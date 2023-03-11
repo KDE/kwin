@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-10 02:27+0000\n"
+"POT-Creation-Date: 2023-03-11 02:40+0000\n"
 "PO-Revision-Date: 2009-12-22 01:06+0530\n"
 "Last-Translator: Danishka Navin <danishka@gmail.com>\n"
 "Language-Team: Sinhala <danishka@gmail.com>\n"
@@ -47,7 +47,7 @@ msgstr "ශක්තිය (&S):"
 msgid "Noise strength:"
 msgstr "ශක්තිය (&S):"
 
-#: colorpicker/colorpicker.cpp:100
+#: colorpicker/colorpicker.cpp:102
 #, kde-format
 msgid ""
 "Select a position for color picking with left click or enter.\n"
@@ -394,27 +394,27 @@ msgstr " px"
 msgid "&Height:"
 msgstr "උස (&H)"
 
-#: mouseclick/mouseclick.cpp:34 mouseclick/mouseclick_config.cpp:51
+#: mouseclick/mouseclick.cpp:36 mouseclick/mouseclick_config.cpp:51
 #, fuzzy, kde-format
 #| msgid "Toggle Invert Effect"
 msgid "Toggle Mouse Click Effect"
 msgstr "යටිකුරු සැරසිලි අතර මාරුවන්න"
 
-#: mouseclick/mouseclick.cpp:41
+#: mouseclick/mouseclick.cpp:43
 #, fuzzy, kde-format
 #| msgid "Left"
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr "වම"
 
-#: mouseclick/mouseclick.cpp:42
+#: mouseclick/mouseclick.cpp:44
 #, fuzzy, kde-format
 #| msgid "Middle button:"
 msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "මැද බොත්තම:"
 
-#: mouseclick/mouseclick.cpp:43
+#: mouseclick/mouseclick.cpp:45
 #, fuzzy, kde-format
 #| msgid "Right"
 msgctxt "Right mouse button"
@@ -532,12 +532,12 @@ msgstr ""
 msgid "Show Text:"
 msgstr "වැඩතලය පෙන්වන්න"
 
-#: mousemark/mousemark.cpp:39
+#: mousemark/mousemark.cpp:40
 #, kde-format
 msgid "Clear All Mouse Marks"
 msgstr "සියලු මවුස ලකුණු මකන්න"
 
-#: mousemark/mousemark.cpp:45 mousemark/mousemark_config.cpp:59
+#: mousemark/mousemark.cpp:46 mousemark/mousemark_config.cpp:59
 #, kde-format
 msgid "Clear Last Mouse Mark"
 msgstr "අවසන් මවුස ලකුණ මකන්න"
@@ -690,7 +690,7 @@ msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr ""
 
-#: showpaint/showpaint.cpp:38 showpaint/showpaint_config.cpp:38
+#: showpaint/showpaint.cpp:39 showpaint/showpaint_config.cpp:38
 #, fuzzy, kde-format
 #| msgid "Show &panels"
 msgid "Toggle Show Paint"
@@ -723,7 +723,7 @@ msgstr "සිරස්"
 msgid "Slide desktop background"
 msgstr "කණ්ඩායම් කිරීමේදී රූටීම"
 
-#: thumbnailaside/thumbnailaside.cpp:29
+#: thumbnailaside/thumbnailaside.cpp:31
 #: thumbnailaside/thumbnailaside_config.cpp:59
 #, kde-format
 msgid "Toggle Thumbnail for Current Window"
@@ -806,7 +806,7 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: trackmouse/trackmouse.cpp:44 trackmouse/trackmouse_config.cpp:57
+#: trackmouse/trackmouse.cpp:45 trackmouse/trackmouse_config.cpp:57
 #, fuzzy, kde-format
 #| msgid "Invert mouse"
 msgid "Track mouse"
@@ -1041,32 +1041,32 @@ msgstr "අඩු"
 msgid "More"
 msgstr "තවත්"
 
-#: zoom/zoom.cpp:65
+#: zoom/zoom.cpp:67
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr ""
 
-#: zoom/zoom.cpp:72
+#: zoom/zoom.cpp:74
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr ""
 
-#: zoom/zoom.cpp:79
+#: zoom/zoom.cpp:81
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr ""
 
-#: zoom/zoom.cpp:86
+#: zoom/zoom.cpp:88
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr ""
 
-#: zoom/zoom.cpp:94 zoom/zoom_config.cpp:108
+#: zoom/zoom.cpp:96 zoom/zoom_config.cpp:108
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr ""
 
-#: zoom/zoom.cpp:101 zoom/zoom_config.cpp:115
+#: zoom/zoom.cpp:103 zoom/zoom_config.cpp:115
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr ""

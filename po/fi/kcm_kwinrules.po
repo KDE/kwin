@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the kde-workspace package.
 # Ilpo Kantonen <ilpo@iki.fi>, 2004, 2005.
 # Teemu Rytilahti <teemu.rytilahti@kde-fi.org>, 2008.
-# Tommi Nieminen <translator@legisign.org>, 2009, 2011, 2012, 2017, 2018, 2019, 2020, 2021, 2022.
+# Tommi Nieminen <translator@legisign.org>, 2009, 2011, 2012, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
 # Jorma Karvonen <karvonen.jorma@gmail.com>, 2010.
 # Lasse Liehu <lliehu@kolumbus.fi>, 2011, 2012, 2013, 2014, 2015, 2016.
 #
@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-04 02:12+0000\n"
-"PO-Revision-Date: 2022-04-19 18:33+0300\n"
+"PO-Revision-Date: 2023-03-06 13:29+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-POT-Import-Date: 2012-12-01 22:22:23+0000\n"
-"X-Generator: Lokalize 20.04.2\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #: kcmrules.cpp:26
 #, kde-format
@@ -424,6 +424,8 @@ msgid ""
 "Readability may be impaired with extremely low opacity values. At 0%, the "
 "window becomes invisible."
 msgstr ""
+"Luettavuus voi heikentyä hyvin pienillä peittävyysarvoilla. 0 prosentissa "
+"ikkuna muuttuu näkymättömäksi."
 
 #: rulesmodel.cpp:378
 #, kde-format
@@ -768,10 +770,9 @@ msgid "Block compositing"
 msgstr "Estä koostaminen"
 
 #: rulesmodel.cpp:723
-#, fuzzy, kde-format
-#| msgid "Window class (application)"
+#, kde-format
 msgid "Window class not available"
-msgstr "Ikkunaluokka (sovellus)"
+msgstr "Ikkunaluokka ei ole saatavilla"
 
 #: rulesmodel.cpp:724
 #, kde-kuit-format
@@ -782,6 +783,10 @@ msgid ""
 "it, try to match other properties like the window title instead.<nl/><nl/"
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
+"Sovellus ei tarjoa ikkunalle luokkaa, joten sitä ei voi käyttää KWin-"
+"säännöissä. Jos yrität silti sovittaa ikkunaa sääntöihin, kokeile sen sijaan "
+"muita ominaisuuksia kuten ikkunan otsikkoa.<nl/><nl/>Harkitse tämän "
+"ilmoittamista ohjelmavirheenä sovelluksen kehittäjille."
 
 #: rulesmodel.cpp:758
 #, kde-format
@@ -932,8 +937,7 @@ msgid "Extreme"
 msgstr "Äärimmäinen"
 
 #: rulesmodel.cpp:885
-#, fuzzy, kde-format
-#| msgid "Unmanaged Window"
+#, kde-format
 msgid "Unmanaged window"
 msgstr "Ei-hallittu ikkuna"
 

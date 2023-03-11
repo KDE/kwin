@@ -11,14 +11,14 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-10 02:27+0000\n"
-"PO-Revision-Date: 2023-03-04 16:15+0100\n"
+"PO-Revision-Date: 2023-03-10 22:38+0100\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
 "Language: nn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 22.12.2\n"
+"X-Generator: Lokalize 22.12.3\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Environment: kde\n"
 "X-Accelerator-Marker: &\n"
@@ -57,6 +57,11 @@ msgid ""
 "meanwhile upgraded to a stable driver,<br>you can reset this protection but "
 "<b>be aware that this might result in an immediate crash!</b></p>"
 msgstr ""
+"<b>OpenGL-samansetjing (som er standard) har krasja KWin tidlegare.</"
+"b><br>Dette kjem truleg av ein feil i skjermkortdrivaren.<p>Viss du meiner "
+"at du i mellomtida har oppgradert til ein stabil drivar,<br>kan du slå av "
+"dette vernet, men <b>ver merksam på at det kan føra til krasj med ein gong</"
+"b>.</p>"
 
 #: composite.cpp:1059
 #, kde-format
@@ -1163,17 +1168,17 @@ msgstr "Vent lenger"
 #: input.cpp:2009
 #, kde-format
 msgid "Move the tablet to the next output"
-msgstr ""
+msgstr "Flytt teikneplata til neste uteining"
 
 #: input.cpp:2088
 #, kde-format
 msgid "Tablet moved to %1"
-msgstr ""
+msgstr "Teikneplate flytta til %1"
 
 #: input.cpp:2088
 #, kde-format
 msgid "Tablets switched outputs"
-msgstr ""
+msgstr "Teikneplate fekk nye uteining"
 
 #: input.cpp:3065
 #, kde-format

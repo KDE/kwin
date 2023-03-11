@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-10 02:27+0000\n"
+"POT-Creation-Date: 2023-03-11 02:40+0000\n"
 "PO-Revision-Date: 2015-01-02 10:39+0000\n"
 "Last-Translator: Fadil Ademovic <fademovic2@etf.unsa.ba>\n"
 "Language-Team: Bosnian <bs@li.org>\n"
@@ -52,7 +52,7 @@ msgstr "Jak"
 msgid "Noise strength:"
 msgstr "&Jačina:"
 
-#: colorpicker/colorpicker.cpp:100
+#: colorpicker/colorpicker.cpp:102
 #, kde-format
 msgid ""
 "Select a position for color picking with left click or enter.\n"
@@ -409,20 +409,20 @@ msgstr " px"
 msgid "&Height:"
 msgstr "&Visina:"
 
-#: mouseclick/mouseclick.cpp:34 mouseclick/mouseclick_config.cpp:51
+#: mouseclick/mouseclick.cpp:36 mouseclick/mouseclick_config.cpp:51
 #, kde-format
 msgid "Toggle Mouse Click Effect"
 msgstr "Aktivira efekat klika miša"
 
 # >> @item:inlistbox Desktop nami alignment
-#: mouseclick/mouseclick.cpp:41
+#: mouseclick/mouseclick.cpp:43
 #, fuzzy, kde-format
 #| msgid "Left"
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr "Lijevo"
 
-#: mouseclick/mouseclick.cpp:42
+#: mouseclick/mouseclick.cpp:44
 #, fuzzy, kde-format
 #| msgid "Middle"
 msgctxt "Middle mouse button"
@@ -430,7 +430,7 @@ msgid "Middle"
 msgstr "Srednje"
 
 # >> @item:inlistbox Desktop nami alignment
-#: mouseclick/mouseclick.cpp:43
+#: mouseclick/mouseclick.cpp:45
 #, fuzzy, kde-format
 #| msgid "Right"
 msgctxt "Right mouse button"
@@ -543,12 +543,12 @@ msgstr "Font:"
 msgid "Show Text:"
 msgstr "Prikaži tekst:"
 
-#: mousemark/mousemark.cpp:39
+#: mousemark/mousemark.cpp:40
 #, kde-format
 msgid "Clear All Mouse Marks"
 msgstr "Očisti sve tragove miša"
 
-#: mousemark/mousemark.cpp:45 mousemark/mousemark_config.cpp:59
+#: mousemark/mousemark.cpp:46 mousemark/mousemark_config.cpp:59
 #, kde-format
 msgid "Clear Last Mouse Mark"
 msgstr "Očisti posljednji trag miša"
@@ -709,7 +709,7 @@ msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr "Ovaj efekt ne služi za mjerenje performansi"
 
-#: showpaint/showpaint.cpp:38 showpaint/showpaint_config.cpp:38
+#: showpaint/showpaint.cpp:39 showpaint/showpaint_config.cpp:38
 #, fuzzy, kde-format
 #| msgctxt "Name of a KWin Effect"
 #| msgid "Show Paint"
@@ -742,7 +742,7 @@ msgstr ""
 msgid "Slide desktop background"
 msgstr ""
 
-#: thumbnailaside/thumbnailaside.cpp:29
+#: thumbnailaside/thumbnailaside.cpp:31
 #: thumbnailaside/thumbnailaside_config.cpp:59
 #, kde-format
 msgid "Toggle Thumbnail for Current Window"
@@ -821,7 +821,7 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: trackmouse/trackmouse.cpp:44 trackmouse/trackmouse_config.cpp:57
+#: trackmouse/trackmouse.cpp:45 trackmouse/trackmouse_config.cpp:57
 #, kde-format
 msgid "Track mouse"
 msgstr "Prati miša"
@@ -1061,32 +1061,32 @@ msgstr "Manje"
 msgid "More"
 msgstr "Više"
 
-#: zoom/zoom.cpp:65
+#: zoom/zoom.cpp:67
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Pomjeri uvećano područje lijevo"
 
-#: zoom/zoom.cpp:72
+#: zoom/zoom.cpp:74
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Pomjeri uvećano područje desno"
 
-#: zoom/zoom.cpp:79
+#: zoom/zoom.cpp:81
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Pomjeri uvećano područje gore"
 
-#: zoom/zoom.cpp:86
+#: zoom/zoom.cpp:88
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Pomjeri uvećano područje dolje"
 
-#: zoom/zoom.cpp:94 zoom/zoom_config.cpp:108
+#: zoom/zoom.cpp:96 zoom/zoom_config.cpp:108
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Pomjeri miša u fokus"
 
-#: zoom/zoom.cpp:101 zoom/zoom_config.cpp:115
+#: zoom/zoom.cpp:103 zoom/zoom_config.cpp:115
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Pomjeri miša u centar"

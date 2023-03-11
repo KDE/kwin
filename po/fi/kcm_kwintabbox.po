@@ -2,7 +2,7 @@
 # Copyright © 2010, 2011 This_file_is_part_of_KDE
 # This file is distributed under the same license as the kde-workspace package.
 # Jorma Karvonen <karvonen.jorma@gmail.com>, 2010.
-# Tommi Nieminen <translator@legisign.org>, 2010, 2011, 2018, 2022.
+# Tommi Nieminen <translator@legisign.org>, 2010, 2011, 2018, 2022, 2023.
 # Lasse Liehu <lasse.liehu@gmail.com>, 2011, 2013, 2014.
 #
 # KDE Finnish translation sprint participants:
@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-08 01:01+0000\n"
-"PO-Revision-Date: 2022-07-18 22:12+0300\n"
+"PO-Revision-Date: 2023-03-06 13:27+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-POT-Import-Date: 2012-12-01 22:22:19+0000\n"
-"X-Generator: Lokalize 20.12.0\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #: layoutpreview.cpp:131
 #, kde-format
@@ -246,19 +246,17 @@ msgstr "Selaa ikkunoita"
 #: shortcutsettings.cpp:133
 #, kde-format
 msgid "Walk Through Windows (Reverse)"
-msgstr "Selaa ikkunoita (käänteisesti)"
+msgstr "Selaa ikkunoita (käänteinen)"
 
 #: shortcutsettings.cpp:134
-#, fuzzy, kde-format
-#| msgid "Walk Through Windows Alternative"
+#, kde-format
 msgid "Walk Through Windows of Current Application"
-msgstr "Selaa ikkunoita (vaihtoehtoinen)"
+msgstr "Selaa nykyisen sovelluksen ikkunoita"
 
 #: shortcutsettings.cpp:135
-#, fuzzy, kde-format
-#| msgid "Walk Through Windows Alternative (Reverse)"
+#, kde-format
 msgid "Walk Through Windows of Current Application (Reverse)"
-msgstr "Selaa ikkunoita (käänteisesti, vaihtoehtoinen)"
+msgstr "Selaa nykyisen sovelluksen ikkunoita (käänteinen)"
 
 #: shortcutsettings.cpp:137
 #, kde-format
@@ -268,19 +266,18 @@ msgstr "Selaa ikkunoita (vaihtoehtoinen)"
 #: shortcutsettings.cpp:138
 #, kde-format
 msgid "Walk Through Windows Alternative (Reverse)"
-msgstr "Selaa ikkunoita (käänteisesti, vaihtoehtoinen)"
+msgstr "Selaa ikkunoita taaksepäin (vaihtoehtoinen käänteinen)"
 
 #: shortcutsettings.cpp:139
-#, fuzzy, kde-format
-#| msgid "Walk Through Windows Alternative"
+#, kde-format
 msgid "Walk Through Windows of Current Application Alternative"
-msgstr "Selaa ikkunoita (vaihtoehtoinen)"
+msgstr "Selaa nykyisen sovelluksen ikkunoita (vaihtoehtoinen)"
 
 #: shortcutsettings.cpp:140
-#, fuzzy, kde-format
-#| msgid "Walk Through Windows Alternative (Reverse)"
+#, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
-msgstr "Selaa ikkunoita (käänteisesti, vaihtoehtoinen)"
+msgstr ""
+"Selaa nykyisen sovelluksen ikkunoita taaksepäin (vaihtoehtoinen käänteinen)"
 
 #~ msgid "KWin"
 #~ msgstr "KWin"

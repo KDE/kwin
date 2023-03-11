@@ -6,7 +6,7 @@
 # Ilpo Kantonen <ilpo@iki.fi>, 2005.
 # Jorma Karvonen <karvonen.jorma@gmail.com>, 2010.
 # Lasse Liehu <lasse.liehu@gmail.com>, 2010, 2011, 2012, 2013, 2014, 2015.
-# Tommi Nieminen <translator@legisign.org>, 2012, 2018, 2019, 2020, 2021.
+# Tommi Nieminen <translator@legisign.org>, 2012, 2018, 2019, 2020, 2021, 2023.
 #
 # KDE Finnish translation sprint participants:
 # Author: Lliehu
@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-05 03:09+0000\n"
-"PO-Revision-Date: 2021-06-11 12:33+0300\n"
+"PO-Revision-Date: 2023-03-06 13:29+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-POT-Import-Date: 2012-12-01 22:22:23+0000\n"
-"X-Generator: Lokalize 20.04.2\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #: declarative-plugin/buttonsmodel.cpp:53
 #, kde-format
@@ -177,9 +177,7 @@ msgid "Drag buttons between here and the titlebar"
 msgstr "Vedä painikkeita tämän alueen ja otsikkopalkin välillä"
 
 #: package/contents/ui/ConfigureTitlebar.qml:16
-#, fuzzy, kde-format
-#| msgctxt "tab label"
-#| msgid "Titlebar Buttons"
+#, kde-format
 msgid "Titlebar Buttons"
 msgstr "Otsikkopalkin painikkeet"
 
@@ -213,17 +211,13 @@ msgid "Window border size:"
 msgstr "Ikkunareunuksen koko:"
 
 #: package/contents/ui/main.qml:60
-#, fuzzy, kde-format
-#| msgctxt "tab label"
-#| msgid "Titlebar Buttons"
+#, kde-format
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
-msgstr "Otsikkopalkin painikkeet"
+msgstr "Otsikkopalkin painikkeiden asetukset…"
 
 #: package/contents/ui/main.qml:65
-#, fuzzy, kde-format
-#| msgctxt "button text"
-#| msgid "Get New Window Decorations..."
+#, kde-format
 msgctxt "button text"
 msgid "Get New Window Decorations…"
 msgstr "Hae uusia ikkunakehyksiä…"

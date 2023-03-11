@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-10 02:27+0000\n"
+"POT-Creation-Date: 2023-03-11 02:40+0000\n"
 "PO-Revision-Date: 2017-05-16 06:54-0400\n"
 "Last-Translator: Copied by Zanata <copied-by-zanata@zanata.org>\n"
 "Language-Team: Hebrew <kde-i18n-doc@kde.org>\n"
@@ -47,7 +47,7 @@ msgstr "חזק"
 msgid "Noise strength:"
 msgstr "&עוצמה:"
 
-#: colorpicker/colorpicker.cpp:100
+#: colorpicker/colorpicker.cpp:102
 #, kde-format
 msgid ""
 "Select a position for color picking with left click or enter.\n"
@@ -385,24 +385,24 @@ msgstr " פיקסלים"
 msgid "&Height:"
 msgstr "&גובה:"
 
-#: mouseclick/mouseclick.cpp:34 mouseclick/mouseclick_config.cpp:51
+#: mouseclick/mouseclick.cpp:36 mouseclick/mouseclick_config.cpp:51
 #, fuzzy, kde-format
 msgid "Toggle Mouse Click Effect"
 msgstr "החלף אפקט"
 
-#: mouseclick/mouseclick.cpp:41
+#: mouseclick/mouseclick.cpp:43
 #, fuzzy, kde-format
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr "שמאל"
 
-#: mouseclick/mouseclick.cpp:42
+#: mouseclick/mouseclick.cpp:44
 #, fuzzy, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "אמצעי"
 
-#: mouseclick/mouseclick.cpp:43
+#: mouseclick/mouseclick.cpp:45
 #, fuzzy, kde-format
 msgctxt "Right mouse button"
 msgid "Right"
@@ -511,12 +511,12 @@ msgstr "גופן:"
 msgid "Show Text:"
 msgstr "הצג טקסט:"
 
-#: mousemark/mousemark.cpp:39
+#: mousemark/mousemark.cpp:40
 #, kde-format
 msgid "Clear All Mouse Marks"
 msgstr "נקה את כל סימוני העכבר"
 
-#: mousemark/mousemark.cpp:45 mousemark/mousemark_config.cpp:59
+#: mousemark/mousemark.cpp:46 mousemark/mousemark_config.cpp:59
 #, kde-format
 msgid "Clear Last Mouse Mark"
 msgstr "נקה את סימון העכבר האחרון"
@@ -669,7 +669,7 @@ msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr ""
 
-#: showpaint/showpaint.cpp:38 showpaint/showpaint_config.cpp:38
+#: showpaint/showpaint.cpp:39 showpaint/showpaint_config.cpp:38
 #, fuzzy, kde-format
 msgid "Toggle Show Paint"
 msgstr "הצג &פאנלים"
@@ -698,7 +698,7 @@ msgstr ""
 msgid "Slide desktop background"
 msgstr ""
 
-#: thumbnailaside/thumbnailaside.cpp:29
+#: thumbnailaside/thumbnailaside.cpp:31
 #: thumbnailaside/thumbnailaside_config.cpp:59
 #, kde-format
 msgid "Toggle Thumbnail for Current Window"
@@ -777,7 +777,7 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: trackmouse/trackmouse.cpp:44 trackmouse/trackmouse_config.cpp:57
+#: trackmouse/trackmouse.cpp:45 trackmouse/trackmouse_config.cpp:57
 #, kde-format
 msgid "Track mouse"
 msgstr "מעקב אחרי העכבר"
@@ -1009,32 +1009,32 @@ msgstr "פחות"
 msgid "More"
 msgstr "יותר"
 
-#: zoom/zoom.cpp:65
+#: zoom/zoom.cpp:67
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr ""
 
-#: zoom/zoom.cpp:72
+#: zoom/zoom.cpp:74
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr ""
 
-#: zoom/zoom.cpp:79
+#: zoom/zoom.cpp:81
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr ""
 
-#: zoom/zoom.cpp:86
+#: zoom/zoom.cpp:88
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr ""
 
-#: zoom/zoom.cpp:94 zoom/zoom_config.cpp:108
+#: zoom/zoom.cpp:96 zoom/zoom_config.cpp:108
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "הזז את העכבר למעקב"
 
-#: zoom/zoom.cpp:101 zoom/zoom_config.cpp:115
+#: zoom/zoom.cpp:103 zoom/zoom_config.cpp:115
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "הזז את עכבר למירכוז"

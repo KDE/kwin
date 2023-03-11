@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-10 02:27+0000\n"
+"POT-Creation-Date: 2023-03-11 02:40+0000\n"
 "PO-Revision-Date: 2022-12-02 14:28+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -48,7 +48,7 @@ msgstr "Potent"
 msgid "Noise strength:"
 msgstr "Potència del soroll:"
 
-#: colorpicker/colorpicker.cpp:100
+#: colorpicker/colorpicker.cpp:102
 #, kde-format
 msgid ""
 "Select a position for color picking with left click or enter.\n"
@@ -378,24 +378,24 @@ msgstr " px"
 msgid "&Height:"
 msgstr "A&lçada:"
 
-#: mouseclick/mouseclick.cpp:34 mouseclick/mouseclick_config.cpp:51
+#: mouseclick/mouseclick.cpp:36 mouseclick/mouseclick_config.cpp:51
 #, kde-format
 msgid "Toggle Mouse Click Effect"
 msgstr "Commuta l'efecte del clic del ratolí"
 
-#: mouseclick/mouseclick.cpp:41
+#: mouseclick/mouseclick.cpp:43
 #, kde-format
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr "Esquerre"
 
-#: mouseclick/mouseclick.cpp:42
+#: mouseclick/mouseclick.cpp:44
 #, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "Mig"
 
-#: mouseclick/mouseclick.cpp:43
+#: mouseclick/mouseclick.cpp:45
 #, kde-format
 msgctxt "Right mouse button"
 msgid "Right"
@@ -502,12 +502,12 @@ msgstr "Tipus de lletra:"
 msgid "Show Text:"
 msgstr "Mostra el text:"
 
-#: mousemark/mousemark.cpp:39
+#: mousemark/mousemark.cpp:40
 #, kde-format
 msgid "Clear All Mouse Marks"
 msgstr "Neteja totes les marques del ratolí"
 
-#: mousemark/mousemark.cpp:45 mousemark/mousemark_config.cpp:59
+#: mousemark/mousemark.cpp:46 mousemark/mousemark_config.cpp:59
 #, kde-format
 msgid "Clear Last Mouse Mark"
 msgstr "Neteja l'última marca del ratolí"
@@ -654,7 +654,7 @@ msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr "Aquest efecte no és cap prova de referència"
 
-#: showpaint/showpaint.cpp:38 showpaint/showpaint_config.cpp:38
+#: showpaint/showpaint.cpp:39 showpaint/showpaint_config.cpp:38
 #, kde-format
 msgid "Toggle Show Paint"
 msgstr "Commuta la mostra del pintat"
@@ -683,7 +683,7 @@ msgstr "Vertical:"
 msgid "Slide desktop background"
 msgstr "Llisca el fons de l'escriptori"
 
-#: thumbnailaside/thumbnailaside.cpp:29
+#: thumbnailaside/thumbnailaside.cpp:31
 #: thumbnailaside/thumbnailaside_config.cpp:59
 #, kde-format
 msgid "Toggle Thumbnail for Current Window"
@@ -762,7 +762,7 @@ msgstr "Afegeix una fitxa flotant"
 msgid "Delete"
 msgstr "Suprimeix"
 
-#: trackmouse/trackmouse.cpp:44 trackmouse/trackmouse_config.cpp:57
+#: trackmouse/trackmouse.cpp:45 trackmouse/trackmouse_config.cpp:57
 #, kde-format
 msgid "Track mouse"
 msgstr "Seguiment del ratolí"
@@ -993,32 +993,32 @@ msgstr "Menys"
 msgid "More"
 msgstr "Més"
 
-#: zoom/zoom.cpp:65
+#: zoom/zoom.cpp:67
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Mou l'àrea ampliada a l'esquerra"
 
-#: zoom/zoom.cpp:72
+#: zoom/zoom.cpp:74
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Mou l'àrea ampliada a la dreta"
 
-#: zoom/zoom.cpp:79
+#: zoom/zoom.cpp:81
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Mou l'àrea ampliada cap a dalt"
 
-#: zoom/zoom.cpp:86
+#: zoom/zoom.cpp:88
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Mou l'àrea ampliada cap a baix"
 
-#: zoom/zoom.cpp:94 zoom/zoom_config.cpp:108
+#: zoom/zoom.cpp:96 zoom/zoom_config.cpp:108
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Mou el ratolí al focus"
 
-#: zoom/zoom.cpp:101 zoom/zoom_config.cpp:115
+#: zoom/zoom.cpp:103 zoom/zoom_config.cpp:115
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Mou el ratolí al centre"
