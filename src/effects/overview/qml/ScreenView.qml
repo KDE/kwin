@@ -5,15 +5,15 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.15
+import QtQuick
 import Qt5Compat.GraphicalEffects
 import org.kde.kirigami 2.20 as Kirigami
-import org.kde.kwin 3.0 as KWinComponents
-import org.kde.kwin.private.effects 1.0
-import org.kde.milou 0.3 as Milou
+import org.kde.kwin as KWinComponents
+import org.kde.kwin.private.effects
+import org.kde.milou as Milou
 import org.kde.plasma.components 3.0 as PC3
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.extras 2.0 as PlasmaExtras
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.extras as PlasmaExtras
 
 FocusScope {
     id: container

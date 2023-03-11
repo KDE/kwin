@@ -6,8 +6,8 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.2
+import QtQuick.Controls
+import QtQuick.Layouts
 
 GridLayout {
     columns: 2

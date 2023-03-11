@@ -3,10 +3,10 @@
 
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
-import QtQuick 2.1
-import QtQuick.Window 2.1
-import QtQuick.Layouts 1.1
-import QtQuick.Controls 2.15
+import QtQuick
+import QtQuick.Window
+import QtQuick.Layouts
+import QtQuick.Controls
 
 /*
  * Small test application to test the difference between unmap and destroy.

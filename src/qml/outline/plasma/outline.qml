@@ -4,10 +4,10 @@
 
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
-import QtQuick 2.1
-import QtQuick.Window 2.1
-import org.kde.kwin 3.0
-import org.kde.plasma.core 2.0 as PlasmaCore
+import QtQuick
+import QtQuick.Window
+import org.kde.kwin
+import org.kde.plasma.core as PlasmaCore
 
 Window {
     id: window

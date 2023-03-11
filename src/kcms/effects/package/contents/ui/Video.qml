@@ -8,10 +8,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.5
-import QtQuick.Controls 2.5 as QQC2
-import QtQuick.Layouts 1.1
-import QtMultimedia 5.0 as Multimedia
+import QtQuick
+import QtQuick.Controls as QQC2
+import QtQuick.Layouts
+import QtMultimedia as Multimedia
 
 Multimedia.Video {
     id: videoItem
