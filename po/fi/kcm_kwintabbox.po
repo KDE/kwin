@@ -2,7 +2,7 @@
 # Copyright © 2010, 2011 This_file_is_part_of_KDE
 # This file is distributed under the same license as the kde-workspace package.
 # Jorma Karvonen <karvonen.jorma@gmail.com>, 2010.
-# Tommi Nieminen <translator@legisign.org>, 2010, 2011, 2018, 2022.
+# Tommi Nieminen <translator@legisign.org>, 2010, 2011, 2018, 2022, 2023.
 # Lasse Liehu <lasse.liehu@gmail.com>, 2011, 2013, 2014.
 #
 # KDE Finnish translation sprint participants:
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-POT-Import-Date: 2012-12-01 22:22:19+0000\n"
-"X-Generator: Lokalize 20.12.0\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #: kwintabboxconfigform.cpp:80
 #, kde-format

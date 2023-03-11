@@ -8,15 +8,15 @@
 # Ilpo Kantonen <ilpo@iki.fi>, 2005.
 # Mikko Piippo <piippo@cc.helsinki.fi>, 2007.
 # Teemu Rytilahti <teemu.rytilahti@d5k.net>, 2008.
-# Tommi Nieminen <translator@legisign.org>, 2009, 2010, 2011, 2012, 2013, 2014, 2016, 2017, 2018, 2019, 2020, 2021, 2022.
+# Tommi Nieminen <translator@legisign.org>, 2009, 2010, 2011, 2012, 2013, 2014, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
 # Lasse Liehu <lasse.liehu@gmail.com>, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-08 03:00+0000\n"
-"PO-Revision-Date: 2022-10-28 22:06+0300\n"
-"Last-Translator: Lasse Liehu <lasse.liehu@iki.fi>\n"
+"PO-Revision-Date: 2023-03-06 13:39+0200\n"
+"Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-POT-Import-Date: 2012-12-01 22:22:29+0000\n"
-"X-Generator: Lokalize 22.08.2\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -58,25 +58,17 @@ msgstr ""
 
 # En pidä sanan ”backend” suomentamisesta tässä. Koostamistyyppi löytyy työpöytätehosteiden lisäasetuksista, vaikka ”koostamistapa” voisi olla vielä parempi.
 #: composite.cpp:1064
-#, fuzzy, kde-format
-#| msgid ""
-#| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
-#| "b><br>This was most likely due to a driver bug.<p>If you think that you "
-#| "have meanwhile upgraded to a stable driver,<br>you can reset this "
-#| "protection but <b>be aware that this might result in an immediate crash!</"
-#| "b></p><p>Alternatively, you might want to use the XRender backend instead."
-#| "</p>"
+#, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
 "b><br>This was most likely due to a driver bug.<p>If you think that you have "
 "meanwhile upgraded to a stable driver,<br>you can reset this protection but "
 "<b>be aware that this might result in an immediate crash!</b></p>"
 msgstr ""
-"<b>OpenGL-koostaminen (oletus) on kaatanut KWinin.</b><br>Tämä johtui "
-"todennäköisesti ajurivirheestä.<p>Jos arvelet päivittäneesi sittemmin "
-"vakaaseen ajuriin,<br>voit nollata tämän suojauksen, mutta <b>tiedä, että "
-"tästä saattaa seurata välitön kaatuminen!</b></p><p>Vaihtoehtoisesti voit "
-"käyttää XRender-koostamistyyppiä.</p>"
+"<b>OpenGL-koostaminen (oletus) on aiemmin kaatanut KWinin.</b><br>Tämä "
+"johtui todennäköisesti ajurivirheestä.<p>Jos arvelet päivittäneesi sittemmin "
+"vakaaseen ajuriin,<br>voit poistaa tämän suojauksen, mutta <b>tästä saattaa "
+"seurata välitön kaatuminen!</b></p>"
 
 #: composite.cpp:1071
 #, kde-format
@@ -85,10 +77,9 @@ msgstr ""
 "Tarvittavat X-laajennukset (XComposite ja XDamage) eivät ole käytettävissä."
 
 #: composite.cpp:1074
-#, fuzzy, kde-format
-#| msgid "GLX/OpenGL and XRender/XFixes are not available."
+#, kde-format
 msgid "GLX/OpenGL is not available."
-msgstr "GLX/OpenGL- ja XRender/XFixes-laajennuksia eivät ole käytettävissä."
+msgstr "GLX/OpenGL ei ole käytettävissä."
 
 #: debug_console.cpp:79 debug_console.cpp:84
 #, kde-format
@@ -2140,20 +2131,20 @@ msgstr "Työpöytätiedoston nimi -säännön tyyppi"
 #, kde-format
 msgctxt "Error message"
 msgid "Could not locate package metadata"
-msgstr ""
+msgstr "Paketin metatietoa ei voitu paikantaa"
 
 #: scripting/genericscriptedconfig.cpp:84
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not contain a valid metadata.json file"
-msgstr ""
+msgstr "%1 ei sisällä kelvollista metadata.json-tiedostoa"
 
 #: scripting/genericscriptedconfig.cpp:90
 #: scripting/genericscriptedconfig.cpp:96
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
-msgstr ""
+msgstr "Tiedostoa %1 ei ole olemassa"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -2287,10 +2278,9 @@ msgid "&Shade"
 msgstr "&Rullaa"
 
 #: useractions.cpp:272
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "&No Titlebar and Frame"
-msgstr "Ei otsikkopalkkia eikä kehystä"
+msgstr "&Ei otsikkopalkkia eikä kehystä"
 
 #: useractions.cpp:280
 #, kde-format
@@ -2407,12 +2397,11 @@ msgstr "Näyttö &%1 (%2)"
 msgid "&All Activities"
 msgstr "Kaikissa &aktiviteeteissa"
 
-# *** TARKISTA: Mitä %1 %2 ovat?
+# *** TARKISTA: Mitä %1 on?
 #: useractions.cpp:776
-#, fuzzy, kde-format
-#| msgid "Move to %1 %2"
+#, kde-format
 msgid "Move to %1"
-msgstr "Siirrä kohtaan %1 %2"
+msgstr "Siirrä → %1"
 
 #: useractions.cpp:901
 #, kde-format
@@ -2491,11 +2480,11 @@ msgstr "Nosta tai laske ikkuna"
 msgid "Make Window Fullscreen"
 msgstr "Tee ikkunasta koko näytön kokoinen"
 
+# *** TARKISTA: ”Togglen” merkitys arvoitus
 #: useractions.cpp:1009
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "Toggle Window Titlebar and Frame"
-msgstr "Ei otsikkopalkkia eikä kehystä"
+msgstr "Näytä tai piilota otsikkopalkki ja kehys"
 
 #: useractions.cpp:1011
 #, kde-format
@@ -2626,16 +2615,14 @@ msgid "Switch to Window to the Left"
 msgstr "Vaihda ikkunaa vasemmalle"
 
 #: useractions.cpp:1061
-#, fuzzy, kde-format
-#| msgid "Increase Opacity of Active Window by 5 %"
+#, kde-format
 msgid "Increase Opacity of Active Window by 5%"
-msgstr "Kasvata aktiivisten ikkunoiden peittävyyttä 5 prosentilla"
+msgstr "Lisää aktiivisen ikkunan peittävyyttä 5 %"
 
 #: useractions.cpp:1063
-#, fuzzy, kde-format
-#| msgid "Decrease Opacity of Active Window by 5 %"
+#, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
-msgstr "Vähennä aktiivisten ikkunoiden peittävyyttä 5 prosentilla"
+msgstr "Vähennä aktiivisen ikkunoan peittävyyttä 5 %"
 
 #: useractions.cpp:1066
 #, kde-format
@@ -2693,30 +2680,25 @@ msgstr "Ikkuna seuraavaan näyttöön"
 msgid "Window to Previous Screen"
 msgstr "Ikkuna edelliseen näyttöön"
 
-# Nämä Window One Desktop... -jonot on yritetty suomentaa niin, että ne tulisivat listassa peräkkäin – siksi vähän outo sanajärjestys. Listassa muodot tukevat toisiaan.
 #: useractions.cpp:1102
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Window One Screen to the Right"
-msgstr "Ikkuna yhden työpöydän oikeaan"
+msgstr "Ikkuna yhden näytön oikealle"
 
 #: useractions.cpp:1104
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Window One Screen to the Left"
-msgstr "Ikkuna yhden työpöydän vasempaan"
+msgstr "Ikkuna yhden näytön vasemmalle"
 
 #: useractions.cpp:1106
-#, fuzzy, kde-format
-#| msgid "Window to Screen 2"
+#, kde-format
 msgid "Window One Screen Up"
-msgstr "Ikkuna näytölle 2"
+msgstr "Ikkuna yhden näytön ylemmäs"
 
 #: useractions.cpp:1108
-#, fuzzy, kde-format
-#| msgid "Window One Desktop Down"
+#, kde-format
 msgid "Window One Screen Down"
-msgstr "Ikkuna yhden työpöydän alas"
+msgstr "Ikkuna yhden näytön alemmas"
 
 #: useractions.cpp:1112
 #, kde-format
@@ -2734,28 +2716,24 @@ msgid "Switch to Previous Screen"
 msgstr "Vaihda edelliseen näyttöön"
 
 #: useractions.cpp:1121
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Right"
+#, kde-format
 msgid "Switch to Screen to the Right"
-msgstr "Vaihda ikkunaa oikealle"
+msgstr "Vaihda oikeanpuoleiseen näyttöön"
 
 #: useractions.cpp:1123
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Left"
+#, kde-format
 msgid "Switch to Screen to the Left"
-msgstr "Vaihda ikkunaa vasemmalle"
+msgstr "Vaihda vasemmanpuoleiseen näyttöön"
 
 #: useractions.cpp:1125
-#, fuzzy, kde-format
-#| msgid "Switch to Screen 0"
+#, kde-format
 msgid "Switch to Screen Above"
-msgstr "Vaihda näyttöön 0"
+msgstr "Vaihda ylempään näyttöön"
 
 #: useractions.cpp:1127
-#, fuzzy, kde-format
-#| msgid "Switch to Screen 0"
+#, kde-format
 msgid "Switch to Screen Below"
-msgstr "Vaihda näyttöön 0"
+msgstr "Vaihda alempaan näyttöön"
 
 #: useractions.cpp:1130
 #, kde-format

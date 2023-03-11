@@ -8,7 +8,7 @@
 # Ilpo Kantonen <ilpo@iki.fi>, 2005.
 # Teemu Rytilahti <tpr@d5k.net>, 2005.
 # Niklas Laxström <niklas.laxstrom+kdetrans@gmail.com>, 2007.
-# Tommi Nieminen <translator@legisign.org>, 2009, 2010, 2011, 2013, 2014, 2019, 2020, 2021.
+# Tommi Nieminen <translator@legisign.org>, 2009, 2010, 2011, 2013, 2014, 2019, 2020, 2021, 2022.
 # Jorma Karvonen <karvonen.jorma@gmail.com>, 2010.
 # Lasse Liehu <lasse.liehu@gmail.com>, 2011, 2012, 2013, 2014, 2015, 2016.
 #
@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-03 00:48+0000\n"
-"PO-Revision-Date: 2021-09-05 14:50+0300\n"
+"PO-Revision-Date: 2022-11-20 22:29+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-POT-Import-Date: 2012-12-01 22:22:23+0000\n"
-"X-Generator: Lokalize 20.04.2\n"
+"X-Generator: Lokalize 22.08.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -665,13 +665,13 @@ msgstr "Piilota passiivisten sovellusten apuikkunat"
 #: advanced.ui:143
 #, kde-format
 msgid "Virtual Desktop behavior:"
-msgstr ""
+msgstr "Virtuaalityöpöydän toiminta:"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyDescriptionLabel)
 #: advanced.ui:153
 #, kde-format
 msgid "When activating a window on a different Virtual Desktop:"
-msgstr ""
+msgstr "Aktivoitaessa ikkuna toisella virtuaalityöpöydällä:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:160
@@ -685,18 +685,24 @@ msgid ""
 "Virtual Desktop</span> will cause the window to jump to the active Virtual "
 "Desktop. </p></body></html>"
 msgstr ""
+"<html><head/><body><p>Tämä asetus vaikuttaa siihen, mitä tapahtuu, kun "
+"aktivoidaan avoin ikkuna muulla kuin nykyisellä virtuaalityöpöydällä. </"
+"p><p><span style=\" font-style:italic;\">Vaihda sille virtuaalityöpöydälle</"
+"span> vaihtaa virtuaalityöpöydälle, jolla ikkuna nyt on.</p><p><span style="
+"\" font-style:italic;\">Tuo ikkuna nykyiselle virtuaalityöpöydälle</span> "
+"saa ikkunan siirtymään aktiiviselle virtuaalityöpöydälle.</p></body></html>"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:164
 #, kde-format
 msgid "Switch to that Virtual Desktop"
-msgstr ""
+msgstr "Vaihda sille virtuaalityöpöydälle"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:169
 #, kde-format
 msgid "Bring window to current Virtual Desktop"
-msgstr ""
+msgstr "Tuo ikkuna nykyiselle virtuaalityöpöydälle"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyLabel)
 #: focus.ui:22
@@ -1427,7 +1433,7 @@ msgid ""
 msgstr ""
 "<em>Kohdistus tiukasti osoittimen alle:</em> Kohdistus on aina "
 "hiiriosoittimen alla olevassa ikkunassa, epäselvissä tapauksissa ei missään. "
-"Toimii vähän samoin kuin<br>kohdistus vanhassa X11-ympäristössä ilman "
+"Toimii vähän samoin kuin<br/>kohdistus vanhassa X11-ympäristössä ilman "
 "ikkunointiohjelmaa.<br/> <strong>Varoitus:</strong> <em>Kohdistuksen "
 "varastamisen esto</em> ja <em>ikkunavalitsin (”Alt+Sarkain”)</em> ovat tämän "
 "kanssa ristiriidassa eivätkä toimi. Haluat todennäköisesti käyttää "
