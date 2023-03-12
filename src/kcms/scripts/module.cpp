@@ -19,8 +19,8 @@
 #include <KMessageWidget>
 #include <KNSWidgets/Button>
 #include <KPackage/Package>
+#include <KPackage/PackageJob>
 #include <KPackage/PackageLoader>
-#include <KPackage/PackageStructure>
 #include <KPluginFactory>
 #include <KSharedConfig>
 
@@ -61,12 +61,23 @@ void Module::importScript()
     }
 
     using namespace KPackage;
-    PackageStructure *structure = PackageLoader::self()->loadPackageStructure(QStringLiteral("KWin/Script"));
-    Package package(structure);
 
-    KJob *installJob = package.update(path);
-    installJob->setProperty("packagePath", path); // so we can retrieve it later for showing the script's name
-    connect(installJob, &KJob::result, this, &Module::importScriptInstallFinished);
+    auto job = PackageJob::update(QStringLiteral("KWin/Script"), path);
+    connect(job, &KJob::result, this, [job, this]() {
+        if (job->error() != KJob::NoError) {
+            setErrorMessage(i18nc("Placeholder is error message returned from the install service", "Cannot import selected script.\n%1", job->errorString()));
+            return;
+        }
+
+        m_infoMessage = i18nc("Placeholder is name of the script that was imported", "The script \"%1\" was successfully imported.", job->package().metadata().name());
+        m_errorMessage.clear();
+        Q_EMIT messageChanged();
+
+        m_model->clear();
+        m_model->addPlugins(m_kwinScriptsData->pluginMetaDataList(), QString());
+
+        setNeedsSave(false);
+    });
 }
 
 void Module::configure(const KPluginMetaData &data)
@@ -86,32 +97,6 @@ void Module::togglePendingDeletion(const KPluginMetaData &data)
     }
     setNeedsSave(m_model->isSaveNeeded() || !m_pendingDeletions.isEmpty());
     Q_EMIT pendingDeletionsChanged();
-}
-
-void Module::importScriptInstallFinished(KJob *job)
-{
-    // if the applet is already installed, just add it to the containment
-    if (job->error() != KJob::NoError) {
-        setErrorMessage(i18nc("Placeholder is error message returned from the install service", "Cannot import selected script.\n%1", job->errorString()));
-        return;
-    }
-
-    using namespace KPackage;
-
-    // so we can show the name of the package we just imported
-    PackageStructure *structure = PackageLoader::self()->loadPackageStructure(QStringLiteral("KWin/Script"));
-    Package package(structure);
-    package.setPath(job->property("packagePath").toString());
-    Q_ASSERT(package.isValid());
-
-    m_infoMessage = i18nc("Placeholder is name of the script that was imported", "The script \"%1\" was successfully imported.", package.metadata().name());
-    m_errorMessage.clear();
-    Q_EMIT messageChanged();
-
-    m_model->clear();
-    m_model->addPlugins(m_kwinScriptsData->pluginMetaDataList(), QString());
-
-    setNeedsSave(false);
 }
 
 void Module::defaults()
@@ -136,12 +121,11 @@ void Module::load()
 void Module::save()
 {
     using namespace KPackage;
-    PackageStructure *structure = PackageLoader::self()->loadPackageStructure(QStringLiteral("KWin/Script"));
     for (const KPluginMetaData &info : std::as_const(m_pendingDeletions)) {
         // We can get the package root from the entry path
         QDir root = QFileInfo(info.fileName()).dir();
         root.cdUp();
-        KJob *uninstallJob = Package(structure).uninstall(info.pluginId(), root.absolutePath());
+        KJob *uninstallJob = PackageJob::uninstall(QStringLiteral("KWin/Script"), info.pluginId(), root.absolutePath());
         connect(uninstallJob, &KJob::result, this, [this, uninstallJob]() {
             if (!uninstallJob->errorString().isEmpty()) {
                 setErrorMessage(i18n("Error when uninstalling KWin Script: %1", uninstallJob->errorString()));

@@ -7,6 +7,7 @@
 #pragma once
 
 #include <KCModule>
+#include <KPackage/Package>
 #include <KPluginMetaData>
 #include <KPluginModel>
 #include <KQuickAddons/ConfigModule>
@@ -74,8 +75,6 @@ Q_SIGNALS:
     void pendingDeletionsChanged();
 
 private:
-    void importScriptInstallFinished(KJob *job);
-
     KWinScriptsData *m_kwinScriptsData;
     QList<KPluginMetaData> m_pendingDeletions;
     KPluginModel *m_model;
