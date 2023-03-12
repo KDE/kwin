@@ -120,7 +120,10 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline 
                 failed();
                 return Error::TestBufferFailed;
             }
-            pipeline->prepareAtomicPresentation();
+            if (!pipeline->prepareAtomicPresentation()) {
+                failed();
+                return Error::InvalidArguments;
+            }
             if (mode == CommitMode::TestAllowModeset || mode == CommitMode::CommitModeset) {
                 pipeline->prepareAtomicModeset();
             }
@@ -231,19 +234,22 @@ static QRect centerBuffer(const QSize &bufferSize, const QSize &modeSize)
     }
 }
 
-void DrmPipeline::prepareAtomicPresentation()
+bool DrmPipeline::prepareAtomicPresentation()
 {
     if (const auto contentType = m_connector->getProp(DrmConnector::PropertyIndex::ContentType)) {
         contentType->setEnum(m_pending.contentType);
     }
 
     m_pending.crtc->setPending(DrmCrtc::PropertyIndex::VrrEnabled, m_pending.syncMode == RenderLoopPrivate::SyncMode::Adaptive || m_pending.syncMode == RenderLoopPrivate::SyncMode::AdaptiveAsync);
-    // use LUT if available, CTM if not
     if (const auto gamma = m_pending.crtc->getProp(DrmCrtc::PropertyIndex::Gamma_LUT)) {
         gamma->setPending(m_pending.gamma ? m_pending.gamma->blobId() : 0);
-        m_pending.crtc->setPending(DrmCrtc::PropertyIndex::CTM, 0);
-    } else {
-        m_pending.crtc->setPending(DrmCrtc::PropertyIndex::CTM, m_pending.ctm ? m_pending.ctm->blobId() : 0);
+    } else if (m_pending.gamma) {
+        return false;
+    }
+    if (const auto ctm = m_pending.crtc->getProp(DrmCrtc::PropertyIndex::CTM)) {
+        ctm->setPending(m_pending.ctm ? m_pending.ctm->blobId() : 0);
+    } else if (m_pending.ctm) {
+        return false;
     }
 
     const auto fb = m_pending.layer->currentBuffer().get();
@@ -256,6 +262,7 @@ void DrmPipeline::prepareAtomicPresentation()
         m_pending.crtc->cursorPlane()->setBuffer(layer->isVisible() ? layer->currentBuffer().get() : nullptr);
         m_pending.crtc->cursorPlane()->setPending(DrmPlane::PropertyIndex::CrtcId, layer->isVisible() ? m_pending.crtc->id() : 0);
     }
+    return true;
 }
 
 void DrmPipeline::prepareAtomicDisable()
