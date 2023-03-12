@@ -172,7 +172,7 @@ private:
     void atomicCommitSuccessful();
     void atomicModesetSuccessful();
     void prepareAtomicModeset();
-    void prepareAtomicPresentation();
+    bool prepareAtomicPresentation();
     void prepareAtomicDisable();
     static Error commitPipelinesAtomic(const QVector<DrmPipeline *> &pipelines, CommitMode mode, const QVector<DrmObject *> &unusedObjects);
 
