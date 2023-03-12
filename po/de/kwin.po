@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-08 03:00+0000\n"
-"PO-Revision-Date: 2023-02-22 19:14+0100\n"
+"PO-Revision-Date: 2023-02-26 00:47+0100\n"
 "Last-Translator: Jannick Kuhr <opensource@kuhr.org>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -131,127 +131,127 @@ msgstr "Aufgabe"
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 4"
-msgstr "Zusatzknopf 4"
+msgstr "Zusatztaste 4"
 
 #: debug_console.cpp:115
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 5"
-msgstr "Zusatzknopf 5"
+msgstr "Zusatztaste 5"
 
 #: debug_console.cpp:117
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 6"
-msgstr "Zusatzknopf 6"
+msgstr "Zusatztaste 6"
 
 #: debug_console.cpp:119
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 7"
-msgstr "Zusatzknopf 7"
+msgstr "Zusatztaste 7"
 
 #: debug_console.cpp:121
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 8"
-msgstr "Zusatzknopf 8"
+msgstr "Zusatztaste 8"
 
 #: debug_console.cpp:123
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 9"
-msgstr "Zusatzknopf 9"
+msgstr "Zusatztaste 9"
 
 #: debug_console.cpp:125
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 10"
-msgstr "Zusatzknopf 10"
+msgstr "Zusatztaste 10"
 
 #: debug_console.cpp:127
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 11"
-msgstr "Zusatzknopf 11"
+msgstr "Zusatztaste 11"
 
 #: debug_console.cpp:129
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 12"
-msgstr "Zusatzknopf 12"
+msgstr "Zusatztaste 12"
 
 #: debug_console.cpp:131
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 13"
-msgstr "Zusatzknopf 13"
+msgstr "Zusatztaste 13"
 
 #: debug_console.cpp:133
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 14"
-msgstr "Zusatzknopf 14"
+msgstr "Zusatztaste 14"
 
 #: debug_console.cpp:135
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 15"
-msgstr "Zusatzknopf 15"
+msgstr "Zusatztaste 15"
 
 #: debug_console.cpp:137
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 16"
-msgstr "Zusatzknopf 16"
+msgstr "Zusatztaste 16"
 
 #: debug_console.cpp:139
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 17"
-msgstr "Zusatzknopf 17"
+msgstr "Zusatztaste 17"
 
 #: debug_console.cpp:141
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 18"
-msgstr "Zusatzknopf 18"
+msgstr "Zusatztaste 18"
 
 #: debug_console.cpp:143
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 19"
-msgstr "Zusatzknopf 19"
+msgstr "Zusatztaste 19"
 
 #: debug_console.cpp:145
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 20"
-msgstr "Zusatzknopf 20"
+msgstr "Zusatztaste 20"
 
 #: debug_console.cpp:147
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 21"
-msgstr "Zusatzknopf 1"
+msgstr "Zusatztaste 1"
 
 #: debug_console.cpp:149
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 22"
-msgstr "Zusatzknopf 22"
+msgstr "Zusatztaste 22"
 
 #: debug_console.cpp:151
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 23"
-msgstr "Zusatzknopf 23"
+msgstr "Zusatztaste 23"
 
 #: debug_console.cpp:153
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 24"
-msgstr "Zusatzknopf 24"
+msgstr "Zusatztaste 24"
 
 #: debug_console.cpp:162 debug_console.cpp:164
 #, kde-format
@@ -292,19 +292,19 @@ msgstr "Globale Position"
 #, kde-format
 msgctxt "A mouse pointer button press event"
 msgid "Pointer Button Press"
-msgstr "Zeigerknopfdruck"
+msgstr "Zeigertastendruck"
 
 #: debug_console.cpp:218 debug_console.cpp:226
 #, kde-format
 msgctxt "A button in a mouse press/release event"
 msgid "Button"
-msgstr "Knopf"
+msgstr "Taste"
 
 #: debug_console.cpp:219 debug_console.cpp:227
 #, kde-format
 msgctxt "A button in a mouse press/release event"
 msgid "Native Button code"
-msgstr "Nativer Knopfcode"
+msgstr "Nativer Tastencode"
 
 #: debug_console.cpp:220 debug_console.cpp:228
 #, kde-format
@@ -317,7 +317,7 @@ msgstr "Gedrückte Knöpfe"
 #, kde-format
 msgctxt "A mouse pointer button release event"
 msgid "Pointer Button Release"
-msgstr "Zeigerknopf losgelassen"
+msgstr "Zeigertaste losgelassen"
 
 #: debug_console.cpp:243
 #, kde-format
