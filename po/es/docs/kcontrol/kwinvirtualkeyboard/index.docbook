@@ -1,0 +1,68 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Spanish "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwinvirtualkeyboard" lang="&language;">
+<articleinfo>
+
+<title
+>Teclado virtual</title>
+<authorgroup>
+<author
+><firstname
+>Yuri</firstname
+> <surname
+>Chornoivan</surname
+> </author>
+<othercredit role="translator"
+><firstname
+>Eloy</firstname
+><surname
+>Cuadra</surname
+><affiliation
+><address
+><email
+>ecuadra@eloihr.net</email
+></address
+></affiliation
+><contrib
+>Traductor</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>2021-04-27</date>
+<releaseinfo
+>Plasma 5.22</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Preferencias del sistema</keyword>
+<keyword
+>virtual</keyword>
+<keyword
+>teclado</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>Este módulo le permite escoger el teclado virtual que se debe usar. El teclado virtual se activará automáticamente cuando no se detecte un teclado físico. </para>
+
+<para
+>Seleccione un <ulink url="https://en.wikipedia.org/wiki/Virtual_keyboard"
+>teclado virtual</ulink
+> de la lista o escoja <guilabel
+>Ninguno</guilabel
+> si no quiere usar ningún teclado virtual. </para>
+
+<para
+>Se recomienda que instale los correspondientes motores de métodos de entrada antes de usar este módulo. </para>
+
+</article>

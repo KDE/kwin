@@ -1,0 +1,137 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Spanish "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwineffects" lang="&language;">
+<articleinfo>
+
+<title
+>Efectos del escritorio</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<othercredit role="translator"
+><firstname
+>Eloy</firstname
+><surname
+>Cuadra</surname
+><affiliation
+><address
+><email
+>ecuadra@eloihr.net</email
+></address
+></affiliation
+><contrib
+>Traductor</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>2021-04-09</date>
+<releaseinfo
+>Plasma 5.20</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>KControl</keyword>
+<keyword
+>escritorio</keyword>
+<keyword
+>efectos</keyword>
+</keywordset>
+</articleinfo>
+
+<!--FIXME Compositor Enable compositor on startup necessary to have effects?-->
+
+<para
+>Este módulo se usa para activar y configurar efectos del escritorio para Plasma.</para>
+
+<para
+>La parte principal de esta página es una lista de los efectos disponibles agrupados por <guilabel
+>Accesibilidad</guilabel
+>, <guilabel
+>Aspecto</guilabel
+>, <guilabel
+>Foco</guilabel
+>, <guilabel
+>Animación de echar un vistazo al escritorio</guilabel
+>, <guilabel
+>Herramientas</guilabel
+>, <guilabel
+>Animación de cambio de escritorio virtual</guilabel
+>, <guilabel
+>Gestión de ventanas</guilabel
+> y <guilabel
+>Animación de abrir/cerrar ventanas</guilabel
+>.</para>
+<para
+>Use la barra de búsqueda incremental que hay sobre la ventana de la lista para encontrar elementos de la lista.</para>
+
+<para
+>Normalmente, no hay motivo para que el usuario cambie esto, pero hay un botón de <inlinemediaobject
+><imageobject
+><imagedata fileref="configure-effects.png" format="PNG"/> </imageobject
+></inlinemediaobject
+> configuración para modificar el filtro de la lista para mostrar también estos efectos. </para>
+
+<para
+>La forma más fácil de instalar nuevos efectos es mediante el uso de KNewStuff integrado en &kwin;. Pulse el botón <guibutton
+>Obtener nuevos efectos de escritorio</guibutton
+> para abrir un diálogo que contiene una lista de los efectos disponibles en Internet, que podrá instalar y desinstalar.</para>
+<note
+><para
+>Tenga en cuenta que el cambio de estos valores predeterminados adecuados puede estropear su sistema.</para>
+</note>
+
+<para
+>Marque un efecto de la lista para activarlo. Puede ver información sobre el autor y la licencia pulsando el botón de <inlinemediaobject
+><imageobject
+><imagedata fileref="dialog-information.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> información que hay a la derecha de cada elemento de la lista.</para>
+
+<para
+>Algunos efectos tienen opciones que se pueden configurar. En este caso existe un botón de <inlinemediaobject
+><imageobject
+> <imagedata fileref="configure-effects.png" format="PNG"/></imageobject
+></inlinemediaobject
+> configuración a la izquierda del botón de información. Púlselo para mostrar un diálogo de configuración.</para>
+<para
+>Para ver una vídeo con una vista previa de un efecto, pulse el botón de <inlinemediaobject
+><imageobject
+><imagedata fileref="video.png" format="PNG"/> </imageobject
+></inlinemediaobject
+> vídeo.</para>
+
+<para
+>Algunos efectos son mutuamente exclusivos con otros efectos. Por ejemplo, solo se debería activar uno de los efectos <guilabel
+>Maximizar</guilabel
+> o <guilabel
+>Lámpara mágica</guilabel
+>. Si activa los dos simultáneamente se producirán animaciones defectuosas. </para>
+
+<para
+>Para los efectos que son mutuamente exclusivos, la interfaz usa botones de opciones y se encarga de que solo se pueda activar uno de ellos. </para>
+
+<para
+>Todos los efectos que no estén permitidos por el motor de composición que esté usando se ocultan de forma predeterminada (por ejemplo, los efectos OpenGL cuando se usa renderización por software). </para
+> 
+
+<para
+>Además, todos los efectos internos o auxiliares están ocultos de forma predeterminada. Estos efectos sustituyen funcionalidades del núcleo de KWin o proporcionan interacción con otros elementos del intérprete del escritorio. </para>
+
+<!--FIXME 
+39 effects + 7 internal (XRender compositor)
+Internal effects
+Appearance (Dashboard, Highlight Windows, KSreen, Screenshot, Window Geometry)
+Window Management (Cover Switch)
+-->
+
+</article>

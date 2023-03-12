@@ -1,18 +1,18 @@
 # translation of kwin_scripting.po to Slovak
-# Roman Paholík <wizzardsk@gmail.com>, 2013, 2017.
+# Roman Paholík <wizzardsk@gmail.com>, 2013, 2017, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin_scripting\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-01 23:30+0000\n"
-"PO-Revision-Date: 2017-05-08 17:12+0100\n"
+"PO-Revision-Date: 2023-03-11 18:24+0100\n"
 "Last-Translator: Roman Paholik <wizzardsk@gmail.com>\n"
 "Language-Team: Slovak <kde-sk@linux.sk>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 2.0\n"
+"X-Generator: Lokalize 22.12.3\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #: genericscriptedconfig.cpp:69
@@ -31,7 +31,7 @@ msgstr ""
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
-msgstr ""
+msgstr "%1 neexistuje"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"
