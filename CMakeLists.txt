@@ -340,14 +340,14 @@ set_package_properties(hwdata PROPERTIES
     URL "https://github.com/vcrhonek/hwdata"
 )
 
-find_package(QAccessibilityClient CONFIG)
-set_package_properties(QAccessibilityClient PROPERTIES
-    URL "https://www.kde.org"
+find_package(QAccessibilityClient6 CONFIG)
+set_package_properties(QAccessibilityClient6 PROPERTIES
+    URL "https://commits.kde.org/libqaccessibilityclient"
     DESCRIPTION "KDE client-side accessibility library"
     TYPE OPTIONAL
     PURPOSE "Required to enable accessibility features"
 )
-set(HAVE_ACCESSIBILITY ${QAccessibilityClient_FOUND})
+set(HAVE_ACCESSIBILITY ${QAccessibilityClient6_FOUND})
 
 ecm_find_qmlmodule(QtQuick 2.3)
 ecm_find_qmlmodule(QtQuick.Controls 2.15)

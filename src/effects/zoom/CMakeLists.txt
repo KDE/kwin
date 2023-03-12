@@ -28,8 +28,7 @@ target_link_libraries(zoom PRIVATE
 )
 
 if (HAVE_ACCESSIBILITY)
-    target_include_directories(zoom PRIVATE ${QACCESSIBILITYCLIENT_INCLUDE_DIR})
-    target_link_libraries(zoom PRIVATE ${QACCESSIBILITYCLIENT_LIBRARY})
+    target_link_libraries(zoom PRIVATE QAccessibilityClient6)
 endif()
 
 #######################################
