@@ -54,14 +54,14 @@ public:
     uint temperature = 6500;
 
     std::unique_ptr<ColorPipelineStage> temperatureStage;
-    QVector3D temperatureFactors;
+    QVector3D temperatureFactors = QVector3D(1, 1, 1);
     std::unique_ptr<ColorPipelineStage> brightnessStage;
-    QVector3D brightnessFactors;
+    QVector3D brightnessFactors = QVector3D(1, 1, 1);
     std::unique_ptr<ColorPipelineStage> calibrationStage;
 
     std::shared_ptr<ColorTransformation> transformation;
     // used if only limited per-channel multiplication is available
-    QVector3D simpleTransformation;
+    QVector3D simpleTransformation = QVector3D(1, 1, 1);
 };
 
 void ColorDevicePrivate::rebuildPipeline()
