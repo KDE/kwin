@@ -12,6 +12,7 @@
         "Description[en_GB]": "Editor for the tiling areas",
         "Description[es]": "Editor para las áreas de mosaico",
         "Description[eu]": "Eremu lauzatuen editorea",
+        "Description[fi]": "Ruutupaneelien muokkain",
         "Description[fr]": "Éditeur pour les zones de recouvrement",
         "Description[ia]": "Editor per le areas de tiling (tegular)",
         "Description[it]": "Editor per le aree di affiancamento",
@@ -25,7 +26,7 @@
         "Description[uk]": "Редактор для мозаїчних областей",
         "Description[vi]": "Trình biên tập các vùng lát",
         "Description[x-test]": "xxEditor for the tiling areasxx",
-        "Description[zh_CN]": "瓷贴区域的编辑器",
+        "Description[zh_CN]": "磁贴区域编辑器",
         "Description[zh_TW]": "平鋪方塊區域的編輯器",
         "EnabledByDefault": true,
         "Id": "tileseditor",
@@ -41,6 +42,7 @@
         "Name[en_GB]": "Tiling Editor",
         "Name[es]": "Editor de mosaico",
         "Name[eu]": "Lauzadura editorea",
+        "Name[fi]": "Paneelimuokkain",
         "Name[fr]": "Éditeur pour la gestion des recouvrements",
         "Name[ia]": "Editor de tiling (tegular)",
         "Name[it]": "Editor di affiancamento",
@@ -55,7 +57,7 @@
         "Name[uk]": "Редактор мозаїк",
         "Name[vi]": "Trình biên tập lát",
         "Name[x-test]": "xxTiling Editorxx",
-        "Name[zh_CN]": "瓷贴编辑器",
+        "Name[zh_CN]": "磁贴编辑器",
         "Name[zh_TW]": "平鋪方塊編輯器"
     },
     "X-KDE-ConfigModule": "kwin_tileseditor_config"
