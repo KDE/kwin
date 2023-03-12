@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-03 03:02+0000\n"
-"PO-Revision-Date: 2023-02-24 12:58\n"
+"PO-Revision-Date: 2023-03-11 04:55\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -736,7 +736,7 @@ msgstr " %"
 #: tileseditor/tileseditoreffect.cpp:29
 #, kde-format
 msgid "Toggle Tiles Editor"
-msgstr "瓷贴编辑器开关"
+msgstr "磁贴编辑器开关"
 
 #: tileseditor/qml/main.qml:145
 #, kde-format
@@ -766,7 +766,7 @@ msgstr "垂直分割"
 #: tileseditor/qml/TileDelegate.qml:182 tileseditor/qml/TileDelegate.qml:211
 #, kde-format
 msgid "Add Floating Tile"
-msgstr "添加浮动瓷贴"
+msgstr "添加浮动磁贴"
 
 #: tileseditor/qml/TileDelegate.qml:191
 #, kde-format

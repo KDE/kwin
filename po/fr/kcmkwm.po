@@ -1417,10 +1417,10 @@ msgid ""
 "precedence)</em> instead!"
 msgstr ""
 "<em>Focus sous la souris :</em>Le focus reste toujours sur la fenêtre sous "
-"la souris. <br/><strong>Attention :</strong> <em>La prévention de vol de "
-"focus</em> et la <b>navigation parmi les fenêtres (« Alt » + « Tab »)sont "
+"la souris.<br/><strong>Attention :</strong> <em>La prévention de vol de "
+"focus</em> et la navigation parmi les fenêtres (« Alt » + « Tab ») sont "
 "contradictoires avec la politique d'activation et ne fonctionneront pas. "
-"Vous aimerez très probablement utiliser<em>Le focus suit la souris "
+"Vous aimerez très probablement utiliser <em>le focus suit la souris "
 "(Précédence de la souris)</em> à la place !"
 
 #: windows.cpp:119
