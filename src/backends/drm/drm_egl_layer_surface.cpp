@@ -41,10 +41,11 @@ static gbm_format_name_desc formatName(uint32_t format)
     return ret;
 }
 
-EglGbmLayerSurface::EglGbmLayerSurface(DrmGpu *gpu, EglGbmBackend *eglBackend, BufferTarget target)
+EglGbmLayerSurface::EglGbmLayerSurface(DrmGpu *gpu, EglGbmBackend *eglBackend, BufferTarget target, FormatOption formatOption)
     : m_gpu(gpu)
     , m_eglBackend(eglBackend)
     , m_bufferTarget(target)
+    , m_formatOption(formatOption)
 {
 }
 
@@ -245,6 +246,9 @@ std::optional<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(con
     };
     const auto testFormats = [this, &size, &formats](const QVector<GbmFormat> &gbmFormats, MultiGpuImportMode importMode) -> std::optional<Surface> {
         for (const auto &format : gbmFormats) {
+            if (m_formatOption == FormatOption::RequireAlpha && format.alphaSize == 0) {
+                continue;
+            }
             const auto surface = createSurface(size, format.drmFormat, formats[format.drmFormat], importMode);
             if (surface.has_value()) {
                 return surface;
