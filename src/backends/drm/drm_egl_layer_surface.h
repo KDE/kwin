@@ -47,7 +47,11 @@ public:
         Linear,
         Dumb
     };
-    EglGbmLayerSurface(DrmGpu *gpu, EglGbmBackend *eglBackend, BufferTarget target = BufferTarget::Normal);
+    enum class FormatOption {
+        PreferAlpha,
+        RequireAlpha
+    };
+    EglGbmLayerSurface(DrmGpu *gpu, EglGbmBackend *eglBackend, BufferTarget target = BufferTarget::Normal, FormatOption formatOption = FormatOption::PreferAlpha);
     ~EglGbmLayerSurface();
 
     std::optional<OutputLayerBeginFrameInfo> startRendering(const QSize &bufferSize, TextureTransforms transformation, const QMap<uint32_t, QVector<uint64_t>> &formats);
@@ -94,6 +98,7 @@ private:
     DrmGpu *const m_gpu;
     EglGbmBackend *const m_eglBackend;
     const BufferTarget m_bufferTarget;
+    const FormatOption m_formatOption;
 };
 
 }
