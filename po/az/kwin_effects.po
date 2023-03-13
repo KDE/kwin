@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-11 02:40+0000\n"
+"POT-Creation-Date: 2023-03-13 02:33+0000\n"
 "PO-Revision-Date: 2022-08-19 17:11+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -599,7 +599,7 @@ msgstr "Açılan pəncərənin ilkin miqyası:"
 msgid "Window close scale:"
 msgstr "Bağlanan pəncərənin son miqyası:"
 
-#: screenshot/screenshotdbusinterface2.cpp:490
+#: screenshot/screenshotdbusinterface2.cpp:478
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -608,7 +608,7 @@ msgstr ""
 "Sol klik və ya enter düyməsi ilə şəkili çəkiləcək pəncərəni seçmək.\n"
 "Bundan imtina etmək üçün Escape və ya sağ klik."
 
-#: screenshot/screenshotdbusinterface2.cpp:508
+#: screenshot/screenshotdbusinterface2.cpp:496
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"

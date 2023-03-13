@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-10 02:27+0000\n"
-"PO-Revision-Date: 2023-03-10 22:38+0100\n"
+"PO-Revision-Date: 2023-03-11 23:29+0100\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
 "Language: nn\n"
@@ -1207,7 +1207,7 @@ msgstr "KWin"
 #: main.cpp:176 main.cpp:199
 #, kde-format
 msgid "KDE window manager"
-msgstr "Vindaugshandsamar for KDE"
+msgstr "Vindaugshandsamar frå KDE"
 
 #: main.cpp:178
 #, kde-format

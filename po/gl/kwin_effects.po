@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-11 02:40+0000\n"
+"POT-Creation-Date: 2023-03-13 02:33+0000\n"
 "PO-Revision-Date: 2020-01-11 11:32+0100\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
@@ -618,7 +618,7 @@ msgstr "Escala de apertura de xanela:"
 msgid "Window close scale:"
 msgstr "Escala de peche de xanela:"
 
-#: screenshot/screenshotdbusinterface2.cpp:490
+#: screenshot/screenshotdbusinterface2.cpp:478
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -627,7 +627,7 @@ msgstr ""
 "Clic esquerdo ou Intro para seleccionar a xanela para capturar.\n"
 "Esc ou clic secundario para cancelar."
 
-#: screenshot/screenshotdbusinterface2.cpp:508
+#: screenshot/screenshotdbusinterface2.cpp:496
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"

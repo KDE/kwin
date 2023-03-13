@@ -1,5 +1,5 @@
 # Thomas Reitelbach <tr@erdfunkstelle.de>, 2007, 2009.
-# Frederik Schwarzer <schwarzer@kde.org>, 2010, 2012.
+# Frederik Schwarzer <schwarzer@kde.org>, 2010, 2012, 2023.
 # Burkhard Lück <lueck@hube-lueck.de>, 2013, 2014, 2018, 2019, 2021.
 # Jannick Kuhr <opensource@kuhr.org>, 2023.
 msgid ""
@@ -115,7 +115,7 @@ msgstr "Einstellungen:"
 #: package/contents/ui/main.qml:202
 #, kde-format
 msgid "Navigation wraps around"
-msgstr "Automatisch zur Gegenseite navigieren"
+msgstr "Navigation rotiert an Anfang/Ende"
 
 #: package/contents/ui/main.qml:220
 #, kde-format
