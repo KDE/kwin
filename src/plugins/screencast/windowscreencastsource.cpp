@@ -29,7 +29,7 @@ WindowScreenCastSource::WindowScreenCastSource(Window *window, QObject *parent)
     , m_window(window)
     , m_offscreenRef(window)
 {
-    connect(m_window, &Window::windowClosed, this, &ScreenCastSource::closed);
+    connect(m_window, &Window::closed, this, &ScreenCastSource::closed);
 }
 
 quint32 WindowScreenCastSource::drmFormat() const

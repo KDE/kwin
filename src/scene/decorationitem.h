@@ -87,7 +87,7 @@ public:
 
 private Q_SLOTS:
     void handleFrameGeometryChanged();
-    void handleWindowClosed(Window *original, Window *deleted);
+    void handleWindowClosed(Window *deleted);
     void handleOutputChanged();
     void handleOutputScaleChanged();
 

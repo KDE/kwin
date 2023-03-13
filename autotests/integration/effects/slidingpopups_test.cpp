@@ -202,10 +202,10 @@ void SlidingPopupsTest::testWithOtherEffect()
     xcb_unmap_window(c.get(), windowId);
     xcb_flush(c.get());
 
-    QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
+    QSignalSpy closedSpy(window, &X11Window::closed);
 
     QSignalSpy windowDeletedSpy(effects, &EffectsHandler::windowDeleted);
-    QVERIFY(windowClosedSpy.wait());
+    QVERIFY(closedSpy.wait());
 
     // again we should have the sliding popups active
     QVERIFY(slidingPoupus->isActive());
@@ -313,7 +313,7 @@ void SlidingPopupsTest::testWithOtherEffectWayland()
     shellSurface.reset();
     surface.reset();
 
-    QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
+    QSignalSpy windowClosedSpy(window, &X11Window::closed);
 
     QSignalSpy windowDeletedSpy(effects, &EffectsHandler::windowDeleted);
     QVERIFY(windowClosedSpy.wait());

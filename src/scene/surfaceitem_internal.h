@@ -31,7 +31,7 @@ public:
 
 private Q_SLOTS:
     void handleBufferGeometryChanged(const QRectF &old);
-    void handleWindowClosed(Window *original, Window *deleted);
+    void handleWindowClosed(Window *deleted);
 
 protected:
     std::unique_ptr<SurfacePixmap> createPixmap() override;

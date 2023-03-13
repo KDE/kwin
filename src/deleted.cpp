@@ -77,7 +77,7 @@ void Deleted::copyToDeleted(Window *window)
     }
     m_mainWindows = window->mainWindows();
     for (Window *w : std::as_const(m_mainWindows)) {
-        connect(w, &Window::windowClosed, this, &Deleted::mainWindowClosed);
+        connect(w, &Window::closed, this, &Deleted::mainWindowClosed);
     }
     m_fullscreen = window->isFullScreen();
     m_caption = window->caption();

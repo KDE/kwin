@@ -1408,7 +1408,7 @@ Q_SIGNALS:
     void damaged(KWin::Window *window);
     void inputTransformationChanged();
     void geometryShapeChanged(const QRectF &old);
-    void windowClosed(KWin::Window *window, KWin::Window *deleted);
+    void closed(KWin::Window *deleted);
     void windowShown(KWin::Window *window);
     void windowHidden(KWin::Window *window);
     /**

@@ -122,7 +122,7 @@ void ToplevelOpenCloseAnimationTest::testAnimateToplevels()
 
     // Close the test window, the effect should start animating the disappearing
     // of the window.
-    QSignalSpy windowClosedSpy(window, &Window::windowClosed);
+    QSignalSpy windowClosedSpy(window, &Window::closed);
     shellSurface.reset();
     surface.reset();
     QVERIFY(windowClosedSpy.wait());
@@ -185,7 +185,7 @@ void ToplevelOpenCloseAnimationTest::testDontAnimatePopups()
     QVERIFY(!effect->isActive());
 
     // Destroy the popup, it should not be animated.
-    QSignalSpy popupClosedSpy(popup, &Window::windowClosed);
+    QSignalSpy popupClosedSpy(popup, &Window::closed);
     popupShellSurface.reset();
     popupSurface.reset();
     QVERIFY(popupClosedSpy.wait());

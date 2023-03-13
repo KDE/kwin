@@ -144,7 +144,7 @@ void Unmanaged::release(ReleaseReason releaseReason)
     if (releaseReason != ReleaseReason::KWinShutsDown) {
         del = Deleted::create(this);
     }
-    Q_EMIT windowClosed(this, del);
+    Q_EMIT closed(del);
     finishCompositing(releaseReason);
     if (!QWidget::find(window()) && releaseReason != ReleaseReason::Destroyed) { // don't affect our own windows
         if (Xcb::Extensions::self()->isShapeAvailable()) {

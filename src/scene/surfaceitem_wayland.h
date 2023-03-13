@@ -90,7 +90,7 @@ public:
     QVector<QRectF> shape() const override;
 
 private:
-    void handleWindowClosed(Window *original, Window *deleted);
+    void handleWindowClosed(Window *deleted);
 
     Window *m_window;
 };

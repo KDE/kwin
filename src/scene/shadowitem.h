@@ -49,7 +49,7 @@ protected:
 private Q_SLOTS:
     void handleTextureChanged();
     void updateGeometry();
-    void handleWindowClosed(Window *original, Window *deleted);
+    void handleWindowClosed(Window *deleted);
 
 private:
     Window *m_window;

@@ -42,7 +42,7 @@ void IdleInhibition::registerClient(Window *client)
     connect(client, &Window::minimizedChanged, this, updateInhibit);
     connect(client, &Window::windowHidden, this, updateInhibit);
     connect(client, &Window::windowShown, this, updateInhibit);
-    connect(client, &Window::windowClosed, this, [this, client]() {
+    connect(client, &Window::closed, this, [this, client]() {
         uninhibit(client);
         auto it = m_connections.find(client);
         if (it != m_connections.end()) {

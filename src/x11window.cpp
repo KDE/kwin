@@ -367,7 +367,7 @@ void X11Window::releaseWindow(bool on_shutdown)
     if (isInteractiveMoveResize()) {
         Q_EMIT interactiveMoveResizeFinished();
     }
-    Q_EMIT windowClosed(this, del);
+    Q_EMIT closed(del);
     finishCompositing();
     workspace()->rulebook()->discardUsed(this, true); // Remove ForceTemporarily rules
     StackingUpdatesBlocker blocker(workspace());
@@ -433,7 +433,7 @@ void X11Window::destroyWindow()
     if (isInteractiveMoveResize()) {
         Q_EMIT interactiveMoveResizeFinished();
     }
-    Q_EMIT windowClosed(this, del);
+    Q_EMIT closed(del);
     finishCompositing(ReleaseReason::Destroyed);
     workspace()->rulebook()->discardUsed(this, true); // Remove ForceTemporarily rules
     StackingUpdatesBlocker blocker(workspace());

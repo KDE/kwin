@@ -52,7 +52,7 @@ WindowItem::WindowItem(Window *window, Scene *scene, Item *parent)
     connect(window, &Window::stackingOrderChanged, this, &WindowItem::updateStackingOrder);
     updateStackingOrder();
 
-    connect(window, &Window::windowClosed, this, &WindowItem::handleWindowClosed);
+    connect(window, &Window::closed, this, &WindowItem::handleWindowClosed);
 }
 
 WindowItem::~WindowItem()
@@ -142,7 +142,7 @@ void WindowItem::deelevate()
     updateStackingOrder();
 }
 
-void WindowItem::handleWindowClosed(Window *original, Window *deleted)
+void WindowItem::handleWindowClosed(Window *deleted)
 {
     m_window = deleted;
 }

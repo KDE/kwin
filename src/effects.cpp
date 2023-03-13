@@ -282,7 +282,9 @@ void EffectsHandlerImpl::unloadAllEffects()
 
 void EffectsHandlerImpl::setupWindowConnections(Window *window)
 {
-    connect(window, &Window::windowClosed, this, &EffectsHandlerImpl::slotWindowClosed);
+    connect(window, &Window::closed, this, [this, window](Window *deleted) {
+        slotWindowClosed(window, deleted);
+    });
     connect(window, &Window::maximizedChanged, this, [this, window]() {
         if (EffectWindowImpl *w = window->effectWindow()) {
             const MaximizeMode mode = window->maximizeMode();
@@ -362,7 +364,9 @@ void EffectsHandlerImpl::setupWindowConnections(Window *window)
 
 void EffectsHandlerImpl::setupUnmanagedConnections(Unmanaged *u)
 {
-    connect(u, &Unmanaged::windowClosed, this, &EffectsHandlerImpl::slotWindowClosed);
+    connect(u, &Window::closed, this, [this, u](Window *deleted) {
+        slotWindowClosed(u, deleted);
+    });
     connect(u, &Unmanaged::opacityChanged, this, &EffectsHandlerImpl::slotOpacityChanged);
     connect(u, &Unmanaged::geometryShapeChanged, this, [this, u](const QRectF &old) {
         // during late cleanup effectWindow() may be already NULL

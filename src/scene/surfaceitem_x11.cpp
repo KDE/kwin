@@ -21,7 +21,7 @@ SurfaceItemX11::SurfaceItemX11(Window *window, Scene *scene, Item *parent)
             this, &SurfaceItemX11::handleBufferGeometryChanged);
     connect(window, &Window::geometryShapeChanged,
             this, &SurfaceItemX11::handleGeometryShapeChanged);
-    connect(window, &Window::windowClosed,
+    connect(window, &Window::closed,
             this, &SurfaceItemX11::handleWindowClosed);
 
     m_damageHandle = xcb_generate_id(kwinApp()->x11Connection());
@@ -49,7 +49,7 @@ Window *SurfaceItemX11::window() const
     return m_window;
 }
 
-void SurfaceItemX11::handleWindowClosed(Window *original, Window *deleted)
+void SurfaceItemX11::handleWindowClosed(Window *deleted)
 {
     m_window = deleted;
 }

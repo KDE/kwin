@@ -214,7 +214,7 @@ void WindowPolicy::layoutChanged(uint index)
     auto it = m_layouts.find(window);
     if (it == m_layouts.end()) {
         m_layouts.insert(window, index);
-        connect(window, &Window::windowClosed, this, [this, window]() {
+        connect(window, &Window::closed, this, [this, window]() {
             m_layouts.remove(window);
         });
     } else {
@@ -308,7 +308,7 @@ void ApplicationPolicy::layoutChanged(uint index)
     auto it = m_layouts.find(window);
     if (it == m_layouts.end()) {
         m_layouts.insert(window, index);
-        connect(window, &Window::windowClosed, this, [this, window]() {
+        connect(window, &Window::closed, this, [this, window]() {
             m_layouts.remove(window);
         });
     } else {

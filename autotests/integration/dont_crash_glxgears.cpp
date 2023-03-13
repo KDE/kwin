@@ -56,7 +56,7 @@ void DontCrashGlxgearsTest::testGlxgears()
     QCOMPARE(workspace()->clientList().count(), 1);
     X11Window *glxgearsWindow = workspace()->clientList().first();
     QVERIFY(glxgearsWindow->isDecorated());
-    QSignalSpy closedSpy(glxgearsWindow, &X11Window::windowClosed);
+    QSignalSpy closedSpy(glxgearsWindow, &X11Window::closed);
     KDecoration2::Decoration *decoration = glxgearsWindow->decoration();
     QVERIFY(decoration);
 

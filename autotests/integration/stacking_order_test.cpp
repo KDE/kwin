@@ -241,17 +241,17 @@ void StackingOrderTest::testDeletedTransient()
     QTRY_VERIFY(!transient2->isActive());
 
     // Close the top-most transient.
-    connect(transient2, &Window::windowClosed, this, [](Window *original, Window *deleted) {
+    connect(transient2, &Window::closed, this, [](Window *deleted) {
         deleted->ref();
     });
 
-    QSignalSpy windowClosedSpy(transient2, &Window::windowClosed);
+    QSignalSpy windowClosedSpy(transient2, &Window::closed);
     delete transient2ShellSurface;
     transient2Surface.reset();
     QVERIFY(windowClosedSpy.wait());
 
     std::unique_ptr<Window, WindowUnrefDeleter> deletedTransient(
-        windowClosedSpy.first().at(1).value<Window *>());
+        windowClosedSpy.first().at(0).value<Window *>());
     QVERIFY(deletedTransient.get());
 
     // The deleted transient still has to be above its old parent (transient1).
@@ -644,17 +644,17 @@ void StackingOrderTest::testDeletedGroupTransient()
     QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{leader, member1, member2, transient}));
 
     // Unmap the transient.
-    connect(transient, &X11Window::windowClosed, this, [](Window *original, Window *deleted) {
+    connect(transient, &X11Window::closed, this, [](Window *deleted) {
         deleted->ref();
     });
 
-    QSignalSpy windowClosedSpy(transient, &X11Window::windowClosed);
+    QSignalSpy windowClosedSpy(transient, &X11Window::closed);
     xcb_unmap_window(conn.get(), transientWid);
     xcb_flush(conn.get());
     QVERIFY(windowClosedSpy.wait());
 
     std::unique_ptr<Window, WindowUnrefDeleter> deletedTransient(
-        windowClosedSpy.first().at(1).value<Window *>());
+        windowClosedSpy.first().at(0).value<Window *>());
     QVERIFY(deletedTransient.get());
 
     // The transient has to be above each member of the window group.

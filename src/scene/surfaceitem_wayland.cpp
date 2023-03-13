@@ -207,7 +207,7 @@ SurfaceItemXwayland::SurfaceItemXwayland(Window *window, Scene *scene, Item *par
     , m_window(window)
 {
     connect(window, &Window::geometryShapeChanged, this, &SurfaceItemXwayland::discardQuads);
-    connect(window, &Window::windowClosed, this, &SurfaceItemXwayland::handleWindowClosed);
+    connect(window, &Window::closed, this, &SurfaceItemXwayland::handleWindowClosed);
 }
 
 QVector<QRectF> SurfaceItemXwayland::shape() const
@@ -222,7 +222,7 @@ QVector<QRectF> SurfaceItemXwayland::shape() const
     return shape;
 }
 
-void SurfaceItemXwayland::handleWindowClosed(Window *original, Window *deleted)
+void SurfaceItemXwayland::handleWindowClosed(Window *deleted)
 {
     m_window = deleted;
 }
