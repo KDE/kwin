@@ -345,7 +345,7 @@ bool ScreenCastStream::createStream()
     // If the offered format is not available for dmabuf, prefer converting to another one than resorting to memfd
     if (itModifiers == supported.constEnd() && !supported.isEmpty()) {
         itModifiers = supported.constFind(DRM_FORMAT_ARGB8888);
-        if (itModifiers == supported.constEnd()) {
+        if (itModifiers != supported.constEnd()) {
             m_drmFormat = itModifiers.key();
         }
     }
