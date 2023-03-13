@@ -242,7 +242,7 @@ void Workspace::setActiveWindow(Window *window)
 
         // activating a client can cause a non active fullscreen window to loose the ActiveLayer status on > 1 screens
         if (outputs().count() > 1) {
-            for (auto it = m_allClients.begin(); it != m_allClients.end(); ++it) {
+            for (auto it = m_windows.begin(); it != m_windows.end(); ++it) {
                 if (*it != m_activeWindow && (*it)->layer() == ActiveLayer && (*it)->output() == m_activeWindow->output()) {
                     (*it)->updateLayer();
                 }

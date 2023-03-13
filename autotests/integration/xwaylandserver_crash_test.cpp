@@ -97,7 +97,7 @@ void XwaylandServerCrashTest::testCrash()
     xcb_map_window(c.get(), windowId2);
     xcb_flush(c.get());
 
-    QSignalSpy unmanagedAddedSpy(workspace(), &Workspace::unmanagedAdded);
+    QSignalSpy unmanagedAddedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(unmanagedAddedSpy.wait());
     QPointer<Unmanaged> unmanaged = unmanagedAddedSpy.last().first().value<Unmanaged *>();
     QVERIFY(unmanaged);

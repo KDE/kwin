@@ -20,7 +20,7 @@ WindowModel::WindowModel(QObject *parent)
     connect(workspace(), &Workspace::windowAdded, this, &WindowModel::handleWindowAdded);
     connect(workspace(), &Workspace::windowRemoved, this, &WindowModel::handleWindowRemoved);
 
-    m_windows = workspace()->allClientList();
+    m_windows = workspace()->windows();
     for (Window *window : std::as_const(m_windows)) {
         setupWindowConnections(window);
     }

@@ -369,7 +369,7 @@ QtScriptWorkspaceWrapper::QtScriptWorkspaceWrapper(QObject *parent)
 
 QList<KWin::Window *> QtScriptWorkspaceWrapper::clientList() const
 {
-    return workspace()->allClientList();
+    return workspace()->windows();
 }
 
 QQmlListProperty<KWin::Window> DeclarativeScriptWorkspaceWrapper::clients()
@@ -379,12 +379,12 @@ QQmlListProperty<KWin::Window> DeclarativeScriptWorkspaceWrapper::clients()
 
 qsizetype DeclarativeScriptWorkspaceWrapper::countClientList(QQmlListProperty<KWin::Window> *clients)
 {
-    return workspace()->allClientList().size();
+    return workspace()->windows().size();
 }
 
 KWin::Window *DeclarativeScriptWorkspaceWrapper::atClientList(QQmlListProperty<KWin::Window> *clients, qsizetype index)
 {
-    return workspace()->allClientList().at(index);
+    return workspace()->windows().at(index);
 }
 
 DeclarativeScriptWorkspaceWrapper::DeclarativeScriptWorkspaceWrapper(QObject *parent)

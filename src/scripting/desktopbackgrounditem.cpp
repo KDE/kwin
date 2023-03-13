@@ -107,7 +107,7 @@ void DesktopBackgroundItem::updateWindow()
 
     Window *clientCandidate = nullptr;
 
-    const auto clients = workspace()->allClientList();
+    const auto clients = workspace()->windows();
     for (Window *client : clients) {
         if (client->isDesktop() && client->isOnOutput(m_output) && client->isOnDesktop(desktop) && client->isOnActivity(activity)) {
             // In the unlikely event there are multiple desktop windows (e.g. conky's floating panel is of type "desktop")

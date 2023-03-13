@@ -270,7 +270,6 @@ public Q_SLOTS:
 
 protected Q_SLOTS:
     void slotWindowShown(KWin::Window *);
-    void slotUnmanagedShown(KWin::Window *);
     void slotWindowClosed(KWin::Window *original, KWin::Window *d);
     void slotOpacityChanged(KWin::Window *window, qreal oldOpacity);
     void slotClientModalityChanged();
@@ -283,7 +282,6 @@ protected:
     void disconnectNotify(const QMetaMethod &signal) override;
     void effectsChanged();
     void setupWindowConnections(KWin::Window *window);
-    void setupUnmanagedConnections(KWin::Unmanaged *u);
 
     /**
      * Default implementation does nothing and returns @c true.

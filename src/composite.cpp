@@ -375,14 +375,8 @@ void Compositor::startupWithWorkspace()
 
     m_state = State::On;
 
-    const auto windows = workspace()->allClientList();
+    const auto windows = workspace()->windows();
     for (Window *window : windows) {
-        window->setupCompositing();
-    }
-    for (Unmanaged *window : Workspace::self()->unmanagedList()) {
-        window->setupCompositing();
-    }
-    for (InternalWindow *window : workspace()->internalWindows()) {
         window->setupCompositing();
     }
 
@@ -500,14 +494,8 @@ void Compositor::stop()
     effects = nullptr;
 
     if (Workspace::self()) {
-        const auto windows = workspace()->allClientList();
+        const auto windows = workspace()->windows();
         for (Window *window : windows) {
-            window->finishCompositing();
-        }
-        for (Unmanaged *window : Workspace::self()->unmanagedList()) {
-            window->finishCompositing();
-        }
-        for (InternalWindow *window : workspace()->internalWindows()) {
             window->finishCompositing();
         }
         if (auto *con = kwinApp()->x11Connection()) {

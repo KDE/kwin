@@ -475,7 +475,7 @@ void DebugConsoleTest::testClosingDebugConsole()
     DebugConsole *console = new DebugConsole;
     QSignalSpy destroyedSpy(console, &QObject::destroyed);
 
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::internalWindowAdded);
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     console->show();
     QCOMPARE(console->windowHandle()->isVisible(), true);
     QTRY_COMPARE(windowAddedSpy.count(), 1);

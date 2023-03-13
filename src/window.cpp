@@ -3930,7 +3930,7 @@ void Window::sendToOutput(Output *newOutput)
     if (isActive()) {
         workspace()->setActiveOutput(newOutput);
         // might impact the layer of a fullscreen window
-        const auto windows = workspace()->allClientList();
+        const auto windows = workspace()->windows();
         for (Window *other : windows) {
             if (other->isFullScreen() && other->output() == newOutput) {
                 other->updateLayer();

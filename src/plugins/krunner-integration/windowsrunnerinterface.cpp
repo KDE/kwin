@@ -109,7 +109,10 @@ RemoteMatches WindowsRunner::Match(const QString &searchTerm)
             }
         }
 
-        for (const Window *window : Workspace::self()->allClientList()) {
+        for (const Window *window : Workspace::self()->windows()) {
+            if (window->isUnmanaged()) {
+                continue;
+            }
             if (!window->isNormalWindow()) {
                 continue;
             }
@@ -159,7 +162,10 @@ RemoteMatches WindowsRunner::Match(const QString &searchTerm)
     }
 
     // check for matching desktops by name
-    for (const Window *window : Workspace::self()->allClientList()) {
+    for (const Window *window : Workspace::self()->windows()) {
+        if (window->isUnmanaged()) {
+            continue;
+        }
         if (!window->isNormalWindow()) {
             continue;
         }
@@ -178,7 +184,10 @@ RemoteMatches WindowsRunner::Match(const QString &searchTerm)
                 matches << desktopMatch(desktop, ActivateDesktopAction, 0.8);
             }
             // search for windows on desktop and list them with less relevance
-            for (const Window *window : Workspace::self()->allClientList()) {
+            for (const Window *window : Workspace::self()->windows()) {
+                if (window->isUnmanaged()) {
+                    continue;
+                }
                 if (!window->isNormalWindow()) {
                     continue;
                 }

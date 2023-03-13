@@ -165,14 +165,6 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, WorkspaceScene *s
             connect(window, &Window::windowShown, this, &EffectsHandlerImpl::slotWindowShown);
         }
     });
-    connect(ws, &Workspace::unmanagedAdded, this, [this](Unmanaged *u) {
-        // it's never initially ready but has synthetic 50ms delay
-        connect(u, &Window::windowShown, this, &EffectsHandlerImpl::slotUnmanagedShown);
-    });
-    connect(ws, &Workspace::internalWindowAdded, this, [this](InternalWindow *window) {
-        setupWindowConnections(window);
-        Q_EMIT windowAdded(window->effectWindow());
-    });
     connect(ws, &Workspace::windowActivated, this, [this](Window *window) {
         Q_EMIT windowActivated(window ? window->effectWindow() : nullptr);
     });
@@ -234,18 +226,12 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, WorkspaceScene *s
     }
 
     // connect all clients
-    for (Window *window : ws->allClientList()) {
+    for (Window *window : ws->windows()) {
         if (window->readyForPainting()) {
             setupWindowConnections(window);
         } else {
             connect(window, &Window::windowShown, this, &EffectsHandlerImpl::slotWindowShown);
         }
-    }
-    for (Unmanaged *u : ws->unmanagedList()) {
-        setupUnmanagedConnections(u);
-    }
-    for (InternalWindow *window : ws->internalWindows()) {
-        setupWindowConnections(window);
     }
 
     connect(ws, &Workspace::outputAdded, this, &EffectsHandlerImpl::slotOutputAdded);
@@ -359,35 +345,6 @@ void EffectsHandlerImpl::setupWindowConnections(Window *window)
     });
     connect(window, &Window::desktopsChanged, this, [this, window]() {
         Q_EMIT windowDesktopsChanged(window->effectWindow());
-    });
-}
-
-void EffectsHandlerImpl::setupUnmanagedConnections(Unmanaged *u)
-{
-    connect(u, &Window::closed, this, [this, u](Window *deleted) {
-        slotWindowClosed(u, deleted);
-    });
-    connect(u, &Unmanaged::opacityChanged, this, &EffectsHandlerImpl::slotOpacityChanged);
-    connect(u, &Unmanaged::geometryShapeChanged, this, [this, u](const QRectF &old) {
-        // during late cleanup effectWindow() may be already NULL
-        // in some functions that may still call this
-        if (u->effectWindow()) {
-            Q_EMIT windowGeometryShapeChanged(u->effectWindow(), old);;
-        }
-    });
-    connect(u, &Unmanaged::frameGeometryChanged, this, [this, u](const QRectF &oldGeometry) {
-        // effectWindow() might be nullptr during tear down of the client.
-        if (u->effectWindow()) {
-            Q_EMIT windowFrameGeometryChanged(u->effectWindow(), oldGeometry);
-        }
-    });    connect(u, &Unmanaged::damaged, this, &EffectsHandlerImpl::slotWindowDamaged);
-    connect(u, &Unmanaged::visibleGeometryChanged, this, [this, u]() {
-        Q_EMIT windowExpandedGeometryChanged(u->effectWindow());
-    });
-    connect(u, &Unmanaged::frameGeometryAboutToChange, this, [this, u]() {
-        if (EffectWindowImpl *w = u->effectWindow()) {
-            Q_EMIT windowFrameGeometryAboutToChange(w);
-        }
     });
 }
 
@@ -513,18 +470,9 @@ void EffectsHandlerImpl::slotOpacityChanged(Window *window, qreal oldOpacity)
 
 void EffectsHandlerImpl::slotWindowShown(Window *window)
 {
-    Q_ASSERT(window->isClient());
     disconnect(window, &Window::windowShown, this, &EffectsHandlerImpl::slotWindowShown);
     setupWindowConnections(window);
     Q_EMIT windowAdded(window->effectWindow());
-}
-
-void EffectsHandlerImpl::slotUnmanagedShown(Window *window)
-{ // regardless, unmanaged windows are -yet?- not synced anyway
-    Q_ASSERT(qobject_cast<Unmanaged *>(window));
-    Unmanaged *u = static_cast<Unmanaged *>(window);
-    setupUnmanagedConnections(u);
-    Q_EMIT windowAdded(u->effectWindow());
 }
 
 void EffectsHandlerImpl::slotWindowClosed(Window *original, Window *d)

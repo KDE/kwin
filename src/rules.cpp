@@ -966,7 +966,7 @@ void RuleBook::setUpdatesDisabled(bool disable)
 {
     m_updatesDisabled = disable;
     if (!disable) {
-        const auto windows = Workspace::self()->allClientList();
+        const auto windows = Workspace::self()->windows();
         for (Window *window : windows) {
             if (window->supportsWindowRules()) {
                 window->updateWindowRules(Rules::All);

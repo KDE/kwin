@@ -389,7 +389,7 @@ void GlobalShortcutsTest::testSetupWindowShortcut()
     QVERIFY(window->isActive());
     QCOMPARE(window->shortcut(), QKeySequence());
 
-    QSignalSpy shortcutDialogAddedSpy(workspace(), &Workspace::internalWindowAdded);
+    QSignalSpy shortcutDialogAddedSpy(workspace(), &Workspace::windowAdded);
     workspace()->slotSetupWindowShortcut();
     QTRY_COMPARE(shortcutDialogAddedSpy.count(), 1);
     auto dialog = shortcutDialogAddedSpy.first().first().value<InternalWindow *>();

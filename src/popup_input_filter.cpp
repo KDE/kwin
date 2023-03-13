@@ -19,7 +19,6 @@ PopupInputFilter::PopupInputFilter()
     : QObject()
 {
     connect(workspace(), &Workspace::windowAdded, this, &PopupInputFilter::handleWindowAdded);
-    connect(workspace(), &Workspace::internalWindowAdded, this, &PopupInputFilter::handleWindowAdded);
 }
 
 void PopupInputFilter::handleWindowAdded(Window *window)

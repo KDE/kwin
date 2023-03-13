@@ -915,32 +915,12 @@ void DebugConsoleModel::remove(int parentRow, QVector<T *> &windows, T *window)
 DebugConsoleModel::DebugConsoleModel(QObject *parent)
     : QAbstractItemModel(parent)
 {
-    const auto windows = workspace()->allClientList();
+    const auto windows = workspace()->windows();
     for (auto window : windows) {
         handleWindowAdded(window);
     }
     connect(workspace(), &Workspace::windowAdded, this, &DebugConsoleModel::handleWindowAdded);
     connect(workspace(), &Workspace::windowRemoved, this, &DebugConsoleModel::handleWindowRemoved);
-
-    const auto unmangeds = workspace()->unmanagedList();
-    for (auto u : unmangeds) {
-        m_unmanageds.append(u);
-    }
-    connect(workspace(), &Workspace::unmanagedAdded, this, [this](Unmanaged *u) {
-        add(s_x11UnmanagedId - 1, m_unmanageds, u);
-    });
-    connect(workspace(), &Workspace::unmanagedRemoved, this, [this](Unmanaged *u) {
-        remove(s_x11UnmanagedId - 1, m_unmanageds, u);
-    });
-    for (InternalWindow *window : workspace()->internalWindows()) {
-        m_internalWindows.append(window);
-    }
-    connect(workspace(), &Workspace::internalWindowAdded, this, [this](InternalWindow *window) {
-        add(s_workspaceInternalId - 1, m_internalWindows, window);
-    });
-    connect(workspace(), &Workspace::internalWindowRemoved, this, [this](InternalWindow *window) {
-        remove(s_workspaceInternalId - 1, m_internalWindows, window);
-    });
 }
 
 void DebugConsoleModel::handleWindowAdded(Window *window)
@@ -954,6 +934,16 @@ void DebugConsoleModel::handleWindowAdded(Window *window)
         add(s_waylandWindowId - 1, m_waylandWindows, wayland);
         return;
     }
+
+    if (auto internal = qobject_cast<InternalWindow *>(window)) {
+        add(s_workspaceInternalId - 1, m_internalWindows, internal);
+        return;
+    }
+
+    if (auto unmanaged = qobject_cast<Unmanaged *>(window)) {
+        add(s_x11UnmanagedId - 1, m_unmanageds, unmanaged);
+        return;
+    }
 }
 
 void DebugConsoleModel::handleWindowRemoved(Window *window)
@@ -965,6 +955,16 @@ void DebugConsoleModel::handleWindowRemoved(Window *window)
 
     if (auto wayland = qobject_cast<WaylandWindow *>(window)) {
         remove(s_waylandWindowId - 1, m_waylandWindows, wayland);
+        return;
+    }
+
+    if (auto internal = qobject_cast<InternalWindow *>(window)) {
+        remove(s_workspaceInternalId - 1, m_internalWindows, internal);
+        return;
+    }
+
+    if (auto unmanaged = qobject_cast<Unmanaged *>(window)) {
+        remove(s_x11UnmanagedId - 1, m_unmanageds, unmanaged);
         return;
     }
 }
@@ -1319,7 +1319,7 @@ SurfaceTreeModel::SurfaceTreeModel(QObject *parent)
         connect(c, &QObject::destroyed, monitor, &QObject::deleteLater);
     };
 
-    for (auto c : workspace()->allClientList()) {
+    for (auto c : workspace()->windows()) {
         watchSubsurfaces(c);
     }
     connect(workspace(), &Workspace::windowAdded, this, [reset, watchSubsurfaces](Window *c) {
@@ -1327,8 +1327,6 @@ SurfaceTreeModel::SurfaceTreeModel(QObject *parent)
         reset();
     });
     connect(workspace(), &Workspace::windowRemoved, this, reset);
-    connect(workspace(), &Workspace::unmanagedAdded, this, reset);
-    connect(workspace(), &Workspace::unmanagedRemoved, this, reset);
 }
 
 SurfaceTreeModel::~SurfaceTreeModel() = default;
@@ -1348,7 +1346,7 @@ int SurfaceTreeModel::rowCount(const QModelIndex &parent) const
         return 0;
     }
     // toplevel are all windows
-    return workspace()->allClientList().count() + workspace()->unmanagedList().count();
+    return workspace()->windows().count();
 }
 
 QModelIndex SurfaceTreeModel::index(int row, int column, const QModelIndex &parent) const
@@ -1376,17 +1374,11 @@ QModelIndex SurfaceTreeModel::index(int row, int column, const QModelIndex &pare
         return QModelIndex();
     }
     // a window
-    const auto &allClients = workspace()->allClientList();
+    const auto &allClients = workspace()->windows();
     if (row < allClients.count()) {
         // references a client
         return createIndex(row, column, allClients.at(row)->surface());
     }
-    int reference = allClients.count();
-    const auto &unmanaged = workspace()->unmanagedList();
-    if (row < reference + unmanaged.count()) {
-        return createIndex(row, column, unmanaged.at(row - reference)->surface());
-    }
-    reference += unmanaged.count();
     // not found
     return QModelIndex();
 }
@@ -1429,21 +1421,12 @@ QModelIndex SurfaceTreeModel::parent(const QModelIndex &child) const
             return QModelIndex();
         }
         // not a subsurface, thus it's a true window
-        int row = 0;
-        const auto &allClients = workspace()->allClientList();
-        for (; row < allClients.count(); row++) {
+        const auto &allClients = workspace()->windows();
+        for (int row = 0; row < allClients.count(); row++) {
             if (allClients.at(row)->surface() == parent) {
                 return createIndex(row, 0, parent);
             }
         }
-        row = allClients.count();
-        const auto &unmanaged = workspace()->unmanagedList();
-        for (int i = 0; i < unmanaged.count(); i++) {
-            if (unmanaged.at(i)->surface() == parent) {
-                return createIndex(row + i, 0, parent);
-            }
-        }
-        row += unmanaged.count();
     }
     return QModelIndex();
 }

@@ -644,7 +644,7 @@ void Placement::cascadeDesktop()
 
 void Placement::unclutterDesktop()
 {
-    const auto &windows = Workspace::self()->allClientList();
+    const auto &windows = Workspace::self()->windows();
     for (int i = windows.size() - 1; i >= 0; i--) {
         auto window = windows.at(i);
         if (!window->isClient()) {
@@ -890,7 +890,7 @@ qreal Workspace::packPositionLeft(const Window *window, qreal oldX, bool leftEdg
         return oldX;
     }
     VirtualDesktop *const desktop = window->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop() : window->desktops().front();
-    for (auto it = m_allClients.constBegin(), end = m_allClients.constEnd(); it != end; ++it) {
+    for (auto it = m_windows.constBegin(), end = m_windows.constEnd(); it != end; ++it) {
         if (isIrrelevant(*it, window, desktop)) {
             continue;
         }
@@ -917,7 +917,7 @@ qreal Workspace::packPositionRight(const Window *window, qreal oldX, bool rightE
         return oldX;
     }
     VirtualDesktop *const desktop = window->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop() : window->desktops().front();
-    for (auto it = m_allClients.constBegin(), end = m_allClients.constEnd(); it != end; ++it) {
+    for (auto it = m_windows.constBegin(), end = m_windows.constEnd(); it != end; ++it) {
         if (isIrrelevant(*it, window, desktop)) {
             continue;
         }
@@ -945,7 +945,7 @@ qreal Workspace::packPositionUp(const Window *window, qreal oldY, bool topEdge) 
         return oldY;
     }
     VirtualDesktop *const desktop = window->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop() : window->desktops().front();
-    for (auto it = m_allClients.constBegin(), end = m_allClients.constEnd(); it != end; ++it) {
+    for (auto it = m_windows.constBegin(), end = m_windows.constEnd(); it != end; ++it) {
         if (isIrrelevant(*it, window, desktop)) {
             continue;
         }
@@ -972,7 +972,7 @@ qreal Workspace::packPositionDown(const Window *window, qreal oldY, bool bottomE
         return oldY;
     }
     VirtualDesktop *const desktop = window->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop() : window->desktops().front();
-    for (auto it = m_allClients.constBegin(), end = m_allClients.constEnd(); it != end; ++it) {
+    for (auto it = m_windows.constBegin(), end = m_windows.constEnd(); it != end; ++it) {
         if (isIrrelevant(*it, window, desktop)) {
             continue;
         }

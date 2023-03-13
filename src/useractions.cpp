@@ -1918,7 +1918,7 @@ bool Workspace::shortcutAvailable(const QKeySequence &cut, Window *ignore) const
         }
     }
     // Check now conflicts with activation shortcuts for current windows
-    for (const auto window : std::as_const(m_allClients)) {
+    for (const auto window : std::as_const(m_windows)) {
         if (window != ignore && window->shortcut() == cut) {
             return false;
         }

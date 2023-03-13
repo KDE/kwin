@@ -131,7 +131,7 @@ void PointerInputRedirection::init()
         connect(window, &Window::interactiveMoveResizeStarted, this, &PointerInputRedirection::updateOnStartMoveResize);
         connect(window, &Window::interactiveMoveResizeFinished, this, &PointerInputRedirection::update);
     };
-    const auto clients = workspace()->allClientList();
+    const auto clients = workspace()->windows();
     std::for_each(clients.begin(), clients.end(), setupMoveResizeConnection);
     connect(workspace(), &Workspace::windowAdded, this, setupMoveResizeConnection);
 
@@ -895,7 +895,7 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
         connect(window, &Window::moveResizedChanged, this, &CursorImage::updateMoveResize);
         connect(window, &Window::moveResizeCursorChanged, this, &CursorImage::updateMoveResize);
     };
-    const auto clients = workspace()->allClientList();
+    const auto clients = workspace()->windows();
     std::for_each(clients.begin(), clients.end(), setupMoveResizeConnection);
     connect(workspace(), &Workspace::windowAdded, this, setupMoveResizeConnection);
 

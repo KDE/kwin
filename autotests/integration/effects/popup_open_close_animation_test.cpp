@@ -230,7 +230,7 @@ void PopupOpenCloseAnimationTest::testAnimateDecorationTooltips()
     QVERIFY(!effect->isActive());
 
     // Show a decoration tooltip.
-    QSignalSpy tooltipAddedSpy(workspace(), &Workspace::internalWindowAdded);
+    QSignalSpy tooltipAddedSpy(workspace(), &Workspace::windowAdded);
     window->decoratedClient()->requestShowToolTip(QStringLiteral("KWin rocks!"));
     QVERIFY(tooltipAddedSpy.wait());
     InternalWindow *tooltip = tooltipAddedSpy.first().first().value<InternalWindow *>();

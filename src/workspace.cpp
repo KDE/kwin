@@ -722,7 +722,6 @@ Unmanaged *Workspace::createUnmanaged(xcb_window_t windowId)
         return nullptr;
     }
     addUnmanaged(window);
-    Q_EMIT unmanagedAdded(window);
     return window;
 }
 
@@ -741,7 +740,7 @@ void Workspace::addX11Window(X11Window *window)
         m_focusChain->update(window, FocusChain::Update);
     }
     m_x11Clients.append(window);
-    m_allClients.append(window);
+    m_windows.append(window);
     addToStack(window);
     updateClientArea(); // This cannot be in manage(), because the window got added only now
     window->updateLayer();
@@ -763,9 +762,11 @@ void Workspace::addX11Window(X11Window *window)
 
 void Workspace::addUnmanaged(Unmanaged *window)
 {
+    m_windows.append(window);
     m_unmanaged.append(window);
     addToStack(window);
     updateStackingOrder(true);
+    Q_EMIT windowAdded(window);
 }
 
 /**
@@ -786,10 +787,11 @@ void Workspace::removeX11Window(X11Window *window)
 void Workspace::removeUnmanaged(Unmanaged *window)
 {
     Q_ASSERT(m_unmanaged.contains(window));
+    m_windows.removeOne(window);
     m_unmanaged.removeAll(window);
     removeFromStack(window);
     updateStackingOrder();
-    Q_EMIT unmanagedRemoved(window);
+    Q_EMIT windowRemoved(window);
 }
 
 void Workspace::addDeleted(Window *c, Window *orig)
@@ -831,7 +833,7 @@ void Workspace::addWaylandWindow(Window *window)
             m_placement->place(window, area);
         }
     }
-    m_allClients.append(window);
+    m_windows.append(window);
     addToStack(window);
 
     updateStackingOrder(true);
@@ -858,7 +860,7 @@ void Workspace::removeWindow(Window *window)
         m_userActionsMenu->close();
     }
 
-    m_allClients.removeAll(window);
+    m_windows.removeAll(window);
     if (window == m_delayFocusWindow) {
         cancelDelayFocus();
     }
@@ -1012,7 +1014,7 @@ void Workspace::slotReconfigure()
     updateToolWindows(true);
 
     m_rulebook->load();
-    for (Window *window : std::as_const(m_allClients)) {
+    for (Window *window : std::as_const(m_windows)) {
         if (window->supportsWindowRules()) {
             window->evaluateWindowRules();
             m_rulebook->discardUsed(window, false);
@@ -1022,7 +1024,7 @@ void Workspace::slotReconfigure()
     if (borderlessMaximizedWindows != options->borderlessMaximizedWindows() && !options->borderlessMaximizedWindows()) {
         // in case borderless maximized windows option changed and new option
         // is to have borders, we need to unset the borders for all maximized windows
-        for (auto it = m_allClients.cbegin(); it != m_allClients.cend(); ++it) {
+        for (auto it = m_windows.cbegin(); it != m_windows.cend(); ++it) {
             if ((*it)->maximizeMode() == MaximizeFull) {
                 (*it)->checkNoBorder();
             }
@@ -1436,7 +1438,7 @@ void Workspace::slotDesktopAdded(VirtualDesktop *desktop)
 
 void Workspace::slotDesktopRemoved(VirtualDesktop *desktop)
 {
-    for (auto it = m_allClients.constBegin(); it != m_allClients.constEnd(); ++it) {
+    for (auto it = m_windows.constBegin(); it != m_windows.constEnd(); ++it) {
         if (!(*it)->desktops().contains(desktop)) {
             continue;
         }
@@ -1964,16 +1966,7 @@ X11Window *Workspace::findClient(Predicate predicate, xcb_window_t w) const
 
 Window *Workspace::findWindow(std::function<bool(const Window *)> func) const
 {
-    if (auto *ret = Window::findInList(m_allClients, func)) {
-        return ret;
-    }
-    if (Unmanaged *ret = Window::findInList(m_unmanaged, func)) {
-        return ret;
-    }
-    if (InternalWindow *ret = Window::findInList(m_internalWindows, func)) {
-        return ret;
-    }
-    return nullptr;
+    return Window::findInList(m_windows, func);
 }
 
 Window *Workspace::findWindow(const QUuid &internalId) const
@@ -1985,9 +1978,7 @@ Window *Workspace::findWindow(const QUuid &internalId) const
 
 void Workspace::forEachWindow(std::function<void(Window *)> func)
 {
-    std::for_each(m_allClients.constBegin(), m_allClients.constEnd(), func);
-    std::for_each(m_unmanaged.constBegin(), m_unmanaged.constEnd(), func);
-    std::for_each(m_internalWindows.constBegin(), m_internalWindows.constEnd(), func);
+    std::for_each(m_windows.constBegin(), m_windows.constEnd(), func);
 }
 
 bool Workspace::hasWindow(const Window *c)
@@ -2038,6 +2029,7 @@ void Workspace::updateTabbox()
 
 void Workspace::addInternalWindow(InternalWindow *window)
 {
+    m_windows.append(window);
     m_internalWindows.append(window);
     addToStack(window);
 
@@ -2052,17 +2044,18 @@ void Workspace::addInternalWindow(InternalWindow *window)
     updateStackingOrder(true);
     updateClientArea();
 
-    Q_EMIT internalWindowAdded(window);
+    Q_EMIT windowAdded(window);
 }
 
 void Workspace::removeInternalWindow(InternalWindow *window)
 {
+    m_windows.removeOne(window);
     m_internalWindows.removeOne(window);
 
     updateStackingOrder();
     updateClientArea();
 
-    Q_EMIT internalWindowRemoved(window);
+    Q_EMIT windowRemoved(window);
 }
 
 void Workspace::setInitialDesktop(int desktop)
@@ -2332,7 +2325,7 @@ void Workspace::updateClientArea()
         }
     }
 
-    for (Window *window : std::as_const(m_allClients)) {
+    for (Window *window : std::as_const(m_windows)) {
         if (!window->hasStrut()) {
             continue;
         }
@@ -2403,7 +2396,7 @@ void Workspace::updateClientArea()
             }
         }
 
-        for (auto it = m_allClients.constBegin(); it != m_allClients.constEnd(); ++it) {
+        for (auto it = m_windows.constBegin(); it != m_windows.constEnd(); ++it) {
             if ((*it)->isClient()) {
                 (*it)->checkWorkspacePosition();
             }
@@ -2676,7 +2669,7 @@ QPointF Workspace::adjustWindowPosition(Window *window, QPointF pos, bool unrest
         // windows snap
         const int windowSnapZone = options->windowSnapZone() * snapAdjust;
         if (windowSnapZone > 0) {
-            for (auto l = m_allClients.constBegin(); l != m_allClients.constEnd(); ++l) {
+            for (auto l = m_windows.constBegin(); l != m_windows.constEnd(); ++l) {
                 if ((*l) == window) {
                     continue;
                 }
@@ -2869,7 +2862,7 @@ QRectF Workspace::adjustWindowSize(Window *window, QRectF moveResizeGeom, Gravit
         if (snap) {
             deltaX = int(snap);
             deltaY = int(snap);
-            for (auto l = m_allClients.constBegin(); l != m_allClients.constEnd(); ++l) {
+            for (auto l = m_windows.constBegin(); l != m_windows.constEnd(); ++l) {
                 if ((*l)->isOnCurrentDesktop() && !(*l)->isMinimized() && !(*l)->isUnmanaged()
                     && (*l) != window) {
                     lx = (*l)->x();

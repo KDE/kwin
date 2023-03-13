@@ -1488,7 +1488,7 @@ int TabBox::previousDesktopStatic(int iDesktop) const
  */
 Window *TabBox::nextClientStatic(Window *c) const
 {
-    const auto &list = Workspace::self()->allClientList();
+    const auto &list = Workspace::self()->windows();
     if (!c || list.isEmpty()) {
         return nullptr;
     }
@@ -1518,7 +1518,7 @@ Window *TabBox::nextClientStatic(Window *c) const
  */
 Window *TabBox::previousClientStatic(Window *c) const
 {
-    const auto &list = Workspace::self()->allClientList();
+    const auto &list = Workspace::self()->windows();
     if (!c || list.isEmpty()) {
         return nullptr;
     }

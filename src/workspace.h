@@ -255,6 +255,7 @@ public:
     {
         return m_unmanaged;
     }
+
     /**
      * @return List of deleted "windows" currently managed by Workspace
      */
@@ -265,9 +266,9 @@ public:
     /**
      * @returns List of all windows (either X11 or Wayland) currently managed by Workspace
      */
-    const QList<Window *> allClientList() const
+    const QList<Window *> windows() const
     {
-        return m_allClients;
+        return m_windows;
     }
 
     /**
@@ -580,8 +581,6 @@ Q_SIGNALS:
     void windowDemandsAttentionChanged(KWin::Window *, bool);
     void windowMinimizedChanged(KWin::Window *);
     void groupAdded(KWin::Group *);
-    void unmanagedAdded(KWin::Unmanaged *);
-    void unmanagedRemoved(KWin::Unmanaged *);
     void deletedRemoved(KWin::Window *);
     void configChanged();
     void showingDesktopChanged(bool showing, bool animated);
@@ -594,16 +593,6 @@ Q_SIGNALS:
      * or lowered
      */
     void stackingOrderChanged();
-
-    /**
-     * This signal is emitted whenever an internal window is created.
-     */
-    void internalWindowAdded(KWin::InternalWindow *window);
-
-    /**
-     * This signal is emitted whenever an internal window gets removed.
-     */
-    void internalWindowRemoved(KWin::InternalWindow *window);
 
 private:
     void init();
@@ -688,7 +677,7 @@ private:
     QPointF focusMousePos;
 
     QList<X11Window *> m_x11Clients;
-    QList<Window *> m_allClients;
+    QList<Window *> m_windows;
     QList<Unmanaged *> m_unmanaged;
     QList<Window *> deleted;
     QList<InternalWindow *> m_internalWindows;
