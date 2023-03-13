@@ -1492,15 +1492,24 @@ Window *TabBox::nextClientStatic(Window *c) const
     if (!c || list.isEmpty()) {
         return nullptr;
     }
-    int pos = list.indexOf(c);
-    if (pos == -1) {
+    const int reference = list.indexOf(c);
+    if (reference == -1) {
         return list.first();
     }
-    ++pos;
-    if (pos == list.count()) {
-        return list.first();
+    for (int i = reference + 1; i < list.count(); ++i) {
+        Window *candidate = list[i];
+        if (candidate->isClient()) {
+            return candidate;
+        }
     }
-    return list.at(pos);
+    // wrap around
+    for (int i = 0; i < reference; ++i) {
+        Window *candidate = list[i];
+        if (candidate->isClient()) {
+            return candidate;
+        }
+    }
+    return nullptr;
 }
 
 /**
@@ -1513,15 +1522,24 @@ Window *TabBox::previousClientStatic(Window *c) const
     if (!c || list.isEmpty()) {
         return nullptr;
     }
-    int pos = list.indexOf(c);
-    if (pos == -1) {
+    const int reference = list.indexOf(c);
+    if (reference == -1) {
         return list.last();
     }
-    if (pos == 0) {
-        return list.last();
+    for (int i = reference - 1; i >= 0; --i) {
+        Window *candidate = list[i];
+        if (candidate->isClient()) {
+            return candidate;
+        }
     }
-    --pos;
-    return list.at(pos);
+    // wrap around
+    for (int i = list.size() - 1; i > reference; --i) {
+        Window *candidate = list[i];
+        if (candidate->isClient()) {
+            return candidate;
+        }
+    }
+    return nullptr;
 }
 
 bool TabBox::establishTabBoxGrab()

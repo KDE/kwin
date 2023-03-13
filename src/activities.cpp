@@ -43,6 +43,9 @@ void Activities::slotServiceStatusChanged()
     }
     const auto windows = Workspace::self()->allClientList();
     for (auto *const window : windows) {
+        if (!window->isClient()) {
+            continue;
+        }
         if (window->isDesktop()) {
             continue;
         }
@@ -69,6 +72,9 @@ void Activities::slotRemoved(const QString &activity)
 {
     const auto windows = Workspace::self()->allClientList();
     for (auto *const window : windows) {
+        if (!window->isClient()) {
+            continue;
+        }
         if (window->isDesktop()) {
             continue;
         }
@@ -169,6 +175,9 @@ void Activities::reallyStop(const QString &id)
     QSet<QByteArray> dontCloseSessionIds;
     const auto windows = ws->allClientList();
     for (auto *const window : windows) {
+        if (!window->isClient()) {
+            continue;
+        }
         if (window->isDesktop()) {
             continue;
         }

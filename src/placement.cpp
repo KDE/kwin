@@ -644,14 +644,17 @@ void Placement::cascadeDesktop()
 
 void Placement::unclutterDesktop()
 {
-    const auto &clients = Workspace::self()->allClientList();
-    for (int i = clients.size() - 1; i >= 0; i--) {
-        auto client = clients.at(i);
-        if ((!client->isOnCurrentDesktop()) || (client->isMinimized()) || (client->isOnAllDesktops()) || (!client->isMovable())) {
+    const auto &windows = Workspace::self()->allClientList();
+    for (int i = windows.size() - 1; i >= 0; i--) {
+        auto window = windows.at(i);
+        if (!window->isClient()) {
             continue;
         }
-        const QRect placementArea = workspace()->clientArea(PlacementArea, client).toRect();
-        placeSmart(client, placementArea);
+        if ((!window->isOnCurrentDesktop()) || (window->isMinimized()) || (window->isOnAllDesktops()) || (!window->isMovable())) {
+            continue;
+        }
+        const QRect placementArea = workspace()->clientArea(PlacementArea, window).toRect();
+        placeSmart(window, placementArea);
     }
 }
 

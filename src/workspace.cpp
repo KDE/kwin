@@ -2404,7 +2404,9 @@ void Workspace::updateClientArea()
         }
 
         for (auto it = m_allClients.constBegin(); it != m_allClients.constEnd(); ++it) {
-            (*it)->checkWorkspacePosition();
+            if ((*it)->isClient()) {
+                (*it)->checkWorkspacePosition();
+            }
         }
 
         m_oldRestrictedAreas.clear(); // reset, no longer valid or needed
@@ -2690,7 +2692,7 @@ QPointF Workspace::adjustWindowPosition(Window *window, QPointF pos, bool unrest
                 if (!(*l)->isOnCurrentActivity()) {
                     continue; // wrong activity
                 }
-                if ((*l)->isDesktop() || (*l)->isSplash() || (*l)->isNotification() || (*l)->isCriticalNotification() || (*l)->isOnScreenDisplay() || (*l)->isAppletPopup()) {
+                if ((*l)->isUnmanaged() || (*l)->isDesktop() || (*l)->isSplash() || (*l)->isNotification() || (*l)->isCriticalNotification() || (*l)->isOnScreenDisplay() || (*l)->isAppletPopup()) {
                     continue;
                 }
 
@@ -2868,7 +2870,7 @@ QRectF Workspace::adjustWindowSize(Window *window, QRectF moveResizeGeom, Gravit
             deltaX = int(snap);
             deltaY = int(snap);
             for (auto l = m_allClients.constBegin(); l != m_allClients.constEnd(); ++l) {
-                if ((*l)->isOnCurrentDesktop() && !(*l)->isMinimized()
+                if ((*l)->isOnCurrentDesktop() && !(*l)->isMinimized() && !(*l)->isUnmanaged()
                     && (*l) != window) {
                     lx = (*l)->x();
                     ly = (*l)->y();
