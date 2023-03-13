@@ -394,6 +394,9 @@ void X11Window::releaseWindow(bool on_shutdown)
         info->setDesktop(0);
         info->setState(NET::States(), info->state()); // Reset all state flags
     }
+    if (WinInfo *cinfo = dynamic_cast<WinInfo *>(info)) {
+        cinfo->disable();
+    }
     xcb_connection_t *c = kwinApp()->x11Connection();
     m_client.deleteProperty(atoms->kde_net_wm_user_creation_time);
     m_client.deleteProperty(atoms->net_frame_extents);
@@ -448,6 +451,9 @@ void X11Window::destroyWindow()
     destroyDecoration();
     cleanGrouping();
     workspace()->removeX11Window(this);
+    if (WinInfo *cinfo = dynamic_cast<WinInfo *>(info)) {
+        cinfo->disable();
+    }
     m_client.reset(); // invalidate
     m_wrapper.reset();
     m_frame.reset();

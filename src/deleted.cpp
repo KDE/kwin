@@ -66,9 +66,6 @@ void Deleted::copyToDeleted(Window *window)
     m_type = window->windowType();
     m_windowRole = window->windowRole();
     m_shade = window->isShade();
-    if (WinInfo *cinfo = dynamic_cast<WinInfo *>(info)) {
-        cinfo->disable();
-    }
     if (window->isDecorated()) {
         window->layoutDecorationRects(decoration_left,
                                       decoration_top,
