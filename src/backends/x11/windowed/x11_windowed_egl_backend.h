@@ -56,7 +56,6 @@ public:
     void release(std::shared_ptr<X11WindowedEglLayerBuffer> buffer);
 
 private:
-    X11WindowedEglBackend *m_backend;
     QSize m_size;
     QVector<std::shared_ptr<X11WindowedEglLayerBuffer>> m_buffers;
     int m_index = 0;

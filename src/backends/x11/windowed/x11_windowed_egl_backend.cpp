@@ -96,8 +96,7 @@ int X11WindowedEglLayerBuffer::age() const
 }
 
 X11WindowedEglLayerSwapchain::X11WindowedEglLayerSwapchain(const QSize &size, uint32_t format, uint32_t depth, uint32_t bpp, const QVector<uint64_t> &modifiers, xcb_drawable_t drawable, X11WindowedEglBackend *backend)
-    : m_backend(backend)
-    , m_size(size)
+    : m_size(size)
 {
     for (int i = 0; i < 2; ++i) {
         m_buffers.append(std::make_shared<X11WindowedEglLayerBuffer>(size, format, depth, bpp, modifiers, drawable, backend));
