@@ -39,7 +39,7 @@ public:
     };
 
     bool init() override;
-    void disable() override;
+    void disable(DrmAtomicCommit *commit) override;
 
     int pipeIndex() const;
     int gammaRampSize() const;

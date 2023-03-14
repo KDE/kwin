@@ -95,7 +95,7 @@ public:
 
     bool init() override;
     bool updateProperties() override;
-    void disable() override;
+    void disable(DrmAtomicCommit *commit) override;
 
     bool isCrtcSupported(DrmCrtc *crtc) const;
     bool isConnected() const;

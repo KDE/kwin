@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "drm_crtc.h"
+#include "drm_atomic_commit.h"
 #include "drm_backend.h"
 #include "drm_buffer.h"
 #include "drm_gpu.h"
@@ -93,10 +94,10 @@ DrmPlane *DrmCrtc::cursorPlane() const
     return m_cursorPlane;
 }
 
-void DrmCrtc::disable()
+void DrmCrtc::disable(DrmAtomicCommit *commit)
 {
-    setPending(PropertyIndex::Active, 0);
-    setPending(PropertyIndex::ModeId, 0);
+    commit->addProperty(getProp(PropertyIndex::Active), 0);
+    commit->addProperty(getProp(PropertyIndex::ModeId), 0);
 }
 
 void DrmCrtc::releaseBuffers()

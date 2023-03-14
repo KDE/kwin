@@ -50,10 +50,9 @@ public:
             return static_cast<T>(m_propertyToEnumMap[value]);
         }
     }
-    template<typename Enum>
-    void setEnum(Enum value)
+    uint64_t valueForEnum(auto enumValue)
     {
-        const uint64_t integer = static_cast<uint64_t>(value);
+        const uint64_t integer = static_cast<uint64_t>(enumValue);
         if (m_isBitmask) {
             uint64_t set = 0;
             for (uint64_t mask = 1; integer >= mask && mask != 0; mask <<= 1) {
@@ -61,9 +60,9 @@ public:
                     set |= m_enumToPropertyMap[mask];
                 }
             }
-            setPending(set);
+            return set;
         } else {
-            setPending(m_enumToPropertyMap[integer]);
+            return m_enumToPropertyMap[integer];
         }
     }
 
@@ -77,20 +76,12 @@ public:
      */
     void setLegacy();
 
-    void setPending(uint64_t value);
-    uint64_t pending() const;
-
     void setCurrent(uint64_t value);
     uint64_t current() const;
     drmModePropertyBlobRes *immutableBlob() const;
 
     uint64_t minValue() const;
     uint64_t maxValue() const;
-
-    void commit();
-    void commitPending();
-    void rollbackPending();
-    bool needsCommit() const;
 
     bool setPropertyLegacy(uint64_t value);
     template<typename T>
@@ -103,6 +94,7 @@ public:
     }
 
     QString valueString(uint64_t value) const;
+    const DrmObject *drmObject() const;
 
 private:
     void initEnumMap(drmModePropertyRes *prop);
@@ -111,13 +103,7 @@ private:
     uint32_t m_propId = 0;
     QByteArray m_propName;
 
-    // the value that will be m_next after the property has been committed
-    // has not necessarily been tested to work
-    uint64_t m_pending = 0;
-    // the value that will be m_current after the next atomic commit
-    // and has been tested to work
-    uint64_t m_next = 0;
-    // the value currently set for or by the kernel
+    // the last known value from the kernel
     uint64_t m_current = 0;
     DrmUniquePtr<drmModePropertyBlobRes> m_immutableBlob;
 

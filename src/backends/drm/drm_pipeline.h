@@ -87,7 +87,6 @@ public:
     bool pageflipPending() const;
     bool modesetPresentPending() const;
     void resetModesetPresentPending();
-    void printDebugInfo() const;
     /**
      * what size buffers submitted to this pipeline should have
      */
@@ -152,22 +151,12 @@ private:
     static Error commitPipelinesLegacy(const QVector<DrmPipeline *> &pipelines, CommitMode mode);
 
     // atomic modesetting only
-    bool populateAtomicValues(drmModeAtomicReq *req);
-    void atomicCommitFailed();
-    void atomicTestSuccessful();
     void atomicCommitSuccessful();
     void atomicModesetSuccessful();
-    void prepareAtomicModeset();
-    bool prepareAtomicPresentation();
-    void prepareAtomicDisable();
+    void prepareAtomicModeset(DrmAtomicCommit *commit);
+    bool prepareAtomicPresentation(DrmAtomicCommit *commit);
+    void prepareAtomicDisable(DrmAtomicCommit *commit);
     static Error commitPipelinesAtomic(const QVector<DrmPipeline *> &pipelines, CommitMode mode, const QVector<DrmObject *> &unusedObjects);
-
-    // logging helpers
-    enum class PrintMode {
-        OnlyChanged,
-        All,
-    };
-    static void printFlags(uint32_t flags);
 
     DrmOutput *m_output = nullptr;
     DrmConnector *m_connector = nullptr;

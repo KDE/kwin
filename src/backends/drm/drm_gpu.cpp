@@ -13,6 +13,7 @@
 #include "abstract_egl_backend.h"
 #include "core/renderloop_p.h"
 #include "core/session.h"
+#include "drm_atomic_commit.h"
 #include "drm_backend.h"
 #include "drm_connector.h"
 #include "drm_crtc.h"
@@ -188,14 +189,14 @@ void DrmGpu::initDrmResources()
         const auto findBestPlane = [crtcId](const QVector<DrmPlane *> &list) {
             // if the plane is already used with this crtc, prefer it
             const auto connected = std::find_if(list.begin(), list.end(), [crtcId](DrmPlane *plane) {
-                return plane->getProp(DrmPlane::PropertyIndex::CrtcId)->pending() == crtcId;
+                return plane->getProp(DrmPlane::PropertyIndex::CrtcId)->current() == crtcId;
             });
             if (connected != list.end()) {
                 return *connected;
             }
             // don't take away planes from other crtcs. The kernel currently rejects such commits
             const auto notconnected = std::find_if(list.begin(), list.end(), [](DrmPlane *plane) {
-                return plane->getProp(DrmPlane::PropertyIndex::CrtcId)->pending() == 0;
+                return plane->getProp(DrmPlane::PropertyIndex::CrtcId)->current() == 0;
             });
             if (notconnected != list.end()) {
                 return *notconnected;
@@ -273,7 +274,6 @@ bool DrmGpu::updateOutputs()
             if (output) {
                 removeOutput(output);
             }
-            conn->disable();
         } else if (!output) {
             qCDebug(KWIN_DRM, "New %soutput on GPU %s: %s", conn->isNonDesktop() ? "non-desktop " : "", qPrintable(m_devNode), qPrintable(conn->modelName()));
             const auto pipeline = conn->pipeline();
@@ -377,7 +377,7 @@ DrmPipeline::Error DrmGpu::checkCrtcAssignment(QVector<DrmConnector *> connector
     DrmCrtc *currentCrtc = nullptr;
     if (m_atomicModeSetting) {
         // try the crtc that this connector is already connected to first
-        uint32_t id = connector->getProp(DrmConnector::PropertyIndex::CrtcId)->pending();
+        const uint32_t id = connector->getProp(DrmConnector::PropertyIndex::CrtcId)->current();
         auto it = std::find_if(crtcs.begin(), crtcs.end(), [id](const auto &crtc) {
             return id == crtc->id();
         });

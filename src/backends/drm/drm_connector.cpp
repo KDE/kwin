@@ -8,6 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "drm_connector.h"
+#include "drm_atomic_commit.h"
 #include "drm_crtc.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
@@ -202,10 +203,10 @@ bool DrmConnector::hasOverscan() const
 
 uint32_t DrmConnector::overscan() const
 {
-    if (const auto &prop = getProp(PropertyIndex::Overscan)) {
-        return prop->pending();
-    } else if (const auto &prop = getProp(PropertyIndex::Underscan_vborder)) {
-        return prop->pending();
+    if (const auto prop = getProp(PropertyIndex::Overscan)) {
+        return prop->current();
+    } else if (const auto prop = getProp(PropertyIndex::Underscan_vborder)) {
+        return prop->current();
     }
     return 0;
 }
@@ -225,7 +226,7 @@ bool DrmConnector::hasRgbRange() const
 Output::RgbRange DrmConnector::rgbRange() const
 {
     const auto &rgb = getProp(PropertyIndex::Broadcast_RGB);
-    return rgb->enumForValue<Output::RgbRange>(rgb->pending());
+    return rgb->enumForValue<Output::RgbRange>(rgb->current());
 }
 
 bool DrmConnector::updateProperties()
@@ -245,9 +246,7 @@ bool DrmConnector::updateProperties()
     auto &underscan = m_props[static_cast<uint32_t>(PropertyIndex::Underscan)];
     auto &vborder = m_props[static_cast<uint32_t>(PropertyIndex::Underscan_vborder)];
     auto &hborder = m_props[static_cast<uint32_t>(PropertyIndex::Underscan_hborder)];
-    if (underscan && vborder && hborder) {
-        underscan->setEnum(vborder->current() > 0 ? UnderscanOptions::On : UnderscanOptions::Off);
-    } else {
+    if (!underscan || !vborder || !hborder) {
         underscan.reset();
         vborder.reset();
         hborder.reset();
@@ -323,9 +322,9 @@ DrmPipeline *DrmConnector::pipeline() const
     return m_pipeline.get();
 }
 
-void DrmConnector::disable()
+void DrmConnector::disable(DrmAtomicCommit *commit)
 {
-    setPending(PropertyIndex::CrtcId, 0);
+    commit->addProperty(getProp(PropertyIndex::CrtcId), 0);
 }
 
 DrmConnector::LinkStatus DrmConnector::linkStatus() const

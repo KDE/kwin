@@ -20,8 +20,6 @@ namespace KWin
 DrmProperty::DrmProperty(DrmObject *obj, drmModePropertyRes *prop, uint64_t val, const QVector<QByteArray> &enumNames)
     : m_propId(prop->prop_id)
     , m_propName(prop->name)
-    , m_pending(val)
-    , m_next(val)
     , m_current(val)
     , m_immutable(prop->flags & DRM_MODE_PROP_IMMUTABLE)
     , m_isBlob(prop->flags & DRM_MODE_PROP_BLOB)
@@ -40,34 +38,12 @@ DrmProperty::DrmProperty(DrmObject *obj, drmModePropertyRes *prop, uint64_t val,
     updateBlob();
 }
 
-void DrmProperty::commit()
-{
-    if (m_immutable || m_current == m_pending) {
-        return;
-    }
-    setCurrent(m_pending);
-}
-
-void DrmProperty::commitPending()
-{
-    if (m_immutable || m_next == m_pending) {
-        return;
-    }
-    m_next = m_pending;
-}
-
-void DrmProperty::rollbackPending()
-{
-    if (m_immutable || m_next == m_pending) {
-        return;
-    }
-    m_pending = m_next;
-}
-
 bool DrmProperty::setPropertyLegacy(uint64_t value)
 {
-    if (drmModeObjectSetProperty(m_obj->gpu()->fd(), m_obj->id(), m_obj->type(), m_propId, value) == 0) {
-        m_current = m_next = m_pending = value;
+    if (m_current == value) {
+        return true;
+    } else if (drmModeObjectSetProperty(m_obj->gpu()->fd(), m_obj->id(), m_obj->type(), m_propId, value) == 0) {
+        m_current = value;
         return true;
     } else {
         return false;
@@ -91,21 +67,6 @@ void DrmProperty::initEnumMap(drmModePropertyRes *prop)
             qCWarning(KWIN_DRM, "%s has unrecognized enum '%s'", qPrintable(m_propName), en->name);
         }
     }
-}
-
-void DrmProperty::setPending(uint64_t value)
-{
-    m_pending = value;
-}
-
-uint64_t DrmProperty::pending() const
-{
-    return m_pending;
-}
-
-bool DrmProperty::needsCommit() const
-{
-    return m_pending != m_current;
 }
 
 void DrmProperty::setCurrent(uint64_t value)
@@ -220,5 +181,10 @@ QString DrmProperty::valueString(uint64_t value) const
         ret.setNum(value);
         return ret;
     }
+}
+
+const DrmObject *DrmProperty::drmObject() const
+{
+    return m_obj;
 }
 }
