@@ -286,7 +286,7 @@ void ApplicationX11::performStartup()
             bool ok = false;
             const quint32 t = timestamp.toULongLong(&ok);
             if (ok) {
-                kwinApp()->setX11Time(t);
+                setX11Time(t);
             }
         });
 
