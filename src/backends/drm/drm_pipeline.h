@@ -19,6 +19,7 @@
 #include "core/colorlut.h"
 #include "core/output.h"
 #include "core/renderloop_p.h"
+#include "drm_blob.h"
 #include "drm_connector.h"
 #include "drm_plane.h"
 
@@ -37,28 +38,13 @@ class DrmGammaRamp
 {
 public:
     DrmGammaRamp(DrmCrtc *crtc, const std::shared_ptr<ColorTransformation> &transformation);
-    ~DrmGammaRamp();
 
     const ColorLUT &lut() const;
-    uint32_t blobId() const;
+    std::shared_ptr<DrmBlob> blob() const;
 
 private:
-    DrmGpu *m_gpu;
     const ColorLUT m_lut;
-    uint32_t m_blobId = 0;
-};
-
-class DrmCTM
-{
-public:
-    DrmCTM(DrmGpu *gpu, const QMatrix3x3 &ctm);
-    ~DrmCTM();
-
-    uint32_t blobId() const;
-
-private:
-    DrmGpu *const m_gpu;
-    uint32_t m_blobId = 0;
+    std::shared_ptr<DrmBlob> m_blob;
 };
 
 class DrmPipeline
@@ -202,7 +188,7 @@ private:
         RenderLoopPrivate::SyncMode syncMode = RenderLoopPrivate::SyncMode::Fixed;
         std::shared_ptr<ColorTransformation> colorTransformation;
         std::shared_ptr<DrmGammaRamp> gamma;
-        std::shared_ptr<DrmCTM> ctm;
+        std::shared_ptr<DrmBlob> ctm;
         DrmConnector::DrmContentType contentType = DrmConnector::DrmContentType::Graphics;
 
         std::shared_ptr<DrmPipelineLayer> layer;

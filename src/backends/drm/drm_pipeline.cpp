@@ -242,7 +242,7 @@ bool DrmPipeline::prepareAtomicPresentation()
 
     m_pending.crtc->setPending(DrmCrtc::PropertyIndex::VrrEnabled, m_pending.syncMode == RenderLoopPrivate::SyncMode::Adaptive || m_pending.syncMode == RenderLoopPrivate::SyncMode::AdaptiveAsync);
     if (const auto gamma = m_pending.crtc->getProp(DrmCrtc::PropertyIndex::Gamma_LUT)) {
-        gamma->setPending(m_pending.gamma ? m_pending.gamma->blobId() : 0);
+        gamma->setPending(m_pending.gamma ? m_pending.gamma->blob()->blobId() : 0);
     } else if (m_pending.gamma) {
         return false;
     }
@@ -306,7 +306,7 @@ void DrmPipeline::prepareAtomicModeset()
     }
 
     m_pending.crtc->setPending(DrmCrtc::PropertyIndex::Active, 1);
-    m_pending.crtc->setPending(DrmCrtc::PropertyIndex::ModeId, m_pending.mode->blobId());
+    m_pending.crtc->setPending(DrmCrtc::PropertyIndex::ModeId, m_pending.mode->blob()->blobId());
 
     m_pending.crtc->primaryPlane()->setPending(DrmPlane::PropertyIndex::CrtcId, m_pending.crtc->id());
     if (const auto rotation = m_pending.crtc->primaryPlane()->getProp(DrmPlane::PropertyIndex::Rotation)) {
@@ -588,8 +588,7 @@ DrmCrtc *DrmPipeline::currentCrtc() const
 }
 
 DrmGammaRamp::DrmGammaRamp(DrmCrtc *crtc, const std::shared_ptr<ColorTransformation> &transformation)
-    : m_gpu(crtc->gpu())
-    , m_lut(transformation, crtc->gammaRampSize())
+    : m_lut(transformation, crtc->gammaRampSize())
 {
     if (crtc->gpu()->atomicModeSetting()) {
         QVector<drm_color_lut> atomicLut(m_lut.size());
@@ -598,27 +597,18 @@ DrmGammaRamp::DrmGammaRamp(DrmCrtc *crtc, const std::shared_ptr<ColorTransformat
             atomicLut[i].green = m_lut.green()[i];
             atomicLut[i].blue = m_lut.blue()[i];
         }
-        if (drmModeCreatePropertyBlob(crtc->gpu()->fd(), atomicLut.data(), sizeof(drm_color_lut) * m_lut.size(), &m_blobId) != 0) {
-            qCWarning(KWIN_DRM) << "Failed to create gamma blob!" << strerror(errno);
-        }
+        m_blob = DrmBlob::create(crtc->gpu(), atomicLut.data(), sizeof(drm_color_lut) * atomicLut.size());
     }
-}
-
-DrmGammaRamp::~DrmGammaRamp()
-{
-    if (m_blobId != 0) {
-        drmModeDestroyPropertyBlob(m_gpu->fd(), m_blobId);
-    }
-}
-
-uint32_t DrmGammaRamp::blobId() const
-{
-    return m_blobId;
 }
 
 const ColorLUT &DrmGammaRamp::lut() const
 {
     return m_lut;
+}
+
+std::shared_ptr<DrmBlob> DrmGammaRamp::blob() const
+{
+    return m_blob;
 }
 
 void DrmPipeline::printFlags(uint32_t flags)
@@ -779,20 +769,6 @@ void DrmPipeline::setGammaRamp(const std::shared_ptr<ColorTransformation> &trans
     m_pending.gamma = std::make_shared<DrmGammaRamp>(m_pending.crtc, transformation);
 }
 
-void DrmPipeline::setCTM(const QMatrix3x3 &ctm)
-{
-    if (ctm.isIdentity()) {
-        m_pending.ctm.reset();
-    } else {
-        m_pending.ctm = std::make_shared<DrmCTM>(gpu(), ctm);
-    }
-}
-
-void DrmPipeline::setContentType(DrmConnector::DrmContentType type)
-{
-    m_pending.contentType = type;
-}
-
 static uint64_t doubleToFixed(double value)
 {
     // ctm values are in S31.32 sign-magnitude format
@@ -803,27 +779,23 @@ static uint64_t doubleToFixed(double value)
     return ret;
 }
 
-DrmCTM::DrmCTM(DrmGpu *gpu, const QMatrix3x3 &ctm)
-    : m_gpu(gpu)
+void DrmPipeline::setCTM(const QMatrix3x3 &ctm)
 {
-    drm_color_ctm blob = {
-        .matrix = {
-            doubleToFixed(ctm(0, 0)), doubleToFixed(ctm(1, 0)), doubleToFixed(ctm(2, 0)),
-            doubleToFixed(ctm(0, 1)), doubleToFixed(ctm(1, 1)), doubleToFixed(ctm(2, 1)),
-            doubleToFixed(ctm(0, 2)), doubleToFixed(ctm(1, 2)), doubleToFixed(ctm(2, 2))},
-    };
-    drmModeCreatePropertyBlob(m_gpu->fd(), &blob, sizeof(drm_color_ctm), &m_blobId);
-}
-
-DrmCTM::~DrmCTM()
-{
-    if (m_blobId) {
-        drmModeDestroyPropertyBlob(m_gpu->fd(), m_blobId);
+    if (ctm.isIdentity()) {
+        m_pending.ctm.reset();
+    } else {
+        drm_color_ctm blob = {
+            .matrix = {
+                doubleToFixed(ctm(0, 0)), doubleToFixed(ctm(1, 0)), doubleToFixed(ctm(2, 0)),
+                doubleToFixed(ctm(0, 1)), doubleToFixed(ctm(1, 1)), doubleToFixed(ctm(2, 1)),
+                doubleToFixed(ctm(0, 2)), doubleToFixed(ctm(1, 2)), doubleToFixed(ctm(2, 2))},
+        };
+        m_pending.ctm = DrmBlob::create(gpu(), &blob, sizeof(blob));
     }
 }
 
-uint32_t DrmCTM::blobId() const
+void DrmPipeline::setContentType(DrmConnector::DrmContentType type)
 {
-    return m_blobId;
+    m_pending.contentType = type;
 }
 }
