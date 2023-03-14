@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-10 02:27+0000\n"
+"POT-Creation-Date: 2023-03-14 02:17+0000\n"
 "PO-Revision-Date: 2023-02-21 14:02+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -49,13 +49,13 @@ msgid "Your emails"
 msgstr ""
 "asm@som.kiev.ua,mokhin@bog.msu.ru,kekcuHa@gmail.com,gammaray@basealt.ru"
 
-#: composite.cpp:636
+#: composite.cpp:624
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 "Подсистема эффектов рабочего стола была перезапущена из-за сброса графики"
 
-#: composite.cpp:863
+#: composite.cpp:851
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -64,7 +64,7 @@ msgstr ""
 "Графические эффекты были отключены другим приложением.<br/>Можно их "
 "возобновить комбинацией клавиш «%1»."
 
-#: composite.cpp:1052
+#: composite.cpp:1040
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -77,12 +77,12 @@ msgstr ""
 "уже был обновлён до стабильной версии,<br>то можно сбросить эту за защиту, "
 "но <b>помните, что это может привести к немедленному сбою.</b></p>"
 
-#: composite.cpp:1059
+#: composite.cpp:1047
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Отсутствуют необходимые расширения X-сервера (XComposite и XDamage)."
 
-#: composite.cpp:1062
+#: composite.cpp:1050
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "Расширение GLX/OpenGL недоступно."
@@ -2814,14 +2814,14 @@ msgstr "Переключиться на один рабочий стол вни�
 msgid "Switch to Desktop %1"
 msgstr "Переключиться на рабочий стол %1"
 
-#: window.cpp:3373
+#: window.cpp:3390
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(не отвечает)"
 
 # BUGME: please proofread this translation, it's full of worms --aspotashev
-#: workspace.cpp:1634
+#: workspace.cpp:1630
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""

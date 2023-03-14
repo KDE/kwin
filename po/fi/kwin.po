@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-10 02:27+0000\n"
+"POT-Creation-Date: 2023-03-14 02:17+0000\n"
 "PO-Revision-Date: 2023-03-06 13:39+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -41,13 +41,13 @@ msgstr ""
 "ilpo@iki.fi, mikko.piippo@helsinki.fi, lliehu@kolumbus.fi, "
 "translator@legisign.org"
 
-#: composite.cpp:636
+#: composite.cpp:624
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 "Työpöytätehosteet käynnistettiin uudelleen, koska grafiikka nollattiin."
 
-#: composite.cpp:863
+#: composite.cpp:851
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -57,7 +57,7 @@ msgstr ""
 "Voit palauttaa ne käyttöön pikanäppäimellä %1."
 
 # En pidä sanan ”backend” suomentamisesta tässä. Koostamistyyppi löytyy työpöytätehosteiden lisäasetuksista, vaikka ”koostamistapa” voisi olla vielä parempi.
-#: composite.cpp:1052
+#: composite.cpp:1040
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -70,13 +70,13 @@ msgstr ""
 "vakaaseen ajuriin,<br>voit poistaa tämän suojauksen, mutta <b>tästä saattaa "
 "seurata välitön kaatuminen!</b></p>"
 
-#: composite.cpp:1059
+#: composite.cpp:1047
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr ""
 "Tarvittavat X-laajennukset (XComposite ja XDamage) eivät ole käytettävissä."
 
-#: composite.cpp:1062
+#: composite.cpp:1050
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL ei ole käytettävissä."
@@ -2806,13 +2806,13 @@ msgstr "Vaihda työpöytää alas päin"
 msgid "Switch to Desktop %1"
 msgstr "Vaihda työpöydälle %1"
 
-#: window.cpp:3373
+#: window.cpp:3390
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Ei vastaa)"
 
-#: workspace.cpp:1634
+#: workspace.cpp:1630
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

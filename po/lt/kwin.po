@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-10 02:27+0000\n"
+"POT-Creation-Date: 2023-03-14 02:17+0000\n"
 "PO-Revision-Date: 2022-12-12 22:06+0200\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -30,12 +30,12 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "rch@richard.eu.org,dgvirtual@akl.lt, <>"
 
-#: composite.cpp:636
+#: composite.cpp:624
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Darbalaukio efektai buvo paleisti iš naujo dėl grafikos atstatymo"
 
-#: composite.cpp:863
+#: composite.cpp:851
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -44,7 +44,7 @@ msgstr ""
 "Darbalaukio efektus pristabdė kita programa.<br/>Galite juos pratęsti "
 "naudodami spartųjį klavišą „%1“."
 
-#: composite.cpp:1052
+#: composite.cpp:1040
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -66,12 +66,12 @@ msgstr ""
 "p><p>Kaip alternatyva, galite naudoti XRender programinę sąsają vietoje "
 "OpenGL.</p>"
 
-#: composite.cpp:1059
+#: composite.cpp:1047
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Privaloma X praplėtimai  (XComposite and XDamage) nerasti."
 
-#: composite.cpp:1062
+#: composite.cpp:1050
 #, fuzzy, kde-format
 #| msgid "GLX/OpenGL and XRender/XFixes are not available."
 msgid "GLX/OpenGL is not available."
@@ -2809,13 +2809,13 @@ msgstr "Perjungti vienu darbalaukiu į apačią"
 msgid "Switch to Desktop %1"
 msgstr "Perjungti į darbalaukį %1"
 
-#: window.cpp:3373
+#: window.cpp:3390
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Neatsako)"
 
-#: workspace.cpp:1634
+#: workspace.cpp:1630
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""
