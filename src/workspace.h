@@ -354,7 +354,7 @@ public:
 
     void removeUnmanaged(Unmanaged *); // Only called from Unmanaged::release()
     void removeDeleted(Window *);
-    void addDeleted(Window *, Window *);
+    void addDeleted(Window *);
 
     bool checkStartupNotification(xcb_window_t w, KStartupInfoId &id, KStartupInfoData &data);
 
@@ -585,7 +585,6 @@ private:
     void fixPositionAfterCrash(xcb_window_t w, const xcb_get_geometry_reply_t *geom);
     void saveOldScreenSizes();
     void addToStack(Window *window);
-    void replaceInStack(Window *original, Window *deleted);
     void removeFromStack(Window *window);
 
     /// This is the right way to create a new X11 window

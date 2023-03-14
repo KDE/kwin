@@ -51,8 +51,6 @@ WindowItem::WindowItem(Window *window, Scene *scene, Item *parent)
 
     connect(window, &Window::stackingOrderChanged, this, &WindowItem::updateStackingOrder);
     updateStackingOrder();
-
-    connect(window, &Window::closed, this, &WindowItem::handleWindowClosed);
 }
 
 WindowItem::~WindowItem()
@@ -140,11 +138,6 @@ void WindowItem::deelevate()
 {
     m_elevation.reset();
     updateStackingOrder();
-}
-
-void WindowItem::handleWindowClosed(Window *deleted)
-{
-    m_window = deleted;
 }
 
 bool WindowItem::computeVisibility() const
@@ -256,7 +249,7 @@ void WindowItem::updateShadowItem()
 
 void WindowItem::updateDecorationItem()
 {
-    if (m_window->isDeleted() || m_window->isZombie()) {
+    if (m_window->isDeleted()) {
         return;
     }
     if (m_window->decoration()) {

@@ -95,8 +95,6 @@ DecorationItem::DecorationItem(KDecoration2::Decoration *decoration, Window *win
 
     connect(window, &Window::frameGeometryChanged,
             this, &DecorationItem::handleFrameGeometryChanged);
-    connect(window, &Window::closed,
-            this, &DecorationItem::handleWindowClosed);
     connect(window, &Window::outputChanged,
             this, &DecorationItem::handleOutputChanged);
 
@@ -163,11 +161,6 @@ void DecorationItem::handleOutputScaleChanged()
 void DecorationItem::handleFrameGeometryChanged()
 {
     setSize(m_window->size().toSize());
-}
-
-void DecorationItem::handleWindowClosed(Window *deleted)
-{
-    m_window = deleted;
 }
 
 DecorationRenderer *DecorationItem::renderer() const

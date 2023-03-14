@@ -9,7 +9,6 @@
 */
 #include "internalwindow.h"
 #include "decorations/decorationbridge.h"
-#include "deleted.h"
 #include "scene/surfaceitem.h"
 #include "scene/windowitem.h"
 #include "workspace.h"
@@ -358,20 +357,21 @@ void InternalWindow::invalidateDecoration()
 
 void InternalWindow::destroyWindow()
 {
-    markAsZombie();
+    m_handle->removeEventFilter(this);
+    m_handle->disconnect(this);
+
+    markAsDeleted();
     if (isInteractiveMoveResize()) {
         leaveInteractiveMoveResize();
         Q_EMIT interactiveMoveResizeFinished();
     }
 
-    Deleted *deleted = Deleted::create(this);
-    Q_EMIT closed(deleted);
+    Q_EMIT closed();
 
     workspace()->removeInternalWindow(this);
     m_handle = nullptr;
 
     unref();
-    deleted->unref();
 }
 
 bool InternalWindow::hasPopupGrab() const

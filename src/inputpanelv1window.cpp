@@ -9,7 +9,6 @@
 
 #include "inputpanelv1window.h"
 #include "core/output.h"
-#include "deleted.h"
 #include "inputmethod.h"
 #include "wayland/output_interface.h"
 #include "wayland/seat_interface.h"
@@ -154,15 +153,16 @@ void KWin::InputPanelV1Window::reposition()
 
 void InputPanelV1Window::destroyWindow()
 {
-    markAsZombie();
+    m_panelSurface->disconnect(this);
+    m_panelSurface->surface()->disconnect(this);
 
-    Deleted *deleted = Deleted::create(this);
-    Q_EMIT closed(deleted);
+    markAsDeleted();
+
+    Q_EMIT closed();
     StackingUpdatesBlocker blocker(workspace());
     waylandServer()->removeWindow(this);
 
     unref();
-    deleted->unref();
 }
 
 NET::WindowType InputPanelV1Window::windowType(bool, int) const
@@ -188,7 +188,7 @@ void InputPanelV1Window::handleMapped()
 void InputPanelV1Window::maybeShow()
 {
     const bool shouldShow = m_mode == Mode::Overlay || (m_mode == Mode::VirtualKeyboard && m_allowed && m_virtualKeyboardShouldBeShown);
-    if (shouldShow && !isZombie() && surface()->isMapped()) {
+    if (shouldShow && !isDeleted() && surface()->isMapped()) {
         markAsMapped();
         reposition();
         showClient();

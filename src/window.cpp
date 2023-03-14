@@ -118,6 +118,9 @@ Window::Window()
 
 Window::~Window()
 {
+    if (m_deleted) {
+        workspace()->removeDeleted(this);
+    }
     if (m_tile) {
         m_tile->removeWindow(this);
     }
@@ -177,65 +180,6 @@ void Window::detectShape(xcb_window_t id)
     if (wasShape != is_shape) {
         Q_EMIT shapedChanged();
     }
-}
-
-// used only by Deleted::copy()
-void Window::copyToDeleted(Window *c)
-{
-    m_internalId = c->internalId();
-    m_bufferGeometry = c->m_bufferGeometry;
-    m_frameGeometry = c->m_frameGeometry;
-    m_clientGeometry = c->m_clientGeometry;
-    m_visual = c->m_visual;
-    bit_depth = c->bit_depth;
-    info = c->info;
-    m_client.reset(c->m_client, false);
-    ready_for_painting = c->ready_for_painting;
-    is_shape = c->is_shape;
-    m_effectWindow = std::move(c->m_effectWindow);
-    if (m_effectWindow != nullptr) {
-        m_effectWindow->setWindow(this);
-    }
-    m_windowItem = std::move(c->m_windowItem);
-    m_shadow = std::move(c->m_shadow);
-    if (m_shadow) {
-        m_shadow->setWindow(this);
-    }
-    resource_name = c->resourceName();
-    resource_class = c->resourceClass();
-    m_clientMachine = c->m_clientMachine;
-    m_clientMachine->setParent(this);
-    m_wmClientLeader = c->wmClientLeader();
-    opaque_region = c->opaqueRegion();
-    m_output = c->m_output;
-    m_skipCloseAnimation = c->m_skipCloseAnimation;
-    m_internalFBO = c->m_internalFBO;
-    m_internalImage = c->m_internalImage;
-    m_opacity = c->m_opacity;
-    m_shapeRegionIsValid = c->m_shapeRegionIsValid;
-    m_shapeRegion = c->m_shapeRegion;
-    m_stackingOrder = c->m_stackingOrder;
-    m_minimized = c->m_minimized;
-    m_modal = c->m_modal;
-    m_keepAbove = c->m_keepAbove;
-    m_keepBelow = c->m_keepBelow;
-    m_active = c->m_active;
-    m_palette = c->m_palette;
-    if (c->m_decoration.decoration) {
-        c->m_decoration.decoration->setParent(this);
-        m_decoration.decoration = c->m_decoration.decoration;
-    }
-    if (c->m_decoration.client) {
-        c->m_decoration.client->setWindow(this);
-        m_decoration.client = c->m_decoration.client;
-    }
-}
-
-// before being deleted, remove references to everything that's now
-// owner by Deleted
-void Window::disownDataPassedToDeleted()
-{
-    info = nullptr;
 }
 
 QRectF Window::visibleGeometry() const
@@ -518,11 +462,6 @@ bool Window::isUnmanaged() const
     return false;
 }
 
-bool Window::isDeleted() const
-{
-    return false;
-}
-
 bool Window::isOnCurrentActivity() const
 {
 #if KWIN_BUILD_ACTIVITIES
@@ -800,7 +739,7 @@ void Window::setIcon(const QIcon &icon)
 
 void Window::setActive(bool act)
 {
-    if (isZombie()) {
+    if (isDeleted()) {
         return;
     }
     if (m_active == act) {
@@ -839,15 +778,16 @@ void Window::doSetActive()
 {
 }
 
-bool Window::isZombie() const
+bool Window::isDeleted() const
 {
-    return m_zombie;
+    return m_deleted;
 }
 
-void Window::markAsZombie()
+void Window::markAsDeleted()
 {
-    Q_ASSERT(!m_zombie);
-    m_zombie = true;
+    Q_ASSERT(!m_deleted);
+    m_deleted = true;
+    workspace()->addDeleted(this);
 }
 
 Layer Window::layer() const
@@ -2294,6 +2234,12 @@ void Window::setupWindowManagementInterface()
     });
 
     m_windowManagementInterface = w;
+}
+
+void Window::destroyWindowManagementInterface()
+{
+    delete m_windowManagementInterface;
+    m_windowManagementInterface = nullptr;
 }
 
 Options::MouseCommand Window::getMouseCommand(Qt::MouseButton button, bool *handled) const

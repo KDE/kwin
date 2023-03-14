@@ -20,7 +20,6 @@
 #include "cursor.h"
 #include "decorations/decoratedclient.h"
 #include "decorations/decorationbridge.h"
-#include "deleted.h"
 #include "effects.h"
 #include "focuschain.h"
 #include "group.h"
@@ -358,16 +357,16 @@ void X11Window::deleteClient(X11Window *c)
  */
 void X11Window::releaseWindow(bool on_shutdown)
 {
+    destroyWindowManagementInterface();
     if (SurfaceItemX11 *item = qobject_cast<SurfaceItemX11 *>(surfaceItem())) {
         item->destroyDamage();
     }
-    markAsZombie();
+    markAsDeleted();
     cleanTabBox();
-    Deleted *del = Deleted::create(this);
     if (isInteractiveMoveResize()) {
         Q_EMIT interactiveMoveResizeFinished();
     }
-    Q_EMIT closed(del);
+    Q_EMIT closed();
     workspace()->rulebook()->discardUsed(this, true); // Remove ForceTemporarily rules
     StackingUpdatesBlocker blocker(workspace());
     if (isInteractiveMoveResize()) {
@@ -415,9 +414,7 @@ void X11Window::releaseWindow(bool on_shutdown)
     m_wrapper.reset();
     m_frame.reset();
     unblockGeometryUpdates(); // Don't use GeometryUpdatesBlocker, it would now set the geometry
-    disownDataPassedToDeleted();
     unref();
-    del->unref();
     ungrabXServer();
 }
 
@@ -427,16 +424,16 @@ void X11Window::releaseWindow(bool on_shutdown)
  */
 void X11Window::destroyWindow()
 {
+    destroyWindowManagementInterface();
     if (SurfaceItemX11 *item = qobject_cast<SurfaceItemX11 *>(surfaceItem())) {
         item->forgetDamage();
     }
-    markAsZombie();
+    markAsDeleted();
     cleanTabBox();
-    Deleted *del = Deleted::create(this);
     if (isInteractiveMoveResize()) {
         Q_EMIT interactiveMoveResizeFinished();
     }
-    Q_EMIT closed(del);
+    Q_EMIT closed();
     workspace()->rulebook()->discardUsed(this, true); // Remove ForceTemporarily rules
     StackingUpdatesBlocker blocker(workspace());
     if (isInteractiveMoveResize()) {
@@ -456,9 +453,7 @@ void X11Window::destroyWindow()
     m_wrapper.reset();
     m_frame.reset();
     unblockGeometryUpdates(); // Don't use GeometryUpdatesBlocker, it would now set the geometry
-    disownDataPassedToDeleted();
     unref();
-    del->unref();
 }
 
 /**
@@ -1223,7 +1218,7 @@ void X11Window::destroyDecoration()
         setDecoration(nullptr);
         maybeDestroyX11DecorationRenderer();
         moveResize(QRectF(grav, clientSizeToFrameSize(clientSize())));
-        if (!isZombie()) {
+        if (!isDeleted()) {
             Q_EMIT geometryShapeChanged(oldgeom);
         }
     }
@@ -1662,7 +1657,7 @@ void X11Window::doSetShade(ShadeMode previousShadeMode)
 
 void X11Window::updateVisibility()
 {
-    if (isZombie()) {
+    if (isDeleted()) {
         return;
     }
     if (hidden) {
@@ -1712,7 +1707,7 @@ void X11Window::updateVisibility()
 void X11Window::exportMappingState(int s)
 {
     Q_ASSERT(m_client != XCB_WINDOW_NONE);
-    Q_ASSERT(!isZombie() || s == XCB_ICCCM_WM_STATE_WITHDRAWN);
+    Q_ASSERT(!isDeleted() || s == XCB_ICCCM_WM_STATE_WITHDRAWN);
     if (s == XCB_ICCCM_WM_STATE_WITHDRAWN) {
         m_client.deleteProperty(atoms->wm_state);
         return;

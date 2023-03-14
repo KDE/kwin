@@ -27,8 +27,6 @@ ShadowItem::ShadowItem(Shadow *shadow, Window *window, Scene *scene, Item *paren
     , m_shadow(shadow)
     , m_textureProvider(Compositor::self()->scene()->createShadowTextureProvider(shadow))
 {
-    connect(window, &Window::closed, this, &ShadowItem::handleWindowClosed);
-
     connect(shadow, &Shadow::offsetChanged, this, &ShadowItem::updateGeometry);
     connect(shadow, &Shadow::rectChanged, this, &ShadowItem::updateGeometry);
     connect(shadow, &Shadow::textureChanged, this, &ShadowItem::handleTextureChanged);
@@ -65,11 +63,6 @@ void ShadowItem::handleTextureChanged()
     scheduleRepaint(rect());
     discardQuads();
     m_textureDirty = true;
-}
-
-void ShadowItem::handleWindowClosed(Window *deleted)
-{
-    m_window = deleted;
 }
 
 static inline void distributeHorizontally(QRectF &leftRect, QRectF &rightRect)

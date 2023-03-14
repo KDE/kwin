@@ -72,6 +72,7 @@ protected:
     virtual XdgSurfaceConfigure *sendRoleConfigure() const = 0;
     virtual void handleRoleCommit();
     virtual void handleRolePrecommit();
+    virtual void handleRoleDestroyed();
 
     XdgSurfaceConfigure *lastAcknowledgedConfigure() const;
     void scheduleConfigure();
@@ -173,6 +174,7 @@ protected:
     XdgSurfaceConfigure *sendRoleConfigure() const override;
     void handleRoleCommit() override;
     void handleRolePrecommit() override;
+    void handleRoleDestroyed() override;
     void doMinimize() override;
     void doInteractiveResizeSync(const QRectF &rect) override;
     void doSetActive() override;
@@ -261,6 +263,7 @@ public:
 protected:
     bool acceptsFocus() const override;
     XdgSurfaceConfigure *sendRoleConfigure() const override;
+    void handleRoleDestroyed() override;
 
 private:
     void handleGrabRequested(KWaylandServer::SeatInterface *seat, quint32 serial);

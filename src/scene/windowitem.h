@@ -59,7 +59,6 @@ protected:
     void updateSurfaceItem(SurfaceItem *surfaceItem);
 
 private Q_SLOTS:
-    void handleWindowClosed(Window *deleted);
     void updateDecorationItem();
     void updateShadowItem();
     void updateSurfacePosition();

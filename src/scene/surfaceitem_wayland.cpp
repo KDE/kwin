@@ -207,7 +207,6 @@ SurfaceItemXwayland::SurfaceItemXwayland(Window *window, Scene *scene, Item *par
     , m_window(window)
 {
     connect(window, &Window::geometryShapeChanged, this, &SurfaceItemXwayland::discardQuads);
-    connect(window, &Window::closed, this, &SurfaceItemXwayland::handleWindowClosed);
 }
 
 QVector<QRectF> SurfaceItemXwayland::shape() const
@@ -220,11 +219,6 @@ QVector<QRectF> SurfaceItemXwayland::shape() const
         shapePart = shapePart.intersected(clipRect);
     }
     return shape;
-}
-
-void SurfaceItemXwayland::handleWindowClosed(Window *deleted)
-{
-    m_window = deleted;
 }
 
 } // namespace KWin

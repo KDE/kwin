@@ -1256,10 +1256,7 @@ bool Unmanaged::windowEvent(xcb_generic_event_t *e)
         // short enough to not cause problems in the close window animations.
         // It's of course still possible that we miss the destroy in which case non-fatal
         // X errors are reported to the event loop and logged by Qt.
-        m_scheduledRelease = true;
-        QTimer::singleShot(1, this, [this]() {
-            release();
-        });
+        m_releaseTimer.start(1);
         break;
     }
     case XCB_CONFIGURE_NOTIFY:

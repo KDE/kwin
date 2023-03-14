@@ -69,7 +69,6 @@ target_sources(kwin PRIVATE
     decorations/decorationpalette.cpp
     decorations/decorations_logging.cpp
     decorations/settings.cpp
-    deleted.cpp
     dmabuftexture.cpp
     dpmsinputeventfilter.cpp
     effectloader.cpp

@@ -74,12 +74,6 @@ public:
     static std::unique_ptr<Shadow> createShadow(Window *window);
 
     Window *window() const;
-    /**
-     * Reparents the shadow to @p window.
-     * Used when a window is deleted.
-     * @param window The new parent
-     */
-    void setWindow(Window *window);
 
     bool hasDecorationShadow() const
     {

@@ -6,7 +6,6 @@
 
 #include "layershellv1window.h"
 #include "core/output.h"
-#include "deleted.h"
 #include "layershellv1integration.h"
 #include "wayland/layershell_v1_interface.h"
 #include "wayland/output_interface.h"
@@ -174,16 +173,17 @@ bool LayerShellV1Window::hasStrut() const
 
 void LayerShellV1Window::destroyWindow()
 {
-    markAsZombie();
+    m_shellSurface->disconnect(this);
+    m_shellSurface->surface()->disconnect(this);
+
+    markAsDeleted();
     cleanTabBox();
-    Deleted *deleted = Deleted::create(this);
-    Q_EMIT closed(deleted);
+    Q_EMIT closed();
     StackingUpdatesBlocker blocker(workspace());
     cleanGrouping();
     waylandServer()->removeWindow(this);
     scheduleRearrange();
     unref();
-    deleted->unref();
 }
 
 void LayerShellV1Window::closeWindow()

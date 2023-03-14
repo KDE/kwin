@@ -9,7 +9,6 @@
 
 #include "unmanaged.h"
 
-#include "deleted.h"
 #include "effects.h"
 #include "scene/surfaceitem_x11.h"
 #include "scene/windowitem.h"
@@ -51,6 +50,11 @@ const NET::WindowTypes SUPPORTED_UNMANAGED_WINDOW_TYPES_MASK = NET::NormalMask
 Unmanaged::Unmanaged()
     : Window()
 {
+    m_releaseTimer.setSingleShot(true);
+    connect(&m_releaseTimer, &QTimer::timeout, this, [this]() {
+        release();
+    });
+
     switch (kwinApp()->operationMode()) {
     case Application::OperationModeXwayland:
         // The wayland surface is associated with the override-redirect window asynchronously.
@@ -146,8 +150,9 @@ void Unmanaged::release(ReleaseReason releaseReason)
             item->destroyDamage();
         }
     }
-    Deleted *del = Deleted::create(this);
-    Q_EMIT closed(del);
+    markAsDeleted();
+    m_releaseTimer.stop();
+    Q_EMIT closed();
     if (releaseReason != ReleaseReason::Destroyed && !findInternalWindow()) { // don't affect our own windows
         if (Xcb::Extensions::self()->isShapeAvailable()) {
             xcb_shape_select_input(kwinApp()->x11Connection(), window(), false);
@@ -155,9 +160,7 @@ void Unmanaged::release(ReleaseReason releaseReason)
         Xcb::selectInput(window(), XCB_EVENT_MASK_NO_EVENT);
     }
     workspace()->removeUnmanaged(this);
-    disownDataPassedToDeleted();
     unref();
-    del->unref();
 }
 
 void Unmanaged::deleteUnmanaged(Unmanaged *c)
@@ -167,7 +170,7 @@ void Unmanaged::deleteUnmanaged(Unmanaged *c)
 
 bool Unmanaged::hasScheduledRelease() const
 {
-    return m_scheduledRelease;
+    return m_releaseTimer.isActive();
 }
 
 int Unmanaged::desktop() const

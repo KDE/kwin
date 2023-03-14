@@ -241,8 +241,9 @@ void StackingOrderTest::testDeletedTransient()
     QTRY_VERIFY(!transient2->isActive());
 
     // Close the top-most transient.
-    connect(transient2, &Window::closed, this, [](Window *deleted) {
-        deleted->ref();
+    connect(transient2, &Window::closed, transient2, &Window::ref);
+    auto cleanup = qScopeGuard([transient2]() {
+        transient2->unref();
     });
 
     QSignalSpy windowClosedSpy(transient2, &Window::closed);
@@ -250,14 +251,10 @@ void StackingOrderTest::testDeletedTransient()
     transient2Surface.reset();
     QVERIFY(windowClosedSpy.wait());
 
-    std::unique_ptr<Window, WindowUnrefDeleter> deletedTransient(
-        windowClosedSpy.first().at(0).value<Window *>());
-    QVERIFY(deletedTransient.get());
-
     // The deleted transient still has to be above its old parent (transient1).
     QTRY_VERIFY(parent->isActive());
     QTRY_VERIFY(!transient1->isActive());
-    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{parent, transient1, deletedTransient.get()}));
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{parent, transient1, transient2}));
 }
 
 static xcb_window_t createGroupWindow(xcb_connection_t *conn,
@@ -644,8 +641,9 @@ void StackingOrderTest::testDeletedGroupTransient()
     QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{leader, member1, member2, transient}));
 
     // Unmap the transient.
-    connect(transient, &X11Window::closed, this, [](Window *deleted) {
-        deleted->ref();
+    connect(transient, &Window::closed, transient, &Window::ref);
+    auto cleanup = qScopeGuard([transient]() {
+        transient->unref();
     });
 
     QSignalSpy windowClosedSpy(transient, &X11Window::closed);
@@ -653,12 +651,8 @@ void StackingOrderTest::testDeletedGroupTransient()
     xcb_flush(conn.get());
     QVERIFY(windowClosedSpy.wait());
 
-    std::unique_ptr<Window, WindowUnrefDeleter> deletedTransient(
-        windowClosedSpy.first().at(0).value<Window *>());
-    QVERIFY(deletedTransient.get());
-
     // The transient has to be above each member of the window group.
-    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{leader, member1, member2, deletedTransient.get()}));
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{leader, member1, member2, transient}));
 }
 
 void StackingOrderTest::testDontKeepAboveNonModalDialogGroupTransients()

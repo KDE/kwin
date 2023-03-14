@@ -13,6 +13,8 @@
 
 #include "window.h"
 
+#include <QTimer>
+
 namespace KWin
 {
 
@@ -74,7 +76,7 @@ private:
     void associate();
     void initialize();
     bool m_outline = false;
-    bool m_scheduledRelease = false;
+    QTimer m_releaseTimer;
 };
 
 } // namespace

@@ -268,8 +268,11 @@ void EffectsHandlerImpl::unloadAllEffects()
 
 void EffectsHandlerImpl::setupWindowConnections(Window *window)
 {
-    connect(window, &Window::closed, this, [this, window](Window *deleted) {
-        slotWindowClosed(window, deleted);
+    connect(window, &Window::closed, this, [this, window]() {
+        window->disconnect(this);
+        if (window->effectWindow()) {
+            Q_EMIT windowClosed(window->effectWindow());
+        }
     });
     connect(window, &Window::maximizedChanged, this, [this, window]() {
         if (EffectWindowImpl *w = window->effectWindow()) {
@@ -472,14 +475,6 @@ void EffectsHandlerImpl::slotWindowShown(Window *window)
 {
     setupWindowConnections(window);
     Q_EMIT windowAdded(window->effectWindow());
-}
-
-void EffectsHandlerImpl::slotWindowClosed(Window *original, Window *d)
-{
-    original->disconnect(this);
-    if (d) {
-        Q_EMIT windowClosed(d->effectWindow());
-    }
 }
 
 void EffectsHandlerImpl::slotClientModalityChanged()
@@ -2019,12 +2014,6 @@ QSizeF EffectWindowImpl::basicUnit() const
         return window->basicUnit();
     }
     return QSize(1, 1);
-}
-
-void EffectWindowImpl::setWindow(Window *w)
-{
-    m_window = w;
-    setParent(w);
 }
 
 void EffectWindowImpl::setWindowItem(WindowItem *item)

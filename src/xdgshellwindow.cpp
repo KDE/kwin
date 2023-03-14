@@ -14,7 +14,6 @@
 #include "activities.h"
 #endif
 #include "decorations/decorationbridge.h"
-#include "deleted.h"
 #include "placement.h"
 #include "pointer_input.h"
 #include "screenedge.h"
@@ -116,7 +115,7 @@ XdgSurfaceConfigure *XdgSurfaceWindow::lastAcknowledgedConfigure() const
 
 void XdgSurfaceWindow::scheduleConfigure()
 {
-    if (!isZombie()) {
+    if (!isDeleted()) {
         m_configureTimer->start();
     }
 }
@@ -285,9 +284,19 @@ QRectF XdgSurfaceWindow::frameRectToBufferRect(const QRectF &rect) const
     return QRectF(QPoint(left, top), surface()->size());
 }
 
+void XdgSurfaceWindow::handleRoleDestroyed()
+{
+    if (m_plasmaShellSurface) {
+        m_plasmaShellSurface->disconnect(this);
+    }
+    m_shellSurface->disconnect(this);
+    m_shellSurface->surface()->disconnect(this);
+}
+
 void XdgSurfaceWindow::destroyWindow()
 {
-    markAsZombie();
+    handleRoleDestroyed();
+    markAsDeleted();
     if (isInteractiveMoveResize()) {
         leaveInteractiveMoveResize();
         Q_EMIT interactiveMoveResizeFinished();
@@ -296,15 +305,13 @@ void XdgSurfaceWindow::destroyWindow()
     qDeleteAll(m_configureEvents);
     m_configureEvents.clear();
     cleanTabBox();
-    Deleted *deleted = Deleted::create(this);
-    Q_EMIT closed(deleted);
+    Q_EMIT closed();
     StackingUpdatesBlocker blocker(workspace());
     workspace()->rulebook()->discardUsed(this, true);
     cleanGrouping();
     waylandServer()->removeWindow(this);
 
     unref();
-    deleted->unref();
 }
 
 void XdgSurfaceWindow::updateClientArea()
@@ -576,6 +583,28 @@ XdgToplevelWindow::XdgToplevelWindow(XdgToplevelInterface *shellSurface)
 
 XdgToplevelWindow::~XdgToplevelWindow()
 {
+}
+
+void XdgToplevelWindow::handleRoleDestroyed()
+{
+    destroyWindowManagementInterface();
+
+    if (m_appMenuInterface) {
+        m_appMenuInterface->disconnect(this);
+    }
+    if (m_paletteInterface) {
+        m_paletteInterface->disconnect(this);
+    }
+    if (m_xdgDecoration) {
+        m_xdgDecoration->disconnect(this);
+    }
+    if (m_serverDecoration) {
+        m_serverDecoration->disconnect(this);
+    }
+
+    m_shellSurface->disconnect(this);
+
+    XdgSurfaceWindow::handleRoleDestroyed();
 }
 
 XdgToplevelInterface *XdgToplevelWindow::shellSurface() const
@@ -1035,7 +1064,7 @@ bool XdgToplevelWindow::acceptsFocus() const
             break;
         }
     }
-    return !isZombie() && readyForPainting();
+    return !isDeleted() && readyForPainting();
 }
 
 Layer XdgToplevelWindow::layerForDock() const
@@ -1728,6 +1757,13 @@ XdgPopupWindow::XdgPopupWindow(XdgPopupInterface *shellSurface)
             this, &XdgPopupWindow::handleRepositionRequested);
     connect(shellSurface, &XdgPopupInterface::aboutToBeDestroyed,
             this, &XdgPopupWindow::destroyWindow);
+}
+
+void XdgPopupWindow::handleRoleDestroyed()
+{
+    m_shellSurface->disconnect(this);
+
+    XdgSurfaceWindow::handleRoleDestroyed();
 }
 
 void XdgPopupWindow::updateReactive()

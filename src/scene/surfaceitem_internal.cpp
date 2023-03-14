@@ -20,8 +20,6 @@ SurfaceItemInternal::SurfaceItemInternal(InternalWindow *window, Scene *scene, I
 {
     connect(window, &Window::bufferGeometryChanged,
             this, &SurfaceItemInternal::handleBufferGeometryChanged);
-    connect(window, &Window::closed,
-            this, &SurfaceItemInternal::handleWindowClosed);
 
     setSize(window->bufferGeometry().size());
 
@@ -52,11 +50,6 @@ void SurfaceItemInternal::handleBufferGeometryChanged(const QRectF &old)
         discardPixmap();
     }
     setSize(m_window->bufferGeometry().size());
-}
-
-void SurfaceItemInternal::handleWindowClosed(Window *deleted)
-{
-    m_window = deleted;
 }
 
 SurfacePixmapInternal::SurfacePixmapInternal(SurfaceItemInternal *item, QObject *parent)

@@ -43,7 +43,6 @@ private Q_SLOTS:
     void testTrimCaption();
     void testFullscreenLayerWithActiveWaylandWindow();
     void testFocusInWithWaylandLastActiveWindow();
-    void testX11WindowId();
     void testCaptionChanges();
     void testCaptionWmName();
     void testCaptionMultipleWindows();
@@ -708,80 +707,6 @@ void X11WindowTest::testFocusInWithWaylandLastActiveWindow()
     // and destroy the window again
     xcb_unmap_window(c.get(), windowId);
     xcb_flush(c.get());
-}
-
-void X11WindowTest::testX11WindowId()
-{
-    QFETCH_GLOBAL(qreal, scale);
-    kwinApp()->setXwaylandScale(scale);
-
-    // create an X11 window
-    Test::XcbConnectionPtr c = Test::createX11Connection();
-    QVERIFY(!xcb_connection_has_error(c.get()));
-    const QRect windowGeometry(0, 0, 100, 200);
-    xcb_window_t windowId = xcb_generate_id(c.get());
-    xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
-                      windowGeometry.x(),
-                      windowGeometry.y(),
-                      windowGeometry.width(),
-                      windowGeometry.height(),
-                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
-    xcb_size_hints_t hints;
-    memset(&hints, 0, sizeof(hints));
-    xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
-    xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
-    xcb_icccm_set_wm_normal_hints(c.get(), windowId, &hints);
-    xcb_map_window(c.get(), windowId);
-    xcb_flush(c.get());
-
-    // we should get a window for it
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowCreatedSpy.wait());
-    X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
-    QVERIFY(window);
-    QCOMPARE(window->window(), windowId);
-    QVERIFY(window->isActive());
-    QCOMPARE(window->window(), windowId);
-    QCOMPARE(window->internalId().isNull(), false);
-    const auto uuid = window->internalId();
-    QUuid deletedUuid;
-    QCOMPARE(deletedUuid.isNull(), true);
-
-    connect(window, &X11Window::closed, this, [&deletedUuid](Window *d) {
-        deletedUuid = d->internalId();
-    });
-
-    NETRootInfo rootInfo(c.get(), NET::WMAllProperties);
-    QCOMPARE(rootInfo.activeWindow(), window->window());
-
-    // activate a wayland window
-    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
-    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
-    auto waylandWindow = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
-    QVERIFY(waylandWindow);
-    QVERIFY(waylandWindow->isActive());
-    xcb_flush(kwinApp()->x11Connection());
-
-    NETRootInfo rootInfo2(c.get(), NET::WMAllProperties);
-    QCOMPARE(rootInfo2.activeWindow(), 0u);
-
-    // back to X11 window
-    shellSurface.reset();
-    surface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(waylandWindow));
-
-    QTRY_VERIFY(window->isActive());
-    NETRootInfo rootInfo3(c.get(), NET::WMAllProperties);
-    QCOMPARE(rootInfo3.activeWindow(), window->window());
-
-    // and destroy the window again
-    xcb_unmap_window(c.get(), windowId);
-    xcb_flush(c.get());
-    QSignalSpy windowClosedSpy(window, &X11Window::closed);
-    QVERIFY(windowClosedSpy.wait());
-
-    QCOMPARE(deletedUuid.isNull(), false);
-    QCOMPARE(deletedUuid, uuid);
 }
 
 void X11WindowTest::testCaptionChanges()

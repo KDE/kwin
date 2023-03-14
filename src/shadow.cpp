@@ -304,11 +304,6 @@ Window *Shadow::window() const
     return m_window;
 }
 
-void Shadow::setWindow(Window *window)
-{
-    m_window = window;
-    connect(m_window, &Window::frameGeometryChanged, this, &Shadow::geometryChanged);
-}
 void Shadow::geometryChanged()
 {
     if (m_cachedSize == m_window->size()) {

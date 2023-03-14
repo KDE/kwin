@@ -634,27 +634,6 @@ void Workspace::addToStack(Window *window)
     }
 }
 
-void Workspace::replaceInStack(Window *original, Window *deleted)
-{
-    const int unconstraintedIndex = unconstrained_stacking_order.indexOf(original);
-    if (unconstraintedIndex != -1) {
-        unconstrained_stacking_order.replace(unconstraintedIndex, deleted);
-    }
-
-    const int index = stacking_order.indexOf(original);
-    if (index != -1) {
-        stacking_order.replace(index, deleted);
-    }
-
-    for (Constraint *constraint : std::as_const(m_constraints)) {
-        if (constraint->below == original) {
-            constraint->below = deleted;
-        } else if (constraint->above == original) {
-            constraint->above = deleted;
-        }
-    }
-}
-
 void Workspace::removeFromStack(Window *window)
 {
     unconstrained_stacking_order.removeAll(window);
@@ -782,11 +761,10 @@ void Workspace::removeUnmanaged(Unmanaged *window)
     Q_EMIT windowRemoved(window);
 }
 
-void Workspace::addDeleted(Window *c, Window *orig)
+void Workspace::addDeleted(Window *c)
 {
     Q_ASSERT(!deleted.contains(c));
     deleted.append(c);
-    replaceInStack(orig, c);
 }
 
 void Workspace::removeDeleted(Window *c)
@@ -1436,6 +1414,12 @@ void Workspace::slotDesktopRemoved(VirtualDesktop *desktop)
         } else {
             const uint desktopId = std::min(desktop->x11DesktopNumber(), VirtualDesktopManager::self()->count());
             sendWindowToDesktops(*it, {VirtualDesktopManager::self()->desktopForX11Id(desktopId)}, true);
+        }
+    }
+
+    for (auto it = deleted.constBegin(); it != deleted.constEnd(); ++it) {
+        if ((*it)->desktops().contains(desktop)) {
+            (*it)->leaveDesktop(desktop);
         }
     }
 

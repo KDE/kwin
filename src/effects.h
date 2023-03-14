@@ -267,7 +267,6 @@ public Q_SLOTS:
 
 protected Q_SLOTS:
     void slotWindowShown(KWin::Window *);
-    void slotWindowClosed(KWin::Window *original, KWin::Window *d);
     void slotOpacityChanged(KWin::Window *window, qreal oldOpacity);
     void slotClientModalityChanged();
     void slotWindowDamaged(KWin::Window *window);
@@ -468,7 +467,6 @@ public:
     const Window *window() const;
     Window *window();
 
-    void setWindow(Window *w); // internal
     void setWindowItem(WindowItem *item); // internal
     WindowItem *windowItem() const; // internal
 
