@@ -2398,10 +2398,7 @@ public:
             seat->notifyPointerMotion(pos);
             seat->notifyPointerFrame();
 
-            const auto eventPos = event->globalPos();
-            // TODO: use InputDeviceHandler::at() here and check isClient()?
-            Window *t = input()->findManagedToplevel(eventPos);
-            const auto dragTarget = static_cast<Window *>(t && t->isClient() ? t : nullptr);
+            Window *dragTarget = pickDragTarget(pos);
             if (dragTarget) {
                 if (dragTarget != m_dragTarget) {
                     workspace()->takeActivity(dragTarget, Workspace::ActivityFlag::ActivityFocus);
@@ -2416,7 +2413,7 @@ public:
             m_dragTarget = dragTarget;
 
             if (auto *xwl = kwinApp()->xwayland()) {
-                const auto ret = xwl->dragMoveFilter(t, eventPos);
+                const auto ret = xwl->dragMoveFilter(dragTarget, event->globalPos());
                 if (ret == Xwl::DragEventReply::Ignore) {
                     return false;
                 } else if (ret == Xwl::DragEventReply::Take) {
@@ -2424,10 +2421,10 @@ public:
                 }
             }
 
-            if (t) {
+            if (dragTarget) {
                 // TODO: consider decorations
-                if (t->surface() != seat->dragSurface()) {
-                    seat->setDragTarget(dropHandler(t), t->surface(), t->inputTransformation());
+                if (dragTarget->surface() != seat->dragSurface()) {
+                    seat->setDragTarget(dropHandler(dragTarget), dragTarget->surface(), dragTarget->inputTransformation());
                 }
             } else {
                 // no window at that place, if we have a surface we need to reset
@@ -2491,7 +2488,7 @@ public:
         seat->setTimestamp(time);
         seat->notifyTouchMotion(id, pos);
 
-        if (Window *t = input()->findToplevel(pos)) {
+        if (Window *t = pickDragTarget(pos)) {
             // TODO: consider decorations
             if (t->surface() != seat->dragSurface()) {
                 if ((m_dragTarget = static_cast<Window *>(t->isClient() ? t : nullptr))) {
@@ -2551,6 +2548,36 @@ private:
             workspace()->takeActivity(m_dragTarget, Workspace::ActivityFlag::ActivityRaise);
         }
     }
+
+    Window *pickDragTarget(const QPointF &pos) const
+    {
+        const QList<Window *> stacking = workspace()->stackingOrder();
+        if (stacking.isEmpty()) {
+            return nullptr;
+        }
+        auto it = stacking.end();
+        do {
+            --it;
+            Window *window = (*it);
+            if (window->isDeleted()) {
+                continue;
+            }
+            if (!window->isClient()) {
+                continue;
+            }
+            if (!window->isOnCurrentActivity() || !window->isOnCurrentDesktop() || window->isMinimized() || window->isHiddenInternal()) {
+                continue;
+            }
+            if (!window->readyForPainting()) {
+                continue;
+            }
+            if (window->hitTest(pos)) {
+                return window;
+            }
+        } while (it != stacking.begin());
+        return nullptr;
+    }
+
     qint32 m_touchId = -1;
     QPointF m_lastPos = QPointF(-1, -1);
     QPointer<Window> m_dragTarget;
@@ -3159,28 +3186,12 @@ Window *InputRedirection::findToplevel(const QPointF &pos)
         return nullptr;
     }
     const bool isScreenLocked = waylandServer() && waylandServer()->isScreenLocked();
-    // TODO: check whether the unmanaged wants input events at all
     if (!isScreenLocked) {
         // if an effect overrides the cursor we don't have a window to focus
         if (effects && static_cast<EffectsHandlerImpl *>(effects)->isMouseInterception()) {
             return nullptr;
         }
-        const QList<Unmanaged *> &unmanaged = Workspace::self()->unmanagedList();
-        for (Unmanaged *u : unmanaged) {
-            if (u->hitTest(pos)) {
-                return u;
-            }
-        }
     }
-    return findManagedToplevel(pos);
-}
-
-Window *InputRedirection::findManagedToplevel(const QPointF &pos)
-{
-    if (!Workspace::self()) {
-        return nullptr;
-    }
-    const bool isScreenLocked = waylandServer() && waylandServer()->isScreenLocked();
     const QList<Window *> &stacking = Workspace::self()->stackingOrder();
     if (stacking.isEmpty()) {
         return nullptr;

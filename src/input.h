@@ -168,7 +168,6 @@ public:
     void removeIdleInhibitor(Window *inhibitor);
 
     Window *findToplevel(const QPointF &pos);
-    Window *findManagedToplevel(const QPointF &pos);
     GlobalShortcutsManager *shortcuts() const
     {
         return m_shortcuts;
