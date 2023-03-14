@@ -622,13 +622,13 @@ std::unique_ptr<DrmLease> DrmGpu::leaseOutputs(const QVector<DrmOutput *> &outpu
     FileDescriptor fd{drmModeCreateLease(m_fd, objects.constData(), objects.count(), 0, &lesseeId)};
     if (!fd.isValid()) {
         qCWarning(KWIN_DRM) << "Could not create DRM lease!" << strerror(errno);
-        qCWarning(KWIN_DRM, "Tried to lease the following %d resources:", objects.count());
+        qCWarning(KWIN_DRM) << "Tried to lease the following" << objects.count() << "resources:";
         for (const auto &res : std::as_const(objects)) {
             qCWarning(KWIN_DRM) << res;
         }
         return nullptr;
     } else {
-        qCDebug(KWIN_DRM, "Created lease for %d resources:", objects.count());
+        qCDebug(KWIN_DRM) << "Created lease for" << objects.count() << "resources:";
         for (const auto &res : std::as_const(objects)) {
             qCDebug(KWIN_DRM) << res;
         }
