@@ -11,7 +11,7 @@
 #include <QString>
 #include <epoxy/egl.h>
 
-static QString getEglErrorString(EGLint errorCode)
+static inline QString getEglErrorString(EGLint errorCode)
 {
     switch (errorCode) {
     case EGL_SUCCESS:
@@ -49,7 +49,7 @@ static QString getEglErrorString(EGLint errorCode)
     }
 }
 
-static QString getEglErrorString()
+static inline QString getEglErrorString()
 {
     return getEglErrorString(eglGetError());
 }
