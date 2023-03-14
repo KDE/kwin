@@ -396,7 +396,6 @@ int main(int argc, char *argv[])
     QSurfaceFormat::setDefaultFormat(format);
 
     KWin::ApplicationX11 a(argc, argv);
-    a.setupTranslator();
 
     // reset QT_QPA_PLATFORM so we don't propagate it to our children (e.g. apps launched from the overview effect)
     qunsetenv("QT_QPA_PLATFORM");

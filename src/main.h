@@ -124,7 +124,6 @@ public:
     void setOperationMode(OperationMode mode);
     bool shouldUseWaylandForCompositing() const;
 
-    void setupTranslator();
     void setupCommandLine(QCommandLineParser *parser);
     void processCommandLine(QCommandLineParser *parser);
 

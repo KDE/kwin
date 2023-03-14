@@ -43,12 +43,9 @@
 #include <KLocalizedString>
 // Qt
 #include <QCommandLineParser>
-#include <QLibraryInfo>
 #include <QQuickWindow>
-#include <QStandardPaths>
-#include <QTranslator>
-#include <qplatformdefs.h>
 #include <private/qtx11extras_p.h>
+#include <qplatformdefs.h>
 
 #include <cerrno>
 
@@ -208,14 +205,6 @@ void Application::processCommandLine(QCommandLineParser *parser)
     aboutData.processCommandLine(parser);
     setConfigLock(parser->isSet(s_lockOption));
     Application::setCrashCount(parser->value(s_crashesOption).toInt());
-}
-
-void Application::setupTranslator()
-{
-    QTranslator *qtTranslator = new QTranslator(qApp);
-    qtTranslator->load("qt_" + QLocale::system().name(),
-                       QLibraryInfo::location(QLibraryInfo::TranslationsPath));
-    installTranslator(qtTranslator);
 }
 
 void Application::setupMalloc()
