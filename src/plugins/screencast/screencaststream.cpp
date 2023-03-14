@@ -105,7 +105,7 @@ void ScreenCastStream::newStreamParams()
     qCDebug(KWIN_SCREENCAST) << "announcing stream params. with dmabuf:" << m_dmabufParams.has_value();
     uint8_t paramsBuffer[1024];
     spa_pod_builder pod_builder = SPA_POD_BUILDER_INIT(paramsBuffer, sizeof(paramsBuffer));
-    const int buffertypes = m_dmabufParams ? (1 << SPA_DATA_DmaBuf) : (1 << SPA_DATA_MemFd);
+    const int buffertypes = m_dmabufParams ? (1 << SPA_DATA_DmaBuf) | (1 << SPA_DATA_MemFd) : (1 << SPA_DATA_MemFd);
     const int bpp = videoFormat.format == SPA_VIDEO_FORMAT_RGB || videoFormat.format == SPA_VIDEO_FORMAT_BGR ? 3 : 4;
     const int stride = SPA_ROUND_UP_N(m_resolution.width() * bpp, 4);
 
