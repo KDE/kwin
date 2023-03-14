@@ -36,7 +36,6 @@ public:
 private:
     QImage *m_image = nullptr;
     GLFramebuffer *m_framebuffer = nullptr;
-    GLTexture *m_texture = nullptr;
     QMatrix4x4 m_transformation;
 };
 
