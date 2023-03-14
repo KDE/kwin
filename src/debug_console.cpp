@@ -74,11 +74,6 @@ static QString tableRow(const QString &title, const T &argument)
     return QStringLiteral("<tr><td>%1</td><td>%2</td></tr>").arg(title).arg(argument);
 }
 
-static QString timestampRow(uint32_t timestamp)
-{
-    return tableRow(i18n("Timestamp"), timestamp);
-}
-
 static QString timestampRow(std::chrono::microseconds timestamp)
 {
     return tableRow(i18n("Timestamp"), std::chrono::duration_cast<std::chrono::milliseconds>(timestamp).count());
@@ -87,11 +82,6 @@ static QString timestampRow(std::chrono::microseconds timestamp)
 static QString timestampRowUsec(std::chrono::microseconds timestamp)
 {
     return tableRow(i18n("Timestamp (µsec)"), timestamp.count());
-}
-
-static QString timestampRowUsec(uint64_t timestamp)
-{
-    return tableRow(i18n("Timestamp (µsec)"), timestamp);
 }
 
 static QString buttonToString(Qt::MouseButton button)
