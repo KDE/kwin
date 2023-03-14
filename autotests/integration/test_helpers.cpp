@@ -1078,7 +1078,7 @@ bool WaylandOutputDeviceV2Mode::preferred() const
     return m_preferred;
 }
 
-bool WaylandOutputDeviceV2Mode::operator==(const WaylandOutputDeviceV2Mode &other)
+bool WaylandOutputDeviceV2Mode::operator==(const WaylandOutputDeviceV2Mode &other) const
 {
     return m_size == other.m_size && m_refreshRate == other.m_refreshRate && m_preferred == other.m_preferred;
 }
