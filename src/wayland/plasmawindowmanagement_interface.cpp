@@ -25,6 +25,19 @@ namespace KWaylandServer
 static const quint32 s_version = 16;
 static const quint32 s_activationVersion = 1;
 
+// any strings that come from user-defined sources
+// that could exceed the maximum wayland length (i.e xwayland clients)
+// need to be truncated to the maximumWaylandBufferSize
+static QString truncate(const QString &stringIn)
+{
+    const int libwaylandMaxBufferSize = 4096;
+    // Some parts of the buffer is used for metadata, so subtract 100 to be on the safe side.
+    // Also, QString is in utf-16, which means that in the worst case each character will be
+    // three bytes when converted to utf-8 (which is what libwayland uses), so divide by three.
+    const int maxLength = libwaylandMaxBufferSize / 3 - 100;
+    return stringIn.left(maxLength);
+}
+
 class PlasmaWindowManagementInterfacePrivate : public QtWaylandServer::org_kde_plasma_window_management
 {
 public:
@@ -347,13 +360,13 @@ void PlasmaWindowInterfacePrivate::org_kde_plasma_window_bind_resource(Resource 
         }
     }
     if (!m_appId.isEmpty()) {
-        send_app_id_changed(resource->handle, m_appId);
+        send_app_id_changed(resource->handle, truncate(m_appId));
     }
     if (m_pid != 0) {
         send_pid_changed(resource->handle, m_pid);
     }
     if (!m_title.isEmpty()) {
-        send_title_changed(resource->handle, m_title);
+        send_title_changed(resource->handle, truncate(m_title));
     }
     if (!m_appObjectPath.isEmpty() || !m_appServiceName.isEmpty()) {
         send_application_menu(resource->handle, m_appServiceName, m_appObjectPath);
@@ -393,7 +406,7 @@ void PlasmaWindowInterfacePrivate::setAppId(const QString &appId)
     const auto clientResources = resourceMap();
 
     for (auto resource : clientResources) {
-        send_app_id_changed(resource->handle, m_appId);
+        send_app_id_changed(resource->handle, truncate(m_appId));
     }
 }
 
@@ -503,7 +516,7 @@ void PlasmaWindowInterfacePrivate::setTitle(const QString &title)
     const auto clientResources = resourceMap();
 
     for (auto resource : clientResources) {
-        send_title_changed(resource->handle, m_title);
+        send_title_changed(resource->handle, truncate(m_title));
     }
 }
 
