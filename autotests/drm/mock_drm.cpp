@@ -273,12 +273,14 @@ MockFb::~MockFb()
 
 // drm functions
 
-#define GPU(fd, error) auto gpu = getGpu(fd);\
-if (!gpu) {\
-    qWarning("invalid fd %d", fd);\
-    errno = EINVAL;\
-    return error;\
-}
+#define GPU(fd, error)                 \
+    auto gpu = getGpu(fd);             \
+    if (!gpu) {                        \
+        qWarning("invalid fd %d", fd); \
+        errno = EINVAL;                \
+        return error;                  \
+    }                                  \
+    std::scoped_lock lock(gpu->m_mutex);
 
 drmVersionPtr drmGetVersion(int fd)
 {

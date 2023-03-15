@@ -34,6 +34,7 @@ class GammaRamp;
 class DrmConnectorMode;
 class DrmPipelineLayer;
 class DrmOverlayLayer;
+class DrmCommitThread;
 
 class DrmGammaRamp
 {
@@ -133,6 +134,7 @@ public:
         Test,
         TestAllowModeset,
         Commit,
+        CommitUpdateOnly,
         CommitModeset
     };
     Q_ENUM(CommitMode)
@@ -201,6 +203,8 @@ private:
     State m_next;
     // the state that is already committed
     State m_current;
+
+    std::unique_ptr<DrmCommitThread> m_commitThread;
 };
 
 }

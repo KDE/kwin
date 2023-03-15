@@ -4,6 +4,7 @@ target_sources(kwin PRIVATE
     drm_backend.cpp
     drm_blob.cpp
     drm_buffer.cpp
+    drm_commit_thread.cpp
     drm_connector.cpp
     drm_crtc.cpp
     drm_dmabuf_feedback.cpp
