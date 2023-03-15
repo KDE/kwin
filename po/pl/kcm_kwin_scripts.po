@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-18 01:00+0000\n"
+"POT-Creation-Date: 2023-03-15 02:12+0000\n"
 "PO-Revision-Date: 2022-09-23 09:21+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -28,7 +28,7 @@ msgstr "Zaimportuj skrypt KWin"
 msgid "*.kwinscript|KWin scripts (*.kwinscript)"
 msgstr "*.kwinscript|Skrypty KWin (*.kwinscript)"
 
-#: module.cpp:95
+#: module.cpp:68
 #, kde-format
 msgctxt "Placeholder is error message returned from the install service"
 msgid ""
@@ -38,13 +38,13 @@ msgstr ""
 "Nie można zaimportować wybranego skryptu.\n"
 "%1"
 
-#: module.cpp:107
+#: module.cpp:72
 #, kde-format
 msgctxt "Placeholder is name of the script that was imported"
 msgid "The script \"%1\" was successfully imported."
 msgstr "Skrypt \"%1\" został pomyślnie zaimportowany."
 
-#: module.cpp:147
+#: module.cpp:131
 #, kde-format
 msgid "Error when uninstalling KWin Script: %1"
 msgstr "Błąd podczas usuwania skryptu KWin: %1"

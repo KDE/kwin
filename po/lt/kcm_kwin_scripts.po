@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: l 10n\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-18 01:00+0000\n"
+"POT-Creation-Date: 2023-03-15 02:12+0000\n"
 "PO-Revision-Date: 2022-12-12 21:28+0200\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -30,7 +30,7 @@ msgstr "Importuoti KWin scenarijų"
 msgid "*.kwinscript|KWin scripts (*.kwinscript)"
 msgstr "*.kwinscript|KWin scenarijai (*.kwinscript)"
 
-#: module.cpp:95
+#: module.cpp:68
 #, kde-format
 msgctxt "Placeholder is error message returned from the install service"
 msgid ""
@@ -40,13 +40,13 @@ msgstr ""
 "Nepavyksta importuoti pasirinkto scenarijaus.\n"
 "%1"
 
-#: module.cpp:107
+#: module.cpp:72
 #, kde-format
 msgctxt "Placeholder is name of the script that was imported"
 msgid "The script \"%1\" was successfully imported."
 msgstr "Scenarijus \"%1\" buvo sėkmingai importuotas."
 
-#: module.cpp:147
+#: module.cpp:131
 #, kde-format
 msgid "Error when uninstalling KWin Script: %1"
 msgstr "Klaida šalinant KWin scenarijų: %1"
