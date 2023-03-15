@@ -435,17 +435,16 @@ void Workspace::cleanupX11()
     StackingUpdatesBlocker blocker(this);
 
     // Use stacking_order, so that kwin --replace keeps stacking order.
-    const QList<X11Window *> orderedClients = ensureStackingOrder(m_x11Clients);
-    for (X11Window *client : orderedClients) {
-        client->releaseWindow(true);
-        removeFromStack(client);
-    }
-
-    // We need a shadow copy because windows get removed as we go through them.
-    const QList<Unmanaged *> unmanaged = m_unmanaged;
-    for (Unmanaged *overrideRedirect : unmanaged) {
-        overrideRedirect->release(ReleaseReason::KWinShutsDown);
-        removeFromStack(overrideRedirect);
+    const auto stack = stacking_order;
+    for (Window *window : stack) {
+        if (auto x11 = qobject_cast<X11Window *>(window)) {
+            x11->releaseWindow(true);
+        } else if (auto unmanaged = qobject_cast<Unmanaged *>(window)) {
+            unmanaged->release(ReleaseReason::KWinShutsDown);
+        } else {
+            continue;
+        }
+        removeFromStack(window);
     }
 
     manual_overlays.clear();
@@ -763,7 +762,6 @@ void Workspace::addX11Window(X11Window *window)
 void Workspace::addUnmanaged(Unmanaged *window)
 {
     m_windows.append(window);
-    m_unmanaged.append(window);
     addToStack(window);
     updateStackingOrder(true);
     Q_EMIT windowAdded(window);
@@ -786,9 +784,8 @@ void Workspace::removeX11Window(X11Window *window)
 
 void Workspace::removeUnmanaged(Unmanaged *window)
 {
-    Q_ASSERT(m_unmanaged.contains(window));
+    Q_ASSERT(m_windows.contains(window));
     m_windows.removeOne(window);
-    m_unmanaged.removeAll(window);
     removeFromStack(window);
     updateStackingOrder();
     Q_EMIT windowRemoved(window);
@@ -1931,7 +1928,13 @@ X11Window *Workspace::findClient(std::function<bool(const X11Window *)> func) co
 
 Unmanaged *Workspace::findUnmanaged(std::function<bool(const Unmanaged *)> func) const
 {
-    return Window::findInList(m_unmanaged, func);
+    for (Window *window : m_windows) {
+        Unmanaged *unmanaged = qobject_cast<Unmanaged *>(window);
+        if (unmanaged && func(unmanaged)) {
+            return unmanaged;
+        }
+    }
+    return nullptr;
 }
 
 Unmanaged *Workspace::findUnmanaged(xcb_window_t w) const
