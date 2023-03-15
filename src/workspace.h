@@ -257,13 +257,6 @@ public:
     }
 
     /**
-     * @return List of deleted "windows" currently managed by Workspace
-     */
-    const QList<Window *> &deletedList() const
-    {
-        return deleted;
-    }
-    /**
      * @returns List of all windows (either X11 or Wayland) currently managed by Workspace
      */
     const QList<Window *> windows() const
