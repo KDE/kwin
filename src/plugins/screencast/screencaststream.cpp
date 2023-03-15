@@ -165,12 +165,34 @@ void ScreenCastStream::onStreamParamChanged(void *data, uint32_t id, const struc
         uint32_t modifiersCount = SPA_POD_CHOICE_N_VALUES(modifierPod);
         uint64_t *modifiers = (uint64_t *)SPA_POD_CHOICE_VALUES(modifierPod);
         receivedModifiers = QVector<uint64_t>(modifiers, modifiers + modifiersCount);
+        // Remove duplicates
+        std::sort(receivedModifiers.begin(), receivedModifiers.end());
+        receivedModifiers.erase(std::unique(receivedModifiers.begin(), receivedModifiers.end()), receivedModifiers.end());
     }
     if (modifierProperty && (!pw->m_dmabufParams || !receivedModifiers.contains(pw->m_dmabufParams->modifier))) {
         if (modifierProperty->flags & SPA_POD_PROP_FLAG_DONT_FIXATE) {
+            // DRM_MOD_INVALID should be used as a last option. Do not just remove it it's the only
+            // item on the list
+            if (receivedModifiers.count() > 1) {
+                receivedModifiers.removeAll(DRM_FORMAT_MOD_INVALID);
+            }
             pw->m_dmabufParams = kwinApp()->outputBackend()->testCreateDmaBuf(pw->m_resolution, pw->m_drmFormat, receivedModifiers);
         } else {
             pw->m_dmabufParams = kwinApp()->outputBackend()->testCreateDmaBuf(pw->m_resolution, pw->m_drmFormat, {DRM_FORMAT_MOD_INVALID});
+        }
+
+        // In case we fail to use any modifier from the list of offered ones, remove these
+        // from our all future offerings, otherwise there will be no indication that it cannot
+        // be used and clients can go for it over and over
+        if (!pw->m_dmabufParams.has_value()) {
+            for (uint64_t modifier : receivedModifiers) {
+                pw->m_modifiers.removeAll(modifier);
+            }
+        // Also in case DRM_FORMAT_MOD_INVALID was used and didn't fail, we still need to
+        // set it as our modifier, otherwise it would be set to default value (0) which is
+        // also a valid modifier, but not the one we want to actually use
+        } else if (receivedModifiers.count() == 1 && receivedModifiers.constFirst() == DRM_FORMAT_MOD_INVALID) {
+            pw->m_dmabufParams->modifier = DRM_FORMAT_MOD_INVALID;
         }
 
         qCDebug(KWIN_SCREENCAST) << "Stream dmabuf modifiers received, offering our best suited modifier" << pw->m_dmabufParams.has_value();
@@ -356,10 +378,12 @@ bool ScreenCastStream::createStream()
 
     if (itModifiers == supported.constEnd()) {
         m_drmFormat = m_source->drmFormat();
-        m_modifiers = {};
+        m_modifiers = {DRM_FORMAT_MOD_INVALID};
     } else {
         m_drmFormat = itModifiers.key();
         m_modifiers = *itModifiers;
+        // Also support modifier-less DmaBufs
+        m_modifiers += DRM_FORMAT_MOD_INVALID;
     }
     m_hasDmaBuf = kwinApp()->outputBackend()->testCreateDmaBuf(m_resolution, m_drmFormat, {DRM_FORMAT_MOD_INVALID}).has_value();
 
