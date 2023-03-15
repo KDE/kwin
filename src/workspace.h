@@ -142,7 +142,6 @@ public:
      * @return KWin::Unmanaged* Found Unmanaged or @c null if there is no Unmanaged with given Id.
      */
     Unmanaged *findUnmanaged(xcb_window_t w) const;
-    void forEachUnmanaged(std::function<void(Unmanaged *)> func);
 
     Window *findWindow(const QUuid &internalId) const;
     Window *findWindow(std::function<bool(const Window *)> func) const;
@@ -247,13 +246,6 @@ public:
     const QList<X11Window *> &clientList() const
     {
         return m_x11Clients;
-    }
-    /**
-     * @return List of unmanaged "windows" currently registered in Workspace
-     */
-    const QList<Unmanaged *> &unmanagedList() const
-    {
-        return m_unmanaged;
     }
 
     /**
@@ -671,7 +663,6 @@ private:
 
     QList<X11Window *> m_x11Clients;
     QList<Window *> m_windows;
-    QList<Unmanaged *> m_unmanaged;
     QList<Window *> deleted;
     QList<InternalWindow *> m_internalWindows;
 
@@ -865,11 +856,6 @@ inline QPointF Workspace::focusMousePosition() const
 inline void Workspace::forEachClient(std::function<void(X11Window *)> func)
 {
     std::for_each(m_x11Clients.constBegin(), m_x11Clients.constEnd(), func);
-}
-
-inline void Workspace::forEachUnmanaged(std::function<void(Unmanaged *)> func)
-{
-    std::for_each(m_unmanaged.constBegin(), m_unmanaged.constEnd(), func);
 }
 
 inline Workspace *workspace()
