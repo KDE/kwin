@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-15 02:12+0000\n"
+"POT-Creation-Date: 2023-03-16 02:20+0000\n"
 "PO-Revision-Date: 2023-03-04 13:46+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -28,12 +28,12 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "Temuri.doghonadze@gmail.com"
 
-#: composite.cpp:624
+#: composite.cpp:612
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "სამუშაო მაგიდის ეფექტები დარესტარტდა გრაფიკის გადატვირთვის გამო"
 
-#: composite.cpp:851
+#: composite.cpp:839
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -42,7 +42,7 @@ msgstr ""
 "სამუშაო მაგიდის ეფექტები სხვა აპლიკაციამ აიღო თავის თავზე.<br/>შეგიძლიათ "
 "გააგრძელოთ '%1'-ის მალსახმობის გამოყენება."
 
-#: composite.cpp:1040
+#: composite.cpp:1028
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -55,12 +55,12 @@ msgstr ""
 "რომ დრაივერი უკვე განაახლეთ, ეს დაცვა <b>შეგიძლიათ გამორთოთ, მაგრამ "
 "გაითვალისწინეთ, რომ ის შეიძლება ავარიულად დასრულდეს!</b></p>"
 
-#: composite.cpp:1047
+#: composite.cpp:1035
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "X-ის აუცილებელი გაფართოებები (XComposite და XDamage) აღმოჩენილი არაა."
 
-#: composite.cpp:1050
+#: composite.cpp:1038
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL ხელმიუწვდომელია."
@@ -1171,7 +1171,7 @@ msgstr "ტაბლეტი გადატანილია %1-ზე"
 msgid "Tablets switched outputs"
 msgstr "ტაბლეტებმა გამოტანები გადართეს"
 
-#: input.cpp:3065
+#: input.cpp:3092
 #, kde-format
 msgid "Touchpad"
 msgstr "თაჩპედი"
@@ -1506,53 +1506,53 @@ msgid "appname"
 msgstr "სახელი"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:97
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:150
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:153
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "desktop"
 msgstr "სამუშაო მაგიდა"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:255
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:264
 #, kde-format
 msgid "Switch to desktop %1"
 msgstr "სამუშაო მაგიდის გადართვა %1-ზე"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:296
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:305
 #, kde-format
 msgid "Close running window on %1"
 msgstr "გაშვებულ ფანჯრის დახურვა %1-ზე"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:299
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:308
 #, kde-format
 msgid "(Un)minimize running window on %1"
 msgstr "%1-ზე გაშვებული ფანჯრის ჩაკეცვა/აღდგენა"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:302
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:311
 #, kde-format
 msgid "Maximize/restore running window on %1"
 msgstr "%1-ზე გაშვებული ფანჯრის მთელ ეკრანზე გადიდება/აღდგენა"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:305
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:314
 #, kde-format
 msgid "Toggle fullscreen for running window on %1"
 msgstr "%1-ზე გაშვებული ფანჯრის მთელ ეკრანზე გაშვების გადართვა"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:308
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:317
 #, kde-format
 msgid "(Un)shade running window on %1"
 msgstr "%1-ზე გაშვებული ფანჯრის დაჩრდილვის გადართვა"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:311
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:320
 #, kde-format
 msgid "Toggle keep above for running window on %1"
 msgstr "%1-ზე გაშვებული ფანჯრის ყველაზე ზემოთ ქონის გადართვა"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:314
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:323
 #, kde-format
 msgid "Toggle keep below running window on %1"
 msgstr "%1-ზე გაშვებული ფანჯრის ყველაზე ქვემოთ ქონის გადართვა"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:318
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:327
 #, kde-format
 msgid "Activate running window on %1"
 msgstr "გაშვებული ფანჯრის გააქტიურება %1-ზე"
@@ -2779,7 +2779,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(არ პასუხობს)"
 
-#: workspace.cpp:1630
+#: workspace.cpp:1632
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-15 02:12+0000\n"
+"POT-Creation-Date: 2023-03-16 02:20+0000\n"
 "PO-Revision-Date: 2023-03-06 13:39+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -41,13 +41,13 @@ msgstr ""
 "ilpo@iki.fi, mikko.piippo@helsinki.fi, lliehu@kolumbus.fi, "
 "translator@legisign.org"
 
-#: composite.cpp:624
+#: composite.cpp:612
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 "Työpöytätehosteet käynnistettiin uudelleen, koska grafiikka nollattiin."
 
-#: composite.cpp:851
+#: composite.cpp:839
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -57,7 +57,7 @@ msgstr ""
 "Voit palauttaa ne käyttöön pikanäppäimellä %1."
 
 # En pidä sanan ”backend” suomentamisesta tässä. Koostamistyyppi löytyy työpöytätehosteiden lisäasetuksista, vaikka ”koostamistapa” voisi olla vielä parempi.
-#: composite.cpp:1040
+#: composite.cpp:1028
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -70,13 +70,13 @@ msgstr ""
 "vakaaseen ajuriin,<br>voit poistaa tämän suojauksen, mutta <b>tästä saattaa "
 "seurata välitön kaatuminen!</b></p>"
 
-#: composite.cpp:1047
+#: composite.cpp:1035
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr ""
 "Tarvittavat X-laajennukset (XComposite ja XDamage) eivät ole käytettävissä."
 
-#: composite.cpp:1050
+#: composite.cpp:1038
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL ei ole käytettävissä."
@@ -1194,7 +1194,7 @@ msgid "Tablets switched outputs"
 msgstr ""
 
 # ?!?!
-#: input.cpp:3065
+#: input.cpp:3092
 #, kde-format
 msgid "Touchpad"
 msgstr "Kosketuslevy"
@@ -1530,53 +1530,53 @@ msgid "appname"
 msgstr "sovnimi"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:97
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:150
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:153
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "desktop"
 msgstr "työpöytä"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:255
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:264
 #, kde-format
 msgid "Switch to desktop %1"
 msgstr "Vaihda työpöydälle %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:296
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:305
 #, kde-format
 msgid "Close running window on %1"
 msgstr "Sulje käynnissä oleva ikkuna (%1)"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:299
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:308
 #, kde-format
 msgid "(Un)minimize running window on %1"
 msgstr "Pienennä tai palauta käynnissä oleva ikkuna (%1)"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:302
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:311
 #, kde-format
 msgid "Maximize/restore running window on %1"
 msgstr "Suurenna tai palauta käynnissä oleva ikkuna (%1)"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:305
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:314
 #, kde-format
 msgid "Toggle fullscreen for running window on %1"
 msgstr "Vaihda käynnissä olevan ikkunan koko näytön tilaa (%1)"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:308
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:317
 #, kde-format
 msgid "(Un)shade running window on %1"
 msgstr "Rullaa käynnissä oleva ikkuna auki tai kiinni (%1)"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:311
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:320
 #, kde-format
 msgid "Toggle keep above for running window on %1"
 msgstr "Vaihda käynnissä olevan ikkunan pidä ylinnä -tilaa (%1)"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:314
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:323
 #, kde-format
 msgid "Toggle keep below running window on %1"
 msgstr "Vaihda käynnissä olevan ikkunan pidä alinna -tilaa (%1)"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:318
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:327
 #, kde-format
 msgid "Activate running window on %1"
 msgstr "Aktivoi käynnissä oleva ikkuna (%1)"
@@ -2812,7 +2812,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Ei vastaa)"
 
-#: workspace.cpp:1630
+#: workspace.cpp:1632
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

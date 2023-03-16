@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-15 02:12+0000\n"
+"POT-Creation-Date: 2023-03-16 02:20+0000\n"
 "PO-Revision-Date: 2023-02-24 12:43\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -27,19 +27,19 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "kde-china@kde.org"
 
-#: composite.cpp:624
+#: composite.cpp:612
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "由于显卡重置，桌面效果已重启。"
 
-#: composite.cpp:851
+#: composite.cpp:839
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
 "resume using the '%1' shortcut."
 msgstr "桌面特效已被某个程序暂停。<br/>按“%1”快捷键可以恢复特效。"
 
-#: composite.cpp:1040
+#: composite.cpp:1028
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -52,12 +52,12 @@ msgstr ""
 "显示驱动程序，<br>您可以重置此保护措施，<b>但不排除这会导致 KWin 立即崩溃！</"
 "b></p>"
 
-#: composite.cpp:1047
+#: composite.cpp:1035
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "需要的 X 扩展功能(XComposite and XDamage)不可用。"
 
-#: composite.cpp:1050
+#: composite.cpp:1038
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL 不可用。"
@@ -1167,7 +1167,7 @@ msgstr "数位板已经移动到 %1"
 msgid "Tablets switched outputs"
 msgstr "数位板已切换输出设备"
 
-#: input.cpp:3065
+#: input.cpp:3092
 #, kde-format
 msgid "Touchpad"
 msgstr "触摸板"
@@ -1493,53 +1493,53 @@ msgid "appname"
 msgstr "应用程序名称"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:97
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:150
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:153
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "desktop"
 msgstr "桌面"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:255
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:264
 #, kde-format
 msgid "Switch to desktop %1"
 msgstr "切换到桌面 %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:296
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:305
 #, kde-format
 msgid "Close running window on %1"
 msgstr "关闭运行于 %1 的窗口"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:299
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:308
 #, kde-format
 msgid "(Un)minimize running window on %1"
 msgstr "最小化/恢复运行于 %1 的窗口"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:302
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:311
 #, kde-format
 msgid "Maximize/restore running window on %1"
 msgstr "最大化/恢复运行于 %1 的窗口"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:305
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:314
 #, kde-format
 msgid "Toggle fullscreen for running window on %1"
 msgstr "对运行于 %1 的窗口切换全屏"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:308
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:317
 #, kde-format
 msgid "(Un)shade running window on %1"
 msgstr "折叠/展开位于 %1 的窗口"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:311
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:320
 #, kde-format
 msgid "Toggle keep above for running window on %1"
 msgstr "对运行于 %1 的窗口切换置于顶端模式"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:314
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:323
 #, kde-format
 msgid "Toggle keep below running window on %1"
 msgstr "对运行于 %1 的窗口切换置于底端模式"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:318
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:327
 #, kde-format
 msgid "Activate running window on %1"
 msgstr "激活运行于 %1 的窗口"
@@ -2763,7 +2763,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(未响应)"
 
-#: workspace.cpp:1630
+#: workspace.cpp:1632
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""

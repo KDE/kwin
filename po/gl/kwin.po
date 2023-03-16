@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-15 02:12+0000\n"
+"POT-Creation-Date: 2023-03-16 02:20+0000\n"
 "PO-Revision-Date: 2020-01-11 11:32+0100\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
@@ -42,12 +42,12 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "xabigf@gmx.net, mvillarino@users.sourceforge.net"
 
-#: composite.cpp:624
+#: composite.cpp:612
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Os efectos do escritorio reiniciáronse debido a un reinicio gráfico"
 
-#: composite.cpp:851
+#: composite.cpp:839
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -56,7 +56,7 @@ msgstr ""
 "Outra aplicación suspendeu os efectos do escritorio.<br/>Pode continuar "
 "empregando o atallo «%1»."
 
-#: composite.cpp:1040
+#: composite.cpp:1028
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -78,14 +78,14 @@ msgstr ""
 "inmediatamente.</b></p><p>Como alternativa pode usar no canto a "
 "infraestrutura XRender.</p>"
 
-#: composite.cpp:1047
+#: composite.cpp:1035
 #, fuzzy, kde-format
 #| msgid "Required X extensions (XComposite and XDamage) are not available."
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr ""
 "Non están dispoñíbeis as extensións das X requiridas (XComposite e XDamage)."
 
-#: composite.cpp:1050
+#: composite.cpp:1038
 #, fuzzy, kde-format
 #| msgid "GLX/OpenGL and XRender/XFixes are not available."
 msgid "GLX/OpenGL is not available."
@@ -1232,7 +1232,7 @@ msgstr "Modo de tableta"
 msgid "Tablets switched outputs"
 msgstr ""
 
-#: input.cpp:3065
+#: input.cpp:3092
 #, fuzzy, kde-format
 #| msgctxt "A touch up event"
 #| msgid "Touch Up"
@@ -1580,55 +1580,55 @@ msgid "appname"
 msgstr "nome"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:97
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:150
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:153
 #, fuzzy, kde-format
 #| msgid "&Desktops"
 msgctxt "Note this is a KRunner keyword"
 msgid "desktop"
 msgstr "&Escritorios"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:255
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:264
 #, fuzzy, kde-format
 #| msgid "Switch to Desktop %1"
 msgid "Switch to desktop %1"
 msgstr "Ir ao escritorio %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:296
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:305
 #, kde-format
 msgid "Close running window on %1"
 msgstr ""
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:299
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:308
 #, kde-format
 msgid "(Un)minimize running window on %1"
 msgstr ""
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:302
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:311
 #, kde-format
 msgid "Maximize/restore running window on %1"
 msgstr ""
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:305
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:314
 #, kde-format
 msgid "Toggle fullscreen for running window on %1"
 msgstr ""
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:308
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:317
 #, kde-format
 msgid "(Un)shade running window on %1"
 msgstr ""
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:311
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:320
 #, kde-format
 msgid "Toggle keep above for running window on %1"
 msgstr ""
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:314
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:323
 #, kde-format
 msgid "Toggle keep below running window on %1"
 msgstr ""
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:318
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:327
 #, fuzzy, kde-format
 #| msgid "Activate Window (%1)"
 msgid "Activate running window on %1"
@@ -2917,7 +2917,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(non responde)"
 
-#: workspace.cpp:1630
+#: workspace.cpp:1632
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""

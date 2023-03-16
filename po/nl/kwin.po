@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-15 02:12+0000\n"
+"POT-Creation-Date: 2023-03-16 02:20+0000\n"
 "PO-Revision-Date: 2023-03-05 14:34+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -41,12 +41,12 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "rinsedevries@kde.nl,,wilbertberendsen@kde.nl,freekdekruijf@kde.nl"
 
-#: composite.cpp:624
+#: composite.cpp:612
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Bureaubladeffecten zijn opnieuw gestart vanwege een grafische reset"
 
-#: composite.cpp:851
+#: composite.cpp:839
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -55,7 +55,7 @@ msgstr ""
 "Bureaublad-effecten zijn onderbroken door een andere applicatie.<br/>U kunt "
 "het hervatten met de sneltoets '%1'."
 
-#: composite.cpp:1040
+#: composite.cpp:1028
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -70,12 +70,12 @@ msgstr ""
 "maar <b>wees er op bedacht dat dit kan resulteren in een onmiddellijke crash!"
 "</b></p>"
 
-#: composite.cpp:1047
+#: composite.cpp:1035
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "De vereiste X-extensies (XComposite en XDamage) zijn niet beschikbaar."
 
-#: composite.cpp:1050
+#: composite.cpp:1038
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL is niet beschikbaar."
@@ -1187,7 +1187,7 @@ msgstr "Tablet verplaatst naar %1"
 msgid "Tablets switched outputs"
 msgstr "Tabletten schakelden uitvoer om"
 
-#: input.cpp:3065
+#: input.cpp:3092
 #, kde-format
 msgid "Touchpad"
 msgstr "Touchpad"
@@ -1529,53 +1529,53 @@ msgid "appname"
 msgstr "appnaam"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:97
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:150
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:153
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "desktop"
 msgstr "bureaublad"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:255
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:264
 #, kde-format
 msgid "Switch to desktop %1"
 msgstr "Omschakelen naar bureaublad %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:296
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:305
 #, kde-format
 msgid "Close running window on %1"
 msgstr "Het actieve venster op %1 sluiten"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:299
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:308
 #, kde-format
 msgid "(Un)minimize running window on %1"
 msgstr "(Max/min)imaliseer het actieve venster op %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:302
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:311
 #, kde-format
 msgid "Maximize/restore running window on %1"
 msgstr "Maximaliseer/herstel het actieve venster op %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:305
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:314
 #, kde-format
 msgid "Toggle fullscreen for running window on %1"
 msgstr "Schakel volledig scherm om voor het actieve venster op %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:308
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:317
 #, kde-format
 msgid "(Un)shade running window on %1"
 msgstr "Ontrol of rol het actieve venster op op %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:311
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:320
 #, kde-format
 msgid "Toggle keep above for running window on %1"
 msgstr "Altijd op voorgrond omschakelen voor het actieve venster op %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:314
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:323
 #, kde-format
 msgid "Toggle keep below running window on %1"
 msgstr "Altijd op achtergrond omschakelen voor het actieve venster op %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:318
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:327
 #, kde-format
 msgid "Activate running window on %1"
 msgstr "Het actieve venster op %1 activeren"
@@ -2802,7 +2802,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Reageert niet)"
 
-#: workspace.cpp:1630
+#: workspace.cpp:1632
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
