@@ -148,13 +148,11 @@ void ApplicationWayland::performStartup()
     WaylandCompositor::create();
 
     connect(Compositor::self(), &Compositor::sceneCreated, outputBackend(), &OutputBackend::sceneInitialized);
-    connect(Compositor::self(), &Compositor::sceneCreated, this, &ApplicationWayland::continueStartupWithScene);
+    connect(Compositor::self(), &Compositor::sceneCreated, this, &ApplicationWayland::continueStartupWithScene, Qt::SingleShotConnection);
 }
 
 void ApplicationWayland::continueStartupWithScene()
 {
-    disconnect(Compositor::self(), &Compositor::sceneCreated, this, &ApplicationWayland::continueStartupWithScene);
-
     // Note that we start accepting client connections after creating the Workspace.
     createWorkspace();
     createColorManager();

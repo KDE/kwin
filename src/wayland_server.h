@@ -247,7 +247,6 @@ Q_SIGNALS:
 
 private:
     int createScreenLockerConnection();
-    void windowShown(Window *t);
     void initScreenLocker();
     void registerXdgGenericWindow(Window *window);
     void registerXdgToplevelWindow(XdgToplevelWindow *window);

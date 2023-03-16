@@ -403,16 +403,15 @@ void XdgSurfaceWindow::installPlasmaShellSurface(PlasmaShellSurfaceInterface *sh
     auto updatePosition = [this, shellSurface] {
         move(shellSurface->position());
     };
-    auto moveUnderCursor = [this] {
+    auto showUnderCursor = [this] {
         // Wait for the first commit
-        auto connection = new QMetaObject::Connection;
-        *connection = connect(this, &Window::windowShown,  [this, connection] () {
-            disconnect(*connection);
+        auto moveUnderCursor = [this] {
             if (input()->hasPointer()) {
                 move(input()->globalPointer());
                 keepInArea(workspace()->clientArea(PlacementArea, this));
             }
-        });
+        };
+        connect(this, &Window::windowShown, this, moveUnderCursor, Qt::SingleShotConnection);
     };
     auto updateRole = [this, shellSurface] {
         NET::WindowType type = NET::Unknown;
@@ -466,7 +465,7 @@ void XdgSurfaceWindow::installPlasmaShellSurface(PlasmaShellSurfaceInterface *sh
         workspace()->updateClientArea();
     };
     connect(shellSurface, &PlasmaShellSurfaceInterface::positionChanged, this, updatePosition);
-    connect(shellSurface, &PlasmaShellSurfaceInterface::openUnderCursorRequested, this, moveUnderCursor);
+    connect(shellSurface, &PlasmaShellSurfaceInterface::openUnderCursorRequested, this, showUnderCursor);
     connect(shellSurface, &PlasmaShellSurfaceInterface::roleChanged, this, updateRole);
     connect(shellSurface, &PlasmaShellSurfaceInterface::panelBehaviorChanged, this, [this] {
         updateShowOnScreenEdge();
@@ -493,7 +492,7 @@ void XdgSurfaceWindow::installPlasmaShellSurface(PlasmaShellSurfaceInterface *sh
         updatePosition();
     }
     if (shellSurface->wantsOpenUnderCursor()) {
-        moveUnderCursor();
+        showUnderCursor();
     }
     updateRole();
     updateShowOnScreenEdge();

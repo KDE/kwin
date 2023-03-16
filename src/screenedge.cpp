@@ -487,12 +487,10 @@ void Edge::switchDesktop(const QPoint &cursorPos)
     if (vds->currentDesktop() != oldDesktop) {
         m_pushBackBlocked = true;
         Cursors::self()->mouse()->setPos(pos);
-        QMetaObject::Connection *me = new QMetaObject::Connection();
-        *me = QObject::connect(QCoreApplication::eventDispatcher(), &QAbstractEventDispatcher::aboutToBlock, this, [this, me]() {
-            QObject::disconnect(*me);
-            delete me;
+        auto unblockPush = [this] {
             m_pushBackBlocked = false;
-        });
+        };
+        QObject::connect(QCoreApplication::eventDispatcher(), &QAbstractEventDispatcher::aboutToBlock, this, unblockPush, Qt::SingleShotConnection);
     }
 }
 

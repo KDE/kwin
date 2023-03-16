@@ -239,7 +239,7 @@ void WaylandServer::registerWindow(Window *window)
     if (window->readyForPainting()) {
         Q_EMIT windowAdded(window);
     } else {
-        connect(window, &Window::windowShown, this, &WaylandServer::windowShown);
+        connect(window, &Window::windowShown, this, &WaylandServer::windowAdded, Qt::SingleShotConnection);
     }
     m_windows << window;
 }
@@ -531,12 +531,6 @@ KWaylandServer::LinuxDmaBufV1ClientBufferIntegration *WaylandServer::linuxDmabuf
 SurfaceInterface *WaylandServer::findForeignTransientForSurface(SurfaceInterface *surface)
 {
     return m_XdgForeign->transientFor(surface);
-}
-
-void WaylandServer::windowShown(Window *window)
-{
-    disconnect(window, &Window::windowShown, this, &WaylandServer::windowShown);
-    Q_EMIT windowAdded(window);
 }
 
 void WaylandServer::initWorkspace()

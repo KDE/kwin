@@ -162,7 +162,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, WorkspaceScene *s
         if (window->readyForPainting()) {
             slotWindowShown(window);
         } else {
-            connect(window, &Window::windowShown, this, &EffectsHandlerImpl::slotWindowShown);
+            connect(window, &Window::windowShown, this, &EffectsHandlerImpl::slotWindowShown, Qt::SingleShotConnection);
         }
     });
     connect(ws, &Workspace::windowActivated, this, [this](Window *window) {
@@ -470,7 +470,6 @@ void EffectsHandlerImpl::slotOpacityChanged(Window *window, qreal oldOpacity)
 
 void EffectsHandlerImpl::slotWindowShown(Window *window)
 {
-    disconnect(window, &Window::windowShown, this, &EffectsHandlerImpl::slotWindowShown);
     setupWindowConnections(window);
     Q_EMIT windowAdded(window->effectWindow());
 }

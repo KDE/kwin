@@ -907,11 +907,10 @@ public:
         if (event->key() == Qt::Key_PowerOff) {
             const auto modifiers = static_cast<KeyEvent *>(event)->modifiersRelevantForGlobalShortcuts();
             if (event->type() == QEvent::KeyPress && !event->isAutoRepeat()) {
-                QObject::connect(&m_powerDown, &QTimer::timeout, input()->shortcuts(), [this, modifiers] {
-                    QObject::disconnect(&m_powerDown, &QTimer::timeout, input()->shortcuts(), nullptr);
-                    m_powerDown.stop();
+                auto passToShortcuts = [modifiers] {
                     input()->shortcuts()->processKey(modifiers, Qt::Key_PowerDown);
-                });
+                };
+                QObject::connect(&m_powerDown, &QTimer::timeout, input()->shortcuts(), passToShortcuts, Qt::SingleShotConnection);
                 m_powerDown.start();
                 return true;
             } else if (event->type() == QEvent::KeyRelease) {
