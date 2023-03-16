@@ -68,6 +68,7 @@ public:
 private:
     enum class MultiGpuImportMode {
         Dmabuf,
+        LinearDmabuf,
         DumbBuffer
     };
     struct Surface
