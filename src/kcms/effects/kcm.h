@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <KQuickAddons/ConfigModule>
+#include <KQuickConfigModule>
 
 #include <QAbstractItemModel>
 #include <QQuickItem>
@@ -16,7 +16,7 @@ namespace KWin
 
 class EffectsModel;
 
-class DesktopEffectsKCM : public KQuickAddons::ConfigModule
+class DesktopEffectsKCM : public KQuickConfigModule
 {
     Q_OBJECT
     Q_PROPERTY(QAbstractItemModel *effectsModel READ effectsModel CONSTANT)

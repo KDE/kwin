@@ -14,7 +14,6 @@
 
 #include <KLocalizedString>
 #include <KPluginFactory>
-#include <kaboutdata.h>
 #include <kconfig.h>
 
 #include "kwinoptions_kdeglobals_settings.h"
@@ -58,60 +57,47 @@ public:
     }
 };
 
-KWinOptions::KWinOptions(QWidget *parent, const QVariantList &)
-    : KCModule(parent)
+KWinOptions::KWinOptions(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
+    : KCModule(parent, data, args)
 {
     mSettings = new KWinOptionsSettings(this);
 
-    QVBoxLayout *layout = new QVBoxLayout(this);
+    QVBoxLayout *layout = new QVBoxLayout(widget());
     layout->setContentsMargins(0, 0, 0, 0);
-    tab = new QTabWidget(this);
+    tab = new QTabWidget(widget());
     layout->addWidget(tab);
 
-    mFocus = new KFocusConfig(false, mSettings, this);
+    const auto connectKCM = [this](KCModule *mod) {
+        connect(mod, &KCModule::needsSaveChanged, this, &KWinOptions::updateUnmanagedState);
+        connect(this, &KCModule::defaultsIndicatorsVisibleChanged, mod, [mod, this]() {
+            mod->setDefaultsIndicatorsVisible(defaultsIndicatorsVisible());
+        });
+    };
+
+    mFocus = new KFocusConfig(false, mSettings, widget());
     mFocus->setObjectName(QLatin1String("KWin Focus Config"));
-    tab->addTab(mFocus, i18n("&Focus"));
-    connect(mFocus, qOverload<bool>(&KCModule::changed), this, qOverload<>(&KWinOptions::updateUnmanagedState));
-    connect(this, &KCModule::defaultsIndicatorsVisibleChanged, mFocus, &KCModule::setDefaultsIndicatorsVisible);
+    tab->addTab(mFocus->widget(), i18n("&Focus"));
+    connectKCM(mFocus);
 
-    mTitleBarActions = new KTitleBarActionsConfig(false, mSettings, this);
+    mTitleBarActions = new KTitleBarActionsConfig(false, mSettings, widget());
     mTitleBarActions->setObjectName(QLatin1String("KWin TitleBar Actions"));
-    tab->addTab(mTitleBarActions, i18n("Titlebar A&ctions"));
-    connect(mTitleBarActions, qOverload<bool>(&KCModule::changed), this, qOverload<>(&KWinOptions::updateUnmanagedState));
-    connect(this, &KCModule::defaultsIndicatorsVisibleChanged, mTitleBarActions, &KCModule::setDefaultsIndicatorsVisible);
+    tab->addTab(mTitleBarActions->widget(), i18n("Titlebar A&ctions"));
+    connectKCM(mTitleBarActions);
 
-    mWindowActions = new KWindowActionsConfig(false, mSettings, this);
+    mWindowActions = new KWindowActionsConfig(false, mSettings, widget());
     mWindowActions->setObjectName(QLatin1String("KWin Window Actions"));
-    tab->addTab(mWindowActions, i18n("W&indow Actions"));
-    connect(mWindowActions, qOverload<bool>(&KCModule::changed), this, qOverload<>(&KWinOptions::updateUnmanagedState));
-    connect(this, &KCModule::defaultsIndicatorsVisibleChanged, mWindowActions, &KCModule::setDefaultsIndicatorsVisible);
+    tab->addTab(mWindowActions->widget(), i18n("W&indow Actions"));
+    connectKCM(mWindowActions);
 
-    mMoving = new KMovingConfig(false, mSettings, this);
+    mMoving = new KMovingConfig(false, mSettings, widget());
     mMoving->setObjectName(QLatin1String("KWin Moving"));
-    tab->addTab(mMoving, i18n("Mo&vement"));
-    connect(mMoving, qOverload<bool>(&KCModule::changed), this, qOverload<>(&KWinOptions::updateUnmanagedState));
-    connect(this, &KCModule::defaultsIndicatorsVisibleChanged, mMoving, &KCModule::setDefaultsIndicatorsVisible);
+    tab->addTab(mMoving->widget(), i18n("Mo&vement"));
+    connectKCM(mMoving);
 
-    mAdvanced = new KAdvancedConfig(false, mSettings, new KWinOptionsKDEGlobalsSettings(this), this);
+    mAdvanced = new KAdvancedConfig(false, mSettings, new KWinOptionsKDEGlobalsSettings(this), widget());
     mAdvanced->setObjectName(QLatin1String("KWin Advanced"));
-    tab->addTab(mAdvanced, i18n("Adva&nced"));
-    connect(mAdvanced, qOverload<bool>(&KCModule::changed), this, qOverload<>(&KWinOptions::updateUnmanagedState));
-    connect(this, &KCModule::defaultsIndicatorsVisibleChanged, mAdvanced, &KCModule::setDefaultsIndicatorsVisible);
-    KAboutData *about =
-        new KAboutData(QStringLiteral("kcmkwinoptions"), i18n("Window Behavior Configuration Module"),
-                       QString(), QString(), KAboutLicense::GPL,
-                       i18n("(c) 1997 - 2002 KWin and KControl Authors"));
-
-    about->addAuthor(i18n("Matthias Ettrich"), QString(), "ettrich@kde.org");
-    about->addAuthor(i18n("Waldo Bastian"), QString(), "bastian@kde.org");
-    about->addAuthor(i18n("Cristian Tibirna"), QString(), "tibirna@kde.org");
-    about->addAuthor(i18n("Matthias Kalle Dalheimer"), QString(), "kalle@kde.org");
-    about->addAuthor(i18n("Daniel Molkentin"), QString(), "molkentin@kde.org");
-    about->addAuthor(i18n("Wynn Wilkes"), QString(), "wynnw@caldera.com");
-    about->addAuthor(i18n("Pat Dowler"), QString(), "dowler@pt1B1106.FSH.UVic.CA");
-    about->addAuthor(i18n("Bernd Wuebben"), QString(), "wuebben@kde.org");
-    about->addAuthor(i18n("Matthias Hoelzer-Kluepfel"), QString(), "hoelzer@kde.org");
-    setAboutData(about);
+    tab->addTab(mAdvanced->widget(), i18n("Adva&nced"));
+    connectKCM(mAdvanced);
 }
 
 void KWinOptions::load()
@@ -156,16 +142,6 @@ void KWinOptions::defaults()
     mFocus->defaults();
 }
 
-QString KWinOptions::quickHelp() const
-{
-    return i18n("<p><h1>Window Behavior</h1> Here you can customize the way windows behave when being"
-                " moved, resized or clicked on. You can also specify a focus policy as well as a placement"
-                " policy for new windows.</p>"
-                " <p>Please note that this configuration will not take effect if you do not use"
-                " KWin as your window manager. If you do use a different window manager, please refer to its documentation"
-                " for how to customize window behavior.</p>");
-}
-
 void KWinOptions::updateUnmanagedState()
 {
     bool isNeedSave = false;
@@ -187,27 +163,35 @@ void KWinOptions::updateUnmanagedState()
     unmanagedWidgetDefaultState(isDefault);
 }
 
-KActionsOptions::KActionsOptions(QWidget *parent, const QVariantList &)
-    : KCModule(parent)
+KActionsOptions::KActionsOptions(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
+    : KCModule(parent, data, args)
 {
     mSettings = new KWinOptionsSettings(this);
 
-    QVBoxLayout *layout = new QVBoxLayout(this);
+    QVBoxLayout *layout = new QVBoxLayout(widget());
     layout->setContentsMargins(0, 0, 0, 0);
-    tab = new QTabWidget(this);
+    tab = new QTabWidget(widget());
     layout->addWidget(tab);
 
-    mTitleBarActions = new KTitleBarActionsConfig(false, mSettings, this);
+    mTitleBarActions = new KTitleBarActionsConfig(false, mSettings, widget());
     mTitleBarActions->setObjectName(QLatin1String("KWin TitleBar Actions"));
-    tab->addTab(mTitleBarActions, i18n("&Titlebar Actions"));
-    connect(mTitleBarActions, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
-    connect(mTitleBarActions, qOverload<bool>(&KCModule::defaulted), this, qOverload<bool>(&KCModule::defaulted));
+    tab->addTab(mTitleBarActions->widget(), i18n("&Titlebar Actions"));
+    connect(mTitleBarActions, &KCModule::needsSaveChanged, this, [this]() {
+        setNeedsSave(mTitleBarActions->needsSave());
+    });
+    connect(mTitleBarActions, &KCModule::representsDefaultsChanged, this, [this]() {
+        setRepresentsDefaults(mTitleBarActions->representsDefaults());
+    });
 
-    mWindowActions = new KWindowActionsConfig(false, mSettings, this);
+    mWindowActions = new KWindowActionsConfig(false, mSettings, widget());
     mWindowActions->setObjectName(QLatin1String("KWin Window Actions"));
-    tab->addTab(mWindowActions, i18n("Window Actio&ns"));
-    connect(mWindowActions, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
-    connect(mWindowActions, qOverload<bool>(&KCModule::defaulted), this, qOverload<bool>(&KCModule::defaulted));
+    tab->addTab(mWindowActions->widget(), i18n("Window Actio&ns"));
+    connect(mWindowActions, &KCModule::needsSaveChanged, this, [this]() {
+        setNeedsSave(mWindowActions->needsSave());
+    });
+    connect(mWindowActions, &KCModule::representsDefaultsChanged, this, [this]() {
+        setRepresentsDefaults(mWindowActions->representsDefaults());
+    });
 }
 
 void KActionsOptions::load()
@@ -221,10 +205,9 @@ void KActionsOptions::save()
     mTitleBarActions->save();
     mWindowActions->save();
 
-    Q_EMIT KCModule::changed(false);
+    setNeedsSave(false);
     // Send signal to all kwin instances
-    QDBusMessage message =
-        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+    QDBusMessage message = QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
     QDBusConnection::sessionBus().send(message);
 }
 
@@ -236,7 +219,7 @@ void KActionsOptions::defaults()
 
 void KActionsOptions::moduleChanged(bool state)
 {
-    Q_EMIT KCModule::changed(state);
+    setNeedsSave(state);
 }
 
 #include "main.moc"

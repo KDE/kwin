@@ -21,10 +21,10 @@ K_PLUGIN_CLASS(KWin::TilesEditorEffectConfig)
 namespace KWin
 {
 
-TilesEditorEffectConfig::TilesEditorEffectConfig(QWidget *parent, const QVariantList &args)
-    : KCModule(parent, args)
+TilesEditorEffectConfig::TilesEditorEffectConfig(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
+    : KCModule(parent, data, args)
 {
-    ui.setupUi(this);
+    ui.setupUi(widget());
 
     auto actionCollection = new KActionCollection(this, QStringLiteral("kwin"));
 
@@ -40,7 +40,7 @@ TilesEditorEffectConfig::TilesEditorEffectConfig(QWidget *parent, const QVariant
     KGlobalAccel::self()->setShortcut(toggleAction, {defaultToggleShortcut});
 
     ui.shortcutsEditor->addCollection(actionCollection);
-    connect(ui.shortcutsEditor, &KShortcutsEditor::keyChange, this, &TilesEditorEffectConfig::markAsChanged);
+    connect(ui.shortcutsEditor, &KShortcutsEditor::keyChange, this, &KCModule::markAsChanged);
 }
 
 TilesEditorEffectConfig::~TilesEditorEffectConfig()

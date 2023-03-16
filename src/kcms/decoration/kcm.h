@@ -9,7 +9,7 @@
 
 #include "utils.h"
 
-#include <KQuickAddons/ManagedConfigModule>
+#include <KQuickManagedConfigModule>
 
 class QAbstractItemModel;
 class QSortFilterProxyModel;
@@ -32,7 +32,7 @@ class DecorationsModel;
 class KWinDecorationSettings;
 class KWinDecorationData;
 
-class KCMKWinDecoration : public KQuickAddons::ManagedConfigModule
+class KCMKWinDecoration : public KQuickManagedConfigModule
 {
     Q_OBJECT
     Q_PROPERTY(KWinDecorationSettings *settings READ settings CONSTANT)

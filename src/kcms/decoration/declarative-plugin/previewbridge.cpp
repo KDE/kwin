@@ -198,12 +198,13 @@ void PreviewBridge::configure(QQuickItem *ctx)
     connect(buttons, &QDialogButtonBox::accepted, dialog, &QDialog::accept);
     connect(buttons, &QDialogButtonBox::rejected, dialog, &QDialog::reject);
     connect(reset, &QPushButton::clicked, kcm, &KCModule::load);
-    auto changedSignal = static_cast<void (KCModule::*)(bool)>(&KCModule::changed);
-    connect(kcm, changedSignal, reset, &QPushButton::setEnabled);
+    connect(kcm, &KCModule::needsSaveChanged, reset, [reset, kcm]() {
+        reset->setEnabled(kcm->needsSave());
+    });
     connect(buttons->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, kcm, &KCModule::defaults);
 
     QVBoxLayout *layout = new QVBoxLayout(dialog);
-    layout->addWidget(kcm);
+    layout->addWidget(kcm->widget());
     layout->addWidget(buttons);
 
     if (ctx->window()) {

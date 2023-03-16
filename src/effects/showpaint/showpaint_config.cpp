@@ -22,11 +22,11 @@ K_PLUGIN_CLASS(KWin::ShowPaintEffectConfig)
 namespace KWin
 {
 
-ShowPaintEffectConfig::ShowPaintEffectConfig(QWidget *parent, const QVariantList &args)
-    : KCModule(parent, args)
+ShowPaintEffectConfig::ShowPaintEffectConfig(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
+    : KCModule(parent, data, args)
     , m_ui(std::make_unique<Ui::ShowPaintEffectConfig>())
 {
-    m_ui->setupUi(this);
+    m_ui->setupUi(widget());
 
     auto *actionCollection = new KActionCollection(this, QStringLiteral("kwin"));
 
@@ -42,8 +42,7 @@ ShowPaintEffectConfig::ShowPaintEffectConfig(QWidget *parent, const QVariantList
 
     m_ui->shortcutsEditor->addCollection(actionCollection);
 
-    connect(m_ui->shortcutsEditor, &KShortcutsEditor::keyChange,
-            this, &ShowPaintEffectConfig::markAsChanged);
+    connect(m_ui->shortcutsEditor, &KShortcutsEditor::keyChange, this, &KCModule::markAsChanged);
 }
 
 ShowPaintEffectConfig::~ShowPaintEffectConfig()

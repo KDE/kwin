@@ -47,7 +47,7 @@ QObject *GenericScriptedConfigFactory::create(const char *iface, QWidget *parent
 }
 
 GenericScriptedConfig::GenericScriptedConfig(const QString &keyword, QWidget *parent, const QVariantList &args)
-    : KCModule(parent, args)
+    : KCModule(parent, KPluginMetaData(), args)
     , m_packageName(keyword)
     , m_translator(new KLocalizedTranslator(this))
 {
@@ -60,7 +60,7 @@ GenericScriptedConfig::~GenericScriptedConfig()
 
 void GenericScriptedConfig::createUi()
 {
-    QVBoxLayout *layout = new QVBoxLayout(this);
+    QVBoxLayout *layout = new QVBoxLayout(widget());
 
     const QString packageRoot = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
                                                        QLatin1String("kwin/") + typeName() + QLatin1Char('/') + m_packageName,
@@ -103,7 +103,7 @@ void GenericScriptedConfig::createUi()
     m_translator->setTranslationDomain(metaData.value("X-KWin-Config-TranslationDomain"));
 
     uiFile.open(QFile::ReadOnly);
-    QWidget *customConfigForm = loader->load(&uiFile, this);
+    QWidget *customConfigForm = loader->load(&uiFile, widget());
     m_translator->addContextToMonitor(customConfigForm->objectName());
     uiFile.close();
 

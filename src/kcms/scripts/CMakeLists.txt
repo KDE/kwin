@@ -17,7 +17,7 @@ target_link_libraries(kcm_kwin_scripts
     KF6::KCMUtils
     KF6::NewStuffWidgets
     KF6::Package
-    KF6::QuickAddons
+    KF6::KCMUtilsQuick
     KF6::ItemViews
 )
 

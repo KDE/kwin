@@ -8,7 +8,7 @@ kconfig_add_kcfg_files(kwin_windowview_config_SOURCES ../windowviewconfig.kcfgc)
 
 kwin_add_effect_config(kwin_windowview_config ${kwin_windowview_config_SOURCES})
 target_link_libraries(kwin_windowview_config
-    KF6::ConfigWidgets
+    KF6::KCMUtils
     KF6::CoreAddons
     KF6::GlobalAccel
     KF6::I18n

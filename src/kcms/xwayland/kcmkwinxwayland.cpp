@@ -17,7 +17,7 @@
 K_PLUGIN_FACTORY_WITH_JSON(KcmXwaylandFactory, "kcm_kwinxwayland.json", registerPlugin<KcmXwayland>(); registerPlugin<KWinXwaylandData>();)
 
 KcmXwayland::KcmXwayland(QObject *parent, const KPluginMetaData &metaData, const QVariantList &args)
-    : KQuickAddons::ManagedConfigModule(parent, metaData, args)
+    : KQuickManagedConfigModule(parent, metaData, args)
     , m_data(new KWinXwaylandData(this))
     , m_settings(new KWinXwaylandSettings(m_data))
 {

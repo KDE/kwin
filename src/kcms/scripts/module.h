@@ -10,13 +10,13 @@
 #include <KPackage/Package>
 #include <KPluginMetaData>
 #include <KPluginModel>
-#include <KQuickAddons/ConfigModule>
+#include <KQuickConfigModule>
 #include <kpluginmetadata.h>
 
 class KJob;
 class KWinScriptsData;
 
-class Module : public KQuickAddons::ConfigModule
+class Module : public KQuickConfigModule
 {
     Q_OBJECT
 

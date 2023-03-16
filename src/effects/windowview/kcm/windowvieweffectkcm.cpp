@@ -24,14 +24,14 @@ K_PLUGIN_CLASS(KWin::WindowViewEffectConfig)
 namespace KWin
 {
 
-WindowViewEffectConfig::WindowViewEffectConfig(QWidget *parent, const QVariantList &args)
-    : KCModule(parent, args)
+WindowViewEffectConfig::WindowViewEffectConfig(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
+    : KCModule(parent, data, args)
 {
-    ui.setupUi(this);
+    ui.setupUi(widget());
     WindowViewConfig::instance(KWIN_CONFIG);
-    addConfig(WindowViewConfig::self(), this);
+    addConfig(WindowViewConfig::self(), widget());
 
-    auto actionCollection = new KActionCollection(this, QStringLiteral("kwin"));
+    auto actionCollection = new KActionCollection(widget(), QStringLiteral("kwin"));
 
     actionCollection->setComponentDisplayName(i18n("KWin"));
     actionCollection->setConfigGroup(QStringLiteral("windowview"));
@@ -65,7 +65,7 @@ WindowViewEffectConfig::WindowViewEffectConfig(QWidget *parent, const QVariantLi
     KGlobalAccel::self()->setShortcut(toggleAction, QList<QKeySequence>());
 
     ui.shortcutsEditor->addCollection(actionCollection);
-    connect(ui.shortcutsEditor, &KShortcutsEditor::keyChange, this, &WindowViewEffectConfig::markAsChanged);
+    connect(ui.shortcutsEditor, &KShortcutsEditor::keyChange, this, &KCModule::markAsChanged);
 }
 
 WindowViewEffectConfig::~WindowViewEffectConfig()

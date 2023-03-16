@@ -106,7 +106,7 @@ class ConfigurationModule : public KCModule
 {
     Q_OBJECT
 public:
-    ConfigurationModule(QWidget *parent, const QVariantList &args);
+    ConfigurationModule(QObject *parent, const KPluginMetaData &data, const QVariantList &args);
 
 private:
     void init();

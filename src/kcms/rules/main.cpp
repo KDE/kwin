@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
     app.setApplicationDisplayName((whole_app) ? i18nc("Window caption for the application wide rules dialog", "Edit Application-Specific Settings")
                                               : i18n("Edit Window-Specific Settings"));
 
-    QStringList kcm_args;
+    QVariantList kcm_args;
     kcm_args << QStringLiteral("uuid=%1").arg(uuid.toString());
     if (whole_app) {
         kcm_args << QStringLiteral("whole-app");

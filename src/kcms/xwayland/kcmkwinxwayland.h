@@ -6,14 +6,14 @@
 
 #pragma once
 
-#include <KQuickAddons/ManagedConfigModule>
+#include <KQuickManagedConfigModule>
 #include <QAbstractListModel>
 
 #include <kwinxwaylandsettings.h>
 
 class KWinXwaylandData;
 
-class KcmXwayland : public KQuickAddons::ManagedConfigModule
+class KcmXwayland : public KQuickManagedConfigModule
 {
     Q_OBJECT
     Q_PROPERTY(KWinXwaylandSettings *settings READ settings CONSTANT)

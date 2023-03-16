@@ -27,7 +27,7 @@ if (KWIN_BUILD_KCMS)
     kwin_add_effect_config(kwin_diminactive_config ${kwin_diminactive_config_SRCS})
 
     target_link_libraries(kwin_diminactive_config
-        KF6::ConfigWidgets
+        KF6::KCMUtils
         KF6::CoreAddons
         KF6::I18n
         Qt::DBus

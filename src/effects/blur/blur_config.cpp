@@ -18,12 +18,12 @@ K_PLUGIN_CLASS(KWin::BlurEffectConfig)
 namespace KWin
 {
 
-BlurEffectConfig::BlurEffectConfig(QWidget *parent, const QVariantList &args)
-    : KCModule(parent, args)
+BlurEffectConfig::BlurEffectConfig(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
+    : KCModule(parent, data, args)
 {
-    ui.setupUi(this);
+    ui.setupUi(widget());
     BlurConfig::instance(KWIN_CONFIG);
-    addConfig(BlurConfig::self(), this);
+    addConfig(BlurConfig::self(), widget());
 }
 
 BlurEffectConfig::~BlurEffectConfig()

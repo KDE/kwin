@@ -49,12 +49,12 @@ namespace KWin
 
 using namespace TabBox;
 
-KWinTabBoxConfig::KWinTabBoxConfig(QWidget *parent, const QVariantList &args)
-    : KCModule(parent, args)
+KWinTabBoxConfig::KWinTabBoxConfig(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
+    : KCModule(parent, data, args)
     , m_config(KSharedConfig::openConfig("kwinrc"))
     , m_data(new KWinTabboxData(this))
 {
-    QTabWidget *tabWidget = new QTabWidget(this);
+    QTabWidget *tabWidget = new QTabWidget(widget());
     m_primaryTabBoxUi = new KWinTabBoxConfigForm(KWinTabBoxConfigForm::TabboxType::Main,
                                                  m_data->tabBoxConfig(),
                                                  m_data->shortcutConfig(),
@@ -66,7 +66,7 @@ KWinTabBoxConfig::KWinTabBoxConfig(QWidget *parent, const QVariantList &args)
     tabWidget->addTab(m_primaryTabBoxUi, i18n("Main"));
     tabWidget->addTab(m_alternativeTabBoxUi, i18n("Alternative"));
 
-    KNSWidgets::Button *ghnsButton = new KNSWidgets::Button(i18n("Get New Task Switchers..."), QStringLiteral("kwinswitcher.knsrc"), this);
+    KNSWidgets::Button *ghnsButton = new KNSWidgets::Button(i18n("Get New Task Switchers..."), QStringLiteral("kwinswitcher.knsrc"), widget());
     connect(ghnsButton, &KNSWidgets::Button::dialogFinished, this, [this](auto changedEntries) {
         if (!changedEntries.isEmpty()) {
             initLayoutLists();
@@ -78,7 +78,7 @@ KWinTabBoxConfig::KWinTabBoxConfig(QWidget *parent, const QVariantList &args)
     buttonBar->addItem(buttonBarSpacer);
     buttonBar->addWidget(ghnsButton);
 
-    QVBoxLayout *layout = new QVBoxLayout(this);
+    QVBoxLayout *layout = new QVBoxLayout(widget());
     KTitleWidget *infoLabel = new KTitleWidget(tabWidget);
     infoLabel->setText(i18n("Focus policy settings limit the functionality of navigating through windows."),
                        KTitleWidget::InfoMessage);
@@ -86,7 +86,7 @@ KWinTabBoxConfig::KWinTabBoxConfig(QWidget *parent, const QVariantList &args)
     layout->addWidget(infoLabel, 0);
     layout->addWidget(tabWidget, 1);
     layout->addLayout(buttonBar);
-    setLayout(layout);
+    widget()->setLayout(layout);
 
     addConfig(m_data->tabBoxConfig(), m_primaryTabBoxUi);
     addConfig(m_data->tabBoxAlternativeConfig(), m_alternativeTabBoxUi);
@@ -196,7 +196,9 @@ void KWinTabBoxConfig::createConnections(KWinTabBoxConfigForm *form)
     connect(form, &KWinTabBoxConfigForm::effectConfigButtonClicked, this, &KWinTabBoxConfig::configureEffectClicked);
     connect(form, &KWinTabBoxConfigForm::configChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
 
-    connect(this, &KWinTabBoxConfig::defaultsIndicatorsVisibleChanged, form, &KWinTabBoxConfigForm::setDefaultIndicatorVisible);
+    connect(this, &KWinTabBoxConfig::defaultsIndicatorsVisibleChanged, form, [form, this]() {
+        form->setDefaultIndicatorVisible(defaultsIndicatorsVisible());
+    });
 }
 
 void KWinTabBoxConfig::updateUnmanagedState()

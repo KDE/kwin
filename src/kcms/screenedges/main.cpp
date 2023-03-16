@@ -31,20 +31,22 @@ K_PLUGIN_FACTORY_WITH_JSON(KWinScreenEdgesConfigFactory, "kcm_kwinscreenedges.js
 namespace KWin
 {
 
-KWinScreenEdgesConfig::KWinScreenEdgesConfig(QWidget *parent, const QVariantList &args)
-    : KCModule(parent, args)
-    , m_form(new KWinScreenEdgesConfigForm(this))
+KWinScreenEdgesConfig::KWinScreenEdgesConfig(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
+    : KCModule(parent, data, args)
+    , m_form(new KWinScreenEdgesConfigForm(widget()))
     , m_config(KSharedConfig::openConfig("kwinrc"))
     , m_data(new KWinScreenEdgeData(this))
 {
-    QVBoxLayout *layout = new QVBoxLayout(this);
+    QVBoxLayout *layout = new QVBoxLayout(widget());
     layout->addWidget(m_form);
 
     addConfig(m_data->settings(), m_form);
 
     monitorInit();
 
-    connect(this, &KWinScreenEdgesConfig::defaultsIndicatorsVisibleChanged, m_form, &KWinScreenEdgesConfigForm::setDefaultsIndicatorsVisible);
+    connect(this, &KWinScreenEdgesConfig::defaultsIndicatorsVisibleChanged, m_form, [this]() {
+        m_form->setDefaultsIndicatorsVisible(defaultsIndicatorsVisible());
+    });
     connect(m_form, &KWinScreenEdgesConfigForm::saveNeededChanged, this, &KWinScreenEdgesConfig::unmanagedWidgetChangeState);
     connect(m_form, &KWinScreenEdgesConfigForm::defaultChanged, this, &KWinScreenEdgesConfig::unmanagedWidgetDefaultState);
 }
@@ -112,13 +114,6 @@ void KWinScreenEdgesConfig::defaults()
     m_form->setDefaults();
 
     KCModule::defaults();
-}
-
-void KWinScreenEdgesConfig::showEvent(QShowEvent *e)
-{
-    KCModule::showEvent(e);
-
-    monitorShowEvent();
 }
 
 //-----------------------------------------------------------------------------

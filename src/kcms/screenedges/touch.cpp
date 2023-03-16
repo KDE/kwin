@@ -31,13 +31,13 @@ K_PLUGIN_FACTORY_WITH_JSON(KWinScreenEdgesConfigFactory, "kcm_kwintouchscreen.js
 namespace KWin
 {
 
-KWinScreenEdgesConfig::KWinScreenEdgesConfig(QWidget *parent, const QVariantList &args)
-    : KCModule(parent, args)
-    , m_form(new KWinTouchScreenEdgeConfigForm(this))
+KWinScreenEdgesConfig::KWinScreenEdgesConfig(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
+    : KCModule(parent, data, args)
+    , m_form(new KWinTouchScreenEdgeConfigForm(widget()))
     , m_config(KSharedConfig::openConfig("kwinrc"))
     , m_data(new KWinTouchScreenData(this))
 {
-    QVBoxLayout *layout = new QVBoxLayout(this);
+    QVBoxLayout *layout = new QVBoxLayout(widget());
     layout->addWidget(m_form);
 
     monitorInit();
@@ -101,13 +101,6 @@ void KWinScreenEdgesConfig::defaults()
     m_form->setDefaults();
 
     KCModule::defaults();
-}
-
-void KWinScreenEdgesConfig::showEvent(QShowEvent *e)
-{
-    KCModule::showEvent(e);
-
-    monitorShowEvent();
 }
 
 //-----------------------------------------------------------------------------

@@ -19,7 +19,7 @@ kcmutils_generate_desktop_file(kcm_kwinxwayland)
 target_link_libraries(kcm_kwinxwayland
     KF6::I18n
     KF6::KCMUtils
-    KF6::QuickAddons
+    KF6::KCMUtilsQuick
     Wayland::Client
 )
 kpackage_install_package(package kcm_kwinxwayland kcms)

@@ -21,7 +21,7 @@ set_target_properties(kwin5_aurorae PROPERTIES
 target_link_libraries(kwin5_aurorae
     KDecoration2::KDecoration
     kwineffects
-    KF6::ConfigWidgets
+    KF6::KCMUtils
     KF6::I18n
     KF6::Package
     KF6::WindowSystem

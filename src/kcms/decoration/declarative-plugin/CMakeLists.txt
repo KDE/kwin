@@ -17,7 +17,7 @@ target_link_libraries(kdecorationprivatedeclarative
     Qt::DBus
     Qt::Quick
     KF6::CoreAddons
-    KF6::ConfigWidgets
+    KF6::KCMUtils
     KF6::I18n
     KF6::Service
 )

@@ -34,14 +34,14 @@ MouseClickEffectConfigForm::MouseClickEffectConfigForm(QWidget *parent)
     setupUi(this);
 }
 
-MouseClickEffectConfig::MouseClickEffectConfig(QWidget *parent, const QVariantList &args)
-    : KCModule(parent, args)
-    , m_ui(this)
+MouseClickEffectConfig::MouseClickEffectConfig(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
+    : KCModule(parent, data, args)
+    , m_ui(widget())
 {
-    QVBoxLayout *layout = new QVBoxLayout(this);
+    QVBoxLayout *layout = new QVBoxLayout(widget());
     layout->addWidget(&m_ui);
 
-    connect(m_ui.editor, &KShortcutsEditor::keyChange, this, &MouseClickEffectConfig::markAsChanged);
+    connect(m_ui.editor, &KShortcutsEditor::keyChange, this, &KCModule::markAsChanged);
 
     // Shortcut config. The shortcut belongs to the component "kwin"!
     m_actionCollection = new KActionCollection(this, QStringLiteral("kwin"));

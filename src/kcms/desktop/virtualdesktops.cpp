@@ -26,7 +26,7 @@ namespace KWin
 {
 
 VirtualDesktops::VirtualDesktops(QObject *parent, const KPluginMetaData &metaData, const QVariantList &args)
-    : KQuickAddons::ManagedConfigModule(parent, metaData, args)
+    : KQuickManagedConfigModule(parent, metaData, args)
     , m_data(new VirtualDesktopsData(this))
 {
     qmlRegisterAnonymousType<VirtualDesktopsSettings>("org.kde.kwin.kcm.desktop", 0);
@@ -62,7 +62,7 @@ VirtualDesktopsSettings *VirtualDesktops::virtualDesktopsSettings() const
 
 void VirtualDesktops::load()
 {
-    ManagedConfigModule::load();
+    KQuickManagedConfigModule::load();
 
     m_data->desktopsModel()->load();
     m_data->animationsModel()->load();
@@ -70,7 +70,7 @@ void VirtualDesktops::load()
 
 void VirtualDesktops::save()
 {
-    ManagedConfigModule::save();
+    KQuickManagedConfigModule::save();
 
     m_data->desktopsModel()->syncWithServer();
     m_data->animationsModel()->save();
@@ -82,7 +82,7 @@ void VirtualDesktops::save()
 
 void VirtualDesktops::defaults()
 {
-    ManagedConfigModule::defaults();
+    KQuickManagedConfigModule::defaults();
 
     m_data->desktopsModel()->defaults();
     m_data->animationsModel()->defaults();

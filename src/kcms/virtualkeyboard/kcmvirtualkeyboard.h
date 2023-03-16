@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <KQuickAddons/ManagedConfigModule>
+#include <KQuickManagedConfigModule>
 
 #include <KService>
 
@@ -35,7 +35,7 @@ private:
     KService::List m_services;
 };
 
-class KcmVirtualKeyboard : public KQuickAddons::ManagedConfigModule
+class KcmVirtualKeyboard : public KQuickManagedConfigModule
 {
     Q_OBJECT
     Q_PROPERTY(VirtualKeyboardSettings *settings READ settings CONSTANT)

@@ -32,7 +32,7 @@ if (KWIN_BUILD_KCMS)
     kwin_add_effect_config(kwin_trackmouse_config ${kwin_trackmouse_config_SRCS})
 
     target_link_libraries(kwin_trackmouse_config
-        KF6::ConfigWidgets
+        KF6::KCMUtils
         KF6::CoreAddons
         KF6::GlobalAccel
         KF6::I18n

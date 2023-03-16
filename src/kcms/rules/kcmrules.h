@@ -9,13 +9,13 @@
 #include "rulebookmodel.h"
 #include "rulesmodel.h"
 
-#include <KQuickAddons/ConfigModule>
+#include <KQuickConfigModule>
 
 namespace KWin
 {
 class RuleSettings;
 
-class KCMKWinRules : public KQuickAddons::ConfigModule
+class KCMKWinRules : public KQuickConfigModule
 {
     Q_OBJECT
 

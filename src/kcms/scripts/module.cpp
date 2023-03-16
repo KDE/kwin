@@ -30,7 +30,7 @@
 #include "kwinscriptsdata.h"
 
 Module::Module(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
-    : KQuickAddons::ConfigModule(parent, data, args)
+    : KQuickConfigModule(parent, data, args)
     , m_kwinScriptsData(new KWinScriptsData(this))
     , m_model(new KPluginModel(this))
 {

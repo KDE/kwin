@@ -24,7 +24,7 @@ namespace KWin
 {
 
 DesktopEffectsKCM::DesktopEffectsKCM(QObject *parent, const KPluginMetaData &metaData, const QVariantList &args)
-    : KQuickAddons::ConfigModule(parent, metaData, args)
+    : KQuickConfigModule(parent, metaData, args)
     , m_model(new EffectsModel(this))
 {
     qmlRegisterType<EffectsFilterProxyModel>("org.kde.private.kcms.kwin.effects", 1, 0, "EffectsFilterProxyModel");

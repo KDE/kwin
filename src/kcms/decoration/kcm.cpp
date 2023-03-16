@@ -35,7 +35,7 @@ const KDecoration2::BorderSize s_defaultRecommendedBorderSize = KDecoration2::Bo
 }
 
 KCMKWinDecoration::KCMKWinDecoration(QObject *parent, const KPluginMetaData &metaData, const QVariantList &arguments)
-    : KQuickAddons::ManagedConfigModule(parent, metaData, arguments)
+    : KQuickManagedConfigModule(parent, metaData, arguments)
     , m_themesModel(new KDecoration2::Configuration::DecorationsModel(this))
     , m_proxyThemesModel(new QSortFilterProxyModel(this))
     , m_leftButtonsModel(new KDecoration2::Preview::ButtonsModel(DecorationButtonsList(), this))
@@ -97,7 +97,7 @@ void KCMKWinDecoration::reloadKWinSettings()
 
 void KCMKWinDecoration::load()
 {
-    ManagedConfigModule::load();
+    KQuickManagedConfigModule::load();
 
     m_leftButtonsModel->replace(Utils::buttonsFromString(settings()->buttonsOnLeft()));
     m_rightButtonsModel->replace(Utils::buttonsFromString(settings()->buttonsOnRight()));
@@ -115,7 +115,7 @@ void KCMKWinDecoration::save()
         settings()->setBorderSize(settings()->defaultBorderSizeValue());
     }
 
-    ManagedConfigModule::save();
+    KQuickManagedConfigModule::save();
 
     // Send a signal to all kwin instances
     QDBusMessage message = QDBusMessage::createSignal(QStringLiteral("/KWin"),
@@ -126,7 +126,7 @@ void KCMKWinDecoration::save()
 
 void KCMKWinDecoration::defaults()
 {
-    ManagedConfigModule::defaults();
+    KQuickManagedConfigModule::defaults();
 
     setBorderSize(recommendedBorderSize());
 

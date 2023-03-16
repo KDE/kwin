@@ -33,7 +33,7 @@ set(kcm_libs
 
     KF6::KCMUtils
     KF6::I18n
-    KF6::QuickAddons
+    KF6::KCMUtilsQuick
     KF6::WindowSystem
     KF6::XmlGui
 )

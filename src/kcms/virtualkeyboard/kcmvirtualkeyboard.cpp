@@ -18,7 +18,7 @@
 K_PLUGIN_FACTORY_WITH_JSON(KcmVirtualKeyboardFactory, "kcm_virtualkeyboard.json", registerPlugin<KcmVirtualKeyboard>(); registerPlugin<VirtualKeyboardData>();)
 
 KcmVirtualKeyboard::KcmVirtualKeyboard(QObject *parent, const KPluginMetaData &metaData, const QVariantList &args)
-    : KQuickAddons::ManagedConfigModule(parent, metaData, args)
+    : KQuickManagedConfigModule(parent, metaData, args)
     , m_data(new VirtualKeyboardData(this))
     , m_model(new VirtualKeyboardsModel(this))
 {

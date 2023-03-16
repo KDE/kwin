@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <KQuickAddons/ManagedConfigModule>
+#include <KQuickManagedConfigModule>
 #include <KSharedConfig>
 
 class VirtualDesktopsSettings;
@@ -18,7 +18,7 @@ class VirtualDesktopsData;
 class AnimationsModel;
 class DesktopsModel;
 
-class VirtualDesktops : public KQuickAddons::ManagedConfigModule
+class VirtualDesktops : public KQuickManagedConfigModule
 {
     Q_OBJECT
 

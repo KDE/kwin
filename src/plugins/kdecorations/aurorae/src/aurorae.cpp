@@ -694,12 +694,11 @@ bool ThemeProvider::hasConfiguration(const QString &theme)
     return !(ui.isEmpty() || xml.isEmpty());
 }
 
-ConfigurationModule::ConfigurationModule(QWidget *parent, const QVariantList &args)
-    : KCModule(parent, args)
+ConfigurationModule::ConfigurationModule(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
+    : KCModule(parent, data, args)
     , m_theme(findTheme(args))
     , m_buttonSize(int(KDecoration2::BorderSize::Normal) - s_indexMapper)
 {
-    setLayout(new QVBoxLayout(this));
     init();
 }
 
@@ -715,7 +714,7 @@ void ConfigurationModule::init()
 
 void ConfigurationModule::initSvg()
 {
-    QWidget *form = new QWidget(this);
+    QWidget *form = new QWidget(widget());
     form->setLayout(new QHBoxLayout(form));
     QComboBox *sizes = new QComboBox(form);
     sizes->addItem(i18nc("@item:inlistbox Button size:", "Tiny"));
@@ -732,7 +731,7 @@ void ConfigurationModule::initSvg()
     form->layout()->addWidget(label);
     form->layout()->addWidget(sizes);
 
-    layout()->addWidget(form);
+    widget()->layout()->addWidget(form);
 
     KCoreConfigSkeleton *skel = new KCoreConfigSkeleton(KSharedConfig::openConfig(QStringLiteral("auroraerc")), this);
     skel->setCurrentGroup(m_theme.mid(16));
@@ -780,10 +779,10 @@ void ConfigurationModule::initQml()
     loader->setLanguageChangeEnabled(true);
     QFile uiFile(ui);
     uiFile.open(QFile::ReadOnly);
-    QWidget *customConfigForm = loader->load(&uiFile, this);
+    QWidget *customConfigForm = loader->load(&uiFile, widget());
     translator->addContextToMonitor(customConfigForm->objectName());
     uiFile.close();
-    layout()->addWidget(customConfigForm);
+    widget()->layout()->addWidget(customConfigForm);
     // connect the ui file with the skeleton
     addConfig(m_skeleton, customConfigForm);
 
