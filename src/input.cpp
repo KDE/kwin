@@ -1208,10 +1208,14 @@ class InternalWindowEventFilter : public InputEventFilter
     }
     bool keyEvent(KeyEvent *event) override
     {
-        const QList<InternalWindow *> &windows = workspace()->internalWindows();
+        const QList<Window *> windows = workspace()->windows();
         QWindow *found = nullptr;
         for (auto it = windows.crbegin(); it != windows.crend(); ++it) {
-            if (QWindow *w = (*it)->handle()) {
+            auto internal = qobject_cast<InternalWindow *>(*it);
+            if (!internal) {
+                continue;
+            }
+            if (QWindow *w = internal->handle()) {
                 if (!w->isVisible()) {
                     continue;
                 }

@@ -478,8 +478,8 @@ Workspace::~Workspace()
     }
 
     // We need a shadow copy because windows get removed as we go through them.
-    const QList<InternalWindow *> internalWindows = m_internalWindows;
-    for (InternalWindow *window : internalWindows) {
+    const QList<Window *> windows = m_windows;
+    for (Window *window : windows) {
         window->destroyWindow();
     }
 
@@ -2000,9 +2000,11 @@ Window *Workspace::findInternal(QWindow *w) const
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
         return findUnmanaged(w->winId());
     }
-    for (InternalWindow *window : m_internalWindows) {
-        if (window->handle() == w) {
-            return window;
+    for (Window *window : m_windows) {
+        if (InternalWindow *internal = qobject_cast<InternalWindow *>(window)) {
+            if (internal->handle() == w) {
+                return internal;
+            }
         }
     }
     return nullptr;
@@ -2033,7 +2035,6 @@ void Workspace::updateTabbox()
 void Workspace::addInternalWindow(InternalWindow *window)
 {
     m_windows.append(window);
-    m_internalWindows.append(window);
     addToStack(window);
 
     setupWindowConnections(window);
@@ -2053,7 +2054,6 @@ void Workspace::addInternalWindow(InternalWindow *window)
 void Workspace::removeInternalWindow(InternalWindow *window)
 {
     m_windows.removeOne(window);
-    m_internalWindows.removeOne(window);
 
     updateStackingOrder();
     updateClientArea();
