@@ -16,7 +16,6 @@
 #include <QPointer>
 #include <optional>
 
-struct gbm_surface;
 struct gbm_bo;
 
 namespace KWaylandServer

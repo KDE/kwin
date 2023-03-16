@@ -18,9 +18,6 @@
 #include "drm_buffer_gbm.h"
 #include "utils/damagejournal.h"
 
-struct gbm_device;
-struct gbm_surface;
-
 namespace KWin
 {
 
