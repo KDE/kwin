@@ -256,14 +256,6 @@ public:
         return m_windows;
     }
 
-    /**
-     * @returns List of all internal windows currently managed by Workspace
-     */
-    const QList<InternalWindow *> &internalWindows() const
-    {
-        return m_internalWindows;
-    }
-
     void stackScreenEdgesUnderOverrideRedirect();
 
     SessionManager *sessionManager() const;
@@ -664,7 +656,6 @@ private:
     QList<X11Window *> m_x11Clients;
     QList<Window *> m_windows;
     QList<Window *> deleted;
-    QList<InternalWindow *> m_internalWindows;
 
     QList<Window *> unconstrained_stacking_order; // Topmost last
     QList<Window *> stacking_order; // Topmost last
