@@ -241,14 +241,6 @@ public:
     void windowAttentionChanged(Window *, bool set);
 
     /**
-     * @return List of windows currently managed by Workspace
-     */
-    const QList<X11Window *> &clientList() const
-    {
-        return m_x11Clients;
-    }
-
-    /**
      * @returns List of all windows (either X11 or Wayland) currently managed by Workspace
      */
     const QList<Window *> windows() const

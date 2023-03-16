@@ -851,8 +851,8 @@ void X11WindowTest::testCaptionWmName()
 
     QVERIFY(windowAddedSpy.wait());
     QCOMPARE(windowAddedSpy.count(), 1);
-    QCOMPARE(workspace()->clientList().count(), 1);
-    X11Window *glxgearsWindow = workspace()->clientList().first();
+    QCOMPARE(workspace()->windows().count(), 1);
+    Window *glxgearsWindow = workspace()->windows().first();
     QCOMPARE(glxgearsWindow->caption(), QStringLiteral("glxgears"));
 
     glxgears.terminate();

@@ -88,9 +88,12 @@ void SessionManager::storeSession(const QString &sessionName, SMSavePhase phase)
     int count = 0;
     int active_client = -1;
 
-    const QList<X11Window *> x11Clients = workspace()->clientList();
-    for (auto it = x11Clients.begin(); it != x11Clients.end(); ++it) {
-        X11Window *c = (*it);
+    const auto windows = workspace()->windows();
+    for (Window *window : windows) {
+        X11Window *c = qobject_cast<X11Window *>(window);
+        if (!c) {
+            continue;
+        }
         if (c->windowType() > NET::Splash) {
             // window types outside this are not tooltips/menus/OSDs
             // typically these will be unmanaged and not in this list anyway, but that is not enforced
@@ -173,10 +176,13 @@ void SessionManager::storeSubSession(const QString &name, QSet<QByteArray> sessi
     KConfigGroup cg(KSharedConfig::openConfig(), QLatin1String("SubSession: ") + name);
     int count = 0;
     int active_client = -1;
-    const QList<X11Window *> x11Clients = workspace()->clientList();
 
-    for (auto it = x11Clients.begin(); it != x11Clients.end(); ++it) {
-        X11Window *c = (*it);
+    const auto windows = workspace()->windows();
+    for (Window *window : windows) {
+        X11Window *c = qobject_cast<X11Window *>(window);
+        if (!c) {
+            continue;
+        }
         if (c->windowType() > NET::Splash) {
             continue;
         }
