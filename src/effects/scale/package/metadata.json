@@ -78,7 +78,7 @@
         "Description[zh_TW]": "讓視窗在顯示或隱藏的時候平滑地以比例縮放方式出現或消失",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-scale",
-        "Id": "kwin4_effect_scale",
+        "Id": "scale",
         "License": "GPL",
         "Name": "Scale",
         "Name[ar]": "حجّم",
@@ -114,7 +114,7 @@
         "Version": "1"
     },
     "X-KDE-Ordering": "60",
-    "X-KDE-PluginKeyword": "kwin4_effect_scale",
+    "X-KDE-PluginKeyword": "scale",
     "X-KWin-Config-TranslationDomain": "kwin_effects",
     "X-KWin-Exclusive-Category": "toplevel-open-close-animation",
     "X-Plasma-API": "javascript",

@@ -68,7 +68,7 @@
         "Description[zh_TW]": "讓視窗在顯示或隱藏的時候平滑地淡入或淡出",
         "EnabledByDefault": false,
         "Icon": "preferences-system-windows-effect-fade",
-        "Id": "kwin4_effect_fade",
+        "Id": "fade",
         "License": "GPL",
         "Name": "Fade",
         "Name[ar]": "التلاشي",

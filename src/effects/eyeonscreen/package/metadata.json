@@ -69,7 +69,7 @@
         "Description[zh_TW]": "將視窗吸進桌面",
         "EnabledByDefault": false,
         "Icon": "preferences-system-windows-effect-eyeonscreen",
-        "Id": "kwin4_effect_eyeonscreen",
+        "Id": "eyeonscreen",
         "License": "GPL",
         "Name": "Eye on Screen",
         "Name[ar]": "عين على الشاشة",

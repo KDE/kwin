@@ -100,7 +100,7 @@ void PopupOpenCloseAnimationTest::testAnimatePopups()
     QVERIFY(mainWindow);
 
     // Load effect that will be tested.
-    const QString effectName = QStringLiteral("kwin4_effect_fadingpopups");
+    const QString effectName = QStringLiteral("fadingpopups");
     QVERIFY(effectsImpl->loadEffect(effectName));
     QCOMPARE(effectsImpl->loadedEffects().count(), 1);
     QCOMPARE(effectsImpl->loadedEffects().first(), effectName);
@@ -160,7 +160,7 @@ void PopupOpenCloseAnimationTest::testAnimateUserActionsPopup()
     QVERIFY(window);
 
     // Load effect that will be tested.
-    const QString effectName = QStringLiteral("kwin4_effect_fadingpopups");
+    const QString effectName = QStringLiteral("fadingpopups");
     QVERIFY(effectsImpl->loadEffect(effectName));
     QCOMPARE(effectsImpl->loadedEffects().count(), 1);
     QCOMPARE(effectsImpl->loadedEffects().first(), effectName);
@@ -221,7 +221,7 @@ void PopupOpenCloseAnimationTest::testAnimateDecorationTooltips()
     QVERIFY(window->isDecorated());
 
     // Load effect that will be tested.
-    const QString effectName = QStringLiteral("kwin4_effect_fadingpopups");
+    const QString effectName = QStringLiteral("fadingpopups");
     QVERIFY(effectsImpl->loadEffect(effectName));
     QCOMPARE(effectsImpl->loadedEffects().count(), 1);
     QCOMPARE(effectsImpl->loadedEffects().first(), effectName);

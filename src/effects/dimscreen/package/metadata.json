@@ -68,7 +68,7 @@
         "Description[zh_TW]": "請求 root 權限時將整個螢幕變暗",
         "EnabledByDefault": false,
         "Icon": "preferences-system-windows-effect-dimscreen",
-        "Id": "kwin4_effect_dimscreen",
+        "Id": "dimscreen",
         "License": "GPL",
         "Name": "Dim Screen for Administrator Mode",
         "Name[ar]": "يعتم الشاشة لنمط المدير",

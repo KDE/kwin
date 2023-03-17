@@ -68,7 +68,7 @@
         "Description[zh_TW]": "視窗進入或離開全螢幕的動畫",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-fullscreen",
-        "Id": "kwin4_effect_fullscreen",
+        "Id": "fullscreen",
         "License": "GPL",
         "Name": "Full Screen",
         "Name[ar]": "ملء الشاشة",

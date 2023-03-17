@@ -68,7 +68,7 @@
         "Description[zh_TW]": "視窗最大化/回復時的動畫",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-maximize",
-        "Id": "kwin4_effect_maximize",
+        "Id": "maximize",
         "License": "GPL",
         "Name": "Maximize",
         "Name[ar]": "كبّر",

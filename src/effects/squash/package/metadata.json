@@ -67,7 +67,7 @@
         "Description[zh_TW]": "最小化視窗時擠壓它們",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-squash",
-        "Id": "kwin4_effect_squash",
+        "Id": "squash",
         "License": "GPL",
         "Name": "Squash",
         "Name[ar]": "الانكماش",

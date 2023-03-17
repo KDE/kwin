@@ -68,7 +68,7 @@
         "Description[zh_TW]": "將目前對話框的親視窗變暗",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-dialog-parent",
-        "Id": "kwin4_effect_dialogparent",
+        "Id": "dialogparent",
         "License": "GPL",
         "Name": "Dialog Parent",
         "Name[ar]": "مولدة الحوار",

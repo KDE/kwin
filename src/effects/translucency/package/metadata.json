@@ -68,7 +68,7 @@
         "Description[zh_CN]": "窗口在某些条件下呈现透明效果",
         "Description[zh_TW]": "在不同的情況下讓視窗變半透明",
         "Icon": "preferences-system-windows-effect-translucency",
-        "Id": "kwin4_effect_translucency",
+        "Id": "translucency",
         "License": "GPL",
         "Name": "Translucency",
         "Name[ar]": "شبه الشفافية",
@@ -104,7 +104,7 @@
         "Version": "0.1.0"
     },
     "X-KDE-Ordering": "50",
-    "X-KDE-PluginKeyword": "kwin4_effect_translucency",
+    "X-KDE-PluginKeyword": "translucency",
     "X-KWin-Config-TranslationDomain": "kwin_effects",
     "X-Plasma-API": "javascript",
     "X-Plasma-MainScript": "code/main.js"

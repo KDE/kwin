@@ -67,7 +67,7 @@
         "Description[zh_TW]": "直到登出完成前皆保留桌面背景圖片",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-logout",
-        "Id": "kwin4_effect_sessionquit",
+        "Id": "sessionquit",
         "License": "GPL",
         "Name": "Session Quit",
         "Name[ar]": "انتهاء الجلسة",

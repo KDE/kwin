@@ -87,7 +87,7 @@ void MinimizeAnimationTest::testMinimizeUnminimize_data()
     QTest::addColumn<QString>("effectName");
 
     QTest::newRow("Magic Lamp") << QStringLiteral("magiclamp");
-    QTest::newRow("Squash") << QStringLiteral("kwin4_effect_squash");
+    QTest::newRow("Squash") << QStringLiteral("squash");
 }
 
 void MinimizeAnimationTest::testMinimizeUnminimize()

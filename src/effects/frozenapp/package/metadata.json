@@ -68,7 +68,7 @@
         "Description[zh_TW]": "降低無回應（凍結）應用程式視窗的飽和度",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-frozenapp",
-        "Id": "kwin4_effect_frozenapp",
+        "Id": "frozenapp",
         "License": "GPL",
         "Name": "Desaturate Unresponsive Applications",
         "Name[ar]": "أظلم التطبيقات غير المستجيبة",
@@ -104,7 +104,7 @@
         "Version": "1.0"
     },
     "X-KDE-Ordering": "60",
-    "X-KDE-PluginKeyword": "kwin4_effect_frozenapp",
+    "X-KDE-PluginKeyword": "frozenapp",
     "X-KWin-Config-TranslationDomain": "kwin_effects",
     "X-Plasma-API": "javascript",
     "X-Plasma-MainScript": "code/main.js"

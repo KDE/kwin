@@ -78,7 +78,7 @@
         "Description[zh_TW]": "讓彈出視窗在顯示或隱藏的時候平滑地淡入或淡出",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-fadingpopups",
-        "Id": "kwin4_effect_fadingpopups",
+        "Id": "fadingpopups",
         "License": "GPL",
         "Name": "Fading Popups",
         "Name[ar]": "تتلاشى النوافذ المنبثقة",

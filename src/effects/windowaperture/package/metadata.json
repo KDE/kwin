@@ -69,7 +69,7 @@
         "Description[zh_TW]": "將視窗移至螢幕角落",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-windowaperture",
-        "Id": "kwin4_effect_windowaperture",
+        "Id": "windowaperture",
         "License": "GPL",
         "Name": "Window Aperture",
         "Name[ar]": "إزاحة النوافذ",

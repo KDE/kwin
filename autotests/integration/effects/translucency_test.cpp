@@ -58,7 +58,7 @@ void TranslucencyTest::initTestCase()
         plugins.writeEntry(name + QStringLiteral("Enabled"), false);
     }
     config->group("Outline").writeEntry(QStringLiteral("QmlPath"), QString("/does/not/exist.qml"));
-    config->group("Effect-kwin4_effect_translucency").writeEntry(QStringLiteral("Dialogs"), 90);
+    config->group("Effect-translucency").writeEntry(QStringLiteral("Dialogs"), 90);
 
     config->sync();
     kwinApp()->setConfig(config);
@@ -78,9 +78,9 @@ void TranslucencyTest::init()
     QVERIFY(effectloader);
     QSignalSpy effectLoadedSpy(effectloader, &AbstractEffectLoader::effectLoaded);
 
-    QVERIFY(!e->isEffectLoaded(QStringLiteral("kwin4_effect_translucency")));
-    QVERIFY(e->loadEffect(QStringLiteral("kwin4_effect_translucency")));
-    QVERIFY(e->isEffectLoaded(QStringLiteral("kwin4_effect_translucency")));
+    QVERIFY(!e->isEffectLoaded(QStringLiteral("translucency")));
+    QVERIFY(e->loadEffect(QStringLiteral("translucency")));
+    QVERIFY(e->isEffectLoaded(QStringLiteral("translucency")));
 
     QCOMPARE(effectLoadedSpy.count(), 1);
     m_translucencyEffect = effectLoadedSpy.first().first().value<Effect *>();
@@ -90,10 +90,10 @@ void TranslucencyTest::init()
 void TranslucencyTest::cleanup()
 {
     EffectsHandlerImpl *e = static_cast<EffectsHandlerImpl *>(effects);
-    if (e->isEffectLoaded(QStringLiteral("kwin4_effect_translucency"))) {
-        e->unloadEffect(QStringLiteral("kwin4_effect_translucency"));
+    if (e->isEffectLoaded(QStringLiteral("translucency"))) {
+        e->unloadEffect(QStringLiteral("translucency"));
     }
-    QVERIFY(!e->isEffectLoaded(QStringLiteral("kwin4_effect_translucency")));
+    QVERIFY(!e->isEffectLoaded(QStringLiteral("translucency")));
     m_translucencyEffect = nullptr;
 }
 

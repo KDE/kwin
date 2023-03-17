@@ -85,9 +85,9 @@ void ToplevelOpenCloseAnimationTest::testAnimateToplevels_data()
 {
     QTest::addColumn<QString>("effectName");
 
-    QTest::newRow("Fade") << QStringLiteral("kwin4_effect_fade");
+    QTest::newRow("Fade") << QStringLiteral("fade");
     QTest::newRow("Glide") << QStringLiteral("glide");
-    QTest::newRow("Scale") << QStringLiteral("kwin4_effect_scale");
+    QTest::newRow("Scale") << QStringLiteral("scale");
 }
 
 void ToplevelOpenCloseAnimationTest::testAnimateToplevels()
@@ -136,9 +136,9 @@ void ToplevelOpenCloseAnimationTest::testDontAnimatePopups_data()
 {
     QTest::addColumn<QString>("effectName");
 
-    QTest::newRow("Fade") << QStringLiteral("kwin4_effect_fade");
+    QTest::newRow("Fade") << QStringLiteral("fade");
     QTest::newRow("Glide") << QStringLiteral("glide");
-    QTest::newRow("Scale") << QStringLiteral("kwin4_effect_scale");
+    QTest::newRow("Scale") << QStringLiteral("scale");
 }
 
 void ToplevelOpenCloseAnimationTest::testDontAnimatePopups()

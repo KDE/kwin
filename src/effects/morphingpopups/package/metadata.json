@@ -77,7 +77,7 @@
         "Description[zh_TW]": "當工具提示或通知變更位置時交錯淡出動畫",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-morphingpopups",
-        "Id": "kwin4_effect_morphingpopups",
+        "Id": "morphingpopups",
         "License": "GPL",
         "Name": "Morphing Popups",
         "Name[ar]": "المنبثقات المتحورة",

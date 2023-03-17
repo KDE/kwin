@@ -69,7 +69,7 @@
         "Description[zh_TW]": "平順地淡入至登出畫面",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-logout",
-        "Id": "kwin4_effect_logout",
+        "Id": "logout",
         "License": "GPL",
         "Name": "Logout",
         "Name[ar]": "الخروج",

@@ -68,7 +68,7 @@
         "Description[zh_TW]": "切換虛擬桌面時在它們之間進行淡化",
         "EnabledByDefault": false,
         "Icon": "preferences-system-windows-effect-fadedesktop",
-        "Id": "kwin4_effect_fadedesktop",
+        "Id": "fadedesktop",
         "License": "GPL",
         "Name": "Fade Desktop",
         "Name[ar]": "تلاشِ سطح المكتب",
