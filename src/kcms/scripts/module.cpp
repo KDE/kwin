@@ -83,7 +83,7 @@ void Module::importScript()
 void Module::configure(const KPluginMetaData &data)
 {
     auto dialog = new KCMultiDialog();
-    dialog->addModule(data);
+    dialog->addModule(data, QVariantList{data.pluginId(), QStringLiteral("KWin/Script")});
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->show();
 }
