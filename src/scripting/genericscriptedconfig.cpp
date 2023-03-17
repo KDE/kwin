@@ -70,7 +70,7 @@ void GenericScriptedConfig::createUi()
         return;
     }
 
-    KPluginMetaData metaData(packageRoot + QLatin1String("/metadata.json"));
+    const KPluginMetaData metaData = KPluginMetaData::fromJsonFile(packageRoot + QLatin1String("/metadata.json"));
     if (!metaData.isValid()) {
         layout->addWidget(new QLabel(i18nc("Required file does not exist", "%1 does not contain a valid metadata.json file", qPrintable(packageRoot))));
         return;

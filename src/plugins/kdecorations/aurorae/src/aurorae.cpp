@@ -751,7 +751,7 @@ void ConfigurationModule::initQml()
         return;
     }
 
-    KPluginMetaData metaData(packageRoot + QLatin1String("/metadata.json"));
+    const KPluginMetaData metaData = KPluginMetaData::fromJsonFile(packageRoot + QLatin1String("/metadata.json"));
     if (!metaData.isValid()) {
         return;
     }

@@ -58,12 +58,8 @@ void AuroraePackage::pathChanged(KPackage::Package *package)
         return;
     }
 
-    KPluginMetaData md(package->metadata().fileName());
-
-    if (!md.pluginId().isEmpty()) {
-        QString configrc = md.pluginId() + "rc";
-        package->addFileDefinition("configrc", configrc, i18n("Configuration file"));
-    }
+    const QString configrc = package->metadata().pluginId() + "rc";
+    package->addFileDefinition("configrc", configrc, i18n("Configuration file"));
 }
 
 K_PLUGIN_CLASS_WITH_JSON(AuroraePackage, "kwin-packagestructure-aurorae.json")
