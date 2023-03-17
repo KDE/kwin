@@ -11,7 +11,6 @@ target_link_libraries(KWinEffectsInterface Qt::DBus)
 
 add_subdirectory(effects)
 add_subdirectory(scripts)
-add_subdirectory(tabbox)
 add_subdirectory(scripting)
 add_subdirectory(helpers)
 add_subdirectory(qml)
@@ -373,6 +372,3 @@ install(
         ${KDE_INSTALL_DBUSINTERFACEDIR}
 )
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/kwin_export.h DESTINATION ${KDE_INSTALL_INCLUDEDIR} COMPONENT Devel)
-
-# Install the KWin/Script service type
-install(FILES scripting/kwinscript.desktop DESTINATION ${KDE_INSTALL_KSERVICETYPESDIR})

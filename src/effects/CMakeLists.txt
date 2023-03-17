@@ -37,9 +37,6 @@ macro(KWIN4_ADD_EFFECT_MODULE name)
     install(FILES metadata.json DESTINATION ${KDE_INSTALL_DATADIR}/kwin/builtin-effects/ RENAME ${name}.json)
 endmacro()
 
-# Install the KWin/Effect service type
-install(FILES kwineffect.desktop DESTINATION ${KDE_INSTALL_KSERVICETYPESDIR})
-
 # scripted effects
 function(install_scripted_effect name)
     kpackage_install_package(${name}/package kwin4_effect_${name} effects kwin)
