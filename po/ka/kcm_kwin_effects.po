@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-18 01:00+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2022-08-22 06:38+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -39,12 +39,7 @@ msgctxt "@info:tooltip"
 msgid "Configure..."
 msgstr "მორგება..."
 
-#: package/contents/ui/main.qml:20
-#, kde-format
-msgid "This module lets you configure desktop effects."
-msgstr "ეს მოდული საშუალებას გაძლევთ მოირგოთ სამუშაო მაგიდის ეფექტები."
-
-#: package/contents/ui/main.qml:27
+#: package/contents/ui/main.qml:25
 #, kde-format
 msgid ""
 "Hint: To find out or configure how to activate an effect, look at the "
@@ -53,25 +48,28 @@ msgstr ""
 "მინიშნება: იმის გასაგებად, როგორ გამოიყენოთ ესა თუ ის ეფექტი, მის "
 "პარამეტრებში შეიხედეთ."
 
-#: package/contents/ui/main.qml:47
+#: package/contents/ui/main.qml:45
 #, kde-format
 msgid "Configure Filter"
 msgstr "ფილტრის მორგება"
 
-#: package/contents/ui/main.qml:59
+#: package/contents/ui/main.qml:57
 #, kde-format
 msgid "Exclude unsupported effects"
 msgstr "მხარდაუჭერელი ეფექტების სიიდან ამოღება"
 
-#: package/contents/ui/main.qml:67
+#: package/contents/ui/main.qml:65
 #, kde-format
 msgid "Exclude internal effects"
 msgstr "სიიდან შიდა ეფექტების ამოღება"
 
-#: package/contents/ui/main.qml:125
+#: package/contents/ui/main.qml:123
 #, kde-format
 msgid "Get New Desktop Effects..."
 msgstr "სამუშაო მაგიდის ახალი ეფექტების მიღება..."
+
+#~ msgid "This module lets you configure desktop effects."
+#~ msgstr "ეს მოდული საშუალებას გაძლევთ მოირგოთ სამუშაო მაგიდის ეფექტები."
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

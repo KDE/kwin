@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-03 00:48+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2022-12-03 12:39+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -24,16 +24,6 @@ msgstr ""
 "X-Generator: Lokalize 20.12.0\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Accelerator-Marker: &\n"
-
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Sebastià Pla i Sanz"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "sps@sastia.com"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:17
@@ -948,110 +938,37 @@ msgstr "&Separa el focus de cada pantalla"
 msgid "Window activation policy description"
 msgstr "Descripció de la política d'activació de les finestres"
 
-#: main.cpp:73
+#: main.cpp:79
 #, kde-format
 msgid "&Focus"
 msgstr "&Focus"
 
-#: main.cpp:79
+#: main.cpp:84
 #, kde-format
 msgid "Titlebar A&ctions"
 msgstr "A&ccions de la barra de títol"
 
-#: main.cpp:85
+#: main.cpp:89
 #, kde-format
 msgid "W&indow Actions"
 msgstr "Accions de la f&inestra"
 
-#: main.cpp:91
+#: main.cpp:94
 #, kde-format
 msgid "Mo&vement"
 msgstr "Mo&viment"
 
-#: main.cpp:97
+#: main.cpp:99
 #, kde-format
 msgid "Adva&nced"
 msgstr "Ava&nçat"
 
-#: main.cpp:101
-#, kde-format
-msgid "Window Behavior Configuration Module"
-msgstr "Mòdul de configuració del comportament de les finestres"
-
-#: main.cpp:103
-#, kde-format
-msgid "(c) 1997 - 2002 KWin and KControl Authors"
-msgstr "(c) 1997 - 2002 autors del KWin i KControl"
-
-#: main.cpp:105
-#, kde-format
-msgid "Matthias Ettrich"
-msgstr "Matthias Ettrich"
-
-#: main.cpp:106
-#, kde-format
-msgid "Waldo Bastian"
-msgstr "Waldo Bastian"
-
-#: main.cpp:107
-#, kde-format
-msgid "Cristian Tibirna"
-msgstr "Cristian Tibirna"
-
-#: main.cpp:108
-#, kde-format
-msgid "Matthias Kalle Dalheimer"
-msgstr "Matthias Kalle Dalheimer"
-
-#: main.cpp:109
-#, kde-format
-msgid "Daniel Molkentin"
-msgstr "Daniel Molkentin"
-
-#: main.cpp:110
-#, kde-format
-msgid "Wynn Wilkes"
-msgstr "Wynn Wilkes"
-
-#: main.cpp:111
-#, kde-format
-msgid "Pat Dowler"
-msgstr "Pat Dowler"
-
-#: main.cpp:112
-#, kde-format
-msgid "Bernd Wuebben"
-msgstr "Bernd Wuebben"
-
-#: main.cpp:113
-#, kde-format
-msgid "Matthias Hoelzer-Kluepfel"
-msgstr "Matthias Hoelzer-Kluepfel"
-
-#: main.cpp:161
-#, kde-format
-msgid ""
-"<p><h1>Window Behavior</h1> Here you can customize the way windows behave "
-"when being moved, resized or clicked on. You can also specify a focus policy "
-"as well as a placement policy for new windows.</p> <p>Please note that this "
-"configuration will not take effect if you do not use KWin as your window "
-"manager. If you do use a different window manager, please refer to its "
-"documentation for how to customize window behavior.</p>"
-msgstr ""
-"<p><h1>Comportament de la finestra</h1> Aquí podeu personalitzar la manera "
-"com es comporten les finestres en moure-les, dimensionar-les o clicar a "
-"sobre. També podeu especificar una política de focus i una política de "
-"col·locació per a les finestres noves.</p><p>Cal tenir present que aquesta "
-"configuració no tindrà cap efecte si no feu servir KWin com a gestor de "
-"finestres. Si useu un gestor de finestres diferent, consulteu la seva "
-"documentació per a personalitzar el comportament de les finestres.</p>"
-
-#: main.cpp:202
+#: main.cpp:178
 #, kde-format
 msgid "&Titlebar Actions"
 msgstr "Accions de la barra de &títol"
 
-#: main.cpp:208
+#: main.cpp:188
 #, kde-format
 msgid "Window Actio&ns"
 msgstr "Accio&ns de la finestra"
@@ -1412,3 +1329,61 @@ msgstr ""
 "pestanyes («Alt+Tab»)</em> entren en contradicció amb la política i no "
 "funcionaran. En el seu lloc, segurament voldreu usar el <em>Focus segueix el "
 "ratolí (prioritat al ratolí)</em>."
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Sebastià Pla i Sanz"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "sps@sastia.com"
+
+#~ msgid "Window Behavior Configuration Module"
+#~ msgstr "Mòdul de configuració del comportament de les finestres"
+
+#~ msgid "(c) 1997 - 2002 KWin and KControl Authors"
+#~ msgstr "(c) 1997 - 2002 autors del KWin i KControl"
+
+#~ msgid "Matthias Ettrich"
+#~ msgstr "Matthias Ettrich"
+
+#~ msgid "Waldo Bastian"
+#~ msgstr "Waldo Bastian"
+
+#~ msgid "Cristian Tibirna"
+#~ msgstr "Cristian Tibirna"
+
+#~ msgid "Matthias Kalle Dalheimer"
+#~ msgstr "Matthias Kalle Dalheimer"
+
+#~ msgid "Daniel Molkentin"
+#~ msgstr "Daniel Molkentin"
+
+#~ msgid "Wynn Wilkes"
+#~ msgstr "Wynn Wilkes"
+
+#~ msgid "Pat Dowler"
+#~ msgstr "Pat Dowler"
+
+#~ msgid "Bernd Wuebben"
+#~ msgstr "Bernd Wuebben"
+
+#~ msgid "Matthias Hoelzer-Kluepfel"
+#~ msgstr "Matthias Hoelzer-Kluepfel"
+
+#~ msgid ""
+#~ "<p><h1>Window Behavior</h1> Here you can customize the way windows behave "
+#~ "when being moved, resized or clicked on. You can also specify a focus "
+#~ "policy as well as a placement policy for new windows.</p> <p>Please note "
+#~ "that this configuration will not take effect if you do not use KWin as "
+#~ "your window manager. If you do use a different window manager, please "
+#~ "refer to its documentation for how to customize window behavior.</p>"
+#~ msgstr ""
+#~ "<p><h1>Comportament de la finestra</h1> Aquí podeu personalitzar la "
+#~ "manera com es comporten les finestres en moure-les, dimensionar-les o "
+#~ "clicar a sobre. També podeu especificar una política de focus i una "
+#~ "política de col·locació per a les finestres noves.</p><p>Cal tenir "
+#~ "present que aquesta configuració no tindrà cap efecte si no feu servir "
+#~ "KWin com a gestor de finestres. Si useu un gestor de finestres diferent, "
+#~ "consulteu la seva documentació per a personalitzar el comportament de les "
+#~ "finestres.</p>"

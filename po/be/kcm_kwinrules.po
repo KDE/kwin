@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 86ff119b1606fcaa910d6b44fc14b611\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-04 02:12+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2023-02-08 13:45\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -23,32 +23,17 @@ msgstr ""
 "X-Crowdin-File: /main/be/kwin/kcm_kwinrules.po\n"
 "X-Crowdin-File-ID: 8357\n"
 
-#: kcmrules.cpp:26
-#, kde-format
-msgid ""
-"<p><h1>Window-specific Settings</h1> Here you can customize window settings "
-"specifically only for some windows.</p> <p>Please note that this "
-"configuration will not take effect if you do not use KWin as your window "
-"manager. If you do use a different window manager, please refer to its "
-"documentation for how to customize window behavior.</p>"
-msgstr ""
-"<p><h1>Налады асобных акон</h1> Тут вы можаце вызначыць налады адмыслова для "
-"пэўных акон.</p> <p>Звярніце ўвагу, што гэтая канфігурацыя не будзе "
-"дзейнічаць, калі вы не выкарыстоўваеце KWin. Калі вы выкарыстоўваеце іншы "
-"кіраўнік акон, звярніцеся да яго дакументацыі, каб даведацца пра наладжванне "
-"паводзін акон.</p>"
-
-#: kcmrules.cpp:232
+#: kcmrules.cpp:226
 #, kde-format
 msgid "Copy of %1"
 msgstr "Скапіяваць %1"
 
-#: kcmrules.cpp:412
+#: kcmrules.cpp:406
 #, kde-format
 msgid "Application settings for %1"
 msgstr "Налады праграмы для %1"
 
-#: kcmrules.cpp:434 rulesmodel.cpp:215
+#: kcmrules.cpp:428 rulesmodel.cpp:215
 #, kde-format
 msgid "Window settings for %1"
 msgstr "Налады акна для %1"
@@ -939,6 +924,19 @@ msgstr "Акно без кіравання"
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr "Не ўдалося выявіць уласцівасці акна. Акно не кіруецца KWin."
+
+#~ msgid ""
+#~ "<p><h1>Window-specific Settings</h1> Here you can customize window "
+#~ "settings specifically only for some windows.</p> <p>Please note that this "
+#~ "configuration will not take effect if you do not use KWin as your window "
+#~ "manager. If you do use a different window manager, please refer to its "
+#~ "documentation for how to customize window behavior.</p>"
+#~ msgstr ""
+#~ "<p><h1>Налады асобных акон</h1> Тут вы можаце вызначыць налады адмыслова "
+#~ "для пэўных акон.</p> <p>Звярніце ўвагу, што гэтая канфігурацыя не будзе "
+#~ "дзейнічаць, калі вы не выкарыстоўваеце KWin. Калі вы выкарыстоўваеце іншы "
+#~ "кіраўнік акон, звярніцеся да яго дакументацыі, каб даведацца пра "
+#~ "наладжванне паводзін акон.</p>"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-04 02:12+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2023-02-19 10:08+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Chinese <zh-l10n@linux.org.tw>\n"
@@ -24,30 +24,17 @@ msgstr ""
 "X-Generator: Lokalize 22.12.2\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: kcmrules.cpp:26
-#, kde-format
-msgid ""
-"<p><h1>Window-specific Settings</h1> Here you can customize window settings "
-"specifically only for some windows.</p> <p>Please note that this "
-"configuration will not take effect if you do not use KWin as your window "
-"manager. If you do use a different window manager, please refer to its "
-"documentation for how to customize window behavior.</p>"
-msgstr ""
-"<p><h1>特定視窗設定配置模組</h1>在這裏您可以自行設定特定視窗的一些設定。</"
-"p><p>請注意若您不是使用 KWin 作視窗管理器，這些設定不會生效。如果您正在使用其"
-"他的視窗管理器，請參考它的文件。</p>"
-
-#: kcmrules.cpp:232
+#: kcmrules.cpp:226
 #, kde-format
 msgid "Copy of %1"
 msgstr "%1 的副本"
 
-#: kcmrules.cpp:412
+#: kcmrules.cpp:406
 #, kde-format
 msgid "Application settings for %1"
 msgstr "%1 的應用程式設定"
 
-#: kcmrules.cpp:434 rulesmodel.cpp:215
+#: kcmrules.cpp:428 rulesmodel.cpp:215
 #, kde-format
 msgid "Window settings for %1"
 msgstr "%1 的視窗設定"
@@ -920,6 +907,17 @@ msgstr "未管理視窗"
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr "無法偵測視窗屬性。視窗未被 KWin 管理。"
+
+#~ msgid ""
+#~ "<p><h1>Window-specific Settings</h1> Here you can customize window "
+#~ "settings specifically only for some windows.</p> <p>Please note that this "
+#~ "configuration will not take effect if you do not use KWin as your window "
+#~ "manager. If you do use a different window manager, please refer to its "
+#~ "documentation for how to customize window behavior.</p>"
+#~ msgstr ""
+#~ "<p><h1>特定視窗設定配置模組</h1>在這裏您可以自行設定特定視窗的一些設定。</"
+#~ "p><p>請注意若您不是使用 KWin 作視窗管理器，這些設定不會生效。如果您正在使"
+#~ "用其他的視窗管理器，請參考它的文件。</p>"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

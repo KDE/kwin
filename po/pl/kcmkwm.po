@@ -1,6 +1,6 @@
 # translation of kcmkwm.po to Polish
 # translation of kcmkwm.po to
-# Version: $Revision: 1641066 $
+# Version: $Revision: 1647185 $
 # Previous translations Piotr Roszatycki <dexter@debian.org>
 # Michał Rudolf <mrudolf@kdewebdev.org>, 2002.
 # Michal Rudolf <mrudolf@kdewebdev.org>, 2002, 2003, 2004.
@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-03 00:48+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2022-12-29 10:14+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -25,18 +25,6 @@ msgstr ""
 "X-Generator: Lokalize 22.12.0\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
-
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Michał Rudolf, Piotr Roszatycki, Łukasz Wojniłowicz, Ignacy Kajdan"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr ""
-"mrudolf@kdewebdev.org, dexter@debian.org, lukasz.wojnilowicz@gmail.com, "
-"ignacy.kajdan@gmail.com"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:17
@@ -942,109 +930,37 @@ msgstr "O&sobno uaktywniaj każdy ekran"
 msgid "Window activation policy description"
 msgstr "Opis zasad aktywacji okien"
 
-#: main.cpp:73
+#: main.cpp:79
 #, kde-format
 msgid "&Focus"
 msgstr "&Uaktywnianie"
 
-#: main.cpp:79
+#: main.cpp:84
 #, kde-format
 msgid "Titlebar A&ctions"
 msgstr "Zachowanie paska &tytułu"
 
-#: main.cpp:85
+#: main.cpp:89
 #, kde-format
 msgid "W&indow Actions"
 msgstr "Zachowanie ok&ien"
 
-#: main.cpp:91
+#: main.cpp:94
 #, kde-format
 msgid "Mo&vement"
 msgstr "&Ruch"
 
-#: main.cpp:97
+#: main.cpp:99
 #, kde-format
 msgid "Adva&nced"
 msgstr "Rozszerzo&ne"
 
-#: main.cpp:101
-#, kde-format
-msgid "Window Behavior Configuration Module"
-msgstr "Moduł ustawień zachowania okien"
-
-#: main.cpp:103
-#, kde-format
-msgid "(c) 1997 - 2002 KWin and KControl Authors"
-msgstr "(c) 1997 - 2002 Autorzy KWin i KControl"
-
-#: main.cpp:105
-#, kde-format
-msgid "Matthias Ettrich"
-msgstr "Matthias Ettrich"
-
-#: main.cpp:106
-#, kde-format
-msgid "Waldo Bastian"
-msgstr "Waldo Bastian"
-
-#: main.cpp:107
-#, kde-format
-msgid "Cristian Tibirna"
-msgstr "Cristian Tibirna"
-
-#: main.cpp:108
-#, kde-format
-msgid "Matthias Kalle Dalheimer"
-msgstr "Matthias Kalle Dalheimer"
-
-#: main.cpp:109
-#, kde-format
-msgid "Daniel Molkentin"
-msgstr "Daniel Molkentin"
-
-#: main.cpp:110
-#, kde-format
-msgid "Wynn Wilkes"
-msgstr "Wynn Wilkes"
-
-#: main.cpp:111
-#, kde-format
-msgid "Pat Dowler"
-msgstr "Pat Dowler"
-
-#: main.cpp:112
-#, kde-format
-msgid "Bernd Wuebben"
-msgstr "Bernd Wuebben"
-
-#: main.cpp:113
-#, kde-format
-msgid "Matthias Hoelzer-Kluepfel"
-msgstr "Matthias Hoelzer-Kluepfel"
-
-#: main.cpp:161
-#, kde-format
-msgid ""
-"<p><h1>Window Behavior</h1> Here you can customize the way windows behave "
-"when being moved, resized or clicked on. You can also specify a focus policy "
-"as well as a placement policy for new windows.</p> <p>Please note that this "
-"configuration will not take effect if you do not use KWin as your window "
-"manager. If you do use a different window manager, please refer to its "
-"documentation for how to customize window behavior.</p>"
-msgstr ""
-"<p><h1>Zachowanie okien</h1> Tu możesz ustawić sposób zachowania okien "
-"podczas ich przesuwania, zmiany rozmiaru lub po kliknięciu. Możesz też "
-"określić sposób uaktywniania okien i metodę rozmieszczania na ekranie nowych "
-"okien.</p><p>Uwaga: ustawienia dotyczą jedynie domyślnego programu do "
-"zarządzania oknami KDE - KWin. Jeśli używasz innego zarządzania oknami, "
-"sprawdź w jego dokumentacji, jak ustawić zachowanie okien.</p>"
-
-#: main.cpp:202
+#: main.cpp:178
 #, kde-format
 msgid "&Titlebar Actions"
 msgstr "Zachowania pasków &tytułu"
 
-#: main.cpp:208
+#: main.cpp:188
 #, kde-format
 msgid "Window Actio&ns"
 msgstr "Zachowanie &okien"
@@ -1407,6 +1323,64 @@ msgstr ""
 "przed zmianą aktywnego okna</em> i <em>pole kart („Alt+Tab”)</em> zaprzecza "
 "tej zasadzie i nie zadziała. W tym przypadku prawdopodobnie chcesz użyć "
 "<em>Uaktywnienie podąża za myszą (mysz ma pierwszeństwo)</em>."
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Michał Rudolf, Piotr Roszatycki, Łukasz Wojniłowicz, Ignacy Kajdan"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr ""
+#~ "mrudolf@kdewebdev.org, dexter@debian.org, lukasz.wojnilowicz@gmail.com, "
+#~ "ignacy.kajdan@gmail.com"
+
+#~ msgid "Window Behavior Configuration Module"
+#~ msgstr "Moduł ustawień zachowania okien"
+
+#~ msgid "(c) 1997 - 2002 KWin and KControl Authors"
+#~ msgstr "(c) 1997 - 2002 Autorzy KWin i KControl"
+
+#~ msgid "Matthias Ettrich"
+#~ msgstr "Matthias Ettrich"
+
+#~ msgid "Waldo Bastian"
+#~ msgstr "Waldo Bastian"
+
+#~ msgid "Cristian Tibirna"
+#~ msgstr "Cristian Tibirna"
+
+#~ msgid "Matthias Kalle Dalheimer"
+#~ msgstr "Matthias Kalle Dalheimer"
+
+#~ msgid "Daniel Molkentin"
+#~ msgstr "Daniel Molkentin"
+
+#~ msgid "Wynn Wilkes"
+#~ msgstr "Wynn Wilkes"
+
+#~ msgid "Pat Dowler"
+#~ msgstr "Pat Dowler"
+
+#~ msgid "Bernd Wuebben"
+#~ msgstr "Bernd Wuebben"
+
+#~ msgid "Matthias Hoelzer-Kluepfel"
+#~ msgstr "Matthias Hoelzer-Kluepfel"
+
+#~ msgid ""
+#~ "<p><h1>Window Behavior</h1> Here you can customize the way windows behave "
+#~ "when being moved, resized or clicked on. You can also specify a focus "
+#~ "policy as well as a placement policy for new windows.</p> <p>Please note "
+#~ "that this configuration will not take effect if you do not use KWin as "
+#~ "your window manager. If you do use a different window manager, please "
+#~ "refer to its documentation for how to customize window behavior.</p>"
+#~ msgstr ""
+#~ "<p><h1>Zachowanie okien</h1> Tu możesz ustawić sposób zachowania okien "
+#~ "podczas ich przesuwania, zmiany rozmiaru lub po kliknięciu. Możesz też "
+#~ "określić sposób uaktywniania okien i metodę rozmieszczania na ekranie "
+#~ "nowych okien.</p><p>Uwaga: ustawienia dotyczą jedynie domyślnego programu "
+#~ "do zarządzania oknami KDE - KWin. Jeśli używasz innego zarządzania "
+#~ "oknami, sprawdź w jego dokumentacji, jak ustawić zachowanie okien.</p>"
 
 #~ msgid "Cascaded"
 #~ msgstr "Kaskadowe"

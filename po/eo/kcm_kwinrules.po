@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-04 02:12+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2023-02-09 22:30+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -20,32 +20,17 @@ msgstr ""
 "X-Generator: translate-po (https://github.com/zcribe/translate-po)\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: kcmrules.cpp:26
-#, kde-format
-msgid ""
-"<p><h1>Window-specific Settings</h1> Here you can customize window settings "
-"specifically only for some windows.</p> <p>Please note that this "
-"configuration will not take effect if you do not use KWin as your window "
-"manager. If you do use a different window manager, please refer to its "
-"documentation for how to customize window behavior.</p>"
-msgstr ""
-"<p><h1>Apartaj agordoj por fenestroj</h1> Ĉi tie vi povas specifi specialajn "
-"agordojn por apartaj fenestroj.</p><p>Bonvolu noti ke ĉi tiu agordo "
-"senutilas se vi ne uzas KWin kiel via fenestra agordilo. Se vi uzas alian, "
-"bonvolu turni vin al ties dokumentaro pri la agordo de la fenestra konduto.</"
-"p>"
-
-#: kcmrules.cpp:232
+#: kcmrules.cpp:226
 #, kde-format
 msgid "Copy of %1"
 msgstr "Kopio de %1"
 
-#: kcmrules.cpp:412
+#: kcmrules.cpp:406
 #, kde-format
 msgid "Application settings for %1"
 msgstr "Aplikaĵaj agordoj por %1"
 
-#: kcmrules.cpp:434 rulesmodel.cpp:215
+#: kcmrules.cpp:428 rulesmodel.cpp:215
 #, kde-format
 msgid "Window settings for %1"
 msgstr "Fenestraj agordoj por %1"
@@ -939,6 +924,19 @@ msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
 "Ne eblis detekti fenestropropraĵojn. La fenestro ne estas administrita de "
 "KWin."
+
+#~ msgid ""
+#~ "<p><h1>Window-specific Settings</h1> Here you can customize window "
+#~ "settings specifically only for some windows.</p> <p>Please note that this "
+#~ "configuration will not take effect if you do not use KWin as your window "
+#~ "manager. If you do use a different window manager, please refer to its "
+#~ "documentation for how to customize window behavior.</p>"
+#~ msgstr ""
+#~ "<p><h1>Apartaj agordoj por fenestroj</h1> Ĉi tie vi povas specifi "
+#~ "specialajn agordojn por apartaj fenestroj.</p><p>Bonvolu noti ke ĉi tiu "
+#~ "agordo senutilas se vi ne uzas KWin kiel via fenestra agordilo. Se vi "
+#~ "uzas alian, bonvolu turni vin al ties dokumentaro pri la agordo de la "
+#~ "fenestra konduto.</p>"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

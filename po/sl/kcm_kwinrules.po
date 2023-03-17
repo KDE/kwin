@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-04 02:12+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2023-03-07 05:47+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -21,32 +21,17 @@ msgstr ""
 "Translator: Andrej Mernik <andrejm@ubuntu.si>\n"
 "X-Generator: Poedit 3.2.2\n"
 
-#: kcmrules.cpp:26
-#, kde-format
-msgid ""
-"<p><h1>Window-specific Settings</h1> Here you can customize window settings "
-"specifically only for some windows.</p> <p>Please note that this "
-"configuration will not take effect if you do not use KWin as your window "
-"manager. If you do use a different window manager, please refer to its "
-"documentation for how to customize window behavior.</p>"
-msgstr ""
-"<h1>Nastavitve glede na okna</h1><p>Tukaj lahko prilagodite nastavitve samo "
-"za posamezna okna.</p><p>Zapomnite si, da te nastavitve ne bodo delovale, če "
-"ne boste uporabljali programa KWin kot okenskega upravljalnika. Če "
-"uporabljate drugega okenskega upravljalnika, preverite njegovo dokumentacijo "
-"za prilagoditev obnašanja oken.</p>"
-
-#: kcmrules.cpp:232
+#: kcmrules.cpp:226
 #, kde-format
 msgid "Copy of %1"
 msgstr "Kopija %1"
 
-#: kcmrules.cpp:412
+#: kcmrules.cpp:406
 #, kde-format
 msgid "Application settings for %1"
 msgstr "Programske nastavitve za %1"
 
-#: kcmrules.cpp:434 rulesmodel.cpp:215
+#: kcmrules.cpp:428 rulesmodel.cpp:215
 #, kde-format
 msgid "Window settings for %1"
 msgstr "Okenske nastavitve za %1"
@@ -942,6 +927,19 @@ msgstr "Neupravljano okno"
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr "Ni bilo mogoče zaznati lastnosti okna. Okna ne upravlja KWin."
+
+#~ msgid ""
+#~ "<p><h1>Window-specific Settings</h1> Here you can customize window "
+#~ "settings specifically only for some windows.</p> <p>Please note that this "
+#~ "configuration will not take effect if you do not use KWin as your window "
+#~ "manager. If you do use a different window manager, please refer to its "
+#~ "documentation for how to customize window behavior.</p>"
+#~ msgstr ""
+#~ "<h1>Nastavitve glede na okna</h1><p>Tukaj lahko prilagodite nastavitve "
+#~ "samo za posamezna okna.</p><p>Zapomnite si, da te nastavitve ne bodo "
+#~ "delovale, če ne boste uporabljali programa KWin kot okenskega "
+#~ "upravljalnika. Če uporabljate drugega okenskega upravljalnika, preverite "
+#~ "njegovo dokumentacijo za prilagoditev obnašanja oken.</p>"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

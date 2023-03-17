@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-03 00:48+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2021-08-21 16:25+0530\n"
 "Last-Translator: Raghavendra Kamath <raghu@raghukamath.com>\n"
 "Language-Team: kde-hindi\n"
@@ -18,16 +18,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n!=1);\n"
 "X-Generator: Lokalize 21.08.0\n"
-
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "रविशंकर श्रीवास्तव, जी. करूणाकर"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "raviratlami@aol.in,"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:17
@@ -919,107 +909,41 @@ msgstr "अलग स्क्रीन फ़ोकस (&e) "
 msgid "Window activation policy description"
 msgstr ""
 
-#: main.cpp:73
+#: main.cpp:79
 #, kde-format
 msgid "&Focus"
 msgstr "फ़ोकस (&F)"
 
-#: main.cpp:79
+#: main.cpp:84
 #, fuzzy, kde-format
 #| msgid "&Titlebar Actions"
 msgid "Titlebar A&ctions"
 msgstr "शीर्षकपट्टी क्रियाएँ (&T)"
 
-#: main.cpp:85
+#: main.cpp:89
 #, fuzzy, kde-format
 #| msgid "Window Actio&ns"
 msgid "W&indow Actions"
 msgstr "विंडो क्रियाएँ (&n)"
 
-#: main.cpp:91
+#: main.cpp:94
 #, fuzzy, kde-format
 #| msgid "&Placement:"
 msgid "Mo&vement"
 msgstr "स्थिति: (&P)"
 
-#: main.cpp:97
+#: main.cpp:99
 #, fuzzy, kde-format
 #| msgid "Ad&vanced"
 msgid "Adva&nced"
 msgstr "विस्तृत (&v)"
 
-#: main.cpp:101
-#, kde-format
-msgid "Window Behavior Configuration Module"
-msgstr "विंडो बर्ताव कॉन्फ़िगरेशन मॉड्यूल"
-
-#: main.cpp:103
-#, kde-format
-msgid "(c) 1997 - 2002 KWin and KControl Authors"
-msgstr "(c) 1997 - 2002 के-विन तथा के-कन्ट्रोल लेखक"
-
-#: main.cpp:105
-#, kde-format
-msgid "Matthias Ettrich"
-msgstr "मेथियास एट्रिच"
-
-#: main.cpp:106
-#, kde-format
-msgid "Waldo Bastian"
-msgstr "वाल्दो बास्तियान"
-
-#: main.cpp:107
-#, kde-format
-msgid "Cristian Tibirna"
-msgstr "क्रिश्चियन टिबरिना"
-
-#: main.cpp:108
-#, kde-format
-msgid "Matthias Kalle Dalheimer"
-msgstr "मेथियास काल दाल्हेमेर"
-
-#: main.cpp:109
-#, kde-format
-msgid "Daniel Molkentin"
-msgstr "डेनियल मॉल्केनटिन"
-
-#: main.cpp:110
-#, kde-format
-msgid "Wynn Wilkes"
-msgstr "वाएन विल्किस"
-
-#: main.cpp:111
-#, kde-format
-msgid "Pat Dowler"
-msgstr "पैट डावलर"
-
-#: main.cpp:112
-#, kde-format
-msgid "Bernd Wuebben"
-msgstr "बर्नद वुएबेन"
-
-#: main.cpp:113
-#, kde-format
-msgid "Matthias Hoelzer-Kluepfel"
-msgstr "मैथियास होल्ज़र-क्लूपफेल"
-
-#: main.cpp:161
-#, kde-format
-msgid ""
-"<p><h1>Window Behavior</h1> Here you can customize the way windows behave "
-"when being moved, resized or clicked on. You can also specify a focus policy "
-"as well as a placement policy for new windows.</p> <p>Please note that this "
-"configuration will not take effect if you do not use KWin as your window "
-"manager. If you do use a different window manager, please refer to its "
-"documentation for how to customize window behavior.</p>"
-msgstr ""
-
-#: main.cpp:202
+#: main.cpp:178
 #, kde-format
 msgid "&Titlebar Actions"
 msgstr "शीर्षकपट्टी क्रियाएँ (&T)"
 
-#: main.cpp:208
+#: main.cpp:188
 #, kde-format
 msgid "Window Actio&ns"
 msgstr "विंडो क्रियाएँ (&n)"
@@ -1352,6 +1276,47 @@ msgid ""
 "activation policy and will not work. You very likely want to use <em>Focus "
 "follows mouse (mouse precedence)</em> instead!"
 msgstr ""
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "रविशंकर श्रीवास्तव, जी. करूणाकर"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "raviratlami@aol.in,"
+
+#~ msgid "Window Behavior Configuration Module"
+#~ msgstr "विंडो बर्ताव कॉन्फ़िगरेशन मॉड्यूल"
+
+#~ msgid "(c) 1997 - 2002 KWin and KControl Authors"
+#~ msgstr "(c) 1997 - 2002 के-विन तथा के-कन्ट्रोल लेखक"
+
+#~ msgid "Matthias Ettrich"
+#~ msgstr "मेथियास एट्रिच"
+
+#~ msgid "Waldo Bastian"
+#~ msgstr "वाल्दो बास्तियान"
+
+#~ msgid "Cristian Tibirna"
+#~ msgstr "क्रिश्चियन टिबरिना"
+
+#~ msgid "Matthias Kalle Dalheimer"
+#~ msgstr "मेथियास काल दाल्हेमेर"
+
+#~ msgid "Daniel Molkentin"
+#~ msgstr "डेनियल मॉल्केनटिन"
+
+#~ msgid "Wynn Wilkes"
+#~ msgstr "वाएन विल्किस"
+
+#~ msgid "Pat Dowler"
+#~ msgstr "पैट डावलर"
+
+#~ msgid "Bernd Wuebben"
+#~ msgstr "बर्नद वुएबेन"
+
+#~ msgid "Matthias Hoelzer-Kluepfel"
+#~ msgstr "मैथियास होल्ज़र-क्लूपफेल"
 
 #, fuzzy
 #~| msgid "Cascade"

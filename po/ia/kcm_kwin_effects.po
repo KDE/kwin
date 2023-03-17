@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-18 01:00+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2022-04-28 14:31+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -38,12 +38,7 @@ msgctxt "@info:tooltip"
 msgid "Configure..."
 msgstr "Configura..."
 
-#: package/contents/ui/main.qml:20
-#, kde-format
-msgid "This module lets you configure desktop effects."
-msgstr "Iste modulo te permitte configurar effectos de scriptorio."
-
-#: package/contents/ui/main.qml:27
+#: package/contents/ui/main.qml:25
 #, kde-format
 msgid ""
 "Hint: To find out or configure how to activate an effect, look at the "
@@ -52,25 +47,28 @@ msgstr ""
 "Suggestion: Pro discoperir o configurar como activar un effecto, tu guarda a "
 "le preferentias de effectos."
 
-#: package/contents/ui/main.qml:47
+#: package/contents/ui/main.qml:45
 #, kde-format
 msgid "Configure Filter"
 msgstr "Configura Filtro"
 
-#: package/contents/ui/main.qml:59
+#: package/contents/ui/main.qml:57
 #, kde-format
 msgid "Exclude unsupported effects"
 msgstr "Exclude effectos non supportate"
 
-#: package/contents/ui/main.qml:67
+#: package/contents/ui/main.qml:65
 #, kde-format
 msgid "Exclude internal effects"
 msgstr "Exclude effectos interne"
 
-#: package/contents/ui/main.qml:125
+#: package/contents/ui/main.qml:123
 #, kde-format
 msgid "Get New Desktop Effects..."
 msgstr "Obtene nove effectos de scriptorio..."
+
+#~ msgid "This module lets you configure desktop effects."
+#~ msgstr "Iste modulo te permitte configurar effectos de scriptorio."
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

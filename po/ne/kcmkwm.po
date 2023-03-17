@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-03 00:48+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2007-11-01 20:27+0545\n"
 "Last-Translator: Shyam Krishna Bal <shyamkrishna_bal@yahoo.com>\n"
 "Language-Team: Nepali <info@mpp.org.np>\n"
@@ -18,16 +18,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n !=1\n"
 "\n"
 "X-Generator: KBabel 1.11.4\n"
-
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Nabin Gautam, श्यामकृष्ण बल"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "nabin@mpp.org.np,shyamkrishna_bal@yahoo.com"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:17
@@ -998,113 +988,41 @@ msgstr "पर्दा फोकस विभाजन गर्नुहोस
 msgid "Window activation policy description"
 msgstr ""
 
-#: main.cpp:73
+#: main.cpp:79
 #, kde-format
 msgid "&Focus"
 msgstr "फोकस"
 
-#: main.cpp:79
+#: main.cpp:84
 #, fuzzy, kde-format
 #| msgid "&Titlebar Actions"
 msgid "Titlebar A&ctions"
 msgstr "शीर्षकपट्टी कार्य"
 
-#: main.cpp:85
+#: main.cpp:89
 #, fuzzy, kde-format
 #| msgid "Window Actio&ns"
 msgid "W&indow Actions"
 msgstr "सञ्झ्याल कार्य"
 
-#: main.cpp:91
+#: main.cpp:94
 #, fuzzy, kde-format
 #| msgid "&Placement:"
 msgid "Mo&vement"
 msgstr "स्थापना:"
 
-#: main.cpp:97
+#: main.cpp:99
 #, fuzzy, kde-format
 #| msgid "Ad&vanced"
 msgid "Adva&nced"
 msgstr "उन्नत"
 
-#: main.cpp:101
-#, kde-format
-msgid "Window Behavior Configuration Module"
-msgstr "सञ्झ्याल व्यवहार कन्फिगरेसन मोड्युल"
-
-#: main.cpp:103
-#, kde-format
-msgid "(c) 1997 - 2002 KWin and KControl Authors"
-msgstr "(सी) १९९७ - २००२ केडीई विन र केडीई नियन्त्रण लेखक"
-
-#: main.cpp:105
-#, kde-format
-msgid "Matthias Ettrich"
-msgstr "माथियस इट्रिच"
-
-#: main.cpp:106
-#, kde-format
-msgid "Waldo Bastian"
-msgstr "वाल्डो बास्टियन"
-
-#: main.cpp:107
-#, kde-format
-msgid "Cristian Tibirna"
-msgstr "क्रिस्टियन टिबिर्ना"
-
-#: main.cpp:108
-#, kde-format
-msgid "Matthias Kalle Dalheimer"
-msgstr "माथियस काले डालहेइमेर"
-
-#: main.cpp:109
-#, kde-format
-msgid "Daniel Molkentin"
-msgstr "डानियल मोलकेन्टिन"
-
-#: main.cpp:110
-#, kde-format
-msgid "Wynn Wilkes"
-msgstr "वाइन वाइक्स"
-
-#: main.cpp:111
-#, kde-format
-msgid "Pat Dowler"
-msgstr "प्याट डाउलर"
-
-#: main.cpp:112
-#, kde-format
-msgid "Bernd Wuebben"
-msgstr "बर्न्ड ह्युबेन"
-
-#: main.cpp:113
-#, kde-format
-msgid "Matthias Hoelzer-Kluepfel"
-msgstr "माथियस होल्जर क्ल्युपफेल"
-
-#: main.cpp:161
-#, kde-format
-msgid ""
-"<p><h1>Window Behavior</h1> Here you can customize the way windows behave "
-"when being moved, resized or clicked on. You can also specify a focus policy "
-"as well as a placement policy for new windows.</p> <p>Please note that this "
-"configuration will not take effect if you do not use KWin as your window "
-"manager. If you do use a different window manager, please refer to its "
-"documentation for how to customize window behavior.</p>"
-msgstr ""
-"<p><h1>सञ्झ्याल व्यवहार</h1> यहाँ तपाईँले सार्दा, रिसाइज गर्दा, वा यसम क्लिक गर्दा "
-"सञ्झ्याल व्यवहार तरिका अनुकूल गर्न सक्नुहुन्छ । तपाईँले नयाँ सञ्झ्यालका लागि फोकस नीति तथा "
-"स्थापना नीति निर्दिष्ट गर्न सक्नुहुन्छ । </p> <p>कृपया याद गर्नुहोस् यदि तपाईँले सञ्झ्याल "
-"प्रबन्धकको रुपमा केडीई विन प्रयोग गर्नुहुन्न भने यो कन्फिगरेसनले प्रभाव पार्ने छैन । यदि तपाईँ "
-"फरक सञ्झ्याल प्रबन्धक प्रयोग गर्नुहुन्छ भने, कृपया कसरी सञ्झ्याल व्यवहार अनुकूल गर्ने यसको "
-"मिसिलिकरण सन्दर्भ गर्नुहोस् ।</p>"
-
-#: main.cpp:202
+#: main.cpp:178
 #, kde-format
 msgid "&Titlebar Actions"
 msgstr "शीर्षकपट्टी कार्य"
 
-#: main.cpp:208
+#: main.cpp:188
 #, kde-format
 msgid "Window Actio&ns"
 msgstr "सञ्झ्याल कार्य"
@@ -1451,6 +1369,62 @@ msgid ""
 "activation policy and will not work. You very likely want to use <em>Focus "
 "follows mouse (mouse precedence)</em> instead!"
 msgstr ""
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Nabin Gautam, श्यामकृष्ण बल"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "nabin@mpp.org.np,shyamkrishna_bal@yahoo.com"
+
+#~ msgid "Window Behavior Configuration Module"
+#~ msgstr "सञ्झ्याल व्यवहार कन्फिगरेसन मोड्युल"
+
+#~ msgid "(c) 1997 - 2002 KWin and KControl Authors"
+#~ msgstr "(सी) १९९७ - २००२ केडीई विन र केडीई नियन्त्रण लेखक"
+
+#~ msgid "Matthias Ettrich"
+#~ msgstr "माथियस इट्रिच"
+
+#~ msgid "Waldo Bastian"
+#~ msgstr "वाल्डो बास्टियन"
+
+#~ msgid "Cristian Tibirna"
+#~ msgstr "क्रिस्टियन टिबिर्ना"
+
+#~ msgid "Matthias Kalle Dalheimer"
+#~ msgstr "माथियस काले डालहेइमेर"
+
+#~ msgid "Daniel Molkentin"
+#~ msgstr "डानियल मोलकेन्टिन"
+
+#~ msgid "Wynn Wilkes"
+#~ msgstr "वाइन वाइक्स"
+
+#~ msgid "Pat Dowler"
+#~ msgstr "प्याट डाउलर"
+
+#~ msgid "Bernd Wuebben"
+#~ msgstr "बर्न्ड ह्युबेन"
+
+#~ msgid "Matthias Hoelzer-Kluepfel"
+#~ msgstr "माथियस होल्जर क्ल्युपफेल"
+
+#~ msgid ""
+#~ "<p><h1>Window Behavior</h1> Here you can customize the way windows behave "
+#~ "when being moved, resized or clicked on. You can also specify a focus "
+#~ "policy as well as a placement policy for new windows.</p> <p>Please note "
+#~ "that this configuration will not take effect if you do not use KWin as "
+#~ "your window manager. If you do use a different window manager, please "
+#~ "refer to its documentation for how to customize window behavior.</p>"
+#~ msgstr ""
+#~ "<p><h1>सञ्झ्याल व्यवहार</h1> यहाँ तपाईँले सार्दा, रिसाइज गर्दा, वा यसम क्लिक गर्दा "
+#~ "सञ्झ्याल व्यवहार तरिका अनुकूल गर्न सक्नुहुन्छ । तपाईँले नयाँ सञ्झ्यालका लागि फोकस नीति "
+#~ "तथा स्थापना नीति निर्दिष्ट गर्न सक्नुहुन्छ । </p> <p>कृपया याद गर्नुहोस् यदि तपाईँले "
+#~ "सञ्झ्याल प्रबन्धकको रुपमा केडीई विन प्रयोग गर्नुहुन्न भने यो कन्फिगरेसनले प्रभाव पार्ने छैन "
+#~ "। यदि तपाईँ फरक सञ्झ्याल प्रबन्धक प्रयोग गर्नुहुन्छ भने, कृपया कसरी सञ्झ्याल व्यवहार "
+#~ "अनुकूल गर्ने यसको मिसिलिकरण सन्दर्भ गर्नुहोस् ।</p>"
 
 #, fuzzy
 #~| msgid "Cascade"

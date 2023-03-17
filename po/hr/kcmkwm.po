@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm 0\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-03 00:48+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2011-03-04 19:01+0100\n"
 "Last-Translator: Marko Dimjasevic <marko@dimjasevic.net>\n"
 "Language-Team: Croatian <kde-croatia-list@lists.sourceforge.net>\n"
@@ -23,21 +23,6 @@ msgstr ""
 "X-Environment: kde\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
-
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr ""
-"Dario Lah, Darko Bednjanec, Denis Lackovic, Mato Kutlić, Vedran Rodic, "
-"Vlatko Kosturjak, Žarko Pintar"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr ""
-"lokalizacija@linux.hr, lokalizacija@linux.hr, lokalizacija@linux.hr, "
-"lokalizacija@linux.hr, lokalizacija@linux.hr, lokalizacija@linux.hr, zarko."
-"pintar@gmail.com"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:17
@@ -1013,114 +998,41 @@ msgstr "O&dvojen fokus zaslona"
 msgid "Window activation policy description"
 msgstr ""
 
-#: main.cpp:73
+#: main.cpp:79
 #, kde-format
 msgid "&Focus"
 msgstr "&Fokus (žarište)"
 
-#: main.cpp:79
+#: main.cpp:84
 #, fuzzy, kde-format
 #| msgid "&Titlebar Actions"
 msgid "Titlebar A&ctions"
 msgstr "Radnje naslovne &trake"
 
-#: main.cpp:85
+#: main.cpp:89
 #, fuzzy, kde-format
 #| msgid "Window Actio&ns"
 msgid "W&indow Actions"
 msgstr "Radnje &prozora"
 
-#: main.cpp:91
+#: main.cpp:94
 #, fuzzy, kde-format
 #| msgid "&Placement:"
 msgid "Mo&vement"
 msgstr "Razmještanje:"
 
-#: main.cpp:97
+#: main.cpp:99
 #, fuzzy, kde-format
 #| msgid "Ad&vanced"
 msgid "Adva&nced"
 msgstr "Napr&edno"
 
-#: main.cpp:101
-#, kde-format
-msgid "Window Behavior Configuration Module"
-msgstr "Modul za podešavanje ponašanja prozora"
-
-#: main.cpp:103
-#, kde-format
-msgid "(c) 1997 - 2002 KWin and KControl Authors"
-msgstr "© 1997–2002 autori KWina i KControla"
-
-#: main.cpp:105
-#, kde-format
-msgid "Matthias Ettrich"
-msgstr "Matthias Ettrich"
-
-#: main.cpp:106
-#, kde-format
-msgid "Waldo Bastian"
-msgstr "Waldo Bastian"
-
-#: main.cpp:107
-#, kde-format
-msgid "Cristian Tibirna"
-msgstr "Cristian Tibirna"
-
-#: main.cpp:108
-#, kde-format
-msgid "Matthias Kalle Dalheimer"
-msgstr "Matthias Kalle Dalheimer"
-
-#: main.cpp:109
-#, kde-format
-msgid "Daniel Molkentin"
-msgstr "Daniel Molkentin"
-
-#: main.cpp:110
-#, kde-format
-msgid "Wynn Wilkes"
-msgstr "Wynn Wilkes"
-
-#: main.cpp:111
-#, kde-format
-msgid "Pat Dowler"
-msgstr "Pat Dowler"
-
-#: main.cpp:112
-#, kde-format
-msgid "Bernd Wuebben"
-msgstr "Bernd Wuebben"
-
-#: main.cpp:113
-#, kde-format
-msgid "Matthias Hoelzer-Kluepfel"
-msgstr "Matthias Hoelzer-Kluepfel"
-
-#: main.cpp:161
-#, kde-format
-msgid ""
-"<p><h1>Window Behavior</h1> Here you can customize the way windows behave "
-"when being moved, resized or clicked on. You can also specify a focus policy "
-"as well as a placement policy for new windows.</p> <p>Please note that this "
-"configuration will not take effect if you do not use KWin as your window "
-"manager. If you do use a different window manager, please refer to its "
-"documentation for how to customize window behavior.</p>"
-msgstr ""
-"<p><h1>Ponašanje prozora</h1>Ovdje možete prilagoditi način nakoji se "
-"prozori ponašaju prilikom pomicanja, promjene veličine ili ako se na njih "
-"klikne. Također, možete odrediti pravilo fokusa kao i pravilo postavljanja "
-"novih prozora.</p> <p>Molimo vas, imajte na umu kako ove postavke neće imati "
-"efekta ako ne koristite KWin kao vaš upravitelj prozorima. Ako koristite "
-"drugi upravitelj prozorima, onda konzultirajte njegovu dokumentaciju kako "
-"prilagoditi ponašanje prozora</p>"
-
-#: main.cpp:202
+#: main.cpp:178
 #, kde-format
 msgid "&Titlebar Actions"
 msgstr "Radnje naslovne &trake"
 
-#: main.cpp:208
+#: main.cpp:188
 #, kde-format
 msgid "Window Actio&ns"
 msgstr "Radnje &prozora"
@@ -1466,6 +1378,68 @@ msgid ""
 "activation policy and will not work. You very likely want to use <em>Focus "
 "follows mouse (mouse precedence)</em> instead!"
 msgstr ""
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr ""
+#~ "Dario Lah, Darko Bednjanec, Denis Lackovic, Mato Kutlić, Vedran Rodic, "
+#~ "Vlatko Kosturjak, Žarko Pintar"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr ""
+#~ "lokalizacija@linux.hr, lokalizacija@linux.hr, lokalizacija@linux.hr, "
+#~ "lokalizacija@linux.hr, lokalizacija@linux.hr, lokalizacija@linux.hr, "
+#~ "zarko.pintar@gmail.com"
+
+#~ msgid "Window Behavior Configuration Module"
+#~ msgstr "Modul za podešavanje ponašanja prozora"
+
+#~ msgid "(c) 1997 - 2002 KWin and KControl Authors"
+#~ msgstr "© 1997–2002 autori KWina i KControla"
+
+#~ msgid "Matthias Ettrich"
+#~ msgstr "Matthias Ettrich"
+
+#~ msgid "Waldo Bastian"
+#~ msgstr "Waldo Bastian"
+
+#~ msgid "Cristian Tibirna"
+#~ msgstr "Cristian Tibirna"
+
+#~ msgid "Matthias Kalle Dalheimer"
+#~ msgstr "Matthias Kalle Dalheimer"
+
+#~ msgid "Daniel Molkentin"
+#~ msgstr "Daniel Molkentin"
+
+#~ msgid "Wynn Wilkes"
+#~ msgstr "Wynn Wilkes"
+
+#~ msgid "Pat Dowler"
+#~ msgstr "Pat Dowler"
+
+#~ msgid "Bernd Wuebben"
+#~ msgstr "Bernd Wuebben"
+
+#~ msgid "Matthias Hoelzer-Kluepfel"
+#~ msgstr "Matthias Hoelzer-Kluepfel"
+
+#~ msgid ""
+#~ "<p><h1>Window Behavior</h1> Here you can customize the way windows behave "
+#~ "when being moved, resized or clicked on. You can also specify a focus "
+#~ "policy as well as a placement policy for new windows.</p> <p>Please note "
+#~ "that this configuration will not take effect if you do not use KWin as "
+#~ "your window manager. If you do use a different window manager, please "
+#~ "refer to its documentation for how to customize window behavior.</p>"
+#~ msgstr ""
+#~ "<p><h1>Ponašanje prozora</h1>Ovdje možete prilagoditi način nakoji se "
+#~ "prozori ponašaju prilikom pomicanja, promjene veličine ili ako se na njih "
+#~ "klikne. Također, možete odrediti pravilo fokusa kao i pravilo "
+#~ "postavljanja novih prozora.</p> <p>Molimo vas, imajte na umu kako ove "
+#~ "postavke neće imati efekta ako ne koristite KWin kao vaš upravitelj "
+#~ "prozorima. Ako koristite drugi upravitelj prozorima, onda konzultirajte "
+#~ "njegovu dokumentaciju kako prilagoditi ponašanje prozora</p>"
 
 #, fuzzy
 #~| msgid "Cascade"

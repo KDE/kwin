@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-04 02:12+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2014-02-17 01:33+0100\n"
 "Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
 "Language-Team: Low Saxon <kde-i18n-nds@kde.org>\n"
@@ -17,32 +17,17 @@ msgstr ""
 "X-Generator: Lokalize 1.4\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: kcmrules.cpp:26
-#, kde-format
-msgid ""
-"<p><h1>Window-specific Settings</h1> Here you can customize window settings "
-"specifically only for some windows.</p> <p>Please note that this "
-"configuration will not take effect if you do not use KWin as your window "
-"manager. If you do use a different window manager, please refer to its "
-"documentation for how to customize window behavior.</p>"
-msgstr ""
-"<p><h1>Instellen för enkelte Finstern</h1> Hier kannst Du Optschonen "
-"fastleggen, de bloots för en Reeg Finstern gellt.</p><p>Beacht bitte, dat "
-"disse Instellen bloots anwendt warrt, wenn Du KWin as Finsterpleger bruukst. "
-"Wenn Du en annern Finsterpleger bruukst, kiek bitte binnen em sien "
-"Dokmentatschoon, wodennig sik dat Bedregen vun Finstern instellen lett.</p>"
-
-#: kcmrules.cpp:232
+#: kcmrules.cpp:226
 #, kde-format
 msgid "Copy of %1"
 msgstr ""
 
-#: kcmrules.cpp:412
+#: kcmrules.cpp:406
 #, kde-format
 msgid "Application settings for %1"
 msgstr "Programm-Instellen för %1"
 
-#: kcmrules.cpp:434 rulesmodel.cpp:215
+#: kcmrules.cpp:428 rulesmodel.cpp:215
 #, kde-format
 msgid "Window settings for %1"
 msgstr "Finster-Instellen för %1"
@@ -968,6 +953,20 @@ msgstr "Nich pleegt Finster"
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
+
+#~ msgid ""
+#~ "<p><h1>Window-specific Settings</h1> Here you can customize window "
+#~ "settings specifically only for some windows.</p> <p>Please note that this "
+#~ "configuration will not take effect if you do not use KWin as your window "
+#~ "manager. If you do use a different window manager, please refer to its "
+#~ "documentation for how to customize window behavior.</p>"
+#~ msgstr ""
+#~ "<p><h1>Instellen för enkelte Finstern</h1> Hier kannst Du Optschonen "
+#~ "fastleggen, de bloots för en Reeg Finstern gellt.</p><p>Beacht bitte, dat "
+#~ "disse Instellen bloots anwendt warrt, wenn Du KWin as Finsterpleger "
+#~ "bruukst. Wenn Du en annern Finsterpleger bruukst, kiek bitte binnen em "
+#~ "sien Dokmentatschoon, wodennig sik dat Bedregen vun Finstern instellen "
+#~ "lett.</p>"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

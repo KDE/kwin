@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-03 00:48+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2020-01-11 11:39+0100\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
@@ -23,16 +23,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Lokalize 19.08.3\n"
-
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Xabi García, Marce Villarino"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "xabigf@gmx.net, mvillarino@users.sourceforge.net"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:17
@@ -973,110 +963,37 @@ msgstr "&Separar o foco da pantalla"
 msgid "Window activation policy description"
 msgstr "Política de &activación de xanelas:"
 
-#: main.cpp:73
+#: main.cpp:79
 #, kde-format
 msgid "&Focus"
 msgstr "&Foco"
 
-#: main.cpp:79
+#: main.cpp:84
 #, kde-format
 msgid "Titlebar A&ctions"
 msgstr "A&ccións da barra de título"
 
-#: main.cpp:85
+#: main.cpp:89
 #, kde-format
 msgid "W&indow Actions"
 msgstr "Acc&ións da xanela"
 
-#: main.cpp:91
+#: main.cpp:94
 #, kde-format
 msgid "Mo&vement"
 msgstr "Mo&vemento"
 
-#: main.cpp:97
+#: main.cpp:99
 #, kde-format
 msgid "Adva&nced"
 msgstr "Ava&nzado"
 
-#: main.cpp:101
-#, kde-format
-msgid "Window Behavior Configuration Module"
-msgstr "Módulo de configuración do comportamento das xanelas"
-
-#: main.cpp:103
-#, kde-format
-msgid "(c) 1997 - 2002 KWin and KControl Authors"
-msgstr "© 1997 - 2002 Os autores de KControl e KWin"
-
-#: main.cpp:105
-#, kde-format
-msgid "Matthias Ettrich"
-msgstr "Matthias Ettrich"
-
-#: main.cpp:106
-#, kde-format
-msgid "Waldo Bastian"
-msgstr "Waldo Bastian"
-
-#: main.cpp:107
-#, kde-format
-msgid "Cristian Tibirna"
-msgstr "Cristian Tibirna"
-
-#: main.cpp:108
-#, kde-format
-msgid "Matthias Kalle Dalheimer"
-msgstr "Matthias Kalle Dalheimer"
-
-#: main.cpp:109
-#, kde-format
-msgid "Daniel Molkentin"
-msgstr "Daniel Molkentin"
-
-#: main.cpp:110
-#, kde-format
-msgid "Wynn Wilkes"
-msgstr "Wynn Wilkes"
-
-#: main.cpp:111
-#, kde-format
-msgid "Pat Dowler"
-msgstr "Pat Dowler"
-
-#: main.cpp:112
-#, kde-format
-msgid "Bernd Wuebben"
-msgstr "Bernd Wuebben"
-
-#: main.cpp:113
-#, kde-format
-msgid "Matthias Hoelzer-Kluepfel"
-msgstr "Matthias Hoelzer-Kluepfel"
-
-#: main.cpp:161
-#, kde-format
-msgid ""
-"<p><h1>Window Behavior</h1> Here you can customize the way windows behave "
-"when being moved, resized or clicked on. You can also specify a focus policy "
-"as well as a placement policy for new windows.</p> <p>Please note that this "
-"configuration will not take effect if you do not use KWin as your window "
-"manager. If you do use a different window manager, please refer to its "
-"documentation for how to customize window behavior.</p>"
-msgstr ""
-"<p><h1>Comportamento das xanelas</h1> Aquí pode personalizar o xeito no que "
-"se comportan as xanelas cando as move, lles cambia o tamaño ou prémeas. "
-"Tamén pode especificar a política de focalización así como a política de "
-"colocación das novas xanelas.</p> <p>Por favor, lembre que esta "
-"configuración non xurdirá efecto se non emprega KWin como xestor de xanelas. "
-"Se emprega un xestor distinto, diríxase á súa documentación para saber como "
-"se personaliza o comportamento das xanelas.</p>"
-
-#: main.cpp:202
+#: main.cpp:178
 #, kde-format
 msgid "&Titlebar Actions"
 msgstr "Accións da barra de &título"
 
-#: main.cpp:208
+#: main.cpp:188
 #, kde-format
 msgid "Window Actio&ns"
 msgstr "Accións da &xanela"
@@ -1494,6 +1411,63 @@ msgstr ""
 "política e non han funcionar. Posibelmente queira usar <span style=\" font-"
 "style:italic;\">O foco segue o rato (precedencia do rato)</span> no seu "
 "lugar.</p></body></html>"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Xabi García, Marce Villarino"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "xabigf@gmx.net, mvillarino@users.sourceforge.net"
+
+#~ msgid "Window Behavior Configuration Module"
+#~ msgstr "Módulo de configuración do comportamento das xanelas"
+
+#~ msgid "(c) 1997 - 2002 KWin and KControl Authors"
+#~ msgstr "© 1997 - 2002 Os autores de KControl e KWin"
+
+#~ msgid "Matthias Ettrich"
+#~ msgstr "Matthias Ettrich"
+
+#~ msgid "Waldo Bastian"
+#~ msgstr "Waldo Bastian"
+
+#~ msgid "Cristian Tibirna"
+#~ msgstr "Cristian Tibirna"
+
+#~ msgid "Matthias Kalle Dalheimer"
+#~ msgstr "Matthias Kalle Dalheimer"
+
+#~ msgid "Daniel Molkentin"
+#~ msgstr "Daniel Molkentin"
+
+#~ msgid "Wynn Wilkes"
+#~ msgstr "Wynn Wilkes"
+
+#~ msgid "Pat Dowler"
+#~ msgstr "Pat Dowler"
+
+#~ msgid "Bernd Wuebben"
+#~ msgstr "Bernd Wuebben"
+
+#~ msgid "Matthias Hoelzer-Kluepfel"
+#~ msgstr "Matthias Hoelzer-Kluepfel"
+
+#~ msgid ""
+#~ "<p><h1>Window Behavior</h1> Here you can customize the way windows behave "
+#~ "when being moved, resized or clicked on. You can also specify a focus "
+#~ "policy as well as a placement policy for new windows.</p> <p>Please note "
+#~ "that this configuration will not take effect if you do not use KWin as "
+#~ "your window manager. If you do use a different window manager, please "
+#~ "refer to its documentation for how to customize window behavior.</p>"
+#~ msgstr ""
+#~ "<p><h1>Comportamento das xanelas</h1> Aquí pode personalizar o xeito no "
+#~ "que se comportan as xanelas cando as move, lles cambia o tamaño ou "
+#~ "prémeas. Tamén pode especificar a política de focalización así como a "
+#~ "política de colocación das novas xanelas.</p> <p>Por favor, lembre que "
+#~ "esta configuración non xurdirá efecto se non emprega KWin como xestor de "
+#~ "xanelas. Se emprega un xestor distinto, diríxase á súa documentación para "
+#~ "saber como se personaliza o comportamento das xanelas.</p>"
 
 #~ msgid "Cascaded"
 #~ msgstr "En fervenza"

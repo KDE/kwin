@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-04 02:12+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2023-02-10 23:10+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -24,33 +24,17 @@ msgstr ""
 "X-Generator: Lokalize 22.12.2\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: kcmrules.cpp:26
-#, kde-format
-msgid ""
-"<p><h1>Window-specific Settings</h1> Here you can customize window settings "
-"specifically only for some windows.</p> <p>Please note that this "
-"configuration will not take effect if you do not use KWin as your window "
-"manager. If you do use a different window manager, please refer to its "
-"documentation for how to customize window behavior.</p>"
-msgstr ""
-"<p><h1>Leihoen ezarpen espezifikoak</h1> Hemen, leiho jakin batzuentzako "
-"ezarpenak pertsonaliza ditzakezu.</p> <p>Kontuan izan konfigurazio honek ez "
-"duela eraginik izango KWin leiho-kudeatzaile gisa erabiltzen ez baldin "
-"baduzu. Beste leiho-kudeatzaileren bat badarabilzu, jo ezazu haren "
-"dokumentaziora dagokion leiho-portaera nola pertsonalizatu behar den "
-"jakiteko.</p>"
-
-#: kcmrules.cpp:232
+#: kcmrules.cpp:226
 #, kde-format
 msgid "Copy of %1"
 msgstr "%1(e)n kopia"
 
-#: kcmrules.cpp:412
+#: kcmrules.cpp:406
 #, kde-format
 msgid "Application settings for %1"
 msgstr "%1(r)entzako aplikazio-ezarpenak"
 
-#: kcmrules.cpp:434 rulesmodel.cpp:215
+#: kcmrules.cpp:428 rulesmodel.cpp:215
 #, kde-format
 msgid "Window settings for %1"
 msgstr "%1(r)entzako leiho-ezarpenak"
@@ -954,6 +938,20 @@ msgstr "Kudeatu gabeko leihoa"
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
 "Ezin dira hauteman leihoaren propietateak. Leihoa ez du KWin-ek kudeatzen."
+
+#~ msgid ""
+#~ "<p><h1>Window-specific Settings</h1> Here you can customize window "
+#~ "settings specifically only for some windows.</p> <p>Please note that this "
+#~ "configuration will not take effect if you do not use KWin as your window "
+#~ "manager. If you do use a different window manager, please refer to its "
+#~ "documentation for how to customize window behavior.</p>"
+#~ msgstr ""
+#~ "<p><h1>Leihoen ezarpen espezifikoak</h1> Hemen, leiho jakin batzuentzako "
+#~ "ezarpenak pertsonaliza ditzakezu.</p> <p>Kontuan izan konfigurazio honek "
+#~ "ez duela eraginik izango KWin leiho-kudeatzaile gisa erabiltzen ez baldin "
+#~ "baduzu. Beste leiho-kudeatzaileren bat badarabilzu, jo ezazu haren "
+#~ "dokumentaziora dagokion leiho-portaera nola pertsonalizatu behar den "
+#~ "jakiteko.</p>"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

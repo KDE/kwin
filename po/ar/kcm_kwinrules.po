@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-04 02:12+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2023-02-16 12:15+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -20,31 +20,17 @@ msgstr ""
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 "X-Generator: Lokalize 21.12.3\n"
 
-#: kcmrules.cpp:26
-#, kde-format
-msgid ""
-"<p><h1>Window-specific Settings</h1> Here you can customize window settings "
-"specifically only for some windows.</p> <p>Please note that this "
-"configuration will not take effect if you do not use KWin as your window "
-"manager. If you do use a different window manager, please refer to its "
-"documentation for how to customize window behavior.</p>"
-msgstr ""
-"<p><h1>إعدادات خاصة بالنافذة</h1> هنا يمكنك تخصيص إعدادات النافذة خصوصا لبعض "
-"النوافذ فقط.</p> <p>الرجاء ملاحظة أن هذا الضبط لن يفعل إذا اختر غير كوِن "
-"كمدير للنوافذ.إذا كنت تستخدم مدير نوافذ مختلف ، فالرجاء الرجوع إلى "
-"وثائقهلكيفية تخصيص سلوك النافذة.</p>"
-
-#: kcmrules.cpp:232
+#: kcmrules.cpp:226
 #, kde-format
 msgid "Copy of %1"
 msgstr "نسخة عن %1"
 
-#: kcmrules.cpp:412
+#: kcmrules.cpp:406
 #, kde-format
 msgid "Application settings for %1"
 msgstr "إعدادات التطبيق لـِ %1"
 
-#: kcmrules.cpp:434 rulesmodel.cpp:215
+#: kcmrules.cpp:428 rulesmodel.cpp:215
 #, kde-format
 msgid "Window settings for %1"
 msgstr "إعدادات النافذة لـِ %1"
@@ -943,6 +929,18 @@ msgstr "نافذة غير مدارة"
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr "لا يمكن اكتشاف خواص النافذة. لا تدار النافذة بواسطة كوين."
+
+#~ msgid ""
+#~ "<p><h1>Window-specific Settings</h1> Here you can customize window "
+#~ "settings specifically only for some windows.</p> <p>Please note that this "
+#~ "configuration will not take effect if you do not use KWin as your window "
+#~ "manager. If you do use a different window manager, please refer to its "
+#~ "documentation for how to customize window behavior.</p>"
+#~ msgstr ""
+#~ "<p><h1>إعدادات خاصة بالنافذة</h1> هنا يمكنك تخصيص إعدادات النافذة خصوصا "
+#~ "لبعض النوافذ فقط.</p> <p>الرجاء ملاحظة أن هذا الضبط لن يفعل إذا اختر غير "
+#~ "كوِن كمدير للنوافذ.إذا كنت تستخدم مدير نوافذ مختلف ، فالرجاء الرجوع إلى "
+#~ "وثائقهلكيفية تخصيص سلوك النافذة.</p>"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

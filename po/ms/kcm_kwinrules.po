@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-04 02:12+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2010-07-24 23:55+0800\n"
 "Last-Translator: Sharuzzaman Ahmat Raslan <sharuzzaman@gmail.com>\n"
 "Language-Team: Malay <kedidiemas@yahoogroups.com>\n"
@@ -16,32 +16,17 @@ msgstr ""
 "X-Generator: KBabel 1.11.4\n"
 "Plural-Forms: nplurals=2; plural=1;\n"
 
-#: kcmrules.cpp:26
-#, kde-format
-msgid ""
-"<p><h1>Window-specific Settings</h1> Here you can customize window settings "
-"specifically only for some windows.</p> <p>Please note that this "
-"configuration will not take effect if you do not use KWin as your window "
-"manager. If you do use a different window manager, please refer to its "
-"documentation for how to customize window behavior.</p>"
-msgstr ""
-"<p><h1>Tetapan Tetingkap Khusus</h1> Di sini anda boleh suaikan tetapan "
-"tetingkap khusus hanya untuk sesetengah tetingkap.</p> <p>Ambil perhatian "
-"bahawa tetapan ini tidak akan berfungsi jika anda tidak menggunakan KWin "
-"sebagai pengurus tetingkap anda. Jika anda menggunakan pengurus tetingkap "
-"lain, rujuk dokumentasinya tentang cara menyesuaikan perilaku tetingkap.</p>"
-
-#: kcmrules.cpp:232
+#: kcmrules.cpp:226
 #, kde-format
 msgid "Copy of %1"
 msgstr ""
 
-#: kcmrules.cpp:412
+#: kcmrules.cpp:406
 #, kde-format
 msgid "Application settings for %1"
 msgstr "Tetapan aplikasi untuk %1"
 
-#: kcmrules.cpp:434 rulesmodel.cpp:215
+#: kcmrules.cpp:428 rulesmodel.cpp:215
 #, kde-format
 msgid "Window settings for %1"
 msgstr "Tetapan tetingkap untuk %1"
@@ -935,6 +920,20 @@ msgstr "Dalam Tetingkap Utama"
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
+
+#~ msgid ""
+#~ "<p><h1>Window-specific Settings</h1> Here you can customize window "
+#~ "settings specifically only for some windows.</p> <p>Please note that this "
+#~ "configuration will not take effect if you do not use KWin as your window "
+#~ "manager. If you do use a different window manager, please refer to its "
+#~ "documentation for how to customize window behavior.</p>"
+#~ msgstr ""
+#~ "<p><h1>Tetapan Tetingkap Khusus</h1> Di sini anda boleh suaikan tetapan "
+#~ "tetingkap khusus hanya untuk sesetengah tetingkap.</p> <p>Ambil perhatian "
+#~ "bahawa tetapan ini tidak akan berfungsi jika anda tidak menggunakan KWin "
+#~ "sebagai pengurus tetingkap anda. Jika anda menggunakan pengurus tetingkap "
+#~ "lain, rujuk dokumentasinya tentang cara menyesuaikan perilaku tetingkap.</"
+#~ "p>"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

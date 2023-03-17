@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-04 02:12+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2023-02-11 16:28+0100\n"
 "Last-Translator: Xavier BESNARD <xavier.besnard]neuf.fr>\n"
 "Language-Team: fr\n"
@@ -34,34 +34,17 @@ msgstr ""
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
 
-#: kcmrules.cpp:26
-#, kde-format
-msgid ""
-"<p><h1>Window-specific Settings</h1> Here you can customize window settings "
-"specifically only for some windows.</p> <p>Please note that this "
-"configuration will not take effect if you do not use KWin as your window "
-"manager. If you do use a different window manager, please refer to its "
-"documentation for how to customize window behavior.</p>"
-msgstr ""
-"<p> <h1>Paramètres spécifiques à une fenêtre</h1> Vous pouvez personnaliser "
-"ici des paramètres de fenêtres qui ne sont applicables qu'à certaines "
-"d'entre elles.</p><p>Veuillez noter que cette configuration ne prendra effet "
-"que si vous utilisez Kwin comme gestionnaire de fenêtres. Si vous utilisez "
-"un autre gestionnaire de fenêtres que Kwin, veuillez vous reporter à sa "
-"documentation pour savoir comment personnaliser le comportement des "
-"fenêtres. </p>"
-
-#: kcmrules.cpp:232
+#: kcmrules.cpp:226
 #, kde-format
 msgid "Copy of %1"
 msgstr "Copie de %1"
 
-#: kcmrules.cpp:412
+#: kcmrules.cpp:406
 #, kde-format
 msgid "Application settings for %1"
 msgstr "Paramètres d'application pour « %1 »"
 
-#: kcmrules.cpp:434 rulesmodel.cpp:215
+#: kcmrules.cpp:428 rulesmodel.cpp:215
 #, kde-format
 msgid "Window settings for %1"
 msgstr "Paramètres de fenêtre pour « %1 »"
@@ -981,6 +964,21 @@ msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
 "Impossible de détecter les propriétés de la fenêtre. La fenêtre n'est pas "
 "gérée par KWin."
+
+#~ msgid ""
+#~ "<p><h1>Window-specific Settings</h1> Here you can customize window "
+#~ "settings specifically only for some windows.</p> <p>Please note that this "
+#~ "configuration will not take effect if you do not use KWin as your window "
+#~ "manager. If you do use a different window manager, please refer to its "
+#~ "documentation for how to customize window behavior.</p>"
+#~ msgstr ""
+#~ "<p> <h1>Paramètres spécifiques à une fenêtre</h1> Vous pouvez "
+#~ "personnaliser ici des paramètres de fenêtres qui ne sont applicables qu'à "
+#~ "certaines d'entre elles.</p><p>Veuillez noter que cette configuration ne "
+#~ "prendra effet que si vous utilisez Kwin comme gestionnaire de fenêtres. "
+#~ "Si vous utilisez un autre gestionnaire de fenêtres que Kwin, veuillez "
+#~ "vous reporter à sa documentation pour savoir comment personnaliser le "
+#~ "comportement des fenêtres. </p>"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

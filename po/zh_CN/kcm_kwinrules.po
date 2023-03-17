@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-04 02:12+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2023-02-24 12:43\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -17,30 +17,17 @@ msgstr ""
 "X-Crowdin-File: /kf5-trunk/messages/kwin/kcm_kwinrules.pot\n"
 "X-Crowdin-File-ID: 4401\n"
 
-#: kcmrules.cpp:26
-#, kde-format
-msgid ""
-"<p><h1>Window-specific Settings</h1> Here you can customize window settings "
-"specifically only for some windows.</p> <p>Please note that this "
-"configuration will not take effect if you do not use KWin as your window "
-"manager. If you do use a different window manager, please refer to its "
-"documentation for how to customize window behavior.</p>"
-msgstr ""
-"<p><h1>窗口特定的设置</h1> 您可在此自定义仅对某些窗口生效的窗口设置。</p><p>"
-"请注意，仅当您使用 KWin 作为窗口管理器时此配置才会生效。如果您使用不同的窗口"
-"管理器，请参考其文档中关于自定义窗口行为的说明。</p>"
-
-#: kcmrules.cpp:232
+#: kcmrules.cpp:226
 #, kde-format
 msgid "Copy of %1"
 msgstr "%1 的副本"
 
-#: kcmrules.cpp:412
+#: kcmrules.cpp:406
 #, kde-format
 msgid "Application settings for %1"
 msgstr "%1 的应用程序设置"
 
-#: kcmrules.cpp:434 rulesmodel.cpp:215
+#: kcmrules.cpp:428 rulesmodel.cpp:215
 #, kde-format
 msgid "Window settings for %1"
 msgstr "%1 的窗口设置"
@@ -919,3 +906,14 @@ msgstr "未管理窗口"
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr "无法检测窗口属性。该窗口不受 KWin 管理。"
+
+#~ msgid ""
+#~ "<p><h1>Window-specific Settings</h1> Here you can customize window "
+#~ "settings specifically only for some windows.</p> <p>Please note that this "
+#~ "configuration will not take effect if you do not use KWin as your window "
+#~ "manager. If you do use a different window manager, please refer to its "
+#~ "documentation for how to customize window behavior.</p>"
+#~ msgstr ""
+#~ "<p><h1>窗口特定的设置</h1> 您可在此自定义仅对某些窗口生效的窗口设置。</"
+#~ "p><p>请注意，仅当您使用 KWin 作为窗口管理器时此配置才会生效。如果您使用不"
+#~ "同的窗口管理器，请参考其文档中关于自定义窗口行为的说明。</p>"

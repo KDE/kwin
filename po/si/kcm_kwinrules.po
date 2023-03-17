@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-04 02:12+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2009-12-28 17:56+0530\n"
 "Last-Translator: Danishka Navin <danishka@gmail.com>\n"
 "Language-Team: Sinhala <danishka@gmail.com>\n"
@@ -17,31 +17,17 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Lokalize 0.3\n"
 
-#: kcmrules.cpp:26
-#, kde-format
-msgid ""
-"<p><h1>Window-specific Settings</h1> Here you can customize window settings "
-"specifically only for some windows.</p> <p>Please note that this "
-"configuration will not take effect if you do not use KWin as your window "
-"manager. If you do use a different window manager, please refer to its "
-"documentation for how to customize window behavior.</p>"
-msgstr ""
-"<p><h1>කවුළු-නිවේශිත-සැකසුම්</h1>මෙහිදී ඇතැම් කවුළු සඳහා පමණක් ඔබට කවුළු සැකසුම් සැකසිය හැක.</"
-"p> <p>ඔබ ඔබේ කවුළු කළමණාකරු ලෙසKWIn භාවිත නොකරයි නම් මෙම සැකසුම් බල නොපැවැත්වෙන බව "
-"කරුණාවෙන් සලකන්න, ඔබ වෙනස් කවුළු කළමණාකරුවෙක් භාවිත කරයි නම් එහි කවුළු හැසිරීම වෙනස් කිරීමට එහි "
-"ලේඛන වලට යොමුවන්න.</p>"
-
-#: kcmrules.cpp:232
+#: kcmrules.cpp:226
 #, kde-format
 msgid "Copy of %1"
 msgstr ""
 
-#: kcmrules.cpp:412
+#: kcmrules.cpp:406
 #, kde-format
 msgid "Application settings for %1"
 msgstr "%1 සඳහා භාවිතයෙදවුම් සැකසුම් නොමැත"
 
-#: kcmrules.cpp:434 rulesmodel.cpp:215
+#: kcmrules.cpp:428 rulesmodel.cpp:215
 #, kde-format
 msgid "Window settings for %1"
 msgstr "%1 සඳහා කවුළු සැකසුම්"
@@ -931,6 +917,18 @@ msgstr "ප්‍රධාන කවුළුව මත"
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
+
+#~ msgid ""
+#~ "<p><h1>Window-specific Settings</h1> Here you can customize window "
+#~ "settings specifically only for some windows.</p> <p>Please note that this "
+#~ "configuration will not take effect if you do not use KWin as your window "
+#~ "manager. If you do use a different window manager, please refer to its "
+#~ "documentation for how to customize window behavior.</p>"
+#~ msgstr ""
+#~ "<p><h1>කවුළු-නිවේශිත-සැකසුම්</h1>මෙහිදී ඇතැම් කවුළු සඳහා පමණක් ඔබට කවුළු සැකසුම් සැකසිය "
+#~ "හැක.</p> <p>ඔබ ඔබේ කවුළු කළමණාකරු ලෙසKWIn භාවිත නොකරයි නම් මෙම සැකසුම් බල "
+#~ "නොපැවැත්වෙන බව කරුණාවෙන් සලකන්න, ඔබ වෙනස් කවුළු කළමණාකරුවෙක් භාවිත කරයි නම් එහි කවුළු "
+#~ "හැසිරීම වෙනස් කිරීමට එහි ලේඛන වලට යොමුවන්න.</p>"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

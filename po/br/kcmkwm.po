@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm-1.1\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-03 00:48+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2004-07-08 22:32+0200\n"
 "Last-Translator: Jañ-Mai Drapier <jan-mai.drapier@mail.dotcom.fr>\n"
 "Language-Team: Brezhoneg <Suav.Icb@wanadoo.fr>\n"
@@ -15,16 +15,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8-bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Thierry Vignaud, Jañ-Mai Drapier"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "tvignaud@mandriva.com, jdrapier@club-internet.fr"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:17
@@ -860,106 +850,40 @@ msgstr ""
 msgid "Window activation policy description"
 msgstr ""
 
-#: main.cpp:73
+#: main.cpp:79
 #, kde-format
 msgid "&Focus"
 msgstr "&Fokus"
 
-#: main.cpp:79
+#: main.cpp:84
 #, fuzzy, kde-format
 msgid "Titlebar A&ctions"
 msgstr "Ar varrenn-ditl kepken"
 
-#: main.cpp:85
+#: main.cpp:89
 #, fuzzy, kde-format
 #| msgid "Window Actio&ns"
 msgid "W&indow Actions"
 msgstr "Obe&roù ar prenestr"
 
-#: main.cpp:91
+#: main.cpp:94
 #, fuzzy, kde-format
 #| msgid "&Placement:"
 msgid "Mo&vement"
 msgstr "&Lec'hiadur :"
 
-#: main.cpp:97
+#: main.cpp:99
 #, fuzzy, kde-format
 #| msgid "Ad&vanced"
 msgid "Adva&nced"
 msgstr "&Barek"
 
-#: main.cpp:101
-#, kde-format
-msgid "Window Behavior Configuration Module"
-msgstr "Mollad ar gefluniadur emzalc'h ar prenester"
-
-#: main.cpp:103
-#, kde-format
-msgid "(c) 1997 - 2002 KWin and KControl Authors"
-msgstr "(c) 1997 - 2002 Oberourien KWin ha Kcontrol"
-
-#: main.cpp:105
-#, kde-format
-msgid "Matthias Ettrich"
-msgstr ""
-
-#: main.cpp:106
-#, kde-format
-msgid "Waldo Bastian"
-msgstr "Waldo Bastian"
-
-#: main.cpp:107
-#, kde-format
-msgid "Cristian Tibirna"
-msgstr ""
-
-#: main.cpp:108
-#, kde-format
-msgid "Matthias Kalle Dalheimer"
-msgstr ""
-
-#: main.cpp:109
-#, kde-format
-msgid "Daniel Molkentin"
-msgstr ""
-
-#: main.cpp:110
-#, kde-format
-msgid "Wynn Wilkes"
-msgstr "Wynn Wilkes"
-
-#: main.cpp:111
-#, kde-format
-msgid "Pat Dowler"
-msgstr ""
-
-#: main.cpp:112
-#, kde-format
-msgid "Bernd Wuebben"
-msgstr ""
-
-#: main.cpp:113
-#, kde-format
-msgid "Matthias Hoelzer-Kluepfel"
-msgstr ""
-
-#: main.cpp:161
-#, kde-format
-msgid ""
-"<p><h1>Window Behavior</h1> Here you can customize the way windows behave "
-"when being moved, resized or clicked on. You can also specify a focus policy "
-"as well as a placement policy for new windows.</p> <p>Please note that this "
-"configuration will not take effect if you do not use KWin as your window "
-"manager. If you do use a different window manager, please refer to its "
-"documentation for how to customize window behavior.</p>"
-msgstr ""
-
-#: main.cpp:202
+#: main.cpp:178
 #, fuzzy, kde-format
 msgid "&Titlebar Actions"
 msgstr "Ar varrenn-ditl kepken"
 
-#: main.cpp:208
+#: main.cpp:188
 #, kde-format
 msgid "Window Actio&ns"
 msgstr "Obe&roù ar prenestr"
@@ -1284,6 +1208,26 @@ msgid ""
 "activation policy and will not work. You very likely want to use <em>Focus "
 "follows mouse (mouse precedence)</em> instead!"
 msgstr ""
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Thierry Vignaud, Jañ-Mai Drapier"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "tvignaud@mandriva.com, jdrapier@club-internet.fr"
+
+#~ msgid "Window Behavior Configuration Module"
+#~ msgstr "Mollad ar gefluniadur emzalc'h ar prenester"
+
+#~ msgid "(c) 1997 - 2002 KWin and KControl Authors"
+#~ msgstr "(c) 1997 - 2002 Oberourien KWin ha Kcontrol"
+
+#~ msgid "Waldo Bastian"
+#~ msgstr "Waldo Bastian"
+
+#~ msgid "Wynn Wilkes"
+#~ msgstr "Wynn Wilkes"
 
 #, fuzzy
 #~| msgid "Cascade"

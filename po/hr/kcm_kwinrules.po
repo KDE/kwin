@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-04 02:12+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2011-07-29 16:56+0200\n"
 "Last-Translator: Marko Dimjašević <marko@dimjasevic.net>\n"
 "Language-Team: Croatian <kde-croatia-list@lists.sourceforge.net>\n"
@@ -26,32 +26,17 @@ msgstr ""
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
 
-#: kcmrules.cpp:26
-#, kde-format
-msgid ""
-"<p><h1>Window-specific Settings</h1> Here you can customize window settings "
-"specifically only for some windows.</p> <p>Please note that this "
-"configuration will not take effect if you do not use KWin as your window "
-"manager. If you do use a different window manager, please refer to its "
-"documentation for how to customize window behavior.</p>"
-msgstr ""
-"<p><h1>Prozorski-posebne postavke</h1> Ovdje možete prilagoditi postavke "
-"prozora posebno za neki prozor.</p> <p>Imajte na umu da ova konfiguracija "
-"nema efekta ako ne koristite KWin kao vaš upravitelj prozorima. Ako "
-"koristite drugi upravitelj prozorima, onda konzultirajte njegovu "
-"dokumentaciju kako prilagoditi ponašanje prozora</p>"
-
-#: kcmrules.cpp:232
+#: kcmrules.cpp:226
 #, kde-format
 msgid "Copy of %1"
 msgstr ""
 
-#: kcmrules.cpp:412
+#: kcmrules.cpp:406
 #, kde-format
 msgid "Application settings for %1"
 msgstr "Postavke aplikacije za %1"
 
-#: kcmrules.cpp:434 rulesmodel.cpp:215
+#: kcmrules.cpp:428 rulesmodel.cpp:215
 #, kde-format
 msgid "Window settings for %1"
 msgstr "Postavke prozora za %1"
@@ -953,6 +938,19 @@ msgstr "Slobodan prozor"
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
+
+#~ msgid ""
+#~ "<p><h1>Window-specific Settings</h1> Here you can customize window "
+#~ "settings specifically only for some windows.</p> <p>Please note that this "
+#~ "configuration will not take effect if you do not use KWin as your window "
+#~ "manager. If you do use a different window manager, please refer to its "
+#~ "documentation for how to customize window behavior.</p>"
+#~ msgstr ""
+#~ "<p><h1>Prozorski-posebne postavke</h1> Ovdje možete prilagoditi postavke "
+#~ "prozora posebno za neki prozor.</p> <p>Imajte na umu da ova konfiguracija "
+#~ "nema efekta ako ne koristite KWin kao vaš upravitelj prozorima. Ako "
+#~ "koristite drugi upravitelj prozorima, onda konzultirajte njegovu "
+#~ "dokumentaciju kako prilagoditi ponašanje prozora</p>"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

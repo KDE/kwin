@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-16 02:20+0000\n"
-"PO-Revision-Date: 2023-02-24 23:29+0100\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
+"PO-Revision-Date: 2023-03-16 11:05+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 22.12.2\n"
+"X-Generator: Lokalize 21.12.1\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -1160,22 +1160,22 @@ msgstr "&Termina Application %1"
 msgid "Wait Longer"
 msgstr "Attende plus longe"
 
-#: input.cpp:2009
+#: input.cpp:2008
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Move le tabletta al proxime exito"
 
-#: input.cpp:2088
+#: input.cpp:2087
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Tabletta movite a %1"
 
-#: input.cpp:2088
+#: input.cpp:2087
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Exitos commutate de tablettas"
 
-#: input.cpp:3092
+#: input.cpp:3091
 #, kde-format
 msgid "Touchpad"
 msgstr "Touchpad"
@@ -1259,53 +1259,53 @@ msgstr "Dishabilita optiones de configuration"
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "Il indica que KWin ha ruinate n vices"
 
-#: main_wayland.cpp:298
+#: main_wayland.cpp:296
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "Initia un servior Xwayland sin radice."
 
-#: main_wayland.cpp:300
+#: main_wayland.cpp:298
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
 msgstr ""
 "Nomine del socket Wayland ubi ascoltar. Si non fixate \"wayland-0\" es usate."
 
-#: main_wayland.cpp:303
+#: main_wayland.cpp:301
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr ""
 "Le monstrator  X11 de usar in modo in fenestra (windowed) sur platteforma "
 "X11."
 
-#: main_wayland.cpp:306
+#: main_wayland.cpp:304
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr ""
 "Le monstrator Wayland de usar in modo sub fenestra (windowed) sur "
 "platteforma Wayland."
 
-#: main_wayland.cpp:308
+#: main_wayland.cpp:306
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "Render a un framebuffer virtual."
 
-#: main_wayland.cpp:310
+#: main_wayland.cpp:308
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "Le largessa per modo sub fenestras. Largessa predefinite es 1024."
 
-#: main_wayland.cpp:314
+#: main_wayland.cpp:312
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "Le altessa per modo sub fenestras. Altessa predefinite es 768."
 
-#: main_wayland.cpp:319
+#: main_wayland.cpp:317
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "Le scala per modo sub fenestras. Valor predefinite es 1."
 
-#: main_wayland.cpp:324
+#: main_wayland.cpp:322
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
@@ -1313,7 +1313,7 @@ msgstr ""
 "Le numero de fenestras a aperir como exitos in modo sub fenestras. Valor "
 "predefinite es 1"
 
-#: main_wayland.cpp:329
+#: main_wayland.cpp:327
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1322,7 +1322,7 @@ msgstr ""
 "Socket Wayland a usar per connexiones in arrivata. Isto pote esser combinate "
 "con --socket per nominar le socket"
 
-#: main_wayland.cpp:333
+#: main_wayland.cpp:331
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1331,29 +1331,29 @@ msgstr ""
 "Socket XWayland a usr per connexiones de Wwayland in arrivata. Isto poter "
 "esser fixate multiple vices"
 
-#: main_wayland.cpp:337
+#: main_wayland.cpp:335
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "Nomine del monstrator de xwayland que ha essite pre-configurate"
 
-#: main_wayland.cpp:341
+#: main_wayland.cpp:339
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "Nomine del file de xauthority "
 
-#: main_wayland.cpp:345
+#: main_wayland.cpp:343
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 "Exi iste instantia assi que illo pote esser restartate per "
 "kwin_wayland_wrapper."
 
-#: main_wayland.cpp:347
+#: main_wayland.cpp:345
 #, kde-format
 msgid "Render through drm node."
 msgstr "Render a transverso nodo drm."
 
-#: main_wayland.cpp:348
+#: main_wayland.cpp:346
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
@@ -1361,37 +1361,37 @@ msgstr ""
 "Extrahe information locale ex locale1 plus tosto que ex le configuration del "
 "usator"
 
-#: main_wayland.cpp:370
+#: main_wayland.cpp:368
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "Methodo de entrata que KWin starta."
 
-#: main_wayland.cpp:376
+#: main_wayland.cpp:374
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "Initia le session in modo serrate."
 
-#: main_wayland.cpp:380
+#: main_wayland.cpp:378
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "Initia le session sin supporto de bloco de schermo."
 
-#: main_wayland.cpp:385
+#: main_wayland.cpp:383
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "Initia le session sin supporto de vias breve global."
 
-#: main_wayland.cpp:390 main_x11.cpp:419
+#: main_wayland.cpp:388 main_x11.cpp:419
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Disactiva integration de KActivities."
 
-#: main_wayland.cpp:395
+#: main_wayland.cpp:393
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr "Exi post que le application de session, initiate per KWin, ha cessate."
 
-#: main_wayland.cpp:400
+#: main_wayland.cpp:398
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr "Programmas a initiar, quando servitores Wayland e Xwayland ha initiate"
@@ -2792,18 +2792,7 @@ msgid "(Not Responding)"
 msgstr "(non respondente)"
 
 #: workspace.cpp:1632
-#, fuzzy, kde-format
-#| msgctxt "Introductory text shown in the support information."
-#| msgid ""
-#| "KWin Support Information:\n"
-#| "The following information should be used when requesting support on e.g. "
-#| "https://forum.kde.org.\n"
-#| "It provides information about the currently running instance, which "
-#| "options are used,\n"
-#| "what OpenGL driver and which effects are running.\n"
-#| "Please post the information provided underneath this introductory text to "
-#| "a paste bin service\n"
-#| "like https://paste.kde.org instead of pasting into support threads.\n"
+#, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
 "KWin Support Information:\n"
@@ -2818,7 +2807,7 @@ msgid ""
 msgstr ""
 "Information de supporto de KWin:\n"
 "Le sequente information deberea esser usate quando on require supporto pro "
-"exemplo a http://forum.kde.org.\n"
+"exemplo a http://discuss.kde.org.\n"
 "Il forni information re le currente instantia executante, qual optiones es "
 "usate,\n"
 "qual driver de OpenGL e qual effectos es executante.\n"

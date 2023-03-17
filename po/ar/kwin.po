@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-16 02:20+0000\n"
-"PO-Revision-Date: 2023-02-16 12:16+0400\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
+"PO-Revision-Date: 2023-03-16 11:04+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -1153,22 +1153,22 @@ msgstr "أ&نهِ التّطبيق %1"
 msgid "Wait Longer"
 msgstr "انتظر أكثر"
 
-#: input.cpp:2009
+#: input.cpp:2008
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "انقل اللوحي إلى الخرج التالي"
 
-#: input.cpp:2088
+#: input.cpp:2087
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "انتقل اللوحي إلى %1"
 
-#: input.cpp:2088
+#: input.cpp:2087
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "بدلت اللوحيات المخرجات"
 
-#: input.cpp:3092
+#: input.cpp:3091
 #, kde-format
 msgid "Touchpad"
 msgstr "لوحة اللمس"
@@ -1252,55 +1252,55 @@ msgstr "عطّل خيارات الضّبط"
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "يشير إلى عدد انهيارات كوين"
 
-#: main_wayland.cpp:298
+#: main_wayland.cpp:296
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "ابدأ خادم اكس_ويلاند بدون صلاحية الجذر."
 
-#: main_wayland.cpp:300
+#: main_wayland.cpp:298
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
 msgstr "اسم مقبس كوين. إذا لم يعين سيستخدم \"wayland-0\""
 
-#: main_wayland.cpp:303
+#: main_wayland.cpp:301
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr "شاشة اكس11 التي ستستخدم في وضع المؤطر على منصة اكس11."
 
-#: main_wayland.cpp:306
+#: main_wayland.cpp:304
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr "شاشة ويلاند التي ستستخدم في وضع المؤطر على منصة ويلاند."
 
-#: main_wayland.cpp:308
+#: main_wayland.cpp:306
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "التصيير إلى framebuffer افتراضي"
 
-#: main_wayland.cpp:310
+#: main_wayland.cpp:308
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "عرض نمط المؤطر. العرض المبدئي 1024."
 
-#: main_wayland.cpp:314
+#: main_wayland.cpp:312
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "ارتفاع نمط المؤطر. الارتفاع المبدئي 768."
 
-#: main_wayland.cpp:319
+#: main_wayland.cpp:317
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "مقياس التكبير لوضع المؤطر. المبدئي 1."
 
-#: main_wayland.cpp:324
+#: main_wayland.cpp:322
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
 msgstr ""
 "عدد النوافذ التي سيتم فتحها كمخرجات في الوضع المؤطر. القيمة المبدئي هي 1 "
 
-#: main_wayland.cpp:329
+#: main_wayland.cpp:327
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1309,7 +1309,7 @@ msgstr ""
 "مقبس ويلاند لاستخدامه في الاتصالات الواردة. يمكن دمج هذا --socket لتسمية "
 "المقبس"
 
-#: main_wayland.cpp:333
+#: main_wayland.cpp:331
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1317,63 +1317,63 @@ msgid ""
 msgstr ""
 "مقبس ويلاند_اكس لاستخدامه لاتصالات ويلاند_اكس الواردة. يمكن تعيينها عدة مرات"
 
-#: main_wayland.cpp:337
+#: main_wayland.cpp:335
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "اسم شاشة ويلاند_اكس التي تم إعدادها مسبقًا "
 
-#: main_wayland.cpp:341
+#: main_wayland.cpp:339
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "اسم ملف xauthority "
 
-#: main_wayland.cpp:345
+#: main_wayland.cpp:343
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr "اخرج من هذه النسخة حتى يمكن إعادة تشغيله بواسطة kwin_wayland_wrappe"
 
-#: main_wayland.cpp:347
+#: main_wayland.cpp:345
 #, kde-format
 msgid "Render through drm node."
 msgstr "التصيير عن طريق drm."
 
-#: main_wayland.cpp:348
+#: main_wayland.cpp:346
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr "استخرج معلومات المحليات من locale1 عوضاً عن ضبط المستخدم"
 
-#: main_wayland.cpp:370
+#: main_wayland.cpp:368
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "طريقة الإدخال الذي يبدأه كوين"
 
-#: main_wayland.cpp:376
+#: main_wayland.cpp:374
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "تبدأ الجلسة في النمط المقفل."
 
-#: main_wayland.cpp:380
+#: main_wayland.cpp:378
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "تبدأ الجَلسة دون دعم قفل الشاشة"
 
-#: main_wayland.cpp:385
+#: main_wayland.cpp:383
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "تبدأ الجلسة دون دعم الاختصارات العامة"
 
-#: main_wayland.cpp:390 main_x11.cpp:419
+#: main_wayland.cpp:388 main_x11.cpp:419
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "عطل تكامل الأنشطة KActivities"
 
-#: main_wayland.cpp:395
+#: main_wayland.cpp:393
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr "اخرج بعد إغلاق تطبيق الجَلسة، الذي بدأه كوين."
 
-#: main_wayland.cpp:400
+#: main_wayland.cpp:398
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr "التطبيقات التي تبدأ حين بَدْء خادم ويلاند و ويلاند_اكس"
@@ -2769,18 +2769,7 @@ msgid "(Not Responding)"
 msgstr "(لا يستجيب)"
 
 #: workspace.cpp:1632
-#, fuzzy, kde-format
-#| msgctxt "Introductory text shown in the support information."
-#| msgid ""
-#| "KWin Support Information:\n"
-#| "The following information should be used when requesting support on e.g. "
-#| "https://forum.kde.org.\n"
-#| "It provides information about the currently running instance, which "
-#| "options are used,\n"
-#| "what OpenGL driver and which effects are running.\n"
-#| "Please post the information provided underneath this introductory text to "
-#| "a paste bin service\n"
-#| "like https://paste.kde.org instead of pasting into support threads.\n"
+#, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
 "KWin Support Information:\n"
@@ -2793,9 +2782,9 @@ msgid ""
 "paste bin service\n"
 "like https://paste.kde.org instead of pasting into support threads.\n"
 msgstr ""
-"معلومات دعم كوين: \n"
-"يجب استخدام المعلومات التالية عند طلب الدعم ، على سبيل المثال فيhttps: //"
-"forum.kde.org. \n"
+"discussمعلومات دعم كوين: \n"
+"يجب استخدام المعلومات التالية عند طلب الدعم ، على سبيل المثال في https://"
+"discuss.kde.org. \n"
 "إنها توفر معلومات حول النسخة المشغلة حاليًا ، والخيارات المستخدمة، \n"
 "وما هو معرف OpenGL والتأثيرات قيد التشغيل. \n"
 "الرجاء نشر المعلومات المتوفرة أسفل هذا الملحق التمهيدي إلى خدمة حاوية "

@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-03 00:48+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2023-01-24 19:00+0100\n"
 "Last-Translator: Xavier BESNARD <xavier.besnard]neuf.fr>\n"
 "Language-Team: fr\n"
@@ -33,20 +33,6 @@ msgstr ""
 "X-Environment: kde\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
-
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr ""
-"Xavier Besnard, Thibaut Cousin, Gilles Caulier, Gérard Delafond, Nicolas "
-"Ternisien"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr ""
-"xavier.besnard@neuf.fr, cousin@kde.org, caulier.gilles@free.fr, "
-"gerard@delafond.org, nicolas.ternisien@gmail.com"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:17
@@ -970,111 +956,37 @@ msgstr "&Séparer le focus des écrans"
 msgid "Window activation policy description"
 msgstr "Description de la politique d'activation des fenêtres"
 
-#: main.cpp:73
+#: main.cpp:79
 #, kde-format
 msgid "&Focus"
 msgstr "Donner le &focus"
 
-#: main.cpp:79
+#: main.cpp:84
 #, kde-format
 msgid "Titlebar A&ctions"
 msgstr "A&ctions de la barre de titre"
 
-#: main.cpp:85
+#: main.cpp:89
 #, kde-format
 msgid "W&indow Actions"
 msgstr "Act&ions de la fenêtre"
 
-#: main.cpp:91
+#: main.cpp:94
 #, kde-format
 msgid "Mo&vement"
 msgstr "Dé&placement"
 
-#: main.cpp:97
+#: main.cpp:99
 #, kde-format
 msgid "Adva&nced"
 msgstr "Ava&ncé"
 
-#: main.cpp:101
-#, kde-format
-msgid "Window Behavior Configuration Module"
-msgstr "Module de configuration du comportement des fenêtres"
-
-#: main.cpp:103
-#, kde-format
-msgid "(c) 1997 - 2002 KWin and KControl Authors"
-msgstr "(c) 1997 - 2002, Les auteurs de KWin et de KControl"
-
-#: main.cpp:105
-#, kde-format
-msgid "Matthias Ettrich"
-msgstr "Matthias Ettrich"
-
-#: main.cpp:106
-#, kde-format
-msgid "Waldo Bastian"
-msgstr "Waldo Bastian"
-
-#: main.cpp:107
-#, kde-format
-msgid "Cristian Tibirna"
-msgstr "Cristian Tibirna"
-
-#: main.cpp:108
-#, kde-format
-msgid "Matthias Kalle Dalheimer"
-msgstr "Matthias Kalle Dalheimer"
-
-#: main.cpp:109
-#, kde-format
-msgid "Daniel Molkentin"
-msgstr "Daniel Molkentin"
-
-#: main.cpp:110
-#, kde-format
-msgid "Wynn Wilkes"
-msgstr "Wynn Wilkes"
-
-#: main.cpp:111
-#, kde-format
-msgid "Pat Dowler"
-msgstr "Pat Dowler"
-
-#: main.cpp:112
-#, kde-format
-msgid "Bernd Wuebben"
-msgstr "Bernd Wuebben"
-
-#: main.cpp:113
-#, kde-format
-msgid "Matthias Hoelzer-Kluepfel"
-msgstr "Matthias Hoelzer-Kluepfel"
-
-#: main.cpp:161
-#, kde-format
-msgid ""
-"<p><h1>Window Behavior</h1> Here you can customize the way windows behave "
-"when being moved, resized or clicked on. You can also specify a focus policy "
-"as well as a placement policy for new windows.</p> <p>Please note that this "
-"configuration will not take effect if you do not use KWin as your window "
-"manager. If you do use a different window manager, please refer to its "
-"documentation for how to customize window behavior.</p>"
-msgstr ""
-"<p> <h1>Comportement des fenêtres</h1> Vous pouvez personnaliser dans ce "
-"panneau la façon dont les fenêtres se comportent durant leurs déplacements, "
-"leurs redimensionnements ou lors d'un clic dessus. Vous pouvez aussi "
-"déterminer des règles de focus et de positionnement de nouvelles fenêtres.</"
-"p> <p>Veuillez noter que ce paramétrage n'aura aucun effet si vous "
-"n'utilisez pas KWin en tant que gestionnaire de fenêtres. Si vous utilisez "
-"un gestionnaire de fenêtres différent, veuillez consulter sa documentation "
-"pour savoir comment personnaliser le comportement des fenêtres.</p>"
-
-#: main.cpp:202
+#: main.cpp:178
 #, kde-format
 msgid "&Titlebar Actions"
 msgstr "Actions de la barre de &titre"
 
-#: main.cpp:208
+#: main.cpp:188
 #, kde-format
 msgid "Window Actio&ns"
 msgstr "Actio&ns de la fenêtre"
@@ -1441,6 +1353,69 @@ msgstr ""
 "(« Alt » + « Tab »)</em>sont contradictoires vis à vis des règles et ne "
 "fonctionneront pas. Vous aimerez très probablement utiliser <em>Le focus "
 "suit la souris (Précédence de la souris)</em> à la place !"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr ""
+#~ "Xavier Besnard, Thibaut Cousin, Gilles Caulier, Gérard Delafond, Nicolas "
+#~ "Ternisien"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr ""
+#~ "xavier.besnard@neuf.fr, cousin@kde.org, caulier.gilles@free.fr, "
+#~ "gerard@delafond.org, nicolas.ternisien@gmail.com"
+
+#~ msgid "Window Behavior Configuration Module"
+#~ msgstr "Module de configuration du comportement des fenêtres"
+
+#~ msgid "(c) 1997 - 2002 KWin and KControl Authors"
+#~ msgstr "(c) 1997 - 2002, Les auteurs de KWin et de KControl"
+
+#~ msgid "Matthias Ettrich"
+#~ msgstr "Matthias Ettrich"
+
+#~ msgid "Waldo Bastian"
+#~ msgstr "Waldo Bastian"
+
+#~ msgid "Cristian Tibirna"
+#~ msgstr "Cristian Tibirna"
+
+#~ msgid "Matthias Kalle Dalheimer"
+#~ msgstr "Matthias Kalle Dalheimer"
+
+#~ msgid "Daniel Molkentin"
+#~ msgstr "Daniel Molkentin"
+
+#~ msgid "Wynn Wilkes"
+#~ msgstr "Wynn Wilkes"
+
+#~ msgid "Pat Dowler"
+#~ msgstr "Pat Dowler"
+
+#~ msgid "Bernd Wuebben"
+#~ msgstr "Bernd Wuebben"
+
+#~ msgid "Matthias Hoelzer-Kluepfel"
+#~ msgstr "Matthias Hoelzer-Kluepfel"
+
+#~ msgid ""
+#~ "<p><h1>Window Behavior</h1> Here you can customize the way windows behave "
+#~ "when being moved, resized or clicked on. You can also specify a focus "
+#~ "policy as well as a placement policy for new windows.</p> <p>Please note "
+#~ "that this configuration will not take effect if you do not use KWin as "
+#~ "your window manager. If you do use a different window manager, please "
+#~ "refer to its documentation for how to customize window behavior.</p>"
+#~ msgstr ""
+#~ "<p> <h1>Comportement des fenêtres</h1> Vous pouvez personnaliser dans ce "
+#~ "panneau la façon dont les fenêtres se comportent durant leurs "
+#~ "déplacements, leurs redimensionnements ou lors d'un clic dessus. Vous "
+#~ "pouvez aussi déterminer des règles de focus et de positionnement de "
+#~ "nouvelles fenêtres.</p> <p>Veuillez noter que ce paramétrage n'aura aucun "
+#~ "effet si vous n'utilisez pas KWin en tant que gestionnaire de fenêtres. "
+#~ "Si vous utilisez un gestionnaire de fenêtres différent, veuillez "
+#~ "consulter sa documentation pour savoir comment personnaliser le "
+#~ "comportement des fenêtres.</p>"
 
 #~ msgid "Cascaded"
 #~ msgstr "En cascade"

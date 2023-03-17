@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-18 01:00+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2019-09-30 13:39+0200\n"
 "Last-Translator: Freek de Kruijf <f.de.kruijf@gmail.com>\n"
 "Language-Team: Dutch <kde-i18n-nl@kde.org>\n"
@@ -38,12 +38,7 @@ msgctxt "@info:tooltip"
 msgid "Configure..."
 msgstr "Configureren..."
 
-#: package/contents/ui/main.qml:20
-#, kde-format
-msgid "This module lets you configure desktop effects."
-msgstr "Deze module laat u bureaubladeffecten configureren."
-
-#: package/contents/ui/main.qml:27
+#: package/contents/ui/main.qml:25
 #, kde-format
 msgid ""
 "Hint: To find out or configure how to activate an effect, look at the "
@@ -52,25 +47,28 @@ msgstr ""
 "Tip: om uit te vinden hoe u een effect kunt activeren of instellen, kijk bij "
 "de instellingen ervan."
 
-#: package/contents/ui/main.qml:47
+#: package/contents/ui/main.qml:45
 #, kde-format
 msgid "Configure Filter"
 msgstr "Filter configureren"
 
-#: package/contents/ui/main.qml:59
+#: package/contents/ui/main.qml:57
 #, kde-format
 msgid "Exclude unsupported effects"
 msgstr "Niet ondersteunde effecten uitsluiten"
 
-#: package/contents/ui/main.qml:67
+#: package/contents/ui/main.qml:65
 #, kde-format
 msgid "Exclude internal effects"
 msgstr "Interne effecten uitsluiten"
 
-#: package/contents/ui/main.qml:125
+#: package/contents/ui/main.qml:123
 #, kde-format
 msgid "Get New Desktop Effects..."
 msgstr "Nieuwe bureaubladeffecten ophalen..."
+
+#~ msgid "This module lets you configure desktop effects."
+#~ msgstr "Deze module laat u bureaubladeffecten configureren."
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

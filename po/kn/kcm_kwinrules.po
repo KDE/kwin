@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-04 02:12+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2008-07-06 23:45+0530\n"
 "Last-Translator: Shankar Prasad <svenkate@redhat.com>\n"
 "Language-Team: Kannada <en@li.org>\n"
@@ -18,32 +18,17 @@ msgstr ""
 "X-Generator: KBabel 1.11.4\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: kcmrules.cpp:26
-#, kde-format
-msgid ""
-"<p><h1>Window-specific Settings</h1> Here you can customize window settings "
-"specifically only for some windows.</p> <p>Please note that this "
-"configuration will not take effect if you do not use KWin as your window "
-"manager. If you do use a different window manager, please refer to its "
-"documentation for how to customize window behavior.</p>"
-msgstr ""
-"<p><h1>ವಿಂಡೋ-ನಿಗದಿತ ಸಂಯೋಜನೆಗಳು</h1> ಇಲ್ಲಿ ನೀವು ಕೆಲವು ನಿಗದಿತ ವಿಂಡೋಗಳಿಗಾಗಿ "
-"ವಿಂಡೊ ಸಂಯೋಜನೆಗಳನ್ನು ಸಿದ್ಧಗೊಳಿಸಬಹುದು.</p> <p>ನೀವು KWin ಅನ್ನು ವಿಂಡೋ ಮ್ಯಾನೇಜರ್ ಆಗಿ "
-"ಬಳಸದೆ ಹೋದಲ್ಲಿ ಈ ಸಂರಚನೆಯು ಪರಿಣಾಮಕಾರಿಯಾಗುವುದಿಲ್ಲ ಎನ್ನುವುದನ್ನು ನೆನಪಿಡಿ. ಎಲ್ಲಿಯಾದರೂ "
-"ನೀವು ಬೇರೊಂದು ವಿಂಡೋ ಮ್ಯಾನೇಜರ್ ಅನ್ನು ಬಳಸುತ್ತಿದ್ದ ಪಕ್ಷದಲ್ಲಿ ವಿಂಡೋ ವರ್ತನೆಯನ್ನು ಕಸ್ಟಮೈಸ್ "
-"ಮಾಡಲು ದಯವಿಟ್ಟು ಅದರ ದಸ್ತಾವೇಜನ್ನು ಸಂಪರ್ಕಿಸಿ.</p>"
-
-#: kcmrules.cpp:232
+#: kcmrules.cpp:226
 #, kde-format
 msgid "Copy of %1"
 msgstr ""
 
-#: kcmrules.cpp:412
+#: kcmrules.cpp:406
 #, kde-format
 msgid "Application settings for %1"
 msgstr "%1 ಗಾಗಿನ ಅನ್ವಯ ಹೊಂದಾಣಿಕೆಗಳು"
 
-#: kcmrules.cpp:434 rulesmodel.cpp:215
+#: kcmrules.cpp:428 rulesmodel.cpp:215
 #, kde-format
 msgid "Window settings for %1"
 msgstr "%1 ಗಾಗಿನ ವಿಂಡೋ ಹೊಂದಾಣಿಕೆಗಳು"
@@ -934,6 +919,19 @@ msgstr "ಮುಖ್ಯ ವಿಂಡೋದಲ್ಲಿ"
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
+
+#~ msgid ""
+#~ "<p><h1>Window-specific Settings</h1> Here you can customize window "
+#~ "settings specifically only for some windows.</p> <p>Please note that this "
+#~ "configuration will not take effect if you do not use KWin as your window "
+#~ "manager. If you do use a different window manager, please refer to its "
+#~ "documentation for how to customize window behavior.</p>"
+#~ msgstr ""
+#~ "<p><h1>ವಿಂಡೋ-ನಿಗದಿತ ಸಂಯೋಜನೆಗಳು</h1> ಇಲ್ಲಿ ನೀವು ಕೆಲವು ನಿಗದಿತ ವಿಂಡೋಗಳಿಗಾಗಿ "
+#~ "ವಿಂಡೊ ಸಂಯೋಜನೆಗಳನ್ನು ಸಿದ್ಧಗೊಳಿಸಬಹುದು.</p> <p>ನೀವು KWin ಅನ್ನು ವಿಂಡೋ ಮ್ಯಾನೇಜರ್ "
+#~ "ಆಗಿ ಬಳಸದೆ ಹೋದಲ್ಲಿ ಈ ಸಂರಚನೆಯು ಪರಿಣಾಮಕಾರಿಯಾಗುವುದಿಲ್ಲ ಎನ್ನುವುದನ್ನು ನೆನಪಿಡಿ. "
+#~ "ಎಲ್ಲಿಯಾದರೂ ನೀವು ಬೇರೊಂದು ವಿಂಡೋ ಮ್ಯಾನೇಜರ್ ಅನ್ನು ಬಳಸುತ್ತಿದ್ದ ಪಕ್ಷದಲ್ಲಿ ವಿಂಡೋ "
+#~ "ವರ್ತನೆಯನ್ನು ಕಸ್ಟಮೈಸ್ ಮಾಡಲು ದಯವಿಟ್ಟು ಅದರ ದಸ್ತಾವೇಜನ್ನು ಸಂಪರ್ಕಿಸಿ.</p>"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

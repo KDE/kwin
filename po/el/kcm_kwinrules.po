@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-04 02:12+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2016-01-22 22:58+0200\n"
 "Last-Translator: Dimitris Kardarakos <dimkard@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -26,33 +26,17 @@ msgstr ""
 "X-Generator: Lokalize 2.0\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: kcmrules.cpp:26
-#, kde-format
-msgid ""
-"<p><h1>Window-specific Settings</h1> Here you can customize window settings "
-"specifically only for some windows.</p> <p>Please note that this "
-"configuration will not take effect if you do not use KWin as your window "
-"manager. If you do use a different window manager, please refer to its "
-"documentation for how to customize window behavior.</p>"
-msgstr ""
-"<p><h1>Ειδικές επιλογές για το παράθυρο</h1> Εδώ μπορείτε να "
-"παραμετροποιήσετε τις ρυθμίσεις παραθύρου ειδικά για ορισμένα παράθυρα. </"
-"p><p> Παρακαλώ σημειώστε ότι αυτή η διαμόρφωση δε θα ενεργοποιηθεί αν δε "
-"χρησιμοποιείτε το KWin σαν Διαχειριστή Παραθύρων. Αν χρησιμοποιείτε "
-"διαφορετικό διαχειριστή παραθύρων παρακαλώ συμβουλευτείτε το εγχειρίδιό του "
-"για την παραμετροποίησή του.</p>"
-
-#: kcmrules.cpp:232
+#: kcmrules.cpp:226
 #, kde-format
 msgid "Copy of %1"
 msgstr ""
 
-#: kcmrules.cpp:412
+#: kcmrules.cpp:406
 #, kde-format
 msgid "Application settings for %1"
 msgstr "Ρύθμιση εφαρμογής για %1"
 
-#: kcmrules.cpp:434 rulesmodel.cpp:215
+#: kcmrules.cpp:428 rulesmodel.cpp:215
 #, kde-format
 msgid "Window settings for %1"
 msgstr "Ρύθμιση παραθύρου για %1"
@@ -983,6 +967,20 @@ msgstr "Παράθυρο χωρίς διαχείριση"
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
+
+#~ msgid ""
+#~ "<p><h1>Window-specific Settings</h1> Here you can customize window "
+#~ "settings specifically only for some windows.</p> <p>Please note that this "
+#~ "configuration will not take effect if you do not use KWin as your window "
+#~ "manager. If you do use a different window manager, please refer to its "
+#~ "documentation for how to customize window behavior.</p>"
+#~ msgstr ""
+#~ "<p><h1>Ειδικές επιλογές για το παράθυρο</h1> Εδώ μπορείτε να "
+#~ "παραμετροποιήσετε τις ρυθμίσεις παραθύρου ειδικά για ορισμένα παράθυρα. </"
+#~ "p><p> Παρακαλώ σημειώστε ότι αυτή η διαμόρφωση δε θα ενεργοποιηθεί αν δε "
+#~ "χρησιμοποιείτε το KWin σαν Διαχειριστή Παραθύρων. Αν χρησιμοποιείτε "
+#~ "διαφορετικό διαχειριστή παραθύρων παρακαλώ συμβουλευτείτε το εγχειρίδιό "
+#~ "του για την παραμετροποίησή του.</p>"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-04 02:12+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2023-01-02 23:31+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -17,32 +17,17 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Lokalize 22.12.0\n"
 
-#: kcmrules.cpp:26
-#, kde-format
-msgid ""
-"<p><h1>Window-specific Settings</h1> Here you can customize window settings "
-"specifically only for some windows.</p> <p>Please note that this "
-"configuration will not take effect if you do not use KWin as your window "
-"manager. If you do use a different window manager, please refer to its "
-"documentation for how to customize window behavior.</p>"
-msgstr ""
-"<p><h1>Xüsusi pəncərə qaydaları</h1> Burada siz ayrı-ayrı pəncərə "
-"parametrlərini yalnız bəzi pəncərələr üçün ayarlaya bilərsiniz.</p><p>Nəzərə "
-"alın ki, bu tənzimləmər yalnız KWin-i pəncərə meneceri kimi istifadə etdikdə "
-"qüvvədə olacaqdır. Digər pəncərə menecerlərindən istifadə etmək istəsəniz "
-"onların necə tənzimlənməsi haqqında təlimatlarla tanış olun.</p>"
-
-#: kcmrules.cpp:232
+#: kcmrules.cpp:226
 #, kde-format
 msgid "Copy of %1"
 msgstr "%1 kopyası"
 
-#: kcmrules.cpp:412
+#: kcmrules.cpp:406
 #, kde-format
 msgid "Application settings for %1"
 msgstr "%1 üçün tətbiq ayarları"
 
-#: kcmrules.cpp:434 rulesmodel.cpp:215
+#: kcmrules.cpp:428 rulesmodel.cpp:215
 #, kde-format
 msgid "Window settings for %1"
 msgstr "%1 üçün pəncərə ayarları"
@@ -944,6 +929,20 @@ msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
 "Pəncərə xüsusiyyətləri müəyyən edilmədi. Pəncərə KWin tərəfindən idarə "
 "edilmir."
+
+#~ msgid ""
+#~ "<p><h1>Window-specific Settings</h1> Here you can customize window "
+#~ "settings specifically only for some windows.</p> <p>Please note that this "
+#~ "configuration will not take effect if you do not use KWin as your window "
+#~ "manager. If you do use a different window manager, please refer to its "
+#~ "documentation for how to customize window behavior.</p>"
+#~ msgstr ""
+#~ "<p><h1>Xüsusi pəncərə qaydaları</h1> Burada siz ayrı-ayrı pəncərə "
+#~ "parametrlərini yalnız bəzi pəncərələr üçün ayarlaya bilərsiniz.</"
+#~ "p><p>Nəzərə alın ki, bu tənzimləmər yalnız KWin-i pəncərə meneceri kimi "
+#~ "istifadə etdikdə qüvvədə olacaqdır. Digər pəncərə menecerlərindən "
+#~ "istifadə etmək istəsəniz onların necə tənzimlənməsi haqqında təlimatlarla "
+#~ "tanış olun.</p>"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

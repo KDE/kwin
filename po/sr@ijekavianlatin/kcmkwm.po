@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-03 00:48+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2017-09-28 17:58+0200\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -21,16 +21,6 @@ msgstr ""
 "X-Text-Markup: kde4\n"
 "X-Associated-UI-Catalogs: kio5\n"
 "X-Environment: kde\n"
-
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Toplica Tanasković,Časlav Ilić"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "toptan@kde.org.yu,caslav.ilic@gmx.net"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:17
@@ -1001,115 +991,41 @@ msgstr "&Razdvoji fokus po ekranu"
 msgid "Window activation policy description"
 msgstr ""
 
-#: main.cpp:73
+#: main.cpp:79
 #, kde-format
 msgid "&Focus"
 msgstr "&Fokus"
 
-#: main.cpp:79
+#: main.cpp:84
 #, fuzzy, kde-format
 #| msgid "&Titlebar Actions"
 msgid "Titlebar A&ctions"
 msgstr "Radnje &naslovne trake"
 
-#: main.cpp:85
+#: main.cpp:89
 #, fuzzy, kde-format
 #| msgid "Window Actio&ns"
 msgid "W&indow Actions"
 msgstr "Radnje &prozora"
 
-#: main.cpp:91
+#: main.cpp:94
 #, fuzzy, kde-format
 #| msgid "&Placement:"
 msgid "Mo&vement"
 msgstr "&Postavljanje:"
 
-#: main.cpp:97
+#: main.cpp:99
 #, fuzzy, kde-format
 #| msgid "Ad&vanced"
 msgid "Adva&nced"
 msgstr "&Napredno"
 
-#: main.cpp:101
-#, kde-format
-msgid "Window Behavior Configuration Module"
-msgstr ""
-"Modul za podešavanje ponašanja prozora|/|$[svojstva dat 'Modulu za "
-"podešavanje ponašanja prozora']"
-
-#: main.cpp:103
-#, kde-format
-msgid "(c) 1997 - 2002 KWin and KControl Authors"
-msgstr "© 1997-2002, autori KWina i K‑kontrole"
-
-#: main.cpp:105
-#, kde-format
-msgid "Matthias Ettrich"
-msgstr "Matijas Etrih"
-
-#: main.cpp:106
-#, kde-format
-msgid "Waldo Bastian"
-msgstr "Valdo Bastijan"
-
-#: main.cpp:107
-#, kde-format
-msgid "Cristian Tibirna"
-msgstr "Kristijan Tibirna"
-
-#: main.cpp:108
-#, kde-format
-msgid "Matthias Kalle Dalheimer"
-msgstr "Matijas Kale Dalhajmer"
-
-#: main.cpp:109
-#, kde-format
-msgid "Daniel Molkentin"
-msgstr "Danijel Molkentin"
-
-#: main.cpp:110
-#, kde-format
-msgid "Wynn Wilkes"
-msgstr "Vin Vilks"
-
-#: main.cpp:111
-#, kde-format
-msgid "Pat Dowler"
-msgstr "Patrik Douler"
-
-#: main.cpp:112
-#, kde-format
-msgid "Bernd Wuebben"
-msgstr "Bernd Johanes Viben"
-
-#: main.cpp:113
-#, kde-format
-msgid "Matthias Hoelzer-Kluepfel"
-msgstr "Matijas Helcer-Klipfel"
-
-#: main.cpp:161
-#, kde-format
-msgid ""
-"<p><h1>Window Behavior</h1> Here you can customize the way windows behave "
-"when being moved, resized or clicked on. You can also specify a focus policy "
-"as well as a placement policy for new windows.</p> <p>Please note that this "
-"configuration will not take effect if you do not use KWin as your window "
-"manager. If you do use a different window manager, please refer to its "
-"documentation for how to customize window behavior.</p>"
-msgstr ""
-"<h1>Ponašanje prozora</h1><p>Ovdje možete prilagoditi ponašanje prozora u "
-"toku pomijeranja, promjene veličine ili klika na njega. Takođe možete "
-"odrediti smjernice fokusiranja kao i smiještanja novih prozora.</p><p>Ova "
-"postava je na snazi samo ako koristite KWin kao menadžer prozora. Ako "
-"koristite drugi menadžer, pogledajte njegovu dokumentaciju za prilagođavanje "
-"ponašanja prozora.</p>"
-
-#: main.cpp:202
+#: main.cpp:178
 #, kde-format
 msgid "&Titlebar Actions"
 msgstr "Radnje &naslovne trake"
 
-#: main.cpp:208
+#: main.cpp:188
 #, kde-format
 msgid "Window Actio&ns"
 msgstr "Radnje &prozora"
@@ -1530,6 +1446,64 @@ msgstr ""
 "+Tab<br />sukobljeni su ovoj opciji, te <b>neće raditi</b>.<br /><br />Od "
 "ovoga će vam vrlo verovatno više odgovarati da<br />fokus prati miš, uz "
 "prednost mišu."
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Toplica Tanasković,Časlav Ilić"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "toptan@kde.org.yu,caslav.ilic@gmx.net"
+
+#~ msgid "Window Behavior Configuration Module"
+#~ msgstr ""
+#~ "Modul za podešavanje ponašanja prozora|/|$[svojstva dat 'Modulu za "
+#~ "podešavanje ponašanja prozora']"
+
+#~ msgid "(c) 1997 - 2002 KWin and KControl Authors"
+#~ msgstr "© 1997-2002, autori KWina i K‑kontrole"
+
+#~ msgid "Matthias Ettrich"
+#~ msgstr "Matijas Etrih"
+
+#~ msgid "Waldo Bastian"
+#~ msgstr "Valdo Bastijan"
+
+#~ msgid "Cristian Tibirna"
+#~ msgstr "Kristijan Tibirna"
+
+#~ msgid "Matthias Kalle Dalheimer"
+#~ msgstr "Matijas Kale Dalhajmer"
+
+#~ msgid "Daniel Molkentin"
+#~ msgstr "Danijel Molkentin"
+
+#~ msgid "Wynn Wilkes"
+#~ msgstr "Vin Vilks"
+
+#~ msgid "Pat Dowler"
+#~ msgstr "Patrik Douler"
+
+#~ msgid "Bernd Wuebben"
+#~ msgstr "Bernd Johanes Viben"
+
+#~ msgid "Matthias Hoelzer-Kluepfel"
+#~ msgstr "Matijas Helcer-Klipfel"
+
+#~ msgid ""
+#~ "<p><h1>Window Behavior</h1> Here you can customize the way windows behave "
+#~ "when being moved, resized or clicked on. You can also specify a focus "
+#~ "policy as well as a placement policy for new windows.</p> <p>Please note "
+#~ "that this configuration will not take effect if you do not use KWin as "
+#~ "your window manager. If you do use a different window manager, please "
+#~ "refer to its documentation for how to customize window behavior.</p>"
+#~ msgstr ""
+#~ "<h1>Ponašanje prozora</h1><p>Ovdje možete prilagoditi ponašanje prozora u "
+#~ "toku pomijeranja, promjene veličine ili klika na njega. Takođe možete "
+#~ "odrediti smjernice fokusiranja kao i smiještanja novih prozora.</p><p>Ova "
+#~ "postava je na snazi samo ako koristite KWin kao menadžer prozora. Ako "
+#~ "koristite drugi menadžer, pogledajte njegovu dokumentaciju za "
+#~ "prilagođavanje ponašanja prozora.</p>"
 
 #, fuzzy
 #~| msgid "Cascade"

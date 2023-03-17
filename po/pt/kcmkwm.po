@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-03 00:48+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2022-12-04 02:30+0000\n"
 "Last-Translator: Pedro Morais <morais@kde.org>\n"
 "Language-Team: pt <kde-i18n-pt@kde.org>\n"
@@ -23,16 +23,6 @@ msgstr ""
 "X-POFile-SpellExtra: Bastian Ettrich Tab Waldo Kluepfel Kalle Cristian\n"
 "X-POFile-SpellExtra: Wilkes Wynn Matthias Wuebben kcmkwinoptions ms \n"
 "X-POFile-IgnoreConsistency: Windows\n"
-
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "José Nuno Pires,Pedro Morais"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "zepires@gmail.com,morais@kde.org"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:17
@@ -949,110 +939,37 @@ msgstr "S&eparar o foco de cada ecrã"
 msgid "Window activation policy description"
 msgstr "Descrição da política de activação da janela"
 
-#: main.cpp:73
+#: main.cpp:79
 #, kde-format
 msgid "&Focus"
 msgstr "&Foco"
 
-#: main.cpp:79
+#: main.cpp:84
 #, kde-format
 msgid "Titlebar A&ctions"
 msgstr "A&cções da Barra de Título"
 
-#: main.cpp:85
+#: main.cpp:89
 #, kde-format
 msgid "W&indow Actions"
 msgstr "Acções da Ja&nela"
 
-#: main.cpp:91
+#: main.cpp:94
 #, kde-format
 msgid "Mo&vement"
 msgstr "Mo&vimento"
 
-#: main.cpp:97
+#: main.cpp:99
 #, kde-format
 msgid "Adva&nced"
 msgstr "Ava&nçado"
 
-#: main.cpp:101
-#, kde-format
-msgid "Window Behavior Configuration Module"
-msgstr "Módulo de Configuração do Comportamento das Janelas"
-
-#: main.cpp:103
-#, kde-format
-msgid "(c) 1997 - 2002 KWin and KControl Authors"
-msgstr "(c) 1997 - 2002 os Autores do KWin e do KControl"
-
-#: main.cpp:105
-#, kde-format
-msgid "Matthias Ettrich"
-msgstr "Matthias Ettrich"
-
-#: main.cpp:106
-#, kde-format
-msgid "Waldo Bastian"
-msgstr "Waldo Bastian"
-
-#: main.cpp:107
-#, kde-format
-msgid "Cristian Tibirna"
-msgstr "Cristian Tibirna"
-
-#: main.cpp:108
-#, kde-format
-msgid "Matthias Kalle Dalheimer"
-msgstr "Matthias Kalle Dalheimer"
-
-#: main.cpp:109
-#, kde-format
-msgid "Daniel Molkentin"
-msgstr "Daniel Molkentin"
-
-#: main.cpp:110
-#, kde-format
-msgid "Wynn Wilkes"
-msgstr "Wynn Wilkes"
-
-#: main.cpp:111
-#, kde-format
-msgid "Pat Dowler"
-msgstr "Pat Dowler"
-
-#: main.cpp:112
-#, kde-format
-msgid "Bernd Wuebben"
-msgstr "Bernd Wuebben"
-
-#: main.cpp:113
-#, kde-format
-msgid "Matthias Hoelzer-Kluepfel"
-msgstr "Matthias Hoelzer-Kluepfel"
-
-#: main.cpp:161
-#, kde-format
-msgid ""
-"<p><h1>Window Behavior</h1> Here you can customize the way windows behave "
-"when being moved, resized or clicked on. You can also specify a focus policy "
-"as well as a placement policy for new windows.</p> <p>Please note that this "
-"configuration will not take effect if you do not use KWin as your window "
-"manager. If you do use a different window manager, please refer to its "
-"documentation for how to customize window behavior.</p>"
-msgstr ""
-"<p><h1>Comportamento das Janelas</h1> Aqui pode configurar a forma como as "
-"janelas se comportam quando são movidas, redimensionadas ou seleccionadas. "
-"Pode também indicar uma política de primeiro plano (foco), assim como uma "
-"política de posicionamento para as janelas novas.</p><p>Lembre-se que esta "
-"configuração não fará efeito se não usar o KWin como o seu gestor de "
-"janelas. Se usar um gestor de janelas diferente, veja na documentação do "
-"mesmo como configurar o comportamento das janelas.</p>"
-
-#: main.cpp:202
+#: main.cpp:178
 #, kde-format
 msgid "&Titlebar Actions"
 msgstr "Acções da Barra de &Título"
 
-#: main.cpp:208
+#: main.cpp:188
 #, kde-format
 msgid "Window Actio&ns"
 msgstr "Acções da Ja&nela"
@@ -1413,3 +1330,61 @@ msgstr ""
 "o <em>selector de janelas (\"Alt+Tab\")</em> contrariam a política e não "
 "irão funcionar. Provavelmente irá querer usar a opção <em>O Foco Segue o "
 "Rato - Precedência do Rato</em> em alternativa!"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "José Nuno Pires,Pedro Morais"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "zepires@gmail.com,morais@kde.org"
+
+#~ msgid "Window Behavior Configuration Module"
+#~ msgstr "Módulo de Configuração do Comportamento das Janelas"
+
+#~ msgid "(c) 1997 - 2002 KWin and KControl Authors"
+#~ msgstr "(c) 1997 - 2002 os Autores do KWin e do KControl"
+
+#~ msgid "Matthias Ettrich"
+#~ msgstr "Matthias Ettrich"
+
+#~ msgid "Waldo Bastian"
+#~ msgstr "Waldo Bastian"
+
+#~ msgid "Cristian Tibirna"
+#~ msgstr "Cristian Tibirna"
+
+#~ msgid "Matthias Kalle Dalheimer"
+#~ msgstr "Matthias Kalle Dalheimer"
+
+#~ msgid "Daniel Molkentin"
+#~ msgstr "Daniel Molkentin"
+
+#~ msgid "Wynn Wilkes"
+#~ msgstr "Wynn Wilkes"
+
+#~ msgid "Pat Dowler"
+#~ msgstr "Pat Dowler"
+
+#~ msgid "Bernd Wuebben"
+#~ msgstr "Bernd Wuebben"
+
+#~ msgid "Matthias Hoelzer-Kluepfel"
+#~ msgstr "Matthias Hoelzer-Kluepfel"
+
+#~ msgid ""
+#~ "<p><h1>Window Behavior</h1> Here you can customize the way windows behave "
+#~ "when being moved, resized or clicked on. You can also specify a focus "
+#~ "policy as well as a placement policy for new windows.</p> <p>Please note "
+#~ "that this configuration will not take effect if you do not use KWin as "
+#~ "your window manager. If you do use a different window manager, please "
+#~ "refer to its documentation for how to customize window behavior.</p>"
+#~ msgstr ""
+#~ "<p><h1>Comportamento das Janelas</h1> Aqui pode configurar a forma como "
+#~ "as janelas se comportam quando são movidas, redimensionadas ou "
+#~ "seleccionadas. Pode também indicar uma política de primeiro plano (foco), "
+#~ "assim como uma política de posicionamento para as janelas novas.</"
+#~ "p><p>Lembre-se que esta configuração não fará efeito se não usar o KWin "
+#~ "como o seu gestor de janelas. Se usar um gestor de janelas diferente, "
+#~ "veja na documentação do mesmo como configurar o comportamento das janelas."
+#~ "</p>"

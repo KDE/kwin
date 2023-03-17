@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-04 02:12+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2023-02-14 21:52+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -14,37 +14,17 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Lokalize 22.12.2\n"
 
-#: kcmrules.cpp:26
-#, fuzzy, kde-format
-#| msgid ""
-#| "<h1>Window-specific Settings</h1> Here you can customize window settings "
-#| "specifically only for some windows. <p>Please note that this "
-#| "configuration will not take effect if you do not use KWin as your window "
-#| "manager. If you do use a different window manager, please refer to its "
-#| "documentation for how to customize window behavior."
-msgid ""
-"<p><h1>Window-specific Settings</h1> Here you can customize window settings "
-"specifically only for some windows.</p> <p>Please note that this "
-"configuration will not take effect if you do not use KWin as your window "
-"manager. If you do use a different window manager, please refer to its "
-"documentation for how to customize window behavior.</p>"
-msgstr ""
-"<h1>சாளரம்-குறிப்பிட்ட அமைப்புகள்</h1>இங்கே நீங்கள் குறிப்பாக சில சாளரங்களுக்கு "
-"அமைப்புகளை தனிப்பயனாக்கலாம். <p>கேவின்னை உங்கள் சாளர மேலாளராக பயன்படுத்தாவிட்டால் "
-"வடிவமைக்க இயலாது. மாறுபட்ட சாளர மேலாளரை பயன்படுத்தினால், வேறு சாளரத்தை "
-"பயன்படுத்தினால் அதை தனிப்பயன் ஆக்குவதற்கு அதனுடைய ஆவணத்தைப் பார்க்கவேண்டும்."
-
-#: kcmrules.cpp:232
+#: kcmrules.cpp:226
 #, kde-format
 msgid "Copy of %1"
 msgstr "%1 என்பதின் நகல்"
 
-#: kcmrules.cpp:412
+#: kcmrules.cpp:406
 #, kde-format
 msgid "Application settings for %1"
 msgstr "%1 எனும் செயலிக்கான அமைப்புகள்"
 
-#: kcmrules.cpp:434 rulesmodel.cpp:215
+#: kcmrules.cpp:428 rulesmodel.cpp:215
 #, kde-format
 msgid "Window settings for %1"
 msgstr "%1 எனும் சாளரத்திற்கான அமைப்புகள்"
@@ -929,6 +909,25 @@ msgstr "பிரதான சாளரத்தில்"
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
+
+#, fuzzy
+#~| msgid ""
+#~| "<h1>Window-specific Settings</h1> Here you can customize window settings "
+#~| "specifically only for some windows. <p>Please note that this "
+#~| "configuration will not take effect if you do not use KWin as your window "
+#~| "manager. If you do use a different window manager, please refer to its "
+#~| "documentation for how to customize window behavior."
+#~ msgid ""
+#~ "<p><h1>Window-specific Settings</h1> Here you can customize window "
+#~ "settings specifically only for some windows.</p> <p>Please note that this "
+#~ "configuration will not take effect if you do not use KWin as your window "
+#~ "manager. If you do use a different window manager, please refer to its "
+#~ "documentation for how to customize window behavior.</p>"
+#~ msgstr ""
+#~ "<h1>சாளரம்-குறிப்பிட்ட அமைப்புகள்</h1>இங்கே நீங்கள் குறிப்பாக சில சாளரங்களுக்கு "
+#~ "அமைப்புகளை தனிப்பயனாக்கலாம். <p>கேவின்னை உங்கள் சாளர மேலாளராக பயன்படுத்தாவிட்டால் "
+#~ "வடிவமைக்க இயலாது. மாறுபட்ட சாளர மேலாளரை பயன்படுத்தினால், வேறு சாளரத்தை "
+#~ "பயன்படுத்தினால் அதை தனிப்பயன் ஆக்குவதற்கு அதனுடைய ஆவணத்தைப் பார்க்கவேண்டும்."
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

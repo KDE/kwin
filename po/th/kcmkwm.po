@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-03 00:48+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2010-12-17 20:58+0700\n"
 "Last-Translator: Thanomsub Noppaburana <donga.nb@gmail.com>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
@@ -21,16 +21,6 @@ msgstr ""
 "X-Poedit-Language: Thai\n"
 "X-Poedit-Country: THAILAND\n"
 "X-Poedit-SourceCharset: utf-8\n"
-
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "ถนอมทรัพย์ นพบูรณ์"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "donga.nb@gmail.com"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:17
@@ -987,112 +977,41 @@ msgstr "แ&ยกโฟกัสของหน้าจอ"
 msgid "Window activation policy description"
 msgstr ""
 
-#: main.cpp:73
+#: main.cpp:79
 #, kde-format
 msgid "&Focus"
 msgstr "การ&โฟกัส"
 
-#: main.cpp:79
+#: main.cpp:84
 #, fuzzy, kde-format
 #| msgid "&Titlebar Actions"
 msgid "Titlebar A&ctions"
 msgstr "การกระทำบนแถบ&หัวเรื่อง"
 
-#: main.cpp:85
+#: main.cpp:89
 #, fuzzy, kde-format
 #| msgid "Window Actio&ns"
 msgid "W&indow Actions"
 msgstr "การกระ&ทำบนหน้าต่าง"
 
-#: main.cpp:91
+#: main.cpp:94
 #, fuzzy, kde-format
 #| msgid "&Placement:"
 msgid "Mo&vement"
 msgstr "การ&จัดวาง:"
 
-#: main.cpp:97
+#: main.cpp:99
 #, fuzzy, kde-format
 #| msgid "Ad&vanced"
 msgid "Adva&nced"
 msgstr "ขั้น&สูง"
 
-#: main.cpp:101
-#, kde-format
-msgid "Window Behavior Configuration Module"
-msgstr "มอดูลปรับแต่งพฤติกรรมของหน้าต่าง"
-
-#: main.cpp:103
-#, kde-format
-msgid "(c) 1997 - 2002 KWin and KControl Authors"
-msgstr "สงวนลิขสิทธิ์ (c) 1997 - 2002 กลุ่มผู้เขียน KWin และ KControl"
-
-#: main.cpp:105
-#, kde-format
-msgid "Matthias Ettrich"
-msgstr "Matthias Ettrich"
-
-#: main.cpp:106
-#, kde-format
-msgid "Waldo Bastian"
-msgstr "Waldo Bastian"
-
-#: main.cpp:107
-#, kde-format
-msgid "Cristian Tibirna"
-msgstr "Cristian Tibirna"
-
-#: main.cpp:108
-#, kde-format
-msgid "Matthias Kalle Dalheimer"
-msgstr "Matthias Kalle Dalheimer"
-
-#: main.cpp:109
-#, kde-format
-msgid "Daniel Molkentin"
-msgstr "Daniel Molkentin"
-
-#: main.cpp:110
-#, kde-format
-msgid "Wynn Wilkes"
-msgstr "Wynn Wilkes"
-
-#: main.cpp:111
-#, kde-format
-msgid "Pat Dowler"
-msgstr "Pat Dowler"
-
-#: main.cpp:112
-#, kde-format
-msgid "Bernd Wuebben"
-msgstr "Bernd Wuebben"
-
-#: main.cpp:113
-#, kde-format
-msgid "Matthias Hoelzer-Kluepfel"
-msgstr "Matthias Hoelzer-Kluepfel"
-
-#: main.cpp:161
-#, kde-format
-msgid ""
-"<p><h1>Window Behavior</h1> Here you can customize the way windows behave "
-"when being moved, resized or clicked on. You can also specify a focus policy "
-"as well as a placement policy for new windows.</p> <p>Please note that this "
-"configuration will not take effect if you do not use KWin as your window "
-"manager. If you do use a different window manager, please refer to its "
-"documentation for how to customize window behavior.</p>"
-msgstr ""
-"<p><h1>พฤติกรรมของหน้าต่าง</h1> คุณสามารถกำหนดพฤติกรรมที่จะให้หน้าต่างกระทำ "
-"เมื่อมีการย้าย, ปรับขนาด หรือมีการคลิกบนหน้าต่างได้ที่นี่ คุณสามารถระบุข้อกำหนด การโฟกัสได้ "
-"และกำหนดตำแหน่งสำหรับหน้าต่างใหม่ได้ </p><p>โปรดจำไว้ว่า การปรับแต่งนี้จะไม่มีผล "
-"หากคุณไม่ได้ใช้ KWin เป็นโปรแกรมจัดการหน้าต่าง ซึ่งหากคุณใช้โปรแกรมอื่น "
-"โปรดอ่านเอกสารกำกับของโปรแกรมนั้น ๆ เพื่อหาวิธีการกำหนดพฤติกรรมของมัน</p>"
-
-#: main.cpp:202
+#: main.cpp:178
 #, kde-format
 msgid "&Titlebar Actions"
 msgstr "การกระทำบนแถบ&หัวเรื่อง"
 
-#: main.cpp:208
+#: main.cpp:188
 #, kde-format
 msgid "Window Actio&ns"
 msgstr "การกระ&ทำบนหน้าต่าง"
@@ -1439,6 +1358,61 @@ msgid ""
 "activation policy and will not work. You very likely want to use <em>Focus "
 "follows mouse (mouse precedence)</em> instead!"
 msgstr ""
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "ถนอมทรัพย์ นพบูรณ์"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "donga.nb@gmail.com"
+
+#~ msgid "Window Behavior Configuration Module"
+#~ msgstr "มอดูลปรับแต่งพฤติกรรมของหน้าต่าง"
+
+#~ msgid "(c) 1997 - 2002 KWin and KControl Authors"
+#~ msgstr "สงวนลิขสิทธิ์ (c) 1997 - 2002 กลุ่มผู้เขียน KWin และ KControl"
+
+#~ msgid "Matthias Ettrich"
+#~ msgstr "Matthias Ettrich"
+
+#~ msgid "Waldo Bastian"
+#~ msgstr "Waldo Bastian"
+
+#~ msgid "Cristian Tibirna"
+#~ msgstr "Cristian Tibirna"
+
+#~ msgid "Matthias Kalle Dalheimer"
+#~ msgstr "Matthias Kalle Dalheimer"
+
+#~ msgid "Daniel Molkentin"
+#~ msgstr "Daniel Molkentin"
+
+#~ msgid "Wynn Wilkes"
+#~ msgstr "Wynn Wilkes"
+
+#~ msgid "Pat Dowler"
+#~ msgstr "Pat Dowler"
+
+#~ msgid "Bernd Wuebben"
+#~ msgstr "Bernd Wuebben"
+
+#~ msgid "Matthias Hoelzer-Kluepfel"
+#~ msgstr "Matthias Hoelzer-Kluepfel"
+
+#~ msgid ""
+#~ "<p><h1>Window Behavior</h1> Here you can customize the way windows behave "
+#~ "when being moved, resized or clicked on. You can also specify a focus "
+#~ "policy as well as a placement policy for new windows.</p> <p>Please note "
+#~ "that this configuration will not take effect if you do not use KWin as "
+#~ "your window manager. If you do use a different window manager, please "
+#~ "refer to its documentation for how to customize window behavior.</p>"
+#~ msgstr ""
+#~ "<p><h1>พฤติกรรมของหน้าต่าง</h1> คุณสามารถกำหนดพฤติกรรมที่จะให้หน้าต่างกระทำ "
+#~ "เมื่อมีการย้าย, ปรับขนาด หรือมีการคลิกบนหน้าต่างได้ที่นี่ คุณสามารถระบุข้อกำหนด การโฟกัสได้ "
+#~ "และกำหนดตำแหน่งสำหรับหน้าต่างใหม่ได้ </p><p>โปรดจำไว้ว่า การปรับแต่งนี้จะไม่มีผล "
+#~ "หากคุณไม่ได้ใช้ KWin เป็นโปรแกรมจัดการหน้าต่าง ซึ่งหากคุณใช้โปรแกรมอื่น "
+#~ "โปรดอ่านเอกสารกำกับของโปรแกรมนั้น ๆ เพื่อหาวิธีการกำหนดพฤติกรรมของมัน</p>"
 
 #, fuzzy
 #~| msgid "Cascade"

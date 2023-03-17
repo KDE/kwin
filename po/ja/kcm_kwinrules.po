@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-04 02:12+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2023-02-25 14:48-0800\n"
 "Last-Translator: Fumiaki Okushi <fumiaki.okushi@gmail.com>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -24,32 +24,17 @@ msgstr ""
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
 
-#: kcmrules.cpp:26
-#, kde-format
-msgid ""
-"<p><h1>Window-specific Settings</h1> Here you can customize window settings "
-"specifically only for some windows.</p> <p>Please note that this "
-"configuration will not take effect if you do not use KWin as your window "
-"manager. If you do use a different window manager, please refer to its "
-"documentation for how to customize window behavior.</p>"
-msgstr ""
-"<p><h1>ウィンドウ固有の設定</h1>ここで一部のウィンドウに対してのみ有効となる"
-"ウィンドウの設定をカスタマイズすることができます。</p><p>【注意】 ここでの設"
-"定はウィンドウマネージャに KWin を使用している場合にのみ有効です。他のウィン"
-"ドウマネージャでのウィンドウの挙動のカスタマイズ方法については、それぞれのド"
-"キュメントを参照してください。</p>"
-
-#: kcmrules.cpp:232
+#: kcmrules.cpp:226
 #, kde-format
 msgid "Copy of %1"
 msgstr "%1 のコピー"
 
-#: kcmrules.cpp:412
+#: kcmrules.cpp:406
 #, kde-format
 msgid "Application settings for %1"
 msgstr "%1 のアプリケーション設定"
 
-#: kcmrules.cpp:434 rulesmodel.cpp:215
+#: kcmrules.cpp:428 rulesmodel.cpp:215
 #, kde-format
 msgid "Window settings for %1"
 msgstr "%1 のウィンドウ設定"
@@ -939,3 +924,16 @@ msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
 "ウィンドウプロパティを検出できませんでした。このウィンドウは KWin によって管"
 "理されていません。"
+
+#~ msgid ""
+#~ "<p><h1>Window-specific Settings</h1> Here you can customize window "
+#~ "settings specifically only for some windows.</p> <p>Please note that this "
+#~ "configuration will not take effect if you do not use KWin as your window "
+#~ "manager. If you do use a different window manager, please refer to its "
+#~ "documentation for how to customize window behavior.</p>"
+#~ msgstr ""
+#~ "<p><h1>ウィンドウ固有の設定</h1>ここで一部のウィンドウに対してのみ有効とな"
+#~ "るウィンドウの設定をカスタマイズすることができます。</p><p>【注意】 ここで"
+#~ "の設定はウィンドウマネージャに KWin を使用している場合にのみ有効です。他の"
+#~ "ウィンドウマネージャでのウィンドウの挙動のカスタマイズ方法については、それ"
+#~ "ぞれのドキュメントを参照してください。</p>"

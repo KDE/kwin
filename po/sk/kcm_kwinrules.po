@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-04 02:12+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2022-05-16 18:25+0200\n"
 "Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
@@ -20,31 +20,17 @@ msgstr ""
 "X-Generator: Lokalize 22.04.1\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
-#: kcmrules.cpp:26
-#, kde-format
-msgid ""
-"<p><h1>Window-specific Settings</h1> Here you can customize window settings "
-"specifically only for some windows.</p> <p>Please note that this "
-"configuration will not take effect if you do not use KWin as your window "
-"manager. If you do use a different window manager, please refer to its "
-"documentation for how to customize window behavior.</p>"
-msgstr ""
-"<p><h1>Špecifické nastavenie okna</h1> Tu môžete upraviť nastavenia iba pre "
-"niektoré okná.</p> <p>Uvedomte si, že toto nastavenie sa prejaví iba v "
-"prípade, že ako správcu okien používate KWin. Ak používate iného správcu "
-"okien, prečítajte si jeho dokumentáciu ako zmeniť správanie okien.</p>"
-
-#: kcmrules.cpp:232
+#: kcmrules.cpp:226
 #, kde-format
 msgid "Copy of %1"
 msgstr "Kópia %1"
 
-#: kcmrules.cpp:412
+#: kcmrules.cpp:406
 #, kde-format
 msgid "Application settings for %1"
 msgstr "Nastavenie aplikácie pre %1"
 
-#: kcmrules.cpp:434 rulesmodel.cpp:215
+#: kcmrules.cpp:428 rulesmodel.cpp:215
 #, kde-format
 msgid "Window settings for %1"
 msgstr "Nastavenie okna pre %1"
@@ -936,6 +922,19 @@ msgstr "Nespravované okno"
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr "Nepodarilo sa zistiť vlastnosti okna. Okno nespravuje KWin."
+
+#~ msgid ""
+#~ "<p><h1>Window-specific Settings</h1> Here you can customize window "
+#~ "settings specifically only for some windows.</p> <p>Please note that this "
+#~ "configuration will not take effect if you do not use KWin as your window "
+#~ "manager. If you do use a different window manager, please refer to its "
+#~ "documentation for how to customize window behavior.</p>"
+#~ msgstr ""
+#~ "<p><h1>Špecifické nastavenie okna</h1> Tu môžete upraviť nastavenia iba "
+#~ "pre niektoré okná.</p> <p>Uvedomte si, že toto nastavenie sa prejaví iba "
+#~ "v prípade, že ako správcu okien používate KWin. Ak používate iného "
+#~ "správcu okien, prečítajte si jeho dokumentáciu ako zmeniť správanie okien."
+#~ "</p>"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

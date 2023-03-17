@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-03 00:48+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2023-01-08 17:48+0100\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
@@ -17,16 +17,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Lokalize 22.12.0\n"
-
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Nguyễn Hùng Phú,Clytie Siddall"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "phu.nguyen@kdemail.net,clytie@riverland.net.au"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:17
@@ -936,110 +926,37 @@ msgstr "&Giới hạn nhắm trong màn hình"
 msgid "Window activation policy description"
 msgstr "Mô tả chính sách kích hoạt cửa sổ"
 
-#: main.cpp:73
+#: main.cpp:79
 #, kde-format
 msgid "&Focus"
 msgstr "&Nhắm"
 
-#: main.cpp:79
+#: main.cpp:84
 #, kde-format
 msgid "Titlebar A&ctions"
 msgstr "Hành động ở &thanh tiêu đề"
 
-#: main.cpp:85
+#: main.cpp:89
 #, kde-format
 msgid "W&indow Actions"
 msgstr "Hành động ở cửa &sổ"
 
-#: main.cpp:91
+#: main.cpp:94
 #, kde-format
 msgid "Mo&vement"
 msgstr "Di chu&yển"
 
-#: main.cpp:97
+#: main.cpp:99
 #, kde-format
 msgid "Adva&nced"
 msgstr "Nâng &cao"
 
-#: main.cpp:101
-#, kde-format
-msgid "Window Behavior Configuration Module"
-msgstr "Khối cấu hình ứng xử cửa sổ"
-
-#: main.cpp:103
-#, kde-format
-msgid "(c) 1997 - 2002 KWin and KControl Authors"
-msgstr "(c) 1997 - 2002 Các tác giả KWin và KControl"
-
-#: main.cpp:105
-#, kde-format
-msgid "Matthias Ettrich"
-msgstr "Matthias Ettrich"
-
-#: main.cpp:106
-#, kde-format
-msgid "Waldo Bastian"
-msgstr "Waldo Bastian"
-
-#: main.cpp:107
-#, kde-format
-msgid "Cristian Tibirna"
-msgstr "Cristian Tibirna"
-
-#: main.cpp:108
-#, kde-format
-msgid "Matthias Kalle Dalheimer"
-msgstr "Matthias Kalle Dalheimer"
-
-#: main.cpp:109
-#, kde-format
-msgid "Daniel Molkentin"
-msgstr "Daniel Molkentin"
-
-#: main.cpp:110
-#, kde-format
-msgid "Wynn Wilkes"
-msgstr "Wynn Wilkes"
-
-#: main.cpp:111
-#, kde-format
-msgid "Pat Dowler"
-msgstr "Pat Dowler"
-
-#: main.cpp:112
-#, kde-format
-msgid "Bernd Wuebben"
-msgstr "Bernd Wuebben"
-
-#: main.cpp:113
-#, kde-format
-msgid "Matthias Hoelzer-Kluepfel"
-msgstr "Matthias Hoelzer-Kluepfel"
-
-#: main.cpp:161
-#, kde-format
-msgid ""
-"<p><h1>Window Behavior</h1> Here you can customize the way windows behave "
-"when being moved, resized or clicked on. You can also specify a focus policy "
-"as well as a placement policy for new windows.</p> <p>Please note that this "
-"configuration will not take effect if you do not use KWin as your window "
-"manager. If you do use a different window manager, please refer to its "
-"documentation for how to customize window behavior.</p>"
-msgstr ""
-"<p><h1>Ứng xử của cửa sổ</h1>Tại đây bạn có thể tự chọn cách các cửa sổ ứng "
-"xử khi được di chuyển, thay đổi kích cỡ hay bấm vào. Bạn cũng có thể chỉ "
-"định một chính sách nhắm cũng như một chính sách xếp chỗ cho các cửa sổ mới."
-"</p><p>Vui lòng lưu ý rằng cấu hình này sẽ không có tác dụng nếu bạn không "
-"dùng KWin làm trình quản lí cửa sổ. Nếu bạn dùng một trình quản lí cửa sổ "
-"khác, vui lòng tham khảo tài liệu hướng dẫn của chương trình đó để biết cách "
-"tự chọn ứng xử của cửa sổ.</p>"
-
-#: main.cpp:202
+#: main.cpp:178
 #, kde-format
 msgid "&Titlebar Actions"
 msgstr "Hành động ở &thanh tiêu đề"
 
-#: main.cpp:208
+#: main.cpp:188
 #, kde-format
 msgid "Window Actio&ns"
 msgstr "Hành động ở cửa &sổ"
@@ -1393,6 +1310,63 @@ msgstr ""
 "thuẫn với chính sách kích hoạt này và sẽ không hoạt động. Rất nhiều khả năng "
 "là bạn muốn dùng <em>Nhắm đi theo chuột (ưu tiên chuột)</em> chứ không phải "
 "cái này!"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Nguyễn Hùng Phú,Clytie Siddall"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "phu.nguyen@kdemail.net,clytie@riverland.net.au"
+
+#~ msgid "Window Behavior Configuration Module"
+#~ msgstr "Khối cấu hình ứng xử cửa sổ"
+
+#~ msgid "(c) 1997 - 2002 KWin and KControl Authors"
+#~ msgstr "(c) 1997 - 2002 Các tác giả KWin và KControl"
+
+#~ msgid "Matthias Ettrich"
+#~ msgstr "Matthias Ettrich"
+
+#~ msgid "Waldo Bastian"
+#~ msgstr "Waldo Bastian"
+
+#~ msgid "Cristian Tibirna"
+#~ msgstr "Cristian Tibirna"
+
+#~ msgid "Matthias Kalle Dalheimer"
+#~ msgstr "Matthias Kalle Dalheimer"
+
+#~ msgid "Daniel Molkentin"
+#~ msgstr "Daniel Molkentin"
+
+#~ msgid "Wynn Wilkes"
+#~ msgstr "Wynn Wilkes"
+
+#~ msgid "Pat Dowler"
+#~ msgstr "Pat Dowler"
+
+#~ msgid "Bernd Wuebben"
+#~ msgstr "Bernd Wuebben"
+
+#~ msgid "Matthias Hoelzer-Kluepfel"
+#~ msgstr "Matthias Hoelzer-Kluepfel"
+
+#~ msgid ""
+#~ "<p><h1>Window Behavior</h1> Here you can customize the way windows behave "
+#~ "when being moved, resized or clicked on. You can also specify a focus "
+#~ "policy as well as a placement policy for new windows.</p> <p>Please note "
+#~ "that this configuration will not take effect if you do not use KWin as "
+#~ "your window manager. If you do use a different window manager, please "
+#~ "refer to its documentation for how to customize window behavior.</p>"
+#~ msgstr ""
+#~ "<p><h1>Ứng xử của cửa sổ</h1>Tại đây bạn có thể tự chọn cách các cửa sổ "
+#~ "ứng xử khi được di chuyển, thay đổi kích cỡ hay bấm vào. Bạn cũng có thể "
+#~ "chỉ định một chính sách nhắm cũng như một chính sách xếp chỗ cho các cửa "
+#~ "sổ mới.</p><p>Vui lòng lưu ý rằng cấu hình này sẽ không có tác dụng nếu "
+#~ "bạn không dùng KWin làm trình quản lí cửa sổ. Nếu bạn dùng một trình quản "
+#~ "lí cửa sổ khác, vui lòng tham khảo tài liệu hướng dẫn của chương trình đó "
+#~ "để biết cách tự chọn ứng xử của cửa sổ.</p>"
 
 #~ msgid "Cascaded"
 #~ msgstr "Xếp tầng"

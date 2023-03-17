@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-04 02:12+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2007-11-01 20:28+0545\n"
 "Last-Translator: Shyam Krishna Bal <shyamkrishna_bal@yahoo.com>\n"
 "Language-Team: Nepali <info@mpp.org.np>\n"
@@ -19,32 +19,17 @@ msgstr ""
 "\n"
 "X-Generator: KBabel 1.11.4\n"
 
-#: kcmrules.cpp:26
-#, kde-format
-msgid ""
-"<p><h1>Window-specific Settings</h1> Here you can customize window settings "
-"specifically only for some windows.</p> <p>Please note that this "
-"configuration will not take effect if you do not use KWin as your window "
-"manager. If you do use a different window manager, please refer to its "
-"documentation for how to customize window behavior.</p>"
-msgstr ""
-"<p><h1>सञ्झ्याल निर्दिष्ट सेटिङ</h1> यहाँ तपाईँले विशेष रुपले केही सञ्झ्यालमा मात्र सञ्झ्याल "
-"सेटिङ अनुकूल गर्न सक्नुहुन्छ ।</p> <p>कृपया याद गर्नुहोस् यदि तपाईँले केडीई विन सञ्झ्याल "
-"प्रबन्धकको रुपमा प्रयोग गर्नुहुदैन भने यो कन्फिगरेसनले प्रभाव लिने छैन । तपाईँले फरक सञ्झ्याल "
-"प्रबन्धक प्रयोग गर्नुहुन्छ भने, कृपया सञ्झ्याल व्यवहार कसरी गर्ने अनुकूल गर्नका लागि यसको "
-"मिसिलिकरणमा सोध्नुहोस् ।</p>"
-
-#: kcmrules.cpp:232
+#: kcmrules.cpp:226
 #, kde-format
 msgid "Copy of %1"
 msgstr ""
 
-#: kcmrules.cpp:412
+#: kcmrules.cpp:406
 #, kde-format
 msgid "Application settings for %1"
 msgstr "%1 का लागि अनुप्रयोग सेटिङ"
 
-#: kcmrules.cpp:434 rulesmodel.cpp:215
+#: kcmrules.cpp:428 rulesmodel.cpp:215
 #, kde-format
 msgid "Window settings for %1"
 msgstr "%1 का लागि सञ्झ्याल सेटिङ"
@@ -935,6 +920,19 @@ msgstr "मुख्य सञ्झ्याल"
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
+
+#~ msgid ""
+#~ "<p><h1>Window-specific Settings</h1> Here you can customize window "
+#~ "settings specifically only for some windows.</p> <p>Please note that this "
+#~ "configuration will not take effect if you do not use KWin as your window "
+#~ "manager. If you do use a different window manager, please refer to its "
+#~ "documentation for how to customize window behavior.</p>"
+#~ msgstr ""
+#~ "<p><h1>सञ्झ्याल निर्दिष्ट सेटिङ</h1> यहाँ तपाईँले विशेष रुपले केही सञ्झ्यालमा मात्र "
+#~ "सञ्झ्याल सेटिङ अनुकूल गर्न सक्नुहुन्छ ।</p> <p>कृपया याद गर्नुहोस् यदि तपाईँले केडीई विन "
+#~ "सञ्झ्याल प्रबन्धकको रुपमा प्रयोग गर्नुहुदैन भने यो कन्फिगरेसनले प्रभाव लिने छैन । तपाईँले "
+#~ "फरक सञ्झ्याल प्रबन्धक प्रयोग गर्नुहुन्छ भने, कृपया सञ्झ्याल व्यवहार कसरी गर्ने अनुकूल गर्नका "
+#~ "लागि यसको मिसिलिकरणमा सोध्नुहोस् ।</p>"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

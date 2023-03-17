@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdebase/kcmkwinrules.po\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-04 02:12+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2004-12-03 14:52-0500\n"
 "Last-Translator: Kevin Scannell <kscanne@gmail.com>\n"
 "Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
@@ -17,33 +17,17 @@ msgstr ""
 "Plural-Forms: nplurals=5; plural=n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n < 11 ? "
 "3 : 4\n"
 
-#: kcmrules.cpp:26
-#, kde-format
-msgid ""
-"<p><h1>Window-specific Settings</h1> Here you can customize window settings "
-"specifically only for some windows.</p> <p>Please note that this "
-"configuration will not take effect if you do not use KWin as your window "
-"manager. If you do use a different window manager, please refer to its "
-"documentation for how to customize window behavior.</p>"
-msgstr ""
-"<p><h1>Socruithe Sainiúil d'Fhuinneoga</h1> Anseo is féidir leat socruithe a "
-"dhéanamh d'fhuinneoga áirithe amháin.</p> <p>Tabhair faoi deara nach "
-"gcuirfear na socruithe seo i bhfeidhm mura bhfuil KWin in úsáid agat mar "
-"bhainisteoir fuinneog. Má bhaineann tú úsáid as bainisteoir fuinneog eile, "
-"féach ar dhoiciméadú an bhainisteora sin le haghaidh eolais ar conas is "
-"féidir oibriú na bhfuinneog a chumrú.</p>"
-
-#: kcmrules.cpp:232
+#: kcmrules.cpp:226
 #, kde-format
 msgid "Copy of %1"
 msgstr ""
 
-#: kcmrules.cpp:412
+#: kcmrules.cpp:406
 #, kde-format
 msgid "Application settings for %1"
 msgstr "Socruithe feidhmchláir do %1"
 
-#: kcmrules.cpp:434 rulesmodel.cpp:215
+#: kcmrules.cpp:428 rulesmodel.cpp:215
 #, kde-format
 msgid "Window settings for %1"
 msgstr "Socruithe fuinneoige do %1"
@@ -947,6 +931,20 @@ msgstr "Ar An Phríomhfhuinneog"
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
+
+#~ msgid ""
+#~ "<p><h1>Window-specific Settings</h1> Here you can customize window "
+#~ "settings specifically only for some windows.</p> <p>Please note that this "
+#~ "configuration will not take effect if you do not use KWin as your window "
+#~ "manager. If you do use a different window manager, please refer to its "
+#~ "documentation for how to customize window behavior.</p>"
+#~ msgstr ""
+#~ "<p><h1>Socruithe Sainiúil d'Fhuinneoga</h1> Anseo is féidir leat "
+#~ "socruithe a dhéanamh d'fhuinneoga áirithe amháin.</p> <p>Tabhair faoi "
+#~ "deara nach gcuirfear na socruithe seo i bhfeidhm mura bhfuil KWin in "
+#~ "úsáid agat mar bhainisteoir fuinneog. Má bhaineann tú úsáid as "
+#~ "bainisteoir fuinneog eile, féach ar dhoiciméadú an bhainisteora sin le "
+#~ "haghaidh eolais ar conas is féidir oibriú na bhfuinneog a chumrú.</p>"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

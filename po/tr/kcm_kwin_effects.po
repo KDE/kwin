@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-18 01:00+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2022-03-18 23:35+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -38,12 +38,7 @@ msgctxt "@info:tooltip"
 msgid "Configure..."
 msgstr "Yapılandır..."
 
-#: package/contents/ui/main.qml:20
-#, kde-format
-msgid "This module lets you configure desktop effects."
-msgstr "Bu modül, masaüstü efektlerini yapılandırmanıza izin verir."
-
-#: package/contents/ui/main.qml:27
+#: package/contents/ui/main.qml:25
 #, kde-format
 msgid ""
 "Hint: To find out or configure how to activate an effect, look at the "
@@ -52,25 +47,28 @@ msgstr ""
 "İpucu: Bir efekti etkinleştirmeyi yapılandırmak isterseniz efektin "
 "ayarlarına bakın."
 
-#: package/contents/ui/main.qml:47
+#: package/contents/ui/main.qml:45
 #, kde-format
 msgid "Configure Filter"
 msgstr "Süzgeci Yapılandır"
 
-#: package/contents/ui/main.qml:59
+#: package/contents/ui/main.qml:57
 #, kde-format
 msgid "Exclude unsupported effects"
 msgstr "Desteklenmeyen efektleri hariç tut"
 
-#: package/contents/ui/main.qml:67
+#: package/contents/ui/main.qml:65
 #, kde-format
 msgid "Exclude internal effects"
 msgstr "İç efektleri hariç tut"
 
-#: package/contents/ui/main.qml:125
+#: package/contents/ui/main.qml:123
 #, kde-format
 msgid "Get New Desktop Effects..."
 msgstr "Yeni Masaüstü Efektleri Al..."
+
+#~ msgid "This module lets you configure desktop effects."
+#~ msgstr "Bu modül, masaüstü efektlerini yapılandırmanıza izin verir."
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"
