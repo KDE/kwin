@@ -92,7 +92,7 @@ std::unique_ptr<SurfaceTexture> EglBackend::createSurfaceTextureX11(SurfacePixma
 void EglBackend::init()
 {
     QOpenGLContext *qtShareContext = QOpenGLContext::globalShareContext();
-    EGLDisplay shareDisplay = EGL_NO_DISPLAY;
+    ::EGLDisplay shareDisplay = EGL_NO_DISPLAY;
     EGLContext shareContext = EGL_NO_CONTEXT;
     if (qtShareContext) {
         qDebug(KWIN_X11STANDALONE) << "Global share context format:" << qtShareContext->format();
@@ -112,7 +112,7 @@ void EglBackend::init()
 
     m_fbo = std::make_unique<GLFramebuffer>(0, workspace()->geometry().size());
 
-    kwinApp()->outputBackend()->setSceneEglDisplay(shareDisplay);
+    m_backend->setEglDisplay(EglDisplay::create(shareDisplay, false));
     kwinApp()->outputBackend()->setSceneEglGlobalShareContext(shareContext);
 
     qputenv("EGL_PLATFORM", "x11");
@@ -172,11 +172,11 @@ void EglBackend::init()
 bool EglBackend::initRenderingContext()
 {
     initClientExtensions();
-    EGLDisplay dpy = kwinApp()->outputBackend()->sceneEglDisplay();
+    auto display = kwinApp()->outputBackend()->sceneEglDisplayObject();
 
     // Use eglGetPlatformDisplayEXT() to get the display pointer
     // if the implementation supports it.
-    if (dpy == EGL_NO_DISPLAY) {
+    if (!display) {
         m_havePlatformBase = hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_base"));
         if (m_havePlatformBase) {
             // Make sure that the X11 platform is supported
@@ -186,19 +186,18 @@ bool EglBackend::initRenderingContext()
                 return false;
             }
 
-            dpy = eglGetPlatformDisplayEXT(EGL_PLATFORM_X11_EXT, m_backend->display(), nullptr);
+            m_backend->setEglDisplay(EglDisplay::create(eglGetPlatformDisplayEXT(EGL_PLATFORM_X11_EXT, m_backend->display(), nullptr)));
         } else {
-            dpy = eglGetDisplay(m_backend->display());
+            m_backend->setEglDisplay(EglDisplay::create(eglGetDisplay(m_backend->display())));
+        }
+        display = m_backend->sceneEglDisplayObject();
+        if (!display) {
+            qCWarning(KWIN_CORE) << "Failed to get the EGLDisplay";
+            return false;
         }
     }
 
-    if (dpy == EGL_NO_DISPLAY) {
-        qCWarning(KWIN_CORE) << "Failed to get the EGLDisplay";
-        return false;
-    }
-    setEglDisplay(dpy);
-    initEglAPI();
-
+    setEglDisplay(display);
     initBufferConfigs();
 
     if (!m_overlayWindow->create()) {
@@ -260,7 +259,6 @@ EGLSurface EglBackend::createSurface(xcb_window_t window)
 
 bool EglBackend::initBufferConfigs()
 {
-    initBufferAge();
     const EGLint config_attribs[] = {
         EGL_SURFACE_TYPE,
         EGL_WINDOW_BIT | (supportsBufferAge() ? 0 : EGL_SWAP_BEHAVIOR_PRESERVED_BIT),

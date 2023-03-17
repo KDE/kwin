@@ -422,10 +422,7 @@ WaylandBackend::WaylandBackend(const WaylandBackendOptions &options, QObject *pa
 
 WaylandBackend::~WaylandBackend()
 {
-    if (sceneEglDisplay() != EGL_NO_DISPLAY) {
-        eglTerminate(sceneEglDisplay());
-    }
-
+    m_eglDisplay.reset();
     destroyOutputs();
 
     m_seat.reset();
@@ -624,6 +621,15 @@ std::shared_ptr<DmaBufTexture> WaylandBackend::createDmaBufTexture(const QSize &
     return std::make_shared<DmaBufTexture>(m_eglBackend->importDmaBufAsTexture(attributes), std::move(attributes));
 }
 
+void WaylandBackend::setEglDisplay(std::unique_ptr<EglDisplay> &&display)
+{
+    m_eglDisplay = std::move(display);
+}
+
+EglDisplay *WaylandBackend::sceneEglDisplayObject() const
+{
+    return m_eglDisplay.get();
+}
 }
 
 } // KWin

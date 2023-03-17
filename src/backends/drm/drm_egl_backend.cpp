@@ -60,11 +60,11 @@ EglGbmBackend::~EglGbmBackend()
 bool EglGbmBackend::initializeEgl()
 {
     initClientExtensions();
-    EGLDisplay display = m_backend->primaryGpu()->eglDisplay();
+    auto display = m_backend->primaryGpu()->eglDisplay();
 
     // Use eglGetPlatformDisplayEXT() to get the display pointer
     // if the implementation supports it.
-    if (display == EGL_NO_DISPLAY) {
+    if (!display) {
         const bool hasMesaGBM = hasClientExtension(QByteArrayLiteral("EGL_MESA_platform_gbm"));
         const bool hasKHRGBM = hasClientExtension(QByteArrayLiteral("EGL_KHR_platform_gbm"));
         const GLenum platform = hasMesaGBM ? EGL_PLATFORM_GBM_MESA : EGL_PLATFORM_GBM_KHR;
@@ -80,15 +80,14 @@ bool EglGbmBackend::initializeEgl()
             return false;
         }
 
-        display = eglGetPlatformDisplayEXT(platform, m_backend->primaryGpu()->gbmDevice(), nullptr);
-        m_backend->primaryGpu()->setEglDisplay(display);
-    }
-
-    if (display == EGL_NO_DISPLAY) {
-        return false;
+        m_backend->primaryGpu()->setEglDisplay(EglDisplay::create(eglGetPlatformDisplayEXT(platform, m_backend->primaryGpu()->gbmDevice(), nullptr)));
+        display = m_backend->primaryGpu()->eglDisplay();
+        if (!display) {
+            return false;
+        }
     }
     setEglDisplay(display);
-    return initEglAPI();
+    return true;
 }
 
 void EglGbmBackend::init()
@@ -102,7 +101,6 @@ void EglGbmBackend::init()
         setFailed("Could not initialize rendering context");
         return;
     }
-    initBufferAge();
     initKWinGL();
     initWayland();
 }

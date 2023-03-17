@@ -124,6 +124,9 @@ public:
     X11WindowedInputDevice *keyboardDevice() const;
     X11WindowedInputDevice *touchDevice() const;
 
+    void setEglDisplay(std::unique_ptr<EglDisplay> &&display);
+    EglDisplay *sceneEglDisplayObject() const override;
+
 private:
     void createOutputs();
     void grabKeyboard(xcb_timestamp_t time);
@@ -174,6 +177,7 @@ private:
 
     FileDescriptor m_drmFileDescriptor;
     gbm_device *m_gbmDevice = nullptr;
+    std::unique_ptr<EglDisplay> m_eglDisplay;
 
     QVector<X11WindowedOutput *> m_outputs;
 };

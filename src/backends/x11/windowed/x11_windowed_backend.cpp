@@ -169,10 +169,7 @@ X11WindowedBackend::~X11WindowedBackend()
     m_pointerDevice.reset();
     m_keyboardDevice.reset();
     m_touchDevice.reset();
-
-    if (sceneEglDisplay() != EGL_NO_DISPLAY) {
-        eglTerminate(sceneEglDisplay());
-    }
+    m_eglDisplay.reset();
 
     if (m_gbmDevice) {
         gbm_device_destroy(m_gbmDevice);
@@ -799,6 +796,16 @@ void X11WindowedBackend::destroyOutputs()
         Q_EMIT outputRemoved(output);
         delete output;
     }
+}
+
+void X11WindowedBackend::setEglDisplay(std::unique_ptr<EglDisplay> &&display)
+{
+    m_eglDisplay = std::move(display);
+}
+
+EglDisplay *X11WindowedBackend::sceneEglDisplayObject() const
+{
+    return m_eglDisplay.get();
 }
 
 } // namespace KWin

@@ -16,7 +16,7 @@ namespace KWin
 #define EGL_NO_NATIVE_FENCE_FD_ANDROID -1
 #endif // EGL_ANDROID_native_fence_sync
 
-EGLNativeFence::EGLNativeFence(EGLDisplay display)
+EGLNativeFence::EGLNativeFence(::EGLDisplay display)
     : m_display(display)
 {
     m_sync = eglCreateSyncKHR(m_display, EGL_SYNC_NATIVE_FENCE_ANDROID, nullptr);

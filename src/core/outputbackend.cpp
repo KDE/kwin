@@ -13,6 +13,7 @@
 #include "inputbackend.h"
 #include "output.h"
 #include "outputconfiguration.h"
+#include "platformsupport/scenes/opengl/egldisplay.h"
 #include "platformsupport/scenes/opengl/openglbackend.h"
 #include "platformsupport/scenes/qpainter/qpainterbackend.h"
 
@@ -21,7 +22,6 @@ namespace KWin
 
 OutputBackend::OutputBackend(QObject *parent)
     : QObject(parent)
-    , m_eglDisplay(EGL_NO_DISPLAY)
 {
 }
 
@@ -103,14 +103,13 @@ void OutputBackend::removeVirtualOutput(Output *output)
     Q_ASSERT(!output);
 }
 
-EGLDisplay KWin::OutputBackend::sceneEglDisplay() const
+::EGLDisplay KWin::OutputBackend::sceneEglDisplay() const
 {
-    return m_eglDisplay;
-}
-
-void OutputBackend::setSceneEglDisplay(EGLDisplay display)
-{
-    m_eglDisplay = display;
+    if (auto display = sceneEglDisplayObject()) {
+        return display->handle();
+    } else {
+        return EGL_NO_DISPLAY;
+    }
 }
 
 QString OutputBackend::supportInformation() const

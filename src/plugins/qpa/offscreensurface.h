@@ -32,7 +32,7 @@ public:
 private:
     QSurfaceFormat m_format;
 
-    EGLDisplay m_eglDisplay = EGL_NO_DISPLAY;
+    ::EGLDisplay m_eglDisplay = EGL_NO_DISPLAY;
     EGLSurface m_surface = EGL_NO_SURFACE;
 };
 

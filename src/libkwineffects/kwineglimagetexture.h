@@ -22,12 +22,12 @@ namespace KWin
 class KWINGLUTILS_EXPORT EGLImageTexture : public GLTexture
 {
 public:
-    EGLImageTexture(EGLDisplay display, EGLImageKHR image, int internalFormat, const QSize &size);
+    EGLImageTexture(::EGLDisplay display, EGLImageKHR image, int internalFormat, const QSize &size);
     ~EGLImageTexture() override;
 
 private:
     EGLImageKHR m_image;
-    EGLDisplay m_display;
+    ::EGLDisplay m_display;
 };
 
 }

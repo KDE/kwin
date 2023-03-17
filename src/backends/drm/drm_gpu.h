@@ -35,6 +35,7 @@ class EglGbmBackend;
 class DrmAbstractOutput;
 class DrmRenderBackend;
 class DrmVirtualOutput;
+class EglDisplay;
 
 class DrmLease : public QObject
 {
@@ -75,7 +76,7 @@ public:
     bool asyncPageflipSupported() const;
     bool isNVidia() const;
     gbm_device *gbmDevice() const;
-    EGLDisplay eglDisplay() const;
+    EglDisplay *eglDisplay() const;
     DrmBackend *platform() const;
     /**
      * Returns the clock from which presentation timestamps are sourced. The returned value
@@ -88,7 +89,7 @@ public:
     QVector<DrmOutput *> drmOutputs() const;
     const QVector<DrmPipeline *> pipelines() const;
 
-    void setEglDisplay(EGLDisplay display);
+    void setEglDisplay(std::unique_ptr<EglDisplay> &&display);
 
     bool updateOutputs();
     void removeOutputs();
@@ -134,7 +135,7 @@ private:
     bool m_isRemoved = false;
     clockid_t m_presentationClock;
     gbm_device *m_gbmDevice;
-    EGLDisplay m_eglDisplay = EGL_NO_DISPLAY;
+    std::unique_ptr<EglDisplay> m_eglDisplay;
     DrmBackend *const m_platform;
 
     std::vector<std::unique_ptr<DrmPlane>> m_planes;

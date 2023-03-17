@@ -223,7 +223,7 @@ void Display::setEglDisplay(void *display)
         qCWarning(KWIN_CORE) << "EGLDisplay cannot be changed";
         return;
     }
-    d->eglDisplay = (EGLDisplay)display;
+    d->eglDisplay = (::EGLDisplay)display;
     new DrmClientBufferIntegration(this);
 }
 

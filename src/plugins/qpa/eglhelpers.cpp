@@ -28,7 +28,7 @@ bool isOpenGLES()
     return QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES;
 }
 
-EGLConfig configFromFormat(EGLDisplay display, const QSurfaceFormat &surfaceFormat, EGLint surfaceType)
+EGLConfig configFromFormat(::EGLDisplay display, const QSurfaceFormat &surfaceFormat, EGLint surfaceType)
 {
     // std::max as these values are initialized to -1 by default.
     const EGLint redSize = std::max(surfaceFormat.redBufferSize(), 0);
@@ -88,7 +88,7 @@ EGLConfig configFromFormat(EGLDisplay display, const QSurfaceFormat &surfaceForm
     return configs[0];
 }
 
-QSurfaceFormat formatFromConfig(EGLDisplay display, EGLConfig config)
+QSurfaceFormat formatFromConfig(::EGLDisplay display, EGLConfig config)
 {
     int redSize = 0;
     int blueSize = 0;

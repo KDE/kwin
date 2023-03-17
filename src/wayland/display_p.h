@@ -51,7 +51,7 @@ public:
     QVector<SeatInterface *> seats;
     QVector<ClientConnection *> clients;
     QStringList socketNames;
-    EGLDisplay eglDisplay = EGL_NO_DISPLAY;
+    ::EGLDisplay eglDisplay = EGL_NO_DISPLAY;
     QHash<::wl_resource *, ClientBuffer *> resourceToBuffer;
     QHash<ClientBuffer *, ClientBufferDestroyListener *> bufferToListener;
     QList<ClientBufferIntegration *> bufferIntegrations;

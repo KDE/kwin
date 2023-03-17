@@ -86,24 +86,24 @@ VirtualEglBackend::~VirtualEglBackend()
 bool VirtualEglBackend::initializeEgl()
 {
     initClientExtensions();
-    EGLDisplay display = m_backend->sceneEglDisplay();
+    auto display = m_backend->sceneEglDisplayObject();
 
     // Use eglGetPlatformDisplayEXT() to get the display pointer
     // if the implementation supports it.
-    if (display == EGL_NO_DISPLAY) {
+    if (!display) {
         // first try surfaceless
         if (hasClientExtension(QByteArrayLiteral("EGL_MESA_platform_surfaceless"))) {
-            display = eglGetPlatformDisplayEXT(EGL_PLATFORM_SURFACELESS_MESA, EGL_DEFAULT_DISPLAY, nullptr);
+            m_backend->setEglDisplay(EglDisplay::create(eglGetPlatformDisplayEXT(EGL_PLATFORM_SURFACELESS_MESA, EGL_DEFAULT_DISPLAY, nullptr)));
+            display = m_backend->sceneEglDisplayObject();
         } else {
             qCWarning(KWIN_VIRTUAL) << "Extension EGL_MESA_platform_surfaceless not available";
         }
-    }
-
-    if (display == EGL_NO_DISPLAY) {
-        return false;
+        if (!display) {
+            return false;
+        }
     }
     setEglDisplay(display);
-    return initEglAPI();
+    return true;
 }
 
 void VirtualEglBackend::init()

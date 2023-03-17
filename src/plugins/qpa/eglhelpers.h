@@ -20,8 +20,8 @@ namespace QPA
 
 bool isOpenGLES();
 
-EGLConfig configFromFormat(EGLDisplay display, const QSurfaceFormat &surfaceFormat, EGLint surfaceType = 0);
-QSurfaceFormat formatFromConfig(EGLDisplay display, EGLConfig config);
+EGLConfig configFromFormat(::EGLDisplay display, const QSurfaceFormat &surfaceFormat, EGLint surfaceType = 0);
+QSurfaceFormat formatFromConfig(::EGLDisplay display, EGLConfig config);
 
 } // namespace QPA
 } // namespace KWin

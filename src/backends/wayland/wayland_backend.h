@@ -229,6 +229,8 @@ public:
     {
         m_eglBackend = eglBackend;
     }
+    void setEglDisplay(std::unique_ptr<EglDisplay> &&display);
+    EglDisplay *sceneEglDisplayObject() const override;
 
 Q_SIGNALS:
     void pointerLockChanged(bool locked);
@@ -247,6 +249,7 @@ private:
     bool m_pointerLockRequested = false;
     FileDescriptor m_drmFileDescriptor;
     gbm_device *m_gbmDevice;
+    std::unique_ptr<EglDisplay> m_eglDisplay;
 };
 
 } // namespace Wayland

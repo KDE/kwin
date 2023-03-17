@@ -119,9 +119,7 @@ X11StandaloneBackend::X11StandaloneBackend(QObject *parent)
 
 X11StandaloneBackend::~X11StandaloneBackend()
 {
-    if (sceneEglDisplay() != EGL_NO_DISPLAY) {
-        eglTerminate(sceneEglDisplay());
-    }
+    m_eglDisplay.reset();
     XRenderUtils::cleanup();
 }
 
@@ -511,4 +509,13 @@ void X11StandaloneBackend::updateRefreshRate()
     m_renderLoop->setRefreshRate(refreshRate);
 }
 
+void X11StandaloneBackend::setEglDisplay(std::unique_ptr<EglDisplay> &&display)
+{
+    m_eglDisplay = std::move(display);
+}
+
+EglDisplay *X11StandaloneBackend::sceneEglDisplayObject() const
+{
+    return m_eglDisplay.get();
+}
 }

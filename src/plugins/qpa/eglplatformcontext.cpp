@@ -30,7 +30,7 @@ namespace KWin
 namespace QPA
 {
 
-EGLPlatformContext::EGLPlatformContext(QOpenGLContext *context, EGLDisplay display)
+EGLPlatformContext::EGLPlatformContext(QOpenGLContext *context, ::EGLDisplay display)
     : m_eglDisplay(display)
 {
     create(context->format(), kwinApp()->outputBackend()->sceneEglGlobalShareContext());
@@ -43,7 +43,7 @@ EGLPlatformContext::~EGLPlatformContext()
     }
 }
 
-EGLDisplay EGLPlatformContext::eglDisplay() const
+::EGLDisplay EGLPlatformContext::eglDisplay() const
 {
     return m_eglDisplay;
 }

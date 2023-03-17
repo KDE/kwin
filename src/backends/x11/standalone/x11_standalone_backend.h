@@ -69,6 +69,9 @@ public:
     RenderLoop *renderLoop() const;
     Outputs outputs() const override;
 
+    void setEglDisplay(std::unique_ptr<EglDisplay> &&display);
+    EglDisplay *sceneEglDisplayObject() const override;
+
 private:
     /**
      * Tests whether GLX is supported and returns @c true
@@ -98,6 +101,7 @@ private:
     std::unique_ptr<X11Keyboard> m_keyboard;
     std::unique_ptr<RenderLoop> m_renderLoop;
     QVector<Output *> m_outputs;
+    std::unique_ptr<EglDisplay> m_eglDisplay;
 };
 
 }

@@ -340,11 +340,11 @@ bool WaylandEglBackend::createEglWaylandOutput(Output *waylandOutput)
 bool WaylandEglBackend::initializeEgl()
 {
     initClientExtensions();
-    EGLDisplay display = m_backend->sceneEglDisplay();
+    auto display = m_backend->sceneEglDisplayObject();
 
     // Use eglGetPlatformDisplayEXT() to get the display pointer
     // if the implementation supports it.
-    if (display == EGL_NO_DISPLAY) {
+    if (!display) {
         m_havePlatformBase = hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_base"));
         if (m_havePlatformBase) {
             // Make sure that the wayland platform is supported
@@ -352,17 +352,17 @@ bool WaylandEglBackend::initializeEgl()
                 return false;
             }
 
-            display = eglGetPlatformDisplayEXT(EGL_PLATFORM_WAYLAND_EXT, m_backend->display()->nativeDisplay(), nullptr);
+            m_backend->setEglDisplay(EglDisplay::create(eglGetPlatformDisplayEXT(EGL_PLATFORM_WAYLAND_EXT, m_backend->display()->nativeDisplay(), nullptr)));
         } else {
-            display = eglGetDisplay(m_backend->display()->nativeDisplay());
+            m_backend->setEglDisplay(EglDisplay::create(eglGetDisplay(m_backend->display()->nativeDisplay())));
+        }
+        display = m_backend->sceneEglDisplayObject();
+        if (!display) {
+            return false;
         }
     }
-
-    if (display == EGL_NO_DISPLAY) {
-        return false;
-    }
     setEglDisplay(display);
-    return initEglAPI();
+    return true;
 }
 
 void WaylandEglBackend::init()
@@ -377,7 +377,6 @@ void WaylandEglBackend::init()
     }
 
     initKWinGL();
-    initBufferAge();
     initWayland();
 }
 

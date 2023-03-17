@@ -67,7 +67,7 @@ EGLContext AbstractEglBackend::ensureGlobalShareContext()
 
 void AbstractEglBackend::destroyGlobalShareContext()
 {
-    const EGLDisplay eglDisplay = kwinApp()->outputBackend()->sceneEglDisplay();
+    const ::EGLDisplay eglDisplay = kwinApp()->outputBackend()->sceneEglDisplay();
     if (eglDisplay == EGL_NO_DISPLAY || s_globalShareContext == EGL_NO_CONTEXT) {
         return;
     }
@@ -78,8 +78,8 @@ void AbstractEglBackend::destroyGlobalShareContext()
 
 void AbstractEglBackend::teardown()
 {
-    if (m_functions.eglUnbindWaylandDisplayWL && m_display != EGL_NO_DISPLAY) {
-        m_functions.eglUnbindWaylandDisplayWL(m_display, *(WaylandServer::self()->display()));
+    if (m_functions.eglUnbindWaylandDisplayWL && m_display) {
+        m_functions.eglUnbindWaylandDisplayWL(m_display->handle(), *(WaylandServer::self()->display()));
     }
     destroyGlobalShareContext();
 }
@@ -93,56 +93,22 @@ void AbstractEglBackend::cleanup()
     cleanupSurfaces();
     cleanupGL();
     doneCurrent();
-    eglDestroyContext(m_display, m_context);
-    eglReleaseThread();
+    eglDestroyContext(m_display->handle(), m_context);
 }
 
 void AbstractEglBackend::cleanupSurfaces()
 {
     if (m_surface != EGL_NO_SURFACE) {
-        eglDestroySurface(m_display, m_surface);
+        eglDestroySurface(m_display->handle(), m_surface);
     }
 }
 
-bool AbstractEglBackend::initEglAPI()
+void AbstractEglBackend::setEglDisplay(EglDisplay *display)
 {
-    EGLint major, minor;
-    if (eglInitialize(m_display, &major, &minor) == EGL_FALSE) {
-        qCWarning(KWIN_OPENGL) << "eglInitialize failed";
-        EGLint error = eglGetError();
-        if (error != EGL_SUCCESS) {
-            qCWarning(KWIN_OPENGL) << "Error during eglInitialize " << error;
-        }
-        return false;
-    }
-    EGLint error = eglGetError();
-    if (error != EGL_SUCCESS) {
-        qCWarning(KWIN_OPENGL) << "Error during eglInitialize " << error;
-        return false;
-    }
-    qCDebug(KWIN_OPENGL) << "Egl Initialize succeeded";
-
-    if (eglBindAPI(isOpenGLES() ? EGL_OPENGL_ES_API : EGL_OPENGL_API) == EGL_FALSE) {
-        qCCritical(KWIN_OPENGL) << "bind OpenGL API failed";
-        return false;
-    }
-    qCDebug(KWIN_OPENGL) << "EGL version: " << major << "." << minor;
-    const QByteArray eglExtensions = eglQueryString(m_display, EGL_EXTENSIONS);
-    setExtensions(eglExtensions.split(' '));
-
-    const QByteArray requiredExtensions[] = {
-        QByteArrayLiteral("EGL_KHR_no_config_context"),
-        QByteArrayLiteral("EGL_KHR_surfaceless_context"),
-    };
-    for (const QByteArray &extensionName : requiredExtensions) {
-        if (!hasExtension(extensionName)) {
-            qCWarning(KWIN_OPENGL) << extensionName << "extension is unsupported";
-            return false;
-        }
-    }
-
-    setSupportsNativeFence(hasExtension(QByteArrayLiteral("EGL_ANDROID_native_fence_sync")));
-    return true;
+    m_display = display;
+    setExtensions(m_display->extensions());
+    setSupportsNativeFence(m_display->supportsNativeFence());
+    setSupportsBufferAge(m_display->supportsBufferAge());
 }
 
 typedef void (*eglFuncPtr)();
@@ -161,19 +127,6 @@ void AbstractEglBackend::initKWinGL()
     }
     glPlatform->printResults();
     initGL(&getProcAddress);
-}
-
-void AbstractEglBackend::initBufferAge()
-{
-    setSupportsBufferAge(false);
-
-    if (hasExtension(QByteArrayLiteral("EGL_EXT_buffer_age"))) {
-        const QByteArray useBufferAge = qgetenv("KWIN_USE_BUFFER_AGE");
-
-        if (useBufferAge != "0") {
-            setSupportsBufferAge(true);
-        }
-    }
 }
 
 static int bpcForFormat(uint32_t format)
@@ -323,13 +276,13 @@ bool AbstractEglBackend::makeCurrent()
         // Workaround to tell Qt that no QOpenGLContext is current
         context->doneCurrent();
     }
-    const bool current = eglMakeCurrent(m_display, m_surface, m_surface, m_context);
+    const bool current = eglMakeCurrent(m_display->handle(), m_surface, m_surface, m_context);
     return current;
 }
 
 void AbstractEglBackend::doneCurrent()
 {
-    eglMakeCurrent(m_display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+    eglMakeCurrent(m_display->handle(), EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
 }
 
 bool AbstractEglBackend::isOpenGLES() const
@@ -440,7 +393,7 @@ EGLContext AbstractEglBackend::createContextInternal(EGLContext sharedContext)
     EGLContext ctx = EGL_NO_CONTEXT;
     for (auto it = candidates.begin(); it != candidates.end(); it++) {
         const auto attribs = (*it)->build();
-        ctx = eglCreateContext(m_display, config(), sharedContext, attribs.data());
+        ctx = eglCreateContext(m_display->handle(), config(), sharedContext, attribs.data());
         if (ctx != EGL_NO_CONTEXT) {
             qCDebug(KWIN_OPENGL) << "Created EGL context with attributes:" << (*it).get();
             break;
@@ -451,12 +404,6 @@ EGLContext AbstractEglBackend::createContextInternal(EGLContext sharedContext)
         qCCritical(KWIN_OPENGL) << "Create Context failed";
     }
     return ctx;
-}
-
-void AbstractEglBackend::setEglDisplay(const EGLDisplay &display)
-{
-    m_display = display;
-    kwinApp()->outputBackend()->setSceneEglDisplay(display);
 }
 
 void AbstractEglBackend::setConfig(const EGLConfig &config)
@@ -504,71 +451,14 @@ EGLImageKHR AbstractEglBackend::importBufferAsImage(KWaylandServer::LinuxDmaBufV
 
 EGLImageKHR AbstractEglBackend::importDmaBufAsImage(const DmaBufAttributes &dmabuf) const
 {
-    QVector<EGLint> attribs;
-    attribs.reserve(6 + dmabuf.planeCount * 10 + 1);
-
-    attribs
-        << EGL_WIDTH << dmabuf.width
-        << EGL_HEIGHT << dmabuf.height
-        << EGL_LINUX_DRM_FOURCC_EXT << dmabuf.format
-        << EGL_IMAGE_PRESERVED_KHR << EGL_TRUE;
-
-    attribs
-        << EGL_DMA_BUF_PLANE0_FD_EXT << dmabuf.fd[0].get()
-        << EGL_DMA_BUF_PLANE0_OFFSET_EXT << dmabuf.offset[0]
-        << EGL_DMA_BUF_PLANE0_PITCH_EXT << dmabuf.pitch[0];
-    if (dmabuf.modifier != DRM_FORMAT_MOD_INVALID) {
-        attribs
-            << EGL_DMA_BUF_PLANE0_MODIFIER_LO_EXT << EGLint(dmabuf.modifier & 0xffffffff)
-            << EGL_DMA_BUF_PLANE0_MODIFIER_HI_EXT << EGLint(dmabuf.modifier >> 32);
-    }
-
-    if (dmabuf.planeCount > 1) {
-        attribs
-            << EGL_DMA_BUF_PLANE1_FD_EXT << dmabuf.fd[1].get()
-            << EGL_DMA_BUF_PLANE1_OFFSET_EXT << dmabuf.offset[1]
-            << EGL_DMA_BUF_PLANE1_PITCH_EXT << dmabuf.pitch[1];
-        if (dmabuf.modifier != DRM_FORMAT_MOD_INVALID) {
-            attribs
-                << EGL_DMA_BUF_PLANE1_MODIFIER_LO_EXT << EGLint(dmabuf.modifier & 0xffffffff)
-                << EGL_DMA_BUF_PLANE1_MODIFIER_HI_EXT << EGLint(dmabuf.modifier >> 32);
-        }
-    }
-
-    if (dmabuf.planeCount > 2) {
-        attribs
-            << EGL_DMA_BUF_PLANE2_FD_EXT << dmabuf.fd[2].get()
-            << EGL_DMA_BUF_PLANE2_OFFSET_EXT << dmabuf.offset[2]
-            << EGL_DMA_BUF_PLANE2_PITCH_EXT << dmabuf.pitch[2];
-        if (dmabuf.modifier != DRM_FORMAT_MOD_INVALID) {
-            attribs
-                << EGL_DMA_BUF_PLANE2_MODIFIER_LO_EXT << EGLint(dmabuf.modifier & 0xffffffff)
-                << EGL_DMA_BUF_PLANE2_MODIFIER_HI_EXT << EGLint(dmabuf.modifier >> 32);
-        }
-    }
-
-    if (dmabuf.planeCount > 3) {
-        attribs
-            << EGL_DMA_BUF_PLANE3_FD_EXT << dmabuf.fd[3].get()
-            << EGL_DMA_BUF_PLANE3_OFFSET_EXT << dmabuf.offset[3]
-            << EGL_DMA_BUF_PLANE3_PITCH_EXT << dmabuf.pitch[3];
-        if (dmabuf.modifier != DRM_FORMAT_MOD_INVALID) {
-            attribs
-                << EGL_DMA_BUF_PLANE3_MODIFIER_LO_EXT << EGLint(dmabuf.modifier & 0xffffffff)
-                << EGL_DMA_BUF_PLANE3_MODIFIER_HI_EXT << EGLint(dmabuf.modifier >> 32);
-        }
-    }
-
-    attribs << EGL_NONE;
-
-    return eglCreateImageKHR(m_display, EGL_NO_CONTEXT, EGL_LINUX_DMA_BUF_EXT, nullptr, attribs.data());
+    return m_display->importDmaBufAsImage(dmabuf);
 }
 
 std::shared_ptr<GLTexture> AbstractEglBackend::importDmaBufAsTexture(const DmaBufAttributes &attributes) const
 {
     EGLImageKHR image = importDmaBufAsImage(attributes);
     if (image != EGL_NO_IMAGE_KHR) {
-        return std::make_shared<EGLImageTexture>(eglDisplay(), image, GL_RGBA8, QSize(attributes.width, attributes.height));
+        return std::make_shared<EGLImageTexture>(m_display->handle(), image, GL_RGBA8, QSize(attributes.width, attributes.height));
     } else {
         qCWarning(KWIN_OPENGL) << "Failed to record frame: Error creating EGLImageKHR - " << getEglErrorString();
         return nullptr;
@@ -618,5 +508,15 @@ bool AbstractEglBackend::initBufferConfigs()
     setConfig(configs[0]);
 
     return true;
+}
+
+::EGLDisplay AbstractEglBackend::eglDisplay() const
+{
+    return m_display->handle();
+}
+
+EglDisplay *AbstractEglBackend::eglDisplayObject() const
+{
+    return m_display;
 }
 }

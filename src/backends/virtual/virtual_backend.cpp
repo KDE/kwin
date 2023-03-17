@@ -20,12 +20,7 @@ VirtualBackend::VirtualBackend(QObject *parent)
 {
 }
 
-VirtualBackend::~VirtualBackend()
-{
-    if (sceneEglDisplay() != EGL_NO_DISPLAY) {
-        eglTerminate(sceneEglDisplay());
-    }
-}
+VirtualBackend::~VirtualBackend() = default;
 
 bool VirtualBackend::initialize()
 {
@@ -82,6 +77,16 @@ void VirtualBackend::setVirtualOutputs(const QVector<QRect> &geometries, QVector
     }
 
     Q_EMIT outputsQueried();
+}
+
+void VirtualBackend::setEglDisplay(std::unique_ptr<EglDisplay> &&display)
+{
+    m_display = std::move(display);
+}
+
+EglDisplay *VirtualBackend::sceneEglDisplayObject() const
+{
+    return m_display.get();
 }
 
 } // namespace KWin

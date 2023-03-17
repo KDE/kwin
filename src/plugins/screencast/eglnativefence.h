@@ -16,7 +16,7 @@ namespace KWin
 class EGLNativeFence
 {
 public:
-    explicit EGLNativeFence(EGLDisplay display);
+    explicit EGLNativeFence(::EGLDisplay display);
     ~EGLNativeFence();
 
     bool isValid() const;
@@ -24,7 +24,7 @@ public:
 
 private:
     EGLSyncKHR m_sync = EGL_NO_SYNC_KHR;
-    EGLDisplay m_display = EGL_NO_DISPLAY;
+    ::EGLDisplay m_display = EGL_NO_DISPLAY;
     int m_fileDescriptor = -1;
 
     Q_DISABLE_COPY(EGLNativeFence)

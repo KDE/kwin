@@ -276,11 +276,11 @@ X11WindowedBackend *X11WindowedEglBackend::backend() const
 bool X11WindowedEglBackend::initializeEgl()
 {
     initClientExtensions();
-    EGLDisplay dpy = kwinApp()->outputBackend()->sceneEglDisplay();
+    auto display = kwinApp()->outputBackend()->sceneEglDisplayObject();
 
     // Use eglGetPlatformDisplayEXT() to get the display pointer
     // if the implementation supports it.
-    if (dpy == EGL_NO_DISPLAY) {
+    if (!display) {
         const bool havePlatformBase = hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_base"));
         if (havePlatformBase) {
             // Make sure that the X11 platform is supported
@@ -290,17 +290,17 @@ bool X11WindowedEglBackend::initializeEgl()
                 return false;
             }
 
-            dpy = eglGetPlatformDisplayEXT(EGL_PLATFORM_X11_EXT, m_backend->display(), nullptr);
+            m_backend->setEglDisplay(EglDisplay::create(eglGetPlatformDisplayEXT(EGL_PLATFORM_X11_EXT, m_backend->display(), nullptr)));
         } else {
-            dpy = eglGetDisplay(m_backend->display());
+            m_backend->setEglDisplay(EglDisplay::create(eglGetDisplay(m_backend->display())));
+        }
+        display = m_backend->sceneEglDisplayObject();
+        if (!display) {
+            return false;
         }
     }
-
-    if (dpy == EGL_NO_DISPLAY) {
-        return false;
-    }
-    setEglDisplay(dpy);
-    return initEglAPI();
+    setEglDisplay(display);
+    return true;
 }
 
 bool X11WindowedEglBackend::initRenderingContext()
@@ -328,7 +328,6 @@ void X11WindowedEglBackend::init()
     }
 
     initKWinGL();
-    initBufferAge();
     initWayland();
 
     const auto &outputs = m_backend->outputs();

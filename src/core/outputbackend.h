@@ -28,6 +28,7 @@ class OpenGLBackend;
 class QPainterBackend;
 class OutputConfiguration;
 struct DmaBufParams;
+class EglDisplay;
 
 class KWIN_EXPORT Outputs : public QVector<Output *>
 {
@@ -58,8 +59,8 @@ public:
     /**
      * The EGLDisplay used by the compositing scene.
      */
-    EGLDisplay sceneEglDisplay() const;
-    void setSceneEglDisplay(EGLDisplay display);
+    ::EGLDisplay sceneEglDisplay() const;
+    virtual EglDisplay *sceneEglDisplayObject() const = 0;
     /**
      * Returns the compositor-wide shared EGL context. This function may return EGL_NO_CONTEXT
      * if the underlying rendering backend does not use EGL.
@@ -119,8 +120,6 @@ Q_SIGNALS:
 protected:
     explicit OutputBackend(QObject *parent = nullptr);
 
-private:
-    EGLDisplay m_eglDisplay;
     EGLContext m_globalShareContext = EGL_NO_CONTEXT;
 };
 

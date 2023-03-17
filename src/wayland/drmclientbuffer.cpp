@@ -17,7 +17,7 @@
 
 namespace KWaylandServer
 {
-typedef EGLBoolean (*eglQueryWaylandBufferWL_func)(EGLDisplay dpy, struct wl_resource *buffer, EGLint attribute, EGLint *value);
+typedef EGLBoolean (*eglQueryWaylandBufferWL_func)(::EGLDisplay dpy, struct wl_resource *buffer, EGLint attribute, EGLint *value);
 static eglQueryWaylandBufferWL_func eglQueryWaylandBufferWL = nullptr;
 
 class DrmClientBufferPrivate : public ClientBufferPrivate
@@ -35,7 +35,7 @@ DrmClientBuffer::DrmClientBuffer(wl_resource *resource, DrmClientBufferIntegrati
 {
     Q_D(DrmClientBuffer);
 
-    EGLDisplay eglDisplay = integration->display()->eglDisplay();
+    ::EGLDisplay eglDisplay = integration->display()->eglDisplay();
     eglQueryWaylandBufferWL(eglDisplay, resource, EGL_TEXTURE_FORMAT, &d->textureFormat);
     eglQueryWaylandBufferWL(eglDisplay, resource, EGL_WIDTH, &d->width);
     eglQueryWaylandBufferWL(eglDisplay, resource, EGL_HEIGHT, &d->height);
@@ -77,7 +77,7 @@ DrmClientBufferIntegration::DrmClientBufferIntegration(Display *display)
 
 ClientBuffer *DrmClientBufferIntegration::createBuffer(::wl_resource *resource)
 {
-    EGLDisplay eglDisplay = display()->eglDisplay();
+    ::EGLDisplay eglDisplay = display()->eglDisplay();
     static bool resolved = false;
     if (!resolved && eglDisplay != EGL_NO_DISPLAY) {
         eglQueryWaylandBufferWL = (eglQueryWaylandBufferWL_func)eglGetProcAddress("eglQueryWaylandBufferWL");

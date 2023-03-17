@@ -44,6 +44,9 @@ public:
         return QVector<CompositingType>{OpenGLCompositing, QPainterCompositing};
     }
 
+    void setEglDisplay(std::unique_ptr<EglDisplay> &&display);
+    EglDisplay *sceneEglDisplayObject() const override;
+
 Q_SIGNALS:
     void virtualOutputsSet(bool countChanged);
 
@@ -51,6 +54,7 @@ private:
     VirtualOutput *createOutput(const QPoint &position, const QSize &size, qreal scale);
 
     QVector<VirtualOutput *> m_outputs;
+    std::unique_ptr<EglDisplay> m_display;
 };
 
 } // namespace KWin

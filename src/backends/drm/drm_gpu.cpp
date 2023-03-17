@@ -94,9 +94,7 @@ DrmGpu::DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t device
 DrmGpu::~DrmGpu()
 {
     removeOutputs();
-    if (m_eglDisplay != EGL_NO_DISPLAY) {
-        eglTerminate(m_eglDisplay);
-    }
+    m_eglDisplay.reset();
     m_crtcs.clear();
     m_connectors.clear();
     m_planes.clear();
@@ -671,14 +669,14 @@ gbm_device *DrmGpu::gbmDevice() const
     return m_gbmDevice;
 }
 
-EGLDisplay DrmGpu::eglDisplay() const
+EglDisplay *DrmGpu::eglDisplay() const
 {
-    return m_eglDisplay;
+    return m_eglDisplay.get();
 }
 
-void DrmGpu::setEglDisplay(EGLDisplay display)
+void DrmGpu::setEglDisplay(std::unique_ptr<EglDisplay> &&display)
 {
-    m_eglDisplay = display;
+    m_eglDisplay = std::move(display);
 }
 
 bool DrmGpu::addFB2ModifiersSupported() const
