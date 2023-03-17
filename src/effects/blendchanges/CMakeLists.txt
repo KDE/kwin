@@ -6,7 +6,7 @@ set(blendchanges_SOURCES
     blendchanges.cpp
 )
 
-kwin4_add_effect_module(blendchanges ${blendchanges_SOURCES})
+kwin_add_builtin_effect(blendchanges ${blendchanges_SOURCES})
 target_link_libraries(blendchanges PRIVATE
     kwineffects
     kwinglutils

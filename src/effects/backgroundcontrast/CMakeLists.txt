@@ -7,7 +7,7 @@ set(contrast_SOURCES
     contrastshader.cpp
     main.cpp
 )
-kwin4_add_effect_module(contrast ${contrast_SOURCES})
+kwin_add_builtin_effect(contrast ${contrast_SOURCES})
 target_link_libraries(contrast PRIVATE
     kwin
     kwineffects

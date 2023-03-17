@@ -8,7 +8,7 @@ set(sheet_SOURCES
 )
 kconfig_add_kcfg_files(sheet_SOURCES sheetconfig.kcfgc)
 
-kwin4_add_effect_module(sheet ${sheet_SOURCES})
+kwin_add_builtin_effect(sheet ${sheet_SOURCES})
 target_link_libraries(sheet PRIVATE
     kwineffects
 

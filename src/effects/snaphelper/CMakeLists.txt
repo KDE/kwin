@@ -7,7 +7,7 @@ set(snaphelper_SOURCES
     snaphelper.cpp
 )
 
-kwin4_add_effect_module(snaphelper ${snaphelper_SOURCES})
+kwin_add_builtin_effect(snaphelper ${snaphelper_SOURCES})
 target_link_libraries(snaphelper PRIVATE
     kwineffects
     kwinglutils

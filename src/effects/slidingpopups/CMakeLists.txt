@@ -11,7 +11,7 @@ kconfig_add_kcfg_files(slidingpopups_SOURCES
     slidingpopupsconfig.kcfgc
 )
 
-kwin4_add_effect_module(slidingpopups ${slidingpopups_SOURCES})
+kwin_add_builtin_effect(slidingpopups ${slidingpopups_SOURCES})
 target_link_libraries(slidingpopups PRIVATE
     kwin
     kwineffects

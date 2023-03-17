@@ -7,7 +7,7 @@ set(screentransform_SOURCES
     screentransform.qrc
 )
 
-kwin4_add_effect_module(screentransform ${screentransform_SOURCES})
+kwin_add_builtin_effect(screentransform ${screentransform_SOURCES})
 target_link_libraries(screentransform PRIVATE
     kwineffects
     kwinglutils

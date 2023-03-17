@@ -11,7 +11,7 @@ set(tileseditor_SOURCES
     tileseditoreffect.cpp
 )
 
-kwin4_add_effect_module(tileseditor ${tileseditor_SOURCES})
+kwin_add_builtin_effect(tileseditor ${tileseditor_SOURCES})
 
 target_link_libraries(tileseditor PRIVATE
     kwineffects

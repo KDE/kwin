@@ -7,7 +7,7 @@ set(invert_SOURCES
     main.cpp
 )
 
-kwin4_add_effect_module(invert ${invert_SOURCES})
+kwin_add_builtin_effect(invert ${invert_SOURCES})
 target_link_libraries(invert PRIVATE
     kwineffects
     kwinglutils

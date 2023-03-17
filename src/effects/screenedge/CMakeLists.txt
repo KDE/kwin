@@ -7,7 +7,7 @@ set(screenedge_SOURCES
     screenedgeeffect.cpp
 )
 
-kwin4_add_effect_module(screenedge ${screenedge_SOURCES})
+kwin_add_builtin_effect(screenedge ${screenedge_SOURCES})
 target_link_libraries(screenedge PRIVATE
     kwineffects
     kwinglutils

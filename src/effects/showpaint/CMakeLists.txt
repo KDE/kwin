@@ -6,7 +6,7 @@ set(showpaint_SOURCES
     showpaint.cpp
 )
 
-kwin4_add_effect_module(showpaint ${showpaint_SOURCES})
+kwin_add_builtin_effect(showpaint ${showpaint_SOURCES})
 target_link_libraries(showpaint PRIVATE
     kwineffects
     kwinglutils

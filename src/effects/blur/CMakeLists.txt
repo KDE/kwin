@@ -12,7 +12,7 @@ kconfig_add_kcfg_files(blur_SOURCES
     blurconfig.kcfgc
 )
 
-kwin4_add_effect_module(blur ${blur_SOURCES})
+kwin_add_builtin_effect(blur ${blur_SOURCES})
 target_link_libraries(blur PRIVATE
     kwin
     kwineffects

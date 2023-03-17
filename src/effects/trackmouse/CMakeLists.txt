@@ -12,7 +12,7 @@ kconfig_add_kcfg_files(trackmouse_SOURCES
     trackmouseconfig.kcfgc
 )
 
-kwin4_add_effect_module(trackmouse ${trackmouse_SOURCES})
+kwin_add_builtin_effect(trackmouse ${trackmouse_SOURCES})
 target_link_libraries(trackmouse PRIVATE
     kwineffects
     kwinglutils

@@ -6,7 +6,7 @@ set(colorpicker_SOURCES
     main.cpp
 )
 
-kwin4_add_effect_module(colorpicker ${colorpicker_SOURCES})
+kwin_add_builtin_effect(colorpicker ${colorpicker_SOURCES})
 target_link_libraries(colorpicker PRIVATE
     kwineffects
 

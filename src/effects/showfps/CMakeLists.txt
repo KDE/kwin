@@ -7,7 +7,7 @@ set(showfps_SOURCES
     showfpseffect.cpp
 )
 
-kwin4_add_effect_module(showfps ${showfps_SOURCES})
+kwin_add_builtin_effect(showfps ${showfps_SOURCES})
 
 target_link_libraries(showfps PRIVATE
     kwineffects

@@ -10,7 +10,7 @@ kconfig_add_kcfg_files(wobblywindows_SOURCES
     wobblywindowsconfig.kcfgc
 )
 
-kwin4_add_effect_module(wobblywindows ${wobblywindows_SOURCES})
+kwin_add_builtin_effect(wobblywindows ${wobblywindows_SOURCES})
 target_link_libraries(wobblywindows PRIVATE
     kwineffects
 

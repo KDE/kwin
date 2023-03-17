@@ -10,7 +10,7 @@ kconfig_add_kcfg_files(glide_SOURCES
     glideconfig.kcfgc
 )
 
-kwin4_add_effect_module(glide ${glide_SOURCES})
+kwin_add_builtin_effect(glide ${glide_SOURCES})
 target_link_libraries(glide PRIVATE
     kwineffects
 

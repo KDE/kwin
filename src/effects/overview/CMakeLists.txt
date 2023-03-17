@@ -15,7 +15,7 @@ kconfig_add_kcfg_files(overview_SOURCES
     overviewconfig.kcfgc
 )
 
-kwin4_add_effect_module(overview ${overview_SOURCES})
+kwin_add_builtin_effect(overview ${overview_SOURCES})
 target_link_libraries(overview PRIVATE
     kwineffects
 

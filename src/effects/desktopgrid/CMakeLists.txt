@@ -12,7 +12,7 @@ kconfig_add_kcfg_files(desktopgrid_SOURCES
 )
 
 
-kwin4_add_effect_module(desktopgrid ${desktopgrid_SOURCES})
+kwin_add_builtin_effect(desktopgrid ${desktopgrid_SOURCES})
 
 target_link_libraries(desktopgrid PRIVATE
     kwineffects

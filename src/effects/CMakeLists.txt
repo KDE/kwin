@@ -28,7 +28,7 @@ function (kwin_strip_builtin_effect_metadata target metadata)
     set_property(TARGET ${target} APPEND PROPERTY AUTOGEN_TARGET_DEPENDS ${stripped_metadata})
 endfunction()
 
-macro(KWIN4_ADD_EFFECT_MODULE name)
+macro(kwin_add_builtin_effect name)
     kcoreaddons_add_plugin(${name} STATIC SOURCES ${ARGN} INSTALL_NAMESPACE "kwin/effects/plugins")
     set_property(TARGET ${name} PROPERTY POSITION_INDEPENDENT_CODE ON)
     kwin_strip_builtin_effect_metadata(${name} metadata.json)

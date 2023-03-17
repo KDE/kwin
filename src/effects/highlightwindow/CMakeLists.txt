@@ -7,7 +7,7 @@ set(highlightwindow_SOURCES
     main.cpp
 )
 
-kwin4_add_effect_module(highlightwindow ${highlightwindow_SOURCES})
+kwin_add_builtin_effect(highlightwindow ${highlightwindow_SOURCES})
 target_link_libraries(highlightwindow PRIVATE
     kwineffects
 
