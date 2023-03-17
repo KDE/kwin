@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-08 03:00+0000\n"
+"POT-Creation-Date: 2023-03-17 03:17+0000\n"
 "PO-Revision-Date: 2023-01-11 00:37+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -1192,7 +1192,7 @@ msgstr "Tableta movida a %1"
 msgid "Tablets switched outputs"
 msgstr "Las tabletas han cambiado de salida"
 
-#: input.cpp:3066
+#: input.cpp:3093
 #, kde-format
 msgid "Touchpad"
 msgstr "Panel táctil"

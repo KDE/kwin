@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-08 03:00+0000\n"
+"POT-Creation-Date: 2023-03-17 03:17+0000\n"
 "PO-Revision-Date: 2022-12-28 21:14+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -1186,7 +1186,7 @@ msgstr "Regim tabletă"
 msgid "Tablets switched outputs"
 msgstr ""
 
-#: input.cpp:3066
+#: input.cpp:3093
 #, kde-format
 msgid "Touchpad"
 msgstr "Zonă tactilă"
