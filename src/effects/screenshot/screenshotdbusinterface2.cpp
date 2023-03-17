@@ -279,6 +279,7 @@ void ScreenShotSinkPipe2::flush(const QImage &image, const QVariantMap &attribut
     results.insert(QStringLiteral("width"), quint32(image.width()));
     results.insert(QStringLiteral("height"), quint32(image.height()));
     results.insert(QStringLiteral("stride"), quint32(image.bytesPerLine()));
+    results.insert(QStringLiteral("scale"), double(image.devicePixelRatio()));
     QDBusConnection::sessionBus().send(m_replyMessage.createReply(results));
 
     QtConcurrent::run([](int fileDescriptor, const QImage &image) {

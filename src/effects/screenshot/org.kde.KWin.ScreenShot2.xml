@@ -55,6 +55,9 @@
                             Available only if the image type is "raw"
             * "windowId" (s): The window id of the captured window. Available
                               since version 4.
+            * "scale" (d): The ratio between the native size and the logical
+                           size of the contents, corresponds to QImage::devicePixelRatio().
+                           Available since version 4.
         -->
         <method name="CaptureWindow">
             <arg name="handle" type="s" direction="in" />
@@ -100,6 +103,9 @@
                             Available only if the image type is "raw"
             * "windowId" (s): The window id of the captured window. Available
                               since version 4.
+            * "scale" (d): The ratio between the native size and the logical
+                           size of the contents, corresponds to QImage::devicePixelRatio().
+                           Available since version 4.
         -->
         <method name="CaptureActiveWindow">
             <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QVariantMap" />
@@ -142,6 +148,9 @@
                             image type is "raw"
             * "format" (u): The image format, as defined in QImage::Format.
                             Available only if the image type is "raw"
+            * "scale" (d): The ratio between the native size and the logical
+                           size of the contents, corresponds to QImage::devicePixelRatio().
+                           Available since version 4.
         -->
         <method name="CaptureArea">
             <arg name="x" type="i" direction="in" />
@@ -187,6 +196,9 @@
                             Available only if the image type is "raw"
             * "screen" (s): The name of the captured screen, same as QScreen::name().
                             Available since version 4
+            * "scale" (d): The ratio between the native size and the logical
+                           size of the contents, corresponds to QImage::devicePixelRatio().
+                           Available since version 4.
         -->
         <method name="CaptureScreen">
             <arg name="name" type="s" direction="in" />
@@ -230,6 +242,9 @@
                             Available only if the image type is "raw"
             * "screen" (s): The name of the captured screen, same as QScreen::name().
                             Available since version 4
+            * "scale" (d): The ratio between the native size and the logical
+                           size of the contents, corresponds to QImage::devicePixelRatio().
+                           Available since version 4.
         -->
         <method name="CaptureActiveScreen">
             <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QVariantMap" />
@@ -268,6 +283,9 @@
                             image type is "raw"
             * "format" (u): The image format, as defined in QImage::Format.
                             Available only if the image type is "raw"
+            * "scale" (d): The ratio between the native size and the logical
+                           size of the contents, corresponds to QImage::devicePixelRatio().
+                           Available since version 4.
 
             The following results get returned when taking a window screenshot:
 
@@ -319,6 +337,9 @@
                             image type is "raw"
             * "format" (u): The image format, as defined in QImage::Format.
                             Available only if the image type is "raw"
+            * "scale" (d): The ratio between the native size and the logical
+                           size of the contents, corresponds to QImage::devicePixelRatio().
+                           Available since version 4.
         -->
         <method name="CaptureWorkspace">
             <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QVariantMap" />
