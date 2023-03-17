@@ -1,8 +1,6 @@
 # KI18N Translation Domain for this library
 add_definitions(-DTRANSLATION_DOMAIN=\"kcmkwincommon\")
 
-include_directories(${KWin_SOURCE_DIR}/src/effects)
-
 set(kcmkwincommon_SRC
     effectsmodel.cpp
 )
