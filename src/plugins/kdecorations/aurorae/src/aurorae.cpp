@@ -265,10 +265,10 @@ Decoration::~Decoration()
 
 void Decoration::init()
 {
-    Helper::instance().rootContext()->setContextProperty(QStringLiteral("decorationSettings"), settings().data());
+    Helper::instance().rootContext()->setContextProperty(QStringLiteral("decorationSettings"), settings().get());
     KDecoration2::Decoration::init();
     auto s = settings();
-    connect(s.data(), &KDecoration2::DecorationSettings::reconfigured, this, &Decoration::configChanged);
+    connect(s.get(), &KDecoration2::DecorationSettings::reconfigured, this, &Decoration::configChanged);
 
     m_qmlContext = std::make_unique<QQmlContext>(Helper::instance().rootContext());
     m_qmlContext->setContextProperty(QStringLiteral("decoration"), this);
@@ -284,7 +284,7 @@ void Decoration::init()
         AuroraeTheme *theme = new AuroraeTheme(this);
         theme->loadTheme(themeName, config);
         theme->setBorderSize(s->borderSize());
-        connect(s.data(), &KDecoration2::DecorationSettings::borderSizeChanged, theme, &AuroraeTheme::setBorderSize);
+        connect(s.get(), &KDecoration2::DecorationSettings::borderSizeChanged, theme, &AuroraeTheme::setBorderSize);
         auto readButtonSize = [this, theme] {
             const KSharedConfigPtr conf = KSharedConfig::openConfig(QStringLiteral("auroraerc"));
             const KConfigGroup themeGroup(conf, m_themeName.mid(16));
@@ -371,7 +371,7 @@ void Decoration::init()
     } else {
         // create a dummy shadow for the configuration interface
         if (m_padding) {
-            auto s = QSharedPointer<KDecoration2::DecorationShadow>::create();
+            auto s = std::make_shared<KDecoration2::DecorationShadow>();
             s->setPadding(*m_padding);
             s->setInnerShadowRect(QRect(m_padding->left(), m_padding->top(), 1, 1));
             setShadow(s);
@@ -430,7 +430,7 @@ void Decoration::updateShadow()
     bool updateShadow = false;
     const auto oldShadow = shadow();
     if (m_padding && (m_padding->left() > 0 || m_padding->top() > 0 || m_padding->right() > 0 || m_padding->bottom() > 0) && !client()->isMaximized()) {
-        if (oldShadow.isNull()) {
+        if (!oldShadow) {
             updateShadow = true;
         } else {
             // compare padding
@@ -461,7 +461,7 @@ void Decoration::updateShadow()
             updateShadow = (oldShadow->shadow() != img);
         }
         if (updateShadow) {
-            auto s = QSharedPointer<KDecoration2::DecorationShadow>::create();
+            auto s = std::make_shared<KDecoration2::DecorationShadow>();
             s->setShadow(img);
             s->setPadding(*m_padding);
             s->setInnerShadowRect(QRect(m_padding->left(),
@@ -471,8 +471,8 @@ void Decoration::updateShadow()
             setShadow(s);
         }
     } else {
-        if (!oldShadow.isNull()) {
-            setShadow(QSharedPointer<KDecoration2::DecorationShadow>());
+        if (oldShadow) {
+            setShadow(nullptr);
         }
     }
 }

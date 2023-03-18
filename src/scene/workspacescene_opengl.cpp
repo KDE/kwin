@@ -152,9 +152,9 @@ std::shared_ptr<GLTexture> DecorationShadowTextureCache::getTexture(ShadowTextur
     Shadow *shadow = provider->shadow();
     Q_ASSERT(shadow->hasDecorationShadow());
     unregister(provider);
-    const auto &decoShadow = shadow->decorationShadow().toStrongRef();
-    Q_ASSERT(!decoShadow.isNull());
-    auto it = m_cache.find(decoShadow.data());
+    const auto decoShadow = shadow->decorationShadow().lock();
+    Q_ASSERT(decoShadow);
+    auto it = m_cache.find(decoShadow.get());
     if (it != m_cache.end()) {
         Q_ASSERT(!it.value().providers.contains(provider));
         it.value().providers << provider;
@@ -163,7 +163,7 @@ std::shared_ptr<GLTexture> DecorationShadowTextureCache::getTexture(ShadowTextur
     Data d;
     d.providers << provider;
     d.texture = std::make_shared<GLTexture>(shadow->decorationShadowImage());
-    m_cache.insert(decoShadow.data(), d);
+    m_cache.insert(decoShadow.get(), d);
     return d.texture;
 }
 

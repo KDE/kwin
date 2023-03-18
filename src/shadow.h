@@ -87,9 +87,9 @@ public:
     }
     QImage decorationShadowImage() const;
 
-    QWeakPointer<KDecoration2::DecorationShadow> decorationShadow() const
+    std::weak_ptr<KDecoration2::DecorationShadow> decorationShadow() const
     {
-        return m_decorationShadow.toWeakRef();
+        return m_decorationShadow;
     }
 
     enum ShadowElements {
@@ -144,7 +144,7 @@ private:
     // caches
     QSizeF m_cachedSize;
     // Decoration based shadows
-    QSharedPointer<KDecoration2::DecorationShadow> m_decorationShadow;
+    std::shared_ptr<KDecoration2::DecorationShadow> m_decorationShadow;
 };
 
 }

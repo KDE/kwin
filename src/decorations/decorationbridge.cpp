@@ -94,7 +94,7 @@ void DecorationBridge::init()
         return;
     }
     m_plugin = readPlugin();
-    m_settings = QSharedPointer<KDecoration2::DecorationSettings>::create(this);
+    m_settings = std::make_shared<KDecoration2::DecorationSettings>(this);
     if (!initPlugin()) {
         if (m_plugin != s_defaultPlugin) {
             // try loading default plugin

@@ -409,11 +409,7 @@ DecorationShadow *PreviewItem::shadow() const
     if (!m_decoration) {
         return nullptr;
     }
-    const auto &s = m_decoration->shadow();
-    if (!s) {
-        return nullptr;
-    }
-    return s.data();
+    return m_decoration->shadow().get();
 }
 
 }
