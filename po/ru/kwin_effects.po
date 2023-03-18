@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-03 03:02+0000\n"
+"POT-Creation-Date: 2023-03-18 03:11+0000\n"
 "PO-Revision-Date: 2023-02-21 13:54+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -765,17 +765,17 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr "Изменить раскладку мозаики окон"
 
-#: tileseditor/qml/main.qml:145
+#: tileseditor/qml/main.qml:150
 #, kde-format
 msgid "Padding:"
 msgstr "Отступ:"
 
-#: tileseditor/qml/main.qml:155
+#: tileseditor/qml/main.qml:160
 #, kde-format
 msgid "Load Layout..."
 msgstr "Загрузить макет…"
 
-#: tileseditor/qml/main.qml:269
+#: tileseditor/qml/main.qml:274
 #, kde-format
 msgid "Close"
 msgstr "Закрыть"
