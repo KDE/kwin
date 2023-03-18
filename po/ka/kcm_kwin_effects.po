@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-17 02:32+0000\n"
-"PO-Revision-Date: 2022-08-22 06:38+0200\n"
+"PO-Revision-Date: 2023-03-17 05:20+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #: package/contents/ui/Effect.qml:92
 #, kde-format
@@ -25,7 +25,7 @@ msgid ""
 "License: %2"
 msgstr ""
 "ავტორი: %1\n"
-"ლიცენზა: %2"
+"ლიცენზია: %2"
 
 #: package/contents/ui/Effect.qml:121
 #, kde-format

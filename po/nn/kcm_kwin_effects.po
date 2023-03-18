@@ -68,6 +68,3 @@ msgstr "Utelat interne effektar"
 #, kde-format
 msgid "Get New Desktop Effects..."
 msgstr "Hent nye skrivebordseffektar …"
-
-#~ msgid "This module lets you configure desktop effects."
-#~ msgstr "Her kan du setja opp skrivebordseffektar."
