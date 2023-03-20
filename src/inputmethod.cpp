@@ -947,7 +947,7 @@ void InputMethod::updateModifiersMap(const QByteArray &modifiers)
 
 bool InputMethod::isVisible() const
 {
-    return m_panel && m_panel->isShown();
+    return m_panel && m_panel->isShown() && m_panel->readyForPainting();
 }
 
 bool InputMethod::isAvailable() const
