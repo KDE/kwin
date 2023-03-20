@@ -12,7 +12,6 @@
 #include "kwin_export.h"
 #include <QObject>
 #include <QPointer>
-#include <QSharedPointer>
 
 namespace KWaylandServer
 {

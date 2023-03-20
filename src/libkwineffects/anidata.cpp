@@ -44,7 +44,7 @@ AniData::AniData()
 
 AniData::AniData(AnimationEffect::Attribute a, int meta_, const FPx2 &to_,
                  int delay, const FPx2 &from_, bool waitAtSource_,
-                 FullScreenEffectLockPtr fullScreenEffectLock_, bool keepAlive,
+                 const std::shared_ptr<FullScreenEffectLock> &fullScreenEffectLock, bool keepAlive,
                  GLShader *shader)
     : attribute(a)
     , from(from_)
@@ -52,7 +52,7 @@ AniData::AniData(AnimationEffect::Attribute a, int meta_, const FPx2 &to_,
     , meta(meta_)
     , frozenTime(-1)
     , startTime(AnimationEffect::clock() + delay)
-    , fullScreenEffectLock(std::move(fullScreenEffectLock_))
+    , fullScreenEffectLock(fullScreenEffectLock)
     , waitAtSource(waitAtSource_)
     , keepAlive(keepAlive)
     , shader(shader)

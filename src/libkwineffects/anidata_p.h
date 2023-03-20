@@ -29,7 +29,6 @@ public:
 private:
     Q_DISABLE_COPY(FullScreenEffectLock)
 };
-typedef QSharedPointer<FullScreenEffectLock> FullScreenEffectLockPtr;
 
 class KWINEFFECTS_EXPORT AniData
 {
@@ -37,7 +36,7 @@ public:
     AniData();
     AniData(AnimationEffect::Attribute a, int meta, const FPx2 &to,
             int delay, const FPx2 &from, bool waitAtSource,
-            FullScreenEffectLockPtr = FullScreenEffectLockPtr(),
+            const std::shared_ptr<FullScreenEffectLock> &lock = nullptr,
             bool keepAlive = true, GLShader *shader = nullptr);
 
     bool isActive() const;
@@ -56,7 +55,7 @@ public:
     uint meta;
     qint64 frozenTime;
     qint64 startTime;
-    QSharedPointer<FullScreenEffectLock> fullScreenEffectLock;
+    std::shared_ptr<FullScreenEffectLock> fullScreenEffectLock;
     bool waitAtSource;
     bool keepAlive;
     EffectWindowDeletedRef deletedRef;

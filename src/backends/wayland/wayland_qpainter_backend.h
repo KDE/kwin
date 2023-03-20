@@ -17,7 +17,6 @@
 
 #include <QImage>
 #include <QObject>
-#include <QWeakPointer>
 
 namespace KWayland
 {

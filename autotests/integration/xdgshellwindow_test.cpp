@@ -562,7 +562,7 @@ void TestXdgShellWindow::testFullscreenMultipleOutputs()
 
         std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
         QVERIFY(surface);
-        QSharedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+        std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
         QVERIFY(shellSurface);
 
         auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);

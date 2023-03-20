@@ -13,7 +13,6 @@
 #include <KDecoration2/Private/DecorationBridge>
 
 #include <QObject>
-#include <QSharedPointer>
 
 class KPluginFactory;
 
