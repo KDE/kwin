@@ -199,7 +199,7 @@ bool EglBackend::initRenderingContext()
 
     setEglDisplay(display);
 
-    if (!createContext(initBufferConfigs())) {
+    if (!createContext(chooseBufferConfig())) {
         qCCritical(KWIN_CORE) << "Create OpenGL context failed";
         return false;
     }
@@ -256,7 +256,7 @@ EGLSurface EglBackend::createSurface(xcb_window_t window)
     return surface;
 }
 
-EGLConfig EglBackend::initBufferConfigs()
+EGLConfig EglBackend::chooseBufferConfig()
 {
     const EGLint config_attribs[] = {
         EGL_SURFACE_TYPE,

@@ -305,7 +305,7 @@ bool X11WindowedEglBackend::initializeEgl()
 
 bool X11WindowedEglBackend::initRenderingContext()
 {
-    if (!createContext(initBufferConfigs())) {
+    if (!createContext(EGL_NO_CONFIG_KHR)) {
         return false;
     }
 

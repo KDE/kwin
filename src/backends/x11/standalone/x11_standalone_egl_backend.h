@@ -53,7 +53,7 @@ public:
     OutputLayer *primaryLayer(Output *output) override;
 
 protected:
-    EGLConfig initBufferConfigs() override;
+    EGLConfig chooseBufferConfig();
     bool initRenderingContext();
 
 private:

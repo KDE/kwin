@@ -137,11 +137,7 @@ void VirtualEglBackend::init()
 
 bool VirtualEglBackend::initRenderingContext()
 {
-    if (!createContext(initBufferConfigs())) {
-        return false;
-    }
-
-    return makeCurrent();
+    return createContext(EGL_NO_CONFIG_KHR) && makeCurrent();
 }
 
 void VirtualEglBackend::addOutput(Output *output)

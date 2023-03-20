@@ -382,7 +382,7 @@ void WaylandEglBackend::init()
 
 bool WaylandEglBackend::initRenderingContext()
 {
-    if (!createContext(initBufferConfigs())) {
+    if (!createContext(EGL_NO_CONFIG_KHR)) {
         return false;
     }
 

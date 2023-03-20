@@ -77,7 +77,6 @@ protected:
     bool hasClientExtension(const QByteArray &ext) const;
     bool isOpenGLES() const;
     bool createContext(EGLConfig config);
-    virtual EGLConfig initBufferConfigs();
 
 private:
     bool ensureGlobalShareContext(EGLConfig config);
