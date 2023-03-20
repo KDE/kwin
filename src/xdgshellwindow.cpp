@@ -302,8 +302,9 @@ void XdgSurfaceWindow::destroyWindow()
     setDecoration(nullptr);
     cleanGrouping();
     waylandServer()->removeWindow(this);
-    deleted->unref();
+
     unref();
+    deleted->unref();
 }
 
 void XdgSurfaceWindow::updateClientArea()

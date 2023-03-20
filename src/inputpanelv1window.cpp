@@ -160,9 +160,9 @@ void InputPanelV1Window::destroyWindow()
     Q_EMIT closed(deleted);
     StackingUpdatesBlocker blocker(workspace());
     waylandServer()->removeWindow(this);
-    deleted->unref();
 
     unref();
+    deleted->unref();
 }
 
 NET::WindowType InputPanelV1Window::windowType(bool, int) const

@@ -418,9 +418,11 @@ void X11Window::releaseWindow(bool on_shutdown)
     unblockGeometryUpdates(); // Don't use GeometryUpdatesBlocker, it would now set the geometry
     if (!on_shutdown) {
         disownDataPassedToDeleted();
-        del->unref();
     }
     unref();
+    if (del) {
+        del->unref();
+    }
     ungrabXServer();
 }
 
@@ -459,8 +461,8 @@ void X11Window::destroyWindow()
     m_frame.reset();
     unblockGeometryUpdates(); // Don't use GeometryUpdatesBlocker, it would now set the geometry
     disownDataPassedToDeleted();
-    del->unref();
     unref();
+    del->unref();
 }
 
 /**

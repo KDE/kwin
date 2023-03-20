@@ -370,11 +370,10 @@ void InternalWindow::destroyWindow()
     destroyDecoration();
 
     workspace()->removeInternalWindow(this);
-
-    deleted->unref();
     m_handle = nullptr;
 
     unref();
+    deleted->unref();
 }
 
 bool InternalWindow::hasPopupGrab() const
