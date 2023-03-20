@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-30 00:54+0000\n"
+"POT-Creation-Date: 2023-03-20 02:18+0000\n"
 "PO-Revision-Date: 2022-12-31 17:40+0000\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
 "Language-Team: British English <kde-l10n-en_gb@kde.org>\n"
@@ -27,55 +27,55 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "steve.allewell@gmail.com"
 
-#: effectsmodel.cpp:52
+#: effectsmodel.cpp:46
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Accessibility"
 msgstr "Accessibility"
 
-#: effectsmodel.cpp:53
+#: effectsmodel.cpp:47
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Appearance"
 msgstr "Appearance"
 
-#: effectsmodel.cpp:54
+#: effectsmodel.cpp:48
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Focus"
 msgstr "Focus"
 
-#: effectsmodel.cpp:55
+#: effectsmodel.cpp:49
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Peek at Desktop Animation"
 msgstr "Peek at Desktop Animation"
 
-#: effectsmodel.cpp:56
+#: effectsmodel.cpp:50
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Tools"
 msgstr "Tools"
 
-#: effectsmodel.cpp:57
+#: effectsmodel.cpp:51
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Virtual Desktop Switching Animation"
 msgstr "Virtual Desktop Switching Animation"
 
-#: effectsmodel.cpp:58
+#: effectsmodel.cpp:52
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Window Management"
 msgstr "Window Management"
 
-#: effectsmodel.cpp:59
+#: effectsmodel.cpp:53
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Window Open/Close Animation"
 msgstr "Window Open/Close Animation"
 
-#: effectsmodel.cpp:241
+#: effectsmodel.cpp:232
 #, kde-format
 msgid "KWin development team"
 msgstr "KWin development team"

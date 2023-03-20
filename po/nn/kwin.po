@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-17 02:32+0000\n"
+"POT-Creation-Date: 2023-03-20 02:18+0000\n"
 "PO-Revision-Date: 2023-03-11 23:29+0100\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
@@ -2113,20 +2113,20 @@ msgstr "Namn på skrivebordsfil"
 msgid "Desktop file name rule type"
 msgstr "Regeltype for namn på skrivebordsfil"
 
-#: scripting/genericscriptedconfig.cpp:69
+#: scripting/genericscriptedconfig.cpp:72
 #, kde-format
 msgctxt "Error message"
 msgid "Could not locate package metadata"
 msgstr "Fann ikkje pakke-metadata"
 
-#: scripting/genericscriptedconfig.cpp:75
+#: scripting/genericscriptedconfig.cpp:78
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not contain a valid metadata.json file"
 msgstr "%1 inneheld ikkje ei gyldig metadata.json-fil"
 
-#: scripting/genericscriptedconfig.cpp:81
-#: scripting/genericscriptedconfig.cpp:87
+#: scripting/genericscriptedconfig.cpp:84
+#: scripting/genericscriptedconfig.cpp:90
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"

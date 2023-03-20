@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-01 23:30+0000\n"
+"POT-Creation-Date: 2023-03-20 02:18+0000\n"
 "PO-Revision-Date: 2022-10-29 19:03+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -19,19 +19,19 @@ msgstr ""
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 "X-Generator: Lokalize 21.12.3\n"
 
-#: genericscriptedconfig.cpp:69
+#: genericscriptedconfig.cpp:72
 #, kde-format
 msgctxt "Error message"
 msgid "Could not locate package metadata"
 msgstr "تعذّر تحديد موقع البيانات الوصفية للحزمة"
 
-#: genericscriptedconfig.cpp:75
+#: genericscriptedconfig.cpp:78
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not contain a valid metadata.json file"
 msgstr "لا يحوي %1 على ملف metadata.json صالح"
 
-#: genericscriptedconfig.cpp:81 genericscriptedconfig.cpp:87
+#: genericscriptedconfig.cpp:84 genericscriptedconfig.cpp:90
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"

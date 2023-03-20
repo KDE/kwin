@@ -778,7 +778,7 @@ msgstr ""
 "style=\" font-style:italic;\">Hiçbiri:</span> Engelleme kapalıdır ve yeni "
 "pencereler her zaman etkin olur.</li><li style=\" margin-top:0px; margin-"
 "bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
-"indent:0px;\"><span style=\" font-style:italic;\">Düşük:</em> Engelleme "
+"indent:0px;\"><span style=\" font-style:italic;\">Düşük:</span> Engelleme "
 "açıktır; bazı pencereler altyapıyı desteklemiyorlarsa ve KWin doğru bir "
 "şekilde karar veremiyorsa etkinleşecektir. Bu ayar, uygulamaya bağlı olarak "
 "bazen iyi bazen de kötü başarım gösterebilir.</li><li style=\" margin-"
@@ -1318,66 +1318,3 @@ msgstr ""
 "çalma koruması</em> ve <em>sekme kutusu ('Alt+Tab)'</em>, etkinleştirme "
 "ilkesine karşıttır ve çalışmazlar. Bu durumda <em>Odak fareyi izler (fare "
 "önceliği)</em>'ni kullanmak isteyeceksinizdir!"
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Your names"
-#~ msgstr "Görkem Çetin, Uğur Çetin, Volkan Gezer, Emir SARI"
-
-#~ msgctxt "EMAIL OF TRANSLATORS"
-#~ msgid "Your emails"
-#~ msgstr ""
-#~ "gorkem@kde.org, jnmbk@users.sourceforge.net, volkangezer@gmail.com, "
-#~ "emir_sari@îcloud.com"
-
-#~ msgid "Window Behavior Configuration Module"
-#~ msgstr "Pencere Davranışı Yapılandırma Modülü"
-
-#~ msgid "(c) 1997 - 2002 KWin and KControl Authors"
-#~ msgstr "(c) 1997 - 2002 KWin ve KControl Yazarları"
-
-#~ msgid "Matthias Ettrich"
-#~ msgstr "Matthias Ettrich"
-
-#~ msgid "Waldo Bastian"
-#~ msgstr "Waldo Bastian"
-
-#~ msgid "Cristian Tibirna"
-#~ msgstr "Cristian Tibirna"
-
-#~ msgid "Matthias Kalle Dalheimer"
-#~ msgstr "Matthias Kalle Dalheimer"
-
-#~ msgid "Daniel Molkentin"
-#~ msgstr "Daniel Molkentin"
-
-#~ msgid "Wynn Wilkes"
-#~ msgstr "Wynn Wilkes"
-
-#~ msgid "Pat Dowler"
-#~ msgstr "Pat Dowler"
-
-#~ msgid "Bernd Wuebben"
-#~ msgstr "Bernd Wuebben"
-
-#~ msgid "Matthias Hoelzer-Kluepfel"
-#~ msgstr "Matthias Hoelzer-Kluepfel"
-
-#~ msgid ""
-#~ "<p><h1>Window Behavior</h1> Here you can customize the way windows behave "
-#~ "when being moved, resized or clicked on. You can also specify a focus "
-#~ "policy as well as a placement policy for new windows.</p> <p>Please note "
-#~ "that this configuration will not take effect if you do not use KWin as "
-#~ "your window manager. If you do use a different window manager, please "
-#~ "refer to its documentation for how to customize window behavior.</p>"
-#~ msgstr ""
-#~ "<p><h1>Pencere Davranışları</h1> Pencerelerin hareket ettirildiğinde, "
-#~ "yeniden boyutlandırıldığında ve üzerine tıklandığında hangi davranışlar "
-#~ "sergileyebileceğine buradan karar verebilirsiniz. Ayrıca, yeni pencereler "
-#~ "için odaklama ve yerleşim yöntemini de belirleyebilirsiniz.</p> <p>Ancak "
-#~ "KWin pencere yöneticisini kullanmıyorsanız burada yaptığınız seçenekler "
-#~ "etkin olmayacaktır. Başka bir pencere yöneticisi kullanıyorsanız pencere "
-#~ "davranışlarını değiştirmek için lütfen onun yardım belgelerine bakınız.</"
-#~ "p>"
-
-#~ msgid "Cascaded"
-#~ msgstr "Basamaklandırılmış"

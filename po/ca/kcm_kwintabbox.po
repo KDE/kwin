@@ -280,6 +280,3 @@ msgstr "Recorre les finestres de l'aplicació actual en alternativa"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr ""
 "Recorre les finestres de l'aplicació actual en alternativa (a la inversa)"
-
-#~ msgid "KWin"
-#~ msgstr "KWin"

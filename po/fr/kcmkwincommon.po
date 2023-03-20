@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-30 00:54+0000\n"
+"POT-Creation-Date: 2023-03-20 02:18+0000\n"
 "PO-Revision-Date: 2022-12-31 15:13+0100\n"
 "Last-Translator: Xavier BESNARD <xavier.besnard]neuf.fr>\n"
 "Language-Team: fr\n"
@@ -38,55 +38,55 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "bruno.patri@gmail.com, vpinon@kde.org, sdepiets@gmail.com"
 
-#: effectsmodel.cpp:52
+#: effectsmodel.cpp:46
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Accessibility"
 msgstr "Accessibilité"
 
-#: effectsmodel.cpp:53
+#: effectsmodel.cpp:47
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Appearance"
 msgstr "Apparence"
 
-#: effectsmodel.cpp:54
+#: effectsmodel.cpp:48
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Focus"
 msgstr "Focus"
 
-#: effectsmodel.cpp:55
+#: effectsmodel.cpp:49
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Peek at Desktop Animation"
 msgstr "Pic lors de l'animation du bureau"
 
-#: effectsmodel.cpp:56
+#: effectsmodel.cpp:50
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Tools"
 msgstr "Outils"
 
-#: effectsmodel.cpp:57
+#: effectsmodel.cpp:51
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Virtual Desktop Switching Animation"
 msgstr "Animation de changement de bureau virtuel"
 
-#: effectsmodel.cpp:58
+#: effectsmodel.cpp:52
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Window Management"
 msgstr "Gestion des fenêtres"
 
-#: effectsmodel.cpp:59
+#: effectsmodel.cpp:53
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Window Open/Close Animation"
 msgstr "Animation à l'ouverture et à la fermeture des fenêtres"
 
-#: effectsmodel.cpp:241
+#: effectsmodel.cpp:232
 #, kde-format
 msgid "KWin development team"
 msgstr "L'équipe de développement de KWin"

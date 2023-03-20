@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-30 00:54+0000\n"
+"POT-Creation-Date: 2023-03-20 02:18+0000\n"
 "PO-Revision-Date: 2023-01-07 17:39+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -27,55 +27,55 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "mkondarev@yahoo.de"
 
-#: effectsmodel.cpp:52
+#: effectsmodel.cpp:46
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Accessibility"
 msgstr "Достъпност"
 
-#: effectsmodel.cpp:53
+#: effectsmodel.cpp:47
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Appearance"
 msgstr "Външен вид"
 
-#: effectsmodel.cpp:54
+#: effectsmodel.cpp:48
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Focus"
 msgstr "Фокус"
 
-#: effectsmodel.cpp:55
+#: effectsmodel.cpp:49
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Peek at Desktop Animation"
 msgstr "Показване при анимация на работния плот"
 
-#: effectsmodel.cpp:56
+#: effectsmodel.cpp:50
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Tools"
 msgstr "Инструменти"
 
-#: effectsmodel.cpp:57
+#: effectsmodel.cpp:51
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Virtual Desktop Switching Animation"
 msgstr "Анимация за превключване на виртуален работен плот"
 
-#: effectsmodel.cpp:58
+#: effectsmodel.cpp:52
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Window Management"
 msgstr "Управление на прозорци"
 
-#: effectsmodel.cpp:59
+#: effectsmodel.cpp:53
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Window Open/Close Animation"
 msgstr "Анимация за отваряне/затваряне на прозорец"
 
-#: effectsmodel.cpp:241
+#: effectsmodel.cpp:232
 #, kde-format
 msgid "KWin development team"
 msgstr "Екип за разработка на KWin"

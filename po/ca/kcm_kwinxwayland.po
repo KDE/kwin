@@ -83,19 +83,3 @@ msgstr ""
 "sistema a la de la sessió X11 permetent que programari maliciós robi "
 "contrasenyes i espiï el text que escriviu. Assegureu-vos d'entendre i "
 "acceptar aquest risc."
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Your names"
-#~ msgstr "Josep M. Ferrer"
-
-#~ msgctxt "EMAIL OF TRANSLATORS"
-#~ msgid "Your emails"
-#~ msgstr "txemaq@gmail.com"
-
-#~ msgid "Legacy X11 App Support"
-#~ msgstr "Implementació de les aplicacions X11 antigues"
-
-#~ msgid "Allow legacy X11 apps to read keystrokes typed in other apps"
-#~ msgstr ""
-#~ "Permet que les aplicacions X11 antigues llegeixin les pulsacions de "
-#~ "tecles teclejades en altres aplicacions"

@@ -133,13 +133,3 @@ msgstr ""
 #, kde-format
 msgid "Animate buttons"
 msgstr "Anima els botons"
-
-#~ msgid ""
-#~ "Check this option if you want the titlebar text to have a 3D look with a "
-#~ "shadow behind it."
-#~ msgstr ""
-#~ "Marqueu aquesta opció si desitgeu que la barra de títol tingui un aspecte "
-#~ "3D amb una ombra al seu darrere."
-
-#~ msgid "Use shadowed &text"
-#~ msgstr "Usa &text ombrejat"

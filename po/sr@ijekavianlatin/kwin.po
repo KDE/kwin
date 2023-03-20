@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-17 02:32+0000\n"
+"POT-Creation-Date: 2023-03-20 02:18+0000\n"
 "PO-Revision-Date: 2017-12-03 22:53+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -2281,20 +2281,20 @@ msgstr ""
 msgid "Desktop file name rule type"
 msgstr ""
 
-#: scripting/genericscriptedconfig.cpp:69
+#: scripting/genericscriptedconfig.cpp:72
 #, kde-format
 msgctxt "Error message"
 msgid "Could not locate package metadata"
 msgstr ""
 
-#: scripting/genericscriptedconfig.cpp:75
+#: scripting/genericscriptedconfig.cpp:78
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not contain a valid metadata.json file"
 msgstr ""
 
-#: scripting/genericscriptedconfig.cpp:81
-#: scripting/genericscriptedconfig.cpp:87
+#: scripting/genericscriptedconfig.cpp:84
+#: scripting/genericscriptedconfig.cpp:90
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"

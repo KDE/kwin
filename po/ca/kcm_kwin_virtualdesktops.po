@@ -138,6 +138,3 @@ msgstr "%1 ms"
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Mostra els indicadors per a la disposició de l'escriptori"
-
-#~ msgid "Virtual Desktops"
-#~ msgstr "Escriptoris virtuals"

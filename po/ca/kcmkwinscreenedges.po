@@ -234,11 +234,3 @@ msgid ""
 msgstr ""
 "Podeu activar una acció lliscant el dit des de la vora de la pantalla cap al "
 "centre de la pantalla."
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Your names"
-#~ msgstr "Josep M. Ferrer"
-
-#~ msgctxt "EMAIL OF TRANSLATORS"
-#~ msgid "Your emails"
-#~ msgstr "txemaq@gmail.com"

@@ -68,11 +68,3 @@ msgstr "Instal·la des d'un fitxer..."
 #, kde-format
 msgid "Get New Scripts..."
 msgstr "Obtén scripts nous..."
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Your names"
-#~ msgstr "Josep M. Ferrer"
-
-#~ msgctxt "EMAIL OF TRANSLATORS"
-#~ msgid "Your emails"
-#~ msgstr "txemaq@gmail.com"
