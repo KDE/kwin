@@ -137,9 +137,7 @@ void VirtualEglBackend::init()
 
 bool VirtualEglBackend::initRenderingContext()
 {
-    initBufferConfigs();
-
-    if (!createContext()) {
+    if (!createContext(initBufferConfigs())) {
         return false;
     }
 

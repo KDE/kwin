@@ -34,7 +34,7 @@ typedef EGLBoolean (*eglQueryDmaBufModifiersEXT_func)(EGLDisplay dpy, EGLint for
 eglQueryDmaBufFormatsEXT_func eglQueryDmaBufFormatsEXT = nullptr;
 eglQueryDmaBufModifiersEXT_func eglQueryDmaBufModifiersEXT = nullptr;
 
-static EGLContext s_globalShareContext = EGL_NO_CONTEXT;
+static std::unique_ptr<EglContext> s_globalShareContext;
 
 static bool isOpenGLES_helper()
 {
@@ -54,25 +54,26 @@ AbstractEglBackend::~AbstractEglBackend()
 {
 }
 
-EGLContext AbstractEglBackend::ensureGlobalShareContext()
+bool AbstractEglBackend::ensureGlobalShareContext(EGLConfig config)
 {
-    if (kwinApp()->outputBackend()->sceneEglGlobalShareContext() != EGL_NO_CONTEXT) {
-        return kwinApp()->outputBackend()->sceneEglGlobalShareContext();
+    if (!s_globalShareContext) {
+        s_globalShareContext = EglContext::create(m_display, config, EGL_NO_CONTEXT);
     }
-
-    s_globalShareContext = createContextInternal(EGL_NO_CONTEXT);
-    kwinApp()->outputBackend()->setSceneEglGlobalShareContext(s_globalShareContext);
-    return s_globalShareContext;
+    if (s_globalShareContext) {
+        kwinApp()->outputBackend()->setSceneEglGlobalShareContext(s_globalShareContext->handle());
+        return true;
+    } else {
+        return false;
+    }
 }
 
 void AbstractEglBackend::destroyGlobalShareContext()
 {
     const ::EGLDisplay eglDisplay = kwinApp()->outputBackend()->sceneEglDisplay();
-    if (eglDisplay == EGL_NO_DISPLAY || s_globalShareContext == EGL_NO_CONTEXT) {
+    if (eglDisplay == EGL_NO_DISPLAY || !s_globalShareContext) {
         return;
     }
-    eglDestroyContext(eglDisplay, s_globalShareContext);
-    s_globalShareContext = EGL_NO_CONTEXT;
+    s_globalShareContext.reset();
     kwinApp()->outputBackend()->setSceneEglGlobalShareContext(EGL_NO_CONTEXT);
 }
 
@@ -92,8 +93,7 @@ void AbstractEglBackend::cleanup()
 
     cleanupSurfaces();
     cleanupGL();
-    doneCurrent();
-    eglDestroyContext(m_display->handle(), m_context);
+    m_context.reset();
 }
 
 void AbstractEglBackend::cleanupSurfaces()
@@ -276,13 +276,12 @@ bool AbstractEglBackend::makeCurrent()
         // Workaround to tell Qt that no QOpenGLContext is current
         context->doneCurrent();
     }
-    const bool current = eglMakeCurrent(m_display->handle(), m_surface, m_surface, m_context);
-    return current;
+    return m_context->makeCurrent(m_surface);
 }
 
 void AbstractEglBackend::doneCurrent()
 {
-    eglMakeCurrent(m_display->handle(), EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+    m_context->doneCurrent();
 }
 
 bool AbstractEglBackend::isOpenGLES() const
@@ -290,125 +289,13 @@ bool AbstractEglBackend::isOpenGLES() const
     return isOpenGLES_helper();
 }
 
-bool AbstractEglBackend::createContext()
+bool AbstractEglBackend::createContext(EGLConfig config)
 {
-    EGLContext globalShareContext = ensureGlobalShareContext();
-    if (globalShareContext == EGL_NO_CONTEXT) {
+    if (!ensureGlobalShareContext(config)) {
         return false;
     }
-    m_context = createContextInternal(globalShareContext);
-    if (m_context == EGL_NO_CONTEXT) {
-        return false;
-    }
-    return true;
-}
-
-EGLContext AbstractEglBackend::createContextInternal(EGLContext sharedContext)
-{
-    const bool haveRobustness = hasExtension(QByteArrayLiteral("EGL_EXT_create_context_robustness"));
-    const bool haveCreateContext = hasExtension(QByteArrayLiteral("EGL_KHR_create_context"));
-    const bool haveContextPriority = hasExtension(QByteArrayLiteral("EGL_IMG_context_priority"));
-    const bool haveResetOnVideoMemoryPurge = hasExtension(QByteArrayLiteral("EGL_NV_robustness_video_memory_purge"));
-
-    std::vector<std::unique_ptr<AbstractOpenGLContextAttributeBuilder>> candidates;
-    if (isOpenGLES()) {
-        if (haveCreateContext && haveRobustness && haveContextPriority && haveResetOnVideoMemoryPurge) {
-            auto glesRobustPriority = std::make_unique<EglOpenGLESContextAttributeBuilder>();
-            glesRobustPriority->setResetOnVideoMemoryPurge(true);
-            glesRobustPriority->setVersion(2);
-            glesRobustPriority->setRobust(true);
-            glesRobustPriority->setHighPriority(true);
-            candidates.push_back(std::move(glesRobustPriority));
-        }
-
-        if (haveCreateContext && haveRobustness && haveContextPriority) {
-            auto glesRobustPriority = std::make_unique<EglOpenGLESContextAttributeBuilder>();
-            glesRobustPriority->setVersion(2);
-            glesRobustPriority->setRobust(true);
-            glesRobustPriority->setHighPriority(true);
-            candidates.push_back(std::move(glesRobustPriority));
-        }
-        if (haveCreateContext && haveRobustness) {
-            auto glesRobust = std::make_unique<EglOpenGLESContextAttributeBuilder>();
-            glesRobust->setVersion(2);
-            glesRobust->setRobust(true);
-            candidates.push_back(std::move(glesRobust));
-        }
-        if (haveContextPriority) {
-            auto glesPriority = std::make_unique<EglOpenGLESContextAttributeBuilder>();
-            glesPriority->setVersion(2);
-            glesPriority->setHighPriority(true);
-            candidates.push_back(std::move(glesPriority));
-        }
-        auto gles = std::make_unique<EglOpenGLESContextAttributeBuilder>();
-        gles->setVersion(2);
-        candidates.push_back(std::move(gles));
-    } else {
-        if (haveCreateContext) {
-            if (haveRobustness && haveContextPriority && haveResetOnVideoMemoryPurge) {
-                auto robustCorePriority = std::make_unique<EglContextAttributeBuilder>();
-                robustCorePriority->setResetOnVideoMemoryPurge(true);
-                robustCorePriority->setVersion(3, 1);
-                robustCorePriority->setRobust(true);
-                robustCorePriority->setHighPriority(true);
-                candidates.push_back(std::move(robustCorePriority));
-            }
-            if (haveRobustness && haveContextPriority) {
-                auto robustCorePriority = std::make_unique<EglContextAttributeBuilder>();
-                robustCorePriority->setVersion(3, 1);
-                robustCorePriority->setRobust(true);
-                robustCorePriority->setHighPriority(true);
-                candidates.push_back(std::move(robustCorePriority));
-            }
-            if (haveRobustness) {
-                auto robustCore = std::make_unique<EglContextAttributeBuilder>();
-                robustCore->setVersion(3, 1);
-                robustCore->setRobust(true);
-                candidates.push_back(std::move(robustCore));
-            }
-            if (haveContextPriority) {
-                auto corePriority = std::make_unique<EglContextAttributeBuilder>();
-                corePriority->setVersion(3, 1);
-                corePriority->setHighPriority(true);
-                candidates.push_back(std::move(corePriority));
-            }
-            auto core = std::make_unique<EglContextAttributeBuilder>();
-            core->setVersion(3, 1);
-            candidates.push_back(std::move(core));
-        }
-        if (haveRobustness && haveCreateContext && haveContextPriority) {
-            auto robustPriority = std::make_unique<EglContextAttributeBuilder>();
-            robustPriority->setRobust(true);
-            robustPriority->setHighPriority(true);
-            candidates.push_back(std::move(robustPriority));
-        }
-        if (haveRobustness && haveCreateContext) {
-            auto robust = std::make_unique<EglContextAttributeBuilder>();
-            robust->setRobust(true);
-            candidates.push_back(std::move(robust));
-        }
-        candidates.emplace_back(new EglContextAttributeBuilder);
-    }
-
-    EGLContext ctx = EGL_NO_CONTEXT;
-    for (auto it = candidates.begin(); it != candidates.end(); it++) {
-        const auto attribs = (*it)->build();
-        ctx = eglCreateContext(m_display->handle(), config(), sharedContext, attribs.data());
-        if (ctx != EGL_NO_CONTEXT) {
-            qCDebug(KWIN_OPENGL) << "Created EGL context with attributes:" << (*it).get();
-            break;
-        }
-    }
-
-    if (ctx == EGL_NO_CONTEXT) {
-        qCCritical(KWIN_OPENGL) << "Create Context failed";
-    }
-    return ctx;
-}
-
-void AbstractEglBackend::setConfig(const EGLConfig &config)
-{
-    m_config = config;
+    m_context = EglContext::create(m_display, config, s_globalShareContext ? s_globalShareContext->handle() : EGL_NO_CONTEXT);
+    return m_context != nullptr;
 }
 
 void AbstractEglBackend::setSurface(const EGLSurface &surface)
@@ -456,13 +343,7 @@ EGLImageKHR AbstractEglBackend::importDmaBufAsImage(const DmaBufAttributes &dmab
 
 std::shared_ptr<GLTexture> AbstractEglBackend::importDmaBufAsTexture(const DmaBufAttributes &attributes) const
 {
-    EGLImageKHR image = importDmaBufAsImage(attributes);
-    if (image != EGL_NO_IMAGE_KHR) {
-        return std::make_shared<EGLImageTexture>(m_display->handle(), image, GL_RGBA8, QSize(attributes.width, attributes.height));
-    } else {
-        qCWarning(KWIN_OPENGL) << "Failed to record frame: Error creating EGLImageKHR - " << getEglErrorString();
-        return nullptr;
-    }
+    return m_context->importDmaBufAsTexture(attributes);
 }
 
 bool AbstractEglBackend::testImportBuffer(KWaylandServer::LinuxDmaBufV1ClientBuffer *buffer)
@@ -475,7 +356,7 @@ QHash<uint32_t, QVector<uint64_t>> AbstractEglBackend::supportedFormats() const
     return m_supportedFormats;
 }
 
-bool AbstractEglBackend::initBufferConfigs()
+EGLConfig AbstractEglBackend::initBufferConfigs()
 {
     const EGLint config_attribs[] = {
         EGL_SURFACE_TYPE,
@@ -499,15 +380,13 @@ bool AbstractEglBackend::initBufferConfigs()
     EGLConfig configs[1024];
     if (eglChooseConfig(eglDisplay(), config_attribs, configs, 1, &count) == EGL_FALSE) {
         qCCritical(KWIN_OPENGL) << "choose config failed";
-        return false;
+        return EGL_NO_CONFIG_KHR;
     }
     if (count != 1) {
         qCCritical(KWIN_OPENGL) << "choose config did not return a config" << count;
-        return false;
+        return EGL_NO_CONFIG_KHR;
     }
-    setConfig(configs[0]);
-
-    return true;
+    return configs[0];
 }
 
 ::EGLDisplay AbstractEglBackend::eglDisplay() const
@@ -515,8 +394,28 @@ bool AbstractEglBackend::initBufferConfigs()
     return m_display->handle();
 }
 
+::EGLContext AbstractEglBackend::context() const
+{
+    return m_context->handle();
+}
+
+EGLSurface AbstractEglBackend::surface() const
+{
+    return m_surface;
+}
+
+EGLConfig AbstractEglBackend::config() const
+{
+    return m_context->config();
+}
+
 EglDisplay *AbstractEglBackend::eglDisplayObject() const
 {
     return m_display;
+}
+
+EglContext *AbstractEglBackend::contextObject()
+{
+    return m_context.get();
 }
 }

@@ -48,7 +48,7 @@ EGLPlatformContext::~EGLPlatformContext()
     return m_eglDisplay;
 }
 
-EGLContext EGLPlatformContext::eglContext() const
+::EGLContext EGLPlatformContext::eglContext() const
 {
     return m_context;
 }
@@ -138,7 +138,7 @@ GLuint EGLPlatformContext::defaultFramebufferObject(QPlatformSurface *surface) c
     return 0;
 }
 
-void EGLPlatformContext::create(const QSurfaceFormat &format, EGLContext shareContext)
+void EGLPlatformContext::create(const QSurfaceFormat &format, ::EGLContext shareContext)
 {
     if (!eglBindAPI(isOpenGLES() ? EGL_OPENGL_ES_API : EGL_OPENGL_API)) {
         qCWarning(KWIN_QPA, "eglBindAPI failed: 0x%x", eglGetError());
@@ -247,7 +247,7 @@ void EGLPlatformContext::create(const QSurfaceFormat &format, EGLContext shareCo
         candidates.emplace_back(new EglContextAttributeBuilder);
     }
 
-    EGLContext context = EGL_NO_CONTEXT;
+    ::EGLContext context = EGL_NO_CONTEXT;
     for (auto it = candidates.begin(); it != candidates.end(); it++) {
         const auto attribs = (*it)->build();
         context = eglCreateContext(eglDisplay(), m_config, shareContext, attribs.data());
@@ -269,7 +269,7 @@ void EGLPlatformContext::updateFormatFromContext()
 {
     const EGLSurface oldDrawSurface = eglGetCurrentSurface(EGL_DRAW);
     const EGLSurface oldReadSurface = eglGetCurrentSurface(EGL_READ);
-    const EGLContext oldContext = eglGetCurrentContext();
+    const ::EGLContext oldContext = eglGetCurrentContext();
 
     eglMakeCurrent(m_eglDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, m_context);
 

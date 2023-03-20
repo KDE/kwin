@@ -8,6 +8,7 @@
 */
 #pragma once
 
+#include <QOpenGLContext>
 #include <QString>
 #include <epoxy/egl.h>
 
@@ -52,4 +53,12 @@ static inline QString getEglErrorString(EGLint errorCode)
 static inline QString getEglErrorString()
 {
     return getEglErrorString(eglGetError());
+}
+
+static inline bool isOpenGLES()
+{
+    if (qstrcmp(qgetenv("KWIN_COMPOSE"), "O2ES") == 0) {
+        return true;
+    }
+    return QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES;
 }

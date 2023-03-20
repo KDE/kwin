@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
+#include "platformsupport/scenes/opengl/eglcontext.h"
 #include "platformsupport/scenes/opengl/egldisplay.h"
 #include "platformsupport/scenes/opengl/openglbackend.h"
 #include "wayland/linuxdmabufv1clientbuffer.h"
@@ -46,20 +47,12 @@ public:
     {
         return &m_functions;
     }
-    ::EGLDisplay eglDisplay() const;
-    EGLContext context() const
-    {
-        return m_context;
-    }
-    EGLSurface surface() const
-    {
-        return m_surface;
-    }
-    EGLConfig config() const
-    {
-        return m_config;
-    }
+    EGLDisplay eglDisplay() const;
+    ::EGLContext context() const;
+    EGLSurface surface() const;
+    EGLConfig config() const;
     EglDisplay *eglDisplayObject() const;
+    EglContext *contextObject();
 
     bool testImportBuffer(KWaylandServer::LinuxDmaBufV1ClientBuffer *buffer) override;
     QHash<uint32_t, QVector<uint64_t>> supportedFormats() const override;
@@ -75,7 +68,6 @@ public:
 protected:
     AbstractEglBackend(dev_t deviceId = 0);
     void setSurface(const EGLSurface &surface);
-    void setConfig(const EGLConfig &config);
     void cleanup();
     virtual void cleanupSurfaces();
     void setEglDisplay(EglDisplay *display);
@@ -84,28 +76,25 @@ protected:
     void initWayland();
     bool hasClientExtension(const QByteArray &ext) const;
     bool isOpenGLES() const;
-    bool createContext();
-    virtual bool initBufferConfigs();
+    bool createContext(EGLConfig config);
+    virtual EGLConfig initBufferConfigs();
 
 private:
-    EGLContext ensureGlobalShareContext();
+    bool ensureGlobalShareContext(EGLConfig config);
     void destroyGlobalShareContext();
-    EGLContext createContextInternal(EGLContext sharedContext);
+    ::EGLContext createContextInternal(::EGLContext sharedContext);
 
     void teardown();
 
     AbstractEglBackendFunctions m_functions;
     EglDisplay *m_display = nullptr;
     EGLSurface m_surface = EGL_NO_SURFACE;
-    EGLContext m_context = EGL_NO_CONTEXT;
-    EGLConfig m_config = nullptr;
+    std::unique_ptr<EglContext> m_context;
     QList<QByteArray> m_clientExtensions;
     const dev_t m_deviceId;
     QVector<KWaylandServer::LinuxDmaBufV1Feedback::Tranche> m_tranches;
     QHash<uint32_t, QVector<uint64_t>> m_supportedFormats;
     QHash<KWaylandServer::LinuxDmaBufV1ClientBuffer *, EGLImageKHR> m_importedBuffers;
-
-    static AbstractEglBackend *s_primaryBackend;
 };
 
 }

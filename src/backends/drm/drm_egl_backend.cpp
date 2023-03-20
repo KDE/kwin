@@ -107,16 +107,10 @@ void EglGbmBackend::init()
 
 bool EglGbmBackend::initRenderingContext()
 {
-    if (!initBufferConfigs()) {
-        return false;
-    }
-    if (!createContext() || !makeCurrent()) {
-        return false;
-    }
-    return true;
+    return createContext(initBufferConfigs()) && makeCurrent();
 }
 
-bool EglGbmBackend::initBufferConfigs()
+EGLConfig EglGbmBackend::initBufferConfigs()
 {
     const EGLint config_attribs[] = {
         EGL_SURFACE_TYPE,
@@ -142,10 +136,8 @@ bool EglGbmBackend::initBufferConfigs()
                          sizeof(configs) / sizeof(EGLConfig),
                          &count)) {
         qCCritical(KWIN_DRM) << "eglChooseConfig failed:" << getEglErrorString();
-        return false;
+        return EGL_NO_CONFIG_KHR;
     }
-
-    setConfig(EGL_NO_CONFIG_KHR);
 
     // Loop through all configs, choosing the first one that has suitable format.
     for (EGLint i = 0; i < count; i++) {
@@ -167,7 +159,7 @@ bool EglGbmBackend::initBufferConfigs()
         m_formats[gbmFormat] = format;
     }
     if (!m_formats.isEmpty()) {
-        return true;
+        return EGL_NO_CONFIG_KHR;
     }
 
     qCCritical(KWIN_DRM, "Choosing EGL config did not return a supported config. There were %u configs", count);
@@ -182,7 +174,7 @@ bool EglGbmBackend::initBufferConfigs()
         gbm_format_get_name(gbmFormat, &name);
         qCCritical(KWIN_DRM, "EGL config %d has format %s with %d,%d,%d,%d bits for r,g,b,a", i, name.name, redSize, greenSize, blueSize, alphaSize);
     }
-    return false;
+    return EGL_NO_CONFIG_KHR;
 }
 
 std::unique_ptr<SurfaceTexture> EglGbmBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)

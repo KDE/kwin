@@ -305,9 +305,7 @@ bool X11WindowedEglBackend::initializeEgl()
 
 bool X11WindowedEglBackend::initRenderingContext()
 {
-    initBufferConfigs();
-
-    if (!createContext()) {
+    if (!createContext(initBufferConfigs())) {
         return false;
     }
 
