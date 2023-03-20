@@ -169,7 +169,6 @@ bool EglGbmBackend::initBufferConfigs()
             continue;
         }
         m_formats[gbmFormat] = format;
-        m_configs[format.drmFormat] = configs[i];
     }
     if (!m_formats.isEmpty()) {
         return true;
@@ -233,11 +232,6 @@ bool EglGbmBackend::prefer10bpc() const
     static bool ok = false;
     static const int preferred = qEnvironmentVariableIntValue("KWIN_DRM_PREFER_COLOR_DEPTH", &ok);
     return !ok || preferred == 30;
-}
-
-EGLConfig EglGbmBackend::config(uint32_t format) const
-{
-    return m_configs.value(format, EGL_NO_CONFIG_KHR);
 }
 
 std::shared_ptr<DrmPipelineLayer> EglGbmBackend::createPrimaryLayer(DrmPipeline *pipeline)

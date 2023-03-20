@@ -74,7 +74,6 @@ public:
     std::shared_ptr<GLTexture> textureForOutput(Output *requestedOutput) const override;
 
     std::shared_ptr<DrmBuffer> testBuffer(DrmAbstractOutput *output);
-    EGLConfig config(uint32_t format) const;
     std::optional<GbmFormat> gbmFormatForDrmFormat(uint32_t format) const;
     DrmGpu *gpu() const;
 
@@ -88,7 +87,6 @@ private:
 
     DrmBackend *m_backend;
     QHash<uint32_t, GbmFormat> m_formats;
-    QHash<uint32_t, EGLConfig> m_configs;
 
     friend class EglGbmTexture;
 };
