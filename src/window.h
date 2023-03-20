@@ -821,9 +821,9 @@ public:
     int stackingOrder() const;
     void setStackingOrder(int order); ///< @internal
 
-    QWeakPointer<TabBox::TabBoxClientImpl> tabBoxClient() const
+    std::weak_ptr<TabBox::TabBoxClientImpl> tabBoxClient() const
     {
-        return m_tabBoxClient.toWeakRef();
+        return m_tabBoxClient;
     }
     bool isFirstInTabBox() const
     {
@@ -1894,7 +1894,7 @@ private:
     QRectF moveToArea(const QRectF &geometry, const QRectF &oldArea, const QRectF &newArea);
     QRectF ensureSpecialStateGeometry(const QRectF &geometry);
 
-    QSharedPointer<TabBox::TabBoxClientImpl> m_tabBoxClient;
+    std::shared_ptr<TabBox::TabBoxClientImpl> m_tabBoxClient;
     bool m_firstInTabBox = false;
     bool m_skipTaskbar = false;
     /**

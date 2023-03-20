@@ -107,23 +107,23 @@ QString TabBoxHandlerImpl::desktopName(int desktop) const
     return vd ? vd->name() : QString();
 }
 
-QWeakPointer<TabBoxClient> TabBoxHandlerImpl::nextClientFocusChain(TabBoxClient *client) const
+std::weak_ptr<TabBoxClient> TabBoxHandlerImpl::nextClientFocusChain(TabBoxClient *client) const
 {
     if (TabBoxClientImpl *c = static_cast<TabBoxClientImpl *>(client)) {
         auto next = Workspace::self()->focusChain()->nextMostRecentlyUsed(c->client());
         if (next) {
-            return qWeakPointerCast<TabBoxClient, TabBoxClientImpl>(next->tabBoxClient());
+            return std::static_pointer_cast<TabBoxClientImpl>(next->tabBoxClient().lock());
         }
     }
-    return QWeakPointer<TabBoxClient>();
+    return std::weak_ptr<TabBoxClient>();
 }
 
-QWeakPointer<TabBoxClient> TabBoxHandlerImpl::firstClientFocusChain() const
+std::weak_ptr<TabBoxClient> TabBoxHandlerImpl::firstClientFocusChain() const
 {
     if (auto c = Workspace::self()->focusChain()->firstMostRecentlyUsed()) {
-        return qWeakPointerCast<TabBoxClient, TabBoxClientImpl>(c->tabBoxClient());
+        return std::static_pointer_cast<TabBoxClientImpl>(c->tabBoxClient().lock());
     } else {
-        return QWeakPointer<TabBoxClient>();
+        return std::weak_ptr<TabBoxClient>();
     }
 }
 
@@ -145,12 +145,12 @@ int TabBoxHandlerImpl::numberOfDesktops() const
     return VirtualDesktopManager::self()->count();
 }
 
-QWeakPointer<TabBoxClient> TabBoxHandlerImpl::activeClient() const
+std::weak_ptr<TabBoxClient> TabBoxHandlerImpl::activeClient() const
 {
     if (Workspace::self()->activeWindow()) {
-        return qWeakPointerCast<TabBoxClient, TabBoxClientImpl>(Workspace::self()->activeWindow()->tabBoxClient());
+        return std::static_pointer_cast<TabBoxClientImpl>(Workspace::self()->activeWindow()->tabBoxClient().lock());
     } else {
-        return QWeakPointer<TabBoxClient>();
+        return std::weak_ptr<TabBoxClient>();
     }
 }
 
@@ -184,36 +184,22 @@ bool TabBoxHandlerImpl::checkActivity(TabBoxClient *client) const
 
 bool TabBoxHandlerImpl::checkApplications(TabBoxClient *client) const
 {
-    auto current = (static_cast<TabBoxClientImpl *>(client))->client();
-    TabBoxClientImpl *c;
-    QListIterator<QWeakPointer<TabBoxClient>> i(clientList());
+    const auto current = (static_cast<TabBoxClientImpl *>(client))->client();
+    const auto list = clientList();
 
     switch (config().clientApplicationsMode()) {
     case TabBoxConfig::OneWindowPerApplication:
         // check if the list already contains an entry of this application
-        while (i.hasNext()) {
-            QSharedPointer<TabBoxClient> client = i.next().toStrongRef();
-            if (!client) {
-                continue;
-            }
-            if ((c = dynamic_cast<TabBoxClientImpl *>(client.data()))) {
-                if (Window::belongToSameApplication(c->client(), current, Window::SameApplicationCheck::AllowCrossProcesses)) {
-                    return false;
-                }
+        for (const auto &weakClient : list) {
+            const std::shared_ptr<TabBoxClientImpl> client = std::dynamic_pointer_cast<TabBoxClientImpl>(weakClient.lock());
+            if (client && Window::belongToSameApplication(client->client(), current, Window::SameApplicationCheck::AllowCrossProcesses)) {
+                return false;
             }
         }
         return true;
     case TabBoxConfig::AllWindowsCurrentApplication: {
-        QSharedPointer<TabBoxClient> pointer = tabBox->activeClient().toStrongRef();
-        if (!pointer) {
-            return false;
-        }
-        if ((c = dynamic_cast<TabBoxClientImpl *>(pointer.data()))) {
-            if (Window::belongToSameApplication(c->client(), current, Window::SameApplicationCheck::AllowCrossProcesses)) {
-                return true;
-            }
-        }
-        return false;
+        const std::shared_ptr<TabBoxClientImpl> client = std::dynamic_pointer_cast<TabBoxClientImpl>(tabBox->activeClient().lock());
+        return client && Window::belongToSameApplication(client->client(), current, Window::SameApplicationCheck::AllowCrossProcesses);
     }
     default: // TabBoxConfig::AllWindowsAllApplications
         return true;
@@ -246,10 +232,10 @@ bool TabBoxHandlerImpl::checkMultiScreen(TabBoxClient *client) const
     }
 }
 
-QWeakPointer<TabBoxClient> TabBoxHandlerImpl::clientToAddToList(TabBoxClient *client, int desktop) const
+std::weak_ptr<TabBoxClient> TabBoxHandlerImpl::clientToAddToList(TabBoxClient *client, int desktop) const
 {
     if (!client) {
-        return QWeakPointer<TabBoxClient>();
+        return std::weak_ptr<TabBoxClient>();
     }
     Window *ret = nullptr;
     Window *current = (static_cast<TabBoxClientImpl *>(client))->client();
@@ -265,16 +251,22 @@ QWeakPointer<TabBoxClient> TabBoxHandlerImpl::clientToAddToList(TabBoxClient *cl
         Window *modal = current->findModal();
         if (modal == nullptr || modal == current) {
             ret = current;
-        } else if (!clientList().contains(qWeakPointerCast<TabBoxClient, TabBoxClientImpl>(modal->tabBoxClient()))) {
-            ret = modal;
         } else {
-            // nothing
+            const auto list = clientList();
+            const bool contains = std::any_of(list.cbegin(), list.cend(), [c = std::static_pointer_cast<TabBoxClientImpl>(modal->tabBoxClient().lock())](auto &weak) {
+                return weak.lock() == c;
+            });
+            if (contains) {
+                ret = modal;
+            } else {
+                // nothing
+            }
         }
     }
     if (ret) {
-        return qWeakPointerCast<TabBoxClient, TabBoxClientImpl>(ret->tabBoxClient());
+        return std::static_pointer_cast<TabBoxClientImpl>(ret->tabBoxClient().lock());
     } else {
-        return QWeakPointer<TabBoxClient>();
+        return std::weak_ptr<TabBoxClient>();
     }
 }
 
@@ -284,7 +276,7 @@ TabBoxClientList TabBoxHandlerImpl::stackingOrder() const
     TabBoxClientList ret;
     for (Window *window : stacking) {
         if (window->isClient()) {
-            ret.append(qWeakPointerCast<TabBoxClient, TabBoxClientImpl>(window->tabBoxClient()));
+            ret.append(std::static_pointer_cast<TabBoxClientImpl>(window->tabBoxClient().lock()));
         }
     }
     return ret;
@@ -326,15 +318,15 @@ void TabBoxHandlerImpl::shadeClient(TabBoxClient *c, bool b) const
     }
 }
 
-QWeakPointer<TabBoxClient> TabBoxHandlerImpl::desktopClient() const
+std::weak_ptr<TabBoxClient> TabBoxHandlerImpl::desktopClient() const
 {
     const auto stackingOrder = Workspace::self()->stackingOrder();
     for (Window *window : stackingOrder) {
         if (window->isClient() && window->isDesktop() && window->isOnCurrentDesktop() && window->output() == workspace()->activeOutput()) {
-            return qWeakPointerCast<TabBoxClient, TabBoxClientImpl>(window->tabBoxClient());
+            return window->tabBoxClient();
         }
     }
-    return QWeakPointer<TabBoxClient>();
+    return std::weak_ptr<TabBoxClient>();
 }
 
 void TabBoxHandlerImpl::activateAndClose()
@@ -659,12 +651,12 @@ QList<Window *> TabBox::currentClientList()
 {
     const TabBoxClientList list = m_tabBox->clientList();
     QList<Window *> ret;
-    for (const QWeakPointer<TabBoxClient> &clientPointer : list) {
-        QSharedPointer<TabBoxClient> client = clientPointer.toStrongRef();
+    for (const std::weak_ptr<TabBoxClient> &clientPointer : list) {
+        std::shared_ptr<TabBoxClient> client = clientPointer.lock();
         if (!client) {
             continue;
         }
-        if (const TabBoxClientImpl *c = static_cast<const TabBoxClientImpl *>(client.data())) {
+        if (const TabBoxClientImpl *c = static_cast<const TabBoxClientImpl *>(client.get())) {
             ret.append(c->client());
         }
     }
@@ -683,7 +675,7 @@ QList<int> TabBox::currentDesktopList()
 
 void TabBox::setCurrentClient(Window *newClient)
 {
-    setCurrentIndex(m_tabBox->index(qWeakPointerCast<TabBoxClient, TabBoxClientImpl>(newClient->tabBoxClient())));
+    setCurrentIndex(m_tabBox->index(std::static_pointer_cast<TabBoxClientImpl>(newClient->tabBoxClient().lock())));
 }
 
 void TabBox::setCurrentDesktop(int newDesktop)

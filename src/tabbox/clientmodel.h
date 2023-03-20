@@ -59,7 +59,7 @@ public:
      * @return Returns the ModelIndex of given TabBoxClient or an invalid ModelIndex
      * if the model does not contain the given TabBoxClient.
      */
-    QModelIndex index(QWeakPointer<TabBoxClient> client) const;
+    QModelIndex index(std::weak_ptr<TabBoxClient> client) const;
 
     /**
      * Generates a new list of TabBoxClients based on the current config.
@@ -93,10 +93,10 @@ public Q_SLOTS:
     void activate(int index);
 
 private:
-    void createFocusChainClientList(int desktop, const QSharedPointer<TabBoxClient> &start,
-        TabBoxClientList &stickyClients);
-    void createStackingOrderClientList(int desktop, const QSharedPointer<TabBoxClient> &start,
-        TabBoxClientList &stickyClients);
+    void createFocusChainClientList(int desktop, const std::shared_ptr<TabBoxClient> &start,
+                                    TabBoxClientList &stickyClients);
+    void createStackingOrderClientList(int desktop, const std::shared_ptr<TabBoxClient> &start,
+                                       TabBoxClientList &stickyClients);
 
     TabBoxClientList m_clientList;
     TabBoxClientList m_mutableClientList;
