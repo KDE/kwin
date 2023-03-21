@@ -191,7 +191,7 @@ public:
     bool hiddenPreview() const; ///< Window is mapped in order to get a window pixmap
 
     bool setupCompositing() override;
-    void finishCompositing(ReleaseReason releaseReason = ReleaseReason::Release) override;
+    void finishCompositing() override;
     void setBlockingCompositing(bool block);
     inline bool isBlockingCompositing()
     {

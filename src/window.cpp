@@ -32,7 +32,6 @@
 #include "tabbox.h"
 #endif
 #include "scene/shadowitem.h"
-#include "scene/surfaceitem_x11.h"
 #include "scene/windowitem.h"
 #include "screenedge.h"
 #include "shadow.h"
@@ -383,14 +382,8 @@ bool Window::setupCompositing()
     return true;
 }
 
-void Window::finishCompositing(ReleaseReason releaseReason)
+void Window::finishCompositing()
 {
-    // If the X11 window has been destroyed, avoid calling XDamageDestroy.
-    if (releaseReason != ReleaseReason::Destroyed) {
-        if (SurfaceItemX11 *item = qobject_cast<SurfaceItemX11 *>(surfaceItem())) {
-            item->destroyDamage();
-        }
-    }
     m_shadow.reset();
     m_effectWindow.reset();
     m_windowItem.reset();

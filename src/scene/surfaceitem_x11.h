@@ -32,6 +32,7 @@ public:
     void processDamage();
     bool fetchDamage();
     void waitForDamage();
+    void forgetDamage();
     void destroyDamage();
 
     QVector<QRectF> shape() const override;

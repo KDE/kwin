@@ -704,7 +704,7 @@ public:
     int depth() const;
     bool hasAlpha() const;
     virtual bool setupCompositing();
-    virtual void finishCompositing(ReleaseReason releaseReason = ReleaseReason::Release);
+    virtual void finishCompositing();
     EffectWindowImpl *effectWindow();
     const EffectWindowImpl *effectWindow() const;
     SurfaceItem *surfaceItem() const;

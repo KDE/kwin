@@ -41,7 +41,7 @@ SurfaceItemX11::SurfaceItemX11(Window *window, Scene *scene, Item *parent)
 
 SurfaceItemX11::~SurfaceItemX11()
 {
-    // destroyDamage() will be called by the associated Window.
+    destroyDamage();
 }
 
 Window *SurfaceItemX11::window() const
@@ -127,6 +127,13 @@ void SurfaceItemX11::waitForDamage()
 
     addDamage(region);
     m_isDamaged = false;
+}
+
+void SurfaceItemX11::forgetDamage()
+{
+    // If the window is destroyed, we cannot destroy XDamage handle. :/
+    m_isDamaged = false;
+    m_damageHandle = XCB_NONE;
 }
 
 void SurfaceItemX11::destroyDamage()
