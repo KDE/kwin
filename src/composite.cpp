@@ -506,6 +506,11 @@ void Compositor::stop()
         disconnect(workspace(), &Workspace::outputRemoved, this, &Compositor::removeOutput);
     }
 
+    if (m_backend->compositingType() == OpenGLCompositing) {
+        // some layers need a context current for destruction
+        static_cast<OpenGLBackend *>(m_backend.get())->makeCurrent();
+    }
+
     const auto superlayers = m_superlayers;
     for (auto it = superlayers.begin(); it != superlayers.end(); ++it) {
         removeSuperLayer(*it);

@@ -73,20 +73,22 @@ public:
 
     std::shared_ptr<GLTexture> textureForOutput(Output *requestedOutput) const override;
 
-    std::shared_ptr<DrmBuffer> testBuffer(DrmAbstractOutput *output);
     std::optional<GbmFormat> gbmFormatForDrmFormat(uint32_t format) const;
     DrmGpu *gpu() const;
 
     EGLImageKHR importBufferObjectAsImage(gbm_bo *bo);
     std::shared_ptr<GLTexture> importBufferObjectAsTexture(gbm_bo *bo);
+    EglContext *contextForGpu(DrmGpu *gpu);
 
 private:
     bool initializeEgl();
-    bool initBufferConfigs();
+    bool initBufferConfigs(EglDisplay *display);
     bool initRenderingContext();
+    EglDisplay *createEglDisplay(DrmGpu *gpu) const;
 
     DrmBackend *m_backend;
-    QHash<uint32_t, GbmFormat> m_formats;
+    std::map<EglDisplay *, std::unique_ptr<EglContext>> m_contexts;
+    QHash<EglDisplay *, QHash<uint32_t, GbmFormat>> m_formats;
 
     friend class EglGbmTexture;
 };

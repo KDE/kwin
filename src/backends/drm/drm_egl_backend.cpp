@@ -48,11 +48,15 @@ EglGbmBackend::EglGbmBackend(DrmBackend *drmBackend)
 {
     drmBackend->setRenderBackend(this);
     setIsDirectRendering(true);
+    connect(m_backend, &DrmBackend::gpuRemoved, this, [this](DrmGpu *gpu) {
+        m_contexts.erase(gpu->eglDisplay());
+    });
 }
 
 EglGbmBackend::~EglGbmBackend()
 {
     m_backend->releaseBuffers();
+    m_contexts.clear();
     cleanup();
     m_backend->setRenderBackend(nullptr);
 }
@@ -65,29 +69,32 @@ bool EglGbmBackend::initializeEgl()
     // Use eglGetPlatformDisplayEXT() to get the display pointer
     // if the implementation supports it.
     if (!display) {
-        const bool hasMesaGBM = hasClientExtension(QByteArrayLiteral("EGL_MESA_platform_gbm"));
-        const bool hasKHRGBM = hasClientExtension(QByteArrayLiteral("EGL_KHR_platform_gbm"));
-        const GLenum platform = hasMesaGBM ? EGL_PLATFORM_GBM_MESA : EGL_PLATFORM_GBM_KHR;
-
-        if (!hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_base")) || (!hasMesaGBM && !hasKHRGBM)) {
-            setFailed("Missing one or more extensions between EGL_EXT_platform_base, "
-                      "EGL_MESA_platform_gbm, EGL_KHR_platform_gbm");
-            return false;
-        }
-
-        if (!m_backend->primaryGpu()->gbmDevice()) {
-            setFailed("Could not create gbm device");
-            return false;
-        }
-
-        m_backend->primaryGpu()->setEglDisplay(EglDisplay::create(eglGetPlatformDisplayEXT(platform, m_backend->primaryGpu()->gbmDevice(), nullptr)));
-        display = m_backend->primaryGpu()->eglDisplay();
+        display = createEglDisplay(m_backend->primaryGpu());
         if (!display) {
             return false;
         }
     }
     setEglDisplay(display);
     return true;
+}
+
+EglDisplay *EglGbmBackend::createEglDisplay(DrmGpu *gpu) const
+{
+    const bool hasMesaGBM = hasClientExtension(QByteArrayLiteral("EGL_MESA_platform_gbm"));
+    const bool hasKHRGBM = hasClientExtension(QByteArrayLiteral("EGL_KHR_platform_gbm"));
+    const GLenum platform = hasMesaGBM ? EGL_PLATFORM_GBM_MESA : EGL_PLATFORM_GBM_KHR;
+
+    if (!hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_base")) || (!hasMesaGBM && !hasKHRGBM)) {
+        qCWarning(KWIN_DRM, "Missing one or more extensions between EGL_EXT_platform_base, EGL_MESA_platform_gbm, EGL_KHR_platform_gbm");
+        return nullptr;
+    }
+
+    if (!gpu->gbmDevice()) {
+        return nullptr;
+    }
+
+    gpu->setEglDisplay(EglDisplay::create(eglGetPlatformDisplayEXT(platform, gpu->gbmDevice(), nullptr)));
+    return gpu->eglDisplay();
 }
 
 void EglGbmBackend::init()
@@ -107,10 +114,29 @@ void EglGbmBackend::init()
 
 bool EglGbmBackend::initRenderingContext()
 {
-    return initBufferConfigs() && createContext(EGL_NO_CONFIG_KHR) && makeCurrent();
+    return initBufferConfigs(eglDisplayObject()) && createContext(EGL_NO_CONFIG_KHR) && makeCurrent();
 }
 
-bool EglGbmBackend::initBufferConfigs()
+EglContext *EglGbmBackend::contextForGpu(DrmGpu *gpu)
+{
+    if (gpu == m_backend->primaryGpu()) {
+        return contextObject();
+    }
+    auto display = gpu->eglDisplay();
+    if (!display) {
+        display = createEglDisplay(gpu);
+        if (!display) {
+            return nullptr;
+        }
+    }
+    auto &context = m_contexts[display];
+    if (!context) {
+        context = EglContext::create(display, EGL_NO_CONFIG_KHR, EGL_NO_CONTEXT);
+    }
+    return context.get();
+}
+
+bool EglGbmBackend::initBufferConfigs(EglDisplay *display)
 {
     const EGLint config_attribs[] = {
         EGL_SURFACE_TYPE,
@@ -132,7 +158,7 @@ bool EglGbmBackend::initBufferConfigs()
 
     EGLint count;
     EGLConfig configs[1024];
-    if (!eglChooseConfig(eglDisplay(), config_attribs, configs,
+    if (!eglChooseConfig(display->handle(), config_attribs, configs,
                          sizeof(configs) / sizeof(EGLConfig),
                          &count)) {
         qCCritical(KWIN_DRM) << "eglChooseConfig failed:" << getEglErrorString();
@@ -140,36 +166,37 @@ bool EglGbmBackend::initBufferConfigs()
     }
 
     // Loop through all configs, choosing the first one that has suitable format.
+    auto &formats = m_formats[display];
     for (EGLint i = 0; i < count; i++) {
         EGLint gbmFormat;
-        eglGetConfigAttrib(eglDisplay(), configs[i], EGL_NATIVE_VISUAL_ID, &gbmFormat);
+        eglGetConfigAttrib(display->handle(), configs[i], EGL_NATIVE_VISUAL_ID, &gbmFormat);
 
         GbmFormat format;
         format.drmFormat = gbmFormat;
         EGLint red, green, blue;
         // Query number of bits for color channel
-        eglGetConfigAttrib(eglDisplay(), configs[i], EGL_RED_SIZE, &red);
-        eglGetConfigAttrib(eglDisplay(), configs[i], EGL_GREEN_SIZE, &green);
-        eglGetConfigAttrib(eglDisplay(), configs[i], EGL_BLUE_SIZE, &blue);
-        eglGetConfigAttrib(eglDisplay(), configs[i], EGL_ALPHA_SIZE, &format.alphaSize);
+        eglGetConfigAttrib(display->handle(), configs[i], EGL_RED_SIZE, &red);
+        eglGetConfigAttrib(display->handle(), configs[i], EGL_GREEN_SIZE, &green);
+        eglGetConfigAttrib(display->handle(), configs[i], EGL_BLUE_SIZE, &blue);
+        eglGetConfigAttrib(display->handle(), configs[i], EGL_ALPHA_SIZE, &format.alphaSize);
         format.bpp = red + green + blue;
-        if (m_formats.contains(gbmFormat)) {
+        if (formats.contains(gbmFormat)) {
             continue;
         }
-        m_formats[gbmFormat] = format;
+        formats[gbmFormat] = format;
     }
-    if (!m_formats.isEmpty()) {
+    if (!formats.isEmpty()) {
         return true;
     }
 
     qCCritical(KWIN_DRM, "Choosing EGL config did not return a supported config. There were %u configs", count);
     for (EGLint i = 0; i < count; i++) {
         EGLint gbmFormat, blueSize, redSize, greenSize, alphaSize;
-        eglGetConfigAttrib(eglDisplay(), configs[i], EGL_NATIVE_VISUAL_ID, &gbmFormat);
-        eglGetConfigAttrib(eglDisplay(), configs[i], EGL_RED_SIZE, &redSize);
-        eglGetConfigAttrib(eglDisplay(), configs[i], EGL_GREEN_SIZE, &greenSize);
-        eglGetConfigAttrib(eglDisplay(), configs[i], EGL_BLUE_SIZE, &blueSize);
-        eglGetConfigAttrib(eglDisplay(), configs[i], EGL_ALPHA_SIZE, &alphaSize);
+        eglGetConfigAttrib(display->handle(), configs[i], EGL_NATIVE_VISUAL_ID, &gbmFormat);
+        eglGetConfigAttrib(display->handle(), configs[i], EGL_RED_SIZE, &redSize);
+        eglGetConfigAttrib(display->handle(), configs[i], EGL_GREEN_SIZE, &greenSize);
+        eglGetConfigAttrib(display->handle(), configs[i], EGL_BLUE_SIZE, &blueSize);
+        eglGetConfigAttrib(display->handle(), configs[i], EGL_ALPHA_SIZE, &alphaSize);
         gbm_format_name_desc name;
         gbm_format_get_name(gbmFormat, &name);
         qCCritical(KWIN_DRM, "EGL config %d has format %s with %d,%d,%d,%d bits for r,g,b,a", i, name.name, redSize, greenSize, blueSize, alphaSize);
@@ -210,9 +237,18 @@ std::shared_ptr<GLTexture> EglGbmBackend::textureForOutput(Output *output) const
 
 std::optional<GbmFormat> EglGbmBackend::gbmFormatForDrmFormat(uint32_t format) const
 {
-    // TODO use a hardcoded lookup table where needed instead?
-    const auto it = m_formats.constFind(format);
-    return it == m_formats.constEnd() ? std::optional<GbmFormat>() : *it;
+    const auto it = m_formats.find(eglDisplayObject());
+    if (it == m_formats.end()) {
+        return std::nullopt;
+    } else {
+        const auto &formats = *it;
+        const auto formatIt = formats.find(format);
+        if (formatIt == formats.end()) {
+            return std::nullopt;
+        } else {
+            return *formatIt;
+        }
+    }
 }
 
 bool EglGbmBackend::prefer10bpc() const
@@ -254,13 +290,7 @@ EGLImageKHR EglGbmBackend::importBufferObjectAsImage(gbm_bo *bo)
 
 std::shared_ptr<GLTexture> EglGbmBackend::importBufferObjectAsTexture(gbm_bo *bo)
 {
-    EGLImageKHR image = importBufferObjectAsImage(bo);
-    if (image != EGL_NO_IMAGE_KHR) {
-        return std::make_shared<EGLImageTexture>(eglDisplay(), image, GL_RGBA8, QSize(gbm_bo_get_width(bo), gbm_bo_get_height(bo)));
-    } else {
-        qCWarning(KWIN_DRM) << "Failed to record frame: Error creating EGLImageKHR - " << getEglErrorString();
-        return nullptr;
-    }
+    return importDmaBufAsTexture(dmaBufAttributesForBo(bo));
 }
 
 } // namespace KWin

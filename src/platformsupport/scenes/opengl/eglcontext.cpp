@@ -10,6 +10,7 @@
 #include "egldisplay.h"
 #include "kwineglimagetexture.h"
 #include "kwineglutils_p.h"
+#include "kwinglutils.h"
 #include "utils/common.h"
 #include "utils/egl_context_attribute_builder.h"
 
@@ -23,6 +24,7 @@ std::unique_ptr<EglContext> EglContext::create(EglDisplay *display, EGLConfig co
 {
     auto context = createContext(display, config, sharedContext);
     if (context) {
+        eglMakeCurrent(display->handle(), EGL_NO_SURFACE, EGL_NO_SURFACE, context);
         return std::make_unique<EglContext>(display, config, context);
     } else {
         return nullptr;
@@ -33,11 +35,23 @@ EglContext::EglContext(EglDisplay *display, EGLConfig config, ::EGLContext conte
     : m_display(display)
     , m_handle(context)
     , m_config(config)
+    , m_shaderManager(std::make_unique<ShaderManager>())
 {
+    // It is not legal to not have a vertex array object bound in a core context
+    // to make code handling old and new OpenGL versions easier, bind a dummy vao that's used for everything
+    if (!isOpenglES() && hasOpenglExtension(QByteArrayLiteral("GL_ARB_vertex_array_object"))) {
+        makeCurrent();
+        glGenVertexArrays(1, &m_vao);
+        glBindVertexArray(m_vao);
+    }
 }
 
 EglContext::~EglContext()
 {
+    if (m_vao) {
+        makeCurrent();
+        glDeleteVertexArrays(1, &m_vao);
+    }
     doneCurrent();
     eglDestroyContext(m_display->handle(), m_handle);
 }
@@ -182,4 +196,8 @@ std::shared_ptr<GLTexture> EglContext::importDmaBufAsTexture(const DmaBufAttribu
     }
 }
 
+ShaderManager *EglContext::shaderManager() const
+{
+    return m_shaderManager.get();
+}
 }

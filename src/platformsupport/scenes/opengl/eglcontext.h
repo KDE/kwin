@@ -21,6 +21,7 @@ namespace KWin
 {
 
 class EglDisplay;
+class ShaderManager;
 
 class KWIN_EXPORT EglContext : public OpenGlContext
 {
@@ -36,15 +37,18 @@ public:
     ::EGLContext handle() const;
     EGLConfig config() const;
     bool isValid() const;
+    ShaderManager *shaderManager() const;
 
     static std::unique_ptr<EglContext> create(EglDisplay *display, EGLConfig config, ::EGLContext sharedContext);
 
 private:
     static ::EGLContext createContext(EglDisplay *display, EGLConfig config, ::EGLContext sharedContext);
 
-    EglDisplay *m_display = nullptr;
-    ::EGLContext m_handle = EGL_NO_CONTEXT;
-    EGLConfig m_config = EGL_NO_CONFIG_KHR;
+    EglDisplay *const m_display;
+    const ::EGLContext m_handle;
+    const EGLConfig m_config;
+    const std::unique_ptr<ShaderManager> m_shaderManager;
+    uint32_t m_vao = 0;
 };
 
 }

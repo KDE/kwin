@@ -194,6 +194,7 @@ Q_DECLARE_FLAGS(ShaderTraits, ShaderTrait)
 class KWINGLUTILS_EXPORT ShaderManager
 {
 public:
+    explicit ShaderManager();
     ~ShaderManager();
 
     /**
@@ -295,8 +296,6 @@ public:
     static void cleanup();
 
 private:
-    ShaderManager();
-
     void bindFragDataLocations(GLShader *shader);
     void bindAttributeLocations(GLShader *shader) const;
 
