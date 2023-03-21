@@ -360,10 +360,7 @@ void X11Window::releaseWindow(bool on_shutdown)
 {
     markAsZombie();
     cleanTabBox();
-    Deleted *del = nullptr;
-    if (!on_shutdown) {
-        del = Deleted::create(this);
-    }
+    Deleted *del = Deleted::create(this);
     if (isInteractiveMoveResize()) {
         Q_EMIT interactiveMoveResizeFinished();
     }
@@ -416,13 +413,9 @@ void X11Window::releaseWindow(bool on_shutdown)
     m_wrapper.reset();
     m_frame.reset();
     unblockGeometryUpdates(); // Don't use GeometryUpdatesBlocker, it would now set the geometry
-    if (!on_shutdown) {
-        disownDataPassedToDeleted();
-    }
+    disownDataPassedToDeleted();
     unref();
-    if (del) {
-        del->unref();
-    }
+    del->unref();
     ungrabXServer();
 }
 

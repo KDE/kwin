@@ -140,10 +140,7 @@ bool Unmanaged::track(xcb_window_t w)
 
 void Unmanaged::release(ReleaseReason releaseReason)
 {
-    Deleted *del = nullptr;
-    if (releaseReason != ReleaseReason::KWinShutsDown) {
-        del = Deleted::create(this);
-    }
+    Deleted *del = Deleted::create(this);
     Q_EMIT closed(del);
     finishCompositing(releaseReason);
     if (!QWidget::find(window()) && releaseReason != ReleaseReason::Destroyed) { // don't affect our own windows
@@ -153,13 +150,9 @@ void Unmanaged::release(ReleaseReason releaseReason)
         Xcb::selectInput(window(), XCB_EVENT_MASK_NO_EVENT);
     }
     workspace()->removeUnmanaged(this);
-    if (releaseReason != ReleaseReason::KWinShutsDown) {
-        disownDataPassedToDeleted();
-    }
+    disownDataPassedToDeleted();
     unref();
-    if (del) {
-        del->unref();
-    }
+    del->unref();
 }
 
 void Unmanaged::deleteUnmanaged(Unmanaged *c)
