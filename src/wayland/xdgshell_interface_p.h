@@ -34,6 +34,7 @@ public:
     QMap<quint32, QTimer *> pings;
 
 protected:
+    void xdg_wm_base_destroy_resource(Resource *resource) override;
     void xdg_wm_base_destroy(Resource *resource) override;
     void xdg_wm_base_create_positioner(Resource *resource, uint32_t id) override;
     void xdg_wm_base_get_xdg_surface(Resource *resource, uint32_t id, ::wl_resource *surface) override;
