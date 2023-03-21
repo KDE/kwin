@@ -85,6 +85,7 @@ OffscreenQuickView::OffscreenQuickView(QObject *parent, ExportMode exportMode)
     d->m_renderControl = std::make_unique<QQuickRenderControl>();
 
     d->m_view = std::make_unique<QQuickWindow>(d->m_renderControl.get());
+    Q_ASSERT(d->m_view->setProperty("_KWIN_WINDOW_IS_OFFSCREEN", true) || true);
     d->m_view->setFlags(Qt::FramelessWindowHint);
     d->m_view->setColor(Qt::transparent);
 
