@@ -214,7 +214,7 @@ QWindow *Unmanaged::findInternalWindow() const
 {
     const QWindowList windows = kwinApp()->topLevelWindows();
     for (QWindow *w : windows) {
-        if (w->winId() == window()) {
+        if (w->handle() && w->winId() == window()) {
             return w;
         }
     }
