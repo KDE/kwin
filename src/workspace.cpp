@@ -738,7 +738,6 @@ void Workspace::addX11Window(X11Window *window)
     } else {
         m_focusChain->update(window, FocusChain::Update);
     }
-    m_x11Clients.append(window);
     m_windows.append(window);
     addToStack(window);
     updateClientArea(); // This cannot be in manage(), because the window got added only now
@@ -772,9 +771,7 @@ void Workspace::addUnmanaged(Unmanaged *window)
  */
 void Workspace::removeX11Window(X11Window *window)
 {
-    Q_ASSERT(m_x11Clients.contains(window));
-    // TODO: if marked window is removed, notify the marked list
-    m_x11Clients.removeAll(window);
+    Q_ASSERT(m_windows.contains(window));
     Group *group = findGroup(window->window());
     if (group != nullptr) {
         group->lostLeader();
@@ -888,8 +885,10 @@ void Workspace::updateToolWindows(bool also_hide)
 {
     // TODO: What if Client's transiency/group changes? should this be called too? (I'm paranoid, am I not?)
     if (!options->isHideUtilityWindowsForInactive()) {
-        for (auto it = m_x11Clients.constBegin(); it != m_x11Clients.constEnd(); ++it) {
-            (*it)->showClient();
+        for (auto it = m_windows.constBegin(); it != m_windows.constEnd(); ++it) {
+            if (X11Window *x11Window = qobject_cast<X11Window *>(*it)) {
+                x11Window->showClient();
+            }
         }
         return;
     }
@@ -1614,7 +1613,7 @@ void Workspace::disableGlobalShortcutsForClient(bool disable)
 
     m_globalShortcutsDisabledForWindow = disable;
     // Update also Meta+LMB actions etc.
-    for (auto it = m_x11Clients.constBegin(); it != m_x11Clients.constEnd(); ++it) {
+    for (auto it = m_windows.constBegin(); it != m_windows.constEnd(); ++it) {
         (*it)->updateMouseGrab();
     }
 }
@@ -1918,10 +1917,23 @@ QString Workspace::supportInformation() const
     return support;
 }
 
+void Workspace::forEachClient(std::function<void(X11Window *)> func)
+{
+    for (Window *window : std::as_const(m_windows)) {
+        X11Window *x11Window = qobject_cast<X11Window *>(window);
+        if (x11Window) {
+            func(x11Window);
+        }
+    }
+}
+
 X11Window *Workspace::findClient(std::function<bool(const X11Window *)> func) const
 {
-    if (X11Window *ret = Window::findInList(m_x11Clients, func)) {
-        return ret;
+    for (Window *window : std::as_const(m_windows)) {
+        X11Window *x11Window = qobject_cast<X11Window *>(window);
+        if (x11Window && func(x11Window)) {
+            return x11Window;
+        }
     }
     return nullptr;
 }
@@ -2082,19 +2094,20 @@ Group *Workspace::findGroup(xcb_window_t leader) const
 Group *Workspace::findClientLeaderGroup(const X11Window *window) const
 {
     Group *ret = nullptr;
-    for (auto it = m_x11Clients.constBegin(); it != m_x11Clients.constEnd(); ++it) {
-        if (*it == window) {
+    for (auto it = m_windows.constBegin(); it != m_windows.constEnd(); ++it) {
+        X11Window *candidate = qobject_cast<X11Window *>(*it);
+        if (!candidate || candidate == window) {
             continue;
         }
-        if ((*it)->wmClientLeader() == window->wmClientLeader()) {
-            if (ret == nullptr || ret == (*it)->group()) {
-                ret = (*it)->group();
+        if (candidate->wmClientLeader() == window->wmClientLeader()) {
+            if (ret == nullptr || ret == candidate->group()) {
+                ret = candidate->group();
             } else {
                 // There are already two groups with the same client leader.
                 // This most probably means the app uses group transients without
                 // setting group for its windows. Merging the two groups is a bad
                 // hack, but there's no really good solution for this case.
-                QList<X11Window *> old_group = (*it)->group()->members();
+                QList<X11Window *> old_group = candidate->group()->members();
                 // old_group autodeletes when being empty
                 for (int pos = 0; pos < old_group.count(); ++pos) {
                     X11Window *tmp = old_group[pos];
@@ -2160,8 +2173,10 @@ void Workspace::updateOnAllDesktopsOfTransients(Window *window)
 // A new window has been mapped. Check if it's not a mainwindow for some already existing transient window.
 void Workspace::checkTransients(xcb_window_t w)
 {
-    for (auto it = m_x11Clients.constBegin(); it != m_x11Clients.constEnd(); ++it) {
-        (*it)->checkTransient(w);
+    for (auto it = m_windows.constBegin(); it != m_windows.constEnd(); ++it) {
+        if (X11Window *x11Window = qobject_cast<X11Window *>(*it)) {
+            x11Window->checkTransient(w);
+        }
     }
 }
 

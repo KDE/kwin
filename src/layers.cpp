@@ -191,12 +191,15 @@ void Workspace::propagateWindows(bool propagate_new_windows)
 
     QVector<xcb_window_t> cl;
     if (propagate_new_windows) {
-        cl.reserve(manual_overlays.size() + m_x11Clients.size());
+        cl.reserve(manual_overlays.size() + m_windows.size());
         for (const auto win : std::as_const(manual_overlays)) {
             cl.push_back(win);
         }
-        for (auto it = m_x11Clients.constBegin(); it != m_x11Clients.constEnd(); ++it) {
-            cl.push_back((*it)->window());
+        for (Window *window : std::as_const(m_windows)) {
+            X11Window *x11Window = qobject_cast<X11Window *>(window);
+            if (x11Window) {
+                cl.push_back(x11Window->window());
+            }
         }
         rootInfo()->setClientList(cl.constData(), cl.size());
     }

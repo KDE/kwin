@@ -985,9 +985,10 @@ void X11Compositor::updateClientCompositeBlocking(X11Window *c)
         // If !c we just check if we can resume in case a blocking client was lost.
         bool shouldResume = true;
 
-        for (auto it = Workspace::self()->clientList().constBegin();
-             it != Workspace::self()->clientList().constEnd(); ++it) {
-            if ((*it)->isBlockingCompositing()) {
+        const auto windows = workspace()->windows();
+        for (Window *window : windows) {
+            X11Window *x11Window = qobject_cast<X11Window *>(window);
+            if (x11Window && x11Window->isBlockingCompositing()) {
                 shouldResume = false;
                 break;
             }

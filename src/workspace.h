@@ -241,14 +241,6 @@ public:
     void windowAttentionChanged(Window *, bool set);
 
     /**
-     * @return List of windows currently managed by Workspace
-     */
-    const QList<X11Window *> &clientList() const
-    {
-        return m_x11Clients;
-    }
-
-    /**
      * @returns List of all windows (either X11 or Wayland) currently managed by Workspace
      */
     const QList<Window *> windows() const
@@ -653,7 +645,6 @@ private:
     Window *m_delayFocusWindow;
     QPointF focusMousePos;
 
-    QList<X11Window *> m_x11Clients;
     QList<Window *> m_windows;
     QList<Window *> deleted;
 
@@ -842,11 +833,6 @@ inline void Workspace::updateFocusMousePosition(const QPointF &pos)
 inline QPointF Workspace::focusMousePosition() const
 {
     return focusMousePos;
-}
-
-inline void Workspace::forEachClient(std::function<void(X11Window *)> func)
-{
-    std::for_each(m_x11Clients.constBegin(), m_x11Clients.constEnd(), func);
 }
 
 inline Workspace *workspace()
