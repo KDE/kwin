@@ -10,21 +10,15 @@
 #include <QDBusMessage>
 #include <QDBusPendingCall>
 #include <QFileDialog>
-#include <QStandardPaths>
 #include <QStringList>
 
+#include <KCMultiDialog>
 #include <KConfigGroup>
 #include <KLocalizedString>
-#include <KMessageBox>
-#include <KMessageWidget>
-#include <KNSWidgets/Button>
 #include <KPackage/Package>
 #include <KPackage/PackageJob>
 #include <KPackage/PackageLoader>
-#include <KPluginFactory>
 #include <KSharedConfig>
-
-#include <KCMultiDialog>
 
 #include "config-kwin.h"
 #include "kwinscriptsdata.h"
