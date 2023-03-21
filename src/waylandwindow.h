@@ -57,6 +57,7 @@ private:
     QString m_captionNormal;
     QString m_captionSuffix;
     bool m_isHidden = false;
+    bool m_isScreenLocker = false;
 };
 
 } // namespace KWin

@@ -35,6 +35,7 @@ enum WaylandGeometryType {
 Q_DECLARE_FLAGS(WaylandGeometryTypes, WaylandGeometryType)
 
 WaylandWindow::WaylandWindow(SurfaceInterface *surface)
+    : m_isScreenLocker(surface->client() == waylandServer()->screenLockerClientConnection())
 {
     setSurface(surface);
     setDepth(32);
@@ -46,8 +47,6 @@ WaylandWindow::WaylandWindow(SurfaceInterface *surface)
     connect(this, &WaylandWindow::desktopFileNameChanged,
             this, &WaylandWindow::updateIcon);
     connect(workspace(), &Workspace::outputsChanged, this, &WaylandWindow::updateClientOutputs);
-    connect(surface->client(), &ClientConnection::aboutToBeDestroyed,
-            this, &WaylandWindow::destroyWindow);
 
     updateResourceName();
     updateIcon();
@@ -70,7 +69,7 @@ QString WaylandWindow::captionSuffix() const
 
 pid_t WaylandWindow::pid() const
 {
-    return surface()->client()->processId();
+    return surface() ? surface()->client()->processId() : -1;
 }
 
 bool WaylandWindow::isClient() const
@@ -80,7 +79,7 @@ bool WaylandWindow::isClient() const
 
 bool WaylandWindow::isLockScreen() const
 {
-    return surface()->client() == waylandServer()->screenLockerClientConnection();
+    return m_isScreenLocker;
 }
 
 bool WaylandWindow::isLocalhost() const
