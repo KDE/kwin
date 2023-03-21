@@ -59,6 +59,12 @@ XdgShellInterfacePrivate *XdgShellInterfacePrivate::get(XdgShellInterface *shell
     return shell->d.get();
 }
 
+void XdgShellInterfacePrivate::xdg_wm_base_destroy_resource(Resource *resource)
+{
+    const QList<XdgSurfaceInterface *> surfaces = xdgSurfaces.keys(resource);
+    qDeleteAll(surfaces);
+}
+
 void XdgShellInterfacePrivate::xdg_wm_base_destroy(Resource *resource)
 {
     if (xdgSurfaces.key(resource)) {
@@ -168,8 +174,6 @@ XdgSurfaceInterfacePrivate *XdgSurfaceInterfacePrivate::get(XdgSurfaceInterface 
 
 void XdgSurfaceInterfacePrivate::xdg_surface_destroy_resource(Resource *resource)
 {
-    Q_EMIT q->aboutToBeDestroyed();
-    XdgShellInterfacePrivate::get(shell)->unregisterXdgSurface(q);
     delete q;
 }
 
@@ -256,6 +260,11 @@ XdgSurfaceInterface::XdgSurfaceInterface(XdgShellInterface *shell, SurfaceInterf
 
 XdgSurfaceInterface::~XdgSurfaceInterface()
 {
+    delete d->toplevel;
+    delete d->popup;
+
+    Q_EMIT aboutToBeDestroyed();
+    XdgShellInterfacePrivate::get(d->shell)->unregisterXdgSurface(this);
 }
 
 XdgToplevelInterface *XdgSurfaceInterface::toplevel() const
@@ -342,7 +351,6 @@ void XdgToplevelInterfacePrivate::reset()
 
 void XdgToplevelInterfacePrivate::xdg_toplevel_destroy_resource(Resource *resource)
 {
-    Q_EMIT q->aboutToBeDestroyed();
     delete q;
 }
 
@@ -480,6 +488,7 @@ XdgToplevelInterface::XdgToplevelInterface(XdgSurfaceInterface *surface, ::wl_re
 
 XdgToplevelInterface::~XdgToplevelInterface()
 {
+    Q_EMIT aboutToBeDestroyed();
 }
 
 XdgShellInterface *XdgToplevelInterface::shell() const
@@ -638,7 +647,6 @@ void XdgPopupInterfacePrivate::reset()
 
 void XdgPopupInterfacePrivate::xdg_popup_destroy_resource(Resource *resource)
 {
-    Q_EMIT q->aboutToBeDestroyed();
     delete q;
 }
 
@@ -676,6 +684,7 @@ XdgPopupInterface::XdgPopupInterface(XdgSurfaceInterface *surface, SurfaceInterf
 
 XdgPopupInterface::~XdgPopupInterface()
 {
+    Q_EMIT aboutToBeDestroyed();
 }
 
 SurfaceInterface *XdgPopupInterface::parentSurface() const
