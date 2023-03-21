@@ -87,7 +87,6 @@ find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
     NewStuff
     Service
     XmlGui
-    ItemViews
 )
 
 find_package(Threads)
