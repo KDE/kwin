@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-20 02:18+0000\n"
+"POT-Creation-Date: 2023-03-21 02:29+0000\n"
 "PO-Revision-Date: 2015-08-27 20:54+0200\n"
 "Last-Translator: Bjørn Steensrud <bjornst@skogkatt.homelinux.org>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
@@ -2121,57 +2121,57 @@ msgstr ""
 msgid "..."
 msgstr ""
 
-#: tabbox/tabbox.cpp:383
+#: tabbox/tabbox.cpp:375
 #, kde-format
 msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "Vis skrivebordet"
 
-#: tabbox/tabbox.cpp:523
+#: tabbox/tabbox.cpp:515
 msgid "Walk Through Windows"
 msgstr "Bla gjennom vinduer"
 
-#: tabbox/tabbox.cpp:524
+#: tabbox/tabbox.cpp:516
 msgid "Walk Through Windows (Reverse)"
 msgstr "Bla baklengs gjennom vinduer"
 
-#: tabbox/tabbox.cpp:525
+#: tabbox/tabbox.cpp:517
 msgid "Walk Through Windows Alternative"
 msgstr "Bla gjennom vinduer på annen måte"
 
-#: tabbox/tabbox.cpp:526
+#: tabbox/tabbox.cpp:518
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Bla gjennom vinduer på annen måte (baklengs)"
 
-#: tabbox/tabbox.cpp:527
+#: tabbox/tabbox.cpp:519
 msgid "Walk Through Windows of Current Application"
 msgstr "Bla gjennom vinduer fra gjeldende program"
 
-#: tabbox/tabbox.cpp:528
+#: tabbox/tabbox.cpp:520
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Bla gjennom vinduer fra gjeldende program (baklengs)"
 
-#: tabbox/tabbox.cpp:529
+#: tabbox/tabbox.cpp:521
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Bla gjennom vinduer fra gjeldende program alternativt"
 
-#: tabbox/tabbox.cpp:530
+#: tabbox/tabbox.cpp:522
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Bla gjennom vinduer fra gjeldende program alternativt /baklengs)"
 
-#: tabbox/tabbox.cpp:531
+#: tabbox/tabbox.cpp:523
 msgid "Walk Through Desktops"
 msgstr "Bla gjennom skrivebord"
 
-#: tabbox/tabbox.cpp:532
+#: tabbox/tabbox.cpp:524
 msgid "Walk Through Desktops (Reverse)"
 msgstr "Bla baklengs gjennom skrivebord"
 
-#: tabbox/tabbox.cpp:533
+#: tabbox/tabbox.cpp:525
 msgid "Walk Through Desktop List"
 msgstr "Bla gjennom skrivebordslista"
 
-#: tabbox/tabbox.cpp:534
+#: tabbox/tabbox.cpp:526
 msgid "Walk Through Desktop List (Reverse)"
 msgstr "Bla baklengs gjennom skrivebordslista"
 

@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-20 02:18+0000\n"
+"POT-Creation-Date: 2023-03-21 02:29+0000\n"
 "PO-Revision-Date: 2023-02-21 14:02+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -2171,57 +2171,57 @@ msgstr "Диалоговое окно"
 msgid "..."
 msgstr "..."
 
-#: tabbox/tabbox.cpp:383
+#: tabbox/tabbox.cpp:375
 #, kde-format
 msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "Показать рабочий стол"
 
-#: tabbox/tabbox.cpp:523
+#: tabbox/tabbox.cpp:515
 msgid "Walk Through Windows"
 msgstr "На одно окно вперёд"
 
-#: tabbox/tabbox.cpp:524
+#: tabbox/tabbox.cpp:516
 msgid "Walk Through Windows (Reverse)"
 msgstr "На одно окно назад"
 
-#: tabbox/tabbox.cpp:525
+#: tabbox/tabbox.cpp:517
 msgid "Walk Through Windows Alternative"
 msgstr "На одно окно вперёд (альтернативный режим)"
 
-#: tabbox/tabbox.cpp:526
+#: tabbox/tabbox.cpp:518
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "На одно окно назад (альтернативный режим)"
 
-#: tabbox/tabbox.cpp:527
+#: tabbox/tabbox.cpp:519
 msgid "Walk Through Windows of Current Application"
 msgstr "На одно окно вперёд текущего приложения"
 
-#: tabbox/tabbox.cpp:528
+#: tabbox/tabbox.cpp:520
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "На одно окно назад текущего приложения"
 
-#: tabbox/tabbox.cpp:529
+#: tabbox/tabbox.cpp:521
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "На одно окно вперёд текущего приложения (альтернативный режим)"
 
-#: tabbox/tabbox.cpp:530
+#: tabbox/tabbox.cpp:522
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "На одно окно назад текущего приложения (альтернативный режим)"
 
-#: tabbox/tabbox.cpp:531
+#: tabbox/tabbox.cpp:523
 msgid "Walk Through Desktops"
 msgstr "На один рабочий стол вперёд"
 
-#: tabbox/tabbox.cpp:532
+#: tabbox/tabbox.cpp:524
 msgid "Walk Through Desktops (Reverse)"
 msgstr "На один рабочий стол назад"
 
-#: tabbox/tabbox.cpp:533
+#: tabbox/tabbox.cpp:525
 msgid "Walk Through Desktop List"
 msgstr "По списку рабочих столов вперёд"
 
-#: tabbox/tabbox.cpp:534
+#: tabbox/tabbox.cpp:526
 msgid "Walk Through Desktop List (Reverse)"
 msgstr "По списку рабочих столов назад"
 

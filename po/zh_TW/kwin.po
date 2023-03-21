@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-20 02:18+0000\n"
+"POT-Creation-Date: 2023-03-21 02:29+0000\n"
 "PO-Revision-Date: 2023-03-06 22:00+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@linux.org.tw>\n"
@@ -2128,57 +2128,57 @@ msgstr "對話框"
 msgid "..."
 msgstr "…"
 
-#: tabbox/tabbox.cpp:383
+#: tabbox/tabbox.cpp:375
 #, kde-format
 msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "顯示桌面"
 
-#: tabbox/tabbox.cpp:523
+#: tabbox/tabbox.cpp:515
 msgid "Walk Through Windows"
 msgstr "瀏覽已開啟視窗"
 
-#: tabbox/tabbox.cpp:524
+#: tabbox/tabbox.cpp:516
 msgid "Walk Through Windows (Reverse)"
 msgstr "瀏覽已開啟視窗 (反向)"
 
-#: tabbox/tabbox.cpp:525
+#: tabbox/tabbox.cpp:517
 msgid "Walk Through Windows Alternative"
 msgstr "瀏覽已開啟視窗（替代按鍵）"
 
-#: tabbox/tabbox.cpp:526
+#: tabbox/tabbox.cpp:518
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "瀏覽已開啟視窗（替代按鍵/反向）"
 
-#: tabbox/tabbox.cpp:527
+#: tabbox/tabbox.cpp:519
 msgid "Walk Through Windows of Current Application"
 msgstr "瀏覽目前應用程式的視窗"
 
-#: tabbox/tabbox.cpp:528
+#: tabbox/tabbox.cpp:520
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "瀏覽目前應用程式的視窗（反向）"
 
-#: tabbox/tabbox.cpp:529
+#: tabbox/tabbox.cpp:521
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "瀏覽目前應用程式視窗（替代按鍵）"
 
-#: tabbox/tabbox.cpp:530
+#: tabbox/tabbox.cpp:522
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "瀏覽目前應用程式視窗（替代按鍵/反向）"
 
-#: tabbox/tabbox.cpp:531
+#: tabbox/tabbox.cpp:523
 msgid "Walk Through Desktops"
 msgstr "瀏覽所有桌面"
 
-#: tabbox/tabbox.cpp:532
+#: tabbox/tabbox.cpp:524
 msgid "Walk Through Desktops (Reverse)"
 msgstr "瀏覽所有桌面 (反向)"
 
-#: tabbox/tabbox.cpp:533
+#: tabbox/tabbox.cpp:525
 msgid "Walk Through Desktop List"
 msgstr "瀏覽桌面清單項目"
 
-#: tabbox/tabbox.cpp:534
+#: tabbox/tabbox.cpp:526
 msgid "Walk Through Desktop List (Reverse)"
 msgstr "瀏覽桌面清單項目（反向）"
 

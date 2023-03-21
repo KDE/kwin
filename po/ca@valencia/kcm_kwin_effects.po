@@ -70,6 +70,3 @@ msgstr "Exclou els efectes interns"
 #, kde-format
 msgid "Get New Desktop Effects..."
 msgstr "Obtín efectes nous d'escriptori..."
-
-#~ msgid "This module lets you configure desktop effects."
-#~ msgstr "Este mòdul permet configurar els efectes de l'escriptori."

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-20 02:18+0000\n"
+"POT-Creation-Date: 2023-03-21 02:29+0000\n"
 "PO-Revision-Date: 2022-12-28 21:14+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -2155,61 +2155,61 @@ msgstr "Dialog"
 msgid "..."
 msgstr "..."
 
-#: tabbox/tabbox.cpp:383
+#: tabbox/tabbox.cpp:375
 #, kde-format
 msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "Arată biroul"
 
-#: tabbox/tabbox.cpp:523
+#: tabbox/tabbox.cpp:515
 msgid "Walk Through Windows"
 msgstr "Comută printre ferestre"
 
-#: tabbox/tabbox.cpp:524
+#: tabbox/tabbox.cpp:516
 msgid "Walk Through Windows (Reverse)"
 msgstr "Comută printre ferestre (invers)"
 
-#: tabbox/tabbox.cpp:525
+#: tabbox/tabbox.cpp:517
 msgid "Walk Through Windows Alternative"
 msgstr "Comută printre alternative ferestre"
 
-#: tabbox/tabbox.cpp:526
+#: tabbox/tabbox.cpp:518
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Comută printre alternative ferestre (invers)"
 
-#: tabbox/tabbox.cpp:527
+#: tabbox/tabbox.cpp:519
 msgid "Walk Through Windows of Current Application"
 msgstr "Comută printre ferestrele aplicației curente"
 
-#: tabbox/tabbox.cpp:528
+#: tabbox/tabbox.cpp:520
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Comută printre ferestrele aplicației curente (invers)"
 
-#: tabbox/tabbox.cpp:529
+#: tabbox/tabbox.cpp:521
 #, fuzzy
 #| msgid "Walk Through Windows Alternative"
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Comută printre ferestrele aplicației curente "
 
-#: tabbox/tabbox.cpp:530
+#: tabbox/tabbox.cpp:522
 #, fuzzy
 #| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Comută printre alternative ferestre (invers)"
 
-#: tabbox/tabbox.cpp:531
+#: tabbox/tabbox.cpp:523
 msgid "Walk Through Desktops"
 msgstr "Comută printre birouri"
 
-#: tabbox/tabbox.cpp:532
+#: tabbox/tabbox.cpp:524
 msgid "Walk Through Desktops (Reverse)"
 msgstr "Comută printre birouri (invers)"
 
-#: tabbox/tabbox.cpp:533
+#: tabbox/tabbox.cpp:525
 msgid "Walk Through Desktop List"
 msgstr "Comută prin lista de ferestre"
 
-#: tabbox/tabbox.cpp:534
+#: tabbox/tabbox.cpp:526
 msgid "Walk Through Desktop List (Reverse)"
 msgstr "Comută prin lista de ferestre (invers)"
 

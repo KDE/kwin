@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-20 02:18+0000\n"
+"POT-Creation-Date: 2023-03-21 02:29+0000\n"
 "PO-Revision-Date: 2012-06-14 11:29+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -2166,57 +2166,57 @@ msgstr ""
 msgid "..."
 msgstr ""
 
-#: tabbox/tabbox.cpp:383
+#: tabbox/tabbox.cpp:375
 #, kde-format
 msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "បង្ហាញ​ផ្ទៃតុ"
 
-#: tabbox/tabbox.cpp:523
+#: tabbox/tabbox.cpp:515
 msgid "Walk Through Windows"
 msgstr "ដើរ​កាត់​បង្អួច"
 
-#: tabbox/tabbox.cpp:524
+#: tabbox/tabbox.cpp:516
 msgid "Walk Through Windows (Reverse)"
 msgstr "ដើរ​កាត់​បង្អួច (បញ្ច្រាស)"
 
-#: tabbox/tabbox.cpp:525
+#: tabbox/tabbox.cpp:517
 msgid "Walk Through Windows Alternative"
 msgstr "ដើរ​កាត់​បង្អួច​ជម្រើស"
 
-#: tabbox/tabbox.cpp:526
+#: tabbox/tabbox.cpp:518
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "ដើរ​កាត់​បង្អួច​ជម្រើស (បញ្ច្រាស)"
 
-#: tabbox/tabbox.cpp:527
+#: tabbox/tabbox.cpp:519
 msgid "Walk Through Windows of Current Application"
 msgstr "ឆ្លង​​កាត់​បង្អួច​​នៃ​កម្មវិធី​បច្ចុប្បន្ន"
 
-#: tabbox/tabbox.cpp:528
+#: tabbox/tabbox.cpp:520
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "ឆ្លង​កាត់​បង្អួច​ជម្រើស​នៃ​កម្មវិធី​បច្ចុប្បន្ន (បញ្ច្រាស)"
 
-#: tabbox/tabbox.cpp:529
+#: tabbox/tabbox.cpp:521
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "ឆ្លង​​កាត់​បង្អួច​​នៃ​កម្មវិធី​បច្ចុប្បន្ន​ជំនួស"
 
-#: tabbox/tabbox.cpp:530
+#: tabbox/tabbox.cpp:522
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "ឆ្លង​​កាត់​បង្អួច​​នៃ​កម្មវិធី​បច្ចុប្បន្ន​ជំនួស (បញ្ច្រាស)"
 
-#: tabbox/tabbox.cpp:531
+#: tabbox/tabbox.cpp:523
 msgid "Walk Through Desktops"
 msgstr "ដើរ​កាត់​ផ្ទៃតុ"
 
-#: tabbox/tabbox.cpp:532
+#: tabbox/tabbox.cpp:524
 msgid "Walk Through Desktops (Reverse)"
 msgstr "ដើរ​កាត់​ផ្ទៃតុ (បញ្ច្រាស)"
 
-#: tabbox/tabbox.cpp:533
+#: tabbox/tabbox.cpp:525
 msgid "Walk Through Desktop List"
 msgstr "ដើរ​កាត់​បញ្ជី​ផ្ទៃតុ"
 
-#: tabbox/tabbox.cpp:534
+#: tabbox/tabbox.cpp:526
 msgid "Walk Through Desktop List (Reverse)"
 msgstr "ដើរ​កាត់​បញ្ជី​ផ្ទៃតុ (បញ្ច្រាស)"
 

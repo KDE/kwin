@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-20 02:18+0000\n"
+"POT-Creation-Date: 2023-03-21 02:29+0000\n"
 "PO-Revision-Date: 2004-07-08 17:18+0200\n"
 "Last-Translator: Thierry Vignaud <tvignaud.com>\n"
 "Language-Team: Brezhoneg <Suav.Icb.fr>\n"
@@ -2143,70 +2143,70 @@ msgstr ""
 msgid "..."
 msgstr ""
 
-#: tabbox/tabbox.cpp:383
+#: tabbox/tabbox.cpp:375
 #, fuzzy, kde-format
 #| msgid "Switch to Desktop 1"
 msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "Gwintañ da Burev 1"
 
-#: tabbox/tabbox.cpp:523
+#: tabbox/tabbox.cpp:515
 msgid "Walk Through Windows"
 msgstr "Mont-dont e-mesk ar prenester"
 
-#: tabbox/tabbox.cpp:524
+#: tabbox/tabbox.cpp:516
 msgid "Walk Through Windows (Reverse)"
 msgstr "Mont-dont e-mesk ar prenester (urzh eilpennet)"
 
-#: tabbox/tabbox.cpp:525
+#: tabbox/tabbox.cpp:517
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows Alternative"
 msgstr "Mont-dont e-mesk ar prenester (urzh eilpennet)"
 
-#: tabbox/tabbox.cpp:526
+#: tabbox/tabbox.cpp:518
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Mont-dont e-mesk ar prenester (urzh eilpennet)"
 
-#: tabbox/tabbox.cpp:527
+#: tabbox/tabbox.cpp:519
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application"
 msgstr "Mont-dont e-mesk ar prenester (urzh eilpennet)"
 
-#: tabbox/tabbox.cpp:528
+#: tabbox/tabbox.cpp:520
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Mont-dont e-mesk ar prenester (urzh eilpennet)"
 
-#: tabbox/tabbox.cpp:529
+#: tabbox/tabbox.cpp:521
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Mont-dont e-mesk ar prenester (urzh eilpennet)"
 
-#: tabbox/tabbox.cpp:530
+#: tabbox/tabbox.cpp:522
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Mont-dont e-mesk ar prenester (urzh eilpennet)"
 
-#: tabbox/tabbox.cpp:531
+#: tabbox/tabbox.cpp:523
 msgid "Walk Through Desktops"
 msgstr "Mont-dont e-mesk ar burevioù"
 
-#: tabbox/tabbox.cpp:532
+#: tabbox/tabbox.cpp:524
 msgid "Walk Through Desktops (Reverse)"
 msgstr "Mont-dont e-mesk ar burevioù (urzh eilpennet)"
 
-#: tabbox/tabbox.cpp:533
+#: tabbox/tabbox.cpp:525
 msgid "Walk Through Desktop List"
 msgstr "Mont-dont e roll ar burevioù"
 
-#: tabbox/tabbox.cpp:534
+#: tabbox/tabbox.cpp:526
 msgid "Walk Through Desktop List (Reverse)"
 msgstr "Mont-dont e roll ar burevioù (urzh eilpennet)"
 

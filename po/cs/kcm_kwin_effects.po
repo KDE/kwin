@@ -64,6 +64,3 @@ msgstr "Vyjmout interní efekty"
 #, kde-format
 msgid "Get New Desktop Effects..."
 msgstr "Získat nové efekty pracovní plochy..."
-
-#~ msgid "This module lets you configure desktop effects."
-#~ msgstr "Tento modul vám umožní nastavit efekty pracovní plochy."
