@@ -29,60 +29,28 @@ namespace KWin
 
 std::unique_ptr<GLPlatform> GLPlatform::s_platform;
 
-static qint64 parseVersionString(const QByteArray &version)
+static Version getXServerVersion()
 {
-    // Skip any leading non digit
-    int start = 0;
-    while (start < version.length() && !QChar::fromLatin1(version[start]).isDigit()) {
-        start++;
-    }
-
-    // Strip any non digit, non '.' characters from the end
-    int end = start;
-    while (end < version.length() && (version[end] == '.' || QChar::fromLatin1(version[end]).isDigit())) {
-        end++;
-    }
-
-    const QByteArray result = version.mid(start, end - start);
-    const QList<QByteArray> tokens = result.split('.');
-    const qint64 major = tokens.at(0).toInt();
-    const qint64 minor = tokens.count() > 1 ? tokens.at(1).toInt() : 0;
-    const qint64 patch = tokens.count() > 2 ? tokens.at(2).toInt() : 0;
-
-    return kVersionNumber(major, minor, patch);
-}
-
-static qint64 getXServerVersion()
-{
-    qint64 major, minor, patch;
-    major = 0;
-    minor = 0;
-    patch = 0;
-
     if (xcb_connection_t *c = connection()) {
         auto setup = xcb_get_setup(c);
         const QByteArray vendorName(xcb_setup_vendor(setup), xcb_setup_vendor_length(setup));
         if (vendorName.contains("X.Org")) {
             const int release = setup->release_number;
-            major = (release / 10000000);
-            minor = (release / 100000) % 100;
-            patch = (release / 1000) % 100;
+            return Version(release / 10000000, (release / 100000) % 100, (release / 1000) % 100);
         }
     }
-
-    return kVersionNumber(major, minor, patch);
+    return Version(0, 0, 0);
 }
 
-static qint64 getKernelVersion()
+static Version getKernelVersion()
 {
     struct utsname name;
     uname(&name);
 
     if (qstrcmp(name.sysname, "Linux") == 0) {
-        return parseVersionString(name.release);
+        return Version::parseString(name.release);
     }
-
-    return 0;
+    return Version(0, 0, 0);
 }
 
 // Extracts the portion of a string that matches a regular expression
@@ -96,7 +64,7 @@ static QString extract(const QString &text, const QString &pattern)
     return match.captured();
 }
 
-static ChipClass detectRadeonClass(const QByteArray &chipset)
+static ChipClass detectRadeonClass(QByteArrayView chipset)
 {
     if (chipset.isEmpty()) {
         return UnknownRadeon;
@@ -407,12 +375,12 @@ static ChipClass detectNVidiaClass(const QString &chipset)
 
     return UnknownNVidia;
 }
-static inline ChipClass detectNVidiaClass(const QByteArray &chipset)
+static inline ChipClass detectNVidiaClass(QByteArrayView chipset)
 {
     return detectNVidiaClass(QString::fromLatin1(chipset));
 }
 
-static ChipClass detectIntelClass(const QByteArray &chipset)
+static ChipClass detectIntelClass(QByteArrayView chipset)
 {
     // see mesa repository: src/mesa/drivers/dri/intel/intel_context.c
     // GL 1.3, DX8? SM ?
@@ -506,12 +474,12 @@ static ChipClass detectIntelClass(const QByteArray &chipset)
     return UnknownIntel;
 }
 
-static ChipClass detectQualcommClass(const QByteArray &chipClass)
+static ChipClass detectQualcommClass(QByteArrayView chipClass)
 {
     if (!chipClass.contains("Adreno")) {
         return UnknownChipClass;
     }
-    const auto parts = chipClass.split(' ');
+    const auto parts = chipClass.toByteArray().split(' ');
     if (parts.count() < 3) {
         return UnknownAdreno;
     }
@@ -533,7 +501,7 @@ static ChipClass detectQualcommClass(const QByteArray &chipClass)
     return UnknownAdreno;
 }
 
-static ChipClass detectPanfrostClass(const QByteArray &chipClass)
+static ChipClass detectPanfrostClass(QByteArrayView chipClass)
 {
 // Keep the list of supported Mali chipset up to date with https://docs.mesa3d.org/drivers/panfrost.html
     if (chipClass.contains("T720") || chipClass.contains("T760")) {
@@ -551,7 +519,7 @@ static ChipClass detectPanfrostClass(const QByteArray &chipClass)
     return UnknownPanfrost;
 }
 
-static ChipClass detectLimaClass(const QByteArray &chipClass)
+static ChipClass detectLimaClass(QByteArrayView chipClass)
 {
     if (chipClass.contains("400")) {
         return Mali400;
@@ -564,7 +532,7 @@ static ChipClass detectLimaClass(const QByteArray &chipClass)
     return UnknownLima;
 }
 
-static ChipClass detectVC4Class(const QByteArray &chipClass)
+static ChipClass detectVC4Class(QByteArrayView chipClass)
 {
     if (chipClass.contains("2.1")) {
         return VC4_2_1;
@@ -573,7 +541,7 @@ static ChipClass detectVC4Class(const QByteArray &chipClass)
     return UnknownVideoCore4;
 }
 
-static ChipClass detectV3DClass(const QByteArray &chipClass)
+static ChipClass detectV3DClass(QByteArrayView chipClass)
 {
     if (chipClass.contains("4.2")) {
         return V3D_4_2;
@@ -582,21 +550,17 @@ static ChipClass detectV3DClass(const QByteArray &chipClass)
     return UnknownVideoCore3D;
 }
 
-QString GLPlatform::versionToString(qint64 version)
+QString GLPlatform::versionToString(const Version &version)
 {
     return QString::fromLatin1(versionToString8(version));
 }
-QByteArray GLPlatform::versionToString8(qint64 version)
+
+QByteArray GLPlatform::versionToString8(const Version &version)
 {
-    int major = (version >> 32);
-    int minor = (version >> 16) & 0xffff;
-    int patch = version & 0xffff;
-
-    QByteArray string = QByteArray::number(major) + '.' + QByteArray::number(minor);
-    if (patch != 0) {
-        string += '.' + QByteArray::number(patch);
+    QByteArray string = QByteArray::number(version.major()) + '.' + QByteArray::number(version.minor());
+    if (version.patch() != 0) {
+        string += '.' + QByteArray::number(version.patch());
     }
-
     return string;
 }
 
@@ -788,13 +752,6 @@ GLPlatform::GLPlatform()
     : m_driver(Driver_Unknown)
     , m_chipClass(UnknownChipClass)
     , m_recommendedCompositor(QPainterCompositing)
-    , m_glVersion(0)
-    , m_glslVersion(0)
-    , m_mesaVersion(0)
-    , m_driverVersion(0)
-    , m_galliumVersion(0)
-    , m_serverVersion(0)
-    , m_kernelVersion(0)
     , m_looseBinding(false)
     , m_supportsGLSL(false)
     , m_limitedGLSL(false)
@@ -804,7 +761,6 @@ GLPlatform::GLPlatform()
     , m_virtualMachine(false)
     , m_preferBufferSubData(false)
     , m_platformInterface(NoOpenGLPlatformInterface)
-    , m_gles(false)
 {
 }
 
@@ -816,26 +772,9 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
 {
     m_platformInterface = platformInterface;
 
-    m_vendor = (const char *)glGetString(GL_VENDOR);
-    m_renderer = (const char *)glGetString(GL_RENDERER);
-    m_version = (const char *)glGetString(GL_VERSION);
+    m_context = std::make_unique<OpenGlContext>();
 
-    // Parse the OpenGL version
-    const QList<QByteArray> versionTokens = m_version.split(' ');
-    if (versionTokens.count() > 0) {
-        const QByteArray version = QByteArray(m_version);
-        m_glVersion = parseVersionString(version);
-        if (platformInterface == EglPlatformInterface) {
-            // only EGL can have OpenGLES, GLX is OpenGL only
-            if (version.startsWith("OpenGL ES")) {
-                // from GLES 2: "Returns a version or release number of the form OpenGL<space>ES<space><version number><space><vendor-specific information>."
-                // from GLES 3: "Returns a version or release number." and "The version number uses one of these forms: major_number.minor_number major_number.minor_number.release_number"
-                m_gles = true;
-            }
-        }
-    }
-
-    if (!isGLES() && m_glVersion >= kVersionNumber(3, 0)) {
+    if (!isGLES() && m_context->hasVersion(Version(3, 0))) {
         int count;
         glGetIntegerv(GL_NUM_EXTENSIONS, &count);
 
@@ -850,10 +789,10 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
     }
 
     // Parse the Mesa version
+    const auto versionTokens = m_context->openglVersionString().toByteArray().split(' ');
     const int mesaIndex = versionTokens.indexOf("Mesa");
     if (mesaIndex != -1) {
-        const QByteArray &version = versionTokens.at(mesaIndex + 1);
-        m_mesaVersion = parseVersionString(version);
+        m_mesaVersion = Version::parseString(versionTokens.at(mesaIndex + 1));
     }
 
     if (isGLES()) {
@@ -870,13 +809,13 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
     m_serverVersion = getXServerVersion();
     m_kernelVersion = getKernelVersion();
 
-    m_glslVersion = 0;
-    m_glsl_version.clear();
-
     if (m_supportsGLSL) {
         // Parse the GLSL version
         m_glsl_version = (const char *)glGetString(GL_SHADING_LANGUAGE_VERSION);
-        m_glslVersion = parseVersionString(m_glsl_version);
+        m_glslVersion = Version::parseString(m_glsl_version);
+    } else {
+        m_glsl_version.clear();
+        m_glslVersion = Version(0, 0, 0);
     }
 
     m_chipset = QByteArrayLiteral("Unknown");
@@ -887,9 +826,9 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
     // ====================================================
 
     // Radeon
-    if (m_renderer.startsWith("Mesa DRI R")) {
+    if (m_context->renderer().startsWith("Mesa DRI R")) {
         // Sample renderer string: Mesa DRI R600 (RV740 94B3) 20090101 x86/MMX/SSE2 TCL DRI2
-        const QList<QByteArray> tokens = m_renderer.split(' ');
+        const QList<QByteArray> tokens = m_context->renderer().toByteArray().split(' ');
         const QByteArray &chipClass = tokens.at(2);
         m_chipset = tokens.at(3).mid(1, -1); // Strip the leading '('
 
@@ -914,15 +853,15 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
     }
 
     // Intel
-    else if (m_renderer.contains("Intel")) {
+    else if (m_context->renderer().contains("Intel")) {
         // Vendor: Tungsten Graphics, Inc.
         // Sample renderer string: Mesa DRI Mobile Intel® GM45 Express Chipset GEM 20100328 2010Q1
 
-        QByteArray chipset;
-        if (m_renderer.startsWith("Intel(R) Integrated Graphics Device")) {
+        QByteArrayView chipset;
+        if (m_context->renderer().startsWith("Intel(R) Integrated Graphics Device")) {
             chipset = "IGD";
         } else {
-            chipset = m_renderer;
+            chipset = m_context->renderer();
         }
 
         m_driver = Driver_Intel;
@@ -931,109 +870,109 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
 
     // Properietary drivers
     // ====================================================
-    else if (m_vendor == "ATI Technologies Inc.") {
-        m_chipClass = detectRadeonClass(m_renderer);
+    else if (m_context->vendor() == "ATI Technologies Inc.") {
+        m_chipClass = detectRadeonClass(m_context->renderer());
         m_driver = Driver_Catalyst;
 
         if (versionTokens.count() > 1 && versionTokens.at(2)[0] == '(') {
-            m_driverVersion = parseVersionString(versionTokens.at(1));
+            m_driverVersion = Version::parseString(versionTokens.at(1));
         } else if (versionTokens.count() > 0) {
-            m_driverVersion = parseVersionString(versionTokens.at(0));
+            m_driverVersion = Version::parseString(versionTokens.at(0));
         } else {
-            m_driverVersion = 0;
+            m_driverVersion = Version(0, 0, 0);
         }
     }
 
-    else if (m_vendor == "NVIDIA Corporation") {
-        m_chipClass = detectNVidiaClass(m_renderer);
+    else if (m_context->vendor() == "NVIDIA Corporation") {
+        m_chipClass = detectNVidiaClass(m_context->renderer());
         m_driver = Driver_NVidia;
 
         int index = versionTokens.indexOf("NVIDIA");
         if (versionTokens.count() > index) {
-            m_driverVersion = parseVersionString(versionTokens.at(index + 1));
+            m_driverVersion = Version::parseString(versionTokens.at(index + 1));
         } else {
-            m_driverVersion = 0;
+            m_driverVersion = Version(0, 0, 0);
         }
     }
 
-    else if (m_vendor == "Qualcomm") {
+    else if (m_context->vendor() == "Qualcomm") {
         m_driver = Driver_Qualcomm;
-        m_chipClass = detectQualcommClass(m_renderer);
+        m_chipClass = detectQualcommClass(m_context->renderer());
     }
 
-    else if (m_renderer.contains("Panfrost")) {
+    else if (m_context->renderer().contains("Panfrost")) {
         m_driver = Driver_Panfrost;
-        m_chipClass = detectPanfrostClass(m_renderer);
+        m_chipClass = detectPanfrostClass(m_context->renderer());
     }
 
-    else if (m_renderer.contains("Mali")) {
+    else if (m_context->renderer().contains("Mali")) {
         m_driver = Driver_Lima;
-        m_chipClass = detectLimaClass(m_renderer);
+        m_chipClass = detectLimaClass(m_context->renderer());
     }
 
-    else if (m_renderer.startsWith("VC4 ")) {
+    else if (m_context->renderer().startsWith("VC4 ")) {
         m_driver = Driver_VC4;
-        m_chipClass = detectVC4Class(m_renderer);
+        m_chipClass = detectVC4Class(m_context->renderer());
     }
 
-    else if(m_renderer.startsWith("V3D ")) {
+    else if (m_context->renderer().startsWith("V3D ")) {
         m_driver = Driver_V3D;
-        m_chipClass = detectV3DClass(m_renderer);
+        m_chipClass = detectV3DClass(m_context->renderer());
     }
 
-    else if (m_renderer == "Software Rasterizer") {
+    else if (m_context->renderer() == "Software Rasterizer") {
         m_driver = Driver_Swrast;
     }
 
     // Virtual Hardware
     // ====================================================
-    else if (m_vendor == "Humper" && m_renderer == "Chromium") {
+    else if (m_context->vendor() == "Humper" && m_context->renderer() == "Chromium") {
         // Virtual Box
         m_driver = Driver_VirtualBox;
 
         const int index = versionTokens.indexOf("Chromium");
         if (versionTokens.count() > index) {
-            m_driverVersion = parseVersionString(versionTokens.at(index + 1));
+            m_driverVersion = Version::parseString(versionTokens.at(index + 1));
         } else {
-            m_driverVersion = 0;
+            m_driverVersion = Version(0, 0, 0);
         }
     }
 
     // Gallium drivers
     // ====================================================
     else {
-        const QList<QByteArray> tokens = m_renderer.split(' ');
-        if (m_renderer.contains("Gallium")) {
+        const QList<QByteArray> tokens = m_context->renderer().toByteArray().split(' ');
+        if (m_context->renderer().contains("Gallium")) {
             // Sample renderer string: Gallium 0.4 on AMD RV740
-            m_galliumVersion = parseVersionString(tokens.at(1));
+            m_galliumVersion = Version::parseString(tokens.at(1));
             m_chipset = (tokens.at(3) == "AMD" || tokens.at(3) == "ATI") ? tokens.at(4) : tokens.at(3);
         } else {
             // The renderer string does not contain "Gallium" anymore.
             m_chipset = tokens.at(0);
             // We don't know the actual version anymore, but it's at least 0.4.
-            m_galliumVersion = kVersionNumber(0, 4, 0);
+            m_galliumVersion = Version(0, 4, 0);
         }
 
         // R300G
-        if (m_vendor == QByteArrayLiteral("X.Org R300 Project")) {
+        if (m_context->vendor() == QByteArrayLiteral("X.Org R300 Project")) {
             m_chipClass = detectRadeonClass(m_chipset);
             m_driver = Driver_R300G;
         }
 
         // R600G
-        else if (m_vendor == "X.Org" && (m_renderer.contains("R6") || m_renderer.contains("R7") || m_renderer.contains("RV6") || m_renderer.contains("RV7") || m_renderer.contains("RS780") || m_renderer.contains("RS880") || m_renderer.contains("CEDAR") || m_renderer.contains("REDWOOD") || m_renderer.contains("JUNIPER") || m_renderer.contains("CYPRESS") || m_renderer.contains("HEMLOCK") || m_renderer.contains("PALM") || m_renderer.contains("EVERGREEN") || m_renderer.contains("SUMO") || m_renderer.contains("SUMO2") || m_renderer.contains("BARTS") || m_renderer.contains("TURKS") || m_renderer.contains("CAICOS") || m_renderer.contains("CAYMAN"))) {
+        else if (m_context->vendor() == "X.Org" && (m_context->renderer().contains("R6") || m_context->renderer().contains("R7") || m_context->renderer().contains("RV6") || m_context->renderer().contains("RV7") || m_context->renderer().contains("RS780") || m_context->renderer().contains("RS880") || m_context->renderer().contains("CEDAR") || m_context->renderer().contains("REDWOOD") || m_context->renderer().contains("JUNIPER") || m_context->renderer().contains("CYPRESS") || m_context->renderer().contains("HEMLOCK") || m_context->renderer().contains("PALM") || m_context->renderer().contains("EVERGREEN") || m_context->renderer().contains("SUMO") || m_context->renderer().contains("SUMO2") || m_context->renderer().contains("BARTS") || m_context->renderer().contains("TURKS") || m_context->renderer().contains("CAICOS") || m_context->renderer().contains("CAYMAN"))) {
             m_chipClass = detectRadeonClass(m_chipset);
             m_driver = Driver_R600G;
         }
 
         // RadeonSI
-        else if ((m_vendor == "X.Org" || m_vendor == "AMD") && (m_renderer.contains("TAHITI") || m_renderer.contains("PITCAIRN") || m_renderer.contains("VERDE") || m_renderer.contains("OLAND") || m_renderer.contains("HAINAN") || m_renderer.contains("BONAIRE") || m_renderer.contains("KAVERI") || m_renderer.contains("KABINI") || m_renderer.contains("HAWAII") || m_renderer.contains("MULLINS") || m_renderer.contains("TOPAZ") || m_renderer.contains("TONGA") || m_renderer.contains("FIJI") || m_renderer.contains("CARRIZO") || m_renderer.contains("STONEY") || m_renderer.contains("POLARIS10") || m_renderer.contains("POLARIS11") || m_renderer.contains("POLARIS12") || m_renderer.contains("VEGAM") || m_renderer.contains("VEGA10") || m_renderer.contains("VEGA12") || m_renderer.contains("VEGA20") || m_renderer.contains("RAVEN") || m_renderer.contains("RAVEN2") || m_renderer.contains("RENOIR") || m_renderer.contains("ARCTURUS") || m_renderer.contains("NAVI10") || m_renderer.contains("NAVI12") || m_renderer.contains("NAVI14"))) {
-            m_chipClass = detectRadeonClass(m_renderer);
+        else if ((m_context->vendor() == "X.Org" || m_context->vendor() == "AMD") && (m_context->renderer().contains("TAHITI") || m_context->renderer().contains("PITCAIRN") || m_context->renderer().contains("VERDE") || m_context->renderer().contains("OLAND") || m_context->renderer().contains("HAINAN") || m_context->renderer().contains("BONAIRE") || m_context->renderer().contains("KAVERI") || m_context->renderer().contains("KABINI") || m_context->renderer().contains("HAWAII") || m_context->renderer().contains("MULLINS") || m_context->renderer().contains("TOPAZ") || m_context->renderer().contains("TONGA") || m_context->renderer().contains("FIJI") || m_context->renderer().contains("CARRIZO") || m_context->renderer().contains("STONEY") || m_context->renderer().contains("POLARIS10") || m_context->renderer().contains("POLARIS11") || m_context->renderer().contains("POLARIS12") || m_context->renderer().contains("VEGAM") || m_context->renderer().contains("VEGA10") || m_context->renderer().contains("VEGA12") || m_context->renderer().contains("VEGA20") || m_context->renderer().contains("RAVEN") || m_context->renderer().contains("RAVEN2") || m_context->renderer().contains("RENOIR") || m_context->renderer().contains("ARCTURUS") || m_context->renderer().contains("NAVI10") || m_context->renderer().contains("NAVI12") || m_context->renderer().contains("NAVI14"))) {
+            m_chipClass = detectRadeonClass(m_context->renderer());
             m_driver = Driver_RadeonSI;
         }
 
         // Nouveau
-        else if (m_vendor == "nouveau") {
+        else if (m_context->vendor() == "nouveau") {
             m_chipClass = detectNVidiaClass(m_chipset);
             m_driver = Driver_Nouveau;
         }
@@ -1049,12 +988,12 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
         }
 
         // SVGA3D
-        else if (m_vendor == "VMware, Inc." && m_chipset.contains("SVGA3D")) {
+        else if (m_context->vendor() == "VMware, Inc." && m_chipset.contains("SVGA3D")) {
             m_driver = Driver_VMware;
         }
 
         // virgl
-        else if (m_renderer == "virgl") {
+        else if (m_context->renderer() == "virgl") {
             m_driver = Driver_Virgl;
         }
     }
@@ -1091,7 +1030,7 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
             m_recommendedCompositor = OpenGLCompositing;
         }
 
-        if (driver() == Driver_R600G || (driver() == Driver_R600C && m_renderer.contains("DRI2"))) {
+        if (driver() == Driver_R600G || (driver() == Driver_R600C && m_context->renderer().contains("DRI2"))) {
             m_looseBinding = true;
         }
     }
@@ -1209,16 +1148,16 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
     }
 }
 
-static void print(const QByteArray &label, const QByteArray &setting)
+static void print(const QByteArray &label, QByteArrayView setting)
 {
     qInfo("%-40s%s", label.data(), setting.data());
 }
 
 void GLPlatform::printResults() const
 {
-    print(QByteArrayLiteral("OpenGL vendor string:"), m_vendor);
-    print(QByteArrayLiteral("OpenGL renderer string:"), m_renderer);
-    print(QByteArrayLiteral("OpenGL version string:"), m_version);
+    print(QByteArrayLiteral("OpenGL vendor string:"), m_context->vendor());
+    print(QByteArrayLiteral("OpenGL renderer string:"), m_context->renderer());
+    print(QByteArrayLiteral("OpenGL version string:"), m_context->openglVersionString());
 
     if (m_supportsGLSL) {
         print(QByteArrayLiteral("OpenGL shading language version string:"), m_glsl_version);
@@ -1231,7 +1170,7 @@ void GLPlatform::printResults() const
 
     print(QByteArrayLiteral("GPU class:"), chipClassToString8(m_chipClass));
 
-    print(QByteArrayLiteral("OpenGL version:"), versionToString8(m_glVersion));
+    print(QByteArrayLiteral("OpenGL version:"), versionToString8(m_context->openglVersion()));
 
     if (m_supportsGLSL) {
         print(QByteArrayLiteral("GLSL version:"), versionToString8(m_glslVersion));
@@ -1242,10 +1181,10 @@ void GLPlatform::printResults() const
     }
     // if (galliumVersion() > 0)
     //     print("Gallium version:", versionToString(m_galliumVersion));
-    if (serverVersion() > 0) {
+    if (serverVersion().isValid()) {
         print(QByteArrayLiteral("X server version:"), versionToString8(m_serverVersion));
     }
-    if (kernelVersion() > 0) {
+    if (kernelVersion().isValid()) {
         print(QByteArrayLiteral("Linux kernel version:"), versionToString8(m_kernelVersion));
     }
 
@@ -1281,37 +1220,37 @@ bool GLPlatform::supports(GLFeature feature) const
     }
 }
 
-qint64 GLPlatform::glVersion() const
+Version GLPlatform::glVersion() const
 {
-    return m_glVersion;
+    return m_context ? m_context->openglVersion() : Version();
 }
 
-qint64 GLPlatform::glslVersion() const
+Version GLPlatform::glslVersion() const
 {
     return m_glslVersion;
 }
 
-qint64 GLPlatform::mesaVersion() const
+Version GLPlatform::mesaVersion() const
 {
     return m_mesaVersion;
 }
 
-qint64 GLPlatform::galliumVersion() const
+Version GLPlatform::galliumVersion() const
 {
     return m_galliumVersion;
 }
 
-qint64 GLPlatform::serverVersion() const
+Version GLPlatform::serverVersion() const
 {
     return m_serverVersion;
 }
 
-qint64 GLPlatform::kernelVersion() const
+Version GLPlatform::kernelVersion() const
 {
     return m_kernelVersion;
 }
 
-qint64 GLPlatform::driverVersion() const
+Version GLPlatform::driverVersion() const
 {
     if (isMesaDriver()) {
         return mesaVersion();
@@ -1332,12 +1271,12 @@ ChipClass GLPlatform::chipClass() const
 
 bool GLPlatform::isMesaDriver() const
 {
-    return mesaVersion() > 0;
+    return mesaVersion().isValid();
 }
 
 bool GLPlatform::isGalliumDriver() const
 {
-    return galliumVersion() > 0;
+    return galliumVersion().isValid();
 }
 
 bool GLPlatform::isRadeon() const
@@ -1372,7 +1311,7 @@ bool GLPlatform::isVirgl() const
 
 bool GLPlatform::isSoftwareEmulation() const
 {
-    return m_driver == Driver_Softpipe || m_driver == Driver_Swrast || m_driver == Driver_Llvmpipe;
+    return m_context ? m_context->isSoftwareRenderer() : false;
 }
 
 bool GLPlatform::isAdreno() const
@@ -1400,22 +1339,22 @@ bool GLPlatform::isVideoCore3D() const
     return m_chipClass >= V3D_4_2 && m_chipClass <= UnknownVideoCore3D;
 }
 
-const QByteArray &GLPlatform::glRendererString() const
+QByteArrayView GLPlatform::glRendererString() const
 {
-    return m_renderer;
+    return m_context ? m_context->renderer() : "";
 }
 
-const QByteArray &GLPlatform::glVendorString() const
+QByteArrayView GLPlatform::glVendorString() const
 {
-    return m_vendor;
+    return m_context ? m_context->vendor() : "";
 }
 
-const QByteArray &GLPlatform::glVersionString() const
+QByteArrayView GLPlatform::glVersionString() const
 {
-    return m_version;
+    return m_context ? m_context->openglVersionString() : "";
 }
 
-const QByteArray &GLPlatform::glShadingLanguageVersionString() const
+QByteArrayView GLPlatform::glShadingLanguageVersionString() const
 {
     return m_glsl_version;
 }
@@ -1447,7 +1386,7 @@ OpenGLPlatformInterface GLPlatform::platformInterface() const
 
 bool GLPlatform::isGLES() const
 {
-    return m_gles;
+    return m_context ? m_context->isOpenglES() : false;
 }
 
 void GLPlatform::cleanup()

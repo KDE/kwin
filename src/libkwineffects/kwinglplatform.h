@@ -9,6 +9,7 @@
 
 #pragma once
 
+#include "openglcontext.h"
 #include "libkwineffects/kwinglobals.h"
 #include "libkwineffects/kwinglutils_export.h"
 
@@ -21,10 +22,7 @@ namespace KWin
 // forward declare method
 void cleanupGL();
 
-inline qint64 kVersionNumber(qint64 major, qint64 minor, qint64 patch = 0)
-{
-    return ((major & 0xffff) << 32) | ((minor & 0xffff) << 16) | (patch & 0xffff);
-}
+class Version;
 
 enum GLFeature {
     /**
@@ -219,22 +217,22 @@ public:
     /**
      * Returns the OpenGL version.
      */
-    qint64 glVersion() const;
+    Version glVersion() const;
 
     /**
      * Returns the GLSL version if the driver supports GLSL, and 0 otherwise.
      */
-    qint64 glslVersion() const;
+    Version glslVersion() const;
 
     /**
      * Returns the Mesa version if the driver is a Mesa driver, and 0 otherwise.
      */
-    qint64 mesaVersion() const;
+    Version mesaVersion() const;
 
     /**
      * Returns the Gallium version if the driver is a Gallium driver, and 0 otherwise.
      */
-    qint64 galliumVersion() const;
+    Version galliumVersion() const;
 
     /**
      * Returns the X server version.
@@ -244,21 +242,21 @@ public:
      *
      * For non X.org servers, this method returns 0.
      */
-    qint64 serverVersion() const;
+    Version serverVersion() const;
 
     /**
      * Returns the Linux kernel version.
      *
      * If the kernel is not a Linux kernel, this method returns 0.
      */
-    qint64 kernelVersion() const;
+    Version kernelVersion() const;
 
     /**
      * Returns the driver version.
      *
      * For Mesa drivers, this is the same as the Mesa version number.
      */
-    qint64 driverVersion() const;
+    Version driverVersion() const;
 
     /**
      * Returns the driver.
@@ -359,23 +357,23 @@ public:
      * @returns the GL_VERSION string as provided by the driver.
      * @since 4.9
      */
-    const QByteArray &glVersionString() const;
+    QByteArrayView glVersionString() const;
     /**
      * @returns the GL_RENDERER string as provided by the driver.
      * @since 4.9
      */
-    const QByteArray &glRendererString() const;
+    QByteArrayView glRendererString() const;
     /**
      * @returns the GL_VENDOR string as provided by the driver.
      * @since 4.9
      */
-    const QByteArray &glVendorString() const;
+    QByteArrayView glVendorString() const;
     /**
      * @returns the GL_SHADING_LANGUAGE_VERSION string as provided by the driver.
      * If the driver does not support the OpenGL Shading Language a null bytearray is returned.
      * @since 4.9
      */
-    const QByteArray &glShadingLanguageVersionString() const;
+    QByteArrayView glShadingLanguageVersionString() const;
     /**
      * @returns Whether the driver supports loose texture binding.
      * @since 4.9
@@ -417,7 +415,7 @@ public:
      * @see kernelVersion
      * @see serverVersion
      */
-    static QString versionToString(qint64 version);
+    static QString versionToString(const Version &version);
     /**
      * @returns a human readable form of the @p version as a QByteArray.
      * @since 5.5
@@ -429,7 +427,7 @@ public:
      * @see kernelVersion
      * @see serverVersion
      */
-    static QByteArray versionToString8(qint64 version);
+    static QByteArray versionToString8(const Version &version);
 
     /**
      * @returns a human readable form for the @p driver as a QString.
@@ -463,22 +461,18 @@ private:
     static void cleanup();
 
 private:
-    QByteArray m_renderer;
-    QByteArray m_vendor;
-    QByteArray m_version;
     QByteArray m_glsl_version;
-    QByteArray m_chipset;
+    QByteArrayView m_chipset;
     QSet<QByteArray> m_extensions;
     Driver m_driver;
     ChipClass m_chipClass;
     CompositingType m_recommendedCompositor;
-    qint64 m_glVersion;
-    qint64 m_glslVersion;
-    qint64 m_mesaVersion;
-    qint64 m_driverVersion;
-    qint64 m_galliumVersion;
-    qint64 m_serverVersion;
-    qint64 m_kernelVersion;
+    Version m_glslVersion;
+    Version m_mesaVersion;
+    Version m_driverVersion;
+    Version m_galliumVersion;
+    Version m_serverVersion;
+    Version m_kernelVersion;
     bool m_looseBinding : 1;
     bool m_supportsGLSL : 1;
     bool m_limitedGLSL : 1;
@@ -488,7 +482,7 @@ private:
     bool m_virtualMachine : 1;
     bool m_preferBufferSubData : 1;
     OpenGLPlatformInterface m_platformInterface;
-    bool m_gles : 1;
+    std::unique_ptr<OpenGlContext> m_context;
     static std::unique_ptr<GLPlatform> s_platform;
 };
 

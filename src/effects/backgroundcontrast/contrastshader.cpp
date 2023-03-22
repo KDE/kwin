@@ -96,8 +96,8 @@ void ContrastShader::init()
     reset();
 
     const bool gles = GLPlatform::instance()->isGLES();
-    const bool glsl_140 = !gles && GLPlatform::instance()->glslVersion() >= kVersionNumber(1, 40);
-    const bool core = glsl_140 || (gles && GLPlatform::instance()->glslVersion() >= kVersionNumber(3, 0));
+    const bool glsl_140 = !gles && GLPlatform::instance()->glslVersion() >= Version(1, 40);
+    const bool core = glsl_140 || (gles && GLPlatform::instance()->glslVersion() >= Version(3, 0));
 
     QByteArray vertexSource;
     QByteArray fragmentSource;

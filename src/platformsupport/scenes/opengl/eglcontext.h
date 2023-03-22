@@ -11,6 +11,7 @@
 #include "core/dmabufattributes.h"
 #include "kwin_export.h"
 #include "kwingltexture.h"
+#include "openglcontext.h"
 
 #include <QByteArray>
 #include <QList>
@@ -21,11 +22,11 @@ namespace KWin
 
 class EglDisplay;
 
-class KWIN_EXPORT EglContext
+class KWIN_EXPORT EglContext : public OpenGlContext
 {
 public:
     EglContext(EglDisplay *display, EGLConfig config, ::EGLContext context);
-    ~EglContext();
+    ~EglContext() override;
 
     bool makeCurrent(EGLSurface surface = EGL_NO_SURFACE) const;
     void doneCurrent() const;

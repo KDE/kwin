@@ -51,6 +51,7 @@ set(kwin_GLUTILSLIB_SRCS
     kwinglutils.cpp
     kwinglutils_funcs.cpp
     logging.cpp
+    openglcontext.cpp
     rendertarget.cpp
     renderviewport.cpp
 )

@@ -326,7 +326,7 @@ bool GlxBackend::checkVersion()
 {
     int major, minor;
     glXQueryVersion(display(), &major, &minor);
-    return kVersionNumber(major, minor) >= kVersionNumber(1, 3);
+    return Version(major, minor) >= Version(1, 3);
 }
 
 void GlxBackend::initExtensions()

@@ -152,13 +152,13 @@ void GLPlatformTest::testPriorDetect()
     QCOMPARE(gl->supports(TextureNPOT), false);
     QCOMPARE(gl->supports(LimitedNPOT), false);
 
-    QCOMPARE(gl->glVersion(), 0);
-    QCOMPARE(gl->glslVersion(), 0);
-    QCOMPARE(gl->mesaVersion(), 0);
-    QCOMPARE(gl->galliumVersion(), 0);
-    QCOMPARE(gl->serverVersion(), 0);
-    QCOMPARE(gl->kernelVersion(), 0);
-    QCOMPARE(gl->driverVersion(), 0);
+    QCOMPARE(gl->glVersion(), Version());
+    QCOMPARE(gl->glslVersion(), Version());
+    QCOMPARE(gl->mesaVersion(), Version());
+    QCOMPARE(gl->galliumVersion(), Version());
+    QCOMPARE(gl->serverVersion(), Version());
+    QCOMPARE(gl->kernelVersion(), Version());
+    QCOMPARE(gl->driverVersion(), Version());
 
     QCOMPARE(gl->driver(), Driver_Unknown);
     QCOMPARE(gl->chipClass(), UnknownChipClass);
@@ -203,11 +203,11 @@ void GLPlatformTest::testDetect_data()
     }
 }
 
-static qint64 readVersion(const KConfigGroup &group, const char *entry)
+static Version readVersion(const KConfigGroup &group, const char *entry)
 {
     const QStringList parts = group.readEntry(entry, QString()).split(',');
     if (parts.count() < 2) {
-        return 0;
+        return Version();
     }
     QVector<qint64> versionParts;
     for (int i = 0; i < parts.count(); ++i) {
@@ -222,7 +222,7 @@ static qint64 readVersion(const KConfigGroup &group, const char *entry)
     while (versionParts.count() < 3) {
         versionParts << 0;
     }
-    return kVersionNumber(versionParts.at(0), versionParts.at(1), versionParts.at(2));
+    return Version(versionParts.at(0), versionParts.at(1), versionParts.at(2));
 }
 
 void GLPlatformTest::testDetect()
@@ -258,7 +258,7 @@ void GLPlatformTest::testDetect()
     QCOMPARE(gl->glslVersion(), readVersion(settingsGroup, "GLSLVersion"));
     QCOMPARE(gl->mesaVersion(), readVersion(settingsGroup, "MesaVersion"));
     QCOMPARE(gl->galliumVersion(), readVersion(settingsGroup, "GalliumVersion"));
-    QCOMPARE(gl->serverVersion(), 0);
+    QCOMPARE(gl->serverVersion(), Version());
     QEXPECT_FAIL("amd-catalyst-radeonhd-7700M-3.1.13399", "Detects GL version instead of driver version", Continue);
     QCOMPARE(gl->driverVersion(), readVersion(settingsGroup, "DriverVersion"));
 
