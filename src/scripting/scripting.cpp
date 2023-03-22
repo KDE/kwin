@@ -609,21 +609,6 @@ QVariant KWin::JSEngineGlobalMethodsWrapper::readConfig(const QString &key, QVar
     return m_script->config().readEntry(key, defaultValue);
 }
 
-void KWin::JSEngineGlobalMethodsWrapper::registerWindow(QQuickWindow *window)
-{
-    if (kwinApp()->operationMode() == Application::OperationModeX11) {
-        // Windows stop updating if they are remapped. It seems like a bug in QtXCB.
-        QPointer<QQuickWindow> guard = window;
-        connect(
-            window, &QWindow::visibilityChanged, this, [guard](QWindow::Visibility visibility) {
-                if (guard && visibility == QWindow::Hidden) {
-                    guard->destroy();
-                }
-            },
-            Qt::QueuedConnection);
-    }
-}
-
 KWin::Scripting *KWin::Scripting::s_self = nullptr;
 
 KWin::Scripting *KWin::Scripting::create(QObject *parent)

@@ -298,7 +298,6 @@ public:
 
 public Q_SLOTS:
     QVariant readConfig(const QString &key, QVariant defaultValue = QVariant());
-    void registerWindow(QQuickWindow *window);
 
 private:
     DeclarativeScript *m_script;

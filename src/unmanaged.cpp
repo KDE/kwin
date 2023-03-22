@@ -19,7 +19,6 @@
 
 #include <QDebug>
 #include <QTimer>
-#include <QWidget>
 #include <QWindow>
 
 #include <xcb/shape.h>
@@ -149,7 +148,7 @@ void Unmanaged::release(ReleaseReason releaseReason)
     }
     Deleted *del = Deleted::create(this);
     Q_EMIT closed(del);
-    if (!QWidget::find(window()) && releaseReason != ReleaseReason::Destroyed) { // don't affect our own windows
+    if (releaseReason != ReleaseReason::Destroyed && !findInternalWindow()) { // don't affect our own windows
         if (Xcb::Extensions::self()->isShapeAvailable()) {
             xcb_shape_select_input(kwinApp()->x11Connection(), window(), false);
         }
