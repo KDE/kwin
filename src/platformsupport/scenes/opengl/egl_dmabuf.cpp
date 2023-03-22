@@ -228,50 +228,6 @@ EglDmabuf::~EglDmabuf()
     }
 }
 
-const uint32_t s_multiPlaneFormats[] = {
-    DRM_FORMAT_XRGB8888_A8,
-    DRM_FORMAT_XBGR8888_A8,
-    DRM_FORMAT_RGBX8888_A8,
-    DRM_FORMAT_BGRX8888_A8,
-    DRM_FORMAT_RGB888_A8,
-    DRM_FORMAT_BGR888_A8,
-    DRM_FORMAT_RGB565_A8,
-    DRM_FORMAT_BGR565_A8,
-
-    DRM_FORMAT_NV12,
-    DRM_FORMAT_NV21,
-    DRM_FORMAT_NV16,
-    DRM_FORMAT_NV61,
-    DRM_FORMAT_NV24,
-    DRM_FORMAT_NV42,
-
-    DRM_FORMAT_YUV410,
-    DRM_FORMAT_YVU410,
-    DRM_FORMAT_YUV411,
-    DRM_FORMAT_YVU411,
-    DRM_FORMAT_YUV420,
-    DRM_FORMAT_YVU420,
-    DRM_FORMAT_YUV422,
-    DRM_FORMAT_YVU422,
-    DRM_FORMAT_YUV444,
-    DRM_FORMAT_YVU444};
-
-void filterFormatsWithMultiplePlanes(QVector<uint32_t> &formats)
-{
-    QVector<uint32_t>::iterator it = formats.begin();
-    while (it != formats.end()) {
-        for (auto linuxFormat : s_multiPlaneFormats) {
-            if (*it == linuxFormat) {
-                qCDebug(KWIN_OPENGL) << "Filter multi-plane format" << *it;
-                it = formats.erase(it);
-                it--;
-                break;
-            }
-        }
-        it++;
-    }
-}
-
 static int bpcForFormat(uint32_t format)
 {
     switch (format) {
@@ -317,8 +273,6 @@ void EglDmabuf::setSupportedFormatsAndModifiers()
         return;
     }
 
-    filterFormatsWithMultiplePlanes(formats);
-
     m_supportedFormats.clear();
     for (auto format : std::as_const(formats)) {
         if (eglQueryDmaBufModifiersEXT != nullptr) {
@@ -326,8 +280,17 @@ void EglDmabuf::setSupportedFormatsAndModifiers()
             const EGLBoolean success = eglQueryDmaBufModifiersEXT(eglDisplay, format, 0, nullptr, nullptr, &count);
             if (success && count > 0) {
                 QVector<uint64_t> modifiers(count);
-                if (eglQueryDmaBufModifiersEXT(eglDisplay, format, count, modifiers.data(), nullptr, &count)) {
-                    m_supportedFormats.insert(format, modifiers);
+                QVector<EGLBoolean> externalOnly(count);
+                if (eglQueryDmaBufModifiersEXT(eglDisplay, format, count, modifiers.data(), externalOnly.data(), &count)) {
+                    for (int i = modifiers.size() - 1; i >= 0; i--) {
+                        if (externalOnly[i]) {
+                            modifiers.remove(i);
+                            externalOnly.remove(i);
+                        }
+                    }
+                    if (!modifiers.empty()) {
+                        m_supportedFormats.insert(format, modifiers);
+                    }
                     continue;
                 }
             }
