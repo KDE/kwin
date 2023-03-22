@@ -118,7 +118,6 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline 
     for (const auto &unused : unusedObjects) {
         unused->disable(commit.get());
     }
-    const auto gpu = pipelines[0]->gpu();
     switch (mode) {
     case CommitMode::TestAllowModeset: {
         if (!commit->testAllowModeset()) {
