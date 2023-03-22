@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 86ff119b1606fcaa910d6b44fc14b611\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-21 02:29+0000\n"
+"POT-Creation-Date: 2023-03-22 02:45+0000\n"
 "PO-Revision-Date: 2023-02-09 08:31\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -1163,22 +1163,22 @@ msgstr "&Знішчыць працэс праграмы %1"
 msgid "Wait Longer"
 msgstr "Пачакаць яшчэ"
 
-#: input.cpp:2008
+#: input.cpp:2012
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Перамясціць планшэт на наступны вывад"
 
-#: input.cpp:2087
+#: input.cpp:2091
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Планшэт перамешчаны на %1"
 
-#: input.cpp:2087
+#: input.cpp:2091
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Пераключаныя вывады планшэтаў"
 
-#: input.cpp:3091
+#: input.cpp:3095
 #, kde-format
 msgid "Touchpad"
 msgstr "Сэнсарная панэль"
@@ -2798,7 +2798,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Не адказвае)"
 
-#: workspace.cpp:1632
+#: workspace.cpp:1629
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""

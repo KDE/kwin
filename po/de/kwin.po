@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-21 02:29+0000\n"
+"POT-Creation-Date: 2023-03-22 02:45+0000\n"
 "PO-Revision-Date: 2023-02-26 00:47+0100\n"
 "Last-Translator: Jannick Kuhr <opensource@kuhr.org>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -1179,24 +1179,24 @@ msgstr "Programm %1 &beenden"
 msgid "Wait Longer"
 msgstr "Länger warten"
 
-#: input.cpp:2008
+#: input.cpp:2012
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr ""
 
-#: input.cpp:2087
+#: input.cpp:2091
 #, fuzzy, kde-format
 #| msgctxt "Name of a hardware switch"
 #| msgid "Tablet mode"
 msgid "Tablet moved to %1"
 msgstr "Tablet-Modus"
 
-#: input.cpp:2087
+#: input.cpp:2091
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr ""
 
-#: input.cpp:3091
+#: input.cpp:3095
 #, kde-format
 msgid "Touchpad"
 msgstr "Touchpad"
@@ -2825,7 +2825,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Reagiert nicht)"
 
-#: workspace.cpp:1632
+#: workspace.cpp:1629
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""

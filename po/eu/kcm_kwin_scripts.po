@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-15 02:12+0000\n"
+"POT-Creation-Date: 2023-03-22 02:45+0000\n"
 "PO-Revision-Date: 2022-09-20 20:43+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -21,17 +21,17 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Lokalize 22.08.0\n"
 
-#: module.cpp:56
+#: module.cpp:50
 #, kde-format
 msgid "Import KWin Script"
 msgstr "Inportatu KWin scripta"
 
-#: module.cpp:57
+#: module.cpp:51
 #, kde-format
 msgid "*.kwinscript|KWin scripts (*.kwinscript)"
 msgstr "*.kwinscript|KWin scriptak (*.kwinscript)"
 
-#: module.cpp:68
+#: module.cpp:62
 #, kde-format
 msgctxt "Placeholder is error message returned from the install service"
 msgid ""
@@ -41,13 +41,13 @@ msgstr ""
 "Ezin da inportatu hautatutako scripta.\n"
 "%1"
 
-#: module.cpp:72
+#: module.cpp:66
 #, kde-format
 msgctxt "Placeholder is name of the script that was imported"
 msgid "The script \"%1\" was successfully imported."
 msgstr "\"%1\" scripta ondo inportatu da."
 
-#: module.cpp:131
+#: module.cpp:125
 #, kde-format
 msgid "Error when uninstalling KWin Script: %1"
 msgstr "Errorea KWin-en script-a desinstalatzean: %1"

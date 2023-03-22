@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-05 03:09+0000\n"
-"PO-Revision-Date: 2023-02-06 15:20+0100\n"
+"PO-Revision-Date: 2023-03-21 20:54+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "com>\n"
 "First-Translator: Pablo de Vicente <pvicentea@nexo.es>\n"
-"X-Generator: Lokalize 22.12.2\n"
+"X-Generator: Lokalize 23.03.80\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: declarative-plugin/buttonsmodel.cpp:53
@@ -207,7 +207,7 @@ msgstr "Mantenga pulsado el botón del menú para mostrar el menú."
 #, kde-format
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
-msgstr "Mostrar sugerencias de la barra de título"
+msgstr "Mostrar ayudas emergentes de los botones de la barra de título"
 
 #: package/contents/ui/main.qml:19
 #, kde-format
