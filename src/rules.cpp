@@ -889,15 +889,14 @@ void RuleBook::edit(Window *c, bool whole_app)
 {
     save();
     QStringList args;
-    args << QStringLiteral("--uuid") << c->internalId().toString();
+    args << QStringLiteral("uuid=%1").arg(c->internalId().toString());
     if (whole_app) {
-        args << QStringLiteral("--whole-app");
+        args << QStringLiteral("whole-app");
     }
     QProcess *p = new QProcess(this);
-    p->setArguments(args);
+    p->setArguments({"kcm_kwinrules", "--args", args.join(QLatin1Char(' '))});
     p->setProcessEnvironment(kwinApp()->processStartupEnvironment());
-    const QFileInfo buildDirBinary{QDir{QCoreApplication::applicationDirPath()}, QStringLiteral("kwin_rules_dialog")};
-    p->setProgram(buildDirBinary.exists() ? buildDirBinary.absoluteFilePath() : QStringLiteral(KWIN_RULES_DIALOG_BIN));
+    p->setProgram(QStandardPaths::findExecutable("kcmshell6"));
     p->setProcessChannelMode(QProcess::MergedChannels);
     connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), p, &QProcess::deleteLater);
     connect(p, &QProcess::errorOccurred, this, [p](QProcess::ProcessError e) {
