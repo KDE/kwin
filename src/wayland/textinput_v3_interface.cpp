@@ -103,27 +103,6 @@ TextInputChangeCause convertChangeCause(uint32_t cause)
         return TextInputChangeCause::Other;
     }
 }
-
-class EnabledEmitter
-{
-public:
-    EnabledEmitter(TextInputV3Interface *q)
-        : q(q)
-        , m_wasEnabled(q->isEnabled())
-    {
-    }
-    ~EnabledEmitter()
-    {
-        if (m_wasEnabled != q->isEnabled()) {
-            Q_EMIT q->enabledChanged();
-        }
-    }
-
-private:
-    TextInputV3Interface *q;
-    const bool m_wasEnabled;
-};
-
 }
 
 TextInputManagerV3InterfacePrivate::TextInputManagerV3InterfacePrivate(TextInputManagerV3Interface *_q, Display *display)
@@ -170,19 +149,24 @@ void TextInputV3InterfacePrivate::zwp_text_input_v3_bind_resource(Resource *reso
 {
     // we initialize the serial for the resource to be 0
     serialHash.insert(resource, 0);
-    enabled.insert(resource, false);
+    enabledHash.insert(resource, false);
+}
+
+void TextInputV3InterfacePrivate::zwp_text_input_v3_destroy_resource(Resource *resource)
+{
+    // drop resource from the serial hash
+    serialHash.remove(resource);
+    enabledHash.remove(resource);
+    updateEnabled();
 }
 
 void TextInputV3InterfacePrivate::zwp_text_input_v3_destroy(Resource *resource)
 {
-    // drop resource from the serial hash
-    serialHash.remove(resource);
-    enabled.remove(resource);
+    wl_resource_destroy(resource->handle);
 }
 
 void TextInputV3InterfacePrivate::sendEnter(SurfaceInterface *newSurface)
 {
-    EnabledEmitter emitter(q);
     // It should be always synchronized with SeatInterface::focusedTextInputSurface.
     Q_ASSERT(!surface && newSurface);
     surface = newSurface;
@@ -190,11 +174,11 @@ void TextInputV3InterfacePrivate::sendEnter(SurfaceInterface *newSurface)
     for (auto resource : clientResources) {
         send_enter(resource->handle, newSurface->resource());
     }
+    updateEnabled();
 }
 
 void TextInputV3InterfacePrivate::sendLeave(SurfaceInterface *leavingSurface)
 {
-    EnabledEmitter emitter(q);
     // It should be always synchronized with SeatInterface::focusedTextInputSurface.
     Q_ASSERT(leavingSurface && surface == leavingSurface);
     surface.clear();
@@ -202,6 +186,7 @@ void TextInputV3InterfacePrivate::sendLeave(SurfaceInterface *leavingSurface)
     for (auto resource : clientResources) {
         send_leave(resource->handle, leavingSurface->resource());
     }
+    updateEnabled();
 }
 
 void TextInputV3InterfacePrivate::sendPreEdit(const QString &text, const quint32 cursorBegin, const quint32 cursorEnd)
@@ -270,22 +255,27 @@ QList<TextInputV3InterfacePrivate::Resource *> TextInputV3InterfacePrivate::enab
     QList<TextInputV3InterfacePrivate::Resource *> result;
     const auto [start, end] = resourceMap().equal_range(client->client());
     for (auto it = start; it != end; ++it) {
-        if (enabled[*it]) {
+        if (enabledHash[*it]) {
             result.append(*it);
         }
     }
     return result;
 }
 
-bool TextInputV3InterfacePrivate::isEnabled() const
+void TextInputV3InterfacePrivate::updateEnabled()
 {
-    if (!surface) {
-        return false;
+    bool newEnabled = false;
+    if (surface) {
+        const auto clientResources = textInputsForClient(surface->client());
+        newEnabled = std::any_of(clientResources.begin(), clientResources.end(), [this](Resource *resource) {
+            return enabledHash[resource];
+        });
     }
-    const auto clientResources = textInputsForClient(surface->client());
-    return std::any_of(clientResources.begin(), clientResources.end(), [this](Resource *resource) {
-        return enabled[resource];
-    });
+
+    if (isEnabled != newEnabled) {
+        isEnabled = newEnabled;
+        Q_EMIT q->enabledChanged();
+    }
 }
 
 void TextInputV3InterfacePrivate::zwp_text_input_v3_enable(Resource *resource)
@@ -345,10 +335,9 @@ void TextInputV3InterfacePrivate::zwp_text_input_v3_set_text_change_cause(Resour
 
 void TextInputV3InterfacePrivate::zwp_text_input_v3_commit(Resource *resource)
 {
-    EnabledEmitter emitter(q);
     serialHash[resource]++;
 
-    auto &resourceEnabled = enabled[resource];
+    auto &resourceEnabled = enabledHash[resource];
     const auto oldResourceEnabled = resourceEnabled;
     if (resourceEnabled != pending.enabled) {
         resourceEnabled = pending.enabled;
@@ -397,6 +386,8 @@ void TextInputV3InterfacePrivate::zwp_text_input_v3_commit(Resource *resource)
     if (resourceEnabled && oldResourceEnabled) {
         Q_EMIT q->enableRequested();
     }
+
+    updateEnabled();
 }
 
 void TextInputV3InterfacePrivate::defaultPending()
@@ -492,7 +483,7 @@ QRect TextInputV3Interface::cursorRectangle() const
 
 bool TextInputV3Interface::isEnabled() const
 {
-    return d->isEnabled();
+    return d->isEnabled;
 }
 
 bool TextInputV3Interface::clientSupportsTextInput(ClientConnection *client) const
