@@ -235,7 +235,7 @@ void InputMethod::setPanel(InputPanelV1Window *panel)
 
     m_panel = panel;
     connect(panel->surface(), &SurfaceInterface::inputChanged, this, &InputMethod::updateInputPanelState);
-    connect(panel, &QObject::destroyed, this, [this] {
+    connect(panel, &Window::closed, this, [this]() {
         if (m_trackedWindow) {
             m_trackedWindow->setVirtualKeyboardGeometry({});
         }
