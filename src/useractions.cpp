@@ -304,11 +304,11 @@ void UserActionsMenu::init()
             QProcess *p = new QProcess(this);
             p->setArguments(args);
             p->setProcessEnvironment(kwinApp()->processStartupEnvironment());
-            p->setProgram(QStringLiteral("kcmshell5"));
+            p->setProgram(QStringLiteral("kcmshell6"));
             connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), p, &QProcess::deleteLater);
             connect(p, &QProcess::errorOccurred, this, [](QProcess::ProcessError e) {
                 if (e == QProcess::FailedToStart) {
-                    qCDebug(KWIN_CORE) << "Failed to start kcmshell5";
+                    qCDebug(KWIN_CORE) << "Failed to start kcmshell6";
                 }
             });
             p->start();

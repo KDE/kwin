@@ -471,7 +471,7 @@ and <guibutton>Move Down</guibutton> buttons effects on how they are applied.</p
   </varlistentry>
   <varlistentry><term><emphasis role="bold">Ignore global shortcuts</emphasis></term>
     <listitem>
-    <para>Toggle whether to ignore global shortcuts (as defined by <menuchoice><guimenu>System Settings</guimenu><guisubmenu>Shortcuts and Gestures</guisubmenu><guimenuitem>Global Shortcuts</guimenuitem></menuchoice> or by running <varname>kcmshell5 keys</varname> in <guilabel>konsole</guilabel>) while the window is active.</para>
+    <para>Toggle whether to ignore global shortcuts (as defined by <menuchoice><guimenu>System Settings</guimenu><guisubmenu>Shortcuts and Gestures</guisubmenu><guimenuitem>Global Shortcuts</guimenuitem></menuchoice> or by running <varname>kcmshell6 keys</varname> in <guilabel>konsole</guilabel>) while the window is active.</para>
      </listitem>
   </varlistentry>
   <varlistentry><term><emphasis role="bold">Closeable</emphasis></term>
