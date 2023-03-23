@@ -3088,6 +3088,8 @@ void X11Window::cleanGrouping()
     //         ++it )
     //        qDebug() << "MN:" << *it;
     removeFromMainClients();
+    group()->removeMember(this);
+    in_group = nullptr;
     //    qDebug() << "CLEANGROUPING2:" << this;
     //    for ( auto it = group()->members().begin();
     //         it != group()->members().end();
@@ -3116,22 +3118,6 @@ void X11Window::cleanGrouping()
     //         it != mains.end();
     //         ++it )
     //        qDebug() << "MN3:" << *it;
-    // HACK
-    // removeFromMainClients() did remove 'this' from transient
-    // lists of all group members, but then made windows that
-    // were transient for 'this' group transient, which again
-    // added 'this' to those transient lists :(
-    QList<X11Window *> group_members = group()->members();
-    group()->removeMember(this);
-    in_group = nullptr;
-    for (auto it = group_members.constBegin(); it != group_members.constEnd(); ++it) {
-        (*it)->removeTransient(this);
-    }
-    //    qDebug() << "CLEANGROUPING4:" << this;
-    //    for ( auto it = group_members.begin();
-    //         it != group_members.end();
-    //         ++it )
-    //        qDebug() << "CL4:" << *it;
     m_transientForId = XCB_WINDOW_NONE;
 }
 
@@ -3270,23 +3256,6 @@ void X11Window::addTransient(Window *cl)
     //         it != transients_list.end();
     //         ++it )
     //        qDebug() << "AT:" << (*it);
-}
-
-void X11Window::removeTransient(Window *cl)
-{
-    //    qDebug() << "REMOVETRANS:" << this << ":" << cl;
-    //    qDebug() << kBacktrace();
-    // cl is transient for this, but this is going away
-    // make cl group transient
-    Window::removeTransient(cl);
-    if (cl->transientFor() == this) {
-        if (X11Window *c = dynamic_cast<X11Window *>(cl)) {
-            c->m_transientForId = XCB_WINDOW_NONE;
-            c->setTransientFor(nullptr); // SELI
-            // SELI       cl->setTransient( kwinApp()->x11RootWindow());
-            c->setTransient(XCB_WINDOW_NONE);
-        }
-    }
 }
 
 // A new window has been mapped. Check if it's not a mainwindow for this already existing window.

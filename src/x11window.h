@@ -431,7 +431,6 @@ private:
     void readTransient();
     xcb_window_t verifyTransientFor(xcb_window_t transient_for, bool set);
     void addTransient(Window *cl) override;
-    void removeTransient(Window *cl) override;
     void removeFromMainClients();
     void cleanGrouping();
     void checkGroupTransients();
