@@ -221,16 +221,18 @@ void WaylandWindow::doSetActive()
 
 void WaylandWindow::cleanGrouping()
 {
+    // We want to break parent-child relationships, but preserve stacking
+    // order constraints at the same time for window closing animations.
+
     if (transientFor()) {
-        transientFor()->removeTransient(this);
+        transientFor()->removeTransientFromList(this);
+        setTransientFor(nullptr);
     }
-    for (auto it = transients().constBegin(); it != transients().constEnd();) {
-        if ((*it)->transientFor() == this) {
-            removeTransient(*it);
-            it = transients().constBegin(); // restart, just in case something more has changed with the list
-        } else {
-            ++it;
-        }
+
+    const auto children = transients();
+    for (Window *transient : children) {
+        removeTransientFromList(transient);
+        transient->setTransientFor(nullptr);
     }
 }
 

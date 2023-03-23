@@ -925,6 +925,7 @@ public:
     virtual QRectF transientPlacement(const QRectF &bounds) const;
     const Window *transientFor() const;
     Window *transientFor();
+    void setTransientFor(Window *transientFor);
     /**
      * @returns @c true if transient is the transient_for window for this window,
      *  or recursively the transient_for window
@@ -934,6 +935,7 @@ public:
     const QList<Window *> &transients() const; // Is not indirect
     virtual void addTransient(Window *transient);
     virtual void removeTransient(Window *transient);
+    void removeTransientFromList(Window *cl);
     virtual QList<Window *> mainWindows() const; // Call once before loop , is not indirect
     QList<Window *> allMainWindows() const; // Call once before loop , is indirect
     /**
@@ -1623,11 +1625,6 @@ protected:
     void setupWindowManagementInterface();
     void updateColorScheme();
     void ensurePalette();
-    void setTransientFor(Window *transientFor);
-    /**
-     * Just removes the @p cl from the transients without any further checks.
-     */
-    void removeTransientFromList(Window *cl);
 
     virtual Layer belongsToLayer() const;
     virtual bool belongsToDesktop() const;

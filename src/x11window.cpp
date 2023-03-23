@@ -3076,19 +3076,29 @@ void X11Window::removeFromMainClients()
 // related lists.
 void X11Window::cleanGrouping()
 {
-    removeFromMainClients();
-    group()->removeMember(this);
-    in_group = nullptr;
+    // We want to break parent-child relationships, but preserve stacking
+    // order constraints at the same time for window closing animations.
 
-    for (auto it = transients().constBegin(); it != transients().constEnd();) {
-        if ((*it)->transientFor() == this) {
-            removeTransient(*it);
-            it = transients().constBegin(); // restart, just in case something more has changed with the list
-        } else {
-            ++it;
+    if (transientFor()) {
+        transientFor()->removeTransientFromList(this);
+        setTransientFor(nullptr);
+    }
+
+    if (groupTransient()) {
+        const auto members = group()->members();
+        for (Window *member : members) {
+            member->removeTransientFromList(this);
         }
     }
 
+    const auto children = transients();
+    for (Window *transient : children) {
+        removeTransientFromList(transient);
+        transient->setTransientFor(nullptr);
+    }
+
+    group()->removeMember(this);
+    in_group = nullptr;
     m_transientForId = XCB_WINDOW_NONE;
 }
 
