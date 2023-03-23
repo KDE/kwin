@@ -347,6 +347,7 @@ InputPanelSurfaceV1Interface::InputPanelSurfaceV1Interface(SurfaceInterface *sur
 
 InputPanelSurfaceV1Interface::~InputPanelSurfaceV1Interface()
 {
+    Q_EMIT aboutToBeDestroyed();
 }
 
 class InputPanelV1InterfacePrivate : public QtWaylandServer::zwp_input_panel_v1

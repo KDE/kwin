@@ -39,7 +39,7 @@ InputPanelV1Window::InputPanelV1Window(InputPanelSurfaceV1Interface *panelSurfac
 
     connect(panelSurface, &InputPanelSurfaceV1Interface::topLevel, this, &InputPanelV1Window::showTopLevel);
     connect(panelSurface, &InputPanelSurfaceV1Interface::overlayPanel, this, &InputPanelV1Window::showOverlayPanel);
-    connect(panelSurface, &InputPanelSurfaceV1Interface::destroyed, this, &InputPanelV1Window::destroyWindow);
+    connect(panelSurface, &InputPanelSurfaceV1Interface::aboutToBeDestroyed, this, &InputPanelV1Window::destroyWindow);
 
     connect(workspace(), &Workspace::outputsChanged, this, &InputPanelV1Window::reposition);
 

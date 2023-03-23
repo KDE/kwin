@@ -139,6 +139,7 @@ public:
 Q_SIGNALS:
     void topLevel(OutputInterface *output, Position position);
     void overlayPanel();
+    void aboutToBeDestroyed();
 
 private:
     InputPanelSurfaceV1Interface(SurfaceInterface *surface, quint32 id, QObject *parent);
