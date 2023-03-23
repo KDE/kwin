@@ -472,6 +472,9 @@ DrmOutputLayer *DrmOutput::cursorLayer() const
 
 bool DrmOutput::setGammaRamp(const std::shared_ptr<ColorTransformation> &transformation)
 {
+    if (!m_pipeline->active()) {
+        return false;
+    }
     m_pipeline->setGammaRamp(transformation);
     m_pipeline->setCTM(QMatrix3x3());
     if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
@@ -486,6 +489,9 @@ bool DrmOutput::setGammaRamp(const std::shared_ptr<ColorTransformation> &transfo
 
 bool DrmOutput::setCTM(const QMatrix3x3 &ctm)
 {
+    if (!m_pipeline->active()) {
+        return false;
+    }
     m_pipeline->setCTM(ctm);
     if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
         m_pipeline->applyPendingChanges();
