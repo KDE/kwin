@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-13 02:33+0000\n"
+"POT-Creation-Date: 2023-03-23 02:36+0000\n"
 "PO-Revision-Date: 2022-05-16 18:28+0200\n"
 "Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
@@ -606,7 +606,7 @@ msgstr "Mierka okna pri otvorení:"
 msgid "Window close scale:"
 msgstr "Mierka okna pri zatvorení:"
 
-#: screenshot/screenshotdbusinterface2.cpp:478
+#: screenshot/screenshotdbusinterface2.cpp:512
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -615,7 +615,7 @@ msgstr ""
 "Vyberte okno na snímku obrazovky ľavým klikom alebo enterom.\n"
 "Escape alebo pravý klik na zrušenie."
 
-#: screenshot/screenshotdbusinterface2.cpp:496
+#: screenshot/screenshotdbusinterface2.cpp:530
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
