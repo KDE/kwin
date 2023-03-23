@@ -483,12 +483,6 @@ Workspace::~Workspace()
         window->destroyWindow();
     }
 
-    for (auto it = deleted.begin(); it != deleted.end();) {
-        Q_EMIT deletedRemoved(*it);
-        (*it)->finishCompositing();
-        it = deleted.erase(it);
-    }
-
     m_rulebook.reset();
     kwinApp()->config()->sync();
 
