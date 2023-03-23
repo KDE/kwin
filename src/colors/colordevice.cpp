@@ -245,6 +245,11 @@ ColorDevice::ColorDevice(Output *output, QObject *parent)
     d->updateTimer = new QTimer(this);
     d->updateTimer->setSingleShot(true);
     connect(d->updateTimer, &QTimer::timeout, this, &ColorDevice::update);
+    connect(output, &Output::dpmsModeChanged, this, [this, output]() {
+        if (output->dpmsMode() == Output::DpmsMode::On) {
+            update();
+        }
+    });
 
     d->output = output;
     scheduleUpdate();
