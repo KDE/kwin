@@ -31,7 +31,6 @@
 #include <QUuid>
 
 class QMouseEvent;
-class QOpenGLFramebufferObject;
 
 namespace KWaylandServer
 {
@@ -740,9 +739,6 @@ public:
     quint32 pendingSurfaceId() const;
     KWaylandServer::SurfaceInterface *surface() const;
     void setSurface(KWaylandServer::SurfaceInterface *surface);
-
-    const std::shared_ptr<QOpenGLFramebufferObject> &internalFramebufferObject() const;
-    QImage internalImageObject() const;
 
     /**
      * @returns Transformation to map from global to window coordinates.
@@ -1541,11 +1537,6 @@ protected:
     int bit_depth;
     NETWinInfo *info;
     bool ready_for_painting;
-    /**
-     * An FBO object KWin internal windows might render to.
-     */
-    std::shared_ptr<QOpenGLFramebufferObject> m_internalFBO;
-    QImage m_internalImage;
 
 protected:
     Window();
@@ -2241,16 +2232,6 @@ inline quint64 Window::surfaceSerial() const
 inline quint32 Window::pendingSurfaceId() const
 {
     return m_pendingSurfaceId;
-}
-
-inline const std::shared_ptr<QOpenGLFramebufferObject> &Window::internalFramebufferObject() const
-{
-    return m_internalFBO;
-}
-
-inline QImage Window::internalImageObject() const
-{
-    return m_internalImage;
 }
 
 template<class T, class U>

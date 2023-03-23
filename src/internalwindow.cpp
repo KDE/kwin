@@ -384,9 +384,19 @@ void InternalWindow::popupDone()
     m_handle->hide();
 }
 
+const std::shared_ptr<QOpenGLFramebufferObject> &InternalWindow::fbo() const
+{
+    return m_fbo;
+}
+
+QImage InternalWindow::image() const
+{
+    return m_image;
+}
+
 void InternalWindow::present(const std::shared_ptr<QOpenGLFramebufferObject> fbo)
 {
-    Q_ASSERT(m_internalImage.isNull());
+    Q_ASSERT(m_image.isNull());
 
     const QSizeF bufferSize = fbo->size() / bufferScale();
     QRectF geometry(pos(), clientSizeToFrameSize(bufferSize));
@@ -397,7 +407,7 @@ void InternalWindow::present(const std::shared_ptr<QOpenGLFramebufferObject> fbo
     commitGeometry(geometry);
     markAsMapped();
 
-    m_internalFBO = fbo;
+    m_fbo = fbo;
 
     setDepth(32);
     surfaceItem()->addDamage(surfaceItem()->rect().toAlignedRect());
@@ -405,7 +415,7 @@ void InternalWindow::present(const std::shared_ptr<QOpenGLFramebufferObject> fbo
 
 void InternalWindow::present(const QImage &image, const QRegion &damage)
 {
-    Q_ASSERT(m_internalFBO == nullptr);
+    Q_ASSERT(m_fbo == nullptr);
 
     const QSize bufferSize = image.size() / bufferScale();
     QRectF geometry(pos(), clientSizeToFrameSize(bufferSize));
@@ -416,7 +426,7 @@ void InternalWindow::present(const QImage &image, const QRegion &damage)
     commitGeometry(geometry);
     markAsMapped();
 
-    m_internalImage = image;
+    m_image = image;
 
     setDepth(32);
     surfaceItem()->addDamage(damage);

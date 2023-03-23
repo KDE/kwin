@@ -11,6 +11,8 @@
 
 #include "window.h"
 
+class QOpenGLFramebufferObject;
+
 namespace KWin
 {
 
@@ -61,6 +63,9 @@ public:
     void pointerEnterEvent(const QPointF &globalPos) override;
     void pointerLeaveEvent() override;
 
+    const std::shared_ptr<QOpenGLFramebufferObject> &fbo() const;
+    QImage image() const;
+
     void present(const std::shared_ptr<QOpenGLFramebufferObject> fbo);
     void present(const QImage &image, const QRegion &damage);
     qreal bufferScale() const;
@@ -91,6 +96,8 @@ private:
     NET::WindowType m_windowType = NET::Normal;
     Qt::WindowFlags m_internalWindowFlags = Qt::WindowFlags();
     bool m_userNoBorder = false;
+    std::shared_ptr<QOpenGLFramebufferObject> m_fbo;
+    QImage m_image;
 
     Q_DISABLE_COPY(InternalWindow)
 };

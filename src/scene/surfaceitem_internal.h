@@ -25,7 +25,7 @@ class KWIN_EXPORT SurfaceItemInternal : public SurfaceItem
 public:
     explicit SurfaceItemInternal(InternalWindow *window, Scene *scene, Item *parent = nullptr);
 
-    Window *window() const;
+    InternalWindow *window() const;
 
     QVector<QRectF> shape() const override;
 
@@ -36,7 +36,7 @@ protected:
     std::unique_ptr<SurfacePixmap> createPixmap() override;
 
 private:
-    Window *m_window;
+    InternalWindow *m_window;
 };
 
 class KWIN_EXPORT SurfacePixmapInternal final : public SurfacePixmap

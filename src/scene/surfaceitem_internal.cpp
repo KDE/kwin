@@ -29,7 +29,7 @@ SurfaceItemInternal::SurfaceItemInternal(InternalWindow *window, Scene *scene, I
     setSurfaceToBufferMatrix(surfaceToBufferMatrix);
 }
 
-Window *SurfaceItemInternal::window() const
+InternalWindow *SurfaceItemInternal::window() const
 {
     return m_window;
 }
@@ -75,14 +75,14 @@ void SurfacePixmapInternal::create()
 
 void SurfacePixmapInternal::update()
 {
-    const Window *window = m_item->window();
+    const InternalWindow *window = m_item->window();
 
-    if (window->internalFramebufferObject()) {
-        m_fbo = window->internalFramebufferObject();
+    if (window->fbo()) {
+        m_fbo = window->fbo();
         m_size = m_fbo->size();
         m_hasAlphaChannel = true;
-    } else if (!window->internalImageObject().isNull()) {
-        m_rasterBuffer = window->internalImageObject();
+    } else if (!window->image().isNull()) {
+        m_rasterBuffer = window->image();
         m_size = m_rasterBuffer.size();
         m_hasAlphaChannel = m_rasterBuffer.hasAlphaChannel();
     }
