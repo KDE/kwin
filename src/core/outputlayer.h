@@ -7,7 +7,7 @@
 #pragma once
 
 #include "kwin_export.h"
-#include "rendertarget.h"
+#include "libkwineffects/rendertarget.h"
 
 #include <QObject>
 #include <QRegion>

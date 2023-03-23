@@ -8,12 +8,12 @@
 */
 #pragma once
 
+#include "libkwineffects/kwineffects.h"
 #include <QColor>
 #include <QDBusContext>
 #include <QDBusMessage>
 #include <QDBusUnixFileDescriptor>
 #include <QObject>
-#include <kwineffects.h>
 
 namespace KWin
 {

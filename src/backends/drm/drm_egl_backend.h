@@ -7,10 +7,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
-#include "abstract_egl_backend.h"
 #include "drm_render_backend.h"
+#include "platformsupport/scenes/opengl/abstract_egl_backend.h"
 
-#include <kwinglutils.h>
+#include "libkwineffects/kwinglutils.h"
 
 #include <QHash>
 #include <QPointer>

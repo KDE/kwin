@@ -9,12 +9,12 @@
 
 #pragma once
 
+#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/kwinglutils.h"
 #include <KLocalizedString>
 #include <QFont>
 #include <QHash>
 #include <deque>
-#include <kwineffects.h>
-#include <kwinglutils.h>
 
 namespace KWin
 {

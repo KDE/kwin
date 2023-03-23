@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "kwineglimagetexture.h"
+#include "libkwineffects/kwineglimagetexture.h"
 
 #include <QDebug>
 #include <epoxy/egl.h>

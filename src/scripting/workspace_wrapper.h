@@ -10,12 +10,12 @@
 
 #pragma once
 
+#include "libkwineffects/kwinglobals.h"
 #include <QObject>
 #include <QQmlListProperty>
 #include <QRect>
 #include <QSize>
 #include <QStringList>
-#include <kwinglobals.h>
 
 namespace KWin
 {

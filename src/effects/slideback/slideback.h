@@ -10,7 +10,7 @@
 #pragma once
 
 // Include with base class for effects.
-#include <kwineffects.h>
+#include "libkwineffects/kwineffects.h"
 
 namespace KWin
 {

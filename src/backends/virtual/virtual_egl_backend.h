@@ -8,8 +8,8 @@
 */
 #pragma once
 
-#include "abstract_egl_backend.h"
 #include "core/outputlayer.h"
+#include "platformsupport/scenes/opengl/abstract_egl_backend.h"
 #include <memory>
 
 namespace KWin

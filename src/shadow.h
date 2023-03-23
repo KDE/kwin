@@ -9,8 +9,8 @@
 */
 #pragma once
 
+#include "libkwineffects/kwineffects.h"
 #include <QObject>
-#include <kwineffects.h>
 
 namespace KDecoration2
 {

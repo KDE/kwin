@@ -7,11 +7,11 @@
 #include "regionscreencastsource.h"
 #include "screencastutils.h"
 
+#include "libkwineffects/kwingltexture.h"
+#include "libkwineffects/kwinglutils.h"
 #include <composite.h>
 #include <core/output.h>
 #include <drm_fourcc.h>
-#include <kwingltexture.h>
-#include <kwinglutils.h>
 #include <scene/workspacescene.h>
 #include <workspace.h>
 

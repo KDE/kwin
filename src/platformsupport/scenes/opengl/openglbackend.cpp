@@ -7,9 +7,9 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "openglbackend.h"
-#include <kwineffects.h>
-#include <kwinglutils_funcs.h>
+#include "platformsupport/scenes/opengl/openglbackend.h"
+#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/kwinglutils_funcs.h"
 
 #include "utils/common.h"
 #include "workspace.h"

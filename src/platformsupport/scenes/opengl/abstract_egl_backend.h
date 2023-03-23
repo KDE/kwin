@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
-#include "openglbackend.h"
+#include "platformsupport/scenes/opengl/openglbackend.h"
 
 #include <QObject>
 #include <epoxy/egl.h>

@@ -7,7 +7,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "egl_dmabuf.h"
+#include "platformsupport/scenes/opengl/egl_dmabuf.h"
 #include "kwineglext.h"
 #include "kwineglutils_p.h"
 

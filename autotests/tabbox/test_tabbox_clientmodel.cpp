@@ -8,8 +8,8 @@
 */
 #include "test_tabbox_clientmodel.h"
 #include "../testutils.h"
-#include "clientmodel.h"
 #include "mock_tabboxhandler.h"
+#include "tabbox/clientmodel.h"
 
 #include <QtTest>
 #include <private/qtx11extras_p.h>

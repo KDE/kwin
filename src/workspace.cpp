@@ -12,7 +12,7 @@
 // own
 #include "workspace.h"
 // kwin libs
-#include <kwinglplatform.h>
+#include "libkwineffects/kwinglplatform.h"
 // kwin
 #include "core/output.h"
 #if KWIN_BUILD_ACTIVITIES
@@ -43,7 +43,7 @@
 #include "tiles/tilemanager.h"
 #include "x11window.h"
 #if KWIN_BUILD_TABBOX
-#include "tabbox.h"
+#include "tabbox/tabbox.h"
 #endif
 #include "decorations/decorationbridge.h"
 #include "kscreenintegration.h"

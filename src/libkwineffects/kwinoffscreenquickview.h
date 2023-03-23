@@ -15,7 +15,7 @@
 
 #include <kwineffects_export.h>
 
-#include "kwineffects.h"
+#include "libkwineffects/kwineffects.h"
 
 #include <memory>
 

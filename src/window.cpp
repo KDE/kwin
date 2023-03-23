@@ -29,7 +29,7 @@
 #include "outline.h"
 #include "placement.h"
 #if KWIN_BUILD_TABBOX
-#include "tabbox.h"
+#include "tabbox/tabbox.h"
 #endif
 #include "scene/shadowitem.h"
 #include "scene/windowitem.h"

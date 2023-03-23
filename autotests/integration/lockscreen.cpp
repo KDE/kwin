@@ -12,6 +12,7 @@
 #include "core/output.h"
 #include "core/outputbackend.h"
 #include "core/renderbackend.h"
+#include "libkwineffects/kwineffects.h"
 #include "pointer_input.h"
 #include "screenedge.h"
 #include "wayland/keyboard_interface.h"
@@ -19,7 +20,6 @@
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
-#include <kwineffects.h>
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>

@@ -13,11 +13,11 @@
 // own
 #include "clientmodel.h"
 #include "desktopmodel.h"
+#include "libkwineffects/kwinglobals.h"
 #include "scripting/scripting.h"
 #include "switcheritem.h"
 #include "tabbox_logging.h"
 #include "utils/xcbutils.h"
-#include <kwinglobals.h>
 // Qt
 #include <QKeyEvent>
 #include <QQmlComponent>

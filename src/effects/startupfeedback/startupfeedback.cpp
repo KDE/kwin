@@ -24,8 +24,8 @@
 #include <KSharedConfig>
 #include <KWindowSystem>
 // KWin
-#include <kwinglutils.h>
-#include <renderviewport.h>
+#include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/renderviewport.h"
 
 // based on StartupId in KRunner by Lubos Lunak
 // SPDX-FileCopyrightText: 2001 Lubos Lunak <l.lunak@kde.org>

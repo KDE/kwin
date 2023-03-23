@@ -6,9 +6,9 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
+#include "libkwineffects/kwinglplatform.h"
 #include "mock_gl.h"
 #include <QTest>
-#include <kwinglplatform.h>
 
 #include <KConfig>
 #include <KConfigGroup>

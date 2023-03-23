@@ -8,15 +8,15 @@
 */
 #include "virtual_egl_backend.h"
 // kwin
-#include "basiceglsurfacetexture_internal.h"
-#include "basiceglsurfacetexture_wayland.h"
-#include "virtual_logging.h"
-#include "softwarevsyncmonitor.h"
+#include "platformsupport/scenes/opengl/basiceglsurfacetexture_internal.h"
+#include "platformsupport/scenes/opengl/basiceglsurfacetexture_wayland.h"
+#include "platformsupport/vsyncconvenience/softwarevsyncmonitor.h"
 #include "virtual_backend.h"
+#include "virtual_logging.h"
 #include "virtual_output.h"
 // kwin libs
+#include "libkwineffects/kwinglutils.h"
 #include <drm_fourcc.h>
-#include <kwinglutils.h>
 
 #ifndef EGL_PLATFORM_SURFACELESS_MESA
 #define EGL_PLATFORM_SURFACELESS_MESA 0x31DD

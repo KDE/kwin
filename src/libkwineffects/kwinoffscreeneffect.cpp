@@ -4,11 +4,11 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "kwinoffscreeneffect.h"
-#include "kwingltexture.h"
-#include "kwinglutils.h"
-#include "rendertarget.h"
-#include "renderviewport.h"
+#include "libkwineffects/kwinoffscreeneffect.h"
+#include "libkwineffects/kwingltexture.h"
+#include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/rendertarget.h"
+#include "libkwineffects/renderviewport.h"
 
 namespace KWin
 {

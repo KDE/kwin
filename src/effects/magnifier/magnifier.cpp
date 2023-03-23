@@ -17,9 +17,9 @@
 #include <kstandardaction.h>
 #include <kwinconfig.h>
 
+#include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/renderviewport.h"
 #include <KGlobalAccel>
-#include <kwinglutils.h>
-#include <renderviewport.h>
 
 namespace KWin
 {

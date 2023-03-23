@@ -11,10 +11,10 @@
 // config
 #include <config-kwin.h>
 // KWin
+#include "libkwineffects/kwineffects.h"
 #include "plugin.h"
 #include "scripting/scriptedeffect.h"
 #include "utils/common.h"
-#include <kwineffects.h>
 // KDE
 #include <KConfigGroup>
 #include <KPackage/Package>

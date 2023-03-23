@@ -7,7 +7,7 @@
 
 #include "blurshader.h"
 
-#include <kwineffects.h>
+#include "libkwineffects/kwineffects.h"
 
 static void ensureResources()
 {

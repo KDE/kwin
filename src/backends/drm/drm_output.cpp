@@ -22,8 +22,8 @@
 #include "drm_egl_backend.h"
 #include "drm_layer.h"
 #include "drm_logging.h"
-#include "kwinglutils.h"
-#include "renderviewport.h"
+#include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/renderviewport.h"
 // Qt
 #include <QCryptographicHash>
 #include <QMatrix4x4>

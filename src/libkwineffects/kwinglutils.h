@@ -10,8 +10,8 @@
 #pragma once
 
 // kwin
-#include "kwingltexture.h"
-#include "kwinglutils_funcs.h"
+#include "libkwineffects/kwingltexture.h"
+#include "libkwineffects/kwinglutils_funcs.h"
 #include <kwinglutils_export.h>
 
 // Qt

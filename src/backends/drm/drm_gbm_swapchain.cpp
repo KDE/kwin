@@ -18,7 +18,7 @@
 #include "drm_gpu.h"
 #include "drm_logging.h"
 #include "kwineglutils_p.h"
-#include "kwinglplatform.h"
+#include "libkwineffects/kwinglplatform.h"
 
 namespace KWin
 {

@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include <kwinglobals.h>
+#include "libkwineffects/kwinglobals.h"
 #include <kwinglutils_export.h>
 
 #include <QByteArray>

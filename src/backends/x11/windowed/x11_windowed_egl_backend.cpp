@@ -12,8 +12,8 @@
 #include "x11_windowed_output.h"
 #include "../../drm/gbm_dmabuf.h"
 
-#include "basiceglsurfacetexture_internal.h"
-#include "basiceglsurfacetexture_wayland.h"
+#include "platformsupport/scenes/opengl/basiceglsurfacetexture_internal.h"
+#include "platformsupport/scenes/opengl/basiceglsurfacetexture_wayland.h"
 
 #include <drm_fourcc.h>
 #include <gbm.h>

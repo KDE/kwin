@@ -10,8 +10,8 @@
 
 #pragma once
 
+#include "libkwineffects/kwinglobals.h"
 #include <config-kwin.h>
-#include <kwinglobals.h>
 
 #include <KSharedConfig>
 #include <memory>

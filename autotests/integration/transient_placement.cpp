@@ -10,13 +10,13 @@
 
 #include "core/output.h"
 #include "core/outputbackend.h"
+#include "libkwineffects/kwineffects.h"
 #include "pointer_input.h"
 #include "wayland/seat_interface.h"
 #include "wayland/surface_interface.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
-#include <kwineffects.h>
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>

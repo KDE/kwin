@@ -9,9 +9,9 @@
 */
 
 #include "wayland_egl_backend.h"
-#include "basiceglsurfacetexture_internal.h"
-#include "basiceglsurfacetexture_wayland.h"
 #include "../drm/gbm_dmabuf.h"
+#include "platformsupport/scenes/opengl/basiceglsurfacetexture_internal.h"
+#include "platformsupport/scenes/opengl/basiceglsurfacetexture_wayland.h"
 
 #include "wayland_backend.h"
 #include "wayland_display.h"
@@ -22,8 +22,8 @@
 #include <unistd.h>
 
 // kwin libs
-#include <kwinglplatform.h>
-#include <kwinglutils.h>
+#include "libkwineffects/kwinglplatform.h"
+#include "libkwineffects/kwinglutils.h"
 
 // KDE
 #include <KWayland/Client/shm_pool.h>

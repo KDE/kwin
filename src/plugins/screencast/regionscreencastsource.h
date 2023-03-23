@@ -8,9 +8,9 @@
 
 #include "screencastsource.h"
 
+#include "libkwineffects/kwingltexture.h"
+#include "libkwineffects/kwinglutils.h"
 #include <QImage>
-#include <kwingltexture.h>
-#include <kwinglutils.h>
 
 namespace KWin
 {

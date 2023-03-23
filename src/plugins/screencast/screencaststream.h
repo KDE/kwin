@@ -11,7 +11,7 @@
 #include "config-kwin.h"
 
 #include "dmabuftexture.h"
-#include "kwinglobals.h"
+#include "libkwineffects/kwinglobals.h"
 #include "wayland/screencast_v1_interface.h"
 
 #include <QHash>

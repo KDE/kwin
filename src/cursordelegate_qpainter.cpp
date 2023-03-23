@@ -9,8 +9,8 @@
 #include "core/output.h"
 #include "core/renderlayer.h"
 #include "cursor.h"
-#include "rendertarget.h"
-#include "renderviewport.h"
+#include "libkwineffects/rendertarget.h"
+#include "libkwineffects/renderviewport.h"
 #include "scene/cursorscene.h"
 
 #include <QPainter>

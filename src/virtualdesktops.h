@@ -8,8 +8,8 @@
 */
 #pragma once
 // KWin
+#include "libkwineffects/kwinglobals.h"
 #include <kwin_export.h>
-#include <kwinglobals.h>
 // Qt includes
 #include <QAction>
 #include <QObject>

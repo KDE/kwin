@@ -10,7 +10,7 @@
 
 #include "drm_egl_backend.h"
 #include "drm_gpu.h"
-#include "egl_dmabuf.h"
+#include "platformsupport/scenes/opengl/egl_dmabuf.h"
 #include "wayland/linuxdmabufv1clientbuffer.h"
 #include "wayland/surface_interface.h"
 

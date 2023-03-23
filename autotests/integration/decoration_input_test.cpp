@@ -12,12 +12,12 @@
 #include "core/outputbackend.h"
 #include "cursor.h"
 #include "internalwindow.h"
+#include "libkwineffects/kwineffects.h"
 #include "pointer_input.h"
 #include "touch_input.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
-#include <kwineffects.h>
 
 #include "decorations/decoratedclient.h"
 #include "decorations/decorationbridge.h"

@@ -1,10 +1,6 @@
 # KI18N Translation Domain for this library
 add_definitions(-DTRANSLATION_DOMAIN=\"kcm_kwintabbox\")
 
-include_directories(${KWin_SOURCE_DIR}/src/effects ${KWin_SOURCE_DIR}/src/tabbox ${KWin_SOURCE_DIR})
-
-########### next target ###############
-
 set(kcm_kwintabbox_PART_SRCS
     ${KWin_SOURCE_DIR}/src/tabbox/tabboxconfig.cpp
     layoutpreview.cpp

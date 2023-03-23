@@ -31,7 +31,7 @@
 #include "unmanaged.h"
 #include "x11window.h"
 #if KWIN_BUILD_TABBOX
-#include "tabbox.h"
+#include "tabbox/tabbox.h"
 #endif
 #include "screenedge.h"
 #include "scripting/scriptedeffect.h"

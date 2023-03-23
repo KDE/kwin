@@ -120,8 +120,6 @@ target_link_libraries(testXcbWindow
 add_test(NAME kwin-testXcbWindow COMMAND testXcbWindow)
 ecm_mark_as_test(testXcbWindow)
 
-include_directories(${KWin_SOURCE_DIR}/src)
-
 ########################################################
 # Test OnScreenNotification
 ########################################################

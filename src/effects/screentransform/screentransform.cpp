@@ -8,9 +8,9 @@
 */
 // own
 #include "screentransform.h"
-#include "kwinglutils.h"
-#include "rendertarget.h"
-#include "renderviewport.h"
+#include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/rendertarget.h"
+#include "libkwineffects/renderviewport.h"
 
 #include <QDebug>
 

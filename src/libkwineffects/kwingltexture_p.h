@@ -12,7 +12,7 @@
 #pragma once
 
 #include "kwinconfig.h" // KWIN_HAVE_OPENGL
-#include "kwinglutils.h"
+#include "libkwineffects/kwinglutils.h"
 #include <kwinglutils_export.h>
 
 #include <QImage>

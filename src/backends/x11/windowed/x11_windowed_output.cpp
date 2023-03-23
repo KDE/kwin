@@ -17,7 +17,7 @@
 #include "core/renderlayer.h"
 #include "core/renderloop_p.h"
 #include "cursorsource.h"
-#include "renderviewport.h"
+#include "libkwineffects/renderviewport.h"
 #include "scene/cursorscene.h"
 
 #include <NETWM>

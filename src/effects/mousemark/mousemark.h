@@ -9,8 +9,8 @@
 
 #pragma once
 
-#include <kwineffects.h>
-#include <kwinglutils.h>
+#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/kwinglutils.h"
 
 namespace KWin
 {

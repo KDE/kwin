@@ -6,10 +6,10 @@
 #include "aurorae.h"
 
 #include "config-kwin.h"
-#include "kwineffects.h"
+#include "libkwineffects/kwineffects.h"
 
 #include "auroraetheme.h"
-#include "kwinoffscreenquickview.h"
+#include "libkwineffects/kwinoffscreenquickview.h"
 // qml imports
 #include "decorationoptions.h"
 // KDecoration2

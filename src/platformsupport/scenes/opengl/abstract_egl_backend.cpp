@@ -6,22 +6,22 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "abstract_egl_backend.h"
+#include "platformsupport/scenes/opengl/abstract_egl_backend.h"
 #include "composite.h"
 #include "core/output.h"
 #include "core/outputbackend.h"
 #include "dmabuftexture.h"
-#include "egl_dmabuf.h"
 #include "options.h"
+#include "platformsupport/scenes/opengl/egl_dmabuf.h"
 #include "utils/common.h"
 #include "utils/egl_context_attribute_builder.h"
 #include "wayland/display.h"
 #include "wayland_server.h"
 // kwin libs
-#include <kwineglimagetexture.h>
+#include "libkwineffects/kwineglimagetexture.h"
+#include "libkwineffects/kwinglplatform.h"
+#include "libkwineffects/kwinglutils.h"
 #include <kwineglutils_p.h>
-#include <kwinglplatform.h>
-#include <kwinglutils.h>
 // Qt
 #include <QOpenGLContext>
 

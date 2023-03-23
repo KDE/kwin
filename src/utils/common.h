@@ -14,7 +14,7 @@
 #include <config-kwin.h>
 #include <kwinconfig.h>
 // kwin
-#include <kwinglobals.h>
+#include "libkwineffects/kwinglobals.h"
 // Qt
 #include <QList>
 #include <QLoggingCategory>

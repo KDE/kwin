@@ -19,10 +19,10 @@
 #include "../common/ge_event_mem_mover.h"
 
 #include "input.h"
+#include "libkwineffects/kwinglobals.h"
 #include "modifier_only_shortcuts.h"
 #include "workspace.h"
 #include "x11eventfilter.h"
-#include <kwinglobals.h>
 
 #include <X11/extensions/XI2proto.h>
 #include <X11/extensions/XInput2.h>

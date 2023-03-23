@@ -17,11 +17,11 @@
 #include "screenedge.h"
 #include "workspace.h"
 // KDE
+#include "libkwineffects/kwinglutils.h"
 #include <KConfigGroup>
 #include <KGlobalAccel>
 #include <KPluginMetaData>
 #include <kconfigloader.h>
-#include <kwinglutils.h>
 // Qt
 #include <QAction>
 #include <QFile>

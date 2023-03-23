@@ -19,10 +19,10 @@
 
 #include <QProcess>
 
+#include "libkwineffects/kwinglplatform.h"
 #include "settings.h"
 #include "workspace.h"
 #include <QOpenGLContext>
-#include <kwinglplatform.h>
 
 #endif // KCMRULES
 

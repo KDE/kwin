@@ -10,10 +10,10 @@
 */
 
 #include "kwinconfig.h" // KWIN_HAVE_OPENGL
-#include "kwineffects.h"
-#include "kwinglplatform.h"
-#include "kwinglutils.h"
-#include "kwinglutils_funcs.h"
+#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/kwinglplatform.h"
+#include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/kwinglutils_funcs.h"
 
 #include "kwingltexture_p.h"
 

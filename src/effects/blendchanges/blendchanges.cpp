@@ -8,7 +8,7 @@
 */
 // own
 #include "blendchanges.h"
-#include "kwinglutils.h"
+#include "libkwineffects/kwinglutils.h"
 
 #include <QDBusConnection>
 #include <QTimer>

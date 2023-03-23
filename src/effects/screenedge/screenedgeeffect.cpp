@@ -8,9 +8,9 @@
 */
 #include "screenedgeeffect.h"
 // KWin
-#include <kwingltexture.h>
-#include <kwinglutils.h>
-#include <renderviewport.h>
+#include "libkwineffects/kwingltexture.h"
+#include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/renderviewport.h"
 // KDE
 #include <Plasma/Svg>
 // Qt

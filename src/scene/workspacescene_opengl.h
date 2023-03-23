@@ -10,13 +10,13 @@
 
 #pragma once
 
-#include "openglbackend.h"
+#include "platformsupport/scenes/opengl/openglbackend.h"
 
 #include "scene/decorationitem.h"
 #include "scene/shadowitem.h"
 #include "scene/workspacescene.h"
 
-#include "kwinglutils.h"
+#include "libkwineffects/kwinglutils.h"
 
 namespace KWin
 {

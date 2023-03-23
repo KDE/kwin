@@ -11,8 +11,8 @@
 #include "platformsupport/scenes/opengl/openglsurfacetexture_x11.h"
 #include "utils/damagejournal.h"
 
-#include <kwingltexture.h>
-#include <kwingltexture_p.h>
+#include "libkwineffects/kwingltexture.h"
+#include "libkwineffects/kwingltexture_p.h"
 
 namespace KWin
 {

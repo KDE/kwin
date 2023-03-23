@@ -10,8 +10,8 @@
 #include "composite.h"
 #include "core/output.h"
 #include "core/renderloop.h"
-#include "kwingltexture.h"
-#include "kwinglutils.h"
+#include "libkwineffects/kwingltexture.h"
+#include "libkwineffects/kwinglutils.h"
 #include "scene/workspacescene.h"
 
 namespace KWin

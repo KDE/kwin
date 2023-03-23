@@ -9,7 +9,7 @@
 #pragma once
 #include "drm_dumb_swapchain.h"
 #include "drm_render_backend.h"
-#include "qpainterbackend.h"
+#include "platformsupport/scenes/qpainter/qpainterbackend.h"
 
 #include <QObject>
 #include <QVector>

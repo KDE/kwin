@@ -8,7 +8,7 @@
 */
 #pragma once
 
-#include "qpainterbackend.h"
+#include "platformsupport/scenes/qpainter/qpainterbackend.h"
 
 #include "scene/decorationitem.h"
 #include "scene/shadowitem.h"

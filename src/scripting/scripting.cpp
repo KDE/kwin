@@ -13,7 +13,7 @@
 // own
 #include "dbuscall.h"
 #include "desktopbackgrounditem.h"
-#include "kwinquickeffect.h"
+#include "libkwineffects/kwinquickeffect.h"
 #include "screenedgehandler.h"
 #include "scripting_logging.h"
 #include "scriptingutils.h"

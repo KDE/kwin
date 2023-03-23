@@ -62,7 +62,7 @@
 
 #include "killwindow.h"
 #if KWIN_BUILD_TABBOX
-#include "tabbox.h"
+#include "tabbox/tabbox.h"
 #endif
 
 namespace KWin

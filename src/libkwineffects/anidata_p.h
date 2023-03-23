@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "kwinanimationeffect.h"
+#include "libkwineffects/kwinanimationeffect.h"
 
 #include <QEasingCurve>
 

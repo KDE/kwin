@@ -12,6 +12,8 @@
 #include "input_event.h"
 #include "internalwindow.h"
 #include "keyboard_input.h"
+#include "libkwineffects/kwinglplatform.h"
+#include "libkwineffects/kwinglutils.h"
 #include "main.h"
 #include "platformsupport/scenes/opengl/openglbackend.h"
 #include "unmanaged.h"
@@ -33,8 +35,6 @@
 #include "x11window.h"
 #include "xkb.h"
 #include <cerrno>
-#include <kwinglplatform.h>
-#include <kwinglutils.h>
 
 #include "ui_debug_console.h"
 

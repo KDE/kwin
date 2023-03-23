@@ -14,7 +14,7 @@
 // own
 #include "x11_standalone_glx_backend.h"
 #include "../common/kwinxrenderutils.h"
-#include "softwarevsyncmonitor.h"
+#include "platformsupport/vsyncconvenience/softwarevsyncmonitor.h"
 #include "x11_standalone_backend.h"
 #include "x11_standalone_glx_context_attribute_builder.h"
 #include "x11_standalone_glxconvenience.h"
@@ -33,9 +33,9 @@
 #include "utils/xcbutils.h"
 #include "workspace.h"
 // kwin libs
-#include <kwinglplatform.h>
-#include <kwinglutils.h>
-#include <kwinoffscreenquickview.h>
+#include "libkwineffects/kwinglplatform.h"
+#include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/kwinoffscreenquickview.h"
 // Qt
 #include <QDebug>
 #include <QOpenGLContext>

@@ -16,8 +16,8 @@
 // KConfigSkeleton
 #include "glideconfig.h"
 
-#include "rendertarget.h"
-#include "renderviewport.h"
+#include "libkwineffects/rendertarget.h"
+#include "libkwineffects/renderviewport.h"
 
 // Qt
 #include <QMatrix4x4>

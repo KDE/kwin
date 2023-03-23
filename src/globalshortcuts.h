@@ -8,7 +8,7 @@
 */
 #pragma once
 // KWin
-#include <kwinglobals.h>
+#include "libkwineffects/kwinglobals.h"
 // Qt
 #include <QKeySequence>
 

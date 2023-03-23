@@ -6,8 +6,8 @@
 
 #include "outputlocator.h"
 
+#include "libkwineffects/kwinoffscreenquickview.h"
 #include <algorithm>
-#include <kwinoffscreenquickview.h>
 
 #include <KLocalizedString>
 

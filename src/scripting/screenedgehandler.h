@@ -8,8 +8,8 @@
 */
 #pragma once
 
+#include "libkwineffects/kwinglobals.h"
 #include <QObject>
-#include <kwinglobals.h>
 
 class QAction;
 

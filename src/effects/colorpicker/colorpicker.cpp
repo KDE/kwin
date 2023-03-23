@@ -7,13 +7,13 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "colorpicker.h"
+#include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/kwinglutils_funcs.h"
+#include "libkwineffects/rendertarget.h"
+#include "libkwineffects/renderviewport.h"
 #include <KLocalizedString>
 #include <QDBusConnection>
 #include <QDBusMetaType>
-#include <kwinglutils.h>
-#include <kwinglutils_funcs.h>
-#include <rendertarget.h>
-#include <renderviewport.h>
 
 Q_DECLARE_METATYPE(QColor)
 

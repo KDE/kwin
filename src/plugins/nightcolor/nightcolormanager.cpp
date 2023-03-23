@@ -8,8 +8,8 @@
 */
 #include "nightcolormanager.h"
 #include "clockskewnotifier.h"
-#include "colordevice.h"
-#include "colormanager.h"
+#include "colors/colordevice.h"
+#include "colors/colormanager.h"
 #include "nightcolordbusinterface.h"
 #include "nightcolorlogging.h"
 #include "nightcolorsettings.h"

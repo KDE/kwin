@@ -14,8 +14,8 @@
 #include "core/inputbackend.h"
 #include "core/inputdevice.h"
 #include "core/outputbackend.h"
+#include "libkwineffects/kwinglobals.h"
 #include "utils/filedescriptor.h"
-#include <kwinglobals.h>
 // Qt
 #include <QHash>
 #include <QImage>

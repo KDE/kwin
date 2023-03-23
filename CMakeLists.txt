@@ -398,11 +398,6 @@ include_directories(BEFORE
     ${CMAKE_CURRENT_BINARY_DIR}/src/libkwineffects
     ${CMAKE_CURRENT_BINARY_DIR}/src/wayland
     ${CMAKE_CURRENT_BINARY_DIR}/src
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/libkwineffects
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/effects
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/tabbox
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/platformsupport
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/colors
     ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 

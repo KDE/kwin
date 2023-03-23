@@ -9,8 +9,8 @@
 
 #pragma once
 
+#include "libkwineffects/kwinglobals.h"
 #include <kwin_export.h>
-#include <kwinglobals.h>
 #include <utils/common.h>
 
 #include <QObject>

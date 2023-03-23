@@ -9,4 +9,3 @@ target_sources(kwin PRIVATE
     openglsurfacetexture_wayland.cpp
     openglsurfacetexture_x11.cpp
 )
-target_include_directories(kwin PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

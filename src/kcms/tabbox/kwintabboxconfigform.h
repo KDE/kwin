@@ -14,7 +14,7 @@
 #include <QStandardItemModel>
 #include <QWidget>
 
-#include "tabboxconfig.h"
+#include "tabbox/tabboxconfig.h"
 
 namespace Ui
 {

@@ -12,7 +12,7 @@
 #pragma once
 
 // kwineffects
-#include <kwineffects.h>
+#include "libkwineffects/kwineffects.h"
 
 namespace KWin
 {

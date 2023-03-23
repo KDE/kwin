@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "screenshot/screenshot.h"
+#include "screenshot.h"
 
 #include <QDBusContext>
 #include <QDBusUnixFileDescriptor>

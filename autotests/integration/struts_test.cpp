@@ -10,13 +10,13 @@
 
 #include "core/output.h"
 #include "core/outputbackend.h"
+#include "libkwineffects/kwineffects.h"
 #include "pointer_input.h"
 #include "screenedge.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "x11window.h"
-#include <kwineffects.h>
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/plasmashell.h>

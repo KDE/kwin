@@ -12,7 +12,7 @@
 #include <config-kwin.h>
 
 #include "atoms.h"
-#include "colormanager.h"
+#include "colors/colormanager.h"
 #include "composite.h"
 #include "core/outputbackend.h"
 #include "core/session.h"
@@ -36,7 +36,7 @@
 #include "screenlockerwatcher.h"
 #endif
 
-#include <kwineffects.h>
+#include "libkwineffects/kwineffects.h"
 
 // KDE
 #include <KAboutData>

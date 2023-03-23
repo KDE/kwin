@@ -11,10 +11,10 @@
 #include "screenshot.h"
 #include "screenshotdbusinterface2.h"
 
-#include <kwinglplatform.h>
-#include <kwinglutils.h>
-#include <rendertarget.h>
-#include <renderviewport.h>
+#include "libkwineffects/kwinglplatform.h"
+#include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/rendertarget.h"
+#include "libkwineffects/renderviewport.h"
 
 #include <QPainter>
 

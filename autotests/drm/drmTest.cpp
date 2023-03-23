@@ -12,18 +12,18 @@
 
 #include "mock_drm.h"
 
+#include "core/session.h"
 #include "drm_backend.h"
+#include "drm_connector.h"
+#include "drm_crtc.h"
 #include "drm_dumb_buffer.h"
 #include "drm_egl_backend.h"
 #include "drm_gpu.h"
-#include "drm_connector.h"
-#include "drm_crtc.h"
-#include "drm_plane.h"
 #include "drm_output.h"
 #include "drm_pipeline.h"
+#include "drm_plane.h"
 #include "drm_pointer.h"
-#include "qpainterbackend.h"
-#include "core/session.h"
+#include "platformsupport/scenes/qpainter/qpainterbackend.h"
 
 #include <drm_fourcc.h>
 

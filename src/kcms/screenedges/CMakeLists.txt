@@ -1,7 +1,6 @@
 # KI18N Translation Domain for this library
 add_definitions(-DTRANSLATION_DOMAIN=\"kcmkwinscreenedges\")
 
-include_directories(${KWin_SOURCE_DIR}/src/effects)
 set(kcm_screenedges_SRCS
     monitor.cpp
     screenpreviewwidget.cpp

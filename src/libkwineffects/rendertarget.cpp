@@ -4,8 +4,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "rendertarget.h"
-#include "kwinglutils.h"
+#include "libkwineffects/rendertarget.h"
+#include "libkwineffects/kwinglutils.h"
 
 namespace KWin
 {

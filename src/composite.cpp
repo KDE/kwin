@@ -23,8 +23,8 @@
 #include "effects.h"
 #include "ftrace.h"
 #include "internalwindow.h"
-#include "openglbackend.h"
-#include "qpainterbackend.h"
+#include "platformsupport/scenes/opengl/openglbackend.h"
+#include "platformsupport/scenes/qpainter/qpainterbackend.h"
 #include "scene/cursorscene.h"
 #include "scene/itemrenderer_opengl.h"
 #include "scene/itemrenderer_qpainter.h"
@@ -42,8 +42,8 @@
 #include "x11syncmanager.h"
 #include "x11window.h"
 
-#include <kwinglplatform.h>
-#include <kwingltexture.h>
+#include "libkwineffects/kwinglplatform.h"
+#include "libkwineffects/kwingltexture.h"
 
 #include <KCrash>
 #include <KGlobalAccel>

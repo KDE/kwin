@@ -16,7 +16,7 @@
 
 #include "core/outputlayer.h"
 #include "drm_plane.h"
-#include "kwingltexture.h"
+#include "libkwineffects/kwingltexture.h"
 
 namespace KWaylandServer
 {

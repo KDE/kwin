@@ -2,8 +2,6 @@
 add_definitions(-DTRANSLATION_DOMAIN=\"kcm_kwinrules\")
 add_definitions(-DKCMRULES)
 
-include_directories(../../)
-
 set(kwinrules_SRCS
     ../../rulebooksettings.cpp
     ../../rules.cpp

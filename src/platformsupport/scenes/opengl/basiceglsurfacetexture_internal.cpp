@@ -4,8 +4,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "basiceglsurfacetexture_internal.h"
-#include "kwingltexture.h"
+#include "platformsupport/scenes/opengl/basiceglsurfacetexture_internal.h"
+#include "libkwineffects/kwingltexture.h"
 #include "scene/surfaceitem_internal.h"
 #include "utils/common.h"
 

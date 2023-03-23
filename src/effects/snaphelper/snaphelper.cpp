@@ -10,8 +10,8 @@
 
 #include "snaphelper.h"
 
-#include <kwinglutils.h>
-#include <renderviewport.h>
+#include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/renderviewport.h"
 
 #include <QPainter>
 

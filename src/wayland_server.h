@@ -8,7 +8,7 @@
 */
 #pragma once
 
-#include <kwinglobals.h>
+#include "libkwineffects/kwinglobals.h"
 
 #include <QObject>
 #include <QPointer>

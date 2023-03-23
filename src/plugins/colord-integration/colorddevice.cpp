@@ -5,10 +5,10 @@
 */
 
 #include "colorddevice.h"
-#include "colordevice.h"
 #include "colordlogging.h"
 #include "colordprofileinterface.h"
-#include "colormanager.h"
+#include "colors/colordevice.h"
+#include "colors/colormanager.h"
 #include "core/output.h"
 
 namespace KWin

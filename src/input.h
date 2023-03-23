@@ -11,10 +11,10 @@
 #pragma once
 #include <config-kwin.h>
 
+#include "libkwineffects/kwinglobals.h"
 #include <QObject>
 #include <QPoint>
 #include <QPointer>
-#include <kwinglobals.h>
 
 #include <KConfigWatcher>
 #include <KSharedConfig>

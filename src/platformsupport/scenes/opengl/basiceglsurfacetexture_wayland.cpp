@@ -4,10 +4,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "basiceglsurfacetexture_wayland.h"
-#include "egl_dmabuf.h"
+#include "platformsupport/scenes/opengl/basiceglsurfacetexture_wayland.h"
 #include "kwineglext.h"
-#include "kwingltexture.h"
+#include "libkwineffects/kwingltexture.h"
+#include "platformsupport/scenes/opengl/egl_dmabuf.h"
 #include "scene/surfaceitem_wayland.h"
 #include "utils/common.h"
 #include "wayland/drmclientbuffer.h"

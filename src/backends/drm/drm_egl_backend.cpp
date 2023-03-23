@@ -7,8 +7,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "drm_egl_backend.h"
-#include "basiceglsurfacetexture_internal.h"
-#include "basiceglsurfacetexture_wayland.h"
+#include "platformsupport/scenes/opengl/basiceglsurfacetexture_internal.h"
+#include "platformsupport/scenes/opengl/basiceglsurfacetexture_wayland.h"
 // kwin
 #include "core/renderloop_p.h"
 #include "drm_abstract_output.h"
@@ -23,18 +23,18 @@
 #include "drm_output.h"
 #include "drm_pipeline.h"
 #include "drm_virtual_egl_layer.h"
-#include "egl_dmabuf.h"
 #include "gbm_dmabuf.h"
 #include "kwineglutils_p.h"
 #include "linux_dmabuf.h"
 #include "options.h"
+#include "platformsupport/scenes/opengl/egl_dmabuf.h"
 #include "scene/surfaceitem_wayland.h"
 #include "wayland/clientconnection.h"
 #include "wayland/linuxdmabufv1clientbuffer.h"
 #include "wayland/surface_interface.h"
 // kwin libs
-#include <kwineglimagetexture.h>
-#include <kwinglplatform.h>
+#include "libkwineffects/kwineglimagetexture.h"
+#include "libkwineffects/kwinglplatform.h"
 // system
 #include <drm_fourcc.h>
 #include <errno.h>

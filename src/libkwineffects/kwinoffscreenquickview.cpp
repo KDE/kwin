@@ -7,9 +7,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "kwinoffscreenquickview.h"
+#include "libkwineffects/kwinoffscreenquickview.h"
 
-#include "kwinglutils.h"
+#include "libkwineffects/kwinglutils.h"
 #include "logging_p.h"
 
 #include <QGuiApplication>

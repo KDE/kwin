@@ -14,9 +14,9 @@
 #include "wayland_display.h"
 #include "wayland_server.h"
 
-#include "kwingltexture.h"
-#include "kwinglutils.h"
-#include "renderviewport.h"
+#include "libkwineffects/kwingltexture.h"
+#include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/renderviewport.h"
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/pointer.h>

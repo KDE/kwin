@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <kwinglutils.h>
+#include "libkwineffects/kwinglutils.h"
 
 #include <QMatrix4x4>
 #include <QObject>

@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "kwineffects.h"
-#include "kwinoffscreenquickview.h"
+#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/kwinoffscreenquickview.h"
 
 #include <QQmlEngine>
 

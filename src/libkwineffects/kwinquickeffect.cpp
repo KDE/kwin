@@ -4,7 +4,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "kwinquickeffect.h"
+#include "libkwineffects/kwinquickeffect.h"
 
 #include "logging_p.h"
 

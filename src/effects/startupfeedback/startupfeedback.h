@@ -8,10 +8,10 @@
 */
 
 #pragma once
+#include "libkwineffects/kwineffects.h"
 #include <KConfigWatcher>
 #include <KStartupInfo>
 #include <QObject>
-#include <kwineffects.h>
 
 #include <chrono>
 

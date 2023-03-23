@@ -12,9 +12,9 @@
 
 #include <config-kwin.h>
 
+#include "libkwineffects/kwineffects.h"
 #include <QTime>
 #include <QTimeLine>
-#include <kwineffects.h>
 
 namespace KWin
 {
