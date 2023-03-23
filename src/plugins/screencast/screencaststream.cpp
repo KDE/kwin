@@ -62,6 +62,10 @@ static spa_video_format drmFourCCToSpaVideoFormat(quint32 format)
         return SPA_VIDEO_FORMAT_xRGB;
     case DRM_FORMAT_NV12:
         return SPA_VIDEO_FORMAT_NV12;
+    case DRM_FORMAT_RGB888:
+        return SPA_VIDEO_FORMAT_BGR;
+    case DRM_FORMAT_BGR888:
+        return SPA_VIDEO_FORMAT_RGB;
     default:
         qCDebug(KWIN_SCREENCAST) << "unknown format" << format;
         return SPA_VIDEO_FORMAT_xRGB;
