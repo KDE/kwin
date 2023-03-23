@@ -606,7 +606,7 @@ public:
     bool isOnActiveOutput() const;
     Output *output() const;
     void setOutput(Output *output);
-    virtual QPointF clientPos() const
+    QPointF clientPos() const
     {
         return QPointF(borderLeft(), borderTop());
     }; // inside of geometry()
@@ -664,8 +664,8 @@ public:
      * or NET::OnAllDesktops. Do not use desktop() directly, use
      * isOnDesktop() instead.
      */
-    virtual int desktop() const;
-    virtual QVector<VirtualDesktop *> desktops() const;
+    int desktop() const;
+    QVector<VirtualDesktop *> desktops() const;
     virtual QStringList activities() const;
     bool isOnDesktop(VirtualDesktop *desktop) const;
     bool isOnDesktop(int d) const;
@@ -723,7 +723,7 @@ public:
      * Whether the Window currently wants the shadow to be rendered. Default
      * implementation always returns @c true.
      */
-    virtual bool wantsShadowToBeRendered() const;
+    bool wantsShadowToBeRendered() const;
 
     /**
      * This method returns the area that the Window window reports to be opaque.
@@ -997,7 +997,7 @@ public:
     /**
      * Returns @c true if the window is shaded and shadeMode is @c ShadeNormal; otherwise returns @c false.
      */
-    virtual bool isShade() const
+    bool isShade() const
     {
         return shadeMode() == ShadeNormal;
     }
@@ -1086,7 +1086,7 @@ public:
     {
         return QuickTileMode(m_quickTileMode);
     }
-    virtual Layer layer() const;
+    Layer layer() const;
     void updateLayer();
 
     Tile *tile() const;

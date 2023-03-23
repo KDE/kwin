@@ -27,10 +27,7 @@ public:
     bool track(xcb_window_t w);
     bool hasScheduledRelease() const;
     static void deleteUnmanaged(Unmanaged *c);
-    int desktop() const override;
     QStringList activities() const override;
-    QVector<VirtualDesktop *> desktops() const override;
-    QPointF clientPos() const override;
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
     bool isOutline() const override;
     bool isUnmanaged() const override;

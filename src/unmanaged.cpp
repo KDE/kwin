@@ -173,24 +173,9 @@ bool Unmanaged::hasScheduledRelease() const
     return m_releaseTimer.isActive();
 }
 
-int Unmanaged::desktop() const
-{
-    return NET::OnAllDesktops; // TODO for some window types should be the current desktop?
-}
-
 QStringList Unmanaged::activities() const
 {
     return QStringList();
-}
-
-QVector<VirtualDesktop *> Unmanaged::desktops() const
-{
-    return QVector<VirtualDesktop *>();
-}
-
-QPointF Unmanaged::clientPos() const
-{
-    return QPoint(0, 0); // unmanaged windows don't have decorations
 }
 
 NET::WindowType Unmanaged::windowType(bool direct, int supportedTypes) const
