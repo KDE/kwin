@@ -94,7 +94,6 @@ public:
 
     bool isTransient() const override;
     bool groupTransient() const override;
-    bool wasOriginallyGroupTransient() const;
     QList<Window *> mainWindows() const override; // Call once before loop , is not indirect
     bool hasTransient(const Window *c, bool indirect) const override;
     void checkTransient(xcb_window_t w);
@@ -507,13 +506,6 @@ inline bool X11Window::isClientSideDecorated() const
 inline bool X11Window::groupTransient() const
 {
     return m_transientForId == kwinApp()->x11RootWindow();
-}
-
-// Needed because verifyTransientFor() may set transient_for_id to root window,
-// if the original value has a problem (window doesn't exist, etc.)
-inline bool X11Window::wasOriginallyGroupTransient() const
-{
-    return m_originalTransientForId == kwinApp()->x11RootWindow();
 }
 
 inline bool X11Window::isTransient() const
