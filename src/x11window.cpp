@@ -3076,30 +3076,10 @@ void X11Window::removeFromMainClients()
 // related lists.
 void X11Window::cleanGrouping()
 {
-    //    qDebug() << "CLEANGROUPING:" << this;
-    //    for ( auto it = group()->members().begin();
-    //         it != group()->members().end();
-    //         ++it )
-    //        qDebug() << "CL:" << *it;
-    //    QList<X11Window *> mains;
-    //    mains = mainClients();
-    //    for ( auto it = mains.begin();
-    //         it != mains.end();
-    //         ++it )
-    //        qDebug() << "MN:" << *it;
     removeFromMainClients();
     group()->removeMember(this);
     in_group = nullptr;
-    //    qDebug() << "CLEANGROUPING2:" << this;
-    //    for ( auto it = group()->members().begin();
-    //         it != group()->members().end();
-    //         ++it )
-    //        qDebug() << "CL2:" << *it;
-    //    mains = mainClients();
-    //    for ( auto it = mains.begin();
-    //         it != mains.end();
-    //         ++it )
-    //        qDebug() << "MN2:" << *it;
+
     for (auto it = transients().constBegin(); it != transients().constEnd();) {
         if ((*it)->transientFor() == this) {
             removeTransient(*it);
@@ -3108,16 +3088,7 @@ void X11Window::cleanGrouping()
             ++it;
         }
     }
-    //    qDebug() << "CLEANGROUPING3:" << this;
-    //    for ( auto it = group()->members().begin();
-    //         it != group()->members().end();
-    //         ++it )
-    //        qDebug() << "CL3:" << *it;
-    //    mains = mainClients();
-    //    for ( auto it = mains.begin();
-    //         it != mains.end();
-    //         ++it )
-    //        qDebug() << "MN3:" << *it;
+
     m_transientForId = XCB_WINDOW_NONE;
 }
 
@@ -3250,12 +3221,6 @@ void X11Window::addTransient(Window *cl)
     if (workspace()->mostRecentlyActivatedWindow() == this && cl->isModal()) {
         check_active_modal = true;
     }
-    //    qDebug() << "ADDTRANS:" << this << ":" << cl;
-    //    qDebug() << kBacktrace();
-    //    for ( auto it = transients_list.begin();
-    //         it != transients_list.end();
-    //         ++it )
-    //        qDebug() << "AT:" << (*it);
 }
 
 // A new window has been mapped. Check if it's not a mainwindow for this already existing window.
