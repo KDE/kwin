@@ -114,13 +114,10 @@ public:
     void setElevatedWindow(KWin::EffectWindow *w, bool set) override;
 
     void setTabBoxWindow(EffectWindow *) override;
-    void setTabBoxDesktop(int) override;
     EffectWindowList currentTabBoxWindowList() const override;
     void refTabBox() override;
     void unrefTabBox() override;
     void closeTabBox() override;
-    QList<int> currentTabBoxDesktopList() const override;
-    int currentTabBoxDesktop() const override;
     EffectWindow *currentTabBoxWindow() const override;
 
     void setActiveFullScreenEffect(Effect *e) override;

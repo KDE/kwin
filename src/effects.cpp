@@ -1066,13 +1066,6 @@ void EffectsHandlerImpl::setTabBoxWindow(EffectWindow *w)
 #endif
 }
 
-void EffectsHandlerImpl::setTabBoxDesktop(int desktop)
-{
-#if KWIN_BUILD_TABBOX
-    workspace()->tabbox()->setCurrentDesktop(desktop);
-#endif
-}
-
 EffectWindowList EffectsHandlerImpl::currentTabBoxWindowList() const
 {
 #if KWIN_BUILD_TABBOX
@@ -1108,24 +1101,6 @@ void EffectsHandlerImpl::closeTabBox()
 {
 #if KWIN_BUILD_TABBOX
     workspace()->tabbox()->close();
-#endif
-}
-
-QList<int> EffectsHandlerImpl::currentTabBoxDesktopList() const
-{
-#if KWIN_BUILD_TABBOX
-    return workspace()->tabbox()->currentDesktopList();
-#else
-    return QList<int>();
-#endif
-}
-
-int EffectsHandlerImpl::currentTabBoxDesktop() const
-{
-#if KWIN_BUILD_TABBOX
-    return workspace()->tabbox()->currentDesktop();
-#else
-    return -1;
 #endif
 }
 

@@ -36,10 +36,6 @@ public:
     {
         return std::weak_ptr<TabBox::TabBoxClient>();
     }
-    QString desktopName(int desktop) const override
-    {
-        return "desktop 1";
-    }
     QString desktopName(TabBox::TabBoxClient *client) const override
     {
         return "desktop";
@@ -56,14 +52,6 @@ public:
     std::weak_ptr<TabBox::TabBoxClient> nextClientFocusChain(TabBox::TabBoxClient *client) const override;
     std::weak_ptr<TabBox::TabBoxClient> firstClientFocusChain() const override;
     bool isInFocusChain(TabBox::TabBoxClient *client) const override;
-    int nextDesktopFocusChain(int desktop) const override
-    {
-        return 1;
-    }
-    int numberOfDesktops() const override
-    {
-        return 1;
-    }
     bool isKWinCompositing() const override
     {
         return false;

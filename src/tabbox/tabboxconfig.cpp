@@ -19,7 +19,6 @@ public:
     TabBoxConfigPrivate()
         : showTabBox(TabBoxConfig::defaultShowTabBox())
         , highlightWindows(TabBoxConfig::defaultHighlightWindow())
-        , tabBoxMode(TabBoxConfig::ClientTabBox)
         , clientDesktopMode(TabBoxConfig::defaultDesktopMode())
         , clientActivitiesMode(TabBoxConfig::defaultActivitiesMode())
         , clientApplicationsMode(TabBoxConfig::defaultApplicationsMode())
@@ -28,7 +27,6 @@ public:
         , showDesktopMode(TabBoxConfig::defaultShowDesktopMode())
         , clientMultiScreenMode(TabBoxConfig::defaultMultiScreenMode())
         , clientSwitchingMode(TabBoxConfig::defaultSwitchingMode())
-        , desktopSwitchingMode(TabBoxConfig::MostRecentlyUsedDesktopSwitching)
         , layoutName(TabBoxConfig::defaultLayoutName())
     {
     }
@@ -38,7 +36,6 @@ public:
     bool showTabBox;
     bool highlightWindows;
 
-    TabBoxConfig::TabBoxMode tabBoxMode;
     TabBoxConfig::ClientDesktopMode clientDesktopMode;
     TabBoxConfig::ClientActivitiesMode clientActivitiesMode;
     TabBoxConfig::ClientApplicationsMode clientApplicationsMode;
@@ -47,7 +44,6 @@ public:
     TabBoxConfig::ShowDesktopMode showDesktopMode;
     TabBoxConfig::ClientMultiScreenMode clientMultiScreenMode;
     TabBoxConfig::ClientSwitchingMode clientSwitchingMode;
-    TabBoxConfig::DesktopSwitchingMode desktopSwitchingMode;
     QString layoutName;
 };
 
@@ -65,7 +61,6 @@ TabBoxConfig &TabBoxConfig::operator=(const KWin::TabBox::TabBoxConfig &object)
 {
     d->showTabBox = object.isShowTabBox();
     d->highlightWindows = object.isHighlightWindows();
-    d->tabBoxMode = object.tabBoxMode();
     d->clientDesktopMode = object.clientDesktopMode();
     d->clientActivitiesMode = object.clientActivitiesMode();
     d->clientApplicationsMode = object.clientApplicationsMode();
@@ -74,7 +69,6 @@ TabBoxConfig &TabBoxConfig::operator=(const KWin::TabBox::TabBoxConfig &object)
     d->showDesktopMode = object.showDesktopMode();
     d->clientMultiScreenMode = object.clientMultiScreenMode();
     d->clientSwitchingMode = object.clientSwitchingMode();
-    d->desktopSwitchingMode = object.desktopSwitchingMode();
     d->layoutName = object.layoutName();
     return *this;
 }
@@ -97,16 +91,6 @@ void TabBoxConfig::setShowTabBox(bool show)
 bool TabBoxConfig::isShowTabBox() const
 {
     return d->showTabBox;
-}
-
-void TabBoxConfig::setTabBoxMode(TabBoxConfig::TabBoxMode mode)
-{
-    d->tabBoxMode = mode;
-}
-
-TabBoxConfig::TabBoxMode TabBoxConfig::tabBoxMode() const
-{
-    return d->tabBoxMode;
 }
 
 TabBoxConfig::ClientDesktopMode TabBoxConfig::clientDesktopMode() const
@@ -187,16 +171,6 @@ TabBoxConfig::ClientSwitchingMode TabBoxConfig::clientSwitchingMode() const
 void TabBoxConfig::setClientSwitchingMode(ClientSwitchingMode switchingMode)
 {
     d->clientSwitchingMode = switchingMode;
-}
-
-TabBoxConfig::DesktopSwitchingMode TabBoxConfig::desktopSwitchingMode() const
-{
-    return d->desktopSwitchingMode;
-}
-
-void TabBoxConfig::setDesktopSwitchingMode(DesktopSwitchingMode switchingMode)
-{
-    d->desktopSwitchingMode = switchingMode;
 }
 
 QString &TabBoxConfig::layoutName() const

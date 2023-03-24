@@ -4,7 +4,6 @@ add_definitions(-DKWIN_UNIT_TEST)
 ########################################################
 set(testTabBoxClientModel_SRCS
     ../../src/tabbox/clientmodel.cpp
-    ../../src/tabbox/desktopmodel.cpp
     ../../src/tabbox/tabbox_logging.cpp
     ../../src/tabbox/tabboxconfig.cpp
     ../../src/tabbox/tabboxhandler.cpp
@@ -38,7 +37,6 @@ ecm_mark_as_test(testTabBoxClientModel)
 ########################################################
 set(testTabBoxHandler_SRCS
     ../../src/tabbox/clientmodel.cpp
-    ../../src/tabbox/desktopmodel.cpp
     ../../src/tabbox/tabbox_logging.cpp
     ../../src/tabbox/tabboxconfig.cpp
     ../../src/tabbox/tabboxhandler.cpp
@@ -80,18 +78,3 @@ add_executable(testTabBoxConfig ${testTabBoxConfig_SRCS})
 target_link_libraries(testTabBoxConfig Qt::Core Qt::Test)
 add_test(NAME kwin-testTabBoxConfig COMMAND testTabBoxConfig)
 ecm_mark_as_test(testTabBoxConfig)
-
-
-########################################################
-# Test TabBox::DesktopChainManager
-########################################################
-set(testDesktopChain_SRCS
-    ../../src/tabbox/desktopchain.cpp
-    ../../src/tabbox/tabbox_logging.cpp
-    test_desktopchain.cpp
-)
-
-add_executable(testDesktopChain ${testDesktopChain_SRCS})
-target_link_libraries(testDesktopChain Qt::Core Qt::Test)
-add_test(NAME kwin-testDesktopChain COMMAND testDesktopChain)
-ecm_mark_as_test(testDesktopChain)

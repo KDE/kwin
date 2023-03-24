@@ -1124,13 +1124,10 @@ public:
     Q_SCRIPTABLE virtual void setElevatedWindow(KWin::EffectWindow *w, bool set) = 0;
 
     virtual void setTabBoxWindow(EffectWindow *) = 0;
-    virtual void setTabBoxDesktop(int) = 0;
     virtual EffectWindowList currentTabBoxWindowList() const = 0;
     virtual void refTabBox() = 0;
     virtual void unrefTabBox() = 0;
     virtual void closeTabBox() = 0;
-    virtual QList<int> currentTabBoxDesktopList() const = 0;
-    virtual int currentTabBoxDesktop() const = 0;
     virtual EffectWindow *currentTabBoxWindow() const = 0;
 
     virtual void setActiveFullScreenEffect(Effect *e) = 0;

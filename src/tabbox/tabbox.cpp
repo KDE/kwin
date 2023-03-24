@@ -14,8 +14,6 @@
 #include "tabbox.h"
 // tabbox
 #include "tabbox/clientmodel.h"
-#include "tabbox/desktopchain.h"
-#include "tabbox/desktopmodel.h"
 #include "tabbox/tabbox_logging.h"
 #include "tabbox/tabboxconfig.h"
 #include "tabbox/x11_filter.h"
@@ -62,19 +60,7 @@ namespace TabBox
 TabBoxHandlerImpl::TabBoxHandlerImpl(TabBox *tabBox)
     : TabBoxHandler(tabBox)
     , m_tabBox(tabBox)
-    , m_desktopFocusChain(new DesktopChainManager(this))
 {
-    // connects for DesktopFocusChainManager
-    VirtualDesktopManager *vds = VirtualDesktopManager::self();
-    connect(vds, &VirtualDesktopManager::countChanged, m_desktopFocusChain, &DesktopChainManager::resize);
-    connect(vds, &VirtualDesktopManager::currentChanged, m_desktopFocusChain, [this](VirtualDesktop *previousDesktop, VirtualDesktop *newDesktop) {
-        m_desktopFocusChain->addDesktop(newDesktop->x11DesktopNumber());
-    });
-#if KWIN_BUILD_ACTIVITIES
-    if (Workspace::self()->activities()) {
-        connect(Workspace::self()->activities(), &Activities::currentChanged, m_desktopFocusChain, &DesktopChainManager::useChain);
-    }
-#endif
 }
 
 TabBoxHandlerImpl::~TabBoxHandlerImpl()
@@ -95,16 +81,10 @@ QString TabBoxHandlerImpl::desktopName(TabBoxClient *client) const
 {
     if (TabBoxClientImpl *c = static_cast<TabBoxClientImpl *>(client)) {
         if (!c->client()->isOnAllDesktops()) {
-            return desktopName(c->client()->desktop());
+            return VirtualDesktopManager::self()->desktopForX11Id(c->client()->desktop())->name();
         }
     }
-    return desktopName(VirtualDesktopManager::self()->current());
-}
-
-QString TabBoxHandlerImpl::desktopName(int desktop) const
-{
-    const VirtualDesktop *vd = VirtualDesktopManager::self()->desktopForX11Id(desktop);
-    return vd ? vd->name() : QString();
+    return VirtualDesktopManager::self()->currentDesktop()->name();
 }
 
 std::weak_ptr<TabBoxClient> TabBoxHandlerImpl::nextClientFocusChain(TabBoxClient *client) const
@@ -133,16 +113,6 @@ bool TabBoxHandlerImpl::isInFocusChain(TabBoxClient *client) const
         return Workspace::self()->focusChain()->contains(c->client());
     }
     return false;
-}
-
-int TabBoxHandlerImpl::nextDesktopFocusChain(int desktop) const
-{
-    return m_desktopFocusChain->next(desktop);
-}
-
-int TabBoxHandlerImpl::numberOfDesktops() const
-{
-    return VirtualDesktopManager::self()->count();
 }
 
 std::weak_ptr<TabBoxClient> TabBoxHandlerImpl::activeClient() const
@@ -436,7 +406,6 @@ QUuid TabBoxClientImpl::internalId() const
 
 TabBox::TabBox()
     : m_displayRefcount(0)
-    , m_desktopGrab(false)
     , m_tabGrab(false)
     , m_noModifierGrab(false)
     , m_forcedGlobalMouseGrab(false)
@@ -444,7 +413,6 @@ TabBox::TabBox()
 {
     m_isShown = false;
     m_defaultConfig = TabBoxConfig();
-    m_defaultConfig.setTabBoxMode(TabBoxConfig::ClientTabBox);
     m_defaultConfig.setClientDesktopMode(TabBoxConfig::OnlyCurrentDesktopClients);
     m_defaultConfig.setClientActivitiesMode(TabBoxConfig::OnlyCurrentActivityClients);
     m_defaultConfig.setClientApplicationsMode(TabBoxConfig::AllWindowsAllApplications);
@@ -455,7 +423,6 @@ TabBox::TabBox()
     m_defaultConfig.setClientSwitchingMode(TabBoxConfig::FocusChainSwitching);
 
     m_alternativeConfig = TabBoxConfig();
-    m_alternativeConfig.setTabBoxMode(TabBoxConfig::ClientTabBox);
     m_alternativeConfig.setClientDesktopMode(TabBoxConfig::AllDesktopsClients);
     m_alternativeConfig.setClientActivitiesMode(TabBoxConfig::OnlyCurrentActivityClients);
     m_alternativeConfig.setClientApplicationsMode(TabBoxConfig::AllWindowsAllApplications);
@@ -471,21 +438,10 @@ TabBox::TabBox()
     m_alternativeCurrentApplicationConfig = m_alternativeConfig;
     m_alternativeCurrentApplicationConfig.setClientApplicationsMode(TabBoxConfig::AllWindowsCurrentApplication);
 
-    m_desktopConfig = TabBoxConfig();
-    m_desktopConfig.setTabBoxMode(TabBoxConfig::DesktopTabBox);
-    m_desktopConfig.setShowTabBox(true);
-    m_desktopConfig.setShowDesktopMode(TabBoxConfig::DoNotShowDesktopClient);
-    m_desktopConfig.setDesktopSwitchingMode(TabBoxConfig::MostRecentlyUsedDesktopSwitching);
-
-    m_desktopListConfig = TabBoxConfig();
-    m_desktopListConfig.setTabBoxMode(TabBoxConfig::DesktopTabBox);
-    m_desktopListConfig.setShowTabBox(true);
-    m_desktopListConfig.setShowDesktopMode(TabBoxConfig::DoNotShowDesktopClient);
-    m_desktopListConfig.setDesktopSwitchingMode(TabBoxConfig::StaticDesktopSwitching);
     m_tabBox = new TabBoxHandlerImpl(this);
     QTimer::singleShot(0, this, &TabBox::handlerReady);
 
-    m_tabBoxMode = TabBoxDesktopMode; // init variables
+    m_tabBoxMode = TabBoxWindowsMode; // init variables
     connect(&m_delayedShowTimer, &QTimer::timeout, this, &TabBox::show);
     connect(Workspace::self(), &Workspace::configChanged, this, &TabBox::reconfigure);
 }
@@ -520,10 +476,6 @@ static constexpr const auto s_app = kli18n("Walk Through Windows of Current Appl
 static constexpr const auto s_appRev = kli18n("Walk Through Windows of Current Application (Reverse)");
 static constexpr const auto s_appAlt = kli18n("Walk Through Windows of Current Application Alternative");
 static constexpr const auto s_appAltRev = kli18n("Walk Through Windows of Current Application Alternative (Reverse)");
-static constexpr const auto s_desktops = kli18n("Walk Through Desktops");
-static constexpr const auto s_desktopsRev = kli18n("Walk Through Desktops (Reverse)");
-static constexpr const auto s_desktopList = kli18n("Walk Through Desktop List");
-static constexpr const auto s_desktopListRev = kli18n("Walk Through Desktop List (Reverse)");
 
 void TabBox::initShortcuts()
 {
@@ -535,10 +487,6 @@ void TabBox::initShortcuts()
     key(s_windowsAltRev, &TabBox::slotWalkBackThroughWindowsAlternative);
     key(s_appAlt, &TabBox::slotWalkThroughCurrentAppWindowsAlternative);
     key(s_appAltRev, &TabBox::slotWalkBackThroughCurrentAppWindowsAlternative);
-    key(s_desktops, &TabBox::slotWalkThroughDesktops);
-    key(s_desktopsRev, &TabBox::slotWalkBackThroughDesktops);
-    key(s_desktopList, &TabBox::slotWalkThroughDesktopList);
-    key(s_desktopListRev, &TabBox::slotWalkBackThroughDesktopList);
 
     connect(KGlobalAccel::self(), &KGlobalAccel::globalShortcutChanged, this, &TabBox::globalShortcutChanged);
 }
@@ -561,14 +509,6 @@ void TabBox::globalShortcutChanged(QAction *action, const QKeySequence &seq)
         m_cutWalkThroughCurrentAppWindowsAlternative = seq;
     } else if (qstrcmp(qPrintable(action->objectName()), s_appAltRev.untranslatedText()) == 0) {
         m_cutWalkThroughCurrentAppWindowsAlternativeReverse = seq;
-    } else if (qstrcmp(qPrintable(action->objectName()), s_desktops.untranslatedText()) == 0) {
-        m_cutWalkThroughDesktops = seq;
-    } else if (qstrcmp(qPrintable(action->objectName()), s_desktopsRev.untranslatedText()) == 0) {
-        m_cutWalkThroughDesktopsReverse = seq;
-    } else if (qstrcmp(qPrintable(action->objectName()), s_desktopList.untranslatedText()) == 0) {
-        m_cutWalkThroughDesktopList = seq;
-    } else if (qstrcmp(qPrintable(action->objectName()), s_desktopListRev.untranslatedText()) == 0) {
-        m_cutWalkThroughDesktopListReverse = seq;
     }
 }
 
@@ -588,42 +528,25 @@ void TabBox::setMode(TabBoxMode mode)
     case TabBoxCurrentAppWindowsAlternativeMode:
         m_tabBox->setConfig(m_alternativeCurrentApplicationConfig);
         break;
-    case TabBoxDesktopMode:
-        m_tabBox->setConfig(m_desktopConfig);
-        break;
-    case TabBoxDesktopListMode:
-        m_tabBox->setConfig(m_desktopListConfig);
-        break;
     }
 }
 
 void TabBox::reset(bool partial_reset)
 {
-    switch (m_tabBox->config().tabBoxMode()) {
-    case TabBoxConfig::ClientTabBox:
-        m_tabBox->createModel(partial_reset);
-        if (!partial_reset) {
-            if (Workspace::self()->activeWindow()) {
-                setCurrentClient(Workspace::self()->activeWindow());
-            }
-            // it's possible that the active client is not part of the model
-            // in that case the index is invalid
-            if (!m_tabBox->currentIndex().isValid()) {
-                setCurrentIndex(m_tabBox->first());
-            }
-        } else {
-            if (!m_tabBox->currentIndex().isValid() || !m_tabBox->client(m_tabBox->currentIndex())) {
-                setCurrentIndex(m_tabBox->first());
-            }
+    m_tabBox->createModel(partial_reset);
+    if (!partial_reset) {
+        if (Workspace::self()->activeWindow()) {
+            setCurrentClient(Workspace::self()->activeWindow());
         }
-        break;
-    case TabBoxConfig::DesktopTabBox:
-        m_tabBox->createModel();
-
-        if (!partial_reset) {
-            setCurrentDesktop(VirtualDesktopManager::self()->current());
+        // it's possible that the active client is not part of the model
+        // in that case the index is invalid
+        if (!m_tabBox->currentIndex().isValid()) {
+            setCurrentIndex(m_tabBox->first());
         }
-        break;
+    } else {
+        if (!m_tabBox->currentIndex().isValid() || !m_tabBox->client(m_tabBox->currentIndex())) {
+            setCurrentIndex(m_tabBox->first());
+        }
     }
 
     Q_EMIT tabBoxUpdated();
@@ -663,24 +586,9 @@ QList<Window *> TabBox::currentClientList()
     return ret;
 }
 
-int TabBox::currentDesktop()
-{
-    return m_tabBox->desktop(m_tabBox->currentIndex());
-}
-
-QList<int> TabBox::currentDesktopList()
-{
-    return m_tabBox->desktopList();
-}
-
 void TabBox::setCurrentClient(Window *newClient)
 {
     setCurrentIndex(m_tabBox->index(std::static_pointer_cast<TabBoxClientImpl>(newClient->tabBoxClient().lock())));
-}
-
-void TabBox::setCurrentDesktop(int newDesktop)
-{
-    setCurrentIndex(m_tabBox->desktopIndex(newDesktop));
 }
 
 void TabBox::setCurrentIndex(QModelIndex index, bool notifyEffects)
@@ -737,10 +645,6 @@ void TabBox::reconfigure()
     m_tabBox->setConfig(m_defaultConfig);
 
     m_delayShowTime = config.readEntry<int>("DelayTime", 90);
-
-    const QString defaultDesktopLayout = QStringLiteral("org.kde.breeze.desktop");
-    m_desktopConfig.setLayoutName(config.readEntry("DesktopLayout", defaultDesktopLayout));
-    m_desktopListConfig.setLayoutName(config.readEntry("DesktopListLayout", defaultDesktopLayout));
 
     QList<ElectricBorder> *borders = &m_borderActivate;
     QString borderConfig = QStringLiteral("BorderActivate");
@@ -1073,62 +977,6 @@ void TabBox::slotWalkBackThroughCurrentAppWindowsAlternative()
     navigatingThroughWindows(false, m_cutWalkThroughCurrentAppWindowsAlternativeReverse, TabBoxCurrentAppWindowsAlternativeMode);
 }
 
-void TabBox::slotWalkThroughDesktops()
-{
-    if (!m_ready || isGrabbed()) {
-        return;
-    }
-    if (areModKeysDepressed(m_cutWalkThroughDesktops)) {
-        if (startWalkThroughDesktops()) {
-            walkThroughDesktops(true);
-        }
-    } else {
-        oneStepThroughDesktops(true);
-    }
-}
-
-void TabBox::slotWalkBackThroughDesktops()
-{
-    if (!m_ready || isGrabbed()) {
-        return;
-    }
-    if (areModKeysDepressed(m_cutWalkThroughDesktopsReverse)) {
-        if (startWalkThroughDesktops()) {
-            walkThroughDesktops(false);
-        }
-    } else {
-        oneStepThroughDesktops(false);
-    }
-}
-
-void TabBox::slotWalkThroughDesktopList()
-{
-    if (!m_ready || isGrabbed()) {
-        return;
-    }
-    if (areModKeysDepressed(m_cutWalkThroughDesktopList)) {
-        if (startWalkThroughDesktopList()) {
-            walkThroughDesktops(true);
-        }
-    } else {
-        oneStepThroughDesktopList(true);
-    }
-}
-
-void TabBox::slotWalkBackThroughDesktopList()
-{
-    if (!m_ready || isGrabbed()) {
-        return;
-    }
-    if (areModKeysDepressed(m_cutWalkThroughDesktopListReverse)) {
-        if (startWalkThroughDesktopList()) {
-            walkThroughDesktops(false);
-        }
-    } else {
-        oneStepThroughDesktopList(false);
-    }
-}
-
 void TabBox::shadeActivate(Window *c)
 {
     if ((c->shadeMode() == ShadeNormal || c->shadeMode() == ShadeHover) && options->isShadeHover()) {
@@ -1176,35 +1024,7 @@ bool TabBox::startKDEWalkThroughWindows(TabBoxMode mode)
     return true;
 }
 
-bool TabBox::startWalkThroughDesktops(TabBoxMode mode)
-{
-    if (!establishTabBoxGrab()) {
-        return false;
-    }
-    m_desktopGrab = true;
-    m_noModifierGrab = false;
-    setMode(mode);
-    reset();
-    return true;
-}
-
-bool TabBox::startWalkThroughDesktops()
-{
-    return startWalkThroughDesktops(TabBoxDesktopMode);
-}
-
-bool TabBox::startWalkThroughDesktopList()
-{
-    return startWalkThroughDesktops(TabBoxDesktopListMode);
-}
-
 void TabBox::KDEWalkThroughWindows(bool forward)
-{
-    nextPrev(forward);
-    delayedShow();
-}
-
-void TabBox::walkThroughDesktops(bool forward)
 {
     nextPrev(forward);
     delayedShow();
@@ -1245,7 +1065,7 @@ void TabBox::CDEWalkThroughWindows(bool forward)
             nc = nullptr;
             break;
         }
-    } while (nc && nc != c && ((!options_traverse_all && !nc->isOnDesktop(currentDesktop())) || nc->isMinimized() || !nc->wantsTabFocus() || nc->keepAbove() || nc->keepBelow() || !nc->isOnCurrentActivity()));
+    } while (nc && nc != c && ((!options_traverse_all && !nc->isOnCurrentDesktop()) || nc->isMinimized() || !nc->wantsTabFocus() || nc->keepAbove() || nc->keepBelow() || !nc->isOnCurrentActivity()));
     if (nc) {
         if (c && c != nc) {
             Workspace::self()->lowerWindow(c);
@@ -1254,8 +1074,8 @@ void TabBox::CDEWalkThroughWindows(bool forward)
             Workspace::self()->activateWindow(nc);
             shadeActivate(nc);
         } else {
-            if (!nc->isOnDesktop(currentDesktop())) {
-                setCurrentDesktop(nc->desktop());
+            if (!nc->isOnCurrentDesktop()) {
+                VirtualDesktopManager::self()->setCurrent(nc->desktop());
             }
             Workspace::self()->raiseWindow(nc);
         }
@@ -1271,26 +1091,6 @@ void TabBox::KDEOneStepThroughWindows(bool forward, TabBoxMode mode)
         Workspace::self()->activateWindow(c);
         shadeActivate(c);
     }
-}
-
-void TabBox::oneStepThroughDesktops(bool forward, TabBoxMode mode)
-{
-    setMode(mode);
-    reset();
-    nextPrev(forward);
-    if (currentDesktop() != -1) {
-        setCurrentDesktop(currentDesktop());
-    }
-}
-
-void TabBox::oneStepThroughDesktops(bool forward)
-{
-    oneStepThroughDesktops(forward, TabBoxDesktopMode);
-}
-
-void TabBox::oneStepThroughDesktopList(bool forward)
-{
-    oneStepThroughDesktops(forward, TabBoxDesktopListMode);
 }
 
 void TabBox::keyPress(int keyQt)
@@ -1394,17 +1194,9 @@ void TabBox::keyPress(int keyQt)
             qCDebug(KWIN_TABBOX) << "== " << cuts[i].toString() << " or " << cuts[i + ModeCount].toString();
             KDEWalkThroughWindows(direction == Forward);
         }
-    } else if (m_desktopGrab) {
-        direction = directionFor(m_cutWalkThroughDesktops, m_cutWalkThroughDesktopsReverse);
-        if (direction == Steady) {
-            direction = directionFor(m_cutWalkThroughDesktopList, m_cutWalkThroughDesktopListReverse);
-        }
-        if (direction != Steady) {
-            walkThroughDesktops(direction == Forward);
-        }
     }
 
-    if (m_desktopGrab || m_tabGrab) {
+    if (m_tabGrab) {
         if (((keyQt & ~Qt::KeyboardModifierMask) == Qt::Key_Escape) && direction == Steady) {
             // if Escape is part of the shortcut, don't cancel
             close(true);
@@ -1423,7 +1215,6 @@ void TabBox::close(bool abort)
     hide(abort);
     input()->pointer()->setEnableConstraints(true);
     m_tabGrab = false;
-    m_desktopGrab = false;
     m_noModifierGrab = false;
 }
 
@@ -1437,7 +1228,7 @@ void TabBox::accept(bool closeTabBox)
         Workspace::self()->activateWindow(c);
         shadeActivate(c);
         if (c->isDesktop()) {
-            Workspace::self()->setShowingDesktop(!Workspace::self()->showingDesktop(), !m_desktopListConfig.isHighlightWindows());
+            Workspace::self()->setShowingDesktop(!Workspace::self()->showingDesktop(), !m_defaultConfig.isHighlightWindows());
         }
     }
 }
@@ -1448,30 +1239,8 @@ void TabBox::modifiersReleased()
         return;
     }
     if (m_tabGrab) {
-        bool old_control_grab = m_desktopGrab;
         accept();
-        m_desktopGrab = old_control_grab;
     }
-    if (m_desktopGrab) {
-        bool old_tab_grab = m_tabGrab;
-        int desktop = currentDesktop();
-        close();
-        m_tabGrab = old_tab_grab;
-        if (desktop != -1) {
-            setCurrentDesktop(desktop);
-            VirtualDesktopManager::self()->setCurrent(desktop);
-        }
-    }
-}
-
-int TabBox::nextDesktopStatic(int iDesktop) const
-{
-    return VirtualDesktopManager::self()->inDirection(iDesktop, VirtualDesktopManager::Direction::Next, true);
-}
-
-int TabBox::previousDesktopStatic(int iDesktop) const
-{
-    return VirtualDesktopManager::self()->inDirection(iDesktop, VirtualDesktopManager::Direction::Previous, true);
 }
 
 /**

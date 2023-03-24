@@ -286,8 +286,6 @@ endif()
 if (KWIN_BUILD_TABBOX)
     target_sources(kwin PRIVATE
         tabbox/clientmodel.cpp
-        tabbox/desktopchain.cpp
-        tabbox/desktopmodel.cpp
         tabbox/switcheritem.cpp
         tabbox/tabbox.cpp
         tabbox/tabbox_logging.cpp
