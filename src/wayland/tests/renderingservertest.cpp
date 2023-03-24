@@ -18,11 +18,12 @@
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QDateTime>
+#include <QFile>
 #include <QKeyEvent>
 #include <QMouseEvent>
 #include <QPainter>
+#include <QThreadPool>
 #include <QWidget>
-#include <QtConcurrent>
 
 #include <iostream>
 #include <unistd.h>
@@ -274,7 +275,7 @@ int main(int argc, char **argv)
             exit(1);
         }
 
-        QtConcurrent::run([pipe] {
+        QThreadPool::globalInstance()->start([pipe] {
             readDisplayFromPipe(pipe);
         });
     }

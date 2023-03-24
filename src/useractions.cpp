@@ -48,7 +48,6 @@
 #include <QAction>
 #include <QCheckBox>
 #include <QPushButton>
-#include <QtConcurrentRun>
 
 #include <KGlobalAccel>
 #include <KLazyLocalizedString>
@@ -186,9 +185,7 @@ void UserActionsMenu::helperDialog(const QString &message, Window *window)
     if (window) {
         args << QStringLiteral("--embed") << QString::number(window->window());
     }
-    QtConcurrent::run([args]() {
-        KProcess::startDetached(QStringLiteral("kdialog"), args);
-    });
+    KProcess::startDetached(QStringLiteral("kdialog"), args);
 }
 
 QStringList configModules(bool controlCenter)

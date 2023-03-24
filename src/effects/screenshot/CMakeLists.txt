@@ -18,7 +18,6 @@ target_link_libraries(screenshot PRIVATE
     KF6::Service
     KF6::I18n
 
-    Qt::Concurrent
     Qt::DBus
 )
 

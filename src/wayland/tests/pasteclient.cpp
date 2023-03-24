@@ -22,8 +22,7 @@
 #include <QFile>
 #include <QImage>
 #include <QMimeType>
-#include <QThread>
-#include <QtConcurrentRun>
+#include <QThreadPool>
 // system
 #include <unistd.h>
 
@@ -137,7 +136,7 @@ void PasteClient::setupRegistry(Registry *registry)
             }
             dataOffer->receive((*it).name(), pipeFds[1]);
             close(pipeFds[1]);
-            QtConcurrent::run([pipeFds] {
+            QThreadPool::globalInstance()->start([pipeFds] {
                 QFile readPipe;
                 if (readPipe.open(pipeFds[0], QIODevice::ReadOnly)) {
                     qDebug() << "Pasted: " << readPipe.readLine();

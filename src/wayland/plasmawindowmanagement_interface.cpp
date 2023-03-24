@@ -14,9 +14,9 @@
 #include <QIcon>
 #include <QList>
 #include <QRect>
+#include <QThreadPool>
 #include <QUuid>
 #include <QVector>
-#include <QtConcurrentRun>
 
 #include <qwayland-server-plasma-window-management.h>
 
@@ -466,15 +466,13 @@ void PlasmaWindowInterfacePrivate::setResourceName(const QString &resourceName)
 
 void PlasmaWindowInterfacePrivate::org_kde_plasma_window_get_icon(Resource *resource, int32_t fd)
 {
-    QtConcurrent::run(
-        [fd](const QIcon &icon) {
-            QFile file;
-            file.open(fd, QIODevice::WriteOnly, QFileDevice::AutoCloseHandle);
-            QDataStream ds(&file);
-            ds << icon;
-            file.close();
-        },
-        m_icon);
+    QThreadPool::globalInstance()->start([fd, icon = m_icon]() {
+        QFile file;
+        file.open(fd, QIODevice::WriteOnly, QFileDevice::AutoCloseHandle);
+        QDataStream ds(&file);
+        ds << icon;
+        file.close();
+    });
 }
 
 void PlasmaWindowInterfacePrivate::org_kde_plasma_window_request_enter_virtual_desktop(Resource *resource, const QString &id)

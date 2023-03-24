@@ -17,7 +17,7 @@ if (TARGET Qt::Widgets)
         fakeoutput.cpp
         )
     add_executable(testRenderingServer ${testRenderingServer_SRCS})
-    target_link_libraries(testRenderingServer kwin Qt::Concurrent Qt::Widgets)
+    target_link_libraries(testRenderingServer kwin Qt::Core Qt::Widgets)
     ecm_mark_as_test(testRenderingServer)
 endif()
 
@@ -26,7 +26,7 @@ target_link_libraries(copyClient KF6::WaylandClient)
 ecm_mark_as_test(copyClient)
 
 add_executable(pasteClient pasteclient.cpp)
-target_link_libraries(pasteClient Qt::Concurrent KF6::WaylandClient)
+target_link_libraries(pasteClient Qt::Core KF6::WaylandClient)
 ecm_mark_as_test(pasteClient)
 
 add_executable(touchClientTest touchclienttest.cpp)
