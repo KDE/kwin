@@ -51,7 +51,6 @@ Kirigami.AbstractListItem {
                 Layout.preferredWidth: 50  // 50%
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignVCenter
-                flat: true
 
                 visible: count > 0
                 enabled: ruleEnabled
