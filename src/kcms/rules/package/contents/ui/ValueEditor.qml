@@ -96,7 +96,6 @@ Loader {
     Component {
         id: optionEditor
         OptionsComboBox {
-            flat: true
             model: ruleOptions
             onActivated: (index) => {
                 valueEditor.valueEdited(currentValue);
@@ -107,7 +106,6 @@ Loader {
     Component {
         id: netTypesEditor
         OptionsComboBox {
-            flat: true
             model: ruleOptions
             multipleChoice: true
             // Filter the provided value with the options mask
@@ -122,7 +120,6 @@ Loader {
         id: optionListEditor
         OptionsComboBox {
             id: optionListCombo
-            flat: true
             model: ruleOptions
             multipleChoice: true
 
