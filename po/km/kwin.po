@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-23 02:36+0000\n"
+"POT-Creation-Date: 2023-03-25 02:10+0000\n"
 "PO-Revision-Date: 2012-06-14 11:29+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -38,7 +38,7 @@ msgid ""
 "resume using the '%1' shortcut."
 msgstr "បែបផែន​ផ្ទៃតុ​ត្រូវបានផ្អាក​ដោយ​កម្មវិធី​ផ្សេង ។<br/>អ្នក​អាច​បន្ត​ ដោយ​ប្រើ​ផ្លូវកាត់ '%1' ។"
 
-#: composite.cpp:1028
+#: composite.cpp:1029
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -58,12 +58,12 @@ msgstr ""
 "អាច​កំណត់​ការការ​ពារ​នេះ​ឡើង​វិញ ប៉ុន្តែ <b>ត្រូវ​ដឹង​ថា វា​​អាច​ធ្វើ​ឲ្យ​គាំង​ភ្លាមៗ​បាន !</b></p><p>ជា​"
 "ជម្រើស អ្នក​ចង់​ប្រើ​កម្មវិធី​ផ្នែក​ខាង​ក្រោយ XRender ជំនួស​វិញ ។</p>"
 
-#: composite.cpp:1035
+#: composite.cpp:1036
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "មិន​មាន​​ផ្នែក​បន្ថែម X (XComposite និង XDamage) ដែល​ទាមទារ ។"
 
-#: composite.cpp:1038
+#: composite.cpp:1039
 #, fuzzy, kde-format
 #| msgid "GLX/OpenGL and XRender/XFixes are not available."
 msgid "GLX/OpenGL is not available."
@@ -2166,61 +2166,45 @@ msgstr ""
 msgid "..."
 msgstr ""
 
-#: tabbox/tabbox.cpp:375
+#: tabbox/tabbox.cpp:345
 #, kde-format
 msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "បង្ហាញ​ផ្ទៃតុ"
 
-#: tabbox/tabbox.cpp:515
+#: tabbox/tabbox.cpp:471
 msgid "Walk Through Windows"
 msgstr "ដើរ​កាត់​បង្អួច"
 
-#: tabbox/tabbox.cpp:516
+#: tabbox/tabbox.cpp:472
 msgid "Walk Through Windows (Reverse)"
 msgstr "ដើរ​កាត់​បង្អួច (បញ្ច្រាស)"
 
-#: tabbox/tabbox.cpp:517
+#: tabbox/tabbox.cpp:473
 msgid "Walk Through Windows Alternative"
 msgstr "ដើរ​កាត់​បង្អួច​ជម្រើស"
 
-#: tabbox/tabbox.cpp:518
+#: tabbox/tabbox.cpp:474
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "ដើរ​កាត់​បង្អួច​ជម្រើស (បញ្ច្រាស)"
 
-#: tabbox/tabbox.cpp:519
+#: tabbox/tabbox.cpp:475
 msgid "Walk Through Windows of Current Application"
 msgstr "ឆ្លង​​កាត់​បង្អួច​​នៃ​កម្មវិធី​បច្ចុប្បន្ន"
 
-#: tabbox/tabbox.cpp:520
+#: tabbox/tabbox.cpp:476
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "ឆ្លង​កាត់​បង្អួច​ជម្រើស​នៃ​កម្មវិធី​បច្ចុប្បន្ន (បញ្ច្រាស)"
 
-#: tabbox/tabbox.cpp:521
+#: tabbox/tabbox.cpp:477
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "ឆ្លង​​កាត់​បង្អួច​​នៃ​កម្មវិធី​បច្ចុប្បន្ន​ជំនួស"
 
-#: tabbox/tabbox.cpp:522
+#: tabbox/tabbox.cpp:478
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "ឆ្លង​​កាត់​បង្អួច​​នៃ​កម្មវិធី​បច្ចុប្បន្ន​ជំនួស (បញ្ច្រាស)"
 
-#: tabbox/tabbox.cpp:523
-msgid "Walk Through Desktops"
-msgstr "ដើរ​កាត់​ផ្ទៃតុ"
-
-#: tabbox/tabbox.cpp:524
-msgid "Walk Through Desktops (Reverse)"
-msgstr "ដើរ​កាត់​ផ្ទៃតុ (បញ្ច្រាស)"
-
-#: tabbox/tabbox.cpp:525
-msgid "Walk Through Desktop List"
-msgstr "ដើរ​កាត់​បញ្ជី​ផ្ទៃតុ"
-
-#: tabbox/tabbox.cpp:526
-msgid "Walk Through Desktop List (Reverse)"
-msgstr "ដើរ​កាត់​បញ្ជី​ផ្ទៃតុ (បញ្ច្រាស)"
-
-#: tabbox/tabboxhandler.cpp:290
+#: tabbox/tabboxhandler.cpp:271
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"
@@ -2852,7 +2836,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr ""
 
-#: workspace.cpp:1629
+#: workspace.cpp:1628
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""
@@ -2886,6 +2870,18 @@ msgstr ""
 "Please post the information provided underneath this introductory text to a "
 "paste bin service\n"
 "like http://paste.kde.org instead of pasting into support threads.\n"
+
+#~ msgid "Walk Through Desktops"
+#~ msgstr "ដើរ​កាត់​ផ្ទៃតុ"
+
+#~ msgid "Walk Through Desktops (Reverse)"
+#~ msgstr "ដើរ​កាត់​ផ្ទៃតុ (បញ្ច្រាស)"
+
+#~ msgid "Walk Through Desktop List"
+#~ msgstr "ដើរ​កាត់​បញ្ជី​ផ្ទៃតុ"
+
+#~ msgid "Walk Through Desktop List (Reverse)"
+#~ msgstr "ដើរ​កាត់​បញ្ជី​ផ្ទៃតុ (បញ្ច្រាស)"
 
 #~ msgid "&No Border"
 #~ msgstr "គ្មាន​ស៊ុម"

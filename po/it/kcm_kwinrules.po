@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-17 02:32+0000\n"
+"POT-Creation-Date: 2023-03-25 02:10+0000\n"
 "PO-Revision-Date: 2023-02-11 08:32+0100\n"
 "Last-Translator: Paolo Zamponi <zapaolo@email.it>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -34,40 +34,6 @@ msgstr "Impostazioni dell'applicazione di %1"
 #, kde-format
 msgid "Window settings for %1"
 msgstr "Impostazioni della finestra di %1"
-
-#: main.cpp:30
-#, kde-format
-msgid "KWinRules KCM launcher"
-msgstr "Lanciatore KCM di KWinRules"
-
-#: main.cpp:31
-#, kde-format
-msgid "KWin id of the window for special window settings."
-msgstr "ID KWin della finestra per le impostazioni speciali della finestra."
-
-#: main.cpp:32
-#, kde-format
-msgid "Whether the settings should affect all windows of the application."
-msgstr ""
-"Se le impostazioni debbano avere effetto su tutte le finestre "
-"dell'applicazione."
-
-#: main.cpp:39
-#, kde-format
-msgid "This helper utility is not supposed to be called directly."
-msgstr ""
-"Questo accessorio di supporto non è pensato per essere eseguito direttamente."
-
-#: main.cpp:43
-#, kde-format
-msgctxt "Window caption for the application wide rules dialog"
-msgid "Edit Application-Specific Settings"
-msgstr "Modifica le impostazioni specifiche di un'applicazione"
-
-#: main.cpp:44
-#, kde-format
-msgid "Edit Window-Specific Settings"
-msgstr "Modifica le impostazioni specifiche di una finestra"
 
 #: optionsmodel.cpp:198
 #, kde-format
@@ -346,8 +312,8 @@ msgid "No"
 msgstr "No"
 
 #: package/contents/ui/RulesEditor.qml:275
-#: package/contents/ui/ValueEditor.qml:171
-#: package/contents/ui/ValueEditor.qml:178
+#: package/contents/ui/ValueEditor.qml:168
+#: package/contents/ui/ValueEditor.qml:175
 #, kde-format
 msgid "%1 %"
 msgstr "%1 %"
@@ -364,7 +330,7 @@ msgctxt "Size (width, height)"
 msgid "(%1, %2)"
 msgstr "(%1, %2)"
 
-#: package/contents/ui/ValueEditor.qml:206
+#: package/contents/ui/ValueEditor.qml:203
 #, kde-format
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
@@ -936,6 +902,29 @@ msgstr "Finestra non gestita"
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
 "Impossibile rilevare le proprietà della finestra: non è gestita da KWin."
+
+#~ msgid "KWinRules KCM launcher"
+#~ msgstr "Lanciatore KCM di KWinRules"
+
+#~ msgid "KWin id of the window for special window settings."
+#~ msgstr "ID KWin della finestra per le impostazioni speciali della finestra."
+
+#~ msgid "Whether the settings should affect all windows of the application."
+#~ msgstr ""
+#~ "Se le impostazioni debbano avere effetto su tutte le finestre "
+#~ "dell'applicazione."
+
+#~ msgid "This helper utility is not supposed to be called directly."
+#~ msgstr ""
+#~ "Questo accessorio di supporto non è pensato per essere eseguito "
+#~ "direttamente."
+
+#~ msgctxt "Window caption for the application wide rules dialog"
+#~ msgid "Edit Application-Specific Settings"
+#~ msgstr "Modifica le impostazioni specifiche di un'applicazione"
+
+#~ msgid "Edit Window-Specific Settings"
+#~ msgstr "Modifica le impostazioni specifiche di una finestra"
 
 #~ msgid ""
 #~ "<p><h1>Window-specific Settings</h1> Here you can customize window "

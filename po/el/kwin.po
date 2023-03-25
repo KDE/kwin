@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-23 02:36+0000\n"
+"POT-Creation-Date: 2023-03-25 02:10+0000\n"
 "PO-Revision-Date: 2017-06-12 16:22+0200\n"
 "Last-Translator: Dimitris Kardarakos <dimkard@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -52,7 +52,7 @@ msgstr ""
 "Τα εφέ της επιφάνειας εργασίας αναστάλθηκαν από κάποια άλλη εφαρμογή.<br/"
 ">Μπορείτε να τα επαναφέρετε με τη συντόμευση '%1'."
 
-#: composite.cpp:1028
+#: composite.cpp:1029
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -74,14 +74,14 @@ msgstr ""
 "προκαλέσει άμεση κατάρρευση!</b></p><p>Εναλλακτικά, μπορείτε να "
 "χρησιμοποιήσετε το σύστημα υποστήριξης XRender.</p>"
 
-#: composite.cpp:1035
+#: composite.cpp:1036
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr ""
 "Οι απαιτούμενες επεκτάσεις του Χ (τα XComposite και XDamage) δεν είναι "
 "διαθέσιμες."
 
-#: composite.cpp:1038
+#: composite.cpp:1039
 #, fuzzy, kde-format
 #| msgid "GLX/OpenGL and XRender/XFixes are not available."
 msgid "GLX/OpenGL is not available."
@@ -2253,62 +2253,46 @@ msgstr ""
 msgid "..."
 msgstr ""
 
-#: tabbox/tabbox.cpp:375
+#: tabbox/tabbox.cpp:345
 #, kde-format
 msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "Εμφάνιση επιφάνειας εργασίας"
 
-#: tabbox/tabbox.cpp:515
+#: tabbox/tabbox.cpp:471
 msgid "Walk Through Windows"
 msgstr "Διάσχιση παραθύρων"
 
-#: tabbox/tabbox.cpp:516
+#: tabbox/tabbox.cpp:472
 msgid "Walk Through Windows (Reverse)"
 msgstr "Διάσχιση παραθύρων (Αντίστροφη)"
 
-#: tabbox/tabbox.cpp:517
+#: tabbox/tabbox.cpp:473
 msgid "Walk Through Windows Alternative"
 msgstr "Εναλλακτική για την διάσχιση παραθύρων"
 
-#: tabbox/tabbox.cpp:518
+#: tabbox/tabbox.cpp:474
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Εναλλακτική για την διάσχιση παραθύρων (Αντίστροφη)"
 
-#: tabbox/tabbox.cpp:519
+#: tabbox/tabbox.cpp:475
 msgid "Walk Through Windows of Current Application"
 msgstr "Διάσχιση παραθύρων της τρέχουσας εφαρμογής"
 
-#: tabbox/tabbox.cpp:520
+#: tabbox/tabbox.cpp:476
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Διάσχιση παραθύρων της τρέχουσας εφαρμογής (Αντίστροφη)"
 
-#: tabbox/tabbox.cpp:521
+#: tabbox/tabbox.cpp:477
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Εναλλακτική για την διάσχιση παραθύρων της τρέχουσας εφαρμογής"
 
-#: tabbox/tabbox.cpp:522
+#: tabbox/tabbox.cpp:478
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr ""
 "Εναλλακτική για την διάσχιση παραθύρων της τρέχουσας εφαρμογής (Αντίστροφη)"
 
-#: tabbox/tabbox.cpp:523
-msgid "Walk Through Desktops"
-msgstr "Διάσχιση επιφανειών εργασίας"
-
-#: tabbox/tabbox.cpp:524
-msgid "Walk Through Desktops (Reverse)"
-msgstr "Διάσχιση επιφανειών εργασίας (Αντίστροφη)"
-
-#: tabbox/tabbox.cpp:525
-msgid "Walk Through Desktop List"
-msgstr "Διάσχιση λίστας επιφανειών εργασίας"
-
-#: tabbox/tabbox.cpp:526
-msgid "Walk Through Desktop List (Reverse)"
-msgstr "Διάσχιση λίστας επιφανειών εργασίας (Αντίστροφη)"
-
-#: tabbox/tabboxhandler.cpp:290
+#: tabbox/tabboxhandler.cpp:271
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"
@@ -2942,7 +2926,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(δεν ανταποκρίνεται)"
 
-#: workspace.cpp:1629
+#: workspace.cpp:1628
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""
@@ -2977,6 +2961,18 @@ msgstr ""
 "εισαγωγικό κείμενο σε μια υπηρεσία τύπου paste bin\n"
 "όπως το http://paste.kde.org αντί να τις επικολλήσετε σε θέματα "
 "υποστήριξης.\n"
+
+#~ msgid "Walk Through Desktops"
+#~ msgstr "Διάσχιση επιφανειών εργασίας"
+
+#~ msgid "Walk Through Desktops (Reverse)"
+#~ msgstr "Διάσχιση επιφανειών εργασίας (Αντίστροφη)"
+
+#~ msgid "Walk Through Desktop List"
+#~ msgstr "Διάσχιση λίστας επιφανειών εργασίας"
+
+#~ msgid "Walk Through Desktop List (Reverse)"
+#~ msgstr "Διάσχιση λίστας επιφανειών εργασίας (Αντίστροφη)"
 
 #~ msgid "&No Border"
 #~ msgstr "&Χωρίς περίγραμμα"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-17 02:32+0000\n"
+"POT-Creation-Date: 2023-03-25 02:10+0000\n"
 "PO-Revision-Date: 2023-01-02 23:31+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -31,37 +31,6 @@ msgstr "%1 üçün tətbiq ayarları"
 #, kde-format
 msgid "Window settings for %1"
 msgstr "%1 üçün pəncərə ayarları"
-
-#: main.cpp:30
-#, kde-format
-msgid "KWinRules KCM launcher"
-msgstr "KWinRules KCM başladıcı"
-
-#: main.cpp:31
-#, kde-format
-msgid "KWin id of the window for special window settings."
-msgstr "Xüsusi pəncərə ayarları üçün pəncərənin KWin İD-si"
-
-#: main.cpp:32
-#, kde-format
-msgid "Whether the settings should affect all windows of the application."
-msgstr "Ayarların tətbiqin bütün pəncərələrinə təsir edib etməməsi."
-
-#: main.cpp:39
-#, kde-format
-msgid "This helper utility is not supposed to be called directly."
-msgstr "Bu köməkçi vasitə müstəqil proqram kimi başladıla bilməz."
-
-#: main.cpp:43
-#, kde-format
-msgctxt "Window caption for the application wide rules dialog"
-msgid "Edit Application-Specific Settings"
-msgstr "Göstərilən tətbiqlər üçün parametrləri ayarlamaq"
-
-#: main.cpp:44
-#, kde-format
-msgid "Edit Window-Specific Settings"
-msgstr "Pəncərə xüsusi ayarlarına düzəliş etmək"
 
 #: optionsmodel.cpp:198
 #, kde-format
@@ -336,8 +305,8 @@ msgid "No"
 msgstr "1"
 
 #: package/contents/ui/RulesEditor.qml:275
-#: package/contents/ui/ValueEditor.qml:171
-#: package/contents/ui/ValueEditor.qml:178
+#: package/contents/ui/ValueEditor.qml:168
+#: package/contents/ui/ValueEditor.qml:175
 #, kde-format
 msgid "%1 %"
 msgstr "%1 %"
@@ -354,7 +323,7 @@ msgctxt "Size (width, height)"
 msgid "(%1, %2)"
 msgstr "(%1, %2)"
 
-#: package/contents/ui/ValueEditor.qml:206
+#: package/contents/ui/ValueEditor.qml:203
 #, kde-format
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
@@ -929,6 +898,25 @@ msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
 "Pəncərə xüsusiyyətləri müəyyən edilmədi. Pəncərə KWin tərəfindən idarə "
 "edilmir."
+
+#~ msgid "KWinRules KCM launcher"
+#~ msgstr "KWinRules KCM başladıcı"
+
+#~ msgid "KWin id of the window for special window settings."
+#~ msgstr "Xüsusi pəncərə ayarları üçün pəncərənin KWin İD-si"
+
+#~ msgid "Whether the settings should affect all windows of the application."
+#~ msgstr "Ayarların tətbiqin bütün pəncərələrinə təsir edib etməməsi."
+
+#~ msgid "This helper utility is not supposed to be called directly."
+#~ msgstr "Bu köməkçi vasitə müstəqil proqram kimi başladıla bilməz."
+
+#~ msgctxt "Window caption for the application wide rules dialog"
+#~ msgid "Edit Application-Specific Settings"
+#~ msgstr "Göstərilən tətbiqlər üçün parametrləri ayarlamaq"
+
+#~ msgid "Edit Window-Specific Settings"
+#~ msgstr "Pəncərə xüsusi ayarlarına düzəliş etmək"
 
 #~ msgid ""
 #~ "<p><h1>Window-specific Settings</h1> Here you can customize window "

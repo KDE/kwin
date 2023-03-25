@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-17 02:32+0000\n"
+"POT-Creation-Date: 2023-03-25 02:10+0000\n"
 "PO-Revision-Date: 2023-03-06 13:29+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -39,37 +39,6 @@ msgstr "Sovelluksen %1 asetukset"
 #, kde-format
 msgid "Window settings for %1"
 msgstr "Ikkunan %1 asetukset"
-
-#: main.cpp:30
-#, kde-format
-msgid "KWinRules KCM launcher"
-msgstr "KWinRulesin KCM-käynnistin"
-
-#: main.cpp:31
-#, kde-format
-msgid "KWin id of the window for special window settings."
-msgstr "Ikkunan tunniste ikkunakohtaisia asetuksia varten."
-
-#: main.cpp:32
-#, kde-format
-msgid "Whether the settings should affect all windows of the application."
-msgstr "Määrittää, koskeeko asetus kaikkia valitun sovelluksen ikkunoita."
-
-#: main.cpp:39
-#, kde-format
-msgid "This helper utility is not supposed to be called directly."
-msgstr "Tätä avustajaa ei ole tarkoitettu kutsuttavaksi suoraan."
-
-#: main.cpp:43
-#, kde-format
-msgctxt "Window caption for the application wide rules dialog"
-msgid "Edit Application-Specific Settings"
-msgstr "Sovelluskohtaisten asetuksien muokkaus"
-
-#: main.cpp:44
-#, kde-format
-msgid "Edit Window-Specific Settings"
-msgstr "Ikkunakohtaisten asetuksien muokkaus"
 
 #: optionsmodel.cpp:198
 #, kde-format
@@ -342,8 +311,8 @@ msgid "No"
 msgstr "Ei"
 
 #: package/contents/ui/RulesEditor.qml:275
-#: package/contents/ui/ValueEditor.qml:171
-#: package/contents/ui/ValueEditor.qml:178
+#: package/contents/ui/ValueEditor.qml:168
+#: package/contents/ui/ValueEditor.qml:175
 #, kde-format
 msgid "%1 %"
 msgstr "%1 %"
@@ -360,7 +329,7 @@ msgctxt "Size (width, height)"
 msgid "(%1, %2)"
 msgstr "(%1, %2)"
 
-#: package/contents/ui/ValueEditor.qml:206
+#: package/contents/ui/ValueEditor.qml:203
 #, kde-format
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
@@ -930,6 +899,25 @@ msgstr "Ei-hallittu ikkuna"
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr "Ikkunan ominaisuuksia ei voitu tunnistaa. KWin ei hallitse ikkunaa."
+
+#~ msgid "KWinRules KCM launcher"
+#~ msgstr "KWinRulesin KCM-käynnistin"
+
+#~ msgid "KWin id of the window for special window settings."
+#~ msgstr "Ikkunan tunniste ikkunakohtaisia asetuksia varten."
+
+#~ msgid "Whether the settings should affect all windows of the application."
+#~ msgstr "Määrittää, koskeeko asetus kaikkia valitun sovelluksen ikkunoita."
+
+#~ msgid "This helper utility is not supposed to be called directly."
+#~ msgstr "Tätä avustajaa ei ole tarkoitettu kutsuttavaksi suoraan."
+
+#~ msgctxt "Window caption for the application wide rules dialog"
+#~ msgid "Edit Application-Specific Settings"
+#~ msgstr "Sovelluskohtaisten asetuksien muokkaus"
+
+#~ msgid "Edit Window-Specific Settings"
+#~ msgstr "Ikkunakohtaisten asetuksien muokkaus"
 
 #~ msgid ""
 #~ "<p><h1>Window-specific Settings</h1> Here you can customize window "

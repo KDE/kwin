@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-23 02:36+0000\n"
+"POT-Creation-Date: 2023-03-25 02:10+0000\n"
 "PO-Revision-Date: 2022-12-12 22:06+0200\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -44,7 +44,7 @@ msgstr ""
 "Darbalaukio efektus pristabdė kita programa.<br/>Galite juos pratęsti "
 "naudodami spartųjį klavišą „%1“."
 
-#: composite.cpp:1028
+#: composite.cpp:1029
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -66,12 +66,12 @@ msgstr ""
 "p><p>Kaip alternatyva, galite naudoti XRender programinę sąsają vietoje "
 "OpenGL.</p>"
 
-#: composite.cpp:1035
+#: composite.cpp:1036
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Privaloma X praplėtimai  (XComposite and XDamage) nerasti."
 
-#: composite.cpp:1038
+#: composite.cpp:1039
 #, fuzzy, kde-format
 #| msgid "GLX/OpenGL and XRender/XFixes are not available."
 msgid "GLX/OpenGL is not available."
@@ -2152,61 +2152,45 @@ msgstr "Dialogas"
 msgid "..."
 msgstr "..."
 
-#: tabbox/tabbox.cpp:375
+#: tabbox/tabbox.cpp:345
 #, kde-format
 msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "Rodyti darbalaukį"
 
-#: tabbox/tabbox.cpp:515
+#: tabbox/tabbox.cpp:471
 msgid "Walk Through Windows"
 msgstr "Pereiti per langus"
 
-#: tabbox/tabbox.cpp:516
+#: tabbox/tabbox.cpp:472
 msgid "Walk Through Windows (Reverse)"
 msgstr "Pereiti per langus (atvirkščiai)"
 
-#: tabbox/tabbox.cpp:517
+#: tabbox/tabbox.cpp:473
 msgid "Walk Through Windows Alternative"
 msgstr "Pereiti per langus alternatyviai"
 
-#: tabbox/tabbox.cpp:518
+#: tabbox/tabbox.cpp:474
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Pereiti per langus alternatyviai (atvirkščiai)"
 
-#: tabbox/tabbox.cpp:519
+#: tabbox/tabbox.cpp:475
 msgid "Walk Through Windows of Current Application"
 msgstr "Pereiti per esamos programos langus"
 
-#: tabbox/tabbox.cpp:520
+#: tabbox/tabbox.cpp:476
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Pereiti per esamos programos langus (atvirkščiai)"
 
-#: tabbox/tabbox.cpp:521
+#: tabbox/tabbox.cpp:477
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Pereiti per esamos programos langus alternatyviai"
 
-#: tabbox/tabbox.cpp:522
+#: tabbox/tabbox.cpp:478
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Pereiti per esamos programos langus alternatyviai (atvirkščiai)"
 
-#: tabbox/tabbox.cpp:523
-msgid "Walk Through Desktops"
-msgstr "Pereiti per darbalaukius"
-
-#: tabbox/tabbox.cpp:524
-msgid "Walk Through Desktops (Reverse)"
-msgstr "Pereiti per darbalaukius (atvirkščiai)"
-
-#: tabbox/tabbox.cpp:525
-msgid "Walk Through Desktop List"
-msgstr "Pereiti per darbalaukių sąrašą"
-
-#: tabbox/tabbox.cpp:526
-msgid "Walk Through Desktop List (Reverse)"
-msgstr "Pereiti per darbalaukių sąrašą (atvirkščiai)"
-
-#: tabbox/tabboxhandler.cpp:290
+#: tabbox/tabboxhandler.cpp:271
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"
@@ -2815,7 +2799,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Neatsako)"
 
-#: workspace.cpp:1629
+#: workspace.cpp:1628
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""
@@ -2849,6 +2833,18 @@ msgstr ""
 "Prašome žemiau pateiktą informaciją įterpti į teksto įdėjimo paslaugas, "
 "pvz., \n"
 "http://paste.kde.org, o ne į palaikymo gijas.\n"
+
+#~ msgid "Walk Through Desktops"
+#~ msgstr "Pereiti per darbalaukius"
+
+#~ msgid "Walk Through Desktops (Reverse)"
+#~ msgstr "Pereiti per darbalaukius (atvirkščiai)"
+
+#~ msgid "Walk Through Desktop List"
+#~ msgstr "Pereiti per darbalaukių sąrašą"
+
+#~ msgid "Walk Through Desktop List (Reverse)"
+#~ msgstr "Pereiti per darbalaukių sąrašą (atvirkščiai)"
 
 #~ msgid "&No Border"
 #~ msgstr "&Nerodyti rėmelio"

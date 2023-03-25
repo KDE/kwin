@@ -1,0 +1,114 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Turkish "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwinscreenedges" lang="&language;">
+<articleinfo>
+
+<title
+>Ekran Kenarları</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<othercredit role="translator"
+><firstname
+>Volkan</firstname
+><surname
+>Gezer</surname
+><affiliation
+><address
+><email
+>volkangezer@gmail.com</email
+></address
+></affiliation
+><contrib
+>Çeviri</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>2023-01-30</date>
+<releaseinfo
+>Plasma 5.27</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>sistem ayarları</keyword>
+<keyword
+>masaüstü</keyword>
+<keyword
+>efektler</keyword>
+<keyword
+>ekran</keyword>
+<keyword
+>kenar</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>Etkin ekran kenarları, fare imlecinizi ekranın kenarına doğru iterek efektleri etkinleştirmenizi sağlar. Burada, ekranın her kenarında ve köşesinde hangi efektin etkinleştirileceğini yapılandırabilirsiniz. </para>
+
+<para
+>Herhangi bir fare düğmesiyle bir kareye tıklayın ve içerik menüsünden bir efekt seçin. Mavi kareli kenarların zaten ekli bir efekti vardır, gri renkli kare bu kenar için hiçbir efektin seçilmediğini gösterir.</para>
+
+<para
+>Bağlam menüsündeki erişilebilir efektlerin sayısı, <guilabel
+>Çalışma Alanı</guilabel
+> kategorisinde bulabileceğiniz <ulink url="help:/kcontrol/kwineffects/index.html"
+><guilabel
+>Masaüstü Efektleri</guilabel
+></ulink
+> modülündeki ayarlara bağlıdır. Favori efektlerinizi <guilabel
+>Pencere Yönetimi</guilabel
+> grubundan seçin. Bu, bağlam menüsündeki ilgili ögeleri etkinleştirir.</para>
+
+<para
+>Fare imlecinizi ekranın kenarına doğru iterek masaüstleri arasında geçiş yapmayı etkinleştirecek ayarı arıyorsanız bağlam menüsünden <guilabel
+>Pencereleri Sun</guilabel
+> efektlerinden birini seçin.</para>
+
+<para
+><guilabel
+>Ekranı Kapla: Üst kenarar sürüklenen pencereler</guilabel
+>, <guilabel
+>Döşe: Sağ veya sol kenara sürüklenen pencereler</guilabel
+> or <guilabel
+>Çeyrek döşemeyi şurada tetikle:</guilabel
+> ayarlarını etkinleştirebilir ve döşemeyi tetikleyecek ekran yüzdesini girebilirsiniz. </para>
+
+<tip>
+<para
+>Sistem ayarlarının <guilabel
+>Pencere Yönetimi</guilabel
+> bölümünde bulunan <guilabel
+>Pencere Davranışı</guilabel
+> ayarları modülündeki <guilabel
+>Hareket</guilabel
+> sekmesinden pencereler kenarlara, merkeze veya diğer pencerelerin yakınlarına taşındığında tutturulacakları bölgeleri yapılandırabilirsiniz. </para>
+</tip>
+
+<para
+>Bir uygulama tam ekran kipinde çalışıyorken ekran kenarı eylemlerini tetiklemeyi bastırmak istiyorsanız <guilabel
+>Pencereler tam ekranken etkin kal</guilabel
+> seçeneğini devre dışı bırakın.</para>
+
+<para
+><guilabel
+>Kenarda masaüstünü değiştir</guilabel
+> ögesini kullanarak, fare imlecini bir ekranın kenarına getirdiğinizde başka bir masaüstüne geçmek isteyip istemediğinizi yapılandırın; &eg;, pencereleri taşırken. </para>
+<para
+><guilabel
+>Etkinleştirme gecikmesi</guilabel
+>, eylem tetiklenmeden önce fare imlecinin ekran kenarlığına itilmesi gereken süredir. </para>
+<para
+><guilabel
+>Yeniden etkinleştirme gecikmesi</guilabel
+>, bir tetik gerçekleşmesinden sonra sonraki tetiğin gerçekleşmesi için geçmesi gereken süredir. </para>
+</article>

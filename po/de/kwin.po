@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-23 02:36+0000\n"
+"POT-Creation-Date: 2023-03-25 02:10+0000\n"
 "PO-Revision-Date: 2023-02-26 00:47+0100\n"
 "Last-Translator: Jannick Kuhr <opensource@kuhr.org>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -46,7 +46,7 @@ msgstr ""
 "Die Arbeitsflächeneffekte wurden durch eine andere Anwendung ausgesetzt.<br/"
 ">Sie können mit Hilfe des Kurzbefehls „%1“ reaktiviert werden."
 
-#: composite.cpp:1028
+#: composite.cpp:1029
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -69,14 +69,14 @@ msgstr ""
 "sofortigen Absturz führen kann.</b></p><p>Alternativ können Sie das XRender-"
 "Backend verwenden.</p>"
 
-#: composite.cpp:1035
+#: composite.cpp:1036
 #, fuzzy, kde-format
 #| msgid "Required X extensions (XComposite and XDamage) are not available."
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr ""
 "Benötigte X-Erweiterungen (XComposite und XDamage) sind nicht verfügbar."
 
-#: composite.cpp:1038
+#: composite.cpp:1039
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL ist nicht verfügbar."
@@ -2172,63 +2172,47 @@ msgstr "Dialog"
 msgid "..."
 msgstr "..."
 
-#: tabbox/tabbox.cpp:375
+#: tabbox/tabbox.cpp:345
 #, kde-format
 msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "Arbeitsfläche anzeigen"
 
-#: tabbox/tabbox.cpp:515
+#: tabbox/tabbox.cpp:471
 msgid "Walk Through Windows"
 msgstr "Zwischen Fenstern wechseln"
 
-#: tabbox/tabbox.cpp:516
+#: tabbox/tabbox.cpp:472
 msgid "Walk Through Windows (Reverse)"
 msgstr "Zwischen Fenstern wechseln (Gegenrichtung)"
 
-#: tabbox/tabbox.cpp:517
+#: tabbox/tabbox.cpp:473
 msgid "Walk Through Windows Alternative"
 msgstr "Alternatives Wechseln zwischen Fenstern"
 
-#: tabbox/tabbox.cpp:518
+#: tabbox/tabbox.cpp:474
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Alternatives Wechseln zwischen Fenstern (Gegenrichtung)"
 
-#: tabbox/tabbox.cpp:519
+#: tabbox/tabbox.cpp:475
 msgid "Walk Through Windows of Current Application"
 msgstr "Zwischen Fenstern der aktuellen Anwendung wechseln"
 
-#: tabbox/tabbox.cpp:520
+#: tabbox/tabbox.cpp:476
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Zwischen Fenstern der aktuellen Anwendung wechseln (Gegenrichtung)"
 
-#: tabbox/tabbox.cpp:521
+#: tabbox/tabbox.cpp:477
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Alternatives Wechseln zwischen Fenstern der aktuellen Anwendung"
 
-#: tabbox/tabbox.cpp:522
+#: tabbox/tabbox.cpp:478
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr ""
 "Alternatives Wechseln zwischen Fenstern der aktuellen Anwendung "
 "(Gegenrichtung)"
 
-#: tabbox/tabbox.cpp:523
-msgid "Walk Through Desktops"
-msgstr "Zwischen Arbeitsflächen umschalten"
-
-#: tabbox/tabbox.cpp:524
-msgid "Walk Through Desktops (Reverse)"
-msgstr "Zwischen Arbeitsflächen umschalten (Gegenrichtung)"
-
-#: tabbox/tabbox.cpp:525
-msgid "Walk Through Desktop List"
-msgstr "Nächster Eintrag in Arbeitsflächenliste"
-
-#: tabbox/tabbox.cpp:526
-msgid "Walk Through Desktop List (Reverse)"
-msgstr "Nächster Eintrag in Arbeitsflächenliste (Gegenrichtung)"
-
-#: tabbox/tabboxhandler.cpp:290
+#: tabbox/tabboxhandler.cpp:271
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"
@@ -2825,7 +2809,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Reagiert nicht)"
 
-#: workspace.cpp:1629
+#: workspace.cpp:1628
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""
@@ -2859,6 +2843,18 @@ msgstr ""
 "Bitte geben Sie die unten stehenden Informationen bei einem Pastebin-Dienst "
 "wie https://paste.kde.org ein, anstatt sie direkt in die Hilfediskussionen "
 "zu schreiben.\n"
+
+#~ msgid "Walk Through Desktops"
+#~ msgstr "Zwischen Arbeitsflächen umschalten"
+
+#~ msgid "Walk Through Desktops (Reverse)"
+#~ msgstr "Zwischen Arbeitsflächen umschalten (Gegenrichtung)"
+
+#~ msgid "Walk Through Desktop List"
+#~ msgstr "Nächster Eintrag in Arbeitsflächenliste"
+
+#~ msgid "Walk Through Desktop List (Reverse)"
+#~ msgstr "Nächster Eintrag in Arbeitsflächenliste (Gegenrichtung)"
 
 #~ msgid "&No Border"
 #~ msgstr "Keine &Umrandung"

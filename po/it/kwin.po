@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-23 02:36+0000\n"
+"POT-Creation-Date: 2023-03-25 02:10+0000\n"
 "PO-Revision-Date: 2023-03-03 02:47+0100\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -46,7 +46,7 @@ msgstr ""
 "Gli effetti del desktop sono stati sospesi da un'altra applicazione.<br/"
 ">Puoi riattivarla con la scorciatoia «%1»."
 
-#: composite.cpp:1028
+#: composite.cpp:1029
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -60,13 +60,13 @@ msgstr ""
 "driver stabile,< br>puoi ripristinare questa protezione, ma <b>tieni "
 "presente che ciò potrebbe causare un arresto anomalo immediato!</b></p>"
 
-#: composite.cpp:1035
+#: composite.cpp:1036
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr ""
 "Le estensioni necessarie di X (XComposite e XDamage) non sono presenti."
 
-#: composite.cpp:1038
+#: composite.cpp:1039
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL non è disponibile."
@@ -2156,62 +2156,46 @@ msgstr "Finestra"
 msgid "..."
 msgstr "..."
 
-#: tabbox/tabbox.cpp:375
+#: tabbox/tabbox.cpp:345
 #, kde-format
 msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "Mostra il desktop"
 
-#: tabbox/tabbox.cpp:515
+#: tabbox/tabbox.cpp:471
 msgid "Walk Through Windows"
 msgstr "Percorri le finestre"
 
-#: tabbox/tabbox.cpp:516
+#: tabbox/tabbox.cpp:472
 msgid "Walk Through Windows (Reverse)"
 msgstr "Percorri le finestre (all'indietro)"
 
-#: tabbox/tabbox.cpp:517
+#: tabbox/tabbox.cpp:473
 msgid "Walk Through Windows Alternative"
 msgstr "Percorri le finestre alternativo"
 
-#: tabbox/tabbox.cpp:518
+#: tabbox/tabbox.cpp:474
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Percorri le finestre alternativo (all'indietro)"
 
-#: tabbox/tabbox.cpp:519
+#: tabbox/tabbox.cpp:475
 msgid "Walk Through Windows of Current Application"
 msgstr "Percorri le finestre dell'applicazione"
 
-#: tabbox/tabbox.cpp:520
+#: tabbox/tabbox.cpp:476
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Percorri le finestre dell'applicazione attuale (all'indietro)"
 
-#: tabbox/tabbox.cpp:521
+#: tabbox/tabbox.cpp:477
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Percorri le finestre dell'applicazione attuale alternativo"
 
-#: tabbox/tabbox.cpp:522
+#: tabbox/tabbox.cpp:478
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr ""
 "Percorri le finestre dell'applicazione attuale alternativo (all'indietro)"
 
-#: tabbox/tabbox.cpp:523
-msgid "Walk Through Desktops"
-msgstr "Percorri i desktop"
-
-#: tabbox/tabbox.cpp:524
-msgid "Walk Through Desktops (Reverse)"
-msgstr "Percorri i desktop (all'indietro)"
-
-#: tabbox/tabbox.cpp:525
-msgid "Walk Through Desktop List"
-msgstr "Percorri la lista dei desktop"
-
-#: tabbox/tabbox.cpp:526
-msgid "Walk Through Desktop List (Reverse)"
-msgstr "Percorri la lista dei desktop (all'indietro)"
-
-#: tabbox/tabboxhandler.cpp:290
+#: tabbox/tabboxhandler.cpp:271
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"
@@ -2810,7 +2794,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Non risponde)"
 
-#: workspace.cpp:1629
+#: workspace.cpp:1628
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -2834,6 +2818,18 @@ msgstr ""
 "servizio paste bin\n"
 "come https://paste.kde.org invece di incollarlo nella conversazione di "
 "supporto.\n"
+
+#~ msgid "Walk Through Desktops"
+#~ msgstr "Percorri i desktop"
+
+#~ msgid "Walk Through Desktops (Reverse)"
+#~ msgstr "Percorri i desktop (all'indietro)"
+
+#~ msgid "Walk Through Desktop List"
+#~ msgstr "Percorri la lista dei desktop"
+
+#~ msgid "Walk Through Desktop List (Reverse)"
+#~ msgstr "Percorri la lista dei desktop (all'indietro)"
 
 #~ msgid "&No Border"
 #~ msgstr "Sen&za bordo"

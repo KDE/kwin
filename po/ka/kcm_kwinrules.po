@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-17 02:32+0000\n"
+"POT-Creation-Date: 2023-03-25 02:10+0000\n"
 "PO-Revision-Date: 2023-02-03 06:20+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -32,37 +32,6 @@ msgstr "აპლიკაციის პარამეტრები %1-ს�
 #, kde-format
 msgid "Window settings for %1"
 msgstr "ფანჯრის პარამეტრები %1-სთვს"
-
-#: main.cpp:30
-#, kde-format
-msgid "KWinRules KCM launcher"
-msgstr "KWinRules KCM გამშვები"
-
-#: main.cpp:31
-#, kde-format
-msgid "KWin id of the window for special window settings."
-msgstr "KWin id ფანჯრის სპეციალური პარამეტრებისთვის."
-
-#: main.cpp:32
-#, kde-format
-msgid "Whether the settings should affect all windows of the application."
-msgstr "გადატარდება თუ არა ეფექტები აპლიკაციის ყველა ფანჯარაზე."
-
-#: main.cpp:39
-#, kde-format
-msgid "This helper utility is not supposed to be called directly."
-msgstr "დამხმარე პროგრამა ცალკე არ უნდა გამოიძახოთ."
-
-#: main.cpp:43
-#, kde-format
-msgctxt "Window caption for the application wide rules dialog"
-msgid "Edit Application-Specific Settings"
-msgstr "აპლიკაციაზე-დამოკიდებული პარამეტრების მორგება"
-
-#: main.cpp:44
-#, kde-format
-msgid "Edit Window-Specific Settings"
-msgstr "ფანჯარაზე-დამოკიდებული პარამეტრების მორგება"
 
 #: optionsmodel.cpp:198
 #, kde-format
@@ -322,8 +291,8 @@ msgid "No"
 msgstr "არა"
 
 #: package/contents/ui/RulesEditor.qml:275
-#: package/contents/ui/ValueEditor.qml:171
-#: package/contents/ui/ValueEditor.qml:178
+#: package/contents/ui/ValueEditor.qml:168
+#: package/contents/ui/ValueEditor.qml:175
 #, kde-format
 msgid "%1 %"
 msgstr "%1 %"
@@ -340,7 +309,7 @@ msgctxt "Size (width, height)"
 msgid "(%1, %2)"
 msgstr "(%1, %2)"
 
-#: package/contents/ui/ValueEditor.qml:206
+#: package/contents/ui/ValueEditor.qml:203
 #, kde-format
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
@@ -866,6 +835,25 @@ msgstr "უმართავი ფანჯარა"
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
 "ფანჯრის თვისებების აღმოჩენის შეცდომა. ფანჯარა KWin-ის მიერ არ იმართება."
+
+#~ msgid "KWinRules KCM launcher"
+#~ msgstr "KWinRules KCM გამშვები"
+
+#~ msgid "KWin id of the window for special window settings."
+#~ msgstr "KWin id ფანჯრის სპეციალური პარამეტრებისთვის."
+
+#~ msgid "Whether the settings should affect all windows of the application."
+#~ msgstr "გადატარდება თუ არა ეფექტები აპლიკაციის ყველა ფანჯარაზე."
+
+#~ msgid "This helper utility is not supposed to be called directly."
+#~ msgstr "დამხმარე პროგრამა ცალკე არ უნდა გამოიძახოთ."
+
+#~ msgctxt "Window caption for the application wide rules dialog"
+#~ msgid "Edit Application-Specific Settings"
+#~ msgstr "აპლიკაციაზე-დამოკიდებული პარამეტრების მორგება"
+
+#~ msgid "Edit Window-Specific Settings"
+#~ msgstr "ფანჯარაზე-დამოკიდებული პარამეტრების მორგება"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

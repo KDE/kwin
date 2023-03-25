@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-23 02:36+0000\n"
+"POT-Creation-Date: 2023-03-25 02:10+0000\n"
 "PO-Revision-Date: 2023-02-24 12:43\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -39,7 +39,7 @@ msgid ""
 "resume using the '%1' shortcut."
 msgstr "桌面特效已被某个程序暂停。<br/>按“%1”快捷键可以恢复特效。"
 
-#: composite.cpp:1028
+#: composite.cpp:1029
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -52,12 +52,12 @@ msgstr ""
 "显示驱动程序，<br>您可以重置此保护措施，<b>但不排除这会导致 KWin 立即崩溃！</"
 "b></p>"
 
-#: composite.cpp:1035
+#: composite.cpp:1036
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "需要的 X 扩展功能(XComposite and XDamage)不可用。"
 
-#: composite.cpp:1038
+#: composite.cpp:1039
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL 不可用。"
@@ -2119,61 +2119,45 @@ msgstr "对话框"
 msgid "..."
 msgstr "..."
 
-#: tabbox/tabbox.cpp:375
+#: tabbox/tabbox.cpp:345
 #, kde-format
 msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "显示桌面"
 
-#: tabbox/tabbox.cpp:515
+#: tabbox/tabbox.cpp:471
 msgid "Walk Through Windows"
 msgstr "遍历窗口"
 
-#: tabbox/tabbox.cpp:516
+#: tabbox/tabbox.cpp:472
 msgid "Walk Through Windows (Reverse)"
 msgstr "遍历窗口(反向)"
 
-#: tabbox/tabbox.cpp:517
+#: tabbox/tabbox.cpp:473
 msgid "Walk Through Windows Alternative"
 msgstr "遍历窗口候选"
 
-#: tabbox/tabbox.cpp:518
+#: tabbox/tabbox.cpp:474
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "遍历窗口候选(反向)"
 
-#: tabbox/tabbox.cpp:519
+#: tabbox/tabbox.cpp:475
 msgid "Walk Through Windows of Current Application"
 msgstr "遍历当前应用程序窗口"
 
-#: tabbox/tabbox.cpp:520
+#: tabbox/tabbox.cpp:476
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "遍历当前应用程序窗口(反向)"
 
-#: tabbox/tabbox.cpp:521
+#: tabbox/tabbox.cpp:477
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "遍历当前应用程序窗口候选"
 
-#: tabbox/tabbox.cpp:522
+#: tabbox/tabbox.cpp:478
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "遍历当前应用程序窗口候选(反向)"
 
-#: tabbox/tabbox.cpp:523
-msgid "Walk Through Desktops"
-msgstr "遍历桌面"
-
-#: tabbox/tabbox.cpp:524
-msgid "Walk Through Desktops (Reverse)"
-msgstr "遍历桌面(反向)"
-
-#: tabbox/tabbox.cpp:525
-msgid "Walk Through Desktop List"
-msgstr "遍历桌面列表"
-
-#: tabbox/tabbox.cpp:526
-msgid "Walk Through Desktop List (Reverse)"
-msgstr "遍历桌面列表(反向)"
-
-#: tabbox/tabboxhandler.cpp:290
+#: tabbox/tabboxhandler.cpp:271
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"
@@ -2763,7 +2747,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(未响应)"
 
-#: workspace.cpp:1629
+#: workspace.cpp:1628
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""
@@ -2794,3 +2778,15 @@ msgstr ""
 "正在使用什么 OpenGL 驱动，和哪些特效正在运行。\n"
 "请将此本文下面的信息贴至一个剪贴板服务，\n"
 "例如 https://paste.kde.org ，而不是直接贴到请求支持的贴子中。\n"
+
+#~ msgid "Walk Through Desktops"
+#~ msgstr "遍历桌面"
+
+#~ msgid "Walk Through Desktops (Reverse)"
+#~ msgstr "遍历桌面(反向)"
+
+#~ msgid "Walk Through Desktop List"
+#~ msgstr "遍历桌面列表"
+
+#~ msgid "Walk Through Desktop List (Reverse)"
+#~ msgstr "遍历桌面列表(反向)"

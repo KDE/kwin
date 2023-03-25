@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-17 02:32+0000\n"
+"POT-Creation-Date: 2023-03-25 02:10+0000\n"
 "PO-Revision-Date: 2017-10-30 23:08+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -36,38 +36,6 @@ msgstr "Програмске поставке за „%1“"
 #, kde-format
 msgid "Window settings for %1"
 msgstr "Прозорске поставке за „%1“"
-
-#: main.cpp:30
-#, kde-format
-msgid "KWinRules KCM launcher"
-msgstr ""
-
-#: main.cpp:31
-#, fuzzy, kde-format
-#| msgid "WId of the window for special window settings."
-msgid "KWin id of the window for special window settings."
-msgstr "ИД прозора за посебне поставке по прозору."
-
-#: main.cpp:32
-#, kde-format
-msgid "Whether the settings should affect all windows of the application."
-msgstr "Да ли поставке утичу на све прозоре истог програма."
-
-#: main.cpp:39
-#, kde-format
-msgid "This helper utility is not supposed to be called directly."
-msgstr "Ова помоћна алатка не би требало да се позива директно."
-
-#: main.cpp:43
-#, kde-format
-msgctxt "Window caption for the application wide rules dialog"
-msgid "Edit Application-Specific Settings"
-msgstr "Уређивање посебних поставки за програм"
-
-#: main.cpp:44
-#, kde-format
-msgid "Edit Window-Specific Settings"
-msgstr "Уреди посебне поставке за прозор"
 
 #: optionsmodel.cpp:198
 #, kde-format
@@ -341,8 +309,8 @@ msgid "No"
 msgstr "не"
 
 #: package/contents/ui/RulesEditor.qml:275
-#: package/contents/ui/ValueEditor.qml:171
-#: package/contents/ui/ValueEditor.qml:178
+#: package/contents/ui/ValueEditor.qml:168
+#: package/contents/ui/ValueEditor.qml:175
 #, kde-format
 msgid "%1 %"
 msgstr ""
@@ -359,7 +327,7 @@ msgctxt "Size (width, height)"
 msgid "(%1, %2)"
 msgstr ""
 
-#: package/contents/ui/ValueEditor.qml:206
+#: package/contents/ui/ValueEditor.qml:203
 #, kde-format
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
@@ -973,6 +941,24 @@ msgstr "на главном прозору"
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
+
+#, fuzzy
+#~| msgid "WId of the window for special window settings."
+#~ msgid "KWin id of the window for special window settings."
+#~ msgstr "ИД прозора за посебне поставке по прозору."
+
+#~ msgid "Whether the settings should affect all windows of the application."
+#~ msgstr "Да ли поставке утичу на све прозоре истог програма."
+
+#~ msgid "This helper utility is not supposed to be called directly."
+#~ msgstr "Ова помоћна алатка не би требало да се позива директно."
+
+#~ msgctxt "Window caption for the application wide rules dialog"
+#~ msgid "Edit Application-Specific Settings"
+#~ msgstr "Уређивање посебних поставки за програм"
+
+#~ msgid "Edit Window-Specific Settings"
+#~ msgstr "Уреди посебне поставке за прозор"
 
 #~ msgid ""
 #~ "<p><h1>Window-specific Settings</h1> Here you can customize window "

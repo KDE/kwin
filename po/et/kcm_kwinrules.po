@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-17 02:32+0000\n"
+"POT-Creation-Date: 2023-03-25 02:10+0000\n"
 "PO-Revision-Date: 2020-10-25 18:44+0100\n"
 "Last-Translator: Mihkel Tõnnov <mihhkel@gmail.com>\n"
 "Language-Team: Estonian <>\n"
@@ -33,37 +33,6 @@ msgstr "%1 rakenduse seadistused"
 #, kde-format
 msgid "Window settings for %1"
 msgstr "%1 akna seadistused"
-
-#: main.cpp:30
-#, kde-format
-msgid "KWinRules KCM launcher"
-msgstr ""
-
-#: main.cpp:31
-#, kde-format
-msgid "KWin id of the window for special window settings."
-msgstr "Akna KWini ID akende spetsiaalsetele seadistustele."
-
-#: main.cpp:32
-#, kde-format
-msgid "Whether the settings should affect all windows of the application."
-msgstr "Kas seadistused peavad mõjutama rakenduse kõiki aknaid."
-
-#: main.cpp:39
-#, kde-format
-msgid "This helper utility is not supposed to be called directly."
-msgstr "See abiutiliit ei ole mõeldud otseseks väljakutsumiseks."
-
-#: main.cpp:43
-#, kde-format
-msgctxt "Window caption for the application wide rules dialog"
-msgid "Edit Application-Specific Settings"
-msgstr "Rakenduse spetsiifiliste seadistuste muutmine"
-
-#: main.cpp:44
-#, kde-format
-msgid "Edit Window-Specific Settings"
-msgstr "Akende spetsiifiliste seadistuste muutmine"
 
 #: optionsmodel.cpp:198
 #, kde-format
@@ -333,8 +302,8 @@ msgid "No"
 msgstr "Ei"
 
 #: package/contents/ui/RulesEditor.qml:275
-#: package/contents/ui/ValueEditor.qml:171
-#: package/contents/ui/ValueEditor.qml:178
+#: package/contents/ui/ValueEditor.qml:168
+#: package/contents/ui/ValueEditor.qml:175
 #, kde-format
 msgid "%1 %"
 msgstr "%1 %"
@@ -351,7 +320,7 @@ msgctxt "Size (width, height)"
 msgid "(%1, %2)"
 msgstr "(%1, %2)"
 
-#: package/contents/ui/ValueEditor.qml:206
+#: package/contents/ui/ValueEditor.qml:203
 #, kde-format
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
@@ -915,6 +884,22 @@ msgstr "Haldamata aken"
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
+
+#~ msgid "KWin id of the window for special window settings."
+#~ msgstr "Akna KWini ID akende spetsiaalsetele seadistustele."
+
+#~ msgid "Whether the settings should affect all windows of the application."
+#~ msgstr "Kas seadistused peavad mõjutama rakenduse kõiki aknaid."
+
+#~ msgid "This helper utility is not supposed to be called directly."
+#~ msgstr "See abiutiliit ei ole mõeldud otseseks väljakutsumiseks."
+
+#~ msgctxt "Window caption for the application wide rules dialog"
+#~ msgid "Edit Application-Specific Settings"
+#~ msgstr "Rakenduse spetsiifiliste seadistuste muutmine"
+
+#~ msgid "Edit Window-Specific Settings"
+#~ msgstr "Akende spetsiifiliste seadistuste muutmine"
 
 #~ msgid ""
 #~ "<p><h1>Window-specific Settings</h1> Here you can customize window "

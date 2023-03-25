@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-17 02:32+0000\n"
+"POT-Creation-Date: 2023-03-25 02:10+0000\n"
 "PO-Revision-Date: 2023-02-20 11:18+0100\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
@@ -32,37 +32,6 @@ msgstr "Thiết lập ứng dụng cho %1"
 #, kde-format
 msgid "Window settings for %1"
 msgstr "Thiết lập cửa sổ cho %1"
-
-#: main.cpp:30
-#, kde-format
-msgid "KWinRules KCM launcher"
-msgstr "Trình khởi chạy KCM KWinRules"
-
-#: main.cpp:31
-#, kde-format
-msgid "KWin id of the window for special window settings."
-msgstr "Mã định danh KWin của cửa sổ để dùng các thiết lập cửa sổ đặc biệt."
-
-#: main.cpp:32
-#, kde-format
-msgid "Whether the settings should affect all windows of the application."
-msgstr "Liệu các thiết lập có nên tác động đến tất cả các cửa sổ của ứng dụng."
-
-#: main.cpp:39
-#, kde-format
-msgid "This helper utility is not supposed to be called directly."
-msgstr "Không nên gọi trực tiếp tiện ích trợ giúp này."
-
-#: main.cpp:43
-#, kde-format
-msgctxt "Window caption for the application wide rules dialog"
-msgid "Edit Application-Specific Settings"
-msgstr "Sửa thiết lập theo ứng dụng"
-
-#: main.cpp:44
-#, kde-format
-msgid "Edit Window-Specific Settings"
-msgstr "Sửa thiết lập theo cửa sổ"
 
 #: optionsmodel.cpp:198
 #, kde-format
@@ -334,8 +303,8 @@ msgid "No"
 msgstr "Không"
 
 #: package/contents/ui/RulesEditor.qml:275
-#: package/contents/ui/ValueEditor.qml:171
-#: package/contents/ui/ValueEditor.qml:178
+#: package/contents/ui/ValueEditor.qml:168
+#: package/contents/ui/ValueEditor.qml:175
 #, kde-format
 msgid "%1 %"
 msgstr "%1 %"
@@ -352,7 +321,7 @@ msgctxt "Size (width, height)"
 msgid "(%1, %2)"
 msgstr "(%1, %2)"
 
-#: package/contents/ui/ValueEditor.qml:206
+#: package/contents/ui/ValueEditor.qml:203
 #, kde-format
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
@@ -921,6 +890,26 @@ msgstr "Cửa sổ vô quản lí"
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
 "Không phát hiện được thuộc tính cửa sổ. Cửa sổ này không do KWin quản lí."
+
+#~ msgid "KWinRules KCM launcher"
+#~ msgstr "Trình khởi chạy KCM KWinRules"
+
+#~ msgid "KWin id of the window for special window settings."
+#~ msgstr "Mã định danh KWin của cửa sổ để dùng các thiết lập cửa sổ đặc biệt."
+
+#~ msgid "Whether the settings should affect all windows of the application."
+#~ msgstr ""
+#~ "Liệu các thiết lập có nên tác động đến tất cả các cửa sổ của ứng dụng."
+
+#~ msgid "This helper utility is not supposed to be called directly."
+#~ msgstr "Không nên gọi trực tiếp tiện ích trợ giúp này."
+
+#~ msgctxt "Window caption for the application wide rules dialog"
+#~ msgid "Edit Application-Specific Settings"
+#~ msgstr "Sửa thiết lập theo ứng dụng"
+
+#~ msgid "Edit Window-Specific Settings"
+#~ msgstr "Sửa thiết lập theo cửa sổ"
 
 #~ msgid ""
 #~ "<p><h1>Window-specific Settings</h1> Here you can customize window "

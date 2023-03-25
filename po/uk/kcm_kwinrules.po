@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-17 02:32+0000\n"
+"POT-Creation-Date: 2023-03-25 02:10+0000\n"
 "PO-Revision-Date: 2023-02-10 08:47+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
@@ -37,37 +37,6 @@ msgstr "Параметри програми для %1"
 #, kde-format
 msgid "Window settings for %1"
 msgstr "Параметри вікна для %1"
-
-#: main.cpp:30
-#, kde-format
-msgid "KWinRules KCM launcher"
-msgstr "Засіб запуску KCM KWinRules"
-
-#: main.cpp:31
-#, kde-format
-msgid "KWin id of the window for special window settings."
-msgstr "Ідентифікатор KWin вікна для особливих параметрів вікна."
-
-#: main.cpp:32
-#, kde-format
-msgid "Whether the settings should affect all windows of the application."
-msgstr "Чи параметри мають стосуватись всіх вікон програми."
-
-#: main.cpp:39
-#, kde-format
-msgid "This helper utility is not supposed to be called directly."
-msgstr "Цю допоміжну утиліту не можна викликати напряму."
-
-#: main.cpp:43
-#, kde-format
-msgctxt "Window caption for the application wide rules dialog"
-msgid "Edit Application-Specific Settings"
-msgstr "Зміна параметрів вікон окремих програм"
-
-#: main.cpp:44
-#, kde-format
-msgid "Edit Window-Specific Settings"
-msgstr "Зміна параметрів вікон"
 
 #: optionsmodel.cpp:198
 #, kde-format
@@ -349,8 +318,8 @@ msgid "No"
 msgstr "Ні"
 
 #: package/contents/ui/RulesEditor.qml:275
-#: package/contents/ui/ValueEditor.qml:171
-#: package/contents/ui/ValueEditor.qml:178
+#: package/contents/ui/ValueEditor.qml:168
+#: package/contents/ui/ValueEditor.qml:175
 #, kde-format
 msgid "%1 %"
 msgstr "%1 %"
@@ -367,7 +336,7 @@ msgctxt "Size (width, height)"
 msgid "(%1, %2)"
 msgstr "(%1, %2)"
 
-#: package/contents/ui/ValueEditor.qml:206
+#: package/contents/ui/ValueEditor.qml:203
 #, kde-format
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
@@ -944,6 +913,25 @@ msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
 "Не вдалося визначити властивості вікна. Керування вікном здійснюється не за "
 "допомогою KWin."
+
+#~ msgid "KWinRules KCM launcher"
+#~ msgstr "Засіб запуску KCM KWinRules"
+
+#~ msgid "KWin id of the window for special window settings."
+#~ msgstr "Ідентифікатор KWin вікна для особливих параметрів вікна."
+
+#~ msgid "Whether the settings should affect all windows of the application."
+#~ msgstr "Чи параметри мають стосуватись всіх вікон програми."
+
+#~ msgid "This helper utility is not supposed to be called directly."
+#~ msgstr "Цю допоміжну утиліту не можна викликати напряму."
+
+#~ msgctxt "Window caption for the application wide rules dialog"
+#~ msgid "Edit Application-Specific Settings"
+#~ msgstr "Зміна параметрів вікон окремих програм"
+
+#~ msgid "Edit Window-Specific Settings"
+#~ msgstr "Зміна параметрів вікон"
 
 #~ msgid ""
 #~ "<p><h1>Window-specific Settings</h1> Here you can customize window "

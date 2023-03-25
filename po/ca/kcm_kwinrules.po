@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-17 02:32+0000\n"
+"POT-Creation-Date: 2023-03-25 02:10+0000\n"
 "PO-Revision-Date: 2023-02-10 10:02+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -38,38 +38,6 @@ msgstr "Valors d'aplicació per a %1"
 #, kde-format
 msgid "Window settings for %1"
 msgstr "Valors de la finestra per a %1"
-
-#: main.cpp:30
-#, kde-format
-msgid "KWinRules KCM launcher"
-msgstr "Llançador del KCM de KWinRules"
-
-#: main.cpp:31
-#, kde-format
-msgid "KWin id of the window for special window settings."
-msgstr "ID del KWin de la finestra per a opcions especials d'aquesta."
-
-#: main.cpp:32
-#, kde-format
-msgid "Whether the settings should affect all windows of the application."
-msgstr ""
-"Si la configuració hauria d'afectar totes les finestres de l'aplicació."
-
-#: main.cpp:39
-#, kde-format
-msgid "This helper utility is not supposed to be called directly."
-msgstr "Aquesta utilitat d'ajuda no està pensada per a cridar-se directament."
-
-#: main.cpp:43
-#, kde-format
-msgctxt "Window caption for the application wide rules dialog"
-msgid "Edit Application-Specific Settings"
-msgstr "Edita l'arranjament específic d'aplicació"
-
-#: main.cpp:44
-#, kde-format
-msgid "Edit Window-Specific Settings"
-msgstr "Edita els valors específics de la finestra"
 
 #: optionsmodel.cpp:198
 #, kde-format
@@ -344,8 +312,8 @@ msgid "No"
 msgstr "No"
 
 #: package/contents/ui/RulesEditor.qml:275
-#: package/contents/ui/ValueEditor.qml:171
-#: package/contents/ui/ValueEditor.qml:178
+#: package/contents/ui/ValueEditor.qml:168
+#: package/contents/ui/ValueEditor.qml:175
 #, kde-format
 msgid "%1 %"
 msgstr "%1 %"
@@ -362,7 +330,7 @@ msgctxt "Size (width, height)"
 msgid "(%1, %2)"
 msgstr "(%1, %2)"
 
-#: package/contents/ui/ValueEditor.qml:206
+#: package/contents/ui/ValueEditor.qml:203
 #, kde-format
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
@@ -936,3 +904,24 @@ msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
 "No s'han pogut detectar les propietats de la finestra. El KWin no gestiona "
 "aquesta finestra."
+
+#~ msgid "KWinRules KCM launcher"
+#~ msgstr "Llançador del KCM de KWinRules"
+
+#~ msgid "KWin id of the window for special window settings."
+#~ msgstr "ID del KWin de la finestra per a opcions especials d'aquesta."
+
+#~ msgid "Whether the settings should affect all windows of the application."
+#~ msgstr ""
+#~ "Si la configuració hauria d'afectar totes les finestres de l'aplicació."
+
+#~ msgid "This helper utility is not supposed to be called directly."
+#~ msgstr ""
+#~ "Aquesta utilitat d'ajuda no està pensada per a cridar-se directament."
+
+#~ msgctxt "Window caption for the application wide rules dialog"
+#~ msgid "Edit Application-Specific Settings"
+#~ msgstr "Edita l'arranjament específic d'aplicació"
+
+#~ msgid "Edit Window-Specific Settings"
+#~ msgstr "Edita els valors específics de la finestra"

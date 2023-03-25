@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-23 02:36+0000\n"
+"POT-Creation-Date: 2023-03-25 02:10+0000\n"
 "PO-Revision-Date: 2022-11-14 01:16+0100\n"
 "Last-Translator: Mihkel Tõnnov <mihhkel@gmail.com>\n"
 "Language-Team: Estonian <>\n"
@@ -46,7 +46,7 @@ msgstr ""
 "Mingi rakendus on töölauaefektid välja lülitanud.<br/>Need saab uuesti sisse "
 "lülitada kiirklahviga '%1'."
 
-#: composite.cpp:1028
+#: composite.cpp:1029
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -59,12 +59,12 @@ msgstr ""
 "paigaldanud stabiilse draiveri,<br>võid selle kaitse maha võtta, aga "
 "<b>arvesta, et see võib kaasa tuua kohese krahhi!</b></p>"
 
-#: composite.cpp:1035
+#: composite.cpp:1036
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Nõutavaid X'i laiendusi (XComposite ja XDamage) pole saadaval."
 
-#: composite.cpp:1038
+#: composite.cpp:1039
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL ei ole saadaval."
@@ -2134,61 +2134,45 @@ msgstr "Dialoog"
 msgid "..."
 msgstr "..."
 
-#: tabbox/tabbox.cpp:375
+#: tabbox/tabbox.cpp:345
 #, kde-format
 msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "Töölaua näitamine"
 
-#: tabbox/tabbox.cpp:515
+#: tabbox/tabbox.cpp:471
 msgid "Walk Through Windows"
 msgstr "Akende läbijalutamine"
 
-#: tabbox/tabbox.cpp:516
+#: tabbox/tabbox.cpp:472
 msgid "Walk Through Windows (Reverse)"
 msgstr "Akende läbijalutamine (tagurpidi)"
 
-#: tabbox/tabbox.cpp:517
+#: tabbox/tabbox.cpp:473
 msgid "Walk Through Windows Alternative"
 msgstr "Akende alternatiivne läbijalutamine"
 
-#: tabbox/tabbox.cpp:518
+#: tabbox/tabbox.cpp:474
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Akende alternatiivne läbijalutamine (tagurpidi)"
 
-#: tabbox/tabbox.cpp:519
+#: tabbox/tabbox.cpp:475
 msgid "Walk Through Windows of Current Application"
 msgstr "Aktiivse rakenduse akende läbijalutamine"
 
-#: tabbox/tabbox.cpp:520
+#: tabbox/tabbox.cpp:476
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Aktiivse rakenduse akende läbijalutamine (tagurpidi)"
 
-#: tabbox/tabbox.cpp:521
+#: tabbox/tabbox.cpp:477
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Aktiivse rakenduse akende alternatiivne läbijalutamine"
 
-#: tabbox/tabbox.cpp:522
+#: tabbox/tabbox.cpp:478
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Aktiivse rakenduse akende alternatiivne läbijalutamine (tagurpidi)"
 
-#: tabbox/tabbox.cpp:523
-msgid "Walk Through Desktops"
-msgstr "Töölaudade läbijalutamine"
-
-#: tabbox/tabbox.cpp:524
-msgid "Walk Through Desktops (Reverse)"
-msgstr "Töölaudade läbijalutamine (tagurpidi)"
-
-#: tabbox/tabbox.cpp:525
-msgid "Walk Through Desktop List"
-msgstr "Töölaudade nimekirja läbijalutamine"
-
-#: tabbox/tabbox.cpp:526
-msgid "Walk Through Desktop List (Reverse)"
-msgstr "Töölaudade nimekirja läbijalutamine (tagurpidi)"
-
-#: tabbox/tabboxhandler.cpp:290
+#: tabbox/tabboxhandler.cpp:271
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"
@@ -2796,7 +2780,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(ei reageeri)"
 
-#: workspace.cpp:1629
+#: workspace.cpp:1628
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""
@@ -2829,6 +2813,18 @@ msgstr ""
 "on kasutusel, milline OpenGL draiver ja millised efektid.\n"
 "Palun postita sissejuhatava teksti all olev teave pastebin-teenussesse,\n"
 "näiteks https://paste.kde.org, mitte ära postita seda foorumisse.\n"
+
+#~ msgid "Walk Through Desktops"
+#~ msgstr "Töölaudade läbijalutamine"
+
+#~ msgid "Walk Through Desktops (Reverse)"
+#~ msgstr "Töölaudade läbijalutamine (tagurpidi)"
+
+#~ msgid "Walk Through Desktop List"
+#~ msgstr "Töölaudade nimekirja läbijalutamine"
+
+#~ msgid "Walk Through Desktop List (Reverse)"
+#~ msgstr "Töölaudade nimekirja läbijalutamine (tagurpidi)"
 
 #~ msgid "&No Border"
 #~ msgstr "P&iireteta"

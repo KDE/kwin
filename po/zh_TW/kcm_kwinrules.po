@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-17 02:32+0000\n"
+"POT-Creation-Date: 2023-03-25 02:10+0000\n"
 "PO-Revision-Date: 2023-02-19 10:08+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Chinese <zh-l10n@linux.org.tw>\n"
@@ -38,37 +38,6 @@ msgstr "%1 的應用程式設定"
 #, kde-format
 msgid "Window settings for %1"
 msgstr "%1 的視窗設定"
-
-#: main.cpp:30
-#, kde-format
-msgid "KWinRules KCM launcher"
-msgstr "KWinRules KCM 啟動器"
-
-#: main.cpp:31
-#, kde-format
-msgid "KWin id of the window for special window settings."
-msgstr "用於設定特殊視窗的視窗 KWin ID。"
-
-#: main.cpp:32
-#, kde-format
-msgid "Whether the settings should affect all windows of the application."
-msgstr "這些設定是否要套用到此應用程式的所有視窗。"
-
-#: main.cpp:39
-#, kde-format
-msgid "This helper utility is not supposed to be called directly."
-msgstr "這個協助工具不是用來被直接呼叫的。"
-
-#: main.cpp:43
-#, kde-format
-msgctxt "Window caption for the application wide rules dialog"
-msgid "Edit Application-Specific Settings"
-msgstr "編輯特定應用程式的設定"
-
-#: main.cpp:44
-#, kde-format
-msgid "Edit Window-Specific Settings"
-msgstr "編輯特定視窗的設定"
 
 #: optionsmodel.cpp:198
 #, kde-format
@@ -334,8 +303,8 @@ msgid "No"
 msgstr "否"
 
 #: package/contents/ui/RulesEditor.qml:275
-#: package/contents/ui/ValueEditor.qml:171
-#: package/contents/ui/ValueEditor.qml:178
+#: package/contents/ui/ValueEditor.qml:168
+#: package/contents/ui/ValueEditor.qml:175
 #, kde-format
 msgid "%1 %"
 msgstr "%1 %"
@@ -352,7 +321,7 @@ msgctxt "Size (width, height)"
 msgid "(%1, %2)"
 msgstr "(%1, %2)"
 
-#: package/contents/ui/ValueEditor.qml:206
+#: package/contents/ui/ValueEditor.qml:203
 #, kde-format
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
@@ -907,6 +876,25 @@ msgstr "未管理視窗"
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr "無法偵測視窗屬性。視窗未被 KWin 管理。"
+
+#~ msgid "KWinRules KCM launcher"
+#~ msgstr "KWinRules KCM 啟動器"
+
+#~ msgid "KWin id of the window for special window settings."
+#~ msgstr "用於設定特殊視窗的視窗 KWin ID。"
+
+#~ msgid "Whether the settings should affect all windows of the application."
+#~ msgstr "這些設定是否要套用到此應用程式的所有視窗。"
+
+#~ msgid "This helper utility is not supposed to be called directly."
+#~ msgstr "這個協助工具不是用來被直接呼叫的。"
+
+#~ msgctxt "Window caption for the application wide rules dialog"
+#~ msgid "Edit Application-Specific Settings"
+#~ msgstr "編輯特定應用程式的設定"
+
+#~ msgid "Edit Window-Specific Settings"
+#~ msgstr "編輯特定視窗的設定"
 
 #~ msgid ""
 #~ "<p><h1>Window-specific Settings</h1> Here you can customize window "

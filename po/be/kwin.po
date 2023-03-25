@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 86ff119b1606fcaa910d6b44fc14b611\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-23 02:36+0000\n"
+"POT-Creation-Date: 2023-03-25 02:10+0000\n"
 "PO-Revision-Date: 2023-02-09 08:31\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -48,7 +48,7 @@ msgstr ""
 "Эфекты працоўнага стала былі прыпыненыя іншай праграмай.<br/>Вы можаце "
 "ўзнавіць іх з дапамогай \"%1\"."
 
-#: composite.cpp:1028
+#: composite.cpp:1029
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -62,12 +62,12 @@ msgstr ""
 "абарону<b>, але майце на ўвазе, што гэта можа прывесці да неадкладнага збою!"
 "</b></p>"
 
-#: composite.cpp:1035
+#: composite.cpp:1036
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Неабходныя пашырэнні X (XComposite і XDamage) недаступныя."
 
-#: composite.cpp:1038
+#: composite.cpp:1039
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL недаступны."
@@ -2144,61 +2144,45 @@ msgstr "Дыялогавае акно"
 msgid "..."
 msgstr "..."
 
-#: tabbox/tabbox.cpp:375
+#: tabbox/tabbox.cpp:345
 #, kde-format
 msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "Паказаць працоўны стол"
 
-#: tabbox/tabbox.cpp:515
+#: tabbox/tabbox.cpp:471
 msgid "Walk Through Windows"
 msgstr "Пераход па вокнах"
 
-#: tabbox/tabbox.cpp:516
+#: tabbox/tabbox.cpp:472
 msgid "Walk Through Windows (Reverse)"
 msgstr "Пераход па вокнах у адваротным кірунку"
 
-#: tabbox/tabbox.cpp:517
+#: tabbox/tabbox.cpp:473
 msgid "Walk Through Windows Alternative"
 msgstr "Альтэрнатыўны пераход па вокнах"
 
-#: tabbox/tabbox.cpp:518
+#: tabbox/tabbox.cpp:474
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Альтэрнатыўны пераход па вокнах у адваротным кірунку"
 
-#: tabbox/tabbox.cpp:519
+#: tabbox/tabbox.cpp:475
 msgid "Walk Through Windows of Current Application"
 msgstr "Пераход па вокнах бягучай праграмы"
 
-#: tabbox/tabbox.cpp:520
+#: tabbox/tabbox.cpp:476
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Пераход па вокнах бягучай праграмы ў адваротным кірунку"
 
-#: tabbox/tabbox.cpp:521
+#: tabbox/tabbox.cpp:477
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Альтэрнатыўны пераход па вокнах бягучай праграмы"
 
-#: tabbox/tabbox.cpp:522
+#: tabbox/tabbox.cpp:478
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Альтэрнатыўны пераход па вокнах бягучай праграмы ў адваротным кірунку"
 
-#: tabbox/tabbox.cpp:523
-msgid "Walk Through Desktops"
-msgstr "Пераход па працоўных сталах"
-
-#: tabbox/tabbox.cpp:524
-msgid "Walk Through Desktops (Reverse)"
-msgstr "Пераход па працоўных сталах у адваротным кірунку"
-
-#: tabbox/tabbox.cpp:525
-msgid "Walk Through Desktop List"
-msgstr "Пераход па спісе працоўных сталоў"
-
-#: tabbox/tabbox.cpp:526
-msgid "Walk Through Desktop List (Reverse)"
-msgstr "Пераход па спісе працоўных сталоў у адваротным кірунку"
-
-#: tabbox/tabboxhandler.cpp:290
+#: tabbox/tabboxhandler.cpp:271
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"
@@ -2798,7 +2782,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Не адказвае)"
 
-#: workspace.cpp:1629
+#: workspace.cpp:1628
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""
@@ -2831,6 +2815,18 @@ msgstr ""
 "Калі ласка, размясціце звесткі, пададзеныя пад гэтым тэкстам, у службу "
 "ўстаўляння\n"
 "накшталт https://paste.kde.org, а не ў паведамленне запыту.\n"
+
+#~ msgid "Walk Through Desktops"
+#~ msgstr "Пераход па працоўных сталах"
+
+#~ msgid "Walk Through Desktops (Reverse)"
+#~ msgstr "Пераход па працоўных сталах у адваротным кірунку"
+
+#~ msgid "Walk Through Desktop List"
+#~ msgstr "Пераход па спісе працоўных сталоў"
+
+#~ msgid "Walk Through Desktop List (Reverse)"
+#~ msgstr "Пераход па спісе працоўных сталоў у адваротным кірунку"
 
 #~ msgid "&No Border"
 #~ msgstr "&Без рамкі"

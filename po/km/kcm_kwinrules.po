@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-17 02:32+0000\n"
+"POT-Creation-Date: 2023-03-25 02:10+0000\n"
 "PO-Revision-Date: 2012-06-13 15:34+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -33,38 +33,6 @@ msgstr "ការ​កំណត់​កម្មវិធី​សម្រា
 #, kde-format
 msgid "Window settings for %1"
 msgstr "ការ​កំណត់​បង្អួច​សម្រាប់ %1"
-
-#: main.cpp:30
-#, kde-format
-msgid "KWinRules KCM launcher"
-msgstr ""
-
-#: main.cpp:31
-#, fuzzy, kde-format
-#| msgid "WId of the window for special window settings."
-msgid "KWin id of the window for special window settings."
-msgstr "WId នៃ​បង្អួច​សម្រាប់​ការ​កំណត់​បង្អួច​សំខាន់ៗ ។"
-
-#: main.cpp:32
-#, kde-format
-msgid "Whether the settings should affect all windows of the application."
-msgstr "ថា​តើ​ការ​កំណត់​គួរ​តែ​ប៉ះពាល់​បង្អួច​ទាំងអស់​នៃ​កម្មវិធី ។"
-
-#: main.cpp:39
-#, kde-format
-msgid "This helper utility is not supposed to be called directly."
-msgstr "ឧបករណ៍​ប្រើប្រាស់​កម្មវិធី​ជំនួយ​នេះ​ទំនង​ជា​មិន​បាន​ហៅ​ដោយ​ផ្ទាល់ទេ ។"
-
-#: main.cpp:43
-#, kde-format
-msgctxt "Window caption for the application wide rules dialog"
-msgid "Edit Application-Specific Settings"
-msgstr "កែ​សម្រួល​ការ​កំណត់កម្មវិធី​​ជាក់លាក់"
-
-#: main.cpp:44
-#, kde-format
-msgid "Edit Window-Specific Settings"
-msgstr "កែ​សម្រួល​ការ​កំណត់​បង្អួច​ជាក់លាក់"
 
 #  i18n: file ruleswidgetbase.ui line 100
 #: optionsmodel.cpp:198
@@ -349,8 +317,8 @@ msgid "No"
 msgstr "គ្មាន"
 
 #: package/contents/ui/RulesEditor.qml:275
-#: package/contents/ui/ValueEditor.qml:171
-#: package/contents/ui/ValueEditor.qml:178
+#: package/contents/ui/ValueEditor.qml:168
+#: package/contents/ui/ValueEditor.qml:175
 #, kde-format
 msgid "%1 %"
 msgstr ""
@@ -367,7 +335,7 @@ msgctxt "Size (width, height)"
 msgid "(%1, %2)"
 msgstr ""
 
-#: package/contents/ui/ValueEditor.qml:206
+#: package/contents/ui/ValueEditor.qml:203
 #, kde-format
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
@@ -1025,6 +993,24 @@ msgstr "បង្អួច​ដែល​មិនអាច​គ្រប់គ
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
+
+#, fuzzy
+#~| msgid "WId of the window for special window settings."
+#~ msgid "KWin id of the window for special window settings."
+#~ msgstr "WId នៃ​បង្អួច​សម្រាប់​ការ​កំណត់​បង្អួច​សំខាន់ៗ ។"
+
+#~ msgid "Whether the settings should affect all windows of the application."
+#~ msgstr "ថា​តើ​ការ​កំណត់​គួរ​តែ​ប៉ះពាល់​បង្អួច​ទាំងអស់​នៃ​កម្មវិធី ។"
+
+#~ msgid "This helper utility is not supposed to be called directly."
+#~ msgstr "ឧបករណ៍​ប្រើប្រាស់​កម្មវិធី​ជំនួយ​នេះ​ទំនង​ជា​មិន​បាន​ហៅ​ដោយ​ផ្ទាល់ទេ ។"
+
+#~ msgctxt "Window caption for the application wide rules dialog"
+#~ msgid "Edit Application-Specific Settings"
+#~ msgstr "កែ​សម្រួល​ការ​កំណត់កម្មវិធី​​ជាក់លាក់"
+
+#~ msgid "Edit Window-Specific Settings"
+#~ msgstr "កែ​សម្រួល​ការ​កំណត់​បង្អួច​ជាក់លាក់"
 
 #~ msgid ""
 #~ "<p><h1>Window-specific Settings</h1> Here you can customize window "

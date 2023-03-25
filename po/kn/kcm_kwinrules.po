@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-17 02:32+0000\n"
+"POT-Creation-Date: 2023-03-25 02:10+0000\n"
 "PO-Revision-Date: 2008-07-06 23:45+0530\n"
 "Last-Translator: Shankar Prasad <svenkate@redhat.com>\n"
 "Language-Team: Kannada <en@li.org>\n"
@@ -32,39 +32,6 @@ msgstr "%1 ಗಾಗಿನ ಅನ್ವಯ ಹೊಂದಾಣಿಕೆಗಳು"
 #, kde-format
 msgid "Window settings for %1"
 msgstr "%1 ಗಾಗಿನ ವಿಂಡೋ ಹೊಂದಾಣಿಕೆಗಳು"
-
-#: main.cpp:30
-#, kde-format
-msgid "KWinRules KCM launcher"
-msgstr ""
-
-#: main.cpp:31
-#, fuzzy, kde-format
-#| msgid "WId of the window for special window settings."
-msgid "KWin id of the window for special window settings."
-msgstr "ವಿಶೇಷ ವಿಂಡೋ ಸಂಯೋಜನೆಗಳಿಗಾಗಿನ WId ಯ ವಿಂಡೋ."
-
-#: main.cpp:32
-#, kde-format
-msgid "Whether the settings should affect all windows of the application."
-msgstr "ಅನ್ವಯದ ಎಲ್ಲಾ ವಿಂಡೋಗಳಿಗೂ ಈ ಸಂಯೋಜನೆಗಳು ಅನ್ವಯಿಸಲ್ಪಡಬೇಕೆ ಅಥವ ಬೇಡವೆ."
-
-#: main.cpp:39
-#, kde-format
-msgid "This helper utility is not supposed to be called directly."
-msgstr "ಈ ಸಹಾಯಕ ಉಪಯುಕ್ತತೆಯನ್ನು ನೇರವಾಗಿ ಕರೆಯುವಂತಿಲ್ಲ."
-
-#: main.cpp:43
-#, fuzzy, kde-format
-#| msgid "Edit Window-Specific Settings"
-msgctxt "Window caption for the application wide rules dialog"
-msgid "Edit Application-Specific Settings"
-msgstr "ವಿಂಡೋ-ನಿಶ್ಚಿತ ಸಂಯೋಜನೆಗಳನ್ನು ಸಂಪಾದಿಸಿ"
-
-#: main.cpp:44
-#, kde-format
-msgid "Edit Window-Specific Settings"
-msgstr "ವಿಂಡೋ-ನಿಶ್ಚಿತ ಸಂಯೋಜನೆಗಳನ್ನು ಸಂಪಾದಿಸಿ"
 
 #: optionsmodel.cpp:198
 #, kde-format
@@ -329,8 +296,8 @@ msgid "No"
 msgstr "ಯಾವುದೂ ಇಲ್ಲ"
 
 #: package/contents/ui/RulesEditor.qml:275
-#: package/contents/ui/ValueEditor.qml:171
-#: package/contents/ui/ValueEditor.qml:178
+#: package/contents/ui/ValueEditor.qml:168
+#: package/contents/ui/ValueEditor.qml:175
 #, kde-format
 msgid "%1 %"
 msgstr ""
@@ -347,7 +314,7 @@ msgctxt "Size (width, height)"
 msgid "(%1, %2)"
 msgstr ""
 
-#: package/contents/ui/ValueEditor.qml:206
+#: package/contents/ui/ValueEditor.qml:203
 #, kde-format
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
@@ -919,6 +886,26 @@ msgstr "ಮುಖ್ಯ ವಿಂಡೋದಲ್ಲಿ"
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
+
+#, fuzzy
+#~| msgid "WId of the window for special window settings."
+#~ msgid "KWin id of the window for special window settings."
+#~ msgstr "ವಿಶೇಷ ವಿಂಡೋ ಸಂಯೋಜನೆಗಳಿಗಾಗಿನ WId ಯ ವಿಂಡೋ."
+
+#~ msgid "Whether the settings should affect all windows of the application."
+#~ msgstr "ಅನ್ವಯದ ಎಲ್ಲಾ ವಿಂಡೋಗಳಿಗೂ ಈ ಸಂಯೋಜನೆಗಳು ಅನ್ವಯಿಸಲ್ಪಡಬೇಕೆ ಅಥವ ಬೇಡವೆ."
+
+#~ msgid "This helper utility is not supposed to be called directly."
+#~ msgstr "ಈ ಸಹಾಯಕ ಉಪಯುಕ್ತತೆಯನ್ನು ನೇರವಾಗಿ ಕರೆಯುವಂತಿಲ್ಲ."
+
+#, fuzzy
+#~| msgid "Edit Window-Specific Settings"
+#~ msgctxt "Window caption for the application wide rules dialog"
+#~ msgid "Edit Application-Specific Settings"
+#~ msgstr "ವಿಂಡೋ-ನಿಶ್ಚಿತ ಸಂಯೋಜನೆಗಳನ್ನು ಸಂಪಾದಿಸಿ"
+
+#~ msgid "Edit Window-Specific Settings"
+#~ msgstr "ವಿಂಡೋ-ನಿಶ್ಚಿತ ಸಂಯೋಜನೆಗಳನ್ನು ಸಂಪಾದಿಸಿ"
 
 #~ msgid ""
 #~ "<p><h1>Window-specific Settings</h1> Here you can customize window "

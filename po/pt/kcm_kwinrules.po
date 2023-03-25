@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-17 02:32+0000\n"
+"POT-Creation-Date: 2023-03-25 02:10+0000\n"
 "PO-Revision-Date: 2023-02-15 15:25+0000\n"
 "Last-Translator: José Nuno Pires <zepires@gmail.com>\n"
 "Language-Team: pt <kde-i18n-pt@kde.org>\n"
@@ -29,38 +29,6 @@ msgstr "Configuração da aplicação %1"
 #, kde-format
 msgid "Window settings for %1"
 msgstr "Configuração da janela %1"
-
-#: main.cpp:30
-#, kde-format
-msgid "KWinRules KCM launcher"
-msgstr "Lançador do KCM de Regras do KWin"
-
-#: main.cpp:31
-#, kde-format
-msgid "KWin id of the window for special window settings."
-msgstr "O ID do KWin da janela para a configuração especial da mesma."
-
-#: main.cpp:32
-#, kde-format
-msgid "Whether the settings should affect all windows of the application."
-msgstr "Se a configuração deverá afectar todas as janelas da aplicação."
-
-#: main.cpp:39
-#, kde-format
-msgid "This helper utility is not supposed to be called directly."
-msgstr ""
-"Este utilitário auxiliar não foi concebido para ser chamado directamente."
-
-#: main.cpp:43
-#, kde-format
-msgctxt "Window caption for the application wide rules dialog"
-msgid "Edit Application-Specific Settings"
-msgstr "Editar as Opções Específicas da Aplicação"
-
-#: main.cpp:44
-#, kde-format
-msgid "Edit Window-Specific Settings"
-msgstr "Editar as Opções Específicas à Janela"
 
 #: optionsmodel.cpp:198
 #, kde-format
@@ -338,8 +306,8 @@ msgid "No"
 msgstr "Não"
 
 #: package/contents/ui/RulesEditor.qml:275
-#: package/contents/ui/ValueEditor.qml:171
-#: package/contents/ui/ValueEditor.qml:178
+#: package/contents/ui/ValueEditor.qml:168
+#: package/contents/ui/ValueEditor.qml:175
 #, kde-format
 msgid "%1 %"
 msgstr "%1 %"
@@ -356,7 +324,7 @@ msgctxt "Size (width, height)"
 msgid "(%1, %2)"
 msgstr "(%1, %2)"
 
-#: package/contents/ui/ValueEditor.qml:206
+#: package/contents/ui/ValueEditor.qml:203
 #, kde-format
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
@@ -930,6 +898,26 @@ msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
 "Não foi possível detectar as propriedades da janela. A mesma não é gerida "
 "pelo KWin."
+
+#~ msgid "KWinRules KCM launcher"
+#~ msgstr "Lançador do KCM de Regras do KWin"
+
+#~ msgid "KWin id of the window for special window settings."
+#~ msgstr "O ID do KWin da janela para a configuração especial da mesma."
+
+#~ msgid "Whether the settings should affect all windows of the application."
+#~ msgstr "Se a configuração deverá afectar todas as janelas da aplicação."
+
+#~ msgid "This helper utility is not supposed to be called directly."
+#~ msgstr ""
+#~ "Este utilitário auxiliar não foi concebido para ser chamado directamente."
+
+#~ msgctxt "Window caption for the application wide rules dialog"
+#~ msgid "Edit Application-Specific Settings"
+#~ msgstr "Editar as Opções Específicas da Aplicação"
+
+#~ msgid "Edit Window-Specific Settings"
+#~ msgstr "Editar as Opções Específicas à Janela"
 
 #~ msgid ""
 #~ "<p><h1>Window-specific Settings</h1> Here you can customize window "

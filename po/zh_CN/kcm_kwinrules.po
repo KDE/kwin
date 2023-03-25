@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-17 02:32+0000\n"
+"POT-Creation-Date: 2023-03-25 02:10+0000\n"
 "PO-Revision-Date: 2023-02-24 12:43\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -31,37 +31,6 @@ msgstr "%1 的应用程序设置"
 #, kde-format
 msgid "Window settings for %1"
 msgstr "%1 的窗口设置"
-
-#: main.cpp:30
-#, kde-format
-msgid "KWinRules KCM launcher"
-msgstr "KWin 规则 KCM 启动程序"
-
-#: main.cpp:31
-#, kde-format
-msgid "KWin id of the window for special window settings."
-msgstr "窗口特定设置的窗口编号(KWin ID)。"
-
-#: main.cpp:32
-#, kde-format
-msgid "Whether the settings should affect all windows of the application."
-msgstr "此设置是否应用到该应用程序的所有窗口。"
-
-#: main.cpp:39
-#, kde-format
-msgid "This helper utility is not supposed to be called directly."
-msgstr "此助手工具不应直接调用。"
-
-#: main.cpp:43
-#, kde-format
-msgctxt "Window caption for the application wide rules dialog"
-msgid "Edit Application-Specific Settings"
-msgstr "编辑程序的特定设置"
-
-#: main.cpp:44
-#, kde-format
-msgid "Edit Window-Specific Settings"
-msgstr "编辑窗口的特定设置"
 
 #: optionsmodel.cpp:198
 #, kde-format
@@ -327,8 +296,8 @@ msgid "No"
 msgstr "否"
 
 #: package/contents/ui/RulesEditor.qml:275
-#: package/contents/ui/ValueEditor.qml:171
-#: package/contents/ui/ValueEditor.qml:178
+#: package/contents/ui/ValueEditor.qml:168
+#: package/contents/ui/ValueEditor.qml:175
 #, kde-format
 msgid "%1 %"
 msgstr "%1 %"
@@ -345,7 +314,7 @@ msgctxt "Size (width, height)"
 msgid "(%1, %2)"
 msgstr "(%1, %2)"
 
-#: package/contents/ui/ValueEditor.qml:206
+#: package/contents/ui/ValueEditor.qml:203
 #, kde-format
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
@@ -906,6 +875,25 @@ msgstr "未管理窗口"
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr "无法检测窗口属性。该窗口不受 KWin 管理。"
+
+#~ msgid "KWinRules KCM launcher"
+#~ msgstr "KWin 规则 KCM 启动程序"
+
+#~ msgid "KWin id of the window for special window settings."
+#~ msgstr "窗口特定设置的窗口编号(KWin ID)。"
+
+#~ msgid "Whether the settings should affect all windows of the application."
+#~ msgstr "此设置是否应用到该应用程序的所有窗口。"
+
+#~ msgid "This helper utility is not supposed to be called directly."
+#~ msgstr "此助手工具不应直接调用。"
+
+#~ msgctxt "Window caption for the application wide rules dialog"
+#~ msgid "Edit Application-Specific Settings"
+#~ msgstr "编辑程序的特定设置"
+
+#~ msgid "Edit Window-Specific Settings"
+#~ msgstr "编辑窗口的特定设置"
 
 #~ msgid ""
 #~ "<p><h1>Window-specific Settings</h1> Here you can customize window "

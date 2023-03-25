@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-17 02:32+0000\n"
+"POT-Creation-Date: 2023-03-25 02:10+0000\n"
 "PO-Revision-Date: 2023-02-09 22:30+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -34,37 +34,6 @@ msgstr "Aplikaĵaj agordoj por %1"
 #, kde-format
 msgid "Window settings for %1"
 msgstr "Fenestraj agordoj por %1"
-
-#: main.cpp:30
-#, kde-format
-msgid "KWinRules KCM launcher"
-msgstr "KWinRules KCM-lanĉilo"
-
-#: main.cpp:31
-#, kde-format
-msgid "KWin id of the window for special window settings."
-msgstr "KWin-id de la fenestro por specialaj fenestraj agordoj."
-
-#: main.cpp:32
-#, kde-format
-msgid "Whether the settings should affect all windows of the application."
-msgstr "Ĉu la agordo efikas por ĉiuj fenestroj de la aplikaĵo."
-
-#: main.cpp:39
-#, kde-format
-msgid "This helper utility is not supposed to be called directly."
-msgstr "Ĉi tiu helpilo ne devus esti vokita rekte."
-
-#: main.cpp:43
-#, kde-format
-msgctxt "Window caption for the application wide rules dialog"
-msgid "Edit Application-Specific Settings"
-msgstr "Redakti Apliko-Specifikajn Agordojn"
-
-#: main.cpp:44
-#, kde-format
-msgid "Edit Window-Specific Settings"
-msgstr "Redakti apartajn fenestrajn agordojn"
 
 #: optionsmodel.cpp:198
 #, kde-format
@@ -339,8 +308,8 @@ msgid "No"
 msgstr "Ne"
 
 #: package/contents/ui/RulesEditor.qml:275
-#: package/contents/ui/ValueEditor.qml:171
-#: package/contents/ui/ValueEditor.qml:178
+#: package/contents/ui/ValueEditor.qml:168
+#: package/contents/ui/ValueEditor.qml:175
 #, kde-format
 msgid "%1 %"
 msgstr "%1 %"
@@ -357,7 +326,7 @@ msgctxt "Size (width, height)"
 msgid "(%1, %2)"
 msgstr "(%1, %2)"
 
-#: package/contents/ui/ValueEditor.qml:206
+#: package/contents/ui/ValueEditor.qml:203
 #, kde-format
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
@@ -924,6 +893,25 @@ msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
 "Ne eblis detekti fenestropropraĵojn. La fenestro ne estas administrita de "
 "KWin."
+
+#~ msgid "KWinRules KCM launcher"
+#~ msgstr "KWinRules KCM-lanĉilo"
+
+#~ msgid "KWin id of the window for special window settings."
+#~ msgstr "KWin-id de la fenestro por specialaj fenestraj agordoj."
+
+#~ msgid "Whether the settings should affect all windows of the application."
+#~ msgstr "Ĉu la agordo efikas por ĉiuj fenestroj de la aplikaĵo."
+
+#~ msgid "This helper utility is not supposed to be called directly."
+#~ msgstr "Ĉi tiu helpilo ne devus esti vokita rekte."
+
+#~ msgctxt "Window caption for the application wide rules dialog"
+#~ msgid "Edit Application-Specific Settings"
+#~ msgstr "Redakti Apliko-Specifikajn Agordojn"
+
+#~ msgid "Edit Window-Specific Settings"
+#~ msgstr "Redakti apartajn fenestrajn agordojn"
 
 #~ msgid ""
 #~ "<p><h1>Window-specific Settings</h1> Here you can customize window "
