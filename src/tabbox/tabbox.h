@@ -84,7 +84,6 @@ public:
     int height() const override;
     bool isCloseable() const override;
     void close() override;
-    bool isFirstInTabBox() const override;
     QUuid internalId() const override;
 
     Window *client() const

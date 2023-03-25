@@ -495,7 +495,6 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     auto skipCloseAnimationCookie = fetchSkipCloseAnimation();
     auto showOnScreenEdgeCookie = fetchShowOnScreenEdge();
     auto colorSchemeCookie = fetchPreferredColorScheme();
-    auto firstInTabBoxCookie = fetchFirstInTabBox();
     auto transientCookie = fetchTransient();
     auto activitiesCookie = fetchActivities();
     auto applicationMenuServiceNameCookie = fetchApplicationMenuServiceName();
@@ -561,7 +560,6 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     setOriginalSkipTaskbar((info->state() & NET::SkipTaskbar) != 0);
     setSkipPager((info->state() & NET::SkipPager) != 0);
     setSkipSwitcher((info->state() & NET::SkipSwitcher) != 0);
-    readFirstInTabBox(firstInTabBoxCookie);
 
     setupCompositing();
 
@@ -2567,24 +2565,6 @@ void X11Window::setSessionActivityOverride(bool needed)
 {
     sessionActivityOverride = needed;
     updateActivities(false);
-}
-
-Xcb::Property X11Window::fetchFirstInTabBox() const
-{
-    return Xcb::Property(false, m_client, atoms->kde_first_in_window_list,
-                         atoms->kde_first_in_window_list, 0, 1);
-}
-
-void X11Window::readFirstInTabBox(Xcb::Property &property)
-{
-    setFirstInTabBox(property.toBool(32, atoms->kde_first_in_window_list));
-}
-
-void X11Window::updateFirstInTabBox()
-{
-    // TODO: move into KWindowInfo
-    Xcb::Property property = fetchFirstInTabBox();
-    readFirstInTabBox(property);
 }
 
 Xcb::StringProperty X11Window::fetchPreferredColorScheme() const

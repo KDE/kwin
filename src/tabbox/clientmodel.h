@@ -93,10 +93,8 @@ public Q_SLOTS:
     void activate(int index);
 
 private:
-    void createFocusChainClientList(int desktop, const std::shared_ptr<TabBoxClient> &start,
-                                    TabBoxClientList &stickyClients);
-    void createStackingOrderClientList(int desktop, const std::shared_ptr<TabBoxClient> &start,
-                                       TabBoxClientList &stickyClients);
+    void createFocusChainClientList(int desktop, const std::shared_ptr<TabBoxClient> &start);
+    void createStackingOrderClientList(int desktop, const std::shared_ptr<TabBoxClient> &start);
 
     TabBoxClientList m_clientList;
     TabBoxClientList m_mutableClientList;

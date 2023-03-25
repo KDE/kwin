@@ -41,10 +41,6 @@ public:
     {
         return true;
     }
-    bool isFirstInTabBox() const override
-    {
-        return false;
-    }
     int width() const override
     {
         return 100;

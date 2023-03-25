@@ -825,10 +825,6 @@ public:
     {
         return m_tabBoxClient;
     }
-    bool isFirstInTabBox() const
-    {
-        return m_firstInTabBox;
-    }
     bool skipSwitcher() const
     {
         return m_skipSwitcher;
@@ -1563,10 +1559,6 @@ protected:
 
 protected:
     Window();
-    void setFirstInTabBox(bool enable)
-    {
-        m_firstInTabBox = enable;
-    }
     void setIcon(const QIcon &icon);
     void startAutoRaise();
     void autoRaise();
@@ -1895,7 +1887,6 @@ private:
     QRectF ensureSpecialStateGeometry(const QRectF &geometry);
 
     std::shared_ptr<TabBox::TabBoxClientImpl> m_tabBoxClient;
-    bool m_firstInTabBox = false;
     bool m_skipTaskbar = false;
     /**
      * Unaffected by KWin

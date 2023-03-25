@@ -390,11 +390,6 @@ void TabBoxClientImpl::close()
     m_client->closeWindow();
 }
 
-bool TabBoxClientImpl::isFirstInTabBox() const
-{
-    return m_client->isFirstInTabBox();
-}
-
 QUuid TabBoxClientImpl::internalId() const
 {
     return m_client->internalId();

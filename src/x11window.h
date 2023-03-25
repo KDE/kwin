@@ -241,9 +241,6 @@ public:
 
     bool isClientSideDecorated() const;
 
-    Xcb::Property fetchFirstInTabBox() const;
-    void readFirstInTabBox(Xcb::Property &property);
-    void updateFirstInTabBox();
     Xcb::StringProperty fetchPreferredColorScheme() const;
     QString readPreferredColorScheme(Xcb::StringProperty &property) const;
     QString preferredColorScheme() const override;

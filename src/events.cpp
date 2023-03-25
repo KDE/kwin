@@ -674,8 +674,6 @@ void X11Window::propertyNotifyEvent(xcb_property_notify_event_t *e)
             getSyncCounter();
         } else if (e->atom == atoms->activities) {
             checkActivities();
-        } else if (e->atom == atoms->kde_first_in_window_list) {
-            updateFirstInTabBox();
         } else if (e->atom == atoms->kde_color_sheme) {
             updateColorScheme();
         } else if (e->atom == atoms->kde_screen_edge_show) {
