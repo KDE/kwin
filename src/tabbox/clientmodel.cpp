@@ -14,7 +14,6 @@
 #include <KLocalizedString>
 
 #include <QIcon>
-#include <QTextDocument> // TODO: remove with Qt 5, only for HTML escaping the caption
 #include <QUuid>
 
 #include <cmath>
@@ -58,11 +57,7 @@ QVariant ClientModel::data(const QModelIndex &index, int role) const
             return i18nc("Special entry in alt+tab list for minimizing all windows",
                          "Show Desktop");
         }
-        QString caption = client->caption();
-        if (Qt::mightBeRichText(caption)) {
-            caption = caption.toHtmlEscaped();
-        }
-        return caption;
+        return client->caption();
     }
     case ClientRole:
         return QVariant::fromValue<void *>(client);
