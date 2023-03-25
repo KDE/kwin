@@ -1231,14 +1231,13 @@ Output *Workspace::outputAt(const QPointF &pos) const
     qreal minDistance;
 
     for (Output *output : std::as_const(m_outputs)) {
-        const QRect &geo = output->geometry();
-        if (geo.contains(pos.toPoint())) {
-            return output;
-        }
-        qreal distance = QPointF(geo.topLeft() - pos).manhattanLength();
-        distance = std::min(distance, QPointF(geo.topRight() - pos).manhattanLength());
-        distance = std::min(distance, QPointF(geo.bottomRight() - pos).manhattanLength());
-        distance = std::min(distance, QPointF(geo.bottomLeft() - pos).manhattanLength());
+        const QRectF geo = output->geometry();
+
+        const QPointF closestPoint(std::clamp(pos.x(), geo.x(), geo.x() + geo.width() - 1),
+                                   std::clamp(pos.y(), geo.y(), geo.y() + geo.height() - 1));
+
+        const QPointF ray = closestPoint - pos;
+        const qreal distance = ray.x() * ray.x() + ray.y() * ray.y();
         if (!bestOutput || distance < minDistance) {
             minDistance = distance;
             bestOutput = output;

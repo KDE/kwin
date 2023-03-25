@@ -1520,7 +1520,7 @@ void PointerInputTest::testConfineToScreenGeometry_data()
     QTest::newRow("move right - top screen") << QPoint(1920, 512) << QPoint(2660, 512) << QPoint(2660, 512);
     QTest::newRow("move bottom-right - top screen") << QPoint(1920, 512) << QPoint(2660, 1124) << QPoint(2660, 1023);
     QTest::newRow("move bottom - top screen") << QPoint(1920, 512) << QPoint(1920, 1124) << QPoint(1920, 1124);
-    QTest::newRow("move bottom-left - top screen") << QPoint(1920, 512) << QPoint(1180, 1124) << QPoint(1180, 1023);
+    QTest::newRow("move bottom-left - top screen") << QPoint(1920, 512) << QPoint(1180, 1124) << QPoint(1280, 1124);
     QTest::newRow("move left - top screen") << QPoint(1920, 512) << QPoint(1180, 512) << QPoint(1180, 512);
 
     QTest::newRow("move top-left - right screen") << QPoint(3200, 512) << QPoint(2460, -100) << QPoint(2460, 0);
