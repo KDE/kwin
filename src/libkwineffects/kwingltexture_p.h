@@ -11,9 +11,9 @@
 
 #pragma once
 
-#include "kwinconfig.h" // KWIN_HAVE_OPENGL
+#include "libkwineffects/kwinconfig.h" // KWIN_HAVE_OPENGL
 #include "libkwineffects/kwinglutils.h"
-#include <kwinglutils_export.h>
+#include "libkwineffects/kwinglutils_export.h"
 
 #include <QImage>
 #include <QMatrix4x4>

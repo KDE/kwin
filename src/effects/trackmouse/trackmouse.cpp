@@ -19,9 +19,9 @@
 #include <QPainter>
 #include <QTime>
 
+#include "libkwineffects/kwinconfig.h"
 #include "libkwineffects/kwinglutils.h"
 #include "libkwineffects/renderviewport.h"
-#include <kwinconfig.h>
 
 #include <KGlobalAccel>
 #include <KLocalizedString>

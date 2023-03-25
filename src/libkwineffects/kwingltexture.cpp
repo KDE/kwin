@@ -9,7 +9,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "kwinconfig.h" // KWIN_HAVE_OPENGL
+#include "libkwineffects/kwinconfig.h" // KWIN_HAVE_OPENGL
 #include "libkwineffects/kwineffects.h"
 #include "libkwineffects/kwinglplatform.h"
 #include "libkwineffects/kwinglutils.h"

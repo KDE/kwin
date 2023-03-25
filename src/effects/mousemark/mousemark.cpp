@@ -13,12 +13,12 @@
 // KConfigSkeleton
 #include "mousemarkconfig.h"
 
+#include "libkwineffects/kwinconfig.h"
 #include "libkwineffects/kwinglplatform.h"
 #include "libkwineffects/renderviewport.h"
 #include <KGlobalAccel>
 #include <KLocalizedString>
 #include <QAction>
-#include <kwinconfig.h>
 
 #include <QPainter>
 

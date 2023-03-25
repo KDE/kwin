@@ -10,11 +10,11 @@
 
 #pragma once
 
+#include "libkwineffects/kwineffects_export.h"
 #include "libkwineffects/kwinoffscreeneffect.h"
 #include <QEasingCurve>
 #include <QElapsedTimer>
 #include <QtMath>
-#include <kwineffects_export.h>
 
 namespace KWin
 {

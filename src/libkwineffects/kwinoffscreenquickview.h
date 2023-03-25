@@ -13,7 +13,7 @@
 #include <QRect>
 #include <QUrl>
 
-#include <kwineffects_export.h>
+#include "libkwineffects/kwineffects_export.h"
 
 #include "libkwineffects/kwineffects.h"
 

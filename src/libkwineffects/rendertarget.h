@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <kwinglutils_export.h>
+#include "libkwineffects/kwinglutils_export.h"
 
 #include <QImage>
 #include <QMatrix4x4>

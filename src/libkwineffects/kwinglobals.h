@@ -18,7 +18,7 @@
 
 #include <xcb/xcb.h>
 
-#include <kwinconfig.h>
+#include "libkwineffects/kwinconfig.h"
 
 #define KWIN_QT5_PORTING 0
 

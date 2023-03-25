@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "kwineffects_export.h"
+#include "libkwineffects/kwineffects_export.h"
 
 #include <QMatrix4x4>
 #include <QRectF>

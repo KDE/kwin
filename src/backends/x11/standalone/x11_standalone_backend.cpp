@@ -10,11 +10,11 @@
 
 #include "atoms.h"
 #include "core/session.h"
+#include "libkwineffects/kwinconfig.h"
 #include "x11_standalone_cursor.h"
 #include "x11_standalone_edge.h"
 #include "x11_standalone_placeholderoutput.h"
 #include "x11_standalone_windowselector.h"
-#include <kwinconfig.h>
 #if HAVE_EPOXY_GLX
 #include "x11_standalone_glx_backend.h"
 #endif

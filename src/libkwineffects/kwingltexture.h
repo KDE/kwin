@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include <kwinglutils_export.h>
+#include "libkwineffects/kwinglutils_export.h"
 
 #include <QExplicitlySharedDataPointer>
 #include <QMatrix4x4>

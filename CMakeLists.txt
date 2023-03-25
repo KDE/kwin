@@ -395,7 +395,6 @@ endif()
 ########### global ###############
 
 include_directories(BEFORE
-    ${CMAKE_CURRENT_BINARY_DIR}/src/libkwineffects
     ${CMAKE_CURRENT_BINARY_DIR}/src/wayland
     ${CMAKE_CURRENT_BINARY_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}/src

@@ -10,7 +10,7 @@
 #pragma once
 
 #include "libkwineffects/kwinglobals.h"
-#include <kwinglutils_export.h>
+#include "libkwineffects/kwinglutils_export.h"
 
 #include <QByteArray>
 #include <QSet>

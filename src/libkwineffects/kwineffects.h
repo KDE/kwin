@@ -12,9 +12,9 @@
 
 #pragma once
 
+#include "libkwineffects/kwinconfig.h"
+#include "libkwineffects/kwineffects_export.h"
 #include "libkwineffects/kwinglobals.h"
-#include <kwinconfig.h>
-#include <kwineffects_export.h>
 
 #include <QEasingCurve>
 #include <QIcon>

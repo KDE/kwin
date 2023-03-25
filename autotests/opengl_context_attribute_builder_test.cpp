@@ -11,7 +11,7 @@
 #include <QtTest>
 #include <epoxy/egl.h>
 
-#include <kwinconfig.h>
+#include "libkwineffects/kwinconfig.h"
 #if HAVE_EPOXY_GLX
 #include "../src/backends/x11/standalone/x11_standalone_glx_context_attribute_builder.h"
 #include <epoxy/glx.h>
