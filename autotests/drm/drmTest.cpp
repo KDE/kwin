@@ -266,6 +266,15 @@ void DrmTest::testModeGeneration()
     conn->addMode(nativeMode.width(), nativeMode.height(), 60);
     QVERIFY(gpu->updateOutputs());
     QCOMPARE(gpu->drmOutputs().size(), 1);
+    // no mode generation without the scaling property
+    QCOMPARE(gpu->drmOutputs().front()->modes().size(), 1);
+
+    mockGpu->connectors.removeAll(conn);
+    QVERIFY(gpu->updateOutputs());
+
+    conn->props.emplace_back(conn.get(), QStringLiteral("scaling mode"), 0, 0, QVector<QByteArray>{"None", "Full", "Center", "Full aspect"});
+    mockGpu->connectors.push_back(conn);
+    QVERIFY(gpu->updateOutputs());
 
     DrmOutput *const output = gpu->drmOutputs().front();
     QCOMPARE(output->modes().size(), expectedModes.size());

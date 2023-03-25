@@ -264,6 +264,9 @@ void DrmPipeline::prepareAtomicModeset(DrmAtomicCommit *commit)
     if (const auto hdr = m_connector->getProp(DrmConnector::PropertyIndex::HdrMetadata)) {
         commit->addProperty(hdr, 0);
     }
+    if (const auto scaling = m_connector->getProp(DrmConnector::PropertyIndex::ScalingMode); scaling && scaling->hasEnum(DrmConnector::ScalingMode::Full_Aspect)) {
+        commit->addEnum(scaling, DrmConnector::ScalingMode::Full_Aspect);
+    }
 
     commit->addProperty(m_pending.crtc->getProp(DrmCrtc::PropertyIndex::Active), 1);
     commit->addBlob(m_pending.crtc->getProp(DrmCrtc::PropertyIndex::ModeId), m_pending.mode->blob());
