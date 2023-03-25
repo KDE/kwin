@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-11 00:48+0000\n"
+"POT-Creation-Date: 2023-03-25 02:43+0000\n"
 "PO-Revision-Date: 2013-10-04 02:07+0600\n"
 "Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
 "Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
@@ -373,8 +373,8 @@ msgid "No"
 msgstr "Жоқ"
 
 #: package/contents/ui/RulesEditor.qml:275
-#: package/contents/ui/ValueEditor.qml:171
-#: package/contents/ui/ValueEditor.qml:178
+#: package/contents/ui/ValueEditor.qml:168
+#: package/contents/ui/ValueEditor.qml:175
 #, kde-format
 msgid "%1 %"
 msgstr ""
@@ -391,7 +391,7 @@ msgctxt "Size (width, height)"
 msgid "(%1, %2)"
 msgstr ""
 
-#: package/contents/ui/ValueEditor.qml:206
+#: package/contents/ui/ValueEditor.qml:203
 #, kde-format
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
