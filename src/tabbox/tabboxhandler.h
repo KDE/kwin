@@ -18,8 +18,6 @@
 /**
  * @file
  * This file contains the classes which hide KWin core from tabbox.
- * It defines the pure virtual classes TabBoxHandler and TabBoxClient.
- * The classes have to be implemented in KWin Core.
  *
  * @author Martin Gräßlin <mgraesslin@kde.org>
  * @since 4.4
@@ -29,13 +27,15 @@ class QKeyEvent;
 
 namespace KWin
 {
+
+class Window;
+
 /**
  * The TabBox is a model based view for displaying a list while switching windows.
  * This functionality is mostly referred to as Alt+Tab. TabBox itself does not provide support for
  * switching windows. This has to be done outside of TabBox inside an independent controller.
  *
  * The main entrance point to TabBox is the class TabBoxHandler, which has to be subclassed and implemented.
- * The class TabBoxClient, which represents a window client inside TabBox, has to be implemented as well.
  *
  * The behavior of the TabBox is defined by the TabBoxConfig and has to be set in the TabBoxHandler.
  *
@@ -62,9 +62,7 @@ namespace TabBox
 {
 class ClientModel;
 class TabBoxConfig;
-class TabBoxClient;
 class TabBoxHandlerPrivate;
-typedef QList<std::weak_ptr<TabBoxClient>> TabBoxClientList;
 
 /**
  * This class is a wrapper around KWin Workspace. It is used for accessing the
@@ -85,15 +83,15 @@ public:
      */
     virtual int activeScreen() const = 0;
     /**
-     * @return The current active TabBoxClient or NULL
+     * @return The current active Window or NULL
      * if there is no active client.
      */
-    virtual std::weak_ptr<TabBoxClient> activeClient() const = 0;
+    virtual Window *activeClient() const = 0;
     /**
      * @param client The client which is starting point to find the next client
-     * @return The next TabBoxClient in focus chain
+     * @return The next Window in focus chain
      */
-    virtual std::weak_ptr<TabBoxClient> nextClientFocusChain(TabBoxClient *client) const = 0;
+    virtual Window *nextClientFocusChain(Window *client) const = 0;
     /**
      * This method is used by the ClientModel to find an entrance into the focus chain in case
      * there is no active Client.
@@ -101,7 +99,7 @@ public:
      * @return The first Client of the focus chain
      * @since 4.9.1
      */
-    virtual std::weak_ptr<TabBoxClient> firstClientFocusChain() const = 0;
+    virtual Window *firstClientFocusChain() const = 0;
     /**
      * Checks whether the given @p client is part of the focus chain at all.
      * This is useful to figure out whether the currently active Client can be used
@@ -115,13 +113,13 @@ public:
      * @return @c true in case the Client is part of the focus chain, @c false otherwise.
      * @since 4.9.2
      */
-    virtual bool isInFocusChain(TabBoxClient *client) const = 0;
+    virtual bool isInFocusChain(Window *client) const = 0;
     /**
      * @param client The client whose desktop name should be retrieved
-     * @return The desktop name of the given TabBoxClient. If the client is
+     * @return The desktop name of the given Window. If the client is
      * on all desktops the name of current desktop will be returned.
      */
-    virtual QString desktopName(TabBoxClient *client) const = 0;
+    virtual QString desktopName(Window *client) const = 0;
     /**
      * @return The number of current desktop
      */
@@ -135,32 +133,32 @@ public:
     /**
      * De-/Elevate a client using the compositor (if enabled)
      */
-    virtual void elevateClient(TabBoxClient *c, QWindow *tabbox, bool elevate) const = 0;
+    virtual void elevateClient(Window *c, QWindow *tabbox, bool elevate) const = 0;
 
     /**
      * Raise a client (w/o activating it)
      */
-    virtual void raiseClient(TabBoxClient *c) const = 0;
+    virtual void raiseClient(Window *c) const = 0;
 
     /**
      * @param c The client to be restacked
      * @param under The client the other one will be placed below
      */
-    virtual void restack(TabBoxClient *c, TabBoxClient *under) = 0;
+    virtual void restack(Window *c, Window *under) = 0;
 
     /**
      * Toggle between ShadeHover and ShadeNormal - not shaded windows are unaffected
      * @param c The client to be shaded
      * @param b Whether to un- or shade
      */
-    virtual void shadeClient(TabBoxClient *c, bool b) const = 0;
+    virtual void shadeClient(Window *c, bool b) const = 0;
 
-    virtual void highlightWindows(TabBoxClient *window = nullptr, QWindow *controller = nullptr) = 0;
+    virtual void highlightWindows(Window *window = nullptr, QWindow *controller = nullptr) = 0;
 
     /**
-     * @return The current stacking order of TabBoxClients
+     * @return The current stacking order of Windows
      */
-    virtual TabBoxClientList stackingOrder() const = 0;
+    virtual QList<Window *> stackingOrder() const = 0;
     /**
      * Determines if given client will be added to the list:
      * <UL>
@@ -177,11 +175,11 @@ public:
      * @param allDesktops Add clients from all desktops or only from current
      * @return The client to be included in the list or NULL if it isn't to be included
      */
-    virtual std::weak_ptr<TabBoxClient> clientToAddToList(TabBoxClient *client, int desktop) const = 0;
+    virtual Window *clientToAddToList(Window *client, int desktop) const = 0;
     /**
      * @return The first desktop window in the stacking order.
      */
-    virtual std::weak_ptr<TabBoxClient> desktopClient() const = 0;
+    virtual Window *desktopClient() const = 0;
     /**
      * Activates the currently selected client and closes the TabBox.
      */
@@ -253,24 +251,24 @@ public:
      */
     bool containsPos(const QPoint &pos) const;
     /**
-     * @param client The TabBoxClient whose index should be returned
-     * @return Returns the ModelIndex of given TabBoxClient or an invalid ModelIndex
-     * if the model does not contain the given TabBoxClient.
+     * @param client The Window whose index should be returned
+     * @return Returns the ModelIndex of given Window or an invalid ModelIndex
+     * if the model does not contain the given Window.
      * @see ClientModel::index
      */
-    QModelIndex index(std::weak_ptr<TabBoxClient> client) const;
+    QModelIndex index(Window *client) const;
     /**
-     * @return Returns the current list of TabBoxClients.
+     * @return Returns the current list of Windows.
      * @see ClientModel::clientList
      */
-    TabBoxClientList clientList() const;
+    QList<Window *> clientList() const;
     /**
      * @param index The index of the client to be returned
-     * @return Returns the TabBoxClient at given model index. If
+     * @return Returns the Window at given model index. If
      * the index is invalid, does not point to a Client or the list
      * is empty, NULL will be returned.
      */
-    TabBoxClient *client(const QModelIndex &index) const;
+    Window *client(const QModelIndex &index) const;
     /**
      * @return The first model index. That is the model index at position 0, 0.
      * It is valid, as desktop has at least one desktop and if there are no
@@ -300,41 +298,6 @@ private Q_SLOTS:
 private:
     friend class TabBoxHandlerPrivate;
     TabBoxHandlerPrivate *d;
-};
-
-/**
- * This class is a wrapper around a KWin Client. It is used for accessing the
- * required client methods from inside TabBox and has to be implemented in KWin core.
- *
- * @author Martin Gräßlin <mgraesslin@kde.org>
- * @since 4.4
- */
-class TabBoxClient
-{
-public:
-    TabBoxClient();
-    virtual ~TabBoxClient();
-
-    /**
-     * @return The caption of the client
-     */
-    virtual QString caption() const = 0;
-    /**
-     * @param size Requested size of the icon
-     * @return The icon of the client
-     */
-    virtual QIcon icon() const = 0;
-    /**
-     * @return Minimized state of the client
-     */
-    virtual bool isMinimized() const = 0;
-    virtual int x() const = 0;
-    virtual int y() const = 0;
-    virtual int width() const = 0;
-    virtual int height() const = 0;
-    virtual bool isCloseable() const = 0;
-    virtual void close() = 0;
-    virtual QUuid internalId() const = 0;
 };
 
 /**

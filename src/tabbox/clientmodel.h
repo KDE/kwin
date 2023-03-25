@@ -13,7 +13,7 @@
 #include <QModelIndex>
 /**
  * @file
- * This file defines the class ClientModel, the model for TabBoxClients.
+ * This file defines the class ClientModel, the model for Windows.
  *
  * @author Martin Gräßlin <mgraesslin@kde.org>
  * @since 4.4
@@ -25,7 +25,7 @@ namespace TabBox
 {
 
 /**
- * The model for TabBoxClients used in TabBox.
+ * The model for Windows used in TabBox.
  *
  * @author Martin Gräßlin <mgraesslin@kde.org>
  * @since 4.4
@@ -36,13 +36,13 @@ class ClientModel
     Q_OBJECT
 public:
     enum {
-        ClientRole = Qt::UserRole, ///< The TabBoxClient
-        CaptionRole = Qt::UserRole + 1, ///< The caption of TabBoxClient
-        DesktopNameRole = Qt::UserRole + 2, ///< The name of the desktop the TabBoxClient is on
+        ClientRole = Qt::UserRole, ///< The Window
+        CaptionRole = Qt::UserRole + 1, ///< The caption of Window
+        DesktopNameRole = Qt::UserRole + 2, ///< The name of the desktop the Window is on
         IconRole = Qt::UserRole + 3, // TODO: to be removed
-        WIdRole = Qt::UserRole + 5, ///< The window ID of TabBoxClient
-        MinimizedRole = Qt::UserRole + 6, ///< TabBoxClient is minimized
-        CloseableRole = Qt::UserRole + 7 ///< TabBoxClient can be closed
+        WIdRole = Qt::UserRole + 5, ///< The window ID of Window
+        MinimizedRole = Qt::UserRole + 6, ///< Window is minimized
+        CloseableRole = Qt::UserRole + 7 ///< Window can be closed
     };
     explicit ClientModel(QObject *parent = nullptr);
     ~ClientModel() override;
@@ -55,14 +55,14 @@ public:
     Q_INVOKABLE QString longestCaption() const;
 
     /**
-     * @param client The TabBoxClient whose index should be returned
-     * @return Returns the ModelIndex of given TabBoxClient or an invalid ModelIndex
-     * if the model does not contain the given TabBoxClient.
+     * @param client The Window whose index should be returned
+     * @return Returns the ModelIndex of given Window or an invalid ModelIndex
+     * if the model does not contain the given Window.
      */
-    QModelIndex index(std::weak_ptr<TabBoxClient> client) const;
+    QModelIndex index(Window *client) const;
 
     /**
-     * Generates a new list of TabBoxClients based on the current config.
+     * Generates a new list of Windows based on the current config.
      * Calling this method will reset the model. If partialReset is true
      * the top of the list is kept as a starting point. If not the
      * current active client is used as the starting point to generate the
@@ -77,9 +77,9 @@ public:
      */
     void createClientList(bool partialReset = false);
     /**
-     * @return Returns the current list of TabBoxClients.
+     * @return Returns the current list of Windows.
      */
-    TabBoxClientList clientList() const
+    QList<Window *> clientList() const
     {
         return m_mutableClientList;
     }
@@ -93,11 +93,11 @@ public Q_SLOTS:
     void activate(int index);
 
 private:
-    void createFocusChainClientList(int desktop, const std::shared_ptr<TabBoxClient> &start);
-    void createStackingOrderClientList(int desktop, const std::shared_ptr<TabBoxClient> &start);
+    void createFocusChainClientList(int desktop, Window *start);
+    void createStackingOrderClientList(int desktop, Window *start);
 
-    TabBoxClientList m_clientList;
-    TabBoxClientList m_mutableClientList;
+    QList<Window *> m_clientList;
+    QList<Window *> m_mutableClientList;
 };
 
 } // namespace Tabbox

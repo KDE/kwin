@@ -41,58 +41,32 @@ public:
     ~TabBoxHandlerImpl() override;
 
     int activeScreen() const override;
-    std::weak_ptr<TabBoxClient> activeClient() const override;
+    Window *activeClient() const override;
     int currentDesktop() const override;
-    QString desktopName(TabBoxClient *client) const override;
+    QString desktopName(Window *client) const override;
     bool isKWinCompositing() const override;
-    std::weak_ptr<TabBoxClient> nextClientFocusChain(TabBoxClient *client) const override;
-    std::weak_ptr<TabBoxClient> firstClientFocusChain() const override;
-    bool isInFocusChain(TabBoxClient *client) const override;
-    TabBoxClientList stackingOrder() const override;
-    void elevateClient(TabBoxClient *c, QWindow *tabbox, bool elevate) const override;
-    void raiseClient(TabBoxClient *client) const override;
-    void restack(TabBoxClient *c, TabBoxClient *under) override;
-    void shadeClient(TabBoxClient *c, bool b) const override;
-    std::weak_ptr<TabBoxClient> clientToAddToList(KWin::TabBox::TabBoxClient *client, int desktop) const override;
-    std::weak_ptr<TabBoxClient> desktopClient() const override;
+    Window *nextClientFocusChain(Window *client) const override;
+    Window *firstClientFocusChain() const override;
+    bool isInFocusChain(Window *client) const override;
+    QList<Window *> stackingOrder() const override;
+    void elevateClient(Window *c, QWindow *tabbox, bool elevate) const override;
+    void raiseClient(Window *client) const override;
+    void restack(Window *c, Window *under) override;
+    void shadeClient(Window *c, bool b) const override;
+    Window *clientToAddToList(Window *client, int desktop) const override;
+    Window *desktopClient() const override;
     void activateAndClose() override;
-    void highlightWindows(TabBoxClient *window = nullptr, QWindow *controller = nullptr) override;
+    void highlightWindows(Window *window = nullptr, QWindow *controller = nullptr) override;
     bool noModifierGrab() const override;
 
 private:
-    bool checkDesktop(TabBoxClient *client, int desktop) const;
-    bool checkActivity(TabBoxClient *client) const;
-    bool checkApplications(TabBoxClient *client) const;
-    bool checkMinimized(TabBoxClient *client) const;
-    bool checkMultiScreen(TabBoxClient *client) const;
+    bool checkDesktop(Window *client, int desktop) const;
+    bool checkActivity(Window *client) const;
+    bool checkApplications(Window *client) const;
+    bool checkMinimized(Window *client) const;
+    bool checkMultiScreen(Window *client) const;
 
     TabBox *m_tabBox;
-};
-
-class TabBoxClientImpl : public TabBoxClient
-{
-public:
-    explicit TabBoxClientImpl(Window *client);
-    ~TabBoxClientImpl() override;
-
-    QString caption() const override;
-    QIcon icon() const override;
-    bool isMinimized() const override;
-    int x() const override;
-    int y() const override;
-    int width() const override;
-    int height() const override;
-    bool isCloseable() const override;
-    void close() override;
-    QUuid internalId() const override;
-
-    Window *client() const
-    {
-        return m_client;
-    }
-
-private:
-    Window *m_client;
 };
 
 class KWIN_EXPORT TabBox : public QObject

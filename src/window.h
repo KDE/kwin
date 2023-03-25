@@ -66,11 +66,6 @@ enum class ReleaseReason {
     KWinShutsDown ///< Release on KWin Shutdown (window still valid)
 };
 
-namespace TabBox
-{
-class TabBoxClientImpl;
-}
-
 namespace Decoration
 {
 class DecoratedClientImpl;
@@ -821,10 +816,6 @@ public:
     int stackingOrder() const;
     void setStackingOrder(int order); ///< @internal
 
-    std::weak_ptr<TabBox::TabBoxClientImpl> tabBoxClient() const
-    {
-        return m_tabBoxClient;
-    }
     bool skipSwitcher() const
     {
         return m_skipSwitcher;
@@ -1886,7 +1877,6 @@ private:
     QRectF moveToArea(const QRectF &geometry, const QRectF &oldArea, const QRectF &newArea);
     QRectF ensureSpecialStateGeometry(const QRectF &geometry);
 
-    std::shared_ptr<TabBox::TabBoxClientImpl> m_tabBoxClient;
     bool m_skipTaskbar = false;
     /**
      * Unaffected by KWin

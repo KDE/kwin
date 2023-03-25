@@ -76,9 +76,6 @@ Window::Window()
     , m_clientMachine(new ClientMachine(this))
     , m_wmClientLeader(XCB_WINDOW_NONE)
     , m_skipCloseAnimation(false)
-#if KWIN_BUILD_TABBOX
-    , m_tabBoxClient(std::make_shared<TabBox::TabBoxClientImpl>(this))
-#endif
     , m_colorScheme(QStringLiteral("kdeglobals"))
     , m_moveResizeOutput(workspace()->activeOutput())
 {
