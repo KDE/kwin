@@ -428,7 +428,7 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_5">
          <item alignment="Qt::AlignBottom">
-          <widget class="QLabel" name="label">
+          <widget class="QLabel" name="label_10">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
              <horstretch>0</horstretch>
@@ -474,7 +474,7 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_4">
          <item alignment="Qt::AlignBottom">
-          <widget class="QLabel" name="label">
+          <widget class="QLabel" name="label_11">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
              <horstretch>0</horstretch>
