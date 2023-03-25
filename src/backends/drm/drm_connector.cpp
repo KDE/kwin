@@ -114,7 +114,8 @@ DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)
                  PropertyDefinition(QByteArrayLiteral("content type"), Requirement::Optional,
                                     {QByteArrayLiteral("No Data"), QByteArrayLiteral("Graphics"), QByteArrayLiteral("Photo"), QByteArrayLiteral("Cinema"), QByteArrayLiteral("Game")}),
                  PropertyDefinition(QByteArrayLiteral("panel orientation"), Requirement::Optional, {QByteArrayLiteral("Normal"), QByteArrayLiteral("Upside Down"), QByteArrayLiteral("Left Side Up"), QByteArrayLiteral("Right Side Up")}),
-                 PropertyDefinition(QByteArrayLiteral("HDR_OUTPUT_METADATA"), Requirement::Optional)},
+                 PropertyDefinition(QByteArrayLiteral("HDR_OUTPUT_METADATA"), Requirement::Optional),
+                 PropertyDefinition(QByteArrayLiteral("scaling mode"), Requirement::Optional, {QByteArrayLiteral("None"), QByteArrayLiteral("Full"), QByteArrayLiteral("Center"), QByteArrayLiteral("Full aspect")})},
                 DRM_MODE_OBJECT_CONNECTOR)
     , m_pipeline(std::make_unique<DrmPipeline>(this))
     , m_conn(drmModeGetConnector(gpu->fd(), connectorId))
@@ -293,7 +294,9 @@ bool DrmConnector::updateProperties()
         }
         m_modes.clear();
         m_modes.append(m_driverModes);
-        m_modes.append(generateCommonModes());
+        if (auto scaling = getProp(PropertyIndex::ScalingMode); scaling && scaling->hasEnum(ScalingMode::Full_Aspect)) {
+            m_modes.append(generateCommonModes());
+        }
         if (m_pipeline->mode()) {
             if (const auto mode = findMode(*m_pipeline->mode()->nativeMode())) {
                 m_pipeline->setMode(mode);

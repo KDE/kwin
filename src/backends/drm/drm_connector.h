@@ -67,6 +67,7 @@ public:
         ContentType = 12,
         PanelOrientation = 13,
         HdrMetadata = 14,
+        ScalingMode = 15,
         Count
     };
 
@@ -91,6 +92,12 @@ public:
         UpsideDown = 1,
         LeftUp = 2,
         RightUp = 3
+    };
+    enum class ScalingMode : uint32_t {
+        None = 0,
+        Full = 1,
+        Center = 2,
+        Full_Aspect = 3
     };
 
     bool init() override;
