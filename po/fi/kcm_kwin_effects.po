@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-03-26 00:45+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2019-10-14 18:46+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -16,26 +16,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Lokalize 18.12.3\n"
-
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Tommi Nieminen"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "translator@legisign.org"
-
-#: kcm.cpp:35
-#, kde-format
-msgid "Desktop Effects"
-msgstr "Työpöytätehosteet"
-
-#: kcm.cpp:39
-#, kde-format
-msgid "Vlad Zahorodnii"
-msgstr "Vlad Zahorodnii"
 
 #: package/contents/ui/Effect.qml:92
 #, kde-format
@@ -58,37 +38,49 @@ msgctxt "@info:tooltip"
 msgid "Configure..."
 msgstr "Asetukset…"
 
-#: package/contents/ui/main.qml:20
-#, kde-format
-msgid "This module lets you configure desktop effects."
-msgstr "Tässä voit asettaa työpöytätehosteet."
-
-#: package/contents/ui/main.qml:27
+#: package/contents/ui/main.qml:25
 #, kde-format
 msgid ""
 "Hint: To find out or configure how to activate an effect, look at the "
 "effect's settings."
 msgstr "Vihje: tehosteen asetuksista löytyy ohje, kuinka tehoste aktivoidaan."
 
-#: package/contents/ui/main.qml:47
+#: package/contents/ui/main.qml:45
 #, kde-format
 msgid "Configure Filter"
 msgstr "Muokkaa suodatinta"
 
-#: package/contents/ui/main.qml:59
+#: package/contents/ui/main.qml:57
 #, kde-format
 msgid "Exclude unsupported effects"
 msgstr "Jätä pois ei-tuetut tehosteet"
 
-#: package/contents/ui/main.qml:67
+#: package/contents/ui/main.qml:65
 #, kde-format
 msgid "Exclude internal effects"
 msgstr "Jätä pois sisäiset tehosteet"
 
-#: package/contents/ui/main.qml:125
+#: package/contents/ui/main.qml:123
 #, kde-format
 msgid "Get New Desktop Effects..."
 msgstr "Hae uusia työpöytätehosteita…"
+
+#~ msgid "This module lets you configure desktop effects."
+#~ msgstr "Tässä voit asettaa työpöytätehosteet."
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Tommi Nieminen"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "translator@legisign.org"
+
+#~ msgid "Desktop Effects"
+#~ msgstr "Työpöytätehosteet"
+
+#~ msgid "Vlad Zahorodnii"
+#~ msgstr "Vlad Zahorodnii"
 
 #~ msgid "Download New Desktop Effects"
 #~ msgstr "Lataa uusia työpöytätehosteita"

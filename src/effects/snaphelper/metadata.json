@@ -40,7 +40,6 @@
         "Description[zh_CN]": "在移动窗口时显示窗口和桌面的中心位置辅助线，以便对齐两者",
         "Description[zh_TW]": "幫助您移動視窗時找到確切的螢幕中心",
         "EnabledByDefault": false,
-        "Id": "snaphelper",
         "License": "GPL",
         "Name": "Snap Helper",
         "Name[ar]": "مساعد الجذب",

@@ -24,9 +24,10 @@ public:
 
     bool hasAlphaChannel() const override;
     QSize textureSize() const override;
+    quint32 drmFormat() const override;
 
     void render(GLFramebuffer *target) override;
-    void render(QImage *image) override;
+    void render(spa_data *spa, spa_video_format format) override;
     std::chrono::nanoseconds clock() const override;
 
 private:

@@ -38,12 +38,12 @@ TrackMouseEffectConfigForm::TrackMouseEffectConfigForm(QWidget *parent)
     setupUi(this);
 }
 
-TrackMouseEffectConfig::TrackMouseEffectConfig(QWidget *parent, const QVariantList &args)
-    : KCModule(parent, args)
+TrackMouseEffectConfig::TrackMouseEffectConfig(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
+    : KCModule(parent, data, args)
 {
     TrackMouseConfig::instance(KWIN_CONFIG);
-    m_ui = new TrackMouseEffectConfigForm(this);
-    QVBoxLayout *layout = new QVBoxLayout(this);
+    m_ui = new TrackMouseEffectConfigForm(widget());
+    QVBoxLayout *layout = new QVBoxLayout(widget());
     layout->addWidget(m_ui);
 
     addConfig(TrackMouseConfig::self(), m_ui);
@@ -101,7 +101,7 @@ void TrackMouseEffectConfig::shortcutChanged(const QKeySequence &seq)
     if (QAction *a = m_actionCollection->action(QStringLiteral("TrackMouse"))) {
         KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << seq, KGlobalAccel::NoAutoloading);
     }
-    Q_EMIT changed(true);
+    setNeedsSave(true);
 }
 
 } // namespace

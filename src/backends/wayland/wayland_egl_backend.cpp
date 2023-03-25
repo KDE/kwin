@@ -9,9 +9,9 @@
 */
 
 #include "wayland_egl_backend.h"
-#include "basiceglsurfacetexture_internal.h"
-#include "basiceglsurfacetexture_wayland.h"
 #include "../drm/gbm_dmabuf.h"
+#include "platformsupport/scenes/opengl/basiceglsurfacetexture_internal.h"
+#include "platformsupport/scenes/opengl/basiceglsurfacetexture_wayland.h"
 
 #include "wayland_backend.h"
 #include "wayland_display.h"
@@ -22,8 +22,8 @@
 #include <unistd.h>
 
 // kwin libs
-#include <kwinglplatform.h>
-#include <kwinglutils.h>
+#include "libkwineffects/kwinglplatform.h"
+#include "libkwineffects/kwinglutils.h"
 
 // KDE
 #include <KWayland/Client/shm_pool.h>
@@ -84,7 +84,7 @@ WaylandEglLayerBuffer::WaylandEglLayerBuffer(const QSize &size, uint32_t format,
                                        attributes.modifier & 0xffffffff);
     }
 
-    m_buffer = zwp_linux_buffer_params_v1_create_immed(params, size.width(), size.height(), format, ZWP_LINUX_BUFFER_PARAMS_V1_FLAGS_Y_INVERT);
+    m_buffer = zwp_linux_buffer_params_v1_create_immed(params, size.width(), size.height(), format, 0);
     zwp_linux_buffer_params_v1_destroy(params);
 
     m_texture = backend->importDmaBufAsTexture(std::move(attributes));
@@ -114,9 +114,19 @@ GLFramebuffer *WaylandEglLayerBuffer::framebuffer() const
     return m_framebuffer.get();
 }
 
+std::shared_ptr<GLTexture> WaylandEglLayerBuffer::texture() const
+{
+    return m_texture;
+}
+
 int WaylandEglLayerBuffer::age() const
 {
     return m_age;
+}
+
+gbm_bo *WaylandEglLayerBuffer::bo() const
+{
+    return m_bo;
 }
 
 WaylandEglLayerSwapchain::WaylandEglLayerSwapchain(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, WaylandEglBackend *backend)
@@ -169,6 +179,11 @@ WaylandEglPrimaryLayer::~WaylandEglPrimaryLayer()
 GLFramebuffer *WaylandEglPrimaryLayer::fbo() const
 {
     return m_buffer->framebuffer();
+}
+
+std::shared_ptr<GLTexture> WaylandEglPrimaryLayer::texture() const
+{
+    return m_buffer->texture();
 }
 
 std::optional<OutputLayerBeginFrameInfo> WaylandEglPrimaryLayer::beginFrame()
@@ -233,38 +248,6 @@ WaylandEglCursorLayer::WaylandEglCursorLayer(WaylandOutput *output, WaylandEglBa
 WaylandEglCursorLayer::~WaylandEglCursorLayer()
 {
     eglMakeCurrent(m_backend->eglDisplay(), EGL_NO_SURFACE, EGL_NO_SURFACE, m_backend->context());
-    m_framebuffer.reset();
-    m_texture.reset();
-}
-
-qreal WaylandEglCursorLayer::scale() const
-{
-    return m_scale;
-}
-
-void WaylandEglCursorLayer::setScale(qreal scale)
-{
-    m_scale = scale;
-}
-
-QPoint WaylandEglCursorLayer::hotspot() const
-{
-    return m_hotspot;
-}
-
-void WaylandEglCursorLayer::setHotspot(const QPoint &hotspot)
-{
-    m_hotspot = hotspot;
-}
-
-QSize WaylandEglCursorLayer::size() const
-{
-    return m_size;
-}
-
-void WaylandEglCursorLayer::setSize(const QSize &size)
-{
-    m_size = size;
 }
 
 std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame()
@@ -274,26 +257,45 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame()
         return std::nullopt;
     }
 
-    const QSize bufferSize = m_size.expandedTo(QSize(64, 64));
-    if (!m_texture || m_texture->size() != bufferSize) {
-        m_texture = std::make_unique<GLTexture>(GL_RGBA8, bufferSize);
-        m_framebuffer = std::make_unique<GLFramebuffer>(m_texture.get());
+    const auto tmp = size().expandedTo(QSize(64, 64));
+    const QSize bufferSize(std::ceil(tmp.width()), std::ceil(tmp.height()));
+    if (!m_swapchain || m_swapchain->size() != bufferSize) {
+        const WaylandLinuxDmabufV1 *dmabuf = m_backend->backend()->display()->linuxDmabuf();
+        const uint32_t format = DRM_FORMAT_ARGB8888;
+        if (!dmabuf->formats().contains(format)) {
+            qCCritical(KWIN_WAYLAND_BACKEND) << "DRM_FORMAT_ARGB8888 is unsupported";
+            return std::nullopt;
+        }
+        const QVector<uint64_t> modifiers = dmabuf->formats().value(format);
+        m_swapchain = std::make_unique<WaylandEglLayerSwapchain>(bufferSize, format, modifiers, m_backend);
     }
 
+    m_buffer = m_swapchain->acquire();
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_framebuffer.get()),
+        .renderTarget = RenderTarget(m_buffer->framebuffer()),
         .repaint = infiniteRegion(),
     };
 }
 
 bool WaylandEglCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    // Technically, we could pass a linux-dmabuf buffer, but host kwin does not support that atm.
-    const QImage image = m_texture->toImage().mirrored(false, true);
-    KWayland::Client::Buffer::Ptr buffer = m_output->backend()->display()->shmPool()->createBuffer(image);
-    m_output->cursor()->update(buffer, m_scale, m_hotspot);
+    // Flush rendering commands to the dmabuf.
+    glFlush();
 
+    m_output->cursor()->update(m_buffer->buffer(), scale(), hotspot().toPoint());
+
+    m_swapchain->release(m_buffer);
     return true;
+}
+
+quint32 WaylandEglCursorLayer::format() const
+{
+    return gbm_bo_get_format(m_buffer->bo());
+}
+
+quint32 WaylandEglPrimaryLayer::format() const
+{
+    return gbm_bo_get_format(m_buffer->bo());
 }
 
 WaylandEglBackend::WaylandEglBackend(WaylandBackend *b)
@@ -408,49 +410,9 @@ bool WaylandEglBackend::initRenderingContext()
     return makeCurrent();
 }
 
-bool WaylandEglBackend::initBufferConfigs()
+std::shared_ptr<GLTexture> WaylandEglBackend::textureForOutput(KWin::Output *output) const
 {
-    const EGLint config_attribs[] = {
-        EGL_SURFACE_TYPE,
-        EGL_WINDOW_BIT,
-        EGL_RED_SIZE,
-        1,
-        EGL_GREEN_SIZE,
-        1,
-        EGL_BLUE_SIZE,
-        1,
-        EGL_ALPHA_SIZE,
-        0,
-        EGL_RENDERABLE_TYPE,
-        isOpenGLES() ? EGL_OPENGL_ES2_BIT : EGL_OPENGL_BIT,
-        EGL_CONFIG_CAVEAT,
-        EGL_NONE,
-        EGL_NONE,
-    };
-
-    EGLint count;
-    EGLConfig configs[1024];
-    if (eglChooseConfig(eglDisplay(), config_attribs, configs, 1, &count) == EGL_FALSE) {
-        qCCritical(KWIN_WAYLAND_BACKEND) << "choose config failed";
-        return false;
-    }
-    if (count != 1) {
-        qCCritical(KWIN_WAYLAND_BACKEND) << "choose config did not return a config" << count;
-        return false;
-    }
-    setConfig(configs[0]);
-
-    return true;
-}
-
-std::shared_ptr<KWin::GLTexture> WaylandEglBackend::textureForOutput(KWin::Output *output) const
-{
-    auto texture = std::make_unique<GLTexture>(GL_RGBA8, output->pixelSize());
-    GLFramebuffer::pushFramebuffer(m_outputs.at(output).primaryLayer->fbo());
-    GLFramebuffer renderTarget(texture.get());
-    renderTarget.blitFromFramebuffer(QRect(0, texture->height(), texture->width(), -texture->height()));
-    GLFramebuffer::popFramebuffer();
-    return texture;
+    return m_outputs.at(output).primaryLayer->texture();
 }
 
 std::unique_ptr<SurfaceTexture> WaylandEglBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
@@ -473,7 +435,7 @@ OutputLayer *WaylandEglBackend::primaryLayer(Output *output)
     return m_outputs[output].primaryLayer.get();
 }
 
-WaylandEglCursorLayer *WaylandEglBackend::cursorLayer(Output *output)
+OutputLayer *WaylandEglBackend::cursorLayer(Output *output)
 {
     return m_outputs[output].cursorLayer.get();
 }

@@ -10,6 +10,7 @@
 
 #include <errno.h>
 
+#include "drm_atomic_commit.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
 #include "drm_pointer.h"
@@ -60,57 +61,6 @@ bool DrmObject::initProps()
         }
     }
     return true;
-}
-
-bool DrmObject::atomicPopulate(drmModeAtomicReq *req) const
-{
-    for (const auto &property : std::as_const(m_props)) {
-        if (property && !property->isImmutable() && !property->isLegacy() && property->needsCommit()) {
-            if (drmModeAtomicAddProperty(req, m_id, property->propId(), property->pending()) <= 0) {
-                qCWarning(KWIN_DRM) << "Adding property" << property->name() << "->" << property->pending()
-                                    << "to atomic commit failed for object" << this << "with error" << strerror(errno);
-                return false;
-            }
-        }
-    }
-    return true;
-}
-
-void DrmObject::commit()
-{
-    for (const auto &prop : std::as_const(m_props)) {
-        if (prop) {
-            prop->commit();
-        }
-    }
-}
-
-void DrmObject::commitPending()
-{
-    for (const auto &prop : std::as_const(m_props)) {
-        if (prop) {
-            prop->commitPending();
-        }
-    }
-}
-
-void DrmObject::rollbackPending()
-{
-    for (const auto &prop : std::as_const(m_props)) {
-        if (prop) {
-            prop->rollbackPending();
-        }
-    }
-}
-
-bool DrmObject::needsCommit() const
-{
-    for (const auto &prop : std::as_const(m_props)) {
-        if (prop && prop->needsCommit()) {
-            return true;
-        }
-    }
-    return false;
 }
 
 bool DrmObject::updateProperties()
@@ -180,30 +130,6 @@ QString DrmObject::typeName() const
         return QStringLiteral("plane");
     default:
         return QStringLiteral("unknown?");
-    }
-}
-
-void DrmObject::printProps(PrintMode mode)
-{
-    bool any = mode == PrintMode::All || std::any_of(m_props.begin(), m_props.end(), [](const auto &prop) {
-                   return prop && !prop->isImmutable() && prop->needsCommit();
-               });
-    if (!any) {
-        return;
-    }
-    qCDebug(KWIN_DRM) << typeName() << id();
-    for (const auto &prop : m_props) {
-        if (prop) {
-            uint64_t current = prop->name().startsWith("SRC_") ? prop->current() >> 16 : prop->current();
-            if (prop->isImmutable() || !prop->needsCommit()) {
-                if (mode == PrintMode::All) {
-                    qCDebug(KWIN_DRM).nospace() << "\t" << prop->name() << ": " << current;
-                }
-            } else {
-                uint64_t pending = prop->name().startsWith("SRC_") ? prop->pending() >> 16 : prop->pending();
-                qCDebug(KWIN_DRM).nospace() << "\t" << prop->name() << ": " << current << "->" << pending;
-            }
-        }
     }
 }
 }

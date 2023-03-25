@@ -34,11 +34,12 @@ public:
         VrrEnabled,
         Gamma_LUT,
         Gamma_LUT_Size,
+        CTM,
         Count
     };
 
     bool init() override;
-    void disable() override;
+    void disable(DrmAtomicCommit *commit) override;
 
     int pipeIndex() const;
     int gammaRampSize() const;

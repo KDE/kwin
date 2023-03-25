@@ -6,11 +6,12 @@
 
 #pragma once
 
-#include "kwineffects.h"
-#include "kwinglobals.h"
+#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/kwinglobals.h"
 
 #include <QMatrix4x4>
 #include <QObject>
+#include <QPointer>
 #include <QVector>
 
 #include <optional>

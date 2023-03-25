@@ -8,9 +8,9 @@
 
 #include "screencastsource.h"
 
+#include "libkwineffects/kwingltexture.h"
+#include "libkwineffects/kwinglutils.h"
 #include <QImage>
-#include <kwingltexture.h>
-#include <kwinglutils.h>
 
 namespace KWin
 {
@@ -23,11 +23,12 @@ class RegionScreenCastSource : public ScreenCastSource
 public:
     explicit RegionScreenCastSource(const QRect &region, qreal scale, QObject *parent = nullptr);
 
+    quint32 drmFormat() const override;
     bool hasAlphaChannel() const override;
     QSize textureSize() const override;
 
     void render(GLFramebuffer *target) override;
-    void render(QImage *image) override;
+    void render(spa_data *spa, spa_video_format format) override;
     std::chrono::nanoseconds clock() const override;
 
     QRect region() const
@@ -41,6 +42,8 @@ public:
     void updateOutput(Output *output);
 
 private:
+    void ensureTexture();
+
     const QRect m_region;
     const qreal m_scale;
     std::unique_ptr<GLFramebuffer> m_target;

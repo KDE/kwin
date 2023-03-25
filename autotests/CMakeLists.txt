@@ -30,10 +30,10 @@ target_link_libraries(testVirtualDesktops
     Qt::Test
     Qt::Widgets
 
-    KF5::ConfigCore
-    KF5::GlobalAccel
-    KF5::I18n
-    KF5::WindowSystem
+    KF6::ConfigCore
+    KF6::GlobalAccel
+    KF6::I18n
+    KF6::WindowSystem
 )
 add_test(NAME kwin-testVirtualDesktops COMMAND testVirtualDesktops)
 ecm_mark_as_test(testVirtualDesktops)
@@ -51,22 +51,18 @@ set_target_properties(testClientMachine PROPERTIES COMPILE_DEFINITIONS "NO_NONE_
 
 target_link_libraries(testClientMachine
     Qt::Concurrent
+    Qt::GuiPrivate
     Qt::Test
     Qt::Widgets
 
-    KF5::ConfigCore
-    KF5::WindowSystem
+    KF6::ConfigCore
+    KF6::WindowSystem
 
     XCB::XCB
     XCB::XFIXES
 
     ${X11_X11_LIB} # to make jenkins happy
 )
-if (QT_MAJOR_VERSION EQUAL "5")
-    target_link_libraries(testClientMachine Qt::X11Extras)
-else()
-    target_link_libraries(testClientMachine Qt::GuiPrivate)
-endif()
 add_test(NAME kwin-testClientMachine COMMAND testClientMachine)
 ecm_mark_as_test(testClientMachine)
 
@@ -76,19 +72,15 @@ ecm_mark_as_test(testClientMachine)
 add_executable(testXcbWrapper test_xcb_wrapper.cpp xcb_scaling_mock.cpp)
 
 target_link_libraries(testXcbWrapper
+    Qt::GuiPrivate
     Qt::Test
     Qt::Widgets
 
-    KF5::ConfigCore
-    KF5::WindowSystem
+    KF6::ConfigCore
+    KF6::WindowSystem
 
     XCB::XCB
 )
-if (QT_MAJOR_VERSION EQUAL "5")
-    target_link_libraries(testXcbWrapper Qt::X11Extras)
-else()
-    target_link_libraries(testXcbWrapper Qt::GuiPrivate)
-endif()
 add_test(NAME kwin-testXcbWrapper COMMAND testXcbWrapper)
 ecm_mark_as_test(testXcbWrapper)
 
@@ -96,20 +88,16 @@ if (XCB_ICCCM_FOUND)
     add_executable(testXcbSizeHints test_xcb_size_hints.cpp xcb_scaling_mock.cpp)
     set_target_properties(testXcbSizeHints PROPERTIES COMPILE_DEFINITIONS "NO_NONE_WINDOW")
     target_link_libraries(testXcbSizeHints
+        Qt::GuiPrivate
         Qt::Test
         Qt::Widgets
 
-        KF5::ConfigCore
-        KF5::WindowSystem
+        KF6::ConfigCore
+        KF6::WindowSystem
 
         XCB::ICCCM
         XCB::XCB
     )
-    if (QT_MAJOR_VERSION EQUAL "5")
-        target_link_libraries(testXcbSizeHints Qt::X11Extras)
-    else()
-        target_link_libraries(testXcbSizeHints Qt::GuiPrivate)
-    endif()
     add_test(NAME kwin-testXcbSizeHints COMMAND testXcbSizeHints)
     ecm_mark_as_test(testXcbSizeHints)
 endif()
@@ -120,23 +108,17 @@ endif()
 add_executable(testXcbWindow test_xcb_window.cpp xcb_scaling_mock.cpp)
 
 target_link_libraries(testXcbWindow
+    Qt::GuiPrivate
     Qt::Test
     Qt::Widgets
 
-    KF5::ConfigCore
-    KF5::WindowSystem
+    KF6::ConfigCore
+    KF6::WindowSystem
 
     XCB::XCB
 )
-if (QT_MAJOR_VERSION EQUAL "5")
-    target_link_libraries(testXcbWindow Qt::X11Extras)
-else()
-    target_link_libraries(testXcbWindow Qt::GuiPrivate)
-endif()
 add_test(NAME kwin-testXcbWindow COMMAND testXcbWindow)
 ecm_mark_as_test(testXcbWindow)
-
-include_directories(${KWin_SOURCE_DIR}/src)
 
 ########################################################
 # Test OnScreenNotification
@@ -154,7 +136,7 @@ target_link_libraries(testOnScreenNotification
     Qt::Test
     Qt::Widgets # QAction include
 
-    KF5::ConfigCore
+    KF6::ConfigCore
 )
 
 add_test(NAME kwin-testOnScreenNotification COMMAND testOnScreenNotification)
@@ -171,6 +153,7 @@ add_executable(testGestures ${testGestures_SRCS})
 
 target_link_libraries(testGestures
     Qt::Test
+    Qt::Widgets
 )
 
 add_test(NAME kwin-testGestures COMMAND testGestures)
@@ -181,7 +164,7 @@ ecm_mark_as_test(testGestures)
 ########################################################
 add_executable(testX11TimestampUpdate test_x11_timestamp_update.cpp)
 target_link_libraries(testX11TimestampUpdate
-    KF5::CoreAddons
+    KF6::CoreAddons
     Qt::Test
     kwin
 )
@@ -212,21 +195,17 @@ target_link_libraries(testXkb
     kwin
 
     Qt::Gui
+    Qt::GuiPrivate
     Qt::Test
     Qt::Widgets
 
-    KF5::ConfigCore
-    KF5::WindowSystem
+    KF6::ConfigCore
+    KF6::WindowSystem
 
     kwineffects
 
     XKB::XKB
 )
-if (QT_MAJOR_VERSION EQUAL "5")
-    target_link_libraries(testXkb Qt5::XkbCommonSupportPrivate)
-else()
-    target_link_libraries(testXkb Qt::GuiPrivate)
-endif()
 add_test(NAME kwin-testXkb COMMAND testXkb)
 ecm_mark_as_test(testXkb)
 

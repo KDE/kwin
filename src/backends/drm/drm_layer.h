@@ -29,6 +29,7 @@ public:
     virtual std::shared_ptr<GLTexture> texture() const;
     virtual QRegion currentDamage() const;
     virtual void releaseBuffers() = 0;
+    quint32 format() const override;
 };
 
 class DrmPipelineLayer : public DrmOutputLayer

@@ -7,14 +7,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "../testutils.h"
-#include "clientmodel.h"
 #include "mock_tabboxhandler.h"
+#include "tabbox/clientmodel.h"
 #include <QtTest>
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 #include <private/qtx11extras_p.h>
-#else
-#include <QX11Info>
-#endif
 
 using namespace KWin;
 
@@ -42,7 +38,6 @@ void TestTabBoxHandler::testDontCrashUpdateOutlineNullClient()
 {
     MockTabBoxHandler tabboxhandler;
     TabBox::TabBoxConfig config;
-    config.setTabBoxMode(TabBox::TabBoxConfig::ClientTabBox);
     config.setShowTabBox(false);
     config.setHighlightWindows(false);
     tabboxhandler.setConfig(config);

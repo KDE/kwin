@@ -21,14 +21,6 @@
 namespace KWin
 {
 
-struct XcbConnectionDeleter
-{
-    void operator()(xcb_connection_t *pointer)
-    {
-        xcb_disconnect(pointer);
-    }
-};
-
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_xwayland_server_restart-0");
 
 class XwaylandServerRestartTest : public QObject
@@ -68,15 +60,22 @@ void XwaylandServerRestartTest::testRestart()
 
     Xwl::Xwayland *xwayland = static_cast<Xwl::Xwayland *>(kwinApp()->xwayland());
 
-    // Pretend that the Xwayland process has crashed by sending a SIGKILL to it.
     QSignalSpy startedSpy(xwayland, &Xwl::Xwayland::started);
+    QSignalSpy stoppedSpy(xwayland, &Xwl::Xwayland::errorOccurred);
+
+    Test::createX11Connection(); // trigger an X11 start
+    QTRY_COMPARE(startedSpy.count(), 1);
+
+    // Pretend that the Xwayland process has crashed by sending a SIGKILL to it.
     kwin_safe_kill(xwayland->xwaylandLauncher()->process());
-    QVERIFY(startedSpy.wait());
-    QCOMPARE(startedSpy.count(), 1);
+
+    QTRY_COMPARE(stoppedSpy.count(), 1);
 
     // Check that the compositor still accepts new X11 clients.
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
+
+    QTRY_COMPARE(startedSpy.count(), 2);
     const QRect rect(0, 0, 100, 200);
     xcb_window_t windowId = xcb_generate_id(c.get());
     xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),

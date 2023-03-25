@@ -9,7 +9,7 @@
 */
 #pragma once
 
-#include <kwinglobals.h>
+#include "libkwineffects/kwinglobals.h"
 
 #include <QObject>
 #include <QRegion>
@@ -21,6 +21,7 @@ namespace KWin
 
 class Output;
 class CompositorSelectionOwner;
+class CursorScene;
 class CursorView;
 class RenderBackend;
 class RenderLayer;
@@ -30,6 +31,7 @@ class WorkspaceScene;
 class Window;
 class X11Window;
 class X11SyncManager;
+class RenderViewport;
 
 class KWIN_EXPORT Compositor : public QObject
 {
@@ -72,6 +74,10 @@ public:
     WorkspaceScene *scene() const
     {
         return m_scene.get();
+    }
+    CursorScene *cursorScene() const
+    {
+        return m_cursorScene.get();
     }
     RenderBackend *backend() const
     {
@@ -134,6 +140,13 @@ public:
      */
     virtual void createOpenGLSafePoint(OpenGLSafePoint safePoint);
 
+    /**
+     * @returns the format of the contents in the @p output
+     *
+     * This format is provided using the drm fourcc encoding
+     */
+    uint outputFormat(Output *output);
+
 Q_SIGNALS:
     void compositingToggled(bool active);
     void aboutToDestroy();
@@ -188,7 +201,7 @@ private:
     void prePaintPass(RenderLayer *layer);
     void postPaintPass(RenderLayer *layer);
     void preparePaintPass(RenderLayer *layer, QRegion *repaint);
-    void paintPass(RenderLayer *layer, RenderTarget *target, const QRegion &region);
+    void paintPass(RenderLayer *layer, const RenderTarget &renderTarget, const QRegion &region);
 
     State m_state = State::Off;
     std::unique_ptr<CompositorSelectionOwner> m_selectionOwner;
@@ -196,6 +209,7 @@ private:
     QList<xcb_atom_t> m_unusedSupportProperties;
     QTimer m_unusedSupportPropertyTimer;
     std::unique_ptr<WorkspaceScene> m_scene;
+    std::unique_ptr<CursorScene> m_cursorScene;
     std::unique_ptr<RenderBackend> m_backend;
     QHash<RenderLoop *, RenderLayer *> m_superlayers;
     CompositingType m_selectedCompositor = NoCompositing;

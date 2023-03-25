@@ -10,13 +10,13 @@
 
 #include "invert.h"
 
+#include "libkwineffects/kwinglplatform.h"
+#include "libkwineffects/kwinglutils.h"
 #include <KGlobalAccel>
 #include <KLocalizedString>
 #include <QAction>
 #include <QFile>
 #include <QStandardPaths>
-#include <kwinglplatform.h>
-#include <kwinglutils.h>
 
 #include <QMatrix4x4>
 

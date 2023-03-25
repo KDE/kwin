@@ -6,21 +6,20 @@
 
 #pragma once
 
-#include <KQuickAddons/ManagedConfigModule>
-#include <KService>
+#include <KQuickManagedConfigModule>
 #include <QAbstractListModel>
 
 #include <kwinxwaylandsettings.h>
 
 class KWinXwaylandData;
 
-class KcmXwayland : public KQuickAddons::ManagedConfigModule
+class KcmXwayland : public KQuickManagedConfigModule
 {
     Q_OBJECT
     Q_PROPERTY(KWinXwaylandSettings *settings READ settings CONSTANT)
 
 public:
-    explicit KcmXwayland(QObject *parent = nullptr, const QVariantList &list = QVariantList());
+    explicit KcmXwayland(QObject *parent, const KPluginMetaData &metaData, const QVariantList &list);
     ~KcmXwayland() override;
 
     KWinXwaylandSettings *settings() const

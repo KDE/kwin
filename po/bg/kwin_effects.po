@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-17 00:51+0000\n"
+"POT-Creation-Date: 2023-03-23 02:36+0000\n"
 "PO-Revision-Date: 2022-12-05 00:31+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -44,7 +44,7 @@ msgstr "Силен"
 msgid "Noise strength:"
 msgstr "Сила на шума:"
 
-#: colorpicker/colorpicker.cpp:101
+#: colorpicker/colorpicker.cpp:102
 #, kde-format
 msgid ""
 "Select a position for color picking with left click or enter.\n"
@@ -372,24 +372,24 @@ msgstr " px"
 msgid "&Height:"
 msgstr "&Височина:"
 
-#: mouseclick/mouseclick.cpp:34 mouseclick/mouseclick_config.cpp:51
+#: mouseclick/mouseclick.cpp:36 mouseclick/mouseclick_config.cpp:51
 #, kde-format
 msgid "Toggle Mouse Click Effect"
 msgstr "Превключване на ефекта на щракване с мишката"
 
-#: mouseclick/mouseclick.cpp:41
+#: mouseclick/mouseclick.cpp:43
 #, kde-format
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr "Отляво"
 
-#: mouseclick/mouseclick.cpp:42
+#: mouseclick/mouseclick.cpp:44
 #, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "Среден"
 
-#: mouseclick/mouseclick.cpp:43
+#: mouseclick/mouseclick.cpp:45
 #, kde-format
 msgctxt "Right mouse button"
 msgid "Right"
@@ -496,12 +496,12 @@ msgstr "Шрифт:"
 msgid "Show Text:"
 msgstr "Показване на текст:"
 
-#: mousemark/mousemark.cpp:36
+#: mousemark/mousemark.cpp:40
 #, kde-format
 msgid "Clear All Mouse Marks"
 msgstr "Изчистване на всички маркировки на мишката"
 
-#: mousemark/mousemark.cpp:42 mousemark/mousemark_config.cpp:59
+#: mousemark/mousemark.cpp:46 mousemark/mousemark_config.cpp:59
 #, kde-format
 msgid "Clear Last Mouse Mark"
 msgstr "Изчистване на последната маркировка на мишката"
@@ -557,24 +557,18 @@ msgstr "Превключване на прегледа"
 msgid "Layout mode:"
 msgstr "Режим на оформление:"
 
-#. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
-#: overview/kcm/overvieweffectkcm.ui:56
-#, kde-format
-msgid "Blur background:"
-msgstr "Замъгляване на фона:"
-
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: overview/kcm/overvieweffectkcm.ui:73
+#: overview/kcm/overvieweffectkcm.ui:43
 #, kde-format
 msgid "Ignore minimized windows:"
 msgstr "Игнориране на минимизираните прозорци:"
 
-#: overview/qml/DesktopBar.qml:186
+#: overview/qml/DesktopBar.qml:187
 #, kde-format
 msgid "Delete Virtual Desktop"
 msgstr "Изтриване на виртуален работен плот"
 
-#: overview/qml/DesktopBar.qml:282
+#: overview/qml/DesktopBar.qml:283
 #, kde-format
 msgid "Add Virtual Desktop"
 msgstr "Добавяне на виртуален работен плот"
@@ -589,7 +583,7 @@ msgstr "Няма съвпадащи прозорци"
 msgid "Drag Down To Close"
 msgstr "Завличане надолу за затваряне"
 
-#: private/qml/WindowHeapDelegate.qml:461
+#: private/qml/WindowHeapDelegate.qml:452
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
@@ -607,20 +601,7 @@ msgstr "Мащаб на отворен прозорец:"
 msgid "Window close scale:"
 msgstr "Мащаб на затваряне на прозорец:"
 
-#: screenshot/screenshotdbusinterface1.cpp:478
-#, kde-format
-msgctxt "Notification caption that a screenshot got saved to file"
-msgid "Screenshot"
-msgstr "Екранна снимка"
-
-#: screenshot/screenshotdbusinterface1.cpp:479
-#, kde-format
-msgctxt "Notification with path to screenshot file"
-msgid "Screenshot saved to %1"
-msgstr "Снимката на екрана е запазена на %1"
-
-#: screenshot/screenshotdbusinterface1.cpp:800
-#: screenshot/screenshotdbusinterface2.cpp:477
+#: screenshot/screenshotdbusinterface2.cpp:512
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -629,8 +610,7 @@ msgstr ""
 "Изберете прозорец за екранна снимка с левия бутон или въвеждане.\n"
 "Натиснете клавиш Escape  или десния бутон на мишката, за да отмените."
 
-#: screenshot/screenshotdbusinterface1.cpp:803
-#: screenshot/screenshotdbusinterface2.cpp:495
+#: screenshot/screenshotdbusinterface2.cpp:530
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
@@ -669,7 +649,7 @@ msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr "Този ефект не е бенчмарк"
 
-#: showpaint/showpaint.cpp:38 showpaint/showpaint_config.cpp:38
+#: showpaint/showpaint.cpp:39 showpaint/showpaint_config.cpp:38
 #, kde-format
 msgid "Toggle Show Paint"
 msgstr "Превключване на показване на цвета"
@@ -698,7 +678,7 @@ msgstr "Вертикално:"
 msgid "Slide desktop background"
 msgstr "Сменяне на фона на работния плот"
 
-#: thumbnailaside/thumbnailaside.cpp:29
+#: thumbnailaside/thumbnailaside.cpp:31
 #: thumbnailaside/thumbnailaside_config.cpp:59
 #, kde-format
 msgid "Toggle Thumbnail for Current Window"
@@ -742,42 +722,42 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr "Превключване на редактор на разпределение"
 
-#: tileseditor/qml/main.qml:147
+#: tileseditor/qml/main.qml:150
 #, kde-format
 msgid "Padding:"
 msgstr "Отстъп:"
 
-#: tileseditor/qml/main.qml:157
+#: tileseditor/qml/main.qml:160
 #, kde-format
 msgid "Load Layout..."
 msgstr "Зареждане на оформление..."
 
-#: tileseditor/qml/main.qml:271
+#: tileseditor/qml/main.qml:274
 #, kde-format
 msgid "Close"
 msgstr "Затваряне"
 
-#: tileseditor/qml/TileDelegate.qml:171
+#: tileseditor/qml/TileDelegate.qml:167
 #, kde-format
 msgid "Split Horizontally"
 msgstr "Хоризонтално разделяне"
 
-#: tileseditor/qml/TileDelegate.qml:178
+#: tileseditor/qml/TileDelegate.qml:174
 #, kde-format
 msgid "Split Vertically"
 msgstr "Вертикално разделяне"
 
-#: tileseditor/qml/TileDelegate.qml:186 tileseditor/qml/TileDelegate.qml:215
+#: tileseditor/qml/TileDelegate.qml:182 tileseditor/qml/TileDelegate.qml:211
 #, kde-format
 msgid "Add Floating Tile"
 msgstr "Добавяне на плаващи плочки"
 
-#: tileseditor/qml/TileDelegate.qml:195
+#: tileseditor/qml/TileDelegate.qml:191
 #, kde-format
 msgid "Delete"
 msgstr "Изтриване"
 
-#: trackmouse/trackmouse.cpp:44 trackmouse/trackmouse_config.cpp:57
+#: trackmouse/trackmouse.cpp:45 trackmouse/trackmouse_config.cpp:57
 #, kde-format
 msgid "Track mouse"
 msgstr "Проследяване на мишката"
@@ -932,17 +912,17 @@ msgstr "Превключване на настоящи прозорци (тек�
 msgid "Ignore &minimized windows"
 msgstr "Игнориране на минимизираните прозорци"
 
-#: windowview/qml/main.qml:106
+#: windowview/qml/main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr "Няма съвпадения"
 
-#: windowview/qml/main.qml:106
+#: windowview/qml/main.qml:107
 #, kde-format
 msgid "No Windows"
 msgstr "Без прозорци"
 
-#: windowview/qml/main.qml:120
+#: windowview/qml/main.qml:122
 #, kde-format
 msgid "Filter windows…"
 msgstr "Филтриране на прозорците…"
@@ -1007,32 +987,32 @@ msgstr "По-малко"
 msgid "More"
 msgstr "Повече"
 
-#: zoom/zoom.cpp:65
+#: zoom/zoom.cpp:67
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Преместване на увеличената област наляво"
 
-#: zoom/zoom.cpp:72
+#: zoom/zoom.cpp:74
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Преместване на увеличената област надясно"
 
-#: zoom/zoom.cpp:79
+#: zoom/zoom.cpp:81
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Преместване на увеличената област нагоре"
 
-#: zoom/zoom.cpp:86
+#: zoom/zoom.cpp:88
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Преместване на намалената зона надолу"
 
-#: zoom/zoom.cpp:94 zoom/zoom_config.cpp:108
+#: zoom/zoom.cpp:96 zoom/zoom_config.cpp:108
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Преместване на мишката във фокуса"
 
-#: zoom/zoom.cpp:101 zoom/zoom_config.cpp:115
+#: zoom/zoom.cpp:103 zoom/zoom_config.cpp:115
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Преместване на мишката в центъра"
@@ -1171,3 +1151,14 @@ msgstr "Изключено"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "Следене на мишката:"
+
+#~ msgctxt "Notification caption that a screenshot got saved to file"
+#~ msgid "Screenshot"
+#~ msgstr "Екранна снимка"
+
+#~ msgctxt "Notification with path to screenshot file"
+#~ msgid "Screenshot saved to %1"
+#~ msgstr "Снимката на екрана е запазена на %1"
+
+#~ msgid "Blur background:"
+#~ msgstr "Замъгляване на фона:"

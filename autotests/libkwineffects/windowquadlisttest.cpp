@@ -6,8 +6,8 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
+#include "libkwineffects/kwineffects.h"
 #include <QTest>
-#include <kwineffects.h>
 
 Q_DECLARE_METATYPE(KWin::WindowQuadList)
 

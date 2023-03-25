@@ -11,7 +11,6 @@
 
 #include "atoms.h"
 #include "core/outputbackend.h"
-#include "deleted.h"
 #include "main.h"
 #include "wayland_server.h"
 #include "window.h"
@@ -53,7 +52,6 @@ private Q_SLOTS:
 void StackingOrderTest::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
-    qRegisterMetaType<KWin::Deleted *>();
 
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(waylandServer()->init(s_socketName));
@@ -182,10 +180,10 @@ void StackingOrderTest::testRaiseTransient()
 
 struct WindowUnrefDeleter
 {
-    void operator()(Deleted *d)
+    void operator()(Window *d)
     {
         if (d != nullptr) {
-            d->unrefWindow();
+            d->unref();
         }
     }
 };
@@ -243,17 +241,17 @@ void StackingOrderTest::testDeletedTransient()
     QTRY_VERIFY(!transient2->isActive());
 
     // Close the top-most transient.
-    connect(transient2, &Window::windowClosed, this, [](Window *original, Deleted *deleted) {
-        deleted->refWindow();
+    connect(transient2, &Window::closed, this, [](Window *deleted) {
+        deleted->ref();
     });
 
-    QSignalSpy windowClosedSpy(transient2, &Window::windowClosed);
+    QSignalSpy windowClosedSpy(transient2, &Window::closed);
     delete transient2ShellSurface;
     transient2Surface.reset();
     QVERIFY(windowClosedSpy.wait());
 
-    std::unique_ptr<Deleted, WindowUnrefDeleter> deletedTransient(
-        windowClosedSpy.first().at(1).value<Deleted *>());
+    std::unique_ptr<Window, WindowUnrefDeleter> deletedTransient(
+        windowClosedSpy.first().at(0).value<Window *>());
     QVERIFY(deletedTransient.get());
 
     // The deleted transient still has to be above its old parent (transient1).
@@ -306,14 +304,6 @@ static xcb_window_t createGroupWindow(xcb_connection_t *conn,
     return wid;
 }
 
-struct XcbConnectionDeleter
-{
-    void operator()(xcb_connection_t *c)
-    {
-        xcb_disconnect(c);
-    }
-};
-
 void StackingOrderTest::testGroupTransientIsAboveWindowGroup()
 {
     // This test verifies that group transients are always above other
@@ -321,8 +311,7 @@ void StackingOrderTest::testGroupTransientIsAboveWindowGroup()
 
     const QRect geometry = QRect(0, 0, 128, 128);
 
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> conn(
-        xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr conn = Test::createX11Connection();
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
 
@@ -434,8 +423,7 @@ void StackingOrderTest::testRaiseGroupTransient()
 {
     const QRect geometry = QRect(0, 0, 128, 128);
 
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> conn(
-        xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr conn = Test::createX11Connection();
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
 
@@ -565,8 +553,7 @@ void StackingOrderTest::testDeletedGroupTransient()
 
     const QRect geometry = QRect(0, 0, 128, 128);
 
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> conn(
-        xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr conn = Test::createX11Connection();
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
 
@@ -657,17 +644,17 @@ void StackingOrderTest::testDeletedGroupTransient()
     QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{leader, member1, member2, transient}));
 
     // Unmap the transient.
-    connect(transient, &X11Window::windowClosed, this, [](Window *original, Deleted *deleted) {
-        deleted->refWindow();
+    connect(transient, &X11Window::closed, this, [](Window *deleted) {
+        deleted->ref();
     });
 
-    QSignalSpy windowClosedSpy(transient, &X11Window::windowClosed);
+    QSignalSpy windowClosedSpy(transient, &X11Window::closed);
     xcb_unmap_window(conn.get(), transientWid);
     xcb_flush(conn.get());
     QVERIFY(windowClosedSpy.wait());
 
-    std::unique_ptr<Deleted, WindowUnrefDeleter> deletedTransient(
-        windowClosedSpy.first().at(1).value<Deleted *>());
+    std::unique_ptr<Window, WindowUnrefDeleter> deletedTransient(
+        windowClosedSpy.first().at(0).value<Window *>());
     QVERIFY(deletedTransient.get());
 
     // The transient has to be above each member of the window group.
@@ -680,8 +667,7 @@ void StackingOrderTest::testDontKeepAboveNonModalDialogGroupTransients()
 
     const QRect geometry = QRect(0, 0, 128, 128);
 
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> conn(
-        xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr conn = Test::createX11Connection();
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
 

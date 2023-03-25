@@ -8,14 +8,15 @@
 */
 #include "virtual_egl_backend.h"
 // kwin
-#include "basiceglsurfacetexture_internal.h"
-#include "basiceglsurfacetexture_wayland.h"
-#include "virtual_logging.h"
-#include "softwarevsyncmonitor.h"
+#include "platformsupport/scenes/opengl/basiceglsurfacetexture_internal.h"
+#include "platformsupport/scenes/opengl/basiceglsurfacetexture_wayland.h"
+#include "platformsupport/vsyncconvenience/softwarevsyncmonitor.h"
 #include "virtual_backend.h"
+#include "virtual_logging.h"
 #include "virtual_output.h"
 // kwin libs
-#include <kwinglutils.h>
+#include "libkwineffects/kwinglutils.h"
+#include <drm_fourcc.h>
 
 #ifndef EGL_PLATFORM_SURFACELESS_MESA
 #define EGL_PLATFORM_SURFACELESS_MESA 0x31DD
@@ -32,9 +33,9 @@ VirtualEglLayer::VirtualEglLayer(Output *output, VirtualEglBackend *backend)
 
 VirtualEglLayer::~VirtualEglLayer() = default;
 
-GLTexture *VirtualEglLayer::texture() const
+std::shared_ptr<GLTexture> VirtualEglLayer::texture() const
 {
-    return m_texture.get();
+    return m_texture;
 }
 
 std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame()
@@ -45,6 +46,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame()
     if (!m_texture || m_texture->size() != nativeSize) {
         m_fbo.reset();
         m_texture = std::make_unique<GLTexture>(GL_RGB8, nativeSize);
+        m_texture->setContentTransform(TextureTransform::MirrorY);
         m_fbo = std::make_unique<GLFramebuffer>(m_texture.get());
     }
 
@@ -56,7 +58,15 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame()
 
 bool VirtualEglLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    glFlush(); // flush pending rendering commands.
+    Q_EMIT m_output->outputChange(damagedRegion);
     return true;
+}
+
+quint32 VirtualEglLayer::format() const
+{
+    // the texture format is hardcoded in VirtualEglLayer::beginFrame
+    return DRM_FORMAT_RGB888;
 }
 
 VirtualEglBackend::VirtualEglBackend(VirtualBackend *b)
@@ -148,39 +158,6 @@ void VirtualEglBackend::removeOutput(Output *output)
     m_outputs.erase(output);
 }
 
-bool VirtualEglBackend::initBufferConfigs()
-{
-    const EGLint config_attribs[] = {
-        EGL_SURFACE_TYPE,
-        EGL_WINDOW_BIT,
-        EGL_RED_SIZE,
-        1,
-        EGL_GREEN_SIZE,
-        1,
-        EGL_BLUE_SIZE,
-        1,
-        EGL_ALPHA_SIZE,
-        0,
-        EGL_RENDERABLE_TYPE,
-        isOpenGLES() ? EGL_OPENGL_ES2_BIT : EGL_OPENGL_BIT,
-        EGL_CONFIG_CAVEAT,
-        EGL_NONE,
-        EGL_NONE,
-    };
-
-    EGLint count;
-    EGLConfig configs[1024];
-    if (eglChooseConfig(eglDisplay(), config_attribs, configs, 1, &count) == EGL_FALSE) {
-        return false;
-    }
-    if (count != 1) {
-        return false;
-    }
-    setConfig(configs[0]);
-
-    return true;
-}
-
 std::unique_ptr<SurfaceTexture> VirtualEglBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
 {
     return std::make_unique<BasicEGLSurfaceTextureInternal>(this, pixmap);
@@ -198,14 +175,16 @@ OutputLayer *VirtualEglBackend::primaryLayer(Output *output)
 
 void VirtualEglBackend::present(Output *output)
 {
-    glFlush();
-
     static_cast<VirtualOutput *>(output)->vsyncMonitor()->arm();
+}
 
-    if (m_backend->saveFrames()) {
-        const std::unique_ptr<VirtualEglLayer> &layer = m_outputs[output];
-        layer->texture()->toImage().save(QStringLiteral("%1/%2-%3.png").arg(m_backend->screenshotDirPath(), output->name(), QString::number(m_frameCounter++)));
+std::shared_ptr<GLTexture> VirtualEglBackend::textureForOutput(Output *output) const
+{
+    auto it = m_outputs.find(output);
+    if (it == m_outputs.end()) {
+        return nullptr;
     }
+    return it->second->texture();
 }
 
 } // namespace

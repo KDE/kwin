@@ -17,7 +17,6 @@ namespace KWin
 {
 class Window;
 class DecorationItem;
-class Deleted;
 class InternalWindow;
 class Shadow;
 class ShadowItem;
@@ -39,7 +38,7 @@ public:
         PAINT_DISABLED_BY_DELETE = 1 << 1,
         PAINT_DISABLED_BY_DESKTOP = 1 << 2,
         PAINT_DISABLED_BY_MINIMIZE = 1 << 3,
-        PAINT_DISABLED_BY_ACTIVITY = 1 << 5
+        PAINT_DISABLED_BY_ACTIVITY = 1 << 4
     };
 
     ~WindowItem() override;
@@ -52,18 +51,23 @@ public:
     void refVisible(int reason);
     void unrefVisible(int reason);
 
+    void elevate();
+    void deelevate();
+
 protected:
     explicit WindowItem(Window *window, Scene *scene, Item *parent = nullptr);
     void updateSurfaceItem(SurfaceItem *surfaceItem);
 
 private Q_SLOTS:
-    void handleWindowClosed(Window *original, Deleted *deleted);
+    void handleWindowClosed(Window *deleted);
     void updateDecorationItem();
     void updateShadowItem();
     void updateSurfacePosition();
     void updateSurfaceVisibility();
     void updatePosition();
     void updateOpacity();
+    void updateStackingOrder();
+    void addSurfaceItemDamageConnects(Item *item);
 
 private:
     bool computeVisibility() const;
@@ -74,6 +78,7 @@ private:
     std::unique_ptr<SurfaceItem> m_surfaceItem;
     std::unique_ptr<DecorationItem> m_decorationItem;
     std::unique_ptr<ShadowItem> m_shadowItem;
+    std::optional<int> m_elevation;
     int m_forceVisibleByHiddenCount = 0;
     int m_forceVisibleByDeleteCount = 0;
     int m_forceVisibleByDesktopCount = 0;

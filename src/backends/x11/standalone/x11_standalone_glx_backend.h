@@ -8,8 +8,8 @@
 */
 #pragma once
 #include "core/outputlayer.h"
-#include "openglbackend.h"
-#include "openglsurfacetexture_x11.h"
+#include "platformsupport/scenes/opengl/openglbackend.h"
+#include "platformsupport/scenes/opengl/openglsurfacetexture_x11.h"
 #include "utils/damagejournal.h"
 #include "x11eventfilter.h"
 
@@ -17,8 +17,8 @@
 #include <fixx11h.h>
 #include <xcb/glx.h>
 
-#include <kwingltexture.h>
-#include <kwingltexture_p.h>
+#include "libkwineffects/kwingltexture.h"
+#include "libkwineffects/kwingltexture_p.h"
 
 #include <QHash>
 #include <memory>
@@ -65,6 +65,7 @@ public:
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    uint format() const override;
 
 private:
     GlxBackend *const m_backend;

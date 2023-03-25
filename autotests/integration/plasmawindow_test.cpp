@@ -10,12 +10,12 @@
 
 #include "core/output.h"
 #include "core/outputbackend.h"
-#include "cursor.h"
+#include "libkwineffects/kwineffects.h"
+#include "pointer_input.h"
 #include "wayland/seat_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "x11window.h"
-#include <kwineffects.h>
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/plasmawindowmanagement.h>
@@ -78,7 +78,7 @@ void PlasmaWindowTest::init()
     m_compositor = Test::waylandCompositor();
 
     workspace()->setActiveOutput(QPoint(640, 512));
-    Cursors::self()->mouse()->setPos(QPoint(640, 512));
+    input()->pointer()->warp(QPoint(640, 512));
 }
 
 void PlasmaWindowTest::cleanup()
@@ -92,14 +92,7 @@ void PlasmaWindowTest::testCreateDestroyX11PlasmaWindow()
     QSignalSpy plasmaWindowCreatedSpy(m_windowManagement, &KWayland::Client::PlasmaWindowManagement::windowCreated);
 
     // create an xcb window
-    struct XcbConnectionDeleter
-    {
-        void operator()(xcb_connection_t *pointer)
-        {
-            xcb_disconnect(pointer);
-        }
-    };
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 100, 200);
     xcb_window_t windowId = xcb_generate_id(c.get());
@@ -164,7 +157,7 @@ void PlasmaWindowTest::testCreateDestroyX11PlasmaWindow()
     xcb_unmap_window(c.get(), windowId);
     xcb_flush(c.get());
 
-    QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
+    QSignalSpy windowClosedSpy(window, &X11Window::closed);
     QVERIFY(windowClosedSpy.wait());
     xcb_destroy_window(c.get(), windowId);
     c.reset();
@@ -207,7 +200,7 @@ void PlasmaWindowTest::testInternalWindowNoPlasmaWindow()
     win.setGeometry(0, 0, 100, 100);
     win.show();
 
-    QVERIFY(!plasmaWindowCreatedSpy.wait());
+    QVERIFY(!plasmaWindowCreatedSpy.wait(100));
 }
 
 void PlasmaWindowTest::testPopupWindowNoPlasmaWindow()
@@ -257,7 +250,7 @@ void PlasmaWindowTest::testLockScreenNoPlasmaWindow()
     QVERIFY(windowAddedSpy.first().first().value<Window *>()->isLockScreen());
     // should not be sent to the window
     QVERIFY(plasmaWindowCreatedSpy.isEmpty());
-    QVERIFY(!plasmaWindowCreatedSpy.wait());
+    QVERIFY(!plasmaWindowCreatedSpy.wait(100));
 
     // fake unlock
     QSignalSpy lockStateChangedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged);

@@ -71,9 +71,9 @@ Unmanaged::~Unmanaged()
 {
 }
 
-WindowItem *Unmanaged::createItem(Scene *scene)
+std::unique_ptr<WindowItem> Unmanaged::createItem(Scene *scene)
 {
-    return new WindowItemX11(this, scene);
+    return std::make_unique<WindowItemX11>(this, scene);
 }
 
 void Unmanaged::associate()
@@ -140,12 +140,15 @@ bool Unmanaged::track(xcb_window_t w)
 
 void Unmanaged::release(ReleaseReason releaseReason)
 {
-    Deleted *del = nullptr;
-    if (releaseReason != ReleaseReason::KWinShutsDown) {
-        del = Deleted::create(this);
+    if (SurfaceItemX11 *item = qobject_cast<SurfaceItemX11 *>(surfaceItem())) {
+        if (releaseReason == ReleaseReason::Destroyed) {
+            item->forgetDamage();
+        } else {
+            item->destroyDamage();
+        }
     }
-    Q_EMIT windowClosed(this, del);
-    finishCompositing(releaseReason);
+    Deleted *del = Deleted::create(this);
+    Q_EMIT closed(del);
     if (!QWidget::find(window()) && releaseReason != ReleaseReason::Destroyed) { // don't affect our own windows
         if (Xcb::Extensions::self()->isShapeAvailable()) {
             xcb_shape_select_input(kwinApp()->x11Connection(), window(), false);
@@ -153,11 +156,9 @@ void Unmanaged::release(ReleaseReason releaseReason)
         Xcb::selectInput(window(), XCB_EVENT_MASK_NO_EVENT);
     }
     workspace()->removeUnmanaged(this);
-    if (releaseReason != ReleaseReason::KWinShutsDown) {
-        disownDataPassedToDeleted();
-        del->unrefWindow();
-    }
-    deleteUnmanaged(this);
+    disownDataPassedToDeleted();
+    unref();
+    del->unref();
 }
 
 void Unmanaged::deleteUnmanaged(Unmanaged *c)
@@ -214,7 +215,7 @@ QWindow *Unmanaged::findInternalWindow() const
 {
     const QWindowList windows = kwinApp()->topLevelWindows();
     for (QWindow *w : windows) {
-        if (w->winId() == window()) {
+        if (w->handle() && w->winId() == window()) {
             return w;
         }
     }
@@ -233,6 +234,11 @@ void Unmanaged::damageNotifyEvent()
     if (item) {
         item->processDamage();
     }
+}
+
+void Unmanaged::killWindow()
+{
+    xcb_kill_client(kwinApp()->x11Connection(), window());
 }
 
 } // namespace

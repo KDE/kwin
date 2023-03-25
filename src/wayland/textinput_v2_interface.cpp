@@ -18,7 +18,7 @@ const quint32 s_version = 1;
 // helpers
 TextInputContentHints convertContentHint(uint32_t hint)
 {
-    const auto hints = zwp_text_input_v2_content_hint(hint);
+    const auto hints = QtWaylandServer::zwp_text_input_v2::content_hint(hint);
     TextInputContentHints ret = TextInputContentHint::None;
 
     if (hints & QtWaylandServer::zwp_text_input_v2::content_hint_auto_completion) {

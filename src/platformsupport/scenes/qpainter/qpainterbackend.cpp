@@ -6,7 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "qpainterbackend.h"
+#include "platformsupport/scenes/qpainter/qpainterbackend.h"
 #include "qpaintersurfacetexture_internal.h"
 #include "qpaintersurfacetexture_wayland.h"
 #include "utils/common.h"

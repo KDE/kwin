@@ -9,7 +9,6 @@
 
 #include "rules.h"
 
-#include <KXMessages>
 #include <QDebug>
 #include <QDir>
 #include <QFile>
@@ -23,18 +22,18 @@
 #include "main.h"
 #include "virtualdesktops.h"
 #include "window.h"
-#include "workspace.h"
 #endif
 
+#include "core/output.h"
 #include "rulebooksettings.h"
 #include "rulesettings.h"
+#include "workspace.h"
 
 namespace KWin
 {
 
 Rules::Rules()
-    : temporary_state(0)
-    , wmclassmatch(UnimportantMatch)
+    : wmclassmatch(UnimportantMatch)
     , wmclasscomplete(UnimportantMatch)
     , windowrolematch(UnimportantMatch)
     , titlematch(UnimportantMatch)
@@ -79,23 +78,6 @@ Rules::Rules()
 {
 }
 
-Rules::Rules(const QString &str, bool temporary)
-    : temporary_state(temporary ? 2 : 0)
-{
-    QTemporaryFile file;
-    if (file.open()) {
-        QByteArray s = str.toUtf8();
-        file.write(s.data(), s.length());
-    }
-    file.flush();
-    auto cfg = KSharedConfig::openConfig(file.fileName(), KConfig::SimpleConfig);
-    RuleSettings settings(cfg, QString());
-    readFromSettings(&settings);
-    if (description.isEmpty()) {
-        description = QStringLiteral("temporary");
-    }
-}
-
 #define READ_MATCH_STRING(var, func) \
     var = settings->var() func;      \
     var##match = static_cast<StringMatch>(settings->var##match())
@@ -109,7 +91,6 @@ Rules::Rules(const QString &str, bool temporary)
     var##rule = convertForceRule(settings->var##rule())
 
 Rules::Rules(const RuleSettings *settings)
-    : temporary_state(0)
 {
     readFromSettings(settings);
 }
@@ -120,9 +101,9 @@ void Rules::readFromSettings(const RuleSettings *settings)
     if (description.isEmpty()) {
         description = settings->descriptionLegacy();
     }
-    READ_MATCH_STRING(wmclass, .toLower());
+    READ_MATCH_STRING(wmclass, );
     wmclasscomplete = settings->wmclasscomplete();
-    READ_MATCH_STRING(windowrole, .toLower());
+    READ_MATCH_STRING(windowrole, );
     READ_MATCH_STRING(title, );
     READ_MATCH_STRING(clientmachine, .toLower());
     types = NET::WindowTypeMask(settings->types());
@@ -345,7 +326,7 @@ bool Rules::matchWMClass(const QString &match_class, const QString &match_name) 
         if (wmclassmatch == RegExpMatch && !QRegularExpression(wmclass).match(cwmclass).hasMatch()) {
             return false;
         }
-        if (wmclassmatch == ExactMatch && wmclass != cwmclass) {
+        if (wmclassmatch == ExactMatch && cwmclass != wmclass) {
             return false;
         }
         if (wmclassmatch == SubstringMatch && !cwmclass.contains(wmclass)) {
@@ -361,7 +342,7 @@ bool Rules::matchRole(const QString &match_role) const
         if (windowrolematch == RegExpMatch && !QRegularExpression(windowrole).match(match_role).hasMatch()) {
             return false;
         }
-        if (windowrolematch == ExactMatch && windowrole != match_role) {
+        if (windowrolematch == ExactMatch && match_role != windowrole) {
             return false;
         }
         if (windowrolematch == SubstringMatch && !match_role.contains(windowrole)) {
@@ -420,7 +401,7 @@ bool Rules::match(const Window *c) const
     if (!matchWMClass(c->resourceClass(), c->resourceName())) {
         return false;
     }
-    if (!matchRole(c->windowRole().toLower())) {
+    if (!matchRole(c->windowRole())) {
         return false;
     }
     if (!matchClientMachine(c->clientMachine()->hostName(), c->clientMachine()->isLocal())) {
@@ -477,8 +458,9 @@ bool Rules::update(Window *c, int selection)
         desktops = c->desktopIds();
     }
     if NOW_REMEMBER (Screen, screen) {
-        updated = updated || screen != c->screen();
-        screen = c->screen();
+        const int index = workspace()->outputs().indexOf(c->output());
+        updated = updated || screen != index;
+        screen = index;
     }
     if NOW_REMEMBER (Activity, activity) {
         updated = updated || activity != c->activities();
@@ -665,23 +647,6 @@ APPLY_RULE(desktopfile, DesktopFile, QString)
 #undef APPLY_RULE
 #undef APPLY_FORCE_RULE
 
-bool Rules::isTemporary() const
-{
-    return temporary_state > 0;
-}
-
-bool Rules::discardTemporary(bool force)
-{
-    if (temporary_state == 0) { // not temporary
-        return false;
-    }
-    if (force || --temporary_state == 0) { // too old
-        delete this;
-        return true;
-    }
-    return false;
-}
-
 #define DISCARD_USED_SET_RULE(var)                                                                     \
     do {                                                                                               \
         if (var##rule == (SetRule)ApplyNow || (withdrawn && var##rule == (SetRule)ForceTemporarily)) { \
@@ -750,19 +715,6 @@ QDebug &operator<<(QDebug &stream, const Rules *r)
 }
 
 #ifndef KCMRULES
-void WindowRules::discardTemporary()
-{
-    QVector<Rules *>::Iterator it2 = rules.begin();
-    for (QVector<Rules *>::Iterator it = rules.begin();
-         it != rules.end();) {
-        if ((*it)->discardTemporary(true)) {
-            ++it;
-        } else {
-            *it2++ = *it++;
-        }
-    }
-    rules.erase(it2, rules.end());
-}
 
 void WindowRules::update(Window *c, int selection)
 {
@@ -814,6 +766,28 @@ CHECK_FORCE_RULE(Placement, PlacementPolicy)
 QRectF WindowRules::checkGeometry(QRectF rect, bool init) const
 {
     return QRectF(checkPosition(rect.topLeft(), init), checkSize(rect.size(), init));
+}
+
+QRectF WindowRules::checkGeometrySafe(QRectF rect, bool init) const
+{
+    return QRectF(checkPositionSafe(rect.topLeft(), init), checkSize(rect.size(), init));
+}
+
+QPointF WindowRules::checkPositionSafe(QPointF pos, bool init) const
+{
+    const auto ret = checkPosition(pos, init);
+    if (ret == pos || ret == invalidPoint) {
+        return ret;
+    }
+    const auto outputs = workspace()->outputs();
+    const bool inAnyOutput = std::any_of(outputs.begin(), outputs.end(), [ret](const auto output) {
+        return output->fractionalGeometry().contains(ret);
+    });
+    if (inAnyOutput) {
+        return ret;
+    } else {
+        return invalidPoint;
+    }
 }
 
 CHECK_RULE(Position, QPointF)
@@ -881,11 +855,7 @@ CHECK_RULE(DesktopFile, QString)
 RuleBook::RuleBook()
     : m_updateTimer(new QTimer(this))
     , m_updatesDisabled(false)
-    , m_temporaryRulesMessages()
 {
-    initializeX11();
-    connect(kwinApp(), &Application::x11ConnectionChanged, this, &RuleBook::initializeX11);
-    connect(kwinApp(), &Application::x11ConnectionAboutToBeDestroyed, this, &RuleBook::cleanupX11);
     connect(m_updateTimer, &QTimer::timeout, this, &RuleBook::save);
     m_updateTimer->setInterval(1000);
     m_updateTimer->setSingleShot(true);
@@ -897,48 +867,20 @@ RuleBook::~RuleBook()
     deleteAll();
 }
 
-void RuleBook::initializeX11()
-{
-    auto c = kwinApp()->x11Connection();
-    if (!c) {
-        return;
-    }
-    m_temporaryRulesMessages.reset(new KXMessages(c, kwinApp()->x11RootWindow(), "_KDE_NET_WM_TEMPORARY_RULES", nullptr));
-    connect(m_temporaryRulesMessages.get(), &KXMessages::gotMessage, this, &RuleBook::temporaryRulesMessage);
-}
-
-void RuleBook::cleanupX11()
-{
-    m_temporaryRulesMessages.reset();
-}
-
 void RuleBook::deleteAll()
 {
     qDeleteAll(m_rules);
     m_rules.clear();
 }
 
-WindowRules RuleBook::find(const Window *c, bool ignore_temporary)
+WindowRules RuleBook::find(const Window *window) const
 {
     QVector<Rules *> ret;
-    for (QList<Rules *>::Iterator it = m_rules.begin();
-         it != m_rules.end();) {
-        if (ignore_temporary && (*it)->isTemporary()) {
-            ++it;
-            continue;
-        }
-        if ((*it)->match(c)) {
-            Rules *rule = *it;
-            qCDebug(KWIN_CORE) << "Rule found:" << rule << ":" << c;
-            if (rule->isTemporary()) {
-                it = m_rules.erase(it);
-            } else {
-                ++it;
-            }
+    for (Rules *rule : m_rules) {
+        if (rule->match(window)) {
+            qCDebug(KWIN_CORE) << "Rule found:" << rule << ":" << window;
             ret.append(rule);
-            continue;
         }
-        ++it;
     }
     return WindowRules(ret);
 }
@@ -947,15 +889,14 @@ void RuleBook::edit(Window *c, bool whole_app)
 {
     save();
     QStringList args;
-    args << QStringLiteral("--uuid") << c->internalId().toString();
+    args << QStringLiteral("uuid=%1").arg(c->internalId().toString());
     if (whole_app) {
-        args << QStringLiteral("--whole-app");
+        args << QStringLiteral("whole-app");
     }
     QProcess *p = new QProcess(this);
-    p->setArguments(args);
+    p->setArguments({"kcm_kwinrules", "--args", args.join(QLatin1Char(' '))});
     p->setProcessEnvironment(kwinApp()->processStartupEnvironment());
-    const QFileInfo buildDirBinary{QDir{QCoreApplication::applicationDirPath()}, QStringLiteral("kwin_rules_dialog")};
-    p->setProgram(buildDirBinary.exists() ? buildDirBinary.absoluteFilePath() : QStringLiteral(KWIN_RULES_DIALOG_BIN));
+    p->setProgram(QStandardPaths::findExecutable("kcmshell6"));
     p->setProcessChannelMode(QProcess::MergedChannels);
     connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), p, &QProcess::deleteLater);
     connect(p, &QProcess::errorOccurred, this, [p](QProcess::ProcessError e) {
@@ -976,7 +917,7 @@ void RuleBook::load()
     }
     RuleBookSettings book(m_config);
     book.load();
-    m_rules = book.rules().toList();
+    m_rules = book.rules();
 }
 
 void RuleBook::save()
@@ -986,57 +927,15 @@ void RuleBook::save()
         qCWarning(KWIN_CORE) << "RuleBook::save invoked without prior invocation of RuleBook::load";
         return;
     }
-    QVector<Rules *> filteredRules;
-    for (const auto &rule : std::as_const(m_rules)) {
-        if (!rule->isTemporary()) {
-            filteredRules.append(rule);
-        }
-    }
     RuleBookSettings settings(m_config);
-    settings.setRules(filteredRules);
+    settings.setRules(m_rules);
     settings.save();
-}
-
-void RuleBook::temporaryRulesMessage(const QString &message)
-{
-    bool was_temporary = false;
-    for (QList<Rules *>::ConstIterator it = m_rules.constBegin();
-         it != m_rules.constEnd();
-         ++it) {
-        if ((*it)->isTemporary()) {
-            was_temporary = true;
-        }
-    }
-    Rules *rule = new Rules(message, true);
-    m_rules.prepend(rule); // highest priority first
-    if (!was_temporary) {
-        QTimer::singleShot(60000, this, &RuleBook::cleanupTemporaryRules);
-    }
-}
-
-void RuleBook::cleanupTemporaryRules()
-{
-    bool has_temporary = false;
-    for (QList<Rules *>::Iterator it = m_rules.begin();
-         it != m_rules.end();) {
-        if ((*it)->discardTemporary(false)) { // deletes (*it)
-            it = m_rules.erase(it);
-        } else {
-            if ((*it)->isTemporary()) {
-                has_temporary = true;
-            }
-            ++it;
-        }
-    }
-    if (has_temporary) {
-        QTimer::singleShot(60000, this, &RuleBook::cleanupTemporaryRules);
-    }
 }
 
 void RuleBook::discardUsed(Window *c, bool withdrawn)
 {
     bool updated = false;
-    for (QList<Rules *>::Iterator it = m_rules.begin();
+    for (QVector<Rules *>::Iterator it = m_rules.begin();
          it != m_rules.end();) {
         if (c->rules()->contains(*it)) {
             if ((*it)->discardUsed(withdrawn)) {
@@ -1066,9 +965,11 @@ void RuleBook::setUpdatesDisabled(bool disable)
 {
     m_updatesDisabled = disable;
     if (!disable) {
-        const auto clients = Workspace::self()->allClientList();
-        for (Window *c : clients) {
-            c->updateWindowRules(Rules::All);
+        const auto windows = Workspace::self()->windows();
+        for (Window *window : windows) {
+            if (window->supportsWindowRules()) {
+                window->updateWindowRules(Rules::All);
+            }
         }
     }
 }

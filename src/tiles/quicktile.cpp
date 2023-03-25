@@ -19,20 +19,67 @@ QuickRootTile::QuickRootTile(TileManager *tiling, Tile *parentItem)
     setRelativeGeometry(QRectF(0, 0, 1, 1));
     setQuickTileMode(QuickTileFlag::Maximize);
 
-    m_leftVerticalTile = std::make_unique<QuickTile>(tiling, ElectricBorder::ElectricLeft, this);
-    m_rightVerticalTile = std::unique_ptr<QuickTile>(new QuickTile(tiling, ElectricBorder::ElectricRight, this));
+    auto createTile = [this, &tiling](const QRectF &geometry, QuickTileMode tileMode) {
+        Tile *tile = new Tile(tiling, this);
+        tile->setPadding(0.0);
+        tile->setQuickTileMode(tileMode);
+        tile->setRelativeGeometry(geometry);
 
-    m_topHorizontalTile = std::unique_ptr<QuickTile>(new QuickTile(tiling, ElectricBorder::ElectricTop, this));
-    m_bottomHorizontalTile = std::unique_ptr<QuickTile>(new QuickTile(tiling, ElectricBorder::ElectricBottom, this));
+        connect(tile, &Tile::relativeGeometryChanged, this, [this, tile]() {
+            relayoutToFit(tile);
+        });
 
-    m_topLeftTile = std::unique_ptr<QuickTile>(new QuickTile(tiling, ElectricBorder::ElectricTopLeft, this));
-    m_topRightTile = std::unique_ptr<QuickTile>(new QuickTile(tiling, ElectricBorder::ElectricTopRight, this));
-    m_bottomLeftTile = std::unique_ptr<QuickTile>(new QuickTile(tiling, ElectricBorder::ElectricBottomLeft, this));
-    m_bottomRightTile = std::unique_ptr<QuickTile>(new QuickTile(tiling, ElectricBorder::ElectricBottomRight, this));
+        return std::unique_ptr<Tile>(tile);
+    };
+
+    m_leftVerticalTile = createTile(QRectF(0, 0, 0.5, 1), QuickTileFlag::Left);
+    m_rightVerticalTile = createTile(QRectF(0.5, 0, 0.5, 1), QuickTileFlag::Right);
+    m_topHorizontalTile = createTile(QRectF(0, 0, 1, 0.5), QuickTileFlag::Top);
+    m_bottomHorizontalTile = createTile(QRectF(0, 0.5, 1, 0.5), QuickTileFlag::Bottom);
+
+    m_topLeftTile = createTile(QRectF(0, 0, 0.5, 0.5), QuickTileFlag::Top | QuickTileFlag::Left);
+    m_topRightTile = createTile(QRectF(0.5, 0, 0.5, 0.5), QuickTileFlag::Top | QuickTileFlag::Right);
+    m_bottomLeftTile = createTile(QRectF(0, 0.5, 0.5, 0.5), QuickTileFlag::Bottom | QuickTileFlag::Left);
+    m_bottomRightTile = createTile(QRectF(0.5, 0.5, 0.5, 0.5), QuickTileFlag::Bottom | QuickTileFlag::Right);
 }
 
 QuickRootTile::~QuickRootTile()
 {
+}
+
+void QuickRootTile::relayoutToFit(Tile *tile)
+{
+    if (m_resizedTile) {
+        return;
+    }
+
+    m_resizedTile = tile;
+
+    const QRectF geometry = tile->relativeGeometry();
+
+    if (m_topHorizontalTile.get() == tile) {
+        setVerticalSplit(geometry.bottom());
+    } else if (m_bottomHorizontalTile.get() == tile) {
+        setVerticalSplit(geometry.top());
+    } else if (m_leftVerticalTile.get() == tile) {
+        setHorizontalSplit(geometry.right());
+    } else if (m_rightVerticalTile.get() == tile) {
+        setHorizontalSplit(geometry.left());
+    } else if (m_topLeftTile.get() == tile) {
+        setHorizontalSplit(geometry.right());
+        setVerticalSplit(geometry.bottom());
+    } else if (m_topRightTile.get() == tile) {
+        setHorizontalSplit(geometry.left());
+        setVerticalSplit(geometry.bottom());
+    } else if (m_bottomRightTile.get() == tile) {
+        setHorizontalSplit(geometry.left());
+        setVerticalSplit(geometry.top());
+    } else if (m_bottomLeftTile.get() == tile) {
+        setHorizontalSplit(geometry.right());
+        setVerticalSplit(geometry.top());
+    }
+
+    m_resizedTile = nullptr;
 }
 
 Tile *QuickRootTile::tileForMode(QuickTileMode mode)
@@ -95,28 +142,31 @@ qreal QuickRootTile::horizontalSplit() const
 
 void QuickRootTile::setHorizontalSplit(qreal split)
 {
+    const QSizeF minSize = minimumSize(); // minimum size is the same for all tiles
+    const qreal effectiveSplit = std::clamp(split, minSize.width(), 1.0 - minSize.width());
+
     auto geom = m_leftVerticalTile->relativeGeometry();
-    geom.setRight(split);
+    geom.setRight(effectiveSplit);
     m_leftVerticalTile->setRelativeGeometry(geom);
 
     geom = m_rightVerticalTile->relativeGeometry();
-    geom.setLeft(split);
+    geom.setLeft(effectiveSplit);
     m_rightVerticalTile->setRelativeGeometry(geom);
 
     geom = m_topLeftTile->relativeGeometry();
-    geom.setRight(split);
+    geom.setRight(effectiveSplit);
     m_topLeftTile->setRelativeGeometry(geom);
 
     geom = m_topRightTile->relativeGeometry();
-    geom.setLeft(split);
+    geom.setLeft(effectiveSplit);
     m_topRightTile->setRelativeGeometry(geom);
 
     geom = m_bottomLeftTile->relativeGeometry();
-    geom.setRight(split);
+    geom.setRight(effectiveSplit);
     m_bottomLeftTile->setRelativeGeometry(geom);
 
     geom = m_bottomRightTile->relativeGeometry();
-    geom.setLeft(split);
+    geom.setLeft(effectiveSplit);
     m_bottomRightTile->setRelativeGeometry(geom);
 }
 
@@ -127,127 +177,32 @@ qreal QuickRootTile::verticalSplit() const
 
 void QuickRootTile::setVerticalSplit(qreal split)
 {
+    const QSizeF minSize = minimumSize(); // minimum size is the same for all tiles
+    const qreal effectiveSplit = std::clamp(split, minSize.height(), 1.0 - minSize.height());
+
     auto geom = m_topHorizontalTile->relativeGeometry();
-    geom.setBottom(split);
+    geom.setBottom(effectiveSplit);
     m_topHorizontalTile->setRelativeGeometry(geom);
 
     geom = m_bottomHorizontalTile->relativeGeometry();
-    geom.setTop(split);
+    geom.setTop(effectiveSplit);
     m_bottomHorizontalTile->setRelativeGeometry(geom);
 
     geom = m_topLeftTile->relativeGeometry();
-    geom.setBottom(split);
+    geom.setBottom(effectiveSplit);
     m_topLeftTile->setRelativeGeometry(geom);
 
     geom = m_topRightTile->relativeGeometry();
-    geom.setBottom(split);
+    geom.setBottom(effectiveSplit);
     m_topRightTile->setRelativeGeometry(geom);
 
     geom = m_bottomLeftTile->relativeGeometry();
-    geom.setTop(split);
+    geom.setTop(effectiveSplit);
     m_bottomLeftTile->setRelativeGeometry(geom);
 
     geom = m_bottomRightTile->relativeGeometry();
-    geom.setTop(split);
+    geom.setTop(effectiveSplit);
     m_bottomRightTile->setRelativeGeometry(geom);
-}
-
-QuickTile::QuickTile(TileManager *tiling, ElectricBorder border, QuickRootTile *parentItem)
-    : Tile(tiling, parentItem)
-    , m_root(parentItem)
-    , m_border(border)
-{
-    m_geometryLock = true;
-    setPadding(0);
-    switch (border) {
-    case ElectricTop:
-        setQuickTileMode(QuickTileFlag::Top);
-        setRelativeGeometry(QRectF(0, 0, 1, 0.5));
-        break;
-    case ElectricTopRight:
-        setQuickTileMode(QuickTileFlag::Top | QuickTileFlag::Right);
-        setRelativeGeometry(QRectF(0.5, 0, 0.5, 0.5));
-        break;
-    case ElectricRight:
-        setQuickTileMode(QuickTileFlag::Right);
-        setRelativeGeometry(QRectF(0.5, 0, 0.5, 1));
-        break;
-    case ElectricBottomRight:
-        setQuickTileMode(QuickTileFlag::Bottom | QuickTileFlag::Right);
-        setRelativeGeometry(QRectF(0.5, 0.5, 0.5, 0.5));
-        break;
-    case ElectricBottom:
-        setQuickTileMode(QuickTileFlag::Bottom);
-        setRelativeGeometry(QRectF(0, 0.5, 1, 0.5));
-        break;
-    case ElectricBottomLeft:
-        setQuickTileMode(QuickTileFlag::Bottom | QuickTileFlag::Left);
-        setRelativeGeometry(QRectF(0, 0.5, 0.5, 0.5));
-        break;
-    case ElectricLeft:
-        setQuickTileMode(QuickTileFlag::Left);
-        setRelativeGeometry(QRectF(0, 0, 0.5, 1));
-        break;
-    case ElectricTopLeft:
-        setQuickTileMode(QuickTileFlag::Top | QuickTileFlag::Left);
-        setRelativeGeometry(QRectF(0, 0, 0.5, 0.5));
-        break;
-    case ElectricNone:
-        setQuickTileMode(QuickTileFlag::None);
-    default:
-        break;
-    }
-}
-
-QuickTile::~QuickTile()
-{
-}
-
-void QuickTile::setRelativeGeometry(const QRectF &geom)
-{
-    if (relativeGeometry() == geom) {
-        return;
-    }
-
-    if (!m_geometryLock) {
-        m_geometryLock = true;
-        switch (m_border) {
-        case ElectricTop:
-            m_root->setVerticalSplit(geom.bottom());
-            break;
-        case ElectricTopRight:
-            m_root->setHorizontalSplit(geom.left());
-            m_root->setVerticalSplit(geom.bottom());
-            break;
-        case ElectricRight:
-            m_root->setHorizontalSplit(geom.left());
-            break;
-        case ElectricBottomRight:
-            m_root->setHorizontalSplit(geom.left());
-            m_root->setVerticalSplit(geom.top());
-            break;
-        case ElectricBottom:
-            m_root->setVerticalSplit(geom.top());
-            break;
-        case ElectricBottomLeft:
-            m_root->setHorizontalSplit(geom.right());
-            m_root->setVerticalSplit(geom.top());
-            break;
-        case ElectricLeft:
-            m_root->setHorizontalSplit(geom.right());
-            break;
-        case ElectricTopLeft:
-            m_root->setHorizontalSplit(geom.right());
-            m_root->setVerticalSplit(geom.bottom());
-            break;
-        case ElectricNone:
-        default:
-            break;
-        }
-    }
-
-    Tile::setRelativeGeometry(geom);
-    m_geometryLock = false;
 }
 
 } // namespace KWin

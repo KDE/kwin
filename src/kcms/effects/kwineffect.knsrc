@@ -2,14 +2,17 @@
 Name=Desktop Effects
 Name[ar]=تأثيرات سطح المكتب
 Name[az]=İş masası effektləri
+Name[be]=Эфекты працоўнага стала
 Name[bg]=Ефекти на работния плот
 Name[bs]=Efekti površi
 Name[ca]=Efectes d'escriptori
 Name[ca@valencia]=Efectes de l'escriptori
+Name[cs]=Efekty na ploše
 Name[da]=Skrivebordseffekter
 Name[de]=Arbeitsflächen-Effekte
 Name[el]=Εφέ επιφάνειας εργασίας
 Name[en_GB]=Desktop Effects
+Name[eo]=Labortablo-Efikoj
 Name[es]=Efectos del escritorio
 Name[et]=Töölauaefektid
 Name[eu]=Mahaigaineko efektuak
@@ -48,6 +51,7 @@ Name[tr]=Masaüstü Efektleri
 Name[uk]=Ефекти стільниці
 Name[vi]=Hiệu ứng bàn làm việc
 Name[x-test]=xxDesktop Effectsxx
+Name[zh_CN]=桌面特效
 Name[zh_TW]=桌面效果
 
 ProvidersUrl=https://autoconfig.kde.org/ocs/providers.xml

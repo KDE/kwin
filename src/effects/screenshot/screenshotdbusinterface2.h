@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "screenshot/screenshot.h"
+#include "screenshot.h"
 
 #include <QDBusContext>
 #include <QDBusUnixFileDescriptor>
@@ -53,6 +53,8 @@ public Q_SLOTS:
                                     QDBusUnixFileDescriptor pipe);
     QVariantMap CaptureInteractive(uint kind, const QVariantMap &options,
                                    QDBusUnixFileDescriptor pipe);
+    QVariantMap CaptureWorkspace(const QVariantMap &options,
+                                 QDBusUnixFileDescriptor pipe);
 
 private:
     void takeScreenShot(EffectScreen *screen, ScreenShotFlags flags, ScreenShotSinkPipe2 *sink);

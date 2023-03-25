@@ -12,7 +12,6 @@
 
 #include "atoms.h"
 #include "core/outputbackend.h"
-#include "deleted.h"
 #include "rules.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
@@ -54,7 +53,6 @@ private Q_SLOTS:
 
 void TestDbusInterface::initTestCase()
 {
-    qRegisterMetaType<KWin::Deleted *>();
     qRegisterMetaType<KWin::Window *>();
 
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
@@ -148,6 +146,7 @@ void TestDbusInterface::testGetWindowInfoXdgShellClient()
     QVERIFY(reply.isValid());
     QVERIFY(!reply.isError());
     auto windowData = reply.value();
+    windowData.remove(QStringLiteral("uuid"));
     QCOMPARE(windowData, expectedData);
 
     auto verifyProperty = [window](const QString &name) {
@@ -189,9 +188,10 @@ void TestDbusInterface::testGetWindowInfoXdgShellClient()
     // not testing shaded as that's X11
     // not testing fullscreen, maximizeHorizontal, maximizeVertical and noBorder as those require window geometry changes
 
-    QCOMPARE(window->desktop(), 1);
-    workspace()->sendWindowToDesktop(window, 2, false);
-    QCOMPARE(window->desktop(), 2);
+    const QVector<VirtualDesktop *> desktops = VirtualDesktopManager::self()->desktops();
+    QCOMPARE(window->desktops(), QVector<VirtualDesktop *>{desktops[0]});
+    workspace()->sendWindowToDesktops(window, {desktops[1]}, false);
+    QCOMPARE(window->desktops(), QVector<VirtualDesktop *>{desktops[1]});
     reply = getWindowInfo(window->internalId());
     reply.waitForFinished();
     QCOMPARE(reply.value().value(QStringLiteral("desktops")).toStringList(), window->desktopIds());
@@ -205,7 +205,7 @@ void TestDbusInterface::testGetWindowInfoXdgShellClient()
 
     // finally close window
     const auto id = window->internalId();
-    QSignalSpy windowClosedSpy(window, &Window::windowClosed);
+    QSignalSpy windowClosedSpy(window, &Window::closed);
     shellSurface.reset();
     surface.reset();
     QVERIFY(windowClosedSpy.wait());
@@ -216,17 +216,9 @@ void TestDbusInterface::testGetWindowInfoXdgShellClient()
     QVERIFY(reply.value().empty());
 }
 
-struct XcbConnectionDeleter
-{
-    void operator()(xcb_connection_t *pointer)
-    {
-        xcb_disconnect(pointer);
-    }
-};
-
 void TestDbusInterface::testGetWindowInfoX11Client()
 {
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 600, 400);
     xcb_window_t windowId = xcb_generate_id(c.get());
@@ -293,6 +285,7 @@ void TestDbusInterface::testGetWindowInfoX11Client()
     // not testing clientmachine as that is system dependent due to that also not testing localhost
     windowData.remove(QStringLiteral("clientMachine"));
     windowData.remove(QStringLiteral("localhost"));
+    windowData.remove(QStringLiteral("uuid"));
     QCOMPARE(windowData, expectedData);
 
     auto verifyProperty = [window](const QString &name) {
@@ -370,7 +363,7 @@ void TestDbusInterface::testGetWindowInfoX11Client()
     xcb_unmap_window(c.get(), windowId);
     xcb_flush(c.get());
 
-    QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
+    QSignalSpy windowClosedSpy(window, &X11Window::closed);
     QVERIFY(windowClosedSpy.wait());
     xcb_destroy_window(c.get(), windowId);
     c.reset();

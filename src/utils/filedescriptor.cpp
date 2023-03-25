@@ -50,6 +50,11 @@ int FileDescriptor::get() const
     return m_fd;
 }
 
+int FileDescriptor::take()
+{
+    return std::exchange(m_fd, -1);
+}
+
 FileDescriptor FileDescriptor::duplicate() const
 {
     if (m_fd != -1) {

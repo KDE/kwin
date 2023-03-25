@@ -25,9 +25,9 @@ SlideEffect::SlideEffect()
     initConfig<SlideConfig>();
     reconfigure(ReconfigureAll);
 
-    connect(effects, QOverload<int, int, EffectWindow *>::of(&EffectsHandler::desktopChanged),
+    connect(effects, &EffectsHandler::desktopChanged,
             this, &SlideEffect::desktopChanged);
-    connect(effects, QOverload<uint, QPointF, EffectWindow *>::of(&EffectsHandler::desktopChanging),
+    connect(effects, &EffectsHandler::desktopChanging,
             this, &SlideEffect::desktopChanging);
     connect(effects, QOverload<>::of(&EffectsHandler::desktopChangingCancelled),
             this, &SlideEffect::desktopChangingCancelled);
@@ -134,10 +134,10 @@ void SlideEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::millisec
     effects->prePaintScreen(data, presentTime);
 }
 
-void SlideEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
+void SlideEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
 {
     m_paintCtx.wrap = effects->optionRollOverDesktops();
-    effects->paintScreen(mask, region, data);
+    effects->paintScreen(renderTarget, viewport, mask, region, screen);
 }
 
 QPoint SlideEffect::getDrawCoords(QPointF pos, EffectScreen *screen)
@@ -190,18 +190,14 @@ void SlideEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std:
     effects->prePaintWindow(w, data, presentTime);
 }
 
-void SlideEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+void SlideEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
     if (!willBePainted(w)) {
         return;
     }
 
     if (!isTranslated(w)) {
-        effects->paintWindow(
-            w,
-            mask,
-            region,
-            data);
+        effects->paintWindow(renderTarget, viewport, w, mask, region, data);
         return;
     }
 
@@ -238,8 +234,7 @@ void SlideEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowP
             const QRect damage = screenArea.translated(drawTranslation).intersected(screenArea);
 
             effects->paintWindow(
-                w,
-                mask,
+                renderTarget, viewport, w, mask,
                 // Only paint the region that intersects the current screen and desktop.
                 region.intersected(damage),
                 data);

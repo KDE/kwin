@@ -137,9 +137,9 @@ var dialogParentEffect = {
         effects.windowMinimized.connect(dialogParentEffect.cancelAnimationInstant);
         effects.windowUnminimized.connect(dialogParentEffect.restartAnimation);
         effects.windowModalityChanged.connect(dialogParentEffect.modalDialogChanged)
-        effects['desktopChanged(int,int)'].connect(dialogParentEffect.desktopChanged);
-        effects.desktopPresenceChanged.connect(dialogParentEffect.cancelAnimationInstant);
-        effects.desktopPresenceChanged.connect(dialogParentEffect.restartAnimation);
+        effects.desktopChanged.connect(dialogParentEffect.desktopChanged);
+        effects.windowDesktopsChanged.connect(dialogParentEffect.cancelAnimationInstant);
+        effects.windowDesktopsChanged.connect(dialogParentEffect.restartAnimation);
         effects.activeFullScreenEffectChanged.connect(
             dialogParentEffect.activeFullScreenEffectChanged);
 

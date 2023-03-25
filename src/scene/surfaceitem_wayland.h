@@ -18,8 +18,6 @@ class SurfaceInterface;
 namespace KWin
 {
 
-class Deleted;
-
 /**
  * The SurfaceItemWayland class represents a Wayland surface in the scene.
  */
@@ -92,7 +90,7 @@ public:
     QVector<QRectF> shape() const override;
 
 private:
-    void handleWindowClosed(Window *original, Deleted *deleted);
+    void handleWindowClosed(Window *deleted);
 
     Window *m_window;
 };

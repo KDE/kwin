@@ -155,23 +155,23 @@ void DecorationOptions::setDecoration(KDecoration2::Decoration *decoration)
     }
     if (m_decoration) {
         // disconnect from existing decoration
-        disconnect(m_decoration->client().toStrongRef().data(), &KDecoration2::DecoratedClient::activeChanged, this, &DecorationOptions::slotActiveChanged);
+        disconnect(m_decoration->client(), &KDecoration2::DecoratedClient::activeChanged, this, &DecorationOptions::slotActiveChanged);
         auto s = m_decoration->settings();
-        disconnect(s.data(), &KDecoration2::DecorationSettings::fontChanged, this, &DecorationOptions::fontChanged);
-        disconnect(s.data(), &KDecoration2::DecorationSettings::decorationButtonsLeftChanged, this, &DecorationOptions::titleButtonsChanged);
-        disconnect(s.data(), &KDecoration2::DecorationSettings::decorationButtonsRightChanged, this, &DecorationOptions::titleButtonsChanged);
+        disconnect(s.get(), &KDecoration2::DecorationSettings::fontChanged, this, &DecorationOptions::fontChanged);
+        disconnect(s.get(), &KDecoration2::DecorationSettings::decorationButtonsLeftChanged, this, &DecorationOptions::titleButtonsChanged);
+        disconnect(s.get(), &KDecoration2::DecorationSettings::decorationButtonsRightChanged, this, &DecorationOptions::titleButtonsChanged);
         disconnect(m_paletteConnection);
     }
     m_decoration = decoration;
-    connect(m_decoration->client().toStrongRef().data(), &KDecoration2::DecoratedClient::activeChanged, this, &DecorationOptions::slotActiveChanged);
-    m_paletteConnection = connect(m_decoration->client().toStrongRef().data(), &KDecoration2::DecoratedClient::paletteChanged, this, [this](const QPalette &pal) {
+    connect(m_decoration->client(), &KDecoration2::DecoratedClient::activeChanged, this, &DecorationOptions::slotActiveChanged);
+    m_paletteConnection = connect(m_decoration->client(), &KDecoration2::DecoratedClient::paletteChanged, this, [this](const QPalette &pal) {
         m_colors.update(pal);
         Q_EMIT colorsChanged();
     });
     auto s = m_decoration->settings();
-    connect(s.data(), &KDecoration2::DecorationSettings::fontChanged, this, &DecorationOptions::fontChanged);
-    connect(s.data(), &KDecoration2::DecorationSettings::decorationButtonsLeftChanged, this, &DecorationOptions::titleButtonsChanged);
-    connect(s.data(), &KDecoration2::DecorationSettings::decorationButtonsRightChanged, this, &DecorationOptions::titleButtonsChanged);
+    connect(s.get(), &KDecoration2::DecorationSettings::fontChanged, this, &DecorationOptions::fontChanged);
+    connect(s.get(), &KDecoration2::DecorationSettings::decorationButtonsLeftChanged, this, &DecorationOptions::titleButtonsChanged);
+    connect(s.get(), &KDecoration2::DecorationSettings::decorationButtonsRightChanged, this, &DecorationOptions::titleButtonsChanged);
     Q_EMIT decorationChanged();
 }
 
@@ -180,10 +180,10 @@ void DecorationOptions::slotActiveChanged()
     if (!m_decoration) {
         return;
     }
-    if (m_active == m_decoration->client().toStrongRef().data()->isActive()) {
+    if (m_active == m_decoration->client()->isActive()) {
         return;
     }
-    m_active = m_decoration->client().toStrongRef().data()->isActive();
+    m_active = m_decoration->client()->isActive();
     Q_EMIT colorsChanged();
     Q_EMIT fontChanged();
 }
@@ -206,22 +206,34 @@ Borders::~Borders()
 {
 }
 
-#define SETTER(methodName, name)       \
-    void Borders::methodName(int name) \
-    {                                  \
-        if (m_##name == name) {        \
-            return;                    \
-        }                              \
-        m_##name = name;               \
-        Q_EMIT name##Changed();        \
+void Borders::setLeft(int left)
+{
+    if (m_left != left) {
+        m_left = left;
+        Q_EMIT leftChanged();
     }
-
-SETTER(setLeft, left)
-SETTER(setRight, right)
-SETTER(setTop, top)
-SETTER(setBottom, bottom)
-
-#undef SETTER
+}
+void Borders::setRight(int right)
+{
+    if (m_right != right) {
+        m_right = right;
+        Q_EMIT rightChanged();
+    }
+}
+void Borders::setTop(int top)
+{
+    if (m_top != top) {
+        m_top = top;
+        Q_EMIT topChanged();
+    }
+}
+void Borders::setBottom(int bottom)
+{
+    if (m_bottom != bottom) {
+        m_bottom = bottom;
+        Q_EMIT bottomChanged();
+    }
+}
 
 void Borders::setAllBorders(int border)
 {

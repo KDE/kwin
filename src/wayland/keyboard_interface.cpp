@@ -194,20 +194,23 @@ void KeyboardInterface::sendKey(quint32 key, KeyboardKeyState state)
 void KeyboardInterface::sendModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group)
 {
     bool changed = false;
-#define UPDATE(value)                  \
-    if (d->modifiers.value != value) { \
-        d->modifiers.value = value;    \
-        changed = true;                \
+    if (d->modifiers.depressed != depressed) {
+        d->modifiers.depressed = depressed;
+        changed = true;
     }
-    UPDATE(depressed)
-    UPDATE(latched)
-    UPDATE(locked)
-    UPDATE(group)
-    if (!changed) {
-        return;
+    if (d->modifiers.latched != latched) {
+        d->modifiers.latched = latched;
+        changed = true;
     }
-
-    if (!d->focusedSurface) {
+    if (d->modifiers.locked != locked) {
+        d->modifiers.locked = locked;
+        changed = true;
+    }
+    if (d->modifiers.group != group) {
+        d->modifiers.group = group;
+        changed = true;
+    }
+    if (!changed || !d->focusedSurface) {
         return;
     }
 

@@ -24,7 +24,8 @@
 #include <KSharedConfig>
 #include <KWindowSystem>
 // KWin
-#include <kwinglutils.h>
+#include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/renderviewport.h"
 
 // based on StartupId in KRunner by Lubos Lunak
 // SPDX-FileCopyrightText: 2001 Lubos Lunak <l.lunak@kde.org>
@@ -194,9 +195,9 @@ void StartupFeedbackEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono
     effects->prePaintScreen(data, presentTime);
 }
 
-void StartupFeedbackEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
+void StartupFeedbackEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
 {
-    effects->paintScreen(mask, region, data);
+    effects->paintScreen(renderTarget, viewport, mask, region, screen);
     if (m_active) {
         GLTexture *texture;
         switch (m_type) {
@@ -220,11 +221,11 @@ void StartupFeedbackEffect::paintScreen(int mask, const QRegion &region, ScreenP
         } else {
             ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
         }
-        const auto scale = effects->renderTargetScale();
-        QMatrix4x4 mvp = data.projectionMatrix();
+        const auto scale = viewport.scale();
+        QMatrix4x4 mvp = viewport.projectionMatrix();
         mvp.translate(m_currentGeometry.x() * scale, m_currentGeometry.y() * scale);
         ShaderManager::instance()->getBoundShader()->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-        texture->render(m_currentGeometry, scale);
+        texture->render(m_currentGeometry.size(), scale);
         ShaderManager::instance()->popShader();
         texture->unbind();
         glDisable(GL_BLEND);
@@ -242,7 +243,7 @@ void StartupFeedbackEffect::postPaintScreen()
     effects->postPaintScreen();
 }
 
-void StartupFeedbackEffect::slotMouseChanged(const QPoint &pos, const QPoint &oldpos, Qt::MouseButtons buttons,
+void StartupFeedbackEffect::slotMouseChanged(const QPointF &pos, const QPointF &oldpos, Qt::MouseButtons buttons,
                                              Qt::MouseButtons oldbuttons, Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers)
 {
     if (m_active) {
@@ -416,7 +417,7 @@ QRect StartupFeedbackEffect::feedbackRect() const
         // nothing
         break;
     }
-    const QPoint cursorPos = effects->cursorPos() + QPoint(xDiff, yDiff + yOffset);
+    const QPoint cursorPos = effects->cursorPos().toPoint() + QPoint(xDiff, yDiff + yOffset);
     QRect rect;
     if (texture) {
         rect = QRect(cursorPos, texture->size());

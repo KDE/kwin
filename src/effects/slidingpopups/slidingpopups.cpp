@@ -62,7 +62,7 @@ SlidingPopupsEffect::SlidingPopupsEffect()
     connect(effects, &EffectsHandler::xcbConnectionChanged, this, [this]() {
         m_atom = effects->announceSupportProperty(QByteArrayLiteral("_KDE_SLIDE"), this);
     });
-    connect(effects, qOverload<int, int, EffectWindow *>(&EffectsHandler::desktopChanged),
+    connect(effects, &EffectsHandler::desktopChanged,
             this, &SlidingPopupsEffect::stopAnimations);
     connect(effects, &EffectsHandler::activeFullScreenEffectChanged,
             this, &SlidingPopupsEffect::stopAnimations);
@@ -128,11 +128,11 @@ void SlidingPopupsEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &da
     effects->prePaintWindow(w, data, presentTime);
 }
 
-void SlidingPopupsEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+void SlidingPopupsEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
     auto animationIt = m_animations.constFind(w);
     if (animationIt == m_animations.constEnd()) {
-        effects->paintWindow(w, mask, region, data);
+        effects->paintWindow(renderTarget, viewport, w, mask, region, data);
         return;
     }
 
@@ -179,13 +179,14 @@ void SlidingPopupsEffect::paintWindow(EffectWindow *w, int mask, QRegion region,
         region &= QRegion(geo.x(), geo.y(), geo.width(), splitPoint);
     }
 
-    effects->paintWindow(w, mask, region, data);
+    effects->paintWindow(renderTarget, viewport, w, mask, region, data);
 }
 
 void SlidingPopupsEffect::postPaintWindow(EffectWindow *w)
 {
     auto animationIt = m_animations.find(w);
     if (animationIt != m_animations.end()) {
+        effects->addRepaint(w->expandedGeometry());
         if ((*animationIt).timeLine.done()) {
             if (!w->isDeleted()) {
                 w->setData(WindowForceBackgroundContrastRole, QVariant());
@@ -193,7 +194,6 @@ void SlidingPopupsEffect::postPaintWindow(EffectWindow *w)
             }
             m_animations.erase(animationIt);
         }
-        effects->addRepaint(w->expandedGeometry());
     }
 
     effects->postPaintWindow(w);
@@ -228,7 +228,6 @@ void SlidingPopupsEffect::slotWindowAdded(EffectWindow *w)
 
 void SlidingPopupsEffect::slotWindowDeleted(EffectWindow *w)
 {
-    m_animations.remove(w);
     m_animationsData.remove(w);
 }
 

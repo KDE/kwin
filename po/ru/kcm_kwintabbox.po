@@ -3,59 +3,54 @@
 #
 # Alexander Potashev <aspotashev@gmail.com>, 2009, 2010, 2012, 2018.
 # Alexey D. <lq07829icatm@rambler.ru>, 2012.
-# Alexander Yavorsky <kekcuha@gmail.com>, 2020, 2021, 2022.
+# Alexander Yavorsky <kekcuha@gmail.com>, 2020, 2021, 2022, 2023.
 # Olesya Gerasimenko <translation-team@basealt.ru>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-06-15 00:48+0000\n"
-"PO-Revision-Date: 2022-06-27 10:47+0300\n"
+"POT-Creation-Date: 2023-02-08 01:01+0000\n"
+"PO-Revision-Date: 2023-02-17 13:16+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 22.04.2\n"
+"X-Generator: Lokalize 21.08.3\n"
 "Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
 "%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Environment: kde\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
 
-#: kwintabboxconfigform.cpp:77
-#, kde-format
-msgid "KWin"
-msgstr "KWin"
-
-#: layoutpreview.cpp:133
+#: layoutpreview.cpp:131
 #, kde-format
 msgid "Show Desktop"
 msgstr "Показать рабочий стол"
 
-#: layoutpreview.cpp:163
+#: layoutpreview.cpp:161
 #, kde-format
 msgctxt "An example Desktop Name"
 msgid "Desktop 1"
 msgstr "Рабочий стол 1"
 
-#: main.cpp:58
+#: main.cpp:66
 #, kde-format
 msgid "Main"
 msgstr "Основные"
 
-#: main.cpp:59
+#: main.cpp:67
 #, kde-format
 msgid "Alternative"
 msgstr "Альтернативные"
 
-#: main.cpp:61
+#: main.cpp:69
 #, kde-format
 msgid "Get New Task Switchers..."
 msgstr "Загрузить визуализации переключения окон..."
 
-#: main.cpp:75
+#: main.cpp:83
 #, kde-format
 msgid ""
 "Focus policy settings limit the functionality of navigating through windows."
@@ -244,6 +239,49 @@ msgstr ""
 msgid "Show selected window"
 msgstr "Показывать выбранное окно"
 
+#: shortcutsettings.cpp:132
+#, kde-format
+msgid "Walk Through Windows"
+msgstr "На одно окно вперёд"
+
+#: shortcutsettings.cpp:133
+#, kde-format
+msgid "Walk Through Windows (Reverse)"
+msgstr "На одно окно назад"
+
+#: shortcutsettings.cpp:134
+#, kde-format
+msgid "Walk Through Windows of Current Application"
+msgstr "На одно окно вперёд текущего приложения"
+
+#: shortcutsettings.cpp:135
+#, kde-format
+msgid "Walk Through Windows of Current Application (Reverse)"
+msgstr "На одно окно назад текущего приложения"
+
+#: shortcutsettings.cpp:137
+#, kde-format
+msgid "Walk Through Windows Alternative"
+msgstr "На одно окно вперёд (альтернативный режим)"
+
+#: shortcutsettings.cpp:138
+#, kde-format
+msgid "Walk Through Windows Alternative (Reverse)"
+msgstr "На одно окно назад (альтернативный режим)"
+
+#: shortcutsettings.cpp:139
+#, kde-format
+msgid "Walk Through Windows of Current Application Alternative"
+msgstr "На одно окно вперёд текущего приложения (альтернативный режим)"
+
+#: shortcutsettings.cpp:140
+#, kde-format
+msgid "Walk Through Windows of Current Application Alternative (Reverse)"
+msgstr "На одно окно назад текущего приложения (альтернативный режим)"
+
+#~ msgid "KWin"
+#~ msgstr "KWin"
+
 #~ msgid "Tabbox layout preview"
 #~ msgstr "Предварительный вид списка окон"
 
@@ -255,38 +293,6 @@ msgstr "Показывать выбранное окно"
 #~ "actions."
 #~ msgstr ""
 #~ "Параметры действий «На одно окно вперёд/назад (альтернативный режим)»."
-
-#~ msgid "Walk Through Windows"
-#~ msgstr "На одно окно вперёд"
-
-#~ msgid "Walk Through Windows (Reverse)"
-#~ msgstr "На одно окно назад"
-
-#~ msgid "Walk Through Windows Alternative"
-#~ msgstr "На одно окно вперёд (альтернативный режим)"
-
-#~ msgid "Walk Through Windows Alternative (Reverse)"
-#~ msgstr "На одно окно назад (альтернативный режим)"
-
-#, fuzzy
-#~| msgid "Walk Through Windows Alternative"
-#~ msgid "Walk Through Windows of Current Application"
-#~ msgstr "На одно окно вперёд (альтернативный режим)"
-
-#, fuzzy
-#~| msgid "Walk Through Windows Alternative (Reverse)"
-#~ msgid "Walk Through Windows of Current Application (Reverse)"
-#~ msgstr "На одно окно назад (альтернативный режим)"
-
-#, fuzzy
-#~| msgid "Walk Through Windows Alternative"
-#~ msgid "Walk Through Windows of Current Application Alternative"
-#~ msgstr "На одно окно вперёд (альтернативный режим)"
-
-#, fuzzy
-#~| msgid "Walk Through Windows Alternative (Reverse)"
-#~ msgid "Walk Through Windows of Current Application Alternative (Reverse)"
-#~ msgstr "На одно окно назад (альтернативный режим)"
 
 #~ msgid "Configure Layout"
 #~ msgstr "Настройка вида"

@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include <kwineffects.h>
+#include "libkwineffects/kwineffects.h"
 
 #include <QHash>
 
@@ -34,8 +34,8 @@ class ThumbnailAsideEffect
 public:
     ThumbnailAsideEffect();
     void reconfigure(ReconfigureFlags) override;
-    void paintScreen(int mask, const QRegion &region, ScreenPaintData &data) override;
-    void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
+    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen) override;
+    void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
 
     // for properties
     int configuredMaxWidth() const

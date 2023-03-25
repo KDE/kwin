@@ -3,10 +3,10 @@
 
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
-import QtQuick 2.15
+import QtQuick
 
 import org.kde.kirigami 2.20 as Kirigami
-import org.kde.kwin.private.kdecoration 1.0 as KDecoration
+import org.kde.kwin.private.kdecoration as KDecoration
 
 ListView {
     id: view

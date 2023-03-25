@@ -10,9 +10,8 @@
 #include "composite.h"
 #include "core/output.h"
 #include "core/outputbackend.h"
-#include "deleted.h"
 #include "effects.h"
-#include "kwingltexture.h"
+#include "libkwineffects/kwingltexture.h"
 #include "outputscreencastsource.h"
 #include "regionscreencastsource.h"
 #include "scene/workspacescene.h"
@@ -62,7 +61,10 @@ public:
         : ScreenCastStream(new WindowScreenCastSource(window), parent)
         , m_window(window)
     {
+        m_timer.setInterval(0);
+        m_timer.setSingleShot(true);
         setObjectName(window->desktopFileName());
+        connect(&m_timer, &QTimer::timeout, this, &WindowStream::bufferToStream);
         connect(this, &ScreenCastStream::startStreaming, this, &WindowStream::startFeeding);
         connect(this, &ScreenCastStream::stopStreaming, this, &WindowStream::stopFeeding);
     }
@@ -70,47 +72,42 @@ public:
 private:
     void startFeeding()
     {
-        connect(Compositor::self()->scene(), &WorkspaceScene::frameRendered, this, &WindowStream::bufferToStream);
-
         connect(m_window, &Window::damaged, this, &WindowStream::markDirty);
         markDirty();
-        m_window->output()->renderLoop()->scheduleRepaint();
     }
 
     void stopFeeding()
     {
-        disconnect(Compositor::self()->scene(), &WorkspaceScene::frameRendered, this, &WindowStream::bufferToStream);
+        disconnect(m_window, &Window::damaged, this, &WindowStream::markDirty);
+        m_timer.stop();
     }
 
     void markDirty()
     {
-        m_dirty = true;
+        m_timer.start();
     }
 
     void bufferToStream()
     {
-        if (m_dirty) {
-            recordFrame(QRegion(0, 0, m_window->width(), m_window->height()));
-            m_dirty = false;
-        }
+        recordFrame(QRegion(0, 0, m_window->width(), m_window->height()));
     }
 
     Window *m_window;
-    bool m_dirty = false;
+    QTimer m_timer;
 };
 
 void ScreencastManager::streamWindow(KWaylandServer::ScreencastStreamV1Interface *waylandStream,
                                      const QString &winid,
                                      KWaylandServer::ScreencastV1Interface::CursorMode mode)
 {
-    auto window = Workspace::self()->findToplevel(QUuid(winid));
+    auto window = Workspace::self()->findWindow(QUuid(winid));
     if (!window) {
         waylandStream->sendFailed(i18n("Could not find window id %1", winid));
         return;
     }
 
     auto stream = new WindowStream(window, this);
-    stream->setCursorMode(mode, 1, window->clientGeometry().toRect());
+    stream->setCursorMode(mode, 1, window->clientGeometry());
     if (mode != KWaylandServer::ScreencastV1Interface::CursorMode::Hidden) {
         connect(window, &Window::clientGeometryChanged, stream, [window, stream, mode]() {
             stream->setCursorMode(mode, 1, window->clientGeometry().toRect());
@@ -181,9 +178,10 @@ void ScreencastManager::streamRegion(KWaylandServer::ScreencastStreamV1Interface
     stream->setObjectName(rectToString(geometry));
     stream->setCursorMode(mode, scale, geometry);
 
-    connect(stream, &ScreenCastStream::startStreaming, waylandStream, [geometry, stream, source] {
+    connect(stream, &ScreenCastStream::startStreaming, waylandStream, [geometry, stream, source, waylandStream] {
         Compositor::self()->scene()->addRepaint(geometry);
 
+        bool found = false;
         const auto allOutputs = workspace()->outputs();
         for (auto output : allOutputs) {
             if (output->geometry().intersects(geometry)) {
@@ -198,7 +196,11 @@ void ScreencastManager::streamRegion(KWaylandServer::ScreencastStreamV1Interface
                     stream->recordFrame(scaleRegion(region.translated(-streamRegion.topLeft()).intersected(streamRegion), source->scale()));
                 };
                 connect(output, &Output::outputChange, stream, bufferToStream);
+                found |= true;
             }
+        }
+        if (!found) {
+            waylandStream->sendFailed(i18n("Region outside the workspace"));
         }
     });
     integrateStreams(waylandStream, stream);

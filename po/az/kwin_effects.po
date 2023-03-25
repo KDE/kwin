@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-17 00:51+0000\n"
+"POT-Creation-Date: 2023-03-23 02:36+0000\n"
 "PO-Revision-Date: 2022-08-19 17:11+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -43,7 +43,7 @@ msgstr "Güclü"
 msgid "Noise strength:"
 msgstr "Küy səviyyəsi:"
 
-#: colorpicker/colorpicker.cpp:101
+#: colorpicker/colorpicker.cpp:102
 #, kde-format
 msgid ""
 "Select a position for color picking with left click or enter.\n"
@@ -372,24 +372,24 @@ msgstr " piksel"
 msgid "&Height:"
 msgstr "&Hündürlük:"
 
-#: mouseclick/mouseclick.cpp:34 mouseclick/mouseclick_config.cpp:51
+#: mouseclick/mouseclick.cpp:36 mouseclick/mouseclick_config.cpp:51
 #, kde-format
 msgid "Toggle Mouse Click Effect"
 msgstr "Siçan kliki effektinin açarı"
 
-#: mouseclick/mouseclick.cpp:41
+#: mouseclick/mouseclick.cpp:43
 #, kde-format
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr "Sol"
 
-#: mouseclick/mouseclick.cpp:42
+#: mouseclick/mouseclick.cpp:44
 #, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "Orta"
 
-#: mouseclick/mouseclick.cpp:43
+#: mouseclick/mouseclick.cpp:45
 #, kde-format
 msgctxt "Right mouse button"
 msgid "Right"
@@ -496,12 +496,12 @@ msgstr "Şrift:"
 msgid "Show Text:"
 msgstr "Mətni Göstər:"
 
-#: mousemark/mousemark.cpp:36
+#: mousemark/mousemark.cpp:40
 #, kde-format
 msgid "Clear All Mouse Marks"
 msgstr "Siçanın bütün nişanlarını silmək"
 
-#: mousemark/mousemark.cpp:42 mousemark/mousemark_config.cpp:59
+#: mousemark/mousemark.cpp:46 mousemark/mousemark_config.cpp:59
 #, kde-format
 msgid "Clear Last Mouse Mark"
 msgstr "Siçanın sonuncu nişanını silmək"
@@ -555,24 +555,18 @@ msgstr "Ümumi baxışı dəyişmək"
 msgid "Layout mode:"
 msgstr "Yerləşdirmə rejimi:"
 
-#. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
-#: overview/kcm/overvieweffectkcm.ui:56
-#, kde-format
-msgid "Blur background:"
-msgstr "Fon bulanıqlığı:"
-
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: overview/kcm/overvieweffectkcm.ui:73
+#: overview/kcm/overvieweffectkcm.ui:43
 #, kde-format
 msgid "Ignore minimized windows:"
 msgstr "Yığılmış pəncərələri yox saymaq:"
 
-#: overview/qml/DesktopBar.qml:186
+#: overview/qml/DesktopBar.qml:187
 #, kde-format
 msgid "Delete Virtual Desktop"
 msgstr "Virtual iş masasını silin"
 
-#: overview/qml/DesktopBar.qml:282
+#: overview/qml/DesktopBar.qml:283
 #, kde-format
 msgid "Add Virtual Desktop"
 msgstr "Virtual iş masası əlavə edin"
@@ -587,7 +581,7 @@ msgstr "Uyğun pəncərələr yoxdur"
 msgid "Drag Down To Close"
 msgstr "Bağlamaq üçün aşağı çəkin"
 
-#: private/qml/WindowHeapDelegate.qml:461
+#: private/qml/WindowHeapDelegate.qml:452
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
@@ -605,20 +599,7 @@ msgstr "Açılan pəncərənin ilkin miqyası:"
 msgid "Window close scale:"
 msgstr "Bağlanan pəncərənin son miqyası:"
 
-#: screenshot/screenshotdbusinterface1.cpp:478
-#, kde-format
-msgctxt "Notification caption that a screenshot got saved to file"
-msgid "Screenshot"
-msgstr "Ekranın şəkli"
-
-#: screenshot/screenshotdbusinterface1.cpp:479
-#, kde-format
-msgctxt "Notification with path to screenshot file"
-msgid "Screenshot saved to %1"
-msgstr "Ekran şəkli %1-də saxlanıldı"
-
-#: screenshot/screenshotdbusinterface1.cpp:800
-#: screenshot/screenshotdbusinterface2.cpp:477
+#: screenshot/screenshotdbusinterface2.cpp:512
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -627,8 +608,7 @@ msgstr ""
 "Sol klik və ya enter düyməsi ilə şəkili çəkiləcək pəncərəni seçmək.\n"
 "Bundan imtina etmək üçün Escape və ya sağ klik."
 
-#: screenshot/screenshotdbusinterface1.cpp:803
-#: screenshot/screenshotdbusinterface2.cpp:495
+#: screenshot/screenshotdbusinterface2.cpp:530
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
@@ -667,7 +647,7 @@ msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr "Bu effekt sürət yoxlaması deyil"
 
-#: showpaint/showpaint.cpp:38 showpaint/showpaint_config.cpp:38
+#: showpaint/showpaint.cpp:39 showpaint/showpaint_config.cpp:38
 #, kde-format
 msgid "Toggle Show Paint"
 msgstr "Rəsm göstərilmə açarı"
@@ -696,7 +676,7 @@ msgstr "Şaquli:"
 msgid "Slide desktop background"
 msgstr "İş Masaları fonlarını sürüşdürmək"
 
-#: thumbnailaside/thumbnailaside.cpp:29
+#: thumbnailaside/thumbnailaside.cpp:31
 #: thumbnailaside/thumbnailaside_config.cpp:59
 #, kde-format
 msgid "Toggle Thumbnail for Current Window"
@@ -740,45 +720,45 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr ""
 
-#: tileseditor/qml/main.qml:147
+#: tileseditor/qml/main.qml:150
 #, kde-format
 msgid "Padding:"
 msgstr ""
 
-#: tileseditor/qml/main.qml:157
+#: tileseditor/qml/main.qml:160
 #, kde-format
 msgid "Load Layout..."
 msgstr ""
 
-#: tileseditor/qml/main.qml:271
+#: tileseditor/qml/main.qml:274
 #, fuzzy, kde-format
 #| msgid "Closest"
 msgid "Close"
 msgstr "Ən yaxın"
 
-#: tileseditor/qml/TileDelegate.qml:171
+#: tileseditor/qml/TileDelegate.qml:167
 #, fuzzy, kde-format
 #| msgid "Horizontal:"
 msgid "Split Horizontally"
 msgstr "Üfüqi:"
 
-#: tileseditor/qml/TileDelegate.qml:178
+#: tileseditor/qml/TileDelegate.qml:174
 #, fuzzy, kde-format
 #| msgid "Vertical:"
 msgid "Split Vertically"
 msgstr "Şaquli:"
 
-#: tileseditor/qml/TileDelegate.qml:186 tileseditor/qml/TileDelegate.qml:215
+#: tileseditor/qml/TileDelegate.qml:182 tileseditor/qml/TileDelegate.qml:211
 #, kde-format
 msgid "Add Floating Tile"
 msgstr ""
 
-#: tileseditor/qml/TileDelegate.qml:195
+#: tileseditor/qml/TileDelegate.qml:191
 #, kde-format
 msgid "Delete"
 msgstr ""
 
-#: trackmouse/trackmouse.cpp:44 trackmouse/trackmouse_config.cpp:57
+#: trackmouse/trackmouse.cpp:45 trackmouse/trackmouse_config.cpp:57
 #, kde-format
 msgid "Track mouse"
 msgstr "Kursorun izi"
@@ -935,17 +915,17 @@ msgstr ""
 msgid "Ignore &minimized windows"
 msgstr "Yığılmış pəncərələri yox saymaq"
 
-#: windowview/qml/main.qml:106
+#: windowview/qml/main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr "Oxşarları yoxdur"
 
-#: windowview/qml/main.qml:106
+#: windowview/qml/main.qml:107
 #, kde-format
 msgid "No Windows"
 msgstr "Pəncərələr yoxdur"
 
-#: windowview/qml/main.qml:120
+#: windowview/qml/main.qml:122
 #, fuzzy, kde-format
 #| msgid "Fullscreen windows"
 msgid "Filter windows…"
@@ -1011,32 +991,32 @@ msgstr "Zəif"
 msgid "More"
 msgstr "Çox"
 
-#: zoom/zoom.cpp:65
+#: zoom/zoom.cpp:67
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Böyümüş sahəni sola hərəkət etdirmək"
 
-#: zoom/zoom.cpp:72
+#: zoom/zoom.cpp:74
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Böyümüş sahəni sağa hərəkət etdirmək"
 
-#: zoom/zoom.cpp:79
+#: zoom/zoom.cpp:81
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Böyümüş sahəni yuxarı hərəkət etdirmək"
 
-#: zoom/zoom.cpp:86
+#: zoom/zoom.cpp:88
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Böyümüş sahəni aşağı hərəkət etdirmək"
 
-#: zoom/zoom.cpp:94 zoom/zoom_config.cpp:108
+#: zoom/zoom.cpp:96 zoom/zoom_config.cpp:108
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Kursoru daxiletmə fokusuna köçürmək"
 
-#: zoom/zoom.cpp:101 zoom/zoom_config.cpp:115
+#: zoom/zoom.cpp:103 zoom/zoom_config.cpp:115
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Kursoru mərkəzə köçürmək"
@@ -1171,6 +1151,17 @@ msgstr "Söndürülüb"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "Siçanın izlənməsi:"
+
+#~ msgctxt "Notification caption that a screenshot got saved to file"
+#~ msgid "Screenshot"
+#~ msgstr "Ekranın şəkli"
+
+#~ msgctxt "Notification with path to screenshot file"
+#~ msgid "Screenshot saved to %1"
+#~ msgstr "Ekran şəkli %1-də saxlanıldı"
+
+#~ msgid "Blur background:"
+#~ msgstr "Fon bulanıqlığı:"
 
 #~ msgid "Slide docks"
 #~ msgstr "Panelləri sürüşdürmək"

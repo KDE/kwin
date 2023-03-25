@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-26 00:47+0000\n"
+"POT-Creation-Date: 2023-03-05 03:09+0000\n"
 "PO-Revision-Date: 2008-08-05 22:26+0200\n"
 "Last-Translator: Yannig Marchegay (Kokoyaya) <yannig@marchegay.org>\n"
 "Language-Team: Occitan (lengadocian) <ubuntu-l10n-oci@lists.ubuntu.com>\n"
@@ -19,16 +19,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: KBabel 1.11.4\n"
-
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Yannig Marchegay (Kokoyaya)"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "yannig@marchegay.org"
 
 #: declarative-plugin/buttonsmodel.cpp:53
 #, kde-format
@@ -81,22 +71,7 @@ msgstr ""
 msgid "Keep above other windows"
 msgstr ""
 
-#: kcm.cpp:49
-#, kde-format
-msgid "Window Decorations"
-msgstr ""
-
-#: kcm.cpp:53
-#, kde-format
-msgid "Valerio Pilo"
-msgstr ""
-
-#: kcm.cpp:54
-#, kde-format
-msgid "Author"
-msgstr ""
-
-#: kcm.cpp:183
+#: kcm.cpp:172
 #, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme's default (%1)"
@@ -183,54 +158,54 @@ msgstr ""
 msgid "Drag buttons between here and the titlebar"
 msgstr ""
 
-#: package/contents/ui/main.qml:18
-#, kde-format
-msgid "This module lets you configure the window decorations."
-msgstr ""
-
-#: package/contents/ui/main.qml:52
-#, kde-format
-msgctxt "tab label"
-msgid "Theme"
-msgstr ""
-
-#: package/contents/ui/main.qml:56
+#: package/contents/ui/ConfigureTitlebar.qml:16
 #, fuzzy, kde-format
 #| msgid "Buttons"
-msgctxt "tab label"
 msgid "Titlebar Buttons"
 msgstr "Botons"
 
-#: package/contents/ui/main.qml:92
-#, kde-format
-msgctxt "Selector label"
-msgid "Window border size:"
-msgstr ""
-
-#: package/contents/ui/main.qml:110
-#, kde-format
-msgctxt "button text"
-msgid "Get New Window Decorations..."
-msgstr ""
-
-#: package/contents/ui/main.qml:139
+#: package/contents/ui/ConfigureTitlebar.qml:35
 #, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the menu button"
 msgstr ""
 
-#: package/contents/ui/main.qml:156
+#: package/contents/ui/ConfigureTitlebar.qml:52
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the menu button to show the menu."
 msgstr ""
 
-#: package/contents/ui/main.qml:163
+#: package/contents/ui/ConfigureTitlebar.qml:59
 #, fuzzy, kde-format
 #| msgid "Buttons"
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "Botons"
+
+#: package/contents/ui/main.qml:19
+#, kde-format
+msgid "This module lets you configure the window decorations."
+msgstr ""
+
+#: package/contents/ui/main.qml:42
+#, kde-format
+msgctxt "Selector label"
+msgid "Window border size:"
+msgstr ""
+
+#: package/contents/ui/main.qml:60
+#, fuzzy, kde-format
+#| msgid "Buttons"
+msgctxt "button text"
+msgid "Configure Titlebar Buttons…"
+msgstr "Botons"
+
+#: package/contents/ui/main.qml:65
+#, kde-format
+msgctxt "button text"
+msgid "Get New Window Decorations…"
+msgstr ""
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -288,6 +263,14 @@ msgstr "Fòrt bèl"
 #| msgid "Resize"
 msgid "Oversized"
 msgstr "Redimensionar"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Yannig Marchegay (Kokoyaya)"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "yannig@marchegay.org"
 
 #~ msgid "Menu"
 #~ msgstr "Menut"

@@ -247,7 +247,7 @@ KWin::TabletToolId createTabletId(libinput_tablet_tool *tool, Device *dev)
     if (libinput_tablet_tool_has_wheel(tool)) {
         capabilities << InputRedirection::Wheel;
     }
-    return {toolType, capabilities, serial, toolId, dev->groupUserData(), dev->name()};
+    return {dev->sysName(), toolType, capabilities, serial, toolId, dev->groupUserData(), dev->name()};
 }
 
 static TabletPadId createTabletPadId(LibInput::Device *device)
@@ -373,13 +373,19 @@ void Connection::processEvents()
         }
         case LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE: {
             PointerEvent *pe = static_cast<PointerEvent *>(event.get());
-            Q_EMIT pe->device()->pointerMotionAbsolute(pe->absolutePos(workspace()->geometry().size()), pe->time(), pe->device());
+            if (workspace()) {
+                Q_EMIT pe->device()->pointerMotionAbsolute(pe->absolutePos(workspace()->geometry().size()), pe->time(), pe->device());
+            }
             break;
         }
         case LIBINPUT_EVENT_TOUCH_DOWN: {
 #ifndef KWIN_BUILD_TESTING
             TouchEvent *te = static_cast<TouchEvent *>(event.get());
             const auto *output = te->device()->output();
+            if (!output) {
+                qCWarning(KWIN_LIBINPUT) << "Touch down received for device with no output assigned";
+                break;
+            }
             const QPointF globalPos = devicePointToGlobalPosition(te->absolutePos(output->modeSize()), output);
             Q_EMIT te->device()->touchDown(te->id(), globalPos, te->time(), te->device());
             break;
@@ -387,6 +393,10 @@ void Connection::processEvents()
         }
         case LIBINPUT_EVENT_TOUCH_UP: {
             TouchEvent *te = static_cast<TouchEvent *>(event.get());
+            const auto *output = te->device()->output();
+            if (!output) {
+                break;
+            }
             Q_EMIT te->device()->touchUp(te->id(), te->time(), te->device());
             break;
         }
@@ -394,6 +404,9 @@ void Connection::processEvents()
 #ifndef KWIN_BUILD_TESTING
             TouchEvent *te = static_cast<TouchEvent *>(event.get());
             const auto *output = te->device()->output();
+            if (!output) {
+                break;
+            }
             const QPointF globalPos = devicePointToGlobalPosition(te->absolutePos(output->modeSize()), output);
             Q_EMIT te->device()->touchMotion(te->id(), globalPos, te->time(), te->device());
             break;

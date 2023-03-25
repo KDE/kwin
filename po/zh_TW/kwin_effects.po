@@ -8,20 +8,20 @@
 # pan93412 <pan93412@gmail.com>, 2018, 2019, 2020.
 # Franklin Weng <franklin at goodhorse dot idv dot tw>, 2007, 2008.
 # Frank Weng (a.k.a. Franklin) <franklin at goodhorse dot idv dot tw>, 2008, 2009, 2010.
-# Kisaragi Hiu <mail@kisaragi-hiu.com>, 2022.
+# Kisaragi Hiu <mail@kisaragi-hiu.com>, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-17 00:51+0000\n"
-"PO-Revision-Date: 2022-06-24 02:29+0900\n"
+"POT-Creation-Date: 2023-03-23 02:36+0000\n"
+"PO-Revision-Date: 2023-01-15 20:17+0800\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@linux.org.tw>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 22.04.2\n"
+"X-Generator: Lokalize 22.12.0\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurDescription)
@@ -50,7 +50,7 @@ msgstr "強"
 msgid "Noise strength:"
 msgstr "雜訊強度："
 
-#: colorpicker/colorpicker.cpp:101
+#: colorpicker/colorpicker.cpp:102
 #, kde-format
 msgid ""
 "Select a position for color picking with left click or enter.\n"
@@ -150,7 +150,7 @@ msgstr "外觀"
 #: desktopgrid/desktopgrid_config.ui:30
 #, kde-format
 msgid "Pager"
-msgstr "呼叫器"
+msgstr "虛擬桌面管理器"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
 #: desktopgrid/desktopgrid_config.ui:35
@@ -206,7 +206,7 @@ msgstr "自然"
 #: desktopgrid/desktopgrid_config.ui:147
 #, kde-format
 msgid "None"
-msgstr ""
+msgstr "無"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: desktopgrid/desktopgrid_config.ui:155
@@ -324,10 +324,9 @@ msgid "Toggle Invert Effect on Window"
 msgstr "在視窗上切換反轉效果"
 
 #: invert/invert.cpp:56
-#, fuzzy, kde-format
-#| msgid "Invert cursor keys"
+#, kde-format
 msgid "Invert Screen Colors"
-msgstr "反轉游標"
+msgstr "反轉螢幕顏色"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_FadeToBlack)
 #: login/package/contents/ui/config.ui:17
@@ -379,24 +378,24 @@ msgstr " 像素"
 msgid "&Height:"
 msgstr "高度(&H)："
 
-#: mouseclick/mouseclick.cpp:34 mouseclick/mouseclick_config.cpp:51
+#: mouseclick/mouseclick.cpp:36 mouseclick/mouseclick_config.cpp:51
 #, kde-format
 msgid "Toggle Mouse Click Effect"
 msgstr "切換滑鼠點擊效果"
 
-#: mouseclick/mouseclick.cpp:41
+#: mouseclick/mouseclick.cpp:43
 #, kde-format
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr "左"
 
-#: mouseclick/mouseclick.cpp:42
+#: mouseclick/mouseclick.cpp:44
 #, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "中"
 
-#: mouseclick/mouseclick.cpp:43
+#: mouseclick/mouseclick.cpp:45
 #, kde-format
 msgctxt "Right mouse button"
 msgid "Right"
@@ -503,12 +502,12 @@ msgstr "字型："
 msgid "Show Text:"
 msgstr "顯示文字："
 
-#: mousemark/mousemark.cpp:36
+#: mousemark/mousemark.cpp:40
 #, kde-format
 msgid "Clear All Mouse Marks"
 msgstr "清除所有滑鼠標記"
 
-#: mousemark/mousemark.cpp:42 mousemark/mousemark_config.cpp:59
+#: mousemark/mousemark.cpp:46 mousemark/mousemark_config.cpp:59
 #, kde-format
 msgid "Clear Last Mouse Mark"
 msgstr "清除上一個滑鼠標記"
@@ -547,7 +546,7 @@ msgstr "按住 Shift+Meta 鍵並移動滑鼠時繪製"
 #, kde-format
 msgctxt "@label"
 msgid "Unknown"
-msgstr ""
+msgstr "未知"
 
 #: overview/kcm/overvieweffectkcm.cpp:41 overview/overvieweffect.cpp:31
 #, kde-format
@@ -561,44 +560,34 @@ msgstr "切換總覽"
 msgid "Layout mode:"
 msgstr "佈局模式："
 
-#. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
-#: overview/kcm/overvieweffectkcm.ui:56
-#, kde-format
-msgid "Blur background:"
-msgstr "模糊背景："
-
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: overview/kcm/overvieweffectkcm.ui:73
+#: overview/kcm/overvieweffectkcm.ui:43
 #, kde-format
 msgid "Ignore minimized windows:"
 msgstr "忽略已最小化的視窗："
 
-#: overview/qml/DesktopBar.qml:186
-#, fuzzy, kde-format
-#| msgid "Delete virtual desktop"
+#: overview/qml/DesktopBar.qml:187
+#, kde-format
 msgid "Delete Virtual Desktop"
 msgstr "刪除虛擬桌面"
 
-#: overview/qml/DesktopBar.qml:282
-#, fuzzy, kde-format
-#| msgid "Add Desktop"
+#: overview/qml/DesktopBar.qml:283
+#, kde-format
 msgid "Add Virtual Desktop"
-msgstr "新增桌面"
+msgstr "新增虛擬桌面"
 
 #: overview/qml/ScreenView.qml:226
-#, fuzzy, kde-format
-#| msgid "Moving windows:"
+#, kde-format
 msgid "No matching windows"
-msgstr "移動中視窗："
+msgstr "沒有相符的視窗"
 
 #: private/qml/WindowHeapDelegate.qml:151
 #, kde-format
 msgid "Drag Down To Close"
 msgstr "下拉關閉"
 
-#: private/qml/WindowHeapDelegate.qml:461
-#, fuzzy, kde-format
-#| msgid "Close window"
+#: private/qml/WindowHeapDelegate.qml:452
+#, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
 msgstr "關閉視窗"
@@ -615,28 +604,14 @@ msgstr "視窗開啟縮放比例："
 msgid "Window close scale:"
 msgstr "視窗關閉縮放比例："
 
-#: screenshot/screenshotdbusinterface1.cpp:478
-#, kde-format
-msgctxt "Notification caption that a screenshot got saved to file"
-msgid "Screenshot"
-msgstr "螢幕快照"
-
-#: screenshot/screenshotdbusinterface1.cpp:479
-#, kde-format
-msgctxt "Notification with path to screenshot file"
-msgid "Screenshot saved to %1"
-msgstr "螢幕快照已儲存至 %1"
-
-#: screenshot/screenshotdbusinterface1.cpp:800
-#: screenshot/screenshotdbusinterface2.cpp:477
+#: screenshot/screenshotdbusinterface2.cpp:512
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr "選取視窗並按下滑鼠左鍵或 Enter 以進行螢幕截圖。Esc 或右鍵點選以取消。"
 
-#: screenshot/screenshotdbusinterface1.cpp:803
-#: screenshot/screenshotdbusinterface2.cpp:495
+#: screenshot/screenshotdbusinterface2.cpp:530
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
@@ -646,40 +621,36 @@ msgstr ""
 "Esc 或右鍵點選以取消。"
 
 #: showfps/qml/main.qml:110
-#, fuzzy, kde-format
-#| msgid "Ring Duration:"
+#, kde-format
 msgctxt "@label"
 msgid "Paint Duration"
-msgstr "環繞時間："
+msgstr "繪製時間"
 
 #: showfps/qml/main.qml:162
-#, fuzzy, kde-format
-#| msgid "Ring Count:"
+#, kde-format
 msgctxt "@label"
 msgid "Paint Amount"
-msgstr "環繞計數："
+msgstr "繪製數量"
 
 #: showfps/qml/main.qml:175
 #, kde-format
 msgctxt "@label"
 msgid "Current FPS"
-msgstr ""
+msgstr "目前 FPS"
 
 #: showfps/qml/main.qml:184
-#, fuzzy, kde-format
-#| msgid "Maximum &width:"
+#, kde-format
 msgctxt "@label"
 msgid "Maximum FPS"
-msgstr "最大寬度(&W)："
+msgstr "最大 FPS"
 
 #: showfps/qml/main.qml:192
-#, fuzzy, kde-format
-#| msgid "This effect is not a benchmark"
+#, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr "此效果非性能測試"
 
-#: showpaint/showpaint.cpp:38 showpaint/showpaint_config.cpp:38
+#: showpaint/showpaint.cpp:39 showpaint/showpaint_config.cpp:38
 #, kde-format
 msgid "Toggle Show Paint"
 msgstr "切換「顯示繪製」功能"
@@ -708,7 +679,7 @@ msgstr "垂直："
 msgid "Slide desktop background"
 msgstr "滑動桌面背景"
 
-#: thumbnailaside/thumbnailaside.cpp:29
+#: thumbnailaside/thumbnailaside.cpp:31
 #: thumbnailaside/thumbnailaside_config.cpp:59
 #, kde-format
 msgid "Toggle Thumbnail for Current Window"
@@ -750,47 +721,44 @@ msgstr " %"
 #: tileseditor/tileseditoreffect.cpp:29
 #, kde-format
 msgid "Toggle Tiles Editor"
-msgstr ""
+msgstr "切換方塊編輯器"
 
-#: tileseditor/qml/main.qml:147
+#: tileseditor/qml/main.qml:150
 #, kde-format
 msgid "Padding:"
-msgstr ""
+msgstr "填充："
 
-#: tileseditor/qml/main.qml:157
+#: tileseditor/qml/main.qml:160
 #, kde-format
 msgid "Load Layout..."
-msgstr ""
+msgstr "載入佈局…"
 
-#: tileseditor/qml/main.qml:271
-#, fuzzy, kde-format
-#| msgid "Closest"
+#: tileseditor/qml/main.qml:274
+#, kde-format
 msgid "Close"
-msgstr "最近的"
+msgstr "關閉"
 
-#: tileseditor/qml/TileDelegate.qml:171
-#, fuzzy, kde-format
-#| msgid "Horizontal:"
+#: tileseditor/qml/TileDelegate.qml:167
+#, kde-format
 msgid "Split Horizontally"
-msgstr "水平："
+msgstr "水平分割"
 
-#: tileseditor/qml/TileDelegate.qml:178
-#, fuzzy, kde-format
-#| msgid "Vertical:"
+#: tileseditor/qml/TileDelegate.qml:174
+#, kde-format
 msgid "Split Vertically"
-msgstr "垂直："
+msgstr "垂直分割"
 
-#: tileseditor/qml/TileDelegate.qml:186 tileseditor/qml/TileDelegate.qml:215
+#: tileseditor/qml/TileDelegate.qml:182 tileseditor/qml/TileDelegate.qml:211
 #, kde-format
 msgid "Add Floating Tile"
-msgstr ""
+msgstr "新增浮動方塊"
 
-#: tileseditor/qml/TileDelegate.qml:195
+#: tileseditor/qml/TileDelegate.qml:191
 #, kde-format
 msgid "Delete"
-msgstr ""
+msgstr "刪除"
 
-#: trackmouse/trackmouse.cpp:44 trackmouse/trackmouse_config.cpp:57
+#: trackmouse/trackmouse.cpp:45 trackmouse/trackmouse_config.cpp:57
 #, kde-format
 msgid "Track mouse"
 msgstr "追蹤滑鼠"
@@ -935,10 +903,9 @@ msgid "Toggle Present Windows (Window class)"
 msgstr "切換展示視窗（視窗類別）"
 
 #: windowview/kcm/windowvieweffectkcm.cpp:62 windowview/windowvieweffect.cpp:72
-#, fuzzy, kde-format
-#| msgid "Toggle Present Windows (Current desktop)"
+#, kde-format
 msgid "Toggle Present Windows (Window class on current desktop)"
-msgstr "切換展示視窗（目前的桌面）"
+msgstr "切換展示視窗（目前桌面上同視窗類別）"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
 #: windowview/kcm/windowvieweffectkcm.ui:56
@@ -946,21 +913,20 @@ msgstr "切換展示視窗（目前的桌面）"
 msgid "Ignore &minimized windows"
 msgstr "忽略已最小化的視窗(&M)"
 
-#: windowview/qml/main.qml:106
+#: windowview/qml/main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr "無相符項目"
 
-#: windowview/qml/main.qml:106
+#: windowview/qml/main.qml:107
 #, kde-format
 msgid "No Windows"
 msgstr "無視窗"
 
-#: windowview/qml/main.qml:120
-#, fuzzy, kde-format
-#| msgid "Fullscreen windows"
+#: windowview/qml/main.qml:122
+#, kde-format
 msgid "Filter windows…"
-msgstr "全螢幕視窗"
+msgstr "過濾視窗…"
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
 #: wobblywindows/wobblywindows_config.ui:20
@@ -1022,32 +988,32 @@ msgstr "較少"
 msgid "More"
 msgstr "較多"
 
-#: zoom/zoom.cpp:65
+#: zoom/zoom.cpp:67
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "將縮放區域移到左邊"
 
-#: zoom/zoom.cpp:72
+#: zoom/zoom.cpp:74
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "將縮放區域移到右邊"
 
-#: zoom/zoom.cpp:79
+#: zoom/zoom.cpp:81
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "將縮放區域移到上方"
 
-#: zoom/zoom.cpp:86
+#: zoom/zoom.cpp:88
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "將縮放區域移到下方"
 
-#: zoom/zoom.cpp:94 zoom/zoom_config.cpp:108
+#: zoom/zoom.cpp:96 zoom/zoom_config.cpp:108
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "移動滑鼠到焦點"
 
-#: zoom/zoom.cpp:101 zoom/zoom_config.cpp:115
+#: zoom/zoom.cpp:103 zoom/zoom_config.cpp:115
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "移動滑鼠到中央"
@@ -1182,6 +1148,17 @@ msgstr "已關閉"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "滑鼠追蹤："
+
+#~ msgctxt "Notification caption that a screenshot got saved to file"
+#~ msgid "Screenshot"
+#~ msgstr "螢幕快照"
+
+#~ msgctxt "Notification with path to screenshot file"
+#~ msgid "Screenshot saved to %1"
+#~ msgstr "螢幕快照已儲存至 %1"
+
+#~ msgid "Blur background:"
+#~ msgstr "模糊背景："
 
 #~ msgid "Slide docks"
 #~ msgstr "滑動 dock"

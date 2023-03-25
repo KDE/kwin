@@ -10,11 +10,10 @@
 
 #include "core/output.h"
 #include "core/outputbackend.h"
-#include "cursor.h"
-#include "deleted.h"
 #include "effects.h"
 #include "inputmethod.h"
 #include "keyboard_input.h"
+#include "pointer_input.h"
 #include "qwayland-input-method-unstable-v1.h"
 #include "qwayland-text-input-unstable-v3.h"
 #include "virtualkeyboard_dbus.h"
@@ -79,7 +78,6 @@ void InputMethodTest::initTestCase()
 {
     QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.kwin.testvirtualkeyboard"));
 
-    qRegisterMetaType<KWin::Deleted *>();
     qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWayland::Client::Output *>();
 
@@ -98,11 +96,12 @@ void InputMethodTest::initTestCase()
 
 void InputMethodTest::init()
 {
-    touchNow();
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::TextInputManagerV2 | Test::AdditionalWaylandInterface::InputMethodV1 | Test::AdditionalWaylandInterface::TextInputManagerV3));
-
     workspace()->setActiveOutput(QPoint(640, 512));
-    KWin::Cursors::self()->mouse()->setPos(QPoint(640, 512));
+    KWin::input()->pointer()->warp(QPoint(640, 512));
+
+    touchNow();
+
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::TextInputManagerV2 | Test::AdditionalWaylandInterface::InputMethodV1 | Test::AdditionalWaylandInterface::TextInputManagerV3));
 
     kwinApp()->inputMethod()->setEnabled(true);
 }

@@ -14,14 +14,16 @@
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
-<date>2021-04-09</date>
-<releaseinfo>Plasma 5.20</releaseinfo>
+<date>2023-01-30</date>
+<releaseinfo>Plasma 5.27</releaseinfo>
 
 <keywordset>
 <keyword>KDE</keyword>
 <keyword>Systemsettings</keyword>
 <keyword>desktop</keyword>
 <keyword>effects</keyword>
+<keyword>screen</keyword>
+<keyword>edge</keyword>
 </keywordset>
 </articleinfo>
 
@@ -44,10 +46,17 @@ group. This activates the corresponding items in the context menu.</para>
 pushing your mouse cursor against the edge of the screen choose one of the <guilabel>Present 
 Windows</guilabel> effects from the context menu.</para>
 
-<para>You can enable <guilabel>Maximize: Windows dragged to top edge</guilabel>
-or <guilabel>Tile: Windows dragged to left or right edge</guilabel>
+<para>You can enable <guilabel>Maximize: Windows dragged to top edge</guilabel>, <guilabel>Tile: Windows dragged to left or right edge</guilabel> or <guilabel>Trigger quarter tiling in:</guilabel>
 and set a percentage of the screen to trigger the tiling.
 </para>
+
+<tip>
+<para>
+In the <guilabel>Movement</guilabel> tab of the <guilabel>Window Behavior</guilabel> settings module in the <guilabel>Window Management</guilabel> section of the system settings, you can configure snap zones for windows to moved to the screen edges, center or other windows when they get near them.
+</para>
+</tip>
+
+<para>Disable the <guilabel>Remain active when windows are fullscreen</guilabel> option to suppress triggering screen edge actions when an application is running in fullscreen.</para>
 
 <para>Using the <guilabel>Switch desktop on edge</guilabel> item, configure if you want to switch 
 to another desktop when pushing the mouse cursor to an edge of the screen, &eg; only when 

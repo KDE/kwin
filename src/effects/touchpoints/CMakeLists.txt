@@ -6,10 +6,10 @@ set(touchpoints_SOURCES
     touchpoints.cpp
 )
 
-kwin4_add_effect_module(kwin4_effect_touchpoints ${touchpoints_SOURCES})
-target_link_libraries(kwin4_effect_touchpoints PRIVATE
+kwin_add_builtin_effect(touchpoints ${touchpoints_SOURCES})
+target_link_libraries(touchpoints PRIVATE
     kwineffects
     kwinglutils
 
-    KF5::GlobalAccel
+    KF6::GlobalAccel
 )

@@ -10,9 +10,7 @@
 #include "shadow.h"
 // kwin
 #include "atoms.h"
-#include "composite.h"
 #include "internalwindow.h"
-#include "scene/workspacescene.h"
 #include "wayland/shadow_interface.h"
 #include "wayland/shmclientbuffer.h"
 #include "wayland/surface_interface.h"
@@ -41,9 +39,9 @@ Shadow::~Shadow()
 {
 }
 
-Shadow *Shadow::createShadow(Window *window)
+std::unique_ptr<Shadow> Shadow::createShadow(Window *window)
 {
-    Shadow *shadow = createShadowFromDecoration(window);
+    auto shadow = createShadowFromDecoration(window);
     if (!shadow && waylandServer()) {
         shadow = createShadowFromWayland(window);
     }
@@ -56,14 +54,12 @@ Shadow *Shadow::createShadow(Window *window)
     return shadow;
 }
 
-Shadow *Shadow::createShadowFromX11(Window *window)
+std::unique_ptr<Shadow> Shadow::createShadowFromX11(Window *window)
 {
     auto data = Shadow::readX11ShadowProperty(window->window());
     if (!data.isEmpty()) {
-        Shadow *shadow = Compositor::self()->scene()->createShadow(window);
-
+        auto shadow = std::make_unique<Shadow>(window);
         if (!shadow->init(data)) {
-            delete shadow;
             return nullptr;
         }
         return shadow;
@@ -72,20 +68,19 @@ Shadow *Shadow::createShadowFromX11(Window *window)
     }
 }
 
-Shadow *Shadow::createShadowFromDecoration(Window *window)
+std::unique_ptr<Shadow> Shadow::createShadowFromDecoration(Window *window)
 {
     if (!window->decoration()) {
         return nullptr;
     }
-    Shadow *shadow = Compositor::self()->scene()->createShadow(window);
+    auto shadow = std::make_unique<Shadow>(window);
     if (!shadow->init(window->decoration())) {
-        delete shadow;
         return nullptr;
     }
     return shadow;
 }
 
-Shadow *Shadow::createShadowFromWayland(Window *window)
+std::unique_ptr<Shadow> Shadow::createShadowFromWayland(Window *window)
 {
     auto surface = window->surface();
     if (!surface) {
@@ -95,15 +90,14 @@ Shadow *Shadow::createShadowFromWayland(Window *window)
     if (!s) {
         return nullptr;
     }
-    Shadow *shadow = Compositor::self()->scene()->createShadow(window);
+    auto shadow = std::make_unique<Shadow>(window);
     if (!shadow->init(s)) {
-        delete shadow;
         return nullptr;
     }
     return shadow;
 }
 
-Shadow *Shadow::createShadowFromInternalWindow(Window *window)
+std::unique_ptr<Shadow> Shadow::createShadowFromInternalWindow(Window *window)
 {
     const InternalWindow *internalWindow = qobject_cast<InternalWindow *>(window);
     if (!internalWindow) {
@@ -113,9 +107,8 @@ Shadow *Shadow::createShadowFromInternalWindow(Window *window)
     if (!handle) {
         return nullptr;
     }
-    Shadow *shadow = Compositor::self()->scene()->createShadow(window);
+    auto shadow = std::make_unique<Shadow>(window);
     if (!shadow->init(handle)) {
-        delete shadow;
         return nullptr;
     }
     return shadow;
@@ -167,7 +160,7 @@ bool Shadow::init(const QVector<uint32_t> &data)
         }
         auto &geo = pixmapGeometries[i];
         QImage image(xcb_get_image_data(reply), geo->width, geo->height, QImage::Format_ARGB32);
-        m_shadowElements[i] = QPixmap::fromImage(image);
+        m_shadowElements[i] = image.copy();
         free(reply);
     }
     m_offset = QMargins(data[ShadowElementsCount + 3],
@@ -175,9 +168,6 @@ bool Shadow::init(const QVector<uint32_t> &data)
                         data[ShadowElementsCount + 1],
                         data[ShadowElementsCount + 2]);
     Q_EMIT offsetChanged();
-    if (!prepareBackend()) {
-        return false;
-    }
     Q_EMIT textureChanged();
     return true;
 }
@@ -186,35 +176,32 @@ bool Shadow::init(KDecoration2::Decoration *decoration)
 {
     if (m_decorationShadow) {
         // disconnect previous connections
-        disconnect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::innerShadowRectChanged, m_window, &Window::updateShadow);
-        disconnect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::shadowChanged, m_window, &Window::updateShadow);
-        disconnect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::paddingChanged, m_window, &Window::updateShadow);
+        disconnect(m_decorationShadow.get(), &KDecoration2::DecorationShadow::innerShadowRectChanged, m_window, &Window::updateShadow);
+        disconnect(m_decorationShadow.get(), &KDecoration2::DecorationShadow::shadowChanged, m_window, &Window::updateShadow);
+        disconnect(m_decorationShadow.get(), &KDecoration2::DecorationShadow::paddingChanged, m_window, &Window::updateShadow);
     }
     m_decorationShadow = decoration->shadow();
     if (!m_decorationShadow) {
         return false;
     }
     // setup connections - all just mapped to recreate
-    connect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::innerShadowRectChanged, m_window, &Window::updateShadow);
-    connect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::shadowChanged, m_window, &Window::updateShadow);
-    connect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::paddingChanged, m_window, &Window::updateShadow);
+    connect(m_decorationShadow.get(), &KDecoration2::DecorationShadow::innerShadowRectChanged, m_window, &Window::updateShadow);
+    connect(m_decorationShadow.get(), &KDecoration2::DecorationShadow::shadowChanged, m_window, &Window::updateShadow);
+    connect(m_decorationShadow.get(), &KDecoration2::DecorationShadow::paddingChanged, m_window, &Window::updateShadow);
 
     m_offset = m_decorationShadow->padding();
     Q_EMIT offsetChanged();
-    if (!prepareBackend()) {
-        return false;
-    }
     Q_EMIT textureChanged();
     return true;
 }
 
-static QPixmap shadowTileForBuffer(KWaylandServer::ClientBuffer *buffer)
+static QImage shadowTileForBuffer(KWaylandServer::ClientBuffer *buffer)
 {
     auto shmBuffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(buffer);
     if (shmBuffer) {
-        return QPixmap::fromImage(shmBuffer->data().copy());
+        return shmBuffer->data().copy();
     }
-    return QPixmap();
+    return QImage();
 }
 
 bool Shadow::init(const QPointer<KWaylandServer::ShadowInterface> &shadow)
@@ -234,9 +221,6 @@ bool Shadow::init(const QPointer<KWaylandServer::ShadowInterface> &shadow)
 
     m_offset = shadow->offset().toMargins();
     Q_EMIT offsetChanged();
-    if (!prepareBackend()) {
-        return false;
-    }
     Q_EMIT textureChanged();
     return true;
 }
@@ -257,21 +241,17 @@ bool Shadow::init(const QWindow *window)
     const QImage bottomTile = window->property("kwin_shadow_bottom_tile").value<QImage>();
     const QImage bottomLeftTile = window->property("kwin_shadow_bottom_left_tile").value<QImage>();
 
-    m_shadowElements[ShadowElementLeft] = QPixmap::fromImage(leftTile);
-    m_shadowElements[ShadowElementTopLeft] = QPixmap::fromImage(topLeftTile);
-    m_shadowElements[ShadowElementTop] = QPixmap::fromImage(topTile);
-    m_shadowElements[ShadowElementTopRight] = QPixmap::fromImage(topRightTile);
-    m_shadowElements[ShadowElementRight] = QPixmap::fromImage(rightTile);
-    m_shadowElements[ShadowElementBottomRight] = QPixmap::fromImage(bottomRightTile);
-    m_shadowElements[ShadowElementBottom] = QPixmap::fromImage(bottomTile);
-    m_shadowElements[ShadowElementBottomLeft] = QPixmap::fromImage(bottomLeftTile);
+    m_shadowElements[ShadowElementLeft] = leftTile;
+    m_shadowElements[ShadowElementTopLeft] = topLeftTile;
+    m_shadowElements[ShadowElementTop] = topTile;
+    m_shadowElements[ShadowElementTopRight] = topRightTile;
+    m_shadowElements[ShadowElementRight] = rightTile;
+    m_shadowElements[ShadowElementBottomRight] = bottomRightTile;
+    m_shadowElements[ShadowElementBottom] = bottomTile;
+    m_shadowElements[ShadowElementBottomLeft] = bottomLeftTile;
 
     m_offset = window->property("kwin_shadow_padding").value<QMargins>();
     Q_EMIT offsetChanged();
-
-    if (!prepareBackend()) {
-        return false;
-    }
     Q_EMIT textureChanged();
     return true;
 }
@@ -372,11 +352,6 @@ QSize Shadow::elementSize(Shadow::ShadowElements element) const
     } else {
         return m_shadowElements[element].size();
     }
-}
-
-void Shadow::setShadowElement(const QPixmap &shadow, Shadow::ShadowElements element)
-{
-    m_shadowElements[element] = shadow;
 }
 
 } // namespace

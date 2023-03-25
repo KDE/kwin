@@ -15,7 +15,7 @@
 
 #include <kwineffects_export.h>
 
-#include "kwineffects.h"
+#include "libkwineffects/kwineffects.h"
 
 #include <memory>
 
@@ -61,20 +61,6 @@ public:
      * Export mode will be determined by the current effectsHandler
      */
     OffscreenQuickView(QObject *parent);
-
-    /**
-     * Construct a new OffscreenQuickView with the specified @a parent and the
-     * render window @a renderWindow. The render window can be used by QtQuick
-     * to compute the scale factor.
-     */
-    OffscreenQuickView(QObject *parent, QWindow *renderWindow);
-
-    /**
-     * Construct a new OffscreenQuickView with the specified @a parent and the
-     * render window @a renderWindow. The render window can be used by QtQuick
-     * to compute the scale factor.
-     */
-    OffscreenQuickView(QObject *parent, QWindow *renderWindow, ExportMode exportMode);
 
     /**
      * Construct a new KWinQuickView explicitly stating an export mode
@@ -180,11 +166,8 @@ class KWINEFFECTS_EXPORT OffscreenQuickScene : public OffscreenQuickView
 public:
     OffscreenQuickScene(QObject *parent);
     OffscreenQuickScene(QObject *parent, ExportMode exportMode);
-    OffscreenQuickScene(QObject *parent, QWindow *renderWindow);
-    OffscreenQuickScene(QObject *parent, QWindow *renderWindow, ExportMode exportMode);
     ~OffscreenQuickScene();
 
-    QQmlContext *rootContext() const;
     /** top level item in the given source*/
     QQuickItem *rootItem() const;
 

@@ -26,6 +26,7 @@ namespace KWin
 class DrmBackend;
 class DrmGpu;
 class DrmOutput;
+class DrmAtomicCommit;
 
 class DrmObject
 {
@@ -42,29 +43,14 @@ public:
     /**
      * Set the properties in such a way that this resource won't be used anymore
      */
-    virtual void disable() = 0;
+    virtual void disable(DrmAtomicCommit *commit) = 0;
 
     uint32_t id() const;
     DrmGpu *gpu() const;
     uint32_t type() const;
     QString typeName() const;
 
-    void commit();
-    void commitPending();
-    void rollbackPending();
-    bool atomicPopulate(drmModeAtomicReq *req) const;
-    bool needsCommit() const;
     virtual bool updateProperties();
-
-    template<typename T>
-    bool setPending(T prop, uint64_t new_value)
-    {
-        if (auto &property = m_props.at(static_cast<uint32_t>(prop))) {
-            property->setPending(new_value);
-            return true;
-        }
-        return false;
-    }
 
     template<typename T>
     DrmProperty *getProp(T propIndex) const

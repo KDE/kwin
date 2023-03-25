@@ -41,7 +41,6 @@
         "Description[zh_CN]": "高亮显示在触控屏幕上的触摸点",
         "Description[zh_TW]": "視覺化觸控點",
         "EnabledByDefault": false,
-        "Id": "touchpoints",
         "License": "GPL",
         "Name": "Touch Points",
         "Name[ar]": "نقاط اللمس",

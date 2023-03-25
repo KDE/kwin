@@ -69,31 +69,7 @@ private:
 class KWIN_EXPORT X11Window : public Window
 {
     Q_OBJECT
-    /**
-     * By how much the window wishes to grow/shrink at least. Usually QSize(1,1).
-     * MAY BE DISOBEYED BY THE WM! It's only for information, do NOT rely on it at all.
-     * The value is evaluated each time the getter is called.
-     * Because of that no changed signal is provided.
-     */
-    Q_PROPERTY(QSizeF basicUnit READ basicUnit)
-    /**
-     * A client can block compositing. That is while the Client is alive and the state is set,
-     * Compositing is suspended and is resumed when there are no Clients blocking compositing any
-     * more.
-     *
-     * This is actually set by a window property, unfortunately not used by the target application
-     * group. For convenience it's exported as a property to the scripts.
-     *
-     * Use with care!
-     */
-    Q_PROPERTY(bool blocksCompositing READ isBlockingCompositing WRITE setBlockingCompositing NOTIFY blockingCompositingChanged)
-    /**
-     * Whether the Client uses client side window decorations.
-     * Only GTK+ are detected.
-     */
-    Q_PROPERTY(bool clientSideDecorated READ isClientSideDecorated NOTIFY clientSideDecoratedChanged)
-    Q_PROPERTY(qulonglong frameId READ frameId CONSTANT)
-    Q_PROPERTY(qulonglong windowId READ window CONSTANT)
+
 public:
     explicit X11Window();
     ~X11Window() override; ///< Use destroyWindow() or releaseWindow()
@@ -118,7 +94,6 @@ public:
 
     bool isTransient() const override;
     bool groupTransient() const override;
-    bool wasOriginallyGroupTransient() const;
     QList<Window *> mainWindows() const override; // Call once before loop , is not indirect
     bool hasTransient(const Window *c, bool indirect) const override;
     void checkTransient(xcb_window_t w);
@@ -215,7 +190,7 @@ public:
     bool hiddenPreview() const; ///< Window is mapped in order to get a window pixmap
 
     bool setupCompositing() override;
-    void finishCompositing(ReleaseReason releaseReason = ReleaseReason::Release) override;
+    void finishCompositing() override;
     void setBlockingCompositing(bool block);
     inline bool isBlockingCompositing()
     {
@@ -357,38 +332,13 @@ protected:
     QSizeF resizeIncrements() const override;
     bool acceptsFocus() const override;
     void moveResizeInternal(const QRectF &rect, MoveResizeMode mode) override;
-    WindowItem *createItem(Scene *scene) override;
+    std::unique_ptr<WindowItem> createItem(Scene *scene) override;
 
-    // Signals for the scripting interface
-    // Signals make an excellent way for communication
-    // in between objects as compared to simple function
-    // calls
 Q_SIGNALS:
-    void clientManaging(KWin::X11Window *);
-    void clientFullScreenSet(KWin::X11Window *, bool, bool);
-
-    /**
-     * Emitted whenever the Client want to show it menu
-     */
-    void showRequest();
-    /**
-     * Emitted whenever the Client's menu is closed
-     */
-    void menuHidden();
-    /**
-     * Emitted whenever the Client's menu is available
-     */
-    void appMenuAvailable();
-    /**
-     * Emitted whenever the Client's menu is unavailable
-     */
-    void appMenuUnavailable();
-
     /**
      * Emitted whenever the Client's block compositing state changes.
      */
     void blockingCompositingChanged(KWin::X11Window *client);
-    void clientSideDecoratedChanged();
 
 private:
     void exportMappingState(int s); // ICCCM 4.1.3.1, 4.1.4, NETWM 2.5.1
@@ -556,13 +506,6 @@ inline bool X11Window::isClientSideDecorated() const
 inline bool X11Window::groupTransient() const
 {
     return m_transientForId == kwinApp()->x11RootWindow();
-}
-
-// Needed because verifyTransientFor() may set transient_for_id to root window,
-// if the original value has a problem (window doesn't exist, etc.)
-inline bool X11Window::wasOriginallyGroupTransient() const
-{
-    return m_originalTransientForId == kwinApp()->x11RootWindow();
 }
 
 inline bool X11Window::isTransient() const

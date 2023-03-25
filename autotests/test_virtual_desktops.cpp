@@ -23,15 +23,15 @@ void InputRedirection::registerAxisShortcut(Qt::KeyboardModifiers modifiers, Poi
 {
 }
 
-void InputRedirection::registerTouchpadSwipeShortcut(SwipeDirection, uint fingerCount, QAction *)
+void InputRedirection::registerTouchpadSwipeShortcut(SwipeDirection direction, uint32_t fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback)
 {
 }
 
-void InputRedirection::registerRealtimeTouchpadSwipeShortcut(SwipeDirection, uint fingerCount, QAction *, std::function<void(qreal)> progressCallback)
+void InputRedirection::registerTouchpadPinchShortcut(PinchDirection direction, uint32_t fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback)
 {
 }
 
-void InputRedirection::registerTouchscreenSwipeShortcut(SwipeDirection, uint, QAction *, std::function<void(qreal)>)
+void InputRedirection::registerTouchscreenSwipeShortcut(SwipeDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback)
 {
 }
 
@@ -199,9 +199,9 @@ void TestVirtualDesktops::current()
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
     QCOMPARE(vds->current(), (uint)0);
     QFETCH(uint, count);
-    vds->setCount(count);
     QFETCH(uint, init);
-    QVERIFY(vds->setCurrent(init));
+    vds->setCount(count);
+    vds->setCurrent(init);
     QCOMPARE(vds->current(), init);
 
     QSignalSpy spy(vds, &VirtualDesktopManager::currentChanged);
@@ -215,10 +215,12 @@ void TestVirtualDesktops::current()
     if (!spy.isEmpty()) {
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.count(), 2);
-        QCOMPARE(arguments.at(0).type(), QVariant::UInt);
-        QCOMPARE(arguments.at(1).type(), QVariant::UInt);
-        QCOMPARE(arguments.at(0).toUInt(), init);
-        QCOMPARE(arguments.at(1).toUInt(), result);
+
+        VirtualDesktop *previous = arguments.at(0).value<VirtualDesktop *>();
+        QCOMPARE(previous->x11DesktopNumber(), init);
+
+        VirtualDesktop *current = arguments.at(1).value<VirtualDesktop *>();
+        QCOMPARE(current->x11DesktopNumber(), result);
     }
 }
 

@@ -66,7 +66,7 @@
 </para>
 
 <para
->Escolliu un estil de decoració de finestra des de la llista de vista prèvia, utilitzant el camp de cerca a la part superior de la pantalla o baixeu un nou estil utilitzant el botó <guibutton
+>Escolliu un estil de decoració de finestra des de la llista de vista prèvia, o baixeu un estil nou utilitzant el botó <guibutton
 >Obtén decoracions noves de finestra...</guibutton
 >.</para>
 
@@ -111,6 +111,13 @@
 >. Aquestes vores llargues són fàcils de veure per a usuaris amb visibilitat reduïda, i fàcils de capturar per a gent amb mobilitat reduïda o dificultats en emprar el ratolí.</para>
 </tip>
 
+<tip>
+<para
+>Si esteu interessat en crear la vostra pròpia decoració de finestra, podeu aprendre'n més <ulink url="https://develop.kde.org/docs/extend/plasma/aurorae/"
+>en aquesta guia d'aprenentatge</ulink
+>.</para>
+</tip>
+
 </sect2>
 
 <sect2>
@@ -141,7 +148,7 @@
 >Botons de la barra de títol</title>
 
 <para
->Aquesta pestanya permet personalitzar la ubicació del botó a la barra de títol. Podeu arrossegar els botons, &pex;, el <guilabel
+>Aquesta pàgina permet personalitzar la ubicació del botó a la barra de títol. Podeu arrossegar els botons, &pex;, el <guilabel
 >Menú d'aplicacions</guilabel
 > dins la barra de títol, eliminar-los o arrossegar-los al voltant fins que us resultin més confortables d'emprar. </para>
 

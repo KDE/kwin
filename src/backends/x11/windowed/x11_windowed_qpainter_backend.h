@@ -9,7 +9,7 @@
 #pragma once
 
 #include "core/outputlayer.h"
-#include "qpainterbackend.h"
+#include "platformsupport/scenes/qpainter/qpainterbackend.h"
 
 #include <QImage>
 #include <QObject>
@@ -66,6 +66,7 @@ public:
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    quint32 format() const override;
 
     void present();
 
@@ -82,20 +83,13 @@ class X11WindowedQPainterCursorLayer : public OutputLayer
 public:
     explicit X11WindowedQPainterCursorLayer(X11WindowedOutput *output);
 
-    QPoint hotspot() const;
-    void setHotspot(const QPoint &hotspot);
-
-    QSize size() const;
-    void setSize(const QSize &size);
-
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    quint32 format() const override;
 
 private:
     QImage m_buffer;
     X11WindowedOutput *m_output;
-    QPoint m_hotspot;
-    QSize m_size;
 };
 
 class X11WindowedQPainterBackend : public QPainterBackend
@@ -107,7 +101,7 @@ public:
 
     void present(Output *output) override;
     OutputLayer *primaryLayer(Output *output) override;
-    X11WindowedQPainterCursorLayer *cursorLayer(Output *output);
+    OutputLayer *cursorLayer(Output *output) override;
 
 private:
     void addOutput(Output *output);

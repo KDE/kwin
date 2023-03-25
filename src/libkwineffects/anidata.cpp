@@ -8,7 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "anidata_p.h"
+#include "libkwineffects/anidata_p.h"
 
 #include "logging_p.h"
 
@@ -31,21 +31,6 @@ FullScreenEffectLock::~FullScreenEffectLock()
     effects->setActiveFullScreenEffect(nullptr);
 }
 
-PreviousWindowPixmapLock::PreviousWindowPixmapLock(EffectWindow *w)
-    : m_window(w)
-{
-    m_window->referencePreviousWindowPixmap();
-}
-
-PreviousWindowPixmapLock::~PreviousWindowPixmapLock()
-{
-    m_window->unreferencePreviousWindowPixmap();
-
-    // Add synthetic repaint to prevent glitches after cross-fading
-    // translucent windows.
-    effects->addRepaint(m_window->expandedGeometry().toAlignedRect());
-}
-
 AniData::AniData()
     : attribute(AnimationEffect::Opacity)
     , customCurve(0) // Linear
@@ -59,18 +44,17 @@ AniData::AniData()
 
 AniData::AniData(AnimationEffect::Attribute a, int meta_, const FPx2 &to_,
                  int delay, const FPx2 &from_, bool waitAtSource_,
-                 FullScreenEffectLockPtr fullScreenEffectLock_, bool keepAlive,
-                 PreviousWindowPixmapLockPtr previousWindowPixmapLock_, GLShader *shader)
+                 const std::shared_ptr<FullScreenEffectLock> &fullScreenEffectLock, bool keepAlive,
+                 GLShader *shader)
     : attribute(a)
     , from(from_)
     , to(to_)
     , meta(meta_)
     , frozenTime(-1)
     , startTime(AnimationEffect::clock() + delay)
-    , fullScreenEffectLock(std::move(fullScreenEffectLock_))
+    , fullScreenEffectLock(fullScreenEffectLock)
     , waitAtSource(waitAtSource_)
     , keepAlive(keepAlive)
-    , previousWindowPixmapLock(std::move(previousWindowPixmapLock_))
     , shader(shader)
 {
 }

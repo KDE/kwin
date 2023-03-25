@@ -15,6 +15,6 @@ ecm_qt_declare_logging_category(kwin_wayland_wrapper
         Warning
 )
 
-target_link_libraries(kwin_wayland_wrapper Qt::Core Qt::DBus KF5::DBusAddons KF5::CoreAddons KWinXwaylandCommon)
+target_link_libraries(kwin_wayland_wrapper Qt::Core Qt::DBus KF6::DBusAddons KF6::CoreAddons KWinXwaylandCommon)
 set_property(TARGET kwin_wayland_wrapper PROPERTY C_STANDARD 11)
 install(TARGETS kwin_wayland_wrapper ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

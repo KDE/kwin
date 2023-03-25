@@ -13,7 +13,6 @@ class QOpenGLFramebufferObject;
 namespace KWin
 {
 
-class Deleted;
 class InternalWindow;
 
 /**
@@ -31,8 +30,8 @@ public:
     QVector<QRectF> shape() const override;
 
 private Q_SLOTS:
-    void handleBufferGeometryChanged(Window *window, const QRectF &old);
-    void handleWindowClosed(Window *original, Deleted *deleted);
+    void handleBufferGeometryChanged(const QRectF &old);
+    void handleWindowClosed(Window *deleted);
 
 protected:
     std::unique_ptr<SurfacePixmap> createPixmap() override;

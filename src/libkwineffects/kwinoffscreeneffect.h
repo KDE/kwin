@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "kwineffects.h"
+#include "libkwineffects/kwineffects.h"
 
 namespace KWin
 {
@@ -40,7 +40,7 @@ public:
     static bool supported();
 
 protected:
-    void drawWindow(EffectWindow *window, int mask, const QRegion &region, WindowPaintData &data) override;
+    void drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, int mask, const QRegion &region, WindowPaintData &data) override;
 
     /**
      * This function must be called when the effect wants to animate the specified
@@ -63,6 +63,13 @@ protected:
      * Can only be called once the window is redirected.
      **/
     void setShader(EffectWindow *window, GLShader *shader);
+
+    /**
+     * Set what mode to use to snap the vertices of this effect.
+     *
+     * @see RenderGeometry::VertexSnappingMode
+     */
+    void setVertexSnappingMode(RenderGeometry::VertexSnappingMode mode);
 
 private Q_SLOTS:
     void handleWindowDamaged(EffectWindow *window);
@@ -93,7 +100,7 @@ public:
     explicit CrossFadeEffect(QObject *parent = nullptr);
     ~CrossFadeEffect() override;
 
-    void drawWindow(EffectWindow *window, int mask, const QRegion &region, WindowPaintData &data) override;
+    void drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, int mask, const QRegion &region, WindowPaintData &data) override;
 
     /**
      * This function must be called when the effect wants to animate the specified

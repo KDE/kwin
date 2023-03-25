@@ -8,6 +8,7 @@
 */
 #pragma once
 
+#include <QHash>
 #include <QMap>
 #include <QPointer>
 #include <QRegion>
@@ -15,6 +16,7 @@
 
 #include "core/outputlayer.h"
 #include "drm_plane.h"
+#include "libkwineffects/kwingltexture.h"
 
 namespace KWaylandServer
 {
@@ -22,11 +24,13 @@ class SurfaceInterface;
 class LinuxDmaBufV1ClientBuffer;
 }
 
+struct gbm_bo;
+
 namespace KWin
 {
 
 class DrmFramebuffer;
-class GbmSurface;
+class GbmSwapchain;
 class DumbSwapchain;
 class ShadowBuffer;
 class EglGbmBackend;
@@ -43,12 +47,15 @@ public:
         Linear,
         Dumb
     };
-    EglGbmLayerSurface(DrmGpu *gpu, EglGbmBackend *eglBackend, BufferTarget target = BufferTarget::Normal);
+    enum class FormatOption {
+        PreferAlpha,
+        RequireAlpha
+    };
+    EglGbmLayerSurface(DrmGpu *gpu, EglGbmBackend *eglBackend, BufferTarget target = BufferTarget::Normal, FormatOption formatOption = FormatOption::PreferAlpha);
     ~EglGbmLayerSurface();
 
-    std::optional<OutputLayerBeginFrameInfo> startRendering(const QSize &bufferSize, DrmPlane::Transformations renderOrientation, DrmPlane::Transformations bufferOrientation, const QMap<uint32_t, QVector<uint64_t>> &formats);
-    void aboutToStartPainting(DrmOutput *output, const QRegion &damagedRegion);
-    bool endRendering(DrmPlane::Transformations renderOrientation, const QRegion &damagedRegion);
+    std::optional<OutputLayerBeginFrameInfo> startRendering(const QSize &bufferSize, TextureTransforms transformation, const QMap<uint32_t, QVector<uint64_t>> &formats);
+    bool endRendering(const QRegion &damagedRegion);
 
     bool doesSurfaceFit(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const;
     std::shared_ptr<GLTexture> texture() const;
@@ -59,26 +66,26 @@ public:
     std::shared_ptr<DrmFramebuffer> currentBuffer() const;
 
 private:
-    bool doesShadowBufferFit(ShadowBuffer *buffer, const QSize &size, DrmPlane::Transformations renderOrientation, DrmPlane::Transformations bufferOrientation) const;
-
     enum class MultiGpuImportMode {
         Dmabuf,
         DumbBuffer
     };
     struct Surface
     {
-        std::shared_ptr<GbmSurface> gbmSurface;
+        std::shared_ptr<GbmSwapchain> gbmSwapchain;
+        std::shared_ptr<GLTexture> texture;
         std::shared_ptr<DumbSwapchain> importSwapchain;
         MultiGpuImportMode importMode;
         std::shared_ptr<GbmBuffer> currentBuffer;
         std::shared_ptr<DrmFramebuffer> currentFramebuffer;
+        QHash<gbm_bo *, std::pair<std::shared_ptr<GLTexture>, std::shared_ptr<GLFramebuffer>>> textureCache;
         bool forceLinear = false;
     };
     bool checkSurface(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats);
     bool doesSurfaceFit(const Surface &surface, const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const;
     std::optional<Surface> createSurface(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const;
     std::optional<Surface> createSurface(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, MultiGpuImportMode importMode) const;
-    std::shared_ptr<GbmSurface> createGbmSurface(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, bool forceLinear) const;
+    std::shared_ptr<GbmSwapchain> createGbmSwapchain(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, bool forceLinear) const;
 
     std::shared_ptr<DrmFramebuffer> doRenderTestBuffer(Surface &surface) const;
     std::shared_ptr<DrmFramebuffer> importBuffer(Surface &surface, const std::shared_ptr<GbmBuffer> &sourceBuffer) const;
@@ -87,12 +94,11 @@ private:
 
     Surface m_surface;
     Surface m_oldSurface;
-    std::shared_ptr<ShadowBuffer> m_shadowBuffer;
-    std::shared_ptr<ShadowBuffer> m_oldShadowBuffer;
 
     DrmGpu *const m_gpu;
     EglGbmBackend *const m_eglBackend;
     const BufferTarget m_bufferTarget;
+    const FormatOption m_formatOption;
 };
 
 }

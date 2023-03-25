@@ -4,11 +4,11 @@
 
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
-import QtQuick 2.15
+import QtQuick
 
-import org.kde.kcm 1.6 as KCM
+import org.kde.kcm as KCM
 import org.kde.kirigami 2.20 as Kirigami
-import org.kde.kwin.private.kdecoration 1.0 as KDecoration
+import org.kde.kwin.private.kdecoration as KDecoration
 
 KCM.GridView {
     function updateDecoration(item, marginTopLeft, marginBottomRight) {
@@ -25,6 +25,8 @@ KCM.GridView {
     view.onContentHeightChanged: view.positionViewAtIndex(view.currentIndex, GridView.Visible)
 
     view.implicitCellWidth: Kirigami.Units.gridUnit * 18
+
+    framedView: false
 
     view.delegate: KCM.GridDelegate {
         id: delegate
@@ -74,10 +76,8 @@ KCM.GridView {
             }
             MouseArea {
                 anchors.fill: parent
-                onClicked: {
-                    kcm.theme = index;
-                    view.currentIndex = index;
-                }
+                onClicked: delegate.clicked()
+                onDoubleClicked: delegate.doubleClicked()
             }
             Connections {
                 target: kcm
@@ -114,4 +114,3 @@ KCM.GridView {
         }
     }
 }
-

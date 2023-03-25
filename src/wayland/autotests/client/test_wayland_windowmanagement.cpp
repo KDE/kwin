@@ -36,6 +36,7 @@ private Q_SLOTS:
     void init();
 
     void testWindowTitle();
+    void testReallyLongTitle();
     void testMinimizedGeometry();
     void testUseAfterUnmap();
     void testServerDelete();
@@ -164,6 +165,18 @@ void TestWindowManagement::testWindowTitle()
     QVERIFY(titleSpy.wait());
 
     QCOMPARE(m_window->title(), QString::fromUtf8("Test Title"));
+}
+
+void TestWindowManagement::testReallyLongTitle()
+{
+    QString title;
+    title.fill(QLatin1Char('t'), 500000);
+    m_windowInterface->setTitle(title);
+
+    QSignalSpy titleSpy(m_window, &KWayland::Client::PlasmaWindow::titleChanged);
+
+    QVERIFY(titleSpy.wait());
+    QVERIFY(m_window->title().startsWith("t"));
 }
 
 void TestWindowManagement::testMinimizedGeometry()

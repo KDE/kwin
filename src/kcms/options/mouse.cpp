@@ -25,9 +25,9 @@ KWinActionsConfigForm::KWinActionsConfigForm(QWidget *parent)
 }
 
 KTitleBarActionsConfig::KTitleBarActionsConfig(bool _standAlone, KWinOptionsSettings *settings, QWidget *parent)
-    : KCModule(parent)
+    : KCModule(parent, KPluginMetaData(), QVariantList())
     , standAlone(_standAlone)
-    , m_ui(new KWinMouseConfigForm(this))
+    , m_ui(new KWinMouseConfigForm(widget()))
 {
     if (settings) {
         initialize(settings);
@@ -37,22 +37,7 @@ KTitleBarActionsConfig::KTitleBarActionsConfig(bool _standAlone, KWinOptionsSett
 void KTitleBarActionsConfig::initialize(KWinOptionsSettings *settings)
 {
     m_settings = settings;
-    addConfig(m_settings, this);
-}
-
-void KTitleBarActionsConfig::showEvent(QShowEvent *ev)
-{
-    if (!standAlone) {
-        // Workaround KCModule::showEvent() calling load(), see bug 163817
-        QWidget::showEvent(ev);
-        return;
-    }
-    KCModule::showEvent(ev);
-}
-
-void KTitleBarActionsConfig::changeEvent(QEvent *ev)
-{
-    ev->accept();
+    addConfig(m_settings, widget());
 }
 
 void KTitleBarActionsConfig::save()
@@ -78,9 +63,9 @@ bool KTitleBarActionsConfig::isSaveNeeded() const
 }
 
 KWindowActionsConfig::KWindowActionsConfig(bool _standAlone, KWinOptionsSettings *settings, QWidget *parent)
-    : KCModule(parent)
+    : KCModule(parent, KPluginMetaData(), QVariantList())
     , standAlone(_standAlone)
-    , m_ui(new KWinActionsConfigForm(this))
+    , m_ui(new KWinActionsConfigForm(widget()))
 {
     if (settings) {
         initialize(settings);
@@ -90,16 +75,7 @@ KWindowActionsConfig::KWindowActionsConfig(bool _standAlone, KWinOptionsSettings
 void KWindowActionsConfig::initialize(KWinOptionsSettings *settings)
 {
     m_settings = settings;
-    addConfig(m_settings, this);
-}
-
-void KWindowActionsConfig::showEvent(QShowEvent *ev)
-{
-    if (!standAlone) {
-        QWidget::showEvent(ev);
-        return;
-    }
-    KCModule::showEvent(ev);
+    addConfig(m_settings, widget());
 }
 
 void KWindowActionsConfig::save()

@@ -22,7 +22,7 @@ class DimInactiveEffectConfig : public KCModule
     Q_OBJECT
 
 public:
-    explicit DimInactiveEffectConfig(QWidget *parent = nullptr, const QVariantList &args = QVariantList());
+    explicit DimInactiveEffectConfig(QObject *parent, const KPluginMetaData &data, const QVariantList &args);
     ~DimInactiveEffectConfig() override;
 
     void save() override;

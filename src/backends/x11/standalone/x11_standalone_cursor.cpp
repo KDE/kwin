@@ -52,7 +52,7 @@ X11Cursor::~X11Cursor()
 
 void X11Cursor::doSetPos()
 {
-    const QPoint &pos = currentPos();
+    const QPointF &pos = currentPos();
     xcb_warp_pointer(connection(), XCB_WINDOW_NONE, rootWindow(), 0, 0, 0, 0, pos.x(), pos.y());
     // call default implementation to emit signal
     Cursor::doSetPos();
@@ -70,7 +70,7 @@ void X11Cursor::doGetPos()
         return;
     }
     m_buttonMask = pointer->mask;
-    updatePos(pointer->root_x, pointer->root_y);
+    updatePos(QPointF(pointer->root_x, pointer->root_y));
     m_resetTimeStampTimer.start(0);
 }
 
@@ -113,7 +113,7 @@ void X11Cursor::doStopCursorTracking()
 
 void X11Cursor::mousePolled()
 {
-    static QPoint lastPos = currentPos();
+    static QPointF lastPos = currentPos();
     static uint16_t lastMask = m_buttonMask;
     doGetPos(); // Update if needed
     if (lastPos != currentPos() || lastMask != m_buttonMask) {

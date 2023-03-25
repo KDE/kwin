@@ -42,6 +42,7 @@
 #include <QFileInfo>
 #include <QProcess>
 #include <QWindow>
+#include <QtPlugin>
 #include <qplatformdefs.h>
 
 #include <sched.h>
@@ -54,9 +55,6 @@ Q_IMPORT_PLUGIN(KWinIntegrationPlugin)
 Q_IMPORT_PLUGIN(KGlobalAccelImpl)
 Q_IMPORT_PLUGIN(KWindowSystemKWinPlugin)
 Q_IMPORT_PLUGIN(KWinIdleTimePoller)
-#if PipeWire_FOUND
-Q_IMPORT_PLUGIN(ScreencastManagerFactory)
-#endif
 
 namespace KWin
 {
@@ -150,13 +148,11 @@ void ApplicationWayland::performStartup()
     WaylandCompositor::create();
 
     connect(Compositor::self(), &Compositor::sceneCreated, outputBackend(), &OutputBackend::sceneInitialized);
-    connect(Compositor::self(), &Compositor::sceneCreated, this, &ApplicationWayland::continueStartupWithScene);
+    connect(Compositor::self(), &Compositor::sceneCreated, this, &ApplicationWayland::continueStartupWithScene, Qt::SingleShotConnection);
 }
 
 void ApplicationWayland::continueStartupWithScene()
 {
-    disconnect(Compositor::self(), &Compositor::sceneCreated, this, &ApplicationWayland::continueStartupWithScene);
-
     // Note that we start accepting client connections after creating the Workspace.
     createWorkspace();
     createColorManager();
@@ -166,25 +162,12 @@ void ApplicationWayland::continueStartupWithScene()
         qFatal("Failed to initialze the Wayland server, exiting now");
     }
 
-    if (operationMode() == OperationModeWaylandOnly) {
-        finalizeStartup();
-        return;
-    }
-
-    m_xwayland = std::make_unique<Xwl::Xwayland>(this);
-    m_xwayland->xwaylandLauncher()->setListenFDs(m_xwaylandListenFds);
-    m_xwayland->xwaylandLauncher()->setDisplayName(m_xwaylandDisplay);
-    m_xwayland->xwaylandLauncher()->setXauthority(m_xwaylandXauthority);
-    connect(m_xwayland.get(), &Xwl::Xwayland::errorOccurred, this, &ApplicationWayland::finalizeStartup);
-    connect(m_xwayland.get(), &Xwl::Xwayland::started, this, &ApplicationWayland::finalizeStartup);
-    m_xwayland->start();
-}
-
-void ApplicationWayland::finalizeStartup()
-{
-    if (m_xwayland) {
-        disconnect(m_xwayland.get(), &Xwl::Xwayland::errorOccurred, this, &ApplicationWayland::finalizeStartup);
-        disconnect(m_xwayland.get(), &Xwl::Xwayland::started, this, &ApplicationWayland::finalizeStartup);
+    if (operationMode() == OperationModeXwayland) {
+        m_xwayland = std::make_unique<Xwl::Xwayland>(this);
+        m_xwayland->xwaylandLauncher()->setListenFDs(m_xwaylandListenFds);
+        m_xwayland->xwaylandLauncher()->setDisplayName(m_xwaylandDisplay);
+        m_xwayland->xwaylandLauncher()->setXauthority(m_xwaylandXauthority);
+        m_xwayland->init();
     }
     startSession();
     notifyStarted();
@@ -220,7 +203,7 @@ void ApplicationWayland::startSession()
         if (!arguments.isEmpty()) {
             QString program = arguments.takeFirst();
             QProcess *p = new QProcess(this);
-            p->setProcessChannelMode(QProcess::ForwardedErrorChannel);
+            p->setProcessChannelMode(QProcess::ForwardedChannels);
             p->setProcessEnvironment(processStartupEnvironment());
             connect(p, qOverload<int, QProcess::ExitStatus>(&QProcess::finished), this, [p](int code, QProcess::ExitStatus status) {
                 p->deleteLater();
@@ -257,7 +240,7 @@ void ApplicationWayland::startSession()
             // note: this will kill the started process when we exit
             // this is going to happen anyway as we are the wayland and X server the app connects to
             QProcess *p = new QProcess(this);
-            p->setProcessChannelMode(QProcess::ForwardedErrorChannel);
+            p->setProcessChannelMode(QProcess::ForwardedChannels);
             p->setProcessEnvironment(processStartupEnvironment());
             p->setProgram(program);
             p->setArguments(arguments);
@@ -296,9 +279,8 @@ int main(int argc, char *argv[])
 
     qunsetenv("QT_DEVICE_PIXEL_RATIO");
     qputenv("QSG_RENDER_LOOP", "basic");
-    QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     KWin::ApplicationWayland a(argc, argv);
-    a.setupTranslator();
+
     // reset QT_QPA_PLATFORM so we don't propagate it to our children (e.g. apps launched from the overview effect)
     qunsetenv("QT_QPA_PLATFORM");
 
@@ -521,7 +503,7 @@ int main(int argc, char *argv[])
         int fd = parser.value(waylandSocketFdOption).toInt(&ok);
         if (ok) {
             // make sure we don't leak this FD to children
-            fcntl(fd, F_SETFD, O_CLOEXEC);
+            fcntl(fd, F_SETFD, FD_CLOEXEC);
             server->display()->addSocketFileDescriptor(fd, socketName);
         } else {
             std::cerr << "FATAL ERROR: could not parse socket FD" << std::endl;
@@ -605,7 +587,7 @@ int main(int argc, char *argv[])
                 int fd = fdString.toInt(&ok);
                 if (ok) {
                     // make sure we don't leak this FD to children
-                    fcntl(fd, F_SETFD, O_CLOEXEC);
+                    fcntl(fd, F_SETFD, FD_CLOEXEC);
                     a.addXwaylandSocketFileDescriptor(fd);
                 }
             }

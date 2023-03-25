@@ -1,61 +1,23 @@
 add_subdirectory(helper)
 
 add_library(KWinIntegrationTestFramework SHARED)
-if (QT_MAJOR_VERSION EQUAL "5")
-    ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework
-        PROTOCOL ${WaylandProtocols_DATADIR}/unstable/input-method/input-method-unstable-v1.xml
-        BASENAME input-method-unstable-v1
-    )
-    ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework
-        PROTOCOL ${WaylandProtocols_DATADIR}/unstable/text-input/text-input-unstable-v3.xml
-        BASENAME text-input-unstable-v3
-    )
-    ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework
-        PROTOCOL protocols/wlr-layer-shell-unstable-v1.xml
-        BASENAME wlr-layer-shell-unstable-v1
-    )
-    ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework
-        PROTOCOL ${WaylandProtocols_DATADIR}/stable/xdg-shell/xdg-shell.xml
-        BASENAME xdg-shell
-    )
-    ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework
-        PROTOCOL ${WaylandProtocols_DATADIR}/unstable/xdg-decoration/xdg-decoration-unstable-v1.xml
-        BASENAME xdg-decoration-unstable-v1
-    )
-    ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework
-        PROTOCOL ${WaylandProtocols_DATADIR}/unstable/idle-inhibit/idle-inhibit-unstable-v1.xml
-        BASENAME idle-inhibit-unstable-v1
-    )
-    ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework
-        PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-output-device-v2.xml
-        BASENAME kde-output-device-v2
-    )
-    ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework
-        PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-output-management-v2.xml
-        BASENAME kde-output-management-v2
-    )
-    ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework
-        PROTOCOL ${WaylandProtocols_DATADIR}/staging/fractional-scale/fractional-scale-v1.xml
-        BASENAME fractional-scale-v1
-    )
-else()
-    qt6_generate_wayland_protocol_client_sources(KWinIntegrationTestFramework
-        NO_INCLUDE_CORE_ONLY
-        FILES
-            ${WaylandProtocols_DATADIR}/unstable/input-method/input-method-unstable-v1.xml
-    )
-    qt6_generate_wayland_protocol_client_sources(KWinIntegrationTestFramework
-        FILES
-            ${WaylandProtocols_DATADIR}/unstable/text-input/text-input-unstable-v3.xml
-            ${CMAKE_CURRENT_SOURCE_DIR}/protocols/wlr-layer-shell-unstable-v1.xml
-            ${WaylandProtocols_DATADIR}/stable/xdg-shell/xdg-shell.xml
-            ${WaylandProtocols_DATADIR}/unstable/xdg-decoration/xdg-decoration-unstable-v1.xml
-            ${WaylandProtocols_DATADIR}/unstable/idle-inhibit/idle-inhibit-unstable-v1.xml
-            ${WaylandProtocols_DATADIR}/staging/fractional-scale/fractional-scale-v1.xml
-            ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-output-device-v2.xml
-            ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-output-management-v2.xml
-    )
-endif()
+
+qt6_generate_wayland_protocol_client_sources(KWinIntegrationTestFramework
+    NO_INCLUDE_CORE_ONLY
+    FILES
+        ${WaylandProtocols_DATADIR}/unstable/input-method/input-method-unstable-v1.xml
+)
+qt6_generate_wayland_protocol_client_sources(KWinIntegrationTestFramework
+    FILES
+        ${WaylandProtocols_DATADIR}/unstable/text-input/text-input-unstable-v3.xml
+        ${CMAKE_CURRENT_SOURCE_DIR}/protocols/wlr-layer-shell-unstable-v1.xml
+        ${WaylandProtocols_DATADIR}/stable/xdg-shell/xdg-shell.xml
+        ${WaylandProtocols_DATADIR}/unstable/xdg-decoration/xdg-decoration-unstable-v1.xml
+        ${WaylandProtocols_DATADIR}/unstable/idle-inhibit/idle-inhibit-unstable-v1.xml
+        ${WaylandProtocols_DATADIR}/staging/fractional-scale/fractional-scale-v1.xml
+        ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-output-device-v2.xml
+        ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-output-management-v2.xml
+)
 
 target_sources(KWinIntegrationTestFramework PRIVATE
     ../../src/cursor.cpp
@@ -67,7 +29,7 @@ target_sources(KWinIntegrationTestFramework PRIVATE
 target_link_libraries(KWinIntegrationTestFramework
     PUBLIC
         Qt::Test
-        KF5::WaylandClient
+        KF6::WaylandClient
         Wayland::Client
         kwin
 
@@ -77,9 +39,9 @@ target_link_libraries(KWinIntegrationTestFramework
 
         # Static plugins
         KWinQpaPlugin
-        KF5GlobalAccelKWinPlugin
-        KF5WindowSystemKWinPlugin
-        KF5IdleTimeKWinPlugin
+        KF6GlobalAccelKWinPlugin
+        KF6WindowSystemKWinPlugin
+        KF6IdleTimeKWinPlugin
 )
 kcoreaddons_target_static_plugins(KWinIntegrationTestFramework "kwin/effects/plugins" LINK_OPTION "PRIVATE")
 set_target_properties(KWinIntegrationTestFramework PROPERTIES CXX_VISIBILITY_PRESET default)
@@ -151,7 +113,6 @@ integrationTest(WAYLAND_ONLY NAME testFractionalScaling SRCS fractional_scaling_
 
 qt_add_dbus_interfaces(DBUS_SRCS ${CMAKE_BINARY_DIR}/src/org.kde.kwin.VirtualKeyboard.xml)
 integrationTest(WAYLAND_ONLY NAME testVirtualKeyboardDBus SRCS test_virtualkeyboard_dbus.cpp ${DBUS_SRCS})
-integrationTest(WAYLAND_ONLY NAME testNightColor SRCS nightcolor_test.cpp LIBS KWinNightColorPlugin)
 
 if (XCB_ICCCM_FOUND)
     integrationTest(NAME testMoveResize SRCS move_resize_window_test.cpp LIBS XCB::ICCCM)

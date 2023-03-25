@@ -15,6 +15,7 @@
 #include <QDebug>
 #include <QHash>
 #include <QPointer>
+#include <cmath>
 
 using namespace KWin;
 

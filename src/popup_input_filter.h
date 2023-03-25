@@ -26,8 +26,6 @@ public:
 
 private:
     void handleWindowAdded(Window *client);
-    void handleWindowRemoved(Window *client);
-    void disconnectClient(Window *client);
     void cancelPopups();
 
     QVector<Window *> m_popupWindows;

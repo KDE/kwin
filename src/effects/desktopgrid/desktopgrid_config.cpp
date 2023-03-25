@@ -36,15 +36,15 @@ DesktopGridEffectConfigForm::DesktopGridEffectConfigForm(QWidget *parent)
     setupUi(this);
 }
 
-DesktopGridEffectConfig::DesktopGridEffectConfig(QWidget *parent, const QVariantList &args)
-    : KCModule(parent, args)
-    , m_ui(this)
+DesktopGridEffectConfig::DesktopGridEffectConfig(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
+    : KCModule(parent, data, args)
+    , m_ui(widget())
 {
-    QVBoxLayout *layout = new QVBoxLayout(this);
+    QVBoxLayout *layout = new QVBoxLayout(widget());
     layout->addWidget(&m_ui);
 
     // Shortcut config. The shortcut belongs to the component "kwin"!
-    m_actionCollection = new KActionCollection(this, QStringLiteral("kwin"));
+    m_actionCollection = new KActionCollection(widget(), QStringLiteral("kwin"));
 
     m_actionCollection->setComponentDisplayName(i18n("KWin"));
     m_actionCollection->setConfigGroup(QStringLiteral("DesktopGrid"));
@@ -72,8 +72,8 @@ DesktopGridEffectConfig::DesktopGridEffectConfig(QWidget *parent, const QVariant
     DesktopGridConfig::instance(KWIN_CONFIG);
     addConfig(DesktopGridConfig::self(), &m_ui);
     connect(m_ui.kcfg_DesktopLayoutMode, qOverload<int>(&QComboBox::currentIndexChanged), this, &DesktopGridEffectConfig::desktopLayoutSelectionChanged);
-    connect(m_ui.desktopNameAlignmentCombo, qOverload<int>(&QComboBox::currentIndexChanged), this, &DesktopGridEffectConfig::markAsChanged);
-    connect(m_ui.shortcutEditor, &KShortcutsEditor::keyChange, this, &DesktopGridEffectConfig::markAsChanged);
+    connect(m_ui.desktopNameAlignmentCombo, qOverload<int>(&QComboBox::currentIndexChanged), this, &KCModule::markAsChanged);
+    connect(m_ui.shortcutEditor, &KShortcutsEditor::keyChange, this, &KCModule::markAsChanged);
 }
 
 DesktopGridEffectConfig::~DesktopGridEffectConfig()

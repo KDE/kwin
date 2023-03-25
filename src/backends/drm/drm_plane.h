@@ -67,7 +67,7 @@ public:
     Q_DECLARE_FLAGS(Transformations, Transformation)
 
     bool init() override;
-    void disable() override;
+    void disable(DrmAtomicCommit *commit) override;
     TypeIndex type() const;
 
     bool isCrtcSupported(int pipeIndex) const;
@@ -79,13 +79,13 @@ public:
     void setNext(const std::shared_ptr<DrmFramebuffer> &b);
     void flipBuffer();
 
-    void setBuffer(DrmFramebuffer *buffer);
-    void set(const QPoint &srcPos, const QSize &srcSize, const QPoint &dstPos, const QSize &dstSize);
+    void set(DrmAtomicCommit *commit, const QPoint &srcPos, const QSize &srcSize, const QRect &dst);
 
-    Transformations transformation();
     Transformations supportedTransformations() const;
 
     void releaseBuffers();
+
+    static int32_t transformationToDegrees(DrmPlane::Transformations transformation);
 
 private:
     std::shared_ptr<DrmFramebuffer> m_current;

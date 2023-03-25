@@ -14,7 +14,7 @@
 #include "scene/workspacescene.h"
 #include "utils/common.h"
 
-#include "kwinglplatform.h"
+#include "libkwineffects/kwinglplatform.h"
 
 namespace KWin
 {

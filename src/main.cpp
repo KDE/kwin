@@ -12,7 +12,7 @@
 #include <config-kwin.h>
 
 #include "atoms.h"
-#include "colormanager.h"
+#include "colors/colormanager.h"
 #include "composite.h"
 #include "core/outputbackend.h"
 #include "core/session.h"
@@ -36,24 +36,16 @@
 #include "screenlockerwatcher.h"
 #endif
 
-#include <kwineffects.h>
+#include "libkwineffects/kwineffects.h"
 
 // KDE
 #include <KAboutData>
 #include <KLocalizedString>
 // Qt
 #include <QCommandLineParser>
-#include <QLibraryInfo>
 #include <QQuickWindow>
-#include <QStandardPaths>
-#include <QTranslator>
-#include <qplatformdefs.h>
-
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 #include <private/qtx11extras_p.h>
-#else
-#include <QX11Info>
-#endif
+#include <qplatformdefs.h>
 
 #include <cerrno>
 
@@ -213,14 +205,6 @@ void Application::processCommandLine(QCommandLineParser *parser)
     aboutData.processCommandLine(parser);
     setConfigLock(parser->isSet(s_lockOption));
     Application::setCrashCount(parser->value(s_crashesOption).toInt());
-}
-
-void Application::setupTranslator()
-{
-    QTranslator *qtTranslator = new QTranslator(qApp);
-    qtTranslator->load("qt_" + QLocale::system().name(),
-                       QLibraryInfo::location(QLibraryInfo::TranslationsPath));
-    installTranslator(qtTranslator);
 }
 
 void Application::setupMalloc()
@@ -596,11 +580,7 @@ void Application::updateX11Time(xcb_generic_event_t *event)
     setX11Time(time);
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-bool XcbEventFilter::nativeEventFilter(const QByteArray &eventType, void *message, long int *result)
-#else
 bool XcbEventFilter::nativeEventFilter(const QByteArray &eventType, void *message, qintptr *result)
-#endif
 {
     if (eventType == "xcb_generic_event_t") {
         return kwinApp()->dispatchEvent(static_cast<xcb_generic_event_t *>(message));
@@ -672,10 +652,10 @@ void Application::startInteractiveWindowSelection(std::function<void(KWin::Windo
     input()->startInteractiveWindowSelection(callback, cursorName);
 }
 
-void Application::startInteractivePositionSelection(std::function<void(const QPoint &)> callback)
+void Application::startInteractivePositionSelection(std::function<void(const QPointF &)> callback)
 {
     if (!input()) {
-        callback(QPoint(-1, -1));
+        callback(QPointF(-1, -1));
         return;
     }
     input()->startInteractivePositionSelection(callback);

@@ -77,7 +77,7 @@ private:
     explicit PointerInterface(SeatInterface *seat);
     std::unique_ptr<PointerInterfacePrivate> d;
 
-    friend class SeatInterface;
+    friend class SeatInterfacePrivate;
     friend class PointerInterfacePrivate;
 };
 
@@ -93,7 +93,7 @@ public:
     /**
      * The hotspot of the cursor image in surface-relative coordinates.
      */
-    QPoint hotspot() const;
+    QPointF hotspot() const;
     /**
      * The entered serial when the Cursor got set.
      */

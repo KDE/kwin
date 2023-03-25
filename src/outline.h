@@ -8,9 +8,9 @@
 */
 
 #pragma once
+#include "libkwineffects/kwinglobals.h"
 #include <QObject>
 #include <QRect>
-#include <kwinglobals.h>
 #include <memory>
 
 #include <kwin_export.h>

@@ -65,6 +65,7 @@ TileManager::TileManager(Output *parent)
 
     m_rootTile = std::make_unique<RootTile>(this);
     m_rootTile->setRelativeGeometry(QRectF(0, 0, 1, 1));
+    connect(m_rootTile.get(), &CustomTile::paddingChanged, m_saveTimer.get(), static_cast<void (QTimer::*)()>(&QTimer::start));
     connect(m_rootTile.get(), &CustomTile::layoutModified, m_saveTimer.get(), static_cast<void (QTimer::*)()>(&QTimer::start));
 
     m_quickRootTile = std::make_unique<QuickRootTile>(this);
@@ -92,7 +93,7 @@ Tile *TileManager::bestTileForPosition(const QPointF &pos)
             const auto r = t->absoluteGeometry();
             // It's possible for tiles to overlap, so take the one which center is nearer to mouse pos
             qreal distance = (r.center() - pos).manhattanLength();
-            if (!r.contains(pos)) {
+            if (!exclusiveContains(r, pos)) {
                 // This gives a strong preference for tiles that contain the point
                 // still base on distance though as floating tiles can overlap
                 distance += m_output->fractionalGeometry().width();

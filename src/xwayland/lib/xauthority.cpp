@@ -11,9 +11,9 @@
 #include "xauthority.h"
 
 #include <QDataStream>
-#include <QHostInfo>
 #include <QRandomGenerator>
 #include <QStandardPaths>
+#include <QSysInfo>
 #include <QTemporaryFile>
 
 static void writeXauthorityEntry(QDataStream &stream, quint16 family,
@@ -54,7 +54,7 @@ bool generateXauthorityFile(int display, QTemporaryFile *authorityFile)
         return false;
     }
 
-    const QByteArray hostname = QHostInfo::localHostName().toUtf8();
+    const QByteArray hostname = QSysInfo::machineHostName().toUtf8();
     const QByteArray displayName = QByteArray::number(display);
     const QByteArray name = QByteArrayLiteral("MIT-MAGIC-COOKIE-1");
     const QByteArray cookie = generateXauthorityCookie();

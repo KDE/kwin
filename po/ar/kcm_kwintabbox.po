@@ -1,55 +1,50 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
 # Safa Alfulaij <safa1996alfulaij@gmail.com>, 2015.
-# Zayed Al-Saidi <zayed.alsaidi@gmail.com>, 2021, 2022.
+# Zayed Al-Saidi <zayed.alsaidi@gmail.com>, 2021, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-06-15 00:48+0000\n"
-"PO-Revision-Date: 2022-06-18 19:25+0400\n"
+"POT-Creation-Date: 2023-02-08 01:01+0000\n"
+"PO-Revision-Date: 2023-02-16 12:17+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
-"Language-Team: Arabic <kde-l10n-ar@kde.org>\n"
+"Language-Team: ar\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
-"X-Generator: Lokalize 21.07.70\n"
+"X-Generator: Lokalize 21.12.3\n"
 
-#: kwintabboxconfigform.cpp:77
-#, kde-format
-msgid "KWin"
-msgstr "ك.وين"
-
-#: layoutpreview.cpp:133
+#: layoutpreview.cpp:131
 #, kde-format
 msgid "Show Desktop"
 msgstr "أظهر سطح المكتب"
 
-#: layoutpreview.cpp:163
+#: layoutpreview.cpp:161
 #, kde-format
 msgctxt "An example Desktop Name"
 msgid "Desktop 1"
 msgstr "سطح المكتب 1"
 
-#: main.cpp:58
+#: main.cpp:66
 #, kde-format
 msgid "Main"
 msgstr "الرّئيسيّ"
 
-#: main.cpp:59
+#: main.cpp:67
 #, kde-format
 msgid "Alternative"
 msgstr "البديل"
 
-#: main.cpp:61
+#: main.cpp:69
 #, kde-format
 msgid "Get New Task Switchers..."
 msgstr "احصل على مُبدِّل مهام جديد"
 
-#: main.cpp:75
+#: main.cpp:83
 #, kde-format
 msgid ""
 "Focus policy settings limit the functionality of navigating through windows."
@@ -77,7 +72,7 @@ msgstr "المستخدَم حديثًا"
 #: main.ui:60
 #, kde-format
 msgid "Stacking order"
-msgstr "ترتيب التّكديس"
+msgstr "ترتيب التّكِيدِيس"
 
 #. i18n: ectx: property (text), widget (QCheckBox, oneAppWindow)
 #: main.ui:68
@@ -234,3 +229,46 @@ msgstr ""
 #, kde-format
 msgid "Show selected window"
 msgstr "اعرض النافذة المحددة"
+
+#: shortcutsettings.cpp:132
+#, kde-format
+msgid "Walk Through Windows"
+msgstr "تنقّل بين النّوافذ"
+
+#: shortcutsettings.cpp:133
+#, kde-format
+msgid "Walk Through Windows (Reverse)"
+msgstr "تنقّل بين النّوافذ (بالعكس)"
+
+#: shortcutsettings.cpp:134
+#, kde-format
+msgid "Walk Through Windows of Current Application"
+msgstr "تنقّل بين نوافذ التّطبيق الحاليّ"
+
+#: shortcutsettings.cpp:135
+#, kde-format
+msgid "Walk Through Windows of Current Application (Reverse)"
+msgstr "تنقّل بين نوافذ التّطبيق الحاليّ (بالعكس)"
+
+#: shortcutsettings.cpp:137
+#, kde-format
+msgid "Walk Through Windows Alternative"
+msgstr "تنقّل بين النّوافذ البديلة"
+
+#: shortcutsettings.cpp:138
+#, kde-format
+msgid "Walk Through Windows Alternative (Reverse)"
+msgstr "تنقّل بين النّوافذ البديلة (بالعكس)"
+
+#: shortcutsettings.cpp:139
+#, kde-format
+msgid "Walk Through Windows of Current Application Alternative"
+msgstr "تنقّل بين نوافذ التّطبيق الحاليّ البديلة"
+
+#: shortcutsettings.cpp:140
+#, kde-format
+msgid "Walk Through Windows of Current Application Alternative (Reverse)"
+msgstr "تنقّل بين نوافذ التّطبيق الحاليّ البديلة (بالعكس)"
+
+#~ msgid "KWin"
+#~ msgstr "ك.وين"

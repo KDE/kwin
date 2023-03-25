@@ -127,6 +127,8 @@ WobblyWindowsEffect::WobblyWindowsEffect()
     connect(effects, &EffectsHandler::windowStepUserMovedResized, this, &WobblyWindowsEffect::slotWindowStepUserMovedResized);
     connect(effects, &EffectsHandler::windowFinishUserMovedResized, this, &WobblyWindowsEffect::slotWindowFinishUserMovedResized);
     connect(effects, &EffectsHandler::windowMaximizedStateChanged, this, &WobblyWindowsEffect::slotWindowMaximizeStateChanged);
+
+    setVertexSnappingMode(RenderGeometry::VertexSnappingMode::None);
 }
 
 WobblyWindowsEffect::~WobblyWindowsEffect()
@@ -244,10 +246,6 @@ void WobblyWindowsEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &da
     auto infoIt = windows.find(w);
     if (infoIt != windows.end()) {
         data.setTransformed();
-
-        // We have to reset the clip region in order to render clients below
-        // opaque wobbly windows.
-        data.opaque = QRegion();
 
         while ((presentTime - infoIt->clock).count() > 0) {
             const auto delta = std::min(presentTime - infoIt->clock, integrationStep);

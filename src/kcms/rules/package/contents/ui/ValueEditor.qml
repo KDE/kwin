@@ -4,13 +4,13 @@
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
 
-import QtQuick 2.14
-import QtQuick.Layouts 1.14
-import QtQuick.Controls 2.14 as QQC2
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Controls as QQC2
 
 import org.kde.kirigami 2.10 as Kirigami
-import org.kde.kquickcontrols 2.0 as KQC
-import org.kde.kcms.kwinrules 1.0
+import org.kde.kquickcontrols as KQC
+import org.kde.kcms.kwinrules
 
 
 Loader {
@@ -96,7 +96,6 @@ Loader {
     Component {
         id: optionEditor
         OptionsComboBox {
-            flat: true
             model: ruleOptions
             onActivated: (index) => {
                 valueEditor.valueEdited(currentValue);
@@ -107,7 +106,6 @@ Loader {
     Component {
         id: netTypesEditor
         OptionsComboBox {
-            flat: true
             model: ruleOptions
             multipleChoice: true
             // Filter the provided value with the options mask
@@ -122,7 +120,6 @@ Loader {
         id: optionListEditor
         OptionsComboBox {
             id: optionListCombo
-            flat: true
             model: ruleOptions
             multipleChoice: true
 

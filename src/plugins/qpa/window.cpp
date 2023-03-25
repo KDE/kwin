@@ -30,6 +30,7 @@ Window::Window(QWindow *window)
     , m_windowId(++s_windowId)
     , m_scale(kwinApp()->devicePixelRatio())
 {
+    Q_ASSERT(!window->property("_KWIN_WINDOW_IS_OFFSCREEN").toBool());
 }
 
 Window::~Window()

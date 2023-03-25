@@ -8,12 +8,12 @@
 */
 #pragma once
 
+#include "libkwineffects/kwineffects.h"
 #include <QColor>
 #include <QDBusContext>
 #include <QDBusMessage>
 #include <QDBusUnixFileDescriptor>
 #include <QObject>
-#include <kwineffects.h>
 
 namespace KWin
 {
@@ -25,7 +25,7 @@ class ColorPickerEffect : public Effect, protected QDBusContext
 public:
     ColorPickerEffect();
     ~ColorPickerEffect() override;
-    void paintScreen(int mask, const QRegion &region, ScreenPaintData &data) override;
+    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen) override;
     bool isActive() const override;
 
     int requestedEffectChainPosition() const override
@@ -43,7 +43,7 @@ private:
     void hideInfoMessage();
 
     QDBusMessage m_replyMessage;
-    QPoint m_scheduledPosition;
+    QPointF m_scheduledPosition;
     bool m_picking = false;
 };
 

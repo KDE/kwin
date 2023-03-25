@@ -46,7 +46,7 @@ public:
     bool isMovableAcrossScreens() const override { return false; }
     bool takeFocus() override { return false; }
     bool wantsInput() const override { return false; }
-    void killWindow() override { /* nothing to do */ }
+    void killWindow() override;
     void destroyWindow() override { /* nothing to do */ }
     void closeWindow() override { /* nothing to do */ }
     bool acceptsFocus() const override { return false; }
@@ -59,7 +59,7 @@ public:
     { /* nothing to do */
         return geometry;
     }
-    WindowItem *createItem(Scene *scene) override;
+    std::unique_ptr<WindowItem> createItem(Scene *scene) override;
 
 public Q_SLOTS:
     void release(ReleaseReason releaseReason = ReleaseReason::Release);

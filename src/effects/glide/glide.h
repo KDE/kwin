@@ -13,7 +13,7 @@
 #pragma once
 
 // kwineffects
-#include <kwineffects.h>
+#include "libkwineffects/kwineffects.h"
 
 namespace KWin
 {
@@ -46,7 +46,7 @@ public:
 
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
+    void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
     void postPaintScreen() override;
 
     bool isActive() const override;
@@ -75,7 +75,6 @@ public:
 private Q_SLOTS:
     void windowAdded(EffectWindow *w);
     void windowClosed(EffectWindow *w);
-    void windowDeleted(EffectWindow *w);
     void windowDataChanged(EffectWindow *w, int role);
 
 private:

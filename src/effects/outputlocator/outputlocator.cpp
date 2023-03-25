@@ -6,8 +6,8 @@
 
 #include "outputlocator.h"
 
+#include "libkwineffects/kwinoffscreenquickview.h"
 #include <algorithm>
-#include <kwinoffscreenquickview.h>
 
 #include <KLocalizedString>
 
@@ -74,13 +74,9 @@ void OutputLocatorEffect::show()
         return;
     }
 
-    // Needed until Qt6 https://codereview.qt-project.org/c/qt/qtdeclarative/+/361506
-    m_dummyWindow = std::make_unique<QWindow>();
-    m_dummyWindow->create();
-
     const auto screens = effects->screens();
     for (const auto screen : screens) {
-        auto scene = new OffscreenQuickScene(this, m_dummyWindow.get());
+        auto scene = new OffscreenQuickScene(this);
         scene->setSource(m_qmlUrl, {{QStringLiteral("outputName"), outputName(screen)}, {QStringLiteral("resolution"), screen->geometry().size()}, {QStringLiteral("scale"), screen->devicePixelRatio()}});
         QRectF geometry(0, 0, scene->rootItem()->implicitWidth(), scene->rootItem()->implicitHeight());
         geometry.moveCenter(screen->geometry().center());
@@ -105,17 +101,17 @@ void OutputLocatorEffect::hide()
     effects->addRepaint(repaintRegion);
 }
 
-void OutputLocatorEffect::paintScreen(int mask, const QRegion &region, KWin::ScreenPaintData &data)
+void OutputLocatorEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, KWin::EffectScreen *screen)
 {
-    effects->paintScreen(mask, region, data);
+    effects->paintScreen(renderTarget, viewport, mask, region, screen);
     // On X11 all screens are painted at once
     if (effects->waylandDisplay()) {
-        if (auto scene = m_scenesByScreens.value(data.screen())) {
-            effects->renderOffscreenQuickView(scene);
+        if (auto scene = m_scenesByScreens.value(screen)) {
+            effects->renderOffscreenQuickView(renderTarget, viewport, scene);
         }
     } else {
         for (auto scene : m_scenesByScreens) {
-            effects->renderOffscreenQuickView(scene);
+            effects->renderOffscreenQuickView(renderTarget, viewport, scene);
         }
     }
 }

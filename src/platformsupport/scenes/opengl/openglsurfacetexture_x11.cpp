@@ -4,7 +4,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "openglsurfacetexture_x11.h"
+#include "platformsupport/scenes/opengl/openglsurfacetexture_x11.h"
 
 namespace KWin
 {

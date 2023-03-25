@@ -4,17 +4,15 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.15
-import QtQuick.Layouts 1.4
-import QtGraphicalEffects 1.12
-import org.kde.kwin 3.0 as KWinComponents
-import org.kde.kwin.private.effects 1.0
-import org.kde.plasma.core 2.0 as PlasmaCore
+import QtQuick
+import Qt5Compat.GraphicalEffects
+import QtQuick.Layouts
+import org.kde.kwin as KWinComponents
+import org.kde.kwin.private.effects
+import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.components 3.0 as PlasmaComponents
-import org.kde.plasma.extras 2.0 as PlasmaExtras
-import org.kde.KWin.Effect.WindowView 1.0
-import org.kde.kitemmodels 1.0 as KitemModels
-import org.kde.kirigami 2.20 as Kirigami
+import org.kde.kitemmodels as KitemModels
+
 FocusScope {
     id: root
     focus: true
@@ -48,26 +46,31 @@ FocusScope {
         active = false;
     }
 
+    MouseArea {
+        anchors.fill: parent
+        onClicked: effect.deactivate(effect.animationDuration);
+    }
+
     Item {
         id: blurredWindows
         anchors.fill: parent
 
         Repeater {
-            model: KWinComponents.ClientFilterModel {
+            model: KWinComponents.WindowFilterModel {
                 activity: KWinComponents.Workspace.currentActivity
-                desktop: KWinComponents.Workspace.currentVirtualDesktop
+                desktop: KWinComponents.Workspace.currentDesktop
                 screenName: targetScreen.name
-                clientModel: KWinComponents.ClientModel {}
+                windowModel: KWinComponents.WindowModel {}
             }
 
-            KWinComponents.WindowThumbnailItem {
-                wId: model.client.internalId
-                x: model.client.x - targetScreen.geometry.x
-                y: model.client.y - targetScreen.geometry.y
-                width: model.client.width
-                height: model.client.height
-                z: model.client.stackingOrder
-                visible: !model.client.minimized
+            KWinComponents.WindowThumbnail {
+                wId: model.window.internalId
+                x: model.window.x - targetScreen.geometry.x
+                y: model.window.y - targetScreen.geometry.y
+                width: model.window.width
+                height: model.window.height
+                z: model.window.stackingOrder
+                visible: !model.window.minimized
             }
         }
         property real blurRadius: root.active ? 64 : 0
@@ -144,7 +147,7 @@ FocusScope {
         }
         contentItem: RowLayout {
             PlasmaComponents.Label {
-                text: i18n("Padding:")
+                text: i18nd("kwin_effects","Padding:")
             }
             PlasmaComponents.SpinBox {
                 from: 0
@@ -154,7 +157,7 @@ FocusScope {
             }
             PlasmaComponents.Button {
                 icon.name: "document-open"
-                text: i18n("Load Layout...")
+                text: i18nd("kwin_effects","Load Layout...")
                 onClicked: loadLayoutDialog.open()
                 // This mouse area is for fitts law
                 MouseArea {
@@ -268,7 +271,7 @@ FocusScope {
             }
             PlasmaComponents.Button {
                 Layout.alignment: Qt.AlignRight
-                text: i18n("Close")
+                text: i18nd("kwin_effects","Close")
                 onClicked: loadLayoutDialog.close()
             }
         }

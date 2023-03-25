@@ -45,7 +45,7 @@ void Cursors::addCursor(Cursor *cursor)
     Q_ASSERT(!m_cursors.contains(cursor));
     m_cursors += cursor;
 
-    connect(cursor, &Cursor::posChanged, this, [this, cursor](const QPoint &pos) {
+    connect(cursor, &Cursor::posChanged, this, [this, cursor](const QPointF &pos) {
         setCurrentCursor(cursor);
         Q_EMIT positionChanged(cursor, pos);
     });
@@ -186,29 +186,29 @@ QImage Cursor::image() const
     return m_source->image();
 }
 
-QPoint Cursor::hotspot() const
+QPointF Cursor::hotspot() const
 {
     if (Q_UNLIKELY(!m_source)) {
-        return QPoint();
+        return QPointF();
     }
     return m_source->hotspot();
 }
 
-QRect Cursor::geometry() const
+QRectF Cursor::geometry() const
 {
     return rect().translated(m_pos - hotspot());
 }
 
-QRect Cursor::rect() const
+QRectF Cursor::rect() const
 {
     if (Q_UNLIKELY(!m_source)) {
-        return QRect();
+        return QRectF();
     } else {
-        return QRect(QPoint(0, 0), m_source->size());
+        return QRectF(QPointF(0, 0), m_source->size());
     }
 }
 
-QPoint Cursor::pos()
+QPointF Cursor::pos()
 {
     doGetPos();
     return m_pos;
@@ -216,22 +216,12 @@ QPoint Cursor::pos()
 
 void Cursor::setPos(const QPointF &pos)
 {
-    setPos(pos.toPoint());
-}
-
-void Cursor::setPos(const QPoint &pos)
-{
     // first query the current pos to not warp to the already existing pos
     if (pos == m_pos) {
         return;
     }
     m_pos = pos;
     doSetPos();
-}
-
-void Cursor::setPos(int x, int y)
-{
-    setPos(QPoint(x, y));
 }
 
 void Cursor::markAsRendered(std::chrono::milliseconds timestamp)
@@ -288,7 +278,7 @@ void Cursor::doGetPos()
 {
 }
 
-void Cursor::updatePos(const QPoint &pos)
+void Cursor::updatePos(const QPointF &pos)
 {
     if (m_pos == pos) {
         return;

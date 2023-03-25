@@ -5,13 +5,13 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.15
-import QtQuick.Window 2.15
+import QtQuick
+import QtQuick.Window
 import org.kde.kirigami 2.20 as Kirigami
-import org.kde.kwin 3.0 as KWinComponents
-import org.kde.kwin.private.effects 1.0
+import org.kde.kwin as KWinComponents
+import org.kde.kwin.private.effects
 import org.kde.plasma.components 3.0 as PC3
-import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.core as PlasmaCore
 
 FocusScope {
     id: heap
@@ -23,9 +23,9 @@ FocusScope {
         Down
     }
 
-    property alias model: windowsRepeater.model
-    property alias delegate: windowsRepeater.delegate
-    readonly property alias count: windowsRepeater.count
+    property alias model: windowsInstantiator.model
+    property alias delegate: windowsInstantiator.delegate
+    readonly property alias count: windowsInstantiator.count
     readonly property bool activeEmpty: {
         var children = expoLayout.visibleChildren;
         for (var i = 0; i < children.length; i++) {
@@ -43,7 +43,7 @@ FocusScope {
     property bool animationEnabled: false
     property bool absolutePositioning: true
     property real padding: 0
-    // Either a string "activeClass" or a list internalIds of clients
+    // Either a string "activeClass" or a list internalIds of windows
     property var showOnly: []
 
     required property bool organized
@@ -51,11 +51,9 @@ FocusScope {
     property bool dragActive: false
 
     signal activated()
-    //TODO: for 5.26 the delegate will be a separate component instead
-    signal windowClicked(QtObject window, EventPoint eventPoint)
 
     function activateIndex(index) {
-        KWinComponents.Workspace.activeClient = windowsRepeater.itemAt(index).client;
+        KWinComponents.Workspace.activeClient = windowsInstantiator.objectAt(index).window;
         activated();
     }
 
@@ -74,10 +72,10 @@ FocusScope {
         delete dndManagerStore[key];
     }
 
-    KWinComponents.WindowThumbnailItem {
+    KWinComponents.WindowThumbnail {
         id: otherScreenThumbnail
         z: 2
-        property KWinComponents.WindowThumbnailItem cloneOf
+        property KWinComponents.WindowThumbnail cloneOf
         visible: false
         client: cloneOf ? cloneOf.client : null
         width: cloneOf ? cloneOf.width : 0
@@ -131,34 +129,37 @@ FocusScope {
         fillGaps: true
         spacing: PlasmaCore.Units.smallSpacing * 5
 
-        Repeater {
-            id: windowsRepeater
+        Instantiator {
+            id: windowsInstantiator
 
-            onItemAdded: (index, item) => {
-                // restore/reparent from drop
-                var key = item.client.internalId;
+            asynchronous: true
+
+            delegate: WindowHeapDelegate {
+                windowHeap: heap
+            }
+
+            onObjectAdded: (index, object) => {
+                object.parent = expoLayout
+                var key = object.window.internalId;
                 if (heap.containsDND(key)) {
                     expoLayout.forceLayout();
                     var oldGlobalRect = heap.restoreDND(key);
-                    item.restoreDND(oldGlobalRect);
+                    object.restoreDND(oldGlobalRect);
                     heap.deleteDND(key);
                 } else if (heap.effectiveOrganized) {
                     // New window has opened in the middle of a running effect.
                     // Make sure it is positioned before enabling its animations.
                     expoLayout.forceLayout();
                 }
-                item.animationEnabled = true;
-            }
-            delegate: WindowHeapDelegate {
-                windowHeap: heap
+                object.animationEnabled = true;
             }
         }
     }
 
     function findFirstItem() {
-        for (let candidateIndex = 0; candidateIndex < windowsRepeater.count; ++candidateIndex) {
-            const candidateItem = windowsRepeater.itemAt(candidateIndex);
-            if (!candidateItem.hidden) {
+        for (let candidateIndex = 0; candidateIndex < windowsInstantiator.count; ++candidateIndex) {
+            const candidateItem = windowsInstantiator.objectAt(candidateIndex);
+            if (!candidateItem.activeHidden) {
                 return candidateIndex;
             }
         }
@@ -170,14 +171,14 @@ FocusScope {
             return findFirstItem();
         }
 
-        const selectedItem = windowsRepeater.itemAt(selectedIndex);
+        const selectedItem = windowsInstantiator.objectAt(selectedIndex);
         let nextIndex = -1;
 
         switch (direction) {
         case WindowHeap.Direction.Left:
-            for (let candidateIndex = 0; candidateIndex < windowsRepeater.count; ++candidateIndex) {
-                const candidateItem = windowsRepeater.itemAt(candidateIndex);
-                if (candidateItem.hidden) {
+            for (let candidateIndex = 0; candidateIndex < windowsInstantiator.count; ++candidateIndex) {
+                const candidateItem = windowsInstantiator.objectAt(candidateIndex);
+                if (candidateItem.activeHidden) {
                     continue;
                 }
 
@@ -191,7 +192,7 @@ FocusScope {
                     if (nextIndex === -1) {
                         nextIndex = candidateIndex;
                     } else {
-                        const nextItem = windowsRepeater.itemAt(nextIndex);
+                        const nextItem = windowsInstantiator.objectAt(nextIndex);
                         if (candidateItem.x + candidateItem.width > nextItem.x + nextItem.width) {
                             nextIndex = candidateIndex;
                         }
@@ -200,9 +201,9 @@ FocusScope {
             }
             break;
         case WindowHeap.Direction.Right:
-            for (let candidateIndex = 0; candidateIndex < windowsRepeater.count; ++candidateIndex) {
-                const candidateItem = windowsRepeater.itemAt(candidateIndex);
-                if (candidateItem.hidden) {
+            for (let candidateIndex = 0; candidateIndex < windowsInstantiator.count; ++candidateIndex) {
+                const candidateItem = windowsInstantiator.objectAt(candidateIndex);
+                if (candidateItem.activeHidden) {
                     continue;
                 }
 
@@ -216,7 +217,7 @@ FocusScope {
                     if (nextIndex === -1) {
                         nextIndex = candidateIndex;
                     } else {
-                        const nextItem = windowsRepeater.itemAt(nextIndex);
+                        const nextItem = windowsInstantiator.objectAt(nextIndex);
                         if (nextIndex === -1 || candidateItem.x < nextItem.x) {
                             nextIndex = candidateIndex;
                         }
@@ -225,9 +226,9 @@ FocusScope {
             }
             break;
         case WindowHeap.Direction.Up:
-            for (let candidateIndex = 0; candidateIndex < windowsRepeater.count; ++candidateIndex) {
-                const candidateItem = windowsRepeater.itemAt(candidateIndex);
-                if (candidateItem.hidden) {
+            for (let candidateIndex = 0; candidateIndex < windowsInstantiator.count; ++candidateIndex) {
+                const candidateItem = windowsInstantiator.objectAt(candidateIndex);
+                if (candidateItem.activeHidden) {
                     continue;
                 }
 
@@ -241,7 +242,7 @@ FocusScope {
                     if (nextIndex === -1) {
                         nextIndex = candidateIndex;
                     } else {
-                        const nextItem = windowsRepeater.itemAt(nextIndex);
+                        const nextItem = windowsInstantiator.objectAt(nextIndex);
                         if (nextItem.y + nextItem.height < candidateItem.y + candidateItem.height) {
                             nextIndex = candidateIndex;
                         }
@@ -250,9 +251,9 @@ FocusScope {
             }
             break;
         case WindowHeap.Direction.Down:
-            for (let candidateIndex = 0; candidateIndex < windowsRepeater.count; ++candidateIndex) {
-                const candidateItem = windowsRepeater.itemAt(candidateIndex);
-                if (candidateItem.hidden) {
+            for (let candidateIndex = 0; candidateIndex < windowsInstantiator.count; ++candidateIndex) {
+                const candidateItem = windowsInstantiator.objectAt(candidateIndex);
+                if (candidateItem.activeHidden) {
                     continue;
                 }
 
@@ -266,7 +267,7 @@ FocusScope {
                     if (nextIndex === -1) {
                         nextIndex = candidateIndex;
                     } else {
-                        const nextItem = windowsRepeater.itemAt(nextIndex);
+                        const nextItem = windowsInstantiator.objectAt(nextIndex);
                         if (candidateItem.y < nextItem.y) {
                             nextIndex = candidateIndex;
                         }
@@ -309,46 +310,56 @@ FocusScope {
         return false;
     }
 
-    onActiveFocusChanged: resetSelected();
 
     Keys.onPressed: {
         let handled = false;
         switch (event.key) {
         case Qt.Key_Up:
             handled = selectNextItem(WindowHeap.Direction.Up);
+            heap.focus = true;
             break;
         case Qt.Key_Down:
             handled = selectNextItem(WindowHeap.Direction.Down);
+            heap.focus = true;
             break;
         case Qt.Key_Left:
             handled = selectNextItem(WindowHeap.Direction.Left);
+            heap.focus = true;
             break;
         case Qt.Key_Right:
             handled = selectNextItem(WindowHeap.Direction.Right);
+            heap.focus = true;
             break;
         case Qt.Key_Home:
             handled = selectLastItem(WindowHeap.Direction.Left);
+            heap.focus = true;
             break;
         case Qt.Key_End:
             handled = selectLastItem(WindowHeap.Direction.Right);
+            heap.focus = true;
             break;
         case Qt.Key_PageUp:
             handled = selectLastItem(WindowHeap.Direction.Up);
+            heap.focus = true;
             break;
         case Qt.Key_PageDown:
             handled = selectLastItem(WindowHeap.Direction.Down);
+            heap.focus = true;
             break;
-        case Qt.Key_Return:
         case Qt.Key_Space:
+            if (!heap.focus) {
+                break;
+            }
+        case Qt.Key_Return:
             handled = false;
             let selectedItem = null;
             if (selectedIndex !== -1) {
-                selectedItem = windowsRepeater.itemAt(selectedIndex);
+                selectedItem = windowsInstantiator.objectAt(selectedIndex);
             } else {
                 // If the window heap has only one visible window, activate it.
-                for (let i = 0; i < windowsRepeater.count; ++i) {
-                    const candidateItem = windowsRepeater.itemAt(i);
-                    if (candidateItem.hidden) {
+                for (let i = 0; i < windowsInstantiator.count; ++i) {
+                    const candidateItem = windowsInstantiator.objectAt(i);
+                    if (candidateItem.activeHidden) {
                         continue;
                     } else if (selectedItem) {
                         selectedItem = null;
@@ -359,7 +370,7 @@ FocusScope {
             }
             if (selectedItem) {
                 handled = true;
-                KWinComponents.Workspace.activeClient = selectedItem.client;
+                KWinComponents.Workspace.activeClient = selectedItem.window;
                 activated();
             }
             break;

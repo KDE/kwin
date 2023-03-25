@@ -18,7 +18,7 @@ class OverviewEffectConfig : public KCModule
     Q_OBJECT
 
 public:
-    explicit OverviewEffectConfig(QWidget *parent = nullptr, const QVariantList &args = QVariantList());
+    explicit OverviewEffectConfig(QObject *parent, const KPluginMetaData &data, const QVariantList &args);
     ~OverviewEffectConfig() override;
 
 public Q_SLOTS:

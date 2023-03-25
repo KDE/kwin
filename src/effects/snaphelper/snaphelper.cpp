@@ -10,7 +10,8 @@
 
 #include "snaphelper.h"
 
-#include <kwinglutils.h>
+#include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/renderviewport.h"
 
 #include <QPainter>
 
@@ -88,16 +89,16 @@ void SnapHelperEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mil
     effects->prePaintScreen(data, presentTime);
 }
 
-void SnapHelperEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
+void SnapHelperEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
 {
-    effects->paintScreen(mask, region, data);
+    effects->paintScreen(renderTarget, viewport, mask, region, screen);
 
     const qreal opacityFactor = m_animation.active
         ? m_animation.timeLine.value()
         : 1.0;
     const QList<EffectScreen *> screens = effects->screens();
 
-    const auto scale = effects->renderTargetScale();
+    const auto scale = viewport.scale();
 
     // Display the guide
     if (effects->isOpenGLCompositing()) {
@@ -105,7 +106,7 @@ void SnapHelperEffect::paintScreen(int mask, const QRegion &region, ScreenPaintD
         vbo->reset();
         vbo->setUseColor(true);
         ShaderBinder binder(ShaderTrait::UniformColor);
-        binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, data.projectionMatrix());
+        binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, viewport.projectionMatrix());
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 

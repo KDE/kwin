@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-06-15 00:48+0000\n"
+"POT-Creation-Date: 2023-02-08 01:01+0000\n"
 "PO-Revision-Date: 2012-06-24 17:40+0530\n"
 "Last-Translator: A S Alam <aalam@users.sf.net>\n"
 "Language-Team: Punjabi/Panjabi <punjabi-users@lists.sf.net>\n"
@@ -17,40 +17,35 @@ msgstr ""
 "X-Generator: Lokalize 1.4\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: kwintabboxconfigform.cpp:77
-#, kde-format
-msgid "KWin"
-msgstr ""
-
-#: layoutpreview.cpp:133
+#: layoutpreview.cpp:131
 #, fuzzy, kde-format
 #| msgid "Show desktop:"
 msgid "Show Desktop"
 msgstr "ਡੈਸਕਟਾਪ ਵੇਖਾਓ:"
 
-#: layoutpreview.cpp:163
+#: layoutpreview.cpp:161
 #, kde-format
 msgctxt "An example Desktop Name"
 msgid "Desktop 1"
 msgstr "ਡੈਸਕਟਾਪ 1"
 
-#: main.cpp:58
+#: main.cpp:66
 #, kde-format
 msgid "Main"
 msgstr "ਮੁੱਖ"
 
-#: main.cpp:59
+#: main.cpp:67
 #, kde-format
 msgid "Alternative"
 msgstr "ਬਦਲਵਾਂ"
 
-#: main.cpp:61
+#: main.cpp:69
 #, fuzzy, kde-format
 #| msgid "Get New Window Switcher Layout"
 msgid "Get New Task Switchers..."
 msgstr "ਨਵਾਂ ਵਿੰਡੋ ਸਵਿੱਚਰ ਲੇਆਉਟ ਲਵੋ"
 
-#: main.cpp:75
+#: main.cpp:83
 #, kde-format
 msgid ""
 "Focus policy settings limit the functionality of navigating through windows."
@@ -234,6 +229,49 @@ msgstr ""
 msgid "Show selected window"
 msgstr "ਚੁਣੀ ਵਿੰਡੋ ਵੇਖਾਓ"
 
+#: shortcutsettings.cpp:132
+#, kde-format
+msgid "Walk Through Windows"
+msgstr "ਵਿੰਡੋਜ਼ ਨੂੰ ਵੇਖੋ"
+
+#: shortcutsettings.cpp:133
+#, kde-format
+msgid "Walk Through Windows (Reverse)"
+msgstr "ਵਿੰਡੋ ਵਿੱਚ ਜਾਓ (ਉਲਟ)"
+
+#: shortcutsettings.cpp:134
+#, kde-format
+msgid "Walk Through Windows of Current Application"
+msgstr "ਮੌਜੂਦਾ ਐਪਲੀਕੇਸ਼ਨ ਦੀਆਂ ਵਿੰਡੋਜ਼ ਵਿੱਚ ਵੇਖੋ"
+
+#: shortcutsettings.cpp:135
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows Alternative (Reverse)"
+msgid "Walk Through Windows of Current Application (Reverse)"
+msgstr "ਵਿੰਡੋ ਵਿੱਚ ਬਦਲੇ ਢੰਗ ਨਾਲ ਜਾਓ (ਉਲਟ)"
+
+#: shortcutsettings.cpp:137
+#, kde-format
+msgid "Walk Through Windows Alternative"
+msgstr "ਵਿੰਡੋ ਵਿੱਚ ਬਦਲੇ ਢੰਗ ਨਾਲ ਜਾਓ"
+
+#: shortcutsettings.cpp:138
+#, kde-format
+msgid "Walk Through Windows Alternative (Reverse)"
+msgstr "ਵਿੰਡੋ ਵਿੱਚ ਬਦਲੇ ਢੰਗ ਨਾਲ ਜਾਓ (ਉਲਟ)"
+
+#: shortcutsettings.cpp:139
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows Alternative"
+msgid "Walk Through Windows of Current Application Alternative"
+msgstr "ਵਿੰਡੋ ਵਿੱਚ ਬਦਲੇ ਢੰਗ ਨਾਲ ਜਾਓ"
+
+#: shortcutsettings.cpp:140
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows Alternative (Reverse)"
+msgid "Walk Through Windows of Current Application Alternative (Reverse)"
+msgstr "ਵਿੰਡੋ ਵਿੱਚ ਬਦਲੇ ਢੰਗ ਨਾਲ ਜਾਓ (ਉਲਟ)"
+
 #~ msgid "Tabbox layout preview"
 #~ msgstr "ਟੈਬ-ਬਾਕਸ ਲੇਆਉਟ ਝਲਕ"
 
@@ -244,37 +282,6 @@ msgstr "ਚੁਣੀ ਵਿੰਡੋ ਵੇਖਾਓ"
 #~ "These settings are used by the \"Walk Through Windows Alternative\" "
 #~ "actions."
 #~ msgstr "ਇਹ ਸੈਟਿੰਗ ਨੂੰ \"ਵਿੰਡੋਜ਼ ਬਦਲ ਰਾਹੀਂ ਜਾਉ\" ਕਾਰਵਾਈ ਰਾਹੀਂ ਵਰਤਿਆ ਜਾਂਦਾ ਹੈ।"
-
-#~ msgid "Walk Through Windows"
-#~ msgstr "ਵਿੰਡੋਜ਼ ਨੂੰ ਵੇਖੋ"
-
-#~ msgid "Walk Through Windows (Reverse)"
-#~ msgstr "ਵਿੰਡੋ ਵਿੱਚ ਜਾਓ (ਉਲਟ)"
-
-#~ msgid "Walk Through Windows Alternative"
-#~ msgstr "ਵਿੰਡੋ ਵਿੱਚ ਬਦਲੇ ਢੰਗ ਨਾਲ ਜਾਓ"
-
-#~ msgid "Walk Through Windows Alternative (Reverse)"
-#~ msgstr "ਵਿੰਡੋ ਵਿੱਚ ਬਦਲੇ ਢੰਗ ਨਾਲ ਜਾਓ (ਉਲਟ)"
-
-#~| msgid "Walk Through Windows Alternative"
-#~ msgid "Walk Through Windows of Current Application"
-#~ msgstr "ਮੌਜੂਦਾ ਐਪਲੀਕੇਸ਼ਨ ਦੀਆਂ ਵਿੰਡੋਜ਼ ਵਿੱਚ ਵੇਖੋ"
-
-#, fuzzy
-#~| msgid "Walk Through Windows Alternative (Reverse)"
-#~ msgid "Walk Through Windows of Current Application (Reverse)"
-#~ msgstr "ਵਿੰਡੋ ਵਿੱਚ ਬਦਲੇ ਢੰਗ ਨਾਲ ਜਾਓ (ਉਲਟ)"
-
-#, fuzzy
-#~| msgid "Walk Through Windows Alternative"
-#~ msgid "Walk Through Windows of Current Application Alternative"
-#~ msgstr "ਵਿੰਡੋ ਵਿੱਚ ਬਦਲੇ ਢੰਗ ਨਾਲ ਜਾਓ"
-
-#, fuzzy
-#~| msgid "Walk Through Windows Alternative (Reverse)"
-#~ msgid "Walk Through Windows of Current Application Alternative (Reverse)"
-#~ msgstr "ਵਿੰਡੋ ਵਿੱਚ ਬਦਲੇ ਢੰਗ ਨਾਲ ਜਾਓ (ਉਲਟ)"
 
 #~ msgctxt ""
 #~ "ComboBox item for window switcher based on layouts instead of a desktop "

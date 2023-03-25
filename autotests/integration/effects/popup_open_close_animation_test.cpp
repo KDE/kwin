@@ -10,7 +10,6 @@
 #include "kwin_wayland_test.h"
 
 #include "core/outputbackend.h"
-#include "deleted.h"
 #include "effectloader.h"
 #include "effects.h"
 #include "internalwindow.h"
@@ -48,7 +47,6 @@ void PopupOpenCloseAnimationTest::initTestCase()
     qputenv("XDG_DATA_DIRS", QCoreApplication::applicationDirPath().toUtf8());
 
     qRegisterMetaType<KWin::Window *>();
-    qRegisterMetaType<KWin::Deleted *>();
     qRegisterMetaType<KWin::InternalWindow *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(waylandServer()->init(s_socketName));
@@ -102,7 +100,7 @@ void PopupOpenCloseAnimationTest::testAnimatePopups()
     QVERIFY(mainWindow);
 
     // Load effect that will be tested.
-    const QString effectName = QStringLiteral("kwin4_effect_fadingpopups");
+    const QString effectName = QStringLiteral("fadingpopups");
     QVERIFY(effectsImpl->loadEffect(effectName));
     QCOMPARE(effectsImpl->loadedEffects().count(), 1);
     QCOMPARE(effectsImpl->loadedEffects().first(), effectName);
@@ -130,7 +128,7 @@ void PopupOpenCloseAnimationTest::testAnimatePopups()
     QTRY_VERIFY(!effect->isActive());
 
     // Destroy the popup, it should not be animated.
-    QSignalSpy popupClosedSpy(popup, &Window::windowClosed);
+    QSignalSpy popupClosedSpy(popup, &Window::closed);
     popupShellSurface.reset();
     popupSurface.reset();
     QVERIFY(popupClosedSpy.wait());
@@ -162,7 +160,7 @@ void PopupOpenCloseAnimationTest::testAnimateUserActionsPopup()
     QVERIFY(window);
 
     // Load effect that will be tested.
-    const QString effectName = QStringLiteral("kwin4_effect_fadingpopups");
+    const QString effectName = QStringLiteral("fadingpopups");
     QVERIFY(effectsImpl->loadEffect(effectName));
     QCOMPARE(effectsImpl->loadedEffects().count(), 1);
     QCOMPARE(effectsImpl->loadedEffects().first(), effectName);
@@ -223,7 +221,7 @@ void PopupOpenCloseAnimationTest::testAnimateDecorationTooltips()
     QVERIFY(window->isDecorated());
 
     // Load effect that will be tested.
-    const QString effectName = QStringLiteral("kwin4_effect_fadingpopups");
+    const QString effectName = QStringLiteral("fadingpopups");
     QVERIFY(effectsImpl->loadEffect(effectName));
     QCOMPARE(effectsImpl->loadedEffects().count(), 1);
     QCOMPARE(effectsImpl->loadedEffects().first(), effectName);
@@ -232,7 +230,7 @@ void PopupOpenCloseAnimationTest::testAnimateDecorationTooltips()
     QVERIFY(!effect->isActive());
 
     // Show a decoration tooltip.
-    QSignalSpy tooltipAddedSpy(workspace(), &Workspace::internalWindowAdded);
+    QSignalSpy tooltipAddedSpy(workspace(), &Workspace::windowAdded);
     window->decoratedClient()->requestShowToolTip(QStringLiteral("KWin rocks!"));
     QVERIFY(tooltipAddedSpy.wait());
     InternalWindow *tooltip = tooltipAddedSpy.first().first().value<InternalWindow *>();
@@ -245,7 +243,7 @@ void PopupOpenCloseAnimationTest::testAnimateDecorationTooltips()
     QTRY_VERIFY(!effect->isActive());
 
     // Hide the decoration tooltip.
-    QSignalSpy tooltipClosedSpy(tooltip, &InternalWindow::windowClosed);
+    QSignalSpy tooltipClosedSpy(tooltip, &InternalWindow::closed);
     window->decoratedClient()->requestHideToolTip();
     QVERIFY(tooltipClosedSpy.wait());
     QVERIFY(effect->isActive());

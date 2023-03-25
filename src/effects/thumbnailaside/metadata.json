@@ -40,7 +40,6 @@
         "Description[zh_CN]": "在屏幕边缘显示窗口的缩略图",
         "Description[zh_TW]": "在螢幕邊緣顯示視窗縮圖",
         "EnabledByDefault": false,
-        "Id": "thumbnailaside",
         "License": "GPL",
         "Name": "Thumbnail Aside",
         "Name[ar]": "مصغرات على الجانب",

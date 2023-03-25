@@ -5,20 +5,21 @@
 # Markus Slopianka <kamikazow@fishmouth.net>, 2010.
 # Felix Schweighofer <felix.schweighofer@googlemail.com>, 2010.
 # Hendrik Knackstedt <kn.hendrik@gmail.com>, 2011.
+# Jannick Kuhr <opensource@kuhr.org>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-17 00:51+0000\n"
-"PO-Revision-Date: 2022-07-02 12:35+0200\n"
-"Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
+"POT-Creation-Date: 2023-03-23 02:36+0000\n"
+"PO-Revision-Date: 2023-02-22 21:23+0100\n"
+"Last-Translator: Jannick Kuhr <opensource@kuhr.org>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 22.04.1\n"
+"X-Generator: Lokalize 22.12.2\n"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurDescription)
 #: blur/blur_config.ui:17
@@ -46,7 +47,7 @@ msgstr "Stark"
 msgid "Noise strength:"
 msgstr "Verzerrstärke:"
 
-#: colorpicker/colorpicker.cpp:101
+#: colorpicker/colorpicker.cpp:102
 #, kde-format
 msgid ""
 "Select a position for color picking with left click or enter.\n"
@@ -189,7 +190,7 @@ msgstr "&Raster-Layout-Modus:"
 #: windowview/kcm/windowvieweffectkcm.ui:30
 #, kde-format
 msgid "Closest"
-msgstr ""
+msgstr "Möglichst eng"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
 #: desktopgrid/desktopgrid_config.ui:142 overview/kcm/overvieweffectkcm.ui:35
@@ -200,17 +201,15 @@ msgstr "Natürlich"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
 #: desktopgrid/desktopgrid_config.ui:147
-#, fuzzy, kde-format
-#| msgid "None"
+#, kde-format
 msgid "None"
-msgstr "Keine(s)"
+msgstr "Keines"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: desktopgrid/desktopgrid_config.ui:155
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Windows layout:"
-msgstr "Fenster"
+msgstr "Fenster-Layout:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 #: desktopgrid/desktopgrid_config.ui:171
@@ -322,10 +321,9 @@ msgid "Toggle Invert Effect on Window"
 msgstr "Invertieren-Effekt für Fenster umschalten"
 
 #: invert/invert.cpp:56
-#, fuzzy, kde-format
-#| msgid "Invert cursor keys"
+#, kde-format
 msgid "Invert Screen Colors"
-msgstr "Pfeiltasten umkehren"
+msgstr "Bildschirmfarben invertieren"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_FadeToBlack)
 #: login/package/contents/ui/config.ui:17
@@ -377,24 +375,24 @@ msgstr " px"
 msgid "&Height:"
 msgstr "&Höhe:"
 
-#: mouseclick/mouseclick.cpp:34 mouseclick/mouseclick_config.cpp:51
+#: mouseclick/mouseclick.cpp:36 mouseclick/mouseclick_config.cpp:51
 #, kde-format
 msgid "Toggle Mouse Click Effect"
 msgstr "Mausklick-Effekt ein-/ausschalten"
 
-#: mouseclick/mouseclick.cpp:41
+#: mouseclick/mouseclick.cpp:43
 #, kde-format
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr "Links"
 
-#: mouseclick/mouseclick.cpp:42
+#: mouseclick/mouseclick.cpp:44
 #, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "Mitte"
 
-#: mouseclick/mouseclick.cpp:43
+#: mouseclick/mouseclick.cpp:45
 #, kde-format
 msgctxt "Right mouse button"
 msgid "Right"
@@ -501,12 +499,12 @@ msgstr "Schriftart:"
 msgid "Show Text:"
 msgstr "Text anzeigen:"
 
-#: mousemark/mousemark.cpp:36
+#: mousemark/mousemark.cpp:40
 #, kde-format
 msgid "Clear All Mouse Marks"
 msgstr "Alle Mausspuren entfernen"
 
-#: mousemark/mousemark.cpp:42 mousemark/mousemark_config.cpp:59
+#: mousemark/mousemark.cpp:46 mousemark/mousemark_config.cpp:59
 #, kde-format
 msgid "Clear Last Mouse Mark"
 msgstr "Letzte Mausspur entfernen"
@@ -548,7 +546,7 @@ msgstr ""
 #, kde-format
 msgctxt "@label"
 msgid "Unknown"
-msgstr ""
+msgstr "Unbekannt"
 
 #: overview/kcm/overvieweffectkcm.cpp:41 overview/overvieweffect.cpp:31
 #, kde-format
@@ -562,43 +560,34 @@ msgstr "Übersicht umschalten"
 msgid "Layout mode:"
 msgstr "Anordnungs-Modus:"
 
-#. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
-#: overview/kcm/overvieweffectkcm.ui:56
-#, kde-format
-msgid "Blur background:"
-msgstr "Hintergrund verwischen:"
-
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: overview/kcm/overvieweffectkcm.ui:73
+#: overview/kcm/overvieweffectkcm.ui:43
 #, kde-format
 msgid "Ignore minimized windows:"
 msgstr "Minimierte Fenster ignorieren:"
 
-#: overview/qml/DesktopBar.qml:186
+#: overview/qml/DesktopBar.qml:187
 #, kde-format
 msgid "Delete Virtual Desktop"
-msgstr ""
+msgstr "Virtuelle Arbeitsfläche löschen"
 
-#: overview/qml/DesktopBar.qml:282
-#, fuzzy, kde-format
-#| msgid "Add Desktop"
+#: overview/qml/DesktopBar.qml:283
+#, kde-format
 msgid "Add Virtual Desktop"
-msgstr "Arbeitsfläche hinzufügen"
+msgstr "Virtuelle Arbeitsfläche hinzufügen"
 
 #: overview/qml/ScreenView.qml:226
-#, fuzzy, kde-format
-#| msgid "Moving windows:"
+#, kde-format
 msgid "No matching windows"
-msgstr "Verschieben von Fenstern:"
+msgstr "Keine passenden Fenster"
 
 #: private/qml/WindowHeapDelegate.qml:151
 #, kde-format
 msgid "Drag Down To Close"
-msgstr ""
+msgstr "Zum Schließen nach unten ziehen"
 
-#: private/qml/WindowHeapDelegate.qml:461
-#, fuzzy, kde-format
-#| msgid "Close window"
+#: private/qml/WindowHeapDelegate.qml:452
+#, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
 msgstr "Fenster schließen"
@@ -615,20 +604,7 @@ msgstr "Fensterskalierung beim Öffnen:"
 msgid "Window close scale:"
 msgstr "Fensterskalierung beim Schließen:"
 
-#: screenshot/screenshotdbusinterface1.cpp:478
-#, kde-format
-msgctxt "Notification caption that a screenshot got saved to file"
-msgid "Screenshot"
-msgstr "Bildschirmfoto"
-
-#: screenshot/screenshotdbusinterface1.cpp:479
-#, kde-format
-msgctxt "Notification with path to screenshot file"
-msgid "Screenshot saved to %1"
-msgstr "Bildschirmfoto gespeichert nach %1"
-
-#: screenshot/screenshotdbusinterface1.cpp:800
-#: screenshot/screenshotdbusinterface2.cpp:477
+#: screenshot/screenshotdbusinterface2.cpp:512
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -638,8 +614,7 @@ msgstr ""
 "das Bildschirmfoto. Mit der Taste ESC oder einem rechten Mausklick brechen "
 "Sie ab."
 
-#: screenshot/screenshotdbusinterface1.cpp:803
-#: screenshot/screenshotdbusinterface2.cpp:495
+#: screenshot/screenshotdbusinterface2.cpp:530
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
@@ -667,23 +642,21 @@ msgstr "Ringanzahl:"
 #, kde-format
 msgctxt "@label"
 msgid "Current FPS"
-msgstr ""
+msgstr "Aktuelle FPS"
 
 #: showfps/qml/main.qml:184
-#, fuzzy, kde-format
-#| msgid "Maximum &width:"
+#, kde-format
 msgctxt "@label"
 msgid "Maximum FPS"
-msgstr "Maximale &Breite:"
+msgstr "Maximale FPS"
 
 #: showfps/qml/main.qml:192
-#, fuzzy, kde-format
-#| msgid "This effect is not a benchmark"
+#, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr "Dieser Effekt ist kein Benchmark"
 
-#: showpaint/showpaint.cpp:38 showpaint/showpaint_config.cpp:38
+#: showpaint/showpaint.cpp:39 showpaint/showpaint_config.cpp:38
 #, kde-format
 msgid "Toggle Show Paint"
 msgstr "Zeichnungsbereiche ein-/ausschalten"
@@ -712,7 +685,7 @@ msgstr "Senkrecht:"
 msgid "Slide desktop background"
 msgstr "Arbeitsflächen-Hintergrund gleiten lassen"
 
-#: thumbnailaside/thumbnailaside.cpp:29
+#: thumbnailaside/thumbnailaside.cpp:31
 #: thumbnailaside/thumbnailaside_config.cpp:59
 #, kde-format
 msgid "Toggle Thumbnail for Current Window"
@@ -754,46 +727,44 @@ msgstr " %"
 #: tileseditor/tileseditoreffect.cpp:29
 #, kde-format
 msgid "Toggle Tiles Editor"
-msgstr ""
+msgstr "Tiling-Editor ein-/ausschalten"
 
-#: tileseditor/qml/main.qml:147
+#: tileseditor/qml/main.qml:150
 #, kde-format
 msgid "Padding:"
-msgstr ""
+msgstr "Zwischenraum:"
 
-#: tileseditor/qml/main.qml:157
+#: tileseditor/qml/main.qml:160
 #, kde-format
 msgid "Load Layout..."
-msgstr ""
+msgstr "Layout laden ..."
 
-#: tileseditor/qml/main.qml:271
+#: tileseditor/qml/main.qml:274
 #, kde-format
 msgid "Close"
-msgstr ""
+msgstr "Schließen"
 
-#: tileseditor/qml/TileDelegate.qml:171
-#, fuzzy, kde-format
-#| msgid "Horizontal:"
+#: tileseditor/qml/TileDelegate.qml:167
+#, kde-format
 msgid "Split Horizontally"
-msgstr "Waagerecht:"
+msgstr "Waagerecht aufteilen"
 
-#: tileseditor/qml/TileDelegate.qml:178
-#, fuzzy, kde-format
-#| msgid "Vertical:"
+#: tileseditor/qml/TileDelegate.qml:174
+#, kde-format
 msgid "Split Vertically"
-msgstr "Senkrecht:"
+msgstr "Senkrecht aufteilen"
 
-#: tileseditor/qml/TileDelegate.qml:186 tileseditor/qml/TileDelegate.qml:215
+#: tileseditor/qml/TileDelegate.qml:182 tileseditor/qml/TileDelegate.qml:211
 #, kde-format
 msgid "Add Floating Tile"
-msgstr ""
+msgstr "Schwebende Kachel hinzufügen"
 
-#: tileseditor/qml/TileDelegate.qml:195
+#: tileseditor/qml/TileDelegate.qml:191
 #, kde-format
 msgid "Delete"
-msgstr ""
+msgstr "Löschen"
 
-#: trackmouse/trackmouse.cpp:44 trackmouse/trackmouse_config.cpp:57
+#: trackmouse/trackmouse.cpp:45 trackmouse/trackmouse_config.cpp:57
 #, kde-format
 msgid "Track mouse"
 msgstr "Maus-Position finden"
@@ -935,13 +906,12 @@ msgstr "Fenster aller Arbeitsflächen anzeigen"
 #: windowview/kcm/windowvieweffectkcm.cpp:56 windowview/windowvieweffect.cpp:63
 #, kde-format
 msgid "Toggle Present Windows (Window class)"
-msgstr "Fenster zeigen umschalten (Fensterklasse)"
+msgstr "Fenster der Fensterklasse anzeigen"
 
 #: windowview/kcm/windowvieweffectkcm.cpp:62 windowview/windowvieweffect.cpp:72
-#, fuzzy, kde-format
-#| msgid "Toggle Present Windows (Current desktop)"
+#, kde-format
 msgid "Toggle Present Windows (Window class on current desktop)"
-msgstr "Fenster der aktuellen Arbeitsfläche anzeigen"
+msgstr "Fenster der Fensterklasse auf der aktuellen Arbeitsfläche anzeigen"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
 #: windowview/kcm/windowvieweffectkcm.ui:56
@@ -949,21 +919,20 @@ msgstr "Fenster der aktuellen Arbeitsfläche anzeigen"
 msgid "Ignore &minimized windows"
 msgstr "&Minimierte Fenster ignorieren"
 
-#: windowview/qml/main.qml:106
+#: windowview/qml/main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr "Keine Übereinstimmungen"
 
-#: windowview/qml/main.qml:106
+#: windowview/qml/main.qml:107
 #, kde-format
 msgid "No Windows"
 msgstr "Keine Fenster"
 
-#: windowview/qml/main.qml:120
-#, fuzzy, kde-format
-#| msgid "Fullscreen windows"
+#: windowview/qml/main.qml:122
+#, kde-format
 msgid "Filter windows…"
-msgstr "Vollbildfenster"
+msgstr "Fenster filtern ..."
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
 #: wobblywindows/wobblywindows_config.ui:20
@@ -1025,32 +994,32 @@ msgstr "Weniger"
 msgid "More"
 msgstr "Mehr"
 
-#: zoom/zoom.cpp:65
+#: zoom/zoom.cpp:67
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Vergrößerten Bereich nach links verschieben"
 
-#: zoom/zoom.cpp:72
+#: zoom/zoom.cpp:74
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Vergrößerten Bereich nach rechts verschieben"
 
-#: zoom/zoom.cpp:79
+#: zoom/zoom.cpp:81
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Vergrößerten Bereich nach oben verschieben"
 
-#: zoom/zoom.cpp:86
+#: zoom/zoom.cpp:88
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Vergrößerten Bereich nach unten verschieben"
 
-#: zoom/zoom.cpp:94 zoom/zoom_config.cpp:108
+#: zoom/zoom.cpp:96 zoom/zoom_config.cpp:108
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Mauszeiger in den Fokus verschieben"
 
-#: zoom/zoom.cpp:101 zoom/zoom_config.cpp:115
+#: zoom/zoom.cpp:103 zoom/zoom_config.cpp:115
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Mauszeiger zentrieren"
@@ -1189,6 +1158,17 @@ msgstr "Deaktiviert"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "Mausverfolgung:"
+
+#~ msgctxt "Notification caption that a screenshot got saved to file"
+#~ msgid "Screenshot"
+#~ msgstr "Bildschirmfoto"
+
+#~ msgctxt "Notification with path to screenshot file"
+#~ msgid "Screenshot saved to %1"
+#~ msgstr "Bildschirmfoto gespeichert nach %1"
+
+#~ msgid "Blur background:"
+#~ msgstr "Hintergrund verwischen:"
 
 #, fuzzy
 #~| msgctxt "Name of a KWin Effect"

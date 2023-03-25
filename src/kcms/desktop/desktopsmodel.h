@@ -9,7 +9,7 @@
 
 #include <QAbstractListModel>
 
-#include "../virtualdesktopsdbustypes.h"
+#include "virtualdesktopsdbustypes.h"
 
 class QDBusArgument;
 class QDBusMessage;

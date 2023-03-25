@@ -9,6 +9,7 @@
         "Description[bg]": "Конфигуриране на заглавни ленти и рамки на прозорци",
         "Description[ca@valencia]": "Configura les barres de títols i les vores de les finestres",
         "Description[ca]": "Configura les barres de títols i les vores de les finestres",
+        "Description[cs]": "Nastavit popisky a okraje okna",
         "Description[de]": "Titelleiste und Ränder von Fenstern einrichten",
         "Description[en_GB]": "Configure window title-bars and borders",
         "Description[es]": "Configurar las barras de título y los bordes de las ventanas",
@@ -27,6 +28,7 @@
         "Description[pl]": "Ustawienia pasków tytułów i obramowań okien",
         "Description[pt]": "Configurar as barras de título e contornos das janelas",
         "Description[pt_BR]": "Configure as barras de títulos e bordas da janela",
+        "Description[ro]": "Configurează barele de titlu și contururile ferestrelor",
         "Description[ru]": "Настройка заголовка и границ окон",
         "Description[sk]": "Nastaviť záhlavia a okraje okna",
         "Description[sl]": "Prilagodite naslovne vrstice in obrobe oken",
@@ -69,6 +71,7 @@
         "Name[pl]": "Wygląd okien",
         "Name[pt]": "Decorações das Janelas",
         "Name[pt_BR]": "Decorações da janela",
+        "Name[ro]": "Decorații fereastră",
         "Name[ru]": "Оформление окон",
         "Name[sk]": "Dekorácie okien",
         "Name[sl]": "Okrasitev oken",
@@ -114,7 +117,6 @@
     "X-KDE-Keywords[vi]": "kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration,window decorations,titlebar,window buttons,window border,skin,cửa sổ,trình quản lí,viền,kiểu cách,chủ đề,nhìn,cảm,bố cục,nút,quai móc,cạnh,trang trí,trang trí cửa sổ,thanh tiêu đề,nút cửa sổ,viền cửa sổ,da",
     "X-KDE-Keywords[x-test]": "xxkwinxx,xxwindowxx,xxmanagerxx,xxborderxx,xxstylexx,xxthemexx,xxlookxx,xxfeelxx,xxlayoutxx,xxbuttonxx,xxhandlexx,xxedgexx,xxkwmxx,xxdecorationxx,xxwindow decorationsxx,xxtitlebarxx,xxwindow buttonsxx,xxwindow borderxx,xxskinxx",
     "X-KDE-Keywords[zh_CN]": "kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration,window decorations,titlebar,window buttons,window border,skin,窗口,管理器,窗口管理器,边框,风格,样式,主题,界面外观,外观,观感,视觉效果,视效,布局,按钮,拖柄,手柄,边缘,装饰,窗口装饰,标题栏,窗口按钮,窗口边框,窗口外框,皮肤",
-    "X-KDE-ParentApp": "kcontrol",
     "X-KDE-System-Settings-Parent-Category": "appearance",
     "X-KDE-Weight": 40
 }

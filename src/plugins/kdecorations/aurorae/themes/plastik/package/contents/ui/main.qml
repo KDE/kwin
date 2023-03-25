@@ -3,9 +3,9 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-import QtQuick 2.0
-import org.kde.kwin.decoration 0.1
-import org.kde.kwin.decorations.plastik 1.0
+import QtQuick
+import org.kde.kwin.decoration
+import org.kde.kwin.decorations.plastik
 
 Decoration {
     function readBorderSize() {

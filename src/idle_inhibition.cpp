@@ -8,8 +8,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "idle_inhibition.h"
-#include "deleted.h"
 #include "input.h"
+#include "virtualdesktops.h"
 #include "wayland/surface_interface.h"
 #include "window.h"
 #include "workspace.h"
@@ -38,12 +38,11 @@ void IdleInhibition::registerClient(Window *client)
     };
 
     m_connections[client] = connect(client->surface(), &SurfaceInterface::inhibitsIdleChanged, this, updateInhibit);
-    connect(client, &Window::desktopChanged, this, updateInhibit);
-    connect(client, &Window::clientMinimized, this, updateInhibit);
-    connect(client, &Window::clientUnminimized, this, updateInhibit);
+    connect(client, &Window::desktopsChanged, this, updateInhibit);
+    connect(client, &Window::minimizedChanged, this, updateInhibit);
     connect(client, &Window::windowHidden, this, updateInhibit);
     connect(client, &Window::windowShown, this, updateInhibit);
-    connect(client, &Window::windowClosed, this, [this, client]() {
+    connect(client, &Window::closed, this, [this, client]() {
         uninhibit(client);
         auto it = m_connections.find(client);
         if (it != m_connections.end()) {
@@ -68,7 +67,7 @@ void IdleInhibition::uninhibit(Window *client)
 
 void IdleInhibition::update(Window *client)
 {
-    if (client->isInternal()) {
+    if (client->isInternal() || client->isUnmanaged()) {
         return;
     }
 
@@ -89,7 +88,7 @@ void IdleInhibition::slotWorkspaceCreated()
 
 void IdleInhibition::slotDesktopChanged()
 {
-    workspace()->forEachAbstractClient([this](Window *c) {
+    workspace()->forEachWindow([this](Window *c) {
         update(c);
     });
 }

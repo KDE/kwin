@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "kwineffects.h"
-#include "kwinglutils.h"
+#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/kwinglutils.h"
 #include "scene/itemrenderer.h"
 
 namespace KWin
@@ -41,14 +41,15 @@ public:
 
     ItemRendererOpenGL();
 
-    void beginFrame(RenderTarget *renderTarget) override;
+    void beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport) override;
     void endFrame() override;
 
-    void renderBackground(const QRegion &region) override;
-    void renderItem(Item *item, int mask, const QRegion &region, const WindowPaintData &data) override;
+    void renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &region) override;
+    void renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &region, const WindowPaintData &data) override;
+
+    ImageItem *createImageItem(Scene *scene, Item *parent = nullptr) override;
 
 private:
-    QMatrix4x4 modelViewProjectionMatrix(const WindowPaintData &data) const;
     QVector4D modulate(float opacity, float brightness) const;
     void setBlendEnabled(bool enabled);
     void createRenderNode(Item *item, RenderContext *context);

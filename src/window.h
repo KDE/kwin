@@ -27,6 +27,7 @@
 #include <QObject>
 #include <QPointer>
 #include <QRectF>
+#include <QTimer>
 #include <QUuid>
 
 class QMouseEvent;
@@ -48,7 +49,6 @@ namespace KWin
 class Group;
 class Output;
 class ClientMachine;
-class Deleted;
 class EffectWindowImpl;
 class Tile;
 class Scene;
@@ -121,14 +121,9 @@ class KWIN_EXPORT Window : public QObject
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
 
     /**
-     * The screen where the window center is on
+     * The output where the window center is on
      */
-    Q_PROPERTY(int screen READ screen NOTIFY screenChanged)
-
-    /**
-     * The output (screen) where the window center is on
-     */
-    Q_PROPERTY(KWin::Output *output READ output NOTIFY screenChanged)
+    Q_PROPERTY(KWin::Output *output READ output NOTIFY outputChanged)
 
     Q_PROPERTY(QRectF rect READ rect)
     Q_PROPERTY(QString resourceName READ resourceName NOTIFY windowClassChanged)
@@ -315,34 +310,19 @@ class KWIN_EXPORT Window : public QObject
     Q_PROPERTY(bool active READ isActive NOTIFY activeChanged)
 
     /**
-     * The desktop this Window is on. If the Window is on all desktops the property has value -1.
-     * This is a legacy property, use x11DesktopIds instead
-     *
-     * @deprecated Use the desktops property instead.
-     */
-    Q_PROPERTY(int desktop READ desktop WRITE setDesktop NOTIFY desktopChanged)
-
-    /**
      * The virtual desktops this client is on. If it's on all desktops, the list is empty.
      */
-    Q_PROPERTY(QVector<KWin::VirtualDesktop *> desktops READ desktops WRITE setDesktops NOTIFY desktopChanged)
+    Q_PROPERTY(QVector<KWin::VirtualDesktop *> desktops READ desktops WRITE setDesktops NOTIFY desktopsChanged)
 
     /**
      * Whether the Window is on all desktops. That is desktop is -1.
      */
-    Q_PROPERTY(bool onAllDesktops READ isOnAllDesktops WRITE setOnAllDesktops NOTIFY desktopChanged)
+    Q_PROPERTY(bool onAllDesktops READ isOnAllDesktops WRITE setOnAllDesktops NOTIFY desktopsChanged)
 
     /**
      * The activities this client is on. If it's on all activities the property is empty.
      */
     Q_PROPERTY(QStringList activities READ activities WRITE setOnActivities NOTIFY activitiesChanged)
-
-    /**
-     * The x11 ids for all desktops this client is in. On X11 this list will always have a length of 1
-     *
-     * @deprecated prefer using apis that use VirtualDesktop objects
-     */
-    Q_PROPERTY(QVector<uint> x11DesktopIds READ x11DesktopIds NOTIFY x11DesktopIdsChanged)
 
     /**
      * Indicates that the window should not be included on a taskbar.
@@ -467,14 +447,6 @@ class KWIN_EXPORT Window : public QObject
     /**
      * The geometry of this Window. Be aware that depending on resize mode the frameGeometryChanged
      * signal might be emitted at each resize step or only at the end of the resize operation.
-     *
-     * @deprecated Use frameGeometry
-     */
-    Q_PROPERTY(QRectF geometry READ frameGeometry WRITE moveResize NOTIFY frameGeometryChanged)
-
-    /**
-     * The geometry of this Window. Be aware that depending on resize mode the frameGeometryChanged
-     * signal might be emitted at each resize step or only at the end of the resize operation.
      */
     Q_PROPERTY(QRectF frameGeometry READ frameGeometry WRITE moveResize NOTIFY frameGeometryChanged)
 
@@ -589,6 +561,9 @@ class KWIN_EXPORT Window : public QObject
 public:
     ~Window() override;
 
+    void ref();
+    void unref();
+
     virtual xcb_window_t frameId() const;
     xcb_window_t window() const;
     /**
@@ -617,7 +592,7 @@ public:
      *
      * Default implementation returns a margins object with all margins set to 0.
      */
-    virtual QMargins frameMargins() const;
+    QMargins frameMargins() const;
     /**
      * The geometry of the Window which accepts input events. This might be larger
      * than the actual geometry, e.g. to support resizing outside the window.
@@ -634,7 +609,6 @@ public:
     qreal height() const;
     bool isOnOutput(Output *output) const;
     bool isOnActiveOutput() const;
-    int screen() const;
     Output *output() const;
     void setOutput(Output *output);
     virtual QPointF clientPos() const
@@ -730,11 +704,7 @@ public:
     int depth() const;
     bool hasAlpha() const;
     virtual bool setupCompositing();
-    virtual void finishCompositing(ReleaseReason releaseReason = ReleaseReason::Release);
-    // these call workspace->addRepaint(), but first transform the damage if needed
-    void addWorkspaceRepaint(const QRectF &r);
-    void addWorkspaceRepaint(int x, int y, int w, int h);
-    void addWorkspaceRepaint(const QRegion &region);
+    virtual void finishCompositing();
     EffectWindowImpl *effectWindow();
     const EffectWindowImpl *effectWindow() const;
     SurfaceItem *surfaceItem() const;
@@ -851,9 +821,9 @@ public:
     int stackingOrder() const;
     void setStackingOrder(int order); ///< @internal
 
-    QWeakPointer<TabBox::TabBoxClientImpl> tabBoxClient() const
+    std::weak_ptr<TabBox::TabBoxClientImpl> tabBoxClient() const
     {
-        return m_tabBoxClient.toWeakRef();
+        return m_tabBoxClient;
     }
     bool isFirstInTabBox() const
     {
@@ -994,7 +964,6 @@ public:
     void setShortcut(const QString &cut);
     bool performMouseCommand(Options::MouseCommand, const QPointF &globalPos);
     void setOnAllDesktops(bool set);
-    void setDesktop(int);
     void enterDesktop(VirtualDesktop *desktop);
     void leaveDesktop(VirtualDesktop *desktop);
 
@@ -1004,15 +973,9 @@ public:
      */
     void setDesktops(QVector<VirtualDesktop *> desktops);
 
-    QVector<uint> x11DesktopIds() const;
     QStringList desktopIds() const;
 
     void setMinimized(bool set);
-    /**
-     * Minimizes this window plus its transients
-     */
-    void minimize(bool avoid_animation = false);
-    void unminimize(bool avoid_animation = false);
     bool isMinimized() const
     {
         return m_minimized;
@@ -1083,7 +1046,7 @@ public:
         return &m_rules;
     }
     void removeRule(Rules *r);
-    void setupWindowRules(bool ignore_temporary);
+    void setupWindowRules();
     void evaluateWindowRules();
     virtual void applyWindowRules();
     virtual bool takeFocus() = 0;
@@ -1270,11 +1233,11 @@ public:
     {
         return m_decoration.decoration != nullptr;
     }
-    QPointer<Decoration::DecoratedClientImpl> decoratedClient() const;
-    void setDecoratedClient(QPointer<Decoration::DecoratedClientImpl> client);
+    Decoration::DecoratedClientImpl *decoratedClient() const;
+    void setDecoratedClient(Decoration::DecoratedClientImpl *client);
     bool decorationHasAlpha() const;
     void triggerDecorationRepaint();
-    virtual void layoutDecorationRects(QRectF &left, QRectF &top, QRectF &right, QRectF &bottom) const;
+    void layoutDecorationRects(QRectF &left, QRectF &top, QRectF &right, QRectF &bottom) const;
     void processDecorationMove(const QPointF &localPos, const QPointF &globalPos);
     bool processDecorationButtonPress(QMouseEvent *event, bool ignoreMenu = false);
     void processDecorationButtonRelease(QMouseEvent *event);
@@ -1429,6 +1392,9 @@ public:
 
     void setTile(Tile *tile);
 
+    void refOffscreenRendering();
+    void unrefOffscreenRendering();
+
 public Q_SLOTS:
     virtual void closeWindow() = 0;
 
@@ -1441,13 +1407,8 @@ Q_SIGNALS:
     void opacityChanged(KWin::Window *window, qreal oldOpacity);
     void damaged(KWin::Window *window);
     void inputTransformationChanged();
-    /**
-     * This signal is emitted when the Window's frame geometry changes.
-     * @deprecated since 5.19, use frameGeometryChanged instead
-     */
-    void geometryChanged();
-    void geometryShapeChanged(KWin::Window *window, const QRectF &old);
-    void windowClosed(KWin::Window *window, KWin::Deleted *deleted);
+    void geometryShapeChanged(const QRectF &old);
+    void closed(KWin::Window *deleted);
     void windowShown(KWin::Window *window);
     void windowHidden(KWin::Window *window);
     /**
@@ -1461,7 +1422,7 @@ Q_SIGNALS:
      * a screen being removed/added or if the Window's geometry changes.
      * @since 4.11
      */
-    void screenChanged();
+    void outputChanged();
     void skipCloseAnimationChanged();
     /**
      * Emitted whenever the window role of the window changes.
@@ -1492,20 +1453,20 @@ Q_SIGNALS:
     /**
      * This signal is emitted when the Window's buffer geometry changes.
      */
-    void bufferGeometryChanged(KWin::Window *window, const QRectF &oldGeometry);
+    void bufferGeometryChanged(const QRectF &oldGeometry);
     /**
      * This signal is emitted when the Window's frame geometry changes.
      */
-    void frameGeometryChanged(KWin::Window *window, const QRectF &oldGeometry);
+    void frameGeometryChanged(const QRectF &oldGeometry);
     /**
      * This signal is emitted when the Window's client geometry has changed.
      */
-    void clientGeometryChanged(KWin::Window *window, const QRectF &oldGeometry);
+    void clientGeometryChanged(const QRectF &oldGeometry);
 
     /**
      * This signal is emitted when the frame geometry is about to change. the new geometry is not known yet
      */
-    void frameGeometryAboutToChange(KWin::Window *window);
+    void frameGeometryAboutToChange();
 
     /**
      * This signal is emitted when the visible geometry has changed.
@@ -1529,27 +1490,22 @@ Q_SIGNALS:
      * Emitted whenever the demands attention state changes.
      */
     void demandsAttentionChanged();
-    void desktopPresenceChanged(KWin::Window *, int); // to be forwarded by Workspace
-    void desktopChanged();
-    void activitiesChanged(KWin::Window *window);
-    void x11DesktopIdsChanged();
+    void desktopsChanged();
+    void activitiesChanged();
     void minimizedChanged();
-    void clientMinimized(KWin::Window *window, bool animate);
-    void clientUnminimized(KWin::Window *window, bool animate);
     void paletteChanged(const QPalette &p);
     void colorSchemeChanged();
     void captionChanged();
-    void clientMaximizedStateAboutToChange(KWin::Window *, MaximizeMode);
-    void clientMaximizedStateChanged(KWin::Window *, MaximizeMode);
-    void clientMaximizedStateChanged(KWin::Window *c, bool h, bool v);
+    void maximizedAboutToChange(MaximizeMode mode);
+    void maximizedChanged();
     void transientChanged();
     void modalChanged();
     void quickTileModeChanged();
     void moveResizedChanged();
     void moveResizeCursorChanged(CursorShape);
-    void clientStartUserMovedResized(KWin::Window *);
-    void clientStepUserMovedResized(KWin::Window *, const QRectF &);
-    void clientFinishUserMovedResized(KWin::Window *);
+    void interactiveMoveResizeStarted();
+    void interactiveMoveResizeStepped(const QRectF &geometry);
+    void interactiveMoveResizeFinished();
     void closeableChanged(bool);
     void minimizeableChanged(bool);
     void shadeableChanged(bool);
@@ -1580,8 +1536,7 @@ protected:
     void getWmOpaqueRegion();
     void discardShapeRegion();
 
-    virtual WindowItem *createItem(Scene *scene) = 0;
-    void deleteItem();
+    virtual std::unique_ptr<WindowItem> createItem(Scene *scene) = 0;
 
     void getResourceClass();
     void setResourceClass(const QString &name, const QString &className = QString());
@@ -1590,8 +1545,6 @@ protected:
     void getSkipCloseAnimation();
     void copyToDeleted(Window *c);
     void disownDataPassedToDeleted();
-    void deleteShadow();
-    void deleteEffectWindow();
     void setDepth(int depth);
 
     Output *m_output = nullptr;
@@ -1788,10 +1741,6 @@ protected:
     {
         return m_interactiveMoveResize.initialGeometry;
     }
-    /**
-     * Sets the initial move resize geometry to the current geometry.
-     */
-    void updateInitialMoveResizeGeometry();
     void setMoveResizeGeometry(const QRectF &geo);
     Gravity interactiveMoveResizeGravity() const
     {
@@ -1844,6 +1793,7 @@ protected:
      * activates quick tiling or maximization
      */
     void checkQuickTilingMaximizationZones(int xroot, int yroot);
+    void resetQuickTilingMaximizationZones();
     /**
      * Whether a sync request is still pending.
      * Default implementation returns @c false.
@@ -1856,7 +1806,7 @@ protected:
      * Default implementation does nothing.
      */
     virtual void doInteractiveResizeSync(const QRectF &rect);
-    void handleInteractiveMoveResize(int x, int y, int x_root, int y_root);
+    void handleInteractiveMoveResize(qreal x, qreal y, qreal x_root, qreal y_root);
     void handleInteractiveMoveResize(const QPointF &local, const QPointF &global);
     void dontInteractiveMoveResize();
 
@@ -1892,7 +1842,6 @@ protected:
     Window *findWindowWithSameCaption() const;
 
     void finishWindowRules();
-    void discardTemporaryRules();
 
     bool tabTo(Window *other, bool behind, bool activate);
 
@@ -1916,13 +1865,16 @@ private Q_SLOTS:
     void shadeUnhover();
 
 private:
+    void maybeSendFrameCallback();
+
     // when adding new data members, check also copyToDeleted()
+    int m_refCount = 1;
     QUuid m_internalId;
     Xcb::Window m_client;
     bool is_shape;
-    EffectWindowImpl *m_effectWindow;
-    WindowItem *m_windowItem = nullptr;
-    Shadow *m_shadow = nullptr;
+    std::unique_ptr<EffectWindowImpl> m_effectWindow;
+    std::unique_ptr<WindowItem> m_windowItem;
+    std::unique_ptr<Shadow> m_shadow;
     QString resource_name;
     QString resource_class;
     ClientMachine *m_clientMachine;
@@ -1942,7 +1894,7 @@ private:
     QRectF moveToArea(const QRectF &geometry, const QRectF &oldArea, const QRectF &newArea);
     QRectF ensureSpecialStateGeometry(const QRectF &geometry);
 
-    QSharedPointer<TabBox::TabBoxClientImpl> m_tabBoxClient;
+    std::shared_ptr<TabBox::TabBoxClientImpl> m_tabBoxClient;
     bool m_firstInTabBox = false;
     bool m_skipTaskbar = false;
     /**
@@ -2004,12 +1956,15 @@ private:
         QPointF offset;
         QPointF invertedOffset;
         QRectF initialGeometry;
+        QRectF initialGeometryRestore;
         Gravity gravity = Gravity::None;
         bool buttonDown = false;
         CursorShape cursor = Qt::ArrowCursor;
         Output *startOutput = nullptr;
         QTimer *delayedTimer = nullptr;
         uint32_t counter = 0;
+        MaximizeMode initialMaximizeMode;
+        QuickTileMode initialQuickTileMode;
     } m_interactiveMoveResize;
 
     struct
@@ -2032,6 +1987,8 @@ private:
     WindowRules m_rules;
     quint32 m_lastUsageSerial = 0;
     bool m_lockScreenOverlay = false;
+    uint32_t m_offscreenRenderCount = 0;
+    QTimer m_offscreenFramecallbackTimer;
 };
 
 /**
@@ -2257,17 +2214,17 @@ inline const QRegion &Window::opaqueRegion() const
 
 inline EffectWindowImpl *Window::effectWindow()
 {
-    return m_effectWindow;
+    return m_effectWindow.get();
 }
 
 inline const EffectWindowImpl *Window::effectWindow() const
 {
-    return m_effectWindow;
+    return m_effectWindow.get();
 }
 
 inline WindowItem *Window::windowItem() const
 {
-    return m_windowItem;
+    return m_windowItem.get();
 }
 
 inline bool Window::isOnAllDesktops() const
@@ -2377,6 +2334,17 @@ inline void Window::setPendingMoveResizeMode(MoveResizeMode mode)
 }
 
 KWIN_EXPORT QDebug operator<<(QDebug debug, const Window *window);
+
+class KWIN_EXPORT WindowOffscreenRenderRef
+{
+public:
+    WindowOffscreenRenderRef(Window *window);
+    WindowOffscreenRenderRef() = default;
+    ~WindowOffscreenRenderRef();
+
+private:
+    QPointer<Window> m_window;
+};
 
 } // namespace KWin
 

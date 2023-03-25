@@ -27,7 +27,7 @@ class MagicLampEffectConfig : public KCModule
 {
     Q_OBJECT
 public:
-    explicit MagicLampEffectConfig(QWidget *parent = nullptr, const QVariantList &args = QVariantList());
+    explicit MagicLampEffectConfig(QObject *parent, const KPluginMetaData &data, const QVariantList &args);
 
 public Q_SLOTS:
     void save() override;

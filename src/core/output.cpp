@@ -321,7 +321,7 @@ Output::DpmsMode Output::dpmsMode() const
     return m_state.dpmsMode;
 }
 
-QMatrix4x4 Output::logicalToNativeMatrix(const QRect &rect, qreal scale, Transform transform)
+QMatrix4x4 Output::logicalToNativeMatrix(const QRectF &rect, qreal scale, Transform transform)
 {
     QMatrix4x4 matrix;
     matrix.scale(scale);
@@ -397,8 +397,14 @@ Output::RgbRange Output::rgbRange() const
     return m_state.rgbRange;
 }
 
-void Output::setColorTransformation(const std::shared_ptr<ColorTransformation> &transformation)
+bool Output::setGammaRamp(const std::shared_ptr<ColorTransformation> &transformation)
 {
+    return false;
+}
+
+bool Output::setCTM(const QMatrix3x3 &ctm)
+{
+    return false;
 }
 
 ContentType Output::contentType() const
@@ -416,12 +422,12 @@ Output::Transform Output::panelOrientation() const
     return m_information.panelOrientation;
 }
 
-bool Output::setCursor(const QImage &image, const QPoint &hotspot)
+bool Output::setCursor(CursorSource *source)
 {
     return false;
 }
 
-bool Output::moveCursor(const QPoint &position)
+bool Output::moveCursor(const QPointF &position)
 {
     return false;
 }

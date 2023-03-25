@@ -8,8 +8,8 @@
 */
 #include "nightcolormanager.h"
 #include "clockskewnotifier.h"
-#include "colordevice.h"
-#include "colormanager.h"
+#include "colors/colordevice.h"
+#include "colors/colormanager.h"
 #include "nightcolordbusinterface.h"
 #include "nightcolorlogging.h"
 #include "nightcolorsettings.h"
@@ -55,10 +55,9 @@ NightColorManager::NightColorManager()
 
     // Display a message when Night Color is (un)inhibited.
     connect(this, &NightColorManager::inhibitedChanged, this, [this] {
-        // TODO: Maybe use different icons?
         const QString iconName = isInhibited()
-            ? QStringLiteral("preferences-desktop-display-nightcolor-off")
-            : QStringLiteral("preferences-desktop-display-nightcolor-on");
+            ? QStringLiteral("redshift-status-off")
+            : QStringLiteral("redshift-status-on");
 
         const QString text = isInhibited()
             ? i18nc("Night Color was disabled", "Night Color Off")
@@ -79,15 +78,6 @@ NightColorManager::NightColorManager()
 
     // we may always read in the current config
     readConfig();
-
-    // legacy shortcut with localized key (to avoid breaking existing config)
-    // TODO Plasma 6: Remove it.
-    if (i18n("Toggle Night Color") != QStringLiteral("Toggle Night Color")) {
-        QAction toggleActionLegacy;
-        toggleActionLegacy.setProperty("componentName", QStringLiteral("kwin"));
-        toggleActionLegacy.setObjectName(i18n("Toggle Night Color"));
-        KGlobalAccel::self()->removeAllShortcuts(&toggleActionLegacy);
-    }
 
     QAction *toggleAction = new QAction(this);
     toggleAction->setProperty("componentName", QStringLiteral("kwin"));
@@ -468,7 +458,7 @@ void NightColorManager::preview(uint previewTemp)
         QStringLiteral("org.kde.osdService"),
         QStringLiteral("showText"));
     message.setArguments(
-        {QStringLiteral("preferences-desktop-display-nightcolor-on"),
+        {QStringLiteral("redshift-status-on"),
          i18n("Color Temperature Preview")});
     QDBusConnection::sessionBus().asyncCall(message);
 }

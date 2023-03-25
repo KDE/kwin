@@ -9,9 +9,9 @@
 
 #pragma once
 
+#include "libkwineffects/kwinglobals.h"
 #include <epoxy/egl.h>
 #include <kwin_export.h>
-#include <kwinglobals.h>
 
 #include <QObject>
 

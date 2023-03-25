@@ -8,8 +8,6 @@
 */
 #include "x11_standalone_backend.h"
 
-#include <config-kwin.h>
-
 #include "atoms.h"
 #include "core/session.h"
 #include "x11_standalone_cursor.h"
@@ -47,11 +45,7 @@
 
 #include <QOpenGLContext>
 #include <QThread>
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 #include <private/qtx11extras_p.h>
-#else
-#include <QX11Info>
-#endif
 
 #include <span>
 
@@ -131,6 +125,21 @@ X11StandaloneBackend::~X11StandaloneBackend()
     XRenderUtils::cleanup();
 }
 
+Display *X11StandaloneBackend::display() const
+{
+    return m_x11Display;
+}
+
+xcb_connection_t *X11StandaloneBackend::connection() const
+{
+    return kwinApp()->x11Connection();
+}
+
+xcb_window_t X11StandaloneBackend::rootWindow() const
+{
+    return kwinApp()->x11RootWindow();
+}
+
 bool X11StandaloneBackend::initialize()
 {
     if (!QX11Info::isPlatformX11()) {
@@ -177,8 +186,8 @@ std::unique_ptr<Edge> X11StandaloneBackend::createScreenEdge(ScreenEdges *edges)
 
 void X11StandaloneBackend::createPlatformCursor(QObject *parent)
 {
-    auto c = new X11Cursor(parent, m_xinputIntegration != nullptr);
 #if HAVE_X11_XINPUT
+    auto c = new X11Cursor(parent, m_xinputIntegration != nullptr);
     if (m_xinputIntegration) {
         m_xinputIntegration->setCursor(c);
         // we know we have xkb already
@@ -186,6 +195,8 @@ void X11StandaloneBackend::createPlatformCursor(QObject *parent)
         xkb->setConfig(kwinApp()->kxkbConfig());
         xkb->reconfigure();
     }
+#else
+    new X11Cursor(parent, false);
 #endif
 }
 
@@ -228,7 +239,7 @@ void X11StandaloneBackend::startInteractiveWindowSelection(std::function<void(KW
     m_windowSelector->start(callback, cursorName);
 }
 
-void X11StandaloneBackend::startInteractivePositionSelection(std::function<void(const QPoint &)> callback)
+void X11StandaloneBackend::startInteractivePositionSelection(std::function<void(const QPointF &)> callback)
 {
     if (!m_windowSelector) {
         m_windowSelector = std::make_unique<WindowSelector>();

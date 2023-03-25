@@ -26,6 +26,9 @@ Tile::Tile(TileManager *tiling, Tile *parent)
     , m_parentTile(parent)
     , m_tiling(tiling)
 {
+    if (m_parentTile) {
+        m_padding = m_parentTile->padding();
+    }
     connect(Workspace::self(), &Workspace::configChanged, this, &Tile::windowGeometryChanged);
 }
 
@@ -91,15 +94,17 @@ void Tile::setGeometryFromAbsolute(const QRectF &geom)
 
 void Tile::setRelativeGeometry(const QRectF &geom)
 {
-    if (m_relativeGeometry == geom) {
+    QRectF constrainedGeom = geom;
+    constrainedGeom.setWidth(std::max(constrainedGeom.width(), s_minimumSize.width()));
+    constrainedGeom.setHeight(std::max(constrainedGeom.height(), s_minimumSize.height()));
+
+    if (m_relativeGeometry == constrainedGeom) {
         return;
     }
 
-    m_relativeGeometry = geom;
-    m_relativeGeometry.setWidth(std::max(m_relativeGeometry.width(), s_minimumSize.width()));
-    m_relativeGeometry.setHeight(std::max(m_relativeGeometry.height(), s_minimumSize.height()));
+    m_relativeGeometry = constrainedGeom;
 
-    Q_EMIT relativeGeometryChanged(geom);
+    Q_EMIT relativeGeometryChanged();
     Q_EMIT absoluteGeometryChanged();
     Q_EMIT windowGeometryChanged();
 
@@ -299,11 +304,7 @@ void Tile::insertChild(int position, Tile *item)
     const bool wasEmpty = m_children.isEmpty();
     item->setParent(this);
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    m_children.insert(std::clamp(position, 0, m_children.length()), item);
-#else
     m_children.insert(std::clamp<qsizetype>(position, 0, m_children.length()), item);
-#endif
 
     if (wasEmpty) {
         Q_EMIT isLayoutChanged(true);
@@ -368,6 +369,14 @@ QList<Tile *> Tile::descendants() const
 Tile *Tile::parentTile() const
 {
     return m_parentTile;
+}
+
+void Tile::visitDescendants(std::function<void(const Tile *child)> callback) const
+{
+    callback(this);
+    for (const Tile *child : m_children) {
+        child->visitDescendants(callback);
+    }
 }
 
 TileManager *Tile::manager() const

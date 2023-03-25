@@ -1,0 +1,217 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Spanish "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwindecoration" lang="&language;">
+<articleinfo>
+<authorgroup>
+<author
+>&Rik.Hemsley; &Rik.Hemsley.mail;</author>
+<author
+>&Anne-Marie.Mahfouf; &Anne-Marie.Mahfouf.mail;</author>
+<othercredit role="translator"
+> <firstname
+>Rocío</firstname
+> <surname
+>Gallego</surname
+> <affiliation
+><address
+><email
+>traducciones@rociogallego.com</email
+></address
+></affiliation
+> <contrib
+>Traducción</contrib
+> </othercredit
+><othercredit role="translator"
+> <firstname
+>Pablo</firstname
+> <surname
+>de Vicente</surname
+> <affiliation
+><address
+><email
+>pvicentea@nexo.es</email
+></address
+></affiliation
+> <contrib
+>Traductor</contrib
+> </othercredit
+> <othercredit role="translator"
+> <firstname
+>Marcos</firstname
+> <surname
+>Fouces Lago</surname
+> <affiliation
+><address
+><email
+>mfouces@yahoo.es</email
+></address
+></affiliation
+> <contrib
+>Traductor</contrib
+> </othercredit
+> 
+</authorgroup>
+
+<date
+>2021-04-09</date>
+<releaseinfo
+>Plasma 5.21</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Preferencias del sistema</keyword>
+<keyword
+>kwin</keyword>
+<keyword
+>ventana</keyword>
+<keyword
+>borde</keyword>
+<keyword
+>tema</keyword>
+<keyword
+>estilo</keyword>
+</keywordset>
+</articleinfo>
+<sect1 id="window-deco">
+<title
+>Decoraciones de la ventana</title>
+
+<para
+>Este módulo le permite seleccionar un estilo para los botones y para los bordes de las ventanas.</para>
+
+<sect2>
+<title
+>Decoraciones de la ventana</title>
+
+<para>
+<screenshot>
+<screeninfo
+>Módulo de configuración dele estilo de la ventana</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="main.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Módulo de configuración del estilo de la ventana</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+
+<para
+>Escoja un estilo de decoración de ventanas de la lista de vista previa, o descargue un nuevo estilo usando el botón <guibutton
+>Descargar nuevas decoraciones de ventanas</guibutton
+>.</para>
+
+<para
+>El estilo predeterminada de las ventanas se llama «Brisa».</para>
+
+<para
+>Cada estilo tiene un aspecto diferente, y un «comportamiento» diferente. Algunos tienen bordes de «redimensionamiento» (a veces invisibles) por todo su contorno para poder redimensionarlos más fácilmente pero que dificulta su movimiento. Algunos no tienen bordes en ciertos lados.</para>
+
+<para
+>Le animamos a que experimente con los diferentes estilos hasta que encuentre uno que se ajuste a su modo de trabajo.</para>
+
+<para
+>En la vista previa de cada estilo podrá encontrar un <inlinemediaobject
+><imageobject
+> <imagedata fileref="configure.png" format="PNG"/></imageobject
+></inlinemediaobject
+> botón de configuración para abrir el diálogo de configuración de la decoración.</para>
+
+<para
+>Las opciones de este diálogo de configuración se aplican a todas las ventanas. Algunas decoraciones de ventanas (por ejemplo, «Brisa») proporcionan la pestaña <guilabel
+>Sustituciones específicas de la ventana</guilabel
+>. En dicha pestaña puede cambiar el tamaño del borde y la visibilidad de la barra de título de algunas ventanas particulares.</para>
+
+<para
+>Puede encontrar distintas opciones para ventanas particulares en el módulo <ulink url="help:/kcontrol/windowspecific"
+>Reglas de las ventanas</ulink
+> de la &systemsettings;. </para>
+
+<tip>
+<para
+>Para mejorar la accesibilidad, algunas decoraciones de ventana admiten bordes más anchos. Si esta opción está disponible, podrá seleccionar el <guilabel
+>Tamaño del borde de la ventana</guilabel
+> aquí. Los bordes más anchos son más fáciles de ver para aquellos usuarios con problemas de visión y más fáciles de seleccionar para aquellas personas con limitaciones de movilidad o dificultades para usar el ratón.</para>
+</tip>
+
+<tip>
+<para
+>Si tiene interés en crear sus propias decoraciones de ventanas, dispone de más información en <ulink url="https://develop.kde.org/docs/extend/plasma/aurorae/"
+>este tutorial</ulink
+>.</para>
+</tip>
+
+</sect2>
+
+<sect2>
+<title
+>Decoraciones</title>
+
+<para
+>En este diálogo, puede cambiar el estilo de la ventana. Las opciones disponibles dependen del estilo seleccionado. </para>
+<para>
+<screenshot>
+<screeninfo
+>Opciones del estilo Brisa</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="decoration.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Opciones del estilo Brisa</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+</sect2>
+
+<sect2>
+<title
+>Botones de la barra de título</title>
+
+<para
+>Esta página le permite personalizar la posición de los botones de la barra de título. Puede arrastrar botones (por ejemplo, el <guilabel
+>Menú de la aplicación</guilabel
+>) a la barra de título, eliminarlos o arrastrarlos a otra posición hasta que consiga el diseño que más le guste. </para>
+
+<screenshot>
+<screeninfo
+>Opciones de los botones</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="button.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Opciones de los botones</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+
+<para
+>Marque <guilabel
+>Cerrar ventanas al hacer doble clic en el botón de menú</guilabel
+> para disponer de la opción adicional al botón «Cerrar» o si ha eliminado del botón «Cerrar» de la barra de título. </para>
+
+<para
+>Marque el elemento <guilabel
+>Mostrar ayudas emergentes de los botones de la barra de título</guilabel
+> si desea que se muestren las informaciones emergentes predeterminadas cuando sitúe el puntero del ratón sobre los botones de la barra de título. </para>
+
+</sect2>
+
+</sect1>
+
+</article>

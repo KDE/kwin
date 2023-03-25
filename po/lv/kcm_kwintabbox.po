@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-06-15 00:48+0000\n"
+"POT-Creation-Date: 2023-02-08 01:01+0000\n"
 "PO-Revision-Date: 2011-07-07 23:17+0300\n"
 "Last-Translator: Rūdofls Mazurs <rudolfs.mazurs@gmail.com>\n"
 "Language-Team: Latvian <locale@laka.lv>\n"
@@ -19,40 +19,35 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
 "2);\n"
 
-#: kwintabboxconfigform.cpp:77
-#, kde-format
-msgid "KWin"
-msgstr ""
-
-#: layoutpreview.cpp:133
+#: layoutpreview.cpp:131
 #, fuzzy, kde-format
 #| msgid "All Desktops"
 msgid "Show Desktop"
 msgstr "Visām darbvirsmām"
 
-#: layoutpreview.cpp:163
+#: layoutpreview.cpp:161
 #, fuzzy, kde-format
 #| msgid "All Desktops"
 msgctxt "An example Desktop Name"
 msgid "Desktop 1"
 msgstr "Visām darbvirsmām"
 
-#: main.cpp:58
+#: main.cpp:66
 #, kde-format
 msgid "Main"
 msgstr "Galvenais"
 
-#: main.cpp:59
+#: main.cpp:67
 #, kde-format
 msgid "Alternative"
 msgstr "Alternatīvais"
 
-#: main.cpp:61
+#: main.cpp:69
 #, kde-format
 msgid "Get New Task Switchers..."
 msgstr ""
 
-#: main.cpp:75
+#: main.cpp:83
 #, kde-format
 msgid ""
 "Focus policy settings limit the functionality of navigating through windows."
@@ -253,6 +248,50 @@ msgstr ""
 msgid "Show selected window"
 msgstr "Rādīt aktīvā loga kontūru"
 
+#: shortcutsettings.cpp:132
+#, kde-format
+msgid "Walk Through Windows"
+msgstr "Iet caur logiem"
+
+#: shortcutsettings.cpp:133
+#, kde-format
+msgid "Walk Through Windows (Reverse)"
+msgstr "Iet caur logiem (reversi)"
+
+#: shortcutsettings.cpp:134
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows Alternative"
+msgid "Walk Through Windows of Current Application"
+msgstr "Iet caur logiem alternatīva"
+
+#: shortcutsettings.cpp:135
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows Alternative (Reverse)"
+msgid "Walk Through Windows of Current Application (Reverse)"
+msgstr "Iet caur logiem alternatīva (reversi)"
+
+#: shortcutsettings.cpp:137
+#, kde-format
+msgid "Walk Through Windows Alternative"
+msgstr "Iet caur logiem alternatīva"
+
+#: shortcutsettings.cpp:138
+#, kde-format
+msgid "Walk Through Windows Alternative (Reverse)"
+msgstr "Iet caur logiem alternatīva (reversi)"
+
+#: shortcutsettings.cpp:139
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows Alternative"
+msgid "Walk Through Windows of Current Application Alternative"
+msgstr "Iet caur logiem alternatīva"
+
+#: shortcutsettings.cpp:140
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows Alternative (Reverse)"
+msgid "Walk Through Windows of Current Application Alternative (Reverse)"
+msgstr "Iet caur logiem alternatīva (reversi)"
+
 #, fuzzy
 #~| msgid "Show outline of selected window"
 #~ msgid "Outline selected window"
@@ -263,38 +302,6 @@ msgstr "Rādīt aktīvā loga kontūru"
 #~ "actions."
 #~ msgstr ""
 #~ "Šie iestatījumi tiek lietoti \"Iet caur logiem alternatīva\" darbībām."
-
-#~ msgid "Walk Through Windows"
-#~ msgstr "Iet caur logiem"
-
-#~ msgid "Walk Through Windows (Reverse)"
-#~ msgstr "Iet caur logiem (reversi)"
-
-#~ msgid "Walk Through Windows Alternative"
-#~ msgstr "Iet caur logiem alternatīva"
-
-#~ msgid "Walk Through Windows Alternative (Reverse)"
-#~ msgstr "Iet caur logiem alternatīva (reversi)"
-
-#, fuzzy
-#~| msgid "Walk Through Windows Alternative"
-#~ msgid "Walk Through Windows of Current Application"
-#~ msgstr "Iet caur logiem alternatīva"
-
-#, fuzzy
-#~| msgid "Walk Through Windows Alternative (Reverse)"
-#~ msgid "Walk Through Windows of Current Application (Reverse)"
-#~ msgstr "Iet caur logiem alternatīva (reversi)"
-
-#, fuzzy
-#~| msgid "Walk Through Windows Alternative"
-#~ msgid "Walk Through Windows of Current Application Alternative"
-#~ msgstr "Iet caur logiem alternatīva"
-
-#, fuzzy
-#~| msgid "Walk Through Windows Alternative (Reverse)"
-#~ msgid "Walk Through Windows of Current Application Alternative (Reverse)"
-#~ msgstr "Iet caur logiem alternatīva (reversi)"
 
 #~ msgid "Configure Layout"
 #~ msgstr "Konfigurēt izkārtojumu"

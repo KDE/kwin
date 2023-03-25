@@ -26,6 +26,7 @@ class KeyboardInterface;
 class PointerInterface;
 class SeatInterfacePrivate;
 class SurfaceInterface;
+class TextInputV1Interface;
 class TextInputV2Interface;
 class TextInputV3Interface;
 class TouchInterface;
@@ -591,6 +592,9 @@ public:
      * @see setFocusedTextInputSurface
      */
     SurfaceInterface *focusedTextInputSurface() const;
+
+    TextInputV1Interface *textInputV1() const;
+
     /**
      * The currently focused text input, may be @c null even if there is a
      * focused text input surface set.

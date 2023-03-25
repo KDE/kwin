@@ -15,8 +15,6 @@
 #include <QObject>
 #include <QRect>
 
-class QTemporaryDir;
-
 namespace KWin
 {
 class VirtualBackend;
@@ -31,12 +29,6 @@ public:
     ~VirtualBackend() override;
 
     bool initialize() override;
-
-    bool saveFrames() const
-    {
-        return m_screenshotDir != nullptr;
-    }
-    QString screenshotDirPath() const;
 
     std::unique_ptr<QPainterBackend> createQPainterBackend() override;
     std::unique_ptr<OpenGLBackend> createOpenGLBackend() override;
@@ -59,7 +51,6 @@ private:
     VirtualOutput *createOutput(const QPoint &position, const QSize &size, qreal scale);
 
     QVector<VirtualOutput *> m_outputs;
-    std::unique_ptr<QTemporaryDir> m_screenshotDir;
 };
 
 } // namespace KWin

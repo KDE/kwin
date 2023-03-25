@@ -52,9 +52,9 @@ private:
 
     void saveGeometry(Window *window);
     void saveInteractionCounter(Window *window);
-    void saveMaximize(KWin::Window *window, MaximizeMode mode);
-    void saveQuickTile();
-    void saveFullscreen();
+    void saveMaximize(Window *window);
+    void saveQuickTile(Window *window);
+    void saveFullscreen(Window *window);
     WindowData dataForWindow(Window *window) const;
 
     QVector<Window *> m_savedWindows;

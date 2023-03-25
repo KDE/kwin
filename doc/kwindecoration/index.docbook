@@ -49,9 +49,9 @@ the windows.</para>
 </screenshot>
 </para>
 
-<para>Choose a window decoration style from the preview list, using the 
-search field at the top of the screen or download a new style using the 
-<guibutton>Get New Window Decorations</guibutton> button.</para>
+<para>Choose a window decoration style from the preview list, or
+download a new style using the <guibutton>Get New Window Decorations</guibutton>
+button.</para>
 
 <para>The default window decoration is called <quote>Breeze</quote>.</para>
 
@@ -86,6 +86,10 @@ vision users, and easier to grab for people with limited mobility or
 difficulty using a mouse.</para>
 </tip>
 
+<tip>
+<para>If you are interested in creating your own window decoration, you can learn more about it <ulink url="https://develop.kde.org/docs/extend/plasma/aurorae/">in this tutorial</ulink>.</para>
+</tip>
+
 </sect2>
 
 <sect2>
@@ -113,7 +117,7 @@ The available options depend on the selected style.
 <sect2>
 <title>Titlebar Buttons</title>
 
-<para>This tab allows you to customize the button location on the titlebar. 
+<para>This page allows you to customize the button location on the titlebar.
 You can drag buttons &eg; the <guilabel>Application menu</guilabel> into the 
 titlebar, remove them or drag around the
 buttons until you have the order that makes you comfortable.

@@ -13,11 +13,11 @@
 #include "core/output.h"
 #include "core/outputbackend.h"
 #include "core/renderbackend.h"
-#include "cursor.h"
+#include "libkwineffects/kwineffects.h"
+#include "pointer_input.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "x11window.h"
-#include <kwineffects.h>
 
 #include <KWayland/Client/surface.h>
 
@@ -70,7 +70,7 @@ void DontCrashNoBorder::init()
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::XdgDecorationV1));
 
     workspace()->setActiveOutput(QPoint(640, 512));
-    Cursors::self()->mouse()->setPos(QPoint(640, 512));
+    input()->pointer()->warp(QPoint(640, 512));
 }
 
 void DontCrashNoBorder::cleanup()

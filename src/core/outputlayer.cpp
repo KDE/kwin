@@ -14,6 +14,36 @@ OutputLayer::OutputLayer(QObject *parent)
 {
 }
 
+qreal OutputLayer::scale() const
+{
+    return m_scale;
+}
+
+void OutputLayer::setScale(qreal scale)
+{
+    m_scale = scale;
+}
+
+QPointF OutputLayer::hotspot() const
+{
+    return m_hotspot;
+}
+
+void OutputLayer::setHotspot(const QPointF &hotspot)
+{
+    m_hotspot = hotspot;
+}
+
+QSizeF OutputLayer::size() const
+{
+    return m_size;
+}
+
+void OutputLayer::setSize(const QSizeF &size)
+{
+    m_size = size;
+}
+
 QRegion OutputLayer::repaints() const
 {
     return m_repaints;
@@ -27,10 +57,6 @@ void OutputLayer::addRepaint(const QRegion &region)
 void OutputLayer::resetRepaints()
 {
     m_repaints = QRegion();
-}
-
-void OutputLayer::aboutToStartPainting(const QRegion &damage)
-{
 }
 
 bool OutputLayer::scanout(SurfaceItem *surfaceItem)

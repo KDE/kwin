@@ -490,21 +490,19 @@ void VirtualDesktopManager::removeVirtualDesktop(VirtualDesktop *desktop)
         return;
     }
 
-    const uint oldCurrent = m_current->x11DesktopNumber();
-    const uint i = desktop->x11DesktopNumber() - 1;
+    const int i = m_desktops.indexOf(desktop);
     m_desktops.remove(i);
 
-    for (uint j = i; j < (uint)m_desktops.count(); ++j) {
+    for (int j = i; j < m_desktops.count(); ++j) {
         m_desktops[j]->setX11DesktopNumber(j + 1);
         if (m_rootInfo) {
             m_rootInfo->setDesktopName(j + 1, m_desktops[j]->name().toUtf8().data());
         }
     }
 
-    const uint newCurrent = std::min(oldCurrent, (uint)m_desktops.count());
-    m_current = m_desktops.at(newCurrent - 1);
-    if (oldCurrent != newCurrent) {
-        Q_EMIT currentChanged(oldCurrent, newCurrent);
+    if (m_current == desktop) {
+        m_current = (i < m_desktops.count()) ? m_desktops.at(i) : m_desktops.constLast();
+        Q_EMIT currentChanged(desktop, m_current);
     }
 
     updateRootInfo();
@@ -542,9 +540,9 @@ bool VirtualDesktopManager::setCurrent(VirtualDesktop *newDesktop)
     if (m_current == newDesktop) {
         return false;
     }
-    const uint oldDesktop = current();
+    VirtualDesktop *oldDesktop = currentDesktop();
     m_current = newDesktop;
-    Q_EMIT currentChanged(oldDesktop, newDesktop->x11DesktopNumber());
+    Q_EMIT currentChanged(oldDesktop, newDesktop);
     return true;
 }
 
@@ -561,13 +559,10 @@ void VirtualDesktopManager::setCount(uint count)
     if ((uint)m_desktops.count() > count) {
         const auto desktopsToRemove = m_desktops.mid(count);
         m_desktops.resize(count);
-        if (m_current) {
-            uint oldCurrent = current();
-            uint newCurrent = std::min(oldCurrent, count);
-            m_current = m_desktops.at(newCurrent - 1);
-            if (oldCurrent != newCurrent) {
-                Q_EMIT currentChanged(oldCurrent, newCurrent);
-            }
+        if (m_current && desktopsToRemove.contains(m_current)) {
+            VirtualDesktop *oldCurrent = m_current;
+            m_current = m_desktops.last();
+            Q_EMIT currentChanged(oldCurrent, m_current);
         }
         for (auto desktop : desktopsToRemove) {
             Q_EMIT desktopRemoved(desktop);
@@ -593,6 +588,10 @@ void VirtualDesktopManager::setCount(uint count)
                 m_rootInfo->setDesktopName(vd->x11DesktopNumber(), vd->name().toUtf8().data());
             }
         }
+    }
+
+    if (!m_current) {
+        m_current = m_desktops.at(0);
     }
 
     updateRootInfo();
@@ -818,38 +817,38 @@ void VirtualDesktopManager::initShortcuts()
     const auto left = [this](qreal cb) {
         if (grid().width() > 1) {
             m_currentDesktopOffset.setX(cb);
-            Q_EMIT currentChanging(current(), m_currentDesktopOffset);
+            Q_EMIT currentChanging(currentDesktop(), m_currentDesktopOffset);
         }
     };
     const auto right = [this](qreal cb) {
         if (grid().width() > 1) {
             m_currentDesktopOffset.setX(-cb);
-            Q_EMIT currentChanging(current(), m_currentDesktopOffset);
+            Q_EMIT currentChanging(currentDesktop(), m_currentDesktopOffset);
         }
     };
-    input()->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Left, 3, m_swipeGestureReleasedX.get(), left);
-    input()->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Right, 3, m_swipeGestureReleasedX.get(), right);
-    input()->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Left, 4, m_swipeGestureReleasedX.get(), left);
-    input()->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Right, 4, m_swipeGestureReleasedX.get(), right);
-    input()->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Down, 3, m_swipeGestureReleasedY.get(), [this](qreal cb) {
+    input()->registerTouchpadSwipeShortcut(SwipeDirection::Left, 3, m_swipeGestureReleasedX.get(), left);
+    input()->registerTouchpadSwipeShortcut(SwipeDirection::Right, 3, m_swipeGestureReleasedX.get(), right);
+    input()->registerTouchpadSwipeShortcut(SwipeDirection::Left, 4, m_swipeGestureReleasedX.get(), left);
+    input()->registerTouchpadSwipeShortcut(SwipeDirection::Right, 4, m_swipeGestureReleasedX.get(), right);
+    input()->registerTouchpadSwipeShortcut(SwipeDirection::Down, 3, m_swipeGestureReleasedY.get(), [this](qreal cb) {
         if (grid().height() > 1) {
             m_currentDesktopOffset.setY(-cb);
-            Q_EMIT currentChanging(current(), m_currentDesktopOffset);
+            Q_EMIT currentChanging(currentDesktop(), m_currentDesktopOffset);
         }
     });
-    input()->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Up, 3, m_swipeGestureReleasedY.get(), [this](qreal cb) {
+    input()->registerTouchpadSwipeShortcut(SwipeDirection::Up, 3, m_swipeGestureReleasedY.get(), [this](qreal cb) {
         if (grid().height() > 1) {
             m_currentDesktopOffset.setY(cb);
-            Q_EMIT currentChanging(current(), m_currentDesktopOffset);
+            Q_EMIT currentChanging(currentDesktop(), m_currentDesktopOffset);
         }
     });
     input()->registerTouchscreenSwipeShortcut(SwipeDirection::Left, 3, m_swipeGestureReleasedX.get(), left);
     input()->registerTouchscreenSwipeShortcut(SwipeDirection::Right, 3, m_swipeGestureReleasedX.get(), right);
 
     // axis events
-    input()->registerAxisShortcut(Qt::ControlModifier | Qt::AltModifier, PointerAxisDown,
+    input()->registerAxisShortcut(Qt::MetaModifier | Qt::AltModifier, PointerAxisDown,
                                   findChild<QAction *>(QStringLiteral("Switch to Next Desktop")));
-    input()->registerAxisShortcut(Qt::ControlModifier | Qt::AltModifier, PointerAxisUp,
+    input()->registerAxisShortcut(Qt::MetaModifier | Qt::AltModifier, PointerAxisUp,
                                   findChild<QAction *>(QStringLiteral("Switch to Previous Desktop")));
 }
 

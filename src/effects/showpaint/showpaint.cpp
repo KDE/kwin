@@ -10,7 +10,8 @@
 
 #include "showpaint.h"
 
-#include <kwinglutils.h>
+#include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/renderviewport.h"
 
 #include <KGlobalAccel>
 #include <KLocalizedString>
@@ -42,12 +43,12 @@ ShowPaintEffect::ShowPaintEffect()
     connect(toggleAction, &QAction::triggered, this, &ShowPaintEffect::toggle);
 }
 
-void ShowPaintEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
+void ShowPaintEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
 {
     m_painted = QRegion();
-    effects->paintScreen(mask, region, data);
+    effects->paintScreen(renderTarget, viewport, mask, region, screen);
     if (effects->isOpenGLCompositing()) {
-        paintGL(data.projectionMatrix(), effects->renderTargetScale());
+        paintGL(viewport.projectionMatrix(), viewport.scale());
     } else if (effects->compositingType() == QPainterCompositing) {
         paintQPainter();
     }
@@ -56,10 +57,10 @@ void ShowPaintEffect::paintScreen(int mask, const QRegion &region, ScreenPaintDa
     }
 }
 
-void ShowPaintEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+void ShowPaintEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
     m_painted |= region;
-    effects->paintWindow(w, mask, region, data);
+    effects->paintWindow(renderTarget, viewport, w, mask, region, data);
 }
 
 void ShowPaintEffect::paintGL(const QMatrix4x4 &projection, qreal scale)

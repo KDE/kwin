@@ -133,13 +133,8 @@ static const TransKey g_rgQtToSymX[] = {
     {XKB_KEY_XF86AudioNext, Qt::Key_MediaNext, Qt::KeyboardModifiers()},
     {XKB_KEY_XF86AudioRecord, Qt::Key_MediaRecord, Qt::KeyboardModifiers()},
     {XKB_KEY_XF86Mail, Qt::Key_LaunchMail, Qt::KeyboardModifiers()},
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     {XKB_KEY_XF86MyComputer, Qt::Key_LaunchMedia, Qt::KeyboardModifiers()},
     {XKB_KEY_XF86Calculater, Qt::Key_Calculator, Qt::KeyboardModifiers()},
-#else
-    {XKB_KEY_XF86MyComputer, Qt::Key_Launch0, Qt::KeyboardModifiers()},
-    {XKB_KEY_XF86Calculator, Qt::Key_Launch1, Qt::KeyboardModifiers()},
-#endif
     {XKB_KEY_XF86Memo, Qt::Key_Memo, Qt::KeyboardModifiers()},
     {XKB_KEY_XF86ToDoList, Qt::Key_ToDoList, Qt::KeyboardModifiers()},
     {XKB_KEY_XF86Calendar, Qt::Key_Calendar, Qt::KeyboardModifiers()},
@@ -241,7 +236,6 @@ static const TransKey g_rgQtToSymX[] = {
     {XKB_KEY_XF86TouchpadOn, Qt::Key_TouchpadOn, Qt::KeyboardModifiers()},
     {XKB_KEY_XF86TouchpadOff, Qt::Key_TouchpadOff, Qt::KeyboardModifiers()},
     {XKB_KEY_XF86AudioMicMute, Qt::Key_MicMute, Qt::KeyboardModifiers()},
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     {XKB_KEY_XF86Launch0, Qt::Key_Launch0, Qt::KeyboardModifiers()},
     {XKB_KEY_XF86Launch1, Qt::Key_Launch1, Qt::KeyboardModifiers()},
     {XKB_KEY_XF86Launch2, Qt::Key_Launch2, Qt::KeyboardModifiers()},
@@ -258,22 +252,6 @@ static const TransKey g_rgQtToSymX[] = {
     {XKB_KEY_XF86LaunchD, Qt::Key_LaunchD, Qt::KeyboardModifiers()},
     {XKB_KEY_XF86LaunchE, Qt::Key_LaunchE, Qt::KeyboardModifiers()},
     {XKB_KEY_XF86LaunchF, Qt::Key_LaunchF, Qt::KeyboardModifiers()},
-#else
-    {XKB_KEY_XF86Launch0, Qt::Key_Launch2, Qt::KeyboardModifiers()},
-    {XKB_KEY_XF86Launch1, Qt::Key_Launch3, Qt::KeyboardModifiers()},
-    {XKB_KEY_XF86Launch2, Qt::Key_Launch4, Qt::KeyboardModifiers()},
-    {XKB_KEY_XF86Launch3, Qt::Key_Launch5, Qt::KeyboardModifiers()},
-    {XKB_KEY_XF86Launch4, Qt::Key_Launch6, Qt::KeyboardModifiers()},
-    {XKB_KEY_XF86Launch5, Qt::Key_Launch7, Qt::KeyboardModifiers()},
-    {XKB_KEY_XF86Launch6, Qt::Key_Launch8, Qt::KeyboardModifiers()},
-    {XKB_KEY_XF86Launch7, Qt::Key_Launch9, Qt::KeyboardModifiers()},
-    {XKB_KEY_XF86Launch8, Qt::Key_LaunchA, Qt::KeyboardModifiers()},
-    {XKB_KEY_XF86Launch9, Qt::Key_LaunchB, Qt::KeyboardModifiers()},
-    {XKB_KEY_XF86LaunchA, Qt::Key_LaunchC, Qt::KeyboardModifiers()},
-    {XKB_KEY_XF86LaunchB, Qt::Key_LaunchD, Qt::KeyboardModifiers()},
-    {XKB_KEY_XF86LaunchC, Qt::Key_LaunchE, Qt::KeyboardModifiers()},
-    {XKB_KEY_XF86LaunchD, Qt::Key_LaunchF, Qt::KeyboardModifiers()},
-#endif
 
      // Latin-1
     {XKB_KEY_exclam, Qt::Key_Exclam, Qt::KeyboardModifiers()},

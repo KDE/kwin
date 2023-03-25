@@ -9,8 +9,8 @@
 
 #pragma once
 
+#include "libkwineffects/kwinglobals.h"
 #include <kwin_export.h>
-#include <kwinglobals.h>
 #include <utils/common.h>
 
 #include <QObject>
@@ -44,6 +44,7 @@ public:
     };
     Q_ENUM(LayoutDirection)
 
+    explicit Tile(TileManager *tiling, Tile *parentItem = nullptr);
     ~Tile();
 
     void setGeometryFromWindow(const QRectF &geom);
@@ -85,6 +86,7 @@ public:
     void setPadding(qreal padding);
 
     QuickTileMode quickTileMode() const;
+    void setQuickTileMode(QuickTileMode mode);
 
     /**
      * All tiles directly children of this tile
@@ -95,6 +97,11 @@ public:
      * All tiles descendant of this tile, recursive
      */
     QList<Tile *> descendants() const;
+
+    /**
+     * Visit all tiles descendant of this tile, recursive
+     */
+    void visitDescendants(std::function<void(const Tile *child)> callback) const;
 
     void resizeFromGravity(Gravity gravity, int x_root, int y_root);
 
@@ -129,7 +136,7 @@ public:
     }
 
 Q_SIGNALS:
-    void relativeGeometryChanged(const QRectF &relativeGeometry);
+    void relativeGeometryChanged();
     void absoluteGeometryChanged();
     void windowGeometryChanged();
     void paddingChanged(qreal padding);
@@ -141,8 +148,6 @@ Q_SIGNALS:
     void windowsChanged();
 
 protected:
-    explicit Tile(TileManager *tiling, Tile *parentItem = nullptr);
-    void setQuickTileMode(QuickTileMode mode);
     void insertChild(int position, Tile *item);
     void removeChild(Tile *child);
 

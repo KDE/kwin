@@ -131,8 +131,6 @@ void VirtualDesktopTest::testLastDesktopRemoved()
 
     QVERIFY(window);
     QCOMPARE(window->desktop(), 2);
-    QSignalSpy desktopPresenceChangedSpy(window, &Window::desktopPresenceChanged);
-
     QCOMPARE(window->desktops().count(), 1u);
     QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), window->desktops().first());
 
@@ -140,7 +138,6 @@ void VirtualDesktopTest::testLastDesktopRemoved()
     VirtualDesktopManager::self()->setCount(1);
     QCOMPARE(VirtualDesktopManager::self()->count(), 1u);
     // now the window should be moved as well
-    QTRY_COMPARE(desktopPresenceChangedSpy.count(), 1);
     QCOMPARE(window->desktop(), 1);
 
     QCOMPARE(window->desktops().count(), 1u);
@@ -165,7 +162,6 @@ void VirtualDesktopTest::testWindowOnMultipleDesktops()
 
     QVERIFY(window);
     QCOMPARE(window->desktop(), 3u);
-    QSignalSpy desktopPresenceChangedSpy(window, &Window::desktopPresenceChanged);
 
     QCOMPARE(window->desktops().count(), 1u);
     QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), window->desktops().first());
@@ -243,7 +239,6 @@ void VirtualDesktopTest::testRemoveDesktopWithWindow()
 
     QVERIFY(window);
     QCOMPARE(window->desktop(), 3u);
-    QSignalSpy desktopPresenceChangedSpy(window, &Window::desktopPresenceChanged);
 
     QCOMPARE(window->desktops().count(), 1u);
     QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), window->desktops().first());

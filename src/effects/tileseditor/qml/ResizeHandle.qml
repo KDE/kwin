@@ -4,16 +4,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.15
-import QtQuick.Layouts 1.4
-import QtGraphicalEffects 1.12
-import org.kde.kwin 3.0 as KWinComponents
-import org.kde.kwin.private.effects 1.0
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 3.0 as PlasmaComponents
-import org.kde.plasma.extras 2.0 as PlasmaExtras
-import org.kde.KWin.Effect.WindowView 1.0
-import org.kde.kitemmodels 1.0 as KitemModels
+import QtQuick
+import org.kde.kwin as KWinComponents
+import org.kde.kwin.private.effects
+import org.kde.plasma.core as PlasmaCore
 
 Rectangle {
     id: handle

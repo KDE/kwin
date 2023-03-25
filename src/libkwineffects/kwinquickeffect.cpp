@@ -4,17 +4,54 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "kwinquickeffect.h"
+#include "libkwineffects/kwinquickeffect.h"
 
-#include "sharedqmlengine.h"
+#include "logging_p.h"
 
 #include <QQmlEngine>
+#include <QQmlIncubator>
 #include <QQuickItem>
 #include <QQuickWindow>
-#include <QWindow>
 
 namespace KWin
 {
+
+static QHash<QQuickWindow *, QuickSceneView *> s_views;
+
+class QuickSceneViewIncubator : public QQmlIncubator
+{
+public:
+    QuickSceneViewIncubator(QuickSceneEffect *effect, EffectScreen *screen, const std::function<void(QuickSceneViewIncubator *)> &statusChangedCallback)
+        : QQmlIncubator(QQmlIncubator::Asynchronous)
+        , m_effect(effect)
+        , m_screen(screen)
+        , m_statusChangedCallback(statusChangedCallback)
+    {
+    }
+
+    std::unique_ptr<QuickSceneView> result()
+    {
+        return std::move(m_view);
+    }
+
+    void setInitialState(QObject *object) override
+    {
+        m_view = std::make_unique<QuickSceneView>(m_effect, m_screen);
+        m_view->setAutomaticRepaint(false);
+        m_view->setRootItem(qobject_cast<QQuickItem *>(object));
+    }
+
+    void statusChanged(QQmlIncubator::Status status) override
+    {
+        m_statusChangedCallback(this);
+    }
+
+private:
+    QuickSceneEffect *m_effect;
+    EffectScreen *m_screen;
+    std::function<void(QuickSceneViewIncubator *)> m_statusChangedCallback;
+    std::unique_ptr<QuickSceneView> m_view;
+};
 
 class QuickSceneEffectPrivate
 {
@@ -25,13 +62,12 @@ public:
     }
     bool isItemOnScreen(QQuickItem *item, EffectScreen *screen) const;
 
-    SharedQmlEngine::Ptr qmlEngine;
     std::unique_ptr<QQmlComponent> qmlComponent;
     QUrl source;
+    std::map<EffectScreen *, std::unique_ptr<QQmlIncubator>> incubators;
     std::map<EffectScreen *, std::unique_ptr<QuickSceneView>> views;
     QPointer<QuickSceneView> mouseImplicitGrab;
     bool running = false;
-    std::unique_ptr<QWindow> dummyWindow;
 };
 
 bool QuickSceneEffectPrivate::isItemOnScreen(QQuickItem *item, EffectScreen *screen) const
@@ -45,7 +81,7 @@ bool QuickSceneEffectPrivate::isItemOnScreen(QQuickItem *item, EffectScreen *scr
 }
 
 QuickSceneView::QuickSceneView(QuickSceneEffect *effect, EffectScreen *screen)
-    : OffscreenQuickView(effect, QuickSceneEffectPrivate::get(effect)->dummyWindow.get())
+    : OffscreenQuickView(effect)
     , m_effect(effect)
     , m_screen(screen)
 {
@@ -53,10 +89,13 @@ QuickSceneView::QuickSceneView(QuickSceneEffect *effect, EffectScreen *screen)
     connect(screen, &EffectScreen::geometryChanged, this, [this, screen]() {
         setGeometry(screen->geometry());
     });
+
+    s_views.insert(window(), this);
 }
 
 QuickSceneView::~QuickSceneView()
 {
+    s_views.remove(window());
 }
 
 QQuickItem *QuickSceneView::rootItem() const
@@ -107,6 +146,23 @@ void QuickSceneView::scheduleRepaint()
 {
     markDirty();
     effects->addRepaint(geometry());
+}
+
+QuickSceneView *QuickSceneView::findView(QQuickItem *item)
+{
+    return s_views.value(item->window());
+}
+
+QuickSceneView *QuickSceneView::qmlAttachedProperties(QObject *object)
+{
+    QQuickItem *item = qobject_cast<QQuickItem *>(object);
+    if (item) {
+        if (QuickSceneView *view = findView(item)) {
+            return view;
+        }
+    }
+    qCWarning(LIBKWINEFFECTS) << "Could not find SceneView for" << object;
+    return nullptr;
 }
 
 QuickSceneEffect::QuickSceneEffect(QObject *parent)
@@ -304,16 +360,16 @@ void QuickSceneEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mil
     }
 }
 
-void QuickSceneEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
+void QuickSceneEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
 {
     if (effects->waylandDisplay()) {
-        const auto it = d->views.find(data.screen());
+        const auto it = d->views.find(screen);
         if (it != d->views.end()) {
-            effects->renderOffscreenQuickView(it->second.get());
+            effects->renderOffscreenQuickView(renderTarget, viewport, it->second.get());
         }
     } else {
         for (const auto &[screen, screenView] : d->views) {
-            effects->renderOffscreenQuickView(screenView.get());
+            effects->renderOffscreenQuickView(renderTarget, viewport, screenView.get());
         }
     }
 }
@@ -336,29 +392,37 @@ void QuickSceneEffect::handleScreenAdded(EffectScreen *screen)
 void QuickSceneEffect::handleScreenRemoved(EffectScreen *screen)
 {
     d->views.erase(screen);
+    d->incubators.erase(screen);
 }
 
 void QuickSceneEffect::addScreen(EffectScreen *screen)
 {
-    QuickSceneView *view = new QuickSceneView(this, screen);
     auto properties = initialProperties(screen);
-    properties["width"] = view->geometry().width();
-    properties["height"] = view->geometry().height();
-    view->setRootItem(qobject_cast<QQuickItem *>(d->qmlComponent->createWithInitialProperties(properties)));
-    // we need the focus always set to the view of activescreen at first, and changed only upon user interaction
-    if (view->contentItem()) {
-        view->contentItem()->setFocus(false);
-    }
-    view->setAutomaticRepaint(false);
+    properties["width"] = screen->geometry().width();
+    properties["height"] = screen->geometry().height();
 
-    connect(view, &QuickSceneView::repaintNeeded, this, [view]() {
-        effects->addRepaint(view->geometry());
+    auto incubator = new QuickSceneViewIncubator(this, screen, [this, screen](QuickSceneViewIncubator *incubator) {
+        if (incubator->isReady()) {
+            auto view = incubator->result();
+            if (view->contentItem()) {
+                view->contentItem()->setFocus(false);
+            }
+            connect(view.get(), &QuickSceneView::repaintNeeded, this, [screen]() {
+                effects->addRepaint(screen->geometry());
+            });
+            connect(view.get(), &QuickSceneView::renderRequested, view.get(), &QuickSceneView::scheduleRepaint);
+            connect(view.get(), &QuickSceneView::sceneChanged, view.get(), &QuickSceneView::scheduleRepaint);
+            view->scheduleRepaint();
+            d->views[screen] = std::move(view);
+        } else if (incubator->isError()) {
+            qCWarning(LIBKWINEFFECTS) << "Could not create a view for QML file" << d->qmlComponent->url();
+            qCWarning(LIBKWINEFFECTS) << incubator->errors();
+        }
     });
-    connect(view, &QuickSceneView::renderRequested, view, &QuickSceneView::scheduleRepaint);
-    connect(view, &QuickSceneView::sceneChanged, view, &QuickSceneView::scheduleRepaint);
 
-    view->scheduleRepaint();
-    d->views[screen].reset(view);
+    incubator->setInitialProperties(properties);
+    d->incubators[screen].reset(incubator);
+    d->qmlComponent->create(*incubator);
 }
 
 void QuickSceneEffect::startInternal()
@@ -372,12 +436,8 @@ void QuickSceneEffect::startInternal()
         return;
     }
 
-    if (!d->qmlEngine) {
-        d->qmlEngine = SharedQmlEngine::engine();
-    }
-
     if (!d->qmlComponent) {
-        d->qmlComponent.reset(new QQmlComponent(d->qmlEngine.get()));
+        d->qmlComponent.reset(new QQmlComponent(effects->qmlEngine()));
         d->qmlComponent->loadUrl(d->source);
         if (d->qmlComponent->isError()) {
             qWarning().nospace() << "Failed to load " << d->source << ": " << d->qmlComponent->errors();
@@ -391,17 +451,6 @@ void QuickSceneEffect::startInternal()
 
     // Install an event filter to monitor cursor shape changes.
     qApp->installEventFilter(this);
-
-    // This is an ugly hack to make hidpi rendering work as expected on wayland until we switch
-    // to Qt 6.3 or newer. See https://codereview.qt-project.org/c/qt/qtdeclarative/+/361506
-    if (effects->waylandDisplay()) {
-        d->dummyWindow.reset(new QWindow());
-        d->dummyWindow->setOpacity(0);
-        d->dummyWindow->resize(1, 1);
-        d->dummyWindow->setFlag(Qt::FramelessWindowHint);
-        d->dummyWindow->setVisible(true);
-        d->dummyWindow->requestActivate();
-    }
 
     const QList<EffectScreen *> screens = effects->screens();
     for (EffectScreen *screen : screens) {
@@ -423,8 +472,8 @@ void QuickSceneEffect::stopInternal()
     disconnect(effects, &EffectsHandler::screenAdded, this, &QuickSceneEffect::handleScreenAdded);
     disconnect(effects, &EffectsHandler::screenRemoved, this, &QuickSceneEffect::handleScreenRemoved);
 
+    d->incubators.clear();
     d->views.clear();
-    d->dummyWindow.reset();
     d->running = false;
     qApp->removeEventFilter(this);
     effects->ungrabKeyboard();

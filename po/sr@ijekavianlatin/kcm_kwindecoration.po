@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2020-05-31 18:12+0200\n"
+"POT-Creation-Date: 2023-03-05 03:09+0000\n"
 "PO-Revision-Date: 2015-10-14 18:13+0200\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -21,226 +21,295 @@ msgstr ""
 "X-Associated-UI-Catalogs: kwidgetsaddons5_qt\n"
 "X-Environment: kde\n"
 
+#: declarative-plugin/buttonsmodel.cpp:53
 #, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
+msgid "More actions for this window"
 msgstr ""
 
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr ""
-
-#: declarative-plugin/buttonsmodel.cpp:68
-#, kde-format
-msgid "Menu"
-msgstr "Meni"
-
-#: declarative-plugin/buttonsmodel.cpp:70
+#: declarative-plugin/buttonsmodel.cpp:55
 #, kde-format
 msgid "Application menu"
 msgstr "Meni programa"
 
-#: declarative-plugin/buttonsmodel.cpp:72
+#: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
 msgid "On all desktops"
 msgstr "Na sve površi"
 
-#: declarative-plugin/buttonsmodel.cpp:74
+#: declarative-plugin/buttonsmodel.cpp:59
 #, kde-format
 msgid "Minimize"
 msgstr "Minimizuj"
 
-#: declarative-plugin/buttonsmodel.cpp:76
+#: declarative-plugin/buttonsmodel.cpp:61
 #, kde-format
 msgid "Maximize"
 msgstr "Maksimizuj"
 
-#: declarative-plugin/buttonsmodel.cpp:78
+#: declarative-plugin/buttonsmodel.cpp:63
 #, kde-format
 msgid "Close"
 msgstr "Zatvori"
 
-#: declarative-plugin/buttonsmodel.cpp:80
+#: declarative-plugin/buttonsmodel.cpp:65
 #, kde-format
 msgid "Context help"
 msgstr "Kontekstna pomoć"
 
-#: declarative-plugin/buttonsmodel.cpp:82
+#: declarative-plugin/buttonsmodel.cpp:67
 #, kde-format
 msgid "Shade"
 msgstr "Namotaj"
 
-#: declarative-plugin/buttonsmodel.cpp:84
+#: declarative-plugin/buttonsmodel.cpp:69
 #, kde-format
-msgid "Keep below"
-msgstr "Drži ispod"
-
-#: declarative-plugin/buttonsmodel.cpp:86
-#, kde-format
-msgid "Keep above"
-msgstr "Drži iznad"
-
-#: kcm.cpp:62
-#, fuzzy, kde-format
-#| msgid "Get New Decorations..."
-msgid "Window Decorations"
-msgstr "Dobavi nove dekoracije..."
-
-#: kcm.cpp:66
-#, kde-format
-msgid "Valerio Pilo"
+msgid "Keep below other windows"
 msgstr ""
 
-#: kcm.cpp:67
+#: declarative-plugin/buttonsmodel.cpp:71
 #, kde-format
-msgid "Author"
+msgid "Keep above other windows"
 msgstr ""
 
-#: kcm.cpp:116
-#, fuzzy, kde-format
-#| msgid "Get New Decorations..."
-msgid "Download New Window Decorations"
-msgstr "Dobavi nove dekoracije..."
+#: kcm.cpp:172
+#, kde-format
+msgctxt "%1 is the name of a border size"
+msgid "Theme's default (%1)"
+msgstr ""
 
-#: package/contents/ui/Buttons.qml:87
+#: kwin-applywindowdecoration.cpp:32
+#, kde-format
+msgid ""
+"This tool allows you to set the window decoration theme for the currently "
+"active session, without accidentally setting it to one that is either not "
+"available, or which is already set."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:33
+#, kde-format
+msgid ""
+"The name of the window decoration theme you wish to set for KWin. Passing a "
+"full path will attempt to find a theme in that directory, and then apply "
+"that if one can be deduced."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:34
+#, kde-format
+msgid ""
+"Show all the themes available on the system (and which is the current theme)"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:65
+#, kde-format
+msgid ""
+"Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
+"as your current theme."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:71
+#, kde-format
+msgid ""
+"You attempted to pass a file path, but this could not be resolved to a "
+"theme, and we will have to abort, due to having no theme to set"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:77
+#, kde-format
+msgid ""
+"The requested theme \"%1\" is already set as the window decoration theme."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:99
+#, kde-format
+msgid "Successfully applied the cursor theme %1 to your current Plasma session"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:103
+#, kde-format
+msgid ""
+"Failed to save your theme settings - the reason is unknown, but this is an "
+"unrecoverable error. You may find that simply trying again will work."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:107
+#, kde-format
+msgid ""
+"Could not find theme \"%1\". The theme should be one of the following "
+"options: %2"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:112
+#, kde-format
+msgid "You have the following KWin window decoration themes on your system:"
+msgstr ""
+
+#: package/contents/ui/Buttons.qml:85
 #, kde-format
 msgid "Titlebar"
 msgstr "Naslovna traka"
 
-#: package/contents/ui/Buttons.qml:228
+#: package/contents/ui/Buttons.qml:245
 #, fuzzy, kde-format
 #| msgid "Drop here to remove button"
 msgid "Drop button here to remove it"
 msgstr "Uklonite dugme ispuštanjem ovde."
 
-#: package/contents/ui/Buttons.qml:246
+#: package/contents/ui/Buttons.qml:261
 #, kde-format
 msgid "Drag buttons between here and the titlebar"
 msgstr "Prevlačite dugmad između ovog mesta i naslovne trake."
 
-#: package/contents/ui/main.qml:27
-#, kde-format
-msgid "This module lets you configure the window decorations."
-msgstr ""
-
-#: package/contents/ui/main.qml:61
-#, fuzzy, kde-format
-#| msgid "Theme"
-msgctxt "tab label"
-msgid "Theme"
-msgstr "Tema"
-
-#: package/contents/ui/main.qml:65
+#: package/contents/ui/ConfigureTitlebar.qml:16
 #, fuzzy, kde-format
 #| msgid "Titlebar"
-msgctxt "tab label"
 msgid "Titlebar Buttons"
 msgstr "Naslovna traka"
 
-#: package/contents/ui/main.qml:90
-#, kde-format
-msgctxt "checkbox label"
-msgid "Use theme's default window border size"
-msgstr ""
-
-#: package/contents/ui/main.qml:121
-#, fuzzy, kde-format
-#| msgid "Get New Decorations..."
-msgctxt "button text"
-msgid "Get New Window Decorations..."
-msgstr "Dobavi nove dekoracije..."
-
-#: package/contents/ui/main.qml:138
+#: package/contents/ui/ConfigureTitlebar.qml:35
 #, fuzzy, kde-format
 #| msgid "Close windows by double clicking &the menu button"
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the menu button"
 msgstr "Zatvori prozor dvoklikom na &dugme menija"
 
-#: package/contents/ui/main.qml:151
-#, fuzzy, kde-format
-#| msgid ""
-#| "Close by double clicking:\n"
-#| " To open the menu, keep the button pressed until it appears."
+#: package/contents/ui/ConfigureTitlebar.qml:52
+#, kde-format
 msgctxt "popup tip"
-msgid ""
-"Close by double clicking: Keep the window's Menu button pressed until it "
-"appears."
+msgid "Click and hold on the menu button to show the menu."
 msgstr ""
-"Zatvorite dvoklikom.\n"
-"Da otvorite meni, držite dugme pritisnuto dok se ne pojavi."
 
-#: package/contents/ui/main.qml:158
+#: package/contents/ui/ConfigureTitlebar.qml:59
 #, kde-format
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr ""
 
-#: package/contents/ui/Themes.qml:100
+#: package/contents/ui/main.qml:19
+#, kde-format
+msgid "This module lets you configure the window decorations."
+msgstr ""
+
+#: package/contents/ui/main.qml:42
+#, kde-format
+msgctxt "Selector label"
+msgid "Window border size:"
+msgstr ""
+
+#: package/contents/ui/main.qml:60
+#, fuzzy, kde-format
+#| msgid "Titlebar"
+msgctxt "button text"
+msgid "Configure Titlebar Buttons…"
+msgstr "Naslovna traka"
+
+#: package/contents/ui/main.qml:65
+#, fuzzy, kde-format
+#| msgid "Get New Decorations..."
+msgctxt "button text"
+msgid "Get New Window Decorations…"
+msgstr "Dobavi nove dekoracije..."
+
+#: package/contents/ui/Themes.qml:92
 #, kde-format
 msgid "Edit %1 Theme"
 msgstr ""
 
-#: utils.cpp:38
+#: utils.cpp:25
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Border size:"
 #| msgid "No Borders"
 msgid "No Borders"
 msgstr "bez ivica"
 
-#: utils.cpp:39
+#: utils.cpp:26
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Border size:"
 #| msgid "No Side Borders"
 msgid "No Side Borders"
 msgstr "bez bočnih ivica"
 
-#: utils.cpp:40
+#: utils.cpp:27
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Border size:"
 #| msgid "Tiny"
 msgid "Tiny"
 msgstr "sićušne"
 
-#: utils.cpp:41
+#: utils.cpp:28
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Border size:"
 #| msgid "Normal"
 msgid "Normal"
 msgstr "normalne"
 
-#: utils.cpp:42
+#: utils.cpp:29
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Border size:"
 #| msgid "Large"
 msgid "Large"
 msgstr "velike"
 
-#: utils.cpp:43
+#: utils.cpp:30
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Border size:"
 #| msgid "Very Large"
 msgid "Very Large"
 msgstr "vrlo velike"
 
-#: utils.cpp:44
+#: utils.cpp:31
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Border size:"
 #| msgid "Huge"
 msgid "Huge"
 msgstr "ogromne"
 
-#: utils.cpp:45
+#: utils.cpp:32
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Border size:"
 #| msgid "Very Huge"
 msgid "Very Huge"
 msgstr "vrlo ogromne"
 
-#: utils.cpp:46
+#: utils.cpp:33
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Border size:"
 #| msgid "Oversized"
 msgid "Oversized"
 msgstr "neizmjerne"
+
+#~ msgid "Menu"
+#~ msgstr "Meni"
+
+#~ msgid "Keep below"
+#~ msgstr "Drži ispod"
+
+#~ msgid "Keep above"
+#~ msgstr "Drži iznad"
+
+#, fuzzy
+#~| msgid "Get New Decorations..."
+#~ msgid "Window Decorations"
+#~ msgstr "Dobavi nove dekoracije..."
+
+#, fuzzy
+#~| msgid "Get New Decorations..."
+#~ msgid "Download New Window Decorations"
+#~ msgstr "Dobavi nove dekoracije..."
+
+#, fuzzy
+#~| msgid "Theme"
+#~ msgctxt "tab label"
+#~ msgid "Theme"
+#~ msgstr "Tema"
+
+#, fuzzy
+#~| msgid ""
+#~| "Close by double clicking:\n"
+#~| " To open the menu, keep the button pressed until it appears."
+#~ msgctxt "popup tip"
+#~ msgid ""
+#~ "Close by double clicking: Keep the window's Menu button pressed until it "
+#~ "appears."
+#~ msgstr ""
+#~ "Zatvorite dvoklikom.\n"
+#~ "Da otvorite meni, držite dugme pritisnuto dok se ne pojavi."

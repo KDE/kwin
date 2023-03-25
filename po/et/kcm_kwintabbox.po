@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-06-15 00:48+0000\n"
+"POT-Creation-Date: 2023-02-08 01:01+0000\n"
 "PO-Revision-Date: 2019-10-30 14:30+0200\n"
 "Last-Translator: Marek Laane <qiilaq69@gmail.com>\n"
 "Language-Team: Estonian <kde-et@lists.linux.ee>\n"
@@ -17,39 +17,34 @@ msgstr ""
 "X-Generator: Lokalize 19.08.1\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: kwintabboxconfigform.cpp:77
-#, kde-format
-msgid "KWin"
-msgstr "KWin"
-
-#: layoutpreview.cpp:133
+#: layoutpreview.cpp:131
 #, fuzzy, kde-format
 #| msgid "Show desktop:"
 msgid "Show Desktop"
 msgstr "Töölaua näitamine:"
 
-#: layoutpreview.cpp:163
+#: layoutpreview.cpp:161
 #, kde-format
 msgctxt "An example Desktop Name"
 msgid "Desktop 1"
 msgstr "Töölaud 1"
 
-#: main.cpp:58
+#: main.cpp:66
 #, kde-format
 msgid "Main"
 msgstr "Peamine"
 
-#: main.cpp:59
+#: main.cpp:67
 #, kde-format
 msgid "Alternative"
 msgstr "Alternatiiv"
 
-#: main.cpp:61
+#: main.cpp:69
 #, kde-format
 msgid "Get New Task Switchers..."
 msgstr "Hangi uusi aknavahetaja paigutusi ..."
 
-#: main.cpp:75
+#: main.cpp:83
 #, kde-format
 msgid ""
 "Focus policy settings limit the functionality of navigating through windows."
@@ -235,6 +230,49 @@ msgstr ""
 msgid "Show selected window"
 msgstr "Valitud akna näitamine"
 
+#: shortcutsettings.cpp:132
+#, kde-format
+msgid "Walk Through Windows"
+msgstr "Akende läbijalutamine"
+
+#: shortcutsettings.cpp:133
+#, kde-format
+msgid "Walk Through Windows (Reverse)"
+msgstr "Akende läbijalutamine (tagurpidi)"
+
+#: shortcutsettings.cpp:134
+#, kde-format
+msgid "Walk Through Windows of Current Application"
+msgstr "Aktiivse rakenduse akende läbijalutamine"
+
+#: shortcutsettings.cpp:135
+#, kde-format
+msgid "Walk Through Windows of Current Application (Reverse)"
+msgstr "Aktiivse rakenduse akende läbijalutamine (tagurpidi)"
+
+#: shortcutsettings.cpp:137
+#, kde-format
+msgid "Walk Through Windows Alternative"
+msgstr "Akende alternatiivne läbijalutamine"
+
+#: shortcutsettings.cpp:138
+#, kde-format
+msgid "Walk Through Windows Alternative (Reverse)"
+msgstr "Akende alternatiivne läbijalutamine (tagurpidi)"
+
+#: shortcutsettings.cpp:139
+#, kde-format
+msgid "Walk Through Windows of Current Application Alternative"
+msgstr "Aktiivse rakenduse akende alternatiivne läbijalutamine"
+
+#: shortcutsettings.cpp:140
+#, kde-format
+msgid "Walk Through Windows of Current Application Alternative (Reverse)"
+msgstr "Aktiivse rakenduse akende alternatiivne läbijalutamine (tagurpidi)"
+
+#~ msgid "KWin"
+#~ msgstr "KWin"
+
 #~ msgid "Tabbox layout preview"
 #~ msgstr "Lülitumiskasti paigutuse eelvaatlus"
 
@@ -247,30 +285,6 @@ msgstr "Valitud akna näitamine"
 #~ msgstr ""
 #~ "Neid seadistusi kasutavad \"akende alternatiivse läbijalutamise\" "
 #~ "toimingud."
-
-#~ msgid "Walk Through Windows"
-#~ msgstr "Akende läbijalutamine"
-
-#~ msgid "Walk Through Windows (Reverse)"
-#~ msgstr "Akende läbijalutamine (tagurpidi)"
-
-#~ msgid "Walk Through Windows Alternative"
-#~ msgstr "Akende alternatiivne läbijalutamine"
-
-#~ msgid "Walk Through Windows Alternative (Reverse)"
-#~ msgstr "Akende alternatiivne läbijalutamine (tagurpidi)"
-
-#~ msgid "Walk Through Windows of Current Application"
-#~ msgstr "Aktiivse rakenduse akende läbijalutamine"
-
-#~ msgid "Walk Through Windows of Current Application (Reverse)"
-#~ msgstr "Aktiivse rakenduse akende läbijalutamine (tagurpidi)"
-
-#~ msgid "Walk Through Windows of Current Application Alternative"
-#~ msgstr "Aktiivse rakenduse akende alternatiivne läbijalutamine"
-
-#~ msgid "Walk Through Windows of Current Application Alternative (Reverse)"
-#~ msgstr "Aktiivse rakenduse akende alternatiivne läbijalutamine (tagurpidi)"
 
 #~ msgctxt ""
 #~ "ComboBox item for window switcher based on layouts instead of a desktop "

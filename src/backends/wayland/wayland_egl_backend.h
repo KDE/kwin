@@ -9,8 +9,8 @@
 */
 #pragma once
 
-#include "abstract_egl_backend.h"
 #include "core/outputlayer.h"
+#include "platformsupport/scenes/opengl/abstract_egl_backend.h"
 #include "utils/damagejournal.h"
 
 #include <KWayland/Client/buffer.h>
@@ -40,7 +40,9 @@ public:
 
     wl_buffer *buffer() const;
     GLFramebuffer *framebuffer() const;
+    std::shared_ptr<GLTexture> texture() const;
     int age() const;
+    gbm_bo *bo() const;
 
 private:
     WaylandEglBackend *m_backend;
@@ -77,10 +79,12 @@ public:
     ~WaylandEglPrimaryLayer() override;
 
     GLFramebuffer *fbo() const;
+    std::shared_ptr<GLTexture> texture() const;
     void present();
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    quint32 format() const override;
 
 private:
     WaylandOutput *m_waylandOutput;
@@ -100,26 +104,15 @@ public:
     WaylandEglCursorLayer(WaylandOutput *output, WaylandEglBackend *backend);
     ~WaylandEglCursorLayer() override;
 
-    qreal scale() const;
-    void setScale(qreal scale);
-
-    QPoint hotspot() const;
-    void setHotspot(const QPoint &hotspot);
-
-    QSize size() const;
-    void setSize(const QSize &size);
-
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    quint32 format() const override;
 
 private:
     WaylandOutput *m_output;
     WaylandEglBackend *m_backend;
-    std::unique_ptr<GLFramebuffer> m_framebuffer;
-    std::unique_ptr<GLTexture> m_texture;
-    QPoint m_hotspot;
-    QSize m_size;
-    qreal m_scale = 1.0;
+    std::unique_ptr<WaylandEglLayerSwapchain> m_swapchain;
+    std::shared_ptr<WaylandEglLayerBuffer> m_buffer;
 };
 
 /**
@@ -149,13 +142,12 @@ public:
     void init() override;
     void present(Output *output) override;
     OutputLayer *primaryLayer(Output *output) override;
-    WaylandEglCursorLayer *cursorLayer(Output *output);
+    OutputLayer *cursorLayer(Output *output) override;
 
-    std::shared_ptr<KWin::GLTexture> textureForOutput(KWin::Output *output) const override;
+    std::shared_ptr<GLTexture> textureForOutput(KWin::Output *output) const override;
 
 private:
     bool initializeEgl();
-    bool initBufferConfigs();
     bool initRenderingContext();
     bool createEglWaylandOutput(Output *output);
     void cleanupSurfaces() override;

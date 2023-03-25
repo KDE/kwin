@@ -130,7 +130,7 @@ private:
     bool m_addFB2ModifiersSupported = false;
     bool m_isNVidia;
     bool m_isVirtualMachine;
-    bool m_asyncPageflipSupported;
+    bool m_asyncPageflipSupported = false;
     bool m_isRemoved = false;
     clockid_t m_presentationClock;
     gbm_device *m_gbmDevice;
@@ -139,7 +139,7 @@ private:
 
     std::vector<std::unique_ptr<DrmPlane>> m_planes;
     std::vector<std::unique_ptr<DrmCrtc>> m_crtcs;
-    std::vector<std::unique_ptr<DrmConnector>> m_connectors;
+    std::vector<std::shared_ptr<DrmConnector>> m_connectors;
     QVector<DrmObject *> m_allObjects;
     QVector<DrmPipeline *> m_pipelines;
 

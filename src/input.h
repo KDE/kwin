@@ -11,10 +11,10 @@
 #pragma once
 #include <config-kwin.h>
 
+#include "libkwineffects/kwinglobals.h"
 #include <QObject>
 #include <QPoint>
 #include <QPointer>
-#include <kwinglobals.h>
 
 #include <KConfigWatcher>
 #include <KSharedConfig>
@@ -127,12 +127,10 @@ public:
 
     void registerPointerShortcut(Qt::KeyboardModifiers modifiers, Qt::MouseButton pointerButtons, QAction *action);
     void registerAxisShortcut(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis, QAction *action);
-    void registerTouchpadSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action);
-    void registerRealtimeTouchpadSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback);
-    void registerTouchpadPinchShortcut(PinchDirection direction, uint fingerCount, QAction *action);
-    void registerRealtimeTouchpadPinchShortcut(PinchDirection direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback);
-    void registerTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback);
-    void forceRegisterTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback);
+    void registerTouchpadSwipeShortcut(SwipeDirection direction, uint32_t fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback = {});
+    void registerTouchpadPinchShortcut(PinchDirection direction, uint32_t fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback = {});
+    void registerTouchscreenSwipeShortcut(SwipeDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback = {});
+    void forceRegisterTouchscreenSwipeShortcut(SwipeDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback = {});
     void registerGlobalAccel(KGlobalAccelInterface *interface);
 
     bool supportsPointerWarping() const;
@@ -168,7 +166,6 @@ public:
     void removeIdleInhibitor(Window *inhibitor);
 
     Window *findToplevel(const QPointF &pos);
-    Window *findManagedToplevel(const QPointF &pos);
     GlobalShortcutsManager *shortcuts() const
     {
         return m_shortcuts;

@@ -62,7 +62,7 @@
 
 #include "killwindow.h"
 #if KWIN_BUILD_TABBOX
-#include "tabbox.h"
+#include "tabbox/tabbox.h"
 #endif
 
 namespace KWin
@@ -269,7 +269,7 @@ void UserActionsMenu::init()
     m_shadeOperation->setCheckable(true);
     m_shadeOperation->setData(Options::ShadeOp);
 
-    m_noBorderOperation = advancedMenu->addAction(i18n("&No Border"));
+    m_noBorderOperation = advancedMenu->addAction(i18n("&No Titlebar and Frame"));
     m_noBorderOperation->setIcon(QIcon::fromTheme(QStringLiteral("edit-none-border")));
     setShortcut(m_noBorderOperation, QStringLiteral("Window No Border"));
     m_noBorderOperation->setCheckable(true);
@@ -500,7 +500,6 @@ void UserActionsMenu::initActivityPopup()
     }
 
     m_activityMenu = new QMenu(m_menu);
-    connect(m_activityMenu, &QMenu::triggered, this, &UserActionsMenu::slotToggleOnActivity);
     connect(m_activityMenu, &QMenu::aboutToShow, this, &UserActionsMenu::activityPopupAboutToShow);
 
     QAction *action = m_activityMenu->menuAction();
@@ -530,7 +529,7 @@ void UserActionsMenu::desktopPopupAboutToShow()
             return;
         }
         VirtualDesktopManager *vds = VirtualDesktopManager::self();
-        workspace()->sendWindowToDesktop(m_window, vds->currentDesktop()->x11DesktopNumber(), false);
+        workspace()->sendWindowToDesktops(m_window, {vds->currentDesktop()}, false);
     });
 
     action = m_desktopMenu->addAction(i18n("&All Desktops"));
@@ -560,7 +559,7 @@ void UserActionsMenu::desktopPopupAboutToShow()
         action = m_desktopMenu->addAction(basic_name.arg(legacyId).arg(desktop->name().replace(QLatin1Char('&'), QStringLiteral("&&"))));
         connect(action, &QAction::triggered, this, [this, desktop]() {
             if (m_window) {
-                workspace()->sendWindowToDesktop(m_window, desktop->x11DesktopNumber(), false);
+                workspace()->sendWindowToDesktops(m_window, {desktop}, false);
             }
         });
         action->setCheckable(true);
@@ -582,7 +581,7 @@ void UserActionsMenu::desktopPopupAboutToShow()
         VirtualDesktopManager *vds = VirtualDesktopManager::self();
         VirtualDesktop *desktop = vds->createVirtualDesktop(vds->count());
         if (desktop) {
-            workspace()->sendWindowToDesktop(m_window, desktop->x11DesktopNumber(), false);
+            workspace()->sendWindowToDesktops(m_window, {desktop}, false);
         }
     });
     action->setEnabled(vds->count() < vds->maximum());
@@ -727,8 +726,12 @@ void UserActionsMenu::activityPopupAboutToShow()
         m_activityMenu->setPalette(m_window->palette());
     }
     QAction *action = m_activityMenu->addAction(i18n("&All Activities"));
-    action->setData(QString());
     action->setCheckable(true);
+    connect(action, &QAction::triggered, this, [this]() {
+        if (m_window) {
+            m_window->setOnAllActivities(!m_window->isOnAllActivities());
+        }
+    });
     static QPointer<QActionGroup> allActivitiesGroup;
     if (!allActivitiesGroup) {
         allActivitiesGroup = new QActionGroup(m_activityMenu);
@@ -752,11 +755,33 @@ void UserActionsMenu::activityPopupAboutToShow()
             action->setIcon(QIcon::fromTheme(icon));
         }
         m_activityMenu->addAction(action);
-        action->setData(id);
+        connect(action, &QAction::triggered, this, [this, id]() {
+            if (m_window) {
+                Workspace::self()->activities()->toggleWindowOnActivity(m_window, id, false);
+            }
+        });
 
         if (m_window && !m_window->isOnAllActivities() && m_window->isOnActivity(id)) {
             action->setChecked(true);
         }
+    }
+
+    m_activityMenu->addSeparator();
+    for (const QString &id : activities) {
+        const KActivities::Info activity(id);
+        if (m_window->activities().size() == 1 && m_window->activities().front() == id) {
+            // no need to show a button that doesn't do anything
+            continue;
+        }
+        const QString name = i18n("Move to %1", activity.name().replace('&', "&&"));
+        const auto action = m_activityMenu->addAction(name);
+        if (const QString icon = activity.icon(); !icon.isEmpty()) {
+            action->setIcon(QIcon::fromTheme(icon));
+        }
+        connect(action, &QAction::triggered, this, [this, id] {
+            m_window->setOnActivities({id});
+        });
+        m_activityMenu->addAction(action);
     }
 #endif
 }
@@ -796,38 +821,6 @@ void UserActionsMenu::slotWindowOperation(QAction *action)
     QMetaObject::invokeMethod(workspace(), std::bind(&Workspace::performWindowOperation, workspace(), c, op), Qt::QueuedConnection);
 }
 
-void UserActionsMenu::slotToggleOnActivity(QAction *action)
-{
-#if KWIN_BUILD_ACTIVITIES
-    if (!Workspace::self()->activities()) {
-        return;
-    }
-    QString activity = action->data().toString();
-    if (m_window.isNull()) {
-        return;
-    }
-    if (activity.isEmpty()) {
-        // the 'on_all_activities' menu entry
-        m_window->setOnAllActivities(!m_window->isOnAllActivities());
-        return;
-    }
-
-    Workspace::self()->activities()->toggleWindowOnActivity(m_window, activity, false);
-    if (m_activityMenu && m_activityMenu->isVisible() && m_activityMenu->actions().count()) {
-        const bool isOnAll = m_window->isOnAllActivities();
-        m_activityMenu->actions().at(0)->setChecked(isOnAll);
-        if (isOnAll) {
-            // toggleClientOnActivity interprets "on all" as "on none" and
-            // susequent toggling ("off") would move the window to only that activity.
-            // bug #330838 -> set all but "on all" off to "force proper usage"
-            for (int i = 1; i < m_activityMenu->actions().count(); ++i) {
-                m_activityMenu->actions().at(i)->setChecked(true);
-            }
-        }
-    }
-#endif
-}
-
 //****************************************
 // ShortcutDialog
 //****************************************
@@ -852,20 +845,11 @@ void ShortcutDialog::accept()
 {
     QKeySequence seq = shortcut();
     if (!seq.isEmpty()) {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        if (seq[0] == Qt::Key_Escape) {
-#else
         if (seq[0] == QKeyCombination(Qt::Key_Escape)) {
-#endif
             reject();
             return;
         }
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        if (seq[0] == Qt::Key_Space
-            || (seq[0] & Qt::KeyboardModifierMask) == 0) {
-#else
         if (seq[0] == QKeyCombination(Qt::Key_Space) || seq[0].keyboardModifiers() == Qt::NoModifier) {
-#endif
             // clear
             m_ui.keySequenceEdit->clear();
             QDialog::accept();
@@ -1013,7 +997,7 @@ void Workspace::initShortcuts()
                  0, &Workspace::slotWindowRaiseOrLower);
     initShortcut("Window Fullscreen", i18n("Make Window Fullscreen"),
                  0, &Workspace::slotWindowFullScreen);
-    initShortcut("Window No Border", i18n("Toggle Window Border"),
+    initShortcut("Window No Border", i18n("Toggle Window Titlebar and Frame"),
                  0, &Workspace::slotWindowNoBorder);
     initShortcut("Window Above Other Windows", i18n("Keep Window Above Others"),
                  0, &Workspace::slotWindowAbove);
@@ -1065,9 +1049,9 @@ void Workspace::initShortcuts()
                  Qt::META | Qt::ALT | Qt::Key_Right, std::bind(static_cast<void (Workspace::*)(Direction)>(&Workspace::switchWindow), this, DirectionEast));
     initShortcut("Switch Window Left", i18n("Switch to Window to the Left"),
                  Qt::META | Qt::ALT | Qt::Key_Left, std::bind(static_cast<void (Workspace::*)(Direction)>(&Workspace::switchWindow), this, DirectionWest));
-    initShortcut("Increase Opacity", i18n("Increase Opacity of Active Window by 5 %"),
+    initShortcut("Increase Opacity", i18n("Increase Opacity of Active Window by 5%"),
                  0, &Workspace::slotIncreaseWindowOpacity);
-    initShortcut("Decrease Opacity", i18n("Decrease Opacity of Active Window by 5 %"),
+    initShortcut("Decrease Opacity", i18n("Decrease Opacity of Active Window by 5%"),
                  0, &Workspace::slotLowerWindowOpacity);
 
     initShortcut("Window On All Desktops", i18n("Keep Window on All Desktops"),
@@ -1095,24 +1079,24 @@ void Workspace::initShortcuts()
                  Qt::META | Qt::CTRL | Qt::SHIFT | Qt::Key_Down, &Workspace::slotWindowToDesktopDown);
 
     for (int i = 0; i < 8; ++i) {
-        initShortcut(QStringLiteral("Window to Screen %1").arg(i), i18n("Window to Screen %1", i), 0, [this, i]() {
+        initShortcut(QStringLiteral("Window to Screen %1").arg(i), i18n("Move Window to Screen %1", i), 0, [this, i]() {
             Output *output = outputs().value(i);
             if (output) {
                 slotWindowToScreen(output);
             }
         });
     }
-    initShortcut("Window to Next Screen", i18n("Window to Next Screen"),
+    initShortcut("Window to Next Screen", i18n("Move Window to Next Screen"),
                  Qt::META | Qt::SHIFT | Qt::Key_Right, &Workspace::slotWindowToNextScreen);
-    initShortcut("Window to Previous Screen", i18n("Window to Previous Screen"),
+    initShortcut("Window to Previous Screen", i18n("Move Window to Previous Screen"),
                  Qt::META | Qt::SHIFT | Qt::Key_Left, &Workspace::slotWindowToPrevScreen);
-    initShortcut("Window One Screen to the Right", i18n("Window One Screen to the Right"),
+    initShortcut("Window One Screen to the Right", i18n("Move Window One Screen to the Right"),
                  0, &Workspace::slotWindowToRightScreen);
-    initShortcut("Window One Screen to the Left", i18n("Window One Screen to the Left"),
+    initShortcut("Window One Screen to the Left", i18n("Move Window One Screen to the Left"),
                  0, &Workspace::slotWindowToLeftScreen);
-    initShortcut("Window One Screen Up", i18n("Window One Screen Up"),
+    initShortcut("Window One Screen Up", i18n("Move Window One Screen Up"),
                  0, &Workspace::slotWindowToAboveScreen);
-    initShortcut("Window One Screen Down", i18n("Window One Screen Down"),
+    initShortcut("Window One Screen Down", i18n("Move Window One Screen Down"),
                  0, &Workspace::slotWindowToBelowScreen);
 
     for (int i = 0; i < 8; ++i) {
@@ -1260,7 +1244,7 @@ void Workspace::performWindowOperation(Window *window, Options::WindowOperation 
         takeActivity(window, ActivityFocus | ActivityRaise);
         break;
     case Options::MinimizeOp:
-        window->minimize();
+        window->setMinimized(true);
         break;
     case Options::ShadeOp:
         window->performMouseCommand(Options::MouseShade, Cursors::self()->mouse()->pos());
@@ -1326,7 +1310,7 @@ void Workspace::slotActivateAttentionWindow()
 void Workspace::slotWindowToDesktop(VirtualDesktop *desktop)
 {
     if (USABLE_ACTIVE_WINDOW) {
-        sendWindowToDesktop(m_activeWindow, desktop->x11DesktopNumber(), true);
+        sendWindowToDesktops(m_activeWindow, {desktop}, true);
     }
 }
 
@@ -1934,7 +1918,7 @@ bool Workspace::shortcutAvailable(const QKeySequence &cut, Window *ignore) const
         }
     }
     // Check now conflicts with activation shortcuts for current windows
-    for (const auto window : std::as_const(m_allClients)) {
+    for (const auto window : std::as_const(m_windows)) {
         if (window != ignore && window->shortcut() == cut) {
             return false;
         }

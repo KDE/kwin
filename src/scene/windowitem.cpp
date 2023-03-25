@@ -5,16 +5,18 @@
 */
 
 #include "scene/windowitem.h"
-#include "deleted.h"
 #include "internalwindow.h"
 #include "scene/decorationitem.h"
 #include "scene/shadowitem.h"
 #include "scene/surfaceitem_internal.h"
 #include "scene/surfaceitem_wayland.h"
 #include "scene/surfaceitem_x11.h"
+#include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
+
+#include <KDecoration2/Decoration>
 
 namespace KWin
 {
@@ -39,7 +41,7 @@ WindowItem::WindowItem(Window *window, Scene *scene, Item *parent)
     connect(window, &Window::minimizedChanged, this, &WindowItem::updateVisibility);
     connect(window, &Window::hiddenChanged, this, &WindowItem::updateVisibility);
     connect(window, &Window::activitiesChanged, this, &WindowItem::updateVisibility);
-    connect(window, &Window::desktopChanged, this, &WindowItem::updateVisibility);
+    connect(window, &Window::desktopsChanged, this, &WindowItem::updateVisibility);
     connect(workspace(), &Workspace::currentActivityChanged, this, &WindowItem::updateVisibility);
     connect(workspace(), &Workspace::currentDesktopChanged, this, &WindowItem::updateVisibility);
     updateVisibility();
@@ -47,7 +49,10 @@ WindowItem::WindowItem(Window *window, Scene *scene, Item *parent)
     connect(window, &Window::opacityChanged, this, &WindowItem::updateOpacity);
     updateOpacity();
 
-    connect(window, &Window::windowClosed, this, &WindowItem::handleWindowClosed);
+    connect(window, &Window::stackingOrderChanged, this, &WindowItem::updateStackingOrder);
+    updateStackingOrder();
+
+    connect(window, &Window::closed, this, &WindowItem::handleWindowClosed);
 }
 
 WindowItem::~WindowItem()
@@ -119,13 +124,34 @@ void WindowItem::unrefVisible(int reason)
     updateVisibility();
 }
 
-void WindowItem::handleWindowClosed(Window *original, Deleted *deleted)
+void WindowItem::elevate()
+{
+    // Not ideal, but it's also highly unlikely that there are more than 1000 windows. The
+    // elevation constantly increases so it's possible to force specific stacking order. It
+    // can potentially overflow, but it's unlikely to happen because windows are elevated
+    // rarely.
+    static int elevation = 1000;
+
+    m_elevation = elevation++;
+    updateStackingOrder();
+}
+
+void WindowItem::deelevate()
+{
+    m_elevation.reset();
+    updateStackingOrder();
+}
+
+void WindowItem::handleWindowClosed(Window *deleted)
 {
     m_window = deleted;
 }
 
 bool WindowItem::computeVisibility() const
 {
+    if (!m_window->readyForPainting()) {
+        return false;
+    }
     if (waylandServer() && waylandServer()->isScreenLocked()) {
         return m_window->isLockScreen() || m_window->isInputMethod() || m_window->isLockScreenOverlay();
     }
@@ -167,6 +193,17 @@ void WindowItem::updatePosition()
     setPosition(m_window->pos());
 }
 
+void WindowItem::addSurfaceItemDamageConnects(Item *item)
+{
+    auto surfaceItem = static_cast<SurfaceItem *>(item);
+    connect(surfaceItem, &SurfaceItem::damaged, this, &WindowItem::markDamaged);
+    connect(surfaceItem, &SurfaceItem::childAdded, this, &WindowItem::addSurfaceItemDamageConnects);
+    const auto childItems = item->childItems();
+    for (const auto &child : childItems) {
+        addSurfaceItemDamageConnects(child);
+    }
+}
+
 void WindowItem::updateSurfaceItem(SurfaceItem *surfaceItem)
 {
     m_surfaceItem.reset(surfaceItem);
@@ -175,12 +212,7 @@ void WindowItem::updateSurfaceItem(SurfaceItem *surfaceItem)
         connect(m_window, &Window::shadeChanged, this, &WindowItem::updateSurfaceVisibility);
         connect(m_window, &Window::bufferGeometryChanged, this, &WindowItem::updateSurfacePosition);
         connect(m_window, &Window::frameGeometryChanged, this, &WindowItem::updateSurfacePosition);
-
-        connect(surfaceItem, &SurfaceItem::damaged, this, &WindowItem::markDamaged);
-        connect(surfaceItem, &SurfaceItem::childAdded, this, [this](Item *item) {
-            auto surfaceItem = static_cast<SurfaceItem *>(item);
-            connect(surfaceItem, &SurfaceItem::damaged, this, &WindowItem::markDamaged);
-        });
+        addSurfaceItemDamageConnects(surfaceItem);
 
         updateSurfacePosition();
         updateSurfaceVisibility();
@@ -216,6 +248,7 @@ void WindowItem::updateShadowItem()
         } else if (m_surfaceItem) {
             m_shadowItem->stackBefore(m_surfaceItem.get());
         }
+        markDamaged();
     } else {
         m_shadowItem.reset();
     }
@@ -233,6 +266,8 @@ void WindowItem::updateDecorationItem()
         } else if (m_surfaceItem) {
             m_decorationItem->stackBefore(m_surfaceItem.get());
         }
+        connect(m_window->decoration(), &KDecoration2::Decoration::damaged, this, &WindowItem::markDamaged);
+        markDamaged();
     } else {
         m_decorationItem.reset();
     }
@@ -241,6 +276,15 @@ void WindowItem::updateDecorationItem()
 void WindowItem::updateOpacity()
 {
     setOpacity(m_window->opacity());
+}
+
+void WindowItem::updateStackingOrder()
+{
+    if (m_elevation.has_value()) {
+        setZ(m_elevation.value());
+    } else {
+        setZ(m_window->stackingOrder());
+    }
 }
 
 void WindowItem::markDamaged()

@@ -9,7 +9,7 @@
 #pragma once
 #include "ui_shortcutdialog.h"
 
-#include <kwinglobals.h>
+#include "libkwineffects/kwinglobals.h"
 
 // Qt
 #include <QDialog>
@@ -135,12 +135,6 @@ private Q_SLOTS:
      * the Window.
      */
     void activityPopupAboutToShow();
-    /**
-     * Toggles whether the Window is on the \a activity
-     *
-     * @param action Invoked Action containing the Id of the Activity to toggle the Window on
-     */
-    void slotToggleOnActivity(QAction *action);
     /**
      * Performs a window operation.
      *

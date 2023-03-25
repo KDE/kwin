@@ -347,12 +347,12 @@ int libinput_device_pointer_has_button(struct libinput_device *device, uint32_t 
         return device->supportedButtons.testFlag(Qt::ExtraButton1);
     case BTN_EXTRA:
         return device->supportedButtons.testFlag(Qt::ExtraButton2);
-    case BTN_BACK:
-        return device->supportedButtons.testFlag(Qt::BackButton);
     case BTN_FORWARD:
-        return device->supportedButtons.testFlag(Qt::ForwardButton);
+        return device->supportedButtons.testFlag(Qt::ExtraButton3);
+    case BTN_BACK:
+        return device->supportedButtons.testFlag(Qt::ExtraButton4);
     case BTN_TASK:
-        return device->supportedButtons.testFlag(Qt::TaskButton);
+        return device->supportedButtons.testFlag(Qt::ExtraButton5);
     default:
         return 0;
     }

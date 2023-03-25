@@ -41,8 +41,11 @@ void Activities::slotServiceStatusChanged()
     if (m_controller->serviceStatus() != KActivities::Consumer::Running) {
         return;
     }
-    const auto windows = Workspace::self()->allClientList();
+    const auto windows = Workspace::self()->windows();
     for (auto *const window : windows) {
+        if (!window->isClient()) {
+            continue;
+        }
         if (window->isDesktop()) {
             continue;
         }
@@ -67,8 +70,11 @@ void Activities::slotCurrentChanged(const QString &newActivity)
 
 void Activities::slotRemoved(const QString &activity)
 {
-    const auto windows = Workspace::self()->allClientList();
+    const auto windows = Workspace::self()->windows();
     for (auto *const window : windows) {
+        if (!window->isClient()) {
+            continue;
+        }
         if (window->isDesktop()) {
             continue;
         }
@@ -167,8 +173,11 @@ void Activities::reallyStop(const QString &id)
 
     QSet<QByteArray> saveSessionIds;
     QSet<QByteArray> dontCloseSessionIds;
-    const auto windows = ws->allClientList();
+    const auto windows = ws->windows();
     for (auto *const window : windows) {
+        if (!window->isClient()) {
+            continue;
+        }
         if (window->isDesktop()) {
             continue;
         }

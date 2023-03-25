@@ -4,16 +4,12 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.15
-import QtQuick.Layouts 1.4
-import QtGraphicalEffects 1.12
-import org.kde.kwin 3.0 as KWinComponents
-import org.kde.kwin.private.effects 1.0
-import org.kde.plasma.core 2.0 as PlasmaCore
+import QtQuick
+import QtQuick.Layouts
+import org.kde.kwin as KWinComponents
+import org.kde.kwin.private.effects
+import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.components 3.0 as PlasmaComponents
-import org.kde.plasma.extras 2.0 as PlasmaExtras
-import org.kde.KWin.Effect.WindowView 1.0
-import org.kde.kitemmodels 1.0 as KitemModels
 
 Item {
     id: delegate
@@ -21,7 +17,7 @@ Item {
 
     x: Math.round(tile.absoluteGeometryInScreen.x)
     y: Math.round(tile.absoluteGeometryInScreen.y)
-    z: (tile.layoutDirection === KWinComponents.Tile.Floating ? 1 : 0) + (focus ? 10 : 0)
+    z: focus ? 1000 : 0
     //onZChanged: print(delegate + " "+z)
     width: Math.round(tile.absoluteGeometryInScreen.width)
     height: Math.round(tile.absoluteGeometryInScreen.height)
@@ -130,12 +126,12 @@ Item {
             MouseArea {
                 anchors.fill: parent
                 hoverEnabled: true
-               // enabled: tile.layoutDirection === KWinComponents.Tile.Floating
+                propagateComposedEvents: true
                 property point lastPos
                 onClicked: {
                     delegate.focus = true;
                     if (tile.layoutDirection !== KWinComponents.Tile.Floating) {
-                        effect.deactivate(effect.animationDuration);
+                        mouse.accepted = false;
                     }
                 }
                 onPressed: {
@@ -168,14 +164,14 @@ Item {
                 id: splitButton
                 Layout.fillWidth: true
                 icon.name: "view-split-left-right"
-                text: i18n("Split Horizontally")
+                text: i18nd("kwin_effects","Split Horizontally")
                 display: parent.compact ? PlasmaComponents.Button.IconOnly : PlasmaComponents.Button.TextBesideIcon
                 onClicked: tile.split(KWinComponents.Tile.Horizontal)
             }
             PlasmaComponents.Button {
                 Layout.fillWidth: true
                 icon.name: "view-split-top-bottom"
-                text: i18n("Split Vertically")
+                text: i18nd("kwin_effects","Split Vertically")
                 display: parent.compact ? PlasmaComponents.Button.IconOnly : PlasmaComponents.Button.TextBesideIcon
                 onClicked: tile.split(KWinComponents.Tile.Vertical)
             }
@@ -183,7 +179,7 @@ Item {
                 Layout.fillWidth: true
                 visible: tile.layoutDirection !== KWinComponents.Tile.Floating
                 icon.name: "window-duplicate"
-                text: i18n("Add Floating Tile")
+                text: i18nd("kwin_effects","Add Floating Tile")
                 display: parent.compact ? PlasmaComponents.Button.IconOnly : PlasmaComponents.Button.TextBesideIcon
                 onClicked: tile.split(KWinComponents.Tile.Floating)
             }
@@ -192,7 +188,7 @@ Item {
                 visible: tile.canBeRemoved
                 Layout.fillWidth: true
                 icon.name: "edit-delete"
-                text: i18n("Delete")
+                text: i18nd("kwin_effects","Delete")
                 display: parent.compact ? PlasmaComponents.Button.IconOnly : PlasmaComponents.Button.TextBesideIcon
                 onClicked: {
                     tile.remove();
@@ -212,7 +208,7 @@ Item {
         }
         visible: tile.layoutDirection === KWinComponents.Tile.Floating && tile.isLayout
         icon.name: "window-duplicate"
-        text: i18n("Add Floating Tile")
+        text: i18nd("kwin_effects","Add Floating Tile")
         onClicked: tile.split(KWinComponents.Tile.Floating)
     }
 }

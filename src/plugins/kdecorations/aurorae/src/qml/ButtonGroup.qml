@@ -3,8 +3,8 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-import QtQuick 2.0
-import org.kde.kwin.decoration 0.1
+import QtQuick
+import org.kde.kwin.decoration
 
 Item {
     function createButtons() {

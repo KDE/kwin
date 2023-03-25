@@ -12,9 +12,9 @@
 
 #include <config-kwin.h>
 
+#include "libkwineffects/kwineffects.h"
 #include <QTime>
 #include <QTimeLine>
-#include <kwineffects.h>
 
 namespace KWin
 {
@@ -44,7 +44,7 @@ public:
     ~ZoomEffect() override;
     void reconfigure(ReconfigureFlags flags) override;
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void paintScreen(int mask, const QRegion &region, ScreenPaintData &data) override;
+    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen) override;
     void postPaintScreen() override;
     bool isActive() const override;
     int requestedEffectChainPosition() const override;
@@ -73,7 +73,7 @@ private Q_SLOTS:
     void moveMouseToCenter();
     void timelineFrameChanged(int frame);
     void moveFocus(const QPoint &point);
-    void slotMouseChanged(const QPoint &pos, const QPoint &old,
+    void slotMouseChanged(const QPointF &pos, const QPointF &old,
                           Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
                           Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
     void slotWindowDamaged();
@@ -89,12 +89,11 @@ private:
     {
         std::unique_ptr<GLTexture> texture;
         std::unique_ptr<GLFramebuffer> framebuffer;
-        std::unique_ptr<GLVertexBuffer> vbo;
         QRect viewport;
     };
 
     GLTexture *ensureCursorTexture();
-    OffscreenData *ensureOffscreenData(EffectScreen *screen);
+    OffscreenData *ensureOffscreenData(const RenderViewport &viewport, EffectScreen *screen);
     void markCursorTextureDirty();
 
 #if HAVE_ACCESSIBILITY

@@ -1,6 +1,8 @@
 target_sources(kwin PRIVATE
     drm_abstract_output.cpp
+    drm_atomic_commit.cpp
     drm_backend.cpp
+    drm_blob.cpp
     drm_buffer.cpp
     drm_buffer_gbm.cpp
     drm_connector.cpp
@@ -12,7 +14,7 @@ target_sources(kwin PRIVATE
     drm_egl_cursor_layer.cpp
     drm_egl_layer.cpp
     drm_egl_layer_surface.cpp
-    drm_gbm_surface.cpp
+    drm_gbm_swapchain.cpp
     drm_gpu.cpp
     drm_layer.cpp
     drm_logging.cpp
@@ -24,7 +26,6 @@ target_sources(kwin PRIVATE
     drm_property.cpp
     drm_qpainter_backend.cpp
     drm_qpainter_layer.cpp
-    drm_shadow_buffer.cpp
     drm_virtual_egl_layer.cpp
     drm_virtual_output.cpp
 )

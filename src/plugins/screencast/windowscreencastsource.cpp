@@ -10,15 +10,16 @@
 #include "composite.h"
 #include "core/output.h"
 #include "core/renderloop.h"
-#include "deleted.h"
 #include "effects.h"
-#include "kwineffects.h"
-#include "kwingltexture.h"
-#include "kwinglutils.h"
+#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/kwingltexture.h"
+#include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/rendertarget.h"
+#include "libkwineffects/renderviewport.h"
 #include "scene/itemrenderer.h"
 #include "scene/windowitem.h"
 #include "scene/workspacescene.h"
-#include "window.h"
+#include <drm_fourcc.h>
 
 namespace KWin
 {
@@ -26,8 +27,14 @@ namespace KWin
 WindowScreenCastSource::WindowScreenCastSource(Window *window, QObject *parent)
     : ScreenCastSource(parent)
     , m_window(window)
+    , m_offscreenRef(window)
 {
-    connect(m_window, &Window::windowClosed, this, &ScreenCastSource::closed);
+    connect(m_window, &Window::closed, this, &ScreenCastSource::closed);
+}
+
+quint32 WindowScreenCastSource::drmFormat() const
+{
+    return DRM_FORMAT_RGBA8888;
 }
 
 bool WindowScreenCastSource::hasAlphaChannel() const
@@ -40,30 +47,31 @@ QSize WindowScreenCastSource::textureSize() const
     return m_window->clientGeometry().size().toSize();
 }
 
-void WindowScreenCastSource::render(QImage *image)
+void WindowScreenCastSource::render(spa_data *spa, spa_video_format format)
 {
     GLTexture offscreenTexture(hasAlphaChannel() ? GL_RGBA8 : GL_RGB8, textureSize());
     GLFramebuffer offscreenTarget(&offscreenTexture);
 
     render(&offscreenTarget);
-    grabTexture(&offscreenTexture, image);
+    grabTexture(&offscreenTexture, spa, format);
 }
 
 void WindowScreenCastSource::render(GLFramebuffer *target)
 {
     const QRectF geometry = m_window->clientGeometry();
     QMatrix4x4 projectionMatrix;
-    projectionMatrix.ortho(geometry.x(), geometry.x() + geometry.width(),
-                           geometry.y(), geometry.y() + geometry.height(), -1, 1);
+    projectionMatrix.scale(1, -1);
+    projectionMatrix.ortho(geometry);
 
     WindowPaintData data;
     data.setProjectionMatrix(projectionMatrix);
-    data.setRenderTargetScale(1.0);
 
+    RenderTarget renderTarget(target);
+    RenderViewport viewport(geometry, 1, renderTarget);
     GLFramebuffer::pushFramebuffer(target);
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
-    Compositor::self()->scene()->renderer()->renderItem(m_window->windowItem(), Scene::PAINT_WINDOW_TRANSFORMED, infiniteRegion(), data);
+    Compositor::self()->scene()->renderer()->renderItem(renderTarget, viewport, m_window->windowItem(), Scene::PAINT_WINDOW_TRANSFORMED, infiniteRegion(), data);
     GLFramebuffer::popFramebuffer();
 }
 

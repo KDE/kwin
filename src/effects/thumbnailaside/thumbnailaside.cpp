@@ -12,6 +12,8 @@
 // KConfigSkeleton
 #include "thumbnailasideconfig.h"
 
+#include "libkwineffects/renderviewport.h"
+
 #include <KGlobalAccel>
 #include <KLocalizedString>
 
@@ -48,26 +50,25 @@ void ThumbnailAsideEffect::reconfigure(ReconfigureFlags)
     arrange();
 }
 
-void ThumbnailAsideEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
+void ThumbnailAsideEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
 {
     painted = QRegion();
-    effects->paintScreen(mask, region, data);
+    effects->paintScreen(renderTarget, viewport, mask, region, screen);
 
-    const QMatrix4x4 projectionMatrix = data.projectionMatrix();
     for (const Data &d : std::as_const(windows)) {
         if (painted.intersects(d.rect)) {
-            WindowPaintData data(projectionMatrix);
+            WindowPaintData data(viewport.projectionMatrix());
             data.multiplyOpacity(opacity);
             QRect region;
             setPositionTransformations(data, region, d.window, d.rect, Qt::KeepAspectRatio);
-            effects->drawWindow(d.window, PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_TRANSFORMED, region, data);
+            effects->drawWindow(renderTarget, viewport, d.window, PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_TRANSFORMED, region, data);
         }
     }
 }
 
-void ThumbnailAsideEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+void ThumbnailAsideEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
-    effects->paintWindow(w, mask, region, data);
+    effects->paintWindow(renderTarget, viewport, w, mask, region, data);
     painted |= region;
 }
 

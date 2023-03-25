@@ -104,7 +104,7 @@ Window *ApplicationMenu::findWindowWithApplicationMenu(const QString &serviceNam
         return nullptr;
     }
 
-    return Workspace::self()->findAbstractClient([&](const Window *window) {
+    return Workspace::self()->findWindow([&](const Window *window) {
         return window->applicationMenuServiceName() == serviceName
             && window->applicationMenuObjectPath() == menuObjectPath.path();
     });

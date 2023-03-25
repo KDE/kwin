@@ -8,7 +8,7 @@
 */
 #pragma once
 
-#include <kwineffects.h>
+#include "libkwineffects/kwineffects.h"
 
 namespace KWin
 {
@@ -25,7 +25,7 @@ public:
     ~ScreenTransformEffect() override;
 
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void paintScreen(int mask, const QRegion &region, KWin::ScreenPaintData &data) override;
+    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, KWin::EffectScreen *screen) override;
 
     bool isActive() const override;
 

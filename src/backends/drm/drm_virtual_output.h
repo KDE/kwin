@@ -31,6 +31,7 @@ public:
 
     bool present() override;
     DrmOutputLayer *primaryLayer() const override;
+    DrmOutputLayer *cursorLayer() const override;
     void recreateSurface();
 
 private:

@@ -484,16 +484,6 @@ void Placement::placeTransient(Window *c)
     const auto parent = c->transientFor();
     const QRectF screen = Workspace::self()->clientArea(parent->isFullScreen() ? FullScreenArea : PlacementArea, parent);
     c->moveResize(c->transientPlacement(screen));
-
-    // Potentially a client could set no constraint adjustments
-    // and we'll be offscreen.
-
-    // The spec implies we should place window the offscreen. However,
-    // practically Qt doesn't set any constraint adjustments yet so we can't.
-    // Also kwin generally doesn't let clients do what they want
-    if (!screen.contains(c->moveResizeGeometry().toAlignedRect())) {
-        c->keepInArea(screen);
-    }
 }
 
 void Placement::placeDialog(Window *c, const QRect &area, PlacementPolicy nextPlacement)
@@ -602,21 +592,33 @@ void Placement::cascadeIfCovering(Window *window, const QRectF &area)
     // cascade until confirmed no total overlap or not enough space to cascade
     while (!noOverlap) {
         noOverlap = true;
+        QRectF coveredArea;
         // check current position candidate for overlaps with other windows
         for (auto l = workspace()->stackingOrder().crbegin(); l != workspace()->stackingOrder().crend(); ++l) {
             auto other = *l;
-            if (isIrrelevant(other, window, desktop)) {
+            if (isIrrelevant(other, window, desktop) || !other->frameGeometry().intersects(possibleGeo)) {
                 continue;
             }
 
-            if (possibleGeo.contains(other->frameGeometry())) {
-                // placed window would completely overlap the other window: try to cascade it from the topleft of that other window
+            if (possibleGeo.contains(other->frameGeometry()) && !coveredArea.contains(other->frameGeometry())) {
+                // placed window would completely overlap another window which is not already
+                // covered by other windows: try to cascade it from the topleft of that other
+                // window
                 noOverlap = false;
                 possibleGeo.moveTopLeft(other->pos() + offset);
                 if (possibleGeo.right() > area.right() || possibleGeo.bottom() > area.bottom()) {
-                    // new cascaded geometry would be out of the bounds of the placement area: abort the cascading and keep the window in the original position
+                    // new cascaded geometry would be out of the bounds of the placement area:
+                    // abort the cascading and keep the window in the original position
                     return;
                 }
+                break;
+            }
+
+            // keep track of the area occupied by other windows as we go from top to bottom
+            // in the stacking order, so we don't need to bother trying to avoid overlap with
+            // windows which are already covered up by other windows anyway
+            coveredArea |= other->frameGeometry();
+            if (coveredArea.contains(area)) {
                 break;
             }
         }
@@ -642,14 +644,17 @@ void Placement::cascadeDesktop()
 
 void Placement::unclutterDesktop()
 {
-    const auto &clients = Workspace::self()->allClientList();
-    for (int i = clients.size() - 1; i >= 0; i--) {
-        auto client = clients.at(i);
-        if ((!client->isOnCurrentDesktop()) || (client->isMinimized()) || (client->isOnAllDesktops()) || (!client->isMovable())) {
+    const auto &windows = Workspace::self()->windows();
+    for (int i = windows.size() - 1; i >= 0; i--) {
+        auto window = windows.at(i);
+        if (!window->isClient()) {
             continue;
         }
-        const QRect placementArea = workspace()->clientArea(PlacementArea, client).toRect();
-        placeSmart(client, placementArea);
+        if ((!window->isOnCurrentDesktop()) || (window->isMinimized()) || (window->isOnAllDesktops()) || (!window->isMovable())) {
+            continue;
+        }
+        const QRect placementArea = workspace()->clientArea(PlacementArea, window).toRect();
+        placeSmart(window, placementArea);
     }
 }
 
@@ -885,7 +890,7 @@ qreal Workspace::packPositionLeft(const Window *window, qreal oldX, bool leftEdg
         return oldX;
     }
     VirtualDesktop *const desktop = window->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop() : window->desktops().front();
-    for (auto it = m_allClients.constBegin(), end = m_allClients.constEnd(); it != end; ++it) {
+    for (auto it = m_windows.constBegin(), end = m_windows.constEnd(); it != end; ++it) {
         if (isIrrelevant(*it, window, desktop)) {
             continue;
         }
@@ -912,7 +917,7 @@ qreal Workspace::packPositionRight(const Window *window, qreal oldX, bool rightE
         return oldX;
     }
     VirtualDesktop *const desktop = window->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop() : window->desktops().front();
-    for (auto it = m_allClients.constBegin(), end = m_allClients.constEnd(); it != end; ++it) {
+    for (auto it = m_windows.constBegin(), end = m_windows.constEnd(); it != end; ++it) {
         if (isIrrelevant(*it, window, desktop)) {
             continue;
         }
@@ -940,7 +945,7 @@ qreal Workspace::packPositionUp(const Window *window, qreal oldY, bool topEdge) 
         return oldY;
     }
     VirtualDesktop *const desktop = window->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop() : window->desktops().front();
-    for (auto it = m_allClients.constBegin(), end = m_allClients.constEnd(); it != end; ++it) {
+    for (auto it = m_windows.constBegin(), end = m_windows.constEnd(); it != end; ++it) {
         if (isIrrelevant(*it, window, desktop)) {
             continue;
         }
@@ -967,7 +972,7 @@ qreal Workspace::packPositionDown(const Window *window, qreal oldY, bool bottomE
         return oldY;
     }
     VirtualDesktop *const desktop = window->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop() : window->desktops().front();
-    for (auto it = m_allClients.constBegin(), end = m_allClients.constEnd(); it != end; ++it) {
+    for (auto it = m_windows.constBegin(), end = m_windows.constEnd(); it != end; ++it) {
         if (isIrrelevant(*it, window, desktop)) {
             continue;
         }

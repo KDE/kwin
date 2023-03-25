@@ -6,11 +6,11 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-import QtQuick 2.0;
-import QtQuick.Window 2.0;
-import org.kde.plasma.core 2.0 as PlasmaCore;
-import org.kde.plasma.extras 2.0 as PlasmaExtras
-import org.kde.kwin 2.0;
+import QtQuick
+import QtQuick.Window
+import org.kde.plasma.core as PlasmaCore;
+import org.kde.plasma.extras as PlasmaExtras
+import org.kde.kwin
 
 PlasmaCore.Dialog {
     id: dialog
@@ -30,21 +30,21 @@ PlasmaCore.Dialog {
         }
 
         function show() {
-            if (dialogItem.currentDesktop == workspace.currentDesktop - 1) {
+            const index = Workspace.desktops.indexOf(Workspace.currentDesktop);
+            if (dialogItem.currentIndex === index) {
                 return;
             }
-            dialogItem.previousDesktop = dialogItem.currentDesktop;
+            dialogItem.previousIndex = dialogItem.currentIndex;
             timer.stop();
-            dialogItem.currentDesktop = workspace.currentDesktop - 1;
-            textElement.text = workspace.desktopName(workspace.currentDesktop);
+            dialogItem.currentIndex = index;
             // screen geometry might have changed
-            var screen = workspace.clientArea(KWin.FullScreenArea, workspace.activeScreen, workspace.currentDesktop);
+            var screen = Workspace.clientArea(KWin.FullScreenArea, Workspace.activeScreen, Workspace.currentDesktop);
             dialogItem.screenWidth = screen.width;
             dialogItem.screenHeight = screen.height;
             if (dialogItem.showGrid) {
                 // non dependable properties might have changed
-                view.columns = workspace.desktopGridWidth;
-                view.rows = workspace.desktopGridHeight;
+                view.columns = Workspace.desktopGridWidth;
+                view.rows = Workspace.desktopGridHeight;
             }
             dialog.visible = true;
             // position might have changed
@@ -57,9 +57,8 @@ PlasmaCore.Dialog {
         id: dialogItem
         property int screenWidth: 0
         property int screenHeight: 0
-        // we count desktops starting from 0 to have it better match the layout in the Grid
-        property int currentDesktop: 0
-        property int previousDesktop: 0
+        property int currentIndex: 0
+        property int previousIndex: 0
         property int animationDuration: 1000
         property bool showGrid: true
 
@@ -74,7 +73,7 @@ PlasmaCore.Dialog {
             horizontalAlignment: Text.AlignHCenter
             wrapMode: Text.NoWrap
             elide: Text.ElideRight
-            text: workspace.desktopName(workspace.currentDesktop)
+            text: Workspace.currentDesktop.name
         }
 
         Grid {
@@ -92,7 +91,7 @@ PlasmaCore.Dialog {
             visible: dialogItem.showGrid
             Repeater {
                 id: repeater
-                model: workspace.desktops
+                model: Workspace.desktops
                 Item {
                     width: view.itemWidth
                     height: view.itemHeight
@@ -123,22 +122,22 @@ PlasmaCore.Dialog {
                             anchors.fill: parent
                             source: "go-down"
                             visible: {
-                                if (dialogItem.currentDesktop <= index) {
+                                if (dialogItem.currentIndex <= index) {
                                     // don't show for target desktop
                                     return false;
                                 }
-                                if (index < dialogItem.previousDesktop) {
+                                if (index < dialogItem.previousIndex) {
                                     return false;
                                 }
-                                if (dialogItem.currentDesktop < dialogItem.previousDesktop) {
+                                if (dialogItem.currentIndex < dialogItem.previousIndex) {
                                     // we only go down if the new desktop is higher
                                     return false;
                                 }
-                                if (Math.floor(dialogItem.currentDesktop/view.columns) == Math.floor(index/view.columns)) {
+                                if (Math.floor(dialogItem.currentIndex/view.columns) == Math.floor(index/view.columns)) {
                                     // don't show icons in same row as target desktop
                                     return false;
                                 }
-                                if (dialogItem.previousDesktop % view.columns == index % view.columns) {
+                                if (dialogItem.previousIndex % view.columns == index % view.columns) {
                                     // show arrows for icons in same column as the previous desktop
                                     return true;
                                 }
@@ -149,22 +148,22 @@ PlasmaCore.Dialog {
                             anchors.fill: parent
                             source: "go-up"
                             visible: {
-                                if (dialogItem.currentDesktop >= index) {
+                                if (dialogItem.currentIndex >= index) {
                                     // don't show for target desktop
                                     return false;
                                 }
-                                if (index > dialogItem.previousDesktop) {
+                                if (index > dialogItem.previousIndex) {
                                     return false;
                                 }
-                                if (dialogItem.currentDesktop > dialogItem.previousDesktop) {
+                                if (dialogItem.currentIndex > dialogItem.previousIndex) {
                                     // we only go down if the new desktop is higher
                                     return false;
                                 }
-                                if (Math.floor(dialogItem.currentDesktop/view.columns) == Math.floor(index/view.columns)) {
+                                if (Math.floor(dialogItem.currentIndex/view.columns) == Math.floor(index/view.columns)) {
                                     // don't show icons in same row as target desktop
                                     return false;
                                 }
-                                if (dialogItem.previousDesktop % view.columns == index % view.columns) {
+                                if (dialogItem.previousIndex % view.columns == index % view.columns) {
                                     // show arrows for icons in same column as the previous desktop
                                     return true;
                                 }
@@ -175,28 +174,28 @@ PlasmaCore.Dialog {
                             anchors.fill: parent
                             source: "go-next"
                             visible: {
-                                if (dialogItem.currentDesktop <= index) {
+                                if (dialogItem.currentIndex <= index) {
                                     // we don't show for desktops not on the path
                                     return false;
                                 }
-                                if (index < dialogItem.previousDesktop) {
+                                if (index < dialogItem.previousIndex) {
                                     // we might have to show this icon in case we go up and to the right
-                                    if (Math.floor(dialogItem.currentDesktop/view.columns) == Math.floor(index/view.columns)) {
+                                    if (Math.floor(dialogItem.currentIndex/view.columns) == Math.floor(index/view.columns)) {
                                         // can only happen in same row
-                                        if (index % view.columns >= dialogItem.previousDesktop % view.columns) {
+                                        if (index % view.columns >= dialogItem.previousIndex % view.columns) {
                                             // but only for items in the same column or after of the previous desktop
                                             return true;
                                         }
                                     }
                                     return false;
                                 }
-                                if (dialogItem.currentDesktop < dialogItem.previousDesktop) {
+                                if (dialogItem.currentIndex < dialogItem.previousIndex) {
                                     // we only go right if the new desktop is higher
                                     return false;
                                 }
-                                if (Math.floor(dialogItem.currentDesktop/view.columns) == Math.floor(index/view.columns)) {
+                                if (Math.floor(dialogItem.currentIndex/view.columns) == Math.floor(index/view.columns)) {
                                     // show icons in same row as target desktop
-                                    if (index % view.columns < dialogItem.previousDesktop % view.columns) {
+                                    if (index % view.columns < dialogItem.previousIndex % view.columns) {
                                         // but only for items in the same column or after of the previous desktop
                                         return false;
                                     }
@@ -209,28 +208,28 @@ PlasmaCore.Dialog {
                             anchors.fill: parent
                             source: "go-previous"
                             visible: {
-                                if (dialogItem.currentDesktop >= index) {
+                                if (dialogItem.currentIndex >= index) {
                                     // we don't show for desktops not on the path
                                     return false;
                                 }
-                                if (index > dialogItem.previousDesktop) {
+                                if (index > dialogItem.previousIndex) {
                                     // we might have to show this icon in case we go down and to the left
-                                    if (Math.floor(dialogItem.currentDesktop/view.columns) == Math.floor(index/view.columns)) {
+                                    if (Math.floor(dialogItem.currentIndex/view.columns) == Math.floor(index/view.columns)) {
                                         // can only happen in same row
-                                        if (index % view.columns <= dialogItem.previousDesktop % view.columns) {
+                                        if (index % view.columns <= dialogItem.previousIndex % view.columns) {
                                             // but only for items in the same column or before the previous desktop
                                             return true;
                                         }
                                     }
                                     return false;
                                 }
-                                if (dialogItem.currentDesktop > dialogItem.previousDesktop) {
+                                if (dialogItem.currentIndex > dialogItem.previousIndex) {
                                     // we only go left if the new desktop is lower
                                     return false;
                                 }
-                                if (Math.floor(dialogItem.currentDesktop/view.columns) == Math.floor(index/view.columns)) {
+                                if (Math.floor(dialogItem.currentIndex/view.columns) == Math.floor(index/view.columns)) {
                                     // show icons in same row as target desktop
-                                    if (index % view.columns > dialogItem.previousDesktop % view.columns) {
+                                    if (index % view.columns > dialogItem.previousIndex % view.columns) {
                                         // but only for items in the same column or before of the previous desktop
                                         return false;
                                     }
@@ -243,7 +242,7 @@ PlasmaCore.Dialog {
                     states: [
                         State {
                             name: "NORMAL"
-                            when: index != dialogItem.currentDesktop
+                            when: index != dialogItem.currentIndex
                             PropertyChanges {
                                 target: activeElement
                                 opacity: 0.0
@@ -251,7 +250,7 @@ PlasmaCore.Dialog {
                         },
                         State {
                             name: "SELECTED"
-                            when: index == dialogItem.currentDesktop
+                            when: index == dialogItem.currentIndex
                             PropertyChanges {
                                 target: activeElement
                                 opacity: 1.0
@@ -259,7 +258,7 @@ PlasmaCore.Dialog {
                         }
                     ]
                     Component.onCompleted: {
-                        view.state = (index == dialogItem.currentDesktop) ? "SELECTED" : "NORMAL"
+                        view.state = (index == dialogItem.currentIndex) ? "SELECTED" : "NORMAL"
                     }
                 }
             }
@@ -273,23 +272,20 @@ PlasmaCore.Dialog {
         }
 
         Connections {
-            target: workspace
+            target: Workspace
             function onCurrentDesktopChanged() {
                 dialogItem.show()
             }
-            function onNumberDesktopsChanged() {
-                repeater.model = workspace.desktops;
-            }
         }
         Connections {
-            target: options
+            target: Options
             function onConfigChanged() {
                 dialogItem.loadConfig()
             }
         }
         Component.onCompleted: {
-            view.columns = workspace.desktopGridWidth;
-            view.rows = workspace.desktopGridHeight;
+            view.columns = Workspace.desktopGridWidth;
+            view.rows = Workspace.desktopGridHeight;
             dialogItem.loadConfig();
             dialogItem.show();
         }

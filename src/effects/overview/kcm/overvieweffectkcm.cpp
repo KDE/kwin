@@ -23,12 +23,12 @@ K_PLUGIN_CLASS(KWin::OverviewEffectConfig)
 namespace KWin
 {
 
-OverviewEffectConfig::OverviewEffectConfig(QWidget *parent, const QVariantList &args)
-    : KCModule(parent, args)
+OverviewEffectConfig::OverviewEffectConfig(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
+    : KCModule(parent, data, args)
 {
-    ui.setupUi(this);
+    ui.setupUi(widget());
     OverviewConfig::instance(KWIN_CONFIG);
-    addConfig(OverviewConfig::self(), this);
+    addConfig(OverviewConfig::self(), widget());
 
     auto actionCollection = new KActionCollection(this, QStringLiteral("kwin"));
 
@@ -44,7 +44,7 @@ OverviewEffectConfig::OverviewEffectConfig(QWidget *parent, const QVariantList &
     KGlobalAccel::self()->setShortcut(toggleAction, {defaultToggleShortcut});
 
     ui.shortcutsEditor->addCollection(actionCollection);
-    connect(ui.shortcutsEditor, &KShortcutsEditor::keyChange, this, &OverviewEffectConfig::markAsChanged);
+    connect(ui.shortcutsEditor, &KShortcutsEditor::keyChange, this, &KCModule::markAsChanged);
 }
 
 OverviewEffectConfig::~OverviewEffectConfig()

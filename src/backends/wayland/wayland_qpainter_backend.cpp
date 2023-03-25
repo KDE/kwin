@@ -18,6 +18,7 @@
 #include <KWayland/Client/surface.h>
 
 #include <cmath>
+#include <drm_fourcc.h>
 
 namespace KWin
 {
@@ -129,6 +130,11 @@ bool WaylandQPainterPrimaryLayer::endFrame(const QRegion &renderedRegion, const 
     return true;
 }
 
+quint32 WaylandQPainterPrimaryLayer::format() const
+{
+    return DRM_FORMAT_RGBA8888;
+}
+
 WaylandQPainterCursorLayer::WaylandQPainterCursorLayer(WaylandOutput *output)
     : m_output(output)
 {
@@ -138,39 +144,10 @@ WaylandQPainterCursorLayer::~WaylandQPainterCursorLayer()
 {
 }
 
-qreal WaylandQPainterCursorLayer::scale() const
-{
-    return m_scale;
-}
-
-void WaylandQPainterCursorLayer::setScale(qreal scale)
-{
-    m_scale = scale;
-}
-
-QPoint WaylandQPainterCursorLayer::hotspot() const
-{
-    return m_hotspot;
-}
-
-void WaylandQPainterCursorLayer::setHotspot(const QPoint &hotspot)
-{
-    m_hotspot = hotspot;
-}
-
-QSize WaylandQPainterCursorLayer::size() const
-{
-    return m_size;
-}
-
-void WaylandQPainterCursorLayer::setSize(const QSize &size)
-{
-    m_size = size;
-}
-
 std::optional<OutputLayerBeginFrameInfo> WaylandQPainterCursorLayer::beginFrame()
 {
-    const QSize bufferSize = m_size.expandedTo(QSize(64, 64));
+    const auto tmp = size().expandedTo(QSize(64, 64));
+    const QSize bufferSize(std::ceil(tmp.width()), std::ceil(tmp.height()));
     if (m_backingStore.size() != bufferSize) {
         m_backingStore = QImage(bufferSize, QImage::Format_ARGB32_Premultiplied);
     }
@@ -184,8 +161,13 @@ std::optional<OutputLayerBeginFrameInfo> WaylandQPainterCursorLayer::beginFrame(
 bool WaylandQPainterCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     KWayland::Client::Buffer::Ptr buffer = m_output->backend()->display()->shmPool()->createBuffer(m_backingStore);
-    m_output->cursor()->update(buffer, m_scale, m_hotspot);
+    m_output->cursor()->update(*buffer.lock(), scale(), hotspot().toPoint());
     return true;
+}
+
+quint32 WaylandQPainterCursorLayer::format() const
+{
+    return DRM_FORMAT_RGBA8888;
 }
 
 WaylandQPainterBackend::WaylandQPainterBackend(Wayland::WaylandBackend *b)
@@ -225,7 +207,7 @@ OutputLayer *WaylandQPainterBackend::primaryLayer(Output *output)
     return m_outputs[output].primaryLayer.get();
 }
 
-WaylandQPainterCursorLayer *WaylandQPainterBackend::cursorLayer(Output *output)
+OutputLayer *WaylandQPainterBackend::cursorLayer(Output *output)
 {
     return m_outputs[output].cursorLayer.get();
 }

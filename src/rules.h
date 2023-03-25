@@ -18,7 +18,6 @@
 
 class QDebug;
 class KConfig;
-class KXMessages;
 
 namespace KWin
 {
@@ -37,12 +36,13 @@ public:
     explicit WindowRules(const QVector<Rules *> &rules);
     WindowRules();
     void update(Window *, int selection);
-    void discardTemporary();
     bool contains(const Rules *rule) const;
     void remove(Rules *rule);
     PlacementPolicy checkPlacement(PlacementPolicy placement) const;
     QRectF checkGeometry(QRectF rect, bool init = false) const;
+    QRectF checkGeometrySafe(QRectF rect, bool init = false) const;
     // use 'invalidPoint' with checkPosition, unlike QSize() and QRect(), QPoint() is a valid point
+    QPointF checkPositionSafe(QPointF pos, bool init = false) const;
     QPointF checkPosition(QPointF pos, bool init = false) const;
     QSizeF checkSize(QSizeF s, bool init = false) const;
     QSizeF checkMinSize(QSizeF s) const;
@@ -91,7 +91,6 @@ class Rules
 public:
     Rules();
     explicit Rules(const RuleSettings *);
-    Rules(const QString &, bool temporary);
     enum Type {
         Position = 1 << 0,
         Size = 1 << 1,
@@ -147,8 +146,6 @@ public:
     bool discardUsed(bool withdrawn);
     bool match(const Window *c) const;
     bool update(Window *, int selection);
-    bool isTemporary() const;
-    bool discardTemporary(bool force); // removes if temporary and forced or too old
     bool applyPlacement(PlacementPolicy &placement) const;
     bool applyGeometry(QRectF &rect, bool init) const;
     // use 'invalidPoint' with applyPosition, unlike QSize() and QRect(), QPoint() is a valid point
@@ -207,7 +204,6 @@ private:
     static bool checkSetStop(SetRule rule);
     static bool checkForceStop(ForceRule rule);
 #endif
-    int temporary_state; // e.g. for kstart
     QString description;
     QString wmclass;
     StringMatch wmclassmatch;
@@ -301,7 +297,7 @@ class KWIN_EXPORT RuleBook : public QObject
 public:
     explicit RuleBook();
     ~RuleBook() override;
-    WindowRules find(const Window *, bool);
+    WindowRules find(const Window *window) const;
     void discardUsed(Window *c, bool withdraw);
     void setUpdatesDisabled(bool disable);
     bool areUpdatesDisabled() const;
@@ -315,18 +311,13 @@ public:
     }
 
 private Q_SLOTS:
-    void temporaryRulesMessage(const QString &);
-    void cleanupTemporaryRules();
     void save();
 
 private:
     void deleteAll();
-    void initializeX11();
-    void cleanupX11();
     QTimer *m_updateTimer;
     bool m_updatesDisabled;
-    QList<Rules *> m_rules;
-    std::unique_ptr<KXMessages> m_temporaryRulesMessages;
+    QVector<Rules *> m_rules;
     KSharedConfig::Ptr m_config;
 };
 

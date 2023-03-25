@@ -37,7 +37,7 @@ Q_DECLARE_FLAGS(WaylandGeometryTypes, WaylandGeometryType)
 WaylandWindow::WaylandWindow(SurfaceInterface *surface)
 {
     setSurface(surface);
-    setupCompositing();
+    setDepth(32);
 
     connect(surface, &SurfaceInterface::shadowChanged,
             this, &WaylandWindow::updateShadow);
@@ -53,9 +53,9 @@ WaylandWindow::WaylandWindow(SurfaceInterface *surface)
     updateIcon();
 }
 
-WindowItem *WaylandWindow::createItem(Scene *scene)
+std::unique_ptr<WindowItem> WaylandWindow::createItem(Scene *scene)
 {
-    return new WindowItemWayland(this, scene);
+    return std::make_unique<WindowItemWayland>(this, scene);
 }
 
 QString WaylandWindow::captionNormal() const
@@ -220,15 +220,6 @@ void WaylandWindow::doSetActive()
     }
 }
 
-void WaylandWindow::updateDepth()
-{
-    if (surface()->buffer()->hasAlphaChannel()) {
-        setDepth(32);
-    } else {
-        setDepth(24);
-    }
-}
-
 void WaylandWindow::cleanGrouping()
 {
     if (transientFor()) {
@@ -317,18 +308,26 @@ void WaylandWindow::updateGeometry(const QRectF &rect)
     updateWindowRules(Rules::Position | Rules::Size);
 
     if (changedGeometries & WaylandGeometryBuffer) {
-        Q_EMIT bufferGeometryChanged(this, oldBufferGeometry);
+        Q_EMIT bufferGeometryChanged(oldBufferGeometry);
     }
     if (changedGeometries & WaylandGeometryClient) {
-        Q_EMIT clientGeometryChanged(this, oldClientGeometry);
+        Q_EMIT clientGeometryChanged(oldClientGeometry);
     }
     if (changedGeometries & WaylandGeometryFrame) {
-        Q_EMIT frameGeometryChanged(this, oldFrameGeometry);
+        Q_EMIT frameGeometryChanged(oldFrameGeometry);
     }
     if (oldOutput != m_output) {
-        Q_EMIT screenChanged();
+        Q_EMIT outputChanged();
     }
-    Q_EMIT geometryShapeChanged(this, oldFrameGeometry);
+    Q_EMIT geometryShapeChanged(oldFrameGeometry);
+}
+
+void WaylandWindow::markAsMapped()
+{
+    if (Q_UNLIKELY(!ready_for_painting)) {
+        setupCompositing();
+        setReadyForPainting();
+    }
 }
 
 } // namespace KWin

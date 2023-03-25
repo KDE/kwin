@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-26 00:47+0000\n"
+"POT-Creation-Date: 2023-03-05 03:09+0000\n"
 "PO-Revision-Date: 2010-08-08 23:05+0800\n"
 "Last-Translator: Sharuzzaman Ahmat Raslan <sharuzzaman@gmail.com>\n"
 "Language-Team: Malay <kedidiemas@yahoogroups.com>\n"
@@ -18,16 +18,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
 "Plural-Forms: nplurals=2; plural=1;\n"
-
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Muhammad Najmi bin Ahmad Zabidi, Sharuzzaman Ahmat Raslan"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "md_najmi@yahoo.com, sharuzzaman@myrealbox.com"
 
 #: declarative-plugin/buttonsmodel.cpp:53
 #, kde-format
@@ -80,23 +70,7 @@ msgstr ""
 msgid "Keep above other windows"
 msgstr ""
 
-#: kcm.cpp:49
-#, fuzzy, kde-format
-#| msgid "&Window Decoration"
-msgid "Window Decorations"
-msgstr "Hiasan &Tetingkap"
-
-#: kcm.cpp:53
-#, kde-format
-msgid "Valerio Pilo"
-msgstr ""
-
-#: kcm.cpp:54
-#, kde-format
-msgid "Author"
-msgstr ""
-
-#: kcm.cpp:183
+#: kcm.cpp:172
 #, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme's default (%1)"
@@ -183,56 +157,56 @@ msgstr ""
 msgid "Drag buttons between here and the titlebar"
 msgstr ""
 
-#: package/contents/ui/main.qml:18
+#: package/contents/ui/ConfigureTitlebar.qml:16
+#, fuzzy, kde-format
+#| msgid "Buttons"
+msgid "Titlebar Buttons"
+msgstr "Butang"
+
+#: package/contents/ui/ConfigureTitlebar.qml:35
+#, kde-format
+msgctxt "checkbox label"
+msgid "Close windows by double clicking the menu button"
+msgstr ""
+
+#: package/contents/ui/ConfigureTitlebar.qml:52
+#, kde-format
+msgctxt "popup tip"
+msgid "Click and hold on the menu button to show the menu."
+msgstr ""
+
+#: package/contents/ui/ConfigureTitlebar.qml:59
+#, fuzzy, kde-format
+#| msgid "&Show window button tooltips"
+msgctxt "checkbox label"
+msgid "Show titlebar button tooltips"
+msgstr "Papar petua alatan butang tetin&gkap"
+
+#: package/contents/ui/main.qml:19
 #, kde-format
 msgid "This module lets you configure the window decorations."
 msgstr ""
 
-#: package/contents/ui/main.qml:52
-#, kde-format
-msgctxt "tab label"
-msgid "Theme"
-msgstr ""
-
-#: package/contents/ui/main.qml:56
-#, fuzzy, kde-format
-#| msgid "Buttons"
-msgctxt "tab label"
-msgid "Titlebar Buttons"
-msgstr "Butang"
-
-#: package/contents/ui/main.qml:92
+#: package/contents/ui/main.qml:42
 #, fuzzy, kde-format
 #| msgid "B&order size:"
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "&Saiz sempadan:"
 
-#: package/contents/ui/main.qml:110
+#: package/contents/ui/main.qml:60
+#, fuzzy, kde-format
+#| msgid "Buttons"
+msgctxt "button text"
+msgid "Configure Titlebar Buttons…"
+msgstr "Butang"
+
+#: package/contents/ui/main.qml:65
 #, fuzzy, kde-format
 #| msgid "&Window Decoration"
 msgctxt "button text"
-msgid "Get New Window Decorations..."
+msgid "Get New Window Decorations…"
 msgstr "Hiasan &Tetingkap"
-
-#: package/contents/ui/main.qml:139
-#, kde-format
-msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
-msgstr ""
-
-#: package/contents/ui/main.qml:156
-#, kde-format
-msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
-msgstr ""
-
-#: package/contents/ui/main.qml:163
-#, fuzzy, kde-format
-#| msgid "&Show window button tooltips"
-msgctxt "checkbox label"
-msgid "Show titlebar button tooltips"
-msgstr "Papar petua alatan butang tetin&gkap"
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -298,6 +272,19 @@ msgstr "Sangat Teramat Besar"
 #| msgid "Oversized"
 msgid "Oversized"
 msgstr "Lebihsaiz"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Muhammad Najmi bin Ahmad Zabidi, Sharuzzaman Ahmat Raslan"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "md_najmi@yahoo.com, sharuzzaman@myrealbox.com"
+
+#, fuzzy
+#~| msgid "&Window Decoration"
+#~ msgid "Window Decorations"
+#~ msgstr "Hiasan &Tetingkap"
 
 #~ msgid "Menu"
 #~ msgstr "Menu"

@@ -9,7 +9,7 @@
 */
 #pragma once
 
-#include "abstract_egl_backend.h"
+#include "platformsupport/scenes/opengl/abstract_egl_backend.h"
 
 #include "linux_dmabuf.h"
 

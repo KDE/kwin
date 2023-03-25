@@ -31,7 +31,6 @@ class FadeEffect {
     loadConfig() {
         this.fadeInTime = animationTime(effect.readConfig("FadeInTime", 150));
         this.fadeOutTime = animationTime(effect.readConfig("FadeOutTime", 150)) * 4;
-        this.fadeWindows = effect.readConfig("FadeWindows", true); // TODO Plasma 6: Remove it.
     }
 
     static isFadeWindow(w) {
@@ -62,7 +61,7 @@ class FadeEffect {
         if (effects.hasActiveFullScreenEffect) {
             return;
         }
-        if (!this.fadeWindows || !FadeEffect.isFadeWindow(window)) {
+        if (!FadeEffect.isFadeWindow(window)) {
             return;
         }
         if (window.fadeOutAnimation) {
@@ -82,7 +81,7 @@ class FadeEffect {
         if (effects.hasActiveFullScreenEffect) {
             return;
         }
-        if (!this.fadeWindows || window.skipsCloseAnimation || !FadeEffect.isFadeWindow(window)) {
+        if (window.skipsCloseAnimation || !FadeEffect.isFadeWindow(window)) {
             return;
         }
         window.fadeOutAnimation = animate({

@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include <kwineffects.h>
+#include "libkwineffects/kwineffects.h"
 
 #include <QtTest>
 

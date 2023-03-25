@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include <kwinanimationeffect.h>
+#include "libkwineffects/kwinanimationeffect.h"
 
 #include <QJSEngine>
 #include <QJSValue>
@@ -24,6 +24,7 @@ namespace KWin
 class KWIN_EXPORT ScriptedEffect : public KWin::AnimationEffect
 {
     Q_OBJECT
+
     Q_ENUMS(DataRole)
     Q_ENUMS(Qt::Axis)
     Q_ENUMS(Anchor)

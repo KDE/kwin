@@ -60,7 +60,7 @@ DesktopGridEffect::DesktopGridEffect()
         }
     });
 
-    effects->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Up, 4, m_realtimeToggleAction, [this](qreal progress) {
+    effects->registerTouchpadSwipeShortcut(SwipeDirection::Up, 4, m_realtimeToggleAction, [this](qreal progress) {
         if (!effects->hasActiveFullScreenEffect() || effects->activeFullScreenEffect() == this) {
             switch (m_status) {
             case Status::Inactive:
@@ -83,14 +83,6 @@ DesktopGridEffect::DesktopGridEffect()
 
 DesktopGridEffect::~DesktopGridEffect()
 {
-}
-
-QVariantMap DesktopGridEffect::initialProperties(EffectScreen *screen)
-{
-    return QVariantMap{
-        {QStringLiteral("effect"), QVariant::fromValue(this)},
-        {QStringLiteral("targetScreen"), QVariant::fromValue(screen)},
-    };
 }
 
 void DesktopGridEffect::reconfigure(ReconfigureFlags)

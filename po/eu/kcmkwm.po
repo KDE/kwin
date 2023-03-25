@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-03 00:48+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2022-12-03 15:48+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -24,20 +24,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Lokalize 22.08.3\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr ""
-"Koldo Navarro,Juan Irigoien,Ion Gaztañaga,Marcos Goyeneche,Asier Urio Larrea,"
-"Iñigo Salvador Azurmendi,Hizkuntza Politikarako Sailburuordetza"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr ""
-"koldo.np@euskalnet.net,juanirigoien@irakasle.net,igaztanaga@gmail.com,"
-"marcos@euskalgnu.org,asieriko@gmail.com,xalba@ni.eus,hizpol@ej-gv.es"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:17
@@ -943,110 +929,37 @@ msgstr "&Bereizi pantailen fokua"
 msgid "Window activation policy description"
 msgstr "Leihoak aktibatzeko gidalerroen azalpena"
 
-#: main.cpp:73
+#: main.cpp:79
 #, kde-format
 msgid "&Focus"
 msgstr "&Fokua"
 
-#: main.cpp:79
+#: main.cpp:84
 #, kde-format
 msgid "Titlebar A&ctions"
 msgstr "Titulu-barrako e&kintzak"
 
-#: main.cpp:85
+#: main.cpp:89
 #, kde-format
 msgid "W&indow Actions"
 msgstr "Le&ihoetako ekintzak"
 
-#: main.cpp:91
+#: main.cpp:94
 #, kde-format
 msgid "Mo&vement"
 msgstr "M&ugimendua"
 
-#: main.cpp:97
+#: main.cpp:99
 #, kde-format
 msgid "Adva&nced"
 msgstr "Au&rreratua"
 
-#: main.cpp:101
-#, kde-format
-msgid "Window Behavior Configuration Module"
-msgstr "Leihoen portaera konfiguratzeko modulua"
-
-#: main.cpp:103
-#, kde-format
-msgid "(c) 1997 - 2002 KWin and KControl Authors"
-msgstr "(c) 1997 - 2002 KWin-en eta KControl-en egileak"
-
-#: main.cpp:105
-#, kde-format
-msgid "Matthias Ettrich"
-msgstr "Matthias Ettrich"
-
-#: main.cpp:106
-#, kde-format
-msgid "Waldo Bastian"
-msgstr "Waldo Bastian"
-
-#: main.cpp:107
-#, kde-format
-msgid "Cristian Tibirna"
-msgstr "Cristian Tibirna"
-
-#: main.cpp:108
-#, kde-format
-msgid "Matthias Kalle Dalheimer"
-msgstr "Matthias Kalle Dalheimer"
-
-#: main.cpp:109
-#, kde-format
-msgid "Daniel Molkentin"
-msgstr "Daniel Molkentin"
-
-#: main.cpp:110
-#, kde-format
-msgid "Wynn Wilkes"
-msgstr "Wynn Wilkes"
-
-#: main.cpp:111
-#, kde-format
-msgid "Pat Dowler"
-msgstr "Pat Dowler"
-
-#: main.cpp:112
-#, kde-format
-msgid "Bernd Wuebben"
-msgstr "Bernd Wuebben"
-
-#: main.cpp:113
-#, kde-format
-msgid "Matthias Hoelzer-Kluepfel"
-msgstr "Matthias Hoelzer-Kluepfel"
-
-#: main.cpp:161
-#, kde-format
-msgid ""
-"<p><h1>Window Behavior</h1> Here you can customize the way windows behave "
-"when being moved, resized or clicked on. You can also specify a focus policy "
-"as well as a placement policy for new windows.</p> <p>Please note that this "
-"configuration will not take effect if you do not use KWin as your window "
-"manager. If you do use a different window manager, please refer to its "
-"documentation for how to customize window behavior.</p>"
-msgstr ""
-"<p><h1>Leihoen portaera</h1> Hemen egokitu dezakezu leihoek, haiek "
-"mugitzean, neurria aldatzean edo klik egitean duten jokabidea. Gainera, "
-"fokua emateko gidalerroak ezezik leiho berriak kokatzeko gidalerroak ere "
-"zehaztu ditzakezu.</p> <p>Ohartu konfigurazio honek ez duela eraginik izango "
-"KWin zure leiho kudeatzaile gisa erabiltzen ez baduzu. Beste leiho-"
-"kudeatzaile bat erabiltzen baduzu, ikusi haren dokumentazioan leihoen "
-"jokabidea nola egokitu.</p>"
-
-#: main.cpp:202
+#: main.cpp:178
 #, kde-format
 msgid "&Titlebar Actions"
 msgstr "&Titulu-barrako ekintzak"
 
-#: main.cpp:208
+#: main.cpp:188
 #, kde-format
 msgid "Window Actio&ns"
 msgstr "Leihoetako &ekintzak"
@@ -1403,6 +1316,67 @@ msgstr ""
 "prebentzioa</em> eta <em>fitxa-kutxa ('Alt+Tab')</em> gidalerroarekin "
 "kontraesankorrak dira eta ez dira ibiliko. Ziur aski, <em>Fokuak saguari "
 "jarraitzen dio (Saguak lehentasuna)</em> erabili nahiko duzu honen ordez!"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr ""
+#~ "Koldo Navarro,Juan Irigoien,Ion Gaztañaga,Marcos Goyeneche,Asier Urio "
+#~ "Larrea,Iñigo Salvador Azurmendi,Hizkuntza Politikarako Sailburuordetza"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr ""
+#~ "koldo.np@euskalnet.net,juanirigoien@irakasle.net,igaztanaga@gmail.com,"
+#~ "marcos@euskalgnu.org,asieriko@gmail.com,xalba@ni.eus,hizpol@ej-gv.es"
+
+#~ msgid "Window Behavior Configuration Module"
+#~ msgstr "Leihoen portaera konfiguratzeko modulua"
+
+#~ msgid "(c) 1997 - 2002 KWin and KControl Authors"
+#~ msgstr "(c) 1997 - 2002 KWin-en eta KControl-en egileak"
+
+#~ msgid "Matthias Ettrich"
+#~ msgstr "Matthias Ettrich"
+
+#~ msgid "Waldo Bastian"
+#~ msgstr "Waldo Bastian"
+
+#~ msgid "Cristian Tibirna"
+#~ msgstr "Cristian Tibirna"
+
+#~ msgid "Matthias Kalle Dalheimer"
+#~ msgstr "Matthias Kalle Dalheimer"
+
+#~ msgid "Daniel Molkentin"
+#~ msgstr "Daniel Molkentin"
+
+#~ msgid "Wynn Wilkes"
+#~ msgstr "Wynn Wilkes"
+
+#~ msgid "Pat Dowler"
+#~ msgstr "Pat Dowler"
+
+#~ msgid "Bernd Wuebben"
+#~ msgstr "Bernd Wuebben"
+
+#~ msgid "Matthias Hoelzer-Kluepfel"
+#~ msgstr "Matthias Hoelzer-Kluepfel"
+
+#~ msgid ""
+#~ "<p><h1>Window Behavior</h1> Here you can customize the way windows behave "
+#~ "when being moved, resized or clicked on. You can also specify a focus "
+#~ "policy as well as a placement policy for new windows.</p> <p>Please note "
+#~ "that this configuration will not take effect if you do not use KWin as "
+#~ "your window manager. If you do use a different window manager, please "
+#~ "refer to its documentation for how to customize window behavior.</p>"
+#~ msgstr ""
+#~ "<p><h1>Leihoen portaera</h1> Hemen egokitu dezakezu leihoek, haiek "
+#~ "mugitzean, neurria aldatzean edo klik egitean duten jokabidea. Gainera, "
+#~ "fokua emateko gidalerroak ezezik leiho berriak kokatzeko gidalerroak ere "
+#~ "zehaztu ditzakezu.</p> <p>Ohartu konfigurazio honek ez duela eraginik "
+#~ "izango KWin zure leiho kudeatzaile gisa erabiltzen ez baduzu. Beste leiho-"
+#~ "kudeatzaile bat erabiltzen baduzu, ikusi haren dokumentazioan leihoen "
+#~ "jokabidea nola egokitu.</p>"
 
 #~ msgid "Cascaded"
 #~ msgstr "Turrustan"

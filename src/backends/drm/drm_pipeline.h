@@ -19,6 +19,7 @@
 #include "core/colorlut.h"
 #include "core/output.h"
 #include "core/renderloop_p.h"
+#include "drm_blob.h"
 #include "drm_connector.h"
 #include "drm_plane.h"
 
@@ -37,15 +38,13 @@ class DrmGammaRamp
 {
 public:
     DrmGammaRamp(DrmCrtc *crtc, const std::shared_ptr<ColorTransformation> &transformation);
-    ~DrmGammaRamp();
 
     const ColorLUT &lut() const;
-    uint32_t blobId() const;
+    std::shared_ptr<DrmBlob> blob() const;
 
 private:
-    DrmGpu *m_gpu;
     const ColorLUT m_lut;
-    uint32_t m_blobId = 0;
+    std::shared_ptr<DrmBlob> m_blob;
 };
 
 class DrmPipeline
@@ -88,7 +87,6 @@ public:
     bool pageflipPending() const;
     bool modesetPresentPending() const;
     void resetModesetPresentPending();
-    void printDebugInfo() const;
     /**
      * what size buffers submitted to this pipeline should have
      */
@@ -125,7 +123,8 @@ public:
     void setSyncMode(RenderLoopPrivate::SyncMode mode);
     void setOverscan(uint32_t overscan);
     void setRgbRange(Output::RgbRange range);
-    void setColorTransformation(const std::shared_ptr<ColorTransformation> &transformation);
+    void setGammaRamp(const std::shared_ptr<ColorTransformation> &transformation);
+    void setCTM(const QMatrix3x3 &ctm);
     void setContentType(DrmConnector::DrmContentType type);
 
     enum class CommitMode {
@@ -152,22 +151,12 @@ private:
     static Error commitPipelinesLegacy(const QVector<DrmPipeline *> &pipelines, CommitMode mode);
 
     // atomic modesetting only
-    bool populateAtomicValues(drmModeAtomicReq *req);
-    void atomicCommitFailed();
-    void atomicTestSuccessful();
     void atomicCommitSuccessful();
     void atomicModesetSuccessful();
-    void prepareAtomicModeset();
-    void prepareAtomicPresentation();
-    void prepareAtomicDisable();
+    void prepareAtomicModeset(DrmAtomicCommit *commit);
+    bool prepareAtomicPresentation(DrmAtomicCommit *commit);
+    void prepareAtomicDisable(DrmAtomicCommit *commit);
     static Error commitPipelinesAtomic(const QVector<DrmPipeline *> &pipelines, CommitMode mode, const QVector<DrmObject *> &unusedObjects);
-
-    // logging helpers
-    enum class PrintMode {
-        OnlyChanged,
-        All,
-    };
-    static void printFlags(uint32_t flags);
 
     DrmOutput *m_output = nullptr;
     DrmConnector *m_connector = nullptr;
@@ -188,6 +177,7 @@ private:
         RenderLoopPrivate::SyncMode syncMode = RenderLoopPrivate::SyncMode::Fixed;
         std::shared_ptr<ColorTransformation> colorTransformation;
         std::shared_ptr<DrmGammaRamp> gamma;
+        std::shared_ptr<DrmBlob> ctm;
         DrmConnector::DrmContentType contentType = DrmConnector::DrmContentType::Graphics;
 
         std::shared_ptr<DrmPipelineLayer> layer;

@@ -5,22 +5,22 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.15
-import QtGraphicalEffects 1.15
+import QtQuick
+import Qt5Compat.GraphicalEffects
 import org.kde.kirigami 2.20 as Kirigami
-import org.kde.kwin 3.0 as KWinComponents
-import org.kde.kwin.private.effects 1.0
-import org.kde.milou 0.3 as Milou
+import org.kde.kwin as KWinComponents
+import org.kde.kwin.private.effects
+import org.kde.milou as Milou
 import org.kde.plasma.components 3.0 as PC3
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.extras 2.0 as PlasmaExtras
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.extras as PlasmaExtras
 
 FocusScope {
     id: container
     focus: true
 
-    required property QtObject effect
-    required property QtObject targetScreen
+    readonly property QtObject effect: KWinComponents.SceneView.effect
+    readonly property QtObject targetScreen: KWinComponents.SceneView.screen
 
     readonly property bool lightBackground: Math.max(PlasmaCore.ColorScope.backgroundColor.r,
                                                      PlasmaCore.ColorScope.backgroundColor.g,
@@ -40,7 +40,6 @@ FocusScope {
 
     Keys.onEscapePressed: effect.deactivate();
 
-    Keys.priority: Keys.AfterItem
     Keys.forwardTo: searchField
 
     Keys.onEnterPressed: {
@@ -75,14 +74,14 @@ FocusScope {
         }
     }
 
-    KWinComponents.DesktopBackgroundItem {
+    KWinComponents.DesktopBackground {
         id: backgroundItem
         activity: KWinComponents.Workspace.currentActivity
-        desktop: KWinComponents.Workspace.currentVirtualDesktop
+        desktop: KWinComponents.Workspace.currentDesktop
         outputName: targetScreen.name
         property real blurRadius: 0
 
-        layer.enabled: effect.blurBackground
+        layer.enabled: true
         layer.effect: FastBlur {
             radius: backgroundItem.blurRadius
         }
@@ -184,9 +183,9 @@ FocusScope {
                 DesktopBar {
                     id: bar
                     anchors.fill: parent
-                    clientModel: stackModel
+                    windowModel: stackModel
                     desktopModel: desktopModel
-                    selectedDesktop: KWinComponents.Workspace.currentVirtualDesktop
+                    selectedDesktop: KWinComponents.Workspace.currentDesktop
                     heap: heap
                 }
             }
@@ -209,6 +208,7 @@ FocusScope {
                         effect.searchText = text;
                         heap.resetSelected();
                         heap.selectNextItem(WindowHeap.Direction.Down);
+                        searchField.focus = true;
                     }
                 }
             }
@@ -238,16 +238,17 @@ FocusScope {
                 organized: container.organized
                 Keys.priority: Keys.AfterItem
                 Keys.forwardTo: searchResults
-                model: KWinComponents.ClientFilterModel {
+                model: KWinComponents.WindowFilterModel {
                     activity: KWinComponents.Workspace.currentActivity
-                    desktop: KWinComponents.Workspace.currentVirtualDesktop
+                    desktop: KWinComponents.Workspace.currentDesktop
                     screenName: targetScreen.name
-                    clientModel: stackModel
+                    windowModel: stackModel
                     filter: effect.searchText
                     minimizedWindows: !effect.ignoreMinimized
-                    windowType: ~KWinComponents.ClientFilterModel.Dock &
-                                ~KWinComponents.ClientFilterModel.Desktop &
-                                ~KWinComponents.ClientFilterModel.Notification
+                    windowType: ~KWinComponents.WindowFilterModel.Dock &
+                                ~KWinComponents.WindowFilterModel.Desktop &
+                                ~KWinComponents.WindowFilterModel.Notification &
+                                ~KWinComponents.WindowFilterModel.CriticalNotification
                 }
                 delegate: WindowHeapDelegate {
                     windowHeap: heap
@@ -266,14 +267,15 @@ FocusScope {
                     }
 
                     opacity: 1 - downGestureProgress
-                    onDownGestureTriggered: client.closeWindow()
-                }
-                onActivated: effect.deactivate();
-                onWindowClicked: {
-                    if (eventPoint.event.button === Qt.MiddleButton) {
-                        window.closeWindow();
+                    onDownGestureTriggered: window.closeWindow()
+
+                    TapHandler {
+                        acceptedPointerTypes: PointerDevice.GenericPointer | PointerDevice.Pen
+                        acceptedButtons: Qt.MiddleButton
+                        onTapped: window.closeWindow()
                     }
                 }
+                onActivated: effect.deactivate();
             }
 
             Milou.ResultsView {
@@ -293,25 +295,25 @@ FocusScope {
     }
 
     Repeater {
-        model: KWinComponents.ClientFilterModel {
-            desktop: KWinComponents.Workspace.currentVirtualDesktop
+        model: KWinComponents.WindowFilterModel {
+            desktop: KWinComponents.Workspace.currentDesktop
             screenName: targetScreen.name
-            clientModel: stackModel
-            windowType: KWinComponents.ClientFilterModel.Dock
+            windowModel: stackModel
+            windowType: KWinComponents.WindowFilterModel.Dock
         }
 
-        KWinComponents.WindowThumbnailItem {
+        KWinComponents.WindowThumbnail {
             id: windowThumbnail
-            visible: !model.client.hidden && opacity > 0
-            wId: model.client.internalId
-            x: model.client.x - targetScreen.geometry.x
-            y: model.client.y - targetScreen.geometry.y
-            z: model.client.stackingOrder
-            width: model.client.width
-            height: model.client.height
+            visible: !model.window.hidden && opacity > 0
+            wId: model.window.internalId
+            x: model.window.x - targetScreen.geometry.x
+            y: model.window.y - targetScreen.geometry.y
+            z: model.window.stackingOrder
+            width: model.window.width
+            height: model.window.height
             opacity: container.effect.gestureInProgress
                 ? 1 - container.effect.partialActivationFactor
-                : (model.client.hidden || container.organized) ? 0 : 1
+                : (model.window.hidden || container.organized) ? 0 : 1
 
             Behavior on opacity {
                 enabled: !container.effect.gestureInProgress
@@ -320,7 +322,7 @@ FocusScope {
         }
     }
 
-    KWinComponents.ClientModel {
+    KWinComponents.WindowModel {
         id: stackModel
     }
 

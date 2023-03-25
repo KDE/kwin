@@ -10,7 +10,6 @@
 
 #include "core/output.h"
 #include "core/outputbackend.h"
-#include "cursor.h"
 #include "keyboard_input.h"
 #include "pointer_input.h"
 #include "wayland_server.h"
@@ -72,7 +71,7 @@ void TestWindowSelection::init()
     QVERIFY(Test::waitForWaylandPointer());
 
     workspace()->setActiveOutput(QPoint(640, 512));
-    KWin::Cursors::self()->mouse()->setPos(QPoint(640, 512));
+    KWin::input()->pointer()->warp(QPoint(640, 512));
 }
 
 void TestWindowSelection::cleanup()
@@ -95,7 +94,7 @@ void TestWindowSelection::testSelectOnWindowPointer()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
     QVERIFY(keyboardEnteredSpy.wait());
-    KWin::Cursors::self()->mouse()->setPos(window->frameGeometry().center());
+    KWin::input()->pointer()->warp(window->frameGeometry().center());
     QCOMPARE(input()->pointer()->focus(), window);
     QVERIFY(pointerEnteredSpy.wait());
 
@@ -177,7 +176,7 @@ void TestWindowSelection::testSelectOnWindowKeyboard()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
     QVERIFY(keyboardEnteredSpy.wait());
-    QVERIFY(!window->frameGeometry().contains(KWin::Cursors::self()->mouse()->pos()));
+    QVERIFY(!exclusiveContains(window->frameGeometry(), KWin::Cursors::self()->mouse()->pos()));
 
     Window *selectedWindow = nullptr;
     auto callback = [&selectedWindow](Window *t) {
@@ -306,7 +305,7 @@ void TestWindowSelection::testCancelOnWindowPointer()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
     QVERIFY(keyboardEnteredSpy.wait());
-    KWin::Cursors::self()->mouse()->setPos(window->frameGeometry().center());
+    KWin::input()->pointer()->warp(window->frameGeometry().center());
     QCOMPARE(input()->pointer()->focus(), window);
     QVERIFY(pointerEnteredSpy.wait());
 
@@ -361,7 +360,7 @@ void TestWindowSelection::testCancelOnWindowKeyboard()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
     QVERIFY(keyboardEnteredSpy.wait());
-    KWin::Cursors::self()->mouse()->setPos(window->frameGeometry().center());
+    KWin::input()->pointer()->warp(window->frameGeometry().center());
     QCOMPARE(input()->pointer()->focus(), window);
     QVERIFY(pointerEnteredSpy.wait());
 
@@ -416,18 +415,16 @@ void TestWindowSelection::testSelectPointPointer()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
     QVERIFY(keyboardEnteredSpy.wait());
-    KWin::Cursors::self()->mouse()->setPos(window->frameGeometry().center());
+    KWin::input()->pointer()->warp(window->frameGeometry().center());
     QCOMPARE(input()->pointer()->focus(), window);
     QVERIFY(pointerEnteredSpy.wait());
 
-    QPoint point;
-    auto callback = [&point](const QPoint &p) {
-        point = p;
-    };
-
     // start the interaction
     QCOMPARE(input()->isSelectingWindow(), false);
-    kwinApp()->startInteractivePositionSelection(callback);
+    QPointF point;
+    kwinApp()->startInteractivePositionSelection([&point](const QPointF &p) {
+        point = p;
+    });
     QCOMPARE(input()->isSelectingWindow(), true);
     QCOMPARE(point, QPoint());
     QCOMPARE(keyboardLeftSpy.count(), 0);
@@ -439,8 +436,8 @@ void TestWindowSelection::testSelectPointPointer()
     QCOMPARE(keyboardLeftSpy.count(), 1);
 
     // trying again should not be allowed
-    QPoint point2;
-    kwinApp()->startInteractivePositionSelection([&point2](const QPoint &p) {
+    QPointF point2;
+    kwinApp()->startInteractivePositionSelection([&point2](const QPointF &p) {
         point2 = p;
     });
     QCOMPARE(point2, QPoint(-1, -1));
@@ -484,14 +481,12 @@ void TestWindowSelection::testSelectPointPointer()
 void TestWindowSelection::testSelectPointTouch()
 {
     // this test verifies point selection through touch works
-    QPoint point;
-    auto callback = [&point](const QPoint &p) {
-        point = p;
-    };
-
     // start the interaction
     QCOMPARE(input()->isSelectingWindow(), false);
-    kwinApp()->startInteractivePositionSelection(callback);
+    QPointF point;
+    kwinApp()->startInteractivePositionSelection([&point](const QPointF &p) {
+        point = p;
+    });
     QCOMPARE(input()->isSelectingWindow(), true);
     QCOMPARE(point, QPoint());
 

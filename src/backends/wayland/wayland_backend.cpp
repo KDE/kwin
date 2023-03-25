@@ -37,14 +37,17 @@
 
 #include "../drm/gbm_dmabuf.h"
 
-#define QSIZE_TO_QPOINT(size) QPointF(size.width(), size.height())
-
 namespace KWin
 {
 namespace Wayland
 {
 
 using namespace KWayland::Client;
+
+inline static QPointF sizeToPoint(const QSizeF &size)
+{
+    return QPointF(size.width(), size.height());
+}
 
 WaylandInputDevice::WaylandInputDevice(KWayland::Client::Keyboard *keyboard, WaylandSeat *seat)
     : m_seat(seat)
@@ -131,7 +134,7 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::Pointer *pointer, Wayla
             Q_EMIT pinchGestureBegin(m_pinchGesture->fingerCount(), std::chrono::milliseconds(time), this);
         });
         connect(m_pinchGesture.get(), &PointerPinchGesture::updated, this, [this](const QSizeF &delta, qreal scale, qreal rotation, quint32 time) {
-            Q_EMIT pinchGestureUpdate(scale, rotation, QSIZE_TO_QPOINT(delta), std::chrono::milliseconds(time), this);
+            Q_EMIT pinchGestureUpdate(scale, rotation, sizeToPoint(delta), std::chrono::milliseconds(time), this);
         });
         connect(m_pinchGesture.get(), &PointerPinchGesture::ended, this, [this](quint32 serial, quint32 time) {
             Q_EMIT pinchGestureEnd(std::chrono::milliseconds(time), this);
@@ -145,7 +148,7 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::Pointer *pointer, Wayla
             Q_EMIT swipeGestureBegin(m_swipeGesture->fingerCount(), std::chrono::milliseconds(time), this);
         });
         connect(m_swipeGesture.get(), &PointerSwipeGesture::updated, this, [this](const QSizeF &delta, quint32 time) {
-            Q_EMIT swipeGestureUpdate(QSIZE_TO_QPOINT(delta), std::chrono::milliseconds(time), this);
+            Q_EMIT swipeGestureUpdate(sizeToPoint(delta), std::chrono::milliseconds(time), this);
         });
         connect(m_swipeGesture.get(), &PointerSwipeGesture::ended, this, [this](quint32 serial, quint32 time) {
             Q_EMIT swipeGestureEnd(std::chrono::milliseconds(time), this);
@@ -161,7 +164,7 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::RelativePointer *relati
     , m_relativePointer(relativePointer)
 {
     connect(relativePointer, &RelativePointer::relativeMotion, this, [this](const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint64 timestamp) {
-        Q_EMIT pointerMotion(QSIZE_TO_QPOINT(delta), QSIZE_TO_QPOINT(deltaNonAccelerated), std::chrono::microseconds(timestamp), this);
+        Q_EMIT pointerMotion(sizeToPoint(delta), sizeToPoint(deltaNonAccelerated), std::chrono::microseconds(timestamp), this);
     });
 }
 
@@ -408,7 +411,7 @@ WaylandBackend::WaylandBackend(const WaylandBackendOptions &options, QObject *pa
     , m_options(options)
 {
     char const *drm_render_node = "/dev/dri/renderD128";
-    m_drmFileDescriptor = FileDescriptor(open(drm_render_node, O_RDWR));
+    m_drmFileDescriptor = FileDescriptor(open(drm_render_node, O_RDWR | O_CLOEXEC));
     if (!m_drmFileDescriptor.isValid()) {
         qCWarning(KWIN_WAYLAND_BACKEND) << "Failed to open drm render node" << drm_render_node;
         m_gbmDevice = nullptr;
@@ -428,7 +431,9 @@ WaylandBackend::~WaylandBackend()
     m_seat.reset();
     m_display.reset();
 
-    gbm_device_destroy(m_gbmDevice);
+    if (m_gbmDevice) {
+        gbm_device_destroy(m_gbmDevice);
+    }
     qCDebug(KWIN_WAYLAND_BACKEND) << "Destroyed Wayland display";
 }
 
@@ -551,7 +556,7 @@ void WaylandBackend::togglePointerLock()
 QVector<CompositingType> WaylandBackend::supportedCompositors() const
 {
     QVector<CompositingType> ret;
-    if (m_display->linuxDmabuf()) {
+    if (m_display->linuxDmabuf() && m_gbmDevice) {
         ret.append(OpenGLCompositing);
     }
     ret.append(QPainterCompositing);

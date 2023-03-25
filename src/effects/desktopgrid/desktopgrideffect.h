@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <kwinquickeffect.h>
+#include "libkwineffects/kwinquickeffect.h"
 
 namespace KWin
 {
@@ -81,9 +81,6 @@ public Q_SLOTS:
     void cancelPartialDeactivate();
     void deactivate(int timeout);
     void toggle();
-
-protected:
-    QVariantMap initialProperties(EffectScreen *screen) override;
 
 Q_SIGNALS:
     void gridRowsChanged();

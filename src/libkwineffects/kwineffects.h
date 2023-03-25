@@ -12,9 +12,9 @@
 
 #pragma once
 
+#include "libkwineffects/kwinglobals.h"
 #include <kwinconfig.h>
 #include <kwineffects_export.h>
-#include <kwinglobals.h>
 
 #include <QEasingCurve>
 #include <QIcon>
@@ -48,6 +48,7 @@ class QKeyEvent;
 class QMatrix4x4;
 class QAction;
 class QTabletEvent;
+class QQmlEngine;
 
 /**
  * Logging category to be used inside the KWin effects.
@@ -84,7 +85,8 @@ class WindowQuadList;
 class WindowPrePaintData;
 class WindowPaintData;
 class ScreenPrePaintData;
-class ScreenPaintData;
+class RenderTarget;
+class RenderViewport;
 
 typedef QPair<QString, Effect *> EffectPair;
 typedef QList<KWin::EffectWindow *> EffectWindowList;
@@ -322,9 +324,6 @@ public:
 
     enum Feature {
         Nothing = 0,
-        Resize, /**< @deprecated */
-        GeometryTip, /**< @deprecated */
-        Outline, /**< @deprecated */
         ScreenInversion,
         Blur,
         Contrast,
@@ -364,11 +363,6 @@ public:
     virtual void reconfigure(ReconfigureFlags flags);
 
     /**
-     * Called when another effect requests the proxy for this effect.
-     */
-    virtual void *proxy();
-
-    /**
      * Called before starting to paint the screen.
      * In this method you can:
      * @li set whether the windows or the entire screen will be transformed
@@ -391,7 +385,7 @@ public:
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when this method is invoked.
      */
-    virtual void paintScreen(int mask, const QRegion &region, ScreenPaintData &data);
+    virtual void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen);
     /**
      * Called after all the painting has been finished.
      * In this method you can:
@@ -429,7 +423,7 @@ public:
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when this method is invoked.
      */
-    virtual void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data);
+    virtual void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data);
     /**
      * Called for every window after all painting has been finished.
      * In this method you can:
@@ -468,7 +462,7 @@ public:
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when this method is invoked.
      */
-    virtual void drawWindow(EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data);
+    virtual void drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data);
 
     virtual void windowInputMouseEvent(QEvent *e);
     virtual void grabbedKeyboardEvent(QKeyEvent *e);
@@ -635,7 +629,7 @@ public:
      */
     virtual bool tabletPadRingEvent(int number, int position, bool isFinger, void *tabletPadId);
 
-    static QPoint cursorPos();
+    static QPointF cursorPos();
 
     /**
      * Read animation time from the configuration and possibly adjust using animationTimeFactor().
@@ -827,7 +821,7 @@ class KWINEFFECTS_EXPORT EffectsHandler : public QObject
      */
     Q_PROPERTY(bool decorationsHaveAlpha READ decorationsHaveAlpha)
     Q_PROPERTY(CompositingType compositingType READ compositingType CONSTANT)
-    Q_PROPERTY(QPoint cursorPos READ cursorPos)
+    Q_PROPERTY(QPointF cursorPos READ cursorPos)
     Q_PROPERTY(QSize virtualScreenSize READ virtualScreenSize NOTIFY virtualScreenSizeChanged)
     Q_PROPERTY(QRect virtualScreenGeometry READ virtualScreenGeometry NOTIFY virtualScreenGeometryChanged)
     Q_PROPERTY(bool hasActiveFullScreenEffect READ hasActiveFullScreenEffect NOTIFY hasActiveFullScreenEffectChanged)
@@ -849,13 +843,13 @@ public:
     ~EffectsHandler() override;
     // for use by effects
     virtual void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) = 0;
-    virtual void paintScreen(int mask, const QRegion &region, ScreenPaintData &data) = 0;
+    virtual void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen) = 0;
     virtual void postPaintScreen() = 0;
     virtual void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) = 0;
-    virtual void paintWindow(EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) = 0;
+    virtual void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) = 0;
     virtual void postPaintWindow(EffectWindow *w) = 0;
-    virtual void drawWindow(EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) = 0;
-    virtual void renderWindow(EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) = 0;
+    virtual void drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) = 0;
+    virtual void renderWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) = 0;
     virtual QVariant kwinOption(KWinOption kwopt) = 0;
     /**
      * Sets the cursor while the mouse is intercepted.
@@ -863,7 +857,7 @@ public:
      * @since 4.11
      */
     virtual void defineCursor(Qt::CursorShape shape) = 0;
-    virtual QPoint cursorPos() const = 0;
+    virtual QPointF cursorPos() const = 0;
     virtual bool grabKeyboard(Effect *effect) = 0;
     virtual void ungrabKeyboard() = 0;
     /**
@@ -912,13 +906,9 @@ public:
      * @param action The action which gets triggered when the gesture triggers
      * @since 5.10
      */
-    virtual void registerTouchpadSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action) = 0;
+    virtual void registerTouchpadSwipeShortcut(SwipeDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback = {}) = 0;
 
-    virtual void registerRealtimeTouchpadSwipeShortcut(SwipeDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback) = 0;
-
-    virtual void registerRealtimeTouchpadPinchShortcut(PinchDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback) = 0;
-
-    virtual void registerTouchpadPinchShortcut(PinchDirection direction, uint fingerCount, QAction *action) = 0;
+    virtual void registerTouchpadPinchShortcut(PinchDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback = {}) = 0;
 
     /**
      * @brief Registers a global touchscreen swipe gesture shortcut with the provided @p action.
@@ -928,12 +918,6 @@ public:
      * @since 5.25
      */
     virtual void registerTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback) = 0;
-
-    /**
-     * Retrieve the proxy class for an effect if it has one. Will return NULL if
-     * the effect isn't loaded or doesn't have a proxy class.
-     */
-    virtual void *getProxy(QString name) = 0;
 
     // Mouse polling
     virtual void startMousePolling() = 0;
@@ -1140,13 +1124,10 @@ public:
     Q_SCRIPTABLE virtual void setElevatedWindow(KWin::EffectWindow *w, bool set) = 0;
 
     virtual void setTabBoxWindow(EffectWindow *) = 0;
-    virtual void setTabBoxDesktop(int) = 0;
     virtual EffectWindowList currentTabBoxWindowList() const = 0;
     virtual void refTabBox() = 0;
     virtual void unrefTabBox() = 0;
     virtual void closeTabBox() = 0;
-    virtual QList<int> currentTabBoxDesktopList() const = 0;
-    virtual int currentTabBoxDesktop() const = 0;
     virtual EffectWindow *currentTabBoxWindow() const = 0;
 
     virtual void setActiveFullScreenEffect(Effect *e) = 0;
@@ -1350,7 +1331,7 @@ public:
      * @param callback The function to invoke once the interactive position selection ends
      * @since 5.9
      */
-    virtual void startInteractivePositionSelection(std::function<void(const QPoint &)> callback) = 0;
+    virtual void startInteractivePositionSelection(std::function<void(const QPointF &)> callback) = 0;
 
     /**
      * Shows an on-screen-message. To hide it again use hideOnScreenMessage.
@@ -1405,7 +1386,7 @@ public:
      * It can be called at any point during the scene rendering
      * @since 5.18
      */
-    virtual void renderOffscreenQuickView(OffscreenQuickView *effectQuickView) const = 0;
+    virtual void renderOffscreenQuickView(const RenderTarget &renderTarget, const RenderViewport &viewport, OffscreenQuickView *effectQuickView) const = 0;
 
     /**
      * The status of the session i.e if the user is logging out
@@ -1426,28 +1407,10 @@ public:
      */
     virtual void renderScreen(EffectScreen *screen) = 0;
 
-    /**
-     * Returns the rect that's currently being repainted, in the logical pixels.
-     */
-    virtual QRect renderTargetRect() const = 0;
-    /**
-     * Returns the device pixel ratio of the current render target.
-     */
-    virtual qreal renderTargetScale() const = 0;
-
-    /**
-     * Maps the given @a rect from the global screen cordinates to the render
-     * target local coordinate system.
-     */
-    QRectF mapToRenderTarget(const QRectF &rect) const;
-    /**
-     * Maps the given @a region from the global screen coordinates to the render
-     * target local coordinate system.
-     */
-    QRegion mapToRenderTarget(const QRegion &region) const;
-
     virtual KWin::EffectWindow *inputPanel() const = 0;
     virtual bool isInputPanelOverlay() const = 0;
+
+    virtual QQmlEngine *qmlEngine() const = 0;
 
 Q_SIGNALS:
     /**
@@ -1477,24 +1440,6 @@ Q_SIGNALS:
     void desktopChanging(uint currentDesktop, QPointF offset, KWin::EffectWindow *with);
     void desktopChangingCancelled();
 
-    /**
-     * @since 4.7
-     * @deprecated
-     */
-    void KWIN_DEPRECATED desktopChanged(int oldDesktop, int newDesktop);
-    /**
-     * @internal
-     */
-    void desktopChangedLegacy(int oldDesktop, int newDesktop);
-    /**
-     * Signal emitted when a window moved to another desktop
-     * NOTICE that this does NOT imply that the desktop has changed
-     * The @param window which is moved to the new desktop
-     * @param oldDesktop The previous desktop of the window
-     * @param newDesktop The new desktop of the window
-     * @since 4.11.4
-     */
-    void desktopPresenceChanged(KWin::EffectWindow *window, int oldDesktop, int newDesktop);
     /**
      * Emitted when the virtual desktop grid layout changes
      * @param size new size
@@ -1741,9 +1686,6 @@ Q_SIGNALS:
      * @since 4.7
      */
     void tabBoxKeyEvent(QKeyEvent *event);
-    void currentTabAboutToChange(KWin::EffectWindow *from, KWin::EffectWindow *to);
-    void tabAdded(KWin::EffectWindow *from, KWin::EffectWindow *to); // from merged with to
-    void tabRemoved(KWin::EffectWindow *c, KWin::EffectWindow *group); // c removed from group
     /**
      * Signal emitted when mouse changed.
      * If an effect needs to get updated mouse positions, it needs to first call startMousePolling.
@@ -1757,7 +1699,7 @@ Q_SIGNALS:
      * @see startMousePolling
      * @since 4.7
      */
-    void mouseChanged(const QPoint &pos, const QPoint &oldpos,
+    void mouseChanged(const QPointF &pos, const QPointF &oldpos,
                       Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
                       Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
     /**
@@ -1961,6 +1903,11 @@ Q_SIGNALS:
 
     void inputPanelChanged();
 
+    /**
+     * This signal is emitted when a window enters or leaves a virtual desktop.
+     */
+    void windowDesktopsChanged(KWin::EffectWindow *window);
+
 protected:
     QVector<EffectPair> loaded_effects;
     // QHash< QString, EffectFactory* > effect_factories;
@@ -2071,7 +2018,7 @@ class EffectWindowVisibleRef;
 class KWINEFFECTS_EXPORT EffectWindow : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QRectF geometry READ geometry)
+    Q_PROPERTY(QRectF geometry READ frameGeometry)
     Q_PROPERTY(QRectF expandedGeometry READ expandedGeometry)
     Q_PROPERTY(qreal height READ height)
     Q_PROPERTY(qreal opacity READ opacity)
@@ -2081,7 +2028,7 @@ class KWINEFFECTS_EXPORT EffectWindow : public QObject
     Q_PROPERTY(qreal width READ width)
     Q_PROPERTY(qreal x READ x)
     Q_PROPERTY(qreal y READ y)
-    Q_PROPERTY(int desktop READ desktop)
+    Q_PROPERTY(QVector<uint> desktops READ desktops)
     Q_PROPERTY(bool onAllDesktops READ isOnAllDesktops)
     Q_PROPERTY(bool onCurrentDesktop READ isOnCurrentDesktop)
     Q_PROPERTY(QRectF rect READ rect)
@@ -2360,13 +2307,11 @@ public:
         PAINT_DISABLED_BY_DESKTOP = 1 << 2,
         /**  Window will not be painted because it is minimized  */
         PAINT_DISABLED_BY_MINIMIZE = 1 << 3,
-        /**  Deprecated, tab groups have been removed: Window will not be painted because it is not the active window in a client group */
-        PAINT_DISABLED_BY_TAB_GROUP = 1 << 4,
         /**  Window will not be painted because it's not on the current activity  */
-        PAINT_DISABLED_BY_ACTIVITY = 1 << 5
+        PAINT_DISABLED_BY_ACTIVITY = 1 << 4
     };
 
-    explicit EffectWindow(QObject *parent = nullptr);
+    explicit EffectWindow();
     ~EffectWindow() override;
 
     Q_SCRIPTABLE virtual void addRepaint(const QRect &r) = 0;
@@ -2392,17 +2337,6 @@ public:
     bool isOnCurrentDesktop() const;
     bool isOnAllDesktops() const;
     /**
-     * The desktop this window is in. This makes sense only on X11
-     * where desktops are mutually exclusive, on Wayland it's the last
-     * desktop the window has been added to.
-     * use desktops() instead.
-     * @see desktops()
-     * @deprecated
-     */
-#ifndef KWIN_NO_DEPRECATED
-    virtual int KWIN_DEPRECATED desktop() const = 0; // prefer isOnXXX()
-#endif
-    /**
      * All the desktops by number that the window is in. On X11 this list will always have
      * a length of 1, on Wayland can be any subset.
      * If the list is empty it means the window is on all desktops
@@ -2418,10 +2352,6 @@ public:
      * MAY BE DISOBEYED BY THE WM! It's only for information, do NOT rely on it at all.
      */
     virtual QSizeF basicUnit() const = 0;
-    /**
-     * @deprecated Use frameGeometry() instead.
-     */
-    virtual QRectF KWIN_DEPRECATED geometry() const = 0;
     /**
      * Returns the geometry of the window excluding server-side and client-side
      * drop-shadows.
@@ -2615,9 +2545,6 @@ public:
     virtual void unminimize() = 0;
     Q_SCRIPTABLE virtual void closeWindow() = 0;
 
-    /// deprecated
-    virtual bool isCurrentTab() const = 0;
-
     /**
      * @since 4.11
      */
@@ -2700,35 +2627,6 @@ public:
      */
     Q_SCRIPTABLE virtual void setData(int role, const QVariant &data) = 0;
     Q_SCRIPTABLE virtual QVariant data(int role) const = 0;
-
-    /**
-     * @brief References the previous window pixmap to prevent discarding.
-     *
-     * This method allows to reference the previous window pixmap in case that a window changed
-     * its size, which requires a new window pixmap. By referencing the previous (and then outdated)
-     * window pixmap an effect can for example cross fade the current window pixmap with the previous
-     * one. This allows for smoother transitions for window geometry changes.
-     *
-     * If an effect calls this method on a window it also needs to call unreferencePreviousWindowPixmap
-     * once it does no longer need the previous window pixmap.
-     *
-     * Note: the window pixmap is not kept forever even when referenced. If the geometry changes again, so that
-     * a new window pixmap is created, the previous window pixmap will be exchanged with the current one. This
-     * means it's still possible to have rendering glitches. An effect is supposed to track for itself the changes
-     * to the window's geometry and decide how the transition should continue in such a situation.
-     *
-     * @see unreferencePreviousWindowPixmap
-     * @since 4.11
-     */
-    virtual void referencePreviousWindowPixmap() = 0;
-    /**
-     * @brief Unreferences the previous window pixmap. Only relevant after referencePreviousWindowPixmap had
-     * been called.
-     *
-     * @see referencePreviousWindowPixmap
-     * @since 4.11
-     */
-    virtual void unreferencePreviousWindowPixmap() = 0;
 
 protected:
     friend EffectWindowVisibleRef;
@@ -2948,8 +2846,6 @@ public:
     WindowQuadList splitAtY(double y) const;
     WindowQuadList makeGrid(int maxquadsize) const;
     WindowQuadList makeRegularGrid(int xSubdivisions, int ySubdivisions) const;
-    void makeInterleavedArrays(unsigned int type, GLVertex2D *vertices, const QMatrix4x4 &matrix, qreal scale) const;
-    void makeArrays(float **vertices, float **texcoords, const QSizeF &size, bool yInverted) const;
 };
 
 /**
@@ -2962,6 +2858,45 @@ public:
 class KWINEFFECTS_EXPORT RenderGeometry : public QVector<GLVertex2D>
 {
 public:
+    /**
+     * In what way should vertices snap to integer device coordinates?
+     *
+     * Vertices are converted to device coordinates before being sent to the
+     * rendering system. Depending on scaling factors, this may lead to device
+     * coordinates with fractional parts. For some cases, this may not be ideal
+     * as fractional coordinates need to be interpolated and can lead to
+     * "blurry" rendering. To avoid that, we can snap the vertices to integer
+     * device coordinates when they are added.
+     */
+    enum class VertexSnappingMode {
+        None, //< No rounding, device coordinates containing fractional parts
+              //  are passed directly to the rendering system.
+        Round, //< Perform a simple rounding, device coordinates will not have
+               //  any fractional parts.
+    };
+
+    /**
+     * The vertex snapping mode to use for this geometry.
+     *
+     * By default, this is VertexSnappingMode::Round.
+     */
+    inline VertexSnappingMode vertexSnappingMode() const
+    {
+        return m_vertexSnappingMode;
+    }
+    /**
+     * Set the vertex snapping mode to use for this geometry.
+     *
+     * Note that this doesn't change vertices retroactively, so you should set
+     * this before adding any vertices, or clear and rebuild the geometry after
+     * setting it.
+     *
+     * @param mode The new rounding mode.
+     */
+    void setVertexSnappingMode(VertexSnappingMode mode)
+    {
+        m_vertexSnappingMode = mode;
+    }
     /**
      * Copy geometry data into another buffer.
      *
@@ -3012,6 +2947,20 @@ public:
      *                    device coordinates.
      */
     void appendSubQuad(const WindowQuad &quad, const QRectF &subquad, qreal deviceScale);
+    /**
+     * Modify this geometry's texture coordinates based on a matrix.
+     *
+     * This is primarily intended to convert from non-normalised to normalised
+     * texture coordinates.
+     *
+     * @param textureMatrix The texture matrix to use for modifying the
+     *                      texture coordinates. Note that only the 2D scale and
+     *                      translation are used.
+     */
+    void postProcessTextureCoordinates(const QMatrix4x4 &textureMatrix);
+
+private:
+    VertexSnappingMode m_vertexSnappingMode = VertexSnappingMode::Round;
 };
 
 class KWINEFFECTS_EXPORT WindowPrePaintData
@@ -3211,7 +3160,7 @@ class KWINEFFECTS_EXPORT WindowPaintData : public PaintData
 {
 public:
     WindowPaintData();
-    explicit WindowPaintData(const QMatrix4x4 &screenProjectionMatrix);
+    explicit WindowPaintData(const QMatrix4x4 &projectionMatrix);
     WindowPaintData(const WindowPaintData &other);
     ~WindowPaintData() override;
     /**
@@ -3352,14 +3301,11 @@ public:
      * Sets the projection matrix that will be used when painting the window.
      *
      * The default projection matrix can be overridden by setting this matrix
-     * to a non-identity matrix.
      */
     void setProjectionMatrix(const QMatrix4x4 &matrix);
 
     /**
      * Returns the current projection matrix.
-     *
-     * The default value for this matrix is the identity matrix.
      */
     QMatrix4x4 projectionMatrix() const;
 
@@ -3368,52 +3314,8 @@ public:
      */
     QMatrix4x4 &rprojectionMatrix();
 
-    /**
-     * Returns The projection matrix as used by the current screen painting pass
-     * including screen transformations.
-     *
-     * @since 5.6
-     */
-    QMatrix4x4 screenProjectionMatrix() const;
-
-    /**
-     * An override for the scale the window should be rendered at.
-     *
-     * When set, this value will be used instead of the window's output scale
-     * when rendering.
-     */
-    std::optional<qreal> renderTargetScale() const;
-    void setRenderTargetScale(qreal scale);
-
 private:
     const std::unique_ptr<WindowPaintDataPrivate> d;
-};
-
-class KWINEFFECTS_EXPORT ScreenPaintData
-{
-public:
-    ScreenPaintData();
-    ScreenPaintData(const QMatrix4x4 &projectionMatrix, EffectScreen *screen = nullptr);
-    ScreenPaintData(const ScreenPaintData &other);
-    ~ScreenPaintData();
-
-    ScreenPaintData &operator=(const ScreenPaintData &rhs);
-
-    /**
-     * The projection matrix used by the scene for the current rendering pass.
-     * On non-OpenGL compositors it's set to Identity matrix.
-     * @since 5.6
-     */
-    QMatrix4x4 projectionMatrix() const;
-
-    /**
-     * Returns the currently rendered screen. It's always the primary screen on X11.
-     */
-    EffectScreen *screen() const;
-
-private:
-    class Private;
-    std::unique_ptr<Private> d;
 };
 
 class KWINEFFECTS_EXPORT ScreenPrePaintData
@@ -3741,7 +3643,7 @@ public:
     /**
      * Render the frame.
      */
-    virtual void render(const QRegion &region = infiniteRegion(), double opacity = 1.0, double frameOpacity = 1.0) = 0;
+    virtual void render(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &region = infiniteRegion(), double opacity = 1.0, double frameOpacity = 1.0) = 0;
 
     virtual void setPosition(const QPoint &point) = 0;
     /**

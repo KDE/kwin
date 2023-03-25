@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-15 00:49+0000\n"
-"PO-Revision-Date: 2022-12-13 12:21\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
+"PO-Revision-Date: 2023-02-24 12:43\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -28,12 +28,11 @@ msgid "Your emails"
 msgstr "kde-china@kde.org, i@guoyunhe.me"
 
 #: desktopsmodel.cpp:191
-#, fuzzy, kde-format
-#| msgid "New Desktop"
+#, kde-format
 msgctxt "A numbered name for virtual desktops"
 msgid "Desktop %1"
 msgid_plural "Desktop %1"
-msgstr[0] "新建桌面"
+msgstr[0] "桌面 %1"
 
 #: desktopsmodel.cpp:479
 #, kde-format
@@ -128,8 +127,3 @@ msgstr "%1 毫秒"
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "显示桌面布局符"
-
-#: virtualdesktops.cpp:33
-#, kde-format
-msgid "Virtual Desktops"
-msgstr "虚拟桌面"

@@ -13,9 +13,7 @@
 #include <kcmodule.h>
 #include <ksharedconfig.h>
 
-#include "kwinglobals.h"
-
-class QShowEvent;
+#include "libkwineffects/kwinglobals.h"
 
 namespace KWin
 {
@@ -29,16 +27,13 @@ class KWinScreenEdgesConfig : public KCModule
     Q_OBJECT
 
 public:
-    explicit KWinScreenEdgesConfig(QWidget *parent, const QVariantList &args);
+    explicit KWinScreenEdgesConfig(QObject *parent, const KPluginMetaData &data, const QVariantList &args);
     ~KWinScreenEdgesConfig() override;
 
 public Q_SLOTS:
     void save() override;
     void load() override;
     void defaults() override;
-
-protected:
-    void showEvent(QShowEvent *e) override;
 
 private:
     KWinScreenEdgesConfigForm *m_form;

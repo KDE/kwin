@@ -1,12 +1,12 @@
 # Copyright (C) 2021 Free Software Foundation, Inc.
 #
-# Kishore G <kishore96@gmail.com>, 2021, 2022.
+# Kishore G <kishore96@gmail.com>, 2021, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-26 00:47+0000\n"
-"PO-Revision-Date: 2022-01-30 19:04+0530\n"
+"POT-Creation-Date: 2023-03-05 03:09+0000\n"
+"PO-Revision-Date: 2023-02-14 21:55+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -14,17 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 21.12.1\n"
-
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "துரையப்பா வசீகரன், பிரபு"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "t_vasee@yahoo.com, prabu_anand2000@yahoo.com"
+"X-Generator: Lokalize 22.12.2\n"
 
 #: declarative-plugin/buttonsmodel.cpp:53
 #, kde-format
@@ -76,22 +66,7 @@ msgstr "மற்ற சாளரங்களுக்கு கீழே வை
 msgid "Keep above other windows"
 msgstr "மற்ற சாளரங்களுக்கு மேலே வை"
 
-#: kcm.cpp:49
-#, kde-format
-msgid "Window Decorations"
-msgstr "சாளர விளிம்புகள்"
-
-#: kcm.cpp:53
-#, kde-format
-msgid "Valerio Pilo"
-msgstr ""
-
-#: kcm.cpp:54
-#, kde-format
-msgid "Author"
-msgstr "இயற்றியவர்"
-
-#: kcm.cpp:183
+#: kcm.cpp:172
 #, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme's default (%1)"
@@ -137,12 +112,13 @@ msgstr ""
 #, kde-format
 msgid ""
 "The requested theme \"%1\" is already set as the window decoration theme."
-msgstr ""
+msgstr "கோரப்பட்ட \"%1\" ஏற்கனவே விளிம்புத்திட்டமாக அமைக்கப்பட்டுள்ளது."
 
 #: kwin-applywindowdecoration.cpp:99
 #, kde-format
 msgid "Successfully applied the cursor theme %1 to your current Plasma session"
 msgstr ""
+"தற்போதைய பிளாஸ்மா அமர்வுக்கு %1 சுட்டிக்குறித்திட்டம் வெற்றிகரமாக செயல்படுத்தப்பட்டுள்ளது"
 
 #: kwin-applywindowdecoration.cpp:103
 #, kde-format
@@ -150,6 +126,8 @@ msgid ""
 "Failed to save your theme settings - the reason is unknown, but this is an "
 "unrecoverable error. You may find that simply trying again will work."
 msgstr ""
+"தெரியாத காரணத்தால் தோற்றத்திட்ட அமைப்புகளை சேமிக்க முடியவில்லை. மறுபடியும் முயற்சித்தால் "
+"இச்சிக்கல் சரியாகலாம்."
 
 #: kwin-applywindowdecoration.cpp:107
 #, kde-format
@@ -157,11 +135,13 @@ msgid ""
 "Could not find theme \"%1\". The theme should be one of the following "
 "options: %2"
 msgstr ""
+"\"%1\" என்ற தோற்றத்திட்டத்தை கண்டுபிடிக்க முடியவில்லை. தோற்றத்திட்டம் பின்வருபவற்றில் ஒன்றாக "
+"இருக்க வேண்டும்: %2"
 
 #: kwin-applywindowdecoration.cpp:112
 #, kde-format
 msgid "You have the following KWin window decoration themes on your system:"
-msgstr ""
+msgstr "உங்கள் கணினியில் கீழ்காணும் விளிம்புத்திட்டங்கள் உள்ளன:"
 
 #: package/contents/ui/Buttons.qml:85
 #, kde-format
@@ -178,53 +158,56 @@ msgstr "பட்டனை நீக்க அதனை இங்கு இழ�
 msgid "Drag buttons between here and the titlebar"
 msgstr "பட்டன்களை இங்கிருந்து தலைப்புப்பட்டைக்கு இழுங்கள்"
 
-#: package/contents/ui/main.qml:18
-#, kde-format
-msgid "This module lets you configure the window decorations."
-msgstr "சாளர விளிம்புகளை அமைக்க இக்கூறு உதவும்."
-
-#: package/contents/ui/main.qml:52
-#, kde-format
-msgctxt "tab label"
-msgid "Theme"
-msgstr "தோற்றத்திட்டம்"
-
-#: package/contents/ui/main.qml:56
-#, kde-format
-msgctxt "tab label"
+#: package/contents/ui/ConfigureTitlebar.qml:16
+#, fuzzy, kde-format
+#| msgctxt "tab label"
+#| msgid "Titlebar Buttons"
 msgid "Titlebar Buttons"
 msgstr "தலைப்புப்பட்டையிலுள்ள பட்டன்கள்"
 
-#: package/contents/ui/main.qml:92
-#, kde-format
-msgctxt "Selector label"
-msgid "Window border size:"
-msgstr "சாளர விளிம்பின் அளவு:"
-
-#: package/contents/ui/main.qml:110
-#, fuzzy, kde-format
-#| msgid "&Window Decoration"
-msgctxt "button text"
-msgid "Get New Window Decorations..."
-msgstr "&சாளரத்தின் அலங்காரம்"
-
-#: package/contents/ui/main.qml:139
+#: package/contents/ui/ConfigureTitlebar.qml:35
 #, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the menu button"
 msgstr "பட்டி பட்டனில் இரட்டை க்ளிக் செய்தல் அவற்றை மூடும்"
 
-#: package/contents/ui/main.qml:156
+#: package/contents/ui/ConfigureTitlebar.qml:52
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the menu button to show the menu."
 msgstr "பட்டியை காட்ட பட்டி பட்டனில் க்ளிக் செய்தபடியே பிடித்திருக்கவும்."
 
-#: package/contents/ui/main.qml:163
+#: package/contents/ui/ConfigureTitlebar.qml:59
 #, kde-format
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "தலைப்புப்பட்டையிலுள்ள பட்டன்களுக்கு கருவித்துப்புகளை காட்டு"
+
+#: package/contents/ui/main.qml:19
+#, kde-format
+msgid "This module lets you configure the window decorations."
+msgstr "சாளர விளிம்புகளை அமைக்க இக்கூறு உதவும்."
+
+#: package/contents/ui/main.qml:42
+#, kde-format
+msgctxt "Selector label"
+msgid "Window border size:"
+msgstr "சாளர விளிம்பின் அளவு:"
+
+#: package/contents/ui/main.qml:60
+#, fuzzy, kde-format
+#| msgctxt "tab label"
+#| msgid "Titlebar Buttons"
+msgctxt "button text"
+msgid "Configure Titlebar Buttons…"
+msgstr "தலைப்புப்பட்டையிலுள்ள பட்டன்கள்"
+
+#: package/contents/ui/main.qml:65
+#, fuzzy, kde-format
+#| msgid "&Window Decoration"
+msgctxt "button text"
+msgid "Get New Window Decorations…"
+msgstr "&சாளரத்தின் அலங்காரம்"
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -278,6 +261,24 @@ msgstr "மிகப்பெரியது"
 #| msgid "Oversized"
 msgid "Oversized"
 msgstr "அதிகமாக அளவிடப்பட்டது"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "துரையப்பா வசீகரன், பிரபு"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "t_vasee@yahoo.com, prabu_anand2000@yahoo.com"
+
+#~ msgid "Window Decorations"
+#~ msgstr "சாளர விளிம்புகள்"
+
+#~ msgid "Author"
+#~ msgstr "இயற்றியவர்"
+
+#~ msgctxt "tab label"
+#~ msgid "Theme"
+#~ msgstr "தோற்றத்திட்டம்"
 
 #~ msgid "Menu"
 #~ msgstr "பட்டி"

@@ -25,6 +25,7 @@
 #include "relativepointer_v1_interface_p.h"
 #include "seat_interface_p.h"
 #include "surface_interface.h"
+#include "textinput_v1_interface_p.h"
 #include "textinput_v2_interface_p.h"
 #include "textinput_v3_interface_p.h"
 #include "touch_interface_p.h"
@@ -49,8 +50,12 @@ SeatInterfacePrivate::SeatInterfacePrivate(SeatInterface *q, Display *display)
     , q(q)
     , display(display)
 {
+    textInputV1 = new TextInputV1Interface(q);
     textInputV2 = new TextInputV2Interface(q);
     textInputV3 = new TextInputV3Interface(q);
+    pointer.reset(new PointerInterface(q));
+    keyboard.reset(new KeyboardInterface(q));
+    touch.reset(new TouchInterface(q));
 }
 
 void SeatInterfacePrivate::seat_bind_resource(Resource *resource)
@@ -64,38 +69,20 @@ void SeatInterfacePrivate::seat_bind_resource(Resource *resource)
 
 void SeatInterfacePrivate::seat_get_pointer(Resource *resource, uint32_t id)
 {
-    if (!(accumulatedCapabilities & capability_pointer)) {
-        wl_resource_post_error(resource->handle, 0, "wl_pointer capability is missing");
-        return;
-    }
-    if (pointer) {
-        PointerInterfacePrivate *pointerPrivate = PointerInterfacePrivate::get(pointer.get());
-        pointerPrivate->add(resource->client(), id, resource->version());
-    }
+    PointerInterfacePrivate *pointerPrivate = PointerInterfacePrivate::get(pointer.get());
+    pointerPrivate->add(resource->client(), id, resource->version());
 }
 
 void SeatInterfacePrivate::seat_get_keyboard(Resource *resource, uint32_t id)
 {
-    if (!(accumulatedCapabilities & capability_keyboard)) {
-        wl_resource_post_error(resource->handle, 0, "wl_keyboard capability is missing");
-        return;
-    }
-    if (keyboard) {
-        KeyboardInterfacePrivate *keyboardPrivate = KeyboardInterfacePrivate::get(keyboard.get());
-        keyboardPrivate->add(resource->client(), id, resource->version());
-    }
+    KeyboardInterfacePrivate *keyboardPrivate = KeyboardInterfacePrivate::get(keyboard.get());
+    keyboardPrivate->add(resource->client(), id, resource->version());
 }
 
 void SeatInterfacePrivate::seat_get_touch(Resource *resource, uint32_t id)
 {
-    if (!(accumulatedCapabilities & capability_touch)) {
-        wl_resource_post_error(resource->handle, 0, "wl_touch capability is missing");
-        return;
-    }
-    if (touch) {
-        TouchInterfacePrivate *touchPrivate = TouchInterfacePrivate::get(touch.get());
-        touchPrivate->add(resource->client(), id, resource->version());
-    }
+    TouchInterfacePrivate *touchPrivate = TouchInterfacePrivate::get(touch.get());
+    touchPrivate->add(resource->client(), id, resource->version());
 }
 
 void SeatInterfacePrivate::seat_release(Resource *resource)
@@ -212,9 +199,11 @@ void SeatInterfacePrivate::registerDataControlDevice(DataControlDeviceV1Interfac
     QObject::connect(dataDevice, &DataControlDeviceV1Interface::selectionChanged, q, [this, dataDevice] {
         // Special klipper workaround to avoid a race
         // If the mimetype x-kde-onlyReplaceEmpty is set, and we've had another update in the meantime, do nothing
+        // but resend selection to mimic normal event flow upon cancel and not confuse the client
         // See https://github.com/swaywm/wlr-protocols/issues/92
         if (dataDevice->selection() && dataDevice->selection()->mimeTypes().contains(QLatin1String("application/x-kde-onlyReplaceEmpty")) && currentSelection) {
             dataDevice->selection()->cancel();
+            dataDevice->sendSelection(currentSelection);
             return;
         }
         q->setSelection(dataDevice->selection());
@@ -223,10 +212,12 @@ void SeatInterfacePrivate::registerDataControlDevice(DataControlDeviceV1Interfac
     QObject::connect(dataDevice, &DataControlDeviceV1Interface::primarySelectionChanged, q, [this, dataDevice] {
         // Special klipper workaround to avoid a race
         // If the mimetype x-kde-onlyReplaceEmpty is set, and we've had another update in the meantime, do nothing
+        // but resend selection to mimic normal event flow upon cancel and not confuse the client
         // See https://github.com/swaywm/wlr-protocols/issues/92
         if (dataDevice->primarySelection() && dataDevice->primarySelection()->mimeTypes().contains(QLatin1String("application/x-kde-onlyReplaceEmpty"))
             && currentPrimarySelection) {
             dataDevice->primarySelection()->cancel();
+            dataDevice->sendPrimarySelection(currentPrimarySelection);
             return;
         }
         q->setPrimarySelection(dataDevice->primarySelection());
@@ -302,20 +293,28 @@ void SeatInterfacePrivate::endDrag()
 
 void SeatInterfacePrivate::updateSelection(DataDeviceInterface *dataDevice)
 {
+    DataSourceInterface *selection = dataDevice->selection();
     // if the update is from the focussed window we should inform the active client
     if (!(globalKeyboard.focus.surface && (*globalKeyboard.focus.surface->client() == dataDevice->client()))) {
+        if (selection) {
+            selection->cancel();
+        }
         return;
     }
-    q->setSelection(dataDevice->selection());
+    q->setSelection(selection);
 }
 
 void SeatInterfacePrivate::updatePrimarySelection(PrimarySelectionDeviceV1Interface *primarySelectionDevice)
 {
+    PrimarySelectionSourceV1Interface *selection = primarySelectionDevice->selection();
     // if the update is from the focussed window we should inform the active client
     if (!(globalKeyboard.focus.surface && (*globalKeyboard.focus.surface->client() == primarySelectionDevice->client()))) {
+        if (selection) {
+            selection->cancel();
+        }
         return;
     }
-    q->setPrimarySelection(primarySelectionDevice->selection());
+    q->setPrimarySelection(selection);
 }
 
 void SeatInterfacePrivate::sendCapabilities()
@@ -328,56 +327,47 @@ void SeatInterfacePrivate::sendCapabilities()
 
 void SeatInterface::setHasKeyboard(bool has)
 {
-    if (!d->keyboard != has) {
+    if (hasKeyboard() == has) {
         return;
     }
     if (has) {
         d->capabilities |= SeatInterfacePrivate::capability_keyboard;
-        d->keyboard.reset(new KeyboardInterface(this));
     } else {
         d->capabilities &= ~SeatInterfacePrivate::capability_keyboard;
-        d->keyboard.reset();
     }
-    d->accumulatedCapabilities |= d->capabilities;
 
     d->sendCapabilities();
-    Q_EMIT hasKeyboardChanged(d->keyboard != nullptr);
+    Q_EMIT hasKeyboardChanged(has);
 }
 
 void SeatInterface::setHasPointer(bool has)
 {
-    if (!d->pointer != has) {
+    if (hasPointer() == has) {
         return;
     }
     if (has) {
         d->capabilities |= SeatInterfacePrivate::capability_pointer;
-        d->pointer.reset(new PointerInterface(this));
     } else {
         d->capabilities &= ~SeatInterfacePrivate::capability_pointer;
-        d->pointer.reset();
     }
-    d->accumulatedCapabilities |= d->capabilities;
 
     d->sendCapabilities();
-    Q_EMIT hasPointerChanged(d->pointer != nullptr);
+    Q_EMIT hasPointerChanged(has);
 }
 
 void SeatInterface::setHasTouch(bool has)
 {
-    if (!d->touch != has) {
+    if (hasTouch() == has) {
         return;
     }
     if (has) {
         d->capabilities |= SeatInterfacePrivate::capability_touch;
-        d->touch.reset(new TouchInterface(this));
     } else {
         d->capabilities &= ~SeatInterfacePrivate::capability_touch;
-        d->touch.reset();
     }
-    d->accumulatedCapabilities |= d->capabilities;
 
     d->sendCapabilities();
-    Q_EMIT hasTouchChanged(d->touch != nullptr);
+    Q_EMIT hasTouchChanged(has);
 }
 
 void SeatInterface::setName(const QString &name)
@@ -404,17 +394,17 @@ QString SeatInterface::name() const
 
 bool SeatInterface::hasPointer() const
 {
-    return d->pointer != nullptr;
+    return d->capabilities & SeatInterfacePrivate::capability_pointer;
 }
 
 bool SeatInterface::hasKeyboard() const
 {
-    return d->keyboard != nullptr;
+    return d->capabilities & SeatInterfacePrivate::capability_keyboard;
 }
 
 bool SeatInterface::hasTouch() const
 {
-    return d->touch != nullptr;
+    return d->capabilities & SeatInterfacePrivate::capability_touch;
 }
 
 Display *SeatInterface::display() const
@@ -1221,6 +1211,7 @@ void SeatInterface::setFocusedTextInputSurface(SurfaceInterface *surface)
 
     if (d->focusedTextInputSurface) {
         disconnect(d->focusedSurfaceDestroyConnection);
+        d->textInputV1->d->sendLeave(d->focusedTextInputSurface);
         d->textInputV2->d->sendLeave(serial, d->focusedTextInputSurface);
         d->textInputV3->d->sendLeave(d->focusedTextInputSurface);
     }
@@ -1230,6 +1221,7 @@ void SeatInterface::setFocusedTextInputSurface(SurfaceInterface *surface)
         d->focusedSurfaceDestroyConnection = connect(surface, &SurfaceInterface::aboutToBeDestroyed, this, [this] {
             setFocusedTextInputSurface(nullptr);
         });
+        d->textInputV1->d->sendEnter(surface);
         d->textInputV2->d->sendEnter(surface, serial);
         d->textInputV3->d->sendEnter(surface);
     }
@@ -1240,6 +1232,11 @@ void SeatInterface::setFocusedTextInputSurface(SurfaceInterface *surface)
 SurfaceInterface *SeatInterface::focusedTextInputSurface() const
 {
     return d->focusedTextInputSurface;
+}
+
+TextInputV1Interface *SeatInterface::textInputV1() const
+{
+    return d->textInputV1;
 }
 
 TextInputV2Interface *SeatInterface::textInputV2() const

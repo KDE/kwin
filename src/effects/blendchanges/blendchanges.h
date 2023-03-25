@@ -7,9 +7,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
+#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/kwinoffscreeneffect.h"
 #include <chrono>
-#include <kwinoffscreeneffect.h>
-#include <kwineffects.h>
 
 namespace KWin
 {
@@ -27,7 +27,7 @@ public:
     // Effect interface
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void postPaintScreen() override;
-    void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
+    void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
 
     bool isActive() const override;
 

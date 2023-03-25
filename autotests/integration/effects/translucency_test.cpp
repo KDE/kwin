@@ -10,9 +10,10 @@
 
 #include "composite.h"
 #include "core/outputbackend.h"
-#include "cursor.h"
 #include "effectloader.h"
 #include "effects.h"
+#include "pointer_input.h"
+#include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "x11window.h"
@@ -57,7 +58,7 @@ void TranslucencyTest::initTestCase()
         plugins.writeEntry(name + QStringLiteral("Enabled"), false);
     }
     config->group("Outline").writeEntry(QStringLiteral("QmlPath"), QString("/does/not/exist.qml"));
-    config->group("Effect-kwin4_effect_translucency").writeEntry(QStringLiteral("Dialogs"), 90);
+    config->group("Effect-translucency").writeEntry(QStringLiteral("Dialogs"), 90);
 
     config->sync();
     kwinApp()->setConfig(config);
@@ -77,9 +78,9 @@ void TranslucencyTest::init()
     QVERIFY(effectloader);
     QSignalSpy effectLoadedSpy(effectloader, &AbstractEffectLoader::effectLoaded);
 
-    QVERIFY(!e->isEffectLoaded(QStringLiteral("kwin4_effect_translucency")));
-    QVERIFY(e->loadEffect(QStringLiteral("kwin4_effect_translucency")));
-    QVERIFY(e->isEffectLoaded(QStringLiteral("kwin4_effect_translucency")));
+    QVERIFY(!e->isEffectLoaded(QStringLiteral("translucency")));
+    QVERIFY(e->loadEffect(QStringLiteral("translucency")));
+    QVERIFY(e->isEffectLoaded(QStringLiteral("translucency")));
 
     QCOMPARE(effectLoadedSpy.count(), 1);
     m_translucencyEffect = effectLoadedSpy.first().first().value<Effect *>();
@@ -89,20 +90,12 @@ void TranslucencyTest::init()
 void TranslucencyTest::cleanup()
 {
     EffectsHandlerImpl *e = static_cast<EffectsHandlerImpl *>(effects);
-    if (e->isEffectLoaded(QStringLiteral("kwin4_effect_translucency"))) {
-        e->unloadEffect(QStringLiteral("kwin4_effect_translucency"));
+    if (e->isEffectLoaded(QStringLiteral("translucency"))) {
+        e->unloadEffect(QStringLiteral("translucency"));
     }
-    QVERIFY(!e->isEffectLoaded(QStringLiteral("kwin4_effect_translucency")));
+    QVERIFY(!e->isEffectLoaded(QStringLiteral("translucency")));
     m_translucencyEffect = nullptr;
 }
-
-struct XcbConnectionDeleter
-{
-    void operator()(xcb_connection_t *pointer)
-    {
-        xcb_disconnect(pointer);
-    }
-};
 
 void TranslucencyTest::testMoveAfterDesktopChange()
 {
@@ -112,7 +105,7 @@ void TranslucencyTest::testMoveAfterDesktopChange()
     QSignalSpy windowAddedSpy(effects, &EffectsHandler::windowAdded);
 
     // create an xcb window
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 100, 200);
     xcb_window_t windowId = xcb_generate_id(c.get());
@@ -141,12 +134,13 @@ void TranslucencyTest::testMoveAfterDesktopChange()
     QVERIFY(windowAddedSpy.wait());
     QVERIFY(!m_translucencyEffect->isActive());
     // let's send the window to desktop 2
-    effects->setNumberOfDesktops(2);
-    QCOMPARE(effects->numberOfDesktops(), 2);
-    workspace()->sendWindowToDesktop(window, 2, false);
-    effects->setCurrentDesktop(2);
+    VirtualDesktopManager *vds = VirtualDesktopManager::self();
+    vds->setCount(2);
+    const QVector<VirtualDesktop *> desktops = vds->desktops();
+    workspace()->sendWindowToDesktops(window, {desktops[1]}, false);
+    vds->setCurrent(desktops[1]);
     QVERIFY(!m_translucencyEffect->isActive());
-    KWin::Cursors::self()->mouse()->setPos(window->frameGeometry().center());
+    KWin::input()->pointer()->warp(window->frameGeometry().center());
     workspace()->performWindowOperation(window, Options::MoveOp);
     QVERIFY(m_translucencyEffect->isActive());
     QTest::qWait(200);
@@ -161,7 +155,7 @@ void TranslucencyTest::testMoveAfterDesktopChange()
     xcb_unmap_window(c.get(), windowId);
     xcb_flush(c.get());
 
-    QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
+    QSignalSpy windowClosedSpy(window, &X11Window::closed);
     QVERIFY(windowClosedSpy.wait());
     xcb_destroy_window(c.get(), windowId);
     c.reset();
@@ -175,7 +169,7 @@ void TranslucencyTest::testDialogClose()
     QSignalSpy windowAddedSpy(effects, &EffectsHandler::windowAdded);
 
     // create an xcb window
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 100, 200);
     xcb_window_t windowId = xcb_generate_id(c.get());
@@ -210,7 +204,7 @@ void TranslucencyTest::testDialogClose()
     xcb_unmap_window(c.get(), windowId);
     xcb_flush(c.get());
 
-    QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
+    QSignalSpy windowClosedSpy(window, &X11Window::closed);
 
     QSignalSpy windowDeletedSpy(effects, &EffectsHandler::windowDeleted);
     QVERIFY(windowClosedSpy.wait());

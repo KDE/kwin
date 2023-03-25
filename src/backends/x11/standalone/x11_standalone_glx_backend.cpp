@@ -14,7 +14,7 @@
 // own
 #include "x11_standalone_glx_backend.h"
 #include "../common/kwinxrenderutils.h"
-#include "softwarevsyncmonitor.h"
+#include "platformsupport/vsyncconvenience/softwarevsyncmonitor.h"
 #include "x11_standalone_backend.h"
 #include "x11_standalone_glx_context_attribute_builder.h"
 #include "x11_standalone_glxconvenience.h"
@@ -33,20 +33,13 @@
 #include "utils/xcbutils.h"
 #include "workspace.h"
 // kwin libs
-#include <kwinglplatform.h>
-#include <kwinglutils.h>
-#include <kwinoffscreenquickview.h>
+#include "libkwineffects/kwinglplatform.h"
+#include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/kwinoffscreenquickview.h"
 // Qt
 #include <QDebug>
 #include <QOpenGLContext>
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 #include <private/qtx11extras_p.h>
-#else
-#include <QX11Info>
-#endif
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-#include <QtPlatformHeaders/QGLXNativeContext>
-#endif
 // system
 #include <unistd.h>
 
@@ -74,6 +67,7 @@ typedef struct xcb_glx_buffer_swap_complete_event_t
 } xcb_glx_buffer_swap_complete_event_t;
 #endif
 
+#include <drm_fourcc.h>
 #include <tuple>
 
 namespace KWin
@@ -118,6 +112,11 @@ bool GlxLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedReg
 {
     m_backend->endFrame(renderedRegion, damagedRegion);
     return true;
+}
+
+uint GlxLayer::format() const
+{
+    return DRM_FORMAT_RGBA8888;
 }
 
 GlxBackend::GlxBackend(Display *display, X11StandaloneBackend *backend)
@@ -344,16 +343,6 @@ bool GlxBackend::initRenderingContext()
     GLXContext globalShareContext = nullptr;
     if (qtGlobalShareContext) {
         qDebug(KWIN_X11STANDALONE) << "Global share context format:" << qtGlobalShareContext->format();
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        const QVariant nativeHandle = qtGlobalShareContext->nativeHandle();
-        if (!nativeHandle.canConvert<QGLXNativeContext>()) {
-            qCDebug(KWIN_X11STANDALONE) << "Invalid QOpenGLContext::globalShareContext()";
-            return false;
-        } else {
-            QGLXNativeContext handle = qvariant_cast<QGLXNativeContext>(nativeHandle);
-            globalShareContext = handle.context();
-        }
-#else
         const auto nativeHandle = qtGlobalShareContext->nativeInterface<QNativeInterface::QGLXContext>();
         if (nativeHandle) {
             globalShareContext = nativeHandle->nativeContext();
@@ -361,7 +350,6 @@ bool GlxBackend::initRenderingContext()
             qCDebug(KWIN_X11STANDALONE) << "Invalid QOpenGLContext::globalShareContext()";
             return false;
         }
-#endif
     }
     if (!globalShareContext) {
         qCWarning(KWIN_X11STANDALONE) << "QOpenGLContext::globalShareContext() is required";
@@ -951,7 +939,7 @@ bool GlxPixmapTexturePrivate::create(SurfacePixmapX11 *texture)
 
     m_glxPixmap = glXCreatePixmap(m_backend->display(), info.fbconfig, texture->pixmap(), attrs);
     m_size = texture->size();
-    m_yInverted = info.y_inverted ? true : false;
+    q->setContentTransform(info.y_inverted ? TextureTransform::MirrorY : TextureTransforms());
     m_canUseMipmaps = false;
 
     glGenTextures(1, &m_texture);

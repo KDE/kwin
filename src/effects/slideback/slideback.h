@@ -10,7 +10,7 @@
 #pragma once
 
 // Include with base class for effects.
-#include <kwineffects.h>
+#include "libkwineffects/kwineffects.h"
 
 namespace KWin
 {
@@ -23,7 +23,7 @@ public:
     SlideBackEffect();
 
     void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
+    void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
     void postPaintWindow(EffectWindow *w) override;
 
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;

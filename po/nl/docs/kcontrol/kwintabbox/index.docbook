@@ -15,9 +15,9 @@
 </authorgroup>
 
 <date
->2020-12-31</date>
+>2023-01-30</date>
 <releaseinfo
->&plasma; 5.21</releaseinfo>
+>&plasma; 5.27</releaseinfo>
 
 <keywordset>
 <keyword
@@ -43,6 +43,18 @@
 
 <para
 >De taakschakelaar biedt de gebruiker het gemakkelijk schakelen tussen nu geopende vensters met het toetsenbord. Het is heel goed te configureren en biedt de gebruiker zijn gedrag, visuele uiterlijk, sneltoetsen en filteren van vensters te besturen.</para>
+
+<para>
+  <screenshot>
+    <screeninfo
+>Schermafdruk van de standaard taakschakelaar</screeninfo>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="taskswitcher.png" format="PNG"/>
+      </imageobject>
+    </mediaobject>
+  </screenshot>
+</para>
 
 <para
 >De taakschakelaar wordt vaak aangeroepen met de toetsencombinatie <keycombo
@@ -81,7 +93,7 @@
 <para
 >Het keuzevakje <guilabel
 >Geselecteerd venster tonen</guilabel
-> bepaalt hoe helder de gebruiker zal zien welk venster geactiveerd zal worden. Als dit vakje geactiveerd is zullen alle vensters gedimd worden behalve diegene die nu geaccentueerd is in de taakschakelaar.</para>
+> bepaalt hoe helder de gebruiker zal zien welk venster geactiveerd zal worden. Als dit vakje geactiveerd is zullen alle vensters verborgen worden behalve diegene die nu geaccentueerd is in de taakschakelaar.</para>
 
 <note
 ><para
@@ -150,7 +162,7 @@
 >Recent gebruikt</guilabel
 >. <guilabel
 >Stapelvolgorde</guilabel
-> is de volgorde waarin de vensters op het scherm verschijnen, terwijl volgorde <guilabel
+> is de volgorde waarin de vensters op het scherm verschijnen bovenop elkaar, terwijl volgorde <guilabel
 >Recent gebruikt</guilabel
 > de volgorde is waarin de vensters gebruikt zijn. Volgorde <guilabel
 >Recent gebruikt</guilabel
@@ -165,6 +177,11 @@
 >De optie <guilabel
 >Slechts één venster per toepassing</guilabel
 > reduceert rommel door alleen één venster voor elke open toepassing te tonen. Als een toepassing meerdere vensters open heeft, dan zal zijn meest recent geactiveerde venster getoond worden in de lijst en de andere zullen niet getoond worden.</para>
+
+<para
+>De optie <guilabel
+>Zet geminimaliseerde vensters achter niet-geminimaliseerde vensters</guilabel
+> zal u alle niet-geminimaliseerde vensters eerst tonen, zelfs als ze minder recent zijn of verder onderaan dan sommige van de geminimaliseerde vensters.</para>
 </sect2>
 
 <sect2 id="filter-windows-by">

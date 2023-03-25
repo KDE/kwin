@@ -1,0 +1,128 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Spanish "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwinscreenedges" lang="&language;">
+<articleinfo>
+
+<title
+>Bordes de la pantalla</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<othercredit role="translator"
+><firstname
+>Rocío</firstname
+><surname
+>Gallego</surname
+><affiliation
+><address
+><email
+>traducciones@rociogallego.com</email
+></address
+></affiliation
+><contrib
+>Traducción</contrib
+></othercredit
+><othercredit role="translator"
+><firstname
+>Cristina Yenyxe</firstname
+><surname
+>González García</surname
+><affiliation
+><address
+><email
+>the.blue.valkyrie@gmail.com</email
+></address
+></affiliation
+><contrib
+>Traductor</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>2023-01-30</date>
+<releaseinfo
+>Plasma 5.27</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Preferencias del sistema</keyword>
+<keyword
+>escritorio</keyword>
+<keyword
+>efectos</keyword>
+<keyword
+>pantalla</keyword>
+<keyword
+>borde</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>Los bordes de pantalla activos le permiten activar efectos empujando el cursor del ratón contra el borde de la pantalla. Aquí podrá configurar qué efecto activar en cada borde y esquina de dicha pantalla. </para>
+
+<para
+>Haga clic con cualquier botón del ratón sobre un cuadrado y seleccione un efecto en el menú contextual. Los cuadrados azules indican que ya se ha asociado un efecto al borde, y los cuadrados grises que no.</para>
+
+<para
+>El número de elementos accesibles en el menú de contexto depende de las preferencias del módulo <ulink url="help:/kcontrol/kwineffects/index.html"
+><guilabel
+>Efectos de escritorio</guilabel
+></ulink
+> de la categoría <guilabel
+>Espacio de trabajo</guilabel
+>. Seleccione sus efectos favoritos en el grupo <guilabel
+>Gestión de ventanas</guilabel
+>. Esto activa los elementos correspondientes en el menú de contexto.</para>
+
+<para
+>Si está buscando la preferencia que activa el cambio entre escritorios al desplazar el cursor hasta el borde de la pantalla, seleccione uno de los efectos de <guilabel
+>Presentar ventanas</guilabel
+> en el menú de contexto.</para>
+
+<para
+>Puede activar <guilabel
+>Maximizar: Ventanas arrastradas al borde superior</guilabel
+>, <guilabel
+>Mosaico: Ventanas arrastradas al borde izquierdo o derecho</guilabel
+> o <guilabel
+>Activar mosaico en un cuarto de pantalla</guilabel
+> y definir un porcentaje de la pantalla para activar el mosaico. </para>
+
+<tip>
+<para
+>En la pestaña <guilabel
+>Movimiento</guilabel
+> del módulo de preferencias <guilabel
+>Comportamiento de las ventanas</guilabel
+>, en la sección <guilabel
+>Gestión de ventanas</guilabel
+> de las preferencias del sistema, puede configurar las zonas de adhesión para las ventanas que se muevan cerca de los bordes de la pantalla, del centro o de otras ventanas. </para>
+</tip>
+
+<para
+>Desactive la opción <guilabel
+>Permanecer activa cuando las ventanas estén a pantalla completa</guilabel
+> para suspender la activación de las acciones de los bordes en las aplicaciones que se ejecuten a pantalla completa.</para>
+
+<para
+>Con la opción <guilabel
+>Cambiar de escritorio en el borde</guilabel
+> puede configurar si desea cambiar a otro escritorio cuando mueva el cursor del ratón hasta un borde de la pantalla, por ejemplo, solo al mover ventanas. </para>
+<para
+><guilabel
+>Retardo de activación</guilabel
+> es la cantidad de tiempo que se requiere para que el cursor del ratón se empuje contra el borde de la pantalla antes de que se active la acción. </para>
+<para
+><guilabel
+>Retardo de reactivación</guilabel
+> es la cantidad de tiempo que se requiere después de activar una acción hasta que pueda ocurrir el siguiente activador. </para>
+</article>

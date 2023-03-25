@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-03 00:48+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2022-12-22 11:14+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -23,16 +23,6 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 "X-Generator: Lokalize 21.12.3\n"
-
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Mohamed SAAD محمد سعد,زايد السعيدي"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "metehyi@free.fr,zayed.alsaidi@gmail.com"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:17
@@ -393,7 +383,7 @@ msgid ""
 "Here you can customize KDE's behavior when scrolling with the mouse wheel in "
 "a window while pressing the modifier key."
 msgstr ""
-"هنا يمكنك تخصيص سلوك الكيدي عند التمرير بواسطة عجلة الفأرة في النافذة أثناء "
+"هنا يمكنك تخصيص سلوك الكِيدِي عند التمرير بواسطة عجلة الفأرة في النافذة أثناء "
 "الضغط على المفتاح المغيّر."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
@@ -926,108 +916,37 @@ msgstr "اف&صل تركيز الشاشة"
 msgid "Window activation policy description"
 msgstr "وصف سياسة تنشيط النافذة"
 
-#: main.cpp:73
+#: main.cpp:79
 #, kde-format
 msgid "&Focus"
 msgstr "التر&كيز"
 
-#: main.cpp:79
+#: main.cpp:84
 #, kde-format
 msgid "Titlebar A&ctions"
 msgstr "إجراءات &شريط العنوان"
 
-#: main.cpp:85
+#: main.cpp:89
 #, kde-format
 msgid "W&indow Actions"
 msgstr "اج&راءات النوافذ"
 
-#: main.cpp:91
+#: main.cpp:94
 #, kde-format
 msgid "Mo&vement"
 msgstr "ال&حركة"
 
-#: main.cpp:97
+#: main.cpp:99
 #, kde-format
 msgid "Adva&nced"
 msgstr "متق&دّم"
 
-#: main.cpp:101
-#, kde-format
-msgid "Window Behavior Configuration Module"
-msgstr "وحدة تشكيل سلوك النوافذ"
-
-#: main.cpp:103
-#, kde-format
-msgid "(c) 1997 - 2002 KWin and KControl Authors"
-msgstr "(c) 1997 - 2002 KWin and KControl مؤلفو"
-
-#: main.cpp:105
-#, kde-format
-msgid "Matthias Ettrich"
-msgstr "Matthias Ettrich"
-
-#: main.cpp:106
-#, kde-format
-msgid "Waldo Bastian"
-msgstr "Waldo Bastian"
-
-#: main.cpp:107
-#, kde-format
-msgid "Cristian Tibirna"
-msgstr "Cristian Tibirna"
-
-#: main.cpp:108
-#, kde-format
-msgid "Matthias Kalle Dalheimer"
-msgstr "Matthias Kalle Dalheimer"
-
-#: main.cpp:109
-#, kde-format
-msgid "Daniel Molkentin"
-msgstr "Daniel Molkentin"
-
-#: main.cpp:110
-#, kde-format
-msgid "Wynn Wilkes"
-msgstr "Wynn Wilkes"
-
-#: main.cpp:111
-#, kde-format
-msgid "Pat Dowler"
-msgstr "Pat Dowler"
-
-#: main.cpp:112
-#, kde-format
-msgid "Bernd Wuebben"
-msgstr "Bernd Wuebben"
-
-#: main.cpp:113
-#, kde-format
-msgid "Matthias Hoelzer-Kluepfel"
-msgstr "Matthias Hoelzer-Kluepfel"
-
-#: main.cpp:161
-#, kde-format
-msgid ""
-"<p><h1>Window Behavior</h1> Here you can customize the way windows behave "
-"when being moved, resized or clicked on. You can also specify a focus policy "
-"as well as a placement policy for new windows.</p> <p>Please note that this "
-"configuration will not take effect if you do not use KWin as your window "
-"manager. If you do use a different window manager, please refer to its "
-"documentation for how to customize window behavior.</p>"
-msgstr ""
-"<p><h1>سلوك النافذة</h1>هنا يمكنك تخصيص كيف تتصرف النافذة عندما تحرك أو تحجم "
-"أو ينقر عليها ، كذلك تستطيع أن تحدد سياسة التركيز و سياسة مكان النوافذ "
-"الجديدة.</p> <p>الرجاء ملاحظة أن هذه الإعدادات لن تدخل في حيز التنفيذ إذا لم "
-"تستعمل كوِن كمدير نوافذك ، إذا كنت تستخدم مدير نوافذ مختلف فراجع وثائقه "
-"لتعريف كيف يمكن تخصيصه.</p>"
-
-#: main.cpp:202
+#: main.cpp:178
 #, kde-format
 msgid "&Titlebar Actions"
 msgstr "إج&راءات شريط العنوان"
 
-#: main.cpp:208
+#: main.cpp:188
 #, kde-format
 msgid "Window Actio&ns"
 msgstr "اج&راءات النوافذ"
@@ -1378,6 +1297,61 @@ msgstr ""
 "التنشيط ولن تعمل. من المحتمل جدًا أنك تريد استخدام <em> التركيز يتبع الفأرة "
 "(أولوية الفأرة) </em> بدلاً من ذلك!"
 
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Mohamed SAAD محمد سعد,زايد السعيدي"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "metehyi@free.fr,zayed.alsaidi@gmail.com"
+
+#~ msgid "Window Behavior Configuration Module"
+#~ msgstr "وحدة تشكيل سلوك النوافذ"
+
+#~ msgid "(c) 1997 - 2002 KWin and KControl Authors"
+#~ msgstr "(c) 1997 - 2002 KWin and KControl مؤلفو"
+
+#~ msgid "Matthias Ettrich"
+#~ msgstr "Matthias Ettrich"
+
+#~ msgid "Waldo Bastian"
+#~ msgstr "Waldo Bastian"
+
+#~ msgid "Cristian Tibirna"
+#~ msgstr "Cristian Tibirna"
+
+#~ msgid "Matthias Kalle Dalheimer"
+#~ msgstr "Matthias Kalle Dalheimer"
+
+#~ msgid "Daniel Molkentin"
+#~ msgstr "Daniel Molkentin"
+
+#~ msgid "Wynn Wilkes"
+#~ msgstr "Wynn Wilkes"
+
+#~ msgid "Pat Dowler"
+#~ msgstr "Pat Dowler"
+
+#~ msgid "Bernd Wuebben"
+#~ msgstr "Bernd Wuebben"
+
+#~ msgid "Matthias Hoelzer-Kluepfel"
+#~ msgstr "Matthias Hoelzer-Kluepfel"
+
+#~ msgid ""
+#~ "<p><h1>Window Behavior</h1> Here you can customize the way windows behave "
+#~ "when being moved, resized or clicked on. You can also specify a focus "
+#~ "policy as well as a placement policy for new windows.</p> <p>Please note "
+#~ "that this configuration will not take effect if you do not use KWin as "
+#~ "your window manager. If you do use a different window manager, please "
+#~ "refer to its documentation for how to customize window behavior.</p>"
+#~ msgstr ""
+#~ "<p><h1>سلوك النافذة</h1>هنا يمكنك تخصيص كيف تتصرف النافذة عندما تحرك أو "
+#~ "تحجم أو ينقر عليها ، كذلك تستطيع أن تحدد سياسة التركيز و سياسة مكان "
+#~ "النوافذ الجديدة.</p> <p>الرجاء ملاحظة أن هذه الإعدادات لن تدخل في حيز "
+#~ "التنفيذ إذا لم تستعمل كوِن كمدير نوافذك ، إذا كنت تستخدم مدير نوافذ مختلف "
+#~ "فراجع وثائقه لتعريف كيف يمكن تخصيصه.</p>"
+
 #~ msgid "Cascaded"
 #~ msgstr "متتالي"
 
@@ -1627,7 +1601,7 @@ msgstr ""
 #~ "Here you can customize KDE's behavior when clicking somewhere into a "
 #~ "window while pressing a modifier key."
 #~ msgstr ""
-#~ "هنا يمكنك تخصيص سلوك كدي عند النقر في مكان في النافذة أثناء الضغط على "
+#~ "هنا يمكنك تخصيص سلوك كِيدِي عند النقر في مكان في النافذة أثناء الضغط على "
 #~ "مفتاح مغيير."
 
 #~ msgctxt "no border snap zone"

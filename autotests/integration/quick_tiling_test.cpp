@@ -13,6 +13,7 @@
 #include "cursor.h"
 #include "decorations/decorationbridge.h"
 #include "decorations/settings.h"
+#include "pointer_input.h"
 #include "scripting/scripting.h"
 #include "utils/common.h"
 #include "wayland_server.h"
@@ -113,7 +114,7 @@ void QuickTilingTest::init()
     m_compositor = Test::waylandCompositor();
 
     workspace()->setActiveOutput(QPoint(640, 512));
-    Cursors::self()->mouse()->setPos(QPoint(640, 512));
+    input()->pointer()->warp(QPoint(640, 512));
 }
 
 void QuickTilingTest::cleanup()
@@ -239,8 +240,7 @@ void QuickTilingTest::testQuickMaximizing()
 
     QSignalSpy quickTileChangedSpy(window, &Window::quickTileModeChanged);
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
-    QSignalSpy maximizeChangedSpy1(window, qOverload<Window *, MaximizeMode>(&Window::clientMaximizedStateChanged));
-    QSignalSpy maximizeChangedSpy2(window, qOverload<Window *, bool, bool>(&Window::clientMaximizedStateChanged));
+    QSignalSpy maximizeChangedSpy(window, &Window::maximizedChanged);
 
     window->setQuickTileMode(QuickTileFlag::Maximize, true);
     QCOMPARE(quickTileChangedSpy.count(), 1);
@@ -266,13 +266,7 @@ void QuickTilingTest::testQuickMaximizing()
     QCOMPARE(window->geometryRestore(), QRect(0, 0, 100, 50));
 
     // window is now set to maximised
-    QCOMPARE(maximizeChangedSpy1.count(), 1);
-    QCOMPARE(maximizeChangedSpy1.first().first().value<KWin::Window *>(), window);
-    QCOMPARE(maximizeChangedSpy1.first().last().value<KWin::MaximizeMode>(), MaximizeFull);
-    QCOMPARE(maximizeChangedSpy2.count(), 1);
-    QCOMPARE(maximizeChangedSpy2.first().first().value<KWin::Window *>(), window);
-    QCOMPARE(maximizeChangedSpy2.first().at(1).toBool(), true);
-    QCOMPARE(maximizeChangedSpy2.first().at(2).toBool(), true);
+    QCOMPARE(maximizeChangedSpy.count(), 1);
     QCOMPARE(window->maximizeMode(), MaximizeFull);
 
     // go back to quick tile none
@@ -296,13 +290,7 @@ void QuickTilingTest::testQuickMaximizing()
     QCOMPARE(frameGeometryChangedSpy.count(), 2);
     QCOMPARE(window->frameGeometry(), QRect(0, 0, 100, 50));
     QCOMPARE(window->geometryRestore(), QRect(0, 0, 100, 50));
-    QCOMPARE(maximizeChangedSpy1.count(), 2);
-    QCOMPARE(maximizeChangedSpy1.last().first().value<KWin::Window *>(), window);
-    QCOMPARE(maximizeChangedSpy1.last().last().value<KWin::MaximizeMode>(), MaximizeRestore);
-    QCOMPARE(maximizeChangedSpy2.count(), 2);
-    QCOMPARE(maximizeChangedSpy2.last().first().value<KWin::Window *>(), window);
-    QCOMPARE(maximizeChangedSpy2.last().at(1).toBool(), false);
-    QCOMPARE(maximizeChangedSpy2.last().at(2).toBool(), false);
+    QCOMPARE(maximizeChangedSpy.count(), 2);
 }
 
 void QuickTilingTest::testQuickTilingKeyboardMove_data()
@@ -497,9 +485,9 @@ void QuickTilingTest::testQuickTilingTouchMove()
 
     // Note that interactive move will be started with a delay.
     quint32 timestamp = 1;
-    QSignalSpy clientStartUserMovedResizedSpy(window, &Window::clientStartUserMovedResized);
+    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
     Test::touchDown(0, QPointF(window->frameGeometry().center().x(), window->frameGeometry().y() + decoration->borderTop() / 2), timestamp++);
-    QVERIFY(clientStartUserMovedResizedSpy.wait());
+    QVERIFY(interactiveMoveResizeStartedSpy.wait());
     QCOMPARE(window, workspace()->moveResizeWindow());
 
     QFETCH(QPoint, targetPos);
@@ -517,14 +505,6 @@ void QuickTilingTest::testQuickTilingTouchMove()
     QTRY_COMPARE(surfaceConfigureRequestedSpy.count(), hasBorders ? 4 : 3);
     QCOMPARE(false, toplevelConfigureRequestedSpy.last().first().toSize().isEmpty());
 }
-
-struct XcbConnectionDeleter
-{
-    void operator()(xcb_connection_t *pointer)
-    {
-        xcb_disconnect(pointer);
-    }
-};
 
 void QuickTilingTest::testX11QuickTiling_data()
 {
@@ -551,7 +531,7 @@ void QuickTilingTest::testX11QuickTiling_data()
 }
 void QuickTilingTest::testX11QuickTiling()
 {
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 100, 200);
     xcb_window_t windowId = xcb_generate_id(c.get());
@@ -603,7 +583,7 @@ void QuickTilingTest::testX11QuickTiling()
     xcb_flush(c.get());
     c.reset();
 
-    QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
+    QSignalSpy windowClosedSpy(window, &X11Window::closed);
     QVERIFY(windowClosedSpy.wait());
 }
 
@@ -631,7 +611,7 @@ void QuickTilingTest::testX11QuickTilingAfterVertMaximize_data()
 
 void QuickTilingTest::testX11QuickTilingAfterVertMaximize()
 {
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 100, 200);
     xcb_window_t windowId = xcb_generate_id(c.get());
@@ -679,7 +659,7 @@ void QuickTilingTest::testX11QuickTilingAfterVertMaximize()
     xcb_flush(c.get());
     c.reset();
 
-    QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
+    QSignalSpy windowClosedSpy(window, &X11Window::closed);
     QVERIFY(windowClosedSpy.wait());
 }
 

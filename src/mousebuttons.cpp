@@ -17,12 +17,10 @@ static const QHash<uint32_t, Qt::MouseButton> s_buttonToQtMouseButton = {
     {BTN_RIGHT, Qt::RightButton},
     // in QtWayland mapped like that
     {BTN_SIDE, Qt::ExtraButton1},
-    // in QtWayland mapped like that
     {BTN_EXTRA, Qt::ExtraButton2},
-    {BTN_BACK, Qt::BackButton},
-    {BTN_FORWARD, Qt::ForwardButton},
-    {BTN_TASK, Qt::TaskButton},
-    // mapped like that in QtWayland
+    {BTN_FORWARD, Qt::ExtraButton3},
+    {BTN_BACK, Qt::ExtraButton4},
+    {BTN_TASK, Qt::ExtraButton5},
     {0x118, Qt::ExtraButton6},
     {0x119, Qt::ExtraButton7},
     {0x11a, Qt::ExtraButton8},

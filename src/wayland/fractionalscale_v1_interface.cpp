@@ -10,6 +10,8 @@
 #include "fractionalscale_v1_interface_p.h"
 #include "surface_interface_p.h"
 
+#include <cmath>
+
 static const int s_version = 1;
 
 namespace KWaylandServer

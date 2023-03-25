@@ -8,7 +8,9 @@
 */
 // own
 #include "screentransform.h"
-#include "kwinglutils.h"
+#include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/rendertarget.h"
+#include "libkwineffects/renderviewport.h"
 
 #include <QDebug>
 
@@ -176,13 +178,11 @@ static QRectF lerp(const QRectF &a, const QRectF &b, qreal t)
     return ret;
 }
 
-void ScreenTransformEffect::paintScreen(int mask, const QRegion &region, KWin::ScreenPaintData &data)
+void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, KWin::EffectScreen *screen)
 {
-    EffectScreen *screen = data.screen();
-
     auto it = m_states.find(screen);
     if (it == m_states.end() || !it->m_captured) {
-        effects->paintScreen(mask, region, data);
+        effects->paintScreen(renderTarget, viewport, mask, region, screen);
         return;
     }
 
@@ -193,19 +193,22 @@ void ScreenTransformEffect::paintScreen(int mask, const QRegion &region, KWin::S
         it->m_current.framebuffer.reset(new GLFramebuffer(it->m_current.texture.get()));
     }
 
+    RenderTarget fboRenderTarget(it->m_current.framebuffer.get());
+    RenderViewport fboViewport(viewport.renderRect(), viewport.scale(), fboRenderTarget);
+
     GLFramebuffer::pushFramebuffer(it->m_current.framebuffer.get());
-    effects->paintScreen(mask, region, data);
+    effects->paintScreen(fboRenderTarget, fboViewport, mask, region, screen);
     GLFramebuffer::popFramebuffer();
 
     const qreal blendFactor = it->m_timeLine.value();
     const QRectF screenRect = screen->geometry();
     const qreal angle = it->m_angle * (1 - blendFactor);
 
-    const auto scale = effects->renderTargetScale();
+    const auto scale = viewport.scale();
 
     // Projection matrix + rotate transform.
     const QVector3D transformOrigin(screenRect.center());
-    QMatrix4x4 modelViewProjectionMatrix(data.projectionMatrix());
+    QMatrix4x4 modelViewProjectionMatrix(viewport.projectionMatrix());
     modelViewProjectionMatrix.translate(transformOrigin * scale);
     modelViewProjectionMatrix.rotate(angle, 0, 0, 1);
     modelViewProjectionMatrix.translate(-transformOrigin * scale);

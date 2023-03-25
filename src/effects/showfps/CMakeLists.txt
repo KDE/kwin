@@ -7,12 +7,12 @@ set(showfps_SOURCES
     showfpseffect.cpp
 )
 
-kwin4_add_effect_module(kwin4_effect_showfps ${showfps_SOURCES})
+kwin_add_builtin_effect(showfps ${showfps_SOURCES})
 
-target_link_libraries(kwin4_effect_showfps PRIVATE
+target_link_libraries(showfps PRIVATE
     kwineffects
 
-    KF5::I18n
+    KF6::I18n
 
     Qt::Quick
     )

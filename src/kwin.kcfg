@@ -268,7 +268,7 @@
                 <choice name="LatencyHigh" value="High"/>
                 <choice name="LatencyExtremelyHigh" value="ExtremelyHigh"/>
             </choices>
-            <default>LatencyMedium</default>
+            <default>LatencyExtremelyHigh</default>
         </entry>
         <entry name="RenderTimeEstimator" type="Enum">
             <choices name="KWin::RenderTimeEstimator">
@@ -283,9 +283,6 @@
         </entry>
     </group>
     <group name="TabBox">
-        <entry name="ShowDelay" type="Bool">
-            <default>true</default>
-        </entry>
         <entry name="DelayTime" type="Int">
             <default>90</default>
         </entry>
@@ -321,9 +318,6 @@
         </entry>
         <entry name="LayoutName" type="String">
             <default>thumbnails</default>
-        </entry>
-        <entry name="MoveMinimizedWindowsToEndOfTabBoxFocusChain" type="Bool">
-            <default>false</default>
         </entry>
     </group>
     <group name="KDE">

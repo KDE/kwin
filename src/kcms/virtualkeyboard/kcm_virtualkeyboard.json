@@ -9,6 +9,7 @@
         "Description[bg]": "Избиране на виртуална клавиатура, която да се използва",
         "Description[ca@valencia]": "Seleccioneu el teclat virtual que s'ha d'utilitzar",
         "Description[ca]": "Seleccioneu el teclat virtual a usar",
+        "Description[cs]": "Zvolte, kterou virtuální klávesnici použít",
         "Description[de]": "Wählen Sie die zu verwendende virtuelle Tastatur",
         "Description[en_GB]": "Select which virtual keyboard to use",
         "Description[es]": "Seleccionar el teclado virtual que se debe usar",
@@ -27,6 +28,7 @@
         "Description[pl]": "Wybierz której klawiatury ekranowej użyć",
         "Description[pt]": "Seleccione qual o teclado virtual a usar",
         "Description[pt_BR]": "Selecione qual teclado virtual a ser usado",
+        "Description[ro]": "Alegeți ce tastatură virtuală să fie folosită",
         "Description[ru]": "Выбор виртуальной клавиатуры",
         "Description[sk]": "Vyberte, ktorá virtuálna klávesnica sa má použiť",
         "Description[sl]": "Izberite, katere navidezne tipkovnice želite uporabljati",
@@ -65,6 +67,7 @@
         "Name[pl]": "Klawiatura ekranowa",
         "Name[pt]": "Teclado Virtual",
         "Name[pt_BR]": "Teclado virtual",
+        "Name[ro]": "Tastatură virtuală",
         "Name[ru]": "Виртуальная клавиатура",
         "Name[sk]": "Virtuálna klávesnica",
         "Name[sl]": "Navidezna tipkovnica",
@@ -110,6 +113,5 @@
     "X-KDE-OnlyShowOnQtPlatforms": [
         "wayland"
     ],
-    "X-KDE-ParentApp": "kcontrol",
     "X-KDE-System-Settings-Parent-Category": "input-devices"
 }

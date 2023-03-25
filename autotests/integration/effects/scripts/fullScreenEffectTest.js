@@ -1,4 +1,4 @@
-effects['desktopChanged(int,int)'].connect(function(old, current) {
+effects.desktopChanged.connect(function(old, current) {
     var stackingOrder = effects.stackingOrder;
     for (var i=0; i<stackingOrder.length; i++) {
         var w = stackingOrder[i];

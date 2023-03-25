@@ -41,7 +41,9 @@
 #include <KScreenLocker/KsldApp>
 #endif
 
+#include <QFutureWatcher>
 #include <QThread>
+#include <QtConcurrent>
 
 // system
 #include <sys/socket.h>
@@ -985,6 +987,24 @@ bool unlockScreen()
 }
 #endif // KWIN_BUILD_LOCKSCREEN
 
+void XcbConnectionDeleter::operator()(xcb_connection_t *pointer)
+{
+    xcb_disconnect(pointer);
+};
+
+Test::XcbConnectionPtr createX11Connection()
+{
+    QFutureWatcher<xcb_connection_t *> watcher;
+    QEventLoop e;
+    e.connect(&watcher, &QFutureWatcher<xcb_connection_t *>::finished, &e, &QEventLoop::quit);
+    QFuture<xcb_connection_t *> future = QtConcurrent::run([]() {
+        return xcb_connect(nullptr, nullptr);
+    });
+    watcher.setFuture(future);
+    e.exec();
+    return Test::XcbConnectionPtr(future.result());
+}
+
 WaylandOutputManagementV2::WaylandOutputManagementV2(struct ::wl_registry *registry, int id, int version)
     : QObject()
     , QtWayland::kde_output_management_v2()
@@ -1058,7 +1078,7 @@ bool WaylandOutputDeviceV2Mode::preferred() const
     return m_preferred;
 }
 
-bool WaylandOutputDeviceV2Mode::operator==(const WaylandOutputDeviceV2Mode &other)
+bool WaylandOutputDeviceV2Mode::operator==(const WaylandOutputDeviceV2Mode &other) const
 {
     return m_size == other.m_size && m_refreshRate == other.m_refreshRate && m_preferred == other.m_preferred;
 }
@@ -1421,6 +1441,12 @@ void pointerMotion(const QPointF &position, quint32 time)
 {
     auto virtualPointer = static_cast<WaylandTestApplication *>(kwinApp())->virtualPointer();
     Q_EMIT virtualPointer->pointerMotionAbsolute(position, std::chrono::milliseconds(time), virtualPointer);
+}
+
+void pointerMotionRelative(const QPointF &delta, quint32 time)
+{
+    auto virtualPointer = static_cast<WaylandTestApplication *>(kwinApp())->virtualPointer();
+    Q_EMIT virtualPointer->pointerMotion(delta, delta, std::chrono::milliseconds(time), virtualPointer);
 }
 
 void touchCancel()

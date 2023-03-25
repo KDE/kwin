@@ -11,10 +11,10 @@
 
 #include "dmabuftexture.h"
 #include "inputbackend.h"
-#include "openglbackend.h"
 #include "output.h"
 #include "outputconfiguration.h"
-#include "qpainterbackend.h"
+#include "platformsupport/scenes/opengl/openglbackend.h"
+#include "platformsupport/scenes/qpainter/qpainterbackend.h"
 
 namespace KWin
 {

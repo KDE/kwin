@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-26 00:47+0000\n"
+"POT-Creation-Date: 2023-03-05 03:09+0000\n"
 "PO-Revision-Date: 2015-11-18 16:23+0200\n"
 "Last-Translator: Dimitris Kardarakos <dimkard@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -26,18 +26,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Lokalize 2.0\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Στέργιος Δράμης,Σπύρος Γεωργαράς,Τούσης Μανώλης, Δημήτριος Γλενταδάκης"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr ""
-"sdramis@egnatia.ee.auth.gr,sngeorgaras@otenet.gr,manolis@koppermind."
-"homelinux.org, dglent@gmail.com"
 
 #: declarative-plugin/buttonsmodel.cpp:53
 #, kde-format
@@ -89,23 +77,7 @@ msgstr ""
 msgid "Keep above other windows"
 msgstr ""
 
-#: kcm.cpp:49
-#, fuzzy, kde-format
-#| msgid "Get New Decorations..."
-msgid "Window Decorations"
-msgstr "Λήψη νέων διακοσμήσεων παραθύρου..."
-
-#: kcm.cpp:53
-#, kde-format
-msgid "Valerio Pilo"
-msgstr ""
-
-#: kcm.cpp:54
-#, kde-format
-msgid "Author"
-msgstr ""
-
-#: kcm.cpp:183
+#: kcm.cpp:172
 #, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme's default (%1)"
@@ -193,58 +165,57 @@ msgstr "Απόθεση εδώ για αφαίρεση κουμπιού"
 msgid "Drag buttons between here and the titlebar"
 msgstr "Σύρσιμο κουμπιών μεταξύ της θέσης αυτής και της γραμμής τίτλου"
 
-#: package/contents/ui/main.qml:18
-#, kde-format
-msgid "This module lets you configure the window decorations."
-msgstr ""
-
-#: package/contents/ui/main.qml:52
-#, fuzzy, kde-format
-#| msgid "Theme"
-msgctxt "tab label"
-msgid "Theme"
-msgstr "Θέμα"
-
-#: package/contents/ui/main.qml:56
+#: package/contents/ui/ConfigureTitlebar.qml:16
 #, fuzzy, kde-format
 #| msgid "Titlebar"
-msgctxt "tab label"
 msgid "Titlebar Buttons"
 msgstr "Γραμμή τίτλου"
 
-#: package/contents/ui/main.qml:92
-#, fuzzy, kde-format
-#| msgid "Border size:"
-msgctxt "Selector label"
-msgid "Window border size:"
-msgstr "Μέγεθος περιγράμματος:"
-
-#: package/contents/ui/main.qml:110
-#, fuzzy, kde-format
-#| msgid "Get New Decorations..."
-msgctxt "button text"
-msgid "Get New Window Decorations..."
-msgstr "Λήψη νέων διακοσμήσεων παραθύρου..."
-
-#: package/contents/ui/main.qml:139
+#: package/contents/ui/ConfigureTitlebar.qml:35
 #, fuzzy, kde-format
 #| msgid "Close windows by double clicking the menu button"
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the menu button"
 msgstr "Κλείστε τα παράθυρα με διπλό κλικ στο κουμπί του μενού"
 
-#: package/contents/ui/main.qml:156
+#: package/contents/ui/ConfigureTitlebar.qml:52
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the menu button to show the menu."
 msgstr ""
 
-#: package/contents/ui/main.qml:163
+#: package/contents/ui/ConfigureTitlebar.qml:59
 #, fuzzy, kde-format
 #| msgid "&Show window button tooltips"
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "Εμ&φάνιση υποδείξεων κουμπιών παραθύρων"
+
+#: package/contents/ui/main.qml:19
+#, kde-format
+msgid "This module lets you configure the window decorations."
+msgstr ""
+
+#: package/contents/ui/main.qml:42
+#, fuzzy, kde-format
+#| msgid "Border size:"
+msgctxt "Selector label"
+msgid "Window border size:"
+msgstr "Μέγεθος περιγράμματος:"
+
+#: package/contents/ui/main.qml:60
+#, fuzzy, kde-format
+#| msgid "Titlebar"
+msgctxt "button text"
+msgid "Configure Titlebar Buttons…"
+msgstr "Γραμμή τίτλου"
+
+#: package/contents/ui/main.qml:65
+#, fuzzy, kde-format
+#| msgid "Get New Decorations..."
+msgctxt "button text"
+msgid "Get New Window Decorations…"
+msgstr "Λήψη νέων διακοσμήσεων παραθύρου..."
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -313,6 +284,28 @@ msgstr "Τερατώδες"
 #| msgid "Oversized"
 msgid "Oversized"
 msgstr "Υπερφυσικό"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr ""
+#~ "Στέργιος Δράμης,Σπύρος Γεωργαράς,Τούσης Μανώλης, Δημήτριος Γλενταδάκης"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr ""
+#~ "sdramis@egnatia.ee.auth.gr,sngeorgaras@otenet.gr,manolis@koppermind."
+#~ "homelinux.org, dglent@gmail.com"
+
+#, fuzzy
+#~| msgid "Get New Decorations..."
+#~ msgid "Window Decorations"
+#~ msgstr "Λήψη νέων διακοσμήσεων παραθύρου..."
+
+#, fuzzy
+#~| msgid "Theme"
+#~ msgctxt "tab label"
+#~ msgid "Theme"
+#~ msgstr "Θέμα"
 
 #, fuzzy
 #~| msgid ""

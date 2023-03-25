@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-06-15 00:48+0000\n"
+"POT-Creation-Date: 2023-02-08 01:01+0000\n"
 "PO-Revision-Date: 2022-06-15 23:05+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -18,38 +18,33 @@ msgstr ""
 "X-Generator: Lokalize 22.04.2\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: kwintabboxconfigform.cpp:77
-#, kde-format
-msgid "KWin"
-msgstr "KWin"
-
-#: layoutpreview.cpp:133
+#: layoutpreview.cpp:131
 #, kde-format
 msgid "Show Desktop"
 msgstr "Bureaublad tonen"
 
-#: layoutpreview.cpp:163
+#: layoutpreview.cpp:161
 #, kde-format
 msgctxt "An example Desktop Name"
 msgid "Desktop 1"
 msgstr "Bureaublad 1"
 
-#: main.cpp:58
+#: main.cpp:66
 #, kde-format
 msgid "Main"
 msgstr "Algemeen"
 
-#: main.cpp:59
+#: main.cpp:67
 #, kde-format
 msgid "Alternative"
 msgstr "Alternatief"
 
-#: main.cpp:61
+#: main.cpp:69
 #, kde-format
 msgid "Get New Task Switchers..."
 msgstr "Nieuwe taakwisselaars ophalen..."
 
-#: main.cpp:75
+#: main.cpp:83
 #, kde-format
 msgid ""
 "Focus policy settings limit the functionality of navigating through windows."
@@ -239,6 +234,49 @@ msgstr ""
 msgid "Show selected window"
 msgstr "Geselecteerd venster tonen"
 
+#: shortcutsettings.cpp:132
+#, kde-format
+msgid "Walk Through Windows"
+msgstr "Door vensters wandelen"
+
+#: shortcutsettings.cpp:133
+#, kde-format
+msgid "Walk Through Windows (Reverse)"
+msgstr "Door vensters wandelen (omgekeerd)"
+
+#: shortcutsettings.cpp:134
+#, kde-format
+msgid "Walk Through Windows of Current Application"
+msgstr "Door vensters van de huidige toepassing lopen"
+
+#: shortcutsettings.cpp:135
+#, kde-format
+msgid "Walk Through Windows of Current Application (Reverse)"
+msgstr "Door vensters van de huidige toepassing lopen (omgekeerd)"
+
+#: shortcutsettings.cpp:137
+#, kde-format
+msgid "Walk Through Windows Alternative"
+msgstr "Alternatief voor lopen door vensters "
+
+#: shortcutsettings.cpp:138
+#, kde-format
+msgid "Walk Through Windows Alternative (Reverse)"
+msgstr "Alternatief voor lopen door vensters (omgekeerd)"
+
+#: shortcutsettings.cpp:139
+#, kde-format
+msgid "Walk Through Windows of Current Application Alternative"
+msgstr "Alternatief door vensters van de huidige toepassing lopen"
+
+#: shortcutsettings.cpp:140
+#, kde-format
+msgid "Walk Through Windows of Current Application Alternative (Reverse)"
+msgstr "Alternatief door vensters van de huidige toepassing lopen (omgekeerd)"
+
+#~ msgid "KWin"
+#~ msgstr "KWin"
+
 #~ msgid "Tabbox layout preview"
 #~ msgstr "Indelingsvoorbeeld van tabbladvak"
 
@@ -251,31 +289,6 @@ msgstr "Geselecteerd venster tonen"
 #~ msgstr ""
 #~ "Deze instellingen worden gebruikt door de acties \"Door alternatieve "
 #~ "vensters lopen\"."
-
-#~ msgid "Walk Through Windows"
-#~ msgstr "Door vensters wandelen"
-
-#~ msgid "Walk Through Windows (Reverse)"
-#~ msgstr "Door vensters wandelen (omgekeerd)"
-
-#~ msgid "Walk Through Windows Alternative"
-#~ msgstr "Alternatief voor lopen door vensters "
-
-#~ msgid "Walk Through Windows Alternative (Reverse)"
-#~ msgstr "Alternatief voor lopen door vensters (omgekeerd)"
-
-#~ msgid "Walk Through Windows of Current Application"
-#~ msgstr "Door vensters van de huidige toepassing lopen"
-
-#~ msgid "Walk Through Windows of Current Application (Reverse)"
-#~ msgstr "Door vensters van de huidige toepassing lopen (omgekeerd)"
-
-#~ msgid "Walk Through Windows of Current Application Alternative"
-#~ msgstr "Alternatief door vensters van de huidige toepassing lopen"
-
-#~ msgid "Walk Through Windows of Current Application Alternative (Reverse)"
-#~ msgstr ""
-#~ "Alternatief door vensters van de huidige toepassing lopen (omgekeerd)"
 
 #~ msgctxt ""
 #~ "ComboBox item for window switcher based on layouts instead of a desktop "

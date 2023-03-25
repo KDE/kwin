@@ -7,11 +7,13 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "colorpicker.h"
+#include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/kwinglutils_funcs.h"
+#include "libkwineffects/rendertarget.h"
+#include "libkwineffects/renderviewport.h"
 #include <KLocalizedString>
 #include <QDBusConnection>
 #include <QDBusMetaType>
-#include <kwinglutils.h>
-#include <kwinglutils_funcs.h>
 
 Q_DECLARE_METATYPE(QColor)
 
@@ -50,18 +52,17 @@ ColorPickerEffect::ColorPickerEffect()
 
 ColorPickerEffect::~ColorPickerEffect() = default;
 
-void ColorPickerEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
+void ColorPickerEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
 {
-    effects->paintScreen(mask, region, data);
+    effects->paintScreen(renderTarget, viewport, mask, region, screen);
 
-    const QRect geo = effects->renderTargetRect();
-    if (m_scheduledPosition != QPoint(-1, -1) && geo.contains(m_scheduledPosition)) {
+    const QRectF geo = viewport.renderRect();
+    if (m_scheduledPosition != QPoint(-1, -1) && exclusiveContains(geo, m_scheduledPosition)) {
         uint8_t data[4];
         constexpr GLsizei PIXEL_SIZE = 1;
-        const QPoint screenPosition(m_scheduledPosition.x() - geo.x(), m_scheduledPosition.y() - geo.y());
-        const QPoint texturePosition(screenPosition.x() * effects->renderTargetScale(), (geo.height() - screenPosition.y() - PIXEL_SIZE) * effects->renderTargetScale());
+        const QPoint texturePosition = viewport.mapToRenderTarget(m_scheduledPosition).toPoint();
 
-        glReadnPixels(texturePosition.x(), texturePosition.y(), PIXEL_SIZE, PIXEL_SIZE, GL_RGBA, GL_UNSIGNED_BYTE, 4, data);
+        glReadnPixels(texturePosition.x(), renderTarget.size().height() - texturePosition.y() - PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE, GL_RGBA, GL_UNSIGNED_BYTE, 4, data);
         QDBusConnection::sessionBus().send(m_replyMessage.createReply(QColor(data[0], data[1], data[2])));
         m_picking = false;
         m_scheduledPosition = QPoint(-1, -1);
@@ -82,9 +83,9 @@ QColor ColorPickerEffect::pick()
     setDelayedReply(true);
     showInfoMessage();
     effects->startInteractivePositionSelection(
-        [this](const QPoint &p) {
+        [this](const QPointF &p) {
             hideInfoMessage();
-            if (p == QPoint(-1, -1)) {
+            if (p == QPointF(-1, -1)) {
                 // error condition
                 QDBusConnection::sessionBus().send(m_replyMessage.createErrorReply(QStringLiteral("org.kde.kwin.ColorPicker.Error.Cancelled"), "Color picking got cancelled"));
                 m_picking = false;

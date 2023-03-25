@@ -15,7 +15,7 @@
 #include "drm_layer.h"
 #include "drm_logging.h"
 #include "drm_render_backend.h"
-#include "softwarevsyncmonitor.h"
+#include "platformsupport/vsyncconvenience/softwarevsyncmonitor.h"
 
 namespace KWin
 {
@@ -72,6 +72,11 @@ void DrmVirtualOutput::setDpmsMode(DpmsMode mode)
 DrmOutputLayer *DrmVirtualOutput::primaryLayer() const
 {
     return m_layer.get();
+}
+
+DrmOutputLayer *DrmVirtualOutput::cursorLayer() const
+{
+    return nullptr;
 }
 
 void DrmVirtualOutput::recreateSurface()

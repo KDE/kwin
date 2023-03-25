@@ -128,10 +128,10 @@ void PointerInputRedirection::init()
     });
     // connect the move resize of all window
     auto setupMoveResizeConnection = [this](Window *window) {
-        connect(window, &Window::clientStartUserMovedResized, this, &PointerInputRedirection::updateOnStartMoveResize);
-        connect(window, &Window::clientFinishUserMovedResized, this, &PointerInputRedirection::update);
+        connect(window, &Window::interactiveMoveResizeStarted, this, &PointerInputRedirection::updateOnStartMoveResize);
+        connect(window, &Window::interactiveMoveResizeFinished, this, &PointerInputRedirection::update);
     };
-    const auto clients = workspace()->allClientList();
+    const auto clients = workspace()->windows();
     std::for_each(clients.begin(), clients.end(), setupMoveResizeConnection);
     connect(workspace(), &Workspace::windowAdded, this, setupMoveResizeConnection);
 
@@ -745,15 +745,8 @@ void PointerInputRedirection::updatePosition(const QPointF &pos)
         return;
     }
     // verify that at least one screen contains the pointer position
-    QPointF p = pos;
-    if (!screenContainsPos(p)) {
-        const QRectF unitedScreensGeometry = workspace()->geometry();
-        p = confineToBoundingBox(p, unitedScreensGeometry);
-        if (!screenContainsPos(p)) {
-            const Output *currentOutput = workspace()->outputAt(m_pos);
-            p = confineToBoundingBox(p, currentOutput->geometry());
-        }
-    }
+    const Output *currentOutput = workspace()->outputAt(pos);
+    QPointF p = confineToBoundingBox(pos, currentOutput->geometry());
     p = applyPointerConfinement(p);
     if (p == m_pos) {
         // didn't change due to confinement
@@ -766,6 +759,7 @@ void PointerInputRedirection::updatePosition(const QPointF &pos)
 
     m_pos = p;
 
+    workspace()->setActiveCursorOutput(m_pos);
     updateCursorOutputs();
 
     Q_EMIT input()->globalPointerChanged(m_pos);
@@ -890,8 +884,6 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
     m_decoration.cursor = std::make_unique<ShapeCursorSource>();
     m_serverCursor.cursor = std::make_unique<SurfaceCursorSource>();
 
-    connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::hasPointerChanged,
-            this, &CursorImage::handlePointerChanged);
 #if KWIN_BUILD_SCREENLOCKER
     if (waylandServer()->hasScreenLockerIntegration()) {
         connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &CursorImage::reevaluteSource);
@@ -903,7 +895,7 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
         connect(window, &Window::moveResizedChanged, this, &CursorImage::updateMoveResize);
         connect(window, &Window::moveResizeCursorChanged, this, &CursorImage::updateMoveResize);
     };
-    const auto clients = workspace()->allClientList();
+    const auto clients = workspace()->windows();
     std::for_each(clients.begin(), clients.end(), setupMoveResizeConnection);
     connect(workspace(), &Workspace::windowAdded, this, setupMoveResizeConnection);
 
@@ -923,7 +915,11 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
         m_decoration.cursor->setTheme(m_waylandImage.theme());
     });
 
-    handlePointerChanged();
+    KWaylandServer::PointerInterface *pointer = waylandServer()->seat()->pointer();
+
+    connect(pointer, &KWaylandServer::PointerInterface::focusedSurfaceChanged,
+            this, &CursorImage::handleFocusedSurfaceChanged);
+
     reevaluteSource();
 }
 
@@ -947,16 +943,6 @@ void CursorImage::markAsRendered(std::chrono::milliseconds timestamp)
         return;
     }
     cursorSurface->frameRendered(timestamp.count());
-}
-
-void CursorImage::handlePointerChanged()
-{
-    KWaylandServer::PointerInterface *pointer = waylandServer()->seat()->pointer();
-
-    if (pointer) {
-        connect(pointer, &KWaylandServer::PointerInterface::focusedSurfaceChanged,
-                this, &CursorImage::handleFocusedSurfaceChanged);
-    }
 }
 
 void CursorImage::handleFocusedSurfaceChanged()
@@ -1187,9 +1173,9 @@ void InputRedirectionCursor::doSetPos()
 
 void InputRedirectionCursor::slotPosChanged(const QPointF &pos)
 {
-    const QPoint oldPos = currentPos();
-    updatePos(pos.toPoint());
-    Q_EMIT mouseChanged(pos.toPoint(), oldPos, m_currentButtons, m_currentButtons,
+    const QPointF oldPos = currentPos();
+    updatePos(pos);
+    Q_EMIT mouseChanged(pos, oldPos, m_currentButtons, m_currentButtons,
                         input()->keyboardModifiers(), input()->keyboardModifiers());
 }
 
@@ -1202,7 +1188,7 @@ void InputRedirectionCursor::slotPointerButtonChanged()
 {
     const Qt::MouseButtons oldButtons = m_currentButtons;
     m_currentButtons = input()->qtButtonStates();
-    const QPoint pos = currentPos();
+    const QPointF pos = currentPos();
     Q_EMIT mouseChanged(pos, pos, m_currentButtons, oldButtons, input()->keyboardModifiers(), input()->keyboardModifiers());
 }
 

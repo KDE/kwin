@@ -62,43 +62,30 @@ bool DBusInterface::showingDesktop() const
     return workspace()->showingDesktop();
 }
 
-// wrap void methods with no arguments to Workspace
-#define WRAP(name)                 \
-    void DBusInterface::name()     \
-    {                              \
-        Workspace::self()->name(); \
-    }
-
-WRAP(reconfigure)
-
-#undef WRAP
+void DBusInterface::reconfigure()
+{
+    Workspace::self()->reconfigure();
+}
 
 void DBusInterface::killWindow()
 {
     Workspace::self()->slotKillWindow();
 }
 
-#define WRAP(name)                        \
-    void DBusInterface::name()            \
-    {                                     \
-        workspace()->placement()->name(); \
-    }
+void DBusInterface::cascadeDesktop()
+{
+    workspace()->placement()->cascadeDesktop();
+}
 
-WRAP(cascadeDesktop)
-WRAP(unclutterDesktop)
+void DBusInterface::unclutterDesktop()
+{
+    workspace()->placement()->unclutterDesktop();
+}
 
-#undef WRAP
-
-// wrap returning methods with no arguments to Workspace
-#define WRAP(rettype, name)               \
-    rettype DBusInterface::name()         \
-    {                                     \
-        return Workspace::self()->name(); \
-    }
-
-WRAP(QString, supportInformation)
-
-#undef WRAP
+QString DBusInterface::supportInformation()
+{
+    return Workspace::self()->supportInformation();
+}
 
 QString DBusInterface::activeOutputName()
 {
@@ -190,6 +177,7 @@ QVariantMap clientToVariantMap(const Window *c)
             {QStringLiteral("skipSwitcher"), c->skipSwitcher()},
             {QStringLiteral("maximizeHorizontal"), c->maximizeMode() & MaximizeHorizontal},
             {QStringLiteral("maximizeVertical"), c->maximizeMode() & MaximizeVertical},
+            {QStringLiteral("uuid"), c->internalId().toString()},
 #if KWIN_BUILD_ACTIVITIES
             {QStringLiteral("activities"), c->activities()},
 #endif
@@ -222,12 +210,9 @@ QVariantMap DBusInterface::queryWindowInfo()
 
 QVariantMap DBusInterface::getWindowInfo(const QString &uuid)
 {
-    const auto id = QUuid::fromString(uuid);
-    const auto client = workspace()->findAbstractClient([&id](const Window *c) {
-        return c->internalId() == id;
-    });
-    if (client) {
-        return clientToVariantMap(client);
+    const auto window = workspace()->findWindow(QUuid::fromString(uuid));
+    if (window) {
+        return clientToVariantMap(window);
     } else {
         return {};
     }
@@ -377,7 +362,7 @@ VirtualDesktopManagerDBusInterface::VirtualDesktopManagerDBusInterface(VirtualDe
                                                  QStringLiteral("org.kde.KWin.VirtualDesktopManager"),
                                                  this);
 
-    connect(m_manager, &VirtualDesktopManager::currentChanged, this, [this](uint previousDesktop, uint newDesktop) {
+    connect(m_manager, &VirtualDesktopManager::currentChanged, this, [this]() {
         Q_EMIT currentChanged(m_manager->currentDesktop()->id());
     });
 

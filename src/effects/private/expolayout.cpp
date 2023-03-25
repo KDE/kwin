@@ -314,20 +314,12 @@ void ExpoLayout::removeCell(ExpoCell *cell)
     polish();
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-void ExpoLayout::geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry)
-#else
 void ExpoLayout::geometryChange(const QRectF &newGeometry, const QRectF &oldGeometry)
-#endif
 {
     if (newGeometry.size() != oldGeometry.size()) {
         polish();
     }
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    QQuickItem::geometryChanged(newGeometry, oldGeometry);
-#else
     QQuickItem::geometryChange(newGeometry, oldGeometry);
-#endif
 }
 
 static int distance(const QPoint &a, const QPoint &b)

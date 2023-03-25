@@ -1,3 +1,4 @@
+[1]
 Description=Window settings for kpat
 clientmachine=localhost
 clientmachinematch=0
@@ -11,3 +12,6 @@ windowrolematch=1
 wmclass=kpat
 wmclasscomplete=false
 wmclassmatch=1
+
+[General]
+count=1

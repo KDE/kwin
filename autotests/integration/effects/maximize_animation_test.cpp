@@ -116,7 +116,7 @@ void MaximizeAnimationTest::testMaximizeRestore()
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Maximized));
 
     // Load effect that will be tested.
-    const QString effectName = QStringLiteral("kwin4_effect_maximize");
+    const QString effectName = QStringLiteral("maximize");
     auto effectsImpl = qobject_cast<EffectsHandlerImpl *>(effects);
     QVERIFY(effectsImpl);
     QVERIFY(effectsImpl->loadEffect(effectName));
@@ -128,7 +128,7 @@ void MaximizeAnimationTest::testMaximizeRestore()
 
     // Maximize the window.
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
-    QSignalSpy maximizeChangedSpy(window, qOverload<Window *, bool, bool>(&Window::clientMaximizedStateChanged));
+    QSignalSpy maximizeChangedSpy(window, &Window::maximizedChanged);
 
     workspace()->slotWindowMaximize();
     QVERIFY(surfaceConfigureRequestedSpy.wait());

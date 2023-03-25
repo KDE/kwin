@@ -96,7 +96,7 @@
 </para>
 
 <para
->Scegli uno stile di decorazione della finestre dall'elenco delle anteprime, usando il campo di ricerca in cima allo schermo, o scarica un nuovo stile con il pulsante <guibutton
+>Scegli uno stile di decorazione della finestre dall'elenco delle anteprime, o scarica un nuovo stile con il pulsante <guibutton
 >Scarica nuove decorazioni delle finestre</guibutton
 >.</para>
 
@@ -141,6 +141,13 @@
 >. Questi bordi ampi sono più semplici da vedere per gli utenti con problemi di vista e più semplici da afferrare per persone con problemi motori o con difficoltà nell'uso del mouse.</para>
 </tip>
 
+<tip>
+<para
+>Se ti interessa creare decorazione delle finestre personalizzate, puoi trovare delle informazioni <ulink url="https://develop.kde.org/docs/extend/plasma/aurorae/"
+>in questa guida</ulink
+>.</para>
+</tip>
+
 </sect2>
 
 <sect2>
@@ -171,7 +178,7 @@
 >Pulsanti della barra del titolo</title>
 
 <para
->Questa scheda permette di personalizzare la posizione dei pulsanti sulla barra del titolo. I pulsanti (come &eg; il <guilabel
+>Questa pagina permette di personalizzare la posizione dei pulsanti sulla barra del titolo. I pulsanti (come &eg; il <guilabel
 >menu dell'applicazione</guilabel
 >) possono essere trascinati nella barra, rimossi o spostati in giro fino a trovare la disposizione più congeniale. </para>
 

@@ -11,7 +11,6 @@ target_link_libraries(KWinEffectsInterface Qt::DBus)
 
 add_subdirectory(effects)
 add_subdirectory(scripts)
-add_subdirectory(tabbox)
 add_subdirectory(scripting)
 add_subdirectory(helpers)
 add_subdirectory(qml)
@@ -25,6 +24,10 @@ add_library(kwin SHARED)
 set_target_properties(kwin PROPERTIES
    VERSION ${PROJECT_VERSION}
    SOVERSION ${PROJECT_VERSION_MAJOR}
+)
+
+target_compile_definitions(kwin PRIVATE
+    -DTRANSLATION_DOMAIN=\"kwin\"
 )
 
 target_sources(kwin PRIVATE
@@ -51,7 +54,6 @@ target_sources(kwin PRIVATE
     core/renderlayer.cpp
     core/renderlayerdelegate.cpp
     core/renderloop.cpp
-    core/rendertarget.cpp
     core/session.cpp
     core/session_consolekit.cpp
     core/session_logind.cpp
@@ -93,6 +95,7 @@ target_sources(kwin PRIVATE
     keyboard_layout_switching.cpp
     keyboard_repeat.cpp
     killwindow.cpp
+    kscreenintegration.cpp
     layers.cpp
     layershellv1integration.cpp
     layershellv1window.cpp
@@ -117,8 +120,11 @@ target_sources(kwin PRIVATE
     rootinfo_filter.cpp
     rulebooksettings.cpp
     rules.cpp
+    scene/cursoritem.cpp
+    scene/cursorscene.cpp
     scene/decorationitem.cpp
     scene/dndiconitem.cpp
+    scene/imageitem.cpp
     scene/item.cpp
     scene/itemrenderer.cpp
     scene/itemrenderer_opengl.cpp
@@ -136,15 +142,15 @@ target_sources(kwin PRIVATE
     screenedge.cpp
     scripting/dbuscall.cpp
     scripting/desktopbackgrounditem.cpp
-    scripting/screenedgeitem.cpp
+    scripting/screenedgehandler.cpp
     scripting/scriptedeffect.cpp
     scripting/scripting.cpp
     scripting/scripting_logging.cpp
     scripting/scriptingutils.cpp
+    scripting/shortcuthandler.cpp
     scripting/tilemodel.cpp
-    scripting/v2/clientmodel.cpp
-    scripting/v3/clientmodel.cpp
-    scripting/v3/virtualdesktopmodel.cpp
+    scripting/virtualdesktopmodel.cpp
+    scripting/windowmodel.cpp
     scripting/windowthumbnailitem.cpp
     scripting/workspace_wrapper.cpp
     shadow.cpp
@@ -187,16 +193,16 @@ target_link_libraries(kwin
     Qt::DBus
     Qt::Quick
 
-    KF5::ConfigCore
-    KF5::ConfigWidgets
-    KF5::CoreAddons
-    KF5::Crash
-    KF5::GlobalAccel
-    KF5::GlobalAccelPrivate
-    KF5::I18n
-    KF5::Package
-    KF5::Service
-    KF5::WindowSystem
+    KF6::ConfigCore
+    KF6::ConfigWidgets
+    KF6::CoreAddons
+    KF6::Crash
+    KF6::GlobalAccel
+    KF6::GlobalAccelPrivate
+    KF6::I18n
+    KF6::Package
+    KF6::Service
+    KF6::WindowSystem
 
     KDecoration2::KDecoration
     KDecoration2::KDecoration2Private
@@ -225,12 +231,9 @@ target_link_libraries(kwin
     Wayland::Server
     lcms2::lcms2
 )
-if (QT_MAJOR_VERSION EQUAL "5")
-    target_link_libraries(kwin Qt5::X11Extras Qt5::XkbCommonSupportPrivate)
-endif()
 
 if (KWIN_BUILD_NOTIFICATIONS)
-    target_link_libraries(kwin KF5::Notifications)
+    target_link_libraries(kwin KF6::Notifications)
 endif()
 
 kconfig_add_kcfg_files(kwin
@@ -255,7 +258,7 @@ qt_add_dbus_adaptor(kwin_dbus_SRCS org.kde.KWin.Plugins.xml dbusinterface.h KWin
 qt_add_dbus_interface(kwin_dbus_SRCS org.freedesktop.DBus.Properties.xml dbusproperties_interface)
 
 if (KWIN_BUILD_SCREENLOCKER)
-    qt_add_dbus_interface(kwin_dbus_SRCS ${KSCREENLOCKER_DBUS_INTERFACES_DIR}/kf5_org.freedesktop.ScreenSaver.xml screenlocker_interface)
+    qt_add_dbus_interface(kwin_dbus_SRCS ${KSCREENLOCKER_DBUS_INTERFACES_DIR}/kf6_org.freedesktop.ScreenSaver.xml screenlocker_interface)
     qt_add_dbus_interface(kwin_dbus_SRCS ${KSCREENLOCKER_DBUS_INTERFACES_DIR}/org.kde.screensaver.xml kscreenlocker_interface)
 endif()
 
@@ -272,7 +275,7 @@ add_subdirectory(xwayland)
 
 if (KWIN_BUILD_ACTIVITIES)
     target_sources(kwin PRIVATE activities.cpp)
-    target_link_libraries(kwin KF5::Activities)
+    target_link_libraries(kwin KF6::Activities)
 endif()
 
 if (KWIN_BUILD_SCREENLOCKER)
@@ -283,8 +286,6 @@ endif()
 if (KWIN_BUILD_TABBOX)
     target_sources(kwin PRIVATE
         tabbox/clientmodel.cpp
-        tabbox/desktopchain.cpp
-        tabbox/desktopmodel.cpp
         tabbox/switcheritem.cpp
         tabbox/tabbox.cpp
         tabbox/tabbox_logging.cpp
@@ -305,6 +306,9 @@ target_link_libraries(kwin_x11
     KWinX11Platform
     kwin
 )
+target_compile_definitions(kwin_x11 PRIVATE
+    -DTRANSLATION_DOMAIN=\"kwin\"
+)
 kcoreaddons_target_static_plugins(kwin_x11 "kwin/effects/plugins")
 
 install(TARGETS kwin ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
@@ -315,6 +319,9 @@ add_executable(kwin_wayland main_wayland.cpp)
 target_link_libraries(kwin_wayland
     kwin
     KWinXwaylandServerModule
+)
+target_compile_definitions(kwin_wayland PRIVATE
+    -DTRANSLATION_DOMAIN=\"kwin\"
 )
 kcoreaddons_target_static_plugins(kwin_wayland "kwin/effects/plugins")
 
@@ -334,9 +341,9 @@ add_subdirectory(plugins)
 
 target_link_libraries(kwin_wayland
     KWinQpaPlugin
-    KF5GlobalAccelKWinPlugin
-    KF5WindowSystemKWinPlugin
-    KF5IdleTimeKWinPlugin
+    KF6GlobalAccelKWinPlugin
+    KF6WindowSystemKWinPlugin
+    KF6IdleTimeKWinPlugin
 )
 
 add_custom_target(
@@ -345,10 +352,6 @@ add_custom_target(
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/org.kde.kwin.VirtualKeyboard.xml
             ${CMAKE_CURRENT_BINARY_DIR}/org.kde.KWin.TabletModeManager.xml
 )
-
-if (PipeWire_FOUND)
-    target_link_libraries(kwin_wayland KWinScreencastPlugin)
-endif()
 
 install(FILES kwin.kcfg DESTINATION ${KDE_INSTALL_KCFGDIR})
 if (KWIN_BUILD_NOTIFICATIONS)
@@ -367,6 +370,3 @@ install(
         ${KDE_INSTALL_DBUSINTERFACEDIR}
 )
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/kwin_export.h DESTINATION ${KDE_INSTALL_INCLUDEDIR} COMPONENT Devel)
-
-# Install the KWin/Script service type
-install(FILES scripting/kwinscript.desktop DESTINATION ${KDE_INSTALL_KSERVICETYPESDIR})

@@ -14,6 +14,7 @@
 #include "wayland/output_interface.h"
 #include "wayland/seat_interface.h"
 #include "wayland/surface_interface.h"
+#include "wayland/textinput_v1_interface.h"
 #include "wayland/textinput_v2_interface.h"
 #include "wayland/textinput_v3_interface.h"
 #include "wayland_server.h"
@@ -38,14 +39,15 @@ InputPanelV1Window::InputPanelV1Window(InputPanelSurfaceV1Interface *panelSurfac
 
     connect(panelSurface, &InputPanelSurfaceV1Interface::topLevel, this, &InputPanelV1Window::showTopLevel);
     connect(panelSurface, &InputPanelSurfaceV1Interface::overlayPanel, this, &InputPanelV1Window::showOverlayPanel);
-    connect(panelSurface, &InputPanelSurfaceV1Interface::destroyed, this, &InputPanelV1Window::destroyWindow);
+    connect(panelSurface, &InputPanelSurfaceV1Interface::aboutToBeDestroyed, this, &InputPanelV1Window::destroyWindow);
+
+    connect(workspace(), &Workspace::outputsChanged, this, &InputPanelV1Window::reposition);
 
     kwinApp()->inputMethod()->setPanel(this);
 }
 
 void InputPanelV1Window::showOverlayPanel()
 {
-    setOutput(nullptr);
     m_mode = Mode::Overlay;
     maybeShow();
 }
@@ -53,7 +55,6 @@ void InputPanelV1Window::showOverlayPanel()
 void InputPanelV1Window::showTopLevel(OutputInterface *output, InputPanelSurfaceV1Interface::Position position)
 {
     m_mode = Mode::VirtualKeyboard;
-    setOutput(output);
     maybeShow();
 }
 
@@ -93,18 +94,13 @@ void KWin::InputPanelV1Window::reposition()
             return;
         }
 
+        const auto activeOutput = workspace()->activeOutput();
+        const QRectF outputArea = activeOutput->geometry();
         QRectF availableArea;
-        QRectF outputArea;
-        if (m_output) {
-            outputArea = m_output->geometry();
-            if (waylandServer()->isScreenLocked()) {
-                availableArea = outputArea;
-            } else {
-                availableArea = workspace()->clientArea(MaximizeArea, this, m_output);
-            }
+        if (waylandServer()->isScreenLocked()) {
+            availableArea = outputArea;
         } else {
-            availableArea = workspace()->clientArea(MaximizeArea, this);
-            outputArea = workspace()->clientArea(FullScreenArea, this);
+            availableArea = workspace()->clientArea(MaximizeArea, this, activeOutput);
         }
 
         panelSize = panelSize.boundedTo(availableArea.size());
@@ -116,6 +112,10 @@ void KWin::InputPanelV1Window::reposition()
         auto textInputSurface = waylandServer()->seat()->focusedTextInputSurface();
         auto textWindow = waylandServer()->findWindow(textInputSurface);
         QRect cursorRectangle;
+        auto textInputV1 = waylandServer()->seat()->textInputV1();
+        if (textInputV1 && textInputV1->isEnabled() && textInputV1->surface() == textInputSurface) {
+            cursorRectangle = textInputV1->cursorRectangle();
+        }
         auto textInputV2 = waylandServer()->seat()->textInputV2();
         if (textInputV2 && textInputV2->isEnabled() && textInputV2->surface() == textInputSurface) {
             cursorRectangle = textInputV2->cursorRectangle();
@@ -157,12 +157,12 @@ void InputPanelV1Window::destroyWindow()
     markAsZombie();
 
     Deleted *deleted = Deleted::create(this);
-    Q_EMIT windowClosed(this, deleted);
+    Q_EMIT closed(deleted);
     StackingUpdatesBlocker blocker(workspace());
     waylandServer()->removeWindow(this);
-    deleted->unrefWindow();
 
-    delete this;
+    unref();
+    deleted->unref();
 }
 
 NET::WindowType InputPanelV1Window::windowType(bool, int) const
@@ -175,19 +175,6 @@ QRectF InputPanelV1Window::inputGeometry() const
     return readyForPainting() ? QRectF(surface()->input().boundingRect()).translated(pos()) : QRectF();
 }
 
-void InputPanelV1Window::setOutput(OutputInterface *outputIface)
-{
-    if (m_output) {
-        disconnect(m_output, &Output::geometryChanged, this, &InputPanelV1Window::reposition);
-    }
-
-    m_output = outputIface ? outputIface->handle() : nullptr;
-
-    if (m_output) {
-        connect(m_output, &Output::geometryChanged, this, &InputPanelV1Window::reposition);
-    }
-}
-
 void InputPanelV1Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
 {
     updateGeometry(rect);
@@ -195,7 +182,6 @@ void InputPanelV1Window::moveResizeInternal(const QRectF &rect, MoveResizeMode m
 
 void InputPanelV1Window::handleMapped()
 {
-    updateDepth();
     maybeShow();
 }
 
@@ -203,7 +189,7 @@ void InputPanelV1Window::maybeShow()
 {
     const bool shouldShow = m_mode == Mode::Overlay || (m_mode == Mode::VirtualKeyboard && m_allowed && m_virtualKeyboardShouldBeShown);
     if (shouldShow && !isZombie() && surface()->isMapped()) {
-        setReadyForPainting();
+        markAsMapped();
         reposition();
         showClient();
     }

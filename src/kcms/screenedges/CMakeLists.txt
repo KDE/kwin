@@ -1,7 +1,6 @@
 # KI18N Translation Domain for this library
 add_definitions(-DTRANSLATION_DOMAIN=\"kcmkwinscreenedges\")
 
-include_directories(${KWin_SOURCE_DIR}/src/effects)
 set(kcm_screenedges_SRCS
     monitor.cpp
     screenpreviewwidget.cpp
@@ -28,13 +27,11 @@ kcoreaddons_add_plugin(kcm_kwinscreenedges SOURCES ${kcm_kwinscreenedges_PART_SR
 set(kcm_screenedges_LIBS
     Qt::DBus
 
-    KF5::ConfigCore
-    KF5::ConfigWidgets
-    KF5::KCMUtils
-    KF5::I18n
-    KF5::Package
-    KF5::Plasma
-    KF5::Service
+    KF6::ConfigCore
+    KF6::KCMUtils
+    KF6::I18n
+    KF6::Package
+    KF6::Plasma
 )
 target_link_libraries(kcm_kwinscreenedges ${X11_LIBRARIES} ${kcm_screenedges_LIBS})
 

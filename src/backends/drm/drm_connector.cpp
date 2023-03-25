@@ -8,6 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "drm_connector.h"
+#include "drm_atomic_commit.h"
 #include "drm_crtc.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
@@ -65,27 +66,17 @@ DrmConnectorMode::DrmConnectorMode(DrmConnector *connector, drmModeModeInfo nati
 {
 }
 
-DrmConnectorMode::~DrmConnectorMode()
+std::shared_ptr<DrmBlob> DrmConnectorMode::blob()
 {
-    if (m_blobId) {
-        drmModeDestroyPropertyBlob(m_connector->gpu()->fd(), m_blobId);
-        m_blobId = 0;
+    if (!m_blob) {
+        m_blob = DrmBlob::create(m_connector->gpu(), &m_nativeMode, sizeof(m_nativeMode));
     }
+    return m_blob;
 }
 
 drmModeModeInfo *DrmConnectorMode::nativeMode()
 {
     return &m_nativeMode;
-}
-
-uint32_t DrmConnectorMode::blobId()
-{
-    if (!m_blobId) {
-        if (drmModeCreatePropertyBlob(m_connector->gpu()->fd(), &m_nativeMode, sizeof(m_nativeMode), &m_blobId) != 0) {
-            qCWarning(KWIN_DRM) << "Failed to create connector mode blob:" << strerror(errno);
-        }
-    }
-    return m_blobId;
 }
 
 bool DrmConnectorMode::operator==(const DrmConnectorMode &otherMode)
@@ -212,10 +203,10 @@ bool DrmConnector::hasOverscan() const
 
 uint32_t DrmConnector::overscan() const
 {
-    if (const auto &prop = getProp(PropertyIndex::Overscan)) {
-        return prop->pending();
-    } else if (const auto &prop = getProp(PropertyIndex::Underscan_vborder)) {
-        return prop->pending();
+    if (const auto prop = getProp(PropertyIndex::Overscan)) {
+        return prop->current();
+    } else if (const auto prop = getProp(PropertyIndex::Underscan_vborder)) {
+        return prop->current();
     }
     return 0;
 }
@@ -235,7 +226,7 @@ bool DrmConnector::hasRgbRange() const
 Output::RgbRange DrmConnector::rgbRange() const
 {
     const auto &rgb = getProp(PropertyIndex::Broadcast_RGB);
-    return rgb->enumForValue<Output::RgbRange>(rgb->pending());
+    return rgb->enumForValue<Output::RgbRange>(rgb->current());
 }
 
 bool DrmConnector::updateProperties()
@@ -255,9 +246,7 @@ bool DrmConnector::updateProperties()
     auto &underscan = m_props[static_cast<uint32_t>(PropertyIndex::Underscan)];
     auto &vborder = m_props[static_cast<uint32_t>(PropertyIndex::Underscan_vborder)];
     auto &hborder = m_props[static_cast<uint32_t>(PropertyIndex::Underscan_hborder)];
-    if (underscan && vborder && hborder) {
-        underscan->setEnum(vborder->current() > 0 ? UnderscanOptions::On : UnderscanOptions::Off);
-    } else {
+    if (!underscan || !vborder || !hborder) {
         underscan.reset();
         vborder.reset();
         hborder.reset();
@@ -333,9 +322,9 @@ DrmPipeline *DrmConnector::pipeline() const
     return m_pipeline.get();
 }
 
-void DrmConnector::disable()
+void DrmConnector::disable(DrmAtomicCommit *commit)
 {
-    setPending(PropertyIndex::CrtcId, 0);
+    commit->addProperty(getProp(PropertyIndex::CrtcId), 0);
 }
 
 DrmConnector::LinkStatus DrmConnector::linkStatus() const
@@ -371,7 +360,7 @@ QList<std::shared_ptr<DrmConnectorMode>> DrmConnector::generateCommonModes()
 {
     QList<std::shared_ptr<DrmConnectorMode>> ret;
     QSize maxSize;
-    uint32_t maxSizeRefreshRate;
+    uint32_t maxSizeRefreshRate = 0;
     for (const auto &mode : std::as_const(m_driverModes)) {
         if (mode->size().width() >= maxSize.width() && mode->size().height() >= maxSize.height() && mode->refreshRate() >= maxSizeRefreshRate) {
             maxSize = mode->size();

@@ -16,6 +16,9 @@
 // KConfigSkeleton
 #include "glideconfig.h"
 
+#include "libkwineffects/rendertarget.h"
+#include "libkwineffects/renderviewport.h"
+
 // Qt
 #include <QMatrix4x4>
 #include <QSet>
@@ -32,9 +35,9 @@ static const QSet<QString> s_blacklist{
     QStringLiteral("ksplashqml ksplashqml"),
 };
 
-static QMatrix4x4 createPerspectiveMatrix(const QRectF &rect, const qreal scale)
+static QMatrix4x4 createPerspectiveMatrix(const QRectF &rect, const qreal scale, const QMatrix4x4 &renderTargetTransformation)
 {
-    QMatrix4x4 ret;
+    QMatrix4x4 ret = renderTargetTransformation;
 
     const float fovY = std::tan(qDegreesToRadians(60.0f) / 2);
     const float aspect = 1.0f;
@@ -67,7 +70,6 @@ GlideEffect::GlideEffect()
 
     connect(effects, &EffectsHandler::windowAdded, this, &GlideEffect::windowAdded);
     connect(effects, &EffectsHandler::windowClosed, this, &GlideEffect::windowClosed);
-    connect(effects, &EffectsHandler::windowDeleted, this, &GlideEffect::windowDeleted);
     connect(effects, &EffectsHandler::windowDataChanged, this, &GlideEffect::windowDataChanged);
 }
 
@@ -117,11 +119,11 @@ void GlideEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std:
     effects->prePaintWindow(w, data, presentTime);
 }
 
-void GlideEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+void GlideEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
     auto animationIt = m_animations.constFind(w);
     if (animationIt == m_animations.constEnd()) {
-        effects->paintWindow(w, mask, region, data);
+        effects->paintWindow(renderTarget, viewport, w, mask, region, data);
         return;
     }
 
@@ -135,10 +137,9 @@ void GlideEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowP
     //  [move to the origin] -> [rotate] -> [translate] ->
     //    -> [perspective projection] -> [reverse "move to the origin"]
 
-    const QMatrix4x4 oldProjMatrix = createPerspectiveMatrix(effects->renderTargetRect(), effects->renderTargetScale());
+    const QMatrix4x4 oldProjMatrix = createPerspectiveMatrix(viewport.renderRect(), viewport.scale(), renderTarget.transformation());
     const auto frame = w->frameGeometry();
-    const auto scale = effects->renderTargetScale();
-    const QRectF windowGeo = scaledRect(frame, scale);
+    const QRectF windowGeo = scaledRect(frame, viewport.scale());
     const QVector3D invOffset = oldProjMatrix.map(QVector3D(windowGeo.center()));
     QMatrix4x4 invOffsetMatrix;
     invOffsetMatrix.translate(invOffset.x(), invOffset.y());
@@ -146,8 +147,7 @@ void GlideEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowP
     data.setProjectionMatrix(invOffsetMatrix * oldProjMatrix);
 
     // Move the center of the window to the origin.
-    const QRectF screenGeo = scaledRect(effects->renderTargetRect(), scale);
-    const QPointF offset = screenGeo.center() - windowGeo.center();
+    const QPointF offset = viewport.renderRect().center() - w->frameGeometry().center();
     data.translate(offset.x(), offset.y());
 
     const GlideParams params = w->isDeleted() ? m_outParams : m_inParams;
@@ -189,7 +189,7 @@ void GlideEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowP
     data.setZTranslation(-interpolate(params.distance.from, params.distance.to, t));
     data.multiplyOpacity(interpolate(params.opacity.from, params.opacity.to, t));
 
-    effects->paintWindow(w, mask, region, data);
+    effects->paintWindow(renderTarget, viewport, w, mask, region, data);
 }
 
 void GlideEffect::postPaintScreen()
@@ -278,11 +278,6 @@ void GlideEffect::windowClosed(EffectWindow *w)
     animation.timeLine.setEasingCurve(QEasingCurve::OutCurve);
 
     effects->addRepaintFull();
-}
-
-void GlideEffect::windowDeleted(EffectWindow *w)
-{
-    m_animations.remove(w);
 }
 
 void GlideEffect::windowDataChanged(EffectWindow *w, int role)

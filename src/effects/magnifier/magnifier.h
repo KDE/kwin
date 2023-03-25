@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include <kwineffects.h>
+#include "libkwineffects/kwineffects.h"
 
 namespace KWin
 {
@@ -28,7 +28,7 @@ public:
     ~MagnifierEffect() override;
     void reconfigure(ReconfigureFlags) override;
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void paintScreen(int mask, const QRegion &region, ScreenPaintData &data) override;
+    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen) override;
     void postPaintScreen() override;
     bool isActive() const override;
     static bool supported();
@@ -40,13 +40,13 @@ private Q_SLOTS:
     void zoomIn();
     void zoomOut();
     void toggle();
-    void slotMouseChanged(const QPoint &pos, const QPoint &old,
+    void slotMouseChanged(const QPointF &pos, const QPointF &old,
                           Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
                           Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
     void slotWindowDamaged();
 
 private:
-    QRect magnifierArea(QPoint pos = cursorPos()) const;
+    QRect magnifierArea(QPointF pos = cursorPos()) const;
     double m_zoom;
     double m_targetZoom;
     bool m_polling; // Mouse polling

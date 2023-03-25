@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "kwineglimagetexture.h"
+#include "libkwineffects/kwineglimagetexture.h"
 
 #include <QDebug>
 #include <epoxy/egl.h>
@@ -24,6 +24,7 @@ EGLImageTexture::EGLImageTexture(EGLDisplay display, EGLImage image, int interna
         return;
     }
 
+    setContentTransform(TextureTransform::MirrorY);
     bind();
     glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, m_image);
 }

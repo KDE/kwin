@@ -20,12 +20,14 @@
 #include "cursordelegate_qpainter.h"
 #include "dbusinterface.h"
 #include "decorations/decoratedclient.h"
-#include "deleted.h"
 #include "effects.h"
 #include "ftrace.h"
 #include "internalwindow.h"
-#include "openglbackend.h"
-#include "qpainterbackend.h"
+#include "platformsupport/scenes/opengl/openglbackend.h"
+#include "platformsupport/scenes/qpainter/qpainterbackend.h"
+#include "scene/cursorscene.h"
+#include "scene/itemrenderer_opengl.h"
+#include "scene/itemrenderer_qpainter.h"
 #include "scene/surfaceitem_x11.h"
 #include "scene/workspacescene_opengl.h"
 #include "scene/workspacescene_qpainter.h"
@@ -40,8 +42,8 @@
 #include "x11syncmanager.h"
 #include "x11window.h"
 
-#include <kwinglplatform.h>
-#include <kwingltexture.h>
+#include "libkwineffects/kwinglplatform.h"
+#include "libkwineffects/kwingltexture.h"
 
 #include <KCrash>
 #include <KGlobalAccel>
@@ -206,6 +208,7 @@ bool Compositor::attemptOpenGLCompositing()
     }
 
     m_scene = std::make_unique<WorkspaceSceneOpenGL>(backend.get());
+    m_cursorScene = std::make_unique<CursorScene>(std::make_unique<ItemRendererOpenGL>());
     m_backend = std::move(backend);
 
     // set strict binding
@@ -225,6 +228,7 @@ bool Compositor::attemptQPainterCompositing()
     }
 
     m_scene = std::make_unique<WorkspaceSceneQPainter>(backend.get());
+    m_cursorScene = std::make_unique<CursorScene>(std::make_unique<ItemRendererQPainter>());
     m_backend = std::move(backend);
 
     qCDebug(KWIN_CORE) << "QPainter compositing has been successfully initialized";
@@ -246,14 +250,6 @@ bool Compositor::setupStart()
     options->reloadCompositingSettings(true);
 
     initializeX11();
-
-    // There might still be a deleted around, needs to be cleared before
-    // creating the scene (BUG 333275).
-    if (Workspace::self()) {
-        while (!Workspace::self()->deletedList().isEmpty()) {
-            Workspace::self()->deletedList().first()->discard();
-        }
-    }
 
     Q_EMIT aboutToToggleCompositing();
 
@@ -320,11 +316,7 @@ bool Compositor::setupStart()
 
     if (!Workspace::self() && m_backend && m_backend->compositingType() == QPainterCompositing) {
         // Force Software QtQuick on first startup with QPainter.
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        QQuickWindow::setSceneGraphBackend(QSGRendererInterface::Software);
-#else
         QQuickWindow::setGraphicsApi(QSGRendererInterface::Software);
-#endif
     }
 
     Q_EMIT sceneCreated();
@@ -362,11 +354,12 @@ void Compositor::startupWithWorkspace()
 {
     Q_ASSERT(m_scene);
     m_scene->initialize();
+    m_cursorScene->initialize();
 
     const QList<Output *> outputs = workspace()->outputs();
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
         auto workspaceLayer = new RenderLayer(outputs.constFirst()->renderLoop());
-        workspaceLayer->setDelegate(std::make_unique<SceneDelegate>(m_scene.get()));
+        workspaceLayer->setDelegate(std::make_unique<SceneDelegate>(m_scene.get(), nullptr));
         workspaceLayer->setGeometry(workspace()->geometry());
         connect(workspace(), &Workspace::geometryChanged, workspaceLayer, [workspaceLayer]() {
             workspaceLayer->setGeometry(workspace()->geometry());
@@ -382,21 +375,9 @@ void Compositor::startupWithWorkspace()
 
     m_state = State::On;
 
-    for (X11Window *window : Workspace::self()->clientList()) {
+    const auto windows = workspace()->windows();
+    for (Window *window : windows) {
         window->setupCompositing();
-    }
-    for (Unmanaged *window : Workspace::self()->unmanagedList()) {
-        window->setupCompositing();
-    }
-    for (InternalWindow *window : workspace()->internalWindows()) {
-        window->setupCompositing();
-    }
-
-    if (auto *server = waylandServer()) {
-        const auto windows = server->windows();
-        for (Window *window : windows) {
-            window->setupCompositing();
-        }
     }
 
     // Sets also the 'effects' pointer.
@@ -434,21 +415,21 @@ void Compositor::addOutput(Output *output)
     auto cursorLayer = new RenderLayer(output->renderLoop());
     cursorLayer->setVisible(false);
     if (m_backend->compositingType() == OpenGLCompositing) {
-        cursorLayer->setDelegate(std::make_unique<CursorDelegateOpenGL>());
+        cursorLayer->setDelegate(std::make_unique<CursorDelegateOpenGL>(output));
     } else {
-        cursorLayer->setDelegate(std::make_unique<CursorDelegateQPainter>());
+        cursorLayer->setDelegate(std::make_unique<CursorDelegateQPainter>(output));
     }
     cursorLayer->setParent(workspaceLayer);
     cursorLayer->setSuperlayer(workspaceLayer);
 
     auto updateCursorLayer = [output, cursorLayer]() {
         const Cursor *cursor = Cursors::self()->currentCursor();
-        const QRect layerRect = output->mapFromGlobal(cursor->geometry());
+        const QRectF layerRect = output->mapFromGlobal(cursor->geometry());
         bool usesHardwareCursor = false;
         if (!Cursors::self()->isCursorHidden()) {
-            usesHardwareCursor = output->setCursor(cursor->image(), cursor->hotspot()) && output->moveCursor(layerRect.topLeft());
+            usesHardwareCursor = output->setCursor(cursor->source()) && output->moveCursor(layerRect.topLeft());
         } else {
-            usesHardwareCursor = output->setCursor(QImage(), QPoint());
+            usesHardwareCursor = output->setCursor(nullptr);
         }
         cursorLayer->setVisible(cursor->isOnOutput(output) && !usesHardwareCursor);
         cursorLayer->setGeometry(layerRect);
@@ -456,7 +437,7 @@ void Compositor::addOutput(Output *output)
     };
     auto moveCursorLayer = [output, cursorLayer]() {
         const Cursor *cursor = Cursors::self()->currentCursor();
-        const QRect layerRect = output->mapFromGlobal(cursor->geometry());
+        const QRectF layerRect = output->mapFromGlobal(cursor->geometry());
         const bool usesHardwareCursor = output->moveCursor(layerRect.topLeft());
         cursorLayer->setVisible(cursor->isOnOutput(output) && !usesHardwareCursor);
         cursorLayer->setGeometry(layerRect);
@@ -513,32 +494,17 @@ void Compositor::stop()
     effects = nullptr;
 
     if (Workspace::self()) {
-        for (X11Window *window : Workspace::self()->clientList()) {
-            window->finishCompositing();
-        }
-        for (Unmanaged *window : Workspace::self()->unmanagedList()) {
-            window->finishCompositing();
-        }
-        for (InternalWindow *window : workspace()->internalWindows()) {
+        const auto windows = workspace()->windows();
+        for (Window *window : windows) {
             window->finishCompositing();
         }
         if (auto *con = kwinApp()->x11Connection()) {
             xcb_composite_unredirect_subwindows(con, kwinApp()->x11RootWindow(),
                                                 XCB_COMPOSITE_REDIRECT_MANUAL);
         }
-        while (!workspace()->deletedList().isEmpty()) {
-            workspace()->deletedList().first()->discard();
-        }
 
         disconnect(workspace(), &Workspace::outputAdded, this, &Compositor::addOutput);
         disconnect(workspace(), &Workspace::outputRemoved, this, &Compositor::removeOutput);
-    }
-
-    if (waylandServer()) {
-        const QList<Window *> toFinishCompositing = waylandServer()->windows();
-        for (Window *window : toFinishCompositing) {
-            window->finishCompositing();
-        }
     }
 
     const auto superlayers = m_superlayers;
@@ -547,6 +513,7 @@ void Compositor::stop()
     }
 
     m_scene.reset();
+    m_cursorScene.reset();
     m_backend.reset();
 
     m_state = State::Off;
@@ -631,6 +598,12 @@ void Compositor::handleFrameRequested(RenderLoop *renderLoop)
     composite(renderLoop);
 }
 
+uint Compositor::outputFormat(Output *output)
+{
+    OutputLayer *primaryLayer = m_backend->primaryLayer(output);
+    return primaryLayer->format();
+}
+
 void Compositor::composite(RenderLoop *renderLoop)
 {
     if (m_backend->checkGraphicsReset()) {
@@ -673,18 +646,16 @@ void Compositor::composite(RenderLoop *renderLoop)
 
         if (auto beginInfo = primaryLayer->beginFrame()) {
             auto &[renderTarget, repaint] = beginInfo.value();
-            renderTarget.setDevicePixelRatio(output->scale());
 
-            const QRegion bufferDamage = surfaceDamage.united(repaint).intersected(superLayer->rect());
-            primaryLayer->aboutToStartPainting(bufferDamage);
+            const QRegion bufferDamage = surfaceDamage.united(repaint).intersected(superLayer->rect().toAlignedRect());
 
-            paintPass(superLayer, &renderTarget, bufferDamage);
+            paintPass(superLayer, renderTarget, bufferDamage);
             primaryLayer->endFrame(bufferDamage, surfaceDamage);
         }
     }
-    renderLoop->endFrame();
 
     postPaintPass(superLayer);
+    renderLoop->endFrame();
 
     m_backend->present(output);
 
@@ -733,14 +704,14 @@ void Compositor::preparePaintPass(RenderLayer *layer, QRegion *repaint)
     }
 }
 
-void Compositor::paintPass(RenderLayer *layer, RenderTarget *target, const QRegion &region)
+void Compositor::paintPass(RenderLayer *layer, const RenderTarget &renderTarget, const QRegion &region)
 {
-    layer->delegate()->paint(target, region);
+    layer->delegate()->paint(renderTarget, region);
 
     const auto sublayers = layer->sublayers();
     for (RenderLayer *sublayer : sublayers) {
         if (sublayer->isVisible()) {
-            paintPass(sublayer, target, region);
+            paintPass(sublayer, renderTarget, region);
         }
     }
 }
@@ -1014,9 +985,10 @@ void X11Compositor::updateClientCompositeBlocking(X11Window *c)
         // If !c we just check if we can resume in case a blocking client was lost.
         bool shouldResume = true;
 
-        for (auto it = Workspace::self()->clientList().constBegin();
-             it != Workspace::self()->clientList().constEnd(); ++it) {
-            if ((*it)->isBlockingCompositing()) {
+        const auto windows = workspace()->windows();
+        for (Window *window : windows) {
+            X11Window *x11Window = qobject_cast<X11Window *>(window);
+            if (x11Window && x11Window->isBlockingCompositing()) {
                 shouldResume = false;
                 break;
             }

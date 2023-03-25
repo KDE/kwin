@@ -118,7 +118,7 @@
       <label>Active opacity</label>
       <min>0</min>
       <max>100</max>
-      <default>0</default>
+      <default>100</default>
     </entry>
     <entry name="opacityactiverule" type="Int">
       <label>Active opacity rule type</label>
@@ -129,7 +129,7 @@
       <label>Inactive opacity</label>
       <min>0</min>
       <max>100</max>
-      <default>0</default>
+      <default>100</default>
     </entry>
     <entry name="opacityinactiverule" type="Int">
       <label>Inactive opacity rule type</label>

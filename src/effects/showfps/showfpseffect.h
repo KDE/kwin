@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <kwineffects.h>
-#include <kwinoffscreenquickview.h>
+#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/kwinoffscreenquickview.h"
 
 #include <QElapsedTimer>
 
@@ -36,8 +36,8 @@ public:
     QColor paintColor() const;
 
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void paintScreen(int mask, const QRegion &region, ScreenPaintData &data) override;
-    void paintWindow(KWin::EffectWindow *w, int mask, QRegion region, KWin::WindowPaintData &data) override;
+    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen) override;
+    void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, KWin::WindowPaintData &data) override;
     void postPaintScreen() override;
 
     static bool supported();
@@ -48,7 +48,6 @@ Q_SIGNALS:
     void paintChanged();
 
 private:
-    std::unique_ptr<QWindow> m_window;
     std::unique_ptr<OffscreenQuickScene> m_scene;
 
     int m_maximumFps = 0;

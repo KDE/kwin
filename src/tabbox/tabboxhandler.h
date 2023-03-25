@@ -30,26 +30,24 @@ class QKeyEvent;
 namespace KWin
 {
 /**
- * The TabBox is a model based view for displaying a list while switching windows or desktops.
+ * The TabBox is a model based view for displaying a list while switching windows.
  * This functionality is mostly referred to as Alt+Tab. TabBox itself does not provide support for
- * switching windows or desktops. This has to be done outside of TabBox inside an independent controller.
+ * switching windows. This has to be done outside of TabBox inside an independent controller.
  *
  * The main entrance point to TabBox is the class TabBoxHandler, which has to be subclassed and implemented.
  * The class TabBoxClient, which represents a window client inside TabBox, has to be implemented as well.
  *
  * The behavior of the TabBox is defined by the TabBoxConfig and has to be set in the TabBoxHandler.
- * If the TabBox should be used to switch desktops as well as clients it is sufficient to just provide
- * different TabBoxConfig objects instead of creating an own handler for each mode.
  *
- * In order to use the TabBox the TabBoxConfig has to be set. This defines if the model for desktops or for
- * clients will be used. The model has to be initialized by calling TabBoxHandler::createModel(), as the
+ * In order to use the TabBox the TabBoxConfig has to be set. The model has to be initialized by calling
+ * TabBoxHandler::createModel(), as the
  * model is undefined when the TabBox is not active. The TabBox is activated by TabBoxHandler::show().
  * Depending on the current set TabBoxConfig it is possible that the
  * highlight windows effect activated and that the view is not displayed at all. As already mentioned
  * the TabBox does not handle any updating of the selected item. This has to be done by invoking
  * TabBoxHandler::setCurrentIndex(). Nevertheless the TabBoxHandler provides methods to query for the
- * model index or the next or previous item, for a cursor position or for a given item (that is
- * TabBoxClient or desktop). By invoking TabBoxHandler::hide() the view, the
+ * model index or the next or previous item, for a cursor position or for a given item. By invoking
+ * TabBoxHandler::hide() the view, the
  * optional highlight windows effect are removed. The model is invalidated immediately. So if it is
  * necessary to retrieve the last selected item this has to be done before calling the hide method.
  *
@@ -62,12 +60,11 @@ namespace KWin
  */
 namespace TabBox
 {
-class DesktopModel;
 class ClientModel;
 class TabBoxConfig;
 class TabBoxClient;
 class TabBoxHandlerPrivate;
-typedef QList<QWeakPointer<TabBoxClient>> TabBoxClientList;
+typedef QList<std::weak_ptr<TabBoxClient>> TabBoxClientList;
 
 /**
  * This class is a wrapper around KWin Workspace. It is used for accessing the
@@ -91,12 +88,12 @@ public:
      * @return The current active TabBoxClient or NULL
      * if there is no active client.
      */
-    virtual QWeakPointer<TabBoxClient> activeClient() const = 0;
+    virtual std::weak_ptr<TabBoxClient> activeClient() const = 0;
     /**
      * @param client The client which is starting point to find the next client
      * @return The next TabBoxClient in focus chain
      */
-    virtual QWeakPointer<TabBoxClient> nextClientFocusChain(TabBoxClient *client) const = 0;
+    virtual std::weak_ptr<TabBoxClient> nextClientFocusChain(TabBoxClient *client) const = 0;
     /**
      * This method is used by the ClientModel to find an entrance into the focus chain in case
      * there is no active Client.
@@ -104,7 +101,7 @@ public:
      * @return The first Client of the focus chain
      * @since 4.9.1
      */
-    virtual QWeakPointer<TabBoxClient> firstClientFocusChain() const = 0;
+    virtual std::weak_ptr<TabBoxClient> firstClientFocusChain() const = 0;
     /**
      * Checks whether the given @p client is part of the focus chain at all.
      * This is useful to figure out whether the currently active Client can be used
@@ -126,23 +123,9 @@ public:
      */
     virtual QString desktopName(TabBoxClient *client) const = 0;
     /**
-     * @param desktop The desktop whose name should be retrieved
-     * @return The desktop name of given desktop
-     */
-    virtual QString desktopName(int desktop) const = 0;
-    /**
      * @return The number of current desktop
      */
     virtual int currentDesktop() const = 0;
-    /**
-     * @return The number of virtual desktops
-     */
-    virtual int numberOfDesktops() const = 0;
-    /**
-     * @param desktop The desktop which is the starting point to find the next desktop
-     * @return The next desktop in the current focus chain.
-     */
-    virtual int nextDesktopFocusChain(int desktop) const = 0;
 
     /**
      * whether KWin is currently compositing and it's related features (elevating) can be used
@@ -194,11 +177,11 @@ public:
      * @param allDesktops Add clients from all desktops or only from current
      * @return The client to be included in the list or NULL if it isn't to be included
      */
-    virtual QWeakPointer<TabBoxClient> clientToAddToList(TabBoxClient *client, int desktop) const = 0;
+    virtual std::weak_ptr<TabBoxClient> clientToAddToList(TabBoxClient *client, int desktop) const = 0;
     /**
      * @return The first desktop window in the stacking order.
      */
-    virtual QWeakPointer<TabBoxClient> desktopClient() const = 0;
+    virtual std::weak_ptr<TabBoxClient> desktopClient() const = 0;
     /**
      * Activates the currently selected client and closes the TabBox.
      */
@@ -219,8 +202,6 @@ public:
      * Call this method to show the TabBoxView. Depending on current
      * configuration this method might not do anything.
      * If highlight windows effect is to be used it will be activated.
-     * Highlight windows and outline are not shown if
-     * TabBoxConfig::TabBoxMode is TabBoxConfig::DesktopTabBox.
      * @see TabBoxConfig::isShowTabBox
      * @see TabBoxConfig::isHighlightWindows
      */
@@ -262,26 +243,6 @@ public:
     void createModel(bool partialReset = false);
 
     /**
-     * @param desktop The desktop whose index should be retrieved
-     * @return The model index of given desktop. If TabBoxMode is not
-     * TabBoxConfig::DesktopTabBox an invalid model index will be returned.
-     */
-    QModelIndex desktopIndex(int desktop) const;
-    /**
-     * @return The current list of desktops.
-     * If TabBoxMode is not TabBoxConfig::DesktopTabBox an empty list will
-     * be returned.
-     * @see DesktopModel::desktopList
-     */
-    QList<int> desktopList() const;
-    /**
-     * @return The desktop for given model index. If the index is not valid
-     * or TabBoxMode is not TabBoxConfig::DesktopTabBox -1 will be returned.
-     * @see DesktopModel::desktopIndex
-     */
-    int desktop(const QModelIndex &index) const;
-
-    /**
      * Handles additional grabbed key events by the TabBox controller.
      * @param event The key event which has been grabbed
      */
@@ -297,11 +258,9 @@ public:
      * if the model does not contain the given TabBoxClient.
      * @see ClientModel::index
      */
-    QModelIndex index(QWeakPointer<TabBoxClient> client) const;
+    QModelIndex index(std::weak_ptr<TabBoxClient> client) const;
     /**
      * @return Returns the current list of TabBoxClients.
-     * If TabBoxMode is not TabBoxConfig::ClientTabBox an empty list will
-     * be returned.
      * @see ClientModel::clientList
      */
     TabBoxClientList clientList() const;

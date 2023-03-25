@@ -59,7 +59,7 @@ void WindowSelector::start(std::function<void(KWin::Window *)> callback, const Q
     m_callback = callback;
 }
 
-void WindowSelector::start(std::function<void(const QPoint &)> callback)
+void WindowSelector::start(std::function<void(const QPointF &)> callback)
 {
     if (m_active) {
         callback(QPoint(-1, -1));
@@ -216,7 +216,7 @@ void WindowSelector::release()
     ungrabXServer();
     m_active = false;
     m_callback = std::function<void(KWin::Window *)>();
-    m_pointSelectionFallback = std::function<void(const QPoint &)>();
+    m_pointSelectionFallback = std::function<void(const QPointF &)>();
 }
 
 void WindowSelector::selectWindowId(xcb_window_t window_to_select)

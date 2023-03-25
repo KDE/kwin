@@ -9,7 +9,7 @@
 #pragma once
 
 #include "core/outputlayer.h"
-#include "qpainterbackend.h"
+#include "platformsupport/scenes/qpainter/qpainterbackend.h"
 
 #include <QMap>
 #include <QObject>
@@ -29,6 +29,7 @@ public:
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     QImage *image();
+    quint32 format() const override;
 
 private:
     Output *const m_output;
@@ -50,8 +51,6 @@ private:
     void removeOutput(Output *output);
 
     std::map<Output *, std::unique_ptr<VirtualQPainterLayer>> m_outputs;
-    VirtualBackend *m_backend;
-    int m_frameCounter = 0;
 };
 
 } // namespace KWin

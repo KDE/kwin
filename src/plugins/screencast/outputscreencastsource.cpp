@@ -10,8 +10,8 @@
 #include "composite.h"
 #include "core/output.h"
 #include "core/renderloop.h"
-#include "kwingltexture.h"
-#include "kwinglutils.h"
+#include "libkwineffects/kwingltexture.h"
+#include "libkwineffects/kwinglutils.h"
 #include "scene/workspacescene.h"
 
 namespace KWin
@@ -22,6 +22,11 @@ OutputScreenCastSource::OutputScreenCastSource(Output *output, QObject *parent)
     , m_output(output)
 {
     connect(m_output, &QObject::destroyed, this, &ScreenCastSource::closed);
+    connect(m_output, &Output::enabledChanged, this, [this] {
+        if (!m_output->isEnabled()) {
+            Q_EMIT closed();
+        }
+    });
 }
 
 bool OutputScreenCastSource::hasAlphaChannel() const
@@ -29,16 +34,21 @@ bool OutputScreenCastSource::hasAlphaChannel() const
     return true;
 }
 
+quint32 OutputScreenCastSource::drmFormat() const
+{
+    return Compositor::self()->outputFormat(m_output);
+}
+
 QSize OutputScreenCastSource::textureSize() const
 {
     return m_output->pixelSize();
 }
 
-void OutputScreenCastSource::render(QImage *image)
+void OutputScreenCastSource::render(spa_data *spa, spa_video_format format)
 {
-    const std::shared_ptr<GLTexture> outputTexture = Compositor::self()->scene()->textureForOutput(m_output);
+    const auto outputTexture = Compositor::self()->scene()->textureForOutput(m_output);
     if (outputTexture) {
-        grabTexture(outputTexture.get(), image);
+        grabTexture(outputTexture.get(), spa, format);
     }
 }
 
@@ -49,16 +59,15 @@ void OutputScreenCastSource::render(GLFramebuffer *target)
         return;
     }
 
-    const QRect geometry(QPoint(), textureSize());
-
     ShaderBinder shaderBinder(ShaderTrait::MapTexture);
     QMatrix4x4 projectionMatrix;
-    projectionMatrix.ortho(scaledRect(geometry, m_output->scale()));
+    projectionMatrix.scale(1, -1);
+    projectionMatrix.ortho(QRect(QPoint(), textureSize() * m_output->scale()));
     shaderBinder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix);
 
     GLFramebuffer::pushFramebuffer(target);
     outputTexture->bind();
-    outputTexture->render(geometry, m_output->scale());
+    outputTexture->render(textureSize(), m_output->scale());
     outputTexture->unbind();
     GLFramebuffer::popFramebuffer();
 }

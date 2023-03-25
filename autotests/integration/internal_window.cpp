@@ -10,10 +10,9 @@
 
 #include "core/output.h"
 #include "core/outputbackend.h"
-#include "cursor.h"
-#include "deleted.h"
 #include "effects.h"
 #include "internalwindow.h"
+#include "pointer_input.h"
 #include "wayland/surface_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -171,7 +170,6 @@ void HelperWindow::keyReleaseEvent(QKeyEvent *event)
 void InternalWindowTest::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
-    qRegisterMetaType<KWin::Deleted *>();
     qRegisterMetaType<KWin::InternalWindow *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(waylandServer()->init(s_socketName));
@@ -188,7 +186,7 @@ void InternalWindowTest::initTestCase()
 
 void InternalWindowTest::init()
 {
-    Cursors::self()->mouse()->setPos(QPoint(512, 512));
+    input()->pointer()->warp(QPoint(512, 512));
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat));
     QVERIFY(Test::waitForWaylandKeyboard());
 }
@@ -200,7 +198,7 @@ void InternalWindowTest::cleanup()
 
 void InternalWindowTest::testEnterLeave()
 {
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::internalWindowAdded);
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     HelperWindow win;
     QVERIFY(!workspace()->findInternal(nullptr));
     QVERIFY(!workspace()->findInternal(&win));
@@ -246,7 +244,7 @@ void InternalWindowTest::testEnterLeave()
 
 void InternalWindowTest::testPointerPressRelease()
 {
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::internalWindowAdded);
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     HelperWindow win;
     win.setGeometry(0, 0, 100, 100);
     win.show();
@@ -266,7 +264,7 @@ void InternalWindowTest::testPointerPressRelease()
 
 void InternalWindowTest::testPointerAxis()
 {
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::internalWindowAdded);
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     HelperWindow win;
     win.setGeometry(0, 0, 100, 100);
     win.show();
@@ -292,7 +290,7 @@ void InternalWindowTest::testKeyboard_data()
 
 void InternalWindowTest::testKeyboard()
 {
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::internalWindowAdded);
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     HelperWindow win;
     win.setGeometry(0, 0, 100, 100);
     win.show();
@@ -318,7 +316,7 @@ void InternalWindowTest::testKeyboard()
 
 void InternalWindowTest::testKeyboardShowWithoutActivating()
 {
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::internalWindowAdded);
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     HelperWindow win;
     win.setProperty("_q_showWithoutActivating", true);
     win.setGeometry(0, 0, 100, 100);
@@ -369,7 +367,7 @@ void InternalWindowTest::testKeyboardTriggersLeave()
     QCOMPARE(enteredSpy.count(), 1);
 
     // create internal window
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::internalWindowAdded);
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     HelperWindow win;
     win.setGeometry(0, 0, 100, 100);
     win.show();
@@ -407,7 +405,7 @@ void InternalWindowTest::testKeyboardTriggersLeave()
 void InternalWindowTest::testTouch()
 {
     // touch events for internal windows are emulated through mouse events
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::internalWindowAdded);
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     HelperWindow win;
     win.setGeometry(0, 0, 100, 100);
     win.show();
@@ -468,7 +466,7 @@ void InternalWindowTest::testTouch()
 void InternalWindowTest::testOpacity()
 {
     // this test verifies that opacity is properly synced from QWindow to InternalClient
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::internalWindowAdded);
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     HelperWindow win;
     win.setOpacity(0.5);
     win.setGeometry(0, 0, 100, 100);
@@ -487,7 +485,7 @@ void InternalWindowTest::testOpacity()
 
 void InternalWindowTest::testMove()
 {
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::internalWindowAdded);
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     HelperWindow win;
     win.setOpacity(0.5);
     win.setGeometry(0, 0, 100, 100);
@@ -527,7 +525,7 @@ void InternalWindowTest::testSkipCloseAnimation_data()
 
 void InternalWindowTest::testSkipCloseAnimation()
 {
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::internalWindowAdded);
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     HelperWindow win;
     win.setOpacity(0.5);
     win.setGeometry(0, 0, 100, 100);
@@ -549,7 +547,7 @@ void InternalWindowTest::testSkipCloseAnimation()
 
 void InternalWindowTest::testModifierClickUnrestrictedMove()
 {
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::internalWindowAdded);
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     HelperWindow win;
     win.setGeometry(0, 0, 100, 100);
     win.setFlags(win.flags() & ~Qt::FramelessWindowHint);
@@ -572,7 +570,7 @@ void InternalWindowTest::testModifierClickUnrestrictedMove()
     QCOMPARE(options->commandAll3(), Options::MouseUnrestrictedMove);
 
     // move cursor on window
-    Cursors::self()->mouse()->setPos(internalWindow->frameGeometry().center());
+    input()->pointer()->warp(internalWindow->frameGeometry().center());
 
     // simulate modifier+click
     quint32 timestamp = 1;
@@ -590,7 +588,7 @@ void InternalWindowTest::testModifierClickUnrestrictedMove()
 
 void InternalWindowTest::testModifierScroll()
 {
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::internalWindowAdded);
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     HelperWindow win;
     win.setGeometry(0, 0, 100, 100);
     win.setFlags(win.flags() & ~Qt::FramelessWindowHint);
@@ -607,7 +605,7 @@ void InternalWindowTest::testModifierScroll()
     workspace()->slotReconfigure();
 
     // move cursor on window
-    Cursors::self()->mouse()->setPos(internalWindow->frameGeometry().center());
+    input()->pointer()->warp(internalWindow->frameGeometry().center());
 
     // set the opacity to 0.5
     internalWindow->setOpacity(0.5);
@@ -623,7 +621,7 @@ void InternalWindowTest::testModifierScroll()
 
 void InternalWindowTest::testPopup()
 {
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::internalWindowAdded);
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     HelperWindow win;
     win.setGeometry(0, 0, 100, 100);
     win.setFlags(win.flags() | Qt::Popup);
@@ -640,7 +638,7 @@ void InternalWindowTest::testScale()
                               Q_ARG(QVector<QRect>, QVector<QRect>({QRect(0, 0, 1280, 1024), QRect(1280 / 2, 0, 1280, 1024)})),
                               Q_ARG(QVector<qreal>, QVector<qreal>({2, 2})));
 
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::internalWindowAdded);
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     HelperWindow win;
     win.setGeometry(0, 0, 100, 100);
     win.setFlags(win.flags() | Qt::Popup);
@@ -675,7 +673,7 @@ void InternalWindowTest::testWindowType_data()
 
 void InternalWindowTest::testWindowType()
 {
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::internalWindowAdded);
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     HelperWindow win;
     win.setGeometry(0, 0, 100, 100);
     QFETCH(NET::WindowType, windowType);
@@ -710,7 +708,7 @@ void InternalWindowTest::testChangeWindowType_data()
 
 void InternalWindowTest::testChangeWindowType()
 {
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::internalWindowAdded);
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     HelperWindow win;
     win.setGeometry(0, 0, 100, 100);
     win.show();
@@ -729,7 +727,7 @@ void InternalWindowTest::testChangeWindowType()
 
 void InternalWindowTest::testEffectWindow()
 {
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::internalWindowAdded);
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     HelperWindow win;
     win.setGeometry(0, 0, 100, 100);
     win.show();
@@ -749,7 +747,7 @@ void InternalWindowTest::testReentrantMoveResize()
     // to the frameGeometryChanged() signal won't cause an infinite recursion.
 
     // Create an internal window.
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::internalWindowAdded);
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     HelperWindow win;
     win.setGeometry(0, 0, 100, 100);
     win.show();
@@ -776,7 +774,7 @@ void InternalWindowTest::testDismissPopup()
     // when user clicks another window.
 
     // Create a toplevel window.
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::internalWindowAdded);
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     HelperWindow clientToplevel;
     clientToplevel.setGeometry(0, 0, 100, 100);
     clientToplevel.show();
@@ -803,7 +801,7 @@ void InternalWindowTest::testDismissPopup()
     QVERIFY(serverOtherToplevel);
 
     // Click somewhere outside the popup window.
-    QSignalSpy popupClosedSpy(serverPopup, &InternalWindow::windowClosed);
+    QSignalSpy popupClosedSpy(serverPopup, &InternalWindow::closed);
     quint32 timestamp = 0;
     Test::pointerMotion(serverOtherToplevel->frameGeometry().center(), timestamp++);
     Test::pointerButtonPressed(BTN_LEFT, timestamp++);

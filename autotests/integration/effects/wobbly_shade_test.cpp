@@ -84,14 +84,6 @@ void WobblyWindowsShadeTest::cleanup()
     QVERIFY(effectsImpl->loadedEffects().isEmpty());
 }
 
-struct XcbConnectionDeleter
-{
-    void operator()(xcb_connection_t *pointer)
-    {
-        xcb_disconnect(pointer);
-    }
-};
-
 void WobblyWindowsShadeTest::testShadeMove()
 {
     // this test simulates the condition from BUG 390953
@@ -99,7 +91,7 @@ void WobblyWindowsShadeTest::testShadeMove()
     QVERIFY(e->loadEffect(QStringLiteral("wobblywindows")));
     QVERIFY(e->isEffectLoaded(QStringLiteral("wobblywindows")));
 
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 100, 200);
     xcb_window_t windowId = xcb_generate_id(c.get());

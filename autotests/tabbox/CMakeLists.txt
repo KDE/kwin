@@ -1,11 +1,9 @@
-include_directories(${KWin_SOURCE_DIR}/src)
 add_definitions(-DKWIN_UNIT_TEST)
 ########################################################
 # Test TabBox::ClientModel
 ########################################################
 set(testTabBoxClientModel_SRCS
     ../../src/tabbox/clientmodel.cpp
-    ../../src/tabbox/desktopmodel.cpp
     ../../src/tabbox/tabbox_logging.cpp
     ../../src/tabbox/tabboxconfig.cpp
     ../../src/tabbox/tabboxhandler.cpp
@@ -24,16 +22,13 @@ target_link_libraries(testTabBoxClientModel
     Qt::Widgets
     Qt::GuiPrivate
 
-    KF5::ConfigCore
-    KF5::I18n
-    KF5::Package
-    KF5::WindowSystem
+    KF6::ConfigCore
+    KF6::I18n
+    KF6::Package
+    KF6::WindowSystem
 
     XCB::XCB
 )
-if (QT_MAJOR_VERSION EQUAL "5")
-    target_link_libraries(testTabBoxClientModel Qt::X11Extras)
-endif()
 add_test(NAME kwin-testTabBoxClientModel COMMAND testTabBoxClientModel)
 ecm_mark_as_test(testTabBoxClientModel)
 
@@ -42,7 +37,6 @@ ecm_mark_as_test(testTabBoxClientModel)
 ########################################################
 set(testTabBoxHandler_SRCS
     ../../src/tabbox/clientmodel.cpp
-    ../../src/tabbox/desktopmodel.cpp
     ../../src/tabbox/tabbox_logging.cpp
     ../../src/tabbox/tabboxconfig.cpp
     ../../src/tabbox/tabboxhandler.cpp
@@ -61,16 +55,13 @@ target_link_libraries(testTabBoxHandler
     Qt::Widgets
     Qt::GuiPrivate
 
-    KF5::ConfigCore
-    KF5::I18n
-    KF5::Package
-    KF5::WindowSystem
+    KF6::ConfigCore
+    KF6::I18n
+    KF6::Package
+    KF6::WindowSystem
 
     XCB::XCB
 )
-if (QT_MAJOR_VERSION EQUAL "5")
-    target_link_libraries(testTabBoxHandler Qt::X11Extras)
-endif()
 add_test(NAME kwin-testTabBoxHandler COMMAND testTabBoxHandler)
 ecm_mark_as_test(testTabBoxHandler)
 
@@ -87,18 +78,3 @@ add_executable(testTabBoxConfig ${testTabBoxConfig_SRCS})
 target_link_libraries(testTabBoxConfig Qt::Core Qt::Test)
 add_test(NAME kwin-testTabBoxConfig COMMAND testTabBoxConfig)
 ecm_mark_as_test(testTabBoxConfig)
-
-
-########################################################
-# Test TabBox::DesktopChainManager
-########################################################
-set(testDesktopChain_SRCS
-    ../../src/tabbox/desktopchain.cpp
-    ../../src/tabbox/tabbox_logging.cpp
-    test_desktopchain.cpp
-)
-
-add_executable(testDesktopChain ${testDesktopChain_SRCS})
-target_link_libraries(testDesktopChain Qt::Core Qt::Test)
-add_test(NAME kwin-testDesktopChain COMMAND testDesktopChain)
-ecm_mark_as_test(testDesktopChain)

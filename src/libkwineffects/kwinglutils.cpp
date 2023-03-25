@@ -8,13 +8,15 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "kwinglutils.h"
+#include "libkwineffects/kwinglutils.h"
 
 // need to call GLTexturePrivate::initStatic()
 #include "kwingltexture_p.h"
 
-#include "kwineffects.h"
-#include "kwinglplatform.h"
+#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/kwinglplatform.h"
+#include "libkwineffects/rendertarget.h"
+#include "libkwineffects/renderviewport.h"
 #include "logging_p.h"
 
 #include <QFile>
@@ -991,11 +993,13 @@ GLFramebuffer *GLFramebuffer::popFramebuffer()
 }
 
 GLFramebuffer::GLFramebuffer()
+    : m_colorAttachment(nullptr)
 {
 }
 
 GLFramebuffer::GLFramebuffer(GLTexture *colorAttachment)
     : mSize(colorAttachment->size())
+    , m_colorAttachment(colorAttachment)
 {
     // Make sure FBO is supported
     if (sSupported && !colorAttachment->isNull()) {
@@ -1010,6 +1014,7 @@ GLFramebuffer::GLFramebuffer(GLuint handle, const QSize &size)
     , mSize(size)
     , mValid(true)
     , mForeign(true)
+    , m_colorAttachment(nullptr)
 {
 }
 
@@ -1127,7 +1132,7 @@ void GLFramebuffer::initFBO(GLTexture *colorAttachment)
     mValid = true;
 }
 
-void GLFramebuffer::blitFromFramebuffer(const QRect &source, const QRect &destination, GLenum filter)
+void GLFramebuffer::blitFromFramebuffer(const QRect &source, const QRect &destination, GLenum filter, bool flipX, bool flipY)
 {
     if (!valid()) {
         return;
@@ -1142,10 +1147,16 @@ void GLFramebuffer::blitFromFramebuffer(const QRect &source, const QRect &destin
     const QRect s = source.isNull() ? QRect(QPoint(0, 0), top->size()) : source;
     const QRect d = destination.isNull() ? QRect(QPoint(0, 0), size()) : destination;
 
-    const GLuint srcX0 = s.x();
-    const GLuint srcY0 = top->size().height() - (s.y() + s.height());
-    const GLuint srcX1 = s.x() + s.width();
-    const GLuint srcY1 = top->size().height() - s.y();
+    GLuint srcX0 = s.x();
+    GLuint srcY0 = top->size().height() - (s.y() + s.height());
+    GLuint srcX1 = s.x() + s.width();
+    GLuint srcY1 = top->size().height() - s.y();
+    if (flipX) {
+        std::swap(srcX0, srcX1);
+    }
+    if (flipY) {
+        std::swap(srcY0, srcY1);
+    }
 
     const GLuint dstX0 = d.x();
     const GLuint dstY0 = mSize.height() - (d.y() + d.height());
@@ -1155,6 +1166,45 @@ void GLFramebuffer::blitFromFramebuffer(const QRect &source, const QRect &destin
     glBlitFramebuffer(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, GL_COLOR_BUFFER_BIT, filter);
 
     GLFramebuffer::popFramebuffer();
+}
+
+bool GLFramebuffer::blitFromRenderTarget(const RenderTarget &sourceRenderTarget, const RenderViewport &sourceViewport, const QRect &source, const QRect &destination)
+{
+    TextureTransforms transform = sourceRenderTarget.texture() ? sourceRenderTarget.texture()->contentTransforms() : TextureTransforms();
+    const bool hasRotation = (transform & TextureTransform::Rotate90) || (transform & TextureTransform::Rotate180) || (transform & TextureTransform::Rotate270);
+    if (!hasRotation && blitSupported()) {
+        // either no transformation or flipping only
+        blitFromFramebuffer(sourceViewport.mapToRenderTarget(source), destination, GL_LINEAR, transform & TextureTransform::MirrorX, transform & TextureTransform::MirrorY);
+        return true;
+    } else {
+        const auto texture = sourceRenderTarget.texture();
+        if (!texture) {
+            // rotations aren't possible without a texture
+            return false;
+        }
+
+        GLFramebuffer::pushFramebuffer(this);
+
+        QMatrix4x4 mat;
+        mat.ortho(QRectF(QPointF(), size()));
+        // GLTexture::render renders with origin (0, 0), move it to the correct place
+        mat.translate(destination.x(), destination.y());
+
+        ShaderBinder binder(ShaderTrait::MapTexture);
+        binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, mat);
+
+        texture->bind();
+        texture->render(sourceViewport.mapToRenderTargetTexture(source), infiniteRegion(), destination.size(), 1);
+        texture->unbind();
+
+        GLFramebuffer::popFramebuffer();
+        return true;
+    }
+}
+
+GLTexture *GLFramebuffer::colorAttachment() const
+{
+    return m_colorAttachment;
 }
 
 // ------------------------------------------------------------------
@@ -1853,6 +1903,16 @@ GLvoid *GLVertexBufferPrivate::mapNextFreeRange(size_t size)
 //*********************************
 // GLVertexBuffer
 //*********************************
+
+const GLVertexAttrib GLVertexBuffer::GLVertex2DLayout[2] = {
+    {VA_Position, 2, GL_FLOAT, offsetof(GLVertex2D, position)},
+    {VA_TexCoord, 2, GL_FLOAT, offsetof(GLVertex2D, texcoord)},
+};
+
+const GLVertexAttrib GLVertexBuffer::GLVertex3DLayout[2] = {
+    {VA_Position, 3, GL_FLOAT, offsetof(GLVertex3D, position)},
+    {VA_TexCoord, 2, GL_FLOAT, offsetof(GLVertex3D, texcoord)},
+};
 
 GLVertexBuffer::GLVertexBuffer(UsageHint hint)
     : d(std::make_unique<GLVertexBufferPrivate>(hint))

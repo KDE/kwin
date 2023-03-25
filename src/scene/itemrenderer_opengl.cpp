@@ -5,8 +5,11 @@
 */
 
 #include "scene/itemrenderer_opengl.h"
+#include "libkwineffects/rendertarget.h"
+#include "libkwineffects/renderviewport.h"
 #include "platformsupport/scenes/opengl/openglsurfacetexture.h"
 #include "scene/decorationitem.h"
+#include "scene/imageitem.h"
 #include "scene/shadowitem.h"
 #include "scene/surfaceitem.h"
 #include "scene/workspacescene_opengl.h"
@@ -18,9 +21,14 @@ ItemRendererOpenGL::ItemRendererOpenGL()
 {
 }
 
-void ItemRendererOpenGL::beginFrame(RenderTarget *renderTarget)
+ImageItem *ItemRendererOpenGL::createImageItem(Scene *scene, Item *parent)
 {
-    GLFramebuffer *fbo = std::get<GLFramebuffer *>(renderTarget->nativeHandle());
+    return new ImageItemOpenGL(scene, parent);
+}
+
+void ItemRendererOpenGL::beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport)
+{
+    GLFramebuffer *fbo = renderTarget.framebuffer();
     GLFramebuffer::pushFramebuffer(fbo);
 
     GLVertexBuffer::streamingBuffer()->beginFrame();
@@ -153,9 +161,9 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
 
     if (auto shadowItem = qobject_cast<ShadowItem *>(item)) {
         if (!geometry.isEmpty()) {
-            SceneOpenGLShadow *shadow = static_cast<SceneOpenGLShadow *>(shadowItem->shadow());
+            OpenGLShadowTextureProvider *textureProvider = static_cast<OpenGLShadowTextureProvider *>(shadowItem->textureProvider());
             context->renderNodes.append(RenderNode{
-                .texture = shadow->shadowTexture(),
+                .texture = textureProvider->shadowTexture(),
                 .geometry = geometry,
                 .transformMatrix = context->transformStack.top(),
                 .opacity = context->opacityStack.top(),
@@ -192,6 +200,18 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
                 });
             }
         }
+    } else if (auto imageItem = qobject_cast<ImageItemOpenGL *>(item)) {
+        if (!geometry.isEmpty()) {
+            context->renderNodes.append(RenderNode{
+                .texture = imageItem->texture(),
+                .geometry = geometry,
+                .transformMatrix = context->transformStack.top(),
+                .opacity = context->opacityStack.top(),
+                .hasAlpha = imageItem->image().hasAlphaChannel(),
+                .coordinateType = NormalizedCoordinates,
+                .scale = scale,
+            });
+        }
     }
 
     for (Item *childItem : sortedChildItems) {
@@ -207,36 +227,20 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
     context->opacityStack.pop();
 }
 
-QMatrix4x4 ItemRendererOpenGL::modelViewProjectionMatrix(const WindowPaintData &data) const
+void ItemRendererOpenGL::renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &region)
 {
-    // An effect may want to override the default projection matrix in some cases,
-    // such as when it is rendering a window on a render target that doesn't have
-    // the same dimensions as the default framebuffer.
-    //
-    // Note that the screen transformation is not applied here.
-    const QMatrix4x4 pMatrix = data.projectionMatrix();
-    if (!pMatrix.isIdentity()) {
-        return pMatrix;
-    } else {
-        return renderTargetProjectionMatrix();
-    }
-}
-
-void ItemRendererOpenGL::renderBackground(const QRegion &region)
-{
-    if (region == infiniteRegion() || (region.rectCount() == 1 && (*region.begin()) == renderTargetRect())) {
+    if (region == infiniteRegion() || (region.rectCount() == 1 && (*region.begin()) == viewport.renderRect())) {
         glClearColor(0, 0, 0, 0);
         glClear(GL_COLOR_BUFFER_BIT);
     } else if (!region.isEmpty()) {
         glClearColor(0, 0, 0, 0);
         glEnable(GL_SCISSOR_TEST);
 
-        const auto scale = renderTargetScale();
-        const auto targetRect = scaledRect(renderTargetRect(), scale).toRect();
+        const auto targetSize = viewport.mapToRenderTarget(viewport.renderRect());
 
         for (const QRect &r : region) {
-            auto deviceRect = scaledRect(r, scale).toAlignedRect();
-            glScissor(deviceRect.x(), targetRect.height() - (deviceRect.y() + deviceRect.height()), deviceRect.width(), deviceRect.height());
+            const auto deviceRect = viewport.mapToRenderTarget(r);
+            glScissor(deviceRect.x(), targetSize.height() - (deviceRect.y() + deviceRect.height()), deviceRect.width(), deviceRect.height());
             glClear(GL_COLOR_BUFFER_BIT);
         }
 
@@ -244,7 +248,7 @@ void ItemRendererOpenGL::renderBackground(const QRegion &region)
     }
 }
 
-void ItemRendererOpenGL::renderItem(Item *item, int mask, const QRegion &region, const WindowPaintData &data)
+void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &region, const WindowPaintData &data)
 {
     if (region.isEmpty()) {
         return;
@@ -253,13 +257,13 @@ void ItemRendererOpenGL::renderItem(Item *item, int mask, const QRegion &region,
     RenderContext renderContext{
         .clip = region,
         .hardwareClipping = region != infiniteRegion() && ((mask & Scene::PAINT_WINDOW_TRANSFORMED) || (mask & Scene::PAINT_SCREEN_TRANSFORMED)),
-        .renderTargetScale = data.renderTargetScale().value_or(renderTargetScale()),
+        .renderTargetScale = viewport.scale(),
     };
 
     renderContext.transformStack.push(QMatrix4x4());
     renderContext.opacityStack.push(data.opacity());
 
-    item->setTransform(data.toMatrix(renderTargetScale()));
+    item->setTransform(data.toMatrix(renderContext.renderTargetScale));
 
     createRenderNode(item, &renderContext);
 
@@ -282,14 +286,9 @@ void ItemRendererOpenGL::renderItem(Item *item, int mask, const QRegion &region,
         shaderTraits |= ShaderTrait::AdjustSaturation;
     }
 
-    const GLVertexAttrib attribs[] = {
-        {VA_Position, 2, GL_FLOAT, offsetof(GLVertex2D, position)},
-        {VA_TexCoord, 2, GL_FLOAT, offsetof(GLVertex2D, texcoord)},
-    };
-
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     vbo->reset();
-    vbo->setAttribLayout(attribs, 2, sizeof(GLVertex2D));
+    vbo->setAttribLayout(GLVertexBuffer::GLVertex2DLayout, 2, sizeof(GLVertex2D));
 
     GLVertex2D *map = (GLVertex2D *)vbo->map(size);
 
@@ -306,16 +305,7 @@ void ItemRendererOpenGL::renderItem(Item *item, int mask, const QRegion &region,
         renderNode.firstVertex = v;
         renderNode.vertexCount = renderNode.geometry.count();
 
-        const QMatrix4x4 textureMatrix = renderNode.texture->matrix(renderNode.coordinateType);
-        if (!textureMatrix.isIdentity()) {
-            // Adjust the vertex' texture coordinates with the specified matrix.
-            const QVector2D coeff(textureMatrix(0, 0), textureMatrix(1, 1));
-            const QVector2D offset(textureMatrix(0, 3), textureMatrix(1, 3));
-
-            for (auto &vertex : renderNode.geometry) {
-                vertex.texcoord = vertex.texcoord * coeff + offset;
-            }
-        }
+        renderNode.geometry.postProcessTextureCoordinates(renderNode.texture->matrix(renderNode.coordinateType));
 
         renderNode.geometry.copy(std::span(&map[v], renderNode.geometry.count()));
         v += renderNode.geometry.count();
@@ -339,10 +329,10 @@ void ItemRendererOpenGL::renderItem(Item *item, int mask, const QRegion &region,
     // The scissor region must be in the render target local coordinate system.
     QRegion scissorRegion = infiniteRegion();
     if (renderContext.hardwareClipping) {
-        scissorRegion = mapToRenderTarget(region);
+        scissorRegion = viewport.mapToRenderTarget(region);
     }
 
-    const QMatrix4x4 projectionMatrix = modelViewProjectionMatrix(data);
+    const QMatrix4x4 projectionMatrix = data.projectionMatrix();
     for (int i = 0; i < renderContext.renderNodes.count(); i++) {
         const RenderNode &renderNode = renderContext.renderNodes[i];
         if (renderNode.vertexCount == 0) {

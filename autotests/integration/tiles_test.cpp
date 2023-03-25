@@ -10,14 +10,14 @@
 
 #include "core/output.h"
 #include "core/outputbackend.h"
-#include "cursor.h"
+#include "libkwineffects/kwineffects.h"
+#include "pointer_input.h"
 #include "tiles/tilemanager.h"
 #include "wayland/seat_interface.h"
 #include "wayland/surface_interface.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
-#include <kwineffects.h>
 
 #include <QAbstractItemModelTester>
 
@@ -68,7 +68,7 @@ void TilesTest::init()
     QVERIFY(Test::waitForWaylandPointer());
 
     workspace()->setActiveOutput(QPoint(640, 512));
-    Cursors::self()->mouse()->setPos(QPoint(640, 512));
+    input()->pointer()->warp(QPoint(640, 512));
     m_output = workspace()->activeOutput();
     m_tileManager = workspace()->tileManager(m_output);
     m_rootTile = m_tileManager->rootTile();
@@ -317,12 +317,12 @@ void TilesTest::resizeTileFromWindow()
     QCOMPARE(window->frameGeometry(), QRect(4, 4, 504, 504));
 
     QCOMPARE(workspace()->activeWindow(), window);
-    QSignalSpy startMoveResizedSpy(window, &Window::clientStartUserMovedResized);
-    QVERIFY(startMoveResizedSpy.isValid());
+    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    QVERIFY(interactiveMoveResizeStartedSpy.isValid());
     QSignalSpy moveResizedChangedSpy(window, &Window::moveResizedChanged);
     QVERIFY(moveResizedChangedSpy.isValid());
-    QSignalSpy clientFinishUserMovedResizedSpy(window, &Window::clientFinishUserMovedResized);
-    QVERIFY(clientFinishUserMovedResizedSpy.isValid());
+    QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
+    QVERIFY(interactiveMoveResizeFinishedSpy.isValid());
 
     // begin resize
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
@@ -330,7 +330,7 @@ void TilesTest::resizeTileFromWindow()
     QCOMPARE(window->isInteractiveResize(), false);
     workspace()->slotWindowResize();
     QCOMPARE(workspace()->moveResizeWindow(), window);
-    QCOMPARE(startMoveResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 1);
     QCOMPARE(moveResizedChangedSpy.count(), 1);
     QCOMPARE(window->isInteractiveResize(), true);
     QCOMPARE(window->geometryRestore(), QRect());
@@ -342,7 +342,7 @@ void TilesTest::resizeTileFromWindow()
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Resizing));
     // Trigger a change.
     QPoint cursorPos = window->frameGeometry().bottomRight().toPoint();
-    Cursors::self()->mouse()->setPos(cursorPos + QPoint(8, 0));
+    input()->pointer()->warp(cursorPos + QPoint(8, 0));
     window->updateInteractiveMoveResize(Cursors::self()->mouse()->pos());
     QCOMPARE(Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
 
@@ -371,7 +371,7 @@ void TilesTest::resizeTileFromWindow()
     // Resize vertically
     workspace()->slotWindowResize();
     QCOMPARE(workspace()->moveResizeWindow(), window);
-    QCOMPARE(startMoveResizedSpy.count(), 2);
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 2);
     QCOMPARE(moveResizedChangedSpy.count(), 3);
     QCOMPARE(window->isInteractiveResize(), true);
     QCOMPARE(window->geometryRestore(), QRect());
@@ -384,7 +384,7 @@ void TilesTest::resizeTileFromWindow()
 
     // Trigger a change.
     cursorPos = window->frameGeometry().bottomRight().toPoint();
-    Cursors::self()->mouse()->setPos(cursorPos + QPoint(0, 8));
+    input()->pointer()->warp(cursorPos + QPoint(0, 8));
     window->updateInteractiveMoveResize(Cursors::self()->mouse()->pos());
     QCOMPARE(Cursors::self()->mouse()->pos(), cursorPos + QPoint(0, 8));
 

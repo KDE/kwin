@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-07-15 00:48+0000\n"
-"PO-Revision-Date: 2022-08-22 06:34+0200\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
+"PO-Revision-Date: 2023-02-11 06:33+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -16,74 +16,64 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.2.2\n"
 
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Temuri Doghonadze"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "Temuri.doghonadze@gmail.com"
-
-#: main.cpp:130 touch.cpp:124
+#: main.cpp:124 touch.cpp:116
 #, kde-format
 msgid "No Action"
 msgstr "ქმედების გარეშე"
 
-#: main.cpp:131 touch.cpp:125
+#: main.cpp:125 touch.cpp:117
 #, kde-format
 msgid "Peek at Desktop"
 msgstr "სამუშაო მაგიდაზე გაჭვრეტა"
 
-#: main.cpp:132 touch.cpp:126
+#: main.cpp:126 touch.cpp:118
 #, kde-format
 msgid "Lock Screen"
 msgstr "ეკრანის დაბლოკვა"
 
-#: main.cpp:133 touch.cpp:127
+#: main.cpp:127 touch.cpp:119
 #, kde-format
 msgid "Show KRunner"
 msgstr "KRunner-ის ჩვენება"
 
-#: main.cpp:134 touch.cpp:128
+#: main.cpp:128 touch.cpp:120
 #, kde-format
 msgid "Activity Manager"
 msgstr "აქტივობების მმართველის ჩვენება"
 
-#: main.cpp:135 touch.cpp:129
+#: main.cpp:129 touch.cpp:121
 #, kde-format
 msgid "Application Launcher"
 msgstr "აპლიკაციების გამშვები"
 
-#: main.cpp:139 touch.cpp:133
+#: main.cpp:133 touch.cpp:125
 #, kde-format
 msgid "Present Windows"
 msgstr "არსებული ფანჯრები"
 
-#: main.cpp:140 touch.cpp:134
+#: main.cpp:134 touch.cpp:126
 #, kde-format
 msgid "%1 - All Desktops"
 msgstr "%1 - ყველა სამუშაო მაგიდა"
 
-#: main.cpp:141 touch.cpp:135
+#: main.cpp:135 touch.cpp:127
 #, kde-format
 msgid "%1 - Current Desktop"
 msgstr "%1 - მიმდინარე სამუშაო მაგიდა"
 
-#: main.cpp:142 touch.cpp:136
+#: main.cpp:136 touch.cpp:128
 #, kde-format
 msgid "%1 - Current Application"
 msgstr "%1 - მიმდინარე აპლიკაცია"
 
-#: main.cpp:144 touch.cpp:138
+#: main.cpp:138 touch.cpp:130
 #, kde-format
 msgid "Toggle window switching"
 msgstr "ფანჯრის გადართვის ჩართ/გამორთ"
 
-#: main.cpp:145 touch.cpp:139
+#: main.cpp:139 touch.cpp:131
 #, kde-format
 msgid "Toggle alternative window switching"
 msgstr "ფანჯრების ალტერნატიული გადართვის ჩართ/გამორთ"
@@ -95,6 +85,8 @@ msgid ""
 "You can trigger an action by pushing the mouse cursor against the "
 "corresponding screen edge or corner."
 msgstr ""
+"ქმედების გაშვება თაგუნას კურსორის ეკრანის შესაბამის კუთხეში ან კიდეზე "
+"მიწოლით შეგიძლიათ."
 
 #. i18n: ectx: property (text), widget (QLabel, quickMaximizeLabel)
 #: main.ui:67
@@ -130,13 +122,13 @@ msgstr "ქცევა:"
 #: main.ui:108
 #, kde-format
 msgid "Remain active when windows are fullscreen"
-msgstr ""
+msgstr "აქტიურად დარჩენა, როცა ფანჯრები სრულ ეკრანეზეა"
 
 #. i18n: ectx: property (text), widget (QLabel, electricBorderCornerRatioLabel)
 #: main.ui:115
 #, kde-format
 msgid "Trigger &quarter tiling in:"
-msgstr ""
+msgstr "ფანჯრების მეოთხედამდე &გადიდების სიმაღლე:"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, electricBorderCornerRatioSpin)
 #: main.ui:130
@@ -195,6 +187,8 @@ msgid ""
 "Amount of time required for the mouse cursor to be pushed against the edge "
 "of the screen before the action is triggered"
 msgstr ""
+"დრო, რომელიც საჭიროა თაგუნას კურსორის ეკრანის კიდეზე მიწოლიდან ქმედების "
+"ტრიგერამდე"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDelayLabel)
 #: main.ui:209
@@ -230,6 +224,15 @@ msgid ""
 "You can trigger an action by swiping from the screen edge towards the center "
 "of the screen."
 msgstr ""
+"ქმედების დატრიგერება ეკრანის კიდიდან ეკრანის ცენტრისკენ გასმით შეგიძლიათ."
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Temuri Doghonadze"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "Temuri.doghonadze@gmail.com"
 
 #~ msgid "Show Desktop"
 #~ msgstr "სამუშაო მაგიდის ჩვენება"

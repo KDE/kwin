@@ -62,9 +62,9 @@
 </authorgroup>
 
 <date
->2015-04-09</date>
+>2021-04-09</date>
 <releaseinfo
->Plasma 5.3</releaseinfo>
+>Plasma 5.20</releaseinfo>
 
 <keywordset>
 <keyword
@@ -72,77 +72,62 @@
 <keyword
 >Preferencias del sistema</keyword>
 <keyword
+>virtual</keyword>
+<keyword
 >escritorio</keyword>
 </keywordset>
 </articleinfo>
 
-<sect1 id="virtual-desktops">
-
-<title
->Escritorios virtuales</title>
-
-<sect2 id="desktop-number">
-<title
-><guilabel
->Escritorios</guilabel
-></title>
-
 <para
->&kde; le ofrece la posibilidad de tener varios escritorios virtuales. En esta pestaña puede configurar el número de escritorios, el número de filas del icono del <guilabel
->Paginador</guilabel
-> así como sus nombres. Simplemente, utilice el cuadro de texto para ajustar el número de escritorios y asígneles nombres introduciendo texto en los campos de texto inferiores.</para
-> 
-<!-- not in 5.3
+>&kde; le ofrece la posibilidad de tener varios escritorios virtuales. </para>
 <para
->Enable <guilabel
->Different widgets for each desktop</guilabel
-> 
-to use independent widgets and wallpapers on each individual desktop.
-</para>
--->
-</sect2>
-
-<sect2 id="desktop-switching">
-<title
-><guilabel
->Cambio</guilabel
-></title>
+>Puede cambiar el nombre de los escritorios pulsando el botón <guibutton
+>Cambiar nombre</guibutton
+> (aparece cuando se sitúa el cursor sobre el nombre del escritorio en la lista) e introduciendo un texto en el correspondiente campo. </para>
+<para
+>Si quiere eliminar un escritorio, use el icono de papelera superpuesto que hay a la derecha del nombre del escritorio. </para>
+<para
+>Pulse el botón <guibutton
+>Añadir</guibutton
+> para añadir un escritorio virtual (con el nombre predeterminado <guilabel
+>Nuevo escritorio</guilabel
+>) a la lista. </para>
+<para
+>Puede configurar el número de filas en el selector del panel. Use el campo de entrada de las filas que hay debajo de la lista para ajustar el número de escritorios. Los escritorios se organizarán automáticamente según el número de filas. </para>
 
 <variablelist>
 <varlistentry>
 <term
 ><guilabel
->Navegación cíclica por los escritorios</guilabel
+>Navegación cíclica</guilabel
 ></term>
 <listitem
 ><para
->Active esta opción si quiere que el teclado o la navegación por los bordes activos del escritorio más allá del borde le lleven al borde opuesto del nuevo escritorio. </para
+>Active esta opción si quiere un teclado o la navegación por los bordes activos del escritorio más allá del borde le lleven al borde opuesto del nuevo escritorio. </para
 ></listitem>
 </varlistentry>
 
 <varlistentry>
 <term
 ><guilabel
->Efecto de animación del escritorio</guilabel
+>Mostrar animación al cambiar</guilabel
 ></term>
 <listitem
 ><para
 >Seleccione <guilabel
->Sin animación</guilabel
->, <guilabel
 >Deslizar</guilabel
 >, <guilabel
 >Animación del cubo de escritorio</guilabel
 > o <guilabel
->Difuminar escritorio</guilabel
-> en el cuadro desplegable. Si la animación seleccionada tiene opciones de configuración, presione el icono de herramientas a la derecha del cuadro desplegable para que se muestre un diálogo de configuración. </para
+>Difuminar el escritorio</guilabel
+> en la lista desplegable, o desactive las animaciones desmarcando la casilla. Si la animación seleccionada tiene opciones de configuración, presione el icono de herramientas a la derecha del cuadro desplegable para que se muestre un diálogo de configuración. </para
 ></listitem>
 </varlistentry>
 
 <varlistentry>
 <term
 ><guilabel
->Información en pantalla del cambio de escritorio</guilabel
+>Mostrar un visor en la pantalla al cambiar</guilabel
 ></term>
 <listitem
 ><para
@@ -158,17 +143,6 @@ to use independent widgets and wallpapers on each individual desktop.
 <listitem
 ><para
 >Si activa esta opción se mostrará una pequeña vista previa de la disposición de escritorios indicando el escritorio seleccionado. </para
-></listitem>
-</varlistentry>
-
-<varlistentry>
-<term
-><guilabel
->Accesos rápidos</guilabel
-></term>
-<listitem
-><para
->Esta sección muestra los accesos rápidos configurados para cambiar de escritorio y le permite editarlos. </para
 ></listitem>
 </varlistentry>
 
@@ -192,7 +166,5 @@ to use independent widgets and wallpapers on each individual desktop.
 >S</keycap
 ></keycombo
 >).</para>
-</sect2>
-</sect1>
 
 </article>

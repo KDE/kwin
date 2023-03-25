@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "drm_crtc.h"
+#include "drm_atomic_commit.h"
 #include "drm_backend.h"
 #include "drm_buffer.h"
 #include "drm_gpu.h"
@@ -19,7 +20,7 @@ namespace KWin
 {
 
 DrmCrtc::DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int pipeIndex, DrmPlane *primaryPlane, DrmPlane *cursorPlane)
-    : DrmObject(gpu, crtcId, {PropertyDefinition(QByteArrayLiteral("MODE_ID"), Requirement::Required), PropertyDefinition(QByteArrayLiteral("ACTIVE"), Requirement::Required), PropertyDefinition(QByteArrayLiteral("VRR_ENABLED"), Requirement::Optional), PropertyDefinition(QByteArrayLiteral("GAMMA_LUT"), Requirement::Optional), PropertyDefinition(QByteArrayLiteral("GAMMA_LUT_SIZE"), Requirement::Optional)}, DRM_MODE_OBJECT_CRTC)
+    : DrmObject(gpu, crtcId, {PropertyDefinition(QByteArrayLiteral("MODE_ID"), Requirement::Required), PropertyDefinition(QByteArrayLiteral("ACTIVE"), Requirement::Required), PropertyDefinition(QByteArrayLiteral("VRR_ENABLED"), Requirement::Optional), PropertyDefinition(QByteArrayLiteral("GAMMA_LUT"), Requirement::Optional), PropertyDefinition(QByteArrayLiteral("GAMMA_LUT_SIZE"), Requirement::Optional), PropertyDefinition(QByteArrayLiteral("CTM"), Requirement::Optional)}, DRM_MODE_OBJECT_CRTC)
     , m_crtc(drmModeGetCrtc(gpu->fd(), crtcId))
     , m_pipeIndex(pipeIndex)
     , m_primaryPlane(primaryPlane)
@@ -93,10 +94,10 @@ DrmPlane *DrmCrtc::cursorPlane() const
     return m_cursorPlane;
 }
 
-void DrmCrtc::disable()
+void DrmCrtc::disable(DrmAtomicCommit *commit)
 {
-    setPending(PropertyIndex::Active, 0);
-    setPending(PropertyIndex::ModeId, 0);
+    commit->addProperty(getProp(PropertyIndex::Active), 0);
+    commit->addProperty(getProp(PropertyIndex::ModeId), 0);
 }
 
 void DrmCrtc::releaseBuffers()

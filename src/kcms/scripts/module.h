@@ -7,15 +7,16 @@
 #pragma once
 
 #include <KCModule>
+#include <KPackage/Package>
 #include <KPluginMetaData>
 #include <KPluginModel>
-#include <KQuickAddons/ConfigModule>
+#include <KQuickConfigModule>
 #include <kpluginmetadata.h>
 
 class KJob;
 class KWinScriptsData;
 
-class Module : public KQuickAddons::ConfigModule
+class Module : public KQuickConfigModule
 {
     Q_OBJECT
 
@@ -38,7 +39,7 @@ public:
     Q_INVOKABLE void togglePendingDeletion(const KPluginMetaData &data);
     Q_INVOKABLE bool canDeleteEntry(const KPluginMetaData &data)
     {
-        return QFileInfo(data.metaDataFileName()).isWritable();
+        return QFileInfo(data.fileName()).isWritable();
     }
 
     QList<KPluginMetaData> pendingDeletions()
@@ -74,8 +75,6 @@ Q_SIGNALS:
     void pendingDeletionsChanged();
 
 private:
-    void importScriptInstallFinished(KJob *job);
-
     KWinScriptsData *m_kwinScriptsData;
     QList<KPluginMetaData> m_pendingDeletions;
     KPluginModel *m_model;

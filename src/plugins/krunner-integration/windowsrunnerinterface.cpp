@@ -109,7 +109,10 @@ RemoteMatches WindowsRunner::Match(const QString &searchTerm)
             }
         }
 
-        for (const Window *window : Workspace::self()->allClientList()) {
+        for (const Window *window : Workspace::self()->windows()) {
+            if (window->isUnmanaged()) {
+                continue;
+            }
             if (!window->isNormalWindow()) {
                 continue;
             }
@@ -159,16 +162,19 @@ RemoteMatches WindowsRunner::Match(const QString &searchTerm)
     }
 
     // check for matching desktops by name
-    for (const Window *window : Workspace::self()->allClientList()) {
+    for (const Window *window : Workspace::self()->windows()) {
+        if (window->isUnmanaged()) {
+            continue;
+        }
         if (!window->isNormalWindow()) {
             continue;
         }
         const QString appName = window->resourceClass();
         const QString name = window->caption();
         if (name.startsWith(term, Qt::CaseInsensitive) || appName.startsWith(term, Qt::CaseInsensitive)) {
-            matches << windowsMatch(window, action, 0.8, Plasma::QueryMatch::ExactMatch);
+            matches << windowsMatch(window, action, 0.8, KRunner::QueryMatch::ExactMatch);
         } else if ((name.contains(term, Qt::CaseInsensitive) || appName.contains(term, Qt::CaseInsensitive)) && actionSupported(window, action)) {
-            matches << windowsMatch(window, action, 0.7, Plasma::QueryMatch::PossibleMatch);
+            matches << windowsMatch(window, action, 0.7, KRunner::QueryMatch::PossibleMatch);
         }
     }
 
@@ -178,12 +184,15 @@ RemoteMatches WindowsRunner::Match(const QString &searchTerm)
                 matches << desktopMatch(desktop, ActivateDesktopAction, 0.8);
             }
             // search for windows on desktop and list them with less relevance
-            for (const Window *window : Workspace::self()->allClientList()) {
+            for (const Window *window : Workspace::self()->windows()) {
+                if (window->isUnmanaged()) {
+                    continue;
+                }
                 if (!window->isNormalWindow()) {
                     continue;
                 }
                 if ((window->desktops().contains(desktop) || window->isOnAllDesktops()) && actionSupported(window, action)) {
-                    matches << windowsMatch(window, action, 0.5, Plasma::QueryMatch::PossibleMatch);
+                    matches << windowsMatch(window, action, 0.5, KRunner::QueryMatch::PossibleMatch);
                 }
             }
         }
@@ -206,7 +215,7 @@ void WindowsRunner::Run(const QString &id, const QString &actionId)
         return;
     }
 
-    const auto window = workspace()->findToplevel(QUuid::fromString(objectId));
+    const auto window = workspace()->findWindow(QUuid::fromString(objectId));
     if (!window || !window->isClient()) {
         return;
     }
@@ -245,7 +254,7 @@ RemoteMatch WindowsRunner::desktopMatch(const VirtualDesktop *desktop, const Win
 {
     RemoteMatch match;
     match.id = QString::number(action) + QLatin1Char('_') + desktop->id();
-    match.type = Plasma::QueryMatch::ExactMatch;
+    match.type = KRunner::QueryMatch::ExactMatch;
     match.iconName = QStringLiteral("user-desktop");
     match.text = desktop->name();
     match.relevance = relevance;
@@ -257,7 +266,7 @@ RemoteMatch WindowsRunner::desktopMatch(const VirtualDesktop *desktop, const Win
     return match;
 }
 
-RemoteMatch WindowsRunner::windowsMatch(const Window *window, const WindowsRunnerAction action, qreal relevance, Plasma::QueryMatch::Type type) const
+RemoteMatch WindowsRunner::windowsMatch(const Window *window, const WindowsRunnerAction action, qreal relevance, KRunner::QueryMatch::Type type) const
 {
     RemoteMatch match;
     match.id = QString::number((int)action) + QLatin1Char('_') + window->internalId().toString();

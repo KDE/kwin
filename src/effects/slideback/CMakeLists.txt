@@ -7,7 +7,7 @@ set(slideback_SOURCES
     slideback.cpp
 )
 
-kwin4_add_effect_module(kwin4_effect_slideback ${slideback_SOURCES})
-target_link_libraries(kwin4_effect_slideback PRIVATE
+kwin_add_builtin_effect(slideback ${slideback_SOURCES})
+target_link_libraries(slideback PRIVATE
     kwineffects
 )

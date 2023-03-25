@@ -335,7 +335,7 @@ public:
     QSize size() const;
     bool preferred() const;
 
-    bool operator==(const WaylandOutputDeviceV2Mode &other);
+    bool operator==(const WaylandOutputDeviceV2Mode &other) const;
 
     static WaylandOutputDeviceV2Mode *get(struct ::kde_output_device_mode_v2 *object);
 
@@ -553,6 +553,7 @@ void pointerAxisVertical(qreal delta,
 void pointerButtonPressed(quint32 button, quint32 time);
 void pointerButtonReleased(quint32 button, quint32 time);
 void pointerMotion(const QPointF &position, quint32 time);
+void pointerMotionRelative(const QPointF &delta, quint32 time);
 void touchCancel();
 void touchDown(qint32 id, const QPointF &pos, quint32 time);
 void touchMotion(qint32 id, const QPointF &pos, quint32 time);
@@ -674,6 +675,20 @@ bool lockScreen();
  */
 bool unlockScreen();
 
+/**
+ * Creates an X11 connection
+ * Internally a nested event loop is spawned whilst we connect to avoid a deadlock
+ * with X on demand
+ */
+
+struct XcbConnectionDeleter
+{
+    void operator()(xcb_connection_t *pointer);
+};
+
+typedef std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> XcbConnectionPtr;
+XcbConnectionPtr createX11Connection();
+
 MockInputMethod *inputMethod();
 KWayland::Client::Surface *inputPanelSurface();
 
@@ -685,7 +700,7 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::Test::AdditionalWaylandInterfaces)
 Q_DECLARE_METATYPE(KWin::Test::XdgToplevel::States)
 Q_DECLARE_METATYPE(QtWayland::zxdg_toplevel_decoration_v1::mode)
 
-#define WAYLANDTEST_MAIN_HELPER(TestObject, DPI, OperationMode)                                                                           \
+#define WAYLANDTEST_MAIN_HELPER(TestObject, OperationMode)                                                                                \
     int main(int argc, char *argv[])                                                                                                      \
     {                                                                                                                                     \
         setenv("QT_QPA_PLATFORM", "wayland-org.kde.kwin.qpa", true);                                                                      \
@@ -695,7 +710,6 @@ Q_DECLARE_METATYPE(QtWayland::zxdg_toplevel_decoration_v1::mode)
         qunsetenv("KDE_SESSION_VERSION");                                                                                                 \
         qunsetenv("XDG_SESSION_DESKTOP");                                                                                                 \
         qunsetenv("XDG_CURRENT_DESKTOP");                                                                                                 \
-        DPI;                                                                                                                              \
         KWin::WaylandTestApplication app(OperationMode, argc, argv);                                                                      \
         app.setAttribute(Qt::AA_Use96Dpi, true);                                                                                          \
         TestObject tc;                                                                                                                    \
@@ -703,9 +717,9 @@ Q_DECLARE_METATYPE(QtWayland::zxdg_toplevel_decoration_v1::mode)
     }
 
 #ifdef NO_XWAYLAND
-#define WAYLANDTEST_MAIN(TestObject) WAYLANDTEST_MAIN_HELPER(TestObject, QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps), KWin::Application::OperationModeWaylandOnly)
+#define WAYLANDTEST_MAIN(TestObject) WAYLANDTEST_MAIN_HELPER(TestObject, KWin::Application::OperationModeWaylandOnly)
 #else
-#define WAYLANDTEST_MAIN(TestObject) WAYLANDTEST_MAIN_HELPER(TestObject, QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps), KWin::Application::OperationModeXwayland)
+#define WAYLANDTEST_MAIN(TestObject) WAYLANDTEST_MAIN_HELPER(TestObject, KWin::Application::OperationModeXwayland)
 #endif
 
 #endif

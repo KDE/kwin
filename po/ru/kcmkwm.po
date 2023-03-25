@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-03 00:48+0000\n"
-"PO-Revision-Date: 2022-10-01 15:16+0300\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
+"PO-Revision-Date: 2022-12-23 11:13+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
@@ -32,17 +32,6 @@ msgstr ""
 "X-Environment: kde\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
-
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Денис Першин,Герман Жеболдов,Григорий Мохин,Леонид Кантер"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr ""
-"dyp@perchine.com,Hermann.Zheboldov@shq.ru,mok@kde.ru,leon@blackcatlinux.com"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:17
@@ -498,35 +487,7 @@ msgstr "&Размещение нового окна:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_Placement)
 #: advanced.ui:76
-#, fuzzy, kde-format
-#| msgid ""
-#| "<html><head/><body><p>The placement policy determines where a new window "
-#| "will appear on the desktop.</p><ul style=\"margin-top: 0px; margin-"
-#| "bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;"
-#| "\"><li style=\" margin-top:12px; margin-bottom:0px; margin-left:0px; "
-#| "margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" "
-#| "font-style:italic;\">Smart</span> will try to achieve a minimum overlap "
-#| "of windows</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
-#| "left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-#| "style=\" font-style:italic;\">Maximizing</span> will try to maximize "
-#| "every window to fill the whole screen. It might be useful to selectively "
-#| "affect placement of some windows using the window-specific settings.</"
-#| "li><li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; "
-#| "margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" "
-#| "font-style:italic;\">Cascade</span> will cascade the windows</li><li "
-#| "style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
-#| "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
-#| "style:italic;\">Random</span> will use a random position</li><li style=\" "
-#| "margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
-#| "block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
-#| "\">Centered</span> will place the window centered</li><li style=\" margin-"
-#| "top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
-#| "indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Zero-"
-#| "cornered</span> will place the window in the top-left corner</li><li "
-#| "style=\" margin-top:0px; margin-bottom:12px; margin-left:0px; margin-"
-#| "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
-#| "style:italic;\">Under mouse</span> will place the window under the "
-#| "pointer</li></ul></body></html>"
+#, kde-format
 msgid ""
 "<html><head/><body><p>The placement policy determines where a new window "
 "will appear on the desktop.</p><ul style=\"margin-top: 0px; margin-bottom: "
@@ -565,9 +526,6 @@ msgstr ""
 "italic;\">Распахнуто</span>: окно будет распахнуто во весь экран. Этот "
 "вариант может быть полезен при заданном особенном поведении отдельных окон;</"
 "li>\n"
-"<li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
-"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
-"italic;\">Каскадом</span>: размещение окон каскадом;</li>\n"
 "<li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
 "italic;\">Случайное</span>: окно будет размещено в случайно определённом "
@@ -981,109 +939,37 @@ msgstr "Отдельный &фокус для экранов"
 msgid "Window activation policy description"
 msgstr "Описание правила активации окон"
 
-#: main.cpp:73
+#: main.cpp:79
 #, kde-format
 msgid "&Focus"
 msgstr "&Фокус"
 
-#: main.cpp:79
+#: main.cpp:84
 #, kde-format
 msgid "Titlebar A&ctions"
 msgstr "Действия &заголовка"
 
-#: main.cpp:85
+#: main.cpp:89
 #, kde-format
 msgid "W&indow Actions"
 msgstr "Действия &окна"
 
-#: main.cpp:91
+#: main.cpp:94
 #, kde-format
 msgid "Mo&vement"
 msgstr "Пе&ремещение"
 
-#: main.cpp:97
+#: main.cpp:99
 #, kde-format
 msgid "Adva&nced"
 msgstr "&Дополнительно"
 
-#: main.cpp:101
-#, kde-format
-msgid "Window Behavior Configuration Module"
-msgstr "Модуль настройки поведения окон"
-
-#: main.cpp:103
-#, kde-format
-msgid "(c) 1997 - 2002 KWin and KControl Authors"
-msgstr "© Разработчики KWin и KControl, 1997-2002"
-
-#: main.cpp:105
-#, kde-format
-msgid "Matthias Ettrich"
-msgstr "Маттиас Эттрих (Matthias Ettrich)"
-
-#: main.cpp:106
-#, kde-format
-msgid "Waldo Bastian"
-msgstr "Вальдо Бастиан (Waldo Bastian)"
-
-#: main.cpp:107
-#, kde-format
-msgid "Cristian Tibirna"
-msgstr "Кристиан Тибирна (Cristian Tibirna)"
-
-#: main.cpp:108
-#, kde-format
-msgid "Matthias Kalle Dalheimer"
-msgstr "Маттиас Калле Далхаймер (Matthias Kalle Dalheimer)"
-
-#: main.cpp:109
-#, kde-format
-msgid "Daniel Molkentin"
-msgstr "Даниэль Молкентин (Daniel Molkentin)"
-
-#: main.cpp:110
-#, kde-format
-msgid "Wynn Wilkes"
-msgstr "Вин Вилкс (Wynn Wilkes)"
-
-#: main.cpp:111
-#, kde-format
-msgid "Pat Dowler"
-msgstr "Пэтрик Доулер (Pat Dowler)"
-
-#: main.cpp:112
-#, kde-format
-msgid "Bernd Wuebben"
-msgstr "Бернд Веббен (Bernd Wuebben)"
-
-#: main.cpp:113
-#, kde-format
-msgid "Matthias Hoelzer-Kluepfel"
-msgstr "Маттиас Хельцер-Клипфел (Matthias Hoelzer-Kluepfel)"
-
-#: main.cpp:161
-#, kde-format
-msgid ""
-"<p><h1>Window Behavior</h1> Here you can customize the way windows behave "
-"when being moved, resized or clicked on. You can also specify a focus policy "
-"as well as a placement policy for new windows.</p> <p>Please note that this "
-"configuration will not take effect if you do not use KWin as your window "
-"manager. If you do use a different window manager, please refer to its "
-"documentation for how to customize window behavior.</p>"
-msgstr ""
-"<p><h1>Поведение окна</h1>В этом модуле можно настроить поведение окон при "
-"перемещении, изменении размера или щелчке мышью. Также, можно задать правила "
-"для фокуса ввода и для размещения вновь создаваемых окон.</p><p>Учтите, что "
-"эти параметры действуют только если в качестве диспетчера окон используется "
-"KWin. Если используется другой диспетчер окон, то для его настройки "
-"необходимо обратиться к его документации.</p>"
-
-#: main.cpp:202
+#: main.cpp:178
 #, kde-format
 msgid "&Titlebar Actions"
 msgstr "&Действия заголовка"
 
-#: main.cpp:208
+#: main.cpp:188
 #, kde-format
 msgid "Window Actio&ns"
 msgstr "&Действия окна"
@@ -1443,6 +1329,64 @@ msgstr ""
 "смены фокуса</em> и <em>переключение через Alt+Tab</em> противоречат этому "
 "поведению и не будут работать Скорее всего вам больше понравится режим "
 "<em>Фокус следует за мышью (приоритет мыши)</em>."
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Денис Першин,Герман Жеболдов,Григорий Мохин,Леонид Кантер"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr ""
+#~ "dyp@perchine.com,Hermann.Zheboldov@shq.ru,mok@kde.ru,leon@blackcatlinux."
+#~ "com"
+
+#~ msgid "Window Behavior Configuration Module"
+#~ msgstr "Модуль настройки поведения окон"
+
+#~ msgid "(c) 1997 - 2002 KWin and KControl Authors"
+#~ msgstr "© Разработчики KWin и KControl, 1997-2002"
+
+#~ msgid "Matthias Ettrich"
+#~ msgstr "Маттиас Эттрих (Matthias Ettrich)"
+
+#~ msgid "Waldo Bastian"
+#~ msgstr "Вальдо Бастиан (Waldo Bastian)"
+
+#~ msgid "Cristian Tibirna"
+#~ msgstr "Кристиан Тибирна (Cristian Tibirna)"
+
+#~ msgid "Matthias Kalle Dalheimer"
+#~ msgstr "Маттиас Калле Далхаймер (Matthias Kalle Dalheimer)"
+
+#~ msgid "Daniel Molkentin"
+#~ msgstr "Даниэль Молкентин (Daniel Molkentin)"
+
+#~ msgid "Wynn Wilkes"
+#~ msgstr "Вин Вилкс (Wynn Wilkes)"
+
+#~ msgid "Pat Dowler"
+#~ msgstr "Пэтрик Доулер (Pat Dowler)"
+
+#~ msgid "Bernd Wuebben"
+#~ msgstr "Бернд Веббен (Bernd Wuebben)"
+
+#~ msgid "Matthias Hoelzer-Kluepfel"
+#~ msgstr "Маттиас Хельцер-Клипфел (Matthias Hoelzer-Kluepfel)"
+
+#~ msgid ""
+#~ "<p><h1>Window Behavior</h1> Here you can customize the way windows behave "
+#~ "when being moved, resized or clicked on. You can also specify a focus "
+#~ "policy as well as a placement policy for new windows.</p> <p>Please note "
+#~ "that this configuration will not take effect if you do not use KWin as "
+#~ "your window manager. If you do use a different window manager, please "
+#~ "refer to its documentation for how to customize window behavior.</p>"
+#~ msgstr ""
+#~ "<p><h1>Поведение окна</h1>В этом модуле можно настроить поведение окон "
+#~ "при перемещении, изменении размера или щелчке мышью. Также, можно задать "
+#~ "правила для фокуса ввода и для размещения вновь создаваемых окон.</"
+#~ "p><p>Учтите, что эти параметры действуют только если в качестве "
+#~ "диспетчера окон используется KWin. Если используется другой диспетчер "
+#~ "окон, то для его настройки необходимо обратиться к его документации.</p>"
 
 #~ msgid "Cascaded"
 #~ msgstr "Каскадом"

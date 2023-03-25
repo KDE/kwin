@@ -1,7 +1,7 @@
 # translation of kcmkwm.po to Slovenian
 # Translation of kcmkwm.po to Slovenian
 # KDEBASE translation to Slovenian language.
-# $Id: kcmkwm.po 1639516 2022-12-06 01:35:44Z scripty $
+# $Id: kcmkwm.po 1647185 2023-03-17 02:50:43Z scripty $
 # $Source$
 #
 # Copyright (C) 2001, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-03 00:48+0000\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
 "PO-Revision-Date: 2022-12-05 06:51+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -28,20 +28,6 @@ msgstr ""
 "X-Generator: Lokalize 22.08.3\n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
 "%100==4 ? 3 : 0);\n"
-
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr ""
-"Marko Samastur,Roman Maurer,Gregor Rakar,Jure Repinc,Andrej Mernik,Matjaž "
-"Jeran"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr ""
-"markos@elite.org,romanm@amis.net,gregor.rakar@kiss.si,jlp@holodeck1.com,"
-"andrejm@ubuntu.si,matjaz.jeran@amis.net"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:17
@@ -946,110 +932,37 @@ msgstr "Ločena osredotočenost zaslona"
 msgid "Window activation policy description"
 msgstr "Opis politike aktiviranja oken"
 
-#: main.cpp:73
+#: main.cpp:79
 #, kde-format
 msgid "&Focus"
 msgstr "Osredotočenost"
 
-#: main.cpp:79
+#: main.cpp:84
 #, kde-format
 msgid "Titlebar A&ctions"
 msgstr "Dejanja naslovne vrstice"
 
-#: main.cpp:85
+#: main.cpp:89
 #, kde-format
 msgid "W&indow Actions"
 msgstr "Dejanja okna"
 
-#: main.cpp:91
+#: main.cpp:94
 #, kde-format
 msgid "Mo&vement"
 msgstr "Premikanje"
 
-#: main.cpp:97
+#: main.cpp:99
 #, kde-format
 msgid "Adva&nced"
 msgstr "Napredno"
 
-#: main.cpp:101
-#, kde-format
-msgid "Window Behavior Configuration Module"
-msgstr "Nastavitveni modul obnašanja oken"
-
-#: main.cpp:103
-#, kde-format
-msgid "(c) 1997 - 2002 KWin and KControl Authors"
-msgstr "© 1997 - 2002 Avtorji KWin in KControl"
-
-#: main.cpp:105
-#, kde-format
-msgid "Matthias Ettrich"
-msgstr "Matthias Ettrich"
-
-#: main.cpp:106
-#, kde-format
-msgid "Waldo Bastian"
-msgstr "Waldo Bastian"
-
-#: main.cpp:107
-#, kde-format
-msgid "Cristian Tibirna"
-msgstr "Cristian Tibirna"
-
-#: main.cpp:108
-#, kde-format
-msgid "Matthias Kalle Dalheimer"
-msgstr "Matthias Kalle Dalheimer"
-
-#: main.cpp:109
-#, kde-format
-msgid "Daniel Molkentin"
-msgstr "Daniel Molkentin"
-
-#: main.cpp:110
-#, kde-format
-msgid "Wynn Wilkes"
-msgstr "Wynn Wilkes"
-
-#: main.cpp:111
-#, kde-format
-msgid "Pat Dowler"
-msgstr "Pat Dowler"
-
-#: main.cpp:112
-#, kde-format
-msgid "Bernd Wuebben"
-msgstr "Bernd Wuebben"
-
-#: main.cpp:113
-#, kde-format
-msgid "Matthias Hoelzer-Kluepfel"
-msgstr "Matthias Hoelzer-Kluepfel"
-
-#: main.cpp:161
-#, kde-format
-msgid ""
-"<p><h1>Window Behavior</h1> Here you can customize the way windows behave "
-"when being moved, resized or clicked on. You can also specify a focus policy "
-"as well as a placement policy for new windows.</p> <p>Please note that this "
-"configuration will not take effect if you do not use KWin as your window "
-"manager. If you do use a different window manager, please refer to its "
-"documentation for how to customize window behavior.</p>"
-msgstr ""
-"<h1>Obnašanje oken</h1><p>Tu lahko nastavite način, kako se okna obnašajo "
-"med premikanjem, spreminjanjem velikosti ali klikanjem nanje. Lahko tudi "
-"določite uporabo osredotočenosti in politiko postavljanja novih oken.</p><p> "
-"Zapomnite si, da ta nastavitev ne bo veljala, če za svoj okenski "
-"upravljalnik ne uporabljate KWina. Če uporabljate kak drug upravljalnik "
-"oken, potem poglejte v njegovo dokumentacijo, če želite izvedeti, kako "
-"nastaviti obnašanje oken.</p>"
-
-#: main.cpp:202
+#: main.cpp:178
 #, kde-format
 msgid "&Titlebar Actions"
 msgstr "Dejanja naslovne vrs&tice"
 
-#: main.cpp:208
+#: main.cpp:188
 #, kde-format
 msgid "Window Actio&ns"
 msgstr "Dejanja ok&na"
@@ -1404,6 +1317,67 @@ msgstr ""
 "kraje osredotočnosti</em> in <em>tabbox ('Alt+Tab') </em>nasprotujejo "
 "politiki aktiviranja in ne bodo delovali. Zelo verjetno bi želeli "
 "uporabljati <em>Osredotočenost sledi miški (prednost miške)</em>!"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr ""
+#~ "Marko Samastur,Roman Maurer,Gregor Rakar,Jure Repinc,Andrej Mernik,Matjaž "
+#~ "Jeran"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr ""
+#~ "markos@elite.org,romanm@amis.net,gregor.rakar@kiss.si,jlp@holodeck1.com,"
+#~ "andrejm@ubuntu.si,matjaz.jeran@amis.net"
+
+#~ msgid "Window Behavior Configuration Module"
+#~ msgstr "Nastavitveni modul obnašanja oken"
+
+#~ msgid "(c) 1997 - 2002 KWin and KControl Authors"
+#~ msgstr "© 1997 - 2002 Avtorji KWin in KControl"
+
+#~ msgid "Matthias Ettrich"
+#~ msgstr "Matthias Ettrich"
+
+#~ msgid "Waldo Bastian"
+#~ msgstr "Waldo Bastian"
+
+#~ msgid "Cristian Tibirna"
+#~ msgstr "Cristian Tibirna"
+
+#~ msgid "Matthias Kalle Dalheimer"
+#~ msgstr "Matthias Kalle Dalheimer"
+
+#~ msgid "Daniel Molkentin"
+#~ msgstr "Daniel Molkentin"
+
+#~ msgid "Wynn Wilkes"
+#~ msgstr "Wynn Wilkes"
+
+#~ msgid "Pat Dowler"
+#~ msgstr "Pat Dowler"
+
+#~ msgid "Bernd Wuebben"
+#~ msgstr "Bernd Wuebben"
+
+#~ msgid "Matthias Hoelzer-Kluepfel"
+#~ msgstr "Matthias Hoelzer-Kluepfel"
+
+#~ msgid ""
+#~ "<p><h1>Window Behavior</h1> Here you can customize the way windows behave "
+#~ "when being moved, resized or clicked on. You can also specify a focus "
+#~ "policy as well as a placement policy for new windows.</p> <p>Please note "
+#~ "that this configuration will not take effect if you do not use KWin as "
+#~ "your window manager. If you do use a different window manager, please "
+#~ "refer to its documentation for how to customize window behavior.</p>"
+#~ msgstr ""
+#~ "<h1>Obnašanje oken</h1><p>Tu lahko nastavite način, kako se okna obnašajo "
+#~ "med premikanjem, spreminjanjem velikosti ali klikanjem nanje. Lahko tudi "
+#~ "določite uporabo osredotočenosti in politiko postavljanja novih oken.</"
+#~ "p><p> Zapomnite si, da ta nastavitev ne bo veljala, če za svoj okenski "
+#~ "upravljalnik ne uporabljate KWina. Če uporabljate kak drug upravljalnik "
+#~ "oken, potem poglejte v njegovo dokumentacijo, če želite izvedeti, kako "
+#~ "nastaviti obnašanje oken.</p>"
 
 #~ msgid "Cascaded"
 #~ msgstr "Kaskadno"

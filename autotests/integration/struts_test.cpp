@@ -10,14 +10,13 @@
 
 #include "core/output.h"
 #include "core/outputbackend.h"
-#include "cursor.h"
-#include "deleted.h"
+#include "libkwineffects/kwineffects.h"
+#include "pointer_input.h"
 #include "screenedge.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "x11window.h"
-#include <kwineffects.h>
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/plasmashell.h>
@@ -60,7 +59,6 @@ private:
 void StrutsTest::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
-    qRegisterMetaType<KWin::Deleted *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(waylandServer()->init(s_socketName));
     QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(QVector<QRect>, QVector<QRect>() << QRect(0, 0, 1280, 1024) << QRect(1280, 0, 1280, 1024)));
@@ -89,7 +87,7 @@ void StrutsTest::init()
     m_plasmaShell = Test::waylandPlasmaShell();
 
     workspace()->setActiveOutput(QPoint(640, 512));
-    Cursors::self()->mouse()->setPos(QPoint(640, 512));
+    input()->pointer()->warp(QPoint(640, 512));
     QVERIFY(waylandServer()->windows().isEmpty());
 }
 
@@ -526,14 +524,6 @@ void StrutsTest::testX11Struts_data()
                                                << StrutRects();
 }
 
-struct XcbConnectionDeleter
-{
-    void operator()(xcb_connection_t *pointer)
-    {
-        xcb_disconnect(pointer);
-    }
-};
-
 void StrutsTest::testX11Struts()
 {
     // this test verifies that struts are applied correctly for X11 windows
@@ -562,7 +552,7 @@ void StrutsTest::testX11Struts()
     QCOMPARE(workspace()->restrictedMoveArea(desktop), StrutRects());
 
     // create an xcb window
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
 
     xcb_window_t windowId = xcb_generate_id(c.get());
@@ -649,7 +639,7 @@ void StrutsTest::testX11Struts()
     xcb_flush(c.get());
     c.reset();
 
-    QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
+    QSignalSpy windowClosedSpy(window, &X11Window::closed);
     QVERIFY(windowClosedSpy.wait());
 
     // now struts should be removed again
@@ -689,7 +679,7 @@ void StrutsTest::test363804()
     QCOMPARE(outputs[1]->geometry(), geometries[1]);
 
     // create an xcb window
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
 
     xcb_window_t windowId = xcb_generate_id(c.get());
@@ -747,7 +737,7 @@ void StrutsTest::test363804()
     xcb_flush(c.get());
     c.reset();
 
-    QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
+    QSignalSpy windowClosedSpy(window, &X11Window::closed);
     QVERIFY(windowClosedSpy.wait());
 }
 
@@ -771,7 +761,7 @@ void StrutsTest::testLeftScreenSmallerBottomAligned()
     VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
 
     // create the panel
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
 
     xcb_window_t windowId = xcb_generate_id(c.get());
@@ -847,7 +837,7 @@ void StrutsTest::testLeftScreenSmallerBottomAligned()
     QCOMPARE(window2->frameGeometry(), QRect(0, 306, 1366, 744));
     QCOMPARE(window2->maximizeMode(), KWin::MaximizeFull);
     // destroy window again
-    QSignalSpy normalWindowClosedSpy(window2, &X11Window::windowClosed);
+    QSignalSpy normalWindowClosedSpy(window2, &X11Window::closed);
     xcb_unmap_window(c.get(), w2);
     xcb_destroy_window(c.get(), w2);
     xcb_flush(c.get());
@@ -859,7 +849,7 @@ void StrutsTest::testLeftScreenSmallerBottomAligned()
     xcb_flush(c.get());
     c.reset();
 
-    QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
+    QSignalSpy windowClosedSpy(window, &X11Window::closed);
     QVERIFY(windowClosedSpy.wait());
 }
 
@@ -884,7 +874,7 @@ void StrutsTest::testWindowMoveWithPanelBetweenScreens()
     VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
 
     // create the panel on the right screen, left edge
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
 
     xcb_window_t windowId = xcb_generate_id(c.get());
@@ -963,14 +953,13 @@ void StrutsTest::testWindowMoveWithPanelBetweenScreens()
     QCOMPARE(window2->pos(), QPoint(1500, 400));
 
     const QRectF origGeo = window2->frameGeometry();
-    Cursors::self()->mouse()->setPos(origGeo.center());
+    input()->pointer()->warp(origGeo.center());
     workspace()->performWindowOperation(window2, Options::MoveOp);
     QTRY_COMPARE(workspace()->moveResizeWindow(), window2);
     QVERIFY(window2->isInteractiveMove());
     // move to next screen - step is 8 pixel, so 800 pixel
     for (int i = 0; i < 100; i++) {
         window2->keyPressEvent(Qt::Key_Left);
-        QTest::qWait(50);
     }
     window2->keyPressEvent(Qt::Key_Enter);
     QCOMPARE(window2->isInteractiveMove(), false);

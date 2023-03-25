@@ -14,8 +14,6 @@
 namespace KWin
 {
 
-class Deleted;
-
 /**
  * The SurfaceItemX11 class represents an X11 surface in the scene.
  */
@@ -34,15 +32,16 @@ public:
     void processDamage();
     bool fetchDamage();
     void waitForDamage();
+    void forgetDamage();
     void destroyDamage();
 
     QVector<QRectF> shape() const override;
     QRegion opaque() const override;
 
 private Q_SLOTS:
-    void handleBufferGeometryChanged(Window *window, const QRectF &old);
+    void handleBufferGeometryChanged(const QRectF &old);
     void handleGeometryShapeChanged();
-    void handleWindowClosed(Window *original, Deleted *deleted);
+    void handleWindowClosed(Window *deleted);
 
 protected:
     std::unique_ptr<SurfacePixmap> createPixmap() override;

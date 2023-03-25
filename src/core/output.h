@@ -13,6 +13,7 @@
 #include "renderloop.h"
 
 #include <QDebug>
+#include <QMatrix3x3>
 #include <QMatrix4x4>
 #include <QObject>
 #include <QRect>
@@ -23,6 +24,7 @@
 namespace KWin
 {
 
+class CursorSource;
 class EffectScreenImpl;
 class RenderLoop;
 class OutputConfiguration;
@@ -244,7 +246,7 @@ public:
     /**
      * Returns a matrix that can translate into the display's coordinates system
      */
-    static QMatrix4x4 logicalToNativeMatrix(const QRect &rect, qreal scale, Transform transform);
+    static QMatrix4x4 logicalToNativeMatrix(const QRectF &rect, qreal scale, Transform transform);
 
     void setVrrPolicy(RenderLoop::VrrPolicy policy);
     RenderLoop::VrrPolicy vrrPolicy() const;
@@ -257,10 +259,11 @@ public:
     bool isNonDesktop() const;
     Transform panelOrientation() const;
 
-    virtual void setColorTransformation(const std::shared_ptr<ColorTransformation> &transformation);
+    virtual bool setGammaRamp(const std::shared_ptr<ColorTransformation> &transformation);
+    virtual bool setCTM(const QMatrix3x3 &ctm);
 
-    virtual bool setCursor(const QImage &image, const QPoint &hotspot);
-    virtual bool moveCursor(const QPoint &position);
+    virtual bool setCursor(CursorSource *source);
+    virtual bool moveCursor(const QPointF &position);
 
 Q_SIGNALS:
     /**

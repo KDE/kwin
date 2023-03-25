@@ -42,7 +42,8 @@ public:
     void deleteSurroundingText(quint32 beforeLength, quint32 afterLength);
     void done();
 
-    bool isEnabled() const;
+    void updateEnabled();
+
     QList<TextInputV3InterfacePrivate::Resource *> textInputsForClient(ClientConnection *client) const;
     QList<TextInputV3InterfacePrivate::Resource *> enabledTextInputsForClient(ClientConnection *client) const;
 
@@ -83,17 +84,18 @@ public:
     } pending;
 
     QHash<Resource *, quint32> serialHash;
-    QHash<Resource *, bool> enabled;
+    QHash<Resource *, bool> enabledHash;
 
     void defaultPending();
     void defaultPendingPreedit();
 
     TextInputV3Interface *q;
+    bool isEnabled = false;
 
 protected:
     void zwp_text_input_v3_bind_resource(Resource *resource) override;
+    void zwp_text_input_v3_destroy_resource(Resource *resource) override;
     void zwp_text_input_v3_destroy(Resource *resource) override;
-    // requests
     void zwp_text_input_v3_enable(Resource *resource) override;
     void zwp_text_input_v3_disable(Resource *resource) override;
     void zwp_text_input_v3_set_surrounding_text(Resource *resource, const QString &text, int32_t cursor, int32_t anchor) override;

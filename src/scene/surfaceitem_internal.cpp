@@ -7,7 +7,6 @@
 #include "scene/surfaceitem_internal.h"
 #include "composite.h"
 #include "core/renderbackend.h"
-#include "deleted.h"
 #include "internalwindow.h"
 
 #include <QOpenGLFramebufferObject>
@@ -21,7 +20,7 @@ SurfaceItemInternal::SurfaceItemInternal(InternalWindow *window, Scene *scene, I
 {
     connect(window, &Window::bufferGeometryChanged,
             this, &SurfaceItemInternal::handleBufferGeometryChanged);
-    connect(window, &Window::windowClosed,
+    connect(window, &Window::closed,
             this, &SurfaceItemInternal::handleWindowClosed);
 
     setSize(window->bufferGeometry().size());
@@ -47,15 +46,15 @@ std::unique_ptr<SurfacePixmap> SurfaceItemInternal::createPixmap()
     return std::make_unique<SurfacePixmapInternal>(this);
 }
 
-void SurfaceItemInternal::handleBufferGeometryChanged(Window *window, const QRectF &old)
+void SurfaceItemInternal::handleBufferGeometryChanged(const QRectF &old)
 {
-    if (window->bufferGeometry().size() != old.size()) {
+    if (m_window->bufferGeometry().size() != old.size()) {
         discardPixmap();
     }
-    setSize(window->bufferGeometry().size());
+    setSize(m_window->bufferGeometry().size());
 }
 
-void SurfaceItemInternal::handleWindowClosed(Window *original, Deleted *deleted)
+void SurfaceItemInternal::handleWindowClosed(Window *deleted)
 {
     m_window = deleted;
 }

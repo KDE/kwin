@@ -189,7 +189,7 @@ void TestKeyboardShortcutsInhibitorInterface::testKeyboardShortcuts()
 
     // Test activate
     inhibitorServer->setActive(true);
-    QVERIFY(inhibitorInactiveSpy.wait() || inhibitorInactiveSpy.count() == 1);
+    QVERIFY(inhibitorActiveSpy.wait() || inhibitorActiveSpy.count() == 1);
 
     // Test creating for another surface
     m_inhibitManagerClient->inhibit_shortcuts(m_clientSurfaces[1], m_clientSeat->operator wl_seat *());

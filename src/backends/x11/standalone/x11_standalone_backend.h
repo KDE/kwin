@@ -9,8 +9,9 @@
 
 #pragma once
 
-#include "core/outputbackend.h"
+#include <config-kwin.h>
 
+#include "core/outputbackend.h"
 #include <kwin_export.h>
 
 #include <QObject>
@@ -45,6 +46,10 @@ public:
     ~X11StandaloneBackend() override;
     bool initialize() override;
 
+    Display *display() const;
+    xcb_connection_t *connection() const;
+    xcb_window_t rootWindow() const;
+
     std::unique_ptr<OpenGLBackend> createOpenGLBackend() override;
     QVector<CompositingType> supportedCompositors() const override;
 
@@ -55,7 +60,7 @@ public:
     std::unique_ptr<Edge> createScreenEdge(ScreenEdges *parent);
     void createPlatformCursor(QObject *parent = nullptr);
     void startInteractiveWindowSelection(std::function<void(KWin::Window *)> callback, const QByteArray &cursorName = QByteArray());
-    void startInteractivePositionSelection(std::function<void(const QPoint &)> callback);
+    void startInteractivePositionSelection(std::function<void(const QPointF &)> callback);
     PlatformCursorImage cursorImage() const;
     std::unique_ptr<OutlineVisual> createOutline(Outline *outline);
     void createEffectsHandler(Compositor *compositor, WorkspaceScene *scene);
@@ -82,7 +87,9 @@ private:
     void updateRefreshRate();
     void updateCursor();
 
+#if HAVE_X11_XINPUT
     std::unique_ptr<XInputIntegration> m_xinputIntegration;
+#endif
     std::unique_ptr<QTimer> m_updateOutputsTimer;
     Display *m_x11Display;
     std::unique_ptr<WindowSelector> m_windowSelector;

@@ -10,8 +10,7 @@
 
 #include "core/output.h"
 #include "core/outputbackend.h"
-#include "cursor.h"
-#include "deleted.h"
+#include "pointer_input.h"
 #include "wayland/seat_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -40,7 +39,6 @@ private Q_SLOTS:
 void XWaylandInputTest::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
-    qRegisterMetaType<KWin::Deleted *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(waylandServer()->init(s_socketName));
     QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(QVector<QRect>, QVector<QRect>() << QRect(0, 0, 1280, 1024) << QRect(1280, 0, 1280, 1024)));
@@ -57,19 +55,10 @@ void XWaylandInputTest::initTestCase()
 void XWaylandInputTest::init()
 {
     workspace()->setActiveOutput(QPoint(640, 512));
-    Cursors::self()->mouse()->setPos(QPoint(640, 512));
-    xcb_warp_pointer(connection(), XCB_WINDOW_NONE, kwinApp()->x11RootWindow(), 0, 0, 0, 0, 640, 512);
-    xcb_flush(connection());
+    input()->pointer()->warp(QPoint(640, 512));
+
     QVERIFY(waylandServer()->windows().isEmpty());
 }
-
-struct XcbConnectionDeleter
-{
-    void operator()(xcb_connection_t *pointer)
-    {
-        xcb_disconnect(pointer);
-    }
-};
 
 class X11EventReaderHelper : public QObject
 {
@@ -123,11 +112,15 @@ void XWaylandInputTest::testPointerEnterLeaveSsd()
     // this test simulates a pointer enter and pointer leave on a server-side decorated X11 window
 
     // create the test window
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     if (xcb_get_setup(c.get())->release_number < 11800000) {
         QSKIP("XWayland 1.18 required");
     }
+
+    xcb_warp_pointer(connection(), XCB_WINDOW_NONE, kwinApp()->x11RootWindow(), 0, 0, 0, 0, 640, 512);
+    xcb_flush(connection());
+
     X11EventReaderHelper eventReader(c.get());
     QSignalSpy enteredSpy(&eventReader, &X11EventReaderHelper::entered);
     QSignalSpy leftSpy(&eventReader, &X11EventReaderHelper::left);
@@ -168,20 +161,20 @@ void XWaylandInputTest::testPointerEnterLeaveSsd()
     QVERIFY(Test::waitForWaylandSurface(window));
 
     // move pointer into the window, should trigger an enter
-    QVERIFY(!window->frameGeometry().contains(Cursors::self()->mouse()->pos()));
+    QVERIFY(!exclusiveContains(window->frameGeometry(), Cursors::self()->mouse()->pos()));
     QVERIFY(enteredSpy.isEmpty());
-    Cursors::self()->mouse()->setPos(window->frameGeometry().center());
+    input()->pointer()->warp(window->frameGeometry().center().toPoint());
     QCOMPARE(waylandServer()->seat()->focusedPointerSurface(), window->surface());
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.last().first().toPoint(), (window->frameGeometry().center() - QPointF(window->frameMargins().left(), window->frameMargins().top())).toPoint());
 
     // move out of window
-    Cursors::self()->mouse()->setPos(window->frameGeometry().bottomRight() + QPointF(10, 10));
+    input()->pointer()->warp(window->frameGeometry().bottomRight() + QPointF(10, 10));
     QVERIFY(leftSpy.wait());
     QCOMPARE(leftSpy.last().first().toPoint(), (window->frameGeometry().center() - QPointF(window->frameMargins().left(), window->frameMargins().top())).toPoint());
 
     // destroy window again
-    QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
+    QSignalSpy windowClosedSpy(window, &X11Window::closed);
     xcb_unmap_window(c.get(), windowId);
     xcb_destroy_window(c.get(), windowId);
     xcb_flush(c.get());
@@ -192,8 +185,11 @@ void XWaylandInputTest::testPointerEventLeaveCsd()
 {
     // this test simulates a pointer enter and pointer leave on a client-side decorated X11 window
 
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
+
+    xcb_warp_pointer(connection(), XCB_WINDOW_NONE, kwinApp()->x11RootWindow(), 0, 0, 0, 0, 640, 512);
+    xcb_flush(connection());
 
     if (xcb_get_setup(c.get())->release_number < 11800000) {
         QSKIP("XWayland 1.18 required");
@@ -253,21 +249,21 @@ void XWaylandInputTest::testPointerEventLeaveCsd()
     QVERIFY(Test::waitForWaylandSurface(window));
 
     // Move pointer into the window, should trigger an enter.
-    QVERIFY(!window->frameGeometry().contains(Cursors::self()->mouse()->pos()));
+    QVERIFY(!exclusiveContains(window->frameGeometry(), Cursors::self()->mouse()->pos()));
     QVERIFY(enteredSpy.isEmpty());
-    Cursors::self()->mouse()->setPos(window->frameGeometry().center());
+    input()->pointer()->warp(window->frameGeometry().center().toPoint());
     QCOMPARE(waylandServer()->seat()->focusedPointerSurface(), window->surface());
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.last().first().toPoint(), QPoint(60, 105));
 
     // Move out of the window, should trigger a leave.
     QVERIFY(leftSpy.isEmpty());
-    Cursors::self()->mouse()->setPos(window->frameGeometry().bottomRight() + QPoint(100, 100));
+    input()->pointer()->warp(window->frameGeometry().bottomRight() + QPoint(100, 100));
     QVERIFY(leftSpy.wait());
     QCOMPARE(leftSpy.last().first().toPoint(), QPoint(60, 105));
 
     // Destroy the window.
-    QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
+    QSignalSpy windowClosedSpy(window, &X11Window::closed);
     xcb_unmap_window(c.get(), windowId);
     xcb_destroy_window(c.get(), windowId);
     xcb_flush(c.get());

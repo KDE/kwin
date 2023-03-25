@@ -9,13 +9,13 @@
 # Enrique Matias Sanchez (aka Quique) <cronopios@gmail.com>, 2007.
 # Cristina Yenyxe González García <the.blue.valkyrie@gmail.com>, 2010, 2011.
 # Javier Vinal <fjvinal@gmail.com>, 2012.
-# Eloy Cuadra <ecuadra@eloihr.net>, 2012, 2013, 2014, 2015, 2018, 2019, 2020, 2021.
+# Eloy Cuadra <ecuadra@eloihr.net>, 2012, 2013, 2014, 2015, 2018, 2019, 2020, 2021, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-26 00:47+0000\n"
-"PO-Revision-Date: 2021-06-10 13:00+0200\n"
+"POT-Creation-Date: 2023-03-05 03:09+0000\n"
+"PO-Revision-Date: 2023-03-21 20:54+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -24,18 +24,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "com>\n"
 "First-Translator: Pablo de Vicente <pvicentea@nexo.es>\n"
-"X-Generator: Lokalize 21.04.1\n"
+"X-Generator: Lokalize 23.03.80\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Eloy Cuadra,Pablo de Vicente,Miguel Revilla Rodríguez"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "ecuadra@eloihr.net,vicente@oan.es,yo@miguelrevilla.com"
 
 #: declarative-plugin/buttonsmodel.cpp:53
 #, kde-format
@@ -87,22 +77,7 @@ msgstr "Mantener por debajo de otras ventanas"
 msgid "Keep above other windows"
 msgstr "Mantener por encima de otras ventanas"
 
-#: kcm.cpp:49
-#, kde-format
-msgid "Window Decorations"
-msgstr "Decoraciones de ventanas"
-
-#: kcm.cpp:53
-#, kde-format
-msgid "Valerio Pilo"
-msgstr "Valerio Pilo"
-
-#: kcm.cpp:54
-#, kde-format
-msgid "Author"
-msgstr "Autor"
-
-#: kcm.cpp:183
+#: kcm.cpp:172
 #, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme's default (%1)"
@@ -211,52 +186,51 @@ msgstr "Suelte el botón aquí para eliminarlo"
 msgid "Drag buttons between here and the titlebar"
 msgstr "Arrastre los botones de aquí a la barra de título y viceversa"
 
-#: package/contents/ui/main.qml:18
+#: package/contents/ui/ConfigureTitlebar.qml:16
 #, kde-format
-msgid "This module lets you configure the window decorations."
-msgstr "Este módulo le permite configurar las decoraciones de las ventanas."
-
-#: package/contents/ui/main.qml:52
-#, kde-format
-msgctxt "tab label"
-msgid "Theme"
-msgstr "Tema"
-
-#: package/contents/ui/main.qml:56
-#, kde-format
-msgctxt "tab label"
 msgid "Titlebar Buttons"
 msgstr "Botones de la barra de título"
 
-#: package/contents/ui/main.qml:92
-#, kde-format
-msgctxt "Selector label"
-msgid "Window border size:"
-msgstr "Tamaño del borde de las ventanas:"
-
-#: package/contents/ui/main.qml:110
-#, kde-format
-msgctxt "button text"
-msgid "Get New Window Decorations..."
-msgstr "Obtener nuevas decoraciones de ventanas..."
-
-#: package/contents/ui/main.qml:139
+#: package/contents/ui/ConfigureTitlebar.qml:35
 #, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the menu button"
 msgstr "Cerrar ventanas al hacer doble clic en el botón de menú"
 
-#: package/contents/ui/main.qml:156
+#: package/contents/ui/ConfigureTitlebar.qml:52
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the menu button to show the menu."
 msgstr "Mantenga pulsado el botón del menú para mostrar el menú."
 
-#: package/contents/ui/main.qml:163
+#: package/contents/ui/ConfigureTitlebar.qml:59
 #, kde-format
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
-msgstr "Mostrar sugerencias de la barra de título"
+msgstr "Mostrar ayudas emergentes de los botones de la barra de título"
+
+#: package/contents/ui/main.qml:19
+#, kde-format
+msgid "This module lets you configure the window decorations."
+msgstr "Este módulo le permite configurar las decoraciones de las ventanas."
+
+#: package/contents/ui/main.qml:42
+#, kde-format
+msgctxt "Selector label"
+msgid "Window border size:"
+msgstr "Tamaño del borde de las ventanas:"
+
+#: package/contents/ui/main.qml:60
+#, kde-format
+msgctxt "button text"
+msgid "Configure Titlebar Buttons…"
+msgstr "Configurar botones de la barra de título..."
+
+#: package/contents/ui/main.qml:65
+#, kde-format
+msgctxt "button text"
+msgid "Get New Window Decorations…"
+msgstr "Obtener nuevas decoraciones de ventanas..."
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -307,6 +281,27 @@ msgstr "Gigantesco"
 #, kde-format
 msgid "Oversized"
 msgstr "De tamaño excesivo"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Eloy Cuadra,Pablo de Vicente,Miguel Revilla Rodríguez"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "ecuadra@eloihr.net,vicente@oan.es,yo@miguelrevilla.com"
+
+#~ msgid "Window Decorations"
+#~ msgstr "Decoraciones de ventanas"
+
+#~ msgid "Valerio Pilo"
+#~ msgstr "Valerio Pilo"
+
+#~ msgid "Author"
+#~ msgstr "Autor"
+
+#~ msgctxt "tab label"
+#~ msgid "Theme"
+#~ msgstr "Tema"
 
 #~ msgctxt "popup tip"
 #~ msgid ""

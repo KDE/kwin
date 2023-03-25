@@ -7,13 +7,13 @@
 #pragma once
 
 #include "screencastsource.h"
+#include "window.h"
 
 #include <QPointer>
+#include <QTimer>
 
 namespace KWin
 {
-
-class Window;
 
 class WindowScreenCastSource : public ScreenCastSource
 {
@@ -22,15 +22,17 @@ class WindowScreenCastSource : public ScreenCastSource
 public:
     explicit WindowScreenCastSource(Window *window, QObject *parent = nullptr);
 
+    quint32 drmFormat() const override;
     bool hasAlphaChannel() const override;
     QSize textureSize() const override;
 
     void render(GLFramebuffer *target) override;
-    void render(QImage *image) override;
+    void render(spa_data *spa, spa_video_format format) override;
     std::chrono::nanoseconds clock() const override;
 
 private:
     QPointer<Window> m_window;
+    WindowOffscreenRenderRef m_offscreenRef;
 };
 
 } // namespace KWin

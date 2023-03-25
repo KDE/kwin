@@ -15,6 +15,8 @@
 // KConfigSkeleton
 #include "sheetconfig.h"
 
+#include "libkwineffects/renderviewport.h"
+
 // Qt
 #include <QMatrix4x4>
 #include <qmath.h>
@@ -57,7 +59,6 @@ SheetEffect::SheetEffect()
 
     connect(effects, &EffectsHandler::windowAdded, this, &SheetEffect::slotWindowAdded);
     connect(effects, &EffectsHandler::windowClosed, this, &SheetEffect::slotWindowClosed);
-    connect(effects, &EffectsHandler::windowDeleted, this, &SheetEffect::slotWindowDeleted);
 }
 
 void SheetEffect::reconfigure(ReconfigureFlags flags)
@@ -93,11 +94,11 @@ void SheetEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std:
     effects->prePaintWindow(w, data, presentTime);
 }
 
-void SheetEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+void SheetEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
     auto animationIt = m_animations.constFind(w);
     if (animationIt == m_animations.constEnd()) {
-        effects->paintWindow(w, mask, region, data);
+        effects->paintWindow(renderTarget, viewport, w, mask, region, data);
         return;
     }
 
@@ -108,7 +109,7 @@ void SheetEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowP
     // this is how the window will be transformed:
     //  [move to the origin] -> [scale] -> [rotate] -> [translate] ->
     //    -> [perspective projection] -> [reverse "move to the origin"]
-    const QMatrix4x4 oldProjMatrix = createPerspectiveMatrix(effects->renderTargetRect(), effects->renderTargetScale());
+    const QMatrix4x4 oldProjMatrix = createPerspectiveMatrix(viewport.renderRect(), viewport.scale());
     const QRectF windowGeo = w->frameGeometry();
     const QVector3D invOffset = oldProjMatrix.map(QVector3D(windowGeo.center()));
     QMatrix4x4 invOffsetMatrix;
@@ -128,7 +129,7 @@ void SheetEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowP
 
     data.multiplyOpacity(t);
 
-    effects->paintWindow(w, mask, region, data);
+    effects->paintWindow(renderTarget, viewport, w, mask, region, data);
 }
 
 void SheetEffect::postPaintWindow(EffectWindow *w)
@@ -224,11 +225,6 @@ void SheetEffect::slotWindowClosed(EffectWindow *w)
     w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void *>(this)));
 
     w->addRepaintFull();
-}
-
-void SheetEffect::slotWindowDeleted(EffectWindow *w)
-{
-    m_animations.remove(w);
 }
 
 bool SheetEffect::isSheetWindow(EffectWindow *w) const

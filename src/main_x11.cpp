@@ -40,11 +40,7 @@
 #include <QSurfaceFormat>
 #include <QVBoxLayout>
 #include <qplatformdefs.h>
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 #include <private/qtx11extras_p.h>
-#else
-#include <QX11Info>
-#endif
 #include <QtDBus>
 
 // system
@@ -227,7 +223,7 @@ void ApplicationX11::startInteractiveWindowSelection(std::function<void(KWin::Wi
     static_cast<X11StandaloneBackend *>(outputBackend())->startInteractiveWindowSelection(callback, cursorName);
 }
 
-void ApplicationX11::startInteractivePositionSelection(std::function<void(const QPoint &)> callback)
+void ApplicationX11::startInteractivePositionSelection(std::function<void(const QPointF &)> callback)
 {
     static_cast<X11StandaloneBackend *>(outputBackend())->startInteractivePositionSelection(callback);
 }
@@ -290,7 +286,7 @@ void ApplicationX11::performStartup()
             bool ok = false;
             const quint32 t = timestamp.toULongLong(&ok);
             if (ok) {
-                kwinApp()->setX11Time(t);
+                setX11Time(t);
             }
         });
 
@@ -380,9 +376,13 @@ int main(int argc, char *argv[])
     // enforce xcb plugin, unfortunately command line switch has precedence
     setenv("QT_QPA_PLATFORM", "xcb", true);
 
+    // disable highdpi scaling
+    setenv("QT_ENABLE_HIGHDPI_SCALING", "0", true);
+
     qunsetenv("QT_DEVICE_PIXEL_RATIO");
     qunsetenv("QT_SCALE_FACTOR");
-    QCoreApplication::setAttribute(Qt::AA_DisableHighDpiScaling);
+    qunsetenv("QT_SCREEN_SCALE_FACTORS");
+
     // KSMServer talks to us directly on DBus.
     QCoreApplication::setAttribute(Qt::AA_DisableSessionManager);
     // For sharing thumbnails between our scene graph and qtquick.
@@ -396,9 +396,10 @@ int main(int argc, char *argv[])
     QSurfaceFormat::setDefaultFormat(format);
 
     KWin::ApplicationX11 a(argc, argv);
-    a.setupTranslator();
+
     // reset QT_QPA_PLATFORM so we don't propagate it to our children (e.g. apps launched from the overview effect)
     qunsetenv("QT_QPA_PLATFORM");
+    qunsetenv("QT_ENABLE_HIGHDPI_SCALING");
 
     KSignalHandler::self()->watchSignal(SIGTERM);
     KSignalHandler::self()->watchSignal(SIGINT);

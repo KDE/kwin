@@ -1,10 +1,10 @@
-import QtQuick 2.0;
-import org.kde.kwin 2.0;
+import QtQuick
+import org.kde.kwin
 
-ScreenEdgeItem {
-    edge: ScreenEdgeItem.LeftEdge
-    mode: ScreenEdgeItem.Touch
+ScreenEdgeHandler {
+    edge: ScreenEdgeHandler.LeftEdge
+    mode: ScreenEdgeHandler.Touch
     onActivated: {
-        workspace.slotToggleShowDesktop();
+        Workspace.slotToggleShowDesktop();
     }
 }

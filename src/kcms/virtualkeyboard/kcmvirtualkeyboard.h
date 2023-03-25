@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <KQuickAddons/ManagedConfigModule>
+#include <KQuickManagedConfigModule>
 
 #include <KService>
 
@@ -35,14 +35,14 @@ private:
     KService::List m_services;
 };
 
-class KcmVirtualKeyboard : public KQuickAddons::ManagedConfigModule
+class KcmVirtualKeyboard : public KQuickManagedConfigModule
 {
     Q_OBJECT
     Q_PROPERTY(VirtualKeyboardSettings *settings READ settings CONSTANT)
     Q_PROPERTY(QAbstractItemModel *model READ keyboardsModel CONSTANT)
 
 public:
-    explicit KcmVirtualKeyboard(QObject *parent = nullptr, const QVariantList &list = QVariantList());
+    explicit KcmVirtualKeyboard(QObject *parent, const KPluginMetaData &metaData, const QVariantList &list);
     ~KcmVirtualKeyboard() override;
 
     VirtualKeyboardSettings *settings() const;

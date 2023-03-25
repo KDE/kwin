@@ -11,13 +11,13 @@
 # Serdar SOYTETİR <tulliana@gmail.com>, 2010, 2012.
 # Volkan Gezer <volkangezer@gmail.com>, 2013, 2015, 2017.
 # Kaan Ozdincer <kaanozdincer@gmail.com>, 2014.
-# Emir SARI <emir_sari@icloud.com>, 2022.
+# Emir SARI <emir_sari@icloud.com>, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-03 00:48+0000\n"
-"PO-Revision-Date: 2022-12-03 18:58+0300\n"
+"POT-Creation-Date: 2023-03-17 02:32+0000\n"
+"PO-Revision-Date: 2023-02-04 13:40+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -25,19 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 22.08.3\n"
-
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Görkem Çetin, Uğur Çetin, Volkan Gezer, Emir SARI"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr ""
-"gorkem@kde.org, jnmbk@users.sourceforge.net, volkangezer@gmail.com, "
-"emir_sari@îcloud.com"
+"X-Generator: Lokalize 22.12.1\n"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:17
@@ -616,8 +604,8 @@ msgid ""
 "application becomes active. Note that applications have to mark the windows "
 "with the proper window type for this feature to work."
 msgstr ""
-"Açıldığında, etkin olmayan pencerelere ait yardımcı pencereler (araç "
-"pencereleri, ayrık menüler, ...) gizlenecektir ve sadece uygulama etkin "
+"Açıldığında, etkin olmayan pencerelere ait yardımcı pencereler (izlence "
+"pencereleri, ayrık menüler, ...) gizlenecektir ve yalnızca uygulama etkin "
 "olduğunda gösterilecektir. Bu özelliğin çalışması için uygulamaların "
 "pencerelerini doğru şekilde işaretlemeleri gereklidir."
 
@@ -790,7 +778,7 @@ msgstr ""
 "style=\" font-style:italic;\">Hiçbiri:</span> Engelleme kapalıdır ve yeni "
 "pencereler her zaman etkin olur.</li><li style=\" margin-top:0px; margin-"
 "bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
-"indent:0px;\"><span style=\" font-style:italic;\">Düşük:</em> Engelleme "
+"indent:0px;\"><span style=\" font-style:italic;\">Düşük:</span> Engelleme "
 "açıktır; bazı pencereler altyapıyı desteklemiyorlarsa ve KWin doğru bir "
 "şekilde karar veremiyorsa etkinleşecektir. Bu ayar, uygulamaya bağlı olarak "
 "bazen iyi bazen de kötü başarım gösterebilir.</li><li style=\" margin-"
@@ -798,16 +786,16 @@ msgstr ""
 "indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Orta:</"
 "span>Engelleme açıktır.</li><li style=\" margin-top:0px; margin-bottom:0px; "
 "margin-left:0px;margin-right:0px; -qt-block-indent:0; text-indent:0px;"
-"\"><span style=\" font-style:italic;\">Yüksek:</span> Yeni pencereler sadece "
-"hiçbir pencere etkin değilse veya geçerli uygulamaya aitse etkinleştirilir. "
-"Bu ayar fare odaklama yöntemi kullanılmıyorsa kullanışlı olmayabilir.</"
-"li><li style=\" margin-top:0px; margin-bottom:12px; margin-left:0px; margin-"
-"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
-"italic;\">Çok Yüksek:</span> Tüm pencereler kullanıcı tarafından "
-"etkinleştirilmelidir.</li></ul><p>Odak çalması engellenen pencereler ilgi "
-"istiyor olarak işaretlenir, yani öntanımlı olarak görev çubuğu girdisi "
-"vurgulanır. Bu davranış Bildirimler denetim modülünden değiştirilebilir.</"
-"p></body></html>"
+"\"><span style=\" font-style:italic;\">Yüksek:</span> Yeni pencereler "
+"yalnızca hiçbir pencere etkin değilse veya geçerli uygulamaya aitse "
+"etkinleştirilir. Bu ayar fare odaklama yöntemi kullanılmıyorsa kullanışlı "
+"olmayabilir.</li><li style=\" margin-top:0px; margin-bottom:12px; margin-"
+"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+"style=\" font-style:italic;\">Çok Yüksek:</span> Tüm pencereler kullanıcı "
+"tarafından etkinleştirilmelidir.</li></ul><p>Odak çalması engellenen "
+"pencereler ilgi istiyor olarak işaretlenir, yani öntanımlı olarak görev "
+"çubuğu girdisi vurgulanır. Bu davranış Bildirimler denetim modülünden "
+"değiştirilebilir.</p></body></html>"
 
 #. i18n: Focus Stealing Prevention Level
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_BorderSnapZone)
@@ -943,110 +931,37 @@ msgstr "&Ekran odaklanmasını ayır"
 msgid "Window activation policy description"
 msgstr "Pencere etkinleştirme ilke açıklaması"
 
-#: main.cpp:73
+#: main.cpp:79
 #, kde-format
 msgid "&Focus"
 msgstr "&Odakla"
 
-#: main.cpp:79
+#: main.cpp:84
 #, kde-format
 msgid "Titlebar A&ctions"
 msgstr "&Başlık Çubuğu Eylemleri"
 
-#: main.cpp:85
+#: main.cpp:89
 #, kde-format
 msgid "W&indow Actions"
 msgstr "Pencere &Eylemleri"
 
-#: main.cpp:91
+#: main.cpp:94
 #, kde-format
 msgid "Mo&vement"
 msgstr "&Hareket"
 
-#: main.cpp:97
+#: main.cpp:99
 #, kde-format
 msgid "Adva&nced"
 msgstr "&Gelişmiş"
 
-#: main.cpp:101
-#, kde-format
-msgid "Window Behavior Configuration Module"
-msgstr "Pencere Davranışı Yapılandırma Modülü"
-
-#: main.cpp:103
-#, kde-format
-msgid "(c) 1997 - 2002 KWin and KControl Authors"
-msgstr "(c) 1997 - 2002 KWin ve KControl Yazarları"
-
-#: main.cpp:105
-#, kde-format
-msgid "Matthias Ettrich"
-msgstr "Matthias Ettrich"
-
-#: main.cpp:106
-#, kde-format
-msgid "Waldo Bastian"
-msgstr "Waldo Bastian"
-
-#: main.cpp:107
-#, kde-format
-msgid "Cristian Tibirna"
-msgstr "Cristian Tibirna"
-
-#: main.cpp:108
-#, kde-format
-msgid "Matthias Kalle Dalheimer"
-msgstr "Matthias Kalle Dalheimer"
-
-#: main.cpp:109
-#, kde-format
-msgid "Daniel Molkentin"
-msgstr "Daniel Molkentin"
-
-#: main.cpp:110
-#, kde-format
-msgid "Wynn Wilkes"
-msgstr "Wynn Wilkes"
-
-#: main.cpp:111
-#, kde-format
-msgid "Pat Dowler"
-msgstr "Pat Dowler"
-
-#: main.cpp:112
-#, kde-format
-msgid "Bernd Wuebben"
-msgstr "Bernd Wuebben"
-
-#: main.cpp:113
-#, kde-format
-msgid "Matthias Hoelzer-Kluepfel"
-msgstr "Matthias Hoelzer-Kluepfel"
-
-#: main.cpp:161
-#, kde-format
-msgid ""
-"<p><h1>Window Behavior</h1> Here you can customize the way windows behave "
-"when being moved, resized or clicked on. You can also specify a focus policy "
-"as well as a placement policy for new windows.</p> <p>Please note that this "
-"configuration will not take effect if you do not use KWin as your window "
-"manager. If you do use a different window manager, please refer to its "
-"documentation for how to customize window behavior.</p>"
-msgstr ""
-"<p><h1>Pencere Davranışları</h1> Pencerelerin hareket ettirildiğinde, "
-"yeniden boyutlandırıldığında ve üzerine tıklandığında hangi davranışlar "
-"sergileyebileceğine buradan karar verebilirsiniz. Ayrıca, yeni pencereler "
-"için odaklama ve yerleşim yöntemini de belirleyebilirsiniz.</p> <p>Ancak "
-"KWin pencere yöneticisini kullanmıyorsanız burada yaptığınız seçenekler "
-"etkin olmayacaktır. Başka bir pencere yöneticisi kullanıyorsanız pencere "
-"davranışlarını değiştirmek için lütfen onun yardım belgelerine bakınız.</p>"
-
-#: main.cpp:202
+#: main.cpp:178
 #, kde-format
 msgid "&Titlebar Actions"
 msgstr "&Başlık Çubuğu Eylemleri"
 
-#: main.cpp:208
+#: main.cpp:188
 #, kde-format
 msgid "Window Actio&ns"
 msgstr "Pencere &Eylemleri"
@@ -1403,6 +1318,3 @@ msgstr ""
 "çalma koruması</em> ve <em>sekme kutusu ('Alt+Tab)'</em>, etkinleştirme "
 "ilkesine karşıttır ve çalışmazlar. Bu durumda <em>Odak fareyi izler (fare "
 "önceliği)</em>'ni kullanmak isteyeceksinizdir!"
-
-#~ msgid "Cascaded"
-#~ msgstr "Basamaklandırılmış"

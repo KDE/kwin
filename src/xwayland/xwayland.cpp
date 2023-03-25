@@ -207,9 +207,16 @@ Xwayland::~Xwayland()
     m_launcher->stop();
 }
 
-void Xwayland::start()
+void Xwayland::init()
 {
-    m_launcher->start();
+    m_launcher->enable();
+
+    auto env = m_app->processStartupEnvironment();
+    env.insert(QStringLiteral("DISPLAY"), m_launcher->displayName());
+    env.insert(QStringLiteral("XAUTHORITY"), m_launcher->xauthority());
+    qputenv("DISPLAY", m_launcher->displayName().toLatin1());
+    qputenv("XAUTHORITY", m_launcher->xauthority().toLatin1());
+    m_app->setProcessStartupEnvironment(env);
 }
 
 XwaylandLauncher *Xwayland::xwaylandLauncher() const
@@ -217,7 +224,7 @@ XwaylandLauncher *Xwayland::xwaylandLauncher() const
     return m_launcher;
 }
 
-void Xwayland::dispatchEvents()
+void Xwayland::dispatchEvents(DispatchEventsMode mode)
 {
     xcb_connection_t *connection = kwinApp()->x11Connection();
     if (!connection) {
@@ -232,12 +239,11 @@ void Xwayland::dispatchEvents()
         return;
     }
 
-    while (xcb_generic_event_t *event = xcb_poll_for_event(connection)) {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        long result = 0;
-#else
+    auto pollEventFunc = mode == DispatchEventsMode::Poll ? xcb_poll_for_event : xcb_poll_for_queued_event;
+
+    while (xcb_generic_event_t *event = pollEventFunc(connection)) {
         qintptr result = 0;
-#endif
+
         QAbstractEventDispatcher *dispatcher = QCoreApplication::eventDispatcher();
         dispatcher->filterNativeEvent(QByteArrayLiteral("xcb_generic_event_t"), event, &result);
         free(event);
@@ -251,18 +257,23 @@ void Xwayland::installSocketNotifier()
     const int fileDescriptor = xcb_get_file_descriptor(kwinApp()->x11Connection());
 
     m_socketNotifier = new QSocketNotifier(fileDescriptor, QSocketNotifier::Read, this);
-    connect(m_socketNotifier, &QSocketNotifier::activated, this, &Xwayland::dispatchEvents);
+    connect(m_socketNotifier, &QSocketNotifier::activated, this, [this]() {
+        dispatchEvents(DispatchEventsMode::Poll);
+    });
 
     QAbstractEventDispatcher *dispatcher = QCoreApplication::eventDispatcher();
-    connect(dispatcher, &QAbstractEventDispatcher::aboutToBlock, this, &Xwayland::dispatchEvents);
-    connect(dispatcher, &QAbstractEventDispatcher::awake, this, &Xwayland::dispatchEvents);
+    connect(dispatcher, &QAbstractEventDispatcher::aboutToBlock, this, [this]() {
+        dispatchEvents(DispatchEventsMode::EventQueue);
+    });
+    connect(dispatcher, &QAbstractEventDispatcher::awake, this, [this]() {
+        dispatchEvents(DispatchEventsMode::EventQueue);
+    });
 }
 
 void Xwayland::uninstallSocketNotifier()
 {
     QAbstractEventDispatcher *dispatcher = QCoreApplication::eventDispatcher();
-    disconnect(dispatcher, &QAbstractEventDispatcher::aboutToBlock, this, &Xwayland::dispatchEvents);
-    disconnect(dispatcher, &QAbstractEventDispatcher::awake, this, &Xwayland::dispatchEvents);
+    disconnect(dispatcher, nullptr, this, nullptr);
 
     delete m_socketNotifier;
     m_socketNotifier = nullptr;
@@ -281,6 +292,9 @@ void Xwayland::handleXwaylandFinished()
 
     m_dataBridge.reset();
     m_selectionOwner.reset();
+
+    m_inputSpy.reset();
+    disconnect(options, &Options::xwaylandEavesdropsChanged, this, &Xwayland::refreshEavesdropping);
 
     destroyX11Connection();
 }
@@ -310,13 +324,6 @@ void Xwayland::handleXwaylandReady()
     }
 
     m_dataBridge = std::make_unique<DataBridge>();
-
-    auto env = m_app->processStartupEnvironment();
-    env.insert(QStringLiteral("DISPLAY"), m_launcher->displayName());
-    env.insert(QStringLiteral("XAUTHORITY"), m_launcher->xauthority());
-    qputenv("DISPLAY", m_launcher->displayName().toLatin1());
-    qputenv("XAUTHORITY", m_launcher->xauthority().toLatin1());
-    m_app->setProcessStartupEnvironment(env);
 
     connect(workspace(), &Workspace::outputOrderChanged, this, &Xwayland::updatePrimary);
     updatePrimary();

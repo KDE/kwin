@@ -10,12 +10,12 @@
 
 #pragma once
 
+#include "libkwineffects/kwinglobals.h"
 #include <QObject>
 #include <QQmlListProperty>
 #include <QRect>
 #include <QSize>
 #include <QStringList>
-#include <kwinglobals.h>
 
 namespace KWin
 {
@@ -24,16 +24,12 @@ class TileManager;
 class Window;
 class Output;
 class VirtualDesktop;
-class X11Window;
 
 class WorkspaceWrapper : public QObject
 {
     Q_OBJECT
-    /**
-     * @deprecated use the currentVirtualDesktop property instead
-     */
-    Q_PROPERTY(int currentDesktop READ currentDesktop WRITE setCurrentDesktop NOTIFY currentDesktopChanged)
-    Q_PROPERTY(KWin::VirtualDesktop *currentVirtualDesktop READ currentVirtualDesktop WRITE setCurrentVirtualDesktop NOTIFY currentVirtualDesktopChanged)
+    Q_PROPERTY(QVector<KWin::VirtualDesktop *> desktops READ desktops NOTIFY desktopsChanged)
+    Q_PROPERTY(KWin::VirtualDesktop *currentDesktop READ currentDesktop WRITE setCurrentDesktop NOTIFY currentDesktopChanged)
     Q_PROPERTY(KWin::Window *activeClient READ activeClient WRITE setActiveClient NOTIFY clientActivated)
     // TODO: write and notify?
     Q_PROPERTY(QSize desktopGridSize READ desktopGridSize NOTIFY desktopLayoutChanged)
@@ -42,27 +38,8 @@ class WorkspaceWrapper : public QObject
     Q_PROPERTY(int workspaceWidth READ workspaceWidth)
     Q_PROPERTY(int workspaceHeight READ workspaceHeight)
     Q_PROPERTY(QSize workspaceSize READ workspaceSize)
-    /**
-     * The number of desktops currently used. Minimum number of desktops is 1, maximum 20.
-     */
-    Q_PROPERTY(int desktops READ numberOfDesktops WRITE setNumberOfDesktops NOTIFY numberDesktopsChanged)
-    /**
-     * The same of the display, that is all screens.
-     * @deprecated since 5.0 use virtualScreenSize
-     */
-    Q_PROPERTY(QSize displaySize READ displaySize)
-    /**
-     * The width of the display, that is width of all combined screens.
-     * @deprecated since 5.0 use virtualScreenSize
-     */
-    Q_PROPERTY(int displayWidth READ displayWidth)
-    /**
-     * The height of the display, that is height of all combined screens.
-     * @deprecated since 5.0 use virtualScreenSize
-     */
-    Q_PROPERTY(int displayHeight READ displayHeight)
-    Q_PROPERTY(int activeScreen READ activeScreen)
-    Q_PROPERTY(int numScreens READ numScreens NOTIFY numberScreensChanged)
+    Q_PROPERTY(KWin::Output *activeScreen READ activeScreen)
+    Q_PROPERTY(QList<KWin::Output *> screens READ screens NOTIFY screensChanged)
     Q_PROPERTY(QString currentActivity READ currentActivity WRITE setCurrentActivity NOTIFY currentActivityChanged)
     Q_PROPERTY(QStringList activities READ activityList NOTIFY activitiesChanged)
     /**
@@ -72,7 +49,7 @@ class WorkspaceWrapper : public QObject
      */
     Q_PROPERTY(QSize virtualScreenSize READ virtualScreenSize NOTIFY virtualScreenSizeChanged)
     /**
-     * The bounding geometry of all outputs combined. Always starts at (0,0) and has
+     * The bounding geometry of all screens combined. Always starts at (0,0) and has
      * virtualScreenSize as it's size.
      * @see virtualScreenSize
      */
@@ -86,25 +63,13 @@ private:
     Q_DISABLE_COPY(WorkspaceWrapper)
 
 Q_SIGNALS:
-    void desktopPresenceChanged(KWin::Window *client, int desktop);
-    void currentDesktopChanged(int desktop, KWin::Window *client);
     void clientAdded(KWin::Window *client);
     void clientRemoved(KWin::Window *client);
-    void clientManaging(KWin::X11Window *client);
-    void clientMinimized(KWin::Window *client);
-    void clientUnminimized(KWin::Window *client);
-    void clientRestored(KWin::X11Window *client);
-    void clientMaximizeSet(KWin::Window *client, bool h, bool v);
-    void killWindowCalled(KWin::X11Window *client);
     void clientActivated(KWin::Window *client);
-    void clientFullScreenSet(KWin::X11Window *client, bool fullScreen, bool user);
-    void clientSetKeepAbove(KWin::X11Window *client, bool keepAbove);
     /**
-     * Signal emitted whenever the number of desktops changed.
-     * To get the current number of desktops use the property desktops.
-     * @param oldNumberOfDesktops The previous number of desktops.
+     * This signal is emitted when a virtual desktop is added or removed.
      */
-    void numberDesktopsChanged(uint oldNumberOfDesktops);
+    void desktopsChanged();
     /**
      * Signal emitted whenever the layout of virtual desktops changed.
      * That is desktopGrid(Size/Width/Height) will have new values.
@@ -118,19 +83,9 @@ Q_SIGNALS:
      */
     void clientDemandsAttentionChanged(KWin::Window *client, bool set);
     /**
-     * Signal emitted when the number of screens changes.
-     * @param count The new number of screens
+     * Emitted when the output list changes, e.g. an output is connected or removed.
      */
-    void numberScreensChanged(int count);
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    /**
-     * This signal is emitted when the size of @p screen changes.
-     * Don't forget to fetch an updated client area.
-     *
-     * @deprecated Use QScreen::geometryChanged signal instead.
-     */
-    void screenResized(int screen);
-#endif
+    void screensChanged();
     /**
      * Signal emitted whenever the current activity changed.
      * @param id id of the new activity
@@ -166,10 +121,8 @@ Q_SIGNALS:
     void virtualScreenGeometryChanged();
     /**
      * This signal is emitted when the current virtual desktop changes.
-     *
-     * @since 5.23
      */
-    void currentVirtualDesktopChanged();
+    void currentDesktopChanged();
     /**
      * This signal is emitted when the cursor position changes.
      * @see cursorPos()
@@ -220,8 +173,6 @@ public:
 #define GETTERSETTERDEF(rettype, getter, setter) \
     rettype getter() const;                      \
     void setter(rettype val);
-    GETTERSETTERDEF(int, numberOfDesktops, setNumberOfDesktops)
-    GETTERSETTERDEF(int, currentDesktop, setCurrentDesktop)
     GETTERSETTERDEF(QString, currentActivity, setCurrentActivity)
     GETTERSETTERDEF(KWin::Window *, activeClient, setActiveClient)
 #undef GETTERSETTERDEF
@@ -231,23 +182,21 @@ public:
     int workspaceWidth() const;
     int workspaceHeight() const;
     QSize workspaceSize() const;
-    int displayWidth() const;
-    int displayHeight() const;
-    QSize displaySize() const;
-    int activeScreen() const;
-    int numScreens() const;
+    KWin::Output *activeScreen() const;
+    QList<KWin::Output *> screens() const;
     QStringList activityList() const;
     QSize virtualScreenSize() const;
     QRect virtualScreenGeometry() const;
     QPoint cursorPos() const;
 
-    VirtualDesktop *currentVirtualDesktop() const;
-    void setCurrentVirtualDesktop(VirtualDesktop *desktop);
+    QVector<VirtualDesktop *> desktops() const;
+    VirtualDesktop *currentDesktop() const;
+    void setCurrentDesktop(VirtualDesktop *desktop);
 
-    Q_INVOKABLE int screenAt(const QPointF &pos) const;
+    Q_INVOKABLE KWin::Output *screenAt(const QPointF &pos) const;
 
     Q_INVOKABLE KWin::TileManager *tilingForScreen(const QString &screenName) const;
-    Q_INVOKABLE KWin::TileManager *tilingForScreen(int screen) const;
+    Q_INVOKABLE KWin::TileManager *tilingForScreen(KWin::Output *output) const;
 
     /**
      * Returns the geometry a Client can use with the specified option.
@@ -258,20 +207,8 @@ public:
      * @param screen The screen for which the area should be considered
      * @param desktop The desktop for which the area should be considered, in general there should not be a difference
      * @returns The specified screen geometry
-     * @deprecated use clientArea(ClientAreaOption option, KWin::Output *output, KWin::VirtualDesktop *desktop)
      */
-    Q_SCRIPTABLE QRectF clientArea(ClientAreaOption option, int screen, int desktop) const; // TODO Plasma 6: Drop
     Q_SCRIPTABLE QRectF clientArea(ClientAreaOption option, KWin::Output *output, KWin::VirtualDesktop *desktop) const;
-    /**
-     * Overloaded method for convenience.
-     * @param option The type of area which should be considered
-     * @param point The coordinates which have to be included in the area
-     * @param desktop The desktop for which the area should be considered, in general there should not be a difference
-     * @returns The specified screen geometry
-     * @deprecated use clientArea(ClientAreaOption option, const QPoint &point, KWin::VirtualDesktop *desktop)
-     */
-    Q_SCRIPTABLE QRectF clientArea(ClientAreaOption option, const QPoint &point, int desktop) const; // TODO Plasma 6: Drop
-    Q_SCRIPTABLE QRectF clientArea(ClientAreaOption option, const QPoint &point, KWin::VirtualDesktop *desktop) const;
     /**
      * Overloaded method for convenience.
      * @param client The Client for which the area should be retrieved
@@ -280,20 +217,15 @@ public:
     Q_SCRIPTABLE QRectF clientArea(ClientAreaOption option, KWin::Window *client) const;
     Q_SCRIPTABLE QRectF clientArea(ClientAreaOption option, const KWin::Window *client) const;
     /**
-     * Returns the name for the given @p desktop.
-     */
-    Q_SCRIPTABLE QString desktopName(int desktop) const;
-    /**
      * Create a new virtual desktop at the requested position.
      * @param position The position of the desktop. It should be in range [0, count].
      * @param name The name for the new desktop, if empty the default name will be used.
      */
     Q_SCRIPTABLE void createDesktop(int position, const QString &name) const;
     /**
-     * Remove the virtual desktop at the requested position
-     * @param position The position of the desktop to be removed. It should be in range [0, count - 1].
+     * Removes the specified virtual desktop.
      */
-    Q_SCRIPTABLE void removeDesktop(int position) const;
+    Q_SCRIPTABLE void removeDesktop(KWin::VirtualDesktop *desktop) const;
     /**
      * Provides support information about the currently running KWin instance.
      */
@@ -303,7 +235,7 @@ public:
      * @param windowId The window Id of the Client
      * @return The found Client or @c null
      */
-    Q_SCRIPTABLE KWin::X11Window *getClient(qulonglong windowId);
+    Q_SCRIPTABLE KWin::Window *getClient(qulonglong windowId);
 
 public Q_SLOTS:
     // all the available key bindings
@@ -338,49 +270,6 @@ public Q_SLOTS:
     void slotWindowLower();
     void slotWindowRaiseOrLower();
     void slotActivateAttentionWindow();
-
-    /**
-     * @deprecated since 5.24 use slotWindowMoveLeft()
-     */
-    void slotWindowPackLeft()
-    {
-        slotWindowMoveLeft();
-    }
-    /**
-     * @deprecated since 5.24 use slotWindowMoveRight()
-     */
-    void slotWindowPackRight()
-    {
-        slotWindowMoveRight();
-    }
-    /**
-     * @deprecated since 5.24 use slotWindowMoveUp()
-     */
-    void slotWindowPackUp()
-    {
-        slotWindowMoveUp();
-    }
-    /**
-     * @deprecated since 5.24 use slotWindowMoveDown()
-     */
-    void slotWindowPackDown()
-    {
-        slotWindowMoveDown();
-    }
-    /**
-     * @deprecated since 5.24 use slotWindowExpandHorizontal()
-     */
-    void slotWindowGrowHorizontal()
-    {
-        slotWindowExpandHorizontal();
-    }
-    /**
-     * @deprecated since 5.24 use slotWindowExpandVertical()
-     */
-    void slotWindowGrowVertical()
-    {
-        slotWindowExpandVertical();
-    }
 
     void slotWindowMoveLeft();
     void slotWindowMoveRight();
@@ -425,9 +314,9 @@ public Q_SLOTS:
     void slotWindowToDesktopDown();
 
     /**
-     * Sends the Window to the given @p screen.
+     * Sends the Window to the given @p output.
      */
-    void sendClientToScreen(KWin::Window *client, int screen);
+    void sendClientToScreen(KWin::Window *client, KWin::Output *output);
 
     /**
      * Shows an outline at the specified @p geometry.
@@ -443,9 +332,6 @@ public Q_SLOTS:
      * Hides the outline previously shown by showOutline.
      */
     void hideOutline();
-
-private Q_SLOTS:
-    void setupClientConnections(Window *client);
 };
 
 class QtScriptWorkspaceWrapper : public WorkspaceWrapper
@@ -467,13 +353,8 @@ class DeclarativeScriptWorkspaceWrapper : public WorkspaceWrapper
     Q_PROPERTY(QQmlListProperty<KWin::Window> clients READ clients)
 public:
     QQmlListProperty<KWin::Window> clients();
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    static int countClientList(QQmlListProperty<KWin::Window> *clients);
-    static KWin::Window *atClientList(QQmlListProperty<KWin::Window> *clients, int index);
-#else
     static qsizetype countClientList(QQmlListProperty<KWin::Window> *clients);
     static KWin::Window *atClientList(QQmlListProperty<KWin::Window> *clients, qsizetype index);
-#endif
 
     explicit DeclarativeScriptWorkspaceWrapper(QObject *parent = nullptr);
 };

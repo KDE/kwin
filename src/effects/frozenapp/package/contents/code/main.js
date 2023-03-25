@@ -105,9 +105,9 @@ var frozenAppEffect = {
         effects.windowMinimized.connect(frozenAppEffect.cancelAnimation);
         effects.windowUnminimized.connect(frozenAppEffect.restartAnimation);
         effects.windowUnresponsiveChanged.connect(frozenAppEffect.unresponsiveChanged);
-        effects['desktopChanged(int,int)'].connect(frozenAppEffect.desktopChanged);
-        effects.desktopPresenceChanged.connect(frozenAppEffect.cancelAnimation);
-        effects.desktopPresenceChanged.connect(frozenAppEffect.restartAnimation);
+        effects.desktopChanged.connect(frozenAppEffect.desktopChanged);
+        effects.windowDesktopsChanged.connect(frozenAppEffect.cancelAnimation);
+        effects.windowDesktopsChanged.connect(frozenAppEffect.restartAnimation);
 
         var windows = effects.stackingOrder;
         for (var i = 0, length = windows.length; i < length; ++i) {

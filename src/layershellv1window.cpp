@@ -177,13 +177,13 @@ void LayerShellV1Window::destroyWindow()
     markAsZombie();
     cleanTabBox();
     Deleted *deleted = Deleted::create(this);
-    Q_EMIT windowClosed(this, deleted);
+    Q_EMIT closed(deleted);
     StackingUpdatesBlocker blocker(workspace());
     cleanGrouping();
     waylandServer()->removeWindow(this);
-    deleted->unrefWindow();
     scheduleRearrange();
-    delete this;
+    unref();
+    deleted->unref();
 }
 
 void LayerShellV1Window::closeWindow()
@@ -250,8 +250,7 @@ void LayerShellV1Window::handleUnmapped()
 void LayerShellV1Window::handleCommitted()
 {
     if (surface()->buffer()) {
-        updateDepth();
-        setReadyForPainting();
+        markAsMapped();
     }
 }
 

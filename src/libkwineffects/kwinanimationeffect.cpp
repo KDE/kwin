@@ -8,9 +8,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "kwinanimationeffect.h"
-#include "kwinglutils.h"
-#include "anidata_p.h"
+#include "libkwineffects/kwinanimationeffect.h"
+#include "libkwineffects/anidata_p.h"
+#include "libkwineffects/kwinglutils.h"
 
 #include <QDateTime>
 #include <QTimer>
@@ -39,7 +39,7 @@ public:
     AnimationEffect::AniMap m_animations;
     static quint64 m_animCounter;
     quint64 m_justEndedAnimation; // protect against cancel
-    QWeakPointer<FullScreenEffectLock> m_fullScreenEffectLock;
+    std::weak_ptr<FullScreenEffectLock> m_fullScreenEffectLock;
     bool m_needSceneRepaint, m_animationsTouched, m_isInitialized;
 };
 
@@ -57,7 +57,14 @@ AnimationEffect::AnimationEffect()
     QMetaObject::invokeMethod(this, &AnimationEffect::init, Qt::QueuedConnection);
 }
 
-AnimationEffect::~AnimationEffect() = default;
+AnimationEffect::~AnimationEffect()
+{
+    Q_D(AnimationEffect);
+    if (d->m_isInitialized) {
+        disconnect(effects, &EffectsHandler::windowDeleted, this, &AnimationEffect::_windowDeleted);
+    }
+    d->m_animations.clear();
+}
 
 void AnimationEffect::init()
 {
@@ -222,17 +229,15 @@ quint64 AnimationEffect::p_animate(EffectWindow *w, Attribute a, uint meta, int 
         it = d->m_animations.insert(w, QPair<QList<AniData>, QRect>(QList<AniData>(), QRect()));
     }
 
-    FullScreenEffectLockPtr fullscreen;
+    std::shared_ptr<FullScreenEffectLock> fullscreen;
     if (fullScreenEffect) {
-        if (d->m_fullScreenEffectLock.isNull()) {
-            fullscreen = FullScreenEffectLockPtr::create(this);
-            d->m_fullScreenEffectLock = fullscreen.toWeakRef();
-        } else {
-            fullscreen = d->m_fullScreenEffectLock.toStrongRef();
+        fullscreen = d->m_fullScreenEffectLock.lock();
+        if (!fullscreen) {
+            fullscreen = std::make_shared<FullScreenEffectLock>(this);
+            d->m_fullScreenEffectLock = fullscreen;
         }
     }
 
-    PreviousWindowPixmapLockPtr previousPixmap;
     if (a == CrossFadePrevious) {
         CrossFadeEffect::redirect(w);
     }
@@ -246,7 +251,6 @@ quint64 AnimationEffect::p_animate(EffectWindow *w, Attribute a, uint meta, int 
         waitAtSource, // Whether the animation should be kept at source
         fullscreen, // Full screen effect lock
         keepAlive, // Keep alive flag
-        previousPixmap, // Previous window pixmap lock
         shader
         ));
 
@@ -410,6 +414,7 @@ bool AnimationEffect::cancel(quint64 animationId)
     for (AniMap::iterator entry = d->m_animations.begin(), mapEnd = d->m_animations.end(); entry != mapEnd; ++entry) {
         for (QList<AniData>::iterator anim = entry->first.begin(), animEnd = entry->first.end(); anim != animEnd; ++anim) {
             if (anim->id == animationId) {
+                EffectWindowDeletedRef ref = std::move(anim->deletedRef); // delete window once we're done updating m_animations
                 if (anim->shader && std::none_of(entry->first.begin(), entry->first.end(), [animationId] (const auto &anim) { return anim.id != animationId && anim.shader; })) {
                     unredirect(entry.key());
                 }
@@ -537,7 +542,7 @@ static inline float geometryCompensation(int flags, float v)
     return 0.5 * (1.0 - v); // half compensation
 }
 
-void AnimationEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+void AnimationEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
     Q_D(AnimationEffect);
     AniMap::const_iterator entry = d->m_animations.constFind(w);
@@ -664,7 +669,7 @@ void AnimationEffect::paintWindow(EffectWindow *w, int mask, QRegion region, Win
         }
     }
 
-    effects->paintWindow(w, mask, region, data);
+    effects->paintWindow(renderTarget, viewport, w, mask, region, data);
 }
 
 void AnimationEffect::postPaintScreen()
@@ -672,6 +677,7 @@ void AnimationEffect::postPaintScreen()
     Q_D(AnimationEffect);
     d->m_animationsTouched = false;
     bool damageDirty = false;
+    std::vector<EffectWindowDeletedRef> zombies;
 
     for (auto entry = d->m_animations.begin(); entry != d->m_animations.end();) {
         bool invalidateLayerRect = false;
@@ -705,6 +711,12 @@ void AnimationEffect::postPaintScreen()
                 for (int i = 0; i < animCounter; ++i) {
                     ++anim;
                 }
+            }
+            // If it's a closed window, keep it alive for a little bit longer until we're done
+            // updating m_animations. Otherwise our windowDeleted slot can access m_animations
+            // while we still modify it.
+            if (!anim->deletedRef.isNull()) {
+                zombies.emplace_back(std::move(anim->deletedRef));
             }
             anim = entry->first.erase(anim);
             invalidateLayerRect = damageDirty = true;

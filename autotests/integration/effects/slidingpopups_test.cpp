@@ -10,7 +10,6 @@
 #include "core/outputbackend.h"
 #include "core/renderbackend.h"
 #include "cursor.h"
-#include "deleted.h"
 #include "effectloader.h"
 #include "effects.h"
 #include "kwin_wayland_test.h"
@@ -49,7 +48,6 @@ void SlidingPopupsTest::initTestCase()
 {
     qputenv("XDG_DATA_DIRS", QCoreApplication::applicationDirPath().toUtf8());
     qRegisterMetaType<KWin::Window *>();
-    qRegisterMetaType<KWin::Deleted *>();
     qRegisterMetaType<KWin::Effect *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(waylandServer()->init(s_socketName));
@@ -95,22 +93,14 @@ void SlidingPopupsTest::cleanup()
     }
 }
 
-struct XcbConnectionDeleter
-{
-    void operator()(xcb_connection_t *pointer)
-    {
-        xcb_disconnect(pointer);
-    }
-};
-
 void SlidingPopupsTest::testWithOtherEffect_data()
 {
     QTest::addColumn<QStringList>("effectsToLoad");
 
-    QTest::newRow("fade, slide") << QStringList{QStringLiteral("kwin4_effect_fade"), QStringLiteral("slidingpopups")};
-    QTest::newRow("slide, fade") << QStringList{QStringLiteral("slidingpopups"), QStringLiteral("kwin4_effect_fade")};
-    QTest::newRow("scale, slide") << QStringList{QStringLiteral("kwin4_effect_scale"), QStringLiteral("slidingpopups")};
-    QTest::newRow("slide, scale") << QStringList{QStringLiteral("slidingpopups"), QStringLiteral("kwin4_effect_scale")};
+    QTest::newRow("fade, slide") << QStringList{QStringLiteral("fade"), QStringLiteral("slidingpopups")};
+    QTest::newRow("slide, fade") << QStringList{QStringLiteral("slidingpopups"), QStringLiteral("fade")};
+    QTest::newRow("scale, slide") << QStringList{QStringLiteral("scale"), QStringLiteral("slidingpopups")};
+    QTest::newRow("slide, scale") << QStringList{QStringLiteral("slidingpopups"), QStringLiteral("scale")};
 
     if (effects->compositingType() & KWin::OpenGLCompositing) {
         QTest::newRow("glide, slide") << QStringList{QStringLiteral("glide"), QStringLiteral("slidingpopups")};
@@ -156,13 +146,10 @@ void SlidingPopupsTest::testWithOtherEffect()
     QVERIFY(!slidingPoupus->isActive());
     QVERIFY(!otherEffect->isActive());
 
-    // give the compositor some time to render
-    QTest::qWait(50);
-
     QSignalSpy windowAddedSpy(effects, &EffectsHandler::windowAdded);
 
     // create an xcb window
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 100, 200);
     xcb_window_t windowId = xcb_generate_id(c.get());
@@ -209,17 +196,16 @@ void SlidingPopupsTest::testWithOtherEffect()
 
     // wait till effect ends
     QTRY_VERIFY(!slidingPoupus->isActive());
-    QTest::qWait(300);
-    QVERIFY(!otherEffect->isActive());
+    QTRY_VERIFY(!otherEffect->isActive());
 
     // and destroy the window again
     xcb_unmap_window(c.get(), windowId);
     xcb_flush(c.get());
 
-    QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
+    QSignalSpy closedSpy(window, &X11Window::closed);
 
     QSignalSpy windowDeletedSpy(effects, &EffectsHandler::windowDeleted);
-    QVERIFY(windowClosedSpy.wait());
+    QVERIFY(closedSpy.wait());
 
     // again we should have the sliding popups active
     QVERIFY(slidingPoupus->isActive());
@@ -228,8 +214,7 @@ void SlidingPopupsTest::testWithOtherEffect()
     QVERIFY(windowDeletedSpy.wait());
 
     QCOMPARE(windowDeletedSpy.count(), 1);
-    QTRY_VERIFY(!slidingPoupus->isActive());
-    QTest::qWait(300);
+    QVERIFY(!slidingPoupus->isActive());
     QVERIFY(!otherEffect->isActive());
     xcb_destroy_window(c.get(), windowId);
     c.reset();
@@ -239,10 +224,10 @@ void SlidingPopupsTest::testWithOtherEffectWayland_data()
 {
     QTest::addColumn<QStringList>("effectsToLoad");
 
-    QTest::newRow("fade, slide") << QStringList{QStringLiteral("kwin4_effect_fade"), QStringLiteral("slidingpopups")};
-    QTest::newRow("slide, fade") << QStringList{QStringLiteral("slidingpopups"), QStringLiteral("kwin4_effect_fade")};
-    QTest::newRow("scale, slide") << QStringList{QStringLiteral("kwin4_effect_scale"), QStringLiteral("slidingpopups")};
-    QTest::newRow("slide, scale") << QStringList{QStringLiteral("slidingpopups"), QStringLiteral("kwin4_effect_scale")};
+    QTest::newRow("fade, slide") << QStringList{QStringLiteral("fade"), QStringLiteral("slidingpopups")};
+    QTest::newRow("slide, fade") << QStringList{QStringLiteral("slidingpopups"), QStringLiteral("fade")};
+    QTest::newRow("scale, slide") << QStringList{QStringLiteral("scale"), QStringLiteral("slidingpopups")};
+    QTest::newRow("slide, scale") << QStringList{QStringLiteral("slidingpopups"), QStringLiteral("scale")};
 
     if (effects->compositingType() & KWin::OpenGLCompositing) {
         QTest::newRow("glide, slide") << QStringList{QStringLiteral("glide"), QStringLiteral("slidingpopups")};
@@ -322,14 +307,13 @@ void SlidingPopupsTest::testWithOtherEffectWayland()
 
     // wait till effect ends
     QTRY_VERIFY(!slidingPoupus->isActive());
-    QTest::qWait(300);
-    QVERIFY(!otherEffect->isActive());
+    QTRY_VERIFY(!otherEffect->isActive());
 
     // and destroy the window again
     shellSurface.reset();
     surface.reset();
 
-    QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
+    QSignalSpy windowClosedSpy(window, &X11Window::closed);
 
     QSignalSpy windowDeletedSpy(effects, &EffectsHandler::windowDeleted);
     QVERIFY(windowClosedSpy.wait());
@@ -341,8 +325,7 @@ void SlidingPopupsTest::testWithOtherEffectWayland()
     QVERIFY(windowDeletedSpy.wait());
 
     QCOMPARE(windowDeletedSpy.count(), 1);
-    QTRY_VERIFY(!slidingPoupus->isActive());
-    QTest::qWait(300);
+    QVERIFY(!slidingPoupus->isActive());
     QVERIFY(!otherEffect->isActive());
 }
 

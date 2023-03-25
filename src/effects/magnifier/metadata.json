@@ -40,7 +40,6 @@
         "Description[zh_CN]": "放大显示鼠标光标附近的一块方形区域的屏幕内容",
         "Description[zh_TW]": "放大在滑鼠游標附近的部分",
         "EnabledByDefault": false,
-        "Id": "magnifier",
         "License": "GPL",
         "Name": "Magnifier",
         "Name[ar]": "المكبّر",

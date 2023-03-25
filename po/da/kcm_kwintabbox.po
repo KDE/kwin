@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-06-15 00:48+0000\n"
+"POT-Creation-Date: 2023-02-08 01:01+0000\n"
 "PO-Revision-Date: 2019-05-07 13:22+0100\n"
 "Last-Translator: Martin Schlander <mschlander@opensuse.org>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
@@ -17,40 +17,35 @@ msgstr ""
 "X-Generator: Lokalize 2.0\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: kwintabboxconfigform.cpp:77
-#, kde-format
-msgid "KWin"
-msgstr "KWin"
-
-#: layoutpreview.cpp:133
+#: layoutpreview.cpp:131
 #, fuzzy, kde-format
 #| msgctxt "An example Desktop Name"
 #| msgid "Desktop 1"
 msgid "Show Desktop"
 msgstr "Skrivebord 1"
 
-#: layoutpreview.cpp:163
+#: layoutpreview.cpp:161
 #, kde-format
 msgctxt "An example Desktop Name"
 msgid "Desktop 1"
 msgstr "Skrivebord 1"
 
-#: main.cpp:58
+#: main.cpp:66
 #, kde-format
 msgid "Main"
 msgstr "Generel"
 
-#: main.cpp:59
+#: main.cpp:67
 #, kde-format
 msgid "Alternative"
 msgstr "Alternativ"
 
-#: main.cpp:61
+#: main.cpp:69
 #, kde-format
 msgid "Get New Task Switchers..."
 msgstr "Hent nye opgaveskiftere..."
 
-#: main.cpp:75
+#: main.cpp:83
 #, kde-format
 msgid ""
 "Focus policy settings limit the functionality of navigating through windows."
@@ -240,6 +235,53 @@ msgstr ""
 msgid "Show selected window"
 msgstr "Vis det valgte vindue"
 
+#: shortcutsettings.cpp:132
+#, kde-format
+msgid "Walk Through Windows"
+msgstr "Gå gennem vinduer"
+
+#: shortcutsettings.cpp:133
+#, kde-format
+msgid "Walk Through Windows (Reverse)"
+msgstr "Gå gennem vinduer (baglæns)"
+
+#: shortcutsettings.cpp:134
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows Alternative"
+msgid "Walk Through Windows of Current Application"
+msgstr "Gå gennem vinduer, alternativ"
+
+#: shortcutsettings.cpp:135
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows Alternative (Reverse)"
+msgid "Walk Through Windows of Current Application (Reverse)"
+msgstr "Gå gennem vinduer, alternativ (baglæns)"
+
+#: shortcutsettings.cpp:137
+#, kde-format
+msgid "Walk Through Windows Alternative"
+msgstr "Gå gennem vinduer, alternativ"
+
+#: shortcutsettings.cpp:138
+#, kde-format
+msgid "Walk Through Windows Alternative (Reverse)"
+msgstr "Gå gennem vinduer, alternativ (baglæns)"
+
+#: shortcutsettings.cpp:139
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows Alternative"
+msgid "Walk Through Windows of Current Application Alternative"
+msgstr "Gå gennem vinduer, alternativ"
+
+#: shortcutsettings.cpp:140
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows Alternative (Reverse)"
+msgid "Walk Through Windows of Current Application Alternative (Reverse)"
+msgstr "Gå gennem vinduer, alternativ (baglæns)"
+
+#~ msgid "KWin"
+#~ msgstr "KWin"
+
 #~ msgid "Tabbox layout preview"
 #~ msgstr "Forhåndsvisning af skifteboksens layout"
 
@@ -252,38 +294,6 @@ msgstr "Vis det valgte vindue"
 #~ msgstr ""
 #~ "Disse indstillinger bruges af \"Gå gennem vinduer, alternativ\"-"
 #~ "handlingerne."
-
-#~ msgid "Walk Through Windows"
-#~ msgstr "Gå gennem vinduer"
-
-#~ msgid "Walk Through Windows (Reverse)"
-#~ msgstr "Gå gennem vinduer (baglæns)"
-
-#~ msgid "Walk Through Windows Alternative"
-#~ msgstr "Gå gennem vinduer, alternativ"
-
-#~ msgid "Walk Through Windows Alternative (Reverse)"
-#~ msgstr "Gå gennem vinduer, alternativ (baglæns)"
-
-#, fuzzy
-#~| msgid "Walk Through Windows Alternative"
-#~ msgid "Walk Through Windows of Current Application"
-#~ msgstr "Gå gennem vinduer, alternativ"
-
-#, fuzzy
-#~| msgid "Walk Through Windows Alternative (Reverse)"
-#~ msgid "Walk Through Windows of Current Application (Reverse)"
-#~ msgstr "Gå gennem vinduer, alternativ (baglæns)"
-
-#, fuzzy
-#~| msgid "Walk Through Windows Alternative"
-#~ msgid "Walk Through Windows of Current Application Alternative"
-#~ msgstr "Gå gennem vinduer, alternativ"
-
-#, fuzzy
-#~| msgid "Walk Through Windows Alternative (Reverse)"
-#~ msgid "Walk Through Windows of Current Application Alternative (Reverse)"
-#~ msgstr "Gå gennem vinduer, alternativ (baglæns)"
 
 #~ msgctxt ""
 #~ "ComboBox item for window switcher based on layouts instead of a desktop "

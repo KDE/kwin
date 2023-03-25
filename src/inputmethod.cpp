@@ -21,7 +21,6 @@
 #if KWIN_BUILD_SCREENLOCKER
 #include "screenlockerwatcher.h"
 #endif
-#include "deleted.h"
 #include "tablet_input.h"
 #include "touch_input.h"
 #include "wayland/display.h"
@@ -29,6 +28,7 @@
 #include "wayland/keyboard_interface.h"
 #include "wayland/seat_interface.h"
 #include "wayland/surface_interface.h"
+#include "wayland/textinput_v1_interface.h"
 #include "wayland/textinput_v3_interface.h"
 #include "xkb.h"
 
@@ -113,10 +113,21 @@ void InputMethod::init()
     qCDebug(KWIN_VIRTUALKEYBOARD) << "Registering the DBus interface";
 
     if (waylandServer()) {
-        new TextInputManagerV2Interface(waylandServer()->display());
-        new TextInputManagerV3Interface(waylandServer()->display());
+        new TextInputManagerV1Interface(waylandServer()->display(), this);
+        new TextInputManagerV2Interface(waylandServer()->display(), this);
+        new TextInputManagerV3Interface(waylandServer()->display(), this);
 
         connect(waylandServer()->seat(), &SeatInterface::focusedTextInputSurfaceChanged, this, &InputMethod::handleFocusedSurfaceChanged);
+
+        TextInputV1Interface *textInputV1 = waylandServer()->seat()->textInputV1();
+        connect(textInputV1, &TextInputV1Interface::requestShowInputPanel, this, &InputMethod::show);
+        connect(textInputV1, &TextInputV1Interface::requestHideInputPanel, this, &InputMethod::hide);
+        connect(textInputV1, &TextInputV1Interface::surroundingTextChanged, this, &InputMethod::surroundingTextChanged);
+        connect(textInputV1, &TextInputV1Interface::contentTypeChanged, this, &InputMethod::contentTypeChanged);
+        connect(textInputV1, &TextInputV1Interface::stateUpdated, this, &InputMethod::textInputInterfaceV1StateUpdated);
+        connect(textInputV1, &TextInputV1Interface::reset, this, &InputMethod::textInputInterfaceV1Reset);
+        connect(textInputV1, &TextInputV1Interface::invokeAction, this, &InputMethod::invokeAction);
+        connect(textInputV1, &TextInputV1Interface::enabledChanged, this, &InputMethod::textInputInterfaceV1EnabledChanged);
 
         TextInputV2Interface *textInputV2 = waylandServer()->seat()->textInputV2();
         connect(textInputV2, &TextInputV2Interface::requestShowInputPanel, this, &InputMethod::show);
@@ -145,6 +156,8 @@ void InputMethod::show()
     if (m_panel) {
         m_panel->show();
         updateInputPanelState();
+    } else if (isActive()) {
+        adoptInputMethodContext();
     }
 }
 
@@ -167,13 +180,14 @@ bool InputMethod::shouldShowOnActive() const
 void InputMethod::refreshActive()
 {
     auto seat = waylandServer()->seat();
+    auto t1 = seat->textInputV1();
     auto t2 = seat->textInputV2();
     auto t3 = seat->textInputV3();
 
     bool active = false;
     if (auto focusedSurface = seat->focusedTextInputSurface()) {
         auto client = focusedSurface->client();
-        if ((t2->clientSupportsTextInput(client) && t2->isEnabled()) || (t3->clientSupportsTextInput(client) && t3->isEnabled())) {
+        if ((t1->clientSupportsTextInput(client) && t1->isEnabled()) || (t2->clientSupportsTextInput(client) && t2->isEnabled()) || (t3->clientSupportsTextInput(client) && t3->isEnabled())) {
             active = true;
         }
     }
@@ -221,17 +235,17 @@ void InputMethod::setPanel(InputPanelV1Window *panel)
 
     m_panel = panel;
     connect(panel->surface(), &SurfaceInterface::inputChanged, this, &InputMethod::updateInputPanelState);
-    connect(panel, &QObject::destroyed, this, [this] {
+    connect(panel, &Window::closed, this, [this]() {
         if (m_trackedWindow) {
             m_trackedWindow->setVirtualKeyboardGeometry({});
         }
     });
     connect(m_panel, &Window::frameGeometryChanged, this, &InputMethod::updateInputPanelState);
     connect(m_panel, &Window::windowHidden, this, &InputMethod::updateInputPanelState);
-    connect(m_panel, &Window::windowClosed, this, &InputMethod::updateInputPanelState);
+    connect(m_panel, &Window::closed, this, &InputMethod::updateInputPanelState);
     connect(m_panel, &Window::windowShown, this, &InputMethod::visibleChanged);
     connect(m_panel, &Window::windowHidden, this, &InputMethod::visibleChanged);
-    connect(m_panel, &Window::windowClosed, this, &InputMethod::visibleChanged);
+    connect(m_panel, &Window::closed, this, &InputMethod::visibleChanged);
     Q_EMIT visibleChanged();
     updateInputPanelState();
     Q_EMIT panelChanged();
@@ -296,11 +310,15 @@ void InputMethod::surroundingTextChanged()
 
 void InputMethod::contentTypeChanged()
 {
+    auto t1 = waylandServer()->seat()->textInputV1();
     auto t2 = waylandServer()->seat()->textInputV2();
     auto t3 = waylandServer()->seat()->textInputV3();
     auto inputContext = waylandServer()->inputMethod()->context();
     if (!inputContext) {
         return;
+    }
+    if (t1 && t1->isEnabled()) {
+        inputContext->sendContentType(t1->contentHints(), t1->contentPurpose());
     }
     if (t2 && t2->isEnabled()) {
         inputContext->sendContentType(t2->contentHints(), t2->contentPurpose());
@@ -308,6 +326,54 @@ void InputMethod::contentTypeChanged()
     if (t3 && t3->isEnabled()) {
         inputContext->sendContentType(t3->contentHints(), t3->contentPurpose());
     }
+}
+
+void InputMethod::textInputInterfaceV1Reset()
+{
+    if (!m_enabled) {
+        return;
+    }
+    auto t1 = waylandServer()->seat()->textInputV1();
+    auto inputContext = waylandServer()->inputMethod()->context();
+    if (!inputContext) {
+        return;
+    }
+    if (!t1 || !t1->isEnabled()) {
+        return;
+    }
+    inputContext->sendReset();
+}
+
+void InputMethod::invokeAction(quint32 button, quint32 index)
+{
+    if (!m_enabled) {
+        return;
+    }
+    auto t1 = waylandServer()->seat()->textInputV1();
+    auto inputContext = waylandServer()->inputMethod()->context();
+    if (!inputContext) {
+        return;
+    }
+    if (!t1 || !t1->isEnabled()) {
+        return;
+    }
+    inputContext->sendInvokeAction(button, index);
+}
+
+void InputMethod::textInputInterfaceV1StateUpdated(quint32 serial)
+{
+    if (!m_enabled) {
+        return;
+    }
+    auto t1 = waylandServer()->seat()->textInputV1();
+    auto inputContext = waylandServer()->inputMethod()->context();
+    if (!inputContext) {
+        return;
+    }
+    if (!t1 || !t1->isEnabled()) {
+        return;
+    }
+    inputContext->sendCommitState(serial);
 }
 
 void InputMethod::textInputInterfaceV2StateUpdated(quint32 serial, KWaylandServer::TextInputV2Interface::UpdateReason reason)
@@ -338,6 +404,15 @@ void InputMethod::textInputInterfaceV2StateUpdated(quint32 serial, KWaylandServe
         inputContext->sendReset();
         break;
     }
+}
+
+void InputMethod::textInputInterfaceV1EnabledChanged()
+{
+    if (!m_enabled) {
+        return;
+    }
+
+    refreshActive();
 }
 
 void InputMethod::textInputInterfaceV2EnabledChanged()
@@ -434,6 +509,15 @@ static quint32 keysymToKeycode(quint32 sym)
 
 void InputMethod::keysymReceived(quint32 serial, quint32 time, quint32 sym, bool pressed, quint32 modifiers)
 {
+    if (auto t1 = waylandServer()->seat()->textInputV1(); t1 && t1->isEnabled()) {
+        if (pressed) {
+            t1->keysymPressed(time, sym, modifiers);
+        } else {
+            t1->keysymReleased(time, sym, modifiers);
+        }
+        return;
+    }
+
     auto t2 = waylandServer()->seat()->textInputV2();
     if (t2 && t2->isEnabled()) {
         if (pressed) {
@@ -455,8 +539,15 @@ void InputMethod::keysymReceived(quint32 serial, quint32 time, quint32 sym, bool
 
 void InputMethod::commitString(qint32 serial, const QString &text)
 {
+    if (auto t1 = waylandServer()->seat()->textInputV1(); t1 && t1->isEnabled()) {
+        t1->commitString(text.toUtf8());
+        t1->setPreEditCursor(0);
+        t1->preEdit({}, {});
+        return;
+    }
     if (auto t2 = waylandServer()->seat()->textInputV2(); t2 && t2->isEnabled()) {
         t2->commitString(text.toUtf8());
+        t2->setPreEditCursor(0);
         t2->preEdit({}, {});
         return;
     } else if (auto t3 = waylandServer()->seat()->textInputV3(); t3 && t3->isEnabled()) {
@@ -509,6 +600,10 @@ void InputMethod::deleteSurroundingText(int32_t index, uint32_t length)
     const quint32 before = -index;
     const quint32 after = index + length;
 
+    auto t1 = waylandServer()->seat()->textInputV1();
+    if (t1 && t1->isEnabled()) {
+        t1->deleteSurroundingText(before, after);
+    }
     auto t2 = waylandServer()->seat()->textInputV2();
     if (t2 && t2->isEnabled()) {
         t2->deleteSurroundingText(before, after);
@@ -522,6 +617,10 @@ void InputMethod::deleteSurroundingText(int32_t index, uint32_t length)
 
 void InputMethod::setCursorPosition(qint32 index, qint32 anchor)
 {
+    auto t1 = waylandServer()->seat()->textInputV1();
+    if (t1 && t1->isEnabled()) {
+        t1->setCursorPosition(index, anchor);
+    }
     auto t2 = waylandServer()->seat()->textInputV2();
     if (t2 && t2->isEnabled()) {
         t2->setCursorPosition(index, anchor);
@@ -530,6 +629,10 @@ void InputMethod::setCursorPosition(qint32 index, qint32 anchor)
 
 void InputMethod::setLanguage(uint32_t serial, const QString &language)
 {
+    auto t1 = waylandServer()->seat()->textInputV1();
+    if (t1 && t1->isEnabled()) {
+        t1->setLanguage(language.toUtf8());
+    }
     auto t2 = waylandServer()->seat()->textInputV2();
     if (t2 && t2->isEnabled()) {
         t2->setLanguage(language.toUtf8());
@@ -538,6 +641,10 @@ void InputMethod::setLanguage(uint32_t serial, const QString &language)
 
 void InputMethod::setTextDirection(uint32_t serial, Qt::LayoutDirection direction)
 {
+    auto t1 = waylandServer()->seat()->textInputV1();
+    if (t1 && t1->isEnabled()) {
+        t1->setTextDirection(direction);
+    }
     auto t2 = waylandServer()->seat()->textInputV2();
     if (t2 && t2->isEnabled()) {
         t2->setTextDirection(direction);
@@ -546,6 +653,10 @@ void InputMethod::setTextDirection(uint32_t serial, Qt::LayoutDirection directio
 
 void InputMethod::setPreeditCursor(qint32 index)
 {
+    auto t1 = waylandServer()->seat()->textInputV1();
+    if (t1 && t1->isEnabled()) {
+        t1->setPreEditCursor(index);
+    }
     auto t2 = waylandServer()->seat()->textInputV2();
     if (t2 && t2->isEnabled()) {
         t2->setPreEditCursor(index);
@@ -558,6 +669,10 @@ void InputMethod::setPreeditCursor(qint32 index)
 
 void InputMethod::setPreeditStyling(quint32 index, quint32 length, quint32 style)
 {
+    auto t1 = waylandServer()->seat()->textInputV1();
+    if (t1 && t1->isEnabled()) {
+        t1->preEditStyling(index, length, style);
+    }
     auto t2 = waylandServer()->seat()->textInputV2();
     if (t2 && t2->isEnabled()) {
         t2->preEditStyling(index, length, style);
@@ -573,6 +688,10 @@ void InputMethod::setPreeditStyling(quint32 index, quint32 length, quint32 style
 
 void InputMethod::setPreeditString(uint32_t serial, const QString &text, const QString &commit)
 {
+    auto t1 = waylandServer()->seat()->textInputV1();
+    if (t1 && t1->isEnabled()) {
+        t1->preEdit(text.toUtf8(), commit.toUtf8());
+    }
     auto t2 = waylandServer()->seat()->textInputV2();
     if (t2 && t2->isEnabled()) {
         t2->preEdit(text.toUtf8(), commit.toUtf8());
@@ -646,10 +765,17 @@ void InputMethod::adoptInputMethodContext()
 {
     auto inputContext = waylandServer()->inputMethod()->context();
 
+    TextInputV1Interface *t1 = waylandServer()->seat()->textInputV1();
     TextInputV2Interface *t2 = waylandServer()->seat()->textInputV2();
     TextInputV3Interface *t3 = waylandServer()->seat()->textInputV3();
 
-    if (t2 && t2->isEnabled()) {
+    if (t1 && t1->isEnabled()) {
+        inputContext->sendSurroundingText(t1->surroundingText(), t1->surroundingTextCursorPosition(), t1->surroundingTextSelectionAnchor());
+        inputContext->sendPreferredLanguage(t1->preferredLanguage());
+        inputContext->sendContentType(t1->contentHints(), t2->contentPurpose());
+        connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::language, this, &InputMethod::setLanguage);
+        connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::textDirection, this, &InputMethod::setTextDirection);
+    } else if (t2 && t2->isEnabled()) {
         inputContext->sendSurroundingText(t2->surroundingText(), t2->surroundingTextCursorPosition(), t2->surroundingTextSelectionAnchor());
         inputContext->sendPreferredLanguage(t2->preferredLanguage());
         inputContext->sendContentType(t2->contentHints(), t2->contentPurpose());
@@ -820,7 +946,7 @@ void InputMethod::updateModifiersMap(const QByteArray &modifiers)
 
 bool InputMethod::isVisible() const
 {
-    return m_panel && m_panel->isShown();
+    return m_panel && m_panel->isShown() && m_panel->readyForPainting();
 }
 
 bool InputMethod::isAvailable() const

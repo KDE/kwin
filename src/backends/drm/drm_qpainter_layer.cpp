@@ -19,6 +19,7 @@
 #include "drm_qpainter_backend.h"
 #include "drm_virtual_output.h"
 
+#include <cerrno>
 #include <drm_fourcc.h>
 
 namespace KWin
@@ -91,6 +92,11 @@ void DrmQPainterLayer::releaseBuffers()
     m_swapchain.reset();
 }
 
+quint32 DrmQPainterLayer::format() const
+{
+    return DRM_FORMAT_XRGB8888;
+}
+
 DrmCursorQPainterLayer::DrmCursorQPainterLayer(DrmPipeline *pipeline)
     : DrmOverlayLayer(pipeline)
 {
@@ -111,7 +117,7 @@ std::optional<OutputLayerBeginFrameInfo> DrmCursorQPainterLayer::beginFrame()
     };
 }
 
-bool DrmCursorQPainterLayer::endFrame(const QRegion &damagedRegion, const QRegion &renderedRegion)
+bool DrmCursorQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     m_swapchain->releaseBuffer(m_swapchain->currentBuffer(), damagedRegion);
     m_currentFramebuffer = DrmFramebuffer::createFramebuffer(m_swapchain->currentBuffer());

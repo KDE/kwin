@@ -95,13 +95,13 @@ void DimInactiveEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mi
     effects->prePaintScreen(data, presentTime);
 }
 
-void DimInactiveEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+void DimInactiveEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
     auto transitionIt = m_transitions.constFind(w);
     if (transitionIt != m_transitions.constEnd()) {
         const qreal transitionProgress = (*transitionIt).value();
         dimWindow(data, m_dimStrength * transitionProgress);
-        effects->paintWindow(w, mask, region, data);
+        effects->paintWindow(renderTarget, viewport, w, mask, region, data);
         return;
     }
 
@@ -109,7 +109,7 @@ void DimInactiveEffect::paintWindow(EffectWindow *w, int mask, QRegion region, W
     if (forceIt != m_forceDim.constEnd()) {
         const qreal forcedStrength = *forceIt;
         dimWindow(data, forcedStrength);
-        effects->paintWindow(w, mask, region, data);
+        effects->paintWindow(renderTarget, viewport, w, mask, region, data);
         return;
     }
 
@@ -117,7 +117,7 @@ void DimInactiveEffect::paintWindow(EffectWindow *w, int mask, QRegion region, W
         dimWindow(data, m_dimStrength);
     }
 
-    effects->paintWindow(w, mask, region, data);
+    effects->paintWindow(renderTarget, viewport, w, mask, region, data);
 }
 
 void DimInactiveEffect::postPaintScreen()
@@ -369,6 +369,9 @@ void DimInactiveEffect::windowDeleted(EffectWindow *w)
     // gets destroyed immediately. So, we have to remove active transitions
     // for that window here, otherwise we'll crash in postPaintScreen.
     m_transitions.remove(w);
+    if (m_activeWindow == w) {
+        m_activeWindow = nullptr;
+    }
 }
 
 void DimInactiveEffect::activeFullScreenEffectChanged()

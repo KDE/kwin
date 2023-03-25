@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-06-15 00:48+0000\n"
+"POT-Creation-Date: 2023-02-08 01:01+0000\n"
 "PO-Revision-Date: 2011-07-26 23:05+0530\n"
 "Last-Translator: Danishka Navin <danishka@gmail.com>\n"
 "Language-Team: Sinhala <info@hanthana.org>\n"
@@ -17,40 +17,35 @@ msgstr ""
 "X-Generator: Lokalize 1.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: kwintabboxconfigform.cpp:77
-#, kde-format
-msgid "KWin"
-msgstr ""
-
-#: layoutpreview.cpp:133
+#: layoutpreview.cpp:131
 #, fuzzy, kde-format
 #| msgid "All Desktops"
 msgid "Show Desktop"
 msgstr "සියළු වැඩතල"
 
-#: layoutpreview.cpp:163
+#: layoutpreview.cpp:161
 #, fuzzy, kde-format
 #| msgid "All Desktops"
 msgctxt "An example Desktop Name"
 msgid "Desktop 1"
 msgstr "සියළු වැඩතල"
 
-#: main.cpp:58
+#: main.cpp:66
 #, kde-format
 msgid "Main"
 msgstr "ප්‍රධාන"
 
-#: main.cpp:59
+#: main.cpp:67
 #, kde-format
 msgid "Alternative"
 msgstr "විකල්ප"
 
-#: main.cpp:61
+#: main.cpp:69
 #, kde-format
 msgid "Get New Task Switchers..."
 msgstr ""
 
-#: main.cpp:75
+#: main.cpp:83
 #, kde-format
 msgid ""
 "Focus policy settings limit the functionality of navigating through windows."
@@ -249,6 +244,50 @@ msgstr ""
 msgid "Show selected window"
 msgstr "තෝරාගත් කවුළුවේ මායිම පෙන්වන්න"
 
+#: shortcutsettings.cpp:132
+#, kde-format
+msgid "Walk Through Windows"
+msgstr "කවුළු අතරින් ඇවිද යාම"
+
+#: shortcutsettings.cpp:133
+#, kde-format
+msgid "Walk Through Windows (Reverse)"
+msgstr "කවුළු අතරින් ඇවිද යාම (ආපසු)"
+
+#: shortcutsettings.cpp:134
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows Alternative"
+msgid "Walk Through Windows of Current Application"
+msgstr "කවුළු විකල්ප අතරින් ඇවිද යාම"
+
+#: shortcutsettings.cpp:135
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows Alternative (Reverse)"
+msgid "Walk Through Windows of Current Application (Reverse)"
+msgstr "කවුළු විකල්ප අතරින් ඇවිද යාම (ආපසු)"
+
+#: shortcutsettings.cpp:137
+#, kde-format
+msgid "Walk Through Windows Alternative"
+msgstr "කවුළු විකල්ප අතරින් ඇවිද යාම"
+
+#: shortcutsettings.cpp:138
+#, kde-format
+msgid "Walk Through Windows Alternative (Reverse)"
+msgstr "කවුළු විකල්ප අතරින් ඇවිද යාම (ආපසු)"
+
+#: shortcutsettings.cpp:139
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows Alternative"
+msgid "Walk Through Windows of Current Application Alternative"
+msgstr "කවුළු විකල්ප අතරින් ඇවිද යාම"
+
+#: shortcutsettings.cpp:140
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows Alternative (Reverse)"
+msgid "Walk Through Windows of Current Application Alternative (Reverse)"
+msgstr "කවුළු විකල්ප අතරින් ඇවිද යාම (ආපසු)"
+
 #, fuzzy
 #~| msgid "Show outline of selected window"
 #~ msgid "Outline selected window"
@@ -258,38 +297,6 @@ msgstr "තෝරාගත් කවුළුවේ මායිම පෙන්
 #~ "These settings are used by the \"Walk Through Windows Alternative\" "
 #~ "actions."
 #~ msgstr "මෙම සැකසුම් \"කවුළු විකල්ප අතරින් ඇවිද යාම\" මගින් භාවිත වේ."
-
-#~ msgid "Walk Through Windows"
-#~ msgstr "කවුළු අතරින් ඇවිද යාම"
-
-#~ msgid "Walk Through Windows (Reverse)"
-#~ msgstr "කවුළු අතරින් ඇවිද යාම (ආපසු)"
-
-#~ msgid "Walk Through Windows Alternative"
-#~ msgstr "කවුළු විකල්ප අතරින් ඇවිද යාම"
-
-#~ msgid "Walk Through Windows Alternative (Reverse)"
-#~ msgstr "කවුළු විකල්ප අතරින් ඇවිද යාම (ආපසු)"
-
-#, fuzzy
-#~| msgid "Walk Through Windows Alternative"
-#~ msgid "Walk Through Windows of Current Application"
-#~ msgstr "කවුළු විකල්ප අතරින් ඇවිද යාම"
-
-#, fuzzy
-#~| msgid "Walk Through Windows Alternative (Reverse)"
-#~ msgid "Walk Through Windows of Current Application (Reverse)"
-#~ msgstr "කවුළු විකල්ප අතරින් ඇවිද යාම (ආපසු)"
-
-#, fuzzy
-#~| msgid "Walk Through Windows Alternative"
-#~ msgid "Walk Through Windows of Current Application Alternative"
-#~ msgstr "කවුළු විකල්ප අතරින් ඇවිද යාම"
-
-#, fuzzy
-#~| msgid "Walk Through Windows Alternative (Reverse)"
-#~ msgid "Walk Through Windows of Current Application Alternative (Reverse)"
-#~ msgstr "කවුළු විකල්ප අතරින් ඇවිද යාම (ආපසු)"
 
 #~ msgid "Configure Layout"
 #~ msgstr "සැකැස්ම සකසන්න"

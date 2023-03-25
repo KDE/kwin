@@ -11,6 +11,7 @@
 
 #include "config-kwin.h"
 
+#include "drm_atomic_commit.h"
 #include "drm_buffer.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
@@ -101,36 +102,24 @@ void DrmPlane::setNext(const std::shared_ptr<DrmFramebuffer> &b)
     m_next = b;
 }
 
-DrmPlane::Transformations DrmPlane::transformation()
-{
-    if (auto property = getProp(PropertyIndex::Rotation)) {
-        return Transformations(static_cast<uint32_t>(property->pending()));
-    }
-    return Transformations(Transformation::Rotate0);
-}
-
 void DrmPlane::flipBuffer()
 {
     m_current = m_next;
     m_next = nullptr;
 }
 
-void DrmPlane::set(const QPoint &srcPos, const QSize &srcSize, const QPoint &dstPos, const QSize &dstSize)
+void DrmPlane::set(DrmAtomicCommit *commit, const QPoint &srcPos, const QSize &srcSize, const QRect &dst)
 {
     // Src* are in 16.16 fixed point format
-    setPending(PropertyIndex::SrcX, srcPos.x() << 16);
-    setPending(PropertyIndex::SrcY, srcPos.y() << 16);
-    setPending(PropertyIndex::SrcW, srcSize.width() << 16);
-    setPending(PropertyIndex::SrcH, srcSize.height() << 16);
-    setPending(PropertyIndex::CrtcX, dstPos.x());
-    setPending(PropertyIndex::CrtcY, dstPos.y());
-    setPending(PropertyIndex::CrtcW, dstSize.width());
-    setPending(PropertyIndex::CrtcH, dstSize.height());
-}
-
-void DrmPlane::setBuffer(DrmFramebuffer *buffer)
-{
-    setPending(PropertyIndex::FbId, buffer ? buffer->framebufferId() : 0);
+    commit->addProperty(getProp(PropertyIndex::SrcX), srcPos.x() << 16);
+    commit->addProperty(getProp(PropertyIndex::SrcX), srcPos.x() << 16);
+    commit->addProperty(getProp(PropertyIndex::SrcY), srcPos.y() << 16);
+    commit->addProperty(getProp(PropertyIndex::SrcW), srcSize.width() << 16);
+    commit->addProperty(getProp(PropertyIndex::SrcH), srcSize.height() << 16);
+    commit->addProperty(getProp(PropertyIndex::CrtcX), dst.x());
+    commit->addProperty(getProp(PropertyIndex::CrtcY), dst.y());
+    commit->addProperty(getProp(PropertyIndex::CrtcW), dst.width());
+    commit->addProperty(getProp(PropertyIndex::CrtcH), dst.height());
 }
 
 bool DrmPlane::isCrtcSupported(int pipeIndex) const
@@ -163,10 +152,10 @@ DrmPlane::Transformations DrmPlane::supportedTransformations() const
     return m_supportedTransformations;
 }
 
-void DrmPlane::disable()
+void DrmPlane::disable(DrmAtomicCommit *commit)
 {
-    setPending(PropertyIndex::CrtcId, 0);
-    setPending(PropertyIndex::FbId, 0);
+    commit->addProperty(getProp(PropertyIndex::CrtcId), 0);
+    commit->addProperty(getProp(PropertyIndex::FbId), 0);
     m_next = nullptr;
 }
 
@@ -177,6 +166,19 @@ void DrmPlane::releaseBuffers()
     }
     if (m_current) {
         m_current->releaseBuffer();
+    }
+}
+
+int32_t DrmPlane::transformationToDegrees(DrmPlane::Transformations transformation)
+{
+    if (transformation & DrmPlane::Transformation::Rotate0) {
+        return 0;
+    } else if (transformation & DrmPlane::Transformation::Rotate90) {
+        return 90;
+    } else if (transformation & DrmPlane::Transformation::Rotate180) {
+        return 180;
+    } else {
+        return 270;
     }
 }
 }

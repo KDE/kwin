@@ -4,13 +4,13 @@
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
 
-import QtQuick 2.15
-import QtQuick.Layouts 1.15
-import QtQuick.Controls 2.15 as QQC2
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Controls as QQC2
 import org.kde.kirigami 2.19 as Kirigami
-import org.kde.kcm 1.2
-import org.kde.kitemmodels 1.0
-import org.kde.kcms.kwinrules 1.0
+import org.kde.kcm
+import org.kde.kitemmodels
+import org.kde.kcms.kwinrules
 
 
 ScrollViewKCM {
@@ -85,9 +85,9 @@ ScrollViewKCM {
             text: checked ? i18n("Close") : i18n("Add Property...")
             icon.name: checked ? "dialog-close" : "list-add"
             checkable: true
-            checked: propertySheet.sheetOpen
+            checked: propertySheet.visible
             onToggled: {
-                propertySheet.sheetOpen = checked;
+                propertySheet.visible = checked;
             }
         }
         Item {
@@ -97,7 +97,7 @@ ScrollViewKCM {
             id: detectButton
             text: i18n("Detect Window Properties")
             icon.name: "edit-find"
-            enabled: !propertySheet.sheetOpen && !errorDialog.visible
+            enabled: !propertySheet.visible && !errorDialog.visible
             onClicked: {
                 overlayModel.onlySuggestions = true;
                 kcm.rulesModel.detectWindowProperties(Math.max(delaySpin.value * 1000,
@@ -136,7 +136,7 @@ ScrollViewKCM {
                 return;
             }
             overlayModel.onlySuggestions = true;
-            propertySheet.sheetOpen = true;
+            propertySheet.visible = true;
         }
         function onShowErrorMessage(title, message) {
             errorDialog.title = title
@@ -254,9 +254,9 @@ ScrollViewKCM {
             }
         }
 
-        onSheetOpenChanged: {
+        onVisibleChanged: {
             searchField.text = "";
-            if (sheetOpen) {
+            if (visible) {
                 searchField.forceActiveFocus();
             } else {
                 overlayModel.onlySuggestions = false;

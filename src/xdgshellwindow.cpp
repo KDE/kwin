@@ -52,10 +52,6 @@ XdgSurfaceWindow::XdgSurfaceWindow(XdgSurfaceInterface *shellSurface)
             this, &XdgSurfaceWindow::destroyWindow);
     connect(shellSurface->surface(), &SurfaceInterface::committed,
             this, &XdgSurfaceWindow::handleCommit);
-#if 0 // TODO: Refactor kwin core in order to uncomment this code.
-    connect(shellSurface->surface(), &SurfaceInterface::mapped,
-            this, &XdgSurfaceWindow::setReadyForPainting);
-#endif
     connect(shellSurface, &XdgSurfaceInterface::aboutToBeDestroyed,
             this, &XdgSurfaceWindow::destroyWindow);
     connect(shellSurface->surface(), &SurfaceInterface::aboutToBeDestroyed,
@@ -94,7 +90,6 @@ XdgSurfaceWindow::XdgSurfaceWindow(XdgSurfaceInterface *shellSurface)
 
 XdgSurfaceWindow::~XdgSurfaceWindow()
 {
-    qDeleteAll(m_configureEvents);
 }
 
 NET::WindowType XdgSurfaceWindow::windowType(bool direct, int supported_types) const
@@ -174,8 +169,7 @@ void XdgSurfaceWindow::handleCommit()
     m_lastAcknowledgedConfigure.reset();
     m_lastAcknowledgedConfigureSerial.reset();
 
-    setReadyForPainting();
-    updateDepth();
+    markAsMapped();
 }
 
 void XdgSurfaceWindow::handleRolePrecommit()
@@ -203,37 +197,6 @@ void XdgSurfaceWindow::maybeUpdateMoveResizeGeometry(const QRectF &rect)
     }
 
     setMoveResizeGeometry(rect);
-}
-
-static QRectF gravitateGeometry(const QRectF &rect, const QRectF &bounds, Gravity gravity)
-{
-    QRectF geometry = rect;
-
-    switch (gravity) {
-    case Gravity::TopLeft:
-        geometry.moveRight(bounds.right());
-        geometry.moveBottom(bounds.bottom());
-        break;
-    case Gravity::Top:
-    case Gravity::TopRight:
-        geometry.moveLeft(bounds.left());
-        geometry.moveBottom(bounds.bottom());
-        break;
-    case Gravity::Right:
-    case Gravity::BottomRight:
-    case Gravity::Bottom:
-    case Gravity::None:
-        geometry.moveLeft(bounds.left());
-        geometry.moveTop(bounds.top());
-        break;
-    case Gravity::BottomLeft:
-    case Gravity::Left:
-        geometry.moveRight(bounds.right());
-        geometry.moveTop(bounds.top());
-        break;
-    }
-
-    return geometry;
 }
 
 void XdgSurfaceWindow::handleNextWindowGeometry()
@@ -295,7 +258,7 @@ void XdgSurfaceWindow::moveResizeInternal(const QRectF &rect, MoveResizeMode mod
         return;
     }
 
-    Q_EMIT frameGeometryAboutToChange(this);
+    Q_EMIT frameGeometryAboutToChange();
 
     if (mode != MoveResizeMode::Move) {
         const QSizeF requestedClientSize = frameSizeToClientSize(rect.size());
@@ -327,19 +290,21 @@ void XdgSurfaceWindow::destroyWindow()
     markAsZombie();
     if (isInteractiveMoveResize()) {
         leaveInteractiveMoveResize();
-        Q_EMIT clientFinishUserMovedResized(this);
+        Q_EMIT interactiveMoveResizeFinished();
     }
     m_configureTimer->stop();
+    qDeleteAll(m_configureEvents);
+    m_configureEvents.clear();
     cleanTabBox();
     Deleted *deleted = Deleted::create(this);
-    Q_EMIT windowClosed(this, deleted);
+    Q_EMIT closed(deleted);
     StackingUpdatesBlocker blocker(workspace());
     workspace()->rulebook()->discardUsed(this, true);
-    setDecoration(nullptr);
     cleanGrouping();
     waylandServer()->removeWindow(this);
-    deleted->unrefWindow();
-    delete this;
+
+    unref();
+    deleted->unref();
 }
 
 void XdgSurfaceWindow::updateClientArea()
@@ -439,16 +404,15 @@ void XdgSurfaceWindow::installPlasmaShellSurface(PlasmaShellSurfaceInterface *sh
     auto updatePosition = [this, shellSurface] {
         move(shellSurface->position());
     };
-    auto moveUnderCursor = [this] {
+    auto showUnderCursor = [this] {
         // Wait for the first commit
-        auto connection = new QMetaObject::Connection;
-        *connection = connect(this, &Window::windowShown,  [this, connection] () {
-            disconnect(*connection);
+        auto moveUnderCursor = [this] {
             if (input()->hasPointer()) {
                 move(input()->globalPointer());
                 keepInArea(workspace()->clientArea(PlacementArea, this));
             }
-        });
+        };
+        connect(this, &Window::windowShown, this, moveUnderCursor, Qt::SingleShotConnection);
     };
     auto updateRole = [this, shellSurface] {
         NET::WindowType type = NET::Unknown;
@@ -502,7 +466,7 @@ void XdgSurfaceWindow::installPlasmaShellSurface(PlasmaShellSurfaceInterface *sh
         workspace()->updateClientArea();
     };
     connect(shellSurface, &PlasmaShellSurfaceInterface::positionChanged, this, updatePosition);
-    connect(shellSurface, &PlasmaShellSurfaceInterface::openUnderCursorRequested, this, moveUnderCursor);
+    connect(shellSurface, &PlasmaShellSurfaceInterface::openUnderCursorRequested, this, showUnderCursor);
     connect(shellSurface, &PlasmaShellSurfaceInterface::roleChanged, this, updateRole);
     connect(shellSurface, &PlasmaShellSurfaceInterface::panelBehaviorChanged, this, [this] {
         updateShowOnScreenEdge();
@@ -529,7 +493,7 @@ void XdgSurfaceWindow::installPlasmaShellSurface(PlasmaShellSurfaceInterface *sh
         updatePosition();
     }
     if (shellSurface->wantsOpenUnderCursor()) {
-        moveUnderCursor();
+        showUnderCursor();
     }
     updateRole();
     updateShowOnScreenEdge();
@@ -1255,7 +1219,7 @@ void XdgToplevelWindow::handleUnfullscreenRequested()
 
 void XdgToplevelWindow::handleMinimizeRequested()
 {
-    minimize();
+    setMinimized(true);
 }
 
 void XdgToplevelWindow::handleTransientForChanged()
@@ -1360,10 +1324,10 @@ bool XdgToplevelWindow::initialFullScreenMode() const
 void XdgToplevelWindow::initialize()
 {
     bool needsPlacement = isPlaceable();
-    setupWindowRules(false);
+    setupWindowRules();
 
     // Move or resize the window only if enforced by a window rule.
-    const QPointF forcedPosition = rules()->checkPosition(invalidPoint, true);
+    const QPointF forcedPosition = rules()->checkPositionSafe(invalidPoint, true);
     if (forcedPosition != invalidPoint) {
         move(forcedPosition);
     }
@@ -1377,9 +1341,7 @@ void XdgToplevelWindow::initialize()
     setOnActivities(rules()->checkActivity(activities(), true));
     setDesktops(rules()->checkDesktops(desktops(), true));
     setDesktopFileName(rules()->checkDesktopFile(desktopFileName(), true));
-    if (rules()->checkMinimize(isMinimized(), true)) {
-        minimize(true); // No animation.
-    }
+    setMinimized(rules()->checkMinimize(isMinimized(), true));
     setSkipTaskbar(rules()->checkSkipTaskbar(skipTaskbar(), true));
     setSkipPager(rules()->checkSkipPager(skipPager(), true));
     setSkipSwitcher(rules()->checkSkipSwitcher(skipSwitcher(), true));
@@ -1398,7 +1360,6 @@ void XdgToplevelWindow::initialize()
         needsPlacement = false;
     }
 
-    discardTemporaryRules();
     workspace()->rulebook()->discardUsed(this, false); // Remove Apply Now rules.
     updateWindowRules(Rules::All);
 
@@ -1425,8 +1386,7 @@ void XdgToplevelWindow::updateMaximizeMode(MaximizeMode maximizeMode)
     }
     m_maximizeMode = maximizeMode;
     updateWindowRules(Rules::MaximizeVert | Rules::MaximizeHoriz);
-    Q_EMIT clientMaximizedStateChanged(this, maximizeMode);
-    Q_EMIT clientMaximizedStateChanged(this, maximizeMode & MaximizeHorizontal, maximizeMode & MaximizeVertical);
+    Q_EMIT maximizedChanged();
 }
 
 void XdgToplevelWindow::updateFullScreenMode(bool set)
@@ -1619,12 +1579,8 @@ void XdgToplevelWindow::setFullScreen(bool set, bool user)
     } else {
         m_fullScreenRequestedOutput.clear();
         if (fullscreenGeometryRestore().isValid()) {
-            Output *currentOutput = moveResizeOutput();
             moveResize(QRectF(fullscreenGeometryRestore().topLeft(),
                               constrainFrameSize(fullscreenGeometryRestore().size())));
-            if (currentOutput != moveResizeOutput()) {
-                workspace()->sendWindowToOutput(this, currentOutput);
-            }
         } else {
             // this can happen when the window was first shown already fullscreen,
             // so let the client set the size by itself
@@ -1656,13 +1612,13 @@ void XdgToplevelWindow::maximize(MaximizeMode mode)
         return;
     }
 
-    Q_EMIT clientMaximizedStateAboutToChange(this, mode);
+    Q_EMIT maximizedAboutToChange(mode);
     m_requestedMaximizeMode = mode;
 
     // call into decoration update borders
     if (m_nextDecoration && !(options->borderlessMaximizedWindows() && m_requestedMaximizeMode == KWin::MaximizeFull)) {
         changeMaximizeRecursion = true;
-        const auto c = m_nextDecoration->client().toStrongRef();
+        const auto c = m_nextDecoration->client();
         if ((m_requestedMaximizeMode & MaximizeVertical) != (oldMode & MaximizeVertical)) {
             Q_EMIT c->maximizedVerticallyChanged(m_requestedMaximizeMode & MaximizeVertical);
         }

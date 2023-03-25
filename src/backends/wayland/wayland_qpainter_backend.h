@@ -10,14 +10,13 @@
 #pragma once
 
 #include "core/outputlayer.h"
-#include "qpainterbackend.h"
+#include "platformsupport/scenes/qpainter/qpainterbackend.h"
 #include "utils/damagejournal.h"
 
 #include <KWayland/Client/buffer.h>
 
 #include <QImage>
 #include <QObject>
-#include <QWeakPointer>
 
 namespace KWayland
 {
@@ -56,6 +55,7 @@ public:
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    quint32 format() const override;
 
     void remapBuffer();
 
@@ -86,24 +86,13 @@ public:
     explicit WaylandQPainterCursorLayer(WaylandOutput *output);
     ~WaylandQPainterCursorLayer() override;
 
-    qreal scale() const;
-    void setScale(qreal scale);
-
-    QPoint hotspot() const;
-    void setHotspot(const QPoint &hotspot);
-
-    QSize size() const;
-    void setSize(const QSize &size);
-
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    quint32 format() const override;
 
 private:
     WaylandOutput *m_output;
     QImage m_backingStore;
-    QPoint m_hotspot;
-    QSize m_size;
-    qreal m_scale = 1.0;
 };
 
 class WaylandQPainterBackend : public QPainterBackend
@@ -115,7 +104,7 @@ public:
 
     void present(Output *output) override;
     OutputLayer *primaryLayer(Output *output) override;
-    WaylandQPainterCursorLayer *cursorLayer(Output *output);
+    OutputLayer *cursorLayer(Output *output) override;
 
 private:
     void createOutput(Output *waylandOutput);

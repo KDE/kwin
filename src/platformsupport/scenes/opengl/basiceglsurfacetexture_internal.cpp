@@ -4,8 +4,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "basiceglsurfacetexture_internal.h"
-#include "kwingltexture.h"
+#include "platformsupport/scenes/opengl/basiceglsurfacetexture_internal.h"
+#include "libkwineffects/kwingltexture.h"
 #include "scene/surfaceitem_internal.h"
 #include "utils/common.h"
 
@@ -52,7 +52,7 @@ bool BasicEGLSurfaceTextureInternal::updateFromFramebuffer()
     m_texture.reset(new GLTexture(fbo->texture(), 0, fbo->size()));
     m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
     m_texture->setFilter(GL_LINEAR);
-    m_texture->setYInverted(false);
+    m_texture->setContentTransform(TextureTransforms());
     return true;
 }
 

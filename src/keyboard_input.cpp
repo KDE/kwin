@@ -16,7 +16,6 @@
 #include "keyboard_layout.h"
 #include "keyboard_repeat.h"
 #include "modifier_only_shortcuts.h"
-#include "utils/common.h"
 #include "wayland/datadevice_interface.h"
 #include "wayland/keyboard_interface.h"
 #include "wayland/seat_interface.h"
@@ -41,7 +40,7 @@ namespace KWin
 KeyboardInputRedirection::KeyboardInputRedirection(InputRedirection *parent)
     : QObject(parent)
     , m_input(parent)
-    , m_xkb(new Xkb(parent))
+    , m_xkb(new Xkb(kwinApp()->followLocale1()))
 {
     connect(m_xkb.get(), &Xkb::ledsChanged, this, &KeyboardInputRedirection::ledsChanged);
     if (waylandServer()) {

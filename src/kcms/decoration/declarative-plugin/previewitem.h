@@ -73,6 +73,8 @@ protected:
 
 private:
     void paintShadow(QPainter *painter, int &paddingLeft, int &paddingRight, int &paddingTop, int &paddingBottom);
+    template <typename E>
+    void proxyPassEvent(E *event) const;
     void syncSize();
     void createDecoration();
     Decoration *m_decoration;

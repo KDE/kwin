@@ -5,15 +5,15 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
-import QtGraphicalEffects 1.15
+import QtQuick
+import Qt5Compat.GraphicalEffects
+import QtQuick.Controls
+import QtQuick.Layouts
 import org.kde.kirigami 2.20 as Kirigami
-import org.kde.kwin 3.0 as KWinComponents
-import org.kde.kwin.private.effects 1.0
+import org.kde.kwin as KWinComponents
+import org.kde.kwin.private.effects
 import org.kde.plasma.components 3.0 as PC3
-import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.core as PlasmaCore
 
 Item {
     id: bar
@@ -22,7 +22,7 @@ Item {
     readonly property real desktopWidth: desktopHeight * targetScreen.geometry.width / targetScreen.geometry.height
     readonly property real columnHeight: desktopHeight + PlasmaCore.Units.gridUnit
 
-    property QtObject clientModel
+    property QtObject windowModel
     property alias desktopModel: desktopRepeater.model
     property QtObject selectedDesktop: null
     property WindowHeap heap
@@ -100,7 +100,7 @@ Item {
                             width: targetScreen.geometry.width
                             height: targetScreen.geometry.height
                             visible: scaled
-                            clientModel: bar.clientModel
+                            windowModel: bar.windowModel
                             desktop: delegate.desktop
                             scale: bar.desktopHeight / targetScreen.geometry.height
                             transformOrigin: Item.TopLeft
@@ -131,7 +131,7 @@ Item {
                                     }
                                     ScriptAction {
                                         script: {
-                                            KWinComponents.Workspace.currentVirtualDesktop = delegate.desktop;
+                                            KWinComponents.Workspace.currentDesktop = delegate.desktop;
                                             effect.quickDeactivate();
                                         }
                                     }
@@ -153,6 +153,7 @@ Item {
                         Rectangle {
                             readonly property bool active: !thumbnail.scaled && (delegate.activeFocus || dropArea.containsDrag || mouseArea.containsPress || bar.selectedDesktop === delegate.desktop)
                             anchors.fill: parent
+                            anchors.margins: -border.width
                             radius: 3
                             color: "transparent"
                             border.width: 2
@@ -202,11 +203,11 @@ Item {
                             onDropped: drop => {
                                 drop.accepted = true;
                                 // dragging a KWin::Window
-                                if (drag.source.desktop === delegate.desktop.x11DesktopNumber) {
+                                if (drag.source.desktops.length === 0 || drag.source.desktops.indexOf(delegate.desktop) !== -1) {
                                     drop.action = Qt.IgnoreAction;
                                     return;
                                 }
-                                drag.source.desktop = delegate.desktop.x11DesktopNumber;
+                                drag.source.desktops = [delegate.desktop];
                             }
                         }
                     }
@@ -303,8 +304,8 @@ Item {
                         drag.accepted = desktopModel.rowCount() < 20
                     }
                     onDropped: {
-                        desktopModel.create(desktopModel.rowCount());
-                        drag.source.desktop = desktopModel.rowCount() + 1;
+                        const desktop = desktopModel.create(desktopModel.rowCount());
+                        drag.source.desktops = [desktop];
                     }
                 }
             }

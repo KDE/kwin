@@ -18,7 +18,7 @@
 
 #pragma once
 // KWin
-#include "kwinglobals.h"
+#include "libkwineffects/kwinglobals.h"
 // KDE includes
 #include <KSharedConfig>
 // Qt
@@ -112,7 +112,7 @@ public Q_SLOTS:
     void setBorder(ElectricBorder border);
     void setAction(ElectricBorderAction action);
     void setGeometry(const QRect &geometry);
-    void updateApproaching(const QPoint &point);
+    void updateApproaching(const QPointF &point);
     void checkBlocking();
 Q_SIGNALS:
     void approaching(ElectricBorder border, qreal factor, const QRect &geometry);

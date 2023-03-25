@@ -15,6 +15,7 @@
 #include <QSize>
 
 #include "core/output.h"
+#include "drm_blob.h"
 #include "drm_object.h"
 #include "drm_pointer.h"
 #include "utils/edid.h"
@@ -33,17 +34,16 @@ class DrmConnectorMode : public OutputMode
 {
 public:
     DrmConnectorMode(DrmConnector *connector, drmModeModeInfo nativeMode);
-    ~DrmConnectorMode() override;
 
-    uint32_t blobId();
     drmModeModeInfo *nativeMode();
+    std::shared_ptr<DrmBlob> blob();
 
     bool operator==(const DrmConnectorMode &otherMode);
 
 private:
     DrmConnector *m_connector;
     drmModeModeInfo m_nativeMode;
-    uint32_t m_blobId = 0;
+    std::shared_ptr<DrmBlob> m_blob;
 };
 
 class DrmConnector : public DrmObject
@@ -95,7 +95,7 @@ public:
 
     bool init() override;
     bool updateProperties() override;
-    void disable() override;
+    void disable(DrmAtomicCommit *commit) override;
 
     bool isCrtcSupported(DrmCrtc *crtc) const;
     bool isConnected() const;

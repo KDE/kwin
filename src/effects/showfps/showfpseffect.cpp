@@ -7,9 +7,9 @@
 */
 
 #include "showfpseffect.h"
+#include "libkwineffects/renderviewport.h"
 
 #include <QQmlContext>
-#include <QWindow>
 
 namespace KWin
 {
@@ -69,20 +69,15 @@ void ShowFpsEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::millis
     }
 
     if (!m_scene) {
-        m_window = std::make_unique<QWindow>();
-        m_window->create();
-        m_scene = std::make_unique<OffscreenQuickScene>(nullptr, m_window.get());
+        m_scene = std::make_unique<OffscreenQuickScene>(nullptr);
         const auto url = QUrl::fromLocalFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin/effects/showfps/qml/main.qml")));
         m_scene->setSource(url, {{QStringLiteral("effect"), QVariant::fromValue(this)}});
     }
-
-    const auto rect = effects->renderTargetRect();
-    m_scene->setGeometry(QRect(rect.x() + rect.width() - 300, 0, 300, 150));
 }
 
-void ShowFpsEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
+void ShowFpsEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
 {
-    effects->paintScreen(mask, region, data);
+    effects->paintScreen(renderTarget, viewport, mask, region, screen);
 
     auto now = std::chrono::steady_clock::now();
     if ((now - m_lastFpsTime) >= std::chrono::milliseconds(1000)) {
@@ -92,12 +87,14 @@ void ShowFpsEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData
         Q_EMIT fpsChanged();
     }
 
-    effects->renderOffscreenQuickView(m_scene.get());
+    const auto rect = viewport.renderRect();
+    m_scene->setGeometry(QRect(rect.x() + rect.width() - 300, 0, 300, 150));
+    effects->renderOffscreenQuickView(renderTarget, viewport, m_scene.get());
 }
 
-void ShowFpsEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+void ShowFpsEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
-    effects->paintWindow(w, mask, region, data);
+    effects->paintWindow(renderTarget, viewport, w, mask, region, data);
 
     // Take intersection of region and actual window's rect, minus the fps area
     //  (since we keep repainting it) and count the pixels.

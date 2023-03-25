@@ -12,11 +12,11 @@
 #include "core/output.h"
 #include "core/outputbackend.h"
 #include "core/renderbackend.h"
-#include "cursor.h"
+#include "libkwineffects/kwineffects.h"
+#include "pointer_input.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "x11window.h"
-#include <kwineffects.h>
 
 #include <KDecoration2/Decoration>
 
@@ -67,7 +67,7 @@ void DontCrashAuroraeDestroyDecoTest::initTestCase()
 void DontCrashAuroraeDestroyDecoTest::init()
 {
     workspace()->setActiveOutput(QPoint(640, 512));
-    Cursors::self()->mouse()->setPos(QPoint(640, 512));
+    input()->pointer()->warp(QPoint(640, 512));
 }
 
 void DontCrashAuroraeDestroyDecoTest::testBorderlessMaximizedWindows()
@@ -84,7 +84,8 @@ void DontCrashAuroraeDestroyDecoTest::testBorderlessMaximizedWindows()
     QCOMPARE(options->borderlessMaximizedWindows(), true);
 
     // create an xcb window
-    xcb_connection_t *c = xcb_connect(nullptr, nullptr);
+    Test::XcbConnectionPtr connection = Test::createX11Connection();
+    auto c = connection.get();
     QVERIFY(!xcb_connection_has_error(c));
 
     xcb_window_t windowId = xcb_generate_id(c);
@@ -113,7 +114,7 @@ void DontCrashAuroraeDestroyDecoTest::testBorderlessMaximizedWindows()
     QVERIFY(window->readyForPainting());
 
     // simulate click on maximize button
-    QSignalSpy maximizedStateChangedSpy(window, static_cast<void (Window::*)(KWin::Window *, MaximizeMode)>(&Window::clientMaximizedStateChanged));
+    QSignalSpy maximizedStateChangedSpy(window, &Window::maximizedChanged);
     quint32 timestamp = 1;
     Test::pointerMotion(window->frameGeometry().topLeft() + scenePoint.toPoint(), timestamp++);
     Test::pointerButtonPressed(BTN_LEFT, timestamp++);
@@ -126,9 +127,8 @@ void DontCrashAuroraeDestroyDecoTest::testBorderlessMaximizedWindows()
     xcb_unmap_window(c, windowId);
     xcb_destroy_window(c, windowId);
     xcb_flush(c);
-    xcb_disconnect(c);
 
-    QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
+    QSignalSpy windowClosedSpy(window, &X11Window::closed);
     QVERIFY(windowClosedSpy.wait());
 }
 

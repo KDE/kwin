@@ -10,9 +10,9 @@
 
 #include <config-kwin.h>
 
-#include "abstract_egl_backend.h"
 #include "core/renderloop_p.h"
 #include "core/session.h"
+#include "drm_atomic_commit.h"
 #include "drm_backend.h"
 #include "drm_connector.h"
 #include "drm_crtc.h"
@@ -24,6 +24,7 @@
 #include "drm_plane.h"
 #include "drm_virtual_output.h"
 #include "gbm_dmabuf.h"
+#include "platformsupport/scenes/opengl/abstract_egl_backend.h"
 // system
 #include <algorithm>
 #include <errno.h>
@@ -188,14 +189,14 @@ void DrmGpu::initDrmResources()
         const auto findBestPlane = [crtcId](const QVector<DrmPlane *> &list) {
             // if the plane is already used with this crtc, prefer it
             const auto connected = std::find_if(list.begin(), list.end(), [crtcId](DrmPlane *plane) {
-                return plane->getProp(DrmPlane::PropertyIndex::CrtcId)->pending() == crtcId;
+                return plane->getProp(DrmPlane::PropertyIndex::CrtcId)->current() == crtcId;
             });
             if (connected != list.end()) {
                 return *connected;
             }
             // don't take away planes from other crtcs. The kernel currently rejects such commits
             const auto notconnected = std::find_if(list.begin(), list.end(), [](DrmPlane *plane) {
-                return plane->getProp(DrmPlane::PropertyIndex::CrtcId)->pending() == 0;
+                return plane->getProp(DrmPlane::PropertyIndex::CrtcId)->current() == 0;
             });
             if (notconnected != list.end()) {
                 return *notconnected;
@@ -253,7 +254,7 @@ bool DrmGpu::updateOutputs()
             return connector->id() == currentConnector;
         });
         if (it == m_connectors.end()) {
-            auto conn = std::make_unique<DrmConnector>(this, currentConnector);
+            auto conn = std::make_shared<DrmConnector>(this, currentConnector);
             if (!conn->init()) {
                 continue;
             }
@@ -273,12 +274,11 @@ bool DrmGpu::updateOutputs()
             if (output) {
                 removeOutput(output);
             }
-            conn->disable();
         } else if (!output) {
             qCDebug(KWIN_DRM, "New %soutput on GPU %s: %s", conn->isNonDesktop() ? "non-desktop " : "", qPrintable(m_devNode), qPrintable(conn->modelName()));
             const auto pipeline = conn->pipeline();
             m_pipelines << pipeline;
-            auto output = new DrmOutput(pipeline);
+            auto output = new DrmOutput(*it);
             m_drmOutputs << output;
             addedOutputs << output;
             Q_EMIT outputAdded(output);
@@ -377,7 +377,7 @@ DrmPipeline::Error DrmGpu::checkCrtcAssignment(QVector<DrmConnector *> connector
     DrmCrtc *currentCrtc = nullptr;
     if (m_atomicModeSetting) {
         // try the crtc that this connector is already connected to first
-        uint32_t id = connector->getProp(DrmConnector::PropertyIndex::CrtcId)->pending();
+        const uint32_t id = connector->getProp(DrmConnector::PropertyIndex::CrtcId)->current();
         auto it = std::find_if(crtcs.begin(), crtcs.end(), [id](const auto &crtc) {
             return id == crtc->id();
         });
@@ -622,13 +622,13 @@ std::unique_ptr<DrmLease> DrmGpu::leaseOutputs(const QVector<DrmOutput *> &outpu
     FileDescriptor fd{drmModeCreateLease(m_fd, objects.constData(), objects.count(), 0, &lesseeId)};
     if (!fd.isValid()) {
         qCWarning(KWIN_DRM) << "Could not create DRM lease!" << strerror(errno);
-        qCWarning(KWIN_DRM, "Tried to lease the following %d resources:", objects.count());
+        qCWarning(KWIN_DRM) << "Tried to lease the following" << objects.count() << "resources:";
         for (const auto &res : std::as_const(objects)) {
             qCWarning(KWIN_DRM) << res;
         }
         return nullptr;
     } else {
-        qCDebug(KWIN_DRM, "Created lease for %d resources:", objects.count());
+        qCDebug(KWIN_DRM) << "Created lease for" << objects.count() << "resources:";
         for (const auto &res : std::as_const(objects)) {
             qCDebug(KWIN_DRM) << res;
         }

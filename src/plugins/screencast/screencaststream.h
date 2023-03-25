@@ -11,7 +11,7 @@
 #include "config-kwin.h"
 
 #include "dmabuftexture.h"
-#include "kwinglobals.h"
+#include "libkwineffects/kwinglobals.h"
 #include "wayland/screencast_v1_interface.h"
 
 #include <QHash>
@@ -59,7 +59,7 @@ public:
      */
     void recordFrame(const QRegion &damagedRegion);
 
-    void setCursorMode(KWaylandServer::ScreencastV1Interface::CursorMode mode, qreal scale, const QRect &viewport);
+    void setCursorMode(KWaylandServer::ScreencastV1Interface::CursorMode mode, qreal scale, const QRectF &viewport);
 
 public Q_SLOTS:
     void recordCursor();
@@ -112,13 +112,13 @@ private:
         KWaylandServer::ScreencastV1Interface::CursorMode mode = KWaylandServer::ScreencastV1Interface::Hidden;
         const QSize bitmapSize = QSize(256, 256);
         qreal scale = 1;
-        QRect viewport;
+        QRectF viewport;
         qint64 lastKey = 0;
-        QRect lastRect;
+        QRectF lastRect;
         std::unique_ptr<GLTexture> texture;
         bool visible = false;
     } m_cursor;
-    QRect cursorGeometry(Cursor *cursor) const;
+    QRectF cursorGeometry(Cursor *cursor) const;
 
     QHash<struct pw_buffer *, std::shared_ptr<DmaBufTexture>> m_dmabufDataForPwBuffer;
 
@@ -129,6 +129,7 @@ private:
     quint64 m_sequential = 0;
     bool m_hasDmaBuf = false;
     bool m_waitForNewBuffers = false;
+    quint32 m_drmFormat = 0;
 };
 
 } // namespace KWin

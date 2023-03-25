@@ -6,13 +6,13 @@ set(showpaint_SOURCES
     showpaint.cpp
 )
 
-kwin4_add_effect_module(kwin4_effect_showpaint ${showpaint_SOURCES})
-target_link_libraries(kwin4_effect_showpaint PRIVATE
+kwin_add_builtin_effect(showpaint ${showpaint_SOURCES})
+target_link_libraries(showpaint PRIVATE
     kwineffects
     kwinglutils
 
-    KF5::GlobalAccel
-    KF5::I18n
+    KF6::GlobalAccel
+    KF6::I18n
 )
 
 #######################################
@@ -24,10 +24,10 @@ if (KWIN_BUILD_KCMS)
     kwin_add_effect_config(kwin_showpaint_config ${kwin_showpaint_config_SRCS})
 
     target_link_libraries(kwin_showpaint_config
-        KF5::ConfigWidgets
-        KF5::CoreAddons
-        KF5::GlobalAccel
-        KF5::I18n
-        KF5::XmlGui
+        KF6::KCMUtils
+        KF6::CoreAddons
+        KF6::GlobalAccel
+        KF6::I18n
+        KF6::XmlGui
     )
 endif()

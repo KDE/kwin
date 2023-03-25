@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include <kwingltexture.h>
+#include "libkwineffects/kwingltexture.h"
 #include <kwinglutils_export.h>
 
 typedef void *EGLImageKHR;

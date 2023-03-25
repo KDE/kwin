@@ -10,8 +10,8 @@
 
 #pragma once
 
+#include "libkwineffects/kwinglobals.h"
 #include <config-kwin.h>
-#include <kwinglobals.h>
 
 #include <KSharedConfig>
 #include <memory>
@@ -46,11 +46,7 @@ class Window;
 class XcbEventFilter : public QAbstractNativeEventFilter
 {
 public:
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    bool nativeEventFilter(const QByteArray &eventType, void *message, long int *result) override;
-#else
     bool nativeEventFilter(const QByteArray &eventType, void *message, qintptr *result) override;
-#endif
 };
 
 class X11EventFilterContainer : public QObject
@@ -128,7 +124,6 @@ public:
     void setOperationMode(OperationMode mode);
     bool shouldUseWaylandForCompositing() const;
 
-    void setupTranslator();
     void setupCommandLine(QCommandLineParser *parser);
     void processCommandLine(QCommandLineParser *parser);
 
@@ -299,7 +294,7 @@ public:
      *
      * @param callback The function to invoke once the interactive position selection ends
      */
-    virtual void startInteractivePositionSelection(std::function<void(const QPoint &)> callback);
+    virtual void startInteractivePositionSelection(std::function<void(const QPointF &)> callback);
 
     /**
      * Returns a PlatformCursorImage. By default this is created by softwareCursor and
@@ -380,6 +375,8 @@ private:
 
 inline static Application *kwinApp()
 {
+    Q_ASSERT(qobject_cast<Application *>(QCoreApplication::instance()));
+
     return static_cast<Application *>(QCoreApplication::instance());
 }
 

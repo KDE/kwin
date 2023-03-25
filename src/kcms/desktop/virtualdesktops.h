@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <KQuickAddons/ManagedConfigModule>
+#include <KQuickManagedConfigModule>
 #include <KSharedConfig>
 
 class VirtualDesktopsSettings;
@@ -18,7 +18,7 @@ class VirtualDesktopsData;
 class AnimationsModel;
 class DesktopsModel;
 
-class VirtualDesktops : public KQuickAddons::ManagedConfigModule
+class VirtualDesktops : public KQuickManagedConfigModule
 {
     Q_OBJECT
 
@@ -27,7 +27,7 @@ class VirtualDesktops : public KQuickAddons::ManagedConfigModule
     Q_PROPERTY(VirtualDesktopsSettings *virtualDesktopsSettings READ virtualDesktopsSettings CONSTANT)
 
 public:
-    explicit VirtualDesktops(QObject *parent = nullptr, const QVariantList &list = QVariantList());
+    explicit VirtualDesktops(QObject *parent, const KPluginMetaData &metaData, const QVariantList &list);
     ~VirtualDesktops() override;
 
     QAbstractItemModel *desktopsModel() const;

@@ -7,8 +7,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "drm_egl_backend.h"
-#include "basiceglsurfacetexture_internal.h"
-#include "basiceglsurfacetexture_wayland.h"
+#include "platformsupport/scenes/opengl/basiceglsurfacetexture_internal.h"
+#include "platformsupport/scenes/opengl/basiceglsurfacetexture_wayland.h"
 // kwin
 #include "core/renderloop_p.h"
 #include "drm_abstract_output.h"
@@ -17,25 +17,24 @@
 #include "drm_dumb_swapchain.h"
 #include "drm_egl_cursor_layer.h"
 #include "drm_egl_layer.h"
-#include "drm_gbm_surface.h"
+#include "drm_gbm_swapchain.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
 #include "drm_output.h"
 #include "drm_pipeline.h"
-#include "drm_shadow_buffer.h"
 #include "drm_virtual_egl_layer.h"
-#include "egl_dmabuf.h"
 #include "gbm_dmabuf.h"
 #include "kwineglutils_p.h"
 #include "linux_dmabuf.h"
 #include "options.h"
+#include "platformsupport/scenes/opengl/egl_dmabuf.h"
 #include "scene/surfaceitem_wayland.h"
 #include "wayland/clientconnection.h"
 #include "wayland/linuxdmabufv1clientbuffer.h"
 #include "wayland/surface_interface.h"
 // kwin libs
-#include <kwineglimagetexture.h>
-#include <kwinglplatform.h>
+#include "libkwineffects/kwineglimagetexture.h"
+#include "libkwineffects/kwinglplatform.h"
 // system
 #include <drm_fourcc.h>
 #include <errno.h>
@@ -170,7 +169,6 @@ bool EglGbmBackend::initBufferConfigs()
             continue;
         }
         m_formats[gbmFormat] = format;
-        m_configs[format.drmFormat] = configs[i];
     }
     if (!m_formats.isEmpty()) {
         return true;
@@ -211,6 +209,11 @@ OutputLayer *EglGbmBackend::primaryLayer(Output *output)
     return static_cast<DrmAbstractOutput *>(output)->primaryLayer();
 }
 
+OutputLayer *EglGbmBackend::cursorLayer(Output *output)
+{
+    return static_cast<DrmAbstractOutput *>(output)->cursorLayer();
+}
+
 std::shared_ptr<GLTexture> EglGbmBackend::textureForOutput(Output *output) const
 {
     const auto drmOutput = static_cast<DrmAbstractOutput *>(output);
@@ -229,11 +232,6 @@ bool EglGbmBackend::prefer10bpc() const
     static bool ok = false;
     static const int preferred = qEnvironmentVariableIntValue("KWIN_DRM_PREFER_COLOR_DEPTH", &ok);
     return !ok || preferred == 30;
-}
-
-EGLConfig EglGbmBackend::config(uint32_t format) const
-{
-    return m_configs.value(format, EGL_NO_CONFIG_KHR);
 }
 
 std::shared_ptr<DrmPipelineLayer> EglGbmBackend::createPrimaryLayer(DrmPipeline *pipeline)

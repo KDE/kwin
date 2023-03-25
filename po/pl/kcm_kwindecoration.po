@@ -1,18 +1,18 @@
 # translation of kcmkwindecoration.po to Polish
-# Version: $Revision: 1636722 $
+# Version: $Revision: 1646071 $
 # translation of kcmkwindecoration.po to
 # Norbert Popiołek <norbert@kde.com.pl>\n"
 # Michał Rudolf <mrudolf@kdewebdev.org>, 2002.
 # Michal Rudolf <mrudolf@kdewebdev.org>, 2002, 2003, 2004, 2005, 2009.
 # Marta Rybczyńska <kde-i18n@rybczynska.net>, 2008, 2009, 2010.
 # Marta Rybczynska <kde-i18n@rybczynska.net>, 2009.
-# Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2021, 2022.
+# Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2021, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-26 00:47+0000\n"
-"PO-Revision-Date: 2022-08-06 09:41+0200\n"
+"POT-Creation-Date: 2023-03-05 03:09+0000\n"
+"PO-Revision-Date: 2023-02-11 08:27+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
@@ -20,20 +20,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 ">\n"
-"X-Generator: Lokalize 22.04.1\n"
+"X-Generator: Lokalize 22.12.2\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
-
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Michał Rudolf, Norbert Popiołek, Łukasz Wojniłowicz"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr ""
-"mrudolf@kdewebdev.org, norbert@kde.com.pl, lukasz.wojnilowicz@gmail.com"
 
 #: declarative-plugin/buttonsmodel.cpp:53
 #, kde-format
@@ -85,22 +74,7 @@ msgstr "Utrzymuj pod innymi oknami"
 msgid "Keep above other windows"
 msgstr "Utrzymuj nad innymi oknami"
 
-#: kcm.cpp:49
-#, kde-format
-msgid "Window Decorations"
-msgstr "Wygląd okien"
-
-#: kcm.cpp:53
-#, kde-format
-msgid "Valerio Pilo"
-msgstr "Valerio Pilo"
-
-#: kcm.cpp:54
-#, kde-format
-msgid "Author"
-msgstr "Autor"
-
-#: kcm.cpp:183
+#: kcm.cpp:172
 #, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme's default (%1)"
@@ -202,52 +176,51 @@ msgstr "Upuść tutaj przycisk, aby go usunąć"
 msgid "Drag buttons between here and the titlebar"
 msgstr "Przeciągnij przycisk stąd na pasek tytułu"
 
-#: package/contents/ui/main.qml:18
+#: package/contents/ui/ConfigureTitlebar.qml:16
 #, kde-format
-msgid "This module lets you configure the window decorations."
-msgstr "Ten moduł umożliwia określenie wyglądu okien."
-
-#: package/contents/ui/main.qml:52
-#, kde-format
-msgctxt "tab label"
-msgid "Theme"
-msgstr "Wygląd"
-
-#: package/contents/ui/main.qml:56
-#, kde-format
-msgctxt "tab label"
 msgid "Titlebar Buttons"
 msgstr "Przyciski paska tytułu"
 
-#: package/contents/ui/main.qml:92
-#, kde-format
-msgctxt "Selector label"
-msgid "Window border size:"
-msgstr "Rozmiar obramowania okna:"
-
-#: package/contents/ui/main.qml:110
-#, kde-format
-msgctxt "button text"
-msgid "Get New Window Decorations..."
-msgstr "Pobierz nowy wygląd dla okien..."
-
-#: package/contents/ui/main.qml:139
+#: package/contents/ui/ConfigureTitlebar.qml:35
 #, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the menu button"
 msgstr "Zamknij okno po dwukrotnym naciśnięciu na przycisk menu"
 
-#: package/contents/ui/main.qml:156
+#: package/contents/ui/ConfigureTitlebar.qml:52
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the menu button to show the menu."
 msgstr "Naciśnij i przytrzymaj przycisk menu, aby pokazać menu."
 
-#: package/contents/ui/main.qml:163
+#: package/contents/ui/ConfigureTitlebar.qml:59
 #, kde-format
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "Pokaż podpowiedź po najechaniu na przycisk paska tytułu"
+
+#: package/contents/ui/main.qml:19
+#, kde-format
+msgid "This module lets you configure the window decorations."
+msgstr "Ten moduł umożliwia określenie wyglądu okien."
+
+#: package/contents/ui/main.qml:42
+#, kde-format
+msgctxt "Selector label"
+msgid "Window border size:"
+msgstr "Rozmiar obramowania okna:"
+
+#: package/contents/ui/main.qml:60
+#, kde-format
+msgctxt "button text"
+msgid "Configure Titlebar Buttons…"
+msgstr "Ustawienia przycisków paska nazwy..."
+
+#: package/contents/ui/main.qml:65
+#, kde-format
+msgctxt "button text"
+msgid "Get New Window Decorations…"
+msgstr "Pobierz nowy wygląd dla okien…"
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -298,6 +271,28 @@ msgstr "Bardzo wielkie"
 #, kde-format
 msgid "Oversized"
 msgstr "Przewymiarowane"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Michał Rudolf, Norbert Popiołek, Łukasz Wojniłowicz"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr ""
+#~ "mrudolf@kdewebdev.org, norbert@kde.com.pl, lukasz.wojnilowicz@gmail.com"
+
+#~ msgid "Window Decorations"
+#~ msgstr "Wygląd okien"
+
+#~ msgid "Valerio Pilo"
+#~ msgstr "Valerio Pilo"
+
+#~ msgid "Author"
+#~ msgstr "Autor"
+
+#~ msgctxt "tab label"
+#~ msgid "Theme"
+#~ msgstr "Wygląd"
 
 #~ msgctxt "popup tip"
 #~ msgid ""

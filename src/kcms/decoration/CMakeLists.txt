@@ -25,11 +25,11 @@ kcmutils_generate_desktop_file(kcm_kwindecoration)
 
 target_link_libraries(kcm_kwindecoration
     KDecoration2::KDecoration
-    KF5::I18n
-    KF5::KCMUtils
-    KF5::NewStuff
-    KF5::QuickAddons
+    KF6::I18n
+    KF6::KCMUtils
+    KF6::KCMUtilsQuick
     Qt::Quick
+    Qt::DBus
 )
 
 set(kwin-applywindowdecoration_SRCS
@@ -44,8 +44,8 @@ add_executable(kwin-applywindowdecoration ${kwin-applywindowdecoration_SRCS})
 target_link_libraries(kwin-applywindowdecoration
     KDecoration2::KDecoration
     Qt::DBus
-    KF5::I18n
-    KF5::KCMUtils
+    KF6::I18n
+    KF6::KCMUtils
 )
 
 configure_file(window-decorations.knsrc.cmake ${CMAKE_CURRENT_BINARY_DIR}/window-decorations.knsrc)

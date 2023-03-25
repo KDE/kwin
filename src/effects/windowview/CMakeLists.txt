@@ -17,14 +17,14 @@ kconfig_add_kcfg_files(windowview_SOURCES
 
 qt_add_dbus_adaptor(windowview_SOURCES org.kde.KWin.Effect.WindowView1.xml windowvieweffect.h KWin::WindowViewEffect)
 
-kwin4_add_effect_module(kwin4_effect_windowview ${windowview_SOURCES})
+kwin_add_builtin_effect(windowview ${windowview_SOURCES})
 
-target_link_libraries(kwin4_effect_windowview PRIVATE
+target_link_libraries(windowview PRIVATE
     kwineffects
 
-    KF5::ConfigGui
-    KF5::GlobalAccel
-    KF5::I18n
+    KF6::ConfigGui
+    KF6::GlobalAccel
+    KF6::I18n
 
     Qt::Quick
     )

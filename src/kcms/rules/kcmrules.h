@@ -9,13 +9,13 @@
 #include "rulebookmodel.h"
 #include "rulesmodel.h"
 
-#include <KQuickAddons/ConfigModule>
+#include <KQuickConfigModule>
 
 namespace KWin
 {
 class RuleSettings;
 
-class KCMKWinRules : public KQuickAddons::ConfigModule
+class KCMKWinRules : public KQuickConfigModule
 {
     Q_OBJECT
 
@@ -24,7 +24,7 @@ class KCMKWinRules : public KQuickAddons::ConfigModule
     Q_PROPERTY(int editIndex READ editIndex NOTIFY editIndexChanged)
 
 public:
-    explicit KCMKWinRules(QObject *parent, const QVariantList &arguments);
+    explicit KCMKWinRules(QObject *parent, const KPluginMetaData &metaData, const QVariantList &arguments);
 
     Q_INVOKABLE void setRuleDescription(int index, const QString &description);
     Q_INVOKABLE void editRule(int index);

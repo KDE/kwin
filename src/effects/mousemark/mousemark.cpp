@@ -13,11 +13,12 @@
 // KConfigSkeleton
 #include "mousemarkconfig.h"
 
+#include "libkwineffects/kwinglplatform.h"
+#include "libkwineffects/renderviewport.h"
 #include <KGlobalAccel>
 #include <KLocalizedString>
 #include <QAction>
 #include <kwinconfig.h>
-#include <kwinglplatform.h>
 
 #include <QPainter>
 
@@ -26,7 +27,10 @@
 namespace KWin
 {
 
-#define NULL_POINT (QPoint(-1, -1)) // null point is (0,0), which is valid :-/
+static consteval QPoint nullPoint()
+{
+    return QPoint(-1, -1);
+}
 
 MouseMarkEffect::MouseMarkEffect()
 {
@@ -47,7 +51,7 @@ MouseMarkEffect::MouseMarkEffect()
     connect(effects, &EffectsHandler::mouseChanged, this, &MouseMarkEffect::slotMouseChanged);
     connect(effects, &EffectsHandler::screenLockingChanged, this, &MouseMarkEffect::screenLockingChanged);
     reconfigure(ReconfigureAll);
-    arrow_start = NULL_POINT;
+    arrow_start = nullPoint();
     effects->startMousePolling(); // We require it to detect activation as well
 }
 
@@ -66,9 +70,9 @@ void MouseMarkEffect::reconfigure(ReconfigureFlags)
     color.setAlphaF(1.0);
 }
 
-void MouseMarkEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
+void MouseMarkEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
 {
-    effects->paintScreen(mask, region, data); // paint normal screen
+    effects->paintScreen(renderTarget, viewport, mask, region, screen); // paint normal screen
     if (marks.isEmpty() && drawing.isEmpty()) {
         return;
     }
@@ -85,14 +89,14 @@ void MouseMarkEffect::paintScreen(int mask, const QRegion &region, ScreenPaintDa
         vbo->reset();
         vbo->setUseColor(true);
         vbo->setColor(color);
-        const auto scale = effects->renderTargetScale();
+        const auto scale = viewport.scale();
         ShaderBinder binder(ShaderTrait::UniformColor);
-        binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, data.projectionMatrix());
+        binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, viewport.projectionMatrix());
         QVector<float> verts;
         for (const Mark &mark : std::as_const(marks)) {
             verts.clear();
             verts.reserve(mark.size() * 2);
-            for (const QPoint &p : std::as_const(mark)) {
+            for (const QPointF &p : std::as_const(mark)) {
                 verts << p.x() * scale << p.y() * scale;
             }
             vbo->setData(verts.size() / 2, 2, verts.data(), nullptr);
@@ -101,7 +105,7 @@ void MouseMarkEffect::paintScreen(int mask, const QRegion &region, ScreenPaintDa
         if (!drawing.isEmpty()) {
             verts.clear();
             verts.reserve(drawing.size() * 2);
-            for (const QPoint &p : std::as_const(drawing)) {
+            for (const QPointF &p : std::as_const(drawing)) {
                 verts << p.x() * scale << p.y() * scale;
             }
             vbo->setData(verts.size() / 2, 2, verts.data(), nullptr);
@@ -136,21 +140,21 @@ void MouseMarkEffect::drawMark(QPainter *painter, const Mark &mark)
     }
 }
 
-void MouseMarkEffect::slotMouseChanged(const QPoint &pos, const QPoint &,
+void MouseMarkEffect::slotMouseChanged(const QPointF &pos, const QPointF &,
                                        Qt::MouseButtons, Qt::MouseButtons,
                                        Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers)
 {
     if (modifiers == (Qt::META | Qt::SHIFT | Qt::CTRL)) { // start/finish arrow
-        if (arrow_start != NULL_POINT) {
+        if (arrow_start != nullPoint()) {
             marks.append(createArrow(arrow_start, pos));
-            arrow_start = NULL_POINT;
+            arrow_start = nullPoint();
             effects->addRepaintFull();
             return;
         } else {
             arrow_start = pos;
         }
     }
-    if (arrow_start != NULL_POINT) {
+    if (arrow_start != nullPoint()) {
         return;
     }
     // TODO the shortcuts now trigger this right before they're activated
@@ -161,7 +165,7 @@ void MouseMarkEffect::slotMouseChanged(const QPoint &pos, const QPoint &,
         if (drawing.last() == pos) {
             return;
         }
-        QPoint pos2 = drawing.last();
+        QPointF pos2 = drawing.last();
         drawing.append(pos);
         QRect repaint = QRect(std::min(pos.x(), pos2.x()), std::min(pos.y(), pos2.y()),
                               std::max(pos.x(), pos2.x()), std::max(pos.y(), pos2.y()));
@@ -182,8 +186,8 @@ void MouseMarkEffect::clear()
 
 void MouseMarkEffect::clearLast()
 {
-    if (arrow_start != NULL_POINT) {
-        arrow_start = NULL_POINT;
+    if (arrow_start != nullPoint()) {
+        arrow_start = nullPoint();
     } else if (!drawing.isEmpty()) {
         drawing.clear();
         effects->addRepaintFull();
@@ -193,7 +197,7 @@ void MouseMarkEffect::clearLast()
     }
 }
 
-MouseMarkEffect::Mark MouseMarkEffect::createArrow(QPoint arrow_start, QPoint arrow_end)
+MouseMarkEffect::Mark MouseMarkEffect::createArrow(QPointF arrow_start, QPointF arrow_end)
 {
     Mark ret;
     double angle = atan2((double)(arrow_end.y() - arrow_start.y()), (double)(arrow_end.x() - arrow_start.x()));

@@ -1,0 +1,19 @@
+[Driver]
+Vendor=Mali (Lima)
+Renderer=Mali 400 (Lima)
+Version=3.0 Mesa 19.1
+ShadingLanguageVersion=1.30
+
+[Settings]
+LooseBinding=true
+GLSL=true
+TextureNPOT=true
+Mesa=true
+Lima=true
+GLVersion=3,0
+GLSLVersion=1,30
+MesaVersion=19,1
+DriverVersion=19,1
+Driver=19
+ChipClass=5000
+Compositor=1

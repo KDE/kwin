@@ -242,7 +242,7 @@ void Workspace::setActiveWindow(Window *window)
 
         // activating a client can cause a non active fullscreen window to loose the ActiveLayer status on > 1 screens
         if (outputs().count() > 1) {
-            for (auto it = m_allClients.begin(); it != m_allClients.end(); ++it) {
+            for (auto it = m_windows.begin(); it != m_windows.end(); ++it) {
                 if (*it != m_activeWindow && (*it)->layer() == ActiveLayer && (*it)->output() == m_activeWindow->output()) {
                     (*it)->updateLayer();
                 }
@@ -309,7 +309,7 @@ void Workspace::activateWindow(Window *window, bool force)
     }
 #endif
     if (window->isMinimized()) {
-        window->unminimize();
+        window->setMinimized(false);
     }
 
     // ensure the window is really visible - could eg. be a hidden utility window, see bug #348083
@@ -441,7 +441,7 @@ Window *Workspace::windowUnderMouse(Output *output) const
             continue;
         }
 
-        if (window->frameGeometry().contains(Cursors::self()->mouse()->pos())) {
+        if (exclusiveContains(window->frameGeometry(), Cursors::self()->mouse()->pos())) {
             return window;
         }
     }
@@ -767,13 +767,17 @@ void X11Window::startupIdChanged()
     // If the ASN contains desktop, move it to the desktop, otherwise move it to the current
     // desktop (since the new ASN should make the window act like if it's a new application
     // launched). However don't affect the window's desktop if it's set to be on all desktops.
-    int desktop = VirtualDesktopManager::self()->current();
-    if (asn_data.desktop() != 0) {
-        desktop = asn_data.desktop();
+
+    if (asn_data.desktop() != 0 && !isOnAllDesktops()) {
+        if (asn_data.desktop() == -1) {
+            workspace()->sendWindowToDesktops(this, {}, true);
+        } else {
+            if (VirtualDesktop *desktop = VirtualDesktopManager::self()->desktopForX11Id(asn_data.desktop())) {
+                workspace()->sendWindowToDesktops(this, {desktop}, true);
+            }
+        }
     }
-    if (!isOnAllDesktops()) {
-        workspace()->sendWindowToDesktop(this, desktop, true);
-    }
+
     if (asn_data.xinerama() != -1) {
         Output *output = workspace()->xineramaIndexToOutput(asn_data.xinerama());
         if (output) {
@@ -783,9 +787,6 @@ void X11Window::startupIdChanged()
     const xcb_timestamp_t timestamp = asn_id.timestamp();
     if (timestamp != 0) {
         bool activate = allowWindowActivation(timestamp);
-        if (asn_data.desktop() != 0 && !isOnCurrentDesktop()) {
-            activate = false; // it was started on different desktop than current one
-        }
         if (activate) {
             workspace()->activateWindow(this);
         } else {

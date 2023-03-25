@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
-#include "openglbackend.h"
+#include "platformsupport/scenes/opengl/openglbackend.h"
 
 #include <QObject>
 #include <epoxy/egl.h>
@@ -62,7 +62,6 @@ public:
         return m_config;
     }
 
-    std::shared_ptr<GLTexture> textureForOutput(Output *output) const override;
     QHash<uint32_t, QVector<uint64_t>> supportedFormats() const override;
 
     dev_t deviceId() const;
@@ -87,6 +86,7 @@ protected:
     bool hasClientExtension(const QByteArray &ext) const;
     bool isOpenGLES() const;
     bool createContext();
+    virtual bool initBufferConfigs();
 
 private:
     EGLContext ensureGlobalShareContext();

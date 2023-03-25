@@ -117,8 +117,7 @@ var fadeDesktopEffect = {
         effect.configChanged.connect(fadeDesktopEffect.loadConfig);
         effect.isActiveFullScreenEffectChanged.connect(
             fadeDesktopEffect.slotIsActiveFullScreenEffectChanged);
-        effects['desktopChanged(int,int,KWin::EffectWindow*)'].connect(
-            fadeDesktopEffect.slotDesktopChanged);
+        effects.desktopChanged.connect(fadeDesktopEffect.slotDesktopChanged);
     }
 };
 

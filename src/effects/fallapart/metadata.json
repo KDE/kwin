@@ -41,7 +41,6 @@
         "Description[zh_CN]": "窗口关闭时绘制粉碎飞散动画",
         "Description[zh_TW]": "關閉的視窗會呈現粉碎效果",
         "EnabledByDefault": false,
-        "Id": "fallapart",
         "License": "GPL",
         "Name": "Fall Apart",
         "Name[ar]": "السقوط أجزاء",

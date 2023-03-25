@@ -9,10 +9,10 @@
 #include "kwin_wayland_test.h"
 
 #include "core/outputbackend.h"
-#include "cursor.h"
 #include "input.h"
 #include "internalwindow.h"
 #include "keyboard_input.h"
+#include "pointer_input.h"
 #include "useractions.h"
 #include "wayland/keyboard_interface.h"
 #include "wayland/seat_interface.h"
@@ -105,7 +105,7 @@ void GlobalShortcutsTest::init()
 {
     QVERIFY(Test::setupWaylandConnection());
     workspace()->setActiveOutput(QPoint(640, 512));
-    KWin::Cursors::self()->mouse()->setPos(QPoint(640, 512));
+    KWin::input()->pointer()->warp(QPoint(640, 512));
 
     auto xkb = input()->keyboard()->xkb();
     xkb->switchToLayout(0);
@@ -351,21 +351,13 @@ void GlobalShortcutsTest::testComponseKey()
     QTRY_COMPARE(triggeredSpy.count(), 0);
 }
 
-struct XcbConnectionDeleter
-{
-    void operator()(xcb_connection_t *pointer)
-    {
-        xcb_disconnect(pointer);
-    }
-};
-
 void GlobalShortcutsTest::testX11WindowShortcut()
 {
 #ifdef NO_XWAYLAND
     QSKIP("x11 test, unnecessary without xwayland");
 #endif
     // create an X11 window
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     xcb_window_t windowId = xcb_generate_id(c.get());
     const QRect windowGeometry = QRect(0, 0, 10, 20);
@@ -420,7 +412,7 @@ void GlobalShortcutsTest::testX11WindowShortcut()
     Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
 
     // destroy window again
-    QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
+    QSignalSpy windowClosedSpy(window, &X11Window::closed);
     xcb_unmap_window(c.get(), windowId);
     xcb_destroy_window(c.get(), windowId);
     xcb_flush(c.get());
@@ -475,7 +467,7 @@ void GlobalShortcutsTest::testSetupWindowShortcut()
     QVERIFY(window->isActive());
     QCOMPARE(window->shortcut(), QKeySequence());
 
-    QSignalSpy shortcutDialogAddedSpy(workspace(), &Workspace::internalWindowAdded);
+    QSignalSpy shortcutDialogAddedSpy(workspace(), &Workspace::windowAdded);
     workspace()->slotSetupWindowShortcut();
     QTRY_COMPARE(shortcutDialogAddedSpy.count(), 1);
     auto dialog = shortcutDialogAddedSpy.first().first().value<InternalWindow *>();
@@ -483,13 +475,6 @@ void GlobalShortcutsTest::testSetupWindowShortcut()
     QVERIFY(dialog->isInternal());
     auto sequenceEdit = workspace()->shortcutDialog()->findChild<QKeySequenceEdit *>();
     QVERIFY(sequenceEdit);
-
-#if QT_VERSION_MAJOR < 6
-    // the QKeySequenceEdit field does not get focus, we need to pass it focus manually
-    QEXPECT_FAIL("", "Edit does not have focus", Continue);
-    QVERIFY(sequenceEdit->hasFocus());
-    sequenceEdit->setFocus();
-#endif
     QTRY_VERIFY(sequenceEdit->hasFocus());
 
     quint32 timestamp = 0;

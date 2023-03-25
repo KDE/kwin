@@ -5,20 +5,18 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.5
-import QtQuick.Controls 2.5 as QQC2
-import QtQuick.Layouts 1.1
+import QtQuick
+import QtQuick.Controls as QQC2
+import QtQuick.Layouts
 
-import org.kde.kcm 1.2
-import org.kde.kconfig 1.0
+import org.kde.kcm
+import org.kde.kconfig
 import org.kde.kirigami 2.10 as Kirigami
-import org.kde.newstuff 1.62 as NewStuff
+import org.kde.newstuff as NewStuff
 
-import org.kde.private.kcms.kwin.effects 1.0 as Private
+import org.kde.private.kcms.kwin.effects as Private
 
 ScrollViewKCM {
-    ConfigModule.quickHelp: i18n("This module lets you configure desktop effects.")
-
     header: ColumnLayout {
         QQC2.Label {
             Layout.fillWidth: true

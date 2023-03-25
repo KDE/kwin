@@ -25,8 +25,6 @@ namespace KWin
 
 class X11WindowedBackend;
 class X11WindowedOutput;
-class X11WindowedEglBackend;
-class X11WindowedQPainterBackend;
 
 class X11WindowedCursor
 {
@@ -34,7 +32,7 @@ public:
     explicit X11WindowedCursor(X11WindowedOutput *output);
     ~X11WindowedCursor();
 
-    void update(const QImage &image, const QPoint &hotspot);
+    void update(const QImage &image, const QPointF &hotspot);
 
 private:
     X11WindowedOutput *m_output;
@@ -72,8 +70,8 @@ public:
      */
     QPointF mapFromGlobal(const QPointF &pos) const;
 
-    bool setCursor(const QImage &image, const QPoint &hotspot) override;
-    bool moveCursor(const QPoint &position) override;
+    bool setCursor(CursorSource *source) override;
+    bool moveCursor(const QPointF &position) override;
 
     QRegion exposedArea() const;
     void addExposedArea(const QRect &rect);
@@ -85,8 +83,6 @@ public:
 
 private:
     void initXInputForWindow();
-    void renderCursorOpengl(X11WindowedEglBackend *backend, const QImage &image, const QPoint &hotspot);
-    void renderCursorQPainter(X11WindowedQPainterBackend *backend, const QImage &image, const QPoint &hotspot);
 
     xcb_window_t m_window = XCB_WINDOW_NONE;
     xcb_present_event_t m_presentEvent = XCB_NONE;

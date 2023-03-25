@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
-#include <kwineffects.h>
+#include "libkwineffects/kwineffects.h"
 
 class QTimer;
 namespace Plasma
@@ -27,7 +27,7 @@ public:
     ScreenEdgeEffect();
     ~ScreenEdgeEffect() override;
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void paintScreen(int mask, const QRegion &region, ScreenPaintData &data) override;
+    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen) override;
     bool isActive() const override;
 
     int requestedEffectChainPosition() const override

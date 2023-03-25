@@ -1,7 +1,7 @@
 File=kwintabboxsettings.kcfg
 NameSpace=KWin::TabBox
 ClassName=TabBoxSettings
-IncludeFiles=\"tabboxconfig.h\"
+IncludeFiles=\"tabbox/tabboxconfig.h\"
 Mutators=true
 DefaultValueGetters=true
 ParentInConstructor=true

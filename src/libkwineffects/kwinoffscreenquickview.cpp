@@ -7,11 +7,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "kwinoffscreenquickview.h"
+#include "libkwineffects/kwinoffscreenquickview.h"
 
-#include "kwinglutils.h"
+#include "libkwineffects/kwinglutils.h"
 #include "logging_p.h"
-#include "sharedqmlengine.h"
 
 #include <QGuiApplication>
 #include <QQmlComponent>
@@ -26,44 +25,13 @@
 #include <QOpenGLContext>
 #include <QOpenGLFramebufferObject>
 #include <QTimer>
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 #include <QQuickGraphicsDevice>
 #include <QQuickOpenGLUtils>
 #include <QQuickRenderTarget>
 #include <private/qeventpoint_p.h> // for QMutableEventPoint
-#endif
 
 namespace KWin
 {
-
-class EffectQuickRenderControl : public QQuickRenderControl
-{
-    Q_OBJECT
-
-public:
-    explicit EffectQuickRenderControl(OffscreenQuickView *view, QWindow *renderWindow)
-        : QQuickRenderControl(view)
-        , m_view(view)
-        , m_renderWindow(renderWindow)
-    {
-    }
-
-    QWindow *renderWindow(QPoint *offset) override
-    {
-        if (offset) {
-            if (m_renderWindow) {
-                *offset = m_renderWindow->mapFromGlobal(m_view->geometry().topLeft());
-            } else {
-                *offset = QPoint(0, 0);
-            }
-        }
-        return m_renderWindow;
-    }
-
-private:
-    OffscreenQuickView *m_view;
-    QPointer<QWindow> m_renderWindow;
-};
 
 class Q_DECL_HIDDEN OffscreenQuickView::Private
 {
@@ -83,14 +51,8 @@ public:
     bool m_visible = true;
     bool m_automaticRepaint = true;
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    QList<QTouchEvent::TouchPoint> touchPoints;
-    Qt::TouchPointStates touchState;
-    QTouchDevice *touchDevice;
-#else
     QList<QEventPoint> touchPoints;
     QPointingDevice *touchDevice;
-#endif
 
     ulong lastMousePressTime = 0;
     Qt::MouseButton lastMousePressButton = Qt::NoButton;
@@ -104,11 +66,9 @@ class Q_DECL_HIDDEN OffscreenQuickScene::Private
 {
 public:
     Private()
-        : qmlEngine(SharedQmlEngine::engine())
     {
     }
 
-    SharedQmlEngine::Ptr qmlEngine;
     std::unique_ptr<QQmlComponent> qmlComponent;
     std::unique_ptr<QQuickItem> quickItem;
 };
@@ -119,22 +79,13 @@ OffscreenQuickView::OffscreenQuickView(QObject *parent)
 }
 
 OffscreenQuickView::OffscreenQuickView(QObject *parent, ExportMode exportMode)
-    : OffscreenQuickView(parent, nullptr, exportMode)
-{
-}
-
-OffscreenQuickView::OffscreenQuickView(QObject *parent, QWindow *renderWindow)
-    : OffscreenQuickView(parent, renderWindow, effects ? ExportMode::Texture : ExportMode::Image)
-{
-}
-
-OffscreenQuickView::OffscreenQuickView(QObject *parent, QWindow *renderWindow, ExportMode exportMode)
     : QObject(parent)
     , d(new OffscreenQuickView::Private)
 {
-    d->m_renderControl = std::make_unique<EffectQuickRenderControl>(this, renderWindow);
+    d->m_renderControl = std::make_unique<QQuickRenderControl>();
 
     d->m_view = std::make_unique<QQuickWindow>(d->m_renderControl.get());
+    Q_ASSERT(d->m_view->setProperty("_KWIN_WINDOW_IS_OFFSCREEN", true) || true);
     d->m_view->setFlags(Qt::FramelessWindowHint);
     d->m_view->setColor(Qt::transparent);
 
@@ -147,11 +98,7 @@ OffscreenQuickView::OffscreenQuickView(QObject *parent, QWindow *renderWindow, E
     if (!usingGl) {
         qCDebug(LIBKWINEFFECTS) << "QtQuick Software rendering mode detected";
         d->m_useBlit = true;
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        d->m_renderControl->initialize(nullptr);
-#else
         d->m_renderControl->initialize();
-#endif
     } else {
         QSurfaceFormat format;
         format.setOption(QSurfaceFormat::ResetNotification);
@@ -170,12 +117,8 @@ OffscreenQuickView::OffscreenQuickView(QObject *parent, QWindow *renderWindow, E
         d->m_offscreenSurface->create();
 
         d->m_glcontext->makeCurrent(d->m_offscreenSurface.get());
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        d->m_renderControl->initialize(d->m_glcontext.get());
-#else
         d->m_view->setGraphicsDevice(QQuickGraphicsDevice::fromOpenGLContext(d->m_glcontext.get()));
         d->m_renderControl->initialize();
-#endif
         d->m_glcontext->doneCurrent();
 
         // On Wayland, contexts are implicitly shared and QOpenGLContext::globalShareContext() is null.
@@ -201,18 +144,14 @@ OffscreenQuickView::OffscreenQuickView(QObject *parent, QWindow *renderWindow, E
     connect(d->m_renderControl.get(), &QQuickRenderControl::renderRequested, this, &OffscreenQuickView::handleRenderRequested);
     connect(d->m_renderControl.get(), &QQuickRenderControl::sceneChanged, this, &OffscreenQuickView::handleSceneChanged);
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    d->touchDevice = new QTouchDevice{};
-    d->touchDevice->setCapabilities(QTouchDevice::Position);
-    d->touchDevice->setType(QTouchDevice::TouchScreen);
-    d->touchDevice->setMaximumTouchPoints(10);
-#else
     d->touchDevice = new QPointingDevice({}, {}, QInputDevice::DeviceType::TouchScreen, {}, QInputDevice::Capability::Position, 10, {});
-#endif
 }
 
 OffscreenQuickView::~OffscreenQuickView()
 {
+    disconnect(d->m_renderControl.get(), &QQuickRenderControl::renderRequested, this, &OffscreenQuickView::handleRenderRequested);
+    disconnect(d->m_renderControl.get(), &QQuickRenderControl::sceneChanged, this, &OffscreenQuickView::handleSceneChanged);
+
     if (d->m_glcontext) {
         // close the view whilst we have an active GL context
         d->m_glcontext->makeCurrent(d->m_offscreenSurface.get());
@@ -283,31 +222,25 @@ void OffscreenQuickView::update()
                 return;
             }
         }
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        d->m_view->setRenderTarget(d->m_fbo.get());
-#else
-        d->m_view->setRenderTarget(QQuickRenderTarget::fromOpenGLTexture(d->m_fbo->texture(), d->m_fbo->size()));
-#endif
+
+        QQuickRenderTarget renderTarget = QQuickRenderTarget::fromOpenGLTexture(d->m_fbo->texture(), d->m_fbo->size());
+        renderTarget.setDevicePixelRatio(d->m_view->devicePixelRatio());
+
+        d->m_view->setRenderTarget(renderTarget);
     }
 
     d->m_renderControl->polishItems();
+    d->m_renderControl->beginFrame();
     d->m_renderControl->sync();
-
     d->m_renderControl->render();
+    d->m_renderControl->endFrame();
+
     if (usingGl) {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        d->m_view->resetOpenGLState();
-#else
         QQuickOpenGLUtils::resetOpenGLState();
-#endif
     }
 
     if (d->m_useBlit) {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        d->m_image = d->m_renderControl->grab();
-#else
         d->m_image = d->m_view->grabWindow();
-#endif
     }
 
     if (usingGl) {
@@ -383,11 +316,7 @@ bool OffscreenQuickView::forwardTouchDown(qint32 id, const QPointF &pos, std::ch
 {
     d->updateTouchState(Qt::TouchPointPressed, id, pos);
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    QTouchEvent event(QEvent::TouchBegin, d->touchDevice, Qt::NoModifier, d->touchState, d->touchPoints);
-#else
     QTouchEvent event(QEvent::TouchBegin, d->touchDevice, Qt::NoModifier, d->touchPoints);
-#endif
     event.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(time).count());
     QCoreApplication::sendEvent(d->m_view.get(), &event);
 
@@ -398,11 +327,7 @@ bool OffscreenQuickView::forwardTouchMotion(qint32 id, const QPointF &pos, std::
 {
     d->updateTouchState(Qt::TouchPointMoved, id, pos);
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    QTouchEvent event(QEvent::TouchUpdate, d->touchDevice, Qt::NoModifier, d->touchState, d->touchPoints);
-#else
     QTouchEvent event(QEvent::TouchUpdate, d->touchDevice, Qt::NoModifier, d->touchPoints);
-#endif
     event.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(time).count());
     QCoreApplication::sendEvent(d->m_view.get(), &event);
 
@@ -413,11 +338,7 @@ bool OffscreenQuickView::forwardTouchUp(qint32 id, std::chrono::microseconds tim
 {
     d->updateTouchState(Qt::TouchPointReleased, id, QPointF{});
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    QTouchEvent event(QEvent::TouchEnd, d->touchDevice, Qt::NoModifier, d->touchState, d->touchPoints);
-#else
     QTouchEvent event(QEvent::TouchEnd, d->touchDevice, Qt::NoModifier, d->touchPoints);
-#endif
     event.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(time).count());
     QCoreApplication::sendEvent(d->m_view.get(), &event);
 
@@ -534,14 +455,10 @@ void OffscreenQuickView::Private::updateTouchState(Qt::TouchPointState state, qi
     // points to Stationary so we only have one touch point with a different
     // state.
     touchPoints.erase(std::remove_if(touchPoints.begin(), touchPoints.end(), [](QTouchEvent::TouchPoint &point) {
-                          if (point.state() == Qt::TouchPointReleased) {
+                          if (point.state() == QEventPoint::Released) {
                               return true;
                           }
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-                          point.setState(Qt::TouchPointStationary);
-#else
                           QMutableEventPoint::setState(point, QEventPoint::Stationary);
-#endif
                           return false;
                       }),
                       touchPoints.end());
@@ -565,19 +482,11 @@ void OffscreenQuickView::Private::updateTouchState(Qt::TouchPointState state, qi
         }
 
         QTouchEvent::TouchPoint point;
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        point.setState(Qt::TouchPointPressed);
-        point.setId(id + idOffset);
-        point.setScreenPos(pos);
-        point.setScenePos(m_view->mapFromGlobal(pos.toPoint()));
-        point.setPos(m_view->mapFromGlobal(pos.toPoint()));
-#else
         QMutableEventPoint::setState(point, QEventPoint::Pressed);
         QMutableEventPoint::setId(point, id + idOffset);
         QMutableEventPoint::setGlobalPosition(point, pos);
         QMutableEventPoint::setScenePosition(point, m_view->mapFromGlobal(pos.toPoint()));
         QMutableEventPoint::setPosition(point, m_view->mapFromGlobal(pos.toPoint()));
-#endif
 
         touchPoints.append(point);
     } break;
@@ -587,21 +496,11 @@ void OffscreenQuickView::Private::updateTouchState(Qt::TouchPointState state, qi
         }
 
         auto &point = *changed;
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        point.setLastPos(point.pos());
-        point.setLastScenePos(point.scenePos());
-        point.setLastScreenPos(point.screenPos());
-        point.setState(Qt::TouchPointMoved);
-        point.setScenePos(m_view->mapFromGlobal(pos.toPoint()));
-        point.setPos(m_view->mapFromGlobal(pos.toPoint()));
-        point.setScreenPos(pos);
-#else
         QMutableEventPoint::setGlobalLastPosition(point, point.globalPosition());
         QMutableEventPoint::setState(point, QEventPoint::Updated);
         QMutableEventPoint::setScenePosition(point, m_view->mapFromGlobal(pos.toPoint()));
         QMutableEventPoint::setPosition(point, m_view->mapFromGlobal(pos.toPoint()));
         QMutableEventPoint::setGlobalPosition(point, pos);
-#endif
     } break;
     case Qt::TouchPointReleased: {
         if (changed == touchPoints.end()) {
@@ -609,42 +508,16 @@ void OffscreenQuickView::Private::updateTouchState(Qt::TouchPointState state, qi
         }
 
         auto &point = *changed;
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        point.setLastPos(point.pos());
-        point.setLastScreenPos(point.screenPos());
-        point.setState(Qt::TouchPointReleased);
-#else
         QMutableEventPoint::setGlobalLastPosition(point, point.globalPosition());
         QMutableEventPoint::setState(point, QEventPoint::Released);
-#endif
     } break;
     default:
         break;
     }
-
-    // The touch state value is used in QTouchEvent and includes all the states
-    // that the current touch points are in.
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    touchState = std::accumulate(touchPoints.begin(), touchPoints.end(), Qt::TouchPointStates{}, [](auto init, const auto &point) {
-        return init | point.state();
-    });
-#endif
 }
 
 OffscreenQuickScene::OffscreenQuickScene(QObject *parent)
     : OffscreenQuickView(parent)
-    , d(new OffscreenQuickScene::Private)
-{
-}
-
-OffscreenQuickScene::OffscreenQuickScene(QObject *parent, QWindow *renderWindow)
-    : OffscreenQuickView(parent, renderWindow)
-    , d(new OffscreenQuickScene::Private)
-{
-}
-
-OffscreenQuickScene::OffscreenQuickScene(QObject *parent, QWindow *renderWindow, ExportMode exportMode)
-    : OffscreenQuickView(parent, renderWindow, exportMode)
     , d(new OffscreenQuickScene::Private)
 {
 }
@@ -665,7 +538,7 @@ void OffscreenQuickScene::setSource(const QUrl &source)
 void OffscreenQuickScene::setSource(const QUrl &source, const QVariantMap &initialProperties)
 {
     if (!d->qmlComponent) {
-        d->qmlComponent.reset(new QQmlComponent(d->qmlEngine.get()));
+        d->qmlComponent.reset(new QQmlComponent(effects->qmlEngine()));
     }
 
     d->qmlComponent->loadUrl(source);
@@ -695,11 +568,6 @@ void OffscreenQuickScene::setSource(const QUrl &source, const QVariantMap &initi
     updateSize();
     connect(contentItem(), &QQuickItem::widthChanged, item, updateSize);
     connect(contentItem(), &QQuickItem::heightChanged, item, updateSize);
-}
-
-QQmlContext *OffscreenQuickScene::rootContext() const
-{
-    return d->qmlEngine->rootContext();
 }
 
 QQuickItem *OffscreenQuickScene::rootItem() const

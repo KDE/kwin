@@ -65,7 +65,6 @@
 */
 
 #include "composite.h"
-#include "deleted.h"
 #include "effects.h"
 #include "focuschain.h"
 #include "group.h"
@@ -73,7 +72,7 @@
 #include "netinfo.h"
 #include "rules.h"
 #include "screenedge.h"
-#include "tabbox.h"
+#include "tabbox/tabbox.h"
 #include "unmanaged.h"
 #include "utils/common.h"
 #include "virtualdesktops.h"
@@ -192,12 +191,15 @@ void Workspace::propagateWindows(bool propagate_new_windows)
 
     QVector<xcb_window_t> cl;
     if (propagate_new_windows) {
-        cl.reserve(manual_overlays.size() + m_x11Clients.size());
+        cl.reserve(manual_overlays.size() + m_windows.size());
         for (const auto win : std::as_const(manual_overlays)) {
             cl.push_back(win);
         }
-        for (auto it = m_x11Clients.constBegin(); it != m_x11Clients.constEnd(); ++it) {
-            cl.push_back((*it)->window());
+        for (Window *window : std::as_const(m_windows)) {
+            X11Window *x11Window = qobject_cast<X11Window *>(window);
+            if (x11Window) {
+                cl.push_back(x11Window->window());
+            }
         }
         rootInfo()->setClientList(cl.constData(), cl.size());
     }
@@ -634,20 +636,17 @@ void Workspace::updateXStackingOrder()
     xcb_window_t *windows = tree.children();
 
     const auto count = tree.data()->children_len;
-    int remainingCount = m_unmanaged.count();
+    bool changed = false;
     for (unsigned int i = 0; i < count; ++i) {
         auto window = findUnmanaged(windows[i]);
         if (window) {
             unconstrained_stacking_order.removeAll(window);
             unconstrained_stacking_order.append(window);
-            remainingCount--;
-        }
-        if (remainingCount == 0) {
-            break;
+            changed = true;
         }
     }
 
-    if (!m_unmanaged.isEmpty()) {
+    if (changed) {
         updateStackingOrder();
     }
 }

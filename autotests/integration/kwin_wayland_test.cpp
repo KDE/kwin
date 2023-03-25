@@ -20,6 +20,7 @@
 #include "wayland_server.h"
 #include "workspace.h"
 #include "xwayland/xwayland.h"
+#include "xwayland/xwaylandlauncher.h"
 
 #include <KPluginMetaData>
 
@@ -143,15 +144,6 @@ void WaylandTestApplication::performStartup()
     connect(Compositor::self(), &Compositor::sceneCreated, this, &WaylandTestApplication::continueStartupWithScene);
 }
 
-void WaylandTestApplication::finalizeStartup()
-{
-    if (m_xwayland) {
-        disconnect(m_xwayland.get(), &Xwl::Xwayland::errorOccurred, this, &WaylandTestApplication::finalizeStartup);
-        disconnect(m_xwayland.get(), &Xwl::Xwayland::started, this, &WaylandTestApplication::finalizeStartup);
-    }
-    notifyStarted();
-}
-
 void WaylandTestApplication::continueStartupWithScene()
 {
     disconnect(Compositor::self(), &Compositor::sceneCreated, this, &WaylandTestApplication::continueStartupWithScene);
@@ -166,15 +158,12 @@ void WaylandTestApplication::continueStartupWithScene()
         qFatal("Failed to initialize the Wayland server, exiting now");
     }
 
-    if (operationMode() == OperationModeWaylandOnly) {
-        finalizeStartup();
-        return;
+    if (operationMode() == OperationModeXwayland) {
+        m_xwayland = std::make_unique<Xwl::Xwayland>(this);
+        m_xwayland->init();
     }
 
-    m_xwayland = std::make_unique<Xwl::Xwayland>(this);
-    connect(m_xwayland.get(), &Xwl::Xwayland::errorOccurred, this, &WaylandTestApplication::finalizeStartup);
-    connect(m_xwayland.get(), &Xwl::Xwayland::started, this, &WaylandTestApplication::finalizeStartup);
-    m_xwayland->start();
+    notifyStarted();
 }
 
 Test::VirtualInputDevice *WaylandTestApplication::virtualPointer() const

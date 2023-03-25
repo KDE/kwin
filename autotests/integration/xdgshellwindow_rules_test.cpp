@@ -317,28 +317,28 @@ void TestXdgShellWindowRules::testPositionApply()
     QCOMPARE(m_window->pos(), QPoint(42, 42));
 
     // One should still be able to move the window around.
-    QSignalSpy clientStartMoveResizedSpy(m_window, &Window::clientStartUserMovedResized);
-    QSignalSpy clientStepUserMovedResizedSpy(m_window, &Window::clientStepUserMovedResized);
-    QSignalSpy clientFinishUserMovedResizedSpy(m_window, &Window::clientFinishUserMovedResized);
+    QSignalSpy interactiveMoveResizeStartedSpy(m_window, &Window::interactiveMoveResizeStarted);
+    QSignalSpy interactiveMoveResizeSteppedSpy(m_window, &Window::interactiveMoveResizeStepped);
+    QSignalSpy interactiveMoveResizeFinishedSpy(m_window, &Window::interactiveMoveResizeFinished);
 
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
     workspace()->slotWindowMove();
     QCOMPARE(workspace()->moveResizeWindow(), m_window);
-    QCOMPARE(clientStartMoveResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 1);
     QVERIFY(m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
 
-    const QPoint cursorPos = KWin::Cursors::self()->mouse()->pos();
+    const QPointF cursorPos = KWin::Cursors::self()->mouse()->pos();
     m_window->keyPressEvent(Qt::Key_Right);
     m_window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
     QCOMPARE(m_window->pos(), QPoint(50, 42));
 
     m_window->keyPressEvent(Qt::Key_Enter);
-    QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 1);
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
@@ -366,28 +366,28 @@ void TestXdgShellWindowRules::testPositionRemember()
     QCOMPARE(m_window->pos(), QPoint(42, 42));
 
     // One should still be able to move the window around.
-    QSignalSpy clientStartMoveResizedSpy(m_window, &Window::clientStartUserMovedResized);
-    QSignalSpy clientStepUserMovedResizedSpy(m_window, &Window::clientStepUserMovedResized);
-    QSignalSpy clientFinishUserMovedResizedSpy(m_window, &Window::clientFinishUserMovedResized);
+    QSignalSpy interactiveMoveResizeStartedSpy(m_window, &Window::interactiveMoveResizeStarted);
+    QSignalSpy interactiveMoveResizeSteppedSpy(m_window, &Window::interactiveMoveResizeStepped);
+    QSignalSpy interactiveMoveResizeFinishedSpy(m_window, &Window::interactiveMoveResizeFinished);
 
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
     workspace()->slotWindowMove();
     QCOMPARE(workspace()->moveResizeWindow(), m_window);
-    QCOMPARE(clientStartMoveResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 1);
     QVERIFY(m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
 
-    const QPoint cursorPos = KWin::Cursors::self()->mouse()->pos();
+    const QPointF cursorPos = KWin::Cursors::self()->mouse()->pos();
     m_window->keyPressEvent(Qt::Key_Right);
     m_window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
     QCOMPARE(m_window->pos(), QPoint(50, 42));
 
     m_window->keyPressEvent(Qt::Key_Enter);
-    QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 1);
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
@@ -416,13 +416,13 @@ void TestXdgShellWindowRules::testPositionForce()
     QCOMPARE(m_window->pos(), QPoint(42, 42));
 
     // User should not be able to move the window.
-    QSignalSpy clientStartMoveResizedSpy(m_window, &Window::clientStartUserMovedResized);
+    QSignalSpy interactiveMoveResizeStartedSpy(m_window, &Window::interactiveMoveResizeStarted);
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
     workspace()->slotWindowMove();
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
-    QCOMPARE(clientStartMoveResizedSpy.count(), 0);
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 0);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
 
@@ -458,28 +458,28 @@ void TestXdgShellWindowRules::testPositionApplyNow()
     // We still have to be able to move the window around.
     QVERIFY(m_window->isMovable());
     QVERIFY(m_window->isMovableAcrossScreens());
-    QSignalSpy clientStartMoveResizedSpy(m_window, &Window::clientStartUserMovedResized);
-    QSignalSpy clientStepUserMovedResizedSpy(m_window, &Window::clientStepUserMovedResized);
-    QSignalSpy clientFinishUserMovedResizedSpy(m_window, &Window::clientFinishUserMovedResized);
+    QSignalSpy interactiveMoveResizeStartedSpy(m_window, &Window::interactiveMoveResizeStarted);
+    QSignalSpy interactiveMoveResizeSteppedSpy(m_window, &Window::interactiveMoveResizeStepped);
+    QSignalSpy interactiveMoveResizeFinishedSpy(m_window, &Window::interactiveMoveResizeFinished);
 
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
     workspace()->slotWindowMove();
     QCOMPARE(workspace()->moveResizeWindow(), m_window);
-    QCOMPARE(clientStartMoveResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 1);
     QVERIFY(m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
 
-    const QPoint cursorPos = KWin::Cursors::self()->mouse()->pos();
+    const QPointF cursorPos = KWin::Cursors::self()->mouse()->pos();
     m_window->keyPressEvent(Qt::Key_Right);
     m_window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
     QCOMPARE(m_window->pos(), QPoint(50, 42));
 
     m_window->keyPressEvent(Qt::Key_Enter);
-    QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 1);
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
@@ -504,13 +504,13 @@ void TestXdgShellWindowRules::testPositionForceTemporarily()
     QCOMPARE(m_window->pos(), QPoint(42, 42));
 
     // User should not be able to move the window.
-    QSignalSpy clientStartMoveResizedSpy(m_window, &Window::clientStartUserMovedResized);
+    QSignalSpy interactiveMoveResizeStartedSpy(m_window, &Window::interactiveMoveResizeStarted);
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
     workspace()->slotWindowMove();
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
-    QCOMPARE(clientStartMoveResizedSpy.count(), 0);
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 0);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
 
@@ -579,16 +579,16 @@ void TestXdgShellWindowRules::testSizeApply()
 
     // One still should be able to resize the window.
     QSignalSpy frameGeometryChangedSpy(m_window, &Window::frameGeometryChanged);
-    QSignalSpy clientStartMoveResizedSpy(m_window, &Window::clientStartUserMovedResized);
-    QSignalSpy clientStepUserMovedResizedSpy(m_window, &Window::clientStepUserMovedResized);
-    QSignalSpy clientFinishUserMovedResizedSpy(m_window, &Window::clientFinishUserMovedResized);
+    QSignalSpy interactiveMoveResizeStartedSpy(m_window, &Window::interactiveMoveResizeStarted);
+    QSignalSpy interactiveMoveResizeSteppedSpy(m_window, &Window::interactiveMoveResizeStepped);
+    QSignalSpy interactiveMoveResizeFinishedSpy(m_window, &Window::interactiveMoveResizeFinished);
 
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
     workspace()->slotWindowResize();
     QCOMPARE(workspace()->moveResizeWindow(), m_window);
-    QCOMPARE(clientStartMoveResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 1);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(m_window->isInteractiveResize());
     QVERIFY(m_surfaceConfigureRequestedSpy->wait());
@@ -599,7 +599,7 @@ void TestXdgShellWindowRules::testSizeApply()
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Resizing));
     m_shellSurface->xdgSurface()->ack_configure(m_surfaceConfigureRequestedSpy->last().at(0).value<quint32>());
 
-    const QPoint cursorPos = KWin::Cursors::self()->mouse()->pos();
+    const QPointF cursorPos = KWin::Cursors::self()->mouse()->pos();
     m_window->keyPressEvent(Qt::Key_Right);
     m_window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
@@ -610,15 +610,15 @@ void TestXdgShellWindowRules::testSizeApply()
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Resizing));
     QCOMPARE(m_toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(488, 640));
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
     m_shellSurface->xdgSurface()->ack_configure(m_surfaceConfigureRequestedSpy->last().at(0).value<quint32>());
     Test::render(m_surface.get(), QSize(488, 640), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(m_window->size(), QSize(488, 640));
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
 
     m_window->keyPressEvent(Qt::Key_Enter);
-    QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 1);
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
@@ -676,16 +676,16 @@ void TestXdgShellWindowRules::testSizeRemember()
 
     // One should still be able to resize the window.
     QSignalSpy frameGeometryChangedSpy(m_window, &Window::frameGeometryChanged);
-    QSignalSpy clientStartMoveResizedSpy(m_window, &Window::clientStartUserMovedResized);
-    QSignalSpy clientStepUserMovedResizedSpy(m_window, &Window::clientStepUserMovedResized);
-    QSignalSpy clientFinishUserMovedResizedSpy(m_window, &Window::clientFinishUserMovedResized);
+    QSignalSpy interactiveMoveResizeStartedSpy(m_window, &Window::interactiveMoveResizeStarted);
+    QSignalSpy interactiveMoveResizeSteppedSpy(m_window, &Window::interactiveMoveResizeStepped);
+    QSignalSpy interactiveMoveResizeFinishedSpy(m_window, &Window::interactiveMoveResizeFinished);
 
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
     workspace()->slotWindowResize();
     QCOMPARE(workspace()->moveResizeWindow(), m_window);
-    QCOMPARE(clientStartMoveResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 1);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(m_window->isInteractiveResize());
     QVERIFY(m_surfaceConfigureRequestedSpy->wait());
@@ -696,7 +696,7 @@ void TestXdgShellWindowRules::testSizeRemember()
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Resizing));
     m_shellSurface->xdgSurface()->ack_configure(m_surfaceConfigureRequestedSpy->last().at(0).value<quint32>());
 
-    const QPoint cursorPos = KWin::Cursors::self()->mouse()->pos();
+    const QPointF cursorPos = KWin::Cursors::self()->mouse()->pos();
     m_window->keyPressEvent(Qt::Key_Right);
     m_window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
@@ -707,15 +707,15 @@ void TestXdgShellWindowRules::testSizeRemember()
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Resizing));
     QCOMPARE(m_toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(488, 640));
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
     m_shellSurface->xdgSurface()->ack_configure(m_surfaceConfigureRequestedSpy->last().at(0).value<quint32>());
     Test::render(m_surface.get(), QSize(488, 640), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(m_window->size(), QSize(488, 640));
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
 
     m_window->keyPressEvent(Qt::Key_Enter);
-    QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 1);
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
@@ -765,13 +765,13 @@ void TestXdgShellWindowRules::testSizeForce()
     QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 2);
 
     // Any attempt to resize the window should not succeed.
-    QSignalSpy clientStartMoveResizedSpy(m_window, &Window::clientStartUserMovedResized);
+    QSignalSpy interactiveMoveResizeStartedSpy(m_window, &Window::interactiveMoveResizeStarted);
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
     workspace()->slotWindowResize();
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
-    QCOMPARE(clientStartMoveResizedSpy.count(), 0);
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 0);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
     QVERIFY(!m_surfaceConfigureRequestedSpy->wait(100));
@@ -859,13 +859,13 @@ void TestXdgShellWindowRules::testSizeForceTemporarily()
     QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 2);
 
     // Any attempt to resize the window should not succeed.
-    QSignalSpy clientStartMoveResizedSpy(m_window, &Window::clientStartUserMovedResized);
+    QSignalSpy interactiveMoveResizeStartedSpy(m_window, &Window::interactiveMoveResizeStarted);
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
     workspace()->slotWindowResize();
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
-    QCOMPARE(clientStartMoveResizedSpy.count(), 0);
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 0);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
     QVERIFY(!m_surfaceConfigureRequestedSpy->wait(100));
@@ -1527,7 +1527,7 @@ void TestXdgShellWindowRules::testMinimizeApply()
     QVERIFY(m_window->isMinimized());
 
     // We should still be able to unminimize the window.
-    m_window->unminimize();
+    m_window->setMinimized(false);
     QVERIFY(!m_window->isMinimized());
 
     // If we re-open the window, it should be minimized back again.
@@ -1548,7 +1548,7 @@ void TestXdgShellWindowRules::testMinimizeRemember()
     QVERIFY(!m_window->isMinimized());
 
     // Minimize the window.
-    m_window->minimize();
+    m_window->setMinimized(true);
     QVERIFY(m_window->isMinimized());
 
     // If we open the window again, it should be minimized.
@@ -1569,7 +1569,7 @@ void TestXdgShellWindowRules::testMinimizeForce()
     QVERIFY(!m_window->isMinimized());
 
     // Any attempt to minimize the window should fail.
-    m_window->minimize();
+    m_window->setMinimized(true);
     QVERIFY(!m_window->isMinimized());
 
     // If we re-open the window, the minimized state should still be forced.
@@ -1577,7 +1577,7 @@ void TestXdgShellWindowRules::testMinimizeForce()
     createTestWindow();
     QVERIFY(!m_window->isMinimizable());
     QVERIFY(!m_window->isMinimized());
-    m_window->minimize();
+    m_window->setMinimized(true);
     QVERIFY(!m_window->isMinimized());
 
     destroyTestWindow();
@@ -1596,7 +1596,7 @@ void TestXdgShellWindowRules::testMinimizeApplyNow()
     QVERIFY(m_window->isMinimized());
 
     // One is still able to unminimize the window.
-    m_window->unminimize();
+    m_window->setMinimized(false);
     QVERIFY(!m_window->isMinimized());
 
     // The rule should not be applied again.
@@ -1616,7 +1616,7 @@ void TestXdgShellWindowRules::testMinimizeForceTemporarily()
     QVERIFY(!m_window->isMinimized());
 
     // Any attempt to minimize the window should fail until the window is closed.
-    m_window->minimize();
+    m_window->setMinimized(true);
     QVERIFY(!m_window->isMinimized());
 
     // The rule should be discarded when the window is closed.
@@ -1624,7 +1624,7 @@ void TestXdgShellWindowRules::testMinimizeForceTemporarily()
     createTestWindow();
     QVERIFY(m_window->isMinimizable());
     QVERIFY(!m_window->isMinimized());
-    m_window->minimize();
+    m_window->setMinimized(true);
     QVERIFY(m_window->isMinimized());
 
     destroyTestWindow();
@@ -2257,11 +2257,11 @@ void TestXdgShellWindowRules::testShortcutDontAffect()
 
     createTestWindow();
     QCOMPARE(m_window->shortcut(), QKeySequence());
-    m_window->minimize();
+    m_window->setMinimized(true);
     QVERIFY(m_window->isMinimized());
 
     // If we press the window shortcut, nothing should happen.
-    QSignalSpy clientUnminimizedSpy(m_window, &Window::clientUnminimized);
+    QSignalSpy minimizedChangedSpy(m_window, &Window::minimizedChanged);
     quint32 timestamp = 1;
     Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
@@ -2269,7 +2269,7 @@ void TestXdgShellWindowRules::testShortcutDontAffect()
     Test::keyboardKeyReleased(KEY_1, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
-    QVERIFY(!clientUnminimizedSpy.wait(100));
+    QVERIFY(!minimizedChangedSpy.wait(100));
     QVERIFY(m_window->isMinimized());
 
     destroyTestWindow();
@@ -2282,10 +2282,10 @@ void TestXdgShellWindowRules::testShortcutApply()
     createTestWindow();
 
     // If we press the window shortcut, the window should be brought back to user.
-    QSignalSpy clientUnminimizedSpy(m_window, &Window::clientUnminimized);
+    QSignalSpy minimizedChangedSpy(m_window, &Window::minimizedChanged);
     quint32 timestamp = 1;
     QCOMPARE(m_window->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
-    m_window->minimize();
+    m_window->setMinimized(true);
     QVERIFY(m_window->isMinimized());
     Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
@@ -2293,13 +2293,13 @@ void TestXdgShellWindowRules::testShortcutApply()
     Test::keyboardKeyReleased(KEY_1, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
-    QVERIFY(clientUnminimizedSpy.wait());
+    QVERIFY(minimizedChangedSpy.wait());
     QVERIFY(!m_window->isMinimized());
 
     // One can also change the shortcut.
     m_window->setShortcut(QStringLiteral("Ctrl+Alt+2"));
     QCOMPARE(m_window->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_2}));
-    m_window->minimize();
+    m_window->setMinimized(true);
     QVERIFY(m_window->isMinimized());
     Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
@@ -2307,11 +2307,11 @@ void TestXdgShellWindowRules::testShortcutApply()
     Test::keyboardKeyReleased(KEY_2, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
-    QVERIFY(clientUnminimizedSpy.wait());
+    QVERIFY(minimizedChangedSpy.wait());
     QVERIFY(!m_window->isMinimized());
 
     // The old shortcut should do nothing.
-    m_window->minimize();
+    m_window->setMinimized(true);
     QVERIFY(m_window->isMinimized());
     Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
@@ -2319,7 +2319,7 @@ void TestXdgShellWindowRules::testShortcutApply()
     Test::keyboardKeyReleased(KEY_1, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
-    QVERIFY(!clientUnminimizedSpy.wait(100));
+    QVERIFY(!minimizedChangedSpy.wait(100));
     QVERIFY(m_window->isMinimized());
 
     // Reopen the window.
@@ -2341,10 +2341,10 @@ void TestXdgShellWindowRules::testShortcutRemember()
     createTestWindow();
 
     // If we press the window shortcut, the window should be brought back to user.
-    QSignalSpy clientUnminimizedSpy(m_window, &Window::clientUnminimized);
+    QSignalSpy minimizedChangedSpy(m_window, &Window::minimizedChanged);
     quint32 timestamp = 1;
     QCOMPARE(m_window->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
-    m_window->minimize();
+    m_window->setMinimized(true);
     QVERIFY(m_window->isMinimized());
     Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
@@ -2352,13 +2352,13 @@ void TestXdgShellWindowRules::testShortcutRemember()
     Test::keyboardKeyReleased(KEY_1, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
-    QVERIFY(clientUnminimizedSpy.wait());
+    QVERIFY(minimizedChangedSpy.wait());
     QVERIFY(!m_window->isMinimized());
 
     // Change the window shortcut to Ctrl+Alt+2.
     m_window->setShortcut(QStringLiteral("Ctrl+Alt+2"));
     QCOMPARE(m_window->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_2}));
-    m_window->minimize();
+    m_window->setMinimized(true);
     QVERIFY(m_window->isMinimized());
     Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
@@ -2366,7 +2366,7 @@ void TestXdgShellWindowRules::testShortcutRemember()
     Test::keyboardKeyReleased(KEY_2, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
-    QVERIFY(clientUnminimizedSpy.wait());
+    QVERIFY(minimizedChangedSpy.wait());
     QVERIFY(!m_window->isMinimized());
 
     // Reopen the window.
@@ -2388,10 +2388,10 @@ void TestXdgShellWindowRules::testShortcutForce()
     createTestWindow();
 
     // If we press the window shortcut, the window should be brought back to user.
-    QSignalSpy clientUnminimizedSpy(m_window, &Window::clientUnminimized);
+    QSignalSpy minimizedChangedSpy(m_window, &Window::minimizedChanged);
     quint32 timestamp = 1;
     QCOMPARE(m_window->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
-    m_window->minimize();
+    m_window->setMinimized(true);
     QVERIFY(m_window->isMinimized());
     Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
@@ -2399,13 +2399,13 @@ void TestXdgShellWindowRules::testShortcutForce()
     Test::keyboardKeyReleased(KEY_1, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
-    QVERIFY(clientUnminimizedSpy.wait());
+    QVERIFY(minimizedChangedSpy.wait());
     QVERIFY(!m_window->isMinimized());
 
     // Any attempt to change the window shortcut should not succeed.
     m_window->setShortcut(QStringLiteral("Ctrl+Alt+2"));
     QCOMPARE(m_window->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
-    m_window->minimize();
+    m_window->setMinimized(true);
     QVERIFY(m_window->isMinimized());
     Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
@@ -2413,7 +2413,7 @@ void TestXdgShellWindowRules::testShortcutForce()
     Test::keyboardKeyReleased(KEY_2, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
-    QVERIFY(!clientUnminimizedSpy.wait(100));
+    QVERIFY(!minimizedChangedSpy.wait(100));
     QVERIFY(m_window->isMinimized());
 
     // Reopen the window.
@@ -2435,9 +2435,9 @@ void TestXdgShellWindowRules::testShortcutApplyNow()
 
     // The window should now have a window shortcut assigned.
     QCOMPARE(m_window->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
-    QSignalSpy clientUnminimizedSpy(m_window, &Window::clientUnminimized);
+    QSignalSpy minimizedChangedSpy(m_window, &Window::minimizedChanged);
     quint32 timestamp = 1;
-    m_window->minimize();
+    m_window->setMinimized(true);
     QVERIFY(m_window->isMinimized());
     Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
@@ -2445,13 +2445,13 @@ void TestXdgShellWindowRules::testShortcutApplyNow()
     Test::keyboardKeyReleased(KEY_1, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
-    QVERIFY(clientUnminimizedSpy.wait());
+    QVERIFY(minimizedChangedSpy.wait());
     QVERIFY(!m_window->isMinimized());
 
     // Assign a different shortcut.
     m_window->setShortcut(QStringLiteral("Ctrl+Alt+2"));
     QCOMPARE(m_window->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_2}));
-    m_window->minimize();
+    m_window->setMinimized(true);
     QVERIFY(m_window->isMinimized());
     Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
@@ -2459,7 +2459,7 @@ void TestXdgShellWindowRules::testShortcutApplyNow()
     Test::keyboardKeyReleased(KEY_2, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
-    QVERIFY(clientUnminimizedSpy.wait());
+    QVERIFY(minimizedChangedSpy.wait());
     QVERIFY(!m_window->isMinimized());
 
     // The rule should not be applied again.
@@ -2478,10 +2478,10 @@ void TestXdgShellWindowRules::testShortcutForceTemporarily()
     createTestWindow();
 
     // If we press the window shortcut, the window should be brought back to user.
-    QSignalSpy clientUnminimizedSpy(m_window, &Window::clientUnminimized);
+    QSignalSpy minimizedChangedSpy(m_window, &Window::minimizedChanged);
     quint32 timestamp = 1;
     QCOMPARE(m_window->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
-    m_window->minimize();
+    m_window->setMinimized(true);
     QVERIFY(m_window->isMinimized());
     Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
@@ -2489,13 +2489,13 @@ void TestXdgShellWindowRules::testShortcutForceTemporarily()
     Test::keyboardKeyReleased(KEY_1, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
-    QVERIFY(clientUnminimizedSpy.wait());
+    QVERIFY(minimizedChangedSpy.wait());
     QVERIFY(!m_window->isMinimized());
 
     // Any attempt to change the window shortcut should not succeed.
     m_window->setShortcut(QStringLiteral("Ctrl+Alt+2"));
     QCOMPARE(m_window->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
-    m_window->minimize();
+    m_window->setMinimized(true);
     QVERIFY(m_window->isMinimized());
     Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
@@ -2503,7 +2503,7 @@ void TestXdgShellWindowRules::testShortcutForceTemporarily()
     Test::keyboardKeyReleased(KEY_2, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
-    QVERIFY(!clientUnminimizedSpy.wait(100));
+    QVERIFY(!minimizedChangedSpy.wait(100));
     QVERIFY(m_window->isMinimized());
 
     // The rule should be discarded when the window is closed.

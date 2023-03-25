@@ -6,22 +6,22 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "abstract_egl_backend.h"
+#include "platformsupport/scenes/opengl/abstract_egl_backend.h"
 #include "composite.h"
 #include "core/output.h"
 #include "core/outputbackend.h"
 #include "dmabuftexture.h"
-#include "egl_dmabuf.h"
 #include "options.h"
+#include "platformsupport/scenes/opengl/egl_dmabuf.h"
 #include "utils/common.h"
 #include "utils/egl_context_attribute_builder.h"
 #include "wayland/display.h"
 #include "wayland_server.h"
 // kwin libs
-#include <kwineglimagetexture.h>
+#include "libkwineffects/kwineglimagetexture.h"
+#include "libkwineffects/kwinglplatform.h"
+#include "libkwineffects/kwinglutils.h"
 #include <kwineglutils_p.h>
-#include <kwinglplatform.h>
-#include <kwinglutils.h>
 // Qt
 #include <QOpenGLContext>
 
@@ -167,13 +167,6 @@ void AbstractEglBackend::initBufferAge()
 
         if (useBufferAge != "0") {
             setSupportsBufferAge(true);
-        }
-    }
-
-    if (hasExtension(QByteArrayLiteral("EGL_KHR_partial_update"))) {
-        const QByteArray usePartialUpdate = qgetenv("KWIN_USE_PARTIAL_UPDATE");
-        if (usePartialUpdate != "0") {
-            setSupportsPartialUpdate(true);
         }
     }
     setSupportsSwapBuffersWithDamage(hasExtension(QByteArrayLiteral("EGL_EXT_swap_buffers_with_damage")));
@@ -374,14 +367,6 @@ void AbstractEglBackend::setSurface(const EGLSurface &surface)
     m_surface = surface;
 }
 
-std::shared_ptr<GLTexture> AbstractEglBackend::textureForOutput(Output *requestedOutput) const
-{
-    std::shared_ptr<GLTexture> texture(new GLTexture(GL_RGBA8, requestedOutput->pixelSize()));
-    GLFramebuffer renderTarget(texture.get());
-    renderTarget.blitFromFramebuffer(QRect(0, texture->height(), texture->width(), -texture->height()));
-    return texture;
-}
-
 dev_t AbstractEglBackend::deviceId() const
 {
     return m_deviceId;
@@ -405,7 +390,8 @@ EGLImageKHR AbstractEglBackend::importDmaBufAsImage(const DmaBufAttributes &dmab
     attribs
         << EGL_WIDTH << dmabuf.width
         << EGL_HEIGHT << dmabuf.height
-        << EGL_LINUX_DRM_FOURCC_EXT << dmabuf.format;
+        << EGL_LINUX_DRM_FOURCC_EXT << dmabuf.format
+        << EGL_IMAGE_PRESERVED_KHR << EGL_TRUE;
 
     attribs
         << EGL_DMA_BUF_PLANE0_FD_EXT << dmabuf.fd[0].get()
@@ -476,5 +462,40 @@ QHash<uint32_t, QVector<uint64_t>> AbstractEglBackend::supportedFormats() const
     } else {
         return RenderBackend::supportedFormats();
     }
+}
+
+bool AbstractEglBackend::initBufferConfigs()
+{
+    const EGLint config_attribs[] = {
+        EGL_SURFACE_TYPE,
+        EGL_WINDOW_BIT,
+        EGL_RED_SIZE,
+        1,
+        EGL_GREEN_SIZE,
+        1,
+        EGL_BLUE_SIZE,
+        1,
+        EGL_ALPHA_SIZE,
+        0,
+        EGL_RENDERABLE_TYPE,
+        isOpenGLES() ? EGL_OPENGL_ES2_BIT : EGL_OPENGL_BIT,
+        EGL_CONFIG_CAVEAT,
+        EGL_NONE,
+        EGL_NONE,
+    };
+
+    EGLint count;
+    EGLConfig configs[1024];
+    if (eglChooseConfig(eglDisplay(), config_attribs, configs, 1, &count) == EGL_FALSE) {
+        qCCritical(KWIN_OPENGL) << "choose config failed";
+        return false;
+    }
+    if (count != 1) {
+        qCCritical(KWIN_OPENGL) << "choose config did not return a config" << count;
+        return false;
+    }
+    setConfig(configs[0]);
+
+    return true;
 }
 }

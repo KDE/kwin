@@ -48,9 +48,9 @@ KWinFocusConfigForm::KWinFocusConfigForm(QWidget *parent)
 }
 
 KFocusConfig::KFocusConfig(bool _standAlone, KWinOptionsSettings *settings, QWidget *parent)
-    : KCModule(parent)
+    : KCModule(parent, KPluginMetaData(), QVariantList())
     , standAlone(_standAlone)
-    , m_ui(new KWinFocusConfigForm(this))
+    , m_ui(new KWinFocusConfigForm(widget()))
 {
     if (settings) {
         initialize(settings);
@@ -60,7 +60,7 @@ KFocusConfig::KFocusConfig(bool _standAlone, KWinOptionsSettings *settings, QWid
 void KFocusConfig::initialize(KWinOptionsSettings *settings)
 {
     m_settings = settings;
-    addConfig(m_settings, this);
+    addConfig(m_settings, widget());
 
     connect(m_ui->windowFocusPolicy, qOverload<int>(&QComboBox::currentIndexChanged), this, &KFocusConfig::focusPolicyChanged);
     connect(m_ui->windowFocusPolicy, qOverload<int>(&QComboBox::currentIndexChanged), this, &KFocusConfig::updateDefaultIndicator);
@@ -135,15 +135,6 @@ void KFocusConfig::focusPolicyChanged()
     // the delayed focus related widgets are: delayFocus
     m_ui->delayFocusOnLabel->setEnabled(focusPolicy != CLICK_TO_FOCUS);
     m_ui->kcfg_DelayFocusInterval->setEnabled(focusPolicy != CLICK_TO_FOCUS);
-}
-
-void KFocusConfig::showEvent(QShowEvent *ev)
-{
-    if (!standAlone) {
-        QWidget::showEvent(ev);
-        return;
-    }
-    KCModule::showEvent(ev);
 }
 
 void KFocusConfig::load(void)
@@ -228,9 +219,9 @@ KWinAdvancedConfigForm::KWinAdvancedConfigForm(QWidget *parent)
 }
 
 KAdvancedConfig::KAdvancedConfig(bool _standAlone, KWinOptionsSettings *settings, KWinOptionsKDEGlobalsSettings *globalSettings, QWidget *parent)
-    : KCModule(parent)
+    : KCModule(parent, KPluginMetaData(), QVariantList())
     , standAlone(_standAlone)
-    , m_ui(new KWinAdvancedConfigForm(this))
+    , m_ui(new KWinAdvancedConfigForm(widget()))
 {
     if (settings && globalSettings) {
         initialize(settings, globalSettings);
@@ -240,8 +231,8 @@ KAdvancedConfig::KAdvancedConfig(bool _standAlone, KWinOptionsSettings *settings
 void KAdvancedConfig::initialize(KWinOptionsSettings *settings, KWinOptionsKDEGlobalsSettings *globalSettings)
 {
     m_settings = settings;
-    addConfig(m_settings, this);
-    addConfig(globalSettings, this);
+    addConfig(m_settings, widget());
+    addConfig(globalSettings, widget());
 
     m_ui->kcfg_Placement->setItemData(KWinOptionsSettings::PlacementChoices::Smart, "Smart");
     m_ui->kcfg_Placement->setItemData(KWinOptionsSettings::PlacementChoices::Maximizing, "Maximizing");
@@ -259,15 +250,6 @@ void KAdvancedConfig::initialize(KWinOptionsSettings *settings, KWinOptionsKDEGl
 
     m_ui->kcfg_ActivationDesktopPolicy->setItemData(KWinOptionsSettings::ActivationDesktopPolicyChoices::SwitchToOtherDesktop, "SwitchToOtherDesktop");
     m_ui->kcfg_ActivationDesktopPolicy->setItemData(KWinOptionsSettings::ActivationDesktopPolicyChoices::BringToCurrentDesktop, "BringToCurrentDesktop");
-}
-
-void KAdvancedConfig::showEvent(QShowEvent *ev)
-{
-    if (!standAlone) {
-        QWidget::showEvent(ev);
-        return;
-    }
-    KCModule::showEvent(ev);
 }
 
 void KAdvancedConfig::save(void)
@@ -299,9 +281,9 @@ KWinMovingConfigForm::KWinMovingConfigForm(QWidget *parent)
 }
 
 KMovingConfig::KMovingConfig(bool _standAlone, KWinOptionsSettings *settings, QWidget *parent)
-    : KCModule(parent)
+    : KCModule(parent, KPluginMetaData(), QVariantList())
     , standAlone(_standAlone)
-    , m_ui(new KWinMovingConfigForm(this))
+    , m_ui(new KWinMovingConfigForm(widget()))
 {
     if (settings) {
         initialize(settings);
@@ -311,16 +293,7 @@ KMovingConfig::KMovingConfig(bool _standAlone, KWinOptionsSettings *settings, QW
 void KMovingConfig::initialize(KWinOptionsSettings *settings)
 {
     m_settings = settings;
-    addConfig(m_settings, this);
-}
-
-void KMovingConfig::showEvent(QShowEvent *ev)
-{
-    if (!standAlone) {
-        QWidget::showEvent(ev);
-        return;
-    }
-    KCModule::showEvent(ev);
+    addConfig(m_settings, widget());
 }
 
 void KMovingConfig::save(void)

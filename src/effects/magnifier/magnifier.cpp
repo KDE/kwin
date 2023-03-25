@@ -17,8 +17,9 @@
 #include <kstandardaction.h>
 #include <kwinconfig.h>
 
+#include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/renderviewport.h"
 #include <KGlobalAccel>
-#include <kwinglutils.h>
 
 namespace KWin
 {
@@ -109,38 +110,38 @@ void MagnifierEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mill
     }
 }
 
-void MagnifierEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
+void MagnifierEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
 {
-    effects->paintScreen(mask, region, data); // paint normal screen
+    effects->paintScreen(renderTarget, viewport, mask, region, screen); // paint normal screen
     if (m_zoom != 1.0) {
         // get the right area from the current rendered screen
         const QRect area = magnifierArea();
-        const QPoint cursor = cursorPos();
-        const auto scale = effects->renderTargetScale();
+        const QPointF cursor = cursorPos();
+        const auto scale = viewport.scale();
 
         QRectF srcArea(cursor.x() - (double)area.width() / (m_zoom * 2),
                        cursor.y() - (double)area.height() / (m_zoom * 2),
                        (double)area.width() / m_zoom, (double)area.height() / m_zoom);
         if (effects->isOpenGLCompositing()) {
-            m_fbo->blitFromFramebuffer(effects->mapToRenderTarget(srcArea).toRect());
+            m_fbo->blitFromRenderTarget(renderTarget, viewport, srcArea.toRect(), QRect(QPoint(), m_fbo->size()));
             // paint magnifier
             m_texture->bind();
             auto s = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
-            QMatrix4x4 mvp;
-            const QSize size = effects->virtualScreenSize();
-            mvp.ortho(0, size.width() * scale, size.height() * scale, 0, 0, 65535);
+            QMatrix4x4 mvp = viewport.projectionMatrix();
             mvp.translate(area.x() * scale, area.y() * scale);
             s->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-            m_texture->render(area, scale);
+            m_texture->render(area.size(), scale);
             ShaderManager::instance()->popShader();
             m_texture->unbind();
-            QVector<float> verts;
+
             GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
             vbo->reset();
             vbo->setColor(QColor(0, 0, 0));
 
             QRectF areaF = scaledRect(area, scale);
             const QRectF frame = scaledRect(area.adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH), scale);
+            QVector<float> verts;
+            verts.reserve(4 * 6 * 2);
             // top frame
             verts << frame.right() << frame.top();
             verts << frame.left() << frame.top();
@@ -172,7 +173,7 @@ void MagnifierEffect::paintScreen(int mask, const QRegion &region, ScreenPaintDa
             vbo->setData(verts.size() / 2, 2, verts.constData(), nullptr);
 
             ShaderBinder binder(ShaderTrait::UniformColor);
-            binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, data.projectionMatrix());
+            binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, viewport.projectionMatrix());
             vbo->render(GL_TRIANGLES);
         }
     }
@@ -187,7 +188,7 @@ void MagnifierEffect::postPaintScreen()
     effects->postPaintScreen();
 }
 
-QRect MagnifierEffect::magnifierArea(QPoint pos) const
+QRect MagnifierEffect::magnifierArea(QPointF pos) const
 {
     return QRect(pos.x() - m_magnifierSize.width() / 2, pos.y() - m_magnifierSize.height() / 2,
                  m_magnifierSize.width(), m_magnifierSize.height());
@@ -203,7 +204,7 @@ void MagnifierEffect::zoomIn()
     if (effects->isOpenGLCompositing() && !m_texture) {
         effects->makeOpenGLContextCurrent();
         m_texture = std::make_unique<GLTexture>(GL_RGBA8, m_magnifierSize.width(), m_magnifierSize.height());
-        m_texture->setYInverted(false);
+        m_texture->setContentTransform(TextureTransforms());
         m_fbo = std::make_unique<GLFramebuffer>(m_texture.get());
     }
     effects->addRepaint(magnifierArea().adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH));
@@ -240,7 +241,7 @@ void MagnifierEffect::toggle()
         if (effects->isOpenGLCompositing() && !m_texture) {
             effects->makeOpenGLContextCurrent();
             m_texture = std::make_unique<GLTexture>(GL_RGBA8, m_magnifierSize.width(), m_magnifierSize.height());
-            m_texture->setYInverted(false);
+            m_texture->setContentTransform(TextureTransforms());
             m_fbo = std::make_unique<GLFramebuffer>(m_texture.get());
         }
     } else {
@@ -253,7 +254,7 @@ void MagnifierEffect::toggle()
     effects->addRepaint(magnifierArea().adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH));
 }
 
-void MagnifierEffect::slotMouseChanged(const QPoint &pos, const QPoint &old,
+void MagnifierEffect::slotMouseChanged(const QPointF &pos, const QPointF &old,
                                        Qt::MouseButtons, Qt::MouseButtons, Qt::KeyboardModifiers, Qt::KeyboardModifiers)
 {
     if (pos != old && m_zoom != 1) {

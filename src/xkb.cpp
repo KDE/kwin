@@ -8,8 +8,10 @@
 */
 #include "xkb.h"
 #include "dbusproperties_interface.h"
+#include "inputmethod.h"
 #include "utils/c_ptr.h"
 #include "utils/common.h"
+#include "wayland/inputmethod_v1_interface.h"
 #include "wayland/keyboard_interface.h"
 #include "wayland/seat_interface.h"
 // frameworks
@@ -17,11 +19,7 @@
 // Qt
 #include <QKeyEvent>
 #include <QTemporaryFile>
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-#include <QtXkbCommonSupport/private/qxkbcommon_p.h>
-#else
 #include <QtGui/private/qxkbcommon_p.h>
-#endif
 // xkbcommon
 #include <xkbcommon/xkbcommon-compose.h>
 #include <xkbcommon/xkbcommon-keysyms.h>
@@ -70,9 +68,14 @@ static void xkbLogHandler(xkb_context *context, xkb_log_level priority, const ch
     }
 }
 
-Xkb::Xkb(QObject *parent)
-    : QObject(parent)
-    , m_context(xkb_context_new(XKB_CONTEXT_NO_FLAGS))
+#if HAVE_XKBCOMMON_NO_SECURE_GETENV
+constexpr xkb_context_flags KWIN_XKB_CONTEXT_FLAGS = XKB_CONTEXT_NO_SECURE_GETENV;
+#else
+constexpr xkb_context_flags KWIN_XKB_CONTEXT_FLAGS = XKB_CONTEXT_NO_FLAGS;
+#endif
+
+Xkb::Xkb(bool followLocale1)
+    : m_context(xkb_context_new(KWIN_XKB_CONTEXT_FLAGS))
     , m_keymap(nullptr)
     , m_state(nullptr)
     , m_shiftModifier(0)
@@ -88,7 +91,7 @@ Xkb::Xkb(QObject *parent)
     , m_consumedModifiers(Qt::NoModifier)
     , m_keysym(XKB_KEY_NoSymbol)
     , m_leds()
-    , m_followLocale1(kwinApp()->followLocale1())
+    , m_followLocale1(followLocale1)
 {
     qRegisterMetaType<KWin::LEDs>();
     if (!m_context) {
@@ -329,6 +332,9 @@ void Xkb::updateKeymap(xkb_keymap *keymap)
 
     createKeymapFile();
     forwardModifiers();
+    if (auto *inputmethod = kwinApp()->inputMethod()) {
+        inputmethod->forwardModifiers(InputMethod::Force);
+    }
     updateModifiers();
 }
 
@@ -339,6 +345,13 @@ void Xkb::createKeymapFile()
         return;
     }
     m_seat->keyboard()->setKeymap(currentKeymap);
+    auto *inputmethod = kwinApp()->inputMethod();
+    if (!inputmethod) {
+        return;
+    }
+    if (auto *keyboardGrab = inputmethod->keyboardGrab()) {
+        keyboardGrab->sendKeymap(currentKeymap);
+    }
 }
 
 QByteArray Xkb::keymapContents() const
@@ -573,11 +586,6 @@ Qt::Key Xkb::toQtKey(xkb_keysym_t keySym,
     } else if (qtKey > 0xff && keySym <= 0xff) {
         // XKB_KEY_mu, XKB_KEY_ydiaeresis go here
         qtKey = Qt::Key(keySym);
-#if QT_VERSION_MAJOR < 6 // since Qt 5 LTS is frozen
-    } else if (keySym == XKB_KEY_Sys_Req) {
-        // fixed in QTBUG-92087
-        qtKey = Qt::Key_SysReq;
-#endif
     }
     return qtKey;
 }

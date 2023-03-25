@@ -8,8 +8,9 @@
 */
 #pragma once
 
-#include "abstract_egl_backend.h"
 #include "core/outputlayer.h"
+#include "platformsupport/scenes/opengl/abstract_egl_backend.h"
+#include <memory>
 
 namespace KWin
 {
@@ -27,13 +28,14 @@ public:
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
-    GLTexture *texture() const;
+    std::shared_ptr<GLTexture> texture() const;
+    quint32 format() const override;
 
 private:
     VirtualEglBackend *const m_backend;
     Output *m_output;
     std::unique_ptr<GLFramebuffer> m_fbo;
-    std::unique_ptr<GLTexture> m_texture;
+    std::shared_ptr<GLTexture> m_texture;
 };
 
 /**
@@ -48,20 +50,19 @@ public:
     ~VirtualEglBackend() override;
     std::unique_ptr<SurfaceTexture> createSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     std::unique_ptr<SurfaceTexture> createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
+    std::shared_ptr<GLTexture> textureForOutput(Output *output) const override;
     OutputLayer *primaryLayer(Output *output) override;
     void present(Output *output) override;
     void init() override;
 
 private:
     bool initializeEgl();
-    bool initBufferConfigs();
     bool initRenderingContext();
 
     void addOutput(Output *output);
     void removeOutput(Output *output);
 
     VirtualBackend *m_backend;
-    int m_frameCounter = 0;
     std::map<Output *, std::unique_ptr<VirtualEglLayer>> m_outputs;
 };
 

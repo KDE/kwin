@@ -17,7 +17,7 @@
 
 #include <functional>
 
-class QPoint;
+class QPointF;
 
 namespace KWin
 {
@@ -30,7 +30,7 @@ public:
     ~WindowSelector() override;
 
     void start(std::function<void(KWin::Window *)> callback, const QByteArray &cursorName);
-    void start(std::function<void(const QPoint &)> callback);
+    void start(std::function<void(const QPointF &)> callback);
     bool isActive() const
     {
         return m_active;
@@ -50,7 +50,7 @@ private:
     void cancelCallback();
     bool m_active;
     std::function<void(KWin::Window *)> m_callback;
-    std::function<void(const QPoint &)> m_pointSelectionFallback;
+    std::function<void(const QPointF &)> m_pointSelectionFallback;
 };
 
 } // namespace

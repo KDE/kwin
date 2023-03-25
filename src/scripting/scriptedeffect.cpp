@@ -17,11 +17,11 @@
 #include "screenedge.h"
 #include "workspace.h"
 // KDE
+#include "libkwineffects/kwinglutils.h"
 #include <KConfigGroup>
 #include <KGlobalAccel>
 #include <KPluginMetaData>
 #include <kconfigloader.h>
-#include <kwinglutils.h>
 // Qt
 #include <QAction>
 #include <QFile>
@@ -244,13 +244,6 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
     QJSValue selfObject = m_engine->newQObject(this);
     QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
     globalObject.setProperty(QStringLiteral("effect"), selfObject);
-
-    // desktopChanged is overloaded, which is problematic. Old code exposed the signal also
-    // with parameters. QJSEngine does not so we have to fake it.
-    effectsObject.setProperty(QStringLiteral("desktopChanged(int,int)"),
-                              effectsObject.property(QStringLiteral("desktopChangedLegacy")));
-    effectsObject.setProperty(QStringLiteral("desktopChanged(int,int,KWin::EffectWindow*)"),
-                              effectsObject.property(QStringLiteral("desktopChanged")));
 
     globalObject.setProperty(QStringLiteral("Effect"),
                              m_engine->newQMetaObject(&ScriptedEffect::staticMetaObject));

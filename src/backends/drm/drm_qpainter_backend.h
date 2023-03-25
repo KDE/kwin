@@ -9,7 +9,7 @@
 #pragma once
 #include "drm_dumb_swapchain.h"
 #include "drm_render_backend.h"
-#include "qpainterbackend.h"
+#include "platformsupport/scenes/qpainter/qpainterbackend.h"
 
 #include <QObject>
 #include <QVector>
@@ -31,6 +31,7 @@ public:
 
     void present(Output *output) override;
     OutputLayer *primaryLayer(Output *output) override;
+    OutputLayer *cursorLayer(Output *output) override;
 
     std::shared_ptr<DrmPipelineLayer> createPrimaryLayer(DrmPipeline *pipeline) override;
     std::shared_ptr<DrmOverlayLayer> createCursorLayer(DrmPipeline *pipeline) override;

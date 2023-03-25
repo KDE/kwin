@@ -29,6 +29,7 @@
 #include <QHostInfo>
 #include <QRandomGenerator>
 #include <QScopeGuard>
+#include <QSocketNotifier>
 #include <QTimer>
 
 // system
@@ -69,11 +70,12 @@ void XwaylandLauncher::setXauthority(const QString &xauthority)
     m_xAuthority = xauthority;
 }
 
-void XwaylandLauncher::start()
+void XwaylandLauncher::enable()
 {
-    if (m_xwaylandProcess) {
+    if (m_enabled) {
         return;
     }
+    m_enabled = true;
 
     if (!m_listenFds.isEmpty()) {
         Q_ASSERT(!m_displayName.isEmpty());
@@ -86,13 +88,35 @@ void XwaylandLauncher::start()
         m_listenFds = m_socket->fileDescriptors();
     }
 
-    startInternal();
+    for (int socket : qAsConst(m_listenFds)) {
+        QSocketNotifier *notifier = new QSocketNotifier(socket, QSocketNotifier::Read, this);
+        connect(notifier, &QSocketNotifier::activated, this, [this]() {
+            if (!m_xwaylandProcess) {
+                start();
+            }
+        });
+        connect(this, &XwaylandLauncher::started, notifier, [notifier]() {
+            notifier->setEnabled(false);
+        });
+        connect(this, &XwaylandLauncher::finished, notifier, [this, notifier]() {
+            // only reactivate if we've not shut down due to the crash count
+            notifier->setEnabled(m_enabled);
+        });
+    }
 }
 
-bool XwaylandLauncher::startInternal()
+void XwaylandLauncher::disable()
 {
-    Q_ASSERT(!m_xwaylandProcess);
+    m_enabled = false;
+    stop();
+}
 
+bool XwaylandLauncher::start()
+{
+    Q_ASSERT(m_enabled);
+    if (m_xwaylandProcess) {
+        return false;
+    }
     QVector<int> fdsToClose;
     auto cleanup = qScopeGuard([&fdsToClose] {
         for (const int fd : std::as_const(fdsToClose)) {
@@ -188,15 +212,6 @@ bool XwaylandLauncher::startInternal()
     return true;
 }
 
-void XwaylandLauncher::stop()
-{
-    if (!m_xwaylandProcess) {
-        return;
-    }
-
-    stopInternal();
-}
-
 QString XwaylandLauncher::displayName() const
 {
     return m_displayName;
@@ -217,8 +232,11 @@ QProcess *XwaylandLauncher::process() const
     return m_xwaylandProcess;
 }
 
-void XwaylandLauncher::stopInternal()
+void XwaylandLauncher::stop()
 {
+    if (!m_xwaylandProcess) {
+        return;
+    }
     Q_EMIT finished();
 
     maybeDestroyReadyNotifier();
@@ -234,14 +252,6 @@ void XwaylandLauncher::stopInternal()
     }
     delete m_xwaylandProcess;
     m_xwaylandProcess = nullptr;
-}
-
-void XwaylandLauncher::restartInternal()
-{
-    if (m_xwaylandProcess) {
-        stopInternal();
-    }
-    startInternal();
 }
 
 void XwaylandLauncher::maybeDestroyReadyNotifier()
@@ -266,17 +276,17 @@ void XwaylandLauncher::handleXwaylandFinished(int exitCode, QProcess::ExitStatus
     switch (options->xwaylandCrashPolicy()) {
     case XwaylandCrashPolicy::Restart:
         if (++m_crashCount <= options->xwaylandMaxCrashCount()) {
-            restartInternal();
+            stop();
             m_resetCrashCountTimer->start(std::chrono::minutes(10));
         } else {
             qCWarning(KWIN_XWL, "Stopping Xwayland server because it has crashed %d times "
                                 "over the past 10 minutes",
                       m_crashCount);
-            stop();
+            disable();
         }
         break;
     case XwaylandCrashPolicy::Stop:
-        stop();
+        disable();
         break;
     }
 }

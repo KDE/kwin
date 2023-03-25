@@ -17,7 +17,6 @@ namespace KWin
 {
 
 class Window;
-class Deleted;
 class Output;
 
 namespace Decoration
@@ -61,7 +60,6 @@ protected:
     {
         m_imageSizesDirty = false;
     }
-    QImage renderToImage(const QRect &geo);
     void renderToPainter(QPainter *painter, const QRect &rect);
 
 private:
@@ -89,7 +87,7 @@ public:
 
 private Q_SLOTS:
     void handleFrameGeometryChanged();
-    void handleWindowClosed(Window *original, Deleted *deleted);
+    void handleWindowClosed(Window *deleted);
     void handleOutputChanged();
     void handleOutputScaleChanged();
 

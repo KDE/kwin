@@ -40,7 +40,6 @@
         "Description[zh_CN]": "所有窗口缩小后平铺显示在一个画面上",
         "Description[zh_TW]": "縮小顯示讓所有開啟的視窗都同時顯示",
         "EnabledByDefault": true,
-        "Id": "windowview",
         "License": "GPL",
         "Name": "Present Windows",
         "Name[ar]": "النوافذ الحاضرة",

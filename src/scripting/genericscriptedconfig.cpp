@@ -12,7 +12,6 @@
 
 #include <kwineffects_interface.h>
 
-#include <KAboutData>
 #define TRANSLATION_DOMAIN "kwin_scripting"
 #include <KLocalizedString>
 #include <KLocalizedTranslator>
@@ -27,28 +26,31 @@
 namespace KWin
 {
 
-QObject *GenericScriptedConfigFactory::create(const char *iface, QWidget *parentWidget, QObject *parent, const QVariantList &args, const QString &keyword)
+QObject *GenericScriptedConfigFactory::create(const char *iface, QWidget *parentWidget, QObject *parent, const QVariantList &args)
 {
-    // the plugin id is in the args when created by desktop effects kcm or EffectsModel in general
-    QString pluginId = args.isEmpty() ? QString() : args.first().toString();
+    if (qstrcmp(iface, "KCModule") == 0) {
+        if (args.count() < 2) {
+            qWarning() << Q_FUNC_INFO << "expects two arguments (plugin id, package type)";
+            return nullptr;
+        }
 
-    // If we do not get the id of the effect we want to load from the args, we have to check our metadata.
-    // This can be the case if the factory gets loaded from a KPluginSelector
-    // the plugin id is in plugin factory metadata when created by scripts kcm
-    // (because it uses kpluginselector, which doesn't pass the plugin id as the first arg),
-    // can be dropped once the scripts kcm is ported to qtquick (because then we could pass the plugin id via the args)
-    if (pluginId.isEmpty()) {
-        pluginId = metaData().pluginId();
+        const QString pluginId = args.at(0).toString();
+        const QString packageType = args.at(1).toString();
+
+        if (packageType == QLatin1StringView("KWin/Effect")) {
+            return new ScriptedEffectConfig(pluginId, parentWidget, args);
+        } else if (packageType == QLatin1StringView("KWin/Script")) {
+            return new ScriptingConfig(pluginId, parentWidget, args);
+        } else {
+            qWarning() << Q_FUNC_INFO << "got unknown package type:" << packageType;
+        }
     }
-    if (pluginId.startsWith(QLatin1String("kwin4_effect_"))) {
-        return new ScriptedEffectConfig(pluginId, parentWidget, args);
-    } else {
-        return new ScriptingConfig(pluginId, parentWidget, args);
-    }
+
+    return nullptr;
 }
 
 GenericScriptedConfig::GenericScriptedConfig(const QString &keyword, QWidget *parent, const QVariantList &args)
-    : KCModule(parent, args)
+    : KCModule(parent, KPluginMetaData(), args)
     , m_packageName(keyword)
     , m_translator(new KLocalizedTranslator(this))
 {
@@ -61,7 +63,7 @@ GenericScriptedConfig::~GenericScriptedConfig()
 
 void GenericScriptedConfig::createUi()
 {
-    QVBoxLayout *layout = new QVBoxLayout(this);
+    QVBoxLayout *layout = new QVBoxLayout(widget());
 
     const QString packageRoot = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
                                                        QLatin1String("kwin/") + typeName() + QLatin1Char('/') + m_packageName,
@@ -71,15 +73,7 @@ void GenericScriptedConfig::createUi()
         return;
     }
 
-    KPluginMetaData metaData(packageRoot + QLatin1String("/metadata.json"));
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    if (!metaData.isValid()) {
-        metaData = KPluginMetaData::fromDesktopFile(packageRoot + QLatin1String("/metadata.desktop"));
-        if (metaData.isValid()) {
-            qWarning("metadata.desktop format is obsolete. Please convert %s to JSON metadata", qPrintable(metaData.fileName()));
-        }
-    }
-#endif
+    const KPluginMetaData metaData = KPluginMetaData::fromJsonFile(packageRoot + QLatin1String("/metadata.json"));
     if (!metaData.isValid()) {
         layout->addWidget(new QLabel(i18nc("Required file does not exist", "%1 does not contain a valid metadata.json file", qPrintable(packageRoot))));
         return;
@@ -97,6 +91,11 @@ void GenericScriptedConfig::createUi()
         return;
     }
 
+    const QString localePath = packageRoot + QLatin1String("/contents/locale");
+    if (QFileInfo::exists(localePath)) {
+        KLocalizedString::addDomainLocaleDir(metaData.value("X-KWin-Config-TranslationDomain").toUtf8(), localePath);
+    }
+
     QFile xmlFile(kconfigXTFile);
     KConfigGroup cg = configGroup();
     KConfigLoader *configLoader = new KConfigLoader(cg, &xmlFile, this);
@@ -107,7 +106,7 @@ void GenericScriptedConfig::createUi()
     m_translator->setTranslationDomain(metaData.value("X-KWin-Config-TranslationDomain"));
 
     uiFile.open(QFile::ReadOnly);
-    QWidget *customConfigForm = loader->load(&uiFile, this);
+    QWidget *customConfigForm = loader->load(&uiFile, widget());
     m_translator->addContextToMonitor(customConfigForm->objectName());
     uiFile.close();
 

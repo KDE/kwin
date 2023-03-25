@@ -1,0 +1,67 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Spanish "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwintouchscreen" lang="&language;">
+<articleinfo>
+
+<title
+>Gestos de la pantalla táctil</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<othercredit role="translator"
+><firstname
+>Eloy</firstname
+><surname
+>Cuadra</surname
+><affiliation
+><address
+><email
+>ecuadra@eloihr.net</email
+></address
+></affiliation
+><contrib
+>Traductor</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>2021-04-10</date>
+<releaseinfo
+>Plasma 5.20</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Preferencias del sistema</keyword>
+<keyword
+>táctil</keyword>
+<keyword
+>pantalla</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>Al deslizar desde el borde de la pantalla hacia el centro de la misma podrá activar efectos. Aquí puede configurar el efecto que se activará en cada borde de la pantalla. </para>
+
+<para
+>Haga clic con cualquier botón del ratón sobre un cuadrado y seleccione un efecto en el menú contextual. Los cuadrados azules indican que ya se ha asociado un efecto al borde, y los cuadrados grises que no.</para>
+
+<para
+>El número de elementos accesibles en el menú de contexto depende de las preferencias del módulo <ulink url="help:/kcontrol/kwineffects/index.html"
+><guilabel
+>Efectos de escritorio</guilabel
+></ulink
+> de la categoría <guilabel
+>Espacio de trabajo</guilabel
+>. Seleccione sus efectos favoritos en el grupo <guilabel
+>Gestión de ventanas</guilabel
+>. Esto activa los elementos correspondientes en el menú de contexto.</para>
+</article>

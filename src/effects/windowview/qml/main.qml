@@ -5,21 +5,20 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.15
-import QtQuick.Layouts 1.15
-import QtGraphicalEffects 1.15
-import org.kde.kwin 3.0 as KWinComponents
-import org.kde.kwin.private.effects 1.0
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.extras 2.0 as PlasmaExtras
-import org.kde.KWin.Effect.WindowView 1.0
+import QtQuick
+import Qt5Compat.GraphicalEffects
+import QtQuick.Layouts
+import org.kde.kwin as KWinComponents
+import org.kde.kwin.private.effects
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.extras as PlasmaExtras
+import org.kde.KWin.Effect.WindowView
 
 Item {
     id: container
 
-    required property QtObject effect
-    required property QtObject targetScreen
-    required property var selectedIds
+    readonly property QtObject effect: KWinComponents.SceneView.effect
+    readonly property QtObject targetScreen: KWinComponents.SceneView.screen
 
     property bool animationEnabled: false
     property bool organized: false
@@ -62,9 +61,9 @@ Item {
         }
     }
 
-    KWinComponents.DesktopBackgroundItem {
+    KWinComponents.DesktopBackground {
         activity: KWinComponents.Workspace.currentActivity
-        desktop: KWinComponents.Workspace.currentVirtualDesktop
+        desktop: KWinComponents.Workspace.currentDesktop
         outputName: targetScreen.name
 
         layer.enabled: true
@@ -90,11 +89,12 @@ Item {
         }
     }
 
-    PlasmaExtras.PlaceholderMessage {
+    Loader {
         anchors.centerIn: parent
         width: parent.width - (PlasmaCore.Units.gridUnit * 8)
 
-        visible: heap.activeEmpty
+        active: heap.activeEmpty
+
         // Otherwise it's always 100% opaque even while the blurry desktop background's
         // opacity is changing, which looks weird and is different from what Overview does.
         opacity: container.organized ? 1 : 0
@@ -102,8 +102,10 @@ Item {
             OpacityAnimator { duration: container.effect.animationDuration; easing.type: Easing.OutCubic }
         }
 
-        iconName: "edit-none"
-        text: effect.searchText.length > 0 ? i18nd("kwin_effects", "No Matches") : i18nd("kwin_effects", "No Windows")
+        sourceComponent: PlasmaExtras.PlaceholderMessage {
+            iconName: "edit-none"
+            text: effect.searchText.length > 0 ? i18nd("kwin_effects", "No Matches") : i18nd("kwin_effects", "No Windows")
+        }
     }
 
     ColumnLayout {
@@ -117,7 +119,7 @@ Item {
             focus: false
 
             // Don't confuse users into thinking it's a full search
-            placeholderText: i18n("Filter windows…")
+            placeholderText: i18nd("kwin_effects", "Filter windows…")
 
             // Otherwise it's always 100% opaque even while the blurry desktop background's
             // opacity is changing, which looks weird and is different from what Overview does.
@@ -173,68 +175,75 @@ Item {
                     case WindowView.ModeWindowClassCurrentDesktop:
                         return "activeClass";
                     default:
-                        return selectedIds;
+                        return container.effect.selectedIds;
                 }
             }
             layout.mode: effect.layout
-            onWindowClicked: {
-                if (eventPoint.event.button !== Qt.MiddleButton) {
-                    return;
-                }
-                window.closeWindow();
-            }
-            model: KWinComponents.ClientFilterModel {
+            model: KWinComponents.WindowFilterModel {
                 activity: KWinComponents.Workspace.currentActivity
                 desktop: {
                     switch (container.effect.mode) {
                         case WindowView.ModeCurrentDesktop:
                         case WindowView.ModeWindowClassCurrentDesktop:
-                            return KWinComponents.Workspace.currentVirtualDesktop;
+                            return KWinComponents.Workspace.currentDesktop;
                         default:
                             return undefined;
                     }
                 }
                 screenName: targetScreen.name
-                clientModel: stackModel
+                windowModel: stackModel
                 filter: effect.searchText
                 minimizedWindows: !effect.ignoreMinimized
-                windowType: ~KWinComponents.ClientFilterModel.Dock &
-                            ~KWinComponents.ClientFilterModel.Desktop &
-                            ~KWinComponents.ClientFilterModel.Notification
+                windowType: ~KWinComponents.WindowFilterModel.Dock &
+                            ~KWinComponents.WindowFilterModel.Desktop &
+                            ~KWinComponents.WindowFilterModel.Notification &
+                            ~KWinComponents.WindowFilterModel.CriticalNotification
             }
             delegate: WindowHeapDelegate {
                 windowHeap: heap
                 opacity: 1 - downGestureProgress
-                onDownGestureTriggered: client.closeWindow()
+                onDownGestureTriggered: window.closeWindow()
+
+                TapHandler {
+                    acceptedPointerTypes: PointerDevice.GenericPointer | PointerDevice.Pen
+                    acceptedButtons: Qt.MiddleButton
+                    onTapped: window.closeWindow();
+                }
             }
             onActivated: effect.deactivate(container.effect.animationDuration);
         }
     }
 
-    Repeater {
-        model: KWinComponents.ClientFilterModel {
-            desktop: KWinComponents.Workspace.currentVirtualDesktop
+    Instantiator {
+        asynchronous: true
+
+        model: KWinComponents.WindowFilterModel {
+            desktop: KWinComponents.Workspace.currentDesktop
             screenName: targetScreen.name
-            clientModel: stackModel
-            windowType: KWinComponents.ClientFilterModel.Dock
+            windowModel: stackModel
+            windowType: KWinComponents.WindowFilterModel.Dock
         }
 
-        KWinComponents.WindowThumbnailItem {
+        KWinComponents.WindowThumbnail {
             id: windowThumbnail
-            wId: model.client.internalId
-            x: model.client.x - targetScreen.geometry.x
-            y: model.client.y - targetScreen.geometry.y
-            z: model.client.stackingOrder
+            wId: model.window.internalId
+            x: model.window.x - targetScreen.geometry.x
+            y: model.window.y - targetScreen.geometry.y
+            z: model.window.stackingOrder
             visible: opacity > 0
-            opacity: (model.client.hidden || container.organized) ? 0 : 1
+            opacity: (model.window.hidden || container.organized) ? 0 : 1
 
             Behavior on opacity {
                 NumberAnimation { duration: container.effect.animationDuration; easing.type: Easing.OutCubic }
             }
         }
+
+        onObjectAdded: (index, object) => {
+            object.parent = container
+        }
     }
 
-    KWinComponents.ClientModel {
+    KWinComponents.WindowModel {
         id: stackModel
     }
 

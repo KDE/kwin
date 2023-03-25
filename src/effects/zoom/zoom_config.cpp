@@ -35,18 +35,18 @@ ZoomEffectConfigForm::ZoomEffectConfigForm(QWidget *parent)
     setupUi(this);
 }
 
-ZoomEffectConfig::ZoomEffectConfig(QWidget *parent, const QVariantList &args)
-    : KCModule(parent, args)
+ZoomEffectConfig::ZoomEffectConfig(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
+    : KCModule(parent, data, args)
 {
     ZoomConfig::instance(KWIN_CONFIG);
-    m_ui = new ZoomEffectConfigForm(this);
+    m_ui = new ZoomEffectConfigForm(widget());
 
-    QVBoxLayout *layout = new QVBoxLayout(this);
+    QVBoxLayout *layout = new QVBoxLayout(widget());
     layout->addWidget(m_ui);
 
     addConfig(ZoomConfig::self(), m_ui);
 
-    connect(m_ui->editor, &KShortcutsEditor::keyChange, this, &ZoomEffectConfig::markAsChanged);
+    connect(m_ui->editor, &KShortcutsEditor::keyChange, this, &KCModule::markAsChanged);
 
 #if !HAVE_ACCESSIBILITY
     m_ui->kcfg_EnableFocusTracking->setVisible(false);

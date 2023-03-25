@@ -11,6 +11,8 @@
 // KConfigSkeleton
 #include "mouseclickconfig.h"
 
+#include "libkwineffects/renderviewport.h"
+
 #include <QAction>
 
 #include <KConfigGroup>
@@ -94,11 +96,13 @@ void MouseClickEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mil
     effects->prePaintScreen(data, presentTime);
 }
 
-void MouseClickEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
+void MouseClickEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
 {
-    effects->paintScreen(mask, region, data);
+    effects->paintScreen(renderTarget, viewport, mask, region, screen);
 
-    paintScreenSetup(mask, region, data);
+    if (effects->isOpenGLCompositing()) {
+        paintScreenSetupGl(viewport.projectionMatrix());
+    }
     for (const auto &click : m_clicks) {
         for (int i = 0; i < m_ringCount; ++i) {
             float alpha = computeAlpha(click.get(), i);
@@ -106,23 +110,25 @@ void MouseClickEffect::paintScreen(int mask, const QRegion &region, ScreenPaintD
             if (size > 0 && alpha > 0) {
                 QColor color = m_colors[click->m_button];
                 color.setAlphaF(alpha);
-                drawCircle(color, click->m_pos.x(), click->m_pos.y(), size);
+                drawCircle(viewport, color, click->m_pos.x(), click->m_pos.y(), size);
             }
         }
 
         if (m_showText && click->m_frame) {
             float frameAlpha = (click->m_time * 2.0f - m_ringLife) / m_ringLife;
             frameAlpha = frameAlpha < 0 ? 1 : -(frameAlpha * frameAlpha) + 1;
-            click->m_frame->render(infiniteRegion(), frameAlpha, frameAlpha);
+            click->m_frame->render(renderTarget, viewport, infiniteRegion(), frameAlpha, frameAlpha);
         }
     }
     for (const auto &tool : std::as_const(m_tabletTools)) {
         const int step = m_ringMaxSize * (1. - tool.m_pressure);
         for (qreal size = m_ringMaxSize; size > 0; size -= step) {
-            drawCircle(tool.m_color, tool.m_globalPosition.x(), tool.m_globalPosition.y(), size);
+            drawCircle(viewport, tool.m_color, tool.m_globalPosition.x(), tool.m_globalPosition.y(), size);
         }
     }
-    paintScreenFinish(mask, region, data);
+    if (effects->isOpenGLCompositing()) {
+        paintScreenFinishGl();
+    }
 }
 
 void MouseClickEffect::postPaintScreen()
@@ -146,7 +152,7 @@ float MouseClickEffect::computeAlpha(const MouseEvent *click, int ring)
     return (m_ringLife - (float)click->m_time - ringDistance * (ring)) / m_ringLife;
 }
 
-void MouseClickEffect::slotMouseChanged(const QPoint &pos, const QPoint &,
+void MouseClickEffect::slotMouseChanged(const QPointF &pos, const QPointF &,
                                         Qt::MouseButtons buttons, Qt::MouseButtons oldButtons,
                                         Qt::KeyboardModifiers, Qt::KeyboardModifiers)
 {
@@ -159,11 +165,11 @@ void MouseClickEffect::slotMouseChanged(const QPoint &pos, const QPoint &,
     while (--i >= 0) {
         MouseButton *b = m_buttons[i].get();
         if (isPressed(b->m_button, buttons, oldButtons)) {
-            m = std::make_unique<MouseEvent>(i, pos, 0, createEffectFrame(pos, b->m_labelDown), true);
+            m = std::make_unique<MouseEvent>(i, pos.toPoint(), 0, createEffectFrame(pos.toPoint(), b->m_labelDown), true);
             break;
         } else if (isReleased(b->m_button, buttons, oldButtons) && (!b->m_isPressed || b->m_time > m_ringLife)) {
             // we might miss a press, thus also check !b->m_isPressed, bug #314762
-            m = std::make_unique<MouseEvent>(i, pos, 0, createEffectFrame(pos, b->m_labelUp), false);
+            m = std::make_unique<MouseEvent>(i, pos.toPoint(), 0, createEffectFrame(pos.toPoint(), b->m_labelUp), false);
             break;
         }
         b->setPressed(b->m_button & buttons);
@@ -247,36 +253,22 @@ bool MouseClickEffect::isActive() const
     return m_enabled && (m_clicks.size() != 0 || !m_tabletTools.isEmpty());
 }
 
-void MouseClickEffect::drawCircle(const QColor &color, float cx, float cy, float r)
+void MouseClickEffect::drawCircle(const RenderViewport &viewport, const QColor &color, float cx, float cy, float r)
 {
     if (effects->isOpenGLCompositing()) {
-        drawCircleGl(color, cx, cy, r);
+        drawCircleGl(viewport, color, cx, cy, r);
     } else if (effects->compositingType() == QPainterCompositing) {
         drawCircleQPainter(color, cx, cy, r);
     }
 }
 
-void MouseClickEffect::paintScreenSetup(int mask, QRegion region, ScreenPaintData &data)
-{
-    if (effects->isOpenGLCompositing()) {
-        paintScreenSetupGl(mask, region, data);
-    }
-}
-
-void MouseClickEffect::paintScreenFinish(int mask, QRegion region, ScreenPaintData &data)
-{
-    if (effects->isOpenGLCompositing()) {
-        paintScreenFinishGl(mask, region, data);
-    }
-}
-
-void MouseClickEffect::drawCircleGl(const QColor &color, float cx, float cy, float r)
+void MouseClickEffect::drawCircleGl(const RenderViewport &viewport, const QColor &color, float cx, float cy, float r)
 {
     static const int num_segments = 80;
     static const float theta = 2 * 3.1415926 / float(num_segments);
     static const float c = cosf(theta); // precalculate the sine and cosine
     static const float s = sinf(theta);
-    const float scale = effects->renderTargetScale();
+    const float scale = viewport.scale();
     float t;
 
     float x = r; // we start at angle = 0
@@ -309,17 +301,17 @@ void MouseClickEffect::drawCircleQPainter(const QColor &color, float cx, float c
     painter->restore();
 }
 
-void MouseClickEffect::paintScreenSetupGl(int, QRegion, ScreenPaintData &data)
+void MouseClickEffect::paintScreenSetupGl(const QMatrix4x4 &projectionMatrix)
 {
     GLShader *shader = ShaderManager::instance()->pushShader(ShaderTrait::UniformColor);
-    shader->setUniform(GLShader::ModelViewProjectionMatrix, data.projectionMatrix());
+    shader->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix);
 
     glLineWidth(m_lineWidth);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-void MouseClickEffect::paintScreenFinishGl(int, QRegion, ScreenPaintData &)
+void MouseClickEffect::paintScreenFinishGl()
 {
     glDisable(GL_BLEND);
 
@@ -331,18 +323,6 @@ bool MouseClickEffect::tabletToolEvent(QTabletEvent *event)
     auto &tabletEvent = m_tabletTools[event->uniqueId()];
     if (!tabletEvent.m_color.isValid()) {
         switch (event->pointerType()) {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        case QTabletEvent::UnknownPointer:
-        case QTabletEvent::Pen:
-            tabletEvent.m_color = MouseClickConfig::color1();
-            break;
-        case QTabletEvent::Eraser:
-            tabletEvent.m_color = MouseClickConfig::color2();
-            break;
-        case QTabletEvent::Cursor:
-            tabletEvent.m_color = MouseClickConfig::color3();
-            break;
-#else
         case QPointingDevice::PointerType::Unknown:
         case QPointingDevice::PointerType::Generic:
         case QPointingDevice::PointerType::Finger:
@@ -355,7 +335,6 @@ bool MouseClickEffect::tabletToolEvent(QTabletEvent *event)
         case QPointingDevice::PointerType::Cursor:
             tabletEvent.m_color = MouseClickConfig::color3();
             break;
-#endif
         }
     }
     switch (event->type()) {

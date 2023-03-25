@@ -7,8 +7,8 @@
 #include "scene/surfaceitem_x11.h"
 #include "composite.h"
 #include "core/renderbackend.h"
-#include "deleted.h"
 #include "x11syncmanager.h"
+#include "x11window.h"
 
 namespace KWin
 {
@@ -21,7 +21,7 @@ SurfaceItemX11::SurfaceItemX11(Window *window, Scene *scene, Item *parent)
             this, &SurfaceItemX11::handleBufferGeometryChanged);
     connect(window, &Window::geometryShapeChanged,
             this, &SurfaceItemX11::handleGeometryShapeChanged);
-    connect(window, &Window::windowClosed,
+    connect(window, &Window::closed,
             this, &SurfaceItemX11::handleWindowClosed);
 
     m_damageHandle = xcb_generate_id(kwinApp()->x11Connection());
@@ -41,7 +41,7 @@ SurfaceItemX11::SurfaceItemX11(Window *window, Scene *scene, Item *parent)
 
 SurfaceItemX11::~SurfaceItemX11()
 {
-    // destroyDamage() will be called by the associated Window.
+    destroyDamage();
 }
 
 Window *SurfaceItemX11::window() const
@@ -49,7 +49,7 @@ Window *SurfaceItemX11::window() const
     return m_window;
 }
 
-void SurfaceItemX11::handleWindowClosed(Window *original, Deleted *deleted)
+void SurfaceItemX11::handleWindowClosed(Window *deleted)
 {
     m_window = deleted;
 }
@@ -129,6 +129,13 @@ void SurfaceItemX11::waitForDamage()
     m_isDamaged = false;
 }
 
+void SurfaceItemX11::forgetDamage()
+{
+    // If the window is destroyed, we cannot destroy XDamage handle. :/
+    m_isDamaged = false;
+    m_damageHandle = XCB_NONE;
+}
+
 void SurfaceItemX11::destroyDamage()
 {
     if (m_damageHandle != XCB_NONE) {
@@ -138,12 +145,12 @@ void SurfaceItemX11::destroyDamage()
     }
 }
 
-void SurfaceItemX11::handleBufferGeometryChanged(Window *window, const QRectF &old)
+void SurfaceItemX11::handleBufferGeometryChanged(const QRectF &old)
 {
-    if (window->bufferGeometry().size() != old.size()) {
+    if (m_window->bufferGeometry().size() != old.size()) {
         discardPixmap();
     }
-    setSize(window->bufferGeometry().size());
+    setSize(m_window->bufferGeometry().size());
 }
 
 void SurfaceItemX11::handleGeometryShapeChanged()
@@ -242,8 +249,8 @@ void SurfacePixmapX11::create()
     }
     const QRectF bufferGeometry = window->bufferGeometry();
     if (windowGeometry.size() != bufferGeometry.size()) {
-        qCDebug(KWIN_CORE, "Failed to create window pixmap for window 0x%x (mismatched geometry)",
-                window->window());
+        qCDebug(KWIN_CORE, "Failed to create window pixmap for window 0x%x: window size (%fx%f) != buffer size (%fx%f)", window->window(),
+                windowGeometry.size().width(), windowGeometry.size().height(), bufferGeometry.width(), bufferGeometry.height());
         xcb_free_pixmap(connection, pixmap);
         return;
     }

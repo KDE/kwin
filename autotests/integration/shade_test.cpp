@@ -10,11 +10,11 @@
 
 #include "core/output.h"
 #include "core/outputbackend.h"
-#include "cursor.h"
+#include "libkwineffects/kwineffects.h"
+#include "pointer_input.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "x11window.h"
-#include <kwineffects.h>
 
 #include <KDecoration2/Decoration>
 
@@ -54,7 +54,7 @@ void ShadeTest::initTestCase()
 void ShadeTest::init()
 {
     workspace()->setActiveOutput(QPoint(640, 512));
-    Cursors::self()->mouse()->setPos(QPoint(640, 512));
+    input()->pointer()->warp(QPoint(640, 512));
 }
 
 void ShadeTest::testShadeGeometry()
@@ -62,14 +62,8 @@ void ShadeTest::testShadeGeometry()
     // this test verifies that the geometry is properly restored after shading
     // see BUG: 362501
     // create an xcb window
-    struct XcbConnectionDeleter
-    {
-        void operator()(xcb_connection_t *pointer)
-        {
-            xcb_disconnect(pointer);
-        }
-    };
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 100, 200);
     xcb_window_t windowId = xcb_generate_id(c.get());
@@ -116,7 +110,7 @@ void ShadeTest::testShadeGeometry()
     xcb_flush(c.get());
     c.reset();
 
-    QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
+    QSignalSpy windowClosedSpy(window, &X11Window::closed);
     QVERIFY(windowClosedSpy.wait());
 }
 

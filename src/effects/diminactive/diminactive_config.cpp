@@ -23,12 +23,12 @@ K_PLUGIN_CLASS(KWin::DimInactiveEffectConfig)
 namespace KWin
 {
 
-DimInactiveEffectConfig::DimInactiveEffectConfig(QWidget *parent, const QVariantList &args)
-    : KCModule(parent, args)
+DimInactiveEffectConfig::DimInactiveEffectConfig(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
+    : KCModule(parent, data, args)
 {
-    m_ui.setupUi(this);
+    m_ui.setupUi(widget());
     DimInactiveConfig::instance(KWIN_CONFIG);
-    addConfig(DimInactiveConfig::self(), this);
+    addConfig(DimInactiveConfig::self(), widget());
 }
 
 DimInactiveEffectConfig::~DimInactiveEffectConfig()

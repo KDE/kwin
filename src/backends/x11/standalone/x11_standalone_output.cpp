@@ -39,13 +39,14 @@ void X11Output::setXineramaNumber(int number)
     m_xineramaNumber = number;
 }
 
-void X11Output::setColorTransformation(const std::shared_ptr<ColorTransformation> &transformation)
+bool X11Output::setGammaRamp(const std::shared_ptr<ColorTransformation> &transformation)
 {
     if (m_crtc == XCB_NONE) {
-        return;
+        return true;
     }
     ColorLUT lut(transformation, m_gammaRampSize);
     xcb_randr_set_crtc_gamma(kwinApp()->x11Connection(), m_crtc, lut.size(), lut.red(), lut.green(), lut.blue());
+    return true;
 }
 
 void X11Output::setCrtc(xcb_randr_crtc_t crtc)
