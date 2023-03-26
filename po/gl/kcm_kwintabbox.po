@@ -237,12 +237,14 @@ msgid "Show selected window"
 msgstr "Mostrar a xanela escollida"
 
 #: shortcutsettings.cpp:132
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows"
 msgid "Walk Through Windows"
 msgstr "Percorrer as xanelas"
 
 #: shortcutsettings.cpp:133
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows (Reverse)"
 msgstr "Percorrer as xanelas (Inverso)"
 
@@ -259,12 +261,14 @@ msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Percorrer as xanelas alternativo (Inverso)"
 
 #: shortcutsettings.cpp:137
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows Alternative"
 msgid "Walk Through Windows Alternative"
 msgstr "Percorrer as xanelas alternativo"
 
 #: shortcutsettings.cpp:138
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Percorrer as xanelas alternativo (Inverso)"
 

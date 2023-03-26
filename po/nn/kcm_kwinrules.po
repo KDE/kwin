@@ -902,23 +902,3 @@ msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
 "Klarte ikkje oppdaga vindaugs­eigenskapar. Vindauget vert ikkje handsama av "
 "KWin."
-
-#~ msgid "KWinRules KCM launcher"
-#~ msgstr "KWinRules KCM-startar"
-
-#~ msgid "KWin id of the window for special window settings."
-#~ msgstr "KWin-ID til vindauget for spesielt vindaugsoppsett"
-
-#~ msgid "Whether the settings should affect all windows of the application."
-#~ msgstr "Om innstillingane skal gjelda alle vindauge til programmet."
-
-#~ msgid "This helper utility is not supposed to be called directly."
-#~ msgstr ""
-#~ "Det er ikkje meininga at dette hjelpeverktøyet skal startast direkte."
-
-#~ msgctxt "Window caption for the application wide rules dialog"
-#~ msgid "Edit Application-Specific Settings"
-#~ msgstr "Rediger programspesifikke innstillingar"
-
-#~ msgid "Edit Window-Specific Settings"
-#~ msgstr "Rediger vindaugsspesifikke innstillingar"

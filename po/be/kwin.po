@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 86ff119b1606fcaa910d6b44fc14b611\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-25 02:10+0000\n"
+"POT-Creation-Date: 2023-03-26 02:13+0000\n"
 "PO-Revision-Date: 2023-02-09 08:31\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -1028,13 +1028,13 @@ msgid "Active LEDs"
 msgstr "Актыўныя індыкатары"
 
 #. i18n: ectx: attribute (title), widget (QWidget, clipboard)
-#. i18n: ectx: property (text), widget (QLabel, label)
+#. i18n: ectx: property (text), widget (QLabel, label_10)
 #: debug_console.ui:425 debug_console.ui:445
 #, kde-format
 msgid "Clipboard"
 msgstr "Буфер абмену"
 
-#. i18n: ectx: property (text), widget (QLabel, label)
+#. i18n: ectx: property (text), widget (QLabel, label_11)
 #: debug_console.ui:491
 #, kde-format
 msgid "Primary Selection"
@@ -2144,45 +2144,45 @@ msgstr "Дыялогавае акно"
 msgid "..."
 msgstr "..."
 
-#: tabbox/tabbox.cpp:345
+#: tabbox/clientmodel.cpp:58
 #, kde-format
 msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "Паказаць працоўны стол"
 
-#: tabbox/tabbox.cpp:471
+#: tabbox/tabbox.cpp:356
 msgid "Walk Through Windows"
 msgstr "Пераход па вокнах"
 
-#: tabbox/tabbox.cpp:472
+#: tabbox/tabbox.cpp:357
 msgid "Walk Through Windows (Reverse)"
 msgstr "Пераход па вокнах у адваротным кірунку"
 
-#: tabbox/tabbox.cpp:473
+#: tabbox/tabbox.cpp:358
 msgid "Walk Through Windows Alternative"
 msgstr "Альтэрнатыўны пераход па вокнах"
 
-#: tabbox/tabbox.cpp:474
+#: tabbox/tabbox.cpp:359
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Альтэрнатыўны пераход па вокнах у адваротным кірунку"
 
-#: tabbox/tabbox.cpp:475
+#: tabbox/tabbox.cpp:360
 msgid "Walk Through Windows of Current Application"
 msgstr "Пераход па вокнах бягучай праграмы"
 
-#: tabbox/tabbox.cpp:476
+#: tabbox/tabbox.cpp:361
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Пераход па вокнах бягучай праграмы ў адваротным кірунку"
 
-#: tabbox/tabbox.cpp:477
+#: tabbox/tabbox.cpp:362
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Альтэрнатыўны пераход па вокнах бягучай праграмы"
 
-#: tabbox/tabbox.cpp:478
+#: tabbox/tabbox.cpp:363
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Альтэрнатыўны пераход па вокнах бягучай праграмы ў адваротным кірунку"
 
-#: tabbox/tabboxhandler.cpp:271
+#: tabbox/tabboxhandler.cpp:270
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"
@@ -2776,13 +2776,13 @@ msgstr "Пераключыцца на працоўны стол ніжэй"
 msgid "Switch to Desktop %1"
 msgstr "Пераключыцца на працоўны стол \"%1\""
 
-#: window.cpp:3392
+#: window.cpp:3389
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Не адказвае)"
 
-#: workspace.cpp:1628
+#: workspace.cpp:1621
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""

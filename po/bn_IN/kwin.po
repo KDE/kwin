@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-25 02:10+0000\n"
+"POT-Creation-Date: 2023-03-26 02:13+0000\n"
 "PO-Revision-Date: 2008-12-22 16:10+0530\n"
 "Last-Translator: Runa Bhattacharjee <runab@redhat.com>\n"
 "Language-Team: Bengali INDIA <fedora-trans-bn_IN@redhat.com>\n"
@@ -1030,13 +1030,13 @@ msgid "Active LEDs"
 msgstr ""
 
 #. i18n: ectx: attribute (title), widget (QWidget, clipboard)
-#. i18n: ectx: property (text), widget (QLabel, label)
+#. i18n: ectx: property (text), widget (QLabel, label_10)
 #: debug_console.ui:425 debug_console.ui:445
 #, kde-format
 msgid "Clipboard"
 msgstr ""
 
-#. i18n: ectx: property (text), widget (QLabel, label)
+#. i18n: ectx: property (text), widget (QLabel, label_11)
 #: debug_console.ui:491
 #, kde-format
 msgid "Primary Selection"
@@ -2164,58 +2164,58 @@ msgstr ""
 msgid "..."
 msgstr ""
 
-#: tabbox/tabbox.cpp:345
+#: tabbox/clientmodel.cpp:58
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "চিহ্নিত ডেস্কটপে স্থানান্তর (&D)"
 
-#: tabbox/tabbox.cpp:471
+#: tabbox/tabbox.cpp:356
 msgid "Walk Through Windows"
 msgstr "উইন্ডোগুলি পরিদর্শন করুন"
 
-#: tabbox/tabbox.cpp:472
+#: tabbox/tabbox.cpp:357
 msgid "Walk Through Windows (Reverse)"
 msgstr "উইন্ডোগুলি পরিদর্শন করুন (বিপরীত দিশায়)"
 
-#: tabbox/tabbox.cpp:473
+#: tabbox/tabbox.cpp:358
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows Alternative"
 msgstr "উইন্ডোগুলি পরিদর্শন করুন (বিপরীত দিশায়)"
 
-#: tabbox/tabbox.cpp:474
+#: tabbox/tabbox.cpp:359
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "উইন্ডোগুলি পরিদর্শন করুন (বিপরীত দিশায়)"
 
-#: tabbox/tabbox.cpp:475
+#: tabbox/tabbox.cpp:360
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application"
 msgstr "উইন্ডোগুলি পরিদর্শন করুন (বিপরীত দিশায়)"
 
-#: tabbox/tabbox.cpp:476
+#: tabbox/tabbox.cpp:361
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "উইন্ডোগুলি পরিদর্শন করুন (বিপরীত দিশায়)"
 
-#: tabbox/tabbox.cpp:477
+#: tabbox/tabbox.cpp:362
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "উইন্ডোগুলি পরিদর্শন করুন (বিপরীত দিশায়)"
 
-#: tabbox/tabbox.cpp:478
+#: tabbox/tabbox.cpp:363
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "উইন্ডোগুলি পরিদর্শন করুন (বিপরীত দিশায়)"
 
-#: tabbox/tabboxhandler.cpp:271
+#: tabbox/tabboxhandler.cpp:270
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"
@@ -2842,13 +2842,13 @@ msgstr "নীচের ডেস্কটপে পরিবর্তন কর
 msgid "Switch to Desktop %1"
 msgstr "ডেস্কটপ ১-এ পরিবর্তন করুন"
 
-#: window.cpp:3392
+#: window.cpp:3389
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr ""
 
-#: workspace.cpp:1628
+#: workspace.cpp:1621
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

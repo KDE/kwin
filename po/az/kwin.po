@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-25 02:10+0000\n"
+"POT-Creation-Date: 2023-03-26 02:13+0000\n"
 "PO-Revision-Date: 2022-10-17 23:50+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -1018,13 +1018,13 @@ msgid "Active LEDs"
 msgstr "Aktiv LED-lər"
 
 #. i18n: ectx: attribute (title), widget (QWidget, clipboard)
-#. i18n: ectx: property (text), widget (QLabel, label)
+#. i18n: ectx: property (text), widget (QLabel, label_10)
 #: debug_console.ui:425 debug_console.ui:445
 #, kde-format
 msgid "Clipboard"
 msgstr "Mübadilə yaddaşı"
 
-#. i18n: ectx: property (text), widget (QLabel, label)
+#. i18n: ectx: property (text), widget (QLabel, label_11)
 #: debug_console.ui:491
 #, kde-format
 msgid "Primary Selection"
@@ -2137,45 +2137,45 @@ msgstr "Dialoq"
 msgid "..."
 msgstr "..."
 
-#: tabbox/tabbox.cpp:345
+#: tabbox/clientmodel.cpp:58
 #, kde-format
 msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "İş masasını Göstərmək"
 
-#: tabbox/tabbox.cpp:471
+#: tabbox/tabbox.cpp:356
 msgid "Walk Through Windows"
 msgstr "Pəncərələrdə İrəli Hərəkət"
 
-#: tabbox/tabbox.cpp:472
+#: tabbox/tabbox.cpp:357
 msgid "Walk Through Windows (Reverse)"
 msgstr "Pəncərələrdə Əksinə Hərəkət"
 
-#: tabbox/tabbox.cpp:473
+#: tabbox/tabbox.cpp:358
 msgid "Walk Through Windows Alternative"
 msgstr "Pəncərələrdə Alternativ Hərəkət"
 
-#: tabbox/tabbox.cpp:474
+#: tabbox/tabbox.cpp:359
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Pəncərələrdə Əksinə Alternativ Hərəkət"
 
-#: tabbox/tabbox.cpp:475
+#: tabbox/tabbox.cpp:360
 msgid "Walk Through Windows of Current Application"
 msgstr "Cari tətbiqin pəncərələrində hərəkət"
 
-#: tabbox/tabbox.cpp:476
+#: tabbox/tabbox.cpp:361
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Cari tətbiqin pəncərələrində əksinə hərəkət"
 
-#: tabbox/tabbox.cpp:477
+#: tabbox/tabbox.cpp:362
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Cari tətbiqin pəncərələrində alternativ hərəkət"
 
-#: tabbox/tabbox.cpp:478
+#: tabbox/tabbox.cpp:363
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Cari tətbiqin pəncərələrində əksinə alternativ hərəkət"
 
-#: tabbox/tabboxhandler.cpp:271
+#: tabbox/tabboxhandler.cpp:270
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"
@@ -2779,13 +2779,13 @@ msgstr "Bir İş masası aşağı keçmək"
 msgid "Switch to Desktop %1"
 msgstr "%1 İş masasına keçid"
 
-#: window.cpp:3392
+#: window.cpp:3389
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Cavab Yoxdur)"
 
-#: workspace.cpp:1628
+#: workspace.cpp:1621
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""
