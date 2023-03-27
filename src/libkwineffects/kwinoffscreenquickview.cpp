@@ -576,5 +576,3 @@ QQuickItem *OffscreenQuickScene::rootItem() const
 }
 
 } // namespace KWin
-
-#include "kwinoffscreenquickview.moc"
