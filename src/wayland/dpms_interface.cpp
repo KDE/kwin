@@ -133,11 +133,19 @@ void DpmsInterface::org_kde_kwin_dpms_set(Resource *resource, uint32_t mode)
 
 void DpmsInterface::sendSupported()
 {
+    if (!m_output || m_output->isRemoved()) {
+        return;
+    }
+
     send_supported(m_output->handle()->capabilities() & Output::Capability::Dpms ? 1 : 0);
 }
 
 void DpmsInterface::sendMode()
 {
+    if (!m_output || m_output->isRemoved()) {
+        return;
+    }
+
     const auto mode = m_output->handle()->dpmsMode();
     org_kde_kwin_dpms_mode wlMode;
     switch (mode) {
