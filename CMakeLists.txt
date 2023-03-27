@@ -37,6 +37,7 @@ include(ECMInstallIcons)
 include(ECMOptionalAddSubdirectory)
 include(ECMConfiguredInstall)
 include(ECMQtDeclareLoggingCategory)
+include(ECMSetupQtPluginMacroNames)
 
 find_package(Qt${QT_MAJOR_VERSION} ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     Concurrent
@@ -417,6 +418,18 @@ add_definitions(
     -DMESA_EGL_NO_X11_HEADERS
     -DEGL_NO_X11
     -DEGL_NO_PLATFORM_SPECIFIC_TYPES
+)
+
+ecm_setup_qtplugin_macro_names(
+    JSON_ARG2
+        "KWIN_EFFECT_FACTORY"
+    JSON_ARG3
+        "KWIN_EFFECT_FACTORY_ENABLED"
+        "KWIN_EFFECT_FACTORY_SUPPORTED"
+    JSON_ARG4
+        "KWIN_EFFECT_FACTORY_SUPPORTED_ENABLED"
+    CONFIG_CODE_VARIABLE
+        PACKAGE_SETUP_KWINEFFECTS_AUTOMOC_VARIABLES
 )
 
 if (KF6DocTools_FOUND)

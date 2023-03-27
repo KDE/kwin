@@ -1,24 +1,11 @@
 ########### next target ###############
 include(ECMSetupVersion)
-include(ECMSetupQtPluginMacroNames)
 
 ecm_setup_version(${PROJECT_VERSION}
                   VARIABLE_PREFIX KWINEFFECTS
                   VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/kwineffects_version.h"
                   PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KWinEffectsConfigVersion.cmake"
                   SOVERSION 14
-)
-
-ecm_setup_qtplugin_macro_names(
-    JSON_ARG2
-        "KWIN_EFFECT_FACTORY"
-    JSON_ARG3
-        "KWIN_EFFECT_FACTORY_ENABLED"
-        "KWIN_EFFECT_FACTORY_SUPPORTED"
-    JSON_ARG4
-        "KWIN_EFFECT_FACTORY_SUPPORTED_ENABLED"
-    CONFIG_CODE_VARIABLE
-        PACKAGE_SETUP_AUTOMOC_VARIABLES
 )
 
 ###  effects lib  ###
