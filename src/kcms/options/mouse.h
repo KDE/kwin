@@ -11,7 +11,7 @@
 
 class KConfig;
 
-#include <KCMUtils/KCModule>
+#include <KCModule>
 #include <KLocalizedString>
 
 #include "ui_actions.h"

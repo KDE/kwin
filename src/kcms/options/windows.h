@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include <KCMUtils/KCModule>
+#include <KCModule>
 #include <QWidget>
 
 #include "ui_advanced.h"

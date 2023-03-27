@@ -11,7 +11,7 @@
 
 #pragma once
 
-#include <KCMUtils/KCModule>
+#include <KCModule>
 #include <QTabWidget>
 
 class KWinOptionsSettings;
