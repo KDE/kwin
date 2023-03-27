@@ -335,6 +335,9 @@ bool MouseClickEffect::tabletToolEvent(QTabletEvent *event)
         case QPointingDevice::PointerType::Cursor:
             tabletEvent.m_color = MouseClickConfig::color3();
             break;
+        case QPointingDevice::PointerType::AllPointerTypes:
+            Q_UNREACHABLE();
+            break;
         }
     }
     switch (event->type()) {
