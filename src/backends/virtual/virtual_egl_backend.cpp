@@ -65,8 +65,8 @@ bool VirtualEglLayer::endFrame(const QRegion &renderedRegion, const QRegion &dam
 
 quint32 VirtualEglLayer::format() const
 {
-    // the texture format is hardcoded in VirtualEglLayer::beginFrame
-    return DRM_FORMAT_RGB888;
+    // While we are using GL_RGB8, it seems to be using 32bit pixels.
+    return DRM_FORMAT_XBGR8888;
 }
 
 VirtualEglBackend::VirtualEglBackend(VirtualBackend *b)
