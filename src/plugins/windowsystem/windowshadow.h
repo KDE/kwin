@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <KWindowSystem/private/kwindowshadow_p.h>
+#include <private/kwindowshadow_p.h>
 
 namespace KWin
 {

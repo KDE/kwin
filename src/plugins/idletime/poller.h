@@ -8,9 +8,9 @@
 */
 #pragma once
 
-#include <KIdleTime/private/abstractsystempoller.h>
 #include <QHash>
 #include <QTimer>
+#include <private/abstractsystempoller.h>
 
 namespace KWin
 {

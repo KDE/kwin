@@ -5,7 +5,7 @@
 */
 #include "windowsystem.h"
 
-#include <KWindowSystem/KWindowSystem>
+#include <KWindowSystem>
 
 #include <QGuiApplication>
 #include <QWindow>

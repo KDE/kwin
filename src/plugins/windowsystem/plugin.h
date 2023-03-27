@@ -5,7 +5,7 @@
 */
 #pragma once
 
-#include <KWindowSystem/private/kwindowsystemplugininterface_p.h>
+#include <private/kwindowsystemplugininterface_p.h>
 
 class KWindowSystemKWinPlugin : public KWindowSystemPluginInterface
 {

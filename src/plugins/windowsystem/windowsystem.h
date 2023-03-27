@@ -5,7 +5,7 @@
 */
 #pragma once
 
-#include <KWindowSystem/private/kwindowsystem_p.h>
+#include <private/kwindowsystem_p.h>
 
 #include <QObject>
 

@@ -4,9 +4,9 @@
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
 #pragma once
-#include <KWindowSystem/private/kwindoweffects_p.h>
 #include <QObject>
 #include <kwindowsystem_version.h>
+#include <private/kwindoweffects_p.h>
 
 namespace KWin
 {

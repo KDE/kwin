@@ -8,7 +8,7 @@
 */
 #pragma once
 
-#include <KGlobalAccel/private/kglobalaccel_interface.h>
+#include <private/kglobalaccel_interface.h>
 
 #include <QObject>
 
