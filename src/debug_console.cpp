@@ -16,7 +16,6 @@
 #include "libkwineffects/kwinglutils.h"
 #include "main.h"
 #include "platformsupport/scenes/opengl/openglbackend.h"
-#include "unmanaged.h"
 #include "utils/filedescriptor.h"
 #include "utils/subsurfacemonitor.h"
 #include "wayland/abstract_data_source.h"
@@ -926,7 +925,11 @@ DebugConsoleModel::DebugConsoleModel(QObject *parent)
 void DebugConsoleModel::handleWindowAdded(Window *window)
 {
     if (auto x11 = qobject_cast<X11Window *>(window)) {
-        add(s_x11WindowId - 1, m_x11Windows, x11);
+        if (x11->isUnmanaged()) {
+            add(s_x11UnmanagedId - 1, m_unmanageds, x11);
+        } else {
+            add(s_x11WindowId - 1, m_x11Windows, x11);
+        }
         return;
     }
 
@@ -939,17 +942,16 @@ void DebugConsoleModel::handleWindowAdded(Window *window)
         add(s_workspaceInternalId - 1, m_internalWindows, internal);
         return;
     }
-
-    if (auto unmanaged = qobject_cast<Unmanaged *>(window)) {
-        add(s_x11UnmanagedId - 1, m_unmanageds, unmanaged);
-        return;
-    }
 }
 
 void DebugConsoleModel::handleWindowRemoved(Window *window)
 {
     if (auto x11 = qobject_cast<X11Window *>(window)) {
-        remove(s_x11WindowId - 1, m_x11Windows, x11);
+        if (x11->isUnmanaged()) {
+            remove(s_x11UnmanagedId - 1, m_unmanageds, x11);
+        } else {
+            remove(s_x11WindowId - 1, m_x11Windows, x11);
+        }
         return;
     }
 
@@ -960,11 +962,6 @@ void DebugConsoleModel::handleWindowRemoved(Window *window)
 
     if (auto internal = qobject_cast<InternalWindow *>(window)) {
         remove(s_workspaceInternalId - 1, m_internalWindows, internal);
-        return;
-    }
-
-    if (auto unmanaged = qobject_cast<Unmanaged *>(window)) {
-        remove(s_x11UnmanagedId - 1, m_unmanageds, unmanaged);
         return;
     }
 }
@@ -1230,7 +1227,7 @@ QVariant DebugConsoleModel::data(const QModelIndex &index, int role) const
             return propertyData(w, index, role);
         } else if (X11Window *w = x11Window(index)) {
             return propertyData(w, index, role);
-        } else if (Unmanaged *u = unmanaged(index)) {
+        } else if (X11Window *u = unmanaged(index)) {
             return propertyData(u, index, role);
         }
     } else {
@@ -1293,7 +1290,7 @@ X11Window *DebugConsoleModel::x11Window(const QModelIndex &index) const
     return windowForIndex(index, m_x11Windows, s_x11WindowId);
 }
 
-Unmanaged *DebugConsoleModel::unmanaged(const QModelIndex &index) const
+X11Window *DebugConsoleModel::unmanaged(const QModelIndex &index) const
 {
     return windowForIndex(index, m_unmanageds, s_x11UnmanagedId);
 }

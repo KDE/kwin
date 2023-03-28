@@ -28,7 +28,6 @@
 #include "pointer_input.h"
 #include "scene/itemrenderer.h"
 #include "scripting/scripting.h"
-#include "unmanaged.h"
 #include "x11window.h"
 #if KWIN_BUILD_TABBOX
 #include "tabbox/tabbox.h"
@@ -996,7 +995,7 @@ EffectWindow *EffectsHandlerImpl::findWindow(WId id) const
     if (X11Window *w = Workspace::self()->findClient(Predicate::WindowMatch, id)) {
         return w->effectWindow();
     }
-    if (Unmanaged *w = Workspace::self()->findUnmanaged(id)) {
+    if (X11Window *w = Workspace::self()->findUnmanaged(id)) {
         return w->effectWindow();
     }
     return nullptr;
@@ -1855,7 +1854,7 @@ EffectWindowImpl::EffectWindowImpl(Window *window)
     managed = window->isClient();
 
     m_waylandWindow = qobject_cast<KWin::WaylandWindow *>(window) != nullptr;
-    m_x11Window = qobject_cast<KWin::X11Window *>(window) != nullptr || qobject_cast<KWin::Unmanaged *>(window) != nullptr;
+    m_x11Window = qobject_cast<KWin::X11Window *>(window) != nullptr;
 }
 
 EffectWindowImpl::~EffectWindowImpl()

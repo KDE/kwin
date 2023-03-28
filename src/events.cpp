@@ -27,7 +27,6 @@
 #include "group.h"
 #include "rules.h"
 #include "screenedge.h"
-#include "unmanaged.h"
 #include "useractions.h"
 #include "utils/xcbutils.h"
 #include "wayland/surface_interface.h"
@@ -168,7 +167,7 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
             if (window->windowEvent(e)) {
                 return true;
             }
-        } else if (Unmanaged *window = findUnmanaged(eventWindow)) {
+        } else if (X11Window *window = findUnmanaged(eventWindow)) {
             if (window->windowEvent(e)) {
                 return true;
             }
@@ -223,7 +222,7 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
     case XCB_MAP_NOTIFY: {
         const auto *event = reinterpret_cast<xcb_map_notify_event_t *>(e);
         if (event->override_redirect) {
-            Unmanaged *window = findUnmanaged(event->window);
+            X11Window *window = findUnmanaged(event->window);
             if (window == nullptr) {
                 window = createUnmanaged(event->window);
             }
@@ -232,7 +231,7 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
                 // since release is scheduled after map notify, this old Unmanaged will get released
                 // before KWIN has chance to remanage it again. so release it right now.
                 if (window->hasScheduledRelease()) {
-                    window->release();
+                    window->releaseWindow();
                     window = createUnmanaged(event->window);
                 }
                 if (window) {
@@ -317,6 +316,73 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
  */
 bool X11Window::windowEvent(xcb_generic_event_t *e)
 {
+    if (isUnmanaged()) {
+        NET::Properties dirtyProperties;
+        NET::Properties2 dirtyProperties2;
+        info->event(e, &dirtyProperties, &dirtyProperties2); // pass through the NET stuff
+        if (dirtyProperties2 & NET::WM2Opacity) {
+            if (Compositor::compositing()) {
+                setOpacity(info->opacityF());
+            }
+        }
+        if (dirtyProperties2 & NET::WM2OpaqueRegion) {
+            getWmOpaqueRegion();
+        }
+        if (dirtyProperties2.testFlag(NET::WM2WindowRole)) {
+            Q_EMIT windowRoleChanged();
+        }
+        if (dirtyProperties2.testFlag(NET::WM2WindowClass)) {
+            getResourceClass();
+        }
+        const uint8_t eventType = e->response_type & ~0x80;
+        switch (eventType) {
+        case XCB_DESTROY_NOTIFY:
+            destroyWindow();
+            break;
+        case XCB_UNMAP_NOTIFY: {
+            workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event
+
+            // unmap notify might have been emitted due to a destroy notify
+            // but unmap notify gets emitted before the destroy notify, nevertheless at this
+            // point the window is already destroyed. This means any XCB request with the window
+            // will cause an error.
+            // To not run into these errors we try to wait for the destroy notify. For this we
+            // generate a round trip to the X server and wait a very short time span before
+            // handling the release.
+            kwinApp()->updateXTime();
+            // using 1 msec to not just move it at the end of the event loop but add an very short
+            // timespan to cover cases like unmap() followed by destroy(). The only other way to
+            // ensure that the window is not destroyed when we do the release handling is to grab
+            // the XServer which we do not want to do for an Unmanaged. The timespan of 1 msec is
+            // short enough to not cause problems in the close window animations.
+            // It's of course still possible that we miss the destroy in which case non-fatal
+            // X errors are reported to the event loop and logged by Qt.
+            m_releaseTimer.start(1);
+            break;
+        }
+        case XCB_CONFIGURE_NOTIFY:
+            configureNotifyEvent(reinterpret_cast<xcb_configure_notify_event_t *>(e));
+            break;
+        case XCB_PROPERTY_NOTIFY:
+            propertyNotifyEvent(reinterpret_cast<xcb_property_notify_event_t *>(e));
+            break;
+        case XCB_CLIENT_MESSAGE:
+            clientMessageEvent(reinterpret_cast<xcb_client_message_event_t *>(e));
+            break;
+        default: {
+            if (eventType == Xcb::Extensions::self()->shapeNotifyEvent()) {
+                detectShape(window());
+                Q_EMIT geometryShapeChanged(frameGeometry());
+            }
+            if (eventType == Xcb::Extensions::self()->damageNotifyEvent()) {
+                damageNotifyEvent();
+            }
+            break;
+        }
+        }
+        return false; // don't eat events, even our own unmanaged widgets are tracked
+    }
+
     if (findEventWindow(e) == window()) { // avoid doing stuff on frame or wrapper
         NET::Properties dirtyProperties;
         NET::Properties2 dirtyProperties2;
@@ -593,6 +659,27 @@ void X11Window::clientMessageEvent(xcb_client_message_event_t *e)
             setMinimized(true);
         }
         return;
+    }
+}
+
+void X11Window::configureNotifyEvent(xcb_configure_notify_event_t *e)
+{
+    if (effects) {
+        static_cast<EffectsHandlerImpl *>(effects)->checkInputWindowStacking(); // keep them on top
+    }
+    QRectF newgeom(Xcb::fromXNative(e->x), Xcb::fromXNative(e->y), Xcb::fromXNative(e->width), Xcb::fromXNative(e->height));
+    if (newgeom != m_frameGeometry) {
+        Q_EMIT frameGeometryAboutToChange();
+
+        QRectF old = m_frameGeometry;
+        m_clientGeometry = newgeom;
+        m_frameGeometry = newgeom;
+        m_bufferGeometry = newgeom;
+        checkOutput();
+        Q_EMIT bufferGeometryChanged(old);
+        Q_EMIT clientGeometryChanged(old);
+        Q_EMIT frameGeometryChanged(old);
+        Q_EMIT geometryShapeChanged(old);
     }
 }
 
@@ -1208,99 +1295,6 @@ void X11Window::keyPressEvent(uint key_code, xcb_timestamp_t time)
 {
     updateUserTime(time);
     Window::keyPressEvent(key_code);
-}
-
-// ****************************************
-// Unmanaged
-// ****************************************
-
-bool Unmanaged::windowEvent(xcb_generic_event_t *e)
-{
-    NET::Properties dirtyProperties;
-    NET::Properties2 dirtyProperties2;
-    info->event(e, &dirtyProperties, &dirtyProperties2); // pass through the NET stuff
-    if (dirtyProperties2 & NET::WM2Opacity) {
-        if (Compositor::compositing()) {
-            setOpacity(info->opacityF());
-        }
-    }
-    if (dirtyProperties2 & NET::WM2OpaqueRegion) {
-        getWmOpaqueRegion();
-    }
-    if (dirtyProperties2.testFlag(NET::WM2WindowRole)) {
-        Q_EMIT windowRoleChanged();
-    }
-    if (dirtyProperties2.testFlag(NET::WM2WindowClass)) {
-        getResourceClass();
-    }
-    const uint8_t eventType = e->response_type & ~0x80;
-    switch (eventType) {
-    case XCB_DESTROY_NOTIFY:
-        release(ReleaseReason::Destroyed);
-        break;
-    case XCB_UNMAP_NOTIFY: {
-        workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event
-
-        // unmap notify might have been emitted due to a destroy notify
-        // but unmap notify gets emitted before the destroy notify, nevertheless at this
-        // point the window is already destroyed. This means any XCB request with the window
-        // will cause an error.
-        // To not run into these errors we try to wait for the destroy notify. For this we
-        // generate a round trip to the X server and wait a very short time span before
-        // handling the release.
-        kwinApp()->updateXTime();
-        // using 1 msec to not just move it at the end of the event loop but add an very short
-        // timespan to cover cases like unmap() followed by destroy(). The only other way to
-        // ensure that the window is not destroyed when we do the release handling is to grab
-        // the XServer which we do not want to do for an Unmanaged. The timespan of 1 msec is
-        // short enough to not cause problems in the close window animations.
-        // It's of course still possible that we miss the destroy in which case non-fatal
-        // X errors are reported to the event loop and logged by Qt.
-        m_releaseTimer.start(1);
-        break;
-    }
-    case XCB_CONFIGURE_NOTIFY:
-        configureNotifyEvent(reinterpret_cast<xcb_configure_notify_event_t *>(e));
-        break;
-    case XCB_PROPERTY_NOTIFY:
-        propertyNotifyEvent(reinterpret_cast<xcb_property_notify_event_t *>(e));
-        break;
-    case XCB_CLIENT_MESSAGE:
-        clientMessageEvent(reinterpret_cast<xcb_client_message_event_t *>(e));
-        break;
-    default: {
-        if (eventType == Xcb::Extensions::self()->shapeNotifyEvent()) {
-            detectShape(window());
-            Q_EMIT geometryShapeChanged(frameGeometry());
-        }
-        if (eventType == Xcb::Extensions::self()->damageNotifyEvent()) {
-            damageNotifyEvent();
-        }
-        break;
-    }
-    }
-    return false; // don't eat events, even our own unmanaged widgets are tracked
-}
-
-void Unmanaged::configureNotifyEvent(xcb_configure_notify_event_t *e)
-{
-    if (effects) {
-        static_cast<EffectsHandlerImpl *>(effects)->checkInputWindowStacking(); // keep them on top
-    }
-    QRectF newgeom(Xcb::fromXNative(e->x), Xcb::fromXNative(e->y), Xcb::fromXNative(e->width), Xcb::fromXNative(e->height));
-    if (newgeom != m_frameGeometry) {
-        Q_EMIT frameGeometryAboutToChange();
-
-        QRectF old = m_frameGeometry;
-        m_clientGeometry = newgeom;
-        m_frameGeometry = newgeom;
-        m_bufferGeometry = newgeom;
-        checkOutput();
-        Q_EMIT bufferGeometryChanged(old);
-        Q_EMIT clientGeometryChanged(old);
-        Q_EMIT frameGeometryChanged(old);
-        Q_EMIT geometryShapeChanged(old);
-    }
 }
 
 // ****************************************

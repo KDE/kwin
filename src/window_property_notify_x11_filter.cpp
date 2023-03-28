@@ -8,7 +8,6 @@
 */
 #include "window_property_notify_x11_filter.h"
 #include "effects.h"
-#include "unmanaged.h"
 #include "workspace.h"
 #include "x11window.h"
 

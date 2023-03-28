@@ -120,8 +120,12 @@ public:
     bool windowEvent(xcb_generic_event_t *e);
     NET::WindowType windowType(bool direct = false) const override;
 
+    bool track(xcb_window_t w);
     bool manage(xcb_window_t w, bool isMapped);
+
     void releaseWindow(bool on_shutdown = false);
+    bool hasScheduledRelease() const;
+
     void destroyWindow() override;
 
     QStringList activities() const override;
@@ -248,6 +252,8 @@ public:
     // sets whether the client should be faked as being on all activities (and be shown during session save)
     void setSessionActivityOverride(bool needed);
     bool isClient() const override;
+    bool isOutline() const override;
+    bool isUnmanaged() const override;
 
     void cancelFocusOutTimer();
 
@@ -297,6 +303,7 @@ private:
     bool mapRequestEvent(xcb_map_request_event_t *e);
     void unmapNotifyEvent(xcb_unmap_notify_event_t *e);
     void destroyNotifyEvent(xcb_destroy_notify_event_t *e);
+    void configureNotifyEvent(xcb_configure_notify_event_t *e);
     void configureRequestEvent(xcb_configure_request_event_t *e);
     void propertyNotifyEvent(xcb_property_notify_event_t *e) override;
     void clientMessageEvent(xcb_client_message_event_t *e) override;
@@ -407,6 +414,10 @@ private:
     void createDecoration(const QRectF &oldgeom);
     void destroyDecoration();
 
+    QWindow *findInternalWindow() const;
+    void checkOutput();
+    void associate();
+
     Xcb::Window m_client;
     Xcb::Window m_wrapper;
     Xcb::Window m_frame;
@@ -477,6 +488,7 @@ private:
     QPointF input_offset;
 
     QTimer *m_focusOutTimer;
+    QTimer m_releaseTimer;
 
     QMetaObject::Connection m_edgeRemoveConnection;
     QMetaObject::Connection m_edgeGeometryTrackingConnection;
@@ -487,6 +499,9 @@ private:
     QRectF m_lastFrameGeometry;
     QRectF m_lastClientGeometry;
     std::unique_ptr<X11DecorationRenderer> m_decorationRenderer;
+
+    bool m_unmanaged = false;
+    bool m_outline = false;
 };
 
 inline xcb_window_t X11Window::wrapperId() const

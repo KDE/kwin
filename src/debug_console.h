@@ -37,7 +37,6 @@ namespace KWin
 class Window;
 class X11Window;
 class InternalWindow;
-class Unmanaged;
 class DebugConsoleFilter;
 class WaylandWindow;
 
@@ -75,13 +74,13 @@ private:
     WaylandWindow *waylandWindow(const QModelIndex &index) const;
     InternalWindow *internalWindow(const QModelIndex &index) const;
     X11Window *x11Window(const QModelIndex &index) const;
-    Unmanaged *unmanaged(const QModelIndex &index) const;
+    X11Window *unmanaged(const QModelIndex &index) const;
     int topLevelRowCount() const;
 
     QVector<WaylandWindow *> m_waylandWindows;
     QVector<InternalWindow *> m_internalWindows;
     QVector<X11Window *> m_x11Windows;
-    QVector<Unmanaged *> m_unmanageds;
+    QVector<X11Window *> m_unmanageds;
 };
 
 class DebugConsoleDelegate : public QStyledItemDelegate

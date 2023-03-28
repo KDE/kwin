@@ -52,7 +52,6 @@
 #include "placeholderoutput.h"
 #include "placementtracker.h"
 #include "tiles/tilemanager.h"
-#include "unmanaged.h"
 #include "useractions.h"
 #include "utils/xcbutils.h"
 #include "virtualdesktops.h"
@@ -440,12 +439,8 @@ void Workspace::cleanupX11()
     for (Window *window : stack) {
         if (auto x11 = qobject_cast<X11Window *>(window)) {
             x11->releaseWindow(true);
-        } else if (auto unmanaged = qobject_cast<Unmanaged *>(window)) {
-            unmanaged->release(ReleaseReason::KWinShutsDown);
-        } else {
-            continue;
+            removeFromStack(window);
         }
-        removeFromStack(window);
     }
 
     manual_overlays.clear();
@@ -677,16 +672,16 @@ X11Window *Workspace::createX11Window(xcb_window_t windowId, bool is_mapped)
     return window;
 }
 
-Unmanaged *Workspace::createUnmanaged(xcb_window_t windowId)
+X11Window *Workspace::createUnmanaged(xcb_window_t windowId)
 {
     if (X11Compositor *compositor = X11Compositor::self()) {
         if (compositor->checkForOverlayWindow(windowId)) {
             return nullptr;
         }
     }
-    Unmanaged *window = new Unmanaged();
+    X11Window *window = new X11Window();
     if (!window->track(windowId)) {
-        Unmanaged::deleteUnmanaged(window);
+        X11Window::deleteClient(window);
         return nullptr;
     }
     addUnmanaged(window);
@@ -727,7 +722,7 @@ void Workspace::addX11Window(X11Window *window)
     updateTabbox();
 }
 
-void Workspace::addUnmanaged(Unmanaged *window)
+void Workspace::addUnmanaged(X11Window *window)
 {
     m_windows.append(window);
     addToStack(window);
@@ -748,7 +743,7 @@ void Workspace::removeX11Window(X11Window *window)
     removeWindow(window);
 }
 
-void Workspace::removeUnmanaged(Unmanaged *window)
+void Workspace::removeUnmanaged(X11Window *window)
 {
     Q_ASSERT(m_windows.contains(window));
     m_windows.removeOne(window);
@@ -1894,7 +1889,7 @@ void Workspace::forEachClient(std::function<void(X11Window *)> func)
 {
     for (Window *window : std::as_const(m_windows)) {
         X11Window *x11Window = qobject_cast<X11Window *>(window);
-        if (x11Window) {
+        if (x11Window && !x11Window->isUnmanaged()) {
             func(x11Window);
         }
     }
@@ -1904,27 +1899,27 @@ X11Window *Workspace::findClient(std::function<bool(const X11Window *)> func) co
 {
     for (Window *window : std::as_const(m_windows)) {
         X11Window *x11Window = qobject_cast<X11Window *>(window);
-        if (x11Window && func(x11Window)) {
+        if (x11Window && !x11Window->isUnmanaged() && func(x11Window)) {
             return x11Window;
         }
     }
     return nullptr;
 }
 
-Unmanaged *Workspace::findUnmanaged(std::function<bool(const Unmanaged *)> func) const
+X11Window *Workspace::findUnmanaged(std::function<bool(const X11Window *)> func) const
 {
     for (Window *window : m_windows) {
-        Unmanaged *unmanaged = qobject_cast<Unmanaged *>(window);
-        if (unmanaged && func(unmanaged)) {
-            return unmanaged;
+        X11Window *x11Window = qobject_cast<X11Window *>(window);
+        if (x11Window && x11Window->isUnmanaged() && func(x11Window)) {
+            return x11Window;
         }
     }
     return nullptr;
 }
 
-Unmanaged *Workspace::findUnmanaged(xcb_window_t w) const
+X11Window *Workspace::findUnmanaged(xcb_window_t w) const
 {
-    return findUnmanaged([w](const Unmanaged *u) {
+    return findUnmanaged([w](const X11Window *u) {
         return u->window() == w;
     });
 }

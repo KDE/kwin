@@ -32,7 +32,6 @@
 #include "scene/workspacescene_opengl.h"
 #include "scene/workspacescene_qpainter.h"
 #include "shadow.h"
-#include "unmanaged.h"
 #include "useractions.h"
 #include "utils/common.h"
 #include "utils/xcbutils.h"

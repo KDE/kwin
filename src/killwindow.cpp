@@ -11,7 +11,6 @@
 #include "killwindow.h"
 #include "main.h"
 #include "osd.h"
-#include "unmanaged.h"
 #include "window.h"
 
 #include <KLocalizedString>

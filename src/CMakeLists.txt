@@ -163,7 +163,6 @@ target_sources(kwin PRIVATE
     tiles/tile.cpp
     tiles/tilemanager.cpp
     touch_input.cpp
-    unmanaged.cpp
     useractions.cpp
     virtualdesktops.cpp
     virtualdesktopsdbustypes.cpp

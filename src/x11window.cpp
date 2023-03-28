@@ -30,6 +30,7 @@
 #include "screenedge.h"
 #include "shadow.h"
 #include "virtualdesktops.h"
+#include "wayland/surface_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include <KDecoration2/DecoratedClient>
@@ -142,6 +143,26 @@ const NET::WindowTypes SUPPORTED_MANAGED_WINDOW_TYPES_MASK = NET::NormalMask
     | NET::OnScreenDisplayMask
     | NET::CriticalNotificationMask
     | NET::AppletPopupMask;
+
+// window types that are supported as unmanaged (mainly for compositing)
+const NET::WindowTypes SUPPORTED_UNMANAGED_WINDOW_TYPES_MASK = NET::NormalMask
+    | NET::DesktopMask
+    | NET::DockMask
+    | NET::ToolbarMask
+    | NET::MenuMask
+    | NET::DialogMask
+    /*| NET::OverrideMask*/
+    | NET::TopMenuMask
+    | NET::UtilityMask
+    | NET::SplashMask
+    | NET::DropdownMenuMask
+    | NET::PopupMenuMask
+    | NET::TooltipMask
+    | NET::NotificationMask
+    | NET::ComboBoxMask
+    | NET::DNDIconMask
+    | NET::OnScreenDisplayMask
+    | NET::CriticalNotificationMask;
 
 X11DecorationRenderer::X11DecorationRenderer(Decoration::DecoratedClientImpl *client)
     : DecorationRenderer(client)
@@ -319,6 +340,11 @@ X11Window::X11Window()
         });
     }
 
+    m_releaseTimer.setSingleShot(true);
+    connect(&m_releaseTimer, &QTimer::timeout, this, [this]() {
+        releaseWindow();
+    });
+
     // SELI TODO: Initialize xsizehints??
 }
 
@@ -335,9 +361,6 @@ X11Window::~X11Window()
         xcb_sync_destroy_alarm(kwinApp()->x11Connection(), m_syncRequest.alarm);
     }
     Q_ASSERT(!isInteractiveMoveResize());
-    Q_ASSERT(m_client == XCB_WINDOW_NONE);
-    Q_ASSERT(m_wrapper == XCB_WINDOW_NONE);
-    Q_ASSERT(m_frame == XCB_WINDOW_NONE);
     Q_ASSERT(!check_active_modal);
 }
 
@@ -352,6 +375,11 @@ void X11Window::deleteClient(X11Window *c)
     delete c;
 }
 
+bool X11Window::hasScheduledRelease() const
+{
+    return m_releaseTimer.isActive();
+}
+
 /**
  * Releases the window. The client has done its job and the window is still existing.
  */
@@ -361,61 +389,75 @@ void X11Window::releaseWindow(bool on_shutdown)
     if (SurfaceItemX11 *item = qobject_cast<SurfaceItemX11 *>(surfaceItem())) {
         item->destroyDamage();
     }
+
     markAsDeleted();
-    cleanTabBox();
-    if (isInteractiveMoveResize()) {
-        Q_EMIT interactiveMoveResizeFinished();
-    }
     Q_EMIT closed();
-    workspace()->rulebook()->discardUsed(this, true); // Remove ForceTemporarily rules
-    StackingUpdatesBlocker blocker(workspace());
-    if (isInteractiveMoveResize()) {
-        leaveInteractiveMoveResize();
+
+    if (isUnmanaged()) {
+        m_releaseTimer.stop();
+        if (!findInternalWindow()) { // don't affect our own windows
+            if (Xcb::Extensions::self()->isShapeAvailable()) {
+                xcb_shape_select_input(kwinApp()->x11Connection(), window(), false);
+            }
+            Xcb::selectInput(window(), XCB_EVENT_MASK_NO_EVENT);
+        }
+        workspace()->removeUnmanaged(this);
+    } else {
+        cleanTabBox();
+        if (isInteractiveMoveResize()) {
+            Q_EMIT interactiveMoveResizeFinished();
+        }
+        workspace()->rulebook()->discardUsed(this, true); // Remove ForceTemporarily rules
+        StackingUpdatesBlocker blocker(workspace());
+        if (isInteractiveMoveResize()) {
+            leaveInteractiveMoveResize();
+        }
+        finishWindowRules();
+        blockGeometryUpdates();
+        // Grab X during the release to make removing of properties, setting to withdrawn state
+        // and repareting to root an atomic operation (https://lists.kde.org/?l=kde-devel&m=116448102901184&w=2)
+        grabXServer();
+        exportMappingState(XCB_ICCCM_WM_STATE_WITHDRAWN);
+        setModal(false); // Otherwise its mainwindow wouldn't get focus
+        hidden = true; // So that it's not considered visible anymore (can't use hideClient(), it would set flags)
+        if (!on_shutdown) {
+            workspace()->windowHidden(this);
+        }
+        m_frame.unmap(); // Destroying decoration would cause ugly visual effect
+        cleanGrouping();
+        workspace()->removeX11Window(this);
+        if (!on_shutdown) {
+            // Only when the window is being unmapped, not when closing down KWin (NETWM sections 5.5,5.7)
+            info->setDesktop(0);
+            info->setState(NET::States(), info->state()); // Reset all state flags
+        }
+        if (WinInfo *cinfo = dynamic_cast<WinInfo *>(info)) {
+            cinfo->disable();
+        }
+        xcb_connection_t *c = kwinApp()->x11Connection();
+        m_client.deleteProperty(atoms->kde_net_wm_user_creation_time);
+        m_client.deleteProperty(atoms->net_frame_extents);
+        m_client.deleteProperty(atoms->kde_net_wm_frame_strut);
+        const QPointF grav = calculateGravitation(true);
+        m_client.reparent(kwinApp()->x11RootWindow(), grav.x(), grav.y());
+        xcb_change_save_set(c, XCB_SET_MODE_DELETE, m_client);
+        m_client.selectInput(XCB_EVENT_MASK_NO_EVENT);
+        if (on_shutdown) {
+            // Map the window, so it can be found after another WM is started
+            m_client.map();
+            // TODO: Preserve minimized, shaded etc. state?
+        } else { // Make sure it's not mapped if the app unmapped it (#65279). The app
+            // may do map+unmap before we initially map the window by calling rawShow() from manage().
+            m_client.unmap();
+        }
+        m_client.reset();
+        m_wrapper.reset();
+        m_frame.reset();
+        unblockGeometryUpdates(); // Don't use GeometryUpdatesBlocker, it would now set the geometry
+        ungrabXServer();
     }
-    finishWindowRules();
-    blockGeometryUpdates();
-    // Grab X during the release to make removing of properties, setting to withdrawn state
-    // and repareting to root an atomic operation (https://lists.kde.org/?l=kde-devel&m=116448102901184&w=2)
-    grabXServer();
-    exportMappingState(XCB_ICCCM_WM_STATE_WITHDRAWN);
-    setModal(false); // Otherwise its mainwindow wouldn't get focus
-    hidden = true; // So that it's not considered visible anymore (can't use hideClient(), it would set flags)
-    if (!on_shutdown) {
-        workspace()->windowHidden(this);
-    }
-    m_frame.unmap(); // Destroying decoration would cause ugly visual effect
-    cleanGrouping();
-    workspace()->removeX11Window(this);
-    if (!on_shutdown) {
-        // Only when the window is being unmapped, not when closing down KWin (NETWM sections 5.5,5.7)
-        info->setDesktop(0);
-        info->setState(NET::States(), info->state()); // Reset all state flags
-    }
-    if (WinInfo *cinfo = dynamic_cast<WinInfo *>(info)) {
-        cinfo->disable();
-    }
-    xcb_connection_t *c = kwinApp()->x11Connection();
-    m_client.deleteProperty(atoms->kde_net_wm_user_creation_time);
-    m_client.deleteProperty(atoms->net_frame_extents);
-    m_client.deleteProperty(atoms->kde_net_wm_frame_strut);
-    const QPointF grav = calculateGravitation(true);
-    m_client.reparent(kwinApp()->x11RootWindow(), grav.x(), grav.y());
-    xcb_change_save_set(c, XCB_SET_MODE_DELETE, m_client);
-    m_client.selectInput(XCB_EVENT_MASK_NO_EVENT);
-    if (on_shutdown) {
-        // Map the window, so it can be found after another WM is started
-        m_client.map();
-        // TODO: Preserve minimized, shaded etc. state?
-    } else { // Make sure it's not mapped if the app unmapped it (#65279). The app
-        // may do map+unmap before we initially map the window by calling rawShow() from manage().
-        m_client.unmap();
-    }
-    m_client.reset();
-    m_wrapper.reset();
-    m_frame.reset();
-    unblockGeometryUpdates(); // Don't use GeometryUpdatesBlocker, it would now set the geometry
+
     unref();
-    ungrabXServer();
 }
 
 /**
@@ -428,32 +470,111 @@ void X11Window::destroyWindow()
     if (SurfaceItemX11 *item = qobject_cast<SurfaceItemX11 *>(surfaceItem())) {
         item->forgetDamage();
     }
+
     markAsDeleted();
-    cleanTabBox();
-    if (isInteractiveMoveResize()) {
-        Q_EMIT interactiveMoveResizeFinished();
-    }
     Q_EMIT closed();
-    workspace()->rulebook()->discardUsed(this, true); // Remove ForceTemporarily rules
-    StackingUpdatesBlocker blocker(workspace());
-    if (isInteractiveMoveResize()) {
-        leaveInteractiveMoveResize();
+
+    if (isUnmanaged()) {
+        m_releaseTimer.stop();
+        workspace()->removeUnmanaged(this);
+    } else {
+        cleanTabBox();
+        if (isInteractiveMoveResize()) {
+            Q_EMIT interactiveMoveResizeFinished();
+        }
+        workspace()->rulebook()->discardUsed(this, true); // Remove ForceTemporarily rules
+        StackingUpdatesBlocker blocker(workspace());
+        if (isInteractiveMoveResize()) {
+            leaveInteractiveMoveResize();
+        }
+        finishWindowRules();
+        blockGeometryUpdates();
+        setModal(false);
+        hidden = true; // So that it's not considered visible anymore
+        workspace()->windowHidden(this);
+        cleanGrouping();
+        workspace()->removeX11Window(this);
+        if (WinInfo *cinfo = dynamic_cast<WinInfo *>(info)) {
+            cinfo->disable();
+        }
+        m_client.reset(); // invalidate
+        m_wrapper.reset();
+        m_frame.reset();
+        unblockGeometryUpdates(); // Don't use GeometryUpdatesBlocker, it would now set the geometry
     }
-    finishWindowRules();
-    blockGeometryUpdates();
-    setModal(false);
-    hidden = true; // So that it's not considered visible anymore
-    workspace()->windowHidden(this);
-    cleanGrouping();
-    workspace()->removeX11Window(this);
-    if (WinInfo *cinfo = dynamic_cast<WinInfo *>(info)) {
-        cinfo->disable();
-    }
-    m_client.reset(); // invalidate
-    m_wrapper.reset();
-    m_frame.reset();
-    unblockGeometryUpdates(); // Don't use GeometryUpdatesBlocker, it would now set the geometry
+
     unref();
+}
+
+bool X11Window::track(xcb_window_t w)
+{
+    XServerGrabber xserverGrabber;
+    Xcb::WindowAttributes attr(w);
+    Xcb::WindowGeometry geo(w);
+    if (attr.isNull() || attr->map_state != XCB_MAP_STATE_VIEWABLE) {
+        return false;
+    }
+    if (attr->_class == XCB_WINDOW_CLASS_INPUT_ONLY) {
+        return false;
+    }
+    if (geo.isNull()) {
+        return false;
+    }
+
+    m_unmanaged = true;
+
+    setWindowHandles(w);
+    m_frame.reset(w, false);
+    m_wrapper.reset(w, false);
+    m_client.reset(w, false);
+
+    Xcb::selectInput(w, attr->your_event_mask | XCB_EVENT_MASK_STRUCTURE_NOTIFY | XCB_EVENT_MASK_PROPERTY_CHANGE);
+    m_bufferGeometry = geo.rect();
+    m_frameGeometry = geo.rect();
+    m_clientGeometry = geo.rect();
+    checkOutput();
+    m_visual = attr->visual;
+    bit_depth = geo->depth;
+    info = new NETWinInfo(kwinApp()->x11Connection(), w, kwinApp()->x11RootWindow(),
+                          NET::WMWindowType | NET::WMPid,
+                          NET::WM2Opacity | NET::WM2WindowRole | NET::WM2WindowClass | NET::WM2OpaqueRegion);
+    setOpacity(info->opacityF());
+    getResourceClass();
+    getWmClientLeader();
+    getWmClientMachine();
+    if (Xcb::Extensions::self()->isShapeAvailable()) {
+        xcb_shape_select_input(kwinApp()->x11Connection(), w, true);
+    }
+    detectShape(w);
+    getWmOpaqueRegion();
+    getSkipCloseAnimation();
+    setupCompositing();
+    if (QWindow *internalWindow = findInternalWindow()) {
+        m_outline = internalWindow->property("__kwin_outline").toBool();
+    }
+    if (effects) {
+        static_cast<EffectsHandlerImpl *>(effects)->checkInputWindowStacking();
+    }
+
+    switch (kwinApp()->operationMode()) {
+    case Application::OperationModeXwayland:
+        // The wayland surface is associated with the override-redirect window asynchronously.
+        if (surface()) {
+            associate();
+        } else {
+            connect(this, &Window::surfaceChanged, this, &X11Window::associate);
+        }
+        break;
+    case Application::OperationModeX11:
+        // We have no way knowing whether the override-redirect window can be painted. Mark it
+        // as ready for painting after synthetic 50ms delay.
+        QTimer::singleShot(50, this, &X11Window::setReadyForPainting);
+        break;
+    case Application::OperationModeWaylandOnly:
+        Q_UNREACHABLE();
+    }
+
+    return true;
 }
 
 /**
@@ -1333,6 +1454,9 @@ bool X11Window::userNoBorder() const
 
 bool X11Window::isFullScreenable() const
 {
+    if (isUnmanaged()) {
+        return false;
+    }
     if (!rules()->checkFullScreen(true)) {
         return false;
     }
@@ -1355,6 +1479,10 @@ bool X11Window::noBorder() const
 
 bool X11Window::userCanSetNoBorder() const
 {
+    if (isUnmanaged()) {
+        return false;
+    }
+
     // Client-side decorations and server-side decorations are mutually exclusive.
     if (isClientSideDecorated()) {
         return false;
@@ -1657,7 +1785,7 @@ void X11Window::doSetShade(ShadeMode previousShadeMode)
 
 void X11Window::updateVisibility()
 {
-    if (isDeleted()) {
+    if (isUnmanaged() || isDeleted()) {
         return;
     }
     if (hidden) {
@@ -1872,7 +2000,7 @@ void X11Window::sendClientMessage(xcb_window_t w, xcb_atom_t a, xcb_atom_t proto
  */
 bool X11Window::isCloseable() const
 {
-    return rules()->checkCloseable(m_motif.close() && !isSpecialWindow());
+    return !isUnmanaged() && rules()->checkCloseable(m_motif.close() && !isSpecialWindow());
 }
 
 /**
@@ -1901,10 +2029,14 @@ void X11Window::closeWindow()
  */
 void X11Window::killWindow()
 {
-    qCDebug(KWIN_CORE) << "X11Window::killWindow():" << caption();
-    killProcess(false);
-    m_client.kill(); // Always kill this client at the server
-    destroyWindow();
+    qCDebug(KWIN_CORE) << "X11Window::killWindow():" << window();
+    if (isUnmanaged()) {
+        xcb_kill_client(kwinApp()->x11Connection(), window());
+    } else {
+        killProcess(false);
+        m_client.kill(); // Always kill this client at the server
+        destroyWindow();
+    }
 }
 
 /**
@@ -2580,11 +2712,25 @@ QString X11Window::preferredColorScheme() const
 
 bool X11Window::isClient() const
 {
-    return true;
+    return !m_unmanaged;
+}
+
+bool X11Window::isUnmanaged() const
+{
+    return m_unmanaged;
+}
+
+bool X11Window::isOutline() const
+{
+    return m_outline;
 }
 
 NET::WindowType X11Window::windowType(bool direct) const
 {
+    if (m_unmanaged) {
+        return info->windowType(SUPPORTED_UNMANAGED_WINDOW_TYPES_MASK);
+    }
+
     NET::WindowType wt = info->windowType(SUPPORTED_MANAGED_WINDOW_TYPES_MASK);
     if (direct) {
         return wt;
@@ -4030,6 +4176,9 @@ void X11Window::GTKShowWindowMenu(qreal x_root, qreal y_root)
 
 bool X11Window::isMovable() const
 {
+    if (isUnmanaged()) {
+        return false;
+    }
     if (!hasNETSupport() && !m_motif.move()) {
         return false;
     }
@@ -4047,6 +4196,9 @@ bool X11Window::isMovable() const
 
 bool X11Window::isMovableAcrossScreens() const
 {
+    if (isUnmanaged()) {
+        return false;
+    }
     if (!hasNETSupport() && !m_motif.move()) {
         return false;
     }
@@ -4061,6 +4213,9 @@ bool X11Window::isMovableAcrossScreens() const
 
 bool X11Window::isResizable() const
 {
+    if (isUnmanaged()) {
+        return false;
+    }
     if (!hasNETSupport() && !m_motif.resize()) {
         return false;
     }
@@ -4085,6 +4240,9 @@ bool X11Window::isResizable() const
 
 bool X11Window::isMaximizable() const
 {
+    if (isUnmanaged()) {
+        return false;
+    }
     if (!isResizable() || isToolbar()) { // SELI isToolbar() ?
         return false;
     }
@@ -4112,6 +4270,11 @@ void X11Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
     // setGeometry( geometry()) - geometry() will return the shaded frame geometry.
     // Such code is wrong and should be changed to handle the case when the window is shaded,
     // for example using X11Window::clientSize()
+
+    if (isUnmanaged()) {
+        qCWarning(KWIN_CORE) << "Cannot move or resize unmanaged window" << this;
+        return;
+    }
 
     QRectF frameGeometry = Xcb::fromXNative(Xcb::toXNative(rect));
 
@@ -4215,6 +4378,11 @@ void X11Window::updateServerGeometry()
 static bool changeMaximizeRecursion = false;
 void X11Window::maximize(MaximizeMode mode)
 {
+    if (isUnmanaged()) {
+        qCWarning(KWIN_CORE) << "Cannot change maximized state of unmanaged window" << this;
+        return;
+    }
+
     if (changeMaximizeRecursion) {
         return;
     }
@@ -4487,6 +4655,9 @@ void X11Window::maximize(MaximizeMode mode)
 
 bool X11Window::userCanSetFullScreen() const
 {
+    if (isUnmanaged()) {
+        return false;
+    }
     if (!isFullScreenable()) {
         return false;
     }
@@ -4773,7 +4944,7 @@ void X11Window::applyWindowRules()
 
 bool X11Window::supportsWindowRules() const
 {
-    return true;
+    return !isUnmanaged();
 }
 
 void X11Window::updateWindowRules(Rules::Types selection)
@@ -4812,6 +4983,33 @@ void X11Window::updateWindowPixmap()
     if (auto item = surfaceItem()) {
         item->updatePixmap();
     }
+}
+
+void X11Window::associate()
+{
+    if (surface()->isMapped()) {
+        setReadyForPainting();
+    } else {
+        // Queued connection because we want to mark the window ready for painting after
+        // the associated surface item has processed the new surface state.
+        connect(surface(), &KWaylandServer::SurfaceInterface::mapped, this, &X11Window::setReadyForPainting, Qt::QueuedConnection);
+    }
+}
+
+QWindow *X11Window::findInternalWindow() const
+{
+    const QWindowList windows = kwinApp()->topLevelWindows();
+    for (QWindow *w : windows) {
+        if (w->handle() && w->winId() == window()) {
+            return w;
+        }
+    }
+    return nullptr;
+}
+
+void X11Window::checkOutput()
+{
+    setOutput(workspace()->outputAt(frameGeometry().center()));
 }
 
 } // namespace

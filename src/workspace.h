@@ -58,7 +58,6 @@ class Group;
 class InternalWindow;
 class KillWindow;
 class ShortcutDialog;
-class Unmanaged;
 class UserActionsMenu;
 class VirtualDesktop;
 class X11Window;
@@ -135,14 +134,14 @@ public:
      */
     X11Window *findClient(Predicate predicate, xcb_window_t w) const;
     void forEachClient(std::function<void(X11Window *)> func);
-    Unmanaged *findUnmanaged(std::function<bool(const Unmanaged *)> func) const;
+    X11Window *findUnmanaged(std::function<bool(const X11Window *)> func) const;
     /**
      * @brief Finds the Unmanaged with the given window id.
      *
      * @param w The window id to search for
      * @return KWin::Unmanaged* Found Unmanaged or @c null if there is no Unmanaged with given Id.
      */
-    Unmanaged *findUnmanaged(xcb_window_t w) const;
+    X11Window *findUnmanaged(xcb_window_t w) const;
 
     Window *findWindow(const QUuid &internalId) const;
     Window *findWindow(std::function<bool(const Window *)> func) const;
@@ -353,7 +352,7 @@ public:
     Group *findClientLeaderGroup(const X11Window *c) const;
     int unconstainedStackingOrderIndex(const X11Window *c) const;
 
-    void removeUnmanaged(Unmanaged *); // Only called from Unmanaged::release()
+    void removeUnmanaged(X11Window *);
     void removeDeleted(Window *);
     void addDeleted(Window *);
 
@@ -592,8 +591,8 @@ private:
     X11Window *createX11Window(xcb_window_t windowId, bool is_mapped);
     void addX11Window(X11Window *c);
     void setupWindowConnections(Window *window);
-    Unmanaged *createUnmanaged(xcb_window_t windowId);
-    void addUnmanaged(Unmanaged *c);
+    X11Window *createUnmanaged(xcb_window_t windowId);
+    void addUnmanaged(X11Window *c);
 
     void addWaylandWindow(Window *window);
     void removeWaylandWindow(Window *window);

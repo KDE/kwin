@@ -91,7 +91,7 @@ void SessionManager::storeSession(const QString &sessionName, SMSavePhase phase)
     const QList<Window *> windows = workspace()->windows();
     for (auto it = windows.begin(); it != windows.end(); ++it) {
         X11Window *c = qobject_cast<X11Window *>(*it);
-        if (!c) {
+        if (!c || c->isUnmanaged()) {
             continue;
         }
         if (c->windowType() > NET::Splash) {
@@ -180,7 +180,7 @@ void SessionManager::storeSubSession(const QString &name, QSet<QByteArray> sessi
 
     for (auto it = windows.begin(); it != windows.end(); ++it) {
         X11Window *c = qobject_cast<X11Window *>(*it);
-        if (!c) {
+        if (!c || c->isUnmanaged()) {
             continue;
         }
         if (c->windowType() > NET::Splash) {

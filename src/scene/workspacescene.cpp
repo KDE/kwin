@@ -66,7 +66,6 @@
 #include "scene/surfaceitem.h"
 #include "scene/windowitem.h"
 #include "shadow.h"
-#include "unmanaged.h"
 #include "wayland/seat_interface.h"
 #include "wayland/surface_interface.h"
 #include "wayland_server.h"

@@ -73,7 +73,6 @@
 #include "rules.h"
 #include "screenedge.h"
 #include "tabbox/tabbox.h"
-#include "unmanaged.h"
 #include "utils/common.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
@@ -162,7 +161,7 @@ void Workspace::propagateWindows(bool propagate_new_windows)
 
     for (int i = stacking_order.size() - 1; i >= 0; --i) {
         X11Window *window = qobject_cast<X11Window *>(stacking_order.at(i));
-        if (!window || window->hiddenPreview()) {
+        if (!window || window->isUnmanaged() || window->hiddenPreview()) {
             continue;
         }
 
@@ -179,7 +178,7 @@ void Workspace::propagateWindows(bool propagate_new_windows)
     // these windows that should be unmapped to interfere with other windows
     for (int i = stacking_order.size() - 1; i >= 0; --i) {
         X11Window *window = qobject_cast<X11Window *>(stacking_order.at(i));
-        if (!window || !window->hiddenPreview()) {
+        if (!window || window->isUnmanaged() || !window->hiddenPreview()) {
             continue;
         }
         newWindowStack << window->frameId();
@@ -197,7 +196,7 @@ void Workspace::propagateWindows(bool propagate_new_windows)
         }
         for (Window *window : std::as_const(m_windows)) {
             X11Window *x11Window = qobject_cast<X11Window *>(window);
-            if (x11Window) {
+            if (x11Window && !x11Window->isUnmanaged()) {
                 cl.push_back(x11Window->window());
             }
         }
@@ -207,7 +206,7 @@ void Workspace::propagateWindows(bool propagate_new_windows)
     cl.clear();
     for (auto it = stacking_order.constBegin(); it != stacking_order.constEnd(); ++it) {
         X11Window *window = qobject_cast<X11Window *>(*it);
-        if (window) {
+        if (window && !window->isUnmanaged()) {
             cl.push_back(window->window());
         }
     }
@@ -467,7 +466,7 @@ void Workspace::restoreSessionStackingOrder(X11Window *window)
     unconstrained_stacking_order.removeAll(window);
     for (auto it = unconstrained_stacking_order.begin(); it != unconstrained_stacking_order.end(); ++it) {
         X11Window *current = qobject_cast<X11Window *>(*it);
-        if (!current) {
+        if (!current || current->isUnmanaged()) {
             continue;
         }
         if (current->sessionStackingOrder() > window->sessionStackingOrder()) {
