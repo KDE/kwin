@@ -14,7 +14,7 @@ namespace KWin
 {
 
 KWinIdleTimePoller::KWinIdleTimePoller(QObject *parent)
-    : AbstractSystemPoller(parent)
+    : KAbstractIdleTimePoller(parent)
 {
 }
 

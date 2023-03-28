@@ -10,18 +10,18 @@
 
 #include <QHash>
 #include <QTimer>
-#include <private/abstractsystempoller.h>
+#include <private/kabstractidletimepoller_p.h>
 
 namespace KWin
 {
 
 class IdleDetector;
 
-class KWinIdleTimePoller : public AbstractSystemPoller
+class KWinIdleTimePoller : public KAbstractIdleTimePoller
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID AbstractSystemPoller_iid FILE "kwin.json")
-    Q_INTERFACES(AbstractSystemPoller)
+    Q_PLUGIN_METADATA(IID KAbstractIdleTimePoller_iid FILE "kwin.json")
+    Q_INTERFACES(KAbstractIdleTimePoller)
 
 public:
     KWinIdleTimePoller(QObject *parent = nullptr);
