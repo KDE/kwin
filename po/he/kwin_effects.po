@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-23 02:36+0000\n"
+"POT-Creation-Date: 2023-03-28 02:57+0000\n"
 "PO-Revision-Date: 2017-05-16 06:54-0400\n"
 "Last-Translator: Copied by Zanata <copied-by-zanata@zanata.org>\n"
 "Language-Team: Hebrew <kde-i18n-doc@kde.org>\n"
@@ -622,14 +622,14 @@ msgstr "אנימציה"
 msgid "Window close scale:"
 msgstr "אנימציה"
 
-#: screenshot/screenshotdbusinterface2.cpp:512
+#: screenshot/screenshotdbusinterface2.cpp:525
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
 
-#: screenshot/screenshotdbusinterface2.cpp:530
+#: screenshot/screenshotdbusinterface2.cpp:543
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"

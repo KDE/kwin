@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-23 02:36+0000\n"
+"POT-Creation-Date: 2023-03-28 02:57+0000\n"
 "PO-Revision-Date: 2021-11-19 13:44+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -610,7 +610,7 @@ msgstr "Méretezés megnyitáskor:"
 msgid "Window close scale:"
 msgstr "Méretezés bezáráskor:"
 
-#: screenshot/screenshotdbusinterface2.cpp:512
+#: screenshot/screenshotdbusinterface2.cpp:525
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -619,7 +619,7 @@ msgstr ""
 "Válasszon ablakot képernyőkép készítéséhez bal egérgombbal vagy enterrel.\n"
 "Megszakításhoz nyomja meg az Escape-et vagy a jobb egérgombot."
 
-#: screenshot/screenshotdbusinterface2.cpp:530
+#: screenshot/screenshotdbusinterface2.cpp:543
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"

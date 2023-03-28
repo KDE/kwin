@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-26 02:13+0000\n"
+"POT-Creation-Date: 2023-03-28 02:57+0000\n"
 "PO-Revision-Date: 2022-08-09 13:31+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -2188,7 +2188,7 @@ msgstr ""
 "창 전환기 설치 상태가 올바르지 않습니다. 자원이 없습니다.\n"
 "배포판 관리자에게 문의하십시오."
 
-#: useractions.cpp:161
+#: useractions.cpp:160
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -2200,7 +2200,7 @@ msgstr ""
 "경계선이 없을 때는 마우스를 사용해서 경계선을 다시 보이게 할 수 없습니다: 키"
 "보드 단축키 %1을(를) 사용해서 창 동작 메뉴를 부르십시오."
 
-#: useractions.cpp:168
+#: useractions.cpp:167
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -2213,58 +2213,58 @@ msgstr ""
 "면 모드에서 벗어날 수 없습니다: 키보드 단축키 %1을(를) 사용해서 창 동작 메뉴"
 "를 부르십시오."
 
-#: useractions.cpp:238
+#: useractions.cpp:235
 #, kde-format
 msgid "&Move"
 msgstr "이동(&M)"
 
-#: useractions.cpp:243
+#: useractions.cpp:240
 #, kde-format
 msgid "&Resize"
 msgstr "크기 조정(&R)"
 
-#: useractions.cpp:248
+#: useractions.cpp:245
 #, kde-format
 msgid "Keep &Above Others"
 msgstr "항상 위(&A)"
 
-#: useractions.cpp:254
+#: useractions.cpp:251
 #, kde-format
 msgid "Keep &Below Others"
 msgstr "항상 아래(&B)"
 
-#: useractions.cpp:260
+#: useractions.cpp:257
 #, kde-format
 msgid "&Fullscreen"
 msgstr "전체 화면(&F)"
 
-#: useractions.cpp:266
+#: useractions.cpp:263
 #, kde-format
 msgid "&Shade"
 msgstr "말아 올리기(&S)"
 
-#: useractions.cpp:272
+#: useractions.cpp:269
 #, fuzzy, kde-format
 #| msgid "No titlebar and frame"
 msgid "&No Titlebar and Frame"
 msgstr "제목 표시줄과 프레임 없음"
 
-#: useractions.cpp:280
+#: useractions.cpp:277
 #, kde-format
 msgid "Set Window Short&cut..."
 msgstr "창 단축키 설정(&C)..."
 
-#: useractions.cpp:286
+#: useractions.cpp:283
 #, kde-format
 msgid "Configure Special &Window Settings..."
 msgstr "창 특별 설정(&W)..."
 
-#: useractions.cpp:291
+#: useractions.cpp:288
 #, kde-format
 msgid "Configure S&pecial Application Settings..."
 msgstr "프로그램 특별 설정(&P)..."
 
-#: useractions.cpp:298
+#: useractions.cpp:295
 #, kde-format
 msgctxt ""
 "Entry in context menu of window decoration to open the configuration module "
@@ -2272,87 +2272,87 @@ msgctxt ""
 msgid "Configure W&indow Manager..."
 msgstr "창 관리자 설정(&I)..."
 
-#: useractions.cpp:325
+#: useractions.cpp:322
 #, kde-format
 msgid "Ma&ximize"
 msgstr "최대화(&X)"
 
-#: useractions.cpp:331
+#: useractions.cpp:328
 #, kde-format
 msgid "Mi&nimize"
 msgstr "최소화(&N)"
 
-#: useractions.cpp:337
+#: useractions.cpp:334
 #, kde-format
 msgid "&More Actions"
 msgstr "더 많은 동작(&M)"
 
-#: useractions.cpp:340
+#: useractions.cpp:337
 #, kde-format
 msgid "&Close"
 msgstr "닫기(&C)"
 
-#: useractions.cpp:410
+#: useractions.cpp:407
 #, kde-format
 msgid "&Extensions"
 msgstr "확장(&E)"
 
-#: useractions.cpp:461
+#: useractions.cpp:458
 #, kde-format
 msgid "&Desktops"
 msgstr "바탕 화면(&D)"
 
-#: useractions.cpp:475
+#: useractions.cpp:472
 #, kde-format
 msgid "Move to &Desktop"
 msgstr "다음 바탕 화면으로 이동(&D)"
 
-#: useractions.cpp:492
+#: useractions.cpp:489
 #, kde-format
 msgid "Move to &Screen"
 msgstr "다음 화면으로 이동(&S)"
 
-#: useractions.cpp:508
+#: useractions.cpp:505
 #, kde-format
 msgid "Show in &Activities"
 msgstr "다음 활동에 표시(&A)"
 
-#: useractions.cpp:525
+#: useractions.cpp:522
 #, fuzzy, kde-format
 #| msgctxt "Create a new desktop and move the window to that desktop"
 #| msgid "Move to New Desktop"
 msgid "Move &To Current Desktop"
 msgstr "새 바탕 화면으로 이동"
 
-#: useractions.cpp:535 useractions.cpp:602
+#: useractions.cpp:532 useractions.cpp:599
 #, kde-format
 msgid "&All Desktops"
 msgstr "모든 바탕 화면(&A)"
 
-#: useractions.cpp:575
+#: useractions.cpp:572
 #, kde-format
 msgctxt "Create a new desktop and move the window there"
 msgid "&New Desktop"
 msgstr "새 바탕 화면(&N)"
 
-#: useractions.cpp:646
+#: useractions.cpp:643
 #, kde-format
 msgid "Move to %1 %2"
 msgstr "%1 %2(으)로 이동"
 
-#: useractions.cpp:659
+#: useractions.cpp:656
 #, kde-format
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
 msgstr "새 바탕 화면에 추가(&N)"
 
-#: useractions.cpp:671
+#: useractions.cpp:668
 #, kde-format
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
 msgstr "새 바탕 화면으로 이동"
 
-#: useractions.cpp:702
+#: useractions.cpp:699
 #, kde-format
 msgctxt ""
 "@item:inmenu List of all Screens to send a window to. First argument is a "
@@ -2360,379 +2360,379 @@ msgctxt ""
 msgid "Screen &%1 (%2)"
 msgstr "화면 %1(%2)(&%1)"
 
-#: useractions.cpp:728
+#: useractions.cpp:725
 #, kde-format
 msgid "&All Activities"
 msgstr "모든 활동(&A)"
 
-#: useractions.cpp:776
+#: useractions.cpp:773
 #, fuzzy, kde-format
 #| msgid "Move to %1 %2"
 msgid "Move to %1"
 msgstr "%1 %2(으)로 이동"
 
-#: useractions.cpp:892
+#: useractions.cpp:889
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr "<b>%1</b>이(가) 이미 사용 중"
 
-#: useractions.cpp:894
+#: useractions.cpp:891
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b>이(가) %3의 %2에서 사용 중"
 
-#: useractions.cpp:974
+#: useractions.cpp:971
 #, kde-format
 msgid "Window Operations Menu"
 msgstr "창 동작 메뉴"
 
-#: useractions.cpp:976
+#: useractions.cpp:973
 #, kde-format
 msgid "Close Window"
 msgstr "창 닫기"
 
-#: useractions.cpp:978
+#: useractions.cpp:975
 #, kde-format
 msgid "Maximize Window"
 msgstr "창 최대화"
 
-#: useractions.cpp:980
+#: useractions.cpp:977
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "창 수직 최대화"
 
-#: useractions.cpp:982
+#: useractions.cpp:979
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "창 수평 최대화"
 
-#: useractions.cpp:984
+#: useractions.cpp:981
 #, kde-format
 msgid "Minimize Window"
 msgstr "창 최소화"
 
-#: useractions.cpp:986
+#: useractions.cpp:983
 #, kde-format
 msgid "Shade Window"
 msgstr "창 말아 올리기"
 
-#: useractions.cpp:988
+#: useractions.cpp:985
 #, kde-format
 msgid "Move Window"
 msgstr "창 이동"
 
-#: useractions.cpp:990
+#: useractions.cpp:987
 #, kde-format
 msgid "Resize Window"
 msgstr "창 크기 조정"
 
-#: useractions.cpp:992
+#: useractions.cpp:989
 #, kde-format
 msgid "Raise Window"
 msgstr "창 올리기"
 
-#: useractions.cpp:994
+#: useractions.cpp:991
 #, kde-format
 msgid "Lower Window"
 msgstr "창 내리기"
 
-#: useractions.cpp:996
+#: useractions.cpp:993
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "창 올리거나 내리기"
 
-#: useractions.cpp:998
+#: useractions.cpp:995
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "창을 전체 화면으로"
 
-#: useractions.cpp:1000
+#: useractions.cpp:997
 #, fuzzy, kde-format
 #| msgid "No titlebar and frame"
 msgid "Toggle Window Titlebar and Frame"
 msgstr "제목 표시줄과 프레임 없음"
 
-#: useractions.cpp:1002
+#: useractions.cpp:999
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "창을 항상 위에 표시"
 
-#: useractions.cpp:1004
+#: useractions.cpp:1001
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "창을 항상 아래에 표시"
 
-#: useractions.cpp:1006
+#: useractions.cpp:1003
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "활성 창이 주목을 기다림"
 
-#: useractions.cpp:1008
+#: useractions.cpp:1005
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "창 단축키 설정"
 
-#: useractions.cpp:1010
+#: useractions.cpp:1007
 #, kde-format
 msgid "Move Window to the Center"
 msgstr "창을 가운데로 이동"
 
-#: useractions.cpp:1012
+#: useractions.cpp:1009
 #, kde-format
 msgid "Move Window Right"
 msgstr "창을 오른쪽으로 이동"
 
-#: useractions.cpp:1014
+#: useractions.cpp:1011
 #, kde-format
 msgid "Move Window Left"
 msgstr "창을 왼쪽으로 이동"
 
-#: useractions.cpp:1016
+#: useractions.cpp:1013
 #, kde-format
 msgid "Move Window Up"
 msgstr "창을 위로 이동"
 
-#: useractions.cpp:1018
+#: useractions.cpp:1015
 #, kde-format
 msgid "Move Window Down"
 msgstr "창을 아래로 이동"
 
-#: useractions.cpp:1020
+#: useractions.cpp:1017
 #, kde-format
 msgid "Expand Window Horizontally"
 msgstr "창을 수평으로 확장"
 
-#: useractions.cpp:1022
+#: useractions.cpp:1019
 #, kde-format
 msgid "Expand Window Vertically"
 msgstr "창을 수직으로 확장"
 
-#: useractions.cpp:1024
+#: useractions.cpp:1021
 #, kde-format
 msgid "Shrink Window Horizontally"
 msgstr "창을 수평으로 축소"
 
-#: useractions.cpp:1026
+#: useractions.cpp:1023
 #, kde-format
 msgid "Shrink Window Vertically"
 msgstr "창을 수직으로 축소"
 
-#: useractions.cpp:1028
+#: useractions.cpp:1025
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "창을 왼쪽 위로 보내기"
 
-#: useractions.cpp:1030
+#: useractions.cpp:1027
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "창을 오른쪽 위로 보내기"
 
-#: useractions.cpp:1032
+#: useractions.cpp:1029
 #, kde-format
 msgid "Quick Tile Window to the Top"
 msgstr "창을 위로 보내기"
 
-#: useractions.cpp:1034
+#: useractions.cpp:1031
 #, kde-format
 msgid "Quick Tile Window to the Bottom"
 msgstr "창을 아래로 보내기"
 
-#: useractions.cpp:1036
+#: useractions.cpp:1033
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
 msgstr "창을 왼쪽 위로 보내기"
 
-#: useractions.cpp:1038
+#: useractions.cpp:1035
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "창을 왼쪽 아래로 보내기"
 
-#: useractions.cpp:1040
+#: useractions.cpp:1037
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
 msgstr "창을 오른쪽 위로 보내기"
 
-#: useractions.cpp:1042
+#: useractions.cpp:1039
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "창을 오른쪽 아래로 보내기"
 
-#: useractions.cpp:1044
+#: useractions.cpp:1041
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "위쪽 창으로 전환"
 
-#: useractions.cpp:1046
+#: useractions.cpp:1043
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "아래쪽 창으로 전환"
 
-#: useractions.cpp:1048
+#: useractions.cpp:1045
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "오른쪽 창으로 전환"
 
-#: useractions.cpp:1050
+#: useractions.cpp:1047
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "왼쪽 창으로 전환"
 
-#: useractions.cpp:1052
+#: useractions.cpp:1049
 #, fuzzy, kde-format
 #| msgid "Increase Opacity of Active Window by 5 %"
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "활성 창 불투명도 5% 증가"
 
-#: useractions.cpp:1054
+#: useractions.cpp:1051
 #, fuzzy, kde-format
 #| msgid "Decrease Opacity of Active Window by 5 %"
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "활성 창 불투명도 5% 감소"
 
-#: useractions.cpp:1057
+#: useractions.cpp:1054
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "창을 모든 바탕 화면에 표시하기"
 
-#: useractions.cpp:1068
+#: useractions.cpp:1065
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "창을 바탕 화면 %1(으)로 보내기"
 
-#: useractions.cpp:1070
+#: useractions.cpp:1067
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "다음 바탕 화면으로 창 이동"
 
-#: useractions.cpp:1071
+#: useractions.cpp:1068
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "이전 바탕 화면으로 창 이동"
 
-#: useractions.cpp:1072
+#: useractions.cpp:1069
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "오른쪽 바탕 화면으로 창 이동"
 
-#: useractions.cpp:1074
+#: useractions.cpp:1071
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "왼쪽 바탕 화면으로 창 이동"
 
-#: useractions.cpp:1076
+#: useractions.cpp:1073
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "위쪽 바탕 화면으로 창 이동"
 
-#: useractions.cpp:1078
+#: useractions.cpp:1075
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "아래쪽 바탕 화면으로 창 이동"
 
-#: useractions.cpp:1082
+#: useractions.cpp:1079
 #, fuzzy, kde-format
 #| msgid "Window to Screen %1"
 msgid "Move Window to Screen %1"
 msgstr "창을 화면 %1(으)로 보내기"
 
-#: useractions.cpp:1089
+#: useractions.cpp:1086
 #, fuzzy, kde-format
 #| msgid "Window to Next Screen"
 msgid "Move Window to Next Screen"
 msgstr "다음 데스크톱으로 창 이동"
 
-#: useractions.cpp:1091
+#: useractions.cpp:1088
 #, fuzzy, kde-format
 #| msgid "Window to Previous Screen"
 msgid "Move Window to Previous Screen"
 msgstr "이전 화면으로 창 이동"
 
-#: useractions.cpp:1093
+#: useractions.cpp:1090
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Window One Screen to the Right"
 msgstr "오른쪽 바탕 화면으로 창 이동"
 
-#: useractions.cpp:1095
+#: useractions.cpp:1092
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Window One Screen to the Left"
 msgstr "왼쪽 바탕 화면으로 창 이동"
 
-#: useractions.cpp:1097
+#: useractions.cpp:1094
 #, fuzzy, kde-format
 #| msgid "Window to Screen %1"
 msgid "Move Window One Screen Up"
 msgstr "창을 화면 %1(으)로 보내기"
 
-#: useractions.cpp:1099
+#: useractions.cpp:1096
 #, fuzzy, kde-format
 #| msgid "Window One Desktop Down"
 msgid "Move Window One Screen Down"
 msgstr "아래쪽 바탕 화면으로 창 이동"
 
-#: useractions.cpp:1103
+#: useractions.cpp:1100
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr "화면 %1(으)로 전환"
 
-#: useractions.cpp:1110
+#: useractions.cpp:1107
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "다음 화면으로 전환"
 
-#: useractions.cpp:1111
+#: useractions.cpp:1108
 #, kde-format
 msgid "Switch to Previous Screen"
 msgstr "이전 화면으로 전환"
 
-#: useractions.cpp:1112
+#: useractions.cpp:1109
 #, fuzzy, kde-format
 #| msgid "Switch to Window to the Right"
 msgid "Switch to Screen to the Right"
 msgstr "오른쪽 창으로 전환"
 
-#: useractions.cpp:1114
+#: useractions.cpp:1111
 #, fuzzy, kde-format
 #| msgid "Switch to Window to the Left"
 msgid "Switch to Screen to the Left"
 msgstr "왼쪽 창으로 전환"
 
-#: useractions.cpp:1116
+#: useractions.cpp:1113
 #, fuzzy, kde-format
 #| msgid "Switch to Screen %1"
 msgid "Switch to Screen Above"
 msgstr "화면 %1(으)로 전환"
 
-#: useractions.cpp:1118
+#: useractions.cpp:1115
 #, fuzzy, kde-format
 #| msgid "Switch to Screen %1"
 msgid "Switch to Screen Below"
 msgstr "화면 %1(으)로 전환"
 
-#: useractions.cpp:1121
+#: useractions.cpp:1118
 #, kde-format
 msgid "Peek at Desktop"
 msgstr "바탕 화면 멀리 보기"
 
-#: useractions.cpp:1124
+#: useractions.cpp:1121
 #, kde-format
 msgid "Kill Window"
 msgstr "창 강제 종료"
 
-#: useractions.cpp:1125
+#: useractions.cpp:1122
 #, kde-format
 msgid "Suspend Compositing"
 msgstr "컴포지팅 중단하기"
 
-#: useractions.cpp:1186
+#: useractions.cpp:1183
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "창 활성화(%1)"
 
-#: useractions.cpp:1323
+#: useractions.cpp:1320
 #, kde-format
 msgid ""
 "The window manager is configured to consider the screen with the mouse on it "

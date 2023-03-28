@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-18 01:00+0000\n"
-"PO-Revision-Date: 2023-01-21 01:14+0300\n"
+"PO-Revision-Date: 2023-03-27 18:58+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 22.12.1\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -117,17 +117,17 @@ msgstr "Seçenekler:"
 #: package/contents/ui/main.qml:202
 #, kde-format
 msgid "Navigation wraps around"
-msgstr "Dolaşım etrafı sarar"
+msgstr "Dolaşım sarmalı"
 
 #: package/contents/ui/main.qml:220
 #, kde-format
 msgid "Show animation when switching:"
-msgstr "Değiştirirken canlandırma göster:"
+msgstr "Geçerken canlandırma göster:"
 
 #: package/contents/ui/main.qml:271
 #, kde-format
 msgid "Show on-screen display when switching:"
-msgstr "Değiştirirken ekran üstü görünüm göster:"
+msgstr "Değiştirirken ekran üzeri görünüm göster:"
 
 #: package/contents/ui/main.qml:290
 #, kde-format
@@ -137,7 +137,7 @@ msgstr "%1 ms"
 #: package/contents/ui/main.qml:314
 #, kde-format
 msgid "Show desktop layout indicators"
-msgstr "Masaüstü düzeni belirteçlerini göster"
+msgstr "Masaüstü yerleşimi göstergelerini göster"
 
 #~ msgid "Virtual Desktops"
 #~ msgstr "Sanal Masaüstleri"
