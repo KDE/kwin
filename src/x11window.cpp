@@ -2583,13 +2583,9 @@ bool X11Window::isClient() const
     return true;
 }
 
-NET::WindowType X11Window::windowType(bool direct, int supportedTypes) const
+NET::WindowType X11Window::windowType(bool direct) const
 {
-    // TODO: does it make sense to cache the returned window type for SUPPORTED_MANAGED_WINDOW_TYPES_MASK?
-    if (supportedTypes == 0) {
-        supportedTypes = SUPPORTED_MANAGED_WINDOW_TYPES_MASK;
-    }
-    NET::WindowType wt = info->windowType(NET::WindowTypes(supportedTypes));
+    NET::WindowType wt = info->windowType(SUPPORTED_MANAGED_WINDOW_TYPES_MASK);
     if (direct) {
         return wt;
     }

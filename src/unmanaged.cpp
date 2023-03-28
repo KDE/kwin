@@ -178,14 +178,9 @@ QStringList Unmanaged::activities() const
     return QStringList();
 }
 
-NET::WindowType Unmanaged::windowType(bool direct, int supportedTypes) const
+NET::WindowType Unmanaged::windowType(bool direct) const
 {
-    // for unmanaged windows the direct does not make any difference
-    // as there are no rules to check and no hacks to apply
-    if (supportedTypes == 0) {
-        supportedTypes = SUPPORTED_UNMANAGED_WINDOW_TYPES_MASK;
-    }
-    return info->windowType(NET::WindowTypes(supportedTypes));
+    return info->windowType(SUPPORTED_UNMANAGED_WINDOW_TYPES_MASK);
 }
 
 bool Unmanaged::isOutline() const

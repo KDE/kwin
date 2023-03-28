@@ -626,8 +626,7 @@ public:
     QPointF mapFromLocal(const QPointF &point) const;
 
     // prefer isXXX() instead
-    // 0 for supported types means default for managed/unmanaged types
-    virtual NET::WindowType windowType(bool direct = false, int supported_types = 0) const = 0;
+    virtual NET::WindowType windowType(bool direct = false) const = 0;
     bool hasNETSupport() const;
     bool isDesktop() const;
     bool isDock() const;

@@ -58,7 +58,7 @@ public:
     explicit XdgSurfaceWindow(KWaylandServer::XdgSurfaceInterface *shellSurface);
     ~XdgSurfaceWindow() override;
 
-    NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
+    NET::WindowType windowType(bool direct = false) const override;
     QRectF frameRectToBufferRect(const QRectF &rect) const override;
     QRectF inputGeometry() const override;
     QMatrix4x4 inputTransformation() const override;

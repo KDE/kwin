@@ -70,7 +70,7 @@ public:
     {
         return true;
     }
-    NET::WindowType windowType(bool /*direct*/, int /*supported_types*/) const override;
+    NET::WindowType windowType(bool direct = false) const override;
     QRectF inputGeometry() const override;
 
     Mode mode() const

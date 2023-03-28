@@ -118,7 +118,7 @@ public:
     } // Inside of geometry()
 
     bool windowEvent(xcb_generic_event_t *e);
-    NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
+    NET::WindowType windowType(bool direct = false) const override;
 
     bool manage(xcb_window_t w, bool isMapped);
     void releaseWindow(bool on_shutdown = false);

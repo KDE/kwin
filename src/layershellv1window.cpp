@@ -95,7 +95,7 @@ void LayerShellV1Window::scheduleRearrange()
     m_integration->scheduleRearrange();
 }
 
-NET::WindowType LayerShellV1Window::windowType(bool, int) const
+NET::WindowType LayerShellV1Window::windowType(bool) const
 {
     return m_windowType;
 }

@@ -28,7 +28,7 @@ public:
     bool hasScheduledRelease() const;
     static void deleteUnmanaged(Unmanaged *c);
     QStringList activities() const override;
-    NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
+    NET::WindowType windowType(bool direct = false) const override;
     bool isOutline() const override;
     bool isUnmanaged() const override;
 

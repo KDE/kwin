@@ -165,7 +165,7 @@ void InputPanelV1Window::destroyWindow()
     unref();
 }
 
-NET::WindowType InputPanelV1Window::windowType(bool, int) const
+NET::WindowType InputPanelV1Window::windowType(bool direct) const
 {
     return NET::Utility;
 }
