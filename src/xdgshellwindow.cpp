@@ -305,7 +305,6 @@ void XdgSurfaceWindow::destroyWindow()
     qDeleteAll(m_configureEvents);
     m_configureEvents.clear();
     cleanTabBox();
-    Q_EMIT closed();
     StackingUpdatesBlocker blocker(workspace());
     workspace()->rulebook()->discardUsed(this, true);
     cleanGrouping();

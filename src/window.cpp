@@ -788,6 +788,7 @@ void Window::markAsClosed()
     Q_ASSERT(!m_closed);
     m_closed = true;
     workspace()->addZombie(this);
+    Q_EMIT closed();
 }
 
 Layer Window::layer() const

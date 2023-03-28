@@ -178,7 +178,6 @@ void LayerShellV1Window::destroyWindow()
 
     markAsClosed();
     cleanTabBox();
-    Q_EMIT closed();
     StackingUpdatesBlocker blocker(workspace());
     cleanGrouping();
     waylandServer()->removeWindow(this);

@@ -158,7 +158,6 @@ void InputPanelV1Window::destroyWindow()
 
     markAsClosed();
 
-    Q_EMIT closed();
     StackingUpdatesBlocker blocker(workspace());
     waylandServer()->removeWindow(this);
 

@@ -152,7 +152,6 @@ void Unmanaged::release(ReleaseReason releaseReason)
     }
     markAsClosed();
     m_releaseTimer.stop();
-    Q_EMIT closed();
     if (releaseReason != ReleaseReason::Destroyed && !findInternalWindow()) { // don't affect our own windows
         if (Xcb::Extensions::self()->isShapeAvailable()) {
             xcb_shape_select_input(kwinApp()->x11Connection(), window(), false);

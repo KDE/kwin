@@ -366,8 +366,6 @@ void InternalWindow::destroyWindow()
         Q_EMIT interactiveMoveResizeFinished();
     }
 
-    Q_EMIT closed();
-
     workspace()->removeInternalWindow(this);
     m_handle = nullptr;
 
