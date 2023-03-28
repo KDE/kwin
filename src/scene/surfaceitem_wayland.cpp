@@ -11,6 +11,7 @@
 #include "wayland/subcompositor_interface.h"
 #include "wayland/surface_interface.h"
 #include "window.h"
+#include "x11window.h"
 
 namespace KWin
 {
@@ -202,7 +203,7 @@ void SurfacePixmapWayland::setBuffer(KWaylandServer::ClientBuffer *buffer)
     }
 }
 
-SurfaceItemXwayland::SurfaceItemXwayland(Window *window, Scene *scene, Item *parent)
+SurfaceItemXwayland::SurfaceItemXwayland(X11Window *window, Scene *scene, Item *parent)
     : SurfaceItemWayland(window->surface(), scene, parent)
     , m_window(window)
 {

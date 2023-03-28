@@ -13,7 +13,7 @@
 namespace KWin
 {
 
-SurfaceItemX11::SurfaceItemX11(Window *window, Scene *scene, Item *parent)
+SurfaceItemX11::SurfaceItemX11(X11Window *window, Scene *scene, Item *parent)
     : SurfaceItem(scene, parent)
     , m_window(window)
 {
@@ -42,7 +42,7 @@ SurfaceItemX11::~SurfaceItemX11()
     destroyDamage();
 }
 
-Window *SurfaceItemX11::window() const
+X11Window *SurfaceItemX11::window() const
 {
     return m_window;
 }
@@ -212,7 +212,7 @@ xcb_visualid_t SurfacePixmapX11::visual() const
 
 void SurfacePixmapX11::create()
 {
-    const Window *window = m_item->window();
+    const X11Window *window = m_item->window();
     if (window->isDeleted()) {
         return;
     }

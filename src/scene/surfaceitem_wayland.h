@@ -18,6 +18,8 @@ class SurfaceInterface;
 namespace KWin
 {
 
+class X11Window;
+
 /**
  * The SurfaceItemWayland class represents a Wayland surface in the scene.
  */
@@ -85,12 +87,12 @@ class KWIN_EXPORT SurfaceItemXwayland : public SurfaceItemWayland
     Q_OBJECT
 
 public:
-    explicit SurfaceItemXwayland(Window *window, Scene *scene, Item *parent = nullptr);
+    explicit SurfaceItemXwayland(X11Window *window, Scene *scene, Item *parent = nullptr);
 
     QVector<QRectF> shape() const override;
 
 private:
-    Window *m_window;
+    X11Window *m_window;
 };
 
 } // namespace KWin

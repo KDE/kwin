@@ -15,6 +15,7 @@
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
+#include "x11window.h"
 
 #include <KDecoration2/Decoration>
 
@@ -285,7 +286,7 @@ void WindowItem::markDamaged()
     Q_EMIT m_window->damaged(m_window);
 }
 
-WindowItemX11::WindowItemX11(Window *window, Scene *scene, Item *parent)
+WindowItemX11::WindowItemX11(X11Window *window, Scene *scene, Item *parent)
     : WindowItem(window, scene, parent)
 {
     initialize();
@@ -298,13 +299,13 @@ void WindowItemX11::initialize()
 {
     switch (kwinApp()->operationMode()) {
     case Application::OperationModeX11:
-        updateSurfaceItem(new SurfaceItemX11(window(), scene(), this));
+        updateSurfaceItem(new SurfaceItemX11(static_cast<X11Window *>(window()), scene(), this));
         break;
     case Application::OperationModeXwayland:
         if (!window()->surface()) {
             updateSurfaceItem(nullptr);
         } else {
-            updateSurfaceItem(new SurfaceItemXwayland(window(), scene(), this));
+            updateSurfaceItem(new SurfaceItemXwayland(static_cast<X11Window *>(window()), scene(), this));
         }
         break;
     case Application::OperationModeWaylandOnly:

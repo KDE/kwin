@@ -14,6 +14,8 @@
 namespace KWin
 {
 
+class X11Window;
+
 /**
  * The SurfaceItemX11 class represents an X11 surface in the scene.
  */
@@ -22,10 +24,10 @@ class KWIN_EXPORT SurfaceItemX11 : public SurfaceItem
     Q_OBJECT
 
 public:
-    explicit SurfaceItemX11(Window *window, Scene *scene, Item *parent = nullptr);
+    explicit SurfaceItemX11(X11Window *window, Scene *scene, Item *parent = nullptr);
     ~SurfaceItemX11() override;
 
-    Window *window() const;
+    X11Window *window() const;
 
     void preprocess() override;
 
@@ -46,7 +48,7 @@ protected:
     std::unique_ptr<SurfacePixmap> createPixmap() override;
 
 private:
-    Window *m_window;
+    X11Window *m_window;
     xcb_damage_damage_t m_damageHandle = XCB_NONE;
     xcb_xfixes_fetch_region_cookie_t m_damageCookie;
     bool m_isDamaged = false;

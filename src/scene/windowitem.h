@@ -21,6 +21,7 @@ class InternalWindow;
 class Shadow;
 class ShadowItem;
 class SurfaceItem;
+class X11Window;
 
 /**
  * The WindowItem class represents a window in the scene.
@@ -96,7 +97,7 @@ class KWIN_EXPORT WindowItemX11 : public WindowItem
     Q_OBJECT
 
 public:
-    explicit WindowItemX11(Window *window, Scene *scene, Item *parent = nullptr);
+    explicit WindowItemX11(X11Window *window, Scene *scene, Item *parent = nullptr);
 
 private Q_SLOTS:
     void initialize();
