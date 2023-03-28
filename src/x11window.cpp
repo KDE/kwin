@@ -1169,6 +1169,21 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
         info.setOpacityF(opacity());
     });
 
+    switch (kwinApp()->operationMode()) {
+    case Application::OperationModeXwayland:
+        // The wayland surface is associated with the window asynchronously.
+        if (surface()) {
+            associate();
+        } else {
+            connect(this, &Window::surfaceChanged, this, &X11Window::associate);
+        }
+        break;
+    case Application::OperationModeX11:
+        break;
+    case Application::OperationModeWaylandOnly:
+        Q_UNREACHABLE();
+    }
+
     return true;
 }
 
@@ -2466,7 +2481,16 @@ void X11Window::getIcons()
  */
 bool X11Window::wantsSyncCounter() const
 {
-    return true;
+    if (!waylandServer()) {
+        return true;
+    }
+    // When the frame window is resized, the attached buffer will be destroyed by
+    // Xwayland, causing unexpected invalid previous and current window pixmaps.
+    // With the addition of multiple window buffers in Xwayland 1.21, X11 clients
+    // are no longer able to destroy the buffer after it's been committed and not
+    // released by the compositor yet.
+    static const quint32 xwaylandVersion = xcb_get_setup(kwinApp()->x11Connection())->release_number;
+    return xwaylandVersion >= 12100000;
 }
 
 void X11Window::getSyncCounter()
@@ -4987,12 +5011,18 @@ void X11Window::updateWindowPixmap()
 
 void X11Window::associate()
 {
+    auto handleMapped = [this]() {
+        if (syncRequest().counter == XCB_NONE) { // cannot detect complete redraw, consider done now
+            setReadyForPainting();
+        }
+    };
+
     if (surface()->isMapped()) {
-        setReadyForPainting();
+        handleMapped();
     } else {
         // Queued connection because we want to mark the window ready for painting after
         // the associated surface item has processed the new surface state.
-        connect(surface(), &KWaylandServer::SurfaceInterface::mapped, this, &X11Window::setReadyForPainting, Qt::QueuedConnection);
+        connect(surface(), &KWaylandServer::SurfaceInterface::mapped, this, handleMapped, Qt::QueuedConnection);
     }
 }
 

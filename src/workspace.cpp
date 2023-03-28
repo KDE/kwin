@@ -57,7 +57,6 @@
 #include "virtualdesktops.h"
 #include "was_user_interaction_x11_filter.h"
 #include "wayland_server.h"
-#include "xwaylandwindow.h"
 // KDE
 #include <KConfig>
 #include <KConfigGroup>
@@ -653,12 +652,7 @@ void Workspace::removeFromStack(Window *window)
 X11Window *Workspace::createX11Window(xcb_window_t windowId, bool is_mapped)
 {
     StackingUpdatesBlocker blocker(this);
-    X11Window *window = nullptr;
-    if (kwinApp()->operationMode() == Application::OperationModeX11) {
-        window = new X11Window();
-    } else {
-        window = new XwaylandWindow();
-    }
+    X11Window *window = new X11Window();
     setupWindowConnections(window);
     if (X11Compositor *compositor = X11Compositor::self()) {
         connect(window, &X11Window::blockingCompositingChanged, compositor, &X11Compositor::updateClientCompositeBlocking);
