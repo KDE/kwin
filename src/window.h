@@ -239,11 +239,6 @@ class KWIN_EXPORT Window : public QObject
     Q_PROPERTY(bool managed READ isClient CONSTANT)
 
     /**
-     * Whether this Window represents an already deleted window and only kept for the compositor for animations.
-     */
-    Q_PROPERTY(bool deleted READ isDeleted CONSTANT)
-
-    /**
      * Whether the window has an own shape
      */
     Q_PROPERTY(bool shaped READ shape NOTIFY shapedChanged)
@@ -615,7 +610,7 @@ public:
      */
     QRectF visibleGeometry() const;
     virtual bool isClient() const;
-    bool isDeleted() const;
+    bool isClosed() const;
     virtual bool isUnmanaged() const;
 
     /**
@@ -1544,7 +1539,7 @@ protected:
     void startAutoRaise();
     void autoRaise();
     bool isMostRecentlyRaised() const;
-    void markAsDeleted();
+    void markAsClosed();
     /**
      * Whether the window accepts focus.
      * The difference to wantsInput is that the implementation should not check rules and return
@@ -1872,7 +1867,7 @@ private:
     bool m_skipSwitcher = false;
     QIcon m_icon;
     bool m_active = false;
-    bool m_deleted = false;
+    bool m_closed = false;
     bool m_keepAbove = false;
     bool m_keepBelow = false;
     bool m_demandsAttention = false;

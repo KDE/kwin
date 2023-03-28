@@ -150,7 +150,7 @@ void Unmanaged::release(ReleaseReason releaseReason)
             item->destroyDamage();
         }
     }
-    markAsDeleted();
+    markAsClosed();
     m_releaseTimer.stop();
     Q_EMIT closed();
     if (releaseReason != ReleaseReason::Destroyed && !findInternalWindow()) { // don't affect our own windows

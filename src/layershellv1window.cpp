@@ -176,7 +176,7 @@ void LayerShellV1Window::destroyWindow()
     m_shellSurface->disconnect(this);
     m_shellSurface->surface()->disconnect(this);
 
-    markAsDeleted();
+    markAsClosed();
     cleanTabBox();
     Q_EMIT closed();
     StackingUpdatesBlocker blocker(workspace());

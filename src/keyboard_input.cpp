@@ -198,7 +198,7 @@ void KeyboardInputRedirection::update()
             do {
                 --it;
                 Window *t = (*it);
-                if (t->isDeleted()) {
+                if (t->isClosed()) {
                     // a deleted window doesn't get mouse events
                     continue;
                 }

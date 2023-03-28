@@ -213,7 +213,7 @@ xcb_visualid_t SurfacePixmapX11::visual() const
 void SurfacePixmapX11::create()
 {
     const Window *window = m_item->window();
-    if (window->isDeleted()) {
+    if (window->isClosed()) {
         return;
     }
 

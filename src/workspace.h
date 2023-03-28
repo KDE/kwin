@@ -353,8 +353,8 @@ public:
     int unconstainedStackingOrderIndex(const X11Window *c) const;
 
     void removeUnmanaged(Unmanaged *); // Only called from Unmanaged::release()
-    void removeDeleted(Window *);
-    void addDeleted(Window *);
+    void removeZombie(Window *);
+    void addZombie(Window *);
 
     bool checkStartupNotification(xcb_window_t w, KStartupInfoId &id, KStartupInfoData &data);
 
@@ -645,7 +645,7 @@ private:
     QPointF focusMousePos;
 
     QList<Window *> m_windows;
-    QList<Window *> deleted;
+    QList<Window *> m_zombies;
 
     QList<Window *> unconstrained_stacking_order; // Topmost last
     QList<Window *> stacking_order; // Topmost last

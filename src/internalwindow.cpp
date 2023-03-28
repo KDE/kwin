@@ -360,7 +360,7 @@ void InternalWindow::destroyWindow()
     m_handle->removeEventFilter(this);
     m_handle->disconnect(this);
 
-    markAsDeleted();
+    markAsClosed();
     if (isInteractiveMoveResize()) {
         leaveInteractiveMoveResize();
         Q_EMIT interactiveMoveResizeFinished();

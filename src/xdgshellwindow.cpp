@@ -115,7 +115,7 @@ XdgSurfaceConfigure *XdgSurfaceWindow::lastAcknowledgedConfigure() const
 
 void XdgSurfaceWindow::scheduleConfigure()
 {
-    if (!isDeleted()) {
+    if (!isClosed()) {
         m_configureTimer->start();
     }
 }
@@ -296,7 +296,7 @@ void XdgSurfaceWindow::handleRoleDestroyed()
 void XdgSurfaceWindow::destroyWindow()
 {
     handleRoleDestroyed();
-    markAsDeleted();
+    markAsClosed();
     if (isInteractiveMoveResize()) {
         leaveInteractiveMoveResize();
         Q_EMIT interactiveMoveResizeFinished();
@@ -1064,7 +1064,7 @@ bool XdgToplevelWindow::acceptsFocus() const
             break;
         }
     }
-    return !isDeleted() && readyForPainting();
+    return !isClosed() && readyForPainting();
 }
 
 Layer XdgToplevelWindow::layerForDock() const

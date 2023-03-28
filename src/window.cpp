@@ -118,8 +118,8 @@ Window::Window()
 
 Window::~Window()
 {
-    if (m_deleted) {
-        workspace()->removeDeleted(this);
+    if (m_closed) {
+        workspace()->removeZombie(this);
     }
     if (m_tile) {
         m_tile->removeWindow(this);
@@ -739,7 +739,7 @@ void Window::setIcon(const QIcon &icon)
 
 void Window::setActive(bool act)
 {
-    if (isDeleted()) {
+    if (isClosed()) {
         return;
     }
     if (m_active == act) {
@@ -778,16 +778,16 @@ void Window::doSetActive()
 {
 }
 
-bool Window::isDeleted() const
+bool Window::isClosed() const
 {
-    return m_deleted;
+    return m_closed;
 }
 
-void Window::markAsDeleted()
+void Window::markAsClosed()
 {
-    Q_ASSERT(!m_deleted);
-    m_deleted = true;
-    workspace()->addDeleted(this);
+    Q_ASSERT(!m_closed);
+    m_closed = true;
+    workspace()->addZombie(this);
 }
 
 Layer Window::layer() const

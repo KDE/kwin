@@ -761,17 +761,17 @@ void Workspace::removeUnmanaged(Unmanaged *window)
     Q_EMIT windowRemoved(window);
 }
 
-void Workspace::addDeleted(Window *c)
+void Workspace::addZombie(Window *c)
 {
-    Q_ASSERT(!deleted.contains(c));
-    deleted.append(c);
+    Q_ASSERT(!m_zombies.contains(c));
+    m_zombies.append(c);
 }
 
-void Workspace::removeDeleted(Window *c)
+void Workspace::removeZombie(Window *c)
 {
-    Q_ASSERT(deleted.contains(c));
+    Q_ASSERT(m_zombies.contains(c));
     Q_EMIT deletedRemoved(c);
-    deleted.removeAll(c);
+    m_zombies.removeAll(c);
     removeFromStack(c);
     if (X11Compositor *compositor = X11Compositor::self()) {
         compositor->updateClientCompositeBlocking();
@@ -1417,7 +1417,7 @@ void Workspace::slotDesktopRemoved(VirtualDesktop *desktop)
         }
     }
 
-    for (auto it = deleted.constBegin(); it != deleted.constEnd(); ++it) {
+    for (auto it = m_zombies.constBegin(); it != m_zombies.constEnd(); ++it) {
         if ((*it)->desktops().contains(desktop)) {
             (*it)->leaveDesktop(desktop);
         }

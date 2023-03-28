@@ -1897,7 +1897,7 @@ const EffectWindowGroup *EffectWindowImpl::group() const
 
 void EffectWindowImpl::refWindow()
 {
-    if (m_window->isDeleted()) {
+    if (m_window->isClosed()) {
         return m_window->ref();
     }
     Q_UNREACHABLE(); // TODO
@@ -1905,7 +1905,7 @@ void EffectWindowImpl::refWindow()
 
 void EffectWindowImpl::unrefWindow()
 {
-    if (m_window->isDeleted()) {
+    if (m_window->isClosed()) {
         return m_window->unref();
     }
     Q_UNREACHABLE(); // TODO
@@ -1951,7 +1951,7 @@ WINDOW_HELPER(bool, isAppletPopup, isAppletPopup)
 WINDOW_HELPER(bool, isOnScreenDisplay, isOnScreenDisplay)
 WINDOW_HELPER(bool, isComboBox, isComboBox)
 WINDOW_HELPER(bool, isDNDIcon, isDNDIcon)
-WINDOW_HELPER(bool, isDeleted, isDeleted)
+WINDOW_HELPER(bool, isDeleted, isClosed)
 WINDOW_HELPER(QString, windowRole, windowRole)
 WINDOW_HELPER(QStringList, activities, activities)
 WINDOW_HELPER(bool, skipsCloseAnimation, skipsCloseAnimation)

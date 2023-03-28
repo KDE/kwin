@@ -148,7 +148,7 @@ bool WindowItem::computeVisibility() const
     if (waylandServer() && waylandServer()->isScreenLocked()) {
         return m_window->isLockScreen() || m_window->isInputMethod() || m_window->isLockScreenOverlay();
     }
-    if (m_window->isDeleted()) {
+    if (m_window->isClosed()) {
         if (m_forceVisibleByDeleteCount == 0) {
             return false;
         }
@@ -249,7 +249,7 @@ void WindowItem::updateShadowItem()
 
 void WindowItem::updateDecorationItem()
 {
-    if (m_window->isDeleted()) {
+    if (m_window->isClosed()) {
         return;
     }
     if (m_window->decoration()) {

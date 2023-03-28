@@ -238,7 +238,7 @@ void WaylandWindow::cleanGrouping()
 
 bool WaylandWindow::isShown() const
 {
-    return !isDeleted() && !isHidden() && !isMinimized();
+    return !isClosed() && !isHidden() && !isMinimized();
 }
 
 bool WaylandWindow::isHiddenInternal() const

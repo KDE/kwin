@@ -2562,7 +2562,7 @@ private:
         do {
             --it;
             Window *window = (*it);
-            if (window->isDeleted()) {
+            if (window->isClosed()) {
                 continue;
             }
             if (!window->isClient()) {
@@ -3202,7 +3202,7 @@ Window *InputRedirection::findToplevel(const QPointF &pos)
     do {
         --it;
         Window *window = (*it);
-        if (window->isDeleted()) {
+        if (window->isClosed()) {
             // a deleted window doesn't get mouse events
             continue;
         }

@@ -156,7 +156,7 @@ void InputPanelV1Window::destroyWindow()
     m_panelSurface->disconnect(this);
     m_panelSurface->surface()->disconnect(this);
 
-    markAsDeleted();
+    markAsClosed();
 
     Q_EMIT closed();
     StackingUpdatesBlocker blocker(workspace());
@@ -188,7 +188,7 @@ void InputPanelV1Window::handleMapped()
 void InputPanelV1Window::maybeShow()
 {
     const bool shouldShow = m_mode == Mode::Overlay || (m_mode == Mode::VirtualKeyboard && m_allowed && m_virtualKeyboardShouldBeShown);
-    if (shouldShow && !isDeleted() && surface()->isMapped()) {
+    if (shouldShow && !isClosed() && surface()->isMapped()) {
         markAsMapped();
         reposition();
         showClient();

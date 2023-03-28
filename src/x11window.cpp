@@ -361,7 +361,7 @@ void X11Window::releaseWindow(bool on_shutdown)
     if (SurfaceItemX11 *item = qobject_cast<SurfaceItemX11 *>(surfaceItem())) {
         item->destroyDamage();
     }
-    markAsDeleted();
+    markAsClosed();
     cleanTabBox();
     if (isInteractiveMoveResize()) {
         Q_EMIT interactiveMoveResizeFinished();
@@ -428,7 +428,7 @@ void X11Window::destroyWindow()
     if (SurfaceItemX11 *item = qobject_cast<SurfaceItemX11 *>(surfaceItem())) {
         item->forgetDamage();
     }
-    markAsDeleted();
+    markAsClosed();
     cleanTabBox();
     if (isInteractiveMoveResize()) {
         Q_EMIT interactiveMoveResizeFinished();
@@ -1218,7 +1218,7 @@ void X11Window::destroyDecoration()
         setDecoration(nullptr);
         maybeDestroyX11DecorationRenderer();
         moveResize(QRectF(grav, clientSizeToFrameSize(clientSize())));
-        if (!isDeleted()) {
+        if (!isClosed()) {
             Q_EMIT geometryShapeChanged(oldgeom);
         }
     }
@@ -1657,7 +1657,7 @@ void X11Window::doSetShade(ShadeMode previousShadeMode)
 
 void X11Window::updateVisibility()
 {
-    if (isDeleted()) {
+    if (isClosed()) {
         return;
     }
     if (hidden) {
@@ -1707,7 +1707,7 @@ void X11Window::updateVisibility()
 void X11Window::exportMappingState(int s)
 {
     Q_ASSERT(m_client != XCB_WINDOW_NONE);
-    Q_ASSERT(!isDeleted() || s == XCB_ICCCM_WM_STATE_WITHDRAWN);
+    Q_ASSERT(!isClosed() || s == XCB_ICCCM_WM_STATE_WITHDRAWN);
     if (s == XCB_ICCCM_WM_STATE_WITHDRAWN) {
         m_client.deleteProperty(atoms->wm_state);
         return;
