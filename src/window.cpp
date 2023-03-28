@@ -72,7 +72,6 @@ Window::Window()
     , ready_for_painting(false)
     , m_internalId(QUuid::createUuid())
     , m_client()
-    , is_shape(false)
     , m_clientMachine(new ClientMachine(this))
     , m_wmClientLeader(XCB_WINDOW_NONE)
     , m_skipCloseAnimation(false)
@@ -175,11 +174,7 @@ QDebug operator<<(QDebug debug, const Window *window)
 
 void Window::detectShape(xcb_window_t id)
 {
-    const bool wasShape = is_shape;
     is_shape = Xcb::Extensions::self()->hasShape(id);
-    if (wasShape != is_shape) {
-        Q_EMIT shapedChanged();
-    }
 }
 
 QRectF Window::visibleGeometry() const
@@ -421,7 +416,7 @@ QVector<QRectF> Window::shapeRegion() const
 
     const QRectF bufferGeometry = this->bufferGeometry();
 
-    if (shape()) {
+    if (is_shape) {
         auto cookie = xcb_shape_get_rectangles_unchecked(kwinApp()->x11Connection(), frameId(), XCB_SHAPE_SK_BOUNDING);
         UniqueCPtr<xcb_shape_get_rectangles_reply_t> reply(xcb_shape_get_rectangles_reply(kwinApp()->x11Connection(), cookie, nullptr));
         if (reply) {

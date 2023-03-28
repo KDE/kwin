@@ -244,11 +244,6 @@ class KWIN_EXPORT Window : public QObject
     Q_PROPERTY(bool deleted READ isDeleted CONSTANT)
 
     /**
-     * Whether the window has an own shape
-     */
-    Q_PROPERTY(bool shaped READ shape NOTIFY shapedChanged)
-
-    /**
      * Whether the window does not want to be animated on window close.
      * There are legit reasons for this like a screenshot application which does not want it's
      * window being captured.
@@ -691,7 +686,6 @@ public:
 
     bool readyForPainting() const; // true if the window has been already painted its contents
     xcb_visualid_t visual() const;
-    bool shape() const;
     QRegion inputShape() const;
     void setOpacity(qreal opacity);
     qreal opacity() const;
@@ -1396,12 +1390,6 @@ Q_SIGNALS:
     void windowShown(KWin::Window *window);
     void windowHidden(KWin::Window *window);
     /**
-     * Signal emitted when the window's shape state changed. That is if it did not have a shape
-     * and received one or if the shape was withdrawn. Think of Chromium enabling/disabling KWin's
-     * decoration.
-     */
-    void shapedChanged();
-    /**
      * Emitted whenever the Window's screen changes. This can happen either in consequence to
      * a screen being removed/added or if the Window's geometry changes.
      * @since 4.11
@@ -1828,6 +1816,7 @@ protected:
     void cleanTabBox();
 
     QStringList m_activityList;
+    bool is_shape = false;
 
 private Q_SLOTS:
     void shadeHover();
@@ -1840,7 +1829,6 @@ private:
     int m_refCount = 1;
     QUuid m_internalId;
     Xcb::Window m_client;
-    bool is_shape;
     std::unique_ptr<EffectWindowImpl> m_effectWindow;
     std::unique_ptr<WindowItem> m_windowItem;
     std::unique_ptr<Shadow> m_shadow;
@@ -2157,11 +2145,6 @@ inline bool Window::isOutline() const
 inline bool Window::isInternal() const
 {
     return false;
-}
-
-inline bool Window::shape() const
-{
-    return is_shape;
 }
 
 inline int Window::depth() const

@@ -1243,7 +1243,7 @@ void X11Window::maybeDestroyX11DecorationRenderer()
 
 void X11Window::detectNoBorder()
 {
-    if (shape()) {
+    if (is_shape) {
         noborder = true;
         app_noborder = true;
         return;
@@ -1384,7 +1384,7 @@ void X11Window::checkNoBorder()
 
 void X11Window::updateShape()
 {
-    if (shape()) {
+    if (is_shape) {
         // Workaround for #19644 - Shaped windows shouldn't have decoration
         if (!app_noborder) {
             // Only when shape is detected for the first time, still let the user to override
