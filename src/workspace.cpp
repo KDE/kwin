@@ -1325,8 +1325,8 @@ void Workspace::updateOutputs(const QVector<Output *> &outputOrder)
                 m_outputOrder.push_back(output);
             }
         }
-        m_outputOrder.erase(std::remove_if(m_outputOrder.begin(), m_outputOrder.end(), [](Output *output) {
-                                return !output->isEnabled();
+        m_outputOrder.erase(std::remove_if(m_outputOrder.begin(), m_outputOrder.end(), [this](Output *output) {
+                                return !m_outputs.contains(output);
                             }),
                             m_outputOrder.end());
     }
