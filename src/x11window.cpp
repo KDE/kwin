@@ -5024,6 +5024,8 @@ void X11Window::associate()
         // the associated surface item has processed the new surface state.
         connect(surface(), &KWaylandServer::SurfaceInterface::mapped, this, handleMapped, Qt::QueuedConnection);
     }
+
+    m_pendingSurfaceId = 0;
 }
 
 QWindow *X11Window::findInternalWindow() const

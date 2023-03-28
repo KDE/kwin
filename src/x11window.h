@@ -294,6 +294,9 @@ public:
 
     static void cleanupX11();
 
+    quint64 surfaceSerial() const;
+    quint32 pendingSurfaceId() const;
+
 public Q_SLOTS:
     void closeWindow() override;
     void updateCaption() override;
@@ -306,7 +309,7 @@ private:
     void configureNotifyEvent(xcb_configure_notify_event_t *e);
     void configureRequestEvent(xcb_configure_request_event_t *e);
     void propertyNotifyEvent(xcb_property_notify_event_t *e) override;
-    void clientMessageEvent(xcb_client_message_event_t *e) override;
+    void clientMessageEvent(xcb_client_message_event_t *e);
     void enterNotifyEvent(xcb_enter_notify_event_t *e);
     void leaveNotifyEvent(xcb_leave_notify_event_t *e);
     void focusInEvent(xcb_focus_in_event_t *e);
@@ -502,6 +505,8 @@ private:
 
     bool m_unmanaged = false;
     bool m_outline = false;
+    quint32 m_pendingSurfaceId = 0;
+    quint64 m_surfaceSerial = 0;
 };
 
 inline xcb_window_t X11Window::wrapperId() const
@@ -597,6 +602,16 @@ inline xcb_window_t X11Window::moveResizeGrabWindow() const
 inline bool X11Window::hiddenPreview() const
 {
     return mapping_state == Kept;
+}
+
+inline quint64 X11Window::surfaceSerial() const
+{
+    return m_surfaceSerial;
+}
+
+inline quint32 X11Window::pendingSurfaceId() const
+{
+    return m_pendingSurfaceId;
 }
 
 } // namespace

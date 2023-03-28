@@ -728,8 +728,6 @@ public:
     bool skipsCloseAnimation() const;
     void setSkipCloseAnimation(bool set);
 
-    quint64 surfaceSerial() const;
-    quint32 pendingSurfaceId() const;
     KWaylandServer::SurfaceInterface *surface() const;
     void setSurface(KWaylandServer::SurfaceInterface *surface);
 
@@ -1494,7 +1492,6 @@ protected:
     void setWindowHandles(xcb_window_t client);
     void detectShape(xcb_window_t id);
     virtual void propertyNotifyEvent(xcb_property_notify_event_t *e);
-    virtual void clientMessageEvent(xcb_client_message_event_t *e);
     Xcb::Property fetchWmClientLeader() const;
     void readWmClientLeader(Xcb::Property &p);
     void getWmClientLeader();
@@ -1839,8 +1836,6 @@ private:
     mutable QVector<QRectF> m_shapeRegion;
     mutable bool m_shapeRegionIsValid = false;
     bool m_skipCloseAnimation;
-    quint32 m_pendingSurfaceId = 0;
-    quint64 m_surfaceSerial = 0;
     QPointer<KWaylandServer::SurfaceInterface> m_surface;
     // when adding new data members, check also copyToDeleted()
     qreal m_opacity = 1.0;
@@ -2204,16 +2199,6 @@ inline QString Window::resourceClass() const
 inline const ClientMachine *Window::clientMachine() const
 {
     return m_clientMachine;
-}
-
-inline quint64 Window::surfaceSerial() const
-{
-    return m_surfaceSerial;
-}
-
-inline quint32 Window::pendingSurfaceId() const
-{
-    return m_pendingSurfaceId;
 }
 
 template<class T, class U>
