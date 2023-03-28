@@ -67,9 +67,6 @@ public:
     dev_t deviceId() const;
     QString devNode() const;
 
-    bool isRemoved() const;
-    void setRemoved();
-
     bool atomicModeSetting() const;
     bool addFB2ModifiersSupported() const;
     bool asyncPageflipSupported() const;
@@ -84,14 +81,13 @@ public:
     clockid_t presentationClock() const;
     QSize cursorSize() const;
 
-    QVector<DrmVirtualOutput *> virtualOutputs() const;
-    QVector<DrmOutput *> drmOutputs() const;
+    const std::vector<std::unique_ptr<DrmVirtualOutput>> &virtualOutputs() const;
+    const std::vector<std::unique_ptr<DrmOutput>> &drmOutputs() const;
     const QVector<DrmPipeline *> pipelines() const;
 
     void setEglDisplay(EGLDisplay display);
 
     bool updateOutputs();
-    void removeOutputs();
 
     DrmVirtualOutput *createVirtualOutput(const QString &name, const QSize &size, double scale);
     void removeVirtualOutput(DrmVirtualOutput *output);
@@ -112,7 +108,6 @@ Q_SIGNALS:
 
 private:
     void dispatchEvents();
-    DrmOutput *findOutput(quint32 connector);
     void removeOutput(DrmOutput *output);
     void initDrmResources();
     void waitIdle();
@@ -131,7 +126,6 @@ private:
     bool m_isNVidia;
     bool m_isVirtualMachine;
     bool m_asyncPageflipSupported = false;
-    bool m_isRemoved = false;
     clockid_t m_presentationClock;
     gbm_device *m_gbmDevice;
     EGLDisplay m_eglDisplay = EGL_NO_DISPLAY;
@@ -143,8 +137,8 @@ private:
     QVector<DrmObject *> m_allObjects;
     QVector<DrmPipeline *> m_pipelines;
 
-    QVector<DrmOutput *> m_drmOutputs;
-    QVector<DrmVirtualOutput *> m_virtualOutputs;
+    std::vector<std::unique_ptr<DrmOutput>> m_drmOutputs;
+    std::vector<std::unique_ptr<DrmVirtualOutput>> m_virtualOutputs;
 
     std::unique_ptr<QSocketNotifier> m_socketNotifier;
     QSize m_cursorSize;

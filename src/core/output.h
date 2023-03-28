@@ -103,9 +103,6 @@ public:
     explicit Output(QObject *parent = nullptr);
     ~Output() override;
 
-    void ref();
-    void unref();
-
     /**
      * Maps the specified @a rect from the global coordinate system to the output-local coords.
      */
@@ -362,7 +359,6 @@ protected:
     Information m_information;
     QUuid m_uuid;
     int m_directScanoutCount = 0;
-    int m_refCount = 1;
     ContentType m_contentType = ContentType::None;
     friend class EffectScreenImpl; // to access m_effectScreen
 };

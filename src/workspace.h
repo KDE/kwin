@@ -720,7 +720,7 @@ private:
 #endif
     std::unique_ptr<PlacementTracker> m_placementTracker;
 
-    PlaceholderOutput *m_placeholderOutput = nullptr;
+    std::unique_ptr<PlaceholderOutput> m_placeholderOutput;
     std::unique_ptr<PlaceholderInputEventFilter> m_placeholderFilter;
     std::map<Output *, std::unique_ptr<TileManager>> m_tileManagers;
     std::unique_ptr<OutputConfigurationStore> m_outputConfigStore;

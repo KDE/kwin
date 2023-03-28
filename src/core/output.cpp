@@ -69,20 +69,6 @@ Output::~Output()
 {
 }
 
-void Output::ref()
-{
-    m_refCount++;
-}
-
-void Output::unref()
-{
-    Q_ASSERT(m_refCount > 0);
-    m_refCount--;
-    if (m_refCount == 0) {
-        delete this;
-    }
-}
-
 QString Output::name() const
 {
     return m_information.name;

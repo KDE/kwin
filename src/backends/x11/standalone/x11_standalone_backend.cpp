@@ -416,6 +416,8 @@ void X11StandaloneBackend::doUpdateOutputs()
         }
     }
 
+    // keep removed outputs alive until after the `outputsQueried` call
+    std::vector<std::unique_ptr<Output>> ref;
     // Outputs have to be removed last to avoid the case where there are no enabled outputs.
     for (Output *output : std::as_const(removed)) {
         m_outputs.removeOne(output);
@@ -425,7 +427,7 @@ void X11StandaloneBackend::doUpdateOutputs()
             nativeOutput->updateEnabled(false);
         }
         Q_EMIT outputRemoved(output);
-        output->unref();
+        ref.push_back(std::unique_ptr<Output>(output));
     }
 
     // Make sure that the position of an output in m_outputs matches its xinerama index, there

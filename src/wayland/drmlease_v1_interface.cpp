@@ -69,9 +69,9 @@ DrmLeaseDeviceV1Interface::DrmLeaseDeviceV1Interface(Display *display, KWin::Drm
     : QtWaylandServer::wp_drm_lease_device_v1(*display, s_version)
     , m_gpu(gpu)
 {
-    const auto outputs = gpu->drmOutputs();
-    for (const auto output : outputs) {
-        addOutput(output);
+    const auto &outputs = gpu->drmOutputs();
+    for (const auto &output : outputs) {
+        addOutput(output.get());
     }
     connect(gpu, &KWin::DrmGpu::outputAdded, this, &DrmLeaseDeviceV1Interface::addOutput);
     connect(gpu, &KWin::DrmGpu::outputRemoved, this, &DrmLeaseDeviceV1Interface::removeOutput);

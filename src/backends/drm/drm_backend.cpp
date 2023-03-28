@@ -251,7 +251,13 @@ void DrmBackend::handleUdevEvent()
                     QCoreApplication::exit(1);
                     return;
                 } else {
-                    gpu->setRemoved();
+                    const auto it = std::find_if(m_gpus.begin(), m_gpus.end(), [gpu](const auto &g) {
+                        return g.get() == gpu;
+                    });
+                    qCDebug(KWIN_DRM) << "Removing GPU" << (*it)->devNode();
+                    const std::unique_ptr<DrmGpu> keepAlive = std::move(*it);
+                    m_gpus.erase(it);
+                    Q_EMIT gpuRemoved(keepAlive.get());
                     updateOutputs();
                 }
             }
@@ -318,21 +324,12 @@ void DrmBackend::removeOutput(DrmAbstractOutput *o)
 
 void DrmBackend::updateOutputs()
 {
-    for (auto it = m_gpus.begin(); it != m_gpus.end(); ++it) {
-        if ((*it)->isRemoved()) {
-            (*it)->removeOutputs();
-        } else {
-            (*it)->updateOutputs();
-        }
-    }
-
-    Q_EMIT outputsQueried();
-
     for (auto it = m_gpus.begin(); it != m_gpus.end();) {
-        DrmGpu *gpu = it->get();
-        if (gpu->isRemoved() || (gpu != primaryGpu() && gpu->drmOutputs().isEmpty())) {
-            qCDebug(KWIN_DRM) << "Removing GPU" << (*it)->devNode();
-            const std::unique_ptr<DrmGpu> keepAlive = std::move(*it);
+        auto &gpu = *it;
+        gpu->updateOutputs();
+        if (primaryGpu() != gpu.get() && gpu->drmOutputs().empty()) {
+            qCDebug(KWIN_DRM) << "Removing GPU" << gpu->devNode();
+            const std::unique_ptr<DrmGpu> keepAlive = std::move(gpu);
             it = m_gpus.erase(it);
             Q_EMIT gpuRemoved(keepAlive.get());
         } else {
@@ -473,12 +470,12 @@ bool DrmBackend::applyOutputChanges(const OutputConfiguration &config)
             if (output->isNonDesktop()) {
                 continue;
             }
-            if (const auto changeset = config.constChangeSet(output)) {
+            if (const auto changeset = config.constChangeSet(output.get())) {
                 output->queueChanges(config);
                 if (changeset->enabled) {
-                    toBeEnabled << output;
+                    toBeEnabled << output.get();
                 } else {
-                    toBeDisabled << output;
+                    toBeDisabled << output.get();
                 }
             }
         }

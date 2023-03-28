@@ -93,7 +93,21 @@ DrmGpu::DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t device
 
 DrmGpu::~DrmGpu()
 {
-    removeOutputs();
+    waitIdle();
+    auto ref = std::move(m_drmOutputs);
+    for (const auto &output : ref) {
+        removeOutput(output.get());
+    }
+    auto virtualRef = std::move(m_virtualOutputs);
+    for (const auto &output : virtualRef) {
+        removeVirtualOutput(output.get());
+    }
+    if (!ref.empty() || !virtualRef.empty()) {
+        Q_EMIT m_platform->outputsQueried();
+        virtualRef.clear();
+        ref.clear();
+    }
+
     if (m_eglDisplay != EGL_NO_DISPLAY) {
         eglTerminate(m_eglDisplay);
     }
@@ -248,6 +262,8 @@ bool DrmGpu::updateOutputs()
     // check for added and removed connectors
     QVector<DrmConnector *> existing;
     QVector<DrmOutput *> addedOutputs;
+    // keep removed outputs alive until after the `outputsQueried` call
+    std::vector<std::unique_ptr<DrmOutput>> removedOutputs;
     for (int i = 0; i < resources->count_connectors; ++i) {
         const uint32_t currentConnector = resources->connectors[i];
         const auto it = std::find_if(m_connectors.begin(), m_connectors.end(), [currentConnector](const auto &connector) {
@@ -268,18 +284,23 @@ bool DrmGpu::updateOutputs()
     }
     for (auto it = m_connectors.begin(); it != m_connectors.end();) {
         DrmConnector *conn = it->get();
-        const auto output = findOutput(conn->id());
+        const auto outputIt = std::find_if(m_drmOutputs.begin(), m_drmOutputs.end(), [conn](const auto &o) {
+            return o->connector() == conn;
+        });
         const bool stillExists = existing.contains(conn);
         if (!stillExists || !conn->isConnected()) {
-            if (output) {
-                removeOutput(output);
+            if (outputIt != m_drmOutputs.end()) {
+                auto ref = std::move(*outputIt);
+                m_drmOutputs.erase(outputIt);
+                removeOutput(ref.get());
+                removedOutputs.push_back(std::move(ref));
             }
-        } else if (!output) {
+        } else if (outputIt == m_drmOutputs.end()) {
             qCDebug(KWIN_DRM, "New %soutput on GPU %s: %s", conn->isNonDesktop() ? "non-desktop " : "", qPrintable(m_devNode), qPrintable(conn->modelName()));
             const auto pipeline = conn->pipeline();
             m_pipelines << pipeline;
-            auto output = new DrmOutput(*it);
-            m_drmOutputs << output;
+            m_drmOutputs.push_back(std::make_unique<DrmOutput>(*it));
+            auto output = m_drmOutputs.back().get();
             addedOutputs << output;
             Q_EMIT outputAdded(output);
             pipeline->setLayers(m_platform->renderBackend()->createPrimaryLayer(pipeline), m_platform->renderBackend()->createCursorLayer(pipeline));
@@ -316,6 +337,11 @@ bool DrmGpu::updateOutputs()
             pipeline->revertPendingChanges();
         }
         for (const auto &output : std::as_const(addedOutputs)) {
+            const auto outputIt = std::find_if(m_drmOutputs.begin(), m_drmOutputs.end(), [output](const auto &o) {
+                return o.get() == output;
+            });
+            const auto ref = std::move(outputIt);
+            m_drmOutputs.erase(outputIt);
             removeOutput(output);
             const auto it = std::find_if(m_connectors.begin(), m_connectors.end(), [output](const auto &conn) {
                 return conn.get() == output->connector();
@@ -336,21 +362,8 @@ bool DrmGpu::updateOutputs()
             output->pipeline()->applyPendingChanges();
         }
     }
+    Q_EMIT m_platform->outputsQueried();
     return true;
-}
-
-void DrmGpu::removeOutputs()
-{
-    waitIdle();
-
-    const auto outputs = m_drmOutputs;
-    for (const auto &output : outputs) {
-        removeOutput(output);
-    }
-    const auto virtualOutputs = m_virtualOutputs;
-    for (const auto &output : virtualOutputs) {
-        removeVirtualOutput(output);
-    }
 }
 
 DrmPipeline::Error DrmGpu::checkCrtcAssignment(QVector<DrmConnector *> connectors, const QVector<DrmCrtc *> &crtcs)
@@ -416,7 +429,7 @@ DrmPipeline::Error DrmGpu::testPendingConfiguration()
     QVector<DrmCrtc *> crtcs;
     // only change resources that aren't currently leased away
     for (const auto &conn : m_connectors) {
-        bool isLeased = std::any_of(m_drmOutputs.cbegin(), m_drmOutputs.cend(), [&conn](const auto output) {
+        const bool isLeased = std::any_of(m_drmOutputs.cbegin(), m_drmOutputs.cend(), [&conn](const auto &output) {
             return output->lease() && output->pipeline()->connector() == conn.get();
         });
         if (!isLeased) {
@@ -424,7 +437,7 @@ DrmPipeline::Error DrmGpu::testPendingConfiguration()
         }
     }
     for (const auto &crtc : m_crtcs) {
-        bool isLeased = std::any_of(m_drmOutputs.cbegin(), m_drmOutputs.cend(), [&crtc](const auto output) {
+        const bool isLeased = std::any_of(m_drmOutputs.cbegin(), m_drmOutputs.cend(), [&crtc](const auto &output) {
             return output->lease() && output->pipeline()->crtc() == crtc.get();
         });
         if (!isLeased) {
@@ -475,22 +488,11 @@ DrmPipeline::Error DrmGpu::testPipelines()
     return test;
 }
 
-DrmOutput *DrmGpu::findOutput(quint32 connector)
-{
-    auto it = std::find_if(m_drmOutputs.constBegin(), m_drmOutputs.constEnd(), [connector](DrmOutput *o) {
-        return o->connector()->id() == connector;
-    });
-    if (it != m_drmOutputs.constEnd()) {
-        return *it;
-    }
-    return nullptr;
-}
-
 void DrmGpu::waitIdle()
 {
     m_socketNotifier->setEnabled(false);
     while (true) {
-        const bool idle = std::all_of(m_drmOutputs.constBegin(), m_drmOutputs.constEnd(), [](DrmOutput *output) {
+        const bool idle = std::all_of(m_drmOutputs.cbegin(), m_drmOutputs.cend(), [](const auto &output) {
             return !output->pipeline()->pageflipPending();
         });
         if (idle) {
@@ -578,9 +580,7 @@ void DrmGpu::removeOutput(DrmOutput *output)
     qCDebug(KWIN_DRM) << "Removing output" << output;
     m_pipelines.removeOne(output->pipeline());
     output->pipeline()->setLayers(nullptr, nullptr);
-    m_drmOutputs.removeOne(output);
     Q_EMIT outputRemoved(output);
-    output->unref();
 }
 
 DrmBackend *DrmGpu::platform() const
@@ -595,17 +595,21 @@ const QVector<DrmPipeline *> DrmGpu::pipelines() const
 
 DrmVirtualOutput *DrmGpu::createVirtualOutput(const QString &name, const QSize &size, double scale)
 {
-    auto output = new DrmVirtualOutput(name, this, size, scale);
-    m_virtualOutputs << output;
-    Q_EMIT outputAdded(output);
-    return output;
+    m_virtualOutputs.push_back(std::make_unique<DrmVirtualOutput>(name, this, size, scale));
+    Q_EMIT outputAdded(m_virtualOutputs.back().get());
+    return m_virtualOutputs.back().get();
 }
 
 void DrmGpu::removeVirtualOutput(DrmVirtualOutput *output)
 {
-    if (m_virtualOutputs.removeOne(output)) {
-        Q_EMIT outputRemoved(output);
-        output->unref();
+    auto it = std::find_if(m_virtualOutputs.begin(), m_virtualOutputs.end(), [output](const auto &o) {
+        return o.get() == output;
+    });
+    if (it != m_virtualOutputs.end()) {
+        const auto ref = std::move(*it);
+        m_virtualOutputs.erase(it);
+        Q_EMIT outputRemoved(ref.get());
+        Q_EMIT m_platform->outputsQueried();
     }
 }
 
@@ -636,12 +640,12 @@ std::unique_ptr<DrmLease> DrmGpu::leaseOutputs(const QVector<DrmOutput *> &outpu
     }
 }
 
-QVector<DrmVirtualOutput *> DrmGpu::virtualOutputs() const
+const std::vector<std::unique_ptr<DrmVirtualOutput>> &DrmGpu::virtualOutputs() const
 {
     return m_virtualOutputs;
 }
 
-QVector<DrmOutput *> DrmGpu::drmOutputs() const
+const std::vector<std::unique_ptr<DrmOutput>> &DrmGpu::drmOutputs() const
 {
     return m_drmOutputs;
 }
@@ -694,16 +698,6 @@ bool DrmGpu::asyncPageflipSupported() const
 bool DrmGpu::isNVidia() const
 {
     return m_isNVidia;
-}
-
-bool DrmGpu::isRemoved() const
-{
-    return m_isRemoved;
-}
-
-void DrmGpu::setRemoved()
-{
-    m_isRemoved = true;
 }
 
 bool DrmGpu::needsModeset() const

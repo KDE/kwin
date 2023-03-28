@@ -545,8 +545,8 @@ void X11WindowedBackend::handleClientMessage(xcb_client_message_event_t *event)
 
                 removedOutput->updateEnabled(false);
                 Q_EMIT outputRemoved(removedOutput);
-                removedOutput->unref();
                 Q_EMIT outputsQueried();
+                delete removedOutput;
             }
         }
     }

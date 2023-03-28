@@ -490,14 +490,8 @@ Workspace::~Workspace()
     m_placement.reset();
     delete m_windowKeysDialog;
 
-    if (m_placeholderOutput) {
-        m_placeholderOutput->unref();
-    }
+    m_placeholderOutput.reset();
     m_tileManagers.clear();
-
-    for (Output *output : std::as_const(m_outputs)) {
-        output->unref();
-    }
 
     _self = nullptr;
 }
@@ -1296,17 +1290,11 @@ void Workspace::updateOutputs(const QVector<Output *> &outputOrder)
     // The workspace requires at least one output connected.
     if (m_outputs.isEmpty()) {
         if (!m_placeholderOutput) {
-            m_placeholderOutput = new PlaceholderOutput(QSize(8192, 8192), 1);
+            m_placeholderOutput = std::make_unique<PlaceholderOutput>(QSize(8192, 8192), 1);
             m_placeholderFilter = std::make_unique<PlaceholderInputEventFilter>();
             input()->prependInputEventFilter(m_placeholderFilter.get());
         }
-        m_outputs.append(m_placeholderOutput);
-    } else {
-        if (m_placeholderOutput) {
-            m_placeholderOutput->unref();
-            m_placeholderOutput = nullptr;
-            m_placeholderFilter.reset();
-        }
+        m_outputs.append(m_placeholderOutput.get());
     }
 
     if (!m_activeOutput || !m_outputs.contains(m_activeOutput)) {
@@ -1336,7 +1324,6 @@ void Workspace::updateOutputs(const QVector<Output *> &outputOrder)
 
     const auto added = outputsSet - oldOutputsSet;
     for (Output *output : added) {
-        output->ref();
         m_tileManagers[output] = std::make_unique<TileManager>(output);
         Q_EMIT outputAdded(output);
     }
@@ -1385,8 +1372,8 @@ void Workspace::updateOutputs(const QVector<Output *> &outputOrder)
 
     desktopResized();
 
-    for (Output *output : removed) {
-        output->unref();
+    if (m_outputs.first() != m_placeholderOutput.get()) {
+        m_placeholderOutput.reset();
     }
 
     Q_EMIT outputsChanged();

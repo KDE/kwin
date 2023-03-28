@@ -74,11 +74,13 @@ void VirtualBackend::setVirtualOutputs(const QVector<QRect> &geometries, QVector
         createOutput(geometries[i].topLeft(), geometries[i].size(), scales.value(i, 1.0));
     }
 
+    // keep removed outputs alive until after the `outputsQueried` call
+    std::vector<std::unique_ptr<VirtualOutput>> ref;
     for (VirtualOutput *output : removed) {
         output->updateEnabled(false);
         m_outputs.removeOne(output);
         Q_EMIT outputRemoved(output);
-        output->unref();
+        ref.emplace_back(output);
     }
 
     Q_EMIT outputsQueried();

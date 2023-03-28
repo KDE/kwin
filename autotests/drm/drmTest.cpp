@@ -97,13 +97,13 @@ void DrmTest::testOutputDetection()
     QVERIFY(gpu->updateOutputs());
 
     // 3 outputs should be detected, one of them non-desktop
-    const auto outputs = gpu->drmOutputs();
+    const auto &outputs = gpu->drmOutputs();
     QCOMPARE(outputs.size(), 3);
     const auto vrOutput = std::find_if(outputs.begin(), outputs.end(), [](const auto &output) {
         return output->isNonDesktop();
     });
     QVERIFY(vrOutput != outputs.end());
-    QVERIFY(static_cast<DrmOutput *>(*vrOutput)->connector()->id() == vr->id);
+    QVERIFY(static_cast<DrmOutput *>(vrOutput->get())->connector()->id() == vr->id);
 
     // test hotunplugging
     mockGpu->connectors.removeOne(one);
@@ -156,7 +156,7 @@ void DrmTest::testZeroModesHandling()
     conn->modes.clear();
     QVERIFY(gpu->updateOutputs());
     QCOMPARE(gpu->drmOutputs().size(), 1);
-    QVERIFY(!gpu->drmOutputs().constFirst()->modes().empty());
+    QVERIFY(!gpu->drmOutputs().front()->modes().empty());
 
     gpu.reset();
     verifyCleanup(mockGpu.get());
@@ -276,7 +276,7 @@ void DrmTest::testModeGeneration()
     mockGpu->connectors.push_back(conn);
     QVERIFY(gpu->updateOutputs());
 
-    DrmOutput *const output = gpu->drmOutputs().front();
+    DrmOutput *const output = gpu->drmOutputs().front().get();
     QCOMPARE(output->modes().size(), expectedModes.size());
     for (const auto &mode : output->modes()) {
         QVERIFY(expectedModes.contains(mode->size()));
@@ -305,12 +305,8 @@ void DrmTest::testConnectorLifetime()
     QVERIFY(gpu->updateOutputs());
     QCOMPARE(gpu->drmOutputs().size(), 1);
 
-    DrmOutput *const output = gpu->drmOutputs().front();
-
-    output->ref();
     mockGpu->connectors.clear();
     QVERIFY(gpu->updateOutputs());
-    output->unref();
 
     gpu.reset();
     verifyCleanup(mockGpu.get());
