@@ -1491,7 +1491,6 @@ Q_SIGNALS:
 protected:
     void setWindowHandles(xcb_window_t client);
     void detectShape(xcb_window_t id);
-    virtual void propertyNotifyEvent(xcb_property_notify_event_t *e);
     Xcb::Property fetchWmClientLeader() const;
     void readWmClientLeader(Xcb::Property &p);
     void getWmClientLeader();

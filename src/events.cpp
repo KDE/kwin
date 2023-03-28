@@ -749,7 +749,6 @@ void X11Window::configureRequestEvent(xcb_configure_request_event_t *e)
  */
 void X11Window::propertyNotifyEvent(xcb_property_notify_event_t *e)
 {
-    Window::propertyNotifyEvent(e);
     if (e->window != window()) {
         return; // ignore frame/wrapper
     }
@@ -784,6 +783,12 @@ void X11Window::propertyNotifyEvent(xcb_property_notify_event_t *e)
             checkApplicationMenuServiceName();
         } else if (e->atom == atoms->kde_net_wm_appmenu_object_path) {
             checkApplicationMenuObjectPath();
+        } else if (e->atom == atoms->wm_client_leader) {
+            getWmClientLeader();
+        } else if (e->atom == atoms->kde_net_wm_shadow) {
+            updateShadow();
+        } else if (e->atom == atoms->kde_skip_close_animation) {
+            getSkipCloseAnimation();
         }
         break;
     }
@@ -1310,28 +1315,6 @@ void X11Window::keyPressEvent(uint key_code, xcb_timestamp_t time)
 {
     updateUserTime(time);
     Window::keyPressEvent(key_code);
-}
-
-// ****************************************
-// Window
-// ****************************************
-
-void Window::propertyNotifyEvent(xcb_property_notify_event_t *e)
-{
-    if (e->window != window()) {
-        return; // ignore frame/wrapper
-    }
-    switch (e->atom) {
-    default:
-        if (e->atom == atoms->wm_client_leader) {
-            getWmClientLeader();
-        } else if (e->atom == atoms->kde_net_wm_shadow) {
-            updateShadow();
-        } else if (e->atom == atoms->kde_skip_close_animation) {
-            getSkipCloseAnimation();
-        }
-        break;
-    }
 }
 
 } // namespace
