@@ -371,7 +371,7 @@ bool X11Window::windowEvent(xcb_generic_event_t *e)
             break;
         default: {
             if (eventType == Xcb::Extensions::self()->shapeNotifyEvent()) {
-                detectShape(window());
+                detectShape();
                 Q_EMIT geometryShapeChanged(frameGeometry());
             }
             if (eventType == Xcb::Extensions::self()->damageNotifyEvent()) {
@@ -554,7 +554,7 @@ bool X11Window::windowEvent(xcb_generic_event_t *e)
     }
     default:
         if (eventType == Xcb::Extensions::self()->shapeNotifyEvent() && reinterpret_cast<xcb_shape_notify_event_t *>(e)->affected_window == window()) {
-            detectShape(window()); // workaround for #19644
+            detectShape(); // workaround for #19644
             updateShape();
         }
         if (eventType == Xcb::Extensions::self()->damageNotifyEvent() && reinterpret_cast<xcb_damage_notify_event_t *>(e)->drawable == frameId()) {

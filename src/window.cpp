@@ -168,11 +168,6 @@ QDebug operator<<(QDebug debug, const Window *window)
     return debug;
 }
 
-void Window::detectShape(xcb_window_t id)
-{
-    is_shape = Xcb::Extensions::self()->hasShape(id);
-}
-
 QRectF Window::visibleGeometry() const
 {
     if (const WindowItem *item = windowItem()) {

@@ -1475,7 +1475,6 @@ Q_SIGNALS:
 
 protected:
     void setWindowHandles(xcb_window_t client);
-    void detectShape(xcb_window_t id);
     Xcb::Property fetchWmClientLeader() const;
     void readWmClientLeader(Xcb::Property &p);
     void getWmClientLeader();
@@ -1786,7 +1785,6 @@ protected:
     void cleanTabBox();
 
     QStringList m_activityList;
-    bool is_shape = false;
 
 private Q_SLOTS:
     void shadeHover();

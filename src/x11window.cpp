@@ -548,7 +548,7 @@ bool X11Window::track(xcb_window_t w)
     if (Xcb::Extensions::self()->isShapeAvailable()) {
         xcb_shape_select_input(kwinApp()->x11Connection(), w, true);
     }
-    detectShape(w);
+    detectShape();
     getWmOpaqueRegion();
     getSkipCloseAnimation();
     setupCompositing();
@@ -649,7 +649,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     if (Xcb::Extensions::self()->isShapeAvailable()) {
         xcb_shape_select_input(kwinApp()->x11Connection(), window(), true);
     }
-    detectShape(window());
+    detectShape();
     detectNoBorder();
     fetchIconicName();
     setClientFrameExtents(info->gtkFrameExtents());
@@ -1526,6 +1526,11 @@ void X11Window::setNoBorder(bool set)
 void X11Window::checkNoBorder()
 {
     setNoBorder(app_noborder);
+}
+
+void X11Window::detectShape()
+{
+    is_shape = Xcb::Extensions::self()->hasShape(window());
 }
 
 void X11Window::updateShape()

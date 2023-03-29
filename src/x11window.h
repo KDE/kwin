@@ -180,6 +180,7 @@ public:
 
     void invalidateDecoration() override;
 
+    void detectShape();
     void updateShape();
 
     /// resizeWithChecks() resizes according to gravity, and checks workarea position
@@ -466,6 +467,7 @@ private:
     uint app_noborder : 1; ///< App requested no border via window type, shape extension, etc.
     uint ignore_focus_stealing : 1; ///< Don't apply focus stealing prevention to this client
     bool blocks_compositing;
+    bool is_shape = false;
 
     enum FullScreenMode {
         FullScreenNone,
