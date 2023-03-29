@@ -93,6 +93,8 @@ public:
     xcb_visualid_t visual() const;
     int depth() const;
     bool hasAlpha() const;
+    QRegion opaqueRegion() const;
+    QVector<QRectF> shapeRegion() const;
 
     QMatrix4x4 inputTransformation() const override;
 
@@ -359,6 +361,8 @@ private:
     void getWmNormalHints();
     void getMotifHints();
     void getIcons();
+    void getWmOpaqueRegion();
+    void discardShapeRegion();
     void fetchName();
     void fetchIconicName();
     QString readName() const;
@@ -483,6 +487,9 @@ private:
     int sm_stacking_order;
     xcb_visualid_t m_visual = XCB_NONE;
     int bit_depth = 24;
+    QRegion opaque_region;
+    mutable QVector<QRectF> m_shapeRegion;
+    mutable bool m_shapeRegionIsValid = false;
     friend struct ResetupRulesProcedure;
 
     friend bool performTransiencyCheck();
@@ -528,6 +535,11 @@ inline int X11Window::depth() const
 inline bool X11Window::hasAlpha() const
 {
     return depth() == 32;
+}
+
+inline QRegion X11Window::opaqueRegion() const
+{
+    return opaque_region;
 }
 
 inline xcb_window_t X11Window::wrapperId() const

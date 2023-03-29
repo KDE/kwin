@@ -714,14 +714,6 @@ public:
      */
     bool wantsShadowToBeRendered() const;
 
-    /**
-     * This method returns the area that the Window window reports to be opaque.
-     * It is supposed to only provide valuable information if hasAlpha is @c true .
-     * @see hasAlpha
-     */
-    const QRegion &opaqueRegion() const;
-    QVector<QRectF> shapeRegion() const;
-
     bool skipsCloseAnimation() const;
     void setSkipCloseAnimation(bool set);
 
@@ -1489,13 +1481,6 @@ protected:
     void getWmClientLeader();
     void getWmClientMachine();
 
-    /**
-     * This function fetches the opaque region from this Window.
-     * Will only be called on corresponding property changes and for initialization.
-     */
-    void getWmOpaqueRegion();
-    void discardShapeRegion();
-
     virtual std::unique_ptr<WindowItem> createItem(Scene *scene) = 0;
 
     void getResourceClass();
@@ -1821,9 +1806,6 @@ private:
     QString resource_class;
     ClientMachine *m_clientMachine;
     xcb_window_t m_wmClientLeader;
-    QRegion opaque_region;
-    mutable QVector<QRectF> m_shapeRegion;
-    mutable bool m_shapeRegionIsValid = false;
     bool m_skipCloseAnimation;
     QPointer<KWaylandServer::SurfaceInterface> m_surface;
     // when adding new data members, check also copyToDeleted()
@@ -2123,11 +2105,6 @@ inline bool Window::isOutline() const
 inline bool Window::isInternal() const
 {
     return false;
-}
-
-inline const QRegion &Window::opaqueRegion() const
-{
-    return opaque_region;
 }
 
 inline EffectWindowImpl *Window::effectWindow()

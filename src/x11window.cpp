@@ -326,6 +326,7 @@ X11Window::X11Window()
     connect(clientMachine(), &ClientMachine::localhostChanged, this, &X11Window::updateCaption);
     connect(options, &Options::configChanged, this, &X11Window::updateMouseGrab);
     connect(options, &Options::condensedTitleChanged, this, &X11Window::updateCaption);
+    connect(this, &Window::geometryShapeChanged, this, &X11Window::discardShapeRegion);
 
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
         connect(this, &X11Window::moveResizeCursorChanged, this, [this](CursorShape cursor) {
@@ -5044,6 +5045,55 @@ QWindow *X11Window::findInternalWindow() const
 void X11Window::checkOutput()
 {
     setOutput(workspace()->outputAt(frameGeometry().center()));
+}
+
+void X11Window::getWmOpaqueRegion()
+{
+    const auto rects = info->opaqueRegion();
+    QRegion new_opaque_region;
+    for (const auto &r : rects) {
+        new_opaque_region |= Xcb::fromXNative(QRect(r.pos.x, r.pos.y, r.size.width, r.size.height)).toRect();
+    }
+    opaque_region = new_opaque_region;
+}
+
+QVector<QRectF> X11Window::shapeRegion() const
+{
+    if (m_shapeRegionIsValid) {
+        return m_shapeRegion;
+    }
+
+    const QRectF bufferGeometry = this->bufferGeometry();
+
+    if (is_shape) {
+        auto cookie = xcb_shape_get_rectangles_unchecked(kwinApp()->x11Connection(), frameId(), XCB_SHAPE_SK_BOUNDING);
+        UniqueCPtr<xcb_shape_get_rectangles_reply_t> reply(xcb_shape_get_rectangles_reply(kwinApp()->x11Connection(), cookie, nullptr));
+        if (reply) {
+            m_shapeRegion.clear();
+            const xcb_rectangle_t *rects = xcb_shape_get_rectangles_rectangles(reply.get());
+            const int rectCount = xcb_shape_get_rectangles_rectangles_length(reply.get());
+            for (int i = 0; i < rectCount; ++i) {
+                QRectF region = Xcb::fromXNative(QRect(rects[i].x, rects[i].y, rects[i].width, rects[i].height)).toAlignedRect();
+                // make sure the shape is sane (X is async, maybe even XShape is broken)
+                region = region.intersected(QRectF(QPointF(0, 0), bufferGeometry.size()));
+
+                m_shapeRegion += region;
+            }
+        } else {
+            m_shapeRegion.clear();
+        }
+    } else {
+        m_shapeRegion = {QRectF(0, 0, bufferGeometry.width(), bufferGeometry.height())};
+    }
+
+    m_shapeRegionIsValid = true;
+    return m_shapeRegion;
+}
+
+void X11Window::discardShapeRegion()
+{
+    m_shapeRegionIsValid = false;
+    m_shapeRegion.clear();
 }
 
 } // namespace
