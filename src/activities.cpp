@@ -8,8 +8,8 @@
 */
 #include "activities.h"
 // KWin
-#include "window.h"
 #include "workspace.h"
+#include "x11window.h"
 // KDE
 #include <KConfigGroup>
 // Qt
@@ -175,13 +175,14 @@ void Activities::reallyStop(const QString &id)
     QSet<QByteArray> dontCloseSessionIds;
     const auto windows = ws->windows();
     for (auto *const window : windows) {
-        if (!window->isClient()) {
+        auto x11Window = qobject_cast<X11Window *>(window);
+        if (!window || window->isUnmanaged()) {
             continue;
         }
         if (window->isDesktop()) {
             continue;
         }
-        const QByteArray sessionId = window->sessionId();
+        const QByteArray sessionId = x11Window->sessionId();
         if (sessionId.isEmpty()) {
             continue; // TODO support old wm_command apps too?
         }

@@ -70,7 +70,6 @@ Window::Window()
     , m_internalId(QUuid::createUuid())
     , m_client()
     , m_clientMachine(new ClientMachine(this))
-    , m_wmClientLeader(XCB_WINDOW_NONE)
     , m_skipCloseAnimation(false)
     , m_colorScheme(QStringLiteral("kdeglobals"))
     , m_moveResizeOutput(workspace()->activeOutput())
@@ -174,54 +173,6 @@ QRectF Window::visibleGeometry() const
     return QRectF();
 }
 
-Xcb::Property Window::fetchWmClientLeader() const
-{
-    return Xcb::Property(false, window(), atoms->wm_client_leader, XCB_ATOM_WINDOW, 0, 10000);
-}
-
-void Window::readWmClientLeader(Xcb::Property &prop)
-{
-    m_wmClientLeader = prop.value<xcb_window_t>(window());
-}
-
-void Window::getWmClientLeader()
-{
-    auto prop = fetchWmClientLeader();
-    readWmClientLeader(prop);
-}
-
-/**
- * Returns sessionId for this window,
- * taken either from its window or from the leader window.
- */
-QByteArray Window::sessionId() const
-{
-    QByteArray result = Xcb::StringProperty(window(), atoms->sm_client_id);
-    if (result.isEmpty() && m_wmClientLeader && m_wmClientLeader != window()) {
-        result = Xcb::StringProperty(m_wmClientLeader, atoms->sm_client_id);
-    }
-    return result;
-}
-
-/**
- * Returns command property for this window,
- * taken either from its window or from the leader window.
- */
-QString Window::wmCommand()
-{
-    QByteArray result = Xcb::StringProperty(window(), XCB_ATOM_WM_COMMAND);
-    if (result.isEmpty() && m_wmClientLeader && m_wmClientLeader != window()) {
-        result = Xcb::StringProperty(m_wmClientLeader, XCB_ATOM_WM_COMMAND);
-    }
-    result.replace(0, ' ');
-    return result;
-}
-
-void Window::getWmClientMachine()
-{
-    m_clientMachine->resolve(window(), wmClientLeader());
-}
-
 /**
  * Returns client machine for this window,
  * taken either from its window or from the leader window.
@@ -237,18 +188,6 @@ QString Window::wmClientMachine(bool use_localhost) const
         return ClientMachine::localhost();
     }
     return m_clientMachine->hostName();
-}
-
-/**
- * Returns client leader window for this client.
- * Returns the client window itself if no leader window is defined.
- */
-xcb_window_t Window::wmClientLeader() const
-{
-    if (m_wmClientLeader != XCB_WINDOW_NONE) {
-        return m_wmClientLeader;
-    }
-    return window();
 }
 
 void Window::setResourceClass(const QString &name, const QString &className)

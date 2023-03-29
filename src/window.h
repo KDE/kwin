@@ -672,14 +672,11 @@ public:
     void setLockScreenOverlay(bool allowed);
 
     virtual QString windowRole() const;
-    QByteArray sessionId() const;
     QString resourceName() const;
     QString resourceClass() const;
-    QString wmCommand();
     QString wmClientMachine(bool use_localhost) const;
-    const ClientMachine *clientMachine() const;
+    ClientMachine *clientMachine() const;
     virtual bool isLocalhost() const;
-    xcb_window_t wmClientLeader() const;
     virtual pid_t pid() const;
     static bool resourceMatch(const Window *c1, const Window *c2);
 
@@ -1475,10 +1472,6 @@ Q_SIGNALS:
 
 protected:
     void setWindowHandles(xcb_window_t client);
-    Xcb::Property fetchWmClientLeader() const;
-    void readWmClientLeader(Xcb::Property &p);
-    void getWmClientLeader();
-    void getWmClientMachine();
 
     virtual std::unique_ptr<WindowItem> createItem(Scene *scene) = 0;
 
@@ -1801,7 +1794,6 @@ private:
     QString resource_name;
     QString resource_class;
     ClientMachine *m_clientMachine;
-    xcb_window_t m_wmClientLeader;
     bool m_skipCloseAnimation;
     QPointer<KWaylandServer::SurfaceInterface> m_surface;
     // when adding new data members, check also copyToDeleted()
@@ -2143,7 +2135,7 @@ inline QString Window::resourceClass() const
     return resource_class; // it is always lowercase
 }
 
-inline const ClientMachine *Window::clientMachine() const
+inline ClientMachine *Window::clientMachine() const
 {
     return m_clientMachine;
 }

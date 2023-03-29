@@ -5118,4 +5118,64 @@ void X11Window::discardShapeRegion()
     m_shapeRegion.clear();
 }
 
+Xcb::Property X11Window::fetchWmClientLeader() const
+{
+    return Xcb::Property(false, window(), atoms->wm_client_leader, XCB_ATOM_WINDOW, 0, 10000);
+}
+
+void X11Window::readWmClientLeader(Xcb::Property &prop)
+{
+    m_wmClientLeader = prop.value<xcb_window_t>(window());
+}
+
+void X11Window::getWmClientLeader()
+{
+    auto prop = fetchWmClientLeader();
+    readWmClientLeader(prop);
+}
+
+/**
+ * Returns sessionId for this window,
+ * taken either from its window or from the leader window.
+ */
+QByteArray X11Window::sessionId() const
+{
+    QByteArray result = Xcb::StringProperty(window(), atoms->sm_client_id);
+    if (result.isEmpty() && m_wmClientLeader && m_wmClientLeader != window()) {
+        result = Xcb::StringProperty(m_wmClientLeader, atoms->sm_client_id);
+    }
+    return result;
+}
+
+/**
+ * Returns command property for this window,
+ * taken either from its window or from the leader window.
+ */
+QString X11Window::wmCommand()
+{
+    QByteArray result = Xcb::StringProperty(window(), XCB_ATOM_WM_COMMAND);
+    if (result.isEmpty() && m_wmClientLeader && m_wmClientLeader != window()) {
+        result = Xcb::StringProperty(m_wmClientLeader, XCB_ATOM_WM_COMMAND);
+    }
+    result.replace(0, ' ');
+    return result;
+}
+
+/**
+ * Returns client leader window for this client.
+ * Returns the client window itself if no leader window is defined.
+ */
+xcb_window_t X11Window::wmClientLeader() const
+{
+    if (m_wmClientLeader != XCB_WINDOW_NONE) {
+        return m_wmClientLeader;
+    }
+    return window();
+}
+
+void X11Window::getWmClientMachine()
+{
+    clientMachine()->resolve(window(), wmClientLeader());
+}
+
 } // namespace

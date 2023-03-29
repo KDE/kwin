@@ -81,6 +81,10 @@ public:
     }
     xcb_window_t frameId() const override;
 
+    QByteArray sessionId() const;
+    xcb_window_t wmClientLeader() const;
+    QString wmCommand();
+
     QRectF inputGeometry() const override;
 
     QPointF framePosToClientPos(const QPointF &point) const override;
@@ -363,6 +367,7 @@ private:
     QRect fullscreenMonitorsArea(NETFullscreenMonitors topology) const;
     void getResourceClass();
     void getWmNormalHints();
+    void getWmClientMachine();
     void getMotifHints();
     void getIcons();
     void getWmOpaqueRegion();
@@ -373,6 +378,9 @@ private:
     void setCaption(const QString &s, bool force = false);
     bool hasTransientInternal(const X11Window *c, bool indirect, QList<const X11Window *> &set) const;
     void setShortcutInternal() override;
+    Xcb::Property fetchWmClientLeader() const;
+    void readWmClientLeader(Xcb::Property &p);
+    void getWmClientLeader();
 
     void configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, qreal rh, int gravity, bool from_tool);
     NETExtendedStrut strut() const;
@@ -436,6 +444,7 @@ private:
     Xcb::Window m_client;
     Xcb::Window m_wrapper;
     Xcb::Window m_frame;
+    xcb_window_t m_wmClientLeader = XCB_WINDOW_NONE;
     int m_activityUpdatesBlocked;
     bool m_blockedActivityUpdatesRequireTransients;
     Xcb::Window m_moveResizeGrabWindow;
