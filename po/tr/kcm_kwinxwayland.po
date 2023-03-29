@@ -1,13 +1,13 @@
 # Copyright (C) YEAR This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
-# Emir SARI <emir_sari@icloud.com>, 2022.
+# Emir SARI <emir_sari@icloud.com>, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-18 01:00+0000\n"
-"PO-Revision-Date: 2022-12-17 17:59+0300\n"
+"PO-Revision-Date: 2023-03-28 17:34+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 22.12.0\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #: package/contents/ui/main.qml:19
 #, kde-format
@@ -56,13 +56,14 @@ msgstr "Hiçbir zaman"
 #: package/contents/ui/main.qml:70
 #, kde-format
 msgid "Only Meta, Control, Alt, and Shift keys"
-msgstr "Yalnızca Meta, Ctrl, Alt ve Shift düğmeleri"
+msgstr "Yalnızca Meta, Kontrol, Seçenek ve Üst Karakter düğmeleri"
 
 #: package/contents/ui/main.qml:73
 #, kde-format
 msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
 msgstr ""
-"Tüm düğmeler; ancak yalnızca Meta, Ctrl, Alt veya Shift düğmeleri basılıyken"
+"Tüm düğmeler; ancak yalnızca Meta, Kontrol, Seçenek veya Üst Karakter "
+"düğmeleri basılıyken"
 
 #: package/contents/ui/main.qml:77
 #, kde-format

@@ -11,15 +11,15 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-25 02:10+0000\n"
-"PO-Revision-Date: 2023-02-10 09:28+0300\n"
+"PO-Revision-Date: 2023-03-28 22:21+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
-"Language-Team: Turkish <kde-i18n-doc@kde.org>\n"
+"Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 22.12.2\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #: kcmrules.cpp:226
 #, kde-format
@@ -49,7 +49,7 @@ msgstr "Tam Eşleşme"
 #: optionsmodel.cpp:200
 #, kde-format
 msgid "Substring Match"
-msgstr "Altdizi Eşleşme"
+msgstr "Altdizi Eşleşmesi"
 
 #: optionsmodel.cpp:201
 #, kde-format
@@ -59,7 +59,7 @@ msgstr "Düzenli İfade"
 #: optionsmodel.cpp:205
 #, kde-format
 msgid "Apply Initially"
-msgstr "İlk Olarak Uygula"
+msgstr "Başlangıçta Uygula"
 
 #: optionsmodel.cpp:206
 #, kde-format
@@ -91,7 +91,7 @@ msgstr ""
 #: optionsmodel.cpp:213
 #, kde-format
 msgid "Remember"
-msgstr "Hatırla"
+msgstr "Anımsa"
 
 #: optionsmodel.cpp:214
 #, kde-format
@@ -154,15 +154,15 @@ msgstr "KWin Kuralları (*.kwinrule)"
 #: package/contents/ui/main.qml:59
 #, kde-format
 msgid "No rules for specific windows are currently set"
-msgstr "Şu anda belirli pencereler için kural belirtilmedi"
+msgstr "Şu anda belirli pencereler için hiçbir kural ayarlanmadı"
 
 #: package/contents/ui/main.qml:60
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Click the <interface>Add New...</interface> button below to add some"
 msgstr ""
-"Yeni eklemek için aşağıda <interface>Yeni Ekle...</interface> düğmesine "
-"tıklayın"
+"Yeni bir tane eklemek için aşağıda <interface>Yeni Ekle...</interface> "
+"düğmesine tıklayın"
 
 #: package/contents/ui/main.qml:68
 #, kde-format
@@ -312,7 +312,7 @@ msgstr "Hayır"
 #: package/contents/ui/ValueEditor.qml:175
 #, kde-format
 msgid "%1 %"
-msgstr "%1 %"
+msgstr "%​%1"
 
 #: package/contents/ui/RulesEditor.qml:277
 #, kde-format
@@ -385,7 +385,7 @@ msgstr "Açıklama"
 #: rulesmodel.cpp:407 rulesmodel.cpp:415 rulesmodel.cpp:420 rulesmodel.cpp:426
 #, kde-format
 msgid "Window matching"
-msgstr "Pencere eşleme"
+msgstr "Pencere eşleştirme"
 
 #: rulesmodel.cpp:386
 #, kde-format
@@ -420,7 +420,7 @@ msgstr "Pencere başlığı"
 #: rulesmodel.cpp:426
 #, kde-format
 msgid "Machine (hostname)"
-msgstr "Makine (sunucu adı)"
+msgstr "Makine (makine adı)"
 
 #: rulesmodel.cpp:432
 #, kde-format
@@ -443,12 +443,12 @@ msgstr "Boyut"
 #: rulesmodel.cpp:444
 #, kde-format
 msgid "Maximized horizontally"
-msgstr "Yatay büyütülmüş"
+msgstr "Ekranı yatay kaplamış"
 
 #: rulesmodel.cpp:449
 #, kde-format
 msgid "Maximized vertically"
-msgstr "Dikey büyütülmüş"
+msgstr "Ekranı dikey kaplamış"
 
 #: rulesmodel.cpp:457
 #, kde-format
@@ -473,22 +473,22 @@ msgstr "Ekran"
 #: rulesmodel.cpp:503
 #, kde-format
 msgid "Fullscreen"
-msgstr "Tam Ekran"
+msgstr "Tam ekran"
 
 #: rulesmodel.cpp:508
 #, kde-format
 msgid "Minimized"
-msgstr "Küçültülmüş"
+msgstr "Simge durumuna küçültülmüş"
 
 #: rulesmodel.cpp:513
 #, kde-format
 msgid "Shaded"
-msgstr "Panjuru Kapatılmış"
+msgstr "Panjuru kapatılmış"
 
 #: rulesmodel.cpp:518
 #, kde-format
 msgid "Initial placement"
-msgstr "İlk konumlandırma"
+msgstr "Başlangıç yerleşimi"
 
 #: rulesmodel.cpp:525
 #, kde-format
@@ -511,12 +511,12 @@ msgstr ""
 #: rulesmodel.cpp:535
 #, kde-format
 msgid "Minimum Size"
-msgstr "En küçük boyut"
+msgstr "En Küçük Boyut"
 
 #: rulesmodel.cpp:540
 #, kde-format
 msgid "Maximum Size"
-msgstr "En büyük boyut"
+msgstr "En Büyük Boyut"
 
 #: rulesmodel.cpp:545
 #, kde-format
@@ -582,7 +582,8 @@ msgstr "Değiştiriciyi atla"
 #: rulesmodel.cpp:580
 #, kde-format
 msgid "Window shall (not) appear in the Alt+Tab list"
-msgstr "Pencereler sanal masaüstleri için Alt+Sekme listesinde görül(me)meli"
+msgstr ""
+"Pencereler sanal masaüstleri için Seçenek+Sekme listesinde görül(me)meli"
 
 #: rulesmodel.cpp:584
 #, kde-format
@@ -690,12 +691,12 @@ msgid ""
 "while it's active!"
 msgstr ""
 "Kullanıldığında, bir pencere etkin olduğunda tüm klavye girişlerini\n"
-"(Alt+Sekme vb. de dahil) alacaktır. Bu özellikle öykünücü ve sanal\n"
+"(Seçenek+Sekme vb. de dahil) alacaktır. Bu özellikle öykünücü ve sanal\n"
 "makineler için ilginçtir.\n"
 "\n"
 "Uyarı:\n"
-"Bir pencere aktifken dışına çıkmak için Alt+Sekme ve herhangi bir\n"
-"evrensel kısayol (K Çalıştır'ı göstermek için Alt+F2 gibi)\n"
+"Bir pencere etkinken dışına çıkmak için Seçenek+Sekme ve herhangi bir\n"
+"evrensel kısayol (K Çalıştır'ı göstermek için Seçenek+F2 gibi)\n"
 "kullanamayacaksınız!"
 
 #: rulesmodel.cpp:655
@@ -741,7 +742,7 @@ msgstr ""
 #: rulesmodel.cpp:758
 #, kde-format
 msgid "All Window Types"
-msgstr "Bütün Pencere Türleri"
+msgstr "Tüm Pencere Türleri"
 
 #: rulesmodel.cpp:759
 #, kde-format
@@ -751,12 +752,12 @@ msgstr "Normal Pencere"
 #: rulesmodel.cpp:760
 #, kde-format
 msgid "Dialog Window"
-msgstr "İletişim Penceresi"
+msgstr "İletişim Kutusu"
 
 #: rulesmodel.cpp:761
 #, kde-format
 msgid "Utility Window"
-msgstr "Yardımcı Yazılım Penceresi"
+msgstr "İzlence Penceresi"
 
 #: rulesmodel.cpp:762
 #, kde-format
@@ -824,22 +825,22 @@ msgstr "Öntanımlı"
 #: rulesmodel.cpp:824
 #, kde-format
 msgid "No Placement"
-msgstr "Yerleştirme Yok"
+msgstr "Yerleştirme yok"
 
 #: rulesmodel.cpp:825
 #, kde-format
 msgid "Minimal Overlapping"
-msgstr "En Az Üst Üste Binme"
+msgstr "En az çakışan"
 
 #: rulesmodel.cpp:826
 #, kde-format
 msgid "Maximized"
-msgstr "Büyütülmüş"
+msgstr "Ekranı kaplamış"
 
 #: rulesmodel.cpp:827
 #, kde-format
 msgid "Centered"
-msgstr "Ortala"
+msgstr "Ortalanmış"
 
 #: rulesmodel.cpp:828
 #, kde-format
@@ -849,17 +850,17 @@ msgstr "Rastgele"
 #: rulesmodel.cpp:829
 #, kde-format
 msgid "In Top-Left Corner"
-msgstr "Sol Üst Köşede"
+msgstr "Sol üst köşede"
 
 #: rulesmodel.cpp:830
 #, kde-format
 msgid "Under Mouse"
-msgstr "Farenin Altı"
+msgstr "Farenin altında"
 
 #: rulesmodel.cpp:831
 #, kde-format
 msgid "On Main Window"
-msgstr "Ana Pencerede"
+msgstr "Ana pencerede"
 
 #: rulesmodel.cpp:838
 #, kde-format

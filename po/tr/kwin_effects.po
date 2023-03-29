@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-28 02:57+0000\n"
-"PO-Revision-Date: 2023-01-18 22:31+0300\n"
+"PO-Revision-Date: 2023-03-28 17:46+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 22.12.1\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurDescription)
 #: blur/blur_config.ui:17
@@ -57,9 +57,9 @@ msgid ""
 "Select a position for color picking with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
-"Sol tıklama ile renk toplama için bir konum seçin veya Enter düğmesine "
+"Sol tıklama ile renk toplama için bir konum seçin veya Giriş düğmesine "
 "basın.\n"
-"İptal etmek için ESC düğmesine basın veya sağ tıklayın."
+"İptal etmek için VAzgeç düğmesine basın veya sağ tıklayın."
 
 #: desktopgrid/desktopgrid_config.cpp:49 invert/invert_config.cpp:35
 #: magnifier/magnifier_config.cpp:55 mouseclick/mouseclick_config.cpp:48
@@ -543,7 +543,7 @@ msgstr "&Renk:"
 #: mousemark/mousemark_config.ui:82
 #, kde-format
 msgid "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
-msgstr "Shift+Meta düğmesine basarak ve fareyi hareket ettirerek çiz."
+msgstr "Üst Karakter+Meta düğmesine basarak ve fareyi hareket ettirerek çizin."
 
 #: outputlocator/outputlocator.cpp:48
 #, kde-format
@@ -613,9 +613,9 @@ msgid ""
 "Select window to screen shot with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
-"Sol tıklama ile ekran görüntüsü alınacak pencereyi seçin veya Enter "
+"Sol tıklama ile ekran görüntüsü alınacak pencereyi seçin veya Giriş "
 "düğmesine basın.\n"
-"İptal etmek için ESC düğmesine basın veya sağ tıklayın."
+"İptal etmek için Vazgeç düğmesine basın veya sağ tıklayın."
 
 #: screenshot/screenshotdbusinterface2.cpp:543
 #, kde-format
@@ -623,8 +623,8 @@ msgid ""
 "Create screen shot with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
-"Sol tıklama ile ekran görüntüsü oluşturun veya Enter düğmesine basın.\n"
-"İptal etmek için ESC düğmesine basın veya sağ tıklayın."
+"Sol tıklama ile ekran görüntüsü oluşturun veya Giriş düğmesine basın.\n"
+"İptal etmek için Vazgeç düğmesine basın veya sağ tıklayın."
 
 #: showfps/qml/main.qml:110
 #, kde-format
@@ -791,19 +791,19 @@ msgstr "Değiştiren düğmeler:"
 #: trackmouse/trackmouse_config.ui:65
 #, kde-format
 msgid "Alt"
-msgstr "Alt"
+msgstr "Seçenek"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Control)
 #: trackmouse/trackmouse_config.ui:72
 #, kde-format
 msgid "Ctrl"
-msgstr "Ctrl"
+msgstr "Kontrol"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Shift)
 #: trackmouse/trackmouse_config.ui:79
 #, kde-format
 msgid "Shift"
-msgstr "Shift"
+msgstr "Üst Karakter"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Meta)
 #: trackmouse/trackmouse_config.ui:86
