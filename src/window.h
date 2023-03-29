@@ -1767,7 +1767,6 @@ private Q_SLOTS:
 private:
     void maybeSendFrameCallback();
 
-    // when adding new data members, check also copyToDeleted()
     int m_refCount = 1;
     QUuid m_internalId;
     std::unique_ptr<EffectWindowImpl> m_effectWindow;
@@ -1778,7 +1777,6 @@ private:
     ClientMachine *m_clientMachine;
     bool m_skipCloseAnimation;
     QPointer<KWaylandServer::SurfaceInterface> m_surface;
-    // when adding new data members, check also copyToDeleted()
     qreal m_opacity = 1.0;
     int m_stackingOrder = 0;
 
