@@ -684,12 +684,9 @@ public:
     static bool resourceMatch(const Window *c1, const Window *c2);
 
     bool readyForPainting() const; // true if the window has been already painted its contents
-    xcb_visualid_t visual() const;
     QRegion inputShape() const;
     void setOpacity(qreal opacity);
     qreal opacity() const;
-    int depth() const;
-    bool hasAlpha() const;
     virtual bool setupCompositing();
     virtual void finishCompositing();
     EffectWindowImpl *effectWindow();
@@ -1403,10 +1400,6 @@ Q_SIGNALS:
      * @since 5.0
      */
     void windowClassChanged();
-    /**
-     * @since 5.4
-     */
-    void hasAlphaChanged();
 
     /**
      * Emitted whenever the Surface for this Window changes.
@@ -1510,14 +1503,11 @@ protected:
     Xcb::Property fetchSkipCloseAnimation() const;
     void readSkipCloseAnimation(Xcb::Property &prop);
     void getSkipCloseAnimation();
-    void setDepth(int depth);
 
     Output *m_output = nullptr;
     QRectF m_frameGeometry;
     QRectF m_clientGeometry;
     QRectF m_bufferGeometry;
-    xcb_visualid_t m_visual;
-    int bit_depth;
     NETWinInfo *info;
     bool ready_for_painting;
 
@@ -2030,11 +2020,6 @@ inline bool Window::readyForPainting() const
     return ready_for_painting;
 }
 
-inline xcb_visualid_t Window::visual() const
-{
-    return m_visual;
-}
-
 inline bool Window::isDesktop() const
 {
     return windowType() == NET::Desktop;
@@ -2138,16 +2123,6 @@ inline bool Window::isOutline() const
 inline bool Window::isInternal() const
 {
     return false;
-}
-
-inline int Window::depth() const
-{
-    return bit_depth;
-}
-
-inline bool Window::hasAlpha() const
-{
-    return depth() == 32;
 }
 
 inline const QRegion &Window::opaqueRegion() const

@@ -38,7 +38,6 @@ WaylandWindow::WaylandWindow(SurfaceInterface *surface)
     : m_isScreenLocker(surface->client() == waylandServer()->screenLockerClientConnection())
 {
     setSurface(surface);
-    setDepth(32);
 
     connect(surface, &SurfaceInterface::shadowChanged,
             this, &WaylandWindow::updateShadow);

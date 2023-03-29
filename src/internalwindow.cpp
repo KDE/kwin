@@ -409,7 +409,6 @@ void InternalWindow::present(const std::shared_ptr<QOpenGLFramebufferObject> fbo
 
     m_fbo = fbo;
 
-    setDepth(32);
     surfaceItem()->addDamage(surfaceItem()->rect().toAlignedRect());
 }
 
@@ -428,7 +427,6 @@ void InternalWindow::present(const QImage &image, const QRegion &damage)
 
     m_image = image;
 
-    setDepth(32);
     surfaceItem()->addDamage(damage);
 }
 

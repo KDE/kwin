@@ -90,6 +90,10 @@ public:
     QRectF frameRectToBufferRect(const QRectF &rect) const;
     QSizeF implicitSize() const;
 
+    xcb_visualid_t visual() const;
+    int depth() const;
+    bool hasAlpha() const;
+
     QMatrix4x4 inputTransformation() const override;
 
     bool isTransient() const override;
@@ -477,6 +481,8 @@ private:
     SyncRequest m_syncRequest;
     static bool check_active_modal; ///< \see X11Window::checkActiveModal()
     int sm_stacking_order;
+    xcb_visualid_t m_visual = XCB_NONE;
+    int bit_depth = 24;
     friend struct ResetupRulesProcedure;
 
     friend bool performTransiencyCheck();
@@ -508,6 +514,21 @@ private:
     quint32 m_pendingSurfaceId = 0;
     quint64 m_surfaceSerial = 0;
 };
+
+inline xcb_visualid_t X11Window::visual() const
+{
+    return m_visual;
+}
+
+inline int X11Window::depth() const
+{
+    return bit_depth;
+}
+
+inline bool X11Window::hasAlpha() const
+{
+    return depth() == 32;
+}
 
 inline xcb_window_t X11Window::wrapperId() const
 {

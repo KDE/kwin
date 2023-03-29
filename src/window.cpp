@@ -66,8 +66,6 @@ std::shared_ptr<Decoration::DecorationPalette> Window::s_defaultPalette;
 
 Window::Window()
     : m_output(workspace()->activeOutput())
-    , m_visual(XCB_NONE)
-    , bit_depth(24)
     , info(nullptr)
     , ready_for_painting(false)
     , m_internalId(QUuid::createUuid())
@@ -553,18 +551,6 @@ QString Window::windowRole() const
         return {};
     }
     return QString::fromLatin1(info->windowRole());
-}
-
-void Window::setDepth(int depth)
-{
-    if (bit_depth == depth) {
-        return;
-    }
-    const bool oldAlpha = hasAlpha();
-    bit_depth = depth;
-    if (oldAlpha != hasAlpha()) {
-        Q_EMIT hasAlphaChanged();
-    }
 }
 
 QRegion Window::inputShape() const

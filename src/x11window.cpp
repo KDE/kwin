@@ -197,13 +197,15 @@ void X11DecorationRenderer::render(const QRegion &region)
         return;
     }
     xcb_connection_t *c = kwinApp()->x11Connection();
+    X11Window *window = static_cast<X11Window *>(client()->window());
+
     if (m_gc == XCB_NONE) {
         m_gc = xcb_generate_id(c);
-        xcb_create_gc(c, m_gc, client()->window()->frameId(), 0, nullptr);
+        xcb_create_gc(c, m_gc, window->frameId(), 0, nullptr);
     }
 
     QRectF left, top, right, bottom;
-    client()->window()->layoutDecorationRects(left, top, right, bottom);
+    window->layoutDecorationRects(left, top, right, bottom);
 
     const QRect geometry = region.boundingRect();
     left = left.intersected(geometry);
@@ -211,14 +213,14 @@ void X11DecorationRenderer::render(const QRegion &region)
     right = right.intersected(geometry);
     bottom = bottom.intersected(geometry);
 
-    auto renderPart = [this, c](const QRect &geo) {
+    auto renderPart = [this, c, window](const QRect &geo) {
         if (!geo.isValid()) {
             return;
         }
 
         // Guess the pixel format of the X pixmap into which the QImage will be copied.
         QImage::Format format;
-        const int depth = client()->window()->depth();
+        const int depth = window->depth();
         switch (depth) {
         case 30:
             format = QImage::Format_A2RGB30_Premultiplied;
@@ -241,8 +243,8 @@ void X11DecorationRenderer::render(const QRegion &region)
         p.setClipRect(geo);
         renderToPainter(&p, geo);
 
-        xcb_put_image(c, XCB_IMAGE_FORMAT_Z_PIXMAP, client()->window()->frameId(), m_gc,
-                      image.width(), image.height(), geo.x(), geo.y(), 0, client()->window()->depth(),
+        xcb_put_image(c, XCB_IMAGE_FORMAT_Z_PIXMAP, window->frameId(), m_gc,
+                      image.width(), image.height(), geo.x(), geo.y(), 0, window->depth(),
                       image.sizeInBytes(), image.constBits());
     };
     renderPart(left.toRect());
