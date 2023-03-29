@@ -1482,7 +1482,6 @@ protected:
 
     virtual std::unique_ptr<WindowItem> createItem(Scene *scene) = 0;
 
-    void getResourceClass();
     void setResourceClass(const QString &name, const QString &className = QString());
     Xcb::Property fetchSkipCloseAnimation() const;
     void readSkipCloseAnimation(Xcb::Property &prop);
@@ -1492,7 +1491,6 @@ protected:
     QRectF m_frameGeometry;
     QRectF m_clientGeometry;
     QRectF m_bufferGeometry;
-    NETWinInfo *info;
     bool ready_for_painting;
 
 protected:

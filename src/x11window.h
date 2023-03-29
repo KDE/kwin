@@ -97,6 +97,8 @@ public:
     QVector<QRectF> shapeRegion() const;
 
     QMatrix4x4 inputTransformation() const override;
+    pid_t pid() const override;
+    QString windowRole() const override;
 
     bool isTransient() const override;
     bool groupTransient() const override;
@@ -359,6 +361,7 @@ private:
     bool isManaged() const; ///< Returns false if this client is not yet managed
     void updateAllowedActions(bool force = false);
     QRect fullscreenMonitorsArea(NETFullscreenMonitors topology) const;
+    void getResourceClass();
     void getWmNormalHints();
     void getMotifHints();
     void getIcons();
@@ -458,6 +461,8 @@ private:
     void cleanGrouping();
     void checkGroupTransients();
     void setTransient(xcb_window_t new_transient_for_id);
+
+    NETWinInfo *info = nullptr;
     xcb_window_t m_transientForId;
     xcb_window_t m_originalTransientForId;
     X11Window *shade_below;

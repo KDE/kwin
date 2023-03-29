@@ -356,6 +356,8 @@ X11Window::X11Window()
  */
 X11Window::~X11Window()
 {
+    delete info;
+
     if (m_killHelperPID && !::kill(m_killHelperPID, 0)) { // means the process is alive
         ::kill(m_killHelperPID, SIGTERM);
         m_killHelperPID = 0;
@@ -2888,6 +2890,16 @@ QMatrix4x4 X11Window::inputTransformation() const
     return matrix;
 }
 
+pid_t X11Window::pid() const
+{
+    return info->pid();
+}
+
+QString X11Window::windowRole() const
+{
+    return QString::fromLatin1(info->windowRole());
+}
+
 Xcb::Property X11Window::fetchShowOnScreenEdge() const
 {
     return Xcb::Property(false, window(), atoms->kde_screen_edge_show, XCB_ATOM_CARDINAL, 0, 1);
@@ -3824,6 +3836,11 @@ QSizeF X11Window::constrainClientSize(const QSizeF &size, SizeMode mode) const
     }
 
     return QSizeF(w, h);
+}
+
+void X11Window::getResourceClass()
+{
+    setResourceClass(QString::fromLatin1(info->windowClassName()), QString::fromLatin1(info->windowClassClass()));
 }
 
 /**

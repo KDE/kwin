@@ -66,7 +66,6 @@ std::shared_ptr<Decoration::DecorationPalette> Window::s_defaultPalette;
 
 Window::Window()
     : m_output(workspace()->activeOutput())
-    , info(nullptr)
     , ready_for_painting(false)
     , m_internalId(QUuid::createUuid())
     , m_client()
@@ -120,7 +119,6 @@ Window::~Window()
         m_tile->removeWindow(this);
     }
     Q_ASSERT(m_blockGeometryUpdates == 0);
-    delete info;
 }
 
 void Window::ref()
@@ -251,14 +249,6 @@ xcb_window_t Window::wmClientLeader() const
         return m_wmClientLeader;
     }
     return window();
-}
-
-void Window::getResourceClass()
-{
-    if (!info) {
-        return;
-    }
-    setResourceClass(QString::fromLatin1(info->windowClassName()), QString::fromLatin1(info->windowClassClass()));
 }
 
 void Window::setResourceClass(const QString &name, const QString &className)
@@ -417,10 +407,7 @@ void Window::elevate(bool elevate)
 
 pid_t Window::pid() const
 {
-    if (!info) {
-        return -1;
-    }
-    return info->pid();
+    return -1;
 }
 
 xcb_window_t Window::frameId() const
@@ -487,10 +474,7 @@ void Window::setStackingOrder(int order)
 
 QString Window::windowRole() const
 {
-    if (!info) {
-        return {};
-    }
-    return QString::fromLatin1(info->windowRole());
+    return QString();
 }
 
 QRegion Window::inputShape() const
