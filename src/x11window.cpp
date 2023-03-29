@@ -5178,4 +5178,20 @@ void X11Window::getWmClientMachine()
     clientMachine()->resolve(window(), wmClientLeader());
 }
 
+Xcb::Property X11Window::fetchSkipCloseAnimation() const
+{
+    return Xcb::Property(false, window(), atoms->kde_skip_close_animation, XCB_ATOM_CARDINAL, 0, 1);
+}
+
+void X11Window::readSkipCloseAnimation(Xcb::Property &property)
+{
+    setSkipCloseAnimation(property.toBool());
+}
+
+void X11Window::getSkipCloseAnimation()
+{
+    Xcb::Property property = fetchSkipCloseAnimation();
+    readSkipCloseAnimation(property);
+}
+
 } // namespace

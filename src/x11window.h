@@ -381,6 +381,9 @@ private:
     Xcb::Property fetchWmClientLeader() const;
     void readWmClientLeader(Xcb::Property &p);
     void getWmClientLeader();
+    Xcb::Property fetchSkipCloseAnimation() const;
+    void readSkipCloseAnimation(Xcb::Property &prop);
+    void getSkipCloseAnimation();
 
     void configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, qreal rh, int gravity, bool from_tool);
     NETExtendedStrut strut() const;

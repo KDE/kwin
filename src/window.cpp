@@ -354,22 +354,6 @@ xcb_window_t Window::frameId() const
     return m_client;
 }
 
-Xcb::Property Window::fetchSkipCloseAnimation() const
-{
-    return Xcb::Property(false, window(), atoms->kde_skip_close_animation, XCB_ATOM_CARDINAL, 0, 1);
-}
-
-void Window::readSkipCloseAnimation(Xcb::Property &property)
-{
-    setSkipCloseAnimation(property.toBool());
-}
-
-void Window::getSkipCloseAnimation()
-{
-    Xcb::Property property = fetchSkipCloseAnimation();
-    readSkipCloseAnimation(property);
-}
-
 bool Window::skipsCloseAnimation() const
 {
     return m_skipCloseAnimation;
