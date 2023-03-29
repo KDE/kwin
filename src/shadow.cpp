@@ -15,7 +15,7 @@
 #include "wayland/shmclientbuffer.h"
 #include "wayland/surface_interface.h"
 #include "wayland_server.h"
-#include "window.h"
+#include "x11window.h"
 
 #include <KDecoration2/Decoration>
 #include <KDecoration2/DecorationShadow>
@@ -56,7 +56,11 @@ std::unique_ptr<Shadow> Shadow::createShadow(Window *window)
 
 std::unique_ptr<Shadow> Shadow::createShadowFromX11(Window *window)
 {
-    auto data = Shadow::readX11ShadowProperty(window->window());
+    X11Window *x11Window = qobject_cast<X11Window *>(window);
+    if (!x11Window) {
+        return nullptr;
+    }
+    auto data = Shadow::readX11ShadowProperty(x11Window->window());
     if (!data.isEmpty()) {
         auto shadow = std::make_unique<Shadow>(window);
         if (!shadow->init(data)) {
@@ -289,14 +293,15 @@ bool Shadow::updateShadow()
         }
     }
 
-    auto data = Shadow::readX11ShadowProperty(m_window->window());
-    if (data.isEmpty()) {
-        return false;
+    if (X11Window *window = qobject_cast<X11Window *>(m_window)) {
+        auto data = Shadow::readX11ShadowProperty(window->window());
+        if (!data.isEmpty()) {
+            init(data);
+            return true;
+        }
     }
 
-    init(data);
-
-    return true;
+    return false;
 }
 
 Window *Shadow::window() const

@@ -74,12 +74,13 @@ public:
     explicit X11Window();
     ~X11Window() override; ///< Use destroyWindow() or releaseWindow()
 
+    xcb_window_t frameId() const;
+    xcb_window_t window() const;
     xcb_window_t wrapperId() const;
     xcb_window_t inputId() const
     {
         return m_decoInputExtent;
     }
-    xcb_window_t frameId() const override;
 
     QByteArray sessionId() const;
     xcb_window_t wmClientLeader() const;
@@ -559,11 +560,6 @@ inline bool X11Window::hasAlpha() const
 inline QRegion X11Window::opaqueRegion() const
 {
     return opaque_region;
-}
-
-inline xcb_window_t X11Window::wrapperId() const
-{
-    return m_wrapper;
 }
 
 inline bool X11Window::isClientSideDecorated() const

@@ -236,11 +236,14 @@ void RootInfo::changeShowingDesktop(bool showing)
 
 void RootInfo::setActiveClient(Window *client)
 {
-    const xcb_window_t w = client ? client->window() : xcb_window_t{XCB_WINDOW_NONE};
-    if (m_activeWindow == w) {
+    xcb_window_t windowId = XCB_WINDOW_NONE;
+    if (auto x11Window = qobject_cast<X11Window *>(client)) {
+        windowId = x11Window->window();
+    }
+    if (m_activeWindow == windowId) {
         return;
     }
-    m_activeWindow = w;
+    m_activeWindow = windowId;
     setActiveWindow(m_activeWindow);
 }
 

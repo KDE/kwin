@@ -26,6 +26,7 @@ class SurfaceInterface;
 namespace KWin
 {
 class Window;
+class X11Window;
 
 namespace Xwl
 {
@@ -57,7 +58,7 @@ class Xvisit : public QObject
 public:
     // TODO: handle ask action
 
-    Xvisit(Window *target, KWaylandServer::AbstractDataSource *dataSource, Dnd *dnd, QObject *parent);
+    Xvisit(X11Window *target, KWaylandServer::AbstractDataSource *dataSource, Dnd *dnd, QObject *parent);
 
     bool handleClientMessage(xcb_client_message_event_t *event);
     bool handleStatus(xcb_client_message_event_t *event);
@@ -70,7 +71,7 @@ public:
     {
         return m_state.finished;
     }
-    Window *target() const
+    X11Window *target() const
     {
         return m_target;
     }
@@ -95,7 +96,7 @@ private:
     void stopConnections();
 
     Dnd *const m_dnd;
-    Window *m_target;
+    X11Window *m_target;
     QPointer<KWaylandServer::AbstractDataSource> m_dataSource;
     uint32_t m_version = 0;
 

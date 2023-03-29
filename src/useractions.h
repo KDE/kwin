@@ -165,9 +165,8 @@ private:
      * Shows a helper Dialog to inform the user how to get back in case he triggered
      * an action which hides the window decoration (e.g. NoBorder or Fullscreen).
      * @param message The message type to be shown
-     * @param window The Window for which the dialog should be shown.
      */
-    void helperDialog(const QString &message, Window *window);
+    void helperDialog(const QString &message);
     /**
      * The actual main context menu which is show when the UserActionsMenu is invoked.
      */

@@ -68,7 +68,6 @@ Window::Window()
     : m_output(workspace()->activeOutput())
     , ready_for_painting(false)
     , m_internalId(QUuid::createUuid())
-    , m_client()
     , m_clientMachine(new ClientMachine(this))
     , m_skipCloseAnimation(false)
     , m_colorScheme(QStringLiteral("kdeglobals"))
@@ -139,9 +138,6 @@ QDebug operator<<(QDebug debug, const Window *window)
     debug.nospace();
     if (window) {
         debug << window->metaObject()->className() << '(' << static_cast<const void *>(window);
-        if (window->window()) {
-            debug << ", windowId=0x" << Qt::hex << window->window() << Qt::dec;
-        }
         if (const KWaylandServer::SurfaceInterface *surface = window->surface()) {
             debug << ", surface=" << surface;
         }
@@ -347,11 +343,6 @@ void Window::elevate(bool elevate)
 pid_t Window::pid() const
 {
     return -1;
-}
-
-xcb_window_t Window::frameId() const
-{
-    return m_client;
 }
 
 bool Window::skipsCloseAnimation() const

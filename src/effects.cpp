@@ -1959,7 +1959,6 @@ WINDOW_HELPER(bool, isPopupWindow, isPopupWindow)
 WINDOW_HELPER(bool, isOutline, isOutline)
 WINDOW_HELPER(bool, isLockScreen, isLockScreen)
 WINDOW_HELPER(pid_t, pid, pid)
-WINDOW_HELPER(qlonglong, windowId, window)
 WINDOW_HELPER(QUuid, internalId, internalId)
 WINDOW_HELPER(bool, isMinimized, isMinimized)
 WINDOW_HELPER(bool, isModal, isModal)
@@ -1980,6 +1979,14 @@ WINDOW_HELPER(bool, decorationHasAlpha, decorationHasAlpha)
 WINDOW_HELPER(bool, isUnresponsive, unresponsive)
 
 #undef WINDOW_HELPER
+
+qlonglong EffectWindowImpl::windowId() const
+{
+    if (X11Window *x11Window = qobject_cast<X11Window *>(m_window)) {
+        return x11Window->window();
+    }
+    return 0;
+}
 
 QVector<uint> EffectWindowImpl::desktops() const
 {
@@ -2032,16 +2039,24 @@ KDecoration2::Decoration *EffectWindowImpl::decoration() const
 
 QByteArray EffectWindowImpl::readProperty(long atom, long type, int format) const
 {
+    auto x11Window = qobject_cast<X11Window *>(m_window);
+    if (!x11Window) {
+        return QByteArray();
+    }
     if (!kwinApp()->x11Connection()) {
         return QByteArray();
     }
-    return readWindowProperty(window()->window(), atom, type, format);
+    return readWindowProperty(x11Window->window(), atom, type, format);
 }
 
 void EffectWindowImpl::deleteProperty(long int atom) const
 {
+    auto x11Window = qobject_cast<X11Window *>(m_window);
+    if (!x11Window) {
+        return;
+    }
     if (kwinApp()->x11Connection()) {
-        deleteWindowProperty(window()->window(), atom);
+        deleteWindowProperty(x11Window->window(), atom);
     }
 }
 

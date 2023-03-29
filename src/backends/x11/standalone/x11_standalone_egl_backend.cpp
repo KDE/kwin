@@ -14,6 +14,7 @@
 #include "platformsupport/vsyncconvenience/softwarevsyncmonitor.h"
 #include "scene/surfaceitem_x11.h"
 #include "scene/workspacescene.h"
+#include "utils/c_ptr.h"
 #include "workspace.h"
 #include "x11_standalone_backend.h"
 #include "x11_standalone_logging.h"

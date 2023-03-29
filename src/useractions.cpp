@@ -146,7 +146,7 @@ void UserActionsMenu::grabInput()
     m_menu->windowHandle()->setKeyboardGrabEnabled(true);
 }
 
-void UserActionsMenu::helperDialog(const QString &message, Window *window)
+void UserActionsMenu::helperDialog(const QString &message)
 {
     QStringList args;
     QString type;
@@ -181,9 +181,6 @@ void UserActionsMenu::helperDialog(const QString &message, Window *window)
             return;
         }
         args << QStringLiteral("--dontagain") << QLatin1String("kwin_dialogsrc:") + type;
-    }
-    if (window) {
-        args << QStringLiteral("--embed") << QString::number(window->window());
     }
     KProcess::startDetached(QStringLiteral("kdialog"), args);
 }
@@ -810,7 +807,7 @@ void UserActionsMenu::slotWindowOperation(QAction *action)
         break;
     }
     if (!type.isEmpty()) {
-        helperDialog(type, c);
+        helperDialog(type);
     }
     // need to delay performing the window operation as we need to have the
     // user actions menu closed before we destroy the decoration. Otherwise Qt crashes
@@ -1173,7 +1170,7 @@ void Workspace::setupWindowShortcutDone(bool ok)
 
 void Workspace::windowShortcutUpdated(Window *window)
 {
-    QString key = QStringLiteral("_k_session:%1").arg(window->window());
+    QString key = QStringLiteral("_k_session:%1").arg(window->internalId().toString());
     QAction *action = findChild<QAction *>(key);
     if (!window->shortcut().isEmpty()) {
         if (action == nullptr) { // new shortcut

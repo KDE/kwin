@@ -10,6 +10,7 @@
 
 #include "core/outputbackend.h"
 #include "main.h"
+#include "utils/xcbutils.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "window.h"

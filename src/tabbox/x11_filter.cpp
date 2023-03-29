@@ -11,6 +11,7 @@
 #include "effects.h"
 #include "screenedge.h"
 #include "tabbox/tabbox.h"
+#include "utils/xcbutils.h"
 #include "workspace.h"
 
 #include <KKeyServer>

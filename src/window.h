@@ -13,7 +13,6 @@
 #include "options.h"
 #include "rules.h"
 #include "utils/common.h"
-#include "utils/xcbutils.h"
 
 #include <functional>
 #include <memory>
@@ -553,8 +552,6 @@ public:
     void ref();
     void unref();
 
-    virtual xcb_window_t frameId() const;
-    xcb_window_t window() const;
     /**
      * Returns the geometry of the pixmap or buffer attached to this Window.
      *
@@ -1471,8 +1468,6 @@ Q_SIGNALS:
     void lockScreenOverlayChanged();
 
 protected:
-    void setWindowHandles(xcb_window_t client);
-
     virtual std::unique_ptr<WindowItem> createItem(Scene *scene) = 0;
 
     void setResourceClass(const QString &name, const QString &className = QString());
@@ -1784,7 +1779,6 @@ private:
     // when adding new data members, check also copyToDeleted()
     int m_refCount = 1;
     QUuid m_internalId;
-    Xcb::Window m_client;
     std::unique_ptr<EffectWindowImpl> m_effectWindow;
     std::unique_ptr<WindowItem> m_windowItem;
     std::unique_ptr<Shadow> m_shadow;
@@ -1915,17 +1909,6 @@ public:
 private:
     Window *cl;
 };
-
-inline xcb_window_t Window::window() const
-{
-    return m_client;
-}
-
-inline void Window::setWindowHandles(xcb_window_t w)
-{
-    Q_ASSERT(!m_client.isValid() && w != XCB_WINDOW_NONE);
-    m_client.reset(w, false);
-}
 
 inline QRectF Window::bufferGeometry() const
 {

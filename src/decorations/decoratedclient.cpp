@@ -12,6 +12,7 @@
 #include "decorationpalette.h"
 #include "window.h"
 #include "workspace.h"
+#include "x11window.h"
 
 #include <KDecoration2/DecoratedClient>
 #include <KDecoration2/Decoration>
@@ -131,10 +132,24 @@ DELEGATE2(QIcon, icon)
 DELEGATE(bool, isKeepAbove, keepAbove)
 DELEGATE(bool, isKeepBelow, keepBelow)
 DELEGATE(bool, isShaded, isShade)
-DELEGATE(WId, windowId, window)
-DELEGATE(WId, decorationId, frameId)
 
 #undef DELEGATE
+
+WId DecoratedClientImpl::windowId() const
+{
+    if (X11Window *x11Window = qobject_cast<X11Window *>(m_window)) {
+        return x11Window->window();
+    }
+    return 0;
+}
+
+WId DecoratedClientImpl::decorationId() const
+{
+    if (X11Window *x11Window = qobject_cast<X11Window *>(m_window)) {
+        return x11Window->frameId();
+    }
+    return 0;
+}
 
 #define DELEGATE(name, op)                                                \
     void DecoratedClientImpl::name()                                      \

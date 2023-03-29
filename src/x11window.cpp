@@ -528,7 +528,6 @@ bool X11Window::track(xcb_window_t w)
 
     m_unmanaged = true;
 
-    setWindowHandles(w);
     m_frame.reset(w, false);
     m_wrapper.reset(w, false);
     m_client.reset(w, false);
@@ -1228,8 +1227,6 @@ void X11Window::embedClient(xcb_window_t w, xcb_visualid_t visualid, xcb_colorma
     xcb_create_window(conn, depth, frame, kwinApp()->x11RootWindow(), 0, 0, 1, 1, 0,
                       XCB_WINDOW_CLASS_INPUT_OUTPUT, visualid, cw_mask, cw_values);
     m_frame.reset(frame);
-
-    setWindowHandles(m_client);
 
     // Create the wrapper window
     xcb_window_t wrapperId = xcb_generate_id(conn);
@@ -2791,6 +2788,16 @@ void X11Window::cancelFocusOutTimer()
 xcb_window_t X11Window::frameId() const
 {
     return m_frame;
+}
+
+xcb_window_t X11Window::window() const
+{
+    return m_client;
+}
+
+xcb_window_t X11Window::wrapperId() const
+{
+    return m_wrapper;
 }
 
 QRectF X11Window::inputGeometry() const

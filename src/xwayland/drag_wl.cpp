@@ -50,7 +50,7 @@ bool WlToXDrag::handleClientMessage(xcb_client_message_event_t *event)
     return m_dnd->dropHandler()->handleClientMessage(event);
 }
 
-Xvisit::Xvisit(Window *target, KWaylandServer::AbstractDataSource *dataSource, Dnd *dnd, QObject *parent)
+Xvisit::Xvisit(X11Window *target, KWaylandServer::AbstractDataSource *dataSource, Dnd *dnd, QObject *parent)
     : QObject(parent)
     , m_dnd(dnd)
     , m_target(target)
