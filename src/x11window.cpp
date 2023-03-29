@@ -3090,7 +3090,7 @@ bool X11Window::belongToSameApplication(const X11Window *c1, const X11Window *c2
                && c2->wmClientLeader() != c2->window() // don't use in this test then
                && !checks.testFlag(SameApplicationCheck::AllowCrossProcesses)) {
         ; // different client leader
-    } else if (!resourceMatch(c1, c2)) {
+    } else if (c1->resourceClass() != c2->resourceClass()) {
         ; // different apps
     } else if (!sameAppWindowRoleMatch(c1, c2, checks.testFlag(SameApplicationCheck::RelaxedForActive))
                && !checks.testFlag(SameApplicationCheck::AllowCrossProcesses)) {

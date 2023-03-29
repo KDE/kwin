@@ -193,11 +193,6 @@ void Window::setResourceClass(const QString &name, const QString &className)
     Q_EMIT windowClassChanged();
 }
 
-bool Window::resourceMatch(const Window *c1, const Window *c2)
-{
-    return c1->resourceClass() == c2->resourceClass();
-}
-
 qreal Window::opacity() const
 {
     return m_opacity;

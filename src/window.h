@@ -666,7 +666,6 @@ public:
     ClientMachine *clientMachine() const;
     virtual bool isLocalhost() const;
     virtual pid_t pid() const;
-    static bool resourceMatch(const Window *c1, const Window *c2);
 
     bool readyForPainting() const; // true if the window has been already painted its contents
     QRegion inputShape() const;
