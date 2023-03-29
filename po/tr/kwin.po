@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-17 03:17+0000\n"
-"PO-Revision-Date: 2023-03-07 20:50+0300\n"
+"PO-Revision-Date: 2023-03-28 22:15+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -369,7 +369,7 @@ msgstr "Kontrol"
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Alt"
-msgstr "Alt"
+msgstr "Seçenek"
 
 #: debug_console.cpp:289
 #, kde-format
@@ -1197,8 +1197,8 @@ msgid ""
 "Select window to force close with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
-"Sol tıklama veya Enter tuşu ile pencereyi kapatmak için pencereyi seçin.\n"
-"İptal etmek için ESC tuşuna basın veya sağ tıklayın."
+"Sol tıklama veya Giriş düğmesi ile pencereyi kapatmak için pencereyi seçin.\n"
+"İptal etmek için Vazgeç düğmesine basın veya sağ tıklayın."
 
 #: main.cpp:179
 #, kde-format
@@ -1439,14 +1439,14 @@ msgstr "etkinleştir"
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "close"
-msgstr "kapat"
+msgstr "büyüt"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:55
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:57
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "min"
-msgstr "min"
+msgstr "küçült"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:58
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:60
@@ -1467,7 +1467,7 @@ msgstr "en büyük"
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "maximize"
-msgstr "büyüt"
+msgstr "ekranı kapla"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:67
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:69
@@ -1513,7 +1513,7 @@ msgstr "ad"
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "appname"
-msgstr "uygulama adı"
+msgstr "uygulama"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:97
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:150
@@ -1535,12 +1535,12 @@ msgstr "%1 üzerinde çalışan pencereyi kapat"
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:299
 #, kde-format
 msgid "(Un)minimize running window on %1"
-msgstr "%1 üzerinde çalışan pencereleri büyüt/simge durumuna küçült"
+msgstr "%1 üzerinde çalışan pencereler ekranı kaplasın/simge durumuna küçült"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:302
 #, kde-format
 msgid "Maximize/restore running window on %1"
-msgstr "%1 üzerinde çalışan pencereleri büyüt/geri yükle"
+msgstr "%1 üzerinde çalışan pencereleri ekranı kaplasın/geri yükle"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:305
 #, kde-format
@@ -1550,7 +1550,7 @@ msgstr "%1 üzerinde çalışan pencereler için tam ekranı aç/kapat"
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:308
 #, kde-format
 msgid "(Un)shade running window on %1"
-msgstr "%1 üzerinde çalışan pencerelerin panjurunu kapat/aç"
+msgstr "%1 üzerinde çalışan pencerelerin panjurunu aç/kapat"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:311
 #, kde-format
@@ -1685,13 +1685,13 @@ msgstr "Eşleşen pencere türleri"
 #: rulesettings.kcfg:69
 #, kde-format
 msgid "Initial placement"
-msgstr "İlk konumlama"
+msgstr "Başlangıç yerleşimi"
 
 #. i18n: ectx: label, entry (placementrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:74
 #, kde-format
 msgid "Initial placement rule type"
-msgstr "Başlangıç konumlandırması kuralı türü"
+msgstr "Başlangıç yerleşimi kuralı türü"
 
 #. i18n: ectx: label, entry (position), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:79
@@ -1829,25 +1829,25 @@ msgstr "Pencere türü kuralı türünü ayarla"
 #: rulesettings.kcfg:194
 #, kde-format
 msgid "Maximized vertically"
-msgstr "Dikey büyütülmüş"
+msgstr "Ekranı dikey kaplamış"
 
 #. i18n: ectx: label, entry (maximizevertrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:198
 #, kde-format
 msgid "Maximized vertically rule type"
-msgstr "Dikey büyütülmüş kural türü"
+msgstr "Ekranı dikey kaplamış kuralı türü"
 
 #. i18n: ectx: label, entry (maximizehoriz), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:205
 #, kde-format
 msgid "Maximized horizontally"
-msgstr "Yatay büyütülmüş"
+msgstr "Yatay ekranı kaplamış"
 
 #. i18n: ectx: label, entry (maximizehorizrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:209
 #, kde-format
 msgid "Maximized horizontally rule type"
-msgstr "Yatay büyütülmüş kural türü"
+msgstr "Ekranı yatay kaplamış kuralı türü"
 
 #. i18n: ectx: label, entry (minimize), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:216
@@ -2295,7 +2295,7 @@ msgstr "Pencere Yöneticisini Ya&pılandır..."
 #: useractions.cpp:325
 #, kde-format
 msgid "Ma&ximize"
-msgstr "Bü&yüt"
+msgstr "Ekranı &Kapla"
 
 #: useractions.cpp:331
 #, kde-format
@@ -2356,7 +2356,7 @@ msgstr "&Yeni Masaüstü"
 #: useractions.cpp:646
 #, kde-format
 msgid "Move to %1 %2"
-msgstr "%1 ögesini %2 konumuna taşı"
+msgstr "%1 Ögesini %2 Konumuna Taşı"
 
 #: useractions.cpp:659
 #, kde-format
@@ -2413,17 +2413,17 @@ msgstr "Pencereyi Kapat"
 #: useractions.cpp:987
 #, kde-format
 msgid "Maximize Window"
-msgstr "Pencereyi Büyüt"
+msgstr "Pencere Ekranı Kaplasın"
 
 #: useractions.cpp:989
 #, kde-format
 msgid "Maximize Window Vertically"
-msgstr "Pencereyi Dikey Büyüt"
+msgstr "Pencere Ekranı Dikey Kaplasın"
 
 #: useractions.cpp:991
 #, kde-format
 msgid "Maximize Window Horizontally"
-msgstr "Pencereyi Yatay Büyüt"
+msgstr "Pencere Ekranı Yatay Kaplasın"
 
 #: useractions.cpp:993
 #, kde-format
@@ -2433,7 +2433,7 @@ msgstr "Pencereyi Simge Durumuna Küçült"
 #: useractions.cpp:995
 #, kde-format
 msgid "Shade Window"
-msgstr "Pencereyi Perdele"
+msgstr "Pencere Panjurunu Kapat"
 
 #: useractions.cpp:997
 #, kde-format

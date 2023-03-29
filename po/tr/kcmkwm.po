@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-03 00:48+0000\n"
-"PO-Revision-Date: 2023-03-27 19:51+0300\n"
+"PO-Revision-Date: 2023-03-28 22:11+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -43,7 +43,7 @@ msgstr ""
 #: actions.ui:17
 #, kde-format
 msgid "Inactive Inner Window Actions"
-msgstr "Etkin Olmayan Pencere İçi Eylemleri"
+msgstr "Etkin Olmayan İç Pencere Eylemleri"
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -68,7 +68,7 @@ msgstr ""
 #: actions.ui:43 actions.ui:83 actions.ui:123
 #, kde-format
 msgid "Activate, raise and pass click"
-msgstr "Etkinleştir, yükselt ve tıklamayı geç"
+msgstr "Etkinleştir, yükselt ve tıklama geçir"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
@@ -76,7 +76,7 @@ msgstr "Etkinleştir, yükselt ve tıklamayı geç"
 #: actions.ui:48 actions.ui:88 actions.ui:128
 #, kde-format
 msgid "Activate and pass click"
-msgstr "Etkinleştir ve tıklamayı geç"
+msgstr "Etkinleştir ve tıklama geçir"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
@@ -176,7 +176,7 @@ msgstr "Etkinleştir, yükselt ve sar"
 #: actions.ui:184
 #, kde-format
 msgid "Inner Window, Titlebar and Frame Actions"
-msgstr "Pencere İçi, Başlık Çubuğu ve Çerçeve Eylemleri"
+msgstr "İç Pencere, Başlık Çubuğu ve Çerçeve Eylemleri"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: actions.ui:195
@@ -191,8 +191,8 @@ msgid ""
 "Here you select whether holding the Meta key or Alt key will allow you to "
 "perform the following actions."
 msgstr ""
-"Meta ve Alt düğmelerine basılı tutmanın aşağıdaki eylemleri yapmanıza izin "
-"verip vermeyeceğini buradan seçebilirsiniz."
+"Meta ve Seçenek düğmelerine basılı tutmanın aşağıdaki eylemleri yapmanıza "
+"izin verip vermeyeceğini buradan seçebilirsiniz."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllKey)
 #: actions.ui:209
@@ -204,7 +204,7 @@ msgstr "Meta"
 #: actions.ui:214
 #, kde-format
 msgid "Alt"
-msgstr "Alt"
+msgstr "Seçenek"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: actions.ui:236
@@ -258,7 +258,7 @@ msgstr "Etkinleştir, yükselt ve taşı"
 #: mouse.ui:361 mouse.ui:423 mouse.ui:476 mouse.ui:538
 #, kde-format
 msgid "Toggle raise and lower"
-msgstr "Yükseltme ve alçaltma geçişi yap"
+msgstr "Yükselt/alçalt geçişi yap"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
@@ -315,7 +315,7 @@ msgstr "Alçalt"
 #: mouse.ui:313 mouse.ui:366 mouse.ui:428 mouse.ui:481 mouse.ui:543
 #, kde-format
 msgid "Minimize"
-msgstr "Küçült"
+msgstr "Simge durumuna küçült"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
@@ -414,21 +414,21 @@ msgstr "Yükselt/alçalt"
 #: actions.ui:480 mouse.ui:107
 #, kde-format
 msgid "Shade/unshade"
-msgstr "Panjuru Kapat/panjuru aç"
+msgstr "Panjuru kapat/aç"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
 #: actions.ui:485 mouse.ui:112
 #, kde-format
 msgid "Maximize/restore"
-msgstr "Büyüt/geri al"
+msgstr "Ekranı kapla/geri yükle"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
 #: actions.ui:490 mouse.ui:117
 #, kde-format
 msgid "Keep above/below"
-msgstr "Üstte/altta aut"
+msgstr "Üstte/altta tut"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
@@ -448,7 +448,7 @@ msgstr "Matlığı değiştir"
 #: advanced.ui:20
 #, kde-format
 msgid "Window &unshading:"
-msgstr "Pencere panjurunu aç:"
+msgstr "Pencere panjurunu &aç:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ShadeHover)
 #: advanced.ui:32
@@ -458,15 +458,15 @@ msgid ""
 "unshade automatically when the mouse pointer has been over the titlebar for "
 "some time.</p></body></html>"
 msgstr ""
-"<html><head/><body><p>Bu seçenek etkin ise panjuru kapatılmış bir pencere "
-"eğer fare imleci üzerinde bir süre kaldıysa kendiliğinden panjuru "
-"açılacaktır indirecektir.</p></body></html>"
+"<html><head/><body><p>Bu seçenek etkinse panjuru kapalı bir pencere eğer "
+"fare imleci üzerinde bir süre kaldıysa kendiliğinden panjuru indirecektir.</"
+"p></body></html>"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ShadeHover)
 #: advanced.ui:35
 #, kde-format
 msgid "On titlebar hover after:"
-msgstr "Başlık çubuğu üzerinde bulunma:"
+msgstr "Başlık çubuğuna geldikten şu kadar sonra:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_ShadeHoverInterval)
 #: advanced.ui:42
@@ -475,7 +475,7 @@ msgid ""
 "Sets the time in milliseconds before the window unshades when the mouse "
 "pointer goes over the shaded window."
 msgstr ""
-"Fare işaretçisinin üzerine gitmesiyle pencere panjuru açılmadan önce kaç "
+"Fare işaretçisinin üzerine gitmesiyle pencere panjuru kapatılmadan önce kaç "
 "milisaniye bekleneceğini belirler."
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_DelayFocusInterval)
@@ -490,7 +490,7 @@ msgstr " ms"
 #: advanced.ui:66
 #, kde-format
 msgid "Window &placement:"
-msgstr "Pencere &yerleştirmesi:"
+msgstr "Pencere &yerleşimi:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_Placement)
 #: advanced.ui:76
@@ -520,7 +520,7 @@ msgid ""
 "\"><span style=\" font-style:italic;\">Under mouse</span> will place the "
 "window under the pointer</li></ul></body></html>"
 msgstr ""
-"<html><head/><body><p>Konumlandırma ilkesi yeni bir pencerenin ekranda "
+"<html><head/><body><p>Yerleştirme politikası yeni bir pencerenin ekranda "
 "nerede görüneceğini belirler.</p><ul style=\"margin-top: 0px; margin-bottom: "
 "0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;\"><li style=\" "
 "margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
@@ -528,9 +528,9 @@ msgstr ""
 "\">Akıllı</span>, olabildiğince pencereleri üst üste bindirmemeye çalışır</"
 "li><li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
-"italic;\">Büyütme</span>, her pencereyi olabildiğince büyük yaparak ekranı "
-"doldurmaya çalışır. Bazı pencerelerin görünme ayarlarını pencereye özgü "
-"ayarlardan el ile ayarlamak yararlı olabilir.</li><li style=\" margin-"
+"italic;\">Ekranı Kapla</span>, her pencereyi olabildiğince büyük yaparak "
+"ekranı doldurmaya çalışır. Bazı pencerelerin görünme ayarlarını pencereye "
+"özgü ayarlardan el ile ayarlamak yararlı olabilir.</li><li style=\" margin-"
 "top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
 "indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Rastgele</"
 "span>, rastgele bir konum kullanır</li><li style=\" margin-top:0px; margin-"
@@ -548,13 +548,13 @@ msgstr ""
 #: advanced.ui:80
 #, kde-format
 msgid "Minimal Overlapping"
-msgstr "En Az Üst Üste Binme"
+msgstr "En az çakışan"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
 #: advanced.ui:85
 #, kde-format
 msgid "Maximized"
-msgstr "Büyütülmüş"
+msgstr "Ekranı kaplamış"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
 #: advanced.ui:90
@@ -572,13 +572,13 @@ msgstr "Ortalanmış"
 #: advanced.ui:100
 #, kde-format
 msgid "In Top-Left Corner"
-msgstr "Sol Üst Köşede"
+msgstr "Sol üst köşede"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
 #: advanced.ui:105
 #, kde-format
 msgid "Under mouse"
-msgstr "Farenin altı"
+msgstr "Farenin altında"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
 #: advanced.ui:113
@@ -589,7 +589,7 @@ msgid ""
 "defined above."
 msgstr ""
 "Açıldığında, pencere konumlarını anımsayabilen pencerelere bunu yapmaları "
-"için izin verilir. Bu, yukarıda tanımlanan pencere konumlandırma kipini "
+"için izin verilir. Bu, yukarıda tanımlanan pencere yerleştirme kipini "
 "geçersiz kılar."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
@@ -598,14 +598,13 @@ msgstr ""
 msgid ""
 "Allow apps to remember the positions of their own windows, if they support it"
 msgstr ""
-"Destekliyorlarsa uygulamaların kendi pencerelerinin konumlarını "
-"anımsamalarına izin ver"
+"Destekliyorlarsa uygulamaların pencere konumlarını anımsamalarına izin ver"
 
 #. i18n: ectx: property (text), widget (QLabel, specialWindowsLabel)
 #: advanced.ui:123
 #, kde-format
 msgid "&Special windows:"
-msgstr "Ö&zel Pencereler:"
+msgstr "Ö&zel pencereler:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
 #: advanced.ui:133
@@ -663,19 +662,19 @@ msgstr ""
 #: advanced.ui:164
 #, kde-format
 msgid "Switch to that Virtual Desktop"
-msgstr "Diğer Sanal Masaüstü'ne Geç"
+msgstr "Söz konusu Sanal Masaüstü'ne geç"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:169
 #, kde-format
 msgid "Bring window to current Virtual Desktop"
-msgstr "Pencereyi Geçerli Sanal Masaüstü'ne Getir"
+msgstr "Pencereyi geçerli Sanal Masaüstü'ne getir"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyLabel)
 #: focus.ui:22
 #, kde-format
 msgid "Window &activation policy:"
-msgstr "Pencere &etkinleştirme ilkesi:"
+msgstr "Pencere &etkinleştirme politikası:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, windowFocusPolicy)
 #: focus.ui:32
@@ -742,7 +741,7 @@ msgstr ""
 #: focus.ui:101
 #, kde-format
 msgid "Focus &stealing prevention:"
-msgstr "Odak &çalma koruması:"
+msgstr "Odak &çalmayı önleme:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_FocusStealingPreventionLevel)
 #: focus.ui:114
@@ -817,7 +816,7 @@ msgstr ""
 #: focus.ui:118 moving.ui:33 moving.ui:65 moving.ui:97
 #, kde-format
 msgid "None"
-msgstr "Hiçbiri"
+msgstr "Yok"
 
 #. i18n: Focus Stealing Prevention Level
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
@@ -886,7 +885,7 @@ msgstr ""
 #: focus.ui:168
 #, kde-format
 msgid "&Raise on hover, delayed by:"
-msgstr "&Üzerine gelince yükselt, gecikme:"
+msgstr "&Üzerine gelince yükselt; gecikmesi:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_AutoRaiseInterval)
 #: focus.ui:175
@@ -920,7 +919,7 @@ msgstr ""
 #: focus.ui:206
 #, kde-format
 msgid "Active screen follows &mouse"
-msgstr "Etkin pencere fareyi &izlesin"
+msgstr "Etkin ekran fareyi &izler"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
 #: focus.ui:213
@@ -935,7 +934,7 @@ msgstr ""
 #: focus.ui:216
 #, kde-format
 msgid "&Separate screen focus"
-msgstr "&Ekran odaklanmasını ayır"
+msgstr "&Ekran odağını ayır"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
 #: focus.ui:229
@@ -1087,7 +1086,7 @@ msgstr "Ekranı kapla"
 #: mouse.ui:45 mouse.ui:620 mouse.ui:655 mouse.ui:690
 #, kde-format
 msgid "Vertically maximize"
-msgstr "Dikey olarak büyüt"
+msgstr "Dikey olarak ekranı kapla"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
@@ -1097,7 +1096,7 @@ msgstr "Dikey olarak büyüt"
 #: mouse.ui:50 mouse.ui:625 mouse.ui:660 mouse.ui:695
 #, kde-format
 msgid "Horizontally maximize"
-msgstr "Yatay olarak büyüt"
+msgstr "Yatay olarak ekranı kapla"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
@@ -1111,7 +1110,7 @@ msgstr "Yatay olarak büyüt"
 #: mouse.ui:548
 #, kde-format
 msgid "Shade"
-msgstr "Panjuru Kapat"
+msgstr "Panjuru kapat"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
@@ -1157,7 +1156,7 @@ msgstr "Etkin"
 #: mouse.ui:190
 #, kde-format
 msgid "Inactive"
-msgstr "Etkin olmayan"
+msgstr "Etkin Değil"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandActiveTitlebar1)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandActiveTitlebar2)
@@ -1207,21 +1206,21 @@ msgstr "Etkinleştir ve alçalt"
 #: mouse.ui:589
 #, kde-format
 msgid "Maximize Button Actions"
-msgstr "Büyütme Düğmesi Eylemleri"
+msgstr "Ekranı Kapla Düğmesi Eylemleri"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label_8)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
 #: mouse.ui:598 mouse.ui:611
 #, kde-format
 msgid "Behavior on <em>left</em> click onto the maximize button."
-msgstr "Büyütme düğmesine <em>sol</em> tıklandığındaki davranış."
+msgstr "Ekranı kapla düğmesine <em>sol</em> tıklandığındaki davranış."
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label_9)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
 #: mouse.ui:633 mouse.ui:646
 #, kde-format
 msgid "Behavior on <em>middle</em> click onto the maximize button."
-msgstr "Büyütme düğmesine <em>orta</em> tuşla tıklandığındaki davranış."
+msgstr "Ekranı kapla düğmesine <em>orta</em> tuşla tıklandığındaki davranış."
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 #: mouse.ui:636
@@ -1234,13 +1233,13 @@ msgstr "O&rta tıklama:"
 #: mouse.ui:668 mouse.ui:681
 #, kde-format
 msgid "Behavior on <em>right</em> click onto the maximize button."
-msgstr "Büyütme düğmesine <em>sağ</em> tıklandığındaki davranış."
+msgstr "Ekranı kapla düğmesine <em>sağ</em> tıklandığındaki davranış."
 
 #. i18n: ectx: property (text), widget (QLabel, borderSnapLabel)
 #: moving.ui:20
 #, kde-format
 msgid "Screen &edge snap zone:"
-msgstr "&Kenar yapışma alanı:"
+msgstr "Ekran &kenarı tutturma bölgesi:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_BorderSnapZone)
 #: moving.ui:30
@@ -1249,9 +1248,9 @@ msgid ""
 "Here you can set the snap zone for screen edges, i.e. the 'strength' of the "
 "magnetic field which will make windows snap to the border when moved near it."
 msgstr ""
-"Buradan ekran kenarları için yapışma alanınını (ayarlayabilirsiniz. "
-"Pencerelerin kenara yapışmasını sağlayan manyetik alanın kuvveti gibi "
-"düşünülebilir."
+"Burada ekran kenarları için tutturma bölgesini, yani yanına taşındığında "
+"pencerelerin kenarlığa yapışmasını sağlayacak manyetik alanın 'kuvvetini' "
+"ayarlayabilirsiniz."
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_BorderSnapZone)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_WindowSnapZone)
@@ -1265,7 +1264,7 @@ msgstr " pks"
 #: moving.ui:52
 #, kde-format
 msgid "&Window snap zone:"
-msgstr "&Pencere yapışma alanı:"
+msgstr "&Pencere tutturma bölgesi:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_WindowSnapZone)
 #: moving.ui:62
@@ -1275,14 +1274,15 @@ msgid ""
 "magnetic field which will make windows snap to each other when they are "
 "moved near another window."
 msgstr ""
-"Buradan pencereler için yapışma alanınını ayarlayabilirsiniz. Pencerelerin "
-"birbirine yapışmasını sağlayan manyetik alanın kuvveti gibi düşünülebilir."
+"Burada pencereler için tutturma bölgesini, yani yanına taşındığında "
+"pencerelerin birbirlerine yapışmalarını sağlayacak manyetik alanın "
+"'kuvvetini' ayarlayabilirsiniz."
 
 #. i18n: ectx: property (text), widget (QLabel, centerSnaplabel)
 #: moving.ui:84
 #, kde-format
 msgid "&Center snap zone:"
-msgstr "&Orta yapışma alanı:"
+msgstr "&Merkez tutturma bölgesi:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_CenterSnapZone)
 #: moving.ui:94
@@ -1292,15 +1292,15 @@ msgid ""
 "the magnetic field which will make windows snap to the center of the screen "
 "when moved near it."
 msgstr ""
-"Buradan ekranın ortası için yapışma alanınını ayarlayabilirsiniz. "
-"Pencerelerin ortaya yapışmasını sağlayan manyetik alanın kuvveti gibi "
-"düşünülebilir."
+"Burada ekran merkezi için tutturma bölgesini, yani pencerelerin yanına "
+"taşındığında ekranın merkezine yapışmasını sağlayacak manyetik alanın "
+"'kuvvetini' ayarlayabilirsiniz."
 
 #. i18n: ectx: property (text), widget (QLabel, OverlapSnapLabel)
 #: moving.ui:113
 #, kde-format
 msgid "&Snap windows:"
-msgstr "P&encere yapıştırma:"
+msgstr "Pencereleri &tuttur:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SnapOnlyWhenOverlapping)
 #: moving.ui:123
@@ -1310,15 +1310,15 @@ msgid ""
 "them, i.e. they will not be snapped if the windows comes only near another "
 "window or border."
 msgstr ""
-"Burada üst üste koymayı denediğinizde pencerelerin birbirine yapışmasını "
-"ayarlayabilirsiniz. Başka bir pencerenin veya ekranın kenarına yaklaşınca "
-"yapışmayacaklardır."
+"Burada, pencerelerin yalnızca örtüştürmeye çalışırsanız tutturulacağını "
+"ayarlayabilirsiniz, yani pencereler yalnızca başka bir pencerenin veya "
+"sınırın yanına gelirse tutturulmaz."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SnapOnlyWhenOverlapping)
 #: moving.ui:126
 #, kde-format
 msgid "Only when overlapping"
-msgstr "&Pencereleri yalnızca üst üste gelmişlerse yapıştır"
+msgstr "Yalnızca örtüştüğünde"
 
 #: windows.cpp:97
 #, kde-format
@@ -1339,11 +1339,11 @@ msgid ""
 "preferred candidate. Unusual, but possible variant of <em>Click to focus</"
 "em>."
 msgstr ""
-"<em>Odak için tıkla (fare önceliği)</em>Bu büyük ölçüde <i>Odak için tıkla</"
-"i> ile aynıdır. Eğer etkin bir pencere sistem tarafından seçilmeli ise (örn. "
-"geçerli olan kapatıldığından dolayı) aday olarak farenin altındaki pencere "
-"tercih edilir. Farklı bir seçenektir ancak <i>Odak için tıkla</i> için bir "
-"alternatiftir."
+"<em>Odak için tıkla (fare önceliği)</em>Bu, çoğunlukla <guilabel>Odak için "
+"tıkla</guilabel> ile aynıdır. Sistem tarafından etkin bir pencerenin "
+"seçilmesi gerekiyorsa (&eg;,. o anda etkin olan kapalı olduğu için), farenin "
+"altındaki pencere tercih edilen adaydır. Alışılmadık; ancak <guilabel>Odak "
+"için tıkla</guilabel>'nın olası bir çeşididir."
 
 #: windows.cpp:106
 #, kde-format
@@ -1383,9 +1383,9 @@ msgid ""
 msgstr ""
 "<em>Odak farenin altında:</em> Odak her zaman farenin altındaki pencerede "
 "kalır.<br/><strong>Uyarı:</strong> <em>Odak çalma koruması</em> ve <em>sekme "
-"kutusu ('Alt+Tab)'</em>, etkinleştirme ilkesine karşıttır ve çalışmazlar. Bu "
-"durumda <em>Odak fareyi izler (fare önceliği)</em>'ni kullanmak "
-"isteyeceksinizdir!"
+"kutusu ('Seçenek+Sekme)'</em>, etkinleştirme ilkesine karşıttır ve "
+"çalışmazlar. Bu durumda <em>Odak fareyi izler (fare önceliği)</em>'ni "
+"kullanmak isteyeceksinizdir!"
 
 #: windows.cpp:119
 #, kde-format
@@ -1400,9 +1400,9 @@ msgstr ""
 "<em>Odak katıca farenin altında:</em> Odak her zaman farenin altındaki "
 "pencerede kalır (kuşkudaysa hiçbir yerde) ve bu eski yönetilmeyen X11 "
 "ortamlarındaki davranışa çok benzer.<br/><strong>Uyarı:</strong> <em>Odak "
-"çalma koruması</em> ve <em>sekme kutusu ('Alt+Tab)'</em>, etkinleştirme "
-"ilkesine karşıttır ve çalışmazlar. Bu durumda <em>Odak fareyi izler (fare "
-"önceliği)</em>'ni kullanmak isteyeceksinizdir!"
+"çalma koruması</em> ve <em>sekme kutusu ('Seçenek+Sekme)'</em>, "
+"etkinleştirme ilkesine karşıttır ve çalışmazlar. Bu durumda <em>Odak fareyi "
+"izler (fare önceliği)</em>'ni kullanmak isteyeceksinizdir!"
 
 #~ msgid "Cascaded"
 #~ msgstr "Basamaklandırılmış"
