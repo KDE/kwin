@@ -1,6 +1,6 @@
 add_definitions(-DTRANSLATION_DOMAIN=\"kwin_package_decoration\")
 
-kcoreaddons_add_plugin(kwin_packagestructure_decoration SOURCES decoration.cpp INSTALL_NAMESPACE "kpackage/packagestructure")
+kcoreaddons_add_plugin(kwin_packagestructure_decoration SOURCES decoration.cpp INSTALL_NAMESPACE "kf6/packagestructure")
 
 target_link_libraries(kwin_packagestructure_decoration
    KF6::I18n
