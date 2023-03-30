@@ -89,7 +89,7 @@ QVariant WindowModel::data(const QModelIndex &index, int role) const
     case OutputRole:
         return QVariant::fromValue(window->output());
     case DesktopRole:
-        return window->desktop();
+        return QVariant::fromValue(window->desktops());
     case ActivityRole:
         return window->activities();
     default:
