@@ -242,14 +242,14 @@ std::optional<std::pair<OutputConfiguration, QVector<Output *>>> readOutputConfi
     }
 
     bool allDisabled = std::all_of(outputs.begin(), outputs.end(), [&cfg](const auto &output) {
-        return !cfg.changeSet(output)->enabled;
+        return !cfg.changeSet(output)->enabled.value_or(output->isEnabled());
     });
     if (allDisabled) {
         qCWarning(KWIN_CORE) << "KScreen config would disable all outputs!";
         return std::nullopt;
     }
     std::erase_if(outputOrder, [&cfg](const auto &pair) {
-        return !cfg.constChangeSet(pair.second)->enabled;
+        return !cfg.constChangeSet(pair.second)->enabled.value_or(pair.second->isEnabled());
     });
     std::sort(outputOrder.begin(), outputOrder.end(), [](const auto &left, const auto &right) {
         if (left.first == right.first) {
