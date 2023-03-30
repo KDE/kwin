@@ -853,10 +853,6 @@ void Window::doSetDesktop()
 {
 }
 
-void Window::doSetOnActivities(const QStringList &activityList)
-{
-}
-
 void Window::enterDesktop(VirtualDesktop *virtualDesktop)
 {
     if (m_desktops.contains(virtualDesktop)) {
@@ -3227,6 +3223,10 @@ void Window::setOnActivities(const QStringList &newActivitiesList)
 
     updateActivities(false);
 #endif
+}
+
+void Window::doSetOnActivities(const QStringList &activityList)
+{
 }
 
 /**

@@ -639,17 +639,34 @@ public:
     virtual bool isOutline() const;
     virtual bool isInternal() const;
 
-    QVector<VirtualDesktop *> desktops() const;
-    virtual QStringList activities() const;
-    bool isOnDesktop(VirtualDesktop *desktop) const;
-    bool isOnActivity(const QString &activity) const;
-    bool isOnCurrentDesktop() const;
-    bool isOnCurrentActivity() const;
-    bool isOnAllDesktops() const;
-    bool isOnAllActivities() const;
     bool isLockScreenOverlay() const;
-
     void setLockScreenOverlay(bool allowed);
+
+    QStringList desktopIds() const;
+    QVector<VirtualDesktop *> desktops() const;
+    void setDesktops(QVector<VirtualDesktop *> desktops);
+    void enterDesktop(VirtualDesktop *desktop);
+    void leaveDesktop(VirtualDesktop *desktop);
+    bool isOnDesktop(VirtualDesktop *desktop) const;
+    bool isOnCurrentDesktop() const;
+    bool isOnAllDesktops() const;
+    void setOnAllDesktops(bool set);
+
+    virtual QStringList activities() const;
+    bool isOnActivity(const QString &activity) const;
+    bool isOnCurrentActivity() const;
+    bool isOnAllActivities() const;
+    void setOnActivity(const QString &activity, bool enable);
+    void setOnActivities(const QStringList &newActivitiesList);
+    void setOnAllActivities(bool all);
+    virtual void updateActivities(bool includeTransients);
+    void blockActivityUpdates(bool b = true);
+
+    /**
+     * Refresh Window's cache of activites
+     * Called when activity daemon status changes
+     */
+    virtual void checkActivities(){};
 
     virtual QString windowRole() const;
     QString resourceName() const;
@@ -903,17 +920,6 @@ public:
     }
     void setShortcut(const QString &cut);
     bool performMouseCommand(Options::MouseCommand, const QPointF &globalPos);
-    void setOnAllDesktops(bool set);
-    void enterDesktop(VirtualDesktop *desktop);
-    void leaveDesktop(VirtualDesktop *desktop);
-
-    /**
-     * Set the window as being on the attached list of desktops
-     * On X11 it will be set to the last entry
-     */
-    void setDesktops(QVector<VirtualDesktop *> desktops);
-
-    QStringList desktopIds() const;
 
     void setMinimized(bool set);
     bool isMinimized() const
@@ -968,18 +974,6 @@ public:
     virtual bool userCanSetFullScreen() const;
     virtual bool userCanSetNoBorder() const;
     virtual void checkNoBorder();
-
-    /**
-     * Refresh Window's cache of activites
-     * Called when activity daemon status changes
-     */
-    virtual void checkActivities(){};
-
-    void setOnActivity(const QString &activity, bool enable);
-    void setOnActivities(const QStringList &newActivitiesList);
-    void setOnAllActivities(bool all);
-    virtual void updateActivities(bool includeTransients);
-    void blockActivityUpdates(bool b = true);
 
     const WindowRules *rules() const
     {
