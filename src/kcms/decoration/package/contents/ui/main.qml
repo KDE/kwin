@@ -16,7 +16,6 @@ import org.kde.newstuff as NewStuff
 KCM.AbstractKCM {
     id: root
 
-    KCM.ConfigModule.quickHelp: i18n("This module lets you configure the window decorations.")
     title: kcm.name
 
     framedView: false

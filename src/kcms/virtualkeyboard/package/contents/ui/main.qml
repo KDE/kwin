@@ -13,7 +13,6 @@ import org.kde.kcm as KCM
 
 KCM.GridViewKCM {
     id: root
-    KCM.ConfigModule.quickHelp: i18n("This module lets you choose the virtual keyboard to use.")
 
     view.model: kcm.model
     view.currentIndex: kcm.model.inputMethodIndex(kcm.settings.inputMethod)

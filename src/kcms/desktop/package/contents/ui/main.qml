@@ -14,8 +14,6 @@ import org.kde.kirigami 2.20 as Kirigami
 KCM.ScrollViewKCM {
     id: root
 
-    KCM.ConfigModule.quickHelp: i18n("This module lets you configure the navigation, number and layout of virtual desktops.")
-
     Connections {
         target: kcm.desktopsModel
 

@@ -15,8 +15,6 @@ import org.kde.kquickcontrols
 
 KCM.SimpleKCM {
     id: root
-    KCM.ConfigModule.buttons: KCM.ConfigModule.Default | KCM.ConfigModule.Apply
-    KCM.ConfigModule.quickHelp: i18n("This module lets configure which keyboard events are forwarded to X11 apps regardless of their focus.")
     KCM.SettingStateBinding {
         configObject: kcm.settings
         settingName: "Xwayland"
