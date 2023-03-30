@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-17 03:17+0000\n"
-"PO-Revision-Date: 2023-03-28 22:15+0300\n"
+"POT-Creation-Date: 2023-03-30 02:44+0000\n"
+"PO-Revision-Date: 2023-03-29 16:24+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -1985,13 +1985,13 @@ msgstr "Bileşikleştirme kural türünü engelle"
 #: rulesettings.kcfg:332
 #, kde-format
 msgid "Focus stealing prevention"
-msgstr "Odak çalması önleme"
+msgstr "Odak çalmayı önleme"
 
 #. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:338
 #, kde-format
 msgid "Focus stealing prevention rule type"
-msgstr "Odak çalma önleme kuralı türü"
+msgstr "Odak çalmayı önleme kuralı türü"
 
 #. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:343
@@ -2063,7 +2063,7 @@ msgstr "Kimliğe göre otomatik grupla"
 #: rulesettings.kcfg:393
 #, kde-format
 msgid "Autogroup by ID rule type"
-msgstr "Kimlik ile otomatik grupla kuralı türü"
+msgstr "Kimliğe göre otomatik grupla kuralı türü"
 
 #. i18n: ectx: label, entry (strictgeometry), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:398
@@ -2099,7 +2099,7 @@ msgstr "Global kısayolları yok say"
 #: rulesettings.kcfg:421
 #, kde-format
 msgid "Ignore global shortcuts rule type"
-msgstr "Global kısayollar kural türünü yok say"
+msgstr "Global kısayolları yok say kuralı türü"
 
 #. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:426
@@ -2792,7 +2792,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Yanıt Vermiyor)"
 
-#: workspace.cpp:1643
+#: workspace.cpp:1642
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

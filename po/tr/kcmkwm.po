@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-03 00:48+0000\n"
-"PO-Revision-Date: 2023-03-28 22:11+0300\n"
+"PO-Revision-Date: 2023-03-29 16:19+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -150,7 +150,7 @@ msgid ""
 "In this row you can customize behavior when scrolling into an inactive inner "
 "window ('inner' means: not titlebar, not frame)."
 msgstr ""
-"Bu satırdan, pasif bir iç pencere üzerinde sarma yapıldığında nasıl "
+"Bu satırdan, etkin olmayan bir iç pencere üzerinde sarma yapıldığında nasıl "
 "davranılacağını özelleştirebilirsiniz ('iç' şu anlama gelir: Başlık çubuğu "
 "ve çerçeve değil)."
 
@@ -741,7 +741,7 @@ msgstr ""
 #: focus.ui:101
 #, kde-format
 msgid "Focus &stealing prevention:"
-msgstr "Odak &çalmayı önleme:"
+msgstr "Odak &çalma koruması:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_FocusStealingPreventionLevel)
 #: focus.ui:114
@@ -928,7 +928,7 @@ msgid ""
 "When this option is enabled, focus operations are limited only to the active "
 "screen"
 msgstr ""
-"Bu ayar etkinse odaklama işlemleri yalnızca etkin olan ekranda geçerli olur"
+"Bu ayar etkinse odak işlemleri yalnızca etkin olan ekranda geçerli olur"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
 #: focus.ui:216
@@ -1355,7 +1355,7 @@ msgid ""
 msgstr ""
 "<em>Odak fareyi izler:</em>Farenin bir pencere üzerine sürüklenmesi, o "
 "pencereyi etkinleştirir. Örneğin, farenin altında rastgele görünen "
-"pencereler odaklanılmayacaktır. <em>Odak çalma koruması</em>, alışıldığı "
+"pencereler odaklanılmayacaktır. <em>Odak çalmayı önleme</em>, alışıldığı "
 "gibi kullanılır.<em>Odak için tıkla</em> olarak düşünün, yalnızca gerçekten "
 "tıklamadan."
 
@@ -1382,7 +1382,7 @@ msgid ""
 "precedence)</em> instead!"
 msgstr ""
 "<em>Odak farenin altında:</em> Odak her zaman farenin altındaki pencerede "
-"kalır.<br/><strong>Uyarı:</strong> <em>Odak çalma koruması</em> ve <em>sekme "
+"kalır.<br/><strong>Uyarı:</strong> <em>Odak çalmayı önleme</em> ve <em>sekme "
 "kutusu ('Seçenek+Sekme)'</em>, etkinleştirme ilkesine karşıttır ve "
 "çalışmazlar. Bu durumda <em>Odak fareyi izler (fare önceliği)</em>'ni "
 "kullanmak isteyeceksinizdir!"
