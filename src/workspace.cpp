@@ -1384,7 +1384,7 @@ void Workspace::updateOutputs(const QVector<Output *> &outputOrder)
 void Workspace::slotDesktopAdded(VirtualDesktop *desktop)
 {
     m_focusChain->addDesktop(desktop);
-    m_placement->reinitCascading(0);
+    m_placement->reinitCascading();
     updateClientArea();
 }
 
@@ -1409,7 +1409,7 @@ void Workspace::slotDesktopRemoved(VirtualDesktop *desktop)
     }
 
     updateClientArea();
-    m_placement->reinitCascading(0);
+    m_placement->reinitCascading();
     m_focusChain->removeDesktop(desktop);
 }
 

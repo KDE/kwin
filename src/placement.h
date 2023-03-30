@@ -22,6 +22,7 @@ class QObject;
 namespace KWin
 {
 
+class VirtualDesktop;
 class Window;
 
 class KWIN_EXPORT Placement
@@ -34,7 +35,8 @@ public:
 
     void placeCentered(Window *c, const QRectF &area, PlacementPolicy next = PlacementUnknown);
 
-    void reinitCascading(int desktop);
+    void reinitCascading();
+    void reinitCascading(VirtualDesktop *desktop);
 
     void cascadeIfCovering(Window *c, const QRectF &area);
 
@@ -71,7 +73,7 @@ private:
         int row;
     };
 
-    QList<DesktopCascadingInfo> cci;
+    QHash<VirtualDesktop *, DesktopCascadingInfo> cci;
 };
 
 } // namespace

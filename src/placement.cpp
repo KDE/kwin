@@ -31,7 +31,7 @@ namespace KWin
 
 Placement::Placement()
 {
-    reinitCascading(0);
+    reinitCascading();
 }
 
 /**
@@ -335,22 +335,22 @@ void Placement::placeSmart(Window *window, const QRectF &area, PlacementPolicy /
     window->move(QPoint(x_optimal, y_optimal));
 }
 
-void Placement::reinitCascading(int desktop)
+void Placement::reinitCascading()
 {
-    // desktop == 0 - reinit all
-    if (desktop == 0) {
-        cci.clear();
-        for (uint i = 0; i < VirtualDesktopManager::self()->count(); ++i) {
-            DesktopCascadingInfo inf;
-            inf.pos = QPoint(-1, -1);
-            inf.col = 0;
-            inf.row = 0;
-            cci.append(inf);
-        }
-    } else {
-        cci[desktop - 1].pos = QPoint(-1, -1);
-        cci[desktop - 1].col = cci[desktop - 1].row = 0;
+    cci.clear();
+    const auto desktops = VirtualDesktopManager::self()->desktops();
+    for (VirtualDesktop *desktop : desktops) {
+        reinitCascading(desktop);
     }
+}
+
+void Placement::reinitCascading(VirtualDesktop *desktop)
+{
+    cci[desktop] = DesktopCascadingInfo{
+        .pos = QPoint(-1, -1),
+        .col = 0,
+        .row = 0,
+    };
 }
 
 QPoint Workspace::cascadeOffset(const Window *c) const
@@ -373,7 +373,7 @@ void Placement::placeCascaded(Window *c, const QRect &area, PlacementPolicy next
     // CT how do I get from the 'Client' class the size that NW squarish "handle"
     const QPoint delta = workspace()->cascadeOffset(c);
 
-    const int dn = c->desktop() == 0 || c->isOnAllDesktops() ? (VirtualDesktopManager::self()->current() - 1) : (c->desktop() - 1);
+    VirtualDesktop *dn = c->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop() : c->desktops().constLast();
 
     if (nextPlacement == PlacementUnknown) {
         nextPlacement = PlacementSmart;
@@ -630,8 +630,7 @@ void Placement::cascadeIfCovering(Window *window, const QRectF &area)
 void Placement::cascadeDesktop()
 {
     Workspace *ws = Workspace::self();
-    const int desktop = VirtualDesktopManager::self()->current();
-    reinitCascading(desktop);
+    reinitCascading(VirtualDesktopManager::self()->currentDesktop());
     const auto stackingOrder = ws->stackingOrder();
     for (Window *window : stackingOrder) {
         if (!window->isClient() || (!window->isOnCurrentDesktop()) || (window->isMinimized()) || (window->isOnAllDesktops()) || (!window->isMovable())) {
