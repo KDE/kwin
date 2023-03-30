@@ -29,6 +29,7 @@ class DrmGpu;
 class DrmPipeline;
 class DumbSwapchain;
 class DrmLease;
+class OutputChangeSet;
 
 class KWIN_EXPORT DrmOutput : public DrmAbstractOutput
 {
@@ -44,8 +45,8 @@ public:
     DrmOutputLayer *primaryLayer() const override;
     DrmOutputLayer *cursorLayer() const override;
 
-    bool queueChanges(const OutputConfiguration &config);
-    void applyQueuedChanges(const OutputConfiguration &config);
+    bool queueChanges(const std::shared_ptr<OutputChangeSet> &properties);
+    void applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &properties);
     void revertQueuedChanges();
     void updateModes();
     void updateDpmsMode(DpmsMode dpmsMode);

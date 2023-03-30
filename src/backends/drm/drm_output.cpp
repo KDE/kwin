@@ -398,12 +398,11 @@ DrmPipeline *DrmOutput::pipeline() const
     return m_pipeline;
 }
 
-bool DrmOutput::queueChanges(const OutputConfiguration &config)
+bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
 {
     static bool valid;
     static int envOnlySoftwareRotations = qEnvironmentVariableIntValue("KWIN_DRM_SW_ROTATIONS_ONLY", &valid) == 1 || !valid;
 
-    const auto props = config.constChangeSet(this);
     const auto mode = props->mode.value_or(currentMode()).lock();
     if (!mode) {
         return false;
@@ -419,15 +418,13 @@ bool DrmOutput::queueChanges(const OutputConfiguration &config)
     return true;
 }
 
-void DrmOutput::applyQueuedChanges(const OutputConfiguration &config)
+void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props)
 {
     if (!m_connector->isConnected()) {
         return;
     }
     Q_EMIT aboutToChange();
     m_pipeline->applyPendingChanges();
-
-    auto props = config.constChangeSet(this);
 
     State next = m_state;
     next.enabled = props->enabled && m_pipeline->crtc();
