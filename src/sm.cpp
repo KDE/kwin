@@ -148,7 +148,7 @@ void SessionManager::storeClient(KConfigGroup &cg, int num, X11Window *c)
     cg.writeEntry(QLatin1String("fsrestore") + n, c->fullscreenGeometryRestore());
     cg.writeEntry(QLatin1String("maximize") + n, (int)c->maximizeMode());
     cg.writeEntry(QLatin1String("fullscreen") + n, (int)c->fullScreenMode());
-    cg.writeEntry(QLatin1String("desktop") + n, c->desktop());
+    cg.writeEntry(QLatin1String("desktop") + n, c->desktopId());
     // the config entry is called "iconified" for back. comp. reasons
     // (kconf_update script for updating session files would be too complicated)
     cg.writeEntry(QLatin1String("iconified") + n, c->isMinimized());

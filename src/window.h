@@ -639,13 +639,6 @@ public:
     virtual bool isOutline() const;
     virtual bool isInternal() const;
 
-    /**
-     * Returns the virtual desktop within the workspace() the client window
-     * is located in, 0 if it isn't located on any special desktop (not mapped yet),
-     * or NET::OnAllDesktops. Do not use desktop() directly, use
-     * isOnDesktop() instead.
-     */
-    int desktop() const;
     QVector<VirtualDesktop *> desktops() const;
     virtual QStringList activities() const;
     bool isOnDesktop(VirtualDesktop *desktop) const;

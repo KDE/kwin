@@ -82,6 +82,7 @@ public:
         return m_decoInputExtent;
     }
 
+    int desktopId() const;
     QByteArray sessionId() const;
     xcb_window_t wmClientLeader() const;
     QString wmCommand();

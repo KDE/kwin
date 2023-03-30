@@ -896,11 +896,6 @@ void Window::setOnAllDesktops(bool b)
     }
 }
 
-int Window::desktop() const
-{
-    return m_desktops.isEmpty() ? (int)NET::OnAllDesktops : m_desktops.last()->x11DesktopNumber();
-}
-
 QVector<VirtualDesktop *> Window::desktops() const
 {
     return m_desktops;

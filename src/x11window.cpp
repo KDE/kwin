@@ -794,7 +794,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
         }
     }
     setDesktops(rules()->checkDesktops(*initialDesktops, !isMapped));
-    info->setDesktop(desktop());
+    info->setDesktop(desktopId());
     workspace()->updateOnAllDesktopsOfTransients(this); // SELI TODO
     // onAllDesktopsChange(); // Decoration doesn't exist here yet
 
@@ -1102,7 +1102,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
         // If session saving, force showing new windows (i.e. "save file?" dialogs etc.)
         // also force if activation is allowed
         if (!isOnCurrentDesktop() && !isMapped && !session && (allow || isSessionSaving)) {
-            VirtualDesktopManager::self()->setCurrent(desktop());
+            VirtualDesktopManager::self()->setCurrent(desktopId());
         }
 
         // If the window is on an inactive activity during session saving, temporarily force it to show.
@@ -2176,7 +2176,7 @@ void X11Window::doSetSkipSwitcher()
 
 void X11Window::doSetDesktop()
 {
-    info->setDesktop(desktop());
+    info->setDesktop(desktopId());
     updateVisibility();
 }
 
@@ -5139,6 +5139,11 @@ void X11Window::getWmClientLeader()
 {
     auto prop = fetchWmClientLeader();
     readWmClientLeader(prop);
+}
+
+int X11Window::desktopId() const
+{
+    return m_desktops.isEmpty() ? -1 : m_desktops.last()->x11DesktopNumber();
 }
 
 /**

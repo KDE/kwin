@@ -220,6 +220,7 @@ void KWinBindingsTest::testWindowToDesktop()
 
     QFETCH(int, desktop);
     VirtualDesktopManager::self()->setCount(desktop);
+    const auto desktops = VirtualDesktopManager::self()->desktops();
 
     // now trigger the shortcut
     auto invokeShortcut = [](int desktop) {
@@ -233,11 +234,11 @@ void KWinBindingsTest::testWindowToDesktop()
     };
     invokeShortcut(desktop);
     QVERIFY(desktopsChangedSpy.wait());
-    QCOMPARE(window->desktop(), desktop);
+    QCOMPARE(window->desktops(), QVector<VirtualDesktop *>{desktops.at(desktop - 1)});
     // back to desktop 1
     invokeShortcut(1);
     QVERIFY(desktopsChangedSpy.wait());
-    QCOMPARE(window->desktop(), 1);
+    QCOMPARE(window->desktops(), QVector<VirtualDesktop *>{desktops.at(0)});
     // invoke with one desktop too many
     invokeShortcut(desktop + 1);
     // that should fail
