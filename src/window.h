@@ -1458,18 +1458,11 @@ Q_SIGNALS:
     void lockScreenOverlayChanged();
 
 protected:
+    Window();
+
     virtual std::unique_ptr<WindowItem> createItem(Scene *scene) = 0;
 
     void setResourceClass(const QString &name, const QString &className = QString());
-
-    Output *m_output = nullptr;
-    QRectF m_frameGeometry;
-    QRectF m_clientGeometry;
-    QRectF m_bufferGeometry;
-    bool ready_for_painting;
-
-protected:
-    Window();
     void setIcon(const QIcon &icon);
     void startAutoRaise();
     void autoRaise();
@@ -1544,6 +1537,7 @@ protected:
     void destroyWindowManagementInterface();
     void updateColorScheme();
     void ensurePalette();
+    void handlePaletteChange();
 
     virtual Layer belongsToLayer() const;
     virtual bool belongsToDesktop() const;
@@ -1577,6 +1571,7 @@ protected:
     int borderTop() const;
     int borderBottom() const;
     void setGeometryRestore(const QRectF &rect);
+    void setFullscreenGeometryRestore(const QRectF &geom);
 
     void blockGeometryUpdates(bool block);
     void blockGeometryUpdates();
@@ -1746,25 +1741,24 @@ protected:
 
     void startShadeHoverTimer();
     void startShadeUnhoverTimer();
+    void shadeHover();
+    void shadeUnhover();
 
     // The geometry that the window should be restored when the virtual keyboard closes
     QRectF keyboardGeometryRestore() const;
     void setKeyboardGeometryRestore(const QRectF &geom);
 
-    QRectF m_virtualKeyboardGeometry;
-
-    void setFullscreenGeometryRestore(const QRectF &geom);
+    QRectF moveToArea(const QRectF &geometry, const QRectF &oldArea, const QRectF &newArea);
+    QRectF ensureSpecialStateGeometry(const QRectF &geometry);
 
     void cleanTabBox();
-
-    QStringList m_activityList;
-
-private Q_SLOTS:
-    void shadeHover();
-    void shadeUnhover();
-
-private:
     void maybeSendFrameCallback();
+
+    Output *m_output = nullptr;
+    QRectF m_frameGeometry;
+    QRectF m_clientGeometry;
+    QRectF m_bufferGeometry;
+    bool ready_for_painting;
 
     int m_refCount = 1;
     QUuid m_internalId;
@@ -1778,10 +1772,6 @@ private:
     QPointer<KWaylandServer::SurfaceInterface> m_surface;
     qreal m_opacity = 1.0;
     int m_stackingOrder = 0;
-
-    void handlePaletteChange();
-    QRectF moveToArea(const QRectF &geometry, const QRectF &oldArea, const QRectF &newArea);
-    QRectF ensureSpecialStateGeometry(const QRectF &geometry);
 
     bool m_skipTaskbar = false;
     /**
@@ -1802,6 +1792,7 @@ private:
     ShadeMode m_shadeMode = ShadeNone;
     QVector<VirtualDesktop *> m_desktops;
 
+    QStringList m_activityList;
     int m_activityUpdatesBlocked = 0;
     bool m_blockedActivityUpdatesRequireTransients = false;
 
@@ -1835,6 +1826,7 @@ private:
     QRectF m_keyboardGeometryRestore;
     QRectF m_maximizeGeometryRestore;
     QRectF m_fullscreenGeometryRestore;
+    QRectF m_virtualKeyboardGeometry;
 
     struct
     {
