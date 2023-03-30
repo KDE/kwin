@@ -61,7 +61,7 @@
         "Description[sk]": "Skryje všetky okná označené ako Preskočiť taskbar na ich vylúčenie z prepínačov okien (napr. Alt+Tab)",
         "Description[sl]": "Skrije vsa okna, označena kot Preskoči opravilno vrstico, da bi bila izključena tudi iz preklopnikov oken (npr. izmenjalka+tabulatorka)",
         "Description[ta]": "பணிப்பட்டையில் காட்டப்படாதவாறு அமைக்கப்பட்டுள்ள சாளரங்களை, சாளரங்களுக்கிடையே தாவும்போதும் (எ.கா. Alt+Tab மூலமாக) தவிர்க்கும்",
-        "Description[tr]": "Görev Çubuğunu Atla olarak imlenen tüm pencerelerin, değiştiricilerden de (örn. Alt+Tab) saklanmasını sağlar",
+        "Description[tr]": "Görev Çubuğunu Atla olarak imlenen tüm pencerelerin, değiştiricilerden de (örn. Seçenek+Sekme) saklanmasını sağlar",
         "Description[uk]": "Приховує всі вікна, позначені як такі, що не показуються на панелі задач, так, щоб їх не було показано у списках перемикання вікон (наприклад Alt+Tab)",
         "Description[vi]": "Ẩn tất cả các cửa sổ được đánh dấu là \"Bỏ qua thanh tác vụ\" khỏi các trình chuyển cửa sổ (vd.: Alt+Tab)",
         "Description[x-test]": "xxHides all windows marked as Skip Taskbar to be also excluded from window switchers (e.g. Alt+Tab)xx",
