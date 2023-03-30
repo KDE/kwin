@@ -67,13 +67,7 @@ public:
      * the top of the list is kept as a starting point. If not the
      * current active client is used as the starting point to generate the
      * list.
-     * @param desktop The desktop for which the list should be created
      * @param partialReset Keep the currently selected client or regenerate everything
-     */
-    void createClientList(int desktop, bool partialReset = false);
-    /**
-     * This method is provided as a overload for current desktop
-     * @see createClientList
      */
     void createClientList(bool partialReset = false);
     /**
@@ -93,8 +87,8 @@ public Q_SLOTS:
     void activate(int index);
 
 private:
-    void createFocusChainClientList(int desktop, Window *start);
-    void createStackingOrderClientList(int desktop, Window *start);
+    void createFocusChainClientList(Window *start);
+    void createStackingOrderClientList(Window *start);
 
     QList<Window *> m_clientList;
     QList<Window *> m_mutableClientList;

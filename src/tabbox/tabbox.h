@@ -42,7 +42,6 @@ public:
 
     int activeScreen() const override;
     Window *activeClient() const override;
-    int currentDesktop() const override;
     QString desktopName(Window *client) const override;
     bool isKWinCompositing() const override;
     Window *nextClientFocusChain(Window *client) const override;
@@ -53,14 +52,14 @@ public:
     void raiseClient(Window *client) const override;
     void restack(Window *c, Window *under) override;
     void shadeClient(Window *c, bool b) const override;
-    Window *clientToAddToList(Window *client, int desktop) const override;
+    Window *clientToAddToList(Window *client) const override;
     Window *desktopClient() const override;
     void activateAndClose() override;
     void highlightWindows(Window *window = nullptr, QWindow *controller = nullptr) override;
     bool noModifierGrab() const override;
 
 private:
-    bool checkDesktop(Window *client, int desktop) const;
+    bool checkDesktop(Window *client) const;
     bool checkActivity(Window *client) const;
     bool checkApplications(Window *client) const;
     bool checkMinimized(Window *client) const;

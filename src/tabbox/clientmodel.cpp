@@ -144,12 +144,7 @@ QModelIndex ClientModel::index(Window *client) const
     return createIndex(row, column);
 }
 
-void ClientModel::createClientList(bool partialReset)
-{
-    createClientList(tabBox->currentDesktop(), partialReset);
-}
-
-void ClientModel::createFocusChainClientList(int desktop, Window *start)
+void ClientModel::createFocusChainClientList(Window *start)
 {
     auto c = start;
     if (!tabBox->isInFocusChain(c)) {
@@ -160,7 +155,7 @@ void ClientModel::createFocusChainClientList(int desktop, Window *start)
     }
     auto stop = c;
     do {
-        Window *add = tabBox->clientToAddToList(c, desktop);
+        Window *add = tabBox->clientToAddToList(c);
         if (add) {
             m_mutableClientList += add;
         }
@@ -168,7 +163,7 @@ void ClientModel::createFocusChainClientList(int desktop, Window *start)
     } while (c && c != stop);
 }
 
-void ClientModel::createStackingOrderClientList(int desktop, Window *start)
+void ClientModel::createStackingOrderClientList(Window *start)
 {
     // TODO: needs improvement
     const QList<Window *> stacking = tabBox->stackingOrder();
@@ -176,7 +171,7 @@ void ClientModel::createStackingOrderClientList(int desktop, Window *start)
     auto stop = c;
     int index = 0;
     while (c) {
-        Window *add = tabBox->clientToAddToList(c, desktop);
+        Window *add = tabBox->clientToAddToList(c);
         if (add) {
             if (start == add) {
                 m_mutableClientList.removeAll(add);
@@ -197,7 +192,7 @@ void ClientModel::createStackingOrderClientList(int desktop, Window *start)
     }
 }
 
-void ClientModel::createClientList(int desktop, bool partialReset)
+void ClientModel::createClientList(bool partialReset)
 {
     auto start = tabBox->activeClient();
     // TODO: new clients are not added at correct position
@@ -212,11 +207,11 @@ void ClientModel::createClientList(int desktop, bool partialReset)
 
     switch (tabBox->config().clientSwitchingMode()) {
     case TabBoxConfig::FocusChainSwitching: {
-        createFocusChainClientList(desktop, start);
+        createFocusChainClientList(start);
         break;
     }
     case TabBoxConfig::StackingOrderSwitching: {
-        createStackingOrderClientList(desktop, start);
+        createStackingOrderClientList(start);
         break;
     }
     }

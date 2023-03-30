@@ -120,10 +120,6 @@ public:
      * on all desktops the name of current desktop will be returned.
      */
     virtual QString desktopName(Window *client) const = 0;
-    /**
-     * @return The number of current desktop
-     */
-    virtual int currentDesktop() const = 0;
 
     /**
      * whether KWin is currently compositing and it's related features (elevating) can be used
@@ -162,7 +158,6 @@ public:
     /**
      * Determines if given client will be added to the list:
      * <UL>
-     * <LI>Depends on desktop</LI>
      * <LI>if the client wants to have tab focus.</LI>
      * <LI>The client won't be added if it has modal dialogs</LI>
      * <LI>In that case the modal dialog will be returned if it isn't already
@@ -171,11 +166,10 @@ public:
      * screen focus</LI>
      * </UL>
      * @param client The client to be checked for inclusion
-     * @param desktop The desktop the client should be on. This is irrelevant if allDesktops is set
      * @param allDesktops Add clients from all desktops or only from current
      * @return The client to be included in the list or NULL if it isn't to be included
      */
-    virtual Window *clientToAddToList(Window *client, int desktop) const = 0;
+    virtual Window *clientToAddToList(Window *client) const = 0;
     /**
      * @return The first desktop window in the stacking order.
      */

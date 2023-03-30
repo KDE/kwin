@@ -71,11 +71,6 @@ int TabBoxHandlerImpl::activeScreen() const
     return workspace()->outputs().indexOf(workspace()->activeOutput());
 }
 
-int TabBoxHandlerImpl::currentDesktop() const
-{
-    return VirtualDesktopManager::self()->current();
-}
-
 QString TabBoxHandlerImpl::desktopName(Window *client) const
 {
     if (!client->isOnAllDesktops()) {
@@ -104,15 +99,15 @@ Window *TabBoxHandlerImpl::activeClient() const
     return Workspace::self()->activeWindow();
 }
 
-bool TabBoxHandlerImpl::checkDesktop(Window *client, int desktop) const
+bool TabBoxHandlerImpl::checkDesktop(Window *client) const
 {
     switch (config().clientDesktopMode()) {
     case TabBoxConfig::AllDesktopsClients:
         return true;
     case TabBoxConfig::ExcludeCurrentDesktopClients:
-        return !client->isOnDesktop(desktop);
+        return !client->isOnCurrentDesktop();
     default: // TabBoxConfig::OnlyCurrentDesktopClients
-        return client->isOnDesktop(desktop);
+        return client->isOnCurrentDesktop();
     }
 }
 
@@ -174,14 +169,14 @@ bool TabBoxHandlerImpl::checkMultiScreen(Window *client) const
     }
 }
 
-Window *TabBoxHandlerImpl::clientToAddToList(Window *client, int desktop) const
+Window *TabBoxHandlerImpl::clientToAddToList(Window *client) const
 {
     if (!client) {
         return nullptr;
     }
     Window *ret = nullptr;
 
-    bool addClient = checkDesktop(client, desktop)
+    bool addClient = checkDesktop(client)
         && checkActivity(client)
         && checkApplications(client)
         && checkMinimized(client)
