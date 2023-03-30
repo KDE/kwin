@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-25 02:10+0000\n"
-"PO-Revision-Date: 2023-03-28 22:21+0300\n"
+"PO-Revision-Date: 2023-03-29 17:59+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -232,7 +232,7 @@ msgstr "Kuralları Dışa Aktar"
 #: package/contents/ui/OptionsComboBox.qml:35
 #, kde-format
 msgid "None selected"
-msgstr "Hiçbiri seçilmedi"
+msgstr "Seçili yok"
 
 #: package/contents/ui/OptionsComboBox.qml:41
 #, kde-format
@@ -511,12 +511,12 @@ msgstr ""
 #: rulesmodel.cpp:535
 #, kde-format
 msgid "Minimum Size"
-msgstr "En Küçük Boyut"
+msgstr "En küçük boyut"
 
 #: rulesmodel.cpp:540
 #, kde-format
 msgid "Maximum Size"
-msgstr "En Büyük Boyut"
+msgstr "En büyük boyut"
 
 #: rulesmodel.cpp:545
 #, kde-format
@@ -620,7 +620,7 @@ msgstr "Etkin olmayan matlık"
 #: rulesmodel.cpp:612
 #, kde-format
 msgid "Focus stealing prevention"
-msgstr "Odak çalma koruması"
+msgstr "Odak çalmayı önleme"
 
 #: rulesmodel.cpp:614
 #, kde-format
@@ -654,7 +654,7 @@ msgstr ""
 "Bu, şu anda etkin olan pencerenin odak korumasını denetler.\n"
 "Asla, odağı hep bırakacaktır,\n"
 "Çok yüksek, koruyacaktır.\n"
-"Aksi halde, odaklamayı isteyen pencereye\n"
+"Aksi halde, odağı isteyen pencereye\n"
 "atandığında çalınmasını önler."
 
 #: rulesmodel.cpp:634
@@ -772,7 +772,7 @@ msgstr "Araç Çubuğu"
 #: rulesmodel.cpp:764
 #, kde-format
 msgid "Torn-Off Menu"
-msgstr "Menüyü Kapat"
+msgstr "Ayrılmış Menü"
 
 #: rulesmodel.cpp:765
 #, kde-format
@@ -865,7 +865,7 @@ msgstr "Ana pencerede"
 #: rulesmodel.cpp:838
 #, kde-format
 msgid "None"
-msgstr "Hiçbiri"
+msgstr "Yok"
 
 #: rulesmodel.cpp:839
 #, kde-format

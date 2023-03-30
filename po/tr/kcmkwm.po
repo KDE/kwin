@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-17 02:32+0000\n"
-"PO-Revision-Date: 2023-03-28 22:11+0300\n"
+"PO-Revision-Date: 2023-03-29 16:19+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -138,7 +138,7 @@ msgid ""
 "In this row you can customize behavior when scrolling into an inactive inner "
 "window ('inner' means: not titlebar, not frame)."
 msgstr ""
-"Bu satırdan, pasif bir iç pencere üzerinde sarma yapıldığında nasıl "
+"Bu satırdan, etkin olmayan bir iç pencere üzerinde sarma yapıldığında nasıl "
 "davranılacağını özelleştirebilirsiniz ('iç' şu anlama gelir: Başlık çubuğu "
 "ve çerçeve değil)."
 
@@ -729,7 +729,7 @@ msgstr ""
 #: focus.ui:101
 #, kde-format
 msgid "Focus &stealing prevention:"
-msgstr "Odak &çalmayı önleme:"
+msgstr "Odak &çalma koruması:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_FocusStealingPreventionLevel)
 #: focus.ui:114
@@ -787,7 +787,7 @@ msgstr ""
 "margin-left:0px;margin-right:0px; -qt-block-indent:0; text-indent:0px;"
 "\"><span style=\" font-style:italic;\">Yüksek:</span> Yeni pencereler "
 "yalnızca hiçbir pencere etkin değilse veya geçerli uygulamaya aitse "
-"etkinleştirilir. Bu ayar fare odaklama yöntemi kullanılmıyorsa kullanışlı "
+"etkinleştirilir. Bu ayar fare odak yöntemi kullanılmıyorsa kullanışlı "
 "olmayabilir.</li><li style=\" margin-top:0px; margin-bottom:12px; margin-"
 "left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
 "style=\" font-style:italic;\">Çok Yüksek:</span> Tüm pencereler kullanıcı "
@@ -916,7 +916,7 @@ msgid ""
 "When this option is enabled, focus operations are limited only to the active "
 "screen"
 msgstr ""
-"Bu ayar etkinse odaklama işlemleri yalnızca etkin olan ekranda geçerli olur"
+"Bu ayar etkinse odak işlemleri yalnızca etkin olan ekranda geçerli olur"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
 #: focus.ui:216

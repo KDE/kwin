@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-29 02:12+0000\n"
+"POT-Creation-Date: 2023-03-30 02:10+0000\n"
 "PO-Revision-Date: 2021-11-23 11:35+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -2225,58 +2225,58 @@ msgstr ""
 "célra az Ablakműveletek menü használható, melynek előhívásához nyomja meg "
 "ezt a billentyűkombinációt: %1"
 
-#: useractions.cpp:235
+#: useractions.cpp:232
 #, kde-format
 msgid "&Move"
 msgstr "&Mozgatás"
 
-#: useractions.cpp:240
+#: useractions.cpp:237
 #, kde-format
 msgid "&Resize"
 msgstr "Át&méretezés"
 
-#: useractions.cpp:245
+#: useractions.cpp:242
 #, kde-format
 msgid "Keep &Above Others"
 msgstr "Az ablak a többi &fölé kerüljön"
 
-#: useractions.cpp:251
+#: useractions.cpp:248
 #, kde-format
 msgid "Keep &Below Others"
 msgstr "Az ablak a többi a&lá kerüljön"
 
-#: useractions.cpp:257
+#: useractions.cpp:254
 #, kde-format
 msgid "&Fullscreen"
 msgstr "Teljes képernyős &ablak"
 
-#: useractions.cpp:263
+#: useractions.cpp:260
 #, kde-format
 msgid "&Shade"
 msgstr "Felgördíté&s"
 
-#: useractions.cpp:269
+#: useractions.cpp:266
 #, fuzzy, kde-format
 #| msgid "No titlebar and frame"
 msgid "&No Titlebar and Frame"
 msgstr "Nincs címsor és keret"
 
-#: useractions.cpp:277
+#: useractions.cpp:274
 #, kde-format
 msgid "Set Window Short&cut..."
 msgstr "&Gyorsbillentyű rendelése az ablak…"
 
-#: useractions.cpp:283
+#: useractions.cpp:280
 #, kde-format
 msgid "Configure Special &Window Settings..."
 msgstr "Spe&ciális ablakbeállítások módosítása…"
 
-#: useractions.cpp:288
+#: useractions.cpp:285
 #, kde-format
 msgid "Configure S&pecial Application Settings..."
 msgstr "Spe&ciális alkalmazásbeállítások módosítása…"
 
-#: useractions.cpp:295
+#: useractions.cpp:292
 #, kde-format
 msgctxt ""
 "Entry in context menu of window decoration to open the configuration module "
@@ -2284,87 +2284,87 @@ msgctxt ""
 msgid "Configure W&indow Manager..."
 msgstr "Az a&blakkezelő beállításai…"
 
-#: useractions.cpp:322
+#: useractions.cpp:319
 #, kde-format
 msgid "Ma&ximize"
 msgstr "Ma&ximalizálás"
 
-#: useractions.cpp:328
+#: useractions.cpp:325
 #, kde-format
 msgid "Mi&nimize"
 msgstr "Mi&nimalizálás"
 
-#: useractions.cpp:334
+#: useractions.cpp:331
 #, kde-format
 msgid "&More Actions"
 msgstr "&További műveletek"
 
-#: useractions.cpp:337
+#: useractions.cpp:334
 #, kde-format
 msgid "&Close"
 msgstr "&Bezárás"
 
-#: useractions.cpp:407
+#: useractions.cpp:404
 #, kde-format
 msgid "&Extensions"
 msgstr "&Kiterjesztések"
 
-#: useractions.cpp:458
+#: useractions.cpp:455
 #, kde-format
 msgid "&Desktops"
 msgstr "&Asztalok"
 
-#: useractions.cpp:472
+#: useractions.cpp:469
 #, kde-format
 msgid "Move to &Desktop"
 msgstr "Áthelyezé&s asztalra"
 
-#: useractions.cpp:489
+#: useractions.cpp:486
 #, kde-format
 msgid "Move to &Screen"
 msgstr "Áthelye&zés képernyőre"
 
-#: useractions.cpp:505
+#: useractions.cpp:502
 #, kde-format
 msgid "Show in &Activities"
 msgstr "Megjelenítés az &aktivitásokon"
 
-#: useractions.cpp:522
+#: useractions.cpp:519
 #, fuzzy, kde-format
 #| msgctxt "Create a new desktop and move the window to that desktop"
 #| msgid "Move to New Desktop"
 msgid "Move &To Current Desktop"
 msgstr "Áthelyezés új asztalra"
 
-#: useractions.cpp:532 useractions.cpp:599
+#: useractions.cpp:529 useractions.cpp:596
 #, kde-format
 msgid "&All Desktops"
 msgstr "Az összes &asztalra"
 
-#: useractions.cpp:572
+#: useractions.cpp:569
 #, kde-format
 msgctxt "Create a new desktop and move the window there"
 msgid "&New Desktop"
 msgstr "Ú&j asztalra"
 
-#: useractions.cpp:643
+#: useractions.cpp:640
 #, kde-format
 msgid "Move to %1 %2"
 msgstr "Áthelyezés ide: %1 %2"
 
-#: useractions.cpp:656
+#: useractions.cpp:653
 #, kde-format
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
 msgstr "Hozzáadás ú&j asztalhoz"
 
-#: useractions.cpp:668
+#: useractions.cpp:665
 #, kde-format
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
 msgstr "Áthelyezés új asztalra"
 
-#: useractions.cpp:699
+#: useractions.cpp:696
 #, kde-format
 msgctxt ""
 "@item:inmenu List of all Screens to send a window to. First argument is a "
@@ -2372,24 +2372,24 @@ msgctxt ""
 msgid "Screen &%1 (%2)"
 msgstr "&%1. képernyő (%2)"
 
-#: useractions.cpp:725
+#: useractions.cpp:722
 #, kde-format
 msgid "&All Activities"
 msgstr "Az összes a&ktivitásra"
 
-#: useractions.cpp:773
+#: useractions.cpp:770
 #, fuzzy, kde-format
 #| msgid "Move to %1 %2"
 msgid "Move to %1"
 msgstr "Áthelyezés ide: %1 %2"
 
-#: useractions.cpp:889
+#: useractions.cpp:886
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr "<b>%1</b> már használatban van"
 
-#: useractions.cpp:891
+#: useractions.cpp:888
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
@@ -2397,357 +2397,357 @@ msgstr ""
 "A(z) <b>%1</b> gyorsbillentyűt a(z) %2 művelet használja a(z) %3 "
 "alkalmazásban"
 
-#: useractions.cpp:971
+#: useractions.cpp:968
 #, kde-format
 msgid "Window Operations Menu"
 msgstr "Az ablakműveletek menü"
 
-#: useractions.cpp:973
+#: useractions.cpp:970
 #, kde-format
 msgid "Close Window"
 msgstr "Ablak bezárása"
 
-#: useractions.cpp:975
+#: useractions.cpp:972
 #, kde-format
 msgid "Maximize Window"
 msgstr "Ablak maximalizálása"
 
-#: useractions.cpp:977
+#: useractions.cpp:974
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "Ablak függőleges maximalizálása"
 
-#: useractions.cpp:979
+#: useractions.cpp:976
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "Ablak vízszintes maximalizálása"
 
-#: useractions.cpp:981
+#: useractions.cpp:978
 #, kde-format
 msgid "Minimize Window"
 msgstr "Ablak minimalizálása"
 
-#: useractions.cpp:983
+#: useractions.cpp:980
 #, kde-format
 msgid "Shade Window"
 msgstr "Ablak felgördítése"
 
-#: useractions.cpp:985
+#: useractions.cpp:982
 #, kde-format
 msgid "Move Window"
 msgstr "Ablak mozgatása"
 
-#: useractions.cpp:987
+#: useractions.cpp:984
 #, kde-format
 msgid "Resize Window"
 msgstr "Ablak átméretezése"
 
-#: useractions.cpp:989
+#: useractions.cpp:986
 #, kde-format
 msgid "Raise Window"
 msgstr "Ablak előrehozása"
 
-#: useractions.cpp:991
+#: useractions.cpp:988
 #, kde-format
 msgid "Lower Window"
 msgstr "Ablak hátraengedése"
 
-#: useractions.cpp:993
+#: useractions.cpp:990
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "Ablak előre/hátra váltása"
 
-#: useractions.cpp:995
+#: useractions.cpp:992
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "Ablak teljes képernyőre váltása"
 
-#: useractions.cpp:997
+#: useractions.cpp:994
 #, fuzzy, kde-format
 #| msgid "No titlebar and frame"
 msgid "Toggle Window Titlebar and Frame"
 msgstr "Nincs címsor és keret"
 
-#: useractions.cpp:999
+#: useractions.cpp:996
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "Az ablak a többi fölé kerüljön"
 
-#: useractions.cpp:1001
+#: useractions.cpp:998
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "Az ablak a többi alá kerüljön"
 
-#: useractions.cpp:1003
+#: useractions.cpp:1000
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "Beavatkozást igénylő ablak aktiválása"
 
-#: useractions.cpp:1005
+#: useractions.cpp:1002
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "Billentyűparancs rendelése ablakhoz"
 
-#: useractions.cpp:1007
+#: useractions.cpp:1004
 #, kde-format
 msgid "Move Window to the Center"
 msgstr "Ablak mozgatása középre"
 
-#: useractions.cpp:1009
+#: useractions.cpp:1006
 #, kde-format
 msgid "Move Window Right"
 msgstr "Ablak mozgatása jobbra"
 
-#: useractions.cpp:1011
+#: useractions.cpp:1008
 #, kde-format
 msgid "Move Window Left"
 msgstr "Ablak mozgatása balra"
 
-#: useractions.cpp:1013
+#: useractions.cpp:1010
 #, kde-format
 msgid "Move Window Up"
 msgstr "Ablak mozgatása felfelé"
 
-#: useractions.cpp:1015
+#: useractions.cpp:1012
 #, kde-format
 msgid "Move Window Down"
 msgstr "Ablak mozgatása lefelé"
 
-#: useractions.cpp:1017
+#: useractions.cpp:1014
 #, kde-format
 msgid "Expand Window Horizontally"
 msgstr "Ablak kiterjesztése vízszintesen"
 
-#: useractions.cpp:1019
+#: useractions.cpp:1016
 #, kde-format
 msgid "Expand Window Vertically"
 msgstr "Ablak kiterjesztése függőlegesen"
 
-#: useractions.cpp:1021
+#: useractions.cpp:1018
 #, kde-format
 msgid "Shrink Window Horizontally"
 msgstr "Ablak zusgorítása vízszintesen"
 
-#: useractions.cpp:1023
+#: useractions.cpp:1020
 #, kde-format
 msgid "Shrink Window Vertically"
 msgstr "Ablak zsugorítása függőlegesen"
 
-#: useractions.cpp:1025
+#: useractions.cpp:1022
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "Ablak áthelyezése balra"
 
-#: useractions.cpp:1027
+#: useractions.cpp:1024
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "Ablak áthelyezése jobbra"
 
-#: useractions.cpp:1029
+#: useractions.cpp:1026
 #, kde-format
 msgid "Quick Tile Window to the Top"
 msgstr "Ablakcsempe áthelyezése fentre"
 
-#: useractions.cpp:1031
+#: useractions.cpp:1028
 #, kde-format
 msgid "Quick Tile Window to the Bottom"
 msgstr "Ablakcsempe áthelyezése lentre"
 
-#: useractions.cpp:1033
+#: useractions.cpp:1030
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
 msgstr "Ablak áthelyezése bal felülre"
 
-#: useractions.cpp:1035
+#: useractions.cpp:1032
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "Ablak áthelyezése bal alulra"
 
-#: useractions.cpp:1037
+#: useractions.cpp:1034
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
 msgstr "Ablak áthelyezése jobb felülre"
 
-#: useractions.cpp:1039
+#: useractions.cpp:1036
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "Ablak áthelyezése jobb alulra"
 
-#: useractions.cpp:1041
+#: useractions.cpp:1038
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "Váltás a lefelé levő ablakra"
 
-#: useractions.cpp:1043
+#: useractions.cpp:1040
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "Váltás a felfelé levő ablakra"
 
-#: useractions.cpp:1045
+#: useractions.cpp:1042
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "Váltás a jobbra eső ablakra"
 
-#: useractions.cpp:1047
+#: useractions.cpp:1044
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "Váltás a balra eső ablakra"
 
-#: useractions.cpp:1049
+#: useractions.cpp:1046
 #, fuzzy, kde-format
 #| msgid "Increase Opacity of Active Window by 5 %"
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "Az aktív ablak átlátszóságának növelése 5%-kal"
 
-#: useractions.cpp:1051
+#: useractions.cpp:1048
 #, fuzzy, kde-format
 #| msgid "Decrease Opacity of Active Window by 5 %"
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "Az aktív ablak átlátszóságának csökkentése 5%-kal"
 
-#: useractions.cpp:1054
+#: useractions.cpp:1051
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "Ablak megjelenítése az összes munkaasztalon"
 
-#: useractions.cpp:1065
+#: useractions.cpp:1062
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "Az ablak a(z) %1. munkaasztalra"
 
-#: useractions.cpp:1067
+#: useractions.cpp:1064
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Az ablak a következő munkaasztalra"
 
-#: useractions.cpp:1068
+#: useractions.cpp:1065
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Az ablak az előző munkaasztalra"
 
-#: useractions.cpp:1069
+#: useractions.cpp:1066
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Váltás a jobbra levő asztalra"
 
-#: useractions.cpp:1071
+#: useractions.cpp:1068
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Váltás a balra levő asztalra"
 
-#: useractions.cpp:1073
+#: useractions.cpp:1070
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "Váltás a felfelé levő asztalra"
 
-#: useractions.cpp:1075
+#: useractions.cpp:1072
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "Váltás a lefelé levő asztalra"
 
-#: useractions.cpp:1079
+#: useractions.cpp:1076
 #, fuzzy, kde-format
 #| msgid "Window to Screen %1"
 msgid "Move Window to Screen %1"
 msgstr "Ablak áthelyezése a(z) %1. képernyőre"
 
-#: useractions.cpp:1086
+#: useractions.cpp:1083
 #, fuzzy, kde-format
 #| msgid "Window to Next Screen"
 msgid "Move Window to Next Screen"
 msgstr "Ablak áthelyezése a következő képernyőre"
 
-#: useractions.cpp:1088
+#: useractions.cpp:1085
 #, fuzzy, kde-format
 #| msgid "Window to Previous Screen"
 msgid "Move Window to Previous Screen"
 msgstr "Ablak áthelyezése az előző képernyőre"
 
-#: useractions.cpp:1090
+#: useractions.cpp:1087
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Window One Screen to the Right"
 msgstr "Váltás a jobbra levő asztalra"
 
-#: useractions.cpp:1092
+#: useractions.cpp:1089
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Window One Screen to the Left"
 msgstr "Váltás a balra levő asztalra"
 
-#: useractions.cpp:1094
+#: useractions.cpp:1091
 #, fuzzy, kde-format
 #| msgid "Window to Screen 2"
 msgid "Move Window One Screen Up"
 msgstr "Ablak áthelyezése a 2. képernyőre"
 
-#: useractions.cpp:1096
+#: useractions.cpp:1093
 #, fuzzy, kde-format
 #| msgid "Window One Desktop Down"
 msgid "Move Window One Screen Down"
 msgstr "Váltás a lefelé levő asztalra"
 
-#: useractions.cpp:1100
+#: useractions.cpp:1097
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr "Váltás a(z) %1. képernyőre"
 
-#: useractions.cpp:1107
+#: useractions.cpp:1104
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "Váltás a következő képernyőre"
 
-#: useractions.cpp:1108
+#: useractions.cpp:1105
 #, kde-format
 msgid "Switch to Previous Screen"
 msgstr "Váltás az előző képernyőre"
 
-#: useractions.cpp:1109
+#: useractions.cpp:1106
 #, fuzzy, kde-format
 #| msgid "Switch to Window to the Right"
 msgid "Switch to Screen to the Right"
 msgstr "Váltás a jobbra eső ablakra"
 
-#: useractions.cpp:1111
+#: useractions.cpp:1108
 #, fuzzy, kde-format
 #| msgid "Switch to Window to the Left"
 msgid "Switch to Screen to the Left"
 msgstr "Váltás a balra eső ablakra"
 
-#: useractions.cpp:1113
+#: useractions.cpp:1110
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Screen Above"
 msgstr "Váltás a 0. képernyőre"
 
-#: useractions.cpp:1115
+#: useractions.cpp:1112
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Screen Below"
 msgstr "Váltás a 0. képernyőre"
 
-#: useractions.cpp:1118
+#: useractions.cpp:1115
 #, fuzzy, kde-format
 #| msgid "Move to &Desktop"
 msgid "Peek at Desktop"
 msgstr "Áthelyezé&s asztalra"
 
-#: useractions.cpp:1121
+#: useractions.cpp:1118
 #, kde-format
 msgid "Kill Window"
 msgstr "Ablak kilövése"
 
-#: useractions.cpp:1122
+#: useractions.cpp:1119
 #, kde-format
 msgid "Suspend Compositing"
 msgstr "A kompozit kiterjesztés felfüggesztése"
 
-#: useractions.cpp:1183
+#: useractions.cpp:1180
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Ablak aktiválása (%1)"
 
-#: useractions.cpp:1320
+#: useractions.cpp:1317
 #, kde-format
 msgid ""
 "The window manager is configured to consider the screen with the mouse on it "
@@ -2798,13 +2798,13 @@ msgstr "Váltás a lefelé eső asztalra"
 msgid "Switch to Desktop %1"
 msgstr "Váltás a(z) %1. asztalra"
 
-#: window.cpp:3330
+#: window.cpp:3153
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Nem válaszol)"
 
-#: workspace.cpp:1596
+#: workspace.cpp:1590
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""
