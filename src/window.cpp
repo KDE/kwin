@@ -9,32 +9,27 @@
 */
 #include "window.h"
 
-#include "core/output.h"
-#include "tiles/tilemanager.h"
-#include "utils/common.h"
-
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
 #include "appmenu.h"
-#include "atoms.h"
 #include "client_machine.h"
 #include "composite.h"
+#include "core/output.h"
 #include "decorations/decoratedclient.h"
-#include "decorations/decorationbridge.h"
 #include "decorations/decorationpalette.h"
 #include "effects.h"
 #include "focuschain.h"
 #include "input.h"
 #include "outline.h"
 #include "placement.h"
-#if KWIN_BUILD_TABBOX
-#include "tabbox/tabbox.h"
-#endif
-#include "scene/shadowitem.h"
 #include "scene/windowitem.h"
 #include "screenedge.h"
 #include "shadow.h"
+#if KWIN_BUILD_TABBOX
+#include "tabbox/tabbox.h"
+#endif
+#include "tiles/tilemanager.h"
 #include "useractions.h"
 #include "virtualdesktops.h"
 #include "wayland/output_interface.h"
@@ -45,7 +40,6 @@
 
 #include <KDecoration2/DecoratedClient>
 #include <KDecoration2/Decoration>
-
 #include <KDesktopFile>
 
 #include <QDebug>
