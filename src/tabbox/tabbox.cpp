@@ -943,7 +943,7 @@ void TabBox::CDEWalkThroughWindows(bool forward)
             shadeActivate(nc);
         } else {
             if (!nc->isOnCurrentDesktop()) {
-                VirtualDesktopManager::self()->setCurrent(nc->desktop());
+                VirtualDesktopManager::self()->setCurrent(nc->desktops().constLast());
             }
             Workspace::self()->raiseWindow(nc);
         }
