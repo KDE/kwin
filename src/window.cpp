@@ -452,11 +452,6 @@ bool Window::isOnDesktop(VirtualDesktop *desktop) const
     return isOnAllDesktops() || desktops().contains(desktop);
 }
 
-bool Window::isOnDesktop(int d) const
-{
-    return isOnDesktop(VirtualDesktopManager::self()->desktopForX11Id(d));
-}
-
 bool Window::isOnCurrentDesktop() const
 {
     return isOnDesktop(VirtualDesktopManager::self()->currentDesktop());
