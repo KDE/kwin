@@ -37,7 +37,7 @@ PreviewClient::PreviewClient(DecoratedClient *c, Decoration *decoration)
     , m_shadeable(true)
     , m_shaded(false)
     , m_providesContextHelp(false)
-    , m_desktop(1)
+    , m_onAllDesktops(false)
     , m_width(0)
     , m_height(0)
     , m_bordersTopEdge(false)
@@ -61,7 +61,6 @@ PreviewClient::PreviewClient(DecoratedClient *c, Decoration *decoration)
     connect(this, &PreviewClient::shadeableChanged, c, &DecoratedClient::shadeableChanged);
     connect(this, &PreviewClient::shadedChanged, c, &DecoratedClient::shadedChanged);
     connect(this, &PreviewClient::providesContextHelpChanged, c, &DecoratedClient::providesContextHelpChanged);
-    connect(this, &PreviewClient::onAllDesktopsChanged, c, &DecoratedClient::onAllDesktopsChanged);
     connect(this, &PreviewClient::widthChanged, c, &DecoratedClient::widthChanged);
     connect(this, &PreviewClient::heightChanged, c, &DecoratedClient::heightChanged);
     connect(this, &PreviewClient::iconChanged, c, &DecoratedClient::iconChanged);
@@ -75,9 +74,6 @@ PreviewClient::PreviewClient(DecoratedClient *c, Decoration *decoration)
     connect(this, &PreviewClient::iconNameChanged, this, [this]() {
         m_icon = QIcon::fromTheme(m_iconName);
         Q_EMIT iconChanged(m_icon);
-    });
-    connect(this, &PreviewClient::desktopChanged, this, [this]() {
-        Q_EMIT onAllDesktopsChanged(isOnAllDesktops());
     });
     connect(&m_palette, &KWin::Decoration::DecorationPalette::changed, this, [this]() {
         Q_EMIT paletteChanged(m_palette.palette());
@@ -129,23 +125,6 @@ QString PreviewClient::caption() const
 WId PreviewClient::decorationId() const
 {
     return 0;
-}
-
-int PreviewClient::desktop() const
-{
-    return m_desktop;
-}
-
-void PreviewClient::setDesktop(int desktop)
-{
-    if (desktop == 0) {
-        desktop = 1;
-    }
-    if (m_desktop == desktop) {
-        return;
-    }
-    m_desktop = desktop;
-    Q_EMIT desktopChanged(m_desktop);
 }
 
 QIcon PreviewClient::icon() const
@@ -215,7 +194,7 @@ bool PreviewClient::isMoveable() const
 
 bool PreviewClient::isOnAllDesktops() const
 {
-    return desktop() == -1;
+    return m_onAllDesktops;
 }
 
 bool PreviewClient::isResizeable() const
@@ -402,7 +381,8 @@ void PreviewClient::showApplicationMenu(int actionId)
 
 void PreviewClient::requestToggleOnAllDesktops()
 {
-    setDesktop(isOnAllDesktops() ? 1 : -1);
+    m_onAllDesktops = !m_onAllDesktops;
+    Q_EMIT onAllDesktopsChanged(m_onAllDesktops);
 }
 
 void PreviewClient::requestToggleShade()
