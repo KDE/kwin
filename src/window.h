@@ -544,6 +544,24 @@ public:
     void unref();
 
     /**
+     * Returns the last requested geometry. The returned value indicates the bounding
+     * geometry, meaning that the client can commit smaller window geometry if the window
+     * is resized.
+     *
+     * The main difference between the frame geometry and the move-resize geometry is
+     * that the former specifies the current geometry while the latter specifies the next
+     * geometry.
+     */
+    QRectF moveResizeGeometry() const;
+
+    /**
+     * Returns the output where the last move or resize operation has occurred. The
+     * window is expected to land on this output after the move/resize operation completes.
+     */
+    Output *moveResizeOutput() const;
+    void setMoveResizeOutput(Output *output);
+
+    /**
      * Returns the geometry of the pixmap or buffer attached to this Window.
      *
      * For X11 windows, this method returns server-side geometry of the Window.
@@ -577,6 +595,8 @@ public:
      * Default implementation returns same as geometry.
      */
     virtual QRectF inputGeometry() const;
+    virtual QSizeF minSize() const;
+    virtual QSizeF maxSize() const;
     QSizeF size() const;
     QPointF pos() const;
     QRectF rect() const;
@@ -597,9 +617,6 @@ public:
      * Returns a rectangle that the window occupies on the screen, including drop-shadows.
      */
     QRectF visibleGeometry() const;
-    virtual bool isClient() const;
-    bool isDeleted() const;
-    virtual bool isUnmanaged() const;
 
     /**
      * Maps the specified @a point from the global screen coordinates to the frame coordinates.
@@ -612,6 +629,69 @@ public:
      */
     QPointF mapToLocal(const QPointF &point) const;
     QPointF mapFromLocal(const QPointF &point) const;
+
+    /**
+     * Calculates the matching client position for the given frame position @p point.
+     */
+    virtual QPointF framePosToClientPos(const QPointF &point) const;
+    /**
+     * Calculates the matching frame position for the given client position @p point.
+     */
+    virtual QPointF clientPosToFramePos(const QPointF &point) const;
+    /**
+     * Calculates the matching client size for the given frame size @p size.
+     *
+     * Notice that size constraints won't be applied.
+     *
+     * Default implementation returns the frame size with frame margins being excluded.
+     */
+    virtual QSizeF frameSizeToClientSize(const QSizeF &size) const;
+    /**
+     * Calculates the matching frame size for the given client size @p size.
+     *
+     * Notice that size constraints won't be applied.
+     *
+     * Default implementation returns the client size with frame margins being included.
+     */
+    virtual QSizeF clientSizeToFrameSize(const QSizeF &size) const;
+    /**
+     * Calculates the matching client rect for the given frame rect @p rect.
+     *
+     * Notice that size constraints won't be applied.
+     */
+    QRectF frameRectToClientRect(const QRectF &rect) const;
+    /**
+     * Calculates the matching frame rect for the given client rect @p rect.
+     *
+     * Notice that size constraints won't be applied.
+     */
+    QRectF clientRectToFrameRect(const QRectF &rect) const;
+
+    /**
+     * How to resize the window in order to obey constraints (mainly aspect ratios).
+     */
+    enum SizeMode {
+        SizeModeAny,
+        SizeModeFixedW, ///< Try not to affect width
+        SizeModeFixedH, ///< Try not to affect height
+        SizeModeMax ///< Try not to make it larger in either direction
+    };
+
+    virtual QSizeF constrainClientSize(const QSizeF &size, SizeMode mode = SizeModeAny) const;
+    QSizeF constrainFrameSize(const QSizeF &size, SizeMode mode = SizeModeAny) const;
+
+    void move(const QPointF &point);
+    void resize(const QSizeF &size);
+    void moveResize(const QRectF &rect);
+
+    void growHorizontal();
+    void shrinkHorizontal();
+    void growVertical();
+    void shrinkVertical();
+
+    virtual QRectF resizeWithChecks(const QRectF &geometry, const QSizeF &s) = 0;
+    void keepInArea(QRectF area, bool partial = false);
+    QRectF keepInArea(QRectF geometry, QRectF area, bool partial = false);
 
     // prefer isXXX() instead
     virtual NET::WindowType windowType(bool direct = false) const = 0;
@@ -638,6 +718,11 @@ public:
     virtual bool isInputMethod() const;
     virtual bool isOutline() const;
     virtual bool isInternal() const;
+    virtual bool isPopupWindow() const;
+
+    virtual bool isClient() const;
+    bool isDeleted() const;
+    virtual bool isUnmanaged() const;
 
     bool isLockScreenOverlay() const;
     void setLockScreenOverlay(bool allowed);
@@ -766,15 +851,6 @@ public:
     static T *findInList(const QList<T *> &list, std::function<bool(const U *)> func);
 
     /**
-     * Whether the window is a popup.
-     *
-     * Popups can be used to implement popup menus, tooltips, combo boxes, etc.
-     *
-     * @since 5.15
-     */
-    virtual bool isPopupWindow() const;
-
-    /**
      * A UUID to uniquely identify this Window independent of windowing system.
      */
     QUuid internalId() const
@@ -848,8 +924,6 @@ public:
 
     void cancelAutoRaise();
 
-    bool wantsTabFocus() const;
-
     virtual void updateMouseGrab();
     /**
      * @returns The caption consisting of captionNormal and captionSuffix
@@ -875,9 +949,6 @@ public:
     virtual bool isHiddenInternal() const = 0;
     virtual void hideClient() = 0;
     virtual void showClient() = 0;
-    virtual bool isFullScreenable() const;
-    virtual bool isFullScreen() const;
-    virtual bool isRequestedFullScreen() const;
     // TODO: remove boolean trap
     virtual Window *findModal(bool allow_itself = false) = 0;
     virtual bool isTransient() const;
@@ -919,16 +990,25 @@ public:
         return _shortcut;
     }
     void setShortcut(const QString &cut);
-    bool performMouseCommand(Options::MouseCommand, const QPointF &globalPos);
+
+    virtual QRectF iconGeometry() const;
 
     void setMinimized(bool set);
     bool isMinimized() const
     {
         return m_minimized;
     }
+    virtual bool isMinimizable() const;
+
+    QRectF fullscreenGeometryRestore() const;
+    virtual bool isFullScreenable() const;
+    virtual bool isFullScreen() const;
+    virtual bool isRequestedFullScreen() const;
+    virtual bool userCanSetFullScreen() const;
     virtual void setFullScreen(bool set, bool user = true);
 
     QRectF geometryRestore() const;
+    virtual bool isMaximizable() const;
     virtual MaximizeMode maximizeMode() const;
     virtual MaximizeMode requestedMaximizeMode() const;
     virtual void maximize(MaximizeMode mode);
@@ -936,10 +1016,10 @@ public:
      * Sets the maximization according to @p vertically and @p horizontally.
      */
     Q_INVOKABLE void setMaximize(bool vertically, bool horizontally);
-    virtual bool noBorder() const;
-    virtual void setNoBorder(bool set);
+
     QPalette palette();
     const Decoration::DecorationPalette *decorationPalette();
+
     /**
      * Returns whether the window is resizable or has a fixed size.
      */
@@ -952,6 +1032,7 @@ public:
      * Returns whether the window can be moved to another screen.
      */
     virtual bool isMovableAcrossScreens() const = 0;
+
     /**
      * Returns @c true if the window is shaded and shadeMode is @c ShadeNormal; otherwise returns @c false.
      */
@@ -968,12 +1049,6 @@ public:
      * Whether the Window can be shaded. Default implementation returns @c false.
      */
     virtual bool isShadeable() const;
-    virtual bool isMaximizable() const;
-    virtual bool isMinimizable() const;
-    virtual QRectF iconGeometry() const;
-    virtual bool userCanSetFullScreen() const;
-    virtual bool userCanSetNoBorder() const;
-    virtual void checkNoBorder();
 
     const WindowRules *rules() const
     {
@@ -981,8 +1056,13 @@ public:
     }
     void removeRule(Rules *r);
     void setupWindowRules();
+    void finishWindowRules();
     void evaluateWindowRules();
+    virtual void updateWindowRules(Rules::Types selection);
     virtual void applyWindowRules();
+    virtual bool supportsWindowRules() const;
+
+    bool wantsTabFocus() const;
     virtual bool takeFocus() = 0;
     virtual bool wantsInput() const = 0;
     /**
@@ -999,27 +1079,17 @@ public:
     virtual bool dockWantsInput() const;
     void checkWorkspacePosition(QRectF oldGeometry = QRectF(), const VirtualDesktop *oldDesktop = nullptr);
     virtual xcb_timestamp_t userTime() const;
-    virtual void updateWindowRules(Rules::Types selection);
 
-    void growHorizontal();
-    void shrinkHorizontal();
-    void growVertical();
-    void shrinkVertical();
-    void updateInteractiveMoveResize(const QPointF &currentGlobalCursor);
-    /**
-     * Ends move resize when all pointer buttons are up again.
-     */
-    void endInteractiveMoveResize();
     void keyPressEvent(uint key_code);
 
     virtual void pointerEnterEvent(const QPointF &globalPos);
     virtual void pointerLeaveEvent();
 
-    Qt::Edge titlebarPosition() const;
-    bool titlebarPositionUnderMouse() const;
-
     // a helper for the workspace window packing. tests for screen validity and updates since in maximization case as with normal moving
     void packTo(qreal left, qreal top);
+
+    Tile *tile() const;
+    void setTile(Tile *tile);
 
     /**
      * Sets the quick tile mode ("snap") of this window.
@@ -1032,88 +1102,9 @@ public:
     {
         return QuickTileMode(m_quickTileMode);
     }
+
     Layer layer() const;
     void updateLayer();
-
-    Tile *tile() const;
-
-    void move(const QPointF &point);
-    void resize(const QSizeF &size);
-    void moveResize(const QRectF &rect);
-
-    virtual QRectF resizeWithChecks(const QRectF &geometry, const QSizeF &s) = 0;
-    void keepInArea(QRectF area, bool partial = false);
-    QRectF keepInArea(QRectF geometry, QRectF area, bool partial = false);
-    virtual QSizeF minSize() const;
-    virtual QSizeF maxSize() const;
-
-    /**
-     * How to resize the window in order to obey constraints (mainly aspect ratios).
-     */
-    enum SizeMode {
-        SizeModeAny,
-        SizeModeFixedW, ///< Try not to affect width
-        SizeModeFixedH, ///< Try not to affect height
-        SizeModeMax ///< Try not to make it larger in either direction
-    };
-
-    virtual QSizeF constrainClientSize(const QSizeF &size, SizeMode mode = SizeModeAny) const;
-    QSizeF constrainFrameSize(const QSizeF &size, SizeMode mode = SizeModeAny) const;
-
-    /**
-     * Calculates the matching client position for the given frame position @p point.
-     */
-    virtual QPointF framePosToClientPos(const QPointF &point) const;
-    /**
-     * Calculates the matching frame position for the given client position @p point.
-     */
-    virtual QPointF clientPosToFramePos(const QPointF &point) const;
-    /**
-     * Calculates the matching client size for the given frame size @p size.
-     *
-     * Notice that size constraints won't be applied.
-     *
-     * Default implementation returns the frame size with frame margins being excluded.
-     */
-    virtual QSizeF frameSizeToClientSize(const QSizeF &size) const;
-    /**
-     * Calculates the matching frame size for the given client size @p size.
-     *
-     * Notice that size constraints won't be applied.
-     *
-     * Default implementation returns the client size with frame margins being included.
-     */
-    virtual QSizeF clientSizeToFrameSize(const QSizeF &size) const;
-    /**
-     * Calculates the matching client rect for the given frame rect @p rect.
-     *
-     * Notice that size constraints won't be applied.
-     */
-    QRectF frameRectToClientRect(const QRectF &rect) const;
-    /**
-     * Calculates the matching frame rect for the given client rect @p rect.
-     *
-     * Notice that size constraints won't be applied.
-     */
-    QRectF clientRectToFrameRect(const QRectF &rect) const;
-
-    /**
-     * Returns the last requested geometry. The returned value indicates the bounding
-     * geometry, meaning that the client can commit smaller window geometry if the window
-     * is resized.
-     *
-     * The main difference between the frame geometry and the move-resize geometry is
-     * that the former specifies the current geometry while the latter specifies the next
-     * geometry.
-     */
-    QRectF moveResizeGeometry() const;
-
-    /**
-     * Returns the output where the last move or resize operation has occurred. The
-     * window is expected to land on this output after the move/resize operation completes.
-     */
-    Output *moveResizeOutput() const;
-    void setMoveResizeOutput(Output *output);
 
     /**
      * Returns @c true if the Client is being interactively moved; otherwise @c false.
@@ -1136,6 +1127,13 @@ public:
     {
         return m_interactiveMoveResize.cursor;
     }
+    uint32_t interactiveMoveResizeCount() const;
+
+    void updateInteractiveMoveResize(const QPointF &currentGlobalCursor);
+    /**
+     * Ends move resize when all pointer buttons are up again.
+     */
+    void endInteractiveMoveResize();
 
     virtual StrutRect strutRect(StrutArea area) const;
     StrutRects strutRects() const;
@@ -1153,8 +1151,11 @@ public:
      */
     Options::MouseCommand getMouseCommand(Qt::MouseButton button, bool *handled) const;
     Options::MouseCommand getWheelCommand(Qt::Orientation orientation, bool *handled) const;
+    bool performMouseCommand(Options::MouseCommand, const QPointF &globalPos);
 
     // decoration related
+    Qt::Edge titlebarPosition() const;
+    bool titlebarPositionUnderMouse() const;
     KDecoration2::Decoration *decoration()
     {
         return m_decoration.decoration.get();
@@ -1177,6 +1178,11 @@ public:
     void processDecorationButtonRelease(QMouseEvent *event);
 
     virtual void invalidateDecoration();
+
+    virtual bool noBorder() const;
+    virtual void setNoBorder(bool set);
+    virtual bool userCanSetNoBorder() const;
+    virtual void checkNoBorder();
 
     /**
      * Returns whether the window provides context help or not. If it does,
@@ -1223,6 +1229,15 @@ public:
     }
 
     /**
+     * Helper function to compute the icon out of an application id defined by @p fileName
+     *
+     * @returns an icon name that can be used with QIcon::fromTheme()
+     */
+    static QString iconFromDesktopFile(const QString &fileName);
+
+    static QString findDesktopFile(const QString &fileName);
+
+    /**
      * Tries to terminate the process of this Window.
      *
      * Implementing subclasses can perform a windowing system solution for terminating.
@@ -1253,15 +1268,15 @@ public:
         return m_applicationMenuObjectPath;
     }
 
-    virtual QString preferredColorScheme() const;
-    QString colorScheme() const;
-    void setColorScheme(const QString &colorScheme);
-
     /**
      * Request showing the application menu bar
      * @param actionId The DBus menu ID of the action that should be highlighted, 0 for the root menu
      */
     void showApplicationMenu(int actionId);
+
+    virtual QString preferredColorScheme() const;
+    QString colorScheme() const;
+    void setColorScheme(const QString &colorScheme);
 
     bool unresponsive() const;
 
@@ -1291,13 +1306,6 @@ public:
     virtual Group *group();
 
     /**
-     * Returns whether window rules can be applied to this client.
-     *
-     * Default implementation returns @c false.
-     */
-    virtual bool supportsWindowRules() const;
-
-    /**
      * Return window management interface
      */
     KWaylandServer::PlasmaWindowInterface *windowManagementInterface() const
@@ -1305,26 +1313,11 @@ public:
         return m_windowManagementInterface;
     }
 
-    QRectF fullscreenGeometryRestore() const;
-
-    /**
-     * Helper function to compute the icon out of an application id defined by @p fileName
-     *
-     * @returns an icon name that can be used with QIcon::fromTheme()
-     */
-    static QString iconFromDesktopFile(const QString &fileName);
-
-    static QString findDesktopFile(const QString &fileName);
-
     /**
      * Sets the last user usage serial of the surface as @p serial
      */
     void setLastUsageSerial(quint32 serial);
     quint32 lastUsageSerial() const;
-
-    uint32_t interactiveMoveResizeCount() const;
-
-    void setTile(Tile *tile);
 
     void refOffscreenRendering();
     void unrefOffscreenRendering();
@@ -1720,8 +1713,6 @@ protected:
      * If no such Window exists @c nullptr is returned.
      */
     Window *findWindowWithSameCaption() const;
-
-    void finishWindowRules();
 
     bool tabTo(Window *other, bool behind, bool activate);
 

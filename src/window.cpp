@@ -309,18 +309,6 @@ bool Window::isUnmanaged() const
     return false;
 }
 
-bool Window::isOnCurrentActivity() const
-{
-#if KWIN_BUILD_ACTIVITIES
-    if (!Workspace::self()->activities()) {
-        return true;
-    }
-    return isOnActivity(Workspace::self()->activities()->current());
-#else
-    return true;
-#endif
-}
-
 void Window::elevate(bool elevate)
 {
     if (!effectWindow()) {
@@ -447,16 +435,6 @@ QMargins Window::frameMargins() const
     return QMargins(borderLeft(), borderTop(), borderRight(), borderBottom());
 }
 
-bool Window::isOnDesktop(VirtualDesktop *desktop) const
-{
-    return isOnAllDesktops() || desktops().contains(desktop);
-}
-
-bool Window::isOnCurrentDesktop() const
-{
-    return isOnDesktop(VirtualDesktopManager::self()->currentDesktop());
-}
-
 void Window::updateMouseGrab()
 {
 }
@@ -464,11 +442,6 @@ void Window::updateMouseGrab()
 bool Window::belongToSameApplication(const Window *c1, const Window *c2, SameApplicationChecks checks)
 {
     return c1->belongsToSameApplication(c2, checks);
-}
-
-bool Window::isTransient() const
-{
-    return false;
 }
 
 xcb_timestamp_t Window::userTime() const
@@ -908,7 +881,17 @@ QStringList Window::desktopIds() const
                        return vd->id();
                    });
     return ids;
-};
+}
+
+bool Window::isOnDesktop(VirtualDesktop *desktop) const
+{
+    return isOnAllDesktops() || desktops().contains(desktop);
+}
+
+bool Window::isOnCurrentDesktop() const
+{
+    return isOnDesktop(VirtualDesktopManager::self()->currentDesktop());
+}
 
 ShadeMode Window::shadeMode() const
 {
@@ -2343,6 +2326,11 @@ bool Window::isModal() const
     return m_modal;
 }
 
+bool Window::isTransient() const
+{
+    return false;
+}
+
 // check whether a transient should be actually kept above its mainwindow
 // there may be some special cases where this rule shouldn't be enfored
 static bool shouldKeepTransientAbove(const Window *parent, const Window *transient)
@@ -3130,17 +3118,6 @@ QString Window::caption() const
     return cap;
 }
 
-void Window::removeRule(Rules *rule)
-{
-    m_rules.remove(rule);
-}
-
-void Window::evaluateWindowRules()
-{
-    setupWindowRules();
-    applyWindowRules();
-}
-
 /**
  * Returns the list of activities the window window is on.
  * if it's on all activities, the list will be empty.
@@ -3149,6 +3126,18 @@ void Window::evaluateWindowRules()
 QStringList Window::activities() const
 {
     return m_activityList;
+}
+
+bool Window::isOnCurrentActivity() const
+{
+#if KWIN_BUILD_ACTIVITIES
+    if (!Workspace::self()->activities()) {
+        return true;
+    }
+    return isOnActivity(Workspace::self()->activities()->current());
+#else
+    return true;
+#endif
 }
 
 /**
@@ -3275,11 +3264,6 @@ void Window::blockActivityUpdates(bool b)
     }
 }
 
-void Window::checkNoBorder()
-{
-    setNoBorder(false);
-}
-
 bool Window::groupTransient() const
 {
     return false;
@@ -3293,11 +3277,6 @@ const Group *Window::group() const
 Group *Window::group()
 {
     return nullptr;
-}
-
-bool Window::supportsWindowRules() const
-{
-    return false;
 }
 
 QPointF Window::framePosToClientPos(const QPointF &point) const
@@ -3948,6 +3927,16 @@ QSizeF Window::constrainFrameSize(const QSizeF &size, SizeMode mode) const
     return clientSizeToFrameSize(constrainedClientSize);
 }
 
+QRectF Window::fullscreenGeometryRestore() const
+{
+    return m_fullscreenGeometryRestore;
+}
+
+void Window::setFullscreenGeometryRestore(const QRectF &geom)
+{
+    m_fullscreenGeometryRestore = geom;
+}
+
 /**
  * Returns @c true if the Window can be shown in full screen mode; otherwise @c false.
  *
@@ -4075,6 +4064,11 @@ void Window::setNoBorder(bool set)
     qCWarning(KWIN_CORE, "%s doesn't support setting decorations", metaObject()->className());
 }
 
+void Window::checkNoBorder()
+{
+    setNoBorder(false);
+}
+
 void Window::showOnScreenEdge()
 {
     qCWarning(KWIN_CORE, "%s doesn't support screen edge activation", metaObject()->className());
@@ -4085,16 +4079,6 @@ bool Window::isPlaceable() const
     return true;
 }
 
-QRectF Window::fullscreenGeometryRestore() const
-{
-    return m_fullscreenGeometryRestore;
-}
-
-void Window::setFullscreenGeometryRestore(const QRectF &geom)
-{
-    m_fullscreenGeometryRestore = geom;
-}
-
 void Window::cleanTabBox()
 {
 #if KWIN_BUILD_TABBOX
@@ -4103,6 +4087,22 @@ void Window::cleanTabBox()
         tabBox->nextPrev(true);
     }
 #endif
+}
+
+bool Window::supportsWindowRules() const
+{
+    return false;
+}
+
+void Window::removeRule(Rules *rule)
+{
+    m_rules.remove(rule);
+}
+
+void Window::evaluateWindowRules()
+{
+    setupWindowRules();
+    applyWindowRules();
 }
 
 void Window::setupWindowRules()
