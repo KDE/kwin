@@ -266,7 +266,12 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
 
     const auto allOutputs = kwinApp()->outputBackend()->outputs();
     const bool allDisabled = !std::any_of(allOutputs.begin(), allOutputs.end(), [this](const auto &output) {
-        return config.constChangeSet(output)->enabled;
+        const auto changeset = config.constChangeSet(output);
+        if (changeset && changeset->enabled.has_value()) {
+            return *changeset->enabled;
+        } else {
+            return output->isEnabled();
+        }
     });
     if (allDisabled) {
         qCWarning(KWIN_CORE) << "Disabling all outputs through configuration changes is not allowed";
@@ -285,7 +290,12 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
             return;
         }
         outputOrder.erase(std::remove_if(outputOrder.begin(), outputOrder.end(), [this](const auto &pair) {
-                              return !config.constChangeSet(pair.second->handle())->enabled;
+                              const auto changeset = config.constChangeSet(pair.second->handle());
+                              if (changeset && changeset->enabled.has_value()) {
+                                  return *changeset->enabled;
+                              } else {
+                                  return pair.second->handle()->isEnabled();
+                              }
                           }),
                           outputOrder.end());
         std::sort(outputOrder.begin(), outputOrder.end(), [](const auto &pair1, const auto &pair2) {
