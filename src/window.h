@@ -584,8 +584,6 @@ public:
      *
      * Note that the returned margins object will have all margins set to 0 if
      * the window doesn't have a server-side decoration.
-     *
-     * Default implementation returns a margins object with all margins set to 0.
      */
     QMargins frameMargins() const;
 
@@ -781,8 +779,7 @@ public:
      */
     void updateShadow();
     /**
-     * Whether the Window currently wants the shadow to be rendered. Default
-     * implementation always returns @c true.
+     * Whether the Window currently wants the shadow to be rendered.
      */
     bool wantsShadowToBeRendered() const;
 
