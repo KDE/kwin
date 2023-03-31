@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-30 02:10+0000\n"
+"POT-Creation-Date: 2023-03-31 02:17+0000\n"
 "PO-Revision-Date: 2011-07-11 12:17+0530\n"
 "Last-Translator: Shankar Prasad <svenkate@redhat.com>\n"
 "Language-Team: Kannada <kde-l10n-kn@kde.org>\n"
@@ -2178,41 +2178,41 @@ msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "ಗಣಕತೆರೆಯನ್ನು ತೋರಿಸು."
 
-#: tabbox/tabbox.cpp:355
+#: tabbox/tabbox.cpp:350
 msgid "Walk Through Windows"
 msgstr "ಕಿಟಕಿಗಳನ್ನು ಅವಲೋಕಿಸಿ."
 
-#: tabbox/tabbox.cpp:356
+#: tabbox/tabbox.cpp:351
 msgid "Walk Through Windows (Reverse)"
 msgstr "ಕಿಟಕಿಗಳನ್ನು ಅವಲೋಕಿಸಿ ( ಹಿಮ್ಮುಖ)"
 
-#: tabbox/tabbox.cpp:357
+#: tabbox/tabbox.cpp:352
 msgid "Walk Through Windows Alternative"
 msgstr "ವಿಂಡೋಸ್‌ಗೆ ಪರ್ಯಾಯವಾದವುಗಳನ್ನು ಅವಲೋಕಿಸಿ"
 
-#: tabbox/tabbox.cpp:358
+#: tabbox/tabbox.cpp:353
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "ವಿಂಡೋಸ್‌ಗೆ ಪರ್ಯಾಯವಾದವುಗಳನ್ನು ಅವಲೋಕಿಸಿ (ಹಿಮ್ಮುಖ)"
 
-#: tabbox/tabbox.cpp:359
+#: tabbox/tabbox.cpp:354
 #, fuzzy
 #| msgid "Walk Through Windows Alternative"
 msgid "Walk Through Windows of Current Application"
 msgstr "ವಿಂಡೋಸ್‌ಗೆ ಪರ್ಯಾಯವಾದವುಗಳನ್ನು ಅವಲೋಕಿಸಿ"
 
-#: tabbox/tabbox.cpp:360
+#: tabbox/tabbox.cpp:355
 #, fuzzy
 #| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "ವಿಂಡೋಸ್‌ಗೆ ಪರ್ಯಾಯವಾದವುಗಳನ್ನು ಅವಲೋಕಿಸಿ (ಹಿಮ್ಮುಖ)"
 
-#: tabbox/tabbox.cpp:361
+#: tabbox/tabbox.cpp:356
 #, fuzzy
 #| msgid "Walk Through Windows Alternative"
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "ವಿಂಡೋಸ್‌ಗೆ ಪರ್ಯಾಯವಾದವುಗಳನ್ನು ಅವಲೋಕಿಸಿ"
 
-#: tabbox/tabbox.cpp:362
+#: tabbox/tabbox.cpp:357
 #, fuzzy
 #| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
@@ -2842,7 +2842,7 @@ msgstr "ಒಂದು ಗಣಕತೆರೆ ಕೆಳಕ್ಕೆ ಬದಲಾಯ
 msgid "Switch to Desktop %1"
 msgstr "%1ನೇ ಗಣಕತೆರೆಗೆ ಬದಲಾಯಿಸು"
 
-#: window.cpp:3153
+#: window.cpp:3128
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-18 01:00+0000\n"
+"POT-Creation-Date: 2023-03-31 02:17+0000\n"
 "PO-Revision-Date: 2023-01-28 07:42+0100\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -51,34 +51,25 @@ msgstr "Došlo k chybě při ukládání nastavení kompozitoru."
 msgid "There was an error requesting information from the compositor."
 msgstr "Došlo k chybě při získávání informací z kompozitoru."
 
-#: package/contents/ui/main.qml:17
-#, kde-format
-msgid ""
-"This module lets you configure the navigation, number and layout of virtual "
-"desktops."
-msgstr ""
-"Tento modul vám umožní nastavit ovládání, počet a rozvržení virtuálních "
-"pracovních ploch."
-
-#: package/contents/ui/main.qml:91
+#: package/contents/ui/main.qml:89
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Rename"
 msgstr "Přejmenovat"
 
-#: package/contents/ui/main.qml:102
+#: package/contents/ui/main.qml:100
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Confirm new name"
 msgstr "Potvrdit nový název"
 
-#: package/contents/ui/main.qml:110
+#: package/contents/ui/main.qml:108
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "Odstranit"
 
-#: package/contents/ui/main.qml:137
+#: package/contents/ui/main.qml:135
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
@@ -87,18 +78,18 @@ msgstr ""
 "Pracovní plochy byly změněny mimo nastavení v této aplikaci. Uložení "
 "nastavení tyto změny přepíše."
 
-#: package/contents/ui/main.qml:153
+#: package/contents/ui/main.qml:151
 #, kde-format
 msgid "Row %1"
 msgstr "Řádek %1"
 
-#: package/contents/ui/main.qml:166
+#: package/contents/ui/main.qml:164
 #, kde-format
 msgctxt "@action:button"
 msgid "Add"
 msgstr "Přidat"
 
-#: package/contents/ui/main.qml:184
+#: package/contents/ui/main.qml:182
 #, kde-format
 msgid "1 Row"
 msgid_plural "%1 Rows"
@@ -106,32 +97,39 @@ msgstr[0] "1 řádek"
 msgstr[1] "%1 řádky"
 msgstr[2] "%1 řádků"
 
-#: package/contents/ui/main.qml:200
+#: package/contents/ui/main.qml:198
 #, kde-format
 msgid "Options:"
 msgstr "Možnosti:"
 
-#: package/contents/ui/main.qml:202
+#: package/contents/ui/main.qml:200
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "Přepínání rotuje dokola"
 
-#: package/contents/ui/main.qml:220
+#: package/contents/ui/main.qml:218
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "Při přepínání zobrazit animaci:"
 
-#: package/contents/ui/main.qml:271
+#: package/contents/ui/main.qml:269
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "Zobrazit On Screen Display při přepínání:"
 
-#: package/contents/ui/main.qml:290
+#: package/contents/ui/main.qml:288
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 ms"
 
-#: package/contents/ui/main.qml:314
+#: package/contents/ui/main.qml:312
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Zobrazit ukazatele rozložení plochy"
+
+#~ msgid ""
+#~ "This module lets you configure the navigation, number and layout of "
+#~ "virtual desktops."
+#~ msgstr ""
+#~ "Tento modul vám umožní nastavit ovládání, počet a rozvržení virtuálních "
+#~ "pracovních ploch."

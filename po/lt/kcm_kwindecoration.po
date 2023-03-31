@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-05 03:09+0000\n"
+"POT-Creation-Date: 2023-03-31 02:17+0000\n"
 "PO-Revision-Date: 2019-07-30 22:25+0300\n"
 "Last-Translator: Moo\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -183,12 +183,7 @@ msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "Rodyti antraštės juostos mygtukų paaiškinimus"
 
-#: package/contents/ui/main.qml:19
-#, kde-format
-msgid "This module lets you configure the window decorations."
-msgstr "Šis modulis leidžia jums konfigūruoti langų dekoracijas."
-
-#: package/contents/ui/main.qml:42
+#: package/contents/ui/main.qml:41
 #, fuzzy, kde-format
 #| msgctxt "combobox label"
 #| msgid "Window border size:"
@@ -196,7 +191,7 @@ msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "Lango rėmelio dydis:"
 
-#: package/contents/ui/main.qml:60
+#: package/contents/ui/main.qml:59
 #, fuzzy, kde-format
 #| msgctxt "tab label"
 #| msgid "Titlebar Buttons"
@@ -204,7 +199,7 @@ msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
 msgstr "Antraštės juostos mygtukai"
 
-#: package/contents/ui/main.qml:65
+#: package/contents/ui/main.qml:64
 #, fuzzy, kde-format
 #| msgctxt "button text"
 #| msgid "Get New Window Decorations..."
@@ -261,6 +256,9 @@ msgstr "Milžiniškas"
 #, kde-format
 msgid "Oversized"
 msgstr "Per didelis"
+
+#~ msgid "This module lets you configure the window decorations."
+#~ msgstr "Šis modulis leidžia jums konfigūruoti langų dekoracijas."
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

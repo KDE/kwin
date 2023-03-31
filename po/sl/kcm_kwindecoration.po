@@ -1,7 +1,7 @@
 # translation of kcmkwindecoration.po to
 # Translation of kcmkwindecoration.po to Slovenian
 # SLOVENIAN TRANSLATION OF K DESKTOP ENVIRONMENT.
-# $Id: kcm_kwindecoration.po 1646071 2023-03-05 03:28:26Z scripty $
+# $Id: kcm_kwindecoration.po 1648435 2023-03-31 02:31:12Z scripty $
 # $Source$
 #
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-05 03:09+0000\n"
+"POT-Creation-Date: 2023-03-31 02:17+0000\n"
 "PO-Revision-Date: 2023-02-07 08:35+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -203,24 +203,19 @@ msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "Prikaži orodne namige gumbov oken"
 
-#: package/contents/ui/main.qml:19
-#, kde-format
-msgid "This module lets you configure the window decorations."
-msgstr "Ta modul omogoča nastavljanje okenskih okraskov."
-
-#: package/contents/ui/main.qml:42
+#: package/contents/ui/main.qml:41
 #, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "Širina obrobe okna:"
 
-#: package/contents/ui/main.qml:60
+#: package/contents/ui/main.qml:59
 #, kde-format
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
 msgstr "Konfiguriraj gumbe naslovne vrstice…"
 
-#: package/contents/ui/main.qml:65
+#: package/contents/ui/main.qml:64
 #, kde-format
 msgctxt "button text"
 msgid "Get New Window Decorations…"
@@ -275,6 +270,9 @@ msgstr "Velikanska"
 #, kde-format
 msgid "Oversized"
 msgstr "Prevelika"
+
+#~ msgid "This module lets you configure the window decorations."
+#~ msgstr "Ta modul omogoča nastavljanje okenskih okraskov."
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-30 02:10+0000\n"
+"POT-Creation-Date: 2023-03-31 02:17+0000\n"
 "PO-Revision-Date: 2022-12-12 22:06+0200\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -2158,35 +2158,35 @@ msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "Rodyti darbalaukį"
 
-#: tabbox/tabbox.cpp:355
+#: tabbox/tabbox.cpp:350
 msgid "Walk Through Windows"
 msgstr "Pereiti per langus"
 
-#: tabbox/tabbox.cpp:356
+#: tabbox/tabbox.cpp:351
 msgid "Walk Through Windows (Reverse)"
 msgstr "Pereiti per langus (atvirkščiai)"
 
-#: tabbox/tabbox.cpp:357
+#: tabbox/tabbox.cpp:352
 msgid "Walk Through Windows Alternative"
 msgstr "Pereiti per langus alternatyviai"
 
-#: tabbox/tabbox.cpp:358
+#: tabbox/tabbox.cpp:353
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Pereiti per langus alternatyviai (atvirkščiai)"
 
-#: tabbox/tabbox.cpp:359
+#: tabbox/tabbox.cpp:354
 msgid "Walk Through Windows of Current Application"
 msgstr "Pereiti per esamos programos langus"
 
-#: tabbox/tabbox.cpp:360
+#: tabbox/tabbox.cpp:355
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Pereiti per esamos programos langus (atvirkščiai)"
 
-#: tabbox/tabbox.cpp:361
+#: tabbox/tabbox.cpp:356
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Pereiti per esamos programos langus alternatyviai"
 
-#: tabbox/tabbox.cpp:362
+#: tabbox/tabbox.cpp:357
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Pereiti per esamos programos langus alternatyviai (atvirkščiai)"
 
@@ -2793,7 +2793,7 @@ msgstr "Perjungti vienu darbalaukiu į apačią"
 msgid "Switch to Desktop %1"
 msgstr "Perjungti į darbalaukį %1"
 
-#: window.cpp:3153
+#: window.cpp:3128
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

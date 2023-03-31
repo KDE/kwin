@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-30 02:10+0000\n"
+"POT-Creation-Date: 2023-03-31 02:17+0000\n"
 "PO-Revision-Date: 2009-01-09 21:22-0800\n"
 "Last-Translator: Deepayan Sarkar <deepayan.sarkar@gmail.com>\n"
 "Language-Team: en_US <kde-translation@bengalinux.org>\n"
@@ -2157,45 +2157,45 @@ msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "ডেস্কটপ গ্রিড দেখাও"
 
-#: tabbox/tabbox.cpp:355
+#: tabbox/tabbox.cpp:350
 msgid "Walk Through Windows"
 msgstr "বিভিন্ন উইণ্ডো পরিদর্শন করো"
 
-#: tabbox/tabbox.cpp:356
+#: tabbox/tabbox.cpp:351
 msgid "Walk Through Windows (Reverse)"
 msgstr "বিভিন্ন উইণ্ডো পরিদর্শন করো (বিপরীতক্রমে)"
 
-#: tabbox/tabbox.cpp:357
+#: tabbox/tabbox.cpp:352
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows Alternative"
 msgstr "বিভিন্ন উইণ্ডো পরিদর্শন করো (বিপরীতক্রমে)"
 
-#: tabbox/tabbox.cpp:358
+#: tabbox/tabbox.cpp:353
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "বিভিন্ন উইণ্ডো পরিদর্শন করো (বিপরীতক্রমে)"
 
-#: tabbox/tabbox.cpp:359
+#: tabbox/tabbox.cpp:354
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application"
 msgstr "বিভিন্ন উইণ্ডো পরিদর্শন করো (বিপরীতক্রমে)"
 
-#: tabbox/tabbox.cpp:360
+#: tabbox/tabbox.cpp:355
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "বিভিন্ন উইণ্ডো পরিদর্শন করো (বিপরীতক্রমে)"
 
-#: tabbox/tabbox.cpp:361
+#: tabbox/tabbox.cpp:356
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "বিভিন্ন উইণ্ডো পরিদর্শন করো (বিপরীতক্রমে)"
 
-#: tabbox/tabbox.cpp:362
+#: tabbox/tabbox.cpp:357
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
@@ -2835,7 +2835,7 @@ msgstr "নিচের ডেস্কটপে যাও"
 msgid "Switch to Desktop %1"
 msgstr "১ নং ডেস্কটপে যাও"
 
-#: window.cpp:3153
+#: window.cpp:3128
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

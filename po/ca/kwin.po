@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-30 02:10+0000\n"
+"POT-Creation-Date: 2023-03-31 02:17+0000\n"
 "PO-Revision-Date: 2023-03-05 13:14+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -2158,35 +2158,35 @@ msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "Mostra l'escriptori"
 
-#: tabbox/tabbox.cpp:355
+#: tabbox/tabbox.cpp:350
 msgid "Walk Through Windows"
 msgstr "Recorre les finestres"
 
-#: tabbox/tabbox.cpp:356
+#: tabbox/tabbox.cpp:351
 msgid "Walk Through Windows (Reverse)"
 msgstr "Recorre les finestres (a la inversa)"
 
-#: tabbox/tabbox.cpp:357
+#: tabbox/tabbox.cpp:352
 msgid "Walk Through Windows Alternative"
 msgstr "Recorre les finestres en alternativa"
 
-#: tabbox/tabbox.cpp:358
+#: tabbox/tabbox.cpp:353
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Recorre les finestres en alternativa (a la inversa)"
 
-#: tabbox/tabbox.cpp:359
+#: tabbox/tabbox.cpp:354
 msgid "Walk Through Windows of Current Application"
 msgstr "Recorre les finestres de l'aplicació actual"
 
-#: tabbox/tabbox.cpp:360
+#: tabbox/tabbox.cpp:355
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Recorre les finestres de l'aplicació actual (a la inversa)"
 
-#: tabbox/tabbox.cpp:361
+#: tabbox/tabbox.cpp:356
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Recorre les finestres de l'aplicació actual en alternativa"
 
-#: tabbox/tabbox.cpp:362
+#: tabbox/tabbox.cpp:357
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr ""
 "Recorre les finestres de l'aplicació actual en alternativa (a la inversa)"
@@ -2780,7 +2780,7 @@ msgstr "Canvia un escriptori avall"
 msgid "Switch to Desktop %1"
 msgstr "Canvia a l'escriptori %1"
 
-#: window.cpp:3153
+#: window.cpp:3128
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

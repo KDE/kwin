@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-05 03:09+0000\n"
+"POT-Creation-Date: 2023-03-31 02:17+0000\n"
 "PO-Revision-Date: 2010-05-24 08:43+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer <support@khmeros.info>\n"
@@ -181,26 +181,21 @@ msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "បង្ហាញ​ព័ត៌មាន​ជំនួយ​ប៊ូតុង​របស់​បង្អួច"
 
-#: package/contents/ui/main.qml:19
-#, kde-format
-msgid "This module lets you configure the window decorations."
-msgstr ""
-
-#: package/contents/ui/main.qml:42
+#: package/contents/ui/main.qml:41
 #, fuzzy, kde-format
 #| msgid "Border size:"
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "ទំហំ​ស៊ុម ៖"
 
-#: package/contents/ui/main.qml:60
+#: package/contents/ui/main.qml:59
 #, fuzzy, kde-format
 #| msgid "Buttons"
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
 msgstr "ប៊ូតុង"
 
-#: package/contents/ui/main.qml:65
+#: package/contents/ui/main.qml:64
 #, fuzzy, kde-format
 #| msgid "Get New Decorations..."
 msgctxt "button text"

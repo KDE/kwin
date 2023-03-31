@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-05 03:09+0000\n"
+"POT-Creation-Date: 2023-03-31 02:17+0000\n"
 "PO-Revision-Date: 2009-01-02 11:45+0530\n"
 "Last-Translator: Manoj Kumar Giri <mgiri@redhat.com>\n"
 "Language-Team: Oriya <oriya-it@googlegroups.com>\n"
@@ -180,24 +180,19 @@ msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr ""
 
-#: package/contents/ui/main.qml:19
-#, kde-format
-msgid "This module lets you configure the window decorations."
-msgstr ""
-
-#: package/contents/ui/main.qml:42
+#: package/contents/ui/main.qml:41
 #, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr ""
 
-#: package/contents/ui/main.qml:60
+#: package/contents/ui/main.qml:59
 #, kde-format
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
 msgstr ""
 
-#: package/contents/ui/main.qml:65
+#: package/contents/ui/main.qml:64
 #, kde-format
 msgctxt "button text"
 msgid "Get New Window Decorations…"

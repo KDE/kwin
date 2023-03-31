@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-18 01:00+0000\n"
+"POT-Creation-Date: 2023-03-31 02:17+0000\n"
 "PO-Revision-Date: 2022-12-14 02:28+0000\n"
 "Last-Translator: gummi <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
@@ -56,34 +56,25 @@ msgstr "Villa kom upp við vistun á stillingum fyrir myndsmiðinn."
 msgid "There was an error requesting information from the compositor."
 msgstr "Villa kom upp þegar beðið var um upplýsingar frá myndsmiðnum."
 
-#: package/contents/ui/main.qml:17
-#, kde-format
-msgid ""
-"This module lets you configure the navigation, number and layout of virtual "
-"desktops."
-msgstr ""
-"Í þessari einingu geturðu grunnstillt flettingu, fjölda og framsetningu "
-"sýndarskjáborða."
-
-#: package/contents/ui/main.qml:91
+#: package/contents/ui/main.qml:89
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Rename"
 msgstr "Endurnefna"
 
-#: package/contents/ui/main.qml:102
+#: package/contents/ui/main.qml:100
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Confirm new name"
 msgstr "Staðfesta nýtt heiti"
 
-#: package/contents/ui/main.qml:110
+#: package/contents/ui/main.qml:108
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "Fjarlægja"
 
-#: package/contents/ui/main.qml:137
+#: package/contents/ui/main.qml:135
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
@@ -92,53 +83,60 @@ msgstr ""
 "Sýndarskjáborðum hefur verið breytt annars staðar en í þessu "
 "stillingaforriti. Ef þú vistar núna glatast þær breytingar."
 
-#: package/contents/ui/main.qml:153
+#: package/contents/ui/main.qml:151
 #, kde-format
 msgid "Row %1"
 msgstr "Röð %1"
 
-#: package/contents/ui/main.qml:166
+#: package/contents/ui/main.qml:164
 #, kde-format
 msgctxt "@action:button"
 msgid "Add"
 msgstr "Bæta við"
 
-#: package/contents/ui/main.qml:184
+#: package/contents/ui/main.qml:182
 #, kde-format
 msgid "1 Row"
 msgid_plural "%1 Rows"
 msgstr[0] "1 röð"
 msgstr[1] "%1 raðir"
 
-#: package/contents/ui/main.qml:200
+#: package/contents/ui/main.qml:198
 #, kde-format
 msgid "Options:"
 msgstr "Valkostir:"
 
-#: package/contents/ui/main.qml:202
+#: package/contents/ui/main.qml:200
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "Fletting í gegn fer hringinn"
 
-#: package/contents/ui/main.qml:220
+#: package/contents/ui/main.qml:218
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "Sýna hreyfiáhrif þegar skipt er á milli:"
 
-#: package/contents/ui/main.qml:271
+#: package/contents/ui/main.qml:269
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "Birta "
 
-#: package/contents/ui/main.qml:290
+#: package/contents/ui/main.qml:288
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 ms."
 
-#: package/contents/ui/main.qml:314
+#: package/contents/ui/main.qml:312
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Sýna tákn fyrir skjáborðauppsetningu"
+
+#~ msgid ""
+#~ "This module lets you configure the navigation, number and layout of "
+#~ "virtual desktops."
+#~ msgstr ""
+#~ "Í þessari einingu geturðu grunnstillt flettingu, fjölda og framsetningu "
+#~ "sýndarskjáborða."
 
 #~ msgid "Virtual Desktops"
 #~ msgstr "Sýndarskjáborð"

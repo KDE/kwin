@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-05 03:09+0000\n"
+"POT-Creation-Date: 2023-03-31 02:17+0000\n"
 "PO-Revision-Date: 2021-09-05 19:15+0200\n"
 "Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
@@ -199,18 +199,13 @@ msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "Zobrazovať popisy tlačidiel záhlavia"
 
-#: package/contents/ui/main.qml:19
-#, kde-format
-msgid "This module lets you configure the window decorations."
-msgstr "Tento modul vám umožnuje nastaviť dekorácie okien."
-
-#: package/contents/ui/main.qml:42
+#: package/contents/ui/main.qml:41
 #, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "Veľkosť orámovania okna:"
 
-#: package/contents/ui/main.qml:60
+#: package/contents/ui/main.qml:59
 #, fuzzy, kde-format
 #| msgctxt "tab label"
 #| msgid "Titlebar Buttons"
@@ -218,7 +213,7 @@ msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
 msgstr "Tlačidlá záhlavia"
 
-#: package/contents/ui/main.qml:65
+#: package/contents/ui/main.qml:64
 #, fuzzy, kde-format
 #| msgctxt "button text"
 #| msgid "Get New Window Decorations..."
@@ -275,6 +270,9 @@ msgstr "Veľmi obrovská"
 #, kde-format
 msgid "Oversized"
 msgstr "Nadmerná"
+
+#~ msgid "This module lets you configure the window decorations."
+#~ msgstr "Tento modul vám umožnuje nastaviť dekorácie okien."
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

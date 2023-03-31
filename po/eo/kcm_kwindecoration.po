@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-05 03:09+0000\n"
+"POT-Creation-Date: 2023-03-31 02:17+0000\n"
 "PO-Revision-Date: 2023-02-09 22:30+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: Esperanto <kde-i18n-eo@kde.org>\n"
@@ -198,24 +198,19 @@ msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "Montri titolbreton butonajn konsiletojn"
 
-#: package/contents/ui/main.qml:19
-#, kde-format
-msgid "This module lets you configure the window decorations."
-msgstr "Ĉi tiu modulo ebligas al vi agordi la fenestrajn ornamojn."
-
-#: package/contents/ui/main.qml:42
+#: package/contents/ui/main.qml:41
 #, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "Fenestra randgrandeco:"
 
-#: package/contents/ui/main.qml:60
+#: package/contents/ui/main.qml:59
 #, kde-format
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
 msgstr "Agordi Titolbreton-Butonojn..."
 
-#: package/contents/ui/main.qml:65
+#: package/contents/ui/main.qml:64
 #, kde-format
 msgctxt "button text"
 msgid "Get New Window Decorations…"
@@ -270,6 +265,9 @@ msgstr "Tre grandega"
 #, kde-format
 msgid "Oversized"
 msgstr "Troigite grandega"
+
+#~ msgid "This module lets you configure the window decorations."
+#~ msgstr "Ĉi tiu modulo ebligas al vi agordi la fenestrajn ornamojn."
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

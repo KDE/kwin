@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-18 01:00+0000\n"
+"POT-Creation-Date: 2023-03-31 02:17+0000\n"
 "PO-Revision-Date: 2022-03-18 23:51+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -27,10 +27,8 @@ msgstr "Hiçbiri"
 msgid "Do not use any virtual keyboard"
 msgstr "Bir sanal klavye kullanma"
 
-#: package/contents/ui/main.qml:16
-#, kde-format
-msgid "This module lets you choose the virtual keyboard to use."
-msgstr "Bu modül, istediğiniz sanal klavyeyi seçmenize izin verir."
+#~ msgid "This module lets you choose the virtual keyboard to use."
+#~ msgstr "Bu modül, istediğiniz sanal klavyeyi seçmenize izin verir."
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

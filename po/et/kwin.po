@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-30 02:10+0000\n"
+"POT-Creation-Date: 2023-03-31 02:17+0000\n"
 "PO-Revision-Date: 2022-11-14 01:16+0100\n"
 "Last-Translator: Mihkel Tõnnov <mihhkel@gmail.com>\n"
 "Language-Team: Estonian <>\n"
@@ -2140,35 +2140,35 @@ msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "Töölaua näitamine"
 
-#: tabbox/tabbox.cpp:355
+#: tabbox/tabbox.cpp:350
 msgid "Walk Through Windows"
 msgstr "Akende läbijalutamine"
 
-#: tabbox/tabbox.cpp:356
+#: tabbox/tabbox.cpp:351
 msgid "Walk Through Windows (Reverse)"
 msgstr "Akende läbijalutamine (tagurpidi)"
 
-#: tabbox/tabbox.cpp:357
+#: tabbox/tabbox.cpp:352
 msgid "Walk Through Windows Alternative"
 msgstr "Akende alternatiivne läbijalutamine"
 
-#: tabbox/tabbox.cpp:358
+#: tabbox/tabbox.cpp:353
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Akende alternatiivne läbijalutamine (tagurpidi)"
 
-#: tabbox/tabbox.cpp:359
+#: tabbox/tabbox.cpp:354
 msgid "Walk Through Windows of Current Application"
 msgstr "Aktiivse rakenduse akende läbijalutamine"
 
-#: tabbox/tabbox.cpp:360
+#: tabbox/tabbox.cpp:355
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Aktiivse rakenduse akende läbijalutamine (tagurpidi)"
 
-#: tabbox/tabbox.cpp:361
+#: tabbox/tabbox.cpp:356
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Aktiivse rakenduse akende alternatiivne läbijalutamine"
 
-#: tabbox/tabbox.cpp:362
+#: tabbox/tabbox.cpp:357
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Aktiivse rakenduse akende alternatiivne läbijalutamine (tagurpidi)"
 
@@ -2774,7 +2774,7 @@ msgstr "Lülitumine üks töölaud alla"
 msgid "Switch to Desktop %1"
 msgstr "Lülitumine töölauale %1"
 
-#: window.cpp:3153
+#: window.cpp:3128
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

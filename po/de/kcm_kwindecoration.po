@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-05 03:09+0000\n"
+"POT-Creation-Date: 2023-03-31 02:17+0000\n"
 "PO-Revision-Date: 2023-02-20 22:46+0100\n"
 "Last-Translator: Jannick Kuhr <opensource@kuhr.org>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -183,24 +183,19 @@ msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "Kurzinfos für Knöpfe der Titelleiste anzeigen"
 
-#: package/contents/ui/main.qml:19
-#, kde-format
-msgid "This module lets you configure the window decorations."
-msgstr "Mit diesem Modul können Sie die Fensterdekoration einrichten."
-
-#: package/contents/ui/main.qml:42
+#: package/contents/ui/main.qml:41
 #, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "Rahmenbreite des Fensters:"
 
-#: package/contents/ui/main.qml:60
+#: package/contents/ui/main.qml:59
 #, kde-format
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
 msgstr "Titelleistenknöpfe einrichten ..."
 
-#: package/contents/ui/main.qml:65
+#: package/contents/ui/main.qml:64
 #, kde-format
 msgctxt "button text"
 msgid "Get New Window Decorations…"
@@ -255,6 +250,9 @@ msgstr "Noch riesiger"
 #, kde-format
 msgid "Oversized"
 msgstr "Übergroß"
+
+#~ msgid "This module lets you configure the window decorations."
+#~ msgstr "Mit diesem Modul können Sie die Fensterdekoration einrichten."
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

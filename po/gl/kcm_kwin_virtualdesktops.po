@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-18 01:00+0000\n"
+"POT-Creation-Date: 2023-03-31 02:17+0000\n"
 "PO-Revision-Date: 2023-03-26 19:36+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
@@ -55,34 +55,25 @@ msgstr "Produciuse un erro ao gardar a configuración no compositor."
 msgid "There was an error requesting information from the compositor."
 msgstr "Produciuse un erro ao solicitar información do compositor."
 
-#: package/contents/ui/main.qml:17
-#, kde-format
-msgid ""
-"This module lets you configure the navigation, number and layout of virtual "
-"desktops."
-msgstr ""
-"Este módulo permítelle configurar a navegación, cantidade e disposición dos "
-"escritorios virtuais."
-
-#: package/contents/ui/main.qml:91
+#: package/contents/ui/main.qml:89
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Rename"
 msgstr "Cambiar de nome"
 
-#: package/contents/ui/main.qml:102
+#: package/contents/ui/main.qml:100
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Confirm new name"
 msgstr "Confirmar o novo nome"
 
-#: package/contents/ui/main.qml:110
+#: package/contents/ui/main.qml:108
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "Retirar"
 
-#: package/contents/ui/main.qml:137
+#: package/contents/ui/main.qml:135
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
@@ -91,53 +82,60 @@ msgstr ""
 "Os escritorios virtuais cambiáronse fóra desta aplicación de configuración. "
 "Gardar agora sobrescribirá os cambios."
 
-#: package/contents/ui/main.qml:153
+#: package/contents/ui/main.qml:151
 #, kde-format
 msgid "Row %1"
 msgstr "Fila %1"
 
-#: package/contents/ui/main.qml:166
+#: package/contents/ui/main.qml:164
 #, kde-format
 msgctxt "@action:button"
 msgid "Add"
 msgstr "Engadir"
 
-#: package/contents/ui/main.qml:184
+#: package/contents/ui/main.qml:182
 #, kde-format
 msgid "1 Row"
 msgid_plural "%1 Rows"
 msgstr[0] "1 fila"
 msgstr[1] "%1 filas"
 
-#: package/contents/ui/main.qml:200
+#: package/contents/ui/main.qml:198
 #, kde-format
 msgid "Options:"
 msgstr "Opcións:"
 
-#: package/contents/ui/main.qml:202
+#: package/contents/ui/main.qml:200
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "A navegación é cíclica"
 
-#: package/contents/ui/main.qml:220
+#: package/contents/ui/main.qml:218
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "Mostrar unha animación ao cambiar:"
 
-#: package/contents/ui/main.qml:271
+#: package/contents/ui/main.qml:269
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "Mostrar unha visualización en pantalla ao cambiar:"
 
-#: package/contents/ui/main.qml:290
+#: package/contents/ui/main.qml:288
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 ms"
 
-#: package/contents/ui/main.qml:314
+#: package/contents/ui/main.qml:312
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Mostrar indicadores da disposición do escritorio"
+
+#~ msgid ""
+#~ "This module lets you configure the navigation, number and layout of "
+#~ "virtual desktops."
+#~ msgstr ""
+#~ "Este módulo permítelle configurar a navegación, cantidade e disposición "
+#~ "dos escritorios virtuais."
 
 #~ msgid "Virtual Desktops"
 #~ msgstr "Escritorios virtuais"

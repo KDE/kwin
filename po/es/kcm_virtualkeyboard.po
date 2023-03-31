@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_virtualkeyboard\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-18 01:00+0000\n"
+"POT-Creation-Date: 2023-03-31 02:17+0000\n"
 "PO-Revision-Date: 2021-04-27 19:49+0200\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -29,10 +29,8 @@ msgstr "Ninguno"
 msgid "Do not use any virtual keyboard"
 msgstr "No usar ningún teclado virtual"
 
-#: package/contents/ui/main.qml:16
-#, kde-format
-msgid "This module lets you choose the virtual keyboard to use."
-msgstr "Este módulo le permite escoger el teclado virtual a usar."
+#~ msgid "This module lets you choose the virtual keyboard to use."
+#~ msgstr "Este módulo le permite escoger el teclado virtual a usar."
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

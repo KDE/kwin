@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-05 03:09+0000\n"
+"POT-Creation-Date: 2023-03-31 02:17+0000\n"
 "PO-Revision-Date: 2021-06-10 11:34+0400\n"
 "Last-Translator: Kheyyam Gojayev <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -195,18 +195,13 @@ msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "Başlıq düyməsi köməkçi bildirişlərini göstərmək"
 
-#: package/contents/ui/main.qml:19
-#, kde-format
-msgid "This module lets you configure the window decorations."
-msgstr "Bu modul pəncərə dekorasiyasını ayarlamağa imkan verir"
-
-#: package/contents/ui/main.qml:42
+#: package/contents/ui/main.qml:41
 #, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "Pəncərə çərçivəsinin ölçüsü:"
 
-#: package/contents/ui/main.qml:60
+#: package/contents/ui/main.qml:59
 #, fuzzy, kde-format
 #| msgctxt "tab label"
 #| msgid "Titlebar Buttons"
@@ -214,7 +209,7 @@ msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
 msgstr "Başlıq paneli düymələri"
 
-#: package/contents/ui/main.qml:65
+#: package/contents/ui/main.qml:64
 #, fuzzy, kde-format
 #| msgctxt "button text"
 #| msgid "Get New Window Decorations..."
@@ -271,6 +266,9 @@ msgstr "Çox nəhəng"
 #, kde-format
 msgid "Oversized"
 msgstr "Ən geniş"
+
+#~ msgid "This module lets you configure the window decorations."
+#~ msgstr "Bu modul pəncərə dekorasiyasını ayarlamağa imkan verir"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

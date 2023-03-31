@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-18 01:00+0000\n"
+"POT-Creation-Date: 2023-03-31 02:17+0000\n"
 "PO-Revision-Date: 2022-03-12 18:12-0800\n"
 "Last-Translator: Fumiaki Okushi <fumiaki.okushi@gmail.com>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -52,34 +52,25 @@ msgstr "コンポジターの設定の保存中にエラーが発生しました
 msgid "There was an error requesting information from the compositor."
 msgstr "コンポジターからの情報の取得中にエラーが発生しました。"
 
-#: package/contents/ui/main.qml:17
-#, kde-format
-msgid ""
-"This module lets you configure the navigation, number and layout of virtual "
-"desktops."
-msgstr ""
-"このモジュールで、仮想デスクトップのナビゲーション、数字、レイアウトを設定で"
-"きます。"
-
-#: package/contents/ui/main.qml:91
+#: package/contents/ui/main.qml:89
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Rename"
 msgstr "名前変更"
 
-#: package/contents/ui/main.qml:102
+#: package/contents/ui/main.qml:100
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Confirm new name"
 msgstr "新しい名前を確定"
 
-#: package/contents/ui/main.qml:110
+#: package/contents/ui/main.qml:108
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "削除"
 
-#: package/contents/ui/main.qml:137
+#: package/contents/ui/main.qml:135
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
@@ -88,53 +79,60 @@ msgstr ""
 "この設定アプリケーション以外で仮想デスクトップが変更されました。今すぐ保存す"
 "ると、変更が上書きされます。"
 
-#: package/contents/ui/main.qml:153
+#: package/contents/ui/main.qml:151
 #, kde-format
 msgid "Row %1"
 msgstr "%1 列目"
 
-#: package/contents/ui/main.qml:166
+#: package/contents/ui/main.qml:164
 #, kde-format
 msgctxt "@action:button"
 msgid "Add"
 msgstr "追加"
 
-#: package/contents/ui/main.qml:184
+#: package/contents/ui/main.qml:182
 #, kde-format
 msgid "1 Row"
 msgid_plural "%1 Rows"
 msgstr[0] "1 列"
 msgstr[1] "%1 列"
 
-#: package/contents/ui/main.qml:200
+#: package/contents/ui/main.qml:198
 #, kde-format
 msgid "Options:"
 msgstr "オプション:"
 
-#: package/contents/ui/main.qml:202
+#: package/contents/ui/main.qml:200
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "ナビゲーションを循環"
 
-#: package/contents/ui/main.qml:220
+#: package/contents/ui/main.qml:218
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "切り替え時にアニメーションを表示:"
 
-#: package/contents/ui/main.qml:271
+#: package/contents/ui/main.qml:269
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "切り替え時にオンスクリーンディスプレイを表示:"
 
-#: package/contents/ui/main.qml:290
+#: package/contents/ui/main.qml:288
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 ms"
 
-#: package/contents/ui/main.qml:314
+#: package/contents/ui/main.qml:312
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "デスクトップ配置インジケータを表示する"
+
+#~ msgid ""
+#~ "This module lets you configure the navigation, number and layout of "
+#~ "virtual desktops."
+#~ msgstr ""
+#~ "このモジュールで、仮想デスクトップのナビゲーション、数字、レイアウトを設定"
+#~ "できます。"
 
 #~ msgid "Virtual Desktops"
 #~ msgstr "仮想デスクトップ"

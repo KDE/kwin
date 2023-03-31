@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-18 01:00+0000\n"
+"POT-Creation-Date: 2023-03-31 02:17+0000\n"
 "PO-Revision-Date: 2021-06-11 12:42+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -27,10 +27,8 @@ msgstr "Ei mitään"
 msgid "Do not use any virtual keyboard"
 msgstr "Älä käytä näyttönäppäimistöä"
 
-#: package/contents/ui/main.qml:16
-#, kde-format
-msgid "This module lets you choose the virtual keyboard to use."
-msgstr "Tässä osiossa voi valita käytettävän näyttönäppäimistön."
+#~ msgid "This module lets you choose the virtual keyboard to use."
+#~ msgstr "Tässä osiossa voi valita käytettävän näyttönäppäimistön."
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

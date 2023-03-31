@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-18 01:00+0000\n"
+"POT-Creation-Date: 2023-03-31 02:17+0000\n"
 "PO-Revision-Date: 2021-07-25 12:31+0100\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian\n"
@@ -28,10 +28,8 @@ msgstr "Niciuna"
 msgid "Do not use any virtual keyboard"
 msgstr "Nu folosi nicio tastatură virtuală"
 
-#: package/contents/ui/main.qml:16
-#, kde-format
-msgid "This module lets you choose the virtual keyboard to use."
-msgstr "Acest modul vă permite să alegeți tastatura virtuală de folosit."
+#~ msgid "This module lets you choose the virtual keyboard to use."
+#~ msgstr "Acest modul vă permite să alegeți tastatura virtuală de folosit."
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

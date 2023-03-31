@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-30 02:10+0000\n"
+"POT-Creation-Date: 2023-03-31 02:17+0000\n"
 "PO-Revision-Date: 2012-06-14 11:29+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -2172,35 +2172,35 @@ msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "បង្ហាញ​ផ្ទៃតុ"
 
-#: tabbox/tabbox.cpp:355
+#: tabbox/tabbox.cpp:350
 msgid "Walk Through Windows"
 msgstr "ដើរ​កាត់​បង្អួច"
 
-#: tabbox/tabbox.cpp:356
+#: tabbox/tabbox.cpp:351
 msgid "Walk Through Windows (Reverse)"
 msgstr "ដើរ​កាត់​បង្អួច (បញ្ច្រាស)"
 
-#: tabbox/tabbox.cpp:357
+#: tabbox/tabbox.cpp:352
 msgid "Walk Through Windows Alternative"
 msgstr "ដើរ​កាត់​បង្អួច​ជម្រើស"
 
-#: tabbox/tabbox.cpp:358
+#: tabbox/tabbox.cpp:353
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "ដើរ​កាត់​បង្អួច​ជម្រើស (បញ្ច្រាស)"
 
-#: tabbox/tabbox.cpp:359
+#: tabbox/tabbox.cpp:354
 msgid "Walk Through Windows of Current Application"
 msgstr "ឆ្លង​​កាត់​បង្អួច​​នៃ​កម្មវិធី​បច្ចុប្បន្ន"
 
-#: tabbox/tabbox.cpp:360
+#: tabbox/tabbox.cpp:355
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "ឆ្លង​កាត់​បង្អួច​ជម្រើស​នៃ​កម្មវិធី​បច្ចុប្បន្ន (បញ្ច្រាស)"
 
-#: tabbox/tabbox.cpp:361
+#: tabbox/tabbox.cpp:356
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "ឆ្លង​​កាត់​បង្អួច​​នៃ​កម្មវិធី​បច្ចុប្បន្ន​ជំនួស"
 
-#: tabbox/tabbox.cpp:362
+#: tabbox/tabbox.cpp:357
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "ឆ្លង​​កាត់​បង្អួច​​នៃ​កម្មវិធី​បច្ចុប្បន្ន​ជំនួស (បញ្ច្រាស)"
 
@@ -2830,7 +2830,7 @@ msgstr "ប្ដូរ​ចុះ​ក្រោម​មួយ​ផ្ទៃ
 msgid "Switch to Desktop %1"
 msgstr "ប្ដូរ​ទៅ​ផ្ទៃតុ %1"
 
-#: window.cpp:3153
+#: window.cpp:3128
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

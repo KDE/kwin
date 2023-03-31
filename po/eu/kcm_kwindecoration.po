@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-05 03:09+0000\n"
+"POT-Creation-Date: 2023-03-31 02:17+0000\n"
 "PO-Revision-Date: 2023-02-07 20:23+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -201,24 +201,19 @@ msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "Erakutsi titulu-barrako botoien argibideak"
 
-#: package/contents/ui/main.qml:19
-#, kde-format
-msgid "This module lets you configure the window decorations."
-msgstr "Modulu honek leihoen apaingarriak konfiguratzen uzten dizu."
-
-#: package/contents/ui/main.qml:42
+#: package/contents/ui/main.qml:41
 #, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "Leiho-ertzaren neurria:"
 
-#: package/contents/ui/main.qml:60
+#: package/contents/ui/main.qml:59
 #, kde-format
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
 msgstr "Konfiguratu titulu-barrako botoiak..."
 
-#: package/contents/ui/main.qml:65
+#: package/contents/ui/main.qml:64
 #, kde-format
 msgctxt "button text"
 msgid "Get New Window Decorations…"
@@ -273,6 +268,9 @@ msgstr "Erraldoia"
 #, kde-format
 msgid "Oversized"
 msgstr "Neurriz kanpokoa"
+
+#~ msgid "This module lets you configure the window decorations."
+#~ msgstr "Modulu honek leihoen apaingarriak konfiguratzen uzten dizu."
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

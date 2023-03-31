@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-05 03:09+0000\n"
+"POT-Creation-Date: 2023-03-31 02:17+0000\n"
 "PO-Revision-Date: 2023-02-06 08:13+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
@@ -197,24 +197,19 @@ msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "Показувати підказки кнопок заголовків вікон"
 
-#: package/contents/ui/main.qml:19
-#, kde-format
-msgid "This module lets you configure the window decorations."
-msgstr "За допомогою цього модуля ви можете налаштувати обрамлення вікон."
-
-#: package/contents/ui/main.qml:42
+#: package/contents/ui/main.qml:41
 #, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "Розмір рамки вікна:"
 
-#: package/contents/ui/main.qml:60
+#: package/contents/ui/main.qml:59
 #, kde-format
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
 msgstr "Налаштувати кнопки заголовка…"
 
-#: package/contents/ui/main.qml:65
+#: package/contents/ui/main.qml:64
 #, kde-format
 msgctxt "button text"
 msgid "Get New Window Decorations…"
@@ -269,6 +264,9 @@ msgstr "Гігантський"
 #, kde-format
 msgid "Oversized"
 msgstr "Найбільший"
+
+#~ msgid "This module lets you configure the window decorations."
+#~ msgstr "За допомогою цього модуля ви можете налаштувати обрамлення вікон."
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

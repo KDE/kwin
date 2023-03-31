@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-30 02:10+0000\n"
+"POT-Creation-Date: 2023-03-31 02:17+0000\n"
 "PO-Revision-Date: 2003-12-27 10:16+0000\n"
 "Last-Translator: KD at KGyfieithu <kyfieithu@dotmon.com>\n"
 "Language-Team: Cymraeg <cy@li.org>\n"
@@ -2162,45 +2162,45 @@ msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "Newid i Benbwrdd 1"
 
-#: tabbox/tabbox.cpp:355
+#: tabbox/tabbox.cpp:350
 msgid "Walk Through Windows"
 msgstr "Cerdded Trwy'r Ffenestri"
 
-#: tabbox/tabbox.cpp:356
+#: tabbox/tabbox.cpp:351
 msgid "Walk Through Windows (Reverse)"
 msgstr "Cerdded Trwy'r Ffenestri (Am yn Ôl)"
 
-#: tabbox/tabbox.cpp:357
+#: tabbox/tabbox.cpp:352
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows Alternative"
 msgstr "Cerdded Trwy'r Ffenestri (Am yn Ôl)"
 
-#: tabbox/tabbox.cpp:358
+#: tabbox/tabbox.cpp:353
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Cerdded Trwy'r Ffenestri (Am yn Ôl)"
 
-#: tabbox/tabbox.cpp:359
+#: tabbox/tabbox.cpp:354
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application"
 msgstr "Cerdded Trwy'r Ffenestri (Am yn Ôl)"
 
-#: tabbox/tabbox.cpp:360
+#: tabbox/tabbox.cpp:355
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Cerdded Trwy'r Ffenestri (Am yn Ôl)"
 
-#: tabbox/tabbox.cpp:361
+#: tabbox/tabbox.cpp:356
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Cerdded Trwy'r Ffenestri (Am yn Ôl)"
 
-#: tabbox/tabbox.cpp:362
+#: tabbox/tabbox.cpp:357
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
@@ -2836,7 +2836,7 @@ msgstr "Newid Un Penbwrdd i Lawr"
 msgid "Switch to Desktop %1"
 msgstr "Newid i Benbwrdd 1"
 
-#: window.cpp:3153
+#: window.cpp:3128
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

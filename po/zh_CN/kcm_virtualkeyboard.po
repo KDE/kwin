@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-18 01:00+0000\n"
+"POT-Creation-Date: 2023-03-31 02:17+0000\n"
 "PO-Revision-Date: 2023-02-24 12:43\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -27,7 +27,5 @@ msgstr "无"
 msgid "Do not use any virtual keyboard"
 msgstr "不使用虚拟键盘"
 
-#: package/contents/ui/main.qml:16
-#, kde-format
-msgid "This module lets you choose the virtual keyboard to use."
-msgstr "此模块用于选择虚拟键盘。"
+#~ msgid "This module lets you choose the virtual keyboard to use."
+#~ msgstr "此模块用于选择虚拟键盘。"

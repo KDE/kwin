@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-05 03:09+0000\n"
+"POT-Creation-Date: 2023-03-31 02:17+0000\n"
 "PO-Revision-Date: 2020-02-08 15:28+0100\n"
 "Last-Translator: Martin Schlander <mschlander@opensuse.org>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
@@ -182,19 +182,14 @@ msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "Vis værktøjstip for titellinjeknapper"
 
-#: package/contents/ui/main.qml:19
-#, kde-format
-msgid "This module lets you configure the window decorations."
-msgstr "Med dette modul kan du indstille vinduesdekorationerne."
-
-#: package/contents/ui/main.qml:42
+#: package/contents/ui/main.qml:41
 #, fuzzy, kde-format
 #| msgid "Border size:"
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "Kantstørrelse:"
 
-#: package/contents/ui/main.qml:60
+#: package/contents/ui/main.qml:59
 #, fuzzy, kde-format
 #| msgctxt "tab label"
 #| msgid "Titlebar Buttons"
@@ -202,7 +197,7 @@ msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
 msgstr "Titellinjeknapper"
 
-#: package/contents/ui/main.qml:65
+#: package/contents/ui/main.qml:64
 #, fuzzy, kde-format
 #| msgctxt "button text"
 #| msgid "Get New Window Decorations..."
@@ -259,6 +254,9 @@ msgstr "Meget enorm"
 #, kde-format
 msgid "Oversized"
 msgstr "Overstørrelse"
+
+#~ msgid "This module lets you configure the window decorations."
+#~ msgstr "Med dette modul kan du indstille vinduesdekorationerne."
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

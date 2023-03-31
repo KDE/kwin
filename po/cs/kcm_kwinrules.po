@@ -874,19 +874,3 @@ msgstr "Nespravované okno"
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
-
-#~ msgid "KWin id of the window for special window settings."
-#~ msgstr "KWin Id okna pro speciální nastavení oken."
-
-#~ msgid "Whether the settings should affect all windows of the application."
-#~ msgstr "Jestli se má nastavení vztahovat na všechna okna aplikace."
-
-#~ msgid "This helper utility is not supposed to be called directly."
-#~ msgstr "Tento pomocný nástroj není určen k samostatnému spouštění."
-
-#~ msgctxt "Window caption for the application wide rules dialog"
-#~ msgid "Edit Application-Specific Settings"
-#~ msgstr "Upravit nastavení specifická pro aplikaci"
-
-#~ msgid "Edit Window-Specific Settings"
-#~ msgstr "Upravit nastavení specifická pro okno"

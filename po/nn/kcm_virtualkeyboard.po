@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-18 01:00+0000\n"
+"POT-Creation-Date: 2023-03-31 02:17+0000\n"
 "PO-Revision-Date: 2022-01-15 18:29+0100\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
@@ -29,7 +29,5 @@ msgstr "Inkje"
 msgid "Do not use any virtual keyboard"
 msgstr "Ikkje bruk noko skjermtastatur"
 
-#: package/contents/ui/main.qml:16
-#, kde-format
-msgid "This module lets you choose the virtual keyboard to use."
-msgstr "Med denne modulen kan du velja kva skjerm­tastatur du vil bruka."
+#~ msgid "This module lets you choose the virtual keyboard to use."
+#~ msgstr "Med denne modulen kan du velja kva skjerm­tastatur du vil bruka."

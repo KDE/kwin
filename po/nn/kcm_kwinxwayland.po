@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-18 01:00+0000\n"
+"POT-Creation-Date: 2023-03-31 02:17+0000\n"
 "PO-Revision-Date: 2023-02-20 21:28+0100\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
@@ -19,16 +19,7 @@ msgstr ""
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
 
-#: package/contents/ui/main.qml:19
-#, kde-format
-msgid ""
-"This module lets configure which keyboard events are forwarded to X11 apps "
-"regardless of their focus."
-msgstr ""
-"Her kan du velja kva taste­hendingar som skal vidare­sendast til X11-program, "
-"uavhengig av kva fokus dei har."
-
-#: package/contents/ui/main.qml:49
+#: package/contents/ui/main.qml:47
 #, kde-format
 msgid ""
 "Legacy X11 apps require the ability to read keystrokes typed in other apps "
@@ -41,33 +32,33 @@ msgstr ""
 "slik funksjonalitet slått av som standard. Viss du må bruka slike program, "
 "kan du velja sjølv korleis du vil balansera tryggleik og funksjonalitet her."
 
-#: package/contents/ui/main.qml:66
+#: package/contents/ui/main.qml:64
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
 msgstr "La eldre X11-program lesa tastetrykk skrivne inn i alle appar:"
 
-#: package/contents/ui/main.qml:67
+#: package/contents/ui/main.qml:65
 #, kde-format
 msgid "Never"
 msgstr "Aldri"
 
-#: package/contents/ui/main.qml:70
+#: package/contents/ui/main.qml:68
 #, kde-format
 msgid "Only Meta, Control, Alt, and Shift keys"
 msgstr "Berre «Meta»-, «Control»-, «Alt»- og «Shift»-tastane"
 
-#: package/contents/ui/main.qml:73
+#: package/contents/ui/main.qml:71
 #, kde-format
 msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
 msgstr ""
 "Alle tastar, men berre når «Meta», «Control», «Alt» eller «Shift» er nede"
 
-#: package/contents/ui/main.qml:77
+#: package/contents/ui/main.qml:75
 #, kde-format
 msgid "Always"
 msgstr "Alltid"
 
-#: package/contents/ui/main.qml:84
+#: package/contents/ui/main.qml:82
 #, kde-format
 msgid ""
 "Note that using this setting will reduce system security to that of the X11 "
@@ -78,3 +69,10 @@ msgstr ""
 "ned til tryggleiks­nivået til X11-økta, og du tillèt potensielt vondsinna "
 "programvare å stela passord og spionera på teksten du skriv. Sjå til at du "
 "er klar over denne risikoen, og godtek han."
+
+#~ msgid ""
+#~ "This module lets configure which keyboard events are forwarded to X11 "
+#~ "apps regardless of their focus."
+#~ msgstr ""
+#~ "Her kan du velja kva taste­hendingar som skal vidare­sendast til X11-"
+#~ "program, uavhengig av kva fokus dei har."

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-18 01:00+0000\n"
+"POT-Creation-Date: 2023-03-31 02:17+0000\n"
 "PO-Revision-Date: 2022-12-24 07:21+0000\n"
 "Last-Translator: José Nuno Coelho Pires <zepires@gmail.com>\n"
 "Language-Team: Portuguese <kde-i18n-pt@kde.org>\n"
@@ -18,17 +18,7 @@ msgstr ""
 "X-POFile-SpellExtra: Control\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: package/contents/ui/main.qml:19
-#, kde-format
-msgid ""
-"This module lets configure which keyboard events are forwarded to X11 apps "
-"regardless of their focus."
-msgstr ""
-"Este módulo permite configurar os eventos de teclado que serão encaminhados "
-"para as aplicações de X11, independentemente se estão em primeiro plano ou "
-"não."
-
-#: package/contents/ui/main.qml:49
+#: package/contents/ui/main.qml:47
 #, kde-format
 msgid ""
 "Legacy X11 apps require the ability to read keystrokes typed in other apps "
@@ -43,36 +33,36 @@ msgstr ""
 "poderá escolher aí o seu ponto de equilíbrio entre segurança e "
 "funcionalidade."
 
-#: package/contents/ui/main.qml:66
+#: package/contents/ui/main.qml:64
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
 msgstr ""
 "Permitir às aplicações de X11 antigas lerem o texto escrito em todas as "
 "aplicações"
 
-#: package/contents/ui/main.qml:67
+#: package/contents/ui/main.qml:65
 #, kde-format
 msgid "Never"
 msgstr "Nunca"
 
-#: package/contents/ui/main.qml:70
+#: package/contents/ui/main.qml:68
 #, kde-format
 msgid "Only Meta, Control, Alt, and Shift keys"
 msgstr "Apenas as teclas Meta, Control, Alt e Shift"
 
-#: package/contents/ui/main.qml:73
+#: package/contents/ui/main.qml:71
 #, kde-format
 msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
 msgstr ""
 "Todas as teclas, mas apenas enquanto as teclas Meta, Ctrl, Alt ou Shift "
 "estiverem carregadas"
 
-#: package/contents/ui/main.qml:77
+#: package/contents/ui/main.qml:75
 #, kde-format
 msgid "Always"
 msgstr "Sempre"
 
-#: package/contents/ui/main.qml:84
+#: package/contents/ui/main.qml:82
 #, kde-format
 msgid ""
 "Note that using this setting will reduce system security to that of the X11 "
@@ -83,6 +73,14 @@ msgstr ""
 "à da sessão de X11, permitindo que algumas aplicações maliciosas roubem as "
 "senhas e olhem para o texto que escreve. Certifique-se que compreende e "
 "aceita esse risco."
+
+#~ msgid ""
+#~ "This module lets configure which keyboard events are forwarded to X11 "
+#~ "apps regardless of their focus."
+#~ msgstr ""
+#~ "Este módulo permite configurar os eventos de teclado que serão "
+#~ "encaminhados para as aplicações de X11, independentemente se estão em "
+#~ "primeiro plano ou não."
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"
