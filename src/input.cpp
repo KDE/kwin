@@ -3337,11 +3337,21 @@ bool InputDeviceHandler::setHover(Window *window)
 
 void InputDeviceHandler::setFocus(Window *window)
 {
-    if (m_focus.window != window) {
-        Window *oldFocus = m_focus.window;
-        m_focus.window = window;
-        focusUpdate(oldFocus, m_focus.window);
+    if (m_focus.window == window) {
+        return;
     }
+
+    Window *oldFocus = m_focus.window;
+    if (oldFocus) {
+        disconnect(oldFocus, &Window::closed, this, &InputDeviceHandler::update);
+    }
+
+    m_focus.window = window;
+    if (window) {
+        connect(window, &Window::closed, this, &InputDeviceHandler::update);
+    }
+
+    focusUpdate(oldFocus, window);
 }
 
 void InputDeviceHandler::setDecoration(Decoration::DecoratedClientImpl *decoration)
