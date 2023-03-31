@@ -258,7 +258,13 @@ void SeatInterfacePrivate::cancelDrag()
         drag.target->updateDragTarget(nullptr, 0);
         drag.target = nullptr;
     }
-    endDrag();
+    QObject::disconnect(drag.dragSourceDestroyConnection);
+    if (drag.source) {
+        drag.source->dndCancelled();
+    }
+    drag = Drag();
+    Q_EMIT q->dragSurfaceChanged();
+    Q_EMIT q->dragEnded();
 }
 
 void SeatInterfacePrivate::endDrag()
@@ -274,6 +280,7 @@ void SeatInterfacePrivate::endDrag()
             dragTargetDevice->drop();
             dragSource->dropPerformed();
         } else {
+            dragSource->dropPerformed();
             dragSource->dndCancelled();
         }
     }
