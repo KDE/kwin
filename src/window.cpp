@@ -395,8 +395,7 @@ bool Window::hitTest(const QPointF &point) const
     if (m_surface && m_surface->isMapped()) {
         return m_surface->inputSurfaceAt(mapToLocal(point));
     }
-    const QPointF relativePoint = point - inputGeometry().topLeft();
-    return relativePoint.x() >= 0 && relativePoint.y() >= 0 && relativePoint.x() < inputGeometry().width() && relativePoint.y() < inputGeometry().height();
+    return exclusiveContains(m_bufferGeometry, point);
 }
 
 QPointF Window::mapToFrame(const QPointF &point) const
@@ -412,14 +411,6 @@ QPointF Window::mapToLocal(const QPointF &point) const
 QPointF Window::mapFromLocal(const QPointF &point) const
 {
     return point + bufferGeometry().topLeft();
-}
-
-QRectF Window::inputGeometry() const
-{
-    if (isDecorated()) {
-        return frameGeometry() + decoration()->resizeOnlyBorders();
-    }
-    return bufferGeometry();
 }
 
 bool Window::isLocalhost() const

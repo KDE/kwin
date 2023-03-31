@@ -588,13 +588,7 @@ public:
      * Default implementation returns a margins object with all margins set to 0.
      */
     QMargins frameMargins() const;
-    /**
-     * The geometry of the Window which accepts input events. This might be larger
-     * than the actual geometry, e.g. to support resizing outside the window.
-     *
-     * Default implementation returns same as geometry.
-     */
-    virtual QRectF inputGeometry() const;
+
     virtual QSizeF minSize() const;
     virtual QSizeF maxSize() const;
     QSizeF size() const;

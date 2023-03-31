@@ -496,8 +496,6 @@ void DecorationInputTest::testResizeOutsideWindow()
     QVERIFY(window->isDecorated());
     QVERIFY(!window->noBorder());
     window->move(workspace()->activeOutput()->geometry().center() - QPoint(window->width() / 2, window->height() / 2));
-    QVERIFY(window->frameGeometry() != window->inputGeometry());
-    QVERIFY(window->inputGeometry().contains(window->frameGeometry()));
     QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
 
     // go to border
