@@ -174,9 +174,8 @@ OpenGLShadowTextureProvider::OpenGLShadowTextureProvider(Shadow *shadow)
 
 OpenGLShadowTextureProvider::~OpenGLShadowTextureProvider()
 {
-    WorkspaceScene *scene = Compositor::self()->scene();
-    if (scene) {
-        scene->makeOpenGLContextCurrent();
+    if (m_texture) {
+        Compositor::self()->scene()->makeOpenGLContextCurrent();
         DecorationShadowTextureCache::instance().unregister(this);
         m_texture.reset();
     }
