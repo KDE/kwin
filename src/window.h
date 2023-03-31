@@ -1702,8 +1702,6 @@ protected:
      */
     Window *findWindowWithSameCaption() const;
 
-    bool tabTo(Window *other, bool behind, bool activate);
-
     void startShadeHoverTimer();
     void startShadeUnhoverTimer();
     void shadeHover();
