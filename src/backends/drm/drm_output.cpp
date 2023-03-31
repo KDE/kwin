@@ -427,7 +427,7 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     m_pipeline->applyPendingChanges();
 
     State next = m_state;
-    next.enabled = props->enabled && m_pipeline->crtc();
+    next.enabled = props->enabled.value_or(m_state.enabled) && m_pipeline->crtc();
     next.position = props->pos.value_or(m_state.position);
     next.scale = props->scale.value_or(m_state.scale);
     next.transform = props->transform.value_or(m_state.transform);
