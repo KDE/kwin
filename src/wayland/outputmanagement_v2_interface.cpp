@@ -292,9 +292,9 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
         outputOrder.erase(std::remove_if(outputOrder.begin(), outputOrder.end(), [this](const auto &pair) {
                               const auto changeset = config.constChangeSet(pair.second->handle());
                               if (changeset && changeset->enabled.has_value()) {
-                                  return *changeset->enabled;
+                                  return !changeset->enabled.value();
                               } else {
-                                  return pair.second->handle()->isEnabled();
+                                  return !pair.second->handle()->isEnabled();
                               }
                           }),
                           outputOrder.end());
