@@ -71,7 +71,7 @@ public:
         return true;
     }
     NET::WindowType windowType(bool direct = false) const override;
-    QRectF inputGeometry() const override;
+    QRectF frameRectToBufferRect(const QRectF &rect) const override;
 
     Mode mode() const
     {
@@ -91,6 +91,7 @@ private:
     void handleMapped();
     void maybeShow();
 
+    QRectF m_windowGeometry;
     Mode m_mode = Mode::None;
     bool m_allowed = false;
     bool m_virtualKeyboardShouldBeShown = false;

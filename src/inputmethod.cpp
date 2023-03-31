@@ -234,7 +234,6 @@ void InputMethod::setPanel(InputPanelV1Window *panel)
     }
 
     m_panel = panel;
-    connect(panel->surface(), &SurfaceInterface::inputChanged, this, &InputMethod::updateInputPanelState);
     connect(panel, &Window::closed, this, [this]() {
         if (m_trackedWindow) {
             m_trackedWindow->setVirtualKeyboardGeometry({});
@@ -825,10 +824,10 @@ void InputMethod::updateInputPanelState()
     QRectF overlap = QRectF(0, 0, 0, 0);
     if (m_trackedWindow) {
         const bool bottomKeyboard = m_panel && m_panel->mode() != InputPanelV1Window::Mode::Overlay && m_panel->isShown();
-        m_trackedWindow->setVirtualKeyboardGeometry(bottomKeyboard ? m_panel->inputGeometry() : QRectF());
+        m_trackedWindow->setVirtualKeyboardGeometry(bottomKeyboard ? m_panel->frameGeometry() : QRectF());
 
         if (m_panel && m_panel->mode() != InputPanelV1Window::Mode::Overlay) {
-            overlap = m_trackedWindow->frameGeometry() & m_panel->inputGeometry();
+            overlap = m_trackedWindow->frameGeometry() & m_panel->frameGeometry();
             overlap.moveTo(m_trackedWindow->mapToLocal(overlap.topLeft()));
         }
     }

@@ -34,6 +34,7 @@ InputPanelV1Window::InputPanelV1Window(InputPanelSurfaceV1Interface *panelSurfac
 
     connect(surface(), &SurfaceInterface::aboutToBeDestroyed, this, &InputPanelV1Window::destroyWindow);
     connect(surface(), &SurfaceInterface::sizeChanged, this, &InputPanelV1Window::reposition);
+    connect(surface(), &SurfaceInterface::inputChanged, this, &InputPanelV1Window::reposition);
     connect(surface(), &SurfaceInterface::mapped, this, &InputPanelV1Window::handleMapped);
 
     connect(panelSurface, &InputPanelSurfaceV1Interface::topLevel, this, &InputPanelV1Window::showTopLevel);
@@ -88,23 +89,21 @@ void KWin::InputPanelV1Window::reposition()
         // should never happen
     }; break;
     case Mode::VirtualKeyboard: {
-        QSizeF panelSize = surface()->size();
-        if (!panelSize.isValid() || panelSize.isEmpty()) {
-            return;
-        }
+        // maliit creates a fullscreen overlay so use the input shape as the window geometry.
+        m_windowGeometry = surface()->input().boundingRect();
 
         const auto activeOutput = workspace()->activeOutput();
-        const QRectF outputArea = activeOutput->geometry();
         QRectF availableArea;
         if (waylandServer()->isScreenLocked()) {
-            availableArea = outputArea;
+            availableArea = workspace()->clientArea(FullScreenArea, this, activeOutput);
         } else {
             availableArea = workspace()->clientArea(MaximizeArea, this, activeOutput);
         }
 
-        panelSize = panelSize.boundedTo(availableArea.size());
-        QRectF geo(QPointF(availableArea.left(), availableArea.top() + availableArea.height() - panelSize.height()), panelSize);
-        geo.translate((availableArea.width() - panelSize.width()) / 2, availableArea.height() - outputArea.height());
+        QRectF geo = m_windowGeometry;
+        geo.moveLeft(availableArea.left() + (availableArea.width() - geo.width()) / 2);
+        geo.moveBottom(availableArea.bottom());
+
         moveResize(geo);
     } break;
     case Mode::Overlay: {
@@ -127,8 +126,10 @@ void KWin::InputPanelV1Window::reposition()
             cursorRectangle.translate(textWindow->bufferGeometry().topLeft().toPoint());
             const QRectF screen = Workspace::self()->clientArea(PlacementArea, this, cursorRectangle.bottomLeft());
 
+            m_windowGeometry = QRectF(QPointF(0, 0), surface()->size());
+
             // Reuse the similar logic like xdg popup
-            QRectF popupRect(popupOffset(cursorRectangle, Qt::BottomEdge | Qt::LeftEdge, Qt::RightEdge | Qt::BottomEdge, surface()->size()), surface()->size());
+            QRectF popupRect(popupOffset(cursorRectangle, Qt::BottomEdge | Qt::LeftEdge, Qt::RightEdge | Qt::BottomEdge, m_windowGeometry.size()), m_windowGeometry.size());
 
             if (popupRect.left() < screen.left()) {
                 popupRect.moveLeft(screen.left());
@@ -138,7 +139,7 @@ void KWin::InputPanelV1Window::reposition()
             }
             if (popupRect.top() < screen.top() || popupRect.bottom() > screen.bottom()) {
                 auto flippedPopupRect =
-                    QRectF(popupOffset(cursorRectangle, Qt::TopEdge | Qt::LeftEdge, Qt::RightEdge | Qt::TopEdge, surface()->size()), surface()->size());
+                    QRectF(popupOffset(cursorRectangle, Qt::TopEdge | Qt::LeftEdge, Qt::RightEdge | Qt::TopEdge, m_windowGeometry.size()), m_windowGeometry.size());
 
                 // if it still doesn't fit we should continue with the unflipped version
                 if (flippedPopupRect.top() >= screen.top() || flippedPopupRect.bottom() <= screen.bottom()) {
@@ -170,9 +171,9 @@ NET::WindowType InputPanelV1Window::windowType(bool direct) const
     return NET::Utility;
 }
 
-QRectF InputPanelV1Window::inputGeometry() const
+QRectF InputPanelV1Window::frameRectToBufferRect(const QRectF &rect) const
 {
-    return readyForPainting() ? QRectF(surface()->input().boundingRect()).translated(pos()) : QRectF();
+    return QRectF(rect.topLeft() - m_windowGeometry.topLeft(), surface()->size());
 }
 
 void InputPanelV1Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
