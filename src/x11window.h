@@ -87,8 +87,6 @@ public:
     xcb_window_t wmClientLeader() const;
     QString wmCommand();
 
-    QRectF inputGeometry() const override;
-
     QPointF framePosToClientPos(const QPointF &point) const override;
     QPointF clientPosToFramePos(const QPointF &point) const override;
     QSizeF frameSizeToClientSize(const QSizeF &size) const override;
@@ -102,7 +100,6 @@ public:
     QRegion opaqueRegion() const;
     QVector<QRectF> shapeRegion() const;
 
-    QMatrix4x4 inputTransformation() const override;
     pid_t pid() const override;
     QString windowRole() const override;
 

@@ -60,8 +60,6 @@ public:
 
     NET::WindowType windowType(bool direct = false) const override;
     QRectF frameRectToBufferRect(const QRectF &rect) const override;
-    QRectF inputGeometry() const override;
-    QMatrix4x4 inputTransformation() const override;
     void destroyWindow() override;
 
     void installPlasmaShellSurface(KWaylandServer::PlasmaShellSurfaceInterface *shellSurface);

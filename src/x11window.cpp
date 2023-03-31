@@ -2800,15 +2800,6 @@ xcb_window_t X11Window::wrapperId() const
     return m_wrapper;
 }
 
-QRectF X11Window::inputGeometry() const
-{
-    // Notice that the buffer geometry corresponds to the geometry of the frame window.
-    if (isDecorated()) {
-        return m_bufferGeometry + decoration()->resizeOnlyBorders();
-    }
-    return m_bufferGeometry;
-}
-
 QPointF X11Window::framePosToClientPos(const QPointF &point) const
 {
     qreal x = point.x();
@@ -2888,13 +2879,6 @@ QRectF X11Window::frameRectToBufferRect(const QRectF &rect) const
 QSizeF X11Window::implicitSize() const
 {
     return clientSizeToFrameSize(m_client.geometry().size());
-}
-
-QMatrix4x4 X11Window::inputTransformation() const
-{
-    QMatrix4x4 matrix;
-    matrix.translate(-m_bufferGeometry.x(), -m_bufferGeometry.y());
-    return matrix;
 }
 
 pid_t X11Window::pid() const

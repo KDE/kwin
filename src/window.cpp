@@ -381,7 +381,7 @@ QRegion Window::inputShape() const
 QMatrix4x4 Window::inputTransformation() const
 {
     QMatrix4x4 m;
-    m.translate(-x(), -y());
+    m.translate(-m_bufferGeometry.x(), -m_bufferGeometry.y());
     return m;
 }
 
@@ -419,7 +419,7 @@ QRectF Window::inputGeometry() const
     if (isDecorated()) {
         return frameGeometry() + decoration()->resizeOnlyBorders();
     }
-    return frameGeometry();
+    return bufferGeometry();
 }
 
 bool Window::isLocalhost() const

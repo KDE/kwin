@@ -96,18 +96,6 @@ NET::WindowType XdgSurfaceWindow::windowType(bool direct) const
     return m_windowType;
 }
 
-QRectF XdgSurfaceWindow::inputGeometry() const
-{
-    return isDecorated() ? Window::inputGeometry() : bufferGeometry();
-}
-
-QMatrix4x4 XdgSurfaceWindow::inputTransformation() const
-{
-    QMatrix4x4 transformation;
-    transformation.translate(-bufferGeometry().x(), -bufferGeometry().y());
-    return transformation;
-}
-
 XdgSurfaceConfigure *XdgSurfaceWindow::lastAcknowledgedConfigure() const
 {
     return m_lastAcknowledgedConfigure.get();

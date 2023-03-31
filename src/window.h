@@ -800,11 +800,8 @@ public:
 
     /**
      * @returns Transformation to map from global to window coordinates.
-     *
-     * Default implementation returns a translation on negative pos().
-     * @see pos
      */
-    virtual QMatrix4x4 inputTransformation() const;
+    QMatrix4x4 inputTransformation() const;
 
     /**
      * Returns @c true if the window can accept input at the specified position @a point.
