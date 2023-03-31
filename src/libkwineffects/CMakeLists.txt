@@ -35,6 +35,7 @@ target_link_libraries(kwineffects
         KF6::I18n
         kwinglutils
 )
+target_include_directories(kwineffects INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/kwin>")
 set_target_properties(kwineffects PROPERTIES
     VERSION ${KWINEFFECTS_VERSION}
     SOVERSION ${KWINEFFECTS_SOVERSION}
@@ -57,6 +58,7 @@ set(kwin_GLUTILSLIB_SRCS
 add_library(kwinglutils SHARED ${kwin_GLUTILSLIB_SRCS})
 generate_export_header(kwinglutils BASE_NAME kwinglutils EXPORT_FILE_NAME kwinglutils_export.h)
 target_link_libraries(kwinglutils PUBLIC XCB::XCB KF6::CoreAddons KF6::ConfigCore KF6::WindowSystem epoxy::epoxy)
+target_include_directories(kwinglutils INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/kwin>")
 set_target_properties(kwinglutils PROPERTIES
     VERSION ${KWINEFFECTS_VERSION}
     SOVERSION ${KWINEFFECTS_SOVERSION}
@@ -78,7 +80,7 @@ install(FILES
     kwinoffscreeneffect.h
     kwinoffscreenquickview.h
     kwinquickeffect.h
-    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/libkwineffects COMPONENT Devel)
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/libkwineffects COMPONENT Devel)
 
 set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KWinEffects")
 
