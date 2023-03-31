@@ -378,7 +378,7 @@ bool InternalWindow::hasPopupGrab() const
 
 void InternalWindow::popupDone()
 {
-    m_handle->hide();
+    m_handle->close();
 }
 
 const std::shared_ptr<QOpenGLFramebufferObject> &InternalWindow::fbo() const
