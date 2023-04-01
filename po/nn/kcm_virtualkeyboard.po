@@ -28,6 +28,3 @@ msgstr "Inkje"
 #, kde-format
 msgid "Do not use any virtual keyboard"
 msgstr "Ikkje bruk noko skjermtastatur"
-
-#~ msgid "This module lets you choose the virtual keyboard to use."
-#~ msgstr "Med denne modulen kan du velja kva skjerm­tastatur du vil bruka."

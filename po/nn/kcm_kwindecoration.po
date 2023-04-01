@@ -261,6 +261,3 @@ msgstr "Kolossal"
 #, kde-format
 msgid "Oversized"
 msgstr "Altfor stor"
-
-#~ msgid "This module lets you configure the window decorations."
-#~ msgstr "Med denne modulen kan du setja opp vindaugspynten."
