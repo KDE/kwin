@@ -16,16 +16,16 @@ void EffectPackageStructure::initPackage(KPackage::Package *package)
     package->setDefaultPackageRoot(QStringLiteral("kwin/effects/"));
 
     package->addDirectoryDefinition("code", QStringLiteral("code"));
-    package->setMimeTypes("code", {QStringLiteral("text/plain")});
+    package->setMimeTypes("code", QStringList{QStringLiteral("text/plain")});
 
     package->addFileDefinition("mainscript", QStringLiteral("code/main.js"));
     package->setRequired("mainscript", true);
 
     package->addFileDefinition("config", QStringLiteral("config/main.xml"));
-    package->setMimeTypes("config", {QStringLiteral("text/xml")});
+    package->setMimeTypes("config", QStringList{QStringLiteral("text/xml")});
 
     package->addFileDefinition("configui", QStringLiteral("ui/config.ui"));
-    package->setMimeTypes("configui", {QStringLiteral("text/xml")});
+    package->setMimeTypes("configui", QStringList{QStringLiteral("text/xml")});
 }
 
 void EffectPackageStructure::pathChanged(KPackage::Package *package)

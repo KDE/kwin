@@ -11,9 +11,7 @@ void ScriptsPackage::initPackage(KPackage::Package *package)
     package->setDefaultPackageRoot(QStringLiteral("kwin/scripts/"));
 
     package->addDirectoryDefinition("config", QStringLiteral("config"));
-    QStringList mimetypes;
-    mimetypes << QStringLiteral("text/xml");
-    package->setMimeTypes("config", mimetypes);
+    package->setMimeTypes("config", QStringList{QStringLiteral("text/xml")});
 
     package->addDirectoryDefinition("ui", QStringLiteral("ui"));
 
@@ -22,9 +20,7 @@ void ScriptsPackage::initPackage(KPackage::Package *package)
     package->addFileDefinition("mainscript", QStringLiteral("code/main.js"));
     package->setRequired("mainscript", true);
 
-    mimetypes.clear();
-    mimetypes << QStringLiteral("text/plain");
-    package->setMimeTypes("scripts", mimetypes);
+    package->setMimeTypes("scripts", QStringList{QStringLiteral("text/plain")});
 }
 
 void ScriptsPackage::pathChanged(KPackage::Package *package)

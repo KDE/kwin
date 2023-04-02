@@ -11,9 +11,7 @@ void DecorationPackage::initPackage(KPackage::Package *package)
     package->setDefaultPackageRoot(QStringLiteral("kwin/decorations/"));
 
     package->addDirectoryDefinition("config", QStringLiteral("config"));
-    QStringList mimetypes;
-    mimetypes << QStringLiteral("text/xml");
-    package->setMimeTypes("config", mimetypes);
+    package->setMimeTypes("config", QStringList{QStringLiteral("text/xml")});
 
     package->addDirectoryDefinition("ui", QStringLiteral("ui"));
 
@@ -22,9 +20,7 @@ void DecorationPackage::initPackage(KPackage::Package *package)
     package->addFileDefinition("mainscript", QStringLiteral("code/main.qml"));
     package->setRequired("mainscript", true);
 
-    mimetypes.clear();
-    mimetypes << QStringLiteral("text/plain");
-    package->setMimeTypes("decoration", mimetypes);
+    package->setMimeTypes("decoration", QStringList{QStringLiteral("text/plain")});
 }
 
 void DecorationPackage::pathChanged(KPackage::Package *package)

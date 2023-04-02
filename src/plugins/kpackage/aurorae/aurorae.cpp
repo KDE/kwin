@@ -15,28 +15,16 @@ void AuroraePackage::initPackage(KPackage::Package *package)
     package->setRequired("decoration", true);
 
     package->addFileDefinition("close", QStringLiteral("close.svgz"));
-
     package->addFileDefinition("minimize", QStringLiteral("minimize.svgz"));
-
     package->addFileDefinition("maximize", QStringLiteral("maximize.svgz"));
-
     package->addFileDefinition("restore", QStringLiteral("restore.svgz"));
-
     package->addFileDefinition("alldesktops", QStringLiteral("alldesktops.svgz"));
-
     package->addFileDefinition("keepabove", QStringLiteral("keepabove.svgz"));
-
     package->addFileDefinition("keepbelow", QStringLiteral("keepbelow.svgz"));
-
     package->addFileDefinition("shade", QStringLiteral("shade.svgz"));
-
     package->addFileDefinition("help", QStringLiteral("help.svgz"));
-
     package->addFileDefinition("configrc", QStringLiteral("configrc"));
-
-    QStringList mimetypes;
-    mimetypes << QStringLiteral("image/svg+xml-compressed");
-    package->setDefaultMimeTypes(mimetypes);
+    package->setDefaultMimeTypes(QStringList{QStringLiteral("image/svg+xml-compressed")});
 }
 
 void AuroraePackage::pathChanged(KPackage::Package *package)

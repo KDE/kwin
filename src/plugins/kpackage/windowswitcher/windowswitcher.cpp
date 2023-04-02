@@ -11,9 +11,7 @@ void SwitcherPackage::initPackage(KPackage::Package *package)
     package->setDefaultPackageRoot(QStringLiteral("kwin/tabbox/"));
 
     package->addDirectoryDefinition("config", QStringLiteral("config"));
-    QStringList mimetypes;
-    mimetypes << QStringLiteral("text/xml");
-    package->setMimeTypes("config", mimetypes);
+    package->setMimeTypes("config", QStringList{QStringLiteral("text/xml")});
 
     package->addDirectoryDefinition("ui", QStringLiteral("ui"));
 
@@ -22,9 +20,7 @@ void SwitcherPackage::initPackage(KPackage::Package *package)
     package->addFileDefinition("mainscript", QStringLiteral("ui/main.qml"));
     package->setRequired("mainscript", true);
 
-    mimetypes.clear();
-    mimetypes << QStringLiteral("text/plain");
-    package->setMimeTypes("windowswitcher", mimetypes);
+    package->setMimeTypes("windowswitcher", QStringList(QStringLiteral("text/plain")));
 }
 
 void SwitcherPackage::pathChanged(KPackage::Package *package)
