@@ -43,6 +43,6 @@ public:
     }
 };
 
-K_PLUGIN_CLASS_WITH_JSON(EffectPackageStructure, "kwin-packagestructure-effect.json")
+K_PLUGIN_CLASS_WITH_JSON(EffectPackageStructure, "effect.json")
 
 #include "effect.moc"

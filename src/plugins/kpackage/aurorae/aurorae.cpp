@@ -43,6 +43,6 @@ public:
     }
 };
 
-K_PLUGIN_CLASS_WITH_JSON(AuroraePackage, "kwin-packagestructure-aurorae.json")
+K_PLUGIN_CLASS_WITH_JSON(AuroraePackage, "aurorae.json")
 
 #include "aurorae.moc"

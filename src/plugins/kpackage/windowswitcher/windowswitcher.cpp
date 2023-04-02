@@ -41,6 +41,6 @@ public:
     }
 };
 
-K_PLUGIN_CLASS_WITH_JSON(SwitcherPackage, "kwin-packagestructure-windowswitcher.json")
+K_PLUGIN_CLASS_WITH_JSON(SwitcherPackage, "windowswitcher.json")
 
 #include "windowswitcher.moc"
