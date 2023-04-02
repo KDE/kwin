@@ -4,36 +4,42 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include "decoration.h"
+#include <KPackage/PackageStructure>
 
-void DecorationPackage::initPackage(KPackage::Package *package)
+class DecorationPackage : public KPackage::PackageStructure
 {
-    package->setDefaultPackageRoot(QStringLiteral("kwin/decorations/"));
+    Q_OBJECT
+public:
+    using KPackage::PackageStructure::PackageStructure;
+    void initPackage(KPackage::Package *package) override
+    {
+        package->setDefaultPackageRoot(QStringLiteral("kwin/decorations/"));
 
-    package->addDirectoryDefinition("config", QStringLiteral("config"));
-    package->setMimeTypes("config", QStringList{QStringLiteral("text/xml")});
+        package->addDirectoryDefinition("config", QStringLiteral("config"));
+        package->setMimeTypes("config", QStringList{QStringLiteral("text/xml")});
 
-    package->addDirectoryDefinition("ui", QStringLiteral("ui"));
+        package->addDirectoryDefinition("ui", QStringLiteral("ui"));
 
-    package->addDirectoryDefinition("code", QStringLiteral("code"));
+        package->addDirectoryDefinition("code", QStringLiteral("code"));
 
-    package->addFileDefinition("mainscript", QStringLiteral("code/main.qml"));
-    package->setRequired("mainscript", true);
+        package->addFileDefinition("mainscript", QStringLiteral("code/main.qml"));
+        package->setRequired("mainscript", true);
 
-    package->setMimeTypes("decoration", QStringList{QStringLiteral("text/plain")});
-}
-
-void DecorationPackage::pathChanged(KPackage::Package *package)
-{
-    if (package->path().isEmpty()) {
-        return;
+        package->setMimeTypes("decoration", QStringList{QStringLiteral("text/plain")});
     }
 
-    const QString mainScript = package->metadata().value("X-Plasma-MainScript");
-    if (!mainScript.isEmpty()) {
-        package->addFileDefinition("mainscript", mainScript);
+    void pathChanged(KPackage::Package *package) override
+    {
+        if (package->path().isEmpty()) {
+            return;
+        }
+
+        const QString mainScript = package->metadata().value("X-Plasma-MainScript");
+        if (!mainScript.isEmpty()) {
+            package->addFileDefinition("mainscript", mainScript);
+        }
     }
-}
+};
 
 K_PLUGIN_CLASS_WITH_JSON(DecorationPackage, "kwin-packagestructure-decoration.json")
 

@@ -4,36 +4,42 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include "windowswitcher.h"
+#include <KPackage/PackageStructure>
 
-void SwitcherPackage::initPackage(KPackage::Package *package)
+class SwitcherPackage : public KPackage::PackageStructure
 {
-    package->setDefaultPackageRoot(QStringLiteral("kwin/tabbox/"));
+    Q_OBJECT
+public:
+    using KPackage::PackageStructure::PackageStructure;
+    void initPackage(KPackage::Package *package) override
+    {
+        package->setDefaultPackageRoot(QStringLiteral("kwin/tabbox/"));
 
-    package->addDirectoryDefinition("config", QStringLiteral("config"));
-    package->setMimeTypes("config", QStringList{QStringLiteral("text/xml")});
+        package->addDirectoryDefinition("config", QStringLiteral("config"));
+        package->setMimeTypes("config", QStringList{QStringLiteral("text/xml")});
 
-    package->addDirectoryDefinition("ui", QStringLiteral("ui"));
+        package->addDirectoryDefinition("ui", QStringLiteral("ui"));
 
-    package->addDirectoryDefinition("code", QStringLiteral("code"));
+        package->addDirectoryDefinition("code", QStringLiteral("code"));
 
-    package->addFileDefinition("mainscript", QStringLiteral("ui/main.qml"));
-    package->setRequired("mainscript", true);
+        package->addFileDefinition("mainscript", QStringLiteral("ui/main.qml"));
+        package->setRequired("mainscript", true);
 
-    package->setMimeTypes("windowswitcher", QStringList(QStringLiteral("text/plain")));
-}
-
-void SwitcherPackage::pathChanged(KPackage::Package *package)
-{
-    if (package->path().isEmpty()) {
-        return;
+        package->setMimeTypes("windowswitcher", QStringList(QStringLiteral("text/plain")));
     }
 
-    const QString mainScript = package->metadata().value("X-Plasma-MainScript");
-    if (!mainScript.isEmpty()) {
-        package->addFileDefinition("mainscript", mainScript);
+    void pathChanged(KPackage::Package *package) override
+    {
+        if (package->path().isEmpty()) {
+            return;
+        }
+
+        const QString mainScript = package->metadata().value("X-Plasma-MainScript");
+        if (!mainScript.isEmpty()) {
+            package->addFileDefinition("mainscript", mainScript);
+        }
     }
-}
+};
 
 K_PLUGIN_CLASS_WITH_JSON(SwitcherPackage, "kwin-packagestructure-windowswitcher.json")
 
