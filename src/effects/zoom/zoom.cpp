@@ -361,9 +361,7 @@ void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewp
 
         shader->setUniform(GLShader::ModelViewProjectionMatrix, viewport.projectionMatrix() * matrix);
 
-        offscreen.texture->bind();
         offscreen.texture->render(offscreen.viewport.size(), scale);
-        offscreen.texture->unbind();
     }
     ShaderManager::instance()->popShader();
 
@@ -382,7 +380,6 @@ void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewp
 
             const QPointF p = (effects->cursorPos() - cursor.hotSpot()) * zoom + QPoint(xTranslation, yTranslation);
 
-            cursorTexture->bind();
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             auto s = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
@@ -391,7 +388,6 @@ void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewp
             s->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
             cursorTexture->render(cursorSize, scale);
             ShaderManager::instance()->popShader();
-            cursorTexture->unbind();
             glDisable(GL_BLEND);
         }
     }

@@ -66,9 +66,7 @@ void OutputScreenCastSource::render(GLFramebuffer *target)
     shaderBinder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix);
 
     GLFramebuffer::pushFramebuffer(target);
-    outputTexture->bind();
     outputTexture->render(textureSize(), m_output->scale());
-    outputTexture->unbind();
     GLFramebuffer::popFramebuffer();
 }
 

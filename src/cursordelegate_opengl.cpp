@@ -66,11 +66,9 @@ void CursorDelegateOpenGL::paint(const RenderTarget &renderTarget, const QRegion
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    m_texture->bind();
     ShaderBinder binder(ShaderTrait::MapTexture);
     binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
     m_texture->render(region, cursorRect.size(), scale);
-    m_texture->unbind();
     glDisable(GL_BLEND);
 
     GLFramebuffer::popFramebuffer();

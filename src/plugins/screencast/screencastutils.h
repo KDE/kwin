@@ -92,9 +92,7 @@ static void grabTexture(GLTexture *texture, spa_data *spa, spa_video_format form
         shaderBinder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix);
 
         GLFramebuffer::pushFramebuffer(&fbo);
-        texture->bind();
         texture->render(size, 1);
-        texture->unbind();
         GLFramebuffer::popFramebuffer();
         doGrabTexture(&backingTexture, spa, format);
     } else {

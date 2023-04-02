@@ -125,14 +125,12 @@ void MagnifierEffect::paintScreen(const RenderTarget &renderTarget, const Render
         if (effects->isOpenGLCompositing()) {
             m_fbo->blitFromRenderTarget(renderTarget, viewport, srcArea.toRect(), QRect(QPoint(), m_fbo->size()));
             // paint magnifier
-            m_texture->bind();
             auto s = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
             QMatrix4x4 mvp = viewport.projectionMatrix();
             mvp.translate(area.x() * scale, area.y() * scale);
             s->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
             m_texture->render(area.size(), scale);
             ShaderManager::instance()->popShader();
-            m_texture->unbind();
 
             GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
             vbo->reset();

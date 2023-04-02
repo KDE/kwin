@@ -527,7 +527,6 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
                 }
 
                 m_cursor.texture->setContentTransform(TextureTransforms());
-                m_cursor.texture->bind();
                 const auto cursorRect = cursorGeometry(cursor);
                 mvp.translate(cursorRect.left(), r.height() - cursorRect.top() - cursor->image().height());
                 shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
@@ -536,7 +535,6 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
                 m_cursor.texture->render(cursorRect.size(), m_cursor.scale);
                 glDisable(GL_BLEND);
-                m_cursor.texture->unbind();
 
                 ShaderManager::instance()->popShader();
                 GLFramebuffer::popFramebuffer();

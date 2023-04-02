@@ -213,7 +213,6 @@ void StartupFeedbackEffect::paintScreen(const RenderTarget &renderTarget, const 
         }
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        texture->bind();
         if (m_type == BlinkingFeedback && m_blinkingShader && m_blinkingShader->isValid()) {
             const QColor &blinkingColor = BLINKING_COLORS[FRAME_TO_BLINKING_COLOR[m_frame]];
             ShaderManager::instance()->pushShader(m_blinkingShader.get());
@@ -227,7 +226,6 @@ void StartupFeedbackEffect::paintScreen(const RenderTarget &renderTarget, const 
         ShaderManager::instance()->getBoundShader()->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
         texture->render(m_currentGeometry.size(), scale);
         ShaderManager::instance()->popShader();
-        texture->unbind();
         glDisable(GL_BLEND);
     }
 }

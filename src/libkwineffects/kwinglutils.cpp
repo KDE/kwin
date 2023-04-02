@@ -1193,9 +1193,7 @@ bool GLFramebuffer::blitFromRenderTarget(const RenderTarget &sourceRenderTarget,
         ShaderBinder binder(ShaderTrait::MapTexture);
         binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, mat);
 
-        texture->bind();
         texture->render(sourceViewport.mapToRenderTargetTexture(source), infiniteRegion(), destination.size(), 1);
-        texture->unbind();
 
         GLFramebuffer::popFramebuffer();
         return true;

@@ -1646,9 +1646,7 @@ void EffectsHandlerImpl::renderOffscreenQuickView(const RenderTarget &renderTarg
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-        t->bind();
         t->render(w->size(), viewport.scale());
-        t->unbind();
         glDisable(GL_BLEND);
 
         ShaderManager::instance()->popShader();

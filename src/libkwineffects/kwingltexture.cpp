@@ -564,7 +564,9 @@ void GLTexture::render(const QRectF &source, const QRegion &region, const QSizeF
 
         d->m_vbo->setData(4, 2, verts, texcoords);
     }
+    bind();
     d->m_vbo->render(region, GL_TRIANGLE_STRIP, hardwareClipping);
+    unbind();
 }
 
 GLuint GLTexture::texture() const

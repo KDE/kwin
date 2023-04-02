@@ -80,7 +80,6 @@ void ScreenEdgeEffect::paintScreen(const RenderTarget &renderTarget, const Rende
             GLTexture *texture = glow->texture.get();
             glEnable(GL_BLEND);
             glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-            texture->bind();
             ShaderBinder binder(ShaderTrait::MapTexture | ShaderTrait::Modulate);
             const QVector4D constant(opacity, opacity, opacity, opacity);
             binder.shader()->setUniform(GLShader::ModulationConstant, constant);
@@ -89,7 +88,6 @@ void ScreenEdgeEffect::paintScreen(const RenderTarget &renderTarget, const Rende
             mvp.translate(glow->geometry.x() * scale, glow->geometry.y() * scale);
             binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
             texture->render(glow->geometry.size(), scale);
-            texture->unbind();
             glDisable(GL_BLEND);
         } else if (effects->compositingType() == QPainterCompositing) {
             QImage tmp(glow->image->size(), QImage::Format_ARGB32_Premultiplied);

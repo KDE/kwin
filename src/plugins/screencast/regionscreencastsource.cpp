@@ -64,9 +64,7 @@ void RegionScreenCastSource::updateOutput(Output *output)
 
         shaderBinder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix);
 
-        outputTexture->bind();
         outputTexture->render(output->geometry().size(), 1 / m_scale);
-        outputTexture->unbind();
         GLFramebuffer::popFramebuffer();
     }
 }
@@ -102,9 +100,7 @@ void RegionScreenCastSource::render(GLFramebuffer *target)
     projectionMatrix.ortho(QRect(QPoint(), target->size()));
     shader->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix);
 
-    m_renderedTexture->bind();
     m_renderedTexture->render(target->size(), m_scale);
-    m_renderedTexture->unbind();
 
     ShaderManager::instance()->popShader();
     GLFramebuffer::popFramebuffer();
