@@ -6,22 +6,20 @@
 
 #include "scripts.h"
 
-#include <KLocalizedString>
-
 void ScriptsPackage::initPackage(KPackage::Package *package)
 {
     package->setDefaultPackageRoot(QStringLiteral("kwin/scripts/"));
 
-    package->addDirectoryDefinition("config", QStringLiteral("config"), i18n("Configuration Definitions"));
+    package->addDirectoryDefinition("config", QStringLiteral("config"));
     QStringList mimetypes;
     mimetypes << QStringLiteral("text/xml");
     package->setMimeTypes("config", mimetypes);
 
-    package->addDirectoryDefinition("ui", QStringLiteral("ui"), i18n("User Interface"));
+    package->addDirectoryDefinition("ui", QStringLiteral("ui"));
 
-    package->addDirectoryDefinition("code", QStringLiteral("code"), i18n("Executable Scripts"));
+    package->addDirectoryDefinition("code", QStringLiteral("code"));
 
-    package->addFileDefinition("mainscript", QStringLiteral("code/main.js"), i18n("Main Script File"));
+    package->addFileDefinition("mainscript", QStringLiteral("code/main.js"));
     package->setRequired("mainscript", true);
 
     mimetypes.clear();
@@ -37,7 +35,7 @@ void ScriptsPackage::pathChanged(KPackage::Package *package)
 
     const QString mainScript = package->metadata().value("X-Plasma-MainScript");
     if (!mainScript.isEmpty()) {
-        package->addFileDefinition("mainscript", mainScript, i18n("Main Script File"));
+        package->addFileDefinition("mainscript", mainScript);
     }
 }
 
