@@ -11,6 +11,7 @@
 #include "kwin_export.h"
 
 #include <QByteArray>
+#include <QHash>
 #include <QList>
 #include <epoxy/egl.h>
 
@@ -33,12 +34,15 @@ public:
     bool supportsBufferAge() const;
     bool supportsSwapBuffersWithDamage() const;
     bool supportsNativeFence() const;
+    QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const;
 
     EGLImageKHR importDmaBufAsImage(const DmaBufAttributes &dmabuf) const;
 
     static std::unique_ptr<EglDisplay> create(::EGLDisplay display, bool owning = true);
 
 private:
+    QHash<uint32_t, QList<uint64_t>> queryImportFormats() const;
+
     const ::EGLDisplay m_handle;
     const QList<QByteArray> m_extensions;
     const bool m_owning;
@@ -46,6 +50,7 @@ private:
     const bool m_supportsBufferAge;
     const bool m_supportsSwapBuffersWithDamage;
     const bool m_supportsNativeFence;
+    const QHash<uint32_t, QList<uint64_t>> m_importFormats;
 };
 
 }

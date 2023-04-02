@@ -177,78 +177,37 @@ void AbstractEglBackend::initWayland()
         }
     }
 
-    if (hasExtension(QByteArrayLiteral("EGL_EXT_image_dma_buf_import")) && hasExtension(QByteArrayLiteral("EGL_EXT_image_dma_buf_import_modifiers"))) {
-        eglQueryDmaBufFormatsEXT = (eglQueryDmaBufFormatsEXT_func)eglGetProcAddress("eglQueryDmaBufFormatsEXT");
-        eglQueryDmaBufModifiersEXT = (eglQueryDmaBufModifiersEXT_func)eglGetProcAddress("eglQueryDmaBufModifiersEXT");
-
-        EGLint count = 0;
-        EGLBoolean success = eglQueryDmaBufFormatsEXT(m_display, 0, nullptr, &count);
-
-        if (!success || count == 0) {
-            qCCritical(KWIN_OPENGL) << "eglQueryDmaBufFormatsEXT failed:" << getEglErrorString();
-            return;
-        }
-
-        QVector<uint32_t> formats(count);
-        if (!eglQueryDmaBufFormatsEXT(m_display, count, (EGLint *)formats.data(), &count)) {
-            qCCritical(KWIN_OPENGL) << "eglQueryDmaBufFormatsEXT with count" << count << "failed:" << getEglErrorString();
-            return;
-        }
-
-        for (auto format : std::as_const(formats)) {
-            EGLint count = 0;
-            const EGLBoolean success = eglQueryDmaBufModifiersEXT(m_display, format, 0, nullptr, nullptr, &count);
-            if (success && count > 0) {
-                QVector<uint64_t> modifiers(count);
-                QVector<EGLBoolean> externalOnly(count);
-                if (eglQueryDmaBufModifiersEXT(m_display, format, count, modifiers.data(), externalOnly.data(), &count)) {
-                    for (int i = modifiers.size() - 1; i >= 0; i--) {
-                        if (externalOnly[i]) {
-                            modifiers.remove(i);
-                            externalOnly.remove(i);
-                        }
-                    }
-                    if (!modifiers.empty()) {
-                        m_supportedFormats.insert(format, modifiers);
-                    }
-                    continue;
-                }
+    auto filterFormats = [this](int bpc) {
+        const auto formats = m_display->supportedDrmFormats();
+        QHash<uint32_t, QVector<uint64_t>> set;
+        for (auto it = formats.constBegin(); it != formats.constEnd(); it++) {
+            if (bpcForFormat(it.key()) == bpc) {
+                set.insert(it.key(), it.value());
             }
-            m_supportedFormats.insert(format, {DRM_FORMAT_MOD_INVALID});
         }
-        qCDebug(KWIN_OPENGL) << "EGL driver advertises" << m_supportedFormats.count() << "supported dmabuf formats";
-
-        auto filterFormats = [this](int bpc) {
-            QHash<uint32_t, QVector<uint64_t>> set;
-            for (auto it = m_supportedFormats.constBegin(); it != m_supportedFormats.constEnd(); it++) {
-                if (bpcForFormat(it.key()) == bpc) {
-                    set.insert(it.key(), it.value());
-                }
-            }
-            return set;
-        };
-        if (prefer10bpc()) {
-            m_tranches.append({
-                .device = deviceId(),
-                .flags = {},
-                .formatTable = filterFormats(10),
-            });
-        }
+        return set;
+    };
+    if (prefer10bpc()) {
         m_tranches.append({
             .device = deviceId(),
             .flags = {},
-            .formatTable = filterFormats(8),
+            .formatTable = filterFormats(10),
         });
-        m_tranches.append({
-            .device = deviceId(),
-            .flags = {},
-            .formatTable = filterFormats(-1),
-        });
-
-        KWaylandServer::LinuxDmaBufV1ClientBufferIntegration *dmabuf = waylandServer()->linuxDmabuf();
-        dmabuf->setRenderBackend(this);
-        dmabuf->setSupportedFormatsWithModifiers(m_tranches);
     }
+    m_tranches.append({
+        .device = deviceId(),
+        .flags = {},
+        .formatTable = filterFormats(8),
+    });
+    m_tranches.append({
+        .device = deviceId(),
+        .flags = {},
+        .formatTable = filterFormats(-1),
+    });
+
+    KWaylandServer::LinuxDmaBufV1ClientBufferIntegration *dmabuf = waylandServer()->linuxDmabuf();
+    dmabuf->setRenderBackend(this);
+    dmabuf->setSupportedFormatsWithModifiers(m_tranches);
 }
 
 void AbstractEglBackend::initClientExtensions()
@@ -353,7 +312,7 @@ bool AbstractEglBackend::testImportBuffer(KWaylandServer::LinuxDmaBufV1ClientBuf
 
 QHash<uint32_t, QVector<uint64_t>> AbstractEglBackend::supportedFormats() const
 {
-    return m_supportedFormats;
+    return m_display->supportedDrmFormats();
 }
 
 ::EGLDisplay AbstractEglBackend::eglDisplay() const

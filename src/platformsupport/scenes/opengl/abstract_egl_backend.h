@@ -47,7 +47,7 @@ public:
     {
         return &m_functions;
     }
-    EGLDisplay eglDisplay() const;
+    ::EGLDisplay eglDisplay() const;
     ::EGLContext context() const;
     EGLSurface surface() const;
     EGLConfig config() const;
@@ -92,7 +92,6 @@ private:
     QList<QByteArray> m_clientExtensions;
     const dev_t m_deviceId;
     QVector<KWaylandServer::LinuxDmaBufV1Feedback::Tranche> m_tranches;
-    QHash<uint32_t, QVector<uint64_t>> m_supportedFormats;
     QHash<KWaylandServer::LinuxDmaBufV1ClientBuffer *, EGLImageKHR> m_importedBuffers;
 };
 
