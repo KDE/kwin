@@ -1,4 +1,0 @@
-kcoreaddons_add_plugin(kwin_packagestructure_decoration SOURCES decoration.cpp INSTALL_NAMESPACE "kf6/packagestructure")
-
-target_link_libraries(kwin_packagestructure_decoration KF6::Package)
-set_target_properties(kwin_packagestructure_decoration PROPERTIES OUTPUT_NAME kwin_decoration)
