@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-01 02:10+0000\n"
-"PO-Revision-Date: 2023-02-09 22:30+0100\n"
+"PO-Revision-Date: 2023-04-01 15:23+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -2625,46 +2625,39 @@ msgid "Window One Desktop Down"
 msgstr "Fenestro al suba labortablo"
 
 #: useractions.cpp:1076
-#, fuzzy, kde-format
-#| msgid "Window to Screen %1"
+#, kde-format
 msgid "Move Window to Screen %1"
-msgstr "Fenestro al Ekrano %1"
+msgstr "Movi fenestron al ekrano %1"
 
 #: useractions.cpp:1083
-#, fuzzy, kde-format
-#| msgid "Window to Next Screen"
+#, kde-format
 msgid "Move Window to Next Screen"
-msgstr "Fenestro al sekva ekrano"
+msgstr "Movi fenestron al sekva ekrano"
 
 #: useractions.cpp:1085
-#, fuzzy, kde-format
-#| msgid "Window to Previous Screen"
+#, kde-format
 msgid "Move Window to Previous Screen"
-msgstr "Fenestro al Antaŭa Ekrano"
+msgstr "Movi fenestron al antaŭa ekrano"
 
 #: useractions.cpp:1087
-#, fuzzy, kde-format
-#| msgid "Window One Screen to the Right"
+#, kde-format
 msgid "Move Window One Screen to the Right"
-msgstr "Fenestro Unu Ekranon dekstren"
+msgstr "Movi fenestron unu ekranon dekstren"
 
 #: useractions.cpp:1089
-#, fuzzy, kde-format
-#| msgid "Window One Screen to the Left"
+#, kde-format
 msgid "Move Window One Screen to the Left"
-msgstr "Fenestro Unu Ekranon maldekstren"
+msgstr "Movi fenestron unu ekranon maldekstren"
 
 #: useractions.cpp:1091
-#, fuzzy, kde-format
-#| msgid "Window One Screen Up"
+#, kde-format
 msgid "Move Window One Screen Up"
-msgstr "Fenestro Unu Ekranon Supren"
+msgstr "Movi fenestron unu ekranon Supren"
 
 #: useractions.cpp:1093
-#, fuzzy, kde-format
-#| msgid "Window One Screen Down"
+#, kde-format
 msgid "Move Window One Screen Down"
-msgstr "Fenestro Unu Ekranon Malsupren"
+msgstr "Movi fenestron unu ekranon Malsupren"
 
 #: useractions.cpp:1097
 #, kde-format
@@ -2779,18 +2772,7 @@ msgid "(Not Responding)"
 msgstr "(Ne respondante)"
 
 #: workspace.cpp:1590
-#, fuzzy, kde-format
-#| msgctxt "Introductory text shown in the support information."
-#| msgid ""
-#| "KWin Support Information:\n"
-#| "The following information should be used when requesting support on e.g. "
-#| "https://forum.kde.org.\n"
-#| "It provides information about the currently running instance, which "
-#| "options are used,\n"
-#| "what OpenGL driver and which effects are running.\n"
-#| "Please post the information provided underneath this introductory text to "
-#| "a paste bin service\n"
-#| "like https://paste.kde.org instead of pasting into support threads.\n"
+#, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
 "KWin Support Information:\n"
@@ -2804,23 +2786,11 @@ msgid ""
 "like https://paste.kde.org instead of pasting into support threads.\n"
 msgstr ""
 "KWin-Subtena Informo:\n"
-"La jenaj informoj estu uzataj kiam oni petas subtenon pri ekz. https://forum."
-"kde.org.\n"
+"La jenaj informoj estu uzataj kiam oni petas subtenon pri ekz. https://"
+"discuss.kde.org.\n"
 "Ĝi provizas informojn pri la nuna funkcianta kazo, kiuj opcioj estas "
 "uzataj,\n"
 "kiu OpenGL-pelilo kaj kiuj efikoj funkcias.\n"
 "Bonvolu afiŝi la informojn provizitajn sub ĉi tiu enkonduka teksto al "
 "algluaĵujo servo. \n"
 "kiel https://paste.kde.org anstataŭ alglui en subtenajn fadenojn.\n"
-
-#~ msgid "Walk Through Desktops"
-#~ msgstr "Iro tra la labortabloj"
-
-#~ msgid "Walk Through Desktops (Reverse)"
-#~ msgstr "Reiro tra la labortabloj"
-
-#~ msgid "Walk Through Desktop List"
-#~ msgstr "Iro tra la labortablolisto"
-
-#~ msgid "Walk Through Desktop List (Reverse)"
-#~ msgstr "Reiro tra la labortablolisto"
