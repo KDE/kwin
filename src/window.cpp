@@ -104,9 +104,6 @@ Window::Window()
 
 Window::~Window()
 {
-    if (m_deleted) {
-        workspace()->removeDeleted(this);
-    }
     if (m_tile) {
         m_tile->removeWindow(this);
     }
@@ -121,9 +118,13 @@ void Window::ref()
 void Window::unref()
 {
     --m_refCount;
-    if (m_refCount == 0) {
-        delete this;
+    if (m_refCount) {
+        return;
     }
+    if (m_deleted) {
+        workspace()->removeDeleted(this);
+    }
+    delete this;
 }
 
 QDebug operator<<(QDebug debug, const Window *window)
