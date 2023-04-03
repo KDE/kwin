@@ -1,13 +1,14 @@
 # translation of kcm_kwinxwayland.po to Slovak
 # Roman Paholík <wizzardsk@gmail.com>, 2023.
+# Matej Mrenica <matejm98mthw@gmail.com>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwinxwayland\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-17 00:51+0000\n"
-"PO-Revision-Date: 2023-03-20 17:05+0100\n"
-"Last-Translator: Roman Paholik <wizzardsk@gmail.com>\n"
-"Language-Team: Slovak <kde-sk@linux.sk>\n"
+"PO-Revision-Date: 2023-04-02 15:29+0200\n"
+"Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
+"Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,12 +29,14 @@ msgstr "wizzardsk@gmail.com"
 #: kcmkwinxwayland.cpp:30
 #, kde-format
 msgid "Legacy X11 App Support"
-msgstr ""
+msgstr "Podpora starších X11 aplikácií"
 
 #: kcmkwinxwayland.cpp:32
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in other apps"
 msgstr ""
+"Povolenie starším aplikáciám X11 čítať stlačené klávesy zadané v iných "
+"aplikáciách"
 
 #: package/contents/ui/main.qml:19
 #, kde-format
@@ -41,6 +44,8 @@ msgid ""
 "This module lets configure which keyboard events are forwarded to X11 apps "
 "regardless of their focus."
 msgstr ""
+"Tento modul umožňuje konfigurovať, ktoré udalosti klávesnice sa budú "
+"preposielať do aplikácií X11 bez ohľadu na ich zameranie."
 
 #: package/contents/ui/main.qml:49
 #, kde-format
@@ -50,11 +55,18 @@ msgid ""
 "disabled by default for security reasons. If you need to use such apps, you "
 "can choose your preferred balance of security and functionality here."
 msgstr ""
+"Staršie aplikácie X11 vyžadujú schopnosť čítať stlačenia klávesov zadané v "
+"iných aplikáciách pre funkcie, ktoré sa aktivujú pomocou globálnych "
+"klávesových skratiek. To je predvolene vypnuté z bezpečnostných dôvodov. Ak "
+"potrebujete používať takéto aplikácie, môžete môžete si tu vybrať "
+"preferovaný pomer medzi bezpečnosťou a funkčnosťou."
 
 #: package/contents/ui/main.qml:66
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
 msgstr ""
+"Umožniť starším aplikáciám X11 čítať stlačené klávesy zadané vo všetkých "
+"aplikáciách:"
 
 #: package/contents/ui/main.qml:67
 #, kde-format
@@ -64,12 +76,13 @@ msgstr "Nikdy"
 #: package/contents/ui/main.qml:70
 #, kde-format
 msgid "Only Meta, Control, Alt, and Shift keys"
-msgstr ""
+msgstr "Len klávesy Meta, Control, Alt a Shift"
 
 #: package/contents/ui/main.qml:73
 #, kde-format
 msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
 msgstr ""
+"Všetky klávesy, ale len keď sú stlačené klávesy Meta, Ctrl, Alt alebo Shift"
 
 #: package/contents/ui/main.qml:77
 #, kde-format
@@ -83,3 +96,7 @@ msgid ""
 "session by permitting malicious software to steal passwords and spy on the "
 "text that you type. Make sure you understand and accept this risk."
 msgstr ""
+"Upozorňujeme, že použitím tohto nastavenia sa zníži zabezpečenie systému na "
+"úroveň zabezpečenia X11 tým, že umožní škodlivému softvéru kradnúť heslá a "
+"špehovať text, ktorý zadávate. Uistite sa, že tomuto riziku rozumiete a "
+"akceptujete ho."
