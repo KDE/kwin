@@ -77,7 +77,7 @@ public:
     /**
      * @see cursorRectangleChanged
      */
-    QRect cursorRectangle() const;
+    QRectF cursorRectangle() const;
 
     /**
      * @see contentTypeChanged
@@ -247,7 +247,7 @@ Q_SIGNALS:
     /**
      * @see cursorRectangle
      */
-    void cursorRectangleChanged(const QRect &rect);
+    void cursorRectangleChanged(const QRectF &rect);
     /**
      * Emitted when the {@link contentPurpose} and/or {@link contentHints} changes.
      * @see contentPurpose

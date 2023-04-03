@@ -68,7 +68,7 @@ public:
     }
 
     QString preferredLanguage;
-    QRect cursorRectangle;
+    QRectF cursorRectangle;
     TextInputContentHints contentHints = TextInputContentHint::None;
     TextInputContentPurpose contentPurpose = TextInputContentPurpose::Normal;
     QPointer<SeatInterface> seat;
@@ -77,7 +77,7 @@ public:
     qint32 surroundingTextCursorPosition = 0;
     qint32 surroundingTextSelectionAnchor = 0;
     bool inputPanelVisible = false;
-    QRect overlappedSurfaceArea;
+    QRectF overlappedSurfaceArea;
     QString language;
     QByteArray modifiersMap;
     TextInputV1Interface *q;
