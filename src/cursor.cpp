@@ -164,9 +164,6 @@ void Cursor::slotKGlobalSettingsNotifyChange(int type, int arg)
     if (type == 5 /*CursorChanged*/) {
         InputConfig::self()->inputConfig()->reparseConfiguration();
         loadThemeFromKConfig();
-        // sync to environment
-        qputenv("XCURSOR_THEME", m_themeName.toUtf8());
-        qputenv("XCURSOR_SIZE", QByteArray::number(m_themeSize));
     }
 }
 
