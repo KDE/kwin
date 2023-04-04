@@ -27,3 +27,14 @@ set_target_properties(kcmkwincommon PROPERTIES
 )
 
 install(TARGETS kcmkwincommon ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
+
+set(kcm_kwin4_genericscripted_SRCS genericscriptedconfig.cpp)
+qt_add_dbus_interface(kcm_kwin4_genericscripted_SRCS ${kwin_effects_dbus_xml} kwineffects_interface)
+add_library(kcm_kwin4_genericscripted MODULE ${kcm_kwin4_genericscripted_SRCS})
+target_link_libraries(kcm_kwin4_genericscripted
+    KF6::KCMUtils #KCModule
+    KF6::I18n
+    Qt::DBus
+    Qt::UiTools
+)
+install(TARGETS kcm_kwin4_genericscripted DESTINATION ${KDE_INSTALL_PLUGINDIR}/kwin/effects/configs)

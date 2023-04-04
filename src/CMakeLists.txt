@@ -11,7 +11,6 @@ target_link_libraries(KWinEffectsInterface Qt::DBus)
 
 add_subdirectory(effects)
 add_subdirectory(scripts)
-add_subdirectory(scripting)
 add_subdirectory(helpers)
 add_subdirectory(qml)
 
