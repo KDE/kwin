@@ -4,7 +4,7 @@
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
 
-import QtQuick 2.14
+import QtQuick 2.15
 import QtQuick.Layouts 1.14
 import QtQuick.Controls 2.14 as QQC2
 import org.kde.kirigami 2.10 as Kirigami
@@ -17,8 +17,9 @@ Kirigami.AbstractListItem {
     Kirigami.Theme.colorSet: Kirigami.Theme.View
 
     width: ListView.view.width
+    background: null
     highlighted: false
-    hoverEnabled: false
+    hoverEnabled: true
 
     RowLayout {
 
@@ -38,6 +39,9 @@ Kirigami.AbstractListItem {
             Layout.preferredWidth: 10 * Kirigami.Units.gridUnit
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignVCenter
+
+            QQC2.ToolTip.visible: ruleDelegate.hovered && (model.description.length > 0)
+            QQC2.ToolTip.text: model.description
         }
 
         RowLayout {
@@ -87,11 +91,6 @@ Kirigami.AbstractListItem {
                     model.enabled = false;
                 }
             }
-        }
-
-        QQC2.ToolTip {
-            text: model.description
-            visible: hovered && (text.length > 0)
         }
     }
 }
