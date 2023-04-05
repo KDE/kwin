@@ -17,8 +17,9 @@ Kirigami.AbstractListItem {
     Kirigami.Theme.colorSet: Kirigami.Theme.View
 
     width: ListView.view.width
+    background: null
     highlighted: false
-    hoverEnabled: false
+    hoverEnabled: true
 
     RowLayout {
 
@@ -38,6 +39,9 @@ Kirigami.AbstractListItem {
             Layout.preferredWidth: 10 * Kirigami.Units.gridUnit
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignVCenter
+
+            QQC2.ToolTip.visible: ruleDelegate.hovered && (model.description.length > 0)
+            QQC2.ToolTip.text: model.description
         }
 
         RowLayout {
@@ -87,11 +91,6 @@ Kirigami.AbstractListItem {
                     model.enabled = false;
                 }
             }
-        }
-
-        QQC2.ToolTip {
-            text: model.description
-            visible: hovered && (text.length > 0)
         }
     }
 }
