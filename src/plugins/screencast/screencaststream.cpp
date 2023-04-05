@@ -472,6 +472,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
     }
 
     spa_data->chunk->offset = 0;
+    spa_data->chunk->flags = SPA_CHUNK_FLAG_NONE;
     static_cast<OpenGLBackend *>(Compositor::self()->backend())->makeCurrent();
     if (data || spa_data[0].type == SPA_DATA_MemFd) {
         const bool hasAlpha = m_source->hasAlphaChannel();
@@ -629,7 +630,9 @@ void ScreenCastStream::recordCursor()
     }
 
     struct spa_buffer *spa_buffer = m_pendingBuffer->buffer;
-    spa_buffer->datas[0].chunk->size = 0;
+
+    // in pipewire terms, corrupted means "do not look at the frame contents" and here they're empty.
+    spa_buffer->datas[0].chunk->flags = SPA_CHUNK_FLAG_CORRUPTED;
 
     sendCursorData(Cursors::self()->currentCursor(),
                    (spa_meta_cursor *)spa_buffer_find_meta_data(spa_buffer, SPA_META_Cursor, sizeof(spa_meta_cursor)));
