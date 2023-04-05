@@ -105,6 +105,8 @@ OffscreenQuickView::OffscreenQuickView(QObject *parent, ExportMode exportMode)
         format.setDepthBufferSize(16);
         format.setStencilBufferSize(8);
 
+        d->m_view->setFormat(format);
+
         auto shareContext = QOpenGLContext::globalShareContext();
         d->m_glcontext.reset(new QOpenGLContext);
         d->m_glcontext->setShareContext(shareContext);
