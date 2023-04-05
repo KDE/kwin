@@ -23,55 +23,54 @@ KCM.AbstractKCM {
     implicitWidth: Kirigami.Units.gridUnit * 48
     implicitHeight: Kirigami.Units.gridUnit * 33
 
-    Themes {
-        id: themes
-
-        anchors.fill: parent
-
-
-        KCM.SettingStateBinding {
-            target: themes
-            configObject: kcm.settings
-            settingName: "pluginName"
-        }
-    }
-
-    footer: RowLayout {
-        QQC2.Label {
-            text: i18nc("Selector label", "Window border size:")
-        }
-
-        QQC2.ComboBox {
+    actions: [
+        Kirigami.Action {
             id: borderSizeComboBox
-            model: kcm.borderSizesModel
-            currentIndex: kcm.borderIndex
-            onActivated: kcm.borderIndex = currentIndex;
-            KCM.SettingHighlighter {
-                highlight: kcm.borderIndex !== 0
-            }
-        }
+            text: i18nc("Selector label", "Window border size:")
 
-        Kirigami.ActionToolBar {
-            flat: false
-            alignment: Qt.AlignRight
-            actions: [
-                Kirigami.Action {
-                    text: i18nc("button text", "Configure Titlebar Buttons…")
-                    icon.name: "configure"
-                    onTriggered: kcm.push("ConfigureTitlebar.qml")
-                },
-                NewStuff.Action {
-                    text: i18nc("button text", "Get New Window Decorations…")
-                    configFile: "window-decorations.knsrc"
-                    onEntryEvent: (entry, event) => {
-                        if (event === NewStuff.Engine.StatusChangedEvent) {
-                            kcm.reloadKWinSettings();
-                        } else if (event === NewStuff.Engine.EntryAdoptedEvent) {
-                            kcm.load();
-                        }
+            displayComponent: RowLayout {
+                QQC2.ComboBox {
+                    id: borderSizeComboBox
+                    currentIndex: kcm.borderIndex
+                    flat: true
+                    model: kcm.borderSizesModel
+
+                    onActivated: kcm.borderIndex = currentIndex
+
+                    KCM.SettingHighlighter {
+                        highlight: kcm.borderIndex !== 0
                     }
                 }
-            ]
+            }
+        },
+        Kirigami.Action {
+            icon.name: "configure"
+            text: i18nc("button text", "Configure Titlebar Buttons…")
+
+            onTriggered: kcm.push("ConfigureTitlebar.qml")
+        },
+        NewStuff.Action {
+            configFile: "window-decorations.knsrc"
+            text: i18nc("@action:button as in, \"Get New Window Decorations\"", "Get New…")
+
+            onEntryEvent: (entry, event) => {
+                if (event === NewStuff.Engine.StatusChangedEvent) {
+                    kcm.reloadKWinSettings();
+                } else if (event === NewStuff.Engine.EntryAdoptedEvent) {
+                    kcm.load();
+                }
+            }
+        }
+    ]
+
+    Themes {
+        id: themes
+        anchors.fill: parent
+
+        KCM.SettingStateBinding {
+            configObject: kcm.settings
+            settingName: "pluginName"
+            target: themes
         }
     }
 }
