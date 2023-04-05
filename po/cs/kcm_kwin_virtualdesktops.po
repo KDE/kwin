@@ -126,10 +126,3 @@ msgstr "%1 ms"
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Zobrazit ukazatele rozložení plochy"
-
-#~ msgid ""
-#~ "This module lets you configure the navigation, number and layout of "
-#~ "virtual desktops."
-#~ msgstr ""
-#~ "Tento modul vám umožní nastavit ovládání, počet a rozvržení virtuálních "
-#~ "pracovních ploch."

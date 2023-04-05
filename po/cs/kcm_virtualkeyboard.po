@@ -26,6 +26,3 @@ msgstr "Žádný"
 #, kde-format
 msgid "Do not use any virtual keyboard"
 msgstr "Nepoužívat virtuální klávesnici"
-
-#~ msgid "This module lets you choose the virtual keyboard to use."
-#~ msgstr "Tento modul vám umožní nastavit virtuální klávesnici."

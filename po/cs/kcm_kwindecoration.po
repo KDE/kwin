@@ -251,6 +251,3 @@ msgstr "Velmi obrovský"
 #, kde-format
 msgid "Oversized"
 msgstr "Nadměrný"
-
-#~ msgid "This module lets you configure the window decorations."
-#~ msgstr "Tento modul vám umožní nastavit dekorace oken."
