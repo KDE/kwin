@@ -14,10 +14,12 @@
 #include "kwinglobals.h"
 #include "wayland/screencast_v1_interface.h"
 
+#include <QDateTime>
 #include <QHash>
 #include <QObject>
 #include <QSize>
 #include <QSocketNotifier>
+#include <QTimer>
 #include <chrono>
 #include <memory>
 #include <optional>
@@ -129,6 +131,10 @@ private:
     quint64 m_sequential = 0;
     bool m_hasDmaBuf = false;
     bool m_waitForNewBuffers = false;
+
+    QDateTime m_lastSent;
+    QRegion m_pendingDamages;
+    QTimer m_pendingFrame;
 };
 
 } // namespace KWin
