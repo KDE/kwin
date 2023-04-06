@@ -11,8 +11,6 @@
 #include "scene/itemrenderer.h"
 #include "scene/scene.h"
 #include "scene/surfaceitem_wayland.h"
-#include "wayland/surface_interface.h"
-#include "wayland_server.h"
 
 namespace KWin
 {
@@ -32,12 +30,7 @@ void CursorItem::refresh()
 {
     const CursorSource *source = Cursors::self()->currentCursor()->source();
     if (auto surfaceSource = qobject_cast<const SurfaceCursorSource *>(source)) {
-        // TODO Plasma 6: Stop setting XCURSOR_SIZE and scale Xcursor.size in xrdb.
-        if (surfaceSource->surface() && surfaceSource->surface()->client() == waylandServer()->xWaylandConnection()) {
-            setImage(surfaceSource->image());
-        } else {
-            setSurface(surfaceSource->surface());
-        }
+        setSurface(surfaceSource->surface());
     } else if (auto imageSource = qobject_cast<const ImageCursorSource *>(source)) {
         setImage(imageSource->image());
     } else if (auto shapeSource = qobject_cast<const ShapeCursorSource *>(source)) {
