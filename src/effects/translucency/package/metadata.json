@@ -111,7 +111,7 @@
     },
     "X-KDE-Ordering": "50",
     "X-KDE-PluginKeyword": "translucency",
-    "X-KWin-Config-TranslationDomain": "kwin_effects",
+    "X-KWin-Config-TranslationDomain": "kwin",
     "X-Plasma-API": "javascript",
     "X-Plasma-MainScript": "code/main.js"
 }

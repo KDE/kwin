@@ -18,6 +18,10 @@ set_target_properties(kwin5_aurorae PROPERTIES
     LIBRARY_OUTPUT_NAME "org.kde.kwin.aurorae"
 )
 
+target_compile_definitions(kwin5_aurorae PRIVATE
+    -DTRANSLATION_DOMAIN=\"kwin\"
+)
+
 target_link_libraries(kwin5_aurorae
     KDecoration2::KDecoration
     kwineffects
@@ -39,6 +43,9 @@ set(decoration_plugin_SRCS
 
 add_library(decorationplugin SHARED ${decoration_plugin_SRCS})
 set_target_properties(decorationplugin PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/org/kde/kwin/decoration/")
+target_compile_definitions(decorationplugin PRIVATE
+    -DTRANSLATION_DOMAIN=\"kwin\"
+)
 target_link_libraries(decorationplugin
     KDecoration2::KDecoration
     KF6::ConfigWidgets

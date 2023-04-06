@@ -1,3 +1,4 @@
 #! /usr/bin/env bash
-$EXTRACTRC *.kcfg *.ui >> rc.cpp
-$XGETTEXT *.h *.cpp plugins/nightcolor/*.cpp helpers/killer/*.cpp scene/*.cpp tabbox/*.cpp scripting/*.cpp plugins/krunner-integration/*.cpp -o $podir/kwin.pot
+$EXTRACTRC `find . -not -path "./kcms/*" \( -name \*.kcfg -o -name \*.ui \)` >> rc.cpp || exit 11
+$XGETTEXT `find . -not -path "./kcms/*" \( -name \*.cpp -o -name \*.qml \)` -o $podir/kwin.pot
+rm -f rc.cpp

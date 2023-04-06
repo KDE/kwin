@@ -112,7 +112,7 @@
     },
     "X-KDE-Ordering": "40",
     "X-KDE-PluginKeyword": "login",
-    "X-KWin-Config-TranslationDomain": "kwin_effects",
+    "X-KWin-Config-TranslationDomain": "kwin",
     "X-Plasma-API": "javascript",
     "X-Plasma-MainScript": "code/main.js"
 }

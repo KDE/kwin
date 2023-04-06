@@ -148,7 +148,7 @@ Item {
         anchors.fill: thumbSource
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
-        text: i18nd("kwin_effects", "Drag Down To Close")
+        text: i18nd("kwin", "Drag Down To Close")
         opacity: 1 - thumbSource.opacity
         visible: !thumb.activeHidden
     }
@@ -449,7 +449,7 @@ Item {
         visible: thumb.closeButtonVisible && (hoverHandler.hovered || Kirigami.Settings.tabletMode || Kirigami.Settings.hasTransientTouchInput) && thumb.window.closeable && !thumb.activeDragHandler.active
         LayoutMirroring.enabled: Qt.application.layoutDirection === Qt.RightToLeft
 
-        text: i18ndc("kwin_effects", "@info:tooltip as in: 'close this window'", "Close window")
+        text: i18ndc("kwin", "@info:tooltip as in: 'close this window'", "Close window")
         icon.name: "window-close"
         display: PC3.AbstractButton.IconOnly
 

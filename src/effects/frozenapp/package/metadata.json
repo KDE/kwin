@@ -111,7 +111,7 @@
     },
     "X-KDE-Ordering": "60",
     "X-KDE-PluginKeyword": "frozenapp",
-    "X-KWin-Config-TranslationDomain": "kwin_effects",
+    "X-KWin-Config-TranslationDomain": "kwin",
     "X-Plasma-API": "javascript",
     "X-Plasma-MainScript": "code/main.js"
 }

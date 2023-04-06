@@ -184,7 +184,7 @@ Item {
                             anchors.right: parent.right
                             anchors.top: parent.top
                             sourceComponent: PC3.Button {
-                                text: i18nd("kwin_effects", "Delete Virtual Desktop")
+                                text: i18nd("kwin", "Delete Virtual Desktop")
                                 icon.name: "delete"
                                 display: PC3.AbstractButton.IconOnly
 
@@ -280,7 +280,7 @@ Item {
                 width: bar.desktopWidth
                 height: bar.desktopHeight
 
-                text: i18nd("kwin_effects", "Add Virtual Desktop")
+                text: i18nd("kwin", "Add Virtual Desktop")
                 icon.name: "list-add"
                 display: PC3.AbstractButton.IconOnly
                 opacity: hovered ? 1 : 0.75

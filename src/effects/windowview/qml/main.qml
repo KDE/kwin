@@ -104,7 +104,7 @@ Item {
 
         sourceComponent: PlasmaExtras.PlaceholderMessage {
             iconName: "edit-none"
-            text: effect.searchText.length > 0 ? i18nd("kwin_effects", "No Matches") : i18nd("kwin_effects", "No Windows")
+            text: effect.searchText.length > 0 ? i18nd("kwin", "No Matches") : i18nd("kwin", "No Windows")
         }
     }
 
@@ -119,7 +119,7 @@ Item {
             focus: false
 
             // Don't confuse users into thinking it's a full search
-            placeholderText: i18nd("kwin_effects", "Filter windows…")
+            placeholderText: i18nd("kwin", "Filter windows…")
 
             // Otherwise it's always 100% opaque even while the blurry desktop background's
             // opacity is changing, which looks weird and is different from what Overview does.

@@ -223,7 +223,7 @@ FocusScope {
                 anchors.top: parent.top
                 anchors.horizontalCenter: parent.horizontalCenter
                 visible: container.organized && effect.searchText.length > 0 && heap.count === 0
-                text: i18nd("kwin_effects", "No matching windows")
+                text: i18nd("kwin", "No matching windows")
             }
 
             WindowHeap {
