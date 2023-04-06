@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-31 02:17+0000\n"
+"POT-Creation-Date: 2023-04-06 02:04+0000\n"
 "PO-Revision-Date: 2011-07-17 15:45+0200\n"
 "Last-Translator: Jean Cayron <jean.cayron@base.be>\n"
 "Language-Team: Walloon <linux@walon.org>\n"
@@ -183,26 +183,25 @@ msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "&Håyner des racsegnes po les botons des purneas"
 
-#: package/contents/ui/main.qml:41
+#: package/contents/ui/main.qml:29
 #, fuzzy, kde-format
 #| msgid "Border size:"
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "Grandeu del boirdeure :"
 
-#: package/contents/ui/main.qml:59
+#: package/contents/ui/main.qml:48
 #, fuzzy, kde-format
 #| msgid "Buttons"
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
 msgstr "Botons"
 
-#: package/contents/ui/main.qml:64
-#, fuzzy, kde-format
-#| msgid "Get New Decorations..."
-msgctxt "button text"
-msgid "Get New Window Decorations…"
-msgstr "Cweri des noveas gåyotaedjes..."
+#: package/contents/ui/main.qml:54
+#, kde-format
+msgctxt "@action:button as in, \"Get New Window Decorations\""
+msgid "Get New…"
+msgstr ""
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -212,63 +211,108 @@ msgstr ""
 #: utils.cpp:25
 #, fuzzy, kde-format
 #| msgid "Border size:"
-msgid "No Borders"
+msgid "No Window Borders"
 msgstr "Grandeu del boirdeure :"
 
 #: utils.cpp:26
 #, fuzzy, kde-format
 #| msgid "Border size:"
-msgid "No Side Borders"
+msgid "No Side Window Borders"
 msgstr "Grandeu del boirdeure :"
 
 #: utils.cpp:27
 #, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Tiny"
-msgid "Tiny"
-msgstr "Tote pitite"
+#| msgid "Border size:"
+msgid "Tiny Window Borders"
+msgstr "Grandeu del boirdeure :"
 
 #: utils.cpp:28
 #, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Normal"
-msgid "Normal"
-msgstr "Normåle"
+#| msgid "Border size:"
+msgid "Normal Window Borders"
+msgstr "Grandeu del boirdeure :"
 
 #: utils.cpp:29
 #, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Large"
-msgid "Large"
-msgstr "Grande"
+#| msgid "Border size:"
+msgid "Large Window Borders"
+msgstr "Grandeu del boirdeure :"
 
 #: utils.cpp:30
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Very Large"
-msgid "Very Large"
-msgstr "Foirt grande"
+#, kde-format
+msgid "Very Large Window Borders"
+msgstr ""
 
 #: utils.cpp:31
 #, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Huge"
-msgid "Huge"
-msgstr "Foû grande"
+#| msgid "Border size:"
+msgid "Huge Window Borders"
+msgstr "Grandeu del boirdeure :"
 
 #: utils.cpp:32
 #, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Very Huge"
-msgid "Very Huge"
-msgstr "Vormint foû grande"
+#| msgid "Border size:"
+msgid "Very Huge Window Borders"
+msgstr "Grandeu del boirdeure :"
 
 #: utils.cpp:33
 #, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Oversized"
-msgid "Oversized"
-msgstr "Foû mzeure"
+#| msgid "Border size:"
+msgid "Oversized Window Borders"
+msgstr "Grandeu del boirdeure :"
+
+#, fuzzy
+#~| msgid "Get New Decorations..."
+#~ msgctxt "button text"
+#~ msgid "Get New Window Decorations…"
+#~ msgstr "Cweri des noveas gåyotaedjes..."
+
+#, fuzzy
+#~| msgid "Border size:"
+#~ msgid "No Borders"
+#~ msgstr "Grandeu del boirdeure :"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Tiny"
+#~ msgid "Tiny"
+#~ msgstr "Tote pitite"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Normal"
+#~ msgid "Normal"
+#~ msgstr "Normåle"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Large"
+#~ msgid "Large"
+#~ msgstr "Grande"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Very Large"
+#~ msgid "Very Large"
+#~ msgstr "Foirt grande"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Huge"
+#~ msgid "Huge"
+#~ msgstr "Foû grande"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Very Huge"
+#~ msgid "Very Huge"
+#~ msgstr "Vormint foû grande"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Oversized"
+#~ msgid "Oversized"
+#~ msgstr "Foû mzeure"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

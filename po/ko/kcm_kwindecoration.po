@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-31 02:17+0000\n"
+"POT-Creation-Date: 2023-04-06 02:04+0000\n"
 "PO-Revision-Date: 2021-06-17 21:11+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -191,13 +191,13 @@ msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "창 단추의 풍선 도움말 보기"
 
-#: package/contents/ui/main.qml:41
+#: package/contents/ui/main.qml:29
 #, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "창 테두리 크기:"
 
-#: package/contents/ui/main.qml:59
+#: package/contents/ui/main.qml:48
 #, fuzzy, kde-format
 #| msgctxt "tab label"
 #| msgid "Titlebar Buttons"
@@ -205,13 +205,11 @@ msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
 msgstr "제목 표시줄 단추"
 
-#: package/contents/ui/main.qml:64
-#, fuzzy, kde-format
-#| msgctxt "button text"
-#| msgid "Get New Window Decorations..."
-msgctxt "button text"
-msgid "Get New Window Decorations…"
-msgstr "새 장식 가져오기..."
+#: package/contents/ui/main.qml:54
+#, kde-format
+msgctxt "@action:button as in, \"Get New Window Decorations\""
+msgid "Get New…"
+msgstr ""
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -219,49 +217,93 @@ msgid "Edit %1 Theme"
 msgstr "%1 테마 편집"
 
 #: utils.cpp:25
-#, kde-format
-msgid "No Borders"
-msgstr "경계선 없음"
+#, fuzzy, kde-format
+#| msgid "No Side Borders"
+msgid "No Window Borders"
+msgstr "옆쪽 경계선 없음"
 
 #: utils.cpp:26
-#, kde-format
-msgid "No Side Borders"
+#, fuzzy, kde-format
+#| msgid "No Side Borders"
+msgid "No Side Window Borders"
 msgstr "옆쪽 경계선 없음"
 
 #: utils.cpp:27
-#, kde-format
-msgid "Tiny"
-msgstr "작게"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Tiny Window Borders"
+msgstr "창 테두리 크기:"
 
 #: utils.cpp:28
-#, kde-format
-msgid "Normal"
-msgstr "일반"
+#, fuzzy, kde-format
+#| msgid "No Side Borders"
+msgid "Normal Window Borders"
+msgstr "옆쪽 경계선 없음"
 
 #: utils.cpp:29
-#, kde-format
-msgid "Large"
-msgstr "크게"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Large Window Borders"
+msgstr "창 테두리 크기:"
 
 #: utils.cpp:30
 #, kde-format
-msgid "Very Large"
-msgstr "매우 크게"
+msgid "Very Large Window Borders"
+msgstr ""
 
 #: utils.cpp:31
-#, kde-format
-msgid "Huge"
-msgstr "매우 매우 크게"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Huge Window Borders"
+msgstr "창 테두리 크기:"
 
 #: utils.cpp:32
-#, kde-format
-msgid "Very Huge"
-msgstr "매우 매우 매우 크게"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Very Huge Window Borders"
+msgstr "창 테두리 크기:"
 
 #: utils.cpp:33
-#, kde-format
-msgid "Oversized"
-msgstr "과다하게 크게"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Oversized Window Borders"
+msgstr "창 테두리 크기:"
+
+#, fuzzy
+#~| msgctxt "button text"
+#~| msgid "Get New Window Decorations..."
+#~ msgctxt "button text"
+#~ msgid "Get New Window Decorations…"
+#~ msgstr "새 장식 가져오기..."
+
+#~ msgid "No Borders"
+#~ msgstr "경계선 없음"
+
+#~ msgid "Tiny"
+#~ msgstr "작게"
+
+#~ msgid "Normal"
+#~ msgstr "일반"
+
+#~ msgid "Large"
+#~ msgstr "크게"
+
+#~ msgid "Very Large"
+#~ msgstr "매우 크게"
+
+#~ msgid "Huge"
+#~ msgstr "매우 매우 크게"
+
+#~ msgid "Very Huge"
+#~ msgstr "매우 매우 매우 크게"
+
+#~ msgid "Oversized"
+#~ msgstr "과다하게 크게"
 
 #~ msgid "This module lets you configure the window decorations."
 #~ msgstr "이 모듈에서 창 장식을 설정할 수 있습니다."

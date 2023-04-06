@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-31 02:17+0000\n"
+"POT-Creation-Date: 2023-04-06 02:04+0000\n"
 "PO-Revision-Date: 2013-09-08 07:05+0900\n"
 "Last-Translator: Gheyret Kenji <gheyret@gmail.com>\n"
 "Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
@@ -183,26 +183,25 @@ msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "توپچىلار"
 
-#: package/contents/ui/main.qml:41
+#: package/contents/ui/main.qml:29
 #, fuzzy, kde-format
 #| msgid "Border size:"
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "گىرۋەك چوڭلۇقى:"
 
-#: package/contents/ui/main.qml:59
+#: package/contents/ui/main.qml:48
 #, fuzzy, kde-format
 #| msgid "Buttons"
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
 msgstr "توپچىلار"
 
-#: package/contents/ui/main.qml:64
-#, fuzzy, kde-format
-#| msgid "kcmkwindecoration"
-msgctxt "button text"
-msgid "Get New Window Decorations…"
-msgstr "kcmkwindecoration"
+#: package/contents/ui/main.qml:54
+#, kde-format
+msgctxt "@action:button as in, \"Get New Window Decorations\""
+msgid "Get New…"
+msgstr ""
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -212,65 +211,112 @@ msgstr ""
 #: utils.cpp:25
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Border size:"
-#| msgid "No Border"
-msgid "No Borders"
-msgstr "گىرۋەكسىز"
+#| msgid "No Side Border"
+msgid "No Window Borders"
+msgstr "يان گىرۋىكى يوق"
 
 #: utils.cpp:26
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Border size:"
 #| msgid "No Side Border"
-msgid "No Side Borders"
+msgid "No Side Window Borders"
 msgstr "يان گىرۋىكى يوق"
 
 #: utils.cpp:27
 #, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Tiny"
-msgid "Tiny"
-msgstr "كىچىك"
+#| msgid "Border size:"
+msgid "Tiny Window Borders"
+msgstr "گىرۋەك چوڭلۇقى:"
 
 #: utils.cpp:28
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Border size:"
-#| msgid "Normal"
-msgid "Normal"
-msgstr "نورمال"
+#| msgid "No Side Border"
+msgid "Normal Window Borders"
+msgstr "يان گىرۋىكى يوق"
 
 #: utils.cpp:29
 #, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Large"
-msgid "Large"
-msgstr "چوڭ"
+#| msgid "Border size:"
+msgid "Large Window Borders"
+msgstr "گىرۋەك چوڭلۇقى:"
 
 #: utils.cpp:30
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Very Large"
-msgid "Very Large"
-msgstr "بەك چوڭ"
+#, kde-format
+msgid "Very Large Window Borders"
+msgstr ""
 
 #: utils.cpp:31
 #, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Huge"
-msgid "Huge"
-msgstr "ئىنتايىن چوڭ"
+#| msgid "Border size:"
+msgid "Huge Window Borders"
+msgstr "گىرۋەك چوڭلۇقى:"
 
 #: utils.cpp:32
 #, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Very Huge"
-msgid "Very Huge"
-msgstr "ئىنتايىن چوڭ"
+#| msgid "Border size:"
+msgid "Very Huge Window Borders"
+msgstr "گىرۋەك چوڭلۇقى:"
 
 #: utils.cpp:33
 #, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Oversized"
-msgid "Oversized"
-msgstr "چوڭلۇقى ئېشىپ كەتكەن"
+#| msgid "Border size:"
+msgid "Oversized Window Borders"
+msgstr "گىرۋەك چوڭلۇقى:"
+
+#, fuzzy
+#~| msgid "kcmkwindecoration"
+#~ msgctxt "button text"
+#~ msgid "Get New Window Decorations…"
+#~ msgstr "kcmkwindecoration"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "No Border"
+#~ msgid "No Borders"
+#~ msgstr "گىرۋەكسىز"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Tiny"
+#~ msgid "Tiny"
+#~ msgstr "كىچىك"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Normal"
+#~ msgid "Normal"
+#~ msgstr "نورمال"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Large"
+#~ msgid "Large"
+#~ msgstr "چوڭ"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Very Large"
+#~ msgid "Very Large"
+#~ msgstr "بەك چوڭ"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Huge"
+#~ msgid "Huge"
+#~ msgstr "ئىنتايىن چوڭ"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Very Huge"
+#~ msgid "Very Huge"
+#~ msgstr "ئىنتايىن چوڭ"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Oversized"
+#~ msgid "Oversized"
+#~ msgstr "چوڭلۇقى ئېشىپ كەتكەن"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

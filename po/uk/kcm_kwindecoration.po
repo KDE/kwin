@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-31 02:17+0000\n"
+"POT-Creation-Date: 2023-04-06 02:04+0000\n"
 "PO-Revision-Date: 2023-02-06 08:13+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
@@ -197,23 +197,23 @@ msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "Показувати підказки кнопок заголовків вікон"
 
-#: package/contents/ui/main.qml:41
+#: package/contents/ui/main.qml:29
 #, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "Розмір рамки вікна:"
 
-#: package/contents/ui/main.qml:59
+#: package/contents/ui/main.qml:48
 #, kde-format
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
 msgstr "Налаштувати кнопки заголовка…"
 
-#: package/contents/ui/main.qml:64
+#: package/contents/ui/main.qml:54
 #, kde-format
-msgctxt "button text"
-msgid "Get New Window Decorations…"
-msgstr "Отримати нові обрамлення вікон…"
+msgctxt "@action:button as in, \"Get New Window Decorations\""
+msgid "Get New…"
+msgstr ""
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -221,49 +221,90 @@ msgid "Edit %1 Theme"
 msgstr "Редагувати тему %1"
 
 #: utils.cpp:25
-#, kde-format
-msgid "No Borders"
-msgstr "Без обрамлення"
+#, fuzzy, kde-format
+#| msgid "No Side Borders"
+msgid "No Window Borders"
+msgstr "Без бічної рамки"
 
 #: utils.cpp:26
-#, kde-format
-msgid "No Side Borders"
+#, fuzzy, kde-format
+#| msgid "No Side Borders"
+msgid "No Side Window Borders"
 msgstr "Без бічної рамки"
 
 #: utils.cpp:27
-#, kde-format
-msgid "Tiny"
-msgstr "Крихітний"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Tiny Window Borders"
+msgstr "Розмір рамки вікна:"
 
 #: utils.cpp:28
-#, kde-format
-msgid "Normal"
-msgstr "Звичайний"
+#, fuzzy, kde-format
+#| msgid "No Side Borders"
+msgid "Normal Window Borders"
+msgstr "Без бічної рамки"
 
 #: utils.cpp:29
-#, kde-format
-msgid "Large"
-msgstr "Великий"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Large Window Borders"
+msgstr "Розмір рамки вікна:"
 
 #: utils.cpp:30
 #, kde-format
-msgid "Very Large"
-msgstr "Дуже великий"
+msgid "Very Large Window Borders"
+msgstr ""
 
 #: utils.cpp:31
-#, kde-format
-msgid "Huge"
-msgstr "Величезний"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Huge Window Borders"
+msgstr "Розмір рамки вікна:"
 
 #: utils.cpp:32
-#, kde-format
-msgid "Very Huge"
-msgstr "Гігантський"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Very Huge Window Borders"
+msgstr "Розмір рамки вікна:"
 
 #: utils.cpp:33
-#, kde-format
-msgid "Oversized"
-msgstr "Найбільший"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Oversized Window Borders"
+msgstr "Розмір рамки вікна:"
+
+#~ msgctxt "button text"
+#~ msgid "Get New Window Decorations…"
+#~ msgstr "Отримати нові обрамлення вікон…"
+
+#~ msgid "No Borders"
+#~ msgstr "Без обрамлення"
+
+#~ msgid "Tiny"
+#~ msgstr "Крихітний"
+
+#~ msgid "Normal"
+#~ msgstr "Звичайний"
+
+#~ msgid "Large"
+#~ msgstr "Великий"
+
+#~ msgid "Very Large"
+#~ msgstr "Дуже великий"
+
+#~ msgid "Huge"
+#~ msgstr "Величезний"
+
+#~ msgid "Very Huge"
+#~ msgstr "Гігантський"
+
+#~ msgid "Oversized"
+#~ msgstr "Найбільший"
 
 #~ msgid "This module lets you configure the window decorations."
 #~ msgstr "За допомогою цього модуля ви можете налаштувати обрамлення вікон."

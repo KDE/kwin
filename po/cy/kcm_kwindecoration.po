@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-31 02:17+0000\n"
+"POT-Creation-Date: 2023-04-06 02:04+0000\n"
 "PO-Revision-Date: 2004-07-03 22:37+0100\n"
 "Last-Translator: KD at KGyfieithu <kyfieithu@dotmon.com>\n"
 "Language-Team: Cymraeg <cy@li.org>\n"
@@ -181,25 +181,24 @@ msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "&Dangos cynghorion offer botymau ffenestri"
 
-#: package/contents/ui/main.qml:41
+#: package/contents/ui/main.qml:29
 #, fuzzy, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "Maint ffin: Bach Iawn"
 
-#: package/contents/ui/main.qml:59
+#: package/contents/ui/main.qml:48
 #, fuzzy, kde-format
 #| msgid "Buttons"
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
 msgstr "Botymau"
 
-#: package/contents/ui/main.qml:64
-#, fuzzy, kde-format
-#| msgid "&Window Decoration"
-msgctxt "button text"
-msgid "Get New Window Decorations…"
-msgstr "Addurniad &Ffenestr"
+#: package/contents/ui/main.qml:54
+#, kde-format
+msgctxt "@action:button as in, \"Get New Window Decorations\""
+msgid "Get New…"
+msgstr ""
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -208,52 +207,90 @@ msgstr ""
 
 #: utils.cpp:25
 #, fuzzy, kde-format
-msgid "No Borders"
+msgid "No Window Borders"
 msgstr "Maint ffin: Bach Iawn"
 
 #: utils.cpp:26
 #, fuzzy, kde-format
-msgid "No Side Borders"
+msgid "No Side Window Borders"
 msgstr "Maint ffin: Bach Iawn"
 
 #: utils.cpp:27
 #, fuzzy, kde-format
-#| msgid "Tiny"
-msgid "Tiny"
-msgstr "Pitw"
+msgid "Tiny Window Borders"
+msgstr "Maint ffin: Bach Iawn"
 
 #: utils.cpp:28
 #, fuzzy, kde-format
-#| msgid "Normal"
-msgid "Normal"
-msgstr "Arferol"
+msgid "Normal Window Borders"
+msgstr "Maint ffin: Bach Iawn"
 
 #: utils.cpp:29
 #, fuzzy, kde-format
-#| msgid "Large"
-msgid "Large"
-msgstr "Mawr"
+msgid "Large Window Borders"
+msgstr "Maint ffin: Bach Iawn"
 
 #: utils.cpp:30
-#, fuzzy, kde-format
-msgid "Very Large"
-msgstr "Maint ffin: Mawr Iawn"
+#, kde-format
+msgid "Very Large Window Borders"
+msgstr ""
 
 #: utils.cpp:31
 #, fuzzy, kde-format
-#| msgid "Huge"
-msgid "Huge"
-msgstr "Anferth"
+msgid "Huge Window Borders"
+msgstr "Maint ffin: Bach Iawn"
 
 #: utils.cpp:32
 #, fuzzy, kde-format
-msgid "Very Huge"
-msgstr "Maint ffin: Mawr Iawn"
+msgid "Very Huge Window Borders"
+msgstr "Maint ffin: Bach Iawn"
 
 #: utils.cpp:33
 #, fuzzy, kde-format
-msgid "Oversized"
-msgstr "Newid maint"
+msgid "Oversized Window Borders"
+msgstr "Maint ffin: Bach Iawn"
+
+#, fuzzy
+#~| msgid "&Window Decoration"
+#~ msgctxt "button text"
+#~ msgid "Get New Window Decorations…"
+#~ msgstr "Addurniad &Ffenestr"
+
+#, fuzzy
+#~ msgid "No Borders"
+#~ msgstr "Maint ffin: Bach Iawn"
+
+#, fuzzy
+#~| msgid "Tiny"
+#~ msgid "Tiny"
+#~ msgstr "Pitw"
+
+#, fuzzy
+#~| msgid "Normal"
+#~ msgid "Normal"
+#~ msgstr "Arferol"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgid "Large"
+#~ msgstr "Mawr"
+
+#, fuzzy
+#~ msgid "Very Large"
+#~ msgstr "Maint ffin: Mawr Iawn"
+
+#, fuzzy
+#~| msgid "Huge"
+#~ msgid "Huge"
+#~ msgstr "Anferth"
+
+#, fuzzy
+#~ msgid "Very Huge"
+#~ msgstr "Maint ffin: Mawr Iawn"
+
+#, fuzzy
+#~ msgid "Oversized"
+#~ msgstr "Newid maint"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

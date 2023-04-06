@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-31 02:17+0000\n"
+"POT-Creation-Date: 2023-04-06 02:04+0000\n"
 "PO-Revision-Date: 2013-01-05 08:28+0530\n"
 "Last-Translator: A S Alam <aalam@users.sf.net>\n"
 "Language-Team: Punjabi/Panjabi <punjabi-users@lists.sf.net>\n"
@@ -184,26 +184,25 @@ msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "ਵਿੰਡੋ ਬਟਨ ਸੰਕੇਤ ਵੇਖੋ(&S)"
 
-#: package/contents/ui/main.qml:41
+#: package/contents/ui/main.qml:29
 #, fuzzy, kde-format
 #| msgid "Border size:"
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "ਬਾਰਡਰ ਸਾਈਜ਼:"
 
-#: package/contents/ui/main.qml:59
+#: package/contents/ui/main.qml:48
 #, fuzzy, kde-format
 #| msgid "Buttons"
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
 msgstr "ਬਟਨ"
 
-#: package/contents/ui/main.qml:64
-#, fuzzy, kde-format
-#| msgid "Get New Decorations..."
-msgctxt "button text"
-msgid "Get New Window Decorations…"
-msgstr "ਨਵੀਂ ਸਜਾਵਟ ਲਵੋ..."
+#: package/contents/ui/main.qml:54
+#, kde-format
+msgctxt "@action:button as in, \"Get New Window Decorations\""
+msgid "Get New…"
+msgstr ""
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -213,63 +212,108 @@ msgstr ""
 #: utils.cpp:25
 #, fuzzy, kde-format
 #| msgid "Border size:"
-msgid "No Borders"
+msgid "No Window Borders"
 msgstr "ਬਾਰਡਰ ਸਾਈਜ਼:"
 
 #: utils.cpp:26
 #, fuzzy, kde-format
 #| msgid "Border size:"
-msgid "No Side Borders"
+msgid "No Side Window Borders"
 msgstr "ਬਾਰਡਰ ਸਾਈਜ਼:"
 
 #: utils.cpp:27
 #, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Tiny"
-msgid "Tiny"
-msgstr "ਨਿੱਕਾ"
+#| msgid "Border size:"
+msgid "Tiny Window Borders"
+msgstr "ਬਾਰਡਰ ਸਾਈਜ਼:"
 
 #: utils.cpp:28
 #, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Normal"
-msgid "Normal"
-msgstr "ਸਧਾਰਨ"
+#| msgid "Border size:"
+msgid "Normal Window Borders"
+msgstr "ਬਾਰਡਰ ਸਾਈਜ਼:"
 
 #: utils.cpp:29
 #, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Large"
-msgid "Large"
-msgstr "ਵੱਡਾ"
+#| msgid "Border size:"
+msgid "Large Window Borders"
+msgstr "ਬਾਰਡਰ ਸਾਈਜ਼:"
 
 #: utils.cpp:30
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Very Large"
-msgid "Very Large"
-msgstr "ਬਹੁਤ ਵੱਡਾ"
+#, kde-format
+msgid "Very Large Window Borders"
+msgstr ""
 
 #: utils.cpp:31
 #, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Huge"
-msgid "Huge"
-msgstr "ਵਿਰਾਟ"
+#| msgid "Border size:"
+msgid "Huge Window Borders"
+msgstr "ਬਾਰਡਰ ਸਾਈਜ਼:"
 
 #: utils.cpp:32
 #, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Very Huge"
-msgid "Very Huge"
-msgstr "ਬਹੁਤ ਵਿਰਾਟ"
+#| msgid "Border size:"
+msgid "Very Huge Window Borders"
+msgstr "ਬਾਰਡਰ ਸਾਈਜ਼:"
 
 #: utils.cpp:33
 #, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Oversized"
-msgid "Oversized"
-msgstr "ਵੱਧ-ਆਕਾਰ"
+#| msgid "Border size:"
+msgid "Oversized Window Borders"
+msgstr "ਬਾਰਡਰ ਸਾਈਜ਼:"
+
+#, fuzzy
+#~| msgid "Get New Decorations..."
+#~ msgctxt "button text"
+#~ msgid "Get New Window Decorations…"
+#~ msgstr "ਨਵੀਂ ਸਜਾਵਟ ਲਵੋ..."
+
+#, fuzzy
+#~| msgid "Border size:"
+#~ msgid "No Borders"
+#~ msgstr "ਬਾਰਡਰ ਸਾਈਜ਼:"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Tiny"
+#~ msgid "Tiny"
+#~ msgstr "ਨਿੱਕਾ"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Normal"
+#~ msgid "Normal"
+#~ msgstr "ਸਧਾਰਨ"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Large"
+#~ msgid "Large"
+#~ msgstr "ਵੱਡਾ"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Very Large"
+#~ msgid "Very Large"
+#~ msgstr "ਬਹੁਤ ਵੱਡਾ"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Huge"
+#~ msgid "Huge"
+#~ msgstr "ਵਿਰਾਟ"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Very Huge"
+#~ msgid "Very Huge"
+#~ msgstr "ਬਹੁਤ ਵਿਰਾਟ"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Oversized"
+#~ msgid "Oversized"
+#~ msgstr "ਵੱਧ-ਆਕਾਰ"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

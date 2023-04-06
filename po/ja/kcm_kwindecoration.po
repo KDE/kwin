@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-31 02:17+0000\n"
+"POT-Creation-Date: 2023-04-06 02:04+0000\n"
 "PO-Revision-Date: 2023-02-23 18:19+0900\n"
 "Last-Translator: Ryuichi Yamada <ryuichi_ya220@outlook.jp>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -200,23 +200,23 @@ msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "タイトルバーボタンのツールチップを表示"
 
-#: package/contents/ui/main.qml:41
+#: package/contents/ui/main.qml:29
 #, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "ウィンドウの枠のサイズ:"
 
-#: package/contents/ui/main.qml:59
+#: package/contents/ui/main.qml:48
 #, kde-format
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
 msgstr "タイトルバーのボタンを設定..."
 
-#: package/contents/ui/main.qml:64
+#: package/contents/ui/main.qml:54
 #, kde-format
-msgctxt "button text"
-msgid "Get New Window Decorations…"
-msgstr "新しいウィンドウの装飾を取得..."
+msgctxt "@action:button as in, \"Get New Window Decorations\""
+msgid "Get New…"
+msgstr ""
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -224,49 +224,90 @@ msgid "Edit %1 Theme"
 msgstr "テーマ %1 を編集"
 
 #: utils.cpp:25
-#, kde-format
-msgid "No Borders"
-msgstr "枠なし"
+#, fuzzy, kde-format
+#| msgid "No Side Borders"
+msgid "No Window Borders"
+msgstr "横の枠なし"
 
 #: utils.cpp:26
-#, kde-format
-msgid "No Side Borders"
+#, fuzzy, kde-format
+#| msgid "No Side Borders"
+msgid "No Side Window Borders"
 msgstr "横の枠なし"
 
 #: utils.cpp:27
-#, kde-format
-msgid "Tiny"
-msgstr "小"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Tiny Window Borders"
+msgstr "ウィンドウの枠のサイズ:"
 
 #: utils.cpp:28
-#, kde-format
-msgid "Normal"
-msgstr "普通"
+#, fuzzy, kde-format
+#| msgid "No Side Borders"
+msgid "Normal Window Borders"
+msgstr "横の枠なし"
 
 #: utils.cpp:29
-#, kde-format
-msgid "Large"
-msgstr "大"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Large Window Borders"
+msgstr "ウィンドウの枠のサイズ:"
 
 #: utils.cpp:30
 #, kde-format
-msgid "Very Large"
-msgstr "より大"
+msgid "Very Large Window Borders"
+msgstr ""
 
 #: utils.cpp:31
-#, kde-format
-msgid "Huge"
-msgstr "とても大"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Huge Window Borders"
+msgstr "ウィンドウの枠のサイズ:"
 
 #: utils.cpp:32
-#, kde-format
-msgid "Very Huge"
-msgstr "さらに大"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Very Huge Window Borders"
+msgstr "ウィンドウの枠のサイズ:"
 
 #: utils.cpp:33
-#, kde-format
-msgid "Oversized"
-msgstr "特大"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Oversized Window Borders"
+msgstr "ウィンドウの枠のサイズ:"
+
+#~ msgctxt "button text"
+#~ msgid "Get New Window Decorations…"
+#~ msgstr "新しいウィンドウの装飾を取得..."
+
+#~ msgid "No Borders"
+#~ msgstr "枠なし"
+
+#~ msgid "Tiny"
+#~ msgstr "小"
+
+#~ msgid "Normal"
+#~ msgstr "普通"
+
+#~ msgid "Large"
+#~ msgstr "大"
+
+#~ msgid "Very Large"
+#~ msgstr "より大"
+
+#~ msgid "Huge"
+#~ msgstr "とても大"
+
+#~ msgid "Very Huge"
+#~ msgstr "さらに大"
+
+#~ msgid "Oversized"
+#~ msgstr "特大"
 
 #~ msgid "This module lets you configure the window decorations."
 #~ msgstr "このモジュールでウィンドウ装飾を設定できます。"

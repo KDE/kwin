@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-31 02:17+0000\n"
+"POT-Creation-Date: 2023-04-06 02:04+0000\n"
 "PO-Revision-Date: 2015-10-14 18:13+0200\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -184,25 +184,24 @@ msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr ""
 
-#: package/contents/ui/main.qml:41
+#: package/contents/ui/main.qml:29
 #, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr ""
 
-#: package/contents/ui/main.qml:59
+#: package/contents/ui/main.qml:48
 #, fuzzy, kde-format
 #| msgid "Titlebar"
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
 msgstr "Насловна трака"
 
-#: package/contents/ui/main.qml:64
-#, fuzzy, kde-format
-#| msgid "Get New Decorations..."
-msgctxt "button text"
-msgid "Get New Window Decorations…"
-msgstr "Добави нове декорације..."
+#: package/contents/ui/main.qml:54
+#, kde-format
+msgctxt "@action:button as in, \"Get New Window Decorations\""
+msgid "Get New…"
+msgstr ""
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -212,65 +211,113 @@ msgstr ""
 #: utils.cpp:25
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Border size:"
-#| msgid "No Borders"
-msgid "No Borders"
-msgstr "без ивица"
+#| msgid "No Side Borders"
+msgid "No Window Borders"
+msgstr "без бочних ивица"
 
 #: utils.cpp:26
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Border size:"
 #| msgid "No Side Borders"
-msgid "No Side Borders"
+msgid "No Side Window Borders"
 msgstr "без бочних ивица"
 
 #: utils.cpp:27
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Border size:"
-#| msgid "Tiny"
-msgid "Tiny"
-msgstr "сићушне"
+#| msgid "No Side Borders"
+msgid "Tiny Window Borders"
+msgstr "без бочних ивица"
 
 #: utils.cpp:28
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Border size:"
-#| msgid "Normal"
-msgid "Normal"
-msgstr "нормалне"
+#| msgid "No Side Borders"
+msgid "Normal Window Borders"
+msgstr "без бочних ивица"
 
 #: utils.cpp:29
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Border size:"
-#| msgid "Large"
-msgid "Large"
-msgstr "велике"
+#| msgid "No Side Borders"
+msgid "Large Window Borders"
+msgstr "без бочних ивица"
 
 #: utils.cpp:30
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Very Large"
-msgid "Very Large"
-msgstr "врло велике"
+#, kde-format
+msgid "Very Large Window Borders"
+msgstr ""
 
 #: utils.cpp:31
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Border size:"
-#| msgid "Huge"
-msgid "Huge"
-msgstr "огромне"
+#| msgid "No Side Borders"
+msgid "Huge Window Borders"
+msgstr "без бочних ивица"
 
 #: utils.cpp:32
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Very Huge"
-msgid "Very Huge"
-msgstr "врло огромне"
+#, kde-format
+msgid "Very Huge Window Borders"
+msgstr ""
 
 #: utils.cpp:33
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Oversized"
-msgid "Oversized"
-msgstr "неизмјерне"
+#, kde-format
+msgid "Oversized Window Borders"
+msgstr ""
+
+#, fuzzy
+#~| msgid "Get New Decorations..."
+#~ msgctxt "button text"
+#~ msgid "Get New Window Decorations…"
+#~ msgstr "Добави нове декорације..."
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "No Borders"
+#~ msgid "No Borders"
+#~ msgstr "без ивица"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Tiny"
+#~ msgid "Tiny"
+#~ msgstr "сићушне"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Normal"
+#~ msgid "Normal"
+#~ msgstr "нормалне"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Large"
+#~ msgid "Large"
+#~ msgstr "велике"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Very Large"
+#~ msgid "Very Large"
+#~ msgstr "врло велике"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Huge"
+#~ msgid "Huge"
+#~ msgstr "огромне"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Very Huge"
+#~ msgid "Very Huge"
+#~ msgstr "врло огромне"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Oversized"
+#~ msgid "Oversized"
+#~ msgstr "неизмјерне"
 
 #~ msgid "Menu"
 #~ msgstr "Мени"

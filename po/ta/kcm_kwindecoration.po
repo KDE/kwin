@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-31 02:17+0000\n"
+"POT-Creation-Date: 2023-04-06 02:04+0000\n"
 "PO-Revision-Date: 2023-02-14 21:55+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -183,13 +183,13 @@ msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "தலைப்புப்பட்டையிலுள்ள பட்டன்களுக்கு கருவித்துப்புகளை காட்டு"
 
-#: package/contents/ui/main.qml:41
+#: package/contents/ui/main.qml:29
 #, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "சாளர விளிம்பின் அளவு:"
 
-#: package/contents/ui/main.qml:59
+#: package/contents/ui/main.qml:48
 #, fuzzy, kde-format
 #| msgctxt "tab label"
 #| msgid "Titlebar Buttons"
@@ -197,12 +197,11 @@ msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
 msgstr "தலைப்புப்பட்டையிலுள்ள பட்டன்கள்"
 
-#: package/contents/ui/main.qml:64
-#, fuzzy, kde-format
-#| msgid "&Window Decoration"
-msgctxt "button text"
-msgid "Get New Window Decorations…"
-msgstr "&சாளரத்தின் அலங்காரம்"
+#: package/contents/ui/main.qml:54
+#, kde-format
+msgctxt "@action:button as in, \"Get New Window Decorations\""
+msgid "Get New…"
+msgstr ""
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -210,52 +209,98 @@ msgid "Edit %1 Theme"
 msgstr "%1 தோற்றத்திட்டத்தை திருத்து"
 
 #: utils.cpp:25
-#, kde-format
-msgid "No Borders"
-msgstr "விளிம்புகள் இல்லாமல்"
+#, fuzzy, kde-format
+#| msgid "No Side Borders"
+msgid "No Window Borders"
+msgstr "கிடைமட்டத்தில் விளிம்புகள் இல்லாமல்"
 
 #: utils.cpp:26
-#, kde-format
-msgid "No Side Borders"
+#, fuzzy, kde-format
+#| msgid "No Side Borders"
+msgid "No Side Window Borders"
 msgstr "கிடைமட்டத்தில் விளிம்புகள் இல்லாமல்"
 
 #: utils.cpp:27
-#, kde-format
-msgid "Tiny"
-msgstr "மிகச்சிறியவை"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Tiny Window Borders"
+msgstr "சாளர விளிம்பின் அளவு:"
 
 #: utils.cpp:28
-#, kde-format
-msgid "Normal"
-msgstr "சாதாரணமானவை"
+#, fuzzy, kde-format
+#| msgid "No Side Borders"
+msgid "Normal Window Borders"
+msgstr "கிடைமட்டத்தில் விளிம்புகள் இல்லாமல்"
 
 #: utils.cpp:29
-#, kde-format
-msgid "Large"
-msgstr "பெரியவை"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Large Window Borders"
+msgstr "சாளர விளிம்பின் அளவு:"
 
 #: utils.cpp:30
 #, kde-format
-msgid "Very Large"
-msgstr "மிகப்பெரியவை"
+msgid "Very Large Window Borders"
+msgstr ""
 
 #: utils.cpp:31
 #, fuzzy, kde-format
-#| msgid "Huge"
-msgid "Huge"
-msgstr "மிகப் பெரியது"
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Huge Window Borders"
+msgstr "சாளர விளிம்பின் அளவு:"
 
 #: utils.cpp:32
 #, fuzzy, kde-format
-#| msgid "Very Huge"
-msgid "Very Huge"
-msgstr "மிகப்பெரியது"
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Very Huge Window Borders"
+msgstr "சாளர விளிம்பின் அளவு:"
 
 #: utils.cpp:33
 #, fuzzy, kde-format
-#| msgid "Oversized"
-msgid "Oversized"
-msgstr "அதிகமாக அளவிடப்பட்டது"
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Oversized Window Borders"
+msgstr "சாளர விளிம்பின் அளவு:"
+
+#, fuzzy
+#~| msgid "&Window Decoration"
+#~ msgctxt "button text"
+#~ msgid "Get New Window Decorations…"
+#~ msgstr "&சாளரத்தின் அலங்காரம்"
+
+#~ msgid "No Borders"
+#~ msgstr "விளிம்புகள் இல்லாமல்"
+
+#~ msgid "Tiny"
+#~ msgstr "மிகச்சிறியவை"
+
+#~ msgid "Normal"
+#~ msgstr "சாதாரணமானவை"
+
+#~ msgid "Large"
+#~ msgstr "பெரியவை"
+
+#~ msgid "Very Large"
+#~ msgstr "மிகப்பெரியவை"
+
+#, fuzzy
+#~| msgid "Huge"
+#~ msgid "Huge"
+#~ msgstr "மிகப் பெரியது"
+
+#, fuzzy
+#~| msgid "Very Huge"
+#~ msgid "Very Huge"
+#~ msgstr "மிகப்பெரியது"
+
+#, fuzzy
+#~| msgid "Oversized"
+#~ msgid "Oversized"
+#~ msgstr "அதிகமாக அளவிடப்பட்டது"
 
 #~ msgid "This module lets you configure the window decorations."
 #~ msgstr "சாளர விளிம்புகளை அமைக்க இக்கூறு உதவும்."

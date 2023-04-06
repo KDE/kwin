@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-31 02:17+0000\n"
+"POT-Creation-Date: 2023-04-06 02:04+0000\n"
 "PO-Revision-Date: 2023-02-09 22:30+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: Esperanto <kde-i18n-eo@kde.org>\n"
@@ -198,23 +198,23 @@ msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "Montri titolbreton butonajn konsiletojn"
 
-#: package/contents/ui/main.qml:41
+#: package/contents/ui/main.qml:29
 #, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "Fenestra randgrandeco:"
 
-#: package/contents/ui/main.qml:59
+#: package/contents/ui/main.qml:48
 #, kde-format
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
 msgstr "Agordi Titolbreton-Butonojn..."
 
-#: package/contents/ui/main.qml:64
+#: package/contents/ui/main.qml:54
 #, kde-format
-msgctxt "button text"
-msgid "Get New Window Decorations…"
-msgstr "Akiri novajn fenestrajn ornamojn..."
+msgctxt "@action:button as in, \"Get New Window Decorations\""
+msgid "Get New…"
+msgstr ""
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -222,49 +222,90 @@ msgid "Edit %1 Theme"
 msgstr "Redakti Etoson %1"
 
 #: utils.cpp:25
-#, kde-format
-msgid "No Borders"
-msgstr "Neniuj Randoj"
+#, fuzzy, kde-format
+#| msgid "No Side Borders"
+msgid "No Window Borders"
+msgstr "Neniuj Flankaj Randoj"
 
 #: utils.cpp:26
-#, kde-format
-msgid "No Side Borders"
+#, fuzzy, kde-format
+#| msgid "No Side Borders"
+msgid "No Side Window Borders"
 msgstr "Neniuj Flankaj Randoj"
 
 #: utils.cpp:27
-#, kde-format
-msgid "Tiny"
-msgstr "Eta"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Tiny Window Borders"
+msgstr "Fenestra randgrandeco:"
 
 #: utils.cpp:28
-#, kde-format
-msgid "Normal"
-msgstr "Normala"
+#, fuzzy, kde-format
+#| msgid "No Side Borders"
+msgid "Normal Window Borders"
+msgstr "Neniuj Flankaj Randoj"
 
 #: utils.cpp:29
-#, kde-format
-msgid "Large"
-msgstr "Granda"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Large Window Borders"
+msgstr "Fenestra randgrandeco:"
 
 #: utils.cpp:30
 #, kde-format
-msgid "Very Large"
-msgstr "Grandega"
+msgid "Very Large Window Borders"
+msgstr ""
 
 #: utils.cpp:31
-#, kde-format
-msgid "Huge"
-msgstr "Tre granda"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Huge Window Borders"
+msgstr "Fenestra randgrandeco:"
 
 #: utils.cpp:32
-#, kde-format
-msgid "Very Huge"
-msgstr "Tre grandega"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Very Huge Window Borders"
+msgstr "Fenestra randgrandeco:"
 
 #: utils.cpp:33
-#, kde-format
-msgid "Oversized"
-msgstr "Troigite grandega"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Oversized Window Borders"
+msgstr "Fenestra randgrandeco:"
+
+#~ msgctxt "button text"
+#~ msgid "Get New Window Decorations…"
+#~ msgstr "Akiri novajn fenestrajn ornamojn..."
+
+#~ msgid "No Borders"
+#~ msgstr "Neniuj Randoj"
+
+#~ msgid "Tiny"
+#~ msgstr "Eta"
+
+#~ msgid "Normal"
+#~ msgstr "Normala"
+
+#~ msgid "Large"
+#~ msgstr "Granda"
+
+#~ msgid "Very Large"
+#~ msgstr "Grandega"
+
+#~ msgid "Huge"
+#~ msgstr "Tre granda"
+
+#~ msgid "Very Huge"
+#~ msgstr "Tre grandega"
+
+#~ msgid "Oversized"
+#~ msgstr "Troigite grandega"
 
 #~ msgid "This module lets you configure the window decorations."
 #~ msgstr "Ĉi tiu modulo ebligas al vi agordi la fenestrajn ornamojn."

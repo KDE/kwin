@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-31 02:17+0000\n"
+"POT-Creation-Date: 2023-04-06 02:04+0000\n"
 "PO-Revision-Date: 2019-07-30 22:25+0300\n"
 "Last-Translator: Moo\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -183,7 +183,7 @@ msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "Rodyti antraštės juostos mygtukų paaiškinimus"
 
-#: package/contents/ui/main.qml:41
+#: package/contents/ui/main.qml:29
 #, fuzzy, kde-format
 #| msgctxt "combobox label"
 #| msgid "Window border size:"
@@ -191,7 +191,7 @@ msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "Lango rėmelio dydis:"
 
-#: package/contents/ui/main.qml:59
+#: package/contents/ui/main.qml:48
 #, fuzzy, kde-format
 #| msgctxt "tab label"
 #| msgid "Titlebar Buttons"
@@ -199,13 +199,11 @@ msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
 msgstr "Antraštės juostos mygtukai"
 
-#: package/contents/ui/main.qml:64
-#, fuzzy, kde-format
-#| msgctxt "button text"
-#| msgid "Get New Window Decorations..."
-msgctxt "button text"
-msgid "Get New Window Decorations…"
-msgstr "Gauti naujas langų dekoracijas..."
+#: package/contents/ui/main.qml:54
+#, kde-format
+msgctxt "@action:button as in, \"Get New Window Decorations\""
+msgid "Get New…"
+msgstr ""
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -213,49 +211,93 @@ msgid "Edit %1 Theme"
 msgstr "Taisyti %1 apipavidalinimą"
 
 #: utils.cpp:25
-#, kde-format
-msgid "No Borders"
-msgstr "Jokių rėmelių"
+#, fuzzy, kde-format
+#| msgid "No Side Borders"
+msgid "No Window Borders"
+msgstr "Jokių šoninių rėmelių"
 
 #: utils.cpp:26
-#, kde-format
-msgid "No Side Borders"
+#, fuzzy, kde-format
+#| msgid "No Side Borders"
+msgid "No Side Window Borders"
 msgstr "Jokių šoninių rėmelių"
 
 #: utils.cpp:27
-#, kde-format
-msgid "Tiny"
-msgstr "Mažytis"
+#, fuzzy, kde-format
+#| msgctxt "combobox label"
+#| msgid "Window border size:"
+msgid "Tiny Window Borders"
+msgstr "Lango rėmelio dydis:"
 
 #: utils.cpp:28
-#, kde-format
-msgid "Normal"
-msgstr "Normalus"
+#, fuzzy, kde-format
+#| msgid "No Side Borders"
+msgid "Normal Window Borders"
+msgstr "Jokių šoninių rėmelių"
 
 #: utils.cpp:29
-#, kde-format
-msgid "Large"
-msgstr "Didelis"
+#, fuzzy, kde-format
+#| msgctxt "combobox label"
+#| msgid "Window border size:"
+msgid "Large Window Borders"
+msgstr "Lango rėmelio dydis:"
 
 #: utils.cpp:30
 #, kde-format
-msgid "Very Large"
-msgstr "Labai didelis"
+msgid "Very Large Window Borders"
+msgstr ""
 
 #: utils.cpp:31
-#, kde-format
-msgid "Huge"
-msgstr "Didžiulis"
+#, fuzzy, kde-format
+#| msgctxt "combobox label"
+#| msgid "Window border size:"
+msgid "Huge Window Borders"
+msgstr "Lango rėmelio dydis:"
 
 #: utils.cpp:32
-#, kde-format
-msgid "Very Huge"
-msgstr "Milžiniškas"
+#, fuzzy, kde-format
+#| msgctxt "combobox label"
+#| msgid "Window border size:"
+msgid "Very Huge Window Borders"
+msgstr "Lango rėmelio dydis:"
 
 #: utils.cpp:33
-#, kde-format
-msgid "Oversized"
-msgstr "Per didelis"
+#, fuzzy, kde-format
+#| msgctxt "combobox label"
+#| msgid "Window border size:"
+msgid "Oversized Window Borders"
+msgstr "Lango rėmelio dydis:"
+
+#, fuzzy
+#~| msgctxt "button text"
+#~| msgid "Get New Window Decorations..."
+#~ msgctxt "button text"
+#~ msgid "Get New Window Decorations…"
+#~ msgstr "Gauti naujas langų dekoracijas..."
+
+#~ msgid "No Borders"
+#~ msgstr "Jokių rėmelių"
+
+#~ msgid "Tiny"
+#~ msgstr "Mažytis"
+
+#~ msgid "Normal"
+#~ msgstr "Normalus"
+
+#~ msgid "Large"
+#~ msgstr "Didelis"
+
+#~ msgid "Very Large"
+#~ msgstr "Labai didelis"
+
+#~ msgid "Huge"
+#~ msgstr "Didžiulis"
+
+#~ msgid "Very Huge"
+#~ msgstr "Milžiniškas"
+
+#~ msgid "Oversized"
+#~ msgstr "Per didelis"
 
 #~ msgid "This module lets you configure the window decorations."
 #~ msgstr "Šis modulis leidžia jums konfigūruoti langų dekoracijas."

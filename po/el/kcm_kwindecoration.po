@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-31 02:17+0000\n"
+"POT-Creation-Date: 2023-04-06 02:04+0000\n"
 "PO-Revision-Date: 2015-11-18 16:23+0200\n"
 "Last-Translator: Dimitris Kardarakos <dimkard@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -191,26 +191,25 @@ msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "Εμ&φάνιση υποδείξεων κουμπιών παραθύρων"
 
-#: package/contents/ui/main.qml:41
+#: package/contents/ui/main.qml:29
 #, fuzzy, kde-format
 #| msgid "Border size:"
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "Μέγεθος περιγράμματος:"
 
-#: package/contents/ui/main.qml:59
+#: package/contents/ui/main.qml:48
 #, fuzzy, kde-format
 #| msgid "Titlebar"
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
 msgstr "Γραμμή τίτλου"
 
-#: package/contents/ui/main.qml:64
-#, fuzzy, kde-format
-#| msgid "Get New Decorations..."
-msgctxt "button text"
-msgid "Get New Window Decorations…"
-msgstr "Λήψη νέων διακοσμήσεων παραθύρου..."
+#: package/contents/ui/main.qml:54
+#, kde-format
+msgctxt "@action:button as in, \"Get New Window Decorations\""
+msgid "Get New…"
+msgstr ""
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -220,65 +219,112 @@ msgstr ""
 #: utils.cpp:25
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Border size:"
-#| msgid "No Borders"
-msgid "No Borders"
-msgstr "Χωρίς περιγράμματα"
+#| msgid "No Side Borders"
+msgid "No Window Borders"
+msgstr "Χωρίς πλευρικά περιγράμματα"
 
 #: utils.cpp:26
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Border size:"
 #| msgid "No Side Borders"
-msgid "No Side Borders"
+msgid "No Side Window Borders"
 msgstr "Χωρίς πλευρικά περιγράμματα"
 
 #: utils.cpp:27
 #, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Tiny"
-msgid "Tiny"
-msgstr "Μικροσκοπικό"
+#| msgid "Border size:"
+msgid "Tiny Window Borders"
+msgstr "Μέγεθος περιγράμματος:"
 
 #: utils.cpp:28
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Border size:"
-#| msgid "Normal"
-msgid "Normal"
-msgstr "Κανονικό"
+#| msgid "No Side Borders"
+msgid "Normal Window Borders"
+msgstr "Χωρίς πλευρικά περιγράμματα"
 
 #: utils.cpp:29
 #, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Large"
-msgid "Large"
-msgstr "Μεγάλο"
+#| msgid "Border size:"
+msgid "Large Window Borders"
+msgstr "Μέγεθος περιγράμματος:"
 
 #: utils.cpp:30
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Very Large"
-msgid "Very Large"
-msgstr "Πολύ μεγάλο"
+#, kde-format
+msgid "Very Large Window Borders"
+msgstr ""
 
 #: utils.cpp:31
 #, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Huge"
-msgid "Huge"
-msgstr "Τεράστιο"
+#| msgid "Border size:"
+msgid "Huge Window Borders"
+msgstr "Μέγεθος περιγράμματος:"
 
 #: utils.cpp:32
 #, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Very Huge"
-msgid "Very Huge"
-msgstr "Τερατώδες"
+#| msgid "Border size:"
+msgid "Very Huge Window Borders"
+msgstr "Μέγεθος περιγράμματος:"
 
 #: utils.cpp:33
 #, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Oversized"
-msgid "Oversized"
-msgstr "Υπερφυσικό"
+#| msgid "Border size:"
+msgid "Oversized Window Borders"
+msgstr "Μέγεθος περιγράμματος:"
+
+#, fuzzy
+#~| msgid "Get New Decorations..."
+#~ msgctxt "button text"
+#~ msgid "Get New Window Decorations…"
+#~ msgstr "Λήψη νέων διακοσμήσεων παραθύρου..."
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "No Borders"
+#~ msgid "No Borders"
+#~ msgstr "Χωρίς περιγράμματα"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Tiny"
+#~ msgid "Tiny"
+#~ msgstr "Μικροσκοπικό"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Normal"
+#~ msgid "Normal"
+#~ msgstr "Κανονικό"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Large"
+#~ msgid "Large"
+#~ msgstr "Μεγάλο"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Very Large"
+#~ msgid "Very Large"
+#~ msgstr "Πολύ μεγάλο"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Huge"
+#~ msgid "Huge"
+#~ msgstr "Τεράστιο"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Very Huge"
+#~ msgid "Very Huge"
+#~ msgstr "Τερατώδες"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Oversized"
+#~ msgid "Oversized"
+#~ msgstr "Υπερφυσικό"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-31 02:17+0000\n"
+"POT-Creation-Date: 2023-04-06 02:04+0000\n"
 "PO-Revision-Date: 2023-02-06 15:10+0100\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -202,23 +202,23 @@ msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "Mostra i suggerimenti per i pulsanti della barra del titolo"
 
-#: package/contents/ui/main.qml:41
+#: package/contents/ui/main.qml:29
 #, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "Dimensione del bordo della finestra:"
 
-#: package/contents/ui/main.qml:59
+#: package/contents/ui/main.qml:48
 #, kde-format
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
 msgstr "Configura i pulsanti della barra del titolo..."
 
-#: package/contents/ui/main.qml:64
+#: package/contents/ui/main.qml:54
 #, kde-format
-msgctxt "button text"
-msgid "Get New Window Decorations…"
-msgstr "Ottieni nuove decorazioni delle finestre..."
+msgctxt "@action:button as in, \"Get New Window Decorations\""
+msgid "Get New…"
+msgstr ""
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -226,49 +226,90 @@ msgid "Edit %1 Theme"
 msgstr "Modifica tema %1"
 
 #: utils.cpp:25
-#, kde-format
-msgid "No Borders"
-msgstr "Nessun bordo"
+#, fuzzy, kde-format
+#| msgid "No Side Borders"
+msgid "No Window Borders"
+msgstr "Nessun bordo laterale"
 
 #: utils.cpp:26
-#, kde-format
-msgid "No Side Borders"
+#, fuzzy, kde-format
+#| msgid "No Side Borders"
+msgid "No Side Window Borders"
 msgstr "Nessun bordo laterale"
 
 #: utils.cpp:27
-#, kde-format
-msgid "Tiny"
-msgstr "Sottile"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Tiny Window Borders"
+msgstr "Dimensione del bordo della finestra:"
 
 #: utils.cpp:28
-#, kde-format
-msgid "Normal"
-msgstr "Normale"
+#, fuzzy, kde-format
+#| msgid "No Side Borders"
+msgid "Normal Window Borders"
+msgstr "Nessun bordo laterale"
 
 #: utils.cpp:29
-#, kde-format
-msgid "Large"
-msgstr "Spesso"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Large Window Borders"
+msgstr "Dimensione del bordo della finestra:"
 
 #: utils.cpp:30
 #, kde-format
-msgid "Very Large"
-msgstr "Molto spesso"
+msgid "Very Large Window Borders"
+msgstr ""
 
 #: utils.cpp:31
-#, kde-format
-msgid "Huge"
-msgstr "Enorme"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Huge Window Borders"
+msgstr "Dimensione del bordo della finestra:"
 
 #: utils.cpp:32
-#, kde-format
-msgid "Very Huge"
-msgstr "Gigantesco"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Very Huge Window Borders"
+msgstr "Dimensione del bordo della finestra:"
 
 #: utils.cpp:33
-#, kde-format
-msgid "Oversized"
-msgstr "Fuori misura"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Oversized Window Borders"
+msgstr "Dimensione del bordo della finestra:"
+
+#~ msgctxt "button text"
+#~ msgid "Get New Window Decorations…"
+#~ msgstr "Ottieni nuove decorazioni delle finestre..."
+
+#~ msgid "No Borders"
+#~ msgstr "Nessun bordo"
+
+#~ msgid "Tiny"
+#~ msgstr "Sottile"
+
+#~ msgid "Normal"
+#~ msgstr "Normale"
+
+#~ msgid "Large"
+#~ msgstr "Spesso"
+
+#~ msgid "Very Large"
+#~ msgstr "Molto spesso"
+
+#~ msgid "Huge"
+#~ msgstr "Enorme"
+
+#~ msgid "Very Huge"
+#~ msgstr "Gigantesco"
+
+#~ msgid "Oversized"
+#~ msgstr "Fuori misura"
 
 #~ msgid "This module lets you configure the window decorations."
 #~ msgstr ""

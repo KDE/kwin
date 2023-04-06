@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-31 02:17+0000\n"
+"POT-Creation-Date: 2023-04-06 02:04+0000\n"
 "PO-Revision-Date: 2023-03-06 13:29+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -199,23 +199,23 @@ msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "Näytä otsikkopalkkipainikkeiden työkaluvihjeet"
 
-#: package/contents/ui/main.qml:41
+#: package/contents/ui/main.qml:29
 #, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "Ikkunareunuksen koko:"
 
-#: package/contents/ui/main.qml:59
+#: package/contents/ui/main.qml:48
 #, kde-format
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
 msgstr "Otsikkopalkin painikkeiden asetukset…"
 
-#: package/contents/ui/main.qml:64
+#: package/contents/ui/main.qml:54
 #, kde-format
-msgctxt "button text"
-msgid "Get New Window Decorations…"
-msgstr "Hae uusia ikkunakehyksiä…"
+msgctxt "@action:button as in, \"Get New Window Decorations\""
+msgid "Get New…"
+msgstr ""
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -223,49 +223,90 @@ msgid "Edit %1 Theme"
 msgstr "Muokkaa teemaa %1"
 
 #: utils.cpp:25
-#, kde-format
-msgid "No Borders"
-msgstr "Ei reunuksia"
+#, fuzzy, kde-format
+#| msgid "No Side Borders"
+msgid "No Window Borders"
+msgstr "Ei sivureunuksia"
 
 #: utils.cpp:26
-#, kde-format
-msgid "No Side Borders"
+#, fuzzy, kde-format
+#| msgid "No Side Borders"
+msgid "No Side Window Borders"
 msgstr "Ei sivureunuksia"
 
 #: utils.cpp:27
-#, kde-format
-msgid "Tiny"
-msgstr "Pieni"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Tiny Window Borders"
+msgstr "Ikkunareunuksen koko:"
 
 #: utils.cpp:28
-#, kde-format
-msgid "Normal"
-msgstr "Tavallinen"
+#, fuzzy, kde-format
+#| msgid "No Side Borders"
+msgid "Normal Window Borders"
+msgstr "Ei sivureunuksia"
 
 #: utils.cpp:29
-#, kde-format
-msgid "Large"
-msgstr "Suuri"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Large Window Borders"
+msgstr "Ikkunareunuksen koko:"
 
 #: utils.cpp:30
 #, kde-format
-msgid "Very Large"
-msgstr "Hyvin suuri"
+msgid "Very Large Window Borders"
+msgstr ""
 
 #: utils.cpp:31
-#, kde-format
-msgid "Huge"
-msgstr "Valtava"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Huge Window Borders"
+msgstr "Ikkunareunuksen koko:"
 
 #: utils.cpp:32
-#, kde-format
-msgid "Very Huge"
-msgstr "Aivan valtava"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Very Huge Window Borders"
+msgstr "Ikkunareunuksen koko:"
 
 #: utils.cpp:33
-#, kde-format
-msgid "Oversized"
-msgstr "Ylisuuri"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Oversized Window Borders"
+msgstr "Ikkunareunuksen koko:"
+
+#~ msgctxt "button text"
+#~ msgid "Get New Window Decorations…"
+#~ msgstr "Hae uusia ikkunakehyksiä…"
+
+#~ msgid "No Borders"
+#~ msgstr "Ei reunuksia"
+
+#~ msgid "Tiny"
+#~ msgstr "Pieni"
+
+#~ msgid "Normal"
+#~ msgstr "Tavallinen"
+
+#~ msgid "Large"
+#~ msgstr "Suuri"
+
+#~ msgid "Very Large"
+#~ msgstr "Hyvin suuri"
+
+#~ msgid "Huge"
+#~ msgstr "Valtava"
+
+#~ msgid "Very Huge"
+#~ msgstr "Aivan valtava"
+
+#~ msgid "Oversized"
+#~ msgstr "Ylisuuri"
 
 #~ msgid "This module lets you configure the window decorations."
 #~ msgstr "Tässä voit asettaa ikkunakehykset."

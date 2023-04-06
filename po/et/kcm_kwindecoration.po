@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-31 02:17+0000\n"
+"POT-Creation-Date: 2023-04-06 02:04+0000\n"
 "PO-Revision-Date: 2019-11-01 16:00+0200\n"
 "Last-Translator: Marek Laane <qiilaq69@gmail.com>\n"
 "Language-Team: Estonian <kde-et@lists.linux.ee>\n"
@@ -181,14 +181,14 @@ msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "Tiitliriba nuppudel vihjete näitamine"
 
-#: package/contents/ui/main.qml:41
+#: package/contents/ui/main.qml:29
 #, fuzzy, kde-format
 #| msgid "Border size:"
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "Piirde suurus:"
 
-#: package/contents/ui/main.qml:59
+#: package/contents/ui/main.qml:48
 #, fuzzy, kde-format
 #| msgctxt "tab label"
 #| msgid "Titlebar Buttons"
@@ -196,13 +196,11 @@ msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
 msgstr "Tiitliriba nupud"
 
-#: package/contents/ui/main.qml:64
-#, fuzzy, kde-format
-#| msgctxt "button text"
-#| msgid "Get New Window Decorations..."
-msgctxt "button text"
-msgid "Get New Window Decorations…"
-msgstr "Hangi uusi aknadekoratsioone ..."
+#: package/contents/ui/main.qml:54
+#, kde-format
+msgctxt "@action:button as in, \"Get New Window Decorations\""
+msgid "Get New…"
+msgstr ""
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -210,49 +208,88 @@ msgid "Edit %1 Theme"
 msgstr "Muuda teemat %1"
 
 #: utils.cpp:25
-#, kde-format
-msgid "No Borders"
-msgstr "Piireteta"
+#, fuzzy, kde-format
+#| msgid "No Side Borders"
+msgid "No Window Borders"
+msgstr "Külgpiireteta"
 
 #: utils.cpp:26
-#, kde-format
-msgid "No Side Borders"
+#, fuzzy, kde-format
+#| msgid "No Side Borders"
+msgid "No Side Window Borders"
 msgstr "Külgpiireteta"
 
 #: utils.cpp:27
-#, kde-format
-msgid "Tiny"
-msgstr "Tilluke"
+#, fuzzy, kde-format
+#| msgid "Border size:"
+msgid "Tiny Window Borders"
+msgstr "Piirde suurus:"
 
 #: utils.cpp:28
-#, kde-format
-msgid "Normal"
-msgstr "Normaalne"
+#, fuzzy, kde-format
+#| msgid "No Side Borders"
+msgid "Normal Window Borders"
+msgstr "Külgpiireteta"
 
 #: utils.cpp:29
-#, kde-format
-msgid "Large"
-msgstr "Suur"
+#, fuzzy, kde-format
+#| msgid "Border size:"
+msgid "Large Window Borders"
+msgstr "Piirde suurus:"
 
 #: utils.cpp:30
 #, kde-format
-msgid "Very Large"
-msgstr "Väga suur"
+msgid "Very Large Window Borders"
+msgstr ""
 
 #: utils.cpp:31
-#, kde-format
-msgid "Huge"
-msgstr "Hiiglaslik"
+#, fuzzy, kde-format
+#| msgid "Border size:"
+msgid "Huge Window Borders"
+msgstr "Piirde suurus:"
 
 #: utils.cpp:32
-#, kde-format
-msgid "Very Huge"
-msgstr "Superhiiglaslik"
+#, fuzzy, kde-format
+#| msgid "Border size:"
+msgid "Very Huge Window Borders"
+msgstr "Piirde suurus:"
 
 #: utils.cpp:33
-#, kde-format
-msgid "Oversized"
-msgstr "Ülemõõduline"
+#, fuzzy, kde-format
+#| msgid "Border size:"
+msgid "Oversized Window Borders"
+msgstr "Piirde suurus:"
+
+#, fuzzy
+#~| msgctxt "button text"
+#~| msgid "Get New Window Decorations..."
+#~ msgctxt "button text"
+#~ msgid "Get New Window Decorations…"
+#~ msgstr "Hangi uusi aknadekoratsioone ..."
+
+#~ msgid "No Borders"
+#~ msgstr "Piireteta"
+
+#~ msgid "Tiny"
+#~ msgstr "Tilluke"
+
+#~ msgid "Normal"
+#~ msgstr "Normaalne"
+
+#~ msgid "Large"
+#~ msgstr "Suur"
+
+#~ msgid "Very Large"
+#~ msgstr "Väga suur"
+
+#~ msgid "Huge"
+#~ msgstr "Hiiglaslik"
+
+#~ msgid "Very Huge"
+#~ msgstr "Superhiiglaslik"
+
+#~ msgid "Oversized"
+#~ msgstr "Ülemõõduline"
 
 #~ msgid "This module lets you configure the window decorations."
 #~ msgstr "See moodul võimaldab seadistada aknadekoratsioone."

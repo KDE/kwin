@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-31 02:17+0000\n"
+"POT-Creation-Date: 2023-04-06 02:04+0000\n"
 "PO-Revision-Date: 2008-08-05 22:26+0200\n"
 "Last-Translator: Yannig Marchegay (Kokoyaya) <yannig@marchegay.org>\n"
 "Language-Team: Occitan (lengadocian) <ubuntu-l10n-oci@lists.ubuntu.com>\n"
@@ -183,23 +183,23 @@ msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "Botons"
 
-#: package/contents/ui/main.qml:41
+#: package/contents/ui/main.qml:29
 #, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr ""
 
-#: package/contents/ui/main.qml:59
+#: package/contents/ui/main.qml:48
 #, fuzzy, kde-format
 #| msgid "Buttons"
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
 msgstr "Botons"
 
-#: package/contents/ui/main.qml:64
+#: package/contents/ui/main.qml:54
 #, kde-format
-msgctxt "button text"
-msgid "Get New Window Decorations…"
+msgctxt "@action:button as in, \"Get New Window Decorations\""
+msgid "Get New…"
 msgstr ""
 
 #: package/contents/ui/Themes.qml:92
@@ -209,55 +209,83 @@ msgstr ""
 
 #: utils.cpp:25
 #, kde-format
-msgid "No Borders"
+msgid "No Window Borders"
 msgstr ""
 
 #: utils.cpp:26
 #, kde-format
-msgid "No Side Borders"
+msgid "No Side Window Borders"
 msgstr ""
 
 #: utils.cpp:27
-#, fuzzy, kde-format
-#| msgid "Tiny"
-msgid "Tiny"
-msgstr "Minuscul"
+#, kde-format
+msgid "Tiny Window Borders"
+msgstr ""
 
 #: utils.cpp:28
-#, fuzzy, kde-format
-#| msgid "Normal"
-msgid "Normal"
-msgstr "Normal"
+#, kde-format
+msgid "Normal Window Borders"
+msgstr ""
 
 #: utils.cpp:29
-#, fuzzy, kde-format
-#| msgid "Large"
-msgid "Large"
-msgstr "Grand"
+#, kde-format
+msgid "Large Window Borders"
+msgstr ""
 
 #: utils.cpp:30
-#, fuzzy, kde-format
-#| msgid "Very Large"
-msgid "Very Large"
-msgstr "Fòrt bèl"
+#, kde-format
+msgid "Very Large Window Borders"
+msgstr ""
 
 #: utils.cpp:31
-#, fuzzy, kde-format
-#| msgid "Very Large"
-msgid "Huge"
-msgstr "Fòrt bèl"
+#, kde-format
+msgid "Huge Window Borders"
+msgstr ""
 
 #: utils.cpp:32
-#, fuzzy, kde-format
-#| msgid "Very Large"
-msgid "Very Huge"
-msgstr "Fòrt bèl"
+#, kde-format
+msgid "Very Huge Window Borders"
+msgstr ""
 
 #: utils.cpp:33
-#, fuzzy, kde-format
-#| msgid "Resize"
-msgid "Oversized"
-msgstr "Redimensionar"
+#, kde-format
+msgid "Oversized Window Borders"
+msgstr ""
+
+#, fuzzy
+#~| msgid "Tiny"
+#~ msgid "Tiny"
+#~ msgstr "Minuscul"
+
+#, fuzzy
+#~| msgid "Normal"
+#~ msgid "Normal"
+#~ msgstr "Normal"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgid "Large"
+#~ msgstr "Grand"
+
+#, fuzzy
+#~| msgid "Very Large"
+#~ msgid "Very Large"
+#~ msgstr "Fòrt bèl"
+
+#, fuzzy
+#~| msgid "Very Large"
+#~ msgid "Huge"
+#~ msgstr "Fòrt bèl"
+
+#, fuzzy
+#~| msgid "Very Large"
+#~ msgid "Very Huge"
+#~ msgstr "Fòrt bèl"
+
+#, fuzzy
+#~| msgid "Resize"
+#~ msgid "Oversized"
+#~ msgstr "Redimensionar"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

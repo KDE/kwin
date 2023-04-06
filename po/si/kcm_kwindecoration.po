@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-31 02:17+0000\n"
+"POT-Creation-Date: 2023-04-06 02:04+0000\n"
 "PO-Revision-Date: 2009-11-12 00:07+0530\n"
 "Last-Translator: Danishka Navin <danishka@gmail.com>\n"
 "Language-Team: American English <danishka@gmail.com>\n"
@@ -180,26 +180,25 @@ msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "කවුළු බොත්තම් ටූල් ටිප් පෙන්වන්න (&S)"
 
-#: package/contents/ui/main.qml:41
+#: package/contents/ui/main.qml:29
 #, fuzzy, kde-format
 #| msgid "B&order size:"
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "දාර ප්‍රමාණය (&o): "
 
-#: package/contents/ui/main.qml:59
+#: package/contents/ui/main.qml:48
 #, fuzzy, kde-format
 #| msgid "Buttons"
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
 msgstr "බොත්තම්"
 
-#: package/contents/ui/main.qml:64
-#, fuzzy, kde-format
-#| msgid "&Window Decoration"
-msgctxt "button text"
-msgid "Get New Window Decorations…"
-msgstr "කවුළු සැරසීම (&W)"
+#: package/contents/ui/main.qml:54
+#, kde-format
+msgctxt "@action:button as in, \"Get New Window Decorations\""
+msgid "Get New…"
+msgstr ""
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -209,56 +208,101 @@ msgstr ""
 #: utils.cpp:25
 #, fuzzy, kde-format
 #| msgid "B&order size:"
-msgid "No Borders"
+msgid "No Window Borders"
 msgstr "දාර ප්‍රමාණය (&o): "
 
 #: utils.cpp:26
 #, fuzzy, kde-format
 #| msgid "B&order size:"
-msgid "No Side Borders"
+msgid "No Side Window Borders"
 msgstr "දාර ප්‍රමාණය (&o): "
 
 #: utils.cpp:27
 #, fuzzy, kde-format
-#| msgid "Tiny"
-msgid "Tiny"
-msgstr "කුඩා"
+#| msgid "B&order size:"
+msgid "Tiny Window Borders"
+msgstr "දාර ප්‍රමාණය (&o): "
 
 #: utils.cpp:28
 #, fuzzy, kde-format
-#| msgid "Normal"
-msgid "Normal"
-msgstr "සාමාන්‍ය"
+#| msgid "B&order size:"
+msgid "Normal Window Borders"
+msgstr "දාර ප්‍රමාණය (&o): "
 
 #: utils.cpp:29
 #, fuzzy, kde-format
-#| msgid "Large"
-msgid "Large"
-msgstr "විශාල"
+#| msgid "B&order size:"
+msgid "Large Window Borders"
+msgstr "දාර ප්‍රමාණය (&o): "
 
 #: utils.cpp:30
-#, fuzzy, kde-format
-#| msgid "Very Large"
-msgid "Very Large"
-msgstr "ඉතා විශාල"
+#, kde-format
+msgid "Very Large Window Borders"
+msgstr ""
 
 #: utils.cpp:31
 #, fuzzy, kde-format
-#| msgid "Huge"
-msgid "Huge"
-msgstr "විශාල"
+#| msgid "B&order size:"
+msgid "Huge Window Borders"
+msgstr "දාර ප්‍රමාණය (&o): "
 
 #: utils.cpp:32
 #, fuzzy, kde-format
-#| msgid "Very Huge"
-msgid "Very Huge"
-msgstr "ඉතාම විශාල"
+#| msgid "B&order size:"
+msgid "Very Huge Window Borders"
+msgstr "දාර ප්‍රමාණය (&o): "
 
 #: utils.cpp:33
 #, fuzzy, kde-format
-#| msgid "Oversized"
-msgid "Oversized"
-msgstr "අධිප්‍රමාණිත"
+#| msgid "B&order size:"
+msgid "Oversized Window Borders"
+msgstr "දාර ප්‍රමාණය (&o): "
+
+#, fuzzy
+#~| msgid "&Window Decoration"
+#~ msgctxt "button text"
+#~ msgid "Get New Window Decorations…"
+#~ msgstr "කවුළු සැරසීම (&W)"
+
+#, fuzzy
+#~| msgid "B&order size:"
+#~ msgid "No Borders"
+#~ msgstr "දාර ප්‍රමාණය (&o): "
+
+#, fuzzy
+#~| msgid "Tiny"
+#~ msgid "Tiny"
+#~ msgstr "කුඩා"
+
+#, fuzzy
+#~| msgid "Normal"
+#~ msgid "Normal"
+#~ msgstr "සාමාන්‍ය"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgid "Large"
+#~ msgstr "විශාල"
+
+#, fuzzy
+#~| msgid "Very Large"
+#~ msgid "Very Large"
+#~ msgstr "ඉතා විශාල"
+
+#, fuzzy
+#~| msgid "Huge"
+#~ msgid "Huge"
+#~ msgstr "විශාල"
+
+#, fuzzy
+#~| msgid "Very Huge"
+#~ msgid "Very Huge"
+#~ msgstr "ඉතාම විශාල"
+
+#, fuzzy
+#~| msgid "Oversized"
+#~ msgid "Oversized"
+#~ msgstr "අධිප්‍රමාණිත"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

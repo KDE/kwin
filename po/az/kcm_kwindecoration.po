@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-31 02:17+0000\n"
+"POT-Creation-Date: 2023-04-06 02:04+0000\n"
 "PO-Revision-Date: 2021-06-10 11:34+0400\n"
 "Last-Translator: Kheyyam Gojayev <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -195,13 +195,13 @@ msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "Başlıq düyməsi köməkçi bildirişlərini göstərmək"
 
-#: package/contents/ui/main.qml:41
+#: package/contents/ui/main.qml:29
 #, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "Pəncərə çərçivəsinin ölçüsü:"
 
-#: package/contents/ui/main.qml:59
+#: package/contents/ui/main.qml:48
 #, fuzzy, kde-format
 #| msgctxt "tab label"
 #| msgid "Titlebar Buttons"
@@ -209,13 +209,11 @@ msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
 msgstr "Başlıq paneli düymələri"
 
-#: package/contents/ui/main.qml:64
-#, fuzzy, kde-format
-#| msgctxt "button text"
-#| msgid "Get New Window Decorations..."
-msgctxt "button text"
-msgid "Get New Window Decorations…"
-msgstr "Yeni Pəncərə Dekorasiyaları Almaq..."
+#: package/contents/ui/main.qml:54
+#, kde-format
+msgctxt "@action:button as in, \"Get New Window Decorations\""
+msgid "Get New…"
+msgstr ""
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -223,49 +221,93 @@ msgid "Edit %1 Theme"
 msgstr "%1 mövzusuna düzəliş etmək"
 
 #: utils.cpp:25
-#, kde-format
-msgid "No Borders"
-msgstr "Kənar çərçivələrsiz"
+#, fuzzy, kde-format
+#| msgid "No Side Borders"
+msgid "No Window Borders"
+msgstr "Kənar çərçivələri yoxdur"
 
 #: utils.cpp:26
-#, kde-format
-msgid "No Side Borders"
+#, fuzzy, kde-format
+#| msgid "No Side Borders"
+msgid "No Side Window Borders"
 msgstr "Kənar çərçivələri yoxdur"
 
 #: utils.cpp:27
-#, kde-format
-msgid "Tiny"
-msgstr "İncə"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Tiny Window Borders"
+msgstr "Pəncərə çərçivəsinin ölçüsü:"
 
 #: utils.cpp:28
-#, kde-format
-msgid "Normal"
-msgstr "Normal"
+#, fuzzy, kde-format
+#| msgid "No Side Borders"
+msgid "Normal Window Borders"
+msgstr "Kənar çərçivələri yoxdur"
 
 #: utils.cpp:29
-#, kde-format
-msgid "Large"
-msgstr "Geniş"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Large Window Borders"
+msgstr "Pəncərə çərçivəsinin ölçüsü:"
 
 #: utils.cpp:30
 #, kde-format
-msgid "Very Large"
-msgstr "Çox geniş"
+msgid "Very Large Window Borders"
+msgstr ""
 
 #: utils.cpp:31
-#, kde-format
-msgid "Huge"
-msgstr "Nəhəng"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Huge Window Borders"
+msgstr "Pəncərə çərçivəsinin ölçüsü:"
 
 #: utils.cpp:32
-#, kde-format
-msgid "Very Huge"
-msgstr "Çox nəhəng"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Very Huge Window Borders"
+msgstr "Pəncərə çərçivəsinin ölçüsü:"
 
 #: utils.cpp:33
-#, kde-format
-msgid "Oversized"
-msgstr "Ən geniş"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Oversized Window Borders"
+msgstr "Pəncərə çərçivəsinin ölçüsü:"
+
+#, fuzzy
+#~| msgctxt "button text"
+#~| msgid "Get New Window Decorations..."
+#~ msgctxt "button text"
+#~ msgid "Get New Window Decorations…"
+#~ msgstr "Yeni Pəncərə Dekorasiyaları Almaq..."
+
+#~ msgid "No Borders"
+#~ msgstr "Kənar çərçivələrsiz"
+
+#~ msgid "Tiny"
+#~ msgstr "İncə"
+
+#~ msgid "Normal"
+#~ msgstr "Normal"
+
+#~ msgid "Large"
+#~ msgstr "Geniş"
+
+#~ msgid "Very Large"
+#~ msgstr "Çox geniş"
+
+#~ msgid "Huge"
+#~ msgstr "Nəhəng"
+
+#~ msgid "Very Huge"
+#~ msgstr "Çox nəhəng"
+
+#~ msgid "Oversized"
+#~ msgstr "Ən geniş"
 
 #~ msgid "This module lets you configure the window decorations."
 #~ msgstr "Bu modul pəncərə dekorasiyasını ayarlamağa imkan verir"

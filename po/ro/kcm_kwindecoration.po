@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-31 02:17+0000\n"
+"POT-Creation-Date: 2023-04-06 02:04+0000\n"
 "PO-Revision-Date: 2022-05-05 12:48+0100\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -190,13 +190,13 @@ msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "Arată indicii pentru butoanele barei de titlu"
 
-#: package/contents/ui/main.qml:41
+#: package/contents/ui/main.qml:29
 #, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "Dimensiunea conturului ferestrei:"
 
-#: package/contents/ui/main.qml:59
+#: package/contents/ui/main.qml:48
 #, fuzzy, kde-format
 #| msgctxt "tab label"
 #| msgid "Titlebar Buttons"
@@ -204,13 +204,11 @@ msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
 msgstr "Butoane pe bara de titlu"
 
-#: package/contents/ui/main.qml:64
-#, fuzzy, kde-format
-#| msgctxt "button text"
-#| msgid "Get New Window Decorations..."
-msgctxt "button text"
-msgid "Get New Window Decorations…"
-msgstr "Obține decorații de fereastră noi..."
+#: package/contents/ui/main.qml:54
+#, kde-format
+msgctxt "@action:button as in, \"Get New Window Decorations\""
+msgid "Get New…"
+msgstr ""
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -218,49 +216,93 @@ msgid "Edit %1 Theme"
 msgstr "Modifică tematica %1"
 
 #: utils.cpp:25
-#, kde-format
-msgid "No Borders"
-msgstr "Fără contur"
+#, fuzzy, kde-format
+#| msgid "No Side Borders"
+msgid "No Window Borders"
+msgstr "Fără contur lateral"
 
 #: utils.cpp:26
-#, kde-format
-msgid "No Side Borders"
+#, fuzzy, kde-format
+#| msgid "No Side Borders"
+msgid "No Side Window Borders"
 msgstr "Fără contur lateral"
 
 #: utils.cpp:27
-#, kde-format
-msgid "Tiny"
-msgstr "Minuscul"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Tiny Window Borders"
+msgstr "Dimensiunea conturului ferestrei:"
 
 #: utils.cpp:28
-#, kde-format
-msgid "Normal"
-msgstr "Normal"
+#, fuzzy, kde-format
+#| msgid "No Side Borders"
+msgid "Normal Window Borders"
+msgstr "Fără contur lateral"
 
 #: utils.cpp:29
-#, kde-format
-msgid "Large"
-msgstr "Mare"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Large Window Borders"
+msgstr "Dimensiunea conturului ferestrei:"
 
 #: utils.cpp:30
 #, kde-format
-msgid "Very Large"
-msgstr "Foarte mare"
+msgid "Very Large Window Borders"
+msgstr ""
 
 #: utils.cpp:31
-#, kde-format
-msgid "Huge"
-msgstr "Imens"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Huge Window Borders"
+msgstr "Dimensiunea conturului ferestrei:"
 
 #: utils.cpp:32
-#, kde-format
-msgid "Very Huge"
-msgstr "Foarte imens"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Very Huge Window Borders"
+msgstr "Dimensiunea conturului ferestrei:"
 
 #: utils.cpp:33
-#, kde-format
-msgid "Oversized"
-msgstr "Supradimensionat"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Oversized Window Borders"
+msgstr "Dimensiunea conturului ferestrei:"
+
+#, fuzzy
+#~| msgctxt "button text"
+#~| msgid "Get New Window Decorations..."
+#~ msgctxt "button text"
+#~ msgid "Get New Window Decorations…"
+#~ msgstr "Obține decorații de fereastră noi..."
+
+#~ msgid "No Borders"
+#~ msgstr "Fără contur"
+
+#~ msgid "Tiny"
+#~ msgstr "Minuscul"
+
+#~ msgid "Normal"
+#~ msgstr "Normal"
+
+#~ msgid "Large"
+#~ msgstr "Mare"
+
+#~ msgid "Very Large"
+#~ msgstr "Foarte mare"
+
+#~ msgid "Huge"
+#~ msgstr "Imens"
+
+#~ msgid "Very Huge"
+#~ msgstr "Foarte imens"
+
+#~ msgid "Oversized"
+#~ msgstr "Supradimensionat"
 
 #~ msgid "This module lets you configure the window decorations."
 #~ msgstr "Acest modul vă permite să configurați decorațiile ferestrelor."

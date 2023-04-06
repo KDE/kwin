@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-31 02:17+0000\n"
+"POT-Creation-Date: 2023-04-06 02:04+0000\n"
 "PO-Revision-Date: 2021-11-19 13:06+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -199,13 +199,13 @@ msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "Tippek megjelenítése a címsor gombjainál"
 
-#: package/contents/ui/main.qml:41
+#: package/contents/ui/main.qml:29
 #, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "Ablakszegély mérete:"
 
-#: package/contents/ui/main.qml:59
+#: package/contents/ui/main.qml:48
 #, fuzzy, kde-format
 #| msgctxt "tab label"
 #| msgid "Titlebar Buttons"
@@ -213,13 +213,11 @@ msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
 msgstr "Címsorgombok"
 
-#: package/contents/ui/main.qml:64
-#, fuzzy, kde-format
-#| msgctxt "button text"
-#| msgid "Get New Window Decorations..."
-msgctxt "button text"
-msgid "Get New Window Decorations…"
-msgstr "Új ablakdekorációk letöltése…"
+#: package/contents/ui/main.qml:54
+#, kde-format
+msgctxt "@action:button as in, \"Get New Window Decorations\""
+msgid "Get New…"
+msgstr ""
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -227,49 +225,93 @@ msgid "Edit %1 Theme"
 msgstr "A(z) %1 téma szerkesztése"
 
 #: utils.cpp:25
-#, kde-format
-msgid "No Borders"
-msgstr "Nincsenek szegélyek"
+#, fuzzy, kde-format
+#| msgid "No Side Borders"
+msgid "No Window Borders"
+msgstr "Nincsenek oldalszegélyek"
 
 #: utils.cpp:26
-#, kde-format
-msgid "No Side Borders"
+#, fuzzy, kde-format
+#| msgid "No Side Borders"
+msgid "No Side Window Borders"
 msgstr "Nincsenek oldalszegélyek"
 
 #: utils.cpp:27
-#, kde-format
-msgid "Tiny"
-msgstr "Apró"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Tiny Window Borders"
+msgstr "Ablakszegély mérete:"
 
 #: utils.cpp:28
-#, kde-format
-msgid "Normal"
-msgstr "Normál"
+#, fuzzy, kde-format
+#| msgid "No Side Borders"
+msgid "Normal Window Borders"
+msgstr "Nincsenek oldalszegélyek"
 
 #: utils.cpp:29
-#, kde-format
-msgid "Large"
-msgstr "Nagy"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Large Window Borders"
+msgstr "Ablakszegély mérete:"
 
 #: utils.cpp:30
 #, kde-format
-msgid "Very Large"
-msgstr "Nagyon nagy"
+msgid "Very Large Window Borders"
+msgstr ""
 
 #: utils.cpp:31
-#, kde-format
-msgid "Huge"
-msgstr "Hatalmas"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Huge Window Borders"
+msgstr "Ablakszegély mérete:"
 
 #: utils.cpp:32
-#, kde-format
-msgid "Very Huge"
-msgstr "Óriási"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Very Huge Window Borders"
+msgstr "Ablakszegély mérete:"
 
 #: utils.cpp:33
-#, kde-format
-msgid "Oversized"
-msgstr "Túlméretezett"
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Oversized Window Borders"
+msgstr "Ablakszegély mérete:"
+
+#, fuzzy
+#~| msgctxt "button text"
+#~| msgid "Get New Window Decorations..."
+#~ msgctxt "button text"
+#~ msgid "Get New Window Decorations…"
+#~ msgstr "Új ablakdekorációk letöltése…"
+
+#~ msgid "No Borders"
+#~ msgstr "Nincsenek szegélyek"
+
+#~ msgid "Tiny"
+#~ msgstr "Apró"
+
+#~ msgid "Normal"
+#~ msgstr "Normál"
+
+#~ msgid "Large"
+#~ msgstr "Nagy"
+
+#~ msgid "Very Large"
+#~ msgstr "Nagyon nagy"
+
+#~ msgid "Huge"
+#~ msgstr "Hatalmas"
+
+#~ msgid "Very Huge"
+#~ msgstr "Óriási"
+
+#~ msgid "Oversized"
+#~ msgstr "Túlméretezett"
 
 #~ msgid "This module lets you configure the window decorations."
 #~ msgstr "Ebben a modulban állíthatja be az ablakdekorációkat."

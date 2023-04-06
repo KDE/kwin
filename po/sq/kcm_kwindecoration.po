@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdebase-workspace\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-31 02:17+0000\n"
+"POT-Creation-Date: 2023-04-06 02:04+0000\n"
 "PO-Revision-Date: 2009-08-08 18:07+0000\n"
 "Last-Translator: Vilson Gjeci <vilsongjeci@gmail.com>\n"
 "Language-Team: Albanian <sq@li.org>\n"
@@ -182,25 +182,24 @@ msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "Butonat"
 
-#: package/contents/ui/main.qml:41
+#: package/contents/ui/main.qml:29
 #, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr ""
 
-#: package/contents/ui/main.qml:59
+#: package/contents/ui/main.qml:48
 #, fuzzy, kde-format
 #| msgid "Buttons"
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
 msgstr "Butonat"
 
-#: package/contents/ui/main.qml:64
-#, fuzzy, kde-format
-#| msgid "kcmkwindecoration"
-msgctxt "button text"
-msgid "Get New Window Decorations…"
-msgstr "kcmkwindecoration"
+#: package/contents/ui/main.qml:54
+#, kde-format
+msgctxt "@action:button as in, \"Get New Window Decorations\""
+msgid "Get New…"
+msgstr ""
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -209,49 +208,59 @@ msgstr ""
 
 #: utils.cpp:25
 #, kde-format
-msgid "No Borders"
+msgid "No Window Borders"
 msgstr ""
 
 #: utils.cpp:26
 #, kde-format
-msgid "No Side Borders"
+msgid "No Side Window Borders"
 msgstr ""
 
 #: utils.cpp:27
 #, kde-format
-msgid "Tiny"
+msgid "Tiny Window Borders"
 msgstr ""
 
 #: utils.cpp:28
 #, kde-format
-msgid "Normal"
+msgid "Normal Window Borders"
 msgstr ""
 
 #: utils.cpp:29
 #, kde-format
-msgid "Large"
+msgid "Large Window Borders"
 msgstr ""
 
 #: utils.cpp:30
 #, kde-format
-msgid "Very Large"
+msgid "Very Large Window Borders"
 msgstr ""
 
 #: utils.cpp:31
 #, kde-format
-msgid "Huge"
+msgid "Huge Window Borders"
 msgstr ""
 
 #: utils.cpp:32
 #, kde-format
-msgid "Very Huge"
+msgid "Very Huge Window Borders"
 msgstr ""
 
 #: utils.cpp:33
-#, fuzzy, kde-format
-#| msgid "Resize"
-msgid "Oversized"
-msgstr "Ripërmaso"
+#, kde-format
+msgid "Oversized Window Borders"
+msgstr ""
+
+#, fuzzy
+#~| msgid "kcmkwindecoration"
+#~ msgctxt "button text"
+#~ msgid "Get New Window Decorations…"
+#~ msgstr "kcmkwindecoration"
+
+#, fuzzy
+#~| msgid "Resize"
+#~ msgid "Oversized"
+#~ msgstr "Ripërmaso"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

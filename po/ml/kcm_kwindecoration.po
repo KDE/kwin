@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration trunk\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-31 02:17+0000\n"
+"POT-Creation-Date: 2023-04-06 02:04+0000\n"
 "PO-Revision-Date: 2019-12-12 22:21+0000\n"
 "Last-Translator: Vivek KJ Pazhedath <vivekkj2004@gmail.com>\n"
 "Language-Team: Swathanthra|സ്വതന്ത്ര Malayalam|മലയാളം Computing|കമ്പ്യൂട്ടിങ്ങ് <smc-"
@@ -179,23 +179,23 @@ msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "ജാലകത്തിന്റെ ബട്ടണുകളെക്കുറിച്ചുള്ള സൂചനകള്‍ &കാണിയ്ക്കുക"
 
-#: package/contents/ui/main.qml:41
+#: package/contents/ui/main.qml:29
 #, fuzzy, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "വക്കിന്റെ വലുപ്പം:"
 
-#: package/contents/ui/main.qml:59
+#: package/contents/ui/main.qml:48
 #, fuzzy, kde-format
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
 msgstr "ബട്ടണുകള്‍"
 
-#: package/contents/ui/main.qml:64
-#, fuzzy, kde-format
-msgctxt "button text"
-msgid "Get New Window Decorations…"
-msgstr "പുതിയ അലങ്കാരങ്ങള്‍ നേടുക"
+#: package/contents/ui/main.qml:54
+#, kde-format
+msgctxt "@action:button as in, \"Get New Window Decorations\""
+msgid "Get New…"
+msgstr ""
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -204,48 +204,85 @@ msgstr ""
 
 #: utils.cpp:25
 #, fuzzy, kde-format
-msgid "No Borders"
+msgid "No Window Borders"
 msgstr "വക്കിന്റെ വലുപ്പം:"
 
 #: utils.cpp:26
 #, fuzzy, kde-format
-msgid "No Side Borders"
+msgid "No Side Window Borders"
 msgstr "വക്കിന്റെ വലുപ്പം:"
 
 #: utils.cpp:27
 #, fuzzy, kde-format
-msgid "Tiny"
-msgstr "ചെറുത്"
+msgid "Tiny Window Borders"
+msgstr "വക്കിന്റെ വലുപ്പം:"
 
 #: utils.cpp:28
 #, fuzzy, kde-format
-msgid "Normal"
-msgstr "സാധാരണമായത്"
+msgid "Normal Window Borders"
+msgstr "വക്കിന്റെ വലുപ്പം:"
 
 #: utils.cpp:29
 #, fuzzy, kde-format
-msgid "Large"
-msgstr "വലിയത്"
+msgid "Large Window Borders"
+msgstr "വക്കിന്റെ വലുപ്പം:"
 
 #: utils.cpp:30
-#, fuzzy, kde-format
-msgid "Very Large"
-msgstr "വളരെ വലുത്"
+#, kde-format
+msgid "Very Large Window Borders"
+msgstr ""
 
 #: utils.cpp:31
 #, fuzzy, kde-format
-msgid "Huge"
-msgstr "ഭീമമായത്"
+msgid "Huge Window Borders"
+msgstr "വക്കിന്റെ വലുപ്പം:"
 
 #: utils.cpp:32
 #, fuzzy, kde-format
-msgid "Very Huge"
-msgstr "അതിഭീമമായത് "
+msgid "Very Huge Window Borders"
+msgstr "വക്കിന്റെ വലുപ്പം:"
 
 #: utils.cpp:33
 #, fuzzy, kde-format
-msgid "Oversized"
-msgstr "ബൃഹത്തായ"
+msgid "Oversized Window Borders"
+msgstr "വക്കിന്റെ വലുപ്പം:"
+
+#, fuzzy
+#~ msgctxt "button text"
+#~ msgid "Get New Window Decorations…"
+#~ msgstr "പുതിയ അലങ്കാരങ്ങള്‍ നേടുക"
+
+#, fuzzy
+#~ msgid "No Borders"
+#~ msgstr "വക്കിന്റെ വലുപ്പം:"
+
+#, fuzzy
+#~ msgid "Tiny"
+#~ msgstr "ചെറുത്"
+
+#, fuzzy
+#~ msgid "Normal"
+#~ msgstr "സാധാരണമായത്"
+
+#, fuzzy
+#~ msgid "Large"
+#~ msgstr "വലിയത്"
+
+#, fuzzy
+#~ msgid "Very Large"
+#~ msgstr "വളരെ വലുത്"
+
+#, fuzzy
+#~ msgid "Huge"
+#~ msgstr "ഭീമമായത്"
+
+#, fuzzy
+#~ msgid "Very Huge"
+#~ msgstr "അതിഭീമമായത് "
+
+#, fuzzy
+#~ msgid "Oversized"
+#~ msgstr "ബൃഹത്തായ"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"
