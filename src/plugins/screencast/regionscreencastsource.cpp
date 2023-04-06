@@ -109,4 +109,15 @@ void RegionScreenCastSource::render(spa_data *spa, spa_video_format format)
     grabTexture(&offscreenTexture, spa, format);
 }
 
+uint RegionScreenCastSource::refreshRate() const
+{
+    uint ret = 0;
+    const auto allOutputs = workspace()->outputs();
+    for (auto output : allOutputs) {
+        if (output->geometry().intersects(m_region)) {
+            ret = std::max<uint>(ret, output->refreshRate());
+        }
+    }
+    return ret;
+}
 }

@@ -660,20 +660,19 @@ QVector<const spa_pod *> ScreenCastStream::buildFormats(bool fixate, char buffer
     const auto format = m_source->hasAlphaChannel() ? SPA_VIDEO_FORMAT_BGRA : SPA_VIDEO_FORMAT_BGR;
     spa_pod_builder podBuilder = SPA_POD_BUILDER_INIT(buffer, 2048);
     spa_fraction minFramerate = SPA_FRACTION(1, 1);
-    spa_fraction maxFramerate = SPA_FRACTION(25, 1);
-    spa_fraction defaultFramerate = SPA_FRACTION(0, 1);
+    spa_fraction maxFramerate = SPA_FRACTION(m_source->refreshRate() / 1000, 1);
 
     spa_rectangle resolution = SPA_RECTANGLE(uint32_t(m_resolution.width()), uint32_t(m_resolution.height()));
 
     QVector<const spa_pod *> params;
     params.reserve(fixate + m_hasDmaBuf + 1);
     if (fixate) {
-        params.append(buildFormat(&podBuilder, SPA_VIDEO_FORMAT_BGRA, &resolution, &defaultFramerate, &minFramerate, &maxFramerate, {m_dmabufParams->modifier}, SPA_POD_PROP_FLAG_MANDATORY));
+        params.append(buildFormat(&podBuilder, SPA_VIDEO_FORMAT_BGRA, &resolution, &maxFramerate, &minFramerate, &maxFramerate, {m_dmabufParams->modifier}, SPA_POD_PROP_FLAG_MANDATORY));
     }
     if (m_hasDmaBuf) {
-        params.append(buildFormat(&podBuilder, SPA_VIDEO_FORMAT_BGRA, &resolution, &defaultFramerate, &minFramerate, &maxFramerate, m_modifiers, SPA_POD_PROP_FLAG_MANDATORY | SPA_POD_PROP_FLAG_DONT_FIXATE));
+        params.append(buildFormat(&podBuilder, SPA_VIDEO_FORMAT_BGRA, &resolution, &maxFramerate, &minFramerate, &maxFramerate, m_modifiers, SPA_POD_PROP_FLAG_MANDATORY | SPA_POD_PROP_FLAG_DONT_FIXATE));
     }
-    params.append(buildFormat(&podBuilder, format, &resolution, &defaultFramerate, &minFramerate, &maxFramerate, {}, SPA_POD_PROP_FLAG_MANDATORY | SPA_POD_PROP_FLAG_DONT_FIXATE));
+    params.append(buildFormat(&podBuilder, format, &resolution, &maxFramerate, &minFramerate, &maxFramerate, {}, SPA_POD_PROP_FLAG_MANDATORY | SPA_POD_PROP_FLAG_DONT_FIXATE));
     return params;
 }
 

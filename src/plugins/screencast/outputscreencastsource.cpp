@@ -73,4 +73,9 @@ std::chrono::nanoseconds OutputScreenCastSource::clock() const
     return m_output->renderLoop()->lastPresentationTimestamp();
 }
 
+uint OutputScreenCastSource::refreshRate() const
+{
+    return m_output->refreshRate();
+}
+
 } // namespace KWin
