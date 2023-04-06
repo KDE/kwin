@@ -315,6 +315,10 @@ ScreenCastStream::ScreenCastStream(ScreenCastSource *source, QObject *parent)
     pwStreamEvents.remove_buffer = &ScreenCastStream::onStreamRemoveBuffer;
     pwStreamEvents.state_changed = &ScreenCastStream::onStreamStateChanged;
     pwStreamEvents.param_changed = &ScreenCastStream::onStreamParamChanged;
+
+    connect(&m_pendingFrame, &QTimer::timeout, this, [this] {
+        recordFrame(m_pendingDamages);
+    });
 }
 
 ScreenCastStream::~ScreenCastStream()
@@ -427,6 +431,19 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
     QRegion damagedRegion = _damagedRegion;
     Q_ASSERT(!m_stopped);
 
+    if (videoFormat.framerate.num != 0 && !m_lastSent.isNull()) {
+        auto frameInterval = (1000. * videoFormat.framerate.denom / videoFormat.framerate.num);
+        auto lastSentAgo = m_lastSent.msecsTo(QDateTime::currentDateTimeUtc());
+        if (lastSentAgo < frameInterval) {
+            m_pendingDamages |= damagedRegion;
+            if (!m_pendingFrame.isActive()) {
+                m_pendingFrame.start(frameInterval - lastSentAgo);
+            }
+            return;
+        }
+    }
+
+    m_pendingDamages = {};
     if (m_pendingBuffer) {
         qCWarning(KWIN_SCREENCAST) << "Dropping a screencast frame because the compositor is slow";
         return;
@@ -677,6 +694,10 @@ void ScreenCastStream::enqueue()
     m_pendingNotifier.reset();
 
     pw_stream_queue_buffer(pwStream, m_pendingBuffer);
+
+    if (m_pendingBuffer->buffer->datas[0].chunk->flags != SPA_CHUNK_FLAG_CORRUPTED) {
+        m_lastSent = QDateTime::currentDateTimeUtc();
+    }
 
     m_pendingBuffer = nullptr;
 }
