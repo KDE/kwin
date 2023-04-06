@@ -22,6 +22,7 @@ class OutputScreenCastSource : public ScreenCastSource
 public:
     explicit OutputScreenCastSource(Output *output, QObject *parent = nullptr);
 
+    uint refreshRate() const override;
     bool hasAlphaChannel() const override;
     QSize textureSize() const override;
     quint32 drmFormat() const override;

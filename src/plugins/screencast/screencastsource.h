@@ -23,6 +23,7 @@ class ScreenCastSource : public QObject
 public:
     explicit ScreenCastSource(QObject *parent = nullptr);
 
+    virtual uint refreshRate() const = 0;
     virtual bool hasAlphaChannel() const = 0;
     virtual quint32 drmFormat() const = 0;
     virtual QSize textureSize() const = 0;

@@ -26,6 +26,7 @@ public:
     quint32 drmFormat() const override;
     bool hasAlphaChannel() const override;
     QSize textureSize() const override;
+    uint refreshRate() const override;
 
     void render(GLFramebuffer *target) override;
     void render(spa_data *spa, spa_video_format format) override;
