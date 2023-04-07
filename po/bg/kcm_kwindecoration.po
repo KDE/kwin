@@ -9,14 +9,14 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-06 02:04+0000\n"
-"PO-Revision-Date: 2023-02-13 12:03+0100\n"
+"PO-Revision-Date: 2023-04-06 18:47+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 22.12.1\n"
+"X-Generator: Lokalize 22.12.3\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: declarative-plugin/buttonsmodel.cpp:53
@@ -210,7 +210,7 @@ msgstr "Конфигуриране на бутони на заглавната �
 #, kde-format
 msgctxt "@action:button as in, \"Get New Window Decorations\""
 msgid "Get New…"
-msgstr ""
+msgstr "Изтегляне на нови…"
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -218,111 +218,46 @@ msgid "Edit %1 Theme"
 msgstr "Редактиране на %1 тема"
 
 #: utils.cpp:25
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "No Window Borders"
-msgstr "Без странични граници"
+msgstr "Без рамки на прозорци"
 
 #: utils.cpp:26
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "No Side Window Borders"
-msgstr "Без странични граници"
+msgstr "Без странични рамки на прозорци"
 
 #: utils.cpp:27
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Tiny Window Borders"
-msgstr "Размер на границите на прозорец:"
+msgstr "Тесни рамки на прозорци"
 
 #: utils.cpp:28
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "Normal Window Borders"
-msgstr "Без странични граници"
+msgstr "Стандартни рамки на прозорци"
 
 #: utils.cpp:29
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Large Window Borders"
-msgstr "Размер на границите на прозорец:"
+msgstr "Големи рамки на прозорци"
 
 #: utils.cpp:30
 #, kde-format
 msgid "Very Large Window Borders"
-msgstr ""
+msgstr "Много широки рамки на прозорците"
 
 #: utils.cpp:31
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Huge Window Borders"
-msgstr "Размер на границите на прозорец:"
+msgstr "Огромни рамки на прозорци"
 
 #: utils.cpp:32
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Very Huge Window Borders"
-msgstr "Размер на границите на прозорец:"
+msgstr "Много огромни рамки на прозорци"
 
 #: utils.cpp:33
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Oversized Window Borders"
-msgstr "Размер на границите на прозорец:"
-
-#~ msgctxt "button text"
-#~ msgid "Get New Window Decorations…"
-#~ msgstr "Изтегляне на нови декорации за прозорци..."
-
-#~ msgid "No Borders"
-#~ msgstr "Без граници"
-
-#~ msgid "Tiny"
-#~ msgstr "Миниатюрен"
-
-#~ msgid "Normal"
-#~ msgstr "Нормално"
-
-#~ msgid "Large"
-#~ msgstr "Голям"
-
-#~ msgid "Very Large"
-#~ msgstr "Много голям"
-
-#~ msgid "Huge"
-#~ msgstr "Огромен"
-
-#~ msgid "Very Huge"
-#~ msgstr "Много огромен"
-
-#~ msgid "Oversized"
-#~ msgstr "Свръх огромен"
-
-#~ msgid "This module lets you configure the window decorations."
-#~ msgstr "Този модул ви позволява да конфигурирате декорациите на прозорците."
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Your names"
-#~ msgstr "Радостин Раднев"
-
-#~ msgctxt "EMAIL OF TRANSLATORS"
-#~ msgid "Your emails"
-#~ msgstr "radnev@yahoo.com"
-
-#~ msgid "Window Decorations"
-#~ msgstr "Декорации на прозорци"
-
-#~ msgid "Valerio Pilo"
-#~ msgstr "Valerio Pilo"
-
-#~ msgid "Author"
-#~ msgstr "Автор"
-
-#~ msgctxt "tab label"
-#~ msgid "Theme"
-#~ msgstr "Тема"
+msgstr "Извънгабаритни  рамки на прозорци"

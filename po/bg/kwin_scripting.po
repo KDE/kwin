@@ -34,11 +34,3 @@ msgstr "%1 не съдържа валиден файл metadata.json"
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
 msgstr "%1 не съществува"
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Your names"
-#~ msgstr "Минчо Кондарев"
-
-#~ msgctxt "EMAIL OF TRANSLATORS"
-#~ msgid "Your emails"
-#~ msgstr "mkondarev@yahoo.de"

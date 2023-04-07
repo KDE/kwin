@@ -1,0 +1,197 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Turkish "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwindecoration" lang="&language;">
+<articleinfo>
+<authorgroup>
+<author
+>&Rik.Hemsley; &Rik.Hemsley.mail;</author>
+<author
+>&Anne-Marie.Mahfouf; &Anne-Marie.Mahfouf.mail;</author>
+<othercredit role="translator"
+><firstname
+>Emir</firstname
+><surname
+>SARI</surname
+><affiliation
+><address
+><email
+>emir_sari@icloud.com</email
+></address
+></affiliation
+><contrib
+>Çeviri</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>2021-04-09</date>
+<releaseinfo
+>Plasma 5.21</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>sistem ayarları</keyword>
+<keyword
+>kwin</keyword>
+<keyword
+>pencere</keyword>
+<keyword
+>kenarlık</keyword>
+<keyword
+>tema</keyword>
+<keyword
+>biçem</keyword>
+</keywordset>
+</articleinfo>
+<sect1 id="window-deco">
+<title
+>Pencere Dekorasyonları</title>
+
+<para
+>Bu modül, pencerelerin etrafındaki düğmeler ve kenarlıklar için bir biçem seçmenizi sağlar.</para>
+
+<sect2>
+<title
+>Pencere Dekorasyonları</title>
+
+<para>
+<screenshot>
+<screeninfo
+>Pencere Dekorasyonu Yapılandırma Modülü</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="main.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Pencere Dekorasyonu Yapılandırma Modülü</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+
+<para
+>Önizleme listesinden bir pencere dekorasyonu biçemi seçin veya <guibutton
+>Yeni Pencere Dekorasyonları Al</guibutton
+> düğmesini kullanarak yeni bir biçem indirin.</para>
+
+<para
+>Öntanımlı pencere dekorasyonuna <quote
+>Esinti</quote
+> denir.</para>
+
+<para
+>Her biçemin farklı bir görünümü; ancak aynı zamanda farklı bir <quote
+>hissi</quote
+> vardır. Bazılarının tüm kenarlarında (bazen görünmez) <quote
+>yeniden boyutlandır</quote
+> kenarlıklar vardır, bu da yeniden boyutlandırmayı kolaylaştırırken taşımayı daha zor hale getirir. Bazılarının belirli kenarlarında kenarlık yoktur.</para>
+
+<para
+>Çalışma düzeninize en uygun olanı bulana kadar farklı biçemleri denemeniz teşvik edilir.</para>
+
+<para
+>Her bir biçemin önizlemesinde, dekorasyon yapılandırması iletişim kutusunu açmak için bir <inlinemediaobject
+><imageobject
+> <imagedata fileref="configure.png" format="PNG"/></imageobject
+></inlinemediaobject
+> yapılandırma düğmesi bulunur.</para>
+
+<para
+>Bu yapılandırma iletişim kutusundaki seçenekler tüm pencerelere uygulanır. Bazı pencere dekorasyonları (&eg;, <quote
+>Esinti</quote
+>), bir <guilabel
+>Pencereye Özgü Geçersiz Kılmalar</guilabel
+> sekmesi sağlar. Bu sekmede, belirli pencereler için kenarlık boyutunu ve pencere başlık çubuğunun görünürlüğünü değiştirebilirsiniz.</para>
+
+<para
+>Belirli pencereler için farklı seçenekleri <ulink url="help:/kcontrol/windowspecific"
+>Pencere Kuralları</ulink
+> &systemsettings; modülünde bulabilirsiniz. </para>
+
+<tip>
+<para
+>Erişilebilirlik amacıyla, bazı pencere dekorasyonları ekstra geniş kenarlıkları destekler. Bu varsa buradan ayrıca bir <guilabel
+>Pencere kenarlığı boyutu</guilabel
+> seçebilirsiniz. Az gören kullanıcılar için geniş kenarlıkları görmek daha kolaydır ve sınırlı hareket kabiliyetine sahip veya fare kullanmakta güçlük çeken kişiler için daha kolay kavranır.</para>
+</tip>
+
+<tip>
+<para
+>Kendi pencere dekorasyonunuzu yapmak istiyorsanız <ulink url="https://develop.kde.org/docs/extend/plasma/aurorae/"
+>bu öğreticiden</ulink
+> daha fazla bilgi alabilirsiniz.</para>
+</tip>
+
+</sect2>
+
+<sect2>
+<title
+>Dekorasyonlar</title>
+
+<para
+>Bu iletişim kutusundan pencerenin dekorasyonunu değiştirebilirsiniz. Kullanılabilir seçenekler seçili biçeme bağlıdır. </para>
+<para>
+<screenshot>
+<screeninfo
+>Esinti Dekorasyon Seçenekleri</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="decoration.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Esinti Dekorasyon Seçenekleri</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+</sect2>
+
+<sect2>
+<title
+>Başlık Çubuğu Düğmeleri</title>
+
+<para
+>Bu sayfa, başlık çubuğundaki düğme konumunu özelleştirmenizi sağlar. Örneğin, <guilabel
+>Uygulama Menüsü</guilabel
+>'nü başlık çubuğuna koyun, kaldırın veya sizi rahat ettiren bir sıralama elde edene kadar düğmeleri sürükleyin. </para>
+
+<screenshot>
+<screeninfo
+>Düğme Seçenekleri</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="button.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Düğme Seçenekleri</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+
+<para
+>Kapat düğmesine ek bir seçenek isterseniz veya başlık çubuğundan kaldırdıysanız <guilabel
+>Menü düğmesine çift tıklayarak pencereleri kapat</guilabel
+> seçeneğini işaretleyin. </para>
+
+<para
+>Fare işaretçisiyle başlık çubuğu düğmeleri üzerine geldiğinizde öntanımlı araç ipuçlarını görmek istiyorsanız <guilabel
+>Başlık çubuğu düğmesi araç ipuçlarını göster</guilabel
+> seçeneğini işaretleyin. </para>
+
+</sect2>
+
+</sect1>
+
+</article>

@@ -2796,15 +2796,3 @@ msgstr ""
 "Моля, публикувайте информацията, предоставена под този уводен текст в "
 "кошчето за поставяне на услугата \n"
 "като https://paste.kde.org, вместо да поставяте в нишки за поддръжка.\n"
-
-#~ msgid "Walk Through Desktops"
-#~ msgstr "Преминаване през работните плотове"
-
-#~ msgid "Walk Through Desktops (Reverse)"
-#~ msgstr "Преминаване през работните плотове (обратно)"
-
-#~ msgid "Walk Through Desktop List"
-#~ msgstr "Преминаване през списъка на работните плотове"
-
-#~ msgid "Walk Through Desktop List (Reverse)"
-#~ msgstr "Преминаване през списъка на работните плотове (обратно)"

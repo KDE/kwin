@@ -66,20 +66,3 @@ msgstr "Изключване на вътрешните ефекти"
 #, kde-format
 msgid "Get New Desktop Effects..."
 msgstr "Изтегляне на нови ефекти за работна среда..."
-
-#~ msgid "This module lets you configure desktop effects."
-#~ msgstr "Този модул ви позволява да конфигурирате ефекти на работния плот."
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Your names"
-#~ msgstr "Минчо Кондарев"
-
-#~ msgctxt "EMAIL OF TRANSLATORS"
-#~ msgid "Your emails"
-#~ msgstr "mkondarev@yahoo.de"
-
-#~ msgid "Desktop Effects"
-#~ msgstr "Ефекти на работния плот"
-
-#~ msgid "Vlad Zahorodnii"
-#~ msgstr "Влад Захародний"

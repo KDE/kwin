@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-06 02:04+0000\n"
-"PO-Revision-Date: 2023-02-06 08:13+0200\n"
+"PO-Revision-Date: 2023-04-06 18:51+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -213,7 +213,7 @@ msgstr "Налаштувати кнопки заголовка…"
 #, kde-format
 msgctxt "@action:button as in, \"Get New Window Decorations\""
 msgid "Get New…"
-msgstr ""
+msgstr "Отримати ще…"
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -221,62 +221,49 @@ msgid "Edit %1 Theme"
 msgstr "Редагувати тему %1"
 
 #: utils.cpp:25
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "No Window Borders"
-msgstr "Без бічної рамки"
+msgstr "Немає обрамлення вікон"
 
 #: utils.cpp:26
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "No Side Window Borders"
-msgstr "Без бічної рамки"
+msgstr "Немає бічного обрамлення вікон"
 
 #: utils.cpp:27
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Tiny Window Borders"
-msgstr "Розмір рамки вікна:"
+msgstr "Малі рамки вікон"
 
 #: utils.cpp:28
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "Normal Window Borders"
-msgstr "Без бічної рамки"
+msgstr "Звичайні рамки вікон"
 
 #: utils.cpp:29
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Large Window Borders"
-msgstr "Розмір рамки вікна:"
+msgstr "Великі рамки вікон"
 
 #: utils.cpp:30
 #, kde-format
 msgid "Very Large Window Borders"
-msgstr ""
+msgstr "Дуже великі рамки вікон"
 
 #: utils.cpp:31
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Huge Window Borders"
-msgstr "Розмір рамки вікна:"
+msgstr "Величезні рамки вікон"
 
 #: utils.cpp:32
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Very Huge Window Borders"
-msgstr "Розмір рамки вікна:"
+msgstr "Гігантські рамки вікон"
 
 #: utils.cpp:33
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Oversized Window Borders"
-msgstr "Розмір рамки вікна:"
+msgstr "Надмірні рамки вікон"
 
 #~ msgctxt "button text"
 #~ msgid "Get New Window Decorations…"

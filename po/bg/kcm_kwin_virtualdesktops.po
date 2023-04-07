@@ -126,13 +126,3 @@ msgstr "%1 ms"
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Показване на индикатори за подредба на работния плот"
-
-#~ msgid ""
-#~ "This module lets you configure the navigation, number and layout of "
-#~ "virtual desktops."
-#~ msgstr ""
-#~ "Този модул ви позволява да конфигурирате навигацията, номера и "
-#~ "оформлението на виртуални работни плотове."
-
-#~ msgid "Virtual Desktops"
-#~ msgstr "Виртуални работни плотове"

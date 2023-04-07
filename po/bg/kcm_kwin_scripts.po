@@ -63,11 +63,3 @@ msgstr "Инсталиране от файл..."
 #, kde-format
 msgid "Get New Scripts..."
 msgstr "Изтегляне на нови скриптове..."
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Your names"
-#~ msgstr "Минчо Кондарев"
-
-#~ msgctxt "EMAIL OF TRANSLATORS"
-#~ msgid "Your emails"
-#~ msgstr "mkondarev@yahoo.de"

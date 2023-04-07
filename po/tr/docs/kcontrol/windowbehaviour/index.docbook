@@ -1,0 +1,1397 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Turkish "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<!--copy from r308626 Tue May 4 17:11:51 2004 UTC -->
+
+<article id="windowbehaviour" lang="&language;">
+<articleinfo>
+<title
+>Pencere Davranışı</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<author
+>&Jost.Schenck; &Jost.Schenck.mail;</author>
+<author
+><firstname
+>Natalie</firstname
+><surname
+>Clarius</surname
+><email
+>natalie_clarius@yahoo.de</email
+></author>
+<othercredit role="translator"
+><firstname
+>Emir</firstname
+><surname
+>SARI</surname
+><affiliation
+><address
+><email
+>emir_sari@icloud.com</email
+></address
+></affiliation
+><contrib
+>Çeviri</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>2022-08-31</date>
+<releaseinfo
+>Plasma 5.26</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>KControl</keyword>
+<keyword
+>sistem ayarları</keyword>
+<keyword
+>eylemler</keyword>
+<keyword
+>pencere</keyword>
+<keyword
+>pencere yerleşimi</keyword>
+<keyword
+>pencere boyutu</keyword>
+<keyword
+>pencere yönetimi</keyword>
+<keyword
+>pencere davranışı</keyword>
+<keyword
+>odak</keyword>
+<keyword
+>yükselt</keyword>
+<keyword
+>başlık çubuğu</keyword>
+<keyword
+>ekran</keyword>
+<keyword
+>tuttur</keyword>
+</keywordset>
+</articleinfo>
+
+<sect1 id="window-behavior">
+<title
+>Pencere Davranışı</title>
+
+<para
+>Bu denetim modülünün üst kısmında birkaç sekme görebilirsiniz: <guilabel
+>Odak</guilabel
+>, <guilabel
+>Başlık Çubuğu Eylemleri</guilabel
+>, <guilabel
+>Pencere Eylemleri</guilabel
+>, <guilabel
+>Hareket</guilabel
+> ve <guilabel
+>Gelişmiş</guilabel
+>. <guilabel
+>Odak</guilabel
+> panelinde pencerelerin nasıl odak alıp kaybettiklerini; &ie; etkin veya devre dışı olduklarını yapılandırabilirsiniz. <guilabel
+>Başlık Çubuğu Eylemleri</guilabel
+> ve <guilabel
+>Pencere Eylemleri</guilabel
+> sekmeleriyle, başlık çubuklarının ve pencerelerin fare tıklamalarına nasıl tepki verdiğini; <guilabel
+>Hareket</guilabel
+> ile de pencerelerin başlatıldıklarında kendilerini nasıl taşıyıp yerleştirdiklerini yapılandırırsınız. <guilabel
+>Gelişmiş</guilabel
+> seçenekler, <quote
+>pencere panjurlama</quote
+> gibi gelişmiş özellikleri barındırır. </para>
+
+<note>
+<para
+>&plasma;'nın yerel pencere yöneticisi &kwin;'i kullanmazsanız bu modüldeki yapılandırmanın etkili olmayacağını lütfen unutmayın. Farklı bir pencere yöneticisi kullanıyorsanız lütfen pencere davranışını nasıl özelleştireceğinizle ilgili belgelere bakın. </para>
+</note>
+
+<sect2 id="focus">
+<title
+>Odak</title>
+
+<para
+>Çalışma alanının <quote
+>odak</quote
+>'ı, kullanıcının o anda üzerinde çalıştığı pencereyi ifade eder. Odaklı pencere genellikle <quote
+>etkin pencere</quote
+> olarak adlandırılır. </para>
+
+<para
+>Odak, pencerenin ön tarafta olduğu anlamına gelmez &mdash; buna <quote
+>yükseltilmiş</quote
+> denir ve bu burada da yapılandırılmış olsa da pencerelerin odaklanması ve yükseltilmesi bağımsız olarak yapılandırılır. </para>
+
+<sect3 id="focus-focuspolicy">
+<title
+>Pencere etkinleştirme politikası</title>
+
+<para
+>&kwin;'in geçerli odağı belirlemek için kullanacağı altı yöntem vardır: </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Odak için tıkla</guilabel
+></term>
+<listitem>
+<para
+>Üzerine tıkladığınızda bir pencere etkin duruma gelir. Bu davranış, diğer işletim sistemlerinde yaygındır ve büyük olasılıkla sizin istediğiniz şeydir.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Odak için tıkla (fare önceliği)</guilabel
+></term>
+<listitem>
+<para
+>Bu, çoğunlukla <guilabel
+>Odak için tıkla</guilabel
+> ile aynıdır. Sistem tarafından etkin bir pencerenin seçilmesi gerekiyorsa (&eg;,. o anda etkin olan kapalı olduğu için), farenin altındaki pencere tercih edilen adaydır. Alışılmadık; ancak <guilabel
+>Odak için tıkla</guilabel
+>'nın olası bir çeşididir. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Odak fareyi izler</guilabel
+></term>
+<listitem>
+<para
+>Fare işaretçisini etkin olarak normal bir pencere üzerinde hareket ettirmek onu etkinleştirir. <keycombo action="simul"
+>&Alt;<keycap
+>F2</keycap
+></keycombo
+> ile çağrılan mini komut satırı gibi yeni pencereler, fareyi açıkça onlara doğrultmanıza gerek kalmadan odağı alacaktır. Örneğin, farenin altında rastgele görünen pencereler odağı kazanmayacaktır. Odak çalma önleme her zamanki gibi gerçekleşir. Gerçekten tıklamanıza gerek kalmadan <guilabel
+>Odak için tıkla</guilabel
+> gibi düşünün. </para>
+<para
+>Diğer pencere yöneticilerinde bu bazen <quote
+>Fareyi takip eden özensiz odak</quote
+> olarak bilinir. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Odak fareyi izler (fare önceliği)</guilabel
+></term>
+<listitem>
+<para
+>Bu çoğunlukla <guilabel
+>Odak fareyi izler</guilabel
+> ile aynıdır. Sistem tarafından etkin bir pencerenin seçilmesi gerekiyorsa (&eg;,. o anda etkin olan kapalı olduğu için), farenin altındaki pencere tercih edilen adaydır. Üzerine gelme denetimli bir odak istiyorsanız bunu seçin. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Odak farenin altında</guilabel
+></term>
+<listitem>
+<para
+>Fare imlecinin altında bulunan pencere etkin duruma gelir. Fare bir pencerenin üzerinde değilse (örneğin, masaüstü duvar kağıdının üzerindeyse) farenin altındaki son pencere odaklanır. <keycombo action="simul"
+>&Alt;<keycap
+>F2</keycap
+></keycombo
+> ile çağrılan mini komut satırı gibi yeni pencereler odağı almaz, yazmak için fareyi üzerilerine getirmeniz gerekir. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Odak katıca farenin altında</guilabel
+></term>
+<listitem>
+<para
+><guilabel
+>Odak farenin altında</guilabel
+>'ya benzer; ancak yorumuyla daha da katıdır. Yalnızca fare işaretçisinin altındaki pencere etkindir. Fare işaretçisi bir pencerenin üzerinde değilse hiçbir pencerenin odağı yoktur. <keycombo action="simul"
+>&Alt;<keycap
+>F2</keycap
+></keycombo
+> ile çağrılan mini komut satırı gibi yeni pencereler odağı almaz, yazmak için fareyi üzerilerine getirmeniz gerekir. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<note>
+<para
+><guilabel
+>Odak farenin altında</guilabel
+> ve <guilabel
+>Odak katıca farenin altında</guilabel
+>'nın <guilabel
+>Odak çalma koruması</guilabel
+> ve <keycombo action="simul"
+>&Alt;&Tab;</keycombo
+> gibi bazı özelliklerin düzgün çalışmasını  önlediğini unutmayın. </para>
+</note>
+
+</sect3>
+
+<sect3 id="focus-focusdelay">
+<title
+>Odak gecikmesi</title>
+
+<para
+>Bu, fare işaretçisinin üzerinde bulunduğu pencerenin otomatik olarak odağı alacağı gecikmedir. </para>
+
+</sect3>
+
+<sect3 id="focus-focusstealing">
+<title
+>Odak çalma koruması</title>
+
+<para
+>Bu seçenek, KWin'in yeni pencerelerin beklenmedik şekilde etkinleştirilmesinden kaynaklanan istenmeyen odak çalmayı ne kadar engellemeye çalışacağını belirtir. </para
+> 
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Yok</guilabel
+></term>
+<listitem
+><para
+>Önleme kapatılır ve yeni pencereler her zaman etkinleştirilir.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Düşük</guilabel
+></term>
+<listitem
+><para
+>Önleme etkindir; bazı pencerelerin altta yatan mekanizma için desteği olmadığında ve KWin pencereyi etkinleştirip etkinleştirmemeye güvenilir bir şekilde karar veremediğinde, etkinleştirilir. Bu ayar, uygulamalara bağlı olarak orta düzeyden hem daha kötü hem de daha iyi sonuçlara sahip olabilir.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Orta</guilabel
+></term>
+<listitem
+><para
+>Önleme etkindir.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Yüksek</guilabel
+></term>
+<listitem
+><para
+>Yeni pencereler, yalnızca şu anda etkin pencere yoksa veya o anda etkin olan uygulamaya aitlerse etkinleştirilir. Bu ayar, büyük olasılıkla fare odağı politikası kullanılmadığında gerçekten kullanılamaz.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Çok Yüksek</guilabel
+></term>
+<listitem
+><para
+>Tüm pencereler açıkça kullanıcı tarafından etkinleştirilmelidir.</para
+></listitem>
+</varlistentry>
+
+</variablelist>
+
+<para
+>Odak çalması engellenen pencereler dikkat istiyor olarak işaretlenir, bu da öntanımlı olarak görev çubuğu girişlerinin vurgulanacağı anlamına gelir. Bu, Bildirimler denetim modülünde değiştirilebilir. </para>
+
+</sect3>
+
+<sect3 id="focus-raisingwindow">
+<title
+>Pencereleri yükseltme</title>
+
+<para
+>Odak almanın yanı sıra, pencerelerin hangi koşullar altında yükseltileceğini; &ie;, öne getirileceğini de denetleyebilirsiniz. </para>
+
+<para
+>Yükseltme seçeneklerinden en az birinin etkinleştirildiğinden emin olmalısınız, aksi takdirde pencereler hiç kaldırılmaz. </para>
+
+<para
+><guilabel
+>Tıklama etkin pencereyi yükseltir</guilabel
+> üzerine tıklandığında bir pencereyi öne getirir. Bu, odaklanmak için tıkla politikasıyla öntanımlı olarak etkindir. </para>
+
+<para
+><guilabel
+>Üzerine gelince yükselt; gecikmesi</guilabel
+> fare işaretçisi belirli bir süre boyunca o pencerenin üzerindeyse alternatif olarak bir pencereyi öne getirebilirsiniz. Döndürme kutusu denetimini kullanarak bu seçenek için gecikmeyi belirleyebilirsiniz. Bu otomatik yükseltme seçeneği, yalnızca odaklanmak için fareyle üzerine gelme ilkesiyle kullanılabilir. </para>
+
+<tip>
+<para
+>Gecikmeyi çok kısa ayarlamak pencerelerin hızlı bir şekilde değiştirilmesine neden olur ve bu oldukça dikkat dağıtıcı olabilir. Çoğu insan 100-300 ms'lik bir gecikmeyi sevecektir. Bu duyarlıdır, ancak hedefinize giderken o pencereyi öne getirmeden pencerenin köşelerinden kaydırmanıza izin verir. </para>
+</tip>
+
+</sect3>
+
+<sect3 id="focus-multiscreen">
+<title
+>Çoklu ekran davranışı</title>
+
+<para
+>Bu, birden çok ekranla pencere odağının davranışını denetler. Bu seçeneklerin yalnızca o anda birden fazla ekran bağlı olduğunda göründüğünü unutmayın. </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Etkin ekran fareyi izler</guilabel
+></term>
+<listitem>
+<para
+>Bu seçenek etkinleştirildiğinde, etkin ekran (örneğin, yeni pencerelerin görüntülendiği yer) fare işaretçisini içeren ekrandır. Devre dışı bırakıldığında etkin ekran, odaklanılan pencereyi içeren ekrandır. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Ekran odağını ayır</guilabel
+></term>
+<listitem>
+<para
+>Bu seçenek etkinleştirildiğinde, odak işlemleri yalnızca etkin ekranla sınırlıdır. Örneğin, bir pencereyi kapattığınızda, farklı bir ekranda daha yakın zamanda kullanılan bir pencere olsa bile, odağı alacak bir sonraki pencere etkin ekrandaki bir pencere olacaktır. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
+
+</sect2>
+
+<sect2 id="titlebar-actions">
+<title
+>Başlık Çubuğu Eylemleri</title>
+
+<para
+>Bu panelde, başlık çubuklarına bir fare düğmesiyle tıklandığında pencerelere ne olacağını yapılandırabilirsiniz. </para>
+
+<sect3 id="actions-titlebar">
+<title
+><guilabel
+>Başlık Çubuğu Eylemleri</guilabel
+></title>
+
+<para
+>Bu bölüm, bir pencerenin başlık çubuğunda çift tıkladığınızda veya fare tekerleğiyle sardığınızda ne olacağını belirlemenizi sağlar. </para>
+
+<para
+><guilabel
+>Çift tıklama</guilabel
+> için aşağıdaki işlemler kullanılabilir: </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Ekranı kapla</guilabel
+></term>
+<listitem>
+<para
+>Ekranın yüksekliğini ve genişliğini doldurmak için pencereyi yeniden boyutlandırır. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Dikey olarak ekranı kapla</guilabel
+></term>
+<listitem>
+<para
+>Pencereyi ekranın yüksekliğine göre yeniden boyutlandırır. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Yatay olarak ekranı kapla</guilabel
+></term>
+<listitem>
+<para
+>Pencereyi ekranın genişliğine göre yeniden boyutlandırır. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Simge durumuna küçült</guilabel
+></term>
+<listitem>
+<para
+>Pencereyi, geri yüklenebileceği simge durumuna küçültülmüş durumuna gizler; &eg;, Görev Yöneticisi veya Görev Değiştirici aracılığıyla. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Panjuru kapat</guilabel
+></term>
+<listitem>
+<para
+>Pencerenin yalnızca başlık çubuğuna indirgenmesine neden olur. Başlık çubuğuna tekrar çift tıklamak, pencereyi normal boyutuna geri yükler. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Kapat</guilabel
+></term>
+<listitem>
+<para
+>Pencereyi kapatır. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Tüm masaüstlerinde göster</guilabel
+></term>
+<listitem>
+<para
+>Pencereyi tüm Sanal Masaüstleri'nde görünür yapar. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Bir şey yapma</guilabel
+></term>
+<listitem>
+<para
+>Çift tıkladığınızda hiçbir şey olmaz. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<para
+><guilabel
+>Fare tekerleği</guilabel
+>, yukarı veya aşağı sarılmasına bağlı olarak bir eylemi tetiklemek için kullanılabilir: </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Yükselt/alçalt</guilabel
+></term>
+<listitem>
+<para
+>Yukarı sarmak, pencereyi diğer pencerelerin üstüne taşır. </para>
+<para
+>Aşağı sarmak, pencereyi diğer pencerelerin altına taşır. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Panjuru kapat/aç</guilabel
+></term>
+<listitem>
+<para
+>Yukarı sarmak, pencereyi yalnızca başlık çubuğuna daraltır. </para>
+<para
+>Aşağı sarmak, pencereyi normal boyutuna geri yükler. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Ekranı kapla/geri yükle</guilabel
+></term>
+<listitem>
+<para
+>Yukarı sarmak, pencereyi tüm ekranı dolduracak şekilde büyütür. </para>
+<para
+>Aşağı sarmak, onu önceki boyutuna geri getirir. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Üzerinde/altında tut</guilabel
+></term>
+<listitem>
+<para
+>Yukarı sarmak, pencerenin üstte kalmasını ve diğer pencereleri örtmesini sağlar. </para>
+<para
+>Aşağı sarmak, pencerenin diğer pencerelerin altında kapalı kalmasını sağlar. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Önceki/sonraki masaüstüne taşı</guilabel
+></term>
+<listitem>
+<para
+>Yukarı sarmak, pencereyi önceki Sanal Masaüstü'ne taşır. </para>
+<para
+>Aşağı sarmak, pencereyi bir sonraki Sanal Masaüstü'ne taşır. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Matlığı değiştir</guilabel
+></term>
+<listitem>
+<para
+>Yukarı sarmak, pencereyi daha az saydam duruma getirir. </para>
+<para
+>Aşağı sarmak, pencereyi daha saydam duruma getirir. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Bir şey yapma</guilabel
+></term>
+<listitem>
+<para
+>Pencerenin başlık çubuğunda yukarı veya aşağı sarınca hiçbir şey olmaz. </para>
+</listitem>
+</varlistentry>
+  
+</variablelist>
+
+<tip>
+<para
+>Pencerelerin panjuru kapalı başlık çubuğuna fare işaretçisini getirince otomatik olarak panjurun açılmasını sağlayabilirsiniz. Yalnızca bu modülün <guilabel
+>Gelişmiş</guilabel
+> sekmesindeki <link linkend="advanced-unshading"
+><guilabel
+>Pencere panjurunu aç</guilabel
+></link
+> onay kutusunu işaretleyin. Bu, sık sık birden çok pencere arasında kopyala ve yapıştır yapıyorsanız çok yararlıdır. </para>
+</tip>
+
+</sect3>
+
+<sect3 id="actions-titlebar-frame">
+<title
+><guilabel
+>Başlık Çubuğu ve Çerçeve Eylemleri</guilabel
+></title>
+
+<para
+>Bu bölüm, bir pencerenin başlık çubuğuna veya çerçevesine bir kez tıkladığınızda ne olacağını belirlemenizi sağlar. Pencerenin etkin olup olmamasına bağlı olarak, aynı tıklamayla ilişkili farklı eylemleriniz olabileceğine dikkat edin. </para>
+
+<para
+>Etkin ve Etkin Değil fare düğmelerinin her bir kombinasyonu için en uygun seçimi seçebilirsiniz. Eylemler aşağıdaki gibidir: </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Yükselt</guilabel
+></term>
+<listitem>
+<para
+>Pencereyi, pencere yığınının en üstüne getirir. Bununla örtüşen diğer tüm pencereler onun <quote
+>altında</quote
+> gizlenecektir. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Alçalt</guilabel
+></term>
+<listitem>
+<para
+>Bu pencereyi pencere yığınının en altına taşır. Bu, pencereyi yoldan çekecektir. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Yükselt/alçalt geçişi yap</guilabel
+></term>
+<listitem>
+<para
+>Bu, üstte olmayan pencereleri yükseltir ve zaten üstte olan pencereleri alçaltır. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Simge durumuna küçült</guilabel
+></term>
+<listitem>
+<para
+>Pencereyi, geri yüklenebileceği simge durumuna küçültülmüş durumuna gizler; &eg;, Görev Yöneticisi veya Görev Değiştirici aracılığıyla. </para>
+</listitem>
+</varlistentry>
+<varlistentry>
+
+<term
+><guilabel
+>Panjuru kapat</guilabel
+></term>
+<listitem>
+<para
+>Pencerenin yalnızca başlık çubuğuna indirgenmesine neden olur. Başlık çubuğuna tekrar çift tıklamak, pencereyi normal boyutuna geri yükler. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Kapat</guilabel
+></term>
+<listitem>
+<para
+>Pencereyi kapatır. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Eylemler menüsünü göster</guilabel
+></term>
+<listitem>
+<para
+>Pencere ile ilgili komutları seçebileceğiniz küçük bir alt menü açacaktır (&eg;, Masaüstüne Taşı, Ekrana Taşı, Ekranı Kapla, Simge Durumuna Küçült, Kapat, vb.). </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Bir şey yapma</guilabel
+></term>
+<listitem>
+<para
+>Tıklayınca bir şey olmaz. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
+
+<sect3 id="actions-maximize-button">
+<title
+><guilabel
+>Ekranı Kapla Düğmesi Eylemleri</guilabel
+></title>
+
+<para
+>Bu bölüm, üç fare düğmesinin ekranı kaplayan düğme üzerindeki davranışını belirlemenizi sağlar. </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Ekranı kapla</guilabel
+></term>
+<listitem>
+<para
+>Pencereyi ekranın yüksekliğine ve genişliğine göre yeniden boyutlandırır. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Dikey olarak ekranı kapla</guilabel
+></term>
+<listitem>
+<para
+>Pencereyi ekranın yüksekliğine göre yeniden boyutlandırır. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Yatay olarak ekranı kapla</guilabel
+></term>
+<listitem>
+<para
+>Pencereyi ekranın genişliğine göre yeniden boyutlandırır. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
+
+</sect2>
+
+<sect2 id="window-actions">
+<title
+>Pencere Eylemleri</title>
+
+<sect3 id="actions-inactive-inner-window">
+<title
+><guilabel
+>Etkin Olmayan İç Pencere</guilabel
+></title>
+
+<para
+>Modülün bu kısmı, etkin olmayan bir pencereye üç fare düğmesinden herhangi biriyle tıkladığınızda veya fare tekerleğini kullandığınızda ne olacağını yapılandırmanıza olanak tanır. </para>
+
+<para
+>Seçenekleriniz şunlardır: </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Etkinleştir, yükselt ve tıklama geçir</guilabel
+></term>
+<listitem>
+<para
+>Bu, tıklanan pencereyi etkin duruma getirir, ekranın üst kısmına yükseltir ve pencere içindeki uygulamaya bir fare tıklaması iletir. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Etkinleştir ve tıklama geçir</guilabel
+></term>
+<listitem>
+<para
+>Bu, tıklanan pencereyi etkin duruma getirir ve pencere içindeki uygulamaya bir fare tıklaması iletir. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Etkinleştir</guilabel
+></term>
+<listitem>
+<para
+>Bu yalnızca tıklanan pencereyi etkin duruma getirir. Fare tıklaması, pencere içindeki uygulamaya aktarılmaz. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Etkinleştir ve yükselt</guilabel
+></term>
+<listitem>
+<para
+>Bu, tıklanan pencereyi etkin duruma getirir ve pencereyi ekranın üst kısmına yükseltir. Fare tıklaması, pencere içindeki uygulamaya aktarılmaz. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<para
+><guilabel
+>Fare tekerleği</guilabel
+> için seçenekleriniz aşağıdaki gibidir: </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Sar</guilabel
+></term>
+<listitem>
+<para
+>Yalnızca pencere içindeki içeriği sarar. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Etkinleştir ve sar</guilabel
+></term>
+<listitem>
+<para
+>Bu, tıklanan pencereyi etkin duruma getirir ve içeriği sarar. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Etkinleştir, yükselt ve sar</guilabel
+></term>
+<listitem>
+<para
+>Bu, tıklanan pencereyi etkin duruma getirir, pencereyi ekranın en üstüne yükseltir ve içeriği sarar. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
+
+<sect3 id="actions-inner-window-titlebar-frame">
+<title
+><guilabel
+>İç Pencere, Başlık Çubuğu ve Çerçeve</guilabel
+></title>
+
+<para
+>Bu alt bölüm, bir değiştirici düğmeye basılırken bir pencereye tıklandığında gerçekleştirilen ek eylemleri yapılandırmanıza izin verir. </para>
+
+<para
+>Bir <guilabel
+>Değiştirici düğme</guilabel
+> olarak, <guilabel
+>Meta</guilabel
+> (öntanımlı) veya <guilabel
+>Seçenek</guilabel
+> arasında seçim yapabilirsiniz. </para>
+
+<para
+>Bir kez daha; <mousebutton
+>Sol</mousebutton
+>, <mousebutton
+>Orta</mousebutton
+> ve <mousebutton
+>Sağ</mousebutton
+> düğme tıklamaları ve <guilabel
+>Fare Tekerleği</guilabel
+>'ne farklı eylemler atayabilirsiniz. </para>
+
+<para
+>Fare düğmeleri için seçenekleriniz şunlardır: </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Taşı</guilabel
+></term>
+<listitem>
+<para
+>Seçili pencereyi çalışma alanında sürüklemenizi sağlar. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Etkinleştir, yükselt ve taşı</guilabel
+></term>
+<listitem>
+<para
+>Bu, tıklanan pencereyi etkin duruma getirir, onu pencere yığınının en üstüne yükseltir ve pencereyi çalışma alanının etrafında sürükler. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Yükselt/alçalt geçişi yap</guilabel
+></term>
+<listitem>
+<para
+>Bu, üstte olmayan pencereleri yükseltir ve zaten üstte olan pencereleri alçaltır. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Yeniden boyutlandır</guilabel
+></term>
+<listitem>
+<para
+>Seçili pencerenin boyutunu değiştirmenizi sağlar. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Yükselt</guilabel
+></term>
+<listitem>
+<para
+>Pencereyi, pencere yığınının en üstüne getirir. Bununla örtüşen diğer tüm pencereler onun <quote
+>altında</quote
+> gizlenecektir. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Alçalt</guilabel
+></term>
+<listitem>
+<para
+>Bu pencereyi pencere yığınının en altına taşır. Bu, pencereyi yoldan çekecektir. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Simge durumuna küçült</guilabel
+></term>
+<listitem>
+<para
+>Pencereyi, geri yüklenebileceği simge durumuna küçültülmüş durumuna gizler; &eg;, Görev Yöneticisi veya Görev Değiştirici aracılığıyla. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Matlığı azalt</guilabel
+></term>
+<listitem>
+<para
+>Pencereyi daha saydam yapar. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Matlığı artır</guilabel
+></term>
+<listitem>
+<para
+>Pencereyi daha az saydam yapar. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Bir şey yapma</guilabel
+></term>
+<listitem>
+<para
+>Tıklayınca bir şey olmaz. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<para
+>Fare tekerleği için seçenekleriniz şunlardır: </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Yükselt/alçalt</guilabel
+></term>
+<listitem>
+<para
+>Yukarı sarmak, pencereyi diğer pencerelerin üstüne taşır. </para>
+<para
+>Aşağı sarmak, pencereyi diğer pencerelerin altına taşır. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Panjuru kapat/aç</guilabel
+></term>
+<listitem>
+<para
+>Yukarı sarmak, pencereyi yalnızca başlık çubuğuna daraltır. </para>
+<para
+>Aşağı sarmak, pencereyi normal boyutuna geri yükler. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Ekranı kapla/geri yükle</guilabel
+></term>
+<listitem>
+<para
+>Yukarı sarmak, pencereyi tüm ekranı dolduracak şekilde büyütür. </para>
+<para
+>Aşağı sarmak, onu önceki boyutuna geri getirir. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Üzerinde/altında tut</guilabel
+></term>
+<listitem>
+<para
+>Yukarı sarmak, pencerenin üstte kalmasını ve diğer pencereleri örtmesini sağlar. </para>
+<para
+>Aşağı sarmak, pencerenin diğer pencerelerin altında kapalı kalmasını sağlar. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Önceki/sonraki masaüstüne taşı</guilabel
+></term>
+<listitem>
+<para
+>Yukarı sarmak, pencereyi önceki Sanal Masaüstü'ne taşır. </para>
+<para
+>Aşağı sarmak, pencereyi bir sonraki Sanal Masaüstü'ne taşır. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Matlığı değiştir</guilabel
+></term>
+<listitem>
+<para
+>Yukarı sarmak, pencereyi daha az saydam duruma getirir. </para>
+<para
+>Aşağı sarmak, pencereyi daha saydam duruma getirir. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Bir şey yapma</guilabel
+></term>
+<listitem>
+<para
+>Pencerenin başlık çubuğunda yukarı veya aşağı sarınca bir şey olmaz. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
+
+</sect2>
+
+<sect2 id="movement">
+<title
+>Hareket</title>
+
+<para
+>Bu sayfa, <guilabel
+>Tutturma Bölgeleri</guilabel
+>'ni yapılandırmanıza izin verir. Bunlar, ekranın ve her pencerenin kenarı boyunca uzanan manyetik bir alan gibidir; bu, yakına taşındığında pencerelerin yan yana oturmasını sağlar. </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Ekran kenarı tutturma bölgesi</guilabel
+></term>
+<listitem>
+<para
+>Burada ekran kenarlıkları için tutturma bölgesini ayarlayabilirsiniz. Bir pencereyi yapılandırılan uzaklık içinde hareket ettirmek, onu ekranın kenarına yapıştıracaktır. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Pencere tutturma bölgesi</guilabel
+></term>
+<listitem>
+<para
+>Burada pencereler için tutturma bölgesini ayarlayabilirsiniz. Ekran kenarlıklarında olduğu gibi, bir pencereyi başka bir pencerenin yanına taşımak, sanki pencereler mıknatıslanmış gibi kenara yapışmasına neden olur. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Merkez tutturma bölgesi</guilabel
+></term>
+<listitem>
+<para
+>Burada ekran merkezi için tutturma bölgesini, yani pencerelerin yanına taşındığında ekranın merkezine yapışmasını sağlayacak manyetik alanın 'kuvvetini' ayarlayabilirsiniz. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Pencereleri tuttur: Yalnızca örtüştüğünde</guilabel
+></term>
+<listitem>
+<para
+>İşaretlenirse, pencereler yalnızca birbirine yakınsa birbirine yapışmaz, yapılandırılan miktarda veya daha az miktarda üst üste gelmeleri gerekir. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<tip>
+<para
+>Sistem ayarlarının <guilabel
+>Çalışma Alanı Davranışı</guilabel
+> bölümündeki <guilabel
+>Ekran Kenarları</guilabel
+> ayarları modülünde, pencereleri ekran kenarlarına yakın sürüklendiğinde ekranın tamamına, yarısına veya çeyreğine hızla döşenecek şekilde yapılandırabilirsiniz. </para>
+</tip>
+
+</sect2>
+
+<sect2 id="advanced">
+<title
+>Gelişmiş</title>
+
+<para
+><guilabel
+>Gelişmiş</guilabel
+> panelinde, pencere davranışında daha gelişmiş ince ayar yapabilirsiniz. </para>
+
+<sect3 id="advanced-unshading">
+<title
+>Pencere panjurunu kapat</title>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Başlık çubuğuna geldikten şu kadar sonra</guilabel
+></term>
+<listitem>
+<para
+>Bu seçenek etkinleştirilirse fare işaretçisi bir süre başlık çubuğunun üzerindeyken panjuru kapalı bir pencerenin panjuru otomatik olarak açılır. Panjuru kapatma gecikmesini yapılandırmak için döndürme kutusunu kullanın. </para>
+</listitem>
+</varlistentry>
+</variablelist>
+</sect3>
+
+<sect3 id="advanced-placement">
+<title
+>Pencere yerleşimi</title>
+
+<para
+>Yerleştirme politikası, ekranda yeni bir pencerenin nerede görüneceğini belirler. </para>
+
+<para
+>Çoklu monitör kurulumunda, pencerelerin görüntüleneceği ekran her zaman etkin ekrandır (yani, fare imlecinin veya odaklanmış pencerenin bulunduğu ekran; bkz. <link linkend="focus-multiscreen"
+>Çoklu ekran davranışı</link
+>), önceki konumlarını anımsayan pencereler dışında (aşağdaki <link linkend="advanced-remember-positions"
+>bağlantıya</link
+> bakın). </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>En az çakışan</guilabel
+></term>
+<listitem>
+<para
+>Tüm yeni pencereleri, var olan pencerelerle olabildiğince az örtüşecek biçimde yerleştirir. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Ekranı kaplamış</guilabel
+></term>
+<listitem>
+<para
+>Tüm ekranı doldurmak için tüm yeni pencereleri büyütmeye çalışacaktır. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Rastgele</guilabel
+></term>
+<listitem>
+<para
+>Tüm yeni pencereleri rastgele konumlara yerleştirir. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Ortalanmış</guilabel
+></term>
+<listitem>
+<para
+>Tüm yeni pencereleri ekranın ortasına yerleştirir. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Sol üst köşede</guilabel
+></term>
+<listitem>
+<para
+>Tüm yeni pencereleri, sol üst köşeleri ekranın sol üst köşesine gelecek şekilde yerleştirir. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Farenin altında</guilabel
+></term>
+<listitem>
+<para
+>Tüm yeni pencereleri fare işaretçisinin altına ortalayarak yerleştirir. </para>
+</listitem>
+</varlistentry>
+  
+</variablelist>
+
+<para id="advanced-remember-positions"
+>Pencereleri yukarıda seçili yerleştirme yöntemi yerine daha önce bulundukları yerde açmak için <guilabel
+>Destekliyorlarsa uygulamaların pencere konumlarını anımsamalarına izin ver</guilabel
+> ögesini işaretleyin. Anımsanan bu konumun ekran atamasını içerdiğine dikkat edin, bu nedenle pencereler, en son bulundukları yer burasıysa etkin ekrandan farklı bir ekranda açılabilir. Ayrıca, bu seçeneğin yalnızca X11'de var olduğunu, Wayland'da bulunmadığını ve yalnızca bazı KDE uygulamaları tarafından desteklendiğini unutmayın. </para>
+
+<tip>
+<para
+>Bazı pencerelerin belirli konumlarda, ekranlarda veya Sanal Masaüstlerinde görünmesini istiyorsanız özel pencere veya uygulama ayarlarını yapılandırmak için <guilabel
+>Pencere Kuralları</guilabel
+> oluşturabilirsiniz. Bunu, bir pencerenin başlık çubuğuna sağ tıklayıp <guimenu
+>Diğer Eylemler</guimenu
+>'i seçerek veya <guilabel
+>Pencere Yönetimi</guilabel
+> sistem ayarları bölümündeki <guilabel
+>Pencere Kuralları</guilabel
+> modülünde bulabilirsiniz. </para>
+</tip>
+
+
+</sect3>
+
+<sect3 id="advanced-special-windows">
+<title
+>Özel pencereler</title>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Etkin olmayan uygulamalar için izlence pencerelerini gizle</guilabel
+></term>
+<listitem>
+<para
+>Etkinleştirildiğinde, etkin olmayan uygulamaların izlence pencereleri (araç pencereleri, parçalanmış menüler, ...) gizlenecek ve yalnızca uygulama etkin olduğunda gösterilecektir. Bu özelliğin çalışması için uygulamaların pencereleri uygun pencere türüyle işaretlemesi gerektiğini unutmayın. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
+
+<sect3 id="advanced-virtual-desktop-behavior">
+<title
+>Sanal Masaüstü davranışı</title>
+
+<para
+>Bazen bir uygulamayı çağırmak, yeni bir pencere açmak yerine var olan bir pencereyi etkinleştirir. Bu ayar, etkinleştirilen pencere geçerli olandan farklı bir Sanal Masaüstü'nde bulunuyorsa ne olacağını denetler. </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Söz konusu Sanal Masaüstü'ne geç</guilabel
+></term>
+<listitem>
+<para
+>Pencerenin şu anda bulunduğu Sanal Masaüstü'ne geçer. </para>
+<para
+>Etkin Sanal Masaüstü'nün, atanmış Sanal Masaüstü'ne giden pencereleri otomatik olarak izlemesini istiyorsanız bu seçeneği seçin. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Pencereyi geçerli Sanal Masaüstü'ne getir</guilabel
+></term>
+<listitem>
+<para
+>Pencerenin etkin Sanal Masaüstü'ne atlamasına neden olur. </para>
+<para
+>Pencerelerin her zaman geçerli Sanal Masaüstü'nde açılmasını ve etkin Sanal Masaüstü'nün yalnızca oraya elle gidildiğinde geçiş yapmasını istiyorsanız bu seçeneği seçin. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
+
+</sect2>
+
+</sect1>
+
+</article>

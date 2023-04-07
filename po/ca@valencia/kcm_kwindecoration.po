@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-06 02:04+0000\n"
-"PO-Revision-Date: 2023-02-06 13:17+0100\n"
+"PO-Revision-Date: 2023-04-06 09:49+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -220,7 +220,7 @@ msgstr "Configura els botons de la barra de títol…"
 #, kde-format
 msgctxt "@action:button as in, \"Get New Window Decorations\""
 msgid "Get New…"
-msgstr ""
+msgstr "Obtín noves…"
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -228,90 +228,46 @@ msgid "Edit %1 Theme"
 msgstr "Edita el tema %1"
 
 #: utils.cpp:25
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "No Window Borders"
-msgstr "Sense vores laterals"
+msgstr "Sense vores de finestres"
 
 #: utils.cpp:26
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "No Side Window Borders"
-msgstr "Sense vores laterals"
+msgstr "Sense vores laterals de finestres"
 
 #: utils.cpp:27
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Tiny Window Borders"
-msgstr "Mida de la vora de la finestra:"
+msgstr "Vores minúscules de finestres"
 
 #: utils.cpp:28
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "Normal Window Borders"
-msgstr "Sense vores laterals"
+msgstr "Vores normals de finestres"
 
 #: utils.cpp:29
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Large Window Borders"
-msgstr "Mida de la vora de la finestra:"
+msgstr "Vores grans de finestres"
 
 #: utils.cpp:30
 #, kde-format
 msgid "Very Large Window Borders"
-msgstr ""
+msgstr "Vores molt grans de finestres"
 
 #: utils.cpp:31
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Huge Window Borders"
-msgstr "Mida de la vora de la finestra:"
+msgstr "Vores enormes de finestres"
 
 #: utils.cpp:32
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Very Huge Window Borders"
-msgstr "Mida de la vora de la finestra:"
+msgstr "Vores molt enormes de finestres"
 
 #: utils.cpp:33
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Oversized Window Borders"
-msgstr "Mida de la vora de la finestra:"
-
-#~ msgctxt "button text"
-#~ msgid "Get New Window Decorations…"
-#~ msgstr "Obtín decoracions noves de finestra…"
-
-#~ msgid "No Borders"
-#~ msgstr "Sense vores"
-
-#~ msgid "Tiny"
-#~ msgstr "Minúscula"
-
-#~ msgid "Normal"
-#~ msgstr "Normal"
-
-#~ msgid "Large"
-#~ msgstr "Gran"
-
-#~ msgid "Very Large"
-#~ msgstr "Molt gran"
-
-#~ msgid "Huge"
-#~ msgstr "Enorme"
-
-#~ msgid "Very Huge"
-#~ msgstr "Molt enorme"
-
-#~ msgid "Oversized"
-#~ msgstr "Fora de mida"
-
-#~ msgid "This module lets you configure the window decorations."
-#~ msgstr "Este mòdul permet configurar les decoracions de les finestres."
+msgstr "Vores fora de mida de les finestres"

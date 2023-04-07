@@ -226,11 +226,3 @@ msgid ""
 "of the screen."
 msgstr ""
 "Можете да активирате действие, като плъзнете от края към центъра на екрана."
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Your names"
-#~ msgstr "Ясен Праматаров"
-
-#~ msgctxt "EMAIL OF TRANSLATORS"
-#~ msgid "Your emails"
-#~ msgstr "yasen@lindeas.com"

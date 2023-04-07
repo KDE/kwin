@@ -1,0 +1,137 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Turkish "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwineffects" lang="&language;">
+<articleinfo>
+
+<title
+>Masaüstü Efektleri</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<othercredit role="translator"
+><firstname
+>Emir</firstname
+><surname
+>SARI</surname
+><affiliation
+><address
+><email
+>emir_sari@icloud.com</email
+></address
+></affiliation
+><contrib
+>Çeviri</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>2021-04-09</date>
+<releaseinfo
+>Plasma 5.20</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>KControl</keyword>
+<keyword
+>masaüstü</keyword>
+<keyword
+>efektler</keyword>
+</keywordset>
+</articleinfo>
+
+<!--FIXME Compositor Enable compositor on startup necessary to have effects?-->
+
+<para
+>Bu modül, Plasma için masaüstü efektlerini etkinleştirmek ve yapılandırmak için kullanılır.</para>
+
+<para
+>Bu sayfanın ana kısmı, <guilabel
+>Erişilebilirlik</guilabel
+>, <guilabel
+>Görünüş</guilabel
+>, <guilabel
+>Odak</guilabel
+>, <guilabel
+>Masaüstüne Bak Canlandırması</guilabel
+>, <guilabel
+>Araçlar</guilabel
+>, <guilabel
+>Sanal Masaüstü Geçişi Canlandırması</guilabel
+>, <guilabel
+>Pencere Yönetimi</guilabel
+> ve <guilabel
+>Pencere Aç/Kapat Canlandırması</guilabel
+> olarak gruplanan kullanılabilir efektlerin bir listesidir.</para>
+<para
+>Listedeki ögeleri bulmak için liste penceresinin üzerindeki artımlı arama çubuğunu kullanın.</para>
+
+<para
+>Kullanıcıların onu değiştirmesi için pek bir neden yoktur; ancak <inlinemediaobject
+><imageobject
+><imagedata fileref="configure-effects.png" format="PNG"/> </imageobject
+></inlinemediaobject
+> yapılandırma düğmesiyle o efektlerin gösterimi için listeyi süzebilirsiniz. </para>
+
+<para
+>Yeni efektler kurmanın en kolay yolu, &kwin; içindeki yerleşik KNewStuff desteğini kullanmaktır. İnternetten kullanılabilir efektlerin bir listesini almak ve efektleri kurmak/kaldırmak için <guibutton
+>Yeni Masaüstü Efektleri Al</guibutton
+> düğmesine tıklayın.</para>
+<note
+><para
+>Lütfen bu makul öntanımlıları değiştirmenin sisteminizi bozabileceğini unutmayın.</para>
+</note>
+
+<para
+>Listedeki bir efekti etkinleştirmek için onu işaretleyin. Liste ögesinin sağ tarafındaki <inlinemediaobject
+><imageobject
+><imagedata fileref="dialog-information.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> bilgi düğmesini tıklayarak Yazar ve Lisans bilgisini görüntüleyebilirsiniz.</para>
+
+<para
+>Bazı efektlerin ayar seçenekleri olabilir; böyle bir durumda bilgi düğmesinin sol tarafında bir <inlinemediaobject
+><imageobject
+> <imagedata fileref="configure-effects.png" format="PNG"/></imageobject
+></inlinemediaobject
+> yapılandırma düğmesi bulunur. Bir yapılandırma iletişim kutusu açmak için ona tıklayın.</para>
+<para
+>Efektin bir video önizlemesini görmek için <inlinemediaobject
+><imageobject
+><imagedata fileref="video.png" format="PNG"/> </imageobject
+></inlinemediaobject
+> düğmesine tıklayın.</para>
+
+<para
+>Bazı efektler birlikte kullanılamaz. Örneğin <guilabel
+>Ekranı Kapla</guilabel
+> veya <guilabel
+>Sihirli Lamba</guilabel
+> efektlerinden yalnızca biri aynı anda kullanılabilir. İkisini de aynı anda etkinleştirmek efektleri bozar. </para>
+
+<para
+>Bu tür efektler olduğunda, grafik arayüz radyo düğmeleri kullanır ve yalnızca bir tanesinin etkin olduğundan emin olur. </para>
+
+<para
+>Halihazırda kullanılan bileşikleştirme arka ucu tarafından desteklenmeyen tüm efektler öntanımlı olarak gizlenir (&eg;, yazılım sunucusu kullanılırken OpenGL efektleri). </para
+> 
+
+<para
+>Ayrıca tüm iç veya yardımcı efektler öntanımlı olarak gizlidir. Bunlar, KWin çekirdeğinin işlevselliğini değiştiren veya masaüstü kabuğunun diğer ögeleriyle etkileşim sağlayan efektlerdir. </para>
+
+<!--FIXME 
+39 effects + 7 internal (XRender compositor)
+Internal effects
+Appearance (Dashboard, Highlight Windows, KSreen, Screenshot, Window Geometry)
+Window Management (Cover Switch)
+-->
+
+</article>

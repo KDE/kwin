@@ -70,26 +70,3 @@ msgstr ""
 "системата до тази на X11 като позволява на злонамерен софтуер да краде "
 "пароли и да шпионира текста, който въвеждате. Уверете се, че разбирате и "
 "приемате този риск."
-
-#~ msgid ""
-#~ "This module lets configure which keyboard events are forwarded to X11 "
-#~ "apps regardless of their focus."
-#~ msgstr ""
-#~ "Този модул позволява да конфигурирате кои събития от клавиатурата да се "
-#~ "препращат към приложенията X11. независимо от техния фокус."
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Your names"
-#~ msgstr "Минчо Кондарев"
-
-#~ msgctxt "EMAIL OF TRANSLATORS"
-#~ msgid "Your emails"
-#~ msgstr "mkondarev@yahoo.de"
-
-#~ msgid "Legacy X11 App Support"
-#~ msgstr "Поддръжка на минали версии  X11 приложения"
-
-#~ msgid "Allow legacy X11 apps to read keystrokes typed in other apps"
-#~ msgstr ""
-#~ "Разрешаване на старите приложения на X11 да четат натискания на клавиши, "
-#~ "въведени в други приложения"
