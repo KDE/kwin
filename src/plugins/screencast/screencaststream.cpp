@@ -607,6 +607,7 @@ void ScreenCastStream::recordCursor()
 
     // in pipewire terms, corrupted means "do not look at the frame contents" and here they're empty.
     spa_buffer->datas[0].chunk->flags = SPA_CHUNK_FLAG_CORRUPTED;
+    spa_buffer->datas[0].chunk->size = 0;
 
     sendCursorData(Cursors::self()->currentCursor(),
                    (spa_meta_cursor *)spa_buffer_find_meta_data(spa_buffer, SPA_META_Cursor, sizeof(spa_meta_cursor)));
