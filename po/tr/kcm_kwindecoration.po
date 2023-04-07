@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-26 02:32+0000\n"
-"PO-Revision-Date: 2023-03-28 22:09+0300\n"
+"PO-Revision-Date: 2023-04-06 13:02+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -51,12 +51,12 @@ msgstr "Tüm masaüstlerinde"
 #: declarative-plugin/buttonsmodel.cpp:59
 #, kde-format
 msgid "Minimize"
-msgstr "Küçült"
+msgstr "Simge Durumuna Küçült"
 
 #: declarative-plugin/buttonsmodel.cpp:61
 #, kde-format
 msgid "Maximize"
-msgstr "Büyüt"
+msgstr "Ekranı Kapla"
 
 #: declarative-plugin/buttonsmodel.cpp:63
 #, kde-format

@@ -1,0 +1,67 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Turkish "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwintouchscreen" lang="&language;">
+<articleinfo>
+
+<title
+>Dokunmatik Ekran Hareketleri</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<othercredit role="translator"
+><firstname
+>Emir</firstname
+><surname
+>SARI</surname
+><affiliation
+><address
+><email
+>emir_sari@icloud.com</email
+></address
+></affiliation
+><contrib
+>Çeviri</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>2021-04-10</date>
+<releaseinfo
+>Plasma 5.20</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>sistem ayarları</keyword>
+<keyword
+>dokuınma</keyword>
+<keyword
+>ekran</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>Ekranın kenarından ekranın merkezine doğru kaydırmak, efektleri etkinleştirmenizi sağlar. Burada, ekranın her bir kenarında hangi efektin etkinleştirileceğini yapılandırabilirsiniz. </para>
+
+<para
+>Herhangi bir fare düğmesiyle bir kareye tıklayın ve içerik menüsünden bir efekt seçin. Mavi kareli kenarların zaten ekli bir efekti vardır, gri renkli kare bu kenar için hiçbir efektin seçilmediğini gösterir.</para>
+
+<para
+>Bağlam menüsündeki erişilebilir ögelerin sayısı <guilabel
+>Çalışma Alanı</guilabel
+> kategorisinin <ulink url="help:/kcontrol/kwineffects/index.html"
+> <guilabel
+>Masaüstü Efektleri</guilabel
+></ulink
+> modülündeki ayarlara bağlıdır. <guilabel
+>Pencere Yönetimi</guilabel
+> grubundan favori efektlerinizi seçin. Bu, bağlam menüsündeki ilgili ögeleri etkinleştirir.</para>
+</article>

@@ -1,0 +1,275 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % Turkish "INCLUDE">
+]>
+<article id="kwintabbox" lang="&language;">
+<articleinfo>
+<title
+>Görev Değiştirici</title>
+<authorgroup>
+<author
+>&Martin.Graesslin;&Martin.Graesslin.mail;</author>
+<othercredit role="translator"
+><firstname
+>Emir</firstname
+><surname
+>SARI</surname
+><affiliation
+><address
+><email
+>emir_sari@icloud.com</email
+></address
+></affiliation
+><contrib
+>Çeviri</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>2023-01-30</date>
+<releaseinfo
+>&plasma; 5.27</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>sistem ayarları</keyword>
+<keyword
+>masaüstü</keyword>
+<keyword
+>pencere</keyword>
+<keyword
+>dolaşım</keyword>
+<keyword
+>değiştir</keyword>
+<keyword
+>seçenek-sekme</keyword>
+</keywordset>
+</articleinfo>
+
+<sect1 id="windows-navigating">
+<title
+>Pencereler Arasında Dolaşmak</title>
+
+<para
+>Görev Değiştirici, kullanıcının klavyeyi kullanarak o anda açık olan pencereler arasında kolayca geçiş yapmasına olanak tanır. Yüksek düzeyde yapılandırılabilir ve kullanıcının davranışını, görsel görünümünü, klavye kısayollarını ve pencere süzmeyi denetlemesine izin verir.</para>
+
+<para>
+  <screenshot>
+    <screeninfo
+>Öntanımlı Görev Değiştirici ekran görüntüsü</screeninfo>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="taskswitcher.png" format="PNG"/>
+      </imageobject>
+    </mediaobject>
+  </screenshot>
+</para>
+
+<para
+>Görev Değiştirici genellikle <keycombo
+>&Alt;&Tab;</keycombo
+> düğme kombinasyonu kullanılarak çağrılır; ancak bu değiştirilebilir. Çağrıldığında, yapılandırma ayarlarına göre isteğe bağlı olarak süzülmüş ve genişletilmiş olarak o anda açık olan tüm pencerelerin bir listesini gösterir. Örneğin, liste, şu anda görünür olan pencereler gibi yalnızca belirli ölçütleri karşılayan pencereleri gösterecek şekilde süzülebilir. Pencere listesi gösterildiğinde kullanıcı, Görev Değiştirici düğme kombinasyonuna art arda basarak listelenen tüm pencereler arasında ileri ve geri gidebilir. Görev Değiştirici düğme kombinasyonunun bırakılması, listede seçili pencereyi etkinleştirir.</para>
+
+<para
+>Görev Değiştirici çok sayıda yapılandırma seçeneği sunduğundan, iki farklı yapılandırma ayarı koleksiyonu tanımlanabilir. Bu koleksiyonlara <guilabel
+>Ana</guilabel
+> ve <guilabel
+>Alternatif</guilabel
+> adı verilir ve her biri kendilerine atanmış benzersiz bir düğme kombinasyonu grubuna sahip olabilir.</para>
+
+<para
+>Ana ve Alternatif koleksiyonların her biri için yapılandırma seçenekleri aşağıdaki gibi dört grup halinde sunulur:</para>
+
+<sect2 id="visualization">
+<title
+>Görselleştirme</title>
+<para
+>Bu yapılandırma seçenekleri grubu, pencere listesinin ekranda nasıl görüntüleneceğini denetler. Öntanımlı görselleştirmeye <guilabel
+>Esinti</guilabel
+> adı verilir. Ekranın sol tarafında tüm açık pencereleri listeler. Diğer görselleştirmeler arasında <guilabel
+>Kapak Değiştirici</guilabel
+> (bir 3B atlıkarınca), <guilabel
+>Işığı Aç/Kapat</guilabel
+> (3B kart yığını) ve <guilabel
+>Orta Yuvarlak</guilabel
+> (bir Microsoft &Windows; tarzı simgeler listesi) vardır. İletişim kutusunun sağ alt kısmındaki <guibutton
+>Yeni Görev Değiştiriciler Al...</guibutton
+> düğmesine tıklayarak daha birçok görselleştirme indirilebilir ve kurulabilir.</para>
+
+<para
+>Açılır listeden bir görselleştirme seçildikten sonra, bir önizleme görmek veya görselleştirmeye özgü seçenekleri yapılandırmak için listenin sağındaki düğme tıklanabilir.</para>
+
+<para
+><guilabel
+>Seçili pencereyi göster</guilabel
+> onay kutusu, kullanıcının hangi pencerenin etkinleştirileceğini ne kadar net göreceğini belirler. Bu kutu işaretlenirse Görev Değiştirici'de o anda vurgulanan pencere dışındaki tüm pencereler gizlenecektir.</para>
+
+<note
+><para
+>İstenen Görev Değiştirici görselleştirmesinin gösterilemediği durumlar olabilir. Bu durumlardan biri, 'bileşikleştirme' adı verilen bir işlemin kapatıldığı veya devre dışı bırakıldığı zaman olabilir. Böyle bir durumda, pencere listesi yine de gösterilir; ancak çok basit bir biçimde.</para
+></note>
+</sect2>
+
+<sect2 id="shortcuts">
+<title
+>Kısayollar</title>
+<para
+>Bu bölüm, <guilabel
+>Ana</guilabel
+> yapılandırması için dört adede kadar Görev Değiştirici klavye kısayolu ve <guilabel
+>Alternatif</guilabel
+> yapılandırması için dört tane daha tanımlamanıza olanak tanır. <guilabel
+>Ana</guilabel
+> kısayolları önceden tanımlanmıştır, <guilabel
+>Alternatif</guilabel
+> kısayollarının ise elle tanımlanması gerekir.</para>
+<para
+><guilabel
+>Tüm Pencereler</guilabel
+> bölümünde, <guilabel
+>İleri</guilabel
+> ve <guilabel
+>Geri</guilabel
+> kısayolları, açık pencereler listesinde ileri ve geri dönmeyi sağlar.</para>
+<para
+><guilabel
+>Geçerli Uygulama</guilabel
+> bölümünde, <guilabel
+>İleri</guilabel
+> ve <guilabel
+>Geri</guilabel
+> kısayolları, o anda etkin olan uygulamanın pencereleri arasında geçiş yapacak şekilde ayarlanabilir. Örneğin, üç &dolphin; penceresi açıksa bu kısayolları kullanarak üç &dolphin; penceresi arasında dolaşabilirsiniz.</para>
+<para
+>Bir klavye kısayolunu değiştirmek için <guibutton
+>İleri</guibutton
+> veya <guibutton
+>Geri</guibutton
+> düğmesine tıklayın ve istediğiniz kısayol kombinasyonunu yazın. &Ctrl; gibi bir değiştirici düğme kullandığınızdan veya &Alt; düğmesinin kısayolun bir parçası olduğundan emin olun; aksi takdirde pencere listesinde düzgün bir şekilde dolaşamayabilirsiniz.</para>
+
+<note
+><para
+>Görev Değiştirici'yi çağırmak için tanımlanmış klavye kısayollarından herhangi biri kullanılabilir. Görev Değiştirici'yi klavyeyi kullanmadan çalıştırmak için <ulink url="help:/kcontrol/kwinscreenedges/index.html"
+><guilabel
+>Ekran Kenarları</guilabel
+></ulink
+> &systemsettings; modülünü kullanın.</para
+></note>
+</sect2>
+
+<sect2 id="content">
+<title
+>İçerik</title>
+<para
+>Bu bölümdeki seçenekler, Görev Değiştirici listesinde hangi pencerelerin görüneceğini kısımsal olarak denetler.</para>
+
+<para
+><guilabel
+>Sıralama Düzeni</guilabel
+> açılır listesi, pencerelerin <guilabel
+>Yığınlama Düzeni</guilabel
+> mi yoksa <guilabel
+>Son Kullanılanlar</guilabel
+> sıralamasında mı listeleneceğini belirtir. <guilabel
+>Yığın Düzeni</guilabel
+>, pencerelerin ekranda üst üste gelme sırasını, <guilabel
+>Son Kullanılanlar</guilabel
+> sıralaması ise pencerelerin kullanılma sırasıdır. <guilabel
+>Son Kullanılanlar</guilabel
+> sıralaması, her zaman listede ilk 2 sırada görünecekleri için en sık kullanılan iki pencere arasında geçiş yapmayı çok kolaylaştırır.</para>
+
+<para
+><guilabel
+>"Masaüstünü Göster" simgesini içer</guilabel
+> seçeneği, pencere listesine bir Masaüstünü Göster seçeneği ekleyecektir. Bu, kullanıcının gösterilecek 'pencere' olarak Masaüstünü kolayca seçmesini sağlar.</para>
+
+<para
+><guilabel
+>Her uygulama için yalnızca bir pencere</guilabel
+> seçeneği, her açık uygulama için yalnızca bir pencere göstererek karmaşayı azaltır. Bir uygulamanın birden fazla açık penceresi varsa en son etkinleştirilen penceresi listede gösterilecek ve diğerleri gösterilmeyecektir.</para>
+
+<para
+><guilabel
+>Küçültülmüş pencereleri diğer pencerelerden sonra sırala</guilabel
+> seçeneği, küçültülmüş pencerelerin bazılarından daha yakın tarihli veya daha altta olsalar bile, önce tüm küçültülmemiş pencereleri gösterir.</para>
+</sect2>
+
+<sect2 id="filter-windows-by">
+<title
+>Pencereleri süzme ölçütü</title>
+<para
+>Bu bölüm, Görev Değiştirici'nin pencere listesini ek olarak süzmek için seçenekler içerir.</para>
+
+<para
+><guilabel
+>Sanal Masaüstleri</guilabel
+> seçeneği, o anda etkin olan sanal masaüstüne göre pencerelerin listesini süzer. Belirli sanal masaüstlerine sürekli olarak belirli pencereler yerleştirirseniz bu süzme seçeneği, bu sanal masaüstleri içinde veya arasında pencerelere geçişi kolaylaştırabilir. Yalnızca geçerli sanal masaüstündeki pencereleri göstermek için <guilabel
+>Geçerli masaüstü</guilabel
+> ögesini seçin. Sanal masaüstlerinde yalnızca şu anda etkin olmayan pencereleri göstermek için <guilabel
+>Diğer tüm masaüstleri</guilabel
+>'ni seçin.</para>
+
+<para
+><guilabel
+>Etkinlikler</guilabel
+> seçeneği, şu anda etkinliğin etkin olduğu pencerelerin listesini süzer. Sanal Masaüstü süzmede olduğu gibi, bu seçenek tüm Etkinlikler içinde veya genelinde uygulamalara geçişi kolaylaştırabilir. Yalnızca geçerli etkinliğin parçası olan pencereleri göstermek için <guilabel
+>Geçerli etkinlik</guilabel
+> ögesini seçin. Yalnızca şu anda etkin olmayan etkinliklerin parçası olan pencereleri göstermek için <guilabel
+>Diğer tüm etkinlikler</guilabel
+>'i seçin.</para>
+
+<para
+><guilabel
+>Ekranlar</guilabel
+> seçeneği, o anda etkin olan görüntüleme ekranına göre pencerelerin listesini süzer. Yalnızca o anda üzerinde fare işaretçisinin bulunduğu ekranda bulunan pencereleri göstermek için <guilabel
+>Geçerli ekran</guilabel
+>'ı seçin. Diğer tüm ekranlardaki pencereleri göstermek için <guilabel
+>Diğer tüm ekranlar</guilabel
+>'ı seçin. Bu seçenek, çoklu monitör kurulumunda aynı monitörde bulunan pencereler arasında hızla geçiş yapmak isteyen kullanıcılar için yararlı olabilir.</para>
+<note
+><para
+>Etkin ekran, o anda etkin pencerenin açık olduğu ekran değil, fare işaretçisinin o anda üzerinde olduğu ekrandır.</para
+></note>
+
+<para
+><guilabel
+>Simge durumuna küçültme</guilabel
+> seçeneği, pencerelerin listesini gizli olup olmamalarına göre süzer. Yalnızca simge durumuna küçültülmemiş pencereleri göstermek için <guilabel
+>Görünür pencereler</guilabel
+>'i seçin. Yalnızca simge durumuna küçültülmüş pencereleri göstermek için <guilabel
+>Gizli pencereler</guilabel
+>'i seçin.</para>
+
+<para
+>Bu bölümdeki bir seçeneğin işaretini kaldırırsanız o seçenek için herhangi bir süzgeç uygulanmaz. Örneğin, Ekranlar seçeneğini işaretler ve diğer üç seçeneği temizlerseniz Görev Değiştirici pencere listesi yalnızca geçerli ekranda hangi pencerelerin bulunduğuna göre süzülür.</para>
+<para
+>Yukarıdaki bölümlerde açıklanan seçeneklerin tümü, Görev Değiştirici'nin davranışı ve görünüşü üzerinde çok ayrıntılı denetim sağlamak için birlikte çalışır. Örneğin, bir döngüde açık pencereleri göstermek için <keycombo
+>&Alt;&Tab;</keycombo
+> düğme kombinasyonu ile çağrılacak <guilabel
+>Ana</guilabel
+> ayarlar koleksiyonunu yalnızca bir pencere gösterecek şekilde, uygulama başına ve yalnızca geçerli masaüstünde ve o anda etkin olan ekranda bulunan pencereleri listelemek için tanımlayabilirsiniz. Bu, hem 'iş' hem de 'ev' sanal masaüstleriniz varsa bağlama duyarlı çok hızlı pencere geçişi sağlayabilir ve ardından iş ve ev için tüm elektronik tablolarınızı aynı monitörde tutar.</para>
+
+<para
+><guilabel
+>Alternatif</guilabel
+> Görev Değiştirici yapılandırmasının kullanılabilirliği, size pencere listelerini kolayca süzmek ve göz atmak için ikinci bir yol sunar. İki Görev Değiştirici yapılandırmasında bulunan sekiz düğme kombinasyonuyla, çok sayıda pencere arasında kolay ve hızlı bir biçimde dolaşabilirsiniz.</para>
+</sect2>
+</sect1>
+</article>
+
+<!--
+Local Variables:
+mode: xml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
+End:
+
+vim:tabstop=2:shiftwidth=2:expandtab
+kate: space-indent on; indent-width 2; tab-width 2; indent-mode none;
+-->

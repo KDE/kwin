@@ -1,0 +1,68 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Turkish "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwinvirtualkeyboard" lang="&language;">
+<articleinfo>
+
+<title
+>Sanal Klavye</title>
+<authorgroup>
+<author
+><firstname
+>Yuri</firstname
+> <surname
+>Chornoivan</surname
+> </author>
+<othercredit role="translator"
+><firstname
+>Emir</firstname
+><surname
+>SARI</surname
+><affiliation
+><address
+><email
+>emir_sari@icloud.com</email
+></address
+></affiliation
+><contrib
+>Çeviri</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>2021-04-27</date>
+<releaseinfo
+>Plasma 5.22</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>sistem ayarları</keyword>
+<keyword
+>sanal</keyword>
+<keyword
+>klavye</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>Bu modül, kullanılacak sanal klavyeyi seçmenizi sağlar. Donanım klavyesi algılanmadığında sanal klavye otomatik olarak etkinleştirilir. </para>
+
+<para
+>Listeden bir <ulink url="https://en.wikipedia.org/wiki/Virtual_keyboard"
+>sanal klavye</ulink
+> veya bir sanal klavye kullanmak istemiyorsanız <guilabel
+>Yok</guilabel
+>'u seçin. </para>
+
+<para
+>Bu modülü kullanmadan önce ilgili giriş yöntemi işletkelerinin kurulması önerilir. </para>
+
+</article>

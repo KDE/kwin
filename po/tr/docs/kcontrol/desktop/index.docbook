@@ -1,0 +1,142 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Turkish "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="desktop" lang="&language;">
+<title
+>Sanal Masaüstleri</title>
+<articleinfo>
+
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<author
+>&Jost.Schenck; &Jost.Schenck.mail;</author>
+<othercredit role="translator"
+><firstname
+>Emir</firstname
+><surname
+>SARI</surname
+><affiliation
+><address
+><email
+>emir_sari@icloud.com</email
+></address
+></affiliation
+><contrib
+>Çeviri</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>2021-04-09</date>
+<releaseinfo
+>Plasma 5.20</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>sistem ayarları</keyword>
+<keyword
+>sanal</keyword>
+<keyword
+>masaüstü</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>&kde; size birkaç sanal masaüstüne sahip olma olanağı sunar. </para>
+<para
+><guibutton
+>Yeniden Adlandır</guibutton
+> düğmesine (listedeki masaüstü ögesinin üzerine geldiğinizde görünür) tıklayıp metin alanına metin girerek masaüstlerinin adlarını değiştirebilirsiniz. </para>
+<para
+>Bir masaüstünü kaldırmak istiyorsanız masaüstü ögesinin sağındaki çöp kutusu yer paylaşımı simgesini kullanın. </para>
+<para
+>Listeye bir sanal masaüstü eklemek için <guibutton
+>Ekle</guibutton
+> düğmesine basın (öntanımlı adı <guilabel
+>Yeni Masaüstü</guilabel
+>'dür). </para>
+<para
+>Paneldeki sayfalayıcıda satır sayısını yapılandırabilirsiniz. Masaüstü sayısını ayarlamak için listenin altındaki satır giriş kutusunu kullanmanız yeterlidir. Masaüstleri, satırlara göre otomatik olarak yeniden düzenlenecektir. </para>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Dolaşım sarmalı</guilabel
+></term>
+<listitem
+><para
+>Bir klavyenin veya etkin masaüstü sınırında gezinmenin sizi yeni masaüstünün karşı kenarına götürmesini istiyorsanız bu seçeneği etkinleştirin. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Geçerken canlandırma göster</guilabel
+></term>
+<listitem
+><para
+>Açılır kutudan <guilabel
+>Kaydır</guilabel
+>, <guilabel
+>Masaüstü Küp Canlandırması</guilabel
+> veya <guilabel
+>Masaüstünü Soldur</guilabel
+>'u seçin veya ögenin işaretini kaldırarak canlandırmaları kapatın. Seçilen canlandırmanın ayar seçenekleri varsa bir yapılandırma iletişim kutusunu başlatmak için açılır kutunun sağındaki araçlar simgesine tıklayın. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Değiştirirken ekran üzeri görünüm göster</guilabel
+></term>
+<listitem
+><para
+>Masaüstü geçişi için ekran üzeri bir görünüm istiyorsanız bu seçeneği etkinleştirin. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Masaüstü yerleşimi göstergelerini göster</guilabel
+></term>
+<listitem
+><para
+>Bu seçeneğin etkinleştirilmesi, seçili masaüstünü gösteren masaüstü yerleşiminin küçük bir önizlemesini gösterecektir. </para
+></listitem>
+</varlistentry>
+
+</variablelist>
+
+<para
+>Fare tekerleğini masaüstündeki boş bir alan üzerinde veya paneldeki <guilabel
+>Sayfalayıcı</guilabel
+> simgesi üzerinde kaydırmak, kaydırdığınız yönde (yukarı veya aşağı) sayısal olarak bir sonraki sanal masaüstüne geçecektir.</para>
+<para
+>Bu öntanımlı davranışı <guilabel
+>Masaüstü Ayarları</guilabel
+> içindeki <guilabel
+>Fare Eylemleri</guilabel
+>'nden değiştirebilirsiniz (<keycombo action="simul"
+>&Alt;<keycap
+>D</keycap
+></keycombo
+>, <keycombo action="simul"
+>&Alt;<keycap
+>S</keycap
+></keycombo
+>).</para>
+
+</article>
