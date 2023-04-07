@@ -45,7 +45,7 @@ protected:
 private:
     libinput_event *m_event;
     libinput_event_type m_type;
-    mutable Device *m_device;
+    Device *const m_device;
 };
 
 class KeyEvent : public Event
