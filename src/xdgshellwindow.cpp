@@ -592,6 +592,9 @@ void XdgToplevelWindow::handleRoleDestroyed()
 
     m_shellSurface->disconnect(this);
 
+    disconnect(waylandServer(), &WaylandServer::foreignTransientChanged,
+               this, &XdgToplevelWindow::handleForeignTransientForChanged);
+
     XdgSurfaceWindow::handleRoleDestroyed();
 }
 
