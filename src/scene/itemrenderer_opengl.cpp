@@ -94,7 +94,7 @@ static QRectF logicalRectToDeviceRect(const QRectF &logical, qreal deviceScale)
                   QPointF(std::round(logical.right() * deviceScale), std::round(logical.bottom() * deviceScale)));
 }
 
-static RenderGeometry clipQuads(const Item *item, const ItemRendererOpenGL::RenderContext *context)
+static RenderGeometry clipQuads(Item *item, const ItemRendererOpenGL::RenderContext *context)
 {
     const WindowQuadList quads = item->quads();
 

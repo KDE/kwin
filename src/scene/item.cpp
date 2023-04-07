@@ -336,7 +336,7 @@ void Item::discardQuads()
     m_quads.reset();
 }
 
-WindowQuadList Item::quads() const
+WindowQuadList Item::quads()
 {
     if (!m_quads.has_value()) {
         m_quads = buildQuads();

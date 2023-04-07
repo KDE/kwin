@@ -108,7 +108,7 @@ public:
     QRegion repaints(SceneDelegate *delegate) const;
     void resetRepaints(SceneDelegate *delegate);
 
-    WindowQuadList quads() const;
+    WindowQuadList quads();
     virtual void preprocess();
 
 Q_SIGNALS:
@@ -155,7 +155,7 @@ private:
     bool m_explicitVisible = true;
     bool m_effectiveVisible = true;
     QMap<SceneDelegate *, QRegion> m_repaints;
-    mutable std::optional<WindowQuadList> m_quads;
+    std::optional<WindowQuadList> m_quads;
     mutable std::optional<QList<Item *>> m_sortedChildItems;
 };
 
