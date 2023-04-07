@@ -7,7 +7,7 @@
 #include "platformsupport/scenes/opengl/basiceglsurfacetexture_wayland.h"
 #include "kwineglext.h"
 #include "libkwineffects/kwingltexture.h"
-#include "platformsupport/scenes/opengl/egl_dmabuf.h"
+#include "platformsupport/scenes/opengl/abstract_egl_backend.h"
 #include "scene/surfaceitem_wayland.h"
 #include "utils/common.h"
 #include "wayland/drmclientbuffer.h"
@@ -155,21 +155,21 @@ void BasicEGLSurfaceTextureWayland::updateEglTexture(KWaylandServer::DrmClientBu
 
 bool BasicEGLSurfaceTextureWayland::loadDmabufTexture(KWaylandServer::LinuxDmaBufV1ClientBuffer *buffer)
 {
-    auto dmabuf = static_cast<EglDmabufBuffer *>(buffer);
-    if (Q_UNLIKELY(dmabuf->images().constFirst() == EGL_NO_IMAGE_KHR)) {
+    EGLImageKHR image = backend()->importBufferAsImage(buffer);
+    if (Q_UNLIKELY(image == EGL_NO_IMAGE_KHR)) {
         qCritical(KWIN_OPENGL) << "Invalid dmabuf-based wl_buffer";
         return false;
     }
 
     m_texture.reset(new GLTexture(GL_TEXTURE_2D));
-    m_texture->setSize(dmabuf->size());
+    m_texture->setSize(buffer->size());
     m_texture->create();
     m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
     m_texture->setFilter(GL_NEAREST);
     m_texture->bind();
-    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, static_cast<GLeglImageOES>(dmabuf->images().constFirst()));
+    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, static_cast<GLeglImageOES>(image));
     m_texture->unbind();
-    m_texture->setContentTransform(dmabuf->origin() == KWaylandServer::ClientBuffer::Origin::TopLeft ? TextureTransform::MirrorY : TextureTransforms());
+    m_texture->setContentTransform(buffer->origin() == KWaylandServer::ClientBuffer::Origin::TopLeft ? TextureTransform::MirrorY : TextureTransforms());
     m_bufferType = BufferType::DmaBuf;
 
     return true;
@@ -183,13 +183,12 @@ void BasicEGLSurfaceTextureWayland::updateDmabufTexture(KWaylandServer::LinuxDma
         return;
     }
 
-    auto dmabuf = static_cast<EglDmabufBuffer *>(buffer);
     m_texture->bind();
-    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, static_cast<GLeglImageOES>(dmabuf->images().constFirst()));
+    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, static_cast<GLeglImageOES>(backend()->importBufferAsImage(buffer)));
     m_texture->unbind();
     // The origin in a dmabuf-buffer is at the upper-left corner, so the meaning
     // of Y-inverted is the inverse of OpenGL.
-    m_texture->setContentTransform(dmabuf->origin() == KWaylandServer::ClientBuffer::Origin::TopLeft ? TextureTransform::MirrorY : TextureTransforms());
+    m_texture->setContentTransform(buffer->origin() == KWaylandServer::ClientBuffer::Origin::TopLeft ? TextureTransform::MirrorY : TextureTransforms());
 }
 
 EGLImageKHR BasicEGLSurfaceTextureWayland::attach(KWaylandServer::DrmClientBuffer *buffer)

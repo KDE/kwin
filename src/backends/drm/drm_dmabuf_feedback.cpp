@@ -10,7 +10,6 @@
 
 #include "drm_egl_backend.h"
 #include "drm_gpu.h"
-#include "platformsupport/scenes/opengl/egl_dmabuf.h"
 #include "wayland/linuxdmabufv1clientbuffer.h"
 #include "wayland/surface_interface.h"
 
@@ -62,7 +61,7 @@ void DmabufFeedback::scanoutFailed(KWaylandServer::SurfaceInterface *surface, co
         if (!m_attemptedFormats[dmabufAttrs.format].contains(dmabufAttrs.modifier)) {
             m_attemptedFormats[dmabufAttrs.format] << dmabufAttrs.modifier;
             QVector<KWaylandServer::LinuxDmaBufV1Feedback::Tranche> scanoutTranches;
-            const auto tranches = m_eglBackend->dmabuf()->tranches();
+            const auto tranches = m_eglBackend->tranches();
             for (const auto &tranche : tranches) {
                 KWaylandServer::LinuxDmaBufV1Feedback::Tranche scanoutTranche;
                 for (auto it = tranche.formatTable.constBegin(); it != tranche.formatTable.constEnd(); it++) {

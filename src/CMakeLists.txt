@@ -98,7 +98,6 @@ target_sources(kwin PRIVATE
     layers.cpp
     layershellv1integration.cpp
     layershellv1window.cpp
-    linux_dmabuf.cpp
     main.cpp
     modifier_only_shortcuts.cpp
     mousebuttons.cpp

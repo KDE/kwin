@@ -19,7 +19,6 @@
 #include "drm_virtual_output.h"
 #include "gbm_dmabuf.h"
 #include "kwineglutils_p.h"
-#include "platformsupport/scenes/opengl/egl_dmabuf.h"
 #include "scene/surfaceitem_wayland.h"
 #include "wayland/linuxdmabufv1clientbuffer.h"
 #include "wayland/surface_interface.h"
@@ -99,7 +98,7 @@ std::shared_ptr<GbmSwapchain> VirtualEglGbmLayer::createGbmSwapchain() const
     static const bool modifiersEnv = qEnvironmentVariableIntValue("KWIN_DRM_USE_MODIFIERS", &modifiersEnvSet) != 0;
     const bool allowModifiers = !modifiersEnvSet || modifiersEnv;
 
-    const auto tranches = m_eglBackend->dmabuf()->tranches();
+    const auto tranches = m_eglBackend->tranches();
     for (const auto &tranche : tranches) {
         for (auto it = tranche.formatTable.constBegin(); it != tranche.formatTable.constEnd(); it++) {
             const auto size = m_output->pixelSize();

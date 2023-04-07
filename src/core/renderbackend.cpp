@@ -32,6 +32,11 @@ bool RenderBackend::checkGraphicsReset()
     return false;
 }
 
+bool RenderBackend::testImportBuffer(KWaylandServer::LinuxDmaBufV1ClientBuffer *buffer)
+{
+    return false;
+}
+
 QHash<uint32_t, QVector<uint64_t>> RenderBackend::supportedFormats() const
 {
     return QHash<uint32_t, QVector<uint64_t>>{{DRM_FORMAT_XRGB8888, QVector<uint64_t>{DRM_FORMAT_MOD_LINEAR}}};

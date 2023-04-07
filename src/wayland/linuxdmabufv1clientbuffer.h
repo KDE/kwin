@@ -17,6 +17,11 @@
 #include <QSet>
 #include <sys/types.h>
 
+namespace KWin
+{
+class RenderBackend;
+}
+
 namespace KWaylandServer
 {
 class LinuxDmaBufV1ClientBufferPrivate;
@@ -93,39 +98,8 @@ public:
     explicit LinuxDmaBufV1ClientBufferIntegration(Display *display);
     ~LinuxDmaBufV1ClientBufferIntegration() override;
 
-    /**
-     * The Iface class provides an interface from the LinuxDmabufInterface into the compositor
-     */
-    class RendererInterface
-    {
-    public:
-        virtual ~RendererInterface() = default;
-
-        /**
-         * Imports a linux-dmabuf buffer into the compositor.
-         *
-         * The parent LinuxDmabufUnstableV1Interface class takes ownership of returned
-         * buffer objects.
-         *
-         * In return the returned buffer takes ownership of the file descriptor for each
-         * plane.
-         *
-         * Note that it is the responsibility of the caller to close the file descriptors
-         * when the import fails.
-         *
-         * @return The imported buffer on success, and nullptr otherwise.
-         */
-        virtual LinuxDmaBufV1ClientBuffer *importBuffer(KWin::DmaBufAttributes &&attrs, quint32 flags) = 0;
-    };
-
-    RendererInterface *rendererInterface() const;
-
-    /**
-     * Sets the compositor implementation for the dmabuf interface.
-     *
-     * The ownership is not transferred by this call.
-     */
-    void setRendererInterface(RendererInterface *rendererInterface);
+    KWin::RenderBackend *renderBackend() const;
+    void setRenderBackend(KWin::RenderBackend *renderBackend);
 
     void setSupportedFormatsWithModifiers(const QVector<LinuxDmaBufV1Feedback::Tranche> &tranches);
 

@@ -11,6 +11,7 @@
 */
 
 #include "linuxdmabufv1clientbuffer.h"
+#include "core/renderbackend.h"
 #include "linuxdmabufv1clientbuffer_p.h"
 #include "surface_interface_p.h"
 #include "utils/common.h"
@@ -142,21 +143,26 @@ void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_create(Resource *resource, 
         return;
     }
 
+    KWin::RenderBackend *renderBackend = m_integration->renderBackend();
+    if (Q_UNLIKELY(!renderBackend)) {
+        send_failed(resource->handle);
+        return;
+    }
+
     m_isUsed = true;
 
     m_attrs.width = width;
     m_attrs.height = height;
     m_attrs.format = format;
 
-    LinuxDmaBufV1ClientBuffer *clientBuffer = m_integration->rendererInterface()->importBuffer(std::move(m_attrs), flags);
-    if (!clientBuffer) {
+    auto clientBuffer = std::make_unique<LinuxDmaBufV1ClientBuffer>(std::move(m_attrs), flags);
+    if (!renderBackend->testImportBuffer(clientBuffer.get())) {
         send_failed(resource->handle);
         return;
     }
 
     wl_resource *bufferResource = wl_resource_create(resource->client(), &wl_buffer_interface, 1, 0);
     if (!bufferResource) {
-        delete clientBuffer;
         wl_resource_post_no_memory(resource->handle);
         return;
     }
@@ -165,7 +171,7 @@ void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_create(Resource *resource, 
     send_created(resource->handle, bufferResource);
 
     DisplayPrivate *displayPrivate = DisplayPrivate::get(m_integration->display());
-    displayPrivate->registerClientBuffer(clientBuffer);
+    displayPrivate->registerClientBuffer(clientBuffer.release());
 }
 
 void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_create_immed(Resource *resource,
@@ -184,21 +190,26 @@ void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_create_immed(Resource *reso
         return;
     }
 
+    KWin::RenderBackend *renderBackend = m_integration->renderBackend();
+    if (Q_UNLIKELY(!renderBackend)) {
+        wl_resource_post_error(resource->handle, error_invalid_wl_buffer, "importing the supplied dmabufs failed");
+        return;
+    }
+
     m_isUsed = true;
 
     m_attrs.width = width;
     m_attrs.height = height;
     m_attrs.format = format;
 
-    LinuxDmaBufV1ClientBuffer *clientBuffer = m_integration->rendererInterface()->importBuffer(std::move(m_attrs), flags);
-    if (!clientBuffer) {
+    auto clientBuffer = std::make_unique<LinuxDmaBufV1ClientBuffer>(std::move(m_attrs), flags);
+    if (!renderBackend->testImportBuffer(clientBuffer.get())) {
         wl_resource_post_error(resource->handle, error_invalid_wl_buffer, "importing the supplied dmabufs failed");
         return;
     }
 
     wl_resource *bufferResource = wl_resource_create(resource->client(), &wl_buffer_interface, 1, buffer_id);
     if (!bufferResource) {
-        delete clientBuffer;
         wl_resource_post_no_memory(resource->handle);
         return;
     }
@@ -206,7 +217,7 @@ void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_create_immed(Resource *reso
     clientBuffer->initialize(bufferResource);
 
     DisplayPrivate *displayPrivate = DisplayPrivate::get(m_integration->display());
-    displayPrivate->registerClientBuffer(clientBuffer);
+    displayPrivate->registerClientBuffer(clientBuffer.release());
 }
 
 bool LinuxDmaBufParamsV1::test(Resource *resource, uint32_t width, uint32_t height)
@@ -279,19 +290,19 @@ LinuxDmaBufV1ClientBufferIntegration::~LinuxDmaBufV1ClientBufferIntegration()
 {
 }
 
-LinuxDmaBufV1ClientBufferIntegration::RendererInterface *LinuxDmaBufV1ClientBufferIntegration::rendererInterface() const
-{
-    return d->rendererInterface;
-}
-
-void LinuxDmaBufV1ClientBufferIntegration::setRendererInterface(RendererInterface *rendererInterface)
-{
-    d->rendererInterface = rendererInterface;
-}
-
 bool operator==(const LinuxDmaBufV1Feedback::Tranche &t1, const LinuxDmaBufV1Feedback::Tranche &t2)
 {
     return t1.device == t2.device && t1.flags == t2.flags && t1.formatTable == t2.formatTable;
+}
+
+KWin::RenderBackend *LinuxDmaBufV1ClientBufferIntegration::renderBackend() const
+{
+    return d->renderBackend;
+}
+
+void LinuxDmaBufV1ClientBufferIntegration::setRenderBackend(KWin::RenderBackend *renderBackend)
+{
+    d->renderBackend = renderBackend;
 }
 
 void LinuxDmaBufV1ClientBufferIntegration::setSupportedFormatsWithModifiers(const QVector<LinuxDmaBufV1Feedback::Tranche> &tranches)

@@ -35,10 +35,10 @@ public:
     LinuxDmaBufV1ClientBufferIntegrationPrivate(LinuxDmaBufV1ClientBufferIntegration *q, Display *display);
 
     LinuxDmaBufV1ClientBufferIntegration *q;
-    LinuxDmaBufV1ClientBufferIntegration::RendererInterface *rendererInterface = nullptr;
     std::unique_ptr<LinuxDmaBufV1Feedback> defaultFeedback;
     std::unique_ptr<LinuxDmaBufV1FormatTable> table;
     dev_t mainDevice;
+    QPointer<KWin::RenderBackend> renderBackend;
     QHash<uint32_t, QVector<uint64_t>> supportedModifiers;
 
 protected:

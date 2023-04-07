@@ -42,7 +42,6 @@ class OutputManagementV2Interface;
 class XdgForeignV2Interface;
 class XdgOutputManagerV1Interface;
 class LinuxDmaBufV1ClientBufferIntegration;
-class LinuxDmaBufV1ClientBuffer;
 class TabletManagerV2Interface;
 class KeyboardShortcutsInhibitManagerV1Interface;
 class XdgDecorationManagerV1Interface;
@@ -214,19 +213,6 @@ public:
      */
     SocketPairConnection createConnection();
 
-    QSet<KWaylandServer::LinuxDmaBufV1ClientBuffer *> linuxDmabufBuffers() const
-    {
-        return m_linuxDmabufBuffers;
-    }
-    void addLinuxDmabufBuffer(KWaylandServer::LinuxDmaBufV1ClientBuffer *buffer)
-    {
-        m_linuxDmabufBuffers << buffer;
-    }
-    void removeLinuxDmabufBuffer(KWaylandServer::LinuxDmaBufV1ClientBuffer *buffer)
-    {
-        m_linuxDmabufBuffers.remove(buffer);
-    }
-
     /**
      * Returns the first socket name that can be used to connect to this server.
      * For a full list, use display()->socketNames()
@@ -284,7 +270,6 @@ private:
     KWaylandServer::XdgDecorationManagerV1Interface *m_xdgDecorationManagerV1 = nullptr;
     KWaylandServer::LinuxDmaBufV1ClientBufferIntegration *m_linuxDmabuf = nullptr;
     KWaylandServer::KeyboardShortcutsInhibitManagerV1Interface *m_keyboardShortcutsInhibitManager = nullptr;
-    QSet<KWaylandServer::LinuxDmaBufV1ClientBuffer *> m_linuxDmabufBuffers;
     QPointer<KWaylandServer::ClientConnection> m_xwaylandConnection;
     KWaylandServer::InputMethodV1Interface *m_inputMethod = nullptr;
     QPointer<KWaylandServer::ClientConnection> m_inputMethodServerConnection;

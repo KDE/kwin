@@ -20,7 +20,6 @@
 #include "gbm_dmabuf.h"
 #include "kwineglutils_p.h"
 #include "libkwineffects/kwinglplatform.h"
-#include "platformsupport/scenes/opengl/egl_dmabuf.h"
 #include "scene/surfaceitem_wayland.h"
 #include "wayland/linuxdmabufv1clientbuffer.h"
 #include "wayland/surface_interface.h"

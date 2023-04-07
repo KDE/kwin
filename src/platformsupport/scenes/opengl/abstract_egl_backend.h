@@ -8,6 +8,7 @@
 */
 #pragma once
 #include "platformsupport/scenes/opengl/openglbackend.h"
+#include "wayland/linuxdmabufv1clientbuffer.h"
 
 #include <QObject>
 #include <epoxy/egl.h>
@@ -30,7 +31,6 @@ struct AbstractEglBackendFunctions
 };
 
 struct DmaBufAttributes;
-class EglDmabuf;
 class Output;
 
 class KWIN_EXPORT AbstractEglBackend : public OpenGLBackend
@@ -62,14 +62,16 @@ public:
         return m_config;
     }
 
+    bool testImportBuffer(KWaylandServer::LinuxDmaBufV1ClientBuffer *buffer) override;
     QHash<uint32_t, QVector<uint64_t>> supportedFormats() const override;
 
+    QVector<KWaylandServer::LinuxDmaBufV1Feedback::Tranche> tranches() const;
     dev_t deviceId() const;
     virtual bool prefer10bpc() const;
-    EglDmabuf *dmabuf() const;
 
     std::shared_ptr<GLTexture> importDmaBufAsTexture(const DmaBufAttributes &attributes) const;
     EGLImageKHR importDmaBufAsImage(const DmaBufAttributes &attributes) const;
+    EGLImageKHR importBufferAsImage(KWaylandServer::LinuxDmaBufV1ClientBuffer *buffer);
 
 protected:
     AbstractEglBackend(dev_t deviceId = 0);
@@ -100,10 +102,11 @@ private:
     EGLSurface m_surface = EGL_NO_SURFACE;
     EGLContext m_context = EGL_NO_CONTEXT;
     EGLConfig m_config = nullptr;
-    // note: m_dmaBuf is nullptr if this is not the primary backend
-    EglDmabuf *m_dmaBuf = nullptr;
     QList<QByteArray> m_clientExtensions;
     const dev_t m_deviceId;
+    QVector<KWaylandServer::LinuxDmaBufV1Feedback::Tranche> m_tranches;
+    QHash<uint32_t, QVector<uint64_t>> m_supportedFormats;
+    QHash<KWaylandServer::LinuxDmaBufV1ClientBuffer *, EGLImageKHR> m_importedBuffers;
 
     static AbstractEglBackend *s_primaryBackend;
 };

@@ -8,11 +8,8 @@
 */
 #include "platformsupport/scenes/opengl/abstract_egl_backend.h"
 #include "composite.h"
-#include "core/output.h"
 #include "core/outputbackend.h"
-#include "dmabuftexture.h"
 #include "options.h"
-#include "platformsupport/scenes/opengl/egl_dmabuf.h"
 #include "utils/common.h"
 #include "utils/egl_context_attribute_builder.h"
 #include "wayland/display.h"
@@ -32,6 +29,11 @@
 namespace KWin
 {
 
+typedef EGLBoolean (*eglQueryDmaBufFormatsEXT_func)(EGLDisplay dpy, EGLint max_formats, EGLint *formats, EGLint *num_formats);
+typedef EGLBoolean (*eglQueryDmaBufModifiersEXT_func)(EGLDisplay dpy, EGLint format, EGLint max_modifiers, EGLuint64KHR *modifiers, EGLBoolean *external_only, EGLint *num_modifiers);
+eglQueryDmaBufFormatsEXT_func eglQueryDmaBufFormatsEXT = nullptr;
+eglQueryDmaBufModifiersEXT_func eglQueryDmaBufModifiersEXT = nullptr;
+
 static EGLContext s_globalShareContext = EGL_NO_CONTEXT;
 
 static bool isOpenGLES_helper()
@@ -50,7 +52,6 @@ AbstractEglBackend::AbstractEglBackend(dev_t deviceId)
 
 AbstractEglBackend::~AbstractEglBackend()
 {
-    delete m_dmaBuf;
 }
 
 EGLContext AbstractEglBackend::ensureGlobalShareContext()
@@ -85,6 +86,10 @@ void AbstractEglBackend::teardown()
 
 void AbstractEglBackend::cleanup()
 {
+    for (const EGLImageKHR &image : m_importedBuffers) {
+        eglDestroyImageKHR(m_display, image);
+    }
+
     cleanupSurfaces();
     cleanupGL();
     doneCurrent();
@@ -172,6 +177,34 @@ void AbstractEglBackend::initBufferAge()
     setSupportsSwapBuffersWithDamage(hasExtension(QByteArrayLiteral("EGL_EXT_swap_buffers_with_damage")));
 }
 
+static int bpcForFormat(uint32_t format)
+{
+    switch (format) {
+    case DRM_FORMAT_XRGB8888:
+    case DRM_FORMAT_XBGR8888:
+    case DRM_FORMAT_RGBX8888:
+    case DRM_FORMAT_BGRX8888:
+    case DRM_FORMAT_ARGB8888:
+    case DRM_FORMAT_ABGR8888:
+    case DRM_FORMAT_RGBA8888:
+    case DRM_FORMAT_BGRA8888:
+    case DRM_FORMAT_RGB888:
+    case DRM_FORMAT_BGR888:
+        return 8;
+    case DRM_FORMAT_XRGB2101010:
+    case DRM_FORMAT_XBGR2101010:
+    case DRM_FORMAT_RGBX1010102:
+    case DRM_FORMAT_BGRX1010102:
+    case DRM_FORMAT_ARGB2101010:
+    case DRM_FORMAT_ABGR2101010:
+    case DRM_FORMAT_RGBA1010102:
+    case DRM_FORMAT_BGRA1010102:
+        return 10;
+    default:
+        return -1;
+    }
+}
+
 void AbstractEglBackend::initWayland()
 {
     if (!WaylandServer::self()) {
@@ -192,8 +225,78 @@ void AbstractEglBackend::initWayland()
         }
     }
 
-    Q_ASSERT(!m_dmaBuf);
-    m_dmaBuf = EglDmabuf::factory(this);
+    if (hasExtension(QByteArrayLiteral("EGL_EXT_image_dma_buf_import")) && hasExtension(QByteArrayLiteral("EGL_EXT_image_dma_buf_import_modifiers"))) {
+        eglQueryDmaBufFormatsEXT = (eglQueryDmaBufFormatsEXT_func)eglGetProcAddress("eglQueryDmaBufFormatsEXT");
+        eglQueryDmaBufModifiersEXT = (eglQueryDmaBufModifiersEXT_func)eglGetProcAddress("eglQueryDmaBufModifiersEXT");
+
+        EGLint count = 0;
+        EGLBoolean success = eglQueryDmaBufFormatsEXT(m_display, 0, nullptr, &count);
+
+        if (!success || count == 0) {
+            qCCritical(KWIN_OPENGL) << "eglQueryDmaBufFormatsEXT failed:" << getEglErrorString();
+            return;
+        }
+
+        QVector<uint32_t> formats(count);
+        if (!eglQueryDmaBufFormatsEXT(m_display, count, (EGLint *)formats.data(), &count)) {
+            qCCritical(KWIN_OPENGL) << "eglQueryDmaBufFormatsEXT with count" << count << "failed:" << getEglErrorString();
+            return;
+        }
+
+        for (auto format : std::as_const(formats)) {
+            EGLint count = 0;
+            const EGLBoolean success = eglQueryDmaBufModifiersEXT(m_display, format, 0, nullptr, nullptr, &count);
+            if (success && count > 0) {
+                QVector<uint64_t> modifiers(count);
+                QVector<EGLBoolean> externalOnly(count);
+                if (eglQueryDmaBufModifiersEXT(m_display, format, count, modifiers.data(), externalOnly.data(), &count)) {
+                    for (int i = modifiers.size() - 1; i >= 0; i--) {
+                        if (externalOnly[i]) {
+                            modifiers.remove(i);
+                            externalOnly.remove(i);
+                        }
+                    }
+                    if (!modifiers.empty()) {
+                        m_supportedFormats.insert(format, modifiers);
+                    }
+                    continue;
+                }
+            }
+            m_supportedFormats.insert(format, {DRM_FORMAT_MOD_INVALID});
+        }
+        qCDebug(KWIN_OPENGL) << "EGL driver advertises" << m_supportedFormats.count() << "supported dmabuf formats";
+
+        auto filterFormats = [this](int bpc) {
+            QHash<uint32_t, QVector<uint64_t>> set;
+            for (auto it = m_supportedFormats.constBegin(); it != m_supportedFormats.constEnd(); it++) {
+                if (bpcForFormat(it.key()) == bpc) {
+                    set.insert(it.key(), it.value());
+                }
+            }
+            return set;
+        };
+        if (prefer10bpc()) {
+            m_tranches.append({
+                .device = deviceId(),
+                .flags = {},
+                .formatTable = filterFormats(10),
+            });
+        }
+        m_tranches.append({
+            .device = deviceId(),
+            .flags = {},
+            .formatTable = filterFormats(8),
+        });
+        m_tranches.append({
+            .device = deviceId(),
+            .flags = {},
+            .formatTable = filterFormats(-1),
+        });
+
+        KWaylandServer::LinuxDmaBufV1ClientBufferIntegration *dmabuf = waylandServer()->linuxDmabuf();
+        dmabuf->setRenderBackend(this);
+        dmabuf->setSupportedFormatsWithModifiers(m_tranches);
+    }
 }
 
 void AbstractEglBackend::initClientExtensions()
@@ -367,6 +470,11 @@ void AbstractEglBackend::setSurface(const EGLSurface &surface)
     m_surface = surface;
 }
 
+QVector<KWaylandServer::LinuxDmaBufV1Feedback::Tranche> AbstractEglBackend::tranches() const
+{
+    return m_tranches;
+}
+
 dev_t AbstractEglBackend::deviceId() const
 {
     return m_deviceId;
@@ -377,9 +485,22 @@ bool AbstractEglBackend::prefer10bpc() const
     return false;
 }
 
-EglDmabuf *AbstractEglBackend::dmabuf() const
+EGLImageKHR AbstractEglBackend::importBufferAsImage(KWaylandServer::LinuxDmaBufV1ClientBuffer *buffer)
 {
-    return m_dmaBuf;
+    auto it = m_importedBuffers.constFind(buffer);
+    if (Q_LIKELY(it != m_importedBuffers.constEnd())) {
+        return *it;
+    }
+
+    EGLImageKHR image = importDmaBufAsImage(buffer->attributes());
+    if (image != EGL_NO_IMAGE_KHR) {
+        m_importedBuffers[buffer] = image;
+        connect(buffer, &QObject::destroyed, this, [this, buffer]() {
+            eglDestroyImageKHR(m_display, m_importedBuffers.take(buffer));
+        });
+    }
+
+    return image;
 }
 
 EGLImageKHR AbstractEglBackend::importDmaBufAsImage(const DmaBufAttributes &dmabuf) const
@@ -455,13 +576,14 @@ std::shared_ptr<GLTexture> AbstractEglBackend::importDmaBufAsTexture(const DmaBu
     }
 }
 
+bool AbstractEglBackend::testImportBuffer(KWaylandServer::LinuxDmaBufV1ClientBuffer *buffer)
+{
+    return importBufferAsImage(buffer) != EGL_NO_IMAGE_KHR;
+}
+
 QHash<uint32_t, QVector<uint64_t>> AbstractEglBackend::supportedFormats() const
 {
-    if (m_dmaBuf) {
-        return m_dmaBuf->supportedFormats();
-    } else {
-        return RenderBackend::supportedFormats();
-    }
+    return m_supportedFormats;
 }
 
 bool AbstractEglBackend::initBufferConfigs()
