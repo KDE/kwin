@@ -112,8 +112,8 @@ DrmPipeline::Error DrmPipeline::applyPendingChangesLegacy()
             m_connector->getProp(DrmConnector::PropertyIndex::Underscan_vborder)->setPropertyLegacy(m_pending.overscan);
             m_connector->getProp(DrmConnector::PropertyIndex::Underscan_hborder)->setPropertyLegacy(hborder);
         }
-        if (const auto scaling = m_connector->getProp(DrmConnector::PropertyIndex::ScalingMode); scaling && scaling->hasEnum(DrmConnector::ScalingMode::Full_Aspect)) {
-            scaling->setEnumLegacy(DrmConnector::ScalingMode::Full_Aspect);
+        if (const auto scaling = m_connector->getProp(DrmConnector::PropertyIndex::ScalingMode); scaling && scaling->hasEnum(DrmConnector::ScalingMode::None)) {
+            scaling->setEnumLegacy(DrmConnector::ScalingMode::None);
         }
         if (m_pending.crtc != m_current.crtc || m_pending.mode != m_current.mode) {
             Error err = legacyModeset();
