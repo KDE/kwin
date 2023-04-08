@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-06 02:04+0000\n"
-"PO-Revision-Date: 2023-02-09 14:44+0100\n"
+"PO-Revision-Date: 2023-04-07 04:46+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -81,6 +81,9 @@ msgid ""
 "active session, without accidentally setting it to one that is either not "
 "available, or which is already set."
 msgstr ""
+"ეს პროგრამა საშუალებას გაძლევთ, ფანჯრის დეკორაციის თემა ამჟამად მიმდინარე "
+"სესიაში ისე დააყენოთ, რომ შემთხვევით ისევ იმაზე არ დააყენოთ, რაც აყენია, ან "
+"მიუთითოთ ის, რაც ხელმისაწვდომი არაა."
 
 #: kwin-applywindowdecoration.cpp:33
 #, kde-format
@@ -89,6 +92,8 @@ msgid ""
 "full path will attempt to find a theme in that directory, and then apply "
 "that if one can be deduced."
 msgstr ""
+"Kwin-სთვის დასაყენებელი ფანჯრის დეკორაციის თემის სახელი. თუ გადასცემთ სრულ "
+"ბილიკს, შევეცდებით, თემა მითითებულ საქაღალდეში ვიპოვოთ."
 
 #: kwin-applywindowdecoration.cpp:34
 #, kde-format
@@ -102,6 +107,8 @@ msgid ""
 "Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
 "as your current theme."
 msgstr ""
+"%1 ამოხსნილია, როგორც KWin Aurorae თემა \"%2\" და ახლა ვცდი, მიმდინარე თემად "
+"დავაყენო."
 
 #: kwin-applywindowdecoration.cpp:71
 #, kde-format
@@ -109,6 +116,8 @@ msgid ""
 "You attempted to pass a file path, but this could not be resolved to a "
 "theme, and we will have to abort, due to having no theme to set"
 msgstr ""
+"სცადეთ გადაგეცათ ფაილის ბილიკი, მაგრამ მისი ამოხსნა თემის ფაილად შეუძლებელია "
+"და ოპერაცია გაუქმდება, რადგან დასაყენებელი თემა აღმოჩენილი არაა"
 
 #: kwin-applywindowdecoration.cpp:77
 #, kde-format
@@ -197,7 +206,7 @@ msgstr "სათაურის ქუდის ღილაკების მ
 #, kde-format
 msgctxt "@action:button as in, \"Get New Window Decorations\""
 msgid "Get New…"
-msgstr ""
+msgstr "ახლის მიღება…"
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -205,62 +214,49 @@ msgid "Edit %1 Theme"
 msgstr "თემის ჩასწორება (%1)"
 
 #: utils.cpp:25
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "No Window Borders"
-msgstr "გვერდითი საზრვრების გარეშე"
+msgstr "ფანჯრის საზღვრების გარეშე"
 
 #: utils.cpp:26
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "No Side Window Borders"
-msgstr "გვერდითი საზრვრების გარეშე"
+msgstr "ფანჯრის გვერდითი საზღვრების გარეშე"
 
 #: utils.cpp:27
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Tiny Window Borders"
-msgstr "ფანჯრის საზღვრის ზომა:"
+msgstr "პატარა ფანჯრის საზღვრები"
 
 #: utils.cpp:28
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "Normal Window Borders"
-msgstr "გვერდითი საზრვრების გარეშე"
+msgstr "ნორმალური ფანჯრის საზღვრები"
 
 #: utils.cpp:29
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Large Window Borders"
-msgstr "ფანჯრის საზღვრის ზომა:"
+msgstr "დიდი ფანჯრის საზღვრები"
 
 #: utils.cpp:30
 #, kde-format
 msgid "Very Large Window Borders"
-msgstr ""
+msgstr "ძალიან დიდი ფანჯრის საზღვრები"
 
 #: utils.cpp:31
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Huge Window Borders"
-msgstr "ფანჯრის საზღვრის ზომა:"
+msgstr "უზარმაზარი ფანჯრის საზღვრები"
 
 #: utils.cpp:32
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Very Huge Window Borders"
-msgstr "ფანჯრის საზღვრის ზომა:"
+msgstr "უსინდისოდ დიდი ფანჯრის საზღვრები"
 
 #: utils.cpp:33
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Oversized Window Borders"
-msgstr "ფანჯრის საზღვრის ზომა:"
+msgstr "არანორმალურად დიდი ფანჯრის საზღვრები"
 
 #~ msgctxt "button text"
 #~ msgid "Get New Window Decorations…"

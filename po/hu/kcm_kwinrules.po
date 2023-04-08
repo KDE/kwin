@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.1\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-25 02:10+0000\n"
+"POT-Creation-Date: 2023-04-08 02:19+0000\n"
 "PO-Revision-Date: 2021-11-18 14:18+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -149,12 +149,12 @@ msgstr "Fájl kiválasztása"
 msgid "KWin Rules (*.kwinrule)"
 msgstr "KWin szabályok (*.kwinrule)"
 
-#: package/contents/ui/main.qml:59
+#: package/contents/ui/main.qml:60
 #, kde-format
 msgid "No rules for specific windows are currently set"
 msgstr "Nincsenek megadva szabályok adott ablakokhoz"
 
-#: package/contents/ui/main.qml:60
+#: package/contents/ui/main.qml:61
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Click the <interface>Add New...</interface> button below to add some"
@@ -162,67 +162,67 @@ msgstr ""
 "Kattintson az <interface>Új hozzáadása…</interface> gombhoz szabályok "
 "hozzáadásához"
 
-#: package/contents/ui/main.qml:68
+#: package/contents/ui/main.qml:69
 #, kde-format
 msgid "Select the rules to export"
 msgstr "Exportálandó szabályok kiválasztása"
 
-#: package/contents/ui/main.qml:72
+#: package/contents/ui/main.qml:73
 #, kde-format
 msgid "Unselect All"
 msgstr "Kijelölés megszüntetése"
 
-#: package/contents/ui/main.qml:72
+#: package/contents/ui/main.qml:73
 #, kde-format
 msgid "Select All"
 msgstr "Összes kijelölése"
 
-#: package/contents/ui/main.qml:86
+#: package/contents/ui/main.qml:87
 #, kde-format
 msgid "Save Rules"
 msgstr "Szabályok mentése"
 
-#: package/contents/ui/main.qml:97
+#: package/contents/ui/main.qml:98
 #, kde-format
 msgid "Add New..."
 msgstr "Új hozzáadása…"
 
-#: package/contents/ui/main.qml:108
+#: package/contents/ui/main.qml:109
 #, kde-format
 msgid "Import..."
 msgstr "Importálás…"
 
-#: package/contents/ui/main.qml:116
+#: package/contents/ui/main.qml:117
 #, kde-format
 msgid "Cancel Export"
 msgstr "Exportálás megszakítása"
 
-#: package/contents/ui/main.qml:116
+#: package/contents/ui/main.qml:117
 #, kde-format
 msgid "Export..."
 msgstr "Exportálás…"
 
-#: package/contents/ui/main.qml:206
+#: package/contents/ui/main.qml:207
 #, kde-format
 msgid "Edit"
 msgstr "Szerkesztés"
 
-#: package/contents/ui/main.qml:215
+#: package/contents/ui/main.qml:216
 #, kde-format
 msgid "Duplicate"
 msgstr "Duplikálás"
 
-#: package/contents/ui/main.qml:224
+#: package/contents/ui/main.qml:225
 #, kde-format
 msgid "Delete"
 msgstr "Törlés"
 
-#: package/contents/ui/main.qml:237
+#: package/contents/ui/main.qml:238
 #, kde-format
 msgid "Import Rules"
 msgstr "Szabályok importálása"
 
-#: package/contents/ui/main.qml:249
+#: package/contents/ui/main.qml:250
 #, kde-format
 msgid "Export Rules"
 msgstr "Szabályok exportálása"

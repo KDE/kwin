@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-25 02:10+0000\n"
+"POT-Creation-Date: 2023-04-08 02:19+0000\n"
 "PO-Revision-Date: 2023-01-02 23:31+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -148,12 +148,12 @@ msgstr "Faylı seçmək"
 msgid "KWin Rules (*.kwinrule)"
 msgstr "KWin qaydaları (*.kwinrule)"
 
-#: package/contents/ui/main.qml:59
+#: package/contents/ui/main.qml:60
 #, kde-format
 msgid "No rules for specific windows are currently set"
 msgstr "Hal-hazırda xüsusi pəncərələr üçün qaydalar təyin edilməyib"
 
-#: package/contents/ui/main.qml:60
+#: package/contents/ui/main.qml:61
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Click the <interface>Add New...</interface> button below to add some"
@@ -161,67 +161,67 @@ msgstr ""
 "Bəzilərini əlavə etmək üçün aşağıdakı <interface>Yenisini əlavə edin...</"
 "interface> düyməsinə vurun"
 
-#: package/contents/ui/main.qml:68
+#: package/contents/ui/main.qml:69
 #, kde-format
 msgid "Select the rules to export"
 msgstr "İxrac etmək üçün qaydaları seçmək"
 
-#: package/contents/ui/main.qml:72
+#: package/contents/ui/main.qml:73
 #, kde-format
 msgid "Unselect All"
 msgstr "Bütün seçimləri ləğv etmək"
 
-#: package/contents/ui/main.qml:72
+#: package/contents/ui/main.qml:73
 #, kde-format
 msgid "Select All"
 msgstr "Hamısını seçmək"
 
-#: package/contents/ui/main.qml:86
+#: package/contents/ui/main.qml:87
 #, kde-format
 msgid "Save Rules"
 msgstr "Qaydaları saxlamaq"
 
-#: package/contents/ui/main.qml:97
+#: package/contents/ui/main.qml:98
 #, kde-format
 msgid "Add New..."
 msgstr "Yenisini əlavə etmək..."
 
-#: package/contents/ui/main.qml:108
+#: package/contents/ui/main.qml:109
 #, kde-format
 msgid "Import..."
 msgstr "İdxal..."
 
-#: package/contents/ui/main.qml:116
+#: package/contents/ui/main.qml:117
 #, kde-format
 msgid "Cancel Export"
 msgstr "İxracı dayandırmaq..."
 
-#: package/contents/ui/main.qml:116
+#: package/contents/ui/main.qml:117
 #, kde-format
 msgid "Export..."
 msgstr "İxrac..."
 
-#: package/contents/ui/main.qml:206
+#: package/contents/ui/main.qml:207
 #, kde-format
 msgid "Edit"
 msgstr "Düzəliş etmək"
 
-#: package/contents/ui/main.qml:215
+#: package/contents/ui/main.qml:216
 #, kde-format
 msgid "Duplicate"
 msgstr "Təkrarı"
 
-#: package/contents/ui/main.qml:224
+#: package/contents/ui/main.qml:225
 #, kde-format
 msgid "Delete"
 msgstr "Silmək"
 
-#: package/contents/ui/main.qml:237
+#: package/contents/ui/main.qml:238
 #, kde-format
 msgid "Import Rules"
 msgstr "Qaydaları idxal etmək"
 
-#: package/contents/ui/main.qml:249
+#: package/contents/ui/main.qml:250
 #, kde-format
 msgid "Export Rules"
 msgstr "Qaydaları ixrac etmək"

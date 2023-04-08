@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-25 02:10+0000\n"
+"POT-Creation-Date: 2023-04-08 02:19+0000\n"
 "PO-Revision-Date: 2023-02-24 16:22-0300\n"
 "Last-Translator: Luiz Fernando Ranghetti <elchevive@opensuse.org>\n"
 "Language-Team: Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -158,12 +158,12 @@ msgstr "Selecionar arquivo"
 msgid "KWin Rules (*.kwinrule)"
 msgstr "Regras do KWin (*.kwinrule)"
 
-#: package/contents/ui/main.qml:59
+#: package/contents/ui/main.qml:60
 #, kde-format
 msgid "No rules for specific windows are currently set"
 msgstr "Nenhuma regra para janelas específicas está definida atualmente"
 
-#: package/contents/ui/main.qml:60
+#: package/contents/ui/main.qml:61
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Click the <interface>Add New...</interface> button below to add some"
@@ -171,67 +171,67 @@ msgstr ""
 "Clique no botão <interface>Adicionar nova...</interface>  abaixo para "
 "adicionar algumas"
 
-#: package/contents/ui/main.qml:68
+#: package/contents/ui/main.qml:69
 #, kde-format
 msgid "Select the rules to export"
 msgstr "Selecionar as regras a exportar"
 
-#: package/contents/ui/main.qml:72
+#: package/contents/ui/main.qml:73
 #, kde-format
 msgid "Unselect All"
 msgstr "Desmarcar tudo"
 
-#: package/contents/ui/main.qml:72
+#: package/contents/ui/main.qml:73
 #, kde-format
 msgid "Select All"
 msgstr "Selecionar tudo"
 
-#: package/contents/ui/main.qml:86
+#: package/contents/ui/main.qml:87
 #, kde-format
 msgid "Save Rules"
 msgstr "Salvar regras"
 
-#: package/contents/ui/main.qml:97
+#: package/contents/ui/main.qml:98
 #, kde-format
 msgid "Add New..."
 msgstr "Adicionar nova..."
 
-#: package/contents/ui/main.qml:108
+#: package/contents/ui/main.qml:109
 #, kde-format
 msgid "Import..."
 msgstr "Importar..."
 
-#: package/contents/ui/main.qml:116
+#: package/contents/ui/main.qml:117
 #, kde-format
 msgid "Cancel Export"
 msgstr "Cancelar exportação"
 
-#: package/contents/ui/main.qml:116
+#: package/contents/ui/main.qml:117
 #, kde-format
 msgid "Export..."
 msgstr "Exportar..."
 
-#: package/contents/ui/main.qml:206
+#: package/contents/ui/main.qml:207
 #, kde-format
 msgid "Edit"
 msgstr "Editar"
 
-#: package/contents/ui/main.qml:215
+#: package/contents/ui/main.qml:216
 #, kde-format
 msgid "Duplicate"
 msgstr "Duplicar"
 
-#: package/contents/ui/main.qml:224
+#: package/contents/ui/main.qml:225
 #, kde-format
 msgid "Delete"
 msgstr "Excluir"
 
-#: package/contents/ui/main.qml:237
+#: package/contents/ui/main.qml:238
 #, kde-format
 msgid "Import Rules"
 msgstr "Importar regras"
 
-#: package/contents/ui/main.qml:249
+#: package/contents/ui/main.qml:250
 #, kde-format
 msgid "Export Rules"
 msgstr "Exportar regras"

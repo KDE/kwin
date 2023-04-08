@@ -1,7 +1,7 @@
 # translation of kcmkwindecoration.po to
 # Translation of kcmkwindecoration.po to Slovenian
 # SLOVENIAN TRANSLATION OF K DESKTOP ENVIRONMENT.
-# $Id: kcm_kwindecoration.po 1648874 2023-04-06 02:17:53Z scripty $
+# $Id: kcm_kwindecoration.po 1649031 2023-04-08 02:32:52Z scripty $
 # $Source$
 #
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-06 02:04+0000\n"
-"PO-Revision-Date: 2023-02-07 08:35+0100\n"
+"PO-Revision-Date: 2023-04-07 08:31+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
 "%100==4 ? 3 : 0);\n"
 "Translator: Andrej Mernik <andrejm@ubuntu.si>\n"
-"X-Generator: Poedit 3.2.2\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #: declarative-plugin/buttonsmodel.cpp:53
 #, kde-format
@@ -219,7 +219,7 @@ msgstr "Konfiguriraj gumbe naslovne vrstice…"
 #, kde-format
 msgctxt "@action:button as in, \"Get New Window Decorations\""
 msgid "Get New…"
-msgstr ""
+msgstr "Dobi novo…"
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -227,62 +227,49 @@ msgid "Edit %1 Theme"
 msgstr "Uredi %1 temo"
 
 #: utils.cpp:25
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "No Window Borders"
-msgstr "Brez stranskih obrob"
+msgstr "Brez okenskih obrob"
 
 #: utils.cpp:26
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "No Side Window Borders"
-msgstr "Brez stranskih obrob"
+msgstr "Brez stranskih obrob oken"
 
 #: utils.cpp:27
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Tiny Window Borders"
-msgstr "Širina obrobe okna:"
+msgstr "Majhne okenske obrobe"
 
 #: utils.cpp:28
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "Normal Window Borders"
-msgstr "Brez stranskih obrob"
+msgstr "Normalne okenske obrobe"
 
 #: utils.cpp:29
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Large Window Borders"
-msgstr "Širina obrobe okna:"
+msgstr "Velike okenske obrobe"
 
 #: utils.cpp:30
 #, kde-format
 msgid "Very Large Window Borders"
-msgstr ""
+msgstr "Zelo velike okenske obrobe"
 
 #: utils.cpp:31
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Huge Window Borders"
-msgstr "Širina obrobe okna:"
+msgstr "Ogromne okenske obrobe"
 
 #: utils.cpp:32
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Very Huge Window Borders"
-msgstr "Širina obrobe okna:"
+msgstr "Še bolj ogromne okenske obrobe"
 
 #: utils.cpp:33
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Oversized Window Borders"
-msgstr "Širina obrobe okna:"
+msgstr "Pretirano velike okenske obrobe"
 
 #~ msgctxt "button text"
 #~ msgid "Get New Window Decorations…"

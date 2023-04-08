@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-25 02:10+0000\n"
+"POT-Creation-Date: 2023-04-08 02:19+0000\n"
 "PO-Revision-Date: 2023-02-20 21:35+0100\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
@@ -156,78 +156,78 @@ msgstr "Vel fil"
 msgid "KWin Rules (*.kwinrule)"
 msgstr "KWin-reglar (*.kwinrule)"
 
-#: package/contents/ui/main.qml:59
+#: package/contents/ui/main.qml:60
 #, kde-format
 msgid "No rules for specific windows are currently set"
 msgstr "Ingen reglar er definerte for spesifikke vindauge"
 
-#: package/contents/ui/main.qml:60
+#: package/contents/ui/main.qml:61
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Click the <interface>Add New...</interface> button below to add some"
 msgstr "Trykk <interface>Legg til ny</interface> for å leggja til ein ny regel"
 
-#: package/contents/ui/main.qml:68
+#: package/contents/ui/main.qml:69
 #, kde-format
 msgid "Select the rules to export"
 msgstr "Vel reglane du vil eksportera"
 
-#: package/contents/ui/main.qml:72
+#: package/contents/ui/main.qml:73
 #, kde-format
 msgid "Unselect All"
 msgstr "Fjern merking"
 
-#: package/contents/ui/main.qml:72
+#: package/contents/ui/main.qml:73
 #, kde-format
 msgid "Select All"
 msgstr "Merk alle"
 
-#: package/contents/ui/main.qml:86
+#: package/contents/ui/main.qml:87
 #, kde-format
 msgid "Save Rules"
 msgstr "Lagra reglar"
 
-#: package/contents/ui/main.qml:97
+#: package/contents/ui/main.qml:98
 #, kde-format
 msgid "Add New..."
 msgstr "Legg til ny …"
 
-#: package/contents/ui/main.qml:108
+#: package/contents/ui/main.qml:109
 #, kde-format
 msgid "Import..."
 msgstr "Importer …"
 
-#: package/contents/ui/main.qml:116
+#: package/contents/ui/main.qml:117
 #, kde-format
 msgid "Cancel Export"
 msgstr "Avbryt eksport"
 
-#: package/contents/ui/main.qml:116
+#: package/contents/ui/main.qml:117
 #, kde-format
 msgid "Export..."
 msgstr "Eksporter …"
 
-#: package/contents/ui/main.qml:206
+#: package/contents/ui/main.qml:207
 #, kde-format
 msgid "Edit"
 msgstr "Rediger"
 
-#: package/contents/ui/main.qml:215
+#: package/contents/ui/main.qml:216
 #, kde-format
 msgid "Duplicate"
 msgstr "Lag kopi"
 
-#: package/contents/ui/main.qml:224
+#: package/contents/ui/main.qml:225
 #, kde-format
 msgid "Delete"
 msgstr "Slett"
 
-#: package/contents/ui/main.qml:237
+#: package/contents/ui/main.qml:238
 #, kde-format
 msgid "Import Rules"
 msgstr "Importer reglar"
 
-#: package/contents/ui/main.qml:249
+#: package/contents/ui/main.qml:250
 #, kde-format
 msgid "Export Rules"
 msgstr "Eksporter reglar"
