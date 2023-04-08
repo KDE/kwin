@@ -5,8 +5,8 @@ include:
   - https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/linux-qt6.yml
   - https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/freebsd-qt6.yml
 
-suse_tumbleweed_qt64_reduced_featureset:
-    extends: suse_tumbleweed_qt64
+suse_tumbleweed_qt65_reduced_featureset:
+    extends: suse_tumbleweed_qt65
     script:
     - git config --global --add safe.directory $CI_PROJECT_DIR
     - python3 -u ci-utilities/run-ci-build.py --project $CI_PROJECT_NAME --branch $CI_COMMIT_REF_NAME --platform Linux --extra-cmake-args="-DKWIN_BUILD_KCMS=OFF -DKWIN_BUILD_SCREENLOCKER=OFF -DKWIN_BUILD_TABBOX=OFF -DKWIN_BUILD_ACTIVITIES=OFF -DKWIN_BUILD_RUNNERS=OFF -DKWIN_BUILD_NOTIFICATIONS=OFF" --skip-publishing
