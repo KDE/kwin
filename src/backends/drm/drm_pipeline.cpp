@@ -304,8 +304,8 @@ void DrmPipeline::prepareAtomicModeset()
     if (const auto hdr = m_connector->getProp(DrmConnector::PropertyIndex::HdrMetadata)) {
         hdr->setPending(0);
     }
-    if (const auto scaling = m_connector->getProp(DrmConnector::PropertyIndex::ScalingMode); scaling && scaling->hasEnum(DrmConnector::ScalingMode::Full_Aspect)) {
-        scaling->setEnum(DrmConnector::ScalingMode::Full_Aspect);
+    if (const auto scaling = m_connector->getProp(DrmConnector::PropertyIndex::ScalingMode); scaling && scaling->hasEnum(DrmConnector::ScalingMode::None)) {
+        scaling->setEnum(DrmConnector::ScalingMode::None);
     }
 
     m_pending.crtc->setPending(DrmCrtc::PropertyIndex::Active, 1);
