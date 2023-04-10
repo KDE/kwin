@@ -17,17 +17,17 @@
 namespace KWin
 {
 
-DrmProperty::DrmProperty(DrmObject *obj, drmModePropertyRes *prop, uint64_t val, const QVector<QByteArray> &enumNames)
+DrmProperty::DrmProperty(DrmObject *obj, drmModePropertyRes *prop, uint64_t val, const QVector<QByteArrayView> &enumNames)
     : m_propId(prop->prop_id)
     , m_propName(prop->name)
     , m_current(val)
+    , m_enumNames(enumNames)
     , m_immutable(prop->flags & DRM_MODE_PROP_IMMUTABLE)
     , m_isBlob(prop->flags & DRM_MODE_PROP_BLOB)
     , m_isBitmask(prop->flags & DRM_MODE_PROP_BITMASK)
     , m_obj(obj)
 {
     if (!enumNames.isEmpty()) {
-        m_enumNames = enumNames;
         initEnumMap(prop);
     }
     if (prop->flags & DRM_MODE_PROP_RANGE) {
@@ -64,7 +64,7 @@ void DrmProperty::initEnumMap(drmModePropertyRes *prop)
                 m_propertyToEnumMap[en->value] = j;
             }
         } else {
-            qCWarning(KWIN_DRM, "%s has unrecognized enum '%s'", qPrintable(m_propName), en->name);
+            qCWarning(KWIN_DRM, "%s has unrecognized enum '%s'", m_propName.data(), en->name);
         }
     }
 }
@@ -90,7 +90,7 @@ uint32_t DrmProperty::propId() const
     return m_propId;
 }
 
-const QByteArray &DrmProperty::name() const
+QByteArrayView DrmProperty::name() const
 {
     return m_propName;
 }
@@ -161,18 +161,18 @@ QString DrmProperty::valueString(uint64_t value) const
                     enumIndex++;
                 }
                 if (enumIndex < m_enumNames.size()) {
-                    ret += m_enumNames[enumIndex];
+                    ret += m_enumNames[enumIndex].toByteArray();
                 }
             }
         }
         return ret;
     } else if (!m_enumNames.isEmpty()) {
         if (const uint64_t index = enumForValue<uint64_t>(value); index < (uint)m_enumNames.size()) {
-            return m_enumNames[index];
+            return m_enumNames[index].toByteArray();
         } else {
             return QStringLiteral("invalid value: %d").arg(value);
         }
-    } else if (m_propName == QStringLiteral("SRC_X") || m_propName == QStringLiteral("SRC_Y") || m_propName == QStringLiteral("SRC_W") || m_propName == QStringLiteral("SRC_H")) {
+    } else if (m_propName == "SRC_X" || m_propName == "SRC_Y" || m_propName == "SRC_W" || m_propName == "SRC_H") {
         QString ret;
         ret.setNum(value / (float)(1ul << 16));
         return ret;

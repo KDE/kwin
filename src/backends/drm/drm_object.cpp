@@ -97,7 +97,7 @@ bool DrmObject::updateProperties()
         bool required = m_gpu->atomicModeSetting() ? m_propertyDefinitions[i].requirement == Requirement::Required
                                                    : m_propertyDefinitions[i].requirement == Requirement::RequiredForLegacy;
         if (!m_props[i] && required) {
-            qCWarning(KWIN_DRM, "Required property %s for object %d not found!", qPrintable(m_propertyDefinitions[i].name), m_id);
+            qCWarning(KWIN_DRM, "Required property %s for object %d not found!", m_propertyDefinitions[i].name.data(), m_id);
             return false;
         }
     }

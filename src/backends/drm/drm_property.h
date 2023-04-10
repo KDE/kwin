@@ -26,7 +26,7 @@ class DrmObject;
 class DrmProperty
 {
 public:
-    DrmProperty(DrmObject *obj, drmModePropertyRes *prop, uint64_t val, const QVector<QByteArray> &enumNames);
+    DrmProperty(DrmObject *obj, drmModePropertyRes *prop, uint64_t val, const QVector<QByteArrayView> &enumNames);
 
     bool hasAllEnums() const;
 
@@ -67,7 +67,7 @@ public:
     }
 
     uint32_t propId() const;
-    const QByteArray &name() const;
+    QByteArrayView name() const;
     bool isImmutable() const;
     bool isBitmask() const;
     bool isLegacy() const;
@@ -101,7 +101,7 @@ private:
     void updateBlob();
 
     uint32_t m_propId = 0;
-    QByteArray m_propName;
+    const QByteArrayView m_propName;
 
     // the last known value from the kernel
     uint64_t m_current = 0;
@@ -112,7 +112,7 @@ private:
 
     QMap<uint64_t, uint64_t> m_enumToPropertyMap;
     QMap<uint64_t, uint64_t> m_propertyToEnumMap;
-    QVector<QByteArray> m_enumNames;
+    const QVector<QByteArrayView> m_enumNames;
     const bool m_immutable;
     const bool m_isBlob;
     const bool m_isBitmask;

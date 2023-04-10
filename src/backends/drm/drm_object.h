@@ -72,15 +72,15 @@ protected:
     };
     struct PropertyDefinition
     {
-        PropertyDefinition(const QByteArray &name, Requirement requirement, const QVector<QByteArray> &&enumNames = {})
+        PropertyDefinition(const char *name, Requirement requirement, const QVector<const char *> &&enumNames = {})
             : name(name)
             , requirement(requirement)
-            , enumNames(enumNames)
         {
+            std::copy(enumNames.begin(), enumNames.end(), std::back_inserter(this->enumNames));
         }
-        QByteArray name;
+        QByteArrayView name;
         Requirement requirement;
-        QVector<QByteArray> enumNames;
+        QVector<QByteArrayView> enumNames;
     };
 
     DrmObject(DrmGpu *gpu, uint32_t objectId, const QVector<PropertyDefinition> &&vector, uint32_t objectType);

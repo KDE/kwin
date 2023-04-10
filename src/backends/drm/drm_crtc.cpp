@@ -20,7 +20,17 @@ namespace KWin
 {
 
 DrmCrtc::DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int pipeIndex, DrmPlane *primaryPlane, DrmPlane *cursorPlane)
-    : DrmObject(gpu, crtcId, {PropertyDefinition(QByteArrayLiteral("MODE_ID"), Requirement::Required), PropertyDefinition(QByteArrayLiteral("ACTIVE"), Requirement::Required), PropertyDefinition(QByteArrayLiteral("VRR_ENABLED"), Requirement::Optional), PropertyDefinition(QByteArrayLiteral("GAMMA_LUT"), Requirement::Optional), PropertyDefinition(QByteArrayLiteral("GAMMA_LUT_SIZE"), Requirement::Optional), PropertyDefinition(QByteArrayLiteral("CTM"), Requirement::Optional)}, DRM_MODE_OBJECT_CRTC)
+    : DrmObject(gpu,
+                crtcId,
+                {
+                    PropertyDefinition("MODE_ID", Requirement::Required),
+                    PropertyDefinition("ACTIVE", Requirement::Required),
+                    PropertyDefinition("VRR_ENABLED", Requirement::Optional),
+                    PropertyDefinition("GAMMA_LUT", Requirement::Optional),
+                    PropertyDefinition("GAMMA_LUT_SIZE", Requirement::Optional),
+                    PropertyDefinition("CTM", Requirement::Optional),
+                },
+                DRM_MODE_OBJECT_CRTC)
     , m_crtc(drmModeGetCrtc(gpu->fd(), crtcId))
     , m_pipeIndex(pipeIndex)
     , m_primaryPlane(primaryPlane)

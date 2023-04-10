@@ -23,21 +23,23 @@ namespace KWin
 {
 
 DrmPlane::DrmPlane(DrmGpu *gpu, uint32_t planeId)
-    : DrmObject(gpu, planeId, {
-                                  PropertyDefinition(QByteArrayLiteral("type"), Requirement::Required, {QByteArrayLiteral("Overlay"), QByteArrayLiteral("Primary"), QByteArrayLiteral("Cursor")}),
-                                  PropertyDefinition(QByteArrayLiteral("SRC_X"), Requirement::Required),
-                                  PropertyDefinition(QByteArrayLiteral("SRC_Y"), Requirement::Required),
-                                  PropertyDefinition(QByteArrayLiteral("SRC_W"), Requirement::Required),
-                                  PropertyDefinition(QByteArrayLiteral("SRC_H"), Requirement::Required),
-                                  PropertyDefinition(QByteArrayLiteral("CRTC_X"), Requirement::Required),
-                                  PropertyDefinition(QByteArrayLiteral("CRTC_Y"), Requirement::Required),
-                                  PropertyDefinition(QByteArrayLiteral("CRTC_W"), Requirement::Required),
-                                  PropertyDefinition(QByteArrayLiteral("CRTC_H"), Requirement::Required),
-                                  PropertyDefinition(QByteArrayLiteral("FB_ID"), Requirement::Required),
-                                  PropertyDefinition(QByteArrayLiteral("CRTC_ID"), Requirement::Required),
-                                  PropertyDefinition(QByteArrayLiteral("rotation"), Requirement::Optional, {QByteArrayLiteral("rotate-0"), QByteArrayLiteral("rotate-90"), QByteArrayLiteral("rotate-180"), QByteArrayLiteral("rotate-270"), QByteArrayLiteral("reflect-x"), QByteArrayLiteral("reflect-y")}),
-                                  PropertyDefinition(QByteArrayLiteral("IN_FORMATS"), Requirement::Optional),
-                              },
+    : DrmObject(gpu,
+                planeId,
+                {
+                    PropertyDefinition("type", Requirement::Required, {"Overlay", "Primary", "Cursor"}),
+                    PropertyDefinition("SRC_X", Requirement::Required),
+                    PropertyDefinition("SRC_Y", Requirement::Required),
+                    PropertyDefinition("SRC_W", Requirement::Required),
+                    PropertyDefinition("SRC_H", Requirement::Required),
+                    PropertyDefinition("CRTC_X", Requirement::Required),
+                    PropertyDefinition("CRTC_Y", Requirement::Required),
+                    PropertyDefinition("CRTC_W", Requirement::Required),
+                    PropertyDefinition("CRTC_H", Requirement::Required),
+                    PropertyDefinition("FB_ID", Requirement::Required),
+                    PropertyDefinition("CRTC_ID", Requirement::Required),
+                    PropertyDefinition("rotation", Requirement::Optional, {"rotate-0", "rotate-90", "rotate-180", "rotate-270", "reflect-x", "reflect-y"}),
+                    PropertyDefinition("IN_FORMATS", Requirement::Optional),
+                },
                 DRM_MODE_OBJECT_PLANE)
 {
 }
