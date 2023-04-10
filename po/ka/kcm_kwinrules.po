@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-08 02:19+0000\n"
-"PO-Revision-Date: 2023-02-03 06:20+0100\n"
+"PO-Revision-Date: 2023-04-09 08:51+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -65,6 +65,9 @@ msgid ""
 "created.\n"
 "No further changes will be affected."
 msgstr ""
+"ფანჯრის თვისება მითითებულ მნიშვნელობაზე მხოლოდ ფანჯრის შექმნის შემდეგ "
+"დაყენდება.\n"
+"მეტი ცვლილებები არ შეიცვლება."
 
 #: optionsmodel.cpp:209
 #, kde-format
@@ -78,6 +81,9 @@ msgid ""
 "be affected later\n"
 "(this action will be deleted afterwards)."
 msgstr ""
+"ფანჯრის თვისება მითითებულ მნიშვნელობაზე დაუყოვნებლივ დადგება და მოგვიანებით "
+"აღარ შეიცვლება\n"
+"(შემდეგ ეს ქმედება წაიშლება)."
 
 #: optionsmodel.cpp:213
 #, kde-format

@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-06 02:04+0000\n"
-"PO-Revision-Date: 2023-02-14 21:55+0530\n"
+"PO-Revision-Date: 2023-04-09 21:32+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 22.12.2\n"
+"X-Generator: Lokalize 23.03.90\n"
 
 #: declarative-plugin/buttonsmodel.cpp:53
 #, kde-format
@@ -93,6 +93,8 @@ msgstr ""
 msgid ""
 "Show all the themes available on the system (and which is the current theme)"
 msgstr ""
+"கணினியில் கிட்டுகின்ற அனைத்து தோற்றத்திட்டங்களை (மற்றும் இப்போது எது செயலில் உள்ளதென) "
+"காட்டும்"
 
 #: kwin-applywindowdecoration.cpp:65
 #, kde-format
@@ -107,6 +109,8 @@ msgid ""
 "You attempted to pass a file path, but this could not be resolved to a "
 "theme, and we will have to abort, due to having no theme to set"
 msgstr ""
+"கோப்புப்பாதையைக் கொடுத்தீர், ஆனால் அது ஓர் தோற்றத்திட்டம் போல் தெரியவில்லை. இதனால் இந்நிரல் "
+"வெளியேறும்."
 
 #: kwin-applywindowdecoration.cpp:77
 #, kde-format
@@ -159,9 +163,7 @@ msgid "Drag buttons between here and the titlebar"
 msgstr "பட்டன்களை இங்கிருந்து தலைப்புப்பட்டைக்கு இழுங்கள்"
 
 #: package/contents/ui/ConfigureTitlebar.qml:16
-#, fuzzy, kde-format
-#| msgctxt "tab label"
-#| msgid "Titlebar Buttons"
+#, kde-format
 msgid "Titlebar Buttons"
 msgstr "தலைப்புப்பட்டையிலுள்ள பட்டன்கள்"
 
@@ -190,18 +192,16 @@ msgid "Window border size:"
 msgstr "சாளர விளிம்பின் அளவு:"
 
 #: package/contents/ui/main.qml:48
-#, fuzzy, kde-format
-#| msgctxt "tab label"
-#| msgid "Titlebar Buttons"
+#, kde-format
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
-msgstr "தலைப்புப்பட்டையிலுள்ள பட்டன்கள்"
+msgstr "தலைப்புப்பட்டையிலுள்ள பட்டன்களை அமை…"
 
 #: package/contents/ui/main.qml:54
 #, kde-format
 msgctxt "@action:button as in, \"Get New Window Decorations\""
 msgid "Get New…"
-msgstr ""
+msgstr "புதியவற்றை பெறு…"
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -209,62 +209,49 @@ msgid "Edit %1 Theme"
 msgstr "%1 தோற்றத்திட்டத்தை திருத்து"
 
 #: utils.cpp:25
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "No Window Borders"
-msgstr "கிடைமட்டத்தில் விளிம்புகள் இல்லாமல்"
+msgstr "விளிம்புகள் இல்லாமல்"
 
 #: utils.cpp:26
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "No Side Window Borders"
 msgstr "கிடைமட்டத்தில் விளிம்புகள் இல்லாமல்"
 
 #: utils.cpp:27
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Tiny Window Borders"
-msgstr "சாளர விளிம்பின் அளவு:"
+msgstr "சிறிய சாளர விளிம்புகள்"
 
 #: utils.cpp:28
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "Normal Window Borders"
-msgstr "கிடைமட்டத்தில் விளிம்புகள் இல்லாமல்"
+msgstr "சாதாரண சாளர விளிம்புகள்"
 
 #: utils.cpp:29
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Large Window Borders"
-msgstr "சாளர விளிம்பின் அளவு:"
+msgstr "பெரிய சாளர விளிம்புகள்"
 
 #: utils.cpp:30
 #, kde-format
 msgid "Very Large Window Borders"
-msgstr ""
+msgstr "மிகப்பெரிய சாளர விளிம்புகள்"
 
 #: utils.cpp:31
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Huge Window Borders"
-msgstr "சாளர விளிம்பின் அளவு:"
+msgstr "பிரம்மாண்டமான சாளர விளிம்புகள்"
 
 #: utils.cpp:32
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Very Huge Window Borders"
-msgstr "சாளர விளிம்பின் அளவு:"
+msgstr "மிகபிரம்மாண்டமான சாளர விளிம்புகள்"
 
 #: utils.cpp:33
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Oversized Window Borders"
-msgstr "சாளர விளிம்பின் அளவு:"
+msgstr "அதிகபட்ச அளவிலான சாளர விளிம்புகள்"
 
 #, fuzzy
 #~| msgid "&Window Decoration"
