@@ -93,7 +93,6 @@ public:
         return false;
     }
 
-    QString valueString(uint64_t value) const;
     const DrmObject *drmObject() const;
 
 private:

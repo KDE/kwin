@@ -53,7 +53,7 @@ bool DrmPlane::init()
 
     m_possibleCrtcs = p->possible_crtcs;
 
-    bool success = initProps();
+    bool success = updateProperties();
     if (success) {
         if (const auto prop = getProp(PropertyIndex::Rotation)) {
             m_supportedTransformations = Transformations();

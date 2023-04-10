@@ -27,42 +27,6 @@ DrmObject::DrmObject(DrmGpu *gpu, uint32_t objectId, const QVector<PropertyDefin
     m_props.resize(m_propertyDefinitions.count());
 }
 
-bool DrmObject::initProps()
-{
-    if (!updateProperties()) {
-        return false;
-    }
-    if (KWIN_DRM().isDebugEnabled()) {
-        auto debug = QMessageLogger(QT_MESSAGELOG_FILE, QT_MESSAGELOG_LINE, QT_MESSAGELOG_FUNC, KWIN_DRM().categoryName()).debug().nospace().noquote();
-        switch (m_objectType) {
-        case DRM_MODE_OBJECT_CONNECTOR:
-            debug << "Connector ";
-            break;
-        case DRM_MODE_OBJECT_CRTC:
-            debug << "Crtc ";
-            break;
-        case DRM_MODE_OBJECT_PLANE:
-            debug << "Plane ";
-            break;
-        default:
-            Q_UNREACHABLE();
-        }
-        debug << m_id << " has properties ";
-        for (size_t i = 0; i < m_props.size(); i++) {
-            if (i > 0) {
-                debug << ", ";
-            }
-            const auto &prop = m_props[i];
-            if (prop) {
-                debug << prop->name() << "=" << prop->valueString(prop->current());
-            } else {
-                debug << m_propertyDefinitions[i].name << " not found";
-            }
-        }
-    }
-    return true;
-}
-
 bool DrmObject::updateProperties()
 {
     DrmUniquePtr<drmModeObjectProperties> properties(drmModeObjectGetProperties(m_gpu->fd(), m_id, m_objectType));

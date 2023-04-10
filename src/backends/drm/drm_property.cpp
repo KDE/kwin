@@ -144,45 +144,6 @@ drmModePropertyBlobRes *DrmProperty::immutableBlob() const
     return m_immutableBlob.get();
 }
 
-QString DrmProperty::valueString(uint64_t value) const
-{
-    if (m_isBitmask) {
-        QString ret;
-        bool first = true;
-        for (uint64_t mask = 1; mask >= value && mask != 0; mask <<= 1) {
-            if (value & mask) {
-                if (!first) {
-                    ret += " | ";
-                }
-                first = false;
-                uint64_t enumValue = enumForValue<uint64_t>(mask);
-                int enumIndex = 0;
-                while (!(enumValue & (1ull << enumIndex)) && enumIndex < 64) {
-                    enumIndex++;
-                }
-                if (enumIndex < m_enumNames.size()) {
-                    ret += m_enumNames[enumIndex];
-                }
-            }
-        }
-        return ret;
-    } else if (!m_enumNames.isEmpty()) {
-        if (const uint64_t index = enumForValue<uint64_t>(value); index < (uint)m_enumNames.size()) {
-            return m_enumNames[index];
-        } else {
-            return QStringLiteral("invalid value: %d").arg(value);
-        }
-    } else if (m_propName == QStringLiteral("SRC_X") || m_propName == QStringLiteral("SRC_Y") || m_propName == QStringLiteral("SRC_W") || m_propName == QStringLiteral("SRC_H")) {
-        QString ret;
-        ret.setNum(value / (float)(1ul << 16));
-        return ret;
-    } else {
-        QString ret;
-        ret.setNum(value);
-        return ret;
-    }
-}
-
 const DrmObject *DrmProperty::drmObject() const
 {
     return m_obj;

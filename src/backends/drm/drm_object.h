@@ -58,12 +58,6 @@ public:
         return m_props[static_cast<uint32_t>(propIndex)].get();
     }
 
-    enum class PrintMode {
-        OnlyChanged,
-        All
-    };
-    void printProps(PrintMode mode);
-
 protected:
     enum class Requirement {
         Required,
@@ -84,8 +78,6 @@ protected:
     };
 
     DrmObject(DrmGpu *gpu, uint32_t objectId, const QVector<PropertyDefinition> &&vector, uint32_t objectType);
-
-    bool initProps();
 
     std::vector<std::unique_ptr<DrmProperty>> m_props;
 

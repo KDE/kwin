@@ -30,10 +30,7 @@ DrmCrtc::DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int pipeIndex, DrmPlane *primaryP
 
 bool DrmCrtc::init()
 {
-    if (!m_crtc) {
-        return false;
-    }
-    return initProps();
+    return m_crtc && updateProperties();
 }
 
 void DrmCrtc::flipBuffer()

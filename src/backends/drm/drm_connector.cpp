@@ -127,7 +127,7 @@ DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)
 
 bool DrmConnector::init()
 {
-    return m_conn && initProps();
+    return updateProperties();
 }
 
 bool DrmConnector::isConnected() const
