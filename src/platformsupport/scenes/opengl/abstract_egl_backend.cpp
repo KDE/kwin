@@ -174,7 +174,6 @@ void AbstractEglBackend::initBufferAge()
             setSupportsBufferAge(true);
         }
     }
-    setSupportsSwapBuffersWithDamage(hasExtension(QByteArrayLiteral("EGL_EXT_swap_buffers_with_damage")));
 }
 
 static int bpcForFormat(uint32_t format)

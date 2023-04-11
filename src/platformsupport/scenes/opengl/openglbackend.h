@@ -79,11 +79,6 @@ public:
         return m_haveBufferAge;
     }
 
-    bool supportsSwapBuffersWithDamage() const
-    {
-        return m_haveSwapBuffersWithDamage;
-    }
-
     bool supportsNativeFence() const
     {
         return m_haveNativeFence;
@@ -143,11 +138,6 @@ protected:
         m_haveBufferAge = value;
     }
 
-    void setSupportsSwapBuffersWithDamage(bool value)
-    {
-        m_haveSwapBuffersWithDamage = value;
-    }
-
     void setSupportsNativeFence(bool value)
     {
         m_haveNativeFence = value;
@@ -172,7 +162,6 @@ private:
      * @brief Whether the backend supports GLX_EXT_buffer_age / EGL_EXT_buffer_age.
      */
     bool m_haveBufferAge;
-    bool m_haveSwapBuffersWithDamage = false;
     /**
      * @brief Whether the backend supports EGL_ANDROID_native_fence_sync.
      */
