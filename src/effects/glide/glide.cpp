@@ -30,6 +30,9 @@ static const QSet<QString> s_blacklist{
     QStringLiteral("ksmserver ksmserver"),
     QStringLiteral("ksmserver-logout-greeter ksmserver-logout-greeter"),
     QStringLiteral("ksplashqml ksplashqml"),
+    // Spectacle needs to be blacklisted in order to stay out of its own screenshots.
+    QStringLiteral("spectacle spectacle"), // x11
+    QStringLiteral("spectacle org.kde.spectacle"), // wayland
 };
 
 static QMatrix4x4 createPerspectiveMatrix(const QRectF &rect, const qreal scale)
