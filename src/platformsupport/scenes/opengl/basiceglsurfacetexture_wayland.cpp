@@ -5,7 +5,6 @@
 */
 
 #include "platformsupport/scenes/opengl/basiceglsurfacetexture_wayland.h"
-#include "kwineglext.h"
 #include "libkwineffects/kwingltexture.h"
 #include "platformsupport/scenes/opengl/abstract_egl_backend.h"
 #include "scene/surfaceitem_wayland.h"
@@ -13,6 +12,16 @@
 #include "wayland/drmclientbuffer.h"
 #include "wayland/linuxdmabufv1clientbuffer.h"
 #include "wayland/shmclientbuffer.h"
+
+#ifndef EGL_WL_bind_wayland_display
+#define EGL_WAYLAND_BUFFER_WL 0x31D5
+#define EGL_WAYLAND_PLANE_WL 0x31D6
+#define EGL_TEXTURE_Y_U_V_WL 0x31D7
+#define EGL_TEXTURE_Y_UV_WL 0x31D8
+#define EGL_TEXTURE_Y_XUXV_WL 0x31D9
+#define EGL_TEXTURE_EXTERNAL_WL 0x31DA
+#define EGL_WAYLAND_Y_INVERTED_WL 0x31DB
+#endif // EGL_WL_bind_wayland_display
 
 namespace KWin
 {
