@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1648742 $
+# Version: $Revision: 1649203 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # Norbert Popiołek <norbert@kde.com.pl>
@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-04 02:22+0000\n"
-"PO-Revision-Date: 2023-01-21 10:05+0100\n"
+"PO-Revision-Date: 2023-04-10 11:18+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
@@ -31,7 +31,7 @@ msgstr ""
 ">\n"
 ">\n"
 ">\n"
-"X-Generator: Lokalize 22.12.1\n"
+"X-Generator: Lokalize 22.12.3\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
 
@@ -2640,46 +2640,39 @@ msgid "Window One Desktop Down"
 msgstr "Okno na pulpit niżej"
 
 #: useractions.cpp:1076
-#, fuzzy, kde-format
-#| msgid "Window to Screen %1"
+#, kde-format
 msgid "Move Window to Screen %1"
-msgstr "Okno na ekran %1"
+msgstr "Przenieś okno na ekran %1"
 
 #: useractions.cpp:1083
-#, fuzzy, kde-format
-#| msgid "Window to Next Screen"
+#, kde-format
 msgid "Move Window to Next Screen"
-msgstr "Okno na następny ekran"
+msgstr "Przenieś okno na następny ekran"
 
 #: useractions.cpp:1085
-#, fuzzy, kde-format
-#| msgid "Window to Previous Screen"
+#, kde-format
 msgid "Move Window to Previous Screen"
-msgstr "Okno na poprzedni ekran"
+msgstr "Przenieś okno na poprzedni ekran"
 
 #: useractions.cpp:1087
-#, fuzzy, kde-format
-#| msgid "Window One Screen to the Right"
+#, kde-format
 msgid "Move Window One Screen to the Right"
-msgstr "Okno na ekran po prawej"
+msgstr "Przenieś okno na ekran po prawej"
 
 #: useractions.cpp:1089
-#, fuzzy, kde-format
-#| msgid "Window One Screen to the Left"
+#, kde-format
 msgid "Move Window One Screen to the Left"
-msgstr "Okno na ekran po lewej"
+msgstr "Przenieś okno na ekran po lewej"
 
 #: useractions.cpp:1091
-#, fuzzy, kde-format
-#| msgid "Window One Screen Up"
+#, kde-format
 msgid "Move Window One Screen Up"
-msgstr "Okno jeden ekran wyżej"
+msgstr "Przenieś okno na ekran na górze"
 
 #: useractions.cpp:1093
-#, fuzzy, kde-format
-#| msgid "Window One Screen Down"
+#, kde-format
 msgid "Move Window One Screen Down"
-msgstr "Okno na ekranie niżej"
+msgstr "Przenieś okno na ekran na dole"
 
 #: useractions.cpp:1097
 #, kde-format
@@ -2794,18 +2787,7 @@ msgid "(Not Responding)"
 msgstr "(Nie odpowiada)"
 
 #: workspace.cpp:1590
-#, fuzzy, kde-format
-#| msgctxt "Introductory text shown in the support information."
-#| msgid ""
-#| "KWin Support Information:\n"
-#| "The following information should be used when requesting support on e.g. "
-#| "https://forum.kde.org.\n"
-#| "It provides information about the currently running instance, which "
-#| "options are used,\n"
-#| "what OpenGL driver and which effects are running.\n"
-#| "Please post the information provided underneath this introductory text to "
-#| "a paste bin service\n"
-#| "like https://paste.kde.org instead of pasting into support threads.\n"
+#, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
 "KWin Support Information:\n"
@@ -2819,7 +2801,7 @@ msgid ""
 "like https://paste.kde.org instead of pasting into support threads.\n"
 msgstr ""
 "Informacje o wsparciu dla KWin:\n"
-"Pytając  na np. https://forum.kde.orgużyj wyświetlanych tu danych.\n"
+"Pytając  na np. https://discuss.kde.org użyj wyświetlanych tu danych.\n"
 "Dostarczają one informacji o obecnie uruchomionym wystąpieniu, o opcjach, "
 "które są używane,\n"
 "o używanym sterowniku OpenGL i o włączonych efektach.\n"
