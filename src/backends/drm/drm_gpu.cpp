@@ -173,9 +173,9 @@ void DrmGpu::initDrmResources()
         QVector<DrmPlane *> cursorCandidates;
         for (const auto &plane : m_planes) {
             if (plane->isCrtcSupported(i) && !assignedPlanes.contains(plane.get())) {
-                if (plane->type() == DrmPlane::TypeIndex::Primary) {
+                if (plane->type.enumValue() == DrmPlane::TypeIndex::Primary) {
                     primaryCandidates.push_back(plane.get());
-                } else if (plane->type() == DrmPlane::TypeIndex::Cursor) {
+                } else if (plane->type.enumValue() == DrmPlane::TypeIndex::Cursor) {
                     cursorCandidates.push_back(plane.get());
                 }
             }
@@ -187,14 +187,14 @@ void DrmGpu::initDrmResources()
         const auto findBestPlane = [crtcId](const QVector<DrmPlane *> &list) {
             // if the plane is already used with this crtc, prefer it
             const auto connected = std::find_if(list.begin(), list.end(), [crtcId](DrmPlane *plane) {
-                return plane->getProp(DrmPlane::PropertyIndex::CrtcId)->current() == crtcId;
+                return plane->crtcId.value() == crtcId;
             });
             if (connected != list.end()) {
                 return *connected;
             }
             // don't take away planes from other crtcs. The kernel currently rejects such commits
             const auto notconnected = std::find_if(list.begin(), list.end(), [](DrmPlane *plane) {
-                return plane->getProp(DrmPlane::PropertyIndex::CrtcId)->current() == 0;
+                return plane->crtcId.value() == 0;
             });
             if (notconnected != list.end()) {
                 return *notconnected;
@@ -375,7 +375,7 @@ DrmPipeline::Error DrmGpu::checkCrtcAssignment(QVector<DrmConnector *> connector
     DrmCrtc *currentCrtc = nullptr;
     if (m_atomicModeSetting) {
         // try the crtc that this connector is already connected to first
-        const uint32_t id = connector->getProp(DrmConnector::PropertyIndex::CrtcId)->current();
+        const uint32_t id = connector->crtcId.value();
         auto it = std::find_if(crtcs.begin(), crtcs.end(), [id](const auto &crtc) {
             return id == crtc->id();
         });
@@ -432,7 +432,7 @@ DrmPipeline::Error DrmGpu::testPendingConfiguration()
     if (m_atomicModeSetting) {
         // sort outputs by being already connected (to any CRTC) so that already working outputs get preferred
         std::sort(connectors.begin(), connectors.end(), [](auto c1, auto c2) {
-            return c1->getProp(DrmConnector::PropertyIndex::CrtcId)->current() > c2->getProp(DrmConnector::PropertyIndex::CrtcId)->current();
+            return c1->crtcId.value() > c2->crtcId.value();
         });
     }
     return checkCrtcAssignment(connectors, crtcs);

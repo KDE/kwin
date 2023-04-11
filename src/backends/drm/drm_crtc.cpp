@@ -20,7 +20,13 @@ namespace KWin
 {
 
 DrmCrtc::DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int pipeIndex, DrmPlane *primaryPlane, DrmPlane *cursorPlane)
-    : DrmObject(gpu, crtcId, {PropertyDefinition(QByteArrayLiteral("MODE_ID"), Requirement::Required), PropertyDefinition(QByteArrayLiteral("ACTIVE"), Requirement::Required), PropertyDefinition(QByteArrayLiteral("VRR_ENABLED"), Requirement::Optional), PropertyDefinition(QByteArrayLiteral("GAMMA_LUT"), Requirement::Optional), PropertyDefinition(QByteArrayLiteral("GAMMA_LUT_SIZE"), Requirement::Optional), PropertyDefinition(QByteArrayLiteral("CTM"), Requirement::Optional)}, DRM_MODE_OBJECT_CRTC)
+    : DrmObject(gpu, crtcId, DRM_MODE_OBJECT_CRTC)
+    , modeId(this, QByteArrayLiteral("MODE_ID"))
+    , active(this, QByteArrayLiteral("ACTIVE"))
+    , vrrEnabled(this, QByteArrayLiteral("VRR_ENABLED"))
+    , gammaLut(this, QByteArrayLiteral("GAMMA_LUT"))
+    , gammaLutSize(this, QByteArrayLiteral("GAMMA_LUT_SIZE"))
+    , ctm(this, QByteArrayLiteral("CTM"))
     , m_crtc(drmModeGetCrtc(gpu->fd(), crtcId))
     , m_pipeIndex(pipeIndex)
     , m_primaryPlane(primaryPlane)
@@ -28,9 +34,20 @@ DrmCrtc::DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int pipeIndex, DrmPlane *primaryP
 {
 }
 
-bool DrmCrtc::init()
+bool DrmCrtc::updateProperties()
 {
-    return m_crtc && updateProperties();
+    if (!m_crtc) {
+        return false;
+    }
+    DrmPropertyList props = queryProperties();
+    modeId.update(props);
+    active.update(props);
+    vrrEnabled.update(props);
+    gammaLut.update(props);
+    gammaLutSize.update(props);
+    ctm.update(props);
+
+    return !gpu()->atomicModeSetting() || (modeId.isValid() && active.isValid());
 }
 
 void DrmCrtc::flipBuffer()
@@ -74,8 +91,8 @@ int DrmCrtc::gammaRampSize() const
 {
     if (gpu()->atomicModeSetting()) {
         // limit atomic gamma ramp to 4096 to work around https://gitlab.freedesktop.org/drm/intel/-/issues/3916
-        if (auto prop = getProp(PropertyIndex::Gamma_LUT_Size); prop && prop->current() <= 4096) {
-            return prop->current();
+        if (gammaLutSize.isValid() && gammaLutSize.value() <= 4096) {
+            return gammaLutSize.value();
         }
     }
     return m_crtc->gamma_size;
@@ -93,8 +110,8 @@ DrmPlane *DrmCrtc::cursorPlane() const
 
 void DrmCrtc::disable(DrmAtomicCommit *commit)
 {
-    commit->addProperty(getProp(PropertyIndex::Active), 0);
-    commit->addProperty(getProp(PropertyIndex::ModeId), 0);
+    commit->addProperty(active, 0);
+    commit->addProperty(modeId, 0);
 }
 
 void DrmCrtc::releaseBuffers()

@@ -28,18 +28,8 @@ class DrmCrtc : public DrmObject
 public:
     DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int pipeIndex, DrmPlane *primaryPlane, DrmPlane *cursorPlane);
 
-    enum class PropertyIndex : uint32_t {
-        ModeId = 0,
-        Active,
-        VrrEnabled,
-        Gamma_LUT,
-        Gamma_LUT_Size,
-        CTM,
-        Count
-    };
-
-    bool init() override;
     void disable(DrmAtomicCommit *commit) override;
+    bool updateProperties() override;
 
     int pipeIndex() const;
     int gammaRampSize() const;
@@ -53,6 +43,13 @@ public:
     void setNext(const std::shared_ptr<DrmFramebuffer> &buffer);
     void flipBuffer();
     void releaseBuffers();
+
+    DrmProperty modeId;
+    DrmProperty active;
+    DrmProperty vrrEnabled;
+    DrmProperty gammaLut;
+    DrmProperty gammaLutSize;
+    DrmProperty ctm;
 
 private:
     DrmUniquePtr<drmModeCrtc> m_crtc;

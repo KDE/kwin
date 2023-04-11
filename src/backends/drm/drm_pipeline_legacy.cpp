@@ -96,24 +96,24 @@ DrmPipeline::Error DrmPipeline::applyPendingChangesLegacy()
         drmModeSetCursor(gpu()->fd(), m_pending.crtc->id(), 0, 0, 0);
     }
     if (activePending()) {
-        auto vrr = m_pending.crtc->getProp(DrmCrtc::PropertyIndex::VrrEnabled);
-        if (vrr && !vrr->setPropertyLegacy(m_pending.syncMode == RenderLoopPrivate::SyncMode::Adaptive || m_pending.syncMode == RenderLoopPrivate::SyncMode::AdaptiveAsync)) {
+        const bool shouldEnableVrr = m_pending.syncMode == RenderLoopPrivate::SyncMode::Adaptive || m_pending.syncMode == RenderLoopPrivate::SyncMode::AdaptiveAsync;
+        if (m_pending.crtc->vrrEnabled.isValid() && !m_pending.crtc->vrrEnabled.setPropertyLegacy(shouldEnableVrr)) {
             qCWarning(KWIN_DRM) << "Setting vrr failed!" << strerror(errno);
             return errnoToError();
         }
-        if (const auto &rgbRange = m_connector->getProp(DrmConnector::PropertyIndex::Broadcast_RGB)) {
-            rgbRange->setEnumLegacy(m_pending.rgbRange);
+        if (m_connector->broadcastRGB.isValid()) {
+            m_connector->broadcastRGB.setEnumLegacy(DrmConnector::rgbRangeToBroadcastRgb(m_pending.rgbRange));
         }
-        if (const auto overscan = m_connector->getProp(DrmConnector::PropertyIndex::Overscan)) {
-            overscan->setPropertyLegacy(m_pending.overscan);
-        } else if (const auto underscan = m_connector->getProp(DrmConnector::PropertyIndex::Underscan)) {
+        if (m_connector->overscan.isValid()) {
+            m_connector->overscan.setPropertyLegacy(m_pending.overscan);
+        } else if (m_connector->underscan.isValid()) {
             const uint32_t hborder = calculateUnderscan();
-            underscan->setEnumLegacy(m_pending.overscan != 0 ? DrmConnector::UnderscanOptions::On : DrmConnector::UnderscanOptions::Off);
-            m_connector->getProp(DrmConnector::PropertyIndex::Underscan_vborder)->setPropertyLegacy(m_pending.overscan);
-            m_connector->getProp(DrmConnector::PropertyIndex::Underscan_hborder)->setPropertyLegacy(hborder);
+            m_connector->underscan.setEnumLegacy(m_pending.overscan != 0 ? DrmConnector::UnderscanOptions::On : DrmConnector::UnderscanOptions::Off);
+            m_connector->underscanVBorder.setPropertyLegacy(m_pending.overscan);
+            m_connector->underscanHBorder.setPropertyLegacy(hborder);
         }
-        if (const auto scaling = m_connector->getProp(DrmConnector::PropertyIndex::ScalingMode); scaling && scaling->hasEnum(DrmConnector::ScalingMode::None)) {
-            scaling->setEnumLegacy(DrmConnector::ScalingMode::None);
+        if (m_connector->scalingMode.isValid() && m_connector->scalingMode.hasEnum(DrmConnector::ScalingMode::None)) {
+            m_connector->scalingMode.setEnumLegacy(DrmConnector::ScalingMode::None);
         }
         if (m_pending.crtc != m_current.crtc || m_pending.mode != m_current.mode) {
             Error err = legacyModeset();
@@ -125,13 +125,13 @@ DrmPipeline::Error DrmPipeline::applyPendingChangesLegacy()
             qCWarning(KWIN_DRM) << "Setting gamma failed!" << strerror(errno);
             return errnoToError();
         }
-        if (const auto contentType = m_connector->getProp(DrmConnector::PropertyIndex::ContentType)) {
-            contentType->setEnumLegacy(m_pending.contentType);
+        if (m_connector->contentType.isValid()) {
+            m_connector->contentType.setEnumLegacy(m_pending.contentType);
         }
         setCursorLegacy();
         moveCursorLegacy();
     }
-    if (!m_connector->getProp(DrmConnector::PropertyIndex::Dpms)->setPropertyLegacy(activePending() ? DRM_MODE_DPMS_ON : DRM_MODE_DPMS_OFF)) {
+    if (!m_connector->dpms.setPropertyLegacy(activePending() ? DRM_MODE_DPMS_ON : DRM_MODE_DPMS_OFF)) {
         qCWarning(KWIN_DRM) << "Setting legacy dpms failed!" << strerror(errno);
         return errnoToError();
     }

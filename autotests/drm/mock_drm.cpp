@@ -231,8 +231,8 @@ MockPlane::MockPlane(MockGpu *gpu, PlaneType type, int crtcIndex)
     , possibleCrtcs(1 << crtcIndex)
     , type(type)
 {
-    props << MockProperty(this, QStringLiteral("type"), static_cast<uint64_t>(type), DRM_MODE_PROP_IMMUTABLE | DRM_MODE_PROP_ENUM | DRM_MODE_PROP_BITMASK,
-                            {QByteArrayLiteral("Primary"), QByteArrayLiteral("Overlay"), QByteArrayLiteral("Cursor")});
+    props << MockProperty(this, QStringLiteral("type"), static_cast<uint64_t>(type), DRM_MODE_PROP_IMMUTABLE | DRM_MODE_PROP_ENUM,
+                          {QByteArrayLiteral("Primary"), QByteArrayLiteral("Overlay"), QByteArrayLiteral("Cursor")});
     addProp("FB_ID", 0, DRM_MODE_PROP_ATOMIC);
     addProp("CRTC_ID", 0, DRM_MODE_PROP_ATOMIC);
     addProp("CRTC_X", 0, DRM_MODE_PROP_ATOMIC);

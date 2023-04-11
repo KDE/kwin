@@ -85,29 +85,50 @@ bool DrmConnectorMode::operator==(const DrmConnectorMode &otherMode)
 }
 
 DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)
-    : DrmObject(gpu,
-                connectorId,
-                {PropertyDefinition(QByteArrayLiteral("CRTC_ID"), Requirement::Required),
-                 PropertyDefinition(QByteArrayLiteral("non-desktop"), Requirement::Optional),
-                 PropertyDefinition(QByteArrayLiteral("DPMS"), Requirement::RequiredForLegacy),
-                 PropertyDefinition(QByteArrayLiteral("EDID"), Requirement::Optional),
-                 PropertyDefinition(QByteArrayLiteral("overscan"), Requirement::Optional),
-                 PropertyDefinition(QByteArrayLiteral("vrr_capable"), Requirement::Optional),
-                 PropertyDefinition(QByteArrayLiteral("underscan"), Requirement::Optional,
-                                    {QByteArrayLiteral("off"), QByteArrayLiteral("on"), QByteArrayLiteral("auto")}),
-                 PropertyDefinition(QByteArrayLiteral("underscan vborder"), Requirement::Optional),
-                 PropertyDefinition(QByteArrayLiteral("underscan hborder"), Requirement::Optional),
-                 PropertyDefinition(QByteArrayLiteral("Broadcast RGB"), Requirement::Optional,
-                                    {QByteArrayLiteral("Automatic"), QByteArrayLiteral("Full"), QByteArrayLiteral("Limited 16:235")}),
-                 PropertyDefinition(QByteArrayLiteral("max bpc"), Requirement::Optional),
-                 PropertyDefinition(QByteArrayLiteral("link-status"), Requirement::Optional,
-                                    {QByteArrayLiteral("Good"), QByteArrayLiteral("Bad")}),
-                 PropertyDefinition(QByteArrayLiteral("content type"), Requirement::Optional,
-                                    {QByteArrayLiteral("No Data"), QByteArrayLiteral("Graphics"), QByteArrayLiteral("Photo"), QByteArrayLiteral("Cinema"), QByteArrayLiteral("Game")}),
-                 PropertyDefinition(QByteArrayLiteral("panel orientation"), Requirement::Optional, {QByteArrayLiteral("Normal"), QByteArrayLiteral("Upside Down"), QByteArrayLiteral("Left Side Up"), QByteArrayLiteral("Right Side Up")}),
-                 PropertyDefinition(QByteArrayLiteral("HDR_OUTPUT_METADATA"), Requirement::Optional),
-                 PropertyDefinition(QByteArrayLiteral("scaling mode"), Requirement::Optional, {QByteArrayLiteral("None"), QByteArrayLiteral("Full"), QByteArrayLiteral("Center"), QByteArrayLiteral("Full aspect")})},
-                DRM_MODE_OBJECT_CONNECTOR)
+    : DrmObject(gpu, connectorId, DRM_MODE_OBJECT_CONNECTOR)
+    , crtcId(this, QByteArrayLiteral("CRTC_ID"))
+    , nonDesktop(this, QByteArrayLiteral("non-desktop"))
+    , dpms(this, QByteArrayLiteral("DPMS"))
+    , edidProp(this, QByteArrayLiteral("EDID"))
+    , overscan(this, QByteArrayLiteral("overscan"))
+    , vrrCapable(this, QByteArrayLiteral("vrr_capable"))
+    , underscan(this, QByteArrayLiteral("EDID"), {
+                                                     QByteArrayLiteral("off"),
+                                                     QByteArrayLiteral("on"),
+                                                     QByteArrayLiteral("auto"),
+                                                 })
+    , underscanVBorder(this, QByteArrayLiteral("underscan vborder"))
+    , underscanHBorder(this, QByteArrayLiteral("underscan hborder"))
+    , broadcastRGB(this, QByteArrayLiteral("Broadcast RGB"), {
+                                                                 QByteArrayLiteral("Automatic"),
+                                                                 QByteArrayLiteral("Full"),
+                                                                 QByteArrayLiteral("Limited 16:235"),
+                                                             })
+    , maxBpc(this, QByteArrayLiteral("max bpc"))
+    , linkStatus(this, QByteArrayLiteral("link-status"), {
+                                                             QByteArrayLiteral("Good"),
+                                                             QByteArrayLiteral("Bad"),
+                                                         })
+    , contentType(this, QByteArrayLiteral("content type"), {
+                                                               QByteArrayLiteral("No Data"),
+                                                               QByteArrayLiteral("Graphics"),
+                                                               QByteArrayLiteral("Photo"),
+                                                               QByteArrayLiteral("Cinema"),
+                                                               QByteArrayLiteral("Game"),
+                                                           })
+    , panelOrientation(this, QByteArrayLiteral("panel orientation"), {
+                                                                         QByteArrayLiteral("Normal"),
+                                                                         QByteArrayLiteral("Upside Down"),
+                                                                         QByteArrayLiteral("Left Side Up"),
+                                                                         QByteArrayLiteral("Right Side Up"),
+                                                                     })
+    , hdrMetadata(this, QByteArrayLiteral("HDR_OUTPUT_METADATA"))
+    , scalingMode(this, QByteArrayLiteral("scaling mode"), {
+                                                               QByteArrayLiteral("None"),
+                                                               QByteArrayLiteral("Full"),
+                                                               QByteArrayLiteral("Center"),
+                                                               QByteArrayLiteral("Full aspect"),
+                                                           })
     , m_pipeline(std::make_unique<DrmPipeline>(this))
     , m_conn(drmModeGetConnector(gpu->fd(), connectorId))
 {
@@ -123,11 +144,6 @@ DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)
     } else {
         qCWarning(KWIN_DRM) << "drmModeGetConnector failed!" << strerror(errno);
     }
-}
-
-bool DrmConnector::init()
-{
-    return updateProperties();
 }
 
 bool DrmConnector::isConnected() const
@@ -197,39 +213,6 @@ Output::SubPixel DrmConnector::subpixel() const
     }
 }
 
-bool DrmConnector::hasOverscan() const
-{
-    return getProp(PropertyIndex::Overscan) || getProp(PropertyIndex::Underscan);
-}
-
-uint32_t DrmConnector::overscan() const
-{
-    if (const auto prop = getProp(PropertyIndex::Overscan)) {
-        return prop->current();
-    } else if (const auto prop = getProp(PropertyIndex::Underscan_vborder)) {
-        return prop->current();
-    }
-    return 0;
-}
-
-bool DrmConnector::vrrCapable() const
-{
-    const auto prop = getProp(PropertyIndex::VrrCapable);
-    return prop && prop->current() == 1;
-}
-
-bool DrmConnector::hasRgbRange() const
-{
-    const auto &rgb = getProp(PropertyIndex::Broadcast_RGB);
-    return rgb && rgb->hasAllEnums();
-}
-
-Output::RgbRange DrmConnector::rgbRange() const
-{
-    const auto &rgb = getProp(PropertyIndex::Broadcast_RGB);
-    return rgb->enumForValue<Output::RgbRange>(rgb->current());
-}
-
 bool DrmConnector::updateProperties()
 {
     if (auto connector = drmModeGetConnector(gpu()->fd(), id())) {
@@ -237,25 +220,31 @@ bool DrmConnector::updateProperties()
     } else if (!m_conn) {
         return false;
     }
-    if (!DrmObject::updateProperties()) {
-        return false;
-    }
-    if (const auto &dpms = getProp(PropertyIndex::Dpms)) {
-        dpms->setLegacy();
-    }
+    DrmPropertyList props = queryProperties();
+    crtcId.update(props);
+    nonDesktop.update(props);
+    dpms.update(props);
+    edidProp.update(props);
+    overscan.update(props);
+    vrrCapable.update(props);
+    underscan.update(props);
+    underscanVBorder.update(props);
+    underscanHBorder.update(props);
+    broadcastRGB.update(props);
+    maxBpc.update(props);
+    linkStatus.update(props);
+    contentType.update(props);
+    panelOrientation.update(props);
+    hdrMetadata.update(props);
+    scalingMode.update(props);
 
-    auto &underscan = m_props[static_cast<uint32_t>(PropertyIndex::Underscan)];
-    auto &vborder = m_props[static_cast<uint32_t>(PropertyIndex::Underscan_vborder)];
-    auto &hborder = m_props[static_cast<uint32_t>(PropertyIndex::Underscan_hborder)];
-    if (!underscan || !vborder || !hborder) {
-        underscan.reset();
-        vborder.reset();
-        hborder.reset();
+    if (gpu()->atomicModeSetting() && !crtcId.isValid()) {
+        return false;
     }
 
     // parse edid
-    if (const auto edidProp = getProp(PropertyIndex::Edid); edidProp && edidProp->immutableBlob()) {
-        m_edid = Edid(edidProp->immutableBlob()->data, edidProp->immutableBlob()->length);
+    if (edidProp.immutableBlob()) {
+        m_edid = Edid(edidProp.immutableBlob()->data, edidProp.immutableBlob()->length);
         if (!m_edid.isValid()) {
             qCWarning(KWIN_DRM) << "Couldn't parse EDID for connector" << this;
         }
@@ -283,7 +272,7 @@ bool DrmConnector::updateProperties()
         }
         m_modes.clear();
         m_modes.append(m_driverModes);
-        if (auto scaling = getProp(PropertyIndex::ScalingMode); scaling && scaling->hasEnum(ScalingMode::Full_Aspect)) {
+        if (scalingMode.isValid() && scalingMode.hasEnum(ScalingMode::Full_Aspect)) {
             m_modes.append(generateCommonModes());
         }
         if (m_pipeline->mode()) {
@@ -311,8 +300,7 @@ bool DrmConnector::isCrtcSupported(DrmCrtc *crtc) const
 
 bool DrmConnector::isNonDesktop() const
 {
-    const auto &prop = getProp(PropertyIndex::NonDesktop);
-    return prop && prop->current();
+    return nonDesktop.isValid() && nonDesktop.value() == 1;
 }
 
 const Edid *DrmConnector::edid() const
@@ -327,15 +315,7 @@ DrmPipeline *DrmConnector::pipeline() const
 
 void DrmConnector::disable(DrmAtomicCommit *commit)
 {
-    commit->addProperty(getProp(PropertyIndex::CrtcId), 0);
-}
-
-DrmConnector::LinkStatus DrmConnector::linkStatus() const
-{
-    if (const auto &property = getProp(PropertyIndex::LinkStatus)) {
-        return property->enumForValue<LinkStatus>(property->current());
-    }
-    return LinkStatus::Good;
+    commit->addProperty(crtcId, 0);
 }
 
 static const QVector<QSize> s_commonModes = {
@@ -413,15 +393,6 @@ std::shared_ptr<DrmConnectorMode> DrmConnector::generateMode(const QSize &size, 
     return std::make_shared<DrmConnectorMode>(this, mode);
 }
 
-DrmConnector::PanelOrientation DrmConnector::panelOrientation() const
-{
-    if (const auto &property = getProp(PropertyIndex::PanelOrientation)) {
-        return property->enumForValue<PanelOrientation>(property->current());
-    } else {
-        return PanelOrientation::Normal;
-    }
-}
-
 QDebug &operator<<(QDebug &s, const KWin::DrmConnector *obj)
 {
     QDebugStateSaver saver(s);
@@ -469,6 +440,34 @@ Output::Transform DrmConnector::toKWinTransform(PanelOrientation orientation)
         return KWin::Output::Transform::Rotated90;
     case PanelOrientation::UpsideDown:
         return KWin::Output::Transform::Rotated180;
+    default:
+        Q_UNREACHABLE();
+    }
+}
+
+DrmConnector::BroadcastRgbOptions DrmConnector::rgbRangeToBroadcastRgb(Output::RgbRange rgbRange)
+{
+    switch (rgbRange) {
+    case Output::RgbRange::Automatic:
+        return BroadcastRgbOptions::Automatic;
+    case Output::RgbRange::Full:
+        return BroadcastRgbOptions::Full;
+    case Output::RgbRange::Limited:
+        return BroadcastRgbOptions::Limited;
+    default:
+        Q_UNREACHABLE();
+    }
+}
+
+Output::RgbRange DrmConnector::broadcastRgbToRgbRange(BroadcastRgbOptions rgbRange)
+{
+    switch (rgbRange) {
+    case BroadcastRgbOptions::Automatic:
+        return Output::RgbRange::Automatic;
+    case BroadcastRgbOptions::Full:
+        return Output::RgbRange::Full;
+    case BroadcastRgbOptions::Limited:
+        return Output::RgbRange::Limited;
     default:
         Q_UNREACHABLE();
     }

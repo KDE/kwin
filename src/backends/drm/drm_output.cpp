@@ -55,17 +55,17 @@ DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn)
     Capabilities capabilities = Capability::Dpms;
     State initialState;
 
-    if (conn->hasOverscan()) {
+    if (conn->overscan.isValid() || conn->underscan.isValid()) {
         capabilities |= Capability::Overscan;
-        initialState.overscan = conn->overscan();
+        initialState.overscan = conn->overscan.isValid() ? conn->overscan.value() : conn->underscanVBorder.value();
     }
-    if (conn->vrrCapable()) {
+    if (conn->vrrCapable.isValid() && conn->vrrCapable.value()) {
         capabilities |= Capability::Vrr;
         setVrrPolicy(RenderLoop::VrrPolicy::Automatic);
     }
-    if (conn->hasRgbRange()) {
+    if (conn->broadcastRGB.isValid()) {
         capabilities |= Capability::RgbRange;
-        initialState.rgbRange = conn->rgbRange();
+        initialState.rgbRange = DrmConnector::broadcastRgbToRgbRange(conn->broadcastRGB.enumValue());
     }
 
     const Edid *edid = conn->edid();
@@ -80,7 +80,7 @@ DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn)
         .edid = *edid,
         .subPixel = conn->subpixel(),
         .capabilities = capabilities,
-        .panelOrientation = DrmConnector::toKWinTransform(conn->panelOrientation()),
+        .panelOrientation = conn->panelOrientation.isValid() ? DrmConnector::toKWinTransform(conn->panelOrientation.enumValue()) : Transform::Normal,
         .internal = conn->isInternal(),
         .nonDesktop = conn->isNonDesktop(),
     });

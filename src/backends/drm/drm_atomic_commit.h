@@ -28,12 +28,13 @@ class DrmAtomicCommit
 public:
     DrmAtomicCommit(DrmGpu *gpu);
 
-    void addProperty(DrmProperty *prop, uint64_t value);
-    void addEnum(DrmProperty *prop, auto enumValue)
+    void addProperty(const DrmProperty &prop, uint64_t value);
+    template<typename T>
+    void addEnum(const DrmEnumProperty<T> &prop, T enumValue)
     {
-        addProperty(prop, prop->valueForEnum(enumValue));
+        addProperty(prop, prop.valueForEnum(enumValue));
     }
-    void addBlob(DrmProperty *prop, const std::shared_ptr<DrmBlob> &blob);
+    void addBlob(const DrmProperty &prop, const std::shared_ptr<DrmBlob> &blob);
 
     bool test();
     bool testAllowModeset();
@@ -45,7 +46,7 @@ public:
 private:
     DrmGpu *const m_gpu;
     DrmUniquePtr<drmModeAtomicReq> m_req;
-    QHash<DrmProperty *, std::shared_ptr<DrmBlob>> m_blobs;
+    QHash<const DrmProperty *, std::shared_ptr<DrmBlob>> m_blobs;
 };
 
 }

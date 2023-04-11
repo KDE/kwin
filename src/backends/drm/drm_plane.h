@@ -29,46 +29,8 @@ class DrmPlane : public DrmObject
 public:
     DrmPlane(DrmGpu *gpu, uint32_t planeId);
 
-    enum class PropertyIndex : uint32_t {
-        Type = 0,
-        SrcX,
-        SrcY,
-        SrcW,
-        SrcH,
-        CrtcX,
-        CrtcY,
-        CrtcW,
-        CrtcH,
-        FbId,
-        CrtcId,
-        Rotation,
-        In_Formats,
-        Count
-    };
-    Q_ENUM(PropertyIndex)
-
-    enum class TypeIndex : uint32_t {
-        Overlay = 0,
-        Primary,
-        Cursor,
-        Count
-    };
-    Q_ENUM(TypeIndex)
-
-    enum class Transformation : uint32_t {
-        Rotate0 = 1 << 0,
-        Rotate90 = 1 << 1,
-        Rotate180 = 1 << 2,
-        Rotate270 = 1 << 3,
-        ReflectX = 1 << 4,
-        ReflectY = 1 << 5
-    };
-    Q_ENUM(Transformation)
-    Q_DECLARE_FLAGS(Transformations, Transformation)
-
-    bool init() override;
+    bool updateProperties() override;
     void disable(DrmAtomicCommit *commit) override;
-    TypeIndex type() const;
 
     bool isCrtcSupported(int pipeIndex) const;
     QMap<uint32_t, QVector<uint64_t>> formats() const;
@@ -81,11 +43,39 @@ public:
 
     void set(DrmAtomicCommit *commit, const QPoint &srcPos, const QSize &srcSize, const QRect &dst);
 
-    Transformations supportedTransformations() const;
-
     void releaseBuffers();
 
-    static int32_t transformationToDegrees(DrmPlane::Transformations transformation);
+    enum class TypeIndex : uint64_t {
+        Overlay = 0,
+        Primary = 1,
+        Cursor = 2
+    };
+    enum class Transformation : uint32_t {
+        Rotate0 = 1 << 0,
+        Rotate90 = 1 << 1,
+        Rotate180 = 1 << 2,
+        Rotate270 = 1 << 3,
+        ReflectX = 1 << 4,
+        ReflectY = 1 << 5
+    };
+    Q_ENUM(Transformation)
+    Q_DECLARE_FLAGS(Transformations, Transformation)
+
+    DrmEnumProperty<TypeIndex> type;
+    DrmProperty srcX;
+    DrmProperty srcY;
+    DrmProperty srcW;
+    DrmProperty srcH;
+    DrmProperty crtcX;
+    DrmProperty crtcY;
+    DrmProperty crtcW;
+    DrmProperty crtcH;
+    DrmProperty fbId;
+    DrmProperty crtcId;
+    DrmEnumProperty<Transformations> rotation;
+    DrmProperty inFormats;
+
+    static int32_t transformationToDegrees(Transformations transformation);
 
 private:
     std::shared_ptr<DrmFramebuffer> m_current;
@@ -93,7 +83,6 @@ private:
 
     QMap<uint32_t, QVector<uint64_t>> m_supportedFormats;
     uint32_t m_possibleCrtcs;
-    Transformations m_supportedTransformations = Transformation::Rotate0;
 };
 
 }

@@ -186,31 +186,31 @@ static QRect centerBuffer(const QSize &bufferSize, const QSize &modeSize)
 
 bool DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commit)
 {
-    if (const auto contentType = m_connector->getProp(DrmConnector::PropertyIndex::ContentType)) {
-        commit->addEnum(contentType, m_pending.contentType);
+    if (m_connector->contentType.isValid()) {
+        commit->addEnum(m_connector->contentType, m_pending.contentType);
     }
 
-    commit->addProperty(m_pending.crtc->getProp(DrmCrtc::PropertyIndex::VrrEnabled), m_pending.syncMode == RenderLoopPrivate::SyncMode::Adaptive || m_pending.syncMode == RenderLoopPrivate::SyncMode::AdaptiveAsync);
-    if (const auto gamma = m_pending.crtc->getProp(DrmCrtc::PropertyIndex::Gamma_LUT)) {
-        commit->addBlob(gamma, m_pending.gamma ? m_pending.gamma->blob() : nullptr);
+    commit->addProperty(m_pending.crtc->vrrEnabled, m_pending.syncMode == RenderLoopPrivate::SyncMode::Adaptive || m_pending.syncMode == RenderLoopPrivate::SyncMode::AdaptiveAsync);
+    if (m_pending.crtc->gammaLut.isValid()) {
+        commit->addBlob(m_pending.crtc->gammaLut, m_pending.gamma ? m_pending.gamma->blob() : nullptr);
     } else if (m_pending.gamma) {
         return false;
     }
-    if (const auto ctm = m_pending.crtc->getProp(DrmCrtc::PropertyIndex::CTM)) {
-        commit->addBlob(ctm, m_pending.ctm);
+    if (m_pending.crtc->ctm.isValid()) {
+        commit->addBlob(m_pending.crtc->ctm, m_pending.ctm);
     } else if (m_pending.ctm) {
         return false;
     }
 
     const auto fb = m_pending.layer->currentBuffer().get();
     m_pending.crtc->primaryPlane()->set(commit, QPoint(0, 0), fb->buffer()->size(), centerBuffer(fb->buffer()->size(), m_pending.mode->size()));
-    commit->addProperty(m_pending.crtc->primaryPlane()->getProp(DrmPlane::PropertyIndex::FbId), fb->framebufferId());
+    commit->addProperty(m_pending.crtc->primaryPlane()->fbId, fb->framebufferId());
 
     if (auto plane = m_pending.crtc->cursorPlane()) {
         const auto layer = cursorLayer();
         plane->set(commit, QPoint(0, 0), gpu()->cursorSize(), QRect(layer->position(), gpu()->cursorSize()));
-        commit->addProperty(plane->getProp(DrmPlane::PropertyIndex::CrtcId), layer->isVisible() ? m_pending.crtc->id() : 0);
-        commit->addProperty(plane->getProp(DrmPlane::PropertyIndex::FbId), layer->isVisible() ? layer->currentBuffer()->framebufferId() : 0);
+        commit->addProperty(plane->crtcId, layer->isVisible() ? m_pending.crtc->id() : 0);
+        commit->addProperty(plane->fbId, layer->isVisible() ? layer->currentBuffer()->framebufferId() : 0);
     }
     return true;
 }
@@ -229,45 +229,45 @@ void DrmPipeline::prepareAtomicDisable(DrmAtomicCommit *commit)
 
 void DrmPipeline::prepareAtomicModeset(DrmAtomicCommit *commit)
 {
-    commit->addProperty(m_connector->getProp(DrmConnector::PropertyIndex::CrtcId), m_pending.crtc->id());
-    if (const auto prop = m_connector->getProp(DrmConnector::PropertyIndex::Broadcast_RGB)) {
-        commit->addEnum(prop, m_pending.rgbRange);
+    commit->addProperty(m_connector->crtcId, m_pending.crtc->id());
+    if (m_connector->broadcastRGB.isValid()) {
+        commit->addEnum(m_connector->broadcastRGB, DrmConnector::rgbRangeToBroadcastRgb(m_pending.rgbRange));
     }
-    if (const auto prop = m_connector->getProp(DrmConnector::PropertyIndex::LinkStatus)) {
-        commit->addEnum(prop, DrmConnector::LinkStatus::Good);
+    if (m_connector->linkStatus.isValid()) {
+        commit->addEnum(m_connector->linkStatus, DrmConnector::LinkStatus::Good);
     }
-    if (const auto overscan = m_connector->getProp(DrmConnector::PropertyIndex::Overscan)) {
-        commit->addProperty(overscan, m_pending.overscan);
-    } else if (const auto underscan = m_connector->getProp(DrmConnector::PropertyIndex::Underscan)) {
+    if (m_connector->overscan.isValid()) {
+        commit->addProperty(m_connector->overscan, m_pending.overscan);
+    } else if (m_connector->underscan.isValid()) {
         const uint32_t hborder = calculateUnderscan();
-        commit->addEnum(underscan, m_pending.overscan != 0 ? DrmConnector::UnderscanOptions::On : DrmConnector::UnderscanOptions::Off);
-        commit->addProperty(m_connector->getProp(DrmConnector::PropertyIndex::Underscan_vborder), m_pending.overscan);
-        commit->addProperty(m_connector->getProp(DrmConnector::PropertyIndex::Underscan_hborder), hborder);
+        commit->addEnum(m_connector->underscan, m_pending.overscan != 0 ? DrmConnector::UnderscanOptions::On : DrmConnector::UnderscanOptions::Off);
+        commit->addProperty(m_connector->underscanVBorder, m_pending.overscan);
+        commit->addProperty(m_connector->underscanHBorder, hborder);
     }
-    if (const auto bpc = m_connector->getProp(DrmConnector::PropertyIndex::MaxBpc)) {
+    if (m_connector->maxBpc.isValid()) {
         uint64_t preferred = 8;
         if (auto backend = dynamic_cast<EglGbmBackend *>(gpu()->platform()->renderBackend()); backend && backend->prefer10bpc()) {
             preferred = 10;
         }
-        commit->addProperty(bpc, preferred);
+        commit->addProperty(m_connector->maxBpc, preferred);
     }
-    if (const auto hdr = m_connector->getProp(DrmConnector::PropertyIndex::HdrMetadata)) {
-        commit->addProperty(hdr, 0);
+    if (m_connector->hdrMetadata.isValid()) {
+        commit->addProperty(m_connector->hdrMetadata, 0);
     }
-    if (const auto scaling = m_connector->getProp(DrmConnector::PropertyIndex::ScalingMode); scaling && scaling->hasEnum(DrmConnector::ScalingMode::None)) {
-        commit->addEnum(scaling, DrmConnector::ScalingMode::None);
+    if (m_connector->scalingMode.isValid() && m_connector->scalingMode.hasEnum(DrmConnector::ScalingMode::None)) {
+        commit->addEnum(m_connector->scalingMode, DrmConnector::ScalingMode::None);
     }
 
-    commit->addProperty(m_pending.crtc->getProp(DrmCrtc::PropertyIndex::Active), 1);
-    commit->addBlob(m_pending.crtc->getProp(DrmCrtc::PropertyIndex::ModeId), m_pending.mode->blob());
+    commit->addProperty(m_pending.crtc->active, 1);
+    commit->addBlob(m_pending.crtc->modeId, m_pending.mode->blob());
 
-    commit->addProperty(m_pending.crtc->primaryPlane()->getProp(DrmPlane::PropertyIndex::CrtcId), m_pending.crtc->id());
-    if (const auto rotation = m_pending.crtc->primaryPlane()->getProp(DrmPlane::PropertyIndex::Rotation)) {
-        commit->addEnum(rotation, DrmPlane::Transformation::Rotate0);
+    commit->addProperty(m_pending.crtc->primaryPlane()->crtcId, m_pending.crtc->id());
+    if (const auto &rotation = m_pending.crtc->primaryPlane()->rotation; rotation.isValid()) {
+        commit->addEnum(rotation, {DrmPlane::Transformation::Rotate0});
     }
     if (m_pending.crtc->cursorPlane()) {
-        if (const auto rotation = m_pending.crtc->cursorPlane()->getProp(DrmPlane::PropertyIndex::Rotation)) {
-            commit->addEnum(rotation, DrmPlane::Transformation::Rotate0);
+        if (const auto &rotation = m_pending.crtc->cursorPlane()->rotation; rotation.isValid()) {
+            commit->addEnum(rotation, DrmPlane::Transformations(DrmPlane::Transformation::Rotate0));
         }
     }
 }

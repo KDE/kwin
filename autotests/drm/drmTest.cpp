@@ -272,7 +272,7 @@ void DrmTest::testModeGeneration()
     mockGpu->connectors.removeAll(conn);
     QVERIFY(gpu->updateOutputs());
 
-    conn->props.emplace_back(conn.get(), QStringLiteral("scaling mode"), 0, 0, QVector<QByteArray>{"None", "Full", "Center", "Full aspect"});
+    conn->props.emplace_back(conn.get(), QStringLiteral("scaling mode"), 0, DRM_MODE_PROP_ENUM, QVector<QByteArray>{"None", "Full", "Center", "Full aspect"});
     mockGpu->connectors.push_back(conn);
     QVERIFY(gpu->updateOutputs());
 

@@ -18,54 +18,35 @@
 namespace KWin
 {
 
-DrmObject::DrmObject(DrmGpu *gpu, uint32_t objectId, const QVector<PropertyDefinition> &&vector, uint32_t objectType)
+DrmObject::DrmObject(DrmGpu *gpu, uint32_t objectId, uint32_t objectType)
     : m_gpu(gpu)
     , m_id(objectId)
     , m_objectType(objectType)
-    , m_propertyDefinitions(vector)
 {
-    m_props.resize(m_propertyDefinitions.count());
 }
 
-bool DrmObject::updateProperties()
+bool DrmObject::init()
+{
+    return updateProperties();
+}
+
+DrmPropertyList DrmObject::queryProperties() const
 {
     DrmUniquePtr<drmModeObjectProperties> properties(drmModeObjectGetProperties(m_gpu->fd(), m_id, m_objectType));
     if (!properties) {
         qCWarning(KWIN_DRM) << "Failed to get properties for object" << m_id;
-        return false;
+        return {};
     }
-    for (int propIndex = 0; propIndex < m_propertyDefinitions.count(); propIndex++) {
-        const PropertyDefinition &def = m_propertyDefinitions[propIndex];
-        bool found = false;
-        for (uint32_t drmPropIndex = 0; drmPropIndex < properties->count_props; drmPropIndex++) {
-            DrmUniquePtr<drmModePropertyRes> prop(drmModeGetProperty(m_gpu->fd(), properties->props[drmPropIndex]));
-            if (!prop) {
-                qCWarning(KWIN_DRM, "Getting property %d of object %d failed!", drmPropIndex, m_id);
-                continue;
-            }
-            if (def.name == prop->name) {
-                if (m_props[propIndex]) {
-                    m_props[propIndex]->setCurrent(properties->prop_values[drmPropIndex]);
-                } else {
-                    m_props[propIndex] = std::make_unique<DrmProperty>(this, prop.get(), properties->prop_values[drmPropIndex], def.enumNames);
-                }
-                found = true;
-                break;
-            }
+    DrmPropertyList ret;
+    for (uint32_t i = 0; i < properties->count_props; i++) {
+        DrmUniquePtr<drmModePropertyRes> prop(drmModeGetProperty(m_gpu->fd(), properties->props[i]));
+        if (!prop) {
+            qCWarning(KWIN_DRM, "Getting property %d of object %d failed!", properties->props[i], m_id);
+            continue;
         }
-        if (!found) {
-            m_props[propIndex].reset();
-        }
+        ret.addProperty(std::move(prop), properties->prop_values[i]);
     }
-    for (int i = 0; i < m_propertyDefinitions.count(); i++) {
-        bool required = m_gpu->atomicModeSetting() ? m_propertyDefinitions[i].requirement == Requirement::Required
-                                                   : m_propertyDefinitions[i].requirement == Requirement::RequiredForLegacy;
-        if (!m_props[i] && required) {
-            qCWarning(KWIN_DRM, "Required property %s for object %d not found!", qPrintable(m_propertyDefinitions[i].name), m_id);
-            return false;
-        }
-    }
-    return true;
+    return ret;
 }
 
 uint32_t DrmObject::id() const
@@ -94,6 +75,25 @@ QString DrmObject::typeName() const
         return QStringLiteral("plane");
     default:
         return QStringLiteral("unknown?");
+    }
+}
+
+void DrmPropertyList::addProperty(DrmUniquePtr<drmModePropertyRes> &&prop, uint64_t value)
+{
+    m_properties.push_back(std::make_pair(std::move(prop), value));
+}
+
+std::optional<std::pair<DrmUniquePtr<drmModePropertyRes>, uint64_t>> DrmPropertyList::takeProperty(const QByteArray &name)
+{
+    const auto it = std::find_if(m_properties.begin(), m_properties.end(), [&name](const auto &pair) {
+        return pair.first->name == name;
+    });
+    if (it != m_properties.end()) {
+        auto ret = std::move(*it);
+        m_properties.erase(it);
+        return ret;
+    } else {
+        return std::nullopt;
     }
 }
 }

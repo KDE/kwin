@@ -107,7 +107,7 @@ public:
 };
 
 enum class PlaneType {
-    Primary,
+    Primary = 0,
     Overlay,
     Cursor
 };

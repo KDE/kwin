@@ -21,15 +21,15 @@ DrmAtomicCommit::DrmAtomicCommit(DrmGpu *gpu)
 {
 }
 
-void DrmAtomicCommit::addProperty(DrmProperty *prop, uint64_t value)
+void DrmAtomicCommit::addProperty(const DrmProperty &prop, uint64_t value)
 {
-    drmModeAtomicAddProperty(m_req.get(), prop->drmObject()->id(), prop->propId(), value);
+    drmModeAtomicAddProperty(m_req.get(), prop.drmObject()->id(), prop.propId(), value);
 }
 
-void DrmAtomicCommit::addBlob(DrmProperty *prop, const std::shared_ptr<DrmBlob> &blob)
+void DrmAtomicCommit::addBlob(const DrmProperty &prop, const std::shared_ptr<DrmBlob> &blob)
 {
     addProperty(prop, blob ? blob->blobId() : 0);
-    m_blobs[prop] = blob;
+    m_blobs[&prop] = blob;
 }
 
 bool DrmAtomicCommit::test()

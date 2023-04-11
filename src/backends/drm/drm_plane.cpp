@@ -23,78 +23,79 @@ namespace KWin
 {
 
 DrmPlane::DrmPlane(DrmGpu *gpu, uint32_t planeId)
-    : DrmObject(gpu, planeId, {
-                                  PropertyDefinition(QByteArrayLiteral("type"), Requirement::Required, {QByteArrayLiteral("Overlay"), QByteArrayLiteral("Primary"), QByteArrayLiteral("Cursor")}),
-                                  PropertyDefinition(QByteArrayLiteral("SRC_X"), Requirement::Required),
-                                  PropertyDefinition(QByteArrayLiteral("SRC_Y"), Requirement::Required),
-                                  PropertyDefinition(QByteArrayLiteral("SRC_W"), Requirement::Required),
-                                  PropertyDefinition(QByteArrayLiteral("SRC_H"), Requirement::Required),
-                                  PropertyDefinition(QByteArrayLiteral("CRTC_X"), Requirement::Required),
-                                  PropertyDefinition(QByteArrayLiteral("CRTC_Y"), Requirement::Required),
-                                  PropertyDefinition(QByteArrayLiteral("CRTC_W"), Requirement::Required),
-                                  PropertyDefinition(QByteArrayLiteral("CRTC_H"), Requirement::Required),
-                                  PropertyDefinition(QByteArrayLiteral("FB_ID"), Requirement::Required),
-                                  PropertyDefinition(QByteArrayLiteral("CRTC_ID"), Requirement::Required),
-                                  PropertyDefinition(QByteArrayLiteral("rotation"), Requirement::Optional, {QByteArrayLiteral("rotate-0"), QByteArrayLiteral("rotate-90"), QByteArrayLiteral("rotate-180"), QByteArrayLiteral("rotate-270"), QByteArrayLiteral("reflect-x"), QByteArrayLiteral("reflect-y")}),
-                                  PropertyDefinition(QByteArrayLiteral("IN_FORMATS"), Requirement::Optional),
-                              },
-                DRM_MODE_OBJECT_PLANE)
+    : DrmObject(gpu, planeId, DRM_MODE_OBJECT_PLANE)
+    , type(this, QByteArrayLiteral("type"), {
+                                                QByteArrayLiteral("Overlay"),
+                                                QByteArrayLiteral("Primary"),
+                                                QByteArrayLiteral("Cursor"),
+                                            })
+    , srcX(this, QByteArrayLiteral("SRC_X"))
+    , srcY(this, QByteArrayLiteral("SRC_Y"))
+    , srcW(this, QByteArrayLiteral("SRC_W"))
+    , srcH(this, QByteArrayLiteral("SRC_H"))
+    , crtcX(this, QByteArrayLiteral("CRTC_X"))
+    , crtcY(this, QByteArrayLiteral("CRTC_Y"))
+    , crtcW(this, QByteArrayLiteral("CRTC_W"))
+    , crtcH(this, QByteArrayLiteral("CRTC_H"))
+    , fbId(this, QByteArrayLiteral("FB_ID"))
+    , crtcId(this, QByteArrayLiteral("CRTC_ID"))
+    , rotation(this, QByteArrayLiteral("rotation"), {
+                                                        QByteArrayLiteral("rotate-0"),
+                                                        QByteArrayLiteral("rotate-90"),
+                                                        QByteArrayLiteral("rotate-180"),
+                                                        QByteArrayLiteral("rotate-270"),
+                                                        QByteArrayLiteral("reflect-x"),
+                                                        QByteArrayLiteral("reflect-y"),
+                                                    })
+    , inFormats(this, QByteArrayLiteral("IN_FORMATS"))
 {
 }
 
-bool DrmPlane::init()
+bool DrmPlane::updateProperties()
 {
     DrmUniquePtr<drmModePlane> p(drmModeGetPlane(gpu()->fd(), id()));
-
     if (!p) {
         qCWarning(KWIN_DRM) << "Failed to get kernel plane" << id();
+        return false;
+    }
+    DrmPropertyList props = queryProperties();
+    type.update(props);
+    srcX.update(props);
+    srcY.update(props);
+    srcW.update(props);
+    srcH.update(props);
+    crtcX.update(props);
+    crtcY.update(props);
+    crtcW.update(props);
+    crtcH.update(props);
+    fbId.update(props);
+    crtcId.update(props);
+    rotation.update(props);
+    inFormats.update(props);
+
+    if (!type.isValid() || !srcX.isValid() || !srcY.isValid() || !srcW.isValid() || !srcH.isValid()
+        || !crtcX.isValid() || !crtcY.isValid() || !crtcW.isValid() || !crtcH.isValid() || !fbId.isValid()) {
         return false;
     }
 
     m_possibleCrtcs = p->possible_crtcs;
 
-    bool success = updateProperties();
-    if (success) {
-        if (const auto prop = getProp(PropertyIndex::Rotation)) {
-            m_supportedTransformations = Transformations();
-            auto checkSupport = [this, prop](Transformation t) {
-                if (prop->hasEnum(t)) {
-                    m_supportedTransformations |= t;
-                }
-            };
-            checkSupport(Transformation::Rotate0);
-            checkSupport(Transformation::Rotate90);
-            checkSupport(Transformation::Rotate180);
-            checkSupport(Transformation::Rotate270);
-            checkSupport(Transformation::ReflectX);
-            checkSupport(Transformation::ReflectY);
-        } else {
-            m_supportedTransformations = Transformation::Rotate0;
+    // read formats from blob if available and if modifiers are supported, and from the plane object if not
+    if (inFormats.isValid() && inFormats.immutableBlob() && gpu()->addFB2ModifiersSupported()) {
+        drmModeFormatModifierIterator iterator{};
+        while (drmModeFormatModifierBlobIterNext(inFormats.immutableBlob(), &iterator)) {
+            m_supportedFormats[iterator.fmt].push_back(iterator.mod);
         }
-
-        // read formats from blob if available and if modifiers are supported, and from the plane object if not
-        if (const auto formatProp = getProp(PropertyIndex::In_Formats); formatProp && formatProp->immutableBlob() && gpu()->addFB2ModifiersSupported()) {
-            drmModeFormatModifierIterator iterator{};
-            while (drmModeFormatModifierBlobIterNext(formatProp->immutableBlob(), &iterator)) {
-                m_supportedFormats[iterator.fmt].push_back(iterator.mod);
-            }
-        } else {
-            for (uint32_t i = 0; i < p->count_formats; i++) {
-                m_supportedFormats.insert(p->formats[i], {DRM_FORMAT_MOD_LINEAR});
-            }
-        }
-        if (m_supportedFormats.isEmpty()) {
-            qCWarning(KWIN_DRM) << "Driver doesn't advertise any formats for this plane. Falling back to XRGB8888 without explicit modifiers";
-            m_supportedFormats.insert(DRM_FORMAT_XRGB8888, {});
+    } else {
+        for (uint32_t i = 0; i < p->count_formats; i++) {
+            m_supportedFormats.insert(p->formats[i], {DRM_FORMAT_MOD_LINEAR});
         }
     }
-    return success;
-}
-
-DrmPlane::TypeIndex DrmPlane::type() const
-{
-    const auto &prop = getProp(PropertyIndex::Type);
-    return prop->enumForValue<DrmPlane::TypeIndex>(prop->current());
+    if (m_supportedFormats.isEmpty()) {
+        qCWarning(KWIN_DRM) << "Driver doesn't advertise any formats for this plane. Falling back to XRGB8888 without explicit modifiers";
+        m_supportedFormats.insert(DRM_FORMAT_XRGB8888, {});
+    }
+    return true;
 }
 
 void DrmPlane::setNext(const std::shared_ptr<DrmFramebuffer> &b)
@@ -111,15 +112,15 @@ void DrmPlane::flipBuffer()
 void DrmPlane::set(DrmAtomicCommit *commit, const QPoint &srcPos, const QSize &srcSize, const QRect &dst)
 {
     // Src* are in 16.16 fixed point format
-    commit->addProperty(getProp(PropertyIndex::SrcX), srcPos.x() << 16);
-    commit->addProperty(getProp(PropertyIndex::SrcX), srcPos.x() << 16);
-    commit->addProperty(getProp(PropertyIndex::SrcY), srcPos.y() << 16);
-    commit->addProperty(getProp(PropertyIndex::SrcW), srcSize.width() << 16);
-    commit->addProperty(getProp(PropertyIndex::SrcH), srcSize.height() << 16);
-    commit->addProperty(getProp(PropertyIndex::CrtcX), dst.x());
-    commit->addProperty(getProp(PropertyIndex::CrtcY), dst.y());
-    commit->addProperty(getProp(PropertyIndex::CrtcW), dst.width());
-    commit->addProperty(getProp(PropertyIndex::CrtcH), dst.height());
+    commit->addProperty(srcX, srcPos.x() << 16);
+    commit->addProperty(srcX, srcPos.x() << 16);
+    commit->addProperty(srcY, srcPos.y() << 16);
+    commit->addProperty(srcW, srcSize.width() << 16);
+    commit->addProperty(srcH, srcSize.height() << 16);
+    commit->addProperty(crtcX, dst.x());
+    commit->addProperty(crtcY, dst.y());
+    commit->addProperty(crtcW, dst.width());
+    commit->addProperty(crtcH, dst.height());
 }
 
 bool DrmPlane::isCrtcSupported(int pipeIndex) const
@@ -147,15 +148,10 @@ void DrmPlane::setCurrent(const std::shared_ptr<DrmFramebuffer> &b)
     m_current = b;
 }
 
-DrmPlane::Transformations DrmPlane::supportedTransformations() const
-{
-    return m_supportedTransformations;
-}
-
 void DrmPlane::disable(DrmAtomicCommit *commit)
 {
-    commit->addProperty(getProp(PropertyIndex::CrtcId), 0);
-    commit->addProperty(getProp(PropertyIndex::FbId), 0);
+    commit->addProperty(crtcId, 0);
+    commit->addProperty(fbId, 0);
     m_next = nullptr;
 }
 

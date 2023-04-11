@@ -17,25 +17,11 @@
 namespace KWin
 {
 
-DrmProperty::DrmProperty(DrmObject *obj, drmModePropertyRes *prop, uint64_t val, const QVector<QByteArray> &enumNames)
-    : m_propId(prop->prop_id)
-    , m_propName(prop->name)
-    , m_current(val)
-    , m_immutable(prop->flags & DRM_MODE_PROP_IMMUTABLE)
-    , m_isBlob(prop->flags & DRM_MODE_PROP_BLOB)
-    , m_isBitmask(prop->flags & DRM_MODE_PROP_BITMASK)
-    , m_obj(obj)
+DrmProperty::DrmProperty(DrmObject *obj, const QByteArray &name, const QVector<QByteArray> &enumNames)
+    : m_obj(obj)
+    , m_propName(name)
+    , m_enumNames(enumNames)
 {
-    if (!enumNames.isEmpty()) {
-        m_enumNames = enumNames;
-        initEnumMap(prop);
-    }
-    if (prop->flags & DRM_MODE_PROP_RANGE) {
-        Q_ASSERT(prop->count_values > 1);
-        m_minValue = prop->values[0];
-        m_maxValue = prop->values[1];
-    }
-    updateBlob();
 }
 
 bool DrmProperty::setPropertyLegacy(uint64_t value)
@@ -50,32 +36,59 @@ bool DrmProperty::setPropertyLegacy(uint64_t value)
     }
 }
 
-void DrmProperty::initEnumMap(drmModePropertyRes *prop)
+void DrmProperty::update(DrmPropertyList &propertyList)
 {
-    for (int i = 0; i < prop->count_enums; i++) {
-        struct drm_mode_property_enum *en = &prop->enums[i];
-        int j = m_enumNames.indexOf(QByteArray(en->name));
-        if (j >= 0) {
-            if (m_isBitmask) {
-                m_enumToPropertyMap[1 << j] = 1 << en->value;
-                m_propertyToEnumMap[1 << en->value] = 1 << j;
-            } else {
-                m_enumToPropertyMap[j] = en->value;
-                m_propertyToEnumMap[en->value] = j;
-            }
-        } else {
-            qCWarning(KWIN_DRM, "%s has unrecognized enum '%s'", qPrintable(m_propName), en->name);
+    if (const auto opt = propertyList.takeProperty(m_propName)) {
+        const auto &[prop, value] = *opt;
+        m_propId = prop->prop_id;
+        m_current = value;
+        m_immutable = prop->flags & DRM_MODE_PROP_IMMUTABLE;
+        m_isBlob = prop->flags & DRM_MODE_PROP_BLOB;
+        m_isBitmask = prop->flags & DRM_MODE_PROP_BITMASK;
+        if (prop->flags & DRM_MODE_PROP_RANGE) {
+            Q_ASSERT(prop->count_values > 1);
+            m_minValue = prop->values[0];
+            m_maxValue = prop->values[1];
         }
+        m_enumToPropertyMap.clear();
+        m_propertyToEnumMap.clear();
+        // bitmasks need translation too, not just enums
+        if (prop->flags & (DRM_MODE_PROP_ENUM | DRM_MODE_PROP_BITMASK)) {
+            for (int i = 0; i < prop->count_enums; i++) {
+                struct drm_mode_property_enum *en = &prop->enums[i];
+                int j = m_enumNames.indexOf(QByteArray(en->name));
+                if (j >= 0) {
+                    if (m_isBitmask) {
+                        m_enumToPropertyMap[1 << j] = 1 << en->value;
+                        m_propertyToEnumMap[1 << en->value] = 1 << j;
+                    } else {
+                        m_enumToPropertyMap[j] = en->value;
+                        m_propertyToEnumMap[en->value] = j;
+                    }
+                } else {
+                    qCWarning(KWIN_DRM, "%s has unrecognized enum '%s'", qPrintable(m_propName), en->name);
+                }
+            }
+        }
+        if (m_immutable && m_isBlob) {
+            if (m_current != 0) {
+                m_immutableBlob.reset(drmModeGetPropertyBlob(m_obj->gpu()->fd(), m_current));
+                if (m_immutableBlob && (!m_immutableBlob->data || !m_immutableBlob->length)) {
+                    m_immutableBlob.reset();
+                }
+            } else {
+                m_immutableBlob.reset();
+            }
+        }
+    } else {
+        m_propId = 0;
+        m_immutableBlob.reset();
+        m_enumToPropertyMap.clear();
+        m_propertyToEnumMap.clear();
     }
 }
 
-void DrmProperty::setCurrent(uint64_t value)
-{
-    m_current = value;
-    updateBlob();
-}
-
-uint64_t DrmProperty::current() const
+uint64_t DrmProperty::value() const
 {
     return m_current;
 }
@@ -105,16 +118,6 @@ bool DrmProperty::isBitmask() const
     return m_isBitmask;
 }
 
-bool DrmProperty::isLegacy() const
-{
-    return m_legacy;
-}
-
-void DrmProperty::setLegacy()
-{
-    m_legacy = true;
-}
-
 uint64_t DrmProperty::minValue() const
 {
     return m_minValue;
@@ -125,27 +128,18 @@ uint64_t DrmProperty::maxValue() const
     return m_maxValue;
 }
 
-void DrmProperty::updateBlob()
-{
-    if (m_immutable && m_isBlob) {
-        if (m_current != 0) {
-            m_immutableBlob.reset(drmModeGetPropertyBlob(m_obj->gpu()->fd(), m_current));
-            if (m_immutableBlob && (!m_immutableBlob->data || !m_immutableBlob->length)) {
-                m_immutableBlob.reset();
-            }
-        } else {
-            m_immutableBlob.reset();
-        }
-    }
-}
-
 drmModePropertyBlobRes *DrmProperty::immutableBlob() const
 {
     return m_immutableBlob.get();
 }
 
-const DrmObject *DrmProperty::drmObject() const
+DrmObject *DrmProperty::drmObject() const
 {
     return m_obj;
+}
+
+bool DrmProperty::isValid() const
+{
+    return m_propId != 0;
 }
 }
