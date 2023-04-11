@@ -105,6 +105,7 @@ public:
     int screenNumer() const;
     xcb_window_t rootWindow() const;
     gbm_device *gbmDevice() const;
+    dev_t renderDeviceId() const;
 
     bool hasXInput() const;
 
@@ -174,6 +175,7 @@ private:
 
     FileDescriptor m_drmFileDescriptor;
     gbm_device *m_gbmDevice = nullptr;
+    dev_t m_renderDeviceId = 0;
 
     QVector<X11WindowedOutput *> m_outputs;
 };

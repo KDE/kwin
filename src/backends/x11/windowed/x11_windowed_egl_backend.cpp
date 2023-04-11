@@ -258,7 +258,8 @@ quint32 X11WindowedEglCursorLayer::format() const
 }
 
 X11WindowedEglBackend::X11WindowedEglBackend(X11WindowedBackend *backend)
-    : m_backend(backend)
+    : AbstractEglBackend(backend->renderDeviceId())
+    , m_backend(backend)
 {
     setIsDirectRendering(true);
 }

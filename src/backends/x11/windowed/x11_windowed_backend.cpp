@@ -43,6 +43,7 @@
 #include <fcntl.h>
 #include <gbm.h>
 #include <linux/input.h>
+#include <sys/stat.h>
 
 namespace KWin
 {
@@ -316,10 +317,14 @@ void X11WindowedBackend::initDri3()
         xcb_dri3_open_cookie_t cookie = xcb_dri3_open(m_connection, m_screen->root, 0);
         UniqueCPtr<xcb_dri3_open_reply_t> reply(xcb_dri3_open_reply(m_connection, cookie, nullptr));
         if (reply && reply->nfd == 1) {
-            int fd = xcb_dri3_open_reply_fds(m_connection, reply.get())[0];
-            fcntl(fd, F_SETFD, fcntl(fd, F_GETFD) | FD_CLOEXEC);
-            m_drmFileDescriptor = FileDescriptor{fd};
-            m_gbmDevice = gbm_create_device(m_drmFileDescriptor.get());
+            FileDescriptor fd{xcb_dri3_open_reply_fds(m_connection, reply.get())[0]};
+            fcntl(fd.get(), F_SETFD, fcntl(fd.get(), F_GETFD) | FD_CLOEXEC);
+            struct stat buf;
+            if (fstat(fd.get(), &buf) != -1) {
+                m_drmFileDescriptor = std::move(fd);
+                m_gbmDevice = gbm_create_device(m_drmFileDescriptor.get());
+                m_renderDeviceId = buf.st_rdev;
+            }
         }
     }
 
@@ -690,6 +695,11 @@ xcb_window_t X11WindowedBackend::rootWindow() const
 gbm_device *X11WindowedBackend::gbmDevice() const
 {
     return m_gbmDevice;
+}
+
+dev_t X11WindowedBackend::renderDeviceId() const
+{
+    return m_renderDeviceId;
 }
 
 X11WindowedInputDevice *X11WindowedBackend::pointerDevice() const
