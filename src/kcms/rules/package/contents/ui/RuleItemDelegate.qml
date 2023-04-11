@@ -8,6 +8,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls as QQC2
 import org.kde.kirigami 2.10 as Kirigami
+import org.kde.kcm 1.6 as KCM
 
 Kirigami.AbstractListItem {
     id: ruleDelegate
@@ -31,13 +32,24 @@ Kirigami.AbstractListItem {
             Layout.alignment: Qt.AlignVCenter
         }
 
-        QQC2.Label {
-            text: model.name
-            horizontalAlignment: Text.AlignLeft
-            elide: Text.ElideRight
+        RowLayout {
             Layout.preferredWidth: 10 * Kirigami.Units.gridUnit
-            Layout.fillWidth: true
-            Layout.alignment: Qt.AlignVCenter
+            spacing: Kirigami.Units.smallSpacing
+
+            QQC2.Label {
+                text: model.name
+                horizontalAlignment: Text.AlignLeft
+                elide: Text.ElideRight
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignVCenter
+            }
+
+            KCM.ContextualHelpButton {
+                Layout.preferredHeight: Kirigami.Units.gridUnit * 2
+                Layout.alignment: Qt.AlignVCenter
+                visible: model.description.length > 0
+                toolTipText: model.description
+            }
         }
 
         RowLayout {

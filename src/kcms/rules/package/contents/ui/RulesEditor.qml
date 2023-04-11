@@ -211,10 +211,6 @@ ScrollViewKCM {
                         Layout.preferredWidth: implicitWidth
                         Layout.fillWidth: true
                         Layout.alignment: Qt.AlignVCenter
-                        QQC2.ToolTip {
-                            text: model.description
-                            visible: hovered && (model.description.length > 0)
-                        }
                     }
                     QQC2.Label {
                         id: suggestedLabel
@@ -229,6 +225,13 @@ ScrollViewKCM {
                             visible: hovered && suggestedLabel.truncated
                         }
                     }
+
+                    ContextualHelpButton {
+                        Layout.rightMargin: Kirigami.Units.largeSpacing
+                        visible: model.description.length > 0
+                        toolTipText: model.description
+                    }
+
                     QQC2.ToolButton {
                         icon.name: (model.enabled) ? "dialog-ok-apply" : "list-add"
                         onClicked: addProperty();

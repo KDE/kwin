@@ -524,9 +524,9 @@ void RulesModel::populateRuleList()
                                                RulePolicy::SetRule, RuleItem::Boolean,
                                                i18n("Ignore requested geometry"), i18n("Size & Position"),
                                                QIcon::fromTheme("view-time-schedule-baselined-remove"),
-                                               i18n("Windows can ask to appear in a certain position.\n"
-                                                    "By default this overrides the placement strategy\n"
-                                                    "what might be nasty if the client abuses the feature\n"
+                                               i18n("Windows can ask to appear in a certain position. "
+                                                    "By default this overrides the placement strategy "
+                                                    "what might be nasty if the client abuses the feature "
                                                     "to unconditionally popup in the middle of your screen.")));
     ignoregeometry->setFlag(RuleItem::AffectsWarning);
 
@@ -544,10 +544,10 @@ void RulesModel::populateRuleList()
                          RulePolicy::ForceRule, RuleItem::Boolean,
                          i18n("Obey geometry restrictions"), i18n("Size & Position"),
                          QIcon::fromTheme("transform-crop-and-resize"),
-                         i18n("Eg. terminals or video players can ask to keep a certain aspect ratio\n"
-                              "or only grow by values larger than one\n"
-                              "(eg. by the dimensions of one character).\n"
-                              "This may be pointless and the restriction prevents arbitrary dimensions\n"
+                         i18n("Eg. terminals or video players can ask to keep a certain aspect ratio "
+                              "or only grow by values larger than one "
+                              "(eg. by the dimensions of one character). "
+                              "This may be pointless and the restriction prevents arbitrary dimensions "
                               "like your complete screen area.")));
 
     // Arrangement & Access
@@ -611,10 +611,10 @@ void RulesModel::populateRuleList()
                                          RulePolicy::ForceRule, RuleItem::Option,
                                          i18n("Focus stealing prevention"), i18n("Appearance & Fixes"),
                                          QIcon::fromTheme("preferences-system-windows-effect-glide"),
-                                         i18n("KWin tries to prevent windows from taking the focus\n"
-                                              "(\"activate\") while you're working in another window,\n"
-                                              "but this may sometimes fail or superact.\n"
-                                              "\"None\" will unconditionally allow this window to get the focus while\n"
+                                         i18n("KWin tries to prevent windows from taking the focus "
+                                              "(\"activate\") while you're working in another window, "
+                                              "but this may sometimes fail or superact. "
+                                              "\"None\" will unconditionally allow this window to get the focus while "
                                               "\"Extreme\" will completely prevent it from taking the focus.")));
     fsplevel->setOptionsData(focusModelData());
 
@@ -622,10 +622,10 @@ void RulesModel::populateRuleList()
                                          RulePolicy::ForceRule, RuleItem::Option,
                                          i18n("Focus protection"), i18n("Appearance & Fixes"),
                                          QIcon::fromTheme("preferences-system-windows-effect-minimize"),
-                                         i18n("This controls the focus protection of the currently active window.\n"
-                                              "None will always give the focus away,\n"
-                                              "Extreme will keep it.\n"
-                                              "Otherwise it's interleaved with the stealing prevention\n"
+                                         i18n("This controls the focus protection of the currently active window. "
+                                              "None will always give the focus away, "
+                                              "Extreme will keep it. "
+                                              "Otherwise it's interleaved with the stealing prevention "
                                               "assigned to the window that wants the focus.")));
     fpplevel->setOptionsData(focusModelData());
 
@@ -633,21 +633,21 @@ void RulesModel::populateRuleList()
                          RulePolicy::ForceRule, RuleItem::Boolean,
                          i18n("Accept focus"), i18n("Appearance & Fixes"),
                          QIcon::fromTheme("preferences-desktop-cursors"),
-                         i18n("Windows may prevent to get the focus (activate) when being clicked.\n"
-                              "On the other hand you might wish to prevent a window\n"
+                         i18n("Windows may prevent to get the focus (activate) when being clicked. "
+                              "On the other hand you might wish to prevent a window "
                               "from getting focused on a mouse click.")));
 
     addRule(new RuleItem(QLatin1String("disableglobalshortcuts"),
                          RulePolicy::ForceRule, RuleItem::Boolean,
                          i18n("Ignore global shortcuts"), i18n("Appearance & Fixes"),
                          QIcon::fromTheme("input-keyboard-virtual-off"),
-                         i18n("When used, a window will receive\n"
-                              "all keyboard inputs while it is active, including Alt+Tab etc.\n"
-                              "This is especially interesting for emulators or virtual machines.\n"
+                         i18n("When used, a window will receive "
+                              "all keyboard inputs while it is active, including Alt+Tab etc. "
+                              "This is especially interesting for emulators or virtual machines. "
                               "\n"
-                              "Be warned:\n"
-                              "you won't be able to Alt+Tab out of the window\n"
-                              "nor use any other global shortcut (such as Alt+F2 to show KRunner)\n"
+                              "Be warned: "
+                              "you won't be able to Alt+Tab out of the window "
+                              "nor use any other global shortcut (such as Alt+F2 to show KRunner) "
                               "while it's active!")));
 
     addRule(new RuleItem(QLatin1String("closeable"),
