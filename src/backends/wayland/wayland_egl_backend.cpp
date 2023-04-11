@@ -299,7 +299,7 @@ quint32 WaylandEglPrimaryLayer::format() const
 }
 
 WaylandEglBackend::WaylandEglBackend(WaylandBackend *b)
-    : AbstractEglBackend()
+    : AbstractEglBackend(b->renderDeviceId())
     , m_backend(b)
 {
     // Egl is always direct rendering

@@ -225,6 +225,11 @@ public:
         return m_gbmDevice;
     }
 
+    dev_t renderDeviceId() const
+    {
+        return m_renderDeviceId;
+    }
+
     void setEglBackend(WaylandEglBackend *eglBackend)
     {
         m_eglBackend = eglBackend;
@@ -246,7 +251,8 @@ private:
     std::unique_ptr<DpmsInputEventFilter> m_dpmsFilter;
     bool m_pointerLockRequested = false;
     FileDescriptor m_drmFileDescriptor;
-    gbm_device *m_gbmDevice;
+    gbm_device *m_gbmDevice = nullptr;
+    dev_t m_renderDeviceId = 0;
 };
 
 } // namespace Wayland

@@ -32,6 +32,7 @@
 #include <fcntl.h>
 #include <gbm.h>
 #include <linux/input.h>
+#include <sys/stat.h>
 #include <unistd.h>
 #include <wayland-client-core.h>
 
@@ -414,10 +415,15 @@ WaylandBackend::WaylandBackend(const WaylandBackendOptions &options, QObject *pa
     m_drmFileDescriptor = FileDescriptor(open(drm_render_node, O_RDWR | O_CLOEXEC));
     if (!m_drmFileDescriptor.isValid()) {
         qCWarning(KWIN_WAYLAND_BACKEND) << "Failed to open drm render node" << drm_render_node;
-        m_gbmDevice = nullptr;
+        return;
+    }
+    struct stat buf;
+    if (fstat(m_drmFileDescriptor.get(), &buf) == -1) {
+        qCWarning(KWIN_WAYLAND_BACKEND) << "fstat() failed" << strerror(errno);
         return;
     }
     m_gbmDevice = gbm_create_device(m_drmFileDescriptor.get());
+    m_renderDeviceId = buf.st_rdev;
 }
 
 WaylandBackend::~WaylandBackend()
