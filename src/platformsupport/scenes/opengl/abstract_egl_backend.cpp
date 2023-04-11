@@ -12,7 +12,7 @@
 #include "options.h"
 #include "utils/common.h"
 #include "utils/egl_context_attribute_builder.h"
-#include "wayland/display.h"
+#include "wayland/drmclientbuffer.h"
 #include "wayland_server.h"
 // kwin libs
 #include "libkwineffects/kwineglimagetexture.h"
@@ -25,6 +25,7 @@
 #include <memory>
 
 #include <drm_fourcc.h>
+#include <xf86drm.h>
 
 namespace KWin
 {
@@ -79,9 +80,6 @@ void AbstractEglBackend::destroyGlobalShareContext()
 
 void AbstractEglBackend::teardown()
 {
-    if (m_functions.eglUnbindWaylandDisplayWL && m_display) {
-        m_functions.eglUnbindWaylandDisplayWL(m_display->handle(), *(WaylandServer::self()->display()));
-    }
     destroyGlobalShareContext();
 }
 
@@ -162,18 +160,28 @@ void AbstractEglBackend::initWayland()
     if (!WaylandServer::self()) {
         return;
     }
-    if (hasExtension(QByteArrayLiteral("EGL_WL_bind_wayland_display"))) {
-        m_functions.eglBindWaylandDisplayWL = (eglBindWaylandDisplayWL_func)eglGetProcAddress("eglBindWaylandDisplayWL");
-        m_functions.eglUnbindWaylandDisplayWL = (eglUnbindWaylandDisplayWL_func)eglGetProcAddress("eglUnbindWaylandDisplayWL");
-        m_functions.eglQueryWaylandBufferWL = (eglQueryWaylandBufferWL_func)eglGetProcAddress("eglQueryWaylandBufferWL");
-        // only bind if not already done
-        if (waylandServer()->display()->eglDisplay() != eglDisplay()) {
-            if (!m_functions.eglBindWaylandDisplayWL(eglDisplay(), *(WaylandServer::self()->display()))) {
-                m_functions.eglUnbindWaylandDisplayWL = nullptr;
-                m_functions.eglQueryWaylandBufferWL = nullptr;
+
+    if (m_deviceId) {
+        QString renderNode = m_display->renderNode();
+        if (renderNode.isEmpty()) {
+            drmDevice *device = nullptr;
+            if (drmGetDeviceFromDevId(deviceId(), 0, &device) != 0) {
+                qCWarning(KWIN_OPENGL) << "drmGetDeviceFromDevId() failed:" << strerror(errno);
             } else {
-                waylandServer()->display()->setEglDisplay(eglDisplay());
+                if (device->available_nodes & (1 << DRM_NODE_RENDER)) {
+                    renderNode = QString::fromLocal8Bit(device->nodes[DRM_NODE_RENDER]);
+                } else if (device->available_nodes & (1 << DRM_NODE_PRIMARY)) {
+                    qCWarning(KWIN_OPENGL) << "No render nodes have been found, falling back to primary node";
+                    renderNode = QString::fromLocal8Bit(device->nodes[DRM_NODE_PRIMARY]);
+                }
+                drmFreeDevice(&device);
             }
+        }
+
+        if (!renderNode.isEmpty()) {
+            waylandServer()->drm()->setDevice(renderNode);
+        } else {
+            qCWarning(KWIN_OPENGL) << "No render node have been found, not initializing wl-drm";
         }
     }
 

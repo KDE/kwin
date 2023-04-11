@@ -37,6 +37,7 @@ class OutputDeviceV2Interface;
 class OutputManagementV2Interface;
 class XdgForeignV2Interface;
 class XdgOutputManagerV1Interface;
+class DrmClientBufferIntegration;
 class LinuxDmaBufV1ClientBufferIntegration;
 class TabletManagerV2Interface;
 class KeyboardShortcutsInhibitManagerV1Interface;
@@ -130,6 +131,7 @@ public:
 
     bool isKeyboardShortcutsInhibited() const;
 
+    KWaylandServer::DrmClientBufferIntegration *drm();
     KWaylandServer::LinuxDmaBufV1ClientBufferIntegration *linuxDmabuf();
 
     KWaylandServer::InputMethodV1Interface *inputMethod() const
@@ -264,6 +266,7 @@ private:
     KWaylandServer::IdleInterface *m_idle = nullptr;
     KWaylandServer::XdgOutputManagerV1Interface *m_xdgOutputManagerV1 = nullptr;
     KWaylandServer::XdgDecorationManagerV1Interface *m_xdgDecorationManagerV1 = nullptr;
+    KWaylandServer::DrmClientBufferIntegration *m_drm = nullptr;
     KWaylandServer::LinuxDmaBufV1ClientBufferIntegration *m_linuxDmabuf = nullptr;
     KWaylandServer::KeyboardShortcutsInhibitManagerV1Interface *m_keyboardShortcutsInhibitManager = nullptr;
     QPointer<KWaylandServer::ClientConnection> m_xwaylandConnection;

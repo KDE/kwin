@@ -31,6 +31,8 @@ public:
     ::EGLDisplay handle() const;
     bool hasExtension(const QByteArray &name) const;
 
+    QString renderNode() const;
+
     bool supportsBufferAge() const;
     bool supportsSwapBuffersWithDamage() const;
     bool supportsNativeFence() const;

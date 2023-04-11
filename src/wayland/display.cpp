@@ -7,7 +7,6 @@
 #include "display.h"
 #include "clientbufferintegration.h"
 #include "display_p.h"
-#include "drmclientbuffer.h"
 #include "output_interface.h"
 #include "shmclientbuffer.h"
 #include "utils/common.h"
@@ -215,21 +214,6 @@ ClientConnection *Display::createClient(int fd)
         return nullptr;
     }
     return getConnection(c);
-}
-
-void Display::setEglDisplay(void *display)
-{
-    if (d->eglDisplay != EGL_NO_DISPLAY) {
-        qCWarning(KWIN_CORE) << "EGLDisplay cannot be changed";
-        return;
-    }
-    d->eglDisplay = (::EGLDisplay)display;
-    new DrmClientBufferIntegration(this);
-}
-
-void *Display::eglDisplay() const
-{
-    return d->eglDisplay;
 }
 
 struct ClientBufferDestroyListener : wl_listener

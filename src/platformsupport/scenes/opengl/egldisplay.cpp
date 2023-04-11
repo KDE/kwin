@@ -16,6 +16,10 @@
 #include <QOpenGLContext>
 #include <drm_fourcc.h>
 
+#ifndef EGL_DRM_RENDER_NODE_FILE_EXT
+#define EGL_DRM_RENDER_NODE_FILE_EXT 0x3377
+#endif
+
 namespace KWin
 {
 
@@ -100,6 +104,54 @@ QList<QByteArray> EglDisplay::extensions() const
 bool EglDisplay::hasExtension(const QByteArray &name) const
 {
     return m_extensions.contains(name);
+}
+
+static bool checkExtension(const QByteArrayView extensions, const QByteArrayView extension)
+{
+    for (int i = 0; i < extensions.size();) {
+        if (extensions[i] == ' ') {
+            i++;
+            continue;
+        }
+        int next = extensions.indexOf(' ', i);
+        if (next == -1) {
+            next = extensions.size();
+        }
+
+        const int size = next - i;
+        if (extension.size() == size && extensions.sliced(i, size) == extension) {
+            return true;
+        }
+
+        i = next;
+    }
+
+    return false;
+}
+
+QString EglDisplay::renderNode() const
+{
+    const char *clientExtensions = eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS);
+    if (checkExtension(clientExtensions, "EGL_EXT_device_query")) {
+        EGLAttrib eglDeviceAttrib;
+        if (eglQueryDisplayAttribEXT(m_handle, EGL_DEVICE_EXT, &eglDeviceAttrib)) {
+            EGLDeviceEXT eglDevice = reinterpret_cast<EGLDeviceEXT>(eglDeviceAttrib);
+
+            const char *deviceExtensions = eglQueryDeviceStringEXT(eglDevice, EGL_EXTENSIONS);
+            if (checkExtension(deviceExtensions, "EGL_EXT_device_drm_render_node")) {
+                if (const char *node = eglQueryDeviceStringEXT(eglDevice, EGL_DRM_RENDER_NODE_FILE_EXT)) {
+                    return QString::fromLocal8Bit(node);
+                }
+            }
+            if (checkExtension(deviceExtensions, "EGL_EXT_device_drm")) {
+                // Fallback to display device.
+                if (const char *node = eglQueryDeviceStringEXT(eglDevice, EGL_DRM_DEVICE_FILE_EXT)) {
+                    return QString::fromLocal8Bit(node);
+                }
+            }
+        }
+    }
+    return QString();
 }
 
 bool EglDisplay::supportsBufferAge() const

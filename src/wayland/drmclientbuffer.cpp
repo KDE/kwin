@@ -5,90 +5,132 @@
 */
 
 #include "drmclientbuffer.h"
-#include "clientbuffer_p.h"
 #include "display.h"
+#include "utils/common.h"
 
-#include <EGL/egl.h>
-#include <QtGui/qopengl.h>
-
-#ifndef EGL_WL_bind_wayland_display
-#define EGL_WAYLAND_Y_INVERTED_WL 0x31DB
-#endif
+#include "qwayland-server-drm.h"
 
 namespace KWaylandServer
 {
-typedef EGLBoolean (*eglQueryWaylandBufferWL_func)(::EGLDisplay dpy, struct wl_resource *buffer, EGLint attribute, EGLint *value);
-static eglQueryWaylandBufferWL_func eglQueryWaylandBufferWL = nullptr;
 
-class DrmClientBufferPrivate : public ClientBufferPrivate
+static constexpr int s_version = 2;
+
+class DrmClientBufferIntegrationPrivate : public QtWaylandServer::wl_drm
 {
 public:
-    int textureFormat = 0;
-    int width = 0;
-    int height = 0;
-    int yInverted = 0;
-    bool hasAlphaChannel = false;
+    explicit DrmClientBufferIntegrationPrivate(Display *display);
+
+    QString nodeName;
+
+protected:
+    void drm_bind_resource(Resource *resource) override;
+    void drm_authenticate(Resource *resource, uint32_t id) override;
+    void drm_create_buffer(Resource *resource,
+                           uint32_t id,
+                           uint32_t name,
+                           int32_t width,
+                           int32_t height,
+                           uint32_t stride,
+                           uint32_t format) override;
+    void drm_create_planar_buffer(Resource *resource,
+                                  uint32_t id,
+                                  uint32_t name,
+                                  int32_t width,
+                                  int32_t height,
+                                  uint32_t format,
+                                  int32_t offset0,
+                                  int32_t stride0,
+                                  int32_t offset1,
+                                  int32_t stride1,
+                                  int32_t offset2,
+                                  int32_t stride2) override;
+    void drm_create_prime_buffer(Resource *resource,
+                                 uint32_t id,
+                                 int32_t name,
+                                 int32_t width,
+                                 int32_t height,
+                                 uint32_t format,
+                                 int32_t offset0,
+                                 int32_t stride0,
+                                 int32_t offset1,
+                                 int32_t stride1,
+                                 int32_t offset2,
+                                 int32_t stride2) override;
 };
 
-DrmClientBuffer::DrmClientBuffer(wl_resource *resource, DrmClientBufferIntegration *integration)
-    : ClientBuffer(resource, *new DrmClientBufferPrivate)
+DrmClientBufferIntegrationPrivate::DrmClientBufferIntegrationPrivate(Display *display)
+    : QtWaylandServer::wl_drm(*display, s_version)
 {
-    Q_D(DrmClientBuffer);
-
-    ::EGLDisplay eglDisplay = integration->display()->eglDisplay();
-    eglQueryWaylandBufferWL(eglDisplay, resource, EGL_TEXTURE_FORMAT, &d->textureFormat);
-    eglQueryWaylandBufferWL(eglDisplay, resource, EGL_WIDTH, &d->width);
-    eglQueryWaylandBufferWL(eglDisplay, resource, EGL_HEIGHT, &d->height);
-
-    if (!eglQueryWaylandBufferWL(eglDisplay, resource, EGL_WAYLAND_Y_INVERTED_WL, &d->yInverted)) {
-        // If EGL_WAYLAND_Y_INVERTED_WL is unsupported, we must assume that the buffer is inverted.
-        d->yInverted = true;
-    }
 }
 
-int DrmClientBuffer::textureFormat() const
+void DrmClientBufferIntegrationPrivate::drm_bind_resource(Resource *resource)
 {
-    Q_D(const DrmClientBuffer);
-    return d->textureFormat;
+    send_device(resource->handle, nodeName);
+    send_capabilities(resource->handle, capability_prime);
 }
 
-QSize DrmClientBuffer::size() const
+void DrmClientBufferIntegrationPrivate::drm_authenticate(Resource *resource, uint32_t id)
 {
-    Q_D(const DrmClientBuffer);
-    return QSize(d->width, d->height);
+    send_authenticated(resource->handle);
 }
 
-bool DrmClientBuffer::hasAlphaChannel() const
+void DrmClientBufferIntegrationPrivate::drm_create_buffer(Resource *resource,
+                                                          uint32_t id,
+                                                          uint32_t name,
+                                                          int32_t width,
+                                                          int32_t height,
+                                                          uint32_t stride,
+                                                          uint32_t format)
 {
-    Q_D(const DrmClientBuffer);
-    return d->textureFormat == EGL_TEXTURE_RGBA;
+    wl_resource_post_error(resource->handle, 0, "wl_drm.create_buffer is not implemented");
 }
 
-ClientBuffer::Origin DrmClientBuffer::origin() const
+void DrmClientBufferIntegrationPrivate::drm_create_planar_buffer(Resource *resource,
+                                                                 uint32_t id,
+                                                                 uint32_t name,
+                                                                 int32_t width,
+                                                                 int32_t height,
+                                                                 uint32_t format,
+                                                                 int32_t offset0,
+                                                                 int32_t stride0,
+                                                                 int32_t offset1,
+                                                                 int32_t stride1,
+                                                                 int32_t offset2,
+                                                                 int32_t stride2)
 {
-    Q_D(const DrmClientBuffer);
-    return d->yInverted ? Origin::TopLeft : Origin::BottomLeft;
+    wl_resource_post_error(resource->handle, 0, "wl_drm.create_planar_buffer is not implemented");
+}
+
+void DrmClientBufferIntegrationPrivate::drm_create_prime_buffer(Resource *resource,
+                                                                uint32_t id,
+                                                                int32_t name,
+                                                                int32_t width,
+                                                                int32_t height,
+                                                                uint32_t format,
+                                                                int32_t offset0,
+                                                                int32_t stride0,
+                                                                int32_t offset1,
+                                                                int32_t stride1,
+                                                                int32_t offset2,
+                                                                int32_t stride2)
+{
+    close(name);
+    wl_resource_post_error(resource->handle, 0, "wl_drm.create_prime_buffer is not implemented");
 }
 
 DrmClientBufferIntegration::DrmClientBufferIntegration(Display *display)
     : ClientBufferIntegration(display)
+    , d(std::make_unique<DrmClientBufferIntegrationPrivate>(display))
 {
 }
 
-ClientBuffer *DrmClientBufferIntegration::createBuffer(::wl_resource *resource)
+DrmClientBufferIntegration::~DrmClientBufferIntegration()
 {
-    ::EGLDisplay eglDisplay = display()->eglDisplay();
-    static bool resolved = false;
-    if (!resolved && eglDisplay != EGL_NO_DISPLAY) {
-        eglQueryWaylandBufferWL = (eglQueryWaylandBufferWL_func)eglGetProcAddress("eglQueryWaylandBufferWL");
-        resolved = true;
-    }
+}
 
-    EGLint format;
-    if (eglQueryWaylandBufferWL(eglDisplay, resource, EGL_TEXTURE_FORMAT, &format)) {
-        return new DrmClientBuffer(resource, this);
-    }
-    return nullptr;
+void DrmClientBufferIntegration::setDevice(const QString &node)
+{
+    d->nodeName = node;
 }
 
 } // namespace KWaylandServer

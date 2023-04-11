@@ -26,6 +26,7 @@
 #include "wayland/datadevicemanager_interface.h"
 #include "wayland/display.h"
 #include "wayland/dpms_interface.h"
+#include "wayland/drmclientbuffer.h"
 #include "wayland/drmlease_v1_interface.h"
 #include "wayland/filtered_display.h"
 #include "wayland/fractionalscale_v1_interface.h"
@@ -510,6 +511,14 @@ bool WaylandServer::init(InitializationFlags flags)
     m_tearingControlInterface = new KWaylandServer::TearingControlManagerV1Interface(m_display, m_display);
 
     return true;
+}
+
+KWaylandServer::DrmClientBufferIntegration *WaylandServer::drm()
+{
+    if (!m_drm) {
+        m_drm = new DrmClientBufferIntegration(m_display);
+    }
+    return m_drm;
 }
 
 KWaylandServer::LinuxDmaBufV1ClientBufferIntegration *WaylandServer::linuxDmabuf()
