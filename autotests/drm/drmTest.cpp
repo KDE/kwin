@@ -39,6 +39,8 @@ private Q_SLOTS:
     void testModeGeneration_data();
     void testModeGeneration();
     void testConnectorLifetime();
+    void testModeset_data();
+    void testModeset();
 };
 
 static void verifyCleanup(MockGpu *mockGpu)
@@ -311,6 +313,40 @@ void DrmTest::testConnectorLifetime()
     mockGpu->connectors.clear();
     QVERIFY(gpu->updateOutputs());
     output->unref();
+
+    gpu.reset();
+    verifyCleanup(mockGpu.get());
+}
+
+void DrmTest::testModeset_data()
+{
+    QTest::addColumn<int>("AMS");
+    // TODO to uncomment this, implement page flip callbacks
+    // QTest::newRow("disabled") << 0;
+    QTest::newRow("enabled") << 1;
+}
+
+void DrmTest::testModeset()
+{
+    // test if doing a modeset would succeed
+    QFETCH(int, AMS);
+    const auto mockGpu = std::make_unique<MockGpu>(1, 5);
+    mockGpu->deviceCaps[MOCKDRM_DEVICE_CAP_ATOMIC] = AMS;
+
+    const auto conn = std::make_shared<MockConnector>(mockGpu.get());
+    mockGpu->connectors.push_back(conn);
+
+    const auto session = Session::create(Session::Type::Noop);
+    const auto backend = std::make_unique<DrmBackend>(session.get());
+    const auto renderBackend = backend->createQPainterBackend();
+    auto gpu = std::make_unique<DrmGpu>(backend.get(), "testModeset", 1, 0);
+
+    QVERIFY(gpu->updateOutputs());
+    QCOMPARE(gpu->drmOutputs().size(), 1);
+    const auto output = gpu->drmOutputs().front();
+    output->renderLoop()->beginFrame();
+    output->renderLoop()->endFrame();
+    QVERIFY(gpu->drmOutputs().front()->present());
 
     gpu.reset();
     verifyCleanup(mockGpu.get());

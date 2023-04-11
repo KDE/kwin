@@ -190,7 +190,9 @@ bool DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commit)
         commit->addEnum(m_connector->contentType, m_pending.contentType);
     }
 
-    commit->addProperty(m_pending.crtc->vrrEnabled, m_pending.syncMode == RenderLoopPrivate::SyncMode::Adaptive || m_pending.syncMode == RenderLoopPrivate::SyncMode::AdaptiveAsync);
+    if (m_pending.crtc->vrrEnabled.isValid()) {
+        commit->addProperty(m_pending.crtc->vrrEnabled, m_pending.syncMode == RenderLoopPrivate::SyncMode::Adaptive || m_pending.syncMode == RenderLoopPrivate::SyncMode::AdaptiveAsync);
+    }
     if (m_pending.crtc->gammaLut.isValid()) {
         commit->addBlob(m_pending.crtc->gammaLut, m_pending.gamma ? m_pending.gamma->blob() : nullptr);
     } else if (m_pending.gamma) {
