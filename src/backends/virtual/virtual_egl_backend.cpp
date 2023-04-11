@@ -70,7 +70,7 @@ quint32 VirtualEglLayer::format() const
 }
 
 VirtualEglBackend::VirtualEglBackend(VirtualBackend *b)
-    : AbstractEglBackend()
+    : AbstractEglBackend(b->renderDeviceId())
     , m_backend(b)
 {
     // Egl is always direct rendering
@@ -88,15 +88,19 @@ bool VirtualEglBackend::initializeEgl()
     initClientExtensions();
     EGLDisplay display = m_backend->sceneEglDisplay();
 
-    // Use eglGetPlatformDisplayEXT() to get the display pointer
-    // if the implementation supports it.
     if (display == EGL_NO_DISPLAY) {
-        // first try surfaceless
-        if (hasClientExtension(QByteArrayLiteral("EGL_MESA_platform_surfaceless"))) {
-            display = eglGetPlatformDisplayEXT(EGL_PLATFORM_SURFACELESS_MESA, EGL_DEFAULT_DISPLAY, nullptr);
-        } else {
-            qCWarning(KWIN_VIRTUAL) << "Extension EGL_MESA_platform_surfaceless not available";
+        const bool hasMesaGBM = hasClientExtension(QByteArrayLiteral("EGL_MESA_platform_gbm"));
+        const bool hasKHRGBM = hasClientExtension(QByteArrayLiteral("EGL_KHR_platform_gbm"));
+        const GLenum platform = hasMesaGBM ? EGL_PLATFORM_GBM_MESA : EGL_PLATFORM_GBM_KHR;
+
+        if (!hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_base")) || (!hasMesaGBM && !hasKHRGBM)) {
+            setFailed("Missing one or more extensions between EGL_EXT_platform_base, "
+                      "EGL_MESA_platform_gbm, EGL_KHR_platform_gbm");
+            return false;
         }
+
+        display = eglGetPlatformDisplayEXT(platform, m_backend->gbmDevice(), nullptr);
+        m_backend->setSceneEglDisplay(display);
     }
 
     if (display == EGL_NO_DISPLAY) {
