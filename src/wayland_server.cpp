@@ -11,24 +11,19 @@
 #include <config-kwin.h>
 
 #include "backends/drm/drm_backend.h"
-#include "composite.h"
 #include "core/output.h"
 #include "core/outputbackend.h"
 #include "idle_inhibition.h"
 #include "inputpanelv1integration.h"
-#include "keyboard_input.h"
 #include "layershellv1integration.h"
 #include "main.h"
-#include "scene/workspacescene.h"
 #include "utils/serviceutils.h"
 #include "virtualdesktops.h"
 #include "wayland/appmenu_interface.h"
-#include "wayland/blur_interface.h"
 #include "wayland/compositor_interface.h"
 #include "wayland/contenttype_v1_interface.h"
 #include "wayland/datacontroldevicemanager_v1_interface.h"
 #include "wayland/datadevicemanager_interface.h"
-#include "wayland/datasource_interface.h"
 #include "wayland/display.h"
 #include "wayland/dpms_interface.h"
 #include "wayland/drmlease_v1_interface.h"
@@ -78,8 +73,6 @@
 #include <QCryptographicHash>
 #include <QDir>
 #include <QFileInfo>
-#include <QThread>
-#include <QWindow>
 
 // system
 #include <sys/socket.h>

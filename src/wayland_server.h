@@ -14,10 +14,6 @@
 #include <QPointer>
 #include <QSet>
 
-class QThread;
-class QProcess;
-class QWindow;
-
 namespace KWaylandServer
 {
 class AppMenuManagerInterface;
