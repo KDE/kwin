@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-08 02:19+0000\n"
+"POT-Creation-Date: 2023-04-12 02:13+0000\n"
 "PO-Revision-Date: 2017-10-30 23:08+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -296,32 +296,32 @@ msgstr[3] ""
 msgid "Add property to the rule"
 msgstr ""
 
-#: package/contents/ui/RulesEditor.qml:273
+#: package/contents/ui/RulesEditor.qml:276
 #: package/contents/ui/ValueEditor.qml:54
 #, kde-format
 msgid "Yes"
 msgstr "da"
 
-#: package/contents/ui/RulesEditor.qml:273
+#: package/contents/ui/RulesEditor.qml:276
 #: package/contents/ui/ValueEditor.qml:60
 #, kde-format
 msgid "No"
 msgstr "ne"
 
-#: package/contents/ui/RulesEditor.qml:275
+#: package/contents/ui/RulesEditor.qml:278
 #: package/contents/ui/ValueEditor.qml:168
 #: package/contents/ui/ValueEditor.qml:175
 #, kde-format
 msgid "%1 %"
 msgstr ""
 
-#: package/contents/ui/RulesEditor.qml:277
+#: package/contents/ui/RulesEditor.qml:280
 #, kde-format
 msgctxt "Coordinates (x, y)"
 msgid "(%1, %2)"
 msgstr ""
 
-#: package/contents/ui/RulesEditor.qml:279
+#: package/contents/ui/RulesEditor.qml:282
 #, kde-format
 msgctxt "Size (width, height)"
 msgid "(%1, %2)"
@@ -374,184 +374,189 @@ msgid ""
 "window becomes invisible."
 msgstr ""
 
-#: rulesmodel.cpp:378
+#: rulesmodel.cpp:382
 #, fuzzy, kde-format
 #| msgid "&Description:"
 msgid "Description"
 msgstr "&Opis:"
 
-#: rulesmodel.cpp:378 rulesmodel.cpp:386 rulesmodel.cpp:394 rulesmodel.cpp:401
-#: rulesmodel.cpp:407 rulesmodel.cpp:415 rulesmodel.cpp:420 rulesmodel.cpp:426
+#: rulesmodel.cpp:382 rulesmodel.cpp:390 rulesmodel.cpp:398 rulesmodel.cpp:405
+#: rulesmodel.cpp:411 rulesmodel.cpp:419 rulesmodel.cpp:424 rulesmodel.cpp:430
 #, fuzzy, kde-format
 #| msgid "&Window matching"
 msgid "Window matching"
 msgstr "&Poklapanje prozora"
 
-#: rulesmodel.cpp:386
+#: rulesmodel.cpp:390
 #, fuzzy, kde-format
 #| msgid "Window &class (application):"
 msgid "Window class (application)"
 msgstr "&Klasa prozora (program):"
 
-#: rulesmodel.cpp:394
+#: rulesmodel.cpp:398
 #, fuzzy, kde-format
 #| msgid "Match w&hole window class"
 msgid "Match whole window class"
 msgstr "Poklopi &cijelu klasu prozora"
 
-#: rulesmodel.cpp:401
+#: rulesmodel.cpp:405
 #, fuzzy, kde-format
 #| msgid "Match w&hole window class"
 msgid "Whole window class"
 msgstr "Poklopi &cijelu klasu prozora"
 
-#: rulesmodel.cpp:407
+#: rulesmodel.cpp:411
 #, fuzzy, kde-format
 #| msgid "Window &types:"
 msgid "Window types"
 msgstr "&Tipovi prozora:"
 
-#: rulesmodel.cpp:415
+#: rulesmodel.cpp:419
 #, fuzzy, kde-format
 #| msgid "Window ro&le:"
 msgid "Window role"
 msgstr "&Uloga prozora:"
 
-#: rulesmodel.cpp:420
+#: rulesmodel.cpp:424
 #, fuzzy, kde-format
 #| msgid "Window t&itle:"
 msgid "Window title"
 msgstr "&Naslov prozora:"
 
-#: rulesmodel.cpp:426
+#: rulesmodel.cpp:430
 #, fuzzy, kde-format
 #| msgid "&Machine (hostname):"
 msgid "Machine (hostname)"
 msgstr "&Mašina (ime domaćina):"
 
-#: rulesmodel.cpp:432
+#: rulesmodel.cpp:436
 #, fuzzy, kde-format
 #| msgid "&Position"
 msgid "Position"
 msgstr "&Položaj"
 
-#: rulesmodel.cpp:432 rulesmodel.cpp:438 rulesmodel.cpp:444 rulesmodel.cpp:449
-#: rulesmodel.cpp:457 rulesmodel.cpp:463 rulesmodel.cpp:482 rulesmodel.cpp:498
-#: rulesmodel.cpp:503 rulesmodel.cpp:508 rulesmodel.cpp:513 rulesmodel.cpp:518
-#: rulesmodel.cpp:525 rulesmodel.cpp:535 rulesmodel.cpp:540 rulesmodel.cpp:545
+#: rulesmodel.cpp:436 rulesmodel.cpp:442 rulesmodel.cpp:448 rulesmodel.cpp:453
+#: rulesmodel.cpp:461 rulesmodel.cpp:467 rulesmodel.cpp:486 rulesmodel.cpp:502
+#: rulesmodel.cpp:507 rulesmodel.cpp:512 rulesmodel.cpp:517 rulesmodel.cpp:522
+#: rulesmodel.cpp:531 rulesmodel.cpp:544 rulesmodel.cpp:549 rulesmodel.cpp:554
 #, fuzzy, kde-format
 #| msgid "&Size && Position"
 msgid "Size & Position"
 msgstr "&Veličina i položaj"
 
-#: rulesmodel.cpp:438
+#: rulesmodel.cpp:442
 #, fuzzy, kde-format
 #| msgid "&Size"
 msgid "Size"
 msgstr "Ve&ličina"
 
-#: rulesmodel.cpp:444
+#: rulesmodel.cpp:448
 #, fuzzy, kde-format
 #| msgid "Maximized &horizontally"
 msgid "Maximized horizontally"
 msgstr "&Vodoravno maksimizovan"
 
-#: rulesmodel.cpp:449
+#: rulesmodel.cpp:453
 #, fuzzy, kde-format
 #| msgid "Maximized &vertically"
 msgid "Maximized vertically"
 msgstr "&Uspravno maksimizovan"
 
-#: rulesmodel.cpp:457
+#: rulesmodel.cpp:461
 #, fuzzy, kde-format
 #| msgid "All Desktops"
 msgid "Virtual Desktop"
 msgstr "Sve površi"
 
-#: rulesmodel.cpp:463
+#: rulesmodel.cpp:467
 #, fuzzy, kde-format
 #| msgid "All Desktops"
 msgid "Virtual Desktops"
 msgstr "Sve površi"
 
-#: rulesmodel.cpp:482
+#: rulesmodel.cpp:486
 #, fuzzy, kde-format
 #| msgid "All Activities"
 msgid "Activities"
 msgstr "Sve aktivnosti"
 
-#: rulesmodel.cpp:498
+#: rulesmodel.cpp:502
 #, kde-format
 msgid "Screen"
 msgstr "Ekran"
 
-#: rulesmodel.cpp:503
+#: rulesmodel.cpp:507
 #, fuzzy, kde-format
 #| msgid "&Fullscreen"
 msgid "Fullscreen"
 msgstr "Preko &cijelog ekrana"
 
-#: rulesmodel.cpp:508
+#: rulesmodel.cpp:512
 #, fuzzy, kde-format
 #| msgid "M&inimized"
 msgid "Minimized"
 msgstr "M&inimizovan"
 
-#: rulesmodel.cpp:513
+#: rulesmodel.cpp:517
 #, fuzzy, kde-format
 #| msgid "Sh&aded"
 msgid "Shaded"
 msgstr "&Namotan"
 
-#: rulesmodel.cpp:518
+#: rulesmodel.cpp:522
 #, fuzzy, kde-format
 #| msgid "Initial p&lacement"
 msgid "Initial placement"
 msgstr "&Postavljanje na početku"
 
-#: rulesmodel.cpp:525
+#: rulesmodel.cpp:531
 #, fuzzy, kde-format
 #| msgid "Ignore requested &geometry"
 msgid "Ignore requested geometry"
 msgstr "Ignoriši traženu &geometriju"
 
-#: rulesmodel.cpp:527
-#, kde-format
+#: rulesmodel.cpp:534
+#, kde-kuit-format
+msgctxt "@info:tooltip"
 msgid ""
-"Windows can ask to appear in a certain position.\n"
-"By default this overrides the placement strategy\n"
-"what might be nasty if the client abuses the feature\n"
-"to unconditionally popup in the middle of your screen."
+"Some applications can set their own geometry, overriding the window manager "
+"preferences. Setting this property overrides their placement requests.<nl/"
+">This affects <interface>Size</interface> and <interface>Position</"
+"interface> but not <interface>Maximized</interface> or "
+"<interface>Fullscreen</interface> states.<nl/>Note that the position can "
+"also be used to map to a different <interface>Screen</interface>"
 msgstr ""
-"<p>Prozori mogu zatražiti da se pojave na određenom mestu. Podrazumevano ovo "
-"potiskuje strategiju postavljanja, što može biti nezgodno kada klijent "
-"zloupotrebljava tu mogućnost da bi bezuslovno iskakao posred ekrana.</p>"
 
-#: rulesmodel.cpp:535
+#: rulesmodel.cpp:544
 #, fuzzy, kde-format
 #| msgid "M&inimum size"
 msgid "Minimum Size"
 msgstr "M&inimalna veličina"
 
-#: rulesmodel.cpp:540
+#: rulesmodel.cpp:549
 #, fuzzy, kde-format
 #| msgid "M&aximum size"
 msgid "Maximum Size"
 msgstr "M&aksimalna veličina"
 
-#: rulesmodel.cpp:545
+#: rulesmodel.cpp:554
 #, kde-format
 msgid "Obey geometry restrictions"
 msgstr "Poštuj ograničenja geometrije"
 
-#: rulesmodel.cpp:547
-#, kde-format
+#: rulesmodel.cpp:556
+#, fuzzy, kde-format
+#| msgid ""
+#| "Eg. terminals or video players can ask to keep a certain aspect ratio\n"
+#| "or only grow by values larger than one\n"
+#| "(eg. by the dimensions of one character).\n"
+#| "This may be pointless and the restriction prevents arbitrary dimensions\n"
+#| "like your complete screen area."
 msgid ""
-"Eg. terminals or video players can ask to keep a certain aspect ratio\n"
-"or only grow by values larger than one\n"
-"(eg. by the dimensions of one character).\n"
-"This may be pointless and the restriction prevents arbitrary dimensions\n"
-"like your complete screen area."
+"Eg. terminals or video players can ask to keep a certain aspect ratio or "
+"only grow by values larger than one (eg. by the dimensions of one "
+"character). This may be pointless and the restriction prevents arbitrary "
+"dimensions like your complete screen area."
 msgstr ""
 "<p>Neki programi, kao što su terminali ili video plejeri, mogu tražiti da "
 "zadrže određenu proporciju ili da se uvećavaju u tačno određenim koracima "
@@ -559,106 +564,111 @@ msgstr ""
 "sprečavajući vas da izaberete proizvoljne dimenzije poput područja celog "
 "ekrana.</p>"
 
-#: rulesmodel.cpp:556
+#: rulesmodel.cpp:565
 #, kde-format
 msgid "Keep above other windows"
 msgstr ""
 
-#: rulesmodel.cpp:556 rulesmodel.cpp:561 rulesmodel.cpp:566 rulesmodel.cpp:572
-#: rulesmodel.cpp:578 rulesmodel.cpp:584
+#: rulesmodel.cpp:565 rulesmodel.cpp:570 rulesmodel.cpp:575 rulesmodel.cpp:581
+#: rulesmodel.cpp:587 rulesmodel.cpp:593
 #, fuzzy, kde-format
 #| msgid "&Arrangement && Access"
 msgid "Arrangement & Access"
 msgstr "&Raspored i pristup"
 
-#: rulesmodel.cpp:561
+#: rulesmodel.cpp:570
 #, kde-format
 msgid "Keep below other windows"
 msgstr ""
 
-#: rulesmodel.cpp:566
+#: rulesmodel.cpp:575
 #, fuzzy, kde-format
 #| msgid "Skip &taskbar"
 msgid "Skip taskbar"
 msgstr "Preskoči &traku zadataka"
 
-#: rulesmodel.cpp:568
+#: rulesmodel.cpp:577
 #, kde-format
 msgid "Window shall (not) appear in the taskbar."
 msgstr "Da li će se prozor javljati u traci zadataka."
 
-#: rulesmodel.cpp:572
+#: rulesmodel.cpp:581
 #, fuzzy, kde-format
 #| msgid "Skip pa&ger"
 msgid "Skip pager"
 msgstr "Preskoči &listač"
 
-#: rulesmodel.cpp:574
+#: rulesmodel.cpp:583
 #, kde-format
 msgid "Window shall (not) appear in the manager for virtual desktops"
 msgstr "Da li će se prozor javljati u menadžeru virtuelnih površi."
 
-#: rulesmodel.cpp:578
+#: rulesmodel.cpp:587
 #, fuzzy, kde-format
 #| msgid "Skip &switcher"
 msgid "Skip switcher"
 msgstr "Preskoči &mjenjač"
 
-#: rulesmodel.cpp:580
+#: rulesmodel.cpp:589
 #, kde-format
 msgid "Window shall (not) appear in the Alt+Tab list"
 msgstr "Da li će se prozor javljati u spisku na Alt+Tab."
 
-#: rulesmodel.cpp:584
+#: rulesmodel.cpp:593
 #, kde-format
 msgid "Shortcut"
 msgstr "Prečica"
 
-#: rulesmodel.cpp:590
+#: rulesmodel.cpp:599
 #, fuzzy, kde-format
 #| msgid "&No titlebar and frame"
 msgid "No titlebar and frame"
 msgstr "&Bez trake naslova i okvira"
 
-#: rulesmodel.cpp:590 rulesmodel.cpp:595 rulesmodel.cpp:601 rulesmodel.cpp:606
-#: rulesmodel.cpp:612 rulesmodel.cpp:623 rulesmodel.cpp:634 rulesmodel.cpp:642
-#: rulesmodel.cpp:655 rulesmodel.cpp:660 rulesmodel.cpp:666 rulesmodel.cpp:671
+#: rulesmodel.cpp:599 rulesmodel.cpp:604 rulesmodel.cpp:610 rulesmodel.cpp:615
+#: rulesmodel.cpp:621 rulesmodel.cpp:632 rulesmodel.cpp:643 rulesmodel.cpp:651
+#: rulesmodel.cpp:664 rulesmodel.cpp:669 rulesmodel.cpp:675 rulesmodel.cpp:680
 #, fuzzy, kde-format
 #| msgid "Appearance && &Fixes"
 msgid "Appearance & Fixes"
 msgstr "&Izgled i popravke"
 
-#: rulesmodel.cpp:595
+#: rulesmodel.cpp:604
 #, fuzzy, kde-format
 #| msgid "Titlebar color &scheme"
 msgid "Titlebar color scheme"
 msgstr "Šema &boja naslovne trake"
 
-#: rulesmodel.cpp:601
+#: rulesmodel.cpp:610
 #, fuzzy, kde-format
 #| msgid "A&ctive opacity"
 msgid "Active opacity"
 msgstr "&Neprozirnost aktivnog"
 
-#: rulesmodel.cpp:606
+#: rulesmodel.cpp:615
 #, fuzzy, kde-format
 #| msgid "I&nactive opacity"
 msgid "Inactive opacity"
 msgstr "Neprozirnost &neaktivnog"
 
-#: rulesmodel.cpp:612
+#: rulesmodel.cpp:621
 #, fuzzy, kde-format
 #| msgid "&Focus stealing prevention"
 msgid "Focus stealing prevention"
 msgstr "Sprečavanje krađe &fokusa"
 
-#: rulesmodel.cpp:614
-#, kde-format
+#: rulesmodel.cpp:623
+#, fuzzy, kde-format
+#| msgid ""
+#| "KWin tries to prevent windows from taking the focus\n"
+#| "(\"activate\") while you're working in another window,\n"
+#| "but this may sometimes fail or superact.\n"
+#| "\"None\" will unconditionally allow this window to get the focus while\n"
+#| "\"Extreme\" will completely prevent it from taking the focus."
 msgid ""
-"KWin tries to prevent windows from taking the focus\n"
-"(\"activate\") while you're working in another window,\n"
-"but this may sometimes fail or superact.\n"
-"\"None\" will unconditionally allow this window to get the focus while\n"
+"KWin tries to prevent windows from taking the focus (\"activate\") while "
+"you're working in another window, but this may sometimes fail or superact. "
+"\"None\" will unconditionally allow this window to get the focus while "
 "\"Extreme\" will completely prevent it from taking the focus."
 msgstr ""
 "<p>KWin se trudi da spreči prozore da oduzimaju fokus („aktiviraju se“) dok "
@@ -666,19 +676,23 @@ msgstr ""
 "<i>nikakvo</i> će ovom prozoru dozvoliti da bezuslovno uzima fokus, dok će "
 "ga <i>ekstremno</i> potpuno sprečiti da to čini.</p>"
 
-#: rulesmodel.cpp:623
+#: rulesmodel.cpp:632
 #, kde-format
 msgid "Focus protection"
 msgstr "Zaštita fokusa"
 
-#: rulesmodel.cpp:625
-#, kde-format
+#: rulesmodel.cpp:634
+#, fuzzy, kde-format
+#| msgid ""
+#| "This controls the focus protection of the currently active window.\n"
+#| "None will always give the focus away,\n"
+#| "Extreme will keep it.\n"
+#| "Otherwise it's interleaved with the stealing prevention\n"
+#| "assigned to the window that wants the focus."
 msgid ""
-"This controls the focus protection of the currently active window.\n"
-"None will always give the focus away,\n"
-"Extreme will keep it.\n"
-"Otherwise it's interleaved with the stealing prevention\n"
-"assigned to the window that wants the focus."
+"This controls the focus protection of the currently active window. None will "
+"always give the focus away, Extreme will keep it. Otherwise it's interleaved "
+"with the stealing prevention assigned to the window that wants the focus."
 msgstr ""
 "Ovo određuje zaštitu fokusa trenutno aktivnog prozora.\n"
 "Vrednost „nikakvo“ će uvek predati fokus,\n"
@@ -686,39 +700,49 @@ msgstr ""
 "Inače se razmatra u sprezi sa zaštitom od krađe\n"
 "dodeljenoj prozoru koji zahteva fokus."
 
-#: rulesmodel.cpp:634
+#: rulesmodel.cpp:643
 #, fuzzy, kde-format
 #| msgid "Accept &focus"
 msgid "Accept focus"
 msgstr "Prihvati &fokus"
 
-#: rulesmodel.cpp:636
-#, kde-format
+#: rulesmodel.cpp:645
+#, fuzzy, kde-format
+#| msgid ""
+#| "Windows may prevent to get the focus (activate) when being clicked.\n"
+#| "On the other hand you might wish to prevent a window\n"
+#| "from getting focused on a mouse click."
 msgid ""
-"Windows may prevent to get the focus (activate) when being clicked.\n"
-"On the other hand you might wish to prevent a window\n"
-"from getting focused on a mouse click."
+"Windows may prevent to get the focus (activate) when being clicked. On the "
+"other hand you might wish to prevent a window from getting focused on a "
+"mouse click."
 msgstr ""
 "<p>Prozor mogu sprečiti dobijanje fokusa (aktivaciju) kada se klikne na "
 "njih. S druge strane, možda vi želite da sprečite neki prozor da dobije "
 "fokus na klik mišem.</p>"
 
-#: rulesmodel.cpp:642
+#: rulesmodel.cpp:651
 #, kde-format
 msgid "Ignore global shortcuts"
 msgstr "Ignoriši globalne prečice"
 
-#: rulesmodel.cpp:644
-#, kde-format
+#: rulesmodel.cpp:653
+#, fuzzy, kde-format
+#| msgid ""
+#| "When used, a window will receive\n"
+#| "all keyboard inputs while it is active, including Alt+Tab etc.\n"
+#| "This is especially interesting for emulators or virtual machines.\n"
+#| "\n"
+#| "Be warned:\n"
+#| "you won't be able to Alt+Tab out of the window\n"
+#| "nor use any other global shortcut (such as Alt+F2 to show KRunner)\n"
+#| "while it's active!"
 msgid ""
-"When used, a window will receive\n"
-"all keyboard inputs while it is active, including Alt+Tab etc.\n"
-"This is especially interesting for emulators or virtual machines.\n"
-"\n"
-"Be warned:\n"
-"you won't be able to Alt+Tab out of the window\n"
-"nor use any other global shortcut (such as Alt+F2 to show KRunner)\n"
-"while it's active!"
+"When used, a window will receive all keyboard inputs while it is active, "
+"including Alt+Tab etc. This is especially interesting for emulators or "
+"virtual machines. \n"
+"Be warned: you won't be able to Alt+Tab out of the window nor use any other "
+"global shortcut (such as Alt+F2 to show KRunner) while it's active!"
 msgstr ""
 "<p>Ako se ovo popuni, prozor će dobijati sve unose sa tastature dok je "
 "aktivan, uključujući i Alt+Tab i sl. Ovo je posebno od koristi za emulatore "
@@ -726,35 +750,35 @@ msgstr ""
 "iskočite iz prozora Alt+Tabom, niti da upotrebite bilo koju drugu globalnu "
 "prečicu (npr. Alt+F2 za dozivanje K‑izvođača).</p>"
 
-#: rulesmodel.cpp:655
+#: rulesmodel.cpp:664
 #, fuzzy, kde-format
 #| msgid "&Closeable"
 msgid "Closeable"
 msgstr "&Zatvorljiv"
 
-#: rulesmodel.cpp:660
+#: rulesmodel.cpp:669
 #, fuzzy, kde-format
 #| msgid "Window &type"
 msgid "Set window type"
 msgstr "&Tip prozora"
 
-#: rulesmodel.cpp:666
+#: rulesmodel.cpp:675
 #, kde-format
 msgid "Desktop file name"
 msgstr ""
 
-#: rulesmodel.cpp:671
+#: rulesmodel.cpp:680
 #, kde-format
 msgid "Block compositing"
 msgstr "Blokiraj slaganje"
 
-#: rulesmodel.cpp:723
+#: rulesmodel.cpp:732
 #, fuzzy, kde-format
 #| msgid "Window &class (application):"
 msgid "Window class not available"
 msgstr "&Klasa prozora (program):"
 
-#: rulesmodel.cpp:724
+#: rulesmodel.cpp:733
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -764,142 +788,142 @@ msgid ""
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
 
-#: rulesmodel.cpp:758
+#: rulesmodel.cpp:767
 #, fuzzy, kde-format
 #| msgid "Window &types:"
 msgid "All Window Types"
 msgstr "&Tipovi prozora:"
 
-#: rulesmodel.cpp:759
+#: rulesmodel.cpp:768
 #, kde-format
 msgid "Normal Window"
 msgstr "normalan prozor"
 
-#: rulesmodel.cpp:760
+#: rulesmodel.cpp:769
 #, kde-format
 msgid "Dialog Window"
 msgstr "dijalog-prozor"
 
-#: rulesmodel.cpp:761
+#: rulesmodel.cpp:770
 #, kde-format
 msgid "Utility Window"
 msgstr "priručni prozor"
 
-#: rulesmodel.cpp:762
+#: rulesmodel.cpp:771
 #, kde-format
 msgid "Dock (panel)"
 msgstr "sidrište (panel)"
 
-#: rulesmodel.cpp:763
+#: rulesmodel.cpp:772
 #, kde-format
 msgid "Toolbar"
 msgstr "traka alatki"
 
-#: rulesmodel.cpp:764
+#: rulesmodel.cpp:773
 #, kde-format
 msgid "Torn-Off Menu"
 msgstr "otcijepljen meni"
 
-#: rulesmodel.cpp:765
+#: rulesmodel.cpp:774
 #, kde-format
 msgid "Splash Screen"
 msgstr "uvodni ekran"
 
-#: rulesmodel.cpp:766
+#: rulesmodel.cpp:775
 #, kde-format
 msgid "Desktop"
 msgstr "površ"
 
 #. i18n("Unmanaged Window")},  deprecated
-#: rulesmodel.cpp:768
+#: rulesmodel.cpp:777
 #, kde-format
 msgid "Standalone Menubar"
 msgstr "samostalna traka menija"
 
-#: rulesmodel.cpp:769
+#: rulesmodel.cpp:778
 #, kde-format
 msgid "On Screen Display"
 msgstr ""
 
-#: rulesmodel.cpp:779
+#: rulesmodel.cpp:788
 #, kde-format
 msgid "All Desktops"
 msgstr "Sve površi"
 
-#: rulesmodel.cpp:781
+#: rulesmodel.cpp:790
 #, kde-format
 msgctxt "@info:tooltip in the virtual desktop list"
 msgid "Make the window available on all desktops"
 msgstr ""
 
-#: rulesmodel.cpp:800
+#: rulesmodel.cpp:809
 #, kde-format
 msgid "All Activities"
 msgstr "Sve aktivnosti"
 
-#: rulesmodel.cpp:802
+#: rulesmodel.cpp:811
 #, kde-format
 msgctxt "@info:tooltip in the activity list"
 msgid "Make the window available on all activities"
 msgstr ""
 
 # >> @item:inlistbox Placement->Force
-#: rulesmodel.cpp:823
+#: rulesmodel.cpp:832
 #, kde-format
 msgid "Default"
 msgstr "podrazumijevano"
 
 # >> @item:inlistbox Placement->Force
-#: rulesmodel.cpp:824
+#: rulesmodel.cpp:833
 #, kde-format
 msgid "No Placement"
 msgstr "bez postavljanja"
 
-#: rulesmodel.cpp:825
+#: rulesmodel.cpp:834
 #, kde-format
 msgid "Minimal Overlapping"
 msgstr ""
 
 # >> @item:inlistbox Placement->Force
-#: rulesmodel.cpp:826
+#: rulesmodel.cpp:835
 #, fuzzy, kde-format
 #| msgid "Maximizing"
 msgid "Maximized"
 msgstr "maksimizovano"
 
 # >> @item:inlistbox Placement->Force
-#: rulesmodel.cpp:827
+#: rulesmodel.cpp:836
 #, kde-format
 msgid "Centered"
 msgstr "centrirano"
 
 # >> @item:inlistbox Placement->Force
-#: rulesmodel.cpp:828
+#: rulesmodel.cpp:837
 #, kde-format
 msgid "Random"
 msgstr "nasumično"
 
 # >> @item:inlistbox Placement->Force
-#: rulesmodel.cpp:829
+#: rulesmodel.cpp:838
 #, fuzzy, kde-format
 #| msgid "Top-Left Corner"
 msgid "In Top-Left Corner"
 msgstr "gornji lijevi ugao"
 
 # >> @item:inlistbox Placement->Force
-#: rulesmodel.cpp:830
+#: rulesmodel.cpp:839
 #, kde-format
 msgid "Under Mouse"
 msgstr "ispod miša"
 
 # >> @item:inlistbox Placement->Force
-#: rulesmodel.cpp:831
+#: rulesmodel.cpp:840
 #, kde-format
 msgid "On Main Window"
 msgstr "na glavnom prozoru"
 
 # >> @item:inlistbox +
-#: rulesmodel.cpp:838
+#: rulesmodel.cpp:847
 #, fuzzy, kde-format
 #| msgctxt "no focus stealing prevention"
 #| msgid "None"
@@ -907,40 +931,51 @@ msgid "None"
 msgstr "nikakvo"
 
 # >> @item:inlistbox Focus stealing prevention->Force
-#: rulesmodel.cpp:839
+#: rulesmodel.cpp:848
 #, kde-format
 msgid "Low"
 msgstr "nisko"
 
 # >> @item:inlistbox Focus stealing prevention->Force
-#: rulesmodel.cpp:840
+#: rulesmodel.cpp:849
 #, kde-format
 msgid "Normal"
 msgstr "normalno"
 
 # >> @item:inlistbox Focus stealing prevention->Force
-#: rulesmodel.cpp:841
+#: rulesmodel.cpp:850
 #, kde-format
 msgid "High"
 msgstr "visoko"
 
 # >> @item:inlistbox Focus stealing prevention->Force
-#: rulesmodel.cpp:842
+#: rulesmodel.cpp:851
 #, kde-format
 msgid "Extreme"
 msgstr "ekstremno"
 
 # >> @item:inlistbox Placement->Force
-#: rulesmodel.cpp:885
+#: rulesmodel.cpp:894
 #, fuzzy, kde-format
 #| msgid "On Main Window"
 msgid "Unmanaged window"
 msgstr "na glavnom prozoru"
 
-#: rulesmodel.cpp:886
+#: rulesmodel.cpp:895
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
+
+#~ msgid ""
+#~ "Windows can ask to appear in a certain position.\n"
+#~ "By default this overrides the placement strategy\n"
+#~ "what might be nasty if the client abuses the feature\n"
+#~ "to unconditionally popup in the middle of your screen."
+#~ msgstr ""
+#~ "<p>Prozori mogu zatražiti da se pojave na određenom mestu. Podrazumevano "
+#~ "ovo potiskuje strategiju postavljanja, što može biti nezgodno kada "
+#~ "klijent zloupotrebljava tu mogućnost da bi bezuslovno iskakao posred "
+#~ "ekrana.</p>"
 
 #, fuzzy
 #~| msgid "WId of the window for special window settings."

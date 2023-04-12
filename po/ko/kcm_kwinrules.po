@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-08 02:19+0000\n"
+"POT-Creation-Date: 2023-04-12 02:13+0000\n"
 "PO-Revision-Date: 2022-05-06 00:08+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -286,32 +286,32 @@ msgstr[0] "%1초 후"
 msgid "Add property to the rule"
 msgstr "규칙에 속성 추가"
 
-#: package/contents/ui/RulesEditor.qml:273
+#: package/contents/ui/RulesEditor.qml:276
 #: package/contents/ui/ValueEditor.qml:54
 #, kde-format
 msgid "Yes"
 msgstr "예"
 
-#: package/contents/ui/RulesEditor.qml:273
+#: package/contents/ui/RulesEditor.qml:276
 #: package/contents/ui/ValueEditor.qml:60
 #, kde-format
 msgid "No"
 msgstr "아니요"
 
-#: package/contents/ui/RulesEditor.qml:275
+#: package/contents/ui/RulesEditor.qml:278
 #: package/contents/ui/ValueEditor.qml:168
 #: package/contents/ui/ValueEditor.qml:175
 #, kde-format
 msgid "%1 %"
 msgstr "%1%"
 
-#: package/contents/ui/RulesEditor.qml:277
+#: package/contents/ui/RulesEditor.qml:280
 #, kde-format
 msgctxt "Coordinates (x, y)"
 msgid "(%1, %2)"
 msgstr "(%1, %2)"
 
-#: package/contents/ui/RulesEditor.qml:279
+#: package/contents/ui/RulesEditor.qml:282
 #, kde-format
 msgctxt "Size (width, height)"
 msgid "(%1, %2)"
@@ -365,161 +365,165 @@ msgid ""
 "window becomes invisible."
 msgstr ""
 
-#: rulesmodel.cpp:378
+#: rulesmodel.cpp:382
 #, kde-format
 msgid "Description"
 msgstr "설명"
 
-#: rulesmodel.cpp:378 rulesmodel.cpp:386 rulesmodel.cpp:394 rulesmodel.cpp:401
-#: rulesmodel.cpp:407 rulesmodel.cpp:415 rulesmodel.cpp:420 rulesmodel.cpp:426
+#: rulesmodel.cpp:382 rulesmodel.cpp:390 rulesmodel.cpp:398 rulesmodel.cpp:405
+#: rulesmodel.cpp:411 rulesmodel.cpp:419 rulesmodel.cpp:424 rulesmodel.cpp:430
 #, kde-format
 msgid "Window matching"
 msgstr "창 일치"
 
-#: rulesmodel.cpp:386
+#: rulesmodel.cpp:390
 #, kde-format
 msgid "Window class (application)"
 msgstr "창 클래스 (프로그램)"
 
-#: rulesmodel.cpp:394
+#: rulesmodel.cpp:398
 #, kde-format
 msgid "Match whole window class"
 msgstr "전체 창 클래스 일치"
 
-#: rulesmodel.cpp:401
+#: rulesmodel.cpp:405
 #, kde-format
 msgid "Whole window class"
 msgstr "전체 창 클래스"
 
-#: rulesmodel.cpp:407
+#: rulesmodel.cpp:411
 #, kde-format
 msgid "Window types"
 msgstr "창 종류"
 
-#: rulesmodel.cpp:415
+#: rulesmodel.cpp:419
 #, kde-format
 msgid "Window role"
 msgstr "창 역할"
 
-#: rulesmodel.cpp:420
+#: rulesmodel.cpp:424
 #, kde-format
 msgid "Window title"
 msgstr "창 제목"
 
-#: rulesmodel.cpp:426
+#: rulesmodel.cpp:430
 #, kde-format
 msgid "Machine (hostname)"
 msgstr "머신(호스트 이름)"
 
-#: rulesmodel.cpp:432
+#: rulesmodel.cpp:436
 #, kde-format
 msgid "Position"
 msgstr "위치"
 
-#: rulesmodel.cpp:432 rulesmodel.cpp:438 rulesmodel.cpp:444 rulesmodel.cpp:449
-#: rulesmodel.cpp:457 rulesmodel.cpp:463 rulesmodel.cpp:482 rulesmodel.cpp:498
-#: rulesmodel.cpp:503 rulesmodel.cpp:508 rulesmodel.cpp:513 rulesmodel.cpp:518
-#: rulesmodel.cpp:525 rulesmodel.cpp:535 rulesmodel.cpp:540 rulesmodel.cpp:545
+#: rulesmodel.cpp:436 rulesmodel.cpp:442 rulesmodel.cpp:448 rulesmodel.cpp:453
+#: rulesmodel.cpp:461 rulesmodel.cpp:467 rulesmodel.cpp:486 rulesmodel.cpp:502
+#: rulesmodel.cpp:507 rulesmodel.cpp:512 rulesmodel.cpp:517 rulesmodel.cpp:522
+#: rulesmodel.cpp:531 rulesmodel.cpp:544 rulesmodel.cpp:549 rulesmodel.cpp:554
 #, kde-format
 msgid "Size & Position"
 msgstr "위치와 크기"
 
-#: rulesmodel.cpp:438
+#: rulesmodel.cpp:442
 #, kde-format
 msgid "Size"
 msgstr "크기"
 
-#: rulesmodel.cpp:444
+#: rulesmodel.cpp:448
 #, kde-format
 msgid "Maximized horizontally"
 msgstr "수평 최대화됨"
 
-#: rulesmodel.cpp:449
+#: rulesmodel.cpp:453
 #, kde-format
 msgid "Maximized vertically"
 msgstr "수직 최대화됨"
 
-#: rulesmodel.cpp:457
+#: rulesmodel.cpp:461
 #, kde-format
 msgid "Virtual Desktop"
 msgstr "가상 바탕 화면"
 
-#: rulesmodel.cpp:463
+#: rulesmodel.cpp:467
 #, kde-format
 msgid "Virtual Desktops"
 msgstr "가상 바탕 화면"
 
-#: rulesmodel.cpp:482
+#: rulesmodel.cpp:486
 #, kde-format
 msgid "Activities"
 msgstr "활동"
 
-#: rulesmodel.cpp:498
+#: rulesmodel.cpp:502
 #, kde-format
 msgid "Screen"
 msgstr "화면"
 
-#: rulesmodel.cpp:503
+#: rulesmodel.cpp:507
 #, kde-format
 msgid "Fullscreen"
 msgstr "전체 화면"
 
-#: rulesmodel.cpp:508
+#: rulesmodel.cpp:512
 #, kde-format
 msgid "Minimized"
 msgstr "최소화됨"
 
-#: rulesmodel.cpp:513
+#: rulesmodel.cpp:517
 #, kde-format
 msgid "Shaded"
 msgstr "말아 올려짐"
 
-#: rulesmodel.cpp:518
+#: rulesmodel.cpp:522
 #, kde-format
 msgid "Initial placement"
 msgstr "초기 배치"
 
-#: rulesmodel.cpp:525
+#: rulesmodel.cpp:531
 #, kde-format
 msgid "Ignore requested geometry"
 msgstr "요청한 크기 및 위치 무시"
 
-#: rulesmodel.cpp:527
-#, kde-format
+#: rulesmodel.cpp:534
+#, kde-kuit-format
+msgctxt "@info:tooltip"
 msgid ""
-"Windows can ask to appear in a certain position.\n"
-"By default this overrides the placement strategy\n"
-"what might be nasty if the client abuses the feature\n"
-"to unconditionally popup in the middle of your screen."
+"Some applications can set their own geometry, overriding the window manager "
+"preferences. Setting this property overrides their placement requests.<nl/"
+">This affects <interface>Size</interface> and <interface>Position</"
+"interface> but not <interface>Maximized</interface> or "
+"<interface>Fullscreen</interface> states.<nl/>Note that the position can "
+"also be used to map to a different <interface>Screen</interface>"
 msgstr ""
-"창이 항상 특정한 위치에 표시되도록 할 수 있습니다.\n"
-"기본적으로 이 동작은 창 위치 배정 정책에 우선하며\n"
-"프로그램에서 이 기능을 잘못 사용하여 항상 화면\n"
-"가운데에 창을 표시하도록 할 수 있습니다."
 
-#: rulesmodel.cpp:535
+#: rulesmodel.cpp:544
 #, kde-format
 msgid "Minimum Size"
 msgstr "최소 크기"
 
-#: rulesmodel.cpp:540
+#: rulesmodel.cpp:549
 #, kde-format
 msgid "Maximum Size"
 msgstr "최대 크기"
 
-#: rulesmodel.cpp:545
+#: rulesmodel.cpp:554
 #, kde-format
 msgid "Obey geometry restrictions"
 msgstr "크기 제한 받아들이기"
 
-#: rulesmodel.cpp:547
-#, kde-format
+#: rulesmodel.cpp:556
+#, fuzzy, kde-format
+#| msgid ""
+#| "Eg. terminals or video players can ask to keep a certain aspect ratio\n"
+#| "or only grow by values larger than one\n"
+#| "(eg. by the dimensions of one character).\n"
+#| "This may be pointless and the restriction prevents arbitrary dimensions\n"
+#| "like your complete screen area."
 msgid ""
-"Eg. terminals or video players can ask to keep a certain aspect ratio\n"
-"or only grow by values larger than one\n"
-"(eg. by the dimensions of one character).\n"
-"This may be pointless and the restriction prevents arbitrary dimensions\n"
-"like your complete screen area."
+"Eg. terminals or video players can ask to keep a certain aspect ratio or "
+"only grow by values larger than one (eg. by the dimensions of one "
+"character). This may be pointless and the restriction prevents arbitrary "
+"dimensions like your complete screen area."
 msgstr ""
 "예를 들어 터미널이나 비디오 재생기는 특정한 화면 비율을 유지하거나\n"
 "특정한 단위(예: 글자 크기)를 기준으로만 증가하거나 감소하도록\n"
@@ -527,96 +531,101 @@ msgstr ""
 "때때로 이 제한이 무의미할 수도 있으며, 전체 화면을 덮는 등\n"
 "임의의 크기로 지정하지 못하게 할 수도 있습니다."
 
-#: rulesmodel.cpp:556
+#: rulesmodel.cpp:565
 #, kde-format
 msgid "Keep above other windows"
 msgstr "다른 창 위에 두기"
 
-#: rulesmodel.cpp:556 rulesmodel.cpp:561 rulesmodel.cpp:566 rulesmodel.cpp:572
-#: rulesmodel.cpp:578 rulesmodel.cpp:584
+#: rulesmodel.cpp:565 rulesmodel.cpp:570 rulesmodel.cpp:575 rulesmodel.cpp:581
+#: rulesmodel.cpp:587 rulesmodel.cpp:593
 #, kde-format
 msgid "Arrangement & Access"
 msgstr "정렬과 접근"
 
-#: rulesmodel.cpp:561
+#: rulesmodel.cpp:570
 #, kde-format
 msgid "Keep below other windows"
 msgstr "다른 창 아래에 두기"
 
-#: rulesmodel.cpp:566
+#: rulesmodel.cpp:575
 #, kde-format
 msgid "Skip taskbar"
 msgstr "작업 표시줄 건너뛰기"
 
-#: rulesmodel.cpp:568
+#: rulesmodel.cpp:577
 #, kde-format
 msgid "Window shall (not) appear in the taskbar."
 msgstr "창이 작업 목록에 나타나지 않습니다."
 
-#: rulesmodel.cpp:572
+#: rulesmodel.cpp:581
 #, kde-format
 msgid "Skip pager"
 msgstr "호출기 건너뛰기"
 
-#: rulesmodel.cpp:574
+#: rulesmodel.cpp:583
 #, kde-format
 msgid "Window shall (not) appear in the manager for virtual desktops"
 msgstr "창이 가상 바탕 화면 관리자에 나타나지 않아야 함"
 
-#: rulesmodel.cpp:578
+#: rulesmodel.cpp:587
 #, kde-format
 msgid "Skip switcher"
 msgstr "전환기 건너뛰기"
 
-#: rulesmodel.cpp:580
+#: rulesmodel.cpp:589
 #, kde-format
 msgid "Window shall (not) appear in the Alt+Tab list"
 msgstr "창이 Alt+Tab 목록에 나타나지 않아야 함"
 
-#: rulesmodel.cpp:584
+#: rulesmodel.cpp:593
 #, kde-format
 msgid "Shortcut"
 msgstr "단축키"
 
-#: rulesmodel.cpp:590
+#: rulesmodel.cpp:599
 #, kde-format
 msgid "No titlebar and frame"
 msgstr "제목 표시줄과 프레임 없음"
 
-#: rulesmodel.cpp:590 rulesmodel.cpp:595 rulesmodel.cpp:601 rulesmodel.cpp:606
-#: rulesmodel.cpp:612 rulesmodel.cpp:623 rulesmodel.cpp:634 rulesmodel.cpp:642
-#: rulesmodel.cpp:655 rulesmodel.cpp:660 rulesmodel.cpp:666 rulesmodel.cpp:671
+#: rulesmodel.cpp:599 rulesmodel.cpp:604 rulesmodel.cpp:610 rulesmodel.cpp:615
+#: rulesmodel.cpp:621 rulesmodel.cpp:632 rulesmodel.cpp:643 rulesmodel.cpp:651
+#: rulesmodel.cpp:664 rulesmodel.cpp:669 rulesmodel.cpp:675 rulesmodel.cpp:680
 #, kde-format
 msgid "Appearance & Fixes"
 msgstr "모양과 설정"
 
-#: rulesmodel.cpp:595
+#: rulesmodel.cpp:604
 #, kde-format
 msgid "Titlebar color scheme"
 msgstr "제목 표시줄 색 구성표"
 
-#: rulesmodel.cpp:601
+#: rulesmodel.cpp:610
 #, kde-format
 msgid "Active opacity"
 msgstr "활성 투명도"
 
-#: rulesmodel.cpp:606
+#: rulesmodel.cpp:615
 #, kde-format
 msgid "Inactive opacity"
 msgstr "비활성 투명도"
 
-#: rulesmodel.cpp:612
+#: rulesmodel.cpp:621
 #, kde-format
 msgid "Focus stealing prevention"
 msgstr "초점 훔쳐가기 방지"
 
-#: rulesmodel.cpp:614
-#, kde-format
+#: rulesmodel.cpp:623
+#, fuzzy, kde-format
+#| msgid ""
+#| "KWin tries to prevent windows from taking the focus\n"
+#| "(\"activate\") while you're working in another window,\n"
+#| "but this may sometimes fail or superact.\n"
+#| "\"None\" will unconditionally allow this window to get the focus while\n"
+#| "\"Extreme\" will completely prevent it from taking the focus."
 msgid ""
-"KWin tries to prevent windows from taking the focus\n"
-"(\"activate\") while you're working in another window,\n"
-"but this may sometimes fail or superact.\n"
-"\"None\" will unconditionally allow this window to get the focus while\n"
+"KWin tries to prevent windows from taking the focus (\"activate\") while "
+"you're working in another window, but this may sometimes fail or superact. "
+"\"None\" will unconditionally allow this window to get the focus while "
 "\"Extreme\" will completely prevent it from taking the focus."
 msgstr ""
 "KWin은 다른 창에서 작업하는 동안 창의 초점\n"
@@ -625,19 +634,23 @@ msgstr ""
 "\"없음\"을 선택하면 항상 창이 초점을 받을 수 있도록 하며,\n"
 "\"매우 높음\"을 선택하면 초점을 빼앗는 것을 완전히 방지합니다."
 
-#: rulesmodel.cpp:623
+#: rulesmodel.cpp:632
 #, kde-format
 msgid "Focus protection"
 msgstr "초점 훔쳐가기 방지"
 
-#: rulesmodel.cpp:625
-#, kde-format
+#: rulesmodel.cpp:634
+#, fuzzy, kde-format
+#| msgid ""
+#| "This controls the focus protection of the currently active window.\n"
+#| "None will always give the focus away,\n"
+#| "Extreme will keep it.\n"
+#| "Otherwise it's interleaved with the stealing prevention\n"
+#| "assigned to the window that wants the focus."
 msgid ""
-"This controls the focus protection of the currently active window.\n"
-"None will always give the focus away,\n"
-"Extreme will keep it.\n"
-"Otherwise it's interleaved with the stealing prevention\n"
-"assigned to the window that wants the focus."
+"This controls the focus protection of the currently active window. None will "
+"always give the focus away, Extreme will keep it. Otherwise it's interleaved "
+"with the stealing prevention assigned to the window that wants the focus."
 msgstr ""
 "이 옵션은 현재 활성 창의 초점 훔쳐가기만 제어합니다.\n"
 "없음을 선택하면 항상 초점을 다른 창에 줍니다.\n"
@@ -645,38 +658,48 @@ msgstr ""
 "다른 옵션을 선택하면 초점을 받고 싶은 창의 종류에 따라서\n"
 "초점을 넘길 지를 결정합니다."
 
-#: rulesmodel.cpp:634
+#: rulesmodel.cpp:643
 #, kde-format
 msgid "Accept focus"
 msgstr "초점 받아들이기"
 
-#: rulesmodel.cpp:636
-#, kde-format
+#: rulesmodel.cpp:645
+#, fuzzy, kde-format
+#| msgid ""
+#| "Windows may prevent to get the focus (activate) when being clicked.\n"
+#| "On the other hand you might wish to prevent a window\n"
+#| "from getting focused on a mouse click."
 msgid ""
-"Windows may prevent to get the focus (activate) when being clicked.\n"
-"On the other hand you might wish to prevent a window\n"
-"from getting focused on a mouse click."
+"Windows may prevent to get the focus (activate) when being clicked. On the "
+"other hand you might wish to prevent a window from getting focused on a "
+"mouse click."
 msgstr ""
 "특정한 창은 마우스를 클릭해도 초점을 받지 않을 수 있습니다.\n"
 "또한, 특정한 창에서 마우스를 클릭해도 초점을 받지 않도록\n"
 "설정할 수도 있습니다."
 
-#: rulesmodel.cpp:642
+#: rulesmodel.cpp:651
 #, kde-format
 msgid "Ignore global shortcuts"
 msgstr "전역 단축키 무시"
 
-#: rulesmodel.cpp:644
-#, kde-format
+#: rulesmodel.cpp:653
+#, fuzzy, kde-format
+#| msgid ""
+#| "When used, a window will receive\n"
+#| "all keyboard inputs while it is active, including Alt+Tab etc.\n"
+#| "This is especially interesting for emulators or virtual machines.\n"
+#| "\n"
+#| "Be warned:\n"
+#| "you won't be able to Alt+Tab out of the window\n"
+#| "nor use any other global shortcut (such as Alt+F2 to show KRunner)\n"
+#| "while it's active!"
 msgid ""
-"When used, a window will receive\n"
-"all keyboard inputs while it is active, including Alt+Tab etc.\n"
-"This is especially interesting for emulators or virtual machines.\n"
-"\n"
-"Be warned:\n"
-"you won't be able to Alt+Tab out of the window\n"
-"nor use any other global shortcut (such as Alt+F2 to show KRunner)\n"
-"while it's active!"
+"When used, a window will receive all keyboard inputs while it is active, "
+"including Alt+Tab etc. This is especially interesting for emulators or "
+"virtual machines. \n"
+"Be warned: you won't be able to Alt+Tab out of the window nor use any other "
+"global shortcut (such as Alt+F2 to show KRunner) while it's active!"
 msgstr ""
 "선택하면 창이 활성화되어 있을 때\n"
 "Alt+Tab과 같은 모든 키 입력을 받습니다.\n"
@@ -687,33 +710,33 @@ msgstr ""
 "Alt+F2 키를 눌러서 실행 대화 상자를 표시하는 등 전역 단축키를\n"
 "사용할 수 없습니다!"
 
-#: rulesmodel.cpp:655
+#: rulesmodel.cpp:664
 #, kde-format
 msgid "Closeable"
 msgstr "닫을 수 있음"
 
-#: rulesmodel.cpp:660
+#: rulesmodel.cpp:669
 #, kde-format
 msgid "Set window type"
 msgstr "창 종류 설정"
 
-#: rulesmodel.cpp:666
+#: rulesmodel.cpp:675
 #, kde-format
 msgid "Desktop file name"
 msgstr "데스크톱 파일 이름"
 
-#: rulesmodel.cpp:671
+#: rulesmodel.cpp:680
 #, kde-format
 msgid "Block compositing"
 msgstr "컴포지팅 무시"
 
-#: rulesmodel.cpp:723
+#: rulesmodel.cpp:732
 #, fuzzy, kde-format
 #| msgid "Window class (application)"
 msgid "Window class not available"
 msgstr "창 클래스 (프로그램)"
 
-#: rulesmodel.cpp:724
+#: rulesmodel.cpp:733
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -723,164 +746,175 @@ msgid ""
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
 
-#: rulesmodel.cpp:758
+#: rulesmodel.cpp:767
 #, kde-format
 msgid "All Window Types"
 msgstr "모든 창 종류"
 
-#: rulesmodel.cpp:759
+#: rulesmodel.cpp:768
 #, kde-format
 msgid "Normal Window"
 msgstr "일반 창"
 
-#: rulesmodel.cpp:760
+#: rulesmodel.cpp:769
 #, kde-format
 msgid "Dialog Window"
 msgstr "대화 상자"
 
-#: rulesmodel.cpp:761
+#: rulesmodel.cpp:770
 #, kde-format
 msgid "Utility Window"
 msgstr "유틸리티 창"
 
-#: rulesmodel.cpp:762
+#: rulesmodel.cpp:771
 #, kde-format
 msgid "Dock (panel)"
 msgstr "독(패널)"
 
-#: rulesmodel.cpp:763
+#: rulesmodel.cpp:772
 #, kde-format
 msgid "Toolbar"
 msgstr "도구 모음"
 
-#: rulesmodel.cpp:764
+#: rulesmodel.cpp:773
 #, kde-format
 msgid "Torn-Off Menu"
 msgstr "떼낼 수 있는 메뉴"
 
-#: rulesmodel.cpp:765
+#: rulesmodel.cpp:774
 #, kde-format
 msgid "Splash Screen"
 msgstr "시작 화면"
 
-#: rulesmodel.cpp:766
+#: rulesmodel.cpp:775
 #, kde-format
 msgid "Desktop"
 msgstr "바탕 화면"
 
 #. i18n("Unmanaged Window")},  deprecated
-#: rulesmodel.cpp:768
+#: rulesmodel.cpp:777
 #, kde-format
 msgid "Standalone Menubar"
 msgstr "단일 메뉴 표시줄"
 
-#: rulesmodel.cpp:769
+#: rulesmodel.cpp:778
 #, kde-format
 msgid "On Screen Display"
 msgstr "화면상 표시"
 
-#: rulesmodel.cpp:779
+#: rulesmodel.cpp:788
 #, kde-format
 msgid "All Desktops"
 msgstr "모든 바탕 화면"
 
-#: rulesmodel.cpp:781
+#: rulesmodel.cpp:790
 #, kde-format
 msgctxt "@info:tooltip in the virtual desktop list"
 msgid "Make the window available on all desktops"
 msgstr "모든 바탕 화면에 창 표시"
 
-#: rulesmodel.cpp:800
+#: rulesmodel.cpp:809
 #, kde-format
 msgid "All Activities"
 msgstr "모든 활동"
 
-#: rulesmodel.cpp:802
+#: rulesmodel.cpp:811
 #, kde-format
 msgctxt "@info:tooltip in the activity list"
 msgid "Make the window available on all activities"
 msgstr "모든 활동에 창 표시"
 
-#: rulesmodel.cpp:823
+#: rulesmodel.cpp:832
 #, kde-format
 msgid "Default"
 msgstr "기본값"
 
-#: rulesmodel.cpp:824
+#: rulesmodel.cpp:833
 #, kde-format
 msgid "No Placement"
 msgstr "위치 지정 없음"
 
-#: rulesmodel.cpp:825
+#: rulesmodel.cpp:834
 #, kde-format
 msgid "Minimal Overlapping"
 msgstr "겹침 최소화"
 
-#: rulesmodel.cpp:826
+#: rulesmodel.cpp:835
 #, kde-format
 msgid "Maximized"
 msgstr "최대화"
 
-#: rulesmodel.cpp:827
+#: rulesmodel.cpp:836
 #, kde-format
 msgid "Centered"
 msgstr "가운데"
 
-#: rulesmodel.cpp:828
+#: rulesmodel.cpp:837
 #, kde-format
 msgid "Random"
 msgstr "무작위"
 
-#: rulesmodel.cpp:829
+#: rulesmodel.cpp:838
 #, kde-format
 msgid "In Top-Left Corner"
 msgstr "왼쪽 위 꼭짓점에"
 
-#: rulesmodel.cpp:830
+#: rulesmodel.cpp:839
 #, kde-format
 msgid "Under Mouse"
 msgstr "마우스 아래"
 
-#: rulesmodel.cpp:831
+#: rulesmodel.cpp:840
 #, kde-format
 msgid "On Main Window"
 msgstr "주 창에"
 
-#: rulesmodel.cpp:838
+#: rulesmodel.cpp:847
 #, kde-format
 msgid "None"
 msgstr "없음"
 
-#: rulesmodel.cpp:839
+#: rulesmodel.cpp:848
 #, kde-format
 msgid "Low"
 msgstr "낮음"
 
-#: rulesmodel.cpp:840
+#: rulesmodel.cpp:849
 #, kde-format
 msgid "Normal"
 msgstr "중간"
 
-#: rulesmodel.cpp:841
+#: rulesmodel.cpp:850
 #, kde-format
 msgid "High"
 msgstr "높음"
 
-#: rulesmodel.cpp:842
+#: rulesmodel.cpp:851
 #, kde-format
 msgid "Extreme"
 msgstr "매우 높음"
 
-#: rulesmodel.cpp:885
+#: rulesmodel.cpp:894
 #, fuzzy, kde-format
 #| msgid "Unmanaged Window"
 msgid "Unmanaged window"
 msgstr "관리되지 않는 창"
 
-#: rulesmodel.cpp:886
+#: rulesmodel.cpp:895
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr "창 속성을 감지할 수 없습니다. KWin에서 관리하는 창이 아닙니다."
+
+#~ msgid ""
+#~ "Windows can ask to appear in a certain position.\n"
+#~ "By default this overrides the placement strategy\n"
+#~ "what might be nasty if the client abuses the feature\n"
+#~ "to unconditionally popup in the middle of your screen."
+#~ msgstr ""
+#~ "창이 항상 특정한 위치에 표시되도록 할 수 있습니다.\n"
+#~ "기본적으로 이 동작은 창 위치 배정 정책에 우선하며\n"
+#~ "프로그램에서 이 기능을 잘못 사용하여 항상 화면\n"
+#~ "가운데에 창을 표시하도록 할 수 있습니다."
 
 #~ msgid "KWinRules KCM launcher"
 #~ msgstr "KWinRules KCM 실행기"

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-08 02:19+0000\n"
+"POT-Creation-Date: 2023-04-12 02:13+0000\n"
 "PO-Revision-Date: 2023-02-19 10:08+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Chinese <zh-l10n@linux.org.tw>\n"
@@ -290,32 +290,32 @@ msgstr[0] "%1 秒後"
 msgid "Add property to the rule"
 msgstr "新增屬性至規則"
 
-#: package/contents/ui/RulesEditor.qml:273
+#: package/contents/ui/RulesEditor.qml:276
 #: package/contents/ui/ValueEditor.qml:54
 #, kde-format
 msgid "Yes"
 msgstr "是"
 
-#: package/contents/ui/RulesEditor.qml:273
+#: package/contents/ui/RulesEditor.qml:276
 #: package/contents/ui/ValueEditor.qml:60
 #, kde-format
 msgid "No"
 msgstr "否"
 
-#: package/contents/ui/RulesEditor.qml:275
+#: package/contents/ui/RulesEditor.qml:278
 #: package/contents/ui/ValueEditor.qml:168
 #: package/contents/ui/ValueEditor.qml:175
 #, kde-format
 msgid "%1 %"
 msgstr "%1 %"
 
-#: package/contents/ui/RulesEditor.qml:277
+#: package/contents/ui/RulesEditor.qml:280
 #, kde-format
 msgctxt "Coordinates (x, y)"
 msgid "(%1, %2)"
 msgstr "(%1, %2)"
 
-#: package/contents/ui/RulesEditor.qml:279
+#: package/contents/ui/RulesEditor.qml:282
 #, kde-format
 msgctxt "Size (width, height)"
 msgid "(%1, %2)"
@@ -368,311 +368,335 @@ msgid ""
 msgstr ""
 "極低的不透明度數值可能會造成視窗可讀性降低。不透明度 0% 時視窗會完全隱形。"
 
-#: rulesmodel.cpp:378
+#: rulesmodel.cpp:382
 #, kde-format
 msgid "Description"
 msgstr "描述"
 
-#: rulesmodel.cpp:378 rulesmodel.cpp:386 rulesmodel.cpp:394 rulesmodel.cpp:401
-#: rulesmodel.cpp:407 rulesmodel.cpp:415 rulesmodel.cpp:420 rulesmodel.cpp:426
+#: rulesmodel.cpp:382 rulesmodel.cpp:390 rulesmodel.cpp:398 rulesmodel.cpp:405
+#: rulesmodel.cpp:411 rulesmodel.cpp:419 rulesmodel.cpp:424 rulesmodel.cpp:430
 #, kde-format
 msgid "Window matching"
 msgstr "視窗比對"
 
-#: rulesmodel.cpp:386
+#: rulesmodel.cpp:390
 #, kde-format
 msgid "Window class (application)"
 msgstr "視窗類別 (應用程式)"
 
-#: rulesmodel.cpp:394
+#: rulesmodel.cpp:398
 #, kde-format
 msgid "Match whole window class"
 msgstr "符合整個視窗類別"
 
-#: rulesmodel.cpp:401
+#: rulesmodel.cpp:405
 #, kde-format
 msgid "Whole window class"
 msgstr "整個視窗類別"
 
-#: rulesmodel.cpp:407
+#: rulesmodel.cpp:411
 #, kde-format
 msgid "Window types"
 msgstr "視窗類型"
 
-#: rulesmodel.cpp:415
+#: rulesmodel.cpp:419
 #, kde-format
 msgid "Window role"
 msgstr "視窗角色"
 
-#: rulesmodel.cpp:420
+#: rulesmodel.cpp:424
 #, kde-format
 msgid "Window title"
 msgstr "視窗標題"
 
-#: rulesmodel.cpp:426
+#: rulesmodel.cpp:430
 #, kde-format
 msgid "Machine (hostname)"
 msgstr "機器 (主機名稱)"
 
-#: rulesmodel.cpp:432
+#: rulesmodel.cpp:436
 #, kde-format
 msgid "Position"
 msgstr "位置"
 
-#: rulesmodel.cpp:432 rulesmodel.cpp:438 rulesmodel.cpp:444 rulesmodel.cpp:449
-#: rulesmodel.cpp:457 rulesmodel.cpp:463 rulesmodel.cpp:482 rulesmodel.cpp:498
-#: rulesmodel.cpp:503 rulesmodel.cpp:508 rulesmodel.cpp:513 rulesmodel.cpp:518
-#: rulesmodel.cpp:525 rulesmodel.cpp:535 rulesmodel.cpp:540 rulesmodel.cpp:545
+#: rulesmodel.cpp:436 rulesmodel.cpp:442 rulesmodel.cpp:448 rulesmodel.cpp:453
+#: rulesmodel.cpp:461 rulesmodel.cpp:467 rulesmodel.cpp:486 rulesmodel.cpp:502
+#: rulesmodel.cpp:507 rulesmodel.cpp:512 rulesmodel.cpp:517 rulesmodel.cpp:522
+#: rulesmodel.cpp:531 rulesmodel.cpp:544 rulesmodel.cpp:549 rulesmodel.cpp:554
 #, kde-format
 msgid "Size & Position"
 msgstr "大小與位置"
 
-#: rulesmodel.cpp:438
+#: rulesmodel.cpp:442
 #, kde-format
 msgid "Size"
 msgstr "大小"
 
-#: rulesmodel.cpp:444
+#: rulesmodel.cpp:448
 #, kde-format
 msgid "Maximized horizontally"
 msgstr "橫向最大化"
 
-#: rulesmodel.cpp:449
+#: rulesmodel.cpp:453
 #, kde-format
 msgid "Maximized vertically"
 msgstr "垂直最大化"
 
-#: rulesmodel.cpp:457
+#: rulesmodel.cpp:461
 #, kde-format
 msgid "Virtual Desktop"
 msgstr "虛擬桌面"
 
-#: rulesmodel.cpp:463
+#: rulesmodel.cpp:467
 #, kde-format
 msgid "Virtual Desktops"
 msgstr "虛擬桌面"
 
-#: rulesmodel.cpp:482
+#: rulesmodel.cpp:486
 #, kde-format
 msgid "Activities"
 msgstr "活動"
 
-#: rulesmodel.cpp:498
+#: rulesmodel.cpp:502
 #, kde-format
 msgid "Screen"
 msgstr "螢幕"
 
-#: rulesmodel.cpp:503
+#: rulesmodel.cpp:507
 #, kde-format
 msgid "Fullscreen"
 msgstr "全螢幕"
 
-#: rulesmodel.cpp:508
+#: rulesmodel.cpp:512
 #, kde-format
 msgid "Minimized"
 msgstr "最小化"
 
-#: rulesmodel.cpp:513
+#: rulesmodel.cpp:517
 #, kde-format
 msgid "Shaded"
 msgstr "已收起"
 
-#: rulesmodel.cpp:518
+#: rulesmodel.cpp:522
 #, kde-format
 msgid "Initial placement"
 msgstr "初始置放位置"
 
-#: rulesmodel.cpp:525
+#: rulesmodel.cpp:531
 #, kde-format
 msgid "Ignore requested geometry"
 msgstr "略過要求的大小和位置"
 
-#: rulesmodel.cpp:527
-#, kde-format
+#: rulesmodel.cpp:534
+#, kde-kuit-format
+msgctxt "@info:tooltip"
 msgid ""
-"Windows can ask to appear in a certain position.\n"
-"By default this overrides the placement strategy\n"
-"what might be nasty if the client abuses the feature\n"
-"to unconditionally popup in the middle of your screen."
+"Some applications can set their own geometry, overriding the window manager "
+"preferences. Setting this property overrides their placement requests.<nl/"
+">This affects <interface>Size</interface> and <interface>Position</"
+"interface> but not <interface>Maximized</interface> or "
+"<interface>Fullscreen</interface> states.<nl/>Note that the position can "
+"also be used to map to a different <interface>Screen</interface>"
 msgstr ""
-"視窗可以要求在特定的位置出現。\n"
-"預設它會覆蓋放置位置政策，因為預設的政策可能會造成不必要的彈出視窗出現在螢幕"
-"正中央。"
 
-#: rulesmodel.cpp:535
+#: rulesmodel.cpp:544
 #, kde-format
 msgid "Minimum Size"
 msgstr "最小大小"
 
-#: rulesmodel.cpp:540
+#: rulesmodel.cpp:549
 #, kde-format
 msgid "Maximum Size"
 msgstr "最大大小"
 
-#: rulesmodel.cpp:545
+#: rulesmodel.cpp:554
 #, kde-format
 msgid "Obey geometry restrictions"
 msgstr "遵循位置限制"
 
-#: rulesmodel.cpp:547
-#, kde-format
+#: rulesmodel.cpp:556
+#, fuzzy, kde-format
+#| msgid ""
+#| "Eg. terminals or video players can ask to keep a certain aspect ratio\n"
+#| "or only grow by values larger than one\n"
+#| "(eg. by the dimensions of one character).\n"
+#| "This may be pointless and the restriction prevents arbitrary dimensions\n"
+#| "like your complete screen area."
 msgid ""
-"Eg. terminals or video players can ask to keep a certain aspect ratio\n"
-"or only grow by values larger than one\n"
-"(eg. by the dimensions of one character).\n"
-"This may be pointless and the restriction prevents arbitrary dimensions\n"
-"like your complete screen area."
+"Eg. terminals or video players can ask to keep a certain aspect ratio or "
+"only grow by values larger than one (eg. by the dimensions of one "
+"character). This may be pointless and the restriction prevents arbitrary "
+"dimensions like your complete screen area."
 msgstr ""
 "例如：終端機或影像播放器可以要求保持特定的大小比例，或是只增長大於一的值。\n"
 "（如大於一個字元的大小）。\n"
 "這個限制可以避免被任意改變大小成全螢幕。"
 
-#: rulesmodel.cpp:556
+#: rulesmodel.cpp:565
 #, kde-format
 msgid "Keep above other windows"
 msgstr "維持在其他視窗之上"
 
-#: rulesmodel.cpp:556 rulesmodel.cpp:561 rulesmodel.cpp:566 rulesmodel.cpp:572
-#: rulesmodel.cpp:578 rulesmodel.cpp:584
+#: rulesmodel.cpp:565 rulesmodel.cpp:570 rulesmodel.cpp:575 rulesmodel.cpp:581
+#: rulesmodel.cpp:587 rulesmodel.cpp:593
 #, kde-format
 msgid "Arrangement & Access"
 msgstr "置放與存取"
 
-#: rulesmodel.cpp:561
+#: rulesmodel.cpp:570
 #, kde-format
 msgid "Keep below other windows"
 msgstr "維持在其他視窗之下"
 
-#: rulesmodel.cpp:566
+#: rulesmodel.cpp:575
 #, kde-format
 msgid "Skip taskbar"
 msgstr "略過工作列"
 
-#: rulesmodel.cpp:568
+#: rulesmodel.cpp:577
 #, kde-format
 msgid "Window shall (not) appear in the taskbar."
 msgstr "不讓視窗出現在工具列中。"
 
-#: rulesmodel.cpp:572
+#: rulesmodel.cpp:581
 #, kde-format
 msgid "Skip pager"
 msgstr "略過虛擬桌面管理器"
 
-#: rulesmodel.cpp:574
+#: rulesmodel.cpp:583
 #, kde-format
 msgid "Window shall (not) appear in the manager for virtual desktops"
 msgstr "不讓視窗出現在虛擬桌面的縮圖中"
 
-#: rulesmodel.cpp:578
+#: rulesmodel.cpp:587
 #, kde-format
 msgid "Skip switcher"
 msgstr "略過切換器"
 
-#: rulesmodel.cpp:580
+#: rulesmodel.cpp:589
 #, kde-format
 msgid "Window shall (not) appear in the Alt+Tab list"
 msgstr "視窗不要出現在 Alt+Tab 切換清單中"
 
-#: rulesmodel.cpp:584
+#: rulesmodel.cpp:593
 #, kde-format
 msgid "Shortcut"
 msgstr "捷徑"
 
-#: rulesmodel.cpp:590
+#: rulesmodel.cpp:599
 #, kde-format
 msgid "No titlebar and frame"
 msgstr "沒有標題列與外框"
 
-#: rulesmodel.cpp:590 rulesmodel.cpp:595 rulesmodel.cpp:601 rulesmodel.cpp:606
-#: rulesmodel.cpp:612 rulesmodel.cpp:623 rulesmodel.cpp:634 rulesmodel.cpp:642
-#: rulesmodel.cpp:655 rulesmodel.cpp:660 rulesmodel.cpp:666 rulesmodel.cpp:671
+#: rulesmodel.cpp:599 rulesmodel.cpp:604 rulesmodel.cpp:610 rulesmodel.cpp:615
+#: rulesmodel.cpp:621 rulesmodel.cpp:632 rulesmodel.cpp:643 rulesmodel.cpp:651
+#: rulesmodel.cpp:664 rulesmodel.cpp:669 rulesmodel.cpp:675 rulesmodel.cpp:680
 #, kde-format
 msgid "Appearance & Fixes"
 msgstr "外觀與修復"
 
-#: rulesmodel.cpp:595
+#: rulesmodel.cpp:604
 #, kde-format
 msgid "Titlebar color scheme"
 msgstr "標題列配色"
 
-#: rulesmodel.cpp:601
+#: rulesmodel.cpp:610
 #, kde-format
 msgid "Active opacity"
 msgstr "作用中的不透明度"
 
-#: rulesmodel.cpp:606
+#: rulesmodel.cpp:615
 #, kde-format
 msgid "Inactive opacity"
 msgstr "非作用中的不透明度"
 
-#: rulesmodel.cpp:612
+#: rulesmodel.cpp:621
 #, kde-format
 msgid "Focus stealing prevention"
 msgstr "防止盜取焦點"
 
-#: rulesmodel.cpp:614
-#, kde-format
+#: rulesmodel.cpp:623
+#, fuzzy, kde-format
+#| msgid ""
+#| "KWin tries to prevent windows from taking the focus\n"
+#| "(\"activate\") while you're working in another window,\n"
+#| "but this may sometimes fail or superact.\n"
+#| "\"None\" will unconditionally allow this window to get the focus while\n"
+#| "\"Extreme\" will completely prevent it from taking the focus."
 msgid ""
-"KWin tries to prevent windows from taking the focus\n"
-"(\"activate\") while you're working in another window,\n"
-"but this may sometimes fail or superact.\n"
-"\"None\" will unconditionally allow this window to get the focus while\n"
+"KWin tries to prevent windows from taking the focus (\"activate\") while "
+"you're working in another window, but this may sometimes fail or superact. "
+"\"None\" will unconditionally allow this window to get the focus while "
 "\"Extreme\" will completely prevent it from taking the focus."
 msgstr ""
 "KWin 會試著在您在別的視窗工作時，讓這個視窗取得焦點，\n"
 "但是有時可能會失敗，或是會誤動作。\n"
 "「無」會無條件允許視窗取得焦點，「極高」則是會完全避免它取得焦點。"
 
-#: rulesmodel.cpp:623
+#: rulesmodel.cpp:632
 #, kde-format
 msgid "Focus protection"
 msgstr "焦點保護"
 
-#: rulesmodel.cpp:625
-#, kde-format
+#: rulesmodel.cpp:634
+#, fuzzy, kde-format
+#| msgid ""
+#| "This controls the focus protection of the currently active window.\n"
+#| "None will always give the focus away,\n"
+#| "Extreme will keep it.\n"
+#| "Otherwise it's interleaved with the stealing prevention\n"
+#| "assigned to the window that wants the focus."
 msgid ""
-"This controls the focus protection of the currently active window.\n"
-"None will always give the focus away,\n"
-"Extreme will keep it.\n"
-"Otherwise it's interleaved with the stealing prevention\n"
-"assigned to the window that wants the focus."
+"This controls the focus protection of the currently active window. None will "
+"always give the focus away, Extreme will keep it. Otherwise it's interleaved "
+"with the stealing prevention assigned to the window that wants the focus."
 msgstr ""
 "這個模組控制目前作用中視窗的焦點保護。\n"
 "「無」每次都會丟掉焦點，\n"
 "「極高」每次都會保留焦點。\n"
 "其他中間的值則會依程度避免將焦點被其他視窗偷走。"
 
-#: rulesmodel.cpp:634
+#: rulesmodel.cpp:643
 #, kde-format
 msgid "Accept focus"
 msgstr "接受焦點"
 
-#: rulesmodel.cpp:636
-#, kde-format
+#: rulesmodel.cpp:645
+#, fuzzy, kde-format
+#| msgid ""
+#| "Windows may prevent to get the focus (activate) when being clicked.\n"
+#| "On the other hand you might wish to prevent a window\n"
+#| "from getting focused on a mouse click."
 msgid ""
-"Windows may prevent to get the focus (activate) when being clicked.\n"
-"On the other hand you might wish to prevent a window\n"
-"from getting focused on a mouse click."
+"Windows may prevent to get the focus (activate) when being clicked. On the "
+"other hand you might wish to prevent a window from getting focused on a "
+"mouse click."
 msgstr ""
 "視窗可能會避免在點擊時取得焦點（啟動）。\n"
 "反之您也可能希望避免讓視窗在滑鼠點擊時取得焦點。"
 
-#: rulesmodel.cpp:642
+#: rulesmodel.cpp:651
 #, kde-format
 msgid "Ignore global shortcuts"
 msgstr "忽略全域快捷鍵"
 
-#: rulesmodel.cpp:644
-#, kde-format
+#: rulesmodel.cpp:653
+#, fuzzy, kde-format
+#| msgid ""
+#| "When used, a window will receive\n"
+#| "all keyboard inputs while it is active, including Alt+Tab etc.\n"
+#| "This is especially interesting for emulators or virtual machines.\n"
+#| "\n"
+#| "Be warned:\n"
+#| "you won't be able to Alt+Tab out of the window\n"
+#| "nor use any other global shortcut (such as Alt+F2 to show KRunner)\n"
+#| "while it's active!"
 msgid ""
-"When used, a window will receive\n"
-"all keyboard inputs while it is active, including Alt+Tab etc.\n"
-"This is especially interesting for emulators or virtual machines.\n"
-"\n"
-"Be warned:\n"
-"you won't be able to Alt+Tab out of the window\n"
-"nor use any other global shortcut (such as Alt+F2 to show KRunner)\n"
-"while it's active!"
+"When used, a window will receive all keyboard inputs while it is active, "
+"including Alt+Tab etc. This is especially interesting for emulators or "
+"virtual machines. \n"
+"Be warned: you won't be able to Alt+Tab out of the window nor use any other "
+"global shortcut (such as Alt+F2 to show KRunner) while it's active!"
 msgstr ""
 "若使用此選項，視窗會在啟動時接受所有鍵盤輸入，包含 Alt+Tab 等。\n"
 "特別是該視窗在執行模擬器或虛擬機器時。\n"
@@ -681,32 +705,32 @@ msgstr ""
 "如此一來，在該視窗啟動時，您就不能使用 Alt+Tab 離開視窗。\n"
 "也沒辦法用任何其它的全域快捷鍵（如按 Alt+F2 叫出 KRunner）。"
 
-#: rulesmodel.cpp:655
+#: rulesmodel.cpp:664
 #, kde-format
 msgid "Closeable"
 msgstr "可關閉"
 
-#: rulesmodel.cpp:660
+#: rulesmodel.cpp:669
 #, kde-format
 msgid "Set window type"
 msgstr "設定視窗類型"
 
-#: rulesmodel.cpp:666
+#: rulesmodel.cpp:675
 #, kde-format
 msgid "Desktop file name"
 msgstr "桌面檔案名稱"
 
-#: rulesmodel.cpp:671
+#: rulesmodel.cpp:680
 #, kde-format
 msgid "Block compositing"
 msgstr "阻擋組合"
 
-#: rulesmodel.cpp:723
+#: rulesmodel.cpp:732
 #, kde-format
 msgid "Window class not available"
 msgstr "視窗類別不可用"
 
-#: rulesmodel.cpp:724
+#: rulesmodel.cpp:733
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -719,163 +743,173 @@ msgstr ""
 "套用任何規則。如果您仍然想要對其套用規則，請試著改用其他屬性，例如視窗標題。"
 "<nl/><nl/>請考慮將此問題回報給該應用程式的開發者。"
 
-#: rulesmodel.cpp:758
+#: rulesmodel.cpp:767
 #, kde-format
 msgid "All Window Types"
 msgstr "所有視窗類型"
 
-#: rulesmodel.cpp:759
+#: rulesmodel.cpp:768
 #, kde-format
 msgid "Normal Window"
 msgstr "正常視窗"
 
-#: rulesmodel.cpp:760
+#: rulesmodel.cpp:769
 #, kde-format
 msgid "Dialog Window"
 msgstr "對話框視窗"
 
-#: rulesmodel.cpp:761
+#: rulesmodel.cpp:770
 #, kde-format
 msgid "Utility Window"
 msgstr "工具視窗"
 
-#: rulesmodel.cpp:762
+#: rulesmodel.cpp:771
 #, kde-format
 msgid "Dock (panel)"
 msgstr "Dock (panel)"
 
-#: rulesmodel.cpp:763
+#: rulesmodel.cpp:772
 #, kde-format
 msgid "Toolbar"
 msgstr "工具列"
 
-#: rulesmodel.cpp:764
+#: rulesmodel.cpp:773
 #, kde-format
 msgid "Torn-Off Menu"
 msgstr "撕下的選單"
 
-#: rulesmodel.cpp:765
+#: rulesmodel.cpp:774
 #, kde-format
 msgid "Splash Screen"
 msgstr "啟動畫面"
 
-#: rulesmodel.cpp:766
+#: rulesmodel.cpp:775
 #, kde-format
 msgid "Desktop"
 msgstr "桌面"
 
 #. i18n("Unmanaged Window")},  deprecated
-#: rulesmodel.cpp:768
+#: rulesmodel.cpp:777
 #, kde-format
 msgid "Standalone Menubar"
 msgstr "獨立選單"
 
-#: rulesmodel.cpp:769
+#: rulesmodel.cpp:778
 #, kde-format
 msgid "On Screen Display"
 msgstr "螢幕顯示 (OSD)"
 
-#: rulesmodel.cpp:779
+#: rulesmodel.cpp:788
 #, kde-format
 msgid "All Desktops"
 msgstr "所有桌面"
 
-#: rulesmodel.cpp:781
+#: rulesmodel.cpp:790
 #, kde-format
 msgctxt "@info:tooltip in the virtual desktop list"
 msgid "Make the window available on all desktops"
 msgstr "讓視窗顯示在所有桌面上"
 
-#: rulesmodel.cpp:800
+#: rulesmodel.cpp:809
 #, kde-format
 msgid "All Activities"
 msgstr "所有的活動"
 
-#: rulesmodel.cpp:802
+#: rulesmodel.cpp:811
 #, kde-format
 msgctxt "@info:tooltip in the activity list"
 msgid "Make the window available on all activities"
 msgstr "讓視窗顯示在所有活動裡"
 
-#: rulesmodel.cpp:823
+#: rulesmodel.cpp:832
 #, kde-format
 msgid "Default"
 msgstr "預設"
 
-#: rulesmodel.cpp:824
+#: rulesmodel.cpp:833
 #, kde-format
 msgid "No Placement"
 msgstr "無特定放置"
 
-#: rulesmodel.cpp:825
+#: rulesmodel.cpp:834
 #, kde-format
 msgid "Minimal Overlapping"
 msgstr "最小化重疊"
 
-#: rulesmodel.cpp:826
+#: rulesmodel.cpp:835
 #, kde-format
 msgid "Maximized"
 msgstr "最大化"
 
-#: rulesmodel.cpp:827
+#: rulesmodel.cpp:836
 #, kde-format
 msgid "Centered"
 msgstr "置中"
 
-#: rulesmodel.cpp:828
+#: rulesmodel.cpp:837
 #, kde-format
 msgid "Random"
 msgstr "隨機"
 
-#: rulesmodel.cpp:829
+#: rulesmodel.cpp:838
 #, kde-format
 msgid "In Top-Left Corner"
 msgstr "於左上角"
 
-#: rulesmodel.cpp:830
+#: rulesmodel.cpp:839
 #, kde-format
 msgid "Under Mouse"
 msgstr "在滑鼠下"
 
-#: rulesmodel.cpp:831
+#: rulesmodel.cpp:840
 #, kde-format
 msgid "On Main Window"
 msgstr "在主視窗上"
 
-#: rulesmodel.cpp:838
+#: rulesmodel.cpp:847
 #, kde-format
 msgid "None"
 msgstr "無"
 
-#: rulesmodel.cpp:839
+#: rulesmodel.cpp:848
 #, kde-format
 msgid "Low"
 msgstr "低"
 
-#: rulesmodel.cpp:840
+#: rulesmodel.cpp:849
 #, kde-format
 msgid "Normal"
 msgstr "正常"
 
-#: rulesmodel.cpp:841
+#: rulesmodel.cpp:850
 #, kde-format
 msgid "High"
 msgstr "高"
 
-#: rulesmodel.cpp:842
+#: rulesmodel.cpp:851
 #, kde-format
 msgid "Extreme"
 msgstr "極高"
 
-#: rulesmodel.cpp:885
+#: rulesmodel.cpp:894
 #, kde-format
 msgid "Unmanaged window"
 msgstr "未管理視窗"
 
-#: rulesmodel.cpp:886
+#: rulesmodel.cpp:895
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr "無法偵測視窗屬性。視窗未被 KWin 管理。"
+
+#~ msgid ""
+#~ "Windows can ask to appear in a certain position.\n"
+#~ "By default this overrides the placement strategy\n"
+#~ "what might be nasty if the client abuses the feature\n"
+#~ "to unconditionally popup in the middle of your screen."
+#~ msgstr ""
+#~ "視窗可以要求在特定的位置出現。\n"
+#~ "預設它會覆蓋放置位置政策，因為預設的政策可能會造成不必要的彈出視窗出現在螢"
+#~ "幕正中央。"
 
 #~ msgid "KWinRules KCM launcher"
 #~ msgstr "KWinRules KCM 啟動器"
