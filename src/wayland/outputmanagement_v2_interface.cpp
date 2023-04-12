@@ -17,6 +17,7 @@
 
 #include "qwayland-server-kde-output-management-v2.h"
 
+#include <cmath>
 #include <optional>
 
 using namespace KWin;
