@@ -873,7 +873,7 @@ void TestWaylandSurface::testDestroyAttachedBuffer()
     // Let's try to destroy it
     delete m_shm;
     m_shm = nullptr;
-    QTRY_VERIFY(serverSurface->buffer()->isDestroyed());
+    QTRY_VERIFY(serverSurface->buffer()->isDropped());
 }
 
 void TestWaylandSurface::testDestroyWithPendingCallback()

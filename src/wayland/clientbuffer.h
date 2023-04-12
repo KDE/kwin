@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "kwin_export.h"
+#include "core/graphicsbuffer.h"
 
 #include <QImage>
 #include <QObject>
@@ -27,7 +27,7 @@ class ClientBufferPrivate;
  * You can use the isDestroyed() function to check whether the wl_buffer object has been
  * destroyed.
  */
-class KWIN_EXPORT ClientBuffer : public QObject
+class KWIN_EXPORT ClientBuffer : public KWin::GraphicsBuffer
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(ClientBuffer)
@@ -36,35 +36,10 @@ public:
     ~ClientBuffer() override;
 
     /**
-     * This enum type is used to specify the corner where the origin is. That's it, the
-     * buffer corner where 0,0 is located.
-     */
-    enum class Origin {
-        TopLeft,
-        BottomLeft,
-    };
-
-    bool isReferenced() const;
-    bool isDestroyed() const;
-
-    void ref();
-    void unref();
-
-    /**
      * Returns the wl_resource for this ClientBuffer. If the buffer is destroyed, @c null
      * will be returned.
      */
     wl_resource *resource() const;
-
-    /**
-     * Returns the size in the native pixels. The returned size is unaffected by buffer
-     * scale or other surface transforms, e.g. @c wp_viewport.
-     */
-    virtual QSize size() const = 0;
-    virtual bool hasAlphaChannel() const = 0;
-    virtual Origin origin() const = 0;
-
-    void markAsDestroyed(); ///< @internal
 
 protected:
     ClientBuffer(ClientBufferPrivate &dd);

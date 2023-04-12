@@ -42,6 +42,7 @@ target_sources(kwin PRIVATE
     core/colorlut.cpp
     core/colorpipelinestage.cpp
     core/colortransformation.cpp
+    core/graphicsbuffer.cpp
     core/inputbackend.cpp
     core/inputdevice.cpp
     core/output.cpp

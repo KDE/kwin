@@ -232,7 +232,7 @@ void bufferDestroyCallback(wl_listener *listener, void *data)
     ClientBuffer *buffer = displayPrivate->q->clientBufferForResource(static_cast<wl_resource *>(data));
     displayPrivate->unregisterClientBuffer(buffer);
 
-    buffer->markAsDestroyed();
+    buffer->drop();
 }
 
 ClientBufferDestroyListener::ClientBufferDestroyListener(Display *display, ClientBuffer *buffer)
