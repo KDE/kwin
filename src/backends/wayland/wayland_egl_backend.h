@@ -25,6 +25,7 @@ struct gbm_bo;
 namespace KWin
 {
 class GLFramebuffer;
+class GbmGraphicsBuffer;
 
 namespace Wayland
 {
@@ -35,19 +36,18 @@ class WaylandEglBackend;
 class WaylandEglLayerBuffer
 {
 public:
-    WaylandEglLayerBuffer(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, WaylandEglBackend *backend);
+    WaylandEglLayerBuffer(GbmGraphicsBuffer *buffer, WaylandEglBackend *backend);
     ~WaylandEglLayerBuffer();
 
+    GbmGraphicsBuffer *graphicsBuffer() const;
     wl_buffer *buffer() const;
     GLFramebuffer *framebuffer() const;
     std::shared_ptr<GLTexture> texture() const;
     int age() const;
-    gbm_bo *bo() const;
 
 private:
-    WaylandEglBackend *m_backend;
+    GbmGraphicsBuffer *m_graphicsBuffer;
     wl_buffer *m_buffer = nullptr;
-    gbm_bo *m_bo = nullptr;
     std::unique_ptr<GLFramebuffer> m_framebuffer;
     std::shared_ptr<GLTexture> m_texture;
     int m_age = 0;
