@@ -13,7 +13,6 @@
 #include <KWayland/Client/registry.h>
 #include <KWayland/Client/relativepointer.h>
 #include <KWayland/Client/seat.h>
-#include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/subcompositor.h>
 #include <KWayland/Client/xdgdecoration.h>
 #include <KWayland/Client/xdgshell.h>
@@ -202,10 +201,12 @@ WaylandDisplay::~WaylandDisplay()
     m_relativePointerManager.reset();
     m_seat.reset();
     m_xdgDecorationManager.reset();
-    m_shmPool.reset();
     m_xdgShell.reset();
     m_linuxDmabuf.reset();
 
+    if (m_shm) {
+        wl_shm_destroy(m_shm);
+    }
     if (m_registry) {
         wl_registry_destroy(m_registry);
     }
@@ -267,9 +268,9 @@ KWayland::Client::RelativePointerManager *WaylandDisplay::relativePointerManager
     return m_relativePointerManager.get();
 }
 
-KWayland::Client::ShmPool *WaylandDisplay::shmPool() const
+wl_shm *WaylandDisplay::shm() const
 {
-    return m_shmPool.get();
+    return m_shm;
 }
 
 KWayland::Client::Seat *WaylandDisplay::seat() const
@@ -303,8 +304,7 @@ void WaylandDisplay::registry_global(void *data, wl_registry *registry, uint32_t
         display->m_compositor = std::make_unique<KWayland::Client::Compositor>();
         display->m_compositor->setup(static_cast<wl_compositor *>(wl_registry_bind(registry, name, &wl_compositor_interface, std::min(version, 4u))));
     } else if (strcmp(interface, wl_shm_interface.name) == 0) {
-        display->m_shmPool = std::make_unique<KWayland::Client::ShmPool>();
-        display->m_shmPool->setup(static_cast<wl_shm *>(wl_registry_bind(registry, name, &wl_shm_interface, std::min(version, 1u))));
+        display->m_shm = static_cast<wl_shm *>(wl_registry_bind(registry, name, &wl_shm_interface, std::min(version, 1u)));
     } else if (strcmp(interface, wl_seat_interface.name) == 0) {
         display->m_seat = std::make_unique<KWayland::Client::Seat>();
         display->m_seat->setup(static_cast<wl_seat *>(wl_registry_bind(registry, name, &wl_seat_interface, std::min(version, 2u))));

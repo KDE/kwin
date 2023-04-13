@@ -13,67 +13,76 @@
 #include "platformsupport/scenes/qpainter/qpainterbackend.h"
 #include "utils/damagejournal.h"
 
-#include <KWayland/Client/buffer.h>
-
 #include <QImage>
 #include <QObject>
 
-namespace KWayland
-{
-namespace Client
-{
-class ShmPool;
-class Buffer;
-}
-}
+struct wl_buffer;
 
 namespace KWin
 {
 class Output;
+class ShmGraphicsBuffer;
+class ShmGraphicsBufferAllocator;
+
 namespace Wayland
 {
 class WaylandBackend;
+class WaylandDisplay;
 class WaylandOutput;
 class WaylandQPainterBackend;
 
 class WaylandQPainterBufferSlot
 {
 public:
-    WaylandQPainterBufferSlot(QSharedPointer<KWayland::Client::Buffer> buffer);
+    WaylandQPainterBufferSlot(WaylandDisplay *display, ShmGraphicsBuffer *graphicsBuffer);
     ~WaylandQPainterBufferSlot();
 
-    QSharedPointer<KWayland::Client::Buffer> buffer;
+    ShmGraphicsBuffer *graphicsBuffer;
+    wl_buffer *buffer;
     QImage image;
+    void *data = nullptr;
+    int size;
     int age = 0;
+    bool used = false;
+};
+
+class WaylandQPainterSwapchain
+{
+public:
+    WaylandQPainterSwapchain(WaylandOutput *output, const QSize &size, uint32_t format);
+
+    QSize size() const;
+
+    std::shared_ptr<WaylandQPainterBufferSlot> acquire();
+    void release(std::shared_ptr<WaylandQPainterBufferSlot> buffer);
+
+private:
+    std::unique_ptr<ShmGraphicsBufferAllocator> m_allocator;
+    WaylandOutput *m_output;
+    QSize m_size;
+    uint32_t m_format;
+    std::vector<std::shared_ptr<WaylandQPainterBufferSlot>> m_slots;
 };
 
 class WaylandQPainterPrimaryLayer : public OutputLayer
 {
 public:
     WaylandQPainterPrimaryLayer(WaylandOutput *output);
-    ~WaylandQPainterPrimaryLayer() override;
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     quint32 format() const override;
 
-    void remapBuffer();
-
-    WaylandQPainterBufferSlot *back() const;
-
-    WaylandQPainterBufferSlot *acquire();
     void present();
 
     QRegion accumulateDamage(int bufferAge) const;
 
 private:
     WaylandOutput *m_waylandOutput;
-    KWayland::Client::ShmPool *m_pool;
     DamageJournal m_damageJournal;
 
-    std::vector<std::unique_ptr<WaylandQPainterBufferSlot>> m_slots;
-    WaylandQPainterBufferSlot *m_back = nullptr;
-    QSize m_swapchainSize;
+    std::unique_ptr<WaylandQPainterSwapchain> m_swapchain;
+    std::shared_ptr<WaylandQPainterBufferSlot> m_back;
 
     friend class WaylandQPainterBackend;
 };
@@ -84,7 +93,6 @@ class WaylandQPainterCursorLayer : public OutputLayer
 
 public:
     explicit WaylandQPainterCursorLayer(WaylandOutput *output);
-    ~WaylandQPainterCursorLayer() override;
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
@@ -92,7 +100,8 @@ public:
 
 private:
     WaylandOutput *m_output;
-    QImage m_backingStore;
+    std::unique_ptr<WaylandQPainterSwapchain> m_swapchain;
+    std::shared_ptr<WaylandQPainterBufferSlot> m_back;
 };
 
 class WaylandQPainterBackend : public QPainterBackend

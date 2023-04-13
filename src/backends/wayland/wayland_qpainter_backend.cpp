@@ -8,106 +8,149 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "wayland_qpainter_backend.h"
+#include "core/shmgraphicsbufferallocator.h"
 #include "wayland_backend.h"
 #include "wayland_display.h"
 #include "wayland_logging.h"
 #include "wayland_output.h"
 
-#include <KWayland/Client/buffer.h>
-#include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
 
 #include <cmath>
 #include <drm_fourcc.h>
+#include <sys/mman.h>
+#include <wayland-client-protocol.h>
 
 namespace KWin
 {
 namespace Wayland
 {
 
-WaylandQPainterBufferSlot::WaylandQPainterBufferSlot(QSharedPointer<KWayland::Client::Buffer> buffer)
-    : buffer(buffer)
-    , image(buffer->address(), buffer->size().width(), buffer->size().height(), QImage::Format_RGB32)
+static uint32_t drmFormatToShmFormat(uint32_t drmFormat)
 {
-    buffer->setUsed(true);
+    switch (drmFormat) {
+    case DRM_FORMAT_ARGB8888:
+        return WL_SHM_FORMAT_ARGB8888;
+    case DRM_FORMAT_XRGB8888:
+        return WL_SHM_FORMAT_XRGB8888;
+    default:
+        return static_cast<wl_shm_format>(drmFormat);
+    }
+}
+
+static QImage::Format drmFormatToQImageFormat(uint32_t drmFormat)
+{
+    switch (drmFormat) {
+    case DRM_FORMAT_ARGB8888:
+        return QImage::Format_ARGB32;
+    case DRM_FORMAT_XRGB8888:
+        return QImage::Format_RGB32;
+    default:
+        Q_UNREACHABLE();
+    }
+}
+
+WaylandQPainterBufferSlot::WaylandQPainterBufferSlot(WaylandDisplay *display, ShmGraphicsBuffer *graphicsBuffer)
+    : graphicsBuffer(graphicsBuffer)
+{
+    const ShmAttributes *attributes = graphicsBuffer->shmAttributes();
+    size = attributes->size.height() * attributes->stride;
+
+    wl_shm_pool *pool = wl_shm_create_pool(display->shm(), attributes->fd.get(), size);
+    buffer = wl_shm_pool_create_buffer(pool,
+                                       attributes->offset,
+                                       attributes->size.width(),
+                                       attributes->size.height(),
+                                       attributes->stride,
+                                       drmFormatToShmFormat(attributes->format));
+    wl_shm_pool_destroy(pool);
+
+    static const wl_buffer_listener listener = {
+        .release = [](void *userData, wl_buffer *buffer) {
+            WaylandQPainterBufferSlot *slot = static_cast<WaylandQPainterBufferSlot *>(userData);
+            slot->used = false;
+        },
+    };
+    wl_buffer_add_listener(buffer, &listener, this);
+
+    data = mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_SHARED, attributes->fd.get(), attributes->offset);
+    if (data == MAP_FAILED) {
+        qCWarning(KWIN_WAYLAND_BACKEND) << "Failed to map a shared memory buffer";
+        return;
+    }
+
+    image = QImage(static_cast<uchar *>(data), attributes->size.width(), attributes->size.height(), drmFormatToQImageFormat(attributes->format));
 }
 
 WaylandQPainterBufferSlot::~WaylandQPainterBufferSlot()
 {
-    buffer->setUsed(false);
-}
-
-WaylandQPainterPrimaryLayer::WaylandQPainterPrimaryLayer(WaylandOutput *output)
-    : m_waylandOutput(output)
-    , m_pool(output->backend()->display()->shmPool())
-{
-    connect(m_pool, &KWayland::Client::ShmPool::poolResized, this, &WaylandQPainterPrimaryLayer::remapBuffer);
-}
-
-WaylandQPainterPrimaryLayer::~WaylandQPainterPrimaryLayer()
-{
-    m_slots.clear();
-}
-
-void WaylandQPainterPrimaryLayer::remapBuffer()
-{
-    qCDebug(KWIN_WAYLAND_BACKEND) << "Remapped back buffer of surface" << m_waylandOutput->surface();
-
-    const QSize nativeSize(m_waylandOutput->geometry().size() * m_waylandOutput->scale());
-    for (const auto &slot : m_slots) {
-        slot->image = QImage(slot->buffer->address(), nativeSize.width(), nativeSize.height(), QImage::Format_RGB32);
+    if (data) {
+        munmap(data, size);
     }
+
+    wl_buffer_destroy(buffer);
+    graphicsBuffer->drop();
 }
 
-void WaylandQPainterPrimaryLayer::present()
+WaylandQPainterSwapchain::WaylandQPainterSwapchain(WaylandOutput *output, const QSize &size, uint32_t format)
+    : m_allocator(std::make_unique<ShmGraphicsBufferAllocator>())
+    , m_output(output)
+    , m_size(size)
+    , m_format(format)
+{
+}
+
+QSize WaylandQPainterSwapchain::size() const
+{
+    return m_size;
+}
+
+std::shared_ptr<WaylandQPainterBufferSlot> WaylandQPainterSwapchain::acquire()
 {
     for (const auto &slot : m_slots) {
-        if (slot.get() == m_back) {
-            slot->age = 1;
-        } else if (slot->age > 0) {
-            slot->age++;
+        if (!slot->used) {
+            slot->used = true;
+            return slot;
         }
     }
 
-    auto s = m_waylandOutput->surface();
-    s->attachBuffer(m_back->buffer);
-    s->damage(m_damageJournal.lastDamage());
-    s->setScale(std::ceil(m_waylandOutput->scale()));
-    s->commit();
-}
-
-WaylandQPainterBufferSlot *WaylandQPainterPrimaryLayer::back() const
-{
-    return m_back;
-}
-
-WaylandQPainterBufferSlot *WaylandQPainterPrimaryLayer::acquire()
-{
-    const QSize nativeSize(m_waylandOutput->pixelSize());
-    if (m_swapchainSize != nativeSize) {
-        m_swapchainSize = nativeSize;
-        m_slots.clear();
-    }
-
-    for (const auto &slot : m_slots) {
-        if (slot->buffer->isReleased()) {
-            m_back = slot.get();
-            slot->buffer->setReleased(false);
-            return m_back;
-        }
-    }
-
-    auto buffer = m_pool->getBuffer(nativeSize, nativeSize.width() * 4, KWayland::Client::Buffer::Format::RGB32).toStrongRef();
+    ShmGraphicsBuffer *buffer = m_allocator->allocate(m_size, m_format);
     if (!buffer) {
         qCDebug(KWIN_WAYLAND_BACKEND) << "Did not get a new Buffer from Shm Pool";
         return nullptr;
     }
 
-    m_slots.push_back(std::make_unique<WaylandQPainterBufferSlot>(buffer));
-    m_back = m_slots.back().get();
+    auto slot = std::make_shared<WaylandQPainterBufferSlot>(m_output->backend()->display(), buffer);
+    m_slots.push_back(slot);
 
-    //    qCDebug(KWIN_WAYLAND_BACKEND) << "Created a new back buffer for output surface" << m_waylandOutput->surface();
-    return m_back;
+    return slot;
+}
+
+void WaylandQPainterSwapchain::release(std::shared_ptr<WaylandQPainterBufferSlot> buffer)
+{
+    for (const auto &slot : m_slots) {
+        if (slot == buffer) {
+            slot->age = 1;
+        } else if (slot->age > 0) {
+            slot->age++;
+        }
+    }
+}
+
+WaylandQPainterPrimaryLayer::WaylandQPainterPrimaryLayer(WaylandOutput *output)
+    : m_waylandOutput(output)
+{
+}
+
+void WaylandQPainterPrimaryLayer::present()
+{
+    auto s = m_waylandOutput->surface();
+    s->attachBuffer(m_back->buffer);
+    s->damage(m_damageJournal.lastDamage());
+    s->setScale(std::ceil(m_waylandOutput->scale()));
+    s->commit();
+
+    m_swapchain->release(m_back);
 }
 
 QRegion WaylandQPainterPrimaryLayer::accumulateDamage(int bufferAge) const
@@ -117,10 +160,19 @@ QRegion WaylandQPainterPrimaryLayer::accumulateDamage(int bufferAge) const
 
 std::optional<OutputLayerBeginFrameInfo> WaylandQPainterPrimaryLayer::beginFrame()
 {
-    WaylandQPainterBufferSlot *slot = acquire();
+    const QSize nativeSize(m_waylandOutput->pixelSize());
+    if (!m_swapchain || m_swapchain->size() != nativeSize) {
+        m_swapchain = std::make_unique<WaylandQPainterSwapchain>(m_waylandOutput, nativeSize, DRM_FORMAT_XRGB8888);
+    }
+
+    m_back = m_swapchain->acquire();
+    if (!m_back) {
+        return std::nullopt;
+    }
+
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(&slot->image),
-        .repaint = accumulateDamage(slot->age),
+        .renderTarget = RenderTarget(&m_back->image),
+        .repaint = accumulateDamage(m_back->age),
     };
 }
 
@@ -140,28 +192,29 @@ WaylandQPainterCursorLayer::WaylandQPainterCursorLayer(WaylandOutput *output)
 {
 }
 
-WaylandQPainterCursorLayer::~WaylandQPainterCursorLayer()
-{
-}
-
 std::optional<OutputLayerBeginFrameInfo> WaylandQPainterCursorLayer::beginFrame()
 {
     const auto tmp = size().expandedTo(QSize(64, 64));
     const QSize bufferSize(std::ceil(tmp.width()), std::ceil(tmp.height()));
-    if (m_backingStore.size() != bufferSize) {
-        m_backingStore = QImage(bufferSize, QImage::Format_ARGB32_Premultiplied);
+    if (!m_swapchain || m_swapchain->size() != bufferSize) {
+        m_swapchain = std::make_unique<WaylandQPainterSwapchain>(m_output, bufferSize, DRM_FORMAT_ARGB8888);
+    }
+
+    m_back = m_swapchain->acquire();
+    if (!m_back) {
+        return std::nullopt;
     }
 
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(&m_backingStore),
+        .renderTarget = RenderTarget(&m_back->image),
         .repaint = infiniteRegion(),
     };
 }
 
 bool WaylandQPainterCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    KWayland::Client::Buffer::Ptr buffer = m_output->backend()->display()->shmPool()->createBuffer(m_backingStore);
-    m_output->cursor()->update(*buffer.lock(), scale(), hotspot().toPoint());
+    m_output->cursor()->update(m_back->buffer, scale(), hotspot().toPoint());
+    m_swapchain->release(m_back);
     return true;
 }
 

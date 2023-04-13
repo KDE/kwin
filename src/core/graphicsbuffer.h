@@ -10,6 +10,7 @@
 #include "utils/filedescriptor.h"
 
 #include <QObject>
+#include <QSize>
 
 namespace KWin
 {
@@ -25,6 +26,15 @@ struct DmaBufAttributes
     FileDescriptor fd[4];
     int offset[4] = {0, 0, 0, 0};
     int pitch[4] = {0, 0, 0, 0};
+};
+
+struct ShmAttributes
+{
+    FileDescriptor fd;
+    int stride;
+    off_t offset;
+    QSize size;
+    uint32_t format;
 };
 
 /**
@@ -52,6 +62,9 @@ public:
     virtual bool hasAlphaChannel() const = 0;
 
     virtual const DmaBufAttributes *dmabufAttributes() const;
+    virtual const ShmAttributes *shmAttributes() const;
+
+    static bool alphaChannelFromDrmFormat(uint32_t format);
 
 Q_SIGNALS:
     void released();

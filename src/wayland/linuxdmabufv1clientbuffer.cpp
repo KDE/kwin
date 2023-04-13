@@ -327,43 +327,6 @@ void LinuxDmaBufV1ClientBufferIntegration::setSupportedFormatsWithModifiers(cons
     }
 }
 
-static bool testAlphaChannel(uint32_t drmFormat)
-{
-    switch (drmFormat) {
-    case DRM_FORMAT_ARGB4444:
-    case DRM_FORMAT_ABGR4444:
-    case DRM_FORMAT_RGBA4444:
-    case DRM_FORMAT_BGRA4444:
-
-    case DRM_FORMAT_ARGB1555:
-    case DRM_FORMAT_ABGR1555:
-    case DRM_FORMAT_RGBA5551:
-    case DRM_FORMAT_BGRA5551:
-
-    case DRM_FORMAT_ARGB8888:
-    case DRM_FORMAT_ABGR8888:
-    case DRM_FORMAT_RGBA8888:
-    case DRM_FORMAT_BGRA8888:
-
-    case DRM_FORMAT_ARGB2101010:
-    case DRM_FORMAT_ABGR2101010:
-    case DRM_FORMAT_RGBA1010102:
-    case DRM_FORMAT_BGRA1010102:
-
-    case DRM_FORMAT_XRGB8888_A8:
-    case DRM_FORMAT_XBGR8888_A8:
-    case DRM_FORMAT_RGBX8888_A8:
-    case DRM_FORMAT_BGRX8888_A8:
-    case DRM_FORMAT_RGB888_A8:
-    case DRM_FORMAT_BGR888_A8:
-    case DRM_FORMAT_RGB565_A8:
-    case DRM_FORMAT_BGR565_A8:
-        return true;
-    default:
-        return false;
-    }
-}
-
 void LinuxDmaBufV1ClientBuffer::buffer_destroy_resource(wl_resource *resource)
 {
     if (LinuxDmaBufV1ClientBuffer *buffer = LinuxDmaBufV1ClientBuffer::get(resource)) {
@@ -384,7 +347,7 @@ const struct wl_buffer_interface LinuxDmaBufV1ClientBuffer::implementation = {
 LinuxDmaBufV1ClientBuffer::LinuxDmaBufV1ClientBuffer(KWin::DmaBufAttributes &&attrs)
 {
     m_attrs = std::move(attrs);
-    m_hasAlphaChannel = testAlphaChannel(m_attrs.format);
+    m_hasAlphaChannel = alphaChannelFromDrmFormat(m_attrs.format);
 }
 
 void LinuxDmaBufV1ClientBuffer::initialize(wl_resource *resource)

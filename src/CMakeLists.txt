@@ -58,6 +58,7 @@ target_sources(kwin PRIVATE
     core/session_consolekit.cpp
     core/session_logind.cpp
     core/session_noop.cpp
+    core/shmgraphicsbufferallocator.cpp
     cursor.cpp
     cursordelegate_opengl.cpp
     cursordelegate_qpainter.cpp
