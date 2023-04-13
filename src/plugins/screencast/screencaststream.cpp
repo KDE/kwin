@@ -403,8 +403,8 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
     QRegion damagedRegion = _damagedRegion;
     Q_ASSERT(!m_stopped);
 
-    if (videoFormat.framerate.num != 0 && !m_lastSent.isNull()) {
-        auto frameInterval = (1000. * videoFormat.framerate.denom / videoFormat.framerate.num);
+    if (videoFormat.max_framerate.num != 0 && !m_lastSent.isNull()) {
+        auto frameInterval = (1000. * videoFormat.max_framerate.denom / videoFormat.max_framerate.num);
         auto lastSentAgo = m_lastSent.msecsTo(QDateTime::currentDateTimeUtc());
         if (lastSentAgo < frameInterval) {
             m_pendingDamages |= damagedRegion;
@@ -680,6 +680,7 @@ QVector<const spa_pod *> ScreenCastStream::buildFormats(bool fixate, char buffer
 {
     const auto format = m_source->hasAlphaChannel() ? SPA_VIDEO_FORMAT_BGRA : SPA_VIDEO_FORMAT_BGR;
     spa_pod_builder podBuilder = SPA_POD_BUILDER_INIT(buffer, 2048);
+    spa_fraction defFramerate = SPA_FRACTION(0, 1);
     spa_fraction minFramerate = SPA_FRACTION(1, 1);
     spa_fraction maxFramerate = SPA_FRACTION(m_source->refreshRate() / 1000, 1);
 
@@ -688,12 +689,12 @@ QVector<const spa_pod *> ScreenCastStream::buildFormats(bool fixate, char buffer
     QVector<const spa_pod *> params;
     params.reserve(fixate + m_hasDmaBuf + 1);
     if (fixate) {
-        params.append(buildFormat(&podBuilder, SPA_VIDEO_FORMAT_BGRA, &resolution, &maxFramerate, &minFramerate, &maxFramerate, {m_dmabufParams->modifier}, SPA_POD_PROP_FLAG_MANDATORY));
+        params.append(buildFormat(&podBuilder, SPA_VIDEO_FORMAT_BGRA, &resolution, &defFramerate, &minFramerate, &maxFramerate, {m_dmabufParams->modifier}, SPA_POD_PROP_FLAG_MANDATORY));
     }
     if (m_hasDmaBuf) {
-        params.append(buildFormat(&podBuilder, SPA_VIDEO_FORMAT_BGRA, &resolution, &maxFramerate, &minFramerate, &maxFramerate, m_modifiers, SPA_POD_PROP_FLAG_MANDATORY | SPA_POD_PROP_FLAG_DONT_FIXATE));
+        params.append(buildFormat(&podBuilder, SPA_VIDEO_FORMAT_BGRA, &resolution, &defFramerate, &minFramerate, &maxFramerate, m_modifiers, SPA_POD_PROP_FLAG_MANDATORY | SPA_POD_PROP_FLAG_DONT_FIXATE));
     }
-    params.append(buildFormat(&podBuilder, format, &resolution, &maxFramerate, &minFramerate, &maxFramerate, {}, SPA_POD_PROP_FLAG_MANDATORY | SPA_POD_PROP_FLAG_DONT_FIXATE));
+    params.append(buildFormat(&podBuilder, format, &resolution, &defFramerate, &minFramerate, &maxFramerate, {}, SPA_POD_PROP_FLAG_MANDATORY | SPA_POD_PROP_FLAG_DONT_FIXATE));
     return params;
 }
 
@@ -713,6 +714,7 @@ spa_pod *ScreenCastStream::buildFormat(struct spa_pod_builder *b, enum spa_video
                             SPA_POD_Fraction(minFramerate),
                             SPA_POD_Fraction(maxFramerate)),
                         0);
+
     if (format == SPA_VIDEO_FORMAT_BGRA) {
         /* announce equivalent format without alpha */
         spa_pod_builder_add(b, SPA_FORMAT_VIDEO_format, SPA_POD_CHOICE_ENUM_Id(3, format, format, SPA_VIDEO_FORMAT_BGRx), 0);
