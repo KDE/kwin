@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-17 02:32+0000\n"
-"PO-Revision-Date: 2023-02-08 06:09+0100\n"
+"PO-Revision-Date: 2023-04-12 06:14+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -865,7 +865,7 @@ msgstr "&ორმაგი წკაპი:"
 #: mouse.ui:36
 #, kde-format
 msgid "Behavior on <em>double</em> click into the titlebar."
-msgstr ""
+msgstr "<em>ორმაგი</em> წკაპის ქცევა ფანჯრის სათაურის ზოლზე."
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-12 02:13+0000\n"
+"POT-Creation-Date: 2023-04-13 02:16+0000\n"
 "PO-Revision-Date: 2023-02-20 21:35+0100\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
@@ -434,7 +434,7 @@ msgstr "Plassering"
 #: rulesmodel.cpp:436 rulesmodel.cpp:442 rulesmodel.cpp:448 rulesmodel.cpp:453
 #: rulesmodel.cpp:461 rulesmodel.cpp:467 rulesmodel.cpp:486 rulesmodel.cpp:502
 #: rulesmodel.cpp:507 rulesmodel.cpp:512 rulesmodel.cpp:517 rulesmodel.cpp:522
-#: rulesmodel.cpp:531 rulesmodel.cpp:544 rulesmodel.cpp:549 rulesmodel.cpp:554
+#: rulesmodel.cpp:531 rulesmodel.cpp:546 rulesmodel.cpp:551 rulesmodel.cpp:556
 #, kde-format
 msgid "Size & Position"
 msgstr "Storleik og plassering"
@@ -505,40 +505,42 @@ msgctxt "@info:tooltip"
 msgid ""
 "Some applications can set their own geometry, overriding the window manager "
 "preferences. Setting this property overrides their placement requests.<nl/"
-">This affects <interface>Size</interface> and <interface>Position</"
+"><nl/>This affects <interface>Size</interface> and <interface>Position</"
 "interface> but not <interface>Maximized</interface> or "
-"<interface>Fullscreen</interface> states.<nl/>Note that the position can "
-"also be used to map to a different <interface>Screen</interface>"
+"<interface>Fullscreen</interface> states.<nl/><nl/>Note that the position "
+"can also be used to map to a different <interface>Screen</interface>"
 msgstr ""
 
-#: rulesmodel.cpp:544
+#: rulesmodel.cpp:546
 #, kde-format
 msgid "Minimum Size"
 msgstr "Minste storleik"
 
-#: rulesmodel.cpp:549
+#: rulesmodel.cpp:551
 #, kde-format
 msgid "Maximum Size"
 msgstr "Største storleik"
 
-#: rulesmodel.cpp:554
+#: rulesmodel.cpp:556
 #, kde-format
 msgid "Obey geometry restrictions"
 msgstr "Følg geometriavgrensingar"
 
-#: rulesmodel.cpp:556
-#, fuzzy, kde-format
+#: rulesmodel.cpp:558
+#, fuzzy, kde-kuit-format
 #| msgid ""
 #| "Eg. terminals or video players can ask to keep a certain aspect ratio\n"
 #| "or only grow by values larger than one\n"
 #| "(eg. by the dimensions of one character).\n"
 #| "This may be pointless and the restriction prevents arbitrary dimensions\n"
 #| "like your complete screen area."
+msgctxt "@info:tooltip"
 msgid ""
-"Eg. terminals or video players can ask to keep a certain aspect ratio or "
-"only grow by values larger than one (eg. by the dimensions of one "
-"character). This may be pointless and the restriction prevents arbitrary "
-"dimensions like your complete screen area."
+"Some apps like video players or terminals can ask KWin to constrain them to "
+"certain aspect ratios or only grow by values larger than the dimensions of "
+"one character. Use this property to ignore such restrictions and allow those "
+"windows to be resized to arbitrary sizes.<nl/><nl/>This can be helpful for "
+"windows that can't quite fit the full screen area when maximized."
 msgstr ""
 "For eksempel kan terminalvindauge eller videospelarar be om\n"
 "eit fast høgd/breidd-forhold, eller berre endra storleiken i\n"
@@ -546,212 +548,200 @@ msgstr ""
 "Dette kan vera formålslaust, og avgrensinga hindrar vilkårlege\n"
 "dimensjonar, som for eksempel heile skjermområdet."
 
-#: rulesmodel.cpp:565
+#: rulesmodel.cpp:569
 #, kde-format
 msgid "Keep above other windows"
 msgstr "Hald over andre vindauge"
 
-#: rulesmodel.cpp:565 rulesmodel.cpp:570 rulesmodel.cpp:575 rulesmodel.cpp:581
-#: rulesmodel.cpp:587 rulesmodel.cpp:593
+#: rulesmodel.cpp:569 rulesmodel.cpp:574 rulesmodel.cpp:579 rulesmodel.cpp:585
+#: rulesmodel.cpp:591 rulesmodel.cpp:597
 #, kde-format
 msgid "Arrangement & Access"
 msgstr "Ordning og tilgang"
 
-#: rulesmodel.cpp:570
+#: rulesmodel.cpp:574
 #, kde-format
 msgid "Keep below other windows"
 msgstr "Hald under andre vindauge"
 
-#: rulesmodel.cpp:575
+#: rulesmodel.cpp:579
 #, kde-format
 msgid "Skip taskbar"
 msgstr "Hopp over oppgåvelinje"
 
-#: rulesmodel.cpp:577
-#, kde-format
-msgid "Window shall (not) appear in the taskbar."
-msgstr "Vindauget skal (ikkje) visast i oppgåvelinja."
-
 #: rulesmodel.cpp:581
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Controls whether or not the window appears in the Task Manager."
+msgstr ""
+
+#: rulesmodel.cpp:585
 #, kde-format
 msgid "Skip pager"
 msgstr "Hopp over sidevekslar"
 
-#: rulesmodel.cpp:583
-#, kde-format
-msgid "Window shall (not) appear in the manager for virtual desktops"
-msgstr "Vindauget skal (ikkje) visast i handsamaren for virtuelle skrivebord"
-
 #: rulesmodel.cpp:587
+#, kde-format
+msgctxt "@info:tooltip"
+msgid ""
+"Controls whether or not the window appears in the Virtual Desktop manager."
+msgstr ""
+
+#: rulesmodel.cpp:591
 #, kde-format
 msgid "Skip switcher"
 msgstr "Hopp over vekslar"
 
-#: rulesmodel.cpp:589
-#, kde-format
-msgid "Window shall (not) appear in the Alt+Tab list"
-msgstr "Vindauget skal (ikkje) visast i «Alt + Tab»-lista"
-
 #: rulesmodel.cpp:593
+#, kde-kuit-format
+msgctxt "@info:tooltip"
+msgid ""
+"Controls whether or not the window appears in the <shortcut>Alt+Tab</"
+"shortcut> window list."
+msgstr ""
+
+#: rulesmodel.cpp:597
 #, kde-format
 msgid "Shortcut"
 msgstr "Snøggtast"
 
-#: rulesmodel.cpp:599
+#: rulesmodel.cpp:603
 #, kde-format
 msgid "No titlebar and frame"
 msgstr "Inga tittellinje og ramme"
 
-#: rulesmodel.cpp:599 rulesmodel.cpp:604 rulesmodel.cpp:610 rulesmodel.cpp:615
-#: rulesmodel.cpp:621 rulesmodel.cpp:632 rulesmodel.cpp:643 rulesmodel.cpp:651
-#: rulesmodel.cpp:664 rulesmodel.cpp:669 rulesmodel.cpp:675 rulesmodel.cpp:680
+#: rulesmodel.cpp:603 rulesmodel.cpp:608 rulesmodel.cpp:614 rulesmodel.cpp:619
+#: rulesmodel.cpp:625 rulesmodel.cpp:652 rulesmodel.cpp:680 rulesmodel.cpp:686
+#: rulesmodel.cpp:698 rulesmodel.cpp:703 rulesmodel.cpp:709 rulesmodel.cpp:714
 #, kde-format
 msgid "Appearance & Fixes"
 msgstr "Utsjånad og fiksar"
 
-#: rulesmodel.cpp:604
+#: rulesmodel.cpp:608
 #, kde-format
 msgid "Titlebar color scheme"
 msgstr "Fargeoppsett for tittellinje"
 
-#: rulesmodel.cpp:610
+#: rulesmodel.cpp:614
 #, kde-format
 msgid "Active opacity"
 msgstr "Aktiv tettleik"
 
-#: rulesmodel.cpp:615
+#: rulesmodel.cpp:619
 #, kde-format
 msgid "Inactive opacity"
 msgstr "Inaktiv tettleik"
 
-#: rulesmodel.cpp:621
+#: rulesmodel.cpp:625
 #, kde-format
 msgid "Focus stealing prevention"
 msgstr "Førebygg fokus-steling"
 
-#: rulesmodel.cpp:623
-#, fuzzy, kde-format
-#| msgid ""
-#| "KWin tries to prevent windows from taking the focus\n"
-#| "(\"activate\") while you're working in another window,\n"
-#| "but this may sometimes fail or superact.\n"
-#| "\"None\" will unconditionally allow this window to get the focus while\n"
-#| "\"Extreme\" will completely prevent it from taking the focus."
+#: rulesmodel.cpp:627
+#, kde-kuit-format
+msgctxt "@info:tooltip"
 msgid ""
-"KWin tries to prevent windows from taking the focus (\"activate\") while "
-"you're working in another window, but this may sometimes fail or superact. "
-"\"None\" will unconditionally allow this window to get the focus while "
-"\"Extreme\" will completely prevent it from taking the focus."
+"KWin tries to prevent windows that were opened without direct user action "
+"from raising themselves and taking focus while you're currently interacting "
+"with another window. This property can be used to change the level of focus "
+"stealing prevention applied to individual windows and apps.<nl/><nl/>Here's "
+"what will happen to a window opened without your direct action at each level "
+"of focus stealing prevention:<nl/><list><item><emphasis strong='true'>None:</"
+"emphasis> The window will be raised and focused.</item><item><emphasis "
+"strong='true'>Low:</emphasis> Focus stealing prevention will be applied, but "
+"in the case of a situation KWin considers ambiguous, the window will be "
+"raised and focused.</item><item><emphasis strong='true'>Normal:</emphasis> "
+"Focus stealing prevention will be applied, but  in the case of a situation "
+"KWin considers ambiguous, the window will <emphasis>not</emphasis> be raised "
+"and focused.</item><item><emphasis strong='true'>High:</emphasis> The window "
+"will only be raised and focused if it belongs to the same app as the "
+"currently-focused window.</item><item><emphasis strong='true'>Extreme:</"
+"emphasis> The window will never be raised and focused.</item></list>"
 msgstr ""
-"KWin prøver å hindra vindauge i å ta fokus («aktivera»)\n"
-"mens du arbeider i eit anna vindauge, men dette kan\n"
-"nokon gonger svikta eller vera overivrig.\n"
-"«Ingen» vil tillata utan vidare at dette vindauget tek fokus,\n"
-"mens «Ekstrem» vil fullt hindra det i å ta fokus."
 
-#: rulesmodel.cpp:632
+#: rulesmodel.cpp:652
 #, kde-format
 msgid "Focus protection"
 msgstr "Fokusvern"
 
-#: rulesmodel.cpp:634
-#, fuzzy, kde-format
-#| msgid ""
-#| "This controls the focus protection of the currently active window.\n"
-#| "None will always give the focus away,\n"
-#| "Extreme will keep it.\n"
-#| "Otherwise it's interleaved with the stealing prevention\n"
-#| "assigned to the window that wants the focus."
+#: rulesmodel.cpp:654
+#, kde-kuit-format
+msgctxt "@info:tooltip"
 msgid ""
-"This controls the focus protection of the currently active window. None will "
-"always give the focus away, Extreme will keep it. Otherwise it's interleaved "
-"with the stealing prevention assigned to the window that wants the focus."
+"This property controls the focus protection level of the currently active "
+"window. It is used to override the focus stealing prevention applied to new "
+"windows that are opened without your direct action.<nl/><nl/>Here's what "
+"happens to new windows that are opened without your direct action at each "
+"level of focus protection while the window with this property applied to it "
+"has focus:<nl/><list><item><emphasis strong='true'>None</emphasis>: Newly-"
+"opened windows always raise themselves and take focus.</item><item><emphasis "
+"strong='true'>Low:</emphasis> Focus stealing prevention will be applied to "
+"the newly-opened window, but in the case of a situation KWin considers "
+"ambiguous, the window will be raised and focused.</item><item><emphasis "
+"strong='true'>Normal:</emphasis> Focus stealing prevention will be applied "
+"to the newly-opened window, but in the case of a situation KWin considers "
+"ambiguous, the window will <emphasis>not</emphasis> be raised and focused.</"
+"item><item><emphasis strong='true'>High:</emphasis> Newly-opened windows "
+"will only raise themselves and take focus if they belongs to the same app as "
+"the currently-focused window.</item><item><emphasis strong='true'>Extreme:</"
+"emphasis> Newly-opened windows never raise themselves and take focus.</"
+"item></list>"
 msgstr ""
-"Dette kontrollerer førebygginga av fokussteling for det aktive vindauget.\n"
-"«Ingen» vil alltid tillata fokussteling.\n"
-"«Ekstrem» vil alltid tillata det.\n"
-"Elles vert det blanda med fokusstelingseigenskapane til\n"
-"vindauget som ønskjer fokus."
 
-#: rulesmodel.cpp:643
+#: rulesmodel.cpp:680
 #, kde-format
 msgid "Accept focus"
 msgstr "Ta imot fokus"
 
-#: rulesmodel.cpp:645
-#, fuzzy, kde-format
-#| msgid ""
-#| "Windows may prevent to get the focus (activate) when being clicked.\n"
-#| "On the other hand you might wish to prevent a window\n"
-#| "from getting focused on a mouse click."
-msgid ""
-"Windows may prevent to get the focus (activate) when being clicked. On the "
-"other hand you might wish to prevent a window from getting focused on a "
-"mouse click."
+#: rulesmodel.cpp:682
+#, kde-format
+msgid "Controls whether or not the window becomes focused when clicked."
 msgstr ""
-"Vindauge kan hindrast å ta fokus (aktiverast) når dei vert trykte på.\n"
-"Du kan òg ønskja å hindra eit vindauge i å fokuserast på ved\n"
-"eit museklikk."
 
-#: rulesmodel.cpp:651
+#: rulesmodel.cpp:686
 #, kde-format
 msgid "Ignore global shortcuts"
 msgstr "Blokker globale snøggtastar"
 
-#: rulesmodel.cpp:653
-#, fuzzy, kde-format
-#| msgid ""
-#| "When used, a window will receive\n"
-#| "all keyboard inputs while it is active, including Alt+Tab etc.\n"
-#| "This is especially interesting for emulators or virtual machines.\n"
-#| "\n"
-#| "Be warned:\n"
-#| "you won't be able to Alt+Tab out of the window\n"
-#| "nor use any other global shortcut (such as Alt+F2 to show KRunner)\n"
-#| "while it's active!"
+#: rulesmodel.cpp:688
+#, kde-kuit-format
+msgctxt "@info:tooltip"
 msgid ""
-"When used, a window will receive all keyboard inputs while it is active, "
-"including Alt+Tab etc. This is especially interesting for emulators or "
-"virtual machines. \n"
-"Be warned: you won't be able to Alt+Tab out of the window nor use any other "
-"global shortcut (such as Alt+F2 to show KRunner) while it's active!"
+"Use this property to prevent global keyboard shortcuts from working while "
+"the window is focused. This can be useful for apps like emulators or virtual "
+"machines that handle some of the same shortcuts themselves.<nl/><nl/>Note "
+"that you won't be able to <shortcut>Alt+Tab</shortcut> out of the window or "
+"use any other global shortcuts such as <shortcut>Alt+Space</shortcut> to "
+"activate KRunner."
 msgstr ""
-"Når dette vert brukt, tek imot eit vindauge\n"
-"alle inntastinger mens det er aktivt, også «Alt + Tab» og liknande.\n"
-"Dette er spesielt interessant for emulatorar og virtuelle maskiner.\n"
-"\n"
-"Men merk:\n"
-"Du kan ikkje forlata vindauget med «Alt + Tab» og heller ikkje\n"
-"bruka andre globale snarvegar (som «Alt + F2» å visa køyraren)\n"
-"når dette vert brukt."
 
-#: rulesmodel.cpp:664
+#: rulesmodel.cpp:698
 #, kde-format
 msgid "Closeable"
 msgstr "Lukkbart"
 
-#: rulesmodel.cpp:669
+#: rulesmodel.cpp:703
 #, kde-format
 msgid "Set window type"
 msgstr "Vel vindaugstype"
 
 # Eller «skrivebordsfilnamn»?
-#: rulesmodel.cpp:675
+#: rulesmodel.cpp:709
 #, kde-format
 msgid "Desktop file name"
 msgstr "Namn på skrivebordsfil"
 
-#: rulesmodel.cpp:680
+#: rulesmodel.cpp:714
 #, kde-format
 msgid "Block compositing"
 msgstr "Blokksamansetjing"
 
-#: rulesmodel.cpp:732
+#: rulesmodel.cpp:766
 #, kde-format
 msgid "Window class not available"
 msgstr "Vindaugsklassen er ikkje tilgjengeleg"
 
-#: rulesmodel.cpp:733
+#: rulesmodel.cpp:767
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -766,165 +756,254 @@ msgstr ""
 "ut frå andre eigenskapar, som vindaugstittelen.<nl/><nl/>Vurder òg å melda "
 "frå om denne feilen til utviklarane av programmet."
 
-#: rulesmodel.cpp:767
+#: rulesmodel.cpp:801
 #, kde-format
 msgid "All Window Types"
 msgstr "Alle vindaugstypar"
 
-#: rulesmodel.cpp:768
+#: rulesmodel.cpp:802
 #, kde-format
 msgid "Normal Window"
 msgstr "Normalt vindauge"
 
-#: rulesmodel.cpp:769
+#: rulesmodel.cpp:803
 #, kde-format
 msgid "Dialog Window"
 msgstr "Dialogvindauge"
 
-#: rulesmodel.cpp:770
+#: rulesmodel.cpp:804
 #, kde-format
 msgid "Utility Window"
 msgstr "Verktøyvindauge"
 
-#: rulesmodel.cpp:771
+#: rulesmodel.cpp:805
 #, kde-format
 msgid "Dock (panel)"
 msgstr "Dokkpanel"
 
-#: rulesmodel.cpp:772
+#: rulesmodel.cpp:806
 #, kde-format
 msgid "Toolbar"
 msgstr "Verktøylinje"
 
-#: rulesmodel.cpp:773
+#: rulesmodel.cpp:807
 #, kde-format
 msgid "Torn-Off Menu"
 msgstr "Avriven meny"
 
-#: rulesmodel.cpp:774
+#: rulesmodel.cpp:808
 #, kde-format
 msgid "Splash Screen"
 msgstr "Velkomstbilete"
 
-#: rulesmodel.cpp:775
+#: rulesmodel.cpp:809
 #, kde-format
 msgid "Desktop"
 msgstr "Skrivebord"
 
 #. i18n("Unmanaged Window")},  deprecated
-#: rulesmodel.cpp:777
+#: rulesmodel.cpp:811
 #, kde-format
 msgid "Standalone Menubar"
 msgstr "Frittståande menylinje"
 
-#: rulesmodel.cpp:778
+#: rulesmodel.cpp:812
 #, kde-format
 msgid "On Screen Display"
 msgstr "På skjermmelding"
 
-#: rulesmodel.cpp:788
+#: rulesmodel.cpp:822
 #, kde-format
 msgid "All Desktops"
 msgstr "Alle skrivebord"
 
-#: rulesmodel.cpp:790
+#: rulesmodel.cpp:824
 #, kde-format
 msgctxt "@info:tooltip in the virtual desktop list"
 msgid "Make the window available on all desktops"
 msgstr "Vis vindauget på alle skriveborda"
 
-#: rulesmodel.cpp:809
+#: rulesmodel.cpp:843
 #, kde-format
 msgid "All Activities"
 msgstr "Alle aktivitetar"
 
-#: rulesmodel.cpp:811
+#: rulesmodel.cpp:845
 #, kde-format
 msgctxt "@info:tooltip in the activity list"
 msgid "Make the window available on all activities"
 msgstr "Tilgjengeleg i alle aktivitetar"
 
-#: rulesmodel.cpp:832
+#: rulesmodel.cpp:866
 #, kde-format
 msgid "Default"
 msgstr "Standard"
 
-#: rulesmodel.cpp:833
+#: rulesmodel.cpp:867
 #, kde-format
 msgid "No Placement"
 msgstr "Inga plassering"
 
-#: rulesmodel.cpp:834
+#: rulesmodel.cpp:868
 #, kde-format
 msgid "Minimal Overlapping"
 msgstr "Minimalt overlapp"
 
-#: rulesmodel.cpp:835
+#: rulesmodel.cpp:869
 #, kde-format
 msgid "Maximized"
 msgstr "Maksimert"
 
-#: rulesmodel.cpp:836
+#: rulesmodel.cpp:870
 #, kde-format
 msgid "Centered"
 msgstr "Sentrert"
 
-#: rulesmodel.cpp:837
+#: rulesmodel.cpp:871
 #, kde-format
 msgid "Random"
 msgstr "Vilkårleg"
 
-#: rulesmodel.cpp:838
+#: rulesmodel.cpp:872
 #, kde-format
 msgid "In Top-Left Corner"
 msgstr "Oppe til venstre"
 
-#: rulesmodel.cpp:839
+#: rulesmodel.cpp:873
 #, kde-format
 msgid "Under Mouse"
 msgstr "Under musa"
 
-#: rulesmodel.cpp:840
+#: rulesmodel.cpp:874
 #, kde-format
 msgid "On Main Window"
 msgstr "På hovudvindauget"
 
-#: rulesmodel.cpp:847
+#: rulesmodel.cpp:881
 #, kde-format
 msgid "None"
 msgstr "Ingen"
 
-#: rulesmodel.cpp:848
+#: rulesmodel.cpp:882
 #, kde-format
 msgid "Low"
 msgstr "Låg"
 
-#: rulesmodel.cpp:849
+#: rulesmodel.cpp:883
 #, kde-format
 msgid "Normal"
 msgstr "Normal"
 
-#: rulesmodel.cpp:850
+#: rulesmodel.cpp:884
 #, kde-format
 msgid "High"
 msgstr "Høg"
 
-#: rulesmodel.cpp:851
+#: rulesmodel.cpp:885
 #, kde-format
 msgid "Extreme"
 msgstr "Ekstrem"
 
-#: rulesmodel.cpp:894
+#: rulesmodel.cpp:928
 #, kde-format
 msgid "Unmanaged window"
 msgstr "Uhandsama vindauge"
 
-#: rulesmodel.cpp:895
+#: rulesmodel.cpp:929
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
 "Klarte ikkje oppdaga vindaugs­eigenskapar. Vindauget vert ikkje handsama av "
 "KWin."
+
+#~ msgid "Window shall (not) appear in the taskbar."
+#~ msgstr "Vindauget skal (ikkje) visast i oppgåvelinja."
+
+#~ msgid "Window shall (not) appear in the manager for virtual desktops"
+#~ msgstr ""
+#~ "Vindauget skal (ikkje) visast i handsamaren for virtuelle skrivebord"
+
+#~ msgid "Window shall (not) appear in the Alt+Tab list"
+#~ msgstr "Vindauget skal (ikkje) visast i «Alt + Tab»-lista"
+
+#, fuzzy
+#~| msgid ""
+#~| "KWin tries to prevent windows from taking the focus\n"
+#~| "(\"activate\") while you're working in another window,\n"
+#~| "but this may sometimes fail or superact.\n"
+#~| "\"None\" will unconditionally allow this window to get the focus while\n"
+#~| "\"Extreme\" will completely prevent it from taking the focus."
+#~ msgid ""
+#~ "KWin tries to prevent windows from taking the focus (\"activate\") while "
+#~ "you're working in another window, but this may sometimes fail or "
+#~ "superact. \"None\" will unconditionally allow this window to get the "
+#~ "focus while \"Extreme\" will completely prevent it from taking the focus."
+#~ msgstr ""
+#~ "KWin prøver å hindra vindauge i å ta fokus («aktivera»)\n"
+#~ "mens du arbeider i eit anna vindauge, men dette kan\n"
+#~ "nokon gonger svikta eller vera overivrig.\n"
+#~ "«Ingen» vil tillata utan vidare at dette vindauget tek fokus,\n"
+#~ "mens «Ekstrem» vil fullt hindra det i å ta fokus."
+
+#, fuzzy
+#~| msgid ""
+#~| "This controls the focus protection of the currently active window.\n"
+#~| "None will always give the focus away,\n"
+#~| "Extreme will keep it.\n"
+#~| "Otherwise it's interleaved with the stealing prevention\n"
+#~| "assigned to the window that wants the focus."
+#~ msgid ""
+#~ "This controls the focus protection of the currently active window. None "
+#~ "will always give the focus away, Extreme will keep it. Otherwise it's "
+#~ "interleaved with the stealing prevention assigned to the window that "
+#~ "wants the focus."
+#~ msgstr ""
+#~ "Dette kontrollerer førebygginga av fokussteling for det aktive "
+#~ "vindauget.\n"
+#~ "«Ingen» vil alltid tillata fokussteling.\n"
+#~ "«Ekstrem» vil alltid tillata det.\n"
+#~ "Elles vert det blanda med fokusstelingseigenskapane til\n"
+#~ "vindauget som ønskjer fokus."
+
+#, fuzzy
+#~| msgid ""
+#~| "Windows may prevent to get the focus (activate) when being clicked.\n"
+#~| "On the other hand you might wish to prevent a window\n"
+#~| "from getting focused on a mouse click."
+#~ msgid ""
+#~ "Windows may prevent to get the focus (activate) when being clicked. On "
+#~ "the other hand you might wish to prevent a window from getting focused on "
+#~ "a mouse click."
+#~ msgstr ""
+#~ "Vindauge kan hindrast å ta fokus (aktiverast) når dei vert trykte på.\n"
+#~ "Du kan òg ønskja å hindra eit vindauge i å fokuserast på ved\n"
+#~ "eit museklikk."
+
+#, fuzzy
+#~| msgid ""
+#~| "When used, a window will receive\n"
+#~| "all keyboard inputs while it is active, including Alt+Tab etc.\n"
+#~| "This is especially interesting for emulators or virtual machines.\n"
+#~| "\n"
+#~| "Be warned:\n"
+#~| "you won't be able to Alt+Tab out of the window\n"
+#~| "nor use any other global shortcut (such as Alt+F2 to show KRunner)\n"
+#~| "while it's active!"
+#~ msgid ""
+#~ "When used, a window will receive all keyboard inputs while it is active, "
+#~ "including Alt+Tab etc. This is especially interesting for emulators or "
+#~ "virtual machines. \n"
+#~ "Be warned: you won't be able to Alt+Tab out of the window nor use any "
+#~ "other global shortcut (such as Alt+F2 to show KRunner) while it's active!"
+#~ msgstr ""
+#~ "Når dette vert brukt, tek imot eit vindauge\n"
+#~ "alle inntastinger mens det er aktivt, også «Alt + Tab» og liknande.\n"
+#~ "Dette er spesielt interessant for emulatorar og virtuelle maskiner.\n"
+#~ "\n"
+#~ "Men merk:\n"
+#~ "Du kan ikkje forlata vindauget med «Alt + Tab» og heller ikkje\n"
+#~ "bruka andre globale snarvegar (som «Alt + F2» å visa køyraren)\n"
+#~ "når dette vert brukt."
 
 #~ msgid ""
 #~ "Windows can ask to appear in a certain position.\n"

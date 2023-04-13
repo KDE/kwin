@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1649203 $
+# Version: $Revision: 1649318 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # Norbert Popiołek <norbert@kde.com.pl>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-04 02:22+0000\n"
+"POT-Creation-Date: 2023-04-13 02:16+0000\n"
 "PO-Revision-Date: 2023-04-10 11:18+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -46,12 +46,12 @@ msgid "Your emails"
 msgstr ""
 "mrudolf@kdewebdev.org, norbert@kde.com.pl, lukasz.wojnilowicz@gmail.com"
 
-#: composite.cpp:611
+#: composite.cpp:616
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Wczytano efekty pulpitu na nowo po wyłączeniu grafiki"
 
-#: composite.cpp:838
+#: composite.cpp:843
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -60,7 +60,7 @@ msgstr ""
 "Efekty pulpitu zostały wstrzymane przez inny program.<br/>Możesz wznowić je "
 "kombinacją klawiszy '%1'."
 
-#: composite.cpp:1028
+#: composite.cpp:1033
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -73,12 +73,12 @@ msgstr ""
 "stabilniejszy sterownik, <br> to możesz zdjąć to zabezpieczenie <b>lecz "
 "przygotuj się na natychmiastowe wysypanie!</b></p>"
 
-#: composite.cpp:1035
+#: composite.cpp:1040
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Wymagane rozszerzenia X (XComposite i XDamage) są niedostępne."
 
-#: composite.cpp:1038
+#: composite.cpp:1043
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL jest niedostępny."

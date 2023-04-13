@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-04 02:22+0000\n"
+"POT-Creation-Date: 2023-04-13 02:16+0000\n"
 "PO-Revision-Date: 2021-11-18 13:04+0100\n"
 "Last-Translator: Dušan Kazik <prescott66@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
@@ -37,12 +37,12 @@ msgstr ""
 "hornicek@globtel.sk,onofer@phf.euke.sk,visnovsky@kde.org,misurel@gmail.com,"
 "prescott66@gmail.com"
 
-#: composite.cpp:611
+#: composite.cpp:616
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Efekty plochy boli reštartované kvôli grafickému vynulovaniu"
 
-#: composite.cpp:838
+#: composite.cpp:843
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -51,7 +51,7 @@ msgstr ""
 "Efekty plochy boli pozastavené inou aplikáciou.<br/>Kompozíciu môžete "
 "obnoviť pomocou klávesovej skratky '%1'."
 
-#: composite.cpp:1028
+#: composite.cpp:1033
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -72,12 +72,12 @@ msgstr ""
 "ale <b>môže to spôsobiť okamžitý pád!</b></p><p>Alternatívne môžete namiesto "
 "toho použiť backend XRender.</p>"
 
-#: composite.cpp:1035
+#: composite.cpp:1040
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Požadované X rozšírenia (XComposite a XDamage) nie sú dostupné."
 
-#: composite.cpp:1038
+#: composite.cpp:1043
 #, fuzzy, kde-format
 #| msgid "GLX/OpenGL and XRender/XFixes are not available."
 msgid "GLX/OpenGL is not available."

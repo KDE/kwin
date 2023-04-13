@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-12 02:13+0000\n"
+"POT-Creation-Date: 2023-04-13 02:16+0000\n"
 "PO-Revision-Date: 2023-02-20 11:18+0100\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
@@ -425,7 +425,7 @@ msgstr "Vị trí"
 #: rulesmodel.cpp:436 rulesmodel.cpp:442 rulesmodel.cpp:448 rulesmodel.cpp:453
 #: rulesmodel.cpp:461 rulesmodel.cpp:467 rulesmodel.cpp:486 rulesmodel.cpp:502
 #: rulesmodel.cpp:507 rulesmodel.cpp:512 rulesmodel.cpp:517 rulesmodel.cpp:522
-#: rulesmodel.cpp:531 rulesmodel.cpp:544 rulesmodel.cpp:549 rulesmodel.cpp:554
+#: rulesmodel.cpp:531 rulesmodel.cpp:546 rulesmodel.cpp:551 rulesmodel.cpp:556
 #, kde-format
 msgid "Size & Position"
 msgstr "Kích thước & vị trí"
@@ -496,40 +496,42 @@ msgctxt "@info:tooltip"
 msgid ""
 "Some applications can set their own geometry, overriding the window manager "
 "preferences. Setting this property overrides their placement requests.<nl/"
-">This affects <interface>Size</interface> and <interface>Position</"
+"><nl/>This affects <interface>Size</interface> and <interface>Position</"
 "interface> but not <interface>Maximized</interface> or "
-"<interface>Fullscreen</interface> states.<nl/>Note that the position can "
-"also be used to map to a different <interface>Screen</interface>"
+"<interface>Fullscreen</interface> states.<nl/><nl/>Note that the position "
+"can also be used to map to a different <interface>Screen</interface>"
 msgstr ""
 
-#: rulesmodel.cpp:544
+#: rulesmodel.cpp:546
 #, kde-format
 msgid "Minimum Size"
 msgstr "Kích thước tối thiểu"
 
-#: rulesmodel.cpp:549
+#: rulesmodel.cpp:551
 #, kde-format
 msgid "Maximum Size"
 msgstr "Kích thước tối đa"
 
-#: rulesmodel.cpp:554
+#: rulesmodel.cpp:556
 #, kde-format
 msgid "Obey geometry restrictions"
 msgstr "Tuân theo các hạn chế về hình dạng"
 
-#: rulesmodel.cpp:556
-#, fuzzy, kde-format
+#: rulesmodel.cpp:558
+#, fuzzy, kde-kuit-format
 #| msgid ""
 #| "Eg. terminals or video players can ask to keep a certain aspect ratio\n"
 #| "or only grow by values larger than one\n"
 #| "(eg. by the dimensions of one character).\n"
 #| "This may be pointless and the restriction prevents arbitrary dimensions\n"
 #| "like your complete screen area."
+msgctxt "@info:tooltip"
 msgid ""
-"Eg. terminals or video players can ask to keep a certain aspect ratio or "
-"only grow by values larger than one (eg. by the dimensions of one "
-"character). This may be pointless and the restriction prevents arbitrary "
-"dimensions like your complete screen area."
+"Some apps like video players or terminals can ask KWin to constrain them to "
+"certain aspect ratios or only grow by values larger than the dimensions of "
+"one character. Use this property to ignore such restrictions and allow those "
+"windows to be resized to arbitrary sizes.<nl/><nl/>This can be helpful for "
+"windows that can't quite fit the full screen area when maximized."
 msgstr ""
 "Vd. các trình dòng lệnh hay trình phát phim có thể yêu cầu giữ một tỉ lệ\n"
 "khung nhất định hoặc chỉ mở rộng ra một lượng bằng các giá trị lớn hơn một\n"
@@ -537,211 +539,199 @@ msgstr ""
 "Việc này có thể không có ý nghĩa gì và hạn chế này ngăn cản các kích thước\n"
 "tuỳ ý chẳng hạn như diện tích toàn bộ màn hình."
 
-#: rulesmodel.cpp:565
+#: rulesmodel.cpp:569
 #, kde-format
 msgid "Keep above other windows"
 msgstr "Giữ trên các cửa sổ khác"
 
-#: rulesmodel.cpp:565 rulesmodel.cpp:570 rulesmodel.cpp:575 rulesmodel.cpp:581
-#: rulesmodel.cpp:587 rulesmodel.cpp:593
+#: rulesmodel.cpp:569 rulesmodel.cpp:574 rulesmodel.cpp:579 rulesmodel.cpp:585
+#: rulesmodel.cpp:591 rulesmodel.cpp:597
 #, kde-format
 msgid "Arrangement & Access"
 msgstr "Sắp đặt & truy cập"
 
-#: rulesmodel.cpp:570
+#: rulesmodel.cpp:574
 #, kde-format
 msgid "Keep below other windows"
 msgstr "Giữ dưới các cửa sổ khác"
 
-#: rulesmodel.cpp:575
+#: rulesmodel.cpp:579
 #, kde-format
 msgid "Skip taskbar"
 msgstr "Bỏ qua thanh tác vụ"
 
-#: rulesmodel.cpp:577
-#, kde-format
-msgid "Window shall (not) appear in the taskbar."
-msgstr "Cửa sổ sẽ (không) xuất hiện trong thanh tác vụ."
-
 #: rulesmodel.cpp:581
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Controls whether or not the window appears in the Task Manager."
+msgstr ""
+
+#: rulesmodel.cpp:585
 #, kde-format
 msgid "Skip pager"
 msgstr "Bỏ qua trình tổng quan"
 
-#: rulesmodel.cpp:583
-#, kde-format
-msgid "Window shall (not) appear in the manager for virtual desktops"
-msgstr "Cửa sổ sẽ (không) xuất hiện trong trình quản lí bàn làm việc ảo"
-
 #: rulesmodel.cpp:587
+#, kde-format
+msgctxt "@info:tooltip"
+msgid ""
+"Controls whether or not the window appears in the Virtual Desktop manager."
+msgstr ""
+
+#: rulesmodel.cpp:591
 #, kde-format
 msgid "Skip switcher"
 msgstr "Bỏ qua trình chuyển"
 
-#: rulesmodel.cpp:589
-#, kde-format
-msgid "Window shall (not) appear in the Alt+Tab list"
-msgstr "Cửa sổ sẽ (không) xuất hiện trong danh sách Alt+Tab"
-
 #: rulesmodel.cpp:593
+#, kde-kuit-format
+msgctxt "@info:tooltip"
+msgid ""
+"Controls whether or not the window appears in the <shortcut>Alt+Tab</"
+"shortcut> window list."
+msgstr ""
+
+#: rulesmodel.cpp:597
 #, kde-format
 msgid "Shortcut"
 msgstr "Phím tắt"
 
-#: rulesmodel.cpp:599
+#: rulesmodel.cpp:603
 #, kde-format
 msgid "No titlebar and frame"
 msgstr "Không có thanh tiêu đề và khung"
 
-#: rulesmodel.cpp:599 rulesmodel.cpp:604 rulesmodel.cpp:610 rulesmodel.cpp:615
-#: rulesmodel.cpp:621 rulesmodel.cpp:632 rulesmodel.cpp:643 rulesmodel.cpp:651
-#: rulesmodel.cpp:664 rulesmodel.cpp:669 rulesmodel.cpp:675 rulesmodel.cpp:680
+#: rulesmodel.cpp:603 rulesmodel.cpp:608 rulesmodel.cpp:614 rulesmodel.cpp:619
+#: rulesmodel.cpp:625 rulesmodel.cpp:652 rulesmodel.cpp:680 rulesmodel.cpp:686
+#: rulesmodel.cpp:698 rulesmodel.cpp:703 rulesmodel.cpp:709 rulesmodel.cpp:714
 #, kde-format
 msgid "Appearance & Fixes"
 msgstr "Diện mạo & Chỉnh sửa"
 
-#: rulesmodel.cpp:604
+#: rulesmodel.cpp:608
 #, kde-format
 msgid "Titlebar color scheme"
 msgstr "Quy hoạch màu thanh tiêu đề"
 
-#: rulesmodel.cpp:610
+#: rulesmodel.cpp:614
 #, kde-format
 msgid "Active opacity"
 msgstr "Độ mờ đục hoạt động"
 
-#: rulesmodel.cpp:615
+#: rulesmodel.cpp:619
 #, kde-format
 msgid "Inactive opacity"
 msgstr "Độ mờ đục bất hoạt"
 
-#: rulesmodel.cpp:621
+#: rulesmodel.cpp:625
 #, kde-format
 msgid "Focus stealing prevention"
 msgstr "Ngăn chặn lấy nhắm"
 
-#: rulesmodel.cpp:623
-#, fuzzy, kde-format
-#| msgid ""
-#| "KWin tries to prevent windows from taking the focus\n"
-#| "(\"activate\") while you're working in another window,\n"
-#| "but this may sometimes fail or superact.\n"
-#| "\"None\" will unconditionally allow this window to get the focus while\n"
-#| "\"Extreme\" will completely prevent it from taking the focus."
+#: rulesmodel.cpp:627
+#, kde-kuit-format
+msgctxt "@info:tooltip"
 msgid ""
-"KWin tries to prevent windows from taking the focus (\"activate\") while "
-"you're working in another window, but this may sometimes fail or superact. "
-"\"None\" will unconditionally allow this window to get the focus while "
-"\"Extreme\" will completely prevent it from taking the focus."
+"KWin tries to prevent windows that were opened without direct user action "
+"from raising themselves and taking focus while you're currently interacting "
+"with another window. This property can be used to change the level of focus "
+"stealing prevention applied to individual windows and apps.<nl/><nl/>Here's "
+"what will happen to a window opened without your direct action at each level "
+"of focus stealing prevention:<nl/><list><item><emphasis strong='true'>None:</"
+"emphasis> The window will be raised and focused.</item><item><emphasis "
+"strong='true'>Low:</emphasis> Focus stealing prevention will be applied, but "
+"in the case of a situation KWin considers ambiguous, the window will be "
+"raised and focused.</item><item><emphasis strong='true'>Normal:</emphasis> "
+"Focus stealing prevention will be applied, but  in the case of a situation "
+"KWin considers ambiguous, the window will <emphasis>not</emphasis> be raised "
+"and focused.</item><item><emphasis strong='true'>High:</emphasis> The window "
+"will only be raised and focused if it belongs to the same app as the "
+"currently-focused window.</item><item><emphasis strong='true'>Extreme:</"
+"emphasis> The window will never be raised and focused.</item></list>"
 msgstr ""
-"KWin cố gắng ngăn chặn các cửa sổ lấy nhắm\n"
-"(\"kích hoạt\") khi bạn đang làm việc trong một cửa sổ khác,\n"
-"nhưng việc này đôi lúc có thể thất bại hoặc làm quá.\n"
-"\"Không\" sẽ chấp nhận vô điều kiện việc cửa sổ này lấy nhắm, còn\n"
-"\"Cực độ\" sẽ hoàn toàn ngăn chặn nó lấy nhắm."
 
-#: rulesmodel.cpp:632
+#: rulesmodel.cpp:652
 #, kde-format
 msgid "Focus protection"
 msgstr "Bảo vệ nhắm"
 
-#: rulesmodel.cpp:634
-#, fuzzy, kde-format
-#| msgid ""
-#| "This controls the focus protection of the currently active window.\n"
-#| "None will always give the focus away,\n"
-#| "Extreme will keep it.\n"
-#| "Otherwise it's interleaved with the stealing prevention\n"
-#| "assigned to the window that wants the focus."
+#: rulesmodel.cpp:654
+#, kde-kuit-format
+msgctxt "@info:tooltip"
 msgid ""
-"This controls the focus protection of the currently active window. None will "
-"always give the focus away, Extreme will keep it. Otherwise it's interleaved "
-"with the stealing prevention assigned to the window that wants the focus."
+"This property controls the focus protection level of the currently active "
+"window. It is used to override the focus stealing prevention applied to new "
+"windows that are opened without your direct action.<nl/><nl/>Here's what "
+"happens to new windows that are opened without your direct action at each "
+"level of focus protection while the window with this property applied to it "
+"has focus:<nl/><list><item><emphasis strong='true'>None</emphasis>: Newly-"
+"opened windows always raise themselves and take focus.</item><item><emphasis "
+"strong='true'>Low:</emphasis> Focus stealing prevention will be applied to "
+"the newly-opened window, but in the case of a situation KWin considers "
+"ambiguous, the window will be raised and focused.</item><item><emphasis "
+"strong='true'>Normal:</emphasis> Focus stealing prevention will be applied "
+"to the newly-opened window, but in the case of a situation KWin considers "
+"ambiguous, the window will <emphasis>not</emphasis> be raised and focused.</"
+"item><item><emphasis strong='true'>High:</emphasis> Newly-opened windows "
+"will only raise themselves and take focus if they belongs to the same app as "
+"the currently-focused window.</item><item><emphasis strong='true'>Extreme:</"
+"emphasis> Newly-opened windows never raise themselves and take focus.</"
+"item></list>"
 msgstr ""
-"Điều khiển việc bảo vệ nhắm của cửa sổ hoạt động hiện tại.\n"
-"\"Không\" sẽ luôn cho nhắm đi.\n"
-"\"Cực độ\" thì giữ lại.\n"
-"Còn lại thì đan xen với quy tắc ngăn chặn lấy nhắm được đặt\n"
-"cho cửa sổ đang muốn lấy nhắm."
 
-#: rulesmodel.cpp:643
+#: rulesmodel.cpp:680
 #, kde-format
 msgid "Accept focus"
 msgstr "Chấp nhận nhắm"
 
-#: rulesmodel.cpp:645
-#, fuzzy, kde-format
-#| msgid ""
-#| "Windows may prevent to get the focus (activate) when being clicked.\n"
-#| "On the other hand you might wish to prevent a window\n"
-#| "from getting focused on a mouse click."
-msgid ""
-"Windows may prevent to get the focus (activate) when being clicked. On the "
-"other hand you might wish to prevent a window from getting focused on a "
-"mouse click."
+#: rulesmodel.cpp:682
+#, kde-format
+msgid "Controls whether or not the window becomes focused when clicked."
 msgstr ""
-"Các cửa sổ có thể ngăn chặn việc lấy nhắm (kích hoạt) khi được bấm vào.\n"
-"Mặt khác, bạn có thể muốn ngăn chặn một cửa sổ được nhắm\n"
-"khi chuột bấm vào."
 
-#: rulesmodel.cpp:651
+#: rulesmodel.cpp:686
 #, kde-format
 msgid "Ignore global shortcuts"
 msgstr "Bỏ qua phím tắt toàn cục"
 
-#: rulesmodel.cpp:653
-#, fuzzy, kde-format
-#| msgid ""
-#| "When used, a window will receive\n"
-#| "all keyboard inputs while it is active, including Alt+Tab etc.\n"
-#| "This is especially interesting for emulators or virtual machines.\n"
-#| "\n"
-#| "Be warned:\n"
-#| "you won't be able to Alt+Tab out of the window\n"
-#| "nor use any other global shortcut (such as Alt+F2 to show KRunner)\n"
-#| "while it's active!"
+#: rulesmodel.cpp:688
+#, kde-kuit-format
+msgctxt "@info:tooltip"
 msgid ""
-"When used, a window will receive all keyboard inputs while it is active, "
-"including Alt+Tab etc. This is especially interesting for emulators or "
-"virtual machines. \n"
-"Be warned: you won't be able to Alt+Tab out of the window nor use any other "
-"global shortcut (such as Alt+F2 to show KRunner) while it's active!"
+"Use this property to prevent global keyboard shortcuts from working while "
+"the window is focused. This can be useful for apps like emulators or virtual "
+"machines that handle some of the same shortcuts themselves.<nl/><nl/>Note "
+"that you won't be able to <shortcut>Alt+Tab</shortcut> out of the window or "
+"use any other global shortcuts such as <shortcut>Alt+Space</shortcut> to "
+"activate KRunner."
 msgstr ""
-"Khi được dùng, một cửa sổ hoạt động sẽ nhận được\n"
-"tất cả các đầu vào bằng bàn phím, bao gồm Alt+Tab v.v.\n"
-"Việc này đặc biệt đáng chú ý cho các trình giả lập hay các máy ảo.\n"
-"\n"
-"Cảnh báo:\n"
-"bạn sẽ không thể Alt+Tab ra khỏi cửa sổ\n"
-"hay dùng các phím tắt toàn cục khác (chẳng hạn như Alt+F2 để hiện KRunner)\n"
-"khi lựa chọn này đang hoạt động!"
 
-#: rulesmodel.cpp:664
+#: rulesmodel.cpp:698
 #, kde-format
 msgid "Closeable"
 msgstr "Đóng được"
 
-#: rulesmodel.cpp:669
+#: rulesmodel.cpp:703
 #, kde-format
 msgid "Set window type"
 msgstr "Đặt kiểu cửa sổ"
 
-#: rulesmodel.cpp:675
+#: rulesmodel.cpp:709
 #, kde-format
 msgid "Desktop file name"
 msgstr "Tên tệp desktop"
 
-#: rulesmodel.cpp:680
+#: rulesmodel.cpp:714
 #, kde-format
 msgid "Block compositing"
 msgstr "Ngưng kết hợp"
 
-#: rulesmodel.cpp:732
+#: rulesmodel.cpp:766
 #, kde-format
 msgid "Window class not available"
 msgstr "Lớp cửa sổ không khả dụng"
 
-#: rulesmodel.cpp:733
+#: rulesmodel.cpp:767
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -755,164 +745,252 @@ msgstr ""
 "cho nó, thay vào đó hãy thử khớp các thuộc tính khác như tiêu đề cửa sổ.<nl/"
 "><nl/>Vui lòng cân nhắc báo lỗi này cho các nhà phát triển ứng dụng."
 
-#: rulesmodel.cpp:767
+#: rulesmodel.cpp:801
 #, kde-format
 msgid "All Window Types"
 msgstr "Tất cả các kiểu cửa sổ"
 
-#: rulesmodel.cpp:768
+#: rulesmodel.cpp:802
 #, kde-format
 msgid "Normal Window"
 msgstr "Cửa sổ thường"
 
-#: rulesmodel.cpp:769
+#: rulesmodel.cpp:803
 #, kde-format
 msgid "Dialog Window"
 msgstr "Cửa sổ thoại"
 
-#: rulesmodel.cpp:770
+#: rulesmodel.cpp:804
 #, kde-format
 msgid "Utility Window"
 msgstr "Cửa sổ tiện ích"
 
-#: rulesmodel.cpp:771
+#: rulesmodel.cpp:805
 #, kde-format
 msgid "Dock (panel)"
 msgstr "Giá (bảng)"
 
-#: rulesmodel.cpp:772
+#: rulesmodel.cpp:806
 #, kde-format
 msgid "Toolbar"
 msgstr "Thanh công cụ"
 
-#: rulesmodel.cpp:773
+#: rulesmodel.cpp:807
 #, kde-format
 msgid "Torn-Off Menu"
 msgstr "Trình đơn xé tách"
 
-#: rulesmodel.cpp:774
+#: rulesmodel.cpp:808
 #, kde-format
 msgid "Splash Screen"
 msgstr "Màn hình khởi động"
 
-#: rulesmodel.cpp:775
+#: rulesmodel.cpp:809
 #, kde-format
 msgid "Desktop"
 msgstr "Bàn làm việc"
 
 #. i18n("Unmanaged Window")},  deprecated
-#: rulesmodel.cpp:777
+#: rulesmodel.cpp:811
 #, kde-format
 msgid "Standalone Menubar"
 msgstr "Thanh trình đơn độc lập"
 
-#: rulesmodel.cpp:778
+#: rulesmodel.cpp:812
 #, kde-format
 msgid "On Screen Display"
 msgstr "Ô hiện nổi"
 
-#: rulesmodel.cpp:788
+#: rulesmodel.cpp:822
 #, kde-format
 msgid "All Desktops"
 msgstr "Tất cả các bàn làm việc"
 
-#: rulesmodel.cpp:790
+#: rulesmodel.cpp:824
 #, kde-format
 msgctxt "@info:tooltip in the virtual desktop list"
 msgid "Make the window available on all desktops"
 msgstr "Làm cho cửa sổ có mặt trên tất cả các bàn làm việc"
 
-#: rulesmodel.cpp:809
+#: rulesmodel.cpp:843
 #, kde-format
 msgid "All Activities"
 msgstr "Tất cả các Hoạt động"
 
-#: rulesmodel.cpp:811
+#: rulesmodel.cpp:845
 #, kde-format
 msgctxt "@info:tooltip in the activity list"
 msgid "Make the window available on all activities"
 msgstr "Làm cho cửa sổ có mặt trên tất cả các Hoạt động"
 
-#: rulesmodel.cpp:832
+#: rulesmodel.cpp:866
 #, kde-format
 msgid "Default"
 msgstr "Mặc định"
 
-#: rulesmodel.cpp:833
+#: rulesmodel.cpp:867
 #, kde-format
 msgid "No Placement"
 msgstr "Không xếp chỗ"
 
-#: rulesmodel.cpp:834
+#: rulesmodel.cpp:868
 #, kde-format
 msgid "Minimal Overlapping"
 msgstr "Chồng lấn tối thiểu"
 
-#: rulesmodel.cpp:835
+#: rulesmodel.cpp:869
 #, kde-format
 msgid "Maximized"
 msgstr "Tối đa hoá"
 
-#: rulesmodel.cpp:836
+#: rulesmodel.cpp:870
 #, kde-format
 msgid "Centered"
 msgstr "Ở giữa"
 
-#: rulesmodel.cpp:837
+#: rulesmodel.cpp:871
 #, kde-format
 msgid "Random"
 msgstr "Ngẫu nhiên"
 
-#: rulesmodel.cpp:838
+#: rulesmodel.cpp:872
 #, kde-format
 msgid "In Top-Left Corner"
 msgstr "Ở góc trái trên"
 
-#: rulesmodel.cpp:839
+#: rulesmodel.cpp:873
 #, kde-format
 msgid "Under Mouse"
 msgstr "Dưới chuột"
 
-#: rulesmodel.cpp:840
+#: rulesmodel.cpp:874
 #, kde-format
 msgid "On Main Window"
 msgstr "Trên cửa sổ chính"
 
-#: rulesmodel.cpp:847
+#: rulesmodel.cpp:881
 #, kde-format
 msgid "None"
 msgstr "Không"
 
-#: rulesmodel.cpp:848
+#: rulesmodel.cpp:882
 #, kde-format
 msgid "Low"
 msgstr "Thấp"
 
-#: rulesmodel.cpp:849
+#: rulesmodel.cpp:883
 #, kde-format
 msgid "Normal"
 msgstr "Trung bình"
 
-#: rulesmodel.cpp:850
+#: rulesmodel.cpp:884
 #, kde-format
 msgid "High"
 msgstr "Cao"
 
-#: rulesmodel.cpp:851
+#: rulesmodel.cpp:885
 #, kde-format
 msgid "Extreme"
 msgstr "Cực độ"
 
-#: rulesmodel.cpp:894
+#: rulesmodel.cpp:928
 #, kde-format
 msgid "Unmanaged window"
 msgstr "Cửa sổ vô quản lí"
 
-#: rulesmodel.cpp:895
+#: rulesmodel.cpp:929
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
 "Không phát hiện được thuộc tính cửa sổ. Cửa sổ này không do KWin quản lí."
+
+#~ msgid "Window shall (not) appear in the taskbar."
+#~ msgstr "Cửa sổ sẽ (không) xuất hiện trong thanh tác vụ."
+
+#~ msgid "Window shall (not) appear in the manager for virtual desktops"
+#~ msgstr "Cửa sổ sẽ (không) xuất hiện trong trình quản lí bàn làm việc ảo"
+
+#~ msgid "Window shall (not) appear in the Alt+Tab list"
+#~ msgstr "Cửa sổ sẽ (không) xuất hiện trong danh sách Alt+Tab"
+
+#, fuzzy
+#~| msgid ""
+#~| "KWin tries to prevent windows from taking the focus\n"
+#~| "(\"activate\") while you're working in another window,\n"
+#~| "but this may sometimes fail or superact.\n"
+#~| "\"None\" will unconditionally allow this window to get the focus while\n"
+#~| "\"Extreme\" will completely prevent it from taking the focus."
+#~ msgid ""
+#~ "KWin tries to prevent windows from taking the focus (\"activate\") while "
+#~ "you're working in another window, but this may sometimes fail or "
+#~ "superact. \"None\" will unconditionally allow this window to get the "
+#~ "focus while \"Extreme\" will completely prevent it from taking the focus."
+#~ msgstr ""
+#~ "KWin cố gắng ngăn chặn các cửa sổ lấy nhắm\n"
+#~ "(\"kích hoạt\") khi bạn đang làm việc trong một cửa sổ khác,\n"
+#~ "nhưng việc này đôi lúc có thể thất bại hoặc làm quá.\n"
+#~ "\"Không\" sẽ chấp nhận vô điều kiện việc cửa sổ này lấy nhắm, còn\n"
+#~ "\"Cực độ\" sẽ hoàn toàn ngăn chặn nó lấy nhắm."
+
+#, fuzzy
+#~| msgid ""
+#~| "This controls the focus protection of the currently active window.\n"
+#~| "None will always give the focus away,\n"
+#~| "Extreme will keep it.\n"
+#~| "Otherwise it's interleaved with the stealing prevention\n"
+#~| "assigned to the window that wants the focus."
+#~ msgid ""
+#~ "This controls the focus protection of the currently active window. None "
+#~ "will always give the focus away, Extreme will keep it. Otherwise it's "
+#~ "interleaved with the stealing prevention assigned to the window that "
+#~ "wants the focus."
+#~ msgstr ""
+#~ "Điều khiển việc bảo vệ nhắm của cửa sổ hoạt động hiện tại.\n"
+#~ "\"Không\" sẽ luôn cho nhắm đi.\n"
+#~ "\"Cực độ\" thì giữ lại.\n"
+#~ "Còn lại thì đan xen với quy tắc ngăn chặn lấy nhắm được đặt\n"
+#~ "cho cửa sổ đang muốn lấy nhắm."
+
+#, fuzzy
+#~| msgid ""
+#~| "Windows may prevent to get the focus (activate) when being clicked.\n"
+#~| "On the other hand you might wish to prevent a window\n"
+#~| "from getting focused on a mouse click."
+#~ msgid ""
+#~ "Windows may prevent to get the focus (activate) when being clicked. On "
+#~ "the other hand you might wish to prevent a window from getting focused on "
+#~ "a mouse click."
+#~ msgstr ""
+#~ "Các cửa sổ có thể ngăn chặn việc lấy nhắm (kích hoạt) khi được bấm vào.\n"
+#~ "Mặt khác, bạn có thể muốn ngăn chặn một cửa sổ được nhắm\n"
+#~ "khi chuột bấm vào."
+
+#, fuzzy
+#~| msgid ""
+#~| "When used, a window will receive\n"
+#~| "all keyboard inputs while it is active, including Alt+Tab etc.\n"
+#~| "This is especially interesting for emulators or virtual machines.\n"
+#~| "\n"
+#~| "Be warned:\n"
+#~| "you won't be able to Alt+Tab out of the window\n"
+#~| "nor use any other global shortcut (such as Alt+F2 to show KRunner)\n"
+#~| "while it's active!"
+#~ msgid ""
+#~ "When used, a window will receive all keyboard inputs while it is active, "
+#~ "including Alt+Tab etc. This is especially interesting for emulators or "
+#~ "virtual machines. \n"
+#~ "Be warned: you won't be able to Alt+Tab out of the window nor use any "
+#~ "other global shortcut (such as Alt+F2 to show KRunner) while it's active!"
+#~ msgstr ""
+#~ "Khi được dùng, một cửa sổ hoạt động sẽ nhận được\n"
+#~ "tất cả các đầu vào bằng bàn phím, bao gồm Alt+Tab v.v.\n"
+#~ "Việc này đặc biệt đáng chú ý cho các trình giả lập hay các máy ảo.\n"
+#~ "\n"
+#~ "Cảnh báo:\n"
+#~ "bạn sẽ không thể Alt+Tab ra khỏi cửa sổ\n"
+#~ "hay dùng các phím tắt toàn cục khác (chẳng hạn như Alt+F2 để hiện "
+#~ "KRunner)\n"
+#~ "khi lựa chọn này đang hoạt động!"
 
 #~ msgid ""
 #~ "Windows can ask to appear in a certain position.\n"
