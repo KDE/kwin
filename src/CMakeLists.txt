@@ -120,6 +120,7 @@ target_sources(kwin PRIVATE
     pointer_input.cpp
     popup_input_filter.cpp
     rootinfo_filter.cpp
+    resources.qrc
     rulebooksettings.cpp
     rules.cpp
     scene/cursoritem.cpp

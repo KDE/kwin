@@ -34,6 +34,7 @@ public:
         QVector<RenderNode> renderNodes;
         QStack<QMatrix4x4> transformStack;
         QStack<qreal> opacityStack;
+        const QMatrix4x4 projectionMatrix;
         const QRegion clip;
         const bool hardwareClipping;
         const qreal renderTargetScale;
@@ -53,8 +54,15 @@ private:
     QVector4D modulate(float opacity, float brightness) const;
     void setBlendEnabled(bool enabled);
     void createRenderNode(Item *item, RenderContext *context);
+    void visualizeFractional(const RenderViewport &viewport, const QRegion &region, const RenderContext &renderContext);
 
     bool m_blendingEnabled = false;
+
+    struct
+    {
+        bool fractionalEnabled = false;
+        std::unique_ptr<GLShader> fractionalShader;
+    } m_debug;
 };
 
 } // namespace KWin

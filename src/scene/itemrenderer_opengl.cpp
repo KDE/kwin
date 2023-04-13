@@ -19,6 +19,11 @@ namespace KWin
 
 ItemRendererOpenGL::ItemRendererOpenGL()
 {
+    const QString visualizeOptionsString = qEnvironmentVariable("KWIN_SCENE_VISUALIZE");
+    if (!visualizeOptionsString.isEmpty()) {
+        const QStringList visualtizeOptions = visualizeOptionsString.split(';');
+        m_debug.fractionalEnabled = visualtizeOptions.contains(QLatin1StringView("fractional"));
+    }
 }
 
 ImageItem *ItemRendererOpenGL::createImageItem(Scene *scene, Item *parent)
@@ -255,6 +260,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
     }
 
     RenderContext renderContext{
+        .projectionMatrix = data.projectionMatrix(),
         .clip = region,
         .hardwareClipping = region != infiniteRegion() && ((mask & Scene::PAINT_WINDOW_TRANSFORMED) || (mask & Scene::PAINT_SCREEN_TRANSFORMED)),
         .renderTargetScale = viewport.scale(),
@@ -332,7 +338,6 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
         scissorRegion = viewport.mapToRenderTarget(region);
     }
 
-    const QMatrix4x4 projectionMatrix = data.projectionMatrix();
     for (int i = 0; i < renderContext.renderNodes.count(); i++) {
         const RenderNode &renderNode = renderContext.renderNodes[i];
         if (renderNode.vertexCount == 0) {
@@ -341,7 +346,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
 
         setBlendEnabled(renderNode.hasAlpha || renderNode.opacity < 1.0);
 
-        shader->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix * renderNode.transformMatrix);
+        shader->setUniform(GLShader::ModelViewProjectionMatrix, renderContext.projectionMatrix * renderNode.transformMatrix);
         if (opacity != renderNode.opacity) {
             shader->setUniform(GLShader::ModulationConstant,
                                modulate(renderNode.opacity, data.brightness()));
@@ -356,14 +361,55 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
                   renderNode.vertexCount, renderContext.hardwareClipping);
     }
 
+    ShaderManager::instance()->popShader();
+
+    if (m_debug.fractionalEnabled) {
+        visualizeFractional(viewport, scissorRegion, renderContext);
+    }
+
     vbo->unbindArrays();
 
     setBlendEnabled(false);
 
-    ShaderManager::instance()->popShader();
-
     if (renderContext.hardwareClipping) {
         glDisable(GL_SCISSOR_TEST);
+    }
+}
+
+void ItemRendererOpenGL::visualizeFractional(const RenderViewport &viewport, const QRegion &region, const RenderContext &renderContext)
+{
+    if (!m_debug.fractionalShader) {
+        m_debug.fractionalShader = ShaderManager::instance()->generateShaderFromFile(
+            ShaderTrait::MapTexture,
+            QStringLiteral(":/scene/shaders/debug_fractional.vert"),
+            QStringLiteral(":/scene/shaders/debug_fractional.frag"));
+    }
+
+    if (!m_debug.fractionalShader) {
+        return;
+    }
+
+    ShaderBinder debugShaderBinder(m_debug.fractionalShader.get());
+    m_debug.fractionalShader->setUniform("fractionalPrecision", 0.01f);
+
+    auto screenSize = viewport.renderRect().size() * viewport.scale();
+    m_debug.fractionalShader->setUniform("screenSize", QVector2D(float(screenSize.width()), float(screenSize.height())));
+
+    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+
+    for (int i = 0; i < renderContext.renderNodes.count(); i++) {
+        const RenderNode &renderNode = renderContext.renderNodes[i];
+        if (renderNode.vertexCount == 0) {
+            continue;
+        }
+
+        setBlendEnabled(true);
+
+        m_debug.fractionalShader->setUniform("geometrySize", QVector2D(renderNode.texture->width(), renderNode.texture->height()));
+        m_debug.fractionalShader->setUniform(GLShader::ModelViewProjectionMatrix, renderContext.projectionMatrix * renderNode.transformMatrix);
+
+        vbo->draw(region, GL_TRIANGLES, renderNode.firstVertex,
+                  renderNode.vertexCount, renderContext.hardwareClipping);
     }
 }
 
