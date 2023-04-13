@@ -112,6 +112,13 @@ private:
 
 TabletModeManager::TabletModeManager()
 {
+    // Control the tablet mode internally for KWin itself.
+    // https://bugs.kde.org/show_bug.cgi?id=468443
+    qputenv("KDE_KIRIGAMI_TABLET_MODE", "0");
+    connect(this, &KWin::TabletModeManager::hasTabletModeInputChanged, this, [](bool enabled) {
+        qputenv("KDE_KIRIGAMI_TABLET_MODE", enabled ? "1" : "0");
+    });
+
     if (waylandServer()) {
         if (input()->hasTabletModeSwitch()) {
             input()->installInputEventSpy(new TabletModeSwitchEventSpy(this));
