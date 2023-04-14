@@ -32,6 +32,7 @@ Dependencies:
     'libraries/plasma-wayland-protocols': '@latest-kf6'
     'plasma/breeze': '@same'
     'plasma/kdecoration': '@same'
+    'plasma/kglobalacceld': '@same'
     'plasma/kpipewire': '@same'
     'plasma/kscreenlocker': '@same'
 

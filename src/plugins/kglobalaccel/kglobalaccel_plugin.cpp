@@ -13,7 +13,7 @@
 #include <QDebug>
 
 KGlobalAccelImpl::KGlobalAccelImpl(QObject *parent)
-    : KGlobalAccelInterfaceV2(parent)
+    : KGlobalAccelInterface(parent)
 {
 }
 

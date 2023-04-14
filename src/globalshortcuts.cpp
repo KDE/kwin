@@ -16,8 +16,8 @@
 #include "main.h"
 #include "utils/common.h"
 // KDE
-#include <private/kglobalaccel_interface.h>
-#include <private/kglobalacceld.h>
+#include <kglobalaccel_interface.h>
+#include <kglobalacceld.h>
 // Qt
 #include <QAction>
 // system

@@ -350,6 +350,8 @@ set_package_properties(QAccessibilityClient6 PROPERTIES
 )
 set(HAVE_ACCESSIBILITY ${QAccessibilityClient6_FOUND})
 
+find_package(KGlobalAccelD REQUIRED)
+
 ecm_find_qmlmodule(QtQuick 2.3)
 ecm_find_qmlmodule(QtQuick.Controls 2.15)
 ecm_find_qmlmodule(QtQuick.Layouts 1.3)

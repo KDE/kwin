@@ -198,7 +198,6 @@ target_link_libraries(kwin
     KF6::CoreAddons
     KF6::Crash
     KF6::GlobalAccel
-    KF6::GlobalAccelPrivate
     KF6::I18n
     KF6::Package
     KF6::Service
@@ -206,6 +205,8 @@ target_link_libraries(kwin
 
     KDecoration2::KDecoration
     KDecoration2::KDecoration2Private
+
+    K::KGlobalAccelD
 
     XCB::COMPOSITE
     XCB::CURSOR

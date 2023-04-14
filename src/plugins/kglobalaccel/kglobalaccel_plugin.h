@@ -8,11 +8,11 @@
 */
 #pragma once
 
-#include <private/kglobalaccel_interface.h>
+#include <kglobalaccel_interface.h>
 
 #include <QObject>
 
-class KGlobalAccelImpl : public KGlobalAccelInterfaceV2
+class KGlobalAccelImpl : public KGlobalAccelInterface
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID KGlobalAccelInterface_iid FILE "kwin.json")
