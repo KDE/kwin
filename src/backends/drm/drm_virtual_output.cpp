@@ -15,7 +15,7 @@
 #include "drm_layer.h"
 #include "drm_logging.h"
 #include "drm_render_backend.h"
-#include "platformsupport/vsyncconvenience/softwarevsyncmonitor.h"
+#include "utils/softwarevsyncmonitor.h"
 
 namespace KWin
 {

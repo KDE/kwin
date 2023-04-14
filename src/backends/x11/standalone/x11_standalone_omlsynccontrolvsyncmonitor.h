@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "platformsupport/vsyncconvenience/vsyncmonitor.h"
+#include "utils/vsyncmonitor.h"
 
 #include <epoxy/glx.h>
 #include <fixx11h.h>

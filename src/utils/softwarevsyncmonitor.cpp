@@ -4,7 +4,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "platformsupport/vsyncconvenience/softwarevsyncmonitor.h"
+#include "utils/softwarevsyncmonitor.h"
 
 namespace KWin
 {

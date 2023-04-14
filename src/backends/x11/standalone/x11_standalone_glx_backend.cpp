@@ -14,7 +14,7 @@
 // own
 #include "x11_standalone_glx_backend.h"
 #include "../common/kwinxrenderutils.h"
-#include "platformsupport/vsyncconvenience/softwarevsyncmonitor.h"
+#include "utils/softwarevsyncmonitor.h"
 #include "x11_standalone_backend.h"
 #include "x11_standalone_glx_context_attribute_builder.h"
 #include "x11_standalone_glxconvenience.h"

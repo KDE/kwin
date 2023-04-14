@@ -10,7 +10,7 @@
 // kwin
 #include "platformsupport/scenes/opengl/basiceglsurfacetexture_internal.h"
 #include "platformsupport/scenes/opengl/basiceglsurfacetexture_wayland.h"
-#include "platformsupport/vsyncconvenience/softwarevsyncmonitor.h"
+#include "utils/softwarevsyncmonitor.h"
 #include "virtual_backend.h"
 #include "virtual_logging.h"
 #include "virtual_output.h"

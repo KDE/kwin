@@ -6,8 +6,10 @@ target_sources(kwin PRIVATE
     filedescriptor.cpp
     ramfile.cpp
     realtime.cpp
+    softwarevsyncmonitor.cpp
     subsurfacemonitor.cpp
     udev.cpp
+    vsyncmonitor.cpp
     xcbutils.cpp
     xcursortheme.cpp
 )
