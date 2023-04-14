@@ -30,11 +30,6 @@
 namespace KWin
 {
 
-typedef EGLBoolean (*eglQueryDmaBufFormatsEXT_func)(EGLDisplay dpy, EGLint max_formats, EGLint *formats, EGLint *num_formats);
-typedef EGLBoolean (*eglQueryDmaBufModifiersEXT_func)(EGLDisplay dpy, EGLint format, EGLint max_modifiers, EGLuint64KHR *modifiers, EGLBoolean *external_only, EGLint *num_modifiers);
-eglQueryDmaBufFormatsEXT_func eglQueryDmaBufFormatsEXT = nullptr;
-eglQueryDmaBufModifiersEXT_func eglQueryDmaBufModifiersEXT = nullptr;
-
 static std::unique_ptr<EglContext> s_globalShareContext;
 
 static bool isOpenGLES_helper()
