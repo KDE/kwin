@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-13 02:16+0000\n"
-"PO-Revision-Date: 2023-02-16 12:15+0400\n"
+"PO-Revision-Date: 2023-04-13 11:18+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -510,6 +510,12 @@ msgid ""
 "<interface>Fullscreen</interface> states.<nl/><nl/>Note that the position "
 "can also be used to map to a different <interface>Screen</interface>"
 msgstr ""
+"يمكن لبعض التطبيقات أن تحدد أبعادها بنفسها بطريقة تتجاوز تفضيلات مدير "
+"النوافذ. هذه الخاصية تسمح بتجاوز تلك الإمكانية.<nl/><nl/> تؤثر هذه  على "
+"<interface>الحجم</interface> و <interface>الموضع</interface> ولكن لا تؤثر "
+"على حالتي <interface>التكبير</interface> أو <interface>ملء الشاشة</"
+"interface>.<nl/><nl/> لاحظ أن الموضع يمكن يستخدم في <interface>شاشة</"
+"interface> أخرى."
 
 #: rulesmodel.cpp:546
 #, kde-format
@@ -527,13 +533,7 @@ msgid "Obey geometry restrictions"
 msgstr "التزم بقيود الأبعاد"
 
 #: rulesmodel.cpp:558
-#, fuzzy, kde-kuit-format
-#| msgid ""
-#| "Eg. terminals or video players can ask to keep a certain aspect ratio\n"
-#| "or only grow by values larger than one\n"
-#| "(eg. by the dimensions of one character).\n"
-#| "This may be pointless and the restriction prevents arbitrary dimensions\n"
-#| "like your complete screen area."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Some apps like video players or terminals can ask KWin to constrain them to "
@@ -542,11 +542,11 @@ msgid ""
 "windows to be resized to arbitrary sizes.<nl/><nl/>This can be helpful for "
 "windows that can't quite fit the full screen area when maximized."
 msgstr ""
-"على سبيل المثال، يمكن أن تطلب الأجهزة الطرفية أو مشغلات\n"
-" الفيديو الاحتفاظ بنسبة عرض إلى ارتفاع معينة أو تكبر فقط\n"
-" بقيم أكبر من واحد (على سبيل المثال بأبعاد محرف واحد). \n"
-"قد يكون هذا بلا معنى ويؤدي إلى عدم إمكانية تحديد الأبعاد بشكل حر مثل مساحة "
-"الشاشة الكاملة."
+"بعض التطبيقات مثل الأجهزة الطرفية أو مشغلات الفيديو يمكن أن تطلب من كوين "
+"الاحتفاظ بنسبة عرض إلى ارتفاع معينة أو تكبر فقط بقيم أكبر من أبعاد محرف "
+"واحد. استخدم هذه الخاصية لتجاهل مثل هذه القيود بحيث يمكن تغيير أبعاد النوافذ "
+"لأي قيم.<nl/><nl/> قد يكون هذا مفيداً للنوافذ التي لا تستطيع أن تتلاءم مع "
+"مساحة الشاشة الكاملة عند تكبيرها."
 
 #: rulesmodel.cpp:569
 #, kde-format
@@ -573,7 +573,7 @@ msgstr "تخطى شريط المهام"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
-msgstr ""
+msgstr "يتحكم في ما إذا كان يجب أن تظهر النافذة في مدير سطح المهام أم لا."
 
 #: rulesmodel.cpp:585
 #, kde-format
@@ -586,6 +586,7 @@ msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the Virtual Desktop manager."
 msgstr ""
+"يتحكم في ما إذا كان يجب أن تظهر النافذة في مدير سطح المكتب الافتراضي أم لا."
 
 #: rulesmodel.cpp:591
 #, kde-format
@@ -599,6 +600,8 @@ msgid ""
 "Controls whether or not the window appears in the <shortcut>Alt+Tab</"
 "shortcut> window list."
 msgstr ""
+"يتحكم في ما إذا كان يجب أن تظهر النافذة في قائمة النوافذ <shortcut>Alt+Tab</"
+"shortcut> أم لا."
 
 #: rulesmodel.cpp:597
 #, kde-format
@@ -658,6 +661,20 @@ msgid ""
 "currently-focused window.</item><item><emphasis strong='true'>Extreme:</"
 "emphasis> The window will never be raised and focused.</item></list>"
 msgstr ""
+"حاول كوين منع النوافذ المفتوحة بدون تدخل مباشر من المستخدم من الارتفاع "
+"والتركيز بينما أنت تتفاعل مع نافذة أخرى في نفس الوقت. يمكن استخدام هذه "
+"الخاصية لتغيير مستوى مانع سرقة التركيز المطبق على النوافذ والتطبيقات الفردية."
+"<nl/><nl/>هنا ما سيحدث للنافذة التي فُتحت دون تدخل مباشر منك عند كل مستوى "
+"لمانع سرقة التركيز:<nl/><list><item><emphasis strong='true'>لا شيء:</"
+"emphasis> سترفع النافذة ويركز عليها.</item><item><emphasis "
+"strong='true'>منخفض:</emphasis> سيطبق مانع سرقة التركيز، ولكن في حالة وجود "
+"حالة غامضة سترفع النافذة ويركز عليها.</item><item><emphasis "
+"strong='true'>عادي:</emphasis> سيطبق مانع سرقة التركيز، ولكن في حالة وجود "
+"حالة غامضة، <emphasis>فلن</emphasis> ترفع النافذة ويركز عليها.</"
+"item><item><emphasis strong='true'>عالي:</emphasis>  سترفع النافذة ويركز "
+"عليها فقط إذا كانت تنتمي إلى نفس التطبيق الذي عليه التركيز  حاليًا.</"
+"item><item><emphasis strong='true'>قصوى:</emphasis>  لن ترفع النافذة ويركز "
+"عليها.</item></list>"
 
 #: rulesmodel.cpp:652
 #, kde-format
@@ -687,6 +704,21 @@ msgid ""
 "emphasis> Newly-opened windows never raise themselves and take focus.</"
 "item></list>"
 msgstr ""
+"تتحكم هذه الخاصية في مستوى حماية التركيز للنافذة النشطة حاليًا. تستخدم هذه "
+"الخاصية لتجاوز منع سرقة التركيز المطبق على النوافذ الجديدة التي تفتح دون "
+"إجراء مباشر من جانبك.<nl/> <nl/>إليك ما سيحدث للنوافذ الجديدة التي تفتح دون "
+"إجراء من قبلك في كل مستوى من مستويات حماية التركيز بينما النافذة التي يطبق "
+"عليها هذه الخاصية في وضع التركيز:<nl/><list><item> <focus strong = 'true'> "
+"لا شيء </emphasis>: النوافذ المفتوحة حديثًا ترفع نفسها دائمًا وتركز على نفسها. "
+"</item><item> <focus strong = 'true'> منخفض: </emphasis> سيطبق منع سرقة "
+"التركيز على النافذة المفتوحة حديثًا، ولكن في حالة وجود موقف يعتبره كوين "
+"غامضًا، سترفع النافذة ويركز عليها. </item><item> <focus strong = 'true'> "
+"عادي: </emphasis> سيطبق منع سرقة التركيز على النافذة المفتوحة حديثًا، ولكن في "
+"حالة وجود موقف يعتبره كوين غامضًا، فإن النافذة <emphasis> لن </emphasis>ترفع "
+"ولن يركز عليها. </item><item> <focus strong = 'true'> عالي: </emphasis> لن "
+"ترفع النوافذ المفتوحة حديثًا إلا إذا كانت تنتمي إلى نفس التطبيق مثل النافذة "
+"المركزة حاليًا. </item><item> <focus strong = 'true'> قصوى: </emphasis> "
+"النوافذ المفتوحة حديثًا لا ترفع نفسها أبدًا ولا يركز عليها. </item></list>"
 
 #: rulesmodel.cpp:680
 #, kde-format
@@ -697,6 +729,7 @@ msgstr "أقبل التركيز"
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
 msgstr ""
+"يتحكم في ما إذا كان يجب أن تصبح النافذة في وضع التركيز عند النقر عليها أم لا."
 
 #: rulesmodel.cpp:686
 #, kde-format
@@ -714,6 +747,12 @@ msgid ""
 "use any other global shortcuts such as <shortcut>Alt+Space</shortcut> to "
 "activate KRunner."
 msgstr ""
+"استخدم هذه الخاصية لمنع اختصارات لوحة المفاتيح العامة من العمل عندما تكون "
+"النافذة في وضع التركيز. يمكن أن يكون هذا مفيدًا لتطبيقات مثل المحاكيات أو "
+"الأجهزة الافتراضية التي تتعامل مع بعض الاختصارات نفسها بنفسها. <nl/><nl/"
+">لاحظ أنك لن تتمكن من استخدام <shortcut> Alt+Tab </shortcut> من نافذة أو "
+"استخدم أي اختصارات عامة أخرى مثل <shortcut> Alt+Space </shortcut> لتنشيط "
+"مشغلك."
 
 #: rulesmodel.cpp:698
 #, kde-format
@@ -880,7 +919,7 @@ msgstr "على النافذة الرئيسية"
 #: rulesmodel.cpp:881
 #, kde-format
 msgid "None"
-msgstr "بلا"
+msgstr "لا شيء"
 
 #: rulesmodel.cpp:882
 #, kde-format
@@ -900,7 +939,7 @@ msgstr "عالي"
 #: rulesmodel.cpp:885
 #, kde-format
 msgid "Extreme"
-msgstr "القصوى"
+msgstr "قصوى"
 
 #: rulesmodel.cpp:928
 #, kde-format

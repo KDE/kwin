@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-13 02:16+0000\n"
-"PO-Revision-Date: 2023-04-12 21:40+0200\n"
+"PO-Revision-Date: 2023-04-14 01:48+0200\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -503,15 +503,7 @@ msgid "Ignore requested geometry"
 msgstr "Ignorar la geometría solicitada"
 
 #: rulesmodel.cpp:534
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info:tooltip"
-#| msgid ""
-#| "Some applications can set their own geometry, overriding the window "
-#| "manager preferences. Setting this property overrides their placement "
-#| "requests.<nl/>This affects <interface>Size</interface> and "
-#| "<interface>Position</interface> but not <interface>Maximized</interface> "
-#| "or <interface>Fullscreen</interface> states.<nl/>Note that the position "
-#| "can also be used to map to a different <interface>Screen</interface>"
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Some applications can set their own geometry, overriding the window manager "
@@ -523,11 +515,11 @@ msgid ""
 msgstr ""
 "Algunas aplicaciones pueden ajustar su geometría, omitiendo las preferencias "
 "del gestor de ventanas. La activación de esta propiedad omite sus peticiones "
-"de colocación.<nl/>Esto afecta al <interface>Tamaño</interface> y a la "
+"de colocación.<nl/><nl/>Esto afecta al <interface>Tamaño</interface> y a la "
 "<interface>Posición</interface>, pero no a los estados de "
 "<interface>Maximizada</interface> ni de <interface>Pantalla completa</"
-"interface>.<nl/>Tenga en cuenta que la posición también se puede usar para "
-"asignar a una <interface>Pantalla</interface> diferente."
+"interface>.<nl/><nl/>Tenga en cuenta que la posición también se puede usar "
+"para asignar a una <interface>Pantalla</interface> diferente."
 
 #: rulesmodel.cpp:546
 #, kde-format
@@ -590,7 +582,7 @@ msgstr "Omitir la barra de tareas"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
-msgstr ""
+msgstr "Controla si la ventana aparece en el gestor de tareas."
 
 #: rulesmodel.cpp:585
 #, kde-format
@@ -602,7 +594,7 @@ msgstr "Omitir el paginador"
 msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the Virtual Desktop manager."
-msgstr ""
+msgstr "Controla si la ventana aparece en el gestor de escritorios virtuales."
 
 #: rulesmodel.cpp:591
 #, kde-format
@@ -616,6 +608,8 @@ msgid ""
 "Controls whether or not the window appears in the <shortcut>Alt+Tab</"
 "shortcut> window list."
 msgstr ""
+"Controla si la ventana aparece en la <shortcut>Alt+Tab</shortcut> lista de "
+"ventanas."
 
 #: rulesmodel.cpp:597
 #, kde-format
@@ -713,7 +707,7 @@ msgstr "Aceptar foco"
 #: rulesmodel.cpp:682
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
-msgstr ""
+msgstr "Controla si la ventana obtiene el foco cuando se pulsa sobre ella."
 
 #: rulesmodel.cpp:686
 #, kde-format

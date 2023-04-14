@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-13 02:16+0000\n"
-"PO-Revision-Date: 2023-04-12 10:57+0200\n"
+"PO-Revision-Date: 2023-04-13 13:24+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -507,15 +507,7 @@ msgid "Ignore requested geometry"
 msgstr "Aangevraagde geometrie negeren"
 
 #: rulesmodel.cpp:534
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info:tooltip"
-#| msgid ""
-#| "Some applications can set their own geometry, overriding the window "
-#| "manager preferences. Setting this property overrides their placement "
-#| "requests.<nl/>This affects <interface>Size</interface> and "
-#| "<interface>Position</interface> but not <interface>Maximized</interface> "
-#| "or <interface>Fullscreen</interface> states.<nl/>Note that the position "
-#| "can also be used to map to a different <interface>Screen</interface>"
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Some applications can set their own geometry, overriding the window manager "
@@ -549,12 +541,7 @@ msgid "Obey geometry restrictions"
 msgstr "Beperkingen van afmetingen naleven"
 
 #: rulesmodel.cpp:558
-#, fuzzy, kde-kuit-format
-#| msgid ""
-#| "Eg. terminals or video players can ask to keep a certain aspect ratio or "
-#| "only grow by values larger than one (eg. by the dimensions of one "
-#| "character). This may be pointless and the restriction prevents arbitrary "
-#| "dimensions like your complete screen area."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Some apps like video players or terminals can ask KWin to constrain them to "
@@ -563,10 +550,13 @@ msgid ""
 "windows to be resized to arbitrary sizes.<nl/><nl/>This can be helpful for "
 "windows that can't quite fit the full screen area when maximized."
 msgstr ""
-"Bijv. terminals of videospelers kunnen vragen om een bepaalde "
-"beeldverhouding te bewaren of alleen te groeien met waarden groter dan één "
-"(bijv. met de afmeting van één teken. Dit kan zonder betekenis zijn en de "
-"beperkingen voorkomen willekeurige afmetingen zoals uw gehele scherm."
+"Sommige toepassingen zoals videospelers of terminals kunnen KWin vragen om "
+"ze te beperken tot bepaalde beeldverhoudingen of alleen te laten groeien met "
+"waarden groter dan de afmeting van één teken. Deze eigenschap gebruiken om "
+"zulke beperkingen te negeren en sta zulke vensters toe om te naar "
+"willekeurige groottes te gaan.<nl/><nl/>Dit kan nuttig zijn voor vensters "
+"die niet helemaal passen op het volledige schermgebied wanneer "
+"gemaximaliseerd."
 
 #: rulesmodel.cpp:569
 #, kde-format
@@ -593,7 +583,7 @@ msgstr "Niet in taakbalk"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
-msgstr ""
+msgstr "Bepaalt of het venster al dan niet in de takenbeheerder verschijnt."
 
 #: rulesmodel.cpp:585
 #, kde-format
@@ -606,6 +596,8 @@ msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the Virtual Desktop manager."
 msgstr ""
+"Bepaalt of het venster al dan niet in de virtuele bureaubladbeheerder "
+"verschijnt."
 
 #: rulesmodel.cpp:591
 #, kde-format
@@ -619,6 +611,8 @@ msgid ""
 "Controls whether or not the window appears in the <shortcut>Alt+Tab</"
 "shortcut> window list."
 msgstr ""
+"Bepaalt of het venster al dan niet in de vensterlijst <shortcut>Alt+Tab</"
+"shortcut> verschijnt."
 
 #: rulesmodel.cpp:597
 #, kde-format
@@ -678,6 +672,25 @@ msgid ""
 "currently-focused window.</item><item><emphasis strong='true'>Extreme:</"
 "emphasis> The window will never be raised and focused.</item></list>"
 msgstr ""
+"KWin probeert te voorkomen dat vensters, die zijn geopend zonder directe "
+"actie van de gebruiker, zichzelf verhogen en focus nemen terwijl u werkt met "
+"een ander venster. Deze eigenschap kan gebruikt worden om het niveau van "
+"voorkomen van focus stelen toegepast op individuele venster en toepassingen "
+"te wijzigen.<nl/><nl/>Hier is wat zal gebeuren met een venster geopend "
+"zonder uw directe actie op elk niveau van voorkomen van stelen van focus:<nl/"
+"><list><item><emphasis strong='true'>Geen:</emphasis> Het venster zal "
+"verhoogd worden en focus krijgen.</item><item><emphasis strong='true'>Laag:</"
+"emphasis> Voorkomen van stelen van focus zal toegepast worden, maar in het "
+"geval van een situatie die KWin dubbelzinnig beschouwt, zal het venster "
+"verhoogd worden en focus krijgen.</item><item><emphasis "
+"strong='true'>Normaal:</emphasis> Voorkomen van stelen van focus zal "
+"toegepast worden, maar in het geval van een situatie die KWin dubbelzinnig "
+"beschouwd, zal het venster <emphasis>niet</emphasis> verhoogd worden en geen "
+"focus krijgen.</item><item><emphasis strong='true'>Hoog:</emphasis> Het "
+"venster zal alleen verhoogd worden en focus krijgen als het behoort tot "
+"dezelfde toepassing als het venster dat nu focus heeft.</"
+"item><item><emphasis strong='true'>Extreem:</emphasis> Het venster zal nooit "
+"verhoogd worden en focus krijgen.</item></list>"
 
 #: rulesmodel.cpp:652
 #, kde-format
@@ -707,6 +720,26 @@ msgid ""
 "emphasis> Newly-opened windows never raise themselves and take focus.</"
 "item></list>"
 msgstr ""
+"Deze eigenschap bepaalt het niveau van bescherming van focus van het nu "
+"actieve venster. Het wordt gebruikt om het voorkomen van stelen van focus "
+"toegepast op nieuwe vensters die geopend worden zonder uw directe actie te "
+"overschrijven.<nl/><nl/>Hier is wat er gebeurt met nieuwe vensters die "
+"geopend worden zonder uw directe actie op elk niveau van bescherming van "
+"stelen van focus terwijl het venster met deze er op toegepaste eigenschap "
+"focus heeft:<nl/><list><item><emphasis strong='true'>Geen</emphasis>: Nieuw "
+"geopende vensters verhogen zichzelf en nemen focus.</item><item><emphasis "
+"strong='true'>Laag:</emphasis> Voorkomen van stelen van focus zal toegepast "
+"worden op het nieuw geopende venster, maar in het geval van een situatie die "
+"KWin beschouwt als dubbelzinnig, het venster zal verhoogd worden en krijgt "
+"focus.</item><item><emphasis strong='true'>Normaal:</emphasis> Voorkomen van "
+"stelen van focus stealing zal toegepast worden op het nieuw geopende "
+"venster, maar in het geval van een situatie die KWin beschouwt als "
+"dubbelzinnig, zal het venster <emphasis>niet</emphasis> verhoogd worden en "
+"geen focus krijgen.</item><item><emphasis strong='true'>Hoog:</emphasis> "
+"Nieuw geopende vensters zullen zichzelf alleen verhogen en focus nemen als "
+"ze behoren tot dezelfde toepassing als het venster dat nu focus heeft.</"
+"item><item><emphasis strong='true'>Extreem:</emphasis> Nieuw geopende "
+"vensters verhogen zichzelf nooit en nemen geen focus.</item></list>"
 
 #: rulesmodel.cpp:680
 #, kde-format
@@ -716,7 +749,7 @@ msgstr "Focus accepteren"
 #: rulesmodel.cpp:682
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
-msgstr ""
+msgstr "Bepaalt of het venster al dan niet in focus krijgt bij erop klikken."
 
 #: rulesmodel.cpp:686
 #, kde-format
@@ -734,6 +767,12 @@ msgid ""
 "use any other global shortcuts such as <shortcut>Alt+Space</shortcut> to "
 "activate KRunner."
 msgstr ""
+"Deze eigenschap gebruiken om te voorkomen dat globale sneltoetsen werken "
+"terwijl het venster focus heeft. Dit kan nuttig zijn voor toepassingen zoals "
+"emulators of virtuele machines die sommige van diezelfde sneltoetsen zelf "
+"behandelen.<nl/><nl/>Merk op dat u niet in staat zult zijn met <shortcut>Alt"
+"+Tab</shortcut> uit het venster te gaan of elke andere globale sneltoets te "
+"gebruiken zoals <shortcut>Alt+Space</shortcut> om KRunner te activeren."
 
 #: rulesmodel.cpp:698
 #, kde-format

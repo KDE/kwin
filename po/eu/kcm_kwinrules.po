@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-13 02:16+0000\n"
-"PO-Revision-Date: 2023-04-12 18:08+0200\n"
+"PO-Revision-Date: 2023-04-13 09:20+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -500,15 +500,7 @@ msgid "Ignore requested geometry"
 msgstr "Ez-ikusi egin eskatutako geometriari"
 
 #: rulesmodel.cpp:534
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info:tooltip"
-#| msgid ""
-#| "Some applications can set their own geometry, overriding the window "
-#| "manager preferences. Setting this property overrides their placement "
-#| "requests.<nl/>This affects <interface>Size</interface> and "
-#| "<interface>Position</interface> but not <interface>Maximized</interface> "
-#| "or <interface>Fullscreen</interface> states.<nl/>Note that the position "
-#| "can also be used to map to a different <interface>Screen</interface>"
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Some applications can set their own geometry, overriding the window manager "
@@ -520,11 +512,11 @@ msgid ""
 msgstr ""
 "Aplikazio batzuek beren geometria ezar dezakete, leiho-kudeatzaileko "
 "hobespenak gaindituz. Propietate hori ezartzeak haien kokapen eskaerak "
-"gainditzen ditu.<nl/>Horrek <interface>Neurria</interface> eta "
+"gainditzen ditu.<nl/><nl/>Horrek <interface>Neurria</interface> eta "
 "<interface>Kokapena</interface>ri eragiten die, ez ordea "
 "<interface>Maximizatuta</interface> edo <interface>Pantaila-betea</"
-"interface> egoerei.<nl/>Kontuan izan kokapena beste <interface>Pantaila</"
-"interface> batera mapatzeko ere erabil daitekeela."
+"interface> egoerei.<nl/><nl/>Kontuan izan kokapena beste "
+"<interface>Pantaila</interface> batera mapatzeko ere erabil daitekeela."
 
 #: rulesmodel.cpp:546
 #, kde-format
@@ -542,12 +534,7 @@ msgid "Obey geometry restrictions"
 msgstr "Obeditu geometria murrizpenei"
 
 #: rulesmodel.cpp:558
-#, fuzzy, kde-kuit-format
-#| msgid ""
-#| "Eg. terminals or video players can ask to keep a certain aspect ratio or "
-#| "only grow by values larger than one (eg. by the dimensions of one "
-#| "character). This may be pointless and the restriction prevents arbitrary "
-#| "dimensions like your complete screen area."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Some apps like video players or terminals can ask KWin to constrain them to "
@@ -556,11 +543,13 @@ msgid ""
 "windows to be resized to arbitrary sizes.<nl/><nl/>This can be helpful for "
 "windows that can't quite fit the full screen area when maximized."
 msgstr ""
-"Adib., terminalek edo bideo-jotzaileek itxura-proportzio jakin bat "
-"mantentzea, edo bat baino balio handiagoetan (adib. karaktere bateko "
-"dimentsioan) bakarrik haztea eska dezakete. Hori alferrikakoa izan liteke, "
-"eta murrizpenak neurri arbitrarioak eragozten ditu, zure pantailaren azalera "
-"osoa esaterako."
+"Aplikazio batzuek, bideo-jotzaileek edo terminalek esaterako, «KWin»eri "
+"itxura-proportzio jakin batera behartu ditzan eska diezaiokete edo karaktere "
+"bakar baten dimentsioa baino balio handiagoengatik bakarrik haztea. Erabili "
+"propietate hori halako murrizketei jaramonik ez egiteko eta leiho haiei "
+"neurri arbitrarioetara neurri aldatzen uzteko.<nl/><nl/>Lagungarria izan "
+"daiteke, maximizatuta daudenean pantaila osoko azalerara ondo egokitu ezin "
+"diren leihoetarako."
 
 #: rulesmodel.cpp:569
 #, kde-format
@@ -587,7 +576,7 @@ msgstr "Saihestu ataza-barra"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
-msgstr ""
+msgstr "Leihoa ataza-kudeatzailean agertzen den edo ez kontrolatzen du."
 
 #: rulesmodel.cpp:585
 #, kde-format
@@ -600,6 +589,7 @@ msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the Virtual Desktop manager."
 msgstr ""
+"Leihoa alegiazko mahaigain kudeatzailean agertzen den edo ez kontrolatzen du."
 
 #: rulesmodel.cpp:591
 #, kde-format
@@ -613,6 +603,8 @@ msgid ""
 "Controls whether or not the window appears in the <shortcut>Alt+Tab</"
 "shortcut> window list."
 msgstr ""
+"Leihoa <shortcut>Alt+Tab</shortcut> leiho-zerrendan agertzen den edo ez "
+"kontrolatzen du."
 
 #: rulesmodel.cpp:597
 #, kde-format
@@ -710,7 +702,7 @@ msgstr "Onartu fokua"
 #: rulesmodel.cpp:682
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
-msgstr ""
+msgstr "Klik egitean leihoak fokua jasotzen duen edo ez kontrolatzen du."
 
 #: rulesmodel.cpp:686
 #, kde-format
@@ -728,6 +720,12 @@ msgid ""
 "use any other global shortcuts such as <shortcut>Alt+Space</shortcut> to "
 "activate KRunner."
 msgstr ""
+"Erabili propietate hori leihoak fokua duen bitartean teklatuko lasterbide "
+"orokorrak ibil daitezen eragozteko. Lagungarria izan daiteke lasterbide "
+"horietako batzuk maneiatzen dituzten emulatzaileak eta alegiazko "
+"makinakgisako aplikazioetarako.<nl/><nl/>Kontuan izan ezingo duzula leihotik "
+"kanpora <shortcut>Alt+Tab</shortcut> egin, ez eta «KRunner» aktibatzeko "
+"<shortcut>Alt+Zuriunea</shortcut> gisako beste lasterbide orokorrik erabili."
 
 #: rulesmodel.cpp:698
 #, kde-format

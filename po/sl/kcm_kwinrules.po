@@ -9,17 +9,17 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-13 02:16+0000\n"
-"PO-Revision-Date: 2023-04-08 07:43+0200\n"
+"PO-Revision-Date: 2023-04-13 09:25+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
-"%100==4 ? 3 : 0);\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100>=3 && n"
+"%100<=4 ? 2 : 3);\n"
 "Translator: Andrej Mernik <andrejm@ubuntu.si>\n"
-"X-Generator: Poedit 3.2.2\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #: kcmrules.cpp:226
 #, kde-format
@@ -510,6 +510,13 @@ msgid ""
 "<interface>Fullscreen</interface> states.<nl/><nl/>Note that the position "
 "can also be used to map to a different <interface>Screen</interface>"
 msgstr ""
+"Nekatere aplikacije lahko nastavijo svojo geometrijo in preglasijo "
+"preference upravitelja oken. Nastavitev te lastnosti preglasi njihove "
+"zahteve za postavitev.<nl/><nl/>To vpliva na vmesnike <interface>Velikost</"
+"interface> in <interface>Pozicijo</interface> ne pa na vmesnike stanja "
+"<interface>Razpeto</interface> ali <interface>Celotni zaslon</interface>.<nl/"
+"><nl/>Upoštevajte, da položaj lahko uporabite tudi za preslikavo na drug "
+"<interface>Zaslon</interface>"
 
 #: rulesmodel.cpp:546
 #, kde-format
@@ -527,13 +534,7 @@ msgid "Obey geometry restrictions"
 msgstr "Drži se omejitev geometrije"
 
 #: rulesmodel.cpp:558
-#, fuzzy, kde-kuit-format
-#| msgid ""
-#| "Eg. terminals or video players can ask to keep a certain aspect ratio\n"
-#| "or only grow by values larger than one\n"
-#| "(eg. by the dimensions of one character).\n"
-#| "This may be pointless and the restriction prevents arbitrary dimensions\n"
-#| "like your complete screen area."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Some apps like video players or terminals can ask KWin to constrain them to "
@@ -542,10 +543,11 @@ msgid ""
 "windows to be resized to arbitrary sizes.<nl/><nl/>This can be helpful for "
 "windows that can't quite fit the full screen area when maximized."
 msgstr ""
-"Terminali ali predvajalniki videa lahko prosijo za ohranjanje razmerja\n"
-"ali pa spreminjanje velikosti v korakih večjih od ena (npr. glede na\n"
-"velikost znaka). Ta omejitev morda nima smisla in lahko preprečuje\n"
-"poljubne velikosti, na primer celotne velikosti zaslona."
+"Nekatere aplikacije kot so predvajalniki videa ali terminali lahko prosijo "
+"KWin za omejitve razmerja stranic ali pa spreminjanje velikosti v korakih "
+"večjih od ene velikosti znaka). Uporabi to lastnost, za spregled take "
+"omejitve in dovoli oknom, da se preoblikujejo v poljubno velikost, ki se "
+"morda popolnoma ne prilega celotni velikosti zaslona pri največjem povečanju."
 
 #: rulesmodel.cpp:569
 #, kde-format
@@ -572,7 +574,7 @@ msgstr "Preskoči opravilno vrstico"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
-msgstr ""
+msgstr "Kontrolira ali se okno pojavlja v upravljalniku dejavnosti."
 
 #: rulesmodel.cpp:585
 #, kde-format
@@ -584,7 +586,7 @@ msgstr "Preskoči pozivnik"
 msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the Virtual Desktop manager."
-msgstr ""
+msgstr "Kontrolira ali se okno pojavi v upravljalniku navideznih namizij."
 
 #: rulesmodel.cpp:591
 #, kde-format
@@ -598,6 +600,7 @@ msgid ""
 "Controls whether or not the window appears in the <shortcut>Alt+Tab</"
 "shortcut> window list."
 msgstr ""
+"Kontrolira ali se okno pojavi v <shortcut>Alt+Tab</shortcut> seznamu oken."
 
 #: rulesmodel.cpp:597
 #, kde-format
@@ -657,6 +660,23 @@ msgid ""
 "currently-focused window.</item><item><emphasis strong='true'>Extreme:</"
 "emphasis> The window will never be raised and focused.</item></list>"
 msgstr ""
+"Kwin poskuša preprečiti, da bi se okna, ki so bila odprta brez neposrednega "
+"dejanja uporabnikov, dvignila in se osredotočala, medtem ko trenutno "
+"komunicirate z drugim oknom. To lastnost lahko uporabite za spremembo "
+"stopnje preprečevanja kraje ostrenja, ki se uporablja za posamezna okna in "
+"aplikacije.<nl/><nl/>Tu je, seznam dogajanj, kaj se bo zgodilo z oknom, ki "
+"se bo odprlo brez neposrednega ukrepanja na vsaki ravni preprečevanja kraje "
+"osredotočenosti:<nl/><list><item><emphasis strong='true'>Brez:</emphasis> "
+"Okno se bo dvignilo in bo osredotočeno.</item><item><emphasis "
+"strong='true'>Nizko:</emphasis> Preprečevanje osredotočenosti bo izvedeno, a "
+"v situaciji, ki jo KWin šteje kot dvoumno, bo okno dvignjeno in osredotočeno."
+"</item><item><emphasis strong='true'>Normalno:</emphasis> Preprečevanje "
+"osredotočenosti bo izvedeno, a v situaciji, ki jo KWin šteje kot dvoumno, "
+"okno <emphasis>ne bo</emphasis> dvignjeno in osredotočeno.</"
+"item><item><emphasis strong='true'>Visoko:</emphasis> Okno bo dvignjeno in "
+"osredotočeno, če pripada isti aplikaciji kot trenutno osredotočeno okno.</"
+"item><item><emphasis strong='true'>Ekstremno:</emphasis> Okno ne bo nikoli "
+"dvignjeno in osredotočeno.</item></list>"
 
 #: rulesmodel.cpp:652
 #, kde-format
@@ -686,6 +706,23 @@ msgid ""
 "emphasis> Newly-opened windows never raise themselves and take focus.</"
 "item></list>"
 msgstr ""
+"Ta lastnost nadzoruje raven zaščite osredotočenosti trenutno aktivnega okna. "
+"Uporablja se za preglasitev preprečevanja kraje osredotočenosti, ki se "
+"uporablja za nova okna, ki se odprejo brez vašega neposrednega dejanja.<nl/"
+"><nl/>Tu je, seznam dogajanj, kaj se bo zgodilo z oknom, ki se bo odprlo "
+"brez neposrednega ukrepanja na vsaki ravni preprečevanja kraje "
+"osredotočenosti:<nl/><list><item><emphasis strong='true'>Brez:</emphasis> "
+"Novo okno se bo vedno dvignilo in bo prevzelo osredotočenost.</"
+"item><item><emphasis strong='true'>Nizko:</emphasis> Preprečevanje "
+"osredotočenosti bo izvedeno na novo odprtem oknu, a v situaciji, ki jo KWin "
+"šteje kot dvoumno, bo okno dvignjeno in osredotočeno.</item><item><emphasis "
+"strong='true'>Normalno:</emphasis> Preprečevanje osredotočenosti na novem "
+"oknu bo izvedeno, a v situaciji, ki jo KWin šteje kot dvoumno, okno "
+"<emphasis>ne bo</emphasis> dvignjeno in osredotočeno.</item><item><emphasis "
+"strong='true'>Visoko:</emphasis> Novo odprto okno bo dvignjeno in "
+"osredotočeno, če pripada isti aplikaciji kot trenutno osredotočeno okno.</"
+"item><item><emphasis strong='true'>Ekstremno:</emphasis> Novo odprto okno ne "
+"bo nikoli dvignjeno in prevzelo osredotočenost.</item></list>"
 
 #: rulesmodel.cpp:680
 #, kde-format
@@ -695,7 +732,7 @@ msgstr "Sprejmi osredotočenost"
 #: rulesmodel.cpp:682
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
-msgstr ""
+msgstr "Kontrolira ali to okno postane osredotočeno, kadar kliknemo nanj."
 
 #: rulesmodel.cpp:686
 #, kde-format
@@ -713,6 +750,12 @@ msgid ""
 "use any other global shortcuts such as <shortcut>Alt+Space</shortcut> to "
 "activate KRunner."
 msgstr ""
+"Uporabite to lastnost, da preprečite, da bi bližnjice globalne tipkovnice "
+"delovale, ko je okno osredotočeno. To je lahko koristno za aplikacije, kot "
+"so emulatorji ali virtualni stroji, ki upravljajo z nekaterimi enakimi "
+"bližnjicami.<nl/><nl/>Upoštevajte, da ne boste mogli uporabiti bližnjic kot "
+"so <shortcut>Alt+Tab</shortcut> iz okna ali katerekoli globalne bližnjice "
+"kot je <shortcut>Alt+preslednica</shortcut> za aktiviranje KRunnerja."
 
 #: rulesmodel.cpp:698
 #, kde-format

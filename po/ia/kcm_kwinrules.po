@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-13 02:16+0000\n"
-"PO-Revision-Date: 2023-04-12 22:16+0200\n"
+"PO-Revision-Date: 2023-04-13 22:58+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -495,15 +495,7 @@ msgid "Ignore requested geometry"
 msgstr "Ignora geometria requirite"
 
 #: rulesmodel.cpp:534
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info:tooltip"
-#| msgid ""
-#| "Some applications can set their own geometry, overriding the window "
-#| "manager preferences. Setting this property overrides their placement "
-#| "requests.<nl/>This affects <interface>Size</interface> and "
-#| "<interface>Position</interface> but not <interface>Maximized</interface> "
-#| "or <interface>Fullscreen</interface> states.<nl/>Note that the position "
-#| "can also be used to map to a different <interface>Screen</interface>"
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Some applications can set their own geometry, overriding the window manager "
@@ -514,11 +506,11 @@ msgid ""
 "can also be used to map to a different <interface>Screen</interface>"
 msgstr ""
 "Alcun applicationes pote fixar lor proprie geometria, ultrapassante le "
-"preferentias de gernte de fenestra.  Fixar iste proprietate ultrapassa lor "
-"requestas de collocation.<nl/>Isto influentia  <interface>Dimension</"
+"preferentias de gerente de fenestra.  Fixar iste proprietate ultrapassa lor "
+"requestas de collocation.<nl/><nl/>Isto influentia  <interface>Dimension</"
 "interface> e <interface>Position</interface> ma non statos "
 "<interface>Maximizate</interface> o <interface>A Schermo plen</interface> ."
-"<nl/>Nota que le position pote anque esser usate per mappar a un "
+"<nl/><nl/>Nota que le position pote anque esser usate per mappar a un "
 "<interface>Schermo</interface> differente"
 
 #: rulesmodel.cpp:546
@@ -537,12 +529,7 @@ msgid "Obey geometry restrictions"
 msgstr "Obedi a restrictiones de geometria"
 
 #: rulesmodel.cpp:558
-#, fuzzy, kde-kuit-format
-#| msgid ""
-#| "Eg. terminals or video players can ask to keep a certain aspect ratio or "
-#| "only grow by values larger than one (eg. by the dimensions of one "
-#| "character). This may be pointless and the restriction prevents arbitrary "
-#| "dimensions like your complete screen area."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Some apps like video players or terminals can ask KWin to constrain them to "
@@ -551,10 +538,12 @@ msgid ""
 "windows to be resized to arbitrary sizes.<nl/><nl/>This can be helpful for "
 "windows that can't quite fit the full screen area when maximized."
 msgstr ""
-"P.ex. jocatores de video o terminales pote demandar de mantener un certe "
-"rata de aspecto o solmente crescer per valores plus grande que uno (p.ex. "
-"per le dimensiones de un character). Isto pote esser sin significato  e le "
-"restriction evita dimensiones arbitrari como tu complete area de schermo."
+"Alcun apps como jocatores de video o terminales pote demandar que KWin "
+"coerce lor a certe ratas de aspecto o solmente crescer per valores plus "
+"grande que un character. Usa iste proprietate per ignorar tal restrictiones "
+"e permitte que ille fenestras essera redimensionate a dimensiones arbitrari."
+"<nl/><nl/>Isto pote esser utile per fenestras que non pote adaptar satis al "
+"area de schermo plen quando maximizate."
 
 #: rulesmodel.cpp:569
 #, kde-format
@@ -581,7 +570,7 @@ msgstr "Salta barra de carga"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
-msgstr ""
+msgstr "Controla si o no le fenestra appare in le Gerente de Carga."
 
 #: rulesmodel.cpp:585
 #, kde-format
@@ -594,6 +583,7 @@ msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the Virtual Desktop manager."
 msgstr ""
+"Controla si o no le fenestra appare in le gerente de Scriptorio Virtual."
 
 #: rulesmodel.cpp:591
 #, kde-format
@@ -607,6 +597,8 @@ msgid ""
 "Controls whether or not the window appears in the <shortcut>Alt+Tab</"
 "shortcut> window list."
 msgstr ""
+"Controla si o no le fenestra appare in le lista de fenestra de <shortcut>Alt"
+"+Tab</shortcut>"
 
 #: rulesmodel.cpp:597
 #, kde-format
@@ -666,6 +658,23 @@ msgid ""
 "currently-focused window.</item><item><emphasis strong='true'>Extreme:</"
 "emphasis> The window will never be raised and focused.</item></list>"
 msgstr ""
+"KWin essaya a impedir fenestras que esseva aperite sin action de usator "
+"directe ab altiar se mesme e prender foco durante que tu es currentemente "
+"interagente con un altere fenestra. Iste proprietate pote esser usate  "
+"cambiar le nivello de  prevention de furto de foco applicate a fenestras "
+"individual e apps.<nl/><nl/>Ecce lo que occurre a un fenestra aperite sin tu "
+"action directe a cata nivello de prevention de furto de foco:<nl/"
+"><list><item><emphasis strong='true'>Necun:</emphasis> Le fenestra essera "
+"altiate e focalisate.</item><item><emphasis strong='true'>Basse:</emphasis> "
+"Prevention de furto de foco essera applicate, ma in le caso de un situation "
+"que KWin considera ambigue, le fenestra essera altiate e focalisate.</"
+"item><item><emphasis strong='true'>Normal:</emphasis> Prevention de furto de "
+"foco essera applicate, ma in le caso de un situation que KWin considera "
+"ambigue, le fenestra <emphasis>non</emphasis> essera altiate e focalisate.</"
+"item><item><emphasis strong='true'>Alte:</emphasis> Le fenestra solmente "
+"ssera altiate e focalisate si pertineal mesme app como le fenestra "
+"currentemente focalisate.</item><item><emphasis strong='true'>Extreme:</"
+"emphasis> Le fenestra jmmais essera atiate e focalisate.</item></list>"
 
 #: rulesmodel.cpp:652
 #, kde-format
@@ -695,6 +704,25 @@ msgid ""
 "emphasis> Newly-opened windows never raise themselves and take focus.</"
 "item></list>"
 msgstr ""
+"Iste proprietate controla le nivello de protection de foco del fenestra "
+"currentemente active. Illo es usate per ultrapassar le prevention de furto "
+"de foco applicate a nove fenestras  que es aperite sin tu action directe.<nl/"
+"> <nl/>Ecce lo que occurre a nove fenestras que es aperite sin tu action "
+"directe a cata nivello de protection de foco durante que le fenestra con "
+"iste proprietate applicate a illo ha foco:<nl/><list><item><emphasis "
+"strong='true'>Necun</emphasis>: Fenestras aperite recentemente altia sempre "
+"se mesme e prende le foco.</item><item><emphasis strong='true'>Basse:</"
+"emphasis> Prevention de furto de foco essera applicate al fenestra aperite "
+"recentemente, ma in le caso de un situation que KWin considera ambigue, le "
+"fenestra essera altiate e focalisate.</item><item><emphasis "
+"strong='true'>Normal:</emphasis> Prevention de furto de foco essera "
+"applicate al fenestra aperite recentemente, ma in le cso de un situation que "
+"KWin considera ambigue, le fenestra <emphasis>non</emphasis> essera altiate "
+"e focalisate.</item><item><emphasis strong='true'>Alte:</emphasis> Fenestras "
+"aperite recentemente solmente altiara se mesme e prendera le foco si illos "
+"pertine al mesme apps como le fenestra currentemente focalisate.</"
+"item><item><emphasis strong='true'>Extreme:</emphasis> Fenestras aperite "
+"recentemente jammais altia se mesme e prende le foco.</item></list>"
 
 #: rulesmodel.cpp:680
 #, kde-format
@@ -704,7 +732,7 @@ msgstr "Acceptar foco"
 #: rulesmodel.cpp:682
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
-msgstr ""
+msgstr "Controla si o no le fenestra deveni focalisate quando cliccate."
 
 #: rulesmodel.cpp:686
 #, kde-format
@@ -722,6 +750,12 @@ msgid ""
 "use any other global shortcuts such as <shortcut>Alt+Space</shortcut> to "
 "activate KRunner."
 msgstr ""
+"Usa iste proprietate per impedir que vias breve global de claviero functiona "
+"durante que le fenestra es focalisate. Isto pote esser utile per apps como "
+"emulatores o machinas virtual que manea alcun del mesme vias breve per se "
+"mesme.<nl/><nl/>Nota que tu non potera usar <shortcut>Alt+Tab</shortcut> "
+"foras del fenestra o usar ulle altere vias breve global tal como "
+"<shortcut>Alt+Spatio</shortcut> per activar KRunner."
 
 #: rulesmodel.cpp:698
 #, kde-format

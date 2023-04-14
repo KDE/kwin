@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-13 02:16+0000\n"
-"PO-Revision-Date: 2023-04-12 12:15+0300\n"
+"PO-Revision-Date: 2023-04-13 12:54+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -496,15 +496,7 @@ msgid "Ignore requested geometry"
 msgstr "İstenen geometriyi yok say"
 
 #: rulesmodel.cpp:534
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info:tooltip"
-#| msgid ""
-#| "Some applications can set their own geometry, overriding the window "
-#| "manager preferences. Setting this property overrides their placement "
-#| "requests.<nl/>This affects <interface>Size</interface> and "
-#| "<interface>Position</interface> but not <interface>Maximized</interface> "
-#| "or <interface>Fullscreen</interface> states.<nl/>Note that the position "
-#| "can also be used to map to a different <interface>Screen</interface>"
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Some applications can set their own geometry, overriding the window manager "
@@ -516,11 +508,11 @@ msgid ""
 msgstr ""
 "Bazı uygulamalar, pencere yöneticisinin tercihlerini geçersiz kılıp kendi "
 "geometrilerini ayarlayabilirler. Bu özelliği ayarlamak, onların yerleştirme "
-"isteklerini geçersiz kılar.<nl/>Bu, <interface>Boyut</interface> ve "
+"isteklerini geçersiz kılar.<nl/><nl/>Bu, <interface>Boyut</interface> ve "
 "<interface>Konum</interface> özelliklerini etkiler; ancak <interface>Ekranı "
 "Kaplamış</interface> veya <interface>Tam Ekran</interface> durumlarını "
-"etkilemez.<nl/>Konumun, başka bir <interface>Ekran</interface>'ı eşlemlemek "
-"için kullanılabileceğini aklınızda bulundurun."
+"etkilemez.<nl/><nl/>Konumun, başka bir <interface>Ekran</interface>'ı "
+"eşlemlemek için kullanılabileceğini aklınızda bulundurun."
 
 #: rulesmodel.cpp:546
 #, kde-format
@@ -538,12 +530,7 @@ msgid "Obey geometry restrictions"
 msgstr "Geometri kısıtlamalarına uy"
 
 #: rulesmodel.cpp:558
-#, fuzzy, kde-kuit-format
-#| msgid ""
-#| "Eg. terminals or video players can ask to keep a certain aspect ratio or "
-#| "only grow by values larger than one (eg. by the dimensions of one "
-#| "character). This may be pointless and the restriction prevents arbitrary "
-#| "dimensions like your complete screen area."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Some apps like video players or terminals can ask KWin to constrain them to "
@@ -552,10 +539,12 @@ msgid ""
 "windows to be resized to arbitrary sizes.<nl/><nl/>This can be helpful for "
 "windows that can't quite fit the full screen area when maximized."
 msgstr ""
-"Örn. uçbirimler veya video oynatıcılar özel bir en-boy oranını korumak "
-"isteyebilir veya yalnızca birden fazla değerlerde büyüyebilirler (örn. bir "
-"karakter boyutuna göre). Bu anlamsız olabilir ve kısıtlama, tüm ekran "
-"alanınız gibi keyfi ölçüleri önler."
+"Video oynatıcılar veya uçbirimler gibi bazı uygulamalar, KWin'den bunları "
+"belirli en boy oranlarıyla sınırlamasını veya yalnızca bir karakterin "
+"boyutlarından daha büyük değerlerle büyümesini isteyebilir. Bu tür "
+"kısıtlamaları yok saymak ve bu pencerelerin rastgele boyutlara getirilmesine "
+"izin vermek için bu özelliği kullanın.<nl/><nl/>Bu, ekranı kapladığında tam "
+"ekran alanına tam olarak sığamayan pencereler için yararlı olabilir."
 
 #: rulesmodel.cpp:569
 #, kde-format
@@ -582,7 +571,7 @@ msgstr "Görev çubuğunu atla"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
-msgstr ""
+msgstr "Pencerenin Görev Yöneticisi'nde görünüp görünmeyeceğini denetler."
 
 #: rulesmodel.cpp:585
 #, kde-format
@@ -595,6 +584,7 @@ msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the Virtual Desktop manager."
 msgstr ""
+"Pencerenin Sanal Masaüstü yöneticisinde görünüp görünmeyeceğini denetler."
 
 #: rulesmodel.cpp:591
 #, kde-format
@@ -608,6 +598,8 @@ msgid ""
 "Controls whether or not the window appears in the <shortcut>Alt+Tab</"
 "shortcut> window list."
 msgstr ""
+"Pencerenin <shortcut>Seçenek+Sekme</shortcut> pencere listesinde görünüp "
+"görünmeyeceğini denetler."
 
 #: rulesmodel.cpp:597
 #, kde-format
@@ -667,6 +659,22 @@ msgid ""
 "currently-focused window.</item><item><emphasis strong='true'>Extreme:</"
 "emphasis> The window will never be raised and focused.</item></list>"
 msgstr ""
+"KWin, doğrudan bir kullanıcı eylemi olmaksızın açılan pencerelerin "
+"kendilerini yükseltmesini ve siz başka bir pencereyle etkileşirken odağı "
+"almalarını önlemeye çalışır. Bireysel pencere ve uygulamalara uygulanan odak "
+"çalma korumasının düzeyini bu özelliği kullanarak değiştirebilirsiniz.<nl/"
+"><nl/>Odak çalmayı önlemenin değişik düzeylerinde, doğrudan bir eyleminiz "
+"olmaksızın açılan pencerelere ne olacağını burada görebilirsiniz:<nl/"
+"><list><item><emphasis strong='true'>Yok:</emphasis> Pencere yükseltilir ve "
+"odaklanılır.</item><item><emphasis strong='true'>Düşük:</emphasis> Odak "
+"çalmayı önleme uygulanır; ancak KWin'in belirsiz addettiği durumlarda "
+"pencere yükseltilir ve odaklanılır.</item><item><emphasis "
+"strong='true'>Normal:</emphasis> Odak çalmayı önleme uygulanır; ancak "
+"KWin'in belirsiz addettiği durumlarda pencere <emphasis>yükseltilmez ve "
+"odaklanılmaz</emphasis>.</item><item><emphasis strong='true'>Yüksek:</"
+"emphasis> Pencere yalnızca geçerli odaklı uygulamayla aynı uygulamaya aitse "
+"yükseltilir ve odaklanılır.</item><item><emphasis strong='true'>Çok Yüksek:</"
+"emphasis> Pencere hiçbir zaman yükseltilmez ve odaklanılmaz.</item></list>"
 
 #: rulesmodel.cpp:652
 #, kde-format
@@ -696,6 +704,22 @@ msgid ""
 "emphasis> Newly-opened windows never raise themselves and take focus.</"
 "item></list>"
 msgstr ""
+"Bu özellik, geçerli etkin pencerenin odak koruması düzeyini denetler. Sizin "
+"doğrudan eyleminiz olmadan açılan yeni pencerelere uygulanan odak çalmayı "
+"önlemeyi geçersiz kılmak için kullanılır.<nl/><nl/>Odak korumanın her bir "
+"düzeyinde, bu özelliğin uygulandığı pencere odaktayken doğrudan eyleminiz "
+"olmadan açılan yeni pencerelere şunlar olur:<nl/><list><item><emphasis "
+"strong='true'>Yok</emphasis>: Yeni açılan pencereler her zaman kendilerini "
+"yükseltirler ve odağı alırlar.</item><item><emphasis strong='true'>Düşük:</"
+"emphasis> Yeni açılan pencereye odak korumayı önleme uygulanır; ancak "
+"KWin'in belirsiz addettiği bir durumda pencere yükseltilir ve odaklanılır.</"
+"item><item><emphasis strong='true'>Normal:</emphasis> Odak çalmayı önleme "
+"yeni açılan pencereye uygulanır; ancak KWin'in belirsiz addettiği durumlarda "
+"pencere <emphasis>yükseltilmez ve odaklanılmaz</emphasis>.</"
+"item><item><emphasis strong='true'>Yüksek:</emphasis> Yeni açılan pencere "
+"yalnızca geçerli odaklı uygulamayla aynı uygulamaya aitse yükseltilir ve "
+"odaklanılır.</item><item><emphasis strong='true'>Çok Yüksek:</emphasis> Yeni "
+"açılan pencere hiçbir zaman yükseltilmez ve odaklanılmaz.</item></list>"
 
 #: rulesmodel.cpp:680
 #, kde-format
@@ -705,7 +729,7 @@ msgstr "Odağı kabul et"
 #: rulesmodel.cpp:682
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
-msgstr ""
+msgstr "Pencerenin tıklandığında odağı alıp almayacağını denetler."
 
 #: rulesmodel.cpp:686
 #, kde-format
@@ -723,6 +747,12 @@ msgid ""
 "use any other global shortcuts such as <shortcut>Alt+Space</shortcut> to "
 "activate KRunner."
 msgstr ""
+"Pencere odaklıyken global klavye kısayollarının çalışmasını önlemek için bu "
+"özelliği kullanın. Bu, öykünücüler ve sanal makineler gibi, aynı kısayolları "
+"kendileri de kullanan bazı uygulamalamar için yararlıdır.<nl/><nl/"
+"><shortcut>Seçenek+Sekme</shortcut> gibi pencere değiştirme kısayolunu veya "
+"<shortcut>Seçenek+Boşluk</shortcut> gibi K Çalıştır kısayollarını "
+"kullanamayacağınızı aklınızda bulundurun."
 
 #: rulesmodel.cpp:698
 #, kde-format

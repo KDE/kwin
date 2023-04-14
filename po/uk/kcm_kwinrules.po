@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-13 02:16+0000\n"
-"PO-Revision-Date: 2023-04-12 08:04+0300\n"
+"PO-Revision-Date: 2023-04-13 15:59+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -507,15 +507,7 @@ msgid "Ignore requested geometry"
 msgstr "Ігнорувати запитану позицію"
 
 #: rulesmodel.cpp:534
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info:tooltip"
-#| msgid ""
-#| "Some applications can set their own geometry, overriding the window "
-#| "manager preferences. Setting this property overrides their placement "
-#| "requests.<nl/>This affects <interface>Size</interface> and "
-#| "<interface>Position</interface> but not <interface>Maximized</interface> "
-#| "or <interface>Fullscreen</interface> states.<nl/>Note that the position "
-#| "can also be used to map to a different <interface>Screen</interface>"
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Some applications can set their own geometry, overriding the window manager "
@@ -527,11 +519,11 @@ msgid ""
 msgstr ""
 "Деякі програми можуть встановлювати власну геометрію, перевизначаючи "
 "налаштування засобу керування вікнами. Встановлення цієї властивості має "
-"пріоритет над їхніми запитами щодо розташування.<nl/>Це стосується "
+"пріоритет над їхніми запитами щодо розташування.<nl/><nl/>Це стосується "
 "параметрів <interface>Розмір</interface> і <interface>Розташування</"
 "interface>, але не станів <interface>Максимізовано</interface> або "
-"<interface>На весь екран</interface>.<nl/>Зауважте, що розташування може "
-"бути також використане для прив'язки вікна до іншого <interface>Екрана</"
+"<interface>На весь екран</interface>.<nl/><nl/>Зауважте, що розташування "
+"може бути також використане для прив'язки вікна до іншого <interface>Екрана</"
 "interface>"
 
 #: rulesmodel.cpp:546
@@ -550,12 +542,7 @@ msgid "Obey geometry restrictions"
 msgstr "Зважати на обмеження розмірів"
 
 #: rulesmodel.cpp:558
-#, fuzzy, kde-kuit-format
-#| msgid ""
-#| "Eg. terminals or video players can ask to keep a certain aspect ratio or "
-#| "only grow by values larger than one (eg. by the dimensions of one "
-#| "character). This may be pointless and the restriction prevents arbitrary "
-#| "dimensions like your complete screen area."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Some apps like video players or terminals can ask KWin to constrain them to "
@@ -564,11 +551,13 @@ msgid ""
 "windows to be resized to arbitrary sizes.<nl/><nl/>This can be helpful for "
 "windows that can't quite fit the full screen area when maximized."
 msgstr ""
-"Для вікон терміналів або програвачів відео, наприклад, потрібно підтримувати "
-"певне співвідношення розмірів або збільшувати розміри на значення, більші за "
-"один піксель (наприклад, на розмір символу). Подібний метод розташування "
-"може не працювати і заважати довільному визначенню розмірів, зокрема "
-"розгортанню вікна на весь екран."
+"Деякі програми, зокрема відеопрогравачі та термінали, можуть надсилати до "
+"KWin запит щодо обмеження їхніх вікон певним співвідношенням розмірів або "
+"збільшення розмірів вікон лише кроками, які кратні до розміру одного "
+"символу. Скористайтеся цією властивістю для ігнорування цих обмежень і "
+"уможливлення довільної зміни розмірів вікон.<nl/><nl/>Це може бути корисним "
+"для вікон, які не повністю вписуються у параметри повноекранного режиму, "
+"коли їх максимізують."
 
 #: rulesmodel.cpp:569
 #, kde-format
@@ -595,7 +584,7 @@ msgstr "Пропустити панель задач"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
-msgstr ""
+msgstr "Керує тим, чи буде вікно показано на панелі керування завданнями."
 
 #: rulesmodel.cpp:585
 #, kde-format
@@ -608,6 +597,8 @@ msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the Virtual Desktop manager."
 msgstr ""
+"Керує тим, чи буде вікно показано на панелі керування віртуальними "
+"стільницями."
 
 #: rulesmodel.cpp:591
 #, kde-format
@@ -621,6 +612,8 @@ msgid ""
 "Controls whether or not the window appears in the <shortcut>Alt+Tab</"
 "shortcut> window list."
 msgstr ""
+"Керує тим, чи буде вікно показано у списку вікон, який можна викликати "
+"комбінацією клавіш <shortcut>Alt+Tab</shortcut>."
 
 #: rulesmodel.cpp:597
 #, kde-format
@@ -680,6 +673,24 @@ msgid ""
 "currently-focused window.</item><item><emphasis strong='true'>Extreme:</"
 "emphasis> The window will never be raised and focused.</item></list>"
 msgstr ""
+"KWin намагається запобігти автоматичному підняттю вікон, які було відкрито "
+"без безпосередньої участі користувача, і перехопленню такими вікнами "
+"фокусування, коли ви працюєте з іншим вікном. Цією властивістю можна "
+"скористатися для внесення змін до рівня запобігання перехопленню фокусування "
+"для окремих вікон і програм.<nl/><nl/>Ось, що трапиться із вікном, яке було "
+"відкрито без безпосередньої взаємодії, на кожному з рівнів запобігання "
+"перехопленню фокусування:<nl/><list><item><emphasis strong='true'>Немає:</"
+"emphasis> вікно буде піднято і фокусовано.</item><item><emphasis "
+"strong='true'>Низький:</emphasis> буде застосовано запобігання перехопленню "
+"фокусування, але у випадках, які KWin вважатиме неоднозначними, вікно буде "
+"піднято і фокусовано.</item><item><emphasis strong='true'>Звичайний:</"
+"emphasis> буде застосовано запобігання перехопленню фокусування, але у "
+"випадках, які KWin вважатиме неоднозначними, вікно <emphasis>не</emphasis> "
+"буде піднято і фокусовано.</item><item><emphasis strong='true'>Високий:</"
+"emphasis> вікно буде піднято і фокусовано, лише якщо воно належить тій самій "
+"програмі, що і поточне фокусоване вікно.</item><item><emphasis "
+"strong='true'>Екстремальний:</emphasis> вікно не буде піднято і фокусовано "
+"за жодних умов.</item></list>"
 
 #: rulesmodel.cpp:652
 #, kde-format
@@ -709,6 +720,26 @@ msgid ""
 "emphasis> Newly-opened windows never raise themselves and take focus.</"
 "item></list>"
 msgstr ""
+"Ця властивість керує рівнем захисту фокусування поточного активного вікна. "
+"Нею користуються для перевизначення запобігання перехопленню фокусування, "
+"яке буде застосовано до нових вікон, які відкрито без безпосередньої "
+"взаємодії з вами.<nl/><nl/>Ось, що трапиться із новими вікнами, які буде "
+"відкрито без безпосередньої взаємодії з вами, на кожному з рівнів захисту "
+"фокусування, доки вікно із застосованим значенням цієї властивості перебуває "
+"у фокусі:<nl/><list><item><emphasis strong='true'>Немає</emphasis>: нові "
+"відкриті вікна завжди підніматимуться і отримуватимуть фокусування.</"
+"item><item><emphasis strong='true'>Низький:</emphasis> запобігання "
+"перехопленню фокусування буде застосовано до нових відкритих вікон, але у "
+"випадках, які KWin вважатиме неоднозначними, вікно буде піднято і фокусовано."
+"</item><item><emphasis strong='true'>Звичайний:</emphasis> запобігання "
+"перехопленню фокусування буде застосовано до нових відкритих вікон, але у "
+"випадках, які KWin вважатиме неоднозначними, вікно <emphasis>не</emphasis> "
+"буде піднято і фокусовано.</item><item><emphasis strong='true'>Високий:</"
+"emphasis> нові відкриті вікна підніматимуться і отримуватимуть фокус, якщо "
+"вони належать тій самій програмі, що і поточне фокусоване вікно.</"
+"item><item><emphasis strong='true'>Екстремальний:</emphasis> нові відкриті "
+"вікна ніколи не підніматимуться і не отримуватимуть фокусування.</item></"
+"list>"
 
 #: rulesmodel.cpp:680
 #, kde-format
@@ -718,7 +749,7 @@ msgstr "Допускає фокус"
 #: rulesmodel.cpp:682
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
-msgstr ""
+msgstr "Керує тим, чи буде передано вікну фокус при клацанні кнопкою миші."
 
 #: rulesmodel.cpp:686
 #, kde-format
@@ -736,6 +767,13 @@ msgid ""
 "use any other global shortcuts such as <shortcut>Alt+Space</shortcut> to "
 "activate KRunner."
 msgstr ""
+"Скористайтеся цією властивістю для запобігання використанню загальний "
+"клавіатурних скорочень, доки вікно перебуває у фокусі. Це може бути корисно "
+"лише для програм, подібних до емуляторів або віртуальних машин, які можуть "
+"обробляти деякі скорочення самостійно.<nl/><nl/>Зауважте, що ви не зможете "
+"скористатися <shortcut>Alt+Tab</shortcut>, щоб покинути вікно, або "
+"використати будь-яке інше загальне скорочення, зокрема <shortcut>Alt+Пробіл</"
+"shortcut> для виклику KRunner."
 
 #: rulesmodel.cpp:698
 #, kde-format
