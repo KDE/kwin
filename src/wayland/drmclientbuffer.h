@@ -6,10 +6,14 @@
 
 #pragma once
 
-#include "clientbufferintegration.h"
+#include "kwin_export.h"
+
+#include <QObject>
 
 namespace KWaylandServer
 {
+
+class Display;
 class DrmClientBufferIntegrationPrivate;
 
 /**
@@ -23,7 +27,7 @@ class DrmClientBufferIntegrationPrivate;
  * Once the wl_drm protocol is no longer mandatory in Xwayland, this stub can be
  * dropped.
  */
-class KWIN_EXPORT DrmClientBufferIntegration : public ClientBufferIntegration
+class KWIN_EXPORT DrmClientBufferIntegration : public QObject
 {
     Q_OBJECT
 

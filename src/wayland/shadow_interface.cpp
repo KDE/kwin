@@ -20,7 +20,6 @@ public:
     ShadowManagerInterfacePrivate(ShadowManagerInterface *_q, Display *display);
 
     ShadowManagerInterface *q;
-    Display *display;
 
 protected:
     void org_kde_kwin_shadow_manager_create(Resource *resource, uint32_t id, wl_resource *surface) override;
@@ -31,7 +30,6 @@ protected:
 ShadowManagerInterfacePrivate::ShadowManagerInterfacePrivate(ShadowManagerInterface *_q, Display *display)
     : QtWaylandServer::org_kde_kwin_shadow_manager(*display, s_version)
     , q(_q)
-    , display(display)
 {
 }
 
@@ -78,11 +76,6 @@ ShadowManagerInterface::ShadowManagerInterface(Display *display, QObject *parent
 }
 
 ShadowManagerInterface::~ShadowManagerInterface() = default;
-
-Display *ShadowManagerInterface::display() const
-{
-    return d->display;
-}
 
 class ShadowInterfacePrivate : public QtWaylandServer::org_kde_kwin_shadow
 {
@@ -172,7 +165,7 @@ void ShadowInterfacePrivate::org_kde_kwin_shadow_commit(Resource *resource)
 
 void ShadowInterfacePrivate::attach(ShadowInterfacePrivate::State::Flags flag, wl_resource *buffer)
 {
-    ClientBuffer *b = manager->display()->clientBufferForResource(buffer);
+    ClientBuffer *b = ClientBuffer::get(buffer);
     switch (flag) {
     case State::LeftBuffer:
         pending.left = b;

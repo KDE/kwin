@@ -215,7 +215,6 @@ target_sources(kwin PRIVATE
     appmenu_interface.cpp
     blur_interface.cpp
     clientbuffer.cpp
-    clientbufferintegration.cpp
     clientconnection.cpp
     compositor_interface.cpp
     contenttype_v1_interface.cpp

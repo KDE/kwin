@@ -28,8 +28,6 @@ public:
     explicit ShadowManagerInterface(Display *display, QObject *parent = nullptr);
     ~ShadowManagerInterface() override;
 
-    Display *display() const;
-
 private:
     std::unique_ptr<ShadowManagerInterfacePrivate> d;
 };

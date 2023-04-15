@@ -8,16 +8,10 @@
 
 #include "core/graphicsbuffer.h"
 
-#include <QImage>
-#include <QObject>
-#include <QSize>
-#include <memory>
-
 struct wl_resource;
 
 namespace KWaylandServer
 {
-class ClientBufferPrivate;
 
 /**
  * The ClientBuffer class represents a client buffer.
@@ -30,23 +24,9 @@ class ClientBufferPrivate;
 class KWIN_EXPORT ClientBuffer : public KWin::GraphicsBuffer
 {
     Q_OBJECT
-    Q_DECLARE_PRIVATE(ClientBuffer)
 
 public:
-    ~ClientBuffer() override;
-
-    /**
-     * Returns the wl_resource for this ClientBuffer. If the buffer is destroyed, @c null
-     * will be returned.
-     */
-    wl_resource *resource() const;
-
-protected:
-    ClientBuffer(std::unique_ptr<ClientBufferPrivate> &&d);
-    ClientBuffer(wl_resource *resource, std::unique_ptr<ClientBufferPrivate> &&d);
-
-    void initialize(wl_resource *resource);
-    std::unique_ptr<ClientBufferPrivate> d_ptr;
+    static ClientBuffer *get(wl_resource *resource);
 };
 
 } // namespace KWaylandServer

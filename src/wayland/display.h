@@ -125,12 +125,6 @@ public:
     ClientConnection *getConnection(wl_client *client);
     QVector<ClientConnection *> connections() const;
 
-    /**
-     * Returns the client buffer with the specified @a resource. Returns @c null if there's
-     * no such a buffer.
-     */
-    ClientBuffer *clientBufferForResource(wl_resource *resource) const;
-
 private Q_SLOTS:
     void flush();
 

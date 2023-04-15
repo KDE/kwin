@@ -5,8 +5,10 @@
 */
 
 #include "shmclientbuffer.h"
-#include "clientbuffer_p.h"
 #include "display.h"
+
+#include <QHash>
+#include <QImage>
 
 #include <wayland-server-core.h>
 #include <wayland-server-protocol.h>
@@ -15,8 +17,9 @@ namespace KWaylandServer
 {
 static const ShmClientBuffer *s_accessedBuffer = nullptr;
 static int s_accessCounter = 0;
+static QHash<wl_resource *, ShmClientBuffer *> s_buffers;
 
-class ShmClientBufferPrivate : public ClientBufferPrivate
+class ShmClientBufferPrivate
 {
 public:
     ShmClientBufferPrivate(ShmClientBuffer *q);
@@ -24,6 +27,7 @@ public:
     static void buffer_destroy_callback(wl_listener *listener, void *data);
 
     ShmClientBuffer *q;
+    wl_resource *resource = nullptr;
     QImage::Format format = QImage::Format_Invalid;
     uint32_t width = 0;
     uint32_t height = 0;
@@ -51,12 +55,13 @@ static void cleanupShmPool(void *poolHandle)
 void ShmClientBufferPrivate::buffer_destroy_callback(wl_listener *listener, void *data)
 {
     auto bufferPrivate = reinterpret_cast<ShmClientBufferPrivate::DestroyListener *>(listener)->receiver;
-    wl_shm_buffer *buffer = wl_shm_buffer_get(bufferPrivate->q->resource());
+    wl_shm_buffer *buffer = wl_shm_buffer_get(bufferPrivate->resource);
     wl_shm_pool *pool = wl_shm_buffer_ref_pool(buffer);
 
     wl_list_remove(&bufferPrivate->destroyListener.listener.link);
     wl_list_init(&bufferPrivate->destroyListener.listener.link);
 
+    bufferPrivate->resource = nullptr;
     bufferPrivate->savedData = QImage(static_cast<const uchar *>(wl_shm_buffer_get_data(buffer)),
                                       bufferPrivate->width,
                                       bufferPrivate->height,
@@ -64,6 +69,8 @@ void ShmClientBufferPrivate::buffer_destroy_callback(wl_listener *listener, void
                                       bufferPrivate->format,
                                       cleanupShmPool,
                                       pool);
+
+    bufferPrivate->q->drop();
 }
 
 static bool alphaChannelFromFormat(uint32_t format)
@@ -110,32 +117,35 @@ static QImage::Format imageFormatForShmFormat(uint32_t format)
 }
 
 ShmClientBuffer::ShmClientBuffer(wl_resource *resource)
-    : ClientBuffer(resource, std::make_unique<ShmClientBufferPrivate>(this))
+    : d(std::make_unique<ShmClientBufferPrivate>(this))
 {
-    Q_D(ShmClientBuffer);
-
     wl_shm_buffer *buffer = wl_shm_buffer_get(resource);
+    d->resource = resource;
     d->width = wl_shm_buffer_get_width(buffer);
     d->height = wl_shm_buffer_get_height(buffer);
     d->hasAlphaChannel = alphaChannelFromFormat(wl_shm_buffer_get_format(buffer));
     d->format = imageFormatForShmFormat(wl_shm_buffer_get_format(buffer));
 
-    // The underlying shm pool will be referenced if the wl_shm_buffer is destroyed so the
-    // compositor can access buffer data even after the buffer is gone.
-    d->destroyListener.receiver = d;
+    d->destroyListener.receiver = d.get();
     d->destroyListener.listener.notify = ShmClientBufferPrivate::buffer_destroy_callback;
     wl_resource_add_destroy_listener(resource, &d->destroyListener.listener);
+
+    connect(this, &GraphicsBuffer::released, [this]() {
+        wl_buffer_send_release(d->resource);
+    });
+}
+
+ShmClientBuffer::~ShmClientBuffer()
+{
 }
 
 QSize ShmClientBuffer::size() const
 {
-    Q_D(const ShmClientBuffer);
     return QSize(d->width, d->height);
 }
 
 bool ShmClientBuffer::hasAlphaChannel() const
 {
-    Q_D(const ShmClientBuffer);
     return d->hasAlphaChannel;
 }
 
@@ -155,8 +165,7 @@ QImage ShmClientBuffer::data() const
         return QImage();
     }
 
-    Q_D(const ShmClientBuffer);
-    if (wl_shm_buffer *buffer = wl_shm_buffer_get(resource())) {
+    if (wl_shm_buffer *buffer = wl_shm_buffer_get(d->resource)) {
         s_accessedBuffer = this;
         s_accessCounter++;
         wl_shm_buffer_begin_access(buffer);
@@ -167,8 +176,26 @@ QImage ShmClientBuffer::data() const
     return d->savedData;
 }
 
+ShmClientBuffer *ShmClientBuffer::get(wl_resource *resource)
+{
+    if (auto buffer = s_buffers.value(resource)) {
+        return buffer;
+    }
+
+    if (wl_shm_buffer_get(resource)) {
+        auto buffer = new ShmClientBuffer(resource);
+        s_buffers[resource] = buffer;
+        connect(buffer, &ShmClientBuffer::dropped, [resource]() {
+            s_buffers.remove(resource);
+        });
+        return buffer;
+    }
+
+    return nullptr;
+}
+
 ShmClientBufferIntegration::ShmClientBufferIntegration(Display *display)
-    : ClientBufferIntegration(display)
+    : QObject(display)
 {
 #if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
     wl_display_add_shm_format(*display, WL_SHM_FORMAT_ARGB2101010);
@@ -179,14 +206,6 @@ ShmClientBufferIntegration::ShmClientBufferIntegration(Display *display)
     wl_display_add_shm_format(*display, WL_SHM_FORMAT_XBGR16161616);
 #endif
     wl_display_init_shm(*display);
-}
-
-ClientBuffer *ShmClientBufferIntegration::createBuffer(::wl_resource *resource)
-{
-    if (wl_shm_buffer_get(resource)) {
-        return new ShmClientBuffer(resource);
-    }
-    return nullptr;
 }
 
 } // namespace KWaylandServer

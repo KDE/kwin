@@ -270,7 +270,7 @@ void SurfaceInterfacePrivate::surface_attach(Resource *resource, struct ::wl_res
         pending.bufferDamage = QRegion();
         return;
     }
-    pending.buffer = compositor->display()->clientBufferForResource(buffer);
+    pending.buffer = ClientBuffer::get(buffer);
 }
 
 void SurfaceInterfacePrivate::surface_damage(Resource *, int32_t x, int32_t y, int32_t width, int32_t height)

@@ -7,10 +7,11 @@
 #pragma once
 
 #include "clientbuffer.h"
-#include "clientbufferintegration.h"
 
 namespace KWaylandServer
 {
+
+class Display;
 class ShmClientBufferPrivate;
 
 /**
@@ -22,28 +23,31 @@ class ShmClientBufferPrivate;
 class KWIN_EXPORT ShmClientBuffer : public ClientBuffer
 {
     Q_OBJECT
-    Q_DECLARE_PRIVATE(ShmClientBuffer)
 
 public:
     explicit ShmClientBuffer(wl_resource *resource);
+    ~ShmClientBuffer() override;
 
     QImage data() const;
 
     QSize size() const override;
     bool hasAlphaChannel() const override;
+
+    static ShmClientBuffer *get(wl_resource *resource);
+
+private:
+    std::unique_ptr<ShmClientBufferPrivate> d;
 };
 
 /**
  * The ShmClientBufferIntegration class provides support for wl_shm_buffer buffers.
  */
-class ShmClientBufferIntegration : public ClientBufferIntegration
+class ShmClientBufferIntegration : public QObject
 {
     Q_OBJECT
 
 public:
     explicit ShmClientBufferIntegration(Display *display);
-
-    ClientBuffer *createBuffer(::wl_resource *resource) override;
 };
 
 } // namespace KWaylandServer

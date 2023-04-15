@@ -119,7 +119,7 @@ void DrmClientBufferIntegrationPrivate::drm_create_prime_buffer(Resource *resour
 }
 
 DrmClientBufferIntegration::DrmClientBufferIntegration(Display *display)
-    : ClientBufferIntegration(display)
+    : QObject(display)
     , d(std::make_unique<DrmClientBufferIntegrationPrivate>(display))
 {
 }
