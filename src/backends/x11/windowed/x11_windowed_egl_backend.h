@@ -12,13 +12,11 @@
 #include "libkwineffects/kwinglutils.h"
 #include "platformsupport/scenes/opengl/abstract_egl_backend.h"
 
-#include <QMap>
-
-struct gbm_bo;
-
 namespace KWin
 {
 
+class GbmGraphicsBuffer;
+class GbmGraphicsBufferAllocator;
 class X11WindowedBackend;
 class X11WindowedOutput;
 class X11WindowedEglBackend;
@@ -26,7 +24,7 @@ class X11WindowedEglBackend;
 class X11WindowedEglLayerBuffer
 {
 public:
-    X11WindowedEglLayerBuffer(const QSize &size, uint32_t format, uint32_t depth, uint32_t bpp, const QVector<uint64_t> &modifiers, xcb_drawable_t drawable, X11WindowedEglBackend *backend);
+    X11WindowedEglLayerBuffer(GbmGraphicsBuffer *graphicsBuffers, uint32_t depth, uint32_t bpp, xcb_drawable_t drawable, X11WindowedEglBackend *backend);
     ~X11WindowedEglLayerBuffer();
 
     xcb_pixmap_t pixmap() const;
@@ -37,7 +35,7 @@ public:
 private:
     X11WindowedEglBackend *m_backend;
     xcb_pixmap_t m_pixmap = XCB_PIXMAP_NONE;
-    gbm_bo *m_bo = nullptr;
+    GbmGraphicsBuffer *m_graphicsBuffer;
     std::unique_ptr<GLFramebuffer> m_framebuffer;
     std::shared_ptr<GLTexture> m_texture;
     int m_age = 0;

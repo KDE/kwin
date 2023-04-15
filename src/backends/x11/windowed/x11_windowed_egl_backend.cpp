@@ -7,33 +7,25 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "x11_windowed_egl_backend.h"
+#include "core/gbmgraphicsbufferallocator.h"
+#include "platformsupport/scenes/opengl/basiceglsurfacetexture_internal.h"
+#include "platformsupport/scenes/opengl/basiceglsurfacetexture_wayland.h"
 #include "x11_windowed_backend.h"
 #include "x11_windowed_logging.h"
 #include "x11_windowed_output.h"
-#include "../../drm/gbm_dmabuf.h"
-
-#include "platformsupport/scenes/opengl/basiceglsurfacetexture_internal.h"
-#include "platformsupport/scenes/opengl/basiceglsurfacetexture_wayland.h"
 
 #include <drm_fourcc.h>
-#include <gbm.h>
 #include <xcb/dri3.h>
 
 namespace KWin
 {
 
-X11WindowedEglLayerBuffer::X11WindowedEglLayerBuffer(const QSize &size, uint32_t format, uint32_t depth, uint32_t bpp, const QVector<uint64_t> &modifiers, xcb_drawable_t drawable, X11WindowedEglBackend *backend)
+X11WindowedEglLayerBuffer::X11WindowedEglLayerBuffer(GbmGraphicsBuffer *graphicsBuffer, uint32_t depth, uint32_t bpp, xcb_drawable_t drawable, X11WindowedEglBackend *backend)
     : m_backend(backend)
+    , m_graphicsBuffer(graphicsBuffer)
 {
     X11WindowedBackend *x11Backend = backend->backend();
-
-    m_bo = createGbmBo(x11Backend->gbmDevice(), size, format, modifiers);
-    if (!m_bo) {
-        qCCritical(KWIN_X11WINDOWED) << "Failed to allocate a buffer for an output layer";
-        return;
-    }
-
-    const DmaBufAttributes attributes = dmaBufAttributesForBo(m_bo);
+    const DmaBufAttributes &attributes = graphicsBuffer->dmabufAttributes();
 
     m_pixmap = xcb_generate_id(x11Backend->connection());
     if (x11Backend->driMajorVersion() >= 1 || x11Backend->driMinorVersion() >= 2) {
@@ -45,16 +37,16 @@ X11WindowedEglLayerBuffer::X11WindowedEglLayerBuffer(const QSize &size, uint32_t
             attributes.fd[3].duplicate().take(),
         };
         xcb_dri3_pixmap_from_buffers(x11Backend->connection(), m_pixmap, drawable, attributes.planeCount,
-                                    size.width(), size.height(),
-                                    attributes.pitch[0], attributes.offset[0],
-                                    attributes.pitch[1], attributes.offset[1],
-                                    attributes.pitch[2], attributes.offset[2],
-                                    attributes.pitch[3], attributes.offset[3],
-                                    depth, bpp, attributes.modifier, fds);
+                                     attributes.width, attributes.height,
+                                     attributes.pitch[0], attributes.offset[0],
+                                     attributes.pitch[1], attributes.offset[1],
+                                     attributes.pitch[2], attributes.offset[2],
+                                     attributes.pitch[3], attributes.offset[3],
+                                     depth, bpp, attributes.modifier, fds);
     } else {
         // xcb_dri3_pixmap_from_buffer() takes the ownership of the file descriptor.
         xcb_dri3_pixmap_from_buffer(x11Backend->connection(), m_pixmap, drawable,
-                                    size.height() * attributes.pitch[0], size.width(), size.height(),
+                                    attributes.height * attributes.pitch[0], attributes.width, attributes.height,
                                     attributes.pitch[0], depth, bpp, attributes.fd[0].duplicate().take());
     }
 
@@ -67,12 +59,8 @@ X11WindowedEglLayerBuffer::~X11WindowedEglLayerBuffer()
     m_texture.reset();
     m_framebuffer.reset();
 
-    if (m_pixmap) {
-        xcb_free_pixmap(m_backend->backend()->connection(), m_pixmap);
-    }
-    if (m_bo) {
-        gbm_bo_destroy(m_bo);
-    }
+    xcb_free_pixmap(m_backend->backend()->connection(), m_pixmap);
+    m_graphicsBuffer->drop();
 }
 
 xcb_pixmap_t X11WindowedEglLayerBuffer::pixmap() const
@@ -98,8 +86,15 @@ int X11WindowedEglLayerBuffer::age() const
 X11WindowedEglLayerSwapchain::X11WindowedEglLayerSwapchain(const QSize &size, uint32_t format, uint32_t depth, uint32_t bpp, const QVector<uint64_t> &modifiers, xcb_drawable_t drawable, X11WindowedEglBackend *backend)
     : m_size(size)
 {
+    GbmGraphicsBufferAllocator allocator(backend->backend()->gbmDevice());
+
     for (int i = 0; i < 2; ++i) {
-        m_buffers.append(std::make_shared<X11WindowedEglLayerBuffer>(size, format, depth, bpp, modifiers, drawable, backend));
+        GbmGraphicsBuffer *graphicsBuffer = allocator.allocate(size, format, modifiers);
+        if (!graphicsBuffer) {
+            qCCritical(KWIN_X11WINDOWED) << "Failed to allocate a buffer for an output layer";
+            continue;
+        }
+        m_buffers.append(std::make_shared<X11WindowedEglLayerBuffer>(graphicsBuffer, depth, bpp, drawable, backend));
     }
 }
 
