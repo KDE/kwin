@@ -11,13 +11,13 @@
 
 namespace KWaylandServer
 {
-ClientBuffer::ClientBuffer(ClientBufferPrivate &dd)
-    : d_ptr(&dd)
+ClientBuffer::ClientBuffer(std::unique_ptr<ClientBufferPrivate> &&d)
+    : d_ptr(std::move(d))
 {
 }
 
-ClientBuffer::ClientBuffer(wl_resource *resource, ClientBufferPrivate &dd)
-    : d_ptr(&dd)
+ClientBuffer::ClientBuffer(wl_resource *resource, std::unique_ptr<ClientBufferPrivate> &&d)
+    : d_ptr(std::move(d))
 {
     initialize(resource);
 }

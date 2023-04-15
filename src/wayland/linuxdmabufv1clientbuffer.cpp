@@ -362,7 +362,7 @@ void LinuxDmaBufV1ClientBufferPrivate::buffer_destroy(Resource *resource)
 }
 
 LinuxDmaBufV1ClientBuffer::LinuxDmaBufV1ClientBuffer(KWin::DmaBufAttributes &&attrs, quint32 flags)
-    : ClientBuffer(*new LinuxDmaBufV1ClientBufferPrivate)
+    : ClientBuffer(std::make_unique<LinuxDmaBufV1ClientBufferPrivate>())
 {
     Q_D(LinuxDmaBufV1ClientBuffer);
     d->attrs = std::move(attrs);

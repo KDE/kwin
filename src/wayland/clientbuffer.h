@@ -42,8 +42,8 @@ public:
     wl_resource *resource() const;
 
 protected:
-    ClientBuffer(ClientBufferPrivate &dd);
-    ClientBuffer(wl_resource *resource, ClientBufferPrivate &dd);
+    ClientBuffer(std::unique_ptr<ClientBufferPrivate> &&d);
+    ClientBuffer(wl_resource *resource, std::unique_ptr<ClientBufferPrivate> &&d);
 
     void initialize(wl_resource *resource);
     std::unique_ptr<ClientBufferPrivate> d_ptr;

@@ -110,7 +110,7 @@ static QImage::Format imageFormatForShmFormat(uint32_t format)
 }
 
 ShmClientBuffer::ShmClientBuffer(wl_resource *resource)
-    : ClientBuffer(resource, *new ShmClientBufferPrivate(this))
+    : ClientBuffer(resource, std::make_unique<ShmClientBufferPrivate>(this))
 {
     Q_D(ShmClientBuffer);
 
