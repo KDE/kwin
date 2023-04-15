@@ -115,9 +115,15 @@ void WaylandTestApplication::createVirtualInputDevices()
 
 void WaylandTestApplication::destroyVirtualInputDevices()
 {
-    input()->removeInputDevice(m_virtualPointer.get());
-    input()->removeInputDevice(m_virtualTouch.get());
-    input()->removeInputDevice(m_virtualKeyboard.get());
+    if (m_virtualPointer) {
+        input()->removeInputDevice(m_virtualPointer.get());
+    }
+    if (m_virtualTouch) {
+        input()->removeInputDevice(m_virtualTouch.get());
+    }
+    if (m_virtualKeyboard) {
+        input()->removeInputDevice(m_virtualKeyboard.get());
+    }
 }
 
 void WaylandTestApplication::performStartup()
