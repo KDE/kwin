@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-13 02:16+0000\n"
-"PO-Revision-Date: 2023-04-12 07:00+0100\n"
+"PO-Revision-Date: 2023-04-15 01:21+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -373,6 +373,8 @@ msgid ""
 "Readability may be impaired with extremely low opacity values. At 0%, the "
 "window becomes invisible."
 msgstr ""
+"Legeblo povus difektiĝi je ekstreme malaltaj valoroj de opakeco. Je 0%, la "
+"fenestro iĝas nevidebla."
 
 #: rulesmodel.cpp:382
 #, kde-format
@@ -504,6 +506,13 @@ msgid ""
 "<interface>Fullscreen</interface> states.<nl/><nl/>Note that the position "
 "can also be used to map to a different <interface>Screen</interface>"
 msgstr ""
+"Iuj aplikaĵoj povas agordi sian propran geometrion, superregante la "
+"preferojn de la fenestromanaĝero. Agordi ĉi tiun posedaĵon superregas iliajn "
+"lokigajn petojn.<nl/><nl/>Tio influas <interface>Grandeco</interface> kaj "
+"<interface>Pozicion</interface> sed ne <interface>Maksimumigita</interface> "
+"aŭ <interface>Plena ekrano. </interface> deklaras.<nl/><nl/>Rimarku, ke la "
+"pozicio ankaŭ povas esti uzata por mapi al malsama <interface>Ekrano</"
+"interface>"
 
 #: rulesmodel.cpp:546
 #, kde-format
@@ -521,12 +530,7 @@ msgid "Obey geometry restrictions"
 msgstr "Obei geometriajn restriktojn"
 
 #: rulesmodel.cpp:558
-#, fuzzy, kde-kuit-format
-#| msgid ""
-#| "Eg. terminals or video players can ask to keep a certain aspect ratio or "
-#| "only grow by values larger than one (eg. by the dimensions of one "
-#| "character). This may be pointless and the restriction prevents arbitrary "
-#| "dimensions like your complete screen area."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Some apps like video players or terminals can ask KWin to constrain them to "
@@ -535,10 +539,11 @@ msgid ""
 "windows to be resized to arbitrary sizes.<nl/><nl/>This can be helpful for "
 "windows that can't quite fit the full screen area when maximized."
 msgstr ""
-"Ekz. terminaloj aŭ videoludiloj povas peti konservi certan bildformaton aŭ "
-"nur kreski per valoroj pli grandaj ol unu (ekz. per la dimensioj de unu "
-"signo). Tio povas esti sencela kaj la limigo malhelpas arbitrajn dimensiojn "
-"kiel via kompleta ekranareo."
+"Iuj aplikoj kiel videoludiloj aŭ terminaloj povas peti al KWin limigi ilin "
+"al certa bildformato aŭ nur kreski per valoroj pli grandaj ol la dimensioj "
+"de unu signo. Uzu ĉi tiun proprecon por ignori tiajn limigojn kaj permesi ke "
+"tiuj fenestroj aligrandiĝu al arbitraj grandecoj.<nl/><nl/>Tio povas helpi "
+"pri fenestroj kiuj ne entute ĝisrandas la plenekranan areon je maksimumiĝo."
 
 #: rulesmodel.cpp:569
 #, kde-format
@@ -565,7 +570,7 @@ msgstr "Preterpasi taskobreton"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
-msgstr ""
+msgstr "Mastrumas ĉu aŭ ne la fenestro aperas en la Task Manager."
 
 #: rulesmodel.cpp:585
 #, kde-format
@@ -578,6 +583,8 @@ msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the Virtual Desktop manager."
 msgstr ""
+"Mastrumas ĉu aŭ ne la fenestro aperas en la Virtuala Labortablo-"
+"administranto."
 
 #: rulesmodel.cpp:591
 #, kde-format
@@ -591,6 +598,8 @@ msgid ""
 "Controls whether or not the window appears in the <shortcut>Alt+Tab</"
 "shortcut> window list."
 msgstr ""
+"Mastrumas ĉu aŭ ne la fenestro aperas en la fenestrolisto <shortcut>Alt+Tab</"
+"shortcut>."
 
 #: rulesmodel.cpp:597
 #, kde-format
@@ -627,7 +636,7 @@ msgstr "Neaktiva opakeco"
 #: rulesmodel.cpp:625
 #, kde-format
 msgid "Focus stealing prevention"
-msgstr "Fokuso ŝtelado antaŭzorgo"
+msgstr "Fokus-ŝtela malhelpo"
 
 #: rulesmodel.cpp:627
 #, kde-kuit-format
@@ -650,6 +659,23 @@ msgid ""
 "currently-focused window.</item><item><emphasis strong='true'>Extreme:</"
 "emphasis> The window will never be raised and focused.</item></list>"
 msgstr ""
+"KWin provas malhelpi fenestrojn kiuj estis malfermitaj sen rekta uzantago "
+"levi sin kaj fokusigi dum vi nuntempe interagas kun alia fenestro. Ĉi tiu "
+"posedaĵo povas esti uzata por ŝanĝi la nivelon de fokusa ŝtelado-preventado "
+"aplikita al unuopaj fenestroj kaj aplikaĵoj.<nl/><nl/>Jen kio okazos al "
+"fenestro malfermita sen via rekta ago ĉe ĉiu nivelo de fokusa ŝtelado-"
+"preventado:<nl /><list><item><emphasis strong='true'>Nenio:</emphasis> La "
+"fenestro estos levita kaj fokusita.</item><item><emphasis "
+"strong='true'>Malalta:</emphasis > Preventado de fokusa ŝtelado estos "
+"aplikita, sed en la kazo de situacio kiun KWin konsideras ambigua, la "
+"fenestro estos levita kaj fokusita.</item><item><emphasis "
+"strong='true'>Normala:</emphasis> Fokusŝtelado. prevento estos aplikata, sed "
+"en la kazo de situacio kiun KWin konsideras ambigua, la fenestro "
+"<emphasis>ne</emphasis> estos levita kaj fokusita.</item><item><emphasis "
+"strong='true'>Alta:< /emphasis> La fenestro estos nur levita kaj fokusita se "
+"ĝi apartenas al la sama programo kiel la nune fokusita fenestro.</"
+"item><item><emphasis strong='true'>Ekstrema:</emphasis> La fenestro neniam "
+"estos esti levita kaj koncentrita.</ item></list>"
 
 #: rulesmodel.cpp:652
 #, kde-format
@@ -679,6 +705,24 @@ msgid ""
 "emphasis> Newly-opened windows never raise themselves and take focus.</"
 "item></list>"
 msgstr ""
+"Ĉi tiu posedaĵo kontrolas la fokusan protektonivelon de la nuntempe aktiva "
+"fenestro. Ĝi estas uzata por superregi la preventon de fokusa ŝtelado "
+"aplikita al novaj fenestroj kiuj estas malfermitaj sen via rekta ago.<nl/"
+"><nl/>Jen kio okazas al novaj fenestroj kiuj estas malfermitaj sen via rekta "
+"ago je ĉiu nivelo de fokusa protekto dum la fenestro kun ĉi tiu propreco "
+"aplikita al ĝi havas fokuson:<nl/><list><item><emphasis strong='true'>Neniu</"
+"emphasis>: Nov-malfermitaj fenestroj ĉiam levas sin kaj fokusiĝas.</item>< "
+"item><emphasis strong='true'>Malalta:</emphasis> Antaŭzorgo pri fokusa "
+"ŝtelado estos aplikata al la ĵus malfermita fenestro, sed en la kazo de "
+"situacio kiun KWin konsideras ambigua, la fenestro estos levita kaj fokusita."
+"</ item><item><emphasis strong='true'>Normala:</emphasis> Fokusŝtela "
+"prevento estos aplikita al la ĵus malfermita fenestro, sed en la kazo de "
+"situacio KWin konsideras ambigua, la fenestro <emphasis>ne </emphasis> estos "
+"levita kaj fokusita.</item><item><emphasis strong='true'>Alta:</emphasis> "
+"Nov-malfermitaj fenestroj nur leviĝos kaj fokusiĝos se ili apartenas al la "
+"sama programo kiel la nune fokusita fenestro.</item><item><emphasis "
+"strong='true'>Ekstrema:</emphasis> Nove malfermitaj fenestroj neniam levas "
+"sin kaj fokusiĝas.</item></list>"
 
 #: rulesmodel.cpp:680
 #, kde-format
@@ -688,7 +732,7 @@ msgstr "Akcepti fokuson"
 #: rulesmodel.cpp:682
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
-msgstr ""
+msgstr "Mastrumas ĉu la fenestro fokusiĝas aŭ ne kiam oni klakas."
 
 #: rulesmodel.cpp:686
 #, kde-format
@@ -706,6 +750,12 @@ msgid ""
 "use any other global shortcuts such as <shortcut>Alt+Space</shortcut> to "
 "activate KRunner."
 msgstr ""
+"Uzu ĉi tiun proprecon por malhelpi ke ĉieaj fulmoklavoj funkciu dum kiam la "
+"fenestro estas fokusita. Ĉi tio povas esti utila por aplikaĵoj kiel emuliloj "
+"aŭ virtualaj maŝinoj, kiuj mem traktas kelkajn el la samaj ŝparvojoj.<nl/"
+"><nl/>Rimarku, ke vi ne povos <shortcut>Alt+Tab</shortcut> eliri fenestron "
+"aŭ uzi aliajn ĉieajn ŝparvojojn kiel <shortcut>Alt+Spaco</shortcut> por "
+"aktivigi KRunner."
 
 #: rulesmodel.cpp:698
 #, kde-format
@@ -906,55 +956,3 @@ msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
 "Ne eblis detekti fenestropropraĵojn. La fenestro ne estas administrita de "
 "KWin."
-
-#~ msgid "Window shall (not) appear in the taskbar."
-#~ msgstr "Fenestro (ne) aperos en la taskobreto."
-
-#~ msgid "Window shall (not) appear in the manager for virtual desktops"
-#~ msgstr "Fenestro (ne) aperos en la administranto por virtualaj labortabloj"
-
-#~ msgid "Window shall (not) appear in the Alt+Tab list"
-#~ msgstr "Fenestro (ne) aperos en la listo Alt+Tab"
-
-#~ msgid ""
-#~ "KWin tries to prevent windows from taking the focus (\"activate\") while "
-#~ "you're working in another window, but this may sometimes fail or "
-#~ "superact. \"None\" will unconditionally allow this window to get the "
-#~ "focus while \"Extreme\" will completely prevent it from taking the focus."
-#~ msgstr ""
-#~ "KWin provas malhelpi fenestrojn preni la fokuson (\"aktivigi\") dum vi "
-#~ "laboras en alia fenestro, sed ĉi tio foje povas malsukcesi aŭ troagi."
-#~ "\"Neniu\" senkondiĉe permesos al ĉi tiu fenestro akiri la fokuso dum "
-#~ "\"Ekstrema\" tute malhelpos ĝin preni la fokuson."
-
-#~ msgid ""
-#~ "This controls the focus protection of the currently active window. None "
-#~ "will always give the focus away, Extreme will keep it. Otherwise it's "
-#~ "interleaved with the stealing prevention assigned to the window that "
-#~ "wants the focus."
-#~ msgstr ""
-#~ "Ĉi tio stiras la fokusan protekton de la nuntempe aktiva fenestro. "
-#~ "'Nenio' ĉiam fordonos la fokuson, 'Ekstrema' konservos ĝin. Alie ĝi estas "
-#~ "interplektita kun la ŝtel-malhelpo atribuita al la fenestro kiu volas la "
-#~ "fokuson."
-
-#~ msgid ""
-#~ "Windows may prevent to get the focus (activate) when being clicked. On "
-#~ "the other hand you might wish to prevent a window from getting focused on "
-#~ "a mouse click."
-#~ msgstr ""
-#~ "Vindozo eble malebligas akiri la fokuson (aktivigi) kiam oni klakas. "
-#~ "Aliflanke vi eble dezirus malhelpi fenestron fokusiĝi al musklako."
-
-#~ msgid ""
-#~ "When used, a window will receive all keyboard inputs while it is active, "
-#~ "including Alt+Tab etc. This is especially interesting for emulators or "
-#~ "virtual machines. \n"
-#~ "Be warned: you won't be able to Alt+Tab out of the window nor use any "
-#~ "other global shortcut (such as Alt+F2 to show KRunner) while it's active!"
-#~ msgstr ""
-#~ "Se uzata, fenestro ricevos ĉiujn klavarajn enigojn dum ĝi estas aktiva, "
-#~ "inkluzive de Alt+Tab ktp. Ĉi tio estas speciale interesa por emuliloj aŭ "
-#~ "virtualaj maŝinoj.\n"
-#~ "Estu avertita: vi ne povos Alt+Tab. el la fenestro nek uzi ajnan alian "
-#~ "ĉiean ŝparvojon (kiel Alt+F2 por montri KRunner) dum kiam ĝi estas aktiva!"

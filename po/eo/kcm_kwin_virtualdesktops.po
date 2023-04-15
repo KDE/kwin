@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-31 02:17+0000\n"
-"PO-Revision-Date: 2023-01-08 12:30+0100\n"
+"PO-Revision-Date: 2023-04-15 01:21+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: Esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -50,7 +50,7 @@ msgstr "Okazis eraro konservante la metojn al kompostisto."
 #: desktopsmodel.cpp:681
 #, kde-format
 msgid "There was an error requesting information from the compositor."
-msgstr ""
+msgstr "Estis eraro petante informon de la kompostisto."
 
 #: package/contents/ui/main.qml:89
 #, kde-format
@@ -76,6 +76,8 @@ msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
 "now will overwrite the changes."
 msgstr ""
+"Virtualaj labortabloj estis ŝanĝitaj ekster ĉi tiu agord-aplikaĵo. Nuna "
+"konservado superskribos la ŝanĝojn."
 
 #: package/contents/ui/main.qml:151
 #, kde-format
@@ -103,17 +105,17 @@ msgstr "Opcioj:"
 #: package/contents/ui/main.qml:200
 #, kde-format
 msgid "Navigation wraps around"
-msgstr ""
+msgstr "Navigado ĉirkaŭfaldiĝas"
 
 #: package/contents/ui/main.qml:218
 #, kde-format
 msgid "Show animation when switching:"
-msgstr ""
+msgstr "Montri animacion dum baskulado:"
 
 #: package/contents/ui/main.qml:269
 #, kde-format
 msgid "Show on-screen display when switching:"
-msgstr ""
+msgstr "Montri surekranan bildon dum baskulado:"
 
 #: package/contents/ui/main.qml:288
 #, kde-format
@@ -124,6 +126,3 @@ msgstr "%1 ms"
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Montri labortablajn aranĝoindikilojn"
-
-#~ msgid "Virtual Desktops"
-#~ msgstr "Virtualaj Labortabloj"

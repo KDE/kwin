@@ -14,14 +14,14 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-13 02:16+0000\n"
-"PO-Revision-Date: 2023-02-19 10:08+0900\n"
+"PO-Revision-Date: 2023-04-14 21:57+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
-"Language-Team: Chinese <zh-l10n@linux.org.tw>\n"
+"Language-Team: Traditional Chinese <zh-l10n@linux.org.tw>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 22.12.2\n"
+"X-Generator: Lokalize 22.12.3\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: kcmrules.cpp:226
@@ -515,13 +515,7 @@ msgid "Obey geometry restrictions"
 msgstr "遵循位置限制"
 
 #: rulesmodel.cpp:558
-#, fuzzy, kde-kuit-format
-#| msgid ""
-#| "Eg. terminals or video players can ask to keep a certain aspect ratio\n"
-#| "or only grow by values larger than one\n"
-#| "(eg. by the dimensions of one character).\n"
-#| "This may be pointless and the restriction prevents arbitrary dimensions\n"
-#| "like your complete screen area."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Some apps like video players or terminals can ask KWin to constrain them to "
@@ -530,9 +524,10 @@ msgid ""
 "windows to be resized to arbitrary sizes.<nl/><nl/>This can be helpful for "
 "windows that can't quite fit the full screen area when maximized."
 msgstr ""
-"例如：終端機或影像播放器可以要求保持特定的大小比例，或是只增長大於一的值。\n"
-"（如大於一個字元的大小）。\n"
-"這個限制可以避免被任意改變大小成全螢幕。"
+"某些應用程式，例如影片播放器或終端機，會要求 KWin 限制它們的大小，來維持寬高"
+"比或是讓大小以字元為單位增減。利用這個屬性來忽略這種要求，並讓您能夠調整這種"
+"視窗的大小到任何大小。<nl/><nl/>這對某些最大化時不會填滿整個螢幕可用空間的視"
+"窗來說很有幫助。"
 
 #: rulesmodel.cpp:569
 #, kde-format
@@ -559,7 +554,7 @@ msgstr "略過工作列"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
-msgstr ""
+msgstr "控制視窗是否於工作管理員內顯示。"
 
 #: rulesmodel.cpp:585
 #, kde-format
@@ -571,7 +566,7 @@ msgstr "略過虛擬桌面管理器"
 msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the Virtual Desktop manager."
-msgstr ""
+msgstr "控制視窗是否於虛擬桌面管理器內顯示。"
 
 #: rulesmodel.cpp:591
 #, kde-format
@@ -584,7 +579,7 @@ msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the <shortcut>Alt+Tab</"
 "shortcut> window list."
-msgstr ""
+msgstr "控制視窗是否於 <shortcut>Alt+Tab</shortcut> 視窗列表中顯示。"
 
 #: rulesmodel.cpp:597
 #, kde-format
@@ -682,7 +677,7 @@ msgstr "接受焦點"
 #: rulesmodel.cpp:682
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
-msgstr ""
+msgstr "控制視窗是否在被點擊時應該得到焦點。"
 
 #: rulesmodel.cpp:686
 #, kde-format

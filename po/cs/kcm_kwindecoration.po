@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-06 02:04+0000\n"
-"PO-Revision-Date: 2023-02-07 09:09+0100\n"
+"PO-Revision-Date: 2023-04-06 15:01+0200\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Lokalize 22.12.2\n"
+"X-Generator: Lokalize 22.12.3\n"
 "X-Language: cs_CZ\n"
 "X-Source-Language: en_US\n"
 
@@ -200,7 +200,7 @@ msgstr "Nastavit tlačítka titulkového pruhu..."
 #, kde-format
 msgctxt "@action:button as in, \"Get New Window Decorations\""
 msgid "Get New…"
-msgstr ""
+msgstr "Získat nové…"
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -208,87 +208,46 @@ msgid "Edit %1 Theme"
 msgstr "Upravit motiv %1"
 
 #: utils.cpp:25
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "No Window Borders"
-msgstr "Bez postranních okrajů"
+msgstr "Bez okrajů oken"
 
 #: utils.cpp:26
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "No Side Window Borders"
-msgstr "Bez postranních okrajů"
+msgstr "Bez postranních okrajů oken"
 
 #: utils.cpp:27
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Tiny Window Borders"
-msgstr "Velikost okraje okna:"
+msgstr "Tenké okraje oken"
 
 #: utils.cpp:28
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "Normal Window Borders"
-msgstr "Bez postranních okrajů"
+msgstr "Normální okraje oken"
 
 #: utils.cpp:29
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Large Window Borders"
-msgstr "Velikost okraje okna:"
+msgstr "Silné okraje oken"
 
 #: utils.cpp:30
 #, kde-format
 msgid "Very Large Window Borders"
-msgstr ""
+msgstr "Velmi silné okraje oken"
 
 #: utils.cpp:31
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Huge Window Borders"
-msgstr "Velikost okraje okna:"
+msgstr "Obrovské okraje oken"
 
 #: utils.cpp:32
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Very Huge Window Borders"
-msgstr "Velikost okraje okna:"
+msgstr "Více než obrovské okraje oken"
 
 #: utils.cpp:33
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Oversized Window Borders"
-msgstr "Velikost okraje okna:"
-
-#~ msgctxt "button text"
-#~ msgid "Get New Window Decorations…"
-#~ msgstr "Získat nové dekorace oken…"
-
-#~ msgid "No Borders"
-#~ msgstr "Žádná ohraničení"
-
-#~ msgid "Tiny"
-#~ msgstr "Drobný"
-
-#~ msgid "Normal"
-#~ msgstr "Normální"
-
-#~ msgid "Large"
-#~ msgstr "Velký"
-
-#~ msgid "Very Large"
-#~ msgstr "Velmi velký"
-
-#~ msgid "Huge"
-#~ msgstr "Obrovský"
-
-#~ msgid "Very Huge"
-#~ msgstr "Velmi obrovský"
-
-#~ msgid "Oversized"
-#~ msgstr "Nadměrný"
+msgstr "Nadměrné okraje oken"

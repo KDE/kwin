@@ -1,0 +1,62 @@
+# translation of kwin_scripts.pot to esperanto
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# This file is distributed under the same license as the kwin package.
+# Oliver Kellogg <okellogg@users.sourceforge.net>, 2023.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin_scripts\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2019-05-20 03:25+0200\n"
+"PO-Revision-Date: 2023-04-15 01:21+0100\n"
+"Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
+"Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
+"Language: eo\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: translate-po (https://github.com/zcribe/translate-po)\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, KWin::VideoWallConfigForm)
+#: videowall/contents/ui/config.ui:14
+#, kde-format
+msgid "Video Wall"
+msgstr "Video-Muro"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ApplyTo)
+#: videowall/contents/ui/config.ui:20
+#, kde-format
+msgid "Apply to"
+msgstr "Apliki al"
+
+#. i18n: ectx: property (text), widget (QLineEdit, kcfg_Whitelist)
+#: videowall/contents/ui/config.ui:32
+#, kde-format
+msgid "vlc, xv, vdpau, smplayer, dragon, xine, ffplay"
+msgstr "vlc, xv, vdpau, smplayer, drako, xine, ffplay"
+
+#. i18n: ectx: property (placeholderText), widget (QLineEdit, kcfg_Whitelist)
+#. i18n: ectx: property (placeholderText), widget (QLineEdit, kcfg_Blacklist)
+#: videowall/contents/ui/config.ui:35 videowall/contents/ui/config.ui:66
+#, kde-format
+msgid "Comma separated list of window classes"
+msgstr "Kome apartigita listo de fenestroklasoj"
+
+#. i18n: ectx: property (text), widget (QLabel, applyLabel)
+#: videowall/contents/ui/config.ui:45
+#, kde-format
+msgid "All"
+msgstr "Ĉiuj"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Ignore)
+#: videowall/contents/ui/config.ui:54
+#, kde-format
+msgid "Ignore"
+msgstr "Ignori"
+
+#. i18n: ectx: property (text), widget (QLabel, ignoreLabel)
+#: videowall/contents/ui/config.ui:73
+#, kde-format
+msgid "None"
+msgstr "Neniu"
