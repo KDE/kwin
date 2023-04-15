@@ -7,23 +7,81 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "virtual_egl_backend.h"
-// kwin
+#include "core/gbmgraphicsbufferallocator.h"
+#include "libkwineffects/kwinglutils.h"
 #include "platformsupport/scenes/opengl/basiceglsurfacetexture_internal.h"
 #include "platformsupport/scenes/opengl/basiceglsurfacetexture_wayland.h"
 #include "utils/softwarevsyncmonitor.h"
 #include "virtual_backend.h"
 #include "virtual_logging.h"
 #include "virtual_output.h"
-// kwin libs
-#include "libkwineffects/kwinglutils.h"
-#include <drm_fourcc.h>
 
-#ifndef EGL_PLATFORM_SURFACELESS_MESA
-#define EGL_PLATFORM_SURFACELESS_MESA 0x31DD
-#endif
+#include <drm_fourcc.h>
 
 namespace KWin
 {
+
+VirtualEglLayerBuffer::VirtualEglLayerBuffer(GbmGraphicsBuffer *buffer, VirtualEglBackend *backend)
+    : m_graphicsBuffer(buffer)
+{
+    m_texture = backend->importDmaBufAsTexture(*buffer->dmabufAttributes());
+    m_framebuffer = std::make_unique<GLFramebuffer>(m_texture.get());
+}
+
+VirtualEglLayerBuffer::~VirtualEglLayerBuffer()
+{
+    m_texture.reset();
+    m_framebuffer.reset();
+    m_graphicsBuffer->drop();
+}
+
+GbmGraphicsBuffer *VirtualEglLayerBuffer::graphicsBuffer() const
+{
+    return m_graphicsBuffer;
+}
+
+GLFramebuffer *VirtualEglLayerBuffer::framebuffer() const
+{
+    return m_framebuffer.get();
+}
+
+std::shared_ptr<GLTexture> VirtualEglLayerBuffer::texture() const
+{
+    return m_texture;
+}
+
+VirtualEglSwapchain::VirtualEglSwapchain(const QSize &size, uint32_t format, VirtualEglBackend *backend)
+    : m_backend(backend)
+    , m_size(size)
+    , m_format(format)
+    , m_allocator(std::make_unique<GbmGraphicsBufferAllocator>(backend->backend()->gbmDevice()))
+{
+}
+
+QSize VirtualEglSwapchain::size() const
+{
+    return m_size;
+}
+
+std::shared_ptr<VirtualEglLayerBuffer> VirtualEglSwapchain::acquire()
+{
+    for (const auto &buffer : std::as_const(m_buffers)) {
+        if (!buffer->graphicsBuffer()->isReferenced()) {
+            return buffer;
+        }
+    }
+
+    GbmGraphicsBuffer *graphicsBuffer = m_allocator->allocate(m_size, m_format);
+    if (!graphicsBuffer) {
+        qCWarning(KWIN_VIRTUAL) << "Failed to allocate layer swapchain buffer";
+        return nullptr;
+    }
+
+    auto buffer = std::make_shared<VirtualEglLayerBuffer>(graphicsBuffer, m_backend);
+    m_buffers.append(buffer);
+
+    return buffer;
+}
 
 VirtualEglLayer::VirtualEglLayer(Output *output, VirtualEglBackend *backend)
     : m_backend(backend)
@@ -31,11 +89,9 @@ VirtualEglLayer::VirtualEglLayer(Output *output, VirtualEglBackend *backend)
 {
 }
 
-VirtualEglLayer::~VirtualEglLayer() = default;
-
 std::shared_ptr<GLTexture> VirtualEglLayer::texture() const
 {
-    return m_texture;
+    return m_current->texture();
 }
 
 std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame()
@@ -43,15 +99,13 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame()
     m_backend->makeCurrent();
 
     const QSize nativeSize = m_output->geometry().size() * m_output->scale();
-    if (!m_texture || m_texture->size() != nativeSize) {
-        m_fbo.reset();
-        m_texture = std::make_unique<GLTexture>(GL_RGB8, nativeSize);
-        m_texture->setContentTransform(TextureTransform::MirrorY);
-        m_fbo = std::make_unique<GLFramebuffer>(m_texture.get());
+    if (!m_swapchain || m_swapchain->size() != nativeSize) {
+        m_swapchain = std::make_unique<VirtualEglSwapchain>(nativeSize, DRM_FORMAT_XRGB8888, m_backend);
     }
 
+    m_current = m_swapchain->acquire();
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_fbo.get()),
+        .renderTarget = RenderTarget(m_current->framebuffer()),
         .repaint = infiniteRegion(),
     };
 }
@@ -65,8 +119,7 @@ bool VirtualEglLayer::endFrame(const QRegion &renderedRegion, const QRegion &dam
 
 quint32 VirtualEglLayer::format() const
 {
-    // While we are using GL_RGB8, it seems to be using 32bit pixels.
-    return DRM_FORMAT_XBGR8888;
+    return DRM_FORMAT_XRGB8888;
 }
 
 VirtualEglBackend::VirtualEglBackend(VirtualBackend *b)
@@ -83,24 +136,29 @@ VirtualEglBackend::~VirtualEglBackend()
     cleanup();
 }
 
+VirtualBackend *VirtualEglBackend::backend() const
+{
+    return m_backend;
+}
+
 bool VirtualEglBackend::initializeEgl()
 {
     initClientExtensions();
-    auto display = m_backend->sceneEglDisplayObject();
 
-    // Use eglGetPlatformDisplayEXT() to get the display pointer
-    // if the implementation supports it.
+    if (!m_backend->sceneEglDisplayObject()) {
+        for (const QByteArray &extension : {QByteArrayLiteral("EGL_EXT_platform_base"), QByteArrayLiteral("EGL_KHR_platform_gbm")}) {
+            if (!hasClientExtension(extension)) {
+                qCWarning(KWIN_VIRTUAL) << extension << "client extension is not supported by the platform";
+                return false;
+            }
+        }
+
+        m_backend->setEglDisplay(EglDisplay::create(eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_KHR, m_backend->gbmDevice(), nullptr)));
+    }
+
+    auto display = m_backend->sceneEglDisplayObject();
     if (!display) {
-        // first try surfaceless
-        if (hasClientExtension(QByteArrayLiteral("EGL_MESA_platform_surfaceless"))) {
-            m_backend->setEglDisplay(EglDisplay::create(eglGetPlatformDisplayEXT(EGL_PLATFORM_SURFACELESS_MESA, EGL_DEFAULT_DISPLAY, nullptr)));
-            display = m_backend->sceneEglDisplayObject();
-        } else {
-            qCWarning(KWIN_VIRTUAL) << "Extension EGL_MESA_platform_surfaceless not available";
-        }
-        if (!display) {
-            return false;
-        }
+        return false;
     }
     setEglDisplay(display);
     return true;

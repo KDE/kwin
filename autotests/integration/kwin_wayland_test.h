@@ -685,6 +685,13 @@ bool lockScreen();
 bool unlockScreen();
 
 /**
+ * Returns @c true if the system has at least one render node; otherwise returns @c false.
+ *
+ * This can be used to test whether the system is capable of allocating and sharing prime buffers, etc.
+ */
+bool renderNodeAvailable();
+
+/**
  * Creates an X11 connection
  * Internally a nested event loop is spawned whilst we connect to avoid a deadlock
  * with X on demand

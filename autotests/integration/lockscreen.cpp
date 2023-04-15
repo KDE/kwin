@@ -174,6 +174,10 @@ std::pair<Window *, std::unique_ptr<KWayland::Client::Surface>> LockScreenTest::
 
 void LockScreenTest::initTestCase()
 {
+    if (!Test::renderNodeAvailable()) {
+        QSKIP("no render node available");
+        return;
+    }
     qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::ElectricBorder>("ElectricBorder");
 

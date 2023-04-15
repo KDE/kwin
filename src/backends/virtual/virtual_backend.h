@@ -9,11 +9,11 @@
 #pragma once
 
 #include "core/outputbackend.h"
+#include "utils/filedescriptor.h"
 
-#include <kwin_export.h>
-
-#include <QObject>
 #include <QRect>
+
+struct gbm_device;
 
 namespace KWin
 {
@@ -39,13 +39,12 @@ public:
 
     Outputs outputs() const override;
 
-    QVector<CompositingType> supportedCompositors() const override
-    {
-        return QVector<CompositingType>{OpenGLCompositing, QPainterCompositing};
-    }
+    QVector<CompositingType> supportedCompositors() const override;
 
     void setEglDisplay(std::unique_ptr<EglDisplay> &&display);
     EglDisplay *sceneEglDisplayObject() const override;
+
+    gbm_device *gbmDevice() const;
 
 Q_SIGNALS:
     void virtualOutputsSet(bool countChanged);
@@ -55,6 +54,8 @@ private:
 
     QVector<VirtualOutput *> m_outputs;
     std::unique_ptr<EglDisplay> m_display;
+    FileDescriptor m_drmFileDescriptor;
+    gbm_device *m_gbmDevice = nullptr;
 };
 
 } // namespace KWin

@@ -14,16 +14,51 @@
 
 namespace KWin
 {
+
+class GbmGraphicsBuffer;
+class GbmGraphicsBufferAllocator;
 class VirtualBackend;
 class GLFramebuffer;
 class GLTexture;
 class VirtualEglBackend;
 
+class VirtualEglLayerBuffer
+{
+public:
+    VirtualEglLayerBuffer(GbmGraphicsBuffer *buffer, VirtualEglBackend *backend);
+    ~VirtualEglLayerBuffer();
+
+    GbmGraphicsBuffer *graphicsBuffer() const;
+    GLFramebuffer *framebuffer() const;
+    std::shared_ptr<GLTexture> texture() const;
+
+private:
+    GbmGraphicsBuffer *m_graphicsBuffer;
+    std::unique_ptr<GLFramebuffer> m_framebuffer;
+    std::shared_ptr<GLTexture> m_texture;
+};
+
+class VirtualEglSwapchain
+{
+public:
+    VirtualEglSwapchain(const QSize &size, uint32_t format, VirtualEglBackend *backend);
+
+    QSize size() const;
+
+    std::shared_ptr<VirtualEglLayerBuffer> acquire();
+
+private:
+    VirtualEglBackend *m_backend;
+    QSize m_size;
+    uint32_t m_format;
+    std::unique_ptr<GbmGraphicsBufferAllocator> m_allocator;
+    QVector<std::shared_ptr<VirtualEglLayerBuffer>> m_buffers;
+};
+
 class VirtualEglLayer : public OutputLayer
 {
 public:
     VirtualEglLayer(Output *output, VirtualEglBackend *backend);
-    ~VirtualEglLayer() override;
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
@@ -34,8 +69,8 @@ public:
 private:
     VirtualEglBackend *const m_backend;
     Output *m_output;
-    std::unique_ptr<GLFramebuffer> m_fbo;
-    std::shared_ptr<GLTexture> m_texture;
+    std::unique_ptr<VirtualEglSwapchain> m_swapchain;
+    std::shared_ptr<VirtualEglLayerBuffer> m_current;
 };
 
 /**
@@ -54,6 +89,8 @@ public:
     OutputLayer *primaryLayer(Output *output) override;
     void present(Output *output) override;
     void init() override;
+
+    VirtualBackend *backend() const;
 
 private:
     bool initializeEgl();
