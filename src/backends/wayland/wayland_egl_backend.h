@@ -13,14 +13,9 @@
 #include "platformsupport/scenes/opengl/abstract_egl_backend.h"
 #include "utils/damagejournal.h"
 
-#include <KWayland/Client/buffer.h>
-
 #include <memory>
 
-class QTemporaryFile;
 struct wl_buffer;
-struct wl_shm;
-struct gbm_bo;
 
 namespace KWin
 {
@@ -160,7 +155,6 @@ private:
 
     WaylandBackend *m_backend;
     std::map<Output *, Layers> m_outputs;
-    bool m_havePlatformBase;
 };
 
 } // namespace Wayland

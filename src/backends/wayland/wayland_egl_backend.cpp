@@ -10,32 +10,21 @@
 
 #include "wayland_egl_backend.h"
 #include "core/gbmgraphicsbufferallocator.h"
+#include "libkwineffects/kwinglutils.h"
 #include "platformsupport/scenes/opengl/basiceglsurfacetexture_internal.h"
 #include "platformsupport/scenes/opengl/basiceglsurfacetexture_wayland.h"
-
 #include "wayland_backend.h"
 #include "wayland_display.h"
 #include "wayland_logging.h"
 #include "wayland_output.h"
 
-#include <fcntl.h>
-#include <unistd.h>
-
-// kwin libs
-#include "libkwineffects/kwinglplatform.h"
-#include "libkwineffects/kwinglutils.h"
-
-// KDE
-#include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
-
-// Qt
-#include <QFile>
-#include <QOpenGLContext>
 
 #include <cmath>
 #include <drm_fourcc.h>
+#include <fcntl.h>
 #include <gbm.h>
+#include <unistd.h>
 
 #include "wayland-linux-dmabuf-unstable-v1-client-protocol.h"
 
@@ -324,8 +313,7 @@ bool WaylandEglBackend::initializeEgl()
     // Use eglGetPlatformDisplayEXT() to get the display pointer
     // if the implementation supports it.
     if (!display) {
-        m_havePlatformBase = hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_base"));
-        if (m_havePlatformBase) {
+        if (hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_base"))) {
             // Make sure that the wayland platform is supported
             if (!hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_wayland"))) {
                 return false;
