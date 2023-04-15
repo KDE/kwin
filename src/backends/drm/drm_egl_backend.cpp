@@ -80,20 +80,18 @@ bool EglGbmBackend::initializeEgl()
 
 EglDisplay *EglGbmBackend::createEglDisplay(DrmGpu *gpu) const
 {
-    const bool hasMesaGBM = hasClientExtension(QByteArrayLiteral("EGL_MESA_platform_gbm"));
-    const bool hasKHRGBM = hasClientExtension(QByteArrayLiteral("EGL_KHR_platform_gbm"));
-    const GLenum platform = hasMesaGBM ? EGL_PLATFORM_GBM_MESA : EGL_PLATFORM_GBM_KHR;
-
-    if (!hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_base")) || (!hasMesaGBM && !hasKHRGBM)) {
-        qCWarning(KWIN_DRM, "Missing one or more extensions between EGL_EXT_platform_base, EGL_MESA_platform_gbm, EGL_KHR_platform_gbm");
-        return nullptr;
-    }
-
     if (!gpu->gbmDevice()) {
         return nullptr;
     }
 
-    gpu->setEglDisplay(EglDisplay::create(eglGetPlatformDisplayEXT(platform, gpu->gbmDevice(), nullptr)));
+    for (const QByteArray &extension : {QByteArrayLiteral("EGL_EXT_platform_base"), QByteArrayLiteral("EGL_KHR_platform_gbm")}) {
+        if (!hasClientExtension(extension)) {
+            qCWarning(KWIN_DRM) << extension << "client extension is not supported by the platform";
+            return nullptr;
+        }
+    }
+
+    gpu->setEglDisplay(EglDisplay::create(eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_KHR, gpu->gbmDevice(), nullptr)));
     return gpu->eglDisplay();
 }
 
