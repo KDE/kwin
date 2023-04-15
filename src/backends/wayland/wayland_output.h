@@ -10,7 +10,6 @@
 
 #include "core/output.h"
 
-#include <KWayland/Client/buffer.h>
 #include <KWayland/Client/xdgshell.h>
 
 #include <QObject>
@@ -26,6 +25,8 @@ class LockedPointer;
 class XdgDecoration;
 }
 }
+
+struct wl_buffer;
 
 namespace KWin
 {
