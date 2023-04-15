@@ -271,28 +271,21 @@ X11WindowedBackend *X11WindowedEglBackend::backend() const
 bool X11WindowedEglBackend::initializeEgl()
 {
     initClientExtensions();
-    auto display = kwinApp()->outputBackend()->sceneEglDisplayObject();
 
-    // Use eglGetPlatformDisplayEXT() to get the display pointer
-    // if the implementation supports it.
-    if (!display) {
-        const bool havePlatformBase = hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_base"));
-        if (havePlatformBase) {
-            // Make sure that the X11 platform is supported
-            if (!hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_x11")) && !hasClientExtension(QByteArrayLiteral("EGL_KHR_platform_x11"))) {
-                qCWarning(KWIN_X11WINDOWED) << "EGL_EXT_platform_base is supported, but neither EGL_EXT_platform_x11 nor EGL_KHR_platform_x11 is supported."
-                                            << "Cannot create EGLDisplay on X11";
+    if (!m_backend->sceneEglDisplayObject()) {
+        for (const QByteArray &extension : {QByteArrayLiteral("EGL_EXT_platform_base"), QByteArrayLiteral("EGL_KHR_platform_gbm")}) {
+            if (!hasClientExtension(extension)) {
+                qCWarning(KWIN_X11WINDOWED) << extension << "client extension is not supported by the platform";
                 return false;
             }
+        }
 
-            m_backend->setEglDisplay(EglDisplay::create(eglGetPlatformDisplayEXT(EGL_PLATFORM_X11_EXT, m_backend->display(), nullptr)));
-        } else {
-            m_backend->setEglDisplay(EglDisplay::create(eglGetDisplay(m_backend->display())));
-        }
-        display = m_backend->sceneEglDisplayObject();
-        if (!display) {
-            return false;
-        }
+        m_backend->setEglDisplay(EglDisplay::create(eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_KHR, m_backend->gbmDevice(), nullptr)));
+    }
+
+    auto display = m_backend->sceneEglDisplayObject();
+    if (!display) {
+        return false;
     }
     setEglDisplay(display);
     return true;
