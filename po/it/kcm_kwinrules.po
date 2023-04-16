@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-25 02:43+0000\n"
-"PO-Revision-Date: 2022-12-12 16:35+0100\n"
+"PO-Revision-Date: 2023-04-13 08:21+0200\n"
 "Last-Translator: Paolo Zamponi <zapaolo@email.it>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 22.12.2\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -503,12 +503,12 @@ msgstr "Posizione"
 #: rulesmodel.cpp:506 rulesmodel.cpp:516 rulesmodel.cpp:521 rulesmodel.cpp:526
 #, kde-format
 msgid "Size & Position"
-msgstr "Dimensioni e posizione"
+msgstr "Dimensione e posizione"
 
 #: rulesmodel.cpp:419
 #, kde-format
 msgid "Size"
-msgstr "Dimensioni"
+msgstr "Dimensione"
 
 #: rulesmodel.cpp:425
 #, kde-format
