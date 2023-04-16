@@ -3207,6 +3207,9 @@ void X11Window::readTransientProperty(Xcb::TransientFor &transientFor)
 
 void X11Window::readTransient()
 {
+    if (isUnmanaged()) {
+        return;
+    }
     Xcb::TransientFor transientFor = fetchTransient();
     readTransientProperty(transientFor);
 }
