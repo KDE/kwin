@@ -1374,6 +1374,19 @@
 </listitem>
 </varlistentry>
 
+<varlistentry>
+<term
+><guilabel
+>No facis res</guilabel
+></term>
+<listitem>
+<para
+>La finestra roman a l'escriptori a on està actualment i l'escriptori actual no canvia. </para>
+<para
+>Trieu aquesta opció si voleu mantenir les finestres i els escriptori tal com estan. </para>
+</listitem>
+</varlistentry>
+
 </variablelist>
 
 </sect3>

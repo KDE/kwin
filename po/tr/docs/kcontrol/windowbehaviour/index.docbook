@@ -1386,6 +1386,19 @@
 </listitem>
 </varlistentry>
 
+<varlistentry>
+<term
+><guilabel
+>Bir şey yapma</guilabel
+></term>
+<listitem>
+<para
+>Pencere, şu anda olduğu masaüstünde kalır ve geçerli masaüstü değişmez. </para>
+<para
+>Pencereleri ve masaüstlerini oldukları gibi bırakmak isterseniz bu seçeneği seçin. </para>
+</listitem>
+</varlistentry>
+
 </variablelist>
 
 </sect3>

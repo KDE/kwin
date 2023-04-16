@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-13 02:16+0000\n"
-"PO-Revision-Date: 2023-02-11 08:26+0100\n"
+"PO-Revision-Date: 2023-04-15 10:51+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 22.12.2\n"
+"X-Generator: Lokalize 22.12.3\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
 
@@ -505,6 +505,13 @@ msgid ""
 "<interface>Fullscreen</interface> states.<nl/><nl/>Note that the position "
 "can also be used to map to a different <interface>Screen</interface>"
 msgstr ""
+"Niektóre z aplikacji mogą ustawić swoją własną geometrię zastępując "
+"ustawienia zarządzania oknami. Ustawienie tej właściwości zastępują ich "
+"żądanie umieszczenia.<nl/><nl/>Wpływa to na <interface>Rozmiar</interface> "
+"oraz <interface>Położenie</interface> lecz nie na stany "
+"<interface>Zmaksymalizowane</interface> czy <interface>Na całym ekranie</"
+"interface>.<nl/><nl/>Zwróć uwagę, że położenie może też być użyte do "
+"zmapowania na inny <interface>Ekran</interface>"
 
 #: rulesmodel.cpp:546
 #, kde-format
@@ -522,13 +529,7 @@ msgid "Obey geometry restrictions"
 msgstr "Pomiń ograniczenia geometryczne"
 
 #: rulesmodel.cpp:558
-#, fuzzy, kde-kuit-format
-#| msgid ""
-#| "Eg. terminals or video players can ask to keep a certain aspect ratio\n"
-#| "or only grow by values larger than one\n"
-#| "(eg. by the dimensions of one character).\n"
-#| "This may be pointless and the restriction prevents arbitrary dimensions\n"
-#| "like your complete screen area."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Some apps like video players or terminals can ask KWin to constrain them to "
@@ -537,12 +538,12 @@ msgid ""
 "windows to be resized to arbitrary sizes.<nl/><nl/>This can be helpful for "
 "windows that can't quite fit the full screen area when maximized."
 msgstr ""
-"Na przykład terminale lub odtwarzacze wideo mogą pytać o zachowanie\n"
-"pewnego współczynnika kształtu lub zwiększenia się o wartości większe od "
-"jeden\n"
-"(np. o wymiary jednego znaku).\n"
-"Ograniczenie to może być bezcelowe i zapobiega dowolnym wymiarom,\n"
-"takim jak całkowity obszar twojego ekranu."
+"Niektóre aplikacje, takie jak odtwarzacze filmów lub terminale, mogą "
+"poprosić KWin o zablokowanie ich współczynnika kształtu lub o zwiększanie "
+"się o wartości większe niż rozmiary jednego znaku. Użyj tej właściwości to "
+"zlekceważenia takich blokad i umożliw zmianę rozmiaru tych okien na dowolny."
+"<nl/><nl/>Przydatne dla okien, które nie mieszczą się na całym ekranie w "
+"stanie zmaksymalizowania."
 
 #: rulesmodel.cpp:569
 #, kde-format
@@ -569,7 +570,7 @@ msgstr "Pomiń pasek zadań"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
-msgstr ""
+msgstr "Określa czy okno pojawia się w zarządzaniu zadaniami."
 
 #: rulesmodel.cpp:585
 #, kde-format
@@ -581,7 +582,7 @@ msgstr "Pomiń pager"
 msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the Virtual Desktop manager."
-msgstr ""
+msgstr "Określa czy okno pojawia się w zarządzaniu pulpitami wirtualnymi."
 
 #: rulesmodel.cpp:591
 #, kde-format
@@ -595,6 +596,8 @@ msgid ""
 "Controls whether or not the window appears in the <shortcut>Alt+Tab</"
 "shortcut> window list."
 msgstr ""
+"Określa czy okno pojawi się w spisie okien po naciśnięciu <shortcut>Alt+Tab</"
+"shortcut>."
 
 #: rulesmodel.cpp:597
 #, kde-format
@@ -654,6 +657,25 @@ msgid ""
 "currently-focused window.</item><item><emphasis strong='true'>Extreme:</"
 "emphasis> The window will never be raised and focused.</item></list>"
 msgstr ""
+"KWin będzie próbował zapobiec pojawianiu się okien i przejmowaniu przez nie "
+"uaktywnienia, które zostały otwarte bez jednoznacznego działania "
+"użytkownika, gdy obecnie będziesz pracować na innym oknie. Tej właściwości "
+"można użyć do zmiany poziomu ochrony przed przejęciem uaktywnienia na "
+"poszczególne okna lub aplikacje.<nl/><nl/>Oto co stanie się z nowymi oknami, "
+"gdy zostaną one otwarte bez twojego jednoznacznego działania na każdym "
+"poziomie ochrony:<nl/><list><item><emphasis strong='true'>Żadna</"
+"emphasis>Okno nie pojawi się i nie przejmie uaktywnienia</"
+"item><item><emphasis strong='true'>Niska:</emphasis> Ochrona przed "
+"uaktywnieniem zostanie zastosowana, lecz w przypadkach niejednoznacznych, "
+"okno pojawi się nad innymi i przejmie uaktywnienie.</item><item><emphasis "
+"strong='true'>Normalne:</emphasis>Ochrona przed uaktywnieniem zostanie "
+"zastosowana, lecz w przypadkach niejednoznacznych, okno <emphasis>nie</"
+"emphasis> pojawi się nad innymi i nie przejmie uaktywnienie.</"
+"item><item><emphasis strong='true'>Wysoka:</emphasis> Nowo otwarte okno "
+"pojawi się nad innymi, tylko gdy należy do tej samej aplikacji, co obecnie "
+"uaktywnione okno.</item><item><emphasis strong='true'>Ekstremalna:</"
+"emphasis> Nowo otwarte okno nigdy nie pojawi się nad innymi i nie przejmie "
+"uaktywnienia.</item></list>"
 
 #: rulesmodel.cpp:652
 #, kde-format
@@ -683,6 +705,25 @@ msgid ""
 "emphasis> Newly-opened windows never raise themselves and take focus.</"
 "item></list>"
 msgstr ""
+"To ustawienie ustawia poziom ochrony przed zmianą uaktywnienia bieżącego "
+"okna. Jest używane do zastępowania ochrony przed przejęciem dla nowych "
+"okien, otwartych bez twojego jednoznacznego działania.<nl/><nl/>Oto co "
+"stanie się z nowymi oknami, gdy zostaną one otwarte bez twojego "
+"jednoznacznego działania na każdym poziomie ochrony uaktywnienia, gdy okno z "
+"tą właściwością jest uaktywnione:<nl/><list><item><emphasis "
+"strong='true'>Żadna</emphasis>: Nowo otwarte okno zawsze pojawi się nad "
+"innymi i przejmie uaktywnienie.</item><item><emphasis strong='true'>Niska:</"
+"emphasis> Ochrona przed przejęciem uaktywnienia zostanie zastosowana do nowo "
+"otwartego okna, lecz w przypadku niejednoznacznych okoliczności, okno pojawi "
+"się nad innymi i przejmie uaktywnienie.</item><item><emphasis "
+"strong='true'>Normalne:</emphasis> Ochrona przed przejęciem uaktywnienia "
+"zostanie zastosowana do nowo otwartego okna, lecz w przypadku "
+"niejednoznacznych okoliczności, okno <emphasis>nie</emphasis> pojawi się nad "
+"innymi i nie przejmie uaktywnienia.</item><item><emphasis "
+"strong='true'>Wysoka:</emphasis> Nowo otwarte okno pojawi się nad innymi, "
+"tylko gdy należy do tej samej aplikacji, co obecnie uaktywnione okno.</"
+"item><item><emphasis strong='true'>Ekstremalna:</emphasis> Nowo otwarte okno "
+"nigdy nie pojawi się nad innymi i nie przejmie uaktywnienia.</item></list>"
 
 #: rulesmodel.cpp:680
 #, kde-format
@@ -692,7 +733,7 @@ msgstr "Zezwól na uaktywnienie"
 #: rulesmodel.cpp:682
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
-msgstr ""
+msgstr "Określa czy okno uaktywni się po jego naciśnięciu."
 
 #: rulesmodel.cpp:686
 #, kde-format
@@ -710,6 +751,12 @@ msgid ""
 "use any other global shortcuts such as <shortcut>Alt+Space</shortcut> to "
 "activate KRunner."
 msgstr ""
+"Użyj tej właściwości, aby zapobiec działania globalnych skrótów "
+"klawiszowych, gdy okno jest uaktywnione. Użyteczne dla wszystkich aplikacji "
+"takich jak emulatory lub maszyny wirtualne, które same obsługują te same "
+"skróty.<nl/><nl/>Zwróć uwagę, że nie będziesz mógł wykonać <shortcut>Alt"
+"+Tab</shortcut> z okna lub używać żadnych innych globalnych skrótów takich "
+"jak <shortcut>Alt+Spacja</shortcut>, aby uruchomić KRunnera."
 
 #: rulesmodel.cpp:698
 #, kde-format

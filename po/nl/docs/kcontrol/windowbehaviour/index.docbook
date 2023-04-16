@@ -1372,6 +1372,19 @@
 </listitem>
 </varlistentry>
 
+<varlistentry>
+<term
+><guilabel
+>Niets doen</guilabel
+></term>
+<listitem>
+<para
+>Het venster blijft op het bureaublad waarop het nu is en het huidige bureaublad wijzigt niet. </para>
+<para
+>Kies deze optie als u het prettig vindt de vensters en bureaubladen hetzelfde te laten. </para>
+</listitem>
+</varlistentry>
+
 </variablelist>
 
 </sect3>

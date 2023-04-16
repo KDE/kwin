@@ -1384,6 +1384,19 @@
 </listitem>
 </varlistentry>
 
+<varlistentry>
+<term
+><guilabel
+>Нічого не робити</guilabel
+></term>
+<listitem>
+<para
+>Вікно лишається на стільниці, де воно було, а поточна стільниця лишається незмінною. </para>
+<para
+>Виберіть цей варіант, якщо вам потрібно, щоб система не змінювала ні активне вікно, ні стільницю. </para>
+</listitem>
+</varlistentry>
+
 </variablelist>
 
 </sect3>
