@@ -261,7 +261,7 @@ QHash<uint32_t, QList<uint64_t>> EglDisplay::queryImportFormats() const
             if (success && count > 0) {
                 QVector<uint64_t> modifiers(count);
                 QVector<EGLBoolean> externalOnly(count);
-                if (eglQueryDmaBufModifiersEXT(m_handle, format, count, modifiers.data(), nullptr, &count)) {
+                if (eglQueryDmaBufModifiersEXT(m_handle, format, count, modifiers.data(), externalOnly.data(), &count)) {
                     for (int i = modifiers.size() - 1; i >= 0; i--) {
                         if (externalOnly[i]) {
                             modifiers.remove(i);
