@@ -81,7 +81,7 @@ void AbstractEglBackend::teardown()
 void AbstractEglBackend::cleanup()
 {
     for (const EGLImageKHR &image : m_importedBuffers) {
-        eglDestroyImageKHR(m_display, image);
+        eglDestroyImageKHR(m_display->handle(), image);
     }
 
     cleanupSurfaces();
@@ -291,7 +291,7 @@ EGLImageKHR AbstractEglBackend::importBufferAsImage(KWaylandServer::LinuxDmaBufV
     if (image != EGL_NO_IMAGE_KHR) {
         m_importedBuffers[buffer] = image;
         connect(buffer, &QObject::destroyed, this, [this, buffer]() {
-            eglDestroyImageKHR(m_display, m_importedBuffers.take(buffer));
+            eglDestroyImageKHR(m_display->handle(), m_importedBuffers.take(buffer));
         });
     }
 
