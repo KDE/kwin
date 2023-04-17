@@ -25,32 +25,32 @@ X11WindowedEglLayerBuffer::X11WindowedEglLayerBuffer(GbmGraphicsBuffer *graphics
     , m_graphicsBuffer(graphicsBuffer)
 {
     X11WindowedBackend *x11Backend = backend->backend();
-    const DmaBufAttributes &attributes = graphicsBuffer->dmabufAttributes();
+    const DmaBufAttributes *attributes = graphicsBuffer->dmabufAttributes();
 
     m_pixmap = xcb_generate_id(x11Backend->connection());
     if (x11Backend->driMajorVersion() >= 1 || x11Backend->driMinorVersion() >= 2) {
         // xcb_dri3_pixmap_from_buffers() takes the ownership of the file descriptors.
         int fds[4] = {
-            attributes.fd[0].duplicate().take(),
-            attributes.fd[1].duplicate().take(),
-            attributes.fd[2].duplicate().take(),
-            attributes.fd[3].duplicate().take(),
+            attributes->fd[0].duplicate().take(),
+            attributes->fd[1].duplicate().take(),
+            attributes->fd[2].duplicate().take(),
+            attributes->fd[3].duplicate().take(),
         };
-        xcb_dri3_pixmap_from_buffers(x11Backend->connection(), m_pixmap, drawable, attributes.planeCount,
-                                     attributes.width, attributes.height,
-                                     attributes.pitch[0], attributes.offset[0],
-                                     attributes.pitch[1], attributes.offset[1],
-                                     attributes.pitch[2], attributes.offset[2],
-                                     attributes.pitch[3], attributes.offset[3],
-                                     depth, bpp, attributes.modifier, fds);
+        xcb_dri3_pixmap_from_buffers(x11Backend->connection(), m_pixmap, drawable, attributes->planeCount,
+                                     attributes->width, attributes->height,
+                                     attributes->pitch[0], attributes->offset[0],
+                                     attributes->pitch[1], attributes->offset[1],
+                                     attributes->pitch[2], attributes->offset[2],
+                                     attributes->pitch[3], attributes->offset[3],
+                                     depth, bpp, attributes->modifier, fds);
     } else {
         // xcb_dri3_pixmap_from_buffer() takes the ownership of the file descriptor.
         xcb_dri3_pixmap_from_buffer(x11Backend->connection(), m_pixmap, drawable,
-                                    attributes.height * attributes.pitch[0], attributes.width, attributes.height,
-                                    attributes.pitch[0], depth, bpp, attributes.fd[0].duplicate().take());
+                                    attributes->height * attributes->pitch[0], attributes->width, attributes->height,
+                                    attributes->pitch[0], depth, bpp, attributes->fd[0].duplicate().take());
     }
 
-    m_texture = backend->importDmaBufAsTexture(attributes);
+    m_texture = backend->importDmaBufAsTexture(*attributes);
     m_framebuffer = std::make_unique<GLFramebuffer>(m_texture.get());
 }
 

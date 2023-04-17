@@ -143,16 +143,18 @@ bool EglGbmLayer::scanout(SurfaceItem *surfaceItem)
         return false;
     }
 
+    const DmaBufAttributes *dmabufAttributes = buffer->dmabufAttributes();
+
     const auto formats = m_pipeline->formats();
-    if (!formats.contains(buffer->format())) {
+    if (!formats.contains(dmabufAttributes->format)) {
         m_dmabufFeedback.scanoutFailed(surface, formats);
         return false;
     }
-    if (buffer->attributes().modifier == DRM_FORMAT_MOD_INVALID && m_pipeline->gpu()->platform()->gpuCount() > 1) {
+    if (dmabufAttributes->modifier == DRM_FORMAT_MOD_INVALID && m_pipeline->gpu()->platform()->gpuCount() > 1) {
         // importing a buffer from another GPU without an explicit modifier can mess up the buffer format
         return false;
     }
-    if (!formats[buffer->format()].contains(buffer->attributes().modifier)) {
+    if (!formats[dmabufAttributes->format].contains(dmabufAttributes->modifier)) {
         return false;
     }
     const auto gbmBuffer = GbmBuffer::importBuffer(m_pipeline->gpu(), buffer);

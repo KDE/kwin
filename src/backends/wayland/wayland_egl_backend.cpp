@@ -36,23 +36,23 @@ namespace Wayland
 WaylandEglLayerBuffer::WaylandEglLayerBuffer(GbmGraphicsBuffer *buffer, WaylandEglBackend *backend)
     : m_graphicsBuffer(buffer)
 {
-    const DmaBufAttributes &attributes = buffer->dmabufAttributes();
+    const DmaBufAttributes *attributes = buffer->dmabufAttributes();
 
     zwp_linux_buffer_params_v1 *params = zwp_linux_dmabuf_v1_create_params(backend->backend()->display()->linuxDmabuf()->handle());
-    for (int i = 0; i < attributes.planeCount; ++i) {
+    for (int i = 0; i < attributes->planeCount; ++i) {
         zwp_linux_buffer_params_v1_add(params,
-                                       attributes.fd[i].get(),
+                                       attributes->fd[i].get(),
                                        i,
-                                       attributes.offset[i],
-                                       attributes.pitch[i],
-                                       attributes.modifier >> 32,
-                                       attributes.modifier & 0xffffffff);
+                                       attributes->offset[i],
+                                       attributes->pitch[i],
+                                       attributes->modifier >> 32,
+                                       attributes->modifier & 0xffffffff);
     }
 
-    m_buffer = zwp_linux_buffer_params_v1_create_immed(params, attributes.width, attributes.height, attributes.format, 0);
+    m_buffer = zwp_linux_buffer_params_v1_create_immed(params, attributes->width, attributes->height, attributes->format, 0);
     zwp_linux_buffer_params_v1_destroy(params);
 
-    m_texture = backend->importDmaBufAsTexture(attributes);
+    m_texture = backend->importDmaBufAsTexture(*attributes);
     m_framebuffer = std::make_unique<GLFramebuffer>(m_texture.get());
 }
 
@@ -258,12 +258,12 @@ bool WaylandEglCursorLayer::endFrame(const QRegion &renderedRegion, const QRegio
 
 quint32 WaylandEglCursorLayer::format() const
 {
-    return m_buffer->graphicsBuffer()->dmabufAttributes().format;
+    return m_buffer->graphicsBuffer()->dmabufAttributes()->format;
 }
 
 quint32 WaylandEglPrimaryLayer::format() const
 {
-    return m_buffer->graphicsBuffer()->dmabufAttributes().format;
+    return m_buffer->graphicsBuffer()->dmabufAttributes()->format;
 }
 
 WaylandEglBackend::WaylandEglBackend(WaylandBackend *b)

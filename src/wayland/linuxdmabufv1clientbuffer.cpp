@@ -379,22 +379,10 @@ void LinuxDmaBufV1ClientBuffer::initialize(wl_resource *resource)
     ClientBuffer::initialize(resource);
 }
 
-quint32 LinuxDmaBufV1ClientBuffer::format() const
+const KWin::DmaBufAttributes *LinuxDmaBufV1ClientBuffer::dmabufAttributes() const
 {
     Q_D(const LinuxDmaBufV1ClientBuffer);
-    return d->attrs.format;
-}
-
-quint32 LinuxDmaBufV1ClientBuffer::flags() const
-{
-    Q_D(const LinuxDmaBufV1ClientBuffer);
-    return d->flags;
-}
-
-const KWin::DmaBufAttributes &LinuxDmaBufV1ClientBuffer::attributes() const
-{
-    Q_D(const LinuxDmaBufV1ClientBuffer);
-    return d->attrs;
+    return &d->attrs;
 }
 
 QSize LinuxDmaBufV1ClientBuffer::size() const

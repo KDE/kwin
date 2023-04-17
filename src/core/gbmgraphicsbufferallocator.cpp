@@ -115,9 +115,9 @@ GraphicsBuffer::Origin GbmGraphicsBuffer::origin() const
     return Origin::TopLeft;
 }
 
-const DmaBufAttributes &GbmGraphicsBuffer::dmabufAttributes() const
+const DmaBufAttributes *GbmGraphicsBuffer::dmabufAttributes() const
 {
-    return m_dmabufAttributes;
+    return &m_dmabufAttributes;
 }
 
 } // namespace KWin

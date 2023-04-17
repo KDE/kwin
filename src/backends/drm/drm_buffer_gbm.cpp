@@ -158,28 +158,28 @@ void GbmBuffer::createFds()
 
 std::shared_ptr<GbmBuffer> GbmBuffer::importBuffer(DrmGpu *gpu, KWaylandServer::LinuxDmaBufV1ClientBuffer *clientBuffer)
 {
-    const auto &attrs = clientBuffer->attributes();
+    const auto *attrs = clientBuffer->dmabufAttributes();
     gbm_bo *bo;
-    if (attrs.modifier != DRM_FORMAT_MOD_INVALID || attrs.offset[0] > 0 || attrs.planeCount > 1) {
+    if (attrs->modifier != DRM_FORMAT_MOD_INVALID || attrs->offset[0] > 0 || attrs->planeCount > 1) {
         gbm_import_fd_modifier_data data = {};
-        data.format = attrs.format;
-        data.width = static_cast<uint32_t>(attrs.width);
-        data.height = static_cast<uint32_t>(attrs.height);
-        data.num_fds = attrs.planeCount;
-        data.modifier = attrs.modifier;
-        for (int i = 0; i < attrs.planeCount; i++) {
-            data.fds[i] = attrs.fd[i].get();
-            data.offsets[i] = attrs.offset[i];
-            data.strides[i] = attrs.pitch[i];
+        data.format = attrs->format;
+        data.width = static_cast<uint32_t>(attrs->width);
+        data.height = static_cast<uint32_t>(attrs->height);
+        data.num_fds = attrs->planeCount;
+        data.modifier = attrs->modifier;
+        for (int i = 0; i < attrs->planeCount; i++) {
+            data.fds[i] = attrs->fd[i].get();
+            data.offsets[i] = attrs->offset[i];
+            data.strides[i] = attrs->pitch[i];
         }
         bo = gbm_bo_import(gpu->gbmDevice(), GBM_BO_IMPORT_FD_MODIFIER, &data, GBM_BO_USE_SCANOUT);
     } else {
         gbm_import_fd_data data = {};
-        data.fd = attrs.fd[0].get();
-        data.width = static_cast<uint32_t>(attrs.width);
-        data.height = static_cast<uint32_t>(attrs.height);
-        data.stride = attrs.pitch[0];
-        data.format = attrs.format;
+        data.fd = attrs->fd[0].get();
+        data.width = static_cast<uint32_t>(attrs->width);
+        data.height = static_cast<uint32_t>(attrs->height);
+        data.stride = attrs->pitch[0];
+        data.format = attrs->format;
         bo = gbm_bo_import(gpu->gbmDevice(), GBM_BO_IMPORT_FD, &data, GBM_BO_USE_SCANOUT);
     }
     if (bo) {

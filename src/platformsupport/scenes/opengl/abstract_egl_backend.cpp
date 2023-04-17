@@ -287,7 +287,7 @@ EGLImageKHR AbstractEglBackend::importBufferAsImage(KWaylandServer::LinuxDmaBufV
         return *it;
     }
 
-    EGLImageKHR image = importDmaBufAsImage(buffer->attributes());
+    EGLImageKHR image = importDmaBufAsImage(*buffer->dmabufAttributes());
     if (image != EGL_NO_IMAGE_KHR) {
         m_importedBuffers[buffer] = image;
         connect(buffer, &QObject::destroyed, this, [this, buffer]() {

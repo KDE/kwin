@@ -27,8 +27,7 @@ public:
     QSize size() const override;
     bool hasAlphaChannel() const override;
     Origin origin() const override;
-
-    const DmaBufAttributes &dmabufAttributes() const;
+    const DmaBufAttributes *dmabufAttributes() const override;
 
 private:
     gbm_bo *m_bo;

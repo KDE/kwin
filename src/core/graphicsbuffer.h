@@ -13,6 +13,8 @@
 namespace KWin
 {
 
+struct DmaBufAttributes;
+
 /**
  * The GraphicsBuffer class represents a chunk of memory containing graphics data.
  *
@@ -46,6 +48,8 @@ public:
     virtual QSize size() const = 0;
     virtual bool hasAlphaChannel() const = 0;
     virtual Origin origin() const = 0;
+
+    virtual const DmaBufAttributes *dmabufAttributes() const;
 
 Q_SIGNALS:
     void released();

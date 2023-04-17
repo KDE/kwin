@@ -43,13 +43,10 @@ public:
     LinuxDmaBufV1ClientBuffer(KWin::DmaBufAttributes &&attrs, quint32 flags);
     ~LinuxDmaBufV1ClientBuffer() override;
 
-    quint32 format() const;
-    quint32 flags() const;
-    const KWin::DmaBufAttributes &attributes() const;
-
     QSize size() const override;
     bool hasAlphaChannel() const override;
     Origin origin() const override;
+    const KWin::DmaBufAttributes *dmabufAttributes() const override;
 
 private:
     void initialize(wl_resource *resource);

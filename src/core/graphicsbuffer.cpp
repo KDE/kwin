@@ -52,4 +52,9 @@ void GraphicsBuffer::drop()
     }
 }
 
+const DmaBufAttributes *GraphicsBuffer::dmabufAttributes() const
+{
+    return nullptr;
+}
+
 } // namespace KWin
