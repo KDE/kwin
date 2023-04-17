@@ -3,14 +3,14 @@
 # Thomas Reitelbach <tr@erdfunkstelle.de>, 2006, 2007, 2008, 2009.
 # Burkhard Lück <lueck@hube-lueck.de>, 2008, 2012, 2013, 2014, 2015, 2018, 2019, 2021.
 # Johannes Obermayr <johannesobermayr@gmx.de>, 2010.
-# Frederik Schwarzer <schwarzer@kde.org>, 2010, 2012, 2013, 2021, 2022.
+# Frederik Schwarzer <schwarzer@kde.org>, 2010, 2012, 2013, 2021, 2022, 2023.
 # Jannick Kuhr <opensource@kuhr.org>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-26 02:32+0000\n"
-"PO-Revision-Date: 2022-07-06 00:04+0200\n"
+"PO-Revision-Date: 2023-04-15 00:07+0200\n"
 "Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 22.12.2\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -122,6 +122,8 @@ msgstr ""
 msgid ""
 "Show all the themes available on the system (and which is the current theme)"
 msgstr ""
+"Alle auf dem System verfügbaren Designs anzeigen (und welches das aktuelle "
+"ist)"
 
 #: kwin-applywindowdecoration.cpp:65
 #, kde-format
@@ -147,6 +149,8 @@ msgstr ""
 #, kde-format
 msgid "Successfully applied the cursor theme %1 to your current Plasma session"
 msgstr ""
+"Das Zeiger-Design „%1“ wurde erfolgreich für die aktuelle Plasma-Sitzung "
+"übernommen"
 
 #: kwin-applywindowdecoration.cpp:103
 #, kde-format
@@ -161,6 +165,8 @@ msgid ""
 "Could not find theme \"%1\". The theme should be one of the following "
 "options: %2"
 msgstr ""
+"Das Design „%1“ wurde nicht gefunden. Es sollte eines der folgenden Designs "
+"gewählt werden: %2"
 
 #: kwin-applywindowdecoration.cpp:112
 #, kde-format
