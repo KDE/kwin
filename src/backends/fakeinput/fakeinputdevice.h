@@ -42,6 +42,8 @@ public:
     bool isTabletModeSwitch() const override;
     bool isLidSwitch() const override;
 
+    bool shouldBeIgnoredForTabletMode() const override;
+
 private:
     QString m_name;
 };

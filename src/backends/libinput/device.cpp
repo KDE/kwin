@@ -660,6 +660,17 @@ void Device::setOutput(Output *output)
     m_output = output;
 }
 
+bool Device::shouldBeIgnoredForTabletMode() const
+{
+    bool ignore = false;
+    if (auto udev = libinput_device_get_udev_device(device()); udev) {
+        ignore = udev_device_has_tag(udev, "kwin-ignore-tablet-mode");
+        udev_device_unref(udev);
+    }
+
+    return ignore;
+}
+
 static libinput_led toLibinputLEDS(LEDs leds)
 {
     quint32 libinputLeds = 0;

@@ -47,6 +47,8 @@ public:
     virtual QString outputName() const;
     virtual void setOutputName(const QString &outputName);
 
+    virtual bool shouldBeIgnoredForTabletMode() const;
+
 Q_SIGNALS:
     void keyChanged(quint32 key, InputRedirection::KeyboardKeyState, std::chrono::microseconds time, InputDevice *device);
     void pointerButtonChanged(quint32 button, InputRedirection::PointerButtonState state, std::chrono::microseconds time, InputDevice *device);

@@ -152,4 +152,9 @@ bool FakeInputDevice::isLidSwitch() const
     return false;
 }
 
+bool FakeInputDevice::shouldBeIgnoredForTabletMode() const
+{
+    return true;
+}
+
 } // namespace KWin

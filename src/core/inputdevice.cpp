@@ -23,4 +23,9 @@ void InputDevice::setOutputName(const QString &outputName)
 {
 }
 
+bool InputDevice::shouldBeIgnoredForTabletMode() const
+{
+    return false;
+}
+
 } // namespace KWin

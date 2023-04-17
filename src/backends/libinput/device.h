@@ -612,6 +612,8 @@ public:
         return m_tabletSwitch;
     }
 
+    bool shouldBeIgnoredForTabletMode() const override;
+
     int stripsCount() const;
     int ringsCount() const;
 
