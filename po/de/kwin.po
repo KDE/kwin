@@ -2,7 +2,7 @@
 # Stephan Johach <hunsum@gmx.de>, 2005, 2006.
 # Thomas Reitelbach <tr@erdfunkstelle.de>, 2005, 2006, 2007, 2008, 2009, 2010.
 # Johannes Obermayr <johannesobermayr@gmx.de>, 2010.
-# Frederik Schwarzer <schwarzer@kde.org>, 2010, 2011, 2012, 2013, 2015, 2016, 2018, 2020, 2021, 2022.
+# Frederik Schwarzer <schwarzer@kde.org>, 2010, 2011, 2012, 2013, 2015, 2016, 2018, 2020, 2021, 2022, 2023.
 # Burkhard Lück <lueck@hube-lueck.de>, 2010, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021.
 # Frank Steinmetzger <Warp_7@gmx.de>, 2012.
 # Jannick Kuhr <opensource@kuhr.org>, 2023.
@@ -11,15 +11,15 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-13 02:16+0000\n"
-"PO-Revision-Date: 2023-02-26 00:47+0100\n"
-"Last-Translator: Jannick Kuhr <opensource@kuhr.org>\n"
+"PO-Revision-Date: 2023-04-16 14:01+0200\n"
+"Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 22.12.2\n"
+"X-Generator: Lokalize 22.07.70\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -47,14 +47,7 @@ msgstr ""
 ">Sie können mit Hilfe des Kurzbefehls „%1“ reaktiviert werden."
 
 #: composite.cpp:1033
-#, fuzzy, kde-format
-#| msgid ""
-#| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
-#| "b><br>This was most likely due to a driver bug.<p>If you think that you "
-#| "have meanwhile upgraded to a stable driver,<br>you can reset this "
-#| "protection but <b>be aware that this might result in an immediate crash!</"
-#| "b></p><p>Alternatively, you might want to use the XRender backend instead."
-#| "</p>"
+#, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
 "b><br>This was most likely due to a driver bug.<p>If you think that you have "
@@ -62,12 +55,11 @@ msgid ""
 "<b>be aware that this might result in an immediate crash!</b></p>"
 msgstr ""
 "<b>OpenGL-Compositing (Voreinstellung) hat KWin in der Vergangenheit zum "
-"Absturz gebracht.</b><br>Ursache war sehr wahrscheinlich ein fehlerhafter "
-"Treiber. <p>Wenn Sie glauben, in der Zwischenzeit auf eine stabile "
-"Treiberversion aktualisiert zu haben,<br>können Sie die Schutzfunktion "
-"zurücksetzen. Seien Sie sich jedoch im Klaren darüber,<br>dass das zu einem "
-"sofortigen Absturz führen kann.</b></p><p>Alternativ können Sie das XRender-"
-"Backend verwenden.</p>"
+"Absturz gebracht.</b><br> Ursache war sehr wahrscheinlich ein fehlerhafter "
+"Treiber.<p>Wenn Sie glauben, in der Zwischenzeit auf eine stabile "
+"Treiberversion aktualisiert zu haben,<br> können Sie die Schutzfunktion "
+"zurücksetzen. <b>Seien Sie sich jedoch im Klaren darüber, dass das zu einem "
+"sofortigen Absturz führen kann.</b></p>"
 
 #: composite.cpp:1040
 #, fuzzy, kde-format
@@ -2810,18 +2802,7 @@ msgid "(Not Responding)"
 msgstr "(Reagiert nicht)"
 
 #: workspace.cpp:1590
-#, fuzzy, kde-format
-#| msgctxt "Introductory text shown in the support information."
-#| msgid ""
-#| "KWin Support Information:\n"
-#| "The following information should be used when requesting support on e.g. "
-#| "https://forum.kde.org.\n"
-#| "It provides information about the currently running instance, which "
-#| "options are used,\n"
-#| "what OpenGL driver and which effects are running.\n"
-#| "Please post the information provided underneath this introductory text to "
-#| "a paste bin service\n"
-#| "like https://paste.kde.org instead of pasting into support threads.\n"
+#, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
 "KWin Support Information:\n"
@@ -2836,7 +2817,7 @@ msgid ""
 msgstr ""
 "KWin-Unterstützungsinformationen:\n"
 "Benutzen Sie die folgenden Informationen, wenn Sie nach Unterstützung "
-"fragen, z. B. auf https://forum.kde.org.\n"
+"fragen, z. B. auf https://discuss.kde.org.\n"
 "Sie enthalten Informationen über die momentan laufende Instanz, welche "
 "Optionen verwendet werden,\n"
 "welcher OpenGL-Treiber verwendet wird und welche Effekte laufen.\n"

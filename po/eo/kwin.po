@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-13 02:16+0000\n"
-"PO-Revision-Date: 2023-04-01 15:23+0100\n"
+"PO-Revision-Date: 2023-04-16 12:22+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -56,9 +56,9 @@ msgid ""
 "meanwhile upgraded to a stable driver,<br>you can reset this protection but "
 "<b>be aware that this might result in an immediate crash!</b></p>"
 msgstr ""
-"<b>OpenGL-komponado (la defaŭlta) kraŝis KWin en la pasinteco.</b><br>Ĉi tio "
+"<b>OpenGL-komponado (la defaŭlta) paneis KWin en la pasinteco.</b><br>Ĉi tio "
 "estis plej verŝajne pro ŝofora cimo.<p>Se vi pensas, ke vi dume ĝisdatigis "
-"al stabila ŝoforo,< br>vi povas restarigi ĉi tiun protekton, sed <b>konsciu, "
+"al stabila ŝoforo,<br>vi povas restarigi ĉi tiun protekton, sed <b>konsciu, "
 "ke tio povus rezultigi tujan kraŝon!</b></p>"
 
 #: composite.cpp:1040
@@ -277,7 +277,7 @@ msgstr "Delta (ne akcelita)"
 #, kde-format
 msgctxt "The global mouse pointer position"
 msgid "Global Position"
-msgstr "Tutmonda Pozicio"
+msgstr "Ĉiea Pozicio"
 
 #: debug_console.cpp:204
 #, kde-format
@@ -439,7 +439,7 @@ msgstr "Punkta identigilo"
 #, kde-format
 msgctxt "The global position of the touch point"
 msgid "Global position"
-msgstr "Tutmonda pozicio"
+msgstr "Ĉiea pozicio"
 
 #: debug_console.cpp:328
 #, kde-format
@@ -589,7 +589,7 @@ msgstr "On"
 #, kde-format
 msgctxt "State of a hardware switch (on/off)"
 msgid "State"
-msgstr "Ŝtato"
+msgstr "Stato"
 
 #: debug_console.cpp:497
 #, kde-format
@@ -1139,7 +1139,7 @@ msgid ""
 "%3), running on host \"%4\", but the application is not responding.</para>"
 msgstr ""
 "<para>Vi provis fermi fenestron \"%1\" de aplikaĵo \"%2\" (Proceza ID: %3), "
-"funkcianta sur gastiganto \"%4\", sed la aplikaĵo ne respondas.</para> >"
+"funkcianta sur gastiganto \"%4\", sed la aplikaĵo ne respondas.</para>"
 
 #: helpers/killer/killer.cpp:86
 #, kde-kuit-format
@@ -1149,7 +1149,7 @@ msgid ""
 "para><para><warning>Terminating the application will close all of its child "
 "windows. Any unsaved data will be lost.</warning></para>"
 msgstr ""
-"<para >Ĉu vi volas ĉesigi ĉi tiun aplikaĵon?</para><para><warning>Ĉu la "
+"<para>Ĉu vi volas ĉesigi ĉi tiun aplikaĵon?</para><para><warning>Ĉu la "
 "aplikaĵon ĉesigas, fermos ĉiujn ĝiajn infanajn fenestrojn. Ĉiuj "
 "nekonservitaj datumoj estos perditaj.</warning></para>"
 
@@ -1367,7 +1367,7 @@ msgstr "Eniga metodo, kiun KWin komenciĝas."
 #: main_wayland.cpp:374
 #, kde-format
 msgid "Starts the session in locked mode."
-msgstr "Komencas la sesion en ŝlosita reĝimo."
+msgstr "Komencas la seancon en ŝlosita reĝimo."
 
 #: main_wayland.cpp:378
 #, kde-format
@@ -1377,7 +1377,7 @@ msgstr "Komencas la seancon sen subteno de ŝlosa ekrano."
 #: main_wayland.cpp:383
 #, kde-format
 msgid "Starts the session without global shortcuts support."
-msgstr "Komencas la seancon sen subteno de tutmondaj ŝparvojoj."
+msgstr "Komencas la seancon sen subteno de ĉieaj ŝparvojoj."
 
 #: main_wayland.cpp:388 main_x11.cpp:419
 #, kde-format
@@ -1646,7 +1646,7 @@ msgstr "Fenestra rolo"
 #: rulesettings.kcfg:37
 #, kde-format
 msgid "Window role string match type"
-msgstr "Fenestra rolŝnuro kongrua tipo"
+msgstr "Fenestra rolĉeno kongrua tipo"
 
 #. i18n: ectx: label, entry (title), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:44
@@ -1670,7 +1670,7 @@ msgstr "Maŝino (gastigantonomo)"
 #: rulesettings.kcfg:57
 #, kde-format
 msgid "Machine string match type"
-msgstr "Maŝinŝnuro kongrua tipo"
+msgstr "Maŝinĉena kongruotipo"
 
 #. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:64
@@ -2251,7 +2251,7 @@ msgstr "&Neniu Titolobreto kaj Kadro"
 #: useractions.cpp:274
 #, kde-format
 msgid "Set Window Short&cut..."
-msgstr "Agordi Fenestran Mallongigon..."
+msgstr "A&gordi Fenestran Mallongigon..."
 
 #: useractions.cpp:280
 #, kde-format
@@ -2261,7 +2261,7 @@ msgstr "Agordi Specialajn &Fenestrajn Agordojn..."
 #: useractions.cpp:285
 #, kde-format
 msgid "Configure S&pecial Application Settings..."
-msgstr "Agordi specialajn agordojn de aplikaĵo..."
+msgstr "Meti s&pecialajn agordojn de aplikaĵo..."
 
 #: useractions.cpp:292
 #, kde-format
@@ -2314,12 +2314,12 @@ msgstr "Movu al &Ekrano"
 #: useractions.cpp:502
 #, kde-format
 msgid "Show in &Activities"
-msgstr "Montru en &Agadoj"
+msgstr "Montri en &Agadoj"
 
 #: useractions.cpp:519
 #, kde-format
 msgid "Move &To Current Desktop"
-msgstr "Movu al la nuna labortablo"
+msgstr "Movi al ak&tuala labortablo"
 
 #: useractions.cpp:529 useractions.cpp:596
 #, kde-format
@@ -2330,7 +2330,7 @@ msgstr "Ĉ&iuj labortabloj"
 #, kde-format
 msgctxt "Create a new desktop and move the window there"
 msgid "&New Desktop"
-msgstr "Nova Labortablo"
+msgstr "&Nova Labortablo"
 
 #: useractions.cpp:640
 #, kde-format

@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-15 02:18+0000\n"
-"PO-Revision-Date: 2023-04-09 23:00+0100\n"
+"PO-Revision-Date: 2023-04-16 12:22+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: Esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -721,7 +721,7 @@ msgstr ""
 #: focus.ui:101
 #, kde-format
 msgid "Focus &stealing prevention:"
-msgstr "Antaŭzorgo pri fokus-ŝtelado:"
+msgstr "Antaŭzorgo pri foku&s-ŝtelado:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_FocusStealingPreventionLevel)
 #: focus.ui:114
@@ -784,7 +784,7 @@ msgstr ""
 "musan fokuspolitikon.</li><li style=\" margin-top:0px; margin-bottom:12px; "
 "margin-left:0px; margin-right:0px; -qt -block-indent:0; text-indent:0px;"
 "\"><span style=\" font-style:italic;\">Ekstrema:</span> Ĉiuj fenestroj devas "
-"esti eksplicite aktivigitaj de la uzanto.</li></ul><p>Vindozoj, kiuj estas "
+"esti eksplicite aktivigitaj de la uzanto.</li></ul><p>Fenestroj, kiuj estas "
 "malhelpitaj ŝteli fokuson, estas markitaj kiel postulantaj atenton, kio "
 "defaŭlte signifas, ke ilia taskobreta eniro estos reliefigita. Ĉi tio povas "
 "esti ŝanĝita en la Modulo de kontrolo de Sciigoj.</p></body></html>"

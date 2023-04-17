@@ -3,22 +3,22 @@
 # Thomas Reitelbach <tr@erdfunkstelle.de>, 2006, 2007, 2008, 2009.
 # Burkhard Lück <lueck@hube-lueck.de>, 2008, 2012, 2013, 2014, 2015, 2018, 2019, 2021.
 # Johannes Obermayr <johannesobermayr@gmx.de>, 2010.
-# Frederik Schwarzer <schwarzer@kde.org>, 2010, 2012, 2013, 2021, 2022.
+# Frederik Schwarzer <schwarzer@kde.org>, 2010, 2012, 2013, 2021, 2022, 2023.
 # Jannick Kuhr <opensource@kuhr.org>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-06 02:04+0000\n"
-"PO-Revision-Date: 2023-02-20 22:46+0100\n"
-"Last-Translator: Jannick Kuhr <opensource@kuhr.org>\n"
+"PO-Revision-Date: 2023-04-15 00:07+0200\n"
+"Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 22.12.2\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #: declarative-plugin/buttonsmodel.cpp:53
 #, kde-format
@@ -97,6 +97,8 @@ msgstr ""
 msgid ""
 "Show all the themes available on the system (and which is the current theme)"
 msgstr ""
+"Alle auf dem System verfügbaren Designs anzeigen (und welches das aktuelle "
+"ist)"
 
 #: kwin-applywindowdecoration.cpp:65
 #, kde-format
@@ -122,6 +124,8 @@ msgstr ""
 #, kde-format
 msgid "Successfully applied the cursor theme %1 to your current Plasma session"
 msgstr ""
+"Das Zeiger-Design „%1“ wurde erfolgreich für die aktuelle Plasma-Sitzung "
+"übernommen"
 
 #: kwin-applywindowdecoration.cpp:103
 #, kde-format
@@ -136,6 +140,8 @@ msgid ""
 "Could not find theme \"%1\". The theme should be one of the following "
 "options: %2"
 msgstr ""
+"Das Design „%1“ wurde nicht gefunden. Es sollte eines der folgenden Designs "
+"gewählt werden: %2"
 
 #: kwin-applywindowdecoration.cpp:112
 #, kde-format
@@ -199,7 +205,7 @@ msgstr "Titelleistenknöpfe einrichten ..."
 #, kde-format
 msgctxt "@action:button as in, \"Get New Window Decorations\""
 msgid "Get New…"
-msgstr ""
+msgstr "Neue holen ..."
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -207,62 +213,49 @@ msgid "Edit %1 Theme"
 msgstr "Design %1 bearbeiten"
 
 #: utils.cpp:25
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "No Window Borders"
-msgstr "Keine Seitenumrandungen"
+msgstr "Keine Fensterränder"
 
 #: utils.cpp:26
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "No Side Window Borders"
-msgstr "Keine Seitenumrandungen"
+msgstr "Keine Seitenränder"
 
 #: utils.cpp:27
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Tiny Window Borders"
-msgstr "Rahmenbreite des Fensters:"
+msgstr "Sehr kleine Fensterränder"
 
 #: utils.cpp:28
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "Normal Window Borders"
-msgstr "Keine Seitenumrandungen"
+msgstr "Normale Fensterränder"
 
 #: utils.cpp:29
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Large Window Borders"
-msgstr "Rahmenbreite des Fensters:"
+msgstr "Große Fensterränder"
 
 #: utils.cpp:30
 #, kde-format
 msgid "Very Large Window Borders"
-msgstr ""
+msgstr "Sehr große Fensterränder"
 
 #: utils.cpp:31
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Huge Window Borders"
-msgstr "Rahmenbreite des Fensters:"
+msgstr "Riesige Fensterränder"
 
 #: utils.cpp:32
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Very Huge Window Borders"
-msgstr "Rahmenbreite des Fensters:"
+msgstr "Noch riesigere Fensterränder"
 
 #: utils.cpp:33
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Oversized Window Borders"
-msgstr "Rahmenbreite des Fensters:"
+msgstr "Übergroße Fensterränder"
 
 #~ msgctxt "button text"
 #~ msgid "Get New Window Decorations…"

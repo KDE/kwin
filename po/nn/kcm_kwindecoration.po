@@ -274,31 +274,3 @@ msgstr "Storleik på vindaugsramme:"
 #| msgid "Window border size:"
 msgid "Oversized Window Borders"
 msgstr "Storleik på vindaugsramme:"
-
-#~ msgctxt "button text"
-#~ msgid "Get New Window Decorations…"
-#~ msgstr "Hent ny vindaugspynt …"
-
-#~ msgid "No Borders"
-#~ msgstr "Inga ramme"
-
-#~ msgid "Tiny"
-#~ msgstr "Ørliten"
-
-#~ msgid "Normal"
-#~ msgstr "Vanleg"
-
-#~ msgid "Large"
-#~ msgstr "Stor"
-
-#~ msgid "Very Large"
-#~ msgstr "Svært stor"
-
-#~ msgid "Huge"
-#~ msgstr "Enorm"
-
-#~ msgid "Very Huge"
-#~ msgstr "Kolossal"
-
-#~ msgid "Oversized"
-#~ msgstr "Altfor stor"
