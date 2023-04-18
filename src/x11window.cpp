@@ -3700,8 +3700,8 @@ QSizeF X11Window::constrainClientSize(const QSizeF &size, SizeMode mode) const
         baseh_inc = m_geometryHints.minSize().height();
     }
 
-    w = std::floor((w - basew_inc) / width_inc) * width_inc + basew_inc;
-    h = std::floor((h - baseh_inc) / height_inc) * height_inc + baseh_inc;
+    w = Xcb::fromXNative(std::floor((Xcb::toXNative(w) - Xcb::toXNative(basew_inc)) / Xcb::toXNative(width_inc)) * Xcb::toXNative(width_inc) + Xcb::toXNative(basew_inc));
+    h = Xcb::fromXNative(std::floor((Xcb::toXNative(h) - Xcb::toXNative(baseh_inc)) / Xcb::toXNative(height_inc)) * Xcb::toXNative(height_inc) + Xcb::toXNative(baseh_inc));
 
     // code for aspect ratios based on code from FVWM
     /*
