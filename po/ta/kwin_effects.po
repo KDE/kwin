@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: கேபசூ 4.1 தமிழாக்கம்\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-18 03:11+0000\n"
+"POT-Creation-Date: 2023-04-18 02:47+0000\n"
 "PO-Revision-Date: 2022-12-06 20:05+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -619,7 +619,7 @@ msgid "Screenshot saved to %1"
 msgstr "திரைப்பிடிப்பு %1 என்ற இடத்திற்கு சேமிக்கப்பட்டது"
 
 #: screenshot/screenshotdbusinterface1.cpp:800
-#: screenshot/screenshotdbusinterface2.cpp:477
+#: screenshot/screenshotdbusinterface2.cpp:511
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -630,7 +630,7 @@ msgstr ""
 "கைவிட escape விசையை அல்லது வலது க்ளிக்கை பயன்படுத்துங்கள்."
 
 #: screenshot/screenshotdbusinterface1.cpp:803
-#: screenshot/screenshotdbusinterface2.cpp:495
+#: screenshot/screenshotdbusinterface2.cpp:529
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
