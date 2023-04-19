@@ -8,15 +8,16 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "drm_buffer_gbm.h"
-#include "drm_gbm_swapchain.h"
 
 #include "config-kwin.h"
+
+#include "core/dmabufattributes.h"
+#include "core/graphicsbuffer.h"
 #include "drm_backend.h"
+#include "drm_gbm_swapchain.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
 #include "kwineglutils_p.h"
-#include "wayland/clientbuffer.h"
-#include "wayland/linuxdmabufv1clientbuffer.h"
 
 #include <cerrno>
 #include <drm_fourcc.h>
@@ -83,7 +84,7 @@ GbmBuffer::GbmBuffer(DrmGpu *gpu, gbm_bo *bo, uint32_t flags)
 {
 }
 
-GbmBuffer::GbmBuffer(DrmGpu *gpu, gbm_bo *bo, KWaylandServer::LinuxDmaBufV1ClientBuffer *clientBuffer, uint32_t flags)
+GbmBuffer::GbmBuffer(DrmGpu *gpu, gbm_bo *bo, GraphicsBuffer *clientBuffer, uint32_t flags)
     : DrmGpuBuffer(gpu, QSize(gbm_bo_get_width(bo), gbm_bo_get_height(bo)), gbm_bo_get_format(bo), gbm_bo_get_modifier(bo), getHandles(bo), getStrides(bo), getOffsets(bo), gbm_bo_get_plane_count(bo))
     , m_bo(bo)
     , m_clientBuffer(clientBuffer)
@@ -117,7 +118,7 @@ void *GbmBuffer::mappedData() const
     return m_data;
 }
 
-KWaylandServer::ClientBuffer *GbmBuffer::clientBuffer() const
+GraphicsBuffer *GbmBuffer::clientBuffer() const
 {
     return m_clientBuffer;
 }
@@ -156,7 +157,7 @@ void GbmBuffer::createFds()
 #endif
 }
 
-std::shared_ptr<GbmBuffer> GbmBuffer::importBuffer(DrmGpu *gpu, KWaylandServer::LinuxDmaBufV1ClientBuffer *clientBuffer)
+std::shared_ptr<GbmBuffer> GbmBuffer::importBuffer(DrmGpu *gpu, GraphicsBuffer *clientBuffer)
 {
     const auto *attrs = clientBuffer->dmabufAttributes();
     gbm_bo *bo;

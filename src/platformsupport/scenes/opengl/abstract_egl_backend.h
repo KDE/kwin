@@ -39,7 +39,7 @@ public:
     EglDisplay *eglDisplayObject() const;
     EglContext *contextObject();
 
-    bool testImportBuffer(KWaylandServer::LinuxDmaBufV1ClientBuffer *buffer) override;
+    bool testImportBuffer(GraphicsBuffer *buffer) override;
     QHash<uint32_t, QVector<uint64_t>> supportedFormats() const override;
 
     QVector<KWaylandServer::LinuxDmaBufV1Feedback::Tranche> tranches() const;
@@ -48,7 +48,7 @@ public:
 
     std::shared_ptr<GLTexture> importDmaBufAsTexture(const DmaBufAttributes &attributes) const;
     EGLImageKHR importDmaBufAsImage(const DmaBufAttributes &attributes) const;
-    EGLImageKHR importBufferAsImage(KWaylandServer::LinuxDmaBufV1ClientBuffer *buffer);
+    EGLImageKHR importBufferAsImage(GraphicsBuffer *buffer);
 
 protected:
     AbstractEglBackend(dev_t deviceId = 0);
@@ -76,7 +76,7 @@ private:
     QList<QByteArray> m_clientExtensions;
     const dev_t m_deviceId;
     QVector<KWaylandServer::LinuxDmaBufV1Feedback::Tranche> m_tranches;
-    QHash<KWaylandServer::LinuxDmaBufV1ClientBuffer *, EGLImageKHR> m_importedBuffers;
+    QHash<GraphicsBuffer *, EGLImageKHR> m_importedBuffers;
 };
 
 }

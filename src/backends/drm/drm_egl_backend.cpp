@@ -28,7 +28,6 @@
 #include "options.h"
 #include "scene/surfaceitem_wayland.h"
 #include "wayland/clientconnection.h"
-#include "wayland/linuxdmabufv1clientbuffer.h"
 #include "wayland/surface_interface.h"
 // kwin libs
 #include "libkwineffects/kwineglimagetexture.h"

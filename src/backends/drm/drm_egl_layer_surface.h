@@ -21,7 +21,6 @@
 namespace KWaylandServer
 {
 class SurfaceInterface;
-class LinuxDmaBufV1ClientBuffer;
 }
 
 struct gbm_bo;
