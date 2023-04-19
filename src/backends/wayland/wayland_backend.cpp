@@ -36,6 +36,8 @@
 
 #include "../drm/gbm_dmabuf.h"
 
+#include "wayland-linux-dmabuf-unstable-v1-client-protocol.h"
+
 namespace KWin
 {
 namespace Wayland
@@ -428,6 +430,8 @@ WaylandBackend::~WaylandBackend()
     m_eglDisplay.reset();
     destroyOutputs();
 
+    m_buffers.clear();
+
     m_seat.reset();
     m_display.reset();
 
@@ -629,6 +633,84 @@ std::shared_ptr<DmaBufTexture> WaylandBackend::createDmaBufTexture(const QSize &
     return std::make_shared<DmaBufTexture>(m_eglBackend->importDmaBufAsTexture(attributes.value()), std::move(attributes.value()));
 }
 
+static wl_buffer *importDmaBufBuffer(WaylandDisplay *display, const DmaBufAttributes *attributes)
+{
+    zwp_linux_buffer_params_v1 *params = zwp_linux_dmabuf_v1_create_params(display->linuxDmabuf()->handle());
+    for (int i = 0; i < attributes->planeCount; ++i) {
+        zwp_linux_buffer_params_v1_add(params,
+                                       attributes->fd[i].get(),
+                                       i,
+                                       attributes->offset[i],
+                                       attributes->pitch[i],
+                                       attributes->modifier >> 32,
+                                       attributes->modifier & 0xffffffff);
+    }
+
+    wl_buffer *buffer = zwp_linux_buffer_params_v1_create_immed(params, attributes->width, attributes->height, attributes->format, 0);
+    zwp_linux_buffer_params_v1_destroy(params);
+
+    return buffer;
+}
+
+static wl_buffer *importShmBuffer(WaylandDisplay *display, const ShmAttributes *attributes)
+{
+    wl_shm_format format;
+    switch (attributes->format) {
+    case DRM_FORMAT_ARGB8888:
+        format = WL_SHM_FORMAT_ARGB8888;
+        break;
+    case DRM_FORMAT_XRGB8888:
+        format = WL_SHM_FORMAT_XRGB8888;
+        break;
+    default:
+        format = static_cast<wl_shm_format>(attributes->format);
+        break;
+    }
+
+    wl_shm_pool *pool = wl_shm_create_pool(display->shm(), attributes->fd.get(), attributes->size.height() * attributes->stride);
+    wl_buffer *buffer = wl_shm_pool_create_buffer(pool,
+                                                  attributes->offset,
+                                                  attributes->size.width(),
+                                                  attributes->size.height(),
+                                                  attributes->stride,
+                                                  format);
+    wl_shm_pool_destroy(pool);
+
+    return buffer;
+}
+
+wl_buffer *WaylandBackend::importBuffer(GraphicsBuffer *graphicsBuffer)
+{
+    auto &buffer = m_buffers[graphicsBuffer];
+    if (!buffer) {
+        wl_buffer *handle = nullptr;
+        if (const DmaBufAttributes *attributes = graphicsBuffer->dmabufAttributes()) {
+            handle = importDmaBufBuffer(m_display.get(), attributes);
+        } else if (const ShmAttributes *attributes = graphicsBuffer->shmAttributes()) {
+            handle = importShmBuffer(m_display.get(), attributes);
+        } else {
+            qCWarning(KWIN_WAYLAND_BACKEND) << graphicsBuffer << "has unknown type";
+            return nullptr;
+        }
+
+        buffer = std::make_unique<WaylandBuffer>(handle, graphicsBuffer);
+        connect(buffer.get(), &WaylandBuffer::defunct, this, [this, graphicsBuffer]() {
+            m_buffers.erase(graphicsBuffer);
+        });
+
+        static const wl_buffer_listener listener = {
+            .release = [](void *userData, wl_buffer *buffer) {
+                WaylandBuffer *slot = static_cast<WaylandBuffer *>(userData);
+                slot->unlock();
+            },
+        };
+        wl_buffer_add_listener(handle, &listener, buffer.get());
+    }
+
+    buffer->lock();
+    return buffer->handle();
+}
+
 void WaylandBackend::setEglDisplay(std::unique_ptr<EglDisplay> &&display)
 {
     m_eglDisplay = std::move(display);
@@ -637,6 +719,43 @@ void WaylandBackend::setEglDisplay(std::unique_ptr<EglDisplay> &&display)
 EglDisplay *WaylandBackend::sceneEglDisplayObject() const
 {
     return m_eglDisplay.get();
+}
+
+WaylandBuffer::WaylandBuffer(wl_buffer *handle, GraphicsBuffer *graphicsBuffer)
+    : m_graphicsBuffer(graphicsBuffer)
+    , m_handle(handle)
+{
+    connect(graphicsBuffer, &GraphicsBuffer::destroyed, this, &WaylandBuffer::defunct);
+}
+
+WaylandBuffer::~WaylandBuffer()
+{
+    m_graphicsBuffer->disconnect(this);
+    if (m_locked) {
+        m_graphicsBuffer->unref();
+    }
+    wl_buffer_destroy(m_handle);
+}
+
+wl_buffer *WaylandBuffer::handle() const
+{
+    return m_handle;
+}
+
+void WaylandBuffer::lock()
+{
+    if (!m_locked) {
+        m_locked = true;
+        m_graphicsBuffer->ref();
+    }
+}
+
+void WaylandBuffer::unlock()
+{
+    if (m_locked) {
+        m_locked = false;
+        m_graphicsBuffer->unref();
+    }
 }
 }
 

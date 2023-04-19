@@ -16,8 +16,6 @@
 #include <QImage>
 #include <QObject>
 
-struct wl_buffer;
-
 namespace KWin
 {
 class Output;
@@ -38,12 +36,10 @@ public:
     ~WaylandQPainterBufferSlot();
 
     ShmGraphicsBuffer *graphicsBuffer;
-    wl_buffer *buffer;
     QImage image;
     void *data = nullptr;
     int size;
     int age = 0;
-    bool used = false;
 };
 
 class WaylandQPainterSwapchain

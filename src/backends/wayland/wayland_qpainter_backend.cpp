@@ -26,18 +26,6 @@ namespace KWin
 namespace Wayland
 {
 
-static uint32_t drmFormatToShmFormat(uint32_t drmFormat)
-{
-    switch (drmFormat) {
-    case DRM_FORMAT_ARGB8888:
-        return WL_SHM_FORMAT_ARGB8888;
-    case DRM_FORMAT_XRGB8888:
-        return WL_SHM_FORMAT_XRGB8888;
-    default:
-        return static_cast<wl_shm_format>(drmFormat);
-    }
-}
-
 static QImage::Format drmFormatToQImageFormat(uint32_t drmFormat)
 {
     switch (drmFormat) {
@@ -56,23 +44,6 @@ WaylandQPainterBufferSlot::WaylandQPainterBufferSlot(WaylandDisplay *display, Sh
     const ShmAttributes *attributes = graphicsBuffer->shmAttributes();
     size = attributes->size.height() * attributes->stride;
 
-    wl_shm_pool *pool = wl_shm_create_pool(display->shm(), attributes->fd.get(), size);
-    buffer = wl_shm_pool_create_buffer(pool,
-                                       attributes->offset,
-                                       attributes->size.width(),
-                                       attributes->size.height(),
-                                       attributes->stride,
-                                       drmFormatToShmFormat(attributes->format));
-    wl_shm_pool_destroy(pool);
-
-    static const wl_buffer_listener listener = {
-        .release = [](void *userData, wl_buffer *buffer) {
-            WaylandQPainterBufferSlot *slot = static_cast<WaylandQPainterBufferSlot *>(userData);
-            slot->used = false;
-        },
-    };
-    wl_buffer_add_listener(buffer, &listener, this);
-
     data = mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_SHARED, attributes->fd.get(), attributes->offset);
     if (data == MAP_FAILED) {
         qCWarning(KWIN_WAYLAND_BACKEND) << "Failed to map a shared memory buffer";
@@ -88,7 +59,6 @@ WaylandQPainterBufferSlot::~WaylandQPainterBufferSlot()
         munmap(data, size);
     }
 
-    wl_buffer_destroy(buffer);
     graphicsBuffer->drop();
 }
 
@@ -108,8 +78,7 @@ QSize WaylandQPainterSwapchain::size() const
 std::shared_ptr<WaylandQPainterBufferSlot> WaylandQPainterSwapchain::acquire()
 {
     for (const auto &slot : m_slots) {
-        if (!slot->used) {
-            slot->used = true;
+        if (!slot->graphicsBuffer->isReferenced()) {
             return slot;
         }
     }
@@ -144,8 +113,11 @@ WaylandQPainterPrimaryLayer::WaylandQPainterPrimaryLayer(WaylandOutput *output)
 
 void WaylandQPainterPrimaryLayer::present()
 {
+    wl_buffer *buffer = m_waylandOutput->backend()->importBuffer(m_back->graphicsBuffer);
+    Q_ASSERT(buffer);
+
     auto s = m_waylandOutput->surface();
-    s->attachBuffer(m_back->buffer);
+    s->attachBuffer(buffer);
     s->damage(m_damageJournal.lastDamage());
     s->setScale(std::ceil(m_waylandOutput->scale()));
     s->commit();
@@ -213,7 +185,10 @@ std::optional<OutputLayerBeginFrameInfo> WaylandQPainterCursorLayer::beginFrame(
 
 bool WaylandQPainterCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    m_output->cursor()->update(m_back->buffer, scale(), hotspot().toPoint());
+    wl_buffer *buffer = m_output->backend()->importBuffer(m_back->graphicsBuffer);
+    Q_ASSERT(buffer);
+
+    m_output->cursor()->update(buffer, scale(), hotspot().toPoint());
     m_swapchain->release(m_back);
     return true;
 }

@@ -23,10 +23,7 @@
 #include <cmath>
 #include <drm_fourcc.h>
 #include <fcntl.h>
-#include <gbm.h>
 #include <unistd.h>
-
-#include "wayland-linux-dmabuf-unstable-v1-client-protocol.h"
 
 namespace KWin
 {
@@ -36,23 +33,7 @@ namespace Wayland
 WaylandEglLayerBuffer::WaylandEglLayerBuffer(GbmGraphicsBuffer *buffer, WaylandEglBackend *backend)
     : m_graphicsBuffer(buffer)
 {
-    const DmaBufAttributes *attributes = buffer->dmabufAttributes();
-
-    zwp_linux_buffer_params_v1 *params = zwp_linux_dmabuf_v1_create_params(backend->backend()->display()->linuxDmabuf()->handle());
-    for (int i = 0; i < attributes->planeCount; ++i) {
-        zwp_linux_buffer_params_v1_add(params,
-                                       attributes->fd[i].get(),
-                                       i,
-                                       attributes->offset[i],
-                                       attributes->pitch[i],
-                                       attributes->modifier >> 32,
-                                       attributes->modifier & 0xffffffff);
-    }
-
-    m_buffer = zwp_linux_buffer_params_v1_create_immed(params, attributes->width, attributes->height, attributes->format, 0);
-    zwp_linux_buffer_params_v1_destroy(params);
-
-    m_texture = backend->importDmaBufAsTexture(*attributes);
+    m_texture = backend->importDmaBufAsTexture(*buffer->dmabufAttributes());
     m_framebuffer = std::make_unique<GLFramebuffer>(m_texture.get());
 }
 
@@ -60,19 +41,12 @@ WaylandEglLayerBuffer::~WaylandEglLayerBuffer()
 {
     m_texture.reset();
     m_framebuffer.reset();
-
-    wl_buffer_destroy(m_buffer);
     m_graphicsBuffer->drop();
 }
 
 GbmGraphicsBuffer *WaylandEglLayerBuffer::graphicsBuffer() const
 {
     return m_graphicsBuffer;
-}
-
-wl_buffer *WaylandEglLayerBuffer::buffer() const
-{
-    return m_buffer;
 }
 
 GLFramebuffer *WaylandEglLayerBuffer::framebuffer() const
@@ -93,17 +67,10 @@ int WaylandEglLayerBuffer::age() const
 WaylandEglLayerSwapchain::WaylandEglLayerSwapchain(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, WaylandEglBackend *backend)
     : m_backend(backend)
     , m_size(size)
+    , m_format(format)
+    , m_modifiers(modifiers)
+    , m_allocator(std::make_unique<GbmGraphicsBufferAllocator>(backend->backend()->gbmDevice()))
 {
-    GbmGraphicsBufferAllocator allocator(backend->backend()->gbmDevice());
-
-    for (int i = 0; i < 2; ++i) {
-        GbmGraphicsBuffer *buffer = allocator.allocate(size, format, modifiers);
-        if (!buffer) {
-            qCWarning(KWIN_WAYLAND_BACKEND) << "Failed to allocate layer swapchain buffer";
-            continue;
-        }
-        m_buffers.append(std::make_shared<WaylandEglLayerBuffer>(buffer, backend));
-    }
 }
 
 WaylandEglLayerSwapchain::~WaylandEglLayerSwapchain()
@@ -117,14 +84,26 @@ QSize WaylandEglLayerSwapchain::size() const
 
 std::shared_ptr<WaylandEglLayerBuffer> WaylandEglLayerSwapchain::acquire()
 {
-    m_index = (m_index + 1) % m_buffers.count();
-    return m_buffers[m_index];
+    for (const auto &buffer : m_buffers) {
+        if (!buffer->graphicsBuffer()->isReferenced()) {
+            return buffer;
+        }
+    }
+
+    GbmGraphicsBuffer *graphicsBuffer = m_allocator->allocate(m_size, m_format, m_modifiers);
+    if (!graphicsBuffer) {
+        qCWarning(KWIN_WAYLAND_BACKEND) << "Failed to allocate layer swapchain buffer";
+        return nullptr;
+    }
+
+    auto buffer = std::make_shared<WaylandEglLayerBuffer>(graphicsBuffer, m_backend);
+    m_buffers << buffer;
+
+    return buffer;
 }
 
 void WaylandEglLayerSwapchain::release(std::shared_ptr<WaylandEglLayerBuffer> buffer)
 {
-    Q_ASSERT(m_buffers[m_index] == buffer);
-
     for (qsizetype i = 0; i < m_buffers.count(); ++i) {
         if (m_buffers[i] == buffer) {
             m_buffers[i]->m_age = 1;
@@ -200,8 +179,11 @@ bool WaylandEglPrimaryLayer::endFrame(const QRegion &renderedRegion, const QRegi
 
 void WaylandEglPrimaryLayer::present()
 {
+    wl_buffer *buffer = m_backend->backend()->importBuffer(m_buffer->graphicsBuffer());
+    Q_ASSERT(buffer);
+
     KWayland::Client::Surface *surface = m_waylandOutput->surface();
-    surface->attachBuffer(m_buffer->buffer());
+    surface->attachBuffer(buffer);
     surface->damage(m_damageJournal.lastDamage());
     surface->setScale(std::ceil(m_waylandOutput->scale()));
     surface->commit();
@@ -253,7 +235,10 @@ bool WaylandEglCursorLayer::endFrame(const QRegion &renderedRegion, const QRegio
     // Flush rendering commands to the dmabuf.
     glFlush();
 
-    m_output->cursor()->update(m_buffer->buffer(), scale(), hotspot().toPoint());
+    wl_buffer *buffer = m_backend->backend()->importBuffer(m_buffer->graphicsBuffer());
+    Q_ASSERT(buffer);
+
+    m_output->cursor()->update(buffer, scale(), hotspot().toPoint());
 
     m_swapchain->release(m_buffer);
     return true;

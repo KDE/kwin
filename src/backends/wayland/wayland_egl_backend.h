@@ -15,12 +15,11 @@
 
 #include <memory>
 
-struct wl_buffer;
-
 namespace KWin
 {
 class GLFramebuffer;
 class GbmGraphicsBuffer;
+class GbmGraphicsBufferAllocator;
 
 namespace Wayland
 {
@@ -35,14 +34,12 @@ public:
     ~WaylandEglLayerBuffer();
 
     GbmGraphicsBuffer *graphicsBuffer() const;
-    wl_buffer *buffer() const;
     GLFramebuffer *framebuffer() const;
     std::shared_ptr<GLTexture> texture() const;
     int age() const;
 
 private:
     GbmGraphicsBuffer *m_graphicsBuffer;
-    wl_buffer *m_buffer = nullptr;
     std::unique_ptr<GLFramebuffer> m_framebuffer;
     std::shared_ptr<GLTexture> m_texture;
     int m_age = 0;
@@ -63,8 +60,10 @@ public:
 private:
     WaylandEglBackend *m_backend;
     QSize m_size;
+    uint32_t m_format;
+    QVector<uint64_t> m_modifiers;
+    std::unique_ptr<GbmGraphicsBufferAllocator> m_allocator;
     QVector<std::shared_ptr<WaylandEglLayerBuffer>> m_buffers;
-    int m_index = 0;
 };
 
 class WaylandEglPrimaryLayer : public OutputLayer

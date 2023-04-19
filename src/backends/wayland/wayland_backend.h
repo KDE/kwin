@@ -23,6 +23,7 @@
 #include <QPoint>
 #include <QSize>
 
+struct wl_buffer;
 struct wl_display;
 struct gbm_device;
 struct gbm_bo;
@@ -45,6 +46,7 @@ class Touch;
 namespace KWin
 {
 class DpmsInputEventFilter;
+class GraphicsBuffer;
 
 namespace Wayland
 {
@@ -164,6 +166,28 @@ private:
     std::unique_ptr<WaylandInputDevice> m_touchDevice;
 };
 
+class WaylandBuffer : public QObject
+{
+    Q_OBJECT
+
+public:
+    WaylandBuffer(wl_buffer *handle, GraphicsBuffer *graphicsBuffer);
+    ~WaylandBuffer() override;
+
+    wl_buffer *handle() const;
+
+    void lock();
+    void unlock();
+
+Q_SIGNALS:
+    void defunct();
+
+private:
+    GraphicsBuffer *m_graphicsBuffer;
+    wl_buffer *m_handle;
+    bool m_locked = false;
+};
+
 struct WaylandBackendOptions
 {
     QString socketName;
@@ -217,6 +241,8 @@ public:
     Output *createVirtualOutput(const QString &name, const QSize &size, double scale) override;
     void removeVirtualOutput(Output *output) override;
 
+    wl_buffer *importBuffer(GraphicsBuffer *graphicsBuffer);
+
     std::optional<DmaBufParams> testCreateDmaBuf(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers) override;
     std::shared_ptr<DmaBufTexture> createDmaBufTexture(const QSize &size, quint32 format, uint64_t modifier) override;
 
@@ -250,6 +276,7 @@ private:
     FileDescriptor m_drmFileDescriptor;
     gbm_device *m_gbmDevice;
     std::unique_ptr<EglDisplay> m_eglDisplay;
+    std::map<GraphicsBuffer *, std::unique_ptr<WaylandBuffer>> m_buffers;
 };
 
 } // namespace Wayland
