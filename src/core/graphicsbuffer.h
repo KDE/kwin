@@ -29,15 +29,6 @@ class KWIN_EXPORT GraphicsBuffer : public QObject
 public:
     explicit GraphicsBuffer(QObject *parent = nullptr);
 
-    /**
-     * This enum type is used to specify the corner where the origin is. That is, the
-     * buffer corner where 0,0 is located.
-     */
-    enum class Origin {
-        TopLeft,
-        BottomLeft,
-    };
-
     bool isReferenced() const;
     bool isDropped() const;
 
@@ -47,7 +38,6 @@ public:
 
     virtual QSize size() const = 0;
     virtual bool hasAlphaChannel() const = 0;
-    virtual Origin origin() const = 0;
 
     virtual const DmaBufAttributes *dmabufAttributes() const;
 

@@ -139,11 +139,6 @@ bool ShmClientBuffer::hasAlphaChannel() const
     return d->hasAlphaChannel;
 }
 
-ClientBuffer::Origin ShmClientBuffer::origin() const
-{
-    return Origin::TopLeft;
-}
-
 static void cleanupShmData(void *bufferHandle)
 {
     Q_ASSERT_X(s_accessCounter > 0, "cleanup", "access counter must be positive");

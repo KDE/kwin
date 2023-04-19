@@ -110,7 +110,7 @@ bool BasicEGLSurfaceTextureWayland::loadDmabufTexture(KWaylandServer::LinuxDmaBu
     m_texture->bind();
     glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, static_cast<GLeglImageOES>(image));
     m_texture->unbind();
-    m_texture->setContentTransform(buffer->origin() == KWaylandServer::ClientBuffer::Origin::TopLeft ? TextureTransform::MirrorY : TextureTransforms());
+    m_texture->setContentTransform(TextureTransform::MirrorY);
     m_bufferType = BufferType::DmaBuf;
 
     return true;
@@ -127,9 +127,6 @@ void BasicEGLSurfaceTextureWayland::updateDmabufTexture(KWaylandServer::LinuxDma
     m_texture->bind();
     glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, static_cast<GLeglImageOES>(backend()->importBufferAsImage(buffer)));
     m_texture->unbind();
-    // The origin in a dmabuf-buffer is at the upper-left corner, so the meaning
-    // of Y-inverted is the inverse of OpenGL.
-    m_texture->setContentTransform(buffer->origin() == KWaylandServer::ClientBuffer::Origin::TopLeft ? TextureTransform::MirrorY : TextureTransforms());
 }
 
 } // namespace KWin

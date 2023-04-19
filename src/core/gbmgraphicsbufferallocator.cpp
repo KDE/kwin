@@ -110,11 +110,6 @@ bool GbmGraphicsBuffer::hasAlphaChannel() const
     return m_hasAlphaChannel;
 }
 
-GraphicsBuffer::Origin GbmGraphicsBuffer::origin() const
-{
-    return Origin::TopLeft;
-}
-
 const DmaBufAttributes *GbmGraphicsBuffer::dmabufAttributes() const
 {
     return &m_dmabufAttributes;

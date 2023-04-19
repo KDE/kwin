@@ -31,7 +31,6 @@ public:
 
     QSize size() const override;
     bool hasAlphaChannel() const override;
-    Origin origin() const override;
 };
 
 /**

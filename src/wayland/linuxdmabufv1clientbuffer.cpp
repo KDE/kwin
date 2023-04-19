@@ -149,13 +149,18 @@ void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_create(Resource *resource, 
         return;
     }
 
+    if (flags) {
+        send_failed(resource->handle);
+        return;
+    }
+
     m_isUsed = true;
 
     m_attrs.width = width;
     m_attrs.height = height;
     m_attrs.format = format;
 
-    auto clientBuffer = std::make_unique<LinuxDmaBufV1ClientBuffer>(std::move(m_attrs), flags);
+    auto clientBuffer = std::make_unique<LinuxDmaBufV1ClientBuffer>(std::move(m_attrs));
     if (!renderBackend->testImportBuffer(clientBuffer.get())) {
         send_failed(resource->handle);
         return;
@@ -196,13 +201,18 @@ void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_create_immed(Resource *reso
         return;
     }
 
+    if (flags) {
+        wl_resource_post_error(resource->handle, error_invalid_wl_buffer, "dma-buf flags are not supported");
+        return;
+    }
+
     m_isUsed = true;
 
     m_attrs.width = width;
     m_attrs.height = height;
     m_attrs.format = format;
 
-    auto clientBuffer = std::make_unique<LinuxDmaBufV1ClientBuffer>(std::move(m_attrs), flags);
+    auto clientBuffer = std::make_unique<LinuxDmaBufV1ClientBuffer>(std::move(m_attrs));
     if (!renderBackend->testImportBuffer(clientBuffer.get())) {
         wl_resource_post_error(resource->handle, error_invalid_wl_buffer, "importing the supplied dmabufs failed");
         return;
@@ -361,12 +371,11 @@ void LinuxDmaBufV1ClientBufferPrivate::buffer_destroy(Resource *resource)
     wl_resource_destroy(resource->handle);
 }
 
-LinuxDmaBufV1ClientBuffer::LinuxDmaBufV1ClientBuffer(KWin::DmaBufAttributes &&attrs, quint32 flags)
+LinuxDmaBufV1ClientBuffer::LinuxDmaBufV1ClientBuffer(KWin::DmaBufAttributes &&attrs)
     : ClientBuffer(std::make_unique<LinuxDmaBufV1ClientBufferPrivate>())
 {
     Q_D(LinuxDmaBufV1ClientBuffer);
     d->attrs = std::move(attrs);
-    d->flags = flags;
     d->hasAlphaChannel = testAlphaChannel(attrs.format);
 }
 
@@ -395,16 +404,6 @@ bool LinuxDmaBufV1ClientBuffer::hasAlphaChannel() const
 {
     Q_D(const LinuxDmaBufV1ClientBuffer);
     return d->hasAlphaChannel;
-}
-
-ClientBuffer::Origin LinuxDmaBufV1ClientBuffer::origin() const
-{
-    Q_D(const LinuxDmaBufV1ClientBuffer);
-    if (d->flags & QtWaylandServer::zwp_linux_buffer_params_v1::flags_y_invert) {
-        return ClientBuffer::Origin::BottomLeft;
-    } else {
-        return ClientBuffer::Origin::TopLeft;
-    }
 }
 
 LinuxDmaBufV1Feedback::LinuxDmaBufV1Feedback(LinuxDmaBufV1ClientBufferIntegrationPrivate *integration)

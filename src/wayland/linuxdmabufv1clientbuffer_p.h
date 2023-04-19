@@ -53,7 +53,6 @@ class LinuxDmaBufV1ClientBufferPrivate : public ClientBufferPrivate, public QtWa
 {
 public:
     KWin::DmaBufAttributes attrs;
-    quint32 flags;
     bool hasAlphaChannel = false;
 
 protected:

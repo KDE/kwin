@@ -40,12 +40,11 @@ class KWIN_EXPORT LinuxDmaBufV1ClientBuffer : public ClientBuffer
     Q_DECLARE_PRIVATE(LinuxDmaBufV1ClientBuffer)
 
 public:
-    LinuxDmaBufV1ClientBuffer(KWin::DmaBufAttributes &&attrs, quint32 flags);
+    LinuxDmaBufV1ClientBuffer(KWin::DmaBufAttributes &&attrs);
     ~LinuxDmaBufV1ClientBuffer() override;
 
     QSize size() const override;
     bool hasAlphaChannel() const override;
-    Origin origin() const override;
     const KWin::DmaBufAttributes *dmabufAttributes() const override;
 
 private:
