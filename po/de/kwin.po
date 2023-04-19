@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-13 02:16+0000\n"
-"PO-Revision-Date: 2023-04-16 14:01+0200\n"
+"PO-Revision-Date: 2023-04-18 22:40+0200\n"
 "Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -1796,17 +1796,15 @@ msgstr "Regelart für Ignorieren der angeforderten Geometrie"
 
 #. i18n: ectx: label, entry (desktops), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:151
-#, fuzzy, kde-format
-#| msgid "Switch to Desktop 2"
+#, kde-format
 msgid "List of Desktop Ids"
-msgstr "Auf Arbeitsfläche 2 umschalten"
+msgstr "Liste der Arbeitsflächenkennungen"
 
 #. i18n: ectx: label, entry (desktopsrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:155
-#, fuzzy, kde-format
-#| msgid "Desktop number rule type"
+#, kde-format
 msgid "Desktop Ids rule type"
-msgstr "Regelart für Arbeitsflächennummer"
+msgstr "Regelart für Arbeitsflächenkennung"
 
 #. i18n: ectx: label, entry (screen), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:162
