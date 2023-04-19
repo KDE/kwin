@@ -342,6 +342,7 @@ set_package_properties(QAccessibilityClient6 PROPERTIES
 set(HAVE_ACCESSIBILITY ${QAccessibilityClient6_FOUND})
 
 find_package(KGlobalAccelD REQUIRED)
+pkg_search_module(libdisplayinfo REQUIRED IMPORTED_TARGET libdisplay-info)
 
 ecm_find_qmlmodule(QtQuick 2.3)
 ecm_find_qmlmodule(QtQuick.Controls 2.15)
