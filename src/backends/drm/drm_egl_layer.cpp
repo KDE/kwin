@@ -30,7 +30,7 @@ namespace KWin
 
 static TextureTransforms drmToTextureRotation(DrmPipeline *pipeline)
 {
-    auto angle = DrmPlane::transformationToDegrees(pipeline->renderOrientation()) - DrmPlane::transformationToDegrees(pipeline->bufferOrientation());
+    auto angle = DrmPlane::transformationToDegrees(pipeline->renderOrientation());
     if (angle < 0) {
         angle += 360;
     }
@@ -60,7 +60,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::beginFrame()
     m_scanoutBuffer.reset();
     m_dmabufFeedback.renderingSurface();
 
-    return m_surface.startRendering(m_pipeline->bufferSize(), drmToTextureRotation(m_pipeline) | TextureTransform::MirrorY, m_pipeline->formats());
+    return m_surface.startRendering(m_pipeline->mode()->size(), drmToTextureRotation(m_pipeline) | TextureTransform::MirrorY, m_pipeline->formats());
 }
 
 bool EglGbmLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
@@ -79,7 +79,7 @@ QRegion EglGbmLayer::currentDamage() const
 
 bool EglGbmLayer::checkTestBuffer()
 {
-    return m_surface.renderTestBuffer(m_pipeline->bufferSize(), m_pipeline->formats()) != nullptr;
+    return m_surface.renderTestBuffer(m_pipeline->mode()->size(), m_pipeline->formats()) != nullptr;
 }
 
 std::shared_ptr<GLTexture> EglGbmLayer::texture() const
@@ -106,7 +106,7 @@ bool EglGbmLayer::scanout(SurfaceItem *surfaceItem)
         return false;
     }
     const auto surface = item->surface();
-    if (m_pipeline->bufferOrientation() != DrmPlane::Transformation::Rotate0 || surface->bufferTransform() != m_pipeline->output()->transform()) {
+    if (surface->bufferTransform() != m_pipeline->output()->transform()) {
         return false;
     }
     const auto buffer = qobject_cast<KWaylandServer::LinuxDmaBufV1ClientBuffer *>(surface->buffer());

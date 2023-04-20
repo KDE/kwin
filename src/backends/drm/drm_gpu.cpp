@@ -435,21 +435,7 @@ DrmPipeline::Error DrmGpu::testPendingConfiguration()
             return c1->getProp(DrmConnector::PropertyIndex::CrtcId)->current() > c2->getProp(DrmConnector::PropertyIndex::CrtcId)->current();
         });
     }
-    DrmPipeline::Error err = checkCrtcAssignment(connectors, crtcs);
-    if (err == DrmPipeline::Error::None || err == DrmPipeline::Error::NoPermission || err == DrmPipeline::Error::FramePending) {
-        return err;
-    } else {
-        // try again without hw rotation
-        bool hwRotationUsed = false;
-        for (const auto &pipeline : std::as_const(m_pipelines)) {
-            hwRotationUsed |= (pipeline->bufferOrientation() != DrmPlane::Transformations(DrmPlane::Transformation::Rotate0));
-            pipeline->setBufferOrientation(DrmPlane::Transformation::Rotate0);
-        }
-        if (hwRotationUsed) {
-            err = checkCrtcAssignment(connectors, crtcs);
-        }
-        return err;
-    }
+    return checkCrtcAssignment(connectors, crtcs);
 }
 
 DrmPipeline::Error DrmGpu::testPipelines()

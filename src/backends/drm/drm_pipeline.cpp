@@ -99,7 +99,6 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline 
 {
     auto commit = std::make_unique<DrmAtomicCommit>(pipelines.front()->gpu());
     for (const auto &pipeline : pipelines) {
-        pipeline->checkHardwareRotation();
         if (pipeline->activePending()) {
             if (!pipeline->m_pending.layer->checkTestBuffer()) {
                 qCWarning(KWIN_DRM) << "Checking test buffer failed for" << mode;
@@ -170,15 +169,6 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline 
     }
 }
 
-static QSize orientateSize(const QSize &size, DrmPlane::Transformations transforms)
-{
-    if (transforms & (DrmPlane::Transformation::Rotate90 | DrmPlane::Transformation::Rotate270)) {
-        return size.transposed();
-    } else {
-        return size;
-    }
-}
-
 static QRect centerBuffer(const QSize &bufferSize, const QSize &modeSize)
 {
     const double widthScale = bufferSize.width() / double(modeSize.width());
@@ -213,7 +203,7 @@ bool DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commit)
     }
 
     const auto fb = m_pending.layer->currentBuffer().get();
-    m_pending.crtc->primaryPlane()->set(commit, QPoint(0, 0), fb->buffer()->size(), centerBuffer(orientateSize(fb->buffer()->size(), m_pending.bufferOrientation), m_pending.mode->size()));
+    m_pending.crtc->primaryPlane()->set(commit, QPoint(0, 0), fb->buffer()->size(), centerBuffer(fb->buffer()->size(), m_pending.mode->size()));
     commit->addProperty(m_pending.crtc->primaryPlane()->getProp(DrmPlane::PropertyIndex::FbId), fb->framebufferId());
 
     if (auto plane = m_pending.crtc->cursorPlane()) {
@@ -273,24 +263,12 @@ void DrmPipeline::prepareAtomicModeset(DrmAtomicCommit *commit)
 
     commit->addProperty(m_pending.crtc->primaryPlane()->getProp(DrmPlane::PropertyIndex::CrtcId), m_pending.crtc->id());
     if (const auto rotation = m_pending.crtc->primaryPlane()->getProp(DrmPlane::PropertyIndex::Rotation)) {
-        commit->addEnum(rotation, m_pending.bufferOrientation);
+        commit->addEnum(rotation, DrmPlane::Transformation::Rotate0);
     }
     if (m_pending.crtc->cursorPlane()) {
         if (const auto rotation = m_pending.crtc->cursorPlane()->getProp(DrmPlane::PropertyIndex::Rotation)) {
             commit->addEnum(rotation, DrmPlane::Transformation::Rotate0);
         }
-    }
-}
-
-void DrmPipeline::checkHardwareRotation()
-{
-    if (m_pending.crtc && m_pending.crtc->primaryPlane()) {
-        const bool supported = (m_pending.bufferOrientation & m_pending.crtc->primaryPlane()->supportedTransformations());
-        if (!supported) {
-            m_pending.bufferOrientation = DrmPlane::Transformation::Rotate0;
-        }
-    } else {
-        m_pending.bufferOrientation = DrmPlane::Transformation::Rotate0;
     }
 }
 
@@ -391,15 +369,6 @@ bool DrmPipeline::moveCursor()
 void DrmPipeline::applyPendingChanges()
 {
     m_next = m_pending;
-}
-
-QSize DrmPipeline::bufferSize() const
-{
-    const auto modeSize = m_pending.mode->size();
-    if (m_pending.bufferOrientation & (DrmPlane::Transformation::Rotate90 | DrmPlane::Transformation::Rotate270)) {
-        return modeSize.transposed();
-    }
-    return modeSize;
 }
 
 DrmConnector *DrmPipeline::connector() const
@@ -561,11 +530,6 @@ DrmPlane::Transformations DrmPipeline::renderOrientation() const
     return m_pending.renderOrientation;
 }
 
-DrmPlane::Transformations DrmPipeline::bufferOrientation() const
-{
-    return m_pending.bufferOrientation;
-}
-
 RenderLoopPrivate::SyncMode DrmPipeline::syncMode() const
 {
     return m_pending.syncMode;
@@ -623,11 +587,6 @@ void DrmPipeline::setLayers(const std::shared_ptr<DrmPipelineLayer> &primaryLaye
 void DrmPipeline::setRenderOrientation(DrmPlane::Transformations orientation)
 {
     m_pending.renderOrientation = orientation;
-}
-
-void DrmPipeline::setBufferOrientation(DrmPlane::Transformations orientation)
-{
-    m_pending.bufferOrientation = orientation;
 }
 
 void DrmPipeline::setSyncMode(RenderLoopPrivate::SyncMode mode)

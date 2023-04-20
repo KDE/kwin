@@ -400,9 +400,6 @@ DrmPipeline *DrmOutput::pipeline() const
 
 bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
 {
-    static bool valid;
-    static int envOnlySoftwareRotations = qEnvironmentVariableIntValue("KWIN_DRM_SW_ROTATIONS_ONLY", &valid) == 1 || !valid;
-
     const auto mode = props->mode.value_or(currentMode()).lock();
     if (!mode) {
         return false;
@@ -411,9 +408,6 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
     m_pipeline->setOverscan(props->overscan.value_or(m_pipeline->overscan()));
     m_pipeline->setRgbRange(props->rgbRange.value_or(m_pipeline->rgbRange()));
     m_pipeline->setRenderOrientation(outputToPlaneTransform(props->transform.value_or(transform())));
-    if (!envOnlySoftwareRotations && m_gpu->atomicModeSetting()) {
-        m_pipeline->setBufferOrientation(m_pipeline->renderOrientation());
-    }
     m_pipeline->setEnable(props->enabled.value_or(m_pipeline->enabled()));
     return true;
 }

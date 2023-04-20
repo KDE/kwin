@@ -87,10 +87,6 @@ public:
     bool pageflipPending() const;
     bool modesetPresentPending() const;
     void resetModesetPresentPending();
-    /**
-     * what size buffers submitted to this pipeline should have
-     */
-    QSize bufferSize() const;
 
     QMap<uint32_t, QVector<uint64_t>> formats() const;
     QMap<uint32_t, QVector<uint64_t>> cursorFormats() const;
@@ -107,7 +103,6 @@ public:
     DrmPipelineLayer *primaryLayer() const;
     DrmOverlayLayer *cursorLayer() const;
     DrmPlane::Transformations renderOrientation() const;
-    DrmPlane::Transformations bufferOrientation() const;
     RenderLoopPrivate::SyncMode syncMode() const;
     uint32_t overscan() const;
     Output::RgbRange rgbRange() const;
@@ -119,7 +114,6 @@ public:
     void setEnable(bool enable);
     void setLayers(const std::shared_ptr<DrmPipelineLayer> &primaryLayer, const std::shared_ptr<DrmOverlayLayer> &cursorLayer);
     void setRenderOrientation(DrmPlane::Transformations orientation);
-    void setBufferOrientation(DrmPlane::Transformations orientation);
     void setSyncMode(RenderLoopPrivate::SyncMode mode);
     void setOverscan(uint32_t overscan);
     void setRgbRange(Output::RgbRange range);
@@ -140,7 +134,6 @@ private:
     bool isBufferForDirectScanout() const;
     uint32_t calculateUnderscan();
     static Error errnoToError();
-    void checkHardwareRotation();
 
     // legacy only
     Error presentLegacy();
@@ -184,8 +177,6 @@ private:
         std::shared_ptr<DrmOverlayLayer> cursorLayer;
         QPoint cursorHotspot;
 
-        // the transformation that this pipeline will apply to submitted buffers
-        DrmPlane::Transformations bufferOrientation = DrmPlane::Transformation::Rotate0;
         // the transformation that buffers submitted to the pipeline should have
         DrmPlane::Transformations renderOrientation = DrmPlane::Transformation::Rotate0;
     };

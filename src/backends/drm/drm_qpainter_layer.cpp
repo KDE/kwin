@@ -33,7 +33,7 @@ DrmQPainterLayer::DrmQPainterLayer(DrmPipeline *pipeline)
 std::optional<OutputLayerBeginFrameInfo> DrmQPainterLayer::beginFrame()
 {
     if (!doesSwapchainFit()) {
-        m_swapchain = std::make_shared<DumbSwapchain>(m_pipeline->gpu(), m_pipeline->bufferSize(), DRM_FORMAT_XRGB8888);
+        m_swapchain = std::make_shared<DumbSwapchain>(m_pipeline->gpu(), m_pipeline->mode()->size(), DRM_FORMAT_XRGB8888);
     }
     QRegion needsRepaint;
     if (!m_swapchain->acquireBuffer(&needsRepaint)) {
@@ -59,7 +59,7 @@ bool DrmQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion &da
 bool DrmQPainterLayer::checkTestBuffer()
 {
     if (!doesSwapchainFit()) {
-        m_swapchain = std::make_shared<DumbSwapchain>(m_pipeline->gpu(), m_pipeline->bufferSize(), DRM_FORMAT_XRGB8888);
+        m_swapchain = std::make_shared<DumbSwapchain>(m_pipeline->gpu(), m_pipeline->mode()->size(), DRM_FORMAT_XRGB8888);
         if (!m_swapchain->isEmpty()) {
             m_currentFramebuffer = DrmFramebuffer::createFramebuffer(m_swapchain->currentBuffer());
             if (!m_currentFramebuffer) {
@@ -74,7 +74,7 @@ bool DrmQPainterLayer::checkTestBuffer()
 
 bool DrmQPainterLayer::doesSwapchainFit() const
 {
-    return m_swapchain && m_swapchain->size() == m_pipeline->bufferSize();
+    return m_swapchain && m_swapchain->size() == m_pipeline->mode()->size();
 }
 
 std::shared_ptr<DrmFramebuffer> DrmQPainterLayer::currentBuffer() const
