@@ -557,12 +557,7 @@ void ScreenCastStream::addHeader(spa_buffer *spaBuffer)
         spaHeader->flags = 0;
         spaHeader->dts_offset = 0;
         spaHeader->seq = m_sequential++;
-
-        const auto timestamp = m_source->clock();
-        if (!m_start) {
-            m_start = timestamp;
-        }
-        spaHeader->pts = (timestamp - m_start.value()).count();
+        spaHeader->pts = m_source->clock().count();
     }
 }
 

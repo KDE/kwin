@@ -127,7 +127,6 @@ private:
     pw_buffer *m_pendingBuffer = nullptr;
     std::unique_ptr<QSocketNotifier> m_pendingNotifier;
     std::unique_ptr<EGLNativeFence> m_pendingFence;
-    std::optional<std::chrono::nanoseconds> m_start;
     quint64 m_sequential = 0;
     bool m_hasDmaBuf = false;
     bool m_waitForNewBuffers = false;
