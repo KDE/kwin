@@ -77,35 +77,6 @@ std::shared_ptr<GLTexture> EglGbmLayer::texture() const
     }
 }
 
-static DrmPlane::Transformations invertAndConvertTransform(Output::Transform transform)
-{
-    DrmPlane::Transformations ret;
-    switch (transform) {
-    case Output::Transform::Normal:
-    case Output::Transform::Flipped:
-        ret = DrmPlane::Transformation::Rotate0;
-        break;
-    case Output::Transform::Rotated90:
-    case Output::Transform::Flipped90:
-        ret = DrmPlane::Transformation::Rotate270;
-        break;
-    case Output::Transform::Rotated180:
-    case Output::Transform::Flipped180:
-        ret = DrmPlane::Transformation::Rotate180;
-        break;
-    case Output::Transform::Rotated270:
-    case Output::Transform::Flipped270:
-        ret = DrmPlane::Transformation::Rotate90;
-        break;
-    }
-    if (transform == Output::Transform::Flipped || transform == Output::Transform::Flipped180) {
-        ret |= DrmPlane::Transformation::ReflectX;
-    } else if (transform == Output::Transform::Flipped90 || transform == Output::Transform::Flipped270) {
-        ret |= DrmPlane::Transformation::ReflectY;
-    }
-    return ret;
-}
-
 bool EglGbmLayer::scanout(SurfaceItem *surfaceItem)
 {
     static bool valid;
@@ -119,7 +90,7 @@ bool EglGbmLayer::scanout(SurfaceItem *surfaceItem)
         return false;
     }
     const auto surface = item->surface();
-    if (invertAndConvertTransform(surface->bufferTransform()) != m_pipeline->bufferOrientation()) {
+    if (m_pipeline->bufferOrientation() != DrmPlane::Transformations(DrmPlane::Transformation::Rotate0) || surface->bufferTransform() != m_pipeline->output()->transform()) {
         return false;
     }
     const auto buffer = qobject_cast<KWaylandServer::LinuxDmaBufV1ClientBuffer *>(surface->buffer());
