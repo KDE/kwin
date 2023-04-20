@@ -239,7 +239,7 @@ msgid "Show selected window"
 msgstr "Monstra fenestra seligite"
 
 #~ msgid "Tabbox layout preview"
-#~ msgstr "Vista preliminari de disposition de tabbox (cassa de scheda)"
+#~ msgstr "Vista preliminar de disposition de tabbox (cassa de scheda)"
 
 #~ msgid "Outline selected window"
 #~ msgstr "Contorna  fenestra seligite"

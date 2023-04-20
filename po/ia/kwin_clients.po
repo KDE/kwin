@@ -435,7 +435,7 @@ msgstr "Buttones animate"
 #~ msgstr "Redimensiona"
 
 #~ msgid "<b><center>B II preview</center></b>"
-#~ msgstr "<b><center>B II Vista preliminari</center></b>"
+#~ msgstr "<b><center>B II Vista preliminar</center></b>"
 
 #~ msgid "Restore"
 #~ msgstr "Restabili"
@@ -689,7 +689,7 @@ msgstr "Buttones animate"
 #~ msgstr "Non Collose"
 
 #~ msgid "<center><b>Keramik preview</b></center>"
-#~ msgstr "<center><b>Vista preliminari de Keramik</b></center>"
+#~ msgstr "<center><b>Vista preliminar de Keramik</b></center>"
 
 #~ msgid "Draw titlebar &stipple effect"
 #~ msgstr "Designar barra de titulo con effecto&s punctate"
