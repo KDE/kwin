@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-20 02:18+0000\n"
+"POT-Creation-Date: 2023-04-20 02:25+0000\n"
 "PO-Revision-Date: 2022-04-04 17:06+0100\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -82,3 +82,21 @@ msgstr "Animație de deschidere/închidere a ferestrelor"
 #, kde-format
 msgid "KWin development team"
 msgstr "Echipa de dezvoltare KWin"
+
+#: genericscriptedconfig.cpp:71
+#, kde-format
+msgctxt "Error message"
+msgid "Could not locate package metadata"
+msgstr ""
+
+#: genericscriptedconfig.cpp:77
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not contain a valid metadata.json file"
+msgstr ""
+
+#: genericscriptedconfig.cpp:83 genericscriptedconfig.cpp:89
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not exist"
+msgstr ""

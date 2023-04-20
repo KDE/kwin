@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-13 02:16+0000\n"
+"POT-Creation-Date: 2023-04-20 02:25+0000\n"
 "PO-Revision-Date: 2022-08-09 13:31+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -29,6 +29,48 @@ msgstr "박신조"
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "kde@peremen.name"
+
+#: backends/wayland/wayland_output.cpp:295
+#, kde-format
+msgid "Press right control to ungrab pointer"
+msgstr ""
+
+#: backends/wayland/wayland_output.cpp:297
+#, kde-format
+msgid "Press right control key to grab pointer"
+msgstr ""
+
+#: backends/wayland/wayland_output.cpp:301
+#, kde-format
+msgctxt ""
+"Title of nested KWin Wayland with Wayland socket identifier as argument"
+msgid "KDE Wayland Compositor %1 (%2)"
+msgstr ""
+
+#: backends/wayland/wayland_output.cpp:304
+#, kde-format
+msgid "- Output disabled"
+msgstr ""
+
+#: backends/wayland/wayland_output.cpp:306
+#, kde-format
+msgid "- Output dimmed"
+msgstr ""
+
+#: backends/x11/windowed/x11_windowed_backend.cpp:515
+#, kde-format
+msgid "Press right control to ungrab input"
+msgstr ""
+
+#: backends/x11/windowed/x11_windowed_backend.cpp:515
+#, kde-format
+msgid "Press right control key to grab input"
+msgstr ""
+
+#: backends/x11/windowed/x11_windowed_backend.cpp:516
+#, kde-format
+msgid "KDE Wayland Compositor"
+msgstr ""
 
 #: composite.cpp:616
 #, kde-format
@@ -1045,6 +1087,1246 @@ msgstr "클립보드"
 msgid "Primary Selection"
 msgstr "주 선택"
 
+#. i18n: ectx: property (text), widget (QLabel, labelConstantBlurDescription)
+#: effects/blur/blur_config.ui:17
+#, kde-format
+msgid "Blur strength:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
+#. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
+#: effects/blur/blur_config.ui:42 effects/blur/blur_config.ui:108
+#, fuzzy, kde-format
+#| msgctxt "A mouse button"
+#| msgid "Right"
+msgid "Light"
+msgstr "오른쪽"
+
+#. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
+#. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
+#: effects/blur/blur_config.ui:74 effects/blur/blur_config.ui:137
+#, kde-format
+msgid "Strong"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseDescription)
+#: effects/blur/blur_config.ui:83
+#, kde-format
+msgid "Noise strength:"
+msgstr ""
+
+#: effects/colorpicker/colorpicker.cpp:102
+#, fuzzy, kde-format
+#| msgid ""
+#| "Select window to force close with left click or enter.\n"
+#| "Escape or right click to cancel."
+msgid ""
+"Select a position for color picking with left click or enter.\n"
+"Escape or right click to cancel."
+msgstr ""
+"왼쪽 단추를 누르거나 Enter 키를 눌러서 강제로 닫을 창을 선택합니다.\n"
+"Esc 키나 오른쪽 단추를 클릭하면 취소합니다."
+
+#: effects/desktopgrid/desktopgrid_config.cpp:49
+#: effects/invert/invert_config.cpp:35
+#: effects/magnifier/magnifier_config.cpp:55
+#: effects/mouseclick/mouseclick_config.cpp:48
+#: effects/mousemark/mousemark_config.cpp:50
+#: effects/overview/kcm/overvieweffectkcm.cpp:35
+#: effects/showpaint/showpaint_config.cpp:33
+#: effects/thumbnailaside/thumbnailaside_config.cpp:54
+#: effects/tileseditor/kcm/tileseditoreffectkcm.cpp:31
+#: effects/trackmouse/trackmouse_config.cpp:52
+#: effects/windowview/kcm/windowvieweffectkcm.cpp:36
+#: effects/zoom/zoom_config.cpp:58 main.cpp:171
+#, kde-format
+msgid "KWin"
+msgstr "KWin"
+
+#: effects/desktopgrid/desktopgrid_config.cpp:54
+#: effects/desktopgrid/desktopgrideffect.cpp:35
+#, fuzzy, kde-format
+#| msgid "Show Desktop"
+msgid "Show Desktop Grid"
+msgstr "바탕 화면 표시"
+
+#: effects/desktopgrid/desktopgrid_config.cpp:61
+#, kde-format
+msgctxt "Desktop name alignment:"
+msgid "Disabled"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#: effects/desktopgrid/desktopgrid_config.cpp:62
+#: effects/glide/glide_config.ui:70 effects/glide/glide_config.ui:168
+#, kde-format
+msgid "Top"
+msgstr ""
+
+#: effects/desktopgrid/desktopgrid_config.cpp:63
+#, fuzzy, kde-format
+#| msgctxt "A mouse button"
+#| msgid "Right"
+msgid "Top-Right"
+msgstr "오른쪽"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
+#: effects/desktopgrid/desktopgrid_config.cpp:64
+#: effects/glide/glide_config.ui:75 effects/glide/glide_config.ui:173
+#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:43
+#, fuzzy, kde-format
+#| msgctxt "A mouse button"
+#| msgid "Right"
+msgid "Right"
+msgstr "오른쪽"
+
+#: effects/desktopgrid/desktopgrid_config.cpp:65
+#, kde-format
+msgid "Bottom-Right"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#: effects/desktopgrid/desktopgrid_config.cpp:66
+#: effects/glide/glide_config.ui:80 effects/glide/glide_config.ui:178
+#, kde-format
+msgid "Bottom"
+msgstr ""
+
+#: effects/desktopgrid/desktopgrid_config.cpp:67
+#, kde-format
+msgid "Bottom-Left"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
+#: effects/desktopgrid/desktopgrid_config.cpp:68
+#: effects/glide/glide_config.ui:85 effects/glide/glide_config.ui:183
+#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:29
+#, fuzzy, kde-format
+#| msgctxt "A mouse button"
+#| msgid "Left"
+msgid "Left"
+msgstr "왼쪽"
+
+#: effects/desktopgrid/desktopgrid_config.cpp:69
+#, fuzzy, kde-format
+#| msgctxt "A mouse button"
+#| msgid "Left"
+msgid "Top-Left"
+msgstr "왼쪽"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
+#: effects/desktopgrid/desktopgrid_config.cpp:70
+#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:36
+#, kde-format
+msgid "Center"
+msgstr ""
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#: effects/desktopgrid/desktopgrid_config.ui:17
+#: effects/mousemark/mousemark_config.ui:17
+#: effects/thumbnailaside/thumbnailaside_config.ui:17
+#, kde-format
+msgid "Appearance"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
+#: effects/desktopgrid/desktopgrid_config.ui:30
+#, kde-format
+msgid "Pager"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
+#: effects/desktopgrid/desktopgrid_config.ui:35
+#, kde-format
+msgid "Automatic"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
+#: effects/desktopgrid/desktopgrid_config.ui:40
+#, kde-format
+msgid "Custom"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, layoutRowsLabel)
+#: effects/desktopgrid/desktopgrid_config.ui:48
+#, kde-format
+msgid "N&umber of rows:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: effects/desktopgrid/desktopgrid_config.ui:103
+#, fuzzy, kde-format
+#| msgid "Desktop file name"
+msgid "Desktop &name alignment:"
+msgstr "데스크톱 파일 이름"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ShowAddRemove)
+#: effects/desktopgrid/desktopgrid_config.ui:116
+#, kde-format
+msgid "Show buttons to alter count of virtual desktops"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#: effects/desktopgrid/desktopgrid_config.ui:123
+#, kde-format
+msgid "&Grid layout mode:"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
+#: effects/desktopgrid/desktopgrid_config.ui:137
+#: effects/overview/kcm/overvieweffectkcm.ui:30
+#: effects/windowview/kcm/windowvieweffectkcm.ui:30
+#, fuzzy, kde-format
+#| msgid "&Close"
+msgid "Closest"
+msgstr "닫기(&C)"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
+#: effects/desktopgrid/desktopgrid_config.ui:142
+#: effects/overview/kcm/overvieweffectkcm.ui:35
+#: effects/windowview/kcm/windowvieweffectkcm.ui:35
+#, kde-format
+msgid "Natural"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, ignoreLabel)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
+#: effects/desktopgrid/desktopgrid_config.ui:147
+#: scripts/videowall/contents/ui/config.ui:73
+#, kde-format
+msgid "None"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: effects/desktopgrid/desktopgrid_config.ui:155
+#, fuzzy, kde-format
+#| msgid "Windows"
+msgid "Windows layout:"
+msgstr "창"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#: effects/desktopgrid/desktopgrid_config.ui:171
+#, fuzzy, kde-format
+#| msgid "caption"
+msgid "Activation"
+msgstr "캡션"
+
+#. i18n: ectx: property (text), widget (QLabel, label_Strength)
+#: effects/diminactive/diminactive_config.ui:17
+#, kde-format
+msgid "Strength:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_Dim)
+#: effects/diminactive/diminactive_config.ui:40
+#, kde-format
+msgid "Dim:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimPanels)
+#: effects/diminactive/diminactive_config.ui:47
+#, kde-format
+msgid "Docks and panels"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimDesktop)
+#: effects/diminactive/diminactive_config.ui:54
+#, fuzzy, kde-format
+#| msgid "&Desktops"
+msgid "Desktop"
+msgstr "바탕 화면(&D)"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimKeepAbove)
+#: effects/diminactive/diminactive_config.ui:61
+#, fuzzy, kde-format
+#| msgid "Keep above"
+msgid "Keep above windows"
+msgstr "항상 위"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimByGroup)
+#: effects/diminactive/diminactive_config.ui:68
+#, fuzzy, kde-format
+#| msgid "Window role"
+msgid "By window group"
+msgstr "창 역할"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimFullScreen)
+#: effects/diminactive/diminactive_config.ui:75
+#, fuzzy, kde-format
+#| msgid "Fullscreen"
+msgid "Fullscreen windows"
+msgstr "전체 화면"
+
+#. i18n: ectx: property (text), widget (QLabel, label_Duration)
+#: effects/glide/glide_config.ui:19
+#: effects/scale/package/contents/ui/config.ui:17
+#, fuzzy, kde-format
+#| msgid "caption"
+msgid "Duration:"
+msgstr "캡션"
+
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_Duration)
+#: effects/glide/glide_config.ui:32
+#: effects/scale/package/contents/ui/config.ui:30
+#, kde-format
+msgid "Default"
+msgstr ""
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Duration)
+#: effects/glide/glide_config.ui:35
+#: effects/scale/package/contents/ui/config.ui:33
+#, kde-format
+msgid " milliseconds"
+msgstr ""
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_InAnimation)
+#: effects/glide/glide_config.ui:50
+#, fuzzy, kde-format
+#| msgid "Window position"
+msgid "Window Open Animation"
+msgstr "창 위치"
+
+#. i18n: ectx: property (text), widget (QLabel, label_InRotationEdge)
+#. i18n: ectx: property (text), widget (QLabel, label_OutRotationEdge)
+#: effects/glide/glide_config.ui:56 effects/glide/glide_config.ui:154
+#, fuzzy, kde-format
+#| msgid "Rotation"
+msgid "Rotation edge:"
+msgstr "회전"
+
+#. i18n: ectx: property (text), widget (QLabel, label_InRotationAngle)
+#. i18n: ectx: property (text), widget (QLabel, label_OutRotationAngle)
+#: effects/glide/glide_config.ui:93 effects/glide/glide_config.ui:191
+#, fuzzy, kde-format
+#| msgid "Rotation"
+msgid "Rotation angle:"
+msgstr "회전"
+
+#. i18n: ectx: property (text), widget (QLabel, label_InDistance)
+#. i18n: ectx: property (text), widget (QLabel, label_OutDistance)
+#: effects/glide/glide_config.ui:119 effects/glide/glide_config.ui:198
+#, kde-format
+msgid "Distance:"
+msgstr ""
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_OutAnimation)
+#: effects/glide/glide_config.ui:148
+#, fuzzy, kde-format
+#| msgid "Window position"
+msgid "Window Close Animation"
+msgstr "창 위치"
+
+#: effects/invert/invert.cpp:42 effects/invert/invert_config.cpp:38
+#, kde-format
+msgid "Toggle Invert Effect"
+msgstr ""
+
+#: effects/invert/invert.cpp:49 effects/invert/invert_config.cpp:44
+#, kde-format
+msgid "Toggle Invert Effect on Window"
+msgstr ""
+
+#: effects/invert/invert.cpp:56
+#, kde-format
+msgid "Invert Screen Colors"
+msgstr "화면 색 반전"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_FadeToBlack)
+#: effects/login/package/contents/ui/config.ui:17
+#, kde-format
+msgid "Fade to black (fullscreen splash screens only)"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: effects/magiclamp/magiclamp_config.ui:17
+#, kde-format
+msgid "Animation duration:"
+msgstr ""
+
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_AnimationDuration)
+#: effects/magiclamp/magiclamp_config.ui:36
+#, kde-format
+msgctxt "Duration of rotation"
+msgid "Default"
+msgstr ""
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AnimationDuration)
+#: effects/magiclamp/magiclamp_config.ui:39
+#, kde-format
+msgid "milliseconds"
+msgstr ""
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupSize)
+#: effects/magnifier/magnifier_config.ui:17
+#, kde-format
+msgid "Size"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: effects/magnifier/magnifier_config.ui:23
+#, kde-format
+msgid "&Width:"
+msgstr ""
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Width)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Height)
+#: effects/magnifier/magnifier_config.ui:42
+#: effects/magnifier/magnifier_config.ui:74
+#, kde-format
+msgid " px"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: effects/magnifier/magnifier_config.ui:55
+#, fuzzy, kde-format
+#| msgctxt "A mouse button"
+#| msgid "Right"
+msgid "&Height:"
+msgstr "오른쪽"
+
+#: effects/mouseclick/mouseclick.cpp:36
+#: effects/mouseclick/mouseclick_config.cpp:51
+#, kde-format
+msgid "Toggle Mouse Click Effect"
+msgstr ""
+
+#: effects/mouseclick/mouseclick.cpp:43
+#, fuzzy, kde-format
+#| msgctxt "A mouse button"
+#| msgid "Left"
+msgctxt "Left mouse button"
+msgid "Left"
+msgstr "왼쪽"
+
+#: effects/mouseclick/mouseclick.cpp:44
+#, fuzzy, kde-format
+#| msgctxt "A mouse button"
+#| msgid "Middle"
+msgctxt "Middle mouse button"
+msgid "Middle"
+msgstr "가운데"
+
+#: effects/mouseclick/mouseclick.cpp:45
+#, fuzzy, kde-format
+#| msgctxt "A mouse button"
+#| msgid "Right"
+msgctxt "Right mouse button"
+msgid "Right"
+msgstr "오른쪽"
+
+#. i18n: ectx: attribute (title), widget (QWidget, basic_tab)
+#: effects/mouseclick/mouseclick_config.ui:21
+#, kde-format
+msgid "Basic Settings"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, button1_label)
+#: effects/mouseclick/mouseclick_config.ui:37
+#, fuzzy, kde-format
+#| msgid "No Mouse Buttons"
+msgid "Left Mouse Button Color:"
+msgstr "마우스 단추 없음"
+
+#. i18n: ectx: property (text), widget (QLabel, button2_label)
+#: effects/mouseclick/mouseclick_config.ui:50
+#, fuzzy, kde-format
+#| msgid "No Mouse Buttons"
+msgid "Middle Mouse Button Color:"
+msgstr "마우스 단추 없음"
+
+#. i18n: ectx: property (text), widget (QLabel, button3_label)
+#: effects/mouseclick/mouseclick_config.ui:70
+#, fuzzy, kde-format
+#| msgid "No Mouse Buttons"
+msgid "Right Mouse Button Color:"
+msgstr "마우스 단추 없음"
+
+#. i18n: ectx: attribute (title), widget (QWidget, advanced_tab)
+#: effects/mouseclick/mouseclick_config.ui:91
+#, kde-format
+msgid "Advanced Settings"
+msgstr ""
+
+#. i18n: ectx: property (title), widget (QGroupBox, rings)
+#: effects/mouseclick/mouseclick_config.ui:97
+#, kde-format
+msgid "Rings"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, ring_line_width_label)
+#: effects/mouseclick/mouseclick_config.ui:103
+#, kde-format
+msgid "Line Width:"
+msgstr ""
+
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, kcfg_LineWidth)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingSize)
+#: effects/mouseclick/mouseclick_config.ui:119
+#: effects/mouseclick/mouseclick_config.ui:171
+#, kde-format
+msgid " pixel"
+msgstr ""
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingLife)
+#: effects/mouseclick/mouseclick_config.ui:132
+#, kde-format
+msgid " msec"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, ring_duration_label)
+#: effects/mouseclick/mouseclick_config.ui:145
+#, kde-format
+msgid "Ring Duration:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, ring_radius_label)
+#: effects/mouseclick/mouseclick_config.ui:155
+#, kde-format
+msgid "Ring Radius:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, ring_count_label)
+#: effects/mouseclick/mouseclick_config.ui:184
+#, fuzzy, kde-format
+#| msgctxt "Number of fingers in this pinch gesture"
+#| msgid "Finger count"
+msgid "Ring Count:"
+msgstr "손가락 개수"
+
+#. i18n: ectx: property (title), widget (QGroupBox, font)
+#: effects/mouseclick/mouseclick_config.ui:210
+#, kde-format
+msgid "Text"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, font_label)
+#: effects/mouseclick/mouseclick_config.ui:216
+#, kde-format
+msgid "Font:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, showtext_label)
+#: effects/mouseclick/mouseclick_config.ui:233
+#, fuzzy, kde-format
+#| msgid "Show Desktop"
+msgid "Show Text:"
+msgstr "바탕 화면 표시"
+
+#: effects/mousemark/mousemark.cpp:40
+#, kde-format
+msgid "Clear All Mouse Marks"
+msgstr ""
+
+#: effects/mousemark/mousemark.cpp:46 effects/mousemark/mousemark_config.cpp:59
+#, kde-format
+msgid "Clear Last Mouse Mark"
+msgstr ""
+
+#: effects/mousemark/mousemark_config.cpp:53
+#, kde-format
+msgid "Clear Mouse Marks"
+msgstr ""
+
+#: effects/mousemark/mousemark_config.cpp:100
+#, kde-format
+msgctxt "Suffix"
+msgid " pixel"
+msgid_plural " pixels"
+msgstr[0] ""
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: effects/mousemark/mousemark_config.ui:23
+#, kde-format
+msgid "Wid&th:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: effects/mousemark/mousemark_config.ui:36
+#, kde-format
+msgid "&Color:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: effects/mousemark/mousemark_config.ui:82
+#, kde-format
+msgid "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
+msgstr ""
+
+#: effects/outputlocator/outputlocator.cpp:48
+#, fuzzy, kde-format
+#| msgctxt "The input device of the event is not known"
+#| msgid "Unknown"
+msgctxt "@label"
+msgid "Unknown"
+msgstr "알 수 없음"
+
+#: effects/overview/kcm/overvieweffectkcm.cpp:41
+#: effects/overview/overvieweffect.cpp:31
+#, kde-format
+msgid "Toggle Overview"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
+#: effects/overview/kcm/overvieweffectkcm.ui:22
+#: effects/windowview/kcm/windowvieweffectkcm.ui:22
+#, fuzzy, kde-format
+#| msgctxt "Name of a hardware switch"
+#| msgid "Tablet mode"
+msgid "Layout mode:"
+msgstr "태블릿 모드"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: effects/overview/kcm/overvieweffectkcm.ui:43
+#, fuzzy, kde-format
+#| msgid "Minimize Window"
+msgid "Ignore minimized windows:"
+msgstr "창 최소화"
+
+#: effects/overview/qml/DesktopBar.qml:187
+#, fuzzy, kde-format
+#| msgid "Peek at Desktop"
+msgid "Delete Virtual Desktop"
+msgstr "바탕 화면 멀리 보기"
+
+#: effects/overview/qml/DesktopBar.qml:283
+#, fuzzy, kde-format
+#| msgctxt "Create a new desktop and add the window to that desktop"
+#| msgid "Add to &New Desktop"
+msgid "Add Virtual Desktop"
+msgstr "새 바탕 화면에 추가(&N)"
+
+#: effects/overview/qml/ScreenView.qml:226
+#, fuzzy, kde-format
+#| msgid "X11 Unmanaged Windows"
+msgid "No matching windows"
+msgstr "X11 관리되지 않는 창"
+
+#: effects/private/qml/WindowHeapDelegate.qml:151
+#, kde-format
+msgid "Drag Down To Close"
+msgstr ""
+
+#: effects/private/qml/WindowHeapDelegate.qml:452
+#, fuzzy, kde-format
+#| msgid "Close Window"
+msgctxt "@info:tooltip as in: 'close this window'"
+msgid "Close window"
+msgstr "창 닫기"
+
+#. i18n: ectx: property (text), widget (QLabel, label_InScale)
+#: effects/scale/package/contents/ui/config.ui:46
+#, fuzzy, kde-format
+#| msgid "Window role"
+msgid "Window open scale:"
+msgstr "창 역할"
+
+#. i18n: ectx: property (text), widget (QLabel, label_OutScale)
+#: effects/scale/package/contents/ui/config.ui:53
+#, fuzzy, kde-format
+#| msgid "Window role"
+msgid "Window close scale:"
+msgstr "창 역할"
+
+#: effects/screenshot/screenshotdbusinterface2.cpp:525
+#, fuzzy, kde-format
+#| msgid ""
+#| "Select window to force close with left click or enter.\n"
+#| "Escape or right click to cancel."
+msgid ""
+"Select window to screen shot with left click or enter.\n"
+"Escape or right click to cancel."
+msgstr ""
+"왼쪽 단추를 누르거나 Enter 키를 눌러서 강제로 닫을 창을 선택합니다.\n"
+"Esc 키나 오른쪽 단추를 클릭하면 취소합니다."
+
+#: effects/screenshot/screenshotdbusinterface2.cpp:543
+#, fuzzy, kde-format
+#| msgid ""
+#| "Select window to force close with left click or enter.\n"
+#| "Escape or right click to cancel."
+msgid ""
+"Create screen shot with left click or enter.\n"
+"Escape or right click to cancel."
+msgstr ""
+"왼쪽 단추를 누르거나 Enter 키를 눌러서 강제로 닫을 창을 선택합니다.\n"
+"Esc 키나 오른쪽 단추를 클릭하면 취소합니다."
+
+#: effects/showfps/qml/main.qml:110
+#, fuzzy, kde-format
+#| msgctxt "A mouse pointer motion event"
+#| msgid "Pointer Motion"
+msgctxt "@label"
+msgid "Paint Duration"
+msgstr "포인터 움직임"
+
+#: effects/showfps/qml/main.qml:162
+#, kde-format
+msgctxt "@label"
+msgid "Paint Amount"
+msgstr ""
+
+#: effects/showfps/qml/main.qml:175
+#, fuzzy, kde-format
+#| msgid "Current Layout:"
+msgctxt "@label"
+msgid "Current FPS"
+msgstr "현재 레이아웃:"
+
+#: effects/showfps/qml/main.qml:184
+#, kde-format
+msgctxt "@label"
+msgid "Maximum FPS"
+msgstr ""
+
+#: effects/showfps/qml/main.qml:192
+#, kde-format
+msgctxt "@label"
+msgid "This effect is not a benchmark"
+msgstr ""
+
+#: effects/showpaint/showpaint.cpp:39 effects/showpaint/showpaint_config.cpp:38
+#, kde-format
+msgid "Toggle Show Paint"
+msgstr ""
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_Gaps)
+#: effects/slide/slide_config.ui:17
+#, kde-format
+msgid "Gap between desktops"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_HorizontalGap)
+#: effects/slide/slide_config.ui:23
+#, fuzzy, kde-format
+#| msgctxt "An orientation of a pointer axis event"
+#| msgid "Horizontal"
+msgid "Horizontal:"
+msgstr "수평"
+
+#. i18n: ectx: property (text), widget (QLabel, label_VerticalGap)
+#: effects/slide/slide_config.ui:46
+#, fuzzy, kde-format
+#| msgctxt "An orientation of a pointer axis event"
+#| msgid "Vertical"
+msgid "Vertical:"
+msgstr "수직"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideBackground)
+#: effects/slide/slide_config.ui:72
+#, kde-format
+msgid "Slide desktop background"
+msgstr ""
+
+#: effects/thumbnailaside/thumbnailaside.cpp:31
+#: effects/thumbnailaside/thumbnailaside_config.cpp:59
+#, kde-format
+msgid "Toggle Thumbnail for Current Window"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: effects/thumbnailaside/thumbnailaside_config.ui:23
+#, kde-format
+msgid "Maximum &width:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: effects/thumbnailaside/thumbnailaside_config.ui:36
+#, kde-format
+msgid "&Spacing:"
+msgstr ""
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Spacing)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_MaxWidth)
+#: effects/thumbnailaside/thumbnailaside_config.ui:55
+#: effects/thumbnailaside/thumbnailaside_config.ui:106
+#, kde-format
+msgid " pixels"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: effects/thumbnailaside/thumbnailaside_config.ui:68
+#, kde-format
+msgid "&Opacity:"
+msgstr ""
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Opacity)
+#: effects/thumbnailaside/thumbnailaside_config.ui:87
+#, no-c-format, kde-format
+msgid " %"
+msgstr ""
+
+#: effects/tileseditor/kcm/tileseditoreffectkcm.cpp:37
+#: effects/tileseditor/tileseditoreffect.cpp:29
+#, kde-format
+msgid "Toggle Tiles Editor"
+msgstr ""
+
+#: effects/tileseditor/qml/main.qml:150
+#, kde-format
+msgid "Padding:"
+msgstr ""
+
+#: effects/tileseditor/qml/main.qml:160
+#, kde-format
+msgid "Load Layout..."
+msgstr ""
+
+#: effects/tileseditor/qml/main.qml:274
+#, fuzzy, kde-format
+#| msgid "&Close"
+msgid "Close"
+msgstr "닫기(&C)"
+
+#: effects/tileseditor/qml/TileDelegate.qml:167
+#, fuzzy, kde-format
+#| msgctxt "An orientation of a pointer axis event"
+#| msgid "Horizontal"
+msgid "Split Horizontally"
+msgstr "수평"
+
+#: effects/tileseditor/qml/TileDelegate.qml:174
+#, fuzzy, kde-format
+#| msgctxt "An orientation of a pointer axis event"
+#| msgid "Vertical"
+msgid "Split Vertically"
+msgstr "수직"
+
+#: effects/tileseditor/qml/TileDelegate.qml:182
+#: effects/tileseditor/qml/TileDelegate.qml:211
+#, kde-format
+msgid "Add Floating Tile"
+msgstr ""
+
+#: effects/tileseditor/qml/TileDelegate.qml:191
+#, kde-format
+msgid "Delete"
+msgstr ""
+
+#: effects/trackmouse/trackmouse.cpp:45
+#: effects/trackmouse/trackmouse_config.cpp:57
+#, kde-format
+msgid "Track mouse"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: effects/trackmouse/trackmouse_config.ui:26
+#, kde-format
+msgid "Trigger effect with:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_KeyboardShortcut)
+#: effects/trackmouse/trackmouse_config.ui:33
+#, fuzzy, kde-format
+#| msgid "Keyboard"
+msgid "Keyboard shortcut:"
+msgstr "키보드"
+
+#. i18n: ectx: property (text), widget (QLabel, label_ModifierKeys)
+#: effects/trackmouse/trackmouse_config.ui:43
+#, fuzzy, kde-format
+#| msgid "Modifiers"
+msgid "Modifier keys:"
+msgstr "수정자"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Alt)
+#: effects/trackmouse/trackmouse_config.ui:65
+#, fuzzy, kde-format
+#| msgctxt "A keyboard modifier"
+#| msgid "Alt"
+msgid "Alt"
+msgstr "Alt"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Control)
+#: effects/trackmouse/trackmouse_config.ui:72
+#, kde-format
+msgid "Ctrl"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Shift)
+#: effects/trackmouse/trackmouse_config.ui:79
+#, fuzzy, kde-format
+#| msgctxt "A keyboard modifier"
+#| msgid "Shift"
+msgid "Shift"
+msgstr "Shift"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Meta)
+#: effects/trackmouse/trackmouse_config.ui:86
+#, fuzzy, kde-format
+#| msgctxt "A keyboard modifier"
+#| msgid "Meta"
+msgid "Meta"
+msgstr "Meta"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, KWin::TranslucencyEffectConfigForm)
+#: effects/translucency/package/contents/ui/config.ui:14
+#, kde-format
+msgid "Translucency"
+msgstr ""
+
+#. i18n: ectx: property (title), widget (QGroupBox, m_opacityGroupBox)
+#: effects/translucency/package/contents/ui/config.ui:20
+#, kde-format
+msgid "General Translucency Settings"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, comboboxpopup_label)
+#: effects/translucency/package/contents/ui/config.ui:64
+#, kde-format
+msgid "Combobox popups:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#: effects/translucency/package/contents/ui/config.ui:121
+#: effects/translucency/package/contents/ui/config.ui:431
+#, kde-format
+msgid "Opaque"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, dialogs_label)
+#: effects/translucency/package/contents/ui/config.ui:137
+#, fuzzy, kde-format
+#| msgid "Dialog"
+msgid "Dialogs:"
+msgstr "대화 상자"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: effects/translucency/package/contents/ui/config.ui:156
+#: effects/translucency/package/contents/ui/config.ui:418
+#, kde-format
+msgid "Transparent"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, menus_label)
+#: effects/translucency/package/contents/ui/config.ui:188
+#, kde-format
+msgid "Menus:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, moveresize_label)
+#: effects/translucency/package/contents/ui/config.ui:207
+#, fuzzy, kde-format
+#| msgid "Move Window"
+msgid "Moving windows:"
+msgstr "창 이동"
+
+#. i18n: ectx: property (text), widget (QLabel, inactive_label)
+#: effects/translucency/package/contents/ui/config.ui:226
+#, fuzzy, kde-format
+#| msgid "Internal Windows"
+msgid "Inactive windows:"
+msgstr "내부 창"
+
+#. i18n: ectx: property (title), widget (QGroupBox, kcfg_IndividualMenuConfig)
+#: effects/translucency/package/contents/ui/config.ui:267
+#, kde-format
+msgid "Set menu translucency independently"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, dropdownmenus_label)
+#: effects/translucency/package/contents/ui/config.ui:285
+#, kde-format
+msgid "Dropdown menus:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, popupmenus_label)
+#: effects/translucency/package/contents/ui/config.ui:329
+#, kde-format
+msgid "Popup menus:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, tornoffmenus_label)
+#: effects/translucency/package/contents/ui/config.ui:367
+#, kde-format
+msgid "Torn-off menus:"
+msgstr ""
+
+#: effects/windowview/kcm/windowvieweffectkcm.cpp:42
+#: effects/windowview/windowvieweffect.cpp:45
+#, kde-format
+msgid "Toggle Present Windows (Current desktop)"
+msgstr ""
+
+#: effects/windowview/kcm/windowvieweffectkcm.cpp:49
+#: effects/windowview/windowvieweffect.cpp:54
+#, fuzzy, kde-format
+#| msgid "Keep Window on All Desktops"
+msgid "Toggle Present Windows (All desktops)"
+msgstr "창을 모든 바탕 화면에 표시하기"
+
+#: effects/windowview/kcm/windowvieweffectkcm.cpp:56
+#: effects/windowview/windowvieweffect.cpp:63
+#, kde-format
+msgid "Toggle Present Windows (Window class)"
+msgstr ""
+
+#: effects/windowview/kcm/windowvieweffectkcm.cpp:62
+#: effects/windowview/windowvieweffect.cpp:72
+#, kde-format
+msgid "Toggle Present Windows (Window class on current desktop)"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
+#: effects/windowview/kcm/windowvieweffectkcm.ui:56
+#, fuzzy, kde-format
+#| msgid "Minimize Window"
+msgid "Ignore &minimized windows"
+msgstr "창 최소화"
+
+#: effects/windowview/qml/main.qml:107
+#, kde-format
+msgid "No Matches"
+msgstr ""
+
+#: effects/windowview/qml/main.qml:107
+#, fuzzy, kde-format
+#| msgid "Windows"
+msgid "No Windows"
+msgstr "창"
+
+#: effects/windowview/qml/main.qml:122
+#, fuzzy, kde-format
+#| msgid "Internal Windows"
+msgid "Filter windows…"
+msgstr "내부 창"
+
+#. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
+#: effects/wobblywindows/wobblywindows_config.ui:20
+#, kde-format
+msgid "Advanced"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#: effects/wobblywindows/wobblywindows_config.ui:26
+#, kde-format
+msgid "&Stiffness:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: effects/wobblywindows/wobblywindows_config.ui:68
+#, kde-format
+msgid "Dra&g:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: effects/wobblywindows/wobblywindows_config.ui:81
+#, fuzzy, kde-format
+#| msgid "Move to %1 %2"
+msgid "&Move factor:"
+msgstr "%1 %2(으)로 이동"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_MoveWobble)
+#: effects/wobblywindows/wobblywindows_config.ui:155
+#, kde-format
+msgid "Wo&bble when moving"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ResizeWobble)
+#: effects/wobblywindows/wobblywindows_config.ui:162
+#, kde-format
+msgid "Wobble when &resizing"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_AdvancedMode)
+#: effects/wobblywindows/wobblywindows_config.ui:182
+#, kde-format
+msgid "Enable &advanced mode"
+msgstr ""
+
+#. i18n: ectx: property (title), widget (QGroupBox, basicGroup)
+#: effects/wobblywindows/wobblywindows_config.ui:192
+#, kde-format
+msgid "&Wobbliness"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: effects/wobblywindows/wobblywindows_config.ui:201
+#, kde-format
+msgid "Less"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: effects/wobblywindows/wobblywindows_config.ui:224
+#, kde-format
+msgid "More"
+msgstr ""
+
+#: effects/zoom/zoom.cpp:67
+#, fuzzy, kde-format
+#| msgid "Window One Desktop to the Left"
+msgid "Move Zoomed Area to Left"
+msgstr "왼쪽 바탕 화면으로 창 이동"
+
+#: effects/zoom/zoom.cpp:74
+#, fuzzy, kde-format
+#| msgid "Window One Desktop to the Right"
+msgid "Move Zoomed Area to Right"
+msgstr "오른쪽 바탕 화면으로 창 이동"
+
+#: effects/zoom/zoom.cpp:81
+#, kde-format
+msgid "Move Zoomed Area Upwards"
+msgstr ""
+
+#: effects/zoom/zoom.cpp:88
+#, kde-format
+msgid "Move Zoomed Area Downwards"
+msgstr ""
+
+#: effects/zoom/zoom.cpp:96 effects/zoom/zoom_config.cpp:108
+#, fuzzy, kde-format
+#| msgid "No Mouse Buttons"
+msgid "Move Mouse to Focus"
+msgstr "마우스 단추 없음"
+
+#: effects/zoom/zoom.cpp:103 effects/zoom/zoom_config.cpp:115
+#, fuzzy, kde-format
+#| msgid "Move Window to the Center"
+msgid "Move Mouse to Center"
+msgstr "창을 가운데로 이동"
+
+#: effects/zoom/zoom_config.cpp:80
+#, fuzzy, kde-format
+#| msgid "Move Window Left"
+msgid "Move Left"
+msgstr "창을 왼쪽으로 이동"
+
+#: effects/zoom/zoom_config.cpp:87
+#, fuzzy, kde-format
+#| msgid "Move Window Right"
+msgid "Move Right"
+msgstr "창을 오른쪽으로 이동"
+
+#: effects/zoom/zoom_config.cpp:94
+#, fuzzy, kde-format
+#| msgid "Move Window Up"
+msgid "Move Up"
+msgstr "창을 위로 이동"
+
+#: effects/zoom/zoom_config.cpp:101
+#, fuzzy, kde-format
+#| msgid "Move Window Down"
+msgid "Move Down"
+msgstr "창을 아래로 이동"
+
+#. i18n: ectx: property (whatsThis), widget (QLabel, label)
+#. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
+#: effects/zoom/zoom_config.ui:25 effects/zoom/zoom_config.ui:41
+#, kde-format
+msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: effects/zoom/zoom_config.ui:28
+#, kde-format
+msgid "Zoom Factor:"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableFocusTracking)
+#: effects/zoom/zoom_config.ui:66
+#, kde-format
+msgid ""
+"Enable tracking of the focused location. This needs QAccessible to be "
+"enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
+#: effects/zoom/zoom_config.ui:69
+#, kde-format
+msgid "Enable Focus Tracking"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableTextCaretTracking)
+#: effects/zoom/zoom_config.ui:76
+#, kde-format
+msgid ""
+"Enable tracking of the text cursor. This needs QAccessible to be enabled per "
+"application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
+#: effects/zoom/zoom_config.ui:79
+#, kde-format
+msgid "Enable Text Cursor Tracking"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: effects/zoom/zoom_config.ui:86
+#, kde-format
+msgid "Mouse Pointer:"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MousePointer)
+#: effects/zoom/zoom_config.ui:99
+#, kde-format
+msgid "Visibility of the mouse-pointer."
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
+#: effects/zoom/zoom_config.ui:103
+#, fuzzy, kde-format
+#| msgctxt "Current scale in pinch gesture"
+#| msgid "Scale"
+msgid "Scale"
+msgstr "크기"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
+#: effects/zoom/zoom_config.ui:108
+#, kde-format
+msgid "Keep"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
+#: effects/zoom/zoom_config.ui:113
+#, kde-format
+msgid "Hide"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MouseTracking)
+#: effects/zoom/zoom_config.ui:121
+#, kde-format
+msgid "Track moving of the mouse."
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
+#: effects/zoom/zoom_config.ui:125
+#, fuzzy, kde-format
+#| msgid "Position"
+msgid "Proportional"
+msgstr "위치"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
+#: effects/zoom/zoom_config.ui:130
+#, kde-format
+msgid "Centered"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
+#: effects/zoom/zoom_config.ui:135
+#, kde-format
+msgid "Push"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
+#: effects/zoom/zoom_config.ui:140
+#, kde-format
+msgid "Disabled"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: effects/zoom/zoom_config.ui:148
+#, kde-format
+msgid "Mouse Tracking:"
+msgstr ""
+
 #: helpers/killer/killer.cpp:29
 #, kde-format
 msgid "Window Manager"
@@ -1203,11 +2485,6 @@ msgid ""
 msgstr ""
 "왼쪽 단추를 누르거나 Enter 키를 눌러서 강제로 닫을 창을 선택합니다.\n"
 "Esc 키나 오른쪽 단추를 클릭하면 취소합니다."
-
-#: main.cpp:171
-#, kde-format
-msgid "KWin"
-msgstr "KWin"
 
 #: main.cpp:173 main.cpp:196
 #, kde-format
@@ -1426,6 +2703,97 @@ msgstr ""
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "이미 실행 중인 ICCCM 2.0 호환 창 관리자를 대체하기"
 
+#: plugins/kdecorations/aurorae/src/aurorae.cpp:720
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Tiny"
+msgstr ""
+
+#: plugins/kdecorations/aurorae/src/aurorae.cpp:721
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Normal"
+msgstr ""
+
+#: plugins/kdecorations/aurorae/src/aurorae.cpp:722
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Large"
+msgstr ""
+
+#: plugins/kdecorations/aurorae/src/aurorae.cpp:723
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Large"
+msgstr ""
+
+#: plugins/kdecorations/aurorae/src/aurorae.cpp:724
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Huge"
+msgstr ""
+
+#: plugins/kdecorations/aurorae/src/aurorae.cpp:725
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Huge"
+msgstr ""
+
+#: plugins/kdecorations/aurorae/src/aurorae.cpp:726
+#, fuzzy, kde-format
+#| msgid "&Resize"
+msgctxt "@item:inlistbox Button size:"
+msgid "Oversized"
+msgstr "크기 조정(&R)"
+
+#: plugins/kdecorations/aurorae/src/aurorae.cpp:729
+#, fuzzy, kde-format
+#| msgid "Buttons"
+msgid "Button size:"
+msgstr "단추"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
+#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:14
+#, fuzzy, kde-format
+#| msgid "Dialog"
+msgid "Config Dialog"
+msgstr "대화 상자"
+
+#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
+#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:23
+#, kde-format
+msgid "Title &Alignment"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
+#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:53
+#, kde-format
+msgid ""
+"Check this option if the window border should be painted in the titlebar "
+"color. Otherwise it will be painted in the background color."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
+#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:56
+#, fuzzy, kde-format
+#| msgid "Hide Window Border"
+msgid "Colored window border"
+msgstr "창 테두리 숨기기"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
+#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:66
+#, kde-format
+msgid ""
+"Check this option if you want the buttons to fade in when the mouse pointer "
+"hovers over them and fade out again when it moves away."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
+#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:69
+#, kde-format
+msgid "Animate buttons"
+msgstr ""
+
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:49
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:51
 #, kde-format
@@ -1586,6 +2954,48 @@ msgstr "야간 색상 전환"
 #: plugins/nightcolor/nightcolormanager.cpp:462
 #, kde-format
 msgid "Color Temperature Preview"
+msgstr ""
+
+#: plugins/screencast/pipewirecore.cpp:60
+#: plugins/screencast/pipewirecore.cpp:89
+#, kde-format
+msgid "Failed to start main PipeWire loop"
+msgstr ""
+
+#: plugins/screencast/pipewirecore.cpp:76
+#, kde-format
+msgid "Failed to create PipeWire context"
+msgstr ""
+
+#: plugins/screencast/pipewirecore.cpp:83
+#, kde-format
+msgid "Failed to connect PipeWire context"
+msgstr ""
+
+#: plugins/screencast/screencastmanager.cpp:105
+#, fuzzy, kde-format
+#| msgid "Close running window on %1"
+msgid "Could not find window id %1"
+msgstr "%1에서 실행 중인 창 닫기"
+
+#: plugins/screencast/screencastmanager.cpp:145
+#, kde-format
+msgid "Could not find output"
+msgstr ""
+
+#: plugins/screencast/screencastmanager.cpp:172
+#, kde-format
+msgid "Invalid region"
+msgstr ""
+
+#: plugins/screencast/screencastmanager.cpp:203
+#, kde-format
+msgid "Region outside the workspace"
+msgstr ""
+
+#: plugins/screencast/screencaststream.cpp:344
+#, kde-format
+msgid "Failed to create PipeWire stream"
 msgstr ""
 
 #. i18n: ectx: label, entry (count), group (General)
@@ -2110,23 +3520,44 @@ msgstr "데스크톱 파일 이름"
 msgid "Desktop file name rule type"
 msgstr "데스크톱 파일 이름 규칙 종류"
 
-#: scripting/genericscriptedconfig.cpp:72
+#. i18n: ectx: property (windowTitle), widget (QWidget, KWin::VideoWallConfigForm)
+#: scripts/videowall/contents/ui/config.ui:14
 #, kde-format
-msgctxt "Error message"
-msgid "Could not locate package metadata"
+msgid "Video Wall"
 msgstr ""
 
-#: scripting/genericscriptedconfig.cpp:78
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ApplyTo)
+#: scripts/videowall/contents/ui/config.ui:20
 #, kde-format
-msgctxt "Required file does not exist"
-msgid "%1 does not contain a valid metadata.json file"
+msgid "Apply to"
 msgstr ""
 
-#: scripting/genericscriptedconfig.cpp:84
-#: scripting/genericscriptedconfig.cpp:90
+#. i18n: ectx: property (text), widget (QLineEdit, kcfg_Whitelist)
+#: scripts/videowall/contents/ui/config.ui:32
 #, kde-format
-msgctxt "Required file does not exist"
-msgid "%1 does not exist"
+msgid "vlc, xv, vdpau, smplayer, dragon, xine, ffplay"
+msgstr ""
+
+#. i18n: ectx: property (placeholderText), widget (QLineEdit, kcfg_Whitelist)
+#. i18n: ectx: property (placeholderText), widget (QLineEdit, kcfg_Blacklist)
+#: scripts/videowall/contents/ui/config.ui:35
+#: scripts/videowall/contents/ui/config.ui:66
+#, kde-format
+msgid "Comma separated list of window classes"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, applyLabel)
+#: scripts/videowall/contents/ui/config.ui:45
+#, fuzzy, kde-format
+#| msgctxt "A keyboard modifier"
+#| msgid "Alt"
+msgid "All"
+msgstr "Alt"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Ignore)
+#: scripts/videowall/contents/ui/config.ui:54
+#, kde-format
+msgid "Ignore"
 msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
@@ -2742,6 +4173,11 @@ msgstr ""
 "창 관리자는 마우스가 있는 화면을 활성 화면으로 간주합니다.\n"
 "따라서 화면을 명시적으로 전환할 수 없습니다."
 
+#: utils/edid.cpp:244
+#, kde-format
+msgid "unknown"
+msgstr "알 수 없음"
+
 #: virtualdesktops.cpp:692 virtualdesktops.cpp:763
 #, kde-format
 msgid "Desktop %1"
@@ -2822,6 +4258,11 @@ msgstr ""
 "이 메시지 아래에 있는 지원 정보를 글에 바로 붙여넣기보다는\n"
 "https://paste.kde.org 등 외부 사이트에 링크하는 것을 권장합니다.\n"
 
+#: xwayland/xwaylandlauncher.cpp:272
+#, kde-format
+msgid "Xwayland has crashed"
+msgstr ""
+
 #~ msgid "Walk Through Desktops"
 #~ msgstr "바탕 화면간 이동"
 
@@ -2837,29 +4278,15 @@ msgstr ""
 #~ msgid "&No Border"
 #~ msgstr "테두리 없음(&N)"
 
-#, fuzzy
-#~| msgid "Hide Window Border"
-#~ msgid "Toggle Window Border"
-#~ msgstr "창 테두리 숨기기"
-
 #~ msgctxt "Error message"
 #~ msgid "Plugin does not provide configuration file in expected location"
 #~ msgstr "플러그인의 설정 파일이 예상한 위치에 없음"
 
-#~ msgid "Invert Screen Colors"
-#~ msgstr "화면 색 반전"
-
 #~ msgid "List all available backends and quit."
 #~ msgstr "사용 가능한 백엔드를 출력하고 끝냅니다."
 
-#~ msgid "Show Desktop"
-#~ msgstr "바탕 화면 표시"
-
 #~ msgid "X11 Client Windows"
 #~ msgstr "X11 클라이언트 창"
-
-#~ msgid "unknown"
-#~ msgstr "알 수 없음"
 
 #~ msgid "Render to framebuffer."
 #~ msgstr "프레임버퍼에 렌더링합니다."

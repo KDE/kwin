@@ -277,7 +277,7 @@ msgstr "Transversa Fenestras de Application Currente Alternative (reverse)"
 #~ msgstr "KWin"
 
 #~ msgid "Tabbox layout preview"
-#~ msgstr "Vista preliminari de disposition de tabbox (cassa de scheda)"
+#~ msgstr "Vista preliminar de disposition de tabbox (cassa de scheda)"
 
 #~ msgid "Outline selected window"
 #~ msgstr "Contorna  fenestra seligite"

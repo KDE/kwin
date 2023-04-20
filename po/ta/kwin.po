@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-13 02:16+0000\n"
+"POT-Creation-Date: 2023-04-20 02:25+0000\n"
 "PO-Revision-Date: 2023-02-14 21:59+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -30,6 +30,48 @@ msgstr "tamilpc team,,"
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "tamilpc@ambalam.com,rajan_agnel@yahoo.co.in,shafi6_loyola@yahoo.co.in"
+
+#: backends/wayland/wayland_output.cpp:295
+#, kde-format
+msgid "Press right control to ungrab pointer"
+msgstr ""
+
+#: backends/wayland/wayland_output.cpp:297
+#, kde-format
+msgid "Press right control key to grab pointer"
+msgstr ""
+
+#: backends/wayland/wayland_output.cpp:301
+#, kde-format
+msgctxt ""
+"Title of nested KWin Wayland with Wayland socket identifier as argument"
+msgid "KDE Wayland Compositor %1 (%2)"
+msgstr ""
+
+#: backends/wayland/wayland_output.cpp:304
+#, kde-format
+msgid "- Output disabled"
+msgstr ""
+
+#: backends/wayland/wayland_output.cpp:306
+#, kde-format
+msgid "- Output dimmed"
+msgstr ""
+
+#: backends/x11/windowed/x11_windowed_backend.cpp:515
+#, kde-format
+msgid "Press right control to ungrab input"
+msgstr ""
+
+#: backends/x11/windowed/x11_windowed_backend.cpp:515
+#, kde-format
+msgid "Press right control key to grab input"
+msgstr ""
+
+#: backends/x11/windowed/x11_windowed_backend.cpp:516
+#, kde-format
+msgid "KDE Wayland Compositor"
+msgstr ""
 
 #: composite.cpp:616
 #, kde-format
@@ -1034,6 +1076,1247 @@ msgstr "பிடிப்புப்பலகை"
 msgid "Primary Selection"
 msgstr "முதன்மையான தேர்வு"
 
+#. i18n: ectx: property (text), widget (QLabel, labelConstantBlurDescription)
+#: effects/blur/blur_config.ui:17
+#, kde-format
+msgid "Blur strength:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
+#. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
+#: effects/blur/blur_config.ui:42 effects/blur/blur_config.ui:108
+#, fuzzy, kde-format
+#| msgctxt "A mouse button"
+#| msgid "Right"
+msgid "Light"
+msgstr "வலது"
+
+#. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
+#. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
+#: effects/blur/blur_config.ui:74 effects/blur/blur_config.ui:137
+#, kde-format
+msgid "Strong"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseDescription)
+#: effects/blur/blur_config.ui:83
+#, kde-format
+msgid "Noise strength:"
+msgstr ""
+
+#: effects/colorpicker/colorpicker.cpp:102
+#, fuzzy, kde-format
+#| msgid ""
+#| "Select window to force close with left click or enter.\n"
+#| "Escape or right click to cancel."
+msgid ""
+"Select a position for color picking with left click or enter.\n"
+"Escape or right click to cancel."
+msgstr ""
+"இடது க்ளிக் அல்லது enter விசையை கொண்டு கட்டாயமாக மூட வேண்டிய சாளரத்தை தேர்ந்தெடுங்கள்.\n"
+"கைவிட, Escape விசையையோ வலது க்ளிக்கையோ பயன்படுத்துங்கள்."
+
+#: effects/desktopgrid/desktopgrid_config.cpp:49
+#: effects/invert/invert_config.cpp:35
+#: effects/magnifier/magnifier_config.cpp:55
+#: effects/mouseclick/mouseclick_config.cpp:48
+#: effects/mousemark/mousemark_config.cpp:50
+#: effects/overview/kcm/overvieweffectkcm.cpp:35
+#: effects/showpaint/showpaint_config.cpp:33
+#: effects/thumbnailaside/thumbnailaside_config.cpp:54
+#: effects/tileseditor/kcm/tileseditoreffectkcm.cpp:31
+#: effects/trackmouse/trackmouse_config.cpp:52
+#: effects/windowview/kcm/windowvieweffectkcm.cpp:36
+#: effects/zoom/zoom_config.cpp:58 main.cpp:171
+#, kde-format
+msgid "KWin"
+msgstr "கேவின்"
+
+#: effects/desktopgrid/desktopgrid_config.cpp:54
+#: effects/desktopgrid/desktopgrideffect.cpp:35
+#, fuzzy, kde-format
+#| msgid "Show Desktop"
+msgid "Show Desktop Grid"
+msgstr "பணிமேடையை காட்டு"
+
+#: effects/desktopgrid/desktopgrid_config.cpp:61
+#, kde-format
+msgctxt "Desktop name alignment:"
+msgid "Disabled"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#: effects/desktopgrid/desktopgrid_config.cpp:62
+#: effects/glide/glide_config.ui:70 effects/glide/glide_config.ui:168
+#, kde-format
+msgid "Top"
+msgstr ""
+
+#: effects/desktopgrid/desktopgrid_config.cpp:63
+#, fuzzy, kde-format
+#| msgctxt "A mouse button"
+#| msgid "Right"
+msgid "Top-Right"
+msgstr "வலது"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
+#: effects/desktopgrid/desktopgrid_config.cpp:64
+#: effects/glide/glide_config.ui:75 effects/glide/glide_config.ui:173
+#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:43
+#, fuzzy, kde-format
+#| msgctxt "A mouse button"
+#| msgid "Right"
+msgid "Right"
+msgstr "வலது"
+
+#: effects/desktopgrid/desktopgrid_config.cpp:65
+#, kde-format
+msgid "Bottom-Right"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#: effects/desktopgrid/desktopgrid_config.cpp:66
+#: effects/glide/glide_config.ui:80 effects/glide/glide_config.ui:178
+#, kde-format
+msgid "Bottom"
+msgstr ""
+
+#: effects/desktopgrid/desktopgrid_config.cpp:67
+#, kde-format
+msgid "Bottom-Left"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
+#: effects/desktopgrid/desktopgrid_config.cpp:68
+#: effects/glide/glide_config.ui:85 effects/glide/glide_config.ui:183
+#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:29
+#, fuzzy, kde-format
+#| msgctxt "A mouse button"
+#| msgid "Left"
+msgid "Left"
+msgstr "இடது"
+
+#: effects/desktopgrid/desktopgrid_config.cpp:69
+#, fuzzy, kde-format
+#| msgctxt "A mouse button"
+#| msgid "Left"
+msgid "Top-Left"
+msgstr "இடது"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
+#: effects/desktopgrid/desktopgrid_config.cpp:70
+#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:36
+#, kde-format
+msgid "Center"
+msgstr ""
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#: effects/desktopgrid/desktopgrid_config.ui:17
+#: effects/mousemark/mousemark_config.ui:17
+#: effects/thumbnailaside/thumbnailaside_config.ui:17
+#, kde-format
+msgid "Appearance"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
+#: effects/desktopgrid/desktopgrid_config.ui:30
+#, kde-format
+msgid "Pager"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
+#: effects/desktopgrid/desktopgrid_config.ui:35
+#, kde-format
+msgid "Automatic"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
+#: effects/desktopgrid/desktopgrid_config.ui:40
+#, kde-format
+msgid "Custom"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, layoutRowsLabel)
+#: effects/desktopgrid/desktopgrid_config.ui:48
+#, kde-format
+msgid "N&umber of rows:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: effects/desktopgrid/desktopgrid_config.ui:103
+#, fuzzy, kde-format
+#| msgid "Desktop file name"
+msgid "Desktop &name alignment:"
+msgstr "Desktop கோப்பின் பெயர்"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ShowAddRemove)
+#: effects/desktopgrid/desktopgrid_config.ui:116
+#, kde-format
+msgid "Show buttons to alter count of virtual desktops"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#: effects/desktopgrid/desktopgrid_config.ui:123
+#, kde-format
+msgid "&Grid layout mode:"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
+#: effects/desktopgrid/desktopgrid_config.ui:137
+#: effects/overview/kcm/overvieweffectkcm.ui:30
+#: effects/windowview/kcm/windowvieweffectkcm.ui:30
+#, fuzzy, kde-format
+#| msgid "&Close"
+msgid "Closest"
+msgstr "மூ&டு"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
+#: effects/desktopgrid/desktopgrid_config.ui:142
+#: effects/overview/kcm/overvieweffectkcm.ui:35
+#: effects/windowview/kcm/windowvieweffectkcm.ui:35
+#, kde-format
+msgid "Natural"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, ignoreLabel)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
+#: effects/desktopgrid/desktopgrid_config.ui:147
+#: scripts/videowall/contents/ui/config.ui:73
+#, kde-format
+msgid "None"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: effects/desktopgrid/desktopgrid_config.ui:155
+#, fuzzy, kde-format
+#| msgid "Windows"
+msgid "Windows layout:"
+msgstr "சாளரங்கள்"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#: effects/desktopgrid/desktopgrid_config.ui:171
+#, fuzzy, kde-format
+#| msgid "Rotation"
+msgid "Activation"
+msgstr "சுழற்சி"
+
+#. i18n: ectx: property (text), widget (QLabel, label_Strength)
+#: effects/diminactive/diminactive_config.ui:17
+#, kde-format
+msgid "Strength:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_Dim)
+#: effects/diminactive/diminactive_config.ui:40
+#, kde-format
+msgid "Dim:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimPanels)
+#: effects/diminactive/diminactive_config.ui:47
+#, kde-format
+msgid "Docks and panels"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimDesktop)
+#: effects/diminactive/diminactive_config.ui:54
+#, fuzzy, kde-format
+#| msgid "&Desktops"
+msgid "Desktop"
+msgstr "&பணிமேடைகள்"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimKeepAbove)
+#: effects/diminactive/diminactive_config.ui:61
+#, fuzzy, kde-format
+#| msgid "Keep above"
+msgid "Keep above windows"
+msgstr "மற்றவற்றிற்கு மேலே வை"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimByGroup)
+#: effects/diminactive/diminactive_config.ui:68
+#, fuzzy, kde-format
+#| msgid "Window role"
+msgid "By window group"
+msgstr "சாளர வகை"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimFullScreen)
+#: effects/diminactive/diminactive_config.ui:75
+#, fuzzy, kde-format
+#| msgid "Fullscreen"
+msgid "Fullscreen windows"
+msgstr "முழுத்திரை"
+
+#. i18n: ectx: property (text), widget (QLabel, label_Duration)
+#: effects/glide/glide_config.ui:19
+#: effects/scale/package/contents/ui/config.ui:17
+#, kde-format
+msgid "Duration:"
+msgstr ""
+
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_Duration)
+#: effects/glide/glide_config.ui:32
+#: effects/scale/package/contents/ui/config.ui:30
+#, kde-format
+msgid "Default"
+msgstr ""
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Duration)
+#: effects/glide/glide_config.ui:35
+#: effects/scale/package/contents/ui/config.ui:33
+#, kde-format
+msgid " milliseconds"
+msgstr ""
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_InAnimation)
+#: effects/glide/glide_config.ui:50
+#, fuzzy, kde-format
+#| msgid "Window position"
+msgid "Window Open Animation"
+msgstr "சாளர இருப்பிடம்"
+
+#. i18n: ectx: property (text), widget (QLabel, label_InRotationEdge)
+#. i18n: ectx: property (text), widget (QLabel, label_OutRotationEdge)
+#: effects/glide/glide_config.ui:56 effects/glide/glide_config.ui:154
+#, fuzzy, kde-format
+#| msgid "Rotation"
+msgid "Rotation edge:"
+msgstr "சுழற்சி"
+
+#. i18n: ectx: property (text), widget (QLabel, label_InRotationAngle)
+#. i18n: ectx: property (text), widget (QLabel, label_OutRotationAngle)
+#: effects/glide/glide_config.ui:93 effects/glide/glide_config.ui:191
+#, fuzzy, kde-format
+#| msgid "Rotation"
+msgid "Rotation angle:"
+msgstr "சுழற்சி"
+
+#. i18n: ectx: property (text), widget (QLabel, label_InDistance)
+#. i18n: ectx: property (text), widget (QLabel, label_OutDistance)
+#: effects/glide/glide_config.ui:119 effects/glide/glide_config.ui:198
+#, kde-format
+msgid "Distance:"
+msgstr ""
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_OutAnimation)
+#: effects/glide/glide_config.ui:148
+#, fuzzy, kde-format
+#| msgid "Window position"
+msgid "Window Close Animation"
+msgstr "சாளர இருப்பிடம்"
+
+#: effects/invert/invert.cpp:42 effects/invert/invert_config.cpp:38
+#, kde-format
+msgid "Toggle Invert Effect"
+msgstr ""
+
+#: effects/invert/invert.cpp:49 effects/invert/invert_config.cpp:44
+#, kde-format
+msgid "Toggle Invert Effect on Window"
+msgstr ""
+
+#: effects/invert/invert.cpp:56
+#, kde-format
+msgid "Invert Screen Colors"
+msgstr "திரையிலுள்ள நிறங்களை புரட்டு"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_FadeToBlack)
+#: effects/login/package/contents/ui/config.ui:17
+#, kde-format
+msgid "Fade to black (fullscreen splash screens only)"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: effects/magiclamp/magiclamp_config.ui:17
+#, kde-format
+msgid "Animation duration:"
+msgstr ""
+
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_AnimationDuration)
+#: effects/magiclamp/magiclamp_config.ui:36
+#, kde-format
+msgctxt "Duration of rotation"
+msgid "Default"
+msgstr ""
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AnimationDuration)
+#: effects/magiclamp/magiclamp_config.ui:39
+#, kde-format
+msgid "milliseconds"
+msgstr ""
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupSize)
+#: effects/magnifier/magnifier_config.ui:17
+#, kde-format
+msgid "Size"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: effects/magnifier/magnifier_config.ui:23
+#, kde-format
+msgid "&Width:"
+msgstr ""
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Width)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Height)
+#: effects/magnifier/magnifier_config.ui:42
+#: effects/magnifier/magnifier_config.ui:74
+#, kde-format
+msgid " px"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: effects/magnifier/magnifier_config.ui:55
+#, fuzzy, kde-format
+#| msgctxt "A mouse button"
+#| msgid "Right"
+msgid "&Height:"
+msgstr "வலது"
+
+#: effects/mouseclick/mouseclick.cpp:36
+#: effects/mouseclick/mouseclick_config.cpp:51
+#, kde-format
+msgid "Toggle Mouse Click Effect"
+msgstr ""
+
+#: effects/mouseclick/mouseclick.cpp:43
+#, fuzzy, kde-format
+#| msgctxt "A mouse button"
+#| msgid "Left"
+msgctxt "Left mouse button"
+msgid "Left"
+msgstr "இடது"
+
+#: effects/mouseclick/mouseclick.cpp:44
+#, fuzzy, kde-format
+#| msgctxt "A mouse button"
+#| msgid "Middle"
+msgctxt "Middle mouse button"
+msgid "Middle"
+msgstr "நடு"
+
+#: effects/mouseclick/mouseclick.cpp:45
+#, fuzzy, kde-format
+#| msgctxt "A mouse button"
+#| msgid "Right"
+msgctxt "Right mouse button"
+msgid "Right"
+msgstr "வலது"
+
+#. i18n: ectx: attribute (title), widget (QWidget, basic_tab)
+#: effects/mouseclick/mouseclick_config.ui:21
+#, kde-format
+msgid "Basic Settings"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, button1_label)
+#: effects/mouseclick/mouseclick_config.ui:37
+#, fuzzy, kde-format
+#| msgid "Mouse Emulation"
+msgid "Left Mouse Button Color:"
+msgstr "எலி போன்மம்"
+
+#. i18n: ectx: property (text), widget (QLabel, button2_label)
+#: effects/mouseclick/mouseclick_config.ui:50
+#, fuzzy, kde-format
+#| msgid "Mouse Emulation"
+msgid "Middle Mouse Button Color:"
+msgstr "எலி போன்மம்"
+
+#. i18n: ectx: property (text), widget (QLabel, button3_label)
+#: effects/mouseclick/mouseclick_config.ui:70
+#, fuzzy, kde-format
+#| msgid "Mouse Emulation"
+msgid "Right Mouse Button Color:"
+msgstr "எலி போன்மம்"
+
+#. i18n: ectx: attribute (title), widget (QWidget, advanced_tab)
+#: effects/mouseclick/mouseclick_config.ui:91
+#, fuzzy, kde-format
+#| msgid "Ad&vanced"
+msgid "Advanced Settings"
+msgstr "&உயர்நிலை "
+
+#. i18n: ectx: property (title), widget (QGroupBox, rings)
+#: effects/mouseclick/mouseclick_config.ui:97
+#, kde-format
+msgid "Rings"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, ring_line_width_label)
+#: effects/mouseclick/mouseclick_config.ui:103
+#, kde-format
+msgid "Line Width:"
+msgstr ""
+
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, kcfg_LineWidth)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingSize)
+#: effects/mouseclick/mouseclick_config.ui:119
+#: effects/mouseclick/mouseclick_config.ui:171
+#, kde-format
+msgid " pixel"
+msgstr ""
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingLife)
+#: effects/mouseclick/mouseclick_config.ui:132
+#, kde-format
+msgid " msec"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, ring_duration_label)
+#: effects/mouseclick/mouseclick_config.ui:145
+#, kde-format
+msgid "Ring Duration:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, ring_radius_label)
+#: effects/mouseclick/mouseclick_config.ui:155
+#, kde-format
+msgid "Ring Radius:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, ring_count_label)
+#: effects/mouseclick/mouseclick_config.ui:184
+#, fuzzy, kde-format
+#| msgctxt "Number of fingers in this pinch gesture"
+#| msgid "Finger count"
+msgid "Ring Count:"
+msgstr "விரல்களின் எண்ணிக்கை"
+
+#. i18n: ectx: property (title), widget (QGroupBox, font)
+#: effects/mouseclick/mouseclick_config.ui:210
+#, kde-format
+msgid "Text"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, font_label)
+#: effects/mouseclick/mouseclick_config.ui:216
+#, kde-format
+msgid "Font:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, showtext_label)
+#: effects/mouseclick/mouseclick_config.ui:233
+#, fuzzy, kde-format
+#| msgid "Show Desktop"
+msgid "Show Text:"
+msgstr "பணிமேடையை காட்டு"
+
+#: effects/mousemark/mousemark.cpp:40
+#, kde-format
+msgid "Clear All Mouse Marks"
+msgstr ""
+
+#: effects/mousemark/mousemark.cpp:46 effects/mousemark/mousemark_config.cpp:59
+#, kde-format
+msgid "Clear Last Mouse Mark"
+msgstr ""
+
+#: effects/mousemark/mousemark_config.cpp:53
+#, kde-format
+msgid "Clear Mouse Marks"
+msgstr ""
+
+#: effects/mousemark/mousemark_config.cpp:100
+#, kde-format
+msgctxt "Suffix"
+msgid " pixel"
+msgid_plural " pixels"
+msgstr[0] ""
+msgstr[1] ""
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: effects/mousemark/mousemark_config.ui:23
+#, kde-format
+msgid "Wid&th:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: effects/mousemark/mousemark_config.ui:36
+#, kde-format
+msgid "&Color:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: effects/mousemark/mousemark_config.ui:82
+#, kde-format
+msgid "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
+msgstr ""
+
+#: effects/outputlocator/outputlocator.cpp:48
+#, fuzzy, kde-format
+#| msgctxt "The input device of the event is not known"
+#| msgid "Unknown"
+msgctxt "@label"
+msgid "Unknown"
+msgstr "தெரியாதது"
+
+#: effects/overview/kcm/overvieweffectkcm.cpp:41
+#: effects/overview/overvieweffect.cpp:31
+#, kde-format
+msgid "Toggle Overview"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
+#: effects/overview/kcm/overvieweffectkcm.ui:22
+#: effects/windowview/kcm/windowvieweffectkcm.ui:22
+#, fuzzy, kde-format
+#| msgctxt "Name of a hardware switch"
+#| msgid "Tablet mode"
+msgid "Layout mode:"
+msgstr "பலகைக்கணினி பயன்முறை"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: effects/overview/kcm/overvieweffectkcm.ui:43
+#, fuzzy, kde-format
+#| msgid "Resize Window"
+msgid "Ignore minimized windows:"
+msgstr "சாளரத்தின் அளவை மாற்று"
+
+#: effects/overview/qml/DesktopBar.qml:187
+#, fuzzy, kde-format
+#| msgid "Peek at Desktop"
+msgid "Delete Virtual Desktop"
+msgstr "பணிமேடையைக் காட்டு"
+
+#: effects/overview/qml/DesktopBar.qml:283
+#, fuzzy, kde-format
+#| msgctxt "Create a new desktop and add the window to that desktop"
+#| msgid "Add to &New Desktop"
+msgid "Add Virtual Desktop"
+msgstr "&புதிய பணிமேடையிலும் காட்டு"
+
+#: effects/overview/qml/ScreenView.qml:226
+#, kde-format
+msgid "No matching windows"
+msgstr ""
+
+#: effects/private/qml/WindowHeapDelegate.qml:151
+#, kde-format
+msgid "Drag Down To Close"
+msgstr ""
+
+#: effects/private/qml/WindowHeapDelegate.qml:452
+#, fuzzy, kde-format
+#| msgid "Close Window"
+msgctxt "@info:tooltip as in: 'close this window'"
+msgid "Close window"
+msgstr "சாளரத்தை மூடு"
+
+#. i18n: ectx: property (text), widget (QLabel, label_InScale)
+#: effects/scale/package/contents/ui/config.ui:46
+#, fuzzy, kde-format
+#| msgid "Window role"
+msgid "Window open scale:"
+msgstr "சாளர வகை"
+
+#. i18n: ectx: property (text), widget (QLabel, label_OutScale)
+#: effects/scale/package/contents/ui/config.ui:53
+#, fuzzy, kde-format
+#| msgid "Window role"
+msgid "Window close scale:"
+msgstr "சாளர வகை"
+
+#: effects/screenshot/screenshotdbusinterface2.cpp:525
+#, fuzzy, kde-format
+#| msgid ""
+#| "Select window to force close with left click or enter.\n"
+#| "Escape or right click to cancel."
+msgid ""
+"Select window to screen shot with left click or enter.\n"
+"Escape or right click to cancel."
+msgstr ""
+"இடது க்ளிக் அல்லது enter விசையை கொண்டு கட்டாயமாக மூட வேண்டிய சாளரத்தை தேர்ந்தெடுங்கள்.\n"
+"கைவிட, Escape விசையையோ வலது க்ளிக்கையோ பயன்படுத்துங்கள்."
+
+#: effects/screenshot/screenshotdbusinterface2.cpp:543
+#, fuzzy, kde-format
+#| msgid ""
+#| "Select window to force close with left click or enter.\n"
+#| "Escape or right click to cancel."
+msgid ""
+"Create screen shot with left click or enter.\n"
+"Escape or right click to cancel."
+msgstr ""
+"இடது க்ளிக் அல்லது enter விசையை கொண்டு கட்டாயமாக மூட வேண்டிய சாளரத்தை தேர்ந்தெடுங்கள்.\n"
+"கைவிட, Escape விசையையோ வலது க்ளிக்கையோ பயன்படுத்துங்கள்."
+
+#: effects/showfps/qml/main.qml:110
+#, fuzzy, kde-format
+#| msgctxt "A mouse pointer motion event"
+#| msgid "Pointer Motion"
+msgctxt "@label"
+msgid "Paint Duration"
+msgstr "சுட்டிக்குறி நகர்ந்த‍து"
+
+#: effects/showfps/qml/main.qml:162
+#, kde-format
+msgctxt "@label"
+msgid "Paint Amount"
+msgstr ""
+
+#: effects/showfps/qml/main.qml:175
+#, fuzzy, kde-format
+#| msgid "Current Layout:"
+msgctxt "@label"
+msgid "Current FPS"
+msgstr "தற்போதைய தளவமைப்பு:"
+
+#: effects/showfps/qml/main.qml:184
+#, kde-format
+msgctxt "@label"
+msgid "Maximum FPS"
+msgstr ""
+
+#: effects/showfps/qml/main.qml:192
+#, kde-format
+msgctxt "@label"
+msgid "This effect is not a benchmark"
+msgstr ""
+
+#: effects/showpaint/showpaint.cpp:39 effects/showpaint/showpaint_config.cpp:38
+#, fuzzy, kde-format
+#| msgid "Window to Next Desktop"
+msgid "Toggle Show Paint"
+msgstr "சாளரத்தை அடுத்த மேசைக்கு"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_Gaps)
+#: effects/slide/slide_config.ui:17
+#, kde-format
+msgid "Gap between desktops"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_HorizontalGap)
+#: effects/slide/slide_config.ui:23
+#, fuzzy, kde-format
+#| msgctxt "An orientation of a pointer axis event"
+#| msgid "Horizontal"
+msgid "Horizontal:"
+msgstr "கிடைமட்டம்"
+
+#. i18n: ectx: property (text), widget (QLabel, label_VerticalGap)
+#: effects/slide/slide_config.ui:46
+#, fuzzy, kde-format
+#| msgctxt "An orientation of a pointer axis event"
+#| msgid "Vertical"
+msgid "Vertical:"
+msgstr "நெடுக்கு"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideBackground)
+#: effects/slide/slide_config.ui:72
+#, kde-format
+msgid "Slide desktop background"
+msgstr ""
+
+#: effects/thumbnailaside/thumbnailaside.cpp:31
+#: effects/thumbnailaside/thumbnailaside_config.cpp:59
+#, kde-format
+msgid "Toggle Thumbnail for Current Window"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: effects/thumbnailaside/thumbnailaside_config.ui:23
+#, kde-format
+msgid "Maximum &width:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: effects/thumbnailaside/thumbnailaside_config.ui:36
+#, kde-format
+msgid "&Spacing:"
+msgstr ""
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Spacing)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_MaxWidth)
+#: effects/thumbnailaside/thumbnailaside_config.ui:55
+#: effects/thumbnailaside/thumbnailaside_config.ui:106
+#, kde-format
+msgid " pixels"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: effects/thumbnailaside/thumbnailaside_config.ui:68
+#, fuzzy, kde-format
+#| msgid "&Opacity"
+msgid "&Opacity:"
+msgstr "&மங்கும் திறன்"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Opacity)
+#: effects/thumbnailaside/thumbnailaside_config.ui:87
+#, no-c-format, kde-format
+msgid " %"
+msgstr ""
+
+#: effects/tileseditor/kcm/tileseditoreffectkcm.cpp:37
+#: effects/tileseditor/tileseditoreffect.cpp:29
+#, fuzzy, kde-format
+#| msgid "Toggle Window Raise/Lower"
+msgid "Toggle Tiles Editor"
+msgstr "சாளரங்களை ஏற்று/இறக்கு"
+
+#: effects/tileseditor/qml/main.qml:150
+#, kde-format
+msgid "Padding:"
+msgstr ""
+
+#: effects/tileseditor/qml/main.qml:160
+#, kde-format
+msgid "Load Layout..."
+msgstr ""
+
+#: effects/tileseditor/qml/main.qml:274
+#, fuzzy, kde-format
+#| msgid "&Close"
+msgid "Close"
+msgstr "மூ&டு"
+
+#: effects/tileseditor/qml/TileDelegate.qml:167
+#, fuzzy, kde-format
+#| msgctxt "An orientation of a pointer axis event"
+#| msgid "Horizontal"
+msgid "Split Horizontally"
+msgstr "கிடைமட்டம்"
+
+#: effects/tileseditor/qml/TileDelegate.qml:174
+#, fuzzy, kde-format
+#| msgctxt "An orientation of a pointer axis event"
+#| msgid "Vertical"
+msgid "Split Vertically"
+msgstr "நெடுக்கு"
+
+#: effects/tileseditor/qml/TileDelegate.qml:182
+#: effects/tileseditor/qml/TileDelegate.qml:211
+#, fuzzy, kde-format
+#| msgid "Close Window"
+msgid "Add Floating Tile"
+msgstr "சாளரத்தை மூடிவிடு"
+
+#: effects/tileseditor/qml/TileDelegate.qml:191
+#, kde-format
+msgid "Delete"
+msgstr ""
+
+#: effects/trackmouse/trackmouse.cpp:45
+#: effects/trackmouse/trackmouse_config.cpp:57
+#, kde-format
+msgid "Track mouse"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: effects/trackmouse/trackmouse_config.ui:26
+#, kde-format
+msgid "Trigger effect with:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_KeyboardShortcut)
+#: effects/trackmouse/trackmouse_config.ui:33
+#, fuzzy, kde-format
+#| msgid "Keyboard"
+msgid "Keyboard shortcut:"
+msgstr "விசைப்பலகை"
+
+#. i18n: ectx: property (text), widget (QLabel, label_ModifierKeys)
+#: effects/trackmouse/trackmouse_config.ui:43
+#, fuzzy, kde-format
+#| msgid "Modifiers"
+msgid "Modifier keys:"
+msgstr "மாற்றிவிசைகள்"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Alt)
+#: effects/trackmouse/trackmouse_config.ui:65
+#, kde-format
+msgid "Alt"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Control)
+#: effects/trackmouse/trackmouse_config.ui:72
+#, kde-format
+msgid "Ctrl"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Shift)
+#: effects/trackmouse/trackmouse_config.ui:79
+#, kde-format
+msgid "Shift"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Meta)
+#: effects/trackmouse/trackmouse_config.ui:86
+#, kde-format
+msgid "Meta"
+msgstr ""
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, KWin::TranslucencyEffectConfigForm)
+#: effects/translucency/package/contents/ui/config.ui:14
+#, kde-format
+msgid "Translucency"
+msgstr ""
+
+#. i18n: ectx: property (title), widget (QGroupBox, m_opacityGroupBox)
+#: effects/translucency/package/contents/ui/config.ui:20
+#, kde-format
+msgid "General Translucency Settings"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, comboboxpopup_label)
+#: effects/translucency/package/contents/ui/config.ui:64
+#, kde-format
+msgid "Combobox popups:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#: effects/translucency/package/contents/ui/config.ui:121
+#: effects/translucency/package/contents/ui/config.ui:431
+#, kde-format
+msgid "Opaque"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, dialogs_label)
+#: effects/translucency/package/contents/ui/config.ui:137
+#, fuzzy, kde-format
+#| msgid "Dialog"
+msgid "Dialogs:"
+msgstr "சார் சாளரம்"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: effects/translucency/package/contents/ui/config.ui:156
+#: effects/translucency/package/contents/ui/config.ui:418
+#, kde-format
+msgid "Transparent"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, menus_label)
+#: effects/translucency/package/contents/ui/config.ui:188
+#, fuzzy, kde-format
+#| msgid "Menu"
+msgid "Menus:"
+msgstr "பட்டியல்"
+
+#. i18n: ectx: property (text), widget (QLabel, moveresize_label)
+#: effects/translucency/package/contents/ui/config.ui:207
+#, fuzzy, kde-format
+#| msgid "Resize Window"
+msgid "Moving windows:"
+msgstr "சாளரத்தின் அளவை மாற்று"
+
+#. i18n: ectx: property (text), widget (QLabel, inactive_label)
+#: effects/translucency/package/contents/ui/config.ui:226
+#, fuzzy, kde-format
+#| msgid "Internal Windows"
+msgid "Inactive windows:"
+msgstr "உள்ளக சாளரங்கள்"
+
+#. i18n: ectx: property (title), widget (QGroupBox, kcfg_IndividualMenuConfig)
+#: effects/translucency/package/contents/ui/config.ui:267
+#, kde-format
+msgid "Set menu translucency independently"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, dropdownmenus_label)
+#: effects/translucency/package/contents/ui/config.ui:285
+#, kde-format
+msgid "Dropdown menus:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, popupmenus_label)
+#: effects/translucency/package/contents/ui/config.ui:329
+#, kde-format
+msgid "Popup menus:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, tornoffmenus_label)
+#: effects/translucency/package/contents/ui/config.ui:367
+#, kde-format
+msgid "Torn-off menus:"
+msgstr ""
+
+#: effects/windowview/kcm/windowvieweffectkcm.cpp:42
+#: effects/windowview/windowvieweffect.cpp:45
+#, fuzzy, kde-format
+#| msgid "Window to Next Desktop"
+msgid "Toggle Present Windows (Current desktop)"
+msgstr "சாளரத்தை அடுத்த மேசைக்கு"
+
+#: effects/windowview/kcm/windowvieweffectkcm.cpp:49
+#: effects/windowview/windowvieweffect.cpp:54
+#, fuzzy, kde-format
+#| msgid "Keep Window on All Desktops"
+msgid "Toggle Present Windows (All desktops)"
+msgstr "சாளரத்தை எல்லா மேல்மேசைகளிலும் வைக்கவும்"
+
+#: effects/windowview/kcm/windowvieweffectkcm.cpp:56
+#: effects/windowview/windowvieweffect.cpp:63
+#, fuzzy, kde-format
+#| msgid "Keep Window on All Desktops"
+msgid "Toggle Present Windows (Window class)"
+msgstr "சாளரத்தை எல்லா மேல்மேசைகளிலும் வைக்கவும்"
+
+#: effects/windowview/kcm/windowvieweffectkcm.cpp:62
+#: effects/windowview/windowvieweffect.cpp:72
+#, fuzzy, kde-format
+#| msgid "Window to Next Desktop"
+msgid "Toggle Present Windows (Window class on current desktop)"
+msgstr "சாளரத்தை அடுத்த மேசைக்கு"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
+#: effects/windowview/kcm/windowvieweffectkcm.ui:56
+#, fuzzy, kde-format
+#| msgid "Minimize Window"
+msgid "Ignore &minimized windows"
+msgstr "சாளரத்தை ஒதுக்கு"
+
+#: effects/windowview/qml/main.qml:107
+#, kde-format
+msgid "No Matches"
+msgstr ""
+
+#: effects/windowview/qml/main.qml:107
+#, fuzzy, kde-format
+#| msgid "Windows"
+msgid "No Windows"
+msgstr "சாளரங்கள்"
+
+#: effects/windowview/qml/main.qml:122
+#, fuzzy, kde-format
+#| msgid "Internal Windows"
+msgid "Filter windows…"
+msgstr "உள்ளக சாளரங்கள்"
+
+#. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
+#: effects/wobblywindows/wobblywindows_config.ui:20
+#, fuzzy, kde-format
+#| msgid "Ad&vanced"
+msgid "Advanced"
+msgstr "&உயர்நிலை "
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#: effects/wobblywindows/wobblywindows_config.ui:26
+#, kde-format
+msgid "&Stiffness:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: effects/wobblywindows/wobblywindows_config.ui:68
+#, kde-format
+msgid "Dra&g:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: effects/wobblywindows/wobblywindows_config.ui:81
+#, fuzzy, kde-format
+#| msgid "Move to %1"
+msgid "&Move factor:"
+msgstr "%1-க்கு நகர்த்து"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_MoveWobble)
+#: effects/wobblywindows/wobblywindows_config.ui:155
+#, kde-format
+msgid "Wo&bble when moving"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ResizeWobble)
+#: effects/wobblywindows/wobblywindows_config.ui:162
+#, kde-format
+msgid "Wobble when &resizing"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_AdvancedMode)
+#: effects/wobblywindows/wobblywindows_config.ui:182
+#, kde-format
+msgid "Enable &advanced mode"
+msgstr ""
+
+#. i18n: ectx: property (title), widget (QGroupBox, basicGroup)
+#: effects/wobblywindows/wobblywindows_config.ui:192
+#, kde-format
+msgid "&Wobbliness"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: effects/wobblywindows/wobblywindows_config.ui:201
+#, kde-format
+msgid "Less"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: effects/wobblywindows/wobblywindows_config.ui:224
+#, kde-format
+msgid "More"
+msgstr ""
+
+#: effects/zoom/zoom.cpp:67
+#, fuzzy, kde-format
+#| msgid "Move Window One Screen to the Left"
+msgid "Move Zoomed Area to Left"
+msgstr "சாளரத்தை இடதிலுள்ள திரைக்கு அனுப்பு"
+
+#: effects/zoom/zoom.cpp:74
+#, fuzzy, kde-format
+#| msgid "Move Window One Screen to the Right"
+msgid "Move Zoomed Area to Right"
+msgstr "சாளரத்தை வலதிலுள்ள திரைக்கு அனுப்பு"
+
+#: effects/zoom/zoom.cpp:81
+#, kde-format
+msgid "Move Zoomed Area Upwards"
+msgstr ""
+
+#: effects/zoom/zoom.cpp:88
+#, kde-format
+msgid "Move Zoomed Area Downwards"
+msgstr ""
+
+#: effects/zoom/zoom.cpp:96 effects/zoom/zoom_config.cpp:108
+#, fuzzy, kde-format
+#| msgid "Mouse Emulation"
+msgid "Move Mouse to Focus"
+msgstr "எலி போன்மம்"
+
+#: effects/zoom/zoom.cpp:103 effects/zoom/zoom_config.cpp:115
+#, fuzzy, kde-format
+#| msgid "Move Window to the Center"
+msgid "Move Mouse to Center"
+msgstr "சாளரத்தை நடுப்பகுதிக்கு நகர்த்து"
+
+#: effects/zoom/zoom_config.cpp:80
+#, fuzzy, kde-format
+#| msgid "Move Window Left"
+msgid "Move Left"
+msgstr "சாளரத்தை இடதுபுறமாக நகர்த்து"
+
+#: effects/zoom/zoom_config.cpp:87
+#, fuzzy, kde-format
+#| msgid "Move Window Right"
+msgid "Move Right"
+msgstr "சாளரத்தை வலதுபுறமாக நகர்த்து"
+
+#: effects/zoom/zoom_config.cpp:94
+#, fuzzy, kde-format
+#| msgid "&Move"
+msgid "Move Up"
+msgstr "நகர்த்து"
+
+#: effects/zoom/zoom_config.cpp:101
+#, fuzzy, kde-format
+#| msgid "Move Window"
+msgid "Move Down"
+msgstr "சாளரத்தை நகர்த்து"
+
+#. i18n: ectx: property (whatsThis), widget (QLabel, label)
+#. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
+#: effects/zoom/zoom_config.ui:25 effects/zoom/zoom_config.ui:41
+#, kde-format
+msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: effects/zoom/zoom_config.ui:28
+#, kde-format
+msgid "Zoom Factor:"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableFocusTracking)
+#: effects/zoom/zoom_config.ui:66
+#, kde-format
+msgid ""
+"Enable tracking of the focused location. This needs QAccessible to be "
+"enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
+#: effects/zoom/zoom_config.ui:69
+#, kde-format
+msgid "Enable Focus Tracking"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableTextCaretTracking)
+#: effects/zoom/zoom_config.ui:76
+#, kde-format
+msgid ""
+"Enable tracking of the text cursor. This needs QAccessible to be enabled per "
+"application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
+#: effects/zoom/zoom_config.ui:79
+#, kde-format
+msgid "Enable Text Cursor Tracking"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: effects/zoom/zoom_config.ui:86
+#, kde-format
+msgid "Mouse Pointer:"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MousePointer)
+#: effects/zoom/zoom_config.ui:99
+#, kde-format
+msgid "Visibility of the mouse-pointer."
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
+#: effects/zoom/zoom_config.ui:103
+#, kde-format
+msgid "Scale"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
+#: effects/zoom/zoom_config.ui:108
+#, kde-format
+msgid "Keep"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
+#: effects/zoom/zoom_config.ui:113
+#, kde-format
+msgid "Hide"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MouseTracking)
+#: effects/zoom/zoom_config.ui:121
+#, kde-format
+msgid "Track moving of the mouse."
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
+#: effects/zoom/zoom_config.ui:125
+#, fuzzy, kde-format
+#| msgid "Position"
+msgid "Proportional"
+msgstr "இருப்பிடம்"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
+#: effects/zoom/zoom_config.ui:130
+#, kde-format
+msgid "Centered"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
+#: effects/zoom/zoom_config.ui:135
+#, kde-format
+msgid "Push"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
+#: effects/zoom/zoom_config.ui:140
+#, kde-format
+msgid "Disabled"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: effects/zoom/zoom_config.ui:148
+#, kde-format
+msgid "Mouse Tracking:"
+msgstr ""
+
 #: helpers/killer/killer.cpp:29
 #, kde-format
 msgid "Window Manager"
@@ -1191,11 +2474,6 @@ msgid ""
 msgstr ""
 "இடது க்ளிக் அல்லது enter விசையை கொண்டு கட்டாயமாக மூட வேண்டிய சாளரத்தை தேர்ந்தெடுங்கள்.\n"
 "கைவிட, Escape விசையையோ வலது க்ளிக்கையோ பயன்படுத்துங்கள்."
-
-#: main.cpp:171
-#, kde-format
-msgid "KWin"
-msgstr "கேவின்"
 
 #: main.cpp:173 main.cpp:196
 #, kde-format
@@ -1415,6 +2693,97 @@ msgstr ""
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "ஏற்கனவே ஓடிக்கொண்டிருக்கும் ICCCM2.0 சாளர மேலாளருக்கு பதிலாக இயங்கும்"
 
+#: plugins/kdecorations/aurorae/src/aurorae.cpp:720
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Tiny"
+msgstr ""
+
+#: plugins/kdecorations/aurorae/src/aurorae.cpp:721
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Normal"
+msgstr ""
+
+#: plugins/kdecorations/aurorae/src/aurorae.cpp:722
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Large"
+msgstr ""
+
+#: plugins/kdecorations/aurorae/src/aurorae.cpp:723
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Large"
+msgstr ""
+
+#: plugins/kdecorations/aurorae/src/aurorae.cpp:724
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Huge"
+msgstr ""
+
+#: plugins/kdecorations/aurorae/src/aurorae.cpp:725
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Huge"
+msgstr ""
+
+#: plugins/kdecorations/aurorae/src/aurorae.cpp:726
+#, fuzzy, kde-format
+#| msgid "&Resize"
+msgctxt "@item:inlistbox Button size:"
+msgid "Oversized"
+msgstr "&அளவுமாற்று"
+
+#: plugins/kdecorations/aurorae/src/aurorae.cpp:729
+#, fuzzy, kde-format
+#| msgid "Buttons"
+msgid "Button size:"
+msgstr "பட்டன்கள்"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
+#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:14
+#, fuzzy, kde-format
+#| msgid "Dialog"
+msgid "Config Dialog"
+msgstr "சார் சாளரம்"
+
+#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
+#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:23
+#, kde-format
+msgid "Title &Alignment"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
+#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:53
+#, kde-format
+msgid ""
+"Check this option if the window border should be painted in the titlebar "
+"color. Otherwise it will be painted in the background color."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
+#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:56
+#, fuzzy, kde-format
+#| msgid "Toggle Window Border"
+msgid "Colored window border"
+msgstr "சாளரத்தின் விளிம்பை மறை/காட்டு"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
+#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:66
+#, kde-format
+msgid ""
+"Check this option if you want the buttons to fade in when the mouse pointer "
+"hovers over them and fade out again when it moves away."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
+#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:69
+#, kde-format
+msgid "Animate buttons"
+msgstr ""
+
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:49
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:51
 #, kde-format
@@ -1576,6 +2945,48 @@ msgstr "இரவு நிறமாற்றத்தை நிலைமாற�
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "நிறவெப்பநிலையின் முன்னோட்டம்"
+
+#: plugins/screencast/pipewirecore.cpp:60
+#: plugins/screencast/pipewirecore.cpp:89
+#, kde-format
+msgid "Failed to start main PipeWire loop"
+msgstr ""
+
+#: plugins/screencast/pipewirecore.cpp:76
+#, kde-format
+msgid "Failed to create PipeWire context"
+msgstr ""
+
+#: plugins/screencast/pipewirecore.cpp:83
+#, kde-format
+msgid "Failed to connect PipeWire context"
+msgstr ""
+
+#: plugins/screencast/screencastmanager.cpp:105
+#, fuzzy, kde-format
+#| msgid "Close running window on %1"
+msgid "Could not find window id %1"
+msgstr "%1-இலுள்ள சாளரத்தை மூடு"
+
+#: plugins/screencast/screencastmanager.cpp:145
+#, kde-format
+msgid "Could not find output"
+msgstr ""
+
+#: plugins/screencast/screencastmanager.cpp:172
+#, kde-format
+msgid "Invalid region"
+msgstr ""
+
+#: plugins/screencast/screencastmanager.cpp:203
+#, kde-format
+msgid "Region outside the workspace"
+msgstr ""
+
+#: plugins/screencast/screencaststream.cpp:344
+#, kde-format
+msgid "Failed to create PipeWire stream"
+msgstr ""
 
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
@@ -2102,24 +3513,43 @@ msgstr "Desktop கோப்பின் பெயர்"
 msgid "Desktop file name rule type"
 msgstr ""
 
-#: scripting/genericscriptedconfig.cpp:72
+#. i18n: ectx: property (windowTitle), widget (QWidget, KWin::VideoWallConfigForm)
+#: scripts/videowall/contents/ui/config.ui:14
 #, kde-format
-msgctxt "Error message"
-msgid "Could not locate package metadata"
-msgstr "தொகுப்பைக் குறித்த மேனிலைத் தரவை கண்டுபிடிக்க முடியவில்லை"
+msgid "Video Wall"
+msgstr ""
 
-#: scripting/genericscriptedconfig.cpp:78
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ApplyTo)
+#: scripts/videowall/contents/ui/config.ui:20
 #, kde-format
-msgctxt "Required file does not exist"
-msgid "%1 does not contain a valid metadata.json file"
-msgstr "%1 என்பதில் முறையான metadata.json கோப்பு இல்லை"
+msgid "Apply to"
+msgstr ""
 
-#: scripting/genericscriptedconfig.cpp:84
-#: scripting/genericscriptedconfig.cpp:90
+#. i18n: ectx: property (text), widget (QLineEdit, kcfg_Whitelist)
+#: scripts/videowall/contents/ui/config.ui:32
 #, kde-format
-msgctxt "Required file does not exist"
-msgid "%1 does not exist"
-msgstr "%1 என்பது இல்லை"
+msgid "vlc, xv, vdpau, smplayer, dragon, xine, ffplay"
+msgstr ""
+
+#. i18n: ectx: property (placeholderText), widget (QLineEdit, kcfg_Whitelist)
+#. i18n: ectx: property (placeholderText), widget (QLineEdit, kcfg_Blacklist)
+#: scripts/videowall/contents/ui/config.ui:35
+#: scripts/videowall/contents/ui/config.ui:66
+#, kde-format
+msgid "Comma separated list of window classes"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, applyLabel)
+#: scripts/videowall/contents/ui/config.ui:45
+#, kde-format
+msgid "All"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Ignore)
+#: scripts/videowall/contents/ui/config.ui:54
+#, kde-format
+msgid "Ignore"
+msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -2716,6 +4146,11 @@ msgstr ""
 "சுட்டிக்குறி உள்ள திரையையே செயலிலுள்ளதாக கருதுமாறு சாளர மேலாளர் அமைக்கப்பட்டுள்ளது.\n"
 "இதனால், சுட்டிக்குறியை கொண்டிராத திரைக்கு தாவ முடியாது."
 
+#: utils/edid.cpp:244
+#, kde-format
+msgid "unknown"
+msgstr "தெரியாதது"
+
 #: virtualdesktops.cpp:692 virtualdesktops.cpp:763
 #, kde-format
 msgid "Desktop %1"
@@ -2797,6 +4232,23 @@ msgstr ""
 "போன்ற\n"
 "ஒட்டுபலகை (pastebin) சேவையை பயன்படுத்தி ஒட்டியதற்கான இணைப்பை வழங்கலாம்.\n"
 
+#: xwayland/xwaylandlauncher.cpp:272
+#, kde-format
+msgid "Xwayland has crashed"
+msgstr ""
+
+#~ msgctxt "Error message"
+#~ msgid "Could not locate package metadata"
+#~ msgstr "தொகுப்பைக் குறித்த மேனிலைத் தரவை கண்டுபிடிக்க முடியவில்லை"
+
+#~ msgctxt "Required file does not exist"
+#~ msgid "%1 does not contain a valid metadata.json file"
+#~ msgstr "%1 என்பதில் முறையான metadata.json கோப்பு இல்லை"
+
+#~ msgctxt "Required file does not exist"
+#~ msgid "%1 does not exist"
+#~ msgstr "%1 என்பது இல்லை"
+
 #~ msgid "Walk Through Desktops"
 #~ msgstr "பணிமேடைகளின் பட்டியலில் முன்னே செல்"
 
@@ -2812,29 +4264,17 @@ msgstr ""
 #~ msgid "&No Border"
 #~ msgstr "&விளிம்பு வேண்டாம்"
 
-#~ msgid "Toggle Window Border"
-#~ msgstr "சாளரத்தின் விளிம்பை மறை/காட்டு"
-
 #~ msgctxt "Error message"
 #~ msgid "Plugin does not provide configuration file in expected location"
 #~ msgstr "எதிர்பார்க்கப்பட்ட இடத்தில் செருகுநிரல் விருப்பத்தேர்வு கோப்பை வழங்கவில்லை"
 
-#~ msgid "Invert Screen Colors"
-#~ msgstr "திரையிலுள்ள நிறங்களை புரட்டு"
-
 #~ msgid "List all available backends and quit."
 #~ msgstr "பயன்படுத்தக்கூடிய பின்நிலைகளை பட்டியலிட்டு வெளியேறும்."
-
-#~ msgid "Show Desktop"
-#~ msgstr "பணிமேடையை காட்டு"
 
 #, fuzzy
 #~| msgid "Close Window"
 #~ msgid "X11 Client Windows"
 #~ msgstr "சாளரத்தை மூடிவிடு"
-
-#~ msgid "unknown"
-#~ msgstr "தெரியாதது"
 
 #~ msgid "Pack Window to the Right"
 #~ msgstr "சாளரத்தை வலதுபுறமாக திணி"
@@ -2946,12 +4386,6 @@ msgstr ""
 
 #, fuzzy
 #~| msgid "Close Window"
-#~ msgctxt "Floating layout, windows aren't tiled at all"
-#~ msgid "Floating"
-#~ msgstr "சாளரத்தை மூடிவிடு"
-
-#, fuzzy
-#~| msgid "Close Window"
 #~ msgctxt "When in tiling mode, toggle's the window's floating/tiled state"
 #~ msgid "&Float Window"
 #~ msgstr "சாளரத்தை மூடிவிடு"
@@ -2966,9 +4400,6 @@ msgstr ""
 #~| msgid "Pack Window to the Right"
 #~ msgid "To the Right"
 #~ msgstr "சாளரத்தை வலதுபுறமக்கு"
-
-#~ msgid "&Opacity"
-#~ msgstr "&மங்கும் திறன்"
 
 #, fuzzy
 #~| msgid "Switch to Desktop 1"
@@ -3162,9 +4593,6 @@ msgstr ""
 #~ msgid "<center><b>%1</b></center>"
 #~ msgstr "<center><b>%1 முன்காட்சி</b></center>"
 
-#~ msgid "Menu"
-#~ msgstr "பட்டியல்"
-
 #~ msgid "Not on all desktops"
 #~ msgstr "எல்லா மேல்மேசைகளிலும் இல்லை"
 
@@ -3195,21 +4623,6 @@ msgstr ""
 #~ msgstr "மேசைத் திரைவேட்டு"
 
 #, fuzzy
-#~| msgid "Toggle Window Raise/Lower"
-#~ msgid "Toggle Tiling"
-#~ msgstr "சாளரங்களை ஏற்று/இறக்கு"
-
-#, fuzzy
-#~| msgid "&Move"
-#~ msgid "Move Up"
-#~ msgstr "நகர்த்து"
-
-#, fuzzy
-#~| msgid "Move Window"
-#~ msgid "Move Down"
-#~ msgstr "சாளரத்தை நகர்த்து"
-
-#, fuzzy
 #~| msgid "Walk Through Windows"
 #~ msgid "Walk Through Grouped Windows"
 #~ msgstr "சாளரங்களினூடு செல்"
@@ -3228,35 +4641,9 @@ msgstr ""
 #~ msgstr "kwin: தொடக்கத்தில் முடக்கம்; முறிகிறது"
 
 #, fuzzy
-#~| msgid "Ad&vanced"
-#~ msgctxt "@title:tab Advanced Settings"
-#~ msgid "Advanced"
-#~ msgstr "&உயர்நிலை "
-
-#, fuzzy
-#~| msgid "Window to Next Desktop"
-#~ msgid "Toggle Present Windows (Current desktop)"
-#~ msgstr "சாளரத்தை அடுத்த மேசைக்கு"
-
-#, fuzzy
-#~| msgid "Keep Window on All Desktops"
-#~ msgid "Toggle Present Windows (All desktops)"
-#~ msgstr "சாளரத்தை எல்லா மேல்மேசைகளிலும் வைக்கவும்"
-
-#, fuzzy
-#~| msgid "Window to Next Desktop"
-#~ msgid "Toggle Snow on Desktop"
-#~ msgstr "சாளரத்தை அடுத்த மேசைக்கு"
-
-#, fuzzy
 #~| msgid "Keep Window on All Desktops"
 #~ msgid "for windows on all desktops: "
 #~ msgstr "சாளரத்தை எல்லா மேல்மேசைகளிலும் வைக்கவும்"
-
-#, fuzzy
-#~| msgid "Resize Window"
-#~ msgid "Moved/resized windows:"
-#~ msgstr "சாளரத்தின் அளவை மாற்று"
 
 #, fuzzy
 #~| msgid "Keep Window on All Desktops"

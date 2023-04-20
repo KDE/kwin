@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-20 02:18+0000\n"
+"POT-Creation-Date: 2023-04-20 02:25+0000\n"
 "PO-Revision-Date: 2023-04-01 21:08-0700\n"
 "Last-Translator: A S Alam <aalam@satluj.org>\n"
 "Language-Team: Punjabi <kde-i18n-doc@kde.org>\n"
@@ -79,3 +79,21 @@ msgstr "ਵਿੰਡੋ ਖੁੱਲ੍ਹਣ/ਬੰਦ ਐਨੀਮੇਸ਼ਨ"
 #, kde-format
 msgid "KWin development team"
 msgstr "ਕੇ-ਵਿਨ ਡਿਵੈਲਪਮੈਂਟ ਟੀਮ"
+
+#: genericscriptedconfig.cpp:71
+#, kde-format
+msgctxt "Error message"
+msgid "Could not locate package metadata"
+msgstr ""
+
+#: genericscriptedconfig.cpp:77
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not contain a valid metadata.json file"
+msgstr ""
+
+#: genericscriptedconfig.cpp:83 genericscriptedconfig.cpp:89
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not exist"
+msgstr ""

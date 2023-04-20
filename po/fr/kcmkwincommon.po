@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-20 02:18+0000\n"
+"POT-Creation-Date: 2023-04-20 02:25+0000\n"
 "PO-Revision-Date: 2022-12-31 15:13+0100\n"
 "Last-Translator: Xavier BESNARD <xavier.besnard]neuf.fr>\n"
 "Language-Team: fr\n"
@@ -90,6 +90,24 @@ msgstr "Animation à l'ouverture et à la fermeture des fenêtres"
 #, kde-format
 msgid "KWin development team"
 msgstr "L'équipe de développement de KWin"
+
+#: genericscriptedconfig.cpp:71
+#, kde-format
+msgctxt "Error message"
+msgid "Could not locate package metadata"
+msgstr ""
+
+#: genericscriptedconfig.cpp:77
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not contain a valid metadata.json file"
+msgstr ""
+
+#: genericscriptedconfig.cpp:83 genericscriptedconfig.cpp:89
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not exist"
+msgstr ""
 
 #~ msgctxt "Category of Desktop Effects, used as section header"
 #~ msgid "Candy"

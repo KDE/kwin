@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-13 02:16+0000\n"
-"PO-Revision-Date: 2023-04-15 20:30+0200\n"
+"PO-Revision-Date: 2023-04-18 07:15+0200\n"
 "Last-Translator: Xavier BESNARD <xavier.besnard]neuf.fr>\n"
 "Language-Team: fr\n"
 "Language: fr\n"
@@ -525,6 +525,13 @@ msgid ""
 "<interface>Fullscreen</interface> states.<nl/><nl/>Note that the position "
 "can also be used to map to a different <interface>Screen</interface>"
 msgstr ""
+"Certaines applications peuvent définir leur propre géométrie, outrepassant "
+"les préférences du gestionnaire de fenêtres. Cette propriété outrepasse "
+"leurs demandes de placement. <nl/><nl/>Cela affecte les paramètres "
+"<interface>Taille</interface> et <interface>Position</interface> mais pas "
+"<interface>Maximisé</interface> ou <interface>Plein écran</interface>. <nl/"
+"><nl/>Veuillez noter que la position peut également être utilisée pour "
+"correspondre à un autre <interface>Écran</interface>"
 
 #: rulesmodel.cpp:546
 #, kde-format
@@ -586,6 +593,7 @@ msgstr "Ignorer la barre de tâches"
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
 msgstr ""
+"Contrôle si la fenêtre doit ou non apparaître dans le gestionnaire de tâches."
 
 #: rulesmodel.cpp:585
 #, kde-format
@@ -598,6 +606,8 @@ msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the Virtual Desktop manager."
 msgstr ""
+"Contrôle si la fenêtre doit ou non apparaître dans le gestionnaire de "
+"bureaux vituels."
 
 #: rulesmodel.cpp:591
 #, kde-format
@@ -611,6 +621,8 @@ msgid ""
 "Controls whether or not the window appears in the <shortcut>Alt+Tab</"
 "shortcut> window list."
 msgstr ""
+"Contrôle si la fenêtre doit ou non apparaître dans la liste de fenêtres "
+"proposée avec le raccourci <shortcut>ALT + Tab</shortcut>."
 
 #: rulesmodel.cpp:597
 #, kde-format
@@ -709,6 +721,7 @@ msgstr "Accepter le focus"
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
 msgstr ""
+"Contrôle si la fenêtre doit ou non prendre le focus lors d'un clic dessus."
 
 #: rulesmodel.cpp:686
 #, kde-format
@@ -726,6 +739,13 @@ msgid ""
 "use any other global shortcuts such as <shortcut>Alt+Space</shortcut> to "
 "activate KRunner."
 msgstr ""
+"Utilisez cette propriété pour empêcher les raccourcis clavier globaux de "
+"fonctionner lorsque la fenêtre reçoit le focus. Cela peut être utile pour "
+"les applications comme les émulateurs ou les machines virtuelles pouvant "
+"gérer elles-même certains raccourcis. <nl/><nl/>Veuillez noter que vous ne "
+"pourrez pas utiliser le raccourci <raccourci>ALT + Tab</raccourci> en dehors "
+"de la fenêtre ou utiliser d’autres raccourcis globaux tels que "
+"<raccourci>ALT + Espace</raccourci> pour activer KRunner."
 
 #: rulesmodel.cpp:698
 #, kde-format
