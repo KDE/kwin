@@ -8,7 +8,7 @@
 
 #include "kwin_export.h"
 
-#include "core/dmabufattributes.h"
+#include "core/graphicsbuffer.h"
 
 #include <memory>
 

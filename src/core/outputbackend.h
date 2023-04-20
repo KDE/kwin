@@ -27,8 +27,16 @@ class InputBackend;
 class OpenGLBackend;
 class QPainterBackend;
 class OutputConfiguration;
-struct DmaBufParams;
 class EglDisplay;
+
+struct DmaBufParams
+{
+    int planeCount = 0;
+    int width = 0;
+    int height = 0;
+    uint32_t format = 0;
+    uint64_t modifier = 0;
+};
 
 class KWIN_EXPORT Outputs : public QVector<Output *>
 {

@@ -8,15 +8,14 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "wayland_backend.h"
-
+#include "dmabuftexture.h"
+#include "dpmsinputeventfilter.h"
+#include "input.h"
 #include "wayland_display.h"
 #include "wayland_egl_backend.h"
 #include "wayland_logging.h"
 #include "wayland_output.h"
 #include "wayland_qpainter_backend.h"
-
-#include "dpmsinputeventfilter.h"
-#include "input.h"
 
 #include <KWayland/Client/keyboard.h>
 #include <KWayland/Client/pointer.h>

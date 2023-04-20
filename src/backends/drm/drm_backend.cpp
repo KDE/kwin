@@ -14,6 +14,7 @@
 #include "core/outputconfiguration.h"
 #include "core/renderloop.h"
 #include "core/session.h"
+#include "dmabuftexture.h"
 #include "drm_connector.h"
 #include "drm_crtc.h"
 #include "drm_egl_backend.h"

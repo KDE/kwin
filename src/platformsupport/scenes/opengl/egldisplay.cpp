@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "egldisplay.h"
-#include "core/dmabufattributes.h"
+#include "core/graphicsbuffer.h"
 #include "kwineglimagetexture.h"
 #include "kwineglutils_p.h"
 #include "libkwineffects/kwinglutils.h"

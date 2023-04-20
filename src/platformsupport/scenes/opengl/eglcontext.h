@@ -8,7 +8,6 @@
 */
 #pragma once
 
-#include "core/dmabufattributes.h"
 #include "kwin_export.h"
 #include "kwingltexture.h"
 #include "openglcontext.h"
@@ -22,6 +21,7 @@ namespace KWin
 
 class EglDisplay;
 class ShaderManager;
+struct DmaBufAttributes;
 
 class KWIN_EXPORT EglContext : public OpenGlContext
 {

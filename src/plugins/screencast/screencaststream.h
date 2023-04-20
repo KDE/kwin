@@ -10,6 +10,7 @@
 
 #include "config-kwin.h"
 
+#include "core/outputbackend.h"
 #include "dmabuftexture.h"
 #include "libkwineffects/kwinglobals.h"
 #include "wayland/screencast_v1_interface.h"

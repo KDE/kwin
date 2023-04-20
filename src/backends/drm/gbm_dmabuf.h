@@ -7,9 +7,11 @@
 #pragma once
 
 #include "config-kwin.h"
-#include "dmabuftexture.h"
-#include <libdrm/drm_fourcc.h>
 
+#include "core/graphicsbuffer.h"
+#include "core/outputbackend.h"
+
+#include <drm_fourcc.h>
 #include <gbm.h>
 
 namespace KWin
