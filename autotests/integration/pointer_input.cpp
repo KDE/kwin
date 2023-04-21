@@ -11,14 +11,11 @@
 #include "core/output.h"
 #include "core/outputbackend.h"
 #include "cursor.h"
-#include "effects.h"
 #include "libkwineffects/kwineffects.h"
 #include "options.h"
 #include "pointer_input.h"
-#include "screenedge.h"
 #include "utils/xcursortheme.h"
 #include "virtualdesktops.h"
-#include "wayland/clientconnection.h"
 #include "wayland/seat_interface.h"
 #include "wayland_server.h"
 #include "window.h"
@@ -94,7 +91,6 @@ private Q_SLOTS:
     void cleanup();
     void testWarpingUpdatesFocus();
     void testWarpingGeneratesPointerMotion();
-    void testWarpingDuringFilter();
     void testWarpingBetweenWindows();
     void testUpdateFocusAfterScreenChange();
     void testUpdateFocusOnDecorationDestroy();
@@ -153,7 +149,6 @@ void PointerInputTest::initTestCase()
     }
     qputenv("XCURSOR_SIZE", QByteArrayLiteral("24"));
     qputenv("XKB_DEFAULT_RULES", "evdev");
-    qputenv("KWIN_COMPOSE", QByteArrayLiteral("O2"));
 
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
@@ -263,47 +258,6 @@ void PointerInputTest::testWarpingGeneratesPointerMotion()
     QVERIFY(movedSpy.wait());
     QCOMPARE(movedSpy.count(), 1);
     QCOMPARE(movedSpy.last().first().toPointF(), QPointF(26, 26));
-}
-
-void PointerInputTest::testWarpingDuringFilter()
-{
-    // this test verifies that pointer motion is handled correctly if
-    // the pointer gets warped during processing of input events
-
-    // create pointer
-    auto pointer = m_seat->createPointer(m_seat);
-    QVERIFY(pointer);
-    QVERIFY(pointer->isValid());
-    QSignalSpy movedSpy(pointer, &KWayland::Client::Pointer::motion);
-
-    // warp cursor into expected geometry
-    input()->pointer()->warp(QPointF(10, 10));
-
-    // create a window
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
-    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
-    QVERIFY(surface);
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
-    QVERIFY(shellSurface);
-    render(surface.get());
-    QVERIFY(windowAddedSpy.wait());
-    Window *window = workspace()->activeWindow();
-    QVERIFY(window);
-
-    QCOMPARE(window->pos(), QPoint(0, 0));
-    QVERIFY(exclusiveContains(window->frameGeometry(), Cursors::self()->mouse()->pos()));
-
-    // is WindowView effect for top left screen edge loaded
-    QVERIFY(static_cast<EffectsHandlerImpl *>(effects)->isEffectLoaded("windowview"));
-    QVERIFY(movedSpy.isEmpty());
-    quint32 timestamp = 0;
-    Test::pointerMotion(QPoint(0, 0), timestamp++);
-    // screen edges push back
-    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(1, 1));
-    QVERIFY(movedSpy.wait());
-    QCOMPARE(movedSpy.count(), 2);
-    QCOMPARE(movedSpy.at(0).first().toPoint(), QPoint(0, 0));
-    QCOMPARE(movedSpy.at(1).first().toPoint(), QPoint(1, 1));
 }
 
 void PointerInputTest::testWarpingBetweenWindows()
@@ -1554,10 +1508,6 @@ void PointerInputTest::testConfineToScreenGeometry()
 {
     // this test verifies that pointer belongs to at least one screen
     // after moving it to off-screen area
-
-    // unload the Window View effect because it pushes back
-    // pointer if it's at (0, 0)
-    static_cast<EffectsHandlerImpl *>(effects)->unloadEffect(QStringLiteral("windowview"));
 
     // setup screen layout
     const QVector<QRect> geometries{
