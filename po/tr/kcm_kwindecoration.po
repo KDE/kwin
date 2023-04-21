@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-06 02:04+0000\n"
-"PO-Revision-Date: 2023-04-06 13:02+0300\n"
+"PO-Revision-Date: 2023-04-20 14:21+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 23.03.70\n"
 
 #: declarative-plugin/buttonsmodel.cpp:53
 #, kde-format
@@ -231,7 +231,7 @@ msgstr "Yan Pencere Kenarlığı Yok"
 #: utils.cpp:27
 #, kde-format
 msgid "Tiny Window Borders"
-msgstr "Minik Pencere Kenarlıkları"
+msgstr "Ufak Pencere Kenarlıkları"
 
 #: utils.cpp:28
 #, kde-format
@@ -241,22 +241,22 @@ msgstr "Normal Pencere Kenarlıkları"
 #: utils.cpp:29
 #, kde-format
 msgid "Large Window Borders"
-msgstr "Geniş Pencere Kenarlıkları"
+msgstr "Büyük Pencere Kenarlıkları"
 
 #: utils.cpp:30
 #, kde-format
 msgid "Very Large Window Borders"
-msgstr "Çok Geniş Pencere Kenarlıkları"
+msgstr "Çok Büyük Pencere Kenarlıkları"
 
 #: utils.cpp:31
 #, kde-format
 msgid "Huge Window Borders"
-msgstr "Büyük Pencere Kenarlıkları"
+msgstr "Kocaman Pencere Kenarlıkları"
 
 #: utils.cpp:32
 #, kde-format
 msgid "Very Huge Window Borders"
-msgstr "Çok Büyük Pencere Kenarlıkları"
+msgstr "En Büyük Pencere Kenarlıkları"
 
 #: utils.cpp:33
 #, kde-format
