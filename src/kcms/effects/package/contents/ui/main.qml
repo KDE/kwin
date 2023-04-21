@@ -10,7 +10,7 @@ import QtQuick.Controls as QQC2
 import QtQuick.Layouts
 
 import org.kde.kcm
-import org.kde.kconfig
+import org.kde.config
 import org.kde.kirigami 2.10 as Kirigami
 import org.kde.newstuff as NewStuff
 
