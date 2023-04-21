@@ -140,7 +140,7 @@ Q_SIGNALS:
     void activateRequested();
 
 private:
-    explicit PlasmaVirtualDesktopInterface(PlasmaVirtualDesktopManagementInterface *parent);
+    PlasmaVirtualDesktopInterface();
     friend class PlasmaVirtualDesktopManagementInterface;
     friend class PlasmaVirtualDesktopManagementInterfacePrivate;
 
