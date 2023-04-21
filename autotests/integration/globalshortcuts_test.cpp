@@ -275,9 +275,6 @@ void GlobalShortcutsTest::testComponseKey()
 
 void GlobalShortcutsTest::testX11WindowShortcut()
 {
-#ifdef NO_XWAYLAND
-    QSKIP("x11 test, unnecessary without xwayland");
-#endif
     // create an X11 window
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));

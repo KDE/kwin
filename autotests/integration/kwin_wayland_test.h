@@ -781,7 +781,7 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::Test::AdditionalWaylandInterfaces)
 Q_DECLARE_METATYPE(KWin::Test::XdgToplevel::States)
 Q_DECLARE_METATYPE(QtWayland::zxdg_toplevel_decoration_v1::mode)
 
-#define WAYLANDTEST_MAIN_HELPER(TestObject, OperationMode)                                                                                \
+#define WAYLANDTEST_MAIN(TestObject)                                                                                                      \
     int main(int argc, char *argv[])                                                                                                      \
     {                                                                                                                                     \
         setenv("QT_QPA_PLATFORM", "wayland-org.kde.kwin.qpa", true);                                                                      \
@@ -791,16 +791,10 @@ Q_DECLARE_METATYPE(QtWayland::zxdg_toplevel_decoration_v1::mode)
         qunsetenv("KDE_SESSION_VERSION");                                                                                                 \
         qunsetenv("XDG_SESSION_DESKTOP");                                                                                                 \
         qunsetenv("XDG_CURRENT_DESKTOP");                                                                                                 \
-        KWin::WaylandTestApplication app(OperationMode, argc, argv);                                                                      \
+        KWin::WaylandTestApplication app(KWin::Application::OperationModeXwayland, argc, argv);                                           \
         app.setAttribute(Qt::AA_Use96Dpi, true);                                                                                          \
         TestObject tc;                                                                                                                    \
         return QTest::qExec(&tc, argc, argv);                                                                                             \
     }
-
-#ifdef NO_XWAYLAND
-#define WAYLANDTEST_MAIN(TestObject) WAYLANDTEST_MAIN_HELPER(TestObject, KWin::Application::OperationModeWaylandOnly)
-#else
-#define WAYLANDTEST_MAIN(TestObject) WAYLANDTEST_MAIN_HELPER(TestObject, KWin::Application::OperationModeXwayland)
-#endif
 
 #endif
