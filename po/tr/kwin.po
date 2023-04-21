@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-30 02:44+0000\n"
-"PO-Revision-Date: 2023-03-29 16:24+0300\n"
+"PO-Revision-Date: 2023-04-20 14:59+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 23.03.70\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -273,13 +273,13 @@ msgstr "Fark"
 #, kde-format
 msgctxt "The relative mouse movement"
 msgid "Delta (not accelerated)"
-msgstr "Fark (hızlandırılmamış)"
+msgstr "Fark (ivmelendirilmemiş)"
 
 #: debug_console.cpp:211
 #, kde-format
 msgctxt "The global mouse pointer position"
 msgid "Global Position"
-msgstr "Evrensel Konum"
+msgstr "Global Konum"
 
 #: debug_console.cpp:215
 #, kde-format
@@ -297,7 +297,7 @@ msgstr "Düğme"
 #, kde-format
 msgctxt "A button in a mouse press/release event"
 msgid "Native Button code"
-msgstr "Doğal Düğme kodu"
+msgstr "Yerel Düğme Kodu"
 
 #: debug_console.cpp:220 debug_console.cpp:228
 #, kde-format
@@ -387,7 +387,7 @@ msgstr "Düğme Takımı"
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Group-switch"
-msgstr "Grup anahtarı"
+msgstr "Grup Anahtarı"
 
 #: debug_console.cpp:303
 #, kde-format
@@ -405,7 +405,7 @@ msgstr "Tarama kodu"
 #, kde-format
 msgctxt "Key according to Qt"
 msgid "Qt::Key code"
-msgstr "Qt::Düğme kodu"
+msgstr "Qt::Key kodu"
 
 #: debug_console.cpp:310
 #, kde-format
@@ -429,7 +429,7 @@ msgstr "Değiştiriciler"
 #, kde-format
 msgctxt "A touch down event"
 msgid "Touch down"
-msgstr "Aşağı Dokunma"
+msgstr "Dokunma teması"
 
 #: debug_console.cpp:326 debug_console.cpp:341 debug_console.cpp:356
 #, kde-format
@@ -441,7 +441,7 @@ msgstr "Nokta tanımlayıcı"
 #, kde-format
 msgctxt "The global position of the touch point"
 msgid "Global position"
-msgstr "Evrensel konum"
+msgstr "Global konum"
 
 #: debug_console.cpp:339
 #, kde-format
@@ -453,13 +453,13 @@ msgstr "Dokunma Hareketi"
 #, kde-format
 msgctxt "A touch up event"
 msgid "Touch Up"
-msgstr "Yukarı Dokunma"
+msgstr "Dokunma kaldırma"
 
 #: debug_console.cpp:367
 #, kde-format
 msgctxt "A pinch gesture is started"
 msgid "Pinch start"
-msgstr "Tutma başlangıcı"
+msgstr "Kıstırma başlangıcı"
 
 #: debug_console.cpp:369
 #, kde-format
@@ -471,7 +471,7 @@ msgstr "Parmak sayısı"
 #, kde-format
 msgctxt "A pinch gesture is updated"
 msgid "Pinch update"
-msgstr "Tutma güncellemesi"
+msgstr "Kıstırma güncellemesi"
 
 #: debug_console.cpp:382
 #, kde-format
@@ -501,13 +501,13 @@ msgstr "Fark y"
 #, kde-format
 msgctxt "A pinch gesture ended"
 msgid "Pinch end"
-msgstr "Tutma sonu"
+msgstr "Kıstırma sonu"
 
 #: debug_console.cpp:408
 #, kde-format
 msgctxt "A pinch gesture got cancelled"
 msgid "Pinch cancelled"
-msgstr "Tutma iptal edildi"
+msgstr "Kıstırma iptal edildi"
 
 #: debug_console.cpp:420
 #, kde-format
@@ -611,7 +611,7 @@ msgstr "Konum"
 #: debug_console.cpp:512
 #, kde-format
 msgid "Tilt"
-msgstr "Yalpala"
+msgstr "Yalpalama"
 
 #: debug_console.cpp:514
 #, kde-format
@@ -955,7 +955,7 @@ msgstr "Sürüm:"
 #: debug_console.ui:157
 #, kde-format
 msgid "Shading Language Version:"
-msgstr "Panjur Dil Sürümü:"
+msgstr "Gölgeleme Dil Sürümü:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: debug_console.ui:164
@@ -1164,7 +1164,7 @@ msgstr "%1 Uygulamasını &Sonlandır"
 #: helpers/killer/killer.cpp:95
 #, kde-format
 msgid "Wait Longer"
-msgstr "Daha Fazla Bekle"
+msgstr "Biraz Daha Bekle"
 
 #: input.cpp:2009
 #, kde-format
