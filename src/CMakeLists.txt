@@ -9,8 +9,6 @@ set_property(TARGET KWinEffectsInterface PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 target_link_libraries(KWinEffectsInterface Qt::DBus)
 
-add_subdirectory(effects)
-add_subdirectory(scripts)
 add_subdirectory(helpers)
 add_subdirectory(qml)
 
@@ -270,6 +268,8 @@ target_sources(kwin PRIVATE
 )
 
 add_subdirectory(backends)
+add_subdirectory(platformsupport)
+add_subdirectory(plugins)
 add_subdirectory(utils)
 add_subdirectory(wayland)
 add_subdirectory(xwayland)
@@ -336,9 +336,6 @@ if (HAVE_LIBCAP)
                 \$ENV{DESTDIR}${CMAKE_INSTALL_FULL_BINDIR}/kwin_wayland)"
     )
 endif()
-
-add_subdirectory(platformsupport)
-add_subdirectory(plugins)
 
 target_link_libraries(kwin_wayland
     KWinQpaPlugin
