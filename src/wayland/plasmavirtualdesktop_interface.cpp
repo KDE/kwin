@@ -190,20 +190,14 @@ void PlasmaVirtualDesktopManagementInterface::removeDesktop(const QString &id)
         return;
     }
 
-    const auto desktopClientResources = (*deskIt)->d->resourceMap();
-    for (auto resource : desktopClientResources) {
-        (*deskIt)->d->send_removed(resource->handle);
-    }
+    PlasmaVirtualDesktopInterface *desktop = *deskIt;
+    d->desktops.erase(deskIt);
+    delete desktop;
 
     const auto clientResources = d->resourceMap();
     for (auto resource : clientResources) {
         d->send_desktop_removed(resource->handle, id);
     }
-
-    PlasmaVirtualDesktopInterface *desktop = *deskIt;
-    d->desktops.erase(deskIt);
-
-    delete desktop;
 }
 
 QList<PlasmaVirtualDesktopInterface *> PlasmaVirtualDesktopManagementInterface::desktops() const
