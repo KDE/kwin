@@ -519,7 +519,7 @@ void TransientPlacementTest::testXdgPopupWithPanel()
 
     transientShellSurface.reset();
     transientSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(transient));
+    QVERIFY(Test::waitForWindowClosed(transient));
 
     // now parent to fullscreen - on fullscreen the panel is ignored
     QSignalSpy toplevelConfigureRequestedSpy(parentShellSurface, &Test::XdgToplevel::configureRequested);

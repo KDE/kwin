@@ -931,13 +931,13 @@ IdleInhibitorV1 *createIdleInhibitorV1(KWayland::Client::Surface *surface)
     return new IdleInhibitorV1(manager, surface);
 }
 
-bool waitForWindowDestroyed(Window *window)
+bool waitForWindowClosed(Window *window)
 {
-    QSignalSpy destroyedSpy(window, &QObject::destroyed);
-    if (!destroyedSpy.isValid()) {
+    QSignalSpy closedSpy(window, &Window::closed);
+    if (!closedSpy.isValid()) {
         return false;
     }
-    return destroyedSpy.wait();
+    return closedSpy.wait();
 }
 
 #if KWIN_BUILD_SCREENLOCKER

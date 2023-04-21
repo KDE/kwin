@@ -776,7 +776,7 @@ void DecorationInputTest::testTooltipDoesntEatKeyEvents()
     QVERIFY(keyEvent.wait());
 
     window->decoratedClient()->requestHideToolTip();
-    Test::waitForWindowDestroyed(internal);
+    Test::waitForWindowClosed(internal);
 }
 
 }

@@ -132,13 +132,13 @@ void ActivationTest::testSwitchToWindowToLeft()
 
     // Destroy all windows.
     shellSurface1.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window1));
+    QVERIFY(Test::waitForWindowClosed(window1));
     shellSurface2.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window2));
+    QVERIFY(Test::waitForWindowClosed(window2));
     shellSurface3.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window3));
+    QVERIFY(Test::waitForWindowClosed(window3));
     shellSurface4.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window4));
+    QVERIFY(Test::waitForWindowClosed(window4));
 }
 
 void ActivationTest::testSwitchToWindowToRight()
@@ -198,13 +198,13 @@ void ActivationTest::testSwitchToWindowToRight()
 
     // Destroy all windows.
     shellSurface1.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window1));
+    QVERIFY(Test::waitForWindowClosed(window1));
     shellSurface2.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window2));
+    QVERIFY(Test::waitForWindowClosed(window2));
     shellSurface3.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window3));
+    QVERIFY(Test::waitForWindowClosed(window3));
     shellSurface4.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window4));
+    QVERIFY(Test::waitForWindowClosed(window4));
 }
 
 void ActivationTest::testSwitchToWindowAbove()
@@ -264,13 +264,13 @@ void ActivationTest::testSwitchToWindowAbove()
 
     // Destroy all windows.
     shellSurface1.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window1));
+    QVERIFY(Test::waitForWindowClosed(window1));
     shellSurface2.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window2));
+    QVERIFY(Test::waitForWindowClosed(window2));
     shellSurface3.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window3));
+    QVERIFY(Test::waitForWindowClosed(window3));
     shellSurface4.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window4));
+    QVERIFY(Test::waitForWindowClosed(window4));
 }
 
 void ActivationTest::testSwitchToWindowBelow()
@@ -330,13 +330,13 @@ void ActivationTest::testSwitchToWindowBelow()
 
     // Destroy all windows.
     shellSurface1.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window1));
+    QVERIFY(Test::waitForWindowClosed(window1));
     shellSurface2.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window2));
+    QVERIFY(Test::waitForWindowClosed(window2));
     shellSurface3.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window3));
+    QVERIFY(Test::waitForWindowClosed(window3));
     shellSurface4.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window4));
+    QVERIFY(Test::waitForWindowClosed(window4));
 }
 
 void ActivationTest::testSwitchToWindowMaximized()
@@ -413,13 +413,13 @@ void ActivationTest::testSwitchToWindowMaximized()
 
     // Destroy all windows.
     shellSurface1.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window1));
+    QVERIFY(Test::waitForWindowClosed(window1));
     shellSurface2.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window2));
+    QVERIFY(Test::waitForWindowClosed(window2));
     shellSurface3.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window3));
+    QVERIFY(Test::waitForWindowClosed(window3));
     shellSurface4.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window4));
+    QVERIFY(Test::waitForWindowClosed(window4));
 }
 
 void ActivationTest::testSwitchToWindowFullScreen()
@@ -496,13 +496,13 @@ void ActivationTest::testSwitchToWindowFullScreen()
 
     // Destroy all windows.
     shellSurface1.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window1));
+    QVERIFY(Test::waitForWindowClosed(window1));
     shellSurface2.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window2));
+    QVERIFY(Test::waitForWindowClosed(window2));
     shellSurface3.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window3));
+    QVERIFY(Test::waitForWindowClosed(window3));
     shellSurface4.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window4));
+    QVERIFY(Test::waitForWindowClosed(window4));
 }
 
 void ActivationTest::stackScreensHorizontally()

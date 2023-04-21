@@ -262,7 +262,7 @@ void TestPointerConstraints::testConfinedPointer()
     // and now unmap
     shellSurface.reset();
     surface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
     QCOMPARE(input()->pointer()->isConstrained(), false);
 }
 

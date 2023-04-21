@@ -435,7 +435,7 @@ void PointerInputTest::testUpdateFocusOnDecorationDestroy()
 
     // Destroy the window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void PointerInputTest::testModifierClickUnrestrictedMove_data()
@@ -1749,7 +1749,7 @@ void PointerInputTest::testDefaultInputRegion()
 
     // Destroy the test window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void PointerInputTest::testEmptyInputRegion()
@@ -1772,7 +1772,7 @@ void PointerInputTest::testEmptyInputRegion()
 
     // Destroy the test window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void PointerInputTest::testUnfocusedModifiers()
@@ -1836,7 +1836,7 @@ void PointerInputTest::testUnfocusedModifiers()
 
     // Destroy the Wayland window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(waylandWindow));
+    QVERIFY(Test::waitForWindowClosed(waylandWindow));
 }
 }
 

@@ -497,7 +497,7 @@ void KeyboardLayoutTest::testApplicationPolicy()
 
     shellSurface2.reset();
     surface2.reset();
-    QVERIFY(Test::waitForWindowDestroyed(c2));
+    QVERIFY(Test::waitForWindowClosed(c2));
     QVERIFY(!layoutChangedSpy.wait(1000));
     QCOMPARE(xkb->layoutName(), QStringLiteral("German (Neo 2)"));
 

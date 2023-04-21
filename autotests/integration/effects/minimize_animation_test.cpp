@@ -165,11 +165,11 @@ void MinimizeAnimationTest::testMinimizeUnminimize()
 
     // Destroy the panel.
     panelSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(panel));
+    QVERIFY(Test::waitForWindowClosed(panel));
 
     // Destroy the test window.
     surface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 WAYLANDTEST_MAIN(MinimizeAnimationTest)

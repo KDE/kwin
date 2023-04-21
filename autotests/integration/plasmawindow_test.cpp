@@ -231,9 +231,9 @@ void PlasmaWindowTest::testPopupWindowNoPlasmaWindow()
 
     // let's destroy the windows
     popupShellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(popupWindow));
+    QVERIFY(Test::waitForWindowClosed(popupWindow));
     parentShellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(parentClient));
+    QVERIFY(Test::waitForWindowClosed(parentClient));
 }
 
 void PlasmaWindowTest::testLockScreenNoPlasmaWindow()

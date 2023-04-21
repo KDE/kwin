@@ -177,7 +177,7 @@ void MaximizeAnimationTest::testMaximizeRestore()
 
     // Destroy the test window.
     surface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 WAYLANDTEST_MAIN(MaximizeAnimationTest)

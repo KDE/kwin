@@ -370,7 +370,7 @@ void GlobalShortcutsTest::testWaylandWindowShortcut()
 
     shellSurface.reset();
     surface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
     QTRY_VERIFY_WITH_TIMEOUT(workspace()->shortcutAvailable(seq), 500); // we need the try since KGlobalAccelPrivate::unregister is async
 }
 

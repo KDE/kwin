@@ -117,7 +117,7 @@ void LayerShellV1WindowTest::testOutput()
 
     // Destroy the window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void LayerShellV1WindowTest::testAnchor_data()
@@ -178,7 +178,7 @@ void LayerShellV1WindowTest::testAnchor()
 
     // Destroy the window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void LayerShellV1WindowTest::testMargins_data()
@@ -249,7 +249,7 @@ void LayerShellV1WindowTest::testMargins()
 
     // Destroy the window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void LayerShellV1WindowTest::testLayer_data()
@@ -290,7 +290,7 @@ void LayerShellV1WindowTest::testLayer()
 
     // Destroy the window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void LayerShellV1WindowTest::testPlacementArea_data()
@@ -334,7 +334,7 @@ void LayerShellV1WindowTest::testPlacementArea()
 
     // Destroy the window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void LayerShellV1WindowTest::testFill_data()
@@ -384,7 +384,7 @@ void LayerShellV1WindowTest::testFill()
 
     // Destroy the window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void LayerShellV1WindowTest::testStack()
@@ -433,9 +433,9 @@ void LayerShellV1WindowTest::testStack()
 
     // Destroy the window.
     shellSurface1.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window1));
+    QVERIFY(Test::waitForWindowClosed(window1));
     shellSurface2.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window2));
+    QVERIFY(Test::waitForWindowClosed(window2));
 }
 
 void LayerShellV1WindowTest::testFocus()
@@ -464,7 +464,7 @@ void LayerShellV1WindowTest::testFocus()
 
     // Destroy the window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void LayerShellV1WindowTest::testActivate_data()
@@ -510,7 +510,7 @@ void LayerShellV1WindowTest::testActivate()
 
     // Destroy the window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void LayerShellV1WindowTest::testUnmap()
@@ -535,7 +535,7 @@ void LayerShellV1WindowTest::testUnmap()
     // Unmap the layer surface.
     surface->attachBuffer(KWayland::Client::Buffer::Ptr());
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 
     // Notify the compositor that we want to map the layer surface.
     shellSurface->set_size(280, 124);
@@ -551,7 +551,7 @@ void LayerShellV1WindowTest::testUnmap()
 
     // Destroy the window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 } // namespace KWin

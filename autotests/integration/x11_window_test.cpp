@@ -640,7 +640,7 @@ void X11WindowTest::testFullscreenLayerWithActiveWaylandWindow()
     // close the window
     shellSurface.reset();
     surface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(waylandWindow));
+    QVERIFY(Test::waitForWindowClosed(waylandWindow));
     QTRY_VERIFY(window->isActive());
     QCOMPARE(window->layer(), ActiveLayer);
 
@@ -695,7 +695,7 @@ void X11WindowTest::testFocusInWithWaylandLastActiveWindow()
     // and close Wayland window again
     shellSurface.reset();
     surface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(waylandWindow));
+    QVERIFY(Test::waitForWindowClosed(waylandWindow));
 
     // and try to activate the x11 window through X11 api
     const auto cookie = xcb_set_input_focus_checked(c.get(), XCB_INPUT_FOCUS_NONE, windowId, XCB_CURRENT_TIME);
@@ -993,13 +993,13 @@ void X11WindowTest::testActivateFocusedWindow()
     xcb_set_input_focus(connection.get(), XCB_INPUT_FOCUS_POINTER_ROOT, windowId1, XCB_CURRENT_TIME);
     xcb_destroy_window(connection.get(), windowId2);
     xcb_flush(connection.get());
-    QVERIFY(Test::waitForWindowDestroyed(window2));
+    QVERIFY(Test::waitForWindowClosed(window2));
     QVERIFY(window1->isActive());
 
     // Destroy the first test window.
     xcb_destroy_window(connection.get(), windowId1);
     xcb_flush(connection.get());
-    QVERIFY(Test::waitForWindowDestroyed(window1));
+    QVERIFY(Test::waitForWindowClosed(window1));
 }
 
 void X11WindowTest::testReentrantMoveResize()
@@ -1050,7 +1050,7 @@ void X11WindowTest::testReentrantMoveResize()
     // Destroy the test window.
     xcb_destroy_window(c.get(), windowId);
     xcb_flush(c.get());
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 WAYLANDTEST_MAIN(X11WindowTest)

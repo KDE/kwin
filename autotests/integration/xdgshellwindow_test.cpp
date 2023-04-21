@@ -224,7 +224,7 @@ void TestXdgShellWindow::testMapUnmap()
     // Unmap the xdg_toplevel surface by committing a null buffer.
     surface->attachBuffer(KWayland::Client::Buffer::Ptr());
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 
     // Tell the compositor that we want to re-map the xdg_toplevel surface.
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
@@ -247,7 +247,7 @@ void TestXdgShellWindow::testMapUnmap()
 
     // Destroy the test window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void TestXdgShellWindow::testWindowOutputs()
@@ -398,7 +398,7 @@ void TestXdgShellWindow::testFullscreen()
 
     // Destroy the window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void TestXdgShellWindow::testUserCanSetFullscreen()
@@ -549,7 +549,7 @@ void TestXdgShellWindow::testMaximizedToFullscreen()
 
     // Destroy the window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void TestXdgShellWindow::testFullscreenMultipleOutputs()
@@ -1137,7 +1137,7 @@ void TestXdgShellWindow::testXdgWindowGeometryAttachBuffer()
     QCOMPARE(window->bufferGeometry().size(), QSize(100, 50));
 
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void TestXdgShellWindow::testXdgWindowGeometryAttachSubSurface()
@@ -1269,7 +1269,7 @@ void TestXdgShellWindow::testXdgWindowGeometryInteractiveResize()
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Resizing));
 
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void TestXdgShellWindow::testXdgWindowGeometryFullScreen()
@@ -1324,7 +1324,7 @@ void TestXdgShellWindow::testXdgWindowGeometryFullScreen()
     QCOMPARE(window->frameGeometry().size(), QSize(180, 80));
 
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void TestXdgShellWindow::testXdgWindowGeometryMaximize()
@@ -1379,7 +1379,7 @@ void TestXdgShellWindow::testXdgWindowGeometryMaximize()
     QCOMPARE(window->frameGeometry().size(), QSize(180, 80));
 
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void TestXdgShellWindow::testPointerInputTransform()
@@ -1434,7 +1434,7 @@ void TestXdgShellWindow::testPointerInputTransform()
 
     // Destroy the xdg-toplevel surface.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void TestXdgShellWindow::testReentrantSetFrameGeometry()
@@ -1462,7 +1462,7 @@ void TestXdgShellWindow::testReentrantSetFrameGeometry()
 
     // Destroy the xdg-toplevel surface.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void TestXdgShellWindow::testDoubleMaximize()
@@ -1609,7 +1609,7 @@ void TestXdgShellWindow::testMaximizeHorizontal()
     // Destroy the window.
     shellSurface.reset();
     surface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void TestXdgShellWindow::testMaximizeVertical()
@@ -1688,7 +1688,7 @@ void TestXdgShellWindow::testMaximizeVertical()
     // Destroy the window.
     shellSurface.reset();
     surface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void TestXdgShellWindow::testMaximizeFull()
@@ -1767,7 +1767,7 @@ void TestXdgShellWindow::testMaximizeFull()
     // Destroy the window.
     shellSurface.reset();
     surface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void TestXdgShellWindow::testSendMaximizedWindowToAnotherOutput()

@@ -157,7 +157,7 @@ void TestMaximized::testMaximizedPassedToDeco()
 
     // Destroy the test window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void TestMaximized::testInitiallyMaximizedBorderless()
@@ -207,7 +207,7 @@ void TestMaximized::testInitiallyMaximizedBorderless()
     // Destroy the window.
     shellSurface.reset();
     surface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 void TestMaximized::testBorderlessMaximizedWindow()
 {
@@ -295,7 +295,7 @@ void TestMaximized::testBorderlessMaximizedWindow()
 
     // Destroy the window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void TestMaximized::testMaximizedGainFocusAndBeActivated()
@@ -319,9 +319,9 @@ void TestMaximized::testMaximizedGainFocusAndBeActivated()
     QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window2, window}));
 
     xdgShellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
     xdgShellSurface2.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window2));
+    QVERIFY(Test::waitForWindowClosed(window2));
 }
 
 WAYLANDTEST_MAIN(TestMaximized)

@@ -139,7 +139,7 @@ void PopupOpenCloseAnimationTest::testAnimatePopups()
 
     // Destroy the main window.
     mainWindowSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(mainWindow));
+    QVERIFY(Test::waitForWindowClosed(mainWindow));
 }
 
 void PopupOpenCloseAnimationTest::testAnimateUserActionsPopup()
@@ -190,7 +190,7 @@ void PopupOpenCloseAnimationTest::testAnimateUserActionsPopup()
 
     // Destroy the test window.
     surface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void PopupOpenCloseAnimationTest::testAnimateDecorationTooltips()
@@ -253,7 +253,7 @@ void PopupOpenCloseAnimationTest::testAnimateDecorationTooltips()
 
     // Destroy the test window.
     surface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 WAYLANDTEST_MAIN(PopupOpenCloseAnimationTest)

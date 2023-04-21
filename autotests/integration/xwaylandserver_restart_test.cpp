@@ -105,7 +105,7 @@ void XwaylandServerRestartTest::testRestart()
     // Destroy the test window.
     xcb_destroy_window(c.get(), windowId);
     xcb_flush(c.get());
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 } // namespace KWin

@@ -233,7 +233,7 @@ void TestPlacement::testPlaceCentered()
     QCOMPARE(window->frameGeometry(), QRect(590, 487, 100, 50));
 
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void TestPlacement::testPlaceUnderMouse()
@@ -255,7 +255,7 @@ void TestPlacement::testPlaceUnderMouse()
     QCOMPARE(window->frameGeometry(), QRect(150, 275, 100, 50));
 
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void TestPlacement::testPlaceZeroCornered()
@@ -289,11 +289,11 @@ void TestPlacement::testPlaceZeroCornered()
     QCOMPARE(window3->size(), QSize(100, 50));
 
     shellSurface3.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window3));
+    QVERIFY(Test::waitForWindowClosed(window3));
     shellSurface2.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window2));
+    QVERIFY(Test::waitForWindowClosed(window2));
     shellSurface1.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window1));
+    QVERIFY(Test::waitForWindowClosed(window1));
 }
 
 void TestPlacement::testPlaceRandom()
@@ -327,11 +327,11 @@ void TestPlacement::testPlaceRandom()
     QCOMPARE(window3->size(), QSize(100, 50));
 
     shellSurface3.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window3));
+    QVERIFY(Test::waitForWindowClosed(window3));
     shellSurface2.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window2));
+    QVERIFY(Test::waitForWindowClosed(window2));
     shellSurface1.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window1));
+    QVERIFY(Test::waitForWindowClosed(window1));
 }
 
 void TestPlacement::testFullscreen()
@@ -401,11 +401,11 @@ void TestPlacement::testCascadeIfCovering()
     QCOMPARE(window3->size(), QSize(100, 50));
 
     shellSurface3.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window3));
+    QVERIFY(Test::waitForWindowClosed(window3));
     shellSurface2.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window2));
+    QVERIFY(Test::waitForWindowClosed(window2));
     shellSurface1.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window1));
+    QVERIFY(Test::waitForWindowClosed(window1));
 }
 
 void TestPlacement::testCascadeIfCoveringIgnoreNonCovering()
@@ -432,9 +432,9 @@ void TestPlacement::testCascadeIfCoveringIgnoreNonCovering()
     QCOMPARE(window2->size(), QSize(50, 50));
 
     shellSurface2.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window2));
+    QVERIFY(Test::waitForWindowClosed(window2));
     shellSurface1.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window1));
+    QVERIFY(Test::waitForWindowClosed(window1));
 }
 
 void TestPlacement::testCascadeIfCoveringIgnoreOutOfArea()
@@ -461,9 +461,9 @@ void TestPlacement::testCascadeIfCoveringIgnoreOutOfArea()
     QCOMPARE(window2->size(), QSize(1280, 1024));
 
     shellSurface2.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window2));
+    QVERIFY(Test::waitForWindowClosed(window2));
     shellSurface1.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window1));
+    QVERIFY(Test::waitForWindowClosed(window1));
 }
 
 void TestPlacement::testCascadeIfCoveringIgnoreAlreadyCovered()
@@ -496,11 +496,11 @@ void TestPlacement::testCascadeIfCoveringIgnoreAlreadyCovered()
     QCOMPARE(window3->size(), QSize(100, 50));
 
     shellSurface3.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window3));
+    QVERIFY(Test::waitForWindowClosed(window3));
     shellSurface2.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window2));
+    QVERIFY(Test::waitForWindowClosed(window2));
     shellSurface1.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window1));
+    QVERIFY(Test::waitForWindowClosed(window1));
 }
 
 WAYLANDTEST_MAIN(TestPlacement)

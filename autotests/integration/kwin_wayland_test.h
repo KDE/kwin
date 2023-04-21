@@ -670,7 +670,7 @@ Window *renderAndWaitForShown(KWayland::Client::Surface *surface, const QImage &
 /**
  * Waits for the @p window to be destroyed.
  */
-bool waitForWindowDestroyed(Window *window);
+bool waitForWindowClosed(Window *window);
 
 /**
  * Locks the screen and waits till the screen is locked.

@@ -170,7 +170,7 @@ void InputMethodTest::testOpenClose()
 
     // Destroy the test window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void InputMethodTest::testEnableDisableV3()
@@ -257,7 +257,7 @@ void InputMethodTest::testEnableActive()
 
     // Destroy the test window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void InputMethodTest::testHidePanel()
@@ -300,7 +300,7 @@ void InputMethodTest::testHidePanel()
 
     // Destroy the test window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void InputMethodTest::testSwitchFocusedSurfaces()
@@ -347,7 +347,7 @@ void InputMethodTest::testSwitchFocusedSurfaces()
     // Destroy the test window.
     for (int i = 0; i < windows.count(); ++i) {
         delete toplevels[i];
-        QVERIFY(Test::waitForWindowDestroyed(windows[i]));
+        QVERIFY(Test::waitForWindowClosed(windows[i]));
     }
 }
 
@@ -419,7 +419,7 @@ void InputMethodTest::testV2V3SameClient()
     QVERIFY(!kwinApp()->inputMethod()->isActive());
 
     toplevel.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void InputMethodTest::testV3Styling()

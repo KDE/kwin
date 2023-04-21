@@ -269,7 +269,7 @@ void TestXdgShellWindowRules::destroyTestWindow()
     m_toplevelConfigureRequestedSpy.reset();
     m_shellSurface.reset();
     m_surface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(m_window));
+    QVERIFY(Test::waitForWindowClosed(m_window));
 }
 
 template<typename T>

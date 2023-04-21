@@ -141,9 +141,9 @@ void MinimizeAllScriptTest::testMinimizeUnminimize()
 
     // Destroy test windows.
     shellSurface2.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window2));
+    QVERIFY(Test::waitForWindowClosed(window2));
     shellSurface1.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window1));
+    QVERIFY(Test::waitForWindowClosed(window1));
 }
 
 }

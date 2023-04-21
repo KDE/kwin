@@ -325,9 +325,9 @@ void StrutsTest::testWaylandMobilePanel()
 
     // Destroy test windows.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
     shellSurface2.reset();
-    QVERIFY(Test::waitForWindowDestroyed(c1));
+    QVERIFY(Test::waitForWindowClosed(c1));
 }
 
 void StrutsTest::testX11Struts_data()

@@ -174,7 +174,7 @@ void MoveResizeWindowTest::testMove()
     QCOMPARE(window->isInteractiveMove(), false);
     QVERIFY(workspace()->moveResizeWindow() == nullptr);
     surface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void MoveResizeWindowTest::testResize()
@@ -297,7 +297,7 @@ void MoveResizeWindowTest::testResize()
 
     // Destroy the client.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void MoveResizeWindowTest::testPackTo_data()
@@ -333,7 +333,7 @@ void MoveResizeWindowTest::testPackTo()
     QMetaObject::invokeMethod(workspace(), methodCall.toLocal8Bit().constData());
     QTEST(window->frameGeometry(), "expectedGeometry");
     surface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void MoveResizeWindowTest::testPackAgainstClient_data()
@@ -505,7 +505,7 @@ void MoveResizeWindowTest::testPointerMoveEnd()
     Test::pointerButtonReleased(additionalButton, timestamp++);
     QVERIFY(!window->isInteractiveMove());
     surface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 void MoveResizeWindowTest::testClientSideMove()
 {
@@ -585,7 +585,7 @@ void MoveResizeWindowTest::testPlasmaShellSurfaceMovable()
     QTEST(window->isMovableAcrossScreens(), "movableAcrossScreens");
     QTEST(window->isResizable(), "resizable");
     surface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void MoveResizeWindowTest::testNetMove()
@@ -1028,7 +1028,7 @@ void MoveResizeWindowTest::testDestroyMoveClient()
     // Let's pretend that the client crashed.
     shellSurface.reset();
     surface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
     QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 1);
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
 }
@@ -1062,7 +1062,7 @@ void MoveResizeWindowTest::testDestroyResizeClient()
     // Let's pretend that the client crashed.
     shellSurface.reset();
     surface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
     QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 1);
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
 }

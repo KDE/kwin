@@ -93,7 +93,7 @@ void TestIdleInhibition::testInhibit()
     QCOMPARE(input()->idleInhibitors(), QList<Window *>{window});
 
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
     QCOMPARE(input()->idleInhibitors(), QList<Window *>{});
 }
 
@@ -142,7 +142,7 @@ void TestIdleInhibition::testDontInhibitWhenNotOnCurrentDesktop()
 
     // Destroy the test window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
     QCOMPARE(input()->idleInhibitors(), QList<Window *>{});
 }
 
@@ -178,7 +178,7 @@ void TestIdleInhibition::testDontInhibitWhenMinimized()
 
     // Destroy the test window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
     QCOMPARE(input()->idleInhibitors(), QList<Window *>{});
 }
 
@@ -218,7 +218,7 @@ void TestIdleInhibition::testDontInhibitWhenUnmapped()
     // Unmap the window.
     surface->attachBuffer(KWayland::Client::Buffer::Ptr());
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 
     // The surface is no longer visible, so the compositor doesn't have to honor the
     // idle inhibitor object.
@@ -245,7 +245,7 @@ void TestIdleInhibition::testDontInhibitWhenUnmapped()
 
     // Destroy the test window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
     QCOMPARE(input()->idleInhibitors(), QList<Window *>{});
 }
 
@@ -294,7 +294,7 @@ void TestIdleInhibition::testDontInhibitWhenLeftCurrentDesktop()
 
     // Destroy the test window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
     QCOMPARE(input()->idleInhibitors(), QList<Window *>{});
 }
 

@@ -122,11 +122,11 @@ void TabBoxTest::testCapsLock()
     QCOMPARE(workspace()->activeWindow(), c2);
 
     surface3.reset();
-    QVERIFY(Test::waitForWindowDestroyed(c3));
+    QVERIFY(Test::waitForWindowClosed(c3));
     surface2.reset();
-    QVERIFY(Test::waitForWindowDestroyed(c2));
+    QVERIFY(Test::waitForWindowClosed(c2));
     surface1.reset();
-    QVERIFY(Test::waitForWindowDestroyed(c1));
+    QVERIFY(Test::waitForWindowClosed(c1));
 }
 
 void TabBoxTest::testMoveForward()
@@ -171,11 +171,11 @@ void TabBoxTest::testMoveForward()
     QCOMPARE(workspace()->activeWindow(), c2);
 
     surface3.reset();
-    QVERIFY(Test::waitForWindowDestroyed(c3));
+    QVERIFY(Test::waitForWindowClosed(c3));
     surface2.reset();
-    QVERIFY(Test::waitForWindowDestroyed(c2));
+    QVERIFY(Test::waitForWindowClosed(c2));
     surface1.reset();
-    QVERIFY(Test::waitForWindowDestroyed(c1));
+    QVERIFY(Test::waitForWindowClosed(c1));
 }
 
 void TabBoxTest::testMoveBackward()
@@ -224,11 +224,11 @@ void TabBoxTest::testMoveBackward()
     QCOMPARE(workspace()->activeWindow(), c1);
 
     surface3.reset();
-    QVERIFY(Test::waitForWindowDestroyed(c3));
+    QVERIFY(Test::waitForWindowClosed(c3));
     surface2.reset();
-    QVERIFY(Test::waitForWindowDestroyed(c2));
+    QVERIFY(Test::waitForWindowClosed(c2));
     surface1.reset();
-    QVERIFY(Test::waitForWindowDestroyed(c1));
+    QVERIFY(Test::waitForWindowClosed(c1));
 }
 
 WAYLANDTEST_MAIN(TabBoxTest)

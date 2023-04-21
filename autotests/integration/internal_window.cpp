@@ -399,7 +399,7 @@ void InternalWindowTest::testKeyboardTriggersLeave()
 
     // Destroy the test window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void InternalWindowTest::testTouch()

@@ -351,7 +351,7 @@ void TouchInputTest::testUpdateFocusOnDecorationDestroy()
 
     // Destroy the window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(window));
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void TouchInputTest::testGestureDetection()
