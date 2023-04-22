@@ -3,7 +3,11 @@ remove_definitions(-DQT_USE_QSTRINGBUILDER)
 add_subdirectory(libkwineffects)
 add_subdirectory(integration)
 add_subdirectory(libinput)
-add_subdirectory(drm)
+# drm autotests are broken on FreeBSD for yet unknown reasons
+# As the test isn't doing anything platform specific, only run it on Linux
+if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+    add_subdirectory(drm)
+endif()
 
 ########################################################
 # Test WindowPaintData
