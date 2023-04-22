@@ -171,7 +171,7 @@ private:
 };
 
 /**
- * The KWinQuickScene class extends KWinQuickView
+ * The OffscreenQuickScene class extends OffscreenQuickView
  * adding QML support. This will represent a context
  * powered by an engine
  */
