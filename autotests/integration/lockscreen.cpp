@@ -174,10 +174,6 @@ std::pair<Window *, std::unique_ptr<KWayland::Client::Surface>> LockScreenTest::
 
 void LockScreenTest::initTestCase()
 {
-    if (!Test::renderNodeAvailable()) {
-        QSKIP("no render node available");
-        return;
-    }
     qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::ElectricBorder>("ElectricBorder");
 
@@ -185,7 +181,6 @@ void LockScreenTest::initTestCase()
     QVERIFY(waylandServer()->init(s_socketName));
     QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(QVector<QRect>, QVector<QRect>() << QRect(0, 0, 1280, 1024) << QRect(1280, 0, 1280, 1024)));
 
-    qputenv("KWIN_COMPOSE", QByteArrayLiteral("O2"));
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
     const auto outputs = workspace()->outputs();
@@ -193,8 +188,6 @@ void LockScreenTest::initTestCase()
     QCOMPARE(outputs[0]->geometry(), QRect(0, 0, 1280, 1024));
     QCOMPARE(outputs[1]->geometry(), QRect(1280, 0, 1280, 1024));
     setenv("QT_QPA_PLATFORM", "wayland", true);
-
-    QCOMPARE(Compositor::self()->backend()->compositingType(), KWin::OpenGLCompositing);
 }
 
 void LockScreenTest::init()
@@ -404,10 +397,24 @@ void LockScreenTest::testKeyboard()
     QCOMPARE(keyChangedSpy.at(3).at(1).value<KWayland::Client::Keyboard::KeyState>(), KWayland::Client::Keyboard::KeyState::Released);
 }
 
+class TestObject : public QObject
+{
+    Q_OBJECT
+
+public Q_SLOTS:
+    bool callback(ElectricBorder border)
+    {
+        return true;
+    }
+};
+
 void LockScreenTest::testScreenEdge()
 {
     QSignalSpy screenEdgeSpy(workspace()->screenEdges(), &ScreenEdges::approaching);
     QCOMPARE(screenEdgeSpy.count(), 0);
+
+    TestObject callback;
+    workspace()->screenEdges()->reserve(ElectricTopLeft, &callback, "callback");
 
     quint32 timestamp = 1;
     MOTION(QPoint(5, 5));
