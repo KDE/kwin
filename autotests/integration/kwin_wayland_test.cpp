@@ -53,6 +53,7 @@ WaylandTestApplication::WaylandTestApplication(OperationMode mode, int &argc, ch
 #if KWIN_BUILD_ACTIVITIES
     setUseKActivities(false);
 #endif
+    qputenv("GBM_ALWAYS_SOFTWARE", QByteArrayLiteral("true"));
     qputenv("KWIN_COMPOSE", QByteArrayLiteral("Q"));
     qputenv("XDG_CURRENT_DESKTOP", QByteArrayLiteral("KDE"));
     qunsetenv("XKB_DEFAULT_RULES");

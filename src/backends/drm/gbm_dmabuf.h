@@ -13,6 +13,7 @@
 
 #include <drm_fourcc.h>
 #include <gbm.h>
+#include <string.h>
 
 namespace KWin
 {
@@ -28,16 +29,25 @@ inline DmaBufAttributes dmaBufAttributesForBo(gbm_bo *bo)
 
 #if HAVE_GBM_BO_GET_FD_FOR_PLANE
     for (int i = 0; i < attributes.planeCount; ++i) {
+	errno = 0;
         attributes.fd[i] = FileDescriptor{gbm_bo_get_fd_for_plane(bo, i)};
+        if (!attributes.fd[i].isValid()) {
+            qDebug() << "invalid fd" << i << strerror(errno);
+        }
         attributes.offset[i] = gbm_bo_get_offset(bo, i);
         attributes.pitch[i] = gbm_bo_get_stride_for_plane(bo, i);
     }
 #else
     if (attributes.planeCount > 1) {
+        qDebug() << "aa";
         return attributes;
     }
 
+    errno = 0;
     attributes.fd[0] = FileDescriptor{gbm_bo_get_fd(bo)};
+    if (!attributes.fd[0].isValid()) {
+        qDebug() << "invalid fd[0]" << strerror(errno);
+    }
     attributes.offset[0] = gbm_bo_get_offset(bo, 0);
     attributes.pitch[0] = gbm_bo_get_stride_for_plane(bo, 0);
 #endif

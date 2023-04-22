@@ -15,6 +15,7 @@
 #include "utils/common.h"
 #include "utils/egl_context_attribute_builder.h"
 
+#include <QFile>
 #include <QOpenGLContext>
 #include <drm_fourcc.h>
 
@@ -188,6 +189,15 @@ bool EglContext::isValid() const
 
 std::shared_ptr<GLTexture> EglContext::importDmaBufAsTexture(const DmaBufAttributes &attributes) const
 {
+    QFile f("/proc/meminfo");
+    if (f.open(QFile::Text | QFile::ReadOnly)) {
+        const auto lines = f.readAll().split('\n');
+        for (const auto &line : lines) {
+            qDebug() << line;
+        }
+    } else {
+        qDebug() << "failed to open /proc/meminfo";
+    }
     EGLImageKHR image = m_display->importDmaBufAsImage(attributes);
     if (image != EGL_NO_IMAGE_KHR) {
         return std::make_shared<EGLImageTexture>(m_display->handle(), image, GL_RGBA8, QSize(attributes.width, attributes.height));

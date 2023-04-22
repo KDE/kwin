@@ -10,12 +10,15 @@
 #include <drm_fourcc.h>
 #include <gbm.h>
 
+#include "gbm_driint.h"
+
 namespace KWin
 {
 
 GbmGraphicsBufferAllocator::GbmGraphicsBufferAllocator(gbm_device *device)
     : m_gbmDevice(device)
 {
+    qDebug() << "gbm driver name:" << gbm_dri_device(device)->driver_name;
 }
 
 GbmGraphicsBufferAllocator::~GbmGraphicsBufferAllocator()
@@ -46,6 +49,10 @@ GbmGraphicsBuffer *GbmGraphicsBufferAllocator::allocate(const QSize &size, uint3
     if (!bo) {
         return nullptr;
     }
+
+    qDebug() << "gbm->image:" << gbm_dri_bo(bo)->image;
+    qDebug() << "gbm->handle:" << gbm_dri_bo(bo)->handle;
+    qDebug() << "gbm->size:" << gbm_dri_bo(bo)->size;
 
     return new GbmGraphicsBuffer(bo, size, format);
 }

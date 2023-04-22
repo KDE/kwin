@@ -61,6 +61,9 @@ VirtualBackend::VirtualBackend(QObject *parent)
     m_drmFileDescriptor = findRenderDevice();
     if (m_drmFileDescriptor.isValid()) {
         m_gbmDevice = gbm_create_device(m_drmFileDescriptor.get());
+        if (m_gbmDevice) {
+            qDebug() << "gbm backend:" << gbm_device_get_backend_name(m_gbmDevice);
+        }
     }
 }
 
