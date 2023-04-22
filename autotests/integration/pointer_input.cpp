@@ -1780,6 +1780,9 @@ void PointerInputTest::testUnfocusedModifiers()
     // This test verifies that a window under the cursor gets modifier events,
     // even if it isn't focused
 
+    QVERIFY(Test::waylandSeat()->hasKeyboard());
+    std::unique_ptr<KWayland::Client::Keyboard> keyboard(Test::waylandSeat()->createKeyboard());
+
     // create a Wayland window
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(surface != nullptr);
@@ -1788,8 +1791,6 @@ void PointerInputTest::testUnfocusedModifiers()
     Window *waylandWindow = Test::renderAndWaitForShown(surface.get(), QSize(10, 10), Qt::blue);
     QVERIFY(waylandWindow);
     waylandWindow->move(QPoint(0, 0));
-    Test::waitForWaylandKeyboard();
-    std::unique_ptr<KWayland::Client::Keyboard> keyboard(Test::waylandSeat()->createKeyboard());
 
     // Create an xcb window.
     Test::XcbConnectionPtr c = Test::createX11Connection();
@@ -1822,7 +1823,7 @@ void PointerInputTest::testUnfocusedModifiers()
 
     QSignalSpy spy(keyboard.get(), &KWayland::Client::Keyboard::modifiersChanged);
     Test::keyboardKeyPressed(KEY_LEFTCTRL, 1);
-    QVERIFY(spy.wait(50));
+    QVERIFY(spy.wait());
     QCOMPARE(spy.last().at(0).toInt(), XCB_MOD_MASK_CONTROL);
 
     Test::keyboardKeyReleased(KEY_LEFTCTRL, 2);
