@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1649839 2023-04-21 02:31:10Z scripty $
+# $Id: kwin.po 1649912 2023-04-22 02:44:07Z scripty $
 # $Source$
 #
 #
@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-20 02:25+0000\n"
-"PO-Revision-Date: 2023-04-20 11:25+0200\n"
+"POT-Creation-Date: 2023-04-22 02:30+0000\n"
+"PO-Revision-Date: 2023-04-21 11:20+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100>=3 && n"
 "%100<=4 ? 2 : 3);\n"
 "Translator: Andrej Mernik <andrejm@ubuntu.si>\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1963,7 +1963,7 @@ msgstr "Nastavite prosojnost menija neodvisno"
 #: effects/translucency/package/contents/ui/config.ui:285
 #, kde-format
 msgid "Dropdown menus:"
-msgstr "Spuščeni meniji"
+msgstr "Spuščeni meniji:"
 
 #. i18n: ectx: property (text), widget (QLabel, popupmenus_label)
 #: effects/translucency/package/contents/ui/config.ui:329
@@ -2188,7 +2188,7 @@ msgstr "Miškina kazalka:"
 #: effects/zoom/zoom_config.ui:99
 #, kde-format
 msgid "Visibility of the mouse-pointer."
-msgstr "Vidnost miškine kazalke:"
+msgstr "Vidnost miškine kazalke."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
 #: effects/zoom/zoom_config.ui:103
@@ -2915,7 +2915,7 @@ msgstr "Neveljavna regija"
 msgid "Region outside the workspace"
 msgstr "Regija izven delovnega prostora"
 
-#: plugins/screencast/screencaststream.cpp:344
+#: plugins/screencast/screencaststream.cpp:343
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Kreiranje toka PipeWire ni uspelo"

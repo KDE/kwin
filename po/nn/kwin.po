@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-20 02:25+0000\n"
+"POT-Creation-Date: 2023-04-22 02:30+0000\n"
 "PO-Revision-Date: 2023-03-11 23:29+0100\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
@@ -1433,7 +1433,7 @@ msgstr ""
 #: effects/invert/invert.cpp:56
 #, kde-format
 msgid "Invert Screen Colors"
-msgstr ""
+msgstr "Snu om skjermfargar"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_FadeToBlack)
 #: effects/login/package/contents/ui/config.ui:17
@@ -2999,7 +2999,7 @@ msgstr ""
 msgid "Region outside the workspace"
 msgstr ""
 
-#: plugins/screencast/screencaststream.cpp:344
+#: plugins/screencast/screencaststream.cpp:343
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr ""
@@ -4164,11 +4164,9 @@ msgstr ""
 "Derfor er det ikkje mogleg å manuelt byta skjerm."
 
 #: utils/edid.cpp:244
-#, fuzzy, kde-format
-#| msgctxt "The input device of the event is not known"
-#| msgid "Unknown"
+#, kde-format
 msgid "unknown"
-msgstr "Ukjend"
+msgstr "ukjend"
 
 #: virtualdesktops.cpp:692 virtualdesktops.cpp:763
 #, kde-format
@@ -4244,15 +4242,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
-
-#~ msgctxt "Error message"
-#~ msgid "Could not locate package metadata"
-#~ msgstr "Fann ikkje pakke-metadata"
-
-#~ msgctxt "Required file does not exist"
-#~ msgid "%1 does not contain a valid metadata.json file"
-#~ msgstr "%1 inneheld ikkje ei gyldig metadata.json-fil"
-
-#~ msgctxt "Required file does not exist"
-#~ msgid "%1 does not exist"
-#~ msgstr "%1 finst ikkje"

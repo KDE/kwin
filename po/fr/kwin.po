@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-20 02:25+0000\n"
+"POT-Creation-Date: 2023-04-22 02:30+0000\n"
 "PO-Revision-Date: 2023-03-03 07:13+0100\n"
 "Last-Translator: Xavier BESNARD <xavier.besnard]neuf.fr>\n"
 "Language-Team: fr\n"
@@ -1460,8 +1460,7 @@ msgid "Toggle Invert Effect on Window"
 msgstr "Activer/désactiver l'effet d'inversion sur les fenêtres"
 
 #: effects/invert/invert.cpp:56
-#, fuzzy, kde-format
-#| msgid "Invert Screen Colors"
+#, kde-format
 msgid "Invert Screen Colors"
 msgstr "Inverser les couleurs de l'écran"
 
@@ -3062,7 +3061,7 @@ msgstr ""
 msgid "Region outside the workspace"
 msgstr ""
 
-#: plugins/screencast/screencaststream.cpp:344
+#: plugins/screencast/screencaststream.cpp:343
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr ""
@@ -4232,8 +4231,7 @@ msgstr ""
 "Cependant, il n'est pas possible de changer d'écran explicitement."
 
 #: utils/edid.cpp:244
-#, fuzzy, kde-format
-#| msgid "unknown"
+#, kde-format
 msgid "unknown"
 msgstr "inconnu"
 

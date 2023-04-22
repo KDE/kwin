@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-13 02:16+0000\n"
-"PO-Revision-Date: 2023-04-09 08:51+0200\n"
+"PO-Revision-Date: 2023-04-21 07:14+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -538,7 +538,7 @@ msgstr "დავალებების პანელის გამოტ�
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
-msgstr ""
+msgstr "აკონტროლებს, გამოჩნდება თუ არა ფანჯარა ამოცანების მმართველში."
 
 #: rulesmodel.cpp:585
 #, kde-format
@@ -551,6 +551,8 @@ msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the Virtual Desktop manager."
 msgstr ""
+"აკონტროლებს, გამოჩნდება თუ არა ფანჯარა ვირტუალური სამუშაო მაგიდების "
+"მმართველში."
 
 #: rulesmodel.cpp:591
 #, kde-format
@@ -564,6 +566,8 @@ msgid ""
 "Controls whether or not the window appears in the <shortcut>Alt+Tab</"
 "shortcut> window list."
 msgstr ""
+"აკონტროლებს, გამოჩნდება თუ არა ფანჯარა <shortcut>Alt+Tab</shortcut> "
+"ფანჯრების სიაში."
 
 #: rulesmodel.cpp:597
 #, kde-format
@@ -661,7 +665,7 @@ msgstr "ფოკუსის მიღება"
 #: rulesmodel.cpp:682
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
-msgstr ""
+msgstr "აკონტროლებს, გაუჩნდება დაწკაპუნებისას ფანჯარას ფოკუსი, თუ არა."
 
 #: rulesmodel.cpp:686
 #, kde-format
