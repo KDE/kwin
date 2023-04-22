@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-18 02:47+0000\n"
-"PO-Revision-Date: 2023-04-20 09:30+0200\n"
+"PO-Revision-Date: 2023-04-21 11:39+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -27,7 +27,7 @@ msgstr ""
 #: blur/blur_config.ui:17
 #, kde-format
 msgid "Blur strength:"
-msgstr "Moč zameglevanja:"
+msgstr "Moč zamegljevanja:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
