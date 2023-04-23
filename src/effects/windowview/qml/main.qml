@@ -7,6 +7,7 @@
 
 import QtQuick 2.15
 import QtQuick.Layouts 1.15
+import QtQuick.Window 2.15
 import QtGraphicalEffects 1.15
 import org.kde.kwin 3.0 as KWinComponents
 import org.kde.kwin.private.effects 1.0
@@ -59,6 +60,13 @@ Item {
         let view = effect.getView(Qt.BottomEdge)
         if (view) {
             effect.activateView(view)
+        }
+    }
+
+    Window.onWindowChanged: {
+        if (Window.window) {
+            Window.window.LayoutMirroring.enabled = Qt.binding(() => Qt.application.layoutDirection === Qt.RightToLeft);
+            Window.window.LayoutMirroring.childrenInherit = true;
         }
     }
 
