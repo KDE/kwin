@@ -9,15 +9,15 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-13 02:16+0000\n"
-"PO-Revision-Date: 2023-02-27 20:38+0000\n"
+"PO-Revision-Date: 2023-04-22 10:51+0100\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
-"Language-Team: British English <kde-l10n-en_gb@kde.org>\n"
+"Language-Team: British English\n"
 "Language: en_GB\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 21.12.3\n"
+"X-Generator: Lokalize 23.03.70\n"
 
 #: kcmrules.cpp:226
 #, kde-format
@@ -504,6 +504,12 @@ msgid ""
 "<interface>Fullscreen</interface> states.<nl/><nl/>Note that the position "
 "can also be used to map to a different <interface>Screen</interface>"
 msgstr ""
+"Some applications can set their own geometry, overriding the window manager "
+"preferences. Setting this property overrides their placement requests.<nl/"
+"><nl/>This affects <interface>Size</interface> and <interface>Position</"
+"interface> but not <interface>Maximised</interface> or "
+"<interface>Fullscreen</interface> states.<nl/><nl/>Note that the position "
+"can also be used to map to a different <interface>Screen</interface>"
 
 #: rulesmodel.cpp:546
 #, kde-format
@@ -521,13 +527,7 @@ msgid "Obey geometry restrictions"
 msgstr "Obey geometry restrictions"
 
 #: rulesmodel.cpp:558
-#, fuzzy, kde-kuit-format
-#| msgid ""
-#| "Eg. terminals or video players can ask to keep a certain aspect ratio\n"
-#| "or only grow by values larger than one\n"
-#| "(eg. by the dimensions of one character).\n"
-#| "This may be pointless and the restriction prevents arbitrary dimensions\n"
-#| "like your complete screen area."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Some apps like video players or terminals can ask KWin to constrain them to "
@@ -536,11 +536,11 @@ msgid ""
 "windows to be resized to arbitrary sizes.<nl/><nl/>This can be helpful for "
 "windows that can't quite fit the full screen area when maximized."
 msgstr ""
-"Eg. terminals or video players can ask to keep a certain aspect ratio\n"
-"or only grow by values larger than one\n"
-"(eg. by the dimensions of one character).\n"
-"This may be pointless and the restriction prevents arbitrary dimensions\n"
-"like your complete screen area."
+"Some apps like video players or terminals can ask KWin to constrain them to "
+"certain aspect ratios or only grow by values larger than the dimensions of "
+"one character. Use this property to ignore such restrictions and allow those "
+"windows to be resized to arbitrary sizes.<nl/><nl/>This can be helpful for "
+"windows that can't quite fit the full screen area when maximised."
 
 #: rulesmodel.cpp:569
 #, kde-format
@@ -567,7 +567,7 @@ msgstr "Skip taskbar"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
-msgstr ""
+msgstr "Controls whether or not the window appears in the Task Manager."
 
 #: rulesmodel.cpp:585
 #, kde-format
@@ -580,6 +580,7 @@ msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the Virtual Desktop manager."
 msgstr ""
+"Controls whether or not the window appears in the Virtual Desktop manager."
 
 #: rulesmodel.cpp:591
 #, kde-format
@@ -593,6 +594,8 @@ msgid ""
 "Controls whether or not the window appears in the <shortcut>Alt+Tab</"
 "shortcut> window list."
 msgstr ""
+"Controls whether or not the window appears in the <shortcut>Alt+Tab</"
+"shortcut> window list."
 
 #: rulesmodel.cpp:597
 #, kde-format
@@ -652,6 +655,22 @@ msgid ""
 "currently-focused window.</item><item><emphasis strong='true'>Extreme:</"
 "emphasis> The window will never be raised and focused.</item></list>"
 msgstr ""
+"KWin tries to prevent windows that were opened without direct user action "
+"from raising themselves and taking focus while you're currently interacting "
+"with another window. This property can be used to change the level of focus "
+"stealing prevention applied to individual windows and apps.<nl/><nl/>Here's "
+"what will happen to a window opened without your direct action at each level "
+"of focus stealing prevention:<nl/><list><item><emphasis strong='true'>None:</"
+"emphasis> The window will be raised and focused.</item><item><emphasis "
+"strong='true'>Low:</emphasis> Focus stealing prevention will be applied, but "
+"in the case of a situation KWin considers ambiguous, the window will be "
+"raised and focused.</item><item><emphasis strong='true'>Normal:</emphasis> "
+"Focus stealing prevention will be applied, but  in the case of a situation "
+"KWin considers ambiguous, the window will <emphasis>not</emphasis> be raised "
+"and focused.</item><item><emphasis strong='true'>High:</emphasis> The window "
+"will only be raised and focused if it belongs to the same app as the "
+"currently-focused window.</item><item><emphasis strong='true'>Extreme:</"
+"emphasis> The window will never be raised and focused.</item></list>"
 
 #: rulesmodel.cpp:652
 #, kde-format
@@ -681,6 +700,24 @@ msgid ""
 "emphasis> Newly-opened windows never raise themselves and take focus.</"
 "item></list>"
 msgstr ""
+"This property controls the focus protection level of the currently active "
+"window. It is used to override the focus stealing prevention applied to new "
+"windows that are opened without your direct action.<nl/><nl/>Here's what "
+"happens to new windows that are opened without your direct action at each "
+"level of focus protection while the window with this property applied to it "
+"has focus:<nl/><list><item><emphasis strong='true'>None</emphasis>: Newly-"
+"opened windows always raise themselves and take focus.</item><item><emphasis "
+"strong='true'>Low:</emphasis> Focus stealing prevention will be applied to "
+"the newly-opened window, but in the case of a situation KWin considers "
+"ambiguous, the window will be raised and focused.</item><item><emphasis "
+"strong='true'>Normal:</emphasis> Focus stealing prevention will be applied "
+"to the newly-opened window, but in the case of a situation KWin considers "
+"ambiguous, the window will <emphasis>not</emphasis> be raised and focused.</"
+"item><item><emphasis strong='true'>High:</emphasis> Newly-opened windows "
+"will only raise themselves and take focus if they belongs to the same app as "
+"the currently-focused window.</item><item><emphasis strong='true'>Extreme:</"
+"emphasis> Newly-opened windows never raise themselves and take focus.</"
+"item></list>"
 
 #: rulesmodel.cpp:680
 #, kde-format
@@ -690,7 +727,7 @@ msgstr "Accept focus"
 #: rulesmodel.cpp:682
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
-msgstr ""
+msgstr "Controls whether or not the window becomes focused when clicked."
 
 #: rulesmodel.cpp:686
 #, kde-format
@@ -708,6 +745,12 @@ msgid ""
 "use any other global shortcuts such as <shortcut>Alt+Space</shortcut> to "
 "activate KRunner."
 msgstr ""
+"Use this property to prevent global keyboard shortcuts from working while "
+"the window is focused. This can be useful for apps like emulators or virtual "
+"machines that handle some of the same shortcuts themselves.<nl/><nl/>Note "
+"that you won't be able to <shortcut>Alt+Tab</shortcut> out of the window or "
+"use any other global shortcuts such as <shortcut>Alt+Space</shortcut> to "
+"activate KRunner."
 
 #: rulesmodel.cpp:698
 #, kde-format

@@ -1464,8 +1464,7 @@ msgid "Toggle Invert Effect on Window"
 msgstr ""
 
 #: effects/invert/invert.cpp:56
-#, fuzzy, kde-format
-#| msgid "Invert Screen Colors"
+#, kde-format
 msgid "Invert Screen Colors"
 msgstr "Inverter as cores da pantalla"
 
@@ -4296,8 +4295,7 @@ msgstr ""
 "Polo tanto non se pode cambiar explicitamente a unha pantalla."
 
 #: utils/edid.cpp:244
-#, fuzzy, kde-format
-#| msgid "unknown"
+#, kde-format
 msgid "unknown"
 msgstr "descoñecido"
 
