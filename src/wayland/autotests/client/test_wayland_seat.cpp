@@ -53,7 +53,7 @@ class WaylandSyncPoint : public QObject
     Q_OBJECT
 
 public:
-    explicit WaylandSyncPoint(wl_display *display)
+    explicit WaylandSyncPoint(KWayland::Client::ConnectionThread *connection, KWayland::Client::EventQueue *eventQueue)
     {
         static const wl_callback_listener listener = {
             .done = [](void *data, wl_callback *callback, uint32_t callback_data) {
@@ -62,7 +62,8 @@ public:
             },
         };
 
-        m_callback = wl_display_sync(display);
+        m_callback = wl_display_sync(connection->display());
+        eventQueue->addProxy(m_callback);
         wl_callback_add_listener(m_callback, &listener, this);
     }
 
@@ -283,7 +284,7 @@ void TestWaylandSeat::cleanup()
 
 bool TestWaylandSeat::sync()
 {
-    WaylandSyncPoint syncPoint(m_connection->display());
+    WaylandSyncPoint syncPoint(m_connection, m_queue);
     QSignalSpy doneSpy(&syncPoint, &WaylandSyncPoint::done);
     return doneSpy.wait();
 }
