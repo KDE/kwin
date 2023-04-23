@@ -19,7 +19,37 @@
 namespace KWin
 {
 
+class ShmGraphicsBuffer;
+class ShmGraphicsBufferAllocator;
 class VirtualBackend;
+
+class VirtualQPainterBufferSlot
+{
+public:
+    VirtualQPainterBufferSlot(ShmGraphicsBuffer *graphicsBuffer);
+    ~VirtualQPainterBufferSlot();
+
+    ShmGraphicsBuffer *graphicsBuffer;
+    QImage image;
+    void *data = nullptr;
+    int size;
+};
+
+class VirtualQPainterSwapchain
+{
+public:
+    VirtualQPainterSwapchain(const QSize &size, uint32_t format);
+
+    QSize size() const;
+
+    std::shared_ptr<VirtualQPainterBufferSlot> acquire();
+
+private:
+    std::unique_ptr<ShmGraphicsBufferAllocator> m_allocator;
+    QSize m_size;
+    uint32_t m_format;
+    std::vector<std::shared_ptr<VirtualQPainterBufferSlot>> m_slots;
+};
 
 class VirtualQPainterLayer : public OutputLayer
 {
@@ -33,7 +63,8 @@ public:
 
 private:
     Output *const m_output;
-    QImage m_image;
+    std::unique_ptr<VirtualQPainterSwapchain> m_swapchain;
+    std::shared_ptr<VirtualQPainterBufferSlot> m_current;
 };
 
 class VirtualQPainterBackend : public QPainterBackend
