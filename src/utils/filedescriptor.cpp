@@ -8,6 +8,7 @@
 */
 #include "filedescriptor.h"
 
+#include <fcntl.h>
 #include <unistd.h>
 #include <utility>
 
@@ -58,7 +59,7 @@ int FileDescriptor::take()
 FileDescriptor FileDescriptor::duplicate() const
 {
     if (m_fd != -1) {
-        return FileDescriptor{dup(m_fd)};
+        return FileDescriptor{fcntl(m_fd, F_DUPFD_CLOEXEC, 0)};
     } else {
         return {};
     }
