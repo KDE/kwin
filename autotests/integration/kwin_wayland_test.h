@@ -607,6 +607,12 @@ bool waitForWaylandKeyboard();
 
 void flushWaylandConnection();
 
+/**
+ * Ensures that all client requests are processed by the compositor and all events
+ * sent by the compositor are seen by the client.
+ */
+bool waylandSync();
+
 std::unique_ptr<KWayland::Client::Surface> createSurface();
 KWayland::Client::SubSurface *createSubSurface(KWayland::Client::Surface *surface,
                                                KWayland::Client::Surface *parentSurface, QObject *parent = nullptr);

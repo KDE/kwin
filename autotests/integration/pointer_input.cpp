@@ -537,7 +537,8 @@ void PointerInputTest::testModifierClickUnrestrictedMove()
     // all of that should not have triggered button events on the surface
     QCOMPARE(buttonSpy.count(), 0);
     // also waiting shouldn't give us the event
-    QVERIFY(!buttonSpy.wait(100));
+    QVERIFY(Test::waylandSync());
+    QCOMPARE(buttonSpy.count(), 0);
 }
 
 void PointerInputTest::testModifierClickUnrestrictedFullscreenMove()
@@ -721,7 +722,8 @@ void PointerInputTest::testModifierScrollOpacity()
 
     // axis should have been filtered out
     QCOMPARE(axisSpy.count(), 0);
-    QVERIFY(!axisSpy.wait(100));
+    QVERIFY(Test::waylandSync());
+    QCOMPARE(axisSpy.count(), 0);
 }
 
 void PointerInputTest::testModifierScrollOpacityGlobalShortcutsDisabled()
@@ -961,7 +963,6 @@ void PointerInputTest::testMouseActionInactiveWindow()
     QVERIFY(!exclusiveContains(window2->frameGeometry(), QPointF(10, 10)));
     input()->pointer()->warp(QPointF(10, 10));
     // no focus follows mouse
-    QVERIFY(!stackingOrderChangedSpy.wait(200));
     QVERIFY(stackingOrderChangedSpy.isEmpty());
     QVERIFY(activeWindowChangedSpy.isEmpty());
     QVERIFY(window2->isActive());
@@ -1055,10 +1056,9 @@ void PointerInputTest::testMouseActionActiveWindow()
     QVERIFY(buttonSpy.wait());
     if (clickRaise) {
         QCOMPARE(stackingOrderChangedSpy.count(), 1);
-        QTRY_COMPARE_WITH_TIMEOUT(workspace()->topWindowOnDesktop(VirtualDesktopManager::self()->currentDesktop()), window2, 200);
+        QCOMPARE(workspace()->topWindowOnDesktop(VirtualDesktopManager::self()->currentDesktop()), window2);
     } else {
         QCOMPARE(stackingOrderChangedSpy.count(), 0);
-        QVERIFY(!stackingOrderChangedSpy.wait(100));
         QCOMPARE(workspace()->topWindowOnDesktop(VirtualDesktopManager::self()->currentDesktop()), window1);
     }
 
@@ -1237,7 +1237,8 @@ void PointerInputTest::testEffectOverrideCursorImage()
     // move cursor to area of window
     input()->pointer()->warp(window->frameGeometry().center());
     // this should not result in an enter event
-    QVERIFY(!enteredSpy.wait(100));
+    QVERIFY(Test::waylandSync());
+    QCOMPARE(enteredSpy.count(), 1);
 
     // after ending the interception we should get an enter event
     effects->stopMouseInterception(effect.get());
@@ -1439,7 +1440,8 @@ void PointerInputTest::testWindowUnderCursorWhileButtonPressed()
     QVERIFY(popupWindow != window);
     QVERIFY(exclusiveContains(window->frameGeometry(), Cursors::self()->mouse()->pos()));
     QVERIFY(exclusiveContains(popupWindow->frameGeometry(), Cursors::self()->mouse()->pos()));
-    QVERIFY(!leftSpy.wait());
+    QVERIFY(Test::waylandSync());
+    QCOMPARE(leftSpy.count(), 0);
 
     Test::pointerButtonReleased(BTN_LEFT, timestamp++);
     // now that the button is no longer pressed we should get the leave event

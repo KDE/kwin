@@ -771,6 +771,44 @@ void flushWaylandConnection()
     }
 }
 
+class WaylandSyncPoint : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit WaylandSyncPoint(KWayland::Client::ConnectionThread *connection, KWayland::Client::EventQueue *eventQueue)
+    {
+        static const wl_callback_listener listener = {
+            .done = [](void *data, wl_callback *callback, uint32_t callback_data) {
+                auto syncPoint = static_cast<WaylandSyncPoint *>(data);
+                Q_EMIT syncPoint->done();
+            },
+        };
+
+        m_callback = wl_display_sync(connection->display());
+        eventQueue->addProxy(m_callback);
+        wl_callback_add_listener(m_callback, &listener, this);
+    }
+
+    ~WaylandSyncPoint() override
+    {
+        wl_callback_destroy(m_callback);
+    }
+
+Q_SIGNALS:
+    void done();
+
+private:
+    wl_callback *m_callback;
+};
+
+bool waylandSync()
+{
+    WaylandSyncPoint syncPoint(s_waylandConnection.connection, s_waylandConnection.queue);
+    QSignalSpy doneSpy(&syncPoint, &WaylandSyncPoint::done);
+    return doneSpy.wait();
+}
+
 std::unique_ptr<KWayland::Client::Surface> createSurface()
 {
     if (!s_waylandConnection.compositor) {
@@ -1516,3 +1554,5 @@ void touchUp(qint32 id, quint32 time)
 }
 }
 }
+
+#include "test_helpers.moc"
