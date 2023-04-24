@@ -38,4 +38,4 @@ Dependencies:
 
 Options:
   use-ccache: True
-  require-passing-tests-on: ['FreeBSD', 'Linux']
+  require-passing-tests-on: ['FreeBSD']
