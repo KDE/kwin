@@ -20,7 +20,7 @@ class KWIN_EXPORT GbmGraphicsBuffer : public GraphicsBuffer
     Q_OBJECT
 
 public:
-    GbmGraphicsBuffer(gbm_bo *handle, const QSize &size, uint32_t format);
+    GbmGraphicsBuffer(DmaBufAttributes attributes, gbm_bo *handle);
     ~GbmGraphicsBuffer() override;
 
     QSize size() const override;

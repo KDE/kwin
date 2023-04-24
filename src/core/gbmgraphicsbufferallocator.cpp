@@ -47,7 +47,13 @@ GbmGraphicsBuffer *GbmGraphicsBufferAllocator::allocate(const QSize &size, uint3
         return nullptr;
     }
 
-    return new GbmGraphicsBuffer(bo, size, format);
+    std::optional<DmaBufAttributes> attributes = dmaBufAttributesForBo(bo);
+    if (!attributes.has_value()) {
+        gbm_bo_destroy(bo);
+        return nullptr;
+    }
+
+    return new GbmGraphicsBuffer(std::move(attributes.value()), bo);
 }
 
 static bool alphaChannelFromDrmFormat(uint32_t drmFormat)
@@ -87,11 +93,11 @@ static bool alphaChannelFromDrmFormat(uint32_t drmFormat)
     }
 }
 
-GbmGraphicsBuffer::GbmGraphicsBuffer(gbm_bo *handle, const QSize &size, uint32_t format)
+GbmGraphicsBuffer::GbmGraphicsBuffer(DmaBufAttributes attributes, gbm_bo *handle)
     : m_bo(handle)
-    , m_dmabufAttributes(dmaBufAttributesForBo(handle))
-    , m_size(size)
-    , m_hasAlphaChannel(alphaChannelFromDrmFormat(format))
+    , m_dmabufAttributes(std::move(attributes))
+    , m_size(m_dmabufAttributes.width, m_dmabufAttributes.height)
+    , m_hasAlphaChannel(alphaChannelFromDrmFormat(m_dmabufAttributes.format))
 {
 }
 

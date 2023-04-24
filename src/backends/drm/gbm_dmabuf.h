@@ -13,11 +13,14 @@
 
 #include <drm_fourcc.h>
 #include <gbm.h>
+#include <string.h>
+
+#include <optional>
 
 namespace KWin
 {
 
-inline DmaBufAttributes dmaBufAttributesForBo(gbm_bo *bo)
+inline std::optional<DmaBufAttributes> dmaBufAttributesForBo(gbm_bo *bo)
 {
     DmaBufAttributes attributes;
     attributes.planeCount = gbm_bo_get_plane_count(bo);
@@ -29,6 +32,10 @@ inline DmaBufAttributes dmaBufAttributesForBo(gbm_bo *bo)
 #if HAVE_GBM_BO_GET_FD_FOR_PLANE
     for (int i = 0; i < attributes.planeCount; ++i) {
         attributes.fd[i] = FileDescriptor{gbm_bo_get_fd_for_plane(bo, i)};
+        if (!attributes.fd[i].isValid()) {
+            qWarning() << "gbm_bo_get_fd_for_plane() failed:" << strerror(errno);
+            return std::nullopt;
+        }
         attributes.offset[i] = gbm_bo_get_offset(bo, i);
         attributes.pitch[i] = gbm_bo_get_stride_for_plane(bo, i);
     }
@@ -38,6 +45,10 @@ inline DmaBufAttributes dmaBufAttributesForBo(gbm_bo *bo)
     }
 
     attributes.fd[0] = FileDescriptor{gbm_bo_get_fd(bo)};
+    if (!attributes.fd[0].isValid()) {
+        qWarning() << "gbm_bo_get_fd() failed:" << strerror(errno);
+        return std::nullopt;
+    }
     attributes.offset[0] = gbm_bo_get_offset(bo, 0);
     attributes.pitch[0] = gbm_bo_get_stride_for_plane(bo, 0);
 #endif

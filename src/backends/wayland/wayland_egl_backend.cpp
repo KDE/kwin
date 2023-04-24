@@ -174,6 +174,9 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglPrimaryLayer::beginFrame()
     }
 
     m_buffer = m_swapchain->acquire();
+    if (!m_buffer) {
+        return std::nullopt;
+    }
 
     QRegion repair;
     if (m_backend->supportsBufferAge()) {

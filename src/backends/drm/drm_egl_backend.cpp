@@ -283,12 +283,20 @@ bool operator==(const GbmFormat &lhs, const GbmFormat &rhs)
 
 EGLImageKHR EglGbmBackend::importBufferObjectAsImage(gbm_bo *bo)
 {
-    return importDmaBufAsImage(dmaBufAttributesForBo(bo));
+    std::optional<DmaBufAttributes> attributes = dmaBufAttributesForBo(bo);
+    if (!attributes.has_value()) {
+        return EGL_NO_IMAGE_KHR;
+    }
+    return importDmaBufAsImage(attributes.value());
 }
 
 std::shared_ptr<GLTexture> EglGbmBackend::importBufferObjectAsTexture(gbm_bo *bo)
 {
-    return importDmaBufAsTexture(dmaBufAttributesForBo(bo));
+    std::optional<DmaBufAttributes> attributes = dmaBufAttributesForBo(bo);
+    if (!attributes.has_value()) {
+        return nullptr;
+    }
+    return importDmaBufAsTexture(attributes.value());
 }
 
 } // namespace KWin

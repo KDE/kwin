@@ -75,7 +75,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
     }
     auto &[texture, fbo] = m_surface.textureCache[buffer->bo()];
     if (!texture) {
-        texture = m_eglBackend->importDmaBufAsTexture(dmaBufAttributesForBo(buffer->bo()));
+        texture = m_eglBackend->importBufferObjectAsTexture(buffer->bo());
         if (!texture) {
             return std::nullopt;
         }
@@ -355,7 +355,9 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface &surfa
     context->makeCurrent();
     auto &sourceTexture = surface.importedTextureCache[sourceBuffer->bo()];
     if (!sourceTexture) {
-        sourceTexture = context->importDmaBufAsTexture(dmaBufAttributesForBo(sourceBuffer->bo()));
+        if (std::optional<DmaBufAttributes> attributes = dmaBufAttributesForBo(sourceBuffer->bo())) {
+            sourceTexture = context->importDmaBufAsTexture(attributes.value());
+        }
     }
     if (!sourceTexture) {
         qCWarning(KWIN_DRM, "failed to import the source texture!");
@@ -364,7 +366,9 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface &surfa
     const auto [localBuffer, repaint] = surface.importGbmSwapchain->acquire();
     auto &[texture, fbo] = surface.importTextureCache[localBuffer->bo()];
     if (!texture) {
-        texture = context->importDmaBufAsTexture(dmaBufAttributesForBo(localBuffer->bo()));
+        if (std::optional<DmaBufAttributes> attributes = dmaBufAttributesForBo(localBuffer->bo())) {
+            texture = context->importDmaBufAsTexture(attributes.value());
+        }
         if (!texture) {
             qCWarning(KWIN_DRM, "failed to import the local texture!");
             return nullptr;

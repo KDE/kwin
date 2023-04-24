@@ -104,6 +104,10 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame()
     }
 
     m_current = m_swapchain->acquire();
+    if (!m_current) {
+        return std::nullopt;
+    }
+
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_current->framebuffer()),
         .repaint = infiniteRegion(),

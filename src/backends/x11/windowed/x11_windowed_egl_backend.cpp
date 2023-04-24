@@ -147,6 +147,9 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglPrimaryLayer::beginFrame(
     }
 
     m_buffer = m_swapchain->acquire();
+    if (!m_buffer) {
+        return std::nullopt;
+    }
 
     QRegion repaint = m_output->exposedArea() + m_output->rect();
     m_output->clearExposedArea();

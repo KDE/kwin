@@ -614,10 +614,15 @@ std::shared_ptr<DmaBufTexture> WaylandBackend::createDmaBufTexture(const QSize &
     }
 
     // The bo will be kept around until the last fd is closed.
-    DmaBufAttributes attributes = dmaBufAttributesForBo(bo);
+    std::optional<DmaBufAttributes> attributes = dmaBufAttributesForBo(bo);
     gbm_bo_destroy(bo);
+
+    if (!attributes.has_value()) {
+        return nullptr;
+    }
+
     m_eglBackend->makeCurrent();
-    return std::make_shared<DmaBufTexture>(m_eglBackend->importDmaBufAsTexture(attributes), std::move(attributes));
+    return std::make_shared<DmaBufTexture>(m_eglBackend->importDmaBufAsTexture(attributes.value()), std::move(attributes.value()));
 }
 
 void WaylandBackend::setEglDisplay(std::unique_ptr<EglDisplay> &&display)

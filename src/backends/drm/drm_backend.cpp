@@ -435,12 +435,17 @@ std::shared_ptr<DmaBufTexture> DrmBackend::createDmaBufTexture(const QSize &size
     }
 
     // The bo will be kept around until the last fd is closed.
-    DmaBufAttributes attributes = dmaBufAttributesForBo(bo);
+    std::optional<DmaBufAttributes> attributes = dmaBufAttributesForBo(bo);
     gbm_bo_destroy(bo);
+
+    if (!attributes.has_value()) {
+        return nullptr;
+    }
+
     const auto eglBackend = static_cast<EglGbmBackend *>(m_renderBackend);
     eglBackend->makeCurrent();
-    if (auto texture = eglBackend->importDmaBufAsTexture(attributes)) {
-        return std::make_shared<DmaBufTexture>(texture, std::move(attributes));
+    if (auto texture = eglBackend->importDmaBufAsTexture(attributes.value())) {
+        return std::make_shared<DmaBufTexture>(texture, std::move(attributes.value()));
     } else {
         return nullptr;
     }
