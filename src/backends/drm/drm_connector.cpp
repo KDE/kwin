@@ -259,6 +259,13 @@ bool DrmConnector::updateProperties()
         m_physicalSize = m_edid.physicalSize();
     }
 
+    if (panelOrientation.isValid()) {
+        const auto orientation = panelOrientation.enumValue();
+        if (orientation == PanelOrientation::RightUp || orientation == PanelOrientation::LeftUp) {
+            m_physicalSize.transpose();
+        }
+    }
+
     // update modes
     bool equal = m_conn->count_modes == m_driverModes.count();
     for (int i = 0; equal && i < m_conn->count_modes; i++) {
