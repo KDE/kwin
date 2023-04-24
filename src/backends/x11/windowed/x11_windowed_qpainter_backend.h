@@ -22,23 +22,26 @@
 namespace KWin
 {
 
+class ShmGraphicsBuffer;
+class ShmGraphicsBufferAllocator;
 class X11WindowedBackend;
 class X11WindowedOutput;
 
 class X11WindowedQPainterLayerBuffer
 {
 public:
-    X11WindowedQPainterLayerBuffer(const QSize &size, X11WindowedOutput *output);
+    X11WindowedQPainterLayerBuffer(ShmGraphicsBuffer *buffer, X11WindowedOutput *output);
     ~X11WindowedQPainterLayerBuffer();
 
-    QSize size() const;
+    ShmGraphicsBuffer *graphicsBuffer() const;
     xcb_pixmap_t pixmap() const;
     QImage *view() const;
 
 private:
     xcb_connection_t *m_connection;
-    QSize m_size;
-    void *m_buffer = nullptr;
+    ShmGraphicsBuffer *m_graphicsBuffer;
+    void *m_data = nullptr;
+    int m_size = 0;
     std::unique_ptr<QImage> m_view;
     xcb_pixmap_t m_pixmap = XCB_PIXMAP_NONE;
 };
@@ -46,17 +49,18 @@ private:
 class X11WindowedQPainterLayerSwapchain
 {
 public:
-    X11WindowedQPainterLayerSwapchain(const QSize &size, X11WindowedOutput *output);
+    X11WindowedQPainterLayerSwapchain(const QSize &size, uint32_t format, X11WindowedOutput *output);
 
     QSize size() const;
 
     std::shared_ptr<X11WindowedQPainterLayerBuffer> acquire();
-    void release(std::shared_ptr<X11WindowedQPainterLayerBuffer> buffer);
 
 private:
+    X11WindowedOutput *m_output;
     QSize m_size;
+    uint32_t m_format;
+    std::unique_ptr<ShmGraphicsBufferAllocator> m_allocator;
     QVector<std::shared_ptr<X11WindowedQPainterLayerBuffer>> m_buffers;
-    int m_index = 0;
 };
 
 class X11WindowedQPainterPrimaryLayer : public OutputLayer
@@ -73,7 +77,7 @@ public:
 private:
     X11WindowedOutput *const m_output;
     std::unique_ptr<X11WindowedQPainterLayerSwapchain> m_swapchain;
-    std::shared_ptr<X11WindowedQPainterLayerBuffer> m_buffer;
+    std::shared_ptr<X11WindowedQPainterLayerBuffer> m_current;
 };
 
 class X11WindowedQPainterCursorLayer : public OutputLayer

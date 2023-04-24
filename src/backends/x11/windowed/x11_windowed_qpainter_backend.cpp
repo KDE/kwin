@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "x11_windowed_qpainter_backend.h"
+#include "core/shmgraphicsbufferallocator.h"
 #include "x11_windowed_backend.h"
 #include "x11_windowed_logging.h"
 #include "x11_windowed_output.h"
@@ -15,57 +16,53 @@
 #include <cmath>
 #include <drm_fourcc.h>
 #include <string.h>
-#include <sys/shm.h>
+#include <sys/mman.h>
 #include <xcb/present.h>
 #include <xcb/shm.h>
 
 namespace KWin
 {
 
-X11WindowedQPainterLayerBuffer::X11WindowedQPainterLayerBuffer(const QSize &size, X11WindowedOutput *output)
-    : m_connection(output->backend()->connection())
-    , m_size(size)
+static QImage::Format drmFormatToQImageFormat(uint32_t drmFormat)
 {
-    QImage::Format format;
-    int bytesPerPixel;
-    switch (output->depth()) {
-    case 24:
-    case 32:
-        format = QImage::Format_ARGB32_Premultiplied;
-        bytesPerPixel = 4;
-        break;
-    case 30:
-        format = QImage::Format_A2RGB30_Premultiplied;
-        bytesPerPixel = 4;
-        break;
+    switch (drmFormat) {
+    case DRM_FORMAT_ARGB8888:
+        return QImage::Format_ARGB32;
+    case DRM_FORMAT_XRGB8888:
+        return QImage::Format_RGB32;
     default:
-        qCWarning(KWIN_X11WINDOWED) << "Unsupported output depth:" << output->depth() << ". Falling back to ARGB32";
-        format = QImage::Format_ARGB32_Premultiplied;
-        bytesPerPixel = 4;
-        break;
+        Q_UNREACHABLE();
     }
+}
 
-    int shmId = shmget(IPC_PRIVATE, size.width() * size.height() * bytesPerPixel, IPC_CREAT | 0600);
-    if (shmId < 0) {
-        qCWarning(KWIN_X11WINDOWED) << "shmget() failed:" << strerror(errno);
-        return;
-    }
+X11WindowedQPainterLayerBuffer::X11WindowedQPainterLayerBuffer(ShmGraphicsBuffer *buffer, X11WindowedOutput *output)
+    : m_connection(output->backend()->connection())
+    , m_graphicsBuffer(buffer)
+{
+    const ShmAttributes *attributes = buffer->shmAttributes();
 
-    m_buffer = shmat(shmId, nullptr, 0 /*read/write*/);
-    shmctl(shmId, IPC_RMID, nullptr);
-    if (reinterpret_cast<long>(m_buffer) == -1) {
-        qCWarning(KWIN_X11WINDOWED) << "shmat() failed:" << strerror(errno);
+    // xcb_shm_attach_fd() takes the ownership of the passed shm file descriptor.
+    FileDescriptor poolFileDescriptor = attributes->fd.duplicate();
+    if (!poolFileDescriptor.isValid()) {
+        qCWarning(KWIN_X11WINDOWED) << "Failed to duplicate shm file descriptor";
         return;
     }
 
     xcb_shm_seg_t segment = xcb_generate_id(m_connection);
-    xcb_shm_attach(m_connection, segment, shmId, false);
+    xcb_shm_attach_fd(m_connection, segment, poolFileDescriptor.take(), 0);
 
     m_pixmap = xcb_generate_id(m_connection);
-    xcb_shm_create_pixmap(m_connection, m_pixmap, output->window(), size.width(), size.height(), output->depth(), segment, 0);
+    xcb_shm_create_pixmap(m_connection, m_pixmap, output->window(), attributes->size.width(), attributes->size.height(), output->depth(), segment, 0);
     xcb_shm_detach(m_connection, segment);
 
-    m_view = std::make_unique<QImage>(static_cast<uchar *>(m_buffer), size.width(), size.height(), format);
+    m_size = attributes->size.height() * attributes->stride;
+    m_data = mmap(nullptr, m_size, PROT_READ | PROT_WRITE, MAP_SHARED, attributes->fd.get(), 0);
+    if (m_data == MAP_FAILED) {
+        qCWarning(KWIN_X11WINDOWED) << "Failed to map a shared memory buffer";
+        return;
+    }
+
+    m_view = std::make_unique<QImage>(static_cast<uchar *>(m_data), attributes->size.width(), attributes->size.height(), drmFormatToQImageFormat(attributes->format));
 }
 
 X11WindowedQPainterLayerBuffer::~X11WindowedQPainterLayerBuffer()
@@ -73,15 +70,16 @@ X11WindowedQPainterLayerBuffer::~X11WindowedQPainterLayerBuffer()
     if (m_pixmap != XCB_PIXMAP_NONE) {
         xcb_free_pixmap(m_connection, m_pixmap);
     }
-    m_view.reset();
-    if (reinterpret_cast<long>(m_buffer) != -1) {
-        shmdt(m_buffer);
+    if (m_data) {
+        munmap(m_data, m_size);
     }
+    m_view.reset();
+    m_graphicsBuffer->drop();
 }
 
-QSize X11WindowedQPainterLayerBuffer::size() const
+ShmGraphicsBuffer *X11WindowedQPainterLayerBuffer::graphicsBuffer() const
 {
-    return m_size;
+    return m_graphicsBuffer;
 }
 
 xcb_pixmap_t X11WindowedQPainterLayerBuffer::pixmap() const
@@ -94,12 +92,12 @@ QImage *X11WindowedQPainterLayerBuffer::view() const
     return m_view.get();
 }
 
-X11WindowedQPainterLayerSwapchain::X11WindowedQPainterLayerSwapchain(const QSize &size, X11WindowedOutput *output)
-    : m_size(size)
+X11WindowedQPainterLayerSwapchain::X11WindowedQPainterLayerSwapchain(const QSize &size, uint32_t format, X11WindowedOutput *output)
+    : m_output(output)
+    , m_size(size)
+    , m_format(format)
+    , m_allocator(std::make_unique<ShmGraphicsBufferAllocator>())
 {
-    for (int i = 0; i < 2; ++i) {
-        m_buffers.append(std::make_shared<X11WindowedQPainterLayerBuffer>(size, output));
-    }
 }
 
 QSize X11WindowedQPainterLayerSwapchain::size() const
@@ -109,13 +107,22 @@ QSize X11WindowedQPainterLayerSwapchain::size() const
 
 std::shared_ptr<X11WindowedQPainterLayerBuffer> X11WindowedQPainterLayerSwapchain::acquire()
 {
-    m_index = (m_index + 1) % m_buffers.count();
-    return m_buffers[m_index];
-}
+    for (const auto &buffer : m_buffers) {
+        if (!buffer->graphicsBuffer()->isReferenced()) {
+            return buffer;
+        }
+    }
 
-void X11WindowedQPainterLayerSwapchain::release(std::shared_ptr<X11WindowedQPainterLayerBuffer> buffer)
-{
-    Q_ASSERT(m_buffers[m_index] == buffer);
+    ShmGraphicsBuffer *graphicsBuffer = m_allocator->allocate(m_size, m_format);
+    if (!graphicsBuffer) {
+        qCWarning(KWIN_X11WINDOWED) << "Failed to allocate a shared memory graphics buffer";
+        return nullptr;
+    }
+
+    auto buffer = std::make_shared<X11WindowedQPainterLayerBuffer>(graphicsBuffer, m_output);
+    m_buffers.push_back(buffer);
+
+    return buffer;
 }
 
 X11WindowedQPainterPrimaryLayer::X11WindowedQPainterPrimaryLayer(X11WindowedOutput *output)
@@ -127,15 +134,19 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedQPainterPrimaryLayer::beginF
 {
     const QSize bufferSize = m_output->pixelSize();
     if (!m_swapchain || m_swapchain->size() != bufferSize) {
-        m_swapchain = std::make_unique<X11WindowedQPainterLayerSwapchain>(bufferSize, m_output);
+        m_swapchain = std::make_unique<X11WindowedQPainterLayerSwapchain>(bufferSize, m_output->backend()->driFormatForDepth(m_output->depth()), m_output);
+    }
+
+    m_current = m_swapchain->acquire();
+    if (!m_current) {
+        return std::nullopt;
     }
 
     QRegion repaint = m_output->exposedArea() + m_output->rect();
     m_output->clearExposedArea();
 
-    m_buffer = m_swapchain->acquire();
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_buffer->view()),
+        .renderTarget = RenderTarget(m_current->view()),
         .repaint = repaint,
     };
 }
@@ -155,7 +166,7 @@ void X11WindowedQPainterPrimaryLayer::present()
 
     xcb_present_pixmap(m_output->backend()->connection(),
                        m_output->window(),
-                       m_buffer->pixmap(),
+                       m_current->pixmap(),
                        serial,
                        valid,
                        update,
@@ -170,13 +181,11 @@ void X11WindowedQPainterPrimaryLayer::present()
                        0,
                        0,
                        nullptr);
-
-    m_swapchain->release(m_buffer);
 }
 
 quint32 X11WindowedQPainterPrimaryLayer::format() const
 {
-    switch (m_buffer->view()->format()) {
+    switch (m_current->view()->format()) {
     case QImage::Format_A2RGB30_Premultiplied:
         return DRM_FORMAT_ARGB2101010;
     case QImage::Format_ARGB32_Premultiplied:
