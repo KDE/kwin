@@ -113,6 +113,7 @@ void Application::start()
     setProperty("org.kde.KActivities.core.disableAutostart", true);
 
     setQuitOnLastWindowClosed(false);
+    setQuitLockEnabled(false);
 
     if (!m_config->isImmutable() && m_configLock) {
         // TODO: This shouldn't be necessary
