@@ -3,15 +3,15 @@
 # Andrea RIZZI <arizzi@pi.infn.it>, 2004.
 # Luciano Montanaro <mikelima@cirulla.net>, 2007, 2008, 2010, 2011.
 # Federico Zenith <federico.zenith@member.fsf.org>, 2010, 2012, 2013, 2014, 2015.
-# Paolo Zamponi <zapaolo@email.it>, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
+# Paolo Zamponi <feus73@gmail.com>, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
 # Vincenzo Reale <smart2128vr@gmail.com>, 2020, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-25 02:43+0000\n"
-"PO-Revision-Date: 2023-04-13 08:21+0200\n"
-"Last-Translator: Paolo Zamponi <zapaolo@email.it>\n"
+"PO-Revision-Date: 2023-04-16 18:31+0200\n"
+"Last-Translator: Paolo Zamponi <feus73@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -28,7 +28,7 @@ msgstr "Paolo Zamponi,Federico Zenith,Andrea Rizzi"
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "zapaolo@email.it,,"
+msgstr "feus73@gmail.com,,"
 
 #: kcmrules.cpp:28
 #, kde-format
@@ -689,7 +689,7 @@ msgstr "Opacità inattiva"
 #: rulesmodel.cpp:592
 #, kde-format
 msgid "Focus stealing prevention"
-msgstr "Prevenzione dell'attivazione"
+msgstr "Prevenzione della sottrazione del fuoco"
 
 #: rulesmodel.cpp:594
 #, kde-format
@@ -704,7 +704,7 @@ msgstr ""
 "mentre stai lavorando in un'altra finestra, ma a volte non riesce, o "
 "esagera.\n"
 "«Nessuna» permette alla finestra di ottenere incondizionatamente il fuoco\n"
-"mentre «Estrema» impedirà completamente che possa prenderlo."
+"mentre «Estrema» impedirà del tutto che possa ottenerlo."
 
 #: rulesmodel.cpp:603
 #, kde-format
@@ -729,7 +729,7 @@ msgstr ""
 #: rulesmodel.cpp:614
 #, kde-format
 msgid "Accept focus"
-msgstr "Accetta attivazione"
+msgstr "Accetta il fuoco"
 
 #: rulesmodel.cpp:616
 #, kde-format
