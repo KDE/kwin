@@ -1210,7 +1210,7 @@ msgstr "Esquèrra"
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:36
 #, kde-format
 msgid "Center"
-msgstr ""
+msgstr "Centre"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 #: effects/desktopgrid/desktopgrid_config.ui:17
@@ -1218,7 +1218,7 @@ msgstr ""
 #: effects/thumbnailaside/thumbnailaside_config.ui:17
 #, kde-format
 msgid "Appearance"
-msgstr ""
+msgstr "Aparéncia"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
 #: effects/desktopgrid/desktopgrid_config.ui:30
@@ -1446,7 +1446,7 @@ msgstr ""
 #: effects/magnifier/magnifier_config.ui:17
 #, kde-format
 msgid "Size"
-msgstr ""
+msgstr "Talha"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: effects/magnifier/magnifier_config.ui:23
@@ -1574,7 +1574,7 @@ msgstr ""
 #: effects/mouseclick/mouseclick_config.ui:210
 #, kde-format
 msgid "Text"
-msgstr ""
+msgstr "Tèxt"
 
 #. i18n: ectx: property (text), widget (QLabel, font_label)
 #: effects/mouseclick/mouseclick_config.ui:216
@@ -1808,7 +1808,7 @@ msgstr ""
 #: effects/thumbnailaside/thumbnailaside_config.ui:87
 #, no-c-format, kde-format
 msgid " %"
-msgstr ""
+msgstr " %s"
 
 #: effects/tileseditor/kcm/tileseditoreffectkcm.cpp:37
 #: effects/tileseditor/tileseditoreffect.cpp:29
@@ -2089,13 +2089,13 @@ msgstr ""
 #: effects/wobblywindows/wobblywindows_config.ui:201
 #, kde-format
 msgid "Less"
-msgstr ""
+msgstr "Mens"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: effects/wobblywindows/wobblywindows_config.ui:224
 #, kde-format
 msgid "More"
-msgstr ""
+msgstr "Mai"
 
 #: effects/zoom/zoom.cpp:67
 #, fuzzy, kde-format
@@ -2629,34 +2629,39 @@ msgid "Normal"
 msgstr ""
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:722
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Large"
 msgctxt "@item:inlistbox Button size:"
 msgid "Large"
-msgstr ""
+msgstr "Grand"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:723
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Large"
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Large"
-msgstr ""
+msgstr "Grand"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:724
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Large"
 msgctxt "@item:inlistbox Button size:"
 msgid "Huge"
-msgstr ""
+msgstr "Grand"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:725
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Large"
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Huge"
-msgstr ""
+msgstr "Grand"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:726
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Resize"
 msgctxt "@item:inlistbox Button size:"
 msgid "Oversized"
-msgstr ""
+msgstr "Redimensionar"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:729
 #, kde-format

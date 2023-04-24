@@ -1212,7 +1212,7 @@ msgstr "چپ بالا"
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:36
 #, kde-format
 msgid "Center"
-msgstr ""
+msgstr "مرکز"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 #: effects/desktopgrid/desktopgrid_config.ui:17
@@ -2662,28 +2662,32 @@ msgid "Normal"
 msgstr ""
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:722
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Large"
 msgctxt "@item:inlistbox Button size:"
 msgid "Large"
-msgstr ""
+msgstr "بزرگ"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:723
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Large"
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Large"
-msgstr ""
+msgstr "بزرگ"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:724
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Large"
 msgctxt "@item:inlistbox Button size:"
 msgid "Huge"
-msgstr ""
+msgstr "بزرگ"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:725
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Large"
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Huge"
-msgstr ""
+msgstr "بزرگ"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:726
 #, fuzzy, kde-format
@@ -2709,7 +2713,7 @@ msgstr "محاوره‌ها:"
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:23
 #, kde-format
 msgid "Title &Alignment"
-msgstr ""
+msgstr "&تراز کردن عنوان‌"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:53
@@ -2718,6 +2722,8 @@ msgid ""
 "Check this option if the window border should be painted in the titlebar "
 "color. Otherwise it will be painted in the background color."
 msgstr ""
+"اگر لبه‌های پنجره باید به رنگ میله عنوان رنگ شوند، این گزینه را علامت بزنید. "
+"در غیر این صورت، به رنگ زمینه رنگ می‌شوند."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:56
@@ -2733,6 +2739,8 @@ msgid ""
 "Check this option if you want the buttons to fade in when the mouse pointer "
 "hovers over them and fade out again when it moves away."
 msgstr ""
+"اگر می‌خواهید دکمه‌ها را هنگامی که اشاره‌گر موشی روی آنها قرار می‌گیرد محو کرده "
+"و دوباره با دور شدن اشاره‌گر پدیدار شوند، این گزینه را علامت بزنید."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:69

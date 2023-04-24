@@ -1110,9 +1110,10 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurDescription)
 #: effects/blur/blur_config.ui:17
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "&Strength:"
 msgid "Blur strength:"
-msgstr ""
+msgstr "&Күші:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
@@ -1127,13 +1128,14 @@ msgstr "Жоғарғы оңда"
 #: effects/blur/blur_config.ui:74 effects/blur/blur_config.ui:137
 #, kde-format
 msgid "Strong"
-msgstr ""
+msgstr "Күшті"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseDescription)
 #: effects/blur/blur_config.ui:83
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "&Strength:"
 msgid "Noise strength:"
-msgstr ""
+msgstr "&Күші:"
 
 #: effects/colorpicker/colorpicker.cpp:102
 #, kde-format
@@ -1245,31 +1247,32 @@ msgstr "Ортаға"
 #: effects/thumbnailaside/thumbnailaside_config.ui:17
 #, kde-format
 msgid "Appearance"
-msgstr ""
+msgstr "Көрінісі"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
 #: effects/desktopgrid/desktopgrid_config.ui:30
 #, kde-format
 msgid "Pager"
-msgstr ""
+msgstr "Ақтарғыш"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
 #: effects/desktopgrid/desktopgrid_config.ui:35
 #, kde-format
 msgid "Automatic"
-msgstr ""
+msgstr "Автоматты"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
 #: effects/desktopgrid/desktopgrid_config.ui:40
 #, kde-format
 msgid "Custom"
-msgstr ""
+msgstr "Келтірілгендей"
 
 #. i18n: ectx: property (text), widget (QLabel, layoutRowsLabel)
 #: effects/desktopgrid/desktopgrid_config.ui:48
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Number of &rows:"
 msgid "N&umber of rows:"
-msgstr ""
+msgstr "&Бағандар саны:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: effects/desktopgrid/desktopgrid_config.ui:103
@@ -1286,9 +1289,10 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: effects/desktopgrid/desktopgrid_config.ui:123
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "&Layout mode:"
 msgid "&Grid layout mode:"
-msgstr ""
+msgstr "&Орналасу тәртібі:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
 #: effects/desktopgrid/desktopgrid_config.ui:137
@@ -1305,7 +1309,7 @@ msgstr "&Жабу"
 #: effects/windowview/kcm/windowvieweffectkcm.ui:35
 #, kde-format
 msgid "Natural"
-msgstr ""
+msgstr "Табиғи"
 
 #. i18n: ectx: property (text), widget (QLabel, ignoreLabel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
@@ -1331,9 +1335,10 @@ msgstr "айдар"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Strength)
 #: effects/diminactive/diminactive_config.ui:17
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "&Strength:"
 msgid "Strength:"
-msgstr ""
+msgstr "&Күші:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Dim)
 #: effects/diminactive/diminactive_config.ui:40
@@ -1343,9 +1348,10 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimPanels)
 #: effects/diminactive/diminactive_config.ui:47
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Do not animate panels"
 msgid "Docks and panels"
-msgstr ""
+msgstr "Панельдері анимацияланбасын"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimDesktop)
 #: effects/diminactive/diminactive_config.ui:54
@@ -1386,16 +1392,18 @@ msgstr "айдар"
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_Duration)
 #: effects/glide/glide_config.ui:32
 #: effects/scale/package/contents/ui/config.ui:30
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "Duration of rotation"
+#| msgid "Default"
 msgid "Default"
-msgstr ""
+msgstr "Әдетті"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Duration)
 #: effects/glide/glide_config.ui:35
 #: effects/scale/package/contents/ui/config.ui:33
 #, kde-format
 msgid " milliseconds"
-msgstr ""
+msgstr " милисекунд"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_InAnimation)
 #: effects/glide/glide_config.ui:50
@@ -1453,38 +1461,38 @@ msgstr "Экраның түстерін терістеу"
 #: effects/login/package/contents/ui/config.ui:17
 #, kde-format
 msgid "Fade to black (fullscreen splash screens only)"
-msgstr ""
+msgstr "Біртіндеп қарайсын (тек толық экранды бейнепердер үшін)"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: effects/magiclamp/magiclamp_config.ui:17
 #, kde-format
 msgid "Animation duration:"
-msgstr ""
+msgstr "Анимацияның ұзақтығы:"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_AnimationDuration)
 #: effects/magiclamp/magiclamp_config.ui:36
 #, kde-format
 msgctxt "Duration of rotation"
 msgid "Default"
-msgstr ""
+msgstr "Әдетті"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AnimationDuration)
 #: effects/magiclamp/magiclamp_config.ui:39
 #, kde-format
 msgid "milliseconds"
-msgstr ""
+msgstr "милисекунд"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupSize)
 #: effects/magnifier/magnifier_config.ui:17
 #, kde-format
 msgid "Size"
-msgstr ""
+msgstr "Өлшемі"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: effects/magnifier/magnifier_config.ui:23
 #, kde-format
 msgid "&Width:"
-msgstr ""
+msgstr "&Ені:"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Width)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Height)
@@ -1492,7 +1500,7 @@ msgstr ""
 #: effects/magnifier/magnifier_config.ui:74
 #, kde-format
 msgid " px"
-msgstr ""
+msgstr " пк"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: effects/magnifier/magnifier_config.ui:55
@@ -1516,10 +1524,11 @@ msgid "Left"
 msgstr "Жоғарғы солда"
 
 #: effects/mouseclick/mouseclick.cpp:44
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Middle"
 msgctxt "Middle mouse button"
 msgid "Middle"
-msgstr ""
+msgstr "Ортаңғы"
 
 #: effects/mouseclick/mouseclick.cpp:45
 #, fuzzy, kde-format
@@ -1532,7 +1541,7 @@ msgstr "Жоғарғы оңда"
 #: effects/mouseclick/mouseclick_config.ui:21
 #, kde-format
 msgid "Basic Settings"
-msgstr ""
+msgstr "Негізгі параметрлері"
 
 #. i18n: ectx: property (text), widget (QLabel, button1_label)
 #: effects/mouseclick/mouseclick_config.ui:37
@@ -1567,57 +1576,59 @@ msgstr "Қосымша"
 #: effects/mouseclick/mouseclick_config.ui:97
 #, kde-format
 msgid "Rings"
-msgstr ""
+msgstr "Шеңберлер"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_line_width_label)
 #: effects/mouseclick/mouseclick_config.ui:103
 #, kde-format
 msgid "Line Width:"
-msgstr ""
+msgstr "Сызық қалыңдығы:"
 
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, kcfg_LineWidth)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingSize)
 #: effects/mouseclick/mouseclick_config.ui:119
 #: effects/mouseclick/mouseclick_config.ui:171
-#, kde-format
+#, fuzzy, kde-format
+#| msgid " pixel"
+#| msgid_plural " pixels"
 msgid " pixel"
-msgstr ""
+msgstr " пиксел"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingLife)
 #: effects/mouseclick/mouseclick_config.ui:132
 #, kde-format
 msgid " msec"
-msgstr ""
+msgstr " мсек"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_duration_label)
 #: effects/mouseclick/mouseclick_config.ui:145
 #, kde-format
 msgid "Ring Duration:"
-msgstr ""
+msgstr "Шеңбер ұзақтығы:"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_radius_label)
 #: effects/mouseclick/mouseclick_config.ui:155
 #, kde-format
 msgid "Ring Radius:"
-msgstr ""
+msgstr "Шеңбер радиусы:"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_count_label)
 #: effects/mouseclick/mouseclick_config.ui:184
 #, kde-format
 msgid "Ring Count:"
-msgstr ""
+msgstr "Шеңбер саны:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, font)
 #: effects/mouseclick/mouseclick_config.ui:210
 #, kde-format
 msgid "Text"
-msgstr ""
+msgstr "Жазуы"
 
 #. i18n: ectx: property (text), widget (QLabel, font_label)
 #: effects/mouseclick/mouseclick_config.ui:216
 #, kde-format
 msgid "Font:"
-msgstr ""
+msgstr "Қаріпі:"
 
 #. i18n: ectx: property (text), widget (QLabel, showtext_label)
 #: effects/mouseclick/mouseclick_config.ui:233
@@ -1642,11 +1653,13 @@ msgid "Clear Mouse Marks"
 msgstr "Тышқанның белгілерін тазалау"
 
 #: effects/mousemark/mousemark_config.cpp:100
-#, kde-format
+#, fuzzy, kde-format
+#| msgid " pixel"
+#| msgid_plural " pixels"
 msgctxt "Suffix"
 msgid " pixel"
 msgid_plural " pixels"
-msgstr[0] ""
+msgstr[0] " пиксел"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: effects/mousemark/mousemark_config.ui:23
@@ -1658,13 +1671,13 @@ msgstr ""
 #: effects/mousemark/mousemark_config.ui:36
 #, kde-format
 msgid "&Color:"
-msgstr ""
+msgstr "&Түсі:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: effects/mousemark/mousemark_config.ui:82
 #, kde-format
 msgid "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
-msgstr ""
+msgstr "Shift+Meta пернелерін басып тұрып тышқанды жылжытып сызыңыз."
 
 #: effects/outputlocator/outputlocator.cpp:48
 #, kde-format
@@ -1684,7 +1697,7 @@ msgstr "Терістеу эффектін ету"
 #: effects/windowview/kcm/windowvieweffectkcm.ui:22
 #, kde-format
 msgid "Layout mode:"
-msgstr ""
+msgstr "Орналастыру тәртібі:"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: effects/overview/kcm/overvieweffectkcm.ui:43
@@ -1707,9 +1720,10 @@ msgid "Add Virtual Desktop"
 msgstr "&Жаңа Үстел"
 
 #: effects/overview/qml/ScreenView.qml:226
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Moving windows:"
 msgid "No matching windows"
-msgstr ""
+msgstr "Жылжымалы терезелер:"
 
 #: effects/private/qml/WindowHeapDelegate.qml:151
 #, kde-format
@@ -1752,16 +1766,18 @@ msgid ""
 msgstr ""
 
 #: effects/showfps/qml/main.qml:110
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Ring Duration:"
 msgctxt "@label"
 msgid "Paint Duration"
-msgstr ""
+msgstr "Шеңбер ұзақтығы:"
 
 #: effects/showfps/qml/main.qml:162
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Ring Count:"
 msgctxt "@label"
 msgid "Paint Amount"
-msgstr ""
+msgstr "Шеңбер саны:"
 
 #: effects/showfps/qml/main.qml:175
 #, fuzzy, kde-format
@@ -1771,16 +1787,18 @@ msgid "Current FPS"
 msgstr "Т&ерезе қасиеттерін баптау..."
 
 #: effects/showfps/qml/main.qml:184
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Maximum &width:"
 msgctxt "@label"
 msgid "Maximum FPS"
-msgstr ""
+msgstr "&Енінің шегі:"
 
 #: effects/showfps/qml/main.qml:192
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "This effect is not a benchmark"
 msgctxt "@label"
 msgid "This effect is not a benchmark"
-msgstr ""
+msgstr "Бұл эффект бағалау сынағы емес"
 
 #: effects/showpaint/showpaint.cpp:39 effects/showpaint/showpaint_config.cpp:38
 #, fuzzy, kde-format
@@ -1796,21 +1814,24 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_HorizontalGap)
 #: effects/slide/slide_config.ui:23
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Horizontal"
 msgid "Horizontal:"
-msgstr ""
+msgstr "Көлденең"
 
 #. i18n: ectx: property (text), widget (QLabel, label_VerticalGap)
 #: effects/slide/slide_config.ui:46
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Vertical"
 msgid "Vertical:"
-msgstr ""
+msgstr "Тігінен"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideBackground)
 #: effects/slide/slide_config.ui:72
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Slide when grouping"
 msgid "Slide desktop background"
-msgstr ""
+msgstr "Топтасқандырғанда сырғанасын"
 
 #: effects/thumbnailaside/thumbnailaside.cpp:31
 #: effects/thumbnailaside/thumbnailaside_config.cpp:59
@@ -1822,13 +1843,13 @@ msgstr "Назардағы терезенің нобайлауын теріст�
 #: effects/thumbnailaside/thumbnailaside_config.ui:23
 #, kde-format
 msgid "Maximum &width:"
-msgstr ""
+msgstr "&Енінің шегі:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: effects/thumbnailaside/thumbnailaside_config.ui:36
 #, kde-format
 msgid "&Spacing:"
-msgstr ""
+msgstr "&Аралығы:"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Spacing)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_MaxWidth)
@@ -1836,7 +1857,7 @@ msgstr ""
 #: effects/thumbnailaside/thumbnailaside_config.ui:106
 #, kde-format
 msgid " pixels"
-msgstr ""
+msgstr " пиксел"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: effects/thumbnailaside/thumbnailaside_config.ui:68
@@ -1849,7 +1870,7 @@ msgstr "&Мөлдірсіздік"
 #: effects/thumbnailaside/thumbnailaside_config.ui:87
 #, no-c-format, kde-format
 msgid " %"
-msgstr ""
+msgstr " %"
 
 #: effects/tileseditor/kcm/tileseditoreffectkcm.cpp:37
 #: effects/tileseditor/tileseditoreffect.cpp:29
@@ -1903,7 +1924,7 @@ msgstr ""
 #: effects/trackmouse/trackmouse_config.cpp:57
 #, kde-format
 msgid "Track mouse"
-msgstr ""
+msgstr "Тышқанның іздері"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: effects/trackmouse/trackmouse_config.ui:26
@@ -1920,51 +1941,52 @@ msgstr "Келесі орналасымы"
 
 #. i18n: ectx: property (text), widget (QLabel, label_ModifierKeys)
 #: effects/trackmouse/trackmouse_config.ui:43
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Modifiers"
 msgid "Modifier keys:"
-msgstr ""
+msgstr "Түрлендіргіштері"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Alt)
 #: effects/trackmouse/trackmouse_config.ui:65
 #, kde-format
 msgid "Alt"
-msgstr ""
+msgstr "Alt"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Control)
 #: effects/trackmouse/trackmouse_config.ui:72
 #, kde-format
 msgid "Ctrl"
-msgstr ""
+msgstr "Ctrl"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Shift)
 #: effects/trackmouse/trackmouse_config.ui:79
 #, kde-format
 msgid "Shift"
-msgstr ""
+msgstr "Shift"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Meta)
 #: effects/trackmouse/trackmouse_config.ui:86
 #, kde-format
 msgid "Meta"
-msgstr ""
+msgstr "Meta"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, KWin::TranslucencyEffectConfigForm)
 #: effects/translucency/package/contents/ui/config.ui:14
 #, kde-format
 msgid "Translucency"
-msgstr ""
+msgstr "Мөлдірлік"
 
 #. i18n: ectx: property (title), widget (QGroupBox, m_opacityGroupBox)
 #: effects/translucency/package/contents/ui/config.ui:20
 #, kde-format
 msgid "General Translucency Settings"
-msgstr ""
+msgstr "Жалпы мөлдірлік параметрлері"
 
 #. i18n: ectx: property (text), widget (QLabel, comboboxpopup_label)
 #: effects/translucency/package/contents/ui/config.ui:64
 #, kde-format
 msgid "Combobox popups:"
-msgstr ""
+msgstr "Қалқымалы ашылмалы тізімдер:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label_7)
@@ -1972,13 +1994,13 @@ msgstr ""
 #: effects/translucency/package/contents/ui/config.ui:431
 #, kde-format
 msgid "Opaque"
-msgstr ""
+msgstr "Мөлдір емес"
 
 #. i18n: ectx: property (text), widget (QLabel, dialogs_label)
 #: effects/translucency/package/contents/ui/config.ui:137
 #, kde-format
 msgid "Dialogs:"
-msgstr ""
+msgstr "Диалогтар"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -1986,7 +2008,7 @@ msgstr ""
 #: effects/translucency/package/contents/ui/config.ui:418
 #, kde-format
 msgid "Transparent"
-msgstr ""
+msgstr "Мөлдір"
 
 #. i18n: ectx: property (text), widget (QLabel, menus_label)
 #: effects/translucency/package/contents/ui/config.ui:188
@@ -2013,25 +2035,25 @@ msgstr "Терезені артқа тығу"
 #: effects/translucency/package/contents/ui/config.ui:267
 #, kde-format
 msgid "Set menu translucency independently"
-msgstr ""
+msgstr "Мәзірлерінің мөлдірлігін жекелеп орнату"
 
 #. i18n: ectx: property (text), widget (QLabel, dropdownmenus_label)
 #: effects/translucency/package/contents/ui/config.ui:285
 #, kde-format
 msgid "Dropdown menus:"
-msgstr ""
+msgstr "Ашылмалы мәзірлер:"
 
 #. i18n: ectx: property (text), widget (QLabel, popupmenus_label)
 #: effects/translucency/package/contents/ui/config.ui:329
 #, kde-format
 msgid "Popup menus:"
-msgstr ""
+msgstr "Қалқымалы мәзірлер:"
 
 #. i18n: ectx: property (text), widget (QLabel, tornoffmenus_label)
 #: effects/translucency/package/contents/ui/config.ui:367
 #, kde-format
 msgid "Torn-off menus:"
-msgstr ""
+msgstr "Тармақты мәзірллер:"
 
 #: effects/windowview/kcm/windowvieweffectkcm.cpp:42
 #: effects/windowview/windowvieweffect.cpp:45
@@ -2095,13 +2117,13 @@ msgstr "Қосымша"
 #: effects/wobblywindows/wobblywindows_config.ui:26
 #, kde-format
 msgid "&Stiffness:"
-msgstr ""
+msgstr "Қа&таңдығы:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: effects/wobblywindows/wobblywindows_config.ui:68
 #, kde-format
 msgid "Dra&g:"
-msgstr ""
+msgstr "Сү&йреу:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: effects/wobblywindows/wobblywindows_config.ui:81
@@ -2114,37 +2136,37 @@ msgstr "Солда"
 #: effects/wobblywindows/wobblywindows_config.ui:155
 #, kde-format
 msgid "Wo&bble when moving"
-msgstr ""
+msgstr "&Бұлғалақтап жылжысын"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ResizeWobble)
 #: effects/wobblywindows/wobblywindows_config.ui:162
 #, kde-format
 msgid "Wobble when &resizing"
-msgstr ""
+msgstr "Өлшемін ө&згерткенде бұлғалақталсын"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AdvancedMode)
 #: effects/wobblywindows/wobblywindows_config.ui:182
 #, kde-format
 msgid "Enable &advanced mode"
-msgstr ""
+msgstr "Қ&еңейтілген режімі рұқсат етілсін"
 
 #. i18n: ectx: property (title), widget (QGroupBox, basicGroup)
 #: effects/wobblywindows/wobblywindows_config.ui:192
 #, kde-format
 msgid "&Wobbliness"
-msgstr ""
+msgstr "&Бұлғалақтау"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: effects/wobblywindows/wobblywindows_config.ui:201
 #, kde-format
 msgid "Less"
-msgstr ""
+msgstr "Азайсын"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: effects/wobblywindows/wobblywindows_config.ui:224
 #, kde-format
 msgid "More"
-msgstr ""
+msgstr "Үлғайсын"
 
 #: effects/zoom/zoom.cpp:67
 #, fuzzy, kde-format
@@ -2161,12 +2183,12 @@ msgstr "Терезені оң жақтағы үстелге ауыстыру"
 #: effects/zoom/zoom.cpp:81
 #, kde-format
 msgid "Move Zoomed Area Upwards"
-msgstr ""
+msgstr "Үлкейту аумағын жоғарға жылжыту"
 
 #: effects/zoom/zoom.cpp:88
 #, kde-format
 msgid "Move Zoomed Area Downwards"
-msgstr ""
+msgstr "Үлкейту аумағын төменге жылжыту"
 
 #: effects/zoom/zoom.cpp:96 effects/zoom/zoom_config.cpp:108
 #, fuzzy, kde-format
@@ -2209,83 +2231,94 @@ msgstr "Терезені жылжыту"
 #: effects/zoom/zoom_config.ui:25 effects/zoom/zoom_config.ui:41
 #, kde-format
 msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
-msgstr ""
+msgstr "Масштабын үлкейткен-азайтқанда оны белгіленген мөлшерге өзгерту."
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: effects/zoom/zoom_config.ui:28
 #, kde-format
 msgid "Zoom Factor:"
-msgstr ""
+msgstr "Масштабтың еселеуі:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableFocusTracking)
 #: effects/zoom/zoom_config.ui:66
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "Enable tracking of the focused location. This needs QAccessible to be "
+#| "enabled per application (\"export QT_ACCESSIBILITY=1\")."
 msgid ""
 "Enable tracking of the focused location. This needs QAccessible to be "
 "enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
 msgstr ""
+"Көздеген орынды қадағалауын рұқсат ету. Бұған,.қолданба үшін "
+"QAccessibleрұқсат етілу керек (\"export QT_ACCESSIBILITY=1\")."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
 #: effects/zoom/zoom_config.ui:69
 #, kde-format
 msgid "Enable Focus Tracking"
-msgstr ""
+msgstr "Көздеген нүктені қадағалау"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableTextCaretTracking)
 #: effects/zoom/zoom_config.ui:76
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "Enable tracking of the focused location. This needs QAccessible to be "
+#| "enabled per application (\"export QT_ACCESSIBILITY=1\")."
 msgid ""
 "Enable tracking of the text cursor. This needs QAccessible to be enabled per "
 "application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
 msgstr ""
+"Көздеген орынды қадағалауын рұқсат ету. Бұған,.қолданба үшін "
+"QAccessibleрұқсат етілу керек (\"export QT_ACCESSIBILITY=1\")."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
 #: effects/zoom/zoom_config.ui:79
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Enable Focus Tracking"
 msgid "Enable Text Cursor Tracking"
-msgstr ""
+msgstr "Көздеген нүктені қадағалау"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: effects/zoom/zoom_config.ui:86
 #, kde-format
 msgid "Mouse Pointer:"
-msgstr ""
+msgstr "Тышқанның меңзері"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MousePointer)
 #: effects/zoom/zoom_config.ui:99
 #, kde-format
 msgid "Visibility of the mouse-pointer."
-msgstr ""
+msgstr "Тышқан меңзерінің көрінісі"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
 #: effects/zoom/zoom_config.ui:103
 #, kde-format
 msgid "Scale"
-msgstr ""
+msgstr "Масштабы"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
 #: effects/zoom/zoom_config.ui:108
 #, kde-format
 msgid "Keep"
-msgstr ""
+msgstr "Сақтау"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
 #: effects/zoom/zoom_config.ui:113
 #, kde-format
 msgid "Hide"
-msgstr ""
+msgstr "Жасыру"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MouseTracking)
 #: effects/zoom/zoom_config.ui:121
 #, kde-format
 msgid "Track moving of the mouse."
-msgstr ""
+msgstr "Жылжыған меңзерінің ізі"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: effects/zoom/zoom_config.ui:125
 #, kde-format
 msgid "Proportional"
-msgstr ""
+msgstr "Пропорционалды"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: effects/zoom/zoom_config.ui:130
@@ -2298,7 +2331,7 @@ msgstr "Ортаға"
 #: effects/zoom/zoom_config.ui:135
 #, kde-format
 msgid "Push"
-msgstr ""
+msgstr "Басу"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: effects/zoom/zoom_config.ui:140
@@ -2311,7 +2344,7 @@ msgstr "Қатарлау рұқсат етілмеген"
 #: effects/zoom/zoom_config.ui:148
 #, kde-format
 msgid "Mouse Tracking:"
-msgstr ""
+msgstr "Тышқанның ізі"
 
 #: helpers/killer/killer.cpp:29
 #, kde-format
@@ -2696,40 +2729,44 @@ msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Істеп тұрған ICCCM2.0-секілді терезе менеджерін алмастыру"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:720
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "Tiny"
 msgctxt "@item:inlistbox Button size:"
 msgid "Tiny"
-msgstr ""
+msgstr "Шағын"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:721
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Normal"
-msgstr ""
+msgstr "Кәдімгі"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:722
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Large"
-msgstr ""
+msgstr "Үлкен"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:723
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Large"
-msgstr ""
+msgstr "Оте үлкен"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:724
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Huge"
-msgstr ""
+msgstr "Зор"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:725
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "Very Huge"
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Huge"
-msgstr ""
+msgstr "Өте зор"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:726
 #, fuzzy, kde-format
@@ -2748,13 +2785,13 @@ msgstr "Тышқанды эмуляциялау"
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:14
 #, kde-format
 msgid "Config Dialog"
-msgstr ""
+msgstr "Баптау диалогы"
 
 #. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:23
 #, kde-format
 msgid "Title &Alignment"
-msgstr ""
+msgstr "&Айдардың жазуының ығысуы"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:53
@@ -2763,6 +2800,8 @@ msgid ""
 "Check this option if the window border should be painted in the titlebar "
 "color. Otherwise it will be painted in the background color."
 msgstr ""
+"Белгісі қойылса, терезенің шегі айдарымен түстес болады, әйтпесе, аясының "
+"түсімен боялады."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:56
@@ -2778,12 +2817,14 @@ msgid ""
 "Check this option if you want the buttons to fade in when the mouse pointer "
 "hovers over them and fade out again when it moves away."
 msgstr ""
+"Батырмалар тышқан меңзері тигенде, біртіндеп өзгеріп, меңзер кеткенде "
+"біртіндеп бұрынғы түріне қайтсын десеңіз, осы құсбелгіні қойыңыз."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:69
 #, kde-format
 msgid "Animate buttons"
-msgstr ""
+msgstr "Батырмалар анимациялансын"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:49
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:51
@@ -3518,7 +3559,7 @@ msgstr ""
 #: rulesettings.kcfg:407
 #, kde-format
 msgid "Shortcut"
-msgstr ""
+msgstr "Тіркесім"
 
 #. i18n: ectx: label, entry (shortcutrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:410
@@ -3594,7 +3635,7 @@ msgstr ""
 #: shortcutdialog.ui:14
 #, kde-format
 msgid "Dialog"
-msgstr ""
+msgstr "Диалог"
 
 #. i18n: ectx: property (text), widget (QToolButton, clearButton)
 #: shortcutdialog.ui:25

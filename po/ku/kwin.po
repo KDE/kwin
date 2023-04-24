@@ -1217,31 +1217,32 @@ msgstr "Navîn"
 #: effects/thumbnailaside/thumbnailaside_config.ui:17
 #, kde-format
 msgid "Appearance"
-msgstr ""
+msgstr "Xuya kirin"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
 #: effects/desktopgrid/desktopgrid_config.ui:30
 #, kde-format
 msgid "Pager"
-msgstr ""
+msgstr "Rûpelker"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
 #: effects/desktopgrid/desktopgrid_config.ui:35
 #, kde-format
 msgid "Automatic"
-msgstr ""
+msgstr "Bixweber"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
 #: effects/desktopgrid/desktopgrid_config.ui:40
 #, kde-format
 msgid "Custom"
-msgstr ""
+msgstr "Taybet"
 
 #. i18n: ectx: property (text), widget (QLabel, layoutRowsLabel)
 #: effects/desktopgrid/desktopgrid_config.ui:48
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Number of &rows:"
 msgid "N&umber of rows:"
-msgstr ""
+msgstr "Hejmara &rêzikan:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: effects/desktopgrid/desktopgrid_config.ui:103
@@ -1357,16 +1358,19 @@ msgstr ""
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_Duration)
 #: effects/glide/glide_config.ui:32
 #: effects/scale/package/contents/ui/config.ui:30
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "Duration of rotation"
+#| msgid "Default"
 msgid "Default"
-msgstr ""
+msgstr "Wekî heyî"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Duration)
 #: effects/glide/glide_config.ui:35
 #: effects/scale/package/contents/ui/config.ui:33
-#, kde-format
+#, fuzzy, kde-format
+#| msgid " msec"
 msgid " milliseconds"
-msgstr ""
+msgstr " mçir"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_InAnimation)
 #: effects/glide/glide_config.ui:50
@@ -1437,25 +1441,26 @@ msgstr ""
 #, kde-format
 msgctxt "Duration of rotation"
 msgid "Default"
-msgstr ""
+msgstr "Wekî heyî"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AnimationDuration)
 #: effects/magiclamp/magiclamp_config.ui:39
-#, kde-format
+#, fuzzy, kde-format
+#| msgid " msec"
 msgid "milliseconds"
-msgstr ""
+msgstr " mçir"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupSize)
 #: effects/magnifier/magnifier_config.ui:17
 #, kde-format
 msgid "Size"
-msgstr ""
+msgstr "Mezinahî"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: effects/magnifier/magnifier_config.ui:23
 #, kde-format
 msgid "&Width:"
-msgstr ""
+msgstr "&Firehî:"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Width)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Height)
@@ -1463,7 +1468,7 @@ msgstr ""
 #: effects/magnifier/magnifier_config.ui:74
 #, kde-format
 msgid " px"
-msgstr ""
+msgstr " px"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: effects/magnifier/magnifier_config.ui:55
@@ -1540,23 +1545,25 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, ring_line_width_label)
 #: effects/mouseclick/mouseclick_config.ui:103
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "&Width:"
 msgid "Line Width:"
-msgstr ""
+msgstr "&Firehî:"
 
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, kcfg_LineWidth)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingSize)
 #: effects/mouseclick/mouseclick_config.ui:119
 #: effects/mouseclick/mouseclick_config.ui:171
-#, kde-format
+#, fuzzy, kde-format
+#| msgid " pixels"
 msgid " pixel"
-msgstr ""
+msgstr " pîksel"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingLife)
 #: effects/mouseclick/mouseclick_config.ui:132
 #, kde-format
 msgid " msec"
-msgstr ""
+msgstr " mçir"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_duration_label)
 #: effects/mouseclick/mouseclick_config.ui:145
@@ -1580,7 +1587,7 @@ msgstr ""
 #: effects/mouseclick/mouseclick_config.ui:210
 #, kde-format
 msgid "Text"
-msgstr ""
+msgstr "Nivîsar"
 
 #. i18n: ectx: property (text), widget (QLabel, font_label)
 #: effects/mouseclick/mouseclick_config.ui:216
@@ -1628,7 +1635,7 @@ msgstr ""
 #: effects/mousemark/mousemark_config.ui:36
 #, kde-format
 msgid "&Color:"
-msgstr ""
+msgstr "&Reng:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: effects/mousemark/mousemark_config.ui:82
@@ -1675,9 +1682,10 @@ msgid "Add Virtual Desktop"
 msgstr "Izxere ya Sermasê Nîşan Bide"
 
 #: effects/overview/qml/ScreenView.qml:226
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Number of windows:"
 msgid "No matching windows"
-msgstr ""
+msgstr "Hejmara pace yan:"
 
 #: effects/private/qml/WindowHeapDelegate.qml:151
 #, kde-format
@@ -1802,9 +1810,10 @@ msgstr ""
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_MaxWidth)
 #: effects/thumbnailaside/thumbnailaside_config.ui:55
 #: effects/thumbnailaside/thumbnailaside_config.ui:106
-#, kde-format
+#, fuzzy, kde-format
+#| msgid " pixels"
 msgid " pixels"
-msgstr ""
+msgstr " pîksel"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: effects/thumbnailaside/thumbnailaside_config.ui:68
@@ -1817,7 +1826,7 @@ msgstr "&Zelalî"
 #: effects/thumbnailaside/thumbnailaside_config.ui:87
 #, no-c-format, kde-format
 msgid " %"
-msgstr ""
+msgstr " %"
 
 #: effects/tileseditor/kcm/tileseditoreffectkcm.cpp:37
 #: effects/tileseditor/tileseditoreffect.cpp:29
@@ -1898,9 +1907,10 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Control)
 #: effects/trackmouse/trackmouse_config.ui:72
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Center"
 msgid "Ctrl"
-msgstr ""
+msgstr "Navîn"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Shift)
 #: effects/trackmouse/trackmouse_config.ui:79
@@ -1938,7 +1948,7 @@ msgstr ""
 #: effects/translucency/package/contents/ui/config.ui:431
 #, kde-format
 msgid "Opaque"
-msgstr ""
+msgstr "Tarî"
 
 #. i18n: ectx: property (text), widget (QLabel, dialogs_label)
 #: effects/translucency/package/contents/ui/config.ui:137
@@ -1953,7 +1963,7 @@ msgstr "Diyalog:"
 #: effects/translucency/package/contents/ui/config.ui:418
 #, kde-format
 msgid "Transparent"
-msgstr ""
+msgstr "Zelalî"
 
 #. i18n: ectx: property (text), widget (QLabel, menus_label)
 #: effects/translucency/package/contents/ui/config.ui:188
@@ -2105,13 +2115,13 @@ msgstr ""
 #: effects/wobblywindows/wobblywindows_config.ui:201
 #, kde-format
 msgid "Less"
-msgstr ""
+msgstr "Kêmtir"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: effects/wobblywindows/wobblywindows_config.ui:224
 #, kde-format
 msgid "More"
-msgstr ""
+msgstr "Zêdetir"
 
 #: effects/zoom/zoom.cpp:67
 #, fuzzy, kde-format
@@ -2649,28 +2659,32 @@ msgid "Normal"
 msgstr ""
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:722
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Large"
 msgctxt "@item:inlistbox Button size:"
 msgid "Large"
-msgstr ""
+msgstr "Mezin"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:723
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Large"
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Large"
-msgstr ""
+msgstr "Mezin"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:724
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Large"
 msgctxt "@item:inlistbox Button size:"
 msgid "Huge"
-msgstr ""
+msgstr "Mezin"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:725
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Large"
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Huge"
-msgstr ""
+msgstr "Mezin"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:726
 #, fuzzy, kde-format
@@ -2695,7 +2709,7 @@ msgstr "Diyalog:"
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:23
 #, kde-format
 msgid "Title &Alignment"
-msgstr ""
+msgstr "&Bicihkirina Sernavê"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:53
@@ -2704,6 +2718,8 @@ msgid ""
 "Check this option if the window border should be painted in the titlebar "
 "color. Otherwise it will be painted in the background color."
 msgstr ""
+"Heke kêleka paceyê di rengê darika sernavê de bê nexşe kirin, vê bijare yê "
+"hilbijêre. Wekî din, ev di rengê rûerdê de bê nexşe kirin."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:56
@@ -2719,12 +2735,14 @@ msgid ""
 "Check this option if you want the buttons to fade in when the mouse pointer "
 "hovers over them and fade out again when it moves away."
 msgstr ""
+"Heke hûn dixwazin bişkojk ronak be dema mişk bê ser de û dema mişk ser de "
+"dûr bikeve dîsa tarî be, vê bijare yê hilbijêrin."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:69
 #, kde-format
 msgid "Animate buttons"
-msgstr ""
+msgstr "Bişkojkan zindî bike"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:49
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:51

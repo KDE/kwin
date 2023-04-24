@@ -1070,9 +1070,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurDescription)
 #: effects/blur/blur_config.ui:17
-#, kde-format
+#, fuzzy, kde-format
 msgid "Blur strength:"
-msgstr ""
+msgstr "&ശക്തി:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
@@ -1084,15 +1084,15 @@ msgstr "മുകളില്‍-വലതു്"
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
 #: effects/blur/blur_config.ui:74 effects/blur/blur_config.ui:137
-#, kde-format
+#, fuzzy, kde-format
 msgid "Strong"
-msgstr ""
+msgstr "&ശക്തി:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseDescription)
 #: effects/blur/blur_config.ui:83
-#, kde-format
+#, fuzzy, kde-format
 msgid "Noise strength:"
-msgstr ""
+msgstr "&ശക്തി:"
 
 #: effects/colorpicker/colorpicker.cpp:102
 #, kde-format
@@ -1124,10 +1124,10 @@ msgid "Show Desktop Grid"
 msgstr "പണിയിടം ഗ്രിഡ് കാണിക്കുക"
 
 #: effects/desktopgrid/desktopgrid_config.cpp:61
-#, kde-format
+#, fuzzy, kde-format
 msgctxt "Desktop name alignment:"
 msgid "Disabled"
-msgstr ""
+msgstr "പ്രവര്‍ത്തനരഹിതമാക്കിയിരിയ്ക്കുന്നു"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
@@ -1190,7 +1190,7 @@ msgstr "മുകളില്‍-ഇടതു്"
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:36
 #, kde-format
 msgid "Center"
-msgstr ""
+msgstr "മദ്ധ്യം"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 #: effects/desktopgrid/desktopgrid_config.ui:17
@@ -1198,31 +1198,31 @@ msgstr ""
 #: effects/thumbnailaside/thumbnailaside_config.ui:17
 #, kde-format
 msgid "Appearance"
-msgstr ""
+msgstr "കാഴ്ച"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
 #: effects/desktopgrid/desktopgrid_config.ui:30
 #, kde-format
 msgid "Pager"
-msgstr ""
+msgstr "പേജര്‍"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
 #: effects/desktopgrid/desktopgrid_config.ui:35
 #, kde-format
 msgid "Automatic"
-msgstr ""
+msgstr "യാന്ത്രികം"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
 #: effects/desktopgrid/desktopgrid_config.ui:40
 #, kde-format
 msgid "Custom"
-msgstr ""
+msgstr "ഇഷ്ടപെട്ടതു്"
 
 #. i18n: ectx: property (text), widget (QLabel, layoutRowsLabel)
 #: effects/desktopgrid/desktopgrid_config.ui:48
-#, kde-format
+#, fuzzy, kde-format
 msgid "N&umber of rows:"
-msgstr ""
+msgstr "&വരികളുടെ എണ്ണം:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: effects/desktopgrid/desktopgrid_config.ui:103
@@ -1238,9 +1238,10 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: effects/desktopgrid/desktopgrid_config.ui:123
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "&Layout mode:"
 msgid "&Grid layout mode:"
-msgstr ""
+msgstr "&വിന്യാസ ദശ:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
 #: effects/desktopgrid/desktopgrid_config.ui:137
@@ -1257,7 +1258,7 @@ msgstr "&അടയ്ക്കുക"
 #: effects/windowview/kcm/windowvieweffectkcm.ui:35
 #, kde-format
 msgid "Natural"
-msgstr ""
+msgstr "സാധാരണ"
 
 #. i18n: ectx: property (text), widget (QLabel, ignoreLabel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
@@ -1277,13 +1278,13 @@ msgstr "ജാലകം നീക്കുക"
 #: effects/desktopgrid/desktopgrid_config.ui:171
 #, kde-format
 msgid "Activation"
-msgstr ""
+msgstr "പ്രാവര്‍ത്തികമാക്കല്‍"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Strength)
 #: effects/diminactive/diminactive_config.ui:17
-#, kde-format
+#, fuzzy, kde-format
 msgid "Strength:"
-msgstr ""
+msgstr "&ശക്തി:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Dim)
 #: effects/diminactive/diminactive_config.ui:40
@@ -1326,23 +1327,23 @@ msgstr "&സ്ക്രീന്‍ പൂര്‍ണ്ണവലിപ്പ�
 #. i18n: ectx: property (text), widget (QLabel, label_Duration)
 #: effects/glide/glide_config.ui:19
 #: effects/scale/package/contents/ui/config.ui:17
-#, kde-format
+#, fuzzy, kde-format
 msgid "Duration:"
-msgstr ""
+msgstr "അലങ്കാരങ്ങള്‍:"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_Duration)
 #: effects/glide/glide_config.ui:32
 #: effects/scale/package/contents/ui/config.ui:30
-#, kde-format
+#, fuzzy, kde-format
 msgid "Default"
-msgstr ""
+msgstr "സഹജമായ"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Duration)
 #: effects/glide/glide_config.ui:35
 #: effects/scale/package/contents/ui/config.ui:33
-#, kde-format
+#, fuzzy, kde-format
 msgid " milliseconds"
-msgstr ""
+msgstr " മില്ലി-സെക്കന്റ്"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_InAnimation)
 #: effects/glide/glide_config.ui:50
@@ -1354,16 +1355,16 @@ msgstr "ജാലക പ്രക്രിയകള്‍ക്കുള്ള �
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationEdge)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationEdge)
 #: effects/glide/glide_config.ui:56 effects/glide/glide_config.ui:154
-#, kde-format
+#, fuzzy, kde-format
 msgid "Rotation edge:"
-msgstr ""
+msgstr "കറക്കേണ്ട സമയം:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationAngle)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationAngle)
 #: effects/glide/glide_config.ui:93 effects/glide/glide_config.ui:191
-#, kde-format
+#, fuzzy, kde-format
 msgid "Rotation angle:"
-msgstr ""
+msgstr "കറക്കേണ്ട സമയം:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InDistance)
 #. i18n: ectx: property (text), widget (QLabel, label_OutDistance)
@@ -1382,12 +1383,12 @@ msgstr "ജാലക പ്രക്രിയകള്‍ക്കുള്ള �
 #: effects/invert/invert.cpp:42 effects/invert/invert_config.cpp:38
 #, kde-format
 msgid "Toggle Invert Effect"
-msgstr ""
+msgstr "മറിക്കല്‍ പ്രഭാവം ടോഗിള്‍ ചെയ്യുക"
 
 #: effects/invert/invert.cpp:49 effects/invert/invert_config.cpp:44
 #, kde-format
 msgid "Toggle Invert Effect on Window"
-msgstr ""
+msgstr "ജാലകത്തില്‍ മറിക്കല്‍ പ്രഭാവം ടോഗിള്‍ ചെയ്യുക"
 
 #: effects/invert/invert.cpp:56
 #, kde-format
@@ -1404,32 +1405,32 @@ msgstr ""
 #: effects/magiclamp/magiclamp_config.ui:17
 #, kde-format
 msgid "Animation duration:"
-msgstr ""
+msgstr "&ആനിമേഷന്‍ (സജീവമാക്കല്‍) ദൈര്‍ഘ്യം:"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_AnimationDuration)
 #: effects/magiclamp/magiclamp_config.ui:36
-#, kde-format
+#, fuzzy, kde-format
 msgctxt "Duration of rotation"
 msgid "Default"
-msgstr ""
+msgstr "സഹജമായ"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AnimationDuration)
 #: effects/magiclamp/magiclamp_config.ui:39
-#, kde-format
+#, fuzzy, kde-format
 msgid "milliseconds"
-msgstr ""
+msgstr " മില്ലി-സെക്കന്റ്"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupSize)
 #: effects/magnifier/magnifier_config.ui:17
 #, kde-format
 msgid "Size"
-msgstr ""
+msgstr "വലിപ്പം"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: effects/magnifier/magnifier_config.ui:23
 #, kde-format
 msgid "&Width:"
-msgstr ""
+msgstr "&വീതി:"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Width)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Height)
@@ -1437,7 +1438,7 @@ msgstr ""
 #: effects/magnifier/magnifier_config.ui:74
 #, kde-format
 msgid " px"
-msgstr ""
+msgstr " px"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: effects/magnifier/magnifier_config.ui:55
@@ -1447,9 +1448,9 @@ msgstr "മുകളില്‍-വലതു്"
 
 #: effects/mouseclick/mouseclick.cpp:36
 #: effects/mouseclick/mouseclick_config.cpp:51
-#, kde-format
+#, fuzzy, kde-format
 msgid "Toggle Mouse Click Effect"
-msgstr ""
+msgstr "മറിക്കല്‍ പ്രഭാവം ടോഗിള്‍ ചെയ്യുക"
 
 #: effects/mouseclick/mouseclick.cpp:43
 #, fuzzy, kde-format
@@ -1507,35 +1508,35 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, ring_line_width_label)
 #: effects/mouseclick/mouseclick_config.ui:103
-#, kde-format
+#, fuzzy, kde-format
 msgid "Line Width:"
-msgstr ""
+msgstr "&വീതി:"
 
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, kcfg_LineWidth)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingSize)
 #: effects/mouseclick/mouseclick_config.ui:119
 #: effects/mouseclick/mouseclick_config.ui:171
-#, kde-format
+#, fuzzy, kde-format
 msgid " pixel"
-msgstr ""
+msgstr " പിക്സെലുകള്‍"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingLife)
 #: effects/mouseclick/mouseclick_config.ui:132
 #, kde-format
 msgid " msec"
-msgstr ""
+msgstr " മില്ലി-സെക്കന്റ്"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_duration_label)
 #: effects/mouseclick/mouseclick_config.ui:145
-#, kde-format
+#, fuzzy, kde-format
 msgid "Ring Duration:"
-msgstr ""
+msgstr "മായല്‍ ദൈര്‍ഘ്യം:"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_radius_label)
 #: effects/mouseclick/mouseclick_config.ui:155
-#, kde-format
+#, fuzzy, kde-format
 msgid "Ring Radius:"
-msgstr ""
+msgstr "&റേഡിയസ് (വ്യാസാര്‍ദ്ധം):"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_count_label)
 #: effects/mouseclick/mouseclick_config.ui:184
@@ -1547,7 +1548,7 @@ msgstr ""
 #: effects/mouseclick/mouseclick_config.ui:210
 #, kde-format
 msgid "Text"
-msgstr ""
+msgstr "പദാവലി"
 
 #. i18n: ectx: property (text), widget (QLabel, font_label)
 #: effects/mouseclick/mouseclick_config.ui:216
@@ -1594,13 +1595,13 @@ msgstr ""
 #: effects/mousemark/mousemark_config.ui:36
 #, kde-format
 msgid "&Color:"
-msgstr ""
+msgstr "&നിറം:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: effects/mousemark/mousemark_config.ui:82
 #, kde-format
 msgid "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
-msgstr ""
+msgstr "മൌസ് ഉപയോഗിച്ച് വരക്കാന്‍ Shift+Meta കീസ് അമര്‍ത്തിപിടിച്ചിട്ട് മൌസ് അനക്കുക."
 
 #: effects/outputlocator/outputlocator.cpp:48
 #, kde-format
@@ -1610,16 +1611,17 @@ msgstr ""
 
 #: effects/overview/kcm/overvieweffectkcm.cpp:41
 #: effects/overview/overvieweffect.cpp:31
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Toggle Invert Effect"
 msgid "Toggle Overview"
-msgstr ""
+msgstr "മറിക്കല്‍ പ്രഭാവം ടോഗിള്‍ ചെയ്യുക"
 
 #. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
 #: effects/overview/kcm/overvieweffectkcm.ui:22
 #: effects/windowview/kcm/windowvieweffectkcm.ui:22
 #, kde-format
 msgid "Layout mode:"
-msgstr ""
+msgstr "വിന്യാസ ദശ:"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: effects/overview/kcm/overvieweffectkcm.ui:43
@@ -1639,9 +1641,10 @@ msgid "Add Virtual Desktop"
 msgstr "പണിയിടം ഗ്രിഡ് കാണിക്കുക"
 
 #: effects/overview/qml/ScreenView.qml:226
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Moving windows:"
 msgid "No matching windows"
-msgstr ""
+msgstr "നീങ്ങുന്ന ജാലകങ്ങള്‍:"
 
 #: effects/private/qml/WindowHeapDelegate.qml:151
 #, kde-format
@@ -1682,10 +1685,10 @@ msgid ""
 msgstr ""
 
 #: effects/showfps/qml/main.qml:110
-#, kde-format
+#, fuzzy, kde-format
 msgctxt "@label"
 msgid "Paint Duration"
-msgstr ""
+msgstr "മായല്‍ ദൈര്‍ഘ്യം:"
 
 #: effects/showfps/qml/main.qml:162
 #, kde-format
@@ -1700,10 +1703,11 @@ msgid "Current FPS"
 msgstr "ജാലകത്തിനുള്ള വിശേഷതകള്‍ ക്രമീ&കരിക്കുക..."
 
 #: effects/showfps/qml/main.qml:184
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Maximum &width:"
 msgctxt "@label"
 msgid "Maximum FPS"
-msgstr ""
+msgstr "ഏറ്റവും കൂടാവുന്ന &വീതി:"
 
 #: effects/showfps/qml/main.qml:192
 #, kde-format
@@ -1736,35 +1740,35 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideBackground)
 #: effects/slide/slide_config.ui:72
-#, kde-format
+#, fuzzy, kde-format
 msgid "Slide desktop background"
-msgstr ""
+msgstr "അനക്കുമ്പോള്‍ &കുലുക്കുക"
 
 #: effects/thumbnailaside/thumbnailaside.cpp:31
 #: effects/thumbnailaside/thumbnailaside_config.cpp:59
 #, kde-format
 msgid "Toggle Thumbnail for Current Window"
-msgstr ""
+msgstr "ഇപ്പോഴുള്ള ജാലകത്തിനു് നഖച്ചിത്രം ടോഗിള്‍ ചെയ്യുക"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: effects/thumbnailaside/thumbnailaside_config.ui:23
 #, kde-format
 msgid "Maximum &width:"
-msgstr ""
+msgstr "ഏറ്റവും കൂടാവുന്ന &വീതി:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: effects/thumbnailaside/thumbnailaside_config.ui:36
 #, kde-format
 msgid "&Spacing:"
-msgstr ""
+msgstr "&സ്പെയ്സിങ്ങ് (നടുക്കുള്ള സ്ഥലം):"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Spacing)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_MaxWidth)
 #: effects/thumbnailaside/thumbnailaside_config.ui:55
 #: effects/thumbnailaside/thumbnailaside_config.ui:106
-#, kde-format
+#, fuzzy, kde-format
 msgid " pixels"
-msgstr ""
+msgstr " പിക്സെലുകള്‍"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: effects/thumbnailaside/thumbnailaside_config.ui:68
@@ -1777,7 +1781,7 @@ msgstr "&അതാര്യത "
 #: effects/thumbnailaside/thumbnailaside_config.ui:87
 #, no-c-format, kde-format
 msgid " %"
-msgstr ""
+msgstr " %"
 
 #: effects/tileseditor/kcm/tileseditoreffectkcm.cpp:37
 #: effects/tileseditor/tileseditoreffect.cpp:29
@@ -1856,9 +1860,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Control)
 #: effects/trackmouse/trackmouse_config.ui:72
-#, kde-format
+#, fuzzy, kde-format
 msgid "Ctrl"
-msgstr ""
+msgstr "നടുക്കു്"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Shift)
 #: effects/trackmouse/trackmouse_config.ui:79
@@ -1876,19 +1880,19 @@ msgstr ""
 #: effects/translucency/package/contents/ui/config.ui:14
 #, kde-format
 msgid "Translucency"
-msgstr ""
+msgstr "അര്‍ദ്ധതാര്യത"
 
 #. i18n: ectx: property (title), widget (QGroupBox, m_opacityGroupBox)
 #: effects/translucency/package/contents/ui/config.ui:20
 #, kde-format
 msgid "General Translucency Settings"
-msgstr ""
+msgstr "പൊതുവേയുള്ള അര്‍ദ്ധതാര്യത സജ്ജീകരണങ്ങള്‍"
 
 #. i18n: ectx: property (text), widget (QLabel, comboboxpopup_label)
 #: effects/translucency/package/contents/ui/config.ui:64
 #, kde-format
 msgid "Combobox popups:"
-msgstr ""
+msgstr "കോംബോ-ചതുരം പോപ്പ്-അപ്പുകള്‍:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label_7)
@@ -1896,13 +1900,13 @@ msgstr ""
 #: effects/translucency/package/contents/ui/config.ui:431
 #, kde-format
 msgid "Opaque"
-msgstr ""
+msgstr "അതാര്യം"
 
 #. i18n: ectx: property (text), widget (QLabel, dialogs_label)
 #: effects/translucency/package/contents/ui/config.ui:137
 #, kde-format
 msgid "Dialogs:"
-msgstr ""
+msgstr "ഡയലോഗുകള്‍:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -1910,7 +1914,7 @@ msgstr ""
 #: effects/translucency/package/contents/ui/config.ui:418
 #, kde-format
 msgid "Transparent"
-msgstr ""
+msgstr "സുതാര്യം"
 
 #. i18n: ectx: property (text), widget (QLabel, menus_label)
 #: effects/translucency/package/contents/ui/config.ui:188
@@ -1936,25 +1940,25 @@ msgstr "ജാലകങ്ങള്‍"
 #: effects/translucency/package/contents/ui/config.ui:267
 #, kde-format
 msgid "Set menu translucency independently"
-msgstr ""
+msgstr "വിഭവസൂചികയുടെ അര്‍ദ്ധതാര്യത വേറെ സജ്ജീകരിയ്ക്കുക"
 
 #. i18n: ectx: property (text), widget (QLabel, dropdownmenus_label)
 #: effects/translucency/package/contents/ui/config.ui:285
 #, kde-format
 msgid "Dropdown menus:"
-msgstr ""
+msgstr "താഴോട്ടു വരുന്ന വിഭവസൂചികകള്‍:"
 
 #. i18n: ectx: property (text), widget (QLabel, popupmenus_label)
 #: effects/translucency/package/contents/ui/config.ui:329
 #, kde-format
 msgid "Popup menus:"
-msgstr ""
+msgstr "പൊങ്ങി വരുന്ന വിഭവസൂചികകള്‍:"
 
 #. i18n: ectx: property (text), widget (QLabel, tornoffmenus_label)
 #: effects/translucency/package/contents/ui/config.ui:367
 #, kde-format
 msgid "Torn-off menus:"
-msgstr ""
+msgstr "കീറി-പോയിരിക്കുന്ന വിഭവസൂചികകള്‍:"
 
 #: effects/windowview/kcm/windowvieweffectkcm.cpp:42
 #: effects/windowview/windowvieweffect.cpp:45
@@ -2012,13 +2016,13 @@ msgstr "പുരോ&ഗമിച്ച"
 #: effects/wobblywindows/wobblywindows_config.ui:26
 #, kde-format
 msgid "&Stiffness:"
-msgstr ""
+msgstr "&കട്ടി :"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: effects/wobblywindows/wobblywindows_config.ui:68
 #, kde-format
 msgid "Dra&g:"
-msgstr ""
+msgstr "വലിച്ചു &നീക്കുക:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: effects/wobblywindows/wobblywindows_config.ui:81
@@ -2030,37 +2034,37 @@ msgstr "ഇടതു്"
 #: effects/wobblywindows/wobblywindows_config.ui:155
 #, kde-format
 msgid "Wo&bble when moving"
-msgstr ""
+msgstr "അനക്കുമ്പോള്‍ &കുലുക്കുക"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ResizeWobble)
 #: effects/wobblywindows/wobblywindows_config.ui:162
 #, kde-format
 msgid "Wobble when &resizing"
-msgstr ""
+msgstr "വലിപ്പം &മാറ്റുമ്പോള്‍ കുലുക്കുക"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AdvancedMode)
 #: effects/wobblywindows/wobblywindows_config.ui:182
 #, kde-format
 msgid "Enable &advanced mode"
-msgstr ""
+msgstr "&സങ്കീര്‍ണമായ ദശ പ്രാവര്‍ത്തികമാക്കുക"
 
 #. i18n: ectx: property (title), widget (QGroupBox, basicGroup)
 #: effects/wobblywindows/wobblywindows_config.ui:192
 #, kde-format
 msgid "&Wobbliness"
-msgstr ""
+msgstr "&കുലുക്കം"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: effects/wobblywindows/wobblywindows_config.ui:201
 #, kde-format
 msgid "Less"
-msgstr ""
+msgstr "കുറവു്"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: effects/wobblywindows/wobblywindows_config.ui:224
 #, kde-format
 msgid "More"
-msgstr ""
+msgstr "കൂടുതല്‍"
 
 #: effects/zoom/zoom.cpp:67
 #, fuzzy, kde-format
@@ -2123,9 +2127,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: effects/zoom/zoom_config.ui:28
-#, kde-format
+#, fuzzy, kde-format
 msgid "Zoom Factor:"
-msgstr ""
+msgstr "സൂം ചെയ്യേണ്ട (വലിപ്പം കൂട്ടേണ്ട) ദൈര്‍ഘ്യം"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableFocusTracking)
 #: effects/zoom/zoom_config.ui:66
@@ -2199,9 +2203,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: effects/zoom/zoom_config.ui:130
-#, kde-format
+#, fuzzy, kde-format
 msgid "Centered"
-msgstr ""
+msgstr "നടുക്കു്"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: effects/zoom/zoom_config.ui:135
@@ -2211,9 +2215,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: effects/zoom/zoom_config.ui:140
-#, kde-format
+#, fuzzy, kde-format
 msgid "Disabled"
-msgstr ""
+msgstr "പ്രവര്‍ത്തനരഹിതമാക്കിയിരിയ്ക്കുന്നു"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: effects/zoom/zoom_config.ui:148
@@ -2591,28 +2595,28 @@ msgid "Normal"
 msgstr ""
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:722
-#, kde-format
+#, fuzzy, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Large"
-msgstr ""
+msgstr "വലുത്"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:723
-#, kde-format
+#, fuzzy, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Large"
-msgstr ""
+msgstr "വലുത്"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:724
-#, kde-format
+#, fuzzy, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Huge"
-msgstr ""
+msgstr "വലുത്"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:725
-#, kde-format
+#, fuzzy, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Huge"
-msgstr ""
+msgstr "വലുത്"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:726
 #, fuzzy, kde-format
@@ -2629,13 +2633,13 @@ msgstr ""
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:14
 #, kde-format
 msgid "Config Dialog"
-msgstr ""
+msgstr "സജ്ജീകരണത്തിനുള്ള സംവാദം"
 
 #. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:23
 #, kde-format
 msgid "Title &Alignment"
-msgstr ""
+msgstr "&തലക്കെട്ട് ക്രമീകരണം"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:53
@@ -2644,6 +2648,8 @@ msgid ""
 "Check this option if the window border should be painted in the titlebar "
 "color. Otherwise it will be painted in the background color."
 msgstr ""
+"ഈ ഐച്ഛികം തെരഞ്ഞെടുത്താല്‍, ജാലകവരമ്പിനു തലക്കെട്ടു് കാണിയ്ക്കുന്ന പട്ടയുടെ നിറം കൊടുക്കും. "
+"അല്ലെങ്കില്‍ പശ്ചാത്തല നിറമായിരിക്കും ഉപയോഗിക്കുക"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:56
@@ -2659,6 +2665,8 @@ msgid ""
 "Check this option if you want the buttons to fade in when the mouse pointer "
 "hovers over them and fade out again when it moves away."
 msgstr ""
+"ഈ ഐച്ഛികം തെരഞ്ഞെടുത്താല്‍, മൌസ് കഴ്സര്‍ കൊണ്ടു വരുമ്പോള്‍ ബട്ടണുകള്‍ മങ്ങുകയും കഴ്സര്‍ മാറ്റുമ്പോള്‍ "
+"ബട്ടണുകള്‍ തെളിയുകയും ചെയ്യും."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:69
@@ -3458,9 +3466,9 @@ msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
-#, kde-format
+#, fuzzy, kde-format
 msgid "Dialog"
-msgstr ""
+msgstr "സജ്ജീകരണത്തിനുള്ള സംവാദം"
 
 #. i18n: ectx: property (text), widget (QToolButton, clearButton)
 #: shortcutdialog.ui:25

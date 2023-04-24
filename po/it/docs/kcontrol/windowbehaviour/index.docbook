@@ -1394,6 +1394,19 @@
 </listitem>
 </varlistentry>
 
+<varlistentry>
+<term
+><guilabel
+>Non fare nulla</guilabel
+></term>
+<listitem>
+<para
+>La finestra rimane sul desktop sul quale si trova e il desktop attuale non cambia. </para>
+<para
+>Scegli questa opzione se desideri mantenere le finestre e i desktop così come sono. </para>
+</listitem>
+</varlistentry>
+
 </variablelist>
 
 </sect3>

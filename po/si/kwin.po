@@ -1087,9 +1087,10 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurDescription)
 #: effects/blur/blur_config.ui:17
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "&Strength:"
 msgid "Blur strength:"
-msgstr ""
+msgstr "ශක්තිය (&S):"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
@@ -1102,15 +1103,17 @@ msgstr "දකුණට"
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
 #: effects/blur/blur_config.ui:74 effects/blur/blur_config.ui:137
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "&Strength:"
 msgid "Strong"
-msgstr ""
+msgstr "ශක්තිය (&S):"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseDescription)
 #: effects/blur/blur_config.ui:83
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "&Strength:"
 msgid "Noise strength:"
-msgstr ""
+msgstr "ශක්තිය (&S):"
 
 #: effects/colorpicker/colorpicker.cpp:102
 #, kde-format
@@ -1143,10 +1146,11 @@ msgid "Show Desktop Grid"
 msgstr "වැඩතලය පෙන්වන්න"
 
 #: effects/desktopgrid/desktopgrid_config.cpp:61
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Disabled"
 msgctxt "Desktop name alignment:"
 msgid "Disabled"
-msgstr ""
+msgstr "අක්‍රීය කල"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
@@ -1154,7 +1158,7 @@ msgstr ""
 #: effects/glide/glide_config.ui:70 effects/glide/glide_config.ui:168
 #, kde-format
 msgid "Top"
-msgstr ""
+msgstr "ඉහළ"
 
 #: effects/desktopgrid/desktopgrid_config.cpp:63
 #, fuzzy, kde-format
@@ -1176,7 +1180,7 @@ msgstr "දකුණට"
 #: effects/desktopgrid/desktopgrid_config.cpp:65
 #, kde-format
 msgid "Bottom-Right"
-msgstr ""
+msgstr "පහළ-දකුණ"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
@@ -1184,12 +1188,12 @@ msgstr ""
 #: effects/glide/glide_config.ui:80 effects/glide/glide_config.ui:178
 #, kde-format
 msgid "Bottom"
-msgstr ""
+msgstr "පහළ"
 
 #: effects/desktopgrid/desktopgrid_config.cpp:67
 #, kde-format
 msgid "Bottom-Left"
-msgstr ""
+msgstr "පහළ-වම"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
@@ -1213,7 +1217,7 @@ msgstr "වමට"
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:36
 #, kde-format
 msgid "Center"
-msgstr ""
+msgstr "මධ්‍යය"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 #: effects/desktopgrid/desktopgrid_config.ui:17
@@ -1221,37 +1225,38 @@ msgstr ""
 #: effects/thumbnailaside/thumbnailaside_config.ui:17
 #, kde-format
 msgid "Appearance"
-msgstr ""
+msgstr "පෙනුම"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
 #: effects/desktopgrid/desktopgrid_config.ui:30
 #, kde-format
 msgid "Pager"
-msgstr ""
+msgstr "පේජරය"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
 #: effects/desktopgrid/desktopgrid_config.ui:35
 #, kde-format
 msgid "Automatic"
-msgstr ""
+msgstr "ස්වයංක්‍රීය"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
 #: effects/desktopgrid/desktopgrid_config.ui:40
 #, kde-format
 msgid "Custom"
-msgstr ""
+msgstr "රුචි"
 
 #. i18n: ectx: property (text), widget (QLabel, layoutRowsLabel)
 #: effects/desktopgrid/desktopgrid_config.ui:48
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Number of &rows:"
 msgid "N&umber of rows:"
-msgstr ""
+msgstr "පේළි ගණන (&r):"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: effects/desktopgrid/desktopgrid_config.ui:103
 #, kde-format
 msgid "Desktop &name alignment:"
-msgstr ""
+msgstr "වැඩතල නාම එල්ලකිරීම (&n):"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ShowAddRemove)
 #: effects/desktopgrid/desktopgrid_config.ui:116
@@ -1261,9 +1266,10 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: effects/desktopgrid/desktopgrid_config.ui:123
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "&Layout mode:"
 msgid "&Grid layout mode:"
-msgstr ""
+msgstr "ආකෘති ප්‍රකාරය (&L):"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
 #: effects/desktopgrid/desktopgrid_config.ui:137
@@ -1280,7 +1286,7 @@ msgstr "වසන්න (&C)"
 #: effects/windowview/kcm/windowvieweffectkcm.ui:35
 #, kde-format
 msgid "Natural"
-msgstr ""
+msgstr "ස්වභාවික"
 
 #. i18n: ectx: property (text), widget (QLabel, ignoreLabel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
@@ -1306,9 +1312,10 @@ msgstr "සක්‍රීය කවුළුව (%1)"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Strength)
 #: effects/diminactive/diminactive_config.ui:17
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "&Strength:"
 msgid "Strength:"
-msgstr ""
+msgstr "ශක්තිය (&S):"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Dim)
 #: effects/diminactive/diminactive_config.ui:40
@@ -1318,9 +1325,10 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimPanels)
 #: effects/diminactive/diminactive_config.ui:47
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Do not animate panels"
 msgid "Docks and panels"
-msgstr ""
+msgstr "පැනල සජීවීකරණය නොකරන්න"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimDesktop)
 #: effects/diminactive/diminactive_config.ui:54
@@ -1353,23 +1361,28 @@ msgstr "පූර්‍ණ තිරය (&F)"
 #. i18n: ectx: property (text), widget (QLabel, label_Duration)
 #: effects/glide/glide_config.ui:19
 #: effects/scale/package/contents/ui/config.ui:17
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Duration"
 msgid "Duration:"
-msgstr ""
+msgstr "කාලසීමාව"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_Duration)
 #: effects/glide/glide_config.ui:32
 #: effects/scale/package/contents/ui/config.ui:30
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "Duration of rotation"
+#| msgid "Default"
 msgid "Default"
-msgstr ""
+msgstr "පෙරනිමි"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Duration)
 #: effects/glide/glide_config.ui:35
 #: effects/scale/package/contents/ui/config.ui:33
-#, kde-format
+#, fuzzy, kde-format
+#| msgid " millisecond"
+#| msgid_plural " milliseconds"
 msgid " milliseconds"
-msgstr ""
+msgstr "මිලිතත්පරය"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_InAnimation)
 #: effects/glide/glide_config.ui:50
@@ -1381,16 +1394,18 @@ msgstr "කවුළු මෙහෙයුම් මෙනුව"
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationEdge)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationEdge)
 #: effects/glide/glide_config.ui:56 effects/glide/glide_config.ui:154
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Rotation duration:"
 msgid "Rotation edge:"
-msgstr ""
+msgstr "භ්‍රමණ කාලසීමාව:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationAngle)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationAngle)
 #: effects/glide/glide_config.ui:93 effects/glide/glide_config.ui:191
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Rotation duration:"
 msgid "Rotation angle:"
-msgstr ""
+msgstr "භ්‍රමණ කාලසීමාව:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InDistance)
 #. i18n: ectx: property (text), widget (QLabel, label_OutDistance)
@@ -1409,17 +1424,18 @@ msgstr "කවුළු මෙහෙයුම් මෙනුව"
 #: effects/invert/invert.cpp:42 effects/invert/invert_config.cpp:38
 #, kde-format
 msgid "Toggle Invert Effect"
-msgstr ""
+msgstr "යටිකුරු සැරසිලි අතර මාරුවන්න"
 
 #: effects/invert/invert.cpp:49 effects/invert/invert_config.cpp:44
 #, kde-format
 msgid "Toggle Invert Effect on Window"
-msgstr ""
+msgstr "කවුළුව මත යටිකුරය සැරසිලි සඳහා මාරුවන්න"
 
 #: effects/invert/invert.cpp:56
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Invert cursor keys"
 msgid "Invert Screen Colors"
-msgstr ""
+msgstr "කර්සර යතුරු යටිකුරු කිරීම"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_FadeToBlack)
 #: effects/login/package/contents/ui/config.ui:17
@@ -1431,32 +1447,34 @@ msgstr ""
 #: effects/magiclamp/magiclamp_config.ui:17
 #, kde-format
 msgid "Animation duration:"
-msgstr ""
+msgstr "සජීවීකරණ කාලසීමාව:"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_AnimationDuration)
 #: effects/magiclamp/magiclamp_config.ui:36
 #, kde-format
 msgctxt "Duration of rotation"
 msgid "Default"
-msgstr ""
+msgstr "පෙරනිමි"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AnimationDuration)
 #: effects/magiclamp/magiclamp_config.ui:39
-#, kde-format
+#, fuzzy, kde-format
+#| msgid " millisecond"
+#| msgid_plural " milliseconds"
 msgid "milliseconds"
-msgstr ""
+msgstr "මිලිතත්පරය"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupSize)
 #: effects/magnifier/magnifier_config.ui:17
 #, kde-format
 msgid "Size"
-msgstr ""
+msgstr "ප්‍රමාණය"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: effects/magnifier/magnifier_config.ui:23
 #, kde-format
 msgid "&Width:"
-msgstr ""
+msgstr "පළල (&W):"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Width)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Height)
@@ -1464,7 +1482,7 @@ msgstr ""
 #: effects/magnifier/magnifier_config.ui:74
 #, kde-format
 msgid " px"
-msgstr ""
+msgstr " px"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: effects/magnifier/magnifier_config.ui:55
@@ -1475,9 +1493,10 @@ msgstr "දකුණට"
 
 #: effects/mouseclick/mouseclick.cpp:36
 #: effects/mouseclick/mouseclick_config.cpp:51
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Toggle Invert Effect"
 msgid "Toggle Mouse Click Effect"
-msgstr ""
+msgstr "යටිකුරු සැරසිලි අතර මාරුවන්න"
 
 #: effects/mouseclick/mouseclick.cpp:43
 #, fuzzy, kde-format
@@ -1487,10 +1506,11 @@ msgid "Left"
 msgstr "වමට"
 
 #: effects/mouseclick/mouseclick.cpp:44
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Middle button:"
 msgctxt "Middle mouse button"
 msgid "Middle"
-msgstr ""
+msgstr "මැද බොත්තම:"
 
 #: effects/mouseclick/mouseclick.cpp:45
 #, fuzzy, kde-format
@@ -1541,35 +1561,40 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, ring_line_width_label)
 #: effects/mouseclick/mouseclick_config.ui:103
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "&Width:"
 msgid "Line Width:"
-msgstr ""
+msgstr "පළල (&W):"
 
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, kcfg_LineWidth)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingSize)
 #: effects/mouseclick/mouseclick_config.ui:119
 #: effects/mouseclick/mouseclick_config.ui:171
-#, kde-format
+#, fuzzy, kde-format
+#| msgid " pixel"
+#| msgid_plural " pixels"
 msgid " pixel"
-msgstr ""
+msgstr "පික්සෙලය"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingLife)
 #: effects/mouseclick/mouseclick_config.ui:132
 #, kde-format
 msgid " msec"
-msgstr ""
+msgstr " msec"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_duration_label)
 #: effects/mouseclick/mouseclick_config.ui:145
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Fading duration:"
 msgid "Ring Duration:"
-msgstr ""
+msgstr "අවපැහැ කාලසීමාව:"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_radius_label)
 #: effects/mouseclick/mouseclick_config.ui:155
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "&Radius:"
 msgid "Ring Radius:"
-msgstr ""
+msgstr "අරය(&R):"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_count_label)
 #: effects/mouseclick/mouseclick_config.ui:184
@@ -1581,7 +1606,7 @@ msgstr ""
 #: effects/mouseclick/mouseclick_config.ui:210
 #, kde-format
 msgid "Text"
-msgstr ""
+msgstr "පෙළ"
 
 #. i18n: ectx: property (text), widget (QLabel, font_label)
 #: effects/mouseclick/mouseclick_config.ui:216
@@ -1599,17 +1624,17 @@ msgstr "වැඩතලය පෙන්වන්න"
 #: effects/mousemark/mousemark.cpp:40
 #, kde-format
 msgid "Clear All Mouse Marks"
-msgstr ""
+msgstr "සියලු මවුස ලකුණු මකන්න"
 
 #: effects/mousemark/mousemark.cpp:46 effects/mousemark/mousemark_config.cpp:59
 #, kde-format
 msgid "Clear Last Mouse Mark"
-msgstr ""
+msgstr "අවසන් මවුස ලකුණ මකන්න"
 
 #: effects/mousemark/mousemark_config.cpp:53
 #, kde-format
 msgid "Clear Mouse Marks"
-msgstr ""
+msgstr "මවුස සටහන් මකන්න"
 
 #: effects/mousemark/mousemark_config.cpp:100
 #, kde-format
@@ -1629,13 +1654,13 @@ msgstr ""
 #: effects/mousemark/mousemark_config.ui:36
 #, kde-format
 msgid "&Color:"
-msgstr ""
+msgstr "වර්‍ණය (&C):"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: effects/mousemark/mousemark_config.ui:82
 #, kde-format
 msgid "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
-msgstr ""
+msgstr "Shift+මෙටා යතුර ඔබා මවුසත ගෙනයෑමෙන් ඇඳිය හැක."
 
 #: effects/outputlocator/outputlocator.cpp:48
 #, kde-format
@@ -1645,16 +1670,17 @@ msgstr ""
 
 #: effects/overview/kcm/overvieweffectkcm.cpp:41
 #: effects/overview/overvieweffect.cpp:31
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Toggle Invert Effect"
 msgid "Toggle Overview"
-msgstr ""
+msgstr "යටිකුරු සැරසිලි අතර මාරුවන්න"
 
 #. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
 #: effects/overview/kcm/overvieweffectkcm.ui:22
 #: effects/windowview/kcm/windowvieweffectkcm.ui:22
 #, kde-format
 msgid "Layout mode:"
-msgstr ""
+msgstr "ආකෘති ප්‍රකාරය:"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: effects/overview/kcm/overvieweffectkcm.ui:43
@@ -1676,9 +1702,10 @@ msgid "Add Virtual Desktop"
 msgstr "වැඩතලය පෙන්වන්න"
 
 #: effects/overview/qml/ScreenView.qml:226
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Moving windows:"
 msgid "No matching windows"
-msgstr ""
+msgstr "ගමන්කරන කවුළු:"
 
 #: effects/private/qml/WindowHeapDelegate.qml:151
 #, kde-format
@@ -1721,10 +1748,11 @@ msgid ""
 msgstr ""
 
 #: effects/showfps/qml/main.qml:110
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Fading duration:"
 msgctxt "@label"
 msgid "Paint Duration"
-msgstr ""
+msgstr "අවපැහැ කාලසීමාව:"
 
 #: effects/showfps/qml/main.qml:162
 #, kde-format
@@ -1740,10 +1768,11 @@ msgid "Current FPS"
 msgstr "කවුළු හැසිරීම සැකසීම... (&e)"
 
 #: effects/showfps/qml/main.qml:184
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Maximum &width:"
 msgctxt "@label"
 msgid "Maximum FPS"
-msgstr ""
+msgstr "උපරිම පළල (&w):"
 
 #: effects/showfps/qml/main.qml:192
 #, kde-format
@@ -1752,9 +1781,10 @@ msgid "This effect is not a benchmark"
 msgstr ""
 
 #: effects/showpaint/showpaint.cpp:39 effects/showpaint/showpaint_config.cpp:38
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Show &panels"
 msgid "Toggle Show Paint"
-msgstr ""
+msgstr "පැනල පෙන්වන්න (&p)"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_Gaps)
 #: effects/slide/slide_config.ui:17
@@ -1764,47 +1794,52 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_HorizontalGap)
 #: effects/slide/slide_config.ui:23
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Horizontal"
 msgid "Horizontal:"
-msgstr ""
+msgstr "තිරස්"
 
 #. i18n: ectx: property (text), widget (QLabel, label_VerticalGap)
 #: effects/slide/slide_config.ui:46
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Vertical"
 msgid "Vertical:"
-msgstr ""
+msgstr "සිරස්"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideBackground)
 #: effects/slide/slide_config.ui:72
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Slide when grouping"
 msgid "Slide desktop background"
-msgstr ""
+msgstr "කණ්ඩායම් කිරීමේදී රූටීම"
 
 #: effects/thumbnailaside/thumbnailaside.cpp:31
 #: effects/thumbnailaside/thumbnailaside_config.cpp:59
 #, kde-format
 msgid "Toggle Thumbnail for Current Window"
-msgstr ""
+msgstr "වත්මන් කවුළුව සඳහා කුඩාරූපයට මාරුවන්න"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: effects/thumbnailaside/thumbnailaside_config.ui:23
 #, kde-format
 msgid "Maximum &width:"
-msgstr ""
+msgstr "උපරිම පළල (&w):"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: effects/thumbnailaside/thumbnailaside_config.ui:36
 #, kde-format
 msgid "&Spacing:"
-msgstr ""
+msgstr "ඉඩතැබීම (&S):"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Spacing)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_MaxWidth)
 #: effects/thumbnailaside/thumbnailaside_config.ui:55
 #: effects/thumbnailaside/thumbnailaside_config.ui:106
-#, kde-format
+#, fuzzy, kde-format
+#| msgid " pixel"
+#| msgid_plural " pixels"
 msgid " pixels"
-msgstr ""
+msgstr "පික්සෙලය"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: effects/thumbnailaside/thumbnailaside_config.ui:68
@@ -1817,7 +1852,7 @@ msgstr "පාරාන්ධතාව (&O)"
 #: effects/thumbnailaside/thumbnailaside_config.ui:87
 #, no-c-format, kde-format
 msgid " %"
-msgstr ""
+msgstr " %"
 
 #: effects/tileseditor/kcm/tileseditoreffectkcm.cpp:37
 #: effects/tileseditor/tileseditoreffect.cpp:29
@@ -1867,9 +1902,10 @@ msgstr ""
 
 #: effects/trackmouse/trackmouse.cpp:45
 #: effects/trackmouse/trackmouse_config.cpp:57
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Invert mouse"
 msgid "Track mouse"
-msgstr ""
+msgstr "මවුසය යටිකුරු කිරීම"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: effects/trackmouse/trackmouse_config.ui:26
@@ -1897,9 +1933,10 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Control)
 #: effects/trackmouse/trackmouse_config.ui:72
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Center"
 msgid "Ctrl"
-msgstr ""
+msgstr "මධ්‍යය"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Shift)
 #: effects/trackmouse/trackmouse_config.ui:79
@@ -1917,19 +1954,19 @@ msgstr ""
 #: effects/translucency/package/contents/ui/config.ui:14
 #, kde-format
 msgid "Translucency"
-msgstr ""
+msgstr "පාරභාසකතාව"
 
 #. i18n: ectx: property (title), widget (QGroupBox, m_opacityGroupBox)
 #: effects/translucency/package/contents/ui/config.ui:20
 #, kde-format
 msgid "General Translucency Settings"
-msgstr ""
+msgstr "සාමාන්‍ය පාරභාසකතා සැකසුම්"
 
 #. i18n: ectx: property (text), widget (QLabel, comboboxpopup_label)
 #: effects/translucency/package/contents/ui/config.ui:64
 #, kde-format
 msgid "Combobox popups:"
-msgstr ""
+msgstr "සංයුක්ත කොටු පොප් අප්:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label_7)
@@ -1937,13 +1974,13 @@ msgstr ""
 #: effects/translucency/package/contents/ui/config.ui:431
 #, kde-format
 msgid "Opaque"
-msgstr ""
+msgstr "පාරාන්ධ"
 
 #. i18n: ectx: property (text), widget (QLabel, dialogs_label)
 #: effects/translucency/package/contents/ui/config.ui:137
 #, kde-format
 msgid "Dialogs:"
-msgstr ""
+msgstr "සංවාද:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -1951,7 +1988,7 @@ msgstr ""
 #: effects/translucency/package/contents/ui/config.ui:418
 #, kde-format
 msgid "Transparent"
-msgstr ""
+msgstr "පාරදෘශ්‍ය "
 
 #. i18n: ectx: property (text), widget (QLabel, menus_label)
 #: effects/translucency/package/contents/ui/config.ui:188
@@ -1978,31 +2015,31 @@ msgstr "කවුළුව හකුළන්න"
 #: effects/translucency/package/contents/ui/config.ui:267
 #, kde-format
 msgid "Set menu translucency independently"
-msgstr ""
+msgstr "මෙනුවට වෙනම පාරදෘශ්‍ය තාව සකසන්න"
 
 #. i18n: ectx: property (text), widget (QLabel, dropdownmenus_label)
 #: effects/translucency/package/contents/ui/config.ui:285
 #, kde-format
 msgid "Dropdown menus:"
-msgstr ""
+msgstr "ගලාහැලෙන මෙනු:"
 
 #. i18n: ectx: property (text), widget (QLabel, popupmenus_label)
 #: effects/translucency/package/contents/ui/config.ui:329
 #, kde-format
 msgid "Popup menus:"
-msgstr ""
+msgstr "පොප්අප් මෙනු:"
 
 #. i18n: ectx: property (text), widget (QLabel, tornoffmenus_label)
 #: effects/translucency/package/contents/ui/config.ui:367
 #, kde-format
 msgid "Torn-off menus:"
-msgstr ""
+msgstr "මෙනු වසන්න:"
 
 #: effects/windowview/kcm/windowvieweffectkcm.cpp:42
 #: effects/windowview/windowvieweffect.cpp:45
 #, kde-format
 msgid "Toggle Present Windows (Current desktop)"
-msgstr ""
+msgstr "පවතින කවුළු අතර මාරුවන්න (වත්මන් වැඩතලය)"
 
 #: effects/windowview/kcm/windowvieweffectkcm.cpp:49
 #: effects/windowview/windowvieweffect.cpp:54
@@ -2015,13 +2052,14 @@ msgstr "කවුළුව සෑම වැඩතලයක තබා ගන්�
 #: effects/windowview/windowvieweffect.cpp:63
 #, kde-format
 msgid "Toggle Present Windows (Window class)"
-msgstr ""
+msgstr "පවතින කවුළු අතර මාරුවන්න (කවුලු කාණ්ඩය)"
 
 #: effects/windowview/kcm/windowvieweffectkcm.cpp:62
 #: effects/windowview/windowvieweffect.cpp:72
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Toggle Present Windows (Current desktop)"
 msgid "Toggle Present Windows (Window class on current desktop)"
-msgstr ""
+msgstr "පවතින කවුළු අතර මාරුවන්න (වත්මන් වැඩතලය)"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
 #: effects/windowview/kcm/windowvieweffectkcm.ui:56
@@ -2058,13 +2096,13 @@ msgstr "වැඩිමනත් (&v)"
 #: effects/wobblywindows/wobblywindows_config.ui:26
 #, kde-format
 msgid "&Stiffness:"
-msgstr ""
+msgstr "දැඩිබව (&S):"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: effects/wobblywindows/wobblywindows_config.ui:68
 #, kde-format
 msgid "Dra&g:"
-msgstr ""
+msgstr "අදින්න (&g):"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: effects/wobblywindows/wobblywindows_config.ui:81
@@ -2077,37 +2115,37 @@ msgstr "වැඩතලයට (&D)"
 #: effects/wobblywindows/wobblywindows_config.ui:155
 #, kde-format
 msgid "Wo&bble when moving"
-msgstr ""
+msgstr "ගමන්කරවන විට සොලවන්න (&b)"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ResizeWobble)
 #: effects/wobblywindows/wobblywindows_config.ui:162
 #, kde-format
 msgid "Wobble when &resizing"
-msgstr ""
+msgstr "ප්‍රතිප්‍රමාණය කරනවිට සොලවන්න (&r)"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AdvancedMode)
 #: effects/wobblywindows/wobblywindows_config.ui:182
 #, kde-format
 msgid "Enable &advanced mode"
-msgstr ""
+msgstr "උසස් ප්‍රකාරය සක්‍රීය කරන්න (&a)"
 
 #. i18n: ectx: property (title), widget (QGroupBox, basicGroup)
 #: effects/wobblywindows/wobblywindows_config.ui:192
 #, kde-format
 msgid "&Wobbliness"
-msgstr ""
+msgstr "සෙලවීම (&W)"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: effects/wobblywindows/wobblywindows_config.ui:201
 #, kde-format
 msgid "Less"
-msgstr ""
+msgstr "අඩු"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: effects/wobblywindows/wobblywindows_config.ui:224
 #, kde-format
 msgid "More"
-msgstr ""
+msgstr "තවත්"
 
 #: effects/zoom/zoom.cpp:67
 #, fuzzy, kde-format
@@ -2176,9 +2214,10 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: effects/zoom/zoom_config.ui:28
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Zoom &duration:"
 msgid "Zoom Factor:"
-msgstr ""
+msgstr "විශාලන කාලසීමාව (&d):"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableFocusTracking)
 #: effects/zoom/zoom_config.ui:66
@@ -2246,15 +2285,17 @@ msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: effects/zoom/zoom_config.ui:125
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Horizontal"
 msgid "Proportional"
-msgstr ""
+msgstr "තිරස්"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: effects/zoom/zoom_config.ui:130
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Center"
 msgid "Centered"
-msgstr ""
+msgstr "මධ්‍යය"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: effects/zoom/zoom_config.ui:135
@@ -2264,9 +2305,10 @@ msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: effects/zoom/zoom_config.ui:140
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Disabled"
 msgid "Disabled"
-msgstr ""
+msgstr "අක්‍රීය කල"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: effects/zoom/zoom_config.ui:148
@@ -2642,40 +2684,46 @@ msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "දැනට ක්‍රියාකරන ICCCM2.0-සහායක කවුළු පාලකය ප්‍රතිපිහිටුවන්න"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:720
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Tiny"
 msgctxt "@item:inlistbox Button size:"
 msgid "Tiny"
-msgstr ""
+msgstr "ඉතා කුඩා"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:721
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Normal"
 msgctxt "@item:inlistbox Button size:"
 msgid "Normal"
-msgstr ""
+msgstr "සාමාන්‍ය"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:722
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Large"
 msgctxt "@item:inlistbox Button size:"
 msgid "Large"
-msgstr ""
+msgstr "විශාල"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:723
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Very Large"
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Large"
-msgstr ""
+msgstr "ඉතා විශාල"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:724
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Huge"
 msgctxt "@item:inlistbox Button size:"
 msgid "Huge"
-msgstr ""
+msgstr "අති විශාල"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:725
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Very Huge"
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Huge"
-msgstr ""
+msgstr "අතිශය විශාල"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:726
 #, fuzzy, kde-format
@@ -2694,13 +2742,13 @@ msgstr "මවුස හැසිරීම්"
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:14
 #, kde-format
 msgid "Config Dialog"
-msgstr ""
+msgstr "සැකසුම් සංවාදය"
 
 #. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:23
 #, kde-format
 msgid "Title &Alignment"
-msgstr ""
+msgstr "මාතෘකා එල්ලය (&A)"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:53
@@ -2709,6 +2757,8 @@ msgid ""
 "Check this option if the window border should be painted in the titlebar "
 "color. Otherwise it will be painted in the background color."
 msgstr ""
+"කවුළු දාරය මාතෘකා තීරු වර්ණයෙන්ම ඇඳීමට ඇවැසි නම් මෙය තෝරන්න. එසේ නොවේනම් පසුබිම් වර්ණයෙන්ම "
+"ඇඳේ."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:56
@@ -2724,12 +2774,13 @@ msgid ""
 "Check this option if you want the buttons to fade in when the mouse pointer "
 "hovers over them and fade out again when it moves away."
 msgstr ""
+"මවුසය ඒමතට ආවිට බොත්තම් අව පැහැවීමටත්, ඉවතට ගිය විට නැවත පෙර තත්වයට පත්වීමටත් මෙය තෝරන්න."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:69
 #, kde-format
 msgid "Animate buttons"
-msgstr ""
+msgstr "සජීවීකරණය කල බොත්තම්"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:49
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:51
@@ -3532,9 +3583,10 @@ msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Config Dialog"
 msgid "Dialog"
-msgstr ""
+msgstr "සැකසුම් සංවාදය"
 
 #. i18n: ectx: property (text), widget (QToolButton, clearButton)
 #: shortcutdialog.ui:25

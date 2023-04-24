@@ -3,15 +3,15 @@
 # Andrea RIZZI <arizzi@pi.infn.it>, 2004.
 # Luciano Montanaro <mikelima@cirulla.net>, 2007, 2008, 2010, 2011.
 # Federico Zenith <federico.zenith@member.fsf.org>, 2010, 2012, 2013, 2014, 2015.
-# Paolo Zamponi <zapaolo@email.it>, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
+# Paolo Zamponi <feus73@gmail.com>, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
 # Vincenzo Reale <smart2128vr@gmail.com>, 2020, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-13 02:16+0000\n"
-"PO-Revision-Date: 2023-04-13 08:21+0200\n"
-"Last-Translator: Paolo Zamponi <zapaolo@email.it>\n"
+"PO-Revision-Date: 2023-04-16 18:31+0200\n"
+"Last-Translator: Paolo Zamponi <feus73@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -511,6 +511,13 @@ msgid ""
 "<interface>Fullscreen</interface> states.<nl/><nl/>Note that the position "
 "can also be used to map to a different <interface>Screen</interface>"
 msgstr ""
+"Alcune applicazioni possono impostare la loro geometria, ignorando le "
+"preferenze del gestore delle finestre. L'impostazione di questa proprietà "
+"ignora le loro richieste di posizionamento.<nl/><nl/>Queste influenzano la "
+"<interface>Dimensione</interface> e la <interface>Posizione</interface>, ma "
+"non gli stati di <interface>Massimizzata</interface> o a <interface>Schermo "
+"intero</interface>.<nl/><nl/>Nota che la posizione può essere usata anche "
+"per associare a uno <interface>Schermo</interface> diverso"
 
 #: rulesmodel.cpp:546
 #, kde-format
@@ -528,13 +535,7 @@ msgid "Obey geometry restrictions"
 msgstr "Rispetta le restrizioni geometriche"
 
 #: rulesmodel.cpp:558
-#, fuzzy, kde-kuit-format
-#| msgid ""
-#| "Eg. terminals or video players can ask to keep a certain aspect ratio\n"
-#| "or only grow by values larger than one\n"
-#| "(eg. by the dimensions of one character).\n"
-#| "This may be pointless and the restriction prevents arbitrary dimensions\n"
-#| "like your complete screen area."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Some apps like video players or terminals can ask KWin to constrain them to "
@@ -543,11 +544,13 @@ msgid ""
 "windows to be resized to arbitrary sizes.<nl/><nl/>This can be helpful for "
 "windows that can't quite fit the full screen area when maximized."
 msgstr ""
-"Pere esempio, i terminali o i riproduttori video possono chiedere di\n"
-"mantenere delle certe proporzioni, o di essere ingranditi solo di valori\n"
-"maggiori di uno (per esempio della dimensione di un carattere).\n"
-"Questo potrebbe essere inutile, e la restrizione impedisce dimensioni\n"
-"arbitrarie, come l'area di tutto lo schermo."
+"Alcune applicazioni, ad esempio i riproduttori video o i terminali, possono "
+"chiedere a KWin di essere vincolate a certe proporzioni, oppure di venir "
+"ingrandite solo per valori maggiori di un carattere. Usa questa proprietà "
+"per ignorare queste restrizioni, e per permettere a queste finestre di "
+"essere ridimensionate a dimensioni arbitrarie.<nl/><nl/>Ciò potrebbe essere "
+"utile con quelle finestre che non riescono a adattarsi perfettamente "
+"all'intera area dello schermo quando vengono massimizzate."
 
 #: rulesmodel.cpp:569
 #, kde-format
@@ -574,7 +577,7 @@ msgstr "Togli dalla barra delle applicazioni"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
-msgstr ""
+msgstr "Controlla se la finestra appare nel gestore dei processi oppure no."
 
 #: rulesmodel.cpp:585
 #, kde-format
@@ -587,6 +590,7 @@ msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the Virtual Desktop manager."
 msgstr ""
+"Controlla se la finestra appare nel gestore dei desktop virtuali oppure no."
 
 #: rulesmodel.cpp:591
 #, kde-format
@@ -600,6 +604,8 @@ msgid ""
 "Controls whether or not the window appears in the <shortcut>Alt+Tab</"
 "shortcut> window list."
 msgstr ""
+"Controlla se la finestra appare nell'elenco delle finestre di <shortcut>Alt"
+"+Tab</shortcut> oppure no."
 
 #: rulesmodel.cpp:597
 #, kde-format
@@ -636,7 +642,7 @@ msgstr "Opacità inattiva"
 #: rulesmodel.cpp:625
 #, kde-format
 msgid "Focus stealing prevention"
-msgstr "Prevenzione dell'attivazione"
+msgstr "Prevenzione della sottrazione del fuoco"
 
 #: rulesmodel.cpp:627
 #, kde-kuit-format
@@ -659,6 +665,26 @@ msgid ""
 "currently-focused window.</item><item><emphasis strong='true'>Extreme:</"
 "emphasis> The window will never be raised and focused.</item></list>"
 msgstr ""
+"KWin cerca di impedire che le finestre aperte senza un'azione diretta "
+"dell'utente possano sollevarsi ed ottenere il fuoco mentre stai interagendo "
+"con un'altra finestra. Questa proprietà può essere usata per modificare il "
+"livello di prevenzione della sottrazione del fuoco che viene applicato alle "
+"singole finestre o applicazioni.<nl/><nl/>Ecco cosa succede, per ogni "
+"livello di prevenzione della sottrazione del fuoco, ad una finestra che si è "
+"aperta senza una tua azione diretta:<nl/><list><item><emphasis "
+"strong='true'>Nessuna:</emphasis> la finestra verrà sollevata e avrà il "
+"fuoco.</item><item><emphasis strong='true'>Bassa:</emphasis> la prevenzione "
+"della sottrazione del fuoco verrà applicata, ma, nel caso in cui KWin "
+"ritenga che la situazione sia ambigua, la finestra verrà sollevata e avrà il "
+"fuoco.</item><item><emphasis strong='true'>Normale:</emphasis> la "
+"prevenzione della sottrazione del fuoco verrà applicata, ma, nel caso in cui "
+"KWin ritenga che la situazione sia ambigua, la finestra <emphasis>non</"
+"emphasis> verrà sollevata e <emphasis>non</emphasis> avrà il fuoco.</"
+"item><item><emphasis strong='true'>Alta:</emphasis> la finestra verrà "
+"sollevata e avrà il fuoco solamente se appartiene alla stessa applicazione "
+"della finestra che ha attualmente il fuoco.</item><item><emphasis "
+"strong='true'>Estrema:</emphasis> la finestra non verrà mai sollevata e non "
+"avrà mai il fuoco.</item></list>"
 
 #: rulesmodel.cpp:652
 #, kde-format
@@ -688,16 +714,38 @@ msgid ""
 "emphasis> Newly-opened windows never raise themselves and take focus.</"
 "item></list>"
 msgstr ""
+"Questa proprietà controlla il livello di protezione del fuoco della finestra "
+"attualmente attiva. Viene usata per ignorare la prevenzione della "
+"sottrazione del fuoco applicata alle nuove finestre che si aprono senza la "
+"tua azione diretta.<nl/><nl/>Ecco cosa succede, per ciascun livello di "
+"protezione del fuoco, alle nuove finestre che si aprono senza la tua azione "
+"diretta mentre una finestra con questa proprietà ha il fuoco:<nl/"
+"><list><item><emphasis strong='true'>Nessuna</emphasis>: le nuove finestre "
+"che si aprono verranno sempre sollevate e avranno sempre il fuoco.</"
+"item><item><emphasis strong='true'>Bassa:</emphasis> la prevenzione della "
+"sottrazione del fuoco verrà applicata alle nuove finestre che si aprono, ma, "
+"nel caso in cui KWin ritenga che la situazione sia ambigua, la finestra "
+"verrà sollevata e avrà il fuoco.</item><item><emphasis strong='true'>Normale:"
+"</emphasis> la prevenzione della sottrazione del fuoco verrà applicata alle "
+"nuove finestre che si aprono, ma, nel caso in cui KWin ritenga che la "
+"situazione sia ambigua, la finestra <emphasis>non</emphasis> verrà sollevata "
+"e <emphasis>non</emphasis> avrà il fuoco.</item><item><emphasis "
+"strong='true'>Alta:</emphasis> le nuove finestre che si aprono verranno "
+"sollevate e avranno il fuoco solamente se appartengono alla stessa "
+"applicazione della finestra che ha attualmente il fuoco.</"
+"item><item><emphasis strong='true'>Estrema:</emphasis> le nuove finestre che "
+"si aprono non verranno mai sollevate e non avranno mai il fuoco.</item></"
+"list>"
 
 #: rulesmodel.cpp:680
 #, kde-format
 msgid "Accept focus"
-msgstr "Accetta attivazione"
+msgstr "Accetta il fuoco"
 
 #: rulesmodel.cpp:682
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
-msgstr ""
+msgstr "Controlla se la finestra ottiene il fuoco al clic oppure no."
 
 #: rulesmodel.cpp:686
 #, kde-format
@@ -715,6 +763,13 @@ msgid ""
 "use any other global shortcuts such as <shortcut>Alt+Space</shortcut> to "
 "activate KRunner."
 msgstr ""
+"Usa questa proprietà per impedire il funzionamento delle scorciatoie globali "
+"mentre la finestra ha il fuoco. Ciò può essere utile per quelle "
+"applicazioni, tipo gli emulatori o le macchine virtuali, che gestiscono le "
+"stesse scorciatoie.<nl/><nl/>Nota che non sarai in grado di utilizzare "
+"<shortcut>Alt+Tab</shortcut> al di fuori della finestra, oppure di "
+"utilizzare qualsiasi altra scorciatoia globale, ad esempio <shortcut>Alt"
+"+Spazio</shortcut> per attivare KRunner."
 
 #: rulesmodel.cpp:698
 #, kde-format

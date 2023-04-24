@@ -1211,7 +1211,7 @@ msgstr "Марказ"
 #: effects/thumbnailaside/thumbnailaside_config.ui:17
 #, kde-format
 msgid "Appearance"
-msgstr ""
+msgstr "Намуди зоҳирӣ"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
 #: effects/desktopgrid/desktopgrid_config.ui:30
@@ -1345,14 +1345,14 @@ msgstr ""
 #: effects/scale/package/contents/ui/config.ui:17
 #, kde-format
 msgid "Duration:"
-msgstr ""
+msgstr "Давомнокӣ:"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_Duration)
 #: effects/glide/glide_config.ui:32
 #: effects/scale/package/contents/ui/config.ui:30
 #, kde-format
 msgid "Default"
-msgstr ""
+msgstr "Стандартӣ"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Duration)
 #: effects/glide/glide_config.ui:35
@@ -1428,7 +1428,7 @@ msgstr ""
 #, kde-format
 msgctxt "Duration of rotation"
 msgid "Default"
-msgstr ""
+msgstr "Стандартӣ"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AnimationDuration)
 #: effects/magiclamp/magiclamp_config.ui:39
@@ -1651,9 +1651,10 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: effects/overview/kcm/overvieweffectkcm.ui:43
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Snow &behind windows"
 msgid "Ignore minimized windows:"
-msgstr ""
+msgstr "Показать &за окнами:"
 
 #: effects/overview/qml/DesktopBar.qml:187
 #, fuzzy, kde-format
@@ -1668,9 +1669,10 @@ msgid "Add Virtual Desktop"
 msgstr "Тиреза ва Мизи корӣ"
 
 #: effects/overview/qml/ScreenView.qml:226
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Number of windows:"
 msgid "No matching windows"
-msgstr ""
+msgstr "Количество окон:"
 
 #: effects/private/qml/WindowHeapDelegate.qml:151
 #, kde-format
@@ -1713,10 +1715,11 @@ msgid ""
 msgstr ""
 
 #: effects/showfps/qml/main.qml:110
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Duration:"
 msgctxt "@label"
 msgid "Paint Duration"
-msgstr ""
+msgstr "Давомнокӣ:"
 
 #: effects/showfps/qml/main.qml:162
 #, kde-format
@@ -2029,9 +2032,10 @@ msgid "No Windows"
 msgstr "*** Тирезаҳо нест ***"
 
 #: effects/windowview/qml/main.qml:122
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Number of windows:"
 msgid "Filter windows…"
-msgstr ""
+msgstr "Количество окон:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
 #: effects/wobblywindows/wobblywindows_config.ui:20
@@ -2627,7 +2631,7 @@ msgstr ""
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Normal"
-msgstr ""
+msgstr "Муқаррар"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:722
 #, kde-format
@@ -3743,7 +3747,7 @@ msgstr ""
 #: useractions.cpp:970
 #, kde-format
 msgid "Close Window"
-msgstr ""
+msgstr "Хуруҷи тиреза"
 
 #: useractions.cpp:972
 #, kde-format
@@ -3763,12 +3767,12 @@ msgstr ""
 #: useractions.cpp:978
 #, kde-format
 msgid "Minimize Window"
-msgstr ""
+msgstr "Хурдкунии тиреза"
 
 #: useractions.cpp:980
 #, kde-format
 msgid "Shade Window"
-msgstr ""
+msgstr "Соякунии тиреза"
 
 #: useractions.cpp:982
 #, kde-format

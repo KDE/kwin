@@ -1168,9 +1168,11 @@ msgid "Right"
 msgstr ""
 
 #: effects/desktopgrid/desktopgrid_config.cpp:65
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "toolbar position string"
+#| msgid "Bottom"
 msgid "Bottom-Right"
-msgstr ""
+msgstr "Deleka"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
@@ -1181,9 +1183,11 @@ msgid "Bottom"
 msgstr ""
 
 #: effects/desktopgrid/desktopgrid_config.cpp:67
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "toolbar position string"
+#| msgid "Bottom"
 msgid "Bottom-Left"
-msgstr ""
+msgstr "Deleka"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
@@ -1196,9 +1200,11 @@ msgid "Left"
 msgstr ""
 
 #: effects/desktopgrid/desktopgrid_config.cpp:69
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "keyboard-key-name"
+#| msgid "Left"
 msgid "Top-Left"
-msgstr ""
+msgstr "Nalěwo"
 
 #. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
 #: effects/desktopgrid/desktopgrid_config.cpp:70
@@ -1235,9 +1241,11 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, layoutRowsLabel)
 #: effects/desktopgrid/desktopgrid_config.ui:48
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "Comment"
+#| msgid "Konqueror window"
 msgid "N&umber of rows:"
-msgstr ""
+msgstr "Konquerorowe wokno"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: effects/desktopgrid/desktopgrid_config.ui:103
@@ -1344,16 +1352,18 @@ msgstr "Přez &cyłu wobrazowku"
 #. i18n: ectx: property (text), widget (QLabel, label_Duration)
 #: effects/glide/glide_config.ui:19
 #: effects/scale/package/contents/ui/config.ui:17
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Saturday"
 msgid "Duration:"
-msgstr ""
+msgstr "Sobotu"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_Duration)
 #: effects/glide/glide_config.ui:32
 #: effects/scale/package/contents/ui/config.ui:30
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Default"
 msgid "Default"
-msgstr ""
+msgstr "Standard"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Duration)
 #: effects/glide/glide_config.ui:35
@@ -1408,9 +1418,9 @@ msgid "Toggle Invert Effect on Window"
 msgstr ""
 
 #: effects/invert/invert.cpp:56
-#, kde-format
+#, fuzzy, kde-format
 msgid "Invert Screen Colors"
-msgstr ""
+msgstr "Swójstwa %2"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_FadeToBlack)
 #: effects/login/package/contents/ui/config.ui:17
@@ -1420,16 +1430,18 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: effects/magiclamp/magiclamp_config.ui:17
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Saturday"
 msgid "Animation duration:"
-msgstr ""
+msgstr "Sobotu"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_AnimationDuration)
 #: effects/magiclamp/magiclamp_config.ui:36
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Default"
 msgctxt "Duration of rotation"
 msgid "Default"
-msgstr ""
+msgstr "Standard"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AnimationDuration)
 #: effects/magiclamp/magiclamp_config.ui:39
@@ -1441,7 +1453,7 @@ msgstr ""
 #: effects/magnifier/magnifier_config.ui:17
 #, kde-format
 msgid "Size"
-msgstr ""
+msgstr "Wulkosć"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: effects/magnifier/magnifier_config.ui:23
@@ -1470,10 +1482,12 @@ msgid "Toggle Mouse Click Effect"
 msgstr ""
 
 #: effects/mouseclick/mouseclick.cpp:43
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "keyboard-key-name"
+#| msgid "Left"
 msgctxt "Left mouse button"
 msgid "Left"
-msgstr ""
+msgstr "Nalěwo"
 
 #: effects/mouseclick/mouseclick.cpp:44
 #, kde-format
@@ -1482,10 +1496,12 @@ msgid "Middle"
 msgstr ""
 
 #: effects/mouseclick/mouseclick.cpp:45
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "keyboard-key-name"
+#| msgid "Right"
 msgctxt "Right mouse button"
 msgid "Right"
-msgstr ""
+msgstr "Naprawo"
 
 #. i18n: ectx: attribute (title), widget (QWidget, basic_tab)
 #: effects/mouseclick/mouseclick_config.ui:21
@@ -1549,9 +1565,10 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, ring_duration_label)
 #: effects/mouseclick/mouseclick_config.ui:145
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Saturday"
 msgid "Ring Duration:"
-msgstr ""
+msgstr "Sobotu"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_radius_label)
 #: effects/mouseclick/mouseclick_config.ui:155
@@ -1666,9 +1683,10 @@ msgid "Add Virtual Desktop"
 msgstr "Na &dźěłowy powjerch"
 
 #: effects/overview/qml/ScreenView.qml:226
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Close window?"
 msgid "No matching windows"
-msgstr ""
+msgstr "Wokno začinić?"
 
 #: effects/private/qml/WindowHeapDelegate.qml:151
 #, kde-format
@@ -1711,10 +1729,11 @@ msgid ""
 msgstr ""
 
 #: effects/showfps/qml/main.qml:110
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Saturday"
 msgctxt "@label"
 msgid "Paint Duration"
-msgstr ""
+msgstr "Sobotu"
 
 #: effects/showfps/qml/main.qml:162
 #, kde-format
@@ -1742,9 +1761,10 @@ msgid "This effect is not a benchmark"
 msgstr ""
 
 #: effects/showpaint/showpaint.cpp:39 effects/showpaint/showpaint_config.cpp:38
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Show help"
 msgid "Toggle Show Paint"
-msgstr ""
+msgstr "Pokaž pomoc"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_Gaps)
 #: effects/slide/slide_config.ui:17
@@ -1857,9 +1877,9 @@ msgstr ""
 
 #: effects/trackmouse/trackmouse.cpp:45
 #: effects/trackmouse/trackmouse_config.cpp:57
-#, kde-format
+#, fuzzy, kde-format
 msgid "Track mouse"
-msgstr ""
+msgstr "Swójstwa %2"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: effects/trackmouse/trackmouse_config.ui:26
@@ -1911,9 +1931,11 @@ msgstr ""
 
 #. i18n: ectx: property (title), widget (QGroupBox, m_opacityGroupBox)
 #: effects/translucency/package/contents/ui/config.ui:20
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "KCharselect unicode block name"
+#| msgid "General Punctuation"
 msgid "General Translucency Settings"
-msgstr ""
+msgstr "Interpunkcija"
 
 #. i18n: ectx: property (text), widget (QLabel, comboboxpopup_label)
 #: effects/translucency/package/contents/ui/config.ui:64

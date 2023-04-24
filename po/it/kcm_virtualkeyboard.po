@@ -1,6 +1,6 @@
 # Copyright (C) YEAR This file is copyright:
 # This file is distributed under the same license as the kwin package.
-# Paolo Zamponi <zapaolo@email.it>, 2021.
+# Paolo Zamponi <feus73@gmail.com>, 2021.
 #
 msgid ""
 msgstr ""
