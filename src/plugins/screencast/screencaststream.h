@@ -103,6 +103,7 @@ private:
 
     QSize m_resolution;
     bool m_stopped = false;
+    bool m_streaming = false;
 
     spa_video_info_raw videoFormat;
     QString m_error;
