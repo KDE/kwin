@@ -76,6 +76,7 @@ void ScreenCastStream::onStreamStateChanged(void *data, pw_stream_state old, pw_
     ScreenCastStream *pw = static_cast<ScreenCastStream *>(data);
     qCDebug(KWIN_SCREENCAST) << "state changed" << pw_stream_state_as_string(old) << " -> " << pw_stream_state_as_string(state) << error_message;
 
+    pw->m_streaming = false;
     switch (state) {
     case PW_STREAM_STATE_ERROR:
         qCWarning(KWIN_SCREENCAST) << "Stream error: " << error_message;
@@ -87,7 +88,11 @@ void ScreenCastStream::onStreamStateChanged(void *data, pw_stream_state old, pw_
         }
         break;
     case PW_STREAM_STATE_STREAMING:
+        pw->m_streaming = true;
         Q_EMIT pw->startStreaming();
+        if (pw->m_pendingBuffer) {
+            pw->tryEnqueue(pw->m_pendingBuffer);
+        }
         break;
     case PW_STREAM_STATE_CONNECTING:
         break;
@@ -297,6 +302,7 @@ void ScreenCastStream::onStreamRenegotiateFormat(void *data, uint64_t)
 {
     ScreenCastStream *stream = static_cast<ScreenCastStream *>(data);
 
+    stream->m_streaming = false; // pause streaming as we wait for the renegotiation
     char buffer[2048];
     auto params = stream->buildFormats(stream->m_dmabufParams.has_value(), buffer);
     pw_stream_update_params(stream->pwStream, params.data(), params.count());
@@ -429,6 +435,11 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
 {
     QRegion damagedRegion = _damagedRegion;
     Q_ASSERT(!m_stopped);
+
+    if (!m_streaming) {
+        m_pendingDamages |= damagedRegion;
+        return;
+    }
 
     if (videoFormat.max_framerate.num != 0 && !m_lastSent.isNull()) {
         auto frameInterval = (1000. * videoFormat.max_framerate.denom / videoFormat.max_framerate.num);
@@ -616,6 +627,9 @@ void ScreenCastStream::addDamage(spa_buffer *spaBuffer, const QRegion &damagedRe
 void ScreenCastStream::recordCursor()
 {
     Q_ASSERT(!m_stopped);
+    if (!m_streaming) {
+        return;
+    }
 
     if (m_pendingBuffer) {
         qCWarning(KWIN_SCREENCAST) << "Dropping a screencast cursor update because the compositor is slow";
@@ -687,6 +701,9 @@ void ScreenCastStream::enqueue()
     m_pendingFence.reset();
     m_pendingNotifier.reset();
 
+    if (!m_streaming) {
+        return;
+    }
     pw_stream_queue_buffer(pwStream, m_pendingBuffer);
 
     if (m_pendingBuffer->buffer->datas[0].chunk->flags != SPA_CHUNK_FLAG_CORRUPTED) {
