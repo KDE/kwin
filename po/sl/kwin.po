@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1650224 2023-04-24 02:53:45Z scripty $
+# $Id: kwin.po 1650286 2023-04-25 02:41:34Z scripty $
 # $Source$
 #
 #
@@ -16,18 +16,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-22 02:30+0000\n"
-"PO-Revision-Date: 2023-04-22 09:55+0200\n"
+"POT-Creation-Date: 2023-04-25 02:28+0000\n"
+"PO-Revision-Date: 2023-04-24 09:35+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
-"%100==4 ? 3 : 0);\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100>=3 && n"
+"%100<=4 ? 2 : 3);\n"
 "Translator: Andrej Mernik <andrejm@ubuntu.si>\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1139,7 +1139,7 @@ msgstr ""
 #: effects/tileseditor/kcm/tileseditoreffectkcm.cpp:31
 #: effects/trackmouse/trackmouse_config.cpp:52
 #: effects/windowview/kcm/windowvieweffectkcm.cpp:36
-#: effects/zoom/zoom_config.cpp:58 main.cpp:171
+#: effects/zoom/zoom_config.cpp:58 main.cpp:172
 #, kde-format
 msgid "KWin"
 msgstr "KWin"
@@ -2401,62 +2401,62 @@ msgstr ""
 "Izberite okno za prisilno zaprtje z levim klikom ali pritiskom tipke Enter.\n"
 "Tipka Escape ali desni klik za preklic."
 
-#: main.cpp:173 main.cpp:196
+#: main.cpp:174 main.cpp:197
 #, kde-format
 msgid "KDE window manager"
 msgstr "Upravljalnik oken za KDE"
 
-#: main.cpp:175
+#: main.cpp:176
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "(c) 1999-2019, razvijalci KDE"
 
-#: main.cpp:177
+#: main.cpp:178
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "Matthias Ettrich"
 
-#: main.cpp:178
+#: main.cpp:179
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "Cristian Tibirna"
 
-#: main.cpp:179
+#: main.cpp:180
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "Daniel M. Duley"
 
-#: main.cpp:180
+#: main.cpp:181
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "Luboš Luňák"
 
-#: main.cpp:181
+#: main.cpp:182
 #, kde-format
 msgid "Martin Flöser"
 msgstr "Martin Flöser"
 
-#: main.cpp:182
+#: main.cpp:183
 #, kde-format
 msgid "David Edmundson"
 msgstr "David Edmundson"
 
-#: main.cpp:183
+#: main.cpp:184
 #, kde-format
 msgid "Roman Gilg"
 msgstr "Roman Gilg"
 
-#: main.cpp:184
+#: main.cpp:185
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr "Vlad Zahorodnii"
 
-#: main.cpp:193
+#: main.cpp:194
 #, kde-format
 msgid "Disable configuration options"
 msgstr "Onemogoči nastavitvene možnosti"
 
-#: main.cpp:194
+#: main.cpp:195
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "Nakaži, da se je KWin nedavno sesul n-krat"
