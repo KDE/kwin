@@ -18,6 +18,7 @@
 #include <QtConcurrent>
 
 #include <errno.h>
+#include <fcntl.h>
 #include <poll.h>
 #include <string.h>
 #include <unistd.h>
@@ -353,7 +354,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureActiveWindow(const QVariantMap &opt
         return QVariantMap();
     }
 
-    const int fileDescriptor = dup(pipe.fileDescriptor());
+    const int fileDescriptor = fcntl(pipe.fileDescriptor(), F_DUPFD_CLOEXEC, 0);
     if (fileDescriptor == -1) {
         sendErrorReply(s_errorFileDescriptor, s_errorFileDescriptorMessage);
         return QVariantMap();
@@ -389,7 +390,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureWindow(const QString &handle,
         return QVariantMap();
     }
 
-    const int fileDescriptor = dup(pipe.fileDescriptor());
+    const int fileDescriptor = fcntl(pipe.fileDescriptor(), F_DUPFD_CLOEXEC, 0);
     if (fileDescriptor == -1) {
         sendErrorReply(s_errorFileDescriptor, s_errorFileDescriptorMessage);
         return QVariantMap();
@@ -416,7 +417,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureArea(int x, int y, int width, int h
         return QVariantMap();
     }
 
-    const int fileDescriptor = dup(pipe.fileDescriptor());
+    const int fileDescriptor = fcntl(pipe.fileDescriptor(), F_DUPFD_CLOEXEC, 0);
     if (fileDescriptor == -1) {
         sendErrorReply(s_errorFileDescriptor, s_errorFileDescriptorMessage);
         return QVariantMap();
@@ -443,7 +444,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureScreen(const QString &name,
         return QVariantMap();
     }
 
-    const int fileDescriptor = dup(pipe.fileDescriptor());
+    const int fileDescriptor = fcntl(pipe.fileDescriptor(), F_DUPFD_CLOEXEC, 0);
     if (fileDescriptor == -1) {
         sendErrorReply(s_errorFileDescriptor, s_errorFileDescriptorMessage);
         return QVariantMap();
@@ -469,7 +470,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureActiveScreen(const QVariantMap &opt
         return QVariantMap();
     }
 
-    const int fileDescriptor = dup(pipe.fileDescriptor());
+    const int fileDescriptor = fcntl(pipe.fileDescriptor(), F_DUPFD_CLOEXEC, 0);
     if (fileDescriptor == -1) {
         sendErrorReply(s_errorFileDescriptor, s_errorFileDescriptorMessage);
         return QVariantMap();
@@ -486,7 +487,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureInteractive(uint kind,
                                                          const QVariantMap &options,
                                                          QDBusUnixFileDescriptor pipe)
 {
-    const int fileDescriptor = dup(pipe.fileDescriptor());
+    const int fileDescriptor = fcntl(pipe.fileDescriptor(), F_DUPFD_CLOEXEC, 0);
     if (fileDescriptor == -1) {
         sendErrorReply(s_errorFileDescriptor, s_errorFileDescriptorMessage);
         return QVariantMap();
@@ -541,7 +542,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureWorkspace(const QVariantMap &option
         return QVariantMap();
     }
 
-    const int fileDescriptor = dup(pipe.fileDescriptor());
+    const int fileDescriptor = fcntl(pipe.fileDescriptor(), F_DUPFD_CLOEXEC, 0);
     if (fileDescriptor == -1) {
         sendErrorReply(s_errorFileDescriptor, s_errorFileDescriptorMessage);
         return QVariantMap();
