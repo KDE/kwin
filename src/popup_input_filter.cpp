@@ -7,6 +7,7 @@
 #include "popup_input_filter.h"
 #include "input_event.h"
 #include "internalwindow.h"
+#include "keyboard_input.h"
 #include "wayland/seat_interface.h"
 #include "wayland_server.h"
 #include "window.h"
@@ -31,6 +32,13 @@ void PopupInputFilter::handleWindowAdded(Window *window)
         m_popupWindows << window;
         connect(window, &Window::closed, this, [this, window]() {
             m_popupWindows.removeOne(window);
+            // Move focus to the parent popup. If that's the last popup, then move focus back to the parent
+            if (!m_popupWindows.isEmpty() && m_popupWindows.last()->surface()) {
+                auto seat = waylandServer()->seat();
+                seat->setFocusedKeyboardSurface(m_popupWindows.last()->surface());
+            } else {
+                input()->keyboard()->update();
+            }
         });
     }
 }
