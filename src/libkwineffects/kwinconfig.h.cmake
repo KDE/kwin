@@ -18,7 +18,7 @@
 
 */
 
-#cmakedefine01 HAVE_EPOXY_GLX
+#cmakedefine01 HAVE_GLX
 
 #cmakedefine01 HAVE_DL_LIBRARY
 

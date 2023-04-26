@@ -15,7 +15,7 @@
 #include "x11_standalone_edge.h"
 #include "x11_standalone_placeholderoutput.h"
 #include "x11_standalone_windowselector.h"
-#if HAVE_EPOXY_GLX
+#if HAVE_GLX
 #include "x11_standalone_glx_backend.h"
 #endif
 #if HAVE_X11_XINPUT
@@ -156,7 +156,7 @@ bool X11StandaloneBackend::initialize()
 std::unique_ptr<OpenGLBackend> X11StandaloneBackend::createOpenGLBackend()
 {
     switch (options->glPlatformInterface()) {
-#if HAVE_EPOXY_GLX
+#if HAVE_GLX
     case GlxPlatformInterface:
         if (hasGlx()) {
             return std::make_unique<GlxBackend>(m_x11Display, this);
@@ -258,7 +258,7 @@ void X11StandaloneBackend::createEffectsHandler(Compositor *compositor, Workspac
 QVector<CompositingType> X11StandaloneBackend::supportedCompositors() const
 {
     QVector<CompositingType> compositors;
-#if HAVE_EPOXY_GLX
+#if HAVE_GLX
     compositors << OpenGLCompositing;
 #endif
     compositors << NoCompositing;

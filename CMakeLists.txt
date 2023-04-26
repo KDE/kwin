@@ -367,7 +367,12 @@ option(KWIN_BUILD_TABBOX "Enable building of KWin Tabbox functionality" ON)
 cmake_dependent_option(KWIN_BUILD_ACTIVITIES "Enable building of KWin with kactivities support" ON "KF6Activities_FOUND" OFF)
 cmake_dependent_option(KWIN_BUILD_RUNNERS "Enable building of KWin with krunner support" ON "KF6Runner_FOUND" OFF)
 
-set(HAVE_EPOXY_GLX ${epoxy_HAS_GLX})
+set(HAVE_GLX ${epoxy_HAS_GLX})
+get_target_property(QT_DISABLED_FEATURES Qt6::Gui QT_DISABLED_PUBLIC_FEATURES)
+if("xcb_glx_plugin" IN_LIST QT_DISABLED_FEATURES)
+    message(STATUS "Disable GLX because Qt6::Gui was built without xcb_glx_plugin")
+    set(HAVE_GLX false)
+endif()
 
 # for kwin internal things
 set(HAVE_X11_XCB ${X11_XCB_FOUND})

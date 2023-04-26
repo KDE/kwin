@@ -12,7 +12,7 @@
 #include <epoxy/egl.h>
 
 #include "libkwineffects/kwinconfig.h"
-#if HAVE_EPOXY_GLX
+#if HAVE_GLX
 #include "../src/backends/x11/standalone/x11_standalone_glx_context_attribute_builder.h"
 #include <epoxy/glx.h>
 
@@ -387,7 +387,7 @@ void OpenGLContextAttributeBuilderTest::testGles()
 
 void OpenGLContextAttributeBuilderTest::testGlx_data()
 {
-#if HAVE_EPOXY_GLX
+#if HAVE_GLX
     QTest::addColumn<bool>("requestVersion");
     QTest::addColumn<int>("major");
     QTest::addColumn<int>("minor");
@@ -442,7 +442,7 @@ void OpenGLContextAttributeBuilderTest::testGlx_data()
 
 void OpenGLContextAttributeBuilderTest::testGlx()
 {
-#if HAVE_EPOXY_GLX
+#if HAVE_GLX
     QFETCH(bool, requestVersion);
     QFETCH(int, major);
     QFETCH(int, minor);

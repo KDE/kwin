@@ -336,7 +336,7 @@ QStringList CompositorDBusInterface::supportedOpenGLPlatformInterfaces() const
 {
     QStringList interfaces;
     bool supportsGlx = false;
-#if HAVE_EPOXY_GLX
+#if HAVE_GLX
     supportsGlx = (kwinApp()->operationMode() == Application::OperationModeX11);
 #endif
     if (QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES) {

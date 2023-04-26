@@ -24,7 +24,7 @@ if (X11_Xi_FOUND)
     target_link_libraries(KWinX11Platform X11::Xi)
 endif()
 
-if (HAVE_EPOXY_GLX)
+if (HAVE_GLX)
     target_sources(KWinX11Platform PRIVATE
         x11_standalone_glx_backend.cpp
         x11_standalone_glx_context_attribute_builder.cpp

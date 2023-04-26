@@ -1633,8 +1633,8 @@ QString Workspace::supportInformation() const
     support.append(KWIN_BUILD_ACTIVITIES ? yes : no);
     support.append(QStringLiteral("HAVE_X11_XCB: "));
     support.append(HAVE_X11_XCB ? yes : no);
-    support.append(QStringLiteral("HAVE_EPOXY_GLX: "));
-    support.append(HAVE_EPOXY_GLX ? yes : no);
+    support.append(QStringLiteral("HAVE_GLX: "));
+    support.append(HAVE_GLX ? yes : no);
     support.append(QStringLiteral("\n"));
 
     if (auto c = kwinApp()->x11Connection()) {

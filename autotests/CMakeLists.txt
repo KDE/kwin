@@ -180,7 +180,7 @@ set(testOpenGLContextAttributeBuilder_SRCS
     opengl_context_attribute_builder_test.cpp
 )
 
-if (HAVE_EPOXY_GLX)
+if (HAVE_GLX)
     set(testOpenGLContextAttributeBuilder_SRCS ${testOpenGLContextAttributeBuilder_SRCS} ../src/backends/x11/standalone/x11_standalone_glx_context_attribute_builder.cpp)
 endif()
 add_executable(testOpenGLContextAttributeBuilder ${testOpenGLContextAttributeBuilder_SRCS})

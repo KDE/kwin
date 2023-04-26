@@ -175,7 +175,7 @@ typedef void (*glXFuncPtr)();
 static glXFuncPtr getProcAddress(const char *name)
 {
     glXFuncPtr ret = nullptr;
-#if HAVE_EPOXY_GLX
+#if ENABLE_GLX
     ret = glXGetProcAddress((const GLubyte *)name);
 #endif
 #if HAVE_DL_LIBRARY

@@ -688,7 +688,7 @@ void Options::setGlPlatformInterface(OpenGLPlatformInterface interface)
         qCDebug(KWIN_CORE) << "Forcing EGL native interface for Wayland mode";
         interface = EglPlatformInterface;
     }
-#if !HAVE_EPOXY_GLX
+#if !HAVE_GLX
     qCDebug(KWIN_CORE) << "Forcing EGL native interface as compiled without GLX support";
     interface = EglPlatformInterface;
 #endif
