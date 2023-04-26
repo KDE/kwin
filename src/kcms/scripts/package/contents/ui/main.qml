@@ -56,7 +56,7 @@ ScrollViewKCM {
         alignment: Qt.AlignRight
         actions: [
              Kirigami.Action {
-                 iconName: "document-import"
+                 icon.name: "document-import"
                  text: i18n("Install from File...")
                  onTriggered: kcm.importScript()
             },

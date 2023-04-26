@@ -69,7 +69,7 @@ KCM.ScrollViewKCM {
         text: i18n("Select the rules to export")
         actions: [
             Kirigami.Action {
-                iconName: "dialog-ok-apply"
+                icon.name: "dialog-ok-apply"
                 text: checked ? i18n("Unselect All") : i18n("Select All")
                 checkable: true
                 checked: selectedIndexes.length === ruleBookView.count
@@ -83,7 +83,7 @@ KCM.ScrollViewKCM {
             }
             ,
             Kirigami.Action {
-                iconName: "document-save"
+                icon.name: "document-save"
                 text: i18n("Save Rules")
                 enabled: selectedIndexes.length > 0
                 onTriggered: {
@@ -205,7 +205,7 @@ KCM.ScrollViewKCM {
             actions: [
                 Kirigami.Action {
                     text: i18n("Edit")
-                    iconName: "edit-entry"
+                    icon.name: "edit-entry"
                     visible: !exportInfo.visible
                     onTriggered: {
                         kcm.editRule(index);
@@ -214,7 +214,7 @@ KCM.ScrollViewKCM {
                 ,
                 Kirigami.Action {
                     text: i18n("Duplicate")
-                    iconName: "edit-duplicate"
+                    icon.name: "edit-duplicate"
                     visible: !exportInfo.visible
                     onTriggered: {
                         kcm.duplicateRule(index);
@@ -223,7 +223,7 @@ KCM.ScrollViewKCM {
                 ,
                 Kirigami.Action {
                     text: i18n("Delete")
-                    iconName: "entry-delete"
+                    icon.name: "entry-delete"
                     visible: !exportInfo.visible
                     onTriggered: {
                         kcm.removeRule(index);

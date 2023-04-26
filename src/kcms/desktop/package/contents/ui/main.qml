@@ -85,7 +85,7 @@ KCM.ScrollViewKCM {
                     id: renameAction
                     enabled: model && !model.IsMissing
                     visible: !applyAction.visible
-                    iconName: "edit-rename"
+                    icon.name: "edit-rename"
                     tooltip: i18nc("@info:tooltip", "Rename")
                     onTriggered: {
                         nameField.readOnly = false;
@@ -96,7 +96,7 @@ KCM.ScrollViewKCM {
                 Kirigami.Action {
                     id: applyAction
                     visible: !nameField.readOnly
-                    iconName: "dialog-ok-apply"
+                    icon.name: "dialog-ok-apply"
                     tooltip: i18nc("@info:tooltip", "Confirm new name")
                     onTriggered: {
                         nameField.readOnly = true;
@@ -104,7 +104,7 @@ KCM.ScrollViewKCM {
                 },
                 Kirigami.Action {
                     enabled: model && !model.IsMissing && desktopsList.count !== 1
-                    iconName: "edit-delete"
+                    icon.name: "edit-delete"
                     tooltip: i18nc("@info:tooltip", "Remove")
                     onTriggered: kcm.desktopsModel.removeDesktop(model.Id)
                 }
