@@ -945,7 +945,8 @@ bool GlxPixmapTexturePrivate::create(SurfacePixmapX11 *texture)
     glGenTextures(1, &m_texture);
 
     q->setDirty();
-    q->setFilter(GL_NEAREST);
+    q->setFilter(GL_LINEAR);
+    q->setWrapMode(GL_CLAMP_TO_EDGE);
 
     glBindTexture(m_target, m_texture);
     glXBindTexImageEXT(m_backend->display(), m_glxPixmap, GLX_FRONT_LEFT_EXT, nullptr);

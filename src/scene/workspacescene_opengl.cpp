@@ -163,6 +163,8 @@ std::shared_ptr<GLTexture> DecorationShadowTextureCache::getTexture(ShadowTextur
     Data d;
     d.providers << provider;
     d.texture = std::make_shared<GLTexture>(shadow->decorationShadowImage());
+    d.texture->setFilter(GL_LINEAR);
+    d.texture->setWrapMode(GL_CLAMP_TO_EDGE);
     m_cache.insert(decoShadow.get(), d);
     return d.texture;
 }
@@ -251,6 +253,8 @@ void OpenGLShadowTextureProvider::update()
     }
 
     m_texture = std::make_shared<GLTexture>(image);
+    m_texture->setFilter(GL_LINEAR);
+    m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
 
     if (m_texture->internalFormat() == GL_R8) {
         // Swizzle red to alpha and all other channels to zero
@@ -455,6 +459,7 @@ void SceneOpenGLDecorationRenderer::resizeTexture()
     if (!size.isEmpty()) {
         m_texture.reset(new GLTexture(GL_RGBA8, size.width(), size.height()));
         m_texture->setContentTransform(TextureTransform::MirrorY);
+        m_texture->setFilter(GL_LINEAR);
         m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
         m_texture->clear();
     } else {

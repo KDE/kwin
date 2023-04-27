@@ -106,7 +106,7 @@ bool BasicEGLSurfaceTextureWayland::loadDmabufTexture(KWaylandServer::LinuxDmaBu
     m_texture->setSize(buffer->size());
     m_texture->create();
     m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
-    m_texture->setFilter(GL_NEAREST);
+    m_texture->setFilter(GL_LINEAR);
     m_texture->bind();
     glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, static_cast<GLeglImageOES>(image));
     m_texture->unbind();

@@ -353,8 +353,6 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
             opacity = renderNode.opacity;
         }
 
-        renderNode.texture->setFilter(GL_LINEAR);
-        renderNode.texture->setWrapMode(GL_CLAMP_TO_EDGE);
         renderNode.texture->bind();
 
         vbo->draw(scissorRegion, GL_TRIANGLES, renderNode.firstVertex,
