@@ -302,7 +302,10 @@ ScreenCastStream::ScreenCastStream(ScreenCastSource *source, QObject *parent)
     , m_source(source)
     , m_resolution(source->textureSize())
 {
-    connect(source, &ScreenCastSource::closed, this, &ScreenCastStream::stopStreaming);
+    connect(source, &ScreenCastSource::closed, this, [this] {
+        m_streaming = false;
+        Q_EMIT stopStreaming();
+    });
 
     pwStreamEvents.version = PW_VERSION_STREAM_EVENTS;
     pwStreamEvents.add_buffer = &ScreenCastStream::onStreamAddBuffer;
