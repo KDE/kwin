@@ -325,7 +325,6 @@ bool DrmGpu::updateOutputs()
             m_allObjects.removeOne(it->get());
             m_connectors.erase(it);
         }
-        QTimer::singleShot(50, m_platform, &DrmBackend::updateOutputs);
     } else {
         qCWarning(KWIN_DRM, "Failed to find a working setup for new outputs!");
         for (const auto &pipeline : std::as_const(m_pipelines)) {
