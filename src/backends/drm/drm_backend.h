@@ -68,8 +68,6 @@ public:
     DrmGpu *findGpu(dev_t deviceId) const;
     size_t gpuCount() const;
 
-    bool isActive() const;
-
     void setRenderBackend(DrmRenderBackend *backend);
     DrmRenderBackend *renderBackend() const;
 
@@ -83,7 +81,6 @@ public Q_SLOTS:
     void sceneInitialized() override;
 
 Q_SIGNALS:
-    void activeChanged();
     void gpuAdded(DrmGpu *gpu);
     void gpuRemoved(DrmGpu *gpu);
 
@@ -94,9 +91,6 @@ private:
     friend class DrmGpu;
     void addOutput(DrmAbstractOutput *output);
     void removeOutput(DrmAbstractOutput *output);
-    void activate(bool active);
-    void reactivate();
-    void deactivate();
     void handleUdevEvent();
     DrmGpu *addGpu(const QString &fileName);
 
@@ -107,7 +101,6 @@ private:
     QVector<DrmAbstractOutput *> m_outputs;
     DrmVirtualOutput *m_placeHolderOutput = nullptr;
 
-    bool m_active = false;
     const QStringList m_explicitGpus;
     std::vector<std::unique_ptr<DrmGpu>> m_gpus;
     std::unique_ptr<DpmsInputEventFilter> m_dpmsFilter;

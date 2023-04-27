@@ -29,13 +29,6 @@ DrmLeaseManagerV1::DrmLeaseManagerV1(KWin::DrmBackend *backend, Display *display
     connect(m_backend, &KWin::DrmBackend::gpuAdded, this, &DrmLeaseManagerV1::addGpu);
     connect(m_backend, &KWin::DrmBackend::gpuRemoved, this, &DrmLeaseManagerV1::removeGpu);
     connect(m_backend, &KWin::DrmBackend::outputsQueried, this, &DrmLeaseManagerV1::handleOutputsQueried);
-    connect(m_backend, &KWin::DrmBackend::activeChanged, this, [this]() {
-        if (!m_backend->isActive()) {
-            for (const auto device : m_leaseDevices) {
-                device->setDrmMaster(false);
-            }
-        }
-    });
 }
 
 DrmLeaseManagerV1::~DrmLeaseManagerV1()
@@ -61,7 +54,7 @@ void DrmLeaseManagerV1::handleOutputsQueried()
 {
     for (const auto device : m_leaseDevices) {
         device->done();
-        device->setDrmMaster(m_backend->isActive());
+        device->setDrmMaster(device->gpu()->isActive());
     }
 }
 
@@ -75,6 +68,7 @@ DrmLeaseDeviceV1Interface::DrmLeaseDeviceV1Interface(Display *display, KWin::Drm
     }
     connect(gpu, &KWin::DrmGpu::outputAdded, this, &DrmLeaseDeviceV1Interface::addOutput);
     connect(gpu, &KWin::DrmGpu::outputRemoved, this, &DrmLeaseDeviceV1Interface::removeOutput);
+    connect(gpu, &KWin::DrmGpu::activeChanged, this, &DrmLeaseDeviceV1Interface::setDrmMaster);
 }
 
 DrmLeaseDeviceV1Interface::~DrmLeaseDeviceV1Interface()

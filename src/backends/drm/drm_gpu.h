@@ -70,6 +70,8 @@ public:
 
     bool isRemoved() const;
     void setRemoved();
+    void setActive(bool active);
+    bool isActive() const;
 
     bool atomicModeSetting() const;
     bool addFB2ModifiersSupported() const;
@@ -108,6 +110,7 @@ public:
     std::unique_ptr<DrmLease> leaseOutputs(const QVector<DrmOutput *> &outputs);
 
 Q_SIGNALS:
+    void activeChanged(bool active);
     void outputAdded(DrmAbstractOutput *output);
     void outputRemoved(DrmAbstractOutput *output);
 
@@ -133,6 +136,7 @@ private:
     bool m_isVirtualMachine;
     bool m_asyncPageflipSupported = false;
     bool m_isRemoved = false;
+    bool m_isActive = true;
     clockid_t m_presentationClock;
     gbm_device *m_gbmDevice;
     std::unique_ptr<EglDisplay> m_eglDisplay;

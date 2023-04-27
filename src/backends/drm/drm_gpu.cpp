@@ -690,6 +690,30 @@ void DrmGpu::setRemoved()
     m_isRemoved = true;
 }
 
+void DrmGpu::setActive(bool active)
+{
+    if (m_isActive != active) {
+        m_isActive = active;
+        if (active) {
+            for (const auto &output : std::as_const(m_drmOutputs)) {
+                output->renderLoop()->uninhibit();
+            }
+            // while the session was inactive, the output list may have changed
+            m_platform->updateOutputs();
+        } else {
+            for (const auto &output : std::as_const(m_drmOutputs)) {
+                output->renderLoop()->inhibit();
+            }
+        }
+        Q_EMIT activeChanged(active);
+    }
+}
+
+bool DrmGpu::isActive() const
+{
+    return m_isActive;
+}
+
 bool DrmGpu::needsModeset() const
 {
     return std::any_of(m_pipelines.constBegin(), m_pipelines.constEnd(), [](const auto &pipeline) {
