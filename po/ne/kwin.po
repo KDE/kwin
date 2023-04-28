@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-25 02:28+0000\n"
+"POT-Creation-Date: 2023-04-28 02:09+0000\n"
 "PO-Revision-Date: 2007-11-01 14:27+0545\n"
 "Last-Translator: Shyam Krishna Bal <shyamkrishna_bal@yahoo.com>\n"
 "Language-Team: Nepali <info@mpp.org.np>\n"
@@ -1686,7 +1686,7 @@ msgstr "डेस्कटपमा"
 msgid "Add Virtual Desktop"
 msgstr "डेस्कटप ग्रिड देखाउनुहोस्"
 
-#: effects/overview/qml/ScreenView.qml:226
+#: effects/overview/qml/main.qml:226
 #, kde-format
 msgid "No matching windows"
 msgstr ""

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-25 02:28+0000\n"
+"POT-Creation-Date: 2023-04-28 02:09+0000\n"
 "PO-Revision-Date: 2003-12-27 10:16+0000\n"
 "Last-Translator: KD at KGyfieithu <kyfieithu@dotmon.com>\n"
 "Language-Team: Cymraeg <cy@li.org>\n"
@@ -1666,7 +1666,7 @@ msgstr "I'r Penbwr&dd"
 msgid "Add Virtual Desktop"
 msgstr "Newid i Benbwrdd 1"
 
-#: effects/overview/qml/ScreenView.qml:226
+#: effects/overview/qml/main.qml:226
 #, kde-format
 msgid "No matching windows"
 msgstr ""

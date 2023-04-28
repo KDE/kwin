@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-25 02:28+0000\n"
+"POT-Creation-Date: 2023-04-28 02:09+0000\n"
 "PO-Revision-Date: 2023-04-20 12:00+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -1658,7 +1658,7 @@ msgstr "Virtueel bureaublad verwijderen"
 msgid "Add Virtual Desktop"
 msgstr "Virtueel bureaublad toevoegen"
 
-#: effects/overview/qml/ScreenView.qml:226
+#: effects/overview/qml/main.qml:226
 #, kde-format
 msgid "No matching windows"
 msgstr "Geen overeenkomende vensters"

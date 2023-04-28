@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-25 02:28+0000\n"
+"POT-Creation-Date: 2023-04-28 02:09+0000\n"
 "PO-Revision-Date: 2008-12-22 16:10+0530\n"
 "Last-Translator: Runa Bhattacharjee <runab@redhat.com>\n"
 "Language-Team: Bengali INDIA <fedora-trans-bn_IN@redhat.com>\n"
@@ -1686,7 +1686,7 @@ msgstr "চিহ্নিত ডেস্কটপে স্থানান্�
 msgid "Add Virtual Desktop"
 msgstr "চিহ্নিত ডেস্কটপে স্থানান্তর (&D)"
 
-#: effects/overview/qml/ScreenView.qml:226
+#: effects/overview/qml/main.qml:226
 #, fuzzy, kde-format
 #| msgid "Moving windows:"
 msgid "No matching windows"

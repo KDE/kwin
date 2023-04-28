@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-25 02:28+0000\n"
+"POT-Creation-Date: 2023-04-28 02:09+0000\n"
 "PO-Revision-Date: 2023-04-21 07:12+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -1641,7 +1641,7 @@ msgstr "ვირტუალური სამუშაო მაგიდი�
 msgid "Add Virtual Desktop"
 msgstr "ვირტუალური სამუშაო მაგიდის დამატება"
 
-#: effects/overview/qml/ScreenView.qml:226
+#: effects/overview/qml/main.qml:226
 #, kde-format
 msgid "No matching windows"
 msgstr "შესაბამისი ფანჯრების გარეშე"

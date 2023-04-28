@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-25 02:28+0000\n"
+"POT-Creation-Date: 2023-04-28 02:09+0000\n"
 "PO-Revision-Date: 2023-04-18 22:40+0200\n"
 "Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -1760,7 +1760,7 @@ msgstr "Blick auf die Arbeitsfläche"
 msgid "Add Virtual Desktop"
 msgstr "Zur &neuen Arbeitsfläche hinzufügen"
 
-#: effects/overview/qml/ScreenView.qml:226
+#: effects/overview/qml/main.qml:226
 #, fuzzy, kde-format
 #| msgid "X11 Unmanaged Windows"
 msgid "No matching windows"

@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1650286 $
+# Version: $Revision: 1650472 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # Norbert Popiołek <norbert@kde.com.pl>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-25 02:28+0000\n"
+"POT-Creation-Date: 2023-04-28 02:09+0000\n"
 "PO-Revision-Date: 2023-04-23 11:46+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -1661,7 +1661,7 @@ msgstr "Usuń pulpit wirtualny"
 msgid "Add Virtual Desktop"
 msgstr "Dodaj wirtualny pulpit"
 
-#: effects/overview/qml/ScreenView.qml:226
+#: effects/overview/qml/main.qml:226
 #, kde-format
 msgid "No matching windows"
 msgstr "Żadne okno nie odpowiada"

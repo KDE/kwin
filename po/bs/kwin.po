@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-25 02:28+0000\n"
+"POT-Creation-Date: 2023-04-28 02:09+0000\n"
 "PO-Revision-Date: 2014-10-20 20:21+0000\n"
 "Last-Translator: Lejla Agic <lagic1@etf.unsa.ba>\n"
 "Language-Team: bosanski <bs@li.org>\n"
@@ -1716,7 +1716,7 @@ msgstr "Pomjeri na ra&dnu površinu"
 msgid "Add Virtual Desktop"
 msgstr "&Nova radna površina"
 
-#: effects/overview/qml/ScreenView.qml:226
+#: effects/overview/qml/main.qml:226
 #, fuzzy, kde-format
 #| msgid "Moving windows:"
 msgid "No matching windows"

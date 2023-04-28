@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-25 02:28+0000\n"
-"PO-Revision-Date: 2023-03-16 11:04+0400\n"
+"POT-Creation-Date: 2023-04-28 02:09+0000\n"
+"PO-Revision-Date: 2023-04-27 12:56+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -29,44 +29,44 @@ msgstr "zayed.alsaidi@gmail.com,safa1996alfulaij@gmail.com"
 #: backends/wayland/wayland_output.cpp:295
 #, kde-format
 msgid "Press right control to ungrab pointer"
-msgstr ""
+msgstr "اضغط على مفتاح التحكم الأيمن لفك المؤشر"
 
 #: backends/wayland/wayland_output.cpp:297
 #, kde-format
 msgid "Press right control key to grab pointer"
-msgstr ""
+msgstr "اضغط على مفتاح التحكم الأيمن للحصول على المؤشر"
 
 #: backends/wayland/wayland_output.cpp:301
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1 (%2)"
-msgstr ""
+msgstr "مراكب ويلاند كيدي %1 (%2)"
 
 #: backends/wayland/wayland_output.cpp:304
 #, kde-format
 msgid "- Output disabled"
-msgstr ""
+msgstr "- الخرج معطّل"
 
 #: backends/wayland/wayland_output.cpp:306
 #, kde-format
 msgid "- Output dimmed"
-msgstr ""
+msgstr "- الخرج معتم"
 
 #: backends/x11/windowed/x11_windowed_backend.cpp:515
 #, kde-format
 msgid "Press right control to ungrab input"
-msgstr ""
+msgstr "اضغط على مفتاح التحكم الأيمن لترك الإدخال"
 
 #: backends/x11/windowed/x11_windowed_backend.cpp:515
 #, kde-format
 msgid "Press right control key to grab input"
-msgstr ""
+msgstr "اضغط على مفتاح التحكم الأيمن للحصول على الإدخال"
 
 #: backends/x11/windowed/x11_windowed_backend.cpp:516
 #, kde-format
 msgid "KDE Wayland Compositor"
-msgstr ""
+msgstr "مراكب ويلاند كيدي"
 
 #: composite.cpp:616
 #, kde-format
@@ -1082,11 +1082,9 @@ msgstr "القوّة الغشاوة:"
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
 #: effects/blur/blur_config.ui:42 effects/blur/blur_config.ui:108
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgid "Light"
-msgstr "اليمين"
+msgstr "خفيف"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
@@ -1102,16 +1100,13 @@ msgid "Noise strength:"
 msgstr "القوّة الضوضاء:"
 
 #: effects/colorpicker/colorpicker.cpp:102
-#, fuzzy, kde-format
-#| msgid ""
-#| "Select window to force close with left click or enter.\n"
-#| "Escape or right click to cancel."
+#, kde-format
 msgid ""
 "Select a position for color picking with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
-"حدد نافذة لفرض الإغلاق بالنقرة اليسرى أو الضغط على زر الدخول. \n"
-"للإلغاء اضغط زر الهروب أو انقر بزر الفأرة الأيمن."
+"حدد موقع لمنتقي اللون بالنقر الأيسر أو الضغط على زر الدخول. \n"
+"للإلغاء اضغط زر الهروب أو انقر بزر الفأرة الأيمن ."
 
 #: effects/desktopgrid/desktopgrid_config.cpp:49
 #: effects/invert/invert_config.cpp:35
@@ -1131,10 +1126,9 @@ msgstr "كوين"
 
 #: effects/desktopgrid/desktopgrid_config.cpp:54
 #: effects/desktopgrid/desktopgrideffect.cpp:35
-#, fuzzy, kde-format
-#| msgid "Show Desktop"
+#, kde-format
 msgid "Show Desktop Grid"
-msgstr "أظهر سطح المكتب"
+msgstr "أظهر شبكة سطح المكتب"
 
 #: effects/desktopgrid/desktopgrid_config.cpp:61
 #, kde-format
@@ -1151,11 +1145,9 @@ msgid "Top"
 msgstr "أعلى"
 
 #: effects/desktopgrid/desktopgrid_config.cpp:63
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgid "Top-Right"
-msgstr "اليمين"
+msgstr "أعلى اليمين"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
@@ -1163,9 +1155,7 @@ msgstr "اليمين"
 #: effects/desktopgrid/desktopgrid_config.cpp:64
 #: effects/glide/glide_config.ui:75 effects/glide/glide_config.ui:173
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:43
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgid "Right"
 msgstr "اليمين"
 
@@ -1193,18 +1183,14 @@ msgstr "أدنى اليسار"
 #: effects/desktopgrid/desktopgrid_config.cpp:68
 #: effects/glide/glide_config.ui:85 effects/glide/glide_config.ui:183
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:29
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Left"
+#, kde-format
 msgid "Left"
 msgstr "اليسار"
 
 #: effects/desktopgrid/desktopgrid_config.cpp:69
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Left"
+#, kde-format
 msgid "Top-Left"
-msgstr "اليسار"
+msgstr "أعلى اليسار"
 
 #. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
 #: effects/desktopgrid/desktopgrid_config.cpp:70
@@ -1247,10 +1233,9 @@ msgstr "&عدد الصّفوف:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: effects/desktopgrid/desktopgrid_config.ui:103
-#, fuzzy, kde-format
-#| msgid "Desktop file name"
+#, kde-format
 msgid "Desktop &name alignment:"
-msgstr "اسم ملف سطح المكتب"
+msgstr "محاذاة ا&سم سطح المكتب:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ShowAddRemove)
 #: effects/desktopgrid/desktopgrid_config.ui:116
@@ -1268,10 +1253,9 @@ msgstr "نمط وضع ال&شبكة:"
 #: effects/desktopgrid/desktopgrid_config.ui:137
 #: effects/overview/kcm/overvieweffectkcm.ui:30
 #: effects/windowview/kcm/windowvieweffectkcm.ui:30
-#, fuzzy, kde-format
-#| msgid "&Close"
+#, kde-format
 msgid "Closest"
-msgstr "أ&غلق"
+msgstr "الأقرب"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
 #: effects/desktopgrid/desktopgrid_config.ui:142
@@ -1291,17 +1275,15 @@ msgstr "بدون"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: effects/desktopgrid/desktopgrid_config.ui:155
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Windows layout:"
-msgstr "النوافذ"
+msgstr "وضع النوافذ:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 #: effects/desktopgrid/desktopgrid_config.ui:171
-#, fuzzy, kde-format
-#| msgid "caption"
+#, kde-format
 msgid "Activation"
-msgstr "الواصفة"
+msgstr "التفعيل"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Strength)
 #: effects/diminactive/diminactive_config.ui:17
@@ -1323,39 +1305,34 @@ msgstr "اللوحات و المراسي"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimDesktop)
 #: effects/diminactive/diminactive_config.ui:54
-#, fuzzy, kde-format
-#| msgid "&Desktops"
+#, kde-format
 msgid "Desktop"
-msgstr "أ&سطح المكتب"
+msgstr "سطح المكتب"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimKeepAbove)
 #: effects/diminactive/diminactive_config.ui:61
-#, fuzzy, kde-format
-#| msgid "Keep above"
+#, kde-format
 msgid "Keep above windows"
-msgstr "أبقها فوق"
+msgstr "أبقِ النّافذة فوق غيرها"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimByGroup)
 #: effects/diminactive/diminactive_config.ui:68
-#, fuzzy, kde-format
-#| msgid "Window role"
+#, kde-format
 msgid "By window group"
-msgstr "دور النافذة"
+msgstr "بمجموعة النافذة"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimFullScreen)
 #: effects/diminactive/diminactive_config.ui:75
-#, fuzzy, kde-format
-#| msgid "Fullscreen"
+#, kde-format
 msgid "Fullscreen windows"
-msgstr "ملء الشّاشة"
+msgstr "نوافذ ملء الشاشة"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Duration)
 #: effects/glide/glide_config.ui:19
 #: effects/scale/package/contents/ui/config.ui:17
-#, fuzzy, kde-format
-#| msgid "caption"
+#, kde-format
 msgid "Duration:"
-msgstr "الواصفة"
+msgstr "المدّة:"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_Duration)
 #: effects/glide/glide_config.ui:32
@@ -1373,26 +1350,23 @@ msgstr " م.ث"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_InAnimation)
 #: effects/glide/glide_config.ui:50
-#, fuzzy, kde-format
-#| msgid "Window position"
+#, kde-format
 msgid "Window Open Animation"
-msgstr "موقع النّافذة"
+msgstr "تحريك فتح النافذة"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationEdge)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationEdge)
 #: effects/glide/glide_config.ui:56 effects/glide/glide_config.ui:154
-#, fuzzy, kde-format
-#| msgid "Rotation"
+#, kde-format
 msgid "Rotation edge:"
-msgstr "التّدوير"
+msgstr "حافة الدوران:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationAngle)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationAngle)
 #: effects/glide/glide_config.ui:93 effects/glide/glide_config.ui:191
-#, fuzzy, kde-format
-#| msgid "Rotation"
+#, kde-format
 msgid "Rotation angle:"
-msgstr "التّدوير"
+msgstr "زاوية الدوران:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InDistance)
 #. i18n: ectx: property (text), widget (QLabel, label_OutDistance)
@@ -1403,10 +1377,9 @@ msgstr "المسافة:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_OutAnimation)
 #: effects/glide/glide_config.ui:148
-#, fuzzy, kde-format
-#| msgid "Window position"
+#, kde-format
 msgid "Window Close Animation"
-msgstr "موقع النّافذة"
+msgstr "حركات غلق النوافذ"
 
 #: effects/invert/invert.cpp:42 effects/invert/invert_config.cpp:38
 #, kde-format
@@ -1470,11 +1443,9 @@ msgstr " بكسل"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: effects/magnifier/magnifier_config.ui:55
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgid "&Height:"
-msgstr "اليمين"
+msgstr "&الارتفاع:"
 
 #: effects/mouseclick/mouseclick.cpp:36
 #: effects/mouseclick/mouseclick_config.cpp:51
@@ -1483,55 +1454,46 @@ msgid "Toggle Mouse Click Effect"
 msgstr "بدّل تأثير نقر الفأرة"
 
 #: effects/mouseclick/mouseclick.cpp:43
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Left"
+#, kde-format
 msgctxt "Left mouse button"
 msgid "Left"
-msgstr "اليسار"
+msgstr "يسار"
 
 #: effects/mouseclick/mouseclick.cpp:44
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Middle"
+#, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "الأوسط"
 
 #: effects/mouseclick/mouseclick.cpp:45
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgctxt "Right mouse button"
 msgid "Right"
-msgstr "اليمين"
+msgstr "يمين"
 
 #. i18n: ectx: attribute (title), widget (QWidget, basic_tab)
 #: effects/mouseclick/mouseclick_config.ui:21
 #, kde-format
 msgid "Basic Settings"
-msgstr "أساسي"
+msgstr "إعدادات أساسية"
 
 #. i18n: ectx: property (text), widget (QLabel, button1_label)
 #: effects/mouseclick/mouseclick_config.ui:37
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
+#, kde-format
 msgid "Left Mouse Button Color:"
-msgstr "لا يوجد أزار للفأرة"
+msgstr "لون زر الفأرة الأيسر:"
 
 #. i18n: ectx: property (text), widget (QLabel, button2_label)
 #: effects/mouseclick/mouseclick_config.ui:50
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
+#, kde-format
 msgid "Middle Mouse Button Color:"
-msgstr "لا يوجد أزار للفأرة"
+msgstr "لون زر الفأرة الأوسط:"
 
 #. i18n: ectx: property (text), widget (QLabel, button3_label)
 #: effects/mouseclick/mouseclick_config.ui:70
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
+#, kde-format
 msgid "Right Mouse Button Color:"
-msgstr "لا يوجد أزار للفأرة"
+msgstr "لون زر الفأرة الأيمن:"
 
 #. i18n: ectx: attribute (title), widget (QWidget, advanced_tab)
 #: effects/mouseclick/mouseclick_config.ui:91
@@ -1579,11 +1541,9 @@ msgstr "نصف قطر الحلقة:"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_count_label)
 #: effects/mouseclick/mouseclick_config.ui:184
-#, fuzzy, kde-format
-#| msgctxt "Number of fingers in this pinch gesture"
-#| msgid "Finger count"
+#, kde-format
 msgid "Ring Count:"
-msgstr "عدد الأصابع"
+msgstr "عدد الحلقات:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, font)
 #: effects/mouseclick/mouseclick_config.ui:210
@@ -1599,10 +1559,9 @@ msgstr "الخط:"
 
 #. i18n: ectx: property (text), widget (QLabel, showtext_label)
 #: effects/mouseclick/mouseclick_config.ui:233
-#, fuzzy, kde-format
-#| msgid "Show Desktop"
+#, kde-format
 msgid "Show Text:"
-msgstr "أظهر سطح المكتب"
+msgstr "أظهر النصّ:"
 
 #: effects/mousemark/mousemark.cpp:40
 #, kde-format
@@ -1624,12 +1583,12 @@ msgstr "امحُ علامات الفأرة"
 msgctxt "Suffix"
 msgid " pixel"
 msgid_plural " pixels"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
+msgstr[0] " بكسل"
+msgstr[1] " بكسل"
+msgstr[2] " بكسل"
+msgstr[3] " بكسل"
+msgstr[4] " بكسل"
+msgstr[5] " بكسل"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: effects/mousemark/mousemark_config.ui:23
@@ -1650,9 +1609,7 @@ msgid "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
 msgstr "اسحب بالفأرة بالضغط على المفاتيح Shift+Meta وتحريك الفأرة."
 
 #: effects/outputlocator/outputlocator.cpp:48
-#, fuzzy, kde-format
-#| msgctxt "The input device of the event is not known"
-#| msgid "Unknown"
+#, kde-format
 msgctxt "@label"
 msgid "Unknown"
 msgstr "مجهول"
@@ -1666,37 +1623,30 @@ msgstr "بدل النظرة العامة"
 #. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
 #: effects/overview/kcm/overvieweffectkcm.ui:22
 #: effects/windowview/kcm/windowvieweffectkcm.ui:22
-#, fuzzy, kde-format
-#| msgctxt "Name of a hardware switch"
-#| msgid "Tablet mode"
+#, kde-format
 msgid "Layout mode:"
-msgstr "وضع اللوحي"
+msgstr "وضع الشبكة:"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: effects/overview/kcm/overvieweffectkcm.ui:43
-#, fuzzy, kde-format
-#| msgid "Minimize Window"
+#, kde-format
 msgid "Ignore minimized windows:"
-msgstr "صغّر النّافذة"
+msgstr "تجاهل النوافذ المصغّرة:"
 
 #: effects/overview/qml/DesktopBar.qml:187
-#, fuzzy, kde-format
-#| msgid "Peek at Desktop"
+#, kde-format
 msgid "Delete Virtual Desktop"
-msgstr "نظرة على سطح المكتب"
+msgstr "احذف سطح المكتب الافتراضي"
 
 #: effects/overview/qml/DesktopBar.qml:283
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and add the window to that desktop"
-#| msgid "Add to &New Desktop"
+#, kde-format
 msgid "Add Virtual Desktop"
-msgstr "أضف سطح مكتب &جديد"
+msgstr "أضف سطح المكتب افتراضي"
 
-#: effects/overview/qml/ScreenView.qml:226
-#, fuzzy, kde-format
-#| msgid "X11 Unmanaged Windows"
+#: effects/overview/qml/main.qml:226
+#, kde-format
 msgid "No matching windows"
-msgstr "نوافذ اكس ١١ غير مدارة"
+msgstr "لا يوجد نوافذ مطابقة"
 
 #: effects/private/qml/WindowHeapDelegate.qml:151
 #, kde-format
@@ -1704,57 +1654,46 @@ msgid "Drag Down To Close"
 msgstr "اسحب للأسفل للإغلاق"
 
 #: effects/private/qml/WindowHeapDelegate.qml:452
-#, fuzzy, kde-format
-#| msgid "Close Window"
+#, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
 msgstr "أغلق النّافذة"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InScale)
 #: effects/scale/package/contents/ui/config.ui:46
-#, fuzzy, kde-format
-#| msgid "Window role"
+#, kde-format
 msgid "Window open scale:"
-msgstr "دور النافذة"
+msgstr "مقياس فتح النافذة:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_OutScale)
 #: effects/scale/package/contents/ui/config.ui:53
-#, fuzzy, kde-format
-#| msgid "Window role"
+#, kde-format
 msgid "Window close scale:"
-msgstr "دور النافذة"
+msgstr "مقياس غلق النافذة:"
 
 #: effects/screenshot/screenshotdbusinterface2.cpp:525
-#, fuzzy, kde-format
-#| msgid ""
-#| "Select window to force close with left click or enter.\n"
-#| "Escape or right click to cancel."
+#, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
-"حدد نافذة لفرض الإغلاق بالنقرة اليسرى أو الضغط على زر الدخول. \n"
-"للإلغاء اضغط زر الهروب أو انقر بزر الفأرة الأيمن."
+"حدد إطارًا للشاشة مع النقر الأيسر أو الضغط على زر الدخول. \n"
+"للإلغاء اضغط زر الهروب أو انقر بزر الفأرة الأيمن ."
 
 #: effects/screenshot/screenshotdbusinterface2.cpp:543
-#, fuzzy, kde-format
-#| msgid ""
-#| "Select window to force close with left click or enter.\n"
-#| "Escape or right click to cancel."
+#, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
-"حدد نافذة لفرض الإغلاق بالنقرة اليسرى أو الضغط على زر الدخول. \n"
-"للإلغاء اضغط زر الهروب أو انقر بزر الفأرة الأيمن."
+"أنشئ لقطة شاشة بالنقر الأيسر أو ضغط زر الدخول. \n"
+"للإلغاء اضغط زر الهروب أو انقر بزر الفأرة الأيمن ."
 
 #: effects/showfps/qml/main.qml:110
-#, fuzzy, kde-format
-#| msgctxt "A mouse pointer motion event"
-#| msgid "Pointer Motion"
+#, kde-format
 msgctxt "@label"
 msgid "Paint Duration"
-msgstr "حركة المؤشّر"
+msgstr "مدّة الرسم:"
 
 #: effects/showfps/qml/main.qml:162
 #, kde-format
@@ -1763,11 +1702,10 @@ msgid "Paint Amount"
 msgstr "كمية الرسم"
 
 #: effects/showfps/qml/main.qml:175
-#, fuzzy, kde-format
-#| msgid "Current Layout:"
+#, kde-format
 msgctxt "@label"
 msgid "Current FPS"
-msgstr "التخطيط الحالي:"
+msgstr "سرعة عدد الإطارات في الثانية"
 
 #: effects/showfps/qml/main.qml:184
 #, kde-format
@@ -1794,19 +1732,15 @@ msgstr "الفراغ بين أسطح المكتب"
 
 #. i18n: ectx: property (text), widget (QLabel, label_HorizontalGap)
 #: effects/slide/slide_config.ui:23
-#, fuzzy, kde-format
-#| msgctxt "An orientation of a pointer axis event"
-#| msgid "Horizontal"
+#, kde-format
 msgid "Horizontal:"
-msgstr "أفقي"
+msgstr "أفقي:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_VerticalGap)
 #: effects/slide/slide_config.ui:46
-#, fuzzy, kde-format
-#| msgctxt "An orientation of a pointer axis event"
-#| msgid "Vertical"
+#, kde-format
 msgid "Vertical:"
-msgstr "عمودي"
+msgstr "عمودي:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideBackground)
 #: effects/slide/slide_config.ui:72
@@ -1869,24 +1803,19 @@ msgid "Load Layout..."
 msgstr "حمّل تخطيطًا..."
 
 #: effects/tileseditor/qml/main.qml:274
-#, fuzzy, kde-format
-#| msgid "&Close"
+#, kde-format
 msgid "Close"
-msgstr "أ&غلق"
+msgstr "أغلق"
 
 #: effects/tileseditor/qml/TileDelegate.qml:167
-#, fuzzy, kde-format
-#| msgctxt "An orientation of a pointer axis event"
-#| msgid "Horizontal"
+#, kde-format
 msgid "Split Horizontally"
-msgstr "أفقي"
+msgstr "اقسم أفقياً"
 
 #: effects/tileseditor/qml/TileDelegate.qml:174
-#, fuzzy, kde-format
-#| msgctxt "An orientation of a pointer axis event"
-#| msgid "Vertical"
+#, kde-format
 msgid "Split Vertically"
-msgstr "عمودي"
+msgstr "اقسم رأسيًا"
 
 #: effects/tileseditor/qml/TileDelegate.qml:182
 #: effects/tileseditor/qml/TileDelegate.qml:211
@@ -1913,23 +1842,19 @@ msgstr "شغل التأثير بـ:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_KeyboardShortcut)
 #: effects/trackmouse/trackmouse_config.ui:33
-#, fuzzy, kde-format
-#| msgid "Keyboard"
+#, kde-format
 msgid "Keyboard shortcut:"
-msgstr "لوحة المفاتيح"
+msgstr "اختصار لوحة المفاتيح:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_ModifierKeys)
 #: effects/trackmouse/trackmouse_config.ui:43
-#, fuzzy, kde-format
-#| msgid "Modifiers"
+#, kde-format
 msgid "Modifier keys:"
-msgstr "المعدِّلات"
+msgstr "المفاتيح المغيِّرة:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Alt)
 #: effects/trackmouse/trackmouse_config.ui:65
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Alt"
+#, kde-format
 msgid "Alt"
 msgstr "Alt"
 
@@ -1941,17 +1866,13 @@ msgstr "Ctrl"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Shift)
 #: effects/trackmouse/trackmouse_config.ui:79
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Shift"
+#, kde-format
 msgid "Shift"
 msgstr "Shift"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Meta)
 #: effects/trackmouse/trackmouse_config.ui:86
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Meta"
+#, kde-format
 msgid "Meta"
 msgstr "Meta"
 
@@ -1983,10 +1904,9 @@ msgstr "معتم"
 
 #. i18n: ectx: property (text), widget (QLabel, dialogs_label)
 #: effects/translucency/package/contents/ui/config.ui:137
-#, fuzzy, kde-format
-#| msgid "Dialog"
+#, kde-format
 msgid "Dialogs:"
-msgstr "حواريّ"
+msgstr "الحواريات:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -2004,17 +1924,15 @@ msgstr "القوائم:"
 
 #. i18n: ectx: property (text), widget (QLabel, moveresize_label)
 #: effects/translucency/package/contents/ui/config.ui:207
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Moving windows:"
-msgstr "انقل النّافذة"
+msgstr "النوافذ المتحركة:"
 
 #. i18n: ectx: property (text), widget (QLabel, inactive_label)
 #: effects/translucency/package/contents/ui/config.ui:226
-#, fuzzy, kde-format
-#| msgid "Internal Windows"
+#, kde-format
 msgid "Inactive windows:"
-msgstr "نوافذ داخلية"
+msgstr "النوافذ غير النشطة:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, kcfg_IndividualMenuConfig)
 #: effects/translucency/package/contents/ui/config.ui:267
@@ -2048,10 +1966,9 @@ msgstr "بدّل عرض النوافذ (سطح المكتب الحالي)"
 
 #: effects/windowview/kcm/windowvieweffectkcm.cpp:49
 #: effects/windowview/windowvieweffect.cpp:54
-#, fuzzy, kde-format
-#| msgid "Keep Window on All Desktops"
+#, kde-format
 msgid "Toggle Present Windows (All desktops)"
-msgstr "أبقِ النّافذة في كلّ أسطح المكتب"
+msgstr "بدّل عرض النوافذ (جميع الأسطح)"
 
 #: effects/windowview/kcm/windowvieweffectkcm.cpp:56
 #: effects/windowview/windowvieweffect.cpp:63
@@ -2067,10 +1984,9 @@ msgstr "بدّل عرض النوافذ (صنف النافذة على سطح ال
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
 #: effects/windowview/kcm/windowvieweffectkcm.ui:56
-#, fuzzy, kde-format
-#| msgid "Minimize Window"
+#, kde-format
 msgid "Ignore &minimized windows"
-msgstr "صغّر النّافذة"
+msgstr "تجاهل النوافذ المص&غّرة"
 
 #: effects/windowview/qml/main.qml:107
 #, kde-format
@@ -2078,16 +1994,14 @@ msgid "No Matches"
 msgstr "لا يوجد تطابق"
 
 #: effects/windowview/qml/main.qml:107
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "No Windows"
-msgstr "النوافذ"
+msgstr "لا يوجد نوافذ"
 
 #: effects/windowview/qml/main.qml:122
-#, fuzzy, kde-format
-#| msgid "Internal Windows"
+#, kde-format
 msgid "Filter windows…"
-msgstr "نوافذ داخلية"
+msgstr "رشّح النّوافذ…"
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
 #: effects/wobblywindows/wobblywindows_config.ui:20
@@ -2109,10 +2023,9 @@ msgstr "ال&سحب:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: effects/wobblywindows/wobblywindows_config.ui:81
-#, fuzzy, kde-format
-#| msgid "Move to %1"
+#, kde-format
 msgid "&Move factor:"
-msgstr "انقل إلى %1"
+msgstr "عا&مل الحركة:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_MoveWobble)
 #: effects/wobblywindows/wobblywindows_config.ui:155
@@ -2151,16 +2064,14 @@ msgid "More"
 msgstr "أكثر"
 
 #: effects/zoom/zoom.cpp:67
-#, fuzzy, kde-format
-#| msgid "Move Window One Screen to the Left"
+#, kde-format
 msgid "Move Zoomed Area to Left"
-msgstr "حرّك النافذة إلى الشاشة اليسرى التالية"
+msgstr "حرك المنطقة المكبرة لليسار"
 
 #: effects/zoom/zoom.cpp:74
-#, fuzzy, kde-format
-#| msgid "Move Window One Screen to the Right"
+#, kde-format
 msgid "Move Zoomed Area to Right"
-msgstr "حرّك النافذة إلى شاشة اليمنى التالية"
+msgstr "حرك المنطقة المكبرة لليمين"
 
 #: effects/zoom/zoom.cpp:81
 #, kde-format
@@ -2173,40 +2084,34 @@ msgid "Move Zoomed Area Downwards"
 msgstr "حرك المنطقة المكبرة للأسفل"
 
 #: effects/zoom/zoom.cpp:96 effects/zoom/zoom_config.cpp:108
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
+#, kde-format
 msgid "Move Mouse to Focus"
-msgstr "لا يوجد أزار للفأرة"
+msgstr "حرك الفأرة للتركيز"
 
 #: effects/zoom/zoom.cpp:103 effects/zoom/zoom_config.cpp:115
-#, fuzzy, kde-format
-#| msgid "Move Window to the Center"
+#, kde-format
 msgid "Move Mouse to Center"
-msgstr "حرّك النافذة إلى الوسط"
+msgstr "حرك الفأرة للوسط"
 
 #: effects/zoom/zoom_config.cpp:80
-#, fuzzy, kde-format
-#| msgid "Move Window Left"
+#, kde-format
 msgid "Move Left"
-msgstr "حرّك النافذة لليسار"
+msgstr "حرك لليسار"
 
 #: effects/zoom/zoom_config.cpp:87
-#, fuzzy, kde-format
-#| msgid "Move Window Right"
+#, kde-format
 msgid "Move Right"
-msgstr "حرّك النافذة لليمين"
+msgstr "حرك لليمين"
 
 #: effects/zoom/zoom_config.cpp:94
-#, fuzzy, kde-format
-#| msgid "Move Window Up"
+#, kde-format
 msgid "Move Up"
-msgstr "حرّك النافذة للأعلى"
+msgstr "انقل لأعلى"
 
 #: effects/zoom/zoom_config.cpp:101
-#, fuzzy, kde-format
-#| msgid "Move Window Down"
+#, kde-format
 msgid "Move Down"
-msgstr "حرّك النافذة للأسفل"
+msgstr "انقل لأسفل"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label)
 #. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
@@ -2267,9 +2172,7 @@ msgstr "ظهور مؤشّر الفأرة."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
 #: effects/zoom/zoom_config.ui:103
-#, fuzzy, kde-format
-#| msgctxt "Current scale in pinch gesture"
-#| msgid "Scale"
+#, kde-format
 msgid "Scale"
 msgstr "حجّم"
 
@@ -2293,10 +2196,9 @@ msgstr "تتبع حركة الفأرة"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: effects/zoom/zoom_config.ui:125
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Proportional"
-msgstr "الموقع"
+msgstr "نسبي"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: effects/zoom/zoom_config.ui:130
@@ -2731,24 +2633,21 @@ msgid "Very Huge"
 msgstr "ضخم جدًّا"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:726
-#, fuzzy, kde-format
-#| msgid "&Resize"
+#, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Oversized"
-msgstr "غيّر ال&حجم"
+msgstr "فوق الطّبيعيّ"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:729
-#, fuzzy, kde-format
-#| msgid "Buttons"
+#, kde-format
 msgid "Button size:"
-msgstr "الأزرار"
+msgstr "حجم الزّرّ:"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:14
-#, fuzzy, kde-format
-#| msgid "Dialog"
+#, kde-format
 msgid "Config Dialog"
-msgstr "حواريّ"
+msgstr "حوار الضبط"
 
 #. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:23
@@ -2768,10 +2667,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:56
-#, fuzzy, kde-format
-#| msgid "Toggle Window Border"
+#, kde-format
 msgid "Colored window border"
-msgstr "بدّل حدّ النّافذة"
+msgstr "حد النافذة ملوّن"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:66
@@ -2955,43 +2853,42 @@ msgstr "معاينة حرارة اللون"
 #: plugins/screencast/pipewirecore.cpp:89
 #, kde-format
 msgid "Failed to start main PipeWire loop"
-msgstr ""
+msgstr "فشل في بدء الحلقة الرئيسة لـPipeWire"
 
 #: plugins/screencast/pipewirecore.cpp:76
 #, kde-format
 msgid "Failed to create PipeWire context"
-msgstr ""
+msgstr "فشل في إنشاء سياق PipeWire"
 
 #: plugins/screencast/pipewirecore.cpp:83
 #, kde-format
 msgid "Failed to connect PipeWire context"
-msgstr ""
+msgstr "فشل الاتصال بسياق PipeWire"
 
 #: plugins/screencast/screencastmanager.cpp:105
-#, fuzzy, kde-format
-#| msgid "Close running window on %1"
+#, kde-format
 msgid "Could not find window id %1"
-msgstr "أغلق النافذة العاملة في %1"
+msgstr "لا يمكن العثور النافذة ذات المعرف  %1"
 
 #: plugins/screencast/screencastmanager.cpp:145
 #, kde-format
 msgid "Could not find output"
-msgstr ""
+msgstr "تعذر العثور على الخرج"
 
 #: plugins/screencast/screencastmanager.cpp:172
 #, kde-format
 msgid "Invalid region"
-msgstr ""
+msgstr "منطقة غير صالحة"
 
 #: plugins/screencast/screencastmanager.cpp:203
 #, kde-format
 msgid "Region outside the workspace"
-msgstr ""
+msgstr "مساحة خارج مساحة العمل"
 
 #: plugins/screencast/screencaststream.cpp:343
 #, kde-format
 msgid "Failed to create PipeWire stream"
-msgstr ""
+msgstr "فشل في إنشاء دفق PipeWire"
 
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
@@ -3543,11 +3440,9 @@ msgstr "قائمة مفصولة بفاصلة , لنوع النوافذ"
 
 #. i18n: ectx: property (text), widget (QLabel, applyLabel)
 #: scripts/videowall/contents/ui/config.ui:45
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Alt"
+#, kde-format
 msgid "All"
-msgstr "Alt"
+msgstr "الكل"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Ignore)
 #: scripts/videowall/contents/ui/config.ui:54
@@ -4227,7 +4122,7 @@ msgstr ""
 #: xwayland/xwaylandlauncher.cpp:272
 #, kde-format
 msgid "Xwayland has crashed"
-msgstr ""
+msgstr "إنهار ويلاند_اكس"
 
 #~ msgctxt "Error message"
 #~ msgid "Could not locate package metadata"
