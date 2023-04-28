@@ -256,20 +256,39 @@ void DrmPipeline::prepareAtomicModeset(DrmAtomicCommit *commit)
     if (m_connector->hdrMetadata.isValid()) {
         commit->addProperty(m_connector->hdrMetadata, 0);
     }
+    if (m_connector->colorspace.isValid()) {
+        commit->addEnum(m_connector->colorspace, DrmConnector::Colorspace::Default);
+    }
     if (m_connector->scalingMode.isValid() && m_connector->scalingMode.hasEnum(DrmConnector::ScalingMode::None)) {
         commit->addEnum(m_connector->scalingMode, DrmConnector::ScalingMode::None);
     }
 
     commit->addProperty(m_pending.crtc->active, 1);
     commit->addBlob(m_pending.crtc->modeId, m_pending.mode->blob());
-
-    commit->addProperty(m_pending.crtc->primaryPlane()->crtcId, m_pending.crtc->id());
-    if (const auto &rotation = m_pending.crtc->primaryPlane()->rotation; rotation.isValid()) {
-        commit->addEnum(rotation, {DrmPlane::Transformation::Rotate0});
+    if (m_pending.crtc->degammaLut.isValid()) {
+        commit->addBlob(m_pending.crtc->degammaLut, nullptr);
     }
-    if (m_pending.crtc->cursorPlane()) {
-        if (const auto &rotation = m_pending.crtc->cursorPlane()->rotation; rotation.isValid()) {
-            commit->addEnum(rotation, DrmPlane::Transformations(DrmPlane::Transformation::Rotate0));
+
+    const auto primary = m_pending.crtc->primaryPlane();
+    commit->addProperty(primary->crtcId, m_pending.crtc->id());
+    if (primary->rotation.isValid()) {
+        commit->addEnum(primary->rotation, {DrmPlane::Transformation::Rotate0});
+    }
+    if (primary->alpha.isValid()) {
+        commit->addProperty(primary->alpha, 0xFFFF);
+    }
+    if (primary->pixelBlendMode.isValid()) {
+        commit->addEnum(primary->pixelBlendMode, DrmPlane::PixelBlendMode::PreMultiplied);
+    }
+    if (const auto cursor = m_pending.crtc->cursorPlane()) {
+        if (cursor->rotation.isValid()) {
+            commit->addEnum(cursor->rotation, DrmPlane::Transformations(DrmPlane::Transformation::Rotate0));
+        }
+        if (cursor->alpha.isValid()) {
+            commit->addProperty(cursor->alpha, 0xFFFF);
+        }
+        if (cursor->pixelBlendMode.isValid()) {
+            commit->addEnum(cursor->pixelBlendMode, DrmPlane::PixelBlendMode::PreMultiplied);
         }
     }
 }

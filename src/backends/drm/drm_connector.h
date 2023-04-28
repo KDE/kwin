@@ -103,6 +103,14 @@ public:
         Center = 2,
         Full_Aspect = 3
     };
+    enum class Colorspace : uint64_t {
+        Default,
+        BT709_YCC,
+        opRGB,
+        BT2020_RGB,
+        BT2020_YCC,
+    };
+
     DrmProperty crtcId;
     DrmProperty nonDesktop;
     DrmProperty dpms;
@@ -119,6 +127,7 @@ public:
     DrmEnumProperty<PanelOrientation> panelOrientation;
     DrmProperty hdrMetadata;
     DrmEnumProperty<ScalingMode> scalingMode;
+    DrmEnumProperty<Colorspace> colorspace;
 
     static DrmContentType kwinToDrmContentType(ContentType type);
     static Output::Transform toKWinTransform(PanelOrientation orientation);

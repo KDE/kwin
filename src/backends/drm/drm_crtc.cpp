@@ -27,6 +27,8 @@ DrmCrtc::DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int pipeIndex, DrmPlane *primaryP
     , gammaLut(this, QByteArrayLiteral("GAMMA_LUT"))
     , gammaLutSize(this, QByteArrayLiteral("GAMMA_LUT_SIZE"))
     , ctm(this, QByteArrayLiteral("CTM"))
+    , degammaLut(this, QByteArrayLiteral("DEGAMMA_LUT"))
+    , degammaLutSize(this, QByteArrayLiteral("DEGAMMA_LUT_SIZE"))
     , m_crtc(drmModeGetCrtc(gpu->fd(), crtcId))
     , m_pipeIndex(pipeIndex)
     , m_primaryPlane(primaryPlane)
@@ -46,6 +48,8 @@ bool DrmCrtc::updateProperties()
     gammaLut.update(props);
     gammaLutSize.update(props);
     ctm.update(props);
+    degammaLut.update(props);
+    degammaLutSize.update(props);
 
     return !gpu()->atomicModeSetting() || (modeId.isValid() && active.isValid());
 }

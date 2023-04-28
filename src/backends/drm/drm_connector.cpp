@@ -129,6 +129,13 @@ DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)
                                                                QByteArrayLiteral("Center"),
                                                                QByteArrayLiteral("Full aspect"),
                                                            })
+    , colorspace(this, QByteArrayLiteral("Colorspace"), {
+                                                            QByteArrayLiteral("Default"),
+                                                            QByteArrayLiteral("BT709_YCC"),
+                                                            QByteArrayLiteral("opRGB"),
+                                                            QByteArrayLiteral("BT2020_RGB"),
+                                                            QByteArrayLiteral("BT2020_YCC"),
+                                                        })
     , m_pipeline(std::make_unique<DrmPipeline>(this))
     , m_conn(drmModeGetConnector(gpu->fd(), connectorId))
 {
@@ -237,6 +244,7 @@ bool DrmConnector::updateProperties()
     panelOrientation.update(props);
     hdrMetadata.update(props);
     scalingMode.update(props);
+    colorspace.update(props);
 
     if (gpu()->atomicModeSetting() && !crtcId.isValid()) {
         return false;

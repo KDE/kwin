@@ -60,6 +60,11 @@ public:
     };
     Q_ENUM(Transformation)
     Q_DECLARE_FLAGS(Transformations, Transformation)
+    enum class PixelBlendMode : uint64_t {
+        None,
+        PreMultiplied,
+        Coverage
+    };
 
     DrmEnumProperty<TypeIndex> type;
     DrmProperty srcX;
@@ -74,6 +79,8 @@ public:
     DrmProperty crtcId;
     DrmEnumProperty<Transformations> rotation;
     DrmProperty inFormats;
+    DrmProperty alpha;
+    DrmEnumProperty<PixelBlendMode> pixelBlendMode;
 
     static int32_t transformationToDegrees(Transformations transformation);
 

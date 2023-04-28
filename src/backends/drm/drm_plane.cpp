@@ -48,6 +48,12 @@ DrmPlane::DrmPlane(DrmGpu *gpu, uint32_t planeId)
                                                         QByteArrayLiteral("reflect-y"),
                                                     })
     , inFormats(this, QByteArrayLiteral("IN_FORMATS"))
+    , alpha(this, QByteArrayLiteral("alpha"))
+    , pixelBlendMode(this, QByteArrayLiteral("pixel blend mode"), {
+                                                                      QByteArrayLiteral("None"),
+                                                                      QByteArrayLiteral("Pre-multiplied"),
+                                                                      QByteArrayLiteral("Coverage"),
+                                                                  })
 {
 }
 
@@ -72,6 +78,8 @@ bool DrmPlane::updateProperties()
     crtcId.update(props);
     rotation.update(props);
     inFormats.update(props);
+    alpha.update(props);
+    pixelBlendMode.update(props);
 
     if (!type.isValid() || !srcX.isValid() || !srcY.isValid() || !srcW.isValid() || !srcH.isValid()
         || !crtcX.isValid() || !crtcY.isValid() || !crtcW.isValid() || !crtcH.isValid() || !fbId.isValid()) {

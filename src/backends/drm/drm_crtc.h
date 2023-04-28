@@ -50,6 +50,8 @@ public:
     DrmProperty gammaLut;
     DrmProperty gammaLutSize;
     DrmProperty ctm;
+    DrmProperty degammaLut;
+    DrmProperty degammaLutSize;
 
 private:
     DrmUniquePtr<drmModeCrtc> m_crtc;
