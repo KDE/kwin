@@ -128,8 +128,6 @@ public:
 
     /**
      * Returns the identifying uuid of this output.
-     *
-     * Default implementation returns an empty byte array.
      */
     QUuid uuid() const;
 
@@ -166,15 +164,11 @@ public:
 
     /**
      * Returns the ratio between physical pixels and logical pixels.
-     *
-     * Default implementation returns 1.
      */
     qreal scale() const;
 
     /**
      * Returns the non-rotated physical size of this output, in millimeters.
-     *
-     * Default implementation returns an invalid QSize.
      */
     QSize physicalSize() const;
 
