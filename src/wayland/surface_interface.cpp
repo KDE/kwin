@@ -5,7 +5,6 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 #include "surface_interface.h"
-#include "clientbuffer.h"
 #include "clientconnection.h"
 #include "compositor_interface.h"
 #include "contenttype_v1_interface.h"
@@ -270,7 +269,7 @@ void SurfaceInterfacePrivate::surface_attach(Resource *resource, struct ::wl_res
         pending.bufferDamage = QRegion();
         return;
     }
-    pending.buffer = ClientBuffer::get(buffer);
+    pending.buffer = Display::bufferForResource(buffer);
 }
 
 void SurfaceInterfacePrivate::surface_damage(Resource *, int32_t x, int32_t y, int32_t width, int32_t height)
@@ -808,7 +807,7 @@ KWin::Output::Transform SurfaceInterface::bufferTransform() const
     return d->current.bufferTransform;
 }
 
-ClientBuffer *SurfaceInterface::buffer() const
+KWin::GraphicsBuffer *SurfaceInterface::buffer() const
 {
     return d->bufferRef;
 }

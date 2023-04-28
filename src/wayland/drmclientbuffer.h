@@ -21,7 +21,7 @@ class DrmClientBufferIntegrationPrivate;
  * protocol.
  *
  * It provides the minimum amount of information to Xwayland so it can run. No
- * ClientBuffers are provided by the DrmClientBufferIntegration. Xwayland is
+ * GraphicsBuffers are provided by the DrmClientBufferIntegration. Xwayland is
  * expected to provide us linux dmabuf client buffers instead.
  *
  * Once the wl_drm protocol is no longer mandatory in Xwayland, this stub can be

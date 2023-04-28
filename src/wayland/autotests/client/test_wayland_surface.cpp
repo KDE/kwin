@@ -8,7 +8,6 @@
 #include <QPainter>
 #include <QtTest>
 // KWin
-#include "wayland/clientbuffer.h"
 #include "wayland/compositor_interface.h"
 #include "wayland/display.h"
 #include "wayland/idleinhibit_v1_interface.h"
@@ -395,7 +394,7 @@ void TestWaylandSurface::testAttachBuffer()
     QVERIFY(unmappedSpy.isEmpty());
 
     // now the ServerSurface should have the black image attached as a buffer
-    KWaylandServer::ClientBuffer *buffer = serverSurface->buffer();
+    KWin::GraphicsBuffer *buffer = serverSurface->buffer();
     buffer->ref();
     auto shmBuffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(buffer);
     QVERIFY(shmBuffer);
@@ -411,7 +410,7 @@ void TestWaylandSurface::testAttachBuffer()
     QVERIFY(damageSpy.wait());
     QCOMPARE(mappedSpy.count(), 1);
     QVERIFY(unmappedSpy.isEmpty());
-    KWaylandServer::ClientBuffer *buffer2 = serverSurface->buffer();
+    KWin::GraphicsBuffer *buffer2 = serverSurface->buffer();
     buffer2->ref();
     auto shmBuffer2 = qobject_cast<KWaylandServer::ShmClientBuffer *>(buffer2);
     QVERIFY(shmBuffer2);
@@ -446,7 +445,7 @@ void TestWaylandSurface::testAttachBuffer()
     }
     QVERIFY(redBuffer.data()->isReleased());
 
-    KWaylandServer::ClientBuffer *buffer3 = serverSurface->buffer();
+    KWin::GraphicsBuffer *buffer3 = serverSurface->buffer();
     buffer3->ref();
     auto shmBuffer3 = qobject_cast<KWaylandServer::ShmClientBuffer *>(buffer3);
     QVERIFY(shmBuffer3);
@@ -542,7 +541,7 @@ void TestWaylandSurface::testMultipleSurfaces()
     QVERIFY(damageSpy1.wait());
 
     // now the ServerSurface should have the black image attached as a buffer
-    ClientBuffer *buffer1 = serverSurface1->buffer();
+    KWin::GraphicsBuffer *buffer1 = serverSurface1->buffer();
     QVERIFY(buffer1);
     QImage buffer1Data = qobject_cast<ShmClientBuffer *>(buffer1)->data();
     QCOMPARE(buffer1Data, black);
@@ -561,7 +560,7 @@ void TestWaylandSurface::testMultipleSurfaces()
     QSignalSpy damageSpy2(serverSurface2, &KWaylandServer::SurfaceInterface::damaged);
     QVERIFY(damageSpy2.wait());
 
-    ClientBuffer *buffer2 = serverSurface2->buffer();
+    KWin::GraphicsBuffer *buffer2 = serverSurface2->buffer();
     QVERIFY(buffer2);
     QImage buffer2Data = qobject_cast<ShmClientBuffer *>(buffer2)->data();
     QCOMPARE(buffer2Data, red);

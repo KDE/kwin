@@ -16,6 +16,11 @@
 struct wl_client;
 struct wl_display;
 
+namespace KWin
+{
+class GraphicsBuffer;
+}
+
 namespace KWaylandServer
 {
 /**
@@ -32,7 +37,6 @@ namespace KWaylandServer
  * @see Display
  */
 
-class ClientBuffer;
 class ClientConnection;
 class DisplayPrivate;
 class OutputInterface;
@@ -124,6 +128,11 @@ public:
      */
     ClientConnection *getConnection(wl_client *client);
     QVector<ClientConnection *> connections() const;
+
+    /**
+     * Returns the graphics buffer for the given @a resource, or @c null if there's no buffer.
+     */
+    static KWin::GraphicsBuffer *bufferForResource(wl_resource *resource);
 
 private Q_SLOTS:
     void flush();

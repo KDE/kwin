@@ -47,7 +47,7 @@ struct SurfaceState
     KWin::Output::Transform bufferTransform = KWin::Output::Transform::Normal;
     wl_list frameCallbacks;
     QPoint offset = QPoint();
-    QPointer<ClientBuffer> buffer;
+    QPointer<KWin::GraphicsBuffer> buffer;
     QPointer<ShadowInterface> shadow;
     QPointer<BlurInterface> blur;
     QPointer<ContrastInterface> contrast;
@@ -125,7 +125,7 @@ public:
 
     QRegion inputRegion;
     QRegion opaqueRegion;
-    ClientBuffer *bufferRef = nullptr;
+    KWin::GraphicsBuffer *bufferRef = nullptr;
     bool mapped = false;
     bool hasCacheState = false;
     qreal scaleOverride = 1.;

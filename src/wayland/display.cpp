@@ -6,6 +6,7 @@
 */
 #include "display.h"
 #include "display_p.h"
+#include "linuxdmabufv1clientbuffer.h"
 #include "output_interface.h"
 #include "shmclientbuffer.h"
 #include "utils/common.h"
@@ -213,6 +214,17 @@ ClientConnection *Display::createClient(int fd)
         return nullptr;
     }
     return getConnection(c);
+}
+
+KWin::GraphicsBuffer *Display::bufferForResource(wl_resource *resource)
+{
+    if (auto buffer = LinuxDmaBufV1ClientBuffer::get(resource)) {
+        return buffer;
+    } else if (auto buffer = ShmClientBuffer::get(resource)) {
+        return buffer;
+    } else {
+        return nullptr;
+    }
 }
 
 } // namespace KWaylandServer

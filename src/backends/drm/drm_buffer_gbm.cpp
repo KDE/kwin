@@ -15,7 +15,6 @@
 #include "drm_gpu.h"
 #include "drm_logging.h"
 #include "kwineglutils_p.h"
-#include "wayland/clientbuffer.h"
 #include "wayland/linuxdmabufv1clientbuffer.h"
 
 #include <cerrno>
@@ -117,7 +116,7 @@ void *GbmBuffer::mappedData() const
     return m_data;
 }
 
-KWaylandServer::ClientBuffer *GbmBuffer::clientBuffer() const
+GraphicsBuffer *GbmBuffer::clientBuffer() const
 {
     return m_clientBuffer;
 }

@@ -14,10 +14,14 @@
 #include <QPointer>
 #include <QRegion>
 
+namespace KWin
+{
+class GraphicsBuffer;
+}
+
 namespace KWaylandServer
 {
 class BlurInterface;
-class ClientBuffer;
 class ConfinedPointerV1Interface;
 class ContrastInterface;
 class CompositorInterface;
@@ -45,13 +49,13 @@ enum class PresentationHint {
  * This should make interacting from the server easier, it only needs to monitor the SurfaceInterface
  * and does not need to track each specific interface.
  *
- * The SurfaceInterface takes care of reference/unreferencing the ClientBuffer attached to it.
- * As long as a ClientBuffer is attached, the released signal won't be sent. If the ClientBuffer
+ * The SurfaceInterface takes care of reference/unreferencing the GraphicsBuffer attached to it.
+ * As long as a GraphicsBuffer is attached, the released signal won't be sent. If the GraphicsBuffer
  * is no longer needed by the SurfaceInterface, it will get unreferenced and might be automatically
  * deleted (if it's no longer referenced).
  *
  * @see CompositorInterface
- * @see ClientBuffer
+ * @see GraphicsBuffer
  * @see SubSurfaceInterface
  * @see BlurInterface
  * @see ContrastInterface
@@ -177,9 +181,9 @@ public:
      */
     KWin::Output::Transform bufferTransform() const;
     /**
-     * @returns the current ClientBuffer, might be @c nullptr.
+     * @returns the current GraphicsBuffer, might be @c nullptr.
      */
-    ClientBuffer *buffer() const;
+    KWin::GraphicsBuffer *buffer() const;
     QPoint offset() const;
     /**
      * Returns the current size of the surface, in surface coordinates.
@@ -238,9 +242,9 @@ public:
 
     /**
      * Whether the SurfaceInterface is currently considered to be mapped.
-     * A SurfaceInterface is mapped if it has a non-null ClientBuffer attached.
+     * A SurfaceInterface is mapped if it has a non-null GraphicsBuffer attached.
      * If the SurfaceInterface references a SubSurfaceInterface it is only considered
-     * mapped if it has a ClientBuffer attached and the parent SurfaceInterface is mapped.
+     * mapped if it has a GraphicsBuffer attached and the parent SurfaceInterface is mapped.
      *
      * @returns Whether the SurfaceInterface is currently mapped
      */
@@ -374,7 +378,7 @@ Q_SIGNALS:
     /**
      * Emitted whenever the SurfaceInterface got damaged.
      * The signal is only emitted during the commit of state.
-     * A damage means that a new ClientBuffer got attached.
+     * A damage means that a new GraphicsBuffer got attached.
      *
      * @see buffer
      * @see damage

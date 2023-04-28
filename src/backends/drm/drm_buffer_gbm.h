@@ -19,7 +19,6 @@ struct gbm_bo;
 
 namespace KWaylandServer
 {
-class ClientBuffer;
 class LinuxDmaBufV1ClientBuffer;
 }
 
@@ -27,6 +26,7 @@ namespace KWin
 {
 
 class GbmSurface;
+class GraphicsBuffer;
 class GLTexture;
 class GbmSwapchain;
 
@@ -40,7 +40,7 @@ public:
 
     gbm_bo *bo() const;
     void *mappedData() const;
-    KWaylandServer::ClientBuffer *clientBuffer() const;
+    GraphicsBuffer *clientBuffer() const;
     uint32_t flags() const;
 
     bool map(uint32_t flags);
@@ -53,7 +53,7 @@ private:
 
     gbm_bo *const m_bo;
     const std::weak_ptr<GbmSwapchain> m_swapchain;
-    KWaylandServer::ClientBuffer *const m_clientBuffer = nullptr;
+    GraphicsBuffer *const m_clientBuffer = nullptr;
     const uint32_t m_flags;
     void *m_data = nullptr;
     void *m_mapping = nullptr;

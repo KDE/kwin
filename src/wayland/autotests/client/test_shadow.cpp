@@ -166,7 +166,7 @@ void ShadowTest::testCreateShadow()
     QVERIFY(!serverSurface->shadow());
 }
 
-static QImage bufferToImage(ClientBuffer *clientBuffer)
+static QImage bufferToImage(KWin::GraphicsBuffer *clientBuffer)
 {
     auto shmBuffer = qobject_cast<ShmClientBuffer *>(clientBuffer);
     if (shmBuffer) {

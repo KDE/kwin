@@ -4,7 +4,7 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 #include "shadow_interface.h"
-#include "clientbuffer.h"
+#include "core/graphicsbuffer.h"
 #include "display.h"
 #include "surface_interface_p.h"
 
@@ -97,14 +97,14 @@ public:
             BottomLeftBuffer = 1 << 7,
             Offset = 1 << 8,
         };
-        QPointer<ClientBuffer> left;
-        QPointer<ClientBuffer> topLeft;
-        QPointer<ClientBuffer> top;
-        QPointer<ClientBuffer> topRight;
-        QPointer<ClientBuffer> right;
-        QPointer<ClientBuffer> bottomRight;
-        QPointer<ClientBuffer> bottom;
-        QPointer<ClientBuffer> bottomLeft;
+        QPointer<KWin::GraphicsBuffer> left;
+        QPointer<KWin::GraphicsBuffer> topLeft;
+        QPointer<KWin::GraphicsBuffer> top;
+        QPointer<KWin::GraphicsBuffer> topRight;
+        QPointer<KWin::GraphicsBuffer> right;
+        QPointer<KWin::GraphicsBuffer> bottomRight;
+        QPointer<KWin::GraphicsBuffer> bottom;
+        QPointer<KWin::GraphicsBuffer> bottomLeft;
         QMarginsF offset;
         Flags flags = Flags::None;
     };
@@ -165,7 +165,7 @@ void ShadowInterfacePrivate::org_kde_kwin_shadow_commit(Resource *resource)
 
 void ShadowInterfacePrivate::attach(ShadowInterfacePrivate::State::Flags flag, wl_resource *buffer)
 {
-    ClientBuffer *b = ClientBuffer::get(buffer);
+    KWin::GraphicsBuffer *b = Display::bufferForResource(buffer);
     switch (flag) {
     case State::LeftBuffer:
         pending.left = b;
@@ -309,10 +309,10 @@ QMarginsF ShadowInterface::offset() const
     return d->current.offset;
 }
 
-#define BUFFER(__PART__)                            \
-    ClientBuffer *ShadowInterface::__PART__() const \
-    {                                               \
-        return d->current.__PART__;                 \
+#define BUFFER(__PART__)                                    \
+    KWin::GraphicsBuffer *ShadowInterface::__PART__() const \
+    {                                                       \
+        return d->current.__PART__;                         \
     }
 
 BUFFER(left)

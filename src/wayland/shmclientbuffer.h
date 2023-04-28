@@ -6,7 +6,9 @@
 
 #pragma once
 
-#include "clientbuffer.h"
+#include "core/graphicsbuffer.h"
+
+struct wl_resource;
 
 namespace KWaylandServer
 {
@@ -20,7 +22,7 @@ class ShmClientBufferPrivate;
  * The buffer's data can be accessed using the data() function. Note that it is not allowed
  * to access data of several shared memory buffers simultaneously.
  */
-class KWIN_EXPORT ShmClientBuffer : public ClientBuffer
+class KWIN_EXPORT ShmClientBuffer : public KWin::GraphicsBuffer
 {
     Q_OBJECT
 

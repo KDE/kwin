@@ -6,8 +6,8 @@
 
 #include "scene/surfaceitem_wayland.h"
 #include "composite.h"
+#include "core/graphicsbuffer.h"
 #include "core/renderbackend.h"
-#include "wayland/clientbuffer.h"
 #include "wayland/subcompositor_interface.h"
 #include "wayland/surface_interface.h"
 #include "window.h"
@@ -164,7 +164,7 @@ KWaylandServer::SurfaceInterface *SurfacePixmapWayland::surface() const
     return m_item->surface();
 }
 
-KWaylandServer::ClientBuffer *SurfacePixmapWayland::buffer() const
+GraphicsBuffer *SurfacePixmapWayland::buffer() const
 {
     return m_buffer;
 }
@@ -187,7 +187,7 @@ bool SurfacePixmapWayland::isValid() const
     return m_buffer;
 }
 
-void SurfacePixmapWayland::setBuffer(KWaylandServer::ClientBuffer *buffer)
+void SurfacePixmapWayland::setBuffer(GraphicsBuffer *buffer)
 {
     if (m_buffer == buffer) {
         return;

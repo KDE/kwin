@@ -8,7 +8,7 @@
 */
 #pragma once
 
-#include "clientbuffer.h"
+#include "core/graphicsbuffer.h"
 
 #include <QHash>
 #include <QSet>
@@ -34,7 +34,7 @@ class LinuxDmaBufV1FeedbackPrivate;
  * The LinuxDmaBufV1ClientBuffer can be used even after the underlying wl_buffer object
  * is destroyed by the client.
  */
-class KWIN_EXPORT LinuxDmaBufV1ClientBuffer : public ClientBuffer
+class KWIN_EXPORT LinuxDmaBufV1ClientBuffer : public KWin::GraphicsBuffer
 {
     Q_OBJECT
 

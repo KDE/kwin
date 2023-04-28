@@ -214,7 +214,6 @@ target_sources(kwin PRIVATE
     abstract_drop_handler.cpp
     appmenu_interface.cpp
     blur_interface.cpp
-    clientbuffer.cpp
     clientconnection.cpp
     compositor_interface.cpp
     contenttype_v1_interface.cpp

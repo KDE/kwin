@@ -199,7 +199,7 @@ bool Shadow::init(KDecoration2::Decoration *decoration)
     return true;
 }
 
-static QImage shadowTileForBuffer(KWaylandServer::ClientBuffer *buffer)
+static QImage shadowTileForBuffer(GraphicsBuffer *buffer)
 {
     auto shmBuffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(buffer);
     if (shmBuffer) {

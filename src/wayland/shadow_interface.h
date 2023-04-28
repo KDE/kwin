@@ -13,9 +13,13 @@
 
 struct wl_resource;
 
+namespace KWin
+{
+class GraphicsBuffer;
+}
+
 namespace KWaylandServer
 {
-class ClientBuffer;
 class Display;
 class ShadowManagerInterfacePrivate;
 class ShadowInterfacePrivate;
@@ -38,14 +42,14 @@ class KWIN_EXPORT ShadowInterface : public QObject
 public:
     ~ShadowInterface() override;
 
-    ClientBuffer *left() const;
-    ClientBuffer *topLeft() const;
-    ClientBuffer *top() const;
-    ClientBuffer *topRight() const;
-    ClientBuffer *right() const;
-    ClientBuffer *bottomRight() const;
-    ClientBuffer *bottom() const;
-    ClientBuffer *bottomLeft() const;
+    KWin::GraphicsBuffer *left() const;
+    KWin::GraphicsBuffer *topLeft() const;
+    KWin::GraphicsBuffer *top() const;
+    KWin::GraphicsBuffer *topRight() const;
+    KWin::GraphicsBuffer *right() const;
+    KWin::GraphicsBuffer *bottomRight() const;
+    KWin::GraphicsBuffer *bottom() const;
+    KWin::GraphicsBuffer *bottomLeft() const;
 
     QMarginsF offset() const;
 

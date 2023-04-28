@@ -10,7 +10,6 @@
 
 namespace KWaylandServer
 {
-class ClientBuffer;
 class SubSurfaceInterface;
 class SurfaceInterface;
 }
@@ -18,6 +17,7 @@ class SurfaceInterface;
 namespace KWin
 {
 
+class GraphicsBuffer;
 class X11Window;
 
 /**
@@ -66,17 +66,17 @@ public:
 
     SurfaceItemWayland *item() const;
     KWaylandServer::SurfaceInterface *surface() const;
-    KWaylandServer::ClientBuffer *buffer() const;
+    GraphicsBuffer *buffer() const;
 
     void create() override;
     void update() override;
     bool isValid() const override;
 
 private:
-    void setBuffer(KWaylandServer::ClientBuffer *buffer);
+    void setBuffer(GraphicsBuffer *buffer);
 
     SurfaceItemWayland *m_item;
-    KWaylandServer::ClientBuffer *m_buffer = nullptr;
+    GraphicsBuffer *m_buffer = nullptr;
 };
 
 /**
