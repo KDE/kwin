@@ -12,7 +12,9 @@
 #include "kwin_export.h"
 
 #include <QByteArray>
+#include <QList>
 #include <QSize>
+#include <QVector2D>
 
 namespace KWin
 {
@@ -76,6 +78,25 @@ public:
 
     QString hash() const;
 
+    struct Colorimetry
+    {
+        QVector2D redPrimary;
+        QVector2D greenPrimary;
+        QVector2D bluePrimary;
+        QVector2D whitePoint;
+    };
+    Colorimetry colorimetry() const;
+
+    struct HDRMetadata
+    {
+        float desiredContentMinLuminance;
+        float desiredContentMaxLuminance;
+        float desiredMaxFrameAverageLuminance;
+        bool supportsPQ;
+        bool supportsBT2020;
+    };
+    std::optional<HDRMetadata> hdrMetadata() const;
+
 private:
     QSize m_physicalSize;
     QByteArray m_vendor;
@@ -83,6 +104,8 @@ private:
     QByteArray m_monitorName;
     QByteArray m_serialNumber;
     QString m_hash;
+    Colorimetry m_colorimetry;
+    std::optional<HDRMetadata> m_hdrMetadata;
 
     QByteArray m_raw;
     bool m_isValid = false;

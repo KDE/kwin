@@ -19,6 +19,7 @@
 #include <QCryptographicHash>
 
 extern "C" {
+#include <libdisplay-info/cta.h>
 #include <libdisplay-info/edid.h>
 #include <libdisplay-info/info.h>
 }
@@ -108,6 +109,7 @@ Edid::Edid(const void *data, uint32_t size)
     const di_edid_vendor_product *productInfo = di_edid_get_vendor_product(edid);
     const di_edid_screen_size *screenSize = di_edid_get_screen_size(edid);
 
+    // basic output information
     m_physicalSize = QSize(screenSize->width_cm, screenSize->height_cm) * 10;
     m_eisaId = parseEisaId(bytes);
     UniqueCPtr<char> monitorName{di_info_get_model(info)};
@@ -117,6 +119,55 @@ Edid::Edid(const void *data, uint32_t size)
     QCryptographicHash hash(QCryptographicHash::Md5);
     hash.addData(m_raw);
     m_hash = QString::fromLatin1(hash.result().toHex());
+
+    // colorimetry and HDR metadata
+    const auto chromaticity = di_edid_get_chromaticity_coords(edid);
+    if (chromaticity) {
+        m_colorimetry = {
+            .redPrimary = {chromaticity->red_x, chromaticity->red_y},
+            .greenPrimary = {chromaticity->green_x, chromaticity->green_y},
+            .bluePrimary = {chromaticity->blue_x, chromaticity->blue_y},
+            .whitePoint = {chromaticity->white_x, chromaticity->white_y},
+        };
+    } else {
+        // assume sRGB
+        m_colorimetry = {
+            .redPrimary = {0.64, 0.33},
+            .greenPrimary = {0.30, 0.60},
+            .bluePrimary = {0.15, 0.06},
+            .whitePoint = {0.3127, 0.3290},
+        };
+    }
+
+    const di_edid_cta *cta = nullptr;
+    const di_edid_ext *const *exts = di_edid_get_extensions(edid);
+    const di_cta_hdr_static_metadata_block *hdr_static_metadata = nullptr;
+    const di_cta_colorimetry_block *colorimetry = nullptr;
+    for (; *exts != nullptr; exts++) {
+        if ((cta = di_edid_ext_get_cta(*exts))) {
+            break;
+        }
+    }
+    if (cta) {
+        const di_cta_data_block *const *blocks = di_edid_cta_get_data_blocks(cta);
+        for (; *blocks != nullptr; blocks++) {
+            if (!hdr_static_metadata && (hdr_static_metadata = di_cta_data_block_get_hdr_static_metadata(*blocks))) {
+                continue;
+            }
+            if (!colorimetry && (colorimetry = di_cta_data_block_get_colorimetry(*blocks))) {
+                continue;
+            }
+        }
+        if (hdr_static_metadata) {
+            m_hdrMetadata = HDRMetadata{
+                .desiredContentMinLuminance = hdr_static_metadata->desired_content_min_luminance,
+                .desiredContentMaxLuminance = hdr_static_metadata->desired_content_max_luminance,
+                .desiredMaxFrameAverageLuminance = hdr_static_metadata->desired_content_max_frame_avg_luminance,
+                .supportsPQ = hdr_static_metadata->eotfs->pq,
+                .supportsBT2020 = colorimetry && colorimetry->bt2020_rgb,
+            };
+        }
+    }
 
     m_isValid = true;
     di_info_destroy(info);
@@ -187,6 +238,16 @@ QString Edid::nameString() const
 QString Edid::hash() const
 {
     return m_hash;
+}
+
+Edid::Colorimetry Edid::colorimetry() const
+{
+    return m_colorimetry;
+}
+
+std::optional<Edid::HDRMetadata> Edid::hdrMetadata() const
+{
+    return m_hdrMetadata;
 }
 
 } // namespace KWin
