@@ -333,6 +333,8 @@ void Workspace::activateWindow(Window *window, bool force)
         // updateUserTime is X11 specific
         x11Window->updateUserTime();
     }
+
+    m_quickTileCombineTimer->stop();
 }
 
 /**

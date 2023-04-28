@@ -712,10 +712,6 @@ void QuickTilingTest::testShortcut()
 
     const int numberOfQuickTileActions = shortcutList.count();
 
-    if (numberOfQuickTileActions > 1) {
-        QTest::qWait(1001);
-    }
-
     for (QString shortcut : shortcutList) {
         // invoke global shortcut through dbus
         auto msg = QDBusMessage::createMethodCall(
