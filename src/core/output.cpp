@@ -181,7 +181,7 @@ QRectF Output::fractionalGeometry() const
 
 QSize Output::physicalSize() const
 {
-    return orientateSize(m_information.physicalSize);
+    return m_information.physicalSize;
 }
 
 int Output::refreshRate() const

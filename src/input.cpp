@@ -1021,7 +1021,7 @@ public:
                 }
                 m_lastTouchDownTime = time;
                 auto output = workspace()->outputAt(pos);
-                auto physicalSize = output->physicalSize();
+                auto physicalSize = output->orientateSize(output->physicalSize());
                 if (!physicalSize.isValid()) {
                     physicalSize = QSize(190, 100);
                 }
@@ -1055,8 +1055,9 @@ public:
                 return true;
             }
             auto output = workspace()->outputAt(pos);
-            const float xfactor = output->physicalSize().width() / (float)output->geometry().width();
-            const float yfactor = output->physicalSize().height() / (float)output->geometry().height();
+            const auto physicalSize = output->orientateSize(output->physicalSize());
+            const float xfactor = physicalSize.width() / (float)output->geometry().width();
+            const float yfactor = physicalSize.height() / (float)output->geometry().height();
 
             auto &point = m_touchPoints[id];
             const QPointF dist = pos - point;

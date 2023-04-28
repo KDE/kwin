@@ -171,7 +171,7 @@ public:
     qreal scale() const;
 
     /**
-     * Returns the physical size of this output, in millimeters.
+     * Returns the non-rotated physical size of this output, in millimeters.
      *
      * Default implementation returns an invalid QSize.
      */
@@ -229,6 +229,7 @@ public:
     };
     Q_ENUM(Transform)
     Transform transform() const;
+    QSize orientateSize(const QSize &size) const;
 
     void applyChanges(const OutputConfiguration &config);
 
@@ -353,8 +354,6 @@ protected:
 
     void setInformation(const Information &information);
     void setState(const State &state);
-
-    QSize orientateSize(const QSize &size) const;
 
     EffectScreenImpl *m_effectScreen = nullptr;
     State m_state;
