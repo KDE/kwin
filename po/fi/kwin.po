@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-30 02:44+0000\n"
+"POT-Creation-Date: 2023-04-29 02:54+0000\n"
 "PO-Revision-Date: 2023-03-17 17:54+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -1177,23 +1177,23 @@ msgid "Wait Longer"
 msgstr "Odota pidempään"
 
 # *** TARKISTA: Onko ”tablet” tabletti vai esim. piirtopöytä tms.? Onko ”output” ulostulo?
-#: input.cpp:2009
+#: input.cpp:2010
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Siirrä tabletti seuraavaan ulostuloon"
 
-#: input.cpp:2088
+#: input.cpp:2089
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Tabletti siirretty ulostuloon %1"
 
-#: input.cpp:2088
+#: input.cpp:2089
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Tabletit vaihtoivat ulostuloja"
 
 # ?!?!
-#: input.cpp:3093
+#: input.cpp:3094
 #, kde-format
 msgid "Touchpad"
 msgstr "Kosketuslevy"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-30 02:44+0000\n"
+"POT-Creation-Date: 2023-04-29 02:54+0000\n"
 "PO-Revision-Date: 2022-09-27 18:25+0700\n"
 "Last-Translator: Wantoyèk <wantoyek@gmail.com>\n"
 "Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
@@ -1169,24 +1169,24 @@ msgstr "&Akhiri Aplikasi %1"
 msgid "Wait Longer"
 msgstr "Tunggu Lebih Lama"
 
-#: input.cpp:2009
+#: input.cpp:2010
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr ""
 
-#: input.cpp:2088
+#: input.cpp:2089
 #, fuzzy, kde-format
 #| msgctxt "Name of a hardware switch"
 #| msgid "Tablet mode"
 msgid "Tablet moved to %1"
 msgstr "Mode tablet"
 
-#: input.cpp:2088
+#: input.cpp:2089
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr ""
 
-#: input.cpp:3093
+#: input.cpp:3094
 #, kde-format
 msgid "Touchpad"
 msgstr "Touchpad"
