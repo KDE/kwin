@@ -6,6 +6,7 @@
 */
 
 import QtQuick
+import QtQuick.Controls
 import Qt5Compat.GraphicalEffects
 import org.kde.kirigami 2.20 as Kirigami
 import org.kde.kwin as KWinComponents
@@ -29,6 +30,8 @@ FocusScope {
     property bool animationEnabled: false
     property bool organized: false
 
+    property alias currentHeap: heapView.currentItem
+
     function start() {
         animationEnabled = true;
         organized = true;
@@ -43,9 +46,9 @@ FocusScope {
     Keys.forwardTo: searchField
 
     Keys.onEnterPressed: {
-        heap.forceActiveFocus();
-        if (heap.count === 1) {
-            heap.activateCurrentClient();
+        currentHeap.forceActiveFocus();
+        if (currentHeap.count === 1) {
+            currentHeap.activateCurrentClient();
         }
     }
 
@@ -186,7 +189,7 @@ FocusScope {
                     windowModel: stackModel
                     desktopModel: desktopModel
                     selectedDesktop: KWinComponents.Workspace.currentDesktop
-                    heap: heap
+                    heap: currentHeap
                 }
             }
 
@@ -202,12 +205,12 @@ FocusScope {
                     width: Math.min(parent.width, 20 * PlasmaCore.Units.gridUnit)
                     focus: true
                     Keys.priority: Keys.BeforeItem
-                    Keys.forwardTo: text && heap.count === 0 ? searchResults : heap
+                    Keys.forwardTo: text && currentHeap.count === 0 ? searchResults : currentHeap
                     text: effect.searchText
                     onTextEdited: {
                         effect.searchText = text;
-                        heap.resetSelected();
-                        heap.selectNextItem(WindowHeap.Direction.Down);
+                        currentHeap.resetSelected();
+                        currentHeap.selectNextItem(WindowHeap.Direction.Down);
                         searchField.focus = true;
                     }
                 }
@@ -222,60 +225,89 @@ FocusScope {
                 id: placeholderMessage
                 anchors.top: parent.top
                 anchors.horizontalCenter: parent.horizontalCenter
-                visible: container.organized && effect.searchText.length > 0 && heap.count === 0
+                visible: container.organized && effect.searchText.length > 0 && currentHeap.count === 0
                 text: i18nd("kwin", "No matching windows")
             }
 
-            WindowHeap {
-                id: heap
-                visible: !(container.organized && effect.searchText.length > 0) || heap.count !== 0
+            StackView {
+                id: heapView
                 anchors.fill: parent
-                layout.mode: effect.layout
-                focus: true
-                padding: PlasmaCore.Units.largeSpacing
-                animationDuration: effect.animationDuration
-                animationEnabled: container.animationEnabled
-                organized: container.organized
-                Keys.priority: Keys.AfterItem
-                Keys.forwardTo: searchResults
-                model: KWinComponents.WindowFilterModel {
-                    activity: KWinComponents.Workspace.currentActivity
-                    desktop: KWinComponents.Workspace.currentDesktop
-                    screenName: targetScreen.name
-                    windowModel: stackModel
-                    filter: effect.searchText
-                    minimizedWindows: !effect.ignoreMinimized
-                    windowType: ~KWinComponents.WindowFilterModel.Dock &
-                                ~KWinComponents.WindowFilterModel.Desktop &
-                                ~KWinComponents.WindowFilterModel.Notification &
-                                ~KWinComponents.WindowFilterModel.CriticalNotification
-                }
-                delegate: WindowHeapDelegate {
-                    windowHeap: heap
 
-                    targetScale: {
-                        if (!activeDragHandler.active) {
-                            return targetScale; // leave it alone, so it won't affect transitions before they start
+                function switchTo(desktop) {
+                    container.animationEnabled = false;
+                    heapView.replace(heapTemplate, { desktop: desktop });
+                    currentItem.layout.forceLayout();
+                    container.animationEnabled = true;
+                }
+
+                Component.onCompleted: {
+                    push(heapTemplate, { desktop: KWinComponents.Workspace.currentDesktop });
+                }
+            }
+
+            Connections {
+                target: KWinComponents.Workspace
+                function onCurrentDesktopChanged() {
+                    heapView.switchTo(KWinComponents.Workspace.currentDesktop);
+                }
+            }
+
+            Component {
+                id: heapTemplate
+
+                WindowHeap {
+                    id: heap
+
+                    required property QtObject desktop
+
+                    visible: !(container.organized && effect.searchText.length > 0) || heap.count !== 0
+                    layout.mode: effect.layout
+                    focus: true
+                    padding: PlasmaCore.Units.largeSpacing
+                    animationDuration: effect.animationDuration
+                    animationEnabled: container.animationEnabled
+                    organized: container.organized
+                    Keys.priority: Keys.AfterItem
+                    Keys.forwardTo: searchResults
+                    model: KWinComponents.WindowFilterModel {
+                        activity: KWinComponents.Workspace.currentActivity
+                        desktop: heap.desktop
+                        screenName: targetScreen.name
+                        windowModel: stackModel
+                        filter: effect.searchText
+                        minimizedWindows: !effect.ignoreMinimized
+                        windowType: ~KWinComponents.WindowFilterModel.Dock &
+                                    ~KWinComponents.WindowFilterModel.Desktop &
+                                    ~KWinComponents.WindowFilterModel.Notification &
+                                    ~KWinComponents.WindowFilterModel.CriticalNotification
+                    }
+                    delegate: WindowHeapDelegate {
+                        windowHeap: heap
+
+                        targetScale: {
+                            if (!activeDragHandler.active) {
+                                return targetScale; // leave it alone, so it won't affect transitions before they start
+                            }
+                            var localPressPosition = activeDragHandler.centroid.scenePressPosition.y - heap.layout.Kirigami.ScenePosition.y;
+                            if (localPressPosition === 0) {
+                                return 0.1;
+                            } else {
+                                var localPosition = activeDragHandler.centroid.scenePosition.y - heap.layout.Kirigami.ScenePosition.y;
+                                return Math.max(0.1, Math.min(localPosition / localPressPosition, 1));
+                            }
                         }
-                        var localPressPosition = activeDragHandler.centroid.scenePressPosition.y - heap.layout.Kirigami.ScenePosition.y;
-                        if (localPressPosition === 0) {
-                            return 0.1;
-                        } else {
-                            var localPosition = activeDragHandler.centroid.scenePosition.y - heap.layout.Kirigami.ScenePosition.y;
-                            return Math.max(0.1, Math.min(localPosition / localPressPosition, 1));
+
+                        opacity: 1 - downGestureProgress
+                        onDownGestureTriggered: window.closeWindow()
+
+                        TapHandler {
+                            acceptedPointerTypes: PointerDevice.GenericPointer | PointerDevice.Pen
+                            acceptedButtons: Qt.MiddleButton
+                            onTapped: window.closeWindow()
                         }
                     }
-
-                    opacity: 1 - downGestureProgress
-                    onDownGestureTriggered: window.closeWindow()
-
-                    TapHandler {
-                        acceptedPointerTypes: PointerDevice.GenericPointer | PointerDevice.Pen
-                        acceptedButtons: Qt.MiddleButton
-                        onTapped: window.closeWindow()
-                    }
+                    onActivated: effect.deactivate();
                 }
-                onActivated: effect.deactivate();
             }
 
             Milou.ResultsView {
@@ -285,7 +317,7 @@ FocusScope {
                 width: parent.width / 2
                 height: parent.height - placeholderMessage.height - PlasmaCore.Units.largeSpacing
                 queryString: effect.searchText
-                visible: container.organized && effect.searchText.length > 0 && heap.count === 0
+                visible: container.organized && effect.searchText.length > 0 && currentHeap.count === 0
 
                 onActivated: {
                     effect.deactivate();

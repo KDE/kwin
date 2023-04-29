@@ -270,11 +270,6 @@ void OverviewEffect::realDeactivate()
     m_status = Status::Inactive;
 }
 
-void OverviewEffect::quickDeactivate()
-{
-    m_shutdownTimer->start(0);
-}
-
 void OverviewEffect::grabbedKeyboardEvent(QKeyEvent *keyEvent)
 {
     if (m_toggleShortcut.contains(keyEvent->key() | keyEvent->modifiers())) {

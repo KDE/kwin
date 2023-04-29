@@ -71,7 +71,7 @@ Item {
                     Keys.onRightPressed: nextItemInFocusChain(!LayoutMirroring.enabled).forceActiveFocus(Qt.TabFocusReason);
 
                     function activate() {
-                        thumbnail.state = "scaled";
+                        KWinComponents.Workspace.currentDesktop = delegate.desktop;
                     }
 
                     function remove() {
@@ -95,48 +95,17 @@ Item {
                         DesktopView {
                             id: thumbnail
 
-                            property bool scaled: state === "scaled"
-
                             width: targetScreen.geometry.width
                             height: targetScreen.geometry.height
-                            visible: scaled
+                            visible: false
                             windowModel: bar.windowModel
                             desktop: delegate.desktop
                             scale: bar.desktopHeight / targetScreen.geometry.height
                             transformOrigin: Item.TopLeft
 
                             // Disable the item layer while being scaled.
-                            layer.enabled: !scaled
+                            layer.enabled: true
                             layer.textureSize: Qt.size(bar.desktopWidth, bar.desktopHeight)
-
-                            states: State {
-                                name: "scaled"
-                                ParentChange {
-                                    target: thumbnail
-                                    parent: container
-                                    x: 0
-                                    y: 0
-                                    scale: 1
-                                }
-                            }
-
-                            transitions: Transition {
-                                SequentialAnimation {
-                                    ParentAnimation {
-                                        NumberAnimation {
-                                            properties: "x,y,scale"
-                                            duration: effect.animationDuration
-                                            easing.type: Easing.OutCubic
-                                        }
-                                    }
-                                    ScriptAction {
-                                        script: {
-                                            KWinComponents.Workspace.currentDesktop = delegate.desktop;
-                                            effect.quickDeactivate();
-                                        }
-                                    }
-                                }
-                            }
                         }
 
                         OpacityMask {
@@ -151,7 +120,7 @@ Item {
                         }
 
                         Rectangle {
-                            readonly property bool active: !thumbnail.scaled && (delegate.activeFocus || dropArea.containsDrag || mouseArea.containsPress || bar.selectedDesktop === delegate.desktop)
+                            readonly property bool active: delegate.activeFocus || dropArea.containsDrag || mouseArea.containsPress || bar.selectedDesktop === delegate.desktop
                             anchors.fill: parent
                             anchors.margins: -border.width
                             radius: 3
