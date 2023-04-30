@@ -10,6 +10,7 @@
 
 #include "kwin_wayland_test.h"
 
+#include "atoms.h"
 #include "core/outputbackend.h"
 #include "cursor.h"
 #include "effectloader.h"
@@ -24,6 +25,8 @@
 #include <KWayland/Client/surface.h>
 
 #include <QAction>
+
+#include <xcb/xcb_icccm.h>
 
 Q_DECLARE_METATYPE(KWin::ElectricBorder)
 
@@ -63,6 +66,7 @@ private Q_SLOTS:
     void testClientEdge();
     void testObjectEdge_data();
     void testObjectEdge();
+    void testKdeNetWmScreenEdgeShow();
 };
 
 void ScreenEdgesTest::initTestCase()
@@ -342,6 +346,170 @@ void ScreenEdgesTest::testObjectEdge()
     timestamp += 250;
     Test::pointerMotion(triggerPoint, timestamp);
     QCOMPARE(spy.count(), 2);
+}
+
+static void enableAutoHide(xcb_connection_t *connection, xcb_window_t windowId, ElectricBorder border)
+{
+    if (border == ElectricNone) {
+        xcb_delete_property(connection, windowId, atoms->kde_screen_edge_show);
+    } else {
+        uint32_t value = 0;
+
+        switch (border) {
+        case ElectricTop:
+            value = 0;
+            break;
+        case ElectricRight:
+            value = 1;
+            break;
+        case ElectricBottom:
+            value = 2;
+            break;
+        case ElectricLeft:
+            value = 3;
+            break;
+        default:
+            Q_UNREACHABLE();
+        }
+
+        xcb_change_property(connection, XCB_PROP_MODE_REPLACE, windowId, atoms->kde_screen_edge_show, XCB_ATOM_CARDINAL, 32, 1, &value);
+    }
+}
+
+class ScreenEdgePropertyMonitor : public QObject
+{
+    Q_OBJECT
+public:
+    ScreenEdgePropertyMonitor(xcb_connection_t *c, xcb_window_t window)
+        : QObject()
+        , m_connection(c)
+        , m_window(window)
+        , m_notifier(new QSocketNotifier(xcb_get_file_descriptor(m_connection), QSocketNotifier::Read, this))
+    {
+        connect(m_notifier, &QSocketNotifier::activated, this, &ScreenEdgePropertyMonitor::processXcbEvents);
+        connect(QCoreApplication::eventDispatcher(), &QAbstractEventDispatcher::aboutToBlock, this, &ScreenEdgePropertyMonitor::processXcbEvents);
+        connect(QCoreApplication::eventDispatcher(), &QAbstractEventDispatcher::awake, this, &ScreenEdgePropertyMonitor::processXcbEvents);
+    }
+
+Q_SIGNALS:
+    void withdrawn();
+
+private:
+    void processXcbEvents()
+    {
+        while (auto event = xcb_poll_for_event(m_connection)) {
+            const uint8_t eventType = event->response_type & ~0x80;
+            switch (eventType) {
+            case XCB_PROPERTY_NOTIFY: {
+                auto propertyNotifyEvent = reinterpret_cast<xcb_property_notify_event_t *>(event);
+                if (propertyNotifyEvent->window == m_window && propertyNotifyEvent->atom == atoms->kde_screen_edge_show && propertyNotifyEvent->state == XCB_PROPERTY_DELETE) {
+                    Q_EMIT withdrawn();
+                }
+                break;
+            }
+            }
+            free(event);
+        }
+    }
+
+    xcb_connection_t *m_connection;
+    xcb_window_t m_window;
+    QSocketNotifier *m_notifier;
+};
+
+void ScreenEdgesTest::testKdeNetWmScreenEdgeShow()
+{
+    // This test verifies that _KDE_NET_WM_SCREEN_EDGE_SHOW is handled properly. Note that
+    // _KDE_NET_WM_SCREEN_EDGE_SHOW has oneshot effect. It's deleted when the window is shown.
+
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+
+    // Create a test window at the bottom of the screen.
+    const QRect windowGeometry(0, 1024 - 30, 1280, 30);
+    const uint32_t values[] = {XCB_EVENT_MASK_PROPERTY_CHANGE};
+    xcb_window_t windowId = xcb_generate_id(c.get());
+    xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
+                      windowGeometry.x(),
+                      windowGeometry.y(),
+                      windowGeometry.width(),
+                      windowGeometry.height(),
+                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT,
+                      XCB_COPY_FROM_PARENT,
+                      XCB_CW_EVENT_MASK, values);
+    xcb_size_hints_t hints;
+    memset(&hints, 0, sizeof(hints));
+    xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
+    xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
+    xcb_icccm_set_wm_normal_hints(c.get(), windowId, &hints);
+    xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &windowId);
+    xcb_map_window(c.get(), windowId);
+    xcb_flush(c.get());
+
+    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    QVERIFY(windowCreatedSpy.wait());
+    Window *window = windowCreatedSpy.first().first().value<Window *>();
+    QVERIFY(window);
+
+    ScreenEdgePropertyMonitor screenEdgeMonitor(c.get(), windowId);
+    QSignalSpy withdrawnSpy(&screenEdgeMonitor, &ScreenEdgePropertyMonitor::withdrawn);
+    QSignalSpy windowShownSpy(window, &Window::windowShown);
+    QSignalSpy windowHiddenSpy(window, &Window::windowHidden);
+    quint32 timestamp = 0;
+
+    // The window will be shown when the pointer approaches its reserved screen edge.
+    {
+        enableAutoHide(c.get(), windowId, ElectricBottom);
+        xcb_flush(c.get());
+        QVERIFY(windowHiddenSpy.wait());
+        QVERIFY(!window->isShown());
+
+        Test::pointerMotion(QPointF(640, 1024), timestamp++);
+        QVERIFY(withdrawnSpy.wait());
+        QVERIFY(window->isShown());
+
+        Test::pointerMotion(QPointF(640, 512), timestamp++);
+        QVERIFY(window->isShown());
+    }
+
+    // The window will be shown when swiping on the touch screen.
+    {
+        enableAutoHide(c.get(), windowId, ElectricBottom);
+        xcb_flush(c.get());
+        QVERIFY(windowHiddenSpy.wait());
+        QVERIFY(!window->isShown());
+
+        Test::touchDown(0, QPointF(640, 1023), timestamp++);
+        Test::touchMotion(0, QPointF(640, 512), timestamp++);
+        Test::touchUp(0, timestamp++);
+        QVERIFY(withdrawnSpy.wait());
+        QVERIFY(window->isShown());
+    }
+
+    // If the screen edge is destroyed (can happen when the screen layout changes), the window will be shown.
+    {
+        enableAutoHide(c.get(), windowId, ElectricBottom);
+        xcb_flush(c.get());
+        QVERIFY(windowHiddenSpy.wait());
+        QVERIFY(!window->isShown());
+
+        workspace()->screenEdges()->recreateEdges();
+        QVERIFY(withdrawnSpy.wait());
+        QVERIFY(window->isShown());
+    }
+
+    // The window will be shown and hidden in response to changing _KDE_NET_WM_SCREEN_EDGE_SHOW.
+    {
+        enableAutoHide(c.get(), windowId, ElectricBottom);
+        xcb_flush(c.get());
+        QVERIFY(windowHiddenSpy.wait());
+        QVERIFY(!window->isShown());
+
+        enableAutoHide(c.get(), windowId, ElectricNone);
+        xcb_flush(c.get());
+        QVERIFY(windowShownSpy.wait());
+        QVERIFY(window->isShown());
+    }
 }
 
 } // namespace KWin
