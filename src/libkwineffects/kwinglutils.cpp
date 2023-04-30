@@ -426,6 +426,7 @@ void GLShader::resolveLocations()
     mMatrixLocation[ModelViewProjectionMatrix] = uniformLocation("modelViewProjectionMatrix");
     mMatrixLocation[WindowTransformation] = uniformLocation("windowTransformation");
     mMatrixLocation[ScreenTransformation] = uniformLocation("screenTransformation");
+    mMatrixLocation[ColorimetryTransformation] = uniformLocation("colorimetryTransform");
 
     mVec2Location[Offset] = uniformLocation("offset");
 
@@ -437,6 +438,9 @@ void GLShader::resolveLocations()
 
     mIntLocation[TextureWidth] = uniformLocation("textureWidth");
     mIntLocation[TextureHeight] = uniformLocation("textureHeight");
+    mIntLocation[SourceNamedTransferFunction] = uniformLocation("sourceNamedTransferFunction");
+    mIntLocation[DestinationNamedTransferFunction] = uniformLocation("destinationNamedTransferFunction");
+    mIntLocation[SdrBrightness] = uniformLocation("sdrBrightness");
 
     mLocationsResolved = true;
 }
@@ -445,6 +449,12 @@ int GLShader::uniformLocation(const char *name)
 {
     const int location = glGetUniformLocation(mProgram, name);
     return location;
+}
+
+bool GLShader::setUniform(MatrixUniform uniform, const QMatrix3x3 &value)
+{
+    resolveLocations();
+    return setUniform(mMatrixLocation[uniform], value);
 }
 
 bool GLShader::setUniform(GLShader::MatrixUniform uniform, const QMatrix4x4 &matrix)
@@ -571,6 +581,14 @@ bool GLShader::setUniform(int location, const QVector4D &value)
     return (location >= 0);
 }
 
+bool GLShader::setUniform(int location, const QMatrix3x3 &value)
+{
+    if (location >= 0) {
+        glUniformMatrix3fv(location, 1, GL_FALSE, value.constData());
+    }
+    return location >= 0;
+}
+
 bool GLShader::setUniform(int location, const QMatrix4x4 &value)
 {
     if (location >= 0) {
@@ -617,6 +635,19 @@ QMatrix4x4 GLShader::getUniformMatrix4x4(const char *name)
     } else {
         return QMatrix4x4();
     }
+}
+
+bool GLShader::setColorspaceUniforms(const Colorspace &src, const Colorspace &dst)
+{
+    return setUniform(GLShader::MatrixUniform::ColorimetryTransformation, src.colorimetry().toOther(dst.colorimetry()))
+        && setUniform(GLShader::IntUniform::SourceNamedTransferFunction, int(src.transferFunction()))
+        && setUniform(GLShader::IntUniform::DestinationNamedTransferFunction, int(dst.transferFunction()));
+}
+
+bool GLShader::setColorspaceUniforms(const Colorspace &src, const RenderTarget &renderTarget)
+{
+    return setColorspaceUniforms(src, renderTarget.colorspace())
+        && setUniform(IntUniform::SdrBrightness, renderTarget.sdrBrightness());
 }
 
 //****************************************
@@ -749,6 +780,38 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
     } else if (traits & ShaderTrait::UniformColor) {
         stream << "uniform vec4 geometryColor;\n";
     }
+    if (traits & ShaderTrait::TransformColorspace) {
+        stream << "uniform mat3 colorimetryTransform;\n";
+        stream << "uniform int sourceNamedTransferFunction;\n";
+        stream << "uniform int destinationNamedTransferFunction;\n";
+        stream << "uniform int sdrBrightness;// in nits\n";
+        stream << "\n";
+        stream << "vec3 nitsToPq(vec3 nits) {\n";
+        stream << "    vec3 normalized = clamp(nits / 10000.0, vec3(0), vec3(1));\n";
+        stream << "    float c1 = 0.8359375;\n";
+        stream << "    float c2 = 18.8515625;\n";
+        stream << "    float c3 = 18.6875;\n";
+        stream << "    float m1 = 0.1593017578125;\n";
+        stream << "    float m2 = 78.84375;\n";
+        stream << "    vec3 num = vec3(c1) + c2 * pow(normalized, vec3(m1));\n";
+        stream << "    vec3 denum = vec3(1.0) + c3 * pow(normalized, vec3(m1));\n";
+        stream << "    return pow(num / denum, vec3(m2));\n";
+        stream << "}\n";
+        stream << "vec3 srgbToLinear(vec3 color) {\n";
+        stream << "    bvec3 isLow = lessThanEqual(color, vec3(0.04045f));\n";
+        stream << "    vec3 loPart = color / 12.92f;\n";
+        stream << "    vec3 hiPart = pow((color + 0.055f) / 1.055f, vec3(12.0f / 5.0f));\n";
+        stream << "    return mix(hiPart, loPart, isLow);\n";
+        stream << "}\n";
+        stream << "\n";
+        stream << "vec3 linearToSrgb(vec3 color) {\n";
+        stream << "    bvec3 isLow = lessThanEqual(color, vec3(0.0031308f));\n";
+        stream << "    vec3 loPart = color * 12.92f;\n";
+        stream << "    vec3 hiPart = pow(color, vec3(5.0f / 12.0f)) * 1.055f - 0.055f;\n";
+        stream << "    return mix(hiPart, loPart, isLow);\n";
+        stream << "}\n";
+        stream << "\n";
+    }
 
     if (output != QByteArrayLiteral("gl_FragColor")) {
         stream << "\nout vec4 " << output << ";\n";
@@ -773,6 +836,20 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
         }
     } else if (traits & ShaderTrait::UniformColor) {
         stream << "    " << output << " = geometryColor;\n";
+    }
+    if (traits & ShaderTrait::TransformColorspace) {
+        // simple sRGB -> linear
+        stream << "if (sourceNamedTransferFunction == 0) {\n";
+        stream << "    " << output << ".rgb = sdrBrightness * srgbToLinear(" << output << ".rgb);\n";
+        stream << "}\n";
+        stream << "        " << output << ".rgb = colorimetryTransform * " << output << ".rgb;\n";
+        // nits -> simple sRGB
+        stream << "if (destinationNamedTransferFunction == 0) {\n";
+        stream << "    " << output << ".rgb = linearToSrgb(" << output << ".rgb / sdrBrightness);\n";
+        // nits -> PQ
+        stream << "} else if (destinationNamedTransferFunction == 2) {\n";
+        stream << "    " << output << ".rgb = nitsToPq(" << output << ".rgb);\n";
+        stream << "}\n";
     }
 
     stream << "}";

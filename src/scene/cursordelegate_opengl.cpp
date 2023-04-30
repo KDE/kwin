@@ -42,11 +42,11 @@ void CursorDelegateOpenGL::paint(const RenderTarget &renderTarget, const QRegion
     // Render the cursor scene in an offscreen render target.
     const QSize bufferSize = (Cursors::self()->currentCursor()->rect().size() * scale).toSize();
     if (!m_texture || m_texture->size() != bufferSize) {
-        m_texture = std::make_unique<GLTexture>(GL_RGBA8, bufferSize);
+        m_texture = std::make_unique<GLTexture>(renderTarget.framebuffer()->colorAttachment()->internalFormat(), bufferSize);
         m_framebuffer = std::make_unique<GLFramebuffer>(m_texture.get());
     }
 
-    RenderTarget offscreenRenderTarget(m_framebuffer.get());
+    RenderTarget offscreenRenderTarget(m_framebuffer.get(), renderTarget.colorspace());
 
     RenderLayer renderLayer(layer()->loop());
     renderLayer.setDelegate(std::make_unique<SceneDelegate>(Compositor::self()->cursorScene(), m_output));

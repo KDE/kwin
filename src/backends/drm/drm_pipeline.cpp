@@ -108,7 +108,9 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline 
                 return Error::InvalidArguments;
             }
             if (mode == CommitMode::TestAllowModeset || mode == CommitMode::CommitModeset) {
-                pipeline->prepareAtomicModeset(commit.get());
+                if (!pipeline->prepareAtomicModeset(commit.get())) {
+                    return Error::InvalidArguments;
+                }
             }
         } else {
             pipeline->prepareAtomicDisable(commit.get());
@@ -229,7 +231,7 @@ void DrmPipeline::prepareAtomicDisable(DrmAtomicCommit *commit)
     }
 }
 
-void DrmPipeline::prepareAtomicModeset(DrmAtomicCommit *commit)
+bool DrmPipeline::prepareAtomicModeset(DrmAtomicCommit *commit)
 {
     commit->addProperty(m_connector->crtcId, m_pending.crtc->id());
     if (m_connector->broadcastRGB.isValid()) {
@@ -254,10 +256,14 @@ void DrmPipeline::prepareAtomicModeset(DrmAtomicCommit *commit)
         commit->addProperty(m_connector->maxBpc, preferred);
     }
     if (m_connector->hdrMetadata.isValid()) {
-        commit->addProperty(m_connector->hdrMetadata, 0);
+        commit->addBlob(m_connector->hdrMetadata, createHdrMetadata(m_pending.transferFunction));
+    } else if (m_pending.transferFunction != NamedTransferFunction::sRGB) {
+        return false;
     }
-    if (m_connector->colorspace.isValid()) {
-        commit->addEnum(m_connector->colorspace, DrmConnector::Colorspace::Default);
+    if (m_connector->colorspace.isValid() && m_connector->colorspace.hasEnum(DrmConnector::Colorspace::BT2020_RGB)) {
+        commit->addEnum(m_connector->colorspace, m_pending.colorimetry == NamedColorimetry::BT2020 ? DrmConnector::Colorspace::BT2020_RGB : DrmConnector::Colorspace::Default);
+    } else if (m_pending.colorimetry != NamedColorimetry::BT709) {
+        return false;
     }
     if (m_connector->scalingMode.isValid() && m_connector->scalingMode.hasEnum(DrmConnector::ScalingMode::None)) {
         commit->addEnum(m_connector->scalingMode, DrmConnector::ScalingMode::None);
@@ -291,6 +297,7 @@ void DrmPipeline::prepareAtomicModeset(DrmAtomicCommit *commit)
             commit->addEnum(cursor->pixelBlendMode, DrmPlane::PixelBlendMode::PreMultiplied);
         }
     }
+    return true;
 }
 
 uint32_t DrmPipeline::calculateUnderscan()
@@ -571,6 +578,16 @@ DrmConnector::DrmContentType DrmPipeline::contentType() const
     return m_pending.contentType;
 }
 
+NamedColorimetry DrmPipeline::colorimetry() const
+{
+    return m_pending.colorimetry;
+}
+
+NamedTransferFunction DrmPipeline::transferFunction() const
+{
+    return m_pending.transferFunction;
+}
+
 void DrmPipeline::setCrtc(DrmCrtc *crtc)
 {
     if (crtc && m_pending.crtc && crtc->gammaRampSize() != m_pending.crtc->gammaRampSize() && m_pending.colorTransformation) {
@@ -659,5 +676,63 @@ void DrmPipeline::setCTM(const QMatrix3x3 &ctm)
 void DrmPipeline::setContentType(DrmConnector::DrmContentType type)
 {
     m_pending.contentType = type;
+}
+
+void DrmPipeline::setColorimetry(NamedColorimetry name)
+{
+    m_pending.colorimetry = name;
+}
+
+void DrmPipeline::setNamedTransferFunction(NamedTransferFunction tf)
+{
+    m_pending.transferFunction = tf;
+}
+
+std::shared_ptr<DrmBlob> DrmPipeline::createHdrMetadata(NamedTransferFunction transferFunction) const
+{
+    if (transferFunction != NamedTransferFunction::PerceptualQuantizer) {
+        // for sRGB / gamma 2.2, don't send any metadata, to ensure the non-HDR experience stays the same
+        return nullptr;
+    }
+    if (!m_connector->edid() || !m_connector->edid()->hdrMetadata()) {
+        return nullptr;
+    }
+    const auto metadata = *m_connector->edid()->hdrMetadata();
+    if (!metadata.supportsPQ) {
+        return nullptr;
+    }
+    const auto colorimetry = m_connector->edid()->colorimetry();
+    const auto to16Bit = [](float value) {
+        return uint16_t(std::round(value / 0.00002));
+    };
+    hdr_output_metadata data{
+        .metadata_type = 0,
+        .hdmi_metadata_type1 = hdr_metadata_infoframe{
+            // eotf types (from CTA-861-G page 85):
+            // - 0: traditional gamma, SDR
+            // - 1: traditional gamma, HDR
+            // - 2: SMPTE ST2084
+            // - 3: hybrid Log-Gamma based on BT.2100-0
+            // - 4-7: reserved
+            .eotf = uint8_t(2),
+            // there's only one type. 1-7 are reserved for future use
+            .metadata_type = 0,
+            // in 0.00002 nits
+            .display_primaries = {
+                {to16Bit(colorimetry.redPrimary.x()), to16Bit(colorimetry.redPrimary.y())},
+                {to16Bit(colorimetry.greenPrimary.x()), to16Bit(colorimetry.greenPrimary.y())},
+                {to16Bit(colorimetry.bluePrimary.x()), to16Bit(colorimetry.bluePrimary.y())},
+            },
+            .white_point = {to16Bit(colorimetry.whitePoint.x()), to16Bit(colorimetry.whitePoint.y())},
+            // in nits
+            .max_display_mastering_luminance = uint16_t(std::round(metadata.desiredContentMaxLuminance)),
+            // in 0.0001 nits
+            .min_display_mastering_luminance = uint16_t(std::round(metadata.desiredContentMinLuminance * 10000)),
+            // in nits
+            .max_cll = uint16_t(std::round(metadata.desiredContentMaxLuminance)),
+            .max_fall = uint16_t(std::round(metadata.desiredMaxFrameAverageLuminance)),
+        },
+    };
+    return DrmBlob::create(gpu(), &data, sizeof(data));
 }
 }

@@ -11,6 +11,7 @@
 #include "touchpoints.h"
 
 #include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/rendertarget.h"
 #include "libkwineffects/renderviewport.h"
 #include <QAction>
 
@@ -123,7 +124,7 @@ void TouchPointsEffect::paintScreen(const RenderTarget &renderTarget, const Rend
     effects->paintScreen(renderTarget, viewport, mask, region, screen);
 
     if (effects->isOpenGLCompositing()) {
-        paintScreenSetupGl(viewport.projectionMatrix());
+        paintScreenSetupGl(renderTarget, viewport.projectionMatrix());
     }
     for (auto it = m_points.constBegin(), end = m_points.constEnd(); it != end; ++it) {
         for (int i = 0; i < m_ringCount; ++i) {
@@ -227,10 +228,11 @@ void TouchPointsEffect::drawCircleQPainter(const QColor &color, float cx, float 
     painter->restore();
 }
 
-void TouchPointsEffect::paintScreenSetupGl(const QMatrix4x4 &projectionMatrix)
+void TouchPointsEffect::paintScreenSetupGl(const RenderTarget &renderTarget, const QMatrix4x4 &projectionMatrix)
 {
     GLShader *shader = ShaderManager::instance()->pushShader(ShaderTrait::UniformColor);
     shader->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix);
+    shader->setColorspaceUniforms(Colorspace::sRGB, renderTarget);
 
     glLineWidth(m_lineWidth);
     glEnable(GL_BLEND);

@@ -54,7 +54,7 @@ public:
     EglGbmLayerSurface(DrmGpu *gpu, EglGbmBackend *eglBackend, BufferTarget target = BufferTarget::Normal, FormatOption formatOption = FormatOption::PreferAlpha);
     ~EglGbmLayerSurface();
 
-    std::optional<OutputLayerBeginFrameInfo> startRendering(const QSize &bufferSize, TextureTransforms transformation, const QMap<uint32_t, QVector<uint64_t>> &formats);
+    std::optional<OutputLayerBeginFrameInfo> startRendering(const QSize &bufferSize, TextureTransforms transformation, const QMap<uint32_t, QVector<uint64_t>> &formats, const Colorspace &colorspace, uint32_t sdrBrightness, const QVector3D &channelFactors);
     bool endRendering(const QRegion &damagedRegion);
 
     bool doesSurfaceFit(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const;
@@ -74,6 +74,11 @@ private:
     };
     struct Surface
     {
+        std::shared_ptr<GLTexture> shadowTexture;
+        std::shared_ptr<GLFramebuffer> shadowBuffer;
+        Colorspace colorspace = Colorspace::sRGB;
+        QVector3D channelFactors = {1, 1, 1};
+        float sdrBrightness = 200;
         std::shared_ptr<GbmSwapchain> gbmSwapchain;
         std::shared_ptr<DumbSwapchain> importDumbSwapchain;
         std::shared_ptr<GbmSwapchain> importGbmSwapchain;

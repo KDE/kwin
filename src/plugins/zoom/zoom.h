@@ -93,7 +93,7 @@ private:
     };
 
     GLTexture *ensureCursorTexture();
-    OffscreenData *ensureOffscreenData(const RenderViewport &viewport, EffectScreen *screen);
+    OffscreenData *ensureOffscreenData(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectScreen *screen);
     void markCursorTextureDirty();
 
 #if HAVE_ACCESSIBILITY

@@ -21,6 +21,7 @@
 
 #include "libkwineffects/kwinconfig.h"
 #include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/rendertarget.h"
 #include "libkwineffects/renderviewport.h"
 
 #include <KGlobalAccel>
@@ -103,11 +104,12 @@ void TrackMouseEffect::paintScreen(const RenderTarget &renderTarget, const Rende
     effects->paintScreen(renderTarget, viewport, mask, region, screen); // paint normal screen
 
     if (effects->isOpenGLCompositing() && m_texture[0] && m_texture[1]) {
-        ShaderBinder binder(ShaderTrait::MapTexture);
+        ShaderBinder binder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
         GLShader *shader(binder.shader());
         if (!shader) {
             return;
         }
+        shader->setColorspaceUniforms(Colorspace::sRGB, renderTarget);
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
         QMatrix4x4 matrix(viewport.projectionMatrix());

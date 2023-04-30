@@ -22,6 +22,7 @@
 #include "drm_blob.h"
 #include "drm_connector.h"
 #include "drm_plane.h"
+#include "libkwineffects/colorspace.h"
 
 namespace KWin
 {
@@ -107,6 +108,8 @@ public:
     uint32_t overscan() const;
     Output::RgbRange rgbRange() const;
     DrmConnector::DrmContentType contentType() const;
+    NamedColorimetry colorimetry() const;
+    NamedTransferFunction transferFunction() const;
 
     void setCrtc(DrmCrtc *crtc);
     void setMode(const std::shared_ptr<DrmConnectorMode> &mode);
@@ -120,6 +123,8 @@ public:
     void setGammaRamp(const std::shared_ptr<ColorTransformation> &transformation);
     void setCTM(const QMatrix3x3 &ctm);
     void setContentType(DrmConnector::DrmContentType type);
+    void setColorimetry(NamedColorimetry name);
+    void setNamedTransferFunction(NamedTransferFunction tf);
 
     enum class CommitMode {
         Test,
@@ -134,6 +139,7 @@ private:
     bool isBufferForDirectScanout() const;
     uint32_t calculateUnderscan();
     static Error errnoToError();
+    std::shared_ptr<DrmBlob> createHdrMetadata(NamedTransferFunction transferFunction) const;
 
     // legacy only
     Error presentLegacy();
@@ -146,7 +152,7 @@ private:
     // atomic modesetting only
     void atomicCommitSuccessful();
     void atomicModesetSuccessful();
-    void prepareAtomicModeset(DrmAtomicCommit *commit);
+    bool prepareAtomicModeset(DrmAtomicCommit *commit);
     bool prepareAtomicPresentation(DrmAtomicCommit *commit);
     void prepareAtomicDisable(DrmAtomicCommit *commit);
     static Error commitPipelinesAtomic(const QVector<DrmPipeline *> &pipelines, CommitMode mode, const QVector<DrmObject *> &unusedObjects);
@@ -172,6 +178,8 @@ private:
         std::shared_ptr<DrmGammaRamp> gamma;
         std::shared_ptr<DrmBlob> ctm;
         DrmConnector::DrmContentType contentType = DrmConnector::DrmContentType::Graphics;
+        NamedColorimetry colorimetry = NamedColorimetry::BT709;
+        NamedTransferFunction transferFunction = NamedTransferFunction::sRGB;
 
         std::shared_ptr<DrmPipelineLayer> layer;
         std::shared_ptr<DrmOverlayLayer> cursorLayer;

@@ -297,6 +297,15 @@ void Output::setState(const State &state)
     if (oldState.rgbRange != state.rgbRange) {
         Q_EMIT rgbRangeChanged();
     }
+    if (oldState.highDynamicRange != state.highDynamicRange) {
+        Q_EMIT highDynamicRangeChanged();
+    }
+    if (oldState.sdrBrightness != state.sdrBrightness) {
+        Q_EMIT sdrBrightnessChanged();
+    }
+    if (oldState.wideColorGamut != state.wideColorGamut) {
+        Q_EMIT wideColorGamutChanged();
+    }
     if (oldState.enabled != state.enabled) {
         Q_EMIT enabledChanged();
     }
@@ -400,12 +409,12 @@ Output::RgbRange Output::rgbRange() const
     return m_state.rgbRange;
 }
 
-bool Output::setGammaRamp(const std::shared_ptr<ColorTransformation> &transformation)
+bool Output::setChannelFactors(const QVector3D &rgb)
 {
     return false;
 }
 
-bool Output::setCTM(const QMatrix3x3 &ctm)
+bool Output::setGammaRamp(const std::shared_ptr<ColorTransformation> &transformation)
 {
     return false;
 }
@@ -423,6 +432,21 @@ void Output::setContentType(ContentType contentType)
 Output::Transform Output::panelOrientation() const
 {
     return m_information.panelOrientation;
+}
+
+bool Output::wideColorGamut() const
+{
+    return m_state.wideColorGamut;
+}
+
+bool Output::highDynamicRange() const
+{
+    return m_state.highDynamicRange;
+}
+
+uint32_t Output::sdrBrightness() const
+{
+    return m_state.sdrBrightness;
 }
 
 bool Output::setCursor(CursorSource *source)

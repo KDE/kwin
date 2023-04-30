@@ -17,8 +17,6 @@ set(kwin_EFFECTSLIB_SRCS
     kwinoffscreenquickview.cpp
     kwinquickeffect.cpp
     logging.cpp
-    rendertarget.cpp
-    renderviewport.cpp
 )
 
 add_library(kwineffects SHARED ${kwin_EFFECTSLIB_SRCS})
@@ -45,6 +43,7 @@ install(TARGETS kwineffects EXPORT KWinEffectsTargets ${KDE_INSTALL_TARGETS_DEFA
 
 # kwingl(es)utils library
 set(kwin_GLUTILSLIB_SRCS
+    colorspace.cpp
     kwineglimagetexture.cpp
     kwinglplatform.cpp
     kwingltexture.cpp
@@ -71,6 +70,7 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/kwinconfig.h
     ${CMAKE_CURRENT_BINARY_DIR}/kwineffects_export.h
     ${CMAKE_CURRENT_BINARY_DIR}/kwinglutils_export.h
+    colorspace.h
     kwinanimationeffect.h
     kwineffects.h
     kwinglobals.h
@@ -81,6 +81,8 @@ install(FILES
     kwinoffscreeneffect.h
     kwinoffscreenquickview.h
     kwinquickeffect.h
+    rendertarget.h
+    renderviewport.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/libkwineffects COMPONENT Devel)
 
 set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KWinEffects")

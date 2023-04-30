@@ -1627,7 +1627,7 @@ void EffectsHandlerImpl::renderOffscreenQuickView(const RenderTarget &renderTarg
             return;
         }
 
-        ShaderTraits traits = ShaderTrait::MapTexture;
+        ShaderTraits traits = ShaderTrait::MapTexture | ShaderTrait::TransformColorspace;
         const qreal a = w->opacity();
         if (a != 1.0) {
             traits |= ShaderTrait::Modulate;
@@ -1643,6 +1643,7 @@ void EffectsHandlerImpl::renderOffscreenQuickView(const RenderTarget &renderTarg
         if (a != 1.0) {
             shader->setUniform(GLShader::ModulationConstant, QVector4D(a, a, a, a));
         }
+        shader->setColorspaceUniforms(Colorspace::sRGB, renderTarget);
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);

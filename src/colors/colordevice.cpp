@@ -319,11 +319,7 @@ void ColorDevice::update()
 {
     d->rebuildPipeline();
     if (!d->output->setGammaRamp(d->transformation)) {
-        QMatrix3x3 ctm;
-        ctm(0, 0) = d->simpleTransformation.x();
-        ctm(1, 1) = d->simpleTransformation.y();
-        ctm(2, 2) = d->simpleTransformation.z();
-        d->output->setCTM(ctm);
+        d->output->setChannelFactors(d->simpleTransformation);
     }
 }
 

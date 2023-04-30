@@ -15,6 +15,7 @@
 
 #include "libkwineffects/kwinconfig.h"
 #include "libkwineffects/kwinglplatform.h"
+#include "libkwineffects/rendertarget.h"
 #include "libkwineffects/renderviewport.h"
 #include <KGlobalAccel>
 #include <KLocalizedString>
@@ -90,8 +91,9 @@ void MouseMarkEffect::paintScreen(const RenderTarget &renderTarget, const Render
         vbo->setUseColor(true);
         vbo->setColor(color);
         const auto scale = viewport.scale();
-        ShaderBinder binder(ShaderTrait::UniformColor);
+        ShaderBinder binder(ShaderTrait::UniformColor | ShaderTrait::TransformColorspace);
         binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, viewport.projectionMatrix());
+        binder.shader()->setColorspaceUniforms(Colorspace::sRGB, renderTarget);
         QVector<float> verts;
         for (const Mark &mark : std::as_const(marks)) {
             verts.clear();

@@ -67,6 +67,13 @@ DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn)
         capabilities |= Capability::RgbRange;
         initialState.rgbRange = DrmConnector::broadcastRgbToRgbRange(conn->broadcastRGB.enumValue());
     }
+    if (m_connector->hdrMetadata.isValid() && m_connector->edid() && m_connector->edid()->hdrMetadata() && m_connector->edid()->hdrMetadata()->supportsPQ) {
+        capabilities |= Capability::HighDynamicRange;
+    }
+    if (m_connector->colorspace.isValid() && m_connector->colorspace.hasEnum(DrmConnector::Colorspace::BT2020_RGB)
+        && m_connector->edid() && m_connector->edid()->hdrMetadata() && m_connector->edid()->hdrMetadata()->supportsBT2020) {
+        capabilities |= Capability::WideColorGamut;
+    }
 
     const Edid *edid = conn->edid();
 
@@ -409,6 +416,8 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
     m_pipeline->setRgbRange(props->rgbRange.value_or(m_pipeline->rgbRange()));
     m_pipeline->setRenderOrientation(outputToPlaneTransform(props->transform.value_or(transform())));
     m_pipeline->setEnable(props->enabled.value_or(m_pipeline->enabled()));
+    m_pipeline->setColorimetry(props->wideColorGamut.value_or(m_state.wideColorGamut) ? NamedColorimetry::BT2020 : NamedColorimetry::BT709);
+    m_pipeline->setNamedTransferFunction(props->highDynamicRange.value_or(m_state.highDynamicRange) ? NamedTransferFunction::PerceptualQuantizer : NamedTransferFunction::sRGB);
     return true;
 }
 
@@ -428,6 +437,12 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.currentMode = m_pipeline->mode();
     next.overscan = m_pipeline->overscan();
     next.rgbRange = m_pipeline->rgbRange();
+    next.highDynamicRange = props->highDynamicRange.value_or(m_state.highDynamicRange);
+    next.sdrBrightness = props->sdrBrightness.value_or(m_state.sdrBrightness);
+    next.wideColorGamut = props->wideColorGamut.value_or(m_state.wideColorGamut);
+    if (m_state.highDynamicRange != next.highDynamicRange || m_state.sdrBrightness != next.sdrBrightness || m_state.wideColorGamut != next.wideColorGamut) {
+        m_renderLoop->scheduleRepaint();
+    }
 
     setState(next);
     setVrrPolicy(props->vrrPolicy.value_or(vrrPolicy()));
@@ -463,7 +478,7 @@ DrmOutputLayer *DrmOutput::cursorLayer() const
 
 bool DrmOutput::setGammaRamp(const std::shared_ptr<ColorTransformation> &transformation)
 {
-    if (!m_pipeline->active()) {
+    if (!m_pipeline->active() || m_pipeline->colorimetry() != NamedColorimetry::BT709 || m_pipeline->transferFunction() != NamedTransferFunction::sRGB) {
         return false;
     }
     m_pipeline->setGammaRamp(transformation);
@@ -478,19 +493,37 @@ bool DrmOutput::setGammaRamp(const std::shared_ptr<ColorTransformation> &transfo
     }
 }
 
-bool DrmOutput::setCTM(const QMatrix3x3 &ctm)
+bool DrmOutput::setChannelFactors(const QVector3D &rgb)
 {
-    if (!m_pipeline->active()) {
-        return false;
+    if (m_channelFactors == rgb) {
+        return true;
     }
-    m_pipeline->setCTM(ctm);
-    if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
-        m_pipeline->applyPendingChanges();
+    m_channelFactors = rgb;
+    if (m_pipeline->colorimetry() == NamedColorimetry::BT709 && m_pipeline->transferFunction() == NamedTransferFunction::sRGB) {
+        if (!m_pipeline->active()) {
+            return false;
+        }
+        QMatrix3x3 ctm;
+        ctm(0, 0) = rgb.x();
+        ctm(1, 1) = rgb.y();
+        ctm(2, 2) = rgb.z();
+        m_pipeline->setCTM(ctm);
+        if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
+            m_pipeline->applyPendingChanges();
+            m_renderLoop->scheduleRepaint();
+            return true;
+        } else {
+            m_pipeline->revertPendingChanges();
+            return false;
+        }
+    } else {
         m_renderLoop->scheduleRepaint();
         return true;
-    } else {
-        m_pipeline->revertPendingChanges();
-        return false;
     }
+}
+
+QVector3D DrmOutput::channelFactors() const
+{
+    return m_channelFactors;
 }
 }

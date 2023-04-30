@@ -10,6 +10,7 @@
 #pragma once
 
 // kwin
+#include "libkwineffects/colorspace.h"
 #include "libkwineffects/kwingltexture.h"
 #include "libkwineffects/kwinglutils_export.h"
 #include "libkwineffects/kwinglutils_funcs.h"
@@ -90,6 +91,7 @@ public:
     bool setUniform(int location, const QVector2D &value);
     bool setUniform(int location, const QVector3D &value);
     bool setUniform(int location, const QVector4D &value);
+    bool setUniform(int location, const QMatrix3x3 &value);
     bool setUniform(int location, const QMatrix4x4 &value);
     bool setUniform(int location, const QColor &value);
 
@@ -108,6 +110,7 @@ public:
         ModelViewProjectionMatrix,
         WindowTransformation,
         ScreenTransformation,
+        ColorimetryTransformation,
         MatrixCount
     };
 
@@ -130,6 +133,9 @@ public:
         AlphaToOne, ///< @deprecated no longer used
         TextureWidth,
         TextureHeight,
+        SourceNamedTransferFunction,
+        DestinationNamedTransferFunction,
+        SdrBrightness,
         IntUniformCount
     };
 
@@ -138,6 +144,7 @@ public:
         ColorUniformCount
     };
 
+    bool setUniform(MatrixUniform uniform, const QMatrix3x3 &value);
     bool setUniform(MatrixUniform uniform, const QMatrix4x4 &matrix);
     bool setUniform(Vec2Uniform uniform, const QVector2D &value);
     bool setUniform(Vec4Uniform uniform, const QVector4D &value);
@@ -145,6 +152,9 @@ public:
     bool setUniform(IntUniform uniform, int value);
     bool setUniform(ColorUniform uniform, const QVector4D &value);
     bool setUniform(ColorUniform uniform, const QColor &value);
+
+    bool setColorspaceUniforms(const Colorspace &src, const Colorspace &dst);
+    bool setColorspaceUniforms(const Colorspace &src, const RenderTarget &renderTarget);
 
 protected:
     GLShader(unsigned int flags = NoFlags);
@@ -176,6 +186,7 @@ enum class ShaderTrait {
     UniformColor = (1 << 1),
     Modulate = (1 << 2),
     AdjustSaturation = (1 << 3),
+    TransformColorspace = (1 << 4),
 };
 
 Q_DECLARE_FLAGS(ShaderTraits, ShaderTrait)

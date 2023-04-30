@@ -255,7 +255,7 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
     effects->prePaintScreen(data, presentTime);
 }
 
-ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(const RenderViewport &viewport, EffectScreen *screen)
+ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectScreen *screen)
 {
     const QRect rect = effects->waylandDisplay() ? screen->geometry() : effects->virtualScreenGeometry();
     const qreal devicePixelRatio = effects->waylandDisplay() ? screen->devicePixelRatio() : 1;
@@ -264,8 +264,9 @@ ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(const RenderViewport 
     OffscreenData &data = m_offscreenData[effects->waylandDisplay() ? screen : nullptr];
     data.viewport = rect;
 
-    if (!data.texture || data.texture->size() != nativeSize) {
-        data.texture.reset(new GLTexture(GL_RGBA8, nativeSize));
+    const GLenum textureFormat = renderTarget.colorspace() == Colorspace::sRGB ? GL_RGBA8 : GL_RGBA16F;
+    if (!data.texture || data.texture->size() != nativeSize || data.texture->internalFormat() != textureFormat) {
+        data.texture.reset(new GLTexture(textureFormat, nativeSize));
         data.texture->setFilter(GL_LINEAR);
         data.texture->setWrapMode(GL_CLAMP_TO_EDGE);
         data.framebuffer = std::make_unique<GLFramebuffer>(data.texture.get());
@@ -276,10 +277,10 @@ ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(const RenderViewport 
 
 void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
 {
-    OffscreenData *offscreenData = ensureOffscreenData(viewport, screen);
+    OffscreenData *offscreenData = ensureOffscreenData(renderTarget, viewport, screen);
 
     // Render the scene in an offscreen texture and then upscale it.
-    RenderTarget offscreenRenderTarget(offscreenData->framebuffer.get());
+    RenderTarget offscreenRenderTarget(offscreenData->framebuffer.get(), renderTarget.colorspace(), renderTarget.sdrBrightness());
     RenderViewport offscreenViewport(screen->geometry(), screen->devicePixelRatio(), offscreenRenderTarget);
     GLFramebuffer::pushFramebuffer(offscreenData->framebuffer.get());
     effects->paintScreen(offscreenRenderTarget, offscreenViewport, mask, region, screen);
@@ -382,7 +383,8 @@ void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewp
 
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            auto s = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
+            auto s = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
+            s->setColorspaceUniforms(Colorspace::sRGB, renderTarget);
             QMatrix4x4 mvp = viewport.projectionMatrix();
             mvp.translate(p.x() * scale, p.y() * scale);
             s->setUniform(GLShader::ModelViewProjectionMatrix, mvp);

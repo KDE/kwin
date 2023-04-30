@@ -77,7 +77,7 @@ private:
     QRect expand(const QRect &rect) const;
     QRegion expand(const QRegion &region) const;
     void initBlurStrengthValues();
-    void updateTexture(EffectScreen *screen);
+    bool updateTexture(EffectScreen *screen, const RenderTarget &renderTarget);
     QRegion blurRegion(const EffectWindow *w) const;
     QRegion decorationBlurRegion(const EffectWindow *w) const;
     bool decorationSupportsBlurBehind(const EffectWindow *w) const;

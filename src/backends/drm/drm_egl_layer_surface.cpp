@@ -60,7 +60,7 @@ void EglGbmLayerSurface::destroyResources()
     m_oldSurface = {};
 }
 
-std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(const QSize &bufferSize, TextureTransforms transformation, const QMap<uint32_t, QVector<uint64_t>> &formats)
+std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(const QSize &bufferSize, TextureTransforms transformation, const QMap<uint32_t, QVector<uint64_t>> &formats, const Colorspace &colorspace, uint32_t sdrBrightness, const QVector3D &channelFactors)
 {
     if (!checkSurface(bufferSize, formats)) {
         return std::nullopt;
@@ -69,7 +69,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
         return std::nullopt;
     }
 
-    const auto [buffer, repaint] = m_surface.gbmSwapchain->acquire();
+    auto [buffer, repaint] = m_surface.gbmSwapchain->acquire();
     if (!buffer) {
         return std::nullopt;
     }
@@ -90,14 +90,49 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
     }
     m_surface.currentBuffer = buffer;
 
-    return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(fbo.get()),
-        .repaint = repaint,
-    };
+    if (m_surface.colorspace != colorspace || m_surface.channelFactors != channelFactors || m_surface.sdrBrightness != sdrBrightness) {
+        m_surface.gbmSwapchain->resetDamage();
+        repaint = infiniteRegion();
+        m_surface.colorspace = colorspace;
+        m_surface.channelFactors = channelFactors;
+        m_surface.sdrBrightness = sdrBrightness;
+    }
+    if (colorspace != Colorspace::sRGB) {
+        if (!m_surface.shadowBuffer) {
+            m_surface.shadowTexture = std::make_shared<GLTexture>(GL_RGBA16F, m_surface.gbmSwapchain->size());
+            m_surface.shadowBuffer = std::make_shared<GLFramebuffer>(m_surface.shadowTexture.get());
+        }
+        return OutputLayerBeginFrameInfo{
+            .renderTarget = RenderTarget(m_surface.shadowBuffer.get(), Colorspace(colorspace.colorimetry(), NamedTransferFunction::linear), sdrBrightness),
+            .repaint = repaint,
+        };
+    } else {
+        return OutputLayerBeginFrameInfo{
+            .renderTarget = RenderTarget(fbo.get(), colorspace),
+            .repaint = repaint,
+        };
+    }
 }
 
 bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion)
 {
+    if (m_surface.colorspace != Colorspace::sRGB) {
+        const auto &[texture, fbo] = m_surface.textureCache[m_surface.currentBuffer->bo()];
+        GLFramebuffer::pushFramebuffer(fbo.get());
+        ShaderBinder binder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
+        QMatrix4x4 mat = texture->contentTransformMatrix();
+        mat.ortho(QRectF(QPointF(), fbo->size()));
+        binder.shader()->setUniform(GLShader::MatrixUniform::ModelViewProjectionMatrix, mat);
+        QMatrix3x3 ctm;
+        ctm(0, 0) = m_surface.channelFactors.x();
+        ctm(1, 1) = m_surface.channelFactors.y();
+        ctm(2, 2) = m_surface.channelFactors.z();
+        binder.shader()->setUniform(GLShader::MatrixUniform::ColorimetryTransformation, ctm);
+        binder.shader()->setUniform(GLShader::IntUniform::SourceNamedTransferFunction, int(NamedTransferFunction::linear));
+        binder.shader()->setUniform(GLShader::IntUniform::DestinationNamedTransferFunction, int(m_surface.colorspace.transferFunction()));
+        m_surface.shadowTexture->render(m_surface.gbmSwapchain->size(), 1);
+        GLFramebuffer::popFramebuffer();
+    }
     m_surface.gbmSwapchain->damage(damagedRegion);
     glFlush();
     const auto buffer = importBuffer(m_surface, m_surface.currentBuffer);

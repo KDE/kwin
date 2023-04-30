@@ -76,10 +76,12 @@ public:
     Q_ENUM(DpmsMode)
 
     enum class Capability : uint {
-        Dpms = 0x1,
-        Overscan = 0x2,
-        Vrr = 0x4,
-        RgbRange = 0x8,
+        Dpms = 1,
+        Overscan = 1 << 1,
+        Vrr = 1 << 2,
+        RgbRange = 1 << 3,
+        HighDynamicRange = 1 << 4,
+        WideColorGamut = 1 << 5,
     };
     Q_DECLARE_FLAGS(Capabilities, Capability)
 
@@ -254,9 +256,12 @@ public:
     bool isPlaceholder() const;
     bool isNonDesktop() const;
     Transform panelOrientation() const;
+    bool wideColorGamut() const;
+    bool highDynamicRange() const;
+    uint32_t sdrBrightness() const;
 
     virtual bool setGammaRamp(const std::shared_ptr<ColorTransformation> &transformation);
-    virtual bool setCTM(const QMatrix3x3 &ctm);
+    virtual bool setChannelFactors(const QVector3D &rgb);
 
     virtual bool setCursor(CursorSource *source);
     virtual bool moveCursor(const QPointF &position);
@@ -314,6 +319,9 @@ Q_SIGNALS:
     void overscanChanged();
     void vrrPolicyChanged();
     void rgbRangeChanged();
+    void wideColorGamutChanged();
+    void sdrBrightnessChanged();
+    void highDynamicRangeChanged();
 
 protected:
     struct Information
@@ -345,6 +353,9 @@ protected:
         bool enabled = false;
         uint32_t overscan = 0;
         RgbRange rgbRange = RgbRange::Automatic;
+        bool wideColorGamut = false;
+        bool highDynamicRange = false;
+        uint32_t sdrBrightness = 200;
     };
 
     void setInformation(const Information &information);

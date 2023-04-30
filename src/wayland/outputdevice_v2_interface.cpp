@@ -24,7 +24,7 @@ using namespace KWin;
 namespace KWaylandServer
 {
 
-static const quint32 s_version = 2;
+static const quint32 s_version = 3;
 
 static QtWaylandServer::kde_output_device_v2::transform kwinTransformToOutputDeviceTransform(Output::Transform transform)
 {
@@ -47,6 +47,12 @@ static uint32_t kwinCapabilitiesToOutputDeviceCapabilities(Output::Capabilities 
     }
     if (caps & Output::Capability::RgbRange) {
         ret |= QtWaylandServer::kde_output_device_v2::capability_rgb_range;
+    }
+    if (caps & Output::Capability::HighDynamicRange) {
+        ret |= QtWaylandServer::kde_output_device_v2::capability_high_dynamic_range;
+    }
+    if (caps & Output::Capability::WideColorGamut) {
+        ret |= QtWaylandServer::kde_output_device_v2::capability_wide_color_gamut;
     }
     return ret;
 }
@@ -82,6 +88,9 @@ public:
     void sendOverscan(Resource *resource);
     void sendVrrPolicy(Resource *resource);
     void sendRgbRange(Resource *resource);
+    void sendHighDynamicRange(Resource *resource);
+    void sendSdrBrightness(Resource *resource);
+    void sendWideColorGamut(Resource *resource);
 
     OutputDeviceV2Interface *q;
     QPointer<Display> m_display;
@@ -105,6 +114,9 @@ public:
     uint32_t m_overscan = 0;
     vrr_policy m_vrrPolicy = vrr_policy_automatic;
     rgb_range m_rgbRange = rgb_range_automatic;
+    bool m_highDynamicRange = false;
+    uint32_t m_sdrBrightness = 200;
+    bool m_wideColorGamut = false;
 
 protected:
     void kde_output_device_v2_bind_resource(Resource *resource) override;
@@ -182,6 +194,9 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, KWin::Output 
     updateRgbRange();
     updateName();
     updateModes();
+    updateHighDynamicRange();
+    updateSdrBrightness();
+    updateWideColorGamut();
 
     connect(handle, &Output::geometryChanged,
             this, &OutputDeviceV2Interface::updateGlobalPosition);
@@ -203,6 +218,9 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, KWin::Output 
             this, &OutputDeviceV2Interface::updateModes);
     connect(handle, &Output::rgbRangeChanged,
             this, &OutputDeviceV2Interface::updateRgbRange);
+    connect(handle, &Output::highDynamicRangeChanged, this, &OutputDeviceV2Interface::updateHighDynamicRange);
+    connect(handle, &Output::sdrBrightnessChanged, this, &OutputDeviceV2Interface::updateSdrBrightness);
+    connect(handle, &Output::wideColorGamutChanged, this, &OutputDeviceV2Interface::updateWideColorGamut);
 }
 
 OutputDeviceV2Interface::~OutputDeviceV2Interface()
@@ -253,6 +271,9 @@ void OutputDeviceV2InterfacePrivate::kde_output_device_v2_bind_resource(Resource
     sendOverscan(resource);
     sendVrrPolicy(resource);
     sendRgbRange(resource);
+    sendHighDynamicRange(resource);
+    sendSdrBrightness(resource);
+    sendWideColorGamut(resource);
     sendDone(resource);
 }
 
@@ -348,6 +369,27 @@ void OutputDeviceV2InterfacePrivate::sendVrrPolicy(Resource *resource)
 void OutputDeviceV2InterfacePrivate::sendRgbRange(Resource *resource)
 {
     send_rgb_range(resource->handle, m_rgbRange);
+}
+
+void OutputDeviceV2InterfacePrivate::sendHighDynamicRange(Resource *resource)
+{
+    if (resource->version() >= KDE_OUTPUT_DEVICE_V2_HIGH_DYNAMIC_RANGE_SINCE_VERSION) {
+        send_high_dynamic_range(resource->handle, m_highDynamicRange ? 1 : 0);
+    }
+}
+
+void OutputDeviceV2InterfacePrivate::sendSdrBrightness(Resource *resource)
+{
+    if (resource->version() >= KDE_OUTPUT_DEVICE_V2_SDR_BRIGHTNESS_SINCE_VERSION) {
+        send_sdr_brightness(resource->handle, m_sdrBrightness);
+    }
+}
+
+void OutputDeviceV2InterfacePrivate::sendWideColorGamut(Resource *resource)
+{
+    if (resource->version() >= KDE_OUTPUT_DEVICE_V2_WIDE_COLOR_GAMUT_SINCE_VERSION) {
+        send_wide_color_gamut(resource->handle, m_wideColorGamut ? 1 : 0);
+    }
 }
 
 void OutputDeviceV2Interface::updateGeometry()
@@ -565,6 +607,42 @@ void OutputDeviceV2Interface::updateRgbRange()
         const auto clientResources = d->resourceMap();
         for (const auto &resource : clientResources) {
             d->sendRgbRange(resource);
+            d->sendDone(resource);
+        }
+    }
+}
+
+void OutputDeviceV2Interface::updateHighDynamicRange()
+{
+    if (d->m_highDynamicRange != d->m_handle->highDynamicRange()) {
+        d->m_highDynamicRange = d->m_handle->highDynamicRange();
+        const auto clientResources = d->resourceMap();
+        for (const auto &resource : clientResources) {
+            d->sendHighDynamicRange(resource);
+            d->sendDone(resource);
+        }
+    }
+}
+
+void OutputDeviceV2Interface::updateSdrBrightness()
+{
+    if (d->m_sdrBrightness != d->m_handle->sdrBrightness()) {
+        d->m_sdrBrightness = d->m_handle->sdrBrightness();
+        const auto clientResources = d->resourceMap();
+        for (const auto &resource : clientResources) {
+            d->sendSdrBrightness(resource);
+            d->sendDone(resource);
+        }
+    }
+}
+
+void OutputDeviceV2Interface::updateWideColorGamut()
+{
+    if (d->m_wideColorGamut != d->m_handle->wideColorGamut()) {
+        d->m_wideColorGamut = d->m_handle->wideColorGamut();
+        const auto clientResources = d->resourceMap();
+        for (const auto &resource : clientResources) {
+            d->sendWideColorGamut(resource);
             d->sendDone(resource);
         }
     }

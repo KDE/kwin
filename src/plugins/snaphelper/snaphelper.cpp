@@ -11,6 +11,7 @@
 #include "snaphelper.h"
 
 #include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/rendertarget.h"
 #include "libkwineffects/renderviewport.h"
 
 #include <QPainter>
@@ -105,8 +106,9 @@ void SnapHelperEffect::paintScreen(const RenderTarget &renderTarget, const Rende
         GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
         vbo->reset();
         vbo->setUseColor(true);
-        ShaderBinder binder(ShaderTrait::UniformColor);
+        ShaderBinder binder(ShaderTrait::UniformColor | ShaderTrait::TransformColorspace);
         binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, viewport.projectionMatrix());
+        binder.shader()->setColorspaceUniforms(Colorspace::sRGB, renderTarget);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 

@@ -58,12 +58,11 @@ BlurEffect::BlurEffect()
         connect(effects, &EffectsHandler::virtualScreenGeometryChanged, this, [this]() {
             screenGeometryChanged(nullptr);
         });
-        updateTexture(nullptr);
     }
 
     // ### Hackish way to announce support.
     //     Should be included in _NET_SUPPORTED instead.
-    if (m_shader && m_shader->isValid() && !m_screenData.empty()) {
+    if (m_shader && m_shader->isValid()) {
         if (effects->xcbConnection()) {
             net_wm_blur_region = effects->announceSupportProperty(s_blurAtomName, this);
         }
@@ -88,7 +87,7 @@ BlurEffect::BlurEffect()
     connect(effects, &EffectsHandler::windowDecorationChanged, this, &BlurEffect::setupDecorationConnections);
     connect(effects, &EffectsHandler::propertyNotify, this, &BlurEffect::slotPropertyNotify);
     connect(effects, &EffectsHandler::xcbConnectionChanged, this, [this]() {
-        if (m_shader && m_shader->isValid() && !m_screenData.empty()) {
+        if (m_shader && m_shader->isValid()) {
             net_wm_blur_region = effects->announceSupportProperty(s_blurAtomName, this);
         }
     });
@@ -113,8 +112,6 @@ void BlurEffect::screenAdded(EffectScreen *screen)
     connect(screen, &EffectScreen::geometryChanged, this, [this, screen]() {
         screenGeometryChanged(screen);
     });
-    effects->makeOpenGLContextCurrent();
-    updateTexture(screen);
 }
 
 void BlurEffect::screenRemoved(EffectScreen *screen)
@@ -126,19 +123,54 @@ void BlurEffect::screenRemoved(EffectScreen *screen)
 
 void BlurEffect::screenGeometryChanged(EffectScreen *screen)
 {
-    effects->makeOpenGLContextCurrent();
-    updateTexture(screen);
-
     // Fetch the blur regions for all windows
     const auto stackingOrder = effects->stackingOrder();
     for (EffectWindow *window : stackingOrder) {
         updateBlurRegion(window);
     }
-    effects->doneOpenGLContextCurrent();
 }
 
-void BlurEffect::updateTexture(EffectScreen *screen)
+bool BlurEffect::updateTexture(EffectScreen *screen, const RenderTarget &renderTarget)
 {
+    GLenum textureFormat = GL_RGBA8;
+    if (renderTarget.colorspace() == Colorspace::sRGB) {
+        if (!GLPlatform::instance()->isGLES()) {
+            GLuint prevFbo = 0;
+            glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, reinterpret_cast<GLint *>(&prevFbo));
+
+            if (prevFbo != 0) {
+                glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+            }
+
+            GLenum colorEncoding = GL_LINEAR;
+            glGetFramebufferAttachmentParameteriv(GL_DRAW_FRAMEBUFFER, GL_BACK_LEFT,
+                                                  GL_FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING,
+                                                  reinterpret_cast<GLint *>(&colorEncoding));
+
+            if (prevFbo != 0) {
+                glBindFramebuffer(GL_DRAW_FRAMEBUFFER, prevFbo);
+            }
+
+            if (colorEncoding == GL_SRGB) {
+                textureFormat = GL_SRGB8_ALPHA8;
+            }
+        }
+    } else {
+        textureFormat = GL_RGBA16F;
+    }
+
+    // Note that we currently render the entire blur effect in logical
+    // coordinates - this means that when using high DPI screens the underlying
+    // texture will be low DPI. This isn't really visible since we're blurring
+    // anyway.
+    const auto screenSize = screen ? screen->geometry().size() : effects->virtualScreenSize();
+
+    if (auto it = m_screenData.find(screen); it != m_screenData.end()) {
+        const auto &texture = it->second.renderTargetTextures.front();
+        if (texture->internalFormat() == textureFormat && texture->size() == screenSize) {
+            return true;
+        }
+    }
     ScreenData data;
     /* Reserve memory for:
      *  - The original sized texture (1)
@@ -148,36 +180,6 @@ void BlurEffect::updateTexture(EffectScreen *screen)
     data.renderTargets.reserve(m_downSampleIterations + 2);
     data.renderTargetTextures.reserve(m_downSampleIterations + 2);
 
-    GLenum textureFormat = GL_RGBA8;
-
-    // Check the color encoding of the default framebuffer
-    if (!GLPlatform::instance()->isGLES()) {
-        GLuint prevFbo = 0;
-        glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, reinterpret_cast<GLint *>(&prevFbo));
-
-        if (prevFbo != 0) {
-            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-        }
-
-        GLenum colorEncoding = GL_LINEAR;
-        glGetFramebufferAttachmentParameteriv(GL_DRAW_FRAMEBUFFER, GL_BACK_LEFT,
-                                              GL_FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING,
-                                              reinterpret_cast<GLint *>(&colorEncoding));
-
-        if (prevFbo != 0) {
-            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, prevFbo);
-        }
-
-        if (colorEncoding == GL_SRGB) {
-            textureFormat = GL_SRGB8_ALPHA8;
-        }
-    }
-
-    // Note that we currently render the entire blur effect in logical
-    // coordinates - this means that when using high DPI screens the underlying
-    // texture will be low DPI. This isn't really visible since we're blurring
-    // anyway.
-    const auto screenSize = screen ? screen->geometry().size() : effects->virtualScreenSize();
     for (int i = 0; i <= m_downSampleIterations; i++) {
         data.renderTargetTextures.push_back(std::make_unique<GLTexture>(textureFormat, screenSize / (1 << i)));
         data.renderTargetTextures.back()->setFilter(GL_LINEAR);
@@ -197,7 +199,7 @@ void BlurEffect::updateTexture(EffectScreen *screen)
         return fbo->valid();
     });
     if (!renderTargetsValid) {
-        return;
+        return false;
     }
 
     // Prepare the stack for the rendering
@@ -217,6 +219,7 @@ void BlurEffect::updateTexture(EffectScreen *screen)
     data.renderTargetStack.push(data.renderTargets.front().get());
 
     m_screenData[screen] = std::move(data);
+    return true;
 }
 
 void BlurEffect::initBlurStrengthValues()
@@ -290,14 +293,6 @@ void BlurEffect::reconfigure(ReconfigureFlags flags)
     m_scalingFactor = std::max(1.0, QGuiApplication::primaryScreen()->logicalDotsPerInch() / 96.0);
     // Invalidate noise texture
     m_noiseTexture.reset();
-
-    if (effects->waylandDisplay()) {
-        for (const auto screen : effects->screens()) {
-            updateTexture(screen);
-        }
-    } else {
-        updateTexture(nullptr);
-    }
 
     // Update all windows for the blur to take effect
     effects->addRepaintFull();
@@ -609,7 +604,7 @@ void BlurEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::
 
 bool BlurEffect::shouldBlur(const EffectWindow *w, int mask, const WindowPaintData &data) const
 {
-    if (m_screenData.empty() || !m_shader || !m_shader->isValid()) {
+    if (!m_shader || !m_shader->isValid()) {
         return false;
     }
 
@@ -634,6 +629,9 @@ bool BlurEffect::shouldBlur(const EffectWindow *w, int mask, const WindowPaintDa
 void BlurEffect::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data)
 {
     if (shouldBlur(w, mask, data)) {
+        if (!updateTexture(m_currentScreen, renderTarget)) {
+            return;
+        }
         const QRect screen = viewport.renderRect().toRect();
         QRegion shape = blurRegion(w).translated(w->pos().toPoint());
 

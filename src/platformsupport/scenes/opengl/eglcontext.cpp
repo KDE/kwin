@@ -186,11 +186,29 @@ bool EglContext::isValid() const
     return EGL_NO_CONTEXT;
 }
 
+static GLint glFormatForDrmFormat(uint32_t format)
+{
+    switch (format) {
+    case DRM_FORMAT_ARGB16161616:
+        return GL_RGBA16;
+    case DRM_FORMAT_ARGB16161616F:
+        return GL_RGBA16F;
+    case DRM_FORMAT_ARGB2101010:
+    case DRM_FORMAT_XRGB2101010:
+        return GL_RGB10_A2;
+    case DRM_FORMAT_ARGB8888:
+    case DRM_FORMAT_XRGB8888:
+    case DRM_FORMAT_ABGR8888:
+    default:
+        return GL_RGBA8;
+    }
+};
+
 std::shared_ptr<GLTexture> EglContext::importDmaBufAsTexture(const DmaBufAttributes &attributes) const
 {
     EGLImageKHR image = m_display->importDmaBufAsImage(attributes);
     if (image != EGL_NO_IMAGE_KHR) {
-        return std::make_shared<EGLImageTexture>(m_display->handle(), image, GL_RGBA8, QSize(attributes.width, attributes.height));
+        return std::make_shared<EGLImageTexture>(m_display->handle(), image, glFormatForDrmFormat(attributes.format), QSize(attributes.width, attributes.height));
     } else {
         qCWarning(KWIN_OPENGL) << "Failed to record frame: Error creating EGLImageKHR - " << getEglErrorString();
         return nullptr;

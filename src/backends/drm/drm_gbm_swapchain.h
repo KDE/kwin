@@ -32,6 +32,7 @@ public:
 
     std::pair<std::shared_ptr<GbmBuffer>, QRegion> acquire();
     void damage(const QRegion &damage);
+    void resetDamage();
     void releaseBuffer(GbmBuffer *buffer);
 
     DrmGpu *gpu() const;

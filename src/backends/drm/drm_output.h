@@ -60,7 +60,8 @@ public:
     void leaseEnded();
 
     bool setGammaRamp(const std::shared_ptr<ColorTransformation> &transformation) override;
-    bool setCTM(const QMatrix3x3 &ctm) override;
+    bool setChannelFactors(const QVector3D &rgb) override;
+    QVector3D channelFactors() const;
 
 private:
     bool setDrmDpmsMode(DpmsMode mode);
@@ -80,6 +81,7 @@ private:
         QPointer<CursorSource> source;
         QPointF position;
     } m_cursor;
+    QVector3D m_channelFactors = {1, 1, 1};
 };
 
 }

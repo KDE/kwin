@@ -60,7 +60,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::beginFrame()
     m_scanoutBuffer.reset();
     m_dmabufFeedback.renderingSurface();
 
-    return m_surface.startRendering(m_pipeline->mode()->size(), drmToTextureRotation(m_pipeline) | TextureTransform::MirrorY, m_pipeline->formats());
+    return m_surface.startRendering(m_pipeline->mode()->size(), drmToTextureRotation(m_pipeline) | TextureTransform::MirrorY, m_pipeline->formats(), Colorspace(m_pipeline->colorimetry(), m_pipeline->transferFunction()), m_pipeline->output()->sdrBrightness(), m_pipeline->output()->channelFactors());
 }
 
 bool EglGbmLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
@@ -98,6 +98,10 @@ bool EglGbmLayer::scanout(SurfaceItem *surfaceItem)
     static bool valid;
     static const bool directScanoutDisabled = qEnvironmentVariableIntValue("KWIN_DRM_NO_DIRECT_SCANOUT", &valid) == 1 && valid;
     if (directScanoutDisabled) {
+        return false;
+    }
+    // TODO use GAMMA_LUT, CTM and DEGAMMA_LUT to allow direct scanout with HDR
+    if (m_pipeline->colorimetry() != NamedColorimetry::BT709 || m_pipeline->transferFunction() != NamedTransferFunction::sRGB) {
         return false;
     }
 

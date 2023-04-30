@@ -10,6 +10,7 @@
 // KWin
 #include "libkwineffects/kwingltexture.h"
 #include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/rendertarget.h"
 #include "libkwineffects/renderviewport.h"
 // KDE
 #include <Plasma/Svg>
@@ -80,7 +81,8 @@ void ScreenEdgeEffect::paintScreen(const RenderTarget &renderTarget, const Rende
             GLTexture *texture = glow->texture.get();
             glEnable(GL_BLEND);
             glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-            ShaderBinder binder(ShaderTrait::MapTexture | ShaderTrait::Modulate);
+            ShaderBinder binder(ShaderTrait::MapTexture | ShaderTrait::Modulate | ShaderTrait::TransformColorspace);
+            binder.shader()->setColorspaceUniforms(Colorspace::sRGB, renderTarget);
             const QVector4D constant(opacity, opacity, opacity, opacity);
             binder.shader()->setUniform(GLShader::ModulationConstant, constant);
             const auto scale = viewport.scale();

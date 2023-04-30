@@ -283,7 +283,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
 
     const size_t size = totalVertexCount * sizeof(GLVertex2D);
 
-    ShaderTraits shaderTraits = ShaderTrait::MapTexture;
+    ShaderTraits shaderTraits = ShaderTrait::MapTexture | ShaderTrait::TransformColorspace;
 
     if (data.brightness() != 1.0) {
         shaderTraits |= ShaderTrait::Modulate;
@@ -322,6 +322,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
 
     GLShader *shader = ShaderManager::instance()->pushShader(shaderTraits);
     shader->setUniform(GLShader::Saturation, data.saturation());
+    shader->setColorspaceUniforms(Colorspace::sRGB, renderTarget);
 
     if (renderContext.hardwareClipping) {
         glEnable(GL_SCISSOR_TEST);

@@ -11,6 +11,7 @@
 // KConfigSkeleton
 #include "mouseclickconfig.h"
 
+#include "libkwineffects/rendertarget.h"
 #include "libkwineffects/renderviewport.h"
 
 #include <QAction>
@@ -101,7 +102,7 @@ void MouseClickEffect::paintScreen(const RenderTarget &renderTarget, const Rende
     effects->paintScreen(renderTarget, viewport, mask, region, screen);
 
     if (effects->isOpenGLCompositing()) {
-        paintScreenSetupGl(viewport.projectionMatrix());
+        paintScreenSetupGl(renderTarget, viewport.projectionMatrix());
     }
     for (const auto &click : m_clicks) {
         for (int i = 0; i < m_ringCount; ++i) {
@@ -301,10 +302,11 @@ void MouseClickEffect::drawCircleQPainter(const QColor &color, float cx, float c
     painter->restore();
 }
 
-void MouseClickEffect::paintScreenSetupGl(const QMatrix4x4 &projectionMatrix)
+void MouseClickEffect::paintScreenSetupGl(const RenderTarget &renderTarget, const QMatrix4x4 &projectionMatrix)
 {
-    GLShader *shader = ShaderManager::instance()->pushShader(ShaderTrait::UniformColor);
+    GLShader *shader = ShaderManager::instance()->pushShader(ShaderTrait::UniformColor | ShaderTrait::TransformColorspace);
     shader->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix);
+    shader->setColorspaceUniforms(Colorspace::sRGB, renderTarget);
 
     glLineWidth(m_lineWidth);
     glEnable(GL_BLEND);

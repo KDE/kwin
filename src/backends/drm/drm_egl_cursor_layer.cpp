@@ -10,6 +10,7 @@
 #include "drm_buffer.h"
 #include "drm_egl_backend.h"
 #include "drm_gpu.h"
+#include "drm_output.h"
 #include "drm_pipeline.h"
 
 #include <gbm.h>
@@ -45,7 +46,7 @@ EglGbmCursorLayer::EglGbmCursorLayer(EglGbmBackend *eglBackend, DrmPipeline *pip
 
 std::optional<OutputLayerBeginFrameInfo> EglGbmCursorLayer::beginFrame()
 {
-    return m_surface.startRendering(m_pipeline->gpu()->cursorSize(), drmToTextureRotation(m_pipeline) | TextureTransform::MirrorY, m_pipeline->cursorFormats());
+    return m_surface.startRendering(m_pipeline->gpu()->cursorSize(), drmToTextureRotation(m_pipeline) | TextureTransform::MirrorY, m_pipeline->cursorFormats(), Colorspace(m_pipeline->colorimetry(), m_pipeline->transferFunction()), m_pipeline->output()->sdrBrightness(), m_pipeline->output()->channelFactors());
 }
 
 bool EglGbmCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)

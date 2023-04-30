@@ -150,8 +150,9 @@ void OffscreenData::setVertexSnappingMode(RenderGeometry::VertexSnappingMode mod
 void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, const QRegion &region,
                           const WindowPaintData &data, const WindowQuadList &quads)
 {
-    GLShader *shader = m_shader ? m_shader : ShaderManager::instance()->shader(ShaderTrait::MapTexture | ShaderTrait::Modulate | ShaderTrait::AdjustSaturation);
+    GLShader *shader = m_shader ? m_shader : ShaderManager::instance()->shader(ShaderTrait::MapTexture | ShaderTrait::Modulate | ShaderTrait::AdjustSaturation | ShaderTrait::TransformColorspace);
     ShaderBinder binder(shader);
+    shader->setColorspaceUniforms(Colorspace::sRGB, renderTarget);
 
     const double scale = viewport.scale();
 

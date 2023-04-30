@@ -72,6 +72,11 @@ void GbmSwapchain::damage(const QRegion &damage)
     m_damageJournal.add(damage);
 }
 
+void GbmSwapchain::resetDamage()
+{
+    m_damageJournal.clear();
+}
+
 void GbmSwapchain::releaseBuffer(GbmBuffer *buffer)
 {
     if (m_buffers.size() < 3) {
