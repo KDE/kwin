@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-29 02:19+0000\n"
-"PO-Revision-Date: 2023-04-23 16:49+0530\n"
+"PO-Revision-Date: 2023-04-30 21:30+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -37,9 +37,9 @@ msgid "Press right control to ungrab pointer"
 msgstr "சுட்டிக்குறியை விடுவிக்க வலது Ctrl விசையை அழுத்தவும்"
 
 #: backends/wayland/wayland_output.cpp:297
-#, fuzzy, kde-format
+#, kde-format
 msgid "Press right control key to grab pointer"
-msgstr "சுட்டிக்குறியை ?? வலது Ctrl விசையை அழுத்தவும்"
+msgstr "சுட்டிக்குறியை கைபற்ற வலது Ctrl விசையை அழுத்தவும்"
 
 #: backends/wayland/wayland_output.cpp:301
 #, kde-format
@@ -64,9 +64,9 @@ msgid "Press right control to ungrab input"
 msgstr "உள்ளீட்டை விடுவிக்க வலது Ctrl விசையை அழுத்தவும்"
 
 #: backends/x11/windowed/x11_windowed_backend.cpp:515
-#, fuzzy, kde-format
+#, kde-format
 msgid "Press right control key to grab input"
-msgstr "உள்ளீட்டை ?? வலது Ctrl விசையை அழுத்தவும்"
+msgstr "உள்ளீட்டை கைபற்ற வலது Ctrl விசையை அழுத்தவும்"
 
 #: backends/x11/windowed/x11_windowed_backend.cpp:516
 #, kde-format
@@ -1089,7 +1089,7 @@ msgstr "நிறுத்த வேண்டிய செயலியின் 
 #: helpers/killer/killer.cpp:33
 #, kde-format
 msgid "pid"
-msgstr ""
+msgstr "பணியெண்"
 
 #: helpers/killer/killer.cpp:35
 #, kde-format
@@ -1099,7 +1099,7 @@ msgstr "செயலி இயங்கும் கணினியின் ப
 #: helpers/killer/killer.cpp:35
 #, kde-format
 msgid "hostname"
-msgstr ""
+msgstr "புரவன்பெயர்"
 
 # Caption = title?
 #: helpers/killer/killer.cpp:37
@@ -1110,7 +1110,7 @@ msgstr "நிறுத்த வேண்டிய சாளரத்தின�
 #: helpers/killer/killer.cpp:37
 #, kde-format
 msgid "caption"
-msgstr ""
+msgstr "தலைப்பு"
 
 #: helpers/killer/killer.cpp:39
 #, kde-format
@@ -1120,7 +1120,7 @@ msgstr "நிறுத்த வேண்டிய செயலியின் 
 #: helpers/killer/killer.cpp:39
 #, kde-format
 msgid "name"
-msgstr ""
+msgstr "பெயர்"
 
 #: helpers/killer/killer.cpp:41
 #, kde-format
@@ -1140,7 +1140,7 @@ msgstr "நிறுத்துமாறு பயனர் கோரிய ந
 #: helpers/killer/killer.cpp:43
 #, kde-format
 msgid "time"
-msgstr ""
+msgstr "நேரம்"
 
 #: helpers/killer/killer.cpp:45
 #, kde-format
