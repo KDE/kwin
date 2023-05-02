@@ -12,6 +12,7 @@
 #include "fractionalscale_v1_interface_p.h"
 #include "idleinhibit_v1_interface_p.h"
 #include "linuxdmabufv1clientbuffer.h"
+#include "output_interface.h"
 #include "pointerconstraints_v1_interface_p.h"
 #include "region_interface_p.h"
 #include "subcompositor_interface.h"

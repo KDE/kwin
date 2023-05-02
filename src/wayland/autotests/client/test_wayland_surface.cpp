@@ -11,6 +11,7 @@
 #include "wayland/compositor_interface.h"
 #include "wayland/display.h"
 #include "wayland/idleinhibit_v1_interface.h"
+#include "wayland/output_interface.h"
 #include "wayland/shmclientbuffer.h"
 #include "wayland/surface_interface.h"
 

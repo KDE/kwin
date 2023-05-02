@@ -6,6 +6,7 @@
 
 #include "layershell_v1_interface.h"
 #include "display.h"
+#include "output_interface.h"
 #include "surface_interface.h"
 #include "surfacerole_p.h"
 #include "utils/common.h"

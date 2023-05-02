@@ -5,6 +5,7 @@
 */
 #include "plasmawindowmanagement_interface.h"
 #include "display.h"
+#include "output_interface.h"
 #include "plasmavirtualdesktop_interface.h"
 #include "surface_interface.h"
 #include "utils/common.h"

@@ -7,12 +7,13 @@
 #pragma once
 
 #include "core/output.h"
-#include "output_interface.h"
 
 #include <QMatrix4x4>
 #include <QObject>
 #include <QPointer>
 #include <QRegion>
+
+struct wl_resource;
 
 namespace KWin
 {
@@ -22,15 +23,17 @@ class GraphicsBuffer;
 namespace KWaylandServer
 {
 class BlurInterface;
+class ClientConnection;
 class ConfinedPointerV1Interface;
 class ContrastInterface;
 class CompositorInterface;
+class LinuxDmaBufV1Feedback;
 class LockedPointerV1Interface;
+class OutputInterface;
 class ShadowInterface;
 class SlideInterface;
 class SubSurfaceInterface;
 class SurfaceInterfacePrivate;
-class LinuxDmaBufV1Feedback;
 
 enum class PresentationHint {
     VSync,

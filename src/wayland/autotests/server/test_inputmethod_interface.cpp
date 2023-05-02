@@ -15,6 +15,7 @@
 #include "wayland/compositor_interface.h"
 #include "wayland/display.h"
 #include "wayland/inputmethod_v1_interface.h"
+#include "wayland/output_interface.h"
 #include "wayland/seat_interface.h"
 
 #include "KWayland/Client/compositor.h"
