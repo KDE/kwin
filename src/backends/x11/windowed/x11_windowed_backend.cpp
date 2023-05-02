@@ -669,6 +669,13 @@ void X11WindowedBackend::handleXinputEvent(xcb_ge_generic_event_t *ge)
 void X11WindowedBackend::handlePresentEvent(xcb_ge_generic_event_t *ge)
 {
     switch (ge->event_type) {
+    case XCB_PRESENT_EVENT_IDLE_NOTIFY: {
+        xcb_present_idle_notify_event_t *idleNotify = reinterpret_cast<xcb_present_idle_notify_event_t *>(ge);
+        if (X11WindowedOutput *output = findOutput(idleNotify->window)) {
+            output->handlePresentIdleNotify(idleNotify);
+        }
+        break;
+    }
     case XCB_PRESENT_EVENT_COMPLETE_NOTIFY: {
         xcb_present_complete_notify_event_t *completeNotify = reinterpret_cast<xcb_present_complete_notify_event_t *>(ge);
         if (X11WindowedOutput *output = findOutput(completeNotify->window)) {

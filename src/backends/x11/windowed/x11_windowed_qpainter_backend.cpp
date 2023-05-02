@@ -18,7 +18,6 @@
 #include <string.h>
 #include <sys/mman.h>
 #include <xcb/present.h>
-#include <xcb/shm.h>
 
 namespace KWin
 {
@@ -36,24 +35,9 @@ static QImage::Format drmFormatToQImageFormat(uint32_t drmFormat)
 }
 
 X11WindowedQPainterLayerBuffer::X11WindowedQPainterLayerBuffer(ShmGraphicsBuffer *buffer, X11WindowedOutput *output)
-    : m_connection(output->backend()->connection())
-    , m_graphicsBuffer(buffer)
+    : m_graphicsBuffer(buffer)
 {
     const ShmAttributes *attributes = buffer->shmAttributes();
-
-    // xcb_shm_attach_fd() takes the ownership of the passed shm file descriptor.
-    FileDescriptor poolFileDescriptor = attributes->fd.duplicate();
-    if (!poolFileDescriptor.isValid()) {
-        qCWarning(KWIN_X11WINDOWED) << "Failed to duplicate shm file descriptor";
-        return;
-    }
-
-    xcb_shm_seg_t segment = xcb_generate_id(m_connection);
-    xcb_shm_attach_fd(m_connection, segment, poolFileDescriptor.take(), 0);
-
-    m_pixmap = xcb_generate_id(m_connection);
-    xcb_shm_create_pixmap(m_connection, m_pixmap, output->window(), attributes->size.width(), attributes->size.height(), output->depth(), segment, 0);
-    xcb_shm_detach(m_connection, segment);
 
     m_size = attributes->size.height() * attributes->stride;
     m_data = mmap(nullptr, m_size, PROT_READ | PROT_WRITE, MAP_SHARED, attributes->fd.get(), 0);
@@ -67,9 +51,6 @@ X11WindowedQPainterLayerBuffer::X11WindowedQPainterLayerBuffer(ShmGraphicsBuffer
 
 X11WindowedQPainterLayerBuffer::~X11WindowedQPainterLayerBuffer()
 {
-    if (m_pixmap != XCB_PIXMAP_NONE) {
-        xcb_free_pixmap(m_connection, m_pixmap);
-    }
     if (m_data) {
         munmap(m_data, m_size);
     }
@@ -80,11 +61,6 @@ X11WindowedQPainterLayerBuffer::~X11WindowedQPainterLayerBuffer()
 ShmGraphicsBuffer *X11WindowedQPainterLayerBuffer::graphicsBuffer() const
 {
     return m_graphicsBuffer;
-}
-
-xcb_pixmap_t X11WindowedQPainterLayerBuffer::pixmap() const
-{
-    return m_pixmap;
 }
 
 QImage *X11WindowedQPainterLayerBuffer::view() const
@@ -158,6 +134,9 @@ bool X11WindowedQPainterPrimaryLayer::endFrame(const QRegion &renderedRegion, co
 
 void X11WindowedQPainterPrimaryLayer::present()
 {
+    xcb_pixmap_t pixmap = m_output->importBuffer(m_current->graphicsBuffer());
+    Q_ASSERT(pixmap != XCB_PIXMAP_NONE);
+
     xcb_xfixes_region_t valid = 0;
     xcb_xfixes_region_t update = 0;
     uint32_t serial = 0;
@@ -166,7 +145,7 @@ void X11WindowedQPainterPrimaryLayer::present()
 
     xcb_present_pixmap(m_output->backend()->connection(),
                        m_output->window(),
-                       m_current->pixmap(),
+                       pixmap,
                        serial,
                        valid,
                        update,

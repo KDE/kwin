@@ -24,17 +24,15 @@ class X11WindowedEglBackend;
 class X11WindowedEglLayerBuffer
 {
 public:
-    X11WindowedEglLayerBuffer(GbmGraphicsBuffer *graphicsBuffers, uint32_t depth, uint32_t bpp, xcb_drawable_t drawable, X11WindowedEglBackend *backend);
+    X11WindowedEglLayerBuffer(GbmGraphicsBuffer *graphicsBuffers, X11WindowedEglBackend *backend);
     ~X11WindowedEglLayerBuffer();
 
-    xcb_pixmap_t pixmap() const;
+    GraphicsBuffer *graphicsBuffer() const;
     std::shared_ptr<GLTexture> texture() const;
     GLFramebuffer *framebuffer() const;
     int age() const;
 
 private:
-    X11WindowedEglBackend *m_backend;
-    xcb_pixmap_t m_pixmap = XCB_PIXMAP_NONE;
     GbmGraphicsBuffer *m_graphicsBuffer;
     std::unique_ptr<GLFramebuffer> m_framebuffer;
     std::shared_ptr<GLTexture> m_texture;
@@ -45,7 +43,7 @@ private:
 class X11WindowedEglLayerSwapchain
 {
 public:
-    X11WindowedEglLayerSwapchain(const QSize &size, uint32_t format, uint32_t depth, uint32_t bpp, const QVector<uint64_t> &modifiers, xcb_drawable_t drawable, X11WindowedEglBackend *backend);
+    X11WindowedEglLayerSwapchain(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, X11WindowedEglBackend *backend);
     ~X11WindowedEglLayerSwapchain();
 
     QSize size() const;
@@ -54,9 +52,12 @@ public:
     void release(std::shared_ptr<X11WindowedEglLayerBuffer> buffer);
 
 private:
+    X11WindowedEglBackend *m_backend;
+    std::unique_ptr<GbmGraphicsBufferAllocator> m_allocator;
     QSize m_size;
+    uint32_t m_format;
+    QVector<uint64_t> m_modifiers;
     QVector<std::shared_ptr<X11WindowedEglLayerBuffer>> m_buffers;
-    int m_index = 0;
 };
 
 class X11WindowedEglPrimaryLayer : public OutputLayer

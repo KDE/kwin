@@ -15,6 +15,8 @@
 #include <QSize>
 #include <QString>
 
+#include <unordered_map>
+
 #include <xcb/xcb.h>
 #include <xcb/present.h>
 
@@ -23,8 +25,36 @@ class NETWinInfo;
 namespace KWin
 {
 
+class GraphicsBuffer;
 class X11WindowedBackend;
 class X11WindowedOutput;
+
+struct DmaBufAttributes;
+struct ShmAttributes;
+
+class X11WindowedBuffer : public QObject
+{
+    Q_OBJECT
+
+public:
+    X11WindowedBuffer(X11WindowedOutput *output, xcb_pixmap_t pixmap, GraphicsBuffer *buffer);
+    ~X11WindowedBuffer() override;
+
+    GraphicsBuffer *buffer() const;
+    xcb_pixmap_t pixmap() const;
+
+    void lock();
+    void unlock();
+
+Q_SIGNALS:
+    void defunct();
+
+private:
+    X11WindowedOutput *m_output;
+    GraphicsBuffer *m_buffer;
+    xcb_pixmap_t m_pixmap;
+    bool m_locked = false;
+};
 
 class X11WindowedCursor
 {
@@ -59,6 +89,8 @@ public:
     xcb_window_t window() const;
     int depth() const;
 
+    xcb_pixmap_t importBuffer(GraphicsBuffer *buffer);
+
     QPoint internalPosition() const;
     QPoint hostPosition() const;
     void setHostPosition(const QPoint &pos);
@@ -80,15 +112,20 @@ public:
     void updateEnabled(bool enabled);
 
     void handlePresentCompleteNotify(xcb_present_complete_notify_event_t *event);
+    void handlePresentIdleNotify(xcb_present_idle_notify_event_t *event);
 
 private:
     void initXInputForWindow();
+
+    xcb_pixmap_t importDmaBufBuffer(const DmaBufAttributes *attributes);
+    xcb_pixmap_t importShmBuffer(const ShmAttributes *attributes);
 
     xcb_window_t m_window = XCB_WINDOW_NONE;
     xcb_present_event_t m_presentEvent = XCB_NONE;
     std::unique_ptr<NETWinInfo> m_winInfo;
     std::unique_ptr<RenderLoop> m_renderLoop;
     std::unique_ptr<X11WindowedCursor> m_cursor;
+    std::unordered_map<GraphicsBuffer *, std::unique_ptr<X11WindowedBuffer>> m_buffers;
     QPoint m_hostPosition;
     QRegion m_exposedArea;
 

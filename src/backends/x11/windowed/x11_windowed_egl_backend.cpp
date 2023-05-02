@@ -15,42 +15,14 @@
 #include "x11_windowed_output.h"
 
 #include <drm_fourcc.h>
-#include <xcb/dri3.h>
 
 namespace KWin
 {
 
-X11WindowedEglLayerBuffer::X11WindowedEglLayerBuffer(GbmGraphicsBuffer *graphicsBuffer, uint32_t depth, uint32_t bpp, xcb_drawable_t drawable, X11WindowedEglBackend *backend)
-    : m_backend(backend)
-    , m_graphicsBuffer(graphicsBuffer)
+X11WindowedEglLayerBuffer::X11WindowedEglLayerBuffer(GbmGraphicsBuffer *graphicsBuffer, X11WindowedEglBackend *backend)
+    : m_graphicsBuffer(graphicsBuffer)
 {
-    X11WindowedBackend *x11Backend = backend->backend();
-    const DmaBufAttributes *attributes = graphicsBuffer->dmabufAttributes();
-
-    m_pixmap = xcb_generate_id(x11Backend->connection());
-    if (x11Backend->driMajorVersion() >= 1 || x11Backend->driMinorVersion() >= 2) {
-        // xcb_dri3_pixmap_from_buffers() takes the ownership of the file descriptors.
-        int fds[4] = {
-            attributes->fd[0].duplicate().take(),
-            attributes->fd[1].duplicate().take(),
-            attributes->fd[2].duplicate().take(),
-            attributes->fd[3].duplicate().take(),
-        };
-        xcb_dri3_pixmap_from_buffers(x11Backend->connection(), m_pixmap, drawable, attributes->planeCount,
-                                     attributes->width, attributes->height,
-                                     attributes->pitch[0], attributes->offset[0],
-                                     attributes->pitch[1], attributes->offset[1],
-                                     attributes->pitch[2], attributes->offset[2],
-                                     attributes->pitch[3], attributes->offset[3],
-                                     depth, bpp, attributes->modifier, fds);
-    } else {
-        // xcb_dri3_pixmap_from_buffer() takes the ownership of the file descriptor.
-        xcb_dri3_pixmap_from_buffer(x11Backend->connection(), m_pixmap, drawable,
-                                    attributes->height * attributes->pitch[0], attributes->width, attributes->height,
-                                    attributes->pitch[0], depth, bpp, attributes->fd[0].duplicate().take());
-    }
-
-    m_texture = backend->importDmaBufAsTexture(*attributes);
+    m_texture = backend->importDmaBufAsTexture(*graphicsBuffer->dmabufAttributes());
     m_framebuffer = std::make_unique<GLFramebuffer>(m_texture.get());
 }
 
@@ -58,14 +30,12 @@ X11WindowedEglLayerBuffer::~X11WindowedEglLayerBuffer()
 {
     m_texture.reset();
     m_framebuffer.reset();
-
-    xcb_free_pixmap(m_backend->backend()->connection(), m_pixmap);
     m_graphicsBuffer->drop();
 }
 
-xcb_pixmap_t X11WindowedEglLayerBuffer::pixmap() const
+GraphicsBuffer *X11WindowedEglLayerBuffer::graphicsBuffer() const
 {
-    return m_pixmap;
+    return m_graphicsBuffer;
 }
 
 std::shared_ptr<GLTexture> X11WindowedEglLayerBuffer::texture() const
@@ -83,19 +53,13 @@ int X11WindowedEglLayerBuffer::age() const
     return m_age;
 }
 
-X11WindowedEglLayerSwapchain::X11WindowedEglLayerSwapchain(const QSize &size, uint32_t format, uint32_t depth, uint32_t bpp, const QVector<uint64_t> &modifiers, xcb_drawable_t drawable, X11WindowedEglBackend *backend)
-    : m_size(size)
+X11WindowedEglLayerSwapchain::X11WindowedEglLayerSwapchain(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, X11WindowedEglBackend *backend)
+    : m_backend(backend)
+    , m_allocator(new GbmGraphicsBufferAllocator(backend->backend()->gbmDevice()))
+    , m_size(size)
+    , m_format(format)
+    , m_modifiers(modifiers)
 {
-    GbmGraphicsBufferAllocator allocator(backend->backend()->gbmDevice());
-
-    for (int i = 0; i < 2; ++i) {
-        GbmGraphicsBuffer *graphicsBuffer = allocator.allocate(size, format, modifiers);
-        if (!graphicsBuffer) {
-            qCCritical(KWIN_X11WINDOWED) << "Failed to allocate a buffer for an output layer";
-            continue;
-        }
-        m_buffers.append(std::make_shared<X11WindowedEglLayerBuffer>(graphicsBuffer, depth, bpp, drawable, backend));
-    }
 }
 
 X11WindowedEglLayerSwapchain::~X11WindowedEglLayerSwapchain()
@@ -109,14 +73,26 @@ QSize X11WindowedEglLayerSwapchain::size() const
 
 std::shared_ptr<X11WindowedEglLayerBuffer> X11WindowedEglLayerSwapchain::acquire()
 {
-    m_index = (m_index + 1) % m_buffers.count();
-    return m_buffers[m_index];
+    for (const auto &buffer : std::as_const(m_buffers)) {
+        if (!buffer->graphicsBuffer()->isReferenced()) {
+            return buffer;
+        }
+    }
+
+    GbmGraphicsBuffer *graphicsBuffer = m_allocator->allocate(m_size, m_format, m_modifiers);
+    if (!graphicsBuffer) {
+        qCWarning(KWIN_X11WINDOWED) << "Failed to allocate layer swapchain buffer";
+        return nullptr;
+    }
+
+    auto buffer = std::make_shared<X11WindowedEglLayerBuffer>(graphicsBuffer, m_backend);
+    m_buffers.append(buffer);
+
+    return buffer;
 }
 
 void X11WindowedEglLayerSwapchain::release(std::shared_ptr<X11WindowedEglLayerBuffer> buffer)
 {
-    Q_ASSERT(m_buffers[m_index] == buffer);
-
     for (qsizetype i = 0; i < m_buffers.count(); ++i) {
         if (m_buffers[i] == buffer) {
             m_buffers[i]->m_age = 1;
@@ -143,7 +119,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglPrimaryLayer::beginFrame(
         if (!formatTable.contains(format)) {
             return std::nullopt;
         }
-        m_swapchain = std::make_unique<X11WindowedEglLayerSwapchain>(bufferSize, format, 24, 32, formatTable[format], m_output->window(), m_backend);
+        m_swapchain = std::make_unique<X11WindowedEglLayerSwapchain>(bufferSize, format, formatTable[format], m_backend);
     }
 
     m_buffer = m_swapchain->acquire();
@@ -168,6 +144,9 @@ bool X11WindowedEglPrimaryLayer::endFrame(const QRegion &renderedRegion, const Q
 
 void X11WindowedEglPrimaryLayer::present()
 {
+    xcb_pixmap_t pixmap = m_output->importBuffer(m_buffer->graphicsBuffer());
+    Q_ASSERT(pixmap != XCB_PIXMAP_NONE);
+
     xcb_xfixes_region_t valid = 0;
     xcb_xfixes_region_t update = 0;
     uint32_t serial = 0;
@@ -176,7 +155,7 @@ void X11WindowedEglPrimaryLayer::present()
 
     xcb_present_pixmap(m_output->backend()->connection(),
                        m_output->window(),
-                       m_buffer->pixmap(),
+                       pixmap,
                        serial,
                        valid,
                        update,

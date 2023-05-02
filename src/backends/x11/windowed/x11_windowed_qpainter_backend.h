@@ -17,8 +17,6 @@
 
 #include <memory>
 
-#include <xcb/xcb.h>
-
 namespace KWin
 {
 
@@ -34,16 +32,13 @@ public:
     ~X11WindowedQPainterLayerBuffer();
 
     ShmGraphicsBuffer *graphicsBuffer() const;
-    xcb_pixmap_t pixmap() const;
     QImage *view() const;
 
 private:
-    xcb_connection_t *m_connection;
     ShmGraphicsBuffer *m_graphicsBuffer;
     void *m_data = nullptr;
     int m_size = 0;
     std::unique_ptr<QImage> m_view;
-    xcb_pixmap_t m_pixmap = XCB_PIXMAP_NONE;
 };
 
 class X11WindowedQPainterLayerSwapchain
