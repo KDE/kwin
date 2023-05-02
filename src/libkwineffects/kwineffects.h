@@ -2701,6 +2701,7 @@ class KWINEFFECTS_EXPORT EffectWindowVisibleRef
 public:
     EffectWindowVisibleRef()
         : m_window(nullptr)
+        , m_reason(0)
     {
     }
 
