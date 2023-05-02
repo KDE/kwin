@@ -1,2 +1,2 @@
 integrationTest(NAME testScriptingScreenEdge SRCS screenedge_test.cpp)
-integrationTest(WAYLAND_ONLY NAME testMinimizeAllScript SRCS minimizeall_test.cpp)
+integrationTest(NAME testMinimizeAllScript SRCS minimizeall_test.cpp)
