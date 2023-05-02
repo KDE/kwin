@@ -87,23 +87,21 @@ target_link_libraries(testXcbWrapper
 add_test(NAME kwin-testXcbWrapper COMMAND testXcbWrapper)
 ecm_mark_as_test(testXcbWrapper)
 
-if (XCB_ICCCM_FOUND)
-    add_executable(testXcbSizeHints test_xcb_size_hints.cpp xcb_scaling_mock.cpp)
-    set_target_properties(testXcbSizeHints PROPERTIES COMPILE_DEFINITIONS "NO_NONE_WINDOW")
-    target_link_libraries(testXcbSizeHints
-        Qt::GuiPrivate
-        Qt::Test
-        Qt::Widgets
+add_executable(testXcbSizeHints test_xcb_size_hints.cpp xcb_scaling_mock.cpp)
+set_target_properties(testXcbSizeHints PROPERTIES COMPILE_DEFINITIONS "NO_NONE_WINDOW")
+target_link_libraries(testXcbSizeHints
+    Qt::GuiPrivate
+    Qt::Test
+    Qt::Widgets
 
-        KF6::ConfigCore
-        KF6::WindowSystem
+    KF6::ConfigCore
+    KF6::WindowSystem
 
-        XCB::ICCCM
-        XCB::XCB
-    )
-    add_test(NAME kwin-testXcbSizeHints COMMAND testXcbSizeHints)
-    ecm_mark_as_test(testXcbSizeHints)
-endif()
+    XCB::ICCCM
+    XCB::XCB
+)
+add_test(NAME kwin-testXcbSizeHints COMMAND testXcbSizeHints)
+ecm_mark_as_test(testXcbSizeHints)
 
 ########################################################
 # Test XcbWindow

@@ -1,8 +1,6 @@
-if (XCB_ICCCM_FOUND)
-    set(normalhintsbasesizetest_SRCS normalhintsbasesizetest.cpp)
-    add_executable(normalhintsbasesizetest ${normalhintsbasesizetest_SRCS})
-    target_link_libraries(normalhintsbasesizetest XCB::XCB XCB::ICCCM KF6::WindowSystem)
-endif()
+set(normalhintsbasesizetest_SRCS normalhintsbasesizetest.cpp)
+add_executable(normalhintsbasesizetest ${normalhintsbasesizetest_SRCS})
+target_link_libraries(normalhintsbasesizetest XCB::XCB XCB::ICCCM KF6::WindowSystem)
 
 # next target
 set(screenedgeshowtest_SRCS screenedgeshowtest.cpp)

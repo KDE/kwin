@@ -47,9 +47,7 @@
 
 #include <xcb/damage.h>
 #include <xcb/sync.h>
-#if XCB_ICCCM_FOUND
 #include <xcb/xcb_icccm.h>
-#endif
 
 #include "composite.h"
 #include "x11eventfilter.h"
