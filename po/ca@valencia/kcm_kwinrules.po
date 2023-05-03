@@ -762,13 +762,14 @@ msgid ""
 "while it's active!"
 msgstr ""
 "Quan s'utilitza, una finestra rebrà\n"
-"totes les entrades de teclat mentre siga activa, incloent-hi Alt+Tab, etc.\n"
+"totes les entrades de teclat mentre estiga activa, incloent-hi Alt+Tab, "
+"etc.\n"
 "Açò és interessant especialment per a emuladors o màquines virtuals.\n"
 "\n"
 "Avís:\n"
 "No podreu fer Alt+Tab fora de la finestra\n"
 "ni utilitzar cap altra drecera global (com Alt+F2 per a mostrar KRunner)\n"
-"mentre siga actiu!"
+"mentre estiga actiu!"
 
 #: rulesmodel.cpp:635
 #, kde-format
