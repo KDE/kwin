@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1650540 2023-04-29 02:33:27Z scripty $
+# $Id: kwin.po 1650806 2023-05-03 02:36:11Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-29 02:19+0000\n"
+"POT-Creation-Date: 2023-05-03 02:20+0000\n"
 "PO-Revision-Date: 2023-04-24 09:35+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -43,29 +43,29 @@ msgstr ""
 "roman.maurer@amis.net,gregor.rakar@kiss.si,jlp@holodeck1.com,andrejm@ubuntu."
 "si,matjaz.jeran@amis.net,miles@filmsi.net"
 
-#: backends/wayland/wayland_output.cpp:295
+#: backends/wayland/wayland_output.cpp:294
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Pritisnite desno kontrolko, da spustite kazalko"
 
-#: backends/wayland/wayland_output.cpp:297
+#: backends/wayland/wayland_output.cpp:296
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Pritisnite puščico desno da zgrabite kazalko"
 
-#: backends/wayland/wayland_output.cpp:301
+#: backends/wayland/wayland_output.cpp:300
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1 (%2)"
 msgstr "KDE Wayland Compositor %1 (%2)"
 
-#: backends/wayland/wayland_output.cpp:304
+#: backends/wayland/wayland_output.cpp:303
 #, kde-format
 msgid "- Output disabled"
 msgstr "- Output onemogočen"
 
-#: backends/wayland/wayland_output.cpp:306
+#: backends/wayland/wayland_output.cpp:305
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- Output zamegljen"

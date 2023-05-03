@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-29 02:19+0000\n"
+"POT-Creation-Date: 2023-05-03 02:20+0000\n"
 "PO-Revision-Date: 2023-04-22 18:07+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -34,29 +34,29 @@ msgstr ""
 "wolfram@steloj.de,Steffen.Pietsch@BerlinOnline.de,matthias@peick.de,"
 "cfmckee@gmail.com"
 
-#: backends/wayland/wayland_output.cpp:295
+#: backends/wayland/wayland_output.cpp:294
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Premu dekstran kontrolon por malkapti montrilon"
 
-#: backends/wayland/wayland_output.cpp:297
+#: backends/wayland/wayland_output.cpp:296
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Premu dekstran kontrolklavon por kapti montrilon"
 
-#: backends/wayland/wayland_output.cpp:301
+#: backends/wayland/wayland_output.cpp:300
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1 (%2)"
 msgstr "KDE Wayland Komponilo %1 (%2)"
 
-#: backends/wayland/wayland_output.cpp:304
+#: backends/wayland/wayland_output.cpp:303
 #, kde-format
 msgid "- Output disabled"
 msgstr "- Eligo malebligita"
 
-#: backends/wayland/wayland_output.cpp:306
+#: backends/wayland/wayland_output.cpp:305
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- Eligo malheliĝis"
