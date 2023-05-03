@@ -68,7 +68,6 @@ public:
 
 Q_SIGNALS:
     void released();
-    void dropped();
 
 protected:
     int m_refCount = 0;

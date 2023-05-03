@@ -47,7 +47,6 @@ void GraphicsBuffer::unref()
 void GraphicsBuffer::drop()
 {
     m_dropped = true;
-    Q_EMIT dropped();
 
     if (!m_refCount) {
         delete this;

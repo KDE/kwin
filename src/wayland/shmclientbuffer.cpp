@@ -58,6 +58,8 @@ void ShmClientBufferPrivate::buffer_destroy_callback(wl_listener *listener, void
     wl_shm_buffer *buffer = wl_shm_buffer_get(bufferPrivate->resource);
     wl_shm_pool *pool = wl_shm_buffer_ref_pool(buffer);
 
+    s_buffers.remove(bufferPrivate->resource);
+
     wl_list_remove(&bufferPrivate->destroyListener.listener.link);
     wl_list_init(&bufferPrivate->destroyListener.listener.link);
 
@@ -185,9 +187,6 @@ ShmClientBuffer *ShmClientBuffer::get(wl_resource *resource)
     if (wl_shm_buffer_get(resource)) {
         auto buffer = new ShmClientBuffer(resource);
         s_buffers[resource] = buffer;
-        connect(buffer, &ShmClientBuffer::dropped, [resource]() {
-            s_buffers.remove(resource);
-        });
         return buffer;
     }
 
