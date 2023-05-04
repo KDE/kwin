@@ -669,7 +669,7 @@ void PointerInputRedirection::updatePointerConstraints()
                 lock->setLocked(false);
                 m_locked = false;
                 disconnectLockedPointerAboutToBeUnboundConnection();
-                if (!(hint.x() < 0 || hint.y() < 0) && focus()) {
+                if (!(hint.x() < 0 || hint.y() < 0 || !lock->region().contains(hint.toPoint())) && focus()) {
                     processMotionAbsolute(focus()->mapFromLocal(hint), waylandServer()->seat()->timestamp());
                 }
             }
@@ -684,7 +684,7 @@ void PointerInputRedirection::updatePointerConstraints()
             // In this case the cached cursor position hint must be fetched before the resource goes away
             m_lockedPointerAboutToBeUnboundConnection = connect(lock, &KWaylandServer::LockedPointerV1Interface::aboutToBeDestroyed, this, [this, lock]() {
                 const auto hint = lock->cursorPositionHint();
-                if (hint.x() < 0 || hint.y() < 0 || !focus()) {
+                if (hint.x() < 0 || hint.y() < 0 || !lock->region().contains(hint.toPoint()) || !focus()) {
                     return;
                 }
                 auto globalHint = focus()->mapFromLocal(hint);
