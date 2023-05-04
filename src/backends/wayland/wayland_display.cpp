@@ -307,7 +307,7 @@ void WaylandDisplay::registry_global(void *data, wl_registry *registry, uint32_t
         display->m_shm = static_cast<wl_shm *>(wl_registry_bind(registry, name, &wl_shm_interface, std::min(version, 1u)));
     } else if (strcmp(interface, wl_seat_interface.name) == 0) {
         display->m_seat = std::make_unique<KWayland::Client::Seat>();
-        display->m_seat->setup(static_cast<wl_seat *>(wl_registry_bind(registry, name, &wl_seat_interface, std::min(version, 2u))));
+        display->m_seat->setup(static_cast<wl_seat *>(wl_registry_bind(registry, name, &wl_seat_interface, std::min(version, 5u))));
     } else if (strcmp(interface, xdg_wm_base_interface.name) == 0) {
         display->m_xdgShell = std::make_unique<KWayland::Client::XdgShellStable>();
         display->m_xdgShell->setup(static_cast<xdg_wm_base *>(wl_registry_bind(registry, name, &xdg_wm_base_interface, std::min(version, 1u))));
