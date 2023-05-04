@@ -194,7 +194,7 @@ void SurfaceInterfacePrivate::installPointerConstraint(LockedPointerV1Interface 
             cleanUp();
         });
     }
-    constrainsUnboundConnection = QObject::connect(lock, &LockedPointerV1Interface::destroyed, q, cleanUp);
+    constrainsUnboundConnection = QObject::connect(lock, &LockedPointerV1Interface::aboutToBeDestroyed, q, cleanUp);
     Q_EMIT q->pointerConstraintsChanged();
 }
 
@@ -222,7 +222,7 @@ void SurfaceInterfacePrivate::installPointerConstraint(ConfinedPointerV1Interfac
             cleanUp();
         });
     }
-    constrainsUnboundConnection = QObject::connect(confinement, &ConfinedPointerV1Interface::destroyed, q, cleanUp);
+    constrainsUnboundConnection = QObject::connect(confinement, &ConfinedPointerV1Interface::aboutToBeDestroyed, q, cleanUp);
     Q_EMIT q->pointerConstraintsChanged();
 }
 

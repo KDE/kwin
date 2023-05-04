@@ -687,12 +687,7 @@ void PointerInputRedirection::updatePointerConstraints()
                 if (hint.x() < 0 || hint.y() < 0 || !focus()) {
                     return;
                 }
-                auto globalHint = focus()->mapFromLocal(hint);
-
-                // When the resource finally goes away, reposition the cursor according to the hint
-                connect(lock, &KWaylandServer::LockedPointerV1Interface::destroyed, this, [this, globalHint]() {
-                    processMotionAbsolute(globalHint, waylandServer()->seat()->timestamp());
-                });
+                processMotionAbsolute(focus()->mapFromLocal(hint), waylandServer()->seat()->timestamp());
             });
             // TODO: connect to region change - is it needed at all? If the pointer is locked it's always in the region
         }

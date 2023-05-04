@@ -260,6 +260,7 @@ void ConfinedPointerV1InterfacePrivate::commit()
 
 void ConfinedPointerV1InterfacePrivate::zwp_confined_pointer_v1_destroy_resource(Resource *resource)
 {
+    Q_EMIT q->aboutToBeDestroyed();
     delete q;
 }
 

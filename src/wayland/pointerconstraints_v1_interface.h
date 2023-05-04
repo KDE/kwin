@@ -221,6 +221,8 @@ public:
     void setConfined(bool confined);
 
 Q_SIGNALS:
+    void aboutToBeDestroyed();
+
     /**
      * Emitted whenever the region changes.
      * This happens when the parent SurfaceInterface gets committed
