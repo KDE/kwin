@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-03 02:20+0000\n"
+"POT-Creation-Date: 2023-05-04 02:20+0000\n"
 "PO-Revision-Date: 2022-09-27 18:25+0700\n"
 "Last-Translator: Wantoyèk <wantoyek@gmail.com>\n"
 "Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
@@ -2412,20 +2412,20 @@ msgstr "Mode tablet"
 msgid "Ignore minimized windows:"
 msgstr "Minimalkan Jendela"
 
-#: plugins/overview/qml/DesktopBar.qml:187
+#: plugins/overview/qml/DesktopBar.qml:156
 #, fuzzy, kde-format
 #| msgid "Move to &Desktop"
 msgid "Delete Virtual Desktop"
 msgstr "Pindah ke &Desktop"
 
-#: plugins/overview/qml/DesktopBar.qml:283
+#: plugins/overview/qml/DesktopBar.qml:252
 #, fuzzy, kde-format
 #| msgctxt "Create a new desktop and add the window to that desktop"
 #| msgid "Add to &New Desktop"
 msgid "Add Virtual Desktop"
 msgstr "Tambahkan ke Desktop &Baru"
 
-#: plugins/overview/qml/main.qml:226
+#: plugins/overview/qml/main.qml:229
 #, fuzzy, kde-format
 #| msgid "X11 Unmanaged Windows"
 msgid "No matching windows"

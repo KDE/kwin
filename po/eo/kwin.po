@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-03 02:20+0000\n"
+"POT-Creation-Date: 2023-05-04 02:20+0000\n"
 "PO-Revision-Date: 2023-04-22 18:07+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -2272,17 +2272,17 @@ msgstr "Enpaĝiga reĝimo:"
 msgid "Ignore minimized windows:"
 msgstr "Ignori minimumigitajn fenestrojn:"
 
-#: plugins/overview/qml/DesktopBar.qml:187
+#: plugins/overview/qml/DesktopBar.qml:156
 #, kde-format
 msgid "Delete Virtual Desktop"
 msgstr "Forigi Virtualan Labortablo"
 
-#: plugins/overview/qml/DesktopBar.qml:283
+#: plugins/overview/qml/DesktopBar.qml:252
 #, kde-format
 msgid "Add Virtual Desktop"
 msgstr "Aldoni Virtualan Labortablon"
 
-#: plugins/overview/qml/main.qml:226
+#: plugins/overview/qml/main.qml:229
 #, kde-format
 msgid "No matching windows"
 msgstr "Neniuj kongruaj fenestroj"

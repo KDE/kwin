@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-03 02:20+0000\n"
+"POT-Creation-Date: 2023-05-04 02:20+0000\n"
 "PO-Revision-Date: 2008-12-27 14:55+0200\n"
 "Last-Translator: Ihar Hrachyshka <ihar.hrachyshka@gmail.com>\n"
 "Language-Team: Belarusian Latin <i18n@mova.org>\n"
@@ -2301,19 +2301,19 @@ msgstr ""
 msgid "Ignore minimized windows:"
 msgstr "Źminimalizuj akno"
 
-#: plugins/overview/qml/DesktopBar.qml:187
+#: plugins/overview/qml/DesktopBar.qml:156
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Delete Virtual Desktop"
 msgstr "Na &stoł"
 
-#: plugins/overview/qml/DesktopBar.qml:283
+#: plugins/overview/qml/DesktopBar.qml:252
 #, fuzzy, kde-format
 #| msgid "Show Desktop Grid"
 msgid "Add Virtual Desktop"
 msgstr "Sietka stała"
 
-#: plugins/overview/qml/main.qml:226
+#: plugins/overview/qml/main.qml:229
 #, kde-format
 msgid "No matching windows"
 msgstr ""

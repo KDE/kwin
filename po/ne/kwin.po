@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-03 02:20+0000\n"
+"POT-Creation-Date: 2023-05-04 02:20+0000\n"
 "PO-Revision-Date: 2007-11-01 14:27+0545\n"
 "Last-Translator: Shyam Krishna Bal <shyamkrishna_bal@yahoo.com>\n"
 "Language-Team: Nepali <info@mpp.org.np>\n"
@@ -2319,19 +2319,19 @@ msgstr ""
 msgid "Ignore minimized windows:"
 msgstr "सारिएको/रिसाइज गरिएको सञ्झ्याल:"
 
-#: plugins/overview/qml/DesktopBar.qml:187
+#: plugins/overview/qml/DesktopBar.qml:156
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Delete Virtual Desktop"
 msgstr "डेस्कटपमा"
 
-#: plugins/overview/qml/DesktopBar.qml:283
+#: plugins/overview/qml/DesktopBar.qml:252
 #, fuzzy, kde-format
 #| msgid "Show Desktop Grid"
 msgid "Add Virtual Desktop"
 msgstr "डेस्कटप ग्रिड देखाउनुहोस्"
 
-#: plugins/overview/qml/main.qml:226
+#: plugins/overview/qml/main.qml:229
 #, kde-format
 msgid "No matching windows"
 msgstr ""

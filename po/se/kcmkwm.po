@@ -1185,17 +1185,3 @@ msgid ""
 "activation policy and will not work. You very likely want to use <em>Focus "
 "follows mouse (mouse precedence)</em> instead!"
 msgstr ""
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Your names"
-#~ msgstr "Børre Gaup"
-
-#~ msgctxt "EMAIL OF TRANSLATORS"
-#~ msgid "Your emails"
-#~ msgstr "boerre@skolelinux.no"
-
-#~ msgid "Window Behavior Configuration Module"
-#~ msgstr "Láseláhtten stivrenmoduvla"
-
-#~ msgid "(c) 1997 - 2002 KWin and KControl Authors"
-#~ msgstr "© 1997–2002 KWin ja KControl čállit"

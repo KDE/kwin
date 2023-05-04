@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-03 02:20+0000\n"
+"POT-Creation-Date: 2023-05-04 02:20+0000\n"
 "PO-Revision-Date: 2023-04-30 21:30+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -2262,17 +2262,17 @@ msgstr "தளவமைக்கும் முறை:"
 msgid "Ignore minimized windows:"
 msgstr "ஒதுக்கப்பட்ட சாளரங்களை பொருட்படுத்தாதே:"
 
-#: plugins/overview/qml/DesktopBar.qml:187
+#: plugins/overview/qml/DesktopBar.qml:156
 #, kde-format
 msgid "Delete Virtual Desktop"
 msgstr "மெய்நிகர் பணிமேடையை நீக்கு"
 
-#: plugins/overview/qml/DesktopBar.qml:283
+#: plugins/overview/qml/DesktopBar.qml:252
 #, kde-format
 msgid "Add Virtual Desktop"
 msgstr "மெய்நிகர் பணிமேடையைச் சேர்"
 
-#: plugins/overview/qml/main.qml:226
+#: plugins/overview/qml/main.qml:229
 #, kde-format
 msgid "No matching windows"
 msgstr "எந்த சாளரமும் பொருந்தவில்லை"

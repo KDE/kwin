@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-03 02:20+0000\n"
+"POT-Creation-Date: 2023-05-04 02:20+0000\n"
 "PO-Revision-Date: 2023-04-22 10:52+0100\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
 "Language-Team: British English\n"
@@ -2263,17 +2263,17 @@ msgstr "Layout mode:"
 msgid "Ignore minimized windows:"
 msgstr "Ignore minimised windows:"
 
-#: plugins/overview/qml/DesktopBar.qml:187
+#: plugins/overview/qml/DesktopBar.qml:156
 #, kde-format
 msgid "Delete Virtual Desktop"
 msgstr "Delete Virtual Desktop"
 
-#: plugins/overview/qml/DesktopBar.qml:283
+#: plugins/overview/qml/DesktopBar.qml:252
 #, kde-format
 msgid "Add Virtual Desktop"
 msgstr "Add Virtual Desktop"
 
-#: plugins/overview/qml/main.qml:226
+#: plugins/overview/qml/main.qml:229
 #, kde-format
 msgid "No matching windows"
 msgstr "No matching windows"

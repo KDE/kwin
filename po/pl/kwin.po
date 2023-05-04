@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1650806 $
+# Version: $Revision: 1650881 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # Norbert Popiołek <norbert@kde.com.pl>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-03 02:20+0000\n"
+"POT-Creation-Date: 2023-05-04 02:20+0000\n"
 "PO-Revision-Date: 2023-04-23 11:46+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -2289,17 +2289,17 @@ msgstr "Tryb układu:"
 msgid "Ignore minimized windows:"
 msgstr "Pomijaj zminimalizowane okna"
 
-#: plugins/overview/qml/DesktopBar.qml:187
+#: plugins/overview/qml/DesktopBar.qml:156
 #, kde-format
 msgid "Delete Virtual Desktop"
 msgstr "Usuń pulpit wirtualny"
 
-#: plugins/overview/qml/DesktopBar.qml:283
+#: plugins/overview/qml/DesktopBar.qml:252
 #, kde-format
 msgid "Add Virtual Desktop"
 msgstr "Dodaj wirtualny pulpit"
 
-#: plugins/overview/qml/main.qml:226
+#: plugins/overview/qml/main.qml:229
 #, kde-format
 msgid "No matching windows"
 msgstr "Żadne okno nie odpowiada"

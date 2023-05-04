@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-03 02:20+0000\n"
+"POT-Creation-Date: 2023-05-04 02:20+0000\n"
 "PO-Revision-Date: 2019-09-23 21:11+0500\n"
 "Last-Translator: Victor Ibragimov <victor.ibragimov@gmail.com>\n"
 "Language-Team: English <kde-i18n-doc@kde.org>\n"
@@ -2268,19 +2268,19 @@ msgstr ""
 msgid "Ignore minimized windows:"
 msgstr "Показать &за окнами:"
 
-#: plugins/overview/qml/DesktopBar.qml:187
+#: plugins/overview/qml/DesktopBar.qml:156
 #, fuzzy, kde-format
 #| msgid "Window & Desktop"
 msgid "Delete Virtual Desktop"
 msgstr "Тиреза ва Мизи корӣ"
 
-#: plugins/overview/qml/DesktopBar.qml:283
+#: plugins/overview/qml/DesktopBar.qml:252
 #, fuzzy, kde-format
 #| msgid "Window & Desktop"
 msgid "Add Virtual Desktop"
 msgstr "Тиреза ва Мизи корӣ"
 
-#: plugins/overview/qml/main.qml:226
+#: plugins/overview/qml/main.qml:229
 #, fuzzy, kde-format
 #| msgid "Number of windows:"
 msgid "No matching windows"

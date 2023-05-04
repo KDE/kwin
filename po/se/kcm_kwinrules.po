@@ -865,6 +865,3 @@ msgstr ""
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
-
-#~ msgid "Edit Window-Specific Settings"
-#~ msgstr "Doaimmat láseguoskevaš heivehusat"
