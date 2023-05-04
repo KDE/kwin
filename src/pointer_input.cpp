@@ -433,6 +433,15 @@ void PointerInputRedirection::processHoldGestureCancelled(std::chrono::microseco
     input()->processFilters(std::bind(&InputEventFilter::holdGestureCancelled, std::placeholders::_1, time));
 }
 
+void PointerInputRedirection::processFrame(KWin::InputDevice *device)
+{
+    if (!inited()) {
+        return;
+    }
+
+    input()->processFilters(std::bind(&InputEventFilter::pointerFrame, std::placeholders::_1));
+}
+
 bool PointerInputRedirection::areButtonsPressed() const
 {
     for (auto state : m_buttons) {

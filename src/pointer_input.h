@@ -143,6 +143,10 @@ public:
      * @internal
      */
     void processHoldGestureCancelled(std::chrono::microseconds time, KWin::InputDevice *device = nullptr);
+    /**
+     * @internal
+     */
+    void processFrame(KWin::InputDevice *device = nullptr);
 
 private:
     void processMotionInternal(const QPointF &pos, const QPointF &delta, const QPointF &deltaNonAccelerated, std::chrono::microseconds time, InputDevice *device);

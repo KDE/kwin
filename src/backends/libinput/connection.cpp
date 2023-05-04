@@ -318,6 +318,7 @@ void Connection::processEvents()
                                                                   pointerEvent->time(),
                                                                   pointerEvent->device());
             }
+            Q_EMIT pointerEvent->device()->pointerFrame(pointerEvent->device());
             break;
         }
         case LIBINPUT_EVENT_POINTER_SCROLL_FINGER: {
@@ -331,6 +332,7 @@ void Connection::processEvents()
                                                                   pointerEvent->time(),
                                                                   pointerEvent->device());
             }
+            Q_EMIT pointerEvent->device()->pointerFrame(pointerEvent->device());
             break;
         }
         case LIBINPUT_EVENT_POINTER_SCROLL_CONTINUOUS: {
@@ -344,11 +346,13 @@ void Connection::processEvents()
                                                                   pointerEvent->time(),
                                                                   pointerEvent->device());
             }
+            Q_EMIT pointerEvent->device()->pointerFrame(pointerEvent->device());
             break;
         }
         case LIBINPUT_EVENT_POINTER_BUTTON: {
             PointerEvent *pe = static_cast<PointerEvent *>(event.get());
             Q_EMIT pe->device()->pointerButtonChanged(pe->button(), pe->buttonState(), pe->time(), pe->device());
+            Q_EMIT pe->device()->pointerFrame(pe->device());
             break;
         }
         case LIBINPUT_EVENT_POINTER_MOTION: {
@@ -369,12 +373,14 @@ void Connection::processEvents()
                 }
             }
             Q_EMIT pe->device()->pointerMotion(delta, deltaNonAccel, latestTime, pe->device());
+            Q_EMIT pe->device()->pointerFrame(pe->device());
             break;
         }
         case LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE: {
             PointerEvent *pe = static_cast<PointerEvent *>(event.get());
             if (workspace()) {
                 Q_EMIT pe->device()->pointerMotionAbsolute(pe->absolutePos(workspace()->geometry().size()), pe->time(), pe->device());
+                Q_EMIT pe->device()->pointerFrame(pe->device());
             }
             break;
         }

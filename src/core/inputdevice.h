@@ -54,6 +54,7 @@ Q_SIGNALS:
     void pointerMotion(const QPointF &delta, const QPointF &deltaNonAccelerated, std::chrono::microseconds time, InputDevice *device);
     void pointerAxisChanged(InputRedirection::PointerAxis axis, qreal delta, qint32 deltaV120,
                             InputRedirection::PointerAxisSource source, std::chrono::microseconds time, InputDevice *device);
+    void pointerFrame(InputDevice *device);
     void touchFrame(InputDevice *device);
     void touchCanceled(InputDevice *device);
     void touchDown(qint32 id, const QPointF &absolutePos, std::chrono::microseconds time, InputDevice *device);

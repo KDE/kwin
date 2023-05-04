@@ -111,6 +111,11 @@ bool InputEventFilter::pointerEvent(MouseEvent *event, quint32 nativeButton)
     return false;
 }
 
+bool InputEventFilter::pointerFrame()
+{
+    return false;
+}
+
 bool InputEventFilter::wheelEvent(WheelEvent *event)
 {
     return false;
@@ -322,7 +327,6 @@ public:
             if (pointerSurfaceAllowed()) {
                 // TODO: should the pointer position always stay in sync, i.e. not do the check?
                 seat->notifyPointerMotion(event->screenPos());
-                seat->notifyPointerFrame();
             }
         } else if (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseButtonRelease) {
             if (pointerSurfaceAllowed()) {
@@ -332,8 +336,18 @@ public:
                     ? KWaylandServer::PointerButtonState::Pressed
                     : KWaylandServer::PointerButtonState::Released;
                 seat->notifyPointerButton(nativeButton, state);
-                seat->notifyPointerFrame();
             }
+        }
+        return true;
+    }
+    bool pointerFrame() override
+    {
+        if (!waylandServer()->isScreenLocked()) {
+            return false;
+        }
+        auto seat = waylandServer()->seat();
+        if (pointerSurfaceAllowed()) {
+            seat->notifyPointerFrame();
         }
         return true;
     }
@@ -349,7 +363,6 @@ public:
             seat->notifyPointerAxis(wheelEvent->orientation(), wheelEvent->delta(),
                                     wheelEvent->deltaV120(),
                                     kwinAxisSourceToKWaylandAxisSource(wheelEvent->axisSource()));
-            seat->notifyPointerFrame();
         }
         return true;
     }
@@ -1774,20 +1787,23 @@ public:
             if (!e->delta().isNull()) {
                 seat->relativePointerMotion(e->delta(), e->deltaUnaccelerated(), e->timestamp());
             }
-            seat->notifyPointerFrame();
             break;
         }
         case QEvent::MouseButtonPress:
             seat->notifyPointerButton(nativeButton, KWaylandServer::PointerButtonState::Pressed);
-            seat->notifyPointerFrame();
             break;
         case QEvent::MouseButtonRelease:
             seat->notifyPointerButton(nativeButton, KWaylandServer::PointerButtonState::Released);
-            seat->notifyPointerFrame();
             break;
         default:
             break;
         }
+        return true;
+    }
+    bool pointerFrame() override
+    {
+        auto seat = waylandServer()->seat();
+        seat->notifyPointerFrame();
         return true;
     }
     bool wheelEvent(WheelEvent *event) override
@@ -1797,7 +1813,6 @@ public:
         auto _event = static_cast<WheelEvent *>(event);
         seat->notifyPointerAxis(_event->orientation(), _event->delta(), _event->deltaV120(),
                                 kwinAxisSourceToKWaylandAxisSource(_event->axisSource()));
-        seat->notifyPointerFrame();
         return true;
     }
     bool keyEvent(KeyEvent *event) override
@@ -2399,7 +2414,6 @@ public:
         case QEvent::MouseMove: {
             const auto pos = input()->globalPointer();
             seat->notifyPointerMotion(pos);
-            seat->notifyPointerFrame();
 
             Window *dragTarget = pickDragTarget(pos);
             if (dragTarget) {
@@ -2438,18 +2452,30 @@ public:
         }
         case QEvent::MouseButtonPress:
             seat->notifyPointerButton(nativeButton, KWaylandServer::PointerButtonState::Pressed);
-            seat->notifyPointerFrame();
             break;
         case QEvent::MouseButtonRelease:
             raiseDragTarget();
             m_dragTarget = nullptr;
             seat->notifyPointerButton(nativeButton, KWaylandServer::PointerButtonState::Released);
-            seat->notifyPointerFrame();
             break;
         default:
             break;
         }
         // TODO: should we pass through effects?
+        return true;
+    }
+
+    bool pointerFrame() override
+    {
+        auto seat = waylandServer()->seat();
+        if (!seat->isDragPointer()) {
+            return false;
+        }
+        if (seat->isDragTouch()) {
+            return true;
+        }
+
+        seat->notifyPointerFrame();
         return true;
     }
 
@@ -2916,6 +2942,8 @@ void InputRedirection::addInputDevice(InputDevice *device)
             m_pointer, &PointerInputRedirection::processButton);
     connect(device, &InputDevice::pointerAxisChanged,
             m_pointer, &PointerInputRedirection::processAxis);
+    connect(device, &InputDevice::pointerFrame,
+            m_pointer, &PointerInputRedirection::processFrame);
     connect(device, &InputDevice::pinchGestureBegin,
             m_pointer, &PointerInputRedirection::processPinchGestureBegin);
     connect(device, &InputDevice::pinchGestureUpdate,

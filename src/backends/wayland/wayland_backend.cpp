@@ -126,6 +126,10 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::Pointer *pointer, Wayla
         Q_EMIT pointerAxisChanged(axis, delta, 0, InputRedirection::PointerAxisSourceUnknown, std::chrono::milliseconds(time), this);
     });
 
+    connect(pointer, &Pointer::frame, this, [this]() {
+        Q_EMIT pointerFrame(this);
+    });
+
     KWayland::Client::PointerGestures *pointerGestures = m_seat->backend()->display()->pointerGestures();
     if (pointerGestures) {
         m_pinchGesture.reset(pointerGestures->createPinchGesture(m_pointer.get(), this));

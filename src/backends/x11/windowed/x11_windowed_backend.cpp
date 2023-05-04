@@ -416,6 +416,7 @@ void X11WindowedBackend::handleEvent(xcb_generic_event_t *e)
         }
         const QPointF position = output->mapFromGlobal(QPointF(event->root_x, event->root_y));
         Q_EMIT m_pointerDevice->pointerMotionAbsolute(position, std::chrono::milliseconds(event->time), m_pointerDevice.get());
+        Q_EMIT m_pointerDevice->pointerFrame(m_pointerDevice.get());
     } break;
     case XCB_KEY_PRESS:
     case XCB_KEY_RELEASE: {
@@ -575,6 +576,7 @@ void X11WindowedBackend::handleButtonPress(xcb_button_press_event_t *event)
                                                    InputRedirection::PointerAxisSourceUnknown,
                                                    std::chrono::milliseconds(event->time),
                                                    m_pointerDevice.get());
+        Q_EMIT m_pointerDevice->pointerFrame(m_pointerDevice.get());
         return;
     }
     uint32_t button = 0;
@@ -601,6 +603,7 @@ void X11WindowedBackend::handleButtonPress(xcb_button_press_event_t *event)
     } else {
         Q_EMIT m_pointerDevice->pointerButtonChanged(button, InputRedirection::PointerButtonReleased, std::chrono::milliseconds(event->time), m_pointerDevice.get());
     }
+    Q_EMIT m_pointerDevice->pointerFrame(m_pointerDevice.get());
 }
 
 void X11WindowedBackend::handleExpose(xcb_expose_event_t *event)

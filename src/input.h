@@ -384,6 +384,7 @@ public:
      * @return @c true to stop further event processing, @c false to pass to next filter
      */
     virtual bool pointerEvent(MouseEvent *event, quint32 nativeButton);
+    virtual bool pointerFrame();
     /**
      * Event filter for pointer axis events.
      *
