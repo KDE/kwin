@@ -10,6 +10,7 @@
 
 #include "core/output.h"
 #include "cursor.h"
+#include "cursorsource.h"
 #include "libkwineffects/kwineffects.h"
 #include "options.h"
 #include "pointer_input.h"
@@ -107,6 +108,7 @@ private Q_SLOTS:
     void testMouseActionActiveWindow_data();
     void testMouseActionActiveWindow();
     void testCursorImage();
+    void testCursorShapeV1();
     void testEffectOverrideCursorImage();
     void testPopup();
     void testDecoCancelsPopup();
@@ -159,7 +161,7 @@ void PointerInputTest::initTestCase()
 
 void PointerInputTest::init()
 {
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::Decoration | Test::AdditionalWaylandInterface::XdgDecorationV1));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::Decoration | Test::AdditionalWaylandInterface::XdgDecorationV1 | Test::AdditionalWaylandInterface::CursorShapeV1));
     QVERIFY(Test::waitForWaylandPointer());
     m_compositor = Test::waylandCompositor();
     m_seat = Test::waylandSeat();
@@ -1151,6 +1153,51 @@ void PointerInputTest::testCursorImage()
     QCOMPARE(kwinApp()->cursorImage().image(), fallbackCursor);
 }
 
+static QByteArray currentCursorShape()
+{
+    if (auto source = qobject_cast<ShapeCursorSource *>(Cursors::self()->currentCursor()->source())) {
+        return source->shape();
+    }
+    return QByteArray();
+}
+
+void PointerInputTest::testCursorShapeV1()
+{
+    // this test verifies the integration of the cursor-shape-v1 protocol
+
+    // get the pointer
+    std::unique_ptr<KWayland::Client::Pointer> pointer(m_seat->createPointer());
+    std::unique_ptr<Test::CursorShapeDeviceV1> cursorShapeDevice(Test::createCursorShapeDeviceV1(pointer.get()));
+
+    // move cursor somewhere the new window won't open
+    input()->pointer()->warp(QPointF(800, 800));
+    QCOMPARE(currentCursorShape(), QByteArray("left_ptr"));
+
+    // create a window
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 100), Qt::cyan);
+    QVERIFY(window);
+
+    // move the pointer to the center of the window
+    QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
+    input()->pointer()->warp(window->frameGeometry().center());
+    QVERIFY(enteredSpy.wait());
+
+    // set a custom cursor shape
+    QSignalSpy cursorChanged(Cursors::self(), &Cursors::currentCursorChanged);
+    cursorShapeDevice->set_shape(enteredSpy.last().at(0).value<quint32>(), Test::CursorShapeDeviceV1::shape_text);
+    QVERIFY(cursorChanged.wait());
+    QCOMPARE(currentCursorShape(), QByteArray("text"));
+
+    // cursor shape won't be changed if the window has no pointer focus
+    input()->pointer()->warp(QPointF(800, 800));
+    QCOMPARE(currentCursorShape(), QByteArray("left_ptr"));
+    cursorShapeDevice->set_shape(enteredSpy.last().at(0).value<quint32>(), Test::CursorShapeDeviceV1::shape_grab);
+    QVERIFY(Test::waylandSync());
+    QCOMPARE(currentCursorShape(), QByteArray("left_ptr"));
+}
+
 class HelperEffect : public Effect
 {
     Q_OBJECT
@@ -1168,16 +1215,14 @@ void PointerInputTest::testEffectOverrideCursorImage()
     // this test verifies the effect cursor override handling
 
     // we need a pointer to get the enter event and set a cursor
-    auto pointer = m_seat->createPointer(m_seat);
-    QVERIFY(pointer);
-    QVERIFY(pointer->isValid());
-    QSignalSpy enteredSpy(pointer, &KWayland::Client::Pointer::entered);
-    QSignalSpy leftSpy(pointer, &KWayland::Client::Pointer::left);
+    std::unique_ptr<KWayland::Client::Pointer> pointer(m_seat->createPointer());
+    std::unique_ptr<Test::CursorShapeDeviceV1> cursorShapeDevice(Test::createCursorShapeDeviceV1(pointer.get()));
+    QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
+    QSignalSpy leftSpy(pointer.get(), &KWayland::Client::Pointer::left);
+    QSignalSpy cursorChanged(Cursors::self(), &Cursors::currentCursorChanged);
+
     // move cursor somewhere the new window won't open
     input()->pointer()->warp(QPointF(800, 800));
-    // here we should have the fallback cursor
-    const QImage fallback = kwinApp()->cursorImage().image();
-    QVERIFY(!fallback.isNull());
 
     // now let's create a window
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
@@ -1194,34 +1239,26 @@ void PointerInputTest::testEffectOverrideCursorImage()
     QVERIFY(!exclusiveContains(window->frameGeometry(), QPoint(800, 800)));
     input()->pointer()->warp(window->frameGeometry().center());
     QVERIFY(enteredSpy.wait());
-    // cursor image should still be fallback
-    QCOMPARE(kwinApp()->cursorImage().image(), fallback);
+    cursorShapeDevice->set_shape(enteredSpy.last().at(0).value<quint32>(), Test::CursorShapeDeviceV1::shape_wait);
+    QVERIFY(cursorChanged.wait());
+    QCOMPARE(currentCursorShape(), QByteArray("wait"));
 
     // now create an effect and set an override cursor
     std::unique_ptr<HelperEffect> effect(new HelperEffect);
     effects->startMouseInterception(effect.get(), Qt::SizeAllCursor);
-    const QImage sizeAll = kwinApp()->cursorImage().image();
-    QVERIFY(!sizeAll.isNull());
-    QVERIFY(sizeAll != fallback);
-    QVERIFY(leftSpy.wait());
+    QCOMPARE(currentCursorShape(), QByteArray("size_all"));
 
     // let's change to arrow cursor, this should be our fallback
     effects->defineCursor(Qt::ArrowCursor);
-    QCOMPARE(kwinApp()->cursorImage().image(), fallback);
+    QCOMPARE(currentCursorShape(), QByteArray("left_ptr"));
 
     // back to size all
     effects->defineCursor(Qt::SizeAllCursor);
-    QCOMPARE(kwinApp()->cursorImage().image(), sizeAll);
+    QCOMPARE(currentCursorShape(), QByteArray("size_all"));
 
     // move cursor outside the window area
     input()->pointer()->warp(QPointF(800, 800));
-    // and end the override, which should switch to fallback
-    effects->stopMouseInterception(effect.get());
-    QCOMPARE(kwinApp()->cursorImage().image(), fallback);
-
-    // start mouse interception again
-    effects->startMouseInterception(effect.get(), Qt::SizeAllCursor);
-    QCOMPARE(kwinApp()->cursorImage().image(), sizeAll);
+    QCOMPARE(currentCursorShape(), QByteArray("size_all"));
 
     // move cursor to area of window
     input()->pointer()->warp(window->frameGeometry().center());
@@ -1232,7 +1269,9 @@ void PointerInputTest::testEffectOverrideCursorImage()
     // after ending the interception we should get an enter event
     effects->stopMouseInterception(effect.get());
     QVERIFY(enteredSpy.wait());
-    QVERIFY(kwinApp()->cursorImage().image().isNull());
+    cursorShapeDevice->set_shape(enteredSpy.last().at(0).value<quint32>(), Test::CursorShapeDeviceV1::shape_crosshair);
+    QVERIFY(cursorChanged.wait());
+    QCOMPARE(currentCursorShape(), QByteArray("cross"));
 }
 
 void PointerInputTest::testPopup()

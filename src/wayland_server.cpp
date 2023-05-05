@@ -23,6 +23,7 @@
 #include "wayland/appmenu_interface.h"
 #include "wayland/compositor_interface.h"
 #include "wayland/contenttype_v1_interface.h"
+#include "wayland/cursorshape_v1_interface.h"
 #include "wayland/datacontroldevicemanager_v1_interface.h"
 #include "wayland/datadevicemanager_interface.h"
 #include "wayland/display.h"
@@ -413,6 +414,7 @@ bool WaylandServer::init(InitializationFlags flags)
     new RelativePointerManagerV1Interface(m_display, m_display);
     m_dataDeviceManager = new DataDeviceManagerInterface(m_display, m_display);
     new DataControlDeviceManagerV1Interface(m_display, m_display);
+    new CursorShapeManagerV1Interface(m_display, m_display);
 
     const auto kwinConfig = kwinApp()->config();
     if (kwinConfig->group("Wayland").readEntry("EnablePrimarySelection", true)) {

@@ -20,6 +20,7 @@
 #include <KWayland/Client/surface.h>
 #include <optional>
 
+#include "qwayland-cursor-shape-v1.h"
 #include "qwayland-fractional-scale-v1.h"
 #include "qwayland-idle-inhibit-unstable-v1.h"
 #include "qwayland-input-method-unstable-v1.h"
@@ -42,6 +43,7 @@ class Compositor;
 class Output;
 class PlasmaShell;
 class PlasmaWindowManagement;
+class Pointer;
 class PointerConstraints;
 class Seat;
 class ServerSideDecorationManager;
@@ -504,6 +506,21 @@ public:
     ~AutoHideScreenEdgeV1() override;
 };
 
+class CursorShapeManagerV1 : public QObject, public QtWayland::wp_cursor_shape_manager_v1
+{
+    Q_OBJECT
+public:
+    ~CursorShapeManagerV1() override;
+};
+
+class CursorShapeDeviceV1 : public QObject, public QtWayland::wp_cursor_shape_device_v1
+{
+    Q_OBJECT
+public:
+    CursorShapeDeviceV1(CursorShapeManagerV1 *manager, KWayland::Client::Pointer *pointer);
+    ~CursorShapeDeviceV1() override;
+};
+
 enum class AdditionalWaylandInterface {
     Seat = 1 << 0,
     Decoration = 1 << 1,
@@ -523,6 +540,7 @@ enum class AdditionalWaylandInterface {
     FractionalScaleManagerV1 = 1 << 15,
     ScreencastingV1 = 1 << 16,
     ScreenEdgeV1 = 1 << 17,
+    CursorShapeV1 = 1 << 18,
 };
 Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
 
@@ -669,6 +687,7 @@ XdgPopup *createXdgPopupSurface(KWayland::Client::Surface *surface, XdgSurface *
 XdgToplevelDecorationV1 *createXdgToplevelDecorationV1(XdgToplevel *toplevel, QObject *parent = nullptr);
 IdleInhibitorV1 *createIdleInhibitorV1(KWayland::Client::Surface *surface);
 AutoHideScreenEdgeV1 *createAutoHideScreenEdgeV1(KWayland::Client::Surface *surface, uint32_t border);
+CursorShapeDeviceV1 *createCursorShapeDeviceV1(KWayland::Client::Pointer *pointer);
 
 /**
  * Creates a shared memory buffer of @p size in @p color and attaches it to the @p surface.

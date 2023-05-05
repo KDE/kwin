@@ -222,7 +222,7 @@ Q_SIGNALS:
 
 private:
     void reevaluteSource();
-    void updateServerCursor(KWaylandServer::Cursor *cursor);
+    void updateServerCursor(const std::variant<KWaylandServer::Cursor *, QByteArray> &cursor);
     void updateDecoration();
     void updateDecorationCursor();
     void updateMoveResize();
@@ -246,7 +246,9 @@ private:
     struct
     {
         QMetaObject::Connection connection;
-        std::unique_ptr<SurfaceCursorSource> cursor;
+        std::unique_ptr<SurfaceCursorSource> surface;
+        std::unique_ptr<ShapeCursorSource> shape;
+        CursorSource *cursor = nullptr;
     } m_serverCursor;
 };
 

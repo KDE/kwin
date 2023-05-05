@@ -25,6 +25,8 @@ class SurfaceInterface;
 enum class PointerAxisSource;
 enum class PointerButtonState : quint32;
 
+using PointerCursor = std::variant<Cursor *, QByteArray>;
+
 /**
  * The PointerInterface class represents one or more input devices such as mice, which control
  * the pointer location. It corresponds to the Wayland interface @c wl_pointer.
@@ -42,6 +44,7 @@ public:
      * the effective focused surface.
      */
     SurfaceInterface *focusedSurface() const;
+    quint32 focusedSerial() const;
 
     /**
      * Returns the seat to which this pointer belongs to.
@@ -65,7 +68,7 @@ Q_SIGNALS:
      * This signal is emitted whenever the cursor surface changes. As long as there is no
      * any focused surface, the cursor cannot be changed.
      */
-    void cursorChanged(KWaylandServer::Cursor *cursor);
+    void cursorChanged(const PointerCursor &cursor);
     /**
      * This signal is emitted whenever the focused pointer surface changes.
      */

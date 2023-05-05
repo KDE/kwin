@@ -147,6 +147,11 @@ SurfaceInterface *PointerInterface::focusedSurface() const
     return d->focusedSurface;
 }
 
+quint32 PointerInterface::focusedSerial() const
+{
+    return d->focusedSerial;
+}
+
 void PointerInterface::sendEnter(SurfaceInterface *surface, const QPointF &position, quint32 serial)
 {
     if (d->focusedSurface == surface) {

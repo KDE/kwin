@@ -212,6 +212,10 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-screen-edge-v1.xml
     BASENAME kde-screen-edge-v1
 )
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PROTOCOL ${WaylandProtocols_DATADIR}/staging/cursor-shape/cursor-shape-v1.xml
+    BASENAME cursor-shape-v1
+)
 
 target_sources(kwin PRIVATE
     abstract_data_source.cpp
@@ -222,6 +226,7 @@ target_sources(kwin PRIVATE
     compositor_interface.cpp
     contenttype_v1_interface.cpp
     contrast_interface.cpp
+    cursorshape_v1_interface.cpp
     datacontroldevice_v1_interface.cpp
     datacontroldevicemanager_v1_interface.cpp
     datacontroloffer_v1_interface.cpp
@@ -305,6 +310,7 @@ install(FILES
     compositor_interface.h
     contenttype_v1_interface.h
     contrast_interface.h
+    cursorshape_v1_interface.h
     datacontroldevice_v1_interface.h
     datacontroldevicemanager_v1_interface.h
     datacontroloffer_v1_interface.h

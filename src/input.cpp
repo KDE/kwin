@@ -1956,27 +1956,35 @@ public:
     explicit SurfaceCursor(KWaylandServer::TabletToolV2Interface *tool)
         : Cursor(tool)
     {
-        connect(tool, &KWaylandServer::TabletToolV2Interface::cursorChanged, this, [this](KWaylandServer::TabletCursorV2 *tcursor) {
-            if (!tcursor || tcursor->enteredSerial() == 0) {
-                if (!m_defaultSource) {
-                    m_defaultSource = std::make_unique<ShapeCursorSource>();
+        connect(tool, &KWaylandServer::TabletToolV2Interface::cursorChanged, this, [this](const KWaylandServer::TabletCursorSourceV2 &cursor) {
+            if (auto surfaceCursor = std::get_if<KWaylandServer::TabletSurfaceCursorV2 *>(&cursor)) {
+                // If the cursor is unset, fallback to the cross cursor.
+                if ((*surfaceCursor) && (*surfaceCursor)->enteredSerial()) {
+                    if (!m_surfaceSource) {
+                        m_surfaceSource = std::make_unique<SurfaceCursorSource>();
+                    }
+                    m_surfaceSource->update((*surfaceCursor)->surface(), (*surfaceCursor)->hotspot());
+                    setSource(m_surfaceSource.get());
+                    return;
                 }
-                static WaylandCursorImage defaultCursor;
-                m_defaultSource->setTheme(defaultCursor.theme());
-                m_defaultSource->setShape(Qt::CrossCursor);
-                setSource(m_defaultSource.get());
-            } else {
-                if (!m_surfaceSource) {
-                    m_surfaceSource = std::make_unique<SurfaceCursorSource>();
-                }
-                m_surfaceSource->update(tcursor->surface(), tcursor->hotspot());
-                setSource(m_surfaceSource.get());
             }
+
+            QByteArray shape;
+            if (auto shapeCursor = std::get_if<QByteArray>(&cursor)) {
+                shape = *shapeCursor;
+            } else {
+                shape = QByteArrayLiteral("cross");
+            }
+
+            static WaylandCursorImage defaultCursor;
+            m_shapeSource->setTheme(defaultCursor.theme());
+            m_shapeSource->setShape(shape);
+            setSource(m_shapeSource.get());
         });
     }
 
 private:
-    std::unique_ptr<ShapeCursorSource> m_defaultSource;
+    std::unique_ptr<ShapeCursorSource> m_shapeSource;
     std::unique_ptr<SurfaceCursorSource> m_surfaceSource;
 };
 

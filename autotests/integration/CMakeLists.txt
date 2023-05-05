@@ -15,6 +15,7 @@ qt6_generate_wayland_protocol_client_sources(KWinIntegrationTestFramework
         ${WaylandProtocols_DATADIR}/unstable/xdg-decoration/xdg-decoration-unstable-v1.xml
         ${WaylandProtocols_DATADIR}/unstable/idle-inhibit/idle-inhibit-unstable-v1.xml
         ${WaylandProtocols_DATADIR}/staging/fractional-scale/fractional-scale-v1.xml
+        ${WaylandProtocols_DATADIR}/staging/cursor-shape/cursor-shape-v1.xml
         ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-output-device-v2.xml
         ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-output-management-v2.xml
         ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-screen-edge-v1.xml

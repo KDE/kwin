@@ -11,14 +11,16 @@
 #include <QVector>
 #include <memory>
 
+struct wl_resource;
+
 namespace KWaylandServer
 {
 class ClientConnection;
 class Display;
 class SeatInterface;
 class SurfaceInterface;
-class TabletCursorV2;
-class TabletCursorV2Private;
+class TabletSurfaceCursorV2;
+class TabletSurfaceCursorV2Private;
 class TabletManagerV2InterfacePrivate;
 class TabletSeatV2Interface;
 class TabletSeatV2InterfacePrivate;
@@ -53,6 +55,26 @@ public:
 private:
     std::unique_ptr<TabletManagerV2InterfacePrivate> d;
 };
+
+class KWIN_EXPORT TabletSurfaceCursorV2 : public QObject
+{
+    Q_OBJECT
+public:
+    ~TabletSurfaceCursorV2() override;
+    QPoint hotspot() const;
+    quint32 enteredSerial() const;
+    SurfaceInterface *surface() const;
+
+Q_SIGNALS:
+    void changed();
+
+private:
+    TabletSurfaceCursorV2();
+    const std::unique_ptr<TabletSurfaceCursorV2Private> d;
+    friend class TabletToolV2InterfacePrivate;
+};
+
+using TabletCursorSourceV2 = std::variant<TabletSurfaceCursorV2 *, QByteArray>;
 
 class KWIN_EXPORT TabletToolV2Interface : public QObject
 {
@@ -93,7 +115,11 @@ public:
      * @see TabletV2Interface::isSurfaceSupported
      */
     void setCurrentSurface(SurfaceInterface *surface);
+    SurfaceInterface *currentSurface() const;
+
     bool isClientSupported() const;
+
+    quint32 proximitySerial() const;
 
     void sendProximityIn(TabletV2Interface *tablet);
     void sendProximityOut();
@@ -109,8 +135,10 @@ public:
     void sendFrame(quint32 time);
     void sendMotion(const QPointF &pos);
 
+    static TabletToolV2Interface *get(wl_resource *resource);
+
 Q_SIGNALS:
-    void cursorChanged(TabletCursorV2 *cursor) const;
+    void cursorChanged(const TabletCursorSourceV2 &cursor);
 
 private:
     friend class TabletSeatV2InterfacePrivate;
@@ -123,24 +151,6 @@ private:
                                    quint32 hil,
                                    const QVector<Capability> &capability);
     std::unique_ptr<TabletToolV2InterfacePrivate> d;
-};
-
-class KWIN_EXPORT TabletCursorV2 : public QObject
-{
-    Q_OBJECT
-public:
-    ~TabletCursorV2() override;
-    QPoint hotspot() const;
-    quint32 enteredSerial() const;
-    SurfaceInterface *surface() const;
-
-Q_SIGNALS:
-    void changed();
-
-private:
-    TabletCursorV2();
-    const std::unique_ptr<TabletCursorV2Private> d;
-    friend class TabletToolV2InterfacePrivate;
 };
 
 class KWIN_EXPORT TabletPadV2Interface : public QObject

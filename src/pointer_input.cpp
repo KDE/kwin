@@ -862,7 +862,8 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
     m_moveResizeCursor = std::make_unique<ShapeCursorSource>();
     m_windowSelectionCursor = std::make_unique<ShapeCursorSource>();
     m_decoration.cursor = std::make_unique<ShapeCursorSource>();
-    m_serverCursor.cursor = std::make_unique<SurfaceCursorSource>();
+    m_serverCursor.surface = std::make_unique<SurfaceCursorSource>();
+    m_serverCursor.shape = std::make_unique<ShapeCursorSource>();
 
 #if KWIN_BUILD_SCREENLOCKER
     if (waylandServer()->hasScreenLockerIntegration()) {
@@ -886,6 +887,7 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
     m_moveResizeCursor->setTheme(m_waylandImage.theme());
     m_windowSelectionCursor->setTheme(m_waylandImage.theme());
     m_decoration.cursor->setTheme(m_waylandImage.theme());
+    m_serverCursor.shape->setTheme(m_waylandImage.theme());
 
     connect(&m_waylandImage, &WaylandCursorImage::themeChanged, this, [this] {
         m_effectsCursor->setTheme(m_waylandImage.theme());
@@ -893,6 +895,7 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
         m_moveResizeCursor->setTheme(m_waylandImage.theme());
         m_windowSelectionCursor->setTheme(m_waylandImage.theme());
         m_decoration.cursor->setTheme(m_waylandImage.theme());
+        m_serverCursor.shape->setTheme(m_waylandImage.theme());
     });
 
     KWaylandServer::PointerInterface *pointer = waylandServer()->seat()->pointer();
@@ -907,8 +910,8 @@ CursorImage::~CursorImage() = default;
 
 void CursorImage::updateCursorOutputs(const QPointF &pos)
 {
-    if (m_currentSource == m_serverCursor.cursor.get()) {
-        auto cursorSurface = m_serverCursor.cursor->surface();
+    if (m_currentSource == m_serverCursor.surface.get()) {
+        auto cursorSurface = m_serverCursor.surface->surface();
         if (cursorSurface) {
             const QRectF cursorGeometry(pos - m_currentSource->hotspot(), m_currentSource->size());
             cursorSurface->setOutputs(waylandServer()->display()->outputsIntersecting(cursorGeometry.toAlignedRect()));
@@ -918,8 +921,8 @@ void CursorImage::updateCursorOutputs(const QPointF &pos)
 
 void CursorImage::markAsRendered(std::chrono::milliseconds timestamp)
 {
-    if (m_currentSource == m_serverCursor.cursor.get()) {
-        auto cursorSurface = m_serverCursor.cursor->surface();
+    if (m_currentSource == m_serverCursor.surface.get()) {
+        auto cursorSurface = m_serverCursor.surface->surface();
         if (cursorSurface) {
             cursorSurface->frameRendered(timestamp.count());
         }
@@ -970,9 +973,15 @@ void CursorImage::updateMoveResize()
     reevaluteSource();
 }
 
-void CursorImage::updateServerCursor(KWaylandServer::Cursor *cursor)
+void CursorImage::updateServerCursor(const KWaylandServer::PointerCursor &cursor)
 {
-    m_serverCursor.cursor->update(cursor->surface(), cursor->hotspot());
+    if (auto surfaceCursor = std::get_if<KWaylandServer::Cursor *>(&cursor)) {
+        m_serverCursor.surface->update((*surfaceCursor)->surface(), (*surfaceCursor)->hotspot());
+        m_serverCursor.cursor = m_serverCursor.surface.get();
+    } else if (auto shapeCursor = std::get_if<QByteArray>(&cursor)) {
+        m_serverCursor.shape->setShape(*shapeCursor);
+        m_serverCursor.cursor = m_serverCursor.shape.get();
+    }
     reevaluteSource();
 }
 
@@ -1040,7 +1049,7 @@ void WaylandCursorImage::updateCursorTheme()
 void CursorImage::reevaluteSource()
 {
     if (waylandServer()->isScreenLocked()) {
-        setSource(m_serverCursor.cursor.get());
+        setSource(m_serverCursor.cursor);
         return;
     }
     if (input()->isSelectingWindow()) {
@@ -1061,7 +1070,7 @@ void CursorImage::reevaluteSource()
     }
     const KWaylandServer::PointerInterface *pointer = waylandServer()->seat()->pointer();
     if (pointer && pointer->focusedSurface()) {
-        setSource(m_serverCursor.cursor.get());
+        setSource(m_serverCursor.cursor);
         return;
     }
     setSource(m_fallbackCursor.get());

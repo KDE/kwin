@@ -28,6 +28,7 @@
 #include <KWayland/Client/output.h>
 #include <KWayland/Client/plasmashell.h>
 #include <KWayland/Client/plasmawindowmanagement.h>
+#include <KWayland/Client/pointer.h>
 #include <KWayland/Client/pointerconstraints.h>
 #include <KWayland/Client/registry.h>
 #include <KWayland/Client/seat.h>
@@ -244,6 +245,21 @@ AutoHideScreenEdgeV1::~AutoHideScreenEdgeV1()
     destroy();
 }
 
+CursorShapeManagerV1::~CursorShapeManagerV1()
+{
+    destroy();
+}
+
+CursorShapeDeviceV1::CursorShapeDeviceV1(CursorShapeManagerV1 *manager, KWayland::Client::Pointer *pointer)
+    : QtWayland::wp_cursor_shape_device_v1(manager->get_pointer(*pointer))
+{
+}
+
+CursorShapeDeviceV1::~CursorShapeDeviceV1()
+{
+    destroy();
+}
+
 static struct
 {
     KWayland::Client::ConnectionThread *connection = nullptr;
@@ -275,6 +291,7 @@ static struct
     FractionalScaleManagerV1 *fractionalScaleManagerV1 = nullptr;
     ScreencastingV1 *screencastingV1 = nullptr;
     ScreenEdgeManagerV1 *screenEdgeManagerV1 = nullptr;
+    CursorShapeManagerV1 *cursorShapeManagerV1 = nullptr;
 } s_waylandConnection;
 
 MockInputMethod *inputMethod()
@@ -460,6 +477,12 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
                 return;
             }
         }
+        if (flags &AdditionalWaylandInterface::CursorShapeV1) {
+            if (interface == wp_cursor_shape_manager_v1_interface.name) {
+                s_waylandConnection.cursorShapeManagerV1 = new CursorShapeManagerV1();
+                s_waylandConnection.cursorShapeManagerV1->init(*registry, name, version);
+            }
+        }
     });
 
     QSignalSpy allAnnounced(registry, &KWayland::Client::Registry::interfacesAnnounced);
@@ -590,6 +613,8 @@ void destroyWaylandConnection()
     s_waylandConnection.screencastingV1 = nullptr;
     delete s_waylandConnection.screenEdgeManagerV1;
     s_waylandConnection.screenEdgeManagerV1 = nullptr;
+    delete s_waylandConnection.cursorShapeManagerV1;
+    s_waylandConnection.cursorShapeManagerV1 = nullptr;
 
     delete s_waylandConnection.queue; // Must be destroyed last
     s_waylandConnection.queue = nullptr;
@@ -1007,6 +1032,17 @@ AutoHideScreenEdgeV1 *createAutoHideScreenEdgeV1(KWayland::Client::Surface *surf
     }
 
     return new AutoHideScreenEdgeV1(manager, surface, border);
+}
+
+CursorShapeDeviceV1 *createCursorShapeDeviceV1(KWayland::Client::Pointer *pointer)
+{
+    CursorShapeManagerV1 *manager = s_waylandConnection.cursorShapeManagerV1;
+    if (!manager) {
+        qWarning() << "Could not create a wp_cursor_shape_device_v1 because wp_cursor_shape_manager_v1 global is not bound";
+        return nullptr;
+    }
+
+    return new CursorShapeDeviceV1(manager, pointer);
 }
 
 bool waitForWindowClosed(Window *window)

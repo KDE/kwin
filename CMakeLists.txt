@@ -203,7 +203,7 @@ set_package_properties(Wayland PROPERTIES
     PURPOSE "Required for building KWin with Wayland support"
 )
 
-find_package(WaylandProtocols 1.31)
+find_package(WaylandProtocols 1.32)
 set_package_properties(WaylandProtocols PROPERTIES
     TYPE REQUIRED
     PURPOSE "Collection of Wayland protocols that add functionality not available in the Wayland core protocol"

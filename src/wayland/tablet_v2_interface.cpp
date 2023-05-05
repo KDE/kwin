@@ -8,6 +8,7 @@
 #include "display.h"
 #include "seat_interface.h"
 #include "surface_interface.h"
+#include "utils.h"
 
 #include "qwayland-server-tablet-unstable-v2.h"
 #include <QHash>
@@ -68,10 +69,10 @@ TabletPadV2Interface *TabletV2Interface::pad() const
     return d->m_pad;
 }
 
-class TabletCursorV2Private
+class TabletSurfaceCursorV2Private
 {
 public:
-    TabletCursorV2Private(TabletCursorV2 *q)
+    TabletSurfaceCursorV2Private(TabletSurfaceCursorV2 *q)
         : q(q)
     {
     }
@@ -88,32 +89,32 @@ public:
         }
     }
 
-    TabletCursorV2 *const q;
+    TabletSurfaceCursorV2 *const q;
 
     quint32 m_serial = 0;
     QPointer<SurfaceInterface> m_surface;
     QPoint m_hotspot;
 };
 
-TabletCursorV2::TabletCursorV2()
+TabletSurfaceCursorV2::TabletSurfaceCursorV2()
     : QObject()
-    , d(new TabletCursorV2Private(this))
+    , d(new TabletSurfaceCursorV2Private(this))
 {
 }
 
-TabletCursorV2::~TabletCursorV2() = default;
+TabletSurfaceCursorV2::~TabletSurfaceCursorV2() = default;
 
-QPoint TabletCursorV2::hotspot() const
+QPoint TabletSurfaceCursorV2::hotspot() const
 {
     return d->m_hotspot;
 }
 
-quint32 TabletCursorV2::enteredSerial() const
+quint32 TabletSurfaceCursorV2::enteredSerial() const
 {
     return d->m_serial;
 }
 
-SurfaceInterface *TabletCursorV2::surface() const
+SurfaceInterface *TabletSurfaceCursorV2::surface() const
 {
     return d->m_surface;
 }
@@ -162,17 +163,18 @@ public:
 
     void zwp_tablet_tool_v2_bind_resource(QtWaylandServer::zwp_tablet_tool_v2::Resource *resource) override
     {
-        TabletCursorV2 *&c = m_cursors[resource->handle];
+        TabletSurfaceCursorV2 *&c = m_cursors[resource->handle];
         if (!c)
-            c = new TabletCursorV2;
+            c = new TabletSurfaceCursorV2;
     }
 
     void zwp_tablet_tool_v2_set_cursor(Resource *resource, uint32_t serial, struct ::wl_resource *_surface, int32_t hotspot_x, int32_t hotspot_y) override
     {
-        TabletCursorV2 *c = m_cursors[resource->handle];
+        TabletSurfaceCursorV2 *c = m_cursors[resource->handle];
         c->d->update(serial, SurfaceInterface::get(_surface), {hotspot_x, hotspot_y});
-        if (resource->handle == targetResource())
-            q->cursorChanged(c);
+        if (resource->handle == targetResource()) {
+            Q_EMIT q->cursorChanged(c);
+        }
     }
 
     void zwp_tablet_tool_v2_destroy_resource(Resource *resource) override
@@ -189,6 +191,7 @@ public:
     }
 
     Display *const m_display;
+    quint32 m_proximitySerial = 0;
     bool m_cleanup = false;
     bool m_removed = false;
     QPointer<SurfaceInterface> m_surface;
@@ -197,7 +200,7 @@ public:
     const uint32_t m_hardwareSerialHigh, m_hardwareSerialLow;
     const uint32_t m_hardwareIdHigh, m_hardwareIdLow;
     const QVector<TabletToolV2Interface::Capability> m_capabilities;
-    QHash<wl_resource *, TabletCursorV2 *> m_cursors;
+    QHash<wl_resource *, TabletSurfaceCursorV2 *> m_cursors;
     TabletToolV2Interface *const q;
 };
 
@@ -220,9 +223,22 @@ TabletToolV2Interface::~TabletToolV2Interface()
     }
 }
 
+TabletToolV2Interface *TabletToolV2Interface::get(wl_resource *resource)
+{
+    if (TabletToolV2InterfacePrivate *tabletToolPrivate = resource_cast<TabletToolV2InterfacePrivate *>(resource)) {
+        return tabletToolPrivate->q;
+    }
+    return nullptr;
+}
+
 bool TabletToolV2Interface::hasCapability(Capability capability) const
 {
     return d->m_capabilities.contains(capability);
+}
+
+SurfaceInterface *TabletToolV2Interface::currentSurface() const
+{
+    return d->m_surface;
 }
 
 void TabletToolV2Interface::setCurrentSurface(SurfaceInterface *surface)
@@ -245,6 +261,11 @@ void TabletToolV2Interface::setCurrentSurface(SurfaceInterface *surface)
     }
 
     Q_EMIT cursorChanged(d->m_cursors.value(d->targetResource()));
+}
+
+quint32 TabletToolV2Interface::proximitySerial() const
+{
+    return d->m_proximitySerial;
 }
 
 bool TabletToolV2Interface::isClientSupported() const
@@ -310,7 +331,10 @@ void TabletToolV2Interface::sendWheel(int32_t degrees, int32_t clicks)
 void TabletToolV2Interface::sendProximityIn(TabletV2Interface *tablet)
 {
     wl_resource *tabletResource = tablet->d->resourceForSurface(d->m_surface);
-    d->send_proximity_in(d->targetResource(), d->m_display->nextSerial(), tabletResource, d->m_surface->resource());
+    quint32 serial = d->m_display->nextSerial();
+
+    d->send_proximity_in(d->targetResource(), serial, tabletResource, d->m_surface->resource());
+    d->m_proximitySerial = serial;
     d->m_lastTablet = tablet;
 }
 

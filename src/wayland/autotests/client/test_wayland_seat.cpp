@@ -1328,7 +1328,7 @@ void TestWaylandSeat::testCursor()
     p->setCursor(nullptr);
     QVERIFY(cursorChangedSpy.wait());
     QCOMPARE(cursorChangedSpy.count(), 1);
-    auto cursor = cursorChangedSpy.last().first().value<KWaylandServer::Cursor *>();
+    auto cursor = std::get<KWaylandServer::Cursor *>(cursorChangedSpy.last().first().value<KWaylandServer::PointerCursor>());
     QVERIFY(cursor);
     QVERIFY(!cursor->surface());
     QCOMPARE(cursor->hotspot(), QPoint());
