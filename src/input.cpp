@@ -697,7 +697,7 @@ public:
         }
         switch (event->type()) {
         case QEvent::TabletMove:
-            window->updateInteractiveMoveResize(event->globalPos());
+            window->updateInteractiveMoveResize(event->globalPosF());
             break;
         case QEvent::TabletRelease:
             window->endInteractiveMoveResize();
@@ -1755,7 +1755,7 @@ public:
         bool wasAction = false;
         const Options::MouseCommand command = window->getMouseCommand(Qt::LeftButton, &wasAction);
         if (wasAction) {
-            return !window->performMouseCommand(command, event->globalPos());
+            return !window->performMouseCommand(command, event->globalPosF());
         }
         return false;
     }
@@ -2206,7 +2206,7 @@ public:
         // may still happen (e.g. Release or ProximityOut events)
         auto tablet = static_cast<KWaylandServer::TabletV2Interface *>(event->tabletId().m_deviceGroupData);
 
-        Window *window = input()->findToplevel(event->globalPos());
+        Window *window = input()->findToplevel(event->globalPosF());
         if (!window || !window->surface()) {
             return false;
         }
@@ -2222,11 +2222,11 @@ public:
         case QEvent::TabletMove: {
             const auto pos = window->mapToLocal(event->globalPosF());
             tool->sendMotion(pos);
-            m_cursorByTool[tool]->setPos(event->globalPos());
+            m_cursorByTool[tool]->setPos(event->globalPosF());
             break;
         }
         case QEvent::TabletEnterProximity: {
-            const QPoint pos = event->globalPos();
+            const QPointF pos = event->globalPosF();
             m_cursorByTool[tool]->setPos(pos);
             tool->sendProximityIn(tablet);
             tool->sendMotion(window->mapToLocal(event->globalPosF()));
@@ -2238,7 +2238,7 @@ public:
         case QEvent::TabletPress: {
             const auto pos = window->mapToLocal(event->globalPosF());
             tool->sendMotion(pos);
-            m_cursorByTool[tool]->setPos(event->globalPos());
+            m_cursorByTool[tool]->setPos(event->globalPosF());
             tool->sendDown();
             break;
         }
