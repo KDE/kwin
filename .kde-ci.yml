@@ -35,6 +35,8 @@ Dependencies:
     'plasma/kglobalacceld': '@same'
     'plasma/kpipewire': '@same'
     'plasma/kscreenlocker': '@same'
+    'third-party/wayland': '@latest'
+    'third-party/wayland-protocols': '@latest'
 
 Options:
   ctest-arguments: '--repeat until-pass:5'
