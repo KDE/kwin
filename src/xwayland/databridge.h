@@ -44,7 +44,7 @@ class DataBridge : public QObject, public QAbstractNativeEventFilter
 public:
     explicit DataBridge();
 
-    DragEventReply dragMoveFilter(Window *target, const QPoint &pos);
+    DragEventReply dragMoveFilter(Window *target);
 
     Dnd *dnd() const
     {

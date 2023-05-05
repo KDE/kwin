@@ -38,7 +38,7 @@ public:
     explicit XToWlDrag(X11Source *source, Dnd *dnd);
     ~XToWlDrag() override;
 
-    DragEventReply moveFilter(Window *target, const QPoint &pos) override;
+    DragEventReply moveFilter(Window *target) override;
     bool handleClientMessage(xcb_client_message_event_t *event) override;
 
     void setDragAndDropAction(KWaylandServer::DataDeviceManagerInterface::DnDAction action);

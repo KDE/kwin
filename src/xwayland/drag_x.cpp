@@ -118,7 +118,7 @@ XToWlDrag::~XToWlDrag()
 {
 }
 
-DragEventReply XToWlDrag::moveFilter(Window *target, const QPoint &pos)
+DragEventReply XToWlDrag::moveFilter(Window *target)
 {
     auto *seat = waylandServer()->seat();
 

@@ -316,7 +316,7 @@ public:
             return false;
         }
 
-        auto window = input()->findToplevel(event->globalPos());
+        auto window = input()->findToplevel(event->globalPosition());
         if (window && window->isClient() && window->isLockScreen()) {
             workspace()->activateWindow(window);
         }
@@ -728,7 +728,7 @@ public:
                 if (event->button() == Qt::RightButton) {
                     cancel();
                 } else {
-                    accept(event->globalPos());
+                    accept(event->globalPosition());
                 }
             }
             break;
@@ -1161,7 +1161,7 @@ std::pair<bool, bool> performWindowMouseAction(QMouseEvent *event, Window *windo
         }
     }
     if (wasAction) {
-        return std::make_pair(wasAction, !window->performMouseCommand(command, event->globalPos()));
+        return std::make_pair(wasAction, !window->performMouseCommand(command, event->globalPosition()));
     }
     return std::make_pair(wasAction, false);
 }
@@ -1198,7 +1198,7 @@ class InternalWindowEventFilter : public InputEventFilter
         QWindow *internal = static_cast<InternalWindow *>(input()->pointer()->focus())->handle();
         QMouseEvent mouseEvent(event->type(),
                                event->pos() - internal->position(),
-                               event->globalPos(),
+                               event->globalPosition(),
                                event->button(), event->buttons(), event->modifiers());
         QCoreApplication::sendEvent(internal, &mouseEvent);
         return mouseEvent.isAccepted();
@@ -1782,7 +1782,7 @@ public:
         seat->setTimestamp(event->timestamp());
         switch (event->type()) {
         case QEvent::MouseMove: {
-            seat->notifyPointerMotion(event->globalPos());
+            seat->notifyPointerMotion(event->globalPosition());
             MouseEvent *e = static_cast<MouseEvent *>(event);
             if (!e->delta().isNull()) {
                 seat->relativePointerMotion(e->delta(), e->deltaUnaccelerated(), e->timestamp());
@@ -2430,7 +2430,7 @@ public:
             m_dragTarget = dragTarget;
 
             if (auto *xwl = kwinApp()->xwayland()) {
-                const auto ret = xwl->dragMoveFilter(dragTarget, event->globalPos());
+                const auto ret = xwl->dragMoveFilter(dragTarget);
                 if (ret == Xwl::DragEventReply::Ignore) {
                     return false;
                 } else if (ret == Xwl::DragEventReply::Take) {

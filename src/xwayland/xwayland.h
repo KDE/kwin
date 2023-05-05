@@ -79,7 +79,7 @@ private:
     bool createX11Connection();
     void destroyX11Connection();
 
-    DragEventReply dragMoveFilter(Window *target, const QPoint &pos) override;
+    DragEventReply dragMoveFilter(Window *target) override;
     KWaylandServer::AbstractDropHandler *xwlDropHandler() override;
     QSocketNotifier *m_socketNotifier = nullptr;
 

@@ -48,7 +48,7 @@ public:
     void x11OffersChanged(const QStringList &added, const QStringList &removed) override;
     bool handleClientMessage(xcb_client_message_event_t *event) override;
 
-    DragEventReply dragMoveFilter(Window *target, const QPoint &pos);
+    DragEventReply dragMoveFilter(Window *target);
 
     using DnDAction = KWaylandServer::DataDeviceManagerInterface::DnDAction;
     using DnDActions = KWaylandServer::DataDeviceManagerInterface::DnDActions;

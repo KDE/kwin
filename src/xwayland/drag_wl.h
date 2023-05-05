@@ -42,7 +42,7 @@ class WlToXDrag : public Drag
 
 public:
     explicit WlToXDrag(Dnd *dnd);
-    DragEventReply moveFilter(Window *target, const QPoint &pos) override;
+    DragEventReply moveFilter(Window *target) override;
     bool handleClientMessage(xcb_client_message_event_t *event) override;
 
 private:
