@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-26 02:49+0000\n"
-"PO-Revision-Date: 2023-03-24 19:42+0100\n"
+"PO-Revision-Date: 2023-05-05 19:42+0200\n"
 "Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 22.07.70\n"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurDescription)
 #: blur/blur_config.ui:17
@@ -539,7 +539,7 @@ msgstr "&Farbe:"
 #, kde-format
 msgid "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
 msgstr ""
-"Zeichnen Sie mit der Maus, indem Sie Umschalt+Meta gedruckt halten und die "
+"Zeichnen Sie mit der Maus, indem Sie Umschalt+Meta gedrückt halten und die "
 "Maus bewegen."
 
 #: outputlocator/outputlocator.cpp:48
@@ -558,7 +558,7 @@ msgstr "Übersicht umschalten"
 #: windowview/kcm/windowvieweffectkcm.ui:22
 #, kde-format
 msgid "Layout mode:"
-msgstr "Anordnungs-Modus:"
+msgstr "Layout-Modus:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
 #: overview/kcm/overvieweffectkcm.ui:56
@@ -805,7 +805,7 @@ msgstr "Tastatur-Kurzbefehl:"
 #: trackmouse/trackmouse_config.ui:43
 #, kde-format
 msgid "Modifier keys:"
-msgstr "Sondertasten"
+msgstr "Sondertasten:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Alt)
 #: trackmouse/trackmouse_config.ui:65
