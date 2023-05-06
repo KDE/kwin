@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-04 02:20+0000\n"
+"POT-Creation-Date: 2023-05-06 02:09+0000\n"
 "PO-Revision-Date: 2023-04-23 22:54+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -56,19 +56,19 @@ msgstr "- Изходът е изключен"
 msgid "- Output dimmed"
 msgstr "- Изходът е затъмнен"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:515
+#: backends/x11/windowed/x11_windowed_backend.cpp:516
 #, kde-format
 msgid "Press right control to ungrab input"
 msgstr ""
 "Натиснете десния бутон за управление, за да освободите входните устройства"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:515
+#: backends/x11/windowed/x11_windowed_backend.cpp:516
 #, kde-format
 msgid "Press right control key to grab input"
 msgstr ""
 "Натиснете десния клавиш за управление, за да прихванете входните устройства"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:516
+#: backends/x11/windowed/x11_windowed_backend.cpp:517
 #, kde-format
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland Compositor"
@@ -1203,22 +1203,22 @@ msgstr "&Прекъсване на програмата %1"
 msgid "Wait Longer"
 msgstr "По-дълго изчакване"
 
-#: input.cpp:2012
+#: input.cpp:2027
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Пренасочване на таблета към следващия изход"
 
-#: input.cpp:2091
+#: input.cpp:2106
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Таблетът е преместен в %1"
 
-#: input.cpp:2091
+#: input.cpp:2106
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Пренасочени изходи на таблети"
 
-#: input.cpp:3095
+#: input.cpp:3123
 #, kde-format
 msgid "Touchpad"
 msgstr "Тъчпад"

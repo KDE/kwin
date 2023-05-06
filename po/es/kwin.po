@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-04 02:20+0000\n"
+"POT-Creation-Date: 2023-05-06 02:09+0000\n"
 "PO-Revision-Date: 2023-04-20 18:09+0200\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -72,17 +72,17 @@ msgstr "- Salida desactivada"
 msgid "- Output dimmed"
 msgstr "- Salida atenuada"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:515
+#: backends/x11/windowed/x11_windowed_backend.cpp:516
 #, kde-format
 msgid "Press right control to ungrab input"
 msgstr "Pulse la tecla de Control derecha para liberar la entrada"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:515
+#: backends/x11/windowed/x11_windowed_backend.cpp:516
 #, kde-format
 msgid "Press right control key to grab input"
 msgstr "Pulse la tecla de Control derecha para capturar la entrada"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:516
+#: backends/x11/windowed/x11_windowed_backend.cpp:517
 #, kde-format
 msgid "KDE Wayland Compositor"
 msgstr "Compositor de KDE Wayland"
@@ -1219,22 +1219,22 @@ msgstr "&Terminar la aplicación %1"
 msgid "Wait Longer"
 msgstr "Esperar más tiempo"
 
-#: input.cpp:2012
+#: input.cpp:2027
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Mover la tableta a la siguiente salida"
 
-#: input.cpp:2091
+#: input.cpp:2106
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Tableta movida a %1"
 
-#: input.cpp:2091
+#: input.cpp:2106
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Las tabletas han cambiado de salida"
 
-#: input.cpp:3095
+#: input.cpp:3123
 #, kde-format
 msgid "Touchpad"
 msgstr "Panel táctil"

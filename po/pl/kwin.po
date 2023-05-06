@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1650881 $
+# Version: $Revision: 1651108 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # Norbert Popiołek <norbert@kde.com.pl>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-04 02:20+0000\n"
+"POT-Creation-Date: 2023-05-06 02:09+0000\n"
 "PO-Revision-Date: 2023-04-23 11:46+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -73,17 +73,17 @@ msgstr "- Wyjście wyłączone"
 msgid "- Output dimmed"
 msgstr "- Wyjście przyciemnione"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:515
+#: backends/x11/windowed/x11_windowed_backend.cpp:516
 #, kde-format
 msgid "Press right control to ungrab input"
 msgstr "Naciśnij prawy przycisk Ctrl, aby zwolnić wprowadzanie"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:515
+#: backends/x11/windowed/x11_windowed_backend.cpp:516
 #, kde-format
 msgid "Press right control key to grab input"
 msgstr "Naciśnij prawy przycisk Ctrl, aby przechwycić wprowadzanie"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:516
+#: backends/x11/windowed/x11_windowed_backend.cpp:517
 #, kde-format
 msgid "KDE Wayland Compositor"
 msgstr "Kompozytor KDE Wayland"
@@ -1217,22 +1217,22 @@ msgstr "&Zakończ program %1"
 msgid "Wait Longer"
 msgstr "Poczekaj dłużej"
 
-#: input.cpp:2012
+#: input.cpp:2027
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Przenieś tablet na następne wyjście"
 
-#: input.cpp:2091
+#: input.cpp:2106
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Tablet przeniósł się na %1"
 
-#: input.cpp:2091
+#: input.cpp:2106
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Tablet przełączył wyjście"
 
-#: input.cpp:3095
+#: input.cpp:3123
 #, kde-format
 msgid "Touchpad"
 msgstr "Gładzik"

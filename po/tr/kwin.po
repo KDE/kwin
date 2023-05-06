@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-04 02:20+0000\n"
+"POT-Creation-Date: 2023-05-06 02:09+0000\n"
 "PO-Revision-Date: 2023-04-20 15:24+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -63,17 +63,17 @@ msgstr "- Çıktı devre dışı"
 msgid "- Output dimmed"
 msgstr "- Çıktı karartıldı"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:515
+#: backends/x11/windowed/x11_windowed_backend.cpp:516
 #, kde-format
 msgid "Press right control to ungrab input"
 msgstr "Girdiyi bırakmak için sağ kontrol düğmesine bas"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:515
+#: backends/x11/windowed/x11_windowed_backend.cpp:516
 #, kde-format
 msgid "Press right control key to grab input"
 msgstr "Girdiyi yakalamak için sağ kontrol düğmesine bas"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:516
+#: backends/x11/windowed/x11_windowed_backend.cpp:517
 #, kde-format
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland Bileşikleştiricisi"
@@ -1208,22 +1208,22 @@ msgstr "%1 Uygulamasını &Sonlandır"
 msgid "Wait Longer"
 msgstr "Biraz Daha Bekle"
 
-#: input.cpp:2012
+#: input.cpp:2027
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Tableti, sonraki çıktıya taşı"
 
-#: input.cpp:2091
+#: input.cpp:2106
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Tablet şuraya taşındı: %1"
 
-#: input.cpp:2091
+#: input.cpp:2106
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Tabletler çıktılarını değiştirdiler"
 
-#: input.cpp:3095
+#: input.cpp:3123
 #, kde-format
 msgid "Touchpad"
 msgstr "Dokunmatik Yüzey"
