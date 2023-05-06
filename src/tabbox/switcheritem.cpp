@@ -27,7 +27,6 @@ SwitcherItem::SwitcherItem(QObject *parent)
     , m_visible(false)
     , m_allDesktops(false)
     , m_currentIndex(0)
-    , m_automaticallyHide(false)
 {
     m_selectedIndexConnection = connect(tabBox, &TabBoxHandler::selectedIndexChanged, this, [this] {
         if (isVisible()) {
