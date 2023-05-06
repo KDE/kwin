@@ -33,8 +33,12 @@ DecoratedClientImpl::DecoratedClientImpl(Window *window, KDecoration2::Decorated
     , m_clientSize(window->clientSize().toSize())
 {
     window->setDecoratedClient(this);
-    connect(window, &Window::activeChanged, this, [decoratedClient, window]() {
-        Q_EMIT decoratedClient->activeChanged(window->isActive());
+    connect(window, &Window::activeChanged, this, [decoratedClient, window, this]() {
+        connect(
+            window, &Window::damaged, this, [window, this, decoratedClient] {
+                Q_EMIT decoratedClient->activeChanged(window->isActive());
+            },
+            Qt::SingleShotConnection);
     });
     connect(window, &Window::clientGeometryChanged, this, [decoratedClient, this]() {
         if (m_window->clientSize() == m_clientSize) {
