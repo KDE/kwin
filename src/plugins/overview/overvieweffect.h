@@ -73,7 +73,8 @@ private:
 
     QTimer *m_shutdownTimer;
     QAction *m_toggleAction = nullptr;
-    QAction *m_realtimeToggleAction = nullptr;
+    QAction *m_deactivateAction = nullptr;
+    QAction *m_activateAction = nullptr;
     QList<QKeySequence> m_toggleShortcut;
     QList<ElectricBorder> m_borderActivate;
     QList<ElectricBorder> m_touchBorderActivate;
