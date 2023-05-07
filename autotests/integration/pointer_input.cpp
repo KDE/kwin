@@ -11,10 +11,10 @@
 #include "core/output.h"
 #include "core/outputbackend.h"
 #include "cursor.h"
+#include "cursorsource.h"
 #include "libkwineffects/kwineffects.h"
 #include "options.h"
 #include "pointer_input.h"
-#include "utils/xcursortheme.h"
 #include "virtualdesktops.h"
 #include "wayland/seat_interface.h"
 #include "wayland_server.h"
@@ -38,47 +38,6 @@
 
 namespace KWin
 {
-
-static PlatformCursorImage loadReferenceThemeCursor_helper(const KXcursorTheme &theme,
-                                                           const QByteArray &name)
-{
-    const QVector<KXcursorSprite> sprites = theme.shape(name);
-    if (sprites.isEmpty()) {
-        return PlatformCursorImage();
-    }
-
-    return PlatformCursorImage(sprites.constFirst().data(), sprites.constFirst().hotspot());
-}
-
-static PlatformCursorImage loadReferenceThemeCursor(const QByteArray &name)
-{
-    const Cursor *pointerCursor = Cursors::self()->mouse();
-
-    const KXcursorTheme theme(pointerCursor->themeName(), pointerCursor->themeSize(), kwinApp()->devicePixelRatio());
-    if (theme.isEmpty()) {
-        return PlatformCursorImage();
-    }
-
-    PlatformCursorImage platformCursorImage = loadReferenceThemeCursor_helper(theme, name);
-    if (!platformCursorImage.isNull()) {
-        return platformCursorImage;
-    }
-
-    const QVector<QByteArray> alternativeNames = Cursor::cursorAlternativeNames(name);
-    for (const QByteArray &alternativeName : alternativeNames) {
-        platformCursorImage = loadReferenceThemeCursor_helper(theme, alternativeName);
-        if (!platformCursorImage.isNull()) {
-            break;
-        }
-    }
-
-    return platformCursorImage;
-}
-
-static PlatformCursorImage loadReferenceThemeCursor(const CursorShape &shape)
-{
-    return loadReferenceThemeCursor(shape.name());
-}
 
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_pointer_input-0");
 
@@ -1550,6 +1509,31 @@ void PointerInputTest::testResizeCursor_data()
     QTest::newRow("left") << Qt::Edges(Qt::LeftEdge) << CursorShape(ExtendedCursor::SizeWest);
 }
 
+enum class CurrentCursorType {
+    Shape,
+    Surface,
+};
+
+static CurrentCursorType currentCursorSource()
+{
+    auto source = Cursors::self()->currentCursor()->source();
+    if (qobject_cast<ShapeCursorSource *>(source)) {
+        return CurrentCursorType::Shape;
+    } else if (qobject_cast<SurfaceCursorSource *>(source)) {
+        return CurrentCursorType::Surface;
+    } else {
+        Q_UNREACHABLE();
+    }
+}
+
+static QByteArray currentCursorShape()
+{
+    if (auto source = qobject_cast<ShapeCursorSource *>(Cursors::self()->currentCursor()->source())) {
+        return source->shape();
+    }
+    return QByteArray();
+}
+
 void PointerInputTest::testResizeCursor()
 {
     // this test verifies that the cursor has correct shape during resize operation
@@ -1563,11 +1547,9 @@ void PointerInputTest::testResizeCursor()
     QCOMPARE(options->commandAllModifier(), Qt::MetaModifier);
     QCOMPARE(options->commandAll3(), Options::MouseUnrestrictedResize);
 
-    // load the fallback cursor (arrow cursor)
-    const PlatformCursorImage arrowCursor = loadReferenceThemeCursor(Qt::ArrowCursor);
-    QVERIFY(!arrowCursor.isNull());
-    QCOMPARE(kwinApp()->cursorImage().image(), arrowCursor.image());
-    QCOMPARE(kwinApp()->cursorImage().hotSpot(), arrowCursor.hotSpot());
+    // arrow cursor should be used by default
+    QCOMPARE(currentCursorSource(), CurrentCursorType::Shape);
+    QCOMPARE(currentCursorShape(), CursorShape(Qt::ArrowCursor).name());
 
     // we need a pointer to get the enter event
     auto pointer = m_seat->createPointer(m_seat);
@@ -1610,11 +1592,14 @@ void PointerInputTest::testResizeCursor()
     std::unique_ptr<KWayland::Client::Surface> cursorSurface(Test::createSurface());
     QVERIFY(cursorSurface);
     QSignalSpy cursorRenderedSpy(cursorSurface.get(), &KWayland::Client::Surface::frameRendered);
-    cursorSurface->attachBuffer(Test::waylandShmPool()->createBuffer(arrowCursor.image()));
-    cursorSurface->damage(arrowCursor.image().rect());
+    QImage cursorImage(QSize(10, 10), QImage::Format_ARGB32_Premultiplied);
+    cursorImage.fill(Qt::green);
+    cursorSurface->attachBuffer(Test::waylandShmPool()->createBuffer(cursorImage));
+    cursorSurface->damage(cursorImage.rect());
     cursorSurface->commit();
-    pointer->setCursor(cursorSurface.get(), arrowCursor.hotSpot().toPoint());
+    pointer->setCursor(cursorSurface.get(), QPoint(0, 0));
     QVERIFY(cursorRenderedSpy.wait());
+    QCOMPARE(currentCursorSource(), CurrentCursorType::Surface);
 
     // start resizing the window
     int timestamp = 1;
@@ -1623,18 +1608,15 @@ void PointerInputTest::testResizeCursor()
     QVERIFY(window->isInteractiveResize());
 
     QFETCH(KWin::CursorShape, cursorShape);
-    const PlatformCursorImage resizeCursor = loadReferenceThemeCursor(cursorShape);
-    QVERIFY(!resizeCursor.isNull());
-    QCOMPARE(kwinApp()->cursorImage().image(), resizeCursor.image());
-    QCOMPARE(kwinApp()->cursorImage().hotSpot(), resizeCursor.hotSpot());
+    QCOMPARE(currentCursorSource(), CurrentCursorType::Shape);
+    QCOMPARE(currentCursorShape(), cursorShape.name());
 
     // finish resizing the window
     Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
     Test::pointerButtonReleased(BTN_RIGHT, timestamp++);
     QVERIFY(!window->isInteractiveResize());
 
-    QCOMPARE(kwinApp()->cursorImage().image(), arrowCursor.image());
-    QCOMPARE(kwinApp()->cursorImage().hotSpot(), arrowCursor.hotSpot());
+    QCOMPARE(currentCursorSource(), CurrentCursorType::Surface);
 }
 
 void PointerInputTest::testMoveCursor()
@@ -1650,11 +1632,9 @@ void PointerInputTest::testMoveCursor()
     QCOMPARE(options->commandAllModifier(), Qt::MetaModifier);
     QCOMPARE(options->commandAll1(), Options::MouseUnrestrictedMove);
 
-    // load the fallback cursor (arrow cursor)
-    const PlatformCursorImage arrowCursor = loadReferenceThemeCursor(Qt::ArrowCursor);
-    QVERIFY(!arrowCursor.isNull());
-    QCOMPARE(kwinApp()->cursorImage().image(), arrowCursor.image());
-    QCOMPARE(kwinApp()->cursorImage().hotSpot(), arrowCursor.hotSpot());
+    // arrow cursor should be used by default
+    QCOMPARE(currentCursorSource(), CurrentCursorType::Shape);
+    QCOMPARE(currentCursorShape(), CursorShape(Qt::ArrowCursor).name());
 
     // we need a pointer to get the enter event
     auto pointer = m_seat->createPointer(m_seat);
@@ -1678,11 +1658,14 @@ void PointerInputTest::testMoveCursor()
     std::unique_ptr<KWayland::Client::Surface> cursorSurface = Test::createSurface();
     QVERIFY(cursorSurface);
     QSignalSpy cursorRenderedSpy(cursorSurface.get(), &KWayland::Client::Surface::frameRendered);
-    cursorSurface->attachBuffer(Test::waylandShmPool()->createBuffer(arrowCursor.image()));
-    cursorSurface->damage(arrowCursor.image().rect());
+    QImage cursorImage(QSize(10, 10), QImage::Format_ARGB32_Premultiplied);
+    cursorImage.fill(Qt::green);
+    cursorSurface->attachBuffer(Test::waylandShmPool()->createBuffer(cursorImage));
+    cursorSurface->damage(cursorImage.rect());
     cursorSurface->commit();
-    pointer->setCursor(cursorSurface.get(), arrowCursor.hotSpot().toPoint());
+    pointer->setCursor(cursorSurface.get(), QPoint(0, 0));
     QVERIFY(cursorRenderedSpy.wait());
+    QCOMPARE(currentCursorSource(), CurrentCursorType::Surface);
 
     // start moving the window
     int timestamp = 1;
@@ -1690,18 +1673,15 @@ void PointerInputTest::testMoveCursor()
     Test::pointerButtonPressed(BTN_LEFT, timestamp++);
     QVERIFY(window->isInteractiveMove());
 
-    const PlatformCursorImage sizeAllCursor = loadReferenceThemeCursor(Qt::SizeAllCursor);
-    QVERIFY(!sizeAllCursor.isNull());
-    QCOMPARE(kwinApp()->cursorImage().image(), sizeAllCursor.image());
-    QCOMPARE(kwinApp()->cursorImage().hotSpot(), sizeAllCursor.hotSpot());
+    QCOMPARE(currentCursorSource(), CurrentCursorType::Shape);
+    QCOMPARE(currentCursorShape(), CursorShape(Qt::SizeAllCursor).name());
 
     // finish moving the window
     Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
     Test::pointerButtonReleased(BTN_LEFT, timestamp++);
     QVERIFY(!window->isInteractiveMove());
 
-    QCOMPARE(kwinApp()->cursorImage().image(), arrowCursor.image());
-    QCOMPARE(kwinApp()->cursorImage().hotSpot(), arrowCursor.hotSpot());
+    QCOMPARE(currentCursorSource(), CurrentCursorType::Surface);
 }
 
 void PointerInputTest::testHideShowCursor()
