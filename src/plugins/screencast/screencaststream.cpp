@@ -413,10 +413,12 @@ bool ScreenCastStream::createStream()
     }
 
     if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Embedded) {
+        connect(Cursors::self(), &Cursors::currentCursorChanged, this, &ScreenCastStream::invalidateCursor);
         connect(Cursors::self(), &Cursors::positionChanged, this, [this] {
             recordFrame({});
         });
     } else if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Metadata) {
+        connect(Cursors::self(), &Cursors::currentCursorChanged, this, &ScreenCastStream::invalidateCursor);
         connect(Cursors::self(), &Cursors::positionChanged, this, &ScreenCastStream::recordCursor);
     }
 
@@ -524,7 +526,8 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
             QImage dest(data, size.width(), size.height(), stride, hasAlpha ? QImage::Format_RGBA8888_Premultiplied : QImage::Format_RGB888);
             QPainter painter(&dest);
             const auto position = (cursor->pos() - m_cursor.viewport.topLeft() - cursor->hotspot()) * m_cursor.scale;
-            painter.drawImage(QRect{position.toPoint(), cursor->image().size()}, cursor->image());
+            const PlatformCursorImage cursorImage = kwinApp()->cursorImage();
+            painter.drawImage(QRect{position.toPoint(), cursorImage.image().size()}, cursorImage.image());
         }
     } else {
         auto &buf = m_dmabufDataForPwBuffer[buffer];
@@ -542,7 +545,16 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
 
         auto cursor = Cursors::self()->currentCursor();
         if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Embedded && exclusiveContains(m_cursor.viewport, cursor->pos())) {
-            if (!cursor->image().isNull()) {
+            if (m_cursor.invalid) {
+                m_cursor.invalid = false;
+                const PlatformCursorImage cursorImage = kwinApp()->cursorImage();
+                if (cursorImage.isNull()) {
+                    m_cursor.texture = nullptr;
+                } else {
+                    m_cursor.texture = std::make_unique<GLTexture>(cursorImage.image());
+                }
+            }
+            if (m_cursor.texture) {
                 GLFramebuffer::pushFramebuffer(buf->framebuffer());
 
                 QRect r(QPoint(), size);
@@ -552,13 +564,9 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
                 mvp.ortho(r);
                 shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
 
-                if (!m_cursor.texture || m_cursor.lastKey != cursor->image().cacheKey()) {
-                    m_cursor.texture.reset(new GLTexture(cursor->image()));
-                }
-
                 m_cursor.texture->setContentTransform(TextureTransforms());
                 const auto cursorRect = cursorGeometry(cursor);
-                mvp.translate(cursorRect.left(), r.height() - cursorRect.top() - cursor->image().height());
+                mvp.translate(cursorRect.left(), r.height() - cursorRect.top() - m_cursor.texture->height());
                 shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
 
                 glEnable(GL_BLEND);
@@ -624,6 +632,11 @@ void ScreenCastStream::addDamage(spa_buffer *spaBuffer, const QRegion &damagedRe
             r->region = SPA_REGION(0, 0, 0, 0);
         }
     }
+}
+
+void ScreenCastStream::invalidateCursor()
+{
+    m_cursor.invalid = true;
 }
 
 void ScreenCastStream::recordCursor()
@@ -815,12 +828,11 @@ void ScreenCastStream::sendCursorData(Cursor *cursor, spa_meta_cursor *spa_meta_
     spa_meta_cursor->hotspot.y = cursor->hotspot().y() * m_cursor.scale;
     spa_meta_cursor->bitmap_offset = 0;
 
-    const QImage image = cursor->image();
-    if (image.cacheKey() == m_cursor.lastKey) {
+    if (!m_cursor.invalid) {
         return;
     }
 
-    m_cursor.lastKey = image.cacheKey();
+    m_cursor.invalid = false;
     spa_meta_cursor->bitmap_offset = sizeof(struct spa_meta_cursor);
 
     const QSize targetSize = (cursor->rect().size() * m_cursor.scale).toSize();
@@ -842,6 +854,7 @@ void ScreenCastStream::sendCursorData(Cursor *cursor, spa_meta_cursor *spa_meta_
                 QImage::Format_RGBA8888_Premultiplied);
     dest.fill(Qt::transparent);
 
+    const QImage image = kwinApp()->cursorImage().image();
     if (!image.isNull()) {
         QPainter painter(&dest);
         painter.drawImage(QRect({0, 0}, targetSize), image);

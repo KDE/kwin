@@ -168,7 +168,6 @@ public:
      */
     xcb_cursor_t x11Cursor(const QByteArray &name);
 
-    QImage image() const;
     QPointF hotspot() const;
     QRectF geometry() const;
     QRectF rect() const;

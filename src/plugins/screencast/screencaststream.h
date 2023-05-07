@@ -65,6 +65,7 @@ public:
     void setCursorMode(KWaylandServer::ScreencastV1Interface::CursorMode mode, qreal scale, const QRectF &viewport);
 
 public Q_SLOTS:
+    void invalidateCursor();
     void recordCursor();
 
 Q_SIGNALS:
@@ -117,10 +118,10 @@ private:
         const QSize bitmapSize = QSize(256, 256);
         qreal scale = 1;
         QRectF viewport;
-        qint64 lastKey = 0;
         QRectF lastRect;
         std::unique_ptr<GLTexture> texture;
         bool visible = false;
+        bool invalid = true;
     } m_cursor;
     QRectF cursorGeometry(Cursor *cursor) const;
 

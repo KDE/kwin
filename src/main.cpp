@@ -17,6 +17,7 @@
 #include "core/outputbackend.h"
 #include "core/session.h"
 #include "cursor.h"
+#include "cursorsource.h"
 #include "effects.h"
 #include "input.h"
 #include "inputmethod.h"
@@ -641,7 +642,10 @@ ScreenLockerWatcher *Application::screenLockerWatcher() const
 PlatformCursorImage Application::cursorImage() const
 {
     Cursor *cursor = Cursors::self()->currentCursor();
-    return PlatformCursorImage(cursor->image(), cursor->hotspot());
+    if (CursorSource *source = cursor->source()) {
+        return PlatformCursorImage(source->image(), source->hotspot());
+    }
+    return PlatformCursorImage();
 }
 
 void Application::startInteractiveWindowSelection(std::function<void(KWin::Window *)> callback, const QByteArray &cursorName)

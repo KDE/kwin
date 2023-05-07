@@ -175,14 +175,6 @@ bool Cursor::isOnOutput(Output *output) const
     return geometry().intersects(output->geometry());
 }
 
-QImage Cursor::image() const
-{
-    if (Q_UNLIKELY(!m_source)) {
-        return QImage();
-    }
-    return m_source->image();
-}
-
 QPointF Cursor::hotspot() const
 {
     if (Q_UNLIKELY(!m_source)) {
