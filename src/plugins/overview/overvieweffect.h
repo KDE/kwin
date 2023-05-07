@@ -11,6 +11,104 @@
 namespace KWin
 {
 
+class TogglableState : public QObject
+{
+    Q_OBJECT
+public:
+    enum class Status {
+        Inactive,
+        Activating,
+        Deactivating,
+        Active
+    };
+    Q_ENUM(Status);
+
+    TogglableState(QObject *parent);
+
+    bool inProgress() const;
+    void setInProgress(bool gesture);
+
+    qreal partialActivationFactor() const
+    {
+        return m_partialActivationFactor;
+    }
+    void setPartialActivationFactor(qreal factor);
+
+    QAction *activateAction() const
+    {
+        return m_activateAction;
+    }
+    QAction *deactivateAction() const
+    {
+        return m_deactivateAction;
+    }
+    QAction *toggleAction() const
+    {
+        return m_toggleAction;
+    }
+
+    void activate();
+    void deactivate();
+    void toggle();
+    void setStatus(Status status);
+    Status status() const
+    {
+        return m_status;
+    }
+
+Q_SIGNALS:
+    void inProgressChanged();
+    void partialActivationFactorChanged();
+    void activated();
+    void deactivated();
+    void statusChanged(Status status);
+
+protected:
+    void setProgress(qreal progress);
+
+    /// regress being the progress when on an active state
+    void setRegress(qreal regress);
+
+private:
+    void partialActivate(qreal factor);
+    void partialDeactivate(qreal factor);
+
+    QAction *m_deactivateAction = nullptr;
+    QAction *m_activateAction = nullptr;
+    QAction *m_toggleAction = nullptr;
+    Status m_status = Status::Inactive;
+    bool m_inProgress = false;
+    qreal m_partialActivationFactor = 0;
+
+    friend class TogglableGesture;
+    friend class TogglableTouchBorder;
+};
+
+class TogglableGesture : public QObject
+{
+public:
+    TogglableGesture(TogglableState *state);
+
+    void addTouchpadGesture(PinchDirection dir, uint fingerCount);
+    void addTouchscreenSwipeGesture(SwipeDirection direction, uint fingerCount);
+
+private:
+    TogglableState *const m_state;
+};
+
+class TogglableTouchBorder : public QObject
+{
+public:
+    TogglableTouchBorder(TogglableState *state);
+    ~TogglableTouchBorder();
+
+    void setBorders(const QList<int> &borders);
+
+private:
+    QList<ElectricBorder> m_touchBorderActivate;
+    TogglableState *const m_state;
+};
+
 class OverviewEffect : public QuickSceneEffect
 {
     Q_OBJECT
@@ -23,12 +121,6 @@ class OverviewEffect : public QuickSceneEffect
     Q_PROPERTY(QString searchText MEMBER m_searchText NOTIFY searchTextChanged)
 
 public:
-    enum class Status {
-        Inactive,
-        Activating,
-        Deactivating,
-        Active
-    };
     OverviewEffect();
     ~OverviewEffect() override;
 
@@ -40,11 +132,15 @@ public:
     int animationDuration() const;
     void setAnimationDuration(int duration);
 
-    qreal partialActivationFactor() const;
-    void setPartialActivationFactor(qreal factor);
+    qreal partialActivationFactor() const
+    {
+        return m_state->partialActivationFactor();
+    }
 
-    bool gestureInProgress() const;
-    void setGestureInProgress(bool gesture);
+    bool gestureInProgress() const
+    {
+        return m_state->inProgress();
+    }
 
     int requestedEffectChainPosition() const override;
     bool borderActivated(ElectricBorder border) override;
@@ -61,29 +157,20 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void activate();
-    void partialActivate(qreal factor);
-    void cancelPartialActivate();
-    void partialDeactivate(qreal factor);
-    void cancelPartialDeactivate();
     void deactivate();
-    void toggle();
 
 private:
     void realDeactivate();
 
+    TogglableState *const m_state;
+    TogglableTouchBorder *const m_border;
+
     QTimer *m_shutdownTimer;
-    QAction *m_toggleAction = nullptr;
-    QAction *m_deactivateAction = nullptr;
-    QAction *m_activateAction = nullptr;
     QList<QKeySequence> m_toggleShortcut;
     QList<ElectricBorder> m_borderActivate;
-    QList<ElectricBorder> m_touchBorderActivate;
     QString m_searchText;
-    Status m_status = Status::Inactive;
-    qreal m_partialActivationFactor = 0;
     int m_animationDuration = 400;
     int m_layout = 1;
-    bool m_gestureInProgress = false;
 };
 
 } // namespace KWin
