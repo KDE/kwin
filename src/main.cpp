@@ -21,10 +21,14 @@
 #include "effects.h"
 #include "input.h"
 #include "inputmethod.h"
+#include "libkwineffects/kwingltexture.h"
+#include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/rendertarget.h"
 #include "options.h"
 #include "outline.h"
 #include "pluginmanager.h"
 #include "pointer_input.h"
+#include "scene/cursorscene.h"
 #include "screenedge.h"
 #include "sm.h"
 #include "tabletmodemanager.h"
@@ -639,13 +643,74 @@ ScreenLockerWatcher *Application::screenLockerWatcher() const
 }
 #endif
 
+static PlatformCursorImage grabCursorOpenGL()
+{
+    CursorScene *scene = Compositor::self()->cursorScene();
+    if (!scene) {
+        return PlatformCursorImage();
+    }
+
+    Cursor *cursor = Cursors::self()->currentCursor();
+    Output *output = workspace()->outputAt(cursor->pos());
+
+    GLTexture texture(GL_RGBA8, (cursor->geometry().size() * output->scale()).toSize());
+    texture.setContentTransform(TextureTransform::MirrorY);
+    GLFramebuffer framebuffer(&texture);
+    RenderTarget renderTarget(&framebuffer);
+
+    SceneDelegate delegate(scene, output);
+    scene->prePaint(&delegate);
+    scene->paint(renderTarget, infiniteRegion());
+    scene->postPaint();
+
+    QImage image = texture.toImage();
+    image.setDevicePixelRatio(output->scale());
+
+    return PlatformCursorImage(image, cursor->hotspot());
+}
+
+static PlatformCursorImage grabCursorSoftware()
+{
+    CursorScene *scene = Compositor::self()->cursorScene();
+    if (!scene) {
+        return PlatformCursorImage();
+    }
+
+    Cursor *cursor = Cursors::self()->currentCursor();
+    Output *output = workspace()->outputAt(cursor->pos());
+
+    QImage image((cursor->geometry().size() * output->scale()).toSize(), QImage::Format_ARGB32_Premultiplied);
+    RenderTarget renderTarget(&image);
+
+    SceneDelegate delegate(scene, output);
+    scene->prePaint(&delegate);
+    scene->paint(renderTarget, infiniteRegion());
+    scene->postPaint();
+
+    image.setDevicePixelRatio(output->scale());
+    return PlatformCursorImage(image, cursor->hotspot());
+}
+
 PlatformCursorImage Application::cursorImage() const
 {
     Cursor *cursor = Cursors::self()->currentCursor();
-    if (CursorSource *source = cursor->source()) {
-        return PlatformCursorImage(source->image(), source->hotspot());
+    if (cursor->geometry().isEmpty()) {
+        return PlatformCursorImage();
     }
-    return PlatformCursorImage();
+
+    if (auto shapeSource = qobject_cast<ShapeCursorSource *>(cursor->source())) {
+        return PlatformCursorImage(shapeSource->image(), shapeSource->hotspot());
+    }
+
+    // The cursor content is provided by a client, grab the contents of the cursor scene.
+    switch (effects->compositingType()) {
+    case OpenGLCompositing:
+        return grabCursorOpenGL();
+    case QPainterCompositing:
+        return grabCursorSoftware();
+    default:
+        Q_UNREACHABLE();
+    }
 }
 
 void Application::startInteractiveWindowSelection(std::function<void(KWin::Window *)> callback, const QByteArray &cursorName)
