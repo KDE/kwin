@@ -72,6 +72,12 @@ FocusScope {
         delete dndManagerStore[key];
     }
 
+    onActiveFocusChanged: () => {
+        if (!activeFocus) {
+            resetSelected();
+        }
+    }
+
     KWinComponents.WindowThumbnail {
         id: otherScreenThumbnail
         z: 2
