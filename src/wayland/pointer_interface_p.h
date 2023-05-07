@@ -36,6 +36,7 @@ public:
     PointerInterface *q;
     SeatInterface *seat;
     SurfaceInterface *focusedSurface = nullptr;
+    quint32 focusedSerial = 0;
     QMetaObject::Connection destroyConnection;
     std::unique_ptr<Cursor> cursor;
     std::unique_ptr<RelativePointerV1Interface> relativePointersV1;

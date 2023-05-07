@@ -62,6 +62,9 @@ void PointerInterfacePrivate::pointer_set_cursor(Resource *resource, uint32_t se
         qCDebug(KWIN_CORE, "Denied set_cursor request from unfocused client");
         return;
     }
+    if (focusedSerial != serial) {
+        return;
+    }
 
     if (surface_resource) {
         surface = SurfaceInterface::get(surface_resource);
@@ -159,6 +162,7 @@ void PointerInterface::sendEnter(SurfaceInterface *surface, const QPointF &posit
     }
 
     d->focusedSurface = surface;
+    d->focusedSerial = serial;
     d->destroyConnection = connect(d->focusedSurface, &SurfaceInterface::aboutToBeDestroyed, this, [this]() {
         d->sendLeave(d->seat->display()->nextSerial());
         d->sendFrame();
