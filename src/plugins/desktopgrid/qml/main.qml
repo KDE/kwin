@@ -40,7 +40,7 @@ Rectangle {
 
     function switchTo(desktop) {
         KWinComponents.Workspace.currentDesktop = desktop;
-        effect.deactivate(effect.animationDuration);
+        effect.deactivate();
     }
 
     function selectNext(direction) {
@@ -92,7 +92,7 @@ Rectangle {
 
     Keys.onPressed: {
         if (event.key === Qt.Key_Escape) {
-            effect.deactivate(effect.animationDuration);
+            effect.deactivate();
         } else if (event.key === Qt.Key_Plus || event.key === Qt.Key_Equal) {
             addButton.clicked();
         } else if (event.key === Qt.Key_Minus) {
@@ -283,7 +283,7 @@ Rectangle {
                     acceptedButtons: Qt.LeftButton
                     onTapped: {
                         KWinComponents.Workspace.currentDesktop = thumbnail.desktop;
-                        container.effect.deactivate(container.effect.animationDuration);
+                        container.effect.deactivate();
                     }
                 }
             }
@@ -320,7 +320,7 @@ Rectangle {
     TapHandler {
         acceptedButtons: Qt.LeftButton
         onTapped: {
-            container.effect.deactivate(container.effect.animationDuration);
+            container.effect.deactivate();
         }
     }
 

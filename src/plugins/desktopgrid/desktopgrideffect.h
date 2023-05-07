@@ -7,6 +7,7 @@
 #pragma once
 
 #include "libkwineffects/kwinquickeffect.h"
+#include "libkwineffects/togglablestate.h"
 
 namespace KWin
 {
@@ -33,13 +34,6 @@ public:
     };
     Q_ENUM(DesktopLayoutMode)
 
-    enum class Status {
-        Inactive,
-        Activating,
-        Deactivating,
-        Active
-    };
-
     DesktopGridEffect();
     ~DesktopGridEffect() override;
 
@@ -51,11 +45,12 @@ public:
 
     bool showAddRemove() const;
 
-    qreal partialActivationFactor() const;
-    void setPartialActivationFactor(qreal factor);
+    qreal partialActivationFactor() const
+    {
+        return m_state->partialActivationFactor();
+    }
 
     bool gestureInProgress() const;
-    void setGestureInProgress(bool gesture);
 
     int gridRows() const;
     int gridColumns() const;
@@ -75,12 +70,7 @@ public:
 
 public Q_SLOTS:
     void activate();
-    void partialActivate(qreal factor);
-    void cancelPartialActivate();
-    void partialDeactivate(qreal factor);
-    void cancelPartialDeactivate();
-    void deactivate(int timeout);
-    void toggle();
+    void deactivate();
 
 Q_SIGNALS:
     void gridRowsChanged();
@@ -98,16 +88,12 @@ private:
     void realDeactivate();
 
     QTimer *m_shutdownTimer;
-    qreal m_partialActivationFactor = 0;
-    QAction *m_toggleAction = nullptr;
-    QAction *m_realtimeToggleAction = nullptr;
     QList<QKeySequence> m_toggleShortcut;
     QList<ElectricBorder> m_borderActivate;
-    QList<ElectricBorder> m_touchBorderActivate;
-    Status m_status = Status::Inactive;
+    TogglableState *const m_state;
+    TogglableTouchBorder *const m_border;
     int m_animationDuration = 400;
     int m_layout = 1;
-    bool m_gestureInProgress = false;
 };
 
 } // namespace KWin

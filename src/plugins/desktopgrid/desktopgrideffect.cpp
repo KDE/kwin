@@ -20,8 +20,8 @@ namespace KWin
 
 DesktopGridEffect::DesktopGridEffect()
     : m_shutdownTimer(new QTimer(this))
-    , m_toggleAction(new QAction(this))
-    , m_realtimeToggleAction(new QAction(this))
+    , m_state(new TogglableState(this))
+    , m_border(new TogglableTouchBorder(m_state))
 {
     qmlRegisterUncreatableType<DesktopGridEffect>("org.kde.kwin.private.desktopgrid", 1, 0, "DesktopGridEffect", QStringLiteral("Cannot create elements of type DesktopGridEffect"));
 
@@ -30,50 +30,23 @@ DesktopGridEffect::DesktopGridEffect()
     connect(effects, &EffectsHandler::screenAboutToLock, this, &DesktopGridEffect::realDeactivate);
     connect(effects, &EffectsHandler::desktopGridWidthChanged, this, &DesktopGridEffect::gridColumnsChanged);
     connect(effects, &EffectsHandler::desktopGridHeightChanged, this, &DesktopGridEffect::gridRowsChanged);
-
-    m_toggleAction->setObjectName(QStringLiteral("ShowDesktopGrid"));
-    m_toggleAction->setText(i18n("Show Desktop Grid"));
-    KGlobalAccel::self()->setDefaultShortcut(m_toggleAction, QList<QKeySequence>() << (Qt::META | Qt::Key_F8));
-    KGlobalAccel::self()->setShortcut(m_toggleAction, QList<QKeySequence>() << (Qt::META | Qt::Key_F8));
-    m_toggleShortcut = KGlobalAccel::self()->shortcut(m_toggleAction);
-    connect(m_toggleAction, &QAction::triggered, this, [this]() {
-        if (isRunning()) {
-            deactivate(animationDuration());
-        } else {
-            activate();
-        }
+    connect(m_state, &TogglableState::activated, this, &DesktopGridEffect::activate);
+    connect(m_state, &TogglableState::deactivated, this, &DesktopGridEffect::deactivate);
+    connect(m_state, &TogglableState::inProgressChanged, this, &DesktopGridEffect::gestureInProgressChanged);
+    connect(m_state, &TogglableState::partialActivationFactorChanged, this, &DesktopGridEffect::partialActivationFactorChanged);
+    connect(m_state, &TogglableState::statusChanged, this, [this](TogglableState::Status status) {
+        setRunning(status != TogglableState::Status::Inactive);
     });
 
-    connect(m_realtimeToggleAction, &QAction::triggered, this, [this]() {
-        if (m_status == Status::Deactivating) {
-            if (m_partialActivationFactor < 0.5) {
-                deactivate(animationDuration());
-            } else {
-                cancelPartialDeactivate();
-            }
-        } else if (m_status == Status::Activating) {
-            if (m_partialActivationFactor > 0.5) {
-                activate();
-            } else {
-                cancelPartialActivate();
-            }
-        }
-    });
+    auto toggleAction = m_state->toggleAction();
+    toggleAction->setObjectName(QStringLiteral("ShowDesktopGrid"));
+    toggleAction->setText(i18n("Show Desktop Grid"));
+    KGlobalAccel::self()->setDefaultShortcut(toggleAction, QList<QKeySequence>() << (Qt::META | Qt::Key_F8));
+    KGlobalAccel::self()->setShortcut(toggleAction, QList<QKeySequence>() << (Qt::META | Qt::Key_F8));
+    m_toggleShortcut = KGlobalAccel::self()->shortcut(toggleAction);
 
-    effects->registerTouchpadSwipeShortcut(SwipeDirection::Up, 4, m_realtimeToggleAction, [this](qreal progress) {
-        if (!effects->hasActiveFullScreenEffect() || effects->activeFullScreenEffect() == this) {
-            switch (m_status) {
-            case Status::Inactive:
-            case Status::Activating:
-                partialActivate(progress);
-                break;
-            case Status::Active:
-            case Status::Deactivating:
-                partialDeactivate(progress);
-                break;
-            }
-        }
-    });
+    auto gesture = new TogglableGesture(m_state);
+    gesture->addTouchpadSwipeGesture(SwipeDirection::Up, 4);
 
     initConfig<DesktopGridConfig>();
     reconfigure(ReconfigureAll);
@@ -95,12 +68,7 @@ void DesktopGridEffect::reconfigure(ReconfigureFlags)
         effects->unreserveElectricBorder(border, this);
     }
 
-    for (const ElectricBorder &border : std::as_const(m_touchBorderActivate)) {
-        effects->unregisterTouchBorder(border, m_toggleAction);
-    }
-
     m_borderActivate.clear();
-    m_touchBorderActivate.clear();
 
     const QList<int> activateBorders = DesktopGridConfig::borderActivate();
     for (const int &border : activateBorders) {
@@ -108,24 +76,7 @@ void DesktopGridEffect::reconfigure(ReconfigureFlags)
         effects->reserveElectricBorder(ElectricBorder(border), this);
     }
 
-    const QList<int> touchActivateBorders = DesktopGridConfig::touchBorderActivate();
-    for (const int &border : touchActivateBorders) {
-        m_touchBorderActivate.append(ElectricBorder(border));
-        effects->registerRealtimeTouchBorder(ElectricBorder(border), m_realtimeToggleAction, [this](ElectricBorder border, const QPointF &deltaProgress, const EffectScreen *screen) {
-            if (m_status == Status::Active) {
-                return;
-            }
-            const int rows = gridRows();
-            const int columns = gridColumns();
-            if (border == ElectricTop || border == ElectricBottom) {
-                const int maxDelta = (screen->geometry().height() / rows) * (rows - (effects->currentDesktop() % rows));
-                partialActivate(std::min(1.0, std::abs(deltaProgress.y()) / maxDelta));
-            } else {
-                const int maxDelta = (screen->geometry().width() / columns) * (columns - (effects->currentDesktop() % columns));
-                partialActivate(std::min(1.0, std::abs(deltaProgress.x()) / maxDelta));
-            }
-        });
-    }
+    m_border->setBorders(DesktopGridConfig::touchBorderActivate());
 
     Q_EMIT showAddRemoveChanged();
     Q_EMIT desktopNameAlignmentChanged();
@@ -141,7 +92,7 @@ int DesktopGridEffect::requestedEffectChainPosition() const
 bool DesktopGridEffect::borderActivated(ElectricBorder border)
 {
     if (m_borderActivate.contains(border)) {
-        toggle();
+        m_state->toggle();
         return true;
     }
     return false;
@@ -151,7 +102,7 @@ void DesktopGridEffect::grabbedKeyboardEvent(QKeyEvent *keyEvent)
 {
     if (m_toggleShortcut.contains(keyEvent->key() | keyEvent->modifiers())) {
         if (keyEvent->type() == QEvent::KeyPress) {
-            toggle();
+            m_state->toggle();
         }
         return;
     }
@@ -262,39 +213,9 @@ void DesktopGridEffect::setLayout(int layout)
     }
 }
 
-qreal DesktopGridEffect::partialActivationFactor() const
-{
-    return m_partialActivationFactor;
-}
-
-void DesktopGridEffect::setPartialActivationFactor(qreal factor)
-{
-    if (m_partialActivationFactor != factor) {
-        m_partialActivationFactor = factor;
-        Q_EMIT partialActivationFactorChanged();
-    }
-}
-
 bool DesktopGridEffect::gestureInProgress() const
 {
-    return m_gestureInProgress;
-}
-
-void DesktopGridEffect::setGestureInProgress(bool gesture)
-{
-    if (m_gestureInProgress != gesture) {
-        m_gestureInProgress = gesture;
-        Q_EMIT gestureInProgressChanged();
-    }
-}
-
-void DesktopGridEffect::toggle()
-{
-    if (!isRunning() || m_partialActivationFactor > 0.5) {
-        activate();
-    } else {
-        deactivate(animationDuration());
-    }
+    return m_state->inProgress();
 }
 
 void DesktopGridEffect::activate()
@@ -303,36 +224,10 @@ void DesktopGridEffect::activate()
         return;
     }
 
-    m_status = Status::Active;
-
-    setGestureInProgress(false);
-    setPartialActivationFactor(0.0);
-
-    // This one should be the last.
-    setRunning(true);
+    m_state->activate();
 }
 
-void DesktopGridEffect::partialActivate(qreal factor)
-{
-    if (effects->isScreenLocked()) {
-        return;
-    }
-
-    m_status = Status::Activating;
-
-    setPartialActivationFactor(factor);
-    setGestureInProgress(true);
-
-    // This one should be the last.
-    setRunning(true);
-}
-
-void DesktopGridEffect::cancelPartialActivate()
-{
-    deactivate(animationDuration());
-}
-
-void DesktopGridEffect::deactivate(int timeout)
+void DesktopGridEffect::deactivate()
 {
     const auto screens = effects->screens();
     for (const auto screen : screens) {
@@ -340,29 +235,14 @@ void DesktopGridEffect::deactivate(int timeout)
             QMetaObject::invokeMethod(view->rootItem(), "stop");
         }
     }
-    m_shutdownTimer->start(timeout);
+    m_shutdownTimer->start(animationDuration());
 
-    setGestureInProgress(false);
-    setPartialActivationFactor(0.0);
-}
-
-void DesktopGridEffect::partialDeactivate(qreal factor)
-{
-    m_status = Status::Deactivating;
-
-    setPartialActivationFactor(1 - factor);
-    setGestureInProgress(true);
-}
-
-void DesktopGridEffect::cancelPartialDeactivate()
-{
-    activate();
+    m_state->deactivate();
 }
 
 void DesktopGridEffect::realDeactivate()
 {
-    setRunning(false);
-    m_status = Status::Inactive;
+    m_state->setStatus(TogglableState::Status::Inactive);
 }
 
 } // namespace KWin
