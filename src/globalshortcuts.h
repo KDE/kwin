@@ -113,7 +113,7 @@ public:
 
 private:
     void objectDeleted(QObject *object);
-    bool addIfNotExists(GlobalShortcut sc, DeviceType device = DeviceType::Touchpad);
+    bool add(GlobalShortcut sc, DeviceType device = DeviceType::Touchpad);
 
     QVector<GlobalShortcut> m_shortcuts;
 

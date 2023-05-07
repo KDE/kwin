@@ -120,14 +120,8 @@ void GlobalShortcutsManager::objectDeleted(QObject *object)
     }
 }
 
-bool GlobalShortcutsManager::addIfNotExists(GlobalShortcut sc, DeviceType device)
+bool GlobalShortcutsManager::add(GlobalShortcut sc, DeviceType device)
 {
-    for (const auto &cs : std::as_const(m_shortcuts)) {
-        if (sc.shortcut() == cs.shortcut()) {
-            return false;
-        }
-    }
-
     const auto &recognizer = device == DeviceType::Touchpad ? m_touchpadGestureRecognizer : m_touchscreenGestureRecognizer;
     if (std::holds_alternative<RealtimeFeedbackSwipeShortcut>(sc.shortcut())) {
         recognizer->registerSwipeGesture(sc.swipeGesture());
@@ -141,27 +135,27 @@ bool GlobalShortcutsManager::addIfNotExists(GlobalShortcut sc, DeviceType device
 
 void GlobalShortcutsManager::registerPointerShortcut(QAction *action, Qt::KeyboardModifiers modifiers, Qt::MouseButtons pointerButtons)
 {
-    addIfNotExists(GlobalShortcut(PointerButtonShortcut{modifiers, pointerButtons}, action));
+    add(GlobalShortcut(PointerButtonShortcut{modifiers, pointerButtons}, action));
 }
 
 void GlobalShortcutsManager::registerAxisShortcut(QAction *action, Qt::KeyboardModifiers modifiers, PointerAxisDirection axis)
 {
-    addIfNotExists(GlobalShortcut(PointerAxisShortcut{modifiers, axis}, action));
+    add(GlobalShortcut(PointerAxisShortcut{modifiers, axis}, action));
 }
 
 void GlobalShortcutsManager::registerTouchpadSwipe(SwipeDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback)
 {
-    addIfNotExists(GlobalShortcut(RealtimeFeedbackSwipeShortcut{DeviceType::Touchpad, direction, progressCallback, fingerCount}, action), DeviceType::Touchpad);
+    add(GlobalShortcut(RealtimeFeedbackSwipeShortcut{DeviceType::Touchpad, direction, progressCallback, fingerCount}, action), DeviceType::Touchpad);
 }
 
 void GlobalShortcutsManager::registerTouchpadPinch(PinchDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback)
 {
-    addIfNotExists(GlobalShortcut(RealtimeFeedbackPinchShortcut{direction, progressCallback, fingerCount}, action), DeviceType::Touchpad);
+    add(GlobalShortcut(RealtimeFeedbackPinchShortcut{direction, progressCallback, fingerCount}, action), DeviceType::Touchpad);
 }
 
 void GlobalShortcutsManager::registerTouchscreenSwipe(SwipeDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback)
 {
-    addIfNotExists(GlobalShortcut(RealtimeFeedbackSwipeShortcut{DeviceType::Touchscreen, direction, progressCallback, fingerCount}, action), DeviceType::Touchscreen);
+    add(GlobalShortcut(RealtimeFeedbackSwipeShortcut{DeviceType::Touchscreen, direction, progressCallback, fingerCount}, action), DeviceType::Touchscreen);
 }
 
 void GlobalShortcutsManager::forceRegisterTouchscreenSwipe(SwipeDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback)
