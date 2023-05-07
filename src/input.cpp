@@ -44,7 +44,6 @@
 #include "wayland/display.h"
 #include "wayland/inputmethod_v1_interface.h"
 #include "wayland/seat_interface.h"
-#include "wayland/shmclientbuffer.h"
 #include "wayland/surface_interface.h"
 #include "wayland/tablet_v2_interface.h"
 #include "wayland_server.h"
@@ -1952,59 +1951,29 @@ class SurfaceCursor : public Cursor
 public:
     explicit SurfaceCursor(KWaylandServer::TabletToolV2Interface *tool)
         : Cursor(tool)
-        , m_source(std::make_unique<ImageCursorSource>())
     {
-        setSource(m_source.get());
         connect(tool, &KWaylandServer::TabletToolV2Interface::cursorChanged, this, [this](KWaylandServer::TabletCursorV2 *tcursor) {
             if (!tcursor || tcursor->enteredSerial() == 0) {
+                if (!m_defaultSource) {
+                    m_defaultSource = std::make_unique<ShapeCursorSource>();
+                }
                 static WaylandCursorImage defaultCursor;
-                defaultCursor.loadThemeCursor(CursorShape(Qt::CrossCursor), m_source.get());
-                return;
+                m_defaultSource->setTheme(defaultCursor.theme());
+                m_defaultSource->setShape(Qt::CrossCursor);
+                setSource(m_defaultSource.get());
+            } else {
+                if (!m_surfaceSource) {
+                    m_surfaceSource = std::make_unique<SurfaceCursorSource>();
+                }
+                m_surfaceSource->update(tcursor->surface(), tcursor->hotspot());
+                setSource(m_surfaceSource.get());
             }
-            auto cursorSurface = tcursor->surface();
-            if (!cursorSurface) {
-                m_source->update(QImage(), QPoint());
-                return;
-            }
-
-            updateCursorSurface(cursorSurface, tcursor->hotspot());
         });
     }
 
-    void updateCursorSurface(KWaylandServer::SurfaceInterface *surface, const QPoint &hotspot)
-    {
-        if (m_surface == surface && hotspot == m_hotspot) {
-            return;
-        }
-
-        if (m_surface) {
-            disconnect(m_surface, nullptr, this, nullptr);
-        }
-        m_surface = surface;
-        m_hotspot = hotspot;
-        connect(m_surface, &KWaylandServer::SurfaceInterface::committed, this, &SurfaceCursor::refresh);
-
-        refresh();
-    }
-
 private:
-    void refresh()
-    {
-        auto buffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(m_surface->buffer());
-        if (!buffer) {
-            m_source->update(QImage(), QPoint());
-            return;
-        }
-
-        QImage cursorImage;
-        cursorImage = buffer->data().copy();
-        cursorImage.setDevicePixelRatio(m_surface->bufferScale());
-        m_source->update(cursorImage, m_hotspot);
-    }
-
-    QPointer<KWaylandServer::SurfaceInterface> m_surface;
-    std::unique_ptr<ImageCursorSource> m_source;
-    QPoint m_hotspot;
+    std::unique_ptr<ShapeCursorSource> m_defaultSource;
+    std::unique_ptr<SurfaceCursorSource> m_surfaceSource;
 };
 
 /**

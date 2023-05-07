@@ -1072,37 +1072,6 @@ void WaylandCursorImage::updateCursorTheme()
     Q_EMIT themeChanged();
 }
 
-void WaylandCursorImage::loadThemeCursor(const CursorShape &shape, ImageCursorSource *source)
-{
-    loadThemeCursor(shape.name(), source);
-}
-
-void WaylandCursorImage::loadThemeCursor(const QByteArray &name, ImageCursorSource *source)
-{
-    if (loadThemeCursor_helper(name, source)) {
-        return;
-    }
-
-    const auto alternativeNames = Cursor::cursorAlternativeNames(name);
-    for (const QByteArray &alternativeName : alternativeNames) {
-        if (loadThemeCursor_helper(alternativeName, source)) {
-            return;
-        }
-    }
-
-    qCWarning(KWIN_CORE) << "Failed to load theme cursor for shape" << name;
-}
-
-bool WaylandCursorImage::loadThemeCursor_helper(const QByteArray &name, ImageCursorSource *source)
-{
-    const QVector<KXcursorSprite> sprites = m_cursorTheme.shape(name);
-    if (sprites.isEmpty()) {
-        return false;
-    }
-    source->update(sprites.first().data(), sprites.first().hotspot());
-    return true;
-}
-
 void CursorImage::reevaluteSource()
 {
     if (waylandServer()->isScreenLocked()) {

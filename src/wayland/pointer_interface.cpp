@@ -23,15 +23,8 @@ namespace KWaylandServer
 class CursorPrivate
 {
 public:
-    CursorPrivate(Cursor *q, PointerInterface *pointer);
-
-    Cursor *q;
-    PointerInterface *pointer;
-    quint32 enteredSerial = 0;
     QPointF hotspot;
     QPointer<SurfaceInterface> surface;
-
-    void update(SurfaceInterface *surface, quint32 serial, const QPointF &hotspot);
 };
 
 PointerInterfacePrivate *PointerInterfacePrivate::get(PointerInterface *pointer)
@@ -85,13 +78,12 @@ void PointerInterfacePrivate::pointer_set_cursor(Resource *resource, uint32_t se
     }
 
     if (!cursor) { // TODO: Assign the cursor surface role.
-        cursor = new Cursor(q);
-        cursor->d->update(surface, serial, QPointF(hotspot_x, hotspot_y) / focusedSurface->client()->scaleOverride());
-        QObject::connect(cursor, &Cursor::changed, q, &PointerInterface::cursorChanged);
-        Q_EMIT q->cursorChanged();
-    } else {
-        cursor->d->update(surface, serial, QPointF(hotspot_x, hotspot_y) / focusedSurface->client()->scaleOverride());
+        cursor = std::make_unique<Cursor>();
     }
+    cursor->d->hotspot = QPointF(hotspot_x, hotspot_y) / focusedSurface->client()->scaleOverride();
+    cursor->d->surface = surface;
+
+    Q_EMIT q->cursorChanged();
 }
 
 void PointerInterfacePrivate::pointer_release(Resource *resource)
@@ -350,7 +342,7 @@ void PointerInterface::sendFrame()
 
 Cursor *PointerInterface::cursor() const
 {
-    return d->cursor;
+    return d->cursor.get();
 }
 
 SeatInterface *PointerInterface::seat() const
@@ -366,44 +358,8 @@ PointerInterface *PointerInterface::get(wl_resource *native)
     return nullptr;
 }
 
-CursorPrivate::CursorPrivate(Cursor *q, PointerInterface *pointer)
-    : q(q)
-    , pointer(pointer)
-{
-}
-
-void CursorPrivate::update(SurfaceInterface *s, quint32 serial, const QPointF &p)
-{
-    bool emitChanged = false;
-    if (enteredSerial != serial) {
-        enteredSerial = serial;
-        emitChanged = true;
-        Q_EMIT q->enteredSerialChanged();
-    }
-    if (hotspot != p) {
-        hotspot = p;
-        emitChanged = true;
-        Q_EMIT q->hotspotChanged();
-    }
-    if (surface != s) {
-        if (!surface.isNull()) {
-            QObject::disconnect(surface.data(), &SurfaceInterface::committed, q, &Cursor::changed);
-        }
-        surface = s;
-        if (!surface.isNull()) {
-            QObject::connect(surface.data(), &SurfaceInterface::committed, q, &Cursor::changed);
-        }
-        emitChanged = true;
-        Q_EMIT q->surfaceChanged();
-    }
-    if (emitChanged) {
-        Q_EMIT q->changed();
-    }
-}
-
-Cursor::Cursor(PointerInterface *parent)
-    : QObject(parent)
-    , d(new CursorPrivate(this, parent))
+Cursor::Cursor()
+    : d(new CursorPrivate())
 {
 }
 
@@ -411,19 +367,9 @@ Cursor::~Cursor()
 {
 }
 
-quint32 Cursor::enteredSerial() const
-{
-    return d->enteredSerial;
-}
-
 QPointF Cursor::hotspot() const
 {
     return d->hotspot;
-}
-
-PointerInterface *Cursor::pointer() const
-{
-    return d->pointer;
 }
 
 SurfaceInterface *Cursor::surface() const

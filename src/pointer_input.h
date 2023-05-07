@@ -190,14 +190,10 @@ public:
 
     KXcursorTheme theme() const;
 
-    void loadThemeCursor(const CursorShape &shape, ImageCursorSource *source);
-    void loadThemeCursor(const QByteArray &name, ImageCursorSource *source);
-
 Q_SIGNALS:
     void themeChanged();
 
 private:
-    bool loadThemeCursor_helper(const QByteArray &name, ImageCursorSource *source);
     void updateCursorTheme();
 
     KXcursorTheme m_cursorTheme;

@@ -84,39 +84,24 @@ private:
 /**
  * @brief Class encapsulating a Cursor image.
  */
-class KWIN_EXPORT Cursor : public QObject
+class KWIN_EXPORT Cursor
 {
-    Q_OBJECT
-
 public:
-    virtual ~Cursor();
+    Cursor();
+    ~Cursor();
+
     /**
      * The hotspot of the cursor image in surface-relative coordinates.
      */
     QPointF hotspot() const;
     /**
-     * The entered serial when the Cursor got set.
-     */
-    quint32 enteredSerial() const;
-    /**
-     * The PointerInterface this Cursor belongs to.
-     */
-    PointerInterface *pointer() const;
-    /**
      * The SurfaceInterface for the image content of the Cursor.
      */
     SurfaceInterface *surface() const;
 
-Q_SIGNALS:
-    void hotspotChanged();
-    void enteredSerialChanged();
-    void surfaceChanged();
-    void changed();
-
 private:
     std::unique_ptr<CursorPrivate> d;
     friend class PointerInterfacePrivate;
-    explicit Cursor(PointerInterface *parent);
 };
 
 } // namespace KWaylandServer

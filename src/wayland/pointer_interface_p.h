@@ -37,7 +37,7 @@ public:
     SeatInterface *seat;
     SurfaceInterface *focusedSurface = nullptr;
     QMetaObject::Connection destroyConnection;
-    Cursor *cursor = nullptr;
+    std::unique_ptr<Cursor> cursor;
     std::unique_ptr<RelativePointerV1Interface> relativePointersV1;
     std::unique_ptr<PointerSwipeGestureV1Interface> swipeGesturesV1;
     std::unique_ptr<PointerPinchGestureV1Interface> pinchGesturesV1;

@@ -135,26 +135,57 @@ KWaylandServer::SurfaceInterface *SurfaceCursorSource::surface() const
     return m_surface;
 }
 
+void SurfaceCursorSource::refresh()
+{
+    auto buffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(m_surface->buffer());
+    if (buffer) {
+        m_image = buffer->data().copy();
+        m_image.setDevicePixelRatio(m_surface->bufferScale());
+    } else {
+        m_image = QImage();
+    }
+    m_size = m_surface->size();
+    Q_EMIT changed();
+}
+
 void SurfaceCursorSource::update(KWaylandServer::SurfaceInterface *surface, const QPointF &hotspot)
 {
-    if (!surface) {
-        m_image = QImage();
-        m_size = QSizeF(0, 0);
-        m_hotspot = QPointF();
-        m_surface = nullptr;
-    } else {
-        auto buffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(surface->buffer());
-        if (buffer) {
-            m_image = buffer->data().copy();
-            m_image.setDevicePixelRatio(surface->bufferScale());
+    bool dirty = false;
+
+    if (m_hotspot != hotspot) {
+        dirty = true;
+        m_hotspot = hotspot;
+    }
+
+    if (m_surface != surface) {
+        dirty = true;
+
+        if (m_surface) {
+            disconnect(m_surface, &KWaylandServer::SurfaceInterface::committed, this, &SurfaceCursorSource::refresh);
+        }
+
+        m_surface = surface;
+
+        if (m_surface) {
+            auto buffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(surface->buffer());
+            if (buffer) {
+                m_image = buffer->data().copy();
+                m_image.setDevicePixelRatio(surface->bufferScale());
+            } else {
+                m_image = QImage();
+            }
+            m_size = surface->size();
+
+            connect(m_surface, &KWaylandServer::SurfaceInterface::committed, this, &SurfaceCursorSource::refresh);
         } else {
             m_image = QImage();
+            m_size = QSizeF(0, 0);
         }
-        m_size = surface->size();
-        m_hotspot = hotspot;
-        m_surface = surface;
     }
-    Q_EMIT changed();
+
+    if (dirty) {
+        Q_EMIT changed();
+    }
 }
 
 } // namespace KWin

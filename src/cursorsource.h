@@ -104,6 +104,8 @@ public Q_SLOTS:
     void update(KWaylandServer::SurfaceInterface *surface, const QPointF &hotspot);
 
 private:
+    void refresh();
+
     QPointer<KWaylandServer::SurfaceInterface> m_surface;
 };
 
