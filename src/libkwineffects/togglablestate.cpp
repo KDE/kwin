@@ -154,6 +154,7 @@ static PinchDirection opposite(PinchDirection direction)
     case PinchDirection::Expanding:
         return PinchDirection::Contracting;
     }
+    return PinchDirection::Expanding;
 }
 
 static SwipeDirection opposite(SwipeDirection direction)
@@ -170,6 +171,7 @@ static SwipeDirection opposite(SwipeDirection direction)
     case SwipeDirection::Right:
         return SwipeDirection::Left;
     }
+    return SwipeDirection::Invalid;
 }
 
 std::function<void(qreal progress)> TogglableState::progressCallback()
