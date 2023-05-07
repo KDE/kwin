@@ -25,7 +25,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-05-06 02:09+0000\n"
-"PO-Revision-Date: 2023-04-24 20:24+0200\n"
+"PO-Revision-Date: 2023-05-05 21:30+0200\n"
 "Last-Translator: Xavier BESNARD <xavier.besnard]neuf.fr>\n"
 "Language-Team: fr\n"
 "Language: fr\n"
@@ -1530,8 +1530,7 @@ msgstr "Léger"
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
 #: plugins/blur/blur_config.ui:74 plugins/blur/blur_config.ui:137
-#, fuzzy, kde-format
-#| msgid "Strong"
+#, kde-format
 msgid "Strong"
 msgstr "Fort"
 
@@ -1561,18 +1560,16 @@ msgid "Show Desktop Grid"
 msgstr "Afficher un bureau en grille"
 
 #: plugins/desktopgrid/desktopgrid_config.cpp:61
-#, fuzzy, kde-format
-#| msgid "Tiling Disabled"
+#, kde-format
 msgctxt "Desktop name alignment:"
 msgid "Disabled"
-msgstr "Dallage désactivé"
+msgstr "Désactivé"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
 #: plugins/desktopgrid/desktopgrid_config.cpp:62
 #: plugins/glide/glide_config.ui:70 plugins/glide/glide_config.ui:168
-#, fuzzy, kde-format
-#| msgid "Top"
+#, kde-format
 msgid "Top"
 msgstr "En haut"
 
@@ -1592,8 +1589,7 @@ msgid "Right"
 msgstr "Droite"
 
 #: plugins/desktopgrid/desktopgrid_config.cpp:65
-#, fuzzy, kde-format
-#| msgid "Bottom-Right"
+#, kde-format
 msgid "Bottom-Right"
 msgstr "En bas à droite"
 
@@ -1601,14 +1597,12 @@ msgstr "En bas à droite"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
 #: plugins/desktopgrid/desktopgrid_config.cpp:66
 #: plugins/glide/glide_config.ui:80 plugins/glide/glide_config.ui:178
-#, fuzzy, kde-format
-#| msgid "Bottom"
+#, kde-format
 msgid "Bottom"
-msgstr "Bas"
+msgstr "En bas"
 
 #: plugins/desktopgrid/desktopgrid_config.cpp:67
-#, fuzzy, kde-format
-#| msgid "Bottom-Left"
+#, kde-format
 msgid "Bottom-Left"
 msgstr "En bas à gauche"
 
@@ -1630,8 +1624,7 @@ msgstr "En haut à gauche"
 #. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
 #: plugins/desktopgrid/desktopgrid_config.cpp:70
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:36
-#, fuzzy, kde-format
-#| msgid "Center"
+#, kde-format
 msgid "Center"
 msgstr "Centre"
 
@@ -1639,29 +1632,25 @@ msgstr "Centre"
 #: plugins/desktopgrid/desktopgrid_config.ui:17
 #: plugins/mousemark/mousemark_config.ui:17
 #: plugins/thumbnailaside/thumbnailaside_config.ui:17
-#, fuzzy, kde-format
-#| msgid "Appearance"
+#, kde-format
 msgid "Appearance"
 msgstr "Apparence"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
 #: plugins/desktopgrid/desktopgrid_config.ui:30
-#, fuzzy, kde-format
-#| msgid "Pager"
+#, kde-format
 msgid "Pager"
-msgstr "Bipeur"
+msgstr "Pager"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
 #: plugins/desktopgrid/desktopgrid_config.ui:35
-#, fuzzy, kde-format
-#| msgid "Automatic"
+#, kde-format
 msgid "Automatic"
 msgstr "Automatique"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
 #: plugins/desktopgrid/desktopgrid_config.ui:40
-#, fuzzy, kde-format
-#| msgid "Custom"
+#, kde-format
 msgid "Custom"
 msgstr "Personnalisé"
 
@@ -1705,8 +1694,7 @@ msgstr "Le plus près"
 #: plugins/desktopgrid/desktopgrid_config.ui:142
 #: plugins/overview/kcm/overvieweffectkcm.ui:35
 #: plugins/windowview/kcm/windowvieweffectkcm.ui:35
-#, fuzzy, kde-format
-#| msgid "Natural"
+#, kde-format
 msgid "Natural"
 msgstr "Naturel"
 
@@ -1714,8 +1702,7 @@ msgstr "Naturel"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
 #: plugins/desktopgrid/desktopgrid_config.ui:147
 #: plugins/videowall/package/contents/ui/config.ui:73
-#, fuzzy, kde-format
-#| msgid "None"
+#, kde-format
 msgid "None"
 msgstr "Aucun"
 
@@ -1733,17 +1720,15 @@ msgstr "Activation"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Strength)
 #: plugins/diminactive/diminactive_config.ui:17
-#, fuzzy, kde-format
-#| msgid "Strength:"
+#, kde-format
 msgid "Strength:"
-msgstr "Force :"
+msgstr "Puissance :"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Dim)
 #: plugins/diminactive/diminactive_config.ui:40
-#, fuzzy, kde-format
-#| msgid "Dim:"
+#, kde-format
 msgid "Dim:"
-msgstr "Assombrissement :"
+msgstr "Réglage :"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimPanels)
 #: plugins/diminactive/diminactive_config.ui:47
@@ -1786,8 +1771,7 @@ msgstr "Durée :"
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_Duration)
 #: plugins/glide/glide_config.ui:32
 #: plugins/scale/package/contents/ui/config.ui:30
-#, fuzzy, kde-format
-#| msgid "Default"
+#, kde-format
 msgid "Default"
 msgstr "Par défaut"
 
@@ -1822,10 +1806,9 @@ msgstr "Angle de rotation :"
 #. i18n: ectx: property (text), widget (QLabel, label_InDistance)
 #. i18n: ectx: property (text), widget (QLabel, label_OutDistance)
 #: plugins/glide/glide_config.ui:119 plugins/glide/glide_config.ui:198
-#, fuzzy, kde-format
-#| msgid "Distance:"
+#, kde-format
 msgid "Distance:"
-msgstr "Distance : "
+msgstr "Distance :"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_OutAnimation)
 #: plugins/glide/glide_config.ui:148
@@ -1851,49 +1834,37 @@ msgid "Invert Screen Colors"
 msgstr "Inverser les couleurs de l'écran"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:720
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Tiny"
+#, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Tiny"
-msgstr "Petite"
+msgstr "Petit"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:721
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Normal"
+#, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Normal"
 msgstr "Normal"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:722
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Large"
+#, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Large"
 msgstr "Grand"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:723
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Very Large"
+#, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Large"
 msgstr "Très grand"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:724
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Huge"
+#, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Huge"
 msgstr "Énorme"
 
 #: plugins/kdecorations/aurorae/src/aurorae.cpp:725
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Very Huge"
+#, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Huge"
 msgstr "Gigantesque"
@@ -2123,31 +2094,26 @@ msgstr "Durée d'animation :"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_AnimationDuration)
 #: plugins/magiclamp/magiclamp_config.ui:36
-#, fuzzy, kde-format
-#| msgctxt "Duration of rotation"
-#| msgid "Default"
+#, kde-format
 msgctxt "Duration of rotation"
 msgid "Default"
 msgstr "Par défaut"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AnimationDuration)
 #: plugins/magiclamp/magiclamp_config.ui:39
-#, fuzzy, kde-format
-#| msgid "milliseconds"
+#, kde-format
 msgid "milliseconds"
-msgstr " millisecondes"
+msgstr "millisecondes"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupSize)
 #: plugins/magnifier/magnifier_config.ui:17
-#, fuzzy, kde-format
-#| msgid "Size"
+#, kde-format
 msgid "Size"
 msgstr "Taille"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/magnifier/magnifier_config.ui:23
-#, fuzzy, kde-format
-#| msgid "&Width:"
+#, kde-format
 msgid "&Width:"
 msgstr "&Largeur :"
 
@@ -2155,8 +2121,7 @@ msgstr "&Largeur :"
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Height)
 #: plugins/magnifier/magnifier_config.ui:42
 #: plugins/magnifier/magnifier_config.ui:74
-#, fuzzy, kde-format
-#| msgid " px"
+#, kde-format
 msgid " px"
 msgstr " px"
 
@@ -2226,15 +2191,13 @@ msgstr "Avancé"
 
 #. i18n: ectx: property (title), widget (QGroupBox, rings)
 #: plugins/mouseclick/mouseclick_config.ui:97
-#, fuzzy, kde-format
-#| msgid "Rings"
+#, kde-format
 msgid "Rings"
-msgstr "Cercles"
+msgstr "Anneaux"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_line_width_label)
 #: plugins/mouseclick/mouseclick_config.ui:103
-#, fuzzy, kde-format
-#| msgid "Line Width:"
+#, kde-format
 msgid "Line Width:"
 msgstr "Largeur de ligne :"
 
@@ -2242,17 +2205,15 @@ msgstr "Largeur de ligne :"
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingSize)
 #: plugins/mouseclick/mouseclick_config.ui:119
 #: plugins/mouseclick/mouseclick_config.ui:171
-#, fuzzy, kde-format
-#| msgid " pixel"
+#, kde-format
 msgid " pixel"
 msgstr " pixel"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingLife)
 #: plugins/mouseclick/mouseclick_config.ui:132
-#, fuzzy, kde-format
-#| msgid " msec"
+#, kde-format
 msgid " msec"
-msgstr " ms"
+msgstr " msec"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_duration_label)
 #: plugins/mouseclick/mouseclick_config.ui:145
@@ -2263,10 +2224,9 @@ msgstr "Durée de sonnerie :"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_radius_label)
 #: plugins/mouseclick/mouseclick_config.ui:155
-#, fuzzy, kde-format
-#| msgid "Ring Radius:"
+#, kde-format
 msgid "Ring Radius:"
-msgstr "Rayon du cercle :"
+msgstr "Rayon de l'anneau :"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_count_label)
 #: plugins/mouseclick/mouseclick_config.ui:184
@@ -2278,17 +2238,15 @@ msgstr "Nombre de doigts"
 
 #. i18n: ectx: property (title), widget (QGroupBox, font)
 #: plugins/mouseclick/mouseclick_config.ui:210
-#, fuzzy, kde-format
-#| msgid "Text"
+#, kde-format
 msgid "Text"
 msgstr "Texte"
 
 #. i18n: ectx: property (text), widget (QLabel, font_label)
 #: plugins/mouseclick/mouseclick_config.ui:216
-#, fuzzy, kde-format
-#| msgid "Font:"
+#, kde-format
 msgid "Font:"
-msgstr "Police de caractères :"
+msgstr "Police :"
 
 #. i18n: ectx: property (text), widget (QLabel, showtext_label)
 #: plugins/mouseclick/mouseclick_config.ui:233
@@ -2324,15 +2282,13 @@ msgstr[1] ""
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/mousemark/mousemark_config.ui:23
-#, fuzzy, kde-format
-#| msgid "Wid&th:"
+#, kde-format
 msgid "Wid&th:"
 msgstr "L&argeur :"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/mousemark/mousemark_config.ui:36
-#, fuzzy, kde-format
-#| msgid "&Color:"
+#, kde-format
 msgid "&Color:"
 msgstr "&Couleur :"
 
@@ -2584,33 +2540,29 @@ msgstr "&Largeur maximale :"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/thumbnailaside/thumbnailaside_config.ui:36
-#, fuzzy, kde-format
-#| msgid "&Spacing:"
+#, kde-format
 msgid "&Spacing:"
-msgstr "E&spacement :"
+msgstr "&Espacement :"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Spacing)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_MaxWidth)
 #: plugins/thumbnailaside/thumbnailaside_config.ui:55
 #: plugins/thumbnailaside/thumbnailaside_config.ui:106
-#, fuzzy, kde-format
-#| msgid " pixels"
+#, kde-format
 msgid " pixels"
 msgstr " pixels"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: plugins/thumbnailaside/thumbnailaside_config.ui:68
-#, fuzzy, kde-format
-#| msgid "&Opacity"
+#, kde-format
 msgid "&Opacity:"
-msgstr "&Opacité"
+msgstr "&Opacité :"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Opacity)
 #: plugins/thumbnailaside/thumbnailaside_config.ui:87
-#, fuzzy, no-c-format, kde-format
-#| msgid " %"
+#, no-c-format, kde-format
 msgid " %"
-msgstr " %"
+msgstr " %"
 
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:37
 #: plugins/tileseditor/tileseditoreffect.cpp:29
@@ -2620,10 +2572,9 @@ msgid "Toggle Tiles Editor"
 msgstr "Activer / Désactiver l'enregistrement vidéo"
 
 #: plugins/tileseditor/qml/main.qml:150
-#, fuzzy, kde-format
-#| msgid "Padding:"
+#, kde-format
 msgid "Padding:"
-msgstr "Remplissage :"
+msgstr "Remplissage : "
 
 #: plugins/tileseditor/qml/main.qml:160
 #, kde-format
@@ -2652,8 +2603,7 @@ msgid "Add Floating Tile"
 msgstr "Ajouter une tuile flottante"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:191
-#, fuzzy, kde-format
-#| msgid "Delete"
+#, kde-format
 msgid "Delete"
 msgstr "Supprimer"
 
@@ -2691,10 +2641,9 @@ msgstr "ALT"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Control)
 #: plugins/trackmouse/trackmouse_config.ui:72
-#, fuzzy, kde-format
-#| msgid "Ctrl"
+#, kde-format
 msgid "Ctrl"
-msgstr "Ctrl"
+msgstr "CTRL"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Shift)
 #: plugins/trackmouse/trackmouse_config.ui:79
@@ -2710,10 +2659,9 @@ msgstr "Méta"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, KWin::TranslucencyEffectConfigForm)
 #: plugins/translucency/package/contents/ui/config.ui:14
-#, fuzzy, kde-format
-#| msgid "Translucency"
+#, kde-format
 msgid "Translucency"
-msgstr "Transparence"
+msgstr "Translucidité"
 
 #. i18n: ectx: property (title), widget (QGroupBox, m_opacityGroupBox)
 #: plugins/translucency/package/contents/ui/config.ui:20
@@ -2733,8 +2681,7 @@ msgstr "Fenêtres contextuelles de listes déroulantes :"
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: plugins/translucency/package/contents/ui/config.ui:121
 #: plugins/translucency/package/contents/ui/config.ui:431
-#, fuzzy, kde-format
-#| msgid "Opaque"
+#, kde-format
 msgid "Opaque"
 msgstr "Opaque"
 
@@ -2748,17 +2695,15 @@ msgstr "Boîtes de dialogue :"
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: plugins/translucency/package/contents/ui/config.ui:156
 #: plugins/translucency/package/contents/ui/config.ui:418
-#, fuzzy, kde-format
-#| msgid "Transparent"
+#, kde-format
 msgid "Transparent"
 msgstr "Transparent"
 
 #. i18n: ectx: property (text), widget (QLabel, menus_label)
 #: plugins/translucency/package/contents/ui/config.ui:188
-#, fuzzy, kde-format
-#| msgid "Menu"
+#, kde-format
 msgid "Menus:"
-msgstr "Menu"
+msgstr "Menus :"
 
 #. i18n: ectx: property (text), widget (QLabel, moveresize_label)
 #: plugins/translucency/package/contents/ui/config.ui:207
@@ -2789,8 +2734,7 @@ msgstr "Menus déroulants :"
 
 #. i18n: ectx: property (text), widget (QLabel, popupmenus_label)
 #: plugins/translucency/package/contents/ui/config.ui:329
-#, fuzzy, kde-format
-#| msgid "Popup menus:"
+#, kde-format
 msgid "Popup menus:"
 msgstr "Menus contextuels :"
 
@@ -2803,15 +2747,13 @@ msgstr "Menus d'extinction :"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, KWin::VideoWallConfigForm)
 #: plugins/videowall/package/contents/ui/config.ui:14
-#, fuzzy, kde-format
-#| msgid "Video Wall"
+#, kde-format
 msgid "Video Wall"
 msgstr "Mur de vidéos"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ApplyTo)
 #: plugins/videowall/package/contents/ui/config.ui:20
-#, fuzzy, kde-format
-#| msgid "Apply to"
+#, kde-format
 msgid "Apply to"
 msgstr "Appliquer à"
 
@@ -2839,8 +2781,7 @@ msgstr "Tous"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Ignore)
 #: plugins/videowall/package/contents/ui/config.ui:54
-#, fuzzy, kde-format
-#| msgid "Ignore"
+#, kde-format
 msgid "Ignore"
 msgstr "Ignorer"
 
@@ -2878,8 +2819,7 @@ msgid "Ignore &minimized windows"
 msgstr "Ignorer les fenêtres &minimisées"
 
 #: plugins/windowview/qml/main.qml:107
-#, fuzzy, kde-format
-#| msgid "No Matches"
+#, kde-format
 msgid "No Matches"
 msgstr "Aucune correspondance"
 
@@ -2895,9 +2835,7 @@ msgstr "Filtrer les fenêtres..."
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
 #: plugins/wobblywindows/wobblywindows_config.ui:20
-#, fuzzy, kde-format
-#| msgctxt "@title:tab Advanced Settings"
-#| msgid "Advanced"
+#, kde-format
 msgid "Advanced"
 msgstr "Avancé"
 
@@ -2910,8 +2848,7 @@ msgstr "Éla&sticité :"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: plugins/wobblywindows/wobblywindows_config.ui:68
-#, fuzzy, kde-format
-#| msgid "Dra&g:"
+#, kde-format
 msgid "Dra&g:"
 msgstr "&Glisser :"
 
@@ -2951,15 +2888,13 @@ msgstr "T&remblement"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/wobblywindows/wobblywindows_config.ui:201
-#, fuzzy, kde-format
-#| msgid "Less"
+#, kde-format
 msgid "Less"
 msgstr "Moins"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/wobblywindows/wobblywindows_config.ui:224
-#, fuzzy, kde-format
-#| msgid "More"
+#, kde-format
 msgid "More"
 msgstr "Plus"
 
@@ -3098,17 +3033,15 @@ msgstr "Échelle"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
 #: plugins/zoom/zoom_config.ui:108
-#, fuzzy, kde-format
-#| msgid "Keep"
+#, kde-format
 msgid "Keep"
 msgstr "Conserver"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
 #: plugins/zoom/zoom_config.ui:113
-#, fuzzy, kde-format
-#| msgid "Hide"
+#, kde-format
 msgid "Hide"
-msgstr "Cacher"
+msgstr "Masquer"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MouseTracking)
 #: plugins/zoom/zoom_config.ui:121
@@ -3125,24 +3058,21 @@ msgstr "Proportionnel"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: plugins/zoom/zoom_config.ui:130
-#, fuzzy, kde-format
-#| msgid "Center"
+#, kde-format
 msgid "Centered"
-msgstr "Centre"
+msgstr "Centré"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: plugins/zoom/zoom_config.ui:135
-#, fuzzy, kde-format
-#| msgid "Push"
+#, kde-format
 msgid "Push"
-msgstr "Pousser"
+msgstr "Pousser "
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: plugins/zoom/zoom_config.ui:140
-#, fuzzy, kde-format
-#| msgid "Tiling Disabled"
+#, kde-format
 msgid "Disabled"
-msgstr "Dallage désactivé"
+msgstr "Désactivé"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: plugins/zoom/zoom_config.ui:148

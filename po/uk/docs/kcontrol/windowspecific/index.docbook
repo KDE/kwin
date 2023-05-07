@@ -1124,7 +1124,7 @@
 >Загальні скорочення</guimenuitem
 ></menuchoice
 > або за допомогою команди <command
->kcmshell5 keys</command
+>kcmshell6 keys</command
 >, відданої з вікна <guilabel
 >konsole</guilabel
 >), доки вікно є активним.</para>
