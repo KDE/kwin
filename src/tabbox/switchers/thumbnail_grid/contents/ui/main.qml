@@ -184,6 +184,7 @@ KWin.TabBoxSwitcher {
                         PlasmaComponents3.Label {
                             Layout.fillWidth: true
                             text: model.caption
+                            font.weight: thumbnailGridItem.isCurrentItem ? Font.Bold : Font.Normal
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
                             textFormat: Text.PlainText
