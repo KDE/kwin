@@ -99,7 +99,7 @@ void PointerInputRedirection::init()
     connect(Cursors::self()->mouse(), &Cursor::rendered, m_cursor, &CursorImage::markAsRendered);
     connect(m_cursor, &CursorImage::changed, Cursors::self()->mouse(), [this] {
         Cursors::self()->mouse()->setSource(m_cursor->source());
-        updateCursorOutputs();
+        m_cursor->updateCursorOutputs(m_pos);
     });
     Q_EMIT m_cursor->changed();
 
@@ -769,30 +769,9 @@ void PointerInputRedirection::updatePosition(const QPointF &pos)
     m_pos = p;
 
     workspace()->setActiveCursorOutput(m_pos);
-    updateCursorOutputs();
+    m_cursor->updateCursorOutputs(m_pos);
 
     Q_EMIT input()->globalPointerChanged(m_pos);
-}
-
-void PointerInputRedirection::updateCursorOutputs()
-{
-    KWaylandServer::PointerInterface *pointer = waylandServer()->seat()->pointer();
-    if (!pointer) {
-        return;
-    }
-
-    KWaylandServer::Cursor *cursor = pointer->cursor();
-    if (!cursor) {
-        return;
-    }
-
-    KWaylandServer::SurfaceInterface *surface = cursor->surface();
-    if (!surface) {
-        return;
-    }
-
-    const QRectF cursorGeometry(m_pos - m_cursor->source()->hotspot(), surface->size());
-    surface->setOutputs(waylandServer()->display()->outputsIntersecting(cursorGeometry.toAlignedRect()));
 }
 
 void PointerInputRedirection::updateButton(uint32_t button, InputRedirection::PointerButtonState state)
@@ -934,24 +913,25 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
 
 CursorImage::~CursorImage() = default;
 
+void CursorImage::updateCursorOutputs(const QPointF &pos)
+{
+    if (m_currentSource == m_serverCursor.cursor.get()) {
+        auto cursorSurface = m_serverCursor.cursor->surface();
+        if (cursorSurface) {
+            const QRectF cursorGeometry(pos - m_currentSource->hotspot(), m_currentSource->size());
+            cursorSurface->setOutputs(waylandServer()->display()->outputsIntersecting(cursorGeometry.toAlignedRect()));
+        }
+    }
+}
+
 void CursorImage::markAsRendered(std::chrono::milliseconds timestamp)
 {
-    if (m_currentSource != m_serverCursor.cursor.get()) {
-        return;
+    if (m_currentSource == m_serverCursor.cursor.get()) {
+        auto cursorSurface = m_serverCursor.cursor->surface();
+        if (cursorSurface) {
+            cursorSurface->frameRendered(timestamp.count());
+        }
     }
-    auto p = waylandServer()->seat()->pointer();
-    if (!p) {
-        return;
-    }
-    auto c = p->cursor();
-    if (!c) {
-        return;
-    }
-    auto cursorSurface = c->surface();
-    if (!cursorSurface) {
-        return;
-    }
-    cursorSurface->frameRendered(timestamp.count());
 }
 
 void CursorImage::handleFocusedSurfaceChanged()
@@ -998,17 +978,10 @@ void CursorImage::updateMoveResize()
     reevaluteSource();
 }
 
-void CursorImage::updateServerCursor()
+void CursorImage::updateServerCursor(KWaylandServer::Cursor *cursor)
 {
+    m_serverCursor.cursor->update(cursor->surface(), cursor->hotspot());
     reevaluteSource();
-    auto p = waylandServer()->seat()->pointer();
-    if (!p) {
-        return;
-    }
-    auto c = p->cursor();
-    if (c) {
-        m_serverCursor.cursor->update(c->surface(), c->hotspot());
-    }
 }
 
 void CursorImage::setEffectsOverrideCursor(Qt::CursorShape shape)

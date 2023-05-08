@@ -86,7 +86,7 @@ void PointerInterfacePrivate::pointer_set_cursor(Resource *resource, uint32_t se
     cursor->d->hotspot = QPointF(hotspot_x, hotspot_y) / focusedSurface->client()->scaleOverride();
     cursor->d->surface = surface;
 
-    Q_EMIT q->cursorChanged();
+    Q_EMIT q->cursorChanged(cursor.get());
 }
 
 void PointerInterfacePrivate::pointer_release(Resource *resource)
@@ -342,11 +342,6 @@ void PointerInterface::sendFrame()
     if (d->focusedSurface) {
         d->sendFrame();
     }
-}
-
-Cursor *PointerInterface::cursor() const
-{
-    return d->cursor.get();
 }
 
 SeatInterface *PointerInterface::seat() const

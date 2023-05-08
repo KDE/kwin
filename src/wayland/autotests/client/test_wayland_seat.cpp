@@ -1321,14 +1321,13 @@ void TestWaylandSeat::testCursor()
     QVERIFY(enteredSpy.wait());
     QCOMPARE_GT(enteredSpy.first().first().value<quint32>(), serial);
     QVERIFY(m_seatInterface->focusedPointerSurface());
-    QVERIFY(!m_seatInterface->pointer()->cursor());
 
     QSignalSpy cursorChangedSpy(m_seatInterface->pointer(), &KWaylandServer::PointerInterface::cursorChanged);
     // just remove the pointer
     p->setCursor(nullptr);
     QVERIFY(cursorChangedSpy.wait());
     QCOMPARE(cursorChangedSpy.count(), 1);
-    auto cursor = m_seatInterface->pointer()->cursor();
+    auto cursor = cursorChangedSpy.last().first().value<KWaylandServer::Cursor *>();
     QVERIFY(cursor);
     QVERIFY(!cursor->surface());
     QCOMPARE(cursor->hotspot(), QPoint());

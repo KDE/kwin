@@ -23,6 +23,7 @@ class QWindow;
 
 namespace KWaylandServer
 {
+class Cursor;
 class SurfaceInterface;
 }
 
@@ -72,7 +73,6 @@ public:
     void removeWindowSelectionCursor();
 
     void updatePointerConstraints();
-    void updateCursorOutputs();
 
     void setEnableConstraints(bool set);
 
@@ -214,6 +214,8 @@ public:
     KXcursorTheme theme() const;
     CursorSource *source() const;
     void setSource(CursorSource *source);
+
+    void updateCursorOutputs(const QPointF &pos);
     void markAsRendered(std::chrono::milliseconds timestamp);
 
 Q_SIGNALS:
@@ -221,7 +223,7 @@ Q_SIGNALS:
 
 private:
     void reevaluteSource();
-    void updateServerCursor();
+    void updateServerCursor(KWaylandServer::Cursor *cursor);
     void updateDecoration();
     void updateDecorationCursor();
     void updateMoveResize();

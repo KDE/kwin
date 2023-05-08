@@ -43,8 +43,6 @@ public:
      */
     SurfaceInterface *focusedSurface() const;
 
-    Cursor *cursor() const;
-
     /**
      * Returns the seat to which this pointer belongs to.
      */
@@ -67,7 +65,7 @@ Q_SIGNALS:
      * This signal is emitted whenever the cursor surface changes. As long as there is no
      * any focused surface, the cursor cannot be changed.
      */
-    void cursorChanged();
+    void cursorChanged(KWaylandServer::Cursor *cursor);
     /**
      * This signal is emitted whenever the focused pointer surface changes.
      */
