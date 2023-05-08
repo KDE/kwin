@@ -15,6 +15,7 @@
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
+
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/event_queue.h>
@@ -61,7 +62,7 @@ void PlasmaSurfaceTest::initTestCase()
     qRegisterMetaType<KWin::Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(waylandServer()->init(s_socketName));
-    QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(QVector<QRect>, QVector<QRect>() << QRect(0, 0, 1280, 1024)));
+    Test::setOutputConfig({QRect(0, 0, 1280, 1024)});
 
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
@@ -194,9 +195,7 @@ void PlasmaSurfaceTest::testOSDPlacement()
 
     // change the screen size
     const QVector<QRect> geometries{QRect(0, 0, 1280, 1024), QRect(1280, 0, 1280, 1024)};
-    QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs",
-                              Qt::DirectConnection,
-                              Q_ARG(QVector<QRect>, geometries));
+    Test::setOutputConfig(geometries);
     const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);
     QCOMPARE(outputs[0]->geometry(), geometries[0]);

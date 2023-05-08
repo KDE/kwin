@@ -133,7 +133,10 @@ void PointerInputTest::initTestCase()
     qRegisterMetaType<KWin::Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(waylandServer()->init(s_socketName));
-    QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(QVector<QRect>, QVector<QRect>() << QRect(0, 0, 1280, 1024) << QRect(1280, 0, 1280, 1024)));
+    Test::setOutputConfig({
+        QRect(0, 0, 1280, 1024),
+        QRect(1280, 0, 1280, 1024),
+    });
 
     kwinApp()->setConfig(KSharedConfig::openConfig(QString(), KConfig::SimpleConfig));
 
@@ -331,9 +334,7 @@ void PointerInputTest::testUpdateFocusAfterScreenChange()
     QVERIFY(leftSpy.wait());
 
     // now let's remove the screen containing the cursor
-    QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs",
-                              Qt::DirectConnection,
-                              Q_ARG(QVector<QRect>, QVector<QRect>{QRect(0, 0, 1280, 1024)}));
+    Test::setOutputConfig({QRect(0, 0, 1280, 1024)});
     QCOMPARE(workspace()->outputs().count(), 1);
 
     // this should have warped the cursor
@@ -545,7 +546,10 @@ void PointerInputTest::testModifierClickUnrestrictedFullscreenMove()
 {
     // this test ensures that Meta+mouse button press triggers unrestricted move for fullscreen windows
     if (workspace()->outputs().size() < 2) {
-        QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(QVector<QRect>, QVector<QRect>() << QRect(0, 0, 1280, 1024) << QRect(1280, 0, 1280, 1024)));
+        Test::setOutputConfig({
+            QRect(0, 0, 1280, 1024),
+            QRect(1280, 0, 1280, 1024),
+        });
     }
 
     // first modify the config for this run
@@ -1513,7 +1517,7 @@ void PointerInputTest::testConfineToScreenGeometry()
         QRect(1280, 0, 1280, 1024),
         QRect(2560, 0, 1280, 1024),
         QRect(1280, 1024, 1280, 1024)};
-    QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(QVector<QRect>, geometries));
+    Test::setOutputConfig(geometries);
 
     const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), geometries.count());

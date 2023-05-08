@@ -211,4 +211,27 @@ void Test::FractionalScaleV1::wp_fractional_scale_v1_preferred_scale(uint32_t sc
 {
     m_preferredScale = scale;
 }
+
+void Test::setOutputConfig(const QVector<QRect> &geometries)
+{
+    QVector<VirtualBackend::OutputInfo> converted;
+    std::transform(geometries.begin(), geometries.end(), std::back_inserter(converted), [](const auto &geometry) {
+        return VirtualBackend::OutputInfo{
+            .geometry = geometry,
+        };
+    });
+    static_cast<VirtualBackend *>(kwinApp()->outputBackend())->setVirtualOutputs(converted);
+}
+
+void Test::setOutputConfig(const QVector<OutputInfo> &infos)
+{
+    QVector<VirtualBackend::OutputInfo> converted;
+    std::transform(infos.begin(), infos.end(), std::back_inserter(converted), [](const auto &info) {
+        return VirtualBackend::OutputInfo{
+            .geometry = info.geometry,
+            .scale = info.scale,
+        };
+    });
+    static_cast<VirtualBackend *>(kwinApp()->outputBackend())->setVirtualOutputs(converted);
+}
 }

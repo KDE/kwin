@@ -6,7 +6,6 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-
 #include "kwin_wayland_test.h"
 
 #include "core/output.h"
@@ -50,7 +49,10 @@ void ActivationTest::initTestCase()
 
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(waylandServer()->init(s_socketName));
-    QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(QVector<QRect>, QVector<QRect>() << QRect(0, 0, 1280, 1024) << QRect(1280, 0, 1280, 1024)));
+    Test::setOutputConfig({
+        QRect(0, 0, 1280, 1024),
+        QRect(1280, 0, 1280, 1024),
+    });
 
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
@@ -514,11 +516,7 @@ void ActivationTest::stackScreensHorizontally()
         QRect(0, 0, 1280, 1024),
         QRect(1280, 0, 1280, 1024),
     };
-
-    QMetaObject::invokeMethod(kwinApp()->outputBackend(),
-                              "setVirtualOutputs",
-                              Qt::DirectConnection,
-                              Q_ARG(QVector<QRect>, screenGeometries));
+    Test::setOutputConfig(screenGeometries);
 }
 
 void ActivationTest::stackScreensVertically()
@@ -530,11 +528,7 @@ void ActivationTest::stackScreensVertically()
         QRect(0, 0, 1280, 1024),
         QRect(0, 1024, 1280, 1024),
     };
-
-    QMetaObject::invokeMethod(kwinApp()->outputBackend(),
-                              "setVirtualOutputs",
-                              Qt::DirectConnection,
-                              Q_ARG(QVector<QRect>, screenGeometries));
+    Test::setOutputConfig(screenGeometries);
 }
 
 }

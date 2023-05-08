@@ -786,6 +786,14 @@ public:
         return stream;
     }
 };
+
+struct OutputInfo
+{
+    QRect geometry;
+    double scale = 1;
+};
+void setOutputConfig(const QVector<QRect> &geometries);
+void setOutputConfig(const QVector<OutputInfo> &infos);
 }
 
 }

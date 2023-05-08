@@ -54,11 +54,16 @@ void TestFractionalScale::initTestCase()
 
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(waylandServer()->init(s_socketName));
-    QMetaObject::invokeMethod(kwinApp()->outputBackend(),
-                              "setVirtualOutputs",
-                              Qt::DirectConnection,
-                              Q_ARG(QVector<QRect>, QVector<QRect>() << QRect(0, 0, 1280, 1024) << QRect(1280, 0, 1280, 1024)),
-                              Q_ARG(QVector<qreal>, QVector<qreal>() << 1.25 << 2.0));
+    Test::setOutputConfig({
+        Test::OutputInfo{
+            .geometry = QRect(0, 0, 1280 / 1.25, 1024 / 1.25),
+            .scale = 1.25,
+        },
+        Test::OutputInfo{
+            .geometry = QRect(1280, 0, 1280 / 2, 1024 / 2),
+            .scale = 2.0,
+        },
+    });
 
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());

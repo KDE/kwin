@@ -534,7 +534,10 @@ int main(int argc, char *argv[])
     case BackendType::Virtual: {
         auto outputBackend = std::make_unique<KWin::VirtualBackend>();
         for (int i = 0; i < outputCount; ++i) {
-            outputBackend->addOutput(initialWindowSize, outputScale);
+            outputBackend->addOutput(KWin::VirtualBackend::OutputInfo{
+                .geometry = QRect(QPoint(), initialWindowSize),
+                .scale = outputScale,
+            });
         }
         a.setSession(KWin::Session::create(KWin::Session::Type::Noop));
         a.setOutputBackend(std::move(outputBackend));
