@@ -161,11 +161,14 @@ KWin.TabBoxSwitcher {
                                 usesPlasmaTheme: false
                             }
 
-                            PlasmaComponents3.Button {
+                            PlasmaComponents3.ToolButton {
                                 id: closeButton
                                 anchors {
                                     right: parent.right
                                     top: parent.top
+                                    // Deliberately touch the inner edges of the frame
+                                    rightMargin: -columnLayout.anchors.rightMargin
+                                    topMargin: -columnLayout.anchors.topMargin
                                 }
                                 visible: model.closeable && typeof tabBox.model.close !== 'undefined' &&
                                         (mouseArea.containsMouse
