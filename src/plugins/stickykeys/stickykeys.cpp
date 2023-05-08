@@ -24,15 +24,6 @@ StickyKeysFilter::StickyKeysFilter()
     }
 }
 
-void StickyKeysFilter::loadConfig(const KConfigGroup &group)
-{
-    KWin::input()->uninstallInputEventFilter(this);
-
-    if (group.readEntry<bool>("StickyKeys", false)) {
-        KWin::input()->prependInputEventFilter(this);
-    }
-}
-
 Qt::KeyboardModifier keyToModifier(Qt::Key key)
 {
     if (key == Qt::Key_Shift) {
@@ -50,6 +41,23 @@ Qt::KeyboardModifier keyToModifier(Qt::Key key)
     return Qt::NoModifier;
 }
 
+void StickyKeysFilter::loadConfig(const KConfigGroup &group)
+{
+    KWin::input()->uninstallInputEventFilter(this);
+
+    if (group.readEntry<bool>("StickyKeys", false)) {
+        KWin::input()->prependInputEventFilter(this);
+    } else {
+        // sticky keys are deactivated, unlatch all latched keys
+        for (auto it = m_keyStates.keyValueBegin(); it != m_keyStates.keyValueEnd(); ++it) {
+            if (it->second != KeyState::None) {
+                it->second = KeyState::None;
+                KWin::input()->keyboard()->xkb()->setModifierLatched(keyToModifier((Qt::Key)it->first), false);
+            }
+        }
+    }
+}
+
 bool StickyKeysFilter::keyEvent(KWin::KeyEvent *event)
 {
     if (m_modifiers.contains(event->key())) {
@@ -65,7 +73,7 @@ bool StickyKeysFilter::keyEvent(KWin::KeyEvent *event)
         for (auto it = m_keyStates.keyValueBegin(); it != m_keyStates.keyValueEnd(); ++it) {
             it->second = KeyState::None;
 
-            KWin::input()->keyboard()->xkb()->setModifierLatched(keyToModifier((Qt::Key)it->first), false);
+            KWin::input()->keyboard()->xkb()->setModifierLatched(keyToModifier(static_cast<Qt::Key>(it->first)), false);
         }
     }
 
