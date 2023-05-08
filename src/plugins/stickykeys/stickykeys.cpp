@@ -13,7 +13,7 @@ StickyKeysFilter::StickyKeysFilter()
 {
     const QLatin1String groupName("Keyboard");
     connect(m_configWatcher.get(), &KConfigWatcher::configChanged, this, [this, groupName](const KConfigGroup &group) {
-        if (group.parent().name() == groupName) {
+        if (group.name() == groupName) {
             loadConfig(group);
         }
     });
