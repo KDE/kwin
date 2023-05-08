@@ -307,6 +307,11 @@ public:
      */
     virtual PlatformCursorImage cursorImage() const;
 
+    TabletModeManager *tabletModeManager() const
+    {
+        return m_tabletModeManager.get();
+    }
+
 Q_SIGNALS:
     void x11ConnectionChanged();
     void x11ConnectionAboutToBeDestroyed();

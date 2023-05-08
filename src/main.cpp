@@ -31,6 +31,7 @@
 #include "wayland/surface_interface.h"
 #include "workspace.h"
 #include "x11eventfilter.h"
+#include "wayland_server.h"
 
 #if KWIN_BUILD_SCREENLOCKER
 #include "screenlockerwatcher.h"
@@ -46,6 +47,11 @@
 #include <QQuickWindow>
 #include <private/qtx11extras_p.h>
 #include <qplatformdefs.h>
+#include <QDBusVariant>
+#include <QDBusAbstractAdaptor>
+#include <QDBusMessage>
+#include <QDBusConnection>
+#include <QDBusMetaType>
 
 #include <cerrno>
 
@@ -62,8 +68,269 @@
 
 Q_DECLARE_METATYPE(KSharedConfigPtr)
 
+
+
+using namespace Qt::StringLiterals;
+
+using VariantMapMap = QMap<QString, QMap<QString, QVariant>>;
+
 namespace KWin
 {
+
+static bool groupMatches(const QString &group, const QStringList &patterns)
+{
+    return std::any_of(patterns.cbegin(), patterns.cend(), [&group](const auto &pattern) {
+        if (pattern.isEmpty()) {
+            return true;
+        }
+
+        if (pattern == group) {
+            return true;
+        }
+
+        if (pattern.endsWith(QLatin1Char('*')) && group.startsWith(pattern.left(pattern.length() - 1))) {
+            return true;
+        }
+
+        return false;
+    });
+}
+
+class SettingsModule : public QObject
+{
+    Q_OBJECT
+public:
+    using QObject::QObject;
+    ~SettingsModule() override = default;
+    Q_DISABLE_COPY_MOVE(SettingsModule);
+    virtual inline QString group() = 0;
+    virtual VariantMapMap readAll(const QStringList &groups) = 0;
+    virtual QVariant read(const QString &group, const QString &key) = 0;
+    Q_SIGNAL void settingChanged(const QString &group, const QString &key, const QDBusVariant &value);
+};
+
+class VirtualKeyboardSettings : public SettingsModule
+{
+    Q_OBJECT
+    static constexpr auto KEY_ACTIVE = "active"_L1;
+    static constexpr auto KEY_ACTIVE_CLIENT_SUPPORTS_TEXT_INPUT = "activeClientSupportsTextInput"_L1;
+    static constexpr auto KEY_AVAILABLE = "available"_L1;
+    static constexpr auto KEY_ENABLED = "enabled"_L1;
+    static constexpr auto KEY_VISIBLE = "visible"_L1;
+    static constexpr auto KEY_WILL_SHOW_ON_ACTIVE = "willShowOnActive"_L1;
+    static constexpr auto KEYS = {KEY_ACTIVE, KEY_ACTIVE_CLIENT_SUPPORTS_TEXT_INPUT, KEY_AVAILABLE, KEY_ENABLED, KEY_VISIBLE, KEY_WILL_SHOW_ON_ACTIVE};
+
+public:
+    explicit VirtualKeyboardSettings(QObject *parent = nullptr)
+        : SettingsModule(parent)
+        , m_inputMethod(kwinApp()->inputMethod())
+    {
+        connect(m_inputMethod, &InputMethod::activeChanged, this, [this]() {
+            Q_EMIT settingChanged(group(), KEY_ACTIVE, QDBusVariant(readInternal(KEY_ACTIVE)));
+        });
+        connect(m_inputMethod, &InputMethod::activeClientSupportsTextInputChanged, this, [this]() {
+            Q_EMIT settingChanged(group(), KEY_ACTIVE_CLIENT_SUPPORTS_TEXT_INPUT, QDBusVariant(readInternal(KEY_ACTIVE_CLIENT_SUPPORTS_TEXT_INPUT)));
+        });
+        connect(m_inputMethod, &InputMethod::availableChanged, this, [this]() {
+            Q_EMIT settingChanged(group(), KEY_AVAILABLE, QDBusVariant(readInternal(KEY_AVAILABLE)));
+        });
+        connect(m_inputMethod, &InputMethod::enabledChanged, this, [this]() {
+            Q_EMIT settingChanged(group(), KEY_ENABLED, QDBusVariant(readInternal(KEY_ENABLED)));
+        });
+        connect(m_inputMethod, &InputMethod::visibleChanged, this, [this]() {
+            Q_EMIT settingChanged(group(), KEY_VISIBLE, QDBusVariant(readInternal(KEY_VISIBLE)));
+        });
+    }
+
+    inline QString group() final
+    {
+        return u"org.kde.VirtualKeyboard"_s;
+    }
+
+    VariantMapMap readAll(const QStringList &groups) final
+    {
+        Q_UNUSED(groups);
+        VariantMapMap result;
+        QVariantMap map;
+        for (const auto &key : KEYS) {
+            map.insert(key, readInternal(key));
+        }
+        result.insert(group(), map);
+        return result;
+    }
+
+    QVariant read(const QString &group, const QString &key) final
+    {
+        Q_UNUSED(group);
+        for (const auto &keyIt : KEYS) {
+            if (key == keyIt) {
+                return readInternal(key);
+            }
+        }
+        return {};
+    }
+
+private:
+    inline QVariant readInternal(const QString &key)
+    {
+        if (key == KEY_WILL_SHOW_ON_ACTIVE) {
+            return m_inputMethod->isAvailable() && m_inputMethod->isEnabled() && m_inputMethod->shouldShowOnActive();
+        }
+        return m_inputMethod->property(qUtf8Printable(key));
+    }
+
+    InputMethod *m_inputMethod;
+};
+
+// For consistency reasons TabletSettings have their property names changed.
+// org.kde.TabletModel.enabled on our end is called tabletMode on the KWin side.
+// As a consequence of that we do not meta program a mapping but instead manually write out the logic per key.
+class TabletModeSettings : public SettingsModule
+{
+    Q_OBJECT
+    static constexpr auto KEY_ENABLED = "enabled"_L1;
+    static constexpr auto KEY_AVAILABLE = "available"_L1;
+
+public:
+    explicit TabletModeSettings(QObject *parent = nullptr)
+        : SettingsModule(parent)
+        , m_manager(kwinApp()->tabletModeManager())
+    {
+        connect(m_manager, &TabletModeManager::tabletModeAvailableChanged, this, [this](bool available) {
+            Q_EMIT settingChanged(group(), KEY_AVAILABLE, QDBusVariant(available));
+        });
+        connect(m_manager, &TabletModeManager::tabletModeChanged, this, [this](bool enabled) {
+            Q_EMIT settingChanged(group(), KEY_ENABLED, QDBusVariant(enabled));
+        });
+    }
+
+    inline QString group() final
+    {
+        return u"org.kde.TabletMode"_s;
+    }
+
+    VariantMapMap readAll(const QStringList &groups) final
+    {
+        Q_UNUSED(groups);
+        VariantMapMap result;
+        result.insert(group(), {{KEY_AVAILABLE, read(group(), KEY_AVAILABLE)}, {KEY_ENABLED, read(group(), KEY_ENABLED)}});
+        return result;
+    }
+
+    QVariant read(const QString &group, const QString &key) final
+    {
+        Q_UNUSED(group);
+        if (key == KEY_AVAILABLE) {
+            return m_manager->isTabletModeAvailable();
+        }
+        if (key == KEY_ENABLED) {
+            return m_manager->effectiveTabletMode();
+        }
+        return {};
+    }
+
+    const TabletModeManager *const m_manager;
+};
+
+class SettingsPortal : public QDBusAbstractAdaptor
+{
+    Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.freedesktop.impl.portal.Settings")
+    Q_PROPERTY(uint version READ version CONSTANT)
+public:
+    SettingsPortal(QObject *parent)
+        : QDBusAbstractAdaptor(parent)
+    {
+        if (kwinApp()->inputMethod()) {
+            m_settings.push_back(std::make_unique<VirtualKeyboardSettings>(this));
+        }
+        m_settings.push_back(std::make_unique<TabletModeSettings>(this));
+        for (const auto &setting : std::as_const(m_settings)) {
+            connect(setting.get(), &SettingsModule::settingChanged, this, &SettingsPortal::SettingChanged);
+        }
+        qDBusRegisterMetaType<VariantMapMap>();
+    }
+
+    uint version() const // only used as property, not slot
+    {
+        return 1;
+    }
+
+public Q_SLOTS:
+    void ReadAll(const QStringList &groups, const QDBusMessage &message)
+    {
+        qCDebug(KWIN_CORE) << "ReadAll called with parameters:";
+        qCDebug(KWIN_CORE) << "    groups: " << groups;
+
+        VariantMapMap result;
+
+        for (const auto &setting : m_settings) {
+            if (groupMatches(setting->group(), groups)) {
+                result.insert(setting->readAll(groups));
+            }
+        }
+
+        QDBusMessage reply = message.createReply(QVariant::fromValue(result));
+        QDBusConnection::sessionBus().send(reply);
+    }
+
+    void Read(const QString &group, const QString &key, const QDBusMessage &message)
+    {
+        qCDebug(KWIN_CORE) << "Read called with parameters:";
+        qCDebug(KWIN_CORE) << "    group: " << group;
+        qCDebug(KWIN_CORE) << "    key: " << key;
+
+        const auto sentMesssage = std::any_of(m_settings.cbegin(), m_settings.cend(), [&message, &group, &key](const auto &setting) {
+            if (group.startsWith(setting->group())) {
+                const QVariant result = setting->read(group, key);
+                QDBusMessage reply;
+                if (result.isNull()) {
+                    reply = message.createErrorReply(QDBusError::UnknownProperty, QStringLiteral("Property doesn't exist"));
+                } else {
+                    reply = message.createReply(QVariant::fromValue(QDBusVariant(result)));
+                }
+                QDBusConnection::sessionBus().send(reply);
+                return true;
+            }
+            return false;
+        });
+        if (sentMesssage) {
+            return;
+        }
+
+        qCWarning(KWIN_CORE) << "Namespace " << group << " is not supported";
+        QDBusMessage reply = message.createErrorReply(QDBusError::UnknownProperty, QStringLiteral("Namespace is not supported"));
+        QDBusConnection::sessionBus().send(reply);
+    }
+
+Q_SIGNALS:
+    void SettingChanged(const QString &group, const QString &key, const QDBusVariant &value);
+
+private:
+    std::vector<std::unique_ptr<SettingsModule>> m_settings;
+};
+
+class PortalInterface : public QObject
+{
+    Q_OBJECT
+public:
+    PortalInterface(QObject *parent = nullptr)
+        : QObject(parent)
+    {
+        qDBusRegisterMetaType<VariantMapMap>();
+        new SettingsPortal(this);
+
+        QDBusConnection sessionBus = QDBusConnection::sessionBus();
+        if (!sessionBus.registerService(QStringLiteral("org.freedesktop.impl.portal.kwin"))) {
+            qCDebug(KWIN_CORE) << "Failed to register portal service";
+            return;
+        }
+        if (!sessionBus.registerObject(QStringLiteral("/org/freedesktop/portal/desktop"), this, QDBusConnection::ExportAdaptors)) {
+            qCDebug(KWIN_CORE) << "Failed to register portal object";
+            return;
+        }
+    }
+};
 
 Options *options;
 Atoms *atoms;
@@ -125,6 +392,7 @@ void Application::start()
     }
 
     performStartup();
+    new PortalInterface(this);
 }
 
 Application::~Application()
@@ -663,3 +931,5 @@ void Application::startInteractivePositionSelection(std::function<void(const QPo
 }
 
 } // namespace
+
+#include "main.moc"

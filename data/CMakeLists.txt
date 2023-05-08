@@ -12,3 +12,4 @@ install(TARGETS kwin5_update_default_rules DESTINATION ${KDE_INSTALL_LIBDIR}/kco
 ########### install files ###############
 
 install(FILES org_kde_kwin.categories DESTINATION ${KDE_INSTALL_LOGGINGCATEGORIESDIR})
+install(FILES kwin.portal DESTINATION ${KDE_INSTALL_DATADIR}/xdg-desktop-portal/portals)
