@@ -46,6 +46,7 @@
 #include "tabbox/tabbox.h"
 #endif
 #include "decorations/decorationbridge.h"
+#include "lidswitchtracker.h"
 #include "main.h"
 #include "outputconfigurationstore.h"
 #include "placeholderinputeventfilter.h"
@@ -129,6 +130,7 @@ Workspace::Workspace()
     , m_applicationMenu(std::make_unique<ApplicationMenu>())
     , m_placementTracker(std::make_unique<PlacementTracker>(this))
     , m_outputConfigStore(std::make_unique<OutputConfigurationStore>())
+    , m_lidSwitchTracker(std::make_unique<LidSwitchTracker>())
 {
     // If KWin was already running it saved its configuration after loosing the selection -> Reread
     QFuture<void> reparseConfigFuture = QtConcurrent::run(&Options::reparseConfiguration, options);
@@ -269,6 +271,11 @@ void Workspace::init()
     connect(this, &Workspace::windowAdded, m_placementTracker.get(), &PlacementTracker::add);
     connect(this, &Workspace::windowRemoved, m_placementTracker.get(), &PlacementTracker::remove);
     m_placementTracker->init(getPlacementTrackerHash());
+
+    connect(m_lidSwitchTracker.get(), &LidSwitchTracker::lidStateChanged, this, [this]() {
+        const auto [config, order] = m_outputConfigStore->queryConfig(kwinApp()->outputBackend()->outputs(), m_lidSwitchTracker->isLidClosed());
+        applyOutputConfiguration(config, order);
+    });
 }
 
 QString Workspace::getPlacementTrackerHash()
@@ -532,7 +539,7 @@ void Workspace::updateOutputConfiguration()
         setOutputOrder(newOrder);
     };
 
-    const auto &[cfg, order] = m_outputConfigStore->queryConfig(outputs);
+    const auto &[cfg, order] = m_outputConfigStore->queryConfig(outputs, m_lidSwitchTracker->isLidClosed());
     if (!kwinApp()->outputBackend()->applyOutputChanges(cfg)) {
         qCWarning(KWIN_CORE) << "Applying output config failed!";
         setFallbackOutputOrder();

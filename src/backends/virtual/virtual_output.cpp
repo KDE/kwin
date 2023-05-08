@@ -15,7 +15,7 @@
 namespace KWin
 {
 
-VirtualOutput::VirtualOutput(VirtualBackend *parent)
+VirtualOutput::VirtualOutput(VirtualBackend *parent, bool internal)
     : Output(parent)
     , m_backend(parent)
     , m_renderLoop(std::make_unique<RenderLoop>())
@@ -27,6 +27,7 @@ VirtualOutput::VirtualOutput(VirtualBackend *parent)
     m_identifier = ++identifier;
     setInformation(Information{
         .name = QStringLiteral("Virtual-%1").arg(identifier),
+        .internal = internal,
     });
 }
 

@@ -518,6 +518,7 @@ public:
     void setPointer(bool set);
     void setKeyboard(bool set);
     void setTouch(bool set);
+    void setLidSwitch(bool set);
     void setName(const QString &name);
 
     QString sysName() const override;
@@ -544,6 +545,7 @@ private:
     bool m_pointer = false;
     bool m_keyboard = false;
     bool m_touch = false;
+    bool m_lidSwitch = false;
 };
 
 void keyboardKeyPressed(quint32 key, quint32 time);
@@ -791,6 +793,7 @@ struct OutputInfo
 {
     QRect geometry;
     double scale = 1;
+    bool internal = false;
 };
 void setOutputConfig(const QVector<QRect> &geometries);
 void setOutputConfig(const QVector<OutputInfo> &infos);

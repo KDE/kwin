@@ -21,13 +21,12 @@ class OutputMode;
 class OutputConfigurationStore
 {
 public:
-    std::pair<OutputConfiguration, QVector<Output *>> queryConfig(const QVector<Output *> &outputs);
+    std::pair<OutputConfiguration, QVector<Output *>> queryConfig(const QVector<Output *> &outputs, bool isLidClosed);
 
 private:
-    std::pair<OutputConfiguration, QVector<Output *>> generateConfig(const QVector<Output *> &outputs) const;
+    std::pair<OutputConfiguration, QVector<Output *>> generateConfig(const QVector<Output *> &outputs, bool isLidClosed) const;
     std::shared_ptr<OutputMode> chooseMode(Output *output) const;
     double chooseScale(Output *output, OutputMode *mode) const;
     double targetDpi(Output *output) const;
 };
-
 }

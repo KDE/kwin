@@ -37,6 +37,7 @@ public:
     {
         QRect geometry;
         double scale = 1;
+        bool internal = false;
     };
     Output *addOutput(const OutputInfo &info);
     void setVirtualOutputs(const QVector<OutputInfo> &infos);

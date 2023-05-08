@@ -24,7 +24,7 @@ class VirtualOutput : public Output
     Q_OBJECT
 
 public:
-    VirtualOutput(VirtualBackend *parent = nullptr);
+    VirtualOutput(VirtualBackend *parent, bool internal);
     ~VirtualOutput() override;
 
     RenderLoop *renderLoop() const override;

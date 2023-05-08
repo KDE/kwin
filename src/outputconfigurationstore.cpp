@@ -9,35 +9,39 @@
 #include "outputconfigurationstore.h"
 #include "core/inputdevice.h"
 #include "core/output.h"
+#include "core/outputbackend.h"
 #include "core/outputconfiguration.h"
 #include "input.h"
+#include "input_event.h"
 #include "kscreenintegration.h"
+#include "workspace.h"
 
 namespace KWin
 {
 
-std::pair<OutputConfiguration, QVector<Output *>> OutputConfigurationStore::queryConfig(const QVector<Output *> &outputs)
+std::pair<OutputConfiguration, QVector<Output *>> OutputConfigurationStore::queryConfig(const QVector<Output *> &outputs, bool isLidClosed)
 {
-    const auto kscreenConfig = KScreenIntegration::readOutputConfig(outputs, KScreenIntegration::connectedOutputsHash(outputs));
+    const auto kscreenConfig = KScreenIntegration::readOutputConfig(outputs, KScreenIntegration::connectedOutputsHash(outputs, isLidClosed));
     if (kscreenConfig) {
         return kscreenConfig.value();
     } else {
         // no config file atm -> generate a new one
-        return generateConfig(outputs);
+        return generateConfig(outputs, isLidClosed);
     }
 }
 
-std::pair<OutputConfiguration, QVector<Output *>> OutputConfigurationStore::generateConfig(const QVector<Output *> &outputs) const
+std::pair<OutputConfiguration, QVector<Output *>> OutputConfigurationStore::generateConfig(const QVector<Output *> &outputs, bool isLidClosed) const
 {
     OutputConfiguration ret;
-
+    QVector<Output *> outputOrder;
     QPoint pos(0, 0);
     for (const auto output : outputs) {
         const auto mode = chooseMode(output);
         const double scale = chooseScale(output, mode.get());
+        const bool enable = !isLidClosed || !output->isInternal();
         *ret.changeSet(output) = {
             .mode = mode,
-            .enabled = true,
+            .enabled = enable,
             .pos = pos,
             .scale = scale,
             .transform = output->panelOrientation(),
@@ -46,6 +50,9 @@ std::pair<OutputConfiguration, QVector<Output *>> OutputConfigurationStore::gene
             .vrrPolicy = RenderLoop::VrrPolicy::Automatic,
         };
         pos.setX(pos.x() + mode->size().width() / scale);
+        if (enable) {
+            outputOrder.push_back(output);
+        }
     }
     return std::make_pair(ret, outputs);
 }
@@ -106,7 +113,7 @@ double OutputConfigurationStore::chooseScale(Output *output, OutputMode *mode) c
     const double outputDpi = mode->size().height() / (output->physicalSize().height() / 25.4);
     const double desiredScale = outputDpi / targetDpi(output);
     // round to 25% steps
-    return std::round(100.0 * desiredScale / 25.0) * 100.0 / 25.0;
+    return std::clamp(std::round(100.0 * desiredScale / 25.0) * 25.0 / 100.0, 1.0, 5.0);
 }
 
 double OutputConfigurationStore::targetDpi(Output *output) const

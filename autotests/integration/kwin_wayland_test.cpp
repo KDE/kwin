@@ -230,6 +230,7 @@ void Test::setOutputConfig(const QVector<OutputInfo> &infos)
         return VirtualBackend::OutputInfo{
             .geometry = info.geometry,
             .scale = info.scale,
+            .internal = info.internal,
         };
     });
     static_cast<VirtualBackend *>(kwinApp()->outputBackend())->setVirtualOutputs(converted);

@@ -16,6 +16,8 @@
 
 #include <KWayland/Client/surface.h>
 
+using namespace std::chrono_literals;
+
 namespace KWin
 {
 
@@ -43,6 +45,7 @@ private Q_SLOTS:
     void testMaximizeStateRestoredAfterEnablingOutput();
 
     void testWindowNotRestoredAfterMovingWindowAndEnablingOutput();
+    void testLaptopLidClosed();
 };
 
 void OutputChangesTest::initTestCase()
@@ -590,6 +593,45 @@ void OutputChangesTest::testMaximizeStateRestoredAfterEnablingOutput()
     QCOMPARE(window->maximizeMode(), MaximizeFull);
     QCOMPARE(window->requestedMaximizeMode(), MaximizeFull);
     QCOMPARE(window->geometryRestore(), QRectF(1280 + 50, 100, 100, 50));
+}
+
+void OutputChangesTest::testLaptopLidClosed()
+{
+    Test::setOutputConfig({
+        Test::OutputInfo{
+            .geometry = QRect(0, 0, 1280, 1024),
+            .internal = true,
+        },
+        Test::OutputInfo{
+            .geometry = QRect(1280, 0, 1280, 1024),
+            .internal = false,
+        },
+    });
+    const auto outputs = kwinApp()->outputBackend()->outputs();
+    const auto internal = outputs.front();
+    QVERIFY(internal->isInternal());
+    const auto external = outputs.back();
+    QVERIFY(!external->isInternal());
+
+    auto lidSwitch = std::make_unique<Test::VirtualInputDevice>();
+    lidSwitch->setLidSwitch(true);
+    lidSwitch->setName("virtual lid switch");
+    input()->addInputDevice(lidSwitch.get());
+
+    auto timestamp = 1ms;
+    Q_EMIT lidSwitch->switchToggledOff(timestamp++, lidSwitch.get());
+    QVERIFY(internal->isEnabled());
+    QVERIFY(external->isEnabled());
+
+    Q_EMIT lidSwitch->switchToggledOn(timestamp++, lidSwitch.get());
+    QVERIFY(!internal->isEnabled());
+    QVERIFY(external->isEnabled());
+
+    Q_EMIT lidSwitch->switchToggledOff(timestamp++, lidSwitch.get());
+    QVERIFY(internal->isEnabled());
+    QVERIFY(external->isEnabled());
+
+    input()->removeInputDevice(lidSwitch.get());
 }
 
 } // namespace KWin

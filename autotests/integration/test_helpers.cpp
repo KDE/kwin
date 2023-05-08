@@ -1403,6 +1403,11 @@ void VirtualInputDevice::setTouch(bool set)
     m_touch = set;
 }
 
+void VirtualInputDevice::setLidSwitch(bool set)
+{
+    m_lidSwitch = set;
+}
+
 void VirtualInputDevice::setName(const QString &name)
 {
     m_name = name;
@@ -1478,7 +1483,7 @@ bool VirtualInputDevice::isTabletModeSwitch() const
 
 bool VirtualInputDevice::isLidSwitch() const
 {
-    return false;
+    return m_lidSwitch;
 }
 
 void keyboardKeyPressed(quint32 key, quint32 time)

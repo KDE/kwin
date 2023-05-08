@@ -78,6 +78,7 @@ class Placement;
 class OutputConfiguration;
 class TileManager;
 class OutputConfigurationStore;
+class LidSwitchTracker;
 
 class KWIN_EXPORT Workspace : public QObject
 {
@@ -723,6 +724,7 @@ private:
     std::unique_ptr<PlaceholderInputEventFilter> m_placeholderFilter;
     std::map<Output *, std::unique_ptr<TileManager>> m_tileManagers;
     std::unique_ptr<OutputConfigurationStore> m_outputConfigStore;
+    std::unique_ptr<LidSwitchTracker> m_lidSwitchTracker;
 
 private:
     friend bool performTransiencyCheck();

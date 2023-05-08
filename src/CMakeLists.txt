@@ -99,6 +99,7 @@ target_sources(kwin PRIVATE
     layers.cpp
     layershellv1integration.cpp
     layershellv1window.cpp
+    lidswitchtracker.cpp
     main.cpp
     modifier_only_shortcuts.cpp
     mousebuttons.cpp
@@ -117,8 +118,8 @@ target_sources(kwin PRIVATE
     pluginmanager.cpp
     pointer_input.cpp
     popup_input_filter.cpp
-    rootinfo_filter.cpp
     resources.qrc
+    rootinfo_filter.cpp
     rulebooksettings.cpp
     rules.cpp
     scene/cursoritem.cpp

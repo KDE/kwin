@@ -34,14 +34,18 @@ static QString outputHash(Output *output)
 }
 
 /// See KScreen::Config::connectedOutputsHash in libkscreen
-QString connectedOutputsHash(const QVector<Output *> &outputs)
+QString connectedOutputsHash(const QVector<Output *> &outputs, bool isLidClosed)
 {
     QStringList hashedOutputs;
     hashedOutputs.reserve(outputs.count());
     for (auto output : std::as_const(outputs)) {
-        if (!output->isPlaceholder() && !output->isNonDesktop()) {
-            hashedOutputs << outputHash(output);
+        if (output->isPlaceholder() || !output->isNonDesktop()) {
+            continue;
         }
+        if (output->isInternal() && isLidClosed) {
+            continue;
+        }
+        hashedOutputs << outputHash(output);
     }
     std::sort(hashedOutputs.begin(), hashedOutputs.end());
     const auto hash = QCryptographicHash::hash(hashedOutputs.join(QString()).toLatin1(), QCryptographicHash::Md5);
@@ -175,6 +179,9 @@ std::shared_ptr<OutputMode> parseMode(Output *output, const QJsonObject &modeInf
 std::optional<std::pair<OutputConfiguration, QVector<Output *>>> readOutputConfig(const QVector<Output *> &outputs, const QString &hash)
 {
     const auto outputsInfo = outputsConfig(outputs, hash);
+    if (outputsInfo.isEmpty()) {
+        return std::nullopt;
+    }
     std::vector<std::pair<uint32_t, Output *>> outputOrder;
     OutputConfiguration cfg;
     // default position goes from left to right

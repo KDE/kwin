@@ -18,7 +18,7 @@ namespace KWin
 namespace KScreenIntegration
 {
 
-QString connectedOutputsHash(const QVector<Output *> &outputs);
+QString connectedOutputsHash(const QVector<Output *> &outputs, bool isLidClosed);
 std::optional<std::pair<OutputConfiguration, QVector<Output *>>> readOutputConfig(const QVector<Output *> &outputs, const QString &hash);
 }
 }
