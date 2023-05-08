@@ -35,38 +35,67 @@ OverviewEffect::OverviewEffect()
 
     m_realtimeToggleAction = new QAction(this);
     connect(m_realtimeToggleAction, &QAction::triggered, this, [this]() {
-        if (m_status == Status::Deactivating) {
-            if (m_partialActivationFactor < 0.5) {
-                deactivate();
-            } else {
-                cancelPartialDeactivate();
-            }
-        } else if (m_status == Status::Activating) {
-            if (m_partialActivationFactor > 0.5) {
-                activate();
-            } else {
-                cancelPartialActivate();
-            }
-        }
+        if (m_status == Status::Deactivating)
+            return;
+        setGestureInProgress(false);
+        setPartialActivationFactor(0.0);
+        m_status = Status::Inactive;
     });
+    auto m_realtimeToggleActionB = new QAction(this);
+    connect(m_realtimeToggleActionB, &QAction::triggered, this, [this]() {
+        if (m_status == Status::Activating)
+            return;
+        setGestureInProgress(false);
+        setPartialActivationFactor(0.0);
+        m_status = Status::Inactive;
+    });
+
+    // Desktop Switching Connections
+    connect(effects, QOverload<uint, QPointF, EffectWindow *>::of(&EffectsHandler::desktopChanging),
+            this, [this](uint old, QPointF desktopOffset, EffectWindow *with) {
+                m_desktopOffset = desktopOffset;
+                Q_EMIT desktopOffsetChanged();
+            });
+    connect(effects, QOverload<int, int, EffectWindow *>::of(&EffectsHandler::desktopChanged),
+            this, [this](int old, int current, EffectWindow *with) {
+                m_desktopOffset = QPointF(0, 0);
+                Q_EMIT desktopOffsetChanged();
+            });
+    connect(effects, &EffectsHandler::desktopChangingCancelled, this, [this]() {
+        m_desktopOffset = QPointF(0, 0);
+        Q_EMIT desktopOffsetChanged();
+    });
+
+    // connect(effects, QOverload<int, int, EffectWindow *>::of(&EffectsHandler::desktopChanged),
+    //         this, &SlideEffect::desktopChanged);
+    // connect(effects, QOverload<uint, QPointF, EffectWindow *>::of(&EffectsHandler::desktopChanging),
+    //         this, &SlideEffect::desktopChanging);
+    // connect(effects, QOverload<>::of(&EffectsHandler::desktopChangingCancelled),
+    //         this, &SlideEffect::desktopChangingCancelled);
 
     auto progressCallback = [this](qreal progress) {
         if (!effects->hasActiveFullScreenEffect() || effects->activeFullScreenEffect() == this) {
-            switch (m_status) {
-            case Status::Inactive:
-            case Status::Activating:
-                partialActivate(progress);
-                break;
-            case Status::Active:
-            case Status::Deactivating:
-                partialDeactivate(progress);
-                break;
-            }
+            if (m_status == Status::Deactivating)
+                return;
+            partialActivate(progress);
+            m_status = Status::Activating;
+        }
+    };
+    auto reverseCallback = [this](qreal progress) {
+        if (!effects->hasActiveFullScreenEffect() || effects->activeFullScreenEffect() == this) {
+            if (m_status == Status::Activating)
+                return;
+            partialActivate(1 - progress);
+            m_status = Status::Deactivating;
         }
     };
 
     effects->registerRealtimeTouchpadPinchShortcut(PinchDirection::Contracting, 4, m_realtimeToggleAction, progressCallback);
+    effects->registerRealtimeTouchpadPinchShortcut(PinchDirection::Expanding, 4, m_realtimeToggleActionB, reverseCallback);
+    effects->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Up, 4, m_realtimeToggleAction, progressCallback);
+    effects->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Down, 4, m_realtimeToggleActionB, reverseCallback);
     effects->registerTouchscreenSwipeShortcut(SwipeDirection::Up, 3, m_realtimeToggleAction, progressCallback);
+    effects->registerTouchscreenSwipeShortcut(SwipeDirection::Down, 3, m_realtimeToggleActionB, reverseCallback);
 
     connect(effects, &EffectsHandler::screenAboutToLock, this, &OverviewEffect::realDeactivate);
 
@@ -132,6 +161,11 @@ void OverviewEffect::reconfigure(ReconfigureFlags)
 int OverviewEffect::animationDuration() const
 {
     return m_animationDuration;
+}
+
+QPointF OverviewEffect::desktopOffset()
+{
+    return m_desktopOffset;
 }
 
 void OverviewEffect::setAnimationDuration(int duration)
@@ -215,11 +249,24 @@ bool OverviewEffect::borderActivated(ElectricBorder border)
 
 void OverviewEffect::toggle()
 {
-    if (!isRunning() || m_partialActivationFactor > 0.5) {
+    if (!isRunning() || m_partialActivationFactor > 0.5 || state() == QString("overview")) {
         activate();
     } else {
         deactivate();
     }
+}
+
+QString OverviewEffect::state() const
+{
+    return m_state;
+}
+
+void OverviewEffect::setState(QString state)
+{
+    if (state == m_state)
+        return;
+    m_state = state;
+    Q_EMIT stateChanged();
 }
 
 void OverviewEffect::activate()
@@ -228,10 +275,11 @@ void OverviewEffect::activate()
         return;
     }
 
-    m_status = Status::Active;
-
     setGestureInProgress(false);
     setPartialActivationFactor(0.0);
+    if (state() == QString("overview")) {
+        setState("grid");
+    }
 
     // This one should be the last.
     m_searchText = QString();
@@ -244,19 +292,12 @@ void OverviewEffect::partialActivate(qreal factor)
         return;
     }
 
-    m_status = Status::Activating;
-
     setPartialActivationFactor(factor);
     setGestureInProgress(true);
 
     // This one should be the last.
     m_searchText = QString();
     setRunning(true);
-}
-
-void OverviewEffect::cancelPartialActivate()
-{
-    deactivate();
 }
 
 void OverviewEffect::deactivate()
@@ -273,23 +314,11 @@ void OverviewEffect::deactivate()
     setPartialActivationFactor(0.0);
 }
 
-void OverviewEffect::partialDeactivate(qreal factor)
-{
-    m_status = Status::Deactivating;
-
-    setPartialActivationFactor(1.0 - factor);
-    setGestureInProgress(true);
-}
-
-void OverviewEffect::cancelPartialDeactivate()
-{
-    activate();
-}
-
 void OverviewEffect::realDeactivate()
 {
     setRunning(false);
     m_status = Status::Inactive;
+    setState("initial");
 }
 
 void OverviewEffect::quickDeactivate()

@@ -19,8 +19,11 @@ VirtualDesktopModel::VirtualDesktopModel(QObject *parent)
             this, &VirtualDesktopModel::handleVirtualDesktopAdded);
     connect(manager, &VirtualDesktopManager::desktopRemoved,
             this, &VirtualDesktopModel::handleVirtualDesktopRemoved);
+    connect(manager, &VirtualDesktopManager::rowsChanged,
+            this, &VirtualDesktopModel::handleGridLayoutRowCountChanged);
 
     m_virtualDesktops = manager->desktops();
+    m_gridLayoutRowCount = manager->rows();
 }
 
 void VirtualDesktopModel::create(uint position, const QString &name)
@@ -51,6 +54,12 @@ void VirtualDesktopModel::handleVirtualDesktopRemoved(VirtualDesktop *desktop)
     beginRemoveRows(QModelIndex(), index, index);
     m_virtualDesktops.removeAt(index);
     endRemoveRows();
+}
+
+void VirtualDesktopModel::handleGridLayoutRowCountChanged(uint rows)
+{
+    m_gridLayoutRowCount = rows;
+    Q_EMIT gridLayoutRowCountChanged();
 }
 
 QHash<int, QByteArray> VirtualDesktopModel::roleNames() const
@@ -86,6 +95,11 @@ QVariant VirtualDesktopModel::data(const QModelIndex &index, int role) const
 int VirtualDesktopModel::rowCount(const QModelIndex &parent) const
 {
     return parent.isValid() ? 0 : m_virtualDesktops.count();
+}
+
+uint VirtualDesktopModel::gridLayoutRowCount() const
+{
+    return m_gridLayoutRowCount;
 }
 
 } // namespace KWin::ScriptingModels::V3

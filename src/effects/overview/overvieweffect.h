@@ -22,6 +22,8 @@ class OverviewEffect : public QuickSceneEffect
     // More efficient from a property binding pov rather than binding to partialActivationFactor !== 0
     Q_PROPERTY(bool gestureInProgress READ gestureInProgress NOTIFY gestureInProgressChanged)
     Q_PROPERTY(QString searchText MEMBER m_searchText NOTIFY searchTextChanged)
+    Q_PROPERTY(QString state READ state WRITE setState NOTIFY stateChanged)
+    Q_PROPERTY(QPointF desktopOffset READ desktopOffset NOTIFY desktopOffsetChanged)
 
 public:
     enum class Status {
@@ -54,6 +56,10 @@ public:
     bool borderActivated(ElectricBorder border) override;
     void reconfigure(ReconfigureFlags flags) override;
     void grabbedKeyboardEvent(QKeyEvent *keyEvent) override;
+    QPointF desktopOffset();
+
+    QString state() const;
+    void setState(QString state);
 
 Q_SIGNALS:
     void animationDurationChanged();
@@ -63,13 +69,12 @@ Q_SIGNALS:
     void gestureInProgressChanged();
     void ignoreMinimizedChanged();
     void searchTextChanged();
+    void stateChanged();
+    void desktopOffsetChanged();
 
 public Q_SLOTS:
     void activate();
     void partialActivate(qreal factor);
-    void cancelPartialActivate();
-    void partialDeactivate(qreal factor);
-    void cancelPartialDeactivate();
     void deactivate();
     void quickDeactivate();
     void toggle();
@@ -93,6 +98,8 @@ private:
     int m_animationDuration = 400;
     int m_layout = 1;
     bool m_gestureInProgress = false;
+    QString m_state = "initial";
+    QPointF m_desktopOffset = QPointF(0, 0);
 };
 
 } // namespace KWin

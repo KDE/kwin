@@ -21,13 +21,18 @@ Item {
     readonly property real desktopHeight: PlasmaCore.Units.gridUnit * 4
     readonly property real desktopWidth: desktopHeight * targetScreen.geometry.width / targetScreen.geometry.height
     readonly property real columnHeight: desktopHeight + PlasmaCore.Units.gridUnit
+    readonly property real columnWidth: desktopWidth + PlasmaCore.Units.gridUnit
+    readonly property int desktopCount: desktopRepeater.count
 
+
+    property bool verticalDesktopBar
     property QtObject clientModel
     property alias desktopModel: desktopRepeater.model
     property QtObject selectedDesktop: null
     property WindowHeap heap
 
     implicitHeight: columnHeight + 2 * PlasmaCore.Units.smallSpacing
+    implicitWidth: columnWidth + 2 * PlasmaCore.Units.smallSpacing
 
     Flickable {
         anchors.fill: parent
@@ -39,8 +44,9 @@ Item {
         clip: true
         flickableDirection: Flickable.HorizontalFlick
 
-        Row {
+        Grid {
             spacing: PlasmaCore.Units.largeSpacing
+            columns: verticalDesktopBar ? 1 : desktopCount + 1
 
             Repeater {
                 id: desktopRepeater
@@ -71,7 +77,7 @@ Item {
                     Keys.onRightPressed: nextItemInFocusChain(!LayoutMirroring.enabled).forceActiveFocus(Qt.TabFocusReason);
 
                     function activate() {
-                        thumbnail.state = "scaled";
+                        KWinComponents.Workspace.currentVirtualDesktop = delegate.desktop
                     }
 
                     function remove() {
@@ -95,68 +101,34 @@ Item {
                         DesktopView {
                             id: thumbnail
 
-                            property bool scaled: state === "scaled"
-
                             width: targetScreen.geometry.width
                             height: targetScreen.geometry.height
-                            visible: scaled
                             clientModel: bar.clientModel
                             desktop: delegate.desktop
                             scale: bar.desktopHeight / targetScreen.geometry.height
                             transformOrigin: Item.TopLeft
 
-                            // Disable the item layer while being scaled.
-                            layer.enabled: !scaled
+
                             layer.textureSize: Qt.size(bar.desktopWidth, bar.desktopHeight)
-
-                            states: State {
-                                name: "scaled"
-                                ParentChange {
-                                    target: thumbnail
-                                    parent: container
-                                    x: 0
-                                    y: 0
-                                    scale: 1
-                                }
-                            }
-
-                            transitions: Transition {
-                                SequentialAnimation {
-                                    ParentAnimation {
-                                        NumberAnimation {
-                                            properties: "x,y,scale"
-                                            duration: effect.animationDuration
-                                            easing.type: Easing.OutCubic
-                                        }
-                                    }
-                                    ScriptAction {
-                                        script: {
-                                            KWinComponents.Workspace.currentVirtualDesktop = delegate.desktop;
-                                            effect.quickDeactivate();
-                                        }
-                                    }
+                            layer.enabled: true
+                            layer.effect: OpacityMask {
+                                maskSource: Rectangle {
+                                    anchors.centerIn: parent
+                                    width: thumbnail.width
+                                    height: thumbnail.height
+                                    // Using % of width since that's constant even under scaling:
+                                    radius: width / 20
                                 }
                             }
                         }
 
-                        OpacityMask {
-                            anchors.fill: parent
-                            cached: true
-                            source: thumbnail
-                            maskSource: Rectangle {
-                                width: bar.desktopWidth
-                                height: bar.desktopHeight
-                                radius: 3
-                            }
-                        }
 
                         Rectangle {
-                            readonly property bool active: !thumbnail.scaled && (delegate.activeFocus || dropArea.containsDrag || mouseArea.containsPress || bar.selectedDesktop === delegate.desktop)
+                            readonly property bool active: (delegate.activeFocus || dropArea.containsDrag || mouseArea.containsPress || bar.selectedDesktop === delegate.desktop)
                             anchors.fill: parent
-                            anchors.margins: -border.width
-                            radius: 3
+                            radius: width / 20
                             color: "transparent"
-                            border.width: 2
+                            border.width: active ? 2 : 1
                             border.color: active ? PlasmaCore.ColorScope.highlightColor : PlasmaCore.ColorScope.textColor
                             opacity: dropArea.containsDrag || !active ? 0.5 : 1.0
                         }
@@ -180,7 +152,7 @@ Item {
 
                         Loader {
                             LayoutMirroring.enabled: Qt.application.layoutDirection === Qt.RightToLeft
-                            active: !heap.dragActive && (hoverHandler.hovered || Kirigami.Settings.tabletMode || Kirigami.Settings.hasTransientTouchInput) && desktopRepeater.count > 1
+                            active: !heap.dragActive && (hoverHandler.hovered || Kirigami.Settings.tabletMode || Kirigami.Settings.hasTransientTouchInput) && desktopCount > 1
                             anchors.right: parent.right
                             anchors.top: parent.top
                             sourceComponent: PC3.Button {

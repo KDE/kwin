@@ -7,6 +7,7 @@
 
 import QtQuick 2.15
 import QtQuick.Window 2.15
+import QtGraphicalEffects 1.15
 import org.kde.kirigami 2.20 as Kirigami
 import org.kde.kwin 3.0 as KWinComponents
 import org.kde.kwin.private.effects 1.0
@@ -19,6 +20,7 @@ Item {
     required property QtObject client
     required property int index
     required property Item windowHeap
+    property real partialActivationFactor: effect.partialActivationFactor
 
     readonly property bool selected: windowHeap.selectedIndex === index
 
@@ -164,8 +166,23 @@ Item {
         anchors.bottomMargin: -Math.round(height / 4)
         visible: !thumb.activeHidden && !activeDragHandler.active
 
+        DropShadow {
+            anchors.fill: caption
+            horizontalOffset: 1
+            verticalOffset: 1
+
+            radius: Math.round(4 * PlasmaCore.Units.devicePixelRatio)
+            samples: radius * 2 + 1
+            spread: 0.35
+
+            color: "black"
+            opacity: 1
+            source: caption
+        }
+
         PC3.Label {
             id: caption
+            color: "#fff"
             visible: thumb.windowTitleVisible
             width: Math.min(implicitWidth, thumbSource.width)
             anchors.top: parent.bottom
@@ -174,6 +191,7 @@ Item {
             text: thumb.client.caption
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
+
         }
     }
 
@@ -219,13 +237,13 @@ Item {
             name: "partial"
             PropertyChanges {
                 target: thumb
-                x: (thumb.client.x - targetScreen.geometry.x - (thumb.windowHeap.absolutePositioning ?  windowHeap.layout.Kirigami.ScenePosition.x : 0)) * (1 - effect.partialActivationFactor) + cell.x * effect.partialActivationFactor
-                y: (thumb.client.y - targetScreen.geometry.y - (thumb.windowHeap.absolutePositioning ?  windowHeap.layout.Kirigami.ScenePosition.y : 0)) * (1 - effect.partialActivationFactor) + cell.y * effect.partialActivationFactor
-                width: thumb.client.width * (1 - effect.partialActivationFactor) + cell.width * effect.partialActivationFactor
-                height: thumb.client.height * (1 - effect.partialActivationFactor) + cell.height * effect.partialActivationFactor
+                x: (thumb.client.x - targetScreen.geometry.x - (thumb.windowHeap.absolutePositioning ?  windowHeap.layout.Kirigami.ScenePosition.x : 0)) * (1 - partialActivationFactor) + cell.x * partialActivationFactor
+                y: (thumb.client.y - targetScreen.geometry.y - (thumb.windowHeap.absolutePositioning ?  windowHeap.layout.Kirigami.ScenePosition.y : 0)) * (1 - partialActivationFactor) + cell.y * partialActivationFactor
+                width: thumb.client.width * (1 - partialActivationFactor) + cell.width * partialActivationFactor
+                height: thumb.client.height * (1 - partialActivationFactor) + cell.height * partialActivationFactor
                 opacity: thumb.initialHidden
-                    ? (thumb.activeHidden ? 0 : effect.partialActivationFactor)
-                    : (thumb.activeHidden ? 1 - effect.partialActivationFactor : 1)
+                    ? (thumb.activeHidden ? 0 : partialActivationFactor)
+                    : (thumb.activeHidden ? 1 - partialActivationFactor : 1)
             }
             PropertyChanges {
                 target: thumbSource
@@ -236,11 +254,11 @@ Item {
             }
             PropertyChanges {
                 target: icon
-                opacity: effect.partialActivationFactor
+                opacity: partialActivationFactor
             }
             PropertyChanges {
                 target: closeButton
-                opacity: effect.partialActivationFactor
+                opacity: partialActivationFactor
             }
         },
         State {

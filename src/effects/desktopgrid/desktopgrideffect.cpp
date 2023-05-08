@@ -60,7 +60,7 @@ DesktopGridEffect::DesktopGridEffect()
         }
     });
 
-    effects->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Up, 4, m_realtimeToggleAction, [this](qreal progress) {
+    /*effects->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Up, 4, m_realtimeToggleAction, [this](qreal progress) {
         if (!effects->hasActiveFullScreenEffect() || effects->activeFullScreenEffect() == this) {
             switch (m_status) {
             case Status::Inactive:
@@ -73,7 +73,7 @@ DesktopGridEffect::DesktopGridEffect()
                 break;
             }
         }
-    });
+    });*/
 
     initConfig<DesktopGridConfig>();
     reconfigure(ReconfigureAll);
