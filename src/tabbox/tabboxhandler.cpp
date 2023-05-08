@@ -235,7 +235,7 @@ QObject *TabBoxHandlerPrivate::createSwitcherItem()
                 // load default
                 offers = KPackage::PackageLoader::self()->findPackages(type, folderName,
                                                                        [](const KPluginMetaData &data) {
-                                                                           return data.pluginId().compare(QStringLiteral("compact"), Qt::CaseInsensitive) == 0;
+                                                                           return data.pluginId().compare(QStringLiteral("thumbnail_grid"), Qt::CaseInsensitive) == 0;
                                                                        });
                 if (offers.isEmpty()) {
                     qCDebug(KWIN_TABBOX) << "could not find default window switcher layout";

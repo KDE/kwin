@@ -318,7 +318,7 @@
             <default>true</default>
         </entry>
         <entry name="LayoutName" type="String">
-            <default>thumbnails</default>
+            <default>thumbnail_grid</default>
         </entry>
     </group>
     <group name="KDE">

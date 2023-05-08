@@ -279,7 +279,7 @@ public:
     }
     static QString defaultLayoutName()
     {
-        return QStringLiteral("org.kde.breeze.desktop");
+        return QStringLiteral("thumbnail_grid");
     }
 
 private:

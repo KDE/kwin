@@ -296,6 +296,7 @@ if (KWIN_BUILD_TABBOX)
         tabbox/x11_filter.cpp
     )
     target_link_libraries(kwin Qt::GuiPrivate)
+    add_subdirectory(tabbox/switchers)
 endif()
 
 qt_generate_dbus_interface(virtualkeyboard_dbus.h org.kde.kwin.VirtualKeyboard.xml OPTIONS -A)
