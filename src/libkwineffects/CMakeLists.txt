@@ -19,7 +19,7 @@ set(kwin_EFFECTSLIB_SRCS
     logging.cpp
     rendertarget.cpp
     renderviewport.cpp
-    togglablestate.cpp
+    effecttogglablestate.cpp
 )
 
 add_library(kwineffects SHARED ${kwin_EFFECTSLIB_SRCS})

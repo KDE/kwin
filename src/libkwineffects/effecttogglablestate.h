@@ -16,7 +16,7 @@ namespace KWin
 
 class Effect;
 
-class KWINEFFECTS_EXPORT TogglableState : public QObject
+class KWINEFFECTS_EXPORT EffectTogglableState : public QObject
 {
     Q_OBJECT
 public:
@@ -28,7 +28,7 @@ public:
     };
     Q_ENUM(Status);
 
-    TogglableState(Effect *parent);
+    EffectTogglableState(Effect *parent);
 
     bool inProgress() const;
     void setInProgress(bool gesture);
@@ -87,34 +87,34 @@ private:
     bool m_inProgress = false;
     qreal m_partialActivationFactor = 0;
 
-    friend class TogglableGesture;
-    friend class TogglableTouchBorder;
+    friend class EffectTogglableGesture;
+    friend class EffectTogglableTouchBorder;
 };
 
-class KWINEFFECTS_EXPORT TogglableGesture : public QObject
+class KWINEFFECTS_EXPORT EffectTogglableGesture : public QObject
 {
 public:
-    TogglableGesture(TogglableState *state);
+    EffectTogglableGesture(EffectTogglableState *state);
 
     void addTouchpadPinchGesture(PinchDirection dir, uint fingerCount);
     void addTouchpadSwipeGesture(SwipeDirection dir, uint fingerCount);
     void addTouchscreenSwipeGesture(SwipeDirection direction, uint fingerCount);
 
 private:
-    TogglableState *const m_state;
+    EffectTogglableState *const m_state;
 };
 
-class KWINEFFECTS_EXPORT TogglableTouchBorder : public QObject
+class KWINEFFECTS_EXPORT EffectTogglableTouchBorder : public QObject
 {
 public:
-    TogglableTouchBorder(TogglableState *state);
-    ~TogglableTouchBorder();
+    EffectTogglableTouchBorder(EffectTogglableState *state);
+    ~EffectTogglableTouchBorder();
 
     void setBorders(const QList<int> &borders);
 
 private:
     QList<ElectricBorder> m_touchBorderActivate;
-    TogglableState *const m_state;
+    EffectTogglableState *const m_state;
 };
 
 }

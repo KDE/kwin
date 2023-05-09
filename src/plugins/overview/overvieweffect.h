@@ -6,8 +6,8 @@
 
 #pragma once
 
+#include "libkwineffects/effecttogglablestate.h"
 #include "libkwineffects/kwinquickeffect.h"
-#include "libkwineffects/togglablestate.h"
 
 namespace KWin
 {
@@ -65,8 +65,8 @@ public Q_SLOTS:
 private:
     void realDeactivate();
 
-    TogglableState *const m_state;
-    TogglableTouchBorder *const m_border;
+    EffectTogglableState *const m_state;
+    EffectTogglableTouchBorder *const m_border;
 
     QTimer *m_shutdownTimer;
     QList<QKeySequence> m_toggleShortcut;

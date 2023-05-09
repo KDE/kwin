@@ -20,8 +20,8 @@ namespace KWin
 
 DesktopGridEffect::DesktopGridEffect()
     : m_shutdownTimer(new QTimer(this))
-    , m_state(new TogglableState(this))
-    , m_border(new TogglableTouchBorder(m_state))
+    , m_state(new EffectTogglableState(this))
+    , m_border(new EffectTogglableTouchBorder(m_state))
 {
     qmlRegisterUncreatableType<DesktopGridEffect>("org.kde.kwin.private.desktopgrid", 1, 0, "DesktopGridEffect", QStringLiteral("Cannot create elements of type DesktopGridEffect"));
 
@@ -30,12 +30,12 @@ DesktopGridEffect::DesktopGridEffect()
     connect(effects, &EffectsHandler::screenAboutToLock, this, &DesktopGridEffect::realDeactivate);
     connect(effects, &EffectsHandler::desktopGridWidthChanged, this, &DesktopGridEffect::gridColumnsChanged);
     connect(effects, &EffectsHandler::desktopGridHeightChanged, this, &DesktopGridEffect::gridRowsChanged);
-    connect(m_state, &TogglableState::activated, this, &DesktopGridEffect::activate);
-    connect(m_state, &TogglableState::deactivated, this, &DesktopGridEffect::deactivate);
-    connect(m_state, &TogglableState::inProgressChanged, this, &DesktopGridEffect::gestureInProgressChanged);
-    connect(m_state, &TogglableState::partialActivationFactorChanged, this, &DesktopGridEffect::partialActivationFactorChanged);
-    connect(m_state, &TogglableState::statusChanged, this, [this](TogglableState::Status status) {
-        setRunning(status != TogglableState::Status::Inactive);
+    connect(m_state, &EffectTogglableState::activated, this, &DesktopGridEffect::activate);
+    connect(m_state, &EffectTogglableState::deactivated, this, &DesktopGridEffect::deactivate);
+    connect(m_state, &EffectTogglableState::inProgressChanged, this, &DesktopGridEffect::gestureInProgressChanged);
+    connect(m_state, &EffectTogglableState::partialActivationFactorChanged, this, &DesktopGridEffect::partialActivationFactorChanged);
+    connect(m_state, &EffectTogglableState::statusChanged, this, [this](EffectTogglableState::Status status) {
+        setRunning(status != EffectTogglableState::Status::Inactive);
     });
 
     auto toggleAction = m_state->toggleAction();
@@ -45,7 +45,7 @@ DesktopGridEffect::DesktopGridEffect()
     KGlobalAccel::self()->setShortcut(toggleAction, QList<QKeySequence>() << (Qt::META | Qt::Key_F8));
     m_toggleShortcut = KGlobalAccel::self()->shortcut(toggleAction);
 
-    auto gesture = new TogglableGesture(m_state);
+    auto gesture = new EffectTogglableGesture(m_state);
     gesture->addTouchpadSwipeGesture(SwipeDirection::Up, 4);
 
     initConfig<DesktopGridConfig>();
@@ -242,7 +242,7 @@ void DesktopGridEffect::deactivate()
 
 void DesktopGridEffect::realDeactivate()
 {
-    m_state->setStatus(TogglableState::Status::Inactive);
+    m_state->setStatus(EffectTogglableState::Status::Inactive);
 }
 
 } // namespace KWin

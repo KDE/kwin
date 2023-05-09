@@ -19,23 +19,23 @@ namespace KWin
 {
 
 OverviewEffect::OverviewEffect()
-    : m_state(new TogglableState(this))
-    , m_border(new TogglableTouchBorder(m_state))
+    : m_state(new EffectTogglableState(this))
+    , m_border(new EffectTogglableTouchBorder(m_state))
     , m_shutdownTimer(new QTimer(this))
 {
-    auto gesture = new TogglableGesture(m_state);
+    auto gesture = new EffectTogglableGesture(m_state);
     gesture->addTouchpadPinchGesture(PinchDirection::Contracting, 4);
     gesture->addTouchscreenSwipeGesture(SwipeDirection::Up, 3);
 
-    connect(m_state, &TogglableState::activated, this, &OverviewEffect::activate);
-    connect(m_state, &TogglableState::deactivated, this, &OverviewEffect::deactivate);
-    connect(m_state, &TogglableState::inProgressChanged, this, &OverviewEffect::gestureInProgressChanged);
-    connect(m_state, &TogglableState::partialActivationFactorChanged, this, &OverviewEffect::partialActivationFactorChanged);
-    connect(m_state, &TogglableState::statusChanged, this, [this](TogglableState::Status status) {
-        if (status == TogglableState::Status::Activating) {
+    connect(m_state, &EffectTogglableState::activated, this, &OverviewEffect::activate);
+    connect(m_state, &EffectTogglableState::deactivated, this, &OverviewEffect::deactivate);
+    connect(m_state, &EffectTogglableState::inProgressChanged, this, &OverviewEffect::gestureInProgressChanged);
+    connect(m_state, &EffectTogglableState::partialActivationFactorChanged, this, &OverviewEffect::partialActivationFactorChanged);
+    connect(m_state, &EffectTogglableState::statusChanged, this, [this](EffectTogglableState::Status status) {
+        if (status == EffectTogglableState::Status::Activating) {
             m_searchText = QString();
         }
-        setRunning(status != TogglableState::Status::Inactive);
+        setRunning(status != EffectTogglableState::Status::Inactive);
     });
 
     m_shutdownTimer->setSingleShot(true);
@@ -43,7 +43,7 @@ OverviewEffect::OverviewEffect()
 
     const QKeySequence defaultToggleShortcut = Qt::META | Qt::Key_W;
     auto toggleAction = m_state->toggleAction();
-    connect(toggleAction, &QAction::triggered, m_state, &TogglableState::toggle);
+    connect(toggleAction, &QAction::triggered, m_state, &EffectTogglableState::toggle);
     toggleAction->setObjectName(QStringLiteral("Overview"));
     toggleAction->setText(i18n("Toggle Overview"));
     KGlobalAccel::self()->setDefaultShortcut(toggleAction, {defaultToggleShortcut});
@@ -152,7 +152,7 @@ void OverviewEffect::deactivate()
 
 void OverviewEffect::realDeactivate()
 {
-    m_state->setStatus(TogglableState::Status::Inactive);
+    m_state->setStatus(EffectTogglableState::Status::Inactive);
 }
 
 void OverviewEffect::grabbedKeyboardEvent(QKeyEvent *keyEvent)
