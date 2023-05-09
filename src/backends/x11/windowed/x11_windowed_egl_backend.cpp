@@ -130,7 +130,6 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglPrimaryLayer::beginFrame(
     QRegion repaint = m_output->exposedArea() + m_output->rect();
     m_output->clearExposedArea();
 
-    GLFramebuffer::pushFramebuffer(m_buffer->framebuffer());
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_buffer->framebuffer()),
         .repaint = repaint,
