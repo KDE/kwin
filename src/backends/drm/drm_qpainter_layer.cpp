@@ -154,8 +154,8 @@ DrmVirtualQPainterLayer::DrmVirtualQPainterLayer(DrmVirtualOutput *output)
 
 std::optional<OutputLayerBeginFrameInfo> DrmVirtualQPainterLayer::beginFrame()
 {
-    if (m_image.isNull() || m_image.size() != m_output->pixelSize()) {
-        m_image = QImage(m_output->pixelSize(), QImage::Format_RGB32);
+    if (m_image.isNull() || m_image.size() != m_output->modeSize()) {
+        m_image = QImage(m_output->modeSize(), QImage::Format_RGB32);
     }
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(&m_image),

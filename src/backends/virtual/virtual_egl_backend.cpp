@@ -98,7 +98,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame()
 {
     m_backend->makeCurrent();
 
-    const QSize nativeSize = m_output->geometry().size() * m_output->scale();
+    const QSize nativeSize = m_output->modeSize();
     if (!m_swapchain || m_swapchain->size() != nativeSize) {
         m_swapchain = std::make_unique<VirtualEglSwapchain>(nativeSize, DRM_FORMAT_XRGB8888, m_backend);
     }

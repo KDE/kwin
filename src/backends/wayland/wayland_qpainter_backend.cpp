@@ -132,7 +132,7 @@ QRegion WaylandQPainterPrimaryLayer::accumulateDamage(int bufferAge) const
 
 std::optional<OutputLayerBeginFrameInfo> WaylandQPainterPrimaryLayer::beginFrame()
 {
-    const QSize nativeSize(m_waylandOutput->pixelSize());
+    const QSize nativeSize(m_waylandOutput->modeSize());
     if (!m_swapchain || m_swapchain->size() != nativeSize) {
         m_swapchain = std::make_unique<WaylandQPainterSwapchain>(m_waylandOutput, nativeSize, DRM_FORMAT_XRGB8888);
     }

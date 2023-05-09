@@ -112,7 +112,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglPrimaryLayer::beginFrame(
 {
     eglMakeCurrent(m_backend->eglDisplay(), EGL_NO_SURFACE, EGL_NO_SURFACE, m_backend->context());
 
-    const QSize bufferSize = m_output->pixelSize();
+    const QSize bufferSize = m_output->modeSize();
     if (!m_swapchain || m_swapchain->size() != bufferSize) {
         const uint32_t format = DRM_FORMAT_XRGB8888;
         const QHash<uint32_t, QVector<uint64_t>> formatTable = m_backend->backend()->driFormats();

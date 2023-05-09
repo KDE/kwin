@@ -101,7 +101,7 @@ std::shared_ptr<GbmSwapchain> VirtualEglGbmLayer::createGbmSwapchain() const
     const auto tranches = m_eglBackend->tranches();
     for (const auto &tranche : tranches) {
         for (auto it = tranche.formatTable.constBegin(); it != tranche.formatTable.constEnd(); it++) {
-            const auto size = m_output->pixelSize();
+            const auto size = m_output->modeSize();
             const auto format = it.key();
             const auto modifiers = it.value();
 
@@ -125,7 +125,7 @@ std::shared_ptr<GbmSwapchain> VirtualEglGbmLayer::createGbmSwapchain() const
 
 bool VirtualEglGbmLayer::doesGbmSwapchainFit(GbmSwapchain *swapchain) const
 {
-    return swapchain && swapchain->size() == m_output->pixelSize();
+    return swapchain && swapchain->size() == m_output->modeSize();
 }
 
 std::shared_ptr<GLTexture> VirtualEglGbmLayer::texture() const
@@ -150,7 +150,7 @@ bool VirtualEglGbmLayer::scanout(SurfaceItem *surfaceItem)
         return false;
     }
     const auto buffer = qobject_cast<KWaylandServer::LinuxDmaBufV1ClientBuffer *>(item->surface()->buffer());
-    if (!buffer || buffer->size() != m_output->pixelSize()) {
+    if (!buffer || buffer->size() != m_output->modeSize()) {
         return false;
     }
     const auto scanoutBuffer = GbmBuffer::importBuffer(m_output->gpu(), buffer);
