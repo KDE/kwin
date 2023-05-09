@@ -124,6 +124,7 @@ KWaylandServer::SurfaceInterface *SurfaceCursorSource::surface() const
 void SurfaceCursorSource::refresh()
 {
     m_size = m_surface->size();
+    m_hotspot -= m_surface->offset();
     Q_EMIT changed();
 }
 
