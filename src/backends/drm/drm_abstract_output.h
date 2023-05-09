@@ -26,7 +26,6 @@ public:
     RenderLoop *renderLoop() const override;
     void frameFailed() const;
     void pageFlipped(std::chrono::nanoseconds timestamp) const;
-    QVector<int32_t> regionToRects(const QRegion &region) const;
     DrmGpu *gpu() const;
 
     virtual bool present() = 0;
