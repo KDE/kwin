@@ -176,7 +176,7 @@ void Activities::reallyStop(const QString &id)
     const auto windows = ws->windows();
     for (auto *const window : windows) {
         auto x11Window = qobject_cast<X11Window *>(window);
-        if (!window || window->isUnmanaged()) {
+        if (!x11Window || window->isUnmanaged()) {
             continue;
         }
         if (window->isDesktop()) {
