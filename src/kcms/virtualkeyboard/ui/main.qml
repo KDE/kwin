@@ -9,7 +9,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls as QQC2
 import org.kde.kirigami 2.6 as Kirigami
-import org.kde.kcm as KCM
+import org.kde.kcmutils as KCM
 
 KCM.GridViewKCM {
     id: root

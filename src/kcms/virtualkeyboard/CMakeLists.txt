@@ -12,8 +12,7 @@ kcmutils_generate_module_data(
 )
 
 kconfig_add_kcfg_files(kcm_virtualkeyboard_PART_SRCS virtualkeyboardsettings.kcfgc GENERATE_MOC)
-kcoreaddons_add_plugin(kcm_virtualkeyboard SOURCES kcmvirtualkeyboard.cpp ${kcm_virtualkeyboard_PART_SRCS} INSTALL_NAMESPACE plasma/kcms/systemsettings)
-kcmutils_generate_desktop_file(kcm_virtualkeyboard)
+kcmutils_add_qml_kcm(kcm_virtualkeyboard SOURCES kcmvirtualkeyboard.cpp ${kcm_virtualkeyboard_PART_SRCS})
 
 target_link_libraries(kcm_virtualkeyboard
     KF6::I18n
@@ -21,5 +20,3 @@ target_link_libraries(kcm_virtualkeyboard
     KF6::Service
     KF6::KCMUtilsQuick
 )
-
-kpackage_install_package(package kcm_virtualkeyboard kcms)

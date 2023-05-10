@@ -12,8 +12,7 @@ kcmutils_generate_module_data(
 )
 
 kconfig_add_kcfg_files(kcm_kwinxwayland_PART_SRCS kwinxwaylandsettings.kcfgc GENERATE_MOC)
-kcoreaddons_add_plugin(kcm_kwinxwayland SOURCES kcmkwinxwayland.cpp ${kcm_kwinxwayland_PART_SRCS} INSTALL_NAMESPACE plasma/kcms/systemsettings)
-kcmutils_generate_desktop_file(kcm_kwinxwayland)
+kcmutils_add_qml_kcm(kcm_kwinxwayland SOURCES kcmkwinxwayland.cpp ${kcm_kwinxwayland_PART_SRCS})
 
 target_link_libraries(kcm_kwinxwayland
     KF6::I18n
@@ -21,4 +20,3 @@ target_link_libraries(kcm_kwinxwayland
     KF6::KCMUtilsQuick
     Wayland::Client
 )
-kpackage_install_package(package kcm_kwinxwayland kcms)

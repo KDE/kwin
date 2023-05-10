@@ -6,7 +6,7 @@
 */
 import QtQuick
 
-import org.kde.kcm as KCM
+import org.kde.kcmutils as KCM
 import org.kde.kirigami 2.20 as Kirigami
 import org.kde.kwin.private.kdecoration as KDecoration
 

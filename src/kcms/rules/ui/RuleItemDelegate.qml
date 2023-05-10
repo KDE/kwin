@@ -8,7 +8,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls as QQC2
 import org.kde.kirigami 2.10 as Kirigami
-import org.kde.kcm 1.6 as KCM
+import org.kde.kcmutils as KCM
 
 Kirigami.AbstractListItem {
     id: ruleDelegate

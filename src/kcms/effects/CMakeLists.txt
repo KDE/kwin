@@ -9,8 +9,7 @@ set(kcm_kwin_effects_PART_SRCS
     desktopeffectsdata.cpp
 )
 
-kcoreaddons_add_plugin(kcm_kwin_effects SOURCES ${kcm_kwin_effects_PART_SRCS} INSTALL_NAMESPACE "plasma/kcms/systemsettings")
-kcmutils_generate_desktop_file(kcm_kwin_effects)
+kcmutils_add_qml_kcm(kcm_kwin_effects SOURCES ${kcm_kwin_effects_PART_SRCS})
 
 target_link_libraries(kcm_kwin_effects
     Qt::DBus
@@ -25,7 +24,4 @@ target_link_libraries(kcm_kwin_effects
     kcmkwincommon
 )
 
-########### install files ###############
-
 install(FILES kwineffect.knsrc DESTINATION ${KDE_INSTALL_KNSRCDIR})
-kpackage_install_package(package kcm_kwin_effects kcms)

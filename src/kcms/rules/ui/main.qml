@@ -8,8 +8,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls as QQC2
 import QtQml.Models
-import org.kde.kcm as KCM
-import org.kde.kcmutils as KCMUtils
+import org.kde.kcmutils as KCM
 import org.kde.kirigami 2.12 as Kirigami
 
 KCM.ScrollViewKCM {
@@ -19,8 +18,8 @@ KCM.ScrollViewKCM {
     implicitWidth: Kirigami.Units.gridUnit * 35
     implicitHeight: Kirigami.Units.gridUnit * 25
 
-    KCMUtils.ConfigModule.columnWidth: Kirigami.Units.gridUnit * 23
-    KCMUtils.ConfigModule.buttons: KCMUtils.ConfigModule.Help | KCMUtils.ConfigModule.Apply
+    KCM.ConfigModule.columnWidth: Kirigami.Units.gridUnit * 23
+    KCM.ConfigModule.buttons: KCM.ConfigModule.Help | KCM.ConfigModule.Apply
 
     property var selectedIndexes: []
 
