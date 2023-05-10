@@ -16,6 +16,11 @@ namespace KWin
 
 class Effect;
 
+/**
+ * It's common to have effects that get activated and deactivated.
+ * This class helps us simplify this process, especially in the cases where we want activation to happen
+ * progressively, like through a touch our touchpad events.
+ */
 class KWINEFFECTS_EXPORT EffectTogglableState : public QObject
 {
     Q_OBJECT
@@ -28,6 +33,7 @@ public:
     };
     Q_ENUM(Status);
 
+    /** Constructs the object, passes the effect as the parent. */
     EffectTogglableState(Effect *parent);
 
     bool inProgress() const;
@@ -94,6 +100,13 @@ private:
 class KWINEFFECTS_EXPORT EffectTogglableGesture : public QObject
 {
 public:
+    /**
+     * Allows specifying which gestures toggle the state.
+     *
+     * The gesture will activate it and once enabled the opposite will disable it back.
+     *
+     * @param state the state we care about. This state will become the parent object and will take care to clean it up.
+     */
     EffectTogglableGesture(EffectTogglableState *state);
 
     void addTouchpadPinchGesture(PinchDirection dir, uint fingerCount);
@@ -107,6 +120,11 @@ private:
 class KWINEFFECTS_EXPORT EffectTogglableTouchBorder : public QObject
 {
 public:
+    /**
+     * Allows specifying which boarders get to toggle the state.
+     *
+     * @param state the state we care about. This state will become the parent object and will take care to clean it up.
+     */
     EffectTogglableTouchBorder(EffectTogglableState *state);
     ~EffectTogglableTouchBorder();
 
