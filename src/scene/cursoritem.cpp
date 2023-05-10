@@ -31,8 +31,6 @@ void CursorItem::refresh()
     const CursorSource *source = Cursors::self()->currentCursor()->source();
     if (auto surfaceSource = qobject_cast<const SurfaceCursorSource *>(source)) {
         setSurface(surfaceSource->surface());
-    } else if (auto imageSource = qobject_cast<const ImageCursorSource *>(source)) {
-        setImage(imageSource->image());
     } else if (auto shapeSource = qobject_cast<const ShapeCursorSource *>(source)) {
         setImage(shapeSource->image());
     }

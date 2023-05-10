@@ -34,7 +34,6 @@ class CursorImage;
 class InputDevice;
 class InputRedirection;
 class CursorShape;
-class ImageCursorSource;
 class ShapeCursorSource;
 class SurfaceCursorSource;
 

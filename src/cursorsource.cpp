@@ -32,19 +32,6 @@ QPointF CursorSource::hotspot() const
     return m_hotspot;
 }
 
-ImageCursorSource::ImageCursorSource(QObject *parent)
-    : CursorSource(parent)
-{
-}
-
-void ImageCursorSource::update(const QImage &image, const QPointF &hotspot)
-{
-    m_image = image;
-    m_size = QSizeF(image.size()) / image.devicePixelRatio();
-    m_hotspot = hotspot;
-    Q_EMIT changed();
-}
-
 ShapeCursorSource::ShapeCursorSource(QObject *parent)
     : CursorSource(parent)
 {

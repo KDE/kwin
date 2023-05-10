@@ -46,20 +46,6 @@ protected:
 };
 
 /**
- * The ImageCursorSource class represents a static raster cursor pixmap.
- */
-class KWIN_EXPORT ImageCursorSource : public CursorSource
-{
-    Q_OBJECT
-
-public:
-    explicit ImageCursorSource(QObject *parent = nullptr);
-
-public Q_SLOTS:
-    void update(const QImage &image, const QPointF &hotspot);
-};
-
-/**
  * The ShapeCursorSource class represents the contents of a shape in the cursor theme.
  */
 class KWIN_EXPORT ShapeCursorSource : public CursorSource
