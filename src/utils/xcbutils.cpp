@@ -646,7 +646,7 @@ QSizeF fromXNative(const QSize &s)
 
 static qreal nativeFloor(qreal value)
 {
-    return std::floor(value / kwinApp()->xwaylandScale()) * kwinApp()->xwaylandScale();
+    return std::floor(value * kwinApp()->xwaylandScale()) / kwinApp()->xwaylandScale();
 }
 
 QRectF nativeFloor(const QRectF &rect)
