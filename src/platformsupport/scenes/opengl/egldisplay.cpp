@@ -78,7 +78,6 @@ EglDisplay::EglDisplay(::EGLDisplay display, const QList<QByteArray> &extensions
     , m_extensions(extensions)
     , m_owning(owning)
     , m_supportsBufferAge(extensions.contains(QByteArrayLiteral("EGL_EXT_buffer_age")) && qgetenv("KWIN_USE_BUFFER_AGE") != "0")
-    , m_supportsSwapBuffersWithDamage(extensions.contains(QByteArrayLiteral("EGL_EXT_swap_buffers_with_damage")))
     , m_supportsNativeFence(extensions.contains(QByteArrayLiteral("EGL_ANDROID_native_fence_sync")))
     , m_importFormats(queryImportFormats())
 {
@@ -157,11 +156,6 @@ QString EglDisplay::renderNode() const
 bool EglDisplay::supportsBufferAge() const
 {
     return m_supportsBufferAge;
-}
-
-bool EglDisplay::supportsSwapBuffersWithDamage() const
-{
-    return m_supportsSwapBuffersWithDamage;
 }
 
 bool EglDisplay::supportsNativeFence() const

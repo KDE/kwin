@@ -34,7 +34,6 @@ public:
     QString renderNode() const;
 
     bool supportsBufferAge() const;
-    bool supportsSwapBuffersWithDamage() const;
     bool supportsNativeFence() const;
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const;
 
@@ -50,7 +49,6 @@ private:
     const bool m_owning;
 
     const bool m_supportsBufferAge;
-    const bool m_supportsSwapBuffersWithDamage;
     const bool m_supportsNativeFence;
     const QHash<uint32_t, QList<uint64_t>> m_importFormats;
 };
