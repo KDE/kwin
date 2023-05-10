@@ -56,6 +56,7 @@ void X11WindowTest::initTestCase_data()
     QTest::addColumn<qreal>("scale");
     QTest::newRow("normal") << 1.0;
     QTest::newRow("scaled2x") << 2.0;
+    QTest::newRow("scaled3.14") << 3.14159;
 }
 
 void X11WindowTest::initTestCase()
