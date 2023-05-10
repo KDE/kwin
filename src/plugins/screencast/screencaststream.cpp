@@ -432,7 +432,6 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
 
     m_pendingDamages = {};
     if (m_pendingBuffer) {
-        qCWarning(KWIN_SCREENCAST) << "Dropping a screencast frame because the compositor is slow";
         return;
     }
 
@@ -611,7 +610,6 @@ void ScreenCastStream::recordCursor()
     }
 
     if (m_pendingBuffer) {
-        qCWarning(KWIN_SCREENCAST) << "Dropping a screencast cursor update because the compositor is slow";
         return;
     }
 
