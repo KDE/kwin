@@ -6,7 +6,6 @@
 
 #include "cursorsource.h"
 #include "cursor.h"
-#include "wayland/shmclientbuffer.h"
 #include "wayland/surface_interface.h"
 
 namespace KWin
@@ -15,11 +14,6 @@ namespace KWin
 CursorSource::CursorSource(QObject *parent)
     : QObject(parent)
 {
-}
-
-QImage CursorSource::image() const
-{
-    return m_image;
 }
 
 QSizeF CursorSource::size() const
@@ -37,6 +31,11 @@ ShapeCursorSource::ShapeCursorSource(QObject *parent)
 {
     m_delayTimer.setSingleShot(true);
     connect(&m_delayTimer, &QTimer::timeout, this, &ShapeCursorSource::selectNextSprite);
+}
+
+QImage ShapeCursorSource::image() const
+{
+    return m_image;
 }
 
 QByteArray ShapeCursorSource::shape() const
@@ -124,13 +123,6 @@ KWaylandServer::SurfaceInterface *SurfaceCursorSource::surface() const
 
 void SurfaceCursorSource::refresh()
 {
-    auto buffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(m_surface->buffer());
-    if (buffer) {
-        m_image = buffer->data().copy();
-        m_image.setDevicePixelRatio(m_surface->bufferScale());
-    } else {
-        m_image = QImage();
-    }
     m_size = m_surface->size();
     Q_EMIT changed();
 }
@@ -154,18 +146,10 @@ void SurfaceCursorSource::update(KWaylandServer::SurfaceInterface *surface, cons
         m_surface = surface;
 
         if (m_surface) {
-            auto buffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(surface->buffer());
-            if (buffer) {
-                m_image = buffer->data().copy();
-                m_image.setDevicePixelRatio(surface->bufferScale());
-            } else {
-                m_image = QImage();
-            }
             m_size = surface->size();
 
             connect(m_surface, &KWaylandServer::SurfaceInterface::committed, this, &SurfaceCursorSource::refresh);
         } else {
-            m_image = QImage();
             m_size = QSizeF(0, 0);
         }
     }

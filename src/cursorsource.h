@@ -32,7 +32,6 @@ class KWIN_EXPORT CursorSource : public QObject
 public:
     explicit CursorSource(QObject *parent = nullptr);
 
-    QImage image() const;
     QSizeF size() const;
     QPointF hotspot() const;
 
@@ -40,7 +39,6 @@ Q_SIGNALS:
     void changed();
 
 protected:
-    QImage m_image;
     QSizeF m_size = QSizeF(0, 0);
     QPointF m_hotspot;
 };
@@ -54,6 +52,8 @@ class KWIN_EXPORT ShapeCursorSource : public CursorSource
 
 public:
     explicit ShapeCursorSource(QObject *parent = nullptr);
+
+    QImage image() const;
 
     QByteArray shape() const;
     void setShape(const QByteArray &shape);
@@ -71,6 +71,7 @@ private:
     QByteArray m_shape;
     QVector<KXcursorSprite> m_sprites;
     QTimer m_delayTimer;
+    QImage m_image;
     int m_currentSprite = -1;
 };
 
