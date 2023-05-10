@@ -32,7 +32,7 @@ class WaylandQPainterBackend;
 class WaylandQPainterBufferSlot
 {
 public:
-    WaylandQPainterBufferSlot(WaylandDisplay *display, ShmGraphicsBuffer *graphicsBuffer);
+    WaylandQPainterBufferSlot(ShmGraphicsBuffer *graphicsBuffer);
     ~WaylandQPainterBufferSlot();
 
     ShmGraphicsBuffer *graphicsBuffer;
@@ -45,7 +45,7 @@ public:
 class WaylandQPainterSwapchain
 {
 public:
-    WaylandQPainterSwapchain(WaylandOutput *output, const QSize &size, uint32_t format);
+    WaylandQPainterSwapchain(const QSize &size, uint32_t format);
 
     QSize size() const;
 
@@ -54,7 +54,6 @@ public:
 
 private:
     std::unique_ptr<ShmGraphicsBufferAllocator> m_allocator;
-    WaylandOutput *m_output;
     QSize m_size;
     uint32_t m_format;
     std::vector<std::shared_ptr<WaylandQPainterBufferSlot>> m_slots;

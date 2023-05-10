@@ -10,7 +10,6 @@
 #include "wayland_qpainter_backend.h"
 #include "core/shmgraphicsbufferallocator.h"
 #include "wayland_backend.h"
-#include "wayland_display.h"
 #include "wayland_logging.h"
 #include "wayland_output.h"
 
@@ -38,7 +37,7 @@ static QImage::Format drmFormatToQImageFormat(uint32_t drmFormat)
     }
 }
 
-WaylandQPainterBufferSlot::WaylandQPainterBufferSlot(WaylandDisplay *display, ShmGraphicsBuffer *graphicsBuffer)
+WaylandQPainterBufferSlot::WaylandQPainterBufferSlot(ShmGraphicsBuffer *graphicsBuffer)
     : graphicsBuffer(graphicsBuffer)
 {
     const ShmAttributes *attributes = graphicsBuffer->shmAttributes();
@@ -62,9 +61,8 @@ WaylandQPainterBufferSlot::~WaylandQPainterBufferSlot()
     graphicsBuffer->drop();
 }
 
-WaylandQPainterSwapchain::WaylandQPainterSwapchain(WaylandOutput *output, const QSize &size, uint32_t format)
+WaylandQPainterSwapchain::WaylandQPainterSwapchain(const QSize &size, uint32_t format)
     : m_allocator(std::make_unique<ShmGraphicsBufferAllocator>())
-    , m_output(output)
     , m_size(size)
     , m_format(format)
 {
@@ -89,7 +87,7 @@ std::shared_ptr<WaylandQPainterBufferSlot> WaylandQPainterSwapchain::acquire()
         return nullptr;
     }
 
-    auto slot = std::make_shared<WaylandQPainterBufferSlot>(m_output->backend()->display(), buffer);
+    auto slot = std::make_shared<WaylandQPainterBufferSlot>(buffer);
     m_slots.push_back(slot);
 
     return slot;
@@ -134,7 +132,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandQPainterPrimaryLayer::beginFrame
 {
     const QSize nativeSize(m_waylandOutput->modeSize());
     if (!m_swapchain || m_swapchain->size() != nativeSize) {
-        m_swapchain = std::make_unique<WaylandQPainterSwapchain>(m_waylandOutput, nativeSize, DRM_FORMAT_XRGB8888);
+        m_swapchain = std::make_unique<WaylandQPainterSwapchain>(nativeSize, DRM_FORMAT_XRGB8888);
     }
 
     m_back = m_swapchain->acquire();
@@ -169,7 +167,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandQPainterCursorLayer::beginFrame(
     const auto tmp = size().expandedTo(QSize(64, 64));
     const QSize bufferSize(std::ceil(tmp.width()), std::ceil(tmp.height()));
     if (!m_swapchain || m_swapchain->size() != bufferSize) {
-        m_swapchain = std::make_unique<WaylandQPainterSwapchain>(m_output, bufferSize, DRM_FORMAT_ARGB8888);
+        m_swapchain = std::make_unique<WaylandQPainterSwapchain>(bufferSize, DRM_FORMAT_ARGB8888);
     }
 
     m_back = m_swapchain->acquire();

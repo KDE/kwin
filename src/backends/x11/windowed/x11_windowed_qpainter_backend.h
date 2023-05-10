@@ -28,7 +28,7 @@ class X11WindowedOutput;
 class X11WindowedQPainterLayerBuffer
 {
 public:
-    X11WindowedQPainterLayerBuffer(ShmGraphicsBuffer *buffer, X11WindowedOutput *output);
+    X11WindowedQPainterLayerBuffer(ShmGraphicsBuffer *buffer);
     ~X11WindowedQPainterLayerBuffer();
 
     ShmGraphicsBuffer *graphicsBuffer() const;
@@ -44,14 +44,13 @@ private:
 class X11WindowedQPainterLayerSwapchain
 {
 public:
-    X11WindowedQPainterLayerSwapchain(const QSize &size, uint32_t format, X11WindowedOutput *output);
+    X11WindowedQPainterLayerSwapchain(const QSize &size, uint32_t format);
 
     QSize size() const;
 
     std::shared_ptr<X11WindowedQPainterLayerBuffer> acquire();
 
 private:
-    X11WindowedOutput *m_output;
     QSize m_size;
     uint32_t m_format;
     std::unique_ptr<ShmGraphicsBufferAllocator> m_allocator;

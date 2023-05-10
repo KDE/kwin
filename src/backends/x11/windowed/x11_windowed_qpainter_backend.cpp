@@ -34,7 +34,7 @@ static QImage::Format drmFormatToQImageFormat(uint32_t drmFormat)
     }
 }
 
-X11WindowedQPainterLayerBuffer::X11WindowedQPainterLayerBuffer(ShmGraphicsBuffer *buffer, X11WindowedOutput *output)
+X11WindowedQPainterLayerBuffer::X11WindowedQPainterLayerBuffer(ShmGraphicsBuffer *buffer)
     : m_graphicsBuffer(buffer)
 {
     const ShmAttributes *attributes = buffer->shmAttributes();
@@ -68,9 +68,8 @@ QImage *X11WindowedQPainterLayerBuffer::view() const
     return m_view.get();
 }
 
-X11WindowedQPainterLayerSwapchain::X11WindowedQPainterLayerSwapchain(const QSize &size, uint32_t format, X11WindowedOutput *output)
-    : m_output(output)
-    , m_size(size)
+X11WindowedQPainterLayerSwapchain::X11WindowedQPainterLayerSwapchain(const QSize &size, uint32_t format)
+    : m_size(size)
     , m_format(format)
     , m_allocator(std::make_unique<ShmGraphicsBufferAllocator>())
 {
@@ -95,7 +94,7 @@ std::shared_ptr<X11WindowedQPainterLayerBuffer> X11WindowedQPainterLayerSwapchai
         return nullptr;
     }
 
-    auto buffer = std::make_shared<X11WindowedQPainterLayerBuffer>(graphicsBuffer, m_output);
+    auto buffer = std::make_shared<X11WindowedQPainterLayerBuffer>(graphicsBuffer);
     m_buffers.push_back(buffer);
 
     return buffer;
@@ -110,7 +109,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedQPainterPrimaryLayer::beginF
 {
     const QSize bufferSize = m_output->modeSize();
     if (!m_swapchain || m_swapchain->size() != bufferSize) {
-        m_swapchain = std::make_unique<X11WindowedQPainterLayerSwapchain>(bufferSize, m_output->backend()->driFormatForDepth(m_output->depth()), m_output);
+        m_swapchain = std::make_unique<X11WindowedQPainterLayerSwapchain>(bufferSize, m_output->backend()->driFormatForDepth(m_output->depth()));
     }
 
     m_current = m_swapchain->acquire();
