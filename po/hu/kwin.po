@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-09 02:11+0000\n"
+"POT-Creation-Date: 2023-05-10 02:05+0000\n"
 "PO-Revision-Date: 2021-11-23 11:35+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -4224,7 +4224,7 @@ msgstr ""
 "amely fölött az egér van.\n"
 "Ezért nem lehetséges kifejezetten a képernyőre váltani."
 
-#: utils/edid.cpp:244
+#: utils/edid.cpp:183
 #, kde-format
 msgid "unknown"
 msgstr "ismeretlen"
@@ -4275,7 +4275,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Nem válaszol)"
 
-#: workspace.cpp:1590
+#: workspace.cpp:1597
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-09 02:11+0000\n"
+"POT-Creation-Date: 2023-05-10 02:05+0000\n"
 "PO-Revision-Date: 2022-09-24 16:08+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@bredband.net>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
@@ -4199,7 +4199,7 @@ msgstr ""
 "Fönsterhanteraren är inställd att anse skärmen med musen som den aktiva.\n"
 "Därför är det inte möjligt att explicit byta till en skärm."
 
-#: utils/edid.cpp:244
+#: utils/edid.cpp:183
 #, kde-format
 msgid "unknown"
 msgstr "okänd"
@@ -4250,7 +4250,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(svarar inte)"
 
-#: workspace.cpp:1590
+#: workspace.cpp:1597
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-09 02:11+0000\n"
+"POT-Creation-Date: 2023-05-10 02:05+0000\n"
 "PO-Revision-Date: 2023-04-27 12:56+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -4045,7 +4045,7 @@ msgstr ""
 "مدير النّوافذ مضبوط ليعتبر الشّاشة بالفأرة عليها هي الشّاشة النّشطة.\n"
 "لذلك لا يمكن التّبديل إلى شاشة تبديلًا صريحًا."
 
-#: utils/edid.cpp:244
+#: utils/edid.cpp:183
 #, kde-format
 msgid "unknown"
 msgstr "مجهول"
@@ -4096,7 +4096,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(لا يستجيب)"
 
-#: workspace.cpp:1590
+#: workspace.cpp:1597
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
