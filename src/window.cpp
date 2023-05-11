@@ -369,16 +369,6 @@ QString Window::windowRole() const
     return QString();
 }
 
-QRegion Window::inputShape() const
-{
-    if (m_surface) {
-        return m_surface->input();
-    } else {
-        // TODO: maybe also for X11?
-        return QRegion();
-    }
-}
-
 QMatrix4x4 Window::inputTransformation() const
 {
     QMatrix4x4 m;

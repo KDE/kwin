@@ -572,15 +572,6 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     next->mergeInto(&current);
     scaleOverride = pendingScaleOverride;
 
-    if (lockedPointer) {
-        auto lockedPointerPrivate = LockedPointerV1InterfacePrivate::get(lockedPointer);
-        lockedPointerPrivate->commit();
-    }
-    if (confinedPointer) {
-        auto confinedPointerPrivate = ConfinedPointerV1InterfacePrivate::get(confinedPointer);
-        confinedPointerPrivate->commit();
-    }
-
     if (bufferRef != current.buffer) {
         if (bufferRef) {
             bufferRef->unref();
@@ -646,6 +637,16 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
 
     surfaceToBufferMatrix = buildSurfaceToBufferMatrix();
     bufferToSurfaceMatrix = surfaceToBufferMatrix.inverted();
+
+    if (lockedPointer) {
+        auto lockedPointerPrivate = LockedPointerV1InterfacePrivate::get(lockedPointer);
+        lockedPointerPrivate->commit();
+    }
+    if (confinedPointer) {
+        auto confinedPointerPrivate = ConfinedPointerV1InterfacePrivate::get(confinedPointer);
+        confinedPointerPrivate->commit();
+    }
+
     if (opaqueRegionChanged) {
         Q_EMIT q->opaqueChanged(opaqueRegion);
     }

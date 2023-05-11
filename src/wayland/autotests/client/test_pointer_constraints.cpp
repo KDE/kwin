@@ -13,6 +13,7 @@
 #include "KWayland/Client/pointerconstraints.h"
 #include "KWayland/Client/registry.h"
 #include "KWayland/Client/seat.h"
+#include "KWayland/Client/shm_pool.h"
 #include "KWayland/Client/surface.h"
 // server
 #include "wayland/compositor_interface.h"
@@ -52,6 +53,7 @@ private:
     KWayland::Client::EventQueue *m_queue = nullptr;
     KWayland::Client::Compositor *m_compositor = nullptr;
     KWayland::Client::Seat *m_seat = nullptr;
+    KWayland::Client::ShmPool *m_shm = nullptr;
     KWayland::Client::Pointer *m_pointer = nullptr;
     KWayland::Client::PointerConstraints *m_pointerConstraints = nullptr;
 };
@@ -95,6 +97,11 @@ void TestPointerConstraints::init()
     registry.setup();
     QVERIFY(interfacesAnnouncedSpy.wait());
 
+    m_shm = new KWayland::Client::ShmPool(this);
+    m_shm->setup(registry.bindShm(registry.interface(KWayland::Client::Registry::Interface::Shm).name,
+                                  registry.interface(KWayland::Client::Registry::Interface::Shm).version));
+    QVERIFY(m_shm->isValid());
+
     m_compositor =
         registry.createCompositor(registry.interface(KWayland::Client::Registry::Interface::Compositor).name, registry.interface(KWayland::Client::Registry::Interface::Compositor).version, this);
     QVERIFY(m_compositor);
@@ -125,6 +132,7 @@ void TestPointerConstraints::cleanup()
     CLEANUP(m_compositor)
     CLEANUP(m_pointerConstraints)
     CLEANUP(m_pointer)
+    CLEANUP(m_shm)
     CLEANUP(m_seat)
     CLEANUP(m_queue)
     if (m_connection) {
@@ -167,6 +175,12 @@ void TestPointerConstraints::testLockPointer()
     QVERIFY(surface->isValid());
     QVERIFY(surfaceCreatedSpy.wait());
 
+    QImage image(QSize(100, 100), QImage::Format_ARGB32_Premultiplied);
+    image.fill(Qt::black);
+    surface->attachBuffer(m_shm->createBuffer(image));
+    surface->damage(image.rect());
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+
     auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface *>();
     QVERIFY(serverSurface);
     QVERIFY(!serverSurface->lockedPointer());
@@ -186,7 +200,7 @@ void TestPointerConstraints::testLockPointer()
     QVERIFY(!serverSurface->confinedPointer());
 
     QCOMPARE(serverLockedPointer->isLocked(), false);
-    QCOMPARE(serverLockedPointer->region(), QRegion());
+    QCOMPARE(serverLockedPointer->region(), QRegion(0, 0, 100, 100));
     QFETCH(LockedPointerV1Interface::LifeTime, serverLifeTime);
     QCOMPARE(serverLockedPointer->lifeTime(), serverLifeTime);
     // setting to unlocked now should not trigger an unlocked spy
@@ -206,7 +220,7 @@ void TestPointerConstraints::testLockPointer()
     lockedPointer->setRegion(nullptr);
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(regionChangedSpy.wait());
-    QCOMPARE(serverLockedPointer->region(), QRegion());
+    QCOMPARE(serverLockedPointer->region(), QRegion(0, 0, 100, 100));
 
     // let's lock the surface
     QSignalSpy lockedChangedSpy(serverLockedPointer, &LockedPointerV1Interface::lockedChanged);
@@ -277,6 +291,12 @@ void TestPointerConstraints::testConfinePointer()
     QVERIFY(surface->isValid());
     QVERIFY(surfaceCreatedSpy.wait());
 
+    QImage image(QSize(100, 100), QImage::Format_ARGB32_Premultiplied);
+    image.fill(Qt::black);
+    surface->attachBuffer(m_shm->createBuffer(image));
+    surface->damage(image.rect());
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+
     auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface *>();
     QVERIFY(serverSurface);
     QVERIFY(!serverSurface->lockedPointer());
@@ -296,7 +316,7 @@ void TestPointerConstraints::testConfinePointer()
     QVERIFY(!serverSurface->lockedPointer());
 
     QCOMPARE(serverConfinedPointer->isConfined(), false);
-    QCOMPARE(serverConfinedPointer->region(), QRegion());
+    QCOMPARE(serverConfinedPointer->region(), QRegion(0, 0, 100, 100));
     QFETCH(ConfinedPointerV1Interface::LifeTime, serverLifeTime);
     QCOMPARE(serverConfinedPointer->lifeTime(), serverLifeTime);
     // setting to unconfined now should not trigger an unconfined spy
@@ -316,7 +336,7 @@ void TestPointerConstraints::testConfinePointer()
     confinedPointer->setRegion(nullptr);
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(regionChangedSpy.wait());
-    QCOMPARE(serverConfinedPointer->region(), QRegion());
+    QCOMPARE(serverConfinedPointer->region(), QRegion(0, 0, 100, 100));
 
     // let's confine the surface
     QSignalSpy confinedChangedSpy(serverConfinedPointer, &ConfinedPointerV1Interface::confinedChanged);

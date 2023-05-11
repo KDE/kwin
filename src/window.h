@@ -754,7 +754,6 @@ public:
     virtual pid_t pid() const;
 
     bool readyForPainting() const; // true if the window has been already painted its contents
-    QRegion inputShape() const;
     void setOpacity(qreal opacity);
     qreal opacity() const;
     virtual bool setupCompositing();

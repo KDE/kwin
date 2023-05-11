@@ -597,14 +597,6 @@ void PointerInputRedirection::disconnectPointerConstraintsConnection()
     m_constraintsActivatedConnection = QMetaObject::Connection();
 }
 
-template<typename T>
-static QRegion getConstraintRegion(Window *window, T *constraint)
-{
-    const QRegion windowShape = window->inputShape();
-    const QRegion intersected = constraint->region().isEmpty() ? windowShape : windowShape.intersected(constraint->region());
-    return intersected.translated(window->mapFromLocal(QPointF(0, 0)).toPoint());
-}
-
 void PointerInputRedirection::setEnableConstraints(bool set)
 {
     if (m_enableConstraints == set) {
@@ -640,8 +632,7 @@ void PointerInputRedirection::updatePointerConstraints()
             }
             return;
         }
-        const QRegion r = getConstraintRegion(focus(), cf);
-        if (canConstrain && r.contains(m_pos.toPoint())) {
+        if (canConstrain && cf->region().contains(focus()->mapToLocal(m_pos).toPoint())) {
             cf->setConfined(true);
             m_confined = true;
             m_confinedPointerRegionConnection = connect(cf, &KWaylandServer::ConfinedPointerV1Interface::regionChanged, this, [this]() {
@@ -653,7 +644,7 @@ void PointerInputRedirection::updatePointerConstraints()
                     return;
                 }
                 const auto cf = s->confinedPointer();
-                if (!getConstraintRegion(focus(), cf).contains(m_pos.toPoint())) {
+                if (!cf->region().contains(focus()->mapToLocal(m_pos).toPoint())) {
                     // pointer no longer in confined region, break the confinement
                     cf->setConfined(false);
                     m_confined = false;
@@ -684,8 +675,7 @@ void PointerInputRedirection::updatePointerConstraints()
             }
             return;
         }
-        const QRegion r = getConstraintRegion(focus(), lock);
-        if (canConstrain && r.contains(m_pos.toPoint())) {
+        if (canConstrain && lock->region().contains(focus()->mapToLocal(m_pos).toPoint())) {
             lock->setLocked(true);
             m_locked = true;
 
@@ -728,20 +718,22 @@ QPointF PointerInputRedirection::applyPointerConfinement(const QPointF &pos) con
         return pos;
     }
 
-    const QRegion confinementRegion = getConstraintRegion(focus(), cf);
-    if (confinementRegion.contains(flooredPoint(pos))) {
+    const QPointF localPos = focus()->mapToLocal(pos);
+    if (cf->region().contains(flooredPoint(localPos))) {
         return pos;
     }
-    QPointF p = pos;
-    // allow either x or y to pass
-    p = QPointF(m_pos.x(), pos.y());
 
-    if (confinementRegion.contains(flooredPoint(p))) {
-        return p;
+    const QPointF currentPos = focus()->mapToLocal(m_pos);
+
+    // allow either x or y to pass
+    QPointF p(currentPos.x(), localPos.y());
+    if (cf->region().contains(flooredPoint(p))) {
+        return focus()->mapFromLocal(p);
     }
-    p = QPointF(pos.x(), m_pos.y());
-    if (confinementRegion.contains(flooredPoint(p))) {
-        return p;
+
+    p = QPointF(localPos.x(), currentPos.y());
+    if (cf->region().contains(flooredPoint(p))) {
+        return focus()->mapFromLocal(p);
     }
 
     return m_pos;

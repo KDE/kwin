@@ -141,21 +141,35 @@ LockedPointerV1InterfacePrivate::LockedPointerV1InterfacePrivate(LockedPointerV1
     , q(q)
     , surface(surface)
     , lifeTime(lifeTime)
-    , region(region)
+    , pendingRegion(region)
+    , hasPendingRegion(true)
 {
+    commit();
 }
 
 void LockedPointerV1InterfacePrivate::commit()
 {
-    qreal scaleOverride = surface->scaleOverride();
+    const QRegion oldRegion = effectiveRegion;
+    const QPointF oldHint = hint;
+
     if (hasPendingRegion) {
-        region = mapScaleOverride(pendingRegion, scaleOverride);
+        region = mapScaleOverride(pendingRegion, surface->scaleOverride());
         hasPendingRegion = false;
-        Q_EMIT q->regionChanged();
     }
     if (hasPendingHint) {
-        hint = pendingHint / scaleOverride;
+        hint = pendingHint / surface->scaleOverride();
         hasPendingHint = false;
+    }
+
+    effectiveRegion = surface->input();
+    if (!region.isEmpty()) {
+        effectiveRegion &= region;
+    }
+
+    if (oldRegion != effectiveRegion) {
+        Q_EMIT q->regionChanged();
+    }
+    if (oldHint != hint) {
         Q_EMIT q->cursorPositionHintChanged();
     }
 }
@@ -200,7 +214,7 @@ LockedPointerV1Interface::LifeTime LockedPointerV1Interface::lifeTime() const
 
 QRegion LockedPointerV1Interface::region() const
 {
-    return d->region;
+    return d->effectiveRegion;
 }
 
 QPointF LockedPointerV1Interface::cursorPositionHint() const
@@ -244,16 +258,27 @@ ConfinedPointerV1InterfacePrivate::ConfinedPointerV1InterfacePrivate(ConfinedPoi
     , q(q)
     , surface(surface)
     , lifeTime(lifeTime)
-    , region(region)
+    , pendingRegion(region)
+    , hasPendingRegion(true)
 {
+    commit();
 }
 
 void ConfinedPointerV1InterfacePrivate::commit()
 {
-    qreal scaleOverride = surface->scaleOverride();
+    const QRegion oldRegion = effectiveRegion;
+
     if (hasPendingRegion) {
-        region = mapScaleOverride(pendingRegion, scaleOverride);
+        region = mapScaleOverride(pendingRegion, surface->scaleOverride());
         hasPendingRegion = false;
+    }
+
+    effectiveRegion = surface->input();
+    if (!region.isEmpty()) {
+        effectiveRegion &= region;
+    }
+
+    if (oldRegion != effectiveRegion) {
         Q_EMIT q->regionChanged();
     }
 }
@@ -291,7 +316,7 @@ ConfinedPointerV1Interface::LifeTime ConfinedPointerV1Interface::lifeTime() cons
 
 QRegion ConfinedPointerV1Interface::region() const
 {
-    return d->region;
+    return d->effectiveRegion;
 }
 
 bool ConfinedPointerV1Interface::isConfined() const

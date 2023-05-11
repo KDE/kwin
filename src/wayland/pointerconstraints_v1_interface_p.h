@@ -47,6 +47,7 @@ public:
     LockedPointerV1Interface *q;
     QPointer<SurfaceInterface> surface;
     LockedPointerV1Interface::LifeTime lifeTime;
+    QRegion effectiveRegion;
     QRegion region;
     QRegion pendingRegion;
     QPointF hint = QPointF(-1, -1);
@@ -77,6 +78,7 @@ public:
     ConfinedPointerV1Interface *q;
     QPointer<SurfaceInterface> surface;
     ConfinedPointerV1Interface::LifeTime lifeTime;
+    QRegion effectiveRegion;
     QRegion region;
     QRegion pendingRegion;
     bool hasPendingRegion = false;
