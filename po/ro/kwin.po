@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-10 02:05+0000\n"
+"POT-Creation-Date: 2023-05-11 02:03+0000\n"
 "PO-Revision-Date: 2022-12-28 21:14+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -1247,7 +1247,7 @@ msgstr ""
 "Alegeți fereastra de închis forțat cu clic stâng sau Enter.\n"
 "Apăsați Escape sau clic drept pentru a renunța."
 
-#: main.cpp:172 plugins/desktopgrid/desktopgrid_config.cpp:49
+#: main.cpp:177 plugins/desktopgrid/desktopgrid_config.cpp:49
 #: plugins/invert/invert_config.cpp:35
 #: plugins/magnifier/magnifier_config.cpp:55
 #: plugins/mouseclick/mouseclick_config.cpp:48
@@ -1263,62 +1263,62 @@ msgstr ""
 msgid "KWin"
 msgstr "KWin"
 
-#: main.cpp:174 main.cpp:197
+#: main.cpp:179 main.cpp:202
 #, kde-format
 msgid "KDE window manager"
 msgstr "Gestionarul de ferestre KDE"
 
-#: main.cpp:176
+#: main.cpp:181
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "(c) 1999-2019, Dezvoltatorii KDE"
 
-#: main.cpp:178
+#: main.cpp:183
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "Matthias Ettrich"
 
-#: main.cpp:179
+#: main.cpp:184
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "Cristian Tibirna"
 
-#: main.cpp:180
+#: main.cpp:185
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "Daniel M. Duley"
 
-#: main.cpp:181
+#: main.cpp:186
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "Luboš Luňák"
 
-#: main.cpp:182
+#: main.cpp:187
 #, kde-format
 msgid "Martin Flöser"
 msgstr "Martin Flöser"
 
-#: main.cpp:183
+#: main.cpp:188
 #, kde-format
 msgid "David Edmundson"
 msgstr "David Edmundson"
 
-#: main.cpp:184
+#: main.cpp:189
 #, kde-format
 msgid "Roman Gilg"
 msgstr "Roman Gilg"
 
-#: main.cpp:185
+#: main.cpp:190
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr "Vlad Zahorodnii"
 
-#: main.cpp:194
+#: main.cpp:199
 #, kde-format
 msgid "Disable configuration options"
 msgstr "Dezactivează opțiunile de configurare"
 
-#: main.cpp:195
+#: main.cpp:200
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "Indică faptul că KWin a eșuat recent de n ori"

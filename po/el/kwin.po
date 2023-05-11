@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-10 02:05+0000\n"
+"POT-Creation-Date: 2023-05-11 02:03+0000\n"
 "PO-Revision-Date: 2017-06-12 16:22+0200\n"
 "Last-Translator: Dimitris Kardarakos <dimkard@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -1299,7 +1299,7 @@ msgstr ""
 "Επιλέξτε παράθυρο για εξαναγκασμένο κλείσιμο με αριστερό κλικ ή enter.\n"
 "Esc ή δεξί κλικ για ακύρωση."
 
-#: main.cpp:172 plugins/desktopgrid/desktopgrid_config.cpp:49
+#: main.cpp:177 plugins/desktopgrid/desktopgrid_config.cpp:49
 #: plugins/invert/invert_config.cpp:35
 #: plugins/magnifier/magnifier_config.cpp:55
 #: plugins/mouseclick/mouseclick_config.cpp:48
@@ -1315,63 +1315,63 @@ msgstr ""
 msgid "KWin"
 msgstr "KWin"
 
-#: main.cpp:174 main.cpp:197
+#: main.cpp:179 main.cpp:202
 #, kde-format
 msgid "KDE window manager"
 msgstr "Ο διαχειριστής παραθύρων του KDE"
 
-#: main.cpp:176
+#: main.cpp:181
 #, fuzzy, kde-format
 #| msgid "(c) 1999-2013, The KDE Developers"
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "(c) 1999-2013, οι προγραμματιστές του KDE"
 
-#: main.cpp:178
+#: main.cpp:183
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "Matthias Ettrich"
 
-#: main.cpp:179
+#: main.cpp:184
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "Cristian Tibirna"
 
-#: main.cpp:180
+#: main.cpp:185
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "Daniel M. Duley"
 
-#: main.cpp:181
+#: main.cpp:186
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "Luboš Luňák"
 
-#: main.cpp:182
+#: main.cpp:187
 #, kde-format
 msgid "Martin Flöser"
 msgstr ""
 
-#: main.cpp:183
+#: main.cpp:188
 #, kde-format
 msgid "David Edmundson"
 msgstr ""
 
-#: main.cpp:184
+#: main.cpp:189
 #, kde-format
 msgid "Roman Gilg"
 msgstr ""
 
-#: main.cpp:185
+#: main.cpp:190
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr ""
 
-#: main.cpp:194
+#: main.cpp:199
 #, kde-format
 msgid "Disable configuration options"
 msgstr "Απενεργοποίηση επιλογών διαμόρφωσης"
 
-#: main.cpp:195
+#: main.cpp:200
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "Υπόδειξη πρόσφατης κατάρρευσης του KWin n φορές στη σειρά"
