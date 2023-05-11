@@ -57,6 +57,7 @@
         "Description[ia]": "Il obscura le schermo integre quando il demanda privilegios de super-usator (root)",
         "Description[it]": "Scurisce tutto lo schermo quando si richiedono i privilegi di root",
         "Description[ja]": "root 権限が要求されるとスクリーン全体を暗くします",
+        "Description[ka]": "ადმინისტრირების პრივილეგიების მოთხოვნისას მთელი ეკრანის გამუქება",
         "Description[nl]": "Maakt het volledige scherm donker wanneer er om root-privileges wordt verzocht",
         "Description[nn]": "Gjer heile skjermen mørkare når det vert spurt om rottilgang",
         "Description[pl]": "Przyciemnia ekran przy żądaniu praw administratora",
