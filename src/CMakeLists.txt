@@ -60,8 +60,6 @@ target_sources(kwin PRIVATE
     core/session_noop.cpp
     core/shmgraphicsbufferallocator.cpp
     cursor.cpp
-    cursordelegate_opengl.cpp
-    cursordelegate_qpainter.cpp
     cursorsource.cpp
     dbusinterface.cpp
     debug_console.cpp
@@ -122,6 +120,8 @@ target_sources(kwin PRIVATE
     rootinfo_filter.cpp
     rulebooksettings.cpp
     rules.cpp
+    scene/cursordelegate_opengl.cpp
+    scene/cursordelegate_qpainter.cpp
     scene/cursoritem.cpp
     scene/cursorscene.cpp
     scene/decorationitem.cpp

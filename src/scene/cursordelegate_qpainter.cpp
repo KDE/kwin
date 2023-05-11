@@ -4,7 +4,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "cursordelegate_qpainter.h"
+#include "scene/cursordelegate_qpainter.h"
 #include "composite.h"
 #include "core/output.h"
 #include "core/renderlayer.h"
