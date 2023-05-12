@@ -25,12 +25,11 @@ target_compile_definitions(kwin5_aurorae PRIVATE
 target_link_libraries(kwin5_aurorae
     KDecoration2::KDecoration
     kwineffects
-    KF6::KCMUtils
     KF6::I18n
     KF6::Package
     KF6::WindowSystem
+    KF6::ConfigGui
     Qt::Quick
-    Qt::UiTools
 )
 
 install(TARGETS kwin5_aurorae DESTINATION ${KDE_INSTALL_PLUGINDIR}/org.kde.kdecoration2)
@@ -57,7 +56,22 @@ configure_file(aurorae.knsrc.cmake ${CMAKE_CURRENT_BINARY_DIR}/aurorae.knsrc)
 
 ########### install files ###############
 
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/aurorae.knsrc DESTINATION ${KDE_INSTALL_KNSRCDIR})
+if (KWIN_BUILD_KCMS)
+    kwin_add_effect_config(kwin_aurorae_config auroraeconfig.cpp)
+
+    target_link_libraries(kwin_aurorae_config
+        KF6::ConfigGui
+        KF6::KCMUtils
+        KF6::I18n
+        KDecoration2::KDecoration
+        Qt::DBus
+        Qt::UiTools
+        Qt::Widgets
+        KWinEffectsInterface
+    )
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/aurorae.knsrc DESTINATION ${KDE_INSTALL_KNSRCDIR})
+endif()
+
 install(
     FILES
         qml/AppMenuButton.qml

@@ -6,7 +6,6 @@
 
 #pragma once
 
-#include <KCModule>
 #include <KDecoration2/Decoration>
 #include <KDecoration2/DecorationThemeProvider>
 #include <KPluginMetaData>
@@ -101,20 +100,4 @@ private:
     QList<KDecoration2::DecorationThemeMetaData> m_themes;
     const KPluginMetaData m_data;
 };
-
-class ConfigurationModule : public KCModule
-{
-    Q_OBJECT
-public:
-    ConfigurationModule(QObject *parent, const KPluginMetaData &data, const QVariantList &args);
-
-private:
-    void init();
-    void initSvg();
-    void initQml();
-    QString m_theme;
-    KConfigLoader *m_skeleton = nullptr;
-    int m_buttonSize;
-};
-
 }
