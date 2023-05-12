@@ -632,7 +632,7 @@ void PointerInputRedirection::updatePointerConstraints()
             }
             return;
         }
-        if (canConstrain && cf->region().contains(focus()->mapToLocal(m_pos).toPoint())) {
+        if (canConstrain && cf->region().contains(flooredPoint(focus()->mapToLocal(m_pos)))) {
             cf->setConfined(true);
             m_confined = true;
             m_confinedPointerRegionConnection = connect(cf, &KWaylandServer::ConfinedPointerV1Interface::regionChanged, this, [this]() {
@@ -644,7 +644,7 @@ void PointerInputRedirection::updatePointerConstraints()
                     return;
                 }
                 const auto cf = s->confinedPointer();
-                if (!cf->region().contains(focus()->mapToLocal(m_pos).toPoint())) {
+                if (!cf->region().contains(flooredPoint(focus()->mapToLocal(m_pos)))) {
                     // pointer no longer in confined region, break the confinement
                     cf->setConfined(false);
                     m_confined = false;
@@ -675,7 +675,7 @@ void PointerInputRedirection::updatePointerConstraints()
             }
             return;
         }
-        if (canConstrain && lock->region().contains(focus()->mapToLocal(m_pos).toPoint())) {
+        if (canConstrain && lock->region().contains(flooredPoint(focus()->mapToLocal(m_pos)))) {
             lock->setLocked(true);
             m_locked = true;
 
