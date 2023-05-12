@@ -39,6 +39,12 @@ include(ECMConfiguredInstall)
 include(ECMQtDeclareLoggingCategory)
 include(ECMSetupQtPluginMacroNames)
 
+option(KWIN_BUILD_DECORATIONS "Enable building of KWin decorations." ON)
+option(KWIN_BUILD_KCMS "Enable building of KWin configuration modules." ON)
+option(KWIN_BUILD_NOTIFICATIONS "Enable building of KWin with knotifications support" ON)
+option(KWIN_BUILD_SCREENLOCKER "Enable building of KWin lockscreen functionality" ON)
+option(KWIN_BUILD_TABBOX "Enable building of KWin Tabbox functionality" ON)
+
 find_package(Qt${QT_MAJOR_VERSION} ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     Concurrent
     Core
@@ -80,13 +86,15 @@ find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
     WindowSystem
 )
 # required frameworks by config modules
-find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
-    Declarative
-    KCMUtils
-    NewStuff
-    Service
-    XmlGui
-)
+if(KWIN_BUILD_KCMS)
+    find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
+        Declarative
+        KCMUtils
+        NewStuff
+        Service
+        XmlGui
+    )
+endif()
 
 find_package(Threads)
 set_package_properties(Threads PROPERTIES
@@ -354,11 +362,6 @@ ecm_find_qmlmodule(org.kde.plasma.core 2.0)
 ecm_find_qmlmodule(org.kde.plasma.components 2.0)
 
 ########### configure tests ###############
-option(KWIN_BUILD_DECORATIONS "Enable building of KWin decorations." ON)
-option(KWIN_BUILD_KCMS "Enable building of KWin configuration modules." ON)
-option(KWIN_BUILD_NOTIFICATIONS "Enable building of KWin with knotifications support" ON)
-option(KWIN_BUILD_SCREENLOCKER "Enable building of KWin lockscreen functionality" ON)
-option(KWIN_BUILD_TABBOX "Enable building of KWin Tabbox functionality" ON)
 cmake_dependent_option(KWIN_BUILD_ACTIVITIES "Enable building of KWin with kactivities support" ON "KF6Activities_FOUND" OFF)
 cmake_dependent_option(KWIN_BUILD_RUNNERS "Enable building of KWin with krunner support" ON "KF6Runner_FOUND" OFF)
 
