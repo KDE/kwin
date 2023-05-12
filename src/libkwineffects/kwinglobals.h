@@ -16,8 +16,6 @@
 
 #include <kwin_export.h>
 
-#include <xcb/xcb.h>
-
 #include "libkwineffects/kwinconfig.h"
 
 #define KWIN_QT5_PORTING 0
@@ -192,21 +190,6 @@ enum class QuickTileFlag {
 };
 Q_ENUM_NS(QuickTileFlag);
 Q_DECLARE_FLAGS(QuickTileMode, QuickTileFlag)
-
-inline KWIN_EXPORT xcb_connection_t *connection()
-{
-    return reinterpret_cast<xcb_connection_t *>(qApp->property("x11Connection").value<void *>());
-}
-
-inline KWIN_EXPORT xcb_window_t rootWindow()
-{
-    return qApp->property("x11RootWindow").value<quint32>();
-}
-
-inline KWIN_EXPORT xcb_timestamp_t xTime()
-{
-    return qApp->property("x11Time").value<xcb_timestamp_t>();
-}
 
 /**
  * Short wrapper for a cursor image provided by the Platform.

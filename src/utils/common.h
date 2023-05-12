@@ -84,11 +84,6 @@ inline MaximizeMode operator^(MaximizeMode m1, MaximizeMode m2)
     return MaximizeMode(int(m1) ^ int(m2));
 }
 
-void KWIN_EXPORT grabXServer();
-void KWIN_EXPORT ungrabXServer();
-bool KWIN_EXPORT grabXKeyboard(xcb_window_t w = XCB_WINDOW_NONE);
-void KWIN_EXPORT ungrabXKeyboard();
-
 static inline QRegion mapRegion(const QMatrix4x4 &matrix, const QRegion &region)
 {
     QRegion result;
@@ -97,24 +92,6 @@ static inline QRegion mapRegion(const QMatrix4x4 &matrix, const QRegion &region)
     }
     return result;
 }
-
-/**
- * Small helper class which performs grabXServer in the ctor and
- * ungrabXServer in the dtor. Use this class to ensure that grab and
- * ungrab are matched.
- */
-class XServerGrabber
-{
-public:
-    XServerGrabber()
-    {
-        grabXServer();
-    }
-    ~XServerGrabber()
-    {
-        ungrabXServer();
-    }
-};
 
 // converting between X11 mouse/keyboard state mask and Qt button/keyboard states
 Qt::MouseButton x11ToQtMouseButton(int button);

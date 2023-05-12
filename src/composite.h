@@ -10,6 +10,7 @@
 #pragma once
 
 #include "libkwineffects/kwinglobals.h"
+#include <xcb/xcb.h>
 
 #include <QObject>
 #include <QRegion>

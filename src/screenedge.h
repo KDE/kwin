@@ -26,7 +26,9 @@
 #include <QObject>
 #include <QRect>
 #include <QVector>
+
 #include <memory>
+#include <xcb/xcb.h>
 
 class QAction;
 class QMouseEvent;

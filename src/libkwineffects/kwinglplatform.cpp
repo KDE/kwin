@@ -11,6 +11,7 @@
 // include kwinglutils_funcs.h to avoid the redeclaration issues
 // between qopengl.h and epoxy/gl.h
 #include "libkwineffects/kwinglutils_funcs.h"
+#include "libkwineffects/kwinxcb.h"
 #include <epoxy/gl.h>
 
 #include <QDebug>

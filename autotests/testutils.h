@@ -10,8 +10,7 @@
 #define TESTUTILS_H
 // KWin
 #include "libkwineffects/kwinglobals.h"
-// XCB
-#include <xcb/xcb.h>
+#include "libkwineffects/kwinxcb.h"
 
 namespace
 {

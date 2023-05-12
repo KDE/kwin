@@ -20,6 +20,8 @@
 #include <QApplication>
 #include <QProcessEnvironment>
 
+#include <xcb/xcb.h>
+
 class KPluginMetaData;
 class QCommandLineParser;
 
