@@ -19,17 +19,18 @@
 namespace KWin
 {
 
-class ShmGraphicsBuffer;
+class GraphicsBuffer;
 class ShmGraphicsBufferAllocator;
 class VirtualBackend;
+class VirtualQPainterBackend;
 
 class VirtualQPainterBufferSlot
 {
 public:
-    VirtualQPainterBufferSlot(ShmGraphicsBuffer *graphicsBuffer);
+    VirtualQPainterBufferSlot(GraphicsBuffer *graphicsBuffer);
     ~VirtualQPainterBufferSlot();
 
-    ShmGraphicsBuffer *graphicsBuffer;
+    GraphicsBuffer *graphicsBuffer;
     QImage image;
     void *data = nullptr;
     int size;
@@ -38,14 +39,14 @@ public:
 class VirtualQPainterSwapchain
 {
 public:
-    VirtualQPainterSwapchain(const QSize &size, uint32_t format);
+    VirtualQPainterSwapchain(const QSize &size, uint32_t format, VirtualQPainterBackend *backend);
 
     QSize size() const;
 
     std::shared_ptr<VirtualQPainterBufferSlot> acquire();
 
 private:
-    std::unique_ptr<ShmGraphicsBufferAllocator> m_allocator;
+    VirtualQPainterBackend *m_backend;
     QSize m_size;
     uint32_t m_format;
     std::vector<std::shared_ptr<VirtualQPainterBufferSlot>> m_slots;
@@ -54,7 +55,7 @@ private:
 class VirtualQPainterLayer : public OutputLayer
 {
 public:
-    VirtualQPainterLayer(Output *output);
+    VirtualQPainterLayer(Output *output, VirtualQPainterBackend *backend);
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
@@ -62,6 +63,7 @@ public:
     quint32 format() const override;
 
 private:
+    VirtualQPainterBackend *const m_backend;
     Output *const m_output;
     std::unique_ptr<VirtualQPainterSwapchain> m_swapchain;
     std::shared_ptr<VirtualQPainterBufferSlot> m_current;
@@ -76,11 +78,13 @@ public:
 
     void present(Output *output) override;
     VirtualQPainterLayer *primaryLayer(Output *output) override;
+    GraphicsBufferAllocator *graphicsBufferAllocator() const override;
 
 private:
     void addOutput(Output *output);
     void removeOutput(Output *output);
 
+    std::unique_ptr<ShmGraphicsBufferAllocator> m_allocator;
     std::map<Output *, std::unique_ptr<VirtualQPainterLayer>> m_outputs;
 };
 

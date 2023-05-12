@@ -21,6 +21,7 @@ class LinuxDmaBufV1ClientBuffer;
 namespace KWin
 {
 
+class GraphicsBufferAllocator;
 class Output;
 class OverlayWindow;
 class OutputLayer;
@@ -41,6 +42,7 @@ public:
 
     virtual CompositingType compositingType() const = 0;
     virtual OverlayWindow *overlayWindow() const;
+    virtual GraphicsBufferAllocator *graphicsBufferAllocator() const;
 
     virtual bool checkGraphicsReset();
 

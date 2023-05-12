@@ -18,8 +18,8 @@
 
 namespace KWin
 {
+class GraphicsBuffer;
 class Output;
-class ShmGraphicsBuffer;
 class ShmGraphicsBufferAllocator;
 
 namespace Wayland
@@ -32,10 +32,10 @@ class WaylandQPainterBackend;
 class WaylandQPainterBufferSlot
 {
 public:
-    WaylandQPainterBufferSlot(ShmGraphicsBuffer *graphicsBuffer);
+    WaylandQPainterBufferSlot(GraphicsBuffer *graphicsBuffer);
     ~WaylandQPainterBufferSlot();
 
-    ShmGraphicsBuffer *graphicsBuffer;
+    GraphicsBuffer *graphicsBuffer;
     QImage image;
     void *data = nullptr;
     int size;
@@ -45,7 +45,7 @@ public:
 class WaylandQPainterSwapchain
 {
 public:
-    WaylandQPainterSwapchain(const QSize &size, uint32_t format);
+    WaylandQPainterSwapchain(const QSize &size, uint32_t format, WaylandQPainterBackend *backend);
 
     QSize size() const;
 
@@ -53,7 +53,7 @@ public:
     void release(std::shared_ptr<WaylandQPainterBufferSlot> buffer);
 
 private:
-    std::unique_ptr<ShmGraphicsBufferAllocator> m_allocator;
+    WaylandQPainterBackend *m_backend;
     QSize m_size;
     uint32_t m_format;
     std::vector<std::shared_ptr<WaylandQPainterBufferSlot>> m_slots;
@@ -62,7 +62,7 @@ private:
 class WaylandQPainterPrimaryLayer : public OutputLayer
 {
 public:
-    WaylandQPainterPrimaryLayer(WaylandOutput *output);
+    WaylandQPainterPrimaryLayer(WaylandOutput *output, WaylandQPainterBackend *backend);
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
@@ -73,6 +73,7 @@ public:
     QRegion accumulateDamage(int bufferAge) const;
 
 private:
+    WaylandQPainterBackend *m_backend;
     WaylandOutput *m_waylandOutput;
     DamageJournal m_damageJournal;
 
@@ -87,13 +88,14 @@ class WaylandQPainterCursorLayer : public OutputLayer
     Q_OBJECT
 
 public:
-    explicit WaylandQPainterCursorLayer(WaylandOutput *output);
+    explicit WaylandQPainterCursorLayer(WaylandOutput *output, WaylandQPainterBackend *backend);
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     quint32 format() const override;
 
 private:
+    WaylandQPainterBackend *m_backend;
     WaylandOutput *m_output;
     std::unique_ptr<WaylandQPainterSwapchain> m_swapchain;
     std::shared_ptr<WaylandQPainterBufferSlot> m_back;
@@ -109,6 +111,7 @@ public:
     void present(Output *output) override;
     OutputLayer *primaryLayer(Output *output) override;
     OutputLayer *cursorLayer(Output *output) override;
+    GraphicsBufferAllocator *graphicsBufferAllocator() const override;
 
 private:
     void createOutput(Output *waylandOutput);
@@ -120,6 +123,7 @@ private:
     };
 
     WaylandBackend *m_backend;
+    std::unique_ptr<ShmGraphicsBufferAllocator> m_allocator;
     std::map<Output *, Layers> m_outputs;
 };
 

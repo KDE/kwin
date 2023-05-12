@@ -20,22 +20,23 @@
 namespace KWin
 {
 
-class ShmGraphicsBuffer;
+class GraphicsBuffer;
 class ShmGraphicsBufferAllocator;
 class X11WindowedBackend;
 class X11WindowedOutput;
+class X11WindowedQPainterBackend;
 
 class X11WindowedQPainterLayerBuffer
 {
 public:
-    X11WindowedQPainterLayerBuffer(ShmGraphicsBuffer *buffer);
+    X11WindowedQPainterLayerBuffer(GraphicsBuffer *buffer);
     ~X11WindowedQPainterLayerBuffer();
 
-    ShmGraphicsBuffer *graphicsBuffer() const;
+    GraphicsBuffer *graphicsBuffer() const;
     QImage *view() const;
 
 private:
-    ShmGraphicsBuffer *m_graphicsBuffer;
+    GraphicsBuffer *m_graphicsBuffer;
     void *m_data = nullptr;
     int m_size = 0;
     std::unique_ptr<QImage> m_view;
@@ -44,23 +45,23 @@ private:
 class X11WindowedQPainterLayerSwapchain
 {
 public:
-    X11WindowedQPainterLayerSwapchain(const QSize &size, uint32_t format);
+    X11WindowedQPainterLayerSwapchain(const QSize &size, uint32_t format, X11WindowedQPainterBackend *backend);
 
     QSize size() const;
 
     std::shared_ptr<X11WindowedQPainterLayerBuffer> acquire();
 
 private:
+    X11WindowedQPainterBackend *m_backend;
     QSize m_size;
     uint32_t m_format;
-    std::unique_ptr<ShmGraphicsBufferAllocator> m_allocator;
     QVector<std::shared_ptr<X11WindowedQPainterLayerBuffer>> m_buffers;
 };
 
 class X11WindowedQPainterPrimaryLayer : public OutputLayer
 {
 public:
-    explicit X11WindowedQPainterPrimaryLayer(X11WindowedOutput *output);
+    explicit X11WindowedQPainterPrimaryLayer(X11WindowedOutput *output, X11WindowedQPainterBackend *backend);
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
@@ -69,6 +70,7 @@ public:
     void present();
 
 private:
+    X11WindowedQPainterBackend *const m_backend;
     X11WindowedOutput *const m_output;
     std::unique_ptr<X11WindowedQPainterLayerSwapchain> m_swapchain;
     std::shared_ptr<X11WindowedQPainterLayerBuffer> m_current;
@@ -100,6 +102,7 @@ public:
     void present(Output *output) override;
     OutputLayer *primaryLayer(Output *output) override;
     OutputLayer *cursorLayer(Output *output) override;
+    GraphicsBufferAllocator *graphicsBufferAllocator() const override;
 
 private:
     void addOutput(Output *output);
@@ -112,6 +115,7 @@ private:
     };
 
     X11WindowedBackend *m_backend;
+    std::unique_ptr<ShmGraphicsBufferAllocator> m_allocator;
     std::map<Output *, Layers> m_outputs;
 };
 

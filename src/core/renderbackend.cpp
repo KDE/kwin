@@ -27,6 +27,11 @@ OverlayWindow *RenderBackend::overlayWindow() const
     return nullptr;
 }
 
+GraphicsBufferAllocator *RenderBackend::graphicsBufferAllocator() const
+{
+    return nullptr;
+}
+
 bool RenderBackend::checkGraphicsReset()
 {
     return false;

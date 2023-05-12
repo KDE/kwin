@@ -21,7 +21,7 @@
 namespace KWin
 {
 
-VirtualEglLayerBuffer::VirtualEglLayerBuffer(GbmGraphicsBuffer *buffer, VirtualEglBackend *backend)
+VirtualEglLayerBuffer::VirtualEglLayerBuffer(GraphicsBuffer *buffer, VirtualEglBackend *backend)
     : m_graphicsBuffer(buffer)
 {
     m_texture = backend->importDmaBufAsTexture(*buffer->dmabufAttributes());
@@ -35,7 +35,7 @@ VirtualEglLayerBuffer::~VirtualEglLayerBuffer()
     m_graphicsBuffer->drop();
 }
 
-GbmGraphicsBuffer *VirtualEglLayerBuffer::graphicsBuffer() const
+GraphicsBuffer *VirtualEglLayerBuffer::graphicsBuffer() const
 {
     return m_graphicsBuffer;
 }
@@ -54,7 +54,6 @@ VirtualEglSwapchain::VirtualEglSwapchain(const QSize &size, uint32_t format, Vir
     : m_backend(backend)
     , m_size(size)
     , m_format(format)
-    , m_allocator(std::make_unique<GbmGraphicsBufferAllocator>(backend->backend()->gbmDevice()))
 {
 }
 
@@ -71,7 +70,7 @@ std::shared_ptr<VirtualEglLayerBuffer> VirtualEglSwapchain::acquire()
         }
     }
 
-    GbmGraphicsBuffer *graphicsBuffer = m_allocator->allocate(m_size, m_format);
+    GraphicsBuffer *graphicsBuffer = m_backend->graphicsBufferAllocator()->allocate(m_size, m_format);
     if (!graphicsBuffer) {
         qCWarning(KWIN_VIRTUAL) << "Failed to allocate layer swapchain buffer";
         return nullptr;
@@ -129,6 +128,7 @@ quint32 VirtualEglLayer::format() const
 VirtualEglBackend::VirtualEglBackend(VirtualBackend *b)
     : AbstractEglBackend()
     , m_backend(b)
+    , m_allocator(std::make_unique<GbmGraphicsBufferAllocator>(b->gbmDevice()))
 {
     // Egl is always direct rendering
     setIsDirectRendering(true);
@@ -241,6 +241,11 @@ std::shared_ptr<GLTexture> VirtualEglBackend::textureForOutput(Output *output) c
         return nullptr;
     }
     return it->second->texture();
+}
+
+GraphicsBufferAllocator *VirtualEglBackend::graphicsBufferAllocator() const
+{
+    return m_allocator.get();
 }
 
 } // namespace

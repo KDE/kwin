@@ -15,7 +15,6 @@
 namespace KWin
 {
 
-class GbmGraphicsBuffer;
 class GbmGraphicsBufferAllocator;
 class VirtualBackend;
 class GLFramebuffer;
@@ -25,15 +24,15 @@ class VirtualEglBackend;
 class VirtualEglLayerBuffer
 {
 public:
-    VirtualEglLayerBuffer(GbmGraphicsBuffer *buffer, VirtualEglBackend *backend);
+    VirtualEglLayerBuffer(GraphicsBuffer *buffer, VirtualEglBackend *backend);
     ~VirtualEglLayerBuffer();
 
-    GbmGraphicsBuffer *graphicsBuffer() const;
+    GraphicsBuffer *graphicsBuffer() const;
     GLFramebuffer *framebuffer() const;
     std::shared_ptr<GLTexture> texture() const;
 
 private:
-    GbmGraphicsBuffer *m_graphicsBuffer;
+    GraphicsBuffer *m_graphicsBuffer;
     std::unique_ptr<GLFramebuffer> m_framebuffer;
     std::shared_ptr<GLTexture> m_texture;
 };
@@ -51,7 +50,6 @@ private:
     VirtualEglBackend *m_backend;
     QSize m_size;
     uint32_t m_format;
-    std::unique_ptr<GbmGraphicsBufferAllocator> m_allocator;
     QVector<std::shared_ptr<VirtualEglLayerBuffer>> m_buffers;
 };
 
@@ -89,6 +87,7 @@ public:
     OutputLayer *primaryLayer(Output *output) override;
     void present(Output *output) override;
     void init() override;
+    GraphicsBufferAllocator *graphicsBufferAllocator() const override;
 
     VirtualBackend *backend() const;
 
@@ -100,6 +99,7 @@ private:
     void removeOutput(Output *output);
 
     VirtualBackend *m_backend;
+    std::unique_ptr<GbmGraphicsBufferAllocator> m_allocator;
     std::map<Output *, std::unique_ptr<VirtualEglLayer>> m_outputs;
 };
 

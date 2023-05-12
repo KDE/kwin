@@ -33,7 +33,7 @@ static QImage::Format drmFormatToQImageFormat(uint32_t drmFormat)
     }
 }
 
-VirtualQPainterBufferSlot::VirtualQPainterBufferSlot(ShmGraphicsBuffer *graphicsBuffer)
+VirtualQPainterBufferSlot::VirtualQPainterBufferSlot(GraphicsBuffer *graphicsBuffer)
     : graphicsBuffer(graphicsBuffer)
 {
     const ShmAttributes *attributes = graphicsBuffer->shmAttributes();
@@ -57,8 +57,8 @@ VirtualQPainterBufferSlot::~VirtualQPainterBufferSlot()
     graphicsBuffer->drop();
 }
 
-VirtualQPainterSwapchain::VirtualQPainterSwapchain(const QSize &size, uint32_t format)
-    : m_allocator(std::make_unique<ShmGraphicsBufferAllocator>())
+VirtualQPainterSwapchain::VirtualQPainterSwapchain(const QSize &size, uint32_t format, VirtualQPainterBackend *backend)
+    : m_backend(backend)
     , m_size(size)
     , m_format(format)
 {
@@ -77,7 +77,7 @@ std::shared_ptr<VirtualQPainterBufferSlot> VirtualQPainterSwapchain::acquire()
         }
     }
 
-    ShmGraphicsBuffer *buffer = m_allocator->allocate(m_size, m_format);
+    GraphicsBuffer *buffer = m_backend->graphicsBufferAllocator()->allocate(m_size, m_format);
     if (!buffer) {
         qCDebug(KWIN_VIRTUAL) << "Did not get a new Buffer from Shm Pool";
         return nullptr;
@@ -89,8 +89,9 @@ std::shared_ptr<VirtualQPainterBufferSlot> VirtualQPainterSwapchain::acquire()
     return slot;
 }
 
-VirtualQPainterLayer::VirtualQPainterLayer(Output *output)
-    : m_output(output)
+VirtualQPainterLayer::VirtualQPainterLayer(Output *output, VirtualQPainterBackend *backend)
+    : m_backend(backend)
+    , m_output(output)
 {
 }
 
@@ -98,7 +99,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualQPainterLayer::beginFrame()
 {
     const QSize nativeSize(m_output->modeSize());
     if (!m_swapchain || m_swapchain->size() != nativeSize) {
-        m_swapchain = std::make_unique<VirtualQPainterSwapchain>(nativeSize, DRM_FORMAT_XRGB8888);
+        m_swapchain = std::make_unique<VirtualQPainterSwapchain>(nativeSize, DRM_FORMAT_XRGB8888, m_backend);
     }
 
     m_current = m_swapchain->acquire();
@@ -128,6 +129,7 @@ quint32 VirtualQPainterLayer::format() const
 }
 
 VirtualQPainterBackend::VirtualQPainterBackend(VirtualBackend *backend)
+    : m_allocator(std::make_unique<ShmGraphicsBufferAllocator>())
 {
     connect(backend, &VirtualBackend::outputAdded, this, &VirtualQPainterBackend::addOutput);
     connect(backend, &VirtualBackend::outputRemoved, this, &VirtualQPainterBackend::removeOutput);
@@ -142,7 +144,7 @@ VirtualQPainterBackend::~VirtualQPainterBackend() = default;
 
 void VirtualQPainterBackend::addOutput(Output *output)
 {
-    m_outputs[output] = std::make_unique<VirtualQPainterLayer>(output);
+    m_outputs[output] = std::make_unique<VirtualQPainterLayer>(output, this);
 }
 
 void VirtualQPainterBackend::removeOutput(Output *output)
@@ -159,4 +161,10 @@ VirtualQPainterLayer *VirtualQPainterBackend::primaryLayer(Output *output)
 {
     return m_outputs[output].get();
 }
+
+GraphicsBufferAllocator *VirtualQPainterBackend::graphicsBufferAllocator() const
+{
+    return m_allocator.get();
+}
+
 }

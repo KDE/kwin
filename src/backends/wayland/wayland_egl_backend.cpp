@@ -30,7 +30,7 @@ namespace KWin
 namespace Wayland
 {
 
-WaylandEglLayerBuffer::WaylandEglLayerBuffer(GbmGraphicsBuffer *buffer, WaylandEglBackend *backend)
+WaylandEglLayerBuffer::WaylandEglLayerBuffer(GraphicsBuffer *buffer, WaylandEglBackend *backend)
     : m_graphicsBuffer(buffer)
 {
     m_texture = backend->importDmaBufAsTexture(*buffer->dmabufAttributes());
@@ -44,7 +44,7 @@ WaylandEglLayerBuffer::~WaylandEglLayerBuffer()
     m_graphicsBuffer->drop();
 }
 
-GbmGraphicsBuffer *WaylandEglLayerBuffer::graphicsBuffer() const
+GraphicsBuffer *WaylandEglLayerBuffer::graphicsBuffer() const
 {
     return m_graphicsBuffer;
 }
@@ -69,7 +69,6 @@ WaylandEglLayerSwapchain::WaylandEglLayerSwapchain(const QSize &size, uint32_t f
     , m_size(size)
     , m_format(format)
     , m_modifiers(modifiers)
-    , m_allocator(std::make_unique<GbmGraphicsBufferAllocator>(backend->backend()->gbmDevice()))
 {
 }
 
@@ -90,7 +89,7 @@ std::shared_ptr<WaylandEglLayerBuffer> WaylandEglLayerSwapchain::acquire()
         }
     }
 
-    GbmGraphicsBuffer *graphicsBuffer = m_allocator->allocate(m_size, m_format, m_modifiers);
+    GraphicsBuffer *graphicsBuffer = m_backend->graphicsBufferAllocator()->allocate(m_size, m_format, m_modifiers);
     if (!graphicsBuffer) {
         qCWarning(KWIN_WAYLAND_BACKEND) << "Failed to allocate layer swapchain buffer";
         return nullptr;
@@ -257,6 +256,7 @@ quint32 WaylandEglPrimaryLayer::format() const
 WaylandEglBackend::WaylandEglBackend(WaylandBackend *b)
     : AbstractEglBackend()
     , m_backend(b)
+    , m_allocator(std::make_unique<GbmGraphicsBufferAllocator>(b->gbmDevice()))
 {
     // Egl is always direct rendering
     setIsDirectRendering(true);
@@ -386,6 +386,11 @@ OutputLayer *WaylandEglBackend::primaryLayer(Output *output)
 OutputLayer *WaylandEglBackend::cursorLayer(Output *output)
 {
     return m_outputs[output].cursorLayer.get();
+}
+
+GraphicsBufferAllocator *WaylandEglBackend::graphicsBufferAllocator() const
+{
+    return m_allocator.get();
 }
 
 }

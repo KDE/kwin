@@ -19,7 +19,7 @@
 namespace KWin
 {
 
-X11WindowedEglLayerBuffer::X11WindowedEglLayerBuffer(GbmGraphicsBuffer *graphicsBuffer, X11WindowedEglBackend *backend)
+X11WindowedEglLayerBuffer::X11WindowedEglLayerBuffer(GraphicsBuffer *graphicsBuffer, X11WindowedEglBackend *backend)
     : m_graphicsBuffer(graphicsBuffer)
 {
     m_texture = backend->importDmaBufAsTexture(*graphicsBuffer->dmabufAttributes());
@@ -55,7 +55,6 @@ int X11WindowedEglLayerBuffer::age() const
 
 X11WindowedEglLayerSwapchain::X11WindowedEglLayerSwapchain(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, X11WindowedEglBackend *backend)
     : m_backend(backend)
-    , m_allocator(new GbmGraphicsBufferAllocator(backend->backend()->gbmDevice()))
     , m_size(size)
     , m_format(format)
     , m_modifiers(modifiers)
@@ -79,7 +78,7 @@ std::shared_ptr<X11WindowedEglLayerBuffer> X11WindowedEglLayerSwapchain::acquire
         }
     }
 
-    GbmGraphicsBuffer *graphicsBuffer = m_allocator->allocate(m_size, m_format, m_modifiers);
+    GraphicsBuffer *graphicsBuffer = m_backend->graphicsBufferAllocator()->allocate(m_size, m_format, m_modifiers);
     if (!graphicsBuffer) {
         qCWarning(KWIN_X11WINDOWED) << "Failed to allocate layer swapchain buffer";
         return nullptr;
@@ -235,6 +234,7 @@ quint32 X11WindowedEglCursorLayer::format() const
 
 X11WindowedEglBackend::X11WindowedEglBackend(X11WindowedBackend *backend)
     : m_backend(backend)
+    , m_allocator(new GbmGraphicsBufferAllocator(backend->gbmDevice()))
 {
     setIsDirectRendering(true);
 }
@@ -345,6 +345,11 @@ std::shared_ptr<GLTexture> X11WindowedEglBackend::textureForOutput(Output *outpu
     }
 
     return it->second.primaryLayer->texture();
+}
+
+GraphicsBufferAllocator *X11WindowedEglBackend::graphicsBufferAllocator() const
+{
+    return m_allocator.get();
 }
 
 } // namespace

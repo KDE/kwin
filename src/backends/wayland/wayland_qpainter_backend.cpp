@@ -37,7 +37,7 @@ static QImage::Format drmFormatToQImageFormat(uint32_t drmFormat)
     }
 }
 
-WaylandQPainterBufferSlot::WaylandQPainterBufferSlot(ShmGraphicsBuffer *graphicsBuffer)
+WaylandQPainterBufferSlot::WaylandQPainterBufferSlot(GraphicsBuffer *graphicsBuffer)
     : graphicsBuffer(graphicsBuffer)
 {
     const ShmAttributes *attributes = graphicsBuffer->shmAttributes();
@@ -61,8 +61,8 @@ WaylandQPainterBufferSlot::~WaylandQPainterBufferSlot()
     graphicsBuffer->drop();
 }
 
-WaylandQPainterSwapchain::WaylandQPainterSwapchain(const QSize &size, uint32_t format)
-    : m_allocator(std::make_unique<ShmGraphicsBufferAllocator>())
+WaylandQPainterSwapchain::WaylandQPainterSwapchain(const QSize &size, uint32_t format, WaylandQPainterBackend *backend)
+    : m_backend(backend)
     , m_size(size)
     , m_format(format)
 {
@@ -81,7 +81,7 @@ std::shared_ptr<WaylandQPainterBufferSlot> WaylandQPainterSwapchain::acquire()
         }
     }
 
-    ShmGraphicsBuffer *buffer = m_allocator->allocate(m_size, m_format);
+    GraphicsBuffer *buffer = m_backend->graphicsBufferAllocator()->allocate(m_size, m_format);
     if (!buffer) {
         qCDebug(KWIN_WAYLAND_BACKEND) << "Did not get a new Buffer from Shm Pool";
         return nullptr;
@@ -104,8 +104,9 @@ void WaylandQPainterSwapchain::release(std::shared_ptr<WaylandQPainterBufferSlot
     }
 }
 
-WaylandQPainterPrimaryLayer::WaylandQPainterPrimaryLayer(WaylandOutput *output)
-    : m_waylandOutput(output)
+WaylandQPainterPrimaryLayer::WaylandQPainterPrimaryLayer(WaylandOutput *output, WaylandQPainterBackend *backend)
+    : m_backend(backend)
+    , m_waylandOutput(output)
 {
 }
 
@@ -132,7 +133,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandQPainterPrimaryLayer::beginFrame
 {
     const QSize nativeSize(m_waylandOutput->modeSize());
     if (!m_swapchain || m_swapchain->size() != nativeSize) {
-        m_swapchain = std::make_unique<WaylandQPainterSwapchain>(nativeSize, DRM_FORMAT_XRGB8888);
+        m_swapchain = std::make_unique<WaylandQPainterSwapchain>(nativeSize, DRM_FORMAT_XRGB8888, m_backend);
     }
 
     m_back = m_swapchain->acquire();
@@ -157,8 +158,9 @@ quint32 WaylandQPainterPrimaryLayer::format() const
     return DRM_FORMAT_RGBA8888;
 }
 
-WaylandQPainterCursorLayer::WaylandQPainterCursorLayer(WaylandOutput *output)
-    : m_output(output)
+WaylandQPainterCursorLayer::WaylandQPainterCursorLayer(WaylandOutput *output, WaylandQPainterBackend *backend)
+    : m_backend(backend)
+    , m_output(output)
 {
 }
 
@@ -167,7 +169,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandQPainterCursorLayer::beginFrame(
     const auto tmp = size().expandedTo(QSize(64, 64));
     const QSize bufferSize(std::ceil(tmp.width()), std::ceil(tmp.height()));
     if (!m_swapchain || m_swapchain->size() != bufferSize) {
-        m_swapchain = std::make_unique<WaylandQPainterSwapchain>(bufferSize, DRM_FORMAT_ARGB8888);
+        m_swapchain = std::make_unique<WaylandQPainterSwapchain>(bufferSize, DRM_FORMAT_ARGB8888, m_backend);
     }
 
     m_back = m_swapchain->acquire();
@@ -199,6 +201,7 @@ quint32 WaylandQPainterCursorLayer::format() const
 WaylandQPainterBackend::WaylandQPainterBackend(Wayland::WaylandBackend *b)
     : QPainterBackend()
     , m_backend(b)
+    , m_allocator(std::make_unique<ShmGraphicsBufferAllocator>())
 {
 
     const auto waylandOutputs = m_backend->waylandOutputs();
@@ -218,8 +221,8 @@ WaylandQPainterBackend::~WaylandQPainterBackend()
 void WaylandQPainterBackend::createOutput(Output *waylandOutput)
 {
     m_outputs[waylandOutput] = Layers{
-        .primaryLayer = std::make_unique<WaylandQPainterPrimaryLayer>(static_cast<WaylandOutput *>(waylandOutput)),
-        .cursorLayer = std::make_unique<WaylandQPainterCursorLayer>(static_cast<WaylandOutput *>(waylandOutput)),
+        .primaryLayer = std::make_unique<WaylandQPainterPrimaryLayer>(static_cast<WaylandOutput *>(waylandOutput), this),
+        .cursorLayer = std::make_unique<WaylandQPainterCursorLayer>(static_cast<WaylandOutput *>(waylandOutput), this),
     };
 }
 
@@ -236,6 +239,11 @@ OutputLayer *WaylandQPainterBackend::primaryLayer(Output *output)
 OutputLayer *WaylandQPainterBackend::cursorLayer(Output *output)
 {
     return m_outputs[output].cursorLayer.get();
+}
+
+GraphicsBufferAllocator *WaylandQPainterBackend::graphicsBufferAllocator() const
+{
+    return m_allocator.get();
 }
 
 }
