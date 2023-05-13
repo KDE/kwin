@@ -148,6 +148,8 @@ static void rearrangeLayer(const QList<LayerShellV1Window *> &windows, QRect *wo
             geometry.setBottom(window->virtualKeyboardGeometry().top());
         }
 
+        window->updateLayer();
+
         if (geometry.isValid()) {
             window->moveResize(geometry);
         } else {

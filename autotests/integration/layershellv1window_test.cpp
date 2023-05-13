@@ -41,6 +41,7 @@ private Q_SLOTS:
     void testMargins();
     void testLayer_data();
     void testLayer();
+    void testChangeLayer();
     void testPlacementArea_data();
     void testPlacementArea();
     void testFill_data();
@@ -294,6 +295,58 @@ void LayerShellV1WindowTest::testLayer()
     // Destroy the window.
     shellSurface.reset();
     QVERIFY(Test::waitForWindowClosed(window));
+}
+
+void LayerShellV1WindowTest::testChangeLayer()
+{
+    // This test verifies that set_layer requests are handled properly after the surface has
+    // been mapped on the screen.
+
+    // Create layer shell surfaces.
+    std::unique_ptr<KWayland::Client::Surface> surface1(Test::createSurface());
+    std::unique_ptr<Test::LayerSurfaceV1> shellSurface1(Test::createLayerSurfaceV1(surface1.get(), QStringLiteral("test")));
+    shellSurface1->set_layer(Test::LayerShellV1::layer_bottom);
+    shellSurface1->set_size(200, 100);
+    surface1->commit(KWayland::Client::Surface::CommitFlag::None);
+
+    std::unique_ptr<KWayland::Client::Surface> surface2(Test::createSurface());
+    std::unique_ptr<Test::LayerSurfaceV1> shellSurface2(Test::createLayerSurfaceV1(surface2.get(), QStringLiteral("test")));
+    shellSurface2->set_layer(Test::LayerShellV1::layer_bottom);
+    shellSurface2->set_size(200, 100);
+    surface2->commit(KWayland::Client::Surface::CommitFlag::None);
+
+    // Wait for the compositor to position the surfaces.
+    QSignalSpy configureRequestedSpy1(shellSurface1.get(), &Test::LayerSurfaceV1::configureRequested);
+    QSignalSpy configureRequestedSpy2(shellSurface2.get(), &Test::LayerSurfaceV1::configureRequested);
+    QVERIFY(configureRequestedSpy2.wait());
+    const QSize requestedSize1 = configureRequestedSpy1.last().at(1).toSize();
+    const QSize requestedSize2 = configureRequestedSpy2.last().at(1).toSize();
+
+    // Map the layer surfaces.
+    shellSurface1->ack_configure(configureRequestedSpy1.last().at(0).toUInt());
+    Window *window1 = Test::renderAndWaitForShown(surface1.get(), requestedSize1, Qt::red);
+    QVERIFY(window1);
+    shellSurface2->ack_configure(configureRequestedSpy2.last().at(0).toUInt());
+    Window *window2 = Test::renderAndWaitForShown(surface2.get(), requestedSize2, Qt::red);
+    QVERIFY(window2);
+
+    // The first layer shell window is stacked below the second one.
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window1, window2}));
+
+    // Move the first layer shell window to the top layer.
+    QSignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
+    shellSurface1->set_layer(Test::LayerShellV1::layer_top);
+    surface1->commit(KWayland::Client::Surface::CommitFlag::None);
+    QVERIFY(stackingOrderChangedSpy.wait());
+
+    // The first layer shell window should be on top now.
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window2, window1}));
+
+    // Destroy the window.
+    shellSurface1.reset();
+    QVERIFY(Test::waitForWindowClosed(window1));
+    shellSurface2.reset();
+    QVERIFY(Test::waitForWindowClosed(window2));
 }
 
 void LayerShellV1WindowTest::testPlacementArea_data()
