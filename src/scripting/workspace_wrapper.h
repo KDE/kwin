@@ -55,6 +55,11 @@ class WorkspaceWrapper : public QObject
      */
     Q_PROPERTY(QRect virtualScreenGeometry READ virtualScreenGeometry NOTIFY virtualScreenGeometryChanged)
     /**
+     * List of Clients currently managed by KWin, orderd by
+     * their visibility (later ones cover earlier ones).
+     */
+    Q_PROPERTY(QList<KWin::Window *> stackingOrder READ stackingOrder)
+    /**
      * The current position of the cursor.
      */
     Q_PROPERTY(QPoint cursorPos READ cursorPos NOTIFY cursorPosChanged)
@@ -230,12 +235,32 @@ public:
      * Provides support information about the currently running KWin instance.
      */
     Q_SCRIPTABLE QString supportInformation() const;
+
+    /**
+     * List of Clients currently managed by KWin, orderd by
+     * their visibility (later ones cover earlier ones).
+     */
+    QList<KWin::Window *> stackingOrder() const;
+    /**
+     * Raises a Window  above all others on the screen.
+     * @param window The Window to raise
+     */
+    Q_INVOKABLE void raiseWindow(KWin::Window *window);
     /**
      * Finds the Client with the given @p windowId.
      * @param windowId The window Id of the Client
      * @return The found Client or @c null
      */
     Q_SCRIPTABLE KWin::Window *getClient(qulonglong windowId);
+    /**
+     * Finds up to count windows at a particular location,
+     * prioritizing the topmost one first.  A negative count
+     * returns all matching clients.
+     * @param pos The location to look for
+     * @param count The number of clients to return
+     * @return A list of Client objects
+     */
+    Q_INVOKABLE QList<KWin::Window *> windowAt(const QPointF &pos, int count = 1) const;
 
 public Q_SLOTS:
     // all the available key bindings

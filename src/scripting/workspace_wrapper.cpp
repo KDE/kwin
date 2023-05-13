@@ -280,11 +280,50 @@ void WorkspaceWrapper::hideOutline()
     workspace()->outline()->hide();
 }
 
+QList<KWin::Window *> WorkspaceWrapper::stackingOrder() const
+{
+    return workspace()->stackingOrder();
+}
+
+void WorkspaceWrapper::raiseWindow(KWin::Window *window)
+{
+    KWin::Workspace::self()->raiseWindow(window);
+}
+
 Window *WorkspaceWrapper::getClient(qulonglong windowId)
 {
     auto window = Workspace::self()->findClient(Predicate::WindowMatch, windowId);
     QQmlEngine::setObjectOwnership(window, QQmlEngine::CppOwnership);
     return window;
+}
+
+QList<KWin::Window *> WorkspaceWrapper::windowAt(const QPointF &pos, int count) const
+{
+    QList<KWin::Window *> result;
+    int found = 0;
+    const QList<Window *> &stacking = workspace()->stackingOrder();
+    if (stacking.isEmpty()) {
+        return result;
+    }
+    auto it = stacking.end();
+    do {
+        if (found == count) {
+            return result;
+        }
+        --it;
+        Window *window = (*it);
+        if (window->isDeleted()) {
+            continue;
+        }
+        if (!window->isOnCurrentActivity() || !window->isOnCurrentDesktop() || window->isMinimized() || window->isHiddenInternal()) {
+            continue;
+        }
+        if (window->hitTest(pos)) {
+            result.append(window);
+            found++;
+        }
+    } while (it != stacking.begin());
+    return result;
 }
 
 QSize WorkspaceWrapper::desktopGridSize() const
