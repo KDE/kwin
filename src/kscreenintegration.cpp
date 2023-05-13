@@ -39,7 +39,7 @@ QString connectedOutputsHash(const QVector<Output *> &outputs, bool isLidClosed)
     QStringList hashedOutputs;
     hashedOutputs.reserve(outputs.count());
     for (auto output : std::as_const(outputs)) {
-        if (output->isPlaceholder() || !output->isNonDesktop()) {
+        if (output->isPlaceholder() || output->isNonDesktop()) {
             continue;
         }
         if (output->isInternal() && isLidClosed) {
