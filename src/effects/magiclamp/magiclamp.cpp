@@ -211,7 +211,9 @@ void MagicLampEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, Wi
         lastQuad[2].setY(-1);
 
         if (position == Bottom) {
-            float height_cube = float(geo.height()) * float(geo.height()) * float(geo.height());
+            const float height_cube = float(geo.height()) * float(geo.height()) * float(geo.height());
+            const float maxY = icon.y() - geo.y();
+
             for (WindowQuad &quad : quads) {
 
                 if (quad[0].y() != lastQuad[0].y() || quad[2].y() != lastQuad[2].y()) {
@@ -219,8 +221,8 @@ void MagicLampEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, Wi
                     offset[0] = (icon.y() + quad[0].y() - geo.y()) * progress * ((quadFactor * quadFactor * quadFactor) / height_cube);
                     quadFactor = quad[2].y() + (geo.height() - quad[2].y()) * progress;
                     offset[1] = (icon.y() + quad[2].y() - geo.y()) * progress * ((quadFactor * quadFactor * quadFactor) / height_cube);
-                    p_progress[1] = std::min(offset[1] / (icon.y() + icon.height() - geo.y() - float(quad[2].y())), 1.0f);
-                    p_progress[0] = std::min(offset[0] / (icon.y() + icon.height() - geo.y() - float(quad[0].y())), 1.0f);
+                    p_progress[1] = std::min(offset[1] / (icon.y() - geo.y() - float(quad[2].y())), 1.0f);
+                    p_progress[0] = std::min(offset[0] / (icon.y() - geo.y() - float(quad[0].y())), 1.0f);
                 } else {
                     lastQuad = quad;
                 }
@@ -229,9 +231,24 @@ void MagicLampEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, Wi
                 p_progress[1] = std::abs(p_progress[1]);
                 // x values are moved towards the center of the icon
                 SET_QUADS(setX, x, width, setY, y, 0, 0, 1, 1);
+
+                if (quad[0].y() > maxY) {
+                    quad[0].setY(maxY);
+                }
+                if (quad[1].y() > maxY) {
+                    quad[1].setY(maxY);
+                }
+                if (quad[2].y() > maxY) {
+                    quad[2].setY(maxY);
+                }
+                if (quad[3].y() > maxY) {
+                    quad[3].setY(maxY);
+                }
             }
         } else if (position == Top) {
-            float height_cube = float(geo.height()) * float(geo.height()) * float(geo.height());
+            const float height_cube = float(geo.height()) * float(geo.height()) * float(geo.height());
+            const float minY = icon.y() + icon.height() - geo.y();
+
             for (WindowQuad &quad : quads) {
 
                 if (quad[0].y() != lastQuad[0].y() || quad[2].y() != lastQuad[2].y()) {
@@ -252,9 +269,24 @@ void MagicLampEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, Wi
                 p_progress[1] = std::abs(p_progress[1]);
                 // x values are moved towards the center of the icon
                 SET_QUADS(setX, x, width, setY, y, 0, 0, 1, 1);
+
+                if (quad[0].y() < minY) {
+                    quad[0].setY(minY);
+                }
+                if (quad[1].y() < minY) {
+                    quad[1].setY(minY);
+                }
+                if (quad[2].y() < minY) {
+                    quad[2].setY(minY);
+                }
+                if (quad[3].y() < minY) {
+                    quad[3].setY(minY);
+                }
             }
         } else if (position == Left) {
-            float width_cube = float(geo.width()) * float(geo.width()) * float(geo.width());
+            const float width_cube = float(geo.width()) * float(geo.width()) * float(geo.width());
+            const float minX = icon.x() + icon.width() - geo.x();
+
             for (WindowQuad &quad : quads) {
 
                 if (quad[0].x() != lastQuad[0].x() || quad[1].x() != lastQuad[1].x()) {
@@ -275,9 +307,24 @@ void MagicLampEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, Wi
                 p_progress[1] = std::abs(p_progress[1]);
                 // y values are moved towards the center of the icon
                 SET_QUADS(setY, y, height, setX, x, 0, 1, 1, 0);
+
+                if (quad[0].x() < minX) {
+                    quad[0].setX(minX);
+                }
+                if (quad[1].x() < minX) {
+                    quad[1].setX(minX);
+                }
+                if (quad[2].x() < minX) {
+                    quad[2].setX(minX);
+                }
+                if (quad[3].x() < minX) {
+                    quad[3].setX(minX);
+                }
             }
         } else if (position == Right) {
-            float width_cube = float(geo.width()) * float(geo.width()) * float(geo.width());
+            const float width_cube = float(geo.width()) * float(geo.width()) * float(geo.width());
+            const float maxX = icon.x() - geo.x();
+
             for (WindowQuad &quad : quads) {
 
                 if (quad[0].x() != lastQuad[0].x() || quad[1].x() != lastQuad[1].x()) {
@@ -285,8 +332,8 @@ void MagicLampEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, Wi
                     offset[0] = (icon.x() + quad[0].x() - geo.x()) * progress * ((quadFactor * quadFactor * quadFactor) / width_cube);
                     quadFactor = quad[1].x() + (geo.width() - quad[1].x()) * progress;
                     offset[1] = (icon.x() + quad[1].x() - geo.x()) * progress * ((quadFactor * quadFactor * quadFactor) / width_cube);
-                    p_progress[0] = std::min(offset[0] / (icon.x() + icon.width() - geo.x() - float(quad[0].x())), 1.0f);
-                    p_progress[1] = std::min(offset[1] / (icon.x() + icon.width() - geo.x() - float(quad[1].x())), 1.0f);
+                    p_progress[0] = std::min(offset[0] / (icon.x() - geo.x() - float(quad[0].x())), 1.0f);
+                    p_progress[1] = std::min(offset[1] / (icon.x() - geo.x() - float(quad[1].x())), 1.0f);
                 } else {
                     lastQuad = quad;
                 }
@@ -295,6 +342,19 @@ void MagicLampEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, Wi
                 p_progress[1] = std::abs(p_progress[1]);
                 // y values are moved towards the center of the icon
                 SET_QUADS(setY, y, height, setX, x, 0, 1, 1, 0);
+
+                if (quad[0].x() > maxX) {
+                    quad[0].setX(maxX);
+                }
+                if (quad[1].x() > maxX) {
+                    quad[1].setX(maxX);
+                }
+                if (quad[2].x() > maxX) {
+                    quad[2].setX(maxX);
+                }
+                if (quad[3].x() > maxX) {
+                    quad[3].setX(maxX);
+                }
             }
         }
     }
