@@ -193,9 +193,6 @@ void LayerShellV1Window::closeWindow()
 
 Layer LayerShellV1Window::belongsToLayer() const
 {
-    if (!isNormalWindow()) {
-        return WaylandWindow::belongsToLayer();
-    }
     switch (m_shellSurface->layer()) {
     case LayerSurfaceV1Interface::BackgroundLayer:
         return DesktopLayer;
