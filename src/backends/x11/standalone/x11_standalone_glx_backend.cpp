@@ -871,7 +871,7 @@ void GlxSurfaceTextureX11::update(const QRegion &region)
 }
 
 GlxPixmapTexture::GlxPixmapTexture(GlxBackend *backend)
-    : GLTexture(*new GlxPixmapTexturePrivate(this, backend))
+    : GLTexture(std::make_unique<GlxPixmapTexturePrivate>(this, backend))
 {
 }
 

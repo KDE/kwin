@@ -49,7 +49,6 @@ class KWINGLUTILS_EXPORT GLTexture
 {
 public:
     explicit GLTexture(GLenum target);
-    GLTexture(const GLTexture &tex);
     explicit GLTexture(const QImage &image, GLenum target = GL_TEXTURE_2D);
     explicit GLTexture(const QPixmap &pixmap, GLenum target = GL_TEXTURE_2D);
     explicit GLTexture(const QString &fileName);
@@ -70,8 +69,6 @@ public:
      */
     explicit GLTexture(GLuint textureId, GLenum internalFormat, const QSize &size, int levels = 1);
     virtual ~GLTexture();
-
-    GLTexture &operator=(const GLTexture &tex);
 
     bool isNull() const;
     QSize size() const;
@@ -114,7 +111,6 @@ public:
     QMatrix4x4 matrix(TextureCoordinateType type) const;
 
     void update(const QImage &image, const QPoint &offset = QPoint(0, 0), const QRect &src = QRect());
-    virtual void discard();
     void bind();
     void unbind();
     void render(const QSizeF &size, double scale);
@@ -163,8 +159,8 @@ public:
     static bool supportsFormatRG();
 
 protected:
-    QExplicitlySharedDataPointer<GLTexturePrivate> d_ptr;
-    GLTexture(GLTexturePrivate &dd);
+    const std::unique_ptr<GLTexturePrivate> d_ptr;
+    GLTexture(std::unique_ptr<GLTexturePrivate> &&dd);
 
 private:
     Q_DECLARE_PRIVATE(GLTexture)
