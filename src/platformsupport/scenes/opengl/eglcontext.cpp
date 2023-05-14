@@ -208,9 +208,9 @@ std::shared_ptr<GLTexture> EglContext::importDmaBufAsTexture(const DmaBufAttribu
 {
     EGLImageKHR image = m_display->importDmaBufAsImage(attributes);
     if (image != EGL_NO_IMAGE_KHR) {
-        return std::make_shared<EGLImageTexture>(m_display->handle(), image, glFormatForDrmFormat(attributes.format), QSize(attributes.width, attributes.height));
+        return EGLImageTexture::create(m_display->handle(), image, glFormatForDrmFormat(attributes.format), QSize(attributes.width, attributes.height));
     } else {
-        qCWarning(KWIN_OPENGL) << "Failed to record frame: Error creating EGLImageKHR - " << getEglErrorString();
+        qCWarning(KWIN_OPENGL) << "Error creating EGLImageKHR: " << getEglErrorString();
         return nullptr;
     }
 }

@@ -97,7 +97,10 @@ void OffscreenData::maybeRender(EffectWindow *window)
     QSize textureSize = logicalGeometry.toAlignedRect().size();
 
     if (!m_texture || m_texture->size() != textureSize) {
-        m_texture.reset(new GLTexture(GL_RGBA8, textureSize));
+        m_texture = GLTexture::allocate(GL_RGBA8, textureSize);
+        if (!m_texture) {
+            return;
+        }
         m_texture->setFilter(GL_LINEAR);
         m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
         m_fbo.reset(new GLFramebuffer(m_texture.get()));

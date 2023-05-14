@@ -9,13 +9,13 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
+#include "kwingltexture_p.h"
 #include "libkwineffects/kwinconfig.h" // KWIN_HAVE_OPENGL
 #include "libkwineffects/kwineffects.h"
 #include "libkwineffects/kwinglplatform.h"
 #include "libkwineffects/kwinglutils.h"
 #include "libkwineffects/kwinglutils_funcs.h"
-
-#include "kwingltexture_p.h"
+#include "logging_p.h"
 
 #include <QImage>
 #include <QPixmap>
@@ -185,56 +185,7 @@ GLTexture::GLTexture(const QString &fileName)
 {
 }
 
-GLTexture::GLTexture(GLenum internalFormat, int width, int height, int levels, bool needsMutability)
-    : d_ptr(new GLTexturePrivate())
-{
-    Q_D(GLTexture);
-
-    d->m_target = GL_TEXTURE_2D;
-    d->m_scale.setWidth(1.0 / width);
-    d->m_scale.setHeight(1.0 / height);
-    d->m_size = QSize(width, height);
-    d->m_canUseMipmaps = levels > 1;
-    d->m_mipLevels = levels;
-    d->m_filter = levels > 1 ? GL_NEAREST_MIPMAP_LINEAR : GL_NEAREST;
-
-    d->updateMatrix();
-
-    create();
-    bind();
-
-    if (!GLPlatform::instance()->isGLES()) {
-        if (d->s_supportsTextureStorage && !needsMutability) {
-            glTexStorage2D(d->m_target, levels, internalFormat, width, height);
-            d->m_immutable = true;
-        } else {
-            glTexParameteri(d->m_target, GL_TEXTURE_MAX_LEVEL, levels - 1);
-            glTexImage2D(d->m_target, 0, internalFormat, width, height, 0,
-                         GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, nullptr);
-        }
-        d->m_internalFormat = internalFormat;
-    } else {
-        // The format parameter in glTexSubImage() must match the internal format
-        // of the texture, so it's important that we allocate the texture with
-        // the format that will be used in update() and clear().
-        const GLenum format = d->s_supportsARGB32 ? GL_BGRA_EXT : GL_RGBA;
-        glTexImage2D(d->m_target, 0, format, width, height, 0,
-                     format, GL_UNSIGNED_BYTE, nullptr);
-
-        // This is technically not true, but it means that code that calls
-        // internalFormat() won't need to be specialized for GLES2.
-        d->m_internalFormat = GL_RGBA8;
-    }
-
-    unbind();
-}
-
-GLTexture::GLTexture(GLenum internalFormat, const QSize &size, int levels, bool needsMutability)
-    : GLTexture(internalFormat, size.width(), size.height(), levels, needsMutability)
-{
-}
-
-GLTexture::GLTexture(GLuint textureId, GLenum internalFormat, const QSize &size, int levels)
+GLTexture::GLTexture(GLuint textureId, GLenum internalFormat, const QSize &size, int levels, bool isImmutable)
     : d_ptr(new GLTexturePrivate())
 {
     Q_D(GLTexture);
@@ -248,6 +199,7 @@ GLTexture::GLTexture(GLuint textureId, GLenum internalFormat, const QSize &size,
     d->m_mipLevels = levels;
     d->m_filter = levels > 1 ? GL_NEAREST_MIPMAP_LINEAR : GL_NEAREST;
     d->m_internalFormat = internalFormat;
+    d->m_immutable = isImmutable;
 
     d->updateMatrix();
 }
@@ -774,6 +726,44 @@ QImage GLTexture::toImage() const
     if (GLuint(currentTextureBinding) != texture()) {
         glBindTexture(GL_TEXTURE_2D, currentTextureBinding);
     }
+    return ret;
+}
+
+std::unique_ptr<GLTexture> GLTexture::allocate(GLenum internalFormat, const QSize &size, int levels, bool needsMutability)
+{
+    GLuint texture = 0;
+    glGenTextures(1, &texture);
+    if (texture == 0) {
+        qCWarning(LIBKWINGLUTILS, "generating OpenGL texture handle failed");
+        return nullptr;
+    }
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    bool immutable = false;
+
+    if (!GLPlatform::instance()->isGLES()) {
+        if (GLTexturePrivate::s_supportsTextureStorage && !needsMutability) {
+            glTexStorage2D(GL_TEXTURE_2D, levels, internalFormat, size.width(), size.height());
+            immutable = true;
+        } else {
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, levels - 1);
+            glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, size.width(), size.height(), 0,
+                         GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, nullptr);
+        }
+    } else {
+        // The format parameter in glTexSubImage() must match the internal format
+        // of the texture, so it's important that we allocate the texture with
+        // the format that will be used in update() and clear().
+        const GLenum format = GLTexturePrivate::s_supportsARGB32 ? GL_BGRA_EXT : GL_RGBA;
+        glTexImage2D(GL_TEXTURE_2D, 0, format, size.width(), size.height(), 0,
+                     format, GL_UNSIGNED_BYTE, nullptr);
+
+        // The internalFormat is technically not correct, but it means that code that calls
+        // internalFormat() won't need to be specialized for GLES2.
+    }
+    glBindTexture(GL_TEXTURE_2D, 0);
+    auto ret = std::make_unique<GLTexture>(texture, internalFormat, size, levels, immutable);
+    ret->d_ptr->m_foreign = false;
     return ret;
 }
 

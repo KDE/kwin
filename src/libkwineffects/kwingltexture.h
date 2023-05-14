@@ -52,8 +52,6 @@ public:
     explicit GLTexture(const QImage &image, GLenum target = GL_TEXTURE_2D);
     explicit GLTexture(const QPixmap &pixmap, GLenum target = GL_TEXTURE_2D);
     explicit GLTexture(const QString &fileName);
-    GLTexture(GLenum internalFormat, int width, int height, int levels = 1, bool needsMutability = false);
-    explicit GLTexture(GLenum internalFormat, const QSize &size, int levels = 1, bool needsMutability = false);
 
     /**
      * Creates the underlying texture object. Returns @c true if the texture has been created
@@ -67,7 +65,7 @@ public:
      * Management of the underlying texture remains the responsibility of the caller.
      * @since 5.18
      */
-    explicit GLTexture(GLuint textureId, GLenum internalFormat, const QSize &size, int levels = 1);
+    explicit GLTexture(GLuint textureId, GLenum internalFormat, const QSize &size, int levels = 1, bool isImmutable = false);
     virtual ~GLTexture();
 
     bool isNull() const;
@@ -157,6 +155,8 @@ public:
      * @since 5.2.1
      */
     static bool supportsFormatRG();
+
+    static std::unique_ptr<GLTexture> allocate(GLenum internalFormat, const QSize &size, int levels = 1, bool needsMutability = false);
 
 protected:
     const std::unique_ptr<GLTexturePrivate> d_ptr;

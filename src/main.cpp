@@ -653,9 +653,12 @@ static PlatformCursorImage grabCursorOpenGL()
     Cursor *cursor = Cursors::self()->currentCursor();
     Output *output = workspace()->outputAt(cursor->pos());
 
-    GLTexture texture(GL_RGBA8, (cursor->geometry().size() * output->scale()).toSize());
-    texture.setContentTransform(TextureTransform::MirrorY);
-    GLFramebuffer framebuffer(&texture);
+    const auto texture = GLTexture::allocate(GL_RGBA8, (cursor->geometry().size() * output->scale()).toSize());
+    if (!texture) {
+        return PlatformCursorImage{};
+    }
+    texture->setContentTransform(TextureTransform::MirrorY);
+    GLFramebuffer framebuffer(texture.get());
     RenderTarget renderTarget(&framebuffer);
 
     SceneDelegate delegate(scene, output);
@@ -663,7 +666,7 @@ static PlatformCursorImage grabCursorOpenGL()
     scene->paint(renderTarget, infiniteRegion());
     scene->postPaint();
 
-    QImage image = texture.toImage();
+    QImage image = texture->toImage();
     image.setDevicePixelRatio(output->scale());
 
     return PlatformCursorImage(image, cursor->hotspot());

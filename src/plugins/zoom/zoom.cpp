@@ -266,7 +266,10 @@ ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(const RenderTarget &r
 
     const GLenum textureFormat = renderTarget.colorDescription() == ColorDescription::sRGB ? GL_RGBA8 : GL_RGBA16F;
     if (!data.texture || data.texture->size() != nativeSize || data.texture->internalFormat() != textureFormat) {
-        data.texture.reset(new GLTexture(textureFormat, nativeSize));
+        data.texture = GLTexture::allocate(textureFormat, nativeSize);
+        if (!data.texture) {
+            return nullptr;
+        }
         data.texture->setFilter(GL_LINEAR);
         data.texture->setWrapMode(GL_CLAMP_TO_EDGE);
         data.framebuffer = std::make_unique<GLFramebuffer>(data.texture.get());
@@ -278,6 +281,9 @@ ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(const RenderTarget &r
 void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
 {
     OffscreenData *offscreenData = ensureOffscreenData(renderTarget, viewport, screen);
+    if (!offscreenData) {
+        return;
+    }
 
     // Render the scene in an offscreen texture and then upscale it.
     RenderTarget offscreenRenderTarget(offscreenData->framebuffer.get(), renderTarget.colorDescription());

@@ -104,7 +104,10 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
     }
     if (enableColormanagement) {
         if (!m_surface.shadowBuffer) {
-            m_surface.shadowTexture = std::make_shared<GLTexture>(GL_RGBA16F, m_surface.gbmSwapchain->size());
+            m_surface.shadowTexture = GLTexture::allocate(GL_RGBA16F, m_surface.gbmSwapchain->size());
+            if (!m_surface.shadowTexture) {
+                return std::nullopt;
+            }
             m_surface.shadowBuffer = std::make_shared<GLFramebuffer>(m_surface.shadowTexture.get());
         }
         return OutputLayerBeginFrameInfo{

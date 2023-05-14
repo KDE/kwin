@@ -181,7 +181,7 @@ bool BlurEffect::updateTexture(EffectScreen *screen, const RenderTarget &renderT
     data.renderTargetTextures.reserve(m_downSampleIterations + 2);
 
     for (int i = 0; i <= m_downSampleIterations; i++) {
-        data.renderTargetTextures.push_back(std::make_unique<GLTexture>(textureFormat, screenSize / (1 << i)));
+        data.renderTargetTextures.push_back(GLTexture::allocate(textureFormat, screenSize / (1 << i)));
         data.renderTargetTextures.back()->setFilter(GL_LINEAR);
         data.renderTargetTextures.back()->setWrapMode(GL_CLAMP_TO_EDGE);
 
@@ -189,7 +189,7 @@ bool BlurEffect::updateTexture(EffectScreen *screen, const RenderTarget &renderT
     }
 
     // This last set is used as a temporary helper texture
-    data.renderTargetTextures.push_back(std::make_unique<GLTexture>(textureFormat, screenSize));
+    data.renderTargetTextures.push_back(GLTexture::allocate(textureFormat, screenSize));
     data.renderTargetTextures.back()->setFilter(GL_LINEAR);
     data.renderTargetTextures.back()->setWrapMode(GL_CLAMP_TO_EDGE);
 

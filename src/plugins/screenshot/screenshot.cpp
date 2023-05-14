@@ -240,7 +240,10 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
     std::unique_ptr<GLTexture> offscreenTexture;
     std::unique_ptr<GLFramebuffer> target;
     if (effects->isOpenGLCompositing()) {
-        offscreenTexture.reset(new GLTexture(GL_RGBA8, QSizeF(geometry.size() * devicePixelRatio).toSize()));
+        offscreenTexture = GLTexture::allocate(GL_RGBA8, QSizeF(geometry.size() * devicePixelRatio).toSize());
+        if (!offscreenTexture) {
+            return;
+        }
         offscreenTexture->setFilter(GL_LINEAR);
         offscreenTexture->setWrapMode(GL_CLAMP_TO_EDGE);
         target.reset(new GLFramebuffer(offscreenTexture.get()));
@@ -364,14 +367,17 @@ QImage ScreenShotEffect::blitScreenshot(const RenderTarget &renderTarget, const 
         image = QImage(nativeSize, QImage::Format_ARGB32);
 
         if (GLFramebuffer::blitSupported() && !GLPlatform::instance()->isGLES()) {
-            GLTexture texture(GL_RGBA8, nativeSize.width(), nativeSize.height());
-            GLFramebuffer target(&texture);
+            const auto texture = GLTexture::allocate(GL_RGBA8, nativeSize);
+            if (!texture) {
+                return {};
+            }
+            GLFramebuffer target(texture.get());
             target.blitFromFramebuffer(viewport.mapToRenderTarget(geometry));
             // copy content from framebuffer into image
-            texture.bind();
+            texture->bind();
             glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE,
                           static_cast<GLvoid *>(image.bits()));
-            texture.unbind();
+            texture->unbind();
         } else {
             glReadPixels(0, 0, nativeSize.width(), nativeSize.height(), GL_RGBA,
                          GL_UNSIGNED_BYTE, static_cast<GLvoid *>(image.bits()));
