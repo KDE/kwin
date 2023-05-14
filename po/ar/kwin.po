@@ -113,127 +113,127 @@ msgstr "المهمّة"
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 4"
-msgstr "زر إضافي ٤"
+msgstr "زر إضافي 4"
 
 #: debug_console.cpp:115
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 5"
-msgstr "زر إضافي ٥"
+msgstr "زر إضافي 5"
 
 #: debug_console.cpp:117
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 6"
-msgstr "زر إضافي ٦"
+msgstr "زر إضافي 6"
 
 #: debug_console.cpp:119
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 7"
-msgstr "زر إضافي ٧"
+msgstr "زر إضافي 7"
 
 #: debug_console.cpp:121
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 8"
-msgstr "زر إضافي ٨"
+msgstr "زر إضافي 8"
 
 #: debug_console.cpp:123
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 9"
-msgstr "زر إضافي ٩"
+msgstr "زر إضافي 9"
 
 #: debug_console.cpp:125
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 10"
-msgstr "زر إضافي ١٠"
+msgstr "زر إضافي 10"
 
 #: debug_console.cpp:127
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 11"
-msgstr "زر إضافي ١١"
+msgstr "زر إضافي 11"
 
 #: debug_console.cpp:129
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 12"
-msgstr "زر إضافي ١٢"
+msgstr "زر إضافي 12"
 
 #: debug_console.cpp:131
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 13"
-msgstr "زر إضافي ١٣"
+msgstr "زر إضافي 13"
 
 #: debug_console.cpp:133
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 14"
-msgstr "زر إضافي ١٤"
+msgstr "زر إضافي 14"
 
 #: debug_console.cpp:135
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 15"
-msgstr "زر إضافي ١٥"
+msgstr "زر إضافي 15"
 
 #: debug_console.cpp:137
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 16"
-msgstr "زر إضافي ١٦"
+msgstr "زر إضافي 16"
 
 #: debug_console.cpp:139
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 17"
-msgstr "زر إضافي ١٧"
+msgstr "زر إضافي 17"
 
 #: debug_console.cpp:141
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 18"
-msgstr "زر إضافي ١٨"
+msgstr "زر إضافي 18"
 
 #: debug_console.cpp:143
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 19"
-msgstr "زر إضافي ١٩"
+msgstr "زر إضافي 19"
 
 #: debug_console.cpp:145
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 20"
-msgstr "زر إضافي ٢٠"
+msgstr "زر إضافي 20"
 
 #: debug_console.cpp:147
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 21"
-msgstr "زر إضافي ٢١"
+msgstr "زر إضافي 21"
 
 #: debug_console.cpp:149
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 22"
-msgstr "زر إضافي ٢٢"
+msgstr "زر إضافي 22"
 
 #: debug_console.cpp:151
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 23"
-msgstr "زر إضافي ٢٣"
+msgstr "زر إضافي 23"
 
 #: debug_console.cpp:153
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 24"
-msgstr "زر إضافي ٢٤"
+msgstr "زر إضافي 24"
 
 #: debug_console.cpp:162 debug_console.cpp:164
 #, kde-format
@@ -708,145 +708,145 @@ msgstr "التقدّم"
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 1"
-msgstr "إضافي ١"
+msgstr "إضافي 1"
 
 #: debug_console.cpp:819
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 2"
-msgstr "إضافي ٢"
+msgstr "إضافي 2"
 
 #: debug_console.cpp:822
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 3"
-msgstr "إضافي ٣"
+msgstr "إضافي 3"
 
 #: debug_console.cpp:825
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 4"
-msgstr "إضافي ٤"
+msgstr "إضافي 4"
 
 #: debug_console.cpp:828
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 5"
-msgstr "إضافي ٥"
+msgstr "إضافي 5"
 
 #: debug_console.cpp:831
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 6"
-msgstr "إضافي ٦"
+msgstr "إضافي 6"
 
 #: debug_console.cpp:834
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 7"
-msgstr "إضافي ٧"
+msgstr "إضافي 7"
 
 #: debug_console.cpp:837
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 8"
-msgstr "إضافي ٨"
+msgstr "إضافي 8"
 
 #: debug_console.cpp:840
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 9"
-msgstr "إضافي ٩"
+msgstr "إضافي 9"
 
 #: debug_console.cpp:843
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 10"
-msgstr "إضافي ١٠"
+msgstr "إضافي 10"
 
 #: debug_console.cpp:846
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 11"
-msgstr "إضافي ١١"
+msgstr "إضافي 11"
 
 #: debug_console.cpp:849
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 12"
-msgstr "إضافي ١٢"
+msgstr "إضافي 12"
 
 #: debug_console.cpp:852
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 13"
-msgstr "إضافي ١٣"
+msgstr "إضافي 13"
 
 #: debug_console.cpp:855
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 14"
-msgstr "إضافي ١٤"
+msgstr "إضافي 14"
 
 #: debug_console.cpp:858
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 15"
-msgstr "إضافي ١٥"
+msgstr "إضافي 15"
 
 #: debug_console.cpp:861
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 16"
-msgstr "إضافي ١٦"
+msgstr "إضافي 16"
 
 #: debug_console.cpp:864
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 17"
-msgstr "إضافي ١٧"
+msgstr "إضافي 17"
 
 #: debug_console.cpp:867
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 18"
-msgstr "إضافي ١٨"
+msgstr "إضافي 18"
 
 #: debug_console.cpp:870
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 19"
-msgstr "إضافي ١٩"
+msgstr "إضافي 19"
 
 #: debug_console.cpp:873
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 20"
-msgstr "إضافي ٢٠"
+msgstr "إضافي 20"
 
 #: debug_console.cpp:876
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 21"
-msgstr "إضافي ٢١"
+msgstr "إضافي 21"
 
 #: debug_console.cpp:879
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 22"
-msgstr "إضافي ٢٢"
+msgstr "إضافي 22"
 
 #: debug_console.cpp:882
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 23"
-msgstr "إضافي ٢٣"
+msgstr "إضافي 23"
 
 #: debug_console.cpp:885
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 24"
-msgstr "إضافي ٢٤"
+msgstr "إضافي 24"
 
 #: debug_console.cpp:888
 #, kde-format
@@ -857,12 +857,12 @@ msgstr "المهمّة"
 #: debug_console.cpp:1222
 #, kde-format
 msgid "X11 Windows"
-msgstr "نوافذ اكس١١"
+msgstr "نوافذ اكس11"
 
 #: debug_console.cpp:1224
 #, kde-format
 msgid "X11 Unmanaged Windows"
-msgstr "نوافذ اكس ١١ غير مدارة"
+msgstr "نوافذ اكس 11 غير مدارة"
 
 #: debug_console.cpp:1226
 #, kde-format
@@ -2577,12 +2577,12 @@ msgstr "بدّل إلى النّافذة اليسرى"
 #: useractions.cpp:1061
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
-msgstr "زِد عتمة النّافذة النّشطة ٥٪"
+msgstr "زِد عتمة النّافذة النّشطة 5٪"
 
 #: useractions.cpp:1063
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
-msgstr "أنقص عتمة النّافذة النّشطة ٥٪"
+msgstr "أنقص عتمة النّافذة النّشطة 5٪"
 
 #: useractions.cpp:1066
 #, kde-format
@@ -2813,7 +2813,7 @@ msgstr ""
 #~ msgstr "أظهر سطح المكتب"
 
 #~ msgid "X11 Client Windows"
-#~ msgstr "نوافذ عميل اكس ١١"
+#~ msgstr "نوافذ عميل اكس 11"
 
 #~ msgid "unknown"
 #~ msgstr "مجهول"
