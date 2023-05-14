@@ -84,7 +84,11 @@ void ScreenTransformEffect::addScreen(EffectScreen *screen)
         auto &state = m_states[screen];
         state.m_oldTransform = screen->transform();
         state.m_oldGeometry = screen->geometry();
-        state.m_prev.texture.reset(new GLTexture(GL_RGBA8, screen->geometry().size() * screen->devicePixelRatio()));
+        state.m_prev.texture = GLTexture::allocate(GL_RGBA8, screen->geometry().size() * screen->devicePixelRatio());
+        if (!state.m_prev.texture) {
+            m_states.remove(screen);
+            return;
+        }
         state.m_prev.framebuffer.reset(new GLFramebuffer(state.m_prev.texture.get()));
 
         // Rendering the current scene into a texture
@@ -193,7 +197,11 @@ void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const 
     // Render the screen in an offscreen texture.
     const QSize nativeSize = screen->geometry().size() * screen->devicePixelRatio();
     if (!it->m_current.texture || it->m_current.texture->size() != nativeSize) {
-        it->m_current.texture.reset(new GLTexture(GL_RGBA8, nativeSize));
+        it->m_current.texture = GLTexture::allocate(GL_RGBA8, nativeSize);
+        if (!it->m_current.texture) {
+            m_states.remove(screen);
+            return;
+        }
         it->m_current.framebuffer.reset(new GLFramebuffer(it->m_current.texture.get()));
     }
 

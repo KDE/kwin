@@ -22,10 +22,11 @@ namespace KWin
 class KWINGLUTILS_EXPORT EGLImageTexture : public GLTexture
 {
 public:
-    EGLImageTexture(::EGLDisplay display, EGLImageKHR image, int internalFormat, const QSize &size);
+    explicit EGLImageTexture(::EGLDisplay display, EGLImageKHR image, uint textureId, int internalFormat, const QSize &size);
     ~EGLImageTexture() override;
 
-private:
+    static std::shared_ptr<EGLImageTexture> create(::EGLDisplay display, EGLImageKHR image, int internalFormat, const QSize &size);
+
     EGLImageKHR m_image;
     ::EGLDisplay m_display;
 };

@@ -380,7 +380,10 @@ void WindowThumbnailItem::updateOffscreenTexture()
     textureSize *= m_devicePixelRatio;
 
     if (!m_offscreenTexture || m_offscreenTexture->size() != textureSize) {
-        m_offscreenTexture.reset(new GLTexture(GL_RGBA8, textureSize));
+        m_offscreenTexture = GLTexture::allocate(GL_RGBA8, textureSize);
+        if (!m_offscreenTexture) {
+            return;
+        }
         m_offscreenTexture->setFilter(GL_LINEAR);
         m_offscreenTexture->setWrapMode(GL_CLAMP_TO_EDGE);
         m_offscreenTarget.reset(new GLFramebuffer(m_offscreenTexture.get()));

@@ -363,7 +363,7 @@ void SceneOpenGLDecorationRenderer::renderPart(const QRect &rect, const QRect &p
                                                const QPoint &textureOffset,
                                                qreal devicePixelRatio, bool rotated)
 {
-    if (!rect.isValid()) {
+    if (!rect.isValid() || !m_texture) {
         return;
     }
     // We allow partial decoration updates and it might just so happen that the
@@ -457,7 +457,10 @@ void SceneOpenGLDecorationRenderer::resizeTexture()
     }
 
     if (!size.isEmpty()) {
-        m_texture.reset(new GLTexture(GL_RGBA8, size.width(), size.height()));
+        m_texture = GLTexture::allocate(GL_RGBA8, size);
+        if (!m_texture) {
+            return;
+        }
         m_texture->setContentTransform(TextureTransform::MirrorY);
         m_texture->setFilter(GL_LINEAR);
         m_texture->setWrapMode(GL_CLAMP_TO_EDGE);

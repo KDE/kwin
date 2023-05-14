@@ -430,14 +430,17 @@ void ContrastEffect::doContrast(const RenderTarget &renderTarget, const RenderVi
 
     // Create a scratch texture and copy the area in the back buffer that we're
     // going to blur into it
-    GLTexture scratch(GL_RGBA8, r.width(), r.height());
-    scratch.setFilter(GL_LINEAR);
-    scratch.setWrapMode(GL_CLAMP_TO_EDGE);
-    scratch.bind();
+    const auto scratch = GLTexture::allocate(GL_RGBA8, r.size().toSize());
+    if (!scratch) {
+        return;
+    }
+    scratch->setFilter(GL_LINEAR);
+    scratch->setWrapMode(GL_CLAMP_TO_EDGE);
+    scratch->bind();
 
     const QRectF sg = viewport.mapToRenderTarget(viewport.renderRect());
     glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, (r.x() - sg.x()), (sg.height() - (r.y() - sg.y() + r.height())),
-                        scratch.width(), scratch.height());
+                        scratch->width(), scratch->height());
 
     // Draw the texture on the offscreen framebuffer object, while blurring it horizontally
 
@@ -465,7 +468,7 @@ void ContrastEffect::doContrast(const RenderTarget &renderTarget, const RenderVi
 
     vbo->draw(GL_TRIANGLES, 0, actualShape.rectCount() * 6);
 
-    scratch.unbind();
+    scratch->unbind();
 
     vbo->unbindArrays();
 

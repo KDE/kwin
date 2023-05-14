@@ -77,7 +77,10 @@ std::chrono::nanoseconds RegionScreenCastSource::clock() const
 void RegionScreenCastSource::ensureTexture()
 {
     if (!m_renderedTexture) {
-        m_renderedTexture.reset(new GLTexture(GL_RGBA8, textureSize()));
+        m_renderedTexture = GLTexture::allocate(GL_RGBA8, textureSize());
+        if (!m_renderedTexture) {
+            return;
+        }
         m_target.reset(new GLFramebuffer(m_renderedTexture.get()));
         const auto allOutputs = workspace()->outputs();
         for (auto output : allOutputs) {
