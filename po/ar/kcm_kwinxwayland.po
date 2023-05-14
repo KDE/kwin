@@ -26,7 +26,7 @@ msgid ""
 "disabled by default for security reasons. If you need to use such apps, you "
 "can choose your preferred balance of security and functionality here."
 msgstr ""
-"تتطلب تطبيقات اكس١١ القديمة القدرة على قراءة ضغطات المفاتيح التي تكتب في "
+"تتطلب تطبيقات اكس11 القديمة القدرة على قراءة ضغطات المفاتيح التي تكتب في "
 "تطبيقات أخرى للميزات التي تنشط باستخدام اختصارات لوحة المفاتيح العالمية. هذا "
 "الخيار معطل افتراضيًا لأسباب أمنية. إذا كنت بحاجة إلى استخدام مثل هذه "
 "التطبيقات، فيمكنك اختيار توازن الأمان والوظائف المفضل لديك هنا."
@@ -34,7 +34,7 @@ msgstr ""
 #: package/contents/ui/main.qml:64
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
-msgstr "اسمح لتطبيقات اكس١١ القديمة بقراءة المفاتيح المضغوطة في كل التطبيقات:"
+msgstr "اسمح لتطبيقات اكس11 القديمة بقراءة المفاتيح المضغوطة في كل التطبيقات:"
 
 #: package/contents/ui/main.qml:65
 #, kde-format
@@ -63,7 +63,7 @@ msgid ""
 "session by permitting malicious software to steal passwords and spy on the "
 "text that you type. Make sure you understand and accept this risk."
 msgstr ""
-"لاحظ أن استخدام هذا الإعداد سيقلل من أمان النظام إلى جلسة اكس١١ من خلال "
+"لاحظ أن استخدام هذا الإعداد سيقلل من أمان النظام إلى جلسة اكس11 من خلال "
 "السماح للبرامج الضارة بسرقة كلمات المرور والتجسس على النص الذي تكتبه. تأكد "
 "من فهمك وقبول هذا الخطر."
 
@@ -72,7 +72,7 @@ msgstr ""
 #~ "apps regardless of their focus."
 #~ msgstr ""
 #~ "تتيح هذه الوحدة ضبط أحداث لوحة المفاتيح التي يعاد توجيهها إلى تطبيقات "
-#~ "اكس١١ بغض النظر عن موضع تركيز لوحة المفاتيح."
+#~ "اكس11 بغض النظر عن موضع تركيز لوحة المفاتيح."
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"
@@ -83,8 +83,8 @@ msgstr ""
 #~ msgstr "zayed.alsaidi@gmail.com"
 
 #~ msgid "Legacy X11 App Support"
-#~ msgstr "دعم تطبيقات اكس١١ القديمة"
+#~ msgstr "دعم تطبيقات اكس11 القديمة"
 
 #~ msgid "Allow legacy X11 apps to read keystrokes typed in other apps"
 #~ msgstr ""
-#~ "اسمح لتطبيقات اكس١١ القديمة بقراءة المفاتيح المضغوطة في التطبيقات الأخرى"
+#~ "اسمح لتطبيقات اكس11 القديمة بقراءة المفاتيح المضغوطة في التطبيقات الأخرى"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-13 02:04+0000\n"
+"POT-Creation-Date: 2023-05-14 02:27+0000\n"
 "PO-Revision-Date: 2023-04-20 11:19+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -1787,49 +1787,49 @@ msgstr "Commuta effecto de inverter sur fenestra"
 msgid "Invert Screen Colors"
 msgstr "Inverte colores de schermo"
 
-#: plugins/kdecorations/aurorae/src/aurorae.cpp:720
+#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:46
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Tiny"
 msgstr "Minuscule"
 
-#: plugins/kdecorations/aurorae/src/aurorae.cpp:721
+#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:47
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Normal"
 msgstr "Normal"
 
-#: plugins/kdecorations/aurorae/src/aurorae.cpp:722
+#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:48
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Large"
 msgstr "Grande"
 
-#: plugins/kdecorations/aurorae/src/aurorae.cpp:723
+#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:49
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Large"
 msgstr "Multe Grande"
 
-#: plugins/kdecorations/aurorae/src/aurorae.cpp:724
+#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:50
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Huge"
 msgstr "Ponderose (Huge)"
 
-#: plugins/kdecorations/aurorae/src/aurorae.cpp:725
+#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:51
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Huge"
 msgstr "Multe Ponderose"
 
-#: plugins/kdecorations/aurorae/src/aurorae.cpp:726
+#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:52
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Oversized"
 msgstr "Super dimensionate"
 
-#: plugins/kdecorations/aurorae/src/aurorae.cpp:729
+#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:55
 #, kde-format
 msgid "Button size:"
 msgstr "Dimension de button:"

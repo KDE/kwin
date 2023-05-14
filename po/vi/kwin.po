@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-13 02:04+0000\n"
+"POT-Creation-Date: 2023-05-14 02:27+0000\n"
 "PO-Revision-Date: 2023-02-20 11:15+0100\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
@@ -1808,50 +1808,50 @@ msgstr "Bật/tắt hiệu ứng đảo cho cửa sổ"
 msgid "Invert Screen Colors"
 msgstr "Đảo màu màn hình"
 
-#: plugins/kdecorations/aurorae/src/aurorae.cpp:720
+#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:46
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Tiny"
 msgstr "Tí hon"
 
-#: plugins/kdecorations/aurorae/src/aurorae.cpp:721
+#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:47
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Normal"
 msgstr "Thường"
 
-#: plugins/kdecorations/aurorae/src/aurorae.cpp:722
+#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:48
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Large"
 msgstr "Lớn"
 
-#: plugins/kdecorations/aurorae/src/aurorae.cpp:723
+#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:49
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Large"
 msgstr "Rất lớn"
 
-#: plugins/kdecorations/aurorae/src/aurorae.cpp:724
+#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:50
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Huge"
 msgstr "Khổng lồ"
 
-#: plugins/kdecorations/aurorae/src/aurorae.cpp:725
+#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:51
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Huge"
 msgstr "Rất khổng lồ"
 
-#: plugins/kdecorations/aurorae/src/aurorae.cpp:726
+#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:52
 #, fuzzy, kde-format
 #| msgid "&Resize"
 msgctxt "@item:inlistbox Button size:"
 msgid "Oversized"
 msgstr "Đổi &cỡ"
 
-#: plugins/kdecorations/aurorae/src/aurorae.cpp:729
+#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:55
 #, fuzzy, kde-format
 #| msgid "Buttons"
 msgid "Button size:"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-13 02:04+0000\n"
+"POT-Creation-Date: 2023-05-14 02:27+0000\n"
 "PO-Revision-Date: 2010-07-20 13:46+0100\n"
 "Last-Translator: Berend Ytsma <berendy@gmail.com>\n"
 "Language-Team: Frysk <kde-i18n-fry@kde.org>\n"
@@ -1800,7 +1800,7 @@ msgstr "Omkeer effekt op finster oan/út"
 msgid "Invert Screen Colors"
 msgstr "De rinnerke toetsen omkeare"
 
-#: plugins/kdecorations/aurorae/src/aurorae.cpp:720
+#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:46
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Border size:"
 #| msgid "Tiny"
@@ -1808,7 +1808,7 @@ msgctxt "@item:inlistbox Button size:"
 msgid "Tiny"
 msgstr "Lyts"
 
-#: plugins/kdecorations/aurorae/src/aurorae.cpp:721
+#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:47
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Button size:"
 #| msgid "Normal"
@@ -1816,13 +1816,13 @@ msgctxt "@item:inlistbox Button size:"
 msgid "Normal"
 msgstr "Normaal"
 
-#: plugins/kdecorations/aurorae/src/aurorae.cpp:722
+#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:48
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Large"
 msgstr "Grut"
 
-#: plugins/kdecorations/aurorae/src/aurorae.cpp:723
+#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:49
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Button size:"
 #| msgid "Very Large"
@@ -1830,7 +1830,7 @@ msgctxt "@item:inlistbox Button size:"
 msgid "Very Large"
 msgstr "Hiel grut"
 
-#: plugins/kdecorations/aurorae/src/aurorae.cpp:724
+#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:50
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Button size:"
 #| msgid "Huge"
@@ -1838,7 +1838,7 @@ msgctxt "@item:inlistbox Button size:"
 msgid "Huge"
 msgstr "Mânsk"
 
-#: plugins/kdecorations/aurorae/src/aurorae.cpp:725
+#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:51
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Border size:"
 #| msgid "Very Huge"
@@ -1846,14 +1846,14 @@ msgctxt "@item:inlistbox Button size:"
 msgid "Very Huge"
 msgstr "Alder Grutst"
 
-#: plugins/kdecorations/aurorae/src/aurorae.cpp:726
+#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:52
 #, fuzzy, kde-format
 #| msgid "Re&size"
 msgctxt "@item:inlistbox Button size:"
 msgid "Oversized"
 msgstr "Grutte &Feroarje"
 
-#: plugins/kdecorations/aurorae/src/aurorae.cpp:729
+#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:55
 #, fuzzy, kde-format
 #| msgid "Mouse Emulation"
 msgid "Button size:"

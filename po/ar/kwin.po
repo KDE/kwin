@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-13 02:04+0000\n"
+"POT-Creation-Date: 2023-05-14 02:27+0000\n"
 "PO-Revision-Date: 2023-04-27 12:56+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -155,127 +155,127 @@ msgstr "المهمّة"
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 4"
-msgstr "زر إضافي ٤"
+msgstr "زر إضافي 4"
 
 #: debug_console.cpp:104
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 5"
-msgstr "زر إضافي ٥"
+msgstr "زر إضافي 5"
 
 #: debug_console.cpp:106
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 6"
-msgstr "زر إضافي ٦"
+msgstr "زر إضافي 6"
 
 #: debug_console.cpp:108
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 7"
-msgstr "زر إضافي ٧"
+msgstr "زر إضافي 7"
 
 #: debug_console.cpp:110
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 8"
-msgstr "زر إضافي ٨"
+msgstr "زر إضافي 8"
 
 #: debug_console.cpp:112
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 9"
-msgstr "زر إضافي ٩"
+msgstr "زر إضافي 9"
 
 #: debug_console.cpp:114
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 10"
-msgstr "زر إضافي ١٠"
+msgstr "زر إضافي 10"
 
 #: debug_console.cpp:116
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 11"
-msgstr "زر إضافي ١١"
+msgstr "زر إضافي 11"
 
 #: debug_console.cpp:118
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 12"
-msgstr "زر إضافي ١٢"
+msgstr "زر إضافي 12"
 
 #: debug_console.cpp:120
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 13"
-msgstr "زر إضافي ١٣"
+msgstr "زر إضافي 13"
 
 #: debug_console.cpp:122
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 14"
-msgstr "زر إضافي ١٤"
+msgstr "زر إضافي 14"
 
 #: debug_console.cpp:124
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 15"
-msgstr "زر إضافي ١٥"
+msgstr "زر إضافي 15"
 
 #: debug_console.cpp:126
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 16"
-msgstr "زر إضافي ١٦"
+msgstr "زر إضافي 16"
 
 #: debug_console.cpp:128
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 17"
-msgstr "زر إضافي ١٧"
+msgstr "زر إضافي 17"
 
 #: debug_console.cpp:130
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 18"
-msgstr "زر إضافي ١٨"
+msgstr "زر إضافي 18"
 
 #: debug_console.cpp:132
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 19"
-msgstr "زر إضافي ١٩"
+msgstr "زر إضافي 19"
 
 #: debug_console.cpp:134
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 20"
-msgstr "زر إضافي ٢٠"
+msgstr "زر إضافي 20"
 
 #: debug_console.cpp:136
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 21"
-msgstr "زر إضافي ٢١"
+msgstr "زر إضافي 21"
 
 #: debug_console.cpp:138
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 22"
-msgstr "زر إضافي ٢٢"
+msgstr "زر إضافي 22"
 
 #: debug_console.cpp:140
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 23"
-msgstr "زر إضافي ٢٣"
+msgstr "زر إضافي 23"
 
 #: debug_console.cpp:142
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 24"
-msgstr "زر إضافي ٢٤"
+msgstr "زر إضافي 24"
 
 #: debug_console.cpp:151 debug_console.cpp:153
 #, kde-format
@@ -750,145 +750,145 @@ msgstr "التقدّم"
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 1"
-msgstr "إضافي ١"
+msgstr "إضافي 1"
 
 #: debug_console.cpp:808
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 2"
-msgstr "إضافي ٢"
+msgstr "إضافي 2"
 
 #: debug_console.cpp:811
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 3"
-msgstr "إضافي ٣"
+msgstr "إضافي 3"
 
 #: debug_console.cpp:814
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 4"
-msgstr "إضافي ٤"
+msgstr "إضافي 4"
 
 #: debug_console.cpp:817
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 5"
-msgstr "إضافي ٥"
+msgstr "إضافي 5"
 
 #: debug_console.cpp:820
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 6"
-msgstr "إضافي ٦"
+msgstr "إضافي 6"
 
 #: debug_console.cpp:823
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 7"
-msgstr "إضافي ٧"
+msgstr "إضافي 7"
 
 #: debug_console.cpp:826
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 8"
-msgstr "إضافي ٨"
+msgstr "إضافي 8"
 
 #: debug_console.cpp:829
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 9"
-msgstr "إضافي ٩"
+msgstr "إضافي 9"
 
 #: debug_console.cpp:832
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 10"
-msgstr "إضافي ١٠"
+msgstr "إضافي 10"
 
 #: debug_console.cpp:835
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 11"
-msgstr "إضافي ١١"
+msgstr "إضافي 11"
 
 #: debug_console.cpp:838
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 12"
-msgstr "إضافي ١٢"
+msgstr "إضافي 12"
 
 #: debug_console.cpp:841
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 13"
-msgstr "إضافي ١٣"
+msgstr "إضافي 13"
 
 #: debug_console.cpp:844
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 14"
-msgstr "إضافي ١٤"
+msgstr "إضافي 14"
 
 #: debug_console.cpp:847
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 15"
-msgstr "إضافي ١٥"
+msgstr "إضافي 15"
 
 #: debug_console.cpp:850
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 16"
-msgstr "إضافي ١٦"
+msgstr "إضافي 16"
 
 #: debug_console.cpp:853
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 17"
-msgstr "إضافي ١٧"
+msgstr "إضافي 17"
 
 #: debug_console.cpp:856
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 18"
-msgstr "إضافي ١٨"
+msgstr "إضافي 18"
 
 #: debug_console.cpp:859
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 19"
-msgstr "إضافي ١٩"
+msgstr "إضافي 19"
 
 #: debug_console.cpp:862
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 20"
-msgstr "إضافي ٢٠"
+msgstr "إضافي 20"
 
 #: debug_console.cpp:865
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 21"
-msgstr "إضافي ٢١"
+msgstr "إضافي 21"
 
 #: debug_console.cpp:868
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 22"
-msgstr "إضافي ٢٢"
+msgstr "إضافي 22"
 
 #: debug_console.cpp:871
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 23"
-msgstr "إضافي ٢٣"
+msgstr "إضافي 23"
 
 #: debug_console.cpp:874
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 24"
-msgstr "إضافي ٢٤"
+msgstr "إضافي 24"
 
 #: debug_console.cpp:877
 #, kde-format
@@ -899,12 +899,12 @@ msgstr "المهمّة"
 #: debug_console.cpp:1209
 #, kde-format
 msgid "X11 Windows"
-msgstr "نوافذ اكس١١"
+msgstr "نوافذ اكس11"
 
 #: debug_console.cpp:1211
 #, kde-format
 msgid "X11 Unmanaged Windows"
-msgstr "نوافذ اكس ١١ غير مدارة"
+msgstr "نوافذ اكس 11 غير مدارة"
 
 #: debug_console.cpp:1213
 #, kde-format
@@ -1768,49 +1768,49 @@ msgstr "بدّل بين تأثير العكس للنافذة وعدمه"
 msgid "Invert Screen Colors"
 msgstr "اعكس ألوان الشّاشة"
 
-#: plugins/kdecorations/aurorae/src/aurorae.cpp:720
+#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:46
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Tiny"
 msgstr "ضئيل"
 
-#: plugins/kdecorations/aurorae/src/aurorae.cpp:721
+#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:47
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Normal"
 msgstr "عاديّ"
 
-#: plugins/kdecorations/aurorae/src/aurorae.cpp:722
+#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:48
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Large"
 msgstr "كبير"
 
-#: plugins/kdecorations/aurorae/src/aurorae.cpp:723
+#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:49
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Large"
 msgstr "كبير جدًّا"
 
-#: plugins/kdecorations/aurorae/src/aurorae.cpp:724
+#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:50
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Huge"
 msgstr "ضخم"
 
-#: plugins/kdecorations/aurorae/src/aurorae.cpp:725
+#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:51
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Huge"
 msgstr "ضخم جدًّا"
 
-#: plugins/kdecorations/aurorae/src/aurorae.cpp:726
+#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:52
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Oversized"
 msgstr "فوق الطّبيعيّ"
 
-#: plugins/kdecorations/aurorae/src/aurorae.cpp:729
+#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:55
 #, kde-format
 msgid "Button size:"
 msgstr "حجم الزّرّ:"
@@ -3898,12 +3898,12 @@ msgstr "بدّل إلى النّافذة اليسرى"
 #: useractions.cpp:1049
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
-msgstr "زِد عتمة النّافذة النّشطة ٥٪"
+msgstr "زِد عتمة النّافذة النّشطة 5٪"
 
 #: useractions.cpp:1051
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
-msgstr "أنقص عتمة النّافذة النّشطة ٥٪"
+msgstr "أنقص عتمة النّافذة النّشطة 5٪"
 
 #: useractions.cpp:1054
 #, kde-format
@@ -4159,7 +4159,7 @@ msgstr "إنهار ويلاند_اكس"
 #~ msgstr "يسرد كل الخلفيات المتوفرة ثم يخرج."
 
 #~ msgid "X11 Client Windows"
-#~ msgstr "نوافذ عميل اكس ١١"
+#~ msgstr "نوافذ عميل اكس 11"
 
 #~ msgid "Render to framebuffer."
 #~ msgstr "التصيير إلى framebuffer"

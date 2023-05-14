@@ -9,7 +9,7 @@
 # Youssef Chahibi <chahibi@gmail.com>, 2007.
 # zayed <zayed.alsaidi@gmail.com>, 2008.
 # Zayed Al-Saidi <zayed.alsaidi@gmail.com>, 2010, 2021, 2023.
-# Safa Alfulaij <safa1996alfulaij@gmail.com>, ٢٠١٦.
+# Safa Alfulaij <safa1996alfulaij@gmail.com>, 2016.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
