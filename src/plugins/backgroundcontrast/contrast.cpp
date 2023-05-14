@@ -466,7 +466,6 @@ void ContrastEffect::doContrast(const RenderTarget &renderTarget, const RenderVi
     vbo->draw(GL_TRIANGLES, 0, actualShape.rectCount() * 6);
 
     scratch.unbind();
-    scratch.discard();
 
     vbo->unbindArrays();
 

@@ -89,13 +89,8 @@ GLTexture::GLTexture(GLenum target)
     d->m_target = target;
 }
 
-GLTexture::GLTexture(GLTexturePrivate &dd)
-    : d_ptr(&dd)
-{
-}
-
-GLTexture::GLTexture(const GLTexture &tex)
-    : d_ptr(tex.d_ptr)
+GLTexture::GLTexture(std::unique_ptr<GLTexturePrivate> &&dd)
+    : d_ptr(std::move(dd))
 {
 }
 
@@ -271,12 +266,6 @@ bool GLTexture::create()
     return d->m_texture != GL_NONE;
 }
 
-GLTexture &GLTexture::operator=(const GLTexture &tex)
-{
-    d_ptr = tex.d_ptr;
-    return *this;
-}
-
 GLTexturePrivate::GLTexturePrivate()
     : m_texture(0)
     , m_target(0)
@@ -435,11 +424,6 @@ void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &s
         glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
         glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
     }
-}
-
-void GLTexture::discard()
-{
-    d_ptr = new GLTexturePrivate();
 }
 
 void GLTexture::bind()

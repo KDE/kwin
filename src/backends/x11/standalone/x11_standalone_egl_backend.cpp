@@ -418,7 +418,7 @@ void EglSurfaceTextureX11::update(const QRegion &region)
 }
 
 EglPixmapTexture::EglPixmapTexture(EglBackend *backend)
-    : GLTexture(*new EglPixmapTexturePrivate(this, backend))
+    : GLTexture(std::make_unique<EglPixmapTexturePrivate>(this, backend))
 {
 }
 
