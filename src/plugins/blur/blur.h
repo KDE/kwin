@@ -84,7 +84,7 @@ private:
     bool shouldBlur(const EffectWindow *w, int mask, const WindowPaintData &data) const;
     void updateBlurRegion(EffectWindow *w);
     void doBlur(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &shape, const QRect &screen, const float opacity, bool isDock, QRect windowRect);
-    void uploadRegion(QVector2D *&map, const QRegion &region);
+    void uploadRegion(const std::span<QVector2D> map, size_t &index, const QRegion &region);
     Q_REQUIRED_RESULT bool uploadGeometry(GLVertexBuffer *vbo, const QRegion &expandedBlurRegion, const QRegion &blurRegion);
     void generateNoiseTexture();
     void screenAdded(EffectScreen *screen);

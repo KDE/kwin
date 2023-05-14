@@ -310,9 +310,9 @@ QRegion ContrastEffect::contrastRegion(const EffectWindow *w) const
     return region;
 }
 
-void ContrastEffect::uploadRegion(QVector2D *&map, const QRegion &region, qreal scale)
+void ContrastEffect::uploadRegion(std::span<QVector2D> map, const QRegion &region, qreal scale)
 {
-    Q_ASSERT(map);
+    size_t index = 0;
     for (const QRect &r : region) {
         const auto deviceRect = scaledRect(r, scale);
         const QVector2D topLeft = roundVector(QVector2D(deviceRect.x(), deviceRect.y()));
@@ -321,14 +321,14 @@ void ContrastEffect::uploadRegion(QVector2D *&map, const QRegion &region, qreal 
         const QVector2D bottomRight = roundVector(QVector2D(deviceRect.x() + deviceRect.width(), deviceRect.y() + deviceRect.height()));
 
         // First triangle
-        *(map++) = topRight;
-        *(map++) = topLeft;
-        *(map++) = bottomLeft;
+        map[index++] = topRight;
+        map[index++] = topLeft;
+        map[index++] = bottomLeft;
 
         // Second triangle
-        *(map++) = bottomLeft;
-        *(map++) = bottomRight;
-        *(map++) = topRight;
+        map[index++] = bottomLeft;
+        map[index++] = bottomRight;
+        map[index++] = topRight;
     }
 }
 
@@ -339,11 +339,11 @@ bool ContrastEffect::uploadGeometry(GLVertexBuffer *vbo, const QRegion &region, 
         return false;
     }
 
-    QVector2D *map = (QVector2D *)vbo->map(vertexCount * sizeof(QVector2D));
+    const auto map = vbo->map<QVector2D>(vertexCount);
     if (!map) {
         return false;
     }
-    uploadRegion(map, region, scale);
+    uploadRegion(*map, region, scale);
     vbo->unmap();
 
     const GLVertexAttrib layout[] = {

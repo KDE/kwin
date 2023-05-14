@@ -128,7 +128,11 @@ static GLVertexBuffer *texturedRectVbo(const QRectF &geometry, qreal scale)
     };
     vbo->setAttribLayout(attribs, 2, sizeof(GLVertex2D));
 
-    auto map = static_cast<GLVertex2D *>(vbo->map(6 * sizeof(GLVertex2D)));
+    const auto opt = vbo->map<GLVertex2D>(6);
+    if (!opt) {
+        return nullptr;
+    }
+    const auto map = *opt;
 
     auto deviceGeometry = scaledRect(geometry, scale);
 
@@ -222,6 +226,11 @@ void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const 
     glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT);
 
+    GLVertexBuffer *vbo = texturedRectVbo(lerp(it->m_oldGeometry, screenRect, blendFactor), scale);
+    if (!vbo) {
+        return;
+    }
+
     ShaderManager *sm = ShaderManager::instance();
     sm->pushShader(m_shader.get());
     m_shader->setUniform(m_modelViewProjectioMatrixLocation, modelViewProjectionMatrix);
@@ -229,7 +238,6 @@ void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const 
     m_shader->setUniform(m_currentTextureLocation, 0);
     m_shader->setUniform(m_previousTextureLocation, 1);
 
-    GLVertexBuffer *vbo = texturedRectVbo(lerp(it->m_oldGeometry, screenRect, blendFactor), scale);
     vbo->bindArrays();
     vbo->draw(GL_TRIANGLES, 0, 6);
     vbo->unbindArrays();

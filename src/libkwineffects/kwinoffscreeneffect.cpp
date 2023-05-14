@@ -166,8 +166,11 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
     }
     geometry.postProcessTextureCoordinates(m_texture->matrix(NormalizedCoordinates));
 
-    GLVertex2D *map = static_cast<GLVertex2D *>(vbo->map(geometry.count() * sizeof(GLVertex2D)));
-    geometry.copy(std::span(map, geometry.count()));
+    const auto map = vbo->map<GLVertex2D>(geometry.size());
+    if (!map) {
+        return;
+    }
+    geometry.copy(*map);
     vbo->unmap();
 
     vbo->bindArrays();
