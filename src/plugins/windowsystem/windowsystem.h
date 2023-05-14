@@ -54,9 +54,7 @@ public:
 
     void connectNotify(const QMetaMethod &signal) override;
 
-    void requestToken(QWindow *win, uint32_t serial, const QString &app_id) override;
     void setCurrentToken(const QString &token) override;
-    quint32 lastInputSerial(QWindow *window) override;
 };
 
 }

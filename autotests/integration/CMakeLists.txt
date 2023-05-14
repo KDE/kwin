@@ -44,6 +44,7 @@ target_link_libraries(KWinIntegrationTestFramework
         KWinQpaPlugin
         KF6GlobalAccelKWinPlugin
         KF6WindowSystemKWinPlugin
+        KF6WaylandExtrasKWinPlugin
         KF6IdleTimeKWinPlugin
 )
 if(TARGET PW::KScreenLocker)

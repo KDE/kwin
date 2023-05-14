@@ -196,28 +196,9 @@ QRect WindowSystem::workArea(int desktop)
     return {};
 }
 
-void WindowSystem::requestToken(QWindow *win, uint32_t serial, const QString &appId)
-{
-    auto seat = KWin::waylandServer()->seat();
-    auto token = KWin::waylandServer()->xdgActivationIntegration()->requestPrivilegedToken(nullptr, seat->display()->serial(), seat, appId);
-    // Ensure that xdgActivationTokenArrived is always emitted asynchronously
-    QTimer::singleShot(0, [serial, token] {
-        Q_EMIT KWindowSystem::self()->xdgActivationTokenArrived(serial, token);
-    });
-}
-
 void WindowSystem::setCurrentToken(const QString &token)
 {
     // KWin cannot activate own windows
-}
-
-quint32 WindowSystem::lastInputSerial(QWindow *window)
-{
-    auto w = workspace()->findInternal(window);
-    if (!w) {
-        return 0;
-    }
-    return w->lastUsageSerial();
 }
 }
 

@@ -362,6 +362,7 @@ target_link_libraries(kwin_wayland
     KWinQpaPlugin
     KF6GlobalAccelKWinPlugin
     KF6WindowSystemKWinPlugin
+    KF6WaylandExtrasKWinPlugin
     KF6IdleTimeKWinPlugin
 )
 
