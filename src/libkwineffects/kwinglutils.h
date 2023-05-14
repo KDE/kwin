@@ -19,6 +19,8 @@
 #include <QSize>
 #include <QStack>
 
+#include <span>
+
 /** @addtogroup kwineffects */
 /** @{ */
 
@@ -627,7 +629,15 @@ public:
      * It is assumed that the GL_ARRAY_BUFFER_BINDING will not be changed while
      * the buffer object is mapped.
      */
-    GLvoid *map(size_t size);
+    template<typename T>
+    std::optional<std::span<T>> map(size_t count)
+    {
+        if (const auto m = map(sizeof(T) * count)) {
+            return std::span(reinterpret_cast<T *>(m), count);
+        } else {
+            return std::nullopt;
+        }
+    }
 
     /**
      * Flushes the mapped buffer range and unmaps the buffer.
@@ -740,6 +750,8 @@ public:
     static const GLVertexAttrib GLVertex3DLayout[2];
 
 private:
+    GLvoid *map(size_t size);
+
     const std::unique_ptr<GLVertexBufferPrivate> d;
 };
 

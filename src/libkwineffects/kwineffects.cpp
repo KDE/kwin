@@ -941,9 +941,7 @@ WindowQuadList WindowQuadList::makeRegularGrid(int xSubdivisions, int ySubdivisi
 void RenderGeometry::copy(std::span<GLVertex2D> destination)
 {
     Q_ASSERT(int(destination.size()) >= size());
-    for (std::size_t i = 0; i < destination.size(); ++i) {
-        destination[i] = at(i);
-    }
+    std::copy(cbegin(), cend(), destination.begin());
 }
 
 void RenderGeometry::appendWindowVertex(const WindowVertex &windowVertex, qreal deviceScale)

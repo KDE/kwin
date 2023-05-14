@@ -281,8 +281,6 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
         return;
     }
 
-    const size_t size = totalVertexCount * sizeof(GLVertex2D);
-
     ShaderTraits shaderTraits = ShaderTrait::MapTexture | ShaderTrait::TransformColorspace;
 
     if (data.brightness() != 1.0) {
@@ -296,7 +294,10 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
     vbo->reset();
     vbo->setAttribLayout(GLVertexBuffer::GLVertex2DLayout, 2, sizeof(GLVertex2D));
 
-    GLVertex2D *map = (GLVertex2D *)vbo->map(size);
+    const auto map = vbo->map<GLVertex2D>(totalVertexCount);
+    if (!map) {
+        return;
+    }
 
     for (int i = 0, v = 0; i < renderContext.renderNodes.count(); i++) {
         RenderNode &renderNode = renderContext.renderNodes[i];
@@ -313,7 +314,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
 
         renderNode.geometry.postProcessTextureCoordinates(renderNode.texture->matrix(renderNode.coordinateType));
 
-        renderNode.geometry.copy(std::span(&map[v], renderNode.geometry.count()));
+        renderNode.geometry.copy(map->subspan(v));
         v += renderNode.geometry.count();
     }
 
