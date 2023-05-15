@@ -1,7 +1,7 @@
 {
     "KPlugin": {
         "Description": "Render to a nested window on X11 windowing system.",
-        "Description[ar]": "التصيير إلى نافذة متداخلة تعمل على نظام النوافذ اكس ١١.",
+        "Description[ar]": "التصيير إلى نافذة متداخلة تعمل على نظام النوافذ اكس 11.",
         "Description[az]": "X11 pəncərə sistemində iç-içə keçmiş pəncərənin formalaşdırılması.",
         "Description[be]": "Рэндэрынг ва ўкладзенае акно ў аконнай сістэме X11.",
         "Description[bg]": "Рендериране към вложен прозорец на х11.",
@@ -47,7 +47,7 @@
         "Description[zh_TW]": "成像到 X11 視窗系統的巢狀視窗。",
         "Id": "KWinWaylandX11Backend",
         "Name": "x11",
-        "Name[ar]": "اكس ١١",
+        "Name[ar]": "اكس 11",
         "Name[az]": "x11",
         "Name[be]": "x11",
         "Name[bg]": "x11",
