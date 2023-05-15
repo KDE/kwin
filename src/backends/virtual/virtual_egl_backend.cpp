@@ -234,13 +234,13 @@ void VirtualEglBackend::present(Output *output)
     static_cast<VirtualOutput *>(output)->vsyncMonitor()->arm();
 }
 
-std::shared_ptr<GLTexture> VirtualEglBackend::textureForOutput(Output *output) const
+std::pair<std::shared_ptr<KWin::GLTexture>, ColorDescription> VirtualEglBackend::textureForOutput(Output *output) const
 {
     auto it = m_outputs.find(output);
     if (it == m_outputs.end()) {
-        return nullptr;
+        return {nullptr, ColorDescription::sRGB};
     }
-    return it->second->texture();
+    return std::make_pair(it->second->texture(), ColorDescription::sRGB);
 }
 
 } // namespace

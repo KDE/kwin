@@ -226,10 +226,11 @@ OutputLayer *EglGbmBackend::cursorLayer(Output *output)
     return static_cast<DrmAbstractOutput *>(output)->cursorLayer();
 }
 
-std::shared_ptr<GLTexture> EglGbmBackend::textureForOutput(Output *output) const
+std::pair<std::shared_ptr<KWin::GLTexture>, ColorDescription> EglGbmBackend::textureForOutput(Output *output) const
 {
     const auto drmOutput = static_cast<DrmAbstractOutput *>(output);
-    return static_cast<EglGbmLayer *>(drmOutput->primaryLayer())->texture();
+    const auto layer = static_cast<EglGbmLayer *>(drmOutput->primaryLayer());
+    return std::make_pair(layer->texture(), layer->colorDescription());
 }
 
 std::optional<GbmFormat> EglGbmBackend::gbmFormatForDrmFormat(uint32_t format) const

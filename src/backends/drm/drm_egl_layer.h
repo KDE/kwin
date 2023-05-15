@@ -37,6 +37,7 @@ public:
     bool hasDirectScanoutBuffer() const override;
     QRegion currentDamage() const override;
     std::shared_ptr<GLTexture> texture() const override;
+    ColorDescription colorDescription() const;
     void releaseBuffers() override;
 
 private:

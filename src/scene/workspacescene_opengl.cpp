@@ -85,7 +85,7 @@ bool WorkspaceSceneOpenGL::animationsSupported() const
     return !GLPlatform::instance()->isSoftwareEmulation();
 }
 
-std::shared_ptr<GLTexture> WorkspaceSceneOpenGL::textureForOutput(Output *output) const
+std::pair<std::shared_ptr<GLTexture>, ColorDescription> WorkspaceSceneOpenGL::textureForOutput(Output *output) const
 {
     return m_backend->textureForOutput(output);
 }

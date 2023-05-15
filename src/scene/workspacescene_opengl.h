@@ -42,7 +42,7 @@ public:
         return m_backend;
     }
 
-    std::shared_ptr<GLTexture> textureForOutput(Output *output) const override;
+    std::pair<std::shared_ptr<GLTexture>, ColorDescription> textureForOutput(Output *output) const override;
 
 private:
     OpenGLBackend *m_backend;

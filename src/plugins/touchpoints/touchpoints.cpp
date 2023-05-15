@@ -232,7 +232,7 @@ void TouchPointsEffect::paintScreenSetupGl(const RenderTarget &renderTarget, con
 {
     GLShader *shader = ShaderManager::instance()->pushShader(ShaderTrait::UniformColor);
     shader->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix);
-    shader->setColorspaceUniforms(Colorspace::sRGB, renderTarget);
+    shader->setColorspaceUniformsFromSRGB(renderTarget.colorDescription());
 
     glLineWidth(m_lineWidth);
     glEnable(GL_BLEND);

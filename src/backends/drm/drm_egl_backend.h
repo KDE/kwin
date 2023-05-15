@@ -71,7 +71,7 @@ public:
     std::shared_ptr<DrmOverlayLayer> createCursorLayer(DrmPipeline *pipeline) override;
     std::shared_ptr<DrmOutputLayer> createLayer(DrmVirtualOutput *output) override;
 
-    std::shared_ptr<GLTexture> textureForOutput(Output *requestedOutput) const override;
+    std::pair<std::shared_ptr<KWin::GLTexture>, ColorDescription> textureForOutput(Output *requestedOutput) const override;
 
     std::optional<GbmFormat> gbmFormatForDrmFormat(uint32_t format) const;
     DrmGpu *gpu() const;

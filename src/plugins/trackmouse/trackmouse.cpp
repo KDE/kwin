@@ -109,7 +109,7 @@ void TrackMouseEffect::paintScreen(const RenderTarget &renderTarget, const Rende
         if (!shader) {
             return;
         }
-        shader->setColorspaceUniforms(Colorspace::sRGB, renderTarget);
+        shader->setColorspaceUniformsFromSRGB(renderTarget.colorDescription());
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
         QMatrix4x4 matrix(viewport.projectionMatrix());

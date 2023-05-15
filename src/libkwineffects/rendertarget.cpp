@@ -10,18 +10,16 @@
 namespace KWin
 {
 
-RenderTarget::RenderTarget(GLFramebuffer *fbo, const Colorspace &colorspace, uint32_t brightness)
+RenderTarget::RenderTarget(GLFramebuffer *fbo, const ColorDescription &colorDescription)
     : m_framebuffer(fbo)
     , m_transformation(fbo->colorAttachment() ? fbo->colorAttachment()->contentTransformMatrix() : QMatrix4x4())
-    , m_colorspace(colorspace)
-    , m_sdrBrightness(brightness)
+    , m_colorDescription(colorDescription)
 {
 }
 
-RenderTarget::RenderTarget(QImage *image, const Colorspace &colorspace, uint32_t brightness)
+RenderTarget::RenderTarget(QImage *image, const ColorDescription &colorDescription)
     : m_image(image)
-    , m_colorspace(colorspace)
-    , m_sdrBrightness(brightness)
+    , m_colorDescription(colorDescription)
 {
 }
 
@@ -71,14 +69,9 @@ QImage *RenderTarget::image() const
     return m_image;
 }
 
-const Colorspace &RenderTarget::colorspace() const
+const ColorDescription &RenderTarget::colorDescription() const
 {
-    return m_colorspace;
-}
-
-uint32_t RenderTarget::sdrBrightness() const
-{
-    return m_sdrBrightness;
+    return m_colorDescription;
 }
 
 } // namespace KWin

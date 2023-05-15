@@ -59,7 +59,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::beginFrame()
     m_scanoutBuffer.reset();
     m_dmabufFeedback.renderingSurface();
 
-    return m_surface.startRendering(m_pipeline->mode()->size(), drmToTextureRotation(m_pipeline) | TextureTransform::MirrorY, m_pipeline->formats(), Colorspace(m_pipeline->colorimetry(), m_pipeline->transferFunction()), m_pipeline->output()->sdrBrightness(), m_pipeline->output()->channelFactors());
+    return m_surface.startRendering(m_pipeline->mode()->size(), drmToTextureRotation(m_pipeline) | TextureTransform::MirrorY, m_pipeline->formats(), m_pipeline->colorDescription(), m_pipeline->output()->channelFactors());
 }
 
 bool EglGbmLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
@@ -90,6 +90,11 @@ std::shared_ptr<GLTexture> EglGbmLayer::texture() const
     } else {
         return m_surface.texture();
     }
+}
+
+ColorDescription EglGbmLayer::colorDescription() const
+{
+    return m_surface.colorDescription();
 }
 
 bool EglGbmLayer::scanout(SurfaceItem *surfaceItem)

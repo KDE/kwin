@@ -111,6 +111,7 @@ public:
     DrmConnector::DrmContentType contentType() const;
     NamedColorimetry colorimetry() const;
     NamedTransferFunction transferFunction() const;
+    const ColorDescription &colorDescription() const;
 
     void setCrtc(DrmCrtc *crtc);
     void setMode(const std::shared_ptr<DrmConnectorMode> &mode);
@@ -126,6 +127,7 @@ public:
     void setContentType(DrmConnector::DrmContentType type);
     void setColorimetry(NamedColorimetry name);
     void setNamedTransferFunction(NamedTransferFunction tf);
+    void setSdrBrightness(double sdrBrightness);
 
     enum class CommitMode {
         Test,
@@ -141,6 +143,7 @@ private:
     uint32_t calculateUnderscan();
     static Error errnoToError();
     std::shared_ptr<DrmBlob> createHdrMetadata(NamedTransferFunction transferFunction) const;
+    ColorDescription createColorDescription() const;
 
     // legacy only
     Error presentLegacy();
@@ -179,8 +182,11 @@ private:
         std::shared_ptr<DrmGammaRamp> gamma;
         std::shared_ptr<DrmBlob> ctm;
         DrmConnector::DrmContentType contentType = DrmConnector::DrmContentType::Graphics;
+
         NamedColorimetry colorimetry = NamedColorimetry::BT709;
         NamedTransferFunction transferFunction = NamedTransferFunction::sRGB;
+        double sdrBrightness = 200;
+        ColorDescription colorDescription = ColorDescription::sRGB;
 
         std::shared_ptr<DrmPipelineLayer> layer;
         std::shared_ptr<DrmOverlayLayer> cursorLayer;

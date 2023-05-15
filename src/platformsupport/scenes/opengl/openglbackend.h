@@ -107,7 +107,7 @@ public:
      */
     void copyPixels(const QRegion &region, const QSize &screenSize);
 
-    virtual std::shared_ptr<GLTexture> textureForOutput(Output *output) const;
+    virtual std::pair<std::shared_ptr<GLTexture>, ColorDescription> textureForOutput(Output *output) const;
 
 protected:
     /**

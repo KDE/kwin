@@ -588,6 +588,11 @@ NamedTransferFunction DrmPipeline::transferFunction() const
     return m_pending.transferFunction;
 }
 
+const ColorDescription &DrmPipeline::colorDescription() const
+{
+    return m_pending.colorDescription;
+}
+
 void DrmPipeline::setCrtc(DrmCrtc *crtc)
 {
     if (crtc && m_pending.crtc && crtc->gammaRampSize() != m_pending.crtc->gammaRampSize() && m_pending.colorTransformation) {
@@ -680,12 +685,39 @@ void DrmPipeline::setContentType(DrmConnector::DrmContentType type)
 
 void DrmPipeline::setColorimetry(NamedColorimetry name)
 {
-    m_pending.colorimetry = name;
+    if (m_pending.colorimetry != name) {
+        m_pending.colorimetry = name;
+        m_pending.colorDescription = createColorDescription();
+    }
 }
 
 void DrmPipeline::setNamedTransferFunction(NamedTransferFunction tf)
 {
-    m_pending.transferFunction = tf;
+    if (m_pending.transferFunction != tf) {
+        m_pending.transferFunction = tf;
+        m_pending.colorDescription = createColorDescription();
+    }
+}
+
+void DrmPipeline::setSdrBrightness(double sdrBrightness)
+{
+    if (m_pending.sdrBrightness != sdrBrightness) {
+        m_pending.sdrBrightness = sdrBrightness;
+        m_pending.colorDescription = createColorDescription();
+    }
+}
+
+ColorDescription DrmPipeline::createColorDescription() const
+{
+    if (m_connector->edid() && (m_pending.colorimetry != NamedColorimetry::BT709 || m_pending.transferFunction != NamedTransferFunction::sRGB)) {
+        if (const auto hdr = m_connector->edid()->hdrMetadata(); hdr && hdr->hasValidBrightnessValues) {
+            return ColorDescription(m_pending.colorimetry, m_pending.transferFunction, m_pending.sdrBrightness, hdr->desiredContentMinLuminance, hdr->desiredMaxFrameAverageLuminance, hdr->desiredContentMaxLuminance);
+        } else {
+            return ColorDescription(m_pending.colorimetry, m_pending.transferFunction, m_pending.sdrBrightness, 0, m_pending.sdrBrightness, m_pending.sdrBrightness);
+        }
+    } else {
+        return ColorDescription::sRGB;
+    }
 }
 
 std::shared_ptr<DrmBlob> DrmPipeline::createHdrMetadata(NamedTransferFunction transferFunction) const

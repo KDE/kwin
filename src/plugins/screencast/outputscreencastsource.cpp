@@ -46,7 +46,7 @@ QSize OutputScreenCastSource::textureSize() const
 
 void OutputScreenCastSource::render(spa_data *spa, spa_video_format format)
 {
-    const auto outputTexture = Compositor::self()->scene()->textureForOutput(m_output);
+    const auto [outputTexture, colorDescription] = Compositor::self()->scene()->textureForOutput(m_output);
     if (outputTexture) {
         grabTexture(outputTexture.get(), spa, format);
     }
@@ -54,16 +54,17 @@ void OutputScreenCastSource::render(spa_data *spa, spa_video_format format)
 
 void OutputScreenCastSource::render(GLFramebuffer *target)
 {
-    const std::shared_ptr<GLTexture> outputTexture = Compositor::self()->scene()->textureForOutput(m_output);
+    const auto [outputTexture, colorDescription] = Compositor::self()->scene()->textureForOutput(m_output);
     if (!outputTexture) {
         return;
     }
 
-    ShaderBinder shaderBinder(ShaderTrait::MapTexture);
+    ShaderBinder shaderBinder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
     QMatrix4x4 projectionMatrix;
     projectionMatrix.scale(1, -1);
     projectionMatrix.ortho(QRect(QPoint(), textureSize() * m_output->scale()));
     shaderBinder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix);
+    shaderBinder.shader()->setColorspaceUniformsToSRGB(colorDescription);
 
     GLFramebuffer::pushFramebuffer(target);
     outputTexture->render(textureSize(), m_output->scale());

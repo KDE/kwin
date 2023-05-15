@@ -161,6 +161,7 @@ Edid::Edid(const void *data, uint32_t size)
         }
         if (hdr_static_metadata) {
             m_hdrMetadata = HDRMetadata{
+                .hasValidBrightnessValues = hdr_static_metadata->desired_content_min_luminance > 0 && hdr_static_metadata->desired_content_max_luminance > 0 && hdr_static_metadata->desired_content_max_frame_avg_luminance,
                 .desiredContentMinLuminance = hdr_static_metadata->desired_content_min_luminance,
                 .desiredContentMaxLuminance = hdr_static_metadata->desired_content_max_luminance,
                 .desiredMaxFrameAverageLuminance = hdr_static_metadata->desired_content_max_frame_avg_luminance,

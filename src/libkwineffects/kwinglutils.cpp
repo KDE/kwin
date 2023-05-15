@@ -433,6 +433,7 @@ void GLShader::resolveLocations()
     mVec4Location[ModulationConstant] = uniformLocation("modulation");
 
     mFloatLocation[Saturation] = uniformLocation("saturation");
+    mFloatLocation[MaxHdrBrightness] = uniformLocation("maxHdrBrightness");
 
     mColorLocation[Color] = uniformLocation("geometryColor");
 
@@ -637,17 +638,27 @@ QMatrix4x4 GLShader::getUniformMatrix4x4(const char *name)
     }
 }
 
-bool GLShader::setColorspaceUniforms(const Colorspace &src, const Colorspace &dst)
+bool GLShader::setColorspaceUniforms(const ColorDescription &src, const ColorDescription &dst)
 {
     return setUniform(GLShader::MatrixUniform::ColorimetryTransformation, src.colorimetry().toOther(dst.colorimetry()))
         && setUniform(GLShader::IntUniform::SourceNamedTransferFunction, int(src.transferFunction()))
-        && setUniform(GLShader::IntUniform::DestinationNamedTransferFunction, int(dst.transferFunction()));
+        && setUniform(GLShader::IntUniform::DestinationNamedTransferFunction, int(dst.transferFunction()))
+        && setUniform(IntUniform::SdrBrightness, dst.sdrBrightness())
+        && setUniform(FloatUniform::MaxHdrBrightness, dst.maxHdrBrightness());
 }
 
-bool GLShader::setColorspaceUniforms(const Colorspace &src, const RenderTarget &renderTarget)
+bool GLShader::setColorspaceUniformsFromSRGB(const ColorDescription &dst)
 {
-    return setColorspaceUniforms(src, renderTarget.colorspace())
-        && setUniform(IntUniform::SdrBrightness, renderTarget.sdrBrightness());
+    return setColorspaceUniforms(ColorDescription::sRGB, dst);
+}
+
+bool GLShader::setColorspaceUniformsToSRGB(const ColorDescription &src)
+{
+    return setUniform(GLShader::MatrixUniform::ColorimetryTransformation, src.colorimetry().toOther(ColorDescription::sRGB.colorimetry()))
+        && setUniform(GLShader::IntUniform::SourceNamedTransferFunction, int(src.transferFunction()))
+        && setUniform(GLShader::IntUniform::DestinationNamedTransferFunction, int(NamedTransferFunction::sRGB))
+        && setUniform(IntUniform::SdrBrightness, src.sdrBrightness())
+        && setUniform(FloatUniform::MaxHdrBrightness, src.sdrBrightness());
 }
 
 //****************************************
@@ -785,6 +796,7 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
         stream << "uniform int sourceNamedTransferFunction;\n";
         stream << "uniform int destinationNamedTransferFunction;\n";
         stream << "uniform int sdrBrightness;// in nits\n";
+        stream << "uniform float maxHdrBrightness; // in nits\n";
         stream << "\n";
         stream << "vec3 nitsToPq(vec3 nits) {\n";
         stream << "    vec3 normalized = clamp(nits / 10000.0, vec3(0), vec3(1));\n";
@@ -809,6 +821,11 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
         stream << "    vec3 loPart = color * 12.92f;\n";
         stream << "    vec3 hiPart = pow(color, vec3(5.0f / 12.0f)) * 1.055f - 0.055f;\n";
         stream << "    return mix(hiPart, loPart, isLow);\n";
+        stream << "}\n";
+        stream << "\n";
+        stream << "vec3 doTonemapping(vec3 color, float maxBrightness) {\n";
+        stream << "    // colorimetric 'tonemapping': just clip to the output color space\n";
+        stream << "    return clamp(color, vec3(0.0), vec3(maxBrightness));\n";
         stream << "}\n";
         stream << "\n";
     }
@@ -842,10 +859,10 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
         stream << "if (sourceNamedTransferFunction == 0) {\n";
         stream << "    " << output << ".rgb = sdrBrightness * srgbToLinear(" << output << ".rgb);\n";
         stream << "}\n";
-        stream << "        " << output << ".rgb = colorimetryTransform * " << output << ".rgb;\n";
+        stream << "        " << output << ".rgb = doTonemapping(colorimetryTransform * " << output << ".rgb, maxHdrBrightness);\n";
         // nits -> simple sRGB
         stream << "if (destinationNamedTransferFunction == 0) {\n";
-        stream << "    " << output << ".rgb = linearToSrgb(" << output << ".rgb / sdrBrightness);\n";
+        stream << "    " << output << ".rgb = linearToSrgb(doTonemapping(" << output << ".rgb, sdrBrightness) / sdrBrightness);\n";
         // nits -> PQ
         stream << "} else if (destinationNamedTransferFunction == 2) {\n";
         stream << "    " << output << ".rgb = nitsToPq(" << output << ".rgb);\n";

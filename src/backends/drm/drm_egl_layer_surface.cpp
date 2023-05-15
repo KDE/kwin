@@ -59,7 +59,7 @@ void EglGbmLayerSurface::destroyResources()
     m_oldSurface = {};
 }
 
-std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(const QSize &bufferSize, TextureTransforms transformation, const QMap<uint32_t, QVector<uint64_t>> &formats, const Colorspace &colorspace, uint32_t sdrBrightness, const QVector3D &channelFactors)
+std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(const QSize &bufferSize, TextureTransforms transformation, const QMap<uint32_t, QVector<uint64_t>> &formats, const ColorDescription &colorDescription, const QVector3D &channelFactors)
 {
     if (!checkSurface(bufferSize, formats)) {
         return std::nullopt;
@@ -89,25 +89,33 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
     }
     m_surface.currentBuffer = buffer;
 
-    if (m_surface.colorspace != colorspace || m_surface.channelFactors != channelFactors || m_surface.sdrBrightness != sdrBrightness) {
+    if (m_surface.targetColorDescription != colorDescription || m_surface.channelFactors != channelFactors) {
         m_surface.gbmSwapchain->resetDamage();
         repaint = infiniteRegion();
-        m_surface.colorspace = colorspace;
+        m_surface.targetColorDescription = colorDescription;
         m_surface.channelFactors = channelFactors;
-        m_surface.sdrBrightness = sdrBrightness;
+        if (colorDescription != ColorDescription::sRGB) {
+            m_surface.intermediaryColorDescription = ColorDescription(colorDescription.colorimetry(), NamedTransferFunction::linear,
+                                                                      colorDescription.sdrBrightness(), colorDescription.minHdrBrightness(),
+                                                                      colorDescription.maxHdrBrightness(), colorDescription.maxHdrHighlightBrightness());
+        } else {
+            m_surface.intermediaryColorDescription = colorDescription;
+        }
     }
-    if (colorspace != Colorspace::sRGB) {
+    if (m_surface.intermediaryColorDescription != colorDescription) {
         if (!m_surface.shadowBuffer) {
             m_surface.shadowTexture = std::make_shared<GLTexture>(GL_RGBA16F, m_surface.gbmSwapchain->size());
             m_surface.shadowBuffer = std::make_shared<GLFramebuffer>(m_surface.shadowTexture.get());
         }
         return OutputLayerBeginFrameInfo{
-            .renderTarget = RenderTarget(m_surface.shadowBuffer.get(), Colorspace(colorspace.colorimetry(), NamedTransferFunction::linear), sdrBrightness),
+            .renderTarget = RenderTarget(m_surface.shadowBuffer.get(), m_surface.intermediaryColorDescription),
             .repaint = repaint,
         };
     } else {
+        m_surface.shadowTexture.reset();
+        m_surface.shadowBuffer.reset();
         return OutputLayerBeginFrameInfo{
-            .renderTarget = RenderTarget(fbo.get(), colorspace),
+            .renderTarget = RenderTarget(fbo.get()),
             .repaint = repaint,
         };
     }
@@ -115,7 +123,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
 
 bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion)
 {
-    if (m_surface.colorspace != Colorspace::sRGB) {
+    if (m_surface.intermediaryColorDescription != m_surface.targetColorDescription) {
         const auto &[texture, fbo] = m_surface.textureCache[m_surface.currentBuffer->bo()];
         GLFramebuffer::pushFramebuffer(fbo.get());
         ShaderBinder binder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
@@ -127,8 +135,8 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion)
         ctm(1, 1) = m_surface.channelFactors.y();
         ctm(2, 2) = m_surface.channelFactors.z();
         binder.shader()->setUniform(GLShader::MatrixUniform::ColorimetryTransformation, ctm);
-        binder.shader()->setUniform(GLShader::IntUniform::SourceNamedTransferFunction, int(NamedTransferFunction::linear));
-        binder.shader()->setUniform(GLShader::IntUniform::DestinationNamedTransferFunction, int(m_surface.colorspace.transferFunction()));
+        binder.shader()->setUniform(GLShader::IntUniform::SourceNamedTransferFunction, int(m_surface.intermediaryColorDescription.transferFunction()));
+        binder.shader()->setUniform(GLShader::IntUniform::DestinationNamedTransferFunction, int(m_surface.targetColorDescription.transferFunction()));
         m_surface.shadowTexture->render(m_surface.gbmSwapchain->size(), 1);
         GLFramebuffer::popFramebuffer();
     }
@@ -153,6 +161,11 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::currentBuffer() const
     return m_surface.currentFramebuffer;
 }
 
+const ColorDescription &EglGbmLayerSurface::colorDescription() const
+{
+    return m_surface.shadowTexture ? m_surface.intermediaryColorDescription : m_surface.targetColorDescription;
+}
+
 bool EglGbmLayerSurface::doesSurfaceFit(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const
 {
     return doesSurfaceFit(m_surface, size, formats);
@@ -160,7 +173,7 @@ bool EglGbmLayerSurface::doesSurfaceFit(const QSize &size, const QMap<uint32_t, 
 
 std::shared_ptr<GLTexture> EglGbmLayerSurface::texture() const
 {
-    return m_surface.textureCache[m_surface.currentBuffer->bo()].first;
+    return m_surface.shadowTexture ? m_surface.shadowTexture : m_surface.textureCache[m_surface.currentBuffer->bo()].first;
 }
 
 std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::renderTestBuffer(const QSize &bufferSize, const QMap<uint32_t, QVector<uint64_t>> &formats)

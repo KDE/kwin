@@ -133,7 +133,7 @@ void BlurEffect::screenGeometryChanged(EffectScreen *screen)
 bool BlurEffect::updateTexture(EffectScreen *screen, const RenderTarget &renderTarget)
 {
     GLenum textureFormat = GL_RGBA8;
-    if (renderTarget.colorspace() == Colorspace::sRGB) {
+    if (renderTarget.colorDescription() == ColorDescription::sRGB) {
         if (!GLPlatform::instance()->isGLES()) {
             GLuint prevFbo = 0;
             glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, reinterpret_cast<GLint *>(&prevFbo));

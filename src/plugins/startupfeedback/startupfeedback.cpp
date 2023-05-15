@@ -25,6 +25,7 @@
 #include <KWindowSystem>
 // KWin
 #include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/rendertarget.h"
 #include "libkwineffects/renderviewport.h"
 
 // based on StartupId in KRunner by Lubos Lunak
@@ -226,7 +227,7 @@ void StartupFeedbackEffect::paintScreen(const RenderTarget &renderTarget, const 
         QMatrix4x4 mvp = viewport.projectionMatrix();
         mvp.translate(m_currentGeometry.x() * scale, m_currentGeometry.y() * scale);
         shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-        shader->setColorspaceUniforms(Colorspace::sRGB, renderTarget);
+        shader->setColorspaceUniformsFromSRGB(renderTarget.colorDescription());
         texture->render(m_currentGeometry.size(), scale);
         ShaderManager::instance()->popShader();
         glDisable(GL_BLEND);

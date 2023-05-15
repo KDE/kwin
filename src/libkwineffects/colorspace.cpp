@@ -98,32 +98,65 @@ constexpr Colorimetry Colorimetry::createFromName(NamedColorimetry name)
     Q_UNREACHABLE();
 }
 
-const Colorspace Colorspace::sRGB(Colorimetry::createFromName(NamedColorimetry::BT709), NamedTransferFunction::sRGB);
+const ColorDescription ColorDescription::sRGB = ColorDescription(NamedColorimetry::BT709, NamedTransferFunction::sRGB, 100, 0, 100, 100);
 
-Colorspace::Colorspace(NamedColorimetry colorimetry, NamedTransferFunction tf)
+ColorDescription::ColorDescription(const Colorimetry &colorimety, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxHdrBrightness, double maxHdrHighlightBrightness)
+    : m_colorimetry(colorimety)
+    , m_transferFunction(tf)
+    , m_sdrBrightness(sdrBrightness)
+    , m_minHdrBrightness(minHdrBrightness)
+    , m_maxHdrBrightness(maxHdrBrightness)
+    , m_maxHdrHighlightBrightness(maxHdrHighlightBrightness)
+{
+}
+
+ColorDescription::ColorDescription(NamedColorimetry colorimetry, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxHdrBrightness, double maxHdrHighlightBrightness)
     : m_colorimetry(Colorimetry::createFromName(colorimetry))
     , m_transferFunction(tf)
+    , m_sdrBrightness(sdrBrightness)
+    , m_minHdrBrightness(minHdrBrightness)
+    , m_maxHdrBrightness(maxHdrBrightness)
+    , m_maxHdrHighlightBrightness(maxHdrHighlightBrightness)
 {
 }
 
-Colorspace::Colorspace(const Colorimetry &colorimetry, NamedTransferFunction tf)
-    : m_colorimetry(colorimetry)
-    , m_transferFunction(tf)
-{
-}
-
-const Colorimetry &Colorspace::colorimetry() const
+const Colorimetry &ColorDescription::colorimetry() const
 {
     return m_colorimetry;
 }
 
-NamedTransferFunction Colorspace::transferFunction() const
+NamedTransferFunction ColorDescription::transferFunction() const
 {
     return m_transferFunction;
 }
 
-bool Colorspace::operator==(const Colorspace &other) const
+double ColorDescription::sdrBrightness() const
 {
-    return m_colorimetry == other.m_colorimetry && m_transferFunction == other.m_transferFunction;
+    return m_sdrBrightness;
+}
+
+double ColorDescription::minHdrBrightness() const
+{
+    return m_minHdrBrightness;
+}
+
+double ColorDescription::maxHdrBrightness() const
+{
+    return m_maxHdrBrightness;
+}
+
+double ColorDescription::maxHdrHighlightBrightness() const
+{
+    return m_maxHdrHighlightBrightness;
+}
+
+bool ColorDescription::operator==(const ColorDescription &other) const
+{
+    return m_colorimetry == other.colorimetry()
+        && m_transferFunction == other.transferFunction()
+        && m_sdrBrightness == other.sdrBrightness()
+        && m_minHdrBrightness == other.minHdrBrightness()
+        && m_maxHdrBrightness == other.maxHdrBrightness()
+        && m_maxHdrHighlightBrightness == other.maxHdrHighlightBrightness();
 }
 }

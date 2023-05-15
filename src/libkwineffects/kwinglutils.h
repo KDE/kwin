@@ -126,6 +126,7 @@ public:
 
     enum FloatUniform {
         Saturation,
+        MaxHdrBrightness,
         FloatUniformCount
     };
 
@@ -153,8 +154,9 @@ public:
     bool setUniform(ColorUniform uniform, const QVector4D &value);
     bool setUniform(ColorUniform uniform, const QColor &value);
 
-    bool setColorspaceUniforms(const Colorspace &src, const Colorspace &dst);
-    bool setColorspaceUniforms(const Colorspace &src, const RenderTarget &renderTarget);
+    bool setColorspaceUniforms(const ColorDescription &src, const ColorDescription &dst);
+    bool setColorspaceUniformsFromSRGB(const ColorDescription &dst);
+    bool setColorspaceUniformsToSRGB(const ColorDescription &src);
 
 protected:
     GLShader(unsigned int flags = NoFlags);

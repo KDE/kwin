@@ -83,6 +83,7 @@ public:
 
     struct HDRMetadata
     {
+        bool hasValidBrightnessValues;
         float desiredContentMinLuminance;
         float desiredContentMaxLuminance;
         float desiredMaxFrameAverageLuminance;

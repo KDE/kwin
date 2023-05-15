@@ -1643,7 +1643,7 @@ void EffectsHandlerImpl::renderOffscreenQuickView(const RenderTarget &renderTarg
         if (a != 1.0) {
             shader->setUniform(GLShader::ModulationConstant, QVector4D(a, a, a, a));
         }
-        shader->setColorspaceUniforms(Colorspace::sRGB, renderTarget);
+        shader->setColorspaceUniformsFromSRGB(renderTarget.colorDescription());
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);

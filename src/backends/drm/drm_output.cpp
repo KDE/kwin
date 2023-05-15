@@ -418,6 +418,7 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
     m_pipeline->setEnable(props->enabled.value_or(m_pipeline->enabled()));
     m_pipeline->setColorimetry(props->wideColorGamut.value_or(m_state.wideColorGamut) ? NamedColorimetry::BT2020 : NamedColorimetry::BT709);
     m_pipeline->setNamedTransferFunction(props->highDynamicRange.value_or(m_state.highDynamicRange) ? NamedTransferFunction::PerceptualQuantizer : NamedTransferFunction::sRGB);
+    m_pipeline->setSdrBrightness(props->sdrBrightness.value_or(m_state.sdrBrightness));
     return true;
 }
 

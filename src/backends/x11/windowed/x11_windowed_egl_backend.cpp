@@ -337,14 +337,13 @@ std::unique_ptr<SurfaceTexture> X11WindowedEglBackend::createSurfaceTextureInter
     return std::make_unique<BasicEGLSurfaceTextureInternal>(this, pixmap);
 }
 
-std::shared_ptr<GLTexture> X11WindowedEglBackend::textureForOutput(Output *output) const
+std::pair<std::shared_ptr<GLTexture>, ColorDescription> X11WindowedEglBackend::textureForOutput(Output *output) const
 {
     auto it = m_outputs.find(output);
     if (it == m_outputs.end()) {
-        return nullptr;
+        return {nullptr, ColorDescription::sRGB};
     }
-
-    return it->second.primaryLayer->texture();
+    return std::make_pair(it->second.primaryLayer->texture(), ColorDescription::sRGB);
 }
 
 } // namespace

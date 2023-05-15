@@ -82,7 +82,7 @@ void ScreenEdgeEffect::paintScreen(const RenderTarget &renderTarget, const Rende
             glEnable(GL_BLEND);
             glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
             ShaderBinder binder(ShaderTrait::MapTexture | ShaderTrait::Modulate | ShaderTrait::TransformColorspace);
-            binder.shader()->setColorspaceUniforms(Colorspace::sRGB, renderTarget);
+            binder.shader()->setColorspaceUniformsFromSRGB(renderTarget.colorDescription());
             const QVector4D constant(opacity, opacity, opacity, opacity);
             binder.shader()->setUniform(GLShader::ModulationConstant, constant);
             const auto scale = viewport.scale();

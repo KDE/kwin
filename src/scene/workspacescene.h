@@ -11,6 +11,7 @@
 
 #include "scene/scene.h"
 
+#include "libkwineffects/colorspace.h"
 #include "libkwineffects/kwineffects.h"
 #include "utils/common.h"
 #include "window.h"
@@ -75,9 +76,9 @@ public:
      */
     virtual bool animationsSupported() const = 0;
 
-    virtual std::shared_ptr<GLTexture> textureForOutput(Output *output) const
+    virtual std::pair<std::shared_ptr<GLTexture>, ColorDescription> textureForOutput(Output *output) const
     {
-        return {};
+        return {nullptr, ColorDescription::sRGB};
     }
 
 Q_SIGNALS:

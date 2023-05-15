@@ -50,24 +50,40 @@ enum class NamedTransferFunction {
 };
 
 /**
- * Describes the meaning of encoded color values
+ * Describes the meaning of encoded color values, with additional metadata for how to convert between different encodings
+ * Note that not all properties of this description are relevant in all contexts
  */
-class KWINEFFECTS_EXPORT Colorspace
+class KWINEFFECTS_EXPORT ColorDescription
 {
 public:
-    explicit Colorspace(NamedColorimetry colorimetry, NamedTransferFunction tf);
-    explicit Colorspace(const Colorimetry &colorimety, NamedTransferFunction tf);
-
-    bool operator==(const Colorspace &other) const;
+    /**
+     * @param colorimety the colorimety of this description
+     * @param tf the transfer function of this description
+     * @param sdrBrightness the brightness of SDR content
+     * @param minHdrBrightness the minimum brightness of HDR content
+     * @param maxHdrBrightness the maximum brightness of HDR content, if the whole screen is white
+     * @param maxHdrHighlightBrightness the maximum brightness of HDR content, for a small part of the screen only
+     */
+    explicit ColorDescription(const Colorimetry &colorimety, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxHdrBrightness, double maxHdrHighlightBrightness);
+    explicit ColorDescription(NamedColorimetry colorimetry, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxHdrBrightness, double maxHdrHighlightBrightness);
 
     const Colorimetry &colorimetry() const;
     NamedTransferFunction transferFunction() const;
+    double sdrBrightness() const;
+    double minHdrBrightness() const;
+    double maxHdrBrightness() const;
+    double maxHdrHighlightBrightness() const;
 
-    static const Colorspace sRGB;
+    bool operator==(const ColorDescription &other) const;
+
+    static const ColorDescription sRGB;
 
 private:
     Colorimetry m_colorimetry;
     NamedTransferFunction m_transferFunction;
+    double m_sdrBrightness;
+    double m_minHdrBrightness;
+    double m_maxHdrBrightness;
+    double m_maxHdrHighlightBrightness;
 };
-
 }

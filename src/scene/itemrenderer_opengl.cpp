@@ -322,7 +322,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
 
     GLShader *shader = ShaderManager::instance()->pushShader(shaderTraits);
     shader->setUniform(GLShader::Saturation, data.saturation());
-    shader->setColorspaceUniforms(Colorspace::sRGB, renderTarget);
+    shader->setColorspaceUniformsFromSRGB(renderTarget.colorDescription());
 
     if (renderContext.hardwareClipping) {
         glEnable(GL_SCISSOR_TEST);

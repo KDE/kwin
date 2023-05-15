@@ -152,7 +152,7 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
 {
     GLShader *shader = m_shader ? m_shader : ShaderManager::instance()->shader(ShaderTrait::MapTexture | ShaderTrait::Modulate | ShaderTrait::AdjustSaturation | ShaderTrait::TransformColorspace);
     ShaderBinder binder(shader);
-    shader->setColorspaceUniforms(Colorspace::sRGB, renderTarget);
+    shader->setColorspaceUniformsFromSRGB(renderTarget.colorDescription());
 
     const double scale = viewport.scale();
 
