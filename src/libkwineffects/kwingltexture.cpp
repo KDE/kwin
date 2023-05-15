@@ -94,97 +94,6 @@ GLTexture::GLTexture(std::unique_ptr<GLTexturePrivate> &&dd)
 {
 }
 
-GLTexture::GLTexture(const QImage &image, GLenum target)
-    : d_ptr(new GLTexturePrivate())
-{
-    Q_D(GLTexture);
-
-    if (image.isNull()) {
-        return;
-    }
-
-    d->m_target = target;
-
-    if (d->m_target != GL_TEXTURE_RECTANGLE_ARB) {
-        d->m_scale.setWidth(1.0 / image.width());
-        d->m_scale.setHeight(1.0 / image.height());
-    } else {
-        d->m_scale.setWidth(1.0);
-        d->m_scale.setHeight(1.0);
-    }
-
-    d->m_size = image.size();
-    setContentTransform(TextureTransform::MirrorY);
-    d->m_canUseMipmaps = false;
-    d->m_mipLevels = 1;
-
-    d->updateMatrix();
-
-    const bool created = create();
-    Q_ASSERT(created);
-    bind();
-
-    if (!GLPlatform::instance()->isGLES()) {
-        QImage im;
-        GLenum internalFormat;
-        GLenum format;
-        GLenum type;
-
-        const QImage::Format index = image.format();
-
-        if (index < sizeof(formatTable) / sizeof(formatTable[0]) && formatTable[index].internalFormat
-            && !(formatTable[index].type == GL_UNSIGNED_SHORT && !d->s_supportsTexture16Bit)) {
-            internalFormat = formatTable[index].internalFormat;
-            format = formatTable[index].format;
-            type = formatTable[index].type;
-            im = image;
-        } else {
-            im = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
-            internalFormat = GL_RGBA8;
-            format = GL_BGRA;
-            type = GL_UNSIGNED_INT_8_8_8_8_REV;
-        }
-
-        d->m_internalFormat = internalFormat;
-
-        if (d->s_supportsTextureStorage) {
-            glTexStorage2D(d->m_target, 1, internalFormat, im.width(), im.height());
-            glTexSubImage2D(d->m_target, 0, 0, 0, im.width(), im.height(),
-                            format, type, im.constBits());
-            d->m_immutable = true;
-        } else {
-            glTexParameteri(d->m_target, GL_TEXTURE_MAX_LEVEL, d->m_mipLevels - 1);
-            glTexImage2D(d->m_target, 0, internalFormat, im.width(), im.height(), 0,
-                         format, type, im.constBits());
-        }
-    } else {
-        d->m_internalFormat = GL_RGBA8;
-
-        if (d->s_supportsARGB32) {
-            const QImage im = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
-            glTexImage2D(d->m_target, 0, GL_BGRA_EXT, im.width(), im.height(),
-                         0, GL_BGRA_EXT, GL_UNSIGNED_BYTE, im.constBits());
-        } else {
-            const QImage im = image.convertToFormat(QImage::Format_RGBA8888_Premultiplied);
-            glTexImage2D(d->m_target, 0, GL_RGBA, im.width(), im.height(),
-                         0, GL_RGBA, GL_UNSIGNED_BYTE, im.constBits());
-        }
-    }
-
-    unbind();
-    setFilter(GL_LINEAR);
-}
-
-GLTexture::GLTexture(const QPixmap &pixmap, GLenum target)
-    : GLTexture(pixmap.toImage(), target)
-{
-}
-
-GLTexture::GLTexture(const QString &fileName)
-    : GLTexture(QImage(fileName))
-{
-}
-
 GLTexture::GLTexture(GLuint textureId, GLenum internalFormat, const QSize &size, int levels, bool isImmutable)
     : d_ptr(new GLTexturePrivate())
 {
@@ -764,6 +673,74 @@ std::unique_ptr<GLTexture> GLTexture::allocate(GLenum internalFormat, const QSiz
     auto ret = std::make_unique<GLTexture>(texture, internalFormat, size, levels, immutable);
     ret->d_ptr->m_foreign = false;
     return ret;
+}
+
+std::unique_ptr<GLTexture> GLTexture::upload(const QImage &image)
+{
+    if (image.isNull()) {
+        return nullptr;
+    }
+    GLuint texture = 0;
+    glGenTextures(1, &texture);
+    if (texture == 0) {
+        return nullptr;
+    }
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    GLenum internalFormat;
+    bool immutable = false;
+    if (!GLPlatform::instance()->isGLES()) {
+        QImage im;
+        GLenum format;
+        GLenum type;
+
+        const QImage::Format index = image.format();
+
+        if (index < sizeof(formatTable) / sizeof(formatTable[0]) && formatTable[index].internalFormat
+            && !(formatTable[index].type == GL_UNSIGNED_SHORT && !GLTexturePrivate::s_supportsTexture16Bit)) {
+            internalFormat = formatTable[index].internalFormat;
+            format = formatTable[index].format;
+            type = formatTable[index].type;
+            im = image;
+        } else {
+            im = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
+            internalFormat = GL_RGBA8;
+            format = GL_BGRA;
+            type = GL_UNSIGNED_INT_8_8_8_8_REV;
+        }
+
+        if (GLTexturePrivate::s_supportsTextureStorage) {
+            glTexStorage2D(GL_TEXTURE_2D, 1, internalFormat, im.width(), im.height());
+            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, im.width(), im.height(),
+                            format, type, im.constBits());
+            immutable = true;
+        } else {
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+            glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, im.width(), im.height(), 0,
+                         format, type, im.constBits());
+        }
+    } else {
+        internalFormat = GL_RGBA8;
+
+        if (GLTexturePrivate::s_supportsARGB32) {
+            const QImage im = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_BGRA_EXT, im.width(), im.height(),
+                         0, GL_BGRA_EXT, GL_UNSIGNED_BYTE, im.constBits());
+        } else {
+            const QImage im = image.convertToFormat(QImage::Format_RGBA8888_Premultiplied);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, im.width(), im.height(),
+                         0, GL_RGBA, GL_UNSIGNED_BYTE, im.constBits());
+        }
+    }
+    glBindTexture(GL_TEXTURE_2D, 0);
+    auto ret = std::make_unique<GLTexture>(texture, internalFormat, image.size(), 1, immutable);
+    ret->d_ptr->m_immutable = false;
+    return ret;
+}
+
+std::unique_ptr<GLTexture> GLTexture::upload(const QPixmap &pixmap)
+{
+    return upload(pixmap.toImage());
 }
 
 } // namespace KWin

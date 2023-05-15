@@ -162,7 +162,10 @@ std::shared_ptr<GLTexture> DecorationShadowTextureCache::getTexture(ShadowTextur
     }
     Data d;
     d.providers << provider;
-    d.texture = std::make_shared<GLTexture>(shadow->decorationShadowImage());
+    d.texture = GLTexture::upload(shadow->decorationShadowImage());
+    if (!d.texture) {
+        return nullptr;
+    }
     d.texture->setFilter(GL_LINEAR);
     d.texture->setWrapMode(GL_CLAMP_TO_EDGE);
     m_cache.insert(decoShadow.get(), d);
@@ -252,7 +255,10 @@ void OpenGLShadowTextureProvider::update()
         }
     }
 
-    m_texture = std::make_shared<GLTexture>(image);
+    m_texture = GLTexture::upload(image);
+    if (!m_texture) {
+        return;
+    }
     m_texture->setFilter(GL_LINEAR);
     m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
 

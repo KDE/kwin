@@ -693,7 +693,10 @@ void BlurEffect::generateNoiseTexture()
     // The noise texture looks distorted when not scaled with integer
     noiseImage = noiseImage.scaled(noiseImage.size() * m_scalingFactor);
 
-    m_noiseTexture.reset(new GLTexture(noiseImage));
+    m_noiseTexture = GLTexture::upload(noiseImage);
+    if (!m_noiseTexture) {
+        return;
+    }
     m_noiseTexture->setFilter(GL_NEAREST);
     m_noiseTexture->setWrapMode(GL_REPEAT);
 }
@@ -835,6 +838,9 @@ void BlurEffect::applyNoise(const ScreenData &data, const RenderTarget &renderTa
 {
     if (!m_noiseTexture) {
         generateNoiseTexture();
+        if (!m_noiseTexture) {
+            return;
+        }
     }
 
     m_shader->bind(BlurShader::NoiseSampleType);

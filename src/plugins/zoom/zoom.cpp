@@ -155,7 +155,10 @@ GLTexture *ZoomEffect::ensureCursorTexture()
         m_cursorTextureDirty = false;
         const auto cursor = effects->cursorImage();
         if (!cursor.image().isNull()) {
-            m_cursorTexture = std::make_unique<GLTexture>(cursor.image());
+            m_cursorTexture = GLTexture::upload(cursor.image());
+            if (!m_cursorTexture) {
+                return nullptr;
+            }
             m_cursorTexture->setWrapMode(GL_CLAMP_TO_EDGE);
         }
     }

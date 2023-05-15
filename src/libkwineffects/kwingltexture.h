@@ -49,9 +49,6 @@ class KWINGLUTILS_EXPORT GLTexture
 {
 public:
     explicit GLTexture(GLenum target);
-    explicit GLTexture(const QImage &image, GLenum target = GL_TEXTURE_2D);
-    explicit GLTexture(const QPixmap &pixmap, GLenum target = GL_TEXTURE_2D);
-    explicit GLTexture(const QString &fileName);
 
     /**
      * Creates the underlying texture object. Returns @c true if the texture has been created
@@ -157,6 +154,8 @@ public:
     static bool supportsFormatRG();
 
     static std::unique_ptr<GLTexture> allocate(GLenum internalFormat, const QSize &size, int levels = 1, bool needsMutability = false);
+    static std::unique_ptr<GLTexture> upload(const QImage &image);
+    static std::unique_ptr<GLTexture> upload(const QPixmap &pixmap);
 
 protected:
     const std::unique_ptr<GLTexturePrivate> d_ptr;

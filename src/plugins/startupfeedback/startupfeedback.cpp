@@ -211,6 +211,9 @@ void StartupFeedbackEffect::paintScreen(const RenderTarget &renderTarget, const 
         default:
             return; // safety
         }
+        if (!texture) {
+            return;
+        }
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         if (m_type == BlinkingFeedback && m_blinkingShader && m_blinkingShader->isValid()) {
@@ -352,14 +355,20 @@ void StartupFeedbackEffect::prepareTextures(const QPixmap &pix)
     switch (m_type) {
     case BouncingFeedback:
         for (int i = 0; i < 5; ++i) {
-            m_bouncingTextures[i].reset(new GLTexture(scalePixmap(pix, BOUNCE_SIZES[i])));
+            m_bouncingTextures[i] = GLTexture::upload(scalePixmap(pix, BOUNCE_SIZES[i]));
+            if (!m_bouncingTextures[i]) {
+                return;
+            }
             m_bouncingTextures[i]->setFilter(GL_LINEAR);
             m_bouncingTextures[i]->setWrapMode(GL_CLAMP_TO_EDGE);
         }
         break;
     case BlinkingFeedback:
     case PassiveFeedback:
-        m_texture.reset(new GLTexture(pix));
+        m_texture = GLTexture::upload(pix);
+        if (!m_texture) {
+            return;
+        }
         m_texture->setFilter(GL_LINEAR);
         m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
         break;

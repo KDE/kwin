@@ -42,10 +42,8 @@ private Q_SLOTS:
 private:
     void ensureGlowSvg();
     std::unique_ptr<Glow> createGlow(ElectricBorder border, qreal factor, const QRect &geometry);
-    template<typename T>
-    T *createCornerGlow(ElectricBorder border);
-    template<typename T>
-    T *createEdgeGlow(ElectricBorder border, const QSize &size);
+    QImage createCornerGlow(ElectricBorder border);
+    QImage createEdgeGlow(ElectricBorder border, const QSize &size);
     QSize cornerGlowSize(ElectricBorder border);
     Plasma::Svg *m_glow = nullptr;
     std::map<ElectricBorder, std::unique_ptr<Glow>> m_borders;
@@ -56,7 +54,7 @@ class Glow
 {
 public:
     std::unique_ptr<GLTexture> texture;
-    std::unique_ptr<QImage> image;
+    QImage image;
     QSize pictureSize;
     qreal strength;
     QRect geometry;

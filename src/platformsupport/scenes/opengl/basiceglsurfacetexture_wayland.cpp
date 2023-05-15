@@ -61,12 +61,10 @@ void BasicEGLSurfaceTextureWayland::update(const QRegion &region)
 
 bool BasicEGLSurfaceTextureWayland::loadShmTexture(KWaylandServer::ShmClientBuffer *buffer)
 {
-    const QImage &image = buffer->data();
-    if (Q_UNLIKELY(image.isNull())) {
+    m_texture = GLTexture::upload(buffer->data());
+    if (!m_texture) {
         return false;
     }
-
-    m_texture.reset(new GLTexture(image));
     m_texture->setFilter(GL_LINEAR);
     m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
     m_texture->setContentTransform(TextureTransform::MirrorY);
