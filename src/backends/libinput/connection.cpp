@@ -624,14 +624,16 @@ void Connection::applyScreenToDevice(Device *device)
         if (internalOutput && testScreenMatches(internalOutput)) {
             deviceOutput = internalOutput;
         }
-        // let's compare all screens for size
-        for (Output *output : outputs) {
-            if (!output->isEnabled()) {
-                continue;
-            }
-            if (testScreenMatches(output)) {
-                deviceOutput = output;
-                break;
+        if (!deviceOutput) {
+            // let's compare all screens for size
+            for (Output *output : outputs) {
+                if (!output->isEnabled()) {
+                    continue;
+                }
+                if (testScreenMatches(output)) {
+                    deviceOutput = output;
+                    break;
+                }
             }
         }
         if (!deviceOutput) {
