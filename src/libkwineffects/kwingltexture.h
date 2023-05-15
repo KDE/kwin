@@ -158,11 +158,9 @@ public:
     static std::unique_ptr<GLTexture> upload(const QPixmap &pixmap);
 
 protected:
-    const std::unique_ptr<GLTexturePrivate> d_ptr;
-    GLTexture(std::unique_ptr<GLTexturePrivate> &&dd);
+    const std::unique_ptr<GLTexturePrivate> d;
 
-private:
-    Q_DECLARE_PRIVATE(GLTexture)
+    virtual void onDamage();
 };
 
 } // namespace

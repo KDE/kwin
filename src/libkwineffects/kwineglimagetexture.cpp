@@ -21,7 +21,7 @@ EGLImageTexture::EGLImageTexture(::EGLDisplay display, EGLImage image, uint text
     , m_image(image)
     , m_display(display)
 {
-    d_ptr->m_foreign = false;
+    d->m_foreign = false;
     setContentTransform(TextureTransform::MirrorY);
 }
 

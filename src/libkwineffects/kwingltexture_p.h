@@ -33,8 +33,6 @@ public:
     GLTexturePrivate();
     virtual ~GLTexturePrivate();
 
-    virtual void onDamage();
-
     void updateMatrix();
 
     GLuint m_texture;
