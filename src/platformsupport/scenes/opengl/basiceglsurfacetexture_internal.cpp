@@ -77,7 +77,7 @@ bool BasicEGLSurfaceTextureInternal::updateFromImage(const QRegion &region)
     }
 
     if (!m_texture) {
-        m_texture.reset(new GLTexture(image));
+        m_texture = GLTexture::upload(image);
     } else {
         const QRegion nativeRegion = scale(region, image.devicePixelRatio());
         for (const QRect &rect : nativeRegion) {
@@ -85,7 +85,7 @@ bool BasicEGLSurfaceTextureInternal::updateFromImage(const QRegion &region)
         }
     }
 
-    return true;
+    return m_texture != nullptr;
 }
 
 } // namespace KWin

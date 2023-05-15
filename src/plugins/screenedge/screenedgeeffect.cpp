@@ -79,6 +79,9 @@ void ScreenEdgeEffect::paintScreen(const RenderTarget &renderTarget, const Rende
         }
         if (effects->isOpenGLCompositing()) {
             GLTexture *texture = glow->texture.get();
+            if (!texture) {
+                return;
+            }
             glEnable(GL_BLEND);
             glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
             ShaderBinder binder(ShaderTrait::MapTexture | ShaderTrait::Modulate | ShaderTrait::TransformColorspace);
@@ -92,10 +95,10 @@ void ScreenEdgeEffect::paintScreen(const RenderTarget &renderTarget, const Rende
             texture->render(glow->geometry.size(), scale);
             glDisable(GL_BLEND);
         } else if (effects->compositingType() == QPainterCompositing) {
-            QImage tmp(glow->image->size(), QImage::Format_ARGB32_Premultiplied);
+            QImage tmp(glow->image.size(), QImage::Format_ARGB32_Premultiplied);
             tmp.fill(Qt::transparent);
             QPainter p(&tmp);
-            p.drawImage(0, 0, *glow->image.get());
+            p.drawImage(0, 0, glow->image);
             QColor color(Qt::transparent);
             color.setAlphaF(opacity);
             p.setCompositionMode(QPainter::CompositionMode_DestinationIn);
@@ -140,9 +143,9 @@ void ScreenEdgeEffect::edgeApproaching(ElectricBorder border, qreal factor, cons
             effects->addRepaint(glow->geometry);
             if (border == ElectricLeft || border == ElectricRight || border == ElectricTop || border == ElectricBottom) {
                 if (effects->isOpenGLCompositing()) {
-                    glow->texture.reset(createEdgeGlow<GLTexture>(border, geometry.size()));
+                    glow->texture = GLTexture::upload(createEdgeGlow(border, geometry.size()));
                 } else if (effects->compositingType() == QPainterCompositing) {
-                    glow->image.reset(createEdgeGlow<QImage>(border, geometry.size()));
+                    glow->image = createEdgeGlow(border, geometry.size());
                 }
             }
         }
@@ -172,25 +175,23 @@ std::unique_ptr<Glow> ScreenEdgeEffect::createGlow(ElectricBorder border, qreal 
     if (effects->isOpenGLCompositing()) {
         effects->makeOpenGLContextCurrent();
         if (border == ElectricTopLeft || border == ElectricTopRight || border == ElectricBottomRight || border == ElectricBottomLeft) {
-            glow->texture.reset(createCornerGlow<GLTexture>(border));
+            glow->texture = GLTexture::upload(createCornerGlow(border));
         } else {
-            glow->texture.reset(createEdgeGlow<GLTexture>(border, geometry.size()));
-        }
-        if (glow->texture) {
-            glow->texture->setWrapMode(GL_CLAMP_TO_EDGE);
+            glow->texture = GLTexture::upload(createEdgeGlow(border, geometry.size()));
         }
         if (!glow->texture) {
             return nullptr;
         }
+        glow->texture->setWrapMode(GL_CLAMP_TO_EDGE);
     } else if (effects->compositingType() == QPainterCompositing) {
         if (border == ElectricTopLeft || border == ElectricTopRight || border == ElectricBottomRight || border == ElectricBottomLeft) {
-            glow->image.reset(createCornerGlow<QImage>(border));
+            glow->image = createCornerGlow(border);
             glow->pictureSize = cornerGlowSize(border);
         } else {
-            glow->image.reset(createEdgeGlow<QImage>(border, geometry.size()));
+            glow->image = createEdgeGlow(border, geometry.size());
             glow->pictureSize = geometry.size();
         }
-        if (!glow->image) {
+        if (glow->image.isNull()) {
             return nullptr;
         }
     }
@@ -198,22 +199,21 @@ std::unique_ptr<Glow> ScreenEdgeEffect::createGlow(ElectricBorder border, qreal 
     return glow;
 }
 
-template<typename T>
-T *ScreenEdgeEffect::createCornerGlow(ElectricBorder border)
+QImage ScreenEdgeEffect::createCornerGlow(ElectricBorder border)
 {
     ensureGlowSvg();
 
     switch (border) {
     case ElectricTopLeft:
-        return new T(m_glow->pixmap(QStringLiteral("bottomright")).toImage());
+        return m_glow->pixmap(QStringLiteral("bottomright")).toImage();
     case ElectricTopRight:
-        return new T(m_glow->pixmap(QStringLiteral("bottomleft")).toImage());
+        return m_glow->pixmap(QStringLiteral("bottomleft")).toImage();
     case ElectricBottomRight:
-        return new T(m_glow->pixmap(QStringLiteral("topleft")).toImage());
+        return m_glow->pixmap(QStringLiteral("topleft")).toImage();
     case ElectricBottomLeft:
-        return new T(m_glow->pixmap(QStringLiteral("topright")).toImage());
+        return m_glow->pixmap(QStringLiteral("topright")).toImage();
     default:
-        return nullptr;
+        return QImage{};
     }
 }
 
@@ -235,8 +235,7 @@ QSize ScreenEdgeEffect::cornerGlowSize(ElectricBorder border)
     }
 }
 
-template<typename T>
-T *ScreenEdgeEffect::createEdgeGlow(ElectricBorder border, const QSize &size)
+QImage ScreenEdgeEffect::createEdgeGlow(ElectricBorder border, const QSize &size)
 {
     ensureGlowSvg();
 
@@ -268,7 +267,7 @@ T *ScreenEdgeEffect::createEdgeGlow(ElectricBorder border, const QSize &size)
         pixmapPosition = QPoint(size.width() - c.width(), 0);
         break;
     default:
-        return nullptr;
+        return QImage{};
     }
     QPixmap image(size);
     image.fill(Qt::transparent);
@@ -294,7 +293,7 @@ T *ScreenEdgeEffect::createEdgeGlow(ElectricBorder border, const QSize &size)
         p.drawPixmap(QPoint(pixmapPosition.x(), size.height() - r.height()), r);
     }
     p.end();
-    return new T(image.toImage());
+    return image.toImage();
 }
 
 bool ScreenEdgeEffect::isActive() const

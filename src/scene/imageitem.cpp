@@ -49,7 +49,7 @@ void ImageItemOpenGL::preprocess()
         m_textureKey = m_image.cacheKey();
 
         if (!m_texture || m_texture->size() != m_image.size()) {
-            m_texture = std::make_unique<GLTexture>(m_image);
+            m_texture = GLTexture::upload(m_image);
         } else {
             m_texture->update(m_image);
         }

@@ -236,7 +236,7 @@ void TrackMouseEffect::loadTexture()
     for (int i = 0; i < 2; ++i) {
         if (effects->isOpenGLCompositing()) {
             QImage img(f[i]);
-            m_texture[i] = std::make_unique<GLTexture>(img);
+            m_texture[i] = GLTexture::upload(img);
             m_lastRect[i].setSize(img.size());
         }
         if (effects->compositingType() == QPainterCompositing) {

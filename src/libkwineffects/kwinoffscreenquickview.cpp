@@ -407,10 +407,7 @@ void OffscreenQuickView::hide()
 GLTexture *OffscreenQuickView::bufferAsTexture()
 {
     if (d->m_useBlit) {
-        if (d->m_image.isNull()) {
-            return nullptr;
-        }
-        d->m_textureExport.reset(new GLTexture(d->m_image));
+        d->m_textureExport = GLTexture::upload(d->m_image);
     } else {
         if (!d->m_fbo) {
             return nullptr;

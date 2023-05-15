@@ -551,7 +551,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
                 if (cursorImage.isNull()) {
                     m_cursor.texture = nullptr;
                 } else {
-                    m_cursor.texture = std::make_unique<GLTexture>(cursorImage.image());
+                    m_cursor.texture = GLTexture::upload(cursorImage.image());
                 }
             }
             if (m_cursor.texture) {
