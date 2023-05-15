@@ -145,18 +145,18 @@ void MagicLampEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, Wi
             }
             if (panel) {
                 // Assumption: width of horizonal panel is greater than its height and vice versa
-                // The panel has to border one screen edge, so get it's screen area
-                QRectF panelScreen = effects->clientArea(ScreenArea, panel);
+                const QRectF windowScreen = effects->clientArea(ScreenArea, w);
+
                 if (panel->width() >= panel->height()) {
                     // horizontal panel
-                    if (panel->y() <= panelScreen.height() / 2) {
+                    if (icon.center().y() <= windowScreen.center().y()) {
                         position = Top;
                     } else {
                         position = Bottom;
                     }
                 } else {
                     // vertical panel
-                    if (panel->x() <= panelScreen.width() / 2) {
+                    if (icon.center().x() <= windowScreen.center().x()) {
                         position = Left;
                     } else {
                         position = Right;
