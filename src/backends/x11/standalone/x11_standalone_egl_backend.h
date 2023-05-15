@@ -78,27 +78,14 @@ class EglPixmapTexture : public GLTexture
 {
 public:
     explicit EglPixmapTexture(EglBackend *backend);
+    ~EglPixmapTexture() override;
 
     bool create(SurfacePixmapX11 *texture);
 
 private:
-    Q_DECLARE_PRIVATE(EglPixmapTexture)
-};
-
-class EglPixmapTexturePrivate : public GLTexturePrivate
-{
-public:
-    EglPixmapTexturePrivate(EglPixmapTexture *texture, EglBackend *backend);
-    ~EglPixmapTexturePrivate() override;
-
-    bool create(SurfacePixmapX11 *texture);
-
-protected:
     void onDamage() override;
 
-private:
-    EglPixmapTexture *q;
-    EglBackend *m_backend;
+    EglBackend *const m_backend;
     EGLImageKHR m_image = EGL_NO_IMAGE_KHR;
 };
 

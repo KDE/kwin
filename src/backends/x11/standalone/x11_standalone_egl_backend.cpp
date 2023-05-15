@@ -418,41 +418,29 @@ void EglSurfaceTextureX11::update(const QRegion &region)
 }
 
 EglPixmapTexture::EglPixmapTexture(EglBackend *backend)
-    : GLTexture(std::make_unique<EglPixmapTexturePrivate>(this, backend))
-{
-}
-
-bool EglPixmapTexture::create(SurfacePixmapX11 *texture)
-{
-    Q_D(EglPixmapTexture);
-    return d->create(texture);
-}
-
-EglPixmapTexturePrivate::EglPixmapTexturePrivate(EglPixmapTexture *texture, EglBackend *backend)
-    : q(texture)
+    : GLTexture(GL_TEXTURE_2D)
     , m_backend(backend)
 {
-    m_target = GL_TEXTURE_2D;
 }
 
-EglPixmapTexturePrivate::~EglPixmapTexturePrivate()
+EglPixmapTexture::~EglPixmapTexture()
 {
     if (m_image != EGL_NO_IMAGE_KHR) {
         eglDestroyImageKHR(m_backend->eglDisplay(), m_image);
     }
 }
 
-bool EglPixmapTexturePrivate::create(SurfacePixmapX11 *pixmap)
+bool EglPixmapTexture::create(SurfacePixmapX11 *pixmap)
 {
     const xcb_pixmap_t nativePixmap = pixmap->pixmap();
     if (nativePixmap == XCB_NONE) {
         return false;
     }
 
-    glGenTextures(1, &m_texture);
-    q->setWrapMode(GL_CLAMP_TO_EDGE);
-    q->setFilter(GL_LINEAR);
-    q->bind();
+    glGenTextures(1, &d->m_texture);
+    setWrapMode(GL_CLAMP_TO_EDGE);
+    setFilter(GL_LINEAR);
+    bind();
     const EGLint attribs[] = {
         EGL_IMAGE_PRESERVED_KHR, EGL_TRUE,
         EGL_NONE};
@@ -464,18 +452,18 @@ bool EglPixmapTexturePrivate::create(SurfacePixmapX11 *pixmap)
 
     if (EGL_NO_IMAGE_KHR == m_image) {
         qCDebug(KWIN_X11STANDALONE) << "failed to create egl image";
-        q->unbind();
+        unbind();
         return false;
     }
     glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, static_cast<GLeglImageOES>(m_image));
-    q->unbind();
-    q->setContentTransform(TextureTransform::MirrorY);
-    m_size = pixmap->size();
-    updateMatrix();
+    unbind();
+    setContentTransform(TextureTransform::MirrorY);
+    d->m_size = pixmap->size();
+    d->updateMatrix();
     return true;
 }
 
-void EglPixmapTexturePrivate::onDamage()
+void EglPixmapTexture::onDamage()
 {
     if (options->isGlStrictBinding()) {
         // This is just implemented to be consistent with
@@ -483,7 +471,6 @@ void EglPixmapTexturePrivate::onDamage()
         eglWaitNative(EGL_CORE_NATIVE_ENGINE);
         glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, static_cast<GLeglImageOES>(m_image));
     }
-    GLTexturePrivate::onDamage();
 }
 
 } // namespace KWin

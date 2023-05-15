@@ -83,24 +83,16 @@ struct
 };
 
 GLTexture::GLTexture(GLenum target)
-    : d_ptr(new GLTexturePrivate())
+    : d(std::make_unique<GLTexturePrivate>())
 {
-    Q_D(GLTexture);
     d->m_target = target;
 }
 
-GLTexture::GLTexture(std::unique_ptr<GLTexturePrivate> &&dd)
-    : d_ptr(std::move(dd))
-{
-}
-
 GLTexture::GLTexture(GLuint textureId, GLenum internalFormat, const QSize &size, int levels, bool isImmutable)
-    : d_ptr(new GLTexturePrivate())
+    : GLTexture(GL_TEXTURE_2D)
 {
-    Q_D(GLTexture);
     d->m_foreign = true;
     d->m_texture = textureId;
-    d->m_target = GL_TEXTURE_2D;
     d->m_scale.setWidth(1.0 / size.width());
     d->m_scale.setHeight(1.0 / size.height());
     d->m_size = size;
@@ -119,7 +111,6 @@ GLTexture::~GLTexture()
 
 bool GLTexture::create()
 {
-    Q_D(GLTexture);
     if (!isNull()) {
         return true;
     }
@@ -191,19 +182,16 @@ void GLTexturePrivate::cleanup()
 
 bool GLTexture::isNull() const
 {
-    Q_D(const GLTexture);
     return GL_NONE == d->m_texture;
 }
 
 QSize GLTexture::size() const
 {
-    Q_D(const GLTexture);
     return d->m_size;
 }
 
 void GLTexture::setSize(const QSize &size)
 {
-    Q_D(GLTexture);
     if (!isNull()) {
         return;
     }
@@ -217,7 +205,6 @@ void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &s
         return;
     }
 
-    Q_D(GLTexture);
     Q_ASSERT(!d->m_foreign);
 
     GLenum glFormat;
@@ -289,13 +276,12 @@ void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &s
 
 void GLTexture::bind()
 {
-    Q_D(GLTexture);
     Q_ASSERT(d->m_texture);
 
     glBindTexture(d->m_target, d->m_texture);
 
     if (d->m_markedDirty) {
-        d->onDamage();
+        onDamage();
     }
     if (d->m_filterChanged) {
         GLenum minFilter = GL_NEAREST;
@@ -337,8 +323,6 @@ void GLTexture::bind()
 
 void GLTexture::generateMipmaps()
 {
-    Q_D(GLTexture);
-
     if (d->m_canUseMipmaps && d->s_supportsFramebufferObjects) {
         glGenerateMipmap(d->m_target);
     }
@@ -346,7 +330,6 @@ void GLTexture::generateMipmaps()
 
 void GLTexture::unbind()
 {
-    Q_D(GLTexture);
     glBindTexture(d->m_target, 0);
 }
 
@@ -357,14 +340,12 @@ void GLTexture::render(const QSizeF &size, qreal scale)
 
 void GLTexture::render(const QRegion &region, const QSizeF &targetSize, double scale, bool hardwareClipping)
 {
-    Q_D(GLTexture);
     const auto rotatedSize = d->m_textureToBufferMatrix.mapRect(QRect(QPoint(), size())).size();
     render(QRectF(QPoint(), rotatedSize), region, targetSize, scale, hardwareClipping);
 }
 
 void GLTexture::render(const QRectF &source, const QRegion &region, const QSizeF &targetSize, double scale, bool hardwareClipping)
 {
-    Q_D(GLTexture);
     if (targetSize.isEmpty()) {
         return; // nothing to paint and m_vbo is likely nullptr and d->m_cachedSize empty as well, #337090
     }
@@ -416,31 +397,26 @@ void GLTexture::render(const QRectF &source, const QRegion &region, const QSizeF
 
 GLuint GLTexture::texture() const
 {
-    Q_D(const GLTexture);
     return d->m_texture;
 }
 
 GLenum GLTexture::target() const
 {
-    Q_D(const GLTexture);
     return d->m_target;
 }
 
 GLenum GLTexture::filter() const
 {
-    Q_D(const GLTexture);
     return d->m_filter;
 }
 
 GLenum GLTexture::internalFormat() const
 {
-    Q_D(const GLTexture);
     return d->m_internalFormat;
 }
 
 void GLTexture::clear()
 {
-    Q_D(GLTexture);
     Q_ASSERT(!d->m_foreign);
     if (!GLTexturePrivate::s_fbo && GLFramebuffer::supported() && GLPlatform::instance()->driver() != Driver_Catalyst) { // fail. -> bug #323065
         glGenFramebuffers(1, &GLTexturePrivate::s_fbo);
@@ -478,13 +454,11 @@ void GLTexture::clear()
 
 bool GLTexture::isDirty() const
 {
-    Q_D(const GLTexture);
     return d->m_markedDirty;
 }
 
 void GLTexture::setFilter(GLenum filter)
 {
-    Q_D(GLTexture);
     if (filter != d->m_filter) {
         d->m_filter = filter;
         d->m_filterChanged = true;
@@ -493,22 +467,19 @@ void GLTexture::setFilter(GLenum filter)
 
 void GLTexture::setWrapMode(GLenum mode)
 {
-    Q_D(GLTexture);
     if (mode != d->m_wrapMode) {
         d->m_wrapMode = mode;
         d->m_wrapModeChanged = true;
     }
 }
 
-void GLTexturePrivate::onDamage()
-{
-    // No-op
-}
-
 void GLTexture::setDirty()
 {
-    Q_D(GLTexture);
     d->m_markedDirty = true;
+}
+
+void GLTexture::onDamage()
+{
 }
 
 void GLTexturePrivate::updateMatrix()
@@ -551,7 +522,6 @@ void GLTexturePrivate::updateMatrix()
 
 void GLTexture::setContentTransform(TextureTransforms transform)
 {
-    Q_D(GLTexture);
     if (d->m_textureToBufferTransform != transform) {
         d->m_textureToBufferTransform = transform;
         d->updateMatrix();
@@ -560,20 +530,16 @@ void GLTexture::setContentTransform(TextureTransforms transform)
 
 TextureTransforms GLTexture::contentTransforms() const
 {
-    Q_D(const GLTexture);
     return d->m_textureToBufferTransform;
 }
 
 QMatrix4x4 GLTexture::contentTransformMatrix() const
 {
-    Q_D(const GLTexture);
     return d->m_textureToBufferMatrix;
 }
 
 void GLTexture::setSwizzle(GLenum red, GLenum green, GLenum blue, GLenum alpha)
 {
-    Q_D(GLTexture);
-
     if (!GLPlatform::instance()->isGLES()) {
         const GLuint swizzle[] = {red, green, blue, alpha};
         glTexParameteriv(d->m_target, GL_TEXTURE_SWIZZLE_RGBA, (const GLint *)swizzle);
@@ -587,19 +553,16 @@ void GLTexture::setSwizzle(GLenum red, GLenum green, GLenum blue, GLenum alpha)
 
 int GLTexture::width() const
 {
-    Q_D(const GLTexture);
     return d->m_size.width();
 }
 
 int GLTexture::height() const
 {
-    Q_D(const GLTexture);
     return d->m_size.height();
 }
 
 QMatrix4x4 GLTexture::matrix(TextureCoordinateType type) const
 {
-    Q_D(const GLTexture);
     return d->m_matrix[type];
 }
 
@@ -671,7 +634,7 @@ std::unique_ptr<GLTexture> GLTexture::allocate(GLenum internalFormat, const QSiz
     }
     glBindTexture(GL_TEXTURE_2D, 0);
     auto ret = std::make_unique<GLTexture>(texture, internalFormat, size, levels, immutable);
-    ret->d_ptr->m_foreign = false;
+    ret->d->m_foreign = false;
     return ret;
 }
 
@@ -734,7 +697,7 @@ std::unique_ptr<GLTexture> GLTexture::upload(const QImage &image)
     }
     glBindTexture(GL_TEXTURE_2D, 0);
     auto ret = std::make_unique<GLTexture>(texture, internalFormat, image.size(), 1, immutable);
-    ret->d_ptr->m_immutable = false;
+    ret->d->m_immutable = false;
     return ret;
 }
 

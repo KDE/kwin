@@ -134,34 +134,21 @@ private:
     X11StandaloneBackend *m_backend;
     std::unique_ptr<VsyncMonitor> m_vsyncMonitor;
     std::unique_ptr<GlxLayer> m_layer;
-    friend class GlxPixmapTexturePrivate;
+    friend class GlxPixmapTexture;
 };
 
 class GlxPixmapTexture final : public GLTexture
 {
 public:
     explicit GlxPixmapTexture(GlxBackend *backend);
+    ~GlxPixmapTexture();
 
     bool create(SurfacePixmapX11 *texture);
 
 private:
-    Q_DECLARE_PRIVATE(GlxPixmapTexture)
-};
-
-class GlxPixmapTexturePrivate final : public GLTexturePrivate
-{
-public:
-    GlxPixmapTexturePrivate(GlxPixmapTexture *texture, GlxBackend *backend);
-    ~GlxPixmapTexturePrivate() override;
-
-    bool create(SurfacePixmapX11 *texture);
-
-protected:
     void onDamage() override;
 
-private:
-    GlxBackend *m_backend;
-    GlxPixmapTexture *q;
+    GlxBackend *const m_backend;
     GLXPixmap m_glxPixmap;
 };
 

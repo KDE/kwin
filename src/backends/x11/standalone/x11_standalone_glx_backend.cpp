@@ -871,24 +871,13 @@ void GlxSurfaceTextureX11::update(const QRegion &region)
 }
 
 GlxPixmapTexture::GlxPixmapTexture(GlxBackend *backend)
-    : GLTexture(std::make_unique<GlxPixmapTexturePrivate>(this, backend))
-{
-}
-
-bool GlxPixmapTexture::create(SurfacePixmapX11 *texture)
-{
-    Q_D(GlxPixmapTexture);
-    return d->create(texture);
-}
-
-GlxPixmapTexturePrivate::GlxPixmapTexturePrivate(GlxPixmapTexture *texture, GlxBackend *backend)
-    : m_backend(backend)
-    , q(texture)
+    : GLTexture(GL_TEXTURE_2D)
+    , m_backend(backend)
     , m_glxPixmap(None)
 {
 }
 
-GlxPixmapTexturePrivate::~GlxPixmapTexturePrivate()
+GlxPixmapTexture::~GlxPixmapTexture()
 {
     if (m_glxPixmap != None) {
         if (!options->isGlStrictBinding()) {
@@ -899,16 +888,7 @@ GlxPixmapTexturePrivate::~GlxPixmapTexturePrivate()
     }
 }
 
-void GlxPixmapTexturePrivate::onDamage()
-{
-    if (options->isGlStrictBinding() && m_glxPixmap) {
-        glXReleaseTexImageEXT(m_backend->display(), m_glxPixmap, GLX_FRONT_LEFT_EXT);
-        glXBindTexImageEXT(m_backend->display(), m_glxPixmap, GLX_FRONT_LEFT_EXT, nullptr);
-    }
-    GLTexturePrivate::onDamage();
-}
-
-bool GlxPixmapTexturePrivate::create(SurfacePixmapX11 *texture)
+bool GlxPixmapTexture::create(SurfacePixmapX11 *texture)
 {
     if (texture->pixmap() == XCB_NONE || texture->size().isEmpty() || texture->visual() == XCB_NONE) {
         return false;
@@ -920,39 +900,47 @@ bool GlxPixmapTexturePrivate::create(SurfacePixmapX11 *texture)
     }
 
     if (info.texture_targets & GLX_TEXTURE_2D_BIT_EXT) {
-        m_target = GL_TEXTURE_2D;
-        m_scale.setWidth(1.0f / m_size.width());
-        m_scale.setHeight(1.0f / m_size.height());
+        d->m_target = GL_TEXTURE_2D;
+        d->m_scale.setWidth(1.0f / d->m_size.width());
+        d->m_scale.setHeight(1.0f / d->m_size.height());
     } else {
         Q_ASSERT(info.texture_targets & GLX_TEXTURE_RECTANGLE_BIT_EXT);
 
-        m_target = GL_TEXTURE_RECTANGLE;
-        m_scale.setWidth(1.0f);
-        m_scale.setHeight(1.0f);
+        d->m_target = GL_TEXTURE_RECTANGLE;
+        d->m_scale.setWidth(1.0f);
+        d->m_scale.setHeight(1.0f);
     }
 
     const int attrs[] = {
         GLX_TEXTURE_FORMAT_EXT, info.bind_texture_format,
         GLX_MIPMAP_TEXTURE_EXT, false,
-        GLX_TEXTURE_TARGET_EXT, m_target == GL_TEXTURE_2D ? GLX_TEXTURE_2D_EXT : GLX_TEXTURE_RECTANGLE_EXT,
+        GLX_TEXTURE_TARGET_EXT, d->m_target == GL_TEXTURE_2D ? GLX_TEXTURE_2D_EXT : GLX_TEXTURE_RECTANGLE_EXT,
         0};
 
     m_glxPixmap = glXCreatePixmap(m_backend->display(), info.fbconfig, texture->pixmap(), attrs);
-    m_size = texture->size();
-    q->setContentTransform(info.y_inverted ? TextureTransform::MirrorY : TextureTransforms());
-    m_canUseMipmaps = false;
+    d->m_size = texture->size();
+    setContentTransform(info.y_inverted ? TextureTransform::MirrorY : TextureTransforms());
+    d->m_canUseMipmaps = false;
 
-    glGenTextures(1, &m_texture);
+    glGenTextures(1, &d->m_texture);
 
-    q->setDirty();
-    q->setFilter(GL_LINEAR);
-    q->setWrapMode(GL_CLAMP_TO_EDGE);
+    setDirty();
+    setFilter(GL_LINEAR);
+    setWrapMode(GL_CLAMP_TO_EDGE);
 
-    glBindTexture(m_target, m_texture);
+    glBindTexture(d->m_target, d->m_texture);
     glXBindTexImageEXT(m_backend->display(), m_glxPixmap, GLX_FRONT_LEFT_EXT, nullptr);
 
-    updateMatrix();
+    d->updateMatrix();
     return true;
+}
+
+void GlxPixmapTexture::onDamage()
+{
+    if (options->isGlStrictBinding() && m_glxPixmap) {
+        glXReleaseTexImageEXT(m_backend->display(), m_glxPixmap, GLX_FRONT_LEFT_EXT);
+        glXBindTexImageEXT(m_backend->display(), m_glxPixmap, GLX_FRONT_LEFT_EXT, nullptr);
+    }
 }
 
 } // namespace
