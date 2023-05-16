@@ -293,27 +293,27 @@ bool ContrastEffect::supported()
     return supported;
 }
 
-QRegion ContrastEffect::contrastRegion(const EffectWindow *w) const
+RegionF ContrastEffect::contrastRegion(const EffectWindow *w) const
 {
-    QRegion region;
+    RegionF region;
     if (const auto it = m_windowData.find(w); it != m_windowData.end()) {
-        const QRegion &appRegion = it->contrastRegion;
+        const RegionF &appRegion = it->contrastRegion;
         if (!appRegion.isEmpty()) {
-            region |= appRegion.translated(w->contentsRect().topLeft().toPoint()) & w->decorationInnerRect().toRect();
+            region |= appRegion.translated(w->contentsRect().topLeft()) & w->decorationInnerRect();
         } else {
             // An empty region means that the blur effect should be enabled
             // for the whole window.
-            region = w->decorationInnerRect().toRect();
+            region = RegionF(w->decorationInnerRect());
         }
     }
 
     return region;
 }
 
-void ContrastEffect::uploadRegion(QVector2D *&map, const QRegion &region, qreal scale)
+void ContrastEffect::uploadRegion(QVector2D *&map, const RegionF &region, qreal scale)
 {
     Q_ASSERT(map);
-    for (const QRect &r : region) {
+    for (const QRectF &r : region) {
         const auto deviceRect = scaledRect(r, scale);
         const QVector2D topLeft = roundVector(QVector2D(deviceRect.x(), deviceRect.y()));
         const QVector2D topRight = roundVector(QVector2D(deviceRect.x() + deviceRect.width(), deviceRect.y()));
@@ -332,9 +332,9 @@ void ContrastEffect::uploadRegion(QVector2D *&map, const QRegion &region, qreal 
     }
 }
 
-bool ContrastEffect::uploadGeometry(GLVertexBuffer *vbo, const QRegion &region, qreal scale)
+bool ContrastEffect::uploadGeometry(GLVertexBuffer *vbo, const RegionF &region, qreal scale)
 {
-    const int vertexCount = region.rectCount() * 6;
+    const int vertexCount = region.rects().count() * 6;
     if (!vertexCount) {
         return false;
     }
@@ -378,19 +378,19 @@ bool ContrastEffect::shouldContrast(const EffectWindow *w, int mask, const Windo
     return true;
 }
 
-void ContrastEffect::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data)
+void ContrastEffect::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const RegionF &region, WindowPaintData &data)
 {
     if (shouldContrast(w, mask, data)) {
-        const QRect screen = viewport.renderRect().toRect();
-        QRegion shape = region & contrastRegion(w).translated(w->pos().toPoint()) & screen;
+        const QRectF screen = viewport.renderRect();
+        RegionF shape = region & contrastRegion(w).translated(w->pos()) & screen;
 
         // let's do the evil parts - someone wants to blur behind a transformed window
         const bool translated = data.xTranslation() || data.yTranslation();
         const bool scaled = data.xScale() != 1 || data.yScale() != 1;
         if (scaled) {
-            QPoint pt = shape.boundingRect().topLeft();
-            QRegion scaledShape;
-            for (QRect r : shape) {
+            QPointF pt = shape.boundingRect().topLeft();
+            RegionF scaledShape;
+            for (QRectF r : shape) {
                 r.moveTo(pt.x() + (r.x() - pt.x()) * data.xScale() + data.xTranslation(),
                          pt.y() + (r.y() - pt.y()) * data.yScale() + data.yTranslation());
                 r.setWidth(std::ceil(r.width() * data.xScale()));
@@ -414,10 +414,10 @@ void ContrastEffect::drawWindow(const RenderTarget &renderTarget, const RenderVi
     effects->drawWindow(renderTarget, viewport, w, mask, region, data);
 }
 
-void ContrastEffect::doContrast(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, const QRegion &shape, const QRect &screen, const float opacity, const QMatrix4x4 &screenProjection)
+void ContrastEffect::doContrast(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, const RegionF &shape, const QRectF &screen, const float opacity, const QMatrix4x4 &screenProjection)
 {
     const qreal scale = viewport.scale();
-    const QRegion actualShape = shape & screen;
+    const RegionF actualShape = shape & screen;
     const QRectF r = viewport.mapToRenderTarget(actualShape.boundingRect());
 
     // Upload geometry for the horizontal and vertical passes
@@ -463,7 +463,7 @@ void ContrastEffect::doContrast(const RenderTarget &renderTarget, const RenderVi
     m_shader->setTextureMatrix(textureMatrix);
     m_shader->setModelViewProjectionMatrix(screenProjection);
 
-    vbo->draw(GL_TRIANGLES, 0, actualShape.rectCount() * 6);
+    vbo->draw(GL_TRIANGLES, 0, actualShape.rects().size() * 6);
 
     scratch.unbind();
     scratch.discard();

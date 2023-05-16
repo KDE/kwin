@@ -112,11 +112,11 @@ static RenderGeometry clipQuads(const Item *item, const ItemRendererOpenGL::Rend
 
     // split all quads in bounding rect with the actual rects in the region
     for (const WindowQuad &quad : std::as_const(quads)) {
-        if (context->clip != infiniteRegion() && !context->hardwareClipping) {
+        if (!context->clip.isInfinite() && !context->hardwareClipping) {
             // Scale to device coordinates, rounding as needed.
             QRectF deviceBounds = logicalRectToDeviceRect(quad.bounds(), scale);
 
-            for (const QRect &clipRect : std::as_const(context->clip)) {
+            for (const QRectF &clipRect : std::as_const(context->clip)) {
                 QRectF deviceClipRect = logicalRectToDeviceRect(clipRect, scale).translated(-worldTranslation);
 
                 const QRectF &intersected = deviceClipRect.intersected(deviceBounds);
@@ -232,9 +232,9 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
     context->opacityStack.pop();
 }
 
-void ItemRendererOpenGL::renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &region)
+void ItemRendererOpenGL::renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const RegionF &region)
 {
-    if (region == infiniteRegion() || (region.rectCount() == 1 && (*region.begin()) == viewport.renderRect())) {
+    if (region.isInfinite() || region.contains(viewport.renderRect())) {
         glClearColor(0, 0, 0, 0);
         glClear(GL_COLOR_BUFFER_BIT);
     } else if (!region.isEmpty()) {
@@ -242,9 +242,9 @@ void ItemRendererOpenGL::renderBackground(const RenderTarget &renderTarget, cons
         glEnable(GL_SCISSOR_TEST);
 
         const auto targetSize = viewport.mapToRenderTarget(viewport.renderRect());
+        const auto mappedRegion = viewport.mapToRenderTarget(region).toAlignedRegion();
 
-        for (const QRect &r : region) {
-            const auto deviceRect = viewport.mapToRenderTarget(r);
+        for (const QRect &deviceRect : mappedRegion) {
             glScissor(deviceRect.x(), targetSize.height() - (deviceRect.y() + deviceRect.height()), deviceRect.width(), deviceRect.height());
             glClear(GL_COLOR_BUFFER_BIT);
         }
@@ -253,7 +253,7 @@ void ItemRendererOpenGL::renderBackground(const RenderTarget &renderTarget, cons
     }
 }
 
-void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &region, const WindowPaintData &data)
+void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const RegionF &region, const WindowPaintData &data)
 {
     if (region.isEmpty()) {
         return;
@@ -336,7 +336,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
     // The scissor region must be in the render target local coordinate system.
     QRegion scissorRegion = infiniteRegion();
     if (renderContext.hardwareClipping) {
-        scissorRegion = viewport.mapToRenderTarget(region);
+        scissorRegion = viewport.mapToRenderTarget(region).toAlignedRegion();
     }
 
     for (int i = 0; i < renderContext.renderNodes.count(); i++) {

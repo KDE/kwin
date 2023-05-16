@@ -54,16 +54,16 @@ public:
     EffectsHandlerImpl(Compositor *compositor, WorkspaceScene *scene);
     ~EffectsHandlerImpl() override;
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen) override;
+    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const RegionF &region, EffectScreen *screen) override;
     void postPaintScreen() override;
     void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) override;
+    void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const RegionF &region, WindowPaintData &data) override;
     void postPaintWindow(EffectWindow *w) override;
 
     Effect *provides(Effect::Feature ef);
 
-    void drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) override;
-    void renderWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) override;
+    void drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const RegionF &region, WindowPaintData &data) override;
+    void renderWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const RegionF &region, WindowPaintData &data) override;
 
     void activateWindow(EffectWindow *c) override;
     EffectWindow *activeWindow() const override;

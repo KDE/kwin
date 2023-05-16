@@ -61,7 +61,7 @@ public:
     VirtualEglLayer(Output *output, VirtualEglBackend *backend);
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
-    bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    bool endFrame(const RegionF &renderedRegion, const RegionF &damagedRegion) override;
 
     std::shared_ptr<GLTexture> texture() const;
     quint32 format() const override;

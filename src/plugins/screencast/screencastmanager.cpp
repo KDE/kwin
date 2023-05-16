@@ -149,9 +149,9 @@ void ScreencastManager::streamOutput(KWaylandServer::ScreencastStreamV1Interface
     auto stream = new ScreenCastStream(new OutputScreenCastSource(streamOutput), this);
     stream->setObjectName(streamOutput->name());
     stream->setCursorMode(mode, streamOutput->scale(), streamOutput->geometry());
-    auto bufferToStream = [stream, streamOutput](const QRegion &damagedRegion) {
+    auto bufferToStream = [stream, streamOutput](const RegionF &damagedRegion) {
         if (!damagedRegion.isEmpty()) {
-            stream->recordFrame(scaleRegion(damagedRegion, streamOutput->scale()));
+            stream->recordFrame(damagedRegion.toAlignedRegion(streamOutput->scale()));
         }
     };
     connect(stream, &ScreenCastStream::startStreaming, waylandStream, [streamOutput, stream, bufferToStream] {
@@ -185,15 +185,15 @@ void ScreencastManager::streamRegion(KWaylandServer::ScreencastStreamV1Interface
         const auto allOutputs = workspace()->outputs();
         for (auto output : allOutputs) {
             if (output->geometry().intersects(geometry)) {
-                auto bufferToStream = [output, stream, source](const QRegion &damagedRegion) {
+                auto bufferToStream = [output, stream, source](const RegionF &damagedRegion) {
                     if (damagedRegion.isEmpty()) {
                         return;
                     }
 
                     const QRect streamRegion = source->region();
-                    const QRegion region = output->pixelSize() != output->modeSize() ? output->geometry() : damagedRegion;
+                    const RegionF region = output->pixelSize() != output->modeSize() ? output->geometry() : damagedRegion;
                     source->updateOutput(output);
-                    stream->recordFrame(scaleRegion(region.translated(-streamRegion.topLeft()).intersected(streamRegion), source->scale()));
+                    stream->recordFrame((region.translated(-streamRegion.topLeft()) & streamRegion).toAlignedRegion(source->scale()));
                 };
                 connect(output, &Output::outputChange, stream, bufferToStream);
                 found |= true;

@@ -36,7 +36,7 @@ std::optional<OutputLayerBeginFrameInfo> EglLayer::beginFrame()
     return m_backend->beginFrame();
 }
 
-bool EglLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool EglLayer::endFrame(const RegionF &renderedRegion, const RegionF &damagedRegion)
 {
     m_backend->endFrame(renderedRegion, damagedRegion);
     return true;
@@ -316,9 +316,9 @@ OutputLayerBeginFrameInfo EglBackend::beginFrame()
 {
     makeCurrent();
 
-    QRegion repaint;
+    RegionF repaint;
     if (supportsBufferAge()) {
-        repaint = m_damageJournal.accumulate(m_bufferAge, infiniteRegion());
+        repaint = m_damageJournal.accumulate(m_bufferAge, RegionF::infiniteRegion());
     }
     eglWaitNative(EGL_CORE_NATIVE_ENGINE);
 
@@ -328,13 +328,13 @@ OutputLayerBeginFrameInfo EglBackend::beginFrame()
     };
 }
 
-void EglBackend::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+void EglBackend::endFrame(const RegionF &renderedRegion, const RegionF &damagedRegion)
 {
     // Save the damaged region to history
     if (supportsBufferAge()) {
         m_damageJournal.add(damagedRegion);
     }
-    m_lastRenderedRegion = renderedRegion;
+    m_lastRenderedRegion = renderedRegion.toAlignedRegion();
 }
 
 void EglBackend::present(Output *output)

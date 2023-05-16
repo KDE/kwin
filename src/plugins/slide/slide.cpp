@@ -134,7 +134,7 @@ void SlideEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::millisec
     effects->prePaintScreen(data, presentTime);
 }
 
-void SlideEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
+void SlideEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const RegionF &region, EffectScreen *screen)
 {
     m_paintCtx.wrap = effects->optionRollOverDesktops();
     effects->paintScreen(renderTarget, viewport, mask, region, screen);
@@ -190,7 +190,7 @@ void SlideEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std:
     effects->prePaintWindow(w, data, presentTime);
 }
 
-void SlideEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+void SlideEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const RegionF &region, WindowPaintData &data)
 {
     if (!willBePainted(w)) {
         return;
@@ -236,7 +236,7 @@ void SlideEffect::paintWindow(const RenderTarget &renderTarget, const RenderView
             effects->paintWindow(
                 renderTarget, viewport, w, mask,
                 // Only paint the region that intersects the current screen and desktop.
-                region.intersected(damage),
+                region & damage,
                 data);
 
             // Undo the translation for the next screen. I know, it hurts me too.

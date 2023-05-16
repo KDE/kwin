@@ -95,7 +95,7 @@ void DimInactiveEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mi
     effects->prePaintScreen(data, presentTime);
 }
 
-void DimInactiveEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+void DimInactiveEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const RegionF &region, WindowPaintData &data)
 {
     auto transitionIt = m_transitions.constFind(w);
     if (transitionIt != m_transitions.constEnd()) {

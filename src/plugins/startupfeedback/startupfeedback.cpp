@@ -195,7 +195,7 @@ void StartupFeedbackEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono
     effects->prePaintScreen(data, presentTime);
 }
 
-void StartupFeedbackEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
+void StartupFeedbackEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const RegionF &region, EffectScreen *screen)
 {
     effects->paintScreen(renderTarget, viewport, mask, region, screen);
     if (m_active) {

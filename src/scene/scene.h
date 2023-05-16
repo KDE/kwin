@@ -28,11 +28,11 @@ public:
     Output *output() const;
     QRect viewport() const;
 
-    QRegion repaints() const override;
+    RegionF repaints() const override;
     SurfaceItem *scanoutCandidate() const override;
     void prePaint() override;
     void postPaint() override;
-    void paint(const RenderTarget &renderTarget, const QRegion &region) override;
+    void paint(const RenderTarget &renderTarget, const RegionF &region) override;
 
 private:
     Scene *m_scene;
@@ -68,10 +68,10 @@ public:
 
     ItemRenderer *renderer() const;
 
-    void addRepaint(const QRegion &region);
-    void addRepaint(int x, int y, int width, int height);
+    void addRepaint(const RegionF &region);
+    void addRepaint(double x, double y, double width, double height);
     void addRepaintFull();
-    virtual QRegion damage() const;
+    virtual RegionF damage() const;
 
     QRect geometry() const;
     void setGeometry(const QRect &rect);
@@ -83,7 +83,7 @@ public:
     virtual SurfaceItem *scanoutCandidate() const;
     virtual void prePaint(SceneDelegate *delegate) = 0;
     virtual void postPaint() = 0;
-    virtual void paint(const RenderTarget &renderTarget, const QRegion &region) = 0;
+    virtual void paint(const RenderTarget &renderTarget, const RegionF &region) = 0;
 
 Q_SIGNALS:
     void delegateRemoved(SceneDelegate *delegate);

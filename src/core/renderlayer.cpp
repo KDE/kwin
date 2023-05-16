@@ -151,31 +151,31 @@ void RenderLayer::updateBoundingRect()
 
 void RenderLayer::addRepaintFull()
 {
-    addRepaint(rect().toAlignedRect());
+    addRepaint(rect());
 }
 
-void RenderLayer::addRepaint(int x, int y, int width, int height)
+void RenderLayer::addRepaint(double x, double y, double width, double height)
 {
-    addRepaint(QRegion(x, y, width, height));
+    addRepaint(RegionF(QRectF(x, y, width, height)));
 }
 
-void RenderLayer::addRepaint(const QRect &rect)
+void RenderLayer::addRepaint(const QRectF &rect)
 {
-    addRepaint(QRegion(rect));
+    addRepaint(RegionF(rect));
 }
 
-void RenderLayer::addRepaint(const QRegion &region)
+void RenderLayer::addRepaint(const RegionF &region)
 {
     if (!m_effectiveVisible) {
         return;
     }
     if (!region.isEmpty()) {
-        m_repaints += region;
+        m_repaints |= region;
         m_loop->scheduleRepaint();
     }
 }
 
-QRegion RenderLayer::repaints() const
+RegionF RenderLayer::repaints() const
 {
     return m_repaints;
 }
@@ -257,6 +257,11 @@ QRegion RenderLayer::mapToGlobal(const QRegion &region) const
         return QRegion();
     }
     return region.translated(mapToGlobal(QPoint(0, 0)));
+}
+
+RegionF RenderLayer::mapToGlobal(const RegionF &region) const
+{
+    return region.translated(mapToGlobal(QPointF(0, 0)));
 }
 
 QPoint RenderLayer::mapFromGlobal(const QPoint &point) const

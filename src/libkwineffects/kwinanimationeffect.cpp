@@ -484,9 +484,9 @@ static qreal yCoord(const QRectF &r, int flag)
     }
 }
 
-QRect AnimationEffect::clipRect(const QRect &geo, const AniData &anim) const
+QRectF AnimationEffect::clipRect(const QRectF &geo, const AniData &anim) const
 {
-    QRect clip = geo;
+    QRectF clip = geo;
     FPx2 ratio = anim.from + progress(anim) * (anim.to - anim.from);
     if (anim.from[0] < 1.0 || anim.to[0] < 1.0) {
         clip.setWidth(clip.width() * ratio[0]);
@@ -494,14 +494,14 @@ QRect AnimationEffect::clipRect(const QRect &geo, const AniData &anim) const
     if (anim.from[1] < 1.0 || anim.to[1] < 1.0) {
         clip.setHeight(clip.height() * ratio[1]);
     }
-    const QRect center = geo.adjusted(clip.width() / 2, clip.height() / 2,
-                                      -(clip.width() + 1) / 2, -(clip.height() + 1) / 2);
+    const QRectF center = geo.adjusted(clip.width() / 2, clip.height() / 2,
+                                       -(clip.width() + 1) / 2, -(clip.height() + 1) / 2);
     const qreal x[2] = {xCoord(center, metaData(SourceAnchor, anim.meta)),
                         xCoord(center, metaData(TargetAnchor, anim.meta))};
     const qreal y[2] = {yCoord(center, metaData(SourceAnchor, anim.meta)),
                         yCoord(center, metaData(TargetAnchor, anim.meta))};
-    const QPoint d(x[0] + ratio[0] * (x[1] - x[0]), y[0] + ratio[1] * (y[1] - y[0]));
-    clip.moveTopLeft(QPoint(d.x() - clip.width() / 2, d.y() - clip.height() / 2));
+    const QPointF d(x[0] + ratio[0] * (x[1] - x[0]), y[0] + ratio[1] * (y[1] - y[0]));
+    clip.moveTopLeft(QPointF(d.x() - clip.width() / 2, d.y() - clip.height() / 2));
     return clip;
 }
 
@@ -542,7 +542,7 @@ static inline float geometryCompensation(int flags, float v)
     return 0.5 * (1.0 - v); // half compensation
 }
 
-void AnimationEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+void AnimationEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const RegionF &region, WindowPaintData &data)
 {
     Q_D(AnimationEffect);
     AniMap::const_iterator entry = d->m_animations.constFind(w);
@@ -587,7 +587,7 @@ void AnimationEffect::paintWindow(const RenderTarget &renderTarget, const Render
                 break;
             }
             case Clip:
-                finalRegion = clipRect(w->expandedGeometry().toAlignedRect(), *anim);
+                finalRegion = clipRect(w->expandedGeometry(), *anim);
                 break;
             case Translation:
                 data += QPointF(interpolated(*anim, 0), interpolated(*anim, 1));

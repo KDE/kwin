@@ -365,7 +365,7 @@ void EffectsHandlerImpl::prePaintScreen(ScreenPrePaintData &data, std::chrono::m
     // no special final code
 }
 
-void EffectsHandlerImpl::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
+void EffectsHandlerImpl::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const RegionF &region, EffectScreen *screen)
 {
     if (m_currentPaintScreenIterator != m_activeEffects.constEnd()) {
         (*m_currentPaintScreenIterator++)->paintScreen(renderTarget, viewport, mask, region, screen);
@@ -393,7 +393,7 @@ void EffectsHandlerImpl::prePaintWindow(EffectWindow *w, WindowPrePaintData &dat
     // no special final code
 }
 
-void EffectsHandlerImpl::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data)
+void EffectsHandlerImpl::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const RegionF &region, WindowPaintData &data)
 {
     if (m_currentPaintWindowIterator != m_activeEffects.constEnd()) {
         (*m_currentPaintWindowIterator++)->paintWindow(renderTarget, viewport, w, mask, region, data);
@@ -422,7 +422,7 @@ Effect *EffectsHandlerImpl::provides(Effect::Feature ef)
     return nullptr;
 }
 
-void EffectsHandlerImpl::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data)
+void EffectsHandlerImpl::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const RegionF &region, WindowPaintData &data)
 {
     if (m_currentDrawWindowIterator != m_activeEffects.constEnd()) {
         (*m_currentDrawWindowIterator++)->drawWindow(renderTarget, viewport, w, mask, region, data);
@@ -432,7 +432,7 @@ void EffectsHandlerImpl::drawWindow(const RenderTarget &renderTarget, const Rend
     }
 }
 
-void EffectsHandlerImpl::renderWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data)
+void EffectsHandlerImpl::renderWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const RegionF &region, WindowPaintData &data)
 {
     m_scene->finalDrawWindow(renderTarget, viewport, static_cast<EffectWindowImpl *>(w), mask, region, data);
 }

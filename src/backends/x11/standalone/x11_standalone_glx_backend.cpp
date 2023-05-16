@@ -108,7 +108,7 @@ std::optional<OutputLayerBeginFrameInfo> GlxLayer::beginFrame()
     return m_backend->beginFrame();
 }
 
-bool GlxLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool GlxLayer::endFrame(const RegionF &renderedRegion, const RegionF &damagedRegion)
 {
     m_backend->endFrame(renderedRegion, damagedRegion);
     return true;
@@ -768,11 +768,11 @@ std::unique_ptr<SurfaceTexture> GlxBackend::createSurfaceTextureX11(SurfacePixma
 
 OutputLayerBeginFrameInfo GlxBackend::beginFrame()
 {
-    QRegion repaint;
+    RegionF repaint;
     makeCurrent();
 
     if (supportsBufferAge()) {
-        repaint = m_damageJournal.accumulate(m_bufferAge, infiniteRegion());
+        repaint = m_damageJournal.accumulate(m_bufferAge, RegionF::infiniteRegion());
     }
 
     glXWaitX();
@@ -783,13 +783,13 @@ OutputLayerBeginFrameInfo GlxBackend::beginFrame()
     };
 }
 
-void GlxBackend::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+void GlxBackend::endFrame(const RegionF &renderedRegion, const RegionF &damagedRegion)
 {
     // Save the damaged region to history
     if (supportsBufferAge()) {
         m_damageJournal.add(damagedRegion);
     }
-    m_lastRenderedRegion = renderedRegion;
+    m_lastRenderedRegion = renderedRegion.toAlignedRegion();
 }
 
 void GlxBackend::present(Output *output)

@@ -112,7 +112,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualQPainterLayer::beginFrame()
     };
 }
 
-bool VirtualQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool VirtualQPainterLayer::endFrame(const RegionF &renderedRegion, const RegionF &damagedRegion)
 {
     return true;
 }

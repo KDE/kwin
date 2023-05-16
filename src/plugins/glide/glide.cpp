@@ -122,7 +122,7 @@ void GlideEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std:
     effects->prePaintWindow(w, data, presentTime);
 }
 
-void GlideEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+void GlideEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const RegionF &region, WindowPaintData &data)
 {
     auto animationIt = m_animations.constFind(w);
     if (animationIt == m_animations.constEnd()) {

@@ -17,7 +17,7 @@ namespace KWin
 
 DrmOutputLayer::~DrmOutputLayer() = default;
 
-QRegion DrmOutputLayer::currentDamage() const
+RegionF DrmOutputLayer::currentDamage() const
 {
     return {};
 }

@@ -7,6 +7,7 @@
 #pragma once
 
 #include "libkwineffects/kwineffects_export.h"
+#include "libkwineffects/regionf.h"
 
 #include <QMatrix4x4>
 #include <QRectF>
@@ -31,6 +32,7 @@ public:
     QPoint mapToRenderTarget(const QPoint &logicalGeometry) const;
     QPointF mapToRenderTarget(const QPointF &logicalGeometry) const;
     QRegion mapToRenderTarget(const QRegion &logicalGeometry) const;
+    RegionF mapToRenderTarget(const RegionF &logicalGeometry) const;
 
     QRectF mapToRenderTargetTexture(const QRectF &logicalGeometry) const;
     QRect mapToRenderTargetTexture(const QRect &logicalGeometry) const;

@@ -26,7 +26,7 @@ public:
 
     void prePaint(SceneDelegate *delegate) override;
     void postPaint() override;
-    void paint(const RenderTarget &renderTarget, const QRegion &region) override;
+    void paint(const RenderTarget &renderTarget, const RegionF &region) override;
 
 private:
     std::unique_ptr<CursorItem> m_rootItem;

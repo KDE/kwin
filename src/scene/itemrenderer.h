@@ -6,7 +6,8 @@
 
 #pragma once
 
-#include <kwin_export.h>
+#include "kwin_export.h"
+#include "libkwineffects/regionf.h"
 
 #include <QMatrix4x4>
 
@@ -33,8 +34,8 @@ public:
     virtual void beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport);
     virtual void endFrame();
 
-    virtual void renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &region) = 0;
-    virtual void renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &region, const WindowPaintData &data) = 0;
+    virtual void renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const RegionF &region) = 0;
+    virtual void renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const RegionF &region, const WindowPaintData &data) = 0;
 
     virtual ImageItem *createImageItem(Scene *scene, Item *parent = nullptr) = 0;
 };

@@ -92,6 +92,15 @@ QRegion RenderViewport::mapToRenderTarget(const QRegion &logicalGeometry) const
     return ret;
 }
 
+RegionF RenderViewport::mapToRenderTarget(const RegionF &logicalGeometry) const
+{
+    RegionF ret;
+    for (const auto &rect : logicalGeometry) {
+        ret |= m_logicalToLocal.mapRect(rect);
+    }
+    return ret;
+}
+
 QRectF RenderViewport::mapToRenderTargetTexture(const QRectF &logicalGeometry) const
 {
     return m_logicalToLocalTexture.mapRect(logicalGeometry);

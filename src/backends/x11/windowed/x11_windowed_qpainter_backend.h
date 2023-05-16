@@ -63,7 +63,7 @@ public:
     explicit X11WindowedQPainterPrimaryLayer(X11WindowedOutput *output);
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
-    bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    bool endFrame(const RegionF &renderedRegion, const RegionF &damagedRegion) override;
     quint32 format() const override;
 
     void present();
@@ -82,7 +82,7 @@ public:
     explicit X11WindowedQPainterCursorLayer(X11WindowedOutput *output);
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
-    bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    bool endFrame(const RegionF &renderedRegion, const RegionF &damagedRegion) override;
     quint32 format() const override;
 
 private:

@@ -275,7 +275,7 @@ ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(const RenderTarget &r
     return &data;
 }
 
-void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
+void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const RegionF &region, EffectScreen *screen)
 {
     OffscreenData *offscreenData = ensureOffscreenData(renderTarget, viewport, screen);
 

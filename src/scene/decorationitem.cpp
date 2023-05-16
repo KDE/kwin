@@ -102,7 +102,7 @@ DecorationItem::DecorationItem(KDecoration2::Decoration *decoration, Window *win
             this, &DecorationItem::discardQuads);
 
     connect(renderer(), &DecorationRenderer::damaged,
-            this, qOverload<const QRegion &>(&Item::scheduleRepaint));
+            this, qOverload<const RegionF &>(&Item::scheduleRepaint));
 
     // this toSize is to match that DecoratedWindow also rounds
     setSize(window->size().toSize());

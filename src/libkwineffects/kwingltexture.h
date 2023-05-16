@@ -11,6 +11,7 @@
 #pragma once
 
 #include "libkwineffects/kwinglutils_export.h"
+#include "libkwineffects/regionf.h"
 
 #include <QExplicitlySharedDataPointer>
 #include <QMatrix4x4>
@@ -118,8 +119,8 @@ public:
     void bind();
     void unbind();
     void render(const QSizeF &size, double scale);
-    void render(const QRegion &region, const QSizeF &size, double scale, bool hardwareClipping = false);
-    void render(const QRectF &source, const QRegion &region, const QSizeF &targetSize, double scale, bool hardwareClipping = false);
+    void render(const RegionF &region, const QSizeF &size, double scale, bool hardwareClipping = false);
+    void render(const QRectF &source, const RegionF &region, const QSizeF &targetSize, double scale, bool hardwareClipping = false);
 
     GLuint texture() const;
     GLenum target() const;

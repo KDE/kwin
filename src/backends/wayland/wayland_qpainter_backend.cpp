@@ -116,16 +116,16 @@ void WaylandQPainterPrimaryLayer::present()
 
     auto s = m_waylandOutput->surface();
     s->attachBuffer(buffer);
-    s->damage(m_damageJournal.lastDamage());
+    s->damage(m_damageJournal.lastDamage().toAlignedRegion());
     s->setScale(std::ceil(m_waylandOutput->scale()));
     s->commit();
 
     m_swapchain->release(m_back);
 }
 
-QRegion WaylandQPainterPrimaryLayer::accumulateDamage(int bufferAge) const
+RegionF WaylandQPainterPrimaryLayer::accumulateDamage(int bufferAge) const
 {
-    return m_damageJournal.accumulate(bufferAge, infiniteRegion());
+    return m_damageJournal.accumulate(bufferAge, RegionF::infiniteRegion());
 }
 
 std::optional<OutputLayerBeginFrameInfo> WaylandQPainterPrimaryLayer::beginFrame()
@@ -146,7 +146,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandQPainterPrimaryLayer::beginFrame
     };
 }
 
-bool WaylandQPainterPrimaryLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool WaylandQPainterPrimaryLayer::endFrame(const RegionF &renderedRegion, const RegionF &damagedRegion)
 {
     m_damageJournal.add(damagedRegion);
     return true;
@@ -177,11 +177,11 @@ std::optional<OutputLayerBeginFrameInfo> WaylandQPainterCursorLayer::beginFrame(
 
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(&m_back->image),
-        .repaint = infiniteRegion(),
+        .repaint = RegionF::infiniteRegion(),
     };
 }
 
-bool WaylandQPainterCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool WaylandQPainterCursorLayer::endFrame(const RegionF &renderedRegion, const RegionF &damagedRegion)
 {
     wl_buffer *buffer = m_output->backend()->importBuffer(m_back->graphicsBuffer);
     Q_ASSERT(buffer);

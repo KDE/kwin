@@ -97,7 +97,7 @@ void MouseClickEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mil
     effects->prePaintScreen(data, presentTime);
 }
 
-void MouseClickEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
+void MouseClickEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const RegionF &region, EffectScreen *screen)
 {
     effects->paintScreen(renderTarget, viewport, mask, region, screen);
 

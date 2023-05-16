@@ -110,7 +110,7 @@ void MagnifierEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mill
     }
 }
 
-void MagnifierEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
+void MagnifierEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const RegionF &region, EffectScreen *screen)
 {
     effects->paintScreen(renderTarget, viewport, mask, region, screen); // paint normal screen
     if (m_zoom != 1.0) {

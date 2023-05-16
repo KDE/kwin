@@ -90,7 +90,7 @@ void SnapHelperEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mil
     effects->prePaintScreen(data, presentTime);
 }
 
-void SnapHelperEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
+void SnapHelperEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const RegionF &region, EffectScreen *screen)
 {
     effects->paintScreen(renderTarget, viewport, mask, region, screen);
 

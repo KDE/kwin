@@ -35,10 +35,10 @@ public:
     VirtualEglGbmLayer(EglGbmBackend *eglBackend, DrmVirtualOutput *output);
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
-    bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    bool endFrame(const RegionF &renderedRegion, const RegionF &damagedRegion) override;
     bool scanout(SurfaceItem *surfaceItem) override;
 
-    QRegion currentDamage() const override;
+    RegionF currentDamage() const override;
     std::shared_ptr<GLTexture> texture() const override;
     void releaseBuffers() override;
     quint32 format() const override;
@@ -51,7 +51,7 @@ private:
     std::shared_ptr<GbmBuffer> m_currentBuffer;
     std::shared_ptr<GLFramebuffer> m_fbo;
     std::shared_ptr<GLTexture> m_texture;
-    QRegion m_currentDamage;
+    RegionF m_currentDamage;
     std::shared_ptr<GbmSwapchain> m_gbmSwapchain;
     std::shared_ptr<GbmSwapchain> m_oldGbmSwapchain;
 

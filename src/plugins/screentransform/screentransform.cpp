@@ -178,7 +178,7 @@ static QRectF lerp(const QRectF &a, const QRectF &b, qreal t)
     return ret;
 }
 
-void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, KWin::EffectScreen *screen)
+void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const RegionF &region, KWin::EffectScreen *screen)
 {
     auto it = m_states.find(screen);
     if (it == m_states.end() || !it->m_captured) {

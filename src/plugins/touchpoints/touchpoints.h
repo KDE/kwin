@@ -27,7 +27,7 @@ public:
     TouchPointsEffect();
     ~TouchPointsEffect() override;
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen) override;
+    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const RegionF &region, EffectScreen *screen) override;
     void postPaintScreen() override;
     bool isActive() const override;
     bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override;

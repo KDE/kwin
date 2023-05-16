@@ -136,7 +136,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglPrimaryLayer::beginFrame(
     };
 }
 
-bool X11WindowedEglPrimaryLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool X11WindowedEglPrimaryLayer::endFrame(const RegionF &renderedRegion, const RegionF &damagedRegion)
 {
     return true;
 }
@@ -215,7 +215,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglCursorLayer::beginFrame()
     };
 }
 
-bool X11WindowedEglCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool X11WindowedEglCursorLayer::endFrame(const RegionF &renderedRegion, const RegionF &damagedRegion)
 {
     QImage buffer(m_framebuffer->size(), QImage::Format_RGBA8888_Premultiplied);
 

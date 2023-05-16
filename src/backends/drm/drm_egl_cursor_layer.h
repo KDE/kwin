@@ -30,9 +30,9 @@ public:
     EglGbmCursorLayer(EglGbmBackend *eglBackend, DrmPipeline *pipeline);
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
-    bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    bool endFrame(const RegionF &renderedRegion, const RegionF &damagedRegion) override;
     std::shared_ptr<DrmFramebuffer> currentBuffer() const override;
-    QRegion currentDamage() const override;
+    RegionF currentDamage() const override;
     bool checkTestBuffer() override;
     void releaseBuffers() override;
     quint32 format() const override;

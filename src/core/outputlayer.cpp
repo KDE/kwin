@@ -44,19 +44,19 @@ void OutputLayer::setSize(const QSizeF &size)
     m_size = size;
 }
 
-QRegion OutputLayer::repaints() const
+RegionF OutputLayer::repaints() const
 {
     return m_repaints;
 }
 
-void OutputLayer::addRepaint(const QRegion &region)
+void OutputLayer::addRepaint(const RegionF &region)
 {
-    m_repaints += region;
+    m_repaints |= region;
 }
 
 void OutputLayer::resetRepaints()
 {
-    m_repaints = QRegion();
+    m_repaints.clear();
 }
 
 bool OutputLayer::scanout(SurfaceItem *surfaceItem)

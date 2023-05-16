@@ -114,7 +114,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame()
     };
 }
 
-bool VirtualEglLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool VirtualEglLayer::endFrame(const RegionF &renderedRegion, const RegionF &damagedRegion)
 {
     glFlush(); // flush pending rendering commands.
     Q_EMIT m_output->outputChange(damagedRegion);

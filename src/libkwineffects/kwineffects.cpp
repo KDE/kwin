@@ -431,7 +431,7 @@ void Effect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds 
     effects->prePaintScreen(data, presentTime);
 }
 
-void Effect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
+void Effect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const RegionF &region, EffectScreen *screen)
 {
     effects->paintScreen(renderTarget, viewport, mask, region, screen);
 }
@@ -446,7 +446,7 @@ void Effect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chro
     effects->prePaintWindow(w, data, presentTime);
 }
 
-void Effect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+void Effect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const RegionF &region, WindowPaintData &data)
 {
     effects->paintWindow(renderTarget, viewport, w, mask, region, data);
 }
@@ -471,7 +471,7 @@ QString Effect::debug(const QString &) const
     return QString();
 }
 
-void Effect::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data)
+void Effect::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const RegionF &region, WindowPaintData &data)
 {
     effects->drawWindow(renderTarget, viewport, w, mask, region, data);
 }

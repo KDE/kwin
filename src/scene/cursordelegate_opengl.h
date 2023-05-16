@@ -25,7 +25,7 @@ public:
     CursorDelegateOpenGL(Output *output);
     ~CursorDelegateOpenGL() override;
 
-    void paint(const RenderTarget &renderTarget, const QRegion &region) override;
+    void paint(const RenderTarget &renderTarget, const RegionF &region) override;
 
 private:
     Output *const m_output;

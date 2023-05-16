@@ -63,7 +63,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::beginFrame()
     return m_surface.startRendering(m_pipeline->mode()->size(), drmToTextureRotation(m_pipeline) | TextureTransform::MirrorY, m_pipeline->formats(), Colorspace(m_pipeline->colorimetry(), m_pipeline->transferFunction()), m_pipeline->output()->sdrBrightness(), m_pipeline->output()->channelFactors());
 }
 
-bool EglGbmLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool EglGbmLayer::endFrame(const RegionF &renderedRegion, const RegionF &damagedRegion)
 {
     const bool ret = m_surface.endRendering(damagedRegion);
     if (ret) {
@@ -72,7 +72,7 @@ bool EglGbmLayer::endFrame(const QRegion &renderedRegion, const QRegion &damaged
     return ret;
 }
 
-QRegion EglGbmLayer::currentDamage() const
+RegionF EglGbmLayer::currentDamage() const
 {
     return m_currentDamage;
 }

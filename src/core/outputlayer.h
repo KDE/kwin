@@ -7,10 +7,10 @@
 #pragma once
 
 #include "kwin_export.h"
+#include "libkwineffects/regionf.h"
 #include "libkwineffects/rendertarget.h"
 
 #include <QObject>
-#include <QRegion>
 #include <optional>
 
 namespace KWin
@@ -21,7 +21,7 @@ class SurfaceItem;
 struct OutputLayerBeginFrameInfo
 {
     RenderTarget renderTarget;
-    QRegion repaint;
+    RegionF repaint;
 };
 
 class KWIN_EXPORT OutputLayer : public QObject
@@ -39,12 +39,12 @@ public:
     QSizeF size() const;
     void setSize(const QSizeF &size);
 
-    QRegion repaints() const;
+    RegionF repaints() const;
     void resetRepaints();
-    void addRepaint(const QRegion &region);
+    void addRepaint(const RegionF &region);
 
     virtual std::optional<OutputLayerBeginFrameInfo> beginFrame() = 0;
-    virtual bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) = 0;
+    virtual bool endFrame(const RegionF &renderedRegion, const RegionF &damagedRegion) = 0;
 
     /**
      * Format in which the output data is internally stored in a drm fourcc format
@@ -58,7 +58,7 @@ public:
     virtual bool scanout(SurfaceItem *surfaceItem);
 
 private:
-    QRegion m_repaints;
+    RegionF m_repaints;
     QPointF m_hotspot;
     QSizeF m_size;
     qreal m_scale = 1.0;

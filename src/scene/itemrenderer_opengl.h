@@ -35,7 +35,7 @@ public:
         QStack<QMatrix4x4> transformStack;
         QStack<qreal> opacityStack;
         const QMatrix4x4 projectionMatrix;
-        const QRegion clip;
+        const RegionF clip;
         const bool hardwareClipping;
         const qreal renderTargetScale;
     };
@@ -45,8 +45,8 @@ public:
     void beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport) override;
     void endFrame() override;
 
-    void renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &region) override;
-    void renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &region, const WindowPaintData &data) override;
+    void renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const RegionF &region) override;
+    void renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const RegionF &region, const WindowPaintData &data) override;
 
     ImageItem *createImageItem(Scene *scene, Item *parent = nullptr) override;
 

@@ -20,7 +20,7 @@ class CursorDelegateQPainter final : public RenderLayerDelegate
 public:
     CursorDelegateQPainter(Output *output);
 
-    void paint(const RenderTarget &renderTarget, const QRegion &region) override;
+    void paint(const RenderTarget &renderTarget, const RegionF &region) override;
 
 private:
     Output *const m_output;

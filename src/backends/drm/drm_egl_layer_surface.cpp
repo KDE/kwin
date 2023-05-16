@@ -92,7 +92,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
 
     if (m_surface.colorspace != colorspace || m_surface.channelFactors != channelFactors || m_surface.sdrBrightness != sdrBrightness) {
         m_surface.gbmSwapchain->resetDamage();
-        repaint = infiniteRegion();
+        repaint = RegionF::infiniteRegion();
         m_surface.colorspace = colorspace;
         m_surface.channelFactors = channelFactors;
         m_surface.sdrBrightness = sdrBrightness;
@@ -114,7 +114,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
     }
 }
 
-bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion)
+bool EglGbmLayerSurface::endRendering(const RegionF &damagedRegion)
 {
     if (m_surface.colorspace != Colorspace::sRGB) {
         const auto &[texture, fbo] = m_surface.textureCache[m_surface.currentBuffer->bo()];

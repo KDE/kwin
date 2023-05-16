@@ -41,7 +41,7 @@ GbmSwapchain::~GbmSwapchain()
     }
 }
 
-std::pair<std::shared_ptr<GbmBuffer>, QRegion> GbmSwapchain::acquire()
+std::pair<std::shared_ptr<GbmBuffer>, RegionF> GbmSwapchain::acquire()
 {
     for (auto &[bo, bufferAge] : m_buffers) {
         bufferAge++;
@@ -55,19 +55,19 @@ std::pair<std::shared_ptr<GbmBuffer>, QRegion> GbmSwapchain::acquire()
         }
         if (!newBo) {
             qCWarning(KWIN_DRM) << "Creating gbm buffer failed!" << strerror(errno);
-            return std::make_pair(nullptr, infiniteRegion());
+            return std::make_pair(nullptr, RegionF::infiniteRegion());
         } else {
-            return std::make_pair(std::make_shared<GbmBuffer>(newBo, shared_from_this()), infiniteRegion());
+            return std::make_pair(std::make_shared<GbmBuffer>(newBo, shared_from_this()), RegionF::infiniteRegion());
         }
     } else {
         const auto [bo, bufferAge] = m_buffers.front();
         m_buffers.pop_front();
         return std::make_pair(std::make_shared<GbmBuffer>(bo, shared_from_this()),
-                              m_damageJournal.accumulate(bufferAge, infiniteRegion()));
+                              m_damageJournal.accumulate(bufferAge, RegionF::infiniteRegion()));
     }
 }
 
-void GbmSwapchain::damage(const QRegion &damage)
+void GbmSwapchain::damage(const RegionF &damage)
 {
     m_damageJournal.add(damage);
 }

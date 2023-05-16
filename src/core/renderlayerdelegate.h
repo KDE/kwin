@@ -7,6 +7,7 @@
 #pragma once
 
 #include "kwin_export.h"
+#include "libkwineffects/regionf.h"
 
 #include <QRegion>
 
@@ -32,7 +33,7 @@ public:
     /**
      * Returns the repaints schduled for the next frame.
      */
-    virtual QRegion repaints() const;
+    virtual RegionF repaints() const;
 
     /**
      * This function is called by the compositor before starting compositing. Reimplement
@@ -56,7 +57,7 @@ public:
      * This function is called when the compositor wants the render layer delegate
      * to repaint its contents.
      */
-    virtual void paint(const RenderTarget &renderTarget, const QRegion &region) = 0;
+    virtual void paint(const RenderTarget &renderTarget, const RegionF &region) = 0;
 
 private:
     RenderLayer *m_layer = nullptr;

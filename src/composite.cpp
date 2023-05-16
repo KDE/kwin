@@ -644,14 +644,14 @@ void Compositor::composite(RenderLoop *renderLoop)
     }
 
     if (!directScanout) {
-        QRegion surfaceDamage = primaryLayer->repaints();
+        RegionF surfaceDamage = primaryLayer->repaints();
         primaryLayer->resetRepaints();
         preparePaintPass(superLayer, &surfaceDamage);
 
         if (auto beginInfo = primaryLayer->beginFrame()) {
             auto &[renderTarget, repaint] = beginInfo.value();
 
-            const QRegion bufferDamage = surfaceDamage.united(repaint).intersected(superLayer->rect().toAlignedRect());
+            const RegionF bufferDamage = (surfaceDamage | repaint) & superLayer->rect();
 
             paintPass(superLayer, renderTarget, bufferDamage);
             primaryLayer->endFrame(bufferDamage, surfaceDamage);
@@ -695,10 +695,10 @@ void Compositor::postPaintPass(RenderLayer *layer)
     }
 }
 
-void Compositor::preparePaintPass(RenderLayer *layer, QRegion *repaint)
+void Compositor::preparePaintPass(RenderLayer *layer, RegionF *repaint)
 {
     // TODO: Cull opaque region.
-    *repaint += layer->mapToGlobal(layer->repaints() + layer->delegate()->repaints());
+    *repaint |= layer->mapToGlobal(layer->repaints() | layer->delegate()->repaints());
     layer->resetRepaints();
     const auto sublayers = layer->sublayers();
     for (RenderLayer *sublayer : sublayers) {
@@ -708,7 +708,7 @@ void Compositor::preparePaintPass(RenderLayer *layer, QRegion *repaint)
     }
 }
 
-void Compositor::paintPass(RenderLayer *layer, const RenderTarget &renderTarget, const QRegion &region)
+void Compositor::paintPass(RenderLayer *layer, const RenderTarget &renderTarget, const RegionF &region)
 {
     layer->delegate()->paint(renderTarget, region);
 

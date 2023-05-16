@@ -77,7 +77,7 @@ public:
     void present();
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
-    bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    bool endFrame(const RegionF &renderedRegion, const RegionF &damagedRegion) override;
     quint32 format() const override;
 
 private:
@@ -99,7 +99,7 @@ public:
     ~WaylandEglCursorLayer() override;
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
-    bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    bool endFrame(const RegionF &renderedRegion, const RegionF &damagedRegion) override;
     quint32 format() const override;
 
 private:

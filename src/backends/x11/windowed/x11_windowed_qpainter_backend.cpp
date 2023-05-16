@@ -126,7 +126,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedQPainterPrimaryLayer::beginF
     };
 }
 
-bool X11WindowedQPainterPrimaryLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool X11WindowedQPainterPrimaryLayer::endFrame(const RegionF &renderedRegion, const RegionF &damagedRegion)
 {
     return true;
 }
@@ -196,7 +196,7 @@ quint32 X11WindowedQPainterCursorLayer::format() const
     return DRM_FORMAT_ARGB8888;
 }
 
-bool X11WindowedQPainterCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool X11WindowedQPainterCursorLayer::endFrame(const RegionF &renderedRegion, const RegionF &damagedRegion)
 {
     m_output->cursor()->update(m_buffer, hotspot());
     return true;

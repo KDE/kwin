@@ -34,8 +34,8 @@ class ThumbnailAsideEffect
 public:
     ThumbnailAsideEffect();
     void reconfigure(ReconfigureFlags) override;
-    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen) override;
-    void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
+    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const RegionF &region, EffectScreen *screen) override;
+    void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const RegionF &region, WindowPaintData &data) override;
 
     // for properties
     int configuredMaxWidth() const
@@ -78,7 +78,7 @@ private:
     int spacing;
     double opacity;
     int screen;
-    QRegion painted;
+    RegionF painted;
 };
 
 } // namespace

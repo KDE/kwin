@@ -101,7 +101,7 @@ void OutputLocatorEffect::hide()
     effects->addRepaint(repaintRegion);
 }
 
-void OutputLocatorEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, KWin::EffectScreen *screen)
+void OutputLocatorEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const RegionF &region, KWin::EffectScreen *screen)
 {
     effects->paintScreen(renderTarget, viewport, mask, region, screen);
     // On X11 all screens are painted at once

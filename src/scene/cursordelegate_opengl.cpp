@@ -29,9 +29,9 @@ CursorDelegateOpenGL::~CursorDelegateOpenGL()
 {
 }
 
-void CursorDelegateOpenGL::paint(const RenderTarget &renderTarget, const QRegion &region)
+void CursorDelegateOpenGL::paint(const RenderTarget &renderTarget, const RegionF &region)
 {
-    if (!region.intersects(layer()->mapToGlobal(layer()->rect()).toAlignedRect())) {
+    if (!region.intersects(layer()->mapToGlobal(layer()->rect()))) {
         return;
     }
 

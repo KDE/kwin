@@ -157,9 +157,9 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglPrimaryLayer::beginFrame()
         return std::nullopt;
     }
 
-    QRegion repair;
+    RegionF repair;
     if (m_backend->supportsBufferAge()) {
-        repair = m_damageJournal.accumulate(m_buffer->age(), infiniteRegion());
+        repair = m_damageJournal.accumulate(m_buffer->age(), RegionF::infiniteRegion());
     }
 
     return OutputLayerBeginFrameInfo{
@@ -168,7 +168,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglPrimaryLayer::beginFrame()
     };
 }
 
-bool WaylandEglPrimaryLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool WaylandEglPrimaryLayer::endFrame(const RegionF &renderedRegion, const RegionF &damagedRegion)
 {
     // Flush rendering commands to the dmabuf.
     glFlush();
@@ -184,7 +184,7 @@ void WaylandEglPrimaryLayer::present()
 
     KWayland::Client::Surface *surface = m_waylandOutput->surface();
     surface->attachBuffer(buffer);
-    surface->damage(m_damageJournal.lastDamage());
+    surface->damage(m_damageJournal.lastDamage().toAlignedRegion());
     surface->setScale(std::ceil(m_waylandOutput->scale()));
     surface->commit();
     Q_EMIT m_waylandOutput->outputChange(m_damageJournal.lastDamage());
@@ -230,7 +230,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame()
     };
 }
 
-bool WaylandEglCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool WaylandEglCursorLayer::endFrame(const RegionF &renderedRegion, const RegionF &damagedRegion)
 {
     // Flush rendering commands to the dmabuf.
     glFlush();

@@ -46,20 +46,20 @@ void ItemRendererQPainter::endFrame()
     m_painter->end();
 }
 
-void ItemRendererQPainter::renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &region)
+void ItemRendererQPainter::renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const RegionF &region)
 {
     m_painter->setCompositionMode(QPainter::CompositionMode_Source);
-    for (const QRect &rect : region) {
+    for (const QRectF &rect : region) {
         m_painter->fillRect(rect, Qt::transparent);
     }
     m_painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
 }
 
-void ItemRendererQPainter::renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &_region, const WindowPaintData &data)
+void ItemRendererQPainter::renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const RegionF &_region, const WindowPaintData &data)
 {
-    QRegion region = _region;
+    RegionF region = _region;
 
-    const QRect boundingRect = item->mapToGlobal(item->boundingRect()).toAlignedRect();
+    const QRectF boundingRect = item->mapToGlobal(item->boundingRect());
     if (!(mask & (Scene::PAINT_WINDOW_TRANSFORMED | Scene::PAINT_SCREEN_TRANSFORMED))) {
         region &= boundingRect;
     }
@@ -69,7 +69,7 @@ void ItemRendererQPainter::renderItem(const RenderTarget &renderTarget, const Re
     }
 
     m_painter->save();
-    m_painter->setClipRegion(region);
+    m_painter->setClipRegion(region.toAlignedRegion());
     m_painter->setClipping(true);
     m_painter->setOpacity(data.opacity());
 

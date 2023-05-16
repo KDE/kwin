@@ -324,7 +324,7 @@ public:
     QString debug(const QString &parameter) const override;
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
+    void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const RegionF &region, WindowPaintData &data) override;
     void postPaintScreen() override;
 
     /**
@@ -507,7 +507,7 @@ protected:
 
 private:
     quint64 p_animate(EffectWindow *w, Attribute a, uint meta, int ms, FPx2 to, const QEasingCurve &curve, int delay, FPx2 from, bool keepAtTarget, bool fullScreenEffect, bool keepAlive, GLShader *shader);
-    QRect clipRect(const QRect &windowRect, const AniData &) const;
+    QRectF clipRect(const QRectF &windowRect, const AniData &) const;
     float interpolated(const AniData &, int i = 0) const;
     float progress(const AniData &) const;
     void disconnectGeometryChanges();

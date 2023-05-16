@@ -55,7 +55,7 @@ public:
     ~EglGbmLayerSurface();
 
     std::optional<OutputLayerBeginFrameInfo> startRendering(const QSize &bufferSize, TextureTransforms transformation, const QMap<uint32_t, QVector<uint64_t>> &formats, const Colorspace &colorspace, uint32_t sdrBrightness, const QVector3D &channelFactors);
-    bool endRendering(const QRegion &damagedRegion);
+    bool endRendering(const RegionF &damagedRegion);
 
     bool doesSurfaceFit(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const;
     std::shared_ptr<GLTexture> texture() const;

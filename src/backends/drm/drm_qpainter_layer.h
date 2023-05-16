@@ -27,10 +27,10 @@ public:
     DrmQPainterLayer(DrmPipeline *pipeline);
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
-    bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    bool endFrame(const RegionF &renderedRegion, const RegionF &damagedRegion) override;
     bool checkTestBuffer() override;
     std::shared_ptr<DrmFramebuffer> currentBuffer() const override;
-    QRegion currentDamage() const override;
+    RegionF currentDamage() const override;
     void releaseBuffers() override;
     quint32 format() const override;
 
@@ -39,7 +39,7 @@ private:
 
     std::shared_ptr<DumbSwapchain> m_swapchain;
     std::shared_ptr<DrmFramebuffer> m_currentFramebuffer;
-    QRegion m_currentDamage;
+    RegionF m_currentDamage;
 };
 
 class DrmCursorQPainterLayer : public DrmOverlayLayer
@@ -48,11 +48,11 @@ public:
     DrmCursorQPainterLayer(DrmPipeline *pipeline);
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
-    bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    bool endFrame(const RegionF &renderedRegion, const RegionF &damagedRegion) override;
 
     bool checkTestBuffer() override;
     std::shared_ptr<DrmFramebuffer> currentBuffer() const override;
-    QRegion currentDamage() const override;
+    RegionF currentDamage() const override;
     void releaseBuffers() override;
 
 private:
@@ -66,14 +66,14 @@ public:
     DrmVirtualQPainterLayer(DrmVirtualOutput *output);
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
-    bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    bool endFrame(const RegionF &renderedRegion, const RegionF &damagedRegion) override;
 
-    QRegion currentDamage() const override;
+    RegionF currentDamage() const override;
     void releaseBuffers() override;
 
 private:
     QImage m_image;
-    QRegion m_currentDamage;
+    RegionF m_currentDamage;
     DrmVirtualOutput *const m_output;
 };
 }

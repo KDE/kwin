@@ -38,14 +38,14 @@ DumbSwapchain::DumbSwapchain(DrmGpu *gpu, const QSize &size, uint32_t drmFormat)
     }
 }
 
-std::shared_ptr<DrmDumbBuffer> DumbSwapchain::acquireBuffer(QRegion *needsRepaint)
+std::shared_ptr<DrmDumbBuffer> DumbSwapchain::acquireBuffer(RegionF *needsRepaint)
 {
     if (m_slots.isEmpty()) {
         return {};
     }
     index = (index + 1) % m_slots.count();
     if (needsRepaint) {
-        *needsRepaint = m_damageJournal.accumulate(m_slots[index].age, infiniteRegion());
+        *needsRepaint = m_damageJournal.accumulate(m_slots[index].age, RegionF::infiniteRegion());
     }
     return m_slots[index].buffer;
 }
@@ -55,7 +55,7 @@ std::shared_ptr<DrmDumbBuffer> DumbSwapchain::currentBuffer() const
     return m_slots[index].buffer;
 }
 
-void DumbSwapchain::releaseBuffer(const std::shared_ptr<DrmDumbBuffer> &buffer, const QRegion &damage)
+void DumbSwapchain::releaseBuffer(const std::shared_ptr<DrmDumbBuffer> &buffer, const RegionF &damage)
 {
     Q_ASSERT(m_slots[index].buffer == buffer);
 

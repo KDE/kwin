@@ -28,7 +28,7 @@ public:
     EglLayer(EglBackend *backend);
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
-    bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    bool endFrame(const RegionF &renderedRegion, const RegionF &damagedRegion) override;
     uint format() const override;
 
 private:
@@ -47,7 +47,7 @@ public:
 
     std::unique_ptr<SurfaceTexture> createSurfaceTextureX11(SurfacePixmapX11 *texture) override;
     OutputLayerBeginFrameInfo beginFrame();
-    void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion);
+    void endFrame(const RegionF &renderedRegion, const RegionF &damagedRegion);
     void present(Output *output) override;
     OverlayWindow *overlayWindow() const override;
     OutputLayer *primaryLayer(Output *output) override;

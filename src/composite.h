@@ -10,6 +10,7 @@
 #pragma once
 
 #include "libkwineffects/kwinglobals.h"
+#include "libkwineffects/regionf.h"
 #include <xcb/xcb.h>
 
 #include <QObject>
@@ -201,8 +202,8 @@ private:
 
     void prePaintPass(RenderLayer *layer);
     void postPaintPass(RenderLayer *layer);
-    void preparePaintPass(RenderLayer *layer, QRegion *repaint);
-    void paintPass(RenderLayer *layer, const RenderTarget &renderTarget, const QRegion &region);
+    void preparePaintPass(RenderLayer *layer, RegionF *repaint);
+    void paintPass(RenderLayer *layer, const RenderTarget &renderTarget, const RegionF &region);
 
     State m_state = State::Off;
     std::unique_ptr<CompositorSelectionOwner> m_selectionOwner;

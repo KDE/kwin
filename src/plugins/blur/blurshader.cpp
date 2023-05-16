@@ -249,7 +249,7 @@ void BlurShader::setNoiseTextureSize(const QSize &noiseTextureSize)
     }
 }
 
-void BlurShader::setTexturePosition(const QPoint &texPos)
+void BlurShader::setTexturePosition(const QPointF &texPos)
 {
     m_shaderNoisesample->setUniform(m_texStartPosLocationNoisesample, QVector2D(-texPos.x(), texPos.y()));
 }

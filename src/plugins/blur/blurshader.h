@@ -42,7 +42,7 @@ public:
     void setTargetTextureSize(const QSize &renderTextureSize);
     void setFragCoordToUv(const QMatrix4x4 &fragCoordToUv);
     void setNoiseTextureSize(const QSize &noiseTextureSize);
-    void setTexturePosition(const QPoint &texPos);
+    void setTexturePosition(const QPointF &texPos);
     void setBlurRect(const QRect &blurRect, const QSizeF &screenSize);
 
 private:

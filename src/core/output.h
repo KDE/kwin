@@ -10,6 +10,7 @@
 
 #include <kwin_export.h>
 
+#include "libkwineffects/regionf.h"
 #include "renderloop.h"
 #include "utils/edid.h"
 
@@ -312,7 +313,7 @@ Q_SIGNALS:
 
     void currentModeChanged();
     void modesChanged();
-    void outputChange(const QRegion &damagedRegion);
+    void outputChange(const RegionF &damagedRegion);
     void transformChanged();
     void dpmsModeChanged();
     void capabilitiesChanged();

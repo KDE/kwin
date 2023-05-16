@@ -23,9 +23,9 @@ CursorDelegateQPainter::CursorDelegateQPainter(Output *output)
 {
 }
 
-void CursorDelegateQPainter::paint(const RenderTarget &renderTarget, const QRegion &region)
+void CursorDelegateQPainter::paint(const RenderTarget &renderTarget, const RegionF &region)
 {
-    if (!region.intersects(layer()->mapToGlobal(layer()->rect()).toAlignedRect())) {
+    if (!region.intersects(layer()->mapToGlobal(layer()->rect()))) {
         return;
     }
 
@@ -48,7 +48,7 @@ void CursorDelegateQPainter::paint(const RenderTarget &renderTarget, const QRegi
     renderLayer.delegate()->postPaint();
 
     QPainter painter(buffer);
-    painter.setClipRegion(region);
+    painter.setClipRegion(region.toAlignedRegion());
     painter.drawImage(layer()->mapToGlobal(layer()->rect()), m_buffer);
 }
 

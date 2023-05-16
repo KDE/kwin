@@ -510,14 +510,14 @@ void GLTexture::render(const QSizeF &size, qreal scale)
     render(infiniteRegion(), size, scale, false);
 }
 
-void GLTexture::render(const QRegion &region, const QSizeF &targetSize, double scale, bool hardwareClipping)
+void GLTexture::render(const RegionF &region, const QSizeF &targetSize, double scale, bool hardwareClipping)
 {
     Q_D(GLTexture);
     const auto rotatedSize = d->m_textureToBufferMatrix.mapRect(QRect(QPoint(), size())).size();
     render(QRectF(QPoint(), rotatedSize), region, targetSize, scale, hardwareClipping);
 }
 
-void GLTexture::render(const QRectF &source, const QRegion &region, const QSizeF &targetSize, double scale, bool hardwareClipping)
+void GLTexture::render(const QRectF &source, const RegionF &region, const QSizeF &targetSize, double scale, bool hardwareClipping)
 {
     Q_D(GLTexture);
     if (targetSize.isEmpty()) {
@@ -565,7 +565,7 @@ void GLTexture::render(const QRectF &source, const QRegion &region, const QSizeF
         d->m_vbo->setData(4, 2, verts, texcoords);
     }
     bind();
-    d->m_vbo->render(region, GL_TRIANGLE_STRIP, hardwareClipping);
+    d->m_vbo->render(region.round(scale), GL_TRIANGLE_STRIP, hardwareClipping);
     unbind();
 }
 

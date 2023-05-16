@@ -49,12 +49,12 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmCursorLayer::beginFrame()
     return m_surface.startRendering(m_pipeline->gpu()->cursorSize(), drmToTextureRotation(m_pipeline) | TextureTransform::MirrorY, m_pipeline->cursorFormats(), Colorspace(m_pipeline->colorimetry(), m_pipeline->transferFunction()), m_pipeline->output()->sdrBrightness(), m_pipeline->output()->channelFactors());
 }
 
-bool EglGbmCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool EglGbmCursorLayer::endFrame(const RegionF &renderedRegion, const RegionF &damagedRegion)
 {
     return m_surface.endRendering(damagedRegion);
 }
 
-QRegion EglGbmCursorLayer::currentDamage() const
+RegionF EglGbmCursorLayer::currentDamage() const
 {
     return {};
 }

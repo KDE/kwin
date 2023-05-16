@@ -23,7 +23,7 @@ public:
     SlideBackEffect();
 
     void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
+    void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const RegionF &region, WindowPaintData &data) override;
     void postPaintWindow(EffectWindow *w) override;
 
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
@@ -52,7 +52,7 @@ private:
     EffectWindow *m_justMapped, *m_upmostWindow;
     QHash<EffectWindow *, QRect> destinationList;
     int m_tabboxActive;
-    QList<QRegion> clippedRegions;
+    QList<RegionF> clippedRegions;
     std::chrono::milliseconds m_lastPresentTime = std::chrono::milliseconds::zero();
 
     QRect getSlideDestination(const QRect &windowUnderGeometry, const QRect &windowOverGeometry);

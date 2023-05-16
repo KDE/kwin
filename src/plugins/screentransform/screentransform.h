@@ -25,7 +25,7 @@ public:
     ~ScreenTransformEffect() override;
 
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, KWin::EffectScreen *screen) override;
+    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const RegionF &region, KWin::EffectScreen *screen) override;
 
     bool isActive() const override;
 

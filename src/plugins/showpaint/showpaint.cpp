@@ -43,7 +43,7 @@ ShowPaintEffect::ShowPaintEffect()
     connect(toggleAction, &QAction::triggered, this, &ShowPaintEffect::toggle);
 }
 
-void ShowPaintEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
+void ShowPaintEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const RegionF &region, EffectScreen *screen)
 {
     m_painted = QRegion();
     effects->paintScreen(renderTarget, viewport, mask, region, screen);
@@ -57,7 +57,7 @@ void ShowPaintEffect::paintScreen(const RenderTarget &renderTarget, const Render
     }
 }
 
-void ShowPaintEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+void ShowPaintEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const RegionF &region, WindowPaintData &data)
 {
     m_painted |= region;
     effects->paintWindow(renderTarget, viewport, w, mask, region, data);
@@ -77,7 +77,7 @@ void ShowPaintEffect::paintGL(const QMatrix4x4 &projection, qreal scale)
     vbo->setColor(color);
     QVector<float> verts;
     verts.reserve(m_painted.rectCount() * 12);
-    for (const QRect &r : m_painted) {
+    for (const QRectF &r : m_painted) {
         const auto deviceRect = scaledRect(r, scale);
         verts << deviceRect.x() + deviceRect.width() << deviceRect.y();
         verts << deviceRect.x() << deviceRect.y();
@@ -95,7 +95,7 @@ void ShowPaintEffect::paintQPainter()
 {
     QColor color = s_colors[m_colorIndex];
     color.setAlphaF(s_alpha);
-    for (const QRect &r : m_painted) {
+    for (const QRectF &r : m_painted) {
         effects->scenePainter()->fillRect(r, color);
     }
 }

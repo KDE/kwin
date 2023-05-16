@@ -293,21 +293,21 @@ void Item::stackAfter(Item *sibling)
     sibling->scheduleRepaint(sibling->boundingRect());
 }
 
-void Item::scheduleRepaint(const QRegion &region)
+void Item::scheduleRepaint(const RegionF &region)
 {
     if (isVisible()) {
         scheduleRepaintInternal(region);
     }
 }
 
-void Item::scheduleRepaintInternal(const QRegion &region)
+void Item::scheduleRepaintInternal(const RegionF &region)
 {
-    const QRegion globalRegion = mapToGlobal(region);
+    const RegionF globalRegion = mapToGlobal(region);
     const QList<SceneDelegate *> delegates = m_scene->delegates();
     for (SceneDelegate *delegate : delegates) {
-        const QRegion dirtyRegion = globalRegion & delegate->viewport();
+        const RegionF dirtyRegion = globalRegion & delegate->viewport();
         if (!dirtyRegion.isEmpty()) {
-            m_repaints[delegate] += dirtyRegion;
+            m_repaints[delegate] |= dirtyRegion;
             delegate->layer()->loop()->scheduleRepaint(this);
         }
     }
@@ -349,14 +349,14 @@ WindowQuadList Item::quads() const
     return m_quads.value();
 }
 
-QRegion Item::repaints(SceneDelegate *delegate) const
+RegionF Item::repaints(SceneDelegate *delegate) const
 {
     return m_repaints.value(delegate);
 }
 
 void Item::resetRepaints(SceneDelegate *delegate)
 {
-    m_repaints.insert(delegate, QRegion());
+    m_repaints.insert(delegate, RegionF());
 }
 
 void Item::removeRepaints(SceneDelegate *delegate)
@@ -384,7 +384,7 @@ void Item::setVisible(bool visible)
 
 void Item::scheduleRepaint(const QRectF &region)
 {
-    scheduleRepaint(QRegion(region.toAlignedRect()));
+    scheduleRepaint(RegionF(region));
 }
 
 bool Item::computeEffectiveVisibility() const

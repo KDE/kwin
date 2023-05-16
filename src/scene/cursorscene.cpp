@@ -55,7 +55,7 @@ void CursorScene::postPaint()
 {
 }
 
-void CursorScene::paint(const RenderTarget &renderTarget, const QRegion &region)
+void CursorScene::paint(const RenderTarget &renderTarget, const RegionF &region)
 {
     RenderViewport viewport(QRectF(QPointF(), QSizeF(renderTarget.size()) / m_paintedOutput->scale()), m_paintedOutput->scale(), renderTarget);
     m_renderer->beginFrame(renderTarget, viewport);

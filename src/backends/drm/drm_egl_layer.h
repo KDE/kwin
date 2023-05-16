@@ -30,18 +30,18 @@ public:
     EglGbmLayer(EglGbmBackend *eglBackend, DrmPipeline *pipeline);
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
-    bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    bool endFrame(const RegionF &renderedRegion, const RegionF &damagedRegion) override;
     bool scanout(SurfaceItem *surfaceItem) override;
     bool checkTestBuffer() override;
     std::shared_ptr<DrmFramebuffer> currentBuffer() const override;
     bool hasDirectScanoutBuffer() const override;
-    QRegion currentDamage() const override;
+    RegionF currentDamage() const override;
     std::shared_ptr<GLTexture> texture() const override;
     void releaseBuffers() override;
 
 private:
     std::shared_ptr<DrmFramebuffer> m_scanoutBuffer;
-    QRegion m_currentDamage;
+    RegionF m_currentDamage;
 
     EglGbmLayerSurface m_surface;
     DmabufFeedback m_dmabufFeedback;

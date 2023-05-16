@@ -30,8 +30,8 @@ public:
     explicit GbmSwapchain(DrmGpu *gpu, gbm_bo *initialBuffer, uint32_t flags);
     ~GbmSwapchain();
 
-    std::pair<std::shared_ptr<GbmBuffer>, QRegion> acquire();
-    void damage(const QRegion &damage);
+    std::pair<std::shared_ptr<GbmBuffer>, RegionF> acquire();
+    void damage(const RegionF &damage);
     void resetDamage();
     void releaseBuffer(GbmBuffer *buffer);
 

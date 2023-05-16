@@ -21,8 +21,8 @@ class ShowPaintEffect : public Effect
 public:
     ShowPaintEffect();
 
-    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen) override;
-    void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
+    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const RegionF &region, EffectScreen *screen) override;
+    void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const RegionF &region, WindowPaintData &data) override;
 
     bool isActive() const override;
 
@@ -34,7 +34,7 @@ private:
     void paintQPainter();
 
     bool m_active = false;
-    QRegion m_painted; // what's painted in one pass
+    RegionF m_painted; // what's painted in one pass
     int m_colorIndex = 0;
 };
 

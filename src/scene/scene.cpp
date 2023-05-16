@@ -24,7 +24,7 @@ SceneDelegate::~SceneDelegate()
     m_scene->removeDelegate(this);
 }
 
-QRegion SceneDelegate::repaints() const
+RegionF SceneDelegate::repaints() const
 {
     return m_scene->damage().translated(-viewport().topLeft());
 }
@@ -44,9 +44,9 @@ void SceneDelegate::postPaint()
     m_scene->postPaint();
 }
 
-void SceneDelegate::paint(const RenderTarget &renderTarget, const QRegion &region)
+void SceneDelegate::paint(const RenderTarget &renderTarget, const RegionF &region)
 {
-    m_scene->paint(renderTarget, region == infiniteRegion() ? infiniteRegion() : region.translated(viewport().topLeft()));
+    m_scene->paint(renderTarget, region.isInfinite() ? RegionF::infiniteRegion() : region.translated(viewport().topLeft()));
 }
 
 Output *SceneDelegate::output() const
@@ -78,16 +78,16 @@ void Scene::addRepaintFull()
     addRepaint(geometry());
 }
 
-void Scene::addRepaint(int x, int y, int width, int height)
+void Scene::addRepaint(double x, double y, double width, double height)
 {
-    addRepaint(QRegion(x, y, width, height));
+    addRepaint(RegionF(QRectF(x, y, width, height)));
 }
 
-void Scene::addRepaint(const QRegion &region)
+void Scene::addRepaint(const RegionF &region)
 {
     for (const auto &delegate : std::as_const(m_delegates)) {
         const QRect viewport = delegate->viewport();
-        QRegion dirtyRegion = region & viewport;
+        RegionF dirtyRegion = region & viewport;
         dirtyRegion.translate(-viewport.topLeft());
         if (!dirtyRegion.isEmpty()) {
             delegate->layer()->addRepaint(dirtyRegion);
@@ -95,9 +95,9 @@ void Scene::addRepaint(const QRegion &region)
     }
 }
 
-QRegion Scene::damage() const
+RegionF Scene::damage() const
 {
-    return QRegion();
+    return RegionF();
 }
 
 QRect Scene::geometry() const

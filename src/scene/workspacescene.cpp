@@ -135,7 +135,7 @@ Item *WorkspaceScene::containerItem() const
     return m_containerItem.get();
 }
 
-QRegion WorkspaceScene::damage() const
+RegionF WorkspaceScene::damage() const
 {
     return m_paintContext.damage;
 }
@@ -241,9 +241,9 @@ static void resetRepaintsHelper(Item *item, SceneDelegate *delegate)
     }
 }
 
-static void accumulateRepaints(Item *item, SceneDelegate *delegate, QRegion *repaints)
+static void accumulateRepaints(Item *item, SceneDelegate *delegate, RegionF *repaints)
 {
-    *repaints += item->repaints(delegate);
+    *repaints |= item->repaints(delegate);
     item->resetRepaints(delegate);
 
     const auto childItems = item->childItems();
@@ -259,7 +259,7 @@ void WorkspaceScene::preparePaintGenericScreen()
 
         WindowPrePaintData data;
         data.mask = m_paintContext.mask;
-        data.paint = infiniteRegion(); // no clipping, so doesn't really matter
+        data.paint = RegionF::infiniteRegion(); // no clipping, so doesn't really matter
 
         effects->prePaintWindow(windowItem->window()->effectWindow(), data, m_expectedPresentTimestamp);
         m_paintContext.phase2Data.append(Phase2Data{
@@ -270,7 +270,7 @@ void WorkspaceScene::preparePaintGenericScreen()
         });
     }
 
-    m_paintContext.damage = infiniteRegion();
+    m_paintContext.damage = RegionF::infiniteRegion();
 }
 
 void WorkspaceScene::preparePaintSimpleScreen()
@@ -304,12 +304,12 @@ void WorkspaceScene::preparePaintSimpleScreen()
     }
 
     // Perform an occlusion cull pass, remove surface damage occluded by opaque windows.
-    QRegion opaque;
+    RegionF opaque;
     for (int i = m_paintContext.phase2Data.size() - 1; i >= 0; --i) {
         const auto &paintData = m_paintContext.phase2Data.at(i);
-        m_paintContext.damage += paintData.region - opaque;
+        m_paintContext.damage |= paintData.region - opaque;
         if (!(paintData.mask & (PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_TRANSFORMED))) {
-            opaque += paintData.opaque;
+            opaque |= paintData.opaque;
         }
     }
 
@@ -348,7 +348,7 @@ void WorkspaceScene::postPaint()
     clearStackingOrder();
 }
 
-void WorkspaceScene::paint(const RenderTarget &renderTarget, const QRegion &region)
+void WorkspaceScene::paint(const RenderTarget &renderTarget, const RegionF &region)
 {
     Output *output = kwinApp()->operationMode() == Application::OperationMode::OperationModeX11 ? nullptr : painted_screen;
     RenderViewport viewport(output ? output->geometry() : workspace()->geometry(), output ? output->scale() : 1, renderTarget);
@@ -363,7 +363,7 @@ void WorkspaceScene::paint(const RenderTarget &renderTarget, const QRegion &regi
 }
 
 // the function that'll be eventually called by paintScreen() above
-void WorkspaceScene::finalPaintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
+void WorkspaceScene::finalPaintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const RegionF &region, EffectScreen *screen)
 {
     m_paintScreenCount++;
     if (mask & (PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS)) {
@@ -393,19 +393,19 @@ void WorkspaceScene::paintGenericScreen(const RenderTarget &renderTarget, const 
 // The optimized case without any transformations at all.
 // It can paint only the requested region and can use clipping
 // to reduce painting and improve performance.
-void WorkspaceScene::paintSimpleScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int, const QRegion &region)
+void WorkspaceScene::paintSimpleScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int, const RegionF &region)
 {
     // This is the occlusion culling pass
-    QRegion visible = region;
+    RegionF visible = region;
     for (int i = m_paintContext.phase2Data.size() - 1; i >= 0; --i) {
         Phase2Data *data = &m_paintContext.phase2Data[i];
         data->region = visible;
 
         if (!(data->mask & PAINT_WINDOW_TRANSFORMED)) {
-            data->region &= data->item->mapToGlobal(data->item->boundingRect()).toAlignedRect();
+            data->region &= data->item->mapToGlobal(data->item->boundingRect());
 
             if (!(data->mask & PAINT_WINDOW_TRANSLUCENT)) {
-                visible -= data->opaque;
+                visible = visible - data->opaque;
             }
         }
     }
@@ -417,7 +417,7 @@ void WorkspaceScene::paintSimpleScreen(const RenderTarget &renderTarget, const R
     }
 
     if (m_dndIcon) {
-        const QRegion repaint = region & m_dndIcon->mapToGlobal(m_dndIcon->boundingRect()).toRect();
+        const RegionF repaint = region & m_dndIcon->mapToGlobal(m_dndIcon->boundingRect());
         if (!repaint.isEmpty()) {
             m_renderer->renderItem(renderTarget, viewport, m_dndIcon.get(), 0, repaint, WindowPaintData(viewport.projectionMatrix()));
         }
@@ -440,7 +440,7 @@ void WorkspaceScene::clearStackingOrder()
     stacking_order.clear();
 }
 
-void WorkspaceScene::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, WindowItem *item, int mask, const QRegion &region)
+void WorkspaceScene::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, WindowItem *item, int mask, const RegionF &region)
 {
     if (region.isEmpty()) { // completely clipped
         return;
@@ -451,13 +451,13 @@ void WorkspaceScene::paintWindow(const RenderTarget &renderTarget, const RenderV
 }
 
 // the function that'll be eventually called by paintWindow() above
-void WorkspaceScene::finalPaintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data)
+void WorkspaceScene::finalPaintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindowImpl *w, int mask, const RegionF &region, WindowPaintData &data)
 {
     effects->drawWindow(renderTarget, viewport, w, mask, region, data);
 }
 
 // will be eventually called from drawWindow()
-void WorkspaceScene::finalDrawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data)
+void WorkspaceScene::finalDrawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindowImpl *w, int mask, const RegionF &region, WindowPaintData &data)
 {
     m_renderer->renderItem(renderTarget, viewport, w->windowItem(), mask, region, data);
 }

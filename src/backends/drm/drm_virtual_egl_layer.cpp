@@ -79,7 +79,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglGbmLayer::beginFrame()
     };
 }
 
-bool VirtualEglGbmLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool VirtualEglGbmLayer::endFrame(const RegionF &renderedRegion, const RegionF &damagedRegion)
 {
     glFlush();
     m_currentDamage = damagedRegion;
@@ -87,7 +87,7 @@ bool VirtualEglGbmLayer::endFrame(const QRegion &renderedRegion, const QRegion &
     return true;
 }
 
-QRegion VirtualEglGbmLayer::currentDamage() const
+RegionF VirtualEglGbmLayer::currentDamage() const
 {
     return m_currentDamage;
 }

@@ -8,12 +8,12 @@
 
 #include "kwin_export.h"
 
+#include "libkwineffects/regionf.h"
 #include "outputlayer.h"
 
 #include <QMap>
 #include <QObject>
 #include <QPointer>
-#include <QRegion>
 
 namespace KWin
 {
@@ -57,6 +57,7 @@ public:
     QPoint mapToGlobal(const QPoint &point) const;
     QPointF mapToGlobal(const QPointF &point) const;
     QRegion mapToGlobal(const QRegion &region) const;
+    RegionF mapToGlobal(const RegionF &region) const;
     QRect mapToGlobal(const QRect &rect) const;
     QRectF mapToGlobal(const QRectF &rect) const;
 
@@ -72,11 +73,11 @@ public:
     QRectF geometry() const;
     void setGeometry(const QRectF &rect);
 
-    void addRepaint(const QRegion &region);
-    void addRepaint(const QRect &rect);
-    void addRepaint(int x, int y, int width, int height);
+    void addRepaint(const RegionF &region);
+    void addRepaint(const QRectF &rect);
+    void addRepaint(double x, double y, double width, double height);
     void addRepaintFull();
-    QRegion repaints() const;
+    RegionF repaints() const;
     void resetRepaints();
 
 private:
@@ -88,7 +89,7 @@ private:
 
     RenderLoop *m_loop;
     std::unique_ptr<RenderLayerDelegate> m_delegate;
-    QRegion m_repaints;
+    RegionF m_repaints;
     QRectF m_boundingRect;
     QRectF m_geometry;
     QPointer<OutputLayer> m_outputLayer;

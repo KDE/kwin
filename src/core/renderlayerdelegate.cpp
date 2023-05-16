@@ -19,9 +19,9 @@ void RenderLayerDelegate::setLayer(RenderLayer *layer)
     m_layer = layer;
 }
 
-QRegion RenderLayerDelegate::repaints() const
+RegionF RenderLayerDelegate::repaints() const
 {
-    return QRegion();
+    return RegionF();
 }
 
 void RenderLayerDelegate::prePaint()

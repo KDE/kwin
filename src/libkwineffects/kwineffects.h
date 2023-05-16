@@ -15,6 +15,7 @@
 #include "libkwineffects/kwinconfig.h"
 #include "libkwineffects/kwineffects_export.h"
 #include "libkwineffects/kwinglobals.h"
+#include "libkwineffects/regionf.h"
 
 #include <QEasingCurve>
 #include <QIcon>
@@ -385,7 +386,7 @@ public:
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when this method is invoked.
      */
-    virtual void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen);
+    virtual void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const RegionF &region, EffectScreen *screen);
     /**
      * Called after all the painting has been finished.
      * In this method you can:
@@ -423,7 +424,7 @@ public:
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when this method is invoked.
      */
-    virtual void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data);
+    virtual void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const RegionF &region, WindowPaintData &data);
     /**
      * Called for every window after all painting has been finished.
      * In this method you can:
@@ -462,7 +463,7 @@ public:
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when this method is invoked.
      */
-    virtual void drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data);
+    virtual void drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const RegionF &region, WindowPaintData &data);
 
     virtual void windowInputMouseEvent(QEvent *e);
     virtual void grabbedKeyboardEvent(QKeyEvent *e);
@@ -843,13 +844,13 @@ public:
     ~EffectsHandler() override;
     // for use by effects
     virtual void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) = 0;
-    virtual void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen) = 0;
+    virtual void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const RegionF &region, EffectScreen *screen) = 0;
     virtual void postPaintScreen() = 0;
     virtual void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) = 0;
-    virtual void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) = 0;
+    virtual void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const RegionF &region, WindowPaintData &data) = 0;
     virtual void postPaintWindow(EffectWindow *w) = 0;
-    virtual void drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) = 0;
-    virtual void renderWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) = 0;
+    virtual void drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const RegionF &region, WindowPaintData &data) = 0;
+    virtual void renderWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const RegionF &region, WindowPaintData &data) = 0;
     virtual QVariant kwinOption(KWinOption kwopt) = 0;
     /**
      * Sets the cursor while the mouse is intercepted.
@@ -2969,14 +2970,14 @@ class KWINEFFECTS_EXPORT WindowPrePaintData
 public:
     int mask;
     /**
-     * Region that will be painted, in screen coordinates.
+     * Region that will be painted, in screen relative logical coordinates.
      */
-    QRegion paint;
+    RegionF paint;
     /**
      * Region indicating the opaque content. It can be used to avoid painting
      * windows occluded by the opaque region.
      */
-    QRegion opaque;
+    RegionF opaque;
     /**
      * Simple helper that sets data to say the window will be painted as non-opaque.
      * Takes also care of changing the regions.

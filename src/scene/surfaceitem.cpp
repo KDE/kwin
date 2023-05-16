@@ -121,22 +121,26 @@ WindowQuadList SurfaceItem::buildQuads() const
     }
 
     const RegionF region = shape();
+    QRegion mapped;
+    for (const QRectF &rect : region) {
+        // Use toRect to round the device position to match what we eventually
+        // do for the geometry, otherwise we end up with mismatched UV
+        // coordinates as the texture size is going to be in (rounded) device
+        // coordinates as well.
+        mapped |= m_surfaceToBufferMatrix.mapRect(rect).toRect();
+    }
     const auto size = pixmap()->size();
 
     WindowQuadList quads;
     quads.reserve(region.rects().size());
 
-    for (const QRectF &rect : region) {
+    for (const QRect &rect : mapped) {
         WindowQuad quad;
 
-        // Use toPoint to round the device position to match what we eventually
-        // do for the geometry, otherwise we end up with mismatched UV
-        // coordinates as the texture size is going to be in (rounded) device
-        // coordinates as well.
-        const QPointF bufferTopLeft = m_surfaceToBufferMatrix.map(rect.topLeft()).toPoint();
-        const QPointF bufferTopRight = m_surfaceToBufferMatrix.map(rect.topRight()).toPoint();
-        const QPointF bufferBottomRight = m_surfaceToBufferMatrix.map(rect.bottomRight()).toPoint();
-        const QPointF bufferBottomLeft = m_surfaceToBufferMatrix.map(rect.bottomLeft()).toPoint();
+        const QPointF bufferTopLeft = QPointF(rect.x(), rect.y());
+        const QPointF bufferTopRight = QPointF(rect.x() + rect.width(), rect.y());
+        const QPointF bufferBottomRight = QPointF(rect.x() + rect.width(), rect.y() + rect.height());
+        const QPointF bufferBottomLeft = QPointF(rect.x(), rect.y() + rect.height());
 
         quad[0] = WindowVertex(rect.topLeft(), QPointF{bufferTopLeft.x() / size.width(), bufferTopLeft.y() / size.height()});
         quad[1] = WindowVertex(rect.topRight(), QPointF{bufferTopRight.x() / size.width(), bufferTopRight.y() / size.height()});
