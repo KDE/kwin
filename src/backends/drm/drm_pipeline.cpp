@@ -719,11 +719,11 @@ std::shared_ptr<DrmBlob> DrmPipeline::createHdrMetadata(NamedTransferFunction tr
             .metadata_type = 0,
             // in 0.00002 nits
             .display_primaries = {
-                {to16Bit(colorimetry.redPrimary.x()), to16Bit(colorimetry.redPrimary.y())},
-                {to16Bit(colorimetry.greenPrimary.x()), to16Bit(colorimetry.greenPrimary.y())},
-                {to16Bit(colorimetry.bluePrimary.x()), to16Bit(colorimetry.bluePrimary.y())},
+                {to16Bit(colorimetry.red.x()), to16Bit(colorimetry.red.y())},
+                {to16Bit(colorimetry.green.x()), to16Bit(colorimetry.green.y())},
+                {to16Bit(colorimetry.blue.x()), to16Bit(colorimetry.blue.y())},
             },
-            .white_point = {to16Bit(colorimetry.whitePoint.x()), to16Bit(colorimetry.whitePoint.y())},
+            .white_point = {to16Bit(colorimetry.white.x()), to16Bit(colorimetry.white.y())},
             // in nits
             .max_display_mastering_luminance = uint16_t(std::round(metadata.desiredContentMaxLuminance)),
             // in 0.0001 nits

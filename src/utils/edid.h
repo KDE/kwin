@@ -10,6 +10,7 @@
 #pragma once
 
 #include "kwin_export.h"
+#include "libkwineffects/colorspace.h"
 
 #include <QByteArray>
 #include <QList>
@@ -78,13 +79,6 @@ public:
 
     QString hash() const;
 
-    struct Colorimetry
-    {
-        QVector2D redPrimary;
-        QVector2D greenPrimary;
-        QVector2D bluePrimary;
-        QVector2D whitePoint;
-    };
     Colorimetry colorimetry() const;
 
     struct HDRMetadata
