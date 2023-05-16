@@ -1247,7 +1247,9 @@ Output *Workspace::findOutput(Output *reference, Direction direction, bool wrapA
             return o1->geometry().center().y() < o2->geometry().center().y();
         default:
             // order outputs from top to bottom, then left to right
-            return (o1->geometry().center().y() < o2->geometry().center().y() || (o1->geometry().center().y() == o2->geometry().center().y() && o1->geometry().center().x() < o2->geometry().center().x()));
+            // case 1: o1 is above o2
+            // case 2: o1 is not below o2, and o1 is left of o2
+            return o1->geometry().y() + o1->geometry().height() <= o2->geometry().top() || (o1->geometry().top() < o2->geometry().y() + o2->geometry().height() && o1->geometry().left() < o2->geometry().left());
         }
     });
 
