@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-14 02:27+0000\n"
+"POT-Creation-Date: 2023-05-16 02:15+0000\n"
 "PO-Revision-Date: 2022-11-14 01:16+0100\n"
 "Last-Translator: Mihkel Tõnnov <mihhkel@gmail.com>\n"
 "Language-Team: Estonian <>\n"
@@ -2096,14 +2096,14 @@ msgstr " pikslit"
 msgid "&Height:"
 msgstr "Parem"
 
-#: plugins/mouseclick/mouseclick.cpp:36
+#: plugins/mouseclick/mouseclick.cpp:37
 #: plugins/mouseclick/mouseclick_config.cpp:51
 #, fuzzy, kde-format
 #| msgid "Toggle Expose Effect"
 msgid "Toggle Mouse Click Effect"
 msgstr "Expose-efekti lülitamine"
 
-#: plugins/mouseclick/mouseclick.cpp:43
+#: plugins/mouseclick/mouseclick.cpp:44
 #, fuzzy, kde-format
 #| msgctxt "A mouse button"
 #| msgid "Left"
@@ -2111,7 +2111,7 @@ msgctxt "Left mouse button"
 msgid "Left"
 msgstr "Vasak"
 
-#: plugins/mouseclick/mouseclick.cpp:44
+#: plugins/mouseclick/mouseclick.cpp:45
 #, fuzzy, kde-format
 #| msgctxt "A mouse button"
 #| msgid "Middle"
@@ -2119,7 +2119,7 @@ msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "Keskmine"
 
-#: plugins/mouseclick/mouseclick.cpp:45
+#: plugins/mouseclick/mouseclick.cpp:46
 #, fuzzy, kde-format
 #| msgctxt "A mouse button"
 #| msgid "Right"
@@ -2229,12 +2229,12 @@ msgstr "Font:"
 msgid "Show Text:"
 msgstr "Töölaua näitamine"
 
-#: plugins/mousemark/mousemark.cpp:40
+#: plugins/mousemark/mousemark.cpp:41
 #, kde-format
 msgid "Clear All Mouse Marks"
 msgstr "Eemalda kõik hiiretähised"
 
-#: plugins/mousemark/mousemark.cpp:46 plugins/mousemark/mousemark_config.cpp:59
+#: plugins/mousemark/mousemark.cpp:47 plugins/mousemark/mousemark_config.cpp:59
 #, kde-format
 msgid "Clear Last Mouse Mark"
 msgstr "Eemalda viimane hiiretähis"
@@ -2592,7 +2592,7 @@ msgstr "Hõljuv"
 msgid "Delete"
 msgstr ""
 
-#: plugins/trackmouse/trackmouse.cpp:45
+#: plugins/trackmouse/trackmouse.cpp:46
 #: plugins/trackmouse/trackmouse_config.cpp:57
 #, kde-format
 msgid "Track mouse"
@@ -4197,7 +4197,7 @@ msgstr ""
 "Aknahaldur on seadistatud pidama hiirekursoriga ekraani aktiivseks.\n"
 "Seepärast ei saa otse ekraanile lülituda."
 
-#: utils/edid.cpp:183
+#: utils/edid.cpp:234
 #, kde-format
 msgid "unknown"
 msgstr "tundmatu"
@@ -4242,7 +4242,7 @@ msgstr "Lülitumine üks töölaud alla"
 msgid "Switch to Desktop %1"
 msgstr "Lülitumine töölauale %1"
 
-#: window.cpp:3108
+#: window.cpp:3098
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

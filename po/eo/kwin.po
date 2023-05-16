@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-14 02:27+0000\n"
+"POT-Creation-Date: 2023-05-16 02:15+0000\n"
 "PO-Revision-Date: 2023-04-22 18:07+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -2068,25 +2068,25 @@ msgstr " px"
 msgid "&Height:"
 msgstr "&Alteco:"
 
-#: plugins/mouseclick/mouseclick.cpp:36
+#: plugins/mouseclick/mouseclick.cpp:37
 #: plugins/mouseclick/mouseclick_config.cpp:51
 #, kde-format
 msgid "Toggle Mouse Click Effect"
 msgstr "Baskuligi Musklakan Efekton"
 
-#: plugins/mouseclick/mouseclick.cpp:43
+#: plugins/mouseclick/mouseclick.cpp:44
 #, kde-format
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr "Maldekstre"
 
-#: plugins/mouseclick/mouseclick.cpp:44
+#: plugins/mouseclick/mouseclick.cpp:45
 #, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "Mezo"
 
-#: plugins/mouseclick/mouseclick.cpp:45
+#: plugins/mouseclick/mouseclick.cpp:46
 #, kde-format
 msgctxt "Right mouse button"
 msgid "Right"
@@ -2184,12 +2184,12 @@ msgstr "Tiparo:"
 msgid "Show Text:"
 msgstr "Montri Tekston:"
 
-#: plugins/mousemark/mousemark.cpp:40
+#: plugins/mousemark/mousemark.cpp:41
 #, kde-format
 msgid "Clear All Mouse Marks"
 msgstr "Forigi Ĉiujn Musmarkojn"
 
-#: plugins/mousemark/mousemark.cpp:46 plugins/mousemark/mousemark_config.cpp:59
+#: plugins/mousemark/mousemark.cpp:47 plugins/mousemark/mousemark_config.cpp:59
 #, kde-format
 msgid "Clear Last Mouse Mark"
 msgstr "Forigi Lastan Musmarkon"
@@ -2508,7 +2508,7 @@ msgstr "Aldoni Flosantan Kahelon"
 msgid "Delete"
 msgstr "Forigi"
 
-#: plugins/trackmouse/trackmouse.cpp:45
+#: plugins/trackmouse/trackmouse.cpp:46
 #: plugins/trackmouse/trackmouse_config.cpp:57
 #, kde-format
 msgid "Track mouse"
@@ -4061,7 +4061,7 @@ msgstr ""
 "muso sur ĝi kiel aktivan.\n"
 "Tial ne eblas eksplicite ŝanĝi al ekrano."
 
-#: utils/edid.cpp:183
+#: utils/edid.cpp:234
 #, kde-format
 msgid "unknown"
 msgstr "nekonata"
@@ -4106,7 +4106,7 @@ msgstr "Iri al suba labortablo"
 msgid "Switch to Desktop %1"
 msgstr "Ŝanĝi al labortablo %1"
 
-#: window.cpp:3108
+#: window.cpp:3098
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

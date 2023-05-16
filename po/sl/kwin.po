@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1651563 2023-05-14 02:40:44Z scripty $
+# $Id: kwin.po 1651777 2023-05-16 02:29:30Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-14 02:27+0000\n"
+"POT-Creation-Date: 2023-05-16 02:15+0000\n"
 "PO-Revision-Date: 2023-04-24 09:35+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -2080,25 +2080,25 @@ msgstr " px"
 msgid "&Height:"
 msgstr "Višina:"
 
-#: plugins/mouseclick/mouseclick.cpp:36
+#: plugins/mouseclick/mouseclick.cpp:37
 #: plugins/mouseclick/mouseclick_config.cpp:51
 #, kde-format
 msgid "Toggle Mouse Click Effect"
 msgstr "Preklopi učinek klika miške"
 
-#: plugins/mouseclick/mouseclick.cpp:43
+#: plugins/mouseclick/mouseclick.cpp:44
 #, kde-format
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr "Levi"
 
-#: plugins/mouseclick/mouseclick.cpp:44
+#: plugins/mouseclick/mouseclick.cpp:45
 #, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "Srednji"
 
-#: plugins/mouseclick/mouseclick.cpp:45
+#: plugins/mouseclick/mouseclick.cpp:46
 #, kde-format
 msgctxt "Right mouse button"
 msgid "Right"
@@ -2196,12 +2196,12 @@ msgstr "Pisava:"
 msgid "Show Text:"
 msgstr "Prikaži besedilo:"
 
-#: plugins/mousemark/mousemark.cpp:40
+#: plugins/mousemark/mousemark.cpp:41
 #, kde-format
 msgid "Clear All Mouse Marks"
 msgstr "Očisti vse miškine oznake"
 
-#: plugins/mousemark/mousemark.cpp:46 plugins/mousemark/mousemark_config.cpp:59
+#: plugins/mousemark/mousemark.cpp:47 plugins/mousemark/mousemark_config.cpp:59
 #, kde-format
 msgid "Clear Last Mouse Mark"
 msgstr "Očisti zadnjo miškino oznako"
@@ -2523,7 +2523,7 @@ msgstr "Dodaj plavajočo ploščico"
 msgid "Delete"
 msgstr "Zbriši"
 
-#: plugins/trackmouse/trackmouse.cpp:45
+#: plugins/trackmouse/trackmouse.cpp:46
 #: plugins/trackmouse/trackmouse_config.cpp:57
 #, kde-format
 msgid "Track mouse"
@@ -4076,7 +4076,7 @@ msgstr ""
 "kot dejavnega.\n"
 "Zato ni mogoče izrecno preklopiti na zaslon."
 
-#: utils/edid.cpp:183
+#: utils/edid.cpp:234
 #, kde-format
 msgid "unknown"
 msgstr "neznano"
@@ -4121,7 +4121,7 @@ msgstr "Preklopi na eno namizje navzdol"
 msgid "Switch to Desktop %1"
 msgstr "Preklopi na namizje %1"
 
-#: window.cpp:3108
+#: window.cpp:3098
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

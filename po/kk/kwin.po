@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-14 02:27+0000\n"
+"POT-Creation-Date: 2023-05-16 02:15+0000\n"
 "PO-Revision-Date: 2013-10-01 03:27+0600\n"
 "Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
 "Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
@@ -2143,28 +2143,28 @@ msgstr " пк"
 msgid "&Height:"
 msgstr "Жоғарғы оңда"
 
-#: plugins/mouseclick/mouseclick.cpp:36
+#: plugins/mouseclick/mouseclick.cpp:37
 #: plugins/mouseclick/mouseclick_config.cpp:51
 #, fuzzy, kde-format
 #| msgid "Toggle Invert Effect"
 msgid "Toggle Mouse Click Effect"
 msgstr "Терістеу эффектін ету"
 
-#: plugins/mouseclick/mouseclick.cpp:43
+#: plugins/mouseclick/mouseclick.cpp:44
 #, fuzzy, kde-format
 #| msgid "Top-Left"
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr "Жоғарғы солда"
 
-#: plugins/mouseclick/mouseclick.cpp:44
+#: plugins/mouseclick/mouseclick.cpp:45
 #, fuzzy, kde-format
 #| msgid "Middle"
 msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "Ортаңғы"
 
-#: plugins/mouseclick/mouseclick.cpp:45
+#: plugins/mouseclick/mouseclick.cpp:46
 #, fuzzy, kde-format
 #| msgid "Top-Right"
 msgctxt "Right mouse button"
@@ -2271,12 +2271,12 @@ msgstr "Қаріпі:"
 msgid "Show Text:"
 msgstr "Үстелді көрсету"
 
-#: plugins/mousemark/mousemark.cpp:40
+#: plugins/mousemark/mousemark.cpp:41
 #, kde-format
 msgid "Clear All Mouse Marks"
 msgstr "Тышқанның барлық белгілерін тазалау"
 
-#: plugins/mousemark/mousemark.cpp:46 plugins/mousemark/mousemark_config.cpp:59
+#: plugins/mousemark/mousemark.cpp:47 plugins/mousemark/mousemark_config.cpp:59
 #, kde-format
 msgid "Clear Last Mouse Mark"
 msgstr "Тышқанның соңғы белгісін тазалау"
@@ -2617,7 +2617,7 @@ msgstr "Қалқымалы"
 msgid "Delete"
 msgstr ""
 
-#: plugins/trackmouse/trackmouse.cpp:45
+#: plugins/trackmouse/trackmouse.cpp:46
 #: plugins/trackmouse/trackmouse_config.cpp:57
 #, kde-format
 msgid "Track mouse"
@@ -4267,7 +4267,7 @@ msgstr ""
 "болып саналады.\n"
 "Сондықтан тура басқа экранға ауысу болмайды."
 
-#: utils/edid.cpp:183
+#: utils/edid.cpp:234
 #, kde-format
 msgid "unknown"
 msgstr ""
@@ -4312,7 +4312,7 @@ msgstr "Төмен жақтағы үстелге ауысу"
 msgid "Switch to Desktop %1"
 msgstr "%1-үстелге ауысу"
 
-#: window.cpp:3108
+#: window.cpp:3098
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

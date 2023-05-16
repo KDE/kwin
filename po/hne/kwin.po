@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-14 02:27+0000\n"
+"POT-Creation-Date: 2023-05-16 02:15+0000\n"
 "PO-Revision-Date: 2009-01-28 17:47+0530\n"
 "Last-Translator: Ravishankar Shrivastava <raviratlami@aol.in>\n"
 "Language-Team: Hindi <kde-i18n-doc@lists.kde.org>\n"
@@ -2100,27 +2100,27 @@ msgstr "px"
 msgid "&Height:"
 msgstr "ऊपरी-जेवनी"
 
-#: plugins/mouseclick/mouseclick.cpp:36
+#: plugins/mouseclick/mouseclick.cpp:37
 #: plugins/mouseclick/mouseclick_config.cpp:51
 #, fuzzy, kde-format
 #| msgid "Toggle Expose effect"
 msgid "Toggle Mouse Click Effect"
 msgstr "एक्सपोज प्रभाव टागल करव"
 
-#: plugins/mouseclick/mouseclick.cpp:43
+#: plugins/mouseclick/mouseclick.cpp:44
 #, fuzzy, kde-format
 #| msgid "Top-Left"
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr "ऊपरी-बांया"
 
-#: plugins/mouseclick/mouseclick.cpp:44
+#: plugins/mouseclick/mouseclick.cpp:45
 #, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr ""
 
-#: plugins/mouseclick/mouseclick.cpp:45
+#: plugins/mouseclick/mouseclick.cpp:46
 #, fuzzy, kde-format
 #| msgid "Top-Right"
 msgctxt "Right mouse button"
@@ -2229,12 +2229,12 @@ msgstr ""
 msgid "Show Text:"
 msgstr "डेस्कटाप ग्रिड देखाव"
 
-#: plugins/mousemark/mousemark.cpp:40
+#: plugins/mousemark/mousemark.cpp:41
 #, kde-format
 msgid "Clear All Mouse Marks"
 msgstr "सब्बो मुसुवा-चिनहा-साफ-करव"
 
-#: plugins/mousemark/mousemark.cpp:46 plugins/mousemark/mousemark_config.cpp:59
+#: plugins/mousemark/mousemark.cpp:47 plugins/mousemark/mousemark_config.cpp:59
 #, kde-format
 msgid "Clear Last Mouse Mark"
 msgstr "पिछला मुसुवा-चिनहा-साफ-करव"
@@ -2569,7 +2569,7 @@ msgstr "विंडो बंद करव"
 msgid "Delete"
 msgstr ""
 
-#: plugins/trackmouse/trackmouse.cpp:45
+#: plugins/trackmouse/trackmouse.cpp:46
 #: plugins/trackmouse/trackmouse_config.cpp:57
 #, kde-format
 msgid "Track mouse"
@@ -4227,7 +4227,7 @@ msgid ""
 "Therefore it is not possible to switch to a screen explicitly."
 msgstr ""
 
-#: utils/edid.cpp:183
+#: utils/edid.cpp:234
 #, kde-format
 msgid "unknown"
 msgstr ""
@@ -4273,7 +4273,7 @@ msgstr "एक डेस्कटाप नीचे स्विच करव"
 msgid "Switch to Desktop %1"
 msgstr "डेस्कटाप 1 मं स्विच करव"
 
-#: window.cpp:3108
+#: window.cpp:3098
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

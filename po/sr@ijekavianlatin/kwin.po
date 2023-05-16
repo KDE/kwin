@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-14 02:27+0000\n"
+"POT-Creation-Date: 2023-05-16 02:15+0000\n"
 "PO-Revision-Date: 2017-12-03 22:53+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -2276,14 +2276,14 @@ msgstr " px"
 msgid "&Height:"
 msgstr "desno"
 
-#: plugins/mouseclick/mouseclick.cpp:36
+#: plugins/mouseclick/mouseclick.cpp:37
 #: plugins/mouseclick/mouseclick_config.cpp:51
 #, kde-format
 msgid "Toggle Mouse Click Effect"
 msgstr "Prebaci efekta klika mišem"
 
 # >> @item
-#: plugins/mouseclick/mouseclick.cpp:43
+#: plugins/mouseclick/mouseclick.cpp:44
 #, fuzzy, kde-format
 #| msgctxt "A mouse button"
 #| msgid "Left"
@@ -2292,7 +2292,7 @@ msgid "Left"
 msgstr "levo"
 
 # >> @item
-#: plugins/mouseclick/mouseclick.cpp:44
+#: plugins/mouseclick/mouseclick.cpp:45
 #, fuzzy, kde-format
 #| msgctxt "A mouse button"
 #| msgid "Middle"
@@ -2301,7 +2301,7 @@ msgid "Middle"
 msgstr "srednje"
 
 # >> @item
-#: plugins/mouseclick/mouseclick.cpp:45
+#: plugins/mouseclick/mouseclick.cpp:46
 #, fuzzy, kde-format
 #| msgctxt "A mouse button"
 #| msgid "Right"
@@ -2416,12 +2416,12 @@ msgstr "Font:"
 msgid "Show Text:"
 msgstr "Prikaži površ"
 
-#: plugins/mousemark/mousemark.cpp:40
+#: plugins/mousemark/mousemark.cpp:41
 #, kde-format
 msgid "Clear All Mouse Marks"
 msgstr "Očisti sve tragove miša"
 
-#: plugins/mousemark/mousemark.cpp:46 plugins/mousemark/mousemark_config.cpp:59
+#: plugins/mousemark/mousemark.cpp:47 plugins/mousemark/mousemark_config.cpp:59
 #, kde-format
 msgid "Clear Last Mouse Mark"
 msgstr "Očisti posljednji trag miša"
@@ -2786,7 +2786,7 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: plugins/trackmouse/trackmouse.cpp:45
+#: plugins/trackmouse/trackmouse.cpp:46
 #: plugins/trackmouse/trackmouse_config.cpp:57
 #, kde-format
 msgid "Track mouse"
@@ -4461,7 +4461,7 @@ msgstr ""
 "Zato nije moguće neposredno prebacivanje između ekrana."
 
 # >> @item
-#: utils/edid.cpp:183
+#: utils/edid.cpp:234
 #, fuzzy, kde-format
 #| msgctxt "The input device of the event is not known"
 #| msgid "Unknown"
@@ -4508,7 +4508,7 @@ msgstr "Na prvu površ ispod"
 msgid "Switch to Desktop %1"
 msgstr "Na površ %1"
 
-#: window.cpp:3108
+#: window.cpp:3098
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

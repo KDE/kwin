@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-14 02:27+0000\n"
+"POT-Creation-Date: 2023-05-16 02:15+0000\n"
 "PO-Revision-Date: 2015-08-27 20:54+0200\n"
 "Last-Translator: Bjørn Steensrud <bjornst@skogkatt.homelinux.org>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
@@ -2116,14 +2116,14 @@ msgstr "px"
 msgid "&Height:"
 msgstr "&Høyde:"
 
-#: plugins/mouseclick/mouseclick.cpp:36
+#: plugins/mouseclick/mouseclick.cpp:37
 #: plugins/mouseclick/mouseclick_config.cpp:51
 #, fuzzy, kde-format
 #| msgid "Toggle Mouse Click Effect"
 msgid "Toggle Mouse Click Effect"
 msgstr "Slå museklikk-effekt av/på "
 
-#: plugins/mouseclick/mouseclick.cpp:43
+#: plugins/mouseclick/mouseclick.cpp:44
 #, fuzzy, kde-format
 #| msgctxt "Left mouse button"
 #| msgid "Left"
@@ -2131,7 +2131,7 @@ msgctxt "Left mouse button"
 msgid "Left"
 msgstr "Venstre"
 
-#: plugins/mouseclick/mouseclick.cpp:44
+#: plugins/mouseclick/mouseclick.cpp:45
 #, fuzzy, kde-format
 #| msgctxt "Middle mouse button"
 #| msgid "Middle"
@@ -2139,7 +2139,7 @@ msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "Midtre"
 
-#: plugins/mouseclick/mouseclick.cpp:45
+#: plugins/mouseclick/mouseclick.cpp:46
 #, fuzzy, kde-format
 #| msgctxt "Right mouse button"
 #| msgid "Right"
@@ -2254,13 +2254,13 @@ msgstr "Skrift:"
 msgid "Show Text:"
 msgstr "Vis skrivebordet"
 
-#: plugins/mousemark/mousemark.cpp:40
+#: plugins/mousemark/mousemark.cpp:41
 #, fuzzy, kde-format
 #| msgid "Clear All Mouse Marks"
 msgid "Clear All Mouse Marks"
 msgstr "Fjern alle musemerker"
 
-#: plugins/mousemark/mousemark.cpp:46 plugins/mousemark/mousemark_config.cpp:59
+#: plugins/mousemark/mousemark.cpp:47 plugins/mousemark/mousemark_config.cpp:59
 #, fuzzy, kde-format
 #| msgid "Clear Last Mouse Mark"
 msgid "Clear Last Mouse Mark"
@@ -2594,7 +2594,7 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: plugins/trackmouse/trackmouse.cpp:45
+#: plugins/trackmouse/trackmouse.cpp:46
 #: plugins/trackmouse/trackmouse_config.cpp:57
 #, fuzzy, kde-format
 #| msgid "Track mouse"
@@ -4199,7 +4199,7 @@ msgstr ""
 "musepekeren som den aktive.\n"
 "Derfor er det ikke mulig å uttrykkelig bytte til en skjerm."
 
-#: utils/edid.cpp:183
+#: utils/edid.cpp:234
 #, kde-format
 msgid "unknown"
 msgstr ""
@@ -4244,7 +4244,7 @@ msgstr "Hopp ett skrivebord ned"
 msgid "Switch to Desktop %1"
 msgstr "Bytt til skrivebord %1"
 
-#: window.cpp:3108
+#: window.cpp:3098
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

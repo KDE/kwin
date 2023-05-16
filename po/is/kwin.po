@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-14 02:27+0000\n"
+"POT-Creation-Date: 2023-05-16 02:15+0000\n"
 "PO-Revision-Date: 2022-12-31 14:10+0000\n"
 "Last-Translator: gummi <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
@@ -2099,13 +2099,13 @@ msgstr " px"
 msgid "&Height:"
 msgstr "Hægri"
 
-#: plugins/mouseclick/mouseclick.cpp:36
+#: plugins/mouseclick/mouseclick.cpp:37
 #: plugins/mouseclick/mouseclick_config.cpp:51
 #, kde-format
 msgid "Toggle Mouse Click Effect"
 msgstr "Víxla músarsmellsáhrifum"
 
-#: plugins/mouseclick/mouseclick.cpp:43
+#: plugins/mouseclick/mouseclick.cpp:44
 #, fuzzy, kde-format
 #| msgctxt "A mouse button"
 #| msgid "Left"
@@ -2113,7 +2113,7 @@ msgctxt "Left mouse button"
 msgid "Left"
 msgstr "Vinstri"
 
-#: plugins/mouseclick/mouseclick.cpp:44
+#: plugins/mouseclick/mouseclick.cpp:45
 #, fuzzy, kde-format
 #| msgctxt "A mouse button"
 #| msgid "Middle"
@@ -2121,7 +2121,7 @@ msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "Miðju"
 
-#: plugins/mouseclick/mouseclick.cpp:45
+#: plugins/mouseclick/mouseclick.cpp:46
 #, fuzzy, kde-format
 #| msgctxt "A mouse button"
 #| msgid "Right"
@@ -2228,12 +2228,12 @@ msgstr "Letur:"
 msgid "Show Text:"
 msgstr "Sýna skjáborðið"
 
-#: plugins/mousemark/mousemark.cpp:40
+#: plugins/mousemark/mousemark.cpp:41
 #, kde-format
 msgid "Clear All Mouse Marks"
 msgstr "Hreinsa allar músarslóðir"
 
-#: plugins/mousemark/mousemark.cpp:46 plugins/mousemark/mousemark_config.cpp:59
+#: plugins/mousemark/mousemark.cpp:47 plugins/mousemark/mousemark_config.cpp:59
 #, kde-format
 msgid "Clear Last Mouse Mark"
 msgstr "Hreinsa síðustu músarslóð"
@@ -2587,7 +2587,7 @@ msgstr "Loka glugga"
 msgid "Delete"
 msgstr ""
 
-#: plugins/trackmouse/trackmouse.cpp:45
+#: plugins/trackmouse/trackmouse.cpp:46
 #: plugins/trackmouse/trackmouse_config.cpp:57
 #, kde-format
 msgid "Track mouse"
@@ -4190,7 +4190,7 @@ msgstr ""
 "staðsett sem virkan skjá.\n"
 "Þess vegna er ekki hægt að skipta sérstaklega yfir á annan skjá."
 
-#: utils/edid.cpp:183
+#: utils/edid.cpp:234
 #, fuzzy, kde-format
 #| msgctxt "The input device of the event is not known"
 #| msgid "Unknown"
@@ -4237,7 +4237,7 @@ msgstr "Eitt skjáborð niður"
 msgid "Switch to Desktop %1"
 msgstr "Skipta á skjáborð %1"
 
-#: window.cpp:3108
+#: window.cpp:3098
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-14 02:27+0000\n"
+"POT-Creation-Date: 2023-05-16 02:15+0000\n"
 "PO-Revision-Date: 2023-02-20 11:15+0100\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
@@ -2096,13 +2096,13 @@ msgstr " px"
 msgid "&Height:"
 msgstr "Phải"
 
-#: plugins/mouseclick/mouseclick.cpp:36
+#: plugins/mouseclick/mouseclick.cpp:37
 #: plugins/mouseclick/mouseclick_config.cpp:51
 #, kde-format
 msgid "Toggle Mouse Click Effect"
 msgstr "Bật/tắt hiệu ứng bấm chuột"
 
-#: plugins/mouseclick/mouseclick.cpp:43
+#: plugins/mouseclick/mouseclick.cpp:44
 #, fuzzy, kde-format
 #| msgctxt "A mouse button"
 #| msgid "Left"
@@ -2110,7 +2110,7 @@ msgctxt "Left mouse button"
 msgid "Left"
 msgstr "Trái"
 
-#: plugins/mouseclick/mouseclick.cpp:44
+#: plugins/mouseclick/mouseclick.cpp:45
 #, fuzzy, kde-format
 #| msgctxt "A mouse button"
 #| msgid "Middle"
@@ -2118,7 +2118,7 @@ msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "Giữa"
 
-#: plugins/mouseclick/mouseclick.cpp:45
+#: plugins/mouseclick/mouseclick.cpp:46
 #, fuzzy, kde-format
 #| msgctxt "A mouse button"
 #| msgid "Right"
@@ -2224,12 +2224,12 @@ msgstr "Phông chữ:"
 msgid "Show Text:"
 msgstr "Hiện bàn làm việc"
 
-#: plugins/mousemark/mousemark.cpp:40
+#: plugins/mousemark/mousemark.cpp:41
 #, kde-format
 msgid "Clear All Mouse Marks"
 msgstr "Xoá hết các vết chuột"
 
-#: plugins/mousemark/mousemark.cpp:46 plugins/mousemark/mousemark_config.cpp:59
+#: plugins/mousemark/mousemark.cpp:47 plugins/mousemark/mousemark_config.cpp:59
 #, kde-format
 msgid "Clear Last Mouse Mark"
 msgstr "Xoá vết chuột cuối"
@@ -2578,7 +2578,7 @@ msgstr "Thêm ô trôi"
 msgid "Delete"
 msgstr "Xoá"
 
-#: plugins/trackmouse/trackmouse.cpp:45
+#: plugins/trackmouse/trackmouse.cpp:46
 #: plugins/trackmouse/trackmouse_config.cpp:57
 #, kde-format
 msgid "Track mouse"
@@ -4160,7 +4160,7 @@ msgstr ""
 "động.\n"
 "Vì vậy không có cách nào để chuyển sang một màn hình cụ thể được."
 
-#: utils/edid.cpp:183
+#: utils/edid.cpp:234
 #, kde-format
 msgid "unknown"
 msgstr "không rõ"
@@ -4205,7 +4205,7 @@ msgstr "Chuyển sang bàn làm việc phía dưới"
 msgid "Switch to Desktop %1"
 msgstr "Chuyển sang bàn làm việc %1"
 
-#: window.cpp:3108
+#: window.cpp:3098
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

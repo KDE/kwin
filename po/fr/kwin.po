@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-14 02:27+0000\n"
+"POT-Creation-Date: 2023-05-16 02:15+0000\n"
 "PO-Revision-Date: 2023-05-05 21:30+0200\n"
 "Last-Translator: Xavier BESNARD <xavier.besnard]neuf.fr>\n"
 "Language-Team: fr\n"
@@ -2131,26 +2131,26 @@ msgstr " px"
 msgid "&Height:"
 msgstr "&Hauteur :"
 
-#: plugins/mouseclick/mouseclick.cpp:36
+#: plugins/mouseclick/mouseclick.cpp:37
 #: plugins/mouseclick/mouseclick_config.cpp:51
 #, fuzzy, kde-format
 #| msgid "Toggle Invert Effect"
 msgid "Toggle Mouse Click Effect"
 msgstr "Activer/désactiver l'effet d'inversion"
 
-#: plugins/mouseclick/mouseclick.cpp:43
+#: plugins/mouseclick/mouseclick.cpp:44
 #, kde-format
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr "Gauche"
 
-#: plugins/mouseclick/mouseclick.cpp:44
+#: plugins/mouseclick/mouseclick.cpp:45
 #, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "Milieu"
 
-#: plugins/mouseclick/mouseclick.cpp:45
+#: plugins/mouseclick/mouseclick.cpp:46
 #, kde-format
 msgctxt "Right mouse button"
 msgid "Right"
@@ -2254,13 +2254,13 @@ msgstr "Police :"
 msgid "Show Text:"
 msgstr "Afficher le texte :"
 
-#: plugins/mousemark/mousemark.cpp:40
+#: plugins/mousemark/mousemark.cpp:41
 #, fuzzy, kde-format
 #| msgid "Clear All Mouse Marks"
 msgid "Clear All Mouse Marks"
 msgstr "Effacer toutes les traces de souris"
 
-#: plugins/mousemark/mousemark.cpp:46 plugins/mousemark/mousemark_config.cpp:59
+#: plugins/mousemark/mousemark.cpp:47 plugins/mousemark/mousemark_config.cpp:59
 #, fuzzy, kde-format
 #| msgid "Clear Last Mouse Mark"
 msgid "Clear Last Mouse Mark"
@@ -2607,7 +2607,7 @@ msgstr "Ajouter une tuile flottante"
 msgid "Delete"
 msgstr "Supprimer"
 
-#: plugins/trackmouse/trackmouse.cpp:45
+#: plugins/trackmouse/trackmouse.cpp:46
 #: plugins/trackmouse/trackmouse_config.cpp:57
 #, fuzzy, kde-format
 #| msgid "Track mouse"
@@ -4205,7 +4205,7 @@ msgstr ""
 "comme celui ayant la souris.\n"
 "Cependant, il n'est pas possible de changer d'écran explicitement."
 
-#: utils/edid.cpp:183
+#: utils/edid.cpp:234
 #, kde-format
 msgid "unknown"
 msgstr "inconnu"
@@ -4250,7 +4250,7 @@ msgstr "Passer au bureau du dessous"
 msgid "Switch to Desktop %1"
 msgstr "Passer au bureau %1"
 
-#: window.cpp:3108
+#: window.cpp:3098
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

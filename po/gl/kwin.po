@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-14 02:27+0000\n"
+"POT-Creation-Date: 2023-05-16 02:15+0000\n"
 "PO-Revision-Date: 2020-01-11 11:32+0100\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
@@ -2227,14 +2227,14 @@ msgstr " píxeles"
 msgid "&Height:"
 msgstr "Dereita"
 
-#: plugins/mouseclick/mouseclick.cpp:36
+#: plugins/mouseclick/mouseclick.cpp:37
 #: plugins/mouseclick/mouseclick_config.cpp:51
 #, fuzzy, kde-format
 #| msgid "Toggle Mouse Click Effect"
 msgid "Toggle Mouse Click Effect"
 msgstr "Conmutar o efecto do clic co rato"
 
-#: plugins/mouseclick/mouseclick.cpp:43
+#: plugins/mouseclick/mouseclick.cpp:44
 #, fuzzy, kde-format
 #| msgctxt "A mouse button"
 #| msgid "Left"
@@ -2242,7 +2242,7 @@ msgctxt "Left mouse button"
 msgid "Left"
 msgstr "Esquerda"
 
-#: plugins/mouseclick/mouseclick.cpp:44
+#: plugins/mouseclick/mouseclick.cpp:45
 #, fuzzy, kde-format
 #| msgctxt "A mouse button"
 #| msgid "Middle"
@@ -2250,7 +2250,7 @@ msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "Medio"
 
-#: plugins/mouseclick/mouseclick.cpp:45
+#: plugins/mouseclick/mouseclick.cpp:46
 #, fuzzy, kde-format
 #| msgctxt "A mouse button"
 #| msgid "Right"
@@ -2367,13 +2367,13 @@ msgstr "Fonte:"
 msgid "Show Text:"
 msgstr "Mostrar o escritorio"
 
-#: plugins/mousemark/mousemark.cpp:40
+#: plugins/mousemark/mousemark.cpp:41
 #, fuzzy, kde-format
 #| msgid "Clear All Mouse Marks"
 msgid "Clear All Mouse Marks"
 msgstr "Limpar todas as marcas do rato"
 
-#: plugins/mousemark/mousemark.cpp:46 plugins/mousemark/mousemark_config.cpp:59
+#: plugins/mousemark/mousemark.cpp:47 plugins/mousemark/mousemark_config.cpp:59
 #, fuzzy, kde-format
 #| msgid "Clear Last Mouse Mark"
 msgid "Clear Last Mouse Mark"
@@ -2743,7 +2743,7 @@ msgstr "Flutuante"
 msgid "Delete"
 msgstr ""
 
-#: plugins/trackmouse/trackmouse.cpp:45
+#: plugins/trackmouse/trackmouse.cpp:46
 #: plugins/trackmouse/trackmouse_config.cpp:57
 #, fuzzy, kde-format
 #| msgid "Track mouse"
@@ -4442,7 +4442,7 @@ msgstr ""
 "rato é a activa.\n"
 "Polo tanto non se pode cambiar explicitamente a unha pantalla."
 
-#: utils/edid.cpp:183
+#: utils/edid.cpp:234
 #, kde-format
 msgid "unknown"
 msgstr "descoñecido"
@@ -4487,7 +4487,7 @@ msgstr "Ir un escritorio cara baixo"
 msgid "Switch to Desktop %1"
 msgstr "Ir ao escritorio %1"
 
-#: window.cpp:3108
+#: window.cpp:3098
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
