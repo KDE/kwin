@@ -138,8 +138,15 @@ QRectF Tile::absoluteGeometryInScreen() const
 
 QRectF Tile::windowGeometry() const
 {
+    // Apply half padding between tiles and full against the screen edges
+    QMarginsF effectiveMargins;
+    effectiveMargins.setLeft(m_relativeGeometry.left() > 0.0 ? m_padding / 2.0 : m_padding);
+    effectiveMargins.setTop(m_relativeGeometry.top() > 0.0 ? m_padding / 2.0 : m_padding);
+    effectiveMargins.setRight(m_relativeGeometry.right() < 1.0 ? m_padding / 2.0 : m_padding);
+    effectiveMargins.setBottom(m_relativeGeometry.bottom() < 1.0 ? m_padding / 2.0 : m_padding);
+
     const auto geom = absoluteGeometry();
-    return geom.intersected(workspace()->clientArea(MaximizeArea, m_tiling->output(), VirtualDesktopManager::self()->currentDesktop())) - QMarginsF(m_padding, m_padding, m_padding, m_padding);
+    return geom.intersected(workspace()->clientArea(MaximizeArea, m_tiling->output(), VirtualDesktopManager::self()->currentDesktop())) - effectiveMargins;
 }
 
 QRectF Tile::maximizedWindowGeometry() const
