@@ -5066,14 +5066,14 @@ void X11Window::checkOutput()
 void X11Window::getWmOpaqueRegion()
 {
     const auto rects = info->opaqueRegion();
-    QRegion new_opaque_region;
+    RegionF new_opaque_region;
     for (const auto &r : rects) {
-        new_opaque_region |= Xcb::fromXNative(QRect(r.pos.x, r.pos.y, r.size.width, r.size.height)).toRect();
+        new_opaque_region |= Xcb::fromXNative(QRect(r.pos.x, r.pos.y, r.size.width, r.size.height));
     }
     opaque_region = new_opaque_region;
 }
 
-QVector<QRectF> X11Window::shapeRegion() const
+RegionF X11Window::shapeRegion() const
 {
     if (m_shapeRegionIsValid) {
         return m_shapeRegion;
@@ -5099,7 +5099,7 @@ QVector<QRectF> X11Window::shapeRegion() const
             m_shapeRegion.clear();
         }
     } else {
-        m_shapeRegion = {QRectF(0, 0, bufferGeometry.width(), bufferGeometry.height())};
+        m_shapeRegion = RegionF{QRectF(0, 0, bufferGeometry.width(), bufferGeometry.height())};
     }
 
     m_shapeRegionIsValid = true;

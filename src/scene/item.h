@@ -8,6 +8,7 @@
 
 #include "libkwineffects/kwineffects.h"
 #include "libkwineffects/kwinglobals.h"
+#include "libkwineffects/regionf.h"
 
 #include <QMatrix4x4>
 #include <QObject>
@@ -56,8 +57,8 @@ public:
      */
     QRectF boundingRect() const;
 
-    virtual QVector<QRectF> shape() const;
-    virtual QRegion opaque() const;
+    virtual RegionF shape() const;
+    virtual RegionF opaque() const;
 
     /**
      * Returns the visual parent of the item. Note that the visual parent differs from
@@ -78,6 +79,11 @@ public:
      * system.
      */
     QRegion mapToGlobal(const QRegion &region) const;
+    /**
+     * Maps the given @a region from the item's coordinate system to the scene's coordinate
+     * system.
+     */
+    RegionF mapToGlobal(const RegionF &region) const;
     /**
      * Maps the given @a rect from the item's coordinate system to the scene's coordinate
      * system.

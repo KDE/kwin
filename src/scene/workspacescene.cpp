@@ -285,12 +285,12 @@ void WorkspaceScene::preparePaintSimpleScreen()
         if (window->opacity() == 1.0) {
             const SurfaceItem *surfaceItem = windowItem->surfaceItem();
             if (Q_LIKELY(surfaceItem)) {
-                data.opaque = surfaceItem->mapToGlobal(surfaceItem->opaque());
+                data.opaque = surfaceItem->mapToGlobal(surfaceItem->opaque()).containedAlignedRegion();
             }
 
             const DecorationItem *decorationItem = windowItem->decorationItem();
             if (decorationItem) {
-                data.opaque |= decorationItem->mapToGlobal(decorationItem->opaque());
+                data.opaque |= decorationItem->mapToGlobal(decorationItem->opaque()).containedAlignedRegion();
             }
         }
 

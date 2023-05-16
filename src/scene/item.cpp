@@ -175,14 +175,14 @@ void Item::updateBoundingRect()
     }
 }
 
-QVector<QRectF> Item::shape() const
+RegionF Item::shape() const
 {
-    return QVector<QRectF>();
+    return RegionF{};
 }
 
-QRegion Item::opaque() const
+RegionF Item::opaque() const
 {
-    return QRegion();
+    return RegionF{};
 }
 
 QPointF Item::rootPosition() const
@@ -214,6 +214,11 @@ QRegion Item::mapToGlobal(const QRegion &region) const
         return QRegion();
     }
     return region.translated(rootPosition().toPoint());
+}
+
+RegionF Item::mapToGlobal(const RegionF &region) const
+{
+    return region.translated(rootPosition());
 }
 
 QRectF Item::mapToGlobal(const QRectF &rect) const

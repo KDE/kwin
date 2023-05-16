@@ -120,13 +120,13 @@ WindowQuadList SurfaceItem::buildQuads() const
         return {};
     }
 
-    const QVector<QRectF> region = shape();
+    const RegionF region = shape();
     const auto size = pixmap()->size();
 
     WindowQuadList quads;
-    quads.reserve(region.count());
+    quads.reserve(region.rects().size());
 
-    for (const QRectF rect : region) {
+    for (const QRectF &rect : region) {
         WindowQuad quad;
 
         // Use toPoint to round the device position to match what we eventually

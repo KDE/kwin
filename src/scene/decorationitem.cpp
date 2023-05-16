@@ -109,21 +109,21 @@ DecorationItem::DecorationItem(KDecoration2::Decoration *decoration, Window *win
     handleOutputChanged();
 }
 
-QVector<QRectF> DecorationItem::shape() const
+RegionF DecorationItem::shape() const
 {
     QRectF left, top, right, bottom;
     m_window->layoutDecorationRects(left, top, right, bottom);
-    return {left, top, right, bottom};
+    return RegionF(left) | top | right | bottom;
 }
 
-QRegion DecorationItem::opaque() const
+RegionF DecorationItem::opaque() const
 {
     if (m_window->decorationHasAlpha()) {
-        return QRegion();
+        return RegionF();
     }
     QRectF left, top, right, bottom;
     m_window->layoutDecorationRects(left, top, right, bottom);
-    return QRegion(left.toRect()).united(top.toRect()).united(right.toRect()).united(bottom.toRect());
+    return RegionF(left) | top | right | bottom;
 }
 
 void DecorationItem::preprocess()

@@ -97,8 +97,8 @@ public:
     xcb_visualid_t visual() const;
     int depth() const;
     bool hasAlpha() const;
-    QRegion opaqueRegion() const;
-    QVector<QRectF> shapeRegion() const;
+    RegionF opaqueRegion() const;
+    RegionF shapeRegion() const;
 
     pid_t pid() const override;
     QString windowRole() const override;
@@ -504,8 +504,8 @@ private:
     int sm_stacking_order;
     xcb_visualid_t m_visual = XCB_NONE;
     int bit_depth = 24;
-    QRegion opaque_region;
-    mutable QVector<QRectF> m_shapeRegion;
+    RegionF opaque_region;
+    mutable RegionF m_shapeRegion;
     mutable bool m_shapeRegionIsValid = false;
     friend struct ResetupRulesProcedure;
 
@@ -554,7 +554,7 @@ inline bool X11Window::hasAlpha() const
     return depth() == 32;
 }
 
-inline QRegion X11Window::opaqueRegion() const
+inline RegionF X11Window::opaqueRegion() const
 {
     return opaque_region;
 }

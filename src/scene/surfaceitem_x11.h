@@ -37,8 +37,8 @@ public:
     void forgetDamage();
     void destroyDamage();
 
-    QVector<QRectF> shape() const override;
-    QRegion opaque() const override;
+    RegionF shape() const override;
+    RegionF opaque() const override;
 
 private Q_SLOTS:
     void handleBufferGeometryChanged(const QRectF &old);

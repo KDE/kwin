@@ -152,29 +152,19 @@ void SurfaceItemX11::handleGeometryShapeChanged()
     discardQuads();
 }
 
-QVector<QRectF> SurfaceItemX11::shape() const
+RegionF SurfaceItemX11::shape() const
 {
     const QRectF clipRect = m_window->clientGeometry().translated(-m_window->bufferGeometry().topLeft());
-    QVector<QRectF> shape = m_window->shapeRegion();
-    // bounded to clipRect
-    for (QRectF &shapePart : shape) {
-        shapePart = shapePart.intersected(clipRect);
-    }
-    return shape;
+    return m_window->shapeRegion() & clipRect;
 }
 
-QRegion SurfaceItemX11::opaque() const
+RegionF SurfaceItemX11::opaque() const
 {
-    QRegion shapeRegion;
-    for (const QRectF &shapePart : shape()) {
-        shapeRegion |= shapePart.toRect();
-    }
     if (!m_window->hasAlpha()) {
-        return shapeRegion;
+        return shape();
     } else {
-        return m_window->opaqueRegion() & shapeRegion;
+        return m_window->opaqueRegion() & shape();
     }
-    return QRegion();
 }
 
 std::unique_ptr<SurfacePixmap> SurfaceItemX11::createPixmap()
