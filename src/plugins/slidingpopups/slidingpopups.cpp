@@ -82,6 +82,11 @@ SlidingPopupsEffect::~SlidingPopupsEffect()
     if (s_slideManager) {
         s_slideManagerRemoveTimer->start(1000);
     }
+
+    // Cancel animations here while both m_animations and m_animationsData are still valid.
+    // slotWindowDeleted may access m_animationsData when an animation is removed.
+    m_animations.clear();
+    m_animationsData.clear();
 }
 
 bool SlidingPopupsEffect::supported()
