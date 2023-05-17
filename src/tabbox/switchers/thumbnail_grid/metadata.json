@@ -20,7 +20,8 @@
                 "Name[ta]": "கிரிஸ் ஹாளண்டு",
                 "Name[tr]": "Chris Holland",
                 "Name[uk]": "Chris Holland",
-                "Name[x-test]": "xxChris Hollandxx"
+                "Name[x-test]": "xxChris Hollandxx",
+                "Name[zh_TW]": "Chris Holland"
             }
         ],
         "Description": "A window switcher layout using a small grid of thumbnails",
@@ -38,6 +39,7 @@
         "Description[tr]": "Küçük bir küçük görsel ızgarası kullanan pencere değiştirici yerleşimi",
         "Description[uk]": "Компонування засобу перемикання вікон з малою таблицею мініатюр поточного стану вікон",
         "Description[x-test]": "xxA window switcher layout using a small grid of thumbnailsxx",
+        "Description[zh_TW]": "使用小型縮圖格線的視窗切換器佈局",
         "Icon": "preferences-system-windows-switcher-thumbnail-grid",
         "Id": "thumbnail_grid",
         "License": "GPL",
@@ -58,6 +60,7 @@
         "Name[tr]": "Küçük Görsel Izgarası",
         "Name[uk]": "Таблиця мініатюр",
         "Name[x-test]": "xxThumbnail Gridxx",
+        "Name[zh_TW]": "縮圖格線",
         "Version": "6"
     },
     "X-Plasma-API": "declarativeappletscript",
