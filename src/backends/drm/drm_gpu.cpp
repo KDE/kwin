@@ -702,6 +702,12 @@ void DrmGpu::setActive(bool active)
             }
             // while the session was inactive, the output list may have changed
             m_platform->updateOutputs();
+            for (const auto &output : std::as_const(m_drmOutputs)) {
+                // force a modeset with legacy, we can't reliably know if one is needed
+                if (!atomicModeSetting()) {
+                    output->pipeline()->forceLegacyModeset();
+                }
+            }
         } else {
             for (const auto &output : std::as_const(m_drmOutputs)) {
                 output->renderLoop()->inhibit();

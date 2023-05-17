@@ -72,6 +72,7 @@ public:
     Error present();
     bool testScanout();
     bool maybeModeset();
+    void forceLegacyModeset();
 
     bool needsModeset() const;
     void applyPendingChanges();

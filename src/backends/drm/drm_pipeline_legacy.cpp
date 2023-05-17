@@ -43,6 +43,11 @@ DrmPipeline::Error DrmPipeline::presentLegacy()
     return Error::None;
 }
 
+void DrmPipeline::forceLegacyModeset()
+{
+    legacyModeset();
+}
+
 DrmPipeline::Error DrmPipeline::legacyModeset()
 {
     uint32_t connId = m_connector->id();
