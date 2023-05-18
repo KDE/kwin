@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-05-17 02:04+0000\n"
-"PO-Revision-Date: 2023-04-22 18:07+0100\n"
+"PO-Revision-Date: 2023-05-17 07:19+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -2204,8 +2204,8 @@ msgstr "Forviŝi Musmarkojn"
 msgctxt "Suffix"
 msgid " pixel"
 msgid_plural " pixels"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] " rastrumero"
+msgstr[1] " rastrumeroj"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/mousemark/mousemark_config.ui:23
@@ -2719,7 +2719,7 @@ msgstr "Neniu Fenestro"
 #: plugins/windowview/qml/main.qml:122
 #, kde-format
 msgid "Filter windows…"
-msgstr "Filtri fenestrojn..."
+msgstr "Filtri fenestrojn…"
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
 #: plugins/wobblywindows/wobblywindows_config.ui:20
