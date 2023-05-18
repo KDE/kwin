@@ -145,6 +145,13 @@ Item {
                                     break;
                                 }
                             }
+                            onDoubleClicked: {
+                                if (mouse.button == Qt.LeftButton) {
+                                    mouse.accepted = true;
+                                    delegate.activate();
+                                    effect.deactivate();
+                                }
+                            }
                         }
 
                         Loader {
