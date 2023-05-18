@@ -2324,6 +2324,7 @@ public:
     virtual void unrefWindow() = 0;
 
     virtual bool isDeleted() const = 0;
+    virtual bool isHidden() const = 0;
 
     virtual bool isMinimized() const = 0;
     virtual double opacity() const = 0;
