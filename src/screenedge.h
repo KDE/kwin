@@ -294,9 +294,6 @@ public:
      * Once the Edge for the client triggers, the client gets shown again and the Edge unreserved.
      * The idea is that the Edge can only get activated if the client is currently hidden.
      *
-     * To make sure that the client can always be shown again the implementation also starts to
-     * track geometry changes and shows the Client again. The same for screen geometry changes.
-     *
      * The Edge gets automatically destroyed if the client gets released.
      * @param client The Client for which an Edge should be reserved
      * @param border The border which the client wants to use, only proper borders are supported (no corners)
