@@ -615,38 +615,46 @@ void Connection::applyScreenToDevice(Device *device)
                 break;
             }
         }
-        auto testScreenMatches = [device](const Output *output) {
+        static auto screenDistance = [device](const Output *output) {
             const auto &size = device->size();
             const auto &screenSize = output->physicalSize();
-            return std::round(size.width()) == std::round(screenSize.width())
-                && std::round(size.height()) == std::round(screenSize.height());
+            return std::hypot(1.0 - (qreal)size.width() / screenSize.width(),
+                              1.0 - (qreal)size.height() / screenSize.height());
         };
-        if (internalOutput && testScreenMatches(internalOutput)) {
+        static constexpr qreal maxDistanceToMatch = 0.05;
+        if (internalOutput && screenDistance(internalOutput) < maxDistanceToMatch) {
             deviceOutput = internalOutput;
         }
         if (!deviceOutput) {
+            auto minDistance = maxDistanceToMatch;
             // let's compare all screens for size
             for (Output *output : outputs) {
                 if (!output->isEnabled()) {
                     continue;
                 }
-                if (testScreenMatches(output)) {
+                const auto distance = screenDistance(output);
+                if (distance < minDistance) {
                     deviceOutput = output;
-                    break;
+                    minDistance = distance;
                 }
             }
         }
         if (!deviceOutput) {
             // still not found
-            if (internalOutput) {
-                // we have an internal id, so let's use that
-                deviceOutput = internalOutput;
-            } else {
-                for (Output *output : outputs) {
-                    // just take first screen, we have no clue
-                    if (output->isEnabled()) {
-                        deviceOutput = output;
-                        break;
+            const bool matchesDisabledScreen = std::any_of(outputs.constBegin(), outputs.constEnd(), [](Output *output) {
+                return !output->isEnabled() && screenDistance(output) < maxDistanceToMatch;
+            });
+            if (!matchesDisabledScreen) {
+                if (internalOutput) {
+                    // we have an internal id, so let's use that
+                    deviceOutput = internalOutput;
+                } else {
+                    for (Output *output : outputs) {
+                        // just take first screen, we have no clue
+                        if (output->isEnabled()) {
+                            deviceOutput = output;
+                            break;
+                        }
                     }
                 }
             }
