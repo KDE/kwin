@@ -2112,6 +2112,7 @@ WINDOW_HELPER(bool, isLockScreen, isLockScreen)
 WINDOW_HELPER(pid_t, pid, pid)
 WINDOW_HELPER(qlonglong, windowId, window)
 WINDOW_HELPER(QUuid, internalId, internalId)
+WINDOW_HELPER(bool, isHidden, isHiddenInternal)
 
 #undef WINDOW_HELPER
 

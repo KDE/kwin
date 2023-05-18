@@ -2730,6 +2730,8 @@ public:
      */
     virtual void unreferencePreviousWindowPixmap() = 0;
 
+    virtual bool isHidden() const = 0;
+
 protected:
     friend EffectWindowVisibleRef;
     virtual void refVisible(const EffectWindowVisibleRef *holder) = 0;

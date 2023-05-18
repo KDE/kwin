@@ -162,6 +162,25 @@ void MagicLampEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, Wi
                         position = Right;
                     }
                 }
+
+                // If the panel is hidden, move the icon offscreen so the animation looks correct.
+                if (panel->isHidden()) {
+                    const QRectF panelScreen = effects->clientArea(ScreenArea, panel);
+                    switch (position) {
+                    case Bottom:
+                        icon.moveTop(panelScreen.y() + panelScreen.height());
+                        break;
+                    case Top:
+                        icon.moveTop(panelScreen.y() - icon.height());
+                        break;
+                    case Left:
+                        icon.moveLeft(panelScreen.x() - icon.width());
+                        break;
+                    case Right:
+                        icon.moveLeft(panelScreen.x() + panelScreen.width());
+                        break;
+                    }
+                }
             } else {
                 // we did not find a panel, so it might be autohidden
                 QRectF iconScreen = effects->clientArea(ScreenArea, icon.topLeft(), effects->currentDesktop());
