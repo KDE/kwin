@@ -657,21 +657,24 @@ void Connection::applyScreenToDevice(Device *device)
                 break;
             }
         }
-        auto testScreenMatches = [device](const BackendOutput *output) {
+        static auto screenDistance = [device](const BackendOutput *output) {
             const auto &size = device->size();
             const auto &screenSize = output->physicalSize();
-            return std::round(size.width()) == std::round(screenSize.width())
-                && std::round(size.height()) == std::round(screenSize.height());
+            return std::hypot(1.0 - (qreal)size.width() / screenSize.width(),
+                              1.0 - (qreal)size.height() / screenSize.height());
         };
-        if (internalOutput && testScreenMatches(internalOutput)) {
+        static constexpr qreal maxDistanceToMatch = 0.05;
+        if (internalOutput && screenDistance(internalOutput) < maxDistanceToMatch) {
             deviceOutput = internalOutput;
         }
         if (!deviceOutput) {
+            auto minDistance = maxDistanceToMatch;
             // let's compare all screens for size
             for (BackendOutput *output : outputs) {
-                if (testScreenMatches(output)) {
+                const auto distance = screenDistance(output);
+                if (distance < minDistance) {
                     deviceOutput = output;
-                    break;
+                    minDistance = distance;
                 }
             }
         }
