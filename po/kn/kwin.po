@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-17 02:04+0000\n"
+"POT-Creation-Date: 2023-05-19 02:02+0000\n"
 "PO-Revision-Date: 2011-07-11 12:17+0530\n"
 "Last-Translator: Shankar Prasad <svenkate@redhat.com>\n"
 "Language-Team: Kannada <kde-l10n-kn@kde.org>\n"
@@ -2324,13 +2324,13 @@ msgstr "ವಿನ್ಯಾಸ ಕ್ರಮ:"
 msgid "Ignore minimized windows:"
 msgstr "ಕಿಟಕಿಯ ಗಾತ್ರಬದಲಿಸು"
 
-#: plugins/overview/qml/DesktopBar.qml:156
+#: plugins/overview/qml/DesktopBar.qml:163
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Delete Virtual Desktop"
 msgstr "ಗಣಕತೆರೆಗೆ(&D)"
 
-#: plugins/overview/qml/DesktopBar.qml:252
+#: plugins/overview/qml/DesktopBar.qml:259
 #, fuzzy, kde-format
 #| msgid "Show Desktop"
 msgid "Add Virtual Desktop"
