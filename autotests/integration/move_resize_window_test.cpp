@@ -60,10 +60,10 @@ private Q_SLOTS:
     void testPlasmaShellSurfaceMovable_data();
     void testPlasmaShellSurfaceMovable();
     void testNetMove();
-    void testAdjustClientGeometryOfAutohidingX11Panel_data();
-    void testAdjustClientGeometryOfAutohidingX11Panel();
-    void testAdjustClientGeometryOfAutohidingWaylandPanel_data();
-    void testAdjustClientGeometryOfAutohidingWaylandPanel();
+    void testAdjustClientGeometryOfHiddenX11Panel_data();
+    void testAdjustClientGeometryOfHiddenX11Panel();
+    void testAdjustClientGeometryOfHiddenWaylandPanel_data();
+    void testAdjustClientGeometryOfHiddenWaylandPanel();
     void testResizeForVirtualKeyboard_data();
     void testResizeForVirtualKeyboard();
     void testResizeForVirtualKeyboardWithMaximize();
@@ -94,7 +94,7 @@ void MoveResizeWindowTest::initTestCase()
 
 void MoveResizeWindowTest::init()
 {
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::PlasmaShell | Test::AdditionalWaylandInterface::Seat));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::PlasmaShell | Test::AdditionalWaylandInterface::LayerShellV1 | Test::AdditionalWaylandInterface::Seat));
     QVERIFY(Test::waitForWaylandPointer());
     m_connection = Test::waylandConnection();
     m_compositor = Test::waylandCompositor();
@@ -657,7 +657,7 @@ void MoveResizeWindowTest::testNetMove()
     QVERIFY(windowClosedSpy.wait());
 }
 
-void MoveResizeWindowTest::testAdjustClientGeometryOfAutohidingX11Panel_data()
+void MoveResizeWindowTest::testAdjustClientGeometryOfHiddenX11Panel_data()
 {
     QTest::addColumn<QRect>("panelGeometry");
     QTest::addColumn<QPoint>("targetPoint");
@@ -670,7 +670,7 @@ void MoveResizeWindowTest::testAdjustClientGeometryOfAutohidingX11Panel_data()
     QTest::newRow("right") << QRect(1280 - 20, 0, 20, 100) << QPoint(1280 - 25 - 100, 50) << QPoint(1280 - 20 - 100, 50) << 1u;
 }
 
-void MoveResizeWindowTest::testAdjustClientGeometryOfAutohidingX11Panel()
+void MoveResizeWindowTest::testAdjustClientGeometryOfHiddenX11Panel()
 {
     // this test verifies that auto hiding panels are ignored when adjusting client geometry
     // see BUG 365892
@@ -745,36 +745,37 @@ void MoveResizeWindowTest::testAdjustClientGeometryOfAutohidingX11Panel()
     QVERIFY(windowClosedSpy.wait());
 }
 
-void MoveResizeWindowTest::testAdjustClientGeometryOfAutohidingWaylandPanel_data()
+void MoveResizeWindowTest::testAdjustClientGeometryOfHiddenWaylandPanel_data()
 {
+    QTest::addColumn<uint32_t>("anchor");
     QTest::addColumn<QRect>("panelGeometry");
     QTest::addColumn<QPoint>("targetPoint");
     QTest::addColumn<QPoint>("expectedAdjustedPoint");
 
-    QTest::newRow("top") << QRect(0, 0, 100, 20) << QPoint(50, 25) << QPoint(50, 20);
-    QTest::newRow("bottom") << QRect(0, 1024 - 20, 100, 20) << QPoint(50, 1024 - 25 - 50) << QPoint(50, 1024 - 20 - 50);
-    QTest::newRow("left") << QRect(0, 0, 20, 100) << QPoint(25, 50) << QPoint(20, 50);
-    QTest::newRow("right") << QRect(1280 - 20, 0, 20, 100) << QPoint(1280 - 25 - 100, 50) << QPoint(1280 - 20 - 100, 50);
+    QTest::newRow("top") << uint32_t(Test::LayerSurfaceV1::anchor_top) << QRect(0, 0, 1280, 20) << QPoint(50, 25) << QPoint(50, 20);
+    QTest::newRow("bottom") << uint32_t(Test::LayerSurfaceV1::anchor_bottom) << QRect(0, 1024 - 20, 1280, 20) << QPoint(50, 1024 - 25 - 50) << QPoint(50, 1024 - 20 - 50);
+    QTest::newRow("left") << uint32_t(Test::LayerSurfaceV1::anchor_left) << QRect(0, 0, 20, 1024) << QPoint(25, 50) << QPoint(20, 50);
+    QTest::newRow("right") << uint32_t(Test::LayerSurfaceV1::anchor_right) << QRect(1280 - 20, 0, 20, 1024) << QPoint(1280 - 25 - 100, 50) << QPoint(1280 - 20 - 100, 50);
 }
 
-void MoveResizeWindowTest::testAdjustClientGeometryOfAutohidingWaylandPanel()
+void MoveResizeWindowTest::testAdjustClientGeometryOfHiddenWaylandPanel()
 {
-    // this test verifies that auto hiding panels are ignored when adjusting client geometry
+    // this test verifies that hidden panels are ignored when adjusting client geometry
     // see BUG 365892
 
     // first create our panel
     std::unique_ptr<KWayland::Client::Surface> panelSurface(Test::createSurface());
-    QVERIFY(panelSurface != nullptr);
-    std::unique_ptr<Test::XdgToplevel> panelShellSurface(Test::createXdgToplevelSurface(panelSurface.get()));
-    QVERIFY(panelShellSurface != nullptr);
-    std::unique_ptr<KWayland::Client::PlasmaShellSurface> plasmaSurface(Test::waylandPlasmaShell()->createSurface(panelSurface.get()));
-    QVERIFY(plasmaSurface != nullptr);
-    plasmaSurface->setRole(KWayland::Client::PlasmaShellSurface::Role::Panel);
-    plasmaSurface->setPanelBehavior(KWayland::Client::PlasmaShellSurface::PanelBehavior::AutoHide);
+    std::unique_ptr<Test::LayerSurfaceV1> panelShellSurface(Test::createLayerSurfaceV1(panelSurface.get(), QStringLiteral("dock")));
     QFETCH(QRect, panelGeometry);
-    plasmaSurface->setPosition(panelGeometry.topLeft());
+    QFETCH(uint32_t, anchor);
+    panelShellSurface->set_anchor(anchor);
+    panelShellSurface->set_size(panelGeometry.width(), panelGeometry.height());
+    panelSurface->commit(KWayland::Client::Surface::CommitFlag::None);
+
     // let's render
-    auto panel = Test::renderAndWaitForShown(panelSurface.get(), panelGeometry.size(), Qt::blue);
+    QSignalSpy panelConfigureRequestedSpy(panelShellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    QVERIFY(panelConfigureRequestedSpy.wait());
+    auto panel = Test::renderAndWaitForShown(panelSurface.get(), panelConfigureRequestedSpy.last().at(1).toSize(), Qt::blue);
     QVERIFY(panel);
     QCOMPARE(panel->frameGeometry(), panelGeometry);
     QVERIFY(panel->isDock());
@@ -794,16 +795,13 @@ void MoveResizeWindowTest::testAdjustClientGeometryOfAutohidingWaylandPanel()
     QTEST(Workspace::self()->adjustWindowPosition(testWindow, targetPoint, false).toPoint(), "expectedAdjustedPoint");
 
     // now let's hide the panel
-    QSignalSpy panelHiddenSpy(panel, &Window::windowHidden);
-    plasmaSurface->requestHideAutoHidingPanel();
-    QVERIFY(panelHiddenSpy.wait());
+    panel->hideClient();
 
     // now try to snap again
     QCOMPARE(Workspace::self()->adjustWindowPosition(testWindow, targetPoint, false), targetPoint);
 
     // and destroy the panel again
     QSignalSpy panelClosedSpy(panel, &Window::closed);
-    plasmaSurface.reset();
     panelShellSurface.reset();
     panelSurface.reset();
     QVERIFY(panelClosedSpy.wait());

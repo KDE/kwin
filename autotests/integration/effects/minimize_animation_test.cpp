@@ -18,7 +18,6 @@
 #include "window.h"
 #include "workspace.h"
 
-#include <KWayland/Client/plasmashell.h>
 #include <KWayland/Client/plasmawindowmanagement.h>
 #include <KWayland/Client/surface.h>
 
@@ -75,8 +74,7 @@ void MinimizeAnimationTest::initTestCase()
 
 void MinimizeAnimationTest::init()
 {
-    QVERIFY(Test::setupWaylandConnection(
-        Test::AdditionalWaylandInterface::PlasmaShell | Test::AdditionalWaylandInterface::WindowManagement));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::LayerShellV1 | Test::AdditionalWaylandInterface::WindowManagement));
 }
 
 void MinimizeAnimationTest::cleanup()
@@ -102,27 +100,25 @@ void MinimizeAnimationTest::testMinimizeUnminimize()
     // This test verifies that a minimize effect tries to animate a window
     // when it's minimized or unminimized.
 
-    QSignalSpy plasmaWindowCreatedSpy(Test::waylandWindowManagement(), &KWayland::Client::PlasmaWindowManagement::windowCreated);
 
     // Create a panel at the top of the screen.
     const QRect panelRect = QRect(0, 0, 1280, 36);
-    std::unique_ptr<KWayland::Client::Surface> panelSurface(Test::createSurface());
-    QVERIFY(panelSurface != nullptr);
-    std::unique_ptr<Test::XdgToplevel> panelShellSurface(Test::createXdgToplevelSurface(panelSurface.get()));
-    QVERIFY(panelShellSurface != nullptr);
-    std::unique_ptr<KWayland::Client::PlasmaShellSurface> plasmaPanelShellSurface(Test::waylandPlasmaShell()->createSurface(panelSurface.get()));
-    QVERIFY(plasmaPanelShellSurface != nullptr);
-    plasmaPanelShellSurface->setRole(KWayland::Client::PlasmaShellSurface::Role::Panel);
-    plasmaPanelShellSurface->setPosition(panelRect.topLeft());
-    plasmaPanelShellSurface->setPanelBehavior(KWayland::Client::PlasmaShellSurface::PanelBehavior::AlwaysVisible);
-    Window *panel = Test::renderAndWaitForShown(panelSurface.get(), panelRect.size(), Qt::blue);
+    std::unique_ptr<KWayland::Client::Surface> panelSurface{Test::createSurface()};
+    std::unique_ptr<Test::LayerSurfaceV1> panelShellSurface{Test::createLayerSurfaceV1(panelSurface.get(), QStringLiteral("dock"))};
+    panelShellSurface->set_size(panelRect.width(), panelRect.height());
+    panelShellSurface->set_exclusive_zone(panelRect.height());
+    panelShellSurface->set_anchor(Test::LayerSurfaceV1::anchor_top);
+    panelSurface->commit(KWayland::Client::Surface::CommitFlag::None);
+
+    QSignalSpy panelConfigureRequestedSpy(panelShellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    QVERIFY(panelConfigureRequestedSpy.wait());
+    Window *panel = Test::renderAndWaitForShown(panelSurface.get(), panelConfigureRequestedSpy.last().at(1).toSize(), Qt::blue);
     QVERIFY(panel);
     QVERIFY(panel->isDock());
     QCOMPARE(panel->frameGeometry(), panelRect);
-    QVERIFY(plasmaWindowCreatedSpy.wait());
-    QCOMPARE(plasmaWindowCreatedSpy.count(), 1);
 
     // Create the test window.
+    QSignalSpy plasmaWindowCreatedSpy(Test::waylandWindowManagement(), &KWayland::Client::PlasmaWindowManagement::windowCreated);
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(surface != nullptr);
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
@@ -130,7 +126,7 @@ void MinimizeAnimationTest::testMinimizeUnminimize()
     Window *window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::red);
     QVERIFY(window);
     QVERIFY(plasmaWindowCreatedSpy.wait());
-    QCOMPARE(plasmaWindowCreatedSpy.count(), 2);
+    QCOMPARE(plasmaWindowCreatedSpy.count(), 1);
 
     // We have to set the minimized geometry because the squash effect needs it,
     // otherwise it won't start animation.

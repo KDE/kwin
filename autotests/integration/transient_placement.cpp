@@ -22,7 +22,6 @@
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/event_queue.h>
 #include <KWayland/Client/keyboard.h>
-#include <KWayland/Client/plasmashell.h>
 #include <KWayland/Client/pointer.h>
 #include <KWayland/Client/registry.h>
 #include <KWayland/Client/seat.h>
@@ -79,7 +78,7 @@ void TransientPlacementTest::initTestCase()
 
 void TransientPlacementTest::init()
 {
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Decoration | Test::AdditionalWaylandInterface::PlasmaShell));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Decoration | Test::AdditionalWaylandInterface::LayerShellV1));
 
     workspace()->setActiveOutput(QPoint(640, 512));
     input()->pointer()->warp(QPoint(640, 512));
@@ -470,18 +469,17 @@ void TransientPlacementTest::testXdgPopupWithPanel()
 {
     const Output *output = workspace()->activeOutput();
 
-    std::unique_ptr<KWayland::Client::Surface> surface{Test::createSurface()};
-    QVERIFY(surface != nullptr);
-    std::unique_ptr<Test::XdgToplevel> dockShellSurface{Test::createXdgToplevelSurface(surface.get())};
-    QVERIFY(dockShellSurface != nullptr);
-    std::unique_ptr<KWayland::Client::PlasmaShellSurface> plasmaSurface(Test::waylandPlasmaShell()->createSurface(surface.get()));
-    QVERIFY(plasmaSurface != nullptr);
-    plasmaSurface->setRole(KWayland::Client::PlasmaShellSurface::Role::Panel);
-    plasmaSurface->setPosition(QPoint(0, output->geometry().height() - 50));
-    plasmaSurface->setPanelBehavior(KWayland::Client::PlasmaShellSurface::PanelBehavior::AlwaysVisible);
+    std::unique_ptr<KWayland::Client::Surface> dockSurface{Test::createSurface()};
+    std::unique_ptr<Test::LayerSurfaceV1> dockShellSurface{Test::createLayerSurfaceV1(dockSurface.get(), QStringLiteral("dock"))};
+    dockShellSurface->set_size(1280, 50);
+    dockShellSurface->set_anchor(Test::LayerSurfaceV1::anchor_bottom);
+    dockShellSurface->set_exclusive_zone(50);
+    dockSurface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     // now render and map the window
-    auto dock = Test::renderAndWaitForShown(surface.get(), QSize(1280, 50), Qt::blue);
+    QSignalSpy dockConfigureRequestedSpy(dockShellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    QVERIFY(dockConfigureRequestedSpy.wait());
+    auto dock = Test::renderAndWaitForShown(dockSurface.get(), dockConfigureRequestedSpy.last().at(1).toSize(), Qt::blue);
     QVERIFY(dock);
     QCOMPARE(dock->windowType(), NET::Dock);
     QVERIFY(dock->isDock());
