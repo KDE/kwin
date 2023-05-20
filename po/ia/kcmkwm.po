@@ -1409,7 +1409,7 @@ msgstr ""
 #~ msgstr "Intelligente"
 
 #~ msgid "Maximizing"
-#~ msgstr "Maximizar"
+#~ msgstr "Maximisar"
 
 #, fuzzy
 #~| msgid "Zero-Cornered"
