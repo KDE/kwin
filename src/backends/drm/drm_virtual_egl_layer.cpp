@@ -20,7 +20,6 @@
 #include "gbm_dmabuf.h"
 #include "kwineglutils_p.h"
 #include "scene/surfaceitem_wayland.h"
-#include "wayland/linuxdmabufv1clientbuffer.h"
 #include "wayland/surface_interface.h"
 
 #include <QRegion>
@@ -149,8 +148,8 @@ bool VirtualEglGbmLayer::scanout(SurfaceItem *surfaceItem)
     if (!item || !item->surface()) {
         return false;
     }
-    const auto buffer = qobject_cast<KWaylandServer::LinuxDmaBufV1ClientBuffer *>(item->surface()->buffer());
-    if (!buffer || buffer->size() != m_output->modeSize()) {
+    const auto buffer = item->surface()->buffer();
+    if (!buffer || !buffer->dmabufAttributes() || buffer->size() != m_output->modeSize()) {
         return false;
     }
     const auto scanoutBuffer = GbmBuffer::importBuffer(m_output->gpu(), buffer);

@@ -16,7 +16,6 @@
 #include "drm_output.h"
 #include "drm_pipeline.h"
 #include "scene/surfaceitem_wayland.h"
-#include "wayland/linuxdmabufv1clientbuffer.h"
 #include "wayland/surface_interface.h"
 
 #include <QRegion>
@@ -113,12 +112,15 @@ bool EglGbmLayer::scanout(SurfaceItem *surfaceItem)
     if (surface->bufferTransform() != m_pipeline->output()->transform()) {
         return false;
     }
-    const auto buffer = qobject_cast<KWaylandServer::LinuxDmaBufV1ClientBuffer *>(surface->buffer());
+    const auto buffer = surface->buffer();
     if (!buffer) {
         return false;
     }
 
     const DmaBufAttributes *dmabufAttributes = buffer->dmabufAttributes();
+    if (!dmabufAttributes) {
+        return false;
+    }
 
     const auto formats = m_pipeline->formats();
     if (!formats.contains(dmabufAttributes->format)) {

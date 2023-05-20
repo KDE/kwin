@@ -9,7 +9,6 @@
 #include "platformsupport/scenes/opengl/abstract_egl_backend.h"
 #include "scene/surfaceitem_wayland.h"
 #include "utils/common.h"
-#include "wayland/linuxdmabufv1clientbuffer.h"
 #include "wayland/shmclientbuffer.h"
 
 #include <epoxy/egl.h>
@@ -35,8 +34,8 @@ AbstractEglBackend *BasicEGLSurfaceTextureWayland::backend() const
 
 bool BasicEGLSurfaceTextureWayland::create()
 {
-    if (auto buffer = qobject_cast<KWaylandServer::LinuxDmaBufV1ClientBuffer *>(m_pixmap->buffer())) {
-        return loadDmabufTexture(buffer);
+    if (m_pixmap->buffer()->dmabufAttributes()) {
+        return loadDmabufTexture(m_pixmap->buffer());
     } else if (auto buffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(m_pixmap->buffer())) {
         return loadShmTexture(buffer);
     } else {
@@ -52,8 +51,8 @@ void BasicEGLSurfaceTextureWayland::destroy()
 
 void BasicEGLSurfaceTextureWayland::update(const QRegion &region)
 {
-    if (auto buffer = qobject_cast<KWaylandServer::LinuxDmaBufV1ClientBuffer *>(m_pixmap->buffer())) {
-        updateDmabufTexture(buffer);
+    if (m_pixmap->buffer()->dmabufAttributes()) {
+        updateDmabufTexture(m_pixmap->buffer());
     } else if (auto buffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(m_pixmap->buffer())) {
         updateShmTexture(buffer, region);
     }
@@ -94,7 +93,7 @@ void BasicEGLSurfaceTextureWayland::updateShmTexture(KWaylandServer::ShmClientBu
     }
 }
 
-bool BasicEGLSurfaceTextureWayland::loadDmabufTexture(KWaylandServer::LinuxDmaBufV1ClientBuffer *buffer)
+bool BasicEGLSurfaceTextureWayland::loadDmabufTexture(GraphicsBuffer *buffer)
 {
     EGLImageKHR image = backend()->importBufferAsImage(buffer);
     if (Q_UNLIKELY(image == EGL_NO_IMAGE_KHR)) {
@@ -116,7 +115,7 @@ bool BasicEGLSurfaceTextureWayland::loadDmabufTexture(KWaylandServer::LinuxDmaBu
     return true;
 }
 
-void BasicEGLSurfaceTextureWayland::updateDmabufTexture(KWaylandServer::LinuxDmaBufV1ClientBuffer *buffer)
+void BasicEGLSurfaceTextureWayland::updateDmabufTexture(GraphicsBuffer *buffer)
 {
     if (Q_UNLIKELY(m_bufferType != BufferType::DmaBuf)) {
         destroy();

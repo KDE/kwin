@@ -11,13 +11,13 @@
 namespace KWaylandServer
 {
 class ShmClientBuffer;
-class LinuxDmaBufV1ClientBuffer;
 }
 
 namespace KWin
 {
 
 class AbstractEglBackend;
+class GraphicsBuffer;
 
 class KWIN_EXPORT BasicEGLSurfaceTextureWayland : public OpenGLSurfaceTextureWayland
 {
@@ -33,8 +33,8 @@ public:
 private:
     bool loadShmTexture(KWaylandServer::ShmClientBuffer *buffer);
     void updateShmTexture(KWaylandServer::ShmClientBuffer *buffer, const QRegion &region);
-    bool loadDmabufTexture(KWaylandServer::LinuxDmaBufV1ClientBuffer *buffer);
-    void updateDmabufTexture(KWaylandServer::LinuxDmaBufV1ClientBuffer *buffer);
+    bool loadDmabufTexture(GraphicsBuffer *buffer);
+    void updateDmabufTexture(GraphicsBuffer *buffer);
     void destroy();
 
     enum class BufferType {

@@ -18,12 +18,6 @@
 #include "drm_plane.h"
 #include "libkwineffects/kwingltexture.h"
 
-namespace KWaylandServer
-{
-class SurfaceInterface;
-class LinuxDmaBufV1ClientBuffer;
-}
-
 struct gbm_bo;
 
 namespace KWin

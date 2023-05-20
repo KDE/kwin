@@ -21,7 +21,6 @@
 #include "kwineglutils_p.h"
 #include "libkwineffects/kwinglplatform.h"
 #include "scene/surfaceitem_wayland.h"
-#include "wayland/linuxdmabufv1clientbuffer.h"
 #include "wayland/surface_interface.h"
 
 #include <drm_fourcc.h>

@@ -6,7 +6,7 @@
 */
 #include "display.h"
 #include "display_p.h"
-#include "linuxdmabufv1clientbuffer.h"
+#include "linuxdmabufv1clientbuffer_p.h"
 #include "output_interface.h"
 #include "shmclientbuffer.h"
 #include "utils/common.h"

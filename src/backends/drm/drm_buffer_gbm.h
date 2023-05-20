@@ -17,11 +17,6 @@
 
 struct gbm_bo;
 
-namespace KWaylandServer
-{
-class LinuxDmaBufV1ClientBuffer;
-}
-
 namespace KWin
 {
 
@@ -35,7 +30,7 @@ class GbmBuffer : public DrmGpuBuffer
 public:
     GbmBuffer(DrmGpu *gpu, gbm_bo *bo, uint32_t flags);
     GbmBuffer(gbm_bo *bo, const std::shared_ptr<GbmSwapchain> &swapchain);
-    GbmBuffer(DrmGpu *gpu, gbm_bo *bo, KWaylandServer::LinuxDmaBufV1ClientBuffer *clientBuffer, uint32_t flags);
+    GbmBuffer(DrmGpu *gpu, gbm_bo *bo, GraphicsBuffer *clientBuffer, uint32_t flags);
     ~GbmBuffer() override;
 
     gbm_bo *bo() const;
@@ -45,7 +40,7 @@ public:
 
     bool map(uint32_t flags);
 
-    static std::shared_ptr<GbmBuffer> importBuffer(DrmGpu *gpu, KWaylandServer::LinuxDmaBufV1ClientBuffer *clientBuffer);
+    static std::shared_ptr<GbmBuffer> importBuffer(DrmGpu *gpu, GraphicsBuffer *clientBuffer);
     static std::shared_ptr<GbmBuffer> importBuffer(DrmGpu *gpu, GbmBuffer *buffer, uint32_t flags = GBM_BO_USE_SCANOUT);
 
 private:

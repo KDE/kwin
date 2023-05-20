@@ -32,7 +32,7 @@ bool RenderBackend::checkGraphicsReset()
     return false;
 }
 
-bool RenderBackend::testImportBuffer(KWaylandServer::LinuxDmaBufV1ClientBuffer *buffer)
+bool RenderBackend::testImportBuffer(GraphicsBuffer *buffer)
 {
     return false;
 }

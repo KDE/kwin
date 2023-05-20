@@ -24,42 +24,8 @@ namespace KWaylandServer
 {
 
 class Display;
-class LinuxDmaBufV1ClientBufferPrivate;
 class LinuxDmaBufV1ClientBufferIntegrationPrivate;
 class LinuxDmaBufV1FeedbackPrivate;
-
-/**
- * The LinuxDmaBufV1ClientBuffer class represents a linux dma-buf client buffer.
- *
- * The LinuxDmaBufV1ClientBuffer can be used even after the underlying wl_buffer object
- * is destroyed by the client.
- */
-class KWIN_EXPORT LinuxDmaBufV1ClientBuffer : public KWin::GraphicsBuffer
-{
-    Q_OBJECT
-
-public:
-    LinuxDmaBufV1ClientBuffer(KWin::DmaBufAttributes &&attrs);
-
-    QSize size() const override;
-    bool hasAlphaChannel() const override;
-    const KWin::DmaBufAttributes *dmabufAttributes() const override;
-
-    static LinuxDmaBufV1ClientBuffer *get(wl_resource *resource);
-
-private:
-    void initialize(wl_resource *resource);
-
-    static void buffer_destroy_resource(wl_resource *resource);
-    static void buffer_destroy(wl_client *client, wl_resource *resource);
-    static const struct wl_buffer_interface implementation;
-
-    wl_resource *m_resource = nullptr;
-    KWin::DmaBufAttributes m_attrs;
-    bool m_hasAlphaChannel = false;
-
-    friend class LinuxDmaBufParamsV1;
-};
 
 class KWIN_EXPORT LinuxDmaBufV1Feedback : public QObject
 {

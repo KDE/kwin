@@ -15,7 +15,6 @@
 namespace KWaylandServer
 {
 class SurfaceInterface;
-class LinuxDmaBufV1ClientBuffer;
 }
 
 namespace KWin

@@ -280,13 +280,14 @@ bool AbstractEglBackend::prefer10bpc() const
     return false;
 }
 
-EGLImageKHR AbstractEglBackend::importBufferAsImage(KWaylandServer::LinuxDmaBufV1ClientBuffer *buffer)
+EGLImageKHR AbstractEglBackend::importBufferAsImage(GraphicsBuffer *buffer)
 {
     auto it = m_importedBuffers.constFind(buffer);
     if (Q_LIKELY(it != m_importedBuffers.constEnd())) {
         return *it;
     }
 
+    Q_ASSERT(buffer->dmabufAttributes());
     EGLImageKHR image = importDmaBufAsImage(*buffer->dmabufAttributes());
     if (image != EGL_NO_IMAGE_KHR) {
         m_importedBuffers[buffer] = image;
@@ -308,7 +309,7 @@ std::shared_ptr<GLTexture> AbstractEglBackend::importDmaBufAsTexture(const DmaBu
     return m_context->importDmaBufAsTexture(attributes);
 }
 
-bool AbstractEglBackend::testImportBuffer(KWaylandServer::LinuxDmaBufV1ClientBuffer *buffer)
+bool AbstractEglBackend::testImportBuffer(GraphicsBuffer *buffer)
 {
     return importBufferAsImage(buffer) != EGL_NO_IMAGE_KHR;
 }
