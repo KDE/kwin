@@ -278,7 +278,7 @@ msgstr "Buttones animate"
 #~ msgstr "Adde manico [rp redimensionar fenestras con necun bordo"
 
 #~ msgid "Display window borders for maximized windows"
-#~ msgstr "Monstra bordos der fenestra  pro maximizar fenestras"
+#~ msgstr "Monstra bordos der fenestra  pro maximisar fenestras"
 
 #~ msgid "Shadows"
 #~ msgstr "Umbras"
@@ -795,7 +795,7 @@ msgstr "Buttones animate"
 #~ "Marcar iste option si tu vole que le bulla de legenda debe haber le mesme "
 #~ "dimension su le fenestra active que il ha super alteres inactive. Iste "
 #~ "option es utile pro laptops o schermos de basse resolution ubi tu vole "
-#~ "maximizar le quantitate de spatio disponibile pro le contentos de "
+#~ "maximisar le quantitate de spatio disponibile pro le contentos de "
 #~ "fenestra."
 
 #~ msgid "Draw g&rab bars below windows"

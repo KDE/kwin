@@ -1847,7 +1847,7 @@ msgstr "Maximizate horizontalmente"
 #: rulesettings.kcfg:209
 #, kde-format
 msgid "Maximized horizontally rule type"
-msgstr "Typo de regula de maximizar horizontalmente"
+msgstr "Typo de regula de maximisar horizontalmente"
 
 #. i18n: ectx: label, entry (minimize), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:216

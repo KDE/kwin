@@ -333,7 +333,7 @@ msgstr "Monstra fenestra seligite"
 #~ msgstr "Non monstra scriptorio"
 
 #~ msgid "Show desktop to minimize all windows"
-#~ msgstr "Monstra scriptorio pro minimizar omne fenestras."
+#~ msgstr "Monstra scriptorio pro minimisar omne fenestras."
 
 #~ msgid "Ignore"
 #~ msgstr "Ignora"
