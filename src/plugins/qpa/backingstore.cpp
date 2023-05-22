@@ -47,6 +47,18 @@ void BackingStore::resize(const QSize &size, const QRegion &staticContents)
     m_frontBuffer.setDevicePixelRatio(devicePixelRatio);
 }
 
+void BackingStore::beginPaint(const QRegion &region)
+{
+    if (m_backBuffer.hasAlphaChannel()) {
+        QPainter p(paintDevice());
+        p.setCompositionMode(QPainter::CompositionMode_Source);
+        const QColor blank = Qt::transparent;
+        for (const QRect &rect : region) {
+            p.fillRect(rect, blank);
+        }
+    }
+}
+
 static QRect scaledRect(const QRect &rect, qreal devicePixelRatio)
 {
     return QRect(rect.topLeft() * devicePixelRatio, rect.size() * devicePixelRatio);
@@ -55,6 +67,7 @@ static QRect scaledRect(const QRect &rect, qreal devicePixelRatio)
 static void blitImage(const QImage &source, QImage &target, const QRegion &region)
 {
     QPainter painter(&target);
+    painter.setCompositionMode(QPainter::CompositionMode_Source);
     for (const QRect &rect : region) {
         painter.drawImage(rect, source, scaledRect(rect, source.devicePixelRatio()));
     }
