@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-19 02:02+0000\n"
+"POT-Creation-Date: 2023-05-23 03:12+0000\n"
 "PO-Revision-Date: 2022-08-09 13:31+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -1520,7 +1520,7 @@ msgstr ""
 "Esc 키나 오른쪽 단추를 클릭하면 취소합니다."
 
 #: plugins/desktopgrid/desktopgrid_config.cpp:54
-#: plugins/desktopgrid/desktopgrideffect.cpp:35
+#: plugins/desktopgrid/desktopgrideffect.cpp:43
 #, fuzzy, kde-format
 #| msgid "Show Desktop"
 msgid "Show Desktop Grid"
@@ -2300,7 +2300,7 @@ msgid "Unknown"
 msgstr "알 수 없음"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:41
-#: plugins/overview/overvieweffect.cpp:31
+#: plugins/overview/overvieweffect.cpp:48
 #, kde-format
 msgid "Toggle Overview"
 msgstr "한눈에 보기 전환"

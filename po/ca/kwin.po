@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-19 02:02+0000\n"
+"POT-Creation-Date: 2023-05-23 03:12+0000\n"
 "PO-Revision-Date: 2023-04-20 12:34+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -1527,7 +1527,7 @@ msgstr ""
 "La tecla d'escapada o clic dret per a cancel·lar."
 
 #: plugins/desktopgrid/desktopgrid_config.cpp:54
-#: plugins/desktopgrid/desktopgrideffect.cpp:35
+#: plugins/desktopgrid/desktopgrideffect.cpp:43
 #, kde-format
 msgid "Show Desktop Grid"
 msgstr "Mostra la quadrícula de l'escriptori"
@@ -2268,7 +2268,7 @@ msgid "Unknown"
 msgstr "Desconegut"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:41
-#: plugins/overview/overvieweffect.cpp:31
+#: plugins/overview/overvieweffect.cpp:48
 #, kde-format
 msgid "Toggle Overview"
 msgstr "Commuta la vista general"

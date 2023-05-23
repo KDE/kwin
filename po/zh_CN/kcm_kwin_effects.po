@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-17 02:32+0000\n"
-"PO-Revision-Date: 2023-02-24 12:43\n"
+"PO-Revision-Date: 2023-05-22 13:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -14,8 +14,8 @@ msgstr ""
 "X-Crowdin-Project: kdeorg\n"
 "X-Crowdin-Project-ID: 269464\n"
 "X-Crowdin-Language: zh-CN\n"
-"X-Crowdin-File: /kf5-trunk/messages/kwin/kcm_kwin_effects.pot\n"
-"X-Crowdin-File-ID: 10236\n"
+"X-Crowdin-File: /kf6-trunk/messages/kwin/kcm_kwin_effects.pot\n"
+"X-Crowdin-File-ID: 42539\n"
 
 #: package/contents/ui/Effect.qml:92
 #, kde-format
@@ -65,6 +65,3 @@ msgstr "排除内建特效"
 #, kde-format
 msgid "Get New Desktop Effects..."
 msgstr "获取新桌面特效..."
-
-#~ msgid "This module lets you configure desktop effects."
-#~ msgstr "您可以在此模块中配置桌面特效。"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-19 02:02+0000\n"
+"POT-Creation-Date: 2023-05-23 03:12+0000\n"
 "PO-Revision-Date: 2023-02-20 11:15+0100\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
@@ -1515,7 +1515,7 @@ msgstr ""
 "Escape hoặc bấm phải để huỷ."
 
 #: plugins/desktopgrid/desktopgrid_config.cpp:54
-#: plugins/desktopgrid/desktopgrideffect.cpp:35
+#: plugins/desktopgrid/desktopgrideffect.cpp:43
 #, fuzzy, kde-format
 #| msgid "Show Desktop"
 msgid "Show Desktop Grid"
@@ -2295,7 +2295,7 @@ msgid "Unknown"
 msgstr "Không rõ"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:41
-#: plugins/overview/overvieweffect.cpp:31
+#: plugins/overview/overvieweffect.cpp:48
 #, kde-format
 msgid "Toggle Overview"
 msgstr "Bật/tắt tổng quan"

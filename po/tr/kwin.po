@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-19 02:02+0000\n"
+"POT-Creation-Date: 2023-05-23 03:12+0000\n"
 "PO-Revision-Date: 2023-04-20 15:24+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -1516,7 +1516,7 @@ msgstr ""
 "İptal etmek için Vazgeç düğmesine basın veya sağ tıklayın."
 
 #: plugins/desktopgrid/desktopgrid_config.cpp:54
-#: plugins/desktopgrid/desktopgrideffect.cpp:35
+#: plugins/desktopgrid/desktopgrideffect.cpp:43
 #, kde-format
 msgid "Show Desktop Grid"
 msgstr "Masaüstü Izgarasını Göster"
@@ -2257,7 +2257,7 @@ msgid "Unknown"
 msgstr "Bilinmiyor"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:41
-#: plugins/overview/overvieweffect.cpp:31
+#: plugins/overview/overvieweffect.cpp:48
 #, kde-format
 msgid "Toggle Overview"
 msgstr "Genel Görünümü Aç/Kapat"

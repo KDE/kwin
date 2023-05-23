@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1651955 $
+# Version: $Revision: 1652322 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # Norbert Popiołek <norbert@kde.com.pl>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-19 02:02+0000\n"
+"POT-Creation-Date: 2023-05-23 03:12+0000\n"
 "PO-Revision-Date: 2023-04-23 11:46+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -1531,7 +1531,7 @@ msgstr ""
 "Klawisz Escape lub kliknięcie prawym przyciskiem myszy zaniecha."
 
 #: plugins/desktopgrid/desktopgrid_config.cpp:54
-#: plugins/desktopgrid/desktopgrideffect.cpp:35
+#: plugins/desktopgrid/desktopgrideffect.cpp:43
 #, kde-format
 msgid "Show Desktop Grid"
 msgstr "Pokaż siatkę na pulpicie"
@@ -2271,7 +2271,7 @@ msgid "Unknown"
 msgstr "Nieznany"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:41
-#: plugins/overview/overvieweffect.cpp:31
+#: plugins/overview/overvieweffect.cpp:48
 #, kde-format
 msgid "Toggle Overview"
 msgstr "Przestaw widok przeglądu"

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-13 02:16+0000\n"
-"PO-Revision-Date: 2023-02-24 12:43\n"
+"PO-Revision-Date: 2023-05-22 13:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -14,8 +14,8 @@ msgstr ""
 "X-Crowdin-Project: kdeorg\n"
 "X-Crowdin-Project-ID: 269464\n"
 "X-Crowdin-Language: zh-CN\n"
-"X-Crowdin-File: /kf5-trunk/messages/kwin/kcm_kwinrules.pot\n"
-"X-Crowdin-File-ID: 4401\n"
+"X-Crowdin-File: /kf6-trunk/messages/kwin/kcm_kwinrules.pot\n"
+"X-Crowdin-File-ID: 42737\n"
 
 #: kcmrules.cpp:226
 #, kde-format
@@ -65,7 +65,7 @@ msgid ""
 "No further changes will be affected."
 msgstr ""
 "窗口属性将只在窗口创建后设置为给定的数值。\n"
-"这不会影响更多的更改。"
+"不影响在这之后的更改。"
 
 #: optionsmodel.cpp:209
 #, kde-format
@@ -85,7 +85,7 @@ msgstr ""
 #: optionsmodel.cpp:213
 #, kde-format
 msgid "Remember"
-msgstr "记忆"
+msgstr "记住"
 
 #: optionsmodel.cpp:214
 #, kde-format
@@ -122,7 +122,7 @@ msgstr "窗口属性将总是被强制为给定的数值。"
 #: optionsmodel.cpp:224
 #, kde-format
 msgid "Force Temporarily"
-msgstr "临时强制"
+msgstr "暂时强制"
 
 #: optionsmodel.cpp:225
 #, kde-format
@@ -152,7 +152,7 @@ msgstr "当前没有设置用于特定窗口的规则"
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Click the <interface>Add New...</interface> button below to add some"
-msgstr "点击下方的 <interface>添加新项...</interface> 按钮来添加"
+msgstr "点击下方的 <interface>新增...</interface> 按钮来添加规则"
 
 #: package/contents/ui/main.qml:69
 #, kde-format
@@ -177,7 +177,7 @@ msgstr "保存规则"
 #: package/contents/ui/main.qml:98
 #, kde-format
 msgid "Add New..."
-msgstr "添加新项…"
+msgstr "新增…"
 
 #: package/contents/ui/main.qml:109
 #, kde-format
@@ -202,7 +202,7 @@ msgstr "编辑"
 #: package/contents/ui/main.qml:216
 #, kde-format
 msgid "Duplicate"
-msgstr "复制"
+msgstr "创建副本"
 
 #: package/contents/ui/main.qml:225
 #, kde-format
@@ -340,8 +340,8 @@ msgid ""
 "types."
 msgstr ""
 "您已将窗口类指定为“不重要”。\n"
-"这意味着设置将可能应用到全部应用程序的窗口中。如果您真的想要创建常规设置的"
-"话，推荐您至少限制一种窗口类型，以避免特殊的窗口类型。"
+"这意味着这些设置将可能被应用到所有程序的窗口中。如果您确实想要创建一组通用设"
+"置，建议至少也要限制窗口类型，避免应用到特殊的窗口类型。"
 
 #: rulesmodel.cpp:244
 #, kde-format
@@ -350,8 +350,8 @@ msgid ""
 "initial settings for size and position. To enforce these settings, also "
 "force the property \"%1\" to \"Yes\"."
 msgstr ""
-"一些程序在启动后会设置他们自己的大小和位置，覆盖您对它的初始设置。要强制应用"
-"这些设置，请将这个属性“%1”设置为“是”。"
+"某些程序会在启动后会自行设置窗口的大小和位置，这将覆盖您对窗口大小和位置的初"
+"始设置。要强制应用这些设置，请将“%1”属性设置为“是”。"
 
 #: rulesmodel.cpp:251
 #, kde-format
@@ -405,7 +405,7 @@ msgstr "窗口标题"
 #: rulesmodel.cpp:430
 #, kde-format
 msgid "Machine (hostname)"
-msgstr "计算机 (主机名)"
+msgstr "机器 (主机名)"
 
 #: rulesmodel.cpp:436
 #, kde-format
@@ -491,6 +491,11 @@ msgid ""
 "<interface>Fullscreen</interface> states.<nl/><nl/>Note that the position "
 "can also be used to map to a different <interface>Screen</interface>"
 msgstr ""
+"某些程序会在启动后会自行设置窗口的大小和位置，这将覆盖您对窗口大小和位置的初"
+"始设置。设置此属性将覆盖它们的位置请求。<nl/><nl/>这将影响<interface>大小</"
+"interface>和<interface>位置</interface>，但不影响<interface>最大化</"
+"interface>或者<interface>全屏</interface>状态。<nl/><nl/>请注意：位置也可以用"
+"于映射到不同的<interface>屏幕</interface>"
 
 #: rulesmodel.cpp:546
 #, kde-format
@@ -505,16 +510,10 @@ msgstr "最大尺寸"
 #: rulesmodel.cpp:556
 #, kde-format
 msgid "Obey geometry restrictions"
-msgstr "服从几何限制"
+msgstr "遵守大小和位置限制"
 
 #: rulesmodel.cpp:558
-#, fuzzy, kde-kuit-format
-#| msgid ""
-#| "Eg. terminals or video players can ask to keep a certain aspect ratio\n"
-#| "or only grow by values larger than one\n"
-#| "(eg. by the dimensions of one character).\n"
-#| "This may be pointless and the restriction prevents arbitrary dimensions\n"
-#| "like your complete screen area."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Some apps like video players or terminals can ask KWin to constrain them to "
@@ -523,15 +522,15 @@ msgid ""
 "windows to be resized to arbitrary sizes.<nl/><nl/>This can be helpful for "
 "windows that can't quite fit the full screen area when maximized."
 msgstr ""
-"例如，终端和视频可以请求保持特定的宽高比，\n"
-"或者仅按照大于 1 的值变大 (例如 1 个字符尺寸)。\n"
-"这可能没有意义，而且该限制将阻止任意的尺寸，\n"
-"例如整个屏幕区域。"
+"某些应用程序，例如视频播放器、命令行终端等可以请求 KWin 将它们限制在某个宽高"
+"比，或者仅允许它们按照大于 1 个字符的大小来调整窗口大小。使用此属性将忽略这些"
+"限制，从而允许将这些窗口设置为任意大小。<nl/><nl/>此功能可以用于改善窗口最大"
+"化时无法填满全屏区域的情况。"
 
 #: rulesmodel.cpp:569
 #, kde-format
 msgid "Keep above other windows"
-msgstr "保持在其他窗口之上"
+msgstr "窗口置顶"
 
 #: rulesmodel.cpp:569 rulesmodel.cpp:574 rulesmodel.cpp:579 rulesmodel.cpp:585
 #: rulesmodel.cpp:591 rulesmodel.cpp:597
@@ -542,7 +541,7 @@ msgstr "布局和访问"
 #: rulesmodel.cpp:574
 #, kde-format
 msgid "Keep below other windows"
-msgstr "保持在其他窗口之下"
+msgstr "窗口置底"
 
 #: rulesmodel.cpp:579
 #, kde-format
@@ -553,24 +552,24 @@ msgstr "跳过任务栏"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
-msgstr ""
+msgstr "控制窗口是否出显示任务管理器中。"
 
 #: rulesmodel.cpp:585
 #, kde-format
 msgid "Skip pager"
-msgstr "跳过桌面切换"
+msgstr "跳过虚拟桌面切换器"
 
 #: rulesmodel.cpp:587
 #, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the Virtual Desktop manager."
-msgstr ""
+msgstr "控制窗口是否显示在虚拟桌面管理器中。"
 
 #: rulesmodel.cpp:591
 #, kde-format
 msgid "Skip switcher"
-msgstr "跳过程序切换"
+msgstr "跳过窗口切换器"
 
 #: rulesmodel.cpp:593
 #, kde-kuit-format
@@ -578,7 +577,7 @@ msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the <shortcut>Alt+Tab</"
 "shortcut> window list."
-msgstr ""
+msgstr "控制窗口是否显示在 <shortcut>Alt+Tab</shortcut> 窗口列表中。"
 
 #: rulesmodel.cpp:597
 #, kde-format
@@ -638,6 +637,18 @@ msgid ""
 "currently-focused window.</item><item><emphasis strong='true'>Extreme:</"
 "emphasis> The window will never be raised and focused.</item></list>"
 msgstr ""
+"当您正在与其他窗口进行交互时，KWin 会尝试防止并非由用户直接操作打开的窗口抢占"
+"焦点并提升到最前方。此属性用于调整单个窗口和应用程序焦点抢占阻止机制的级别。"
+"<nl/><nl/>当窗口在并非由您直接操作的情况下打开时，不同的焦点抢占阻止级别的效"
+"果：<nl/><list><item><emphasis strong='true'>无：</emphasis>该窗口将被提升到"
+"最前方并取得焦点。</item><item><emphasis strong='true'>低：</emphasis>焦点抢"
+"占阻止机制将生效，但在 KWin 难以判断的情形下，该窗口将被提升到最前方并取得焦"
+"点。</item><item><emphasis strong='true'>正常：</emphasis>焦点抢占阻止机制将"
+"生效，但在 KWin 难以判断的情形下，该窗口将<emphasis>不</emphasis>被提升到最前"
+"方并取得焦点。</item><item><emphasis strong='true'>高：</emphasis>只有在该窗"
+"口属于当前焦点窗口的同一个应用程序时，它才会被提升到最前方并取得焦点。</"
+"item><item><emphasis strong='true'>彻底：</emphasis>该窗口将不会被提升到最前"
+"方并取得焦点。</item></list>"
 
 #: rulesmodel.cpp:652
 #, kde-format
@@ -667,6 +678,18 @@ msgid ""
 "emphasis> Newly-opened windows never raise themselves and take focus.</"
 "item></list>"
 msgstr ""
+"此属性用于调整当前活动窗口的焦点抢占阻止机制的级别。它会覆盖应用于并非由用户"
+"直接操作打开新窗口的焦点抢占阻止机制。<nl/><nl/>如果带有此属性的窗口在当前拥"
+"有焦点，而新窗口并非由您直接操作的情况下打开时，不同的焦点抢占阻止级别的效"
+"果：<nl/><list><item><emphasis strong='true'>无：</emphasis>新窗口将被提升到"
+"最前方并取得焦点。</item><item><emphasis strong='true'>低：</emphasis>焦点抢"
+"占阻止机制将对新窗口生效，但在 KWin 难以判断的情形下，新窗口将被提升到最前方"
+"并取得焦点。</item><item><emphasis strong='true'>正常：</emphasis>焦点抢占阻"
+"止机制将对新窗口生效，但在 KWin 难以判断的情形下，新窗口将<emphasis>不</"
+"emphasis>被提升到最前方并取得焦点。</item><item><emphasis strong='true'>高："
+"</emphasis>只有在新窗口属于当前焦点窗口的同一个应用程序时，它才会被提升到最前"
+"方并取得焦点。</item><item><emphasis strong='true'>彻底：</emphasis>新窗口将"
+"不会被提升到最前方并取得焦点。</item></list>"
 
 #: rulesmodel.cpp:680
 #, kde-format
@@ -676,7 +699,7 @@ msgstr "接受焦点"
 #: rulesmodel.cpp:682
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
-msgstr ""
+msgstr "控制窗口被点击时是否取得焦点。"
 
 #: rulesmodel.cpp:686
 #, kde-format
@@ -694,6 +717,10 @@ msgid ""
 "use any other global shortcuts such as <shortcut>Alt+Space</shortcut> to "
 "activate KRunner."
 msgstr ""
+"使用此属性可以在窗口取得焦点时防止全局键盘快捷键工作。这对于模拟器、虚拟机等"
+"需要在窗内处理同样快捷键的应用程序来说有用。<nl/><nl/>该窗口处于活动状态时，"
+"您将无法使用 <shortcut>Alt+Tab</shortcut> 来切出窗口，也无法使用任何全局快捷"
+"键——例如使用 <shortcut>Alt+空格键</shortcut>来激活 KRunner。"
 
 #: rulesmodel.cpp:698
 #, kde-format
@@ -741,7 +768,7 @@ msgstr "所有窗口类型"
 #: rulesmodel.cpp:802
 #, kde-format
 msgid "Normal Window"
-msgstr "普通窗口"
+msgstr "正常窗口"
 
 #: rulesmodel.cpp:803
 #, kde-format
@@ -756,7 +783,7 @@ msgstr "工具窗口"
 #: rulesmodel.cpp:805
 #, kde-format
 msgid "Dock (panel)"
-msgstr "停靠(面板)"
+msgstr "停靠面板 (面板)"
 
 #: rulesmodel.cpp:806
 #, kde-format
@@ -766,12 +793,12 @@ msgstr "工具栏"
 #: rulesmodel.cpp:807
 #, kde-format
 msgid "Torn-Off Menu"
-msgstr "撕下的菜单"
+msgstr "分离式菜单"
 
 #: rulesmodel.cpp:808
 #, kde-format
 msgid "Splash Screen"
-msgstr "欢迎屏幕"
+msgstr "启动屏幕"
 
 #: rulesmodel.cpp:809
 #, kde-format
@@ -782,7 +809,7 @@ msgstr "桌面"
 #: rulesmodel.cpp:811
 #, kde-format
 msgid "Standalone Menubar"
-msgstr "独立式菜单"
+msgstr "独立式菜单栏"
 
 #: rulesmodel.cpp:812
 #, kde-format
@@ -819,7 +846,7 @@ msgstr "默认"
 #: rulesmodel.cpp:867
 #, kde-format
 msgid "No Placement"
-msgstr "无放置"
+msgstr "不放置"
 
 #: rulesmodel.cpp:868
 #, kde-format
@@ -849,7 +876,7 @@ msgstr "左上角"
 #: rulesmodel.cpp:873
 #, kde-format
 msgid "Under Mouse"
-msgstr "鼠标下"
+msgstr "鼠标下方"
 
 #: rulesmodel.cpp:874
 #, kde-format
@@ -869,7 +896,7 @@ msgstr "低"
 #: rulesmodel.cpp:883
 #, kde-format
 msgid "Normal"
-msgstr "普通"
+msgstr "正常"
 
 #: rulesmodel.cpp:884
 #, kde-format
@@ -879,140 +906,14 @@ msgstr "高"
 #: rulesmodel.cpp:885
 #, kde-format
 msgid "Extreme"
-msgstr "终极"
+msgstr "彻底"
 
 #: rulesmodel.cpp:928
 #, kde-format
 msgid "Unmanaged window"
-msgstr "未管理窗口"
+msgstr "不受管理窗口"
 
 #: rulesmodel.cpp:929
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr "无法检测窗口属性。该窗口不受 KWin 管理。"
-
-#~ msgid "Window shall (not) appear in the taskbar."
-#~ msgstr "窗口(不)显示在任务栏中。"
-
-#~ msgid "Window shall (not) appear in the manager for virtual desktops"
-#~ msgstr "窗口(不)显示在虚拟桌面管理器中。"
-
-#~ msgid "Window shall (not) appear in the Alt+Tab list"
-#~ msgstr "窗口(不)显示在 Alt + Tab 列表中。"
-
-#, fuzzy
-#~| msgid ""
-#~| "KWin tries to prevent windows from taking the focus\n"
-#~| "(\"activate\") while you're working in another window,\n"
-#~| "but this may sometimes fail or superact.\n"
-#~| "\"None\" will unconditionally allow this window to get the focus while\n"
-#~| "\"Extreme\" will completely prevent it from taking the focus."
-#~ msgid ""
-#~ "KWin tries to prevent windows from taking the focus (\"activate\") while "
-#~ "you're working in another window, but this may sometimes fail or "
-#~ "superact. \"None\" will unconditionally allow this window to get the "
-#~ "focus while \"Extreme\" will completely prevent it from taking the focus."
-#~ msgstr ""
-#~ "当您正在其他窗口工作时，KWin 会尝试阻止其\n"
-#~ "他窗口抢夺焦点 (“激活”) 。但这有时可能会\n"
-#~ "失效或者保护过度。\n"
-#~ "“无” 将无条件的让这个窗口获得焦点，\n"
-#~ "“终极” 将完全阻止它抢夺焦点。"
-
-#, fuzzy
-#~| msgid ""
-#~| "This controls the focus protection of the currently active window.\n"
-#~| "None will always give the focus away,\n"
-#~| "Extreme will keep it.\n"
-#~| "Otherwise it's interleaved with the stealing prevention\n"
-#~| "assigned to the window that wants the focus."
-#~ msgid ""
-#~ "This controls the focus protection of the currently active window. None "
-#~ "will always give the focus away, Extreme will keep it. Otherwise it's "
-#~ "interleaved with the stealing prevention assigned to the window that "
-#~ "wants the focus."
-#~ msgstr ""
-#~ "这控制了当前活动窗口的焦点保护。\n"
-#~ "无将会总是交出焦点，\n"
-#~ "终极将总是保留焦点。\n"
-#~ "否则它将会和阻止偷取焦点\n"
-#~ "指定的的想要焦点窗口交替。"
-
-#, fuzzy
-#~| msgid ""
-#~| "Windows may prevent to get the focus (activate) when being clicked.\n"
-#~| "On the other hand you might wish to prevent a window\n"
-#~| "from getting focused on a mouse click."
-#~ msgid ""
-#~ "Windows may prevent to get the focus (activate) when being clicked. On "
-#~ "the other hand you might wish to prevent a window from getting focused on "
-#~ "a mouse click."
-#~ msgstr ""
-#~ "窗口自身也许会阻止在被点击时获得焦点 (激活)。\n"
-#~ "或者您也许想阻止一个窗口在被点击时激活。"
-
-#, fuzzy
-#~| msgid ""
-#~| "When used, a window will receive\n"
-#~| "all keyboard inputs while it is active, including Alt+Tab etc.\n"
-#~| "This is especially interesting for emulators or virtual machines.\n"
-#~| "\n"
-#~| "Be warned:\n"
-#~| "you won't be able to Alt+Tab out of the window\n"
-#~| "nor use any other global shortcut (such as Alt+F2 to show KRunner)\n"
-#~| "while it's active!"
-#~ msgid ""
-#~ "When used, a window will receive all keyboard inputs while it is active, "
-#~ "including Alt+Tab etc. This is especially interesting for emulators or "
-#~ "virtual machines. \n"
-#~ "Be warned: you won't be able to Alt+Tab out of the window nor use any "
-#~ "other global shortcut (such as Alt+F2 to show KRunner) while it's active!"
-#~ msgstr ""
-#~ "在使用这个选项时，窗口在激活时将会接受所有键盘输入，\n"
-#~ "包括 Alt+Tab 等等。这对模拟器或者虚拟机来说很有用。\n"
-#~ "\n"
-#~ "请注意：\n"
-#~ "在窗口激活时，您无法使用 Alt+Tab 来切出窗口，\n"
-#~ "也无法使用任何全局快捷键 (例如使用 Alt+F2 来显示\n"
-#~ "KRunner) 。"
-
-#~ msgid ""
-#~ "Windows can ask to appear in a certain position.\n"
-#~ "By default this overrides the placement strategy\n"
-#~ "what might be nasty if the client abuses the feature\n"
-#~ "to unconditionally popup in the middle of your screen."
-#~ msgstr ""
-#~ "窗口可以要求在一个特定位置显示。\n"
-#~ "默认这将会覆盖位置策略\n"
-#~ "这可能会导致窗口滥用此项功能\n"
-#~ "使得弹出窗口无限制地显示在屏幕中央。"
-
-#~ msgid "KWinRules KCM launcher"
-#~ msgstr "KWin 规则 KCM 启动程序"
-
-#~ msgid "KWin id of the window for special window settings."
-#~ msgstr "窗口特定设置的窗口编号(KWin ID)。"
-
-#~ msgid "Whether the settings should affect all windows of the application."
-#~ msgstr "此设置是否应用到该应用程序的所有窗口。"
-
-#~ msgid "This helper utility is not supposed to be called directly."
-#~ msgstr "此助手工具不应直接调用。"
-
-#~ msgctxt "Window caption for the application wide rules dialog"
-#~ msgid "Edit Application-Specific Settings"
-#~ msgstr "编辑程序的特定设置"
-
-#~ msgid "Edit Window-Specific Settings"
-#~ msgstr "编辑窗口的特定设置"
-
-#~ msgid ""
-#~ "<p><h1>Window-specific Settings</h1> Here you can customize window "
-#~ "settings specifically only for some windows.</p> <p>Please note that this "
-#~ "configuration will not take effect if you do not use KWin as your window "
-#~ "manager. If you do use a different window manager, please refer to its "
-#~ "documentation for how to customize window behavior.</p>"
-#~ msgstr ""
-#~ "<p><h1>窗口特定的设置</h1> 您可在此自定义仅对某些窗口生效的窗口设置。</"
-#~ "p><p>请注意，仅当您使用 KWin 作为窗口管理器时此配置才会生效。如果您使用不"
-#~ "同的窗口管理器，请参考其文档中关于自定义窗口行为的说明。</p>"

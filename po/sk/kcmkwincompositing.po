@@ -4,19 +4,20 @@
 # Roman Paholík <wizzardsk@gmail.com>, 2012, 2013, 2014, 2016, 2017.
 # Mthw <jari_45@hotmail.com>, 2018, 2019.
 # Matej Mrenica <matejm98mthw@gmail.com>, 2021, 2022.
+# Ferdinand Galko <galko.ferdinand@gmail.com>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-29 00:59+0000\n"
-"PO-Revision-Date: 2022-01-31 17:01+0100\n"
-"Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
-"Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
+"PO-Revision-Date: 2023-05-08 19:50+0200\n"
+"Last-Translator: Ferdinand Galko <galko.ferdinand@gmail.com>\n"
+"Language-Team: Slovak <opensuse-translation@opensuse.org>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 21.12.1\n"
+"X-Generator: Lokalize 21.12.3\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. i18n: ectx: property (text), widget (KMessageWidget, glCrashedWarning)
@@ -161,6 +162,8 @@ msgstr "Vynútiť najplynulejšie animácie"
 msgid ""
 "Reduce latency by allowing screen tearing artifacts in fullscreen windows"
 msgstr ""
+"Znížiť oneskorenie umožnením artefaktov trhania obrazovky v oknách na celú "
+"obrazovku"
 
 #: main.cpp:78
 #, kde-format

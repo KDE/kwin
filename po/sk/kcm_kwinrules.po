@@ -5,19 +5,20 @@
 # Roman Paholík <wizzardsk@gmail.com>, 2012, 2013, 2015, 2017.
 # Mthw <jari_45@hotmail.com>, 2018, 2019.
 # Matej Mrenica <matejm98mthw@gmail.com>, 2019, 2020, 2021, 2022.
+# Ferdinand Galko <galko.ferdinand@gmail.com>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-13 02:16+0000\n"
-"PO-Revision-Date: 2022-05-16 18:25+0200\n"
-"Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
-"Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
+"PO-Revision-Date: 2023-05-12 18:28+0200\n"
+"Last-Translator: Ferdinand Galko <galko.ferdinand@gmail.com>\n"
+"Language-Team: Slovak <opensuse-translation@opensuse.org>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 22.04.1\n"
+"X-Generator: Lokalize 21.12.3\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #: kcmrules.cpp:226
@@ -374,6 +375,8 @@ msgid ""
 "Readability may be impaired with extremely low opacity values. At 0%, the "
 "window becomes invisible."
 msgstr ""
+"Čitateľnosť môže byť zhoršená pri extrémne nízkych hodnotách "
+"nepriehľadnosti. Pri 0% sa okno stane neviditeľným."
 
 #: rulesmodel.cpp:382
 #, kde-format
@@ -505,6 +508,13 @@ msgid ""
 "<interface>Fullscreen</interface> states.<nl/><nl/>Note that the position "
 "can also be used to map to a different <interface>Screen</interface>"
 msgstr ""
+"Niektoré aplikácie si môžu nastaviť vlastnú geometriu, čím potlačia "
+"predvoľby správcu okien. Nastavenie tejto vlastnosti potláča ich požiadavky "
+"na umiestnenie.<nl/><nl/>Ovplyvňuje to <interface>Veľkosť</interface> a "
+"<interface>Polohu</interface>, ale nie stavy <interface>Maximalizované</"
+"interface> alebo <interface>Na celú obrazovku</interface>.<nl/><nl/>Treba "
+"poznamenať, že pozíciu možno použiť aj na mapovanie na inú "
+"<interface>Obrazovku</interface>"
 
 #: rulesmodel.cpp:546
 #, kde-format
@@ -522,13 +532,7 @@ msgid "Obey geometry restrictions"
 msgstr "Riadiť sa obmedzenou geometriou"
 
 #: rulesmodel.cpp:558
-#, fuzzy, kde-kuit-format
-#| msgid ""
-#| "Eg. terminals or video players can ask to keep a certain aspect ratio\n"
-#| "or only grow by values larger than one\n"
-#| "(eg. by the dimensions of one character).\n"
-#| "This may be pointless and the restriction prevents arbitrary dimensions\n"
-#| "like your complete screen area."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Some apps like video players or terminals can ask KWin to constrain them to "
@@ -537,11 +541,12 @@ msgid ""
 "windows to be resized to arbitrary sizes.<nl/><nl/>This can be helpful for "
 "windows that can't quite fit the full screen area when maximized."
 msgstr ""
-"Napr. terminály alebo video prehrávače sa môžu opýtať či zachovať\n"
-"pomer strán alebo iba zväčšiť hodnoty väčšie ako jeden\n"
-"(napr. rozmermi jedného znaku).\n"
-"Toto môže byť zbytočné a obmedzenie neumožňuje ľubovoľné rozmery\n"
-"ako vaša celá plocha obrazovky."
+"Niektoré aplikácie, ako napríklad prehrávače videa alebo terminály, môžu "
+"požiadať KWin, aby ich obmedzil na určité pomery strán alebo aby sa zväčšili "
+"len o hodnoty väčšie ako rozmery jedného znaku. Pomocou tejto vlastnosti "
+"môžete ignorovať takéto obmedzenia a umožniť zmenu veľkosti týchto okien na "
+"ľubovoľnú veľkosť.<nl/><nl/>To môže byť užitočné v prípade okien, ktoré sa "
+"po maximalizácii nezmestia na celú obrazovku."
 
 #: rulesmodel.cpp:569
 #, kde-format
@@ -568,7 +573,7 @@ msgstr "Neuvádzať v paneli úloh"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
-msgstr ""
+msgstr "Ovláda, či sa okno zobrazí alebo nezobrazí v Správcovi úloh."
 
 #: rulesmodel.cpp:585
 #, kde-format
@@ -581,6 +586,7 @@ msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the Virtual Desktop manager."
 msgstr ""
+"Ovláda, či sa okno zobrazí alebo nezobrazí v Správcovi virtuálnych plôch."
 
 #: rulesmodel.cpp:591
 #, kde-format
@@ -594,6 +600,8 @@ msgid ""
 "Controls whether or not the window appears in the <shortcut>Alt+Tab</"
 "shortcut> window list."
 msgstr ""
+"Ovláda, či sa okno zobrazí alebo nezobrazí v zozname okien <shortcut>Alt"
+"+Tab</shortcut>."
 
 #: rulesmodel.cpp:597
 #, kde-format
@@ -653,6 +661,23 @@ msgid ""
 "currently-focused window.</item><item><emphasis strong='true'>Extreme:</"
 "emphasis> The window will never be raised and focused.</item></list>"
 msgstr ""
+"KWin sa snaží zabrániť tomu, aby sa okná, ktoré boli otvorené bez priameho "
+"zásahu používateľa, vyzdvihli a prevzali zameranie, keď práve pracujete s "
+"iným oknom. Túto vlastnosť možno použiť na zmenu úrovne prevencie kradnutia "
+"zamerania použitej na jednotlivé okná a aplikácie.<nl/><nl/>Tu je uvedené, "
+"čo sa stane s oknom otvoreným bez vášho priameho zásahu na každej úrovni "
+"prevencie kradnutia zamerania:<nl/><list><item><emphasis "
+"strong='true'>Žiadna:</emphasis> Okno sa vyzdvihne a zameria sa.</"
+"item><item><emphasis strong='true'>Nízka:</emphasis> Uplatní sa prevencia "
+"kradnutia zamerania, ale v prípade situácie, ktorú KWin považuje za "
+"nejednoznačnú, sa okno vyzdvihne a zameria.</item><item><emphasis "
+"strong='true'>Normálna:</emphasis> Uplatní sa prevencia kradnutia zamerania, "
+"ale v prípade situácie, ktorú KWin považuje za nejednoznačnú, okno "
+"<emphasis>nebude</emphasis> vyzdvihnuté a zamerané.</item><item><emphasis "
+"strong='true'>Vysoká:</emphasis> Okno sa vyzdvihne a zameria iba vtedy, ak "
+"patrí do tej istej aplikácie ako aktuálne zamerané okno.</"
+"item><item><emphasis strong='true'>Extrémna:</emphasis> Okno nebude nikdy "
+"vyzdvihnuté a zamerané.</item></list>"
 
 #: rulesmodel.cpp:652
 #, kde-format
@@ -682,6 +707,24 @@ msgid ""
 "emphasis> Newly-opened windows never raise themselves and take focus.</"
 "item></list>"
 msgstr ""
+"Táto vlastnosť riadi úroveň ochrany zamerania aktuálne aktívneho okna. "
+"Používa sa na potlačenie prevencie kradnutia zamerania aplikovanej na nové "
+"okná, ktoré sú otvorené bez vašej priamej akcie.<nl/><nl/>Tu je uvedené, čo "
+"sa stane s novými oknami, ktoré sa otvoria bez vašej priamej akcie na každej "
+"úrovni ochrany zamerania, kým má okno s touto vlastnosťou použitou naň "
+"zameranie:<nl/><list><item><emphasis strong='true'>Žiadna</emphasis>: "
+"Novootvorené okná sa vždy vyzdvihnú a prevezmú zameranie.</"
+"item><item><emphasis strong='true'>Nízka:</emphasis> Na novootvorené okno sa "
+"uplatní prevencia kradnutia zamerania, ale v prípade situácie, ktorú KWin "
+"považuje za nejednoznačnú, sa okno vyzdvihne a zameria.</"
+"item><item><emphasis strong='true'>Normálna:</emphasis> Na novootvorené okno "
+"sa uplatní prevencia kradnutia zamerania, ale v prípade situácie, ktorú KWin "
+"považuje za nejednoznačnú, okno <emphasis>nebude</emphasis> vyzdvihnuté a "
+"zamerané.</item><item><emphasis strong='true'>Vysoká:</emphasis> "
+"Novootvorené okná sa vyzdvihnú a prevezmú zameranie len vtedy, ak patria do "
+"tej istej aplikácie ako aktuálne zamerané okno.</item><item><emphasis "
+"strong='true'>Extrémna:</emphasis> Novootvorené okná sa nikdy nevyzdvihujú a "
+"nepreberú zameranie.</item></list>"
 
 #: rulesmodel.cpp:680
 #, kde-format
@@ -691,7 +734,7 @@ msgstr "Akceptovať zameranie"
 #: rulesmodel.cpp:682
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
-msgstr ""
+msgstr "Ovláda, či sa okno po kliknutí naň stane zameraným alebo nie."
 
 #: rulesmodel.cpp:686
 #, kde-format
@@ -709,6 +752,13 @@ msgid ""
 "use any other global shortcuts such as <shortcut>Alt+Space</shortcut> to "
 "activate KRunner."
 msgstr ""
+"Túto vlastnosť použite na zabránenie fungovania globálnych klávesových "
+"skratiek, keď je okno zamerané. Môže to byť užitočné pre aplikácie, ako sú "
+"emulátory alebo virtuálne stroje, ktoré samy spracovávajú niektoré z "
+"rovnakých skratiek.<nl/><nl/>Treba upozorniť, že nebudete môcť použiť "
+"<shortcut>Alt+Tab</shortcut> na opustenie okna ani žiadne iné globálne "
+"klávesové skratky, ako napríklad <shortcut>Alt+Medzerník</shortcut> na "
+"aktiváciu KRunner."
 
 #: rulesmodel.cpp:698
 #, kde-format
@@ -731,10 +781,9 @@ msgid "Block compositing"
 msgstr "Blokovať kompozíciu"
 
 #: rulesmodel.cpp:766
-#, fuzzy, kde-format
-#| msgid "Window class (application)"
+#, kde-format
 msgid "Window class not available"
-msgstr "Trieda okna (aplikácia)"
+msgstr "Trieda okna nie je k dispozícii"
 
 #: rulesmodel.cpp:767
 #, kde-kuit-format
@@ -745,6 +794,11 @@ msgid ""
 "it, try to match other properties like the window title instead.<nl/><nl/"
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
+"Táto aplikácia neposkytuje triedu pre okno, takže KWin ju nemôže použiť na "
+"porovnanie a použitie žiadnych pravidiel. Ak naň napriek tomu chcete "
+"uplatniť nejaké pravidlá, skúste namiesto toho porovnať iné vlastnosti, "
+"napríklad názov okna.<nl/><nl/>Prosím, zvážte nahlásenie tejto chyby "
+"vývojárom aplikácie."
 
 #: rulesmodel.cpp:801
 #, kde-format
@@ -895,8 +949,7 @@ msgid "Extreme"
 msgstr "Extrémna"
 
 #: rulesmodel.cpp:928
-#, fuzzy, kde-format
-#| msgid "Unmanaged Window"
+#, kde-format
 msgid "Unmanaged window"
 msgstr "Nespravované okno"
 

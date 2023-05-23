@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-06 02:04+0000\n"
-"PO-Revision-Date: 2023-02-24 12:43\n"
+"PO-Revision-Date: 2023-05-22 13:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -14,8 +14,8 @@ msgstr ""
 "X-Crowdin-Project: kdeorg\n"
 "X-Crowdin-Project-ID: 269464\n"
 "X-Crowdin-Language: zh-CN\n"
-"X-Crowdin-File: /kf5-trunk/messages/kwin/kcm_kwindecoration.pot\n"
-"X-Crowdin-File-ID: 9626\n"
+"X-Crowdin-File: /kf6-trunk/messages/kwin/kcm_kwindecoration.pot\n"
+"X-Crowdin-File-ID: 43257\n"
 
 #: declarative-plugin/buttonsmodel.cpp:53
 #, kde-format
@@ -201,7 +201,7 @@ msgstr "配置标题栏按钮…"
 #, kde-format
 msgctxt "@action:button as in, \"Get New Window Decorations\""
 msgid "Get New…"
-msgstr ""
+msgstr "获取新窗口装饰…"
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -209,90 +209,46 @@ msgid "Edit %1 Theme"
 msgstr "编辑 %1 主题"
 
 #: utils.cpp:25
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "No Window Borders"
-msgstr "无侧边框"
+msgstr "无窗口边框"
 
 #: utils.cpp:26
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "No Side Window Borders"
-msgstr "无侧边框"
+msgstr "无窗口侧边框"
 
 #: utils.cpp:27
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Tiny Window Borders"
-msgstr "窗口边框大小："
+msgstr "小窗口边框"
 
 #: utils.cpp:28
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "Normal Window Borders"
-msgstr "无侧边框"
+msgstr "正常窗口边框"
 
 #: utils.cpp:29
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Large Window Borders"
-msgstr "窗口边框大小："
+msgstr "大窗口边框"
 
 #: utils.cpp:30
 #, kde-format
 msgid "Very Large Window Borders"
-msgstr ""
+msgstr "特大窗口边框"
 
 #: utils.cpp:31
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Huge Window Borders"
-msgstr "窗口边框大小："
+msgstr "超大窗口边框"
 
 #: utils.cpp:32
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Very Huge Window Borders"
-msgstr "窗口边框大小："
+msgstr "超特大窗口边框"
 
 #: utils.cpp:33
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Oversized Window Borders"
-msgstr "窗口边框大小："
-
-#~ msgctxt "button text"
-#~ msgid "Get New Window Decorations…"
-#~ msgstr "获取新窗口装饰…"
-
-#~ msgid "No Borders"
-#~ msgstr "无边框"
-
-#~ msgid "Tiny"
-#~ msgstr "小"
-
-#~ msgid "Normal"
-#~ msgstr "正常"
-
-#~ msgid "Large"
-#~ msgstr "大"
-
-#~ msgid "Very Large"
-#~ msgstr "特大"
-
-#~ msgid "Huge"
-#~ msgstr "超大"
-
-#~ msgid "Very Huge"
-#~ msgstr "超特大"
-
-#~ msgid "Oversized"
-#~ msgstr "极大"
-
-#~ msgid "This module lets you configure the window decorations."
-#~ msgstr "此模块用于配置窗口装饰。"
+msgstr "极大窗口边框"

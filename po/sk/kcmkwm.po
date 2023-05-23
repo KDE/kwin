@@ -5,19 +5,20 @@
 # Michal Sulek <misurel@gmail.com>, 2009, 2010, 2011.
 # Roman Paholík <wizzardsk@gmail.com>, 2012, 2013, 2015, 2019.
 # Matej Mrenica <matejm98mthw@gmail.com>, 2019, 2020, 2021.
+# Ferdinand Galko <galko.ferdinand@gmail.com>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-15 02:18+0000\n"
-"PO-Revision-Date: 2021-05-15 17:10+0200\n"
-"Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
-"Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
+"PO-Revision-Date: 2023-05-14 16:06+0200\n"
+"Last-Translator: Ferdinand Galko <galko.ferdinand@gmail.com>\n"
+"Language-Team: Slovak <opensuse-translation@opensuse.org>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 21.04.1\n"
+"X-Generator: Lokalize 21.12.3\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
@@ -475,35 +476,7 @@ msgstr "Umiestnenie okien:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_Placement)
 #: advanced.ui:76
-#, fuzzy, kde-format
-#| msgid ""
-#| "<html><head/><body><p>The placement policy determines where a new window "
-#| "will appear on the desktop.</p><ul style=\"margin-top: 0px; margin-"
-#| "bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;"
-#| "\"><li style=\" margin-top:12px; margin-bottom:0px; margin-left:0px; "
-#| "margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" "
-#| "font-style:italic;\">Smart</span> will try to achieve a minimum overlap "
-#| "of windows</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
-#| "left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-#| "style=\" font-style:italic;\">Maximizing</span> will try to maximize "
-#| "every window to fill the whole screen. It might be useful to selectively "
-#| "affect placement of some windows using the window-specific settings.</"
-#| "li><li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; "
-#| "margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" "
-#| "font-style:italic;\">Cascade</span> will cascade the windows</li><li "
-#| "style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
-#| "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
-#| "style:italic;\">Random</span> will use a random position</li><li style=\" "
-#| "margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
-#| "block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
-#| "\">Centered</span> will place the window centered</li><li style=\" margin-"
-#| "top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
-#| "indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Zero-"
-#| "cornered</span> will place the window in the top-left corner</li><li "
-#| "style=\" margin-top:0px; margin-bottom:12px; margin-left:0px; margin-"
-#| "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
-#| "style:italic;\">Under mouse</span> will place the window under the "
-#| "pointer</li></ul></body></html>"
+#, kde-format
 msgid ""
 "<html><head/><body><p>The placement policy determines where a new window "
 "will appear on the desktop.</p><ul style=\"margin-top: 0px; margin-bottom: "
@@ -530,30 +503,28 @@ msgid ""
 "window under the pointer</li></ul></body></html>"
 msgstr ""
 "<html><head/><body><p>Politika umiestnenia určuje, kde sa nové okno objaví "
-"na ploche.</p> <ul style=\"margin-top: 0px; margin-bottom: 0px; margin-left: "
-"0px; margin-right: 0px; -qt-list-indent: 1;\"> <li style=\"margin-top:12px; "
+"na ploche.</p><ul style=\"margin-top: 0px; margin-bottom: 0px; margin-left: "
+"0px; margin-right: 0px; -qt-list-indent: 1;\"><li style=\" margin-top:12px; "
 "margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
 "text-indent:0px;\"><span style=\" font-style:italic;\">Inteligentné</span> "
-"sa snaží dosiahnuť minimálne presahy okien</li> <li style=\" margin-top:0px; "
+"sa snaží dosiahnuť minimálne presahy okien</li><li style=\" margin-top:0px; "
 "margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
 "text-indent:0px;\"><span style=\" font-style:italic;\">Maximalizovanie</"
 "span> sa snaží maximalizovať každé okno na vyplnenie celej obrazovky. Môže "
 "to byť užitočné na selektívne ovplyvnenie umiestnenia niektorých okien "
-"pomocou špecifických nastavení okna.</li> <li style=\" margin-top:0px; "
-"margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
-"text-indent:0px;\"><span style=\" font-style:italic;\">Kaskáda</span> "
-"kaskáduje okná</li> <li style=\" margin-top:0px; margin-bottom:0px; margin-"
+"pomocou špecifických nastavení okna.</li><li style=\" margin-top:0px; margin-"
+"bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
+"indent:0px;\"><span style=\" font-style:italic;\">Náhodné</span> použije "
+"náhodnú polohu</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
 "left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-"style=\" font-style:italic;\">Náhodné</span> použije náhodnú polohu</li> <li "
-"style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
-"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
-"italic;\">Vycentrované</span> umiestni okno vycentrované</li> <li style=\" "
-"margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
-"block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
-"\">Nulové rohy</span> umiestni okno do ľavého horného rohu</li> <li style=\" "
-"margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-"
-"block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Pod "
-"myšou</span> umiestni okno pod kurzor</li></ul></body></html>"
+"style=\" font-style:italic;\">Vycentrované</span> umiestni okno "
+"vycentrované</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
+"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+"style=\" font-style:italic;\">Nulové rohy</span> umiestni okno do ľavého "
+"horného rohu</li><li style=\" margin-top:0px; margin-bottom:12px; margin-"
+"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+"style=\" font-style:italic;\">Pod myšou</span> umiestni okno pod kurzor</"
+"li></ul></body></html>"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
 #: advanced.ui:80
@@ -640,13 +611,13 @@ msgstr "Skrývať okná nástrojov neaktívnych aplikácií"
 #: advanced.ui:143
 #, kde-format
 msgid "Virtual Desktop behavior:"
-msgstr ""
+msgstr "Správanie virtuálnych plôch:"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyDescriptionLabel)
 #: advanced.ui:153
 #, kde-format
 msgid "When activating a window on a different Virtual Desktop:"
-msgstr ""
+msgstr "Pri aktivácii okna na inej virtuálnej ploche:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:160
@@ -660,18 +631,25 @@ msgid ""
 "Virtual Desktop</span> will cause the window to jump to the active Virtual "
 "Desktop. </p></body></html>"
 msgstr ""
+"<html><head/><body><p>Toto nastavenie ovláda, čo sa stane, keď sa aktivuje "
+"otvorené okno umiestnené na inej virtuálnej ploche, ako je aktuálna plocha. "
+"</p><p><span style=\" font-style:italic;\">Prepnutie na túto virtuálnu "
+"plochu</span> spôsobí prepnutie na virtuálnu plochu, na ktorej sa okno práve "
+"nachádza. </p><p><span style=\" font-style:italic;\">Preniesť okno na "
+"aktuálnu virtuálnu plochu </span> spôsobí, že okno prejde na aktívnu "
+"virtuálnu plochu. </p></body></html>"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:164
 #, kde-format
 msgid "Switch to that Virtual Desktop"
-msgstr ""
+msgstr "Prepnúť na túto virtuálnu plochu"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:169
 #, kde-format
 msgid "Bring window to current Virtual Desktop"
-msgstr ""
+msgstr "Preniesť okno na aktuálnu virtuálnu plochu"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyLabel)
 #: focus.ui:22
