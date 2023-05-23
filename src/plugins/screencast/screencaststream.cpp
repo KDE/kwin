@@ -88,6 +88,10 @@ void ScreenCastStream::onStreamStateChanged(void *data, pw_stream_state old, pw_
     qCDebug(KWIN_SCREENCAST) << "state changed" << pw_stream_state_as_string(old) << " -> " << pw_stream_state_as_string(state) << error_message;
 
     pw->m_streaming = false;
+    pw->m_pendingBuffer = nullptr;
+    pw->m_pendingNotifier.reset();
+    pw->m_pendingFence.reset();
+
     switch (state) {
     case PW_STREAM_STATE_ERROR:
         qCWarning(KWIN_SCREENCAST) << "Stream error: " << error_message;
@@ -101,9 +105,6 @@ void ScreenCastStream::onStreamStateChanged(void *data, pw_stream_state old, pw_
     case PW_STREAM_STATE_STREAMING:
         pw->m_streaming = true;
         Q_EMIT pw->startStreaming();
-        if (pw->m_pendingBuffer) {
-            pw->tryEnqueue(pw->m_pendingBuffer);
-        }
         break;
     case PW_STREAM_STATE_CONNECTING:
         break;
