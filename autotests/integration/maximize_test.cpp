@@ -17,7 +17,6 @@
 #include "workspace.h"
 
 #include <KWayland/Client/compositor.h>
-#include <KWayland/Client/plasmashell.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
 
@@ -65,7 +64,7 @@ void TestMaximized::initTestCase()
 
 void TestMaximized::init()
 {
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::XdgDecorationV1 | Test::AdditionalWaylandInterface::PlasmaShell));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::XdgDecorationV1));
 
     workspace()->setActiveOutput(QPoint(640, 512));
     KWin::input()->pointer()->warp(QPoint(640, 512));

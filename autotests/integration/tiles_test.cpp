@@ -9,11 +9,8 @@
 #include "kwin_wayland_test.h"
 
 #include "core/output.h"
-#include "libkwineffects/kwineffects.h"
 #include "pointer_input.h"
 #include "tiles/tilemanager.h"
-#include "wayland/seat_interface.h"
-#include "wayland/surface_interface.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
@@ -66,8 +63,7 @@ void TilesTest::initTestCase()
 
 void TilesTest::init()
 {
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Decoration | Test::AdditionalWaylandInterface::PlasmaShell | Test::AdditionalWaylandInterface::Seat));
-    QVERIFY(Test::waitForWaylandPointer());
+    QVERIFY(Test::setupWaylandConnection());
 
     workspace()->setActiveOutput(QPoint(640, 512));
     input()->pointer()->warp(QPoint(640, 512));
