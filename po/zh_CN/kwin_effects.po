@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-26 02:49+0000\n"
-"PO-Revision-Date: 2023-04-29 08:36\n"
+"PO-Revision-Date: 2023-05-22 14:04\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -900,7 +900,7 @@ msgstr "弹出菜单："
 #: translucency/package/contents/ui/config.ui:367
 #, kde-format
 msgid "Torn-off menus:"
-msgstr "拆分菜单："
+msgstr "分离式菜单："
 
 #: windowview/kcm/windowvieweffectkcm.cpp:42 windowview/windowvieweffect.cpp:45
 #, kde-format

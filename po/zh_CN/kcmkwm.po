@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-03 00:48+0000\n"
-"PO-Revision-Date: 2023-04-29 08:36\n"
+"PO-Revision-Date: 2023-05-22 14:04\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -20,25 +20,26 @@ msgstr ""
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "KDE 中国,Guo Yunhe,magsom,Tyson Tan"
+msgstr "KDE 中国, Guo Yunhe, magsom, Tyson Tan"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "kde-china@kde.org,i@guoyunhe.me,magsom@kde.org,tysontan@tysontan.com"
+msgstr ""
+"kde-china@kde.org, i@guoyunhe.me, magsom@kde.org, tysontan@tysontan.com"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:17
 #, kde-format
 msgid "Inactive Inner Window Actions"
-msgstr "非活动内部操作"
+msgstr "非活动窗口内部操作"
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: actions.ui:26 mouse.ui:177
 #, kde-format
 msgid "&Left click:"
-msgstr "单击(&L)："
+msgstr "左键点击(&L)："
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow1)
 #: actions.ui:39
@@ -47,8 +48,8 @@ msgid ""
 "In this row you can customize left click behavior when clicking into an "
 "inactive inner window ('inner' means: not titlebar, not frame)."
 msgstr ""
-"这一行您可以自定义鼠标左键点击非活动窗口内部(标题栏和边框包围住的部分)的行"
-"为。"
+"您可以在这一行自定义鼠标左键点击非活动窗口内部 (窗口的标题栏和边框以外的部"
+"分) 的行为。"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
@@ -56,7 +57,7 @@ msgstr ""
 #: actions.ui:43 actions.ui:83 actions.ui:123
 #, kde-format
 msgid "Activate, raise and pass click"
-msgstr "激活，提升并传递点击"
+msgstr "激活，提升，传递点击"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
@@ -64,7 +65,7 @@ msgstr "激活，提升并传递点击"
 #: actions.ui:48 actions.ui:88 actions.ui:128
 #, kde-format
 msgid "Activate and pass click"
-msgstr "激活并传递点击"
+msgstr "激活，传递点击"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
@@ -88,14 +89,14 @@ msgstr "激活"
 #: mouse.ui:513
 #, kde-format
 msgid "Activate and raise"
-msgstr "激活并提升"
+msgstr "激活，提升"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: actions.ui:66 mouse.ui:200
 #, kde-format
 msgid "&Middle click:"
-msgstr "中击(&M)："
+msgstr "中键点击(&M)："
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow2)
 #: actions.ui:79
@@ -104,15 +105,15 @@ msgid ""
 "In this row you can customize middle click behavior when clicking into an "
 "inactive inner window ('inner' means: not titlebar, not frame)."
 msgstr ""
-"这一行您可以自定义鼠标中键点击非活动窗口内部(标题栏和边框包围住的部分)的行"
-"为。"
+"您可以在这一行自定义鼠标中键点击非活动窗口内部 (窗口的标题栏和边框以外的部"
+"分) 的行为。"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: actions.ui:106 mouse.ui:213
 #, kde-format
 msgid "&Right click:"
-msgstr "右击(&R)："
+msgstr "右键点击(&R)："
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow3)
 #: actions.ui:119
@@ -121,15 +122,15 @@ msgid ""
 "In this row you can customize right click behavior when clicking into an "
 "inactive inner window ('inner' means: not titlebar, not frame)."
 msgstr ""
-"这一行您可以自定义鼠标右键点击非活动窗口内部(标题栏和边框包围住的部分)的行"
-"为。"
+"您可以在这一行自定义鼠标右键点击非活动窗口内部 (窗口的标题栏和边框以外的部"
+"分) 的行为。"
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: actions.ui:146 mouse.ui:88
 #, kde-format
 msgid "Mouse &wheel:"
-msgstr "滚轮(&W)："
+msgstr "鼠标滚轮(&W)："
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindowWheel)
 #: actions.ui:159
@@ -138,7 +139,8 @@ msgid ""
 "In this row you can customize behavior when scrolling into an inactive inner "
 "window ('inner' means: not titlebar, not frame)."
 msgstr ""
-"这一行您可以自定义鼠标滚到非活动窗口内部(标题栏和边框包围住的部分)时的行为。"
+"您可以在这一行自定义鼠标滚轮滚动在非活动窗口内部 (窗口的标题栏和边框以外的部"
+"分) 的行为。"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
 #: actions.ui:163
@@ -150,19 +152,19 @@ msgstr "滚动"
 #: actions.ui:168
 #, kde-format
 msgid "Activate and scroll"
-msgstr "激活并滚动"
+msgstr "激活，滚动"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
 #: actions.ui:173
 #, kde-format
 msgid "Activate, raise and scroll"
-msgstr "激活，提升并滚动"
+msgstr "激活，提升，滚动"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 #: actions.ui:184
 #, kde-format
 msgid "Inner Window, Titlebar and Frame Actions"
-msgstr "内部窗口，标题栏和边框操作"
+msgstr "窗口内部、标题栏和边框操作"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: actions.ui:195
@@ -201,7 +203,7 @@ msgstr "  + "
 #: actions.ui:248 mouse.ui:601
 #, kde-format
 msgid "L&eft click:"
-msgstr "单击(&E)："
+msgstr "左键点击(&E)："
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll1)
 #: actions.ui:261
@@ -209,7 +211,7 @@ msgstr "单击(&E)："
 msgid ""
 "In this row you can customize left click behavior when clicking into the "
 "titlebar or the frame."
-msgstr "这一行您可以自定义鼠标左键点击标题栏或边框时的窗口行为。"
+msgstr "您可以在这一行自定义鼠标左键点击标题栏或者边框时的窗口行为。"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
@@ -225,7 +227,7 @@ msgstr "移动"
 #: actions.ui:270 actions.ui:340 actions.ui:410
 #, kde-format
 msgid "Activate, raise and move"
-msgstr "激活，提升并移动"
+msgstr "激活，提升，移动"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
@@ -240,7 +242,7 @@ msgstr "激活，提升并移动"
 #: mouse.ui:361 mouse.ui:423 mouse.ui:476 mouse.ui:538
 #, kde-format
 msgid "Toggle raise and lower"
-msgstr "切换提升和下降"
+msgstr "切换提升/降低"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
@@ -248,7 +250,7 @@ msgstr "切换提升和下降"
 #: actions.ui:280 actions.ui:350 actions.ui:420
 #, kde-format
 msgid "Resize"
-msgstr "更改大小"
+msgstr "调整大小"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
@@ -263,7 +265,7 @@ msgstr "更改大小"
 #: mouse.ui:351 mouse.ui:413 mouse.ui:466 mouse.ui:528
 #, kde-format
 msgid "Raise"
-msgstr "提前"
+msgstr "提升"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -280,7 +282,7 @@ msgstr "提前"
 #: mouse.ui:303 mouse.ui:356 mouse.ui:418 mouse.ui:471 mouse.ui:533
 #, kde-format
 msgid "Lower"
-msgstr "推后"
+msgstr "降低"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -305,7 +307,7 @@ msgstr "最小化"
 #: actions.ui:300 actions.ui:370 actions.ui:440
 #, kde-format
 msgid "Decrease opacity"
-msgstr "增加透明度"
+msgstr "降低不透明度"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
@@ -313,7 +315,7 @@ msgstr "增加透明度"
 #: actions.ui:305 actions.ui:375 actions.ui:445
 #, kde-format
 msgid "Increase opacity"
-msgstr "降低透明度"
+msgstr "提高不透明度"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -339,7 +341,7 @@ msgstr "无操作"
 #: actions.ui:318
 #, kde-format
 msgid "Middle &click:"
-msgstr "中击(&C)："
+msgstr "中键点击(&C)："
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll2)
 #: actions.ui:331
@@ -347,14 +349,14 @@ msgstr "中击(&C)："
 msgid ""
 "In this row you can customize middle click behavior when clicking into the "
 "titlebar or the frame."
-msgstr "这一行您可以自定义鼠标中键点击标题栏或边框时的窗口行为。"
+msgstr "您可以在这一行自定义鼠标中键点击标题栏或者边框时的窗口行为。"
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 #. i18n: ectx: property (text), widget (QLabel, label_10)
 #: actions.ui:388 mouse.ui:671
 #, kde-format
 msgid "Right clic&k:"
-msgstr "右击(&K)："
+msgstr "右键点击(&K)："
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll3)
 #: actions.ui:401
@@ -362,13 +364,13 @@ msgstr "右击(&K)："
 msgid ""
 "In this row you can customize right click behavior when clicking into the "
 "titlebar or the frame."
-msgstr "这一行您可以自定义鼠标右键点击标题栏或边框时的窗口行为。"
+msgstr "您可以在这一行自定义鼠标右键点击标题栏或者边框时的窗口行为。"
 
 #. i18n: ectx: property (text), widget (QLabel, label_10)
 #: actions.ui:458
 #, kde-format
 msgid "Mo&use wheel:"
-msgstr "滚轮(&U)："
+msgstr "鼠标滚轮(&U)："
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAllWheel)
 #: actions.ui:471
@@ -376,14 +378,14 @@ msgstr "滚轮(&U)："
 msgid ""
 "Here you can customize KDE's behavior when scrolling with the mouse wheel in "
 "a window while pressing the modifier key."
-msgstr "您可以自定义在按下修饰键时在窗口内滚动鼠标滑轮时 KDE 的行为。"
+msgstr "您可以在此自定义在窗口内部按住修饰键滚动鼠标滚轮时 KDE 软件的行为。"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
 #: actions.ui:475 mouse.ui:102
 #, kde-format
 msgid "Raise/lower"
-msgstr "提升/下降"
+msgstr "提升/降低"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
@@ -404,7 +406,7 @@ msgstr "最大化/还原"
 #: actions.ui:490 mouse.ui:117
 #, kde-format
 msgid "Keep above/below"
-msgstr "保持顶部/底部"
+msgstr "置顶/置底"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
@@ -418,13 +420,13 @@ msgstr "移动到上个/下个桌面"
 #: actions.ui:500 mouse.ui:127
 #, kde-format
 msgid "Change opacity"
-msgstr "更改透明度"
+msgstr "更改不透明度"
 
 #. i18n: ectx: property (text), widget (QLabel, shadeHoverLabel)
 #: advanced.ui:20
 #, kde-format
 msgid "Window &unshading:"
-msgstr "展开窗口(&U)："
+msgstr "窗口展开(&U)："
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ShadeHover)
 #: advanced.ui:32
@@ -548,7 +550,7 @@ msgstr "左上角"
 #: advanced.ui:105
 #, kde-format
 msgid "Under mouse"
-msgstr "鼠标下"
+msgstr "鼠标下方"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
 #: advanced.ui:113
@@ -558,15 +560,15 @@ msgid ""
 "windows are allowed to do so. This will override the window placement mode "
 "defined above."
 msgstr ""
-"启用后，将允许具备窗口位置记忆能力的应用程序记忆其窗口位置。这会覆盖上面定义"
-"的窗口放置模式。"
+"启用后，将允许支持窗口位置记忆的应用程序记忆其窗口位置。这会覆盖上面定义的窗"
+"口放置模式。"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
 #: advanced.ui:116
 #, kde-format
 msgid ""
 "Allow apps to remember the positions of their own windows, if they support it"
-msgstr "允许应用程序记忆其窗口位置，如果它们支持此功能"
+msgstr "允许应用程序记忆其窗口位置 (如果程序支持)"
 
 #. i18n: ectx: property (text), widget (QLabel, specialWindowsLabel)
 #: advanced.ui:123
@@ -583,9 +585,9 @@ msgid ""
 "application becomes active. Note that applications have to mark the windows "
 "with the proper window type for this feature to work."
 msgstr ""
-"开启时，非活动应用程序的工具窗口(工具栏、私下的菜单)将被隐藏，而且仅当应用程"
-"序活动时才显示。请注意，要让此特性工作正常，应用程序必须将正确设定相应窗口的"
-"类型。"
+"启用此选项时，非活动应用程序的工具窗口 (工具栏、分离式菜单等) 将被隐藏，仅在"
+"应用程序变为活动时才再次显示。请注意，为了让此特性正常工作，应用程序必须正确"
+"标识其窗口的类型。"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
 #: advanced.ui:136
@@ -603,7 +605,7 @@ msgstr "虚拟桌面行为："
 #: advanced.ui:153
 #, kde-format
 msgid "When activating a window on a different Virtual Desktop:"
-msgstr "当激活在其他虚拟桌面上的窗口时："
+msgstr "激活位于其他虚拟桌面中的窗口时："
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:160
@@ -618,15 +620,15 @@ msgid ""
 "Desktop. </p></body></html>"
 msgstr ""
 "<html><head/><body><p>此设置控制激活位于非当前虚拟桌面的已打开窗口时的行为。"
-"</p><p><span style=\" font-style:italic;\">切换到对应的虚拟桌面</span>会将虚"
-"拟桌面切换到被激活窗口所在处。</p><p><span style=\" font-style:italic;\">移动"
-"窗口到当前虚拟桌面</span>会将被激活窗口移动到当前虚拟桌面。</p></body></html>"
+"</p><p><span style=\" font-style:italic;\">切换到该虚拟桌面</span>将切换到被"
+"激活窗口所在的虚拟桌面。</p><p><span style=\" font-style:italic;\">移动窗口到"
+"当前虚拟桌面</span>将把被激活窗口移动到当前虚拟桌面。</p></body></html>"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:164
 #, kde-format
 msgid "Switch to that Virtual Desktop"
-msgstr "切换到对应的虚拟桌面"
+msgstr "切换到该虚拟桌面"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:169
@@ -644,7 +646,7 @@ msgstr "窗口激活策略(&A)："
 #: focus.ui:32
 #, kde-format
 msgid "With this option you can specify how and when windows will be focused."
-msgstr "使用此选项您可以指定窗口将如何和何时聚焦。"
+msgstr "您可以通过此选项指定窗口取得焦点的时机和方式。"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:36
@@ -675,13 +677,13 @@ msgstr "焦点跟随鼠标 (鼠标优先)"
 #: focus.ui:56
 #, kde-format
 msgid "Focus under mouse"
-msgstr "鼠标悬浮聚焦"
+msgstr "焦点位于鼠标下方"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:61
 #, kde-format
 msgid "Focus strictly under mouse"
-msgstr "鼠标严格悬浮聚焦"
+msgstr "焦点位于鼠标下方 (严格)"
 
 #. i18n: ectx: property (text), widget (QLabel, delayFocusOnLabel)
 #: focus.ui:69
@@ -695,7 +697,7 @@ msgstr "聚焦延迟(&D)："
 msgid ""
 "This is the delay after which the window the mouse pointer is over will "
 "automatically receive focus."
-msgstr "当鼠标移动到窗口上后，延迟这么长时间窗口就会自动出现在最前面。"
+msgstr "鼠标移动到窗口上方后，经过此延迟时间之后，窗口将自动取得焦点。"
 
 #. i18n: ectx: property (text), widget (QLabel, focusStealingLabel)
 #: focus.ui:101
@@ -738,29 +740,30 @@ msgid ""
 "by default means their taskbar entry will be highlighted. This can be "
 "changed in the Notifications control module.</p></body></html>"
 msgstr ""
-"<html><head/><body><p>此选项指定 KWin 如何阻止意外激活新窗口造成的非预料焦点"
-"抢占。 (注意：此功能不适用于 <span style=\" font-style:italic;\">鼠标悬浮聚焦"
-"</span> 和 <span style=\" font-style:italic;\">鼠标严格悬浮聚焦</span> 。) </"
-"p><ul style=\"margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-"
-"right: 0px; -qt-list-indent: 1;\"><li style=\" margin-top:12px; margin-"
-"bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
-"indent:0px;\"><span style=\" font-style:italic;\">无：</span> 阻止功能已关"
-"闭，新窗口总是激活。</li><li style=\" margin-top:0px; margin-bottom:0px; "
+"<html><head/><body><p>此选项用于指定在意外激活新窗口时 KWin 防止意外焦点抢占"
+"的积极程度。(注意：此功能不适用于<span style=\" font-style:italic;\">焦点位于"
+"鼠标下方</span>和<span style=\" font-style:italic;\">焦点位于鼠标下方 (严"
+"格)</span>。) </p><ul style=\"margin-top: 0px; margin-bottom: 0px; margin-"
+"left: 0px; margin-right: 0px; -qt-list-indent: 1;\"><li style=\" margin-"
+"top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
+"indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">无：</span>"
+"关闭焦点抢占防止机制，新窗口总是激活。</li><li style=\" margin-top:0px; "
+"margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
+"text-indent:0px;\"><span style=\" font-style:italic;\">低：</span>启用焦点抢"
+"占防止机制；当某个窗口不支持该机制，且 KWin 无法可靠地确定是否激活该窗口时，"
+"它将被激活。应用程序的具体情况将影响此选项的执行效果，可能造成好于或者坏"
+"于“中”选项的效果。</li><li style=\" margin-top:0px; margin-bottom:0px; "
 "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
-"\"><span style=\" font-style:italic;\">低：</span> 已启用阻止； 当某个窗口不"
-"支持基本机制，且 KWin 无法可靠地决定是否激活该窗口时，它将被激活。 取决于应用"
-"程序，本设置效果的结果可能比中级更糟或更好。</li><li style=\" margin-"
-"top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
-"indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">中：</span> "
-"已启用。</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
-"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-"style=\" font-style:italic;\">高：</span> 新窗口只有在当前没有窗口处于活动状"
-"态或属于当前活动应用程序时才被激活。 当不使用鼠标焦点策略时，此设置可能无法真"
-"正使用。</li><li style=\" margin-top:0px; margin-bottom:12px; margin-"
-"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-"style=\" font-style:italic;\">终极：</span> 所有窗口必须由用户明确激活。</"
-"li></ul><p>被阻止抢占焦点的窗口被标记为需要关注。 默认情况下，将突出显示他们"
-"的任务栏条目。 这可以在通知控制模块中更改。</p></body></html>"
+"\"><span style=\" font-style:italic;\">中：</span> 启用焦点抢占防止机制。</"
+"li><li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
+"italic;\">高：</span>仅在当前没有活动窗口、或者新窗口属于当前活动程序时才激活"
+"新窗口。此设置在不使用鼠标焦点策略时可能无法正常工作。</li><li style=\" "
+"margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-"
+"block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">彻底："
+"</span> 所有窗口必须由用户明确激活。</li></ul><p>被阻止了焦点抢占的窗口将被标"
+"记为需要关注，默认行为是高亮显示它的任务栏项。您可以在通知控制模块中更改相关"
+"行为。</p></body></html>"
 
 #. i18n: Focus Stealing Prevention Level
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_BorderSnapZone)
@@ -798,13 +801,13 @@ msgstr "高"
 #: focus.ui:138
 #, kde-format
 msgid "Extreme"
-msgstr "终极"
+msgstr "彻底"
 
 #. i18n: ectx: property (text), widget (QLabel, raisingWindowsLabel)
 #: focus.ui:146
 #, kde-format
 msgid "Raising windows:"
-msgstr "升起窗口："
+msgstr "提升窗口："
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ClickRaise)
 #: focus.ui:153
@@ -814,8 +817,8 @@ msgid ""
 "when you click somewhere into the window contents. To change it for inactive "
 "windows, you need to change the settings in the Actions tab."
 msgstr ""
-"勾选此项后，当您点击活动窗口中的内容时，该窗口将会被带到顶层。要更改非活动窗"
-"口的特性，您需要在操作标签中更改设置。"
+"启用此选项后，当您点击活动窗口中的内容时，该窗口将被提升到最前面。要更改非活"
+"动窗口的对应特性，您需要在“操作”标签页中更改设置。"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ClickRaise)
 #: focus.ui:156
@@ -830,14 +833,14 @@ msgid ""
 "When this option is enabled, a window in the background will automatically "
 "come to the front when the mouse pointer has been over it for some time."
 msgstr ""
-"这个选项启用时，当鼠标光标移动到窗口上一段时间后，在后面背景里的窗口将自动出"
-"现在最前面。"
+"启用此选项后，当鼠标光标移动到后台窗口上方一段时间后，该窗口将自动被提升到最"
+"前面。"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AutoRaise)
 #: focus.ui:168
 #, kde-format
 msgid "&Raise on hover, delayed by:"
-msgstr "鼠标悬停提升(&R)，延迟："
+msgstr "悬停提升窗口(&R)，延迟："
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_AutoRaiseInterval)
 #: focus.ui:175
@@ -845,7 +848,8 @@ msgstr "鼠标悬停提升(&R)，延迟："
 msgid ""
 "This is the delay after which the window that the mouse pointer is over will "
 "automatically come to the front."
-msgstr "当鼠标移动到窗口上后，延迟这么长时间窗口就会自动出现在最前面。"
+msgstr ""
+"当鼠标移动到窗口上方，经过在此设置的延迟时间后，窗口将自动被提升到最前面。"
 
 #. i18n: ectx: property (text), widget (QLabel, multiscreenBehaviorLabel)
 #: focus.ui:196
@@ -876,7 +880,7 @@ msgstr "活动屏幕跟随鼠标(&M)"
 msgid ""
 "When this option is enabled, focus operations are limited only to the active "
 "screen"
-msgstr "启用此项时，聚焦操作将仅限于活动屏幕"
+msgstr "启用此项时，聚焦操作将只在活动屏幕中发生"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
 #: focus.ui:216
@@ -982,8 +986,8 @@ msgid ""
 msgstr ""
 "<p><h1>窗口行为</h1> 您可以在这里自定义窗口移动、改变大小或被点击时的行为。您"
 "可以指定焦点策略和新窗口的放置策略。</p><p>请注意，只有您使用 KWin 作为窗口管"
-"理器，这里的配置才有效。如果您使用其他的窗口管理器，请参考其文档以了解如何自"
-"定义窗口行为。</p>"
+"理器时这些配置才有效。如果您使用其他的窗口管理器，请参考其文档以了解如何自定"
+"义窗口行为。</p>"
 
 #: main.cpp:202
 #, kde-format
@@ -1011,7 +1015,7 @@ msgstr "双击(&D)："
 #: mouse.ui:36
 #, kde-format
 msgid "Behavior on <em>double</em> click into the titlebar."
-msgstr "<em>双</em>击标题栏时的行为。"
+msgstr "<em>双击</em>标题栏时的行为。"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
@@ -1082,7 +1086,7 @@ msgstr "显示在所有桌面上"
 #: mouse.ui:98
 #, kde-format
 msgid "Behavior on <em>mouse wheel</em> scroll over the titlebar."
-msgstr "<em>鼠标滚轮</em>在标题栏滚动的行为。"
+msgstr "<em>鼠标滚轮</em>在标题栏滚动时的行为。"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 #: mouse.ui:143
@@ -1094,13 +1098,13 @@ msgstr "标题栏和边框操作"
 #: mouse.ui:167
 #, kde-format
 msgid "Active"
-msgstr "活动的"
+msgstr "活动窗口"
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #: mouse.ui:190
 #, kde-format
 msgid "Inactive"
-msgstr "非活动的"
+msgstr "非活动窗口"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandActiveTitlebar1)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandActiveTitlebar2)
@@ -1110,7 +1114,7 @@ msgstr "非活动的"
 msgid ""
 "Behavior on <em>left</em> click into the titlebar or frame of an <em>active</"
 "em> window."
-msgstr "<em>左</em>键点击<em>活动</em>窗口的标题栏或边框时的行为。"
+msgstr "<em>左键</em>点击<em>活动</em>窗口的标题栏或者边框时的行为。"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
@@ -1132,7 +1136,7 @@ msgstr "显示操作菜单"
 msgid ""
 "Behavior on <em>left</em> click into the titlebar or frame of an "
 "<em>inactive</em> window."
-msgstr "<em>左</em>键点击<em>非活动</em>窗口的标题栏或边框时的行为。"
+msgstr "<em>左键</em>点击<em>非活动</em>窗口的标题栏或者边框时的行为。"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
@@ -1140,7 +1144,7 @@ msgstr "<em>左</em>键点击<em>非活动</em>窗口的标题栏或边框时的
 #: mouse.ui:288 mouse.ui:403 mouse.ui:518
 #, kde-format
 msgid "Activate and lower"
-msgstr "激活并放在后面"
+msgstr "激活，降低"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
 #: mouse.ui:589
@@ -1153,33 +1157,33 @@ msgstr "最大化按钮操作"
 #: mouse.ui:598 mouse.ui:611
 #, kde-format
 msgid "Behavior on <em>left</em> click onto the maximize button."
-msgstr "<em>左键</em>单击最大化按钮的行为。"
+msgstr "<em>左键</em>点击最大化按钮时的行为。"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label_9)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
 #: mouse.ui:633 mouse.ui:646
 #, kde-format
 msgid "Behavior on <em>middle</em> click onto the maximize button."
-msgstr "<em>中键</em>单击最大化按钮的行为。"
+msgstr "<em>中键</em>点击最大化按钮时的行为。"
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 #: mouse.ui:636
 #, kde-format
 msgid "Middle c&lick:"
-msgstr "中键单击(&L)："
+msgstr "中键点击(&L)："
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label_10)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
 #: mouse.ui:668 mouse.ui:681
 #, kde-format
 msgid "Behavior on <em>right</em> click onto the maximize button."
-msgstr "<em>右键</em>单击最大化按钮的行为。"
+msgstr "<em>右键</em>点击最大化按钮时的行为。"
 
 #. i18n: ectx: property (text), widget (QLabel, borderSnapLabel)
 #: moving.ui:20
 #, kde-format
 msgid "Screen &edge snap zone:"
-msgstr "屏幕边缘贴靠区(&E)："
+msgstr "屏幕边缘吸附区域(&E)："
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_BorderSnapZone)
 #: moving.ui:30
@@ -1188,8 +1192,8 @@ msgid ""
 "Here you can set the snap zone for screen edges, i.e. the 'strength' of the "
 "magnetic field which will make windows snap to the border when moved near it."
 msgstr ""
-"在这里您可以设置屏幕边缘的吸附区域，即： 磁场的“强度”，它会使窗口在靠近边界时"
-"吸附到边界。"
+"您可以在此处设置屏幕边缘的吸附区域，它如同一个磁场那样，会将移动到它附近的窗"
+"口吸附到屏幕的边缘。"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_BorderSnapZone)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_WindowSnapZone)
@@ -1203,7 +1207,7 @@ msgstr " 像素"
 #: moving.ui:52
 #, kde-format
 msgid "&Window snap zone:"
-msgstr "窗口吸附区(&W)："
+msgstr "窗口吸附区域(&W)："
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_WindowSnapZone)
 #: moving.ui:62
@@ -1213,14 +1217,14 @@ msgid ""
 "magnetic field which will make windows snap to each other when they are "
 "moved near another window."
 msgstr ""
-"您可以设置窗口的吸附区，即磁场的“吸引力”，它使窗口移近另外的窗口时彼此吸附到"
-"一起。"
+"您可以在此处设置窗口的吸附区域，它如同一个磁场那样，当窗口被移动到另一个窗口"
+"附近时，它们将彼此吸附到一起。"
 
 #. i18n: ectx: property (text), widget (QLabel, centerSnaplabel)
 #: moving.ui:84
 #, kde-format
 msgid "&Center snap zone:"
-msgstr "中间吸附区(&C)："
+msgstr "中央吸附区域(&C)："
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_CenterSnapZone)
 #: moving.ui:94
@@ -1230,14 +1234,14 @@ msgid ""
 "the magnetic field which will make windows snap to the center of the screen "
 "when moved near it."
 msgstr ""
-"您可以设置屏幕中间的吸附区，即磁场的“吸引力”，它使窗口移近中间时被吸附到中间"
-"位置。"
+"您可以再次设置屏幕中央的吸附区域，它如同一个磁场那样，会将移动到它附近的窗口"
+"吸附到屏幕的中央。"
 
 #. i18n: ectx: property (text), widget (QLabel, OverlapSnapLabel)
 #: moving.ui:113
 #, kde-format
 msgid "&Snap windows:"
-msgstr "贴靠窗口(&S)："
+msgstr "窗口吸附方式(&S)："
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SnapOnlyWhenOverlapping)
 #: moving.ui:123
@@ -1247,14 +1251,14 @@ msgid ""
 "them, i.e. they will not be snapped if the windows comes only near another "
 "window or border."
 msgstr ""
-"您可以在这里设置窗口只在重叠时才将它们的边界吸引到一起。即，如果它们只是相互"
-"靠近或者靠近屏幕边沿但尚未重叠，则不相互吸引。"
+"您可以在此处设置窗口的吸附方式。当设置为“仅在重叠时吸附”时，窗口将不会在相互"
+"靠近或者靠近边框时立即吸附。"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SnapOnlyWhenOverlapping)
 #: moving.ui:126
 #, kde-format
 msgid "Only when overlapping"
-msgstr "仅当重叠时"
+msgstr "仅在重叠时吸附"
 
 #: windows.cpp:97
 #, kde-format
@@ -1262,8 +1266,8 @@ msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
 "This behavior is common on other operating systems and likely what you want."
 msgstr ""
-"<em>点击聚焦：</em>窗口在您点击它时被激活。该行为在其他操作系统中较常见，可能"
-"是您所希望的。"
+"<em>点击聚焦：</em>窗口在您点击它时被激活。此模式普遍被其他操作系统采用，可能"
+"是您想要的行为。"
 
 #: windows.cpp:101
 #, kde-format
@@ -1274,9 +1278,9 @@ msgid ""
 "preferred candidate. Unusual, but possible variant of <em>Click to focus</"
 "em>."
 msgstr ""
-"<em>单击聚焦 (鼠标优先)：</em>非常类似于 <em>点击聚焦</em>。如果活动窗口需要"
-"由系统选择 (例如，由于当前活动窗口被关闭) 鼠标下的窗口将是优先候选。不常见，"
-"但是 <em>单击聚焦</em> 的可能的变换。"
+"<em>点击聚焦 (鼠标优先)：</em>大致与 <em>点击聚焦</em> 相同。如果活动窗口必须"
+"由系统选择时 (例如，由于当前活动窗口被关闭时)，位于鼠标下方的窗口将是优先候"
+"选。可以将此视作 <em>点击聚焦</em> 模式的一种不常见，但可能存在的变种版本。"
 
 #: windows.cpp:106
 #, kde-format
@@ -1286,9 +1290,9 @@ msgid ""
 "<em>Focus stealing prevention</em> takes place as usual. Think as <em>Click "
 "to focus</em> just without having to actually click."
 msgstr ""
-"<em>焦点跟随鼠标：</em>移动鼠标到窗口上将激活该窗口。例如，随机出现在鼠标下的"
-"窗口将不会获得焦点。<em>阻止焦点抢占</em> 正常生效。类似 <em>点击聚焦</em> 只"
-"是不需要真的点击。"
+"<em>焦点跟随鼠标：</em>将鼠标移动到窗口的上方时将激活该窗口。随机出现在鼠标下"
+"方的窗口将不会获得焦点。<em>阻止焦点抢占</em>机制将正常生效。可以将此模式视作"
+"无需点击的 <em>点击聚焦</em> 的变种版本。"
 
 #: windows.cpp:110
 #, kde-format
@@ -1298,9 +1302,9 @@ msgid ""
 "closed) the window under the mouse is the preferred candidate. Choose this, "
 "if you want a hover controlled focus."
 msgstr ""
-"非常类似于 <em>焦点跟随鼠标</em>。如果活动窗口需要由系统选择 (例如，由于当前"
-"活动窗口被关闭) 鼠标下的窗口将是优先候选。如果你想使用鼠标悬停控制焦点，选择"
-"此项。"
+"大致与 <em>焦点跟随鼠标</em> 相同。如果活动窗口必须由系统选择时 (例如，由于当"
+"前活动窗口被关闭时)，位于鼠标下方的窗口将是优先候选。如果您想通过鼠标悬停控制"
+"焦点，请选择此项。"
 
 #: windows.cpp:115
 #, kde-format
@@ -1311,9 +1315,10 @@ msgid ""
 "not work. You very likely want to use <em>Focus follows mouse (mouse "
 "precedence)</em> instead!"
 msgstr ""
-"<em>鼠标悬浮聚焦：</em>焦点始终保持在鼠标下的窗口。<br/><strong>警告：</"
-"strong><em>阻止焦点抢占</em> 以及 <em>任务切换器 ('Alt+Tab')</em> 与本策略冲"
-"突，将不会生效。 您想要使用的很可能是 <em>焦点跟随鼠标 (鼠标优先)</em>！"
+"<em>焦点位于鼠标下方：</em>位于鼠标下方的窗口将总是取得焦点。<br/><strong>警"
+"告：</strong><em>阻止焦点抢占</em> 和 <em>任务切换器 (Alt+Tab)</em> 与本策略"
+"冲突，它们将不会生效。您很可能并不需要使用此模式，而是 <em>焦点跟随鼠标 (鼠标"
+"优先)</em> 模式。"
 
 #: windows.cpp:119
 #, kde-format
@@ -1325,7 +1330,8 @@ msgid ""
 "activation policy and will not work. You very likely want to use <em>Focus "
 "follows mouse (mouse precedence)</em> instead!"
 msgstr ""
-"<em>鼠标严格悬浮聚焦：</em>焦点总是在鼠标下的窗口上 (鼠标离开窗口后不会保"
-"留)，非常类似于未托管的传统 X11 环境。<br/><strong>警告：</strong><em>阻止焦"
-"点抢占</em> 以及 <em>任务切换器 ('Alt+Tab')</em> 与本策略冲突，将不会生效。 "
-"您想要使用的很可能是 <em>焦点跟随鼠标 (鼠标优先)</em>！"
+"<em>焦点位于鼠标下方 (严格)：</em>位于鼠标下方的窗口将总是取得焦点 (鼠标离开"
+"窗口后不保留焦点)，类似于不受 kwin 管理的传统 X11 环境。<br/><strong>警告：</"
+"strong><em>阻止焦点抢占</em> 和 <em>任务切换器 (Alt+Tab)</em> 与本策略冲突，"
+"它们将不会生效。您很可能并不需要使用此模式，而是 <em>焦点跟随鼠标 (鼠标优"
+"先)</em> 模式。"

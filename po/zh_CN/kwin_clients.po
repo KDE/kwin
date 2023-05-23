@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-22 02:35+0000\n"
-"PO-Revision-Date: 2023-04-29 08:36\n"
+"PO-Revision-Date: 2023-05-22 14:04\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -27,7 +27,7 @@ msgstr "小"
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Normal"
-msgstr "普通"
+msgstr "正常"
 
 #: aurorae/src/aurorae.cpp:739
 #, kde-format
@@ -39,25 +39,25 @@ msgstr "大"
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Large"
-msgstr "非常大"
+msgstr "特大"
 
 #: aurorae/src/aurorae.cpp:741
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Huge"
-msgstr "巨大"
+msgstr "超大"
 
 #: aurorae/src/aurorae.cpp:742
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Huge"
-msgstr "超大"
+msgstr "超特大"
 
 #: aurorae/src/aurorae.cpp:743
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Oversized"
-msgstr "超特大"
+msgstr "极大"
 
 #: aurorae/src/aurorae.cpp:746
 #, kde-format
@@ -74,13 +74,13 @@ msgstr "配置对话框"
 #: aurorae/themes/plastik/package/contents/ui/config.ui:23
 #, kde-format
 msgid "Title &Alignment"
-msgstr "标题排列(&A)"
+msgstr "标题对齐(&A)"
 
 #. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
 #: aurorae/themes/plastik/package/contents/ui/config.ui:29
 #, kde-format
 msgid "Left"
-msgstr "左"
+msgstr "左对齐"
 
 #. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
 #: aurorae/themes/plastik/package/contents/ui/config.ui:36
@@ -92,7 +92,7 @@ msgstr "居中"
 #: aurorae/themes/plastik/package/contents/ui/config.ui:43
 #, kde-format
 msgid "Right"
-msgstr "右"
+msgstr "右对齐"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
 #: aurorae/themes/plastik/package/contents/ui/config.ui:53
@@ -100,13 +100,13 @@ msgstr "右"
 msgid ""
 "Check this option if the window border should be painted in the titlebar "
 "color. Otherwise it will be painted in the background color."
-msgstr "选中时，窗口边框会使用标题栏颜色绘制。否则，将使用背景颜色绘制。"
+msgstr "勾选此项后，窗口边框将使用标题栏颜色绘制。否则将使用背景颜色绘制。"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
 #: aurorae/themes/plastik/package/contents/ui/config.ui:56
 #, kde-format
 msgid "Colored window border"
-msgstr "对窗口边框着色"
+msgstr "窗口边框着色"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
 #: aurorae/themes/plastik/package/contents/ui/config.ui:66
@@ -114,10 +114,10 @@ msgstr "对窗口边框着色"
 msgid ""
 "Check this option if you want the buttons to fade in when the mouse pointer "
 "hovers over them and fade out again when it moves away."
-msgstr "勾选此项后，鼠标光标移入或移出按钮时，按钮将显示渐变过渡的效果。"
+msgstr "勾选此项后，鼠标光标移入或移出按钮时，按钮将显示颜色渐变的动效。"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
 #: aurorae/themes/plastik/package/contents/ui/config.ui:69
 #, kde-format
 msgid "Animate buttons"
-msgstr "动画按钮"
+msgstr "按钮动效"

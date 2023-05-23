@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-25 02:43+0000\n"
-"PO-Revision-Date: 2023-04-29 08:36\n"
+"PO-Revision-Date: 2023-05-22 14:04\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -20,13 +20,13 @@ msgstr ""
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "KDE 中国,Guo Yunhe,Coelacanthus,Tyson Tan"
+msgstr "KDE 中国, Coelacanthus, Guo Yunhe, Tyson Tan"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
-"kde-china@kde.org,i@guoyunhe.me,coelacanthus@kde.org,tysontan@tysontan.com"
+"kde-china@kde.org, coelacanthus@kde.org, i@guoyunhe.me, tysontan@tysontan.com"
 
 #: kcmrules.cpp:28
 #, kde-format
@@ -79,7 +79,7 @@ msgstr "KWin 规则 KCM 启动程序"
 #: main.cpp:32
 #, kde-format
 msgid "KWin id of the window for special window settings."
-msgstr "窗口特定设置的窗口编号(KWin ID)。"
+msgstr "用于特殊窗口设置的窗口 KWin ID。"
 
 #: main.cpp:33
 #, kde-format
@@ -89,18 +89,18 @@ msgstr "此设置是否应用到该应用程序的所有窗口。"
 #: main.cpp:40
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
-msgstr "此助手工具不应直接调用。"
+msgstr "此辅助工具不应被直接调用。"
 
 #: main.cpp:44
 #, kde-format
 msgctxt "Window caption for the application wide rules dialog"
 msgid "Edit Application-Specific Settings"
-msgstr "编辑程序的特定设置"
+msgstr "编辑特定应用程序的设置"
 
 #: main.cpp:45
 #, kde-format
 msgid "Edit Window-Specific Settings"
-msgstr "编辑窗口的特定设置"
+msgstr "编辑特定窗口的设置"
 
 #: optionsmodel.cpp:198
 #, kde-format
@@ -135,7 +135,7 @@ msgid ""
 "No further changes will be affected."
 msgstr ""
 "窗口属性将只在窗口创建后设置为给定的数值。\n"
-"这不会影响更多的更改。"
+"不影响在这之后的更改。"
 
 #: optionsmodel.cpp:209
 #, kde-format
@@ -155,7 +155,7 @@ msgstr ""
 #: optionsmodel.cpp:213
 #, kde-format
 msgid "Remember"
-msgstr "记忆"
+msgstr "记住"
 
 #: optionsmodel.cpp:214
 #, kde-format
@@ -192,7 +192,7 @@ msgstr "窗口属性将总是被强制为给定的数值。"
 #: optionsmodel.cpp:224
 #, kde-format
 msgid "Force Temporarily"
-msgstr "临时强制"
+msgstr "暂时强制"
 
 #: optionsmodel.cpp:225
 #, kde-format
@@ -222,7 +222,7 @@ msgstr "当前没有设置用于特定窗口的规则"
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Click the <interface>Add New...</interface> button below to add some"
-msgstr "点击下方的 <interface>添加新项...</interface> 按钮来添加"
+msgstr "点击下方的 <interface>新增...</interface> 按钮来添加规则"
 
 #: package/contents/ui/main.qml:68
 #, kde-format
@@ -247,7 +247,7 @@ msgstr "保存规则"
 #: package/contents/ui/main.qml:97
 #, kde-format
 msgid "Add New..."
-msgstr "添加新项…"
+msgstr "新增…"
 
 #: package/contents/ui/main.qml:108
 #, kde-format
@@ -272,7 +272,7 @@ msgstr "编辑"
 #: package/contents/ui/main.qml:215
 #, kde-format
 msgid "Duplicate"
-msgstr "复制"
+msgstr "创建副本"
 
 #: package/contents/ui/main.qml:224
 #, kde-format
@@ -410,8 +410,8 @@ msgid ""
 "types."
 msgstr ""
 "您已将窗口类指定为“不重要”。\n"
-"这意味着设置将可能应用到全部应用程序的窗口中。如果您真的想要创建常规设置的"
-"话，推荐您至少限制一种窗口类型，以避免特殊的窗口类型。"
+"这意味着这些设置将可能被应用到所有程序的窗口中。如果您确实想要创建一组通用设"
+"置，建议至少也要限制窗口类型，避免应用到特殊的窗口类型。"
 
 #: rulesmodel.cpp:244
 #, kde-format
@@ -420,8 +420,8 @@ msgid ""
 "initial settings for size and position. To enforce these settings, also "
 "force the property \"%1\" to \"Yes\"."
 msgstr ""
-"一些程序在启动后会设置他们自己的大小和位置，覆盖您对它的初始设置。要强制应用"
-"这些设置，请将这个属性“%1”设置为“是”。"
+"某些程序会在启动后会自行设置窗口的大小和位置，这将覆盖您对窗口大小和位置的初"
+"始设置。要强制应用这些设置，请将“%1”属性设置为“是”。"
 
 #: rulesmodel.cpp:359
 #, kde-format
@@ -467,7 +467,7 @@ msgstr "窗口标题"
 #: rulesmodel.cpp:407
 #, kde-format
 msgid "Machine (hostname)"
-msgstr "计算机 (主机名)"
+msgstr "机器 (主机名)"
 
 #: rulesmodel.cpp:413
 #, kde-format
@@ -550,10 +550,10 @@ msgid ""
 "what might be nasty if the client abuses the feature\n"
 "to unconditionally popup in the middle of your screen."
 msgstr ""
-"窗口可以要求在一个特定位置显示。\n"
-"默认这将会覆盖位置策略\n"
-"这可能会导致窗口滥用此项功能\n"
-"使得弹出窗口无限制地显示在屏幕中央。"
+"窗口可以请求在某个特定位置显示自己。\n"
+"默认状态下，窗口的请求将覆盖位置策略。\n"
+"某些客户端可能会滥用此功能，从而在\n"
+"屏幕上无节制地显示弹窗。"
 
 #: rulesmodel.cpp:516
 #, kde-format
@@ -568,7 +568,7 @@ msgstr "最大尺寸"
 #: rulesmodel.cpp:526
 #, kde-format
 msgid "Obey geometry restrictions"
-msgstr "服从几何限制"
+msgstr "遵守大小和位置限制"
 
 #: rulesmodel.cpp:528
 #, kde-format
@@ -587,7 +587,7 @@ msgstr ""
 #: rulesmodel.cpp:537
 #, kde-format
 msgid "Keep above other windows"
-msgstr "保持在其他窗口之上"
+msgstr "窗口置顶"
 
 #: rulesmodel.cpp:537 rulesmodel.cpp:542 rulesmodel.cpp:547 rulesmodel.cpp:553
 #: rulesmodel.cpp:559 rulesmodel.cpp:565
@@ -598,7 +598,7 @@ msgstr "布局和访问"
 #: rulesmodel.cpp:542
 #, kde-format
 msgid "Keep below other windows"
-msgstr "保持在其他窗口之下"
+msgstr "窗口置底"
 
 #: rulesmodel.cpp:547
 #, kde-format
@@ -608,27 +608,27 @@ msgstr "跳过任务栏"
 #: rulesmodel.cpp:549
 #, kde-format
 msgid "Window shall (not) appear in the taskbar."
-msgstr "窗口(不)显示在任务栏中。"
+msgstr "窗口是否显示在任务栏中。"
 
 #: rulesmodel.cpp:553
 #, kde-format
 msgid "Skip pager"
-msgstr "跳过桌面切换"
+msgstr "跳过虚拟桌面切换器"
 
 #: rulesmodel.cpp:555
 #, kde-format
 msgid "Window shall (not) appear in the manager for virtual desktops"
-msgstr "窗口(不)显示在虚拟桌面管理器中。"
+msgstr "窗口是否显示在虚拟桌面管理器中。"
 
 #: rulesmodel.cpp:559
 #, kde-format
 msgid "Skip switcher"
-msgstr "跳过程序切换"
+msgstr "跳过窗口切换器"
 
 #: rulesmodel.cpp:561
 #, kde-format
 msgid "Window shall (not) appear in the Alt+Tab list"
-msgstr "窗口(不)显示在 Alt + Tab 列表中。"
+msgstr "窗口是否显示在 Alt + Tab 列表中。"
 
 #: rulesmodel.cpp:565
 #, kde-format
@@ -676,11 +676,11 @@ msgid ""
 "\"None\" will unconditionally allow this window to get the focus while\n"
 "\"Extreme\" will completely prevent it from taking the focus."
 msgstr ""
-"当您正在其他窗口工作时，KWin 会尝试阻止其\n"
-"他窗口抢夺焦点 (“激活”) 。但这有时可能会\n"
-"失效或者保护过度。\n"
-"“无” 将无条件的让这个窗口获得焦点，\n"
-"“终极” 将完全阻止它抢夺焦点。"
+"当您正在其他窗口工作时，\n"
+"KWin 将尝试阻止其他窗口取得焦点 (激活) 。\n"
+"但此功能有时会漏网或者用力过猛。\n"
+"“无” 将无条件地允许窗口取得焦点，\n"
+"“彻底”将彻底阻止窗口取得焦点。"
 
 #: rulesmodel.cpp:603
 #, kde-format
@@ -696,11 +696,10 @@ msgid ""
 "Otherwise it's interleaved with the stealing prevention\n"
 "assigned to the window that wants the focus."
 msgstr ""
-"这控制了当前活动窗口的焦点保护。\n"
-"无将会总是交出焦点，\n"
-"终极将总是保留焦点。\n"
-"否则它将会和阻止偷取焦点\n"
-"指定的的想要焦点窗口交替。"
+"此选项控制当前活动窗口的焦点保护功能。\n"
+"“无”将总是交出焦点，“彻底”将总是保持焦点。\n"
+"其他选项则与想要取得焦点的窗口所指定的\n"
+"焦点抢占阻止机制有关。"
 
 #: rulesmodel.cpp:614
 #, kde-format
@@ -714,8 +713,8 @@ msgid ""
 "On the other hand you might wish to prevent a window\n"
 "from getting focused on a mouse click."
 msgstr ""
-"窗口自身也许会阻止在被点击时获得焦点 (激活)。\n"
-"或者您也许想阻止一个窗口在被点击时激活。"
+"窗口可以阻止自己在被点击时取得焦点 (激活)。\n"
+"您也可以阻止某个窗口在被鼠标点击时激活。"
 
 #: rulesmodel.cpp:622
 #, kde-format
@@ -734,13 +733,12 @@ msgid ""
 "nor use any other global shortcut (such as Alt+F2 to show KRunner)\n"
 "while it's active!"
 msgstr ""
-"在使用这个选项时，窗口在激活时将会接受所有键盘输入，\n"
-"包括 Alt+Tab 等等。这对模拟器或者虚拟机来说很有用。\n"
+"在使用这个选项时，窗口将在活动时接受所有键盘输入，\n"
+"包括 Alt+Tab 等。这对模拟器或者虚拟机来说很有用。\n"
 "\n"
 "请注意：\n"
-"在窗口激活时，您无法使用 Alt+Tab 来切出窗口，\n"
-"也无法使用任何全局快捷键 (例如使用 Alt+F2 来显示\n"
-"KRunner) 。"
+"该窗口处于活动状态时，您将无法使用 Alt+Tab 来切出窗口，\n"
+"也无法使用任何全局快捷键 (例如使用 Alt+F2 来显示 KRunner) 。"
 
 #: rulesmodel.cpp:635
 #, kde-format
@@ -788,7 +786,7 @@ msgstr "所有窗口类型"
 #: rulesmodel.cpp:739
 #, kde-format
 msgid "Normal Window"
-msgstr "普通窗口"
+msgstr "正常窗口"
 
 #: rulesmodel.cpp:740
 #, kde-format
@@ -803,7 +801,7 @@ msgstr "工具窗口"
 #: rulesmodel.cpp:742
 #, kde-format
 msgid "Dock (panel)"
-msgstr "停靠(面板)"
+msgstr "停靠面板 (面板)"
 
 #: rulesmodel.cpp:743
 #, kde-format
@@ -813,12 +811,12 @@ msgstr "工具栏"
 #: rulesmodel.cpp:744
 #, kde-format
 msgid "Torn-Off Menu"
-msgstr "撕下的菜单"
+msgstr "分离式菜单"
 
 #: rulesmodel.cpp:745
 #, kde-format
 msgid "Splash Screen"
-msgstr "欢迎屏幕"
+msgstr "启动屏幕"
 
 #: rulesmodel.cpp:746
 #, kde-format
@@ -829,7 +827,7 @@ msgstr "桌面"
 #: rulesmodel.cpp:748
 #, kde-format
 msgid "Standalone Menubar"
-msgstr "独立式菜单"
+msgstr "独立式菜单栏"
 
 #: rulesmodel.cpp:749
 #, kde-format
@@ -866,7 +864,7 @@ msgstr "默认"
 #: rulesmodel.cpp:804
 #, kde-format
 msgid "No Placement"
-msgstr "无放置"
+msgstr "不放置"
 
 #: rulesmodel.cpp:805
 #, kde-format
@@ -896,7 +894,7 @@ msgstr "左上角"
 #: rulesmodel.cpp:810
 #, kde-format
 msgid "Under Mouse"
-msgstr "鼠标下"
+msgstr "鼠标下方"
 
 #: rulesmodel.cpp:811
 #, kde-format
@@ -916,7 +914,7 @@ msgstr "低"
 #: rulesmodel.cpp:820
 #, kde-format
 msgid "Normal"
-msgstr "普通"
+msgstr "正常"
 
 #: rulesmodel.cpp:821
 #, kde-format
@@ -926,12 +924,12 @@ msgstr "高"
 #: rulesmodel.cpp:822
 #, kde-format
 msgid "Extreme"
-msgstr "终极"
+msgstr "彻底"
 
 #: rulesmodel.cpp:865
 #, kde-format
 msgid "Unmanaged window"
-msgstr "未管理窗口"
+msgstr "不受管理窗口"
 
 #: rulesmodel.cpp:866
 #, kde-format

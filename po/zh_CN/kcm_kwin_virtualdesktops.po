@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-15 00:49+0000\n"
-"PO-Revision-Date: 2023-04-29 08:36\n"
+"PO-Revision-Date: 2023-05-22 14:04\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -20,12 +20,12 @@ msgstr ""
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "KDE 中国, Guo Yunhe"
+msgstr "KDE 中国, Guo Yunhe, Tyson Tan"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "kde-china@kde.org, i@guoyunhe.me"
+msgstr "kde-china@kde.org, i@guoyunhe.me, tysontan@tysontan.com"
 
 #: desktopsmodel.cpp:191
 #, kde-format
@@ -54,7 +54,7 @@ msgstr "获取显示特效合成器信息时出错。"
 msgid ""
 "This module lets you configure the navigation, number and layout of virtual "
 "desktops."
-msgstr "此模块允许您配置虚拟桌面的数量、布局和切换方式。"
+msgstr "此模块用于配置虚拟桌面的数量、布局和切换方式。"
 
 #: package/contents/ui/main.qml:91
 #, kde-format
@@ -79,7 +79,7 @@ msgstr "移除"
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
 "now will overwrite the changes."
-msgstr "虚拟桌面已在此设置应用程序之外进行了更改。立即保存将覆盖所做的更改。"
+msgstr "虚拟桌面已在此设置程序外部进行了更改。现在保存将覆盖之前的更改。"
 
 #: package/contents/ui/main.qml:153
 #, kde-format
@@ -126,7 +126,7 @@ msgstr "%1 毫秒"
 #: package/contents/ui/main.qml:314
 #, kde-format
 msgid "Show desktop layout indicators"
-msgstr "显示桌面布局符"
+msgstr "显示桌面布局指示图"
 
 #: virtualdesktops.cpp:33
 #, kde-format

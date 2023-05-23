@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2019-05-20 03:25+0200\n"
-"PO-Revision-Date: 2023-04-29 08:36\n"
+"PO-Revision-Date: 2023-05-22 14:04\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -40,7 +40,7 @@ msgstr "vlc, xv, vdpau, smplayer, dragon, xine, ffplay"
 #: videowall/contents/ui/config.ui:35 videowall/contents/ui/config.ui:66
 #, kde-format
 msgid "Comma separated list of window classes"
-msgstr "逗号分隔的窗口类列表"
+msgstr "窗口类列表，以半角逗号分隔"
 
 #. i18n: ectx: property (text), widget (QLabel, applyLabel)
 #: videowall/contents/ui/config.ui:45
