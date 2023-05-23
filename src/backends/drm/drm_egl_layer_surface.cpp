@@ -59,7 +59,7 @@ void EglGbmLayerSurface::destroyResources()
     m_oldSurface = {};
 }
 
-std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(const QSize &bufferSize, TextureTransforms transformation, const QMap<uint32_t, QVector<uint64_t>> &formats, const ColorDescription &colorDescription, const QVector3D &channelFactors)
+std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(const QSize &bufferSize, TextureTransforms transformation, const QMap<uint32_t, QVector<uint64_t>> &formats, const ColorDescription &colorDescription, const QVector3D &channelFactors, bool enableColormanagement)
 {
     if (!checkSurface(bufferSize, formats)) {
         return std::nullopt;
@@ -102,7 +102,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
             m_surface.intermediaryColorDescription = colorDescription;
         }
     }
-    if (m_surface.intermediaryColorDescription != colorDescription) {
+    if (enableColormanagement) {
         if (!m_surface.shadowBuffer) {
             m_surface.shadowTexture = std::make_shared<GLTexture>(GL_RGBA16F, m_surface.gbmSwapchain->size());
             m_surface.shadowBuffer = std::make_shared<GLFramebuffer>(m_surface.shadowTexture.get());
@@ -123,7 +123,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
 
 bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion)
 {
-    if (m_surface.intermediaryColorDescription != m_surface.targetColorDescription) {
+    if (m_surface.shadowTexture) {
         const auto &[texture, fbo] = m_surface.textureCache[m_surface.currentBuffer->bo()];
         GLFramebuffer::pushFramebuffer(fbo.get());
         ShaderBinder binder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);

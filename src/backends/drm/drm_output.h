@@ -62,6 +62,7 @@ public:
     bool setGammaRamp(const std::shared_ptr<ColorTransformation> &transformation) override;
     bool setChannelFactors(const QVector3D &rgb) override;
     QVector3D channelFactors() const;
+    bool needsColormanagement() const;
 
 private:
     bool setDrmDpmsMode(DpmsMode mode);

@@ -46,7 +46,7 @@ EglGbmCursorLayer::EglGbmCursorLayer(EglGbmBackend *eglBackend, DrmPipeline *pip
 
 std::optional<OutputLayerBeginFrameInfo> EglGbmCursorLayer::beginFrame()
 {
-    return m_surface.startRendering(m_pipeline->gpu()->cursorSize(), drmToTextureRotation(m_pipeline) | TextureTransform::MirrorY, m_pipeline->cursorFormats(), m_pipeline->colorDescription(), m_pipeline->output()->channelFactors());
+    return m_surface.startRendering(m_pipeline->gpu()->cursorSize(), drmToTextureRotation(m_pipeline) | TextureTransform::MirrorY, m_pipeline->cursorFormats(), m_pipeline->colorDescription(), m_pipeline->output()->channelFactors(), m_pipeline->output()->needsColormanagement());
 }
 
 bool EglGbmCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)

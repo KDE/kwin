@@ -479,7 +479,7 @@ DrmOutputLayer *DrmOutput::cursorLayer() const
 
 bool DrmOutput::setGammaRamp(const std::shared_ptr<ColorTransformation> &transformation)
 {
-    if (!m_pipeline->active() || m_pipeline->colorimetry() != NamedColorimetry::BT709 || m_pipeline->transferFunction() != NamedTransferFunction::sRGB) {
+    if (!m_pipeline->active() || needsColormanagement()) {
         return false;
     }
     m_pipeline->setGammaRamp(transformation);
@@ -500,7 +500,7 @@ bool DrmOutput::setChannelFactors(const QVector3D &rgb)
         return true;
     }
     m_channelFactors = rgb;
-    if (m_pipeline->colorimetry() == NamedColorimetry::BT709 && m_pipeline->transferFunction() == NamedTransferFunction::sRGB) {
+    if (needsColormanagement()) {
         if (!m_pipeline->active()) {
             return false;
         }
@@ -526,5 +526,10 @@ bool DrmOutput::setChannelFactors(const QVector3D &rgb)
 QVector3D DrmOutput::channelFactors() const
 {
     return m_channelFactors;
+}
+
+bool DrmOutput::needsColormanagement() const
+{
+    return m_pipeline->colorimetry() != NamedColorimetry::BT709 || m_pipeline->transferFunction() != NamedTransferFunction::sRGB || m_gpu->isNVidia();
 }
 }
