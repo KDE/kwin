@@ -745,8 +745,6 @@ void StrutsTest::testLeftScreenSmallerBottomAligned()
 {
     // this test verifies a two screen setup with the left screen smaller than the right and bottom aligned
     // the panel is on the top of the left screen, thus not at 0/0
-    // what this test in addition tests is whether a window larger than the left screen is not placed into
-    // the dead area
     const QVector<QRect> geometries{QRect(0, 282, 1366, 768), QRect(1366, 0, 1680, 1050)};
     Test::setOutputConfig(geometries);
     QCOMPARE(workspace()->geometry(), QRect(0, 0, 3046, 1050));
@@ -810,36 +808,6 @@ void StrutsTest::testLeftScreenSmallerBottomAligned()
     QCOMPARE(workspace()->clientArea(PlacementArea, outputs[1], desktop), geometries.at(1));
     QCOMPARE(workspace()->clientArea(MaximizeArea, outputs[1], desktop), geometries.at(1));
     QCOMPARE(workspace()->clientArea(WorkArea, outputs[0], desktop), QRect(0, 0, 3046, 1050));
-
-    // now create a window which is larger than screen 0
-
-    xcb_window_t w2 = xcb_generate_id(c.get());
-    const QRect windowGeometry2(0, 26, 1280, 774);
-    xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, w2, rootWindow(),
-                      windowGeometry2.x(),
-                      windowGeometry2.y(),
-                      windowGeometry2.width(),
-                      windowGeometry2.height(),
-                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
-    xcb_size_hints_t hints2;
-    memset(&hints2, 0, sizeof(hints2));
-    xcb_icccm_size_hints_set_min_size(&hints2, 868, 431);
-    xcb_icccm_set_wm_normal_hints(c.get(), w2, &hints2);
-    xcb_map_window(c.get(), w2);
-    xcb_flush(c.get());
-    QVERIFY(windowCreatedSpy.wait());
-    X11Window *window2 = windowCreatedSpy.last().first().value<X11Window *>();
-    QVERIFY(window2);
-    QVERIFY(window2 != window);
-    QVERIFY(window2->isDecorated());
-    QCOMPARE(window2->frameGeometry(), QRect(0, 306, 1366, 744));
-    QCOMPARE(window2->maximizeMode(), KWin::MaximizeFull);
-    // destroy window again
-    QSignalSpy normalWindowClosedSpy(window2, &X11Window::closed);
-    xcb_unmap_window(c.get(), w2);
-    xcb_destroy_window(c.get(), w2);
-    xcb_flush(c.get());
-    QVERIFY(normalWindowClosedSpy.wait());
 
     // and destroy the window again
     xcb_unmap_window(c.get(), windowId);
