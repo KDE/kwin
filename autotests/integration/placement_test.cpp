@@ -18,7 +18,6 @@
 #include "workspace.h"
 
 #include <KWayland/Client/compositor.h>
-#include <KWayland/Client/plasmashell.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
 
@@ -67,7 +66,7 @@ private:
 
 void TestPlacement::init()
 {
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::PlasmaShell));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::LayerShellV1));
 
     workspace()->setActiveOutput(QPoint(640, 512));
     KWin::input()->pointer()->warp(QPoint(640, 512));
@@ -162,12 +161,15 @@ void TestPlacement::testPlaceMaximized()
     setPlacementPolicy(PlacementMaximizing);
 
     // add a top panel
-    std::unique_ptr<KWayland::Client::Surface> panelSurface(Test::createSurface());
-    std::unique_ptr<QObject> panelShellSurface(Test::createXdgToplevelSurface(panelSurface.get()));
-    std::unique_ptr<KWayland::Client::PlasmaShellSurface> plasmaSurface(Test::waylandPlasmaShell()->createSurface(panelSurface.get()));
-    plasmaSurface->setRole(KWayland::Client::PlasmaShellSurface::Role::Panel);
-    plasmaSurface->setPosition(QPoint(0, 0));
-    Test::renderAndWaitForShown(panelSurface.get(), QSize(1280, 20), Qt::blue);
+    std::unique_ptr<KWayland::Client::Surface> panelSurface{Test::createSurface()};
+    std::unique_ptr<Test::LayerSurfaceV1> panelShellSurface{Test::createLayerSurfaceV1(panelSurface.get(), QStringLiteral("dock"))};
+    panelShellSurface->set_size(1280, 20);
+    panelShellSurface->set_anchor(Test::LayerSurfaceV1::anchor_top);
+    panelShellSurface->set_exclusive_zone(20);
+    panelSurface->commit(KWayland::Client::Surface::CommitFlag::None);
+    QSignalSpy panelConfigureRequestedSpy(panelShellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    QVERIFY(panelConfigureRequestedSpy.wait());
+    Test::renderAndWaitForShown(panelSurface.get(), panelConfigureRequestedSpy.last().at(1).toSize(), Qt::blue);
 
     std::vector<std::unique_ptr<KWayland::Client::Surface>> surfaces;
 
@@ -186,12 +188,15 @@ void TestPlacement::testPlaceMaximizedLeavesFullscreen()
     setPlacementPolicy(PlacementMaximizing);
 
     // add a top panel
-    std::unique_ptr<KWayland::Client::Surface> panelSurface(Test::createSurface());
-    std::unique_ptr<QObject> panelShellSurface(Test::createXdgToplevelSurface(panelSurface.get()));
-    std::unique_ptr<KWayland::Client::PlasmaShellSurface> plasmaSurface(Test::waylandPlasmaShell()->createSurface(panelSurface.get()));
-    plasmaSurface->setRole(KWayland::Client::PlasmaShellSurface::Role::Panel);
-    plasmaSurface->setPosition(QPoint(0, 0));
-    Test::renderAndWaitForShown(panelSurface.get(), QSize(1280, 20), Qt::blue);
+    std::unique_ptr<KWayland::Client::Surface> panelSurface{Test::createSurface()};
+    std::unique_ptr<Test::LayerSurfaceV1> panelShellSurface{Test::createLayerSurfaceV1(panelSurface.get(), QStringLiteral("dock"))};
+    panelShellSurface->set_size(1280, 20);
+    panelShellSurface->set_anchor(Test::LayerSurfaceV1::anchor_top);
+    panelShellSurface->set_exclusive_zone(20);
+    panelSurface->commit(KWayland::Client::Surface::CommitFlag::None);
+    QSignalSpy panelConfigureRequestedSpy(panelShellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    QVERIFY(panelConfigureRequestedSpy.wait());
+    Test::renderAndWaitForShown(panelSurface.get(), panelConfigureRequestedSpy.last().at(1).toSize(), Qt::blue);
 
     std::vector<std::unique_ptr<KWayland::Client::Surface>> surfaces;
 

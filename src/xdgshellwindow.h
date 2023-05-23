@@ -83,7 +83,6 @@ protected:
 
 private:
     void setupPlasmaShellIntegration();
-    void updateClientArea();
     void updateShowOnScreenEdge();
     void handleConfigureAcknowledged(quint32 serial);
     void handleCommit();
@@ -156,8 +155,6 @@ public:
     bool takeFocus() override;
     bool wantsInput() const override;
     bool dockWantsInput() const override;
-    StrutRect strutRect(StrutArea area) const override;
-    bool hasStrut() const override;
     void showOnScreenEdge() override;
     void setFullScreen(bool set, bool user) override;
     void closeWindow() override;

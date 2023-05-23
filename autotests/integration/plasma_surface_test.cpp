@@ -46,8 +46,6 @@ private Q_SLOTS:
     void testPanelWindowsCanCover();
     void testOSDPlacement();
     void testOSDPlacementManualPosition();
-    void testPanelTypeHasStrut_data();
-    void testPanelTypeHasStrut();
     void testPanelActivate_data();
     void testPanelActivate();
 
@@ -230,48 +228,6 @@ void PlasmaSurfaceTest::testOSDPlacementManualPosition()
     QCOMPARE(window->windowType(), NET::OnScreenDisplay);
     QVERIFY(window->isOnScreenDisplay());
     QCOMPARE(window->frameGeometry(), QRect(50, 70, 100, 50));
-}
-
-void PlasmaSurfaceTest::testPanelTypeHasStrut_data()
-{
-    QTest::addColumn<KWayland::Client::PlasmaShellSurface::PanelBehavior>("panelBehavior");
-    QTest::addColumn<bool>("expectedStrut");
-    QTest::addColumn<QRectF>("expectedMaxArea");
-    QTest::addColumn<KWin::Layer>("expectedLayer");
-
-    QTest::newRow("always visible - xdgWmBase") << KWayland::Client::PlasmaShellSurface::PanelBehavior::AlwaysVisible << true << QRectF(0, 50, 1280, 974) << KWin::DockLayer;
-    QTest::newRow("autohide - xdgWmBase") << KWayland::Client::PlasmaShellSurface::PanelBehavior::AutoHide << false << QRectF(0, 0, 1280, 1024) << KWin::AboveLayer;
-    QTest::newRow("windows can cover - xdgWmBase") << KWayland::Client::PlasmaShellSurface::PanelBehavior::WindowsCanCover << false << QRectF(0, 0, 1280, 1024) << KWin::NormalLayer;
-    QTest::newRow("windows go below - xdgWmBase") << KWayland::Client::PlasmaShellSurface::PanelBehavior::WindowsGoBelow << false << QRectF(0, 0, 1280, 1024) << KWin::AboveLayer;
-}
-
-void PlasmaSurfaceTest::testPanelTypeHasStrut()
-{
-    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
-    QVERIFY(surface != nullptr);
-    std::unique_ptr<QObject> shellSurface(Test::createXdgToplevelSurface(surface.get()));
-    QVERIFY(shellSurface != nullptr);
-    std::unique_ptr<KWayland::Client::PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.get()));
-    QVERIFY(plasmaSurface != nullptr);
-    plasmaSurface->setRole(KWayland::Client::PlasmaShellSurface::Role::Panel);
-    plasmaSurface->setPosition(QPoint(0, 0));
-    QFETCH(KWayland::Client::PlasmaShellSurface::PanelBehavior, panelBehavior);
-    plasmaSurface->setPanelBehavior(panelBehavior);
-
-    // now render and map the window
-    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
-
-    // the panel is on the first output and the current desktop
-    Output *output = workspace()->outputs().constFirst();
-    VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
-
-    QVERIFY(window);
-    QCOMPARE(window->windowType(), NET::Dock);
-    QVERIFY(window->isDock());
-    QCOMPARE(window->frameGeometry(), QRect(0, 0, 100, 50));
-    QTEST(window->hasStrut(), "expectedStrut");
-    QTEST(workspace()->clientArea(MaximizeArea, output, desktop), "expectedMaxArea");
-    QTEST(window->layer(), "expectedLayer");
 }
 
 void PlasmaSurfaceTest::testPanelWindowsCanCover_data()

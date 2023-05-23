@@ -302,13 +302,6 @@ void XdgSurfaceWindow::destroyWindow()
     unref();
 }
 
-void XdgSurfaceWindow::updateClientArea()
-{
-    if (hasStrut()) {
-        workspace()->updateClientArea();
-    }
-}
-
 void XdgSurfaceWindow::updateShowOnScreenEdge()
 {
     if (!workspace()->screenEdges()) {
@@ -458,14 +451,12 @@ void XdgSurfaceWindow::installPlasmaShellSurface(PlasmaShellSurfaceInterface *sh
         default:
             break;
         }
-        workspace()->updateClientArea();
     };
     connect(shellSurface, &PlasmaShellSurfaceInterface::positionChanged, this, updatePosition);
     connect(shellSurface, &PlasmaShellSurfaceInterface::openUnderCursorRequested, this, showUnderCursor);
     connect(shellSurface, &PlasmaShellSurfaceInterface::roleChanged, this, updateRole);
     connect(shellSurface, &PlasmaShellSurfaceInterface::panelBehaviorChanged, this, [this] {
         updateShowOnScreenEdge();
-        workspace()->updateClientArea();
     });
     connect(shellSurface, &PlasmaShellSurfaceInterface::panelAutoHideHideRequested, this, [this] {
         if (m_plasmaShellSurface->panelBehavior() == PlasmaShellSurfaceInterface::PanelBehavior::AutoHide) {
@@ -512,8 +503,6 @@ void XdgSurfaceWindow::setupPlasmaShellIntegration()
 {
     connect(surface(), &SurfaceInterface::mapped,
             this, &XdgSurfaceWindow::updateShowOnScreenEdge);
-    connect(this, &XdgSurfaceWindow::frameGeometryChanged,
-            this, &XdgSurfaceWindow::updateClientArea);
 }
 
 XdgToplevelWindow::XdgToplevelWindow(XdgToplevelInterface *shellSurface)
@@ -757,61 +746,6 @@ void XdgToplevelWindow::invalidateDecoration()
 bool XdgToplevelWindow::supportsWindowRules() const
 {
     return true;
-}
-
-StrutRect XdgToplevelWindow::strutRect(StrutArea area) const
-{
-    if (!hasStrut()) {
-        return StrutRect();
-    }
-
-    const QRect windowRect = frameGeometry().toRect();
-    const QRect outputRect = output()->geometry();
-
-    const bool left = windowRect.left() == outputRect.left();
-    const bool right = windowRect.right() == outputRect.right();
-    const bool top = windowRect.top() == outputRect.top();
-    const bool bottom = windowRect.bottom() == outputRect.bottom();
-    const bool horizontal = width() >= height();
-
-    switch (area) {
-    case StrutAreaTop:
-        if (top && horizontal) {
-            return StrutRect(windowRect, StrutAreaTop);
-        }
-        return StrutRect();
-    case StrutAreaRight:
-        if (right && !horizontal) {
-            return StrutRect(windowRect, StrutAreaRight);
-        }
-        return StrutRect();
-    case StrutAreaBottom:
-        if (bottom && horizontal) {
-            return StrutRect(windowRect, StrutAreaBottom);
-        }
-        return StrutRect();
-    case StrutAreaLeft:
-        if (left && !horizontal) {
-            return StrutRect(windowRect, StrutAreaLeft);
-        }
-        return StrutRect();
-    default:
-        return StrutRect();
-    }
-}
-
-bool XdgToplevelWindow::hasStrut() const
-{
-    if (!isShown()) {
-        return false;
-    }
-    if (!m_plasmaShellSurface) {
-        return false;
-    }
-    if (m_plasmaShellSurface->role() != PlasmaShellSurfaceInterface::Role::Panel) {
-        return false;
-    }
-    return m_plasmaShellSurface->panelBehavior() == PlasmaShellSurfaceInterface::PanelBehavior::AlwaysVisible;
 }
 
 void XdgToplevelWindow::showOnScreenEdge()
