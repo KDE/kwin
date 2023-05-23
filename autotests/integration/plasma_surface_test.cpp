@@ -45,6 +45,8 @@ private Q_SLOTS:
     void testOSDPlacementManualPosition();
     void testPanelActivate_data();
     void testPanelActivate();
+    void testMovable_data();
+    void testMovable();
 
 private:
     KWayland::Client::Compositor *m_compositor = nullptr;
@@ -256,6 +258,43 @@ void PlasmaSurfaceTest::testPanelActivate()
     QFETCH(bool, active);
     QCOMPARE(panel->dockWantsInput(), active);
     QCOMPARE(panel->isActive(), active);
+}
+
+void PlasmaSurfaceTest::testMovable_data()
+{
+    QTest::addColumn<KWayland::Client::PlasmaShellSurface::Role>("role");
+    QTest::addColumn<bool>("movable");
+    QTest::addColumn<bool>("movableAcrossScreens");
+    QTest::addColumn<bool>("resizable");
+
+    QTest::newRow("normal") << KWayland::Client::PlasmaShellSurface::Role::Normal << true << true << true;
+    QTest::newRow("desktop") << KWayland::Client::PlasmaShellSurface::Role::Desktop << false << false << false;
+    QTest::newRow("panel") << KWayland::Client::PlasmaShellSurface::Role::Panel << false << false << false;
+    QTest::newRow("osd") << KWayland::Client::PlasmaShellSurface::Role::OnScreenDisplay << false << false << false;
+}
+
+void PlasmaSurfaceTest::testMovable()
+{
+    // this test verifies that certain window types from PlasmaShellSurface are not moveable or resizable
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    QVERIFY(surface != nullptr);
+
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    QVERIFY(shellSurface != nullptr);
+    // and a PlasmaShellSurface
+    std::unique_ptr<KWayland::Client::PlasmaShellSurface> plasmaSurface(Test::waylandPlasmaShell()->createSurface(surface.get()));
+    QVERIFY(plasmaSurface != nullptr);
+    QFETCH(KWayland::Client::PlasmaShellSurface::Role, role);
+    plasmaSurface->setRole(role);
+    // let's render
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+
+    QVERIFY(window);
+    QTEST(window->isMovable(), "movable");
+    QTEST(window->isMovableAcrossScreens(), "movableAcrossScreens");
+    QTEST(window->isResizable(), "resizable");
+    surface.reset();
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 WAYLANDTEST_MAIN(PlasmaSurfaceTest)

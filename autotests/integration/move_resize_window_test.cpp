@@ -22,7 +22,6 @@
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>
-#include <KWayland/Client/plasmashell.h>
 #include <KWayland/Client/pointer.h>
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/surface.h>
@@ -56,8 +55,6 @@ private Q_SLOTS:
     void testPointerMoveEnd_data();
     void testPointerMoveEnd();
     void testClientSideMove();
-    void testPlasmaShellSurfaceMovable_data();
-    void testPlasmaShellSurfaceMovable();
     void testNetMove();
     void testAdjustClientGeometryOfHiddenX11Panel_data();
     void testAdjustClientGeometryOfHiddenX11Panel();
@@ -93,7 +90,7 @@ void MoveResizeWindowTest::initTestCase()
 
 void MoveResizeWindowTest::init()
 {
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::PlasmaShell | Test::AdditionalWaylandInterface::LayerShellV1 | Test::AdditionalWaylandInterface::Seat));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::LayerShellV1 | Test::AdditionalWaylandInterface::Seat));
     QVERIFY(Test::waitForWaylandPointer());
     m_connection = Test::waylandConnection();
     m_compositor = Test::waylandCompositor();
@@ -548,43 +545,6 @@ void MoveResizeWindowTest::testClientSideMove()
     QCOMPARE(window->isInteractiveMove(), false);
     QCOMPARE(window->frameGeometry(), startGeometry.translated(QPoint(dragDistance, dragDistance) + QPoint(6, 6)));
     QCOMPARE(pointerEnteredSpy.last().last().toPoint(), QPoint(50, 25));
-}
-
-void MoveResizeWindowTest::testPlasmaShellSurfaceMovable_data()
-{
-    QTest::addColumn<KWayland::Client::PlasmaShellSurface::Role>("role");
-    QTest::addColumn<bool>("movable");
-    QTest::addColumn<bool>("movableAcrossScreens");
-    QTest::addColumn<bool>("resizable");
-
-    QTest::newRow("normal") << KWayland::Client::PlasmaShellSurface::Role::Normal << true << true << true;
-    QTest::newRow("desktop") << KWayland::Client::PlasmaShellSurface::Role::Desktop << false << false << false;
-    QTest::newRow("panel") << KWayland::Client::PlasmaShellSurface::Role::Panel << false << false << false;
-    QTest::newRow("osd") << KWayland::Client::PlasmaShellSurface::Role::OnScreenDisplay << false << false << false;
-}
-
-void MoveResizeWindowTest::testPlasmaShellSurfaceMovable()
-{
-    // this test verifies that certain window types from PlasmaShellSurface are not moveable or resizable
-    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
-    QVERIFY(surface != nullptr);
-
-    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
-    QVERIFY(shellSurface != nullptr);
-    // and a PlasmaShellSurface
-    std::unique_ptr<KWayland::Client::PlasmaShellSurface> plasmaSurface(Test::waylandPlasmaShell()->createSurface(surface.get()));
-    QVERIFY(plasmaSurface != nullptr);
-    QFETCH(KWayland::Client::PlasmaShellSurface::Role, role);
-    plasmaSurface->setRole(role);
-    // let's render
-    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
-
-    QVERIFY(window);
-    QTEST(window->isMovable(), "movable");
-    QTEST(window->isMovableAcrossScreens(), "movableAcrossScreens");
-    QTEST(window->isResizable(), "resizable");
-    surface.reset();
-    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void MoveResizeWindowTest::testNetMove()
