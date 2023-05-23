@@ -9,7 +9,6 @@
 #include "kwin_wayland_test.h"
 
 #include "core/output.h"
-#include "core/outputbackend.h"
 #include "libkwineffects/kwineffects.h"
 #include "pointer_input.h"
 #include "wayland/seat_interface.h"

@@ -9,7 +9,6 @@
 #include "kwin_wayland_test.h"
 
 #include "core/output.h"
-#include "core/outputbackend.h"
 #include "debug_console.h"
 #include "internalwindow.h"
 #include "utils/xcbutils.h"

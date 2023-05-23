@@ -10,7 +10,6 @@
 
 #include "composite.h"
 #include "core/output.h"
-#include "core/outputbackend.h"
 #include "core/renderbackend.h"
 #include "libkwineffects/kwineffects.h"
 #include "pointer_input.h"

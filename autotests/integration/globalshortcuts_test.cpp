@@ -8,7 +8,6 @@
 */
 #include "kwin_wayland_test.h"
 
-#include "core/outputbackend.h"
 #include "input.h"
 #include "internalwindow.h"
 #include "keyboard_input.h"

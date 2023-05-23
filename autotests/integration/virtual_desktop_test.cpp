@@ -8,7 +8,6 @@
 */
 #include "kwin_wayland_test.h"
 
-#include "core/outputbackend.h"
 #include "main.h"
 #include "utils/xcbutils.h"
 #include "virtualdesktops.h"

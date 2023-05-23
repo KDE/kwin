@@ -12,7 +12,6 @@
 #include "kwin_wayland_test.h"
 
 #include "core/output.h"
-#include "core/outputbackend.h"
 #include "core/outputconfiguration.h"
 #include "cursor.h"
 #include "rules.h"

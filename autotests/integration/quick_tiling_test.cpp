@@ -9,7 +9,6 @@
 #include "kwin_wayland_test.h"
 
 #include "core/output.h"
-#include "core/outputbackend.h"
 #include "cursor.h"
 #include "decorations/decorationbridge.h"
 #include "decorations/settings.h"

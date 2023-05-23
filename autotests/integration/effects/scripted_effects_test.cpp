@@ -10,7 +10,6 @@
 #include "kwin_wayland_test.h"
 
 #include "composite.h"
-#include "core/outputbackend.h"
 #include "core/renderbackend.h"
 #include "cursor.h"
 #include "effectloader.h"

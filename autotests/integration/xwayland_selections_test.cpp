@@ -10,7 +10,6 @@
 #include "kwin_wayland_test.h"
 
 #include "core/output.h"
-#include "core/outputbackend.h"
 #include "wayland/seat_interface.h"
 #include "wayland_server.h"
 #include "window.h"

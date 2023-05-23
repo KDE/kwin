@@ -11,7 +11,6 @@
 
 #include "atoms.h"
 #include "core/output.h"
-#include "core/outputbackend.h"
 #include "cursor.h"
 #include "effects.h"
 #include "placement.h"

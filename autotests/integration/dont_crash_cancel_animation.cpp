@@ -9,7 +9,6 @@
 #include "kwin_wayland_test.h"
 
 #include "composite.h"
-#include "core/outputbackend.h"
 #include "effectloader.h"
 #include "effects.h"
 #include "scripting/scriptedeffect.h"

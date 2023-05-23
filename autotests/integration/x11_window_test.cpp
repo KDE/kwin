@@ -10,7 +10,6 @@
 
 #include "atoms.h"
 #include "composite.h"
-#include "core/outputbackend.h"
 #include "cursor.h"
 #include "effectloader.h"
 #include "effects.h"

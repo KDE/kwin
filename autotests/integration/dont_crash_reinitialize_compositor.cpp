@@ -11,7 +11,6 @@
 
 #include "composite.h"
 #include "core/output.h"
-#include "core/outputbackend.h"
 #include "core/renderbackend.h"
 #include "effectloader.h"
 #include "effects.h"

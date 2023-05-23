@@ -8,7 +8,6 @@
 */
 #include "composite.h"
 #include "core/output.h"
-#include "core/outputbackend.h"
 #include "generic_scene_opengl_test.h"
 #include "pointer_input.h"
 #include "scene/workspacescene.h"

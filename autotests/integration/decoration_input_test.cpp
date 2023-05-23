@@ -9,7 +9,6 @@
 #include "kwin_wayland_test.h"
 
 #include "core/output.h"
-#include "core/outputbackend.h"
 #include "cursor.h"
 #include "internalwindow.h"
 #include "libkwineffects/kwineffects.h"

@@ -9,7 +9,6 @@
 
 #include "kwin_wayland_test.h"
 
-#include "core/outputbackend.h"
 #include "main.h"
 #include "virtualkeyboard_dbus.h"
 #include "wayland_server.h"

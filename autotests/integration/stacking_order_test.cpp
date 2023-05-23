@@ -10,7 +10,6 @@
 #include "kwin_wayland_test.h"
 
 #include "atoms.h"
-#include "core/outputbackend.h"
 #include "main.h"
 #include "wayland_server.h"
 #include "window.h"

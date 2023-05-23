@@ -9,7 +9,6 @@
 #include "kwin_wayland_test.h"
 
 #include "core/output.h"
-#include "core/outputbackend.h"
 #include "effects.h"
 #include "internalwindow.h"
 #include "pointer_input.h"
@@ -637,10 +636,6 @@ void InternalWindowTest::testPopup()
 
 void InternalWindowTest::testScale()
 {
-    QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs", Qt::DirectConnection,
-                              Q_ARG(QVector<QRect>, QVector<QRect>({QRect(0, 0, 1280, 1024), QRect(1280 / 2, 0, 1280, 1024)})),
-                              Q_ARG(QVector<qreal>, QVector<qreal>({2, 2})));
-
     Test::setOutputConfig({
         Test::OutputInfo{
             .geometry = QRect(0, 0, 1280, 1024),

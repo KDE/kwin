@@ -11,7 +11,6 @@
 #include "kwin_wayland_test.h"
 
 #include "atoms.h"
-#include "core/outputbackend.h"
 #include "cursor.h"
 #include "effectloader.h"
 #include "main.h"

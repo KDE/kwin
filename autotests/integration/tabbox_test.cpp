@@ -8,7 +8,6 @@
 */
 #include "kwin_wayland_test.h"
 
-#include "core/outputbackend.h"
 #include "input.h"
 #include "pointer_input.h"
 #include "tabbox/tabbox.h"

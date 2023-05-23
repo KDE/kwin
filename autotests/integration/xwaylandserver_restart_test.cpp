@@ -7,7 +7,6 @@
 #include "kwin_wayland_test.h"
 
 #include "composite.h"
-#include "core/outputbackend.h"
 #include "main.h"
 #include "scene/workspacescene.h"
 #include "wayland_server.h"

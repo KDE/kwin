@@ -10,7 +10,6 @@
 
 #include "atoms.h"
 #include "core/output.h"
-#include "core/outputbackend.h"
 #include "pointer_input.h"
 #include "rules.h"
 #include "wayland_server.h"

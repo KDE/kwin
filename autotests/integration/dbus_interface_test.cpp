@@ -11,7 +11,6 @@
 #include "kwin_wayland_test.h"
 
 #include "atoms.h"
-#include "core/outputbackend.h"
 #include "rules.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"

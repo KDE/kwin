@@ -10,7 +10,6 @@
 
 #include "backends/virtual/virtual_backend.h"
 #include "composite.h"
-#include "core/outputbackend.h"
 #include "core/session.h"
 #include "effects.h"
 #include "inputmethod.h"
