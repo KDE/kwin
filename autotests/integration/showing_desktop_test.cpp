@@ -12,7 +12,6 @@
 #include "window.h"
 #include "workspace.h"
 
-#include <KWayland/Client/plasmashell.h>
 #include <KWayland/Client/surface.h>
 
 using namespace KWin;
@@ -47,7 +46,7 @@ void ShowingDesktopTest::initTestCase()
 
 void ShowingDesktopTest::init()
 {
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::PlasmaShell));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::LayerShellV1));
 }
 
 void ShowingDesktopTest::cleanup()
@@ -80,14 +79,18 @@ void ShowingDesktopTest::testRestoreFocusWithDesktopWindow()
     // first create a desktop window
 
     std::unique_ptr<KWayland::Client::Surface> desktopSurface(Test::createSurface());
-    QVERIFY(desktopSurface != nullptr);
-    std::unique_ptr<Test::XdgToplevel> desktopShellSurface(Test::createXdgToplevelSurface(desktopSurface.get()));
-    QVERIFY(desktopSurface != nullptr);
-    std::unique_ptr<KWayland::Client::PlasmaShellSurface> plasmaSurface(Test::waylandPlasmaShell()->createSurface(desktopSurface.get()));
-    QVERIFY(plasmaSurface != nullptr);
-    plasmaSurface->setRole(KWayland::Client::PlasmaShellSurface::Role::Desktop);
-
-    auto desktop = Test::renderAndWaitForShown(desktopSurface.get(), QSize(100, 50), Qt::blue);
+    std::unique_ptr<Test::LayerSurfaceV1> desktopShellSurface(Test::createLayerSurfaceV1(desktopSurface.get(), QStringLiteral("desktop")));
+    desktopShellSurface->set_layer(Test::LayerShellV1::layer_background);
+    desktopShellSurface->set_size(0, 0);
+    desktopShellSurface->set_exclusive_zone(-1);
+    desktopShellSurface->set_anchor(Test::LayerSurfaceV1::anchor_bottom
+        | Test::LayerSurfaceV1::anchor_top
+        | Test::LayerSurfaceV1::anchor_left
+        | Test::LayerSurfaceV1::anchor_right);
+    desktopSurface->commit(KWayland::Client::Surface::CommitFlag::None);
+    QSignalSpy desktopConfigureRequestedSpy(desktopShellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    QVERIFY(desktopConfigureRequestedSpy.wait());
+    auto desktop = Test::renderAndWaitForShown(desktopSurface.get(), desktopConfigureRequestedSpy.last().at(1).toSize(), Qt::blue);
     QVERIFY(desktop);
     QVERIFY(desktop->isDesktop());
 
