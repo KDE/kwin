@@ -41,9 +41,6 @@ private Q_SLOTS:
     void testRoleOnAllDesktops();
     void testAcceptsFocus_data();
     void testAcceptsFocus();
-
-    void testPanelWindowsCanCover_data();
-    void testPanelWindowsCanCover();
     void testOSDPlacement();
     void testOSDPlacementManualPosition();
     void testPanelActivate_data();
@@ -228,89 +225,6 @@ void PlasmaSurfaceTest::testOSDPlacementManualPosition()
     QCOMPARE(window->windowType(), NET::OnScreenDisplay);
     QVERIFY(window->isOnScreenDisplay());
     QCOMPARE(window->frameGeometry(), QRect(50, 70, 100, 50));
-}
-
-void PlasmaSurfaceTest::testPanelWindowsCanCover_data()
-{
-    QTest::addColumn<QRect>("panelGeometry");
-    QTest::addColumn<QRect>("windowGeometry");
-    QTest::addColumn<QPoint>("triggerPoint");
-
-    QTest::newRow("top-full-edge") << QRect(0, 0, 1280, 30) << QRect(0, 0, 200, 300) << QPoint(100, 0);
-    QTest::newRow("top-left-edge") << QRect(0, 0, 1000, 30) << QRect(0, 0, 200, 300) << QPoint(100, 0);
-    QTest::newRow("top-right-edge") << QRect(280, 0, 1000, 30) << QRect(1000, 0, 200, 300) << QPoint(1000, 0);
-    QTest::newRow("bottom-full-edge") << QRect(0, 994, 1280, 30) << QRect(0, 724, 200, 300) << QPoint(100, 1023);
-    QTest::newRow("bottom-left-edge") << QRect(0, 994, 1000, 30) << QRect(0, 724, 200, 300) << QPoint(100, 1023);
-    QTest::newRow("bottom-right-edge") << QRect(280, 994, 1000, 30) << QRect(1000, 724, 200, 300) << QPoint(1000, 1023);
-    QTest::newRow("left-full-edge") << QRect(0, 0, 30, 1024) << QRect(0, 0, 200, 300) << QPoint(0, 100);
-    QTest::newRow("left-top-edge") << QRect(0, 0, 30, 800) << QRect(0, 0, 200, 300) << QPoint(0, 100);
-    QTest::newRow("left-bottom-edge") << QRect(0, 200, 30, 824) << QRect(0, 0, 200, 300) << QPoint(0, 250);
-    QTest::newRow("right-full-edge") << QRect(1250, 0, 30, 1024) << QRect(1080, 0, 200, 300) << QPoint(1279, 100);
-    QTest::newRow("right-top-edge") << QRect(1250, 0, 30, 800) << QRect(1080, 0, 200, 300) << QPoint(1279, 100);
-    QTest::newRow("right-bottom-edge") << QRect(1250, 200, 30, 824) << QRect(1080, 0, 200, 300) << QPoint(1279, 250);
-}
-
-void PlasmaSurfaceTest::testPanelWindowsCanCover()
-{
-    // this test verifies the behavior of a panel with windows can cover
-    // triggering the screen edge should raise the panel.
-    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
-    QVERIFY(surface != nullptr);
-    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
-    QVERIFY(shellSurface != nullptr);
-    std::unique_ptr<KWayland::Client::PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.get()));
-    QVERIFY(plasmaSurface != nullptr);
-    plasmaSurface->setRole(KWayland::Client::PlasmaShellSurface::Role::Panel);
-    QFETCH(QRect, panelGeometry);
-    plasmaSurface->setPosition(panelGeometry.topLeft());
-    plasmaSurface->setPanelBehavior(KWayland::Client::PlasmaShellSurface::PanelBehavior::WindowsCanCover);
-
-    // now render and map the window
-    auto panel = Test::renderAndWaitForShown(surface.get(), panelGeometry.size(), Qt::blue);
-
-    // the panel is on the first output and the current desktop
-    Output *output = workspace()->outputs().constFirst();
-    VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
-
-    QVERIFY(panel);
-    QCOMPARE(panel->windowType(), NET::Dock);
-    QVERIFY(panel->isDock());
-    QCOMPARE(panel->frameGeometry(), panelGeometry);
-    QCOMPARE(panel->hasStrut(), false);
-    QCOMPARE(workspace()->clientArea(MaximizeArea, output, desktop), QRect(0, 0, 1280, 1024));
-    QCOMPARE(panel->layer(), KWin::NormalLayer);
-
-    // create a Window
-    std::unique_ptr<KWayland::Client::Surface> surface2(Test::createSurface());
-    QVERIFY(surface2 != nullptr);
-    std::unique_ptr<Test::XdgToplevel> shellSurface2(Test::createXdgToplevelSurface(surface2.get()));
-    QVERIFY(shellSurface2 != nullptr);
-
-    QFETCH(QRect, windowGeometry);
-    auto window = Test::renderAndWaitForShown(surface2.get(), windowGeometry.size(), Qt::red);
-
-    QVERIFY(window);
-    QCOMPARE(window->windowType(), NET::Normal);
-    QVERIFY(window->isActive());
-    QCOMPARE(window->layer(), KWin::NormalLayer);
-    window->move(windowGeometry.topLeft());
-    QCOMPARE(window->frameGeometry(), windowGeometry);
-
-    auto stackingOrder = workspace()->stackingOrder();
-    QCOMPARE(stackingOrder.count(), 2);
-    QCOMPARE(stackingOrder.first(), panel);
-    QCOMPARE(stackingOrder.last(), window);
-
-    QSignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
-    // trigger screenedge
-    QFETCH(QPoint, triggerPoint);
-    KWin::input()->pointer()->warp(triggerPoint);
-    QVERIFY(stackingOrderChangedSpy.wait());
-    QCOMPARE(stackingOrderChangedSpy.count(), 1);
-    stackingOrder = workspace()->stackingOrder();
-    QCOMPARE(stackingOrder.count(), 2);
-    QCOMPARE(stackingOrder.first(), window);
-    QCOMPARE(stackingOrder.last(), panel);
 }
 
 void PlasmaSurfaceTest::testPanelActivate_data()

@@ -16,7 +16,6 @@
 #include "decorations/decorationbridge.h"
 #include "placement.h"
 #include "pointer_input.h"
-#include "screenedge.h"
 #include "touch_input.h"
 #include "utils/subsurfacemonitor.h"
 #include "virtualdesktops.h"
@@ -44,7 +43,6 @@ XdgSurfaceWindow::XdgSurfaceWindow(XdgSurfaceInterface *shellSurface)
     , m_shellSurface(shellSurface)
     , m_configureTimer(new QTimer(this))
 {
-    setupPlasmaShellIntegration();
     connect(shellSurface, &XdgSurfaceInterface::configureAcknowledged,
             this, &XdgSurfaceWindow::handleConfigureAcknowledged);
     connect(shellSurface, &XdgSurfaceInterface::resetOccurred,
@@ -302,83 +300,6 @@ void XdgSurfaceWindow::destroyWindow()
     unref();
 }
 
-void XdgSurfaceWindow::updateShowOnScreenEdge()
-{
-    if (!workspace()->screenEdges()) {
-        return;
-    }
-    if (!readyForPainting() || !m_plasmaShellSurface || m_plasmaShellSurface->role() != PlasmaShellSurfaceInterface::Role::Panel) {
-        workspace()->screenEdges()->reserve(this, ElectricNone);
-        return;
-    }
-    const PlasmaShellSurfaceInterface::PanelBehavior panelBehavior = m_plasmaShellSurface->panelBehavior();
-    if ((panelBehavior == PlasmaShellSurfaceInterface::PanelBehavior::AutoHide && isHidden()) || panelBehavior == PlasmaShellSurfaceInterface::PanelBehavior::WindowsCanCover) {
-        // Screen edge API requires an edge, thus we need to figure out which edge the window borders.
-        const QRect clientGeometry = frameGeometry().toRect(); // converted here to match output checks
-        Qt::Edges edges;
-
-        const auto outputs = workspace()->outputs();
-        for (const Output *output : outputs) {
-            const QRect screenGeometry = output->geometry();
-            if (screenGeometry.left() == clientGeometry.left()) {
-                edges |= Qt::LeftEdge;
-            }
-            if (screenGeometry.right() == clientGeometry.right()) {
-                edges |= Qt::RightEdge;
-            }
-            if (screenGeometry.top() == clientGeometry.top()) {
-                edges |= Qt::TopEdge;
-            }
-            if (screenGeometry.bottom() == clientGeometry.bottom()) {
-                edges |= Qt::BottomEdge;
-            }
-        }
-
-        // A panel might border multiple screen edges. E.g. a horizontal panel at the bottom will
-        // also border the left and right edge. Let's remove such cases.
-        if (edges & Qt::LeftEdge && edges & Qt::RightEdge) {
-            edges = edges & (~(Qt::LeftEdge | Qt::RightEdge));
-        }
-        if (edges & Qt::TopEdge && edges & Qt::BottomEdge) {
-            edges = edges & (~(Qt::TopEdge | Qt::BottomEdge));
-        }
-
-        // It's still possible that a panel borders two edges, e.g. bottom and left
-        // in that case the one which is sharing more with the edge wins.
-        auto check = [clientGeometry](Qt::Edges edges, Qt::Edge horizontal, Qt::Edge vertical) {
-            if (edges & horizontal && edges & vertical) {
-                if (clientGeometry.width() >= clientGeometry.height()) {
-                    return edges & ~horizontal;
-                } else {
-                    return edges & ~vertical;
-                }
-            }
-            return edges;
-        };
-        edges = check(edges, Qt::LeftEdge, Qt::TopEdge);
-        edges = check(edges, Qt::LeftEdge, Qt::BottomEdge);
-        edges = check(edges, Qt::RightEdge, Qt::TopEdge);
-        edges = check(edges, Qt::RightEdge, Qt::BottomEdge);
-
-        ElectricBorder border = ElectricNone;
-        if (edges & Qt::LeftEdge) {
-            border = ElectricLeft;
-        }
-        if (edges & Qt::RightEdge) {
-            border = ElectricRight;
-        }
-        if (edges & Qt::TopEdge) {
-            border = ElectricTop;
-        }
-        if (edges & Qt::BottomEdge) {
-            border = ElectricBottom;
-        }
-        workspace()->screenEdges()->reserve(this, border);
-    } else {
-        workspace()->screenEdges()->reserve(this, ElectricNone);
-    }
-}
-
 /**
  * \todo This whole plasma shell surface thing doesn't seem right. It turns xdg-toplevel into
  * something completely different! Perhaps plasmashell surfaces need to be implemented via a
@@ -455,21 +376,6 @@ void XdgSurfaceWindow::installPlasmaShellSurface(PlasmaShellSurfaceInterface *sh
     connect(shellSurface, &PlasmaShellSurfaceInterface::positionChanged, this, updatePosition);
     connect(shellSurface, &PlasmaShellSurfaceInterface::openUnderCursorRequested, this, showUnderCursor);
     connect(shellSurface, &PlasmaShellSurfaceInterface::roleChanged, this, updateRole);
-    connect(shellSurface, &PlasmaShellSurfaceInterface::panelBehaviorChanged, this, [this] {
-        updateShowOnScreenEdge();
-    });
-    connect(shellSurface, &PlasmaShellSurfaceInterface::panelAutoHideHideRequested, this, [this] {
-        if (m_plasmaShellSurface->panelBehavior() == PlasmaShellSurfaceInterface::PanelBehavior::AutoHide) {
-            hideClient();
-            m_plasmaShellSurface->hideAutoHidingPanel();
-        }
-        updateShowOnScreenEdge();
-    });
-    connect(shellSurface, &PlasmaShellSurfaceInterface::panelAutoHideShowRequested, this, [this] {
-        showClient();
-        workspace()->screenEdges()->reserve(this, ElectricNone);
-        m_plasmaShellSurface->showAutoHidingPanel();
-    });
     connect(shellSurface, &PlasmaShellSurfaceInterface::panelTakesFocusChanged, this, [this] {
         if (m_plasmaShellSurface->panelTakesFocus()) {
             workspace()->activateWindow(this);
@@ -482,11 +388,6 @@ void XdgSurfaceWindow::installPlasmaShellSurface(PlasmaShellSurfaceInterface *sh
         showUnderCursor();
     }
     updateRole();
-    updateShowOnScreenEdge();
-    connect(this, &XdgSurfaceWindow::frameGeometryChanged,
-            this, &XdgSurfaceWindow::updateShowOnScreenEdge);
-    connect(this, &XdgSurfaceWindow::windowShown,
-            this, &XdgSurfaceWindow::updateShowOnScreenEdge);
 
     setSkipTaskbar(shellSurface->skipTaskbar());
     connect(shellSurface, &PlasmaShellSurfaceInterface::skipTaskbarChanged, this, [this] {
@@ -497,12 +398,6 @@ void XdgSurfaceWindow::installPlasmaShellSurface(PlasmaShellSurfaceInterface *sh
     connect(shellSurface, &PlasmaShellSurfaceInterface::skipSwitcherChanged, this, [this] {
         setSkipSwitcher(m_plasmaShellSurface->skipSwitcher());
     });
-}
-
-void XdgSurfaceWindow::setupPlasmaShellIntegration()
-{
-    connect(surface(), &SurfaceInterface::mapped,
-            this, &XdgSurfaceWindow::updateShowOnScreenEdge);
 }
 
 XdgToplevelWindow::XdgToplevelWindow(XdgToplevelInterface *shellSurface)
@@ -746,19 +641,6 @@ void XdgToplevelWindow::invalidateDecoration()
 bool XdgToplevelWindow::supportsWindowRules() const
 {
     return true;
-}
-
-void XdgToplevelWindow::showOnScreenEdge()
-{
-    // ShowOnScreenEdge can be called by an Edge, and hideClient could destroy the Edge
-    // Use the singleshot to avoid use-after-free
-    QTimer::singleShot(0, this, [this]() {
-        showClient();
-        workspace()->raiseWindow(this);
-        if (m_plasmaShellSurface && m_plasmaShellSurface->panelBehavior() == PlasmaShellSurfaceInterface::PanelBehavior::AutoHide) {
-            m_plasmaShellSurface->showAutoHidingPanel();
-        }
-    });
 }
 
 void XdgToplevelWindow::closeWindow()

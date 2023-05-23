@@ -61,8 +61,6 @@ private Q_SLOTS:
     void testTouchCallback();
     void testPushBack_data();
     void testPushBack();
-    void testClientEdge_data();
-    void testClientEdge();
     void testObjectEdge_data();
     void testObjectEdge();
     void testKdeNetWmScreenEdgeShow();
@@ -240,49 +238,6 @@ void ScreenEdgesTest::testPushBack()
     Test::pointerMotion(trigger, 0);
     QVERIFY(spy.isEmpty());
     QTEST(Cursors::self()->mouse()->pos(), "expected");
-}
-
-void ScreenEdgesTest::testClientEdge_data()
-{
-    QTest::addColumn<ElectricBorder>("border");
-    QTest::addColumn<QRect>("geometry");
-    QTest::addColumn<QPointF>("triggerPoint");
-
-    QTest::newRow("top") << ElectricTop << QRect(540, 0, 200, 5) << QPointF(640, 0);
-    QTest::newRow("right") << ElectricRight << QRect(1275, 412, 5, 200) << QPointF(1279, 512);
-    QTest::newRow("bottom") << ElectricBottom << QRect(540, 1019, 200, 5) << QPointF(640, 1023);
-    QTest::newRow("left") << ElectricLeft << QRect(0, 412, 5, 200) << QPointF(0, 512);
-}
-
-void ScreenEdgesTest::testClientEdge()
-{
-    // This test verifies that a window will be shown when its screen edge is activated.
-    QFETCH(QRect, geometry);
-
-    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
-    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
-    Window *window = Test::renderAndWaitForShown(surface.get(), geometry.size(), Qt::red);
-    QVERIFY(window);
-    QVERIFY(window->isActive());
-    window->move(geometry.topLeft());
-
-    // Reserve an electric border.
-    QFETCH(ElectricBorder, border);
-    workspace()->screenEdges()->reserve(window, border);
-
-    // Hide the window.
-    window->hideClient();
-    QVERIFY(window->isHiddenInternal());
-
-    // Trigger the screen edge.
-    QFETCH(QPointF, triggerPoint);
-    quint32 timestamp = 0;
-    Test::pointerMotion(triggerPoint, timestamp);
-    QVERIFY(window->isHiddenInternal());
-
-    timestamp += 150 + 1;
-    Test::pointerMotion(triggerPoint, timestamp);
-    QTRY_VERIFY(!window->isHiddenInternal());
 }
 
 void ScreenEdgesTest::testObjectEdge_data()

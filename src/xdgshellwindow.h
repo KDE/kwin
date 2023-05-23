@@ -82,8 +82,6 @@ protected:
     Gravity m_nextGravity = Gravity::None;
 
 private:
-    void setupPlasmaShellIntegration();
-    void updateShowOnScreenEdge();
     void handleConfigureAcknowledged(quint32 serial);
     void handleCommit();
     void handleNextWindowGeometry();
@@ -155,7 +153,6 @@ public:
     bool takeFocus() override;
     bool wantsInput() const override;
     bool dockWantsInput() const override;
-    void showOnScreenEdge() override;
     void setFullScreen(bool set, bool user) override;
     void closeWindow() override;
     void maximize(MaximizeMode mode) override;
