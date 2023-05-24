@@ -12,7 +12,6 @@
 
 #include <config-kwin.h>
 
-#include "cursor.h"
 #include "databridge.h"
 #include "dnd.h"
 #include "window.h"
@@ -311,11 +310,6 @@ void Xwayland::handleXwaylandReady()
     connect(m_selectionOwner.get(), &KSelectionOwner::failedToClaimOwnership,
             this, &Xwayland::handleSelectionFailedToClaimOwnership);
     m_selectionOwner->claim(true);
-
-    Cursor *mouseCursor = Cursors::self()->mouse();
-    if (mouseCursor) {
-        Xcb::defineCursor(kwinApp()->x11RootWindow(), mouseCursor->x11Cursor(Qt::ArrowCursor));
-    }
 
     m_dataBridge = std::make_unique<DataBridge>();
 
