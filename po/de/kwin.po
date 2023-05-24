@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-23 03:12+0000\n"
+"POT-Creation-Date: 2023-05-24 02:08+0000\n"
 "PO-Revision-Date: 2023-05-05 19:47+0200\n"
 "Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -4102,7 +4102,7 @@ msgstr ""
 "aktive erkannt wird auf dem sich der Mauszeiger befindet.\n"
 "Es ist daher nicht möglich, ausdrücklich auf einen Bildschirm zu wechseln."
 
-#: utils/edid.cpp:234
+#: utils/edid.cpp:236
 #, kde-format
 msgid "unknown"
 msgstr "unbekannt"

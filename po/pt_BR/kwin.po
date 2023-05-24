@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-23 03:12+0000\n"
+"POT-Creation-Date: 2023-05-24 02:08+0000\n"
 "PO-Revision-Date: 2023-02-24 16:25-0300\n"
 "Last-Translator: Luiz Fernando Ranghetti <elchevive@opensuse.org>\n"
 "Language-Team: Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -4195,7 +4195,7 @@ msgstr ""
 "mouse está posicionado como sendo a tela ativa.\n"
 "Sendo assim, não é possível mudar de forma explícita para uma tela."
 
-#: utils/edid.cpp:234
+#: utils/edid.cpp:236
 #, kde-format
 msgid "unknown"
 msgstr "desconhecido"

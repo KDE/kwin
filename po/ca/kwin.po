@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-23 03:12+0000\n"
+"POT-Creation-Date: 2023-05-24 02:08+0000\n"
 "PO-Revision-Date: 2023-04-20 12:34+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -4080,7 +4080,7 @@ msgstr ""
 "pantalla amb el cursor del ratolí.\n"
 "Per tant, no es pot commutar explícitament a una pantalla."
 
-#: utils/edid.cpp:234
+#: utils/edid.cpp:236
 #, kde-format
 msgid "unknown"
 msgstr "desconegut"

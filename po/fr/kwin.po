@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-23 03:12+0000\n"
+"POT-Creation-Date: 2023-05-24 02:08+0000\n"
 "PO-Revision-Date: 2023-05-05 21:30+0200\n"
 "Last-Translator: Xavier BESNARD <xavier.besnard]neuf.fr>\n"
 "Language-Team: fr\n"
@@ -4205,7 +4205,7 @@ msgstr ""
 "comme celui ayant la souris.\n"
 "Cependant, il n'est pas possible de changer d'écran explicitement."
 
-#: utils/edid.cpp:234
+#: utils/edid.cpp:236
 #, kde-format
 msgid "unknown"
 msgstr "inconnu"
