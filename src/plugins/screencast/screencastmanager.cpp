@@ -28,8 +28,9 @@
 namespace KWin
 {
 
-ScreencastManager::ScreencastManager()
+ScreencastManager::ScreencastManager(std::shared_ptr<PipeWireCore> pwCore)
     : m_screencast(new KWaylandServer::ScreencastV1Interface(waylandServer()->display(), this))
+    , m_pwCore(std::move(pwCore))
 {
     connect(m_screencast, &KWaylandServer::ScreencastV1Interface::windowScreencastRequested, this, &ScreencastManager::streamWindow);
     connect(m_screencast, &KWaylandServer::ScreencastV1Interface::outputScreencastRequested, this, &ScreencastManager::streamWaylandOutput);
@@ -57,8 +58,8 @@ static QRegion scaleRegion(const QRegion &_region, qreal scale)
 class WindowStream : public ScreenCastStream
 {
 public:
-    WindowStream(Window *window, QObject *parent)
-        : ScreenCastStream(new WindowScreenCastSource(window), parent)
+    WindowStream(Window *window, std::shared_ptr<PipeWireCore> pwCore, QObject *parent)
+        : ScreenCastStream(new WindowScreenCastSource(window), pwCore, parent)
         , m_window(window)
     {
         m_timer.setInterval(0);
@@ -106,7 +107,7 @@ void ScreencastManager::streamWindow(KWaylandServer::ScreencastStreamV1Interface
         return;
     }
 
-    auto stream = new WindowStream(window, this);
+    auto stream = new WindowStream(window, m_pwCore, this);
     stream->setCursorMode(mode, 1, window->clientGeometry());
     if (mode != KWaylandServer::ScreencastV1Interface::CursorMode::Hidden) {
         connect(window, &Window::clientGeometryChanged, stream, [window, stream, mode]() {
@@ -146,7 +147,7 @@ void ScreencastManager::streamOutput(KWaylandServer::ScreencastStreamV1Interface
         return;
     }
 
-    auto stream = new ScreenCastStream(new OutputScreenCastSource(streamOutput), this);
+    auto stream = new ScreenCastStream(new OutputScreenCastSource(streamOutput), m_pwCore, this);
     stream->setObjectName(streamOutput->name());
     stream->setCursorMode(mode, streamOutput->scale(), streamOutput->geometry());
     auto bufferToStream = [stream, streamOutput](const QRegion &damagedRegion) {
@@ -174,7 +175,7 @@ void ScreencastManager::streamRegion(KWaylandServer::ScreencastStreamV1Interface
     }
 
     auto source = new RegionScreenCastSource(geometry, scale);
-    auto stream = new ScreenCastStream(source, this);
+    auto stream = new ScreenCastStream(source, m_pwCore, this);
     stream->setObjectName(rectToString(geometry));
     stream->setCursorMode(mode, scale, geometry);
 

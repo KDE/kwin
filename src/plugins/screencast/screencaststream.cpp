@@ -308,8 +308,9 @@ void ScreenCastStream::onStreamRenegotiateFormat(void *data, uint64_t)
     pw_stream_update_params(stream->pwStream, params.data(), params.count());
 }
 
-ScreenCastStream::ScreenCastStream(ScreenCastSource *source, QObject *parent)
+ScreenCastStream::ScreenCastStream(ScreenCastSource *source, std::shared_ptr<PipeWireCore> pwCore, QObject *parent)
     : QObject(parent)
+    , m_pwCore(std::move(pwCore))
     , m_source(source)
     , m_resolution(source->textureSize())
 {
@@ -339,13 +340,7 @@ ScreenCastStream::~ScreenCastStream()
 
 bool ScreenCastStream::init()
 {
-    pwCore = PipeWireCore::self();
-    if (!pwCore->m_error.isEmpty()) {
-        m_error = pwCore->m_error;
-        return false;
-    }
-
-    connect(pwCore.get(), &PipeWireCore::pipewireFailed, this, &ScreenCastStream::coreFailed);
+    connect(m_pwCore.get(), &PipeWireCore::pipewireFailed, this, &ScreenCastStream::coreFailed);
 
     if (!createStream()) {
         qCWarning(KWIN_SCREENCAST) << "Failed to create PipeWire stream";
@@ -353,7 +348,7 @@ bool ScreenCastStream::init()
         return false;
     }
 
-    pwRenegotiate = pw_loop_add_event(pwCore.get()->pwMainLoop, onStreamRenegotiateFormat, this);
+    pwRenegotiate = pw_loop_add_event(m_pwCore.get()->pwMainLoop, onStreamRenegotiateFormat, this);
 
     return true;
 }
@@ -375,7 +370,7 @@ uint ScreenCastStream::nodeId()
 bool ScreenCastStream::createStream()
 {
     const QByteArray objname = "kwin-screencast-" + objectName().toUtf8();
-    pwStream = pw_stream_new(pwCore->pwCore, objname, nullptr);
+    pwStream = pw_stream_new(m_pwCore->pwCore, objname, nullptr);
 
     const auto supported = Compositor::self()->backend()->supportedFormats();
     auto itModifiers = supported.constFind(m_source->drmFormat());
@@ -473,7 +468,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
         m_resolution = size;
         m_waitForNewBuffers = true;
         m_dmabufParams = std::nullopt;
-        pw_loop_signal_event(pwCore.get()->pwMainLoop, pwRenegotiate);
+        pw_loop_signal_event(m_pwCore.get()->pwMainLoop, pwRenegotiate);
         return;
     }
 

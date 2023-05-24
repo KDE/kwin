@@ -43,7 +43,7 @@ class KWIN_EXPORT ScreenCastStream : public QObject
 {
     Q_OBJECT
 public:
-    explicit ScreenCastStream(ScreenCastSource *source, QObject *parent);
+    explicit ScreenCastStream(ScreenCastSource *source, std::shared_ptr<PipeWireCore> pwCore, QObject *parent);
     ~ScreenCastStream();
 
     bool init();
@@ -94,7 +94,7 @@ private:
                          struct spa_fraction *defaultFramerate, struct spa_fraction *minFramerate, struct spa_fraction *maxFramerate,
                          const QVector<uint64_t> &modifiers, quint32 modifiersFlags);
 
-    std::shared_ptr<PipeWireCore> pwCore;
+    std::shared_ptr<PipeWireCore> m_pwCore;
     std::unique_ptr<ScreenCastSource> m_source;
     struct pw_stream *pwStream = nullptr;
     struct spa_source *pwRenegotiate = nullptr;

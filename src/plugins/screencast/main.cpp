@@ -5,6 +5,7 @@
 */
 
 #include "main.h"
+#include "pipewirecore.h"
 #include "screencastmanager.h"
 
 #include <KPluginFactory>
@@ -29,8 +30,13 @@ std::unique_ptr<Plugin> ScreencastManagerFactory::create() const
     case Application::OperationModeX11:
         return nullptr;
     case Application::OperationModeXwayland:
-    case Application::OperationModeWaylandOnly:
-        return std::make_unique<ScreencastManager>();
+    case Application::OperationModeWaylandOnly: {
+        auto pwCore = std::make_shared<PipeWireCore>();
+        if (!pwCore->init()) {
+            return nullptr;
+        }
+        return std::make_unique<ScreencastManager>(pwCore);
+    }
     default:
         return nullptr;
     }

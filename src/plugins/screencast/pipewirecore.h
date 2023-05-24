@@ -29,8 +29,6 @@ public:
 
     bool init();
 
-    static std::shared_ptr<PipeWireCore> self();
-
     struct pw_core *pwCore = nullptr;
     struct pw_context *pwContext = nullptr;
     struct pw_loop *pwMainLoop = nullptr;

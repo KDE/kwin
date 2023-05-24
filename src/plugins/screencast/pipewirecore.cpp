@@ -94,16 +94,4 @@ bool PipeWireCore::init()
     return true;
 }
 
-std::shared_ptr<PipeWireCore> PipeWireCore::self()
-{
-    static std::weak_ptr<PipeWireCore> global;
-    auto ret = global.lock();
-    if (!ret) {
-        ret = std::make_shared<PipeWireCore>();
-        ret->init();
-        global = ret;
-    }
-    return ret;
-}
-
 } // namespace KWin

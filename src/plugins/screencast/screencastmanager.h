@@ -15,6 +15,7 @@
 namespace KWin
 {
 class Output;
+class PipeWireCore;
 class ScreenCastStream;
 
 class ScreencastManager : public Plugin
@@ -22,7 +23,7 @@ class ScreencastManager : public Plugin
     Q_OBJECT
 
 public:
-    explicit ScreencastManager();
+    explicit ScreencastManager(std::shared_ptr<PipeWireCore> pwCore);
 
 private:
     void streamWindow(KWaylandServer::ScreencastStreamV1Interface *stream,
@@ -46,6 +47,7 @@ private:
     void integrateStreams(KWaylandServer::ScreencastStreamV1Interface *waylandStream, ScreenCastStream *stream);
 
     KWaylandServer::ScreencastV1Interface *m_screencast;
+    std::shared_ptr<PipeWireCore> m_pwCore;
 };
 
 } // namespace KWin
