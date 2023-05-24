@@ -835,40 +835,36 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
     }
 
     stream << "\nvoid main(void)\n{\n";
+    stream << "    vec4 result;\n";
     if (traits & ShaderTrait::MapTexture) {
-        stream << "vec2 texcoordC = texcoord0;\n";
-
-        if (traits & (ShaderTrait::Modulate | ShaderTrait::AdjustSaturation)) {
-            stream << "    vec4 texel = " << textureLookup << "(sampler, texcoordC);\n";
-            if (traits & ShaderTrait::Modulate) {
-                stream << "    texel *= modulation;\n";
-            }
-            if (traits & ShaderTrait::AdjustSaturation) {
-                stream << "    texel.rgb = mix(vec3(dot(texel.rgb, vec3(0.2126, 0.7152, 0.0722))), texel.rgb, saturation);\n";
-            }
-
-            stream << "    " << output << " = texel;\n";
-        } else {
-            stream << "    " << output << " = " << textureLookup << "(sampler, texcoordC);\n";
-        }
+        stream << "    result = " << textureLookup << "(sampler, texcoord0);\n";
     } else if (traits & ShaderTrait::UniformColor) {
-        stream << "    " << output << " = geometryColor;\n";
+        stream << "    result = geometryColor;\n";
+    }
+    if (traits & ShaderTrait::AdjustSaturation) {
+        stream << "    result.rgb = mix(vec3(dot(result.rgb, vec3(0.2126, 0.7152, 0.0722))), result.rgb, saturation);\n";
     }
     if (traits & ShaderTrait::TransformColorspace) {
-        // simple sRGB -> linear
-        stream << "if (sourceNamedTransferFunction == 0) {\n";
-        stream << "    " << output << ".rgb = sdrBrightness * srgbToLinear(" << output << ".rgb);\n";
-        stream << "}\n";
-        stream << "        " << output << ".rgb = doTonemapping(colorimetryTransform * " << output << ".rgb, maxHdrBrightness);\n";
+        // sRGB -> output colorspace & linear
+        stream << "    if (sourceNamedTransferFunction == 0) {\n";
+        stream << "        result.rgb = sdrBrightness * srgbToLinear(result.rgb);\n";
+        stream << "    }\n";
+        stream << "    result.rgb = doTonemapping(colorimetryTransform * result.rgb, maxHdrBrightness);\n";
+    }
+    if (traits & ShaderTrait::Modulate) {
+        stream << "    result *= modulation;\n";
+    }
+    if (traits & ShaderTrait::TransformColorspace) {
         // nits -> simple sRGB
-        stream << "if (destinationNamedTransferFunction == 0) {\n";
-        stream << "    " << output << ".rgb = linearToSrgb(doTonemapping(" << output << ".rgb, sdrBrightness) / sdrBrightness);\n";
+        stream << "    if (destinationNamedTransferFunction == 0) {\n";
+        stream << "        result.rgb = linearToSrgb(doTonemapping(result.rgb, sdrBrightness) / sdrBrightness);\n";
         // nits -> PQ
-        stream << "} else if (destinationNamedTransferFunction == 2) {\n";
-        stream << "    " << output << ".rgb = nitsToPq(" << output << ".rgb);\n";
-        stream << "}\n";
+        stream << "    } else if (destinationNamedTransferFunction == 2) {\n";
+        stream << "        result.rgb = nitsToPq(result.rgb);\n";
+        stream << "    }\n";
     }
 
+    stream << "    " << output << " = result;\n";
     stream << "}";
     stream.flush();
     return source;
