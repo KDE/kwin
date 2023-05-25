@@ -430,6 +430,8 @@ void GLShader::resolveLocations()
 
     mVec2Location[Offset] = uniformLocation("offset");
 
+    m_vec3Locations[Vec3Uniform::PrimaryBrightness] = uniformLocation("primaryBrightness");
+
     mVec4Location[ModulationConstant] = uniformLocation("modulation");
 
     mFloatLocation[Saturation] = uniformLocation("saturation");
@@ -468,6 +470,12 @@ bool GLShader::setUniform(GLShader::Vec2Uniform uniform, const QVector2D &value)
 {
     resolveLocations();
     return setUniform(mVec2Location[uniform], value);
+}
+
+bool GLShader::setUniform(Vec3Uniform uniform, const QVector3D &value)
+{
+    resolveLocations();
+    return setUniform(m_vec3Locations[uniform], value);
 }
 
 bool GLShader::setUniform(GLShader::Vec4Uniform uniform, const QVector4D &value)
@@ -783,6 +791,7 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
         }
         if (traits & ShaderTrait::AdjustSaturation) {
             stream << "uniform float saturation;\n";
+            stream << "uniform vec3 primaryBrightness;\n";
         }
 
         stream << "\n"
@@ -841,15 +850,18 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
     } else if (traits & ShaderTrait::UniformColor) {
         stream << "    result = geometryColor;\n";
     }
-    if (traits & ShaderTrait::AdjustSaturation) {
-        stream << "    result.rgb = mix(vec3(dot(result.rgb, vec3(0.2126, 0.7152, 0.0722))), result.rgb, saturation);\n";
-    }
     if (traits & ShaderTrait::TransformColorspace) {
         // sRGB -> output colorspace & linear
         stream << "    if (sourceNamedTransferFunction == 0) {\n";
         stream << "        result.rgb = sdrBrightness * srgbToLinear(result.rgb);\n";
         stream << "    }\n";
         stream << "    result.rgb = doTonemapping(colorimetryTransform * result.rgb, maxHdrBrightness);\n";
+    }
+    if (traits & ShaderTrait::AdjustSaturation) {
+        // this calculates the Y component of the XYZ color representation for the color,
+        // which roughly corresponds to the brightness of the RGB tuple
+        stream << "    float Y = dot(result.rgb, primaryBrightness);\n";
+        stream << "    result.rgb = mix(vec3(Y), result.rgb, saturation);\n";
     }
     if (traits & ShaderTrait::Modulate) {
         stream << "    result *= modulation;\n";

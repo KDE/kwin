@@ -121,6 +121,10 @@ public:
         Vec2UniformCount
     };
 
+    enum class Vec3Uniform {
+        PrimaryBrightness = 0
+    };
+
     enum Vec4Uniform {
         ModulationConstant,
         Vec4UniformCount
@@ -150,6 +154,7 @@ public:
     bool setUniform(MatrixUniform uniform, const QMatrix3x3 &value);
     bool setUniform(MatrixUniform uniform, const QMatrix4x4 &matrix);
     bool setUniform(Vec2Uniform uniform, const QVector2D &value);
+    bool setUniform(Vec3Uniform uniform, const QVector3D &value);
     bool setUniform(Vec4Uniform uniform, const QVector4D &value);
     bool setUniform(FloatUniform uniform, float value);
     bool setUniform(IntUniform uniform, int value);
@@ -177,6 +182,7 @@ private:
     bool mExplicitLinking : 1;
     int mMatrixLocation[MatrixCount];
     int mVec2Location[Vec2UniformCount];
+    QHash<Vec3Uniform, int> m_vec3Locations;
     int mVec4Location[Vec4UniformCount];
     int mFloatLocation[FloatUniformCount];
     int mIntLocation[IntUniformCount];

@@ -322,7 +322,11 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
     vbo->bindArrays();
 
     GLShader *shader = ShaderManager::instance()->pushShader(shaderTraits);
-    shader->setUniform(GLShader::Saturation, data.saturation());
+    if (shaderTraits & ShaderTrait::AdjustSaturation) {
+        const auto toXYZ = renderTarget.colorDescription().colorimetry().toXYZ();
+        shader->setUniform(GLShader::Saturation, data.saturation());
+        shader->setUniform(GLShader::Vec3Uniform::PrimaryBrightness, QVector3D(toXYZ(1, 0), toXYZ(1, 1), toXYZ(1, 2)));
+    }
     shader->setColorspaceUniformsFromSRGB(renderTarget.colorDescription());
 
     if (renderContext.hardwareClipping) {
