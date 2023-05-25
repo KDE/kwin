@@ -17,12 +17,10 @@ namespace KWin
 {
 
 EGLImageTexture::EGLImageTexture(::EGLDisplay display, EGLImage image, uint textureId, int internalFormat, const QSize &size)
-    : GLTexture(textureId, internalFormat, size, 1, true)
+    : GLTexture(textureId, internalFormat, size, 1, true, TextureTransform::MirrorY)
     , m_image(image)
     , m_display(display)
 {
-    d->m_foreign = false;
-    setContentTransform(TextureTransform::MirrorY);
 }
 
 EGLImageTexture::~EGLImageTexture()

@@ -413,7 +413,7 @@ GLTexture *OffscreenQuickView::bufferAsTexture()
             return nullptr;
         }
         if (!d->m_textureExport) {
-            d->m_textureExport.reset(new GLTexture(d->m_fbo->texture(), d->m_fbo->format().internalTextureFormat(), d->m_fbo->size()));
+            d->m_textureExport = GLTexture::createNonOwningWrapper(d->m_fbo->texture(), d->m_fbo->format().internalTextureFormat(), d->m_fbo->size());
         }
     }
     return d->m_textureExport.get();

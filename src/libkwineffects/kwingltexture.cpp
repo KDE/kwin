@@ -88,10 +88,10 @@ GLTexture::GLTexture(GLenum target)
     d->m_target = target;
 }
 
-GLTexture::GLTexture(GLuint textureId, GLenum internalFormat, const QSize &size, int levels, bool isImmutable)
+GLTexture::GLTexture(GLuint textureId, GLenum internalFormat, const QSize &size, int levels, bool owning, TextureTransforms transform)
     : GLTexture(GL_TEXTURE_2D)
 {
-    d->m_foreign = true;
+    d->m_owning = owning;
     d->m_texture = textureId;
     d->m_scale.setWidth(1.0 / size.width());
     d->m_scale.setHeight(1.0 / size.height());
@@ -100,7 +100,7 @@ GLTexture::GLTexture(GLuint textureId, GLenum internalFormat, const QSize &size,
     d->m_mipLevels = levels;
     d->m_filter = levels > 1 ? GL_NEAREST_MIPMAP_LINEAR : GL_NEAREST;
     d->m_internalFormat = internalFormat;
-    d->m_immutable = isImmutable;
+    d->m_textureToBufferTransform = transform;
 
     d->updateMatrix();
 }
@@ -128,8 +128,7 @@ GLTexturePrivate::GLTexturePrivate()
     , m_markedDirty(false)
     , m_filterChanged(true)
     , m_wrapModeChanged(false)
-    , m_immutable(false)
-    , m_foreign(false)
+    , m_owning(true)
     , m_mipLevels(1)
     , m_unnormalizeActive(0)
     , m_normalizeActive(0)
@@ -138,7 +137,7 @@ GLTexturePrivate::GLTexturePrivate()
 
 GLTexturePrivate::~GLTexturePrivate()
 {
-    if (m_texture != 0 && !m_foreign) {
+    if (m_texture != 0 && m_owning) {
         glDeleteTextures(1, &m_texture);
     }
 }
@@ -205,7 +204,7 @@ void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &s
         return;
     }
 
-    Q_ASSERT(!d->m_foreign);
+    Q_ASSERT(d->m_owning);
 
     GLenum glFormat;
     GLenum type;
@@ -417,7 +416,7 @@ GLenum GLTexture::internalFormat() const
 
 void GLTexture::clear()
 {
-    Q_ASSERT(!d->m_foreign);
+    Q_ASSERT(d->m_owning);
     if (!GLTexturePrivate::s_fbo && GLFramebuffer::supported() && GLPlatform::instance()->driver() != Driver_Catalyst) { // fail. -> bug #323065
         glGenFramebuffers(1, &GLTexturePrivate::s_fbo);
     }
@@ -601,7 +600,12 @@ QImage GLTexture::toImage() const
     return ret;
 }
 
-std::unique_ptr<GLTexture> GLTexture::allocate(GLenum internalFormat, const QSize &size, int levels, bool needsMutability)
+std::unique_ptr<GLTexture> GLTexture::createNonOwningWrapper(GLuint textureId, GLenum internalFormat, const QSize &size)
+{
+    return std::unique_ptr<GLTexture>(new GLTexture(textureId, internalFormat, size, 1, false, TextureTransforms{}));
+}
+
+std::unique_ptr<GLTexture> GLTexture::allocate(GLenum internalFormat, const QSize &size, int levels)
 {
     GLuint texture = 0;
     glGenTextures(1, &texture);
@@ -611,12 +615,9 @@ std::unique_ptr<GLTexture> GLTexture::allocate(GLenum internalFormat, const QSiz
     }
     glBindTexture(GL_TEXTURE_2D, texture);
 
-    bool immutable = false;
-
     if (!GLPlatform::instance()->isGLES()) {
-        if (GLTexturePrivate::s_supportsTextureStorage && !needsMutability) {
+        if (GLTexturePrivate::s_supportsTextureStorage) {
             glTexStorage2D(GL_TEXTURE_2D, levels, internalFormat, size.width(), size.height());
-            immutable = true;
         } else {
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, levels - 1);
             glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, size.width(), size.height(), 0,
@@ -634,9 +635,7 @@ std::unique_ptr<GLTexture> GLTexture::allocate(GLenum internalFormat, const QSiz
         // internalFormat() won't need to be specialized for GLES2.
     }
     glBindTexture(GL_TEXTURE_2D, 0);
-    auto ret = std::make_unique<GLTexture>(texture, internalFormat, size, levels, immutable);
-    ret->d->m_foreign = false;
-    return ret;
+    return std::unique_ptr<GLTexture>(new GLTexture(texture, internalFormat, size, levels, true, TextureTransforms{}));
 }
 
 std::unique_ptr<GLTexture> GLTexture::upload(const QImage &image)
@@ -653,7 +652,6 @@ std::unique_ptr<GLTexture> GLTexture::upload(const QImage &image)
     glBindTexture(GL_TEXTURE_2D, texture);
 
     GLenum internalFormat;
-    bool immutable = false;
     if (!GLPlatform::instance()->isGLES()) {
         QImage im;
         GLenum format;
@@ -678,7 +676,6 @@ std::unique_ptr<GLTexture> GLTexture::upload(const QImage &image)
             glTexStorage2D(GL_TEXTURE_2D, 1, internalFormat, im.width(), im.height());
             glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, im.width(), im.height(),
                             format, type, im.constBits());
-            immutable = true;
         } else {
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
             glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, im.width(), im.height(), 0,
@@ -698,10 +695,7 @@ std::unique_ptr<GLTexture> GLTexture::upload(const QImage &image)
         }
     }
     glBindTexture(GL_TEXTURE_2D, 0);
-    auto ret = std::make_unique<GLTexture>(texture, internalFormat, image.size(), 1, immutable);
-    ret->setContentTransform(TextureTransform::MirrorY);
-    ret->d->m_foreign = false;
-    return ret;
+    return std::unique_ptr<GLTexture>(new GLTexture(texture, internalFormat, image.size(), 1, true, TextureTransform::MirrorY));
 }
 
 std::unique_ptr<GLTexture> GLTexture::upload(const QPixmap &pixmap)

@@ -56,13 +56,6 @@ public:
      * for the texture.
      */
     bool create();
-
-    /**
-     * Create a GLTexture wrapper around an existing texture.
-     * Management of the underlying texture remains the responsibility of the caller.
-     * @since 5.18
-     */
-    explicit GLTexture(GLuint textureId, GLenum internalFormat, const QSize &size, int levels = 1, bool isImmutable = false);
     virtual ~GLTexture();
 
     bool isNull() const;
@@ -153,11 +146,14 @@ public:
      */
     static bool supportsFormatRG();
 
-    static std::unique_ptr<GLTexture> allocate(GLenum internalFormat, const QSize &size, int levels = 1, bool needsMutability = false);
+    static std::unique_ptr<GLTexture> createNonOwningWrapper(GLuint textureId, GLenum internalFormat, const QSize &size);
+    static std::unique_ptr<GLTexture> allocate(GLenum internalFormat, const QSize &size, int levels = 1);
     static std::unique_ptr<GLTexture> upload(const QImage &image);
     static std::unique_ptr<GLTexture> upload(const QPixmap &pixmap);
 
 protected:
+    explicit GLTexture(GLuint textureId, GLenum internalFormat, const QSize &size, int levels, bool owning, TextureTransforms transform);
+
     const std::unique_ptr<GLTexturePrivate> d;
 
     virtual void onDamage();

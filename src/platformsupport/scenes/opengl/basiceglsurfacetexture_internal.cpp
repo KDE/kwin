@@ -49,7 +49,7 @@ bool BasicEGLSurfaceTextureInternal::updateFromFramebuffer()
     if (!fbo) {
         return false;
     }
-    m_texture.reset(new GLTexture(fbo->texture(), 0, fbo->size()));
+    m_texture = GLTexture::createNonOwningWrapper(fbo->texture(), 0, fbo->size());
     m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
     m_texture->setFilter(GL_LINEAR);
     m_texture->setContentTransform(TextureTransforms());
