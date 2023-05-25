@@ -464,6 +464,28 @@ void ScreenEdgesTest::testKdeNetWmScreenEdgeShow()
         QVERIFY(windowShownSpy.wait());
         QVERIFY(window->isShown());
     }
+
+    // The approaching state will be reset if the window is shown manually.
+    {
+        QSignalSpy approachingSpy(workspace()->screenEdges(), &ScreenEdges::approaching);
+        enableAutoHide(c.get(), windowId, ElectricBottom);
+        xcb_flush(c.get());
+        QVERIFY(windowHiddenSpy.wait());
+        QVERIFY(!window->isShown());
+
+        Test::pointerMotion(QPointF(640, 1020), timestamp++);
+        QVERIFY(approachingSpy.last().at(1).toReal() == 0.0);
+        Test::pointerMotion(QPointF(640, 1021), timestamp++);
+        QVERIFY(approachingSpy.last().at(1).toReal() != 0.0);
+
+        enableAutoHide(c.get(), windowId, ElectricNone);
+        xcb_flush(c.get());
+        QVERIFY(windowShownSpy.wait());
+        QVERIFY(window->isShown());
+        QVERIFY(approachingSpy.last().at(1).toReal() == 0.0);
+
+        Test::pointerMotion(QPointF(640, 512), timestamp++);
+    }
 }
 
 } // namespace KWin

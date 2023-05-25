@@ -145,6 +145,7 @@ Edge::Edge(ScreenEdges *parent)
 
 Edge::~Edge()
 {
+    stopApproaching();
 }
 
 void Edge::reserve()

@@ -9,6 +9,7 @@
 #include "core/output.h"
 #include "main.h"
 #include "pointer_input.h"
+#include "screenedge.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
@@ -634,35 +635,63 @@ void LayerShellV1WindowTest::testScreenEdge()
     QVERIFY(window);
     QVERIFY(!window->isActive());
 
-    // The layer surface will be hidden and shown when the screen edge is activated or deactivated.
     QSignalSpy windowShowSpy(window, &Window::windowShown);
     QSignalSpy windowHiddenSpy(window, &Window::windowHidden);
-    screenEdge->activate();
-    QVERIFY(windowHiddenSpy.wait());
-    QVERIFY(!window->isShown());
+    quint32 timestamp = 0;
 
-    screenEdge->deactivate();
-    QVERIFY(windowShowSpy.wait());
-    QVERIFY(window->isShown());
+    // The layer surface will be hidden and shown when the screen edge is activated or deactivated.
+    {
+        screenEdge->activate();
+        QVERIFY(windowHiddenSpy.wait());
+        QVERIFY(!window->isShown());
+
+        screenEdge->deactivate();
+        QVERIFY(windowShowSpy.wait());
+        QVERIFY(window->isShown());
+    }
 
     // The layer surface will be shown when the screen edge is triggered.
-    screenEdge->activate();
-    QVERIFY(windowHiddenSpy.wait());
-    QVERIFY(!window->isShown());
+    {
+        screenEdge->activate();
+        QVERIFY(windowHiddenSpy.wait());
+        QVERIFY(!window->isShown());
 
-    Test::pointerMotion(QPointF(640, 1023), 0);
-    Test::pointerMotion(QPointF(640, 512), 1);
-    QVERIFY(windowShowSpy.wait());
-    QVERIFY(window->isShown());
+        Test::pointerMotion(QPointF(640, 1023), timestamp++);
+        Test::pointerMotion(QPointF(640, 512), timestamp++);
+        QVERIFY(windowShowSpy.wait());
+        QVERIFY(window->isShown());
+    }
+
+    // The approaching state will be reset if the window is shown manually.
+    {
+        QSignalSpy approachingSpy(workspace()->screenEdges(), &ScreenEdges::approaching);
+        screenEdge->activate();
+        QVERIFY(windowHiddenSpy.wait());
+        QVERIFY(!window->isShown());
+
+        Test::pointerMotion(QPointF(640, 1020), timestamp++);
+        QVERIFY(approachingSpy.last().at(1).toReal() == 0.0);
+        Test::pointerMotion(QPointF(640, 1021), timestamp++);
+        QVERIFY(approachingSpy.last().at(1).toReal() != 0.0);
+
+        screenEdge->deactivate();
+        QVERIFY(windowShowSpy.wait());
+        QVERIFY(window->isShown());
+        QVERIFY(approachingSpy.last().at(1).toReal() == 0.0);
+
+        Test::pointerMotion(QPointF(640, 512), timestamp++);
+    }
 
     // The layer surface will be shown when the screen edge is destroyed.
-    screenEdge->activate();
-    QVERIFY(windowHiddenSpy.wait());
-    QVERIFY(!window->isShown());
+    {
+        screenEdge->activate();
+        QVERIFY(windowHiddenSpy.wait());
+        QVERIFY(!window->isShown());
 
-    screenEdge.reset();
-    QVERIFY(windowShowSpy.wait());
-    QVERIFY(window->isShown());
+        screenEdge.reset();
+        QVERIFY(windowShowSpy.wait());
+        QVERIFY(window->isShown());
+    }
 }
 
 } // namespace KWin
