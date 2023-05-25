@@ -557,19 +557,17 @@ Layer Window::layer() const
 
 void Window::updateLayer()
 {
+    if (isDeleted()) {
+        return;
+    }
     if (layer() == belongsToLayer()) {
         return;
     }
     StackingUpdatesBlocker blocker(workspace());
-    invalidateLayer(); // invalidate, will be updated when doing restacking
+    m_layer = UnknownLayer; // invalidate, will be updated when doing restacking
     for (auto it = transients().constBegin(), end = transients().constEnd(); it != end; ++it) {
         (*it)->updateLayer();
     }
-}
-
-void Window::invalidateLayer()
-{
-    m_layer = UnknownLayer;
 }
 
 Layer Window::belongsToLayer() const

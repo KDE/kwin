@@ -1507,7 +1507,6 @@ protected:
 
     virtual Layer belongsToLayer() const;
     virtual bool belongsToDesktop() const;
-    void invalidateLayer();
     bool isActiveFullScreen() const;
     virtual Layer layerForDock() const;
 
