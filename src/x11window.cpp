@@ -2898,11 +2898,6 @@ Xcb::Property X11Window::fetchShowOnScreenEdge() const
 
 void X11Window::readShowOnScreenEdge(Xcb::Property &property)
 {
-    // value comes in two parts, edge in the lower byte
-    // then the type in the upper byte
-    //  0 = autohide
-    //  1 = raise in front on activate
-
     const uint32_t value = property.value<uint32_t>(ElectricNone);
     ElectricBorder border = ElectricNone;
     switch (value & 0xFF) {
@@ -2920,28 +2915,15 @@ void X11Window::readShowOnScreenEdge(Xcb::Property &property)
         break;
     }
     if (border != ElectricNone) {
-        disconnect(m_edgeRemoveConnection);
         disconnect(m_edgeGeometryTrackingConnection);
-        bool successfullyHidden = false;
 
-        if (((value >> 8) & 0xFF) == 1) {
-            setKeepBelow(true);
-            successfullyHidden = keepBelow(); // request could have failed due to user kwin rules
+        hideClient();
+        const bool successfullyHidden = isHiddenInternal();
 
-            m_edgeRemoveConnection = connect(this, &Window::keepBelowChanged, this, [this]() {
-                if (!keepBelow()) {
-                    workspace()->screenEdges()->reserve(this, ElectricNone);
-                }
-            });
-        } else {
+        m_edgeGeometryTrackingConnection = connect(this, &X11Window::frameGeometryChanged, this, [this, border]() {
             hideClient();
-            successfullyHidden = isHiddenInternal();
-
-            m_edgeGeometryTrackingConnection = connect(this, &X11Window::frameGeometryChanged, this, [this, border]() {
-                hideClient();
-                workspace()->screenEdges()->reserve(this, border);
-            });
-        }
+            workspace()->screenEdges()->reserve(this, border);
+        });
 
         if (successfullyHidden) {
             workspace()->screenEdges()->reserve(this, border);
@@ -2970,10 +2952,7 @@ void X11Window::updateShowOnScreenEdge()
 
 void X11Window::showOnScreenEdge()
 {
-    disconnect(m_edgeRemoveConnection);
-
     showClient();
-    setKeepBelow(false);
     xcb_delete_property(kwinApp()->x11Connection(), window(), atoms->kde_screen_edge_show);
 }
 

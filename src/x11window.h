@@ -523,7 +523,6 @@ private:
     QTimer *m_focusOutTimer;
     QTimer m_releaseTimer;
 
-    QMetaObject::Connection m_edgeRemoveConnection;
     QMetaObject::Connection m_edgeGeometryTrackingConnection;
 
     QMarginsF m_clientFrameExtents;
