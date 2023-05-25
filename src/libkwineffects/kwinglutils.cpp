@@ -801,6 +801,10 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
         stream << "uniform vec4 geometryColor;\n";
     }
     if (traits & ShaderTrait::TransformColorspace) {
+        stream << "const int sRGB_EOTF = 0;\n";
+        stream << "const int linear_EOTF = 1;\n";
+        stream << "const int PQ_EOTF = 2;\n";
+        stream << "\n";
         stream << "uniform mat3 colorimetryTransform;\n";
         stream << "uniform int sourceNamedTransferFunction;\n";
         stream << "uniform int destinationNamedTransferFunction;\n";
@@ -851,8 +855,7 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
         stream << "    result = geometryColor;\n";
     }
     if (traits & ShaderTrait::TransformColorspace) {
-        // sRGB -> output colorspace & linear
-        stream << "    if (sourceNamedTransferFunction == 0) {\n";
+        stream << "    if (sourceNamedTransferFunction == sRGB_EOTF) {\n";
         stream << "        result.rgb = sdrBrightness * srgbToLinear(result.rgb);\n";
         stream << "    }\n";
         stream << "    result.rgb = doTonemapping(colorimetryTransform * result.rgb, maxHdrBrightness);\n";
@@ -867,11 +870,9 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
         stream << "    result *= modulation;\n";
     }
     if (traits & ShaderTrait::TransformColorspace) {
-        // nits -> simple sRGB
-        stream << "    if (destinationNamedTransferFunction == 0) {\n";
+        stream << "    if (destinationNamedTransferFunction == sRGB_EOTF) {\n";
         stream << "        result.rgb = linearToSrgb(doTonemapping(result.rgb, sdrBrightness) / sdrBrightness);\n";
-        // nits -> PQ
-        stream << "    } else if (destinationNamedTransferFunction == 2) {\n";
+        stream << "    } else if (destinationNamedTransferFunction == PQ_EOTF) {\n";
         stream << "        result.rgb = nitsToPq(result.rgb);\n";
         stream << "    }\n";
     }
