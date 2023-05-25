@@ -58,6 +58,9 @@ public:
     void unref();
     void drop();
 
+    virtual void *map();
+    virtual void unmap();
+
     virtual QSize size() const = 0;
     virtual bool hasAlphaChannel() const = 0;
 
