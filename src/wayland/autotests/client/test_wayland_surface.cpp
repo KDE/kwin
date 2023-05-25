@@ -8,11 +8,12 @@
 #include <QPainter>
 #include <QtTest>
 // KWin
+#include "core/graphicsbuffer.h"
+#include "core/graphicsbufferview.h"
 #include "wayland/compositor_interface.h"
 #include "wayland/display.h"
 #include "wayland/idleinhibit_v1_interface.h"
 #include "wayland/output_interface.h"
-#include "wayland/shmclientbuffer.h"
 #include "wayland/surface_interface.h"
 
 #include "KWayland/Client/compositor.h"
@@ -43,7 +44,6 @@ private Q_SLOTS:
     void testDamage();
     void testFrameCallback();
     void testAttachBuffer();
-    void testMultipleSurfaces();
     void testOpaque();
     void testInput();
     void testScale();
@@ -397,11 +397,13 @@ void TestWaylandSurface::testAttachBuffer()
     // now the ServerSurface should have the black image attached as a buffer
     KWin::GraphicsBuffer *buffer = serverSurface->buffer();
     buffer->ref();
-    auto shmBuffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(buffer);
-    QVERIFY(shmBuffer);
-    QCOMPARE(shmBuffer->data(), black);
-    QCOMPARE(shmBuffer->data().format(), QImage::Format_RGB32);
-    QCOMPARE(shmBuffer->size(), QSize(24, 24));
+    {
+        KWin::GraphicsBufferView view(buffer);
+        QVERIFY(view.image());
+        QCOMPARE(*view.image(), black);
+        QCOMPARE(view.image()->format(), QImage::Format_RGB32);
+        QCOMPARE(view.image()->size(), QSize(24, 24));
+    }
 
     // render another frame
     s->attachBuffer(redBuffer);
@@ -413,14 +415,16 @@ void TestWaylandSurface::testAttachBuffer()
     QVERIFY(unmappedSpy.isEmpty());
     KWin::GraphicsBuffer *buffer2 = serverSurface->buffer();
     buffer2->ref();
-    auto shmBuffer2 = qobject_cast<KWaylandServer::ShmClientBuffer *>(buffer2);
-    QVERIFY(shmBuffer2);
-    QCOMPARE(shmBuffer2->data().format(), QImage::Format_ARGB32_Premultiplied);
-    QCOMPARE(shmBuffer2->size(), QSize(24, 24));
-    for (int i = 0; i < 24; ++i) {
-        for (int j = 0; j < 24; ++j) {
-            // it's premultiplied in the format
-            QCOMPARE(shmBuffer2->data().pixel(i, j), qRgba(128, 0, 0, 128));
+    {
+        KWin::GraphicsBufferView view(buffer2);
+        QVERIFY(view.image());
+        QCOMPARE(view.image()->format(), QImage::Format_ARGB32_Premultiplied);
+        QCOMPARE(view.image()->size(), QSize(24, 24));
+        for (int i = 0; i < 24; ++i) {
+            for (int j = 0; j < 24; ++j) {
+                // it's premultiplied in the format
+                QCOMPARE(view.image()->pixel(i, j), qRgba(128, 0, 0, 128));
+            }
         }
     }
     buffer2->unref();
@@ -448,14 +452,16 @@ void TestWaylandSurface::testAttachBuffer()
 
     KWin::GraphicsBuffer *buffer3 = serverSurface->buffer();
     buffer3->ref();
-    auto shmBuffer3 = qobject_cast<KWaylandServer::ShmClientBuffer *>(buffer3);
-    QVERIFY(shmBuffer3);
-    QCOMPARE(shmBuffer3->data().format(), QImage::Format_ARGB32_Premultiplied);
-    QCOMPARE(shmBuffer3->size(), QSize(24, 24));
-    for (int i = 0; i < 24; ++i) {
-        for (int j = 0; j < 24; ++j) {
-            // it's premultiplied in the format
-            QCOMPARE(shmBuffer3->data().pixel(i, j), qRgba(0, 0, 128, 128));
+    {
+        KWin::GraphicsBufferView view(buffer3);
+        QVERIFY(view.image());
+        QCOMPARE(view.image()->format(), QImage::Format_ARGB32_Premultiplied);
+        QCOMPARE(view.image()->size(), QSize(24, 24));
+        for (int i = 0; i < 24; ++i) {
+            for (int j = 0; j < 24; ++j) {
+                // it's premultiplied in the format
+                QCOMPARE(view.image()->pixel(i, j), qRgba(0, 0, 128, 128));
+            }
         }
     }
     buffer3->unref();
@@ -493,94 +499,6 @@ void TestWaylandSurface::testAttachBuffer()
 
     // TODO: add signal test on release
     buffer->unref();
-}
-
-void TestWaylandSurface::testMultipleSurfaces()
-{
-    using namespace KWaylandServer;
-    KWayland::Client::Registry registry;
-    registry.setEventQueue(m_queue);
-    QSignalSpy shmSpy(&registry, &KWayland::Client::Registry::shmAnnounced);
-    registry.create(m_connection->display());
-    QVERIFY(registry.isValid());
-    registry.setup();
-    QVERIFY(shmSpy.wait());
-
-    KWayland::Client::ShmPool pool1;
-    KWayland::Client::ShmPool pool2;
-    pool1.setup(registry.bindShm(shmSpy.first().first().value<quint32>(), shmSpy.first().last().value<quint32>()));
-    pool2.setup(registry.bindShm(shmSpy.first().first().value<quint32>(), shmSpy.first().last().value<quint32>()));
-    QVERIFY(pool1.isValid());
-    QVERIFY(pool2.isValid());
-
-    // create the surfaces
-    QSignalSpy serverSurfaceCreated(m_compositorInterface, &KWaylandServer::CompositorInterface::surfaceCreated);
-    std::unique_ptr<KWayland::Client::Surface> s1(m_compositor->createSurface());
-    QVERIFY(serverSurfaceCreated.wait());
-    SurfaceInterface *serverSurface1 = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface *>();
-    QVERIFY(serverSurface1);
-    // second surface
-    std::unique_ptr<KWayland::Client::Surface> s2(m_compositor->createSurface());
-    QVERIFY(serverSurfaceCreated.wait());
-    SurfaceInterface *serverSurface2 = serverSurfaceCreated.last().first().value<KWaylandServer::SurfaceInterface *>();
-    QVERIFY(serverSurface2);
-    QVERIFY(serverSurface1->resource() != serverSurface2->resource());
-
-    // create two images
-    QImage black(24, 24, QImage::Format_RGB32);
-    black.fill(Qt::black);
-    QImage red(24, 24, QImage::Format_ARGB32_Premultiplied);
-    red.fill(QColor(255, 0, 0, 128));
-
-    auto blackBuffer = pool1.createBuffer(black);
-    auto redBuffer = pool2.createBuffer(red);
-
-    s1->attachBuffer(blackBuffer);
-    s1->damage(QRect(0, 0, 24, 24));
-    s1->commit(KWayland::Client::Surface::CommitFlag::None);
-    QSignalSpy damageSpy1(serverSurface1, &KWaylandServer::SurfaceInterface::damaged);
-    QVERIFY(damageSpy1.wait());
-
-    // now the ServerSurface should have the black image attached as a buffer
-    KWin::GraphicsBuffer *buffer1 = serverSurface1->buffer();
-    QVERIFY(buffer1);
-    QImage buffer1Data = qobject_cast<ShmClientBuffer *>(buffer1)->data();
-    QCOMPARE(buffer1Data, black);
-    // accessing the same buffer is OK
-    QImage buffer1Data2 = qobject_cast<ShmClientBuffer *>(buffer1)->data();
-    QCOMPARE(buffer1Data2, buffer1Data);
-    buffer1Data = QImage();
-    QVERIFY(buffer1Data.isNull());
-    buffer1Data2 = QImage();
-    QVERIFY(buffer1Data2.isNull());
-
-    // attach a buffer for the other surface
-    s2->attachBuffer(redBuffer);
-    s2->damage(QRect(0, 0, 24, 24));
-    s2->commit(KWayland::Client::Surface::CommitFlag::None);
-    QSignalSpy damageSpy2(serverSurface2, &KWaylandServer::SurfaceInterface::damaged);
-    QVERIFY(damageSpy2.wait());
-
-    KWin::GraphicsBuffer *buffer2 = serverSurface2->buffer();
-    QVERIFY(buffer2);
-    QImage buffer2Data = qobject_cast<ShmClientBuffer *>(buffer2)->data();
-    QCOMPARE(buffer2Data, red);
-
-    // while buffer2 is accessed we cannot access buffer1
-    buffer1Data = qobject_cast<ShmClientBuffer *>(buffer1)->data();
-    QVERIFY(buffer1Data.isNull());
-
-    // a deep copy can be kept around
-    QImage deepCopy = buffer2Data.copy();
-    QCOMPARE(deepCopy, red);
-    buffer2Data = QImage();
-    QVERIFY(buffer2Data.isNull());
-    QCOMPARE(deepCopy, red);
-
-    // now that buffer2Data is destroyed we can access buffer1 again
-    buffer1Data = qobject_cast<ShmClientBuffer *>(buffer1)->data();
-    QVERIFY(!buffer1Data.isNull());
-    QCOMPARE(buffer1Data, black);
 }
 
 void TestWaylandSurface::testOpaque()

@@ -8,6 +8,7 @@
 */
 #include "debug_console.h"
 #include "composite.h"
+#include "core/graphicsbufferview.h"
 #include "core/inputdevice.h"
 #include "input_event.h"
 #include "internalwindow.h"
@@ -25,7 +26,6 @@
 #include "wayland/display.h"
 #include "wayland/primaryselectionsource_v1_interface.h"
 #include "wayland/seat_interface.h"
-#include "wayland/shmclientbuffer.h"
 #include "wayland/subcompositor_interface.h"
 #include "wayland/surface_interface.h"
 #include "wayland_server.h"
@@ -1438,9 +1438,13 @@ QVariant SurfaceTreeModel::data(const QModelIndex &index, int role) const
         if (role == Qt::DisplayRole || role == Qt::ToolTipRole) {
             return QStringLiteral("%1 (%2) - %3").arg(surface->client()->executablePath()).arg(surface->client()->processId()).arg(surface->id());
         } else if (role == Qt::DecorationRole) {
-            if (auto buffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(surface->buffer())) {
-                return buffer->data().scaled(QSize(64, 64), Qt::KeepAspectRatio);
+            if (surface->buffer()) {
+                const GraphicsBufferView view(surface->buffer());
+                if (const QImage *image = view.image()) {
+                    return image->scaled(QSize(64, 64), Qt::KeepAspectRatio);
+                }
             }
+            return QImage();
         }
     }
     return QVariant();

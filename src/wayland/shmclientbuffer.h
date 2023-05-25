@@ -6,50 +6,30 @@
 
 #pragma once
 
-#include "core/graphicsbuffer.h"
+#include "kwin_export.h"
 
-struct wl_resource;
+#include <QObject>
 
 namespace KWaylandServer
 {
 
 class Display;
-class ShmClientBufferPrivate;
+class ShmClientBufferIntegrationPrivate;
 
 /**
- * The ShmClientBuffer class represents a wl_shm_buffer client buffer.
- *
- * The buffer's data can be accessed using the data() function. Note that it is not allowed
- * to access data of several shared memory buffers simultaneously.
+ * The ShmClientBufferIntegration class provides support for shared memory client buffers.
  */
-class KWIN_EXPORT ShmClientBuffer : public KWin::GraphicsBuffer
-{
-    Q_OBJECT
-
-public:
-    explicit ShmClientBuffer(wl_resource *resource);
-    ~ShmClientBuffer() override;
-
-    QImage data() const;
-
-    QSize size() const override;
-    bool hasAlphaChannel() const override;
-
-    static ShmClientBuffer *get(wl_resource *resource);
-
-private:
-    std::unique_ptr<ShmClientBufferPrivate> d;
-};
-
-/**
- * The ShmClientBufferIntegration class provides support for wl_shm_buffer buffers.
- */
-class ShmClientBufferIntegration : public QObject
+class KWIN_EXPORT ShmClientBufferIntegration : public QObject
 {
     Q_OBJECT
 
 public:
     explicit ShmClientBufferIntegration(Display *display);
+    ~ShmClientBufferIntegration() override;
+
+private:
+    friend class ShmClientBufferIntegrationPrivate;
+    std::unique_ptr<ShmClientBufferIntegrationPrivate> d;
 };
 
 } // namespace KWaylandServer

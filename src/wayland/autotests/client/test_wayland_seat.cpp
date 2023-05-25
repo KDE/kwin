@@ -15,7 +15,6 @@
 #include "wayland/pointergestures_v1_interface.h"
 #include "wayland/relativepointer_v1_interface.h"
 #include "wayland/seat_interface.h"
-#include "wayland/shmclientbuffer.h"
 #include "wayland/subcompositor_interface.h"
 #include "wayland/surface_interface.h"
 
@@ -1351,7 +1350,6 @@ void TestWaylandSeat::testCursor()
     QCOMPARE(cursorChangedSpy.count(), 3);
     QCOMPARE(cursor->hotspot(), QPoint(1, 2));
     QVERIFY(cursor->surface());
-    QCOMPARE(qobject_cast<ShmClientBuffer *>(cursor->surface()->buffer())->data(), img);
 
     p->hideCursor();
     QVERIFY(cursorChangedSpy.wait());

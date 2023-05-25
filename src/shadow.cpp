@@ -10,9 +10,9 @@
 #include "shadow.h"
 // kwin
 #include "atoms.h"
+#include "core/graphicsbufferview.h"
 #include "internalwindow.h"
 #include "wayland/shadow_interface.h"
-#include "wayland/shmclientbuffer.h"
 #include "wayland/surface_interface.h"
 #include "wayland_server.h"
 #include "x11window.h"
@@ -201,9 +201,11 @@ bool Shadow::init(KDecoration2::Decoration *decoration)
 
 static QImage shadowTileForBuffer(GraphicsBuffer *buffer)
 {
-    auto shmBuffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(buffer);
-    if (shmBuffer) {
-        return shmBuffer->data().copy();
+    if (buffer) {
+        const GraphicsBufferView view(buffer);
+        if (const QImage *image = view.image()) {
+            return image->copy();
+        }
     }
     return QImage();
 }

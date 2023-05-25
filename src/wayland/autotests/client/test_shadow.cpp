@@ -14,10 +14,10 @@
 #include "KWayland/Client/shm_pool.h"
 #include "KWayland/Client/surface.h"
 // server
+#include "core/graphicsbufferview.h"
 #include "wayland/compositor_interface.h"
 #include "wayland/display.h"
 #include "wayland/shadow_interface.h"
-#include "wayland/shmclientbuffer.h"
 
 using namespace KWaylandServer;
 
@@ -168,9 +168,11 @@ void ShadowTest::testCreateShadow()
 
 static QImage bufferToImage(KWin::GraphicsBuffer *clientBuffer)
 {
-    auto shmBuffer = qobject_cast<ShmClientBuffer *>(clientBuffer);
-    if (shmBuffer) {
-        return shmBuffer->data();
+    if (clientBuffer) {
+        KWin::GraphicsBufferView view(clientBuffer);
+        if (QImage *image = view.image()) {
+            return image->copy();
+        }
     }
     return QImage();
 }

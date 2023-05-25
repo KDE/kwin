@@ -5,11 +5,11 @@
 */
 
 #include "platformsupport/scenes/opengl/basiceglsurfacetexture_wayland.h"
+#include "core/graphicsbufferview.h"
 #include "libkwineffects/kwingltexture.h"
 #include "platformsupport/scenes/opengl/abstract_egl_backend.h"
 #include "scene/surfaceitem_wayland.h"
 #include "utils/common.h"
-#include "wayland/shmclientbuffer.h"
 
 #include <epoxy/egl.h>
 
@@ -36,8 +36,8 @@ bool BasicEGLSurfaceTextureWayland::create()
 {
     if (m_pixmap->buffer()->dmabufAttributes()) {
         return loadDmabufTexture(m_pixmap->buffer());
-    } else if (auto buffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(m_pixmap->buffer())) {
-        return loadShmTexture(buffer);
+    } else if (m_pixmap->buffer()->shmAttributes()) {
+        return loadShmTexture(m_pixmap->buffer());
     } else {
         return false;
     }
@@ -53,17 +53,23 @@ void BasicEGLSurfaceTextureWayland::update(const QRegion &region)
 {
     if (m_pixmap->buffer()->dmabufAttributes()) {
         updateDmabufTexture(m_pixmap->buffer());
-    } else if (auto buffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(m_pixmap->buffer())) {
-        updateShmTexture(buffer, region);
+    } else if (m_pixmap->buffer()->shmAttributes()) {
+        updateShmTexture(m_pixmap->buffer(), region);
     }
 }
 
-bool BasicEGLSurfaceTextureWayland::loadShmTexture(KWaylandServer::ShmClientBuffer *buffer)
+bool BasicEGLSurfaceTextureWayland::loadShmTexture(GraphicsBuffer *buffer)
 {
-    m_texture = GLTexture::upload(buffer->data());
-    if (!m_texture) {
+    const GraphicsBufferView view(buffer);
+    if (Q_UNLIKELY(!view.image())) {
         return false;
     }
+
+    m_texture = GLTexture::upload(*view.image());
+    if (Q_UNLIKELY(!m_texture)) {
+        return false;
+    }
+
     m_texture->setFilter(GL_LINEAR);
     m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
     m_texture->setContentTransform(TextureTransform::MirrorY);
@@ -72,7 +78,7 @@ bool BasicEGLSurfaceTextureWayland::loadShmTexture(KWaylandServer::ShmClientBuff
     return true;
 }
 
-void BasicEGLSurfaceTextureWayland::updateShmTexture(KWaylandServer::ShmClientBuffer *buffer, const QRegion &region)
+void BasicEGLSurfaceTextureWayland::updateShmTexture(GraphicsBuffer *buffer, const QRegion &region)
 {
     if (Q_UNLIKELY(m_bufferType != BufferType::Shm)) {
         destroy();
@@ -80,14 +86,14 @@ void BasicEGLSurfaceTextureWayland::updateShmTexture(KWaylandServer::ShmClientBu
         return;
     }
 
-    const QImage &image = buffer->data();
-    if (Q_UNLIKELY(image.isNull())) {
+    const GraphicsBufferView view(buffer);
+    if (Q_UNLIKELY(!view.image())) {
         return;
     }
 
     const QRegion damage = mapRegion(m_pixmap->item()->surfaceToBufferMatrix(), region);
     for (const QRect &rect : damage) {
-        m_texture->update(image, rect.topLeft(), rect);
+        m_texture->update(*view.image(), rect.topLeft(), rect);
     }
 }
 

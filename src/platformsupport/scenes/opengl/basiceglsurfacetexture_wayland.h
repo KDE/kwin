@@ -8,11 +8,6 @@
 
 #include "openglsurfacetexture_wayland.h"
 
-namespace KWaylandServer
-{
-class ShmClientBuffer;
-}
-
 namespace KWin
 {
 
@@ -31,8 +26,8 @@ public:
     void update(const QRegion &region) override;
 
 private:
-    bool loadShmTexture(KWaylandServer::ShmClientBuffer *buffer);
-    void updateShmTexture(KWaylandServer::ShmClientBuffer *buffer, const QRegion &region);
+    bool loadShmTexture(GraphicsBuffer *buffer);
+    void updateShmTexture(GraphicsBuffer *buffer, const QRegion &region);
     bool loadDmabufTexture(GraphicsBuffer *buffer);
     void updateDmabufTexture(GraphicsBuffer *buffer);
     void destroy();

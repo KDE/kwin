@@ -8,7 +8,7 @@
 #include "display_p.h"
 #include "linuxdmabufv1clientbuffer_p.h"
 #include "output_interface.h"
-#include "shmclientbuffer.h"
+#include "shmclientbuffer_p.h"
 #include "utils/common.h"
 
 #include <QAbstractEventDispatcher>
