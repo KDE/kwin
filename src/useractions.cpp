@@ -331,6 +331,8 @@ void UserActionsMenu::init()
     overflowAction->setText(i18n("&More Actions"));
     overflowAction->setIcon(QIcon::fromTheme(QStringLiteral("overflow-menu")));
 
+    m_menu->addSeparator();
+
     m_closeOperation = m_menu->addAction(i18n("&Close"));
     m_closeOperation->setIcon(QIcon::fromTheme(QStringLiteral("window-close")));
     setShortcut(m_closeOperation, QStringLiteral("Window Close"));
