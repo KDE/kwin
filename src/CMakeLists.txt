@@ -42,6 +42,7 @@ target_sources(kwin PRIVATE
     core/gbmgraphicsbufferallocator.cpp
     core/graphicsbuffer.cpp
     core/graphicsbufferallocator.cpp
+    core/graphicsbufferview.cpp
     core/inputbackend.cpp
     core/inputdevice.cpp
     core/output.cpp

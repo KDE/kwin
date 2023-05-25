@@ -53,6 +53,15 @@ void GraphicsBuffer::drop()
     }
 }
 
+void *GraphicsBuffer::map()
+{
+    return nullptr;
+}
+
+void GraphicsBuffer::unmap()
+{
+}
+
 const DmaBufAttributes *GraphicsBuffer::dmabufAttributes() const
 {
     return nullptr;
