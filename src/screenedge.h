@@ -298,7 +298,7 @@ public:
      * @param client The Client for which an Edge should be reserved
      * @param border The border which the client wants to use, only proper borders are supported (no corners)
      */
-    void reserve(KWin::Window *client, ElectricBorder border);
+    bool reserve(KWin::Window *client, ElectricBorder border);
 
     /**
      * Mark the specified screen edge as reserved for touch gestures. This method is provided for
@@ -409,7 +409,7 @@ private:
     void setRemainActiveOnFullscreen(bool remainActive);
     ElectricBorderAction actionForEdge(Edge *edge) const;
     ElectricBorderAction actionForTouchEdge(Edge *edge) const;
-    void createEdgeForClient(Window *client, ElectricBorder border);
+    bool createEdgeForClient(Window *client, ElectricBorder border);
     void deleteEdgeForClient(Window *client);
     bool m_desktopSwitching;
     bool m_desktopSwitchingMovingClients;

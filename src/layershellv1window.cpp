@@ -322,8 +322,11 @@ void LayerShellV1Window::installAutoHideScreenEdgeV1(KWaylandServer::AutoHideScr
 
 void LayerShellV1Window::reserveScreenEdge()
 {
-    hideClient();
-    workspace()->screenEdges()->reserve(this, m_screenEdge->border());
+    if (workspace()->screenEdges()->reserve(this, m_screenEdge->border())) {
+        hideClient();
+    } else {
+        showClient();
+    }
 }
 
 void LayerShellV1Window::unreserveScreenEdge()

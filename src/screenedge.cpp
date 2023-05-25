@@ -1279,7 +1279,7 @@ void ScreenEdges::unreserve(ElectricBorder border, QObject *object)
     }
 }
 
-void ScreenEdges::reserve(Window *client, ElectricBorder border)
+bool ScreenEdges::reserve(Window *client, ElectricBorder border)
 {
     const auto it = std::remove_if(m_edges.begin(), m_edges.end(), [client](const auto &edge) {
         return edge->client() == client;
@@ -1288,11 +1288,9 @@ void ScreenEdges::reserve(Window *client, ElectricBorder border)
     m_edges.erase(it, m_edges.end());
 
     if (border != ElectricNone) {
-        createEdgeForClient(client, border);
+        return createEdgeForClient(client, border);
     } else {
-        if (hadBorder) { // show again
-            client->showOnScreenEdge();
-        }
+        return hadBorder;
     }
 }
 
@@ -1314,7 +1312,7 @@ void ScreenEdges::unreserveTouch(ElectricBorder border, QAction *action)
     }
 }
 
-void ScreenEdges::createEdgeForClient(Window *client, ElectricBorder border)
+bool ScreenEdges::createEdgeForClient(Window *client, ElectricBorder border)
 {
     int y = 0;
     int x = 0;
@@ -1385,10 +1383,10 @@ void ScreenEdges::createEdgeForClient(Window *client, ElectricBorder border)
         Edge *edge = m_edges.back().get();
         edge->setClient(client);
         edge->reserve();
-    } else {
-        // we could not create an edge window, so don't allow the window to hide
-        client->showOnScreenEdge();
+        return true;
     }
+
+    return false;
 }
 
 void ScreenEdges::deleteEdgeForClient(Window *window)

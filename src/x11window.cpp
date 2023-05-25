@@ -2917,29 +2917,26 @@ void X11Window::readShowOnScreenEdge(Xcb::Property &property)
     if (border != ElectricNone) {
         disconnect(m_edgeGeometryTrackingConnection);
 
-        hideClient();
-        const bool successfullyHidden = isHiddenInternal();
+        auto reserveScreenEdge = [this, border]() {
+            if (workspace()->screenEdges()->reserve(this, border)) {
+                hideClient();
+            } else {
+                showClient();
+            }
+        };
 
-        m_edgeGeometryTrackingConnection = connect(this, &X11Window::frameGeometryChanged, this, [this, border]() {
-            hideClient();
-            workspace()->screenEdges()->reserve(this, border);
-        });
-
-        if (successfullyHidden) {
-            workspace()->screenEdges()->reserve(this, border);
-        } else {
-            workspace()->screenEdges()->reserve(this, ElectricNone);
-        }
+        reserveScreenEdge();
+        m_edgeGeometryTrackingConnection = connect(this, &X11Window::frameGeometryChanged, this, reserveScreenEdge);
     } else if (!property.isNull() && property->type != XCB_ATOM_NONE) {
         // property value is incorrect, delete the property
         // so that the client knows that it is not hidden
         xcb_delete_property(kwinApp()->x11Connection(), window(), atoms->kde_screen_edge_show);
     } else {
         // restore
-        // TODO: add proper unreserve
-
-        // this will call showOnScreenEdge to reset the state
         disconnect(m_edgeGeometryTrackingConnection);
+
+        showClient();
+
         workspace()->screenEdges()->reserve(this, ElectricNone);
     }
 }
