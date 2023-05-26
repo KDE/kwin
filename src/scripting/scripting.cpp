@@ -103,7 +103,7 @@ KWin::AbstractScript::AbstractScript(int id, QString scriptName, QString pluginN
     }
 
     new ScriptAdaptor(this);
-    QDBusConnection::sessionBus().registerObject(QLatin1Char('/') + QString::number(scriptId()), this, QDBusConnection::ExportAdaptors);
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/Scripting/Script") + QString::number(scriptId()), this, QDBusConnection::ExportAdaptors);
 }
 
 KWin::AbstractScript::~AbstractScript()
