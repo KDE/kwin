@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-24 02:08+0000\n"
+"POT-Creation-Date: 2023-05-26 01:59+0000\n"
 "PO-Revision-Date: 2023-04-20 15:28+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
@@ -3638,70 +3638,70 @@ msgstr "Мін&імізувати"
 msgid "&More Actions"
 msgstr "&Додаткові дії"
 
-#: useractions.cpp:334
+#: useractions.cpp:336
 #, kde-format
 msgid "&Close"
 msgstr "&Закрити"
 
-#: useractions.cpp:404
+#: useractions.cpp:406
 #, kde-format
 msgid "&Extensions"
 msgstr "&Розширення"
 
-#: useractions.cpp:455
+#: useractions.cpp:457
 #, kde-format
 msgid "&Desktops"
 msgstr "С&тільниці"
 
-#: useractions.cpp:469
+#: useractions.cpp:471
 #, kde-format
 msgid "Move to &Desktop"
 msgstr "Пересунути на с&тільницю"
 
-#: useractions.cpp:486
+#: useractions.cpp:488
 #, kde-format
 msgid "Move to &Screen"
 msgstr "Пересунути на &екран"
 
-#: useractions.cpp:502
+#: useractions.cpp:504
 #, kde-format
 msgid "Show in &Activities"
 msgstr "Показати у п&росторах дій"
 
-#: useractions.cpp:519
+#: useractions.cpp:521
 #, kde-format
 msgid "Move &To Current Desktop"
 msgstr "Пересунути &на поточну стільницю"
 
-#: useractions.cpp:529 useractions.cpp:596
+#: useractions.cpp:531 useractions.cpp:598
 #, kde-format
 msgid "&All Desktops"
 msgstr "&Всі стільниці"
 
-#: useractions.cpp:569
+#: useractions.cpp:571
 #, kde-format
 msgctxt "Create a new desktop and move the window there"
 msgid "&New Desktop"
 msgstr "С&творити стільницю"
 
-#: useractions.cpp:640
+#: useractions.cpp:642
 #, kde-format
 msgid "Move to %1 %2"
 msgstr "Пересунути до %1 %2"
 
-#: useractions.cpp:653
+#: useractions.cpp:655
 #, kde-format
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
 msgstr "Додати на &нову стільницю"
 
-#: useractions.cpp:665
+#: useractions.cpp:667
 #, kde-format
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
 msgstr "Пересунути на нову стільницю"
 
-#: useractions.cpp:696
+#: useractions.cpp:698
 #, kde-format
 msgctxt ""
 "@item:inmenu List of all Screens to send a window to. First argument is a "
@@ -3709,364 +3709,364 @@ msgctxt ""
 msgid "Screen &%1 (%2)"
 msgstr "Екран &%1 (%2)"
 
-#: useractions.cpp:722
+#: useractions.cpp:724
 #, kde-format
 msgid "&All Activities"
 msgstr "&Всі простори дій"
 
-#: useractions.cpp:770
+#: useractions.cpp:772
 #, kde-format
 msgid "Move to %1"
 msgstr "Пересунути до %1"
 
-#: useractions.cpp:889
+#: useractions.cpp:891
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr "<b>%1</b> вже використовується"
 
-#: useractions.cpp:891
+#: useractions.cpp:893
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> використовується для дії %2 у %3"
 
-#: useractions.cpp:971
+#: useractions.cpp:973
 #, kde-format
 msgid "Window Operations Menu"
 msgstr "Меню дій над вікнами"
 
-#: useractions.cpp:973
+#: useractions.cpp:975
 #, kde-format
 msgid "Close Window"
 msgstr "Закрити вікно"
 
-#: useractions.cpp:975
+#: useractions.cpp:977
 #, kde-format
 msgid "Maximize Window"
 msgstr "Максимізувати вікно"
 
-#: useractions.cpp:977
+#: useractions.cpp:979
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "Максимізувати вікно вертикально"
 
-#: useractions.cpp:979
+#: useractions.cpp:981
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "Максимізувати вікно горизонтально"
 
-#: useractions.cpp:981
+#: useractions.cpp:983
 #, kde-format
 msgid "Minimize Window"
 msgstr "Мінімізувати вікно"
 
-#: useractions.cpp:983
+#: useractions.cpp:985
 #, kde-format
 msgid "Shade Window"
 msgstr "Згорнути вікно"
 
-#: useractions.cpp:985
+#: useractions.cpp:987
 #, kde-format
 msgid "Move Window"
 msgstr "Пересунути вікно"
 
-#: useractions.cpp:987
+#: useractions.cpp:989
 #, kde-format
 msgid "Resize Window"
 msgstr "Змінити розмір вікна"
 
-#: useractions.cpp:989
+#: useractions.cpp:991
 #, kde-format
 msgid "Raise Window"
 msgstr "Підняти вікно"
 
-#: useractions.cpp:991
+#: useractions.cpp:993
 #, kde-format
 msgid "Lower Window"
 msgstr "Опустити вікно"
 
-#: useractions.cpp:993
+#: useractions.cpp:995
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "Перемикач підняти/опустити вікно"
 
-#: useractions.cpp:995
+#: useractions.cpp:997
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "Помістити вікно на весь екран"
 
-#: useractions.cpp:997
+#: useractions.cpp:999
 #, kde-format
 msgid "Toggle Window Titlebar and Frame"
 msgstr "Перемкнути показ смужки заголовка і рамки"
 
-#: useractions.cpp:999
+#: useractions.cpp:1001
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "Утримувати вікно понад іншими"
 
-#: useractions.cpp:1001
+#: useractions.cpp:1003
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "Утримувати вікно під іншими"
 
-#: useractions.cpp:1003
+#: useractions.cpp:1005
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "Активізувати вікно, що потребує уваги"
 
-#: useractions.cpp:1005
+#: useractions.cpp:1007
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "Скорочення до вікна налаштування"
 
-#: useractions.cpp:1007
+#: useractions.cpp:1009
 #, kde-format
 msgid "Move Window to the Center"
 msgstr "Пересунути вікно у центр"
 
-#: useractions.cpp:1009
+#: useractions.cpp:1011
 #, kde-format
 msgid "Move Window Right"
 msgstr "Пересунути вікно праворуч"
 
-#: useractions.cpp:1011
+#: useractions.cpp:1013
 #, kde-format
 msgid "Move Window Left"
 msgstr "Пересунути вікно ліворуч"
 
-#: useractions.cpp:1013
+#: useractions.cpp:1015
 #, kde-format
 msgid "Move Window Up"
 msgstr "Пересунути вікно вище"
 
-#: useractions.cpp:1015
+#: useractions.cpp:1017
 #, kde-format
 msgid "Move Window Down"
 msgstr "Пересунути вікно нижче"
 
-#: useractions.cpp:1017
+#: useractions.cpp:1019
 #, kde-format
 msgid "Expand Window Horizontally"
 msgstr "Розгорнути вікно горизонтально"
 
-#: useractions.cpp:1019
+#: useractions.cpp:1021
 #, kde-format
 msgid "Expand Window Vertically"
 msgstr "Розгорнути вікно вертикально"
 
-#: useractions.cpp:1021
+#: useractions.cpp:1023
 #, kde-format
 msgid "Shrink Window Horizontally"
 msgstr "Зменшити вікно горизонтально"
 
-#: useractions.cpp:1023
+#: useractions.cpp:1025
 #, kde-format
 msgid "Shrink Window Vertically"
 msgstr "Зменшити вікно вертикально"
 
-#: useractions.cpp:1025
+#: useractions.cpp:1027
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "Вкласти вікно ліворуч"
 
-#: useractions.cpp:1027
+#: useractions.cpp:1029
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "Вкласти вікно праворуч"
 
-#: useractions.cpp:1029
+#: useractions.cpp:1031
 #, kde-format
 msgid "Quick Tile Window to the Top"
 msgstr "Вкласти вікно вгору"
 
-#: useractions.cpp:1031
+#: useractions.cpp:1033
 #, kde-format
 msgid "Quick Tile Window to the Bottom"
 msgstr "Вкласти вікно вниз"
 
-#: useractions.cpp:1033
+#: useractions.cpp:1035
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
 msgstr "Вкласти вікно ліворуч вгору"
 
-#: useractions.cpp:1035
+#: useractions.cpp:1037
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "Вкласти вікно ліворуч вниз"
 
-#: useractions.cpp:1037
+#: useractions.cpp:1039
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
 msgstr "Вкласти вікно праворуч вгору"
 
-#: useractions.cpp:1039
+#: useractions.cpp:1041
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "Вкласти вікно праворуч вниз"
 
-#: useractions.cpp:1041
+#: useractions.cpp:1043
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "Перемкнутися на верхнє вікно"
 
-#: useractions.cpp:1043
+#: useractions.cpp:1045
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "Перемкнутися на вікно внизу"
 
-#: useractions.cpp:1045
+#: useractions.cpp:1047
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "Перемкнутися на вікно праворуч"
 
-#: useractions.cpp:1047
+#: useractions.cpp:1049
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "Перемкнутися на вікно ліворуч"
 
-#: useractions.cpp:1049
+#: useractions.cpp:1051
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "Зменшити прозорість активного вікна на 5%"
 
-#: useractions.cpp:1051
+#: useractions.cpp:1053
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "Збільшити прозорість активного вікна на 5%"
 
-#: useractions.cpp:1054
+#: useractions.cpp:1056
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "Утримувати вікно на всіх стільницях"
 
-#: useractions.cpp:1065
+#: useractions.cpp:1067
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "Вікно на стільницю %1"
 
-#: useractions.cpp:1067
+#: useractions.cpp:1069
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Вікно на наступну стільницю"
 
-#: useractions.cpp:1068
+#: useractions.cpp:1070
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Вікно на попередню стільницю"
 
-#: useractions.cpp:1069
+#: useractions.cpp:1071
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Вікно на одну стільницю праворуч"
 
-#: useractions.cpp:1071
+#: useractions.cpp:1073
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Вікно на одну стільницю ліворуч"
 
-#: useractions.cpp:1073
+#: useractions.cpp:1075
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "Вікно на одну стільницю вгору"
 
-#: useractions.cpp:1075
+#: useractions.cpp:1077
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "Вікно на одну стільницю вниз"
 
-#: useractions.cpp:1079
+#: useractions.cpp:1081
 #, kde-format
 msgid "Move Window to Screen %1"
 msgstr "Пересунути вікно на екран %1"
 
-#: useractions.cpp:1086
+#: useractions.cpp:1088
 #, kde-format
 msgid "Move Window to Next Screen"
 msgstr "Пересунути вікно на наступний екран"
 
-#: useractions.cpp:1088
+#: useractions.cpp:1090
 #, kde-format
 msgid "Move Window to Previous Screen"
 msgstr "Пересунути вікно на попередній екран"
 
-#: useractions.cpp:1090
+#: useractions.cpp:1092
 #, kde-format
 msgid "Move Window One Screen to the Right"
 msgstr "Пересунути вікно на один екран праворуч"
 
-#: useractions.cpp:1092
+#: useractions.cpp:1094
 #, kde-format
 msgid "Move Window One Screen to the Left"
 msgstr "Пересунути вікно на один екран ліворуч"
 
-#: useractions.cpp:1094
+#: useractions.cpp:1096
 #, kde-format
 msgid "Move Window One Screen Up"
 msgstr "Пересунути вікно на один екран вище"
 
-#: useractions.cpp:1096
+#: useractions.cpp:1098
 #, kde-format
 msgid "Move Window One Screen Down"
 msgstr "Пересунути вікно на один екран нижче"
 
-#: useractions.cpp:1100
+#: useractions.cpp:1102
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr "Перемкнути на екран %1"
 
-#: useractions.cpp:1107
+#: useractions.cpp:1109
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "Перемкнути на наступний екран"
 
-#: useractions.cpp:1108
+#: useractions.cpp:1110
 #, kde-format
 msgid "Switch to Previous Screen"
 msgstr "Перемкнутися до попереднього екрана"
 
-#: useractions.cpp:1109
+#: useractions.cpp:1111
 #, kde-format
 msgid "Switch to Screen to the Right"
 msgstr "Перемкнутися на екран праворуч"
 
-#: useractions.cpp:1111
+#: useractions.cpp:1113
 #, kde-format
 msgid "Switch to Screen to the Left"
 msgstr "Перемкнутися на екран ліворуч"
 
-#: useractions.cpp:1113
+#: useractions.cpp:1115
 #, kde-format
 msgid "Switch to Screen Above"
 msgstr "Перемкнути на екран вище"
 
-#: useractions.cpp:1115
+#: useractions.cpp:1117
 #, kde-format
 msgid "Switch to Screen Below"
 msgstr "Перемкнути на екран нижче"
 
-#: useractions.cpp:1118
+#: useractions.cpp:1120
 #, kde-format
 msgid "Peek at Desktop"
 msgstr "Показати стільницю"
 
-#: useractions.cpp:1121
+#: useractions.cpp:1123
 #, kde-format
 msgid "Kill Window"
 msgstr "Вбити вікно"
 
-#: useractions.cpp:1122
+#: useractions.cpp:1124
 #, kde-format
 msgid "Suspend Compositing"
 msgstr "Призупинити композитний режим"
 
-#: useractions.cpp:1183
+#: useractions.cpp:1185
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Активувати вікно (%1)"
 
-#: useractions.cpp:1320
+#: useractions.cpp:1322
 #, kde-format
 msgid ""
 "The window manager is configured to consider the screen with the mouse on it "
