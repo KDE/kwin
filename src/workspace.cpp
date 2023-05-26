@@ -703,6 +703,7 @@ void Workspace::addX11Window(X11Window *window)
     } else {
         m_focusChain->update(window, FocusChain::Update);
     }
+    Q_ASSERT(!m_windows.contains(window));
     m_windows.append(window);
     addToStack(window);
     updateClientArea(); // This cannot be in manage(), because the window got added only now
@@ -725,6 +726,7 @@ void Workspace::addX11Window(X11Window *window)
 
 void Workspace::addUnmanaged(X11Window *window)
 {
+    Q_ASSERT(!m_windows.contains(window));
     m_windows.append(window);
     addToStack(window);
     updateStackingOrder(true);
@@ -791,6 +793,7 @@ void Workspace::addWaylandWindow(Window *window)
             m_placement->place(window, area);
         }
     }
+    Q_ASSERT(!m_windows.contains(window));
     m_windows.append(window);
     addToStack(window);
 
@@ -2015,6 +2018,7 @@ void Workspace::updateTabbox()
 
 void Workspace::addInternalWindow(InternalWindow *window)
 {
+    Q_ASSERT(!m_windows.contains(window));
     m_windows.append(window);
     addToStack(window);
 
