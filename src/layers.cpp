@@ -293,6 +293,10 @@ void Workspace::lowerWindow(Window *window, bool nogroup)
     if (!window) {
         return;
     }
+    if (window->isDeleted()) {
+        qCWarning(KWIN_CORE) << "Workspace::lowerWindow: closed window" << window << "cannot be restacked";
+        return;
+    }
 
     window->cancelAutoRaise();
 
@@ -317,6 +321,10 @@ void Workspace::lowerWindow(Window *window, bool nogroup)
 void Workspace::lowerWindowWithinApplication(Window *window)
 {
     if (!window) {
+        return;
+    }
+    if (window->isDeleted()) {
+        qCWarning(KWIN_CORE) << "Workspace::lowerWindowWithinApplication: closed window" << window << "cannot be restacked";
         return;
     }
 
@@ -349,6 +357,10 @@ void Workspace::raiseWindow(Window *window, bool nogroup)
     if (!window) {
         return;
     }
+    if (window->isDeleted()) {
+        qCWarning(KWIN_CORE) << "Workspace::raiseWindow: closed window" << window << "cannot be restacked";
+        return;
+    }
 
     window->cancelAutoRaise();
 
@@ -372,6 +384,10 @@ void Workspace::raiseWindow(Window *window, bool nogroup)
 void Workspace::raiseWindowWithinApplication(Window *window)
 {
     if (!window) {
+        return;
+    }
+    if (window->isDeleted()) {
+        qCWarning(KWIN_CORE) << "Workspace::raiseWindowWithinApplication: closed window" << window << "cannot be restacked";
         return;
     }
 
@@ -427,6 +443,10 @@ void Workspace::lowerWindowRequest(Window *window)
 
 void Workspace::restack(Window *window, Window *under, bool force)
 {
+    if (window->isDeleted()) {
+        qCWarning(KWIN_CORE) << "Workspace::restack: closed window" << window << "cannot be restacked";
+        return;
+    }
     Q_ASSERT(unconstrained_stacking_order.contains(under));
     if (!force && !Window::belongToSameApplication(under, window)) {
         // put in the stacking order below _all_ windows belonging to the active application
