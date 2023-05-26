@@ -116,6 +116,7 @@ void FocusChain::updateWindowInChain(Window *window, FocusChain::Change change, 
 
 void FocusChain::insertWindowIntoChain(Window *window, Chain &chain)
 {
+    Q_ASSERT(!window->isDeleted());
     if (chain.contains(window)) {
         return;
     }
@@ -130,6 +131,7 @@ void FocusChain::insertWindowIntoChain(Window *window, Chain &chain)
 
 void FocusChain::moveAfterWindow(Window *window, Window *reference)
 {
+    Q_ASSERT(!window->isDeleted());
     if (!window->wantsTabFocus()) {
         return;
     }
@@ -147,6 +149,7 @@ void FocusChain::moveAfterWindow(Window *window, Window *reference)
 
 void FocusChain::moveAfterWindowInChain(Window *window, Window *reference, Chain &chain)
 {
+    Q_ASSERT(!window->isDeleted());
     if (!chain.contains(reference)) {
         return;
     }
@@ -211,12 +214,14 @@ Window *FocusChain::nextForDesktop(Window *reference, VirtualDesktop *desktop) c
 
 void FocusChain::makeFirstInChain(Window *window, Chain &chain)
 {
+    Q_ASSERT(!window->isDeleted());
     chain.removeAll(window);
     chain.append(window);
 }
 
 void FocusChain::makeLastInChain(Window *window, Chain &chain)
 {
+    Q_ASSERT(!window->isDeleted());
     chain.removeAll(window);
     chain.prepend(window);
 }
