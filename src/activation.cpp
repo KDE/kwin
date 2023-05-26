@@ -286,6 +286,9 @@ void Workspace::activateWindow(Window *window, bool force)
         setActiveWindow(nullptr);
         return;
     }
+    if (window->isDeleted()) {
+        return;
+    }
     raiseWindow(window);
     if (!window->isOnCurrentDesktop()) {
         ++block_focus;
