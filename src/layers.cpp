@@ -273,7 +273,7 @@ Window *Workspace::findDesktop(bool topmost, VirtualDesktop *desktop) const
 
 void Workspace::raiseOrLowerWindow(Window *window)
 {
-    if (!window || !window->isOnCurrentDesktop()) {
+    if (!window->isOnCurrentDesktop()) {
         return;
     }
 
@@ -290,9 +290,6 @@ void Workspace::raiseOrLowerWindow(Window *window)
 
 void Workspace::lowerWindow(Window *window, bool nogroup)
 {
-    if (!window) {
-        return;
-    }
     if (window->isDeleted()) {
         qCWarning(KWIN_CORE) << "Workspace::lowerWindow: closed window" << window << "cannot be restacked";
         return;
@@ -320,9 +317,6 @@ void Workspace::lowerWindow(Window *window, bool nogroup)
 
 void Workspace::lowerWindowWithinApplication(Window *window)
 {
-    if (!window) {
-        return;
-    }
     if (window->isDeleted()) {
         qCWarning(KWIN_CORE) << "Workspace::lowerWindowWithinApplication: closed window" << window << "cannot be restacked";
         return;
@@ -354,9 +348,6 @@ void Workspace::lowerWindowWithinApplication(Window *window)
 
 void Workspace::raiseWindow(Window *window, bool nogroup)
 {
-    if (!window) {
-        return;
-    }
     if (window->isDeleted()) {
         qCWarning(KWIN_CORE) << "Workspace::raiseWindow: closed window" << window << "cannot be restacked";
         return;
@@ -383,9 +374,6 @@ void Workspace::raiseWindow(Window *window, bool nogroup)
 
 void Workspace::raiseWindowWithinApplication(Window *window)
 {
-    if (!window) {
-        return;
-    }
     if (window->isDeleted()) {
         qCWarning(KWIN_CORE) << "Workspace::raiseWindowWithinApplication: closed window" << window << "cannot be restacked";
         return;

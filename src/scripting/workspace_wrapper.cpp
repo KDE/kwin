@@ -287,7 +287,9 @@ QList<KWin::Window *> WorkspaceWrapper::stackingOrder() const
 
 void WorkspaceWrapper::raiseWindow(KWin::Window *window)
 {
-    KWin::Workspace::self()->raiseWindow(window);
+    if (window) {
+        KWin::Workspace::self()->raiseWindow(window);
+    }
 }
 
 Window *WorkspaceWrapper::getClient(qulonglong windowId)
