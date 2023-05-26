@@ -1823,6 +1823,17 @@ void X11Window::updateVisibility()
         }
         return;
     }
+    if (isHiddenByShowDesktop()) {
+        if (waylandServer()) {
+            return;
+        }
+        if (Compositor::compositing() && options->hiddenPreviews() != HiddenPreviewsNever) {
+            internalKeep();
+        } else {
+            internalHide();
+        }
+        return;
+    }
     setSkipTaskbar(originalSkipTaskbar()); // Reset from 'hidden'
     if (isMinimized()) {
         info->setState(NET::Hidden, NET::Hidden);
@@ -2184,6 +2195,11 @@ void X11Window::doSetDemandsAttention()
     info->setState(isDemandingAttention() ? NET::DemandsAttention : NET::States(), NET::DemandsAttention);
 }
 
+void X11Window::doSetHiddenByShowDesktop()
+{
+    updateVisibility();
+}
+
 void X11Window::doSetOnActivities(const QStringList &activityList)
 {
 #if KWIN_BUILD_ACTIVITIES
@@ -2240,21 +2256,6 @@ bool X11Window::takeFocus()
         sendClientMessage(window(), atoms->wm_protocols, atoms->wm_take_focus);
     }
     workspace()->setShouldGetFocus(this);
-
-    bool breakShowingDesktop = !keepAbove();
-    if (breakShowingDesktop) {
-        const auto members = group()->members();
-        for (const X11Window *c : members) {
-            if (c->isDesktop()) {
-                breakShowingDesktop = false;
-                break;
-            }
-        }
-    }
-    if (breakShowingDesktop) {
-        workspace()->setShowingDesktop(false);
-    }
-
     return true;
 }
 

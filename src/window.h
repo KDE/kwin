@@ -936,6 +936,8 @@ public:
     virtual bool isHiddenInternal() const = 0;
     virtual void hideClient() = 0;
     virtual void showClient() = 0;
+    bool isHiddenByShowDesktop() const;
+    void setHiddenByShowDesktop(bool hidden);
     // TODO: remove boolean trap
     virtual Window *findModal(bool allow_itself = false) = 0;
     virtual bool isTransient() const;
@@ -1238,6 +1240,7 @@ public:
     };
     Q_DECLARE_FLAGS(SameApplicationChecks, SameApplicationCheck)
     static bool belongToSameApplication(const Window *c1, const Window *c2, SameApplicationChecks checks = SameApplicationChecks());
+    virtual bool belongsToDesktop() const;
 
     bool hasApplicationMenu() const;
     bool applicationMenuActive() const
@@ -1421,6 +1424,7 @@ Q_SIGNALS:
     void unresponsiveChanged(bool);
     void decorationChanged();
     void hiddenChanged();
+    void hiddenByShowDesktopChanged();
     void lockScreenOverlayChanged();
 
 protected:
@@ -1498,6 +1502,7 @@ protected:
     virtual void doSetSkipSwitcher();
     virtual void doSetDemandsAttention();
     virtual void doSetQuickTileMode();
+    virtual void doSetHiddenByShowDesktop();
 
     void setupWindowManagementInterface();
     void destroyWindowManagementInterface();
@@ -1506,7 +1511,6 @@ protected:
     void handlePaletteChange();
 
     virtual Layer belongsToLayer() const;
-    virtual bool belongsToDesktop() const;
     bool isActiveFullScreen() const;
     virtual Layer layerForDock() const;
 
@@ -1720,6 +1724,7 @@ protected:
     QRectF m_clientGeometry;
     QRectF m_bufferGeometry;
     bool ready_for_painting;
+    bool m_hiddenByShowDesktop = false;
 
     int m_refCount = 1;
     QUuid m_internalId;

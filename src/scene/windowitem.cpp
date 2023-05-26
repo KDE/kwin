@@ -41,6 +41,7 @@ WindowItem::WindowItem(Window *window, Scene *scene, Item *parent)
     connect(window, &Window::lockScreenOverlayChanged, this, &WindowItem::updateVisibility);
     connect(window, &Window::minimizedChanged, this, &WindowItem::updateVisibility);
     connect(window, &Window::hiddenChanged, this, &WindowItem::updateVisibility);
+    connect(window, &Window::hiddenByShowDesktopChanged, this, &WindowItem::updateVisibility);
     connect(window, &Window::activitiesChanged, this, &WindowItem::updateVisibility);
     connect(window, &Window::desktopsChanged, this, &WindowItem::updateVisibility);
     connect(workspace(), &Workspace::currentActivityChanged, this, &WindowItem::updateVisibility);
@@ -169,7 +170,7 @@ bool WindowItem::computeVisibility() const
             return false;
         }
     }
-    if (m_window->isHiddenInternal()) {
+    if (m_window->isHiddenInternal() || m_window->isHiddenByShowDesktop()) {
         if (m_forceVisibleByHiddenCount == 0) {
             return false;
         }

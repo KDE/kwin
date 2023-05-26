@@ -258,7 +258,7 @@ quint64 AnimationEffect::p_animate(EffectWindow *w, Attribute a, uint meta, int 
     AniData &animation = it->first.last();
     animation.id = ret_id;
 
-    animation.visibleRef = EffectWindowVisibleRef(w, EffectWindow::PAINT_DISABLED_BY_MINIMIZE | EffectWindow::PAINT_DISABLED_BY_DESKTOP | EffectWindow::PAINT_DISABLED_BY_DELETE);
+    animation.visibleRef = EffectWindowVisibleRef(w, EffectWindow::PAINT_DISABLED_BY_MINIMIZE | EffectWindow::PAINT_DISABLED_BY_DESKTOP | EffectWindow::PAINT_DISABLED_BY_DELETE | EffectWindow::PAINT_DISABLED);
     animation.timeLine.setDirection(TimeLine::Forward);
     animation.timeLine.setDuration(std::chrono::milliseconds(ms));
     animation.timeLine.setEasingCurve(curve);

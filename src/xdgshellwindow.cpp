@@ -836,9 +836,6 @@ bool XdgToplevelWindow::takeFocus()
         sendPing(PingReason::FocusWindow);
         setActive(true);
     }
-    if (!keepAbove() && !isOnScreenDisplay() && !belongsToDesktop()) {
-        workspace()->setShowingDesktop(false);
-    }
     return true;
 }
 

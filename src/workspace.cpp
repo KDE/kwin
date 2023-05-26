@@ -1534,34 +1534,22 @@ void Workspace::setShowingDesktop(bool showing, bool animated)
     }
     showing_desktop = showing;
 
-    Window *topDesk = nullptr;
-
-    { // for the blocker RAII
-        StackingUpdatesBlocker blocker(this); // updateLayer & lowerWindow would invalidate stacking_order
-        for (int i = stacking_order.count() - 1; i > -1; --i) {
-            auto window = stacking_order.at(i);
-            if (window->isClient() && window->isOnCurrentDesktop()) {
-                if (window->isDock()) {
-                    window->updateLayer();
-                } else if (window->isDesktop() && window->isShown()) {
-                    window->updateLayer();
-                    lowerWindow(window);
-                    if (!topDesk) {
-                        topDesk = window;
-                    }
-                    if (auto group = window->group()) {
-                        const auto members = group->members();
-                        for (X11Window *cm : members) {
-                            cm->updateLayer();
-                        }
-                    }
-                }
-            }
+    for (int i = stacking_order.count() - 1; i > -1; --i) {
+        auto window = stacking_order.at(i);
+        if (window->isDeleted() || window->isUnmanaged()) {
+            continue;
         }
-    } // ~StackingUpdatesBlocker
+        if (window->isDock() || window->isDesktop() || window->belongsToDesktop()) {
+            continue;
+        }
+        window->setHiddenByShowDesktop(showing_desktop);
+    }
 
-    if (showing_desktop && topDesk) {
-        requestFocus(topDesk);
+    if (showing_desktop) {
+        Window *desktop = findDesktop(true, VirtualDesktopManager::self()->currentDesktop());
+        if (desktop) {
+            requestFocus(desktop);
+        }
     } else if (!showing_desktop && changed) {
         const auto window = m_focusChain->getForActivation(VirtualDesktopManager::self()->currentDesktop());
         if (window) {

@@ -572,11 +572,6 @@ void Window::updateLayer()
 
 Layer Window::belongsToLayer() const
 {
-    // NOTICE while showingDesktop, desktops move to the AboveLayer
-    // (interchangeable w/ eg. yakuake etc. which will at first remain visible)
-    // and the docks move into the NotificationLayer (which is between Above- and
-    // ActiveLayer, so that active fullscreen windows will still cover everything)
-    // Since the desktop is also activated, nothing should be in the ActiveLayer, though
     if (isUnmanaged() || isInternal()) {
         return UnmanagedLayer;
     }
@@ -590,15 +585,12 @@ Layer Window::belongsToLayer() const
         return UnmanagedLayer;
     }
     if (isDesktop()) {
-        return workspace()->showingDesktop() ? AboveLayer : DesktopLayer;
+        return DesktopLayer;
     }
     if (isSplash()) { // no damn annoying splashscreens
         return NormalLayer; // getting in the way of everything else
     }
     if (isDock() || isAppletPopup()) {
-        if (workspace()->showingDesktop()) {
-            return NotificationLayer;
-        }
         return layerForDock();
     }
     if (isPopupWindow()) {
@@ -612,9 +604,6 @@ Layer Window::belongsToLayer() const
     }
     if (isCriticalNotification()) {
         return CriticalNotificationLayer;
-    }
-    if (workspace()->showingDesktop() && belongsToDesktop()) {
-        return AboveLayer;
     }
     if (keepBelow()) {
         return BelowLayer;
@@ -3578,6 +3567,10 @@ void Window::doSetQuickTileMode()
 {
 }
 
+void Window::doSetHiddenByShowDesktop()
+{
+}
+
 QRectF Window::moveToArea(const QRectF &geometry, const QRectF &oldArea, const QRectF &newArea)
 {
     QRectF ret = geometry;
@@ -4218,6 +4211,20 @@ WindowOffscreenRenderRef::~WindowOffscreenRenderRef()
 {
     if (m_window) {
         m_window->unrefOffscreenRendering();
+    }
+}
+
+bool Window::isHiddenByShowDesktop() const
+{
+    return m_hiddenByShowDesktop;
+}
+
+void Window::setHiddenByShowDesktop(bool hidden)
+{
+    if (m_hiddenByShowDesktop != hidden) {
+        m_hiddenByShowDesktop = hidden;
+        doSetHiddenByShowDesktop();
+        Q_EMIT hiddenByShowDesktopChanged();
     }
 }
 

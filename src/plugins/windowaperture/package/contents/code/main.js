@@ -33,20 +33,14 @@ var badBadWindowsEffect = {
             for (var i = 0; i < stackingOrder.length; ++i) {
                 var w = stackingOrder[i];
 
-                // ignore windows above the desktop
-                // (when not showing, pretty much everything would be)
-                if (w.desktopWindow) {
-                    if (frozenTime <= 0)
-                        break
-                    else
-                        continue;
+                if (!w.hiddenByShowDesktop) {
+                    continue;
                 }
 
                 // ignore invisible windows and such that do not have to be restored
                 if (!w.visible) {
                     if (w.offToCornerId) {
                         // if it was visible when the effect was activated delete its animation data
-                        effects.setElevatedWindow(w, false);
                         cancel(w.offToCornerId);
                         delete w.offToCornerId;
                         delete w.apertureCorner;
@@ -122,9 +116,6 @@ var badBadWindowsEffect = {
             var w = stackingOrder[i];
             if (w.apertureCorner === undefined && w.offToCornerId === undefined)
                 continue;
-
-            // keep windows above the desktop visually
-            effects.setElevatedWindow(w, showing);
 
             if (w.dock) {
                 continue;

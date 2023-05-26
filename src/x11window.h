@@ -343,6 +343,7 @@ protected:
     void doSetSkipTaskbar() override;
     void doSetSkipSwitcher() override;
     void doSetDemandsAttention() override;
+    void doSetHiddenByShowDesktop() override;
     bool belongsToDesktop() const override;
     bool doStartInteractiveMoveResize() override;
     bool isWaitingForInteractiveMoveResizeSync() const override;
@@ -585,7 +586,7 @@ inline Group *X11Window::group()
 
 inline bool X11Window::isShown() const
 {
-    return !isMinimized() && !hidden;
+    return !isMinimized() && !hidden && !isHiddenByShowDesktop();
 }
 
 inline bool X11Window::isHiddenInternal() const

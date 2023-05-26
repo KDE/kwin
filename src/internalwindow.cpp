@@ -244,7 +244,7 @@ bool InternalWindow::isOutline() const
 
 bool InternalWindow::isShown() const
 {
-    return readyForPainting();
+    return readyForPainting() && !isHiddenByShowDesktop();
 }
 
 bool InternalWindow::isHiddenInternal() const

@@ -2296,6 +2296,11 @@ class KWINEFFECTS_EXPORT EffectWindow : public QObject
      */
     Q_PROPERTY(bool lockScreen READ isLockScreen CONSTANT)
 
+    /**
+     * Whether this EffectWindow is hidden because the show desktop mode is active.
+     */
+    Q_PROPERTY(bool hiddenByShowDesktop READ isHiddenByShowDesktop)
+
 public:
     /**  Flags explaining why painting should be disabled  */
     enum {
@@ -2325,6 +2330,7 @@ public:
 
     virtual bool isDeleted() const = 0;
     virtual bool isHidden() const = 0;
+    virtual bool isHiddenByShowDesktop() const = 0;
 
     virtual bool isMinimized() const = 0;
     virtual double opacity() const = 0;

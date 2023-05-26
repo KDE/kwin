@@ -317,7 +317,7 @@ QList<KWin::Window *> WorkspaceWrapper::windowAt(const QPointF &pos, int count) 
         if (window->isDeleted()) {
             continue;
         }
-        if (!window->isOnCurrentActivity() || !window->isOnCurrentDesktop() || window->isMinimized() || window->isHiddenInternal()) {
+        if (!window->isOnCurrentActivity() || !window->isOnCurrentDesktop() || window->isMinimized() || window->isHiddenInternal() || window->isHiddenByShowDesktop()) {
             continue;
         }
         if (window->hitTest(pos)) {
