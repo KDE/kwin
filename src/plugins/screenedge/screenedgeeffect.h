@@ -7,18 +7,13 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
+#include "kwinoffscreenquickview.h"
 #include "libkwineffects/kwineffects.h"
 
 class QTimer;
-namespace Plasma
-{
-class Svg;
-}
 
 namespace KWin
 {
-class Glow;
-class GLTexture;
 
 class ScreenEdgeEffect : public Effect
 {
@@ -40,27 +35,8 @@ private Q_SLOTS:
     void cleanup();
 
 private:
-    void ensureGlowSvg();
-    std::unique_ptr<Glow> createGlow(ElectricBorder border, qreal factor, const QRect &geometry);
-    template<typename T>
-    T *createCornerGlow(ElectricBorder border);
-    template<typename T>
-    T *createEdgeGlow(ElectricBorder border, const QSize &size);
-    QSize cornerGlowSize(ElectricBorder border);
-    Plasma::Svg *m_glow = nullptr;
-    std::map<ElectricBorder, std::unique_ptr<Glow>> m_borders;
+    std::map<ElectricBorder, std::unique_ptr<OffscreenQuickScene>> m_borders;
     QTimer *m_cleanupTimer;
-};
-
-class Glow
-{
-public:
-    std::unique_ptr<GLTexture> texture;
-    std::unique_ptr<QImage> image;
-    QSize pictureSize;
-    qreal strength;
-    QRect geometry;
-    ElectricBorder border;
 };
 
 }
