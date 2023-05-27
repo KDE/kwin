@@ -74,6 +74,9 @@ void ScreenEdgeEffect::edgeApproaching(ElectricBorder border, qreal factor, cons
         connect(glow.get(), &OffscreenQuickView::repaintNeeded, this, [glowPtr] {
             effects->addRepaint(glowPtr->geometry());
         });
+        //        connect(glow.get(), geometryChanged, this, [glowPtr](const QRect &old, const QRect &new) {
+        //    });
+
         glow->setSource(QUrl::fromLocalFile("/home/david/edge.qml"));
         glow->setGeometry(QRect(0, 0, 30, 30));
 

@@ -33,12 +33,8 @@ namespace KWin
 {
 
 TrackMouseEffect::TrackMouseEffect()
-    : m_angle(0)
 {
     initConfig<TrackMouseConfig>();
-    if (effects->isOpenGLCompositing() || effects->compositingType() == QPainterCompositing) {
-        m_angleBase = 90.0;
-    }
     m_mousePolling = false;
 
     m_action = new QAction(this);
@@ -90,76 +86,21 @@ void TrackMouseEffect::reconfigure(ReconfigureFlags)
 
 void TrackMouseEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
-    QTime t = QTime::currentTime();
-    m_angle = ((t.second() % 4) * m_angleBase) + (t.msec() / 1000.0 * m_angleBase);
-    m_lastRect[0].moveCenter(cursorPos().toPoint());
-    m_lastRect[1].moveCenter(cursorPos().toPoint());
-    data.paint |= m_lastRect[0].adjusted(-1, -1, 1, 1);
-
-    effects->prePaintScreen(data, presentTime);
+    // TODO, once per screen on multiscreen
+    if (m_scene) {
+        // should guard, this but we know we rotate
+        m_scene->update();
+    }
 }
 
 void TrackMouseEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
 {
-    effects->paintScreen(renderTarget, viewport, mask, region, screen); // paint normal screen
+    effects->paintScreen(renderTarget, viewport, mask, region, screen);
 
-    if (effects->isOpenGLCompositing() && m_texture[0] && m_texture[1]) {
-        ShaderBinder binder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
-        GLShader *shader(binder.shader());
-        if (!shader) {
-            return;
-        }
-        shader->setColorspaceUniforms(Colorspace::sRGB, renderTarget);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-        QMatrix4x4 matrix(viewport.projectionMatrix());
-        const QPointF p = m_lastRect[0].topLeft() + QPoint(m_lastRect[0].width() / 2.0, m_lastRect[0].height() / 2.0);
-        const float x = p.x();
-        const float y = p.y();
-        const auto scale = viewport.scale();
-        for (int i = 0; i < 2; ++i) {
-            matrix.translate(x * scale, y * scale, 0.0);
-            matrix.rotate(i ? -2 * m_angle : m_angle, 0, 0, 1.0);
-            matrix.translate(-x * scale, -y * scale, 0.0);
-            QMatrix4x4 mvp(matrix);
-            mvp.translate(m_lastRect[i].x() * scale, m_lastRect[i].y() * scale);
-            shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-            m_texture[i]->render(m_lastRect[i].size(), scale);
-        }
-        glDisable(GL_BLEND);
-    } else if (effects->compositingType() == QPainterCompositing && !m_image[0].isNull() && !m_image[1].isNull()) {
-        QPainter *painter = effects->scenePainter();
-        const QPointF p = m_lastRect[0].topLeft() + QPoint(m_lastRect[0].width() / 2.0, m_lastRect[0].height() / 2.0);
-        for (int i = 0; i < 2; ++i) {
-            painter->save();
-            painter->translate(p.x(), p.y());
-            painter->rotate(i ? -2 * m_angle : m_angle);
-            painter->translate(-p.x(), -p.y());
-            painter->drawImage(m_lastRect[i], m_image[i]);
-            painter->restore();
-        }
+    // TODO if visible in viewport
+    if (m_scene) {
+        effects->renderOffscreenQuickView(renderTarget, viewport, m_scene.get());
     }
-}
-
-void TrackMouseEffect::postPaintScreen()
-{
-    effects->addRepaint(m_lastRect[0].adjusted(-1, -1, 1, 1));
-    effects->postPaintScreen();
-}
-
-bool TrackMouseEffect::init()
-{
-    effects->makeOpenGLContextCurrent();
-    if (!m_texture[0] && m_image[0].isNull()) {
-        loadTexture();
-        if (!m_texture[0] && m_image[0].isNull()) {
-            return false;
-        }
-    }
-    m_lastRect[0].moveCenter(cursorPos().toPoint());
-    m_lastRect[1].moveCenter(cursorPos().toPoint());
-    m_angle = 0;
-    return true;
 }
 
 void TrackMouseEffect::toggle()
@@ -174,9 +115,6 @@ void TrackMouseEffect::toggle()
         break;
 
     case State::Inactive:
-        if (!init()) {
-            return;
-        }
         m_state = State::ActivatedByShortcut;
         break;
 
@@ -184,22 +122,19 @@ void TrackMouseEffect::toggle()
         Q_UNREACHABLE();
         break;
     }
-
-    effects->addRepaint(m_lastRect[0].adjusted(-1, -1, 1, 1));
 }
 
-void TrackMouseEffect::slotMouseChanged(const QPointF &, const QPointF &,
+void TrackMouseEffect::slotMouseChanged(const QPointF &pos, const QPointF &,
                                         Qt::MouseButtons, Qt::MouseButtons,
                                         Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers)
 {
     if (!m_mousePolling) { // we didn't ask for it but maybe someone else did...
         return;
     }
-
     switch (m_state) {
     case State::ActivatedByModifiers:
         if (modifiers == m_modifiers) {
-            return;
+            break;
         }
         m_state = State::Inactive;
         break;
@@ -209,10 +144,7 @@ void TrackMouseEffect::slotMouseChanged(const QPointF &, const QPointF &,
 
     case State::Inactive:
         if (modifiers != m_modifiers) {
-            return;
-        }
-        if (!init()) {
-            return;
+            break;
         }
         m_state = State::ActivatedByModifiers;
         break;
@@ -222,27 +154,35 @@ void TrackMouseEffect::slotMouseChanged(const QPointF &, const QPointF &,
         break;
     }
 
-    effects->addRepaint(m_lastRect[0].adjusted(-1, -1, 1, 1));
-}
+    if (m_state != State::Inactive) {
+        if (!m_scene) {
+            m_scene.reset(new OffscreenQuickScene(nullptr));
+            m_scene->setAutomaticRepaint(false);
+            auto glowPtr = m_scene.get();
 
-void TrackMouseEffect::loadTexture()
-{
-    QString f[2] = {QStandardPaths::locate(QStandardPaths::AppDataLocation, QStringLiteral("tm_outer.png")),
-                    QStandardPaths::locate(QStandardPaths::AppDataLocation, QStringLiteral("tm_inner.png"))};
-    if (f[0].isEmpty() || f[1].isEmpty()) {
-        return;
-    }
+            connect(m_scene.get(), &OffscreenQuickView::renderRequested, this, [glowPtr] {
+                effects->addRepaint(glowPtr->geometry());
+            });
+            connect(m_scene.get(), &OffscreenQuickView::sceneChanged, this, [glowPtr] {
+                effects->addRepaint(glowPtr->geometry());
+            });
+            connect(m_scene.get(), &OffscreenQuickView::geometryChanged, this, [](const QRect &oldGeom, const QRect &newGeom) {
+                effects->addRepaint(oldGeom);
+                effects->addRepaint(newGeom);
+            });
 
-    for (int i = 0; i < 2; ++i) {
-        if (effects->isOpenGLCompositing()) {
-            QImage img(f[i]);
-            m_texture[i] = std::make_unique<GLTexture>(img);
-            m_lastRect[i].setSize(img.size());
+            m_scene->setSource(QUrl::fromLocalFile("/home/david/projects/temp/qml/mousemark2.qml"));
         }
-        if (effects->compositingType() == QPainterCompositing) {
-            m_image[i] = QImage(f[i]);
-            m_lastRect[i].setSize(m_image[i].size());
-        }
+
+        QRect rect(0, 0, 300, 300);
+        rect.moveCenter(pos.toPoint());
+        m_scene->setGeometry(rect);
+
+    } else if (m_scene) {
+        effects->addRepaint(m_scene->geometry());
+        qDebug() << "RELEASE";
+
+        m_scene.reset();
     }
 }
 

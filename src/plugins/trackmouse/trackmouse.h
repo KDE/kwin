@@ -11,6 +11,7 @@
 
 #pragma once
 
+#include "kwinoffscreenquickview.h"
 #include "libkwineffects/kwineffects.h"
 
 class QAction;
@@ -28,9 +29,8 @@ class TrackMouseEffect
 public:
     TrackMouseEffect();
     ~TrackMouseEffect() override;
-    void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
+    void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime);
     void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen) override;
-    void postPaintScreen() override;
     void reconfigure(ReconfigureFlags) override;
     bool isActive() const override;
 
@@ -50,16 +50,9 @@ private Q_SLOTS:
                           Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
 
 private:
-    bool init();
-    void loadTexture();
-    QRect m_lastRect[2];
-    bool m_mousePolling;
-    float m_angle;
-    float m_angleBase;
-    std::unique_ptr<GLTexture> m_texture[2];
     QAction *m_action;
-    QImage m_image[2];
     Qt::KeyboardModifiers m_modifiers;
+    bool m_mousePolling = false;
 
     enum class State {
         ActivatedByModifiers,
@@ -67,6 +60,8 @@ private:
         Inactive
     };
     State m_state = State::Inactive;
+
+    std::unique_ptr<OffscreenQuickScene> m_scene;
 };
 
 } // namespace

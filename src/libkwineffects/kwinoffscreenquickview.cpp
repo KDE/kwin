@@ -435,6 +435,9 @@ QSize OffscreenQuickView::size() const
 void OffscreenQuickView::setGeometry(const QRect &rect)
 {
     const QRect oldGeometry = d->m_view->geometry();
+    if (rect == oldGeometry) {
+        return;
+    }
     d->m_view->setGeometry(rect);
     Q_EMIT geometryChanged(oldGeometry, rect);
 }
