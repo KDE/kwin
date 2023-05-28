@@ -757,11 +757,11 @@ std::shared_ptr<DrmBlob> DrmPipeline::createHdrMetadata(NamedTransferFunction tr
             },
             .white_point = {to16Bit(colorimetry.white.x()), to16Bit(colorimetry.white.y())},
             // in nits
-            .max_display_mastering_luminance = uint16_t(std::round(metadata.desiredContentMaxLuminance)),
+            .max_display_mastering_luminance = uint16_t(std::round(metadata.desiredMaxFrameAverageLuminance)),
             // in 0.0001 nits
             .min_display_mastering_luminance = uint16_t(std::round(metadata.desiredContentMinLuminance * 10000)),
             // in nits
-            .max_cll = uint16_t(std::round(metadata.desiredContentMaxLuminance)),
+            .max_cll = uint16_t(std::round(metadata.desiredMaxFrameAverageLuminance)),
             .max_fall = uint16_t(std::round(metadata.desiredMaxFrameAverageLuminance)),
         },
     };
