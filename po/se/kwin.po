@@ -1610,7 +1610,6 @@ msgstr ""
 #: plugins/overview/kcm/overvieweffectkcm.ui:30
 #: plugins/windowview/kcm/windowvieweffectkcm.ui:30
 #, fuzzy, kde-format
-#| msgid "&Close"
 msgid "Closest"
 msgstr "&Gidde"
 
@@ -1633,7 +1632,6 @@ msgstr "Ii oktage"
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/desktopgrid/desktopgrid_config.ui:155
 #, fuzzy, kde-format
-#| msgid "Windows"
 msgid "Windows layout:"
 msgstr "Láset"
 
@@ -1664,28 +1662,24 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimDesktop)
 #: plugins/diminactive/diminactive_config.ui:54
 #, fuzzy, kde-format
-#| msgid "Desktop %1"
 msgid "Desktop"
 msgstr "Cállinbeavdi %1"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimKeepAbove)
 #: plugins/diminactive/diminactive_config.ui:61
 #, fuzzy, kde-format
-#| msgid "Move Window"
 msgid "Keep above windows"
 msgstr "Sirdde láse"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimByGroup)
 #: plugins/diminactive/diminactive_config.ui:68
 #, fuzzy, kde-format
-#| msgid "KDE window manager"
 msgid "By window group"
 msgstr "KDE lásegieđahalli"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimFullScreen)
 #: plugins/diminactive/diminactive_config.ui:75
 #, fuzzy, kde-format
-#| msgid "&Fullscreen"
 msgid "Fullscreen windows"
 msgstr "&Deavasšearbma"
 
@@ -1713,7 +1707,6 @@ msgstr ""
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_InAnimation)
 #: plugins/glide/glide_config.ui:50
 #, fuzzy, kde-format
-#| msgid "Window Operations Menu"
 msgid "Window Open Animation"
 msgstr "Lásiid doaimmafállu"
 
@@ -1797,7 +1790,6 @@ msgstr ""
 
 #: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:52
 #, fuzzy, kde-format
-#| msgid "&Resize"
 msgctxt "@item:inlistbox Button size:"
 msgid "Oversized"
 msgstr "&Rievdat sturrodaga"
@@ -1810,7 +1802,6 @@ msgstr ""
 #. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:14
 #, fuzzy, kde-format
-#| msgid "Config Dialog"
 msgid "Config Dialog"
 msgstr "Heivehusláseš"
 
@@ -1831,7 +1822,6 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:56
 #, fuzzy, kde-format
-#| msgid "Close Window"
 msgid "Colored window border"
 msgstr "Gidde láse"
 
@@ -1846,7 +1836,6 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:69
 #, fuzzy, kde-format
-#| msgid "Animate buttons"
 msgid "Animate buttons"
 msgstr "Animere boaluid"
 
@@ -2242,7 +2231,6 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/overview/kcm/overvieweffectkcm.ui:43
 #, fuzzy, kde-format
-#| msgid "Minimize Window"
 msgid "Ignore minimized windows:"
 msgstr "Minimere láse"
 
@@ -2253,7 +2241,6 @@ msgstr ""
 
 #: plugins/overview/qml/DesktopBar.qml:259
 #, fuzzy, kde-format
-#| msgid "&All Desktops"
 msgid "Add Virtual Desktop"
 msgstr "&Buot čállinbevddiide"
 
@@ -2269,7 +2256,6 @@ msgstr ""
 
 #: plugins/private/qml/WindowHeapDelegate.qml:452
 #, fuzzy, kde-format
-#| msgid "Close Window"
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
 msgstr "Gidde láse"
@@ -2277,7 +2263,6 @@ msgstr "Gidde láse"
 #. i18n: ectx: property (text), widget (QLabel, label_InScale)
 #: plugins/scale/package/contents/ui/config.ui:46
 #, fuzzy, kde-format
-#| msgid "Window Operations Menu"
 msgid "Window open scale:"
 msgstr "Lásiid doaimmafállu"
 
@@ -2457,13 +2442,11 @@ msgstr ""
 
 #: plugins/tileseditor/qml/main.qml:274
 #, fuzzy, kde-format
-#| msgid "&Close"
 msgid "Close"
 msgstr "&Gidde"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:167
 #, fuzzy, kde-format
-#| msgid "Maximize Window Horizontally"
 msgid "Split Horizontally"
 msgstr "Maksimere láse láskut"
 
@@ -2580,14 +2563,12 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, moveresize_label)
 #: plugins/translucency/package/contents/ui/config.ui:207
 #, fuzzy, kde-format
-#| msgid "Move Window"
 msgid "Moving windows:"
 msgstr "Sirdde láse"
 
 #. i18n: ectx: property (text), widget (QLabel, inactive_label)
 #: plugins/translucency/package/contents/ui/config.ui:226
 #, fuzzy, kde-format
-#| msgid "Raise Window"
 msgid "Inactive windows:"
 msgstr "Lokte láse"
 
@@ -2662,7 +2643,6 @@ msgstr ""
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:49
 #: plugins/windowview/windowvieweffect.cpp:54
 #, fuzzy, kde-format
-#| msgid "Keep Window on All Desktops"
 msgid "Toggle Present Windows (All desktops)"
 msgstr "Čájet láse buot čállinbevddiin"
 
@@ -2681,7 +2661,6 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
 #: plugins/windowview/kcm/windowvieweffectkcm.ui:56
 #, fuzzy, kde-format
-#| msgid "Minimize Window"
 msgid "Ignore &minimized windows"
 msgstr "Minimere láse"
 
@@ -2692,7 +2671,6 @@ msgstr ""
 
 #: plugins/windowview/qml/main.qml:107
 #, fuzzy, kde-format
-#| msgid "Windows"
 msgid "No Windows"
 msgstr "Láset"
 
@@ -2803,13 +2781,11 @@ msgstr ""
 
 #: plugins/zoom/zoom_config.cpp:94
 #, fuzzy, kde-format
-#| msgid "&Move"
 msgid "Move Up"
 msgstr "&Sirdde"
 
 #: plugins/zoom/zoom_config.cpp:101
 #, fuzzy, kde-format
-#| msgid "Move Window"
 msgid "Move Down"
 msgstr "Sirdde láse"
 

@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-13 02:16+0000\n"
-"PO-Revision-Date: 2023-03-06 13:29+0200\n"
+"PO-Revision-Date: 2023-04-27 12:17+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-POT-Import-Date: 2012-12-01 22:22:23+0000\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 23.04.0\n"
 
 #: kcmrules.cpp:226
 #, kde-format
@@ -511,6 +511,13 @@ msgid ""
 "<interface>Fullscreen</interface> states.<nl/><nl/>Note that the position "
 "can also be used to map to a different <interface>Screen</interface>"
 msgstr ""
+"Jotkin sovellukset saattavat asettaa geometriansa itse ikkunointiohjelman "
+"suositukset sivuuttaen. Tämän ominaisuuden asettamalla niiden "
+"sijoituspyynnöt sivuutetaan.<nl/><nl/>Tämä vaikuttaa <interface>kokoon</"
+"interface> ja <interface>sijaintiin</interface>, mutta ei "
+"<interface>suurentamisen</interface> tai <interface>koko näytön</interface> "
+"tiloihin.<nl/><nl/>Huomaa, että sijoittaa voi myös kokonaan eri "
+"<interface>näytölle</interface>"
 
 #: rulesmodel.cpp:546
 #, kde-format
@@ -528,13 +535,7 @@ msgid "Obey geometry restrictions"
 msgstr "Noudata geometriarajoituksia"
 
 #: rulesmodel.cpp:558
-#, fuzzy, kde-kuit-format
-#| msgid ""
-#| "Eg. terminals or video players can ask to keep a certain aspect ratio\n"
-#| "or only grow by values larger than one\n"
-#| "(eg. by the dimensions of one character).\n"
-#| "This may be pointless and the restriction prevents arbitrary dimensions\n"
-#| "like your complete screen area."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Some apps like video players or terminals can ask KWin to constrain them to "
@@ -543,11 +544,11 @@ msgid ""
 "windows to be resized to arbitrary sizes.<nl/><nl/>This can be helpful for "
 "windows that can't quite fit the full screen area when maximized."
 msgstr ""
-"Esim. päätteet ja videosoittimet voivat pyytää tiettyä kuvasuhdetta\n"
-"tai kasvaa vain yhtä suuremmilla arvoilla\n"
-"(esim. yhden merkin askelin).\n"
-"Tämä saattaa olla merkityksetöntä, niin että rajoitus estää jotkin\n"
-"ulottuvuudet kuten koko näytön alan."
+"Jotkin sovellukset kuten videosoittimet tai päätteet voivat pyytää KWiniltä "
+"rajoitusta tiettyihin kuvasuhteisiin tai ikkunan koon kasvamista vain yhden "
+"merkin askelin). Tällä ominaisuudella nämä rajoitukset voi sivuuttaa ja "
+"sallia ikkunoiden mielivaltaiset koot.<nl/><nl/>Tästä voi olla apua "
+"ikkunoille, jotka eivät suurennettuina aivan täytä koko näyttöä."
 
 #: rulesmodel.cpp:569
 #, kde-format
@@ -574,7 +575,7 @@ msgstr "Ohita tehtäväpalkki"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
-msgstr ""
+msgstr "Asettaa, näkyykö ikkuna tehtävänhallinnassa."
 
 #: rulesmodel.cpp:585
 #, kde-format
@@ -586,7 +587,7 @@ msgstr "Ohita sivutin"
 msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the Virtual Desktop manager."
-msgstr ""
+msgstr "Asettaa, näkyykö ikkuna virtuaalityöpöytien hallinnassa."
 
 #: rulesmodel.cpp:591
 #, kde-format
@@ -600,6 +601,7 @@ msgid ""
 "Controls whether or not the window appears in the <shortcut>Alt+Tab</"
 "shortcut> window list."
 msgstr ""
+"Asettaa, näkyykö ikkuna <shortcut>Alt+Sarkain</shortcut>-ikkunaluettelossa."
 
 #: rulesmodel.cpp:597
 #, kde-format
@@ -638,6 +640,7 @@ msgstr "Peittävyys passiivisena"
 msgid "Focus stealing prevention"
 msgstr "Kohdistuksen varastamisen esto"
 
+# Lähtöteksti on epäselvä: onko tämä nyt vanha YLEINEN ominaisuus vai jokin uusi, TIETTYJÄ ikkunoita/sovelluksia koskeva? (”to INDIVIDUAL windows and apps”!)
 #: rulesmodel.cpp:627
 #, kde-kuit-format
 msgctxt "@info:tooltip"
@@ -659,6 +662,22 @@ msgid ""
 "currently-focused window.</item><item><emphasis strong='true'>Extreme:</"
 "emphasis> The window will never be raised and focused.</item></list>"
 msgstr ""
+"KWin yrittää estää käyttäjän toimitta avattuja ikkunoita nostamasta itseään "
+"ja varastamasta kohdistusta, kun jotakin tehdään toisessa ikkunassa. Tällä "
+"ominaisuudella kohdistuksen varastamisen eston tasoa voi eri ikkunoille ja "
+"sovelluksille muuttaa.<nl/><nl/>Näin eri kohdistuksen varastamisen eston "
+"tasoilla käy ikkunoille, joita et itse nimenomaisesti ole avannut:<nl/"
+"><list><item><emphasis strong='true'>Ei mitään:</emphasis> Ikkuna nostetaan "
+"ja kohdistetaan.</item><item><emphasis strong='true'>Vähäinen:</emphasis> "
+"Kohdistuksen varastamisen estoa käytetään, mutta KWinin epäselviksi "
+"tulkitsemissa tapauksissa ikkuna nostetaan ja kohdistetaan.</"
+"item><item><emphasis strong='true'>Tavallinen:</emphasis> Kohdistuksen "
+"varastamisen enestoa käytetään, mutta KWinin epäselviksi tulkitsemissa "
+"tapauksissa ikkunaa <emphasis>ei</emphasis> nosteta tai kohdisteta.</"
+"item><item><emphasis strong='true'>Suuri:</emphasis> Ikkuna nostetaan ja "
+"kohdistetaan vain, jos se kuuluu samaan sovellukseen kuin tällä hetkellä "
+"kohdistettu ikkuna.</item><item><emphasis strong='true'>Äärimmäinen:</"
+"emphasis> Ikkunaa ei ikinä nosteta ja kohdisteta.</item></list>"
 
 #: rulesmodel.cpp:652
 #, kde-format
@@ -688,6 +707,24 @@ msgid ""
 "emphasis> Newly-opened windows never raise themselves and take focus.</"
 "item></list>"
 msgstr ""
+"Tämä ominaisuus asettaa aktiivisen ikkunan kohdistuksen suojan tason. Sitä "
+"voi käyttää ohittamaan ilman käyttäjän toimia avatuille uusille ikkunoille "
+"käytetty kohdistuksen varastamisen esto.<nl/><nl/>Näin eri kohdistuksen "
+"varastamisen eston tasoilla käy ikkunoille, joita et itse nimenomaisesti ole "
+"avannut, kun kohdistettuna on ikkuna, johon tätä ominaisuutta on käytetty:"
+"<nl/><list><item><emphasis strong='true'>Ei mitään:</emphasis> Vasta avatut "
+"ikkunat nostetaan ja kohdistetaan aina.</item><item><emphasis "
+"strong='true'>Vähäinen:</emphasis> Kohdistuksen varastamisen estoa käytetään "
+"vasta avattuihin ikkunoihin, mutta KWinin epäselviksi tulkitsemissa "
+"tapauksissa ikkuna nostetaan ja kohdistetaan.</item><item><emphasis "
+"strong='true'>Tavallinen:</emphasis> Kohdistuksen varastamisen estoa "
+"käytetään vasta avattuihin ikkunoihin, mutta KWinin epäselviksi "
+"tulkitsemissa tapauksissa ikkunaa <emphasis>ei</emphasis> nosteta tai "
+"kohdisteta.</item><item><emphasis strong='true'>Suuri:</emphasis> Vasta "
+"avattu ikkuna nostetaan ja kohdistetaan vain, jos se kuuluu samaan "
+"sovellukseen kuin tällä hetkellä kohdistettu ikkuna.</item><item><emphasis "
+"strong='true'>Äärimmäinen:</emphasis> Vasta avattua ikkunaa ei ikinä nosteta "
+"ja kohdisteta.</item></list>"
 
 #: rulesmodel.cpp:680
 #, kde-format
@@ -697,7 +734,7 @@ msgstr "Hyväksy kohdistus"
 #: rulesmodel.cpp:682
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
-msgstr ""
+msgstr "Asettaa, saako ikkuna kohdistuksen sitä napsautettaessa."
 
 #: rulesmodel.cpp:686
 #, kde-format
@@ -715,6 +752,12 @@ msgid ""
 "use any other global shortcuts such as <shortcut>Alt+Space</shortcut> to "
 "activate KRunner."
 msgstr ""
+"Tällä ominaisuudella voi estää yleisiä pikanäppäimiä toimimasta, kun ikkuna "
+"on kohdistettu. Tästä voi olla apua emulaattorien tai virtuaalikoneiden "
+"tapaisissa sovelluksissa, jotka käsittelevät samat pikanäppäimet itse.<nl/"
+"><nl/>Huomaa, ettei myöskään <shortcut>Alt+Sarkaimella</shortcut> voi "
+"vaihtaa pois ikkunasta tai esimerkiksi <shortcut>Alt+Välilyönnillä</"
+"shortcut> avata KRunneria."
 
 #: rulesmodel.cpp:698
 #, kde-format
