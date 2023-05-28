@@ -281,7 +281,10 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
         return;
     }
 
-    ShaderTraits shaderTraits = ShaderTrait::MapTexture | ShaderTrait::TransformColorspace;
+    ShaderTraits shaderTraits = ShaderTrait::MapTexture;
+    if (renderTarget.colorDescription() != ColorDescription::sRGB) {
+        shaderTraits |= ShaderTrait::TransformColorspace;
+    }
 
     if (data.brightness() != 1.0) {
         shaderTraits |= ShaderTrait::Modulate;
@@ -327,7 +330,9 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
         shader->setUniform(GLShader::Saturation, data.saturation());
         shader->setUniform(GLShader::Vec3Uniform::PrimaryBrightness, QVector3D(toXYZ(1, 0), toXYZ(1, 1), toXYZ(1, 2)));
     }
-    shader->setColorspaceUniformsFromSRGB(renderTarget.colorDescription());
+    if (shaderTraits & ShaderTrait::TransformColorspace) {
+        shader->setColorspaceUniformsFromSRGB(renderTarget.colorDescription());
+    }
 
     if (renderContext.hardwareClipping) {
         glEnable(GL_SCISSOR_TEST);
