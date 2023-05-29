@@ -45,7 +45,7 @@ option(KWIN_BUILD_NOTIFICATIONS "Enable building of KWin with knotifications sup
 option(KWIN_BUILD_SCREENLOCKER "Enable building of KWin lockscreen functionality" ON)
 option(KWIN_BUILD_TABBOX "Enable building of KWin Tabbox functionality" ON)
 
-find_package(Qt${QT_MAJOR_VERSION} ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
+find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     Concurrent
     Core
     DBus
@@ -54,13 +54,13 @@ find_package(Qt${QT_MAJOR_VERSION} ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     Widgets
 )
 
-find_package(Qt${QT_MAJOR_VERSION}Test ${QT_MIN_VERSION} CONFIG QUIET)
-set_package_properties(Qt${QT_MAJOR_VERSION}Test PROPERTIES
+find_package(Qt6Test ${QT_MIN_VERSION} CONFIG QUIET)
+set_package_properties(Qt6Test PROPERTIES
     PURPOSE "Required for tests"
     TYPE OPTIONAL
 )
-add_feature_info("Qt${QT_MAJOR_VERSION}Test" Qt${QT_MAJOR_VERSION}Test_FOUND "Required for building tests")
-if (NOT Qt${QT_MAJOR_VERSION}Test_FOUND)
+add_feature_info("Qt6Test" Qt6Test_FOUND "Required for building tests")
+if (NOT Qt6Test_FOUND)
     set(BUILD_TESTING OFF CACHE BOOL "Build the testing tree.")
 endif()
 

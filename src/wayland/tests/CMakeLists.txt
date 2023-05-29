@@ -10,7 +10,7 @@ add_executable(testServer ${testServer_SRCS})
 target_link_libraries(testServer kwin Qt::CorePrivate)
 ecm_mark_as_test(testServer)
 
-find_package(Qt${QT_MAJOR_VERSION}Widgets ${QT_MIN_VERSION} CONFIG QUIET)
+find_package(Qt6Widgets ${QT_MIN_VERSION} CONFIG QUIET)
 if (TARGET Qt::Widgets)
     set(testRenderingServer_SRCS
         renderingservertest.cpp
