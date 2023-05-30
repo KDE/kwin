@@ -13,7 +13,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
 "X-Generator: Lokalize 20.04.2\n"
@@ -35,7 +35,6 @@ msgctxt "A numbered name for virtual desktops"
 msgid "Desktop %1"
 msgid_plural "Desktop %1"
 msgstr[0] "新しいデスクトップ"
-msgstr[1] "新しいデスクトップ"
 
 #: desktopsmodel.cpp:479
 #, kde-format
@@ -103,8 +102,7 @@ msgstr "追加"
 #, kde-format
 msgid "1 Row"
 msgid_plural "%1 Rows"
-msgstr[0] "1 列"
-msgstr[1] "%1 列"
+msgstr[0] "%1 列"
 
 #: package/contents/ui/main.qml:200
 #, kde-format

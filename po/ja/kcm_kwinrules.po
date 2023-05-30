@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Lokalize 22.12.2\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
 
@@ -318,7 +318,6 @@ msgstr "全選択"
 msgid "%1 selected"
 msgid_plural "%1 selected"
 msgstr[0] "%1 選択済み"
-msgstr[1] "%1 選択済み"
 
 #: package/contents/ui/RulesEditor.qml:63
 #, kde-format
@@ -362,7 +361,6 @@ msgstr "すぐに"
 msgid "After %1 second"
 msgid_plural "After %1 seconds"
 msgstr[0] "%1 秒後"
-msgstr[1] "%1 秒後"
 
 #: package/contents/ui/RulesEditor.qml:175
 #, kde-format
