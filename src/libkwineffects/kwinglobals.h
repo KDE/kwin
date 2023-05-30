@@ -159,7 +159,6 @@ enum class Gravity {
 };
 
 enum Layer {
-    UnknownLayer = -1,
     FirstLayer = 0,
     DesktopLayer = FirstLayer,
     BelowLayer,

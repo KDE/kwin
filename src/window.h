@@ -1767,7 +1767,7 @@ protected:
     Window *m_transientFor = nullptr;
     QList<Window *> m_transients;
     bool m_modal = false;
-    Layer m_layer = UnknownLayer;
+    Layer m_layer = NormalLayer;
     QPointer<Tile> m_tile;
 
     // electric border/quick tiling

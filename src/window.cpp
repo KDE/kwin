@@ -549,9 +549,6 @@ void Window::markAsDeleted()
 
 Layer Window::layer() const
 {
-    if (m_layer == UnknownLayer) {
-        const_cast<Window *>(this)->m_layer = belongsToLayer();
-    }
     return m_layer;
 }
 
@@ -560,11 +557,12 @@ void Window::updateLayer()
     if (isDeleted()) {
         return;
     }
-    if (layer() == belongsToLayer()) {
+    const Layer newLayer = belongsToLayer();
+    if (layer() == newLayer) {
         return;
     }
     StackingUpdatesBlocker blocker(workspace());
-    m_layer = UnknownLayer; // invalidate, will be updated when doing restacking
+    m_layer = newLayer;
     for (auto it = transients().constBegin(), end = transients().constEnd(); it != end; ++it) {
         (*it)->updateLayer();
     }

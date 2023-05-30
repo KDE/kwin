@@ -727,6 +727,7 @@ void Workspace::addX11Window(X11Window *window)
 void Workspace::addUnmanaged(X11Window *window)
 {
     Q_ASSERT(!m_windows.contains(window));
+    window->updateLayer();
     m_windows.append(window);
     addToStack(window);
     updateStackingOrder(true);
