@@ -1625,6 +1625,8 @@ void X11Window::hideClient()
     }
     hidden = true;
     updateVisibility();
+    workspace()->windowHidden(this);
+    Q_EMIT windowHidden(this);
 }
 
 void X11Window::showClient()
@@ -1634,6 +1636,7 @@ void X11Window::showClient()
     }
     hidden = false;
     updateVisibility();
+    Q_EMIT windowShown(this);
 }
 
 bool X11Window::setupCompositing()
@@ -1884,7 +1887,6 @@ void X11Window::internalShow()
         m_decoInputExtent.map();
         updateHiddenPreview();
     }
-    Q_EMIT windowShown(this);
 }
 
 void X11Window::internalHide()
@@ -1900,8 +1902,6 @@ void X11Window::internalHide()
     if (old == Kept) {
         updateHiddenPreview();
     }
-    workspace()->windowHidden(this);
-    Q_EMIT windowHidden(this);
 }
 
 void X11Window::internalKeep()
@@ -1920,7 +1920,6 @@ void X11Window::internalKeep()
         workspace()->focusToNull(); // get rid of input focus, bug #317484
     }
     updateHiddenPreview();
-    workspace()->windowHidden(this);
 }
 
 /**
