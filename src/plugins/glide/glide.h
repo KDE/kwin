@@ -21,7 +21,6 @@ namespace KWin
 struct GlideAnimation
 {
     EffectWindowDeletedRef deletedRef;
-    EffectWindowVisibleRef visibleRef;
     TimeLine timeLine;
 };
 

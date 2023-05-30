@@ -543,7 +543,7 @@ void SlidingPopupsEffect::slideOut(EffectWindow *w)
     if (w->isDeleted()) {
         animation.deletedRef = EffectWindowDeletedRef(w);
     }
-    animation.visibleRef = EffectWindowVisibleRef(w, EffectWindow::PAINT_DISABLED | EffectWindow::PAINT_DISABLED_BY_DELETE);
+    animation.visibleRef = EffectWindowVisibleRef(w, EffectWindow::PAINT_DISABLED);
     animation.kind = AnimationKind::Out;
     animation.timeLine.setDirection(TimeLine::Backward);
     animation.timeLine.setDuration((*dataIt).slideOutDuration);

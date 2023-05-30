@@ -274,7 +274,6 @@ void GlideEffect::windowClosed(EffectWindow *w)
 
     GlideAnimation &animation = m_animations[w];
     animation.deletedRef = EffectWindowDeletedRef(w);
-    animation.visibleRef = EffectWindowVisibleRef(w, EffectWindow::PAINT_DISABLED_BY_DELETE);
     animation.timeLine.reset();
     animation.timeLine.setDirection(TimeLine::Forward);
     animation.timeLine.setDuration(m_duration);

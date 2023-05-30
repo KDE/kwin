@@ -84,9 +84,6 @@ void WindowItem::refVisible(int reason)
     if (reason & PAINT_DISABLED_BY_HIDDEN) {
         m_forceVisibleByHiddenCount++;
     }
-    if (reason & PAINT_DISABLED_BY_DELETE) {
-        m_forceVisibleByDeleteCount++;
-    }
     if (reason & PAINT_DISABLED_BY_DESKTOP) {
         m_forceVisibleByDesktopCount++;
     }
@@ -104,10 +101,6 @@ void WindowItem::unrefVisible(int reason)
     if (reason & PAINT_DISABLED_BY_HIDDEN) {
         Q_ASSERT(m_forceVisibleByHiddenCount > 0);
         m_forceVisibleByHiddenCount--;
-    }
-    if (reason & PAINT_DISABLED_BY_DELETE) {
-        Q_ASSERT(m_forceVisibleByDeleteCount > 0);
-        m_forceVisibleByDeleteCount--;
     }
     if (reason & PAINT_DISABLED_BY_DESKTOP) {
         Q_ASSERT(m_forceVisibleByDesktopCount > 0);
@@ -149,11 +142,6 @@ bool WindowItem::computeVisibility() const
     }
     if (waylandServer() && waylandServer()->isScreenLocked()) {
         return m_window->isLockScreen() || m_window->isInputMethod() || m_window->isLockScreenOverlay();
-    }
-    if (m_window->isDeleted()) {
-        if (m_forceVisibleByDeleteCount == 0) {
-            return false;
-        }
     }
     if (!m_window->isOnCurrentDesktop()) {
         if (m_forceVisibleByDesktopCount == 0) {
