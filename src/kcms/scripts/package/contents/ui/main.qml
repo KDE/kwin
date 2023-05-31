@@ -19,6 +19,24 @@ ScrollViewKCM {
     implicitWidth: Kirigami.Units.gridUnit * 22
     implicitHeight: Kirigami.Units.gridUnit * 20
 
+    actions: [
+        Kirigami.Action {
+            icon.name: "document-import"
+            text: i18n("Install from File…")
+            onTriggered: kcm.importScript()
+        },
+        NewStuff.Action {
+            text: i18nc("@action:button get new KWin scripts", "Get New…")
+            visible: KAuthorized.authorize(KAuthorized.GHNS)
+            configFile: "kwinscripts.knsrc"
+            onEntryEvent: (entry, event) => {
+                if (event === NewStuff.Engine.StatusChangedEvent) {
+                    kcm.onGHNSEntriesChanged()
+                }
+            }
+        }
+    ]
+
     header: ColumnLayout {
         spacing: Kirigami.Units.smallSpacing
 
@@ -51,27 +69,5 @@ ScrollViewKCM {
                 }
             ]
         }
-    }
-
-    footer: Kirigami.ActionToolBar {
-        flat: false
-        alignment: Qt.AlignRight
-        actions: [
-             Kirigami.Action {
-                 icon.name: "document-import"
-                 text: i18n("Install from File…")
-                 onTriggered: kcm.importScript()
-            },
-            NewStuff.Action {
-                text: i18n("Get New Scripts…")
-                visible: KAuthorized.authorize(KAuthorized.GHNS)
-                configFile: "kwinscripts.knsrc"
-                onEntryEvent: (entry, event) => {
-                    if (event === NewStuff.Engine.StatusChangedEvent) {
-                        kcm.onGHNSEntriesChanged()
-                    }
-                }
-            }
-        ]
     }
 }
