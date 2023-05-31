@@ -18,7 +18,9 @@ import org.kde.kcmutils as KCMUtils
 ScrollViewKCM {
     implicitWidth: Kirigami.Units.gridUnit * 22
     implicitHeight: Kirigami.Units.gridUnit * 20
+
     header: ColumnLayout {
+        spacing: Kirigami.Units.smallSpacing
 
         Kirigami.InlineMessage {
             Layout.fillWidth: true
@@ -26,12 +28,12 @@ ScrollViewKCM {
             type: kcm.errorMessage ? Kirigami.MessageType.Error : Kirigami.MessageType.Information
             text: kcm.errorMessage || kcm.infoMessage
         }
+
         Kirigami.SearchField {
             Layout.fillWidth: true
             id: searchField
         }
     }
-
 
     view: KCMUtils.KPluginSelector {
         id: selector
