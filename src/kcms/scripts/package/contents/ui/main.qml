@@ -44,7 +44,7 @@ ScrollViewKCM {
                 Kirigami.Action {
                     enabled: kcm.canDeleteEntry(model.metaData)
                     icon.name: kcm.pendingDeletions.indexOf(model.metaData) === -1 ? "delete" : "edit-undo"
-                    tooltip: i18nc("@info:tooltip", "Delete...")
+                    tooltip: i18nc("@info:tooltip", "Delete…")
                     onTriggered: kcm.togglePendingDeletion(model.metaData)
                 }
             ]
@@ -57,11 +57,11 @@ ScrollViewKCM {
         actions: [
              Kirigami.Action {
                  icon.name: "document-import"
-                 text: i18n("Install from File...")
+                 text: i18n("Install from File…")
                  onTriggered: kcm.importScript()
             },
             NewStuff.Action {
-                text: i18n("Get New Scripts...")
+                text: i18n("Get New Scripts…")
                 visible: KAuthorized.authorize(KAuthorized.GHNS)
                 configFile: "kwinscripts.knsrc"
                 onEntryEvent: function (entry, event) {
