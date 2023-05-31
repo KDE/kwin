@@ -36,6 +36,7 @@ namespace Wayland
 {
 
 class WaylandEventThread;
+class WaylandLinuxDmabufFeedbackV1;
 
 class WaylandLinuxDmabufV1
 {
@@ -44,6 +45,7 @@ public:
     ~WaylandLinuxDmabufV1();
 
     zwp_linux_dmabuf_v1 *handle() const;
+    QByteArray mainDevice() const;
     QHash<uint32_t, QVector<uint64_t>> formats() const;
 
 private:
@@ -51,7 +53,7 @@ private:
     static void modifier(void *data, struct zwp_linux_dmabuf_v1 *zwp_linux_dmabuf_v1, uint32_t format, uint32_t modifier_hi, uint32_t modifier_lo);
 
     zwp_linux_dmabuf_v1 *m_dmabuf;
-    QHash<uint32_t, QVector<uint64_t>> m_formats;
+    std::unique_ptr<WaylandLinuxDmabufFeedbackV1> m_defaultFeedback;
 };
 
 class WaylandDisplay : public QObject

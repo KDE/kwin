@@ -274,7 +274,7 @@ private:
     std::unique_ptr<DpmsInputEventFilter> m_dpmsFilter;
     bool m_pointerLockRequested = false;
     FileDescriptor m_drmFileDescriptor;
-    gbm_device *m_gbmDevice;
+    gbm_device *m_gbmDevice = nullptr;
     std::unique_ptr<EglDisplay> m_eglDisplay;
     std::map<GraphicsBuffer *, std::unique_ptr<WaylandBuffer>> m_buffers;
 };

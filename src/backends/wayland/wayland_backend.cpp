@@ -415,14 +415,6 @@ WaylandBackend::WaylandBackend(const WaylandBackendOptions &options, QObject *pa
     : OutputBackend(parent)
     , m_options(options)
 {
-    char const *drm_render_node = "/dev/dri/renderD128";
-    m_drmFileDescriptor = FileDescriptor(open(drm_render_node, O_RDWR | O_CLOEXEC));
-    if (!m_drmFileDescriptor.isValid()) {
-        qCWarning(KWIN_WAYLAND_BACKEND) << "Failed to open drm render node" << drm_render_node;
-        m_gbmDevice = nullptr;
-        return;
-    }
-    m_gbmDevice = gbm_create_device(m_drmFileDescriptor.get());
 }
 
 WaylandBackend::~WaylandBackend()
@@ -446,6 +438,15 @@ bool WaylandBackend::initialize()
     m_display = std::make_unique<WaylandDisplay>();
     if (!m_display->initialize(m_options.socketName)) {
         return false;
+    }
+
+    if (WaylandLinuxDmabufV1 *dmabuf = m_display->linuxDmabuf()) {
+        m_drmFileDescriptor = FileDescriptor(open(dmabuf->mainDevice(), O_RDWR | O_CLOEXEC));
+        if (m_drmFileDescriptor.isValid()) {
+            m_gbmDevice = gbm_create_device(m_drmFileDescriptor.get());
+        } else {
+            qCWarning(KWIN_WAYLAND_BACKEND) << "Failed to open drm render node" << dmabuf->mainDevice();
+        }
     }
 
     createOutputs();
