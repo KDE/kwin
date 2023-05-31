@@ -64,8 +64,8 @@ ScrollViewKCM {
                 text: i18n("Get New Scripts…")
                 visible: KAuthorized.authorize(KAuthorized.GHNS)
                 configFile: "kwinscripts.knsrc"
-                onEntryEvent: function (entry, event) {
-                    if (event == 1) { // StatusChangedEvent
+                onEntryEvent: (entry, event) => {
+                    if (event === NewStuff.Engine.StatusChangedEvent) {
                         kcm.onGHNSEntriesChanged()
                     }
                 }
