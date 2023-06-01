@@ -358,7 +358,7 @@ Q_SIGNALS:
      * Emitted whenever the Client's block compositing state changes.
      */
     void blockingCompositingChanged(KWin::X11Window *client);
-    void geometryShapeChanged(const QRectF &old);
+    void shapeChanged();
 
 private:
     void exportMappingState(int s); // ICCCM 4.1.3.1, 4.1.4, NETWM 2.5.1
@@ -437,7 +437,7 @@ private:
     void maybeCreateX11DecorationRenderer();
     void maybeDestroyX11DecorationRenderer();
     void updateDecoration(bool check_workspace_pos, bool force = false);
-    void createDecoration(const QRectF &oldgeom);
+    void createDecoration();
     void destroyDecoration();
 
     QWindow *findInternalWindow() const;

@@ -370,7 +370,7 @@ bool X11Window::windowEvent(xcb_generic_event_t *e)
         default: {
             if (eventType == Xcb::Extensions::self()->shapeNotifyEvent()) {
                 detectShape();
-                Q_EMIT geometryShapeChanged(frameGeometry());
+                Q_EMIT shapeChanged();
             }
             if (eventType == Xcb::Extensions::self()->damageNotifyEvent()) {
                 damageNotifyEvent();
@@ -692,7 +692,7 @@ void X11Window::configureNotifyEvent(xcb_configure_notify_event_t *e)
         Q_EMIT bufferGeometryChanged(old);
         Q_EMIT clientGeometryChanged(old);
         Q_EMIT frameGeometryChanged(old);
-        Q_EMIT geometryShapeChanged(old);
+        Q_EMIT shapeChanged();
     }
 }
 

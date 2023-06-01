@@ -326,7 +326,7 @@ X11Window::X11Window()
     connect(clientMachine(), &ClientMachine::localhostChanged, this, &X11Window::updateCaption);
     connect(options, &Options::configChanged, this, &X11Window::updateMouseGrab);
     connect(options, &Options::condensedTitleChanged, this, &X11Window::updateCaption);
-    connect(this, &X11Window::geometryShapeChanged, this, &X11Window::discardShapeRegion);
+    connect(this, &X11Window::shapeChanged, this, &X11Window::discardShapeRegion);
 
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
         connect(this, &X11Window::moveResizeCursorChanged, this, [this](CursorShape cursor) {
@@ -1315,7 +1315,7 @@ void X11Window::updateDecoration(bool check_workspace_pos, bool force)
         destroyDecoration();
     }
     if (!noBorder()) {
-        createDecoration(oldgeom);
+        createDecoration();
     } else {
         destroyDecoration();
     }
@@ -1333,7 +1333,7 @@ void X11Window::invalidateDecoration()
     updateDecoration(true, true);
 }
 
-void X11Window::createDecoration(const QRectF &oldgeom)
+void X11Window::createDecoration()
 {
     std::shared_ptr<KDecoration2::Decoration> decoration(Workspace::self()->decorationBridge()->createDecoration(this));
     if (decoration) {
@@ -1345,19 +1345,18 @@ void X11Window::createDecoration(const QRectF &oldgeom)
 
     moveResize(QRectF(calculateGravitation(false), clientSizeToFrameSize(clientSize())));
     maybeCreateX11DecorationRenderer();
-    Q_EMIT geometryShapeChanged(oldgeom);
+    Q_EMIT shapeChanged();
 }
 
 void X11Window::destroyDecoration()
 {
-    QRectF oldgeom = moveResizeGeometry();
     if (isDecorated()) {
         QPointF grav = calculateGravitation(true);
         setDecoration(nullptr);
         maybeDestroyX11DecorationRenderer();
         moveResize(QRectF(grav, clientSizeToFrameSize(clientSize())));
         if (!isDeleted()) {
-            Q_EMIT geometryShapeChanged(oldgeom);
+            Q_EMIT shapeChanged();
         }
     }
     m_decoInputExtent.reset();
@@ -1448,7 +1447,7 @@ void X11Window::setClientFrameExtents(const NETStrut &strut)
     moveResize(moveResizeGeometry());
 
     // This will invalidate the window quads cache.
-    Q_EMIT geometryShapeChanged(frameGeometry());
+    Q_EMIT shapeChanged();
 }
 
 /**
@@ -1563,7 +1562,7 @@ void X11Window::updateShape()
     // Decoration mask (i.e. 'else' here) setting is done in setMask()
     // when the decoration calls it or when the decoration is created/destroyed
     updateInputShape();
-    Q_EMIT geometryShapeChanged(frameGeometry());
+    Q_EMIT shapeChanged();
 }
 
 static Xcb::Window shape_helper_window(XCB_WINDOW_NONE);
@@ -4353,7 +4352,7 @@ void X11Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
     if (oldOutput != m_output) {
         Q_EMIT outputChanged();
     }
-    Q_EMIT geometryShapeChanged(oldFrameGeometry);
+    Q_EMIT shapeChanged();
 }
 
 void X11Window::updateServerGeometry()
