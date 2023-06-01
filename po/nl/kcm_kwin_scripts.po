@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-22 02:45+0000\n"
+"POT-Creation-Date: 2023-06-01 02:11+0000\n"
 "PO-Revision-Date: 2022-09-20 10:39+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -50,19 +50,23 @@ msgid "Error when uninstalling KWin Script: %1"
 msgstr "Fout bij installatie ongedaan maken van KWin Script: %1"
 
 #: package/contents/ui/main.qml:47
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@info:tooltip"
+#| msgid "Delete..."
 msgctxt "@info:tooltip"
-msgid "Delete..."
+msgid "Delete…"
 msgstr "Verwijderen..."
 
 #: package/contents/ui/main.qml:60
-#, kde-format
-msgid "Install from File..."
+#, fuzzy, kde-format
+#| msgid "Install from File..."
+msgid "Install from File…"
 msgstr "Uit bestand installeren..."
 
 #: package/contents/ui/main.qml:64
-#, kde-format
-msgid "Get New Scripts..."
+#, fuzzy, kde-format
+#| msgid "Get New Scripts..."
+msgid "Get New Scripts…"
 msgstr "Nieuwe scripts ophalen..."
 
 #~ msgctxt "NAME OF TRANSLATORS"

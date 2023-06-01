@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-22 02:45+0000\n"
+"POT-Creation-Date: 2023-06-01 02:11+0000\n"
 "PO-Revision-Date: 2022-09-20 09:40+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -54,17 +54,21 @@ msgid "Error when uninstalling KWin Script: %1"
 msgstr "Error en desinstal·lar l'Script del KWin: %1"
 
 #: package/contents/ui/main.qml:47
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@info:tooltip"
+#| msgid "Delete..."
 msgctxt "@info:tooltip"
-msgid "Delete..."
+msgid "Delete…"
 msgstr "Suprimeix..."
 
 #: package/contents/ui/main.qml:60
-#, kde-format
-msgid "Install from File..."
+#, fuzzy, kde-format
+#| msgid "Install from File..."
+msgid "Install from File…"
 msgstr "Instal·la des d'un fitxer..."
 
 #: package/contents/ui/main.qml:64
-#, kde-format
-msgid "Get New Scripts..."
+#, fuzzy, kde-format
+#| msgid "Get New Scripts..."
+msgid "Get New Scripts…"
 msgstr "Obtén scripts nous..."

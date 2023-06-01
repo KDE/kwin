@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-22 02:45+0000\n"
+"POT-Creation-Date: 2023-06-01 02:11+0000\n"
 "PO-Revision-Date: 2020-10-08 14:26+0200\n"
 "Last-Translator: Mihkel Tõnnov <mihhkel@gmail.com>\n"
 "Language-Team: Estonian <>\n"
@@ -52,17 +52,19 @@ msgstr "Tõrge KWini skripti eemaldamisel: %1"
 #: package/contents/ui/main.qml:47
 #, kde-format
 msgctxt "@info:tooltip"
-msgid "Delete..."
+msgid "Delete…"
 msgstr ""
 
 #: package/contents/ui/main.qml:60
-#, kde-format
-msgid "Install from File..."
+#, fuzzy, kde-format
+#| msgid "Install from File..."
+msgid "Install from File…"
 msgstr "Paigalda failist ..."
 
 #: package/contents/ui/main.qml:64
-#, kde-format
-msgid "Get New Scripts..."
+#, fuzzy, kde-format
+#| msgid "Get New Scripts..."
+msgid "Get New Scripts…"
 msgstr "Hangi uusi skripte ..."
 
 #~ msgctxt "NAME OF TRANSLATORS"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: l 10n\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-22 02:45+0000\n"
+"POT-Creation-Date: 2023-06-01 02:11+0000\n"
 "PO-Revision-Date: 2022-12-12 21:28+0200\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -52,19 +52,23 @@ msgid "Error when uninstalling KWin Script: %1"
 msgstr "Klaida šalinant KWin scenarijų: %1"
 
 #: package/contents/ui/main.qml:47
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@info:tooltip"
+#| msgid "Delete..."
 msgctxt "@info:tooltip"
-msgid "Delete..."
+msgid "Delete…"
 msgstr "Ištrinti..."
 
 #: package/contents/ui/main.qml:60
-#, kde-format
-msgid "Install from File..."
+#, fuzzy, kde-format
+#| msgid "Install from File..."
+msgid "Install from File…"
 msgstr "Įdiegti iš failo..."
 
 #: package/contents/ui/main.qml:64
-#, kde-format
-msgid "Get New Scripts..."
+#, fuzzy, kde-format
+#| msgid "Get New Scripts..."
+msgid "Get New Scripts…"
 msgstr "Gauti naujų scenarijų..."
 
 #~ msgctxt "NAME OF TRANSLATORS"

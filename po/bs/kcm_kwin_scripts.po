@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: bosnianuniversetranslation\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-22 02:45+0000\n"
+"POT-Creation-Date: 2023-06-01 02:11+0000\n"
 "PO-Revision-Date: 2013-11-03 21:03+0000\n"
 "Last-Translator: Samir Ribić <Unknown>\n"
 "Language-Team: Bosnian <bs@li.org>\n"
@@ -52,18 +52,18 @@ msgstr ""
 #: package/contents/ui/main.qml:47
 #, kde-format
 msgctxt "@info:tooltip"
-msgid "Delete..."
+msgid "Delete…"
 msgstr ""
 
 #: package/contents/ui/main.qml:60
 #, kde-format
-msgid "Install from File..."
+msgid "Install from File…"
 msgstr ""
 
 #: package/contents/ui/main.qml:64
 #, fuzzy, kde-format
 #| msgid "Get New Script..."
-msgid "Get New Scripts..."
+msgid "Get New Scripts…"
 msgstr "Dobavi novu skriptu..."
 
 #~ msgctxt "NAME OF TRANSLATORS"

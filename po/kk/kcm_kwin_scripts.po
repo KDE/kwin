@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-22 02:45+0000\n"
+"POT-Creation-Date: 2023-06-01 02:11+0000\n"
 "PO-Revision-Date: 2013-10-04 02:05+0600\n"
 "Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
 "Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
@@ -49,18 +49,18 @@ msgstr ""
 #: package/contents/ui/main.qml:47
 #, kde-format
 msgctxt "@info:tooltip"
-msgid "Delete..."
+msgid "Delete…"
 msgstr ""
 
 #: package/contents/ui/main.qml:60
 #, kde-format
-msgid "Install from File..."
+msgid "Install from File…"
 msgstr ""
 
 #: package/contents/ui/main.qml:64
 #, fuzzy, kde-format
 #| msgid "Get New Script..."
-msgid "Get New Scripts..."
+msgid "Get New Scripts…"
 msgstr "Жаңа скриптін табу..."
 
 #~ msgctxt "NAME OF TRANSLATORS"
