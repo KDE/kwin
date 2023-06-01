@@ -1345,7 +1345,6 @@ void X11Window::createDecoration()
 
     moveResize(QRectF(calculateGravitation(false), clientSizeToFrameSize(clientSize())));
     maybeCreateX11DecorationRenderer();
-    Q_EMIT shapeChanged();
 }
 
 void X11Window::destroyDecoration()
@@ -1355,9 +1354,6 @@ void X11Window::destroyDecoration()
         setDecoration(nullptr);
         maybeDestroyX11DecorationRenderer();
         moveResize(QRectF(grav, clientSizeToFrameSize(clientSize())));
-        if (!isDeleted()) {
-            Q_EMIT shapeChanged();
-        }
     }
     m_decoInputExtent.reset();
 }
@@ -1445,9 +1441,6 @@ void X11Window::setClientFrameExtents(const NETStrut &strut)
     // maximized or fullscreen state. Notice that a client-side decorated client
     // cannot be shaded, therefore it's okay not to use the adjusted size here.
     moveResize(moveResizeGeometry());
-
-    // This will invalidate the window quads cache.
-    Q_EMIT shapeChanged();
 }
 
 /**
