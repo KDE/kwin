@@ -326,7 +326,7 @@ X11Window::X11Window()
     connect(clientMachine(), &ClientMachine::localhostChanged, this, &X11Window::updateCaption);
     connect(options, &Options::configChanged, this, &X11Window::updateMouseGrab);
     connect(options, &Options::condensedTitleChanged, this, &X11Window::updateCaption);
-    connect(this, &Window::geometryShapeChanged, this, &X11Window::discardShapeRegion);
+    connect(this, &X11Window::geometryShapeChanged, this, &X11Window::discardShapeRegion);
 
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
         connect(this, &X11Window::moveResizeCursorChanged, this, [this](CursorShape cursor) {

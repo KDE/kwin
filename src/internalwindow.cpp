@@ -310,8 +310,6 @@ void InternalWindow::createDecoration(const QRectF &oldGeometry)
 {
     setDecoration(std::shared_ptr<KDecoration2::Decoration>(Workspace::self()->decorationBridge()->createDecoration(this)));
     moveResize(QRectF(oldGeometry.topLeft(), clientSizeToFrameSize(clientSize())));
-
-    Q_EMIT geometryShapeChanged(oldGeometry);
 }
 
 void InternalWindow::destroyDecoration()
@@ -508,7 +506,6 @@ void InternalWindow::commitGeometry(const QRectF &rect)
     if (oldOutput != m_output) {
         Q_EMIT outputChanged();
     }
-    Q_EMIT geometryShapeChanged(oldFrameGeometry);
 }
 
 void InternalWindow::setCaption(const QString &caption)

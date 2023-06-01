@@ -2642,7 +2642,6 @@ void Window::setDecoration(std::shared_ptr<KDecoration2::Decoration> decoration)
             if (!isShade()) {
                 checkWorkspacePosition(oldGeometry);
             }
-            Q_EMIT geometryShapeChanged(oldGeometry);
         });
         connect(decoratedClient()->decoratedClient(), &KDecoration2::DecoratedClient::sizeChanged,
                 this, &Window::updateDecorationInputShape);

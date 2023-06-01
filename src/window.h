@@ -1324,7 +1324,6 @@ Q_SIGNALS:
     void opacityChanged(KWin::Window *window, qreal oldOpacity);
     void damaged(KWin::Window *window);
     void inputTransformationChanged();
-    void geometryShapeChanged(const QRectF &old);
     void closed();
     void windowShown(KWin::Window *window);
     void windowHidden(KWin::Window *window);

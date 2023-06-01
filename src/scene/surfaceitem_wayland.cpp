@@ -207,7 +207,7 @@ SurfaceItemXwayland::SurfaceItemXwayland(X11Window *window, Scene *scene, Item *
     : SurfaceItemWayland(window->surface(), scene, parent)
     , m_window(window)
 {
-    connect(window, &Window::geometryShapeChanged, this, &SurfaceItemXwayland::discardQuads);
+    connect(window, &X11Window::geometryShapeChanged, this, &SurfaceItemXwayland::discardQuads);
 }
 
 QVector<QRectF> SurfaceItemXwayland::shape() const

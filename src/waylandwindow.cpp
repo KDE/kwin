@@ -322,7 +322,6 @@ void WaylandWindow::updateGeometry(const QRectF &rect)
     if (oldOutput != m_output) {
         Q_EMIT outputChanged();
     }
-    Q_EMIT geometryShapeChanged(oldFrameGeometry);
 }
 
 void WaylandWindow::markAsMapped()

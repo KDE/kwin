@@ -19,7 +19,7 @@ SurfaceItemX11::SurfaceItemX11(X11Window *window, Scene *scene, Item *parent)
 {
     connect(window, &Window::bufferGeometryChanged,
             this, &SurfaceItemX11::handleBufferGeometryChanged);
-    connect(window, &Window::geometryShapeChanged,
+    connect(window, &X11Window::geometryShapeChanged,
             this, &SurfaceItemX11::handleGeometryShapeChanged);
 
     m_damageHandle = xcb_generate_id(kwinApp()->x11Connection());
