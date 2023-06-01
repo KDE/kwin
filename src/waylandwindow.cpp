@@ -238,43 +238,6 @@ void WaylandWindow::cleanGrouping()
     }
 }
 
-bool WaylandWindow::isShown() const
-{
-    return !isDeleted() && !isHidden() && !isHiddenByShowDesktop() && !isMinimized();
-}
-
-bool WaylandWindow::isHiddenInternal() const
-{
-    return isHidden();
-}
-
-bool WaylandWindow::isHidden() const
-{
-    return m_isHidden;
-}
-
-void WaylandWindow::showClient()
-{
-    if (!isHidden()) {
-        return;
-    }
-    m_isHidden = false;
-    Q_EMIT windowShown(this);
-}
-
-void WaylandWindow::hideClient()
-{
-    if (isHidden()) {
-        return;
-    }
-    if (isInteractiveMoveResize()) {
-        leaveInteractiveMoveResize();
-    }
-    m_isHidden = true;
-    workspace()->windowHidden(this);
-    Q_EMIT windowHidden(this);
-}
-
 QRectF WaylandWindow::frameRectToBufferRect(const QRectF &rect) const
 {
     return QRectF(rect.topLeft(), surface()->size());

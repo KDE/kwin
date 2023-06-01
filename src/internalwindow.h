@@ -47,10 +47,6 @@ public:
     bool isInternal() const override;
     bool isLockScreen() const override;
     bool isOutline() const override;
-    bool isShown() const override;
-    bool isHiddenInternal() const override;
-    void hideClient() override;
-    void showClient() override;
     QRectF resizeWithChecks(const QRectF &geometry, const QSizeF &size) override;
     Window *findModal(bool allow_itself = false) override;
     bool takeFocus() override;

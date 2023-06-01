@@ -297,7 +297,7 @@ void LayerShellV1Window::setVirtualKeyboardGeometry(const QRectF &geo)
 
 void LayerShellV1Window::showOnScreenEdge()
 {
-    // ShowOnScreenEdge can be called by an Edge, and hideClient could destroy the Edge
+    // ShowOnScreenEdge can be called by an Edge, and setHidden could destroy the Edge
     // Use the singleshot to avoid use-after-free
     QTimer::singleShot(0, this, &LayerShellV1Window::deactivateScreenEdge);
 }
@@ -323,15 +323,15 @@ void LayerShellV1Window::installAutoHideScreenEdgeV1(KWaylandServer::AutoHideScr
 void LayerShellV1Window::reserveScreenEdge()
 {
     if (workspace()->screenEdges()->reserve(this, m_screenEdge->border())) {
-        hideClient();
+        setHidden(true);
     } else {
-        showClient();
+        setHidden(false);
     }
 }
 
 void LayerShellV1Window::unreserveScreenEdge()
 {
-    showClient();
+    setHidden(false);
     workspace()->screenEdges()->reserve(this, ElectricNone);
 }
 

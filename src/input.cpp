@@ -2563,7 +2563,7 @@ private:
             if (!window->isClient()) {
                 continue;
             }
-            if (!window->isOnCurrentActivity() || !window->isOnCurrentDesktop() || window->isMinimized() || window->isHiddenInternal() || window->isHiddenByShowDesktop()) {
+            if (!window->isOnCurrentActivity() || !window->isOnCurrentDesktop() || window->isMinimized() || window->isHidden() || window->isHiddenByShowDesktop()) {
                 continue;
             }
             if (!window->readyForPainting()) {
@@ -3203,7 +3203,7 @@ Window *InputRedirection::findToplevel(const QPointF &pos)
             // a deleted window doesn't get mouse events
             continue;
         }
-        if (!window->isOnCurrentActivity() || !window->isOnCurrentDesktop() || window->isMinimized() || window->isHiddenInternal() || window->isHiddenByShowDesktop()) {
+        if (!window->isOnCurrentActivity() || !window->isOnCurrentDesktop() || window->isMinimized() || window->isHidden() || window->isHiddenByShowDesktop()) {
             continue;
         }
         if (!window->readyForPainting()) {

@@ -530,7 +530,7 @@ class KWIN_EXPORT Window : public QObject
     /**
      * Whether this window is hidden. It's usually the case with auto-hide panels.
      */
-    Q_PROPERTY(bool hidden READ isHiddenInternal NOTIFY hiddenChanged)
+    Q_PROPERTY(bool hidden READ isHidden NOTIFY hiddenChanged)
 
     /**
      * The Tile this window is associated to, if any
@@ -932,10 +932,9 @@ public:
     virtual QString captionSuffix() const = 0;
     virtual bool isPlaceable() const;
     virtual bool isCloseable() const = 0;
-    virtual bool isShown() const = 0;
-    virtual bool isHiddenInternal() const = 0;
-    virtual void hideClient() = 0;
-    virtual void showClient() = 0;
+    bool isShown() const;
+    bool isHidden() const;
+    void setHidden(bool hidden);
     bool isHiddenByShowDesktop() const;
     void setHiddenByShowDesktop(bool hidden);
     // TODO: remove boolean trap
@@ -1501,6 +1500,7 @@ protected:
     virtual void doSetSkipSwitcher();
     virtual void doSetDemandsAttention();
     virtual void doSetQuickTileMode();
+    virtual void doSetHidden();
     virtual void doSetHiddenByShowDesktop();
 
     void setupWindowManagementInterface();
@@ -1723,6 +1723,7 @@ protected:
     QRectF m_clientGeometry;
     QRectF m_bufferGeometry;
     bool ready_for_painting;
+    bool m_hidden = false;
     bool m_hiddenByShowDesktop = false;
 
     int m_refCount = 1;

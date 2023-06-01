@@ -143,10 +143,6 @@ public:
     void doSetOnActivities(const QStringList &newActivitiesList) override;
     void updateActivities(bool includeTransients) override;
 
-    /// Is not minimized and not hidden. I.e. normally visible on some virtual desktop.
-    bool isShown() const override;
-    bool isHiddenInternal() const override; // For compositing
-
     bool isShadeable() const override;
     bool isMaximizable() const override;
     MaximizeMode maximizeMode() const override;
@@ -200,9 +196,6 @@ public:
 
     /// Updates visibility depending on being shaded, virtual desktop, etc.
     void updateVisibility();
-    /// Hides a client - Basically like minimize, but without effects, it's simply hidden
-    void hideClient() override;
-    void showClient() override;
     bool hiddenPreview() const; ///< Window is mapped in order to get a window pixmap
 
     bool setupCompositing() override;
@@ -343,6 +336,7 @@ protected:
     void doSetSkipTaskbar() override;
     void doSetSkipSwitcher() override;
     void doSetDemandsAttention() override;
+    void doSetHidden() override;
     void doSetHiddenByShowDesktop() override;
     bool belongsToDesktop() const override;
     bool doStartInteractiveMoveResize() override;
@@ -479,7 +473,6 @@ private:
     xcb_window_t m_originalTransientForId;
     X11Window *shade_below;
     Xcb::MotifHints m_motif;
-    uint hidden : 1; ///< Forcibly hidden by calling hide()
     uint noborder : 1;
     uint app_noborder : 1; ///< App requested no border via window type, shape extension, etc.
     uint ignore_focus_stealing : 1; ///< Don't apply focus stealing prevention to this client
@@ -583,16 +576,6 @@ inline const Group *X11Window::group() const
 inline Group *X11Window::group()
 {
     return in_group;
-}
-
-inline bool X11Window::isShown() const
-{
-    return !isMinimized() && !hidden && !isHiddenByShowDesktop();
-}
-
-inline bool X11Window::isHiddenInternal() const
-{
-    return hidden;
 }
 
 inline MaximizeMode X11Window::maximizeMode() const

@@ -315,7 +315,6 @@ X11Window::X11Window()
     info = nullptr;
 
     m_fullscreenMode = FullScreenNone;
-    hidden = false;
     noborder = false;
     app_noborder = false;
     ignore_focus_stealing = false;
@@ -424,7 +423,6 @@ void X11Window::releaseWindow(bool on_shutdown)
         grabXServer();
         exportMappingState(XCB_ICCCM_WM_STATE_WITHDRAWN);
         setModal(false); // Otherwise its mainwindow wouldn't get focus
-        hidden = true; // So that it's not considered visible anymore (can't use hideClient(), it would set flags)
         if (!on_shutdown) {
             workspace()->windowHidden(this);
         }
@@ -495,7 +493,6 @@ void X11Window::destroyWindow()
         finishWindowRules();
         blockGeometryUpdates();
         setModal(false);
-        hidden = true; // So that it's not considered visible anymore
         workspace()->windowHidden(this);
         cleanGrouping();
         workspace()->removeX11Window(this);
@@ -1610,27 +1607,6 @@ void X11Window::updateInputShape()
     }
 }
 
-void X11Window::hideClient()
-{
-    if (hidden) {
-        return;
-    }
-    hidden = true;
-    updateVisibility();
-    workspace()->windowHidden(this);
-    Q_EMIT windowHidden(this);
-}
-
-void X11Window::showClient()
-{
-    if (!hidden) {
-        return;
-    }
-    hidden = false;
-    updateVisibility();
-    Q_EMIT windowShown(this);
-}
-
 bool X11Window::setupCompositing()
 {
     if (!Window::setupCompositing()) {
@@ -1805,7 +1781,7 @@ void X11Window::updateVisibility()
     if (isUnmanaged() || isDeleted()) {
         return;
     }
-    if (hidden) {
+    if (isHidden()) {
         info->setState(NET::Hidden, NET::Hidden);
         setSkipTaskbar(true); // Also hide from taskbar
         if (Compositor::compositing() && options->hiddenPreviews() == HiddenPreviewsAlways) {
@@ -2185,6 +2161,11 @@ void X11Window::doSetDesktop()
 void X11Window::doSetDemandsAttention()
 {
     info->setState(isDemandingAttention() ? NET::DemandsAttention : NET::States(), NET::DemandsAttention);
+}
+
+void X11Window::doSetHidden()
+{
+    updateVisibility();
 }
 
 void X11Window::doSetHiddenByShowDesktop()
@@ -2911,9 +2892,9 @@ void X11Window::readShowOnScreenEdge(Xcb::Property &property)
 
         auto reserveScreenEdge = [this, border]() {
             if (workspace()->screenEdges()->reserve(this, border)) {
-                hideClient();
+                setHidden(true);
             } else {
-                showClient();
+                setHidden(false);
             }
         };
 
@@ -2927,7 +2908,7 @@ void X11Window::readShowOnScreenEdge(Xcb::Property &property)
         // restore
         disconnect(m_edgeGeometryTrackingConnection);
 
-        showClient();
+        setHidden(false);
 
         workspace()->screenEdges()->reserve(this, ElectricNone);
     }
@@ -2941,7 +2922,7 @@ void X11Window::updateShowOnScreenEdge()
 
 void X11Window::showOnScreenEdge()
 {
-    showClient();
+    setHidden(false);
     xcb_delete_property(kwinApp()->x11Connection(), window(), atoms->kde_screen_edge_show);
 }
 

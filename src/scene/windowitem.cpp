@@ -170,7 +170,7 @@ bool WindowItem::computeVisibility() const
             return false;
         }
     }
-    if (m_window->isHiddenInternal() || m_window->isHiddenByShowDesktop()) {
+    if (m_window->isHidden() || m_window->isHiddenByShowDesktop()) {
         if (m_forceVisibleByHiddenCount == 0) {
             return false;
         }

@@ -323,7 +323,7 @@ void Workspace::activateWindow(Window *window, bool force)
     }
 
     // ensure the window is really visible - could eg. be a hidden utility window, see bug #348083
-    window->showClient();
+    window->setHidden(false);
 
     // TODO force should perhaps allow this only if the window already contains the mouse
     if (options->focusPolicyIsReasonable() || force) {

@@ -754,7 +754,7 @@ void MoveResizeWindowTest::testAdjustClientGeometryOfHiddenWaylandPanel()
     QTEST(Workspace::self()->adjustWindowPosition(testWindow, targetPoint, false).toPoint(), "expectedAdjustedPoint");
 
     // now let's hide the panel
-    panel->hideClient();
+    panel->setHidden(true);
 
     // now try to snap again
     QCOMPARE(Workspace::self()->adjustWindowPosition(testWindow, targetPoint, false), targetPoint);

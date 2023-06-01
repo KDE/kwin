@@ -242,24 +242,6 @@ bool InternalWindow::isOutline() const
     return false;
 }
 
-bool InternalWindow::isShown() const
-{
-    return readyForPainting() && !isHiddenByShowDesktop();
-}
-
-bool InternalWindow::isHiddenInternal() const
-{
-    return false;
-}
-
-void InternalWindow::hideClient()
-{
-}
-
-void InternalWindow::showClient()
-{
-}
-
 QRectF InternalWindow::resizeWithChecks(const QRectF &geometry, const QSizeF &size)
 {
     if (!m_handle) {

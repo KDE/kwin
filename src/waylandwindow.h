@@ -28,13 +28,8 @@ public:
     QRectF resizeWithChecks(const QRectF &geometry, const QSizeF &size) override;
     void killWindow() override;
     QString windowRole() const override;
-    bool isShown() const override;
-    bool isHiddenInternal() const override;
-    void hideClient() override;
-    void showClient() override;
 
     virtual QRectF frameRectToBufferRect(const QRectF &rect) const;
-    bool isHidden() const;
 
     void setCaption(const QString &caption);
 
@@ -56,7 +51,6 @@ private:
 
     QString m_captionNormal;
     QString m_captionSuffix;
-    bool m_isHidden = false;
     bool m_isScreenLocker = false;
 };
 

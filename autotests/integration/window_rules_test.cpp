@@ -118,7 +118,6 @@ void WindowRuleTest::testApplyInitialMaximizeVert()
     QVERIFY(window);
     QVERIFY(window->isDecorated());
     QVERIFY(!window->hasStrut());
-    QVERIFY(!window->isHiddenInternal());
     QVERIFY(!window->readyForPainting());
     QMetaObject::invokeMethod(window, "setReadyForPainting");
     QVERIFY(window->readyForPainting());
@@ -181,7 +180,6 @@ void WindowRuleTest::testWindowClassChange()
     QVERIFY(window);
     QVERIFY(window->isDecorated());
     QVERIFY(!window->hasStrut());
-    QVERIFY(!window->isHiddenInternal());
     QVERIFY(!window->readyForPainting());
     QMetaObject::invokeMethod(window, "setReadyForPainting");
     QVERIFY(window->readyForPainting());

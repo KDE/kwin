@@ -3566,6 +3566,10 @@ void Window::doSetQuickTileMode()
 {
 }
 
+void Window::doSetHidden()
+{
+}
+
 void Window::doSetHiddenByShowDesktop()
 {
 }
@@ -4210,6 +4214,31 @@ WindowOffscreenRenderRef::~WindowOffscreenRenderRef()
 {
     if (m_window) {
         m_window->unrefOffscreenRendering();
+    }
+}
+
+bool Window::isShown() const
+{
+    return !isDeleted() && !isHidden() && !isHiddenByShowDesktop() && !isMinimized();
+}
+
+bool Window::isHidden() const
+{
+    return m_hidden;
+}
+
+void Window::setHidden(bool hidden)
+{
+    if (m_hidden == hidden) {
+        return;
+    }
+    m_hidden = hidden;
+    doSetHidden();
+    if (hidden) {
+        workspace()->windowHidden(this);
+        Q_EMIT windowHidden(this);
+    } else {
+        Q_EMIT windowShown(this);
     }
 }
 

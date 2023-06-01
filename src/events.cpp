@@ -987,7 +987,7 @@ bool X11Window::buttonPressEvent(xcb_window_t w, int button, int state, int x, i
         if (isSplash()
             && button == XCB_BUTTON_INDEX_1 && !bModKeyHeld) {
             // hide splashwindow if the user clicks on it
-            hideClient();
+            setHidden(true);
             if (w == wrapperId()) {
                 xcb_allow_events(kwinApp()->x11Connection(), XCB_ALLOW_SYNC_POINTER, XCB_TIME_CURRENT_TIME); // xTime());
             }

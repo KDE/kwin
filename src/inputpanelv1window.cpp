@@ -74,7 +74,7 @@ void InputPanelV1Window::hide()
 {
     m_virtualKeyboardShouldBeShown = false;
     if (readyForPainting() && m_mode != Mode::Overlay) {
-        hideClient();
+        setHidden(true);
     }
 }
 
@@ -192,7 +192,7 @@ void InputPanelV1Window::maybeShow()
     if (shouldShow && !isDeleted() && surface()->isMapped()) {
         markAsMapped();
         reposition();
-        showClient();
+        setHidden(false);
     }
 }
 

@@ -860,7 +860,7 @@ void Workspace::updateToolWindows(bool also_hide)
     if (!options->isHideUtilityWindowsForInactive()) {
         for (auto it = m_windows.constBegin(); it != m_windows.constEnd(); ++it) {
             if (X11Window *x11Window = qobject_cast<X11Window *>(*it)) {
-                x11Window->showClient();
+                x11Window->setHidden(false);
             }
         }
         return;
@@ -931,11 +931,11 @@ void Workspace::updateToolWindows(bool also_hide)
     } // First show new ones, then hide
     for (int i = to_show.size() - 1; i >= 0; --i) { // From topmost
         // TODO: Since this is in stacking order, the order of taskbar entries changes :(
-        to_show.at(i)->showClient();
+        to_show.at(i)->setHidden(false);
     }
     if (also_hide) {
         for (auto it = to_hide.constBegin(); it != to_hide.constEnd(); ++it) { // From bottommost
-            (*it)->hideClient();
+            (*it)->setHidden(true);
         }
         updateToolWindowsTimer.stop();
     } else { // setActiveWindow() is after called with NULL window, quickly followed
