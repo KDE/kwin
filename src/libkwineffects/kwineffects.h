@@ -1578,17 +1578,6 @@ Q_SIGNALS:
     void windowMaximizedStateAboutToChange(KWin::EffectWindow *w, bool horizontal, bool vertical);
 
     /**
-     * Signal emitted when the geometry or shape of a window changed.
-     * This is caused if the window changes geometry without user interaction.
-     * E.g. the decoration is changed. This is in opposite to windowUserMovedResized
-     * which is caused by direct user interaction.
-     * @param w The window whose geometry changed
-     * @param old The previous geometry
-     * @see windowUserMovedResized
-     * @since 4.7
-     */
-    void windowGeometryShapeChanged(KWin::EffectWindow *w, const QRectF &old);
-    /**
      * This signal is emitted when the frame geometry of a window changed.
      * @param window The window whose geometry changed
      * @param oldGeometry The previous geometry

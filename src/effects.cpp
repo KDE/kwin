@@ -307,13 +307,6 @@ void EffectsHandlerImpl::setupWindowConnections(Window *window)
         }
     });
     connect(window, &Window::modalChanged, this, &EffectsHandlerImpl::slotClientModalityChanged);
-    connect(window, &Window::geometryShapeChanged, this, [this, window](const QRectF &old) {
-        // during late cleanup effectWindow() may be already NULL
-        // in some functions that may still call this
-        if (window->effectWindow()) {
-            Q_EMIT windowGeometryShapeChanged(window->effectWindow(), old);;
-        }
-    });
     connect(window, &Window::frameGeometryChanged, this, [this, window](const QRectF &oldGeometry) {
         // effectWindow() might be nullptr during tear down of the client.
         if (window->effectWindow()) {
