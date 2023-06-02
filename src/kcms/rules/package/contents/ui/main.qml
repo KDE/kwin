@@ -58,7 +58,7 @@ KCM.ScrollViewKCM {
             anchors.centerIn: parent
             width: parent.width - (Kirigami.Units.largeSpacing * 4)
             text: i18n("No rules for specific windows are currently set");
-            explanation: xi18nc("@info", "Click the <interface>Add New...</interface> button below to add some")
+            explanation: xi18nc("@info", "Click the <interface>Add New…</interface> button below to add some")
         }
     }
 
@@ -95,7 +95,7 @@ KCM.ScrollViewKCM {
 
     footer: RowLayout {
         QQC2.Button {
-            text: i18n("Add New...")
+            text: i18n("Add New…")
             icon.name: "list-add"
             enabled: !exportInfo.visible
             onClicked: {
@@ -106,7 +106,7 @@ KCM.ScrollViewKCM {
             Layout.fillWidth: true
         }
         QQC2.Button {
-            text: i18n("Import...")
+            text: i18n("Import…")
             icon.name: "document-import"
             enabled: !exportInfo.visible
             onClicked: {
@@ -114,7 +114,7 @@ KCM.ScrollViewKCM {
             }
         }
         QQC2.Button {
-            text: checked ? i18n("Cancel Export") : i18n("Export...")
+            text: checked ? i18n("Cancel Export") : i18n("Export…")
             icon.name: exportInfo.visible ? "dialog-cancel" : "document-export"
             enabled: ruleBookView.count > 0
             checkable: true
