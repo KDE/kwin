@@ -132,9 +132,4 @@ uint64_t GbmSwapchain::modifier() const
 {
     return m_modifier;
 }
-
-uint32_t GbmSwapchain::flags() const
-{
-    return m_flags;
-}
 }

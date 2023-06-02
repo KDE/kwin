@@ -39,7 +39,6 @@ public:
     QSize size() const;
     uint32_t format() const;
     uint64_t modifier() const;
-    uint32_t flags() const;
 
     enum class Error {
         ModifiersUnsupported,

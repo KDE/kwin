@@ -382,7 +382,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importBuffer(Surface &surfac
 
 std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importDmabuf(GbmBuffer *sourceBuffer) const
 {
-    const auto imported = GbmBuffer::importBuffer(m_gpu, sourceBuffer, sourceBuffer->flags() | GBM_BO_USE_SCANOUT);
+    const auto imported = GbmBuffer::importBuffer(m_gpu, sourceBuffer);
     if (!imported) {
         qCWarning(KWIN_DRM, "failed to import %s gbm_bo for multi-gpu usage: %s", formatName(sourceBuffer->format()).name, strerror(errno));
         return nullptr;

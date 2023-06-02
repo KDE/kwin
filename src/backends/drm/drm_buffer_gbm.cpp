@@ -72,22 +72,19 @@ GbmBuffer::GbmBuffer(gbm_bo *bo, const std::shared_ptr<GbmSwapchain> &swapchain)
     : DrmGpuBuffer(swapchain->gpu(), swapchain->size(), swapchain->format(), swapchain->modifier(), getHandles(bo), getStrides(bo), getOffsets(bo), gbm_bo_get_plane_count(bo))
     , m_bo(bo)
     , m_swapchain(swapchain)
-    , m_flags(swapchain->flags())
 {
 }
 
-GbmBuffer::GbmBuffer(DrmGpu *gpu, gbm_bo *bo, uint32_t flags)
+GbmBuffer::GbmBuffer(DrmGpu *gpu, gbm_bo *bo)
     : DrmGpuBuffer(gpu, QSize(gbm_bo_get_width(bo), gbm_bo_get_height(bo)), gbm_bo_get_format(bo), gbm_bo_get_modifier(bo), getHandles(bo), getStrides(bo), getOffsets(bo), gbm_bo_get_plane_count(bo))
     , m_bo(bo)
-    , m_flags(flags)
 {
 }
 
-GbmBuffer::GbmBuffer(DrmGpu *gpu, gbm_bo *bo, GraphicsBuffer *clientBuffer, uint32_t flags)
+GbmBuffer::GbmBuffer(DrmGpu *gpu, gbm_bo *bo, GraphicsBuffer *clientBuffer)
     : DrmGpuBuffer(gpu, QSize(gbm_bo_get_width(bo), gbm_bo_get_height(bo)), gbm_bo_get_format(bo), gbm_bo_get_modifier(bo), getHandles(bo), getStrides(bo), getOffsets(bo), gbm_bo_get_plane_count(bo))
     , m_bo(bo)
     , m_clientBuffer(clientBuffer)
-    , m_flags(flags)
 {
     m_clientBuffer->ref();
 }
@@ -120,11 +117,6 @@ void *GbmBuffer::mappedData() const
 GraphicsBuffer *GbmBuffer::clientBuffer() const
 {
     return m_clientBuffer;
-}
-
-uint32_t GbmBuffer::flags() const
-{
-    return m_flags;
 }
 
 bool GbmBuffer::map(uint32_t flags)
@@ -183,13 +175,13 @@ std::shared_ptr<GbmBuffer> GbmBuffer::importBuffer(DrmGpu *gpu, GraphicsBuffer *
         bo = gbm_bo_import(gpu->gbmDevice(), GBM_BO_IMPORT_FD, &data, GBM_BO_USE_SCANOUT);
     }
     if (bo) {
-        return std::make_shared<GbmBuffer>(gpu, bo, clientBuffer, GBM_BO_USE_SCANOUT);
+        return std::make_shared<GbmBuffer>(gpu, bo, clientBuffer);
     } else {
         return nullptr;
     }
 }
 
-std::shared_ptr<GbmBuffer> GbmBuffer::importBuffer(DrmGpu *gpu, GbmBuffer *buffer, uint32_t flags)
+std::shared_ptr<GbmBuffer> GbmBuffer::importBuffer(DrmGpu *gpu, GbmBuffer *buffer)
 {
     const auto &fds = buffer->fds();
     if (!fds[0].isValid()) {
@@ -212,9 +204,9 @@ std::shared_ptr<GbmBuffer> GbmBuffer::importBuffer(DrmGpu *gpu, GbmBuffer *buffe
         data.strides[i] = strides[i];
         data.offsets[i] = offsets[i];
     }
-    gbm_bo *bo = gbm_bo_import(gpu->gbmDevice(), GBM_BO_IMPORT_FD_MODIFIER, &data, flags);
+    gbm_bo *bo = gbm_bo_import(gpu->gbmDevice(), GBM_BO_IMPORT_FD_MODIFIER, &data, GBM_BO_USE_SCANOUT);
     if (bo) {
-        return std::make_shared<GbmBuffer>(gpu, bo, flags);
+        return std::make_shared<GbmBuffer>(gpu, bo);
     } else {
         return nullptr;
     }

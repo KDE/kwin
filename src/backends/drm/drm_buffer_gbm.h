@@ -28,20 +28,19 @@ class GbmSwapchain;
 class GbmBuffer : public DrmGpuBuffer
 {
 public:
-    GbmBuffer(DrmGpu *gpu, gbm_bo *bo, uint32_t flags);
+    GbmBuffer(DrmGpu *gpu, gbm_bo *bo);
     GbmBuffer(gbm_bo *bo, const std::shared_ptr<GbmSwapchain> &swapchain);
-    GbmBuffer(DrmGpu *gpu, gbm_bo *bo, GraphicsBuffer *clientBuffer, uint32_t flags);
+    GbmBuffer(DrmGpu *gpu, gbm_bo *bo, GraphicsBuffer *clientBuffer);
     ~GbmBuffer() override;
 
     gbm_bo *bo() const;
     void *mappedData() const;
     GraphicsBuffer *clientBuffer() const;
-    uint32_t flags() const;
 
     bool map(uint32_t flags);
 
     static std::shared_ptr<GbmBuffer> importBuffer(DrmGpu *gpu, GraphicsBuffer *clientBuffer);
-    static std::shared_ptr<GbmBuffer> importBuffer(DrmGpu *gpu, GbmBuffer *buffer, uint32_t flags = GBM_BO_USE_SCANOUT);
+    static std::shared_ptr<GbmBuffer> importBuffer(DrmGpu *gpu, GbmBuffer *buffer);
 
 private:
     void createFds() override;
@@ -49,7 +48,6 @@ private:
     gbm_bo *const m_bo;
     const std::weak_ptr<GbmSwapchain> m_swapchain;
     GraphicsBuffer *const m_clientBuffer = nullptr;
-    const uint32_t m_flags;
     void *m_data = nullptr;
     void *m_mapping = nullptr;
 };
