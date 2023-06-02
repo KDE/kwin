@@ -1,17 +1,17 @@
 # Translation of kcm_kwin_scripts.po to Catalan
-# Copyright (C) 2012-2022 This_file_is_part_of_KDE
+# Copyright (C) 2012-2023 This_file_is_part_of_KDE
 # This file is distributed under the license LGPL version 2.1 or
 # version 3 or later versions approved by the membership of KDE e.V.
 #
-# Josep M. Ferrer <txemaq@gmail.com>, 2012, 2013, 2015, 2017, 2018, 2020, 2022.
+# Josep M. Ferrer <txemaq@gmail.com>, 2012, 2013, 2015, 2017, 2018, 2020, 2022, 2023.
 # Empar Montoro Martín <montoro_mde@gva.es>, 2019.
 # Antoni Bella Pérez <antonibella5@yahoo.com>, 2020.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-01 02:11+0000\n"
-"PO-Revision-Date: 2022-09-20 09:40+0200\n"
+"POT-Creation-Date: 2023-06-02 02:04+0000\n"
+"PO-Revision-Date: 2023-06-01 09:04+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
@@ -53,22 +53,20 @@ msgstr "L'script «%1» s'ha importat correctament."
 msgid "Error when uninstalling KWin Script: %1"
 msgstr "Error en desinstal·lar l'Script del KWin: %1"
 
-#: package/contents/ui/main.qml:47
+#: package/contents/ui/main.qml:25
+#, kde-format
+msgid "Install from File…"
+msgstr "Instal·la des d'un fitxer…"
+
+#: package/contents/ui/main.qml:29
 #, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Delete..."
+#| msgid "Get New Scripts…"
+msgctxt "@action:button get new KWin scripts"
+msgid "Get New…"
+msgstr "Obtén scripts nous…"
+
+#: package/contents/ui/main.qml:67
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Delete…"
-msgstr "Suprimeix..."
-
-#: package/contents/ui/main.qml:60
-#, fuzzy, kde-format
-#| msgid "Install from File..."
-msgid "Install from File…"
-msgstr "Instal·la des d'un fitxer..."
-
-#: package/contents/ui/main.qml:64
-#, fuzzy, kde-format
-#| msgid "Get New Scripts..."
-msgid "Get New Scripts…"
-msgstr "Obtén scripts nous..."
+msgstr "Suprimeix…"

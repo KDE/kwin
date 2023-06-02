@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm-kwin-scripts\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-01 02:11+0000\n"
+"POT-Creation-Date: 2023-06-02 02:04+0000\n"
 "PO-Revision-Date: 2023-02-20 18:03+0100\n"
 "Last-Translator: Jannick Kuhr <opensource@kuhr.org>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -47,25 +47,26 @@ msgstr "Das Skript „%1“ wurde erfolgreich importiert."
 msgid "Error when uninstalling KWin Script: %1"
 msgstr "Fehler bei der Deinstallation des KWin-Skripts: %1"
 
-#: package/contents/ui/main.qml:47
+#: package/contents/ui/main.qml:25
+#, fuzzy, kde-format
+#| msgid "Install from File..."
+msgid "Install from File…"
+msgstr "Aus Datei installieren ..."
+
+#: package/contents/ui/main.qml:29
+#, fuzzy, kde-format
+#| msgid "Get New Scripts..."
+msgctxt "@action:button get new KWin scripts"
+msgid "Get New…"
+msgstr "Neue Skripte holen ..."
+
+#: package/contents/ui/main.qml:67
 #, fuzzy, kde-format
 #| msgctxt "@info:tooltip"
 #| msgid "Delete..."
 msgctxt "@info:tooltip"
 msgid "Delete…"
 msgstr "Löschen ..."
-
-#: package/contents/ui/main.qml:60
-#, fuzzy, kde-format
-#| msgid "Install from File..."
-msgid "Install from File…"
-msgstr "Aus Datei installieren ..."
-
-#: package/contents/ui/main.qml:64
-#, fuzzy, kde-format
-#| msgid "Get New Scripts..."
-msgid "Get New Scripts…"
-msgstr "Neue Skripte holen ..."
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

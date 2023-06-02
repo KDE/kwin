@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-27 02:03+0000\n"
+"POT-Creation-Date: 2023-06-02 02:04+0000\n"
 "PO-Revision-Date: 2023-04-30 21:30+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -2336,7 +2336,7 @@ msgstr "செல்லுபடியாகாத பரப்பளவு"
 msgid "Region outside the workspace"
 msgstr "பணிமேடைக்கு வெளியேயான பரப்பளவு"
 
-#: plugins/screencast/screencaststream.cpp:352
+#: plugins/screencast/screencaststream.cpp:353
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr ""
@@ -4101,13 +4101,13 @@ msgstr "கீழுள்ள பணிமேடைக்கு தாவு"
 msgid "Switch to Desktop %1"
 msgstr "பணிமேடை %1-க்கு தாவு"
 
-#: window.cpp:3090
+#: window.cpp:3079
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(பதிலளிக்கவில்லை)"
 
-#: workspace.cpp:1602
+#: workspace.cpp:1590
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

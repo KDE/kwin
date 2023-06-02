@@ -1,13 +1,13 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
 # Safa Alfulaij <safa1996alfulaij@gmail.com>, 2015.
-# Zayed Al-Saidi <zayed.alsaidi@gmail.com>, 2021, 2022.
+# Zayed Al-Saidi <zayed.alsaidi@gmail.com>, 2021, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-01 02:11+0000\n"
-"PO-Revision-Date: 2022-09-20 20:34+0400\n"
+"POT-Creation-Date: 2023-06-02 02:04+0000\n"
+"PO-Revision-Date: 2023-06-01 09:57+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
-"X-Generator: Lokalize 21.12.3\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #: module.cpp:50
 #, kde-format
@@ -49,25 +49,23 @@ msgstr "استورد السّكرِبت \"%1\" بنجاح."
 msgid "Error when uninstalling KWin Script: %1"
 msgstr "خطأ عند إلغاء تثبيت سكربت كوين: %1"
 
-#: package/contents/ui/main.qml:47
+#: package/contents/ui/main.qml:25
+#, kde-format
+msgid "Install from File…"
+msgstr "ثبت من ملف…"
+
+#: package/contents/ui/main.qml:29
 #, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Delete..."
+#| msgid "Get New Scripts…"
+msgctxt "@action:button get new KWin scripts"
+msgid "Get New…"
+msgstr "احصل على سكرِبت جديد…"
+
+#: package/contents/ui/main.qml:67
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Delete…"
-msgstr "احذف..."
-
-#: package/contents/ui/main.qml:60
-#, fuzzy, kde-format
-#| msgid "Install from File..."
-msgid "Install from File…"
-msgstr "ثبت من ملف..."
-
-#: package/contents/ui/main.qml:64
-#, fuzzy, kde-format
-#| msgid "Get New Scripts..."
-msgid "Get New Scripts…"
-msgstr "احصل على سكرِبت جديد..."
+msgstr "احذف…"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

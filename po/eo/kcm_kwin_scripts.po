@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwin_scripts\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-01 02:11+0000\n"
-"PO-Revision-Date: 2023-04-15 01:21+0100\n"
+"POT-Creation-Date: 2023-06-02 02:04+0000\n"
+"PO-Revision-Date: 2023-06-01 18:38+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -49,22 +49,20 @@ msgstr "La skripto \"%1\" estis sukcese importita."
 msgid "Error when uninstalling KWin Script: %1"
 msgstr "Eraro dum malinstalado de KWin Script: %1"
 
-#: package/contents/ui/main.qml:47
+#: package/contents/ui/main.qml:25
+#, kde-format
+msgid "Install from File…"
+msgstr "Instali el Dosiero…"
+
+#: package/contents/ui/main.qml:29
 #, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Delete..."
+#| msgid "Get New Scripts…"
+msgctxt "@action:button get new KWin scripts"
+msgid "Get New…"
+msgstr "Akiri Novajn Skriptojn…"
+
+#: package/contents/ui/main.qml:67
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Delete…"
-msgstr "Forigi..."
-
-#: package/contents/ui/main.qml:60
-#, fuzzy, kde-format
-#| msgid "Install from File..."
-msgid "Install from File…"
-msgstr "Instali el Dosiero..."
-
-#: package/contents/ui/main.qml:64
-#, fuzzy, kde-format
-#| msgid "Get New Scripts..."
-msgid "Get New Scripts…"
-msgstr "Akiri Novajn Skriptojn..."
+msgstr "Forigi…"

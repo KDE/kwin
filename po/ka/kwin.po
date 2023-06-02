@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-27 02:03+0000\n"
+"POT-Creation-Date: 2023-06-02 02:04+0000\n"
 "PO-Revision-Date: 2023-04-21 07:12+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -2337,7 +2337,7 @@ msgstr "არასწორი რეგიონი"
 msgid "Region outside the workspace"
 msgstr "რეგიონი სამუშაო სივრცის გარეთ"
 
-#: plugins/screencast/screencaststream.cpp:352
+#: plugins/screencast/screencaststream.cpp:353
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "PipeWire-ის ნაკადის შექმნის შეცდოა"
@@ -4099,13 +4099,13 @@ msgstr "ერთი სამუშაო მაგიდის დაბლა
 msgid "Switch to Desktop %1"
 msgstr "%1-ე სამუშაო მაგიდაზე გადართვა"
 
-#: window.cpp:3090
+#: window.cpp:3079
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(არ პასუხობს)"
 
-#: workspace.cpp:1602
+#: workspace.cpp:1590
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

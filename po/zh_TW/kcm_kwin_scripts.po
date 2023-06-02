@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-01 02:11+0000\n"
+"POT-Creation-Date: 2023-06-02 02:04+0000\n"
 "PO-Revision-Date: 2022-12-26 03:37+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@linux.org.tw>\n"
@@ -51,25 +51,26 @@ msgstr "指令稿「%1」成功匯入。"
 msgid "Error when uninstalling KWin Script: %1"
 msgstr "解除安裝 KWin 指令稿時發生錯誤：%1"
 
-#: package/contents/ui/main.qml:47
+#: package/contents/ui/main.qml:25
+#, fuzzy, kde-format
+#| msgid "Install from File..."
+msgid "Install from File…"
+msgstr "從檔案安裝…"
+
+#: package/contents/ui/main.qml:29
+#, fuzzy, kde-format
+#| msgid "Get New Scripts..."
+msgctxt "@action:button get new KWin scripts"
+msgid "Get New…"
+msgstr "取得新文稿..."
+
+#: package/contents/ui/main.qml:67
 #, fuzzy, kde-format
 #| msgctxt "@info:tooltip"
 #| msgid "Delete..."
 msgctxt "@info:tooltip"
 msgid "Delete…"
 msgstr "刪除…"
-
-#: package/contents/ui/main.qml:60
-#, fuzzy, kde-format
-#| msgid "Install from File..."
-msgid "Install from File…"
-msgstr "從檔案安裝…"
-
-#: package/contents/ui/main.qml:64
-#, fuzzy, kde-format
-#| msgid "Get New Scripts..."
-msgid "Get New Scripts…"
-msgstr "取得新文稿..."
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

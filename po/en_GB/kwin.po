@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-27 02:03+0000\n"
+"POT-Creation-Date: 2023-06-02 02:04+0000\n"
 "PO-Revision-Date: 2023-04-22 10:52+0100\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
 "Language-Team: British English\n"
@@ -2337,7 +2337,7 @@ msgstr "Invalid region"
 msgid "Region outside the workspace"
 msgstr "Region outside the workspace"
 
-#: plugins/screencast/screencaststream.cpp:352
+#: plugins/screencast/screencaststream.cpp:353
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Failed to create PipeWire stream"
@@ -4097,13 +4097,13 @@ msgstr "Switch One Desktop Down"
 msgid "Switch to Desktop %1"
 msgstr "Switch to Desktop %1"
 
-#: window.cpp:3090
+#: window.cpp:3079
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Not Responding)"
 
-#: workspace.cpp:1602
+#: workspace.cpp:1590
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

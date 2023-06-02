@@ -3,13 +3,13 @@
 # This file is distributed under the license LGPL version 2.1 or
 # version 3 or later versions approved by the membership of KDE e.V.
 #
-# Yuri Chornoivan <yurchor@ukr.net>, 2012, 2013, 2017, 2018, 2020, 2022.
+# Yuri Chornoivan <yurchor@ukr.net>, 2012, 2013, 2017, 2018, 2020, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm-kwin-scripts\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-01 02:11+0000\n"
-"PO-Revision-Date: 2022-09-20 08:54+0300\n"
+"POT-Creation-Date: 2023-06-02 02:04+0000\n"
+"PO-Revision-Date: 2023-06-01 22:05+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -51,25 +51,23 @@ msgstr "Скрипт «%1» успішно імпортовано."
 msgid "Error when uninstalling KWin Script: %1"
 msgstr "Помилка під час спроби вилучити скрипт KWin: %1"
 
-#: package/contents/ui/main.qml:47
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Delete..."
-msgctxt "@info:tooltip"
-msgid "Delete…"
-msgstr "Вилучити…"
-
-#: package/contents/ui/main.qml:60
-#, fuzzy, kde-format
-#| msgid "Install from File..."
+#: package/contents/ui/main.qml:25
+#, kde-format
 msgid "Install from File…"
 msgstr "Встановити з файла…"
 
-#: package/contents/ui/main.qml:64
+#: package/contents/ui/main.qml:29
 #, fuzzy, kde-format
-#| msgid "Get New Scripts..."
-msgid "Get New Scripts…"
+#| msgid "Get New Scripts…"
+msgctxt "@action:button get new KWin scripts"
+msgid "Get New…"
 msgstr "Отримати новий скрипти…"
+
+#: package/contents/ui/main.qml:67
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Delete…"
+msgstr "Вилучити…"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"
