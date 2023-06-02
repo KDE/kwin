@@ -706,7 +706,9 @@ void Workspace::addX11Window(X11Window *window)
     Q_ASSERT(!m_windows.contains(window));
     m_windows.append(window);
     addToStack(window);
-    updateClientArea(); // This cannot be in manage(), because the window got added only now
+    if (window->hasStrut()) {
+        updateClientArea(); // This cannot be in manage(), because the window got added only now
+    }
     window->updateLayer();
     if (window->isDesktop()) {
         raiseWindow(window);
@@ -798,7 +800,9 @@ void Workspace::addWaylandWindow(Window *window)
     addToStack(window);
 
     updateStackingOrder(true);
-    updateClientArea();
+    if (window->hasStrut()) {
+        updateClientArea();
+    }
     if (window->wantsInput() && !window->isMinimized()) {
         activateWindow(window);
     }
@@ -840,11 +844,13 @@ void Workspace::removeWindow(Window *window)
         window->setShortcut(QString()); // Remove from client_keys
         windowShortcutUpdated(window); // Needed, since this is otherwise delayed by setShortcut() and wouldn't run
     }
+    if (window->hasStrut()) {
+        updateClientArea();
+    }
 
     Q_EMIT windowRemoved(window);
 
     updateStackingOrder(true);
-    updateClientArea();
     updateTabbox();
 }
 
@@ -2021,8 +2027,6 @@ void Workspace::addInternalWindow(InternalWindow *window)
     }
 
     updateStackingOrder(true);
-    updateClientArea();
-
     Q_EMIT windowAdded(window);
 }
 
@@ -2031,8 +2035,6 @@ void Workspace::removeInternalWindow(InternalWindow *window)
     m_windows.removeOne(window);
 
     updateStackingOrder();
-    updateClientArea();
-
     Q_EMIT windowRemoved(window);
 }
 
