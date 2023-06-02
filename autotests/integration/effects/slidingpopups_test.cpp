@@ -196,7 +196,7 @@ void SlidingPopupsTest::testWithOtherEffect()
     QVERIFY(window->isNormalWindow());
 
     // sliding popups should be active
-    QVERIFY(windowAddedSpy.wait());
+    QCOMPARE(windowAddedSpy.count(), 1);
     QTRY_VERIFY(slidingPoupus->isActive());
     QVERIFY(!otherEffect->isActive());
 

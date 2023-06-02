@@ -158,11 +158,8 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, WorkspaceScene *s
         Q_EMIT desktopChangingCancelled();
     });
     connect(ws, &Workspace::windowAdded, this, [this](Window *window) {
-        if (window->readyForPainting()) {
-            slotWindowShown(window);
-        } else {
-            connect(window, &Window::windowShown, this, &EffectsHandlerImpl::slotWindowShown, Qt::SingleShotConnection);
-        }
+        setupWindowConnections(window);
+        Q_EMIT windowAdded(window->effectWindow());
     });
     connect(ws, &Workspace::windowActivated, this, [this](Window *window) {
         Q_EMIT windowActivated(window ? window->effectWindow() : nullptr);
@@ -226,11 +223,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, WorkspaceScene *s
 
     // connect all clients
     for (Window *window : ws->windows()) {
-        if (window->readyForPainting()) {
-            setupWindowConnections(window);
-        } else {
-            connect(window, &Window::windowShown, this, &EffectsHandlerImpl::slotWindowShown);
-        }
+        setupWindowConnections(window);
     }
 
     connect(ws, &Workspace::outputAdded, this, &EffectsHandlerImpl::slotOutputAdded);
@@ -461,12 +454,6 @@ void EffectsHandlerImpl::slotOpacityChanged(Window *window, qreal oldOpacity)
         return;
     }
     Q_EMIT windowOpacityChanged(window->effectWindow(), oldOpacity, (qreal)window->opacity());
-}
-
-void EffectsHandlerImpl::slotWindowShown(Window *window)
-{
-    setupWindowConnections(window);
-    Q_EMIT windowAdded(window->effectWindow());
 }
 
 void EffectsHandlerImpl::slotClientModalityChanged()

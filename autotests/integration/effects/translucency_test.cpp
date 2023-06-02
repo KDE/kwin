@@ -133,7 +133,7 @@ void TranslucencyTest::testMoveAfterDesktopChange()
     QCOMPARE(window->window(), windowId);
     QVERIFY(window->isDecorated());
 
-    QVERIFY(windowAddedSpy.wait());
+    QCOMPARE(windowAddedSpy.count(), 1);
     QVERIFY(!m_translucencyEffect->isActive());
     // let's send the window to desktop 2
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
@@ -200,7 +200,7 @@ void TranslucencyTest::testDialogClose()
     QVERIFY(window->isDecorated());
     QVERIFY(window->isDialog());
 
-    QVERIFY(windowAddedSpy.wait());
+    QCOMPARE(windowAddedSpy.count(), 1);
     QTRY_VERIFY(m_translucencyEffect->isActive());
     // and destroy the window again
     xcb_unmap_window(c.get(), windowId);
