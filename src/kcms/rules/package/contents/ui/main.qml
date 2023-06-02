@@ -50,7 +50,10 @@ KCM.ScrollViewKCM {
         highlightMoveDuration: Kirigami.Units.longDuration
 
         displaced: Transition {
-            NumberAnimation { properties: "y"; duration: Kirigami.Units.longDuration }
+            NumberAnimation {
+                properties: "y"
+                duration: Kirigami.Units.longDuration
+            }
         }
 
         Kirigami.PlaceholderMessage {
@@ -120,7 +123,7 @@ KCM.ScrollViewKCM {
             checkable: true
             checked: exportInfo.visible
             onToggled: {
-                selectedIndexes = []
+                selectedIndexes = [];
                 exportInfo.visible = checked;
             }
         }
@@ -128,8 +131,8 @@ KCM.ScrollViewKCM {
 
     component RuleBookDelegate : Item {
         // External item required to make Kirigami.ListItemDragHandle work
-        width : ruleBookView.width
-        implicitHeight : ruleBookItem.implicitHeight
+        width: ruleBookView.width
+        implicitHeight: ruleBookItem.implicitHeight
 
         ListView.onPooled: {
             if (descriptionField.activeFocus) {
@@ -146,7 +149,7 @@ KCM.ScrollViewKCM {
                     visible: !exportInfo.visible
                     listItem: ruleBookItem
                     listView: ruleBookView
-                    onMoveRequested: {
+                    onMoveRequested: (oldIndex, newIndex) => {
                         kcm.moveRule(oldIndex, newIndex);
                     }
                 }
@@ -161,7 +164,7 @@ KCM.ScrollViewKCM {
                     onEditingFinished: {
                         kcm.setRuleDescription(index, text);
                     }
-                    Keys.onPressed: {
+                    Keys.onPressed: event => {
                         switch (event.key) {
                         case Qt.Key_Escape:
                             // On <Esc> key reset to model data before losing focus
