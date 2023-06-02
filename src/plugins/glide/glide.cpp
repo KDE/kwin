@@ -102,12 +102,6 @@ void GlideEffect::reconfigure(ReconfigureFlags flags)
 
 void GlideEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
-    auto animationIt = m_animations.begin();
-    while (animationIt != m_animations.end()) {
-        (*animationIt).timeLine.advance(presentTime);
-        ++animationIt;
-    }
-
     data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
 
     effects->prePaintScreen(data, presentTime);
@@ -115,7 +109,9 @@ void GlideEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::millisec
 
 void GlideEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
 {
-    if (m_animations.contains(w)) {
+    auto animationIt = m_animations.find(w);
+    if (animationIt != m_animations.end()) {
+        (*animationIt).timeLine.advance(presentTime);
         data.setTransformed();
     }
 

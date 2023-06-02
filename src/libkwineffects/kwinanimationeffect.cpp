@@ -441,27 +441,6 @@ void AnimationEffect::genericAnimation(EffectWindow *w, WindowPaintData &data, f
 {
 }
 
-void AnimationEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
-{
-    Q_D(AnimationEffect);
-    if (d->m_animations.isEmpty()) {
-        effects->prePaintScreen(data, presentTime);
-        return;
-    }
-
-    for (auto entry = d->m_animations.begin(); entry != d->m_animations.end(); ++entry) {
-        for (auto anim = entry->first.begin(); anim != entry->first.end(); ++anim) {
-            if (anim->startTime <= clock()) {
-                if (anim->frozenTime < 0) {
-                    anim->timeLine.advance(presentTime);
-                }
-            }
-        }
-    }
-
-    effects->prePaintScreen(data, presentTime);
-}
-
 static qreal xCoord(const QRectF &r, int flag)
 {
     if (flag & AnimationEffect::Left) {
@@ -514,11 +493,15 @@ void AnimationEffect::disconnectGeometryChanges()
 void AnimationEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     Q_D(AnimationEffect);
-    AniMap::const_iterator entry = d->m_animations.constFind(w);
-    if (entry != d->m_animations.constEnd()) {
-        for (QList<AniData>::const_iterator anim = entry->first.constBegin(); anim != entry->first.constEnd(); ++anim) {
+    auto entry = d->m_animations.find(w);
+    if (entry != d->m_animations.end()) {
+        for (auto anim = entry->first.begin(); anim != entry->first.end(); ++anim) {
             if (anim->startTime > clock() && !anim->waitAtSource) {
                 continue;
+            }
+
+            if (anim->frozenTime < 0) {
+                anim->timeLine.advance(presentTime);
             }
 
             if (anim->attribute == Opacity || anim->attribute == CrossFadePrevious) {
