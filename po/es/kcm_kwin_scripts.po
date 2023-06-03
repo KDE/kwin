@@ -1,13 +1,13 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
 #
-# Eloy Cuadra <ecuadra@eloihr.net>, 2012, 2013, 2017, 2018, 2020, 2022.
+# Eloy Cuadra <ecuadra@eloihr.net>, 2012, 2013, 2017, 2018, 2020, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-02 02:04+0000\n"
-"PO-Revision-Date: 2022-09-21 12:18+0200\n"
+"PO-Revision-Date: 2023-06-03 01:06+0200\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 22.08.1\n"
+"X-Generator: Lokalize 23.04.1\n"
 
 #: module.cpp:50
 #, kde-format
@@ -49,22 +49,18 @@ msgid "Error when uninstalling KWin Script: %1"
 msgstr "Ha ocurrido un error al desinstalar el guion de KWin: %1"
 
 #: package/contents/ui/main.qml:25
-#, fuzzy, kde-format
-#| msgid "Install from File..."
+#, kde-format
 msgid "Install from File…"
 msgstr "Instalar desde archivo..."
 
 #: package/contents/ui/main.qml:29
-#, fuzzy, kde-format
-#| msgid "Get New Scripts..."
+#, kde-format
 msgctxt "@action:button get new KWin scripts"
 msgid "Get New…"
-msgstr "Obtener nuevos guiones..."
+msgstr "Obtener novedades..."
 
 #: package/contents/ui/main.qml:67
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Delete..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Delete…"
 msgstr "Borrar..."

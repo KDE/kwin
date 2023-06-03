@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-02 02:04+0000\n"
-"PO-Revision-Date: 2023-06-01 08:05+0200\n"
+"PO-Revision-Date: 2023-06-02 07:33+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -59,11 +59,10 @@ msgid "Install from File…"
 msgstr "Namesti iz datoteke…"
 
 #: package/contents/ui/main.qml:29
-#, fuzzy, kde-format
-#| msgid "Get New Scripts…"
+#, kde-format
 msgctxt "@action:button get new KWin scripts"
 msgid "Get New…"
-msgstr "Dobi nove skripte…"
+msgstr "Dobi nove…"
 
 #: package/contents/ui/main.qml:67
 #, kde-format

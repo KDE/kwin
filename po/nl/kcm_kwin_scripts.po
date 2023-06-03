@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-02 02:04+0000\n"
-"PO-Revision-Date: 2023-06-01 16:49+0200\n"
+"PO-Revision-Date: 2023-06-02 13:08+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -55,11 +55,10 @@ msgid "Install from File…"
 msgstr "Uit bestand installeren…"
 
 #: package/contents/ui/main.qml:29
-#, fuzzy, kde-format
-#| msgid "Get New Scripts…"
+#, kde-format
 msgctxt "@action:button get new KWin scripts"
 msgid "Get New…"
-msgstr "Nieuwe scripts ophalen…"
+msgstr "Nieuwe ophalen…"
 
 #: package/contents/ui/main.qml:67
 #, kde-format

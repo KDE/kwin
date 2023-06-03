@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-02 02:04+0000\n"
+"POT-Creation-Date: 2023-06-03 02:04+0000\n"
 "PO-Revision-Date: 2023-04-20 18:09+0200\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -4137,7 +4137,7 @@ msgstr "Cambiar al escritorio inferior"
 msgid "Switch to Desktop %1"
 msgstr "Cambiar al escritorio %1"
 
-#: window.cpp:3079
+#: window.cpp:3078
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

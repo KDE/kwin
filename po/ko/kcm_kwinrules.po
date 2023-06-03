@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-13 02:16+0000\n"
+"POT-Creation-Date: 2023-06-03 02:04+0000\n"
 "PO-Revision-Date: 2022-05-06 00:08+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -146,78 +146,83 @@ msgstr "Select File"
 msgid "KWin Rules (*.kwinrule)"
 msgstr "KWin Rules (*.kwinrule)"
 
-#: package/contents/ui/main.qml:60
+#: package/contents/ui/main.qml:63
 #, kde-format
 msgid "No rules for specific windows are currently set"
 msgstr "창 지정 규칙 없음"
 
-#: package/contents/ui/main.qml:61
-#, kde-kuit-format
+#: package/contents/ui/main.qml:64
+#, fuzzy, kde-kuit-format
+#| msgctxt "@info"
+#| msgid "Click the <interface>Add New...</interface> button below to add some"
 msgctxt "@info"
-msgid "Click the <interface>Add New...</interface> button below to add some"
+msgid "Click the <interface>Add New…</interface> button below to add some"
 msgstr "<interface>새로 추가...</interface>를 클릭해서 추가하십시오"
 
-#: package/contents/ui/main.qml:69
+#: package/contents/ui/main.qml:72
 #, kde-format
 msgid "Select the rules to export"
 msgstr "내보낼 규칙 선택"
 
-#: package/contents/ui/main.qml:73
+#: package/contents/ui/main.qml:76
 #, kde-format
 msgid "Unselect All"
 msgstr "모두 선택 해제"
 
-#: package/contents/ui/main.qml:73
+#: package/contents/ui/main.qml:76
 #, kde-format
 msgid "Select All"
 msgstr "모두 선택"
 
-#: package/contents/ui/main.qml:87
+#: package/contents/ui/main.qml:90
 #, kde-format
 msgid "Save Rules"
 msgstr "규칙 저장"
 
-#: package/contents/ui/main.qml:98
-#, kde-format
-msgid "Add New..."
+#: package/contents/ui/main.qml:101
+#, fuzzy, kde-format
+#| msgid "Add New..."
+msgid "Add New…"
 msgstr "새로 추가..."
 
-#: package/contents/ui/main.qml:109
-#, kde-format
-msgid "Import..."
+#: package/contents/ui/main.qml:112
+#, fuzzy, kde-format
+#| msgid "Import..."
+msgid "Import…"
 msgstr "가져오기..."
 
-#: package/contents/ui/main.qml:117
+#: package/contents/ui/main.qml:120
 #, kde-format
 msgid "Cancel Export"
 msgstr "내보내기 취소"
 
-#: package/contents/ui/main.qml:117
-#, kde-format
-msgid "Export..."
+#: package/contents/ui/main.qml:120
+#, fuzzy, kde-format
+#| msgid "Export..."
+msgid "Export…"
 msgstr "내보내기"
 
-#: package/contents/ui/main.qml:207
+#: package/contents/ui/main.qml:210
 #, kde-format
 msgid "Edit"
 msgstr "편집"
 
-#: package/contents/ui/main.qml:216
+#: package/contents/ui/main.qml:219
 #, kde-format
 msgid "Duplicate"
 msgstr "복제"
 
-#: package/contents/ui/main.qml:225
+#: package/contents/ui/main.qml:228
 #, kde-format
 msgid "Delete"
 msgstr "삭제"
 
-#: package/contents/ui/main.qml:238
+#: package/contents/ui/main.qml:241
 #, kde-format
 msgid "Import Rules"
 msgstr "규칙 가져오기"
 
-#: package/contents/ui/main.qml:250
+#: package/contents/ui/main.qml:253
 #, kde-format
 msgid "Export Rules"
 msgstr "규칙 내보내기"

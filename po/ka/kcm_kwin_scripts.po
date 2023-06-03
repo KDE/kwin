@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-02 02:04+0000\n"
-"PO-Revision-Date: 2023-02-18 07:12+0100\n"
+"PO-Revision-Date: 2023-06-02 05:31+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.2.2\n"
+"X-Generator: Poedit 3.3.1\n"
 
 #: module.cpp:50
 #, kde-format
@@ -50,25 +50,21 @@ msgid "Error when uninstalling KWin Script: %1"
 msgstr "KWin-ის სკრიპტის წაშლის შეცდომა: %1"
 
 #: package/contents/ui/main.qml:25
-#, fuzzy, kde-format
-#| msgid "Install from File..."
+#, kde-format
 msgid "Install from File…"
-msgstr "ფაილიდან დაყენება..."
+msgstr "ფაილიდან დაყენება…"
 
 #: package/contents/ui/main.qml:29
-#, fuzzy, kde-format
-#| msgid "Get New Scripts..."
+#, kde-format
 msgctxt "@action:button get new KWin scripts"
 msgid "Get New…"
-msgstr "ახალი სკრიპტების მიღება..."
+msgstr "ახლის მიღება…"
 
 #: package/contents/ui/main.qml:67
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Delete..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Delete…"
-msgstr "წაშლა..."
+msgstr "წაშლა…"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

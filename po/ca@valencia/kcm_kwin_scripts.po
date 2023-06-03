@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-02 02:04+0000\n"
-"PO-Revision-Date: 2023-06-01 09:04+0200\n"
+"PO-Revision-Date: 2023-06-02 09:08+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -59,11 +59,10 @@ msgid "Install from File…"
 msgstr "Instal·la des d'un fitxer…"
 
 #: package/contents/ui/main.qml:29
-#, fuzzy, kde-format
-#| msgid "Get New Scripts…"
+#, kde-format
 msgctxt "@action:button get new KWin scripts"
 msgid "Get New…"
-msgstr "Obtín scripts nous…"
+msgstr "Obtín nous…"
 
 #: package/contents/ui/main.qml:67
 #, kde-format

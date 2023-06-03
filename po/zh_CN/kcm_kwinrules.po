@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-13 02:16+0000\n"
+"POT-Creation-Date: 2023-06-03 02:04+0000\n"
 "PO-Revision-Date: 2023-05-22 13:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -143,78 +143,83 @@ msgstr "选择文件"
 msgid "KWin Rules (*.kwinrule)"
 msgstr "KWin 规则 (*.kwinrule)"
 
-#: package/contents/ui/main.qml:60
+#: package/contents/ui/main.qml:63
 #, kde-format
 msgid "No rules for specific windows are currently set"
 msgstr "当前没有设置用于特定窗口的规则"
 
-#: package/contents/ui/main.qml:61
-#, kde-kuit-format
+#: package/contents/ui/main.qml:64
+#, fuzzy, kde-kuit-format
+#| msgctxt "@info"
+#| msgid "Click the <interface>Add New...</interface> button below to add some"
 msgctxt "@info"
-msgid "Click the <interface>Add New...</interface> button below to add some"
+msgid "Click the <interface>Add New…</interface> button below to add some"
 msgstr "点击下方的 <interface>新增...</interface> 按钮来添加规则"
 
-#: package/contents/ui/main.qml:69
+#: package/contents/ui/main.qml:72
 #, kde-format
 msgid "Select the rules to export"
 msgstr "选择要导出的规则"
 
-#: package/contents/ui/main.qml:73
+#: package/contents/ui/main.qml:76
 #, kde-format
 msgid "Unselect All"
 msgstr "全部不选"
 
-#: package/contents/ui/main.qml:73
+#: package/contents/ui/main.qml:76
 #, kde-format
 msgid "Select All"
 msgstr "全部选中"
 
-#: package/contents/ui/main.qml:87
+#: package/contents/ui/main.qml:90
 #, kde-format
 msgid "Save Rules"
 msgstr "保存规则"
 
-#: package/contents/ui/main.qml:98
-#, kde-format
-msgid "Add New..."
+#: package/contents/ui/main.qml:101
+#, fuzzy, kde-format
+#| msgid "Add New..."
+msgid "Add New…"
 msgstr "新增…"
 
-#: package/contents/ui/main.qml:109
-#, kde-format
-msgid "Import..."
+#: package/contents/ui/main.qml:112
+#, fuzzy, kde-format
+#| msgid "Import..."
+msgid "Import…"
 msgstr "导入…"
 
-#: package/contents/ui/main.qml:117
+#: package/contents/ui/main.qml:120
 #, kde-format
 msgid "Cancel Export"
 msgstr "取消导出"
 
-#: package/contents/ui/main.qml:117
-#, kde-format
-msgid "Export..."
+#: package/contents/ui/main.qml:120
+#, fuzzy, kde-format
+#| msgid "Export..."
+msgid "Export…"
 msgstr "导出…"
 
-#: package/contents/ui/main.qml:207
+#: package/contents/ui/main.qml:210
 #, kde-format
 msgid "Edit"
 msgstr "编辑"
 
-#: package/contents/ui/main.qml:216
+#: package/contents/ui/main.qml:219
 #, kde-format
 msgid "Duplicate"
 msgstr "创建副本"
 
-#: package/contents/ui/main.qml:225
+#: package/contents/ui/main.qml:228
 #, kde-format
 msgid "Delete"
 msgstr "删除"
 
-#: package/contents/ui/main.qml:238
+#: package/contents/ui/main.qml:241
 #, kde-format
 msgid "Import Rules"
 msgstr "导入规则"
 
-#: package/contents/ui/main.qml:250
+#: package/contents/ui/main.qml:253
 #, kde-format
 msgid "Export Rules"
 msgstr "导出规则"
