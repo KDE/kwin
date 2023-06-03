@@ -17,6 +17,9 @@ import org.kde.newstuff as NewStuff
 import org.kde.private.kcms.kwin.effects as Private
 
 ScrollViewKCM {
+    implicitHeight: Kirigami.Units.gridUnit * 30
+    implicitWidth: Kirigami.Units.gridUnit * 40
+
     header: ColumnLayout {
         QQC2.Label {
             Layout.fillWidth: true
