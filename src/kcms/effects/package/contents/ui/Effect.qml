@@ -29,6 +29,8 @@ Kirigami.SwipeListItem {
     }
 
     contentItem: RowLayout {
+        spacing: Kirigami.Units.smallSpacing
+
         QQC2.RadioButton {
             readonly property bool _exclusive: model.ExclusiveRole != ""
             property bool _toggled: false

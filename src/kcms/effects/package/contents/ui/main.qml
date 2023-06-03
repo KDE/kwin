@@ -21,14 +21,20 @@ ScrollViewKCM {
     implicitWidth: Kirigami.Units.gridUnit * 40
 
     header: ColumnLayout {
+        spacing: Kirigami.Units.smallSpacing
+
         QQC2.Label {
             Layout.fillWidth: true
+            Layout.leftMargin: Kirigami.Units.smallSpacing
+            Layout.rightMargin: Kirigami.Units.smallSpacing
 
             wrapMode: Text.WordWrap
             text: i18n("Hint: To find out or configure how to activate an effect, look at the effect's settings.")
         }
 
         RowLayout {
+            spacing: Kirigami.Units.smallSpacing
+
             Kirigami.SearchField {
                 id: searchField
 
