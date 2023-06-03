@@ -73,7 +73,8 @@ ScrollViewKCM {
     view: ListView {
         id: effectsList
 
-        property var _buttonGroups: []
+        // { string name: QQC2.ButtonGroup group }
+        property var _buttonGroups: new Map()
 
         clip: true
 
@@ -94,23 +95,18 @@ ScrollViewKCM {
             text: section
         }
 
-        function findButtonGroup(name) {
-            for (let item of effectsList._buttonGroups) {
-                if (item.name == name) {
-                    return item.group;
-                }
+        Component {
+            id: buttonGroupComponent
+
+            QQC2.ButtonGroup {}
+        }
+
+        function findButtonGroup(name: string): QQC2.ButtonGroup {
+            let group = _buttonGroups.get(name);
+            if (group === undefined) {
+                group = buttonGroupComponent.createObject(this);
+                _buttonGroups.set(name, group);
             }
-
-            let group = Qt.createQmlObject(
-                'import QtQuick 2.5;' +
-                'import QtQuick.Controls 2.5;' +
-                'ButtonGroup {}',
-                effectsList,
-                "dynamicButtonGroup" + effectsList._buttonGroups.length
-            );
-
-            effectsList._buttonGroups.push({ name, group });
-
             return group;
         }
     }
@@ -123,7 +119,7 @@ ScrollViewKCM {
                 text: i18n("Get New Desktop Effects…")
                 visible: KAuthorized.authorize(KAuthorized.GHNS)
                 configFile: "kwineffect.knsrc"
-                onEntryEvent: function (entry, event) {
+                onEntryEvent: (entry, event) => {
                     if (event === NewStuff.Engine.StatusChangedEvent) {
                         kcm.onGHNSEntriesChanged()
                     }

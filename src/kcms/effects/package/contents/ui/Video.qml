@@ -15,29 +15,32 @@ import QtMultimedia as Multimedia
 
 Multimedia.Video {
     id: videoItem
+
     autoPlay: true
     source: model.VideoRole
     width: 400
     height: 400
+
     QQC2.BusyIndicator {
         anchors.centerIn: parent
-        visible: videoItem.status == Multimedia.MediaPlayer.Loading
+        visible: videoItem.status === Multimedia.MediaPlayer.Loading
         running: true
     }
+
     QQC2.Button {
         id: replayButton
+
         visible: false
         anchors.centerIn: parent
         icon.name: "media-playback-start"
+
         onClicked: {
             replayButton.visible = false;
             videoItem.play();
         }
-        Connections {
-            target: videoItem
-            function onStopped() {
-                replayButton.visible = true
-            }
-        }
+    }
+
+    onStopped: {
+        replayButton.visible = true
     }
 }

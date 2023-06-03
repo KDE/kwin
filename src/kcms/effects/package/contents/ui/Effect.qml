@@ -15,20 +15,22 @@ import org.kde.kcm as KCM
 
 Kirigami.SwipeListItem {
     id: listItem
+
     hoverEnabled: true
+
     onClicked: {
-        if (view.currentIndex == index) {
+        if (ListView.isCurrentItem) {
             // Collapse list item
-            view.currentIndex = -1;
+            ListView.view.currentIndex = -1;
         } else {
             // Expand list item
-            view.currentIndex = index;
+            ListView.view.currentIndex = index;
         }
     }
+
     contentItem: RowLayout {
-        id: row
         QQC2.RadioButton {
-            property bool _exclusive: model.ExclusiveRole != ""
+            readonly property bool _exclusive: model.ExclusiveRole != ""
             property bool _toggled: false
 
             checked: model.StatusRole
@@ -39,6 +41,7 @@ Kirigami.SwipeListItem {
                 model.StatusRole = checked ? Qt.Checked : Qt.Unchecked;
                 _toggled = true;
             }
+
             onClicked: {
                 // Uncheck the radio button if it's clicked.
                 if (checked && !_toggled) {
@@ -91,7 +94,7 @@ Kirigami.SwipeListItem {
 
                 text: i18n("Author: %1\nLicense: %2", model.AuthorNameRole, model.LicenseRole)
                 opacity: listItem.hovered ? 0.8 : 0.6
-                visible: view.currentIndex === index
+                visible: listItem.ListView.isCurrentItem
                 wrapMode: Text.Wrap
             }
 
@@ -114,6 +117,7 @@ Kirigami.SwipeListItem {
             }
         }
     }
+
     actions: [
         Kirigami.Action {
             visible: model.VideoRole.toString() !== ""
