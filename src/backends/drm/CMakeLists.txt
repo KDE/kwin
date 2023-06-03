@@ -4,11 +4,9 @@ target_sources(kwin PRIVATE
     drm_backend.cpp
     drm_blob.cpp
     drm_buffer.cpp
-    drm_buffer_gbm.cpp
     drm_connector.cpp
     drm_crtc.cpp
     drm_dmabuf_feedback.cpp
-    drm_dumb_buffer.cpp
     drm_dumb_swapchain.cpp
     drm_egl_backend.cpp
     drm_egl_cursor_layer.cpp

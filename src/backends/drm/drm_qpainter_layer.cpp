@@ -7,16 +7,12 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "drm_qpainter_layer.h"
-#include "drm_abstract_output.h"
-#include "drm_backend.h"
+#include "core/graphicsbufferview.h"
 #include "drm_buffer.h"
-#include "drm_dumb_buffer.h"
 #include "drm_dumb_swapchain.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
-#include "drm_output.h"
 #include "drm_pipeline.h"
-#include "drm_qpainter_backend.h"
 #include "drm_virtual_output.h"
 
 #include <cerrno>
@@ -34,22 +30,26 @@ std::optional<OutputLayerBeginFrameInfo> DrmQPainterLayer::beginFrame()
 {
     if (!doesSwapchainFit()) {
         m_swapchain = std::make_shared<DumbSwapchain>(m_pipeline->gpu(), m_pipeline->mode()->size(), DRM_FORMAT_XRGB8888);
+        m_damageJournal = DamageJournal();
     }
-    QRegion needsRepaint;
-    if (!m_swapchain->acquireBuffer(&needsRepaint)) {
+
+    m_currentBuffer = m_swapchain->acquire();
+    if (!m_currentBuffer) {
         return std::nullopt;
     }
+
+    const QRegion repaint = m_damageJournal.accumulate(m_currentBuffer->age(), infiniteRegion());
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_swapchain->currentBuffer()->image()),
-        .repaint = needsRepaint,
+        .renderTarget = RenderTarget(m_currentBuffer->view()->image()),
+        .repaint = repaint,
     };
 }
 
 bool DrmQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    m_currentDamage = damagedRegion;
-    m_swapchain->releaseBuffer(m_swapchain->currentBuffer(), damagedRegion);
-    m_currentFramebuffer = DrmFramebuffer::createFramebuffer(m_swapchain->currentBuffer());
+    m_currentFramebuffer = m_pipeline->gpu()->importBuffer(m_currentBuffer->buffer());
+    m_damageJournal.add(damagedRegion);
+    m_swapchain->release(m_currentBuffer);
     if (!m_currentFramebuffer) {
         qCWarning(KWIN_DRM, "Failed to create dumb framebuffer: %s", strerror(errno));
     }
@@ -60,8 +60,10 @@ bool DrmQPainterLayer::checkTestBuffer()
 {
     if (!doesSwapchainFit()) {
         m_swapchain = std::make_shared<DumbSwapchain>(m_pipeline->gpu(), m_pipeline->mode()->size(), DRM_FORMAT_XRGB8888);
-        if (!m_swapchain->isEmpty()) {
-            m_currentFramebuffer = DrmFramebuffer::createFramebuffer(m_swapchain->currentBuffer());
+        m_currentBuffer = m_swapchain->acquire();
+        if (m_currentBuffer) {
+            m_currentFramebuffer = m_pipeline->gpu()->importBuffer(m_currentBuffer->buffer());
+            m_swapchain->release(m_currentBuffer);
             if (!m_currentFramebuffer) {
                 qCWarning(KWIN_DRM, "Failed to create dumb framebuffer: %s", strerror(errno));
             }
@@ -84,7 +86,7 @@ std::shared_ptr<DrmFramebuffer> DrmQPainterLayer::currentBuffer() const
 
 QRegion DrmQPainterLayer::currentDamage() const
 {
-    return m_currentDamage;
+    return m_damageJournal.lastDamage();
 }
 
 void DrmQPainterLayer::releaseBuffers()
@@ -107,20 +109,20 @@ std::optional<OutputLayerBeginFrameInfo> DrmCursorQPainterLayer::beginFrame()
     if (!m_swapchain) {
         m_swapchain = std::make_shared<DumbSwapchain>(m_pipeline->gpu(), m_pipeline->gpu()->cursorSize(), DRM_FORMAT_ARGB8888);
     }
-    QRegion needsRepaint;
-    if (!m_swapchain->acquireBuffer(&needsRepaint)) {
+    m_currentBuffer = m_swapchain->acquire();
+    if (!m_currentBuffer) {
         return std::nullopt;
     }
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_swapchain->currentBuffer()->image()),
-        .repaint = needsRepaint,
+        .renderTarget = RenderTarget(m_currentBuffer->view()->image()),
+        .repaint = infiniteRegion(),
     };
 }
 
 bool DrmCursorQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    m_swapchain->releaseBuffer(m_swapchain->currentBuffer(), damagedRegion);
-    m_currentFramebuffer = DrmFramebuffer::createFramebuffer(m_swapchain->currentBuffer());
+    m_currentFramebuffer = m_pipeline->gpu()->importBuffer(m_currentBuffer->buffer());
+    m_swapchain->release(m_currentBuffer);
     if (!m_currentFramebuffer) {
         qCWarning(KWIN_DRM, "Failed to create dumb framebuffer for the cursor: %s", strerror(errno));
     }

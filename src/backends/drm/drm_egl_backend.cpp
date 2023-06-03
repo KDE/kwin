@@ -13,7 +13,6 @@
 #include "core/renderloop_p.h"
 #include "drm_abstract_output.h"
 #include "drm_backend.h"
-#include "drm_buffer_gbm.h"
 #include "drm_dumb_swapchain.h"
 #include "drm_egl_cursor_layer.h"
 #include "drm_egl_layer.h"

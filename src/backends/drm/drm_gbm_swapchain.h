@@ -8,54 +8,65 @@
 */
 #pragma once
 
+#include <QSize>
 #include <QVector>
+
 #include <cstdint>
-#include <deque>
 #include <epoxy/egl.h>
 #include <memory>
-#include <variant>
-
-#include "drm_buffer_gbm.h"
-#include "utils/damagejournal.h"
 
 namespace KWin
 {
 
+class DrmGpu;
+class GraphicsBufferAllocator;
+class GraphicsBuffer;
 class GLFramebuffer;
+class GLTexture;
+class EglContext;
 class EglGbmBackend;
 
-class GbmSwapchain : public std::enable_shared_from_this<GbmSwapchain>
+class DrmEglSwapchainSlot
 {
 public:
-    explicit GbmSwapchain(DrmGpu *gpu, gbm_bo *initialBuffer, uint32_t flags);
-    ~GbmSwapchain();
+    DrmEglSwapchainSlot(EglContext *context, GraphicsBuffer *buffer);
+    ~DrmEglSwapchainSlot();
 
-    std::pair<std::shared_ptr<GbmBuffer>, QRegion> acquire();
-    void damage(const QRegion &damage);
-    void resetDamage();
-    void releaseBuffer(GbmBuffer *buffer);
+    GraphicsBuffer *buffer() const;
+    std::shared_ptr<GLTexture> texture() const;
+    GLFramebuffer *framebuffer() const;
+    int age() const;
 
-    DrmGpu *gpu() const;
+private:
+    GraphicsBuffer *m_buffer;
+    std::unique_ptr<GLFramebuffer> m_framebuffer;
+    std::shared_ptr<GLTexture> m_texture;
+    int m_age = 0;
+    friend class DrmEglSwapchain;
+};
+
+class DrmEglSwapchain
+{
+public:
+    DrmEglSwapchain(std::unique_ptr<GraphicsBufferAllocator> allocator, EglContext *context, const QSize &size, uint32_t format, uint64_t modifier, const QVector<std::shared_ptr<DrmEglSwapchainSlot>> &slots);
+    ~DrmEglSwapchain();
+
     QSize size() const;
     uint32_t format() const;
     uint64_t modifier() const;
-    uint32_t flags() const;
 
-    enum class Error {
-        ModifiersUnsupported,
-        Unknown
-    };
-    static std::variant<std::shared_ptr<GbmSwapchain>, Error> createSwapchain(DrmGpu *gpu, const QSize &size, uint32_t format, uint32_t flags);
-    static std::variant<std::shared_ptr<GbmSwapchain>, Error> createSwapchain(DrmGpu *gpu, const QSize &size, uint32_t format, QVector<uint64_t> modifiers);
+    std::shared_ptr<DrmEglSwapchainSlot> acquire();
+    void release(std::shared_ptr<DrmEglSwapchainSlot> slot);
+
+    static std::shared_ptr<DrmEglSwapchain> create(DrmGpu *gpu, EglContext *context, const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers);
 
 private:
-    DrmGpu *const m_gpu;
-    const QSize m_size;
-    const uint32_t m_format;
-    const uint64_t m_modifier;
-    const uint32_t m_flags;
-
-    std::deque<std::pair<gbm_bo *, uint32_t>> m_buffers;
-    DamageJournal m_damageJournal;
+    std::unique_ptr<GraphicsBufferAllocator> m_allocator;
+    EglContext *m_context;
+    QSize m_size;
+    uint32_t m_format;
+    uint64_t m_modifier;
+    QVector<std::shared_ptr<DrmEglSwapchainSlot>> m_slots;
 };
-}
+
+} // namespace KWin

@@ -5,11 +5,9 @@ set(mockDRM_SRCS
     ../../src/backends/drm/drm_backend.cpp
     ../../src/backends/drm/drm_blob.cpp
     ../../src/backends/drm/drm_buffer.cpp
-    ../../src/backends/drm/drm_buffer_gbm.cpp
     ../../src/backends/drm/drm_connector.cpp
     ../../src/backends/drm/drm_crtc.cpp
     ../../src/backends/drm/drm_dmabuf_feedback.cpp
-    ../../src/backends/drm/drm_dumb_buffer.cpp
     ../../src/backends/drm/drm_dumb_swapchain.cpp
     ../../src/backends/drm/drm_egl_backend.cpp
     ../../src/backends/drm/drm_egl_cursor_layer.cpp

@@ -8,7 +8,6 @@
 */
 #include "drm_output.h"
 #include "drm_backend.h"
-#include "drm_buffer.h"
 #include "drm_connector.h"
 #include "drm_crtc.h"
 #include "drm_gpu.h"
@@ -17,9 +16,6 @@
 #include "core/outputconfiguration.h"
 #include "core/renderloop.h"
 #include "core/renderloop_p.h"
-#include "drm_dumb_buffer.h"
-#include "drm_dumb_swapchain.h"
-#include "drm_egl_backend.h"
 #include "drm_layer.h"
 #include "drm_logging.h"
 #include "libkwineffects/kwinglutils.h"

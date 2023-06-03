@@ -18,7 +18,6 @@ namespace KWin
 
 class DrmBackend;
 class DrmFramebuffer;
-class DrmDumbBuffer;
 class GammaRamp;
 class DrmGpu;
 class DrmPlane;

@@ -42,13 +42,17 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglGbmLayer::beginFrame()
     // gbm surface
     if (doesGbmSwapchainFit(m_gbmSwapchain.get())) {
         m_oldGbmSwapchain.reset();
+        m_oldDamageJournal.clear();
     } else {
         if (doesGbmSwapchainFit(m_oldGbmSwapchain.get())) {
             m_gbmSwapchain = m_oldGbmSwapchain;
+            m_damageJournal = m_oldDamageJournal;
         } else {
             if (const auto swapchain = createGbmSwapchain()) {
                 m_oldGbmSwapchain = m_gbmSwapchain;
+                m_oldDamageJournal = m_damageJournal;
                 m_gbmSwapchain = swapchain;
+                m_damageJournal = DamageJournal();
             } else {
                 return std::nullopt;
             }
@@ -58,22 +62,22 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglGbmLayer::beginFrame()
     if (eglMakeCurrent(m_eglBackend->eglDisplay(), EGL_NO_SURFACE, EGL_NO_SURFACE, m_eglBackend->context()) != EGL_TRUE) {
         return std::nullopt;
     }
-    const auto [buffer, repair] = m_gbmSwapchain->acquire();
-    auto texture = m_eglBackend->importBufferObjectAsTexture(buffer->bo());
-    if (!texture) {
+
+    auto slot = m_gbmSwapchain->acquire();
+    if (!slot) {
         return std::nullopt;
     }
-    texture->setContentTransform(TextureTransform::MirrorY);
-    auto fbo = std::make_shared<GLFramebuffer>(texture.get());
-    if (!fbo) {
-        return std::nullopt;
-    }
-    m_currentBuffer = buffer;
-    m_texture = texture;
-    m_fbo = fbo;
+
+    m_currentSlot = slot;
     m_scanoutSurface.clear();
+    if (m_scanoutBuffer) {
+        m_scanoutBuffer->unref();
+        m_scanoutBuffer = nullptr;
+    }
+
+    const QRegion repair = m_damageJournal.accumulate(slot->age(), infiniteRegion());
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(fbo.get()),
+        .renderTarget = RenderTarget(slot->framebuffer()),
         .repaint = repair,
     };
 }
@@ -82,7 +86,8 @@ bool VirtualEglGbmLayer::endFrame(const QRegion &renderedRegion, const QRegion &
 {
     glFlush();
     m_currentDamage = damagedRegion;
-    m_gbmSwapchain->damage(damagedRegion);
+    m_damageJournal.add(damagedRegion);
+    m_gbmSwapchain->release(m_currentSlot);
     return true;
 }
 
@@ -91,7 +96,7 @@ QRegion VirtualEglGbmLayer::currentDamage() const
     return m_currentDamage;
 }
 
-std::shared_ptr<GbmSwapchain> VirtualEglGbmLayer::createGbmSwapchain() const
+std::shared_ptr<DrmEglSwapchain> VirtualEglGbmLayer::createGbmSwapchain() const
 {
     static bool modifiersEnvSet = false;
     static const bool modifiersEnv = qEnvironmentVariableIntValue("KWIN_DRM_USE_MODIFIERS", &modifiersEnvSet) != 0;
@@ -105,16 +110,14 @@ std::shared_ptr<GbmSwapchain> VirtualEglGbmLayer::createGbmSwapchain() const
             const auto modifiers = it.value();
 
             if (allowModifiers && !modifiers.isEmpty()) {
-                const auto ret = GbmSwapchain::createSwapchain(m_eglBackend->gpu(), size, format, modifiers);
-                if (const auto surface = std::get_if<std::shared_ptr<GbmSwapchain>>(&ret)) {
-                    return *surface;
-                } else if (std::get<GbmSwapchain::Error>(ret) != GbmSwapchain::Error::ModifiersUnsupported) {
-                    continue;
+                if (auto swapchain = DrmEglSwapchain::create(m_eglBackend->gpu(), m_eglBackend->contextObject(), size, format, modifiers)) {
+                    return swapchain;
                 }
             }
-            const auto ret = GbmSwapchain::createSwapchain(m_eglBackend->gpu(), size, format, GBM_BO_USE_RENDERING);
-            if (const auto surface = std::get_if<std::shared_ptr<GbmSwapchain>>(&ret)) {
-                return *surface;
+
+            static const QVector<uint64_t> implicitModifier{DRM_FORMAT_MOD_INVALID};
+            if (auto swapchain = DrmEglSwapchain::create(m_eglBackend->gpu(), m_eglBackend->contextObject(), size, format, implicitModifier)) {
+                return swapchain;
             }
         }
     }
@@ -122,7 +125,7 @@ std::shared_ptr<GbmSwapchain> VirtualEglGbmLayer::createGbmSwapchain() const
     return nullptr;
 }
 
-bool VirtualEglGbmLayer::doesGbmSwapchainFit(GbmSwapchain *swapchain) const
+bool VirtualEglGbmLayer::doesGbmSwapchainFit(DrmEglSwapchain *swapchain) const
 {
     return swapchain && swapchain->size() == m_output->modeSize();
 }
@@ -130,9 +133,9 @@ bool VirtualEglGbmLayer::doesGbmSwapchainFit(GbmSwapchain *swapchain) const
 std::shared_ptr<GLTexture> VirtualEglGbmLayer::texture() const
 {
     if (m_scanoutSurface) {
-        return m_eglBackend->importBufferObjectAsTexture(m_currentBuffer->bo());
+        return m_eglBackend->importDmaBufAsTexture(*m_scanoutBuffer->dmabufAttributes());
     } else {
-        return m_texture;
+        return m_currentSlot->texture();
     }
 }
 
@@ -152,28 +155,30 @@ bool VirtualEglGbmLayer::scanout(SurfaceItem *surfaceItem)
     if (!buffer || !buffer->dmabufAttributes() || buffer->size() != m_output->modeSize()) {
         return false;
     }
-    const auto scanoutBuffer = GbmBuffer::importBuffer(m_output->gpu(), buffer);
-    if (!scanoutBuffer) {
-        return false;
+    buffer->ref();
+    if (m_scanoutBuffer) {
+        m_scanoutBuffer->unref();
     }
+    m_scanoutBuffer = buffer;
     // damage tracking for screen casting
     m_currentDamage = m_scanoutSurface == item->surface() ? surfaceItem->damage() : infiniteRegion();
     surfaceItem->resetDamage();
     // ensure the pixmap is updated when direct scanout ends
     surfaceItem->destroyPixmap();
     m_scanoutSurface = item->surface();
-    m_currentBuffer = scanoutBuffer;
     return true;
 }
 
 void VirtualEglGbmLayer::releaseBuffers()
 {
     eglMakeCurrent(m_eglBackend->eglDisplay(), EGL_NO_SURFACE, EGL_NO_SURFACE, m_eglBackend->context());
-    m_fbo.reset();
-    m_texture.reset();
     m_gbmSwapchain.reset();
     m_oldGbmSwapchain.reset();
-    m_currentBuffer.reset();
+    m_currentSlot.reset();
+    if (m_scanoutBuffer) {
+        m_scanoutBuffer->unref();
+        m_scanoutBuffer = nullptr;
+    }
 }
 
 quint32 VirtualEglGbmLayer::format() const

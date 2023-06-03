@@ -19,6 +19,7 @@ public:
     explicit GraphicsBufferView(GraphicsBuffer *buffer, GraphicsBuffer::MapFlags accessFlags = GraphicsBuffer::Read);
     ~GraphicsBufferView();
 
+    bool isNull() const;
     QImage *image();
     const QImage *image() const;
 

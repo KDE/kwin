@@ -9,8 +9,6 @@
 
 #pragma once
 
-#include "utils/damagejournal.h"
-
 #include <QImage>
 #include <QSize>
 #include <QVector>
@@ -19,35 +17,45 @@
 namespace KWin
 {
 
-class DrmDumbBuffer;
 class DrmGpu;
+class GraphicsBuffer;
+class GraphicsBufferAllocator;
+class GraphicsBufferView;
+
+class DumbSwapchainSlot
+{
+public:
+    DumbSwapchainSlot(GraphicsBuffer *buffer);
+    ~DumbSwapchainSlot();
+
+    GraphicsBuffer *buffer() const;
+    GraphicsBufferView *view() const;
+    int age() const;
+
+private:
+    GraphicsBuffer *m_buffer;
+    std::unique_ptr<GraphicsBufferView> m_view;
+    int m_age = 0;
+    friend class DumbSwapchain;
+};
 
 class DumbSwapchain
 {
 public:
-    DumbSwapchain(DrmGpu *gpu, const QSize &size, uint32_t drmFormat);
+    DumbSwapchain(DrmGpu *gpu, const QSize &size, uint32_t format);
+    ~DumbSwapchain();
 
-    std::shared_ptr<DrmDumbBuffer> acquireBuffer(QRegion *needsRepaint = nullptr);
-    std::shared_ptr<DrmDumbBuffer> currentBuffer() const;
-    void releaseBuffer(const std::shared_ptr<DrmDumbBuffer> &buffer, const QRegion &damage = {});
-
-    qsizetype slotCount() const;
     QSize size() const;
-    bool isEmpty() const;
-    uint32_t drmFormat() const;
+    uint32_t format() const;
+
+    std::shared_ptr<DumbSwapchainSlot> acquire();
+    void release(std::shared_ptr<DumbSwapchainSlot> slot);
 
 private:
-    struct Slot
-    {
-        std::shared_ptr<DrmDumbBuffer> buffer;
-        int age = 0;
-    };
-
+    std::unique_ptr<GraphicsBufferAllocator> m_allocator;
+    QVector<std::shared_ptr<DumbSwapchainSlot>> m_slots;
     QSize m_size;
-    int index = 0;
     uint32_t m_format;
-    QVector<Slot> m_slots;
-    DamageJournal m_damageJournal;
 };
 
 }

@@ -8,6 +8,7 @@
 */
 #pragma once
 #include "drm_layer.h"
+#include "utils/damagejournal.h"
 
 #include <QImage>
 
@@ -15,10 +16,10 @@ namespace KWin
 {
 
 class DumbSwapchain;
+class DumbSwapchainSlot;
 class DrmPipeline;
 class DrmVirtualOutput;
 class DrmQPainterBackend;
-class DrmDumbBuffer;
 class DrmFramebuffer;
 
 class DrmQPainterLayer : public DrmPipelineLayer
@@ -38,8 +39,9 @@ private:
     bool doesSwapchainFit() const;
 
     std::shared_ptr<DumbSwapchain> m_swapchain;
+    std::shared_ptr<DumbSwapchainSlot> m_currentBuffer;
     std::shared_ptr<DrmFramebuffer> m_currentFramebuffer;
-    QRegion m_currentDamage;
+    DamageJournal m_damageJournal;
 };
 
 class DrmCursorQPainterLayer : public DrmOverlayLayer
@@ -57,6 +59,7 @@ public:
 
 private:
     std::shared_ptr<DumbSwapchain> m_swapchain;
+    std::shared_ptr<DumbSwapchainSlot> m_currentBuffer;
     std::shared_ptr<DrmFramebuffer> m_currentFramebuffer;
 };
 

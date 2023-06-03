@@ -8,6 +8,7 @@
 */
 #pragma once
 #include "drm_layer.h"
+#include "utils/damagejournal.h"
 
 #include <QMap>
 #include <QPointer>
@@ -23,10 +24,11 @@ class SurfaceInterface;
 namespace KWin
 {
 
-class GbmSwapchain;
+class DrmEglSwapchain;
+class DrmEglSwapchainSlot;
+class GraphicsBuffer;
 class GLTexture;
 class EglGbmBackend;
-class GbmBuffer;
 class DrmVirtualOutput;
 
 class VirtualEglGbmLayer : public DrmOutputLayer
@@ -44,16 +46,17 @@ public:
     quint32 format() const override;
 
 private:
-    std::shared_ptr<GbmSwapchain> createGbmSwapchain() const;
-    bool doesGbmSwapchainFit(GbmSwapchain *swapchain) const;
+    std::shared_ptr<DrmEglSwapchain> createGbmSwapchain() const;
+    bool doesGbmSwapchainFit(DrmEglSwapchain *swapchain) const;
 
     QPointer<KWaylandServer::SurfaceInterface> m_scanoutSurface;
-    std::shared_ptr<GbmBuffer> m_currentBuffer;
-    std::shared_ptr<GLFramebuffer> m_fbo;
-    std::shared_ptr<GLTexture> m_texture;
+    QPointer<GraphicsBuffer> m_scanoutBuffer;
+    DamageJournal m_damageJournal;
+    DamageJournal m_oldDamageJournal;
     QRegion m_currentDamage;
-    std::shared_ptr<GbmSwapchain> m_gbmSwapchain;
-    std::shared_ptr<GbmSwapchain> m_oldGbmSwapchain;
+    std::shared_ptr<DrmEglSwapchain> m_gbmSwapchain;
+    std::shared_ptr<DrmEglSwapchain> m_oldGbmSwapchain;
+    std::shared_ptr<DrmEglSwapchainSlot> m_currentSlot;
 
     DrmVirtualOutput *const m_output;
     EglGbmBackend *const m_eglBackend;

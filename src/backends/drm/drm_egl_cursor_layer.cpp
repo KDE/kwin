@@ -76,6 +76,6 @@ void EglGbmCursorLayer::releaseBuffers()
 
 quint32 EglGbmCursorLayer::format() const
 {
-    return m_surface.currentBuffer()->buffer()->format();
+    return m_surface.currentBuffer()->buffer()->dmabufAttributes()->format;
 }
 }

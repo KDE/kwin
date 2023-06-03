@@ -78,6 +78,11 @@ GraphicsBufferView::~GraphicsBufferView()
     }
 }
 
+bool GraphicsBufferView::isNull() const
+{
+    return m_image.isNull();
+}
+
 QImage *GraphicsBufferView::image()
 {
     return &m_image;

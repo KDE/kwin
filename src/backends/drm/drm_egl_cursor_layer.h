@@ -22,7 +22,6 @@ namespace KWin
 {
 
 class EglGbmBackend;
-class DrmGbmBuffer;
 
 class EglGbmCursorLayer : public DrmOverlayLayer
 {

@@ -9,7 +9,7 @@
 #include "drm_egl_layer.h"
 #include "drm_abstract_output.h"
 #include "drm_backend.h"
-#include "drm_buffer_gbm.h"
+#include "drm_buffer.h"
 #include "drm_egl_backend.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
@@ -84,7 +84,7 @@ bool EglGbmLayer::checkTestBuffer()
 std::shared_ptr<GLTexture> EglGbmLayer::texture() const
 {
     if (m_scanoutBuffer) {
-        const auto ret = m_surface.eglBackend()->importBufferObjectAsTexture(static_cast<GbmBuffer *>(m_scanoutBuffer->buffer())->bo());
+        const auto ret = m_surface.eglBackend()->importDmaBufAsTexture(*m_scanoutBuffer->buffer()->dmabufAttributes());
         ret->setContentTransform(drmToTextureRotation(m_pipeline));
         return ret;
     } else {
@@ -139,12 +139,7 @@ bool EglGbmLayer::scanout(SurfaceItem *surfaceItem)
     if (!formats[dmabufAttributes->format].contains(dmabufAttributes->modifier)) {
         return false;
     }
-    const auto gbmBuffer = GbmBuffer::importBuffer(m_pipeline->gpu(), buffer);
-    if (!gbmBuffer) {
-        m_dmabufFeedback.scanoutFailed(surface, formats);
-        return false;
-    }
-    m_scanoutBuffer = DrmFramebuffer::createFramebuffer(gbmBuffer);
+    m_scanoutBuffer = m_pipeline->gpu()->importBuffer(buffer);
     if (m_scanoutBuffer && m_pipeline->testScanout()) {
         m_dmabufFeedback.scanoutSuccessful(surface);
         m_currentDamage = surfaceItem->damage();

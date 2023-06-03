@@ -17,6 +17,7 @@
 #include "core/outputlayer.h"
 #include "drm_plane.h"
 #include "libkwineffects/kwingltexture.h"
+#include "utils/damagejournal.h"
 
 struct gbm_bo;
 
@@ -24,13 +25,15 @@ namespace KWin
 {
 
 class DrmFramebuffer;
-class GbmSwapchain;
+class DrmEglSwapchain;
+class DrmEglSwapchainSlot;
 class DumbSwapchain;
 class ShadowBuffer;
+class EglContext;
 class EglGbmBackend;
+class GraphicsBuffer;
 class SurfaceItem;
 class GLTexture;
-class GbmBuffer;
 
 class EglGbmLayerSurface : public QObject
 {
@@ -75,28 +78,26 @@ private:
         ColorDescription targetColorDescription = ColorDescription::sRGB;
         ColorDescription intermediaryColorDescription = ColorDescription::sRGB;
         QVector3D channelFactors = {1, 1, 1};
-        std::shared_ptr<GbmSwapchain> gbmSwapchain;
+        std::shared_ptr<DrmEglSwapchain> gbmSwapchain;
+        std::shared_ptr<DrmEglSwapchainSlot> currentSlot;
+        DamageJournal damageJournal;
         std::shared_ptr<DumbSwapchain> importDumbSwapchain;
-        std::shared_ptr<GbmSwapchain> importGbmSwapchain;
-        QHash<gbm_bo *, std::shared_ptr<GLTexture>> importedTextureCache;
-        QHash<gbm_bo *, std::pair<std::shared_ptr<GLTexture>, std::shared_ptr<GLFramebuffer>>> importTextureCache;
+        std::shared_ptr<DrmEglSwapchain> importGbmSwapchain;
+        QHash<GraphicsBuffer *, std::shared_ptr<GLTexture>> importedTextureCache;
         MultiGpuImportMode importMode;
-        std::shared_ptr<GbmBuffer> currentBuffer;
         std::shared_ptr<DrmFramebuffer> currentFramebuffer;
-        QHash<gbm_bo *, std::pair<std::shared_ptr<GLTexture>, std::shared_ptr<GLFramebuffer>>> textureCache;
         bool forceLinear = false;
     };
     bool checkSurface(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats);
     bool doesSurfaceFit(const Surface &surface, const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const;
     std::optional<Surface> createSurface(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const;
     std::optional<Surface> createSurface(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, MultiGpuImportMode importMode) const;
-    std::shared_ptr<GbmSwapchain> createGbmSwapchain(DrmGpu *gpu, const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, bool forceLinear) const;
+    std::shared_ptr<DrmEglSwapchain> createGbmSwapchain(DrmGpu *gpu, EglContext *context, const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, bool forceLinear) const;
 
     std::shared_ptr<DrmFramebuffer> doRenderTestBuffer(Surface &surface) const;
-    std::shared_ptr<DrmFramebuffer> importBuffer(Surface &surface, const std::shared_ptr<GbmBuffer> &sourceBuffer) const;
-    std::shared_ptr<DrmFramebuffer> importDmabuf(GbmBuffer *sourceBuffer) const;
-    std::shared_ptr<DrmFramebuffer> importWithEgl(Surface &surface, GbmBuffer *sourceBuffer) const;
-    std::shared_ptr<DrmFramebuffer> importWithCpu(Surface &surface, GbmBuffer *sourceBuffer) const;
+    std::shared_ptr<DrmFramebuffer> importBuffer(Surface &surface, GraphicsBuffer *sourceBuffer) const;
+    std::shared_ptr<DrmFramebuffer> importWithEgl(Surface &surface, GraphicsBuffer *sourceBuffer) const;
+    std::shared_ptr<DrmFramebuffer> importWithCpu(Surface &surface, GraphicsBuffer *sourceBuffer) const;
 
     Surface m_surface;
     Surface m_oldSurface;

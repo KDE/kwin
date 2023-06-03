@@ -22,7 +22,6 @@ namespace KWin
 {
 
 class EglGbmBackend;
-class GbmBuffer;
 
 class EglGbmLayer : public DrmPipelineLayer
 {

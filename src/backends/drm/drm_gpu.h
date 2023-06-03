@@ -36,6 +36,7 @@ class DrmAbstractOutput;
 class DrmRenderBackend;
 class DrmVirtualOutput;
 class EglDisplay;
+class GraphicsBuffer;
 
 class DrmLease : public QObject
 {
@@ -103,6 +104,7 @@ public:
     bool needsModeset() const;
     bool maybeModeset();
 
+    std::shared_ptr<DrmFramebuffer> importBuffer(GraphicsBuffer *buffer);
     void releaseBuffers();
     void recreateSurfaces();
 

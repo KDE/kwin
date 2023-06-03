@@ -8,6 +8,7 @@
  */
 
 #include "drm_buffer.h"
+#include "core/graphicsbuffer.h"
 #include "drm_connector.h"
 #include "drm_crtc.h"
 #include "drm_gpu.h"
@@ -146,7 +147,14 @@ DrmPipeline::Error DrmPipeline::applyPendingChangesLegacy()
 bool DrmPipeline::setCursorLegacy()
 {
     const auto bo = cursorLayer()->currentBuffer();
-    const uint32_t handle = bo && bo->buffer() && cursorLayer()->isVisible() ? bo->buffer()->handles()[0] : 0;
+    uint32_t handle = 0;
+    if (bo && bo->buffer() && cursorLayer()->isVisible()) {
+        const DmaBufAttributes *attributes = bo->buffer()->dmabufAttributes();
+        if (drmPrimeFDToHandle(gpu()->fd(), attributes->fd[0].get(), &handle) != 0) {
+            qCWarning(KWIN_DRM) << "drmPrimeFDToHandle() failed";
+            return false;
+        }
+    }
 
     struct drm_mode_cursor2 arg = {
         .flags = DRM_MODE_CURSOR_BO | DRM_MODE_CURSOR_MOVE,
@@ -159,7 +167,12 @@ bool DrmPipeline::setCursorLegacy()
         .hot_x = m_pending.cursorHotspot.x(),
         .hot_y = m_pending.cursorHotspot.y(),
     };
-    return drmIoctl(gpu()->fd(), DRM_IOCTL_MODE_CURSOR2, &arg) == 0;
+    const int ret = drmIoctl(gpu()->fd(), DRM_IOCTL_MODE_CURSOR2, &arg);
+
+    if (handle != 0) {
+        drmCloseBufferHandle(gpu()->fd(), handle);
+    }
+    return ret == 0;
 }
 
 bool DrmPipeline::moveCursorLegacy()

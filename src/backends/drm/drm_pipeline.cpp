@@ -15,7 +15,6 @@
 #include "drm_atomic_commit.h"
 #include "drm_backend.h"
 #include "drm_buffer.h"
-#include "drm_buffer_gbm.h"
 #include "drm_connector.h"
 #include "drm_crtc.h"
 #include "drm_egl_backend.h"
@@ -450,12 +449,13 @@ QMap<uint32_t, QVector<uint64_t>> DrmPipeline::cursorFormats() const
 
 bool DrmPipeline::pruneModifier()
 {
-    if (!m_pending.layer->currentBuffer()
-        || m_pending.layer->currentBuffer()->buffer()->modifier() == DRM_FORMAT_MOD_NONE
-        || m_pending.layer->currentBuffer()->buffer()->modifier() == DRM_FORMAT_MOD_INVALID) {
+    const DmaBufAttributes *dmabufAttributes = m_pending.layer->currentBuffer() ? m_pending.layer->currentBuffer()->buffer()->dmabufAttributes() : nullptr;
+    if (!dmabufAttributes
+        || dmabufAttributes->modifier == DRM_FORMAT_MOD_NONE
+        || dmabufAttributes->modifier == DRM_FORMAT_MOD_INVALID) {
         return false;
     }
-    auto &modifiers = m_pending.formats[m_pending.layer->currentBuffer()->buffer()->format()];
+    auto &modifiers = m_pending.formats[dmabufAttributes->format];
     if (modifiers.empty()) {
         return false;
     } else {

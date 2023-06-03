@@ -7,134 +7,141 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "drm_gbm_swapchain.h"
+#include "backends/drm/drm_gbm_swapchain.h"
+#include "backends/drm/drm_gpu.h"
+#include "core/gbmgraphicsbufferallocator.h"
+#include "libkwineffects/kwinglutils.h"
+#include "platformsupport/scenes/opengl/eglcontext.h"
 
 #include <errno.h>
 #include <gbm.h>
 #include <drm_fourcc.h>
 
-#include "drm_backend.h"
-#include "drm_egl_backend.h"
-#include "drm_gpu.h"
-#include "drm_logging.h"
-#include "kwineglutils_p.h"
-#include "libkwineffects/kwinglplatform.h"
-
 namespace KWin
 {
 
-GbmSwapchain::GbmSwapchain(DrmGpu *gpu, gbm_bo *initialBuffer, uint32_t flags)
-    : m_gpu(gpu)
-    , m_size(gbm_bo_get_width(initialBuffer), gbm_bo_get_height(initialBuffer))
-    , m_format(gbm_bo_get_format(initialBuffer))
-    , m_modifier(gbm_bo_get_modifier(initialBuffer))
-    , m_flags(flags)
-    , m_buffers({std::make_pair(initialBuffer, 0)})
+DrmEglSwapchainSlot::DrmEglSwapchainSlot(EglContext *context, GraphicsBuffer *buffer)
+    : m_buffer(buffer)
+{
+    m_texture = context->importDmaBufAsTexture(*buffer->dmabufAttributes());
+    m_framebuffer = std::make_unique<GLFramebuffer>(m_texture.get());
+}
+
+DrmEglSwapchainSlot::~DrmEglSwapchainSlot()
+{
+    m_framebuffer.reset();
+    m_texture.reset();
+    m_buffer->drop();
+}
+
+GraphicsBuffer *DrmEglSwapchainSlot::buffer() const
+{
+    return m_buffer;
+}
+
+std::shared_ptr<GLTexture> DrmEglSwapchainSlot::texture() const
+{
+    return m_texture;
+}
+
+GLFramebuffer *DrmEglSwapchainSlot::framebuffer() const
+{
+    return m_framebuffer.get();
+}
+
+int DrmEglSwapchainSlot::age() const
+{
+    return m_age;
+}
+
+DrmEglSwapchain::DrmEglSwapchain(std::unique_ptr<GraphicsBufferAllocator> allocator, EglContext *context, const QSize &size, uint32_t format, uint64_t modifier, const QVector<std::shared_ptr<DrmEglSwapchainSlot>> &slots)
+    : m_allocator(std::move(allocator))
+    , m_context(context)
+    , m_size(size)
+    , m_format(format)
+    , m_modifier(modifier)
+    , m_slots(slots)
 {
 }
 
-GbmSwapchain::~GbmSwapchain()
+DrmEglSwapchain::~DrmEglSwapchain()
 {
-    while (!m_buffers.empty()) {
-        gbm_bo_destroy(m_buffers.back().first);
-        m_buffers.pop_back();
-    }
 }
 
-std::pair<std::shared_ptr<GbmBuffer>, QRegion> GbmSwapchain::acquire()
-{
-    for (auto &[bo, bufferAge] : m_buffers) {
-        bufferAge++;
-    }
-    if (m_buffers.empty()) {
-        gbm_bo *newBo;
-        if (m_modifier == DRM_FORMAT_MOD_INVALID) {
-            newBo = gbm_bo_create(m_gpu->gbmDevice(), m_size.width(), m_size.height(), m_format, m_flags);
-        } else {
-            newBo = gbm_bo_create_with_modifiers(m_gpu->gbmDevice(), m_size.width(), m_size.height(), m_format, &m_modifier, 1);
-        }
-        if (!newBo) {
-            qCWarning(KWIN_DRM) << "Creating gbm buffer failed!" << strerror(errno);
-            return std::make_pair(nullptr, infiniteRegion());
-        } else {
-            return std::make_pair(std::make_shared<GbmBuffer>(newBo, shared_from_this()), infiniteRegion());
-        }
-    } else {
-        const auto [bo, bufferAge] = m_buffers.front();
-        m_buffers.pop_front();
-        return std::make_pair(std::make_shared<GbmBuffer>(bo, shared_from_this()),
-                              m_damageJournal.accumulate(bufferAge, infiniteRegion()));
-    }
-}
-
-void GbmSwapchain::damage(const QRegion &damage)
-{
-    m_damageJournal.add(damage);
-}
-
-void GbmSwapchain::resetDamage()
-{
-    m_damageJournal.clear();
-}
-
-void GbmSwapchain::releaseBuffer(GbmBuffer *buffer)
-{
-    if (m_buffers.size() < 3) {
-        m_buffers.push_back(std::make_pair(buffer->bo(), 1));
-    } else {
-        gbm_bo_destroy(buffer->bo());
-    }
-}
-
-std::variant<std::shared_ptr<GbmSwapchain>, GbmSwapchain::Error> GbmSwapchain::createSwapchain(DrmGpu *gpu, const QSize &size, uint32_t format, uint32_t flags)
-{
-    gbm_bo *bo = gbm_bo_create(gpu->gbmDevice(), size.width(), size.height(), format, flags);
-    if (bo) {
-        return std::make_shared<GbmSwapchain>(gpu, bo, flags);
-    } else {
-        qCWarning(KWIN_DRM) << "Creating initial gbm buffer failed!" << strerror(errno);
-        return Error::Unknown;
-    }
-}
-
-std::variant<std::shared_ptr<GbmSwapchain>, GbmSwapchain::Error> GbmSwapchain::createSwapchain(DrmGpu *gpu, const QSize &size, uint32_t format, QVector<uint64_t> modifiers)
-{
-    gbm_bo *bo = gbm_bo_create_with_modifiers(gpu->gbmDevice(), size.width(), size.height(), format, modifiers.constData(), modifiers.size());
-    if (bo) {
-        // scanout is implicitly assumed with gbm_bo_create_with_modifiers
-        return std::make_shared<GbmSwapchain>(gpu, bo, GBM_BO_USE_SCANOUT);
-    } else {
-        if (errno == ENOSYS) {
-            return Error::ModifiersUnsupported;
-        } else {
-            qCWarning(KWIN_DRM) << "Creating initial gbm buffer failed!" << strerror(errno);
-            return Error::Unknown;
-        }
-    }
-}
-
-DrmGpu *GbmSwapchain::gpu() const
-{
-    return m_gpu;
-}
-
-QSize GbmSwapchain::size() const
+QSize DrmEglSwapchain::size() const
 {
     return m_size;
 }
 
-uint32_t GbmSwapchain::format() const
+uint32_t DrmEglSwapchain::format() const
 {
     return m_format;
 }
 
-uint64_t GbmSwapchain::modifier() const
+uint64_t DrmEglSwapchain::modifier() const
 {
     return m_modifier;
 }
 
-uint32_t GbmSwapchain::flags() const
+std::shared_ptr<DrmEglSwapchainSlot> DrmEglSwapchain::acquire()
 {
-    return m_flags;
+    for (const auto &slot : std::as_const(m_slots)) {
+        if (!slot->buffer()->isReferenced()) {
+            return slot;
+        }
+    }
+
+    GraphicsBuffer *buffer = m_allocator->allocate(GraphicsBufferOptions{
+        .size = m_size,
+        .format = m_format,
+        .modifiers = {m_modifier},
+    });
+    if (!buffer) {
+        qCWarning(KWIN_DRM) << "Failed to allocate a gbm graphics buffer";
+        return nullptr;
+    }
+
+    auto slot = std::make_shared<DrmEglSwapchainSlot>(m_context, buffer);
+    m_slots.append(slot);
+    return slot;
 }
+
+void DrmEglSwapchain::release(std::shared_ptr<DrmEglSwapchainSlot> slot)
+{
+    for (qsizetype i = 0; i < m_slots.count(); ++i) {
+        if (m_slots[i] == slot) {
+            m_slots[i]->m_age = 1;
+        } else if (m_slots[i]->m_age > 0) {
+            m_slots[i]->m_age++;
+        }
+    }
 }
+
+std::shared_ptr<DrmEglSwapchain> DrmEglSwapchain::create(DrmGpu *gpu, EglContext *context, const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers)
+{
+    if (!context->makeCurrent()) {
+        return nullptr;
+    }
+
+    auto allocator = std::make_unique<GbmGraphicsBufferAllocator>(gpu->gbmDevice());
+
+    // The seed graphics buffer is used to fixate modifiers.
+    GraphicsBuffer *seed = allocator->allocate(GraphicsBufferOptions{
+        .size = size,
+        .format = format,
+        .modifiers = modifiers,
+    });
+    if (!seed) {
+        return nullptr;
+    }
+
+    const QVector<std::shared_ptr<DrmEglSwapchainSlot>> slots{std::make_shared<DrmEglSwapchainSlot>(context, seed)};
+    return std::make_shared<DrmEglSwapchain>(std::move(allocator),
+                                             context,
+                                             size,
+                                             format,
+                                             seed->dmabufAttributes()->modifier,
+                                             slots);
+}
+
+} // namespace KWin

@@ -14,6 +14,7 @@
 #include "core/session.h"
 #include "drm_atomic_commit.h"
 #include "drm_backend.h"
+#include "drm_buffer.h"
 #include "drm_connector.h"
 #include "drm_crtc.h"
 #include "drm_egl_backend.h"
@@ -822,6 +823,84 @@ void DrmGpu::recreateSurfaces()
     for (const auto &output : std::as_const(m_virtualOutputs)) {
         output->recreateSurface();
     }
+}
+
+std::shared_ptr<DrmFramebuffer> DrmGpu::importBuffer(GraphicsBuffer *buffer)
+{
+    const DmaBufAttributes *attributes = buffer->dmabufAttributes();
+    if (Q_UNLIKELY(!attributes)) {
+        return nullptr;
+    }
+
+    uint32_t handles[] = {0, 0, 0, 0};
+    auto cleanup = qScopeGuard([this, &handles]() {
+        for (int i = 0; i < 4; ++i) {
+            if (handles[i] == 0) {
+                continue;
+            }
+            bool closed = false;
+            for (int j = 0; j < i; ++j) {
+                if (handles[i] == handles[j]) {
+                    closed = true;
+                    break;
+                }
+            }
+            if (closed) {
+                continue;
+            }
+            drmCloseBufferHandle(m_fd, handles[i]);
+        }
+    });
+    for (int i = 0; i < attributes->planeCount; ++i) {
+        if (drmPrimeFDToHandle(m_fd, attributes->fd[i].get(), &handles[i]) != 0) {
+            qCWarning(KWIN_DRM) << "drmPrimeFDToHandle() failed";
+            return nullptr;
+        }
+    }
+
+    uint32_t framebufferId = 0;
+    int ret;
+    if (addFB2ModifiersSupported() && attributes->modifier != DRM_FORMAT_MOD_INVALID) {
+        uint64_t modifier[4] = {0, 0, 0, 0};
+        for (int i = 0; i < attributes->planeCount; ++i) {
+            modifier[i] = attributes->modifier;
+        }
+        ret = drmModeAddFB2WithModifiers(m_fd,
+                                         attributes->width,
+                                         attributes->height,
+                                         attributes->format,
+                                         handles,
+                                         attributes->pitch,
+                                         attributes->offset,
+                                         modifier,
+                                         &framebufferId,
+                                         DRM_MODE_FB_MODIFIERS);
+    } else {
+        ret = drmModeAddFB2(m_fd,
+                            attributes->width,
+                            attributes->height,
+                            attributes->format,
+                            handles,
+                            attributes->pitch,
+                            attributes->offset,
+                            &framebufferId,
+                            0);
+        if (ret == EOPNOTSUPP && attributes->planeCount == 1) {
+            ret = drmModeAddFB(m_fd,
+                               attributes->width,
+                               attributes->height,
+                               24, 32,
+                               attributes->pitch[0],
+                               handles[0],
+                               &framebufferId);
+        }
+    }
+
+    if (ret != 0) {
+        return nullptr;
+    }
+
+    return std::make_shared<DrmFramebuffer>(this, framebufferId, buffer);
 }
 
 DrmLease::DrmLease(DrmGpu *gpu, FileDescriptor &&fd, uint32_t lesseeId, const QVector<DrmOutput *> &outputs)

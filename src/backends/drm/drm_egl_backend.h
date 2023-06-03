@@ -29,10 +29,7 @@ namespace KWin
 struct DmaBufAttributes;
 class Output;
 class DrmAbstractOutput;
-class DrmBuffer;
-class DrmGbmBuffer;
 class DrmOutput;
-class GbmBuffer;
 class DumbSwapchain;
 class DrmBackend;
 class DrmGpu;

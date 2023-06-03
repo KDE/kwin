@@ -7,76 +7,52 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "drm_dumb_swapchain.h"
-#include "drm_buffer.h"
-#include "drm_dumb_buffer.h"
-#include "drm_gpu.h"
-#include "drm_logging.h"
+#include "backends/drm/drm_dumb_swapchain.h"
+#include "core/gbmgraphicsbufferallocator.h"
+#include "core/graphicsbufferview.h"
+#include "backends/drm/drm_gpu.h"
+
+#include <memory>
 
 namespace KWin
 {
 
-DumbSwapchain::DumbSwapchain(DrmGpu *gpu, const QSize &size, uint32_t drmFormat)
-    : m_size(size)
-    , m_format(drmFormat)
+DumbSwapchainSlot::DumbSwapchainSlot(GraphicsBuffer *buffer)
+    : m_buffer(buffer)
+    , m_view(std::make_unique<GraphicsBufferView>(buffer, GraphicsBuffer::Read | GraphicsBuffer::Write))
 {
-    for (int i = 0; i < 2; i++) {
-        auto buffer = DrmDumbBuffer::createDumbBuffer(gpu, size, drmFormat);
-        if (!buffer->map(QImage::Format::Format_ARGB32)) {
-            break;
-        }
-        buffer->image()->fill(Qt::black);
-        m_slots.append(Slot{
-            .buffer = buffer,
-            .age = 0,
-        });
-    }
-    m_damageJournal.setCapacity(2);
-    if (m_slots.count() < 2) {
-        qCWarning(KWIN_DRM) << "Failed to create dumb buffers for swapchain!";
-        m_slots.clear();
-    }
 }
 
-std::shared_ptr<DrmDumbBuffer> DumbSwapchain::acquireBuffer(QRegion *needsRepaint)
+DumbSwapchainSlot::~DumbSwapchainSlot()
 {
-    if (m_slots.isEmpty()) {
-        return {};
-    }
-    index = (index + 1) % m_slots.count();
-    if (needsRepaint) {
-        *needsRepaint = m_damageJournal.accumulate(m_slots[index].age, infiniteRegion());
-    }
-    return m_slots[index].buffer;
+    m_view.reset();
+    m_buffer->drop();
 }
 
-std::shared_ptr<DrmDumbBuffer> DumbSwapchain::currentBuffer() const
+GraphicsBuffer *DumbSwapchainSlot::buffer() const
 {
-    return m_slots[index].buffer;
+    return m_buffer;
 }
 
-void DumbSwapchain::releaseBuffer(const std::shared_ptr<DrmDumbBuffer> &buffer, const QRegion &damage)
+GraphicsBufferView *DumbSwapchainSlot::view() const
 {
-    Q_ASSERT(m_slots[index].buffer == buffer);
-
-    for (qsizetype i = 0; i < m_slots.count(); ++i) {
-        if (m_slots[i].buffer == buffer) {
-            m_slots[i].age = 1;
-        } else if (m_slots[i].age > 0) {
-            m_slots[i].age++;
-        }
-    }
-    m_damageJournal.add(damage);
+    return m_view.get();
 }
 
-uint32_t DumbSwapchain::drmFormat() const
+int DumbSwapchainSlot::age() const
 {
-    return m_format;
+    return m_age;
 }
 
-qsizetype DumbSwapchain::slotCount() const
+DumbSwapchain::DumbSwapchain(DrmGpu *gpu, const QSize &size, uint32_t format)
+    : m_allocator(std::make_unique<GbmGraphicsBufferAllocator>(gpu->gbmDevice()))
+    , m_size(size)
+    , m_format(format)
 {
-    return m_slots.count();
+}
+
+DumbSwapchain::~DumbSwapchain()
+{
 }
 
 QSize DumbSwapchain::size() const
@@ -84,9 +60,44 @@ QSize DumbSwapchain::size() const
     return m_size;
 }
 
-bool DumbSwapchain::isEmpty() const
+uint32_t DumbSwapchain::format() const
 {
-    return m_slots.isEmpty();
+    return m_format;
+}
+
+std::shared_ptr<DumbSwapchainSlot> DumbSwapchain::acquire()
+{
+    for (const auto &slot : std::as_const(m_slots)) {
+        if (!slot->buffer()->isReferenced()) {
+            return slot;
+        }
+    }
+
+    GraphicsBuffer *buffer = m_allocator->allocate(GraphicsBufferOptions{
+        .size = m_size,
+        .format = m_format,
+        .software = true,
+    });
+    if (!buffer) {
+        qCWarning(KWIN_DRM) << "Failed to allocate a dumb buffer";
+        return nullptr;
+    }
+
+    auto slot = std::make_shared<DumbSwapchainSlot>(buffer);
+    m_slots.append(slot);
+
+    return slot;
+}
+
+void DumbSwapchain::release(std::shared_ptr<DumbSwapchainSlot> slot)
+{
+    for (qsizetype i = 0; i < m_slots.count(); ++i) {
+        if (m_slots[i] == slot) {
+            m_slots[i]->m_age = 1;
+        } else if (m_slots[i]->m_age > 0) {
+            m_slots[i]->m_age++;
+        }
+    }
 }
 
 }
