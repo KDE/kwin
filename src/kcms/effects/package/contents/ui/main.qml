@@ -24,7 +24,7 @@ ScrollViewKCM {
         QQC2.Label {
             Layout.fillWidth: true
 
-            elide: Text.ElideRight
+            wrapMode: Text.WordWrap
             text: i18n("Hint: To find out or configure how to activate an effect, look at the effect's settings.")
         }
 
