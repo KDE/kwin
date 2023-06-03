@@ -20,6 +20,17 @@ ScrollViewKCM {
     implicitHeight: Kirigami.Units.gridUnit * 30
     implicitWidth: Kirigami.Units.gridUnit * 40
 
+    actions: NewStuff.Action {
+        text: i18n("Get New…")
+        visible: KAuthorized.authorize(KAuthorized.GHNS)
+        configFile: "kwineffect.knsrc"
+        onEntryEvent: (entry, event) => {
+            if (event === NewStuff.Engine.StatusChangedEvent) {
+                kcm.onGHNSEntriesChanged()
+            }
+        }
+    }
+
     header: ColumnLayout {
         spacing: Kirigami.Units.smallSpacing
 
@@ -117,23 +128,6 @@ ScrollViewKCM {
                 _buttonGroups.set(name, group);
             }
             return group;
-        }
-    }
-
-    footer: ColumnLayout {
-        RowLayout {
-            Layout.alignment: Qt.AlignRight
-
-            NewStuff.Button {
-                text: i18n("Get New Desktop Effects…")
-                visible: KAuthorized.authorize(KAuthorized.GHNS)
-                configFile: "kwineffect.knsrc"
-                onEntryEvent: (entry, event) => {
-                    if (event === NewStuff.Engine.StatusChangedEvent) {
-                        kcm.onGHNSEntriesChanged()
-                    }
-                }
-            }
         }
     }
 }
