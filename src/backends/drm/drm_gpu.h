@@ -139,6 +139,7 @@ private:
     bool m_isActive = true;
     clockid_t m_presentationClock;
     gbm_device *m_gbmDevice;
+    FileDescriptor m_gbmFd;
     std::unique_ptr<EglDisplay> m_eglDisplay;
     DrmBackend *const m_platform;
 

@@ -78,7 +78,15 @@ DrmGpu::DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t device
     m_isNVidia = strstr(version->name, "nvidia-drm");
     m_isVirtualMachine = strstr(version->name, "virtio") || strstr(version->name, "qxl")
         || strstr(version->name, "vmwgfx") || strstr(version->name, "vboxvideo");
-    m_gbmDevice = gbm_create_device(m_fd);
+
+    // Reopen the drm node to create a new GEM handle namespace.
+    m_gbmFd = FileDescriptor{open(devNode.toLocal8Bit(), O_RDWR | O_CLOEXEC)};
+    if (m_gbmFd.isValid()) {
+        drm_magic_t magic;
+        drmGetMagic(m_gbmFd.get(), &magic);
+        drmAuthMagic(m_fd, magic);
+        m_gbmDevice = gbm_create_device(m_gbmFd.get());
+    }
 
     m_socketNotifier = std::make_unique<QSocketNotifier>(fd, QSocketNotifier::Read);
     connect(m_socketNotifier.get(), &QSocketNotifier::activated, this, &DrmGpu::dispatchEvents);
@@ -102,6 +110,7 @@ DrmGpu::~DrmGpu()
     if (m_gbmDevice) {
         gbm_device_destroy(m_gbmDevice);
     }
+    m_gbmFd = FileDescriptor{};
     m_platform->session()->closeRestricted(m_fd);
 }
 
