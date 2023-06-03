@@ -95,12 +95,12 @@ ScrollViewKCM {
         }
 
         delegate: Effect {
-            width: effectsList.width
+            width: ListView.view.width - ListView.view.leftMargin - ListView.view.rightMargin
         }
 
         section.property: "CategoryRole"
         section.delegate: Kirigami.ListSectionHeader {
-            width: effectsList.width
+            width: ListView.view.width - ListView.view.leftMargin - ListView.view.rightMargin
             text: section
         }
 
