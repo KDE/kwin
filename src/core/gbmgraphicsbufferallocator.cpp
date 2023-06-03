@@ -24,36 +24,50 @@ GbmGraphicsBufferAllocator::~GbmGraphicsBufferAllocator()
 
 GbmGraphicsBuffer *GbmGraphicsBufferAllocator::allocate(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers)
 {
-    gbm_bo *bo = nullptr;
-
     if (!modifiers.isEmpty() && !(modifiers.size() == 1 && modifiers.first() == DRM_FORMAT_MOD_INVALID)) {
-        bo = gbm_bo_create_with_modifiers(m_gbmDevice,
-                                          size.width(),
-                                          size.height(),
-                                          format,
-                                          modifiers.constData(),
-                                          modifiers.size());
+        gbm_bo *bo = gbm_bo_create_with_modifiers(m_gbmDevice,
+                                                  size.width(),
+                                                  size.height(),
+                                                  format,
+                                                  modifiers.constData(),
+                                                  modifiers.size());
+        if (bo) {
+            std::optional<DmaBufAttributes> attributes = dmaBufAttributesForBo(bo);
+            if (!attributes.has_value()) {
+                gbm_bo_destroy(bo);
+                return nullptr;
+            }
+            return new GbmGraphicsBuffer(std::move(attributes.value()), bo);
+        }
     }
 
-    if (!bo) {
-        bo = gbm_bo_create(m_gbmDevice,
-                           size.width(),
-                           size.height(),
-                           format,
-                           GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING);
-    }
-
-    if (!bo) {
+    uint32_t flags = GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING;
+    if (modifiers.size() == 1 && modifiers.first() == DRM_FORMAT_MOD_LINEAR) {
+        flags |= GBM_BO_USE_LINEAR;
+    } else if (!modifiers.contains(DRM_FORMAT_MOD_INVALID)) {
         return nullptr;
     }
 
-    std::optional<DmaBufAttributes> attributes = dmaBufAttributesForBo(bo);
-    if (!attributes.has_value()) {
-        gbm_bo_destroy(bo);
-        return nullptr;
+    gbm_bo *bo = gbm_bo_create(m_gbmDevice,
+                               size.width(),
+                               size.height(),
+                               format,
+                               flags);
+    if (bo) {
+        std::optional<DmaBufAttributes> attributes = dmaBufAttributesForBo(bo);
+        if (!attributes.has_value()) {
+            gbm_bo_destroy(bo);
+            return nullptr;
+        }
+        if (flags & GBM_BO_USE_LINEAR) {
+            attributes->modifier = DRM_FORMAT_MOD_LINEAR;
+        } else {
+            attributes->modifier = DRM_FORMAT_MOD_INVALID;
+        }
+        return new GbmGraphicsBuffer(std::move(attributes.value()), bo);
     }
 
-    return new GbmGraphicsBuffer(std::move(attributes.value()), bo);
+    return nullptr;
 }
 
 GbmGraphicsBuffer::GbmGraphicsBuffer(DmaBufAttributes attributes, gbm_bo *handle)
