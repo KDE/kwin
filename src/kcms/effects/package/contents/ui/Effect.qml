@@ -125,7 +125,7 @@ Kirigami.SwipeListItem {
             visible: model.ConfigurableRole
             enabled: model.StatusRole != Qt.Unchecked
             icon.name: "configure"
-            tooltip: i18nc("@info:tooltip", "Configure...")
+            tooltip: i18nc("@info:tooltip", "Configure…")
             onTriggered: kcm.configure(model.ServiceNameRole, listItem)
         }
     ]

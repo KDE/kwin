@@ -120,7 +120,7 @@ ScrollViewKCM {
             Layout.alignment: Qt.AlignRight
 
             NewStuff.Button {
-                text: i18n("Get New Desktop Effects...")
+                text: i18n("Get New Desktop Effects…")
                 visible: KAuthorized.authorize(KAuthorized.GHNS)
                 configFile: "kwineffect.knsrc"
                 onEntryEvent: function (entry, event) {
