@@ -45,7 +45,7 @@ msgstr "Aucune action"
 #: main.cpp:131 touch.cpp:125
 #, kde-format
 msgid "Peek at Desktop"
-msgstr "Coup d’œil sur le bureau"
+msgstr "Coup d'œil sur le bureau"
 
 #: main.cpp:132 touch.cpp:126
 #, kde-format
