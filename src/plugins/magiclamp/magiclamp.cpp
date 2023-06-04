@@ -145,21 +145,52 @@ void MagicLampEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, Wi
             }
             if (panel) {
                 // Assumption: width of horizonal panel is greater than its height and vice versa
-                const QRectF windowScreen = effects->clientArea(ScreenArea, w);
+                const QRect windowScreen = effects->clientArea(ScreenArea, w).toRect();
+                const QRect visible = geo & windowScreen;
 
                 if (panel->width() >= panel->height()) {
-                    // horizontal panel
-                    if (icon.center().y() <= windowScreen.center().y()) {
+                    // Horizontal panel: compute how much it takes for the top window edge to travel
+                    // downwards, and the bottom window edge travel upwards. Use the direction that takes
+                    // the farthest to travel.
+                    const int windowBottomToIconBottom = std::max(visible.bottom() - icon.bottom(), 0);
+                    const int windowTopToIconTop = std::max(icon.top() - visible.top(), 0);
+
+                    if (windowBottomToIconBottom > windowTopToIconTop) {
                         position = Top;
-                    } else {
+                    } else if (windowBottomToIconBottom < windowTopToIconTop) {
                         position = Bottom;
+                    } else {
+                        // If both are the same, the direction does not matter in general. For better
+                        // visuals, we prefer a window edge that's closest to the opposite screen edge.
+                        const int windowBottomToScreenTop = std::max(geo.y() + geo.height() - windowScreen.y(), 0);
+                        const int windowTopToScreenBottom = std::max(windowScreen.y() + windowScreen.height() - geo.y(), 0);
+                        if (windowBottomToScreenTop < windowTopToScreenBottom) {
+                            position = Top;
+                        } else {
+                            position = Bottom;
+                        }
                     }
                 } else {
-                    // vertical panel
-                    if (icon.center().x() <= windowScreen.center().x()) {
+                    // Vertical panel: compute how much it takes for the left window edge to travel
+                    // rightwards, and the right window edge travel leftwards. Use the direction that takes
+                    // the farthest to travel.
+                    const int windowRightToIconRight = std::max(visible.right() - icon.right(), 0);
+                    const int windowLeftToIconLeft = std::max(icon.left() - visible.left(), 0);
+
+                    if (windowRightToIconRight > windowLeftToIconLeft) {
                         position = Left;
-                    } else {
+                    } else if (windowRightToIconRight < windowLeftToIconLeft) {
                         position = Right;
+                    } else {
+                        // If both are the same, the direction does not matter in general. For better
+                        // visuals, we prefer a window edge that's closest to the opposite screen edge.
+                        const int windowRightToScreenLeft = std::max(geo.x() + geo.width() - windowScreen.x(), 0);
+                        const int windowLeftToScreenRight = std::max(windowScreen.x() + windowScreen.width() - geo.x(), 0);
+                        if (windowRightToScreenLeft < windowLeftToScreenRight) {
+                            position = Left;
+                        } else {
+                            position = Right;
+                        }
                     }
                 }
 
