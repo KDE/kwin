@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-03 02:04+0000\n"
-"PO-Revision-Date: 2023-04-13 12:54+0300\n"
+"PO-Revision-Date: 2023-06-03 12:45+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 23.03.70\n"
+"X-Generator: Lokalize 23.07.70\n"
 
 #: kcmrules.cpp:226
 #, kde-format
@@ -157,13 +157,11 @@ msgid "No rules for specific windows are currently set"
 msgstr "Şu anda belirli pencereler için hiçbir kural ayarlanmadı"
 
 #: package/contents/ui/main.qml:64
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Click the <interface>Add New...</interface> button below to add some"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Click the <interface>Add New…</interface> button below to add some"
 msgstr ""
-"Yeni bir tane eklemek için aşağıda <interface>Yeni Ekle...</interface> "
+"Birkaç tane eklemek için aşağıdaki <interface>Yeni Ekle...</interface> "
 "düğmesine tıklayın"
 
 #: package/contents/ui/main.qml:72
@@ -187,16 +185,14 @@ msgid "Save Rules"
 msgstr "Kuralları Kaydet"
 
 #: package/contents/ui/main.qml:101
-#, fuzzy, kde-format
-#| msgid "Add New..."
+#, kde-format
 msgid "Add New…"
-msgstr "Yeni Ekle..."
+msgstr "Yeni Ekle…"
 
 #: package/contents/ui/main.qml:112
-#, fuzzy, kde-format
-#| msgid "Import..."
+#, kde-format
 msgid "Import…"
-msgstr "İçe Aktar..."
+msgstr "İçe Aktar…"
 
 #: package/contents/ui/main.qml:120
 #, kde-format
@@ -204,10 +200,9 @@ msgid "Cancel Export"
 msgstr "Dışa Aktarmayı İptal Et"
 
 #: package/contents/ui/main.qml:120
-#, fuzzy, kde-format
-#| msgid "Export..."
+#, kde-format
 msgid "Export…"
-msgstr "Dışa Aktar..."
+msgstr "Dışa Aktar…"
 
 #: package/contents/ui/main.qml:210
 #, kde-format

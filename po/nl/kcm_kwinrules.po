@@ -16,14 +16,14 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-03 02:04+0000\n"
-"PO-Revision-Date: 2023-04-13 13:24+0200\n"
+"PO-Revision-Date: 2023-06-03 11:57+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 23.04.1\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: kcmrules.cpp:226
@@ -166,13 +166,11 @@ msgid "No rules for specific windows are currently set"
 msgstr "Er zijn op dit moment geen regels voor specifieke vensters ingesteld"
 
 #: package/contents/ui/main.qml:64
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Click the <interface>Add New...</interface> button below to add some"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Click the <interface>Add New…</interface> button below to add some"
 msgstr ""
-"Klik op de onderstaande knop <interface>Nieuw toevoegen...</interface> om er "
+"Klik op de onderstaande knop <interface>Nieuw toevoegen…</interface> om er "
 "enige toe te voegen"
 
 #: package/contents/ui/main.qml:72
@@ -196,16 +194,14 @@ msgid "Save Rules"
 msgstr "Regels opslaan"
 
 #: package/contents/ui/main.qml:101
-#, fuzzy, kde-format
-#| msgid "Add New..."
+#, kde-format
 msgid "Add New…"
-msgstr "Nieuw toevoegen..."
+msgstr "Nieuw toevoegen…"
 
 #: package/contents/ui/main.qml:112
-#, fuzzy, kde-format
-#| msgid "Import..."
+#, kde-format
 msgid "Import…"
-msgstr "Importeren..."
+msgstr "Importeren…"
 
 #: package/contents/ui/main.qml:120
 #, kde-format
@@ -213,10 +209,9 @@ msgid "Cancel Export"
 msgstr "Exporteren annuleren"
 
 #: package/contents/ui/main.qml:120
-#, fuzzy, kde-format
-#| msgid "Export..."
+#, kde-format
 msgid "Export…"
-msgstr "Exporteren..."
+msgstr "Exporteren…"
 
 #: package/contents/ui/main.qml:210
 #, kde-format

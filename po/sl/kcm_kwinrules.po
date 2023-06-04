@@ -9,17 +9,17 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-03 02:04+0000\n"
-"PO-Revision-Date: 2023-04-16 08:19+0200\n"
+"PO-Revision-Date: 2023-06-03 08:42+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
-"%100==4 ? 3 : 0);\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100>=3 && n"
+"%100<=4 ? 2 : 3);\n"
 "Translator: Andrej Mernik <andrejm@ubuntu.si>\n"
-"X-Generator: Poedit 3.2.2\n"
+"X-Generator: Poedit 3.3.1\n"
 
 #: kcmrules.cpp:226
 #, kde-format
@@ -158,9 +158,7 @@ msgid "No rules for specific windows are currently set"
 msgstr "Trenutno ni določenih pravil za določena okna"
 
 #: package/contents/ui/main.qml:64
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Click the <interface>Add New...</interface> button below to add some"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Click the <interface>Add New…</interface> button below to add some"
 msgstr ""
@@ -187,16 +185,14 @@ msgid "Save Rules"
 msgstr "Shrani pravila"
 
 #: package/contents/ui/main.qml:101
-#, fuzzy, kde-format
-#| msgid "Add New..."
+#, kde-format
 msgid "Add New…"
-msgstr "Dodaj novo..."
+msgstr "Dodaj novo…"
 
 #: package/contents/ui/main.qml:112
-#, fuzzy, kde-format
-#| msgid "Import..."
+#, kde-format
 msgid "Import…"
-msgstr "Uvozi..."
+msgstr "Uvozi…"
 
 #: package/contents/ui/main.qml:120
 #, kde-format
@@ -204,10 +200,9 @@ msgid "Cancel Export"
 msgstr "Prekliči izvoz"
 
 #: package/contents/ui/main.qml:120
-#, fuzzy, kde-format
-#| msgid "Export..."
+#, kde-format
 msgid "Export…"
-msgstr "Izvoz..."
+msgstr "Izvoz…"
 
 #: package/contents/ui/main.qml:210
 #, kde-format

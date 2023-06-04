@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-03 02:04+0000\n"
 "PO-Revision-Date: 2023-05-05 21:30+0200\n"
-"Last-Translator: Xavier BESNARD <xavier.besnard]neuf.fr>\n"
+"Last-Translator: Xavier BESNARD <xavier.besnard@neuf.fr>\n"
 "Language-Team: fr\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -1438,7 +1438,7 @@ msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
 "Extraire les informations de localisation à partir de « locale1 » plutôt que "
-"la configuration de l’utilisateur"
+"la configuration de l'utilisateur"
 
 #: main_wayland.cpp:368
 #, kde-format
@@ -4177,7 +4177,7 @@ msgstr "Basculer vers l'écran ci-dessous"
 #: useractions.cpp:1120
 #, kde-format
 msgid "Peek at Desktop"
-msgstr "Coup d’œil sur le bureau"
+msgstr "Coup d'œil sur le bureau"
 
 #: useractions.cpp:1123
 #, kde-format
