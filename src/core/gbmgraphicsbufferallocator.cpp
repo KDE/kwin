@@ -6,9 +6,13 @@
 
 #include "core/gbmgraphicsbufferallocator.h"
 #include "backends/drm/gbm_dmabuf.h" // FIXME: move dmaBufAttributesForBo() elsewhere
+#include "utils/common.h"
 
 #include <drm_fourcc.h>
+#include <fcntl.h>
 #include <gbm.h>
+#include <sys/mman.h>
+#include <xf86drm.h>
 
 namespace KWin
 {
@@ -22,28 +26,48 @@ GbmGraphicsBufferAllocator::~GbmGraphicsBufferAllocator()
 {
 }
 
-GraphicsBuffer *GbmGraphicsBufferAllocator::allocate(const GraphicsBufferOptions &options)
+static GraphicsBuffer *allocateDumb(gbm_device *device, const GraphicsBufferOptions &options)
 {
-    if (options.software) {
-        gbm_bo *bo = gbm_bo_create(m_gbmDevice,
-                                   options.size.width(),
-                                   options.size.height(),
-                                   options.format,
-                                   GBM_BO_USE_SCANOUT | GBM_BO_USE_WRITE | GBM_BO_USE_LINEAR);
-        if (bo) {
-            std::optional<DmaBufAttributes> attributes = dmaBufAttributesForBo(bo);
-            if (!attributes.has_value()) {
-                gbm_bo_destroy(bo);
-                return nullptr;
-            }
-            attributes->modifier = DRM_FORMAT_MOD_LINEAR;
-            return new GbmGraphicsBuffer(std::move(attributes.value()), bo);
-        }
+    if (!options.modifiers.isEmpty()) {
         return nullptr;
     }
 
+    drm_mode_create_dumb createArgs{
+        .height = uint32_t(options.size.height()),
+        .width = uint32_t(options.size.width()),
+        .bpp = 32,
+    };
+    if (drmIoctl(gbm_device_get_fd(device), DRM_IOCTL_MODE_CREATE_DUMB, &createArgs) != 0) {
+        qCWarning(KWIN_CORE) << "DRM_IOCTL_MODE_CREATE_DUMB failed:" << strerror(errno);
+        return nullptr;
+    }
+
+    int primeFd;
+    if (drmPrimeHandleToFD(gbm_device_get_fd(device), createArgs.handle, DRM_CLOEXEC, &primeFd) != 0) {
+        qCWarning(KWIN_CORE) << "drmPrimeHandleToFD() failed:" << strerror(errno);
+        drm_mode_destroy_dumb destroyArgs{
+            .handle = createArgs.handle,
+        };
+        drmIoctl(gbm_device_get_fd(device), DRM_IOCTL_MODE_DESTROY_DUMB, &destroyArgs);
+        return nullptr;
+    }
+
+    return new DumbGraphicsBuffer(gbm_device_get_fd(device), createArgs.handle, DmaBufAttributes{
+        .planeCount = 1,
+        .width = options.size.width(),
+        .height = options.size.height(),
+        .format = options.format,
+        .modifier = DRM_FORMAT_MOD_LINEAR,
+        .fd = {FileDescriptor(primeFd), FileDescriptor{}, FileDescriptor{}, FileDescriptor{}},
+        .offset = {0, 0, 0, 0},
+        .pitch = {createArgs.pitch, 0, 0, 0},
+    });
+}
+
+static GraphicsBuffer *allocateDmaBuf(gbm_device *device, const GraphicsBufferOptions &options)
+{
     if (!options.modifiers.isEmpty() && !(options.modifiers.size() == 1 && options.modifiers.first() == DRM_FORMAT_MOD_INVALID)) {
-        gbm_bo *bo = gbm_bo_create_with_modifiers(m_gbmDevice,
+        gbm_bo *bo = gbm_bo_create_with_modifiers(device,
                                                   options.size.width(),
                                                   options.size.height(),
                                                   options.format,
@@ -62,11 +86,11 @@ GraphicsBuffer *GbmGraphicsBufferAllocator::allocate(const GraphicsBufferOptions
     uint32_t flags = GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING;
     if (options.modifiers.size() == 1 && options.modifiers.first() == DRM_FORMAT_MOD_LINEAR) {
         flags |= GBM_BO_USE_LINEAR;
-    } else if (!modifiers.isEmpty() && !modifiers.contains(DRM_FORMAT_MOD_INVALID)) {
+    } else if (!options.modifiers.isEmpty() && !options.modifiers.contains(DRM_FORMAT_MOD_INVALID)) {
         return nullptr;
     }
 
-    gbm_bo *bo = gbm_bo_create(m_gbmDevice,
+    gbm_bo *bo = gbm_bo_create(device,
                                options.size.width(),
                                options.size.height(),
                                options.format,
@@ -86,6 +110,15 @@ GraphicsBuffer *GbmGraphicsBufferAllocator::allocate(const GraphicsBufferOptions
     }
 
     return nullptr;
+}
+
+GraphicsBuffer *GbmGraphicsBufferAllocator::allocate(const GraphicsBufferOptions &options)
+{
+    if (options.software) {
+        return allocateDumb(m_gbmDevice, options);
+    }
+
+    return allocateDmaBuf(m_gbmDevice, options);
 }
 
 GbmGraphicsBuffer::GbmGraphicsBuffer(DmaBufAttributes attributes, gbm_bo *handle)
@@ -142,6 +175,72 @@ void GbmGraphicsBuffer::unmap()
         gbm_bo_unmap(m_bo, m_mapData);
         m_mapPtr = nullptr;
         m_mapData = nullptr;
+    }
+}
+
+DumbGraphicsBuffer::DumbGraphicsBuffer(int drmFd, uint32_t handle, DmaBufAttributes attributes)
+    : m_drmFd(drmFd)
+    , m_handle(handle)
+    , m_size(attributes.pitch[0] * attributes.height)
+    , m_dmabufAttributes(std::move(attributes))
+    , m_hasAlphaChannel(alphaChannelFromDrmFormat(m_dmabufAttributes.format))
+{
+}
+
+DumbGraphicsBuffer::~DumbGraphicsBuffer()
+{
+    unmap();
+
+    drm_mode_destroy_dumb destroyArgs{
+        .handle = m_handle,
+    };
+    drmIoctl(m_drmFd, DRM_IOCTL_MODE_DESTROY_DUMB, &destroyArgs);
+}
+
+QSize DumbGraphicsBuffer::size() const
+{
+    return QSize(m_dmabufAttributes.width, m_dmabufAttributes.height);
+}
+
+bool DumbGraphicsBuffer::hasAlphaChannel() const
+{
+    return m_hasAlphaChannel;
+}
+
+const DmaBufAttributes *DumbGraphicsBuffer::dmabufAttributes() const
+{
+    return &m_dmabufAttributes;
+}
+
+void *DumbGraphicsBuffer::map(MapFlags flags)
+{
+    if (m_data) {
+        return m_data;
+    }
+
+    drm_mode_map_dumb mapArgs{
+        .handle = m_handle,
+    };
+    if (drmIoctl(m_drmFd, DRM_IOCTL_MODE_MAP_DUMB, &mapArgs) != 0) {
+        qCWarning(KWIN_CORE) << "DRM_IOCTL_MODE_MAP_DUMB failed:" << strerror(errno);
+        return nullptr;
+    }
+
+    void *address = mmap(nullptr, m_size, PROT_READ | PROT_WRITE, MAP_SHARED, m_drmFd, mapArgs.offset);
+    if (address == MAP_FAILED) {
+        qCWarning(KWIN_CORE) << "mmap() failed:" << strerror(errno);
+        return nullptr;
+    }
+
+    m_data = address;
+    return m_data;
+}
+
+void DumbGraphicsBuffer::unmap()
+{
+    if (m_data) {
+        munmap(m_data, m_size);
+        m_data = nullptr;
     }
 }
 
