@@ -16,8 +16,6 @@
 #include <QPointer>
 #include <optional>
 
-struct gbm_bo;
-
 namespace KWaylandServer
 {
 class SurfaceInterface;
@@ -73,8 +71,6 @@ public:
     std::optional<GbmFormat> gbmFormatForDrmFormat(uint32_t format) const;
     DrmGpu *gpu() const;
 
-    EGLImageKHR importBufferObjectAsImage(gbm_bo *bo);
-    std::shared_ptr<GLTexture> importBufferObjectAsTexture(gbm_bo *bo);
     EglContext *contextForGpu(DrmGpu *gpu);
 
 private:

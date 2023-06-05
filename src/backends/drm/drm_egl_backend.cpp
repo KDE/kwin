@@ -22,7 +22,6 @@
 #include "drm_output.h"
 #include "drm_pipeline.h"
 #include "drm_virtual_egl_layer.h"
-#include "gbm_dmabuf.h"
 #include "kwineglutils_p.h"
 #include "options.h"
 #include "scene/surfaceitem_wayland.h"
@@ -278,24 +277,6 @@ DrmGpu *EglGbmBackend::gpu() const
 bool operator==(const GbmFormat &lhs, const GbmFormat &rhs)
 {
     return lhs.drmFormat == rhs.drmFormat;
-}
-
-EGLImageKHR EglGbmBackend::importBufferObjectAsImage(gbm_bo *bo)
-{
-    std::optional<DmaBufAttributes> attributes = dmaBufAttributesForBo(bo);
-    if (!attributes.has_value()) {
-        return EGL_NO_IMAGE_KHR;
-    }
-    return importDmaBufAsImage(attributes.value());
-}
-
-std::shared_ptr<GLTexture> EglGbmBackend::importBufferObjectAsTexture(gbm_bo *bo)
-{
-    std::optional<DmaBufAttributes> attributes = dmaBufAttributesForBo(bo);
-    if (!attributes.has_value()) {
-        return nullptr;
-    }
-    return importDmaBufAsTexture(attributes.value());
 }
 
 } // namespace KWin
