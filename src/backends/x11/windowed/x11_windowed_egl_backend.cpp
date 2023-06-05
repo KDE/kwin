@@ -79,7 +79,11 @@ std::shared_ptr<X11WindowedEglLayerBuffer> X11WindowedEglLayerSwapchain::acquire
         }
     }
 
-    GbmGraphicsBuffer *graphicsBuffer = m_allocator->allocate(m_size, m_format, m_modifiers);
+    GbmGraphicsBuffer *graphicsBuffer = m_allocator->allocate(GraphicsBufferOptions{
+        .size = m_size,
+        .format = m_format,
+        .modifiers = m_modifiers,
+    });
     if (!graphicsBuffer) {
         qCWarning(KWIN_X11WINDOWED) << "Failed to allocate layer swapchain buffer";
         return nullptr;

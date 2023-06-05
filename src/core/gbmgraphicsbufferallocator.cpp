@@ -22,15 +22,15 @@ GbmGraphicsBufferAllocator::~GbmGraphicsBufferAllocator()
 {
 }
 
-GbmGraphicsBuffer *GbmGraphicsBufferAllocator::allocate(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers)
+GbmGraphicsBuffer *GbmGraphicsBufferAllocator::allocate(const GraphicsBufferOptions &options)
 {
-    if (!modifiers.isEmpty() && !(modifiers.size() == 1 && modifiers.first() == DRM_FORMAT_MOD_INVALID)) {
+    if (!options.modifiers.isEmpty() && !(options.modifiers.size() == 1 && options.modifiers.first() == DRM_FORMAT_MOD_INVALID)) {
         gbm_bo *bo = gbm_bo_create_with_modifiers(m_gbmDevice,
-                                                  size.width(),
-                                                  size.height(),
-                                                  format,
-                                                  modifiers.constData(),
-                                                  modifiers.size());
+                                                  options.size.width(),
+                                                  options.size.height(),
+                                                  options.format,
+                                                  options.modifiers.constData(),
+                                                  options.modifiers.size());
         if (bo) {
             std::optional<DmaBufAttributes> attributes = dmaBufAttributesForBo(bo);
             if (!attributes.has_value()) {
@@ -42,16 +42,16 @@ GbmGraphicsBuffer *GbmGraphicsBufferAllocator::allocate(const QSize &size, uint3
     }
 
     uint32_t flags = GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING;
-    if (modifiers.size() == 1 && modifiers.first() == DRM_FORMAT_MOD_LINEAR) {
+    if (options.modifiers.size() == 1 && options.modifiers.first() == DRM_FORMAT_MOD_LINEAR) {
         flags |= GBM_BO_USE_LINEAR;
     } else if (!modifiers.contains(DRM_FORMAT_MOD_INVALID)) {
         return nullptr;
     }
 
     gbm_bo *bo = gbm_bo_create(m_gbmDevice,
-                               size.width(),
-                               size.height(),
-                               format,
+                               options.size.width(),
+                               options.size.height(),
+                               options.format,
                                flags);
     if (bo) {
         std::optional<DmaBufAttributes> attributes = dmaBufAttributesForBo(bo);

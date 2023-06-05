@@ -71,7 +71,10 @@ std::shared_ptr<VirtualEglLayerBuffer> VirtualEglSwapchain::acquire()
         }
     }
 
-    GbmGraphicsBuffer *graphicsBuffer = m_allocator->allocate(m_size, m_format);
+    GbmGraphicsBuffer *graphicsBuffer = m_allocator->allocate(GraphicsBufferOptions{
+        .size = m_size,
+        .format = m_format,
+    });
     if (!graphicsBuffer) {
         qCWarning(KWIN_VIRTUAL) << "Failed to allocate layer swapchain buffer";
         return nullptr;

@@ -36,13 +36,13 @@ const ShmAttributes *ShmGraphicsBuffer::shmAttributes() const
     return &m_attributes;
 }
 
-ShmGraphicsBuffer *ShmGraphicsBufferAllocator::allocate(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers)
+ShmGraphicsBuffer *ShmGraphicsBufferAllocator::allocate(const GraphicsBufferOptions &options)
 {
-    if (!modifiers.isEmpty()) {
+    if (!options.modifiers.isEmpty()) {
         return nullptr;
     }
 
-    switch (format) {
+    switch (options.format) {
     case DRM_FORMAT_ARGB8888:
     case DRM_FORMAT_XRGB8888:
         break;
@@ -50,8 +50,8 @@ ShmGraphicsBuffer *ShmGraphicsBufferAllocator::allocate(const QSize &size, uint3
         return nullptr;
     }
 
-    const int stride = size.width() * 4;
-    const int bufferSize = size.height() * stride;
+    const int stride = options.size.width() * 4;
+    const int bufferSize = options.size.height() * stride;
 
 #if HAVE_MEMFD
     FileDescriptor fd = FileDescriptor(memfd_create("shm", MFD_CLOEXEC | MFD_ALLOW_SEALING));
@@ -86,8 +86,8 @@ ShmGraphicsBuffer *ShmGraphicsBufferAllocator::allocate(const QSize &size, uint3
         .fd = std::move(fd),
         .stride = stride,
         .offset = 0,
-        .size = size,
-        .format = format,
+        .size = options.size,
+        .format = options.format,
     });
 }
 

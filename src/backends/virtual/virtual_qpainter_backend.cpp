@@ -77,7 +77,10 @@ std::shared_ptr<VirtualQPainterBufferSlot> VirtualQPainterSwapchain::acquire()
         }
     }
 
-    ShmGraphicsBuffer *buffer = m_allocator->allocate(m_size, m_format);
+    ShmGraphicsBuffer *buffer = m_allocator->allocate(GraphicsBufferOptions{
+        .size = m_size,
+        .format = m_format,
+    });
     if (!buffer) {
         qCDebug(KWIN_VIRTUAL) << "Did not get a new Buffer from Shm Pool";
         return nullptr;

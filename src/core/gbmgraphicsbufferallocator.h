@@ -40,7 +40,7 @@ public:
     explicit GbmGraphicsBufferAllocator(gbm_device *device);
     ~GbmGraphicsBufferAllocator() override;
 
-    GbmGraphicsBuffer *allocate(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers = {}) override;
+    GbmGraphicsBuffer *allocate(const GraphicsBufferOptions &options) override;
 
 private:
     gbm_device *m_gbmDevice;

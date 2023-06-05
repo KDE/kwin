@@ -88,7 +88,10 @@ std::shared_ptr<X11WindowedQPainterLayerBuffer> X11WindowedQPainterLayerSwapchai
         }
     }
 
-    ShmGraphicsBuffer *graphicsBuffer = m_allocator->allocate(m_size, m_format);
+    ShmGraphicsBuffer *graphicsBuffer = m_allocator->allocate(GraphicsBufferOptions{
+        .size = m_size,
+        .format = m_format,
+    });
     if (!graphicsBuffer) {
         qCWarning(KWIN_X11WINDOWED) << "Failed to allocate a shared memory graphics buffer";
         return nullptr;
