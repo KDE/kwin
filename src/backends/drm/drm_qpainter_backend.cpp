@@ -7,10 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "drm_qpainter_backend.h"
-#include "core/renderloop_p.h"
 #include "drm_backend.h"
-#include "drm_buffer.h"
-#include "drm_gpu.h"
 #include "drm_output.h"
 #include "drm_pipeline.h"
 #include "drm_qpainter_layer.h"

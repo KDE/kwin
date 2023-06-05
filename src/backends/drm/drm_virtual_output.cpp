@@ -9,11 +9,9 @@
 */
 #include "drm_virtual_output.h"
 
-#include "core/renderloop_p.h"
 #include "drm_backend.h"
 #include "drm_gpu.h"
 #include "drm_layer.h"
-#include "drm_logging.h"
 #include "drm_render_backend.h"
 #include "utils/softwarevsyncmonitor.h"
 

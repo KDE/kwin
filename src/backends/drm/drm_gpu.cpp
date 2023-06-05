@@ -10,9 +10,7 @@
 
 #include <config-kwin.h>
 
-#include "core/renderloop_p.h"
 #include "core/session.h"
-#include "drm_atomic_commit.h"
 #include "drm_backend.h"
 #include "drm_buffer.h"
 #include "drm_connector.h"
@@ -24,8 +22,6 @@
 #include "drm_pipeline.h"
 #include "drm_plane.h"
 #include "drm_virtual_output.h"
-#include "gbm_dmabuf.h"
-#include "platformsupport/scenes/opengl/abstract_egl_backend.h"
 // system
 #include <algorithm>
 #include <errno.h>

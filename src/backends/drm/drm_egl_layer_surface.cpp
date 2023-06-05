@@ -15,7 +15,6 @@
 #include "drm_gbm_swapchain.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
-#include "gbm_dmabuf.h"
 
 #include <drm_fourcc.h>
 #include <errno.h>

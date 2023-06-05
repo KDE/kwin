@@ -18,8 +18,6 @@
 #include "core/renderloop_p.h"
 #include "drm_layer.h"
 #include "drm_logging.h"
-#include "libkwineffects/kwinglutils.h"
-#include "libkwineffects/renderviewport.h"
 // Qt
 #include <QCryptographicHash>
 #include <QMatrix4x4>
