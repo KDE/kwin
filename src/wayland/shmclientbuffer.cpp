@@ -233,7 +233,7 @@ static void sigbusHandler(int signum, siginfo_t *info, void *context)
     }
 }
 
-void *ShmClientBuffer::map()
+void *ShmClientBuffer::map(MapFlags flags)
 {
     if (!m_shmPool->sigbusImpossible) {
         // A SIGBUS signal may be emitted if the backing file is shrinked and we access now

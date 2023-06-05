@@ -53,7 +53,7 @@ void GraphicsBuffer::drop()
     }
 }
 
-void *GraphicsBuffer::map()
+void *GraphicsBuffer::map(MapFlags flags)
 {
     return nullptr;
 }

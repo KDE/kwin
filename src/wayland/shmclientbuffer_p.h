@@ -57,7 +57,7 @@ public:
     ShmClientBuffer(ShmPool *pool, KWin::ShmAttributes attributes, wl_client *client, uint32_t id);
     ~ShmClientBuffer() override;
 
-    void *map() override;
+    void *map(MapFlags flags) override;
     void unmap() override;
 
     QSize size() const override;

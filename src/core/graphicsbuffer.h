@@ -58,7 +58,13 @@ public:
     void unref();
     void drop();
 
-    virtual void *map();
+    enum MapFlag {
+        Read = 0x1,
+        Write = 0x2,
+    };
+    Q_DECLARE_FLAGS(MapFlags, MapFlag)
+
+    virtual void *map(MapFlags flags);
     virtual void unmap();
 
     virtual QSize size() const = 0;
@@ -78,3 +84,5 @@ protected:
 };
 
 } // namespace KWin
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::GraphicsBuffer::MapFlags)

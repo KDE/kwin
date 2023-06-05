@@ -6,19 +6,17 @@
 
 #pragma once
 
-#include "kwin_export.h"
+#include "core/graphicsbuffer.h"
 
 #include <QImage>
 
 namespace KWin
 {
 
-class GraphicsBuffer;
-
 class KWIN_EXPORT GraphicsBufferView
 {
 public:
-    explicit GraphicsBufferView(GraphicsBuffer *buffer);
+    explicit GraphicsBufferView(GraphicsBuffer *buffer, GraphicsBuffer::MapFlags accessFlags = GraphicsBuffer::Read);
     ~GraphicsBufferView();
 
     QImage *image();

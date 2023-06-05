@@ -117,14 +117,22 @@ const DmaBufAttributes *GbmGraphicsBuffer::dmabufAttributes() const
     return &m_dmabufAttributes;
 }
 
-void *GbmGraphicsBuffer::map()
+void *GbmGraphicsBuffer::map(MapFlags flags)
 {
     if (m_mapPtr) {
         return m_mapPtr;
     }
 
+    uint32_t access = 0;
+    if (flags & MapFlag::Read) {
+        access |= GBM_BO_TRANSFER_READ;
+    }
+    if (flags & MapFlag::Write) {
+        access |= GBM_BO_TRANSFER_WRITE;
+    }
+
     uint32_t stride = 0;
-    m_mapPtr = gbm_bo_map(m_bo, 0, 0, m_dmabufAttributes.width, m_dmabufAttributes.height, GBM_BO_TRANSFER_READ_WRITE, &stride, &m_mapData);
+    m_mapPtr = gbm_bo_map(m_bo, 0, 0, m_dmabufAttributes.width, m_dmabufAttributes.height, access, &stride, &m_mapData);
     return m_mapPtr;
 }
 

@@ -39,7 +39,7 @@ static QImage::Format drmFormatToQImageFormat(uint32_t drmFormat)
     }
 }
 
-GraphicsBufferView::GraphicsBufferView(GraphicsBuffer *buffer)
+GraphicsBufferView::GraphicsBufferView(GraphicsBuffer *buffer, GraphicsBuffer::MapFlags accessFlags)
     : m_buffer(buffer)
 {
     int width;
@@ -65,7 +65,7 @@ GraphicsBufferView::GraphicsBufferView(GraphicsBuffer *buffer)
         return;
     }
 
-    void *data = buffer->map();
+    void *data = buffer->map(accessFlags);
     if (data) {
         m_image = QImage(static_cast<uchar *>(data), width, height, stride, drmFormatToQImageFormat(format));
     }

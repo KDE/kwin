@@ -23,12 +23,12 @@ public:
     GbmGraphicsBuffer(DmaBufAttributes attributes, gbm_bo *handle);
     ~GbmGraphicsBuffer() override;
 
+    void *map(MapFlags flags) override;
+    void unmap() override;
+
     QSize size() const override;
     bool hasAlphaChannel() const override;
     const DmaBufAttributes *dmabufAttributes() const override;
-
-    void *map() override;
-    void unmap() override;
 
 private:
     gbm_bo *m_bo;
