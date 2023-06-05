@@ -45,7 +45,7 @@ public:
     explicit GbmGraphicsBufferAllocator(gbm_device *device);
     ~GbmGraphicsBufferAllocator() override;
 
-    GbmGraphicsBuffer *allocate(const GraphicsBufferOptions &options) override;
+    GraphicsBuffer *allocate(const GraphicsBufferOptions &options) override;
 
 private:
     gbm_device *m_gbmDevice;

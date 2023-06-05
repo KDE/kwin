@@ -34,7 +34,7 @@ static QImage::Format drmFormatToQImageFormat(uint32_t drmFormat)
     }
 }
 
-X11WindowedQPainterLayerBuffer::X11WindowedQPainterLayerBuffer(ShmGraphicsBuffer *buffer)
+X11WindowedQPainterLayerBuffer::X11WindowedQPainterLayerBuffer(GraphicsBuffer *buffer)
     : m_graphicsBuffer(buffer)
 {
     const ShmAttributes *attributes = buffer->shmAttributes();
@@ -58,7 +58,7 @@ X11WindowedQPainterLayerBuffer::~X11WindowedQPainterLayerBuffer()
     m_graphicsBuffer->drop();
 }
 
-ShmGraphicsBuffer *X11WindowedQPainterLayerBuffer::graphicsBuffer() const
+GraphicsBuffer *X11WindowedQPainterLayerBuffer::graphicsBuffer() const
 {
     return m_graphicsBuffer;
 }
@@ -88,7 +88,7 @@ std::shared_ptr<X11WindowedQPainterLayerBuffer> X11WindowedQPainterLayerSwapchai
         }
     }
 
-    ShmGraphicsBuffer *graphicsBuffer = m_allocator->allocate(GraphicsBufferOptions{
+    GraphicsBuffer *graphicsBuffer = m_allocator->allocate(GraphicsBufferOptions{
         .size = m_size,
         .format = m_format,
         .software = true,

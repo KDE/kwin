@@ -30,7 +30,7 @@ namespace KWin
 namespace Wayland
 {
 
-WaylandEglLayerBuffer::WaylandEglLayerBuffer(GbmGraphicsBuffer *buffer, WaylandEglBackend *backend)
+WaylandEglLayerBuffer::WaylandEglLayerBuffer(GraphicsBuffer *buffer, WaylandEglBackend *backend)
     : m_graphicsBuffer(buffer)
 {
     m_texture = backend->importDmaBufAsTexture(*buffer->dmabufAttributes());
@@ -44,7 +44,7 @@ WaylandEglLayerBuffer::~WaylandEglLayerBuffer()
     m_graphicsBuffer->drop();
 }
 
-GbmGraphicsBuffer *WaylandEglLayerBuffer::graphicsBuffer() const
+GraphicsBuffer *WaylandEglLayerBuffer::graphicsBuffer() const
 {
     return m_graphicsBuffer;
 }
@@ -90,7 +90,7 @@ std::shared_ptr<WaylandEglLayerBuffer> WaylandEglLayerSwapchain::acquire()
         }
     }
 
-    GbmGraphicsBuffer *graphicsBuffer = m_allocator->allocate(GraphicsBufferOptions{
+    GraphicsBuffer *graphicsBuffer = m_allocator->allocate(GraphicsBufferOptions{
         .size = m_size,
         .format = m_format,
         .modifiers = m_modifiers,

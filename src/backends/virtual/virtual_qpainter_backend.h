@@ -19,17 +19,16 @@
 namespace KWin
 {
 
-class ShmGraphicsBuffer;
-class ShmGraphicsBufferAllocator;
+class GraphicsBufferAllocator;
 class VirtualBackend;
 
 class VirtualQPainterBufferSlot
 {
 public:
-    VirtualQPainterBufferSlot(ShmGraphicsBuffer *graphicsBuffer);
+    VirtualQPainterBufferSlot(GraphicsBuffer *graphicsBuffer);
     ~VirtualQPainterBufferSlot();
 
-    ShmGraphicsBuffer *graphicsBuffer;
+    GraphicsBuffer *graphicsBuffer;
     QImage image;
     void *data = nullptr;
     int size;
@@ -45,7 +44,7 @@ public:
     std::shared_ptr<VirtualQPainterBufferSlot> acquire();
 
 private:
-    std::unique_ptr<ShmGraphicsBufferAllocator> m_allocator;
+    std::unique_ptr<GraphicsBufferAllocator> m_allocator;
     QSize m_size;
     uint32_t m_format;
     std::vector<std::shared_ptr<VirtualQPainterBufferSlot>> m_slots;

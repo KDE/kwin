@@ -22,7 +22,7 @@ GbmGraphicsBufferAllocator::~GbmGraphicsBufferAllocator()
 {
 }
 
-GbmGraphicsBuffer *GbmGraphicsBufferAllocator::allocate(const GraphicsBufferOptions &options)
+GraphicsBuffer *GbmGraphicsBufferAllocator::allocate(const GraphicsBufferOptions &options)
 {
     if (options.software) {
         gbm_bo *bo = gbm_bo_create(m_gbmDevice,

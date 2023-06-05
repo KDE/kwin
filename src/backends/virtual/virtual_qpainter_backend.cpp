@@ -33,7 +33,7 @@ static QImage::Format drmFormatToQImageFormat(uint32_t drmFormat)
     }
 }
 
-VirtualQPainterBufferSlot::VirtualQPainterBufferSlot(ShmGraphicsBuffer *graphicsBuffer)
+VirtualQPainterBufferSlot::VirtualQPainterBufferSlot(GraphicsBuffer *graphicsBuffer)
     : graphicsBuffer(graphicsBuffer)
 {
     const ShmAttributes *attributes = graphicsBuffer->shmAttributes();
@@ -77,7 +77,7 @@ std::shared_ptr<VirtualQPainterBufferSlot> VirtualQPainterSwapchain::acquire()
         }
     }
 
-    ShmGraphicsBuffer *buffer = m_allocator->allocate(GraphicsBufferOptions{
+    GraphicsBuffer *buffer = m_allocator->allocate(GraphicsBufferOptions{
         .size = m_size,
         .format = m_format,
         .software = true,

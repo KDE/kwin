@@ -32,7 +32,7 @@ private:
 class KWIN_EXPORT ShmGraphicsBufferAllocator : public GraphicsBufferAllocator
 {
 public:
-    ShmGraphicsBuffer *allocate(const GraphicsBufferOptions &options) override;
+    GraphicsBuffer *allocate(const GraphicsBufferOptions &options) override;
 };
 
 } // namespace KWin

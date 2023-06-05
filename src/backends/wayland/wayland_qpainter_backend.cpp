@@ -37,7 +37,7 @@ static QImage::Format drmFormatToQImageFormat(uint32_t drmFormat)
     }
 }
 
-WaylandQPainterBufferSlot::WaylandQPainterBufferSlot(ShmGraphicsBuffer *graphicsBuffer)
+WaylandQPainterBufferSlot::WaylandQPainterBufferSlot(GraphicsBuffer *graphicsBuffer)
     : graphicsBuffer(graphicsBuffer)
 {
     const ShmAttributes *attributes = graphicsBuffer->shmAttributes();
@@ -81,7 +81,7 @@ std::shared_ptr<WaylandQPainterBufferSlot> WaylandQPainterSwapchain::acquire()
         }
     }
 
-    ShmGraphicsBuffer *buffer = m_allocator->allocate(GraphicsBufferOptions{
+    GraphicsBuffer *buffer = m_allocator->allocate(GraphicsBufferOptions{
         .size = m_size,
         .format = m_format,
         .software = true,

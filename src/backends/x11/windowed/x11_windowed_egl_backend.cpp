@@ -19,7 +19,7 @@
 namespace KWin
 {
 
-X11WindowedEglLayerBuffer::X11WindowedEglLayerBuffer(GbmGraphicsBuffer *graphicsBuffer, X11WindowedEglBackend *backend)
+X11WindowedEglLayerBuffer::X11WindowedEglLayerBuffer(GraphicsBuffer *graphicsBuffer, X11WindowedEglBackend *backend)
     : m_graphicsBuffer(graphicsBuffer)
 {
     m_texture = backend->importDmaBufAsTexture(*graphicsBuffer->dmabufAttributes());
@@ -79,7 +79,7 @@ std::shared_ptr<X11WindowedEglLayerBuffer> X11WindowedEglLayerSwapchain::acquire
         }
     }
 
-    GbmGraphicsBuffer *graphicsBuffer = m_allocator->allocate(GraphicsBufferOptions{
+    GraphicsBuffer *graphicsBuffer = m_allocator->allocate(GraphicsBufferOptions{
         .size = m_size,
         .format = m_format,
         .modifiers = m_modifiers,

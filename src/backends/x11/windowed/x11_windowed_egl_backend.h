@@ -15,8 +15,7 @@
 namespace KWin
 {
 
-class GbmGraphicsBuffer;
-class GbmGraphicsBufferAllocator;
+class GraphicsBufferAllocator;
 class X11WindowedBackend;
 class X11WindowedOutput;
 class X11WindowedEglBackend;
@@ -24,7 +23,7 @@ class X11WindowedEglBackend;
 class X11WindowedEglLayerBuffer
 {
 public:
-    X11WindowedEglLayerBuffer(GbmGraphicsBuffer *graphicsBuffers, X11WindowedEglBackend *backend);
+    X11WindowedEglLayerBuffer(GraphicsBuffer *graphicsBuffers, X11WindowedEglBackend *backend);
     ~X11WindowedEglLayerBuffer();
 
     GraphicsBuffer *graphicsBuffer() const;
@@ -33,7 +32,7 @@ public:
     int age() const;
 
 private:
-    GbmGraphicsBuffer *m_graphicsBuffer;
+    GraphicsBuffer *m_graphicsBuffer;
     std::unique_ptr<GLFramebuffer> m_framebuffer;
     std::shared_ptr<GLTexture> m_texture;
     int m_age = 0;
@@ -53,7 +52,7 @@ public:
 
 private:
     X11WindowedEglBackend *m_backend;
-    std::unique_ptr<GbmGraphicsBufferAllocator> m_allocator;
+    std::unique_ptr<GraphicsBufferAllocator> m_allocator;
     QSize m_size;
     uint32_t m_format;
     QVector<uint64_t> m_modifiers;

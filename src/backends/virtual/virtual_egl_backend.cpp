@@ -21,7 +21,7 @@
 namespace KWin
 {
 
-VirtualEglLayerBuffer::VirtualEglLayerBuffer(GbmGraphicsBuffer *buffer, VirtualEglBackend *backend)
+VirtualEglLayerBuffer::VirtualEglLayerBuffer(GraphicsBuffer *buffer, VirtualEglBackend *backend)
     : m_graphicsBuffer(buffer)
 {
     m_texture = backend->importDmaBufAsTexture(*buffer->dmabufAttributes());
@@ -35,7 +35,7 @@ VirtualEglLayerBuffer::~VirtualEglLayerBuffer()
     m_graphicsBuffer->drop();
 }
 
-GbmGraphicsBuffer *VirtualEglLayerBuffer::graphicsBuffer() const
+GraphicsBuffer *VirtualEglLayerBuffer::graphicsBuffer() const
 {
     return m_graphicsBuffer;
 }
@@ -71,7 +71,7 @@ std::shared_ptr<VirtualEglLayerBuffer> VirtualEglSwapchain::acquire()
         }
     }
 
-    GbmGraphicsBuffer *graphicsBuffer = m_allocator->allocate(GraphicsBufferOptions{
+    GraphicsBuffer *graphicsBuffer = m_allocator->allocate(GraphicsBufferOptions{
         .size = m_size,
         .format = m_format,
     });

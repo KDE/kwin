@@ -20,22 +20,21 @@
 namespace KWin
 {
 
-class ShmGraphicsBuffer;
-class ShmGraphicsBufferAllocator;
+class GraphicsBufferAllocator;
 class X11WindowedBackend;
 class X11WindowedOutput;
 
 class X11WindowedQPainterLayerBuffer
 {
 public:
-    X11WindowedQPainterLayerBuffer(ShmGraphicsBuffer *buffer);
+    X11WindowedQPainterLayerBuffer(GraphicsBuffer *buffer);
     ~X11WindowedQPainterLayerBuffer();
 
-    ShmGraphicsBuffer *graphicsBuffer() const;
+    GraphicsBuffer *graphicsBuffer() const;
     QImage *view() const;
 
 private:
-    ShmGraphicsBuffer *m_graphicsBuffer;
+    GraphicsBuffer *m_graphicsBuffer;
     void *m_data = nullptr;
     int m_size = 0;
     std::unique_ptr<QImage> m_view;
@@ -53,7 +52,7 @@ public:
 private:
     QSize m_size;
     uint32_t m_format;
-    std::unique_ptr<ShmGraphicsBufferAllocator> m_allocator;
+    std::unique_ptr<GraphicsBufferAllocator> m_allocator;
     QVector<std::shared_ptr<X11WindowedQPainterLayerBuffer>> m_buffers;
 };
 

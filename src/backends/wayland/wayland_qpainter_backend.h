@@ -19,8 +19,7 @@
 namespace KWin
 {
 class Output;
-class ShmGraphicsBuffer;
-class ShmGraphicsBufferAllocator;
+class GraphicsBufferAllocator;
 
 namespace Wayland
 {
@@ -32,10 +31,10 @@ class WaylandQPainterBackend;
 class WaylandQPainterBufferSlot
 {
 public:
-    WaylandQPainterBufferSlot(ShmGraphicsBuffer *graphicsBuffer);
+    WaylandQPainterBufferSlot(GraphicsBuffer *graphicsBuffer);
     ~WaylandQPainterBufferSlot();
 
-    ShmGraphicsBuffer *graphicsBuffer;
+    GraphicsBuffer *graphicsBuffer;
     QImage image;
     void *data = nullptr;
     int size;
@@ -53,7 +52,7 @@ public:
     void release(std::shared_ptr<WaylandQPainterBufferSlot> buffer);
 
 private:
-    std::unique_ptr<ShmGraphicsBufferAllocator> m_allocator;
+    std::unique_ptr<GraphicsBufferAllocator> m_allocator;
     QSize m_size;
     uint32_t m_format;
     std::vector<std::shared_ptr<WaylandQPainterBufferSlot>> m_slots;
