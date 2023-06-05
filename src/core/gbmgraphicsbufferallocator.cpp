@@ -24,6 +24,10 @@ GbmGraphicsBufferAllocator::~GbmGraphicsBufferAllocator()
 
 GbmGraphicsBuffer *GbmGraphicsBufferAllocator::allocate(const GraphicsBufferOptions &options)
 {
+    if (options.software) {
+        return nullptr;
+    }
+
     if (!options.modifiers.isEmpty() && !(options.modifiers.size() == 1 && options.modifiers.first() == DRM_FORMAT_MOD_INVALID)) {
         gbm_bo *bo = gbm_bo_create_with_modifiers(m_gbmDevice,
                                                   options.size.width(),

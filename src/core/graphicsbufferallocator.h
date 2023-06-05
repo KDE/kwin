@@ -29,6 +29,9 @@ struct GraphicsBufferOptions
 
     /// An optional list of modifiers, see DRM_FORMAT_MOD_*.
     QVector<uint64_t> modifiers;
+
+    /// Whether the graphics buffer should be suitable for software rendering.
+    bool software = false;
 };
 
 class KWIN_EXPORT GraphicsBufferAllocator

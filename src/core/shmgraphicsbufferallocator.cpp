@@ -38,6 +38,9 @@ const ShmAttributes *ShmGraphicsBuffer::shmAttributes() const
 
 ShmGraphicsBuffer *ShmGraphicsBufferAllocator::allocate(const GraphicsBufferOptions &options)
 {
+    if (!options.software) {
+        return nullptr;
+    }
     if (!options.modifiers.isEmpty()) {
         return nullptr;
     }

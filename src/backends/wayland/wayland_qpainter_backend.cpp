@@ -84,6 +84,7 @@ std::shared_ptr<WaylandQPainterBufferSlot> WaylandQPainterSwapchain::acquire()
     ShmGraphicsBuffer *buffer = m_allocator->allocate(GraphicsBufferOptions{
         .size = m_size,
         .format = m_format,
+        .software = true,
     });
     if (!buffer) {
         qCDebug(KWIN_WAYLAND_BACKEND) << "Did not get a new Buffer from Shm Pool";
