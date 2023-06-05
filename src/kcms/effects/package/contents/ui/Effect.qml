@@ -3,7 +3,6 @@
     SPDX-FileCopyrightText: 2019 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
-
 */
 
 import QtQuick
