@@ -25,6 +25,20 @@ GbmGraphicsBufferAllocator::~GbmGraphicsBufferAllocator()
 GbmGraphicsBuffer *GbmGraphicsBufferAllocator::allocate(const GraphicsBufferOptions &options)
 {
     if (options.software) {
+        gbm_bo *bo = gbm_bo_create(m_gbmDevice,
+                                   options.size.width(),
+                                   options.size.height(),
+                                   options.format,
+                                   GBM_BO_USE_SCANOUT | GBM_BO_USE_WRITE | GBM_BO_USE_LINEAR);
+        if (bo) {
+            std::optional<DmaBufAttributes> attributes = dmaBufAttributesForBo(bo);
+            if (!attributes.has_value()) {
+                gbm_bo_destroy(bo);
+                return nullptr;
+            }
+            attributes->modifier = DRM_FORMAT_MOD_LINEAR;
+            return new GbmGraphicsBuffer(std::move(attributes.value()), bo);
+        }
         return nullptr;
     }
 
@@ -48,7 +62,7 @@ GbmGraphicsBuffer *GbmGraphicsBufferAllocator::allocate(const GraphicsBufferOpti
     uint32_t flags = GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING;
     if (options.modifiers.size() == 1 && options.modifiers.first() == DRM_FORMAT_MOD_LINEAR) {
         flags |= GBM_BO_USE_LINEAR;
-    } else if (!modifiers.contains(DRM_FORMAT_MOD_INVALID)) {
+    } else if (!modifiers.isEmpty() && !modifiers.contains(DRM_FORMAT_MOD_INVALID)) {
         return nullptr;
     }
 
@@ -84,6 +98,7 @@ GbmGraphicsBuffer::GbmGraphicsBuffer(DmaBufAttributes attributes, gbm_bo *handle
 
 GbmGraphicsBuffer::~GbmGraphicsBuffer()
 {
+    unmap();
     gbm_bo_destroy(m_bo);
 }
 
@@ -100,6 +115,26 @@ bool GbmGraphicsBuffer::hasAlphaChannel() const
 const DmaBufAttributes *GbmGraphicsBuffer::dmabufAttributes() const
 {
     return &m_dmabufAttributes;
+}
+
+void *GbmGraphicsBuffer::map()
+{
+    if (m_mapPtr) {
+        return m_mapPtr;
+    }
+
+    uint32_t stride = 0;
+    m_mapPtr = gbm_bo_map(m_bo, 0, 0, m_dmabufAttributes.width, m_dmabufAttributes.height, GBM_BO_TRANSFER_READ_WRITE, &stride, &m_mapData);
+    return m_mapPtr;
+}
+
+void GbmGraphicsBuffer::unmap()
+{
+    if (m_mapPtr) {
+        gbm_bo_unmap(m_bo, m_mapData);
+        m_mapPtr = nullptr;
+        m_mapData = nullptr;
+    }
 }
 
 } // namespace KWin

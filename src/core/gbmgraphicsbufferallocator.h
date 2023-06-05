@@ -27,8 +27,13 @@ public:
     bool hasAlphaChannel() const override;
     const DmaBufAttributes *dmabufAttributes() const override;
 
+    void *map() override;
+    void unmap() override;
+
 private:
     gbm_bo *m_bo;
+    void *m_mapPtr = nullptr;
+    void *m_mapData = nullptr;
     DmaBufAttributes m_dmabufAttributes;
     QSize m_size;
     bool m_hasAlphaChannel;
