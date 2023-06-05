@@ -21,7 +21,7 @@ ScrollViewKCM {
     implicitWidth: Kirigami.Units.gridUnit * 40
 
     actions: NewStuff.Action {
-        text: i18n("Get New…")
+        text: i18nc("@action:button get new KWin effects", "Get New…")
         visible: KAuthorized.authorize(KAuthorized.GHNS)
         configFile: "kwineffect.knsrc"
         onEntryEvent: (entry, event) => {
