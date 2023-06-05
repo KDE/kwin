@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-03 02:04+0000\n"
-"PO-Revision-Date: 2023-04-13 22:58+0200\n"
+"PO-Revision-Date: 2023-06-04 22:02+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 23.03.90\n"
+"X-Generator: Lokalize 23.04.1\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: kcmrules.cpp:226
@@ -156,13 +156,11 @@ msgid "No rules for specific windows are currently set"
 msgstr "Nulle regulas per fenestras specific es currentemente assignate"
 
 #: package/contents/ui/main.qml:64
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Click the <interface>Add New...</interface> button below to add some"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Click the <interface>Add New…</interface> button below to add some"
 msgstr ""
-"Clicca le button <interface>Adde Nove...</interface>  a basso per adder alcun"
+"Clicca le button <interface>Adde Nove</interface>  a basso per adder alcun"
 
 #: package/contents/ui/main.qml:72
 #, kde-format
@@ -185,16 +183,14 @@ msgid "Save Rules"
 msgstr "Salveguarda regulas"
 
 #: package/contents/ui/main.qml:101
-#, fuzzy, kde-format
-#| msgid "Add New..."
+#, kde-format
 msgid "Add New…"
-msgstr "Adde Nove ..."
+msgstr "Adde Nove …"
 
 #: package/contents/ui/main.qml:112
-#, fuzzy, kde-format
-#| msgid "Import..."
+#, kde-format
 msgid "Import…"
-msgstr "Importa..."
+msgstr "Importa…"
 
 #: package/contents/ui/main.qml:120
 #, kde-format
@@ -202,10 +198,9 @@ msgid "Cancel Export"
 msgstr "Cancella exportation"
 
 #: package/contents/ui/main.qml:120
-#, fuzzy, kde-format
-#| msgid "Export..."
+#, kde-format
 msgid "Export…"
-msgstr "Exporta..."
+msgstr "Exporta…"
 
 #: package/contents/ui/main.qml:210
 #, kde-format

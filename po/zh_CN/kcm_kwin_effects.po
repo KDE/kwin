@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-17 02:32+0000\n"
+"POT-Creation-Date: 2023-06-05 01:59+0000\n"
 "PO-Revision-Date: 2023-05-22 13:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -17,7 +17,7 @@ msgstr ""
 "X-Crowdin-File: /kf6-trunk/messages/kwin/kcm_kwin_effects.pot\n"
 "X-Crowdin-File-ID: 42539\n"
 
-#: package/contents/ui/Effect.qml:92
+#: package/contents/ui/Effect.qml:97
 #, kde-format
 msgid ""
 "Author: %1\n"
@@ -26,19 +26,26 @@ msgstr ""
 "开发者：%1\n"
 "许可证：%2"
 
-#: package/contents/ui/Effect.qml:121
+#: package/contents/ui/Effect.qml:127
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Show/Hide Video"
 msgstr "显示/隐藏特效演示视频"
 
-#: package/contents/ui/Effect.qml:128
-#, kde-format
+#: package/contents/ui/Effect.qml:134
+#, fuzzy, kde-format
+#| msgctxt "@info:tooltip"
+#| msgid "Configure..."
 msgctxt "@info:tooltip"
-msgid "Configure..."
+msgid "Configure…"
 msgstr "配置..."
 
-#: package/contents/ui/main.qml:25
+#: package/contents/ui/main.qml:24
+#, kde-format
+msgid "Get New…"
+msgstr ""
+
+#: package/contents/ui/main.qml:43
 #, kde-format
 msgid ""
 "Hint: To find out or configure how to activate an effect, look at the "
@@ -46,22 +53,20 @@ msgid ""
 msgstr ""
 "提示：要了解或配置特效的工作方式，请选中一种特效并点击列表右侧的配置按钮。"
 
-#: package/contents/ui/main.qml:45
+#: package/contents/ui/main.qml:65
 #, kde-format
 msgid "Configure Filter"
 msgstr "筛选条件"
 
-#: package/contents/ui/main.qml:57
+#: package/contents/ui/main.qml:77
 #, kde-format
 msgid "Exclude unsupported effects"
 msgstr "排除不支持的特效"
 
-#: package/contents/ui/main.qml:65
+#: package/contents/ui/main.qml:85
 #, kde-format
 msgid "Exclude internal effects"
 msgstr "排除内建特效"
 
-#: package/contents/ui/main.qml:123
-#, kde-format
-msgid "Get New Desktop Effects..."
-msgstr "获取新桌面特效..."
+#~ msgid "Get New Desktop Effects..."
+#~ msgstr "获取新桌面特效..."

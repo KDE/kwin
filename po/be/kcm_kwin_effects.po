@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 86ff119b1606fcaa910d6b44fc14b611\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-17 02:32+0000\n"
+"POT-Creation-Date: 2023-06-05 01:59+0000\n"
 "PO-Revision-Date: 2022-12-25 17:08\n"
 "Last-Translator: Zmicier <zmicerturok@gmail.com>\n"
 "Language-Team: Belarusian\n"
@@ -21,7 +21,7 @@ msgstr ""
 "X-Crowdin-File: /main/be/kwin/kcm_kwin_effects.po\n"
 "X-Crowdin-File-ID: 8756\n"
 
-#: package/contents/ui/Effect.qml:92
+#: package/contents/ui/Effect.qml:97
 #, kde-format
 msgid ""
 "Author: %1\n"
@@ -30,19 +30,26 @@ msgstr ""
 "Аўтар: %1\n"
 "Ліцэнзія: %2"
 
-#: package/contents/ui/Effect.qml:121
+#: package/contents/ui/Effect.qml:127
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Show/Hide Video"
 msgstr "Паказаць/схаваць відэа"
 
-#: package/contents/ui/Effect.qml:128
-#, kde-format
+#: package/contents/ui/Effect.qml:134
+#, fuzzy, kde-format
+#| msgctxt "@info:tooltip"
+#| msgid "Configure..."
 msgctxt "@info:tooltip"
-msgid "Configure..."
+msgid "Configure…"
 msgstr "Наладжванне..."
 
-#: package/contents/ui/main.qml:25
+#: package/contents/ui/main.qml:24
+#, kde-format
+msgid "Get New…"
+msgstr ""
+
+#: package/contents/ui/main.qml:43
 #, kde-format
 msgid ""
 "Hint: To find out or configure how to activate an effect, look at the "
@@ -51,25 +58,23 @@ msgstr ""
 "Падказка: каб даведацца пра эфект або актываваць ці наладзіць яго, "
 "паглядзіце налады эфекту."
 
-#: package/contents/ui/main.qml:45
+#: package/contents/ui/main.qml:65
 #, kde-format
 msgid "Configure Filter"
 msgstr "Наладжванне фільтра"
 
-#: package/contents/ui/main.qml:57
+#: package/contents/ui/main.qml:77
 #, kde-format
 msgid "Exclude unsupported effects"
 msgstr "Выключыць эфекты, якія не падтрымліваюцца"
 
-#: package/contents/ui/main.qml:65
+#: package/contents/ui/main.qml:85
 #, kde-format
 msgid "Exclude internal effects"
 msgstr "Выключыць унутраныя эфекты"
 
-#: package/contents/ui/main.qml:123
-#, kde-format
-msgid "Get New Desktop Effects..."
-msgstr "Атрымаць новыя эфекты працоўнага стала..."
+#~ msgid "Get New Desktop Effects..."
+#~ msgstr "Атрымаць новыя эфекты працоўнага стала..."
 
 #~ msgid "This module lets you configure desktop effects."
 #~ msgstr "Гэты модуль дазваляе наладзіць эфекты працоўнага стала."

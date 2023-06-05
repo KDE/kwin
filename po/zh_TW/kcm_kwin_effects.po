@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-17 02:32+0000\n"
+"POT-Creation-Date: 2023-06-05 01:59+0000\n"
 "PO-Revision-Date: 2019-09-30 19:24+0800\n"
 "Last-Translator: pan93412 <pan93412@gmail.com>\n"
 "Language-Team: Chinese <zh-l10n@lists.linux.org.tw>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Lokalize 19.08.1\n"
 
-#: package/contents/ui/Effect.qml:92
+#: package/contents/ui/Effect.qml:97
 #, kde-format
 msgid ""
 "Author: %1\n"
@@ -28,44 +28,49 @@ msgstr ""
 "作者：%1\n"
 "授權：%2"
 
-#: package/contents/ui/Effect.qml:121
+#: package/contents/ui/Effect.qml:127
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Show/Hide Video"
 msgstr "顯示 / 隱藏影片"
 
-#: package/contents/ui/Effect.qml:128
-#, kde-format
+#: package/contents/ui/Effect.qml:134
+#, fuzzy, kde-format
+#| msgctxt "@info:tooltip"
+#| msgid "Configure..."
 msgctxt "@info:tooltip"
-msgid "Configure..."
+msgid "Configure…"
 msgstr "設定…"
 
-#: package/contents/ui/main.qml:25
+#: package/contents/ui/main.qml:24
+#, kde-format
+msgid "Get New…"
+msgstr ""
+
+#: package/contents/ui/main.qml:43
 #, kde-format
 msgid ""
 "Hint: To find out or configure how to activate an effect, look at the "
 "effect's settings."
 msgstr "提示：若要找出或設定啟用特效的方式，請看看特效的設定。"
 
-#: package/contents/ui/main.qml:45
+#: package/contents/ui/main.qml:65
 #, kde-format
 msgid "Configure Filter"
 msgstr "設定過濾器"
 
-#: package/contents/ui/main.qml:57
+#: package/contents/ui/main.qml:77
 #, kde-format
 msgid "Exclude unsupported effects"
 msgstr "排除不支援特效"
 
-#: package/contents/ui/main.qml:65
+#: package/contents/ui/main.qml:85
 #, kde-format
 msgid "Exclude internal effects"
 msgstr "排除內部桌面特效"
 
-#: package/contents/ui/main.qml:123
-#, kde-format
-msgid "Get New Desktop Effects..."
-msgstr "取得新桌面特效…"
+#~ msgid "Get New Desktop Effects..."
+#~ msgstr "取得新桌面特效…"
 
 #~ msgid "This module lets you configure desktop effects."
 #~ msgstr "此模組讓您能設定桌面特效。"

@@ -52,7 +52,7 @@
 >Ekranın kenarından ekranın merkezine doğru kaydırmak, efektleri etkinleştirmenizi sağlar. Burada, ekranın her bir kenarında hangi efektin etkinleştirileceğini yapılandırabilirsiniz. </para>
 
 <para
->Herhangi bir fare düğmesiyle bir kareye tıklayın ve içerik menüsünden bir efekt seçin. Mavi kareli kenarların zaten ekli bir efekti vardır, gri renkli kare bu kenar için hiçbir efektin seçilmediğini gösterir.</para>
+>Herhangi bir fare düğmesiyle bir kareye tıklayın ve bağlam menüsünden bir efekt seçin. Mavi kareli kenarların zaten ekli bir efekti vardır, gri renkli kare bu kenar için hiçbir efektin seçilmediğini gösterir.</para>
 
 <para
 >Bağlam menüsündeki erişilebilir ögelerin sayısı <guilabel

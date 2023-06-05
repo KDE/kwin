@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-03 02:04+0000\n"
-"PO-Revision-Date: 2023-04-21 07:14+0200\n"
+"PO-Revision-Date: 2023-06-04 05:06+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.2.2\n"
+"X-Generator: Poedit 3.3.1\n"
 
 #: kcmrules.cpp:226
 #, kde-format
@@ -96,6 +96,9 @@ msgid ""
 "The value of the window property will be remembered and, every time the "
 "window is created, the last remembered value will be applied."
 msgstr ""
+"ფანჯრის თვისების მნიშვნელობა დამახსოვრებული იქნება და ყოველ ჯერზე, "
+"რამდენჯერაც ფანჯარა შეიქმნება, გამოყენებული იქნება ბოლოს დაყენებული "
+"მნიშვნელობა."
 
 #: optionsmodel.cpp:217
 #, kde-format
@@ -148,14 +151,12 @@ msgid "No rules for specific windows are currently set"
 msgstr "ამჟამად მითითებული ფანჯრების წესები მითითებული არაა"
 
 #: package/contents/ui/main.qml:64
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Click the <interface>Add New...</interface> button below to add some"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Click the <interface>Add New…</interface> button below to add some"
 msgstr ""
-"დასამატებლად დააწკაპუნეთ <interface>ახლის დამატების...</interface> ღილაკს "
-"ქვემოთ"
+"დასამატებლად ქვემოთ <interface>ახლის დამატების...</interface> ღილაკს "
+"დააწკაპუნეთ"
 
 #: package/contents/ui/main.qml:72
 #, kde-format
@@ -178,16 +179,14 @@ msgid "Save Rules"
 msgstr "წესების შენახვა"
 
 #: package/contents/ui/main.qml:101
-#, fuzzy, kde-format
-#| msgid "Add New..."
+#, kde-format
 msgid "Add New…"
-msgstr "ახლის დამატება..."
+msgstr "ახლის დამატება…"
 
 #: package/contents/ui/main.qml:112
-#, fuzzy, kde-format
-#| msgid "Import..."
+#, kde-format
 msgid "Import…"
-msgstr "შემოტანა..."
+msgstr "შემოტანა…"
 
 #: package/contents/ui/main.qml:120
 #, kde-format
@@ -195,10 +194,9 @@ msgid "Cancel Export"
 msgstr "გატანის გაუქმება"
 
 #: package/contents/ui/main.qml:120
-#, fuzzy, kde-format
-#| msgid "Export..."
+#, kde-format
 msgid "Export…"
-msgstr "გატანა..."
+msgstr "გატანა…"
 
 #: package/contents/ui/main.qml:210
 #, kde-format
@@ -360,6 +358,8 @@ msgid ""
 "Readability may be impaired with extremely low opacity values. At 0%, the "
 "window becomes invisible."
 msgstr ""
+"გაუმჭვირვალობის ძალიან დაბალი მნიშვნელობებისას კითხვადობა შეიძლება "
+"დაქვეითდეს. 0%-ის დროს ფანჯარა უჩინარი გახდება."
 
 #: rulesmodel.cpp:382
 #, kde-format

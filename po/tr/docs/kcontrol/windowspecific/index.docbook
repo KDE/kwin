@@ -1,0 +1,2210 @@
+<?xml version="1.0" ?>
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % Turkish "INCLUDE">
+]>
+<book id="windowspecific" lang="&language;">
+<bookinfo>
+<title
+>Pencere Kuralları</title>
+<authorgroup>
+<author
+>&Lauri.Watts; &Lauri.Watts.mail;</author>
+<author>
+<personname
+><firstname
+>Bu belgelendirmenin bir kısmı KDE Kullanıcı Tabanı<ulink url="https://userbase.kde.org/KWin Rules"
+>KWin Kuralları</ulink
+> sayfasından dönüştürülmüş ve &kde; Belgelendirme Takımı tarafından Plasma 5.8 için uyarlanmıştır.</firstname
+> <surname
+></surname
+> </personname>
+      </author>
+<othercredit role="translator"
+><firstname
+>Emir</firstname
+><surname
+>SARI</surname
+><affiliation
+><address
+><email
+>emir_sari@icloud.com</email
+></address
+></affiliation
+><contrib
+>Çeviri</contrib
+></othercredit
+> 
+      </authorgroup>
+<legalnotice
+>&FDLNotice;</legalnotice>
+<date
+>2016-06-23</date>
+      <releaseinfo
+>Plasma 5.8</releaseinfo>
+<abstract>
+<para
+>Buradan pencere ayarlarını yalnızca belirli pencereler için özelleştirebilirsiniz.</para>
+      </abstract>
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>KControl</keyword>
+<keyword
+>pencere ayarları</keyword>
+<keyword
+>pencere konumlandırması</keyword>
+<keyword
+>pencere boyutu</keyword>
+</keywordset>
+</bookinfo>
+<chapter id="window-specific">
+<title
+>Pencereye Özgü Ayarlar: Hızlı Başlangıç</title>
+
+<para
+>Buradan pencere ayarlarını yalnızca belirli pencereler için özelleştirebilirsiniz.</para>
+
+<note>
+<para
+>&plasma;'nın yerel pencere yöneticisi &kwin;'i kullanmazsanız bu modüldeki yapılandırmanın etkili olmayacağını lütfen unutmayın. Farklı bir pencere yöneticisi kullanıyorsanız lütfen pencere davranışını nasıl özelleştireceğinizle ilgili belgelere bakın.</para>
+</note>
+
+<para
+>Burada yapılandırabileceğiniz ayarların çoğu, genel olarak <guilabel
+>Pencere Davranışı</guilabel
+> &systemsettings; modülünde yapılandırabileceğiniz ayarlardır; ancak burada bazıları daha ayrıntılıdır.</para>
+
+<para
+>Geometriyi, yerleşimi, bir pencerenin diğerlerinin üzerinde mi yoksa altında mı tutulması gerektiğini, odak çalmayı önlemeyi ve saydamlık ayarlarını kapsar.</para>
+
+<para
+>Bu modüle iki şekilde erişebilirsiniz: Yapılandırmak istediğiniz uygulamanın başlık çubuğundan veya &systemsettings;'ndan. &systemsettings; içinden başlatırsanız bir pencere profili oluşturmak için <guibutton
+>Yeni..</guibutton
+>'yi ve ortaya çıkan iletişim kutusundaki <guibutton
+>Pencere Özelliklerini Algıla</guibutton
+> düğmesini kullanarak yapılandırmak istediğiniz uygulama için gerekli bilgileri kısmen doldurabilirsiniz.</para>
+
+<para
+>Ayrıca istediğiniz bir zamanda herhangi bir depolanan ayarlar profilini <guibutton
+>Değiştir...</guibutton
+> veya <guibutton
+>Sil</guibutton
+> yapabilir ve listeyi yeniden sıralayabilirsiniz. <guibutton
+>Yukarı Taşı</guibutton
+> ve <guibutton
+>Aşağı Taşı</guibutton
+> düğmelerinin nasıl uygulandıklarına etkisi olur.</para>
+
+</chapter>
+<!--userbase <timestamp
+>2012-03-09T20:50:14Z</timestamp
+>-->
+
+<!--userbase-content-->
+<chapter id="overview"
+><title
+>Genel Görünüm</title
+> 
+<para
+>&kwin;, kullanıcının bir uygulamanın pencere özniteliklerini değiştirmek için kurallar tanımlamasına izin verir. </para>
+<para
+>Örneğin, bir uygulama başlatıldığında, her zaman <emphasis
+>Sanal Masaüstü 2</emphasis
+> üzerinde çalışmaya zorlanabilir. Veya bir uygulamadaki bir kusur, pencereyi diğerlerinin üzerinde zorlayarak çözülebilir. </para>
+<para
+><link linkend="kwin-rule-editor"
+>&kwin; Kural Düzenleyicisi</link
+>'ni kullanma ve <link linkend="window-matching"
+>Pencere Eşleştirme</link
+>'yi ve <link linkend="window-attributes"
+>Pencere Öznitelikleri</link
+>'ni belirtmek üzerine adım adım <link linkend="examples"
+>örnekler</link
+> sağlanır. </para>
+</chapter>
+<chapter id="examples-and-application-workaround"
+><title
+>Örnekler ve Uygulama Geçici Çözümü</title
+> 
+<para
+>Neyin olanaklı olduğunu görmek ve kendi kurallarınızı modellemek için de kullanılabilecek ayrıntılı <link linkend="examples"
+>örnekler</link
+> sağlanmıştır. </para>
+<para
+><link linkend="application-workarounds"
+>Uygulama Geçici Çözümü</link
+>'nü ele almak için özel bir sayfa ayrılmıştır. </para>
+</chapter>
+<chapter id="kwin-rule-editor"
+><title
+>KWin Kural Düzenleyicisi</title
+> 
+<sect1 id="invoking-the-kwin-rule-editor"
+><title
+>KWin Kural Düzenleyicisi'ni Çağırmak</title
+> 
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rules-ordering.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>&kwin; kural düzenleyicisini çağırmanın birkaç yolu vardır. Aşağıda ikisini bulabilirsiniz: </para>
+<itemizedlist>
+<listitem
+><para
+>Herhangi bir pencerenin başlık çubuğuna sağ tıklayın ve <menuchoice
+><guimenu
+>Daha Fazla Eylem</guimenu
+><guimenuitem
+>Pencere Yöneticisi Ayarları...</guimenuitem
+></menuchoice
+> ve <guilabel
+>Yapılandır</guilabel
+> penceresinde <guilabel
+>Pencere Kuralları</guilabel
+>'nı seçin veya şu yolu izleyin:</para
+></listitem>
+</itemizedlist>
+<itemizedlist>
+<listitem
+><para
+><menuchoice
+><guimenu
+>Sistem Ayarları</guimenu
+><guisubmenu
+>Pencere Davranışı</guisubmenu
+><guimenuitem
+>Pencere Kuralları</guimenuitem
+></menuchoice
+></para
+></listitem>
+</itemizedlist>
+<para
+>Ana pencere şunun için kullanılır: </para>
+<itemizedlist>
+<listitem
+><para
+>Kuralları, <guilabel
+>Yeni...</guilabel
+>, <guilabel
+>Değiştir...</guilabel
+> ve <guilabel
+>Sil</guilabel
+> ile etkilemek</para
+></listitem>
+<listitem
+><para
+>Kuralları, <guilabel
+>İçe Aktar</guilabel
+> ve <guilabel
+>Dışa Aktar</guilabel
+> ile başkalarıyla paylaşmak</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Yukarı Taşı</guilabel
+> ve <guilabel
+>Aşağı Taşı</guilabel
+> ile istenen <link linkend="rule-evaluation"
+>kural değerlendirmesinin</link
+> yapıldığından emin olmak</para
+></listitem>
+</itemizedlist>
+<sect2 id="rule-evaluation"
+><title
+>Kural Değerlendirmesi</title
+> 
+<para
+>Bir uygulama başlatıldığında (veya kurallar değiştirildiğinde), &kwin; kuralları listenin başından sonuna kadar değerlendirir. Bir pencereyle eşleşen tüm kurallar için toplu öznitelikler pencereye uygulanır, ardından pencere görüntülenir. </para>
+<para
+>İki veya daha fazla eşleşen kuralın aynı özniteliği etkinleştirmesi durumunda, listedeki <emphasis
+>ilk</emphasis
+> kuralın ayarı kullanılır. </para>
+<para
+><tip
+><para
+>Önce daha kısıtlayıcı kurallar koyarak alt pencereleri uygulama için uyarlayabilirsiniz - örnek olarak <link linkend="application-on-all-desktops-and-handle-one-child-window-uniquely"
+>Kopete ve Kopete Sohbet Penceresi</link
+> verilebilir.</para
+></tip>
+</para>
+</sect2>
+</sect1>
+<sect1 id="rule-editor"
+><title
+>Kural Düzenleyici</title
+> 
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rule-editor.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>Düzenleyici, dört sekmeden oluşur: </para>
+<orderedlist>
+<listitem
+><para
+><guilabel
+>Pencere eşleştirme</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Boyut ve Konum</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Düzenleme ve Erişim</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Görünüş ve Düzeltmeler</guilabel
+></para
+></listitem>
+</orderedlist>
+<para
+>Adından da anlaşılacağı gibi <guilabel
+>Pencere eşleştirme</guilabel
+>, bir veya daha fazla pencereyi eşleştirmek için kriter belirtmek için kullanılır. Diğer üç sekme, eşleşen pencerelerin özniteliklerini değiştirmek için kullanılır. </para>
+<para
+><tip
+><para
+>Paneller de etkilenebilir.</para
+></tip>
+</para>
+<sect2 id="window-matching"
+><title
+>Pencere Eşleştirme</title
+> 
+<para
+>Her pencere kuralı, kullanıcı tarafından belirlenen <link linkend="window-matching"
+>Pencere Eşleştirme</link
+> kriterine sahiptir. &kwin; kuralın bir uygulama için geçerli olup olmadığını belirlemek için ölçütleri kullanır. </para>
+</sect2>
+<sect2 id="window-attributes"
+><title
+>Pencere Öznitelikleri</title
+> 
+<para
+>Pencere Eşleştirme ölçütlerinin yanı sıra, her pencere kuralının bir dizi <link linkend="window-attributes"
+>Pencere Öznitelikleri</link
+> vardır. Öznitelikler ilgili uygulamanın ayarlarını geçersiz kılar ve pencere &kwin; tarafından görüntülenmeden önce uygulanır. </para>
+
+</sect2>
+</sect1>
+</chapter>
+<chapter id="window-matching0"
+><title
+>Pencere Eşleştirme</title
+> 
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rule-editor.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+><guilabel
+>Pencere Eşleştirme</guilabel
+> sekmesi ,&kwin; tarafından kuralın belirli bir pencere için geçerli olup olmadığını değerlendirmek için kullanılır. </para>
+<para
+>Sıfır (herhangi bir pencereyle eşleşir) veya aşağıdakilerden daha fazlası belirtilebilir: </para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Pencere sınıfı (uygulama)</guilabel
+> - sınıfı eşleştirin.<itemizedlist
+> <listitem
+><para
+><guilabel
+>Tüm pencere sınıfını eşleştir</guilabel
+> - ikincil sınıfı eşleştirmeyi içerir.</para
+></listitem>
+</itemizedlist>
+</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Pencere rolü</guilabel
+> - eşleşmeyi pencerenin işleviyle sınırlayın (&eg;, bir <emphasis
+>ana pencere</emphasis
+>, bir <emphasis
+>sohbet penceresi</emphasis
+>, &etc;)</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Pencere türleri</guilabel
+> - eşleşmeyi pencere türüyle sınırlayın: <guilabel
+>Normal Pencere</guilabel
+>, <guilabel
+>İletişim Kutusu</guilabel
+>, &etc;</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Pencere başlığı</guilabel
+> - eşleşmeyi pencerenin başlığıyla sınırlayın.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Makine (makine adı)</guilabel
+> - eşleşmeyi, pencereyle ilişkili makine adıyla kısıtlayın.</para
+></listitem>
+</itemizedlist>
+<para
+><tip
+><para
+>Yukarıdaki bilgileri elle girmek olanaklı olsa da, tercih edilen yöntem <guilabel
+>Pencere Özelliklerini Algıla</guilabel
+> düğmesini kullanmaktır.</para
+></tip>
+</para>
+<para
+>Her alan için, alan değerine karşı aşağıdaki işleçler uygulanabilir: </para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Önemsiz</guilabel
+> - alanı yok sayın.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Tam Eşleşme</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Altdizi Eşleşmesi</guilabel
+></para
+></listitem>
+</itemizedlist>
+<para
+><note
+><para
+>Hem <guilabel
+>Tam Eşleşme</guilabel
+> ve <guilabel
+>Altdizi Eşleşmesi</guilabel
+> BÜYÜK/küçük harf duyarlı eşleşmeyi uygulayabilir. Örneğin, <emphasis
+>AB</emphasis
+>, <emphasis
+>AB</emphasis
+> dizisiyle; <emphasis
+>ab</emphasis
+>, <emphasis
+>Ab</emphasis
+> ve <emphasis
+>aB</emphasis
+> ile eşleşebilir.</para
+></note>
+</para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Düzenli İfade</guilabel
+> - Qt'nin düzenli ifadeleri uygulanır - bkz. <ulink url="https://doc.qt.io/qt-5/qregexp.html"
+>düzenli ifadeler kullanarak model eşleştirme</ulink
+>.</para
+></listitem>
+</itemizedlist>
+<sect1 id="detect-window-properties"
+><title
+>Pencere Özelliklerini Algıla</title>
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-detect-window.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+><guilabel
+>Pencere Özelliklerini Algıla</guilabel
+> işlevi, eşleştirme kriterlerini girme sürecini basitleştirir. </para>
+<orderedlist>
+<listitem
+><para
+>Kural oluşturmak istediğiniz uygulama için uygulamayı başlatın.</para
+></listitem>
+<listitem
+><para
+>Ardından, <guilabel
+>Pencere eşleştirme</guilabel
+> sekmesinde, <guilabel
+>Pencere Özelliklerini Algıla</guilabel
+> işlevi başlamadan önceki gecikme saniyesini ayarlayın. Öntanımlı değer sıfır saniyedir.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Pencere Özelliklerini Algıla</guilabel
+>'ya tıklayın ve</para
+></listitem>
+<listitem
+><para
+>Fare imleci artı işaretine döndüğünde, onu uygulama penceresinin içine (başlık çubuğuna değil) yerleştirin ve sol tıklayın.</para
+></listitem>
+<listitem
+><para
+>Seçilen pencere üzerine bilgi içeren yeni bir pencere sunulur. İstediğiniz alanları seçin:<itemizedlist>
+<listitem
+><para
+><guilabel
+>İkincil sınıf adı</guilabel
+> - bazı uygulamaların ikincil bir sınıf adı vardır. Bu değer, pencereleri bu değere göre kısıtlamak için kullanılabilir.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Pencere rolü</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Pencere türü</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Pencere başlığı</guilabel
+></para
+></listitem>
+</itemizedlist>
+</para
+></listitem>
+</orderedlist>
+<para
+><guilabel
+>Pencere Eşleştirme</guilabel
+> kriterlerini yeniden doldurmak için <guilabel
+>Tamam</guilabel
+> düğmesine tıklayın. </para>
+<para
+>Bilgilerin kombinasyonunu kullanarak bir kural, tüm uygulamaya (<guilabel
+>Sınıf</guilabel
+> tarafından) veya <guilabel
+>Sınıf</guilabel
+> içindeki belirli bir pencere <guilabel
+>Tür</guilabel
+>'üne uygulanabilir; örneğin, bir <guilabel
+>Araç Çubuğu</guilabel
+>. </para>
+</sect1>
+</chapter>
+<chapter id="window-attributes1"
+><title
+>Pencere Öznitelikleri</title>
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-window-attributes.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>Ayarlanabilen öznitelikler, işleve göre üç sekmede gruplandırılmıştır: </para>
+<orderedlist>
+<listitem
+><para
+><guilabel
+>Boyut ve Konum</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Düzenleme ve Erişim</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Görünüş ve Düzeltmeler</guilabel
+></para
+></listitem>
+</orderedlist>
+<para
+>Her özniteliğin, yerini belirleyen bir dizi parametresi vardır. </para>
+<sect1 id="parameters"
+><title
+>Parametreler</title>
+<para
+>Her öznitelik en az olarak aşağıdaki parametrelerden birini kabul eder. Her bir <link linkend="attributes"
+>öznitelik</link
+> tanımında ek, özniteliğe özgü bağımsız değişkenler listelenir. </para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Etkileme</emphasis
+></term>
+    <listitem>
+    <para
+>Pencereyle eşleşen bir sonraki kuralın özniteliği etkilemediğinden emin olun.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Başlangıçta Uygula</emphasis
+></term>
+    <listitem>
+    <para
+>Pencereyi öznitelikle başlatın ve çalışma zamanında değiştirilmesine izin verin.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Anımsa</emphasis
+></term>
+    <listitem>
+    <para
+>Öznitelik ayarını kuralda tanımlandığı şekilde kullanın ve çalışma zamanında değiştirilirse bunun yerine yeni değeri kaydedin ve kullanın.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Zorla</emphasis
+></term>
+    <listitem>
+    <para
+>Ayar çalışma zamanında değiştirilemez.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Şimdi Uygula, Geçici Olarak Zorla</emphasis
+></term>
+    <listitem>
+    <para
+>Ayarı bir kez Uygula/Zorla ve özniteliğin ayarını kaldır. İkisi arasındaki fark çalışma zamanındadır, <guilabel
+>Şimdi Uygula</guilabel
+> özniteliğin değiştirilmesine izin verir ve <guilabel
+>Geçici Olarak Zorla</guilabel
+> bunu yasaklar etkilenen tüm pencereler çıkana kadar değiştirilmelidir.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><warning
+><para
+><guilabel
+>Şimdi Uygula</guilabel
+> için kuralın ayarlanmış başka bir özniteliği yoksa kural değerlendirmeden sonra silinir; ancak <guilabel
+>Geçici Olarak Zorla</guilabel
+> ile, etkilenen son pencere sona erdikten sonra kural silinir.</para
+></warning>
+</para>
+</sect1>
+<sect1 id="attributes"
+><title
+>Öznitelikler</title>
+<para
+><tip
+><para
+><guilabel
+>Pencere Özelliklerini Algıla</guilabel
+> düğmesi özniteliğe özgü değerleri geri doldurur - daha fazla bilgi için <link linkend="window-matching"
+>Pencere Eşleştirme</link
+> bölümüne bakın. Örneğin, <guilabel
+>Boyut</guilabel
+> özniteliğinin yükseklik ve genişlik değerleri, algılanan pencerenin yükseklik ve genişliğine ayarlanır.</para
+></tip>
+</para>
+<para
+><tip
+><para
+><guilabel
+>Evet/Hayır</guilabel
+> argümanları, öznitelikleri açıp kapatmak için kullanılır. Dilbilgisi ile hoşgörü, bir ayarın nasıl işleneceğini anlamanıza yardımcı olur. <inlinemediaobject
+> <imageobject
+> <imagedata fileref="Face-smile.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Örneğin, <guilabel
+>Görev çubuğunu atla</guilabel
+> özelliği <guilabel
+>Hayır</guilabel
+> olarak ayarlandığında, görev çubuğunu atlamayın anlamına gelir. Başka bir deyişle, pencereyi görev çubuğunda gösterin. <inlinemediaobject
+> <imageobject
+> <imagedata fileref="Face-smile.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+></para
+></tip>
+</para>
+<sect2 id="size--position"
+><title
+>Boyut ve Konum</title>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Konum</emphasis
+></term>
+    <listitem>
+    <para
+>Pencerenin sol üst köşesini belirtilen x,y koordinatına konumlandırın.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>&kwin;'in başlangıç noktası (0,0), masaüstünün sol üst köşesidir.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Boyut</emphasis
+></term>
+    <listitem>
+    <para
+>Pencerenin genişliği ve yüksekliği.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Yatay/dikey olarak ekranı kaplamış</emphasis
+></term>
+    <listitem>
+    <para
+>Bu öznitelikler, en büyük yatay/en küçük yatay pencere özniteliği arasında geçiş yapmak için kullanılır.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Masaüstü, Etkinlik, Ekran</emphasis
+></term>
+    <listitem>
+    <para
+>Pencereyi belirtilen <emphasis
+>(Sanal) Masaüstü</emphasis
+>, <emphasis
+>Etkinlik</emphasis
+> veya <emphasis
+>Ekran</emphasis
+> üzerine yerleştirin. Pencereyi tüm <emphasis
+>Sanal Masaüstlerine</emphasis
+> yerleştirmek için <guilabel
+>Tüm Masaüstleri</guilabel
+>'ni kullanın.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Tam ekran, Simge durumuna küçültülmüş, Panjuru kapatılmış</emphasis
+></term>
+    <listitem>
+    <para
+>Tam Ekran, Simge Durumuna Küçült ve Panjuru Kapat pencere özniteliğini değiştirin. Örneğin, bir pencere küçültülmüş olarak başlatılabilir veya küçültülmüş olarak başlatılırsa açılmamaya zorlanabilir.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>Ekranı kaplamış özniteliği, <guilabel
+>Ekranı Kaplama</guilabel
+> özniteliğiyle hem <guilabel
+>Ekranı yatay olarak kaplamış</guilabel
+> hem de <guilabel
+>Ekranı dikey olarak kaplamış</guilabel
+> veya <guilabel
+>Başlangıç yerleşimi</guilabel
+> kullanılarak öykünülür.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Başlangıç yerleşimi</emphasis
+></term>
+    <listitem>
+    <para
+>Global pencere yerleştirme stratejisini aşağıdakilerden biriyle geçersiz kılın:</para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Öntanımlı</guilabel
+> - genel pencere yerleştirme stratejisini kullanın.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Yerleştirme yok</guilabel
+> - sol üst köşe.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>En az çakışan</guilabel
+> - başka pencerenin olmadığı yerdir.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Ekranı kaplamış</guilabel
+> - pencereyi ekranı kaplamış olarak başlatın.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Ortalanmış</guilabel
+> - masaüstünün merkezi.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Rastgele</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Sol üst köşede</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Farenin altında</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Ana pencerede</guilabel
+> - bir alt pencerenin yerleşimini ana pencerenin sınırlarıyla sınırlayın.</para
+></listitem>
+</itemizedlist>
+
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>İstenen geometriyi yok say</emphasis
+></term>
+    <listitem>
+    <para
+>Pencerenin istenen geometri konumunu kabul etmek veya yok saymak arasında geçiş yapın. Öntanımlı yerleştirme stratejisi ile pencerenin isteği arasındaki çakışmaları önlemek için pencerenin isteği kabul edildiğinde yerleştirme stratejisi yok sayılır.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>En küçük boyut, En büyük boyut</emphasis
+></term>
+    <listitem>
+    <para
+>Pencere için izin verilen en küçük ve en büyük boyut.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Geometri kısıtlamalarına uy</emphasis
+></term>
+    <listitem>
+    <para
+>Pencerenin istenen en boy oranına mı yoksa <emphasis
+>temel artışa</emphasis
+> mı bağlı kalacağınızı açın/kapatın. Bu özniteliği anlamak için biraz arka plan gereklidir. Kısaca, pencereler, Pencere Yöneticisi'nden bir temel artış talep etmelidir: Yeniden boyutlandırma isteği başına en az <emphasis
+>yükseklik</emphasis
+> X <emphasis
+>genişlik</emphasis
+> piksel sayısı olmalıdır. Genellikle 1 x 1'dir. Diğer pencereler, örneğin uçbirim öykünücüleri veya düzenleyicileri, eş aralıklı yazıtiplerini kullanır ve bir karakterin boyutuna göre taban artışlarını ister.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+</sect2>
+<sect2 id="arrangement--access"
+><title
+>Düzenleme ve Erişim</title>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Üzerinde tut, Altında tut</emphasis
+></term>
+    <listitem>
+    <para
+>Pencerenin diğerlerinin üstünde/altında tutulup tutulmayacağını açın/kapatın.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Eşdeğeriyle otomatik grupla</emphasis
+></term>
+    <listitem>
+    <para
+>Pencerelerin gruplandırmasını (genellikle <emphasis
+>sekmeleme</emphasis
+> olarak bilinir) açın/kapatın.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Ön planda otomatik grupla</emphasis
+></term>
+    <listitem>
+    <para
+>Geçerli otomatik gruba eklendiğinde pencerenin etkin olup olmayacağını açın/kapatın.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Kimliğe göre otomatik grupla</emphasis
+></term>
+    <listitem>
+    <para
+>Kullanıcı tanımlı bir kimlik aracılığıyla bir grup oluşturun. Görünüşte ilgisiz pencerelerin gruplandırılmasına izin vermek için birden fazla kural aynı kimliği paylaşabilir.</para>
+     </listitem>
+  </varlistentry>
+
+  <varlistentry
+><term
+><emphasis role="bold"
+>Görev çubuğunu atla</emphasis
+></term>
+    <listitem>
+    <para
+>Pencerenin görev çubuğunda görüntülenip görüntülenmeyeceğini açın/kapatın.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Sayfalayıcıyı atla</emphasis
+></term>
+    <listitem>
+    <para
+>Pencerenin sayfalayıcıda görüntülenip görüntülenmeyeceğini açın/kapatın.</para>
+     </listitem>
+  </varlistentry>
+    </variablelist>
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="pager-4-desktops.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Değiştiriciyi atla</emphasis
+></term>
+    <listitem>
+    <para
+>Pencerenin <guilabel
+>SEÇENEK+SEKME</guilabel
+> listesinde görüntülenip görüntülenmeyeceğini açın/kapatın.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Kısayol</emphasis
+></term>
+    <listitem>
+    <para
+>Pencereye bir kısayol atayın. <guilabel
+>Düzenle...</guilabel
+> tıklandığında, ek yönergeler sunulur.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+</sect2>
+<sect2 id="appearance--fixes"
+><title
+>Görünüş ve Düzeltmeler</title>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Başlık çubuğu ve çerçeve yok</emphasis
+></term>
+    <listitem>
+    <para
+>Başlık çubuğunun ve pencerenin etrafındaki çerçevenin görüntülenip görüntülenmemesini açın/kapatın.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Başlık çubuğu renk şeması</emphasis
+></term>
+    <listitem>
+    <para
+>Pencerenin başlık çubuğu için bir renk şeması seçin.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Etkin/Etkin olmayan matlık</emphasis
+></term>
+    <listitem>
+    <para
+>Pencere etkin/etkin değilken, matlığını belirtilen yüzdeye ayarlayın.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+><guilabel
+>Etkin/Etkin olmayan matlık</guilabel
+>, yalnızca <guilabel
+>Masaüstü Efektleri</guilabel
+> etkinleştirildiğinde etkilenir.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Odak çalma koruması</emphasis
+></term>
+    <listitem>
+    <para
+>Bir pencere odağı istediğinde, isteği yerine getirip diğer tüm pencerelerin üstüne yerleştirip yerleştirmeyeceğinizi (<guilabel
+>Yok</guilabel
+> ile <guilabel
+>Çok Yüksek</guilabel
+> arasında) bir ölçekte denetleyin veya isteğini yok sayın (potansiyel olarak diğer pencerelerin arkasındaki pencere):</para>
+<itemizedlist>
+<listitem
+><para
+>Yok - Odağı her zaman pencereye verin.</para
+></listitem>
+<listitem
+><para
+>Düşük</para
+></listitem>
+<listitem
+><para
+>Normal</para
+></listitem>
+<listitem
+><para
+>Yüksek</para
+></listitem>
+<listitem
+><para
+>Çok Yüksek - Pencerenin odak isteği reddedildi. Odak, yalnızca fare aracılığıyla açıkça istendiğinde verilir.</para
+></listitem>
+</itemizedlist>
+
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>Bir pencereyi saltokunur yapmak ve herhangi bir klavye girişini kabul etmemesi için <guilabel
+>Odağı kabul et</guilabel
+>'e bakın.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Odağı kabul et</emphasis
+></term>
+    <listitem>
+    <para
+>Pencerenin klavye girişini kabul edip etmemesini açın/kapatın. Pencereyi saltokunur yapın.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Global kısayolları yok say</emphasis
+></term>
+    <listitem>
+    <para
+>Pencere etkinken global kısayolları yok saymayı açın/kapatın (<menuchoice
+><guimenu
+>Sistem Ayarları</guimenu
+><guisubmenu
+>Kısayollar ve Hareketler</guisubmenu
+><guimenuitem
+>Global Kısayollar</guimenuitem
+></menuchoice
+>'da tanımlandığı üzere veya <guilabel
+>konsole</guilabel
+>'da <varname
+>kcmshell6 keys</varname
+> yazarak).</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Kapatılabilir</emphasis
+></term>
+    <listitem>
+    <para
+>Başlık çubuğunda <guilabel
+>Kapat</guilabel
+> düğmesinin görüntülenip görüntülenmemesini açın/kapatın.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>Bir uçbirim penceresi, kabuk oturumunu sonlandırarak son kullanıcı tarafından yine de kapatılabilir; ancak klavye girişini devre dışı bırakmak için <guilabel
+>Odağı kabul et</guilabel
+> öğesinin kullanılması, pencerenin kapatılmasını daha zor hale getirecektir.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Pencere türü</emphasis
+></term>
+    <listitem>
+    <para
+>Pencereyi başka bir türe değiştirin ve o pencerenin özelliklerini devralın:</para>
+<itemizedlist>
+<listitem
+><para
+>Normal Pencere</para
+></listitem>
+<listitem
+><para
+>İletişim Kutusu</para
+></listitem>
+<listitem
+><para
+>İzlence Penceresi</para
+></listitem>
+<listitem
+><para
+>Rıhtım (Panel)</para
+></listitem>
+<listitem
+><para
+>Araç Çubuğu</para
+></listitem>
+<listitem
+><para
+>Ayrılmış Menü</para
+></listitem>
+<listitem
+><para
+>Açılış Ekranı</para
+></listitem>
+<listitem
+><para
+>Masaüstü</para
+></listitem>
+<listitem
+><para
+>Bağımsız Menü Çubuğu</para
+></listitem>
+<listitem
+><para
+>Ekran Üzeri Görüntü</para
+></listitem>
+</itemizedlist>
+
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><warning
+><para
+>Dikkatli kullanın; çünkü istenmeyen sonuçlar ortaya çıkabilir. Örneğin bir <guilabel
+>Açılış Ekranı</guilabel
+>, tıklandığında &kwin; tarafından otomatik olarak kapatılır.</para
+></warning>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Bileşikleştirmeyi engelle</emphasis
+></term>
+    <listitem>
+    <para
+>Pencere <emphasis
+>varken</emphasis
+> bileşikleştirmenin devre dışı bırakılıp bırakılmayacağını değiştirin. Bileşikleştirme etkinleştirilirse ve kural bileşikleştirmenin devre dışı bırakılacağını belirtirse <emphasis
+>herhangi bir</emphasis
+> eşleştirme penceresi varken bileşikleştirme devre dışı bırakılır. Bileşikleştirme, son eşleşen pencere sona erdiğinde yeniden etkinleştirilir.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+</sect2>
+</sect1>
+</chapter>
+<chapter id="examples"
+><title
+>Örnekler</title>
+<para
+><note
+><para
+>İlk örnek, kuralları oluşturmak için gerekli tüm adımları ayrıntılandırır. Bu sayfayı yönetilebilir bir boyutta tutmak için sonraki örneklerde yalnızca örneğe özgü adımlar listelenmiştir.</para
+></note>
+</para>
+<para
+><note
+><para
+><guilabel
+>Sayfalayıcı</guilabel
+> özniteliği, <guilabel
+>Sanal Masaüstü Yöneticisi</guilabel
+> ile ilgilidir: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="pager-4-desktops.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></note>
+</para>
+<sect1 id="pin-a-window-to-a-desktop-and-set-other-attributes"
+><title
+>Bir Pencereyi Masaüstüne Sabitleyin ve Diğer Öznitelikleri Ayarlayın</title>
+<para
+>&akregator;'ü <emphasis
+>Sanal Masaüstü 2</emphasis
+>'ye sabitleyin. Ek olarak, uygulamayı yeğlenen bir boyutla ve konumda başlatın. Her bir öznitelik için <guilabel
+>Başlangıçta Uygula</guilabel
+> <link linkend="parameters"
+>parametresini</link
+> kullanın ki çalışma zamanında geçersiz kılınabilsin. </para>
+<para
+>&kwin; kuralı şöyle oluşturulur: </para>
+<orderedlist>
+<listitem
+><para
+>&akregator;'ü <emphasis
+>ikinci masaüstünde</emphasis
+> başlatın ve istediğiniz gibi konumlandırıp boyutlandırın: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="akregator-fav.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Başlık çubuğunda sağ tıklayıp <menuchoice
+><guimenu
+>Daha Fazla Eylem</guimenu
+><guimenuitem
+>Pencere Yöneticisi Ayarları...</guimenuitem
+></menuchoice
+>'nı seçin: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="config-win-behavior.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Sol sütunda <guilabel
+>Pencere Kuralları</guilabel
+>'nı seçin ve <guilabel
+>Yeni...</guilabel
+>'ye tıklayın: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rules-main.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Pencereye Özgü Ayarları Düzenle</guilabel
+> penceresi görüntülenir. <guilabel
+>Pencere eşleştirme</guilabel
+> öntanımlı sekmedir: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-init.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>0 sn gecikme</guilabel
+> ile <guilabel
+>Pencere Özelliklerini Algıla</guilabel
+>'ya tıklayın, imleç hemen artı işaretine dönüşür. &akregator; penceresi içinde (herhangi bir yere) tıklayın; (ancak başlık çubuğuna değil). Pencere kriterleri sunulur. Yalnızca birincil sınıf adına göre eşleştirin, bu nedenle onay kutularını işaretlemeyin - ek bilgi için <link linkend="window-matching"
+>pencere eşleştirme</link
+> bölümüne bakın: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="akgregator-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Önceki pencerede <guilabel
+>Tamam</guilabel
+>'a tıklamak, <guilabel
+>Pencere Eşleştirme</guilabel
+> sekmesindeki sonuçları geri doldurur. <guilabel
+>Açıklama</guilabel
+> alanına (<guilabel
+>KWin Kuralı</guilabel
+> penceresindeki) anlamlı bir metin girin: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-ready-akregator.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Pencere özniteliklerini etkinleştirin: <guilabel
+>Konum</guilabel
+>,<guilabel
+>Boyut</guilabel
+> ve <guilabel
+>Masaüstü</guilabel
+>. Başlangıç değerleri <guilabel
+>Pencere Özelliklerini Algıla</guilabel
+> tarafından ayarlanır ve geçersiz kılınabilir: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="akregator-attributes.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Önceki pencerede <guilabel
+>Tamam</guilabel
+>'e tıklandığında ana <guilabel
+>KWin Kuralları</guilabel
+>'na geri dönülür. Açıklamasıyla birlikte yeni kural listelenmiştir: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rules-main-n-akregator.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Pencereyi kapatmak için <guilabel
+>Tamam</guilabel
+>'a tıklayın.</para
+></listitem>
+<listitem
+><para
+>Bitti.</para
+></listitem>
+</orderedlist>
+</sect1>
+<sect1 id="application-on-all-desktops-and-handle-one-child-window-uniquely"
+><title
+>Tüm Masaüstlerinde Uygulamayı ve Bir Alt Pencereyi Benzersizce İşleyin</title>
+<para
+>Konuşma pencereleri dışında, &kopete; ve alt pencereleri tüm masaüstlerinde açılır ve sistem tepsisi ile sayfalayıcıyı atlar. Alt konuşma pencereleri için bunları sistem tepsisinde gösterme dışında ana pencere olarak ele alın. </para>
+<para
+>Her bir öznitelik için <guilabel
+>Zorla</guilabel
+> <link linkend="parameters"
+>parametresini</link
+> kullanın, böylece geçersiz kılınamaz. </para>
+<para
+>Yukarıdakileri uygulamak için iki kuralın oluşturulması gerekir: </para>
+<orderedlist>
+<listitem
+><para
+><guilabel
+>Kopete Sohbeti</guilabel
+> için bir kural ve</para
+></listitem>
+<listitem
+><para
+>&kopete; için bir kural</para
+></listitem>
+</orderedlist>
+<para
+><guilabel
+>Kopete Sohbeti</guilabel
+> kuralının eşleştirme kriteri, belirli bir pencere rolüyle, yani sohbet penceresiyle eşleşmesi gerektiğinden, <emphasis
+>Kopete</emphasis
+> kuralından daha kısıtlayıcıdır. <link linkend="rule-evaluation"
+>Kural değerlendirmesi</link
+> işlemesi nedeniyle, <link linkend="kopete-kwin-rule-list"
+>KWin Rule list for Kopete için KWin Kuralı listesi</link
+> içindeki &kopete; kuralından önce gelmelidir. </para>
+<sect2 id="kopete-chat-rule"
+><title
+>Kopete Sohbeti Kuralı</title>
+<para
+>Bir <guilabel
+>Kopete Sohbeti</guilabel
+> penceresinin açık olduğunu varsayarsak: </para>
+<orderedlist>
+<listitem
+><para
+><guilabel
+>Pencere Özelliklerini Algıla</guilabel
+>'yı kullanın ve <guilabel
+>Kopete Sohbeti</guilabel
+> penceresini seçin. Kriterleri sohbet pencereleriyle sınırlamak için <guilabel
+>Pencere rolü</guilabel
+> kutusunu işaretleyin - ek bilgi için <link linkend="window-matching"
+>pencere eşleştirme</link
+>bölümüne bakın: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-chat-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Önceki pencerede <guilabel
+>Tamam</guilabel
+>'a tıklandığında <guilabel
+>Pencere Eşleştirme</guilabel
+> sekmesindeki sonuçlar geri doldurulur. <guilabel
+>Açıklama</guilabel
+> kutusuna anlamlı bir metin girin: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-kopete-chat.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Aşağıdaki öznitelikleri etkinleştirin: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-chat-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Kuralın girişini tamamlamak için tıklayın.</para
+></listitem>
+</orderedlist>
+<para
+><note
+><para
+>Pencereyi görev çubuğunda görüntülemek için <guilabel
+>Görev çubuğunu atla</guilabel
+> özniteliği <guilabel
+>Hayır</guilabel
+> olarak ayarlanmıştır. Bu da şu anlama gelir: <emphasis
+>Hayır</emphasis
+>, <emphasis
+>görev çubuğunu</emphasis
+> <emphasis
+>atlama</emphasis
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="Face-smile.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>.</para
+></note>
+</para>
+</sect2>
+<sect2 id="kopete-rule"
+><title
+>Kopete Kuralı</title>
+<para
+>&kopete;'nin açık olduğunu varsayarsak: </para>
+<orderedlist>
+<listitem
+><para
+><guilabel
+>Pencere Özelliklerini Algıla</guilabel
+>'yı kullanın ve &kopete; penceresini seçin. Yalnızca birincil sınıf adına göre eşleştirin, bu nedenle onay kutularını işaretlemeyin - ek bilgi için <link linkend="window-matching"
+>pencere eşleştirme</link
+> bölümüne bakın: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Önceki pencerede <guilabel
+>Tamam</guilabel
+>'a tıklandığında <guilabel
+>Pencere Eşleştirme</guilabel
+> sekmesindeki sonuçlar geri doldurulur. <guilabel
+>Açıklama</guilabel
+> kutusuna anlamlı bir metin girin: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-kopete.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Aşağıdaki öznitelikleri etkinleştirin: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-attribute-2.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Kuralın girişini tamamlamak için tıklayın.</para
+></listitem>
+</orderedlist>
+</sect2>
+<sect2 id="kopete-kwin-rule-list"
+><title
+>Kopete KWin Kuralı Listesi</title>
+<para
+>Söz edildiği üzere, <link linkend="rule-evaluation"
+>kural değerlendirmesi</link
+> nedeniyle, <guilabel
+>Kopete Sohbeti</guilabel
+> kuralı &kopete; kuralından önce gelmelidir: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-kopete-rules.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+</sect2>
+</sect1>
+<sect1 id="suppress-a-window-from-showing-on-pager"
+><title
+>Bir Pencerenin Sayfalayıcıda Gösterilmesini Engelleyin</title>
+<para
+><guilabel
+>K Notlar</guilabel
+> şu anda notlarının sayfalayıcıyı atlamasına izin vermiyor; ancak bir kural bu eksikliği kolayca çözer. </para>
+<para
+>Bir <emphasis
+>yapışkan not</emphasis
+>' penceresinin var olduğunu varsayarsak: </para>
+<orderedlist>
+<listitem
+><para
+><guilabel
+>Pencere Özelliklerini Algıla</guilabel
+>'yı kullanın ve herhangi bir <emphasis
+>yapışkan not</emphasis
+> penceresini seçin. Yalnızca birincil sınıf adına göre eşleştirin, bu nedenle onay kutularını işaretlemeyin - ek bilgi için <link linkend="window-matching"
+>pencere eşleştirme</link
+> bölümüne bakın: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="knotes-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Önceki pencerede <guilabel
+>Tamam</guilabel
+>'a tıklandığında <guilabel
+>Pencere Eşleştirme</guilabel
+> sekmesindeki sonuçlar geri doldurulur. <guilabel
+>Açıklama</guilabel
+> kutusuna anlamlı bir metin girin: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-knotes.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Sayfalayıcıyı Atla</guilabel
+> özniteliğini <guilabel
+>Zorla</guilabel
+> <link linkend="parameters"
+>parametresiyle</link
+> etkinleştirin: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="knotes-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Kuralın girişini tamamlamak için tıklayın.</para
+></listitem>
+</orderedlist>
+</sect1>
+<sect1 id="force-a-window-to-the-top"
+><title
+>Bir Pencereyi En Üste Zorla</title>
+<para
+>Etkin bir pencereyi en yukarıda açmak için onun <guilabel
+>Odak çalma koruması</guilabel
+> özniteliğini <guilabel
+>Yok</guilabel
+> olarak ayarlayın; genellikle <guilabel
+>Zorla</guilabel
+> <link linkend="parameters"
+>parametresiyle</link
+> birlikte kullanılır: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="focus-stealing-pop2top-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+</sect1>
+<sect1 id="multiple-rules-per-application"
+><title
+>Uygulama Başına Birden Çok Kural</title>
+<para
+><application
+>Thunderbird</application
+> birkaç farklı alt pencereye sahiptir. Bu örnekte: </para>
+<itemizedlist>
+<listitem
+><para
+><application
+>Thunderbird</application
+>'ün ana penceresini <emphasis
+>Sanal Masaüstü 1</emphasis
+>'e masaüstünde belirli bir boyut ve konumla sabitleyin.</para
+></listitem>
+<listitem
+><para
+><application
+>Thunderbird</application
+> oluşturucu penceresinin herhangi bir masaüstünde kalmasına izin verin ve etkinleştirildiğinde, odaklanmaya zorlayın ve onu tüm pencerelerin üzerine yerleştirin.</para
+></listitem>
+<listitem
+><para
+><application
+>Thunderbird</application
+> anımsatıcısını en üste getirin ve istemeden yok sayılmaması için ona odaklanmayın.</para
+></listitem>
+</itemizedlist>
+<para
+>Her bir kuralın eşleştirme kriterleri yeterince kısıtlayıcıdır; bu nedenle onların ana &kwin; penceresi içindeki sıraları <link linkend="rule-evaluation"
+>kural değerlendirmesini</link
+> etkileyecek kadar önemli değildir. </para>
+<sect2 id="thunderbird---main"
+><title
+>Thunderbird - Ana</title>
+<para
+><guilabel
+>Thunderbird Ana</guilabel
+> penceresinin açık, boyutlandırılmış ve uygun konumda olduğunu varsayarsak: </para>
+<orderedlist>
+<listitem
+><para
+><guilabel
+>Pencere Özelliklerini Algıla</guilabel
+>'yı kullanın ve <guilabel
+>Thunderbird Ana</guilabel
+> penceresini seçin. Kriterleri ana pencereyle sınırlamak için <guilabel
+>Pencere rolü</guilabel
+> kutusunu işaretleyin - ek bilgi için <link linkend="window-matching"
+>pencere eşleştirme</link
+> bölümüne bakın: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-main-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Önceki pencerede <guilabel
+>Tamam</guilabel
+>'a tıklandığında <guilabel
+>Pencere Eşleştirme</guilabel
+> sekmesindeki sonuçlar geri doldurulur. <guilabel
+>Açıklama</guilabel
+> kutusuna anlamlı bir metin girin: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-tbird-main.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Aşağıdaki öznitelikleri etkinleştirin: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-main-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Kuralın girişini tamamlamak için tıklayın.</para
+></listitem>
+</orderedlist>
+</sect2>
+<sect2 id="thunderbird---composer"
+><title
+>Thunderbird - Oluşturucu</title>
+<para
+>Bir <guilabel
+>Thunderbird Oluşturucu</guilabel
+> penceresinin açık olduğunu varsayarsak: </para>
+<orderedlist>
+<listitem
+><para
+><guilabel
+>Pencere Özelliklerini Algıla</guilabel
+>'yı kullanın ve <guilabel
+>Thunderbird Oluşturucu</guilabel
+> penceresini seçin. Kriterleri oluşturucu pencereleriyle sınırlamak için <guilabel
+>Pencere rolü</guilabel
+> ve <guilabel
+>Pencere türü</guilabel
+> kutularını işaretleyin - ek bilgi için <link linkend="window-matching"
+>pencere eşleştirme</link
+> bölümüne bakın: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-compose-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Önceki pencerede <guilabel
+>Tamam</guilabel
+>'a tıklandığında <guilabel
+>Pencere Eşleştirme</guilabel
+> sekmesindeki sonuçlar geri doldurulur. <guilabel
+>Açıklama</guilabel
+> kutusuna anlamlı bir metin girin: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-tbird-compose.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Aşağıdaki öznitelikleri etkinleştirin: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-compose-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Kuralın girişini tamamlamak için tıklayın.</para
+></listitem>
+</orderedlist>
+</sect2>
+<sect2 id="thunderbird---reminder"
+><title
+>Thunderbird - Anımsatıcı</title>
+<para
+>Bir <guilabel
+>Thunderbird Anımsatıcı</guilabel
+> penceresinin açık olduğunu varsayarsak: </para>
+<orderedlist>
+<listitem
+><para
+><guilabel
+>Pencere Özelliklerini Algıla</guilabel
+>'yı kullanın ve <guilabel
+>Thunderbird Anımsatıcı</guilabel
+> penceresini seçin. Kriterleri anımsatma pencereleriyle sınırlamak için <guilabel
+>İkincil sınıf adı</guilabel
+> ve <guilabel
+>Pencere Türü</guilabel
+> kutularını işaretleyin - ek bilgi için <link linkend="window-matching"
+>pencere eşleştirme</link 
+> bölümüne bakın: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-reminder-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Önceki pencerede <guilabel
+>Tamam</guilabel
+>'a tıklandığında <guilabel
+>Pencere Eşleştirme</guilabel
+> sekmesindeki sonuçlar geri doldurulur. <guilabel
+>Açıklama</guilabel
+> kutusuna anlamlı bir metin girin: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-tbird-reminder.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Aşağıdaki öznitelikleri etkinleştirin: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-reminder-attribute-2.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Kuralın girişini tamamlamak için tıklayın.</para
+></listitem>
+</orderedlist>
+
+</sect2>
+</sect1>
+</chapter>
+<chapter id="application-workarounds"
+><title
+>Uygulama Geçici Çözümleri</title>
+<para
+>Yanlış davranan uygulamalar için geçici çözümleri aşağıda bulabilirsiniz. </para>
+<para
+><tip
+><para
+>&kwin; Kuralları oluşturma konusunda bilginiz yoksa yeni kuralınızı temellendirmek için bu <link linkend="pin-a-window-to-a-desktop-and-set-other-attributes"
+>ayrıntılı örneğe</link
+> bakın.</para
+></tip>
+</para>
+<sect1 id="full-screen-re-size-error"
+><title
+>Tam Ekran Yeniden Boyutlandırma Hatası</title>
+<para
+>&Emacs; ve <guilabel
+>gVim</guilabel
+>, büyütüldüğünde (tam ekran kipi) ve belirli koşullar altında pencere yeniden boyutlandırma sorunlarıyla karşılaşabilir - bkz. <ulink url="https://bugs.kde.org/show_bug.cgi? id=252314"
+>Emacs window resizes...</ulink
+>. Bir &kwin; Kuralı, soruna geçici bir çözüm getiriyor. </para>
+<para
+>Bir &Emacs; penceresinin açık olduğunu varsayarsak: </para>
+<orderedlist>
+<listitem
+><para
+><guilabel
+>Pencere Özelliklerini Algıla</guilabel
+>'yı kullanın ve &Emacs; penceresini seçin. Yalnızca <guilabel
+>birincil sınıf adına</guilabel
+> göre eşleştirin, bu nedenle onay kutularını işaretlemeyin - ek bilgi için <link linkend="window-matching"
+>pencere eşleştirme</link
+> bölümüne bakın. <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="emacs-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Önceki pencerede <guilabel
+>Tamam</guilabel
+>'a tıklandığında <guilabel
+>Pencere Eşleştirme</guilabel
+> sekmesindeki sonuçlar geri doldurulur. <guilabel
+>Açıklama</guilabel
+> metin kutusuna anlamlı bir metin girin: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-emacs.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Geometry kısıtlamalarına uy</guilabel
+> özniteliğini, yok saymak için onu kapalı yaparak (<guilabel
+>Hayır</guilabel
+>) ve <guilabel
+>Zorla</guilabel
+> <link linkend="parameters"
+>parametresini</link
+> seçerek etkinleştirin: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="emacs-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Kuralın girişini tamamlamak için tıklayın.</para
+></listitem>
+</orderedlist>
+</sect1>
+</chapter>
+
+<!--userbase-content-->
+<chapter id="credits">
+<title
+>Emeği Geçenler ve Lisans</title>
+      <para
+>Belgelendirme telif hakkı için Kullanıcı Tabanı <ulink url="https://userbase.kde.org/index.php?title=KWin Rules&amp;action=history"
+>KWin Kuralları sayfa geçmişine</ulink
+> bakın</para>
+      <para
+>Emir SARI<email
+>emir_sari@icloud.com</email
+></para
+> &underFDL; </chapter>
+&documentation.index;
+</book>

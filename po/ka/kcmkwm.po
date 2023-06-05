@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-15 02:18+0000\n"
-"PO-Revision-Date: 2023-04-12 06:14+0200\n"
+"PO-Revision-Date: 2023-06-04 05:08+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.2.2\n"
+"X-Generator: Poedit 3.3.1\n"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:17
@@ -38,6 +38,8 @@ msgid ""
 "In this row you can customize left click behavior when clicking into an "
 "inactive inner window ('inner' means: not titlebar, not frame)."
 msgstr ""
+"ამ მწკრივში შეგიძლიათ არააქტიურ შიდა ფანჯარაზე თაგუნას მარცხენა წკაპის "
+"ქმედება განსაზღვროთ ('შიდა' ნიშნავს: სათაური ზოლისა და ჩარჩოს გარეშე)."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
@@ -93,6 +95,8 @@ msgid ""
 "In this row you can customize middle click behavior when clicking into an "
 "inactive inner window ('inner' means: not titlebar, not frame)."
 msgstr ""
+"ამ მწკრივში შეგიძლიათ არააქტიურ შიდა ფანჯარაზე თაგუნას შუა წკაპის ქმედება "
+"განსაზღვროთ ('შიდა' ნიშნავს: სათაური ზოლისა და ჩარჩოს გარეშე)."
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label_7)
@@ -108,6 +112,8 @@ msgid ""
 "In this row you can customize right click behavior when clicking into an "
 "inactive inner window ('inner' means: not titlebar, not frame)."
 msgstr ""
+"ამ მწკრივში შეგიძლიათ არააქტიურ შიდა ფანჯარაზე თაგუნას მარჯვენა წკაპის "
+"ქმედება განსაზღვროთ ('შიდა' ნიშნავს: სათაური ზოლისა და ჩარჩოს გარეშე)."
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -123,6 +129,8 @@ msgid ""
 "In this row you can customize behavior when scrolling into an inactive inner "
 "window ('inner' means: not titlebar, not frame)."
 msgstr ""
+"ამ მწკრივში შეგიძლიათ არააქტიურ შიდა ფანჯარაზე თაგუნათი გადახვევის ქმედება "
+"განსაზღვროთ ('შიდა' ნიშნავს: სათაური ზოლისა და ჩარჩოს გარეშე)."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
 #: actions.ui:163
@@ -161,6 +169,8 @@ msgid ""
 "Here you select whether holding the Meta key or Alt key will allow you to "
 "perform the following actions."
 msgstr ""
+"აქ შეგიძლიათ აირჩიოთ, Meta/Alt ღილაკების დაჭერისას რომელი ქმედებების არჩევა "
+"შეგიძლიათ."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllKey)
 #: actions.ui:209

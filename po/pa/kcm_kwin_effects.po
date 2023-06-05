@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-17 02:32+0000\n"
+"POT-Creation-Date: 2023-06-05 01:59+0000\n"
 "PO-Revision-Date: 2021-05-02 16:25-0700\n"
 "Last-Translator: A S Alam <aalam@satluj.org>\n"
 "Language-Team: Punjabi <punjabi-users@lists.sf.net>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Lokalize 20.12.2\n"
 
-#: package/contents/ui/Effect.qml:92
+#: package/contents/ui/Effect.qml:97
 #, kde-format
 msgid ""
 "Author: %1\n"
@@ -26,44 +26,49 @@ msgstr ""
 "ਲੇਖਕ: %1\n"
 "ਲਸੰਸ: %2"
 
-#: package/contents/ui/Effect.qml:121
+#: package/contents/ui/Effect.qml:127
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Show/Hide Video"
 msgstr "ਵਿਡੀਓ ਵੇਖਾਓ/ਲੁਕਾਓ"
 
-#: package/contents/ui/Effect.qml:128
-#, kde-format
+#: package/contents/ui/Effect.qml:134
+#, fuzzy, kde-format
+#| msgctxt "@info:tooltip"
+#| msgid "Configure..."
 msgctxt "@info:tooltip"
-msgid "Configure..."
+msgid "Configure…"
 msgstr "...ਸੰਰਚਨਾ"
 
-#: package/contents/ui/main.qml:25
+#: package/contents/ui/main.qml:24
+#, kde-format
+msgid "Get New…"
+msgstr ""
+
+#: package/contents/ui/main.qml:43
 #, kde-format
 msgid ""
 "Hint: To find out or configure how to activate an effect, look at the "
 "effect's settings."
 msgstr ""
 
-#: package/contents/ui/main.qml:45
+#: package/contents/ui/main.qml:65
 #, kde-format
 msgid "Configure Filter"
 msgstr "ਫਿਲਟਰ ਦੀ ਸੰਰਚਨਾ"
 
-#: package/contents/ui/main.qml:57
+#: package/contents/ui/main.qml:77
 #, kde-format
 msgid "Exclude unsupported effects"
 msgstr "ਗ਼ੈਰ-ਸਹਾਇਕ ਪਰਭਾਵ ਅਲਹਿਦਾ ਰੱਖੋ"
 
-#: package/contents/ui/main.qml:65
+#: package/contents/ui/main.qml:85
 #, kde-format
 msgid "Exclude internal effects"
 msgstr "ਅੰਦਰੂਨੀ ਪਰਭਾਵ ਅਲਹਿਦਾ ਰੱਖੋ"
 
-#: package/contents/ui/main.qml:123
-#, kde-format
-msgid "Get New Desktop Effects..."
-msgstr "...ਨਵੇਂ ਡੈਸਕਟਾਪ ਪਰਭਾਵ ਲਵੋ"
+#~ msgid "Get New Desktop Effects..."
+#~ msgstr "...ਨਵੇਂ ਡੈਸਕਟਾਪ ਪਰਭਾਵ ਲਵੋ"
 
 #~ msgid "This module lets you configure desktop effects."
 #~ msgstr "ਇਹ ਮੋਡੀਊਲ ਤੁਹਾਨੂੰ ਡੈਸਕਟਾਪ ਪਰਭਾਵ ਦੀ ਸੰਰਚਨਾ ਲਈ ਸਹਾਇਕ ਹੈ।"

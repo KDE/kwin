@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-17 02:32+0000\n"
+"POT-Creation-Date: 2023-06-05 01:59+0000\n"
 "PO-Revision-Date: 2021-11-18 14:20+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Lokalize 21.08.3\n"
 
-#: package/contents/ui/Effect.qml:92
+#: package/contents/ui/Effect.qml:97
 #, kde-format
 msgid ""
 "Author: %1\n"
@@ -27,19 +27,26 @@ msgstr ""
 "Szerző: %1\n"
 "Licenc: %2"
 
-#: package/contents/ui/Effect.qml:121
+#: package/contents/ui/Effect.qml:127
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Show/Hide Video"
 msgstr "Videó megjelenítése/elrejtése"
 
-#: package/contents/ui/Effect.qml:128
-#, kde-format
+#: package/contents/ui/Effect.qml:134
+#, fuzzy, kde-format
+#| msgctxt "@info:tooltip"
+#| msgid "Configure..."
 msgctxt "@info:tooltip"
-msgid "Configure..."
+msgid "Configure…"
 msgstr "Beállítás…"
 
-#: package/contents/ui/main.qml:25
+#: package/contents/ui/main.qml:24
+#, kde-format
+msgid "Get New…"
+msgstr ""
+
+#: package/contents/ui/main.qml:43
 #, kde-format
 msgid ""
 "Hint: To find out or configure how to activate an effect, look at the "
@@ -47,25 +54,23 @@ msgid ""
 msgstr ""
 "Tipp: egy effekt aktiválásának konfigurálásához nézze meg annak beállításait."
 
-#: package/contents/ui/main.qml:45
+#: package/contents/ui/main.qml:65
 #, kde-format
 msgid "Configure Filter"
 msgstr "Szűrőbeállítás"
 
-#: package/contents/ui/main.qml:57
+#: package/contents/ui/main.qml:77
 #, kde-format
 msgid "Exclude unsupported effects"
 msgstr "Nem támogatott effektusok kizárása"
 
-#: package/contents/ui/main.qml:65
+#: package/contents/ui/main.qml:85
 #, kde-format
 msgid "Exclude internal effects"
 msgstr "Belső effektusok kizárása"
 
-#: package/contents/ui/main.qml:123
-#, kde-format
-msgid "Get New Desktop Effects..."
-msgstr "Új asztali effektusok letöltése…"
+#~ msgid "Get New Desktop Effects..."
+#~ msgstr "Új asztali effektusok letöltése…"
 
 #~ msgid "This module lets you configure desktop effects."
 #~ msgstr "Ebben a modulban állíthatja be az asztali effektusokat."
