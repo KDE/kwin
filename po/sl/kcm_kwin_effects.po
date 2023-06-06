@@ -6,17 +6,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-05 01:59+0000\n"
-"PO-Revision-Date: 2020-06-08 18:45+0200\n"
+"POT-Creation-Date: 2023-06-06 02:09+0000\n"
+"PO-Revision-Date: 2023-06-05 06:56+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 19.12.2\n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
 "%100==4 ? 3 : 0);\n"
+"X-Generator: Poedit 3.3.1\n"
 
 #: package/contents/ui/Effect.qml:97
 #, kde-format
@@ -34,19 +34,19 @@ msgid "Show/Hide Video"
 msgstr "Prikaži/skrij video"
 
 #: package/contents/ui/Effect.qml:134
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Configure..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Configure…"
-msgstr "Nastavi..."
+msgstr "Konfiguriraj..."
 
-#: package/contents/ui/main.qml:24
-#, kde-format
+#: package/contents/ui/main.qml:25
+#, fuzzy, kde-format
+#| msgid "Get New…"
+msgctxt "@action:button get new KWin effects"
 msgid "Get New…"
-msgstr ""
+msgstr "Dobi novega…"
 
-#: package/contents/ui/main.qml:43
+#: package/contents/ui/main.qml:44
 #, kde-format
 msgid ""
 "Hint: To find out or configure how to activate an effect, look at the "
@@ -55,17 +55,17 @@ msgstr ""
 "Namig: Če želite izvedeti ali nastaviti, kako aktivirati učinek, poglejte "
 "nastavitve učinka."
 
-#: package/contents/ui/main.qml:65
+#: package/contents/ui/main.qml:66
 #, kde-format
 msgid "Configure Filter"
 msgstr "Nastavi filter"
 
-#: package/contents/ui/main.qml:77
+#: package/contents/ui/main.qml:78
 #, kde-format
 msgid "Exclude unsupported effects"
 msgstr "Izvzemi nepodprte učinke"
 
-#: package/contents/ui/main.qml:85
+#: package/contents/ui/main.qml:86
 #, kde-format
 msgid "Exclude internal effects"
 msgstr "Izvzemi notranje učinke"

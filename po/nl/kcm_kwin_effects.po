@@ -1,21 +1,21 @@
 # Copyright (C) YEAR This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
-# Freek de Kruijf <freekdekruijf@kde.nl>, 2019.
+# Freek de Kruijf <freekdekruijf@kde.nl>, 2019, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-05 01:59+0000\n"
-"PO-Revision-Date: 2019-09-30 13:39+0200\n"
-"Last-Translator: Freek de Kruijf <f.de.kruijf@gmail.com>\n"
-"Language-Team: Dutch <kde-i18n-nl@kde.org>\n"
+"POT-Creation-Date: 2023-06-06 02:09+0000\n"
+"PO-Revision-Date: 2023-06-05 11:21+0200\n"
+"Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
+"Language-Team: \n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 19.08.1\n"
+"X-Generator: Lokalize 23.04.1\n"
 
 #: package/contents/ui/Effect.qml:97
 #, kde-format
@@ -33,19 +33,19 @@ msgid "Show/Hide Video"
 msgstr "Video tonen/verbergen"
 
 #: package/contents/ui/Effect.qml:134
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Configure..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Configure…"
-msgstr "Configureren..."
+msgstr "Configureren…"
 
-#: package/contents/ui/main.qml:24
-#, kde-format
+#: package/contents/ui/main.qml:25
+#, fuzzy, kde-format
+#| msgid "Get New…"
+msgctxt "@action:button get new KWin effects"
 msgid "Get New…"
-msgstr ""
+msgstr "Nieuwe ophalen…"
 
-#: package/contents/ui/main.qml:43
+#: package/contents/ui/main.qml:44
 #, kde-format
 msgid ""
 "Hint: To find out or configure how to activate an effect, look at the "
@@ -54,17 +54,17 @@ msgstr ""
 "Tip: om uit te vinden hoe u een effect kunt activeren of instellen, kijk bij "
 "de instellingen ervan."
 
-#: package/contents/ui/main.qml:65
+#: package/contents/ui/main.qml:66
 #, kde-format
 msgid "Configure Filter"
 msgstr "Filter configureren"
 
-#: package/contents/ui/main.qml:77
+#: package/contents/ui/main.qml:78
 #, kde-format
 msgid "Exclude unsupported effects"
 msgstr "Niet ondersteunde effecten uitsluiten"
 
-#: package/contents/ui/main.qml:85
+#: package/contents/ui/main.qml:86
 #, kde-format
 msgid "Exclude internal effects"
 msgstr "Interne effecten uitsluiten"

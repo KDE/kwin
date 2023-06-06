@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-05 01:59+0000\n"
+"POT-Creation-Date: 2023-06-06 02:09+0000\n"
 "PO-Revision-Date: 2019-09-30 14:57+0200\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -40,29 +40,30 @@ msgctxt "@info:tooltip"
 msgid "Configure…"
 msgstr "Nastavit..."
 
-#: package/contents/ui/main.qml:24
+#: package/contents/ui/main.qml:25
 #, kde-format
+msgctxt "@action:button get new KWin effects"
 msgid "Get New…"
 msgstr ""
 
-#: package/contents/ui/main.qml:43
+#: package/contents/ui/main.qml:44
 #, kde-format
 msgid ""
 "Hint: To find out or configure how to activate an effect, look at the "
 "effect's settings."
 msgstr "Rada: více informací o efektu najdete v jeho nastavení."
 
-#: package/contents/ui/main.qml:65
+#: package/contents/ui/main.qml:66
 #, kde-format
 msgid "Configure Filter"
 msgstr "Nastavení filtru"
 
-#: package/contents/ui/main.qml:77
+#: package/contents/ui/main.qml:78
 #, kde-format
 msgid "Exclude unsupported effects"
 msgstr "Vyjmout nepodporované efekty"
 
-#: package/contents/ui/main.qml:85
+#: package/contents/ui/main.qml:86
 #, kde-format
 msgid "Exclude internal effects"
 msgstr "Vyjmout interní efekty"
