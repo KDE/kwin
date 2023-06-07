@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-03 02:04+0000\n"
+"POT-Creation-Date: 2023-06-07 02:19+0000\n"
 "PO-Revision-Date: 2022-04-19 19:39+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@bredband.net>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
@@ -138,202 +138,6 @@ msgid ""
 msgstr ""
 "Fönsteregenskapen tvingas till den angivna värdet tills det döljs\n"
 "(åtgärden tas bort efter att fönstret har dolts)."
-
-#: package/contents/ui/FileDialogLoader.qml:15
-#, kde-format
-msgid "Select File"
-msgstr "Välj fil"
-
-#: package/contents/ui/FileDialogLoader.qml:27
-#, kde-format
-msgid "KWin Rules (*.kwinrule)"
-msgstr "Kwin-regler (*.kwinrule)"
-
-#: package/contents/ui/main.qml:63
-#, kde-format
-msgid "No rules for specific windows are currently set"
-msgstr "Inga regler för specifika fönster är för närvarande inställda"
-
-#: package/contents/ui/main.qml:64
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Click the <interface>Add New...</interface> button below to add some"
-msgctxt "@info"
-msgid "Click the <interface>Add New…</interface> button below to add some"
-msgstr ""
-"Klicka på knappen <interface>Lägg till ny...</interface> nedan för att lägga "
-"till några"
-
-#: package/contents/ui/main.qml:72
-#, kde-format
-msgid "Select the rules to export"
-msgstr "Markera reglerna att exportera"
-
-#: package/contents/ui/main.qml:76
-#, kde-format
-msgid "Unselect All"
-msgstr "Avmarkera alla"
-
-#: package/contents/ui/main.qml:76
-#, kde-format
-msgid "Select All"
-msgstr "Markera alla"
-
-#: package/contents/ui/main.qml:90
-#, kde-format
-msgid "Save Rules"
-msgstr "Spara regler"
-
-#: package/contents/ui/main.qml:101
-#, fuzzy, kde-format
-#| msgid "Add New..."
-msgid "Add New…"
-msgstr "Lägg till ny..."
-
-#: package/contents/ui/main.qml:112
-#, fuzzy, kde-format
-#| msgid "Import..."
-msgid "Import…"
-msgstr "Importera..."
-
-#: package/contents/ui/main.qml:120
-#, kde-format
-msgid "Cancel Export"
-msgstr "Avbryt export"
-
-#: package/contents/ui/main.qml:120
-#, fuzzy, kde-format
-#| msgid "Export..."
-msgid "Export…"
-msgstr "Exportera..."
-
-#: package/contents/ui/main.qml:210
-#, kde-format
-msgid "Edit"
-msgstr "Redigera"
-
-#: package/contents/ui/main.qml:219
-#, kde-format
-msgid "Duplicate"
-msgstr "Dubblett"
-
-#: package/contents/ui/main.qml:228
-#, kde-format
-msgid "Delete"
-msgstr "Ta bort"
-
-#: package/contents/ui/main.qml:241
-#, kde-format
-msgid "Import Rules"
-msgstr "Importera regler"
-
-#: package/contents/ui/main.qml:253
-#, kde-format
-msgid "Export Rules"
-msgstr "Exportera regler"
-
-#: package/contents/ui/OptionsComboBox.qml:35
-#, kde-format
-msgid "None selected"
-msgstr "Ingen vald"
-
-#: package/contents/ui/OptionsComboBox.qml:41
-#, kde-format
-msgid "All selected"
-msgstr "Alla valda"
-
-#: package/contents/ui/OptionsComboBox.qml:43
-#, kde-format
-msgid "%1 selected"
-msgid_plural "%1 selected"
-msgstr[0] "%1 vald"
-msgstr[1] "%1 valda"
-
-#: package/contents/ui/RulesEditor.qml:63
-#, kde-format
-msgid "No window properties changed"
-msgstr "Inga fönsteregenskaper ändrade"
-
-#: package/contents/ui/RulesEditor.qml:64
-#, kde-kuit-format
-msgctxt "@info"
-msgid ""
-"Click the <interface>Add Property...</interface> button below to add some "
-"window properties that will be affected by the rule"
-msgstr ""
-"Klicka på knappen <interface>Lägg till egenskap...</interface> nedan för att "
-"lägga till några fönsteregenskaper som ska påverkas av regeln"
-
-#: package/contents/ui/RulesEditor.qml:85
-#, kde-format
-msgid "Close"
-msgstr "Stäng"
-
-#: package/contents/ui/RulesEditor.qml:85
-#, kde-format
-msgid "Add Property..."
-msgstr "Lägg till egenskap..."
-
-#: package/contents/ui/RulesEditor.qml:98
-#, kde-format
-msgid "Detect Window Properties"
-msgstr "Identifiera fönsteregenskaper"
-
-#: package/contents/ui/RulesEditor.qml:114
-#: package/contents/ui/RulesEditor.qml:121
-#, kde-format
-msgid "Instantly"
-msgstr "Omedelbart"
-
-#: package/contents/ui/RulesEditor.qml:115
-#: package/contents/ui/RulesEditor.qml:126
-#, kde-format
-msgid "After %1 second"
-msgid_plural "After %1 seconds"
-msgstr[0] "Efter %1 sekund"
-msgstr[1] "Efter %1 sekunder"
-
-#: package/contents/ui/RulesEditor.qml:175
-#, kde-format
-msgid "Add property to the rule"
-msgstr "Lägg till egenskap i regeln"
-
-#: package/contents/ui/RulesEditor.qml:276
-#: package/contents/ui/ValueEditor.qml:54
-#, kde-format
-msgid "Yes"
-msgstr "Ja"
-
-#: package/contents/ui/RulesEditor.qml:276
-#: package/contents/ui/ValueEditor.qml:60
-#, kde-format
-msgid "No"
-msgstr "Nej"
-
-#: package/contents/ui/RulesEditor.qml:278
-#: package/contents/ui/ValueEditor.qml:168
-#: package/contents/ui/ValueEditor.qml:175
-#, kde-format
-msgid "%1 %"
-msgstr "%1 %"
-
-#: package/contents/ui/RulesEditor.qml:280
-#, kde-format
-msgctxt "Coordinates (x, y)"
-msgid "(%1, %2)"
-msgstr "(%1, %2)"
-
-#: package/contents/ui/RulesEditor.qml:282
-#, kde-format
-msgctxt "Size (width, height)"
-msgid "(%1, %2)"
-msgstr "(%1, %2)"
-
-#: package/contents/ui/ValueEditor.qml:203
-#, kde-format
-msgctxt "(x, y) coordinates separator in size/position"
-msgid "x"
-msgstr "x"
 
 #: rulesmodel.cpp:218
 #, kde-format
@@ -907,6 +711,196 @@ msgstr "Ohanterat fönster"
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
 "Kunde inte detektera fönsteregenskaper. Fönstret hanteras inte av Kwin."
+
+#: ui/FileDialogLoader.qml:15
+#, kde-format
+msgid "Select File"
+msgstr "Välj fil"
+
+#: ui/FileDialogLoader.qml:27
+#, kde-format
+msgid "KWin Rules (*.kwinrule)"
+msgstr "Kwin-regler (*.kwinrule)"
+
+#: ui/main.qml:62
+#, kde-format
+msgid "No rules for specific windows are currently set"
+msgstr "Inga regler för specifika fönster är för närvarande inställda"
+
+#: ui/main.qml:63
+#, fuzzy, kde-kuit-format
+#| msgctxt "@info"
+#| msgid "Click the <interface>Add New...</interface> button below to add some"
+msgctxt "@info"
+msgid "Click the <interface>Add New…</interface> button below to add some"
+msgstr ""
+"Klicka på knappen <interface>Lägg till ny...</interface> nedan för att lägga "
+"till några"
+
+#: ui/main.qml:71
+#, kde-format
+msgid "Select the rules to export"
+msgstr "Markera reglerna att exportera"
+
+#: ui/main.qml:75
+#, kde-format
+msgid "Unselect All"
+msgstr "Avmarkera alla"
+
+#: ui/main.qml:75
+#, kde-format
+msgid "Select All"
+msgstr "Markera alla"
+
+#: ui/main.qml:89
+#, kde-format
+msgid "Save Rules"
+msgstr "Spara regler"
+
+#: ui/main.qml:100
+#, fuzzy, kde-format
+#| msgid "Add New..."
+msgid "Add New…"
+msgstr "Lägg till ny..."
+
+#: ui/main.qml:111
+#, fuzzy, kde-format
+#| msgid "Import..."
+msgid "Import…"
+msgstr "Importera..."
+
+#: ui/main.qml:119
+#, kde-format
+msgid "Cancel Export"
+msgstr "Avbryt export"
+
+#: ui/main.qml:119
+#, fuzzy, kde-format
+#| msgid "Export..."
+msgid "Export…"
+msgstr "Exportera..."
+
+#: ui/main.qml:209
+#, kde-format
+msgid "Edit"
+msgstr "Redigera"
+
+#: ui/main.qml:218
+#, kde-format
+msgid "Duplicate"
+msgstr "Dubblett"
+
+#: ui/main.qml:227
+#, kde-format
+msgid "Delete"
+msgstr "Ta bort"
+
+#: ui/main.qml:240
+#, kde-format
+msgid "Import Rules"
+msgstr "Importera regler"
+
+#: ui/main.qml:252
+#, kde-format
+msgid "Export Rules"
+msgstr "Exportera regler"
+
+#: ui/OptionsComboBox.qml:35
+#, kde-format
+msgid "None selected"
+msgstr "Ingen vald"
+
+#: ui/OptionsComboBox.qml:41
+#, kde-format
+msgid "All selected"
+msgstr "Alla valda"
+
+#: ui/OptionsComboBox.qml:43
+#, kde-format
+msgid "%1 selected"
+msgid_plural "%1 selected"
+msgstr[0] "%1 vald"
+msgstr[1] "%1 valda"
+
+#: ui/RulesEditor.qml:63
+#, kde-format
+msgid "No window properties changed"
+msgstr "Inga fönsteregenskaper ändrade"
+
+#: ui/RulesEditor.qml:64
+#, kde-kuit-format
+msgctxt "@info"
+msgid ""
+"Click the <interface>Add Property...</interface> button below to add some "
+"window properties that will be affected by the rule"
+msgstr ""
+"Klicka på knappen <interface>Lägg till egenskap...</interface> nedan för att "
+"lägga till några fönsteregenskaper som ska påverkas av regeln"
+
+#: ui/RulesEditor.qml:85
+#, kde-format
+msgid "Close"
+msgstr "Stäng"
+
+#: ui/RulesEditor.qml:85
+#, kde-format
+msgid "Add Property..."
+msgstr "Lägg till egenskap..."
+
+#: ui/RulesEditor.qml:98
+#, kde-format
+msgid "Detect Window Properties"
+msgstr "Identifiera fönsteregenskaper"
+
+#: ui/RulesEditor.qml:114 ui/RulesEditor.qml:121
+#, kde-format
+msgid "Instantly"
+msgstr "Omedelbart"
+
+#: ui/RulesEditor.qml:115 ui/RulesEditor.qml:126
+#, kde-format
+msgid "After %1 second"
+msgid_plural "After %1 seconds"
+msgstr[0] "Efter %1 sekund"
+msgstr[1] "Efter %1 sekunder"
+
+#: ui/RulesEditor.qml:175
+#, kde-format
+msgid "Add property to the rule"
+msgstr "Lägg till egenskap i regeln"
+
+#: ui/RulesEditor.qml:276 ui/ValueEditor.qml:54
+#, kde-format
+msgid "Yes"
+msgstr "Ja"
+
+#: ui/RulesEditor.qml:276 ui/ValueEditor.qml:60
+#, kde-format
+msgid "No"
+msgstr "Nej"
+
+#: ui/RulesEditor.qml:278 ui/ValueEditor.qml:168 ui/ValueEditor.qml:175
+#, kde-format
+msgid "%1 %"
+msgstr "%1 %"
+
+#: ui/RulesEditor.qml:280
+#, kde-format
+msgctxt "Coordinates (x, y)"
+msgid "(%1, %2)"
+msgstr "(%1, %2)"
+
+#: ui/RulesEditor.qml:282
+#, kde-format
+msgctxt "Size (width, height)"
+msgid "(%1, %2)"
+msgstr "(%1, %2)"
+
+#: ui/ValueEditor.qml:203
+#, kde-format
+msgctxt "(x, y) coordinates separator in size/position"
+msgid "x"
+msgstr "x"
 
 #~ msgid "Window shall (not) appear in the taskbar."
 #~ msgstr "Fönster får (inte) synas i aktivitetsfältet."

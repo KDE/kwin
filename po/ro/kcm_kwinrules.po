@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-03 02:04+0000\n"
+"POT-Creation-Date: 2023-06-07 02:19+0000\n"
 "PO-Revision-Date: 2022-05-05 12:47+0100\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -141,205 +141,6 @@ msgid ""
 msgstr ""
 "Proprietatea ferestrei va fi forțată la valoarea dată până este ascunsă\n"
 "(această acțiune va fi ștearsă după închiderea ferestrei)."
-
-#: package/contents/ui/FileDialogLoader.qml:15
-#, kde-format
-msgid "Select File"
-msgstr "Alegeți fișierul"
-
-#: package/contents/ui/FileDialogLoader.qml:27
-#, kde-format
-msgid "KWin Rules (*.kwinrule)"
-msgstr "Reguli KWin (*.kwinrule)"
-
-#: package/contents/ui/main.qml:63
-#, kde-format
-msgid "No rules for specific windows are currently set"
-msgstr "Nu sunt stabilite reguli pentru ferestre specifice"
-
-#: package/contents/ui/main.qml:64
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Click the <interface>Add New...</interface> button below to add some"
-msgctxt "@info"
-msgid "Click the <interface>Add New…</interface> button below to add some"
-msgstr ""
-"Apăsați butonul <interface>Adaugă noi...</interface> de mai jos pentru a "
-"adăuga câteva"
-
-#: package/contents/ui/main.qml:72
-#, kde-format
-msgid "Select the rules to export"
-msgstr "Alegeți regulile de exportat"
-
-#: package/contents/ui/main.qml:76
-#, kde-format
-msgid "Unselect All"
-msgstr "Deselectează tot"
-
-#: package/contents/ui/main.qml:76
-#, kde-format
-msgid "Select All"
-msgstr "Selectează tot"
-
-#: package/contents/ui/main.qml:90
-#, kde-format
-msgid "Save Rules"
-msgstr "Salvează regulile"
-
-#: package/contents/ui/main.qml:101
-#, fuzzy, kde-format
-#| msgid "Add New..."
-msgid "Add New…"
-msgstr "Adaugă noi..."
-
-#: package/contents/ui/main.qml:112
-#, fuzzy, kde-format
-#| msgid "Import..."
-msgid "Import…"
-msgstr "Import..."
-
-#: package/contents/ui/main.qml:120
-#, kde-format
-msgid "Cancel Export"
-msgstr "Anulează exportul"
-
-#: package/contents/ui/main.qml:120
-#, fuzzy, kde-format
-#| msgid "Export..."
-msgid "Export…"
-msgstr "Export..."
-
-#: package/contents/ui/main.qml:210
-#, kde-format
-msgid "Edit"
-msgstr "Modifică"
-
-#: package/contents/ui/main.qml:219
-#, kde-format
-msgid "Duplicate"
-msgstr "Duplică"
-
-#: package/contents/ui/main.qml:228
-#, kde-format
-msgid "Delete"
-msgstr "Șterge"
-
-#: package/contents/ui/main.qml:241
-#, kde-format
-msgid "Import Rules"
-msgstr "Import reguli"
-
-#: package/contents/ui/main.qml:253
-#, kde-format
-msgid "Export Rules"
-msgstr "Export reguli"
-
-#: package/contents/ui/OptionsComboBox.qml:35
-#, kde-format
-msgid "None selected"
-msgstr "Niciunul ales"
-
-#: package/contents/ui/OptionsComboBox.qml:41
-#, kde-format
-msgid "All selected"
-msgstr "Toate alese"
-
-#: package/contents/ui/OptionsComboBox.qml:43
-#, kde-format
-msgid "%1 selected"
-msgid_plural "%1 selected"
-msgstr[0] "%1 ales"
-msgstr[1] "%1 alese"
-msgstr[2] "%1 alese"
-
-#: package/contents/ui/RulesEditor.qml:63
-#, kde-format
-msgid "No window properties changed"
-msgstr "Nicio proprietate a ferestrei nu s-a modificat"
-
-#: package/contents/ui/RulesEditor.qml:64
-#, kde-kuit-format
-msgctxt "@info"
-msgid ""
-"Click the <interface>Add Property...</interface> button below to add some "
-"window properties that will be affected by the rule"
-msgstr ""
-"Apăsați butonul <interface>Adaugă proprietate...</interface> de mai jos "
-"pentru a adăuga câteva proprietăți ale ferestrelor ce vor fi afectate de "
-"către regulă"
-
-#: package/contents/ui/RulesEditor.qml:85
-#, kde-format
-msgid "Close"
-msgstr "Închide"
-
-#: package/contents/ui/RulesEditor.qml:85
-#, kde-format
-msgid "Add Property..."
-msgstr "Adaugă proprietate..."
-
-#: package/contents/ui/RulesEditor.qml:98
-#, kde-format
-msgid "Detect Window Properties"
-msgstr "Detectează proprietățile ferestrei"
-
-#: package/contents/ui/RulesEditor.qml:114
-#: package/contents/ui/RulesEditor.qml:121
-#, kde-format
-msgid "Instantly"
-msgstr "Instant"
-
-#: package/contents/ui/RulesEditor.qml:115
-#: package/contents/ui/RulesEditor.qml:126
-#, kde-format
-msgid "After %1 second"
-msgid_plural "After %1 seconds"
-msgstr[0] "După %1 secundă"
-msgstr[1] "După %1 secunde"
-msgstr[2] "După %1 de secunde"
-
-#: package/contents/ui/RulesEditor.qml:175
-#, kde-format
-msgid "Add property to the rule"
-msgstr "Adaugă proprietate la regulă"
-
-#: package/contents/ui/RulesEditor.qml:276
-#: package/contents/ui/ValueEditor.qml:54
-#, kde-format
-msgid "Yes"
-msgstr "Da"
-
-#: package/contents/ui/RulesEditor.qml:276
-#: package/contents/ui/ValueEditor.qml:60
-#, kde-format
-msgid "No"
-msgstr "Nu"
-
-#: package/contents/ui/RulesEditor.qml:278
-#: package/contents/ui/ValueEditor.qml:168
-#: package/contents/ui/ValueEditor.qml:175
-#, kde-format
-msgid "%1 %"
-msgstr "%1 %"
-
-#: package/contents/ui/RulesEditor.qml:280
-#, kde-format
-msgctxt "Coordinates (x, y)"
-msgid "(%1, %2)"
-msgstr "(%1, %2)"
-
-#: package/contents/ui/RulesEditor.qml:282
-#, kde-format
-msgctxt "Size (width, height)"
-msgid "(%1, %2)"
-msgstr "(%1, %2)"
-
-#: package/contents/ui/ValueEditor.qml:203
-#, kde-format
-msgctxt "(x, y) coordinates separator in size/position"
-msgid "x"
-msgstr "x"
 
 #: rulesmodel.cpp:218
 #, kde-format
@@ -915,6 +716,199 @@ msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
 "Proprietățile ferestrei nu au putut fi detectate. Fereastra nu e gestionată "
 "de KWin."
+
+#: ui/FileDialogLoader.qml:15
+#, kde-format
+msgid "Select File"
+msgstr "Alegeți fișierul"
+
+#: ui/FileDialogLoader.qml:27
+#, kde-format
+msgid "KWin Rules (*.kwinrule)"
+msgstr "Reguli KWin (*.kwinrule)"
+
+#: ui/main.qml:62
+#, kde-format
+msgid "No rules for specific windows are currently set"
+msgstr "Nu sunt stabilite reguli pentru ferestre specifice"
+
+#: ui/main.qml:63
+#, fuzzy, kde-kuit-format
+#| msgctxt "@info"
+#| msgid "Click the <interface>Add New...</interface> button below to add some"
+msgctxt "@info"
+msgid "Click the <interface>Add New…</interface> button below to add some"
+msgstr ""
+"Apăsați butonul <interface>Adaugă noi...</interface> de mai jos pentru a "
+"adăuga câteva"
+
+#: ui/main.qml:71
+#, kde-format
+msgid "Select the rules to export"
+msgstr "Alegeți regulile de exportat"
+
+#: ui/main.qml:75
+#, kde-format
+msgid "Unselect All"
+msgstr "Deselectează tot"
+
+#: ui/main.qml:75
+#, kde-format
+msgid "Select All"
+msgstr "Selectează tot"
+
+#: ui/main.qml:89
+#, kde-format
+msgid "Save Rules"
+msgstr "Salvează regulile"
+
+#: ui/main.qml:100
+#, fuzzy, kde-format
+#| msgid "Add New..."
+msgid "Add New…"
+msgstr "Adaugă noi..."
+
+#: ui/main.qml:111
+#, fuzzy, kde-format
+#| msgid "Import..."
+msgid "Import…"
+msgstr "Import..."
+
+#: ui/main.qml:119
+#, kde-format
+msgid "Cancel Export"
+msgstr "Anulează exportul"
+
+#: ui/main.qml:119
+#, fuzzy, kde-format
+#| msgid "Export..."
+msgid "Export…"
+msgstr "Export..."
+
+#: ui/main.qml:209
+#, kde-format
+msgid "Edit"
+msgstr "Modifică"
+
+#: ui/main.qml:218
+#, kde-format
+msgid "Duplicate"
+msgstr "Duplică"
+
+#: ui/main.qml:227
+#, kde-format
+msgid "Delete"
+msgstr "Șterge"
+
+#: ui/main.qml:240
+#, kde-format
+msgid "Import Rules"
+msgstr "Import reguli"
+
+#: ui/main.qml:252
+#, kde-format
+msgid "Export Rules"
+msgstr "Export reguli"
+
+#: ui/OptionsComboBox.qml:35
+#, kde-format
+msgid "None selected"
+msgstr "Niciunul ales"
+
+#: ui/OptionsComboBox.qml:41
+#, kde-format
+msgid "All selected"
+msgstr "Toate alese"
+
+#: ui/OptionsComboBox.qml:43
+#, kde-format
+msgid "%1 selected"
+msgid_plural "%1 selected"
+msgstr[0] "%1 ales"
+msgstr[1] "%1 alese"
+msgstr[2] "%1 alese"
+
+#: ui/RulesEditor.qml:63
+#, kde-format
+msgid "No window properties changed"
+msgstr "Nicio proprietate a ferestrei nu s-a modificat"
+
+#: ui/RulesEditor.qml:64
+#, kde-kuit-format
+msgctxt "@info"
+msgid ""
+"Click the <interface>Add Property...</interface> button below to add some "
+"window properties that will be affected by the rule"
+msgstr ""
+"Apăsați butonul <interface>Adaugă proprietate...</interface> de mai jos "
+"pentru a adăuga câteva proprietăți ale ferestrelor ce vor fi afectate de "
+"către regulă"
+
+#: ui/RulesEditor.qml:85
+#, kde-format
+msgid "Close"
+msgstr "Închide"
+
+#: ui/RulesEditor.qml:85
+#, kde-format
+msgid "Add Property..."
+msgstr "Adaugă proprietate..."
+
+#: ui/RulesEditor.qml:98
+#, kde-format
+msgid "Detect Window Properties"
+msgstr "Detectează proprietățile ferestrei"
+
+#: ui/RulesEditor.qml:114 ui/RulesEditor.qml:121
+#, kde-format
+msgid "Instantly"
+msgstr "Instant"
+
+#: ui/RulesEditor.qml:115 ui/RulesEditor.qml:126
+#, kde-format
+msgid "After %1 second"
+msgid_plural "After %1 seconds"
+msgstr[0] "După %1 secundă"
+msgstr[1] "După %1 secunde"
+msgstr[2] "După %1 de secunde"
+
+#: ui/RulesEditor.qml:175
+#, kde-format
+msgid "Add property to the rule"
+msgstr "Adaugă proprietate la regulă"
+
+#: ui/RulesEditor.qml:276 ui/ValueEditor.qml:54
+#, kde-format
+msgid "Yes"
+msgstr "Da"
+
+#: ui/RulesEditor.qml:276 ui/ValueEditor.qml:60
+#, kde-format
+msgid "No"
+msgstr "Nu"
+
+#: ui/RulesEditor.qml:278 ui/ValueEditor.qml:168 ui/ValueEditor.qml:175
+#, kde-format
+msgid "%1 %"
+msgstr "%1 %"
+
+#: ui/RulesEditor.qml:280
+#, kde-format
+msgctxt "Coordinates (x, y)"
+msgid "(%1, %2)"
+msgstr "(%1, %2)"
+
+#: ui/RulesEditor.qml:282
+#, kde-format
+msgctxt "Size (width, height)"
+msgid "(%1, %2)"
+msgstr "(%1, %2)"
+
+#: ui/ValueEditor.qml:203
+#, kde-format
+msgctxt "(x, y) coordinates separator in size/position"
+msgid "x"
+msgstr "x"
 
 #~ msgid "Window shall (not) appear in the taskbar."
 #~ msgstr "Fereastra (nu) va apărea în bara de procese."

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-06 02:04+0000\n"
+"POT-Creation-Date: 2023-06-07 02:19+0000\n"
 "PO-Revision-Date: 2010-07-11 13:38+0100\n"
 "Last-Translator: Berend Ytsma <berendy@gmail.com>\n"
 "Language-Team: Frysk <kde-i18n-fry@kde.org>\n"
@@ -142,67 +142,67 @@ msgstr ""
 msgid "You have the following KWin window decoration themes on your system:"
 msgstr ""
 
-#: package/contents/ui/Buttons.qml:85
+#: ui/Buttons.qml:85
 #, kde-format
 msgid "Titlebar"
 msgstr ""
 
-#: package/contents/ui/Buttons.qml:245
+#: ui/Buttons.qml:245
 #, kde-format
 msgid "Drop button here to remove it"
 msgstr ""
 
-#: package/contents/ui/Buttons.qml:261
+#: ui/Buttons.qml:261
 #, kde-format
 msgid "Drag buttons between here and the titlebar"
 msgstr ""
 
-#: package/contents/ui/ConfigureTitlebar.qml:16
+#: ui/ConfigureTitlebar.qml:16
 #, fuzzy, kde-format
 #| msgid "Buttons"
 msgid "Titlebar Buttons"
 msgstr "Knoppen"
 
-#: package/contents/ui/ConfigureTitlebar.qml:35
+#: ui/ConfigureTitlebar.qml:35
 #, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the menu button"
 msgstr ""
 
-#: package/contents/ui/ConfigureTitlebar.qml:52
+#: ui/ConfigureTitlebar.qml:52
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the menu button to show the menu."
 msgstr ""
 
-#: package/contents/ui/ConfigureTitlebar.qml:59
+#: ui/ConfigureTitlebar.qml:59
 #, fuzzy, kde-format
 #| msgid "&Show window button tooltips"
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "Arktips by finsterknop &sjen litte"
 
-#: package/contents/ui/main.qml:29
+#: ui/main.qml:29
 #, fuzzy, kde-format
 #| msgid "Border size:"
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "Râne grutte:"
 
-#: package/contents/ui/main.qml:48
+#: ui/main.qml:48
 #, fuzzy, kde-format
 #| msgid "Buttons"
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
 msgstr "Knoppen"
 
-#: package/contents/ui/main.qml:54
+#: ui/main.qml:54
 #, kde-format
 msgctxt "@action:button as in, \"Get New Window Decorations\""
 msgid "Get New…"
 msgstr ""
 
-#: package/contents/ui/Themes.qml:92
+#: ui/Themes.qml:92
 #, kde-format
 msgid "Edit %1 Theme"
 msgstr ""

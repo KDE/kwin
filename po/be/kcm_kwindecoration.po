@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 86ff119b1606fcaa910d6b44fc14b611\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-06 02:04+0000\n"
+"POT-Creation-Date: 2023-06-07 02:19+0000\n"
 "PO-Revision-Date: 2023-02-09 08:31\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@gmail.com>\n"
 "Language-Team: Belarusian\n"
@@ -159,63 +159,63 @@ msgstr ""
 msgid "You have the following KWin window decoration themes on your system:"
 msgstr "У вашай сістэме ёсць наступныя тэмы аздаблення акон для KWin:"
 
-#: package/contents/ui/Buttons.qml:85
+#: ui/Buttons.qml:85
 #, kde-format
 msgid "Titlebar"
 msgstr "Панэль загалоўка"
 
-#: package/contents/ui/Buttons.qml:245
+#: ui/Buttons.qml:245
 #, kde-format
 msgid "Drop button here to remove it"
 msgstr "Перацягніце кнопку сюды, каб выдаліць"
 
-#: package/contents/ui/Buttons.qml:261
+#: ui/Buttons.qml:261
 #, kde-format
 msgid "Drag buttons between here and the titlebar"
 msgstr "Перацягвайце кнопкі паміж гэтай вобласцю і панэллю загалоўка"
 
-#: package/contents/ui/ConfigureTitlebar.qml:16
+#: ui/ConfigureTitlebar.qml:16
 #, kde-format
 msgid "Titlebar Buttons"
 msgstr "Кнопкі панэлі загалоўка"
 
-#: package/contents/ui/ConfigureTitlebar.qml:35
+#: ui/ConfigureTitlebar.qml:35
 #, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the menu button"
 msgstr "Закрываць вокны падвойным пстрыканнем па кнопцы меню"
 
-#: package/contents/ui/ConfigureTitlebar.qml:52
+#: ui/ConfigureTitlebar.qml:52
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the menu button to show the menu."
 msgstr "Націсніце і ўтрымлівайце кнопку меню, каб паглядзець меню."
 
-#: package/contents/ui/ConfigureTitlebar.qml:59
+#: ui/ConfigureTitlebar.qml:59
 #, kde-format
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "Паказваць выплыўныя падказкі для кнопак панэлі загалоўка"
 
-#: package/contents/ui/main.qml:29
+#: ui/main.qml:29
 #, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "Памер рамкі акон:"
 
-#: package/contents/ui/main.qml:48
+#: ui/main.qml:48
 #, kde-format
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
 msgstr "Наладжванне кнопак панэляў загалоўкаў…"
 
-#: package/contents/ui/main.qml:54
+#: ui/main.qml:54
 #, kde-format
 msgctxt "@action:button as in, \"Get New Window Decorations\""
 msgid "Get New…"
 msgstr ""
 
-#: package/contents/ui/Themes.qml:92
+#: ui/Themes.qml:92
 #, kde-format
 msgid "Edit %1 Theme"
 msgstr "Рэдагаваць тэму \"%1\""

@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-06 02:09+0000\n"
-"PO-Revision-Date: 2023-06-05 10:00+0200\n"
+"POT-Creation-Date: 2023-06-07 02:19+0000\n"
+"PO-Revision-Date: 2023-06-06 09:54+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
@@ -21,7 +21,7 @@ msgstr ""
 "X-Accelerator-Marker: &\n"
 "X-Generator: Lokalize 20.12.0\n"
 
-#: package/contents/ui/Effect.qml:97
+#: ui/Effect.qml:97
 #, kde-format
 msgid ""
 "Author: %1\n"
@@ -30,26 +30,25 @@ msgstr ""
 "Autor: %1\n"
 "Llicència: %2"
 
-#: package/contents/ui/Effect.qml:127
+#: ui/Effect.qml:127
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Show/Hide Video"
 msgstr "Mostra/oculta el vídeo"
 
-#: package/contents/ui/Effect.qml:134
+#: ui/Effect.qml:134
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Configure…"
 msgstr "Configura…"
 
-#: package/contents/ui/main.qml:25
-#, fuzzy, kde-format
-#| msgid "Get New…"
+#: ui/main.qml:25
+#, kde-format
 msgctxt "@action:button get new KWin effects"
 msgid "Get New…"
 msgstr "Obtén nous…"
 
-#: package/contents/ui/main.qml:44
+#: ui/main.qml:44
 #, kde-format
 msgid ""
 "Hint: To find out or configure how to activate an effect, look at the "
@@ -58,17 +57,17 @@ msgstr ""
 "Consell: per a trobar els detalls o configurar la manera d'activar un "
 "efecte, examineu l'arranjament de l'efecte."
 
-#: package/contents/ui/main.qml:66
+#: ui/main.qml:66
 #, kde-format
 msgid "Configure Filter"
 msgstr "Configura el filtre"
 
-#: package/contents/ui/main.qml:78
+#: ui/main.qml:78
 #, kde-format
 msgid "Exclude unsupported effects"
 msgstr "Exclou els efectes no admesos"
 
-#: package/contents/ui/main.qml:86
+#: ui/main.qml:86
 #, kde-format
 msgid "Exclude internal effects"
 msgstr "Exclou els efectes interns"

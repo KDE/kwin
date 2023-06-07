@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-03 02:04+0000\n"
+"POT-Creation-Date: 2023-06-07 02:19+0000\n"
 "PO-Revision-Date: 2023-06-03 14:21+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -140,197 +140,6 @@ msgid ""
 msgstr ""
 "La fenestro-propreco estos devigita al la donita valoro ĝis ĝi estas kaŝita\n"
 "(ĉi tiu ago estos forigita post kiam la fenestro estas kaŝita)."
-
-#: package/contents/ui/FileDialogLoader.qml:15
-#, kde-format
-msgid "Select File"
-msgstr "Elekti Dosieron"
-
-#: package/contents/ui/FileDialogLoader.qml:27
-#, kde-format
-msgid "KWin Rules (*.kwinrule)"
-msgstr "KWin Reguloj (*.kwinrule)"
-
-#: package/contents/ui/main.qml:63
-#, kde-format
-msgid "No rules for specific windows are currently set"
-msgstr "Neniuj reguloj por specifaj fenestroj estas nuntempe fiksitaj"
-
-#: package/contents/ui/main.qml:64
-#, kde-kuit-format
-msgctxt "@info"
-msgid "Click the <interface>Add New…</interface> button below to add some"
-msgstr ""
-"Alklaku la suban butonon <interface>Aldoni novan…</interface> por aldoni "
-"kelkajn"
-
-#: package/contents/ui/main.qml:72
-#, kde-format
-msgid "Select the rules to export"
-msgstr "Elekti la regulojn por eksporti"
-
-#: package/contents/ui/main.qml:76
-#, kde-format
-msgid "Unselect All"
-msgstr "Malelekti Ĉion"
-
-#: package/contents/ui/main.qml:76
-#, kde-format
-msgid "Select All"
-msgstr "Elekti ĉiujn"
-
-#: package/contents/ui/main.qml:90
-#, kde-format
-msgid "Save Rules"
-msgstr "Konservi Regulojn"
-
-#: package/contents/ui/main.qml:101
-#, kde-format
-msgid "Add New…"
-msgstr "Aldoni novan…"
-
-#: package/contents/ui/main.qml:112
-#, kde-format
-msgid "Import…"
-msgstr "Importi…"
-
-#: package/contents/ui/main.qml:120
-#, kde-format
-msgid "Cancel Export"
-msgstr "Nuligi Eksporton"
-
-#: package/contents/ui/main.qml:120
-#, kde-format
-msgid "Export…"
-msgstr "Eksporti…"
-
-#: package/contents/ui/main.qml:210
-#, kde-format
-msgid "Edit"
-msgstr "Redakti"
-
-#: package/contents/ui/main.qml:219
-#, kde-format
-msgid "Duplicate"
-msgstr "Duobligi"
-
-#: package/contents/ui/main.qml:228
-#, kde-format
-msgid "Delete"
-msgstr "Forigi"
-
-#: package/contents/ui/main.qml:241
-#, kde-format
-msgid "Import Rules"
-msgstr "Reguloj de importo"
-
-#: package/contents/ui/main.qml:253
-#, kde-format
-msgid "Export Rules"
-msgstr "Eksportaj Reguloj"
-
-#: package/contents/ui/OptionsComboBox.qml:35
-#, kde-format
-msgid "None selected"
-msgstr "Neniu elektita"
-
-#: package/contents/ui/OptionsComboBox.qml:41
-#, kde-format
-msgid "All selected"
-msgstr "Ĉiuj elektitaj"
-
-#: package/contents/ui/OptionsComboBox.qml:43
-#, kde-format
-msgid "%1 selected"
-msgid_plural "%1 selected"
-msgstr[0] "%1 elektita"
-msgstr[1] "%1 elektitaj"
-
-#: package/contents/ui/RulesEditor.qml:63
-#, kde-format
-msgid "No window properties changed"
-msgstr "Neniuj fenestraj proprietoj ŝanĝiĝis"
-
-#: package/contents/ui/RulesEditor.qml:64
-#, kde-kuit-format
-msgctxt "@info"
-msgid ""
-"Click the <interface>Add Property...</interface> button below to add some "
-"window properties that will be affected by the rule"
-msgstr ""
-"Alklaku la suban butonon <interface>Aldoni Propraĵon...</interface> por "
-"aldoni kelkajn fenestrajn ecojn, kiuj estos tuŝitaj de la regulo."
-
-#: package/contents/ui/RulesEditor.qml:85
-#, kde-format
-msgid "Close"
-msgstr "Fermi"
-
-#: package/contents/ui/RulesEditor.qml:85
-#, kde-format
-msgid "Add Property..."
-msgstr "Aldoni Trajton..."
-
-#: package/contents/ui/RulesEditor.qml:98
-#, kde-format
-msgid "Detect Window Properties"
-msgstr "Detekti Fenestrajn Propraĵojn"
-
-#: package/contents/ui/RulesEditor.qml:114
-#: package/contents/ui/RulesEditor.qml:121
-#, kde-format
-msgid "Instantly"
-msgstr "Tuj"
-
-#: package/contents/ui/RulesEditor.qml:115
-#: package/contents/ui/RulesEditor.qml:126
-#, kde-format
-msgid "After %1 second"
-msgid_plural "After %1 seconds"
-msgstr[0] "Post %1 sekundo"
-msgstr[1] "Post %1 sekundoj"
-
-#: package/contents/ui/RulesEditor.qml:175
-#, kde-format
-msgid "Add property to the rule"
-msgstr "Aldoni trajton al la regulo"
-
-#: package/contents/ui/RulesEditor.qml:276
-#: package/contents/ui/ValueEditor.qml:54
-#, kde-format
-msgid "Yes"
-msgstr "Jes"
-
-#: package/contents/ui/RulesEditor.qml:276
-#: package/contents/ui/ValueEditor.qml:60
-#, kde-format
-msgid "No"
-msgstr "Ne"
-
-#: package/contents/ui/RulesEditor.qml:278
-#: package/contents/ui/ValueEditor.qml:168
-#: package/contents/ui/ValueEditor.qml:175
-#, kde-format
-msgid "%1 %"
-msgstr "%1 %"
-
-#: package/contents/ui/RulesEditor.qml:280
-#, kde-format
-msgctxt "Coordinates (x, y)"
-msgid "(%1, %2)"
-msgstr "(%1, %2)"
-
-#: package/contents/ui/RulesEditor.qml:282
-#, kde-format
-msgctxt "Size (width, height)"
-msgid "(%1, %2)"
-msgstr "(%1, %2)"
-
-#: package/contents/ui/ValueEditor.qml:203
-#, kde-format
-msgctxt "(x, y) coordinates separator in size/position"
-msgid "x"
-msgstr "x"
 
 #: rulesmodel.cpp:218
 #, kde-format
@@ -956,3 +765,188 @@ msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
 "Ne eblis detekti fenestropropraĵojn. La fenestro ne estas administrita de "
 "KWin."
+
+#: ui/FileDialogLoader.qml:15
+#, kde-format
+msgid "Select File"
+msgstr "Elekti Dosieron"
+
+#: ui/FileDialogLoader.qml:27
+#, kde-format
+msgid "KWin Rules (*.kwinrule)"
+msgstr "KWin Reguloj (*.kwinrule)"
+
+#: ui/main.qml:62
+#, kde-format
+msgid "No rules for specific windows are currently set"
+msgstr "Neniuj reguloj por specifaj fenestroj estas nuntempe fiksitaj"
+
+#: ui/main.qml:63
+#, kde-kuit-format
+msgctxt "@info"
+msgid "Click the <interface>Add New…</interface> button below to add some"
+msgstr ""
+"Alklaku la suban butonon <interface>Aldoni novan…</interface> por aldoni "
+"kelkajn"
+
+#: ui/main.qml:71
+#, kde-format
+msgid "Select the rules to export"
+msgstr "Elekti la regulojn por eksporti"
+
+#: ui/main.qml:75
+#, kde-format
+msgid "Unselect All"
+msgstr "Malelekti Ĉion"
+
+#: ui/main.qml:75
+#, kde-format
+msgid "Select All"
+msgstr "Elekti ĉiujn"
+
+#: ui/main.qml:89
+#, kde-format
+msgid "Save Rules"
+msgstr "Konservi Regulojn"
+
+#: ui/main.qml:100
+#, kde-format
+msgid "Add New…"
+msgstr "Aldoni novan…"
+
+#: ui/main.qml:111
+#, kde-format
+msgid "Import…"
+msgstr "Importi…"
+
+#: ui/main.qml:119
+#, kde-format
+msgid "Cancel Export"
+msgstr "Nuligi Eksporton"
+
+#: ui/main.qml:119
+#, kde-format
+msgid "Export…"
+msgstr "Eksporti…"
+
+#: ui/main.qml:209
+#, kde-format
+msgid "Edit"
+msgstr "Redakti"
+
+#: ui/main.qml:218
+#, kde-format
+msgid "Duplicate"
+msgstr "Duobligi"
+
+#: ui/main.qml:227
+#, kde-format
+msgid "Delete"
+msgstr "Forigi"
+
+#: ui/main.qml:240
+#, kde-format
+msgid "Import Rules"
+msgstr "Reguloj de importo"
+
+#: ui/main.qml:252
+#, kde-format
+msgid "Export Rules"
+msgstr "Eksportaj Reguloj"
+
+#: ui/OptionsComboBox.qml:35
+#, kde-format
+msgid "None selected"
+msgstr "Neniu elektita"
+
+#: ui/OptionsComboBox.qml:41
+#, kde-format
+msgid "All selected"
+msgstr "Ĉiuj elektitaj"
+
+#: ui/OptionsComboBox.qml:43
+#, kde-format
+msgid "%1 selected"
+msgid_plural "%1 selected"
+msgstr[0] "%1 elektita"
+msgstr[1] "%1 elektitaj"
+
+#: ui/RulesEditor.qml:63
+#, kde-format
+msgid "No window properties changed"
+msgstr "Neniuj fenestraj proprietoj ŝanĝiĝis"
+
+#: ui/RulesEditor.qml:64
+#, kde-kuit-format
+msgctxt "@info"
+msgid ""
+"Click the <interface>Add Property...</interface> button below to add some "
+"window properties that will be affected by the rule"
+msgstr ""
+"Alklaku la suban butonon <interface>Aldoni Propraĵon...</interface> por "
+"aldoni kelkajn fenestrajn ecojn, kiuj estos tuŝitaj de la regulo."
+
+#: ui/RulesEditor.qml:85
+#, kde-format
+msgid "Close"
+msgstr "Fermi"
+
+#: ui/RulesEditor.qml:85
+#, kde-format
+msgid "Add Property..."
+msgstr "Aldoni Trajton..."
+
+#: ui/RulesEditor.qml:98
+#, kde-format
+msgid "Detect Window Properties"
+msgstr "Detekti Fenestrajn Propraĵojn"
+
+#: ui/RulesEditor.qml:114 ui/RulesEditor.qml:121
+#, kde-format
+msgid "Instantly"
+msgstr "Tuj"
+
+#: ui/RulesEditor.qml:115 ui/RulesEditor.qml:126
+#, kde-format
+msgid "After %1 second"
+msgid_plural "After %1 seconds"
+msgstr[0] "Post %1 sekundo"
+msgstr[1] "Post %1 sekundoj"
+
+#: ui/RulesEditor.qml:175
+#, kde-format
+msgid "Add property to the rule"
+msgstr "Aldoni trajton al la regulo"
+
+#: ui/RulesEditor.qml:276 ui/ValueEditor.qml:54
+#, kde-format
+msgid "Yes"
+msgstr "Jes"
+
+#: ui/RulesEditor.qml:276 ui/ValueEditor.qml:60
+#, kde-format
+msgid "No"
+msgstr "Ne"
+
+#: ui/RulesEditor.qml:278 ui/ValueEditor.qml:168 ui/ValueEditor.qml:175
+#, kde-format
+msgid "%1 %"
+msgstr "%1 %"
+
+#: ui/RulesEditor.qml:280
+#, kde-format
+msgctxt "Coordinates (x, y)"
+msgid "(%1, %2)"
+msgstr "(%1, %2)"
+
+#: ui/RulesEditor.qml:282
+#, kde-format
+msgctxt "Size (width, height)"
+msgid "(%1, %2)"
+msgstr "(%1, %2)"
+
+#: ui/ValueEditor.qml:203
+#, kde-format
+msgctxt "(x, y) coordinates separator in size/position"
+msgid "x"
+msgstr "x"

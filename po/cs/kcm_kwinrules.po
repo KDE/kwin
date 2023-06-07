@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-03 02:04+0000\n"
-"PO-Revision-Date: 2023-03-03 11:25+0100\n"
+"POT-Creation-Date: 2023-06-07 02:19+0000\n"
+"PO-Revision-Date: 2023-06-05 13:11+0200\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 23.04.1\n"
 "X-Language: cs_CZ\n"
 "X-Source-Language: en_US\n"
 
@@ -129,202 +129,6 @@ msgid ""
 "The window property will be forced to the given value until it is hidden\n"
 "(this action will be deleted after the window is hidden)."
 msgstr ""
-
-#: package/contents/ui/FileDialogLoader.qml:15
-#, kde-format
-msgid "Select File"
-msgstr "Vybrat soubor"
-
-#: package/contents/ui/FileDialogLoader.qml:27
-#, kde-format
-msgid "KWin Rules (*.kwinrule)"
-msgstr "Pravidla KWinu (*.kwinrule)"
-
-#: package/contents/ui/main.qml:63
-#, kde-format
-msgid "No rules for specific windows are currently set"
-msgstr "Žádná pravidla pro konkrétní okna nejsou momentálně nastavena"
-
-#: package/contents/ui/main.qml:64
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Click the <interface>Add New...</interface> button below to add some"
-msgctxt "@info"
-msgid "Click the <interface>Add New…</interface> button below to add some"
-msgstr "Klikněte na tlačítko <interface>Přidat nové...</interface> pro přidání"
-
-#: package/contents/ui/main.qml:72
-#, kde-format
-msgid "Select the rules to export"
-msgstr ""
-
-#: package/contents/ui/main.qml:76
-#, kde-format
-msgid "Unselect All"
-msgstr "Zrušit výběr"
-
-#: package/contents/ui/main.qml:76
-#, kde-format
-msgid "Select All"
-msgstr "Vybrat vše"
-
-#: package/contents/ui/main.qml:90
-#, kde-format
-msgid "Save Rules"
-msgstr "Uložit pravidla"
-
-#: package/contents/ui/main.qml:101
-#, fuzzy, kde-format
-#| msgid "Add New..."
-msgid "Add New…"
-msgstr "Přidat nové..."
-
-#: package/contents/ui/main.qml:112
-#, fuzzy, kde-format
-#| msgid "Import..."
-msgid "Import…"
-msgstr "Importovat..."
-
-#: package/contents/ui/main.qml:120
-#, kde-format
-msgid "Cancel Export"
-msgstr "Zrušit export"
-
-#: package/contents/ui/main.qml:120
-#, fuzzy, kde-format
-#| msgid "Export..."
-msgid "Export…"
-msgstr "Exportovat..."
-
-#: package/contents/ui/main.qml:210
-#, kde-format
-msgid "Edit"
-msgstr "Upravit"
-
-#: package/contents/ui/main.qml:219
-#, kde-format
-msgid "Duplicate"
-msgstr "Duplikovat"
-
-#: package/contents/ui/main.qml:228
-#, kde-format
-msgid "Delete"
-msgstr "Smazat"
-
-#: package/contents/ui/main.qml:241
-#, kde-format
-msgid "Import Rules"
-msgstr "Importovat pravidla"
-
-#: package/contents/ui/main.qml:253
-#, kde-format
-msgid "Export Rules"
-msgstr "Exportovat pravidla"
-
-#: package/contents/ui/OptionsComboBox.qml:35
-#, kde-format
-msgid "None selected"
-msgstr "Nic nevybráno"
-
-#: package/contents/ui/OptionsComboBox.qml:41
-#, kde-format
-msgid "All selected"
-msgstr "Vše označené"
-
-#: package/contents/ui/OptionsComboBox.qml:43
-#, kde-format
-msgid "%1 selected"
-msgid_plural "%1 selected"
-msgstr[0] "%1 vybráno"
-msgstr[1] "%1 vybrány"
-msgstr[2] "%1 vybráno"
-
-#: package/contents/ui/RulesEditor.qml:63
-#, kde-format
-msgid "No window properties changed"
-msgstr "Nebyly změněny žádné vlastnosti okna"
-
-#: package/contents/ui/RulesEditor.qml:64
-#, kde-kuit-format
-msgctxt "@info"
-msgid ""
-"Click the <interface>Add Property...</interface> button below to add some "
-"window properties that will be affected by the rule"
-msgstr ""
-"Klikněte na tlačítko <interface>Přidat vlastnost...</interface> níže a "
-"přidejte některé vlastnosti okna, které budou pravidlem ovlivněny"
-
-#: package/contents/ui/RulesEditor.qml:85
-#, kde-format
-msgid "Close"
-msgstr "Zavřít"
-
-#: package/contents/ui/RulesEditor.qml:85
-#, kde-format
-msgid "Add Property..."
-msgstr "Přidat vlastnost..."
-
-#: package/contents/ui/RulesEditor.qml:98
-#, kde-format
-msgid "Detect Window Properties"
-msgstr "Detekovat vlastnosti okna"
-
-#: package/contents/ui/RulesEditor.qml:114
-#: package/contents/ui/RulesEditor.qml:121
-#, kde-format
-msgid "Instantly"
-msgstr "Okamžitě"
-
-#: package/contents/ui/RulesEditor.qml:115
-#: package/contents/ui/RulesEditor.qml:126
-#, kde-format
-msgid "After %1 second"
-msgid_plural "After %1 seconds"
-msgstr[0] "Po %1 sekundě"
-msgstr[1] "Po %1 sekundách"
-msgstr[2] "Po %1 sekundách"
-
-#: package/contents/ui/RulesEditor.qml:175
-#, kde-format
-msgid "Add property to the rule"
-msgstr "Přidat do pravidla vlastnost"
-
-#: package/contents/ui/RulesEditor.qml:276
-#: package/contents/ui/ValueEditor.qml:54
-#, kde-format
-msgid "Yes"
-msgstr "Ano"
-
-#: package/contents/ui/RulesEditor.qml:276
-#: package/contents/ui/ValueEditor.qml:60
-#, kde-format
-msgid "No"
-msgstr "Ne"
-
-#: package/contents/ui/RulesEditor.qml:278
-#: package/contents/ui/ValueEditor.qml:168
-#: package/contents/ui/ValueEditor.qml:175
-#, kde-format
-msgid "%1 %"
-msgstr "%1 %"
-
-#: package/contents/ui/RulesEditor.qml:280
-#, kde-format
-msgctxt "Coordinates (x, y)"
-msgid "(%1, %2)"
-msgstr "(%1, %2)"
-
-#: package/contents/ui/RulesEditor.qml:282
-#, kde-format
-msgctxt "Size (width, height)"
-msgid "(%1, %2)"
-msgstr "(%1, %2)"
-
-#: package/contents/ui/ValueEditor.qml:203
-#, kde-format
-msgctxt "(x, y) coordinates separator in size/position"
-msgid "x"
-msgstr "x"
 
 #: rulesmodel.cpp:218
 #, kde-format
@@ -885,3 +689,188 @@ msgstr "Nespravované okno"
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
+
+#: ui/FileDialogLoader.qml:15
+#, kde-format
+msgid "Select File"
+msgstr "Vybrat soubor"
+
+#: ui/FileDialogLoader.qml:27
+#, kde-format
+msgid "KWin Rules (*.kwinrule)"
+msgstr "Pravidla KWinu (*.kwinrule)"
+
+#: ui/main.qml:62
+#, kde-format
+msgid "No rules for specific windows are currently set"
+msgstr "Žádná pravidla pro konkrétní okna nejsou momentálně nastavena"
+
+#: ui/main.qml:63
+#, kde-kuit-format
+msgctxt "@info"
+msgid "Click the <interface>Add New…</interface> button below to add some"
+msgstr "Klikněte na tlačítko <interface>Přidat nové...</interface> pro přidání"
+
+#: ui/main.qml:71
+#, kde-format
+msgid "Select the rules to export"
+msgstr ""
+
+#: ui/main.qml:75
+#, kde-format
+msgid "Unselect All"
+msgstr "Zrušit výběr"
+
+#: ui/main.qml:75
+#, kde-format
+msgid "Select All"
+msgstr "Vybrat vše"
+
+#: ui/main.qml:89
+#, kde-format
+msgid "Save Rules"
+msgstr "Uložit pravidla"
+
+#: ui/main.qml:100
+#, kde-format
+msgid "Add New…"
+msgstr "Přidat nové…"
+
+#: ui/main.qml:111
+#, kde-format
+msgid "Import…"
+msgstr "Importovat…"
+
+#: ui/main.qml:119
+#, kde-format
+msgid "Cancel Export"
+msgstr "Zrušit export"
+
+#: ui/main.qml:119
+#, kde-format
+msgid "Export…"
+msgstr "Exportovat…"
+
+#: ui/main.qml:209
+#, kde-format
+msgid "Edit"
+msgstr "Upravit"
+
+#: ui/main.qml:218
+#, kde-format
+msgid "Duplicate"
+msgstr "Duplikovat"
+
+#: ui/main.qml:227
+#, kde-format
+msgid "Delete"
+msgstr "Smazat"
+
+#: ui/main.qml:240
+#, kde-format
+msgid "Import Rules"
+msgstr "Importovat pravidla"
+
+#: ui/main.qml:252
+#, kde-format
+msgid "Export Rules"
+msgstr "Exportovat pravidla"
+
+#: ui/OptionsComboBox.qml:35
+#, kde-format
+msgid "None selected"
+msgstr "Nic nevybráno"
+
+#: ui/OptionsComboBox.qml:41
+#, kde-format
+msgid "All selected"
+msgstr "Vše označené"
+
+#: ui/OptionsComboBox.qml:43
+#, kde-format
+msgid "%1 selected"
+msgid_plural "%1 selected"
+msgstr[0] "%1 vybráno"
+msgstr[1] "%1 vybrány"
+msgstr[2] "%1 vybráno"
+
+#: ui/RulesEditor.qml:63
+#, kde-format
+msgid "No window properties changed"
+msgstr "Nebyly změněny žádné vlastnosti okna"
+
+#: ui/RulesEditor.qml:64
+#, kde-kuit-format
+msgctxt "@info"
+msgid ""
+"Click the <interface>Add Property...</interface> button below to add some "
+"window properties that will be affected by the rule"
+msgstr ""
+"Klikněte na tlačítko <interface>Přidat vlastnost...</interface> níže a "
+"přidejte některé vlastnosti okna, které budou pravidlem ovlivněny"
+
+#: ui/RulesEditor.qml:85
+#, kde-format
+msgid "Close"
+msgstr "Zavřít"
+
+#: ui/RulesEditor.qml:85
+#, kde-format
+msgid "Add Property..."
+msgstr "Přidat vlastnost..."
+
+#: ui/RulesEditor.qml:98
+#, kde-format
+msgid "Detect Window Properties"
+msgstr "Detekovat vlastnosti okna"
+
+#: ui/RulesEditor.qml:114 ui/RulesEditor.qml:121
+#, kde-format
+msgid "Instantly"
+msgstr "Okamžitě"
+
+#: ui/RulesEditor.qml:115 ui/RulesEditor.qml:126
+#, kde-format
+msgid "After %1 second"
+msgid_plural "After %1 seconds"
+msgstr[0] "Po %1 sekundě"
+msgstr[1] "Po %1 sekundách"
+msgstr[2] "Po %1 sekundách"
+
+#: ui/RulesEditor.qml:175
+#, kde-format
+msgid "Add property to the rule"
+msgstr "Přidat do pravidla vlastnost"
+
+#: ui/RulesEditor.qml:276 ui/ValueEditor.qml:54
+#, kde-format
+msgid "Yes"
+msgstr "Ano"
+
+#: ui/RulesEditor.qml:276 ui/ValueEditor.qml:60
+#, kde-format
+msgid "No"
+msgstr "Ne"
+
+#: ui/RulesEditor.qml:278 ui/ValueEditor.qml:168 ui/ValueEditor.qml:175
+#, kde-format
+msgid "%1 %"
+msgstr "%1 %"
+
+#: ui/RulesEditor.qml:280
+#, kde-format
+msgctxt "Coordinates (x, y)"
+msgid "(%1, %2)"
+msgstr "(%1, %2)"
+
+#: ui/RulesEditor.qml:282
+#, kde-format
+msgctxt "Size (width, height)"
+msgid "(%1, %2)"
+msgstr "(%1, %2)"
+
+#: ui/ValueEditor.qml:203
+#, kde-format
+msgctxt "(x, y) coordinates separator in size/position"
+msgid "x"
+msgstr "x"

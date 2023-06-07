@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 86ff119b1606fcaa910d6b44fc14b611\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-31 02:17+0000\n"
+"POT-Creation-Date: 2023-06-07 02:19+0000\n"
 "PO-Revision-Date: 2023-02-08 13:45\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@gmail.com>\n"
 "Language-Team: Belarusian\n"
@@ -57,25 +57,25 @@ msgstr "Не ўдалося захаваць налады сродку камп�
 msgid "There was an error requesting information from the compositor."
 msgstr "Не ўдалося атрымаць звесткі пра сродак кампазітынгу."
 
-#: package/contents/ui/main.qml:89
+#: ui/main.qml:89
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Rename"
 msgstr "Змяніць назву"
 
-#: package/contents/ui/main.qml:100
+#: ui/main.qml:100
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Confirm new name"
 msgstr "Пацвердзіце новую назву"
 
-#: package/contents/ui/main.qml:108
+#: ui/main.qml:108
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "Выдаліць"
 
-#: package/contents/ui/main.qml:135
+#: ui/main.qml:135
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
@@ -84,18 +84,18 @@ msgstr ""
 "Віртуальныя працоўныя сталы былі змененыя па-за межамі гэтай праграмы. Калі "
 "захаваць, то змены перазапішуцца."
 
-#: package/contents/ui/main.qml:151
+#: ui/main.qml:151
 #, kde-format
 msgid "Row %1"
 msgstr "Радок %1"
 
-#: package/contents/ui/main.qml:164
+#: ui/main.qml:164
 #, kde-format
 msgctxt "@action:button"
 msgid "Add"
 msgstr "Дадаць"
 
-#: package/contents/ui/main.qml:182
+#: ui/main.qml:182
 #, kde-format
 msgid "1 Row"
 msgid_plural "%1 Rows"
@@ -104,32 +104,32 @@ msgstr[1] "%1 радкі"
 msgstr[2] "%1 радкоў"
 msgstr[3] "%1 радкі"
 
-#: package/contents/ui/main.qml:198
+#: ui/main.qml:198
 #, kde-format
 msgid "Options:"
 msgstr "Параметры:"
 
-#: package/contents/ui/main.qml:200
+#: ui/main.qml:200
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "Навігацыя па коле"
 
-#: package/contents/ui/main.qml:218
+#: ui/main.qml:218
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "Паказ анімацыі пры пераключэнні:"
 
-#: package/contents/ui/main.qml:269
+#: ui/main.qml:269
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "Паказ індыкацыі пры пераключэнні:"
 
-#: package/contents/ui/main.qml:288
+#: ui/main.qml:288
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 мс"
 
-#: package/contents/ui/main.qml:312
+#: ui/main.qml:312
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Паказваць індыкатары макета працоўных сталоў"

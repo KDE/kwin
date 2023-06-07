@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-03 02:04+0000\n"
+"POT-Creation-Date: 2023-06-07 02:19+0000\n"
 "PO-Revision-Date: 2005-10-19 21:33+0200\n"
 "Last-Translator: Mashrab Kuvatov <kmashrab@uni-bremen.de>\n"
 "Language-Team: Uzbek <floss-uz-l10n@googlegroups.com>\n"
@@ -123,198 +123,6 @@ msgstr ""
 msgid ""
 "The window property will be forced to the given value until it is hidden\n"
 "(this action will be deleted after the window is hidden)."
-msgstr ""
-
-#: package/contents/ui/FileDialogLoader.qml:15
-#, kde-format
-msgid "Select File"
-msgstr ""
-
-#: package/contents/ui/FileDialogLoader.qml:27
-#, kde-format
-msgid "KWin Rules (*.kwinrule)"
-msgstr ""
-
-#: package/contents/ui/main.qml:63
-#, kde-format
-msgid "No rules for specific windows are currently set"
-msgstr ""
-
-#: package/contents/ui/main.qml:64
-#, kde-kuit-format
-msgctxt "@info"
-msgid "Click the <interface>Add New…</interface> button below to add some"
-msgstr ""
-
-#: package/contents/ui/main.qml:72
-#, kde-format
-msgid "Select the rules to export"
-msgstr ""
-
-#: package/contents/ui/main.qml:76
-#, kde-format
-msgid "Unselect All"
-msgstr ""
-
-#: package/contents/ui/main.qml:76
-#, kde-format
-msgid "Select All"
-msgstr ""
-
-#: package/contents/ui/main.qml:90
-#, kde-format
-msgid "Save Rules"
-msgstr ""
-
-#: package/contents/ui/main.qml:101
-#, fuzzy, kde-format
-#| msgid "&New..."
-msgid "Add New…"
-msgstr "Ya&ngi"
-
-#: package/contents/ui/main.qml:112
-#, kde-format
-msgid "Import…"
-msgstr ""
-
-#: package/contents/ui/main.qml:120
-#, kde-format
-msgid "Cancel Export"
-msgstr ""
-
-#: package/contents/ui/main.qml:120
-#, fuzzy, kde-format
-#| msgid "Edit..."
-msgid "Export…"
-msgstr "Tahrirlash"
-
-#: package/contents/ui/main.qml:210
-#, fuzzy, kde-format
-msgid "Edit"
-msgstr "Tahrirlash"
-
-#: package/contents/ui/main.qml:219
-#, kde-format
-msgid "Duplicate"
-msgstr ""
-
-#: package/contents/ui/main.qml:228
-#, fuzzy, kde-format
-msgid "Delete"
-msgstr "&Aniqlash"
-
-#: package/contents/ui/main.qml:241
-#, kde-format
-msgid "Import Rules"
-msgstr ""
-
-#: package/contents/ui/main.qml:253
-#, kde-format
-msgid "Export Rules"
-msgstr ""
-
-#: package/contents/ui/OptionsComboBox.qml:35
-#, kde-format
-msgid "None selected"
-msgstr ""
-
-#: package/contents/ui/OptionsComboBox.qml:41
-#, kde-format
-msgid "All selected"
-msgstr ""
-
-#: package/contents/ui/OptionsComboBox.qml:43
-#, kde-format
-msgid "%1 selected"
-msgid_plural "%1 selected"
-msgstr[0] ""
-
-#: package/contents/ui/RulesEditor.qml:63
-#, fuzzy, kde-format
-#| msgid "Detect Window Properties"
-msgid "No window properties changed"
-msgstr "Oynaning xossalarini aniqlash"
-
-#: package/contents/ui/RulesEditor.qml:64
-#, kde-kuit-format
-msgctxt "@info"
-msgid ""
-"Click the <interface>Add Property...</interface> button below to add some "
-"window properties that will be affected by the rule"
-msgstr ""
-
-#: package/contents/ui/RulesEditor.qml:85
-#, fuzzy, kde-format
-#| msgid "&Closeable"
-msgid "Close"
-msgstr "Yopib &boʻladigan"
-
-#: package/contents/ui/RulesEditor.qml:85
-#, fuzzy, kde-format
-#| msgid "&New..."
-msgid "Add Property..."
-msgstr "Ya&ngi"
-
-#: package/contents/ui/RulesEditor.qml:98
-#, fuzzy, kde-format
-#| msgid "Detect Window Properties"
-msgid "Detect Window Properties"
-msgstr "Oynaning xossalarini aniqlash"
-
-#: package/contents/ui/RulesEditor.qml:114
-#: package/contents/ui/RulesEditor.qml:121
-#, kde-format
-msgid "Instantly"
-msgstr ""
-
-#: package/contents/ui/RulesEditor.qml:115
-#: package/contents/ui/RulesEditor.qml:126
-#, kde-format
-msgid "After %1 second"
-msgid_plural "After %1 seconds"
-msgstr[0] ""
-
-#: package/contents/ui/RulesEditor.qml:175
-#, kde-format
-msgid "Add property to the rule"
-msgstr ""
-
-#: package/contents/ui/RulesEditor.qml:276
-#: package/contents/ui/ValueEditor.qml:54
-#, kde-format
-msgid "Yes"
-msgstr ""
-
-#: package/contents/ui/RulesEditor.qml:276
-#: package/contents/ui/ValueEditor.qml:60
-#, fuzzy, kde-format
-#| msgid "None"
-msgid "No"
-msgstr "Yoʻq"
-
-#: package/contents/ui/RulesEditor.qml:278
-#: package/contents/ui/ValueEditor.qml:168
-#: package/contents/ui/ValueEditor.qml:175
-#, kde-format
-msgid "%1 %"
-msgstr ""
-
-#: package/contents/ui/RulesEditor.qml:280
-#, kde-format
-msgctxt "Coordinates (x, y)"
-msgid "(%1, %2)"
-msgstr ""
-
-#: package/contents/ui/RulesEditor.qml:282
-#, kde-format
-msgctxt "Size (width, height)"
-msgid "(%1, %2)"
-msgstr ""
-
-#: package/contents/ui/ValueEditor.qml:203
-#, kde-format
-msgctxt "(x, y) coordinates separator in size/position"
-msgid "x"
 msgstr ""
 
 #: rulesmodel.cpp:218
@@ -898,6 +706,192 @@ msgstr "Asosiy oyna ustida"
 #: rulesmodel.cpp:929
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
+msgstr ""
+
+#: ui/FileDialogLoader.qml:15
+#, kde-format
+msgid "Select File"
+msgstr ""
+
+#: ui/FileDialogLoader.qml:27
+#, kde-format
+msgid "KWin Rules (*.kwinrule)"
+msgstr ""
+
+#: ui/main.qml:62
+#, kde-format
+msgid "No rules for specific windows are currently set"
+msgstr ""
+
+#: ui/main.qml:63
+#, kde-kuit-format
+msgctxt "@info"
+msgid "Click the <interface>Add New…</interface> button below to add some"
+msgstr ""
+
+#: ui/main.qml:71
+#, kde-format
+msgid "Select the rules to export"
+msgstr ""
+
+#: ui/main.qml:75
+#, kde-format
+msgid "Unselect All"
+msgstr ""
+
+#: ui/main.qml:75
+#, kde-format
+msgid "Select All"
+msgstr ""
+
+#: ui/main.qml:89
+#, kde-format
+msgid "Save Rules"
+msgstr ""
+
+#: ui/main.qml:100
+#, fuzzy, kde-format
+#| msgid "&New..."
+msgid "Add New…"
+msgstr "Ya&ngi"
+
+#: ui/main.qml:111
+#, kde-format
+msgid "Import…"
+msgstr ""
+
+#: ui/main.qml:119
+#, kde-format
+msgid "Cancel Export"
+msgstr ""
+
+#: ui/main.qml:119
+#, fuzzy, kde-format
+#| msgid "Edit..."
+msgid "Export…"
+msgstr "Tahrirlash"
+
+#: ui/main.qml:209
+#, fuzzy, kde-format
+msgid "Edit"
+msgstr "Tahrirlash"
+
+#: ui/main.qml:218
+#, kde-format
+msgid "Duplicate"
+msgstr ""
+
+#: ui/main.qml:227
+#, fuzzy, kde-format
+msgid "Delete"
+msgstr "&Aniqlash"
+
+#: ui/main.qml:240
+#, kde-format
+msgid "Import Rules"
+msgstr ""
+
+#: ui/main.qml:252
+#, kde-format
+msgid "Export Rules"
+msgstr ""
+
+#: ui/OptionsComboBox.qml:35
+#, kde-format
+msgid "None selected"
+msgstr ""
+
+#: ui/OptionsComboBox.qml:41
+#, kde-format
+msgid "All selected"
+msgstr ""
+
+#: ui/OptionsComboBox.qml:43
+#, kde-format
+msgid "%1 selected"
+msgid_plural "%1 selected"
+msgstr[0] ""
+
+#: ui/RulesEditor.qml:63
+#, fuzzy, kde-format
+#| msgid "Detect Window Properties"
+msgid "No window properties changed"
+msgstr "Oynaning xossalarini aniqlash"
+
+#: ui/RulesEditor.qml:64
+#, kde-kuit-format
+msgctxt "@info"
+msgid ""
+"Click the <interface>Add Property...</interface> button below to add some "
+"window properties that will be affected by the rule"
+msgstr ""
+
+#: ui/RulesEditor.qml:85
+#, fuzzy, kde-format
+#| msgid "&Closeable"
+msgid "Close"
+msgstr "Yopib &boʻladigan"
+
+#: ui/RulesEditor.qml:85
+#, fuzzy, kde-format
+#| msgid "&New..."
+msgid "Add Property..."
+msgstr "Ya&ngi"
+
+#: ui/RulesEditor.qml:98
+#, fuzzy, kde-format
+#| msgid "Detect Window Properties"
+msgid "Detect Window Properties"
+msgstr "Oynaning xossalarini aniqlash"
+
+#: ui/RulesEditor.qml:114 ui/RulesEditor.qml:121
+#, kde-format
+msgid "Instantly"
+msgstr ""
+
+#: ui/RulesEditor.qml:115 ui/RulesEditor.qml:126
+#, kde-format
+msgid "After %1 second"
+msgid_plural "After %1 seconds"
+msgstr[0] ""
+
+#: ui/RulesEditor.qml:175
+#, kde-format
+msgid "Add property to the rule"
+msgstr ""
+
+#: ui/RulesEditor.qml:276 ui/ValueEditor.qml:54
+#, kde-format
+msgid "Yes"
+msgstr ""
+
+#: ui/RulesEditor.qml:276 ui/ValueEditor.qml:60
+#, fuzzy, kde-format
+#| msgid "None"
+msgid "No"
+msgstr "Yoʻq"
+
+#: ui/RulesEditor.qml:278 ui/ValueEditor.qml:168 ui/ValueEditor.qml:175
+#, kde-format
+msgid "%1 %"
+msgstr ""
+
+#: ui/RulesEditor.qml:280
+#, kde-format
+msgctxt "Coordinates (x, y)"
+msgid "(%1, %2)"
+msgstr ""
+
+#: ui/RulesEditor.qml:282
+#, kde-format
+msgctxt "Size (width, height)"
+msgid "(%1, %2)"
+msgstr ""
+
+#: ui/ValueEditor.qml:203
+#, kde-format
+msgctxt "(x, y) coordinates separator in size/position"
+msgid "x"
 msgstr ""
 
 #, fuzzy

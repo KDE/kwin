@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-31 02:17+0000\n"
+"POT-Creation-Date: 2023-06-07 02:19+0000\n"
 "PO-Revision-Date: 2022-12-26 03:37+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@linux.org.tw>\n"
@@ -55,74 +55,74 @@ msgstr "儲存設定到合成器時發生錯誤。"
 msgid "There was an error requesting information from the compositor."
 msgstr "從合成器請求資訊時發生錯誤。"
 
-#: package/contents/ui/main.qml:89
+#: ui/main.qml:89
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Rename"
 msgstr "重新命名"
 
-#: package/contents/ui/main.qml:100
+#: ui/main.qml:100
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Confirm new name"
 msgstr "確認新名稱"
 
-#: package/contents/ui/main.qml:108
+#: ui/main.qml:108
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "移除"
 
-#: package/contents/ui/main.qml:135
+#: ui/main.qml:135
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
 "now will overwrite the changes."
 msgstr "虛擬桌面已在設定程式之外的地方變更過。現在儲存會覆寫那些變更。"
 
-#: package/contents/ui/main.qml:151
+#: ui/main.qml:151
 #, kde-format
 msgid "Row %1"
 msgstr "第 %1 行"
 
-#: package/contents/ui/main.qml:164
+#: ui/main.qml:164
 #, kde-format
 msgctxt "@action:button"
 msgid "Add"
 msgstr "新增"
 
-#: package/contents/ui/main.qml:182
+#: ui/main.qml:182
 #, kde-format
 msgid "1 Row"
 msgid_plural "%1 Rows"
 msgstr[0] "%1 行"
 
-#: package/contents/ui/main.qml:198
+#: ui/main.qml:198
 #, kde-format
 msgid "Options:"
 msgstr "選項："
 
-#: package/contents/ui/main.qml:200
+#: ui/main.qml:200
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "環繞式瀏覽"
 
-#: package/contents/ui/main.qml:218
+#: ui/main.qml:218
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "切換時顯示動畫："
 
-#: package/contents/ui/main.qml:269
+#: ui/main.qml:269
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "切換時使用螢幕顯示 (OSD)："
 
-#: package/contents/ui/main.qml:288
+#: ui/main.qml:288
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 毫秒"
 
-#: package/contents/ui/main.qml:312
+#: ui/main.qml:312
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "顯示桌面佈局指示器"

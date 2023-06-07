@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-02 02:04+0000\n"
+"POT-Creation-Date: 2023-06-07 02:19+0000\n"
 "PO-Revision-Date: 2022-03-11 19:14+0700\n"
 "Last-Translator: Wantoyek <wantoyek@gmail.com>\n"
 "Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
@@ -48,20 +48,20 @@ msgstr "Skrip \"%1\" telah sukses diimpor."
 msgid "Error when uninstalling KWin Script: %1"
 msgstr "Galat ketika menguninstall KWin Script: %1"
 
-#: package/contents/ui/main.qml:25
+#: ui/main.qml:24
 #, fuzzy, kde-format
 #| msgid "Install from File..."
 msgid "Install from File…"
 msgstr "Instal dari File..."
 
-#: package/contents/ui/main.qml:29
+#: ui/main.qml:28
 #, fuzzy, kde-format
 #| msgid "Get New Scripts..."
 msgctxt "@action:button get new KWin scripts"
 msgid "Get New…"
 msgstr "Dapatkan Skrip Baru"
 
-#: package/contents/ui/main.qml:67
+#: ui/main.qml:66
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Delete…"

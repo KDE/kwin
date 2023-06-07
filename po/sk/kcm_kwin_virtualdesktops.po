@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-31 02:17+0000\n"
+"POT-Creation-Date: 2023-06-07 02:19+0000\n"
 "PO-Revision-Date: 2023-05-06 17:59+0200\n"
 "Last-Translator: Ferdinand Galko <galko.ferdinand@gmail.com>\n"
 "Language-Team: Slovak <opensuse-translation@opensuse.org>\n"
@@ -54,25 +54,25 @@ msgstr "Nastala chyba pri ukladaní nastavení do kompozítora."
 msgid "There was an error requesting information from the compositor."
 msgstr "Nastala chyba pri žiadaní informácií od kompozítora."
 
-#: package/contents/ui/main.qml:89
+#: ui/main.qml:89
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Rename"
 msgstr "Premenovať"
 
-#: package/contents/ui/main.qml:100
+#: ui/main.qml:100
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Confirm new name"
 msgstr "Potvrdiť nový názov"
 
-#: package/contents/ui/main.qml:108
+#: ui/main.qml:108
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "Odstrániť"
 
-#: package/contents/ui/main.qml:135
+#: ui/main.qml:135
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
@@ -80,18 +80,18 @@ msgid ""
 msgstr ""
 "Virtuálne plochy boli zmenené inou aplikáciou. Uloženie prepíše tieto zmeny."
 
-#: package/contents/ui/main.qml:151
+#: ui/main.qml:151
 #, kde-format
 msgid "Row %1"
 msgstr "Riadok %1"
 
-#: package/contents/ui/main.qml:164
+#: ui/main.qml:164
 #, kde-format
 msgctxt "@action:button"
 msgid "Add"
 msgstr "Pridať"
 
-#: package/contents/ui/main.qml:182
+#: ui/main.qml:182
 #, kde-format
 msgid "1 Row"
 msgid_plural "%1 Rows"
@@ -99,32 +99,32 @@ msgstr[0] "1 riadok"
 msgstr[1] "%1 riadky"
 msgstr[2] "%1 riadkov"
 
-#: package/contents/ui/main.qml:198
+#: ui/main.qml:198
 #, kde-format
 msgid "Options:"
 msgstr "Voľby:"
 
-#: package/contents/ui/main.qml:200
+#: ui/main.qml:200
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "Navigovať v plochách dookola"
 
-#: package/contents/ui/main.qml:218
+#: ui/main.qml:218
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "Zobraziť animáciu pri prepínaní:"
 
-#: package/contents/ui/main.qml:269
+#: ui/main.qml:269
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "Zobraziť OSD pri prepínaní:"
 
-#: package/contents/ui/main.qml:288
+#: ui/main.qml:288
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 ms"
 
-#: package/contents/ui/main.qml:312
+#: ui/main.qml:312
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Zobraziť indikátory rozloženia pracovnej plochy"

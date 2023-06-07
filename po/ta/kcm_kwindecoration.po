@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-06 02:04+0000\n"
+"POT-Creation-Date: 2023-06-07 02:19+0000\n"
 "PO-Revision-Date: 2023-04-09 21:32+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -147,63 +147,63 @@ msgstr ""
 msgid "You have the following KWin window decoration themes on your system:"
 msgstr "உங்கள் கணினியில் கீழ்காணும் விளிம்புத்திட்டங்கள் உள்ளன:"
 
-#: package/contents/ui/Buttons.qml:85
+#: ui/Buttons.qml:85
 #, kde-format
 msgid "Titlebar"
 msgstr "தலைப்புப்பட்டை"
 
-#: package/contents/ui/Buttons.qml:245
+#: ui/Buttons.qml:245
 #, kde-format
 msgid "Drop button here to remove it"
 msgstr "பட்டனை நீக்க அதனை இங்கு இழுத்து போடவும்"
 
-#: package/contents/ui/Buttons.qml:261
+#: ui/Buttons.qml:261
 #, kde-format
 msgid "Drag buttons between here and the titlebar"
 msgstr "பட்டன்களை இங்கிருந்து தலைப்புப்பட்டைக்கு இழுங்கள்"
 
-#: package/contents/ui/ConfigureTitlebar.qml:16
+#: ui/ConfigureTitlebar.qml:16
 #, kde-format
 msgid "Titlebar Buttons"
 msgstr "தலைப்புப்பட்டையிலுள்ள பட்டன்கள்"
 
-#: package/contents/ui/ConfigureTitlebar.qml:35
+#: ui/ConfigureTitlebar.qml:35
 #, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the menu button"
 msgstr "பட்டி பட்டனில் இரட்டை க்ளிக் செய்தல் அவற்றை மூடும்"
 
-#: package/contents/ui/ConfigureTitlebar.qml:52
+#: ui/ConfigureTitlebar.qml:52
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the menu button to show the menu."
 msgstr "பட்டியை காட்ட பட்டி பட்டனில் க்ளிக் செய்தபடியே பிடித்திருக்கவும்."
 
-#: package/contents/ui/ConfigureTitlebar.qml:59
+#: ui/ConfigureTitlebar.qml:59
 #, kde-format
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "தலைப்புப்பட்டையிலுள்ள பட்டன்களுக்கு கருவித்துப்புகளை காட்டு"
 
-#: package/contents/ui/main.qml:29
+#: ui/main.qml:29
 #, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "சாளர விளிம்பின் அளவு:"
 
-#: package/contents/ui/main.qml:48
+#: ui/main.qml:48
 #, kde-format
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
 msgstr "தலைப்புப்பட்டையிலுள்ள பட்டன்களை அமை…"
 
-#: package/contents/ui/main.qml:54
+#: ui/main.qml:54
 #, kde-format
 msgctxt "@action:button as in, \"Get New Window Decorations\""
 msgid "Get New…"
 msgstr "புதியவற்றை பெறு…"
 
-#: package/contents/ui/Themes.qml:92
+#: ui/Themes.qml:92
 #, kde-format
 msgid "Edit %1 Theme"
 msgstr "%1 தோற்றத்திட்டத்தை திருத்து"

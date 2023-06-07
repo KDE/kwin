@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-06 02:04+0000\n"
+"POT-Creation-Date: 2023-06-07 02:19+0000\n"
 "PO-Revision-Date: 2023-02-15 15:25+0000\n"
 "Last-Translator: José Nuno Pires <zepires@gmail.com>\n"
 "Language-Team: pt <kde-i18n-pt@kde.org>\n"
@@ -157,63 +157,63 @@ msgid "You have the following KWin window decoration themes on your system:"
 msgstr ""
 "Tem os seguintes temas de decorações das janelas do KWin no seu sistema:"
 
-#: package/contents/ui/Buttons.qml:85
+#: ui/Buttons.qml:85
 #, kde-format
 msgid "Titlebar"
 msgstr "Barra de título"
 
-#: package/contents/ui/Buttons.qml:245
+#: ui/Buttons.qml:245
 #, kde-format
 msgid "Drop button here to remove it"
 msgstr "Largar o botão aqui para o remover"
 
-#: package/contents/ui/Buttons.qml:261
+#: ui/Buttons.qml:261
 #, kde-format
 msgid "Drag buttons between here and the titlebar"
 msgstr "Arraste os botões entre a barra de título e aqui"
 
-#: package/contents/ui/ConfigureTitlebar.qml:16
+#: ui/ConfigureTitlebar.qml:16
 #, kde-format
 msgid "Titlebar Buttons"
 msgstr "Botões da Barra de Título"
 
-#: package/contents/ui/ConfigureTitlebar.qml:35
+#: ui/ConfigureTitlebar.qml:35
 #, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the menu button"
 msgstr "Fechar as janelas com um duplo-click no botão do menu"
 
-#: package/contents/ui/ConfigureTitlebar.qml:52
+#: ui/ConfigureTitlebar.qml:52
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the menu button to show the menu."
 msgstr "Carregue e mantenha carregado sobre o botão do menu para o mostrar."
 
-#: package/contents/ui/ConfigureTitlebar.qml:59
+#: ui/ConfigureTitlebar.qml:59
 #, kde-format
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "Mostrar as dicas dos botões da barra de título"
 
-#: package/contents/ui/main.qml:29
+#: ui/main.qml:29
 #, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "Tamanho do contorno da janela:"
 
-#: package/contents/ui/main.qml:48
+#: ui/main.qml:48
 #, kde-format
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
 msgstr "Configurar os Botões da Barra de Título…"
 
-#: package/contents/ui/main.qml:54
+#: ui/main.qml:54
 #, kde-format
 msgctxt "@action:button as in, \"Get New Window Decorations\""
 msgid "Get New…"
 msgstr ""
 
-#: package/contents/ui/Themes.qml:92
+#: ui/Themes.qml:92
 #, kde-format
 msgid "Edit %1 Theme"
 msgstr "Editar o Tema %1"

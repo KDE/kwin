@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-31 02:17+0000\n"
+"POT-Creation-Date: 2023-06-07 02:19+0000\n"
 "PO-Revision-Date: 2023-01-18 15:04+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Lokalize 20.12.0\n"
 
-#: package/contents/ui/main.qml:47
+#: ui/main.qml:47
 #, kde-format
 msgid ""
 "Legacy X11 apps require the ability to read keystrokes typed in other apps "
@@ -30,35 +30,35 @@ msgstr ""
 "sallita. Jos käytät tällaisia sovelluksia, voit tässä tasapainottaa "
 "tietoturvaa ja toiminnallisuutta haluamallasi tapaa."
 
-#: package/contents/ui/main.qml:64
+#: ui/main.qml:64
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
 msgstr ""
 "Salli vanhojen X11-sovellusten lukea kaikkien sovellusten "
 "näppäinpainallukset:"
 
-#: package/contents/ui/main.qml:65
+#: ui/main.qml:65
 #, kde-format
 msgid "Never"
 msgstr "Ei koskaan"
 
-#: package/contents/ui/main.qml:68
+#: ui/main.qml:68
 #, kde-format
 msgid "Only Meta, Control, Alt, and Shift keys"
 msgstr "Vain Meta-, Ctrl-, Alt- ja vaihtonäppäimet"
 
-#: package/contents/ui/main.qml:71
+#: ui/main.qml:71
 #, kde-format
 msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
 msgstr ""
 "Kaikki näppäimet mutta vain kun Meta, Ctrl, Alt ja vaihtonäppäin on alhaalla"
 
-#: package/contents/ui/main.qml:75
+#: ui/main.qml:75
 #, kde-format
 msgid "Always"
 msgstr "Aina"
 
-#: package/contents/ui/main.qml:82
+#: ui/main.qml:82
 #, kde-format
 msgid ""
 "Note that using this setting will reduce system security to that of the X11 "

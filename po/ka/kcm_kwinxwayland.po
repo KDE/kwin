@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-31 02:17+0000\n"
+"POT-Creation-Date: 2023-06-07 02:19+0000\n"
 "PO-Revision-Date: 2023-02-08 06:13+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.2.2\n"
 
-#: package/contents/ui/main.qml:47
+#: ui/main.qml:47
 #, kde-format
 msgid ""
 "Legacy X11 apps require the ability to read keystrokes typed in other apps "
@@ -33,36 +33,36 @@ msgstr ""
 "შეგიძლიათ აირჩიოთ თქვენი უსაფრთხოებისა და ფუნქციონირების სასურველი ბალანსი "
 "აქ."
 
-#: package/contents/ui/main.qml:64
+#: ui/main.qml:64
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
 msgstr ""
 "მოძველებული X11 აპებისთვის სხვა აპებში აკრეფილი ღილაკების მიმდევრობის "
 "წაკითხვის უფლების მიცემა:"
 
-#: package/contents/ui/main.qml:65
+#: ui/main.qml:65
 #, kde-format
 msgid "Never"
 msgstr "არასდროს"
 
-#: package/contents/ui/main.qml:68
+#: ui/main.qml:68
 #, kde-format
 msgid "Only Meta, Control, Alt, and Shift keys"
 msgstr "მხოლოდ მეტა, კონტროლი, ალტი და შიფტის ღილაკები"
 
-#: package/contents/ui/main.qml:71
+#: ui/main.qml:71
 #, kde-format
 msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
 msgstr ""
 "ყველა ღილაკი, მაგრამ მხოლოდ მაშინ, როცა მეტა, კონტროლი, ალტი ან შიფტის "
 "ღილაკებიცაა დაჭერილი"
 
-#: package/contents/ui/main.qml:75
+#: ui/main.qml:75
 #, kde-format
 msgid "Always"
 msgstr "ყოველთვის"
 
-#: package/contents/ui/main.qml:82
+#: ui/main.qml:82
 #, kde-format
 msgid ""
 "Note that using this setting will reduce system security to that of the X11 "

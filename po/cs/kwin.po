@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-05 01:59+0000\n"
-"PO-Revision-Date: 2023-02-14 19:42+0100\n"
+"PO-Revision-Date: 2023-06-05 13:18+0200\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Lokalize 22.12.2\n"
+"X-Generator: Lokalize 23.04.1\n"
 "X-Language: cs_CZ\n"
 "X-Source-Language: en_US\n"
 
@@ -1471,18 +1471,16 @@ msgstr "Síla rozmazání:"
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
 #: plugins/blur/blur_config.ui:42 plugins/blur/blur_config.ui:108
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgid "Light"
-msgstr "Vpravo"
+msgstr "Lehce"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
 #: plugins/blur/blur_config.ui:74 plugins/blur/blur_config.ui:137
 #, kde-format
 msgid "Strong"
-msgstr "Silně"
+msgstr "Silné"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseDescription)
 #: plugins/blur/blur_config.ui:83
@@ -1499,11 +1497,9 @@ msgstr ""
 
 #: plugins/desktopgrid/desktopgrid_config.cpp:54
 #: plugins/desktopgrid/desktopgrideffect.cpp:43
-#, fuzzy, kde-format
-#| msgctxt "Special entry in alt+tab list for minimizing all windows"
-#| msgid "Show Desktop"
+#, kde-format
 msgid "Show Desktop Grid"
-msgstr "Zobrazit plochu"
+msgstr "Zobrazit mřížku ploch"
 
 #: plugins/desktopgrid/desktopgrid_config.cpp:61
 #, kde-format
@@ -1520,11 +1516,9 @@ msgid "Top"
 msgstr "Nahoře"
 
 #: plugins/desktopgrid/desktopgrid_config.cpp:63
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgid "Top-Right"
-msgstr "Vpravo"
+msgstr "Vpravo nahoře"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
@@ -1532,9 +1526,7 @@ msgstr "Vpravo"
 #: plugins/desktopgrid/desktopgrid_config.cpp:64
 #: plugins/glide/glide_config.ui:75 plugins/glide/glide_config.ui:173
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:43
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgid "Right"
 msgstr "Vpravo"
 
@@ -1562,25 +1554,21 @@ msgstr "Vlevo dole"
 #: plugins/desktopgrid/desktopgrid_config.cpp:68
 #: plugins/glide/glide_config.ui:85 plugins/glide/glide_config.ui:183
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:29
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Left"
+#, kde-format
 msgid "Left"
 msgstr "Vlevo"
 
 #: plugins/desktopgrid/desktopgrid_config.cpp:69
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Left"
+#, kde-format
 msgid "Top-Left"
-msgstr "Vlevo"
+msgstr "Vlevo nahoře"
 
 #. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
 #: plugins/desktopgrid/desktopgrid_config.cpp:70
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:36
 #, kde-format
 msgid "Center"
-msgstr "Uprostřed"
+msgstr "Střed"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 #: plugins/desktopgrid/desktopgrid_config.ui:17
@@ -1594,19 +1582,19 @@ msgstr "Vzhled"
 #: plugins/desktopgrid/desktopgrid_config.ui:30
 #, kde-format
 msgid "Pager"
-msgstr "Stránkovač"
+msgstr "Pager"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
 #: plugins/desktopgrid/desktopgrid_config.ui:35
 #, kde-format
 msgid "Automatic"
-msgstr "Automatický"
+msgstr "Automaticky"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
 #: plugins/desktopgrid/desktopgrid_config.ui:40
 #, kde-format
 msgid "Custom"
-msgstr "Volitelný"
+msgstr "Vlastní"
 
 #. i18n: ectx: property (text), widget (QLabel, layoutRowsLabel)
 #: plugins/desktopgrid/desktopgrid_config.ui:48
@@ -1616,10 +1604,9 @@ msgstr "Počet řád&ků:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: plugins/desktopgrid/desktopgrid_config.ui:103
-#, fuzzy, kde-format
-#| msgid "Desktop file name"
+#, kde-format
 msgid "Desktop &name alignment:"
-msgstr "Název souboru plochy"
+msgstr "Zarov&nání názvu plochy:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ShowAddRemove)
 #: plugins/desktopgrid/desktopgrid_config.ui:116
@@ -1637,10 +1624,9 @@ msgstr "Režim roz&ložení mřížky:"
 #: plugins/desktopgrid/desktopgrid_config.ui:137
 #: plugins/overview/kcm/overvieweffectkcm.ui:30
 #: plugins/windowview/kcm/windowvieweffectkcm.ui:30
-#, fuzzy, kde-format
-#| msgid "&Close"
+#, kde-format
 msgid "Closest"
-msgstr "&Zavřít"
+msgstr "Nejbližší"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
 #: plugins/desktopgrid/desktopgrid_config.ui:142
@@ -1650,27 +1636,26 @@ msgstr "&Zavřít"
 msgid "Natural"
 msgstr "Přirozený"
 
+# žádné parametry funkce v inspektoru funkcí
 #. i18n: ectx: property (text), widget (QLabel, ignoreLabel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
 #: plugins/desktopgrid/desktopgrid_config.ui:147
 #: plugins/videowall/package/contents/ui/config.ui:73
 #, kde-format
 msgid "None"
-msgstr "Žádný"
+msgstr "Nic"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/desktopgrid/desktopgrid_config.ui:155
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Windows layout:"
-msgstr "Okna"
+msgstr "Rozložení oken"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 #: plugins/desktopgrid/desktopgrid_config.ui:171
-#, fuzzy, kde-format
-#| msgid "caption"
+#, kde-format
 msgid "Activation"
-msgstr "titulek"
+msgstr "Aktivace"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Strength)
 #: plugins/diminactive/diminactive_config.ui:17
@@ -1692,39 +1677,34 @@ msgstr "Doky a panely"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimDesktop)
 #: plugins/diminactive/diminactive_config.ui:54
-#, fuzzy, kde-format
-#| msgid "&Desktops"
+#, kde-format
 msgid "Desktop"
-msgstr "&Plochy"
+msgstr "Pracovní plocha"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimKeepAbove)
 #: plugins/diminactive/diminactive_config.ui:61
-#, fuzzy, kde-format
-#| msgid "Keep above"
+#, kde-format
 msgid "Keep above windows"
-msgstr "Ponechat nad"
+msgstr "Podržet nad okny"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimByGroup)
 #: plugins/diminactive/diminactive_config.ui:68
-#, fuzzy, kde-format
-#| msgid "Window role"
+#, kde-format
 msgid "By window group"
-msgstr "Role okna"
+msgstr "Podle skupiny oken"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimFullScreen)
 #: plugins/diminactive/diminactive_config.ui:75
-#, fuzzy, kde-format
-#| msgid "Fullscreen"
+#, kde-format
 msgid "Fullscreen windows"
-msgstr "Celá obrazovka"
+msgstr "Okna přes celou obrazovku"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Duration)
 #: plugins/glide/glide_config.ui:19
 #: plugins/scale/package/contents/ui/config.ui:17
-#, fuzzy, kde-format
-#| msgid "caption"
+#, kde-format
 msgid "Duration:"
-msgstr "titulek"
+msgstr "Doba trvání:"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_Duration)
 #: plugins/glide/glide_config.ui:32
@@ -1742,26 +1722,23 @@ msgstr " milisekundy"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_InAnimation)
 #: plugins/glide/glide_config.ui:50
-#, fuzzy, kde-format
-#| msgid "Window position"
+#, kde-format
 msgid "Window Open Animation"
-msgstr "Umístění okna"
+msgstr "Animace otevření okna"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationEdge)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationEdge)
 #: plugins/glide/glide_config.ui:56 plugins/glide/glide_config.ui:154
-#, fuzzy, kde-format
-#| msgid "Rotation"
+#, kde-format
 msgid "Rotation edge:"
-msgstr "Rotace"
+msgstr "Okraj otáčení:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationAngle)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationAngle)
 #: plugins/glide/glide_config.ui:93 plugins/glide/glide_config.ui:191
-#, fuzzy, kde-format
-#| msgid "Rotation"
+#, kde-format
 msgid "Rotation angle:"
-msgstr "Rotace"
+msgstr "Úhel otáčení:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InDistance)
 #. i18n: ectx: property (text), widget (QLabel, label_OutDistance)
@@ -1772,10 +1749,9 @@ msgstr "Vzdálenost:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_OutAnimation)
 #: plugins/glide/glide_config.ui:148
-#, fuzzy, kde-format
-#| msgid "Window position"
+#, kde-format
 msgid "Window Close Animation"
-msgstr "Umístění okna"
+msgstr "Animace zavření okna"
 
 #: plugins/invert/invert.cpp:42 plugins/invert/invert_config.cpp:38
 #, kde-format
@@ -1829,24 +1805,21 @@ msgid "Very Huge"
 msgstr "Velmi obrovská"
 
 #: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:52
-#, fuzzy, kde-format
-#| msgid "&Resize"
+#, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Oversized"
-msgstr "Změnit &velikost"
+msgstr "Nadměrná"
 
 #: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:55
-#, fuzzy, kde-format
-#| msgid "Buttons"
+#, kde-format
 msgid "Button size:"
-msgstr "Tlačítka"
+msgstr "Velikost tlačítka:"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:14
-#, fuzzy, kde-format
-#| msgid "Dialog"
+#, kde-format
 msgid "Config Dialog"
-msgstr "Dialog"
+msgstr "Nastavovací dialog"
 
 #. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:23
@@ -1866,10 +1839,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:56
-#, fuzzy, kde-format
-#| msgid "Close Window"
+#, kde-format
 msgid "Colored window border"
-msgstr "Zavřít okno"
+msgstr "Barevný okraj okna"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:66
@@ -2074,11 +2046,9 @@ msgstr " px"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/magnifier/magnifier_config.ui:55
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgid "&Height:"
-msgstr "Vpravo"
+msgstr "&Výška:"
 
 #: plugins/mouseclick/mouseclick.cpp:37
 #: plugins/mouseclick/mouseclick_config.cpp:51
@@ -2087,25 +2057,19 @@ msgid "Toggle Mouse Click Effect"
 msgstr "Zapnout efekt kliknutí myší"
 
 #: plugins/mouseclick/mouseclick.cpp:44
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Left"
+#, kde-format
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr "Vlevo"
 
 #: plugins/mouseclick/mouseclick.cpp:45
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Middle"
+#, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
-msgstr "Uprostřed"
+msgstr "Střední"
 
 #: plugins/mouseclick/mouseclick.cpp:46
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgctxt "Right mouse button"
 msgid "Right"
 msgstr "Vpravo"
@@ -2118,24 +2082,21 @@ msgstr "Základní nastavení"
 
 #. i18n: ectx: property (text), widget (QLabel, button1_label)
 #: plugins/mouseclick/mouseclick_config.ui:37
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
+#, kde-format
 msgid "Left Mouse Button Color:"
-msgstr "Žádná tlačítka myši"
+msgstr "Barva levého tlačítko myši:"
 
 #. i18n: ectx: property (text), widget (QLabel, button2_label)
 #: plugins/mouseclick/mouseclick_config.ui:50
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
+#, kde-format
 msgid "Middle Mouse Button Color:"
-msgstr "Žádná tlačítka myši"
+msgstr "Barva prostředního tlačítka myši:"
 
 #. i18n: ectx: property (text), widget (QLabel, button3_label)
 #: plugins/mouseclick/mouseclick_config.ui:70
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
+#, kde-format
 msgid "Right Mouse Button Color:"
-msgstr "Žádná tlačítka myši"
+msgstr "Barva pravého tlačítka myši:"
 
 #. i18n: ectx: attribute (title), widget (QWidget, advanced_tab)
 #: plugins/mouseclick/mouseclick_config.ui:91
@@ -2183,11 +2144,9 @@ msgstr "Poloměr prstence"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_count_label)
 #: plugins/mouseclick/mouseclick_config.ui:184
-#, fuzzy, kde-format
-#| msgctxt "Number of fingers in this pinch gesture"
-#| msgid "Finger count"
+#, kde-format
 msgid "Ring Count:"
-msgstr "Počet prstů"
+msgstr "Počet prstenců:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, font)
 #: plugins/mouseclick/mouseclick_config.ui:210
@@ -2203,11 +2162,9 @@ msgstr "Písmo:"
 
 #. i18n: ectx: property (text), widget (QLabel, showtext_label)
 #: plugins/mouseclick/mouseclick_config.ui:233
-#, fuzzy, kde-format
-#| msgctxt "Special entry in alt+tab list for minimizing all windows"
-#| msgid "Show Desktop"
+#, kde-format
 msgid "Show Text:"
-msgstr "Zobrazit plochu"
+msgstr "Zobrazit text:"
 
 #: plugins/mousemark/mousemark.cpp:41
 #, kde-format
@@ -2229,9 +2186,9 @@ msgstr "Vymazat značky myší"
 msgctxt "Suffix"
 msgid " pixel"
 msgid_plural " pixels"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] " pixel"
+msgstr[1] " pixely"
+msgstr[2] " pixelů"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/mousemark/mousemark_config.ui:23
@@ -2274,9 +2231,7 @@ msgid "Color Temperature Preview"
 msgstr "Náhled teploty barvy"
 
 #: plugins/outputlocator/outputlocator.cpp:48
-#, fuzzy, kde-format
-#| msgctxt "The input device of the event is not known"
-#| msgid "Unknown"
+#, kde-format
 msgctxt "@label"
 msgid "Unknown"
 msgstr "Neznámý"
@@ -2290,31 +2245,25 @@ msgstr "Přepnout přehled"
 #. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
 #: plugins/overview/kcm/overvieweffectkcm.ui:22
 #: plugins/windowview/kcm/windowvieweffectkcm.ui:22
-#, fuzzy, kde-format
-#| msgctxt "Name of a hardware switch"
-#| msgid "Tablet mode"
+#, kde-format
 msgid "Layout mode:"
-msgstr "Režim tabletu"
+msgstr "Režim rozložení:"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/overview/kcm/overvieweffectkcm.ui:43
-#, fuzzy, kde-format
-#| msgid "Minimize Window"
+#, kde-format
 msgid "Ignore minimized windows:"
-msgstr "Minimalizovat okno"
+msgstr "Ignorovat minimalizovaná okna:"
 
 #: plugins/overview/qml/DesktopBar.qml:163
-#, fuzzy, kde-format
-#| msgid "Peek at Desktop"
+#, kde-format
 msgid "Delete Virtual Desktop"
-msgstr "Nakouknout na pracovní plochu"
+msgstr "Smazat virtuální plochu"
 
 #: plugins/overview/qml/DesktopBar.qml:259
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and add the window to that desktop"
-#| msgid "Add to &New Desktop"
+#, kde-format
 msgid "Add Virtual Desktop"
-msgstr "Přidat na novou pracovní plochu"
+msgstr "Přidat virtuální plochu"
 
 #: plugins/overview/qml/main.qml:229
 #, kde-format
@@ -2327,36 +2276,33 @@ msgid "Drag Down To Close"
 msgstr "Pro uzavření táhnout dolů"
 
 #: plugins/private/qml/WindowHeapDelegate.qml:452
-#, fuzzy, kde-format
-#| msgid "Close Window"
+#, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
 msgstr "Zavřít okno"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InScale)
 #: plugins/scale/package/contents/ui/config.ui:46
-#, fuzzy, kde-format
-#| msgid "Window role"
+#, kde-format
 msgid "Window open scale:"
-msgstr "Role okna"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_OutScale)
 #: plugins/scale/package/contents/ui/config.ui:53
-#, fuzzy, kde-format
-#| msgid "Window role"
+#, kde-format
 msgid "Window close scale:"
-msgstr "Role okna"
+msgstr ""
 
 #: plugins/screencast/pipewirecore.cpp:60
 #: plugins/screencast/pipewirecore.cpp:89
 #, kde-format
 msgid "Failed to start main PipeWire loop"
-msgstr ""
+msgstr "Chyba při spouštění hlavní smyčky PipeWire"
 
 #: plugins/screencast/pipewirecore.cpp:76
 #, kde-format
 msgid "Failed to create PipeWire context"
-msgstr ""
+msgstr "Chyba při vytváření kontextu PipeWire"
 
 #: plugins/screencast/pipewirecore.cpp:83
 #, kde-format
@@ -2364,10 +2310,9 @@ msgid "Failed to connect PipeWire context"
 msgstr ""
 
 #: plugins/screencast/screencastmanager.cpp:105
-#, fuzzy, kde-format
-#| msgid "Close running window on %1"
+#, kde-format
 msgid "Could not find window id %1"
-msgstr "Zavřít okno běžící na %1"
+msgstr ""
 
 #: plugins/screencast/screencastmanager.cpp:145
 #, kde-format
@@ -2404,12 +2349,10 @@ msgid ""
 msgstr ""
 
 #: plugins/showfps/qml/main.qml:110
-#, fuzzy, kde-format
-#| msgctxt "A mouse pointer motion event"
-#| msgid "Pointer Motion"
+#, kde-format
 msgctxt "@label"
 msgid "Paint Duration"
-msgstr "Pohyb ukazatele"
+msgstr "Délka malby"
 
 #: plugins/showfps/qml/main.qml:162
 #, kde-format
@@ -2418,11 +2361,10 @@ msgid "Paint Amount"
 msgstr "Množství barvy"
 
 #: plugins/showfps/qml/main.qml:175
-#, fuzzy, kde-format
-#| msgid "Current Layout:"
+#, kde-format
 msgctxt "@label"
 msgid "Current FPS"
-msgstr "Současné rozložení:"
+msgstr "Současné FPS"
 
 #: plugins/showfps/qml/main.qml:184
 #, kde-format
@@ -2449,19 +2391,15 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_HorizontalGap)
 #: plugins/slide/slide_config.ui:23
-#, fuzzy, kde-format
-#| msgctxt "An orientation of a pointer axis event"
-#| msgid "Horizontal"
+#, kde-format
 msgid "Horizontal:"
-msgstr "Vodorovně"
+msgstr "Vodorovně:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_VerticalGap)
 #: plugins/slide/slide_config.ui:46
-#, fuzzy, kde-format
-#| msgctxt "An orientation of a pointer axis event"
-#| msgid "Vertical"
+#, kde-format
 msgid "Vertical:"
-msgstr "Svisle"
+msgstr "Svisle:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideBackground)
 #: plugins/slide/slide_config.ui:72
@@ -2524,24 +2462,19 @@ msgid "Load Layout..."
 msgstr "Načíst rozložení..."
 
 #: plugins/tileseditor/qml/main.qml:274
-#, fuzzy, kde-format
-#| msgid "&Close"
+#, kde-format
 msgid "Close"
-msgstr "&Zavřít"
+msgstr "Zavřít"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:167
-#, fuzzy, kde-format
-#| msgctxt "An orientation of a pointer axis event"
-#| msgid "Horizontal"
+#, kde-format
 msgid "Split Horizontally"
-msgstr "Vodorovně"
+msgstr "Rozdělit vodorovně"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:174
-#, fuzzy, kde-format
-#| msgctxt "An orientation of a pointer axis event"
-#| msgid "Vertical"
+#, kde-format
 msgid "Split Vertically"
-msgstr "Svisle"
+msgstr "Rozdělit svisle"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:182
 #: plugins/tileseditor/qml/TileDelegate.qml:211
@@ -2558,7 +2491,7 @@ msgstr "Smazat"
 #: plugins/trackmouse/trackmouse_config.cpp:57
 #, kde-format
 msgid "Track mouse"
-msgstr "Sledovat myš"
+msgstr "Sledovat kurzor"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/trackmouse/trackmouse_config.ui:26
@@ -2568,23 +2501,19 @@ msgstr "Spustit efekt pomocí:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_KeyboardShortcut)
 #: plugins/trackmouse/trackmouse_config.ui:33
-#, fuzzy, kde-format
-#| msgid "Keyboard"
+#, kde-format
 msgid "Keyboard shortcut:"
-msgstr "Klávesnice"
+msgstr "Klávesová zkratka:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_ModifierKeys)
 #: plugins/trackmouse/trackmouse_config.ui:43
-#, fuzzy, kde-format
-#| msgid "Modifiers"
+#, kde-format
 msgid "Modifier keys:"
-msgstr "Modifikátory"
+msgstr "Modifikátory klávesnice:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Alt)
 #: plugins/trackmouse/trackmouse_config.ui:65
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Alt"
+#, kde-format
 msgid "Alt"
 msgstr "Alt"
 
@@ -2596,17 +2525,13 @@ msgstr "Ctrl"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Shift)
 #: plugins/trackmouse/trackmouse_config.ui:79
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Shift"
+#, kde-format
 msgid "Shift"
 msgstr "Shift"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Meta)
 #: plugins/trackmouse/trackmouse_config.ui:86
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Meta"
+#, kde-format
 msgid "Meta"
 msgstr "Meta"
 
@@ -2634,14 +2559,13 @@ msgstr "Rozbalovací seznamy:"
 #: plugins/translucency/package/contents/ui/config.ui:431
 #, kde-format
 msgid "Opaque"
-msgstr "Neprůhledný"
+msgstr "Neprůhledné"
 
 #. i18n: ectx: property (text), widget (QLabel, dialogs_label)
 #: plugins/translucency/package/contents/ui/config.ui:137
-#, fuzzy, kde-format
-#| msgid "Dialog"
+#, kde-format
 msgid "Dialogs:"
-msgstr "Dialog"
+msgstr "Dialogy:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -2659,17 +2583,15 @@ msgstr "Nabídky:"
 
 #. i18n: ectx: property (text), widget (QLabel, moveresize_label)
 #: plugins/translucency/package/contents/ui/config.ui:207
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Moving windows:"
-msgstr "Přesunout okno"
+msgstr "Okna v pohybu:"
 
 #. i18n: ectx: property (text), widget (QLabel, inactive_label)
 #: plugins/translucency/package/contents/ui/config.ui:226
-#, fuzzy, kde-format
-#| msgid "Internal Windows"
+#, kde-format
 msgid "Inactive windows:"
-msgstr "Vnitřní okna"
+msgstr "Neaktivní okna:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, kcfg_IndividualMenuConfig)
 #: plugins/translucency/package/contents/ui/config.ui:267
@@ -2723,11 +2645,9 @@ msgstr "Čárkou oddělený seznam tříd okna"
 
 #. i18n: ectx: property (text), widget (QLabel, applyLabel)
 #: plugins/videowall/package/contents/ui/config.ui:45
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Alt"
+#, kde-format
 msgid "All"
-msgstr "Alt"
+msgstr "Vše"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Ignore)
 #: plugins/videowall/package/contents/ui/config.ui:54
@@ -2743,10 +2663,9 @@ msgstr "Zapnout současná okna (na aktivní ploše)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:49
 #: plugins/windowview/windowvieweffect.cpp:54
-#, fuzzy, kde-format
-#| msgid "Keep Window on All Desktops"
+#, kde-format
 msgid "Toggle Present Windows (All desktops)"
-msgstr "Podržet okno na všech plochách"
+msgstr "Zapnout současná okna (na všech plochách)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:56
 #: plugins/windowview/windowvieweffect.cpp:63
@@ -2762,10 +2681,9 @@ msgstr "Zapnout současná okna (Třída okna na aktivní ploše)"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
 #: plugins/windowview/kcm/windowvieweffectkcm.ui:56
-#, fuzzy, kde-format
-#| msgid "Minimize Window"
+#, kde-format
 msgid "Ignore &minimized windows"
-msgstr "Minimalizovat okno"
+msgstr "Ignorovat &minimalizovaná okna"
 
 #: plugins/windowview/qml/main.qml:107
 #, kde-format
@@ -2773,16 +2691,14 @@ msgid "No Matches"
 msgstr "Žádný nevyhovuje"
 
 #: plugins/windowview/qml/main.qml:107
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "No Windows"
-msgstr "Okna"
+msgstr "Žádná okna"
 
 #: plugins/windowview/qml/main.qml:122
-#, fuzzy, kde-format
-#| msgid "Internal Windows"
+#, kde-format
 msgid "Filter windows…"
-msgstr "Vnitřní okna"
+msgstr "Filtrovat okna..."
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
 #: plugins/wobblywindows/wobblywindows_config.ui:20
@@ -2804,10 +2720,9 @@ msgstr "Přetá&hnutí:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: plugins/wobblywindows/wobblywindows_config.ui:81
-#, fuzzy, kde-format
-#| msgid "Move to %1"
+#, kde-format
 msgid "&Move factor:"
-msgstr "Přesunout na '%1'"
+msgstr "Faktor poh&ybu:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_MoveWobble)
 #: plugins/wobblywindows/wobblywindows_config.ui:155
@@ -2843,19 +2758,17 @@ msgstr "Méně"
 #: plugins/wobblywindows/wobblywindows_config.ui:224
 #, kde-format
 msgid "More"
-msgstr "více"
+msgstr "Více"
 
 #: plugins/zoom/zoom.cpp:67
-#, fuzzy, kde-format
-#| msgid "Move Window One Screen to the Left"
+#, kde-format
 msgid "Move Zoomed Area to Left"
-msgstr "Přesunout okno o obrazovku doleva"
+msgstr "Přesunout přiblíženou oblast doleva"
 
 #: plugins/zoom/zoom.cpp:74
-#, fuzzy, kde-format
-#| msgid "Move Window One Screen to the Right"
+#, kde-format
 msgid "Move Zoomed Area to Right"
-msgstr "Přesunout okno o obrazovku doprava"
+msgstr "Přesunout přiblíženou oblast doprava"
 
 #: plugins/zoom/zoom.cpp:81
 #, kde-format
@@ -2868,40 +2781,34 @@ msgid "Move Zoomed Area Downwards"
 msgstr "Přesunout přiblíženou oblast dolů"
 
 #: plugins/zoom/zoom.cpp:96 plugins/zoom/zoom_config.cpp:108
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
+#, kde-format
 msgid "Move Mouse to Focus"
-msgstr "Žádná tlačítka myši"
+msgstr "Přesunout myš na zaměření"
 
 #: plugins/zoom/zoom.cpp:103 plugins/zoom/zoom_config.cpp:115
-#, fuzzy, kde-format
-#| msgid "Move Window to the Center"
+#, kde-format
 msgid "Move Mouse to Center"
-msgstr "Přesunout okno na střed"
+msgstr "Přesunout myš na střed"
 
 #: plugins/zoom/zoom_config.cpp:80
-#, fuzzy, kde-format
-#| msgid "Move Window Left"
+#, kde-format
 msgid "Move Left"
-msgstr "Přesunout okno doleva"
+msgstr "Přesunout doleva"
 
 #: plugins/zoom/zoom_config.cpp:87
-#, fuzzy, kde-format
-#| msgid "Move Window Right"
+#, kde-format
 msgid "Move Right"
-msgstr "Přesunout okno doprava"
+msgstr "Přesunout doprava"
 
 #: plugins/zoom/zoom_config.cpp:94
-#, fuzzy, kde-format
-#| msgid "Move Window Up"
+#, kde-format
 msgid "Move Up"
-msgstr "Přesunout okno nahoru"
+msgstr "Přesunout nahoru"
 
 #: plugins/zoom/zoom_config.cpp:101
-#, fuzzy, kde-format
-#| msgid "Move Window Down"
+#, kde-format
 msgid "Move Down"
-msgstr "Přesunout okno dolů"
+msgstr "Přesunout dolů"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label)
 #. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
@@ -2959,9 +2866,7 @@ msgstr "Viditelnost ukazatele myši."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
 #: plugins/zoom/zoom_config.ui:103
-#, fuzzy, kde-format
-#| msgctxt "Current scale in pinch gesture"
-#| msgid "Scale"
+#, kde-format
 msgid "Scale"
 msgstr "Měřítko"
 
@@ -2985,10 +2890,9 @@ msgstr "Sledovat pohyb myši."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: plugins/zoom/zoom_config.ui:125
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Proportional"
-msgstr "Pozice"
+msgstr "Proporcionální"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: plugins/zoom/zoom_config.ui:130
@@ -3000,7 +2904,7 @@ msgstr "Na střed"
 #: plugins/zoom/zoom_config.ui:135
 #, kde-format
 msgid "Push"
-msgstr "Tlačit"
+msgstr "Odeslat"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: plugins/zoom/zoom_config.ui:140
@@ -4130,11 +4034,9 @@ msgid ""
 msgstr ""
 
 #: utils/edid.cpp:236
-#, fuzzy, kde-format
-#| msgctxt "The input device of the event is not known"
-#| msgid "Unknown"
+#, kde-format
 msgid "unknown"
-msgstr "Neznámý"
+msgstr "neznámý"
 
 #: virtualdesktops.cpp:692 virtualdesktops.cpp:763
 #, kde-format
@@ -4200,16 +4102,4 @@ msgstr ""
 #: xwayland/xwaylandlauncher.cpp:272
 #, kde-format
 msgid "Xwayland has crashed"
-msgstr ""
-
-#~ msgctxt "Error message"
-#~ msgid "Could not locate package metadata"
-#~ msgstr "Nelze najít metadata balíčku"
-
-#~ msgctxt "Required file does not exist"
-#~ msgid "%1 does not contain a valid metadata.json file"
-#~ msgstr "%1 neobsahuje platný soubor metadata.json"
-
-#~ msgctxt "Required file does not exist"
-#~ msgid "%1 does not exist"
-#~ msgstr "%1 neexistuje"
+msgstr "Xwayland spadnul"

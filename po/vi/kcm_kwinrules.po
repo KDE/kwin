@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-03 02:04+0000\n"
+"POT-Creation-Date: 2023-06-07 02:19+0000\n"
 "PO-Revision-Date: 2023-02-20 11:18+0100\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
@@ -139,198 +139,6 @@ msgid ""
 msgstr ""
 "Thuộc tính cửa sổ sẽ bị ép thành giá trị đã cho, đến khi nó bị ẩn đi\n"
 "(hành động này sẽ bị xoá sau khi cửa sổ bị ẩn đi)."
-
-#: package/contents/ui/FileDialogLoader.qml:15
-#, kde-format
-msgid "Select File"
-msgstr "Chọn tệp"
-
-#: package/contents/ui/FileDialogLoader.qml:27
-#, kde-format
-msgid "KWin Rules (*.kwinrule)"
-msgstr "Luật KWin (*.kwinrule)"
-
-#: package/contents/ui/main.qml:63
-#, kde-format
-msgid "No rules for specific windows are currently set"
-msgstr "Không có luật nào đang được đặt theo cửa sổ"
-
-#: package/contents/ui/main.qml:64
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Click the <interface>Add New...</interface> button below to add some"
-msgctxt "@info"
-msgid "Click the <interface>Add New…</interface> button below to add some"
-msgstr "Bấm nút <interface>Thêm mới...</interface> ở dưới để thêm"
-
-#: package/contents/ui/main.qml:72
-#, kde-format
-msgid "Select the rules to export"
-msgstr "Chọn luật để xuất khẩu"
-
-#: package/contents/ui/main.qml:76
-#, kde-format
-msgid "Unselect All"
-msgstr "Bỏ chọn tất cả"
-
-#: package/contents/ui/main.qml:76
-#, kde-format
-msgid "Select All"
-msgstr "Chọn tất cả"
-
-#: package/contents/ui/main.qml:90
-#, kde-format
-msgid "Save Rules"
-msgstr "Lưu các luật"
-
-#: package/contents/ui/main.qml:101
-#, fuzzy, kde-format
-#| msgid "Add New..."
-msgid "Add New…"
-msgstr "Thêm mới..."
-
-#: package/contents/ui/main.qml:112
-#, fuzzy, kde-format
-#| msgid "Import..."
-msgid "Import…"
-msgstr "Nhập khẩu..."
-
-#: package/contents/ui/main.qml:120
-#, kde-format
-msgid "Cancel Export"
-msgstr "Huỷ xuất khẩu"
-
-#: package/contents/ui/main.qml:120
-#, fuzzy, kde-format
-#| msgid "Export..."
-msgid "Export…"
-msgstr "Xuất khẩu..."
-
-#: package/contents/ui/main.qml:210
-#, kde-format
-msgid "Edit"
-msgstr "Sửa"
-
-#: package/contents/ui/main.qml:219
-#, kde-format
-msgid "Duplicate"
-msgstr "Nhân đôi"
-
-#: package/contents/ui/main.qml:228
-#, kde-format
-msgid "Delete"
-msgstr "Xoá"
-
-#: package/contents/ui/main.qml:241
-#, kde-format
-msgid "Import Rules"
-msgstr "Nhập khẩu luật"
-
-#: package/contents/ui/main.qml:253
-#, kde-format
-msgid "Export Rules"
-msgstr "Xuất khẩu luật"
-
-#: package/contents/ui/OptionsComboBox.qml:35
-#, kde-format
-msgid "None selected"
-msgstr "Chưa chọn gì"
-
-#: package/contents/ui/OptionsComboBox.qml:41
-#, kde-format
-msgid "All selected"
-msgstr "Đã chọn hết"
-
-#: package/contents/ui/OptionsComboBox.qml:43
-#, kde-format
-msgid "%1 selected"
-msgid_plural "%1 selected"
-msgstr[0] "Đã chọn %1"
-
-#: package/contents/ui/RulesEditor.qml:63
-#, kde-format
-msgid "No window properties changed"
-msgstr "Không thuộc tính cửa sổ nào bị thay đổi"
-
-#: package/contents/ui/RulesEditor.qml:64
-#, kde-kuit-format
-msgctxt "@info"
-msgid ""
-"Click the <interface>Add Property...</interface> button below to add some "
-"window properties that will be affected by the rule"
-msgstr ""
-"Bấm nút <interface>Thêm thuộc tính...</interface> ở dưới để thêm các thuộc "
-"tính cửa sổ sẽ bị tác động bởi luật này"
-
-#: package/contents/ui/RulesEditor.qml:85
-#, kde-format
-msgid "Close"
-msgstr "Đóng"
-
-#: package/contents/ui/RulesEditor.qml:85
-#, kde-format
-msgid "Add Property..."
-msgstr "Thêm thuộc tính..."
-
-#: package/contents/ui/RulesEditor.qml:98
-#, kde-format
-msgid "Detect Window Properties"
-msgstr "Phát hiện thuộc tính cửa sổ"
-
-#: package/contents/ui/RulesEditor.qml:114
-#: package/contents/ui/RulesEditor.qml:121
-#, kde-format
-msgid "Instantly"
-msgstr "Lập tức"
-
-#: package/contents/ui/RulesEditor.qml:115
-#: package/contents/ui/RulesEditor.qml:126
-#, kde-format
-msgid "After %1 second"
-msgid_plural "After %1 seconds"
-msgstr[0] "Sau %1 giây"
-
-#: package/contents/ui/RulesEditor.qml:175
-#, kde-format
-msgid "Add property to the rule"
-msgstr "Thêm thuộc tính vào luật"
-
-#: package/contents/ui/RulesEditor.qml:276
-#: package/contents/ui/ValueEditor.qml:54
-#, kde-format
-msgid "Yes"
-msgstr "Có"
-
-#: package/contents/ui/RulesEditor.qml:276
-#: package/contents/ui/ValueEditor.qml:60
-#, kde-format
-msgid "No"
-msgstr "Không"
-
-#: package/contents/ui/RulesEditor.qml:278
-#: package/contents/ui/ValueEditor.qml:168
-#: package/contents/ui/ValueEditor.qml:175
-#, kde-format
-msgid "%1 %"
-msgstr "%1 %"
-
-#: package/contents/ui/RulesEditor.qml:280
-#, kde-format
-msgctxt "Coordinates (x, y)"
-msgid "(%1, %2)"
-msgstr "(%1, %2)"
-
-#: package/contents/ui/RulesEditor.qml:282
-#, kde-format
-msgctxt "Size (width, height)"
-msgid "(%1, %2)"
-msgstr "(%1, %2)"
-
-#: package/contents/ui/ValueEditor.qml:203
-#, kde-format
-msgctxt "(x, y) coordinates separator in size/position"
-msgid "x"
-msgstr "x"
 
 #: rulesmodel.cpp:218
 #, kde-format
@@ -908,6 +716,192 @@ msgstr "Cửa sổ vô quản lí"
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
 "Không phát hiện được thuộc tính cửa sổ. Cửa sổ này không do KWin quản lí."
+
+#: ui/FileDialogLoader.qml:15
+#, kde-format
+msgid "Select File"
+msgstr "Chọn tệp"
+
+#: ui/FileDialogLoader.qml:27
+#, kde-format
+msgid "KWin Rules (*.kwinrule)"
+msgstr "Luật KWin (*.kwinrule)"
+
+#: ui/main.qml:62
+#, kde-format
+msgid "No rules for specific windows are currently set"
+msgstr "Không có luật nào đang được đặt theo cửa sổ"
+
+#: ui/main.qml:63
+#, fuzzy, kde-kuit-format
+#| msgctxt "@info"
+#| msgid "Click the <interface>Add New...</interface> button below to add some"
+msgctxt "@info"
+msgid "Click the <interface>Add New…</interface> button below to add some"
+msgstr "Bấm nút <interface>Thêm mới...</interface> ở dưới để thêm"
+
+#: ui/main.qml:71
+#, kde-format
+msgid "Select the rules to export"
+msgstr "Chọn luật để xuất khẩu"
+
+#: ui/main.qml:75
+#, kde-format
+msgid "Unselect All"
+msgstr "Bỏ chọn tất cả"
+
+#: ui/main.qml:75
+#, kde-format
+msgid "Select All"
+msgstr "Chọn tất cả"
+
+#: ui/main.qml:89
+#, kde-format
+msgid "Save Rules"
+msgstr "Lưu các luật"
+
+#: ui/main.qml:100
+#, fuzzy, kde-format
+#| msgid "Add New..."
+msgid "Add New…"
+msgstr "Thêm mới..."
+
+#: ui/main.qml:111
+#, fuzzy, kde-format
+#| msgid "Import..."
+msgid "Import…"
+msgstr "Nhập khẩu..."
+
+#: ui/main.qml:119
+#, kde-format
+msgid "Cancel Export"
+msgstr "Huỷ xuất khẩu"
+
+#: ui/main.qml:119
+#, fuzzy, kde-format
+#| msgid "Export..."
+msgid "Export…"
+msgstr "Xuất khẩu..."
+
+#: ui/main.qml:209
+#, kde-format
+msgid "Edit"
+msgstr "Sửa"
+
+#: ui/main.qml:218
+#, kde-format
+msgid "Duplicate"
+msgstr "Nhân đôi"
+
+#: ui/main.qml:227
+#, kde-format
+msgid "Delete"
+msgstr "Xoá"
+
+#: ui/main.qml:240
+#, kde-format
+msgid "Import Rules"
+msgstr "Nhập khẩu luật"
+
+#: ui/main.qml:252
+#, kde-format
+msgid "Export Rules"
+msgstr "Xuất khẩu luật"
+
+#: ui/OptionsComboBox.qml:35
+#, kde-format
+msgid "None selected"
+msgstr "Chưa chọn gì"
+
+#: ui/OptionsComboBox.qml:41
+#, kde-format
+msgid "All selected"
+msgstr "Đã chọn hết"
+
+#: ui/OptionsComboBox.qml:43
+#, kde-format
+msgid "%1 selected"
+msgid_plural "%1 selected"
+msgstr[0] "Đã chọn %1"
+
+#: ui/RulesEditor.qml:63
+#, kde-format
+msgid "No window properties changed"
+msgstr "Không thuộc tính cửa sổ nào bị thay đổi"
+
+#: ui/RulesEditor.qml:64
+#, kde-kuit-format
+msgctxt "@info"
+msgid ""
+"Click the <interface>Add Property...</interface> button below to add some "
+"window properties that will be affected by the rule"
+msgstr ""
+"Bấm nút <interface>Thêm thuộc tính...</interface> ở dưới để thêm các thuộc "
+"tính cửa sổ sẽ bị tác động bởi luật này"
+
+#: ui/RulesEditor.qml:85
+#, kde-format
+msgid "Close"
+msgstr "Đóng"
+
+#: ui/RulesEditor.qml:85
+#, kde-format
+msgid "Add Property..."
+msgstr "Thêm thuộc tính..."
+
+#: ui/RulesEditor.qml:98
+#, kde-format
+msgid "Detect Window Properties"
+msgstr "Phát hiện thuộc tính cửa sổ"
+
+#: ui/RulesEditor.qml:114 ui/RulesEditor.qml:121
+#, kde-format
+msgid "Instantly"
+msgstr "Lập tức"
+
+#: ui/RulesEditor.qml:115 ui/RulesEditor.qml:126
+#, kde-format
+msgid "After %1 second"
+msgid_plural "After %1 seconds"
+msgstr[0] "Sau %1 giây"
+
+#: ui/RulesEditor.qml:175
+#, kde-format
+msgid "Add property to the rule"
+msgstr "Thêm thuộc tính vào luật"
+
+#: ui/RulesEditor.qml:276 ui/ValueEditor.qml:54
+#, kde-format
+msgid "Yes"
+msgstr "Có"
+
+#: ui/RulesEditor.qml:276 ui/ValueEditor.qml:60
+#, kde-format
+msgid "No"
+msgstr "Không"
+
+#: ui/RulesEditor.qml:278 ui/ValueEditor.qml:168 ui/ValueEditor.qml:175
+#, kde-format
+msgid "%1 %"
+msgstr "%1 %"
+
+#: ui/RulesEditor.qml:280
+#, kde-format
+msgctxt "Coordinates (x, y)"
+msgid "(%1, %2)"
+msgstr "(%1, %2)"
+
+#: ui/RulesEditor.qml:282
+#, kde-format
+msgctxt "Size (width, height)"
+msgid "(%1, %2)"
+msgstr "(%1, %2)"
+
+#: ui/ValueEditor.qml:203
+#, kde-format
+msgctxt "(x, y) coordinates separator in size/position"
+msgid "x"
+msgstr "x"
 
 #~ msgid "Window shall (not) appear in the taskbar."
 #~ msgstr "Cửa sổ sẽ (không) xuất hiện trong thanh tác vụ."

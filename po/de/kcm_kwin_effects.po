@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-06 02:09+0000\n"
-"PO-Revision-Date: 2023-06-05 13:09+0200\n"
+"POT-Creation-Date: 2023-06-07 02:19+0000\n"
+"PO-Revision-Date: 2023-06-06 23:23+0200\n"
 "Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Lokalize 23.07.70\n"
 
-#: package/contents/ui/Effect.qml:97
+#: ui/Effect.qml:97
 #, kde-format
 msgid ""
 "Author: %1\n"
@@ -27,26 +27,25 @@ msgstr ""
 "Autor: %1\n"
 "Lizenz: %2"
 
-#: package/contents/ui/Effect.qml:127
+#: ui/Effect.qml:127
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Show/Hide Video"
 msgstr "Video anzeigen/ausblenden"
 
-#: package/contents/ui/Effect.qml:134
+#: ui/Effect.qml:134
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Configure…"
 msgstr "Einrichten ..."
 
-#: package/contents/ui/main.qml:25
-#, fuzzy, kde-format
-#| msgid "Get New…"
+#: ui/main.qml:25
+#, kde-format
 msgctxt "@action:button get new KWin effects"
 msgid "Get New…"
 msgstr "Neue holen ..."
 
-#: package/contents/ui/main.qml:44
+#: ui/main.qml:44
 #, kde-format
 msgid ""
 "Hint: To find out or configure how to activate an effect, look at the "
@@ -55,17 +54,17 @@ msgstr ""
 "Tipp: Wie ein Effekt ausgelöst und eingerichtet wird, erfahren Sie in den "
 "Effekt-Einstellungen"
 
-#: package/contents/ui/main.qml:66
+#: ui/main.qml:66
 #, kde-format
 msgid "Configure Filter"
 msgstr "Filter einrichten"
 
-#: package/contents/ui/main.qml:78
+#: ui/main.qml:78
 #, kde-format
 msgid "Exclude unsupported effects"
 msgstr "Nicht unterstützte Effekte ausschließen"
 
-#: package/contents/ui/main.qml:86
+#: ui/main.qml:86
 #, kde-format
 msgid "Exclude internal effects"
 msgstr "Interne Effekte ausschließen"
