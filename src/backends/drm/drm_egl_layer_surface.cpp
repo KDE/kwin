@@ -241,25 +241,24 @@ std::optional<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(con
     };
     const auto testFormats = [this, &sort, &doTestFormats](QVector<GbmFormat> &formats) -> std::optional<Surface> {
         std::sort(formats.begin(), formats.end(), sort);
-        if (const auto surface = doTestFormats(formats, MultiGpuImportMode::Dmabuf)) {
-            if (m_gpu != m_eglBackend->gpu()) {
-                qCDebug(KWIN_DRM) << "chose dmabuf import with format" << formatName(surface->gbmSwapchain->format()).name << "and modifier" << surface->gbmSwapchain->modifier();
-            }
+        if (m_gpu == m_eglBackend->gpu()) {
+            return doTestFormats(formats, MultiGpuImportMode::None);
+        }
+        if (const auto surface = doTestFormats(formats, MultiGpuImportMode::Egl)) {
+            qCDebug(KWIN_DRM) << "chose egl import with format" << formatName(surface->gbmSwapchain->format()).name << "and modifier" << surface->gbmSwapchain->modifier();
             return surface;
         }
-        if (m_gpu != m_eglBackend->gpu()) {
-            if (const auto surface = doTestFormats(formats, MultiGpuImportMode::LinearDmabuf)) {
-                qCDebug(KWIN_DRM) << "chose linear dmabuf import with format" << formatName(surface->gbmSwapchain->format()).name << "and modifier" << surface->gbmSwapchain->modifier();
-                return surface;
-            }
-            if (const auto surface = doTestFormats(formats, MultiGpuImportMode::Egl)) {
-                qCDebug(KWIN_DRM) << "chose egl import with format" << formatName(surface->gbmSwapchain->format()).name << "and modifier" << surface->gbmSwapchain->modifier();
-                return surface;
-            }
-            if (const auto surface = doTestFormats(formats, MultiGpuImportMode::DumbBuffer)) {
-                qCDebug(KWIN_DRM) << "chose cpu import with format" << formatName(surface->gbmSwapchain->format()).name << "and modifier" << surface->gbmSwapchain->modifier();
-                return surface;
-            }
+        if (const auto surface = doTestFormats(formats, MultiGpuImportMode::Dmabuf)) {
+            qCDebug(KWIN_DRM) << "chose dmabuf import with format" << formatName(surface->gbmSwapchain->format()).name << "and modifier" << surface->gbmSwapchain->modifier();
+            return surface;
+        }
+        if (const auto surface = doTestFormats(formats, MultiGpuImportMode::LinearDmabuf)) {
+            qCDebug(KWIN_DRM) << "chose linear dmabuf import with format" << formatName(surface->gbmSwapchain->format()).name << "and modifier" << surface->gbmSwapchain->modifier();
+            return surface;
+        }
+        if (const auto surface = doTestFormats(formats, MultiGpuImportMode::DumbBuffer)) {
+            qCDebug(KWIN_DRM) << "chose cpu import with format" << formatName(surface->gbmSwapchain->format()).name << "and modifier" << surface->gbmSwapchain->modifier();
+            return surface;
         }
         return std::nullopt;
     };
