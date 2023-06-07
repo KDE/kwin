@@ -289,6 +289,9 @@ bool Compositor::setupStart()
 
         if (stop) {
             break;
+        } else if (qEnvironmentVariableIsSet("KWIN_COMPOSE")) {
+            qCCritical(KWIN_CORE) << "Could not fulfill the requested compositing mode in KWIN_COMPOSE:" << type << ". Exiting.";
+            qApp->quit();
         }
     }
 
