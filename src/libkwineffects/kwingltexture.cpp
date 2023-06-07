@@ -88,8 +88,8 @@ GLTexture::GLTexture(GLenum target)
     d->m_target = target;
 }
 
-GLTexture::GLTexture(GLuint textureId, GLenum internalFormat, const QSize &size, int levels, bool owning, TextureTransforms transform)
-    : GLTexture(GL_TEXTURE_2D)
+GLTexture::GLTexture(GLenum target, GLuint textureId, GLenum internalFormat, const QSize &size, int levels, bool owning, TextureTransforms transform)
+    : GLTexture(target)
 {
     d->m_owning = owning;
     d->m_texture = textureId;
@@ -602,7 +602,7 @@ QImage GLTexture::toImage() const
 
 std::unique_ptr<GLTexture> GLTexture::createNonOwningWrapper(GLuint textureId, GLenum internalFormat, const QSize &size)
 {
-    return std::unique_ptr<GLTexture>(new GLTexture(textureId, internalFormat, size, 1, false, TextureTransforms{}));
+    return std::unique_ptr<GLTexture>(new GLTexture(GL_TEXTURE_2D, textureId, internalFormat, size, 1, false, TextureTransforms{}));
 }
 
 std::unique_ptr<GLTexture> GLTexture::allocate(GLenum internalFormat, const QSize &size, int levels)
@@ -635,7 +635,7 @@ std::unique_ptr<GLTexture> GLTexture::allocate(GLenum internalFormat, const QSiz
         // internalFormat() won't need to be specialized for GLES2.
     }
     glBindTexture(GL_TEXTURE_2D, 0);
-    return std::unique_ptr<GLTexture>(new GLTexture(texture, internalFormat, size, levels, true, TextureTransforms{}));
+    return std::unique_ptr<GLTexture>(new GLTexture(GL_TEXTURE_2D, texture, internalFormat, size, levels, true, TextureTransforms{}));
 }
 
 std::unique_ptr<GLTexture> GLTexture::upload(const QImage &image)
@@ -695,7 +695,7 @@ std::unique_ptr<GLTexture> GLTexture::upload(const QImage &image)
         }
     }
     glBindTexture(GL_TEXTURE_2D, 0);
-    return std::unique_ptr<GLTexture>(new GLTexture(texture, internalFormat, image.size(), 1, true, TextureTransform::MirrorY));
+    return std::unique_ptr<GLTexture>(new GLTexture(GL_TEXTURE_2D, texture, internalFormat, image.size(), 1, true, TextureTransform::MirrorY));
 }
 
 std::unique_ptr<GLTexture> GLTexture::upload(const QPixmap &pixmap)

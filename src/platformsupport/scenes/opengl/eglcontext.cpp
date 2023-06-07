@@ -23,10 +23,13 @@ namespace KWin
 
 std::unique_ptr<EglContext> EglContext::create(EglDisplay *display, EGLConfig config, ::EGLContext sharedContext)
 {
-    auto context = createContext(display, config, sharedContext);
-    if (context) {
-        eglMakeCurrent(display->handle(), EGL_NO_SURFACE, EGL_NO_SURFACE, context);
-        return std::make_unique<EglContext>(display, config, context);
+    auto handle = createContext(display, config, sharedContext);
+    if (handle) {
+        if (!eglMakeCurrent(display->handle(), EGL_NO_SURFACE, EGL_NO_SURFACE, handle)) {
+            eglDestroyContext(display->handle(), handle);
+            return nullptr;
+        }
+        return std::make_unique<EglContext>(display, config, handle);
     } else {
         return nullptr;
     }
@@ -41,7 +44,6 @@ EglContext::EglContext(EglDisplay *display, EGLConfig config, ::EGLContext conte
     // It is not legal to not have a vertex array object bound in a core context
     // to make code handling old and new OpenGL versions easier, bind a dummy vao that's used for everything
     if (!isOpenglES() && hasOpenglExtension(QByteArrayLiteral("GL_ARB_vertex_array_object"))) {
-        makeCurrent();
         glGenVertexArrays(1, &m_vao);
         glBindVertexArray(m_vao);
     }
@@ -49,10 +51,11 @@ EglContext::EglContext(EglDisplay *display, EGLConfig config, ::EGLContext conte
 
 EglContext::~EglContext()
 {
+    makeCurrent();
     if (m_vao) {
-        makeCurrent();
         glDeleteVertexArrays(1, &m_vao);
     }
+    m_shaderManager.reset();
     doneCurrent();
     eglDestroyContext(m_display->handle(), m_handle);
 }
@@ -208,7 +211,7 @@ std::shared_ptr<GLTexture> EglContext::importDmaBufAsTexture(const DmaBufAttribu
 {
     EGLImageKHR image = m_display->importDmaBufAsImage(attributes);
     if (image != EGL_NO_IMAGE_KHR) {
-        return EGLImageTexture::create(m_display->handle(), image, glFormatForDrmFormat(attributes.format), QSize(attributes.width, attributes.height));
+        return EGLImageTexture::create(m_display->handle(), image, glFormatForDrmFormat(attributes.format), QSize(attributes.width, attributes.height), m_display->isExternalOnly(attributes.format, attributes.modifier));
     } else {
         qCWarning(KWIN_OPENGL) << "Error creating EGLImageKHR: " << getEglErrorString();
         return nullptr;

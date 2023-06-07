@@ -16,8 +16,8 @@
 namespace KWin
 {
 
-EGLImageTexture::EGLImageTexture(::EGLDisplay display, EGLImage image, uint textureId, int internalFormat, const QSize &size)
-    : GLTexture(textureId, internalFormat, size, 1, true, TextureTransform::MirrorY)
+EGLImageTexture::EGLImageTexture(::EGLDisplay display, EGLImage image, uint textureId, int internalFormat, const QSize &size, uint32_t target)
+    : GLTexture(target, textureId, internalFormat, size, 1, true, TextureTransform::MirrorY)
     , m_image(image)
     , m_display(display)
 {
@@ -28,7 +28,7 @@ EGLImageTexture::~EGLImageTexture()
     eglDestroyImageKHR(m_display, m_image);
 }
 
-std::shared_ptr<EGLImageTexture> EGLImageTexture::create(::EGLDisplay display, EGLImageKHR image, int internalFormat, const QSize &size)
+std::shared_ptr<EGLImageTexture> EGLImageTexture::create(::EGLDisplay display, EGLImageKHR image, int internalFormat, const QSize &size, bool externalOnly)
 {
     if (image == EGL_NO_IMAGE) {
         return nullptr;
@@ -38,10 +38,11 @@ std::shared_ptr<EGLImageTexture> EGLImageTexture::create(::EGLDisplay display, E
     if (!texture) {
         return nullptr;
     }
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, image);
-    glBindTexture(GL_TEXTURE_2D, 0);
-    return std::make_shared<EGLImageTexture>(display, image, texture, internalFormat, size);
+    const uint32_t target = externalOnly ? GL_TEXTURE_EXTERNAL_OES : GL_TEXTURE_2D;
+    glBindTexture(target, texture);
+    glEGLImageTargetTexture2DOES(target, image);
+    glBindTexture(target, 0);
+    return std::make_shared<EGLImageTexture>(display, image, texture, internalFormat, size, target);
 }
 
 } // namespace KWin

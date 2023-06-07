@@ -47,7 +47,7 @@ private:
     EglDisplay *const m_display;
     const ::EGLContext m_handle;
     const EGLConfig m_config;
-    const std::unique_ptr<ShaderManager> m_shaderManager;
+    std::unique_ptr<ShaderManager> m_shaderManager;
     uint32_t m_vao = 0;
 };
 

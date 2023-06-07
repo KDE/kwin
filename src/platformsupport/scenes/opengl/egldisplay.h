@@ -36,13 +36,23 @@ public:
     bool supportsBufferAge() const;
     bool supportsNativeFence() const;
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const;
+    /**
+     * includes external formats
+     */
+    QHash<uint32_t, QList<uint64_t>> allSupportedDrmFormats() const;
+    bool isExternalOnly(uint32_t format, uint64_t modifier) const;
 
     EGLImageKHR importDmaBufAsImage(const DmaBufAttributes &dmabuf) const;
 
     static std::unique_ptr<EglDisplay> create(::EGLDisplay display, bool owning = true);
 
 private:
-    QHash<uint32_t, QList<uint64_t>> queryImportFormats() const;
+    enum class Filter {
+        None,
+        Normal,
+        ExternalOnly
+    };
+    QHash<uint32_t, QList<uint64_t>> queryImportFormats(Filter filter) const;
 
     const ::EGLDisplay m_handle;
     const QList<QByteArray> m_extensions;
@@ -51,6 +61,8 @@ private:
     const bool m_supportsBufferAge;
     const bool m_supportsNativeFence;
     const QHash<uint32_t, QList<uint64_t>> m_importFormats;
+    const QHash<uint32_t, QList<uint64_t>> m_externalOnlyFormats;
+    const QHash<uint32_t, QList<uint64_t>> m_allImportFormats;
 };
 
 }

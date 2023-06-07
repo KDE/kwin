@@ -152,7 +152,7 @@ public:
     static std::unique_ptr<GLTexture> upload(const QPixmap &pixmap);
 
 protected:
-    explicit GLTexture(GLuint textureId, GLenum internalFormat, const QSize &size, int levels, bool owning, TextureTransforms transform);
+    explicit GLTexture(GLenum target, GLuint textureId, GLenum internalFormat, const QSize &size, int levels, bool owning, TextureTransforms transform);
 
     const std::unique_ptr<GLTexturePrivate> d;
 

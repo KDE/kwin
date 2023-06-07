@@ -34,6 +34,8 @@ class DrmGpu;
 class EglGbmLayer;
 class DrmOutputLayer;
 class DrmPipeline;
+class EglContext;
+class EglDisplay;
 
 struct GbmFormat
 {
@@ -71,6 +73,7 @@ public:
     std::optional<GbmFormat> gbmFormatForDrmFormat(uint32_t format) const;
     DrmGpu *gpu() const;
 
+    EglDisplay *displayForGpu(DrmGpu *gpu);
     EglContext *contextForGpu(DrmGpu *gpu);
 
 private:

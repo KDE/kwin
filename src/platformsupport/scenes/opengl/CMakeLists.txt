@@ -4,6 +4,7 @@ target_sources(kwin PRIVATE
     basiceglsurfacetexture_wayland.cpp
     eglcontext.cpp
     egldisplay.cpp
+    eglnativefence.cpp
     openglbackend.cpp
     openglsurfacetexture.cpp
     openglsurfacetexture_internal.cpp

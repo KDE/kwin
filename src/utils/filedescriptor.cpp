@@ -56,6 +56,14 @@ int FileDescriptor::take()
     return std::exchange(m_fd, -1);
 }
 
+void FileDescriptor::reset()
+{
+    if (m_fd != -1) {
+        ::close(m_fd);
+        m_fd = -1;
+    }
+}
+
 FileDescriptor FileDescriptor::duplicate() const
 {
     if (m_fd != -1) {

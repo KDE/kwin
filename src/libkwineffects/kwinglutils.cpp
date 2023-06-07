@@ -727,7 +727,7 @@ QByteArray ShaderManager::generateVertexSource(ShaderTraits traits) const
     }
 
     stream << attribute << " vec4 position;\n";
-    if (traits & ShaderTrait::MapTexture) {
+    if (traits & (ShaderTrait::MapTexture | ShaderTrait::MapExternalTexture)) {
         stream << attribute << " vec4 texcoord;\n\n";
         stream << varying << " vec2 texcoord0;\n\n";
     } else {
@@ -737,7 +737,7 @@ QByteArray ShaderManager::generateVertexSource(ShaderTraits traits) const
     stream << "uniform mat4 modelViewProjectionMatrix;\n\n";
 
     stream << "void main()\n{\n";
-    if (traits & ShaderTrait::MapTexture) {
+    if (traits & (ShaderTrait::MapTexture | ShaderTrait::MapExternalTexture)) {
         stream << "    texcoord0 = texcoord.st;\n";
     }
 
@@ -785,20 +785,20 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
 
     if (traits & ShaderTrait::MapTexture) {
         stream << "uniform sampler2D sampler;\n";
-
-        if (traits & ShaderTrait::Modulate) {
-            stream << "uniform vec4 modulation;\n";
-        }
-        if (traits & ShaderTrait::AdjustSaturation) {
-            stream << "uniform float saturation;\n";
-            stream << "uniform vec3 primaryBrightness;\n";
-        }
-
-        stream << "\n"
-               << varying << " vec2 texcoord0;\n";
-
+        stream << varying << " vec2 texcoord0;\n";
+    } else if (traits & ShaderTrait::MapExternalTexture) {
+        stream << "#extension GL_OES_EGL_image_external : require\n\n";
+        stream << "uniform samplerExternalOES sampler;\n";
+        stream << varying << " vec2 texcoord0;\n";
     } else if (traits & ShaderTrait::UniformColor) {
         stream << "uniform vec4 geometryColor;\n";
+    }
+    if (traits & ShaderTrait::Modulate) {
+        stream << "uniform vec4 modulation;\n";
+    }
+    if (traits & ShaderTrait::AdjustSaturation) {
+        stream << "uniform float saturation;\n";
+        stream << "uniform vec3 primaryBrightness;\n";
     }
     if (traits & ShaderTrait::TransformColorspace) {
         stream << "const int sRGB_EOTF = 0;\n";
@@ -851,6 +851,9 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
     stream << "    vec4 result;\n";
     if (traits & ShaderTrait::MapTexture) {
         stream << "    result = " << textureLookup << "(sampler, texcoord0);\n";
+    } else if (traits & ShaderTrait::MapExternalTexture) {
+        // external textures require texture2D for sampling
+        stream << "    result = texture2D(sampler, texcoord0);\n";
     } else if (traits & ShaderTrait::UniformColor) {
         stream << "    result = geometryColor;\n";
     }

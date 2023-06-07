@@ -79,7 +79,9 @@ EglDisplay::EglDisplay(::EGLDisplay display, const QList<QByteArray> &extensions
     , m_owning(owning)
     , m_supportsBufferAge(extensions.contains(QByteArrayLiteral("EGL_EXT_buffer_age")) && qgetenv("KWIN_USE_BUFFER_AGE") != "0")
     , m_supportsNativeFence(extensions.contains(QByteArrayLiteral("EGL_ANDROID_native_fence_sync")))
-    , m_importFormats(queryImportFormats())
+    , m_importFormats(queryImportFormats(Filter::Normal))
+    , m_externalOnlyFormats(queryImportFormats(Filter::ExternalOnly))
+    , m_allImportFormats(queryImportFormats(Filter::None))
 {
 }
 
@@ -220,7 +222,21 @@ QHash<uint32_t, QList<uint64_t>> EglDisplay::supportedDrmFormats() const
     return m_importFormats;
 }
 
-QHash<uint32_t, QList<uint64_t>> EglDisplay::queryImportFormats() const
+QHash<uint32_t, QList<uint64_t>> EglDisplay::allSupportedDrmFormats() const
+{
+    return m_allImportFormats;
+}
+
+bool EglDisplay::isExternalOnly(uint32_t format, uint64_t modifier) const
+{
+    if (const auto it = m_externalOnlyFormats.find(format); it != m_externalOnlyFormats.end()) {
+        return it->contains(modifier);
+    } else {
+        return false;
+    }
+}
+
+QHash<uint32_t, QList<uint64_t>> EglDisplay::queryImportFormats(Filter filter) const
 {
     if (!hasExtension(QByteArrayLiteral("EGL_EXT_image_dma_buf_import")) || !hasExtension(QByteArrayLiteral("EGL_EXT_image_dma_buf_import_modifiers"))) {
         return {};
@@ -256,10 +272,13 @@ QHash<uint32_t, QList<uint64_t>> EglDisplay::queryImportFormats() const
                 QVector<uint64_t> modifiers(count);
                 QVector<EGLBoolean> externalOnly(count);
                 if (eglQueryDmaBufModifiersEXT(m_handle, format, count, modifiers.data(), externalOnly.data(), &count)) {
-                    for (int i = modifiers.size() - 1; i >= 0; i--) {
-                        if (externalOnly[i]) {
-                            modifiers.remove(i);
-                            externalOnly.remove(i);
+                    if (filter != Filter::None) {
+                        const bool external = filter == Filter::Normal;
+                        for (int i = modifiers.size() - 1; i >= 0; i--) {
+                            if (externalOnly[i] == external) {
+                                modifiers.remove(i);
+                                externalOnly.remove(i);
+                            }
                         }
                     }
                     if (!modifiers.empty()) {

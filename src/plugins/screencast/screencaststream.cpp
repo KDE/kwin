@@ -11,7 +11,6 @@
 #include "core/renderbackend.h"
 #include "cursor.h"
 #include "dmabuftexture.h"
-#include "eglnativefence.h"
 #include "kwinscreencast_logging.h"
 #include "libkwineffects/kwineffects.h"
 #include "libkwineffects/kwinglplatform.h"
@@ -19,6 +18,7 @@
 #include "libkwineffects/kwinglutils.h"
 #include "main.h"
 #include "pipewirecore.h"
+#include "platformsupport/scenes/opengl/eglnativefence.h"
 #include "platformsupport/scenes/opengl/openglbackend.h"
 #include "scene/workspacescene.h"
 #include "screencastsource.h"
@@ -698,7 +698,7 @@ void ScreenCastStream::tryEnqueue(pw_buffer *buffer)
             glFinish();
             enqueue();
         } else {
-            m_pendingNotifier = std::make_unique<QSocketNotifier>(m_pendingFence->fileDescriptor(), QSocketNotifier::Read);
+            m_pendingNotifier = std::make_unique<QSocketNotifier>(m_pendingFence->fileDescriptor().get(), QSocketNotifier::Read);
             connect(m_pendingNotifier.get(), &QSocketNotifier::activated, this, &ScreenCastStream::enqueue);
         }
     } else {

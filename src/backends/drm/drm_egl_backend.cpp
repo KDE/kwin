@@ -101,6 +101,18 @@ bool EglGbmBackend::initRenderingContext()
     return initBufferConfigs(eglDisplayObject()) && createContext(EGL_NO_CONFIG_KHR) && makeCurrent();
 }
 
+EglDisplay *EglGbmBackend::displayForGpu(DrmGpu *gpu)
+{
+    if (gpu == m_backend->primaryGpu()) {
+        return eglDisplayObject();
+    }
+    auto display = gpu->eglDisplay();
+    if (!display) {
+        display = createEglDisplay(gpu);
+    }
+    return display;
+}
+
 EglContext *EglGbmBackend::contextForGpu(DrmGpu *gpu)
 {
     if (gpu == m_backend->primaryGpu()) {

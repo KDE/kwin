@@ -15,6 +15,7 @@
 #include "drm_gbm_swapchain.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
+#include "platformsupport/scenes/opengl/eglnativefence.h"
 
 #include <drm_fourcc.h>
 #include <errno.h>
@@ -278,7 +279,7 @@ std::optional<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(con
         if (!context || context->isSoftwareRenderer()) {
             return std::nullopt;
         }
-        renderModifiers = context->displayObject()->supportedDrmFormats()[format];
+        renderModifiers = context->displayObject()->allSupportedDrmFormats()[format];
     }
     Surface ret;
     ret.importMode = importMode;
@@ -357,11 +358,23 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface &surfa
 {
     Q_ASSERT(surface.importGbmSwapchain);
 
+    EGLNativeFence sourceFence(m_eglBackend->eglDisplay());
+
+    const auto display = m_eglBackend->displayForGpu(m_gpu);
+    // the NVidia proprietary driver supports neither implicit sync nor EGL_ANDROID_native_fence_sync
+    if (!sourceFence.isValid() || !display->supportsNativeFence()) {
+        glFinish();
+    }
     const auto context = m_eglBackend->contextForGpu(m_gpu);
-    if (!context || context->isSoftwareRenderer()) {
+    if (!context || context->isSoftwareRenderer() || !context->makeCurrent()) {
         return nullptr;
     }
-    context->makeCurrent();
+
+    if (sourceFence.isValid()) {
+        const auto destinationFence = EGLNativeFence::importFence(context->displayObject()->handle(), sourceFence.fileDescriptor().duplicate());
+        destinationFence.waitSync();
+    }
+
     auto &sourceTexture = surface.importedTextureCache[sourceBuffer];
     if (!sourceTexture) {
         sourceTexture = context->importDmaBufAsTexture(*sourceBuffer->dmabufAttributes());
@@ -379,10 +392,8 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface &surfa
     GLFramebuffer *fbo = slot->framebuffer();
     glBindFramebuffer(GL_FRAMEBUFFER, fbo->handle());
     glViewport(0, 0, fbo->size().width(), fbo->size().height());
-    glClearColor(0, 1, 0, 0);
-    glClear(GL_COLOR_BUFFER_BIT);
 
-    const auto shader = context->shaderManager()->pushShader(ShaderTrait::MapTexture);
+    const auto shader = context->shaderManager()->pushShader(sourceTexture->target() == GL_TEXTURE_EXTERNAL_OES ? ShaderTrait::MapExternalTexture : ShaderTrait::MapTexture);
     QMatrix4x4 mat;
     mat.scale(1, -1);
     mat.ortho(QRect(QPoint(), fbo->size()));
