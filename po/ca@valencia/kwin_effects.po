@@ -1046,22 +1046,22 @@ msgstr "Mou el ratolí al centre"
 #: zoom/zoom_config.cpp:80
 #, kde-format
 msgid "Move Left"
-msgstr "Mou a l'esquerra"
+msgstr "Mou cap a l'esquerra"
 
 #: zoom/zoom_config.cpp:87
 #, kde-format
 msgid "Move Right"
-msgstr "Mou a la dreta"
+msgstr "Mou cap a la dreta"
 
 #: zoom/zoom_config.cpp:94
 #, kde-format
 msgid "Move Up"
-msgstr "Mou amunt"
+msgstr "Mou cap amunt"
 
 #: zoom/zoom_config.cpp:101
 #, kde-format
 msgid "Move Down"
-msgstr "Mou avall"
+msgstr "Mou cap avall"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label)
 #. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
