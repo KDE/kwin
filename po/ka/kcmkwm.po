@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-15 02:18+0000\n"
-"PO-Revision-Date: 2023-06-04 05:08+0200\n"
+"PO-Revision-Date: 2023-06-07 05:53+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -204,6 +204,8 @@ msgid ""
 "In this row you can customize left click behavior when clicking into the "
 "titlebar or the frame."
 msgstr ""
+"ამ მწკრივში სათაურის ზოლში ან ჩარჩოზე დაჭერისას თაგუნას მარცხენა წკაპის "
+"ქცევა შეგიძლიათ მოირგოთ."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
@@ -343,6 +345,8 @@ msgid ""
 "In this row you can customize middle click behavior when clicking into the "
 "titlebar or the frame."
 msgstr ""
+"ამ მწკრივში სათაურის ზოლში ან ჩარჩოზე დაჭერისას თაგუნას შუა წკაპის ქცევა "
+"შეგიძლიათ მოირგოთ."
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 #. i18n: ectx: property (text), widget (QLabel, label_10)
@@ -358,6 +362,8 @@ msgid ""
 "In this row you can customize right click behavior when clicking into the "
 "titlebar or the frame."
 msgstr ""
+"ამ მწკრივში სათაურის ზოლში ან ჩარჩოზე დაჭერისას თაგუნას მარჯვენა წკაპის "
+"ქცევა შეგიძლიათ მოირგოთ."
 
 #. i18n: ectx: property (text), widget (QLabel, label_10)
 #: actions.ui:458
@@ -372,6 +378,8 @@ msgid ""
 "Here you can customize KDE's behavior when scrolling with the mouse wheel in "
 "a window while pressing the modifier key."
 msgstr ""
+"აქ შეგიძლიათ მოირგოთ KDE-ის ქცევა თაგუნას ბორბლით ფანჯარაში გადახვევისას "
+"მაშინ, როცა მოდიფიკატორ ღილაკზე თითი გიკავიათ."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
@@ -538,6 +546,8 @@ msgstr ""
 msgid ""
 "Allow apps to remember the positions of their own windows, if they support it"
 msgstr ""
+"აპებისთვის, მათში ამის მხარდაჭერის არსებობის შემთხვევაში, საკუთრი ფანჯრების "
+"მდებარეობის დამახსოვრების უფლების მიცემა"
 
 #. i18n: ectx: property (text), widget (QLabel, specialWindowsLabel)
 #: advanced.ui:123
@@ -609,6 +619,8 @@ msgstr "ფანჯრის &აქტივაციის პოლიტი
 #, kde-format
 msgid "With this option you can specify how and when windows will be focused."
 msgstr ""
+"ამ პარამეტრით შეგიძლიათ მიუთითოთ, ამ ფანჯრის ფოკუსირდება როგორ და როდის "
+"მოხდება."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:36
@@ -783,6 +795,8 @@ msgid ""
 "This is the delay after which the window that the mouse pointer is over will "
 "automatically come to the front."
 msgstr ""
+"პაუზა, რომლის გავლის შემდეგაც ფანჯარა, რომელზეც თაგუნას კურსორი მიუთითებს, "
+"წინ ავტომატურად გამოვა."
 
 #. i18n: ectx: property (text), widget (QLabel, multiscreenBehaviorLabel)
 #: focus.ui:196
@@ -811,7 +825,7 @@ msgstr "აქტიური ეკრანი &თაგუნას და�
 msgid ""
 "When this option is enabled, focus operations are limited only to the active "
 "screen"
-msgstr ""
+msgstr "თუ ეს პარამეტრი ჩართულია, ფოკუსის ოპერაცები აქტიური ეკრანით შეიზღუდება"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
 #: focus.ui:216
@@ -947,7 +961,7 @@ msgstr "ყველა სამუშაო მაგიდაზე ჩვე
 #: mouse.ui:98
 #, kde-format
 msgid "Behavior on <em>mouse wheel</em> scroll over the titlebar."
-msgstr ""
+msgstr "<em>თაგუნას ბორბლის</em> ქცევა სათაურის ზოლზე დატრიალებისას."
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 #: mouse.ui:143
@@ -976,6 +990,8 @@ msgid ""
 "Behavior on <em>left</em> click into the titlebar or frame of an <em>active</"
 "em> window."
 msgstr ""
+"თაგუნას <em>მარცხენა</em> ღილაკის ქცევა <em>აქტიური</em> ფანჯრის სათაურის "
+"ზოლზე ან ჩარჩოზე დაწკაპუნებისას."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
@@ -998,6 +1014,8 @@ msgid ""
 "Behavior on <em>left</em> click into the titlebar or frame of an "
 "<em>inactive</em> window."
 msgstr ""
+"თაგუნას <em>მარცხენა</em> ღილაკის ქცევა <em>არააქტიური</em> ფანჯრის სათაურის "
+"ზოლზე ან ჩარჩოზე დაწკაპუნებისას."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
