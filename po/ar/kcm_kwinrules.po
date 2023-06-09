@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-07 02:19+0000\n"
-"PO-Revision-Date: 2023-04-13 11:18+0400\n"
+"PO-Revision-Date: 2023-06-08 12:05+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
-"X-Generator: Lokalize 21.12.3\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #: kcmrules.cpp:226
 #, kde-format
@@ -770,12 +770,10 @@ msgid "No rules for specific windows are currently set"
 msgstr "لا توجد قواعد للنوافذ المحددة حاليا"
 
 #: ui/main.qml:63
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Click the <interface>Add New...</interface> button below to add some"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Click the <interface>Add New…</interface> button below to add some"
-msgstr "انقر على زر <interface>أضف أيضا...</interface> في الأسفل لتضيف بعضها"
+msgstr "انقر على زر <interface>أضف أيضا…</interface> في الأسفل لتضيف بعضها"
 
 #: ui/main.qml:71
 #, kde-format
@@ -798,16 +796,14 @@ msgid "Save Rules"
 msgstr "احفظ القواعد"
 
 #: ui/main.qml:100
-#, fuzzy, kde-format
-#| msgid "Add New..."
+#, kde-format
 msgid "Add New…"
-msgstr "أضف أيضاً ..."
+msgstr "أضف أيضاً…"
 
 #: ui/main.qml:111
-#, fuzzy, kde-format
-#| msgid "Import..."
+#, kde-format
 msgid "Import…"
-msgstr "استورد..."
+msgstr "استورد…"
 
 #: ui/main.qml:119
 #, kde-format
@@ -815,10 +811,9 @@ msgid "Cancel Export"
 msgstr "ألغ التصدير"
 
 #: ui/main.qml:119
-#, fuzzy, kde-format
-#| msgid "Export..."
+#, kde-format
 msgid "Export…"
-msgstr "صدّر..."
+msgstr "صدّر…"
 
 #: ui/main.qml:209
 #, kde-format
