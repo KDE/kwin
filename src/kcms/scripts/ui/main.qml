@@ -12,9 +12,9 @@ import QtQuick.Layouts
 import org.kde.config
 import org.kde.kirigami 2.10 as Kirigami
 import org.kde.newstuff as NewStuff
-import org.kde.kcmutils as KCM
+import org.kde.kcmutils as KCMUtils
 
-KCM.ScrollViewKCM {
+KCMUtils.ScrollViewKCM {
     implicitWidth: Kirigami.Units.gridUnit * 22
     implicitHeight: Kirigami.Units.gridUnit * 20
 
@@ -57,7 +57,7 @@ KCM.ScrollViewKCM {
         sourceModel: kcm.model
         query: searchField.text
 
-        delegate: KCM.PluginDelegate {
+        delegate: KCMUtils.PluginDelegate {
             onConfigTriggered: kcm.configure(model.config)
             additionalActions: [
                 Kirigami.Action {
