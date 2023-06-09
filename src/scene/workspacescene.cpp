@@ -241,29 +241,14 @@ static void resetRepaintsHelper(Item *item, SceneDelegate *delegate)
     }
 }
 
-static void accumulateRepaints(Item *item, SceneDelegate *delegate, QRegion *repaints, const bool padDamage)
+static void accumulateRepaints(Item *item, SceneDelegate *delegate, QRegion *repaints)
 {
-    if (!padDamage) {
-        *repaints += item->repaints(delegate);
-    } else {
-        const auto padding = 1;
-
-        for (const QRect region : item->repaints(delegate)) {
-            if (region.isEmpty() || region == infiniteRegion()) {
-                *repaints += region;
-                continue;
-            }
-
-            *repaints += QRect{region.x() - padding, region.y() - padding,
-                               region.width() + 2 * padding, region.height() + 2 * padding};
-        }
-    }
-
+    *repaints += item->repaints(delegate);
     item->resetRepaints(delegate);
 
     const auto childItems = item->childItems();
     for (Item *childItem : childItems) {
-        accumulateRepaints(childItem, delegate, repaints, padDamage);
+        accumulateRepaints(childItem, delegate, repaints);
     }
 }
 
@@ -290,17 +275,11 @@ void WorkspaceScene::preparePaintGenericScreen()
 
 void WorkspaceScene::preparePaintSimpleScreen()
 {
-    // if a fractional scale factor is used, pad the damage to avoid visual
-    // glitches due to rounding errors (floating point arithmetic) and/or the
-    // use of GL_LINEAR in the pipeline
-    const auto scale = painted_screen->scale();
-    const bool padDamage = std::trunc(scale) != scale;
-
     for (WindowItem *windowItem : std::as_const(stacking_order)) {
         Window *window = windowItem->window();
         WindowPrePaintData data;
         data.mask = m_paintContext.mask;
-        accumulateRepaints(windowItem, painted_delegate, &data.paint, padDamage);
+        accumulateRepaints(windowItem, painted_delegate, &data.paint);
 
         // Clip out the decoration for opaque windows; the decoration is drawn in the second pass.
         if (window->opacity() == 1.0) {
@@ -335,7 +314,7 @@ void WorkspaceScene::preparePaintSimpleScreen()
     }
 
     if (m_dndIcon) {
-        accumulateRepaints(m_dndIcon.get(), painted_delegate, &m_paintContext.damage, padDamage);
+        accumulateRepaints(m_dndIcon.get(), painted_delegate, &m_paintContext.damage);
     }
 }
 
