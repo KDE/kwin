@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-17 00:51+0000\n"
-"PO-Revision-Date: 2023-06-07 19:58+0200\n"
+"PO-Revision-Date: 2023-06-08 20:13+0200\n"
 "Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -73,12 +73,14 @@ msgstr "Niemals"
 #: package/contents/ui/main.qml:70
 #, kde-format
 msgid "Only Meta, Control, Alt, and Shift keys"
-msgstr ""
+msgstr "Nur die Tasten Meta, Strg, Alt und Umschalt"
 
 #: package/contents/ui/main.qml:73
 #, kde-format
 msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
 msgstr ""
+"Alle Tasten, aber nur wenn eine der Tasten Meta, Strg, Alt oder Umschalt "
+"gedrückt ist"
 
 #: package/contents/ui/main.qml:77
 #, kde-format
