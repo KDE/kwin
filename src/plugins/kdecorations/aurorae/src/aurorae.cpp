@@ -617,7 +617,9 @@ void ThemeProvider::findAllQmlThemes()
         data.setPluginId(m_data.pluginId());
         data.setThemeName(offer.pluginId());
         data.setVisibleName(offer.name());
-        data.setHasConfiguration(hasConfiguration(offer.pluginId()));
+        if (hasConfiguration(offer.pluginId())) {
+            data.setConfigurationName("kwin_aurorae_config");
+        }
         m_themes.append(data);
     }
 }
@@ -654,7 +656,9 @@ void ThemeProvider::findAllSvgThemes()
         data.setPluginId(m_data.pluginId());
         data.setThemeName(QLatin1String("__aurorae__svg__") + packageName);
         data.setVisibleName(name);
-        data.setHasConfiguration(hasConfiguration(data.themeName()));
+        if (hasConfiguration(data.themeName())) {
+            data.setConfigurationName("kwin_aurorae_config");
+        }
         m_themes.append(data);
     }
 }

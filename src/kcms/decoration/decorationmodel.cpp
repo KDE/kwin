@@ -50,7 +50,9 @@ QVariant DecorationsModel::data(const QModelIndex &index, int role) const
     case ThemeNameRole:
         return d.themeName();
     case ConfigurationRole:
-        return d.hasConfiguration();
+        return !d.configurationName().isEmpty();
+    case KcmoduleNameRole:
+        return d.configurationName();
     case RecommendedBorderSizeRole:
         return Utils::borderSizeToString(d.borderSize());
     }
@@ -63,6 +65,7 @@ QHash<int, QByteArray> DecorationsModel::roleNames() const
                                   {PluginNameRole, QByteArrayLiteral("plugin")},
                                   {ThemeNameRole, QByteArrayLiteral("theme")},
                                   {ConfigurationRole, QByteArrayLiteral("configureable")},
+                                  {KcmoduleNameRole, QByteArrayLiteral("kcmoduleName")},
                                   {RecommendedBorderSizeRole, QByteArrayLiteral("recommendedbordersize")}});
     return roles;
 }
@@ -70,15 +73,6 @@ QHash<int, QByteArray> DecorationsModel::roleNames() const
 static bool isThemeEngine(const QVariantMap &decoSettingsMap)
 {
     auto it = decoSettingsMap.find(QStringLiteral("themes"));
-    if (it == decoSettingsMap.end()) {
-        return false;
-    }
-    return it.value().toBool();
-}
-
-static bool isConfigureable(const QVariantMap &decoSettingsMap)
-{
-    auto it = decoSettingsMap.find(QStringLiteral("kcmodule"));
     if (it == decoSettingsMap.end()) {
         return false;
     }
@@ -142,7 +136,12 @@ void DecorationsModel::init()
                 continue;
             }
         }
-        data.setHasConfiguration(isConfigureable(decoSettingsMap));
+
+        if (decoSettingsMap.contains(QStringLiteral("kcmodule"))) {
+            qWarning() << "The use of 'kcmodule' is deprecated in favor of 'kcmoduleName', please update" << info.name();
+        }
+
+        data.setConfigurationName(info.value("X-KDE-ConfigModule"));
         data.setBorderSize(recommendedBorderSize(decoSettingsMap));
         data.setVisibleName(info.name().isEmpty() ? info.pluginId() : info.name());
         data.setPluginId(info.pluginId());

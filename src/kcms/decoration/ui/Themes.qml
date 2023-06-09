@@ -42,6 +42,7 @@ KCM.GridView {
                 id: bridgeItem
                 plugin: model.plugin
                 theme: model.theme
+                kcmoduleName: model.kcmoduleName
             }
             KDecoration.Settings {
                 id: settingsItem

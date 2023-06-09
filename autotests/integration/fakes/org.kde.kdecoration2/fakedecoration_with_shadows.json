@@ -6,7 +6,6 @@
         "Name": "Fake Decoration With Shadows"
     },
     "org.kde.kdecoration2": {
-        "blur": false,
-        "kcmodule": false
+        "blur": false
     }
 }

@@ -29,6 +29,7 @@ class PreviewBridge : public DecorationBridge
     Q_OBJECT
     Q_PROPERTY(QString plugin READ plugin WRITE setPlugin NOTIFY pluginChanged)
     Q_PROPERTY(QString theme READ theme WRITE setTheme NOTIFY themeChanged)
+    Q_PROPERTY(QString kcmoduleName READ kcmoduleName WRITE setKcmoduleName NOTIFY kcmoduleNameChanged)
     Q_PROPERTY(bool valid READ isValid NOTIFY validChanged)
 public:
     explicit PreviewBridge(QObject *parent = nullptr);
@@ -50,6 +51,8 @@ public:
 
     void setPlugin(const QString &plugin);
     QString plugin() const;
+    void setKcmoduleName(const QString &name);
+    QString kcmoduleName() const;
     void setTheme(const QString &theme);
     QString theme() const;
     bool isValid() const;
@@ -64,6 +67,7 @@ Q_SIGNALS:
     void pluginChanged();
     void themeChanged();
     void validChanged();
+    void kcmoduleNameChanged();
 
 private:
     void createFactory();
@@ -73,6 +77,7 @@ private:
     QList<PreviewItem *> m_previewItems;
     QString m_plugin;
     QString m_theme;
+    QString m_kcmoduleName;
     QPointer<KPluginFactory> m_factory;
     bool m_valid;
 };
@@ -82,6 +87,7 @@ class BridgeItem : public QObject
     Q_OBJECT
     Q_PROPERTY(QString plugin READ plugin WRITE setPlugin NOTIFY pluginChanged)
     Q_PROPERTY(QString theme READ theme WRITE setTheme NOTIFY themeChanged)
+    Q_PROPERTY(QString kcmoduleName READ kcmoduleName WRITE setKcmoduleName NOTIFY kcmoduleNameChanged)
     Q_PROPERTY(bool valid READ isValid NOTIFY validChanged)
     Q_PROPERTY(KDecoration2::Preview::PreviewBridge *bridge READ bridge CONSTANT)
 
@@ -101,6 +107,14 @@ public:
     {
         m_bridge->setTheme(theme);
     }
+    QString kcmoduleName() const
+    {
+        return m_bridge->kcmoduleName();
+    }
+    void setKcmoduleName(const QString &name)
+    {
+        m_bridge->setKcmoduleName(name);
+    }
     QString theme() const
     {
         return m_bridge->theme();
@@ -118,6 +132,7 @@ public:
 Q_SIGNALS:
     void pluginChanged();
     void themeChanged();
+    void kcmoduleNameChanged();
     void validChanged();
 
 private:

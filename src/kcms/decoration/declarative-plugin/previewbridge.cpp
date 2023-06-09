@@ -33,6 +33,7 @@ namespace Preview
 {
 
 static const QString s_pluginName = QStringLiteral("org.kde.kdecoration2");
+static const QString s_kcmName = QStringLiteral("org.kde.kdecoration2.kcm");
 
 PreviewBridge::PreviewBridge(QObject *parent)
     : DecorationBridge(parent)
@@ -89,6 +90,20 @@ void PreviewBridge::setTheme(const QString &theme)
         return;
     }
     m_theme = theme;
+    Q_EMIT themeChanged();
+}
+
+QString PreviewBridge::kcmoduleName() const
+{
+    return m_kcmoduleName;
+}
+
+void PreviewBridge::setKcmoduleName(const QString &kcmoduleName)
+{
+    if (m_kcmoduleName == kcmoduleName) {
+        return;
+    }
+    m_kcmoduleName = kcmoduleName;
     Q_EMIT themeChanged();
 }
 
@@ -155,6 +170,7 @@ DecorationButton *PreviewBridge::createButton(KDecoration2::Decoration *decorati
 void PreviewBridge::configure(QQuickItem *ctx)
 {
     if (!m_valid) {
+        qWarning() << "Cannot show an invalid decoration's configuration dialog";
         return;
     }
     // setup the UI
@@ -169,10 +185,16 @@ void PreviewBridge::configure(QQuickItem *ctx)
     if (!m_theme.isNull()) {
         args.insert(QStringLiteral("theme"), m_theme);
     }
+    Q_ASSERT(!m_kcmoduleName.isEmpty());
+    const auto md = KPluginMetaData::findPluginById(s_kcmName, m_kcmoduleName);
+    const auto result = KPluginFactory::instantiatePlugin<KCModule>(md, dialog, QVariantList({args}));
+    if (!result) {
+        qWarning() << "error loading kcm" << result.errorReason << result.errorText;
+    }
 
-    KCModule *kcm = m_factory->create<KCModule>(dialog, QVariantList({args}));
-
+    KCModule *kcm = result.plugin;
     if (!kcm) {
+        qWarning() << "Could not find the kcm for" << args << m_kcmoduleName << m_theme;
         return;
     }
 
@@ -223,6 +245,7 @@ BridgeItem::BridgeItem(QObject *parent)
     connect(m_bridge, &PreviewBridge::themeChanged, this, &BridgeItem::themeChanged);
     connect(m_bridge, &PreviewBridge::pluginChanged, this, &BridgeItem::pluginChanged);
     connect(m_bridge, &PreviewBridge::validChanged, this, &BridgeItem::validChanged);
+    connect(m_bridge, &PreviewBridge::kcmoduleNameChanged, this, &BridgeItem::kcmoduleNameChanged);
 }
 
 BridgeItem::~BridgeItem()
