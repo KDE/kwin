@@ -25,8 +25,8 @@ K_PLUGIN_CLASS(KWin::InvertEffectConfig)
 namespace KWin
 {
 
-InvertEffectConfig::InvertEffectConfig(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
-    : KCModule(parent, data, args)
+InvertEffectConfig::InvertEffectConfig(QObject *parent, const KPluginMetaData &data)
+    : KCModule(parent, data)
 {
     QVBoxLayout *layout = new QVBoxLayout(widget());
 

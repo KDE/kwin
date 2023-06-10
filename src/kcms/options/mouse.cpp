@@ -25,7 +25,7 @@ KWinActionsConfigForm::KWinActionsConfigForm(QWidget *parent)
 }
 
 KTitleBarActionsConfig::KTitleBarActionsConfig(bool _standAlone, KWinOptionsSettings *settings, QWidget *parent)
-    : KCModule(parent, KPluginMetaData(), QVariantList())
+    : KCModule(parent, KPluginMetaData())
     , standAlone(_standAlone)
     , m_ui(new KWinMouseConfigForm(widget()))
 {
@@ -63,7 +63,7 @@ bool KTitleBarActionsConfig::isSaveNeeded() const
 }
 
 KWindowActionsConfig::KWindowActionsConfig(bool _standAlone, KWinOptionsSettings *settings, QWidget *parent)
-    : KCModule(parent, KPluginMetaData(), QVariantList())
+    : KCModule(parent, KPluginMetaData())
     , standAlone(_standAlone)
     , m_ui(new KWinActionsConfigForm(widget()))
 {

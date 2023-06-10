@@ -25,8 +25,8 @@ K_PLUGIN_FACTORY_WITH_JSON(VirtualDesktopsFactory,
 namespace KWin
 {
 
-VirtualDesktops::VirtualDesktops(QObject *parent, const KPluginMetaData &metaData, const QVariantList &args)
-    : KQuickManagedConfigModule(parent, metaData, args)
+VirtualDesktops::VirtualDesktops(QObject *parent, const KPluginMetaData &metaData)
+    : KQuickManagedConfigModule(parent, metaData)
     , m_data(new VirtualDesktopsData(this))
 {
     qmlRegisterAnonymousType<VirtualDesktopsSettings>("org.kde.kwin.kcm.desktop", 0);

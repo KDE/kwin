@@ -12,8 +12,8 @@
 #include <KPackage/PackageStructure>
 #include <KPluginFactory>
 
-KWinScriptsData::KWinScriptsData(QObject *parent, const QVariantList &args)
-    : KCModuleData(parent, args)
+KWinScriptsData::KWinScriptsData(QObject *parent)
+    : KCModuleData(parent)
     , m_kwinConfig(KSharedConfig::openConfig("kwinrc"))
 {
 }

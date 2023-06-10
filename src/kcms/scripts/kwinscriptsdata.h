@@ -18,7 +18,7 @@ class KWinScriptsData : public KCModuleData
     Q_OBJECT
 
 public:
-    KWinScriptsData(QObject *parent = nullptr, const QVariantList &args = QVariantList());
+    KWinScriptsData(QObject *parent);
 
     bool isDefaults() const override;
 

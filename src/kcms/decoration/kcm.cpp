@@ -34,8 +34,8 @@ namespace
 const KDecoration2::BorderSize s_defaultRecommendedBorderSize = KDecoration2::BorderSize::Normal;
 }
 
-KCMKWinDecoration::KCMKWinDecoration(QObject *parent, const KPluginMetaData &metaData, const QVariantList &arguments)
-    : KQuickManagedConfigModule(parent, metaData, arguments)
+KCMKWinDecoration::KCMKWinDecoration(QObject *parent, const KPluginMetaData &metaData)
+    : KQuickManagedConfigModule(parent, metaData)
     , m_themesModel(new KDecoration2::Configuration::DecorationsModel(this))
     , m_proxyThemesModel(new QSortFilterProxyModel(this))
     , m_leftButtonsModel(new KDecoration2::Preview::ButtonsModel(DecorationButtonsList(), this))

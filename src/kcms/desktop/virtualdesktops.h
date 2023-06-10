@@ -27,7 +27,7 @@ class VirtualDesktops : public KQuickManagedConfigModule
     Q_PROPERTY(VirtualDesktopsSettings *virtualDesktopsSettings READ virtualDesktopsSettings CONSTANT)
 
 public:
-    explicit VirtualDesktops(QObject *parent, const KPluginMetaData &metaData, const QVariantList &list);
+    explicit VirtualDesktops(QObject *parent, const KPluginMetaData &metaData);
     ~VirtualDesktops() override;
 
     QAbstractItemModel *desktopsModel() const;

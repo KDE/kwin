@@ -29,7 +29,7 @@ class KWinTabBoxConfig : public KCModule
     Q_OBJECT
 
 public:
-    explicit KWinTabBoxConfig(QObject *parent, const KPluginMetaData &data, const QVariantList &args);
+    explicit KWinTabBoxConfig(QObject *parent, const KPluginMetaData &data);
     ~KWinTabBoxConfig() override;
 
 public Q_SLOTS:

@@ -34,7 +34,7 @@ class KWinCompositingKCM : public KCModule
 {
     Q_OBJECT
 public:
-    explicit KWinCompositingKCM(QObject *parent, const KPluginMetaData &data, const QVariantList &args);
+    explicit KWinCompositingKCM(QObject *parent, const KPluginMetaData &data);
 
 public Q_SLOTS:
     void load() override;
@@ -62,8 +62,8 @@ bool KWinCompositingKCM::compositingRequired() const
     return m_compositingInterface->platformRequiresCompositing();
 }
 
-KWinCompositingKCM::KWinCompositingKCM(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
-    : KCModule(parent, data, args)
+KWinCompositingKCM::KWinCompositingKCM(QObject *parent, const KPluginMetaData &data)
+    : KCModule(parent, data)
     , m_compositingInterface(new OrgKdeKwinCompositingInterface(QStringLiteral("org.kde.KWin"), QStringLiteral("/Compositor"), QDBusConnection::sessionBus(), this))
     , m_settings(new KWinCompositingSetting(this))
 {

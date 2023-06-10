@@ -23,8 +23,8 @@
 #include "config-kwin.h"
 #include "kwinscriptsdata.h"
 
-Module::Module(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
-    : KQuickConfigModule(parent, data, args)
+Module::Module(QObject *parent, const KPluginMetaData &data)
+    : KQuickConfigModule(parent, data)
     , m_kwinScriptsData(new KWinScriptsData(this))
     , m_model(new KPluginModel(this))
 {

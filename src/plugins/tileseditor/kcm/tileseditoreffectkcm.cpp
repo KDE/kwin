@@ -21,8 +21,8 @@ K_PLUGIN_CLASS(KWin::TilesEditorEffectConfig)
 namespace KWin
 {
 
-TilesEditorEffectConfig::TilesEditorEffectConfig(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
-    : KCModule(parent, data, args)
+TilesEditorEffectConfig::TilesEditorEffectConfig(QObject *parent, const KPluginMetaData &data)
+    : KCModule(parent, data)
 {
     ui.setupUi(widget());
 

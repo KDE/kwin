@@ -13,8 +13,8 @@
 namespace KWin
 {
 
-VirtualDesktopsData::VirtualDesktopsData(QObject *parent, const QVariantList &args)
-    : KCModuleData(parent, args)
+VirtualDesktopsData::VirtualDesktopsData(QObject *parent)
+    : KCModuleData(parent)
     , m_settings(new VirtualDesktopsSettings(this))
     , m_desktopsModel(new DesktopsModel(this))
     , m_animationsModel(new AnimationsModel(this))

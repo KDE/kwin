@@ -20,7 +20,7 @@ class InvertEffectConfig : public KCModule
 {
     Q_OBJECT
 public:
-    explicit InvertEffectConfig(QObject *parent, const KPluginMetaData &data, const QVariantList &args);
+    explicit InvertEffectConfig(QObject *parent, const KPluginMetaData &data);
     ~InvertEffectConfig() override;
 
 public Q_SLOTS:

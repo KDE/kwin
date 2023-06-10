@@ -19,8 +19,8 @@ K_PLUGIN_CLASS(KWin::GlideEffectConfig)
 namespace KWin
 {
 
-GlideEffectConfig::GlideEffectConfig(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
-    : KCModule(parent, data, args)
+GlideEffectConfig::GlideEffectConfig(QObject *parent, const KPluginMetaData &data)
+    : KCModule(parent, data)
 {
     ui.setupUi(widget());
     GlideConfig::instance(KWIN_CONFIG);

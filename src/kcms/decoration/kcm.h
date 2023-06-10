@@ -47,7 +47,7 @@ class KCMKWinDecoration : public KQuickManagedConfigModule
     Q_PROPERTY(QAbstractListModel *availableButtonsModel READ availableButtonsModel CONSTANT)
 
 public:
-    KCMKWinDecoration(QObject *parent, const KPluginMetaData &metaData, const QVariantList &arguments);
+    KCMKWinDecoration(QObject *parent, const KPluginMetaData &metaData);
 
     KWinDecorationSettings *settings() const;
     QSortFilterProxyModel *themesModel() const;

@@ -35,8 +35,8 @@ MouseMarkEffectConfigForm::MouseMarkEffectConfigForm(QWidget *parent)
     setupUi(this);
 }
 
-MouseMarkEffectConfig::MouseMarkEffectConfig(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
-    : KCModule(parent, data, args)
+MouseMarkEffectConfig::MouseMarkEffectConfig(QObject *parent, const KPluginMetaData &data)
+    : KCModule(parent, data)
     , m_ui(widget())
 {
     QVBoxLayout *layout = new QVBoxLayout(widget());

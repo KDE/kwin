@@ -23,8 +23,8 @@ K_PLUGIN_FACTORY_WITH_JSON(DesktopEffectsKCMFactory,
 namespace KWin
 {
 
-DesktopEffectsKCM::DesktopEffectsKCM(QObject *parent, const KPluginMetaData &metaData, const QVariantList &args)
-    : KQuickConfigModule(parent, metaData, args)
+DesktopEffectsKCM::DesktopEffectsKCM(QObject *parent, const KPluginMetaData &metaData)
+    : KQuickConfigModule(parent, metaData)
     , m_model(new EffectsModel(this))
 {
     qmlRegisterType<EffectsFilterProxyModel>("org.kde.private.kcms.kwin.effects", 1, 0, "EffectsFilterProxyModel");

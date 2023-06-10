@@ -22,7 +22,7 @@ class DesktopEffectsKCM : public KQuickConfigModule
     Q_PROPERTY(QAbstractItemModel *effectsModel READ effectsModel CONSTANT)
 
 public:
-    explicit DesktopEffectsKCM(QObject *parent, const KPluginMetaData &metaData, const QVariantList &list);
+    explicit DesktopEffectsKCM(QObject *parent, const KPluginMetaData &metaData);
     ~DesktopEffectsKCM() override;
 
     QAbstractItemModel *effectsModel() const;

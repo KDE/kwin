@@ -24,8 +24,8 @@ K_PLUGIN_CLASS(KWin::WindowViewEffectConfig)
 namespace KWin
 {
 
-WindowViewEffectConfig::WindowViewEffectConfig(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
-    : KCModule(parent, data, args)
+WindowViewEffectConfig::WindowViewEffectConfig(QObject *parent, const KPluginMetaData &data)
+    : KCModule(parent, data)
 {
     ui.setupUi(widget());
     WindowViewConfig::instance(KWIN_CONFIG);

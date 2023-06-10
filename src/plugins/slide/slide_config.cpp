@@ -22,8 +22,8 @@ K_PLUGIN_CLASS(KWin::SlideEffectConfig)
 namespace KWin
 {
 
-SlideEffectConfig::SlideEffectConfig(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
-    : KCModule(parent, data, args)
+SlideEffectConfig::SlideEffectConfig(QObject *parent, const KPluginMetaData &data)
+    : KCModule(parent, data)
 {
     m_ui.setupUi(widget());
     SlideConfig::instance(KWIN_CONFIG);

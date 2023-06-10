@@ -19,8 +19,8 @@ namespace KWin
 namespace TabBox
 {
 
-KWinTabboxData::KWinTabboxData(QObject *parent, const QVariantList &args)
-    : KCModuleData(parent, args)
+KWinTabboxData::KWinTabboxData(QObject *parent)
+    : KCModuleData(parent)
     , m_tabBoxConfig(new TabBoxSettings(QStringLiteral("TabBox"), this))
     , m_tabBoxAlternativeConfig(new TabBoxSettings(QStringLiteral("TabBoxAlternative"), this))
     , m_pluginsConfig(new PluginsSettings(this))

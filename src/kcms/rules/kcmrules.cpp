@@ -19,7 +19,7 @@ namespace KWin
 {
 
 KCMKWinRules::KCMKWinRules(QObject *parent, const KPluginMetaData &metaData, const QVariantList &arguments)
-    : KQuickConfigModule(parent, metaData, arguments)
+    : KQuickConfigModule(parent, metaData)
     , m_ruleBookModel(new RuleBookModel(this))
     , m_rulesModel(new RulesModel(this))
 {

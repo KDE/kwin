@@ -19,7 +19,7 @@ class KcmXwayland : public KQuickManagedConfigModule
     Q_PROPERTY(KWinXwaylandSettings *settings READ settings CONSTANT)
 
 public:
-    explicit KcmXwayland(QObject *parent, const KPluginMetaData &metaData, const QVariantList &list);
+    explicit KcmXwayland(QObject *parent, const KPluginMetaData &metaData);
     ~KcmXwayland() override;
 
     KWinXwaylandSettings *settings() const

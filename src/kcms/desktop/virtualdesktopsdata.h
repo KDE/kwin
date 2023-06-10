@@ -23,7 +23,7 @@ class VirtualDesktopsData : public KCModuleData
     Q_OBJECT
 
 public:
-    explicit VirtualDesktopsData(QObject *parent = nullptr, const QVariantList &args = QVariantList());
+    explicit VirtualDesktopsData(QObject *parent);
 
     bool isDefaults() const override;
 

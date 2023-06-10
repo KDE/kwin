@@ -36,8 +36,8 @@ DesktopGridEffectConfigForm::DesktopGridEffectConfigForm(QWidget *parent)
     setupUi(this);
 }
 
-DesktopGridEffectConfig::DesktopGridEffectConfig(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
-    : KCModule(parent, data, args)
+DesktopGridEffectConfig::DesktopGridEffectConfig(QObject *parent, const KPluginMetaData &data)
+    : KCModule(parent, data)
     , m_ui(widget())
 {
     QVBoxLayout *layout = new QVBoxLayout(widget());

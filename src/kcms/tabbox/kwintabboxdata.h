@@ -27,7 +27,7 @@ class KWinTabboxData : public KCModuleData
     Q_OBJECT
 
 public:
-    explicit KWinTabboxData(QObject *parent = nullptr, const QVariantList &args = QVariantList());
+    explicit KWinTabboxData(QObject *parent);
 
     TabBoxSettings *tabBoxConfig() const;
     TabBoxSettings *tabBoxAlternativeConfig() const;

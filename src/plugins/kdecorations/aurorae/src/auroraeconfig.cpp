@@ -21,7 +21,7 @@ namespace Aurorae
 {
 
 ConfigurationModule::ConfigurationModule(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
-    : KCModule(parent, data, args)
+    : KCModule(parent, data)
     , m_theme(findTheme(args))
     , m_buttonSize(int(KDecoration2::BorderSize::Normal) - s_indexMapper)
 {

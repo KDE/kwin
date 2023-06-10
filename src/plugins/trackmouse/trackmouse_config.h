@@ -30,7 +30,7 @@ class TrackMouseEffectConfig : public KCModule
 {
     Q_OBJECT
 public:
-    explicit TrackMouseEffectConfig(QObject *parent, const KPluginMetaData &data, const QVariantList &args);
+    explicit TrackMouseEffectConfig(QObject *parent, const KPluginMetaData &data);
     ~TrackMouseEffectConfig() override;
 
 public Q_SLOTS:

@@ -21,7 +21,7 @@ class WobblyWindowsEffectConfig : public KCModule
 {
     Q_OBJECT
 public:
-    explicit WobblyWindowsEffectConfig(QObject *parent, const KPluginMetaData &data, const QVariantList &args);
+    explicit WobblyWindowsEffectConfig(QObject *parent, const KPluginMetaData &data);
     ~WobblyWindowsEffectConfig() override;
 
 public Q_SLOTS:

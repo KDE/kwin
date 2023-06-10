@@ -25,7 +25,7 @@ class Module : public KQuickConfigModule
     Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY messageChanged)
     Q_PROPERTY(QString infoMessage READ infoMessage NOTIFY messageChanged)
 public:
-    explicit Module(QObject *parent, const KPluginMetaData &data, const QVariantList &args);
+    explicit Module(QObject *parent, const KPluginMetaData &data);
 
     void load() override;
     void save() override;

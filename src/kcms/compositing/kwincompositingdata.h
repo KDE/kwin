@@ -20,7 +20,7 @@ class KWinCompositingData : public KCModuleData
     Q_OBJECT
 
 public:
-    explicit KWinCompositingData(QObject *parent = nullptr, const QVariantList &args = QVariantList());
+    explicit KWinCompositingData(QObject *parent);
 
     bool isDefaults() const override;
 

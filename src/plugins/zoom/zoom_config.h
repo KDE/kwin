@@ -28,7 +28,7 @@ class ZoomEffectConfig : public KCModule
 {
     Q_OBJECT
 public:
-    explicit ZoomEffectConfig(QObject *parent, const KPluginMetaData &data, const QVariantList &args);
+    explicit ZoomEffectConfig(QObject *parent, const KPluginMetaData &data);
     ~ZoomEffectConfig() override;
 
 public Q_SLOTS:

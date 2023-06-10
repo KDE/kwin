@@ -27,7 +27,7 @@ class KWinOptions : public KCModule
     Q_OBJECT
 
 public:
-    explicit KWinOptions(QObject *parent, const KPluginMetaData &data, const QVariantList &args);
+    explicit KWinOptions(QObject *parent, const KPluginMetaData &data);
 
     void load() override;
     void save() override;
@@ -53,7 +53,7 @@ class KActionsOptions : public KCModule
     Q_OBJECT
 
 public:
-    KActionsOptions(QObject *parent, const KPluginMetaData &data, const QVariantList &args);
+    KActionsOptions(QObject *parent, const KPluginMetaData &data);
 
     void load() override;
     void save() override;

@@ -85,7 +85,7 @@ class ThemeProvider : public KDecoration2::DecorationThemeProvider
 {
     Q_OBJECT
 public:
-    explicit ThemeProvider(QObject *parent, const KPluginMetaData &data, const QVariantList &args);
+    explicit ThemeProvider(QObject *parent, const KPluginMetaData &data);
 
     QList<KDecoration2::DecorationThemeMetaData> themes() const override
     {

@@ -23,8 +23,8 @@ K_PLUGIN_CLASS(KWin::OverviewEffectConfig)
 namespace KWin
 {
 
-OverviewEffectConfig::OverviewEffectConfig(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
-    : KCModule(parent, data, args)
+OverviewEffectConfig::OverviewEffectConfig(QObject *parent, const KPluginMetaData &data)
+    : KCModule(parent, data)
 {
     ui.setupUi(widget());
     OverviewConfig::instance(KWIN_CONFIG);

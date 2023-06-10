@@ -27,7 +27,7 @@ class KWinScreenEdgesConfig : public KCModule
     Q_OBJECT
 
 public:
-    explicit KWinScreenEdgesConfig(QObject *parent, const KPluginMetaData &data, const QVariantList &args);
+    explicit KWinScreenEdgesConfig(QObject *parent, const KPluginMetaData &data);
     ~KWinScreenEdgesConfig() override;
 
 public Q_SLOTS:

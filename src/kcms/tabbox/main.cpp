@@ -49,8 +49,8 @@ namespace KWin
 
 using namespace TabBox;
 
-KWinTabBoxConfig::KWinTabBoxConfig(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
-    : KCModule(parent, data, args)
+KWinTabBoxConfig::KWinTabBoxConfig(QObject *parent, const KPluginMetaData &data)
+    : KCModule(parent, data)
     , m_config(KSharedConfig::openConfig("kwinrc"))
     , m_data(new KWinTabboxData(this))
 {

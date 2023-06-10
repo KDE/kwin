@@ -48,7 +48,7 @@ KWinFocusConfigForm::KWinFocusConfigForm(QWidget *parent)
 }
 
 KFocusConfig::KFocusConfig(bool _standAlone, KWinOptionsSettings *settings, QWidget *parent)
-    : KCModule(parent, KPluginMetaData(), QVariantList())
+    : KCModule(parent, KPluginMetaData())
     , standAlone(_standAlone)
     , m_ui(new KWinFocusConfigForm(widget()))
 {
@@ -219,7 +219,7 @@ KWinAdvancedConfigForm::KWinAdvancedConfigForm(QWidget *parent)
 }
 
 KAdvancedConfig::KAdvancedConfig(bool _standAlone, KWinOptionsSettings *settings, KWinOptionsKDEGlobalsSettings *globalSettings, QWidget *parent)
-    : KCModule(parent, KPluginMetaData(), QVariantList())
+    : KCModule(parent, KPluginMetaData())
     , standAlone(_standAlone)
     , m_ui(new KWinAdvancedConfigForm(widget()))
 {
@@ -281,7 +281,7 @@ KWinMovingConfigForm::KWinMovingConfigForm(QWidget *parent)
 }
 
 KMovingConfig::KMovingConfig(bool _standAlone, KWinOptionsSettings *settings, QWidget *parent)
-    : KCModule(parent, KPluginMetaData(), QVariantList())
+    : KCModule(parent, KPluginMetaData())
     , standAlone(_standAlone)
     , m_ui(new KWinMovingConfigForm(widget()))
 {

@@ -35,8 +35,8 @@ ZoomEffectConfigForm::ZoomEffectConfigForm(QWidget *parent)
     setupUi(this);
 }
 
-ZoomEffectConfig::ZoomEffectConfig(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
-    : KCModule(parent, data, args)
+ZoomEffectConfig::ZoomEffectConfig(QObject *parent, const KPluginMetaData &data)
+    : KCModule(parent, data)
 {
     ZoomConfig::instance(KWIN_CONFIG);
     m_ui = new ZoomEffectConfigForm(widget());
