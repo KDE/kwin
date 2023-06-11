@@ -1,6 +1,5 @@
 kcoreaddons_add_plugin(screencast INSTALL_NAMESPACE "kwin/plugins")
 target_sources(screencast PRIVATE
-    eglnativefence.cpp
     main.cpp
     outputscreencastsource.cpp
     pipewirecore.cpp

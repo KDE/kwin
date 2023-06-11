@@ -11,7 +11,6 @@
 #include "core/renderbackend.h"
 #include "cursor.h"
 #include "dmabuftexture.h"
-#include "eglnativefence.h"
 #include "kwinscreencast_logging.h"
 #include "libkwineffects/kwineffects.h"
 #include "libkwineffects/kwinglplatform.h"
@@ -77,9 +76,6 @@ void ScreenCastStream::onStreamStateChanged(void *data, pw_stream_state old, pw_
     qCDebug(KWIN_SCREENCAST) << "state changed" << pw_stream_state_as_string(old) << " -> " << pw_stream_state_as_string(state) << error_message;
 
     pw->m_streaming = false;
-    pw->m_pendingBuffer = nullptr;
-    pw->m_pendingNotifier.reset();
-    pw->m_pendingFence.reset();
 
     switch (state) {
     case PW_STREAM_STATE_ERROR:
@@ -460,10 +456,6 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
     }
 
     m_pendingDamages = {};
-    if (m_pendingBuffer) {
-        return;
-    }
-
     if (m_waitForNewBuffers) {
         qCWarning(KWIN_SCREENCAST) << "Waiting for new buffers to be created";
         return;
@@ -594,7 +586,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
 
     addDamage(spa_buffer, damagedRegion);
     addHeader(spa_buffer);
-    tryEnqueue(buffer);
+    enqueue(buffer);
 }
 
 void ScreenCastStream::addHeader(spa_buffer *spaBuffer)
@@ -647,10 +639,6 @@ void ScreenCastStream::recordCursor()
         return;
     }
 
-    if (m_pendingBuffer) {
-        return;
-    }
-
     const char *error = "";
     auto state = pw_stream_get_state(pwStream, &error);
     if (state != PW_STREAM_STATE_STREAMING) {
@@ -664,12 +652,12 @@ void ScreenCastStream::recordCursor()
         return;
     }
 
-    m_pendingBuffer = pw_stream_dequeue_buffer(pwStream);
-    if (!m_pendingBuffer) {
+    auto buffer = pw_stream_dequeue_buffer(pwStream);
+    if (!buffer) {
         return;
     }
 
-    struct spa_buffer *spa_buffer = m_pendingBuffer->buffer;
+    struct spa_buffer *spa_buffer = buffer->buffer;
 
     // in pipewire terms, corrupted means "do not look at the frame contents" and here they're empty.
     spa_buffer->datas[0].chunk->flags = SPA_CHUNK_FLAG_CORRUPTED;
@@ -679,53 +667,24 @@ void ScreenCastStream::recordCursor()
                    (spa_meta_cursor *)spa_buffer_find_meta_data(spa_buffer, SPA_META_Cursor, sizeof(spa_meta_cursor)));
     addHeader(spa_buffer);
     addDamage(spa_buffer, {});
-    enqueue();
+    enqueue(buffer);
 }
 
-void ScreenCastStream::tryEnqueue(pw_buffer *buffer)
+void ScreenCastStream::enqueue(pw_buffer *buffer)
 {
-    m_pendingBuffer = buffer;
-
-    // The GPU doesn't necessarily process draw commands as soon as they are issued. Thus,
-    // we need to insert a fence into the command stream and enqueue the pipewire buffer
-    // only after the fence is signaled; otherwise stream consumers will most likely see
-    // a corrupted buffer.
-    if (Compositor::self()->scene()->supportsNativeFence()) {
-        Q_ASSERT_X(eglGetCurrentContext(), "tryEnqueue", "no current context");
-        m_pendingFence = std::make_unique<EGLNativeFence>(kwinApp()->outputBackend()->sceneEglDisplay());
-        if (!m_pendingFence->isValid()) {
-            qCWarning(KWIN_SCREENCAST) << "Failed to create a native EGL fence";
-            glFinish();
-            enqueue();
-        } else {
-            m_pendingNotifier = std::make_unique<QSocketNotifier>(m_pendingFence->fileDescriptor(), QSocketNotifier::Read);
-            connect(m_pendingNotifier.get(), &QSocketNotifier::activated, this, &ScreenCastStream::enqueue);
-        }
-    } else {
-        // The compositing backend doesn't support native fences. We don't have any other choice
-        // but stall the graphics pipeline. Otherwise stream consumers may see an incomplete buffer.
-        glFinish();
-        enqueue();
-    }
-}
-
-void ScreenCastStream::enqueue()
-{
-    Q_ASSERT_X(m_pendingBuffer, "enqueue", "pending buffer must be valid");
-
-    m_pendingFence.reset();
-    m_pendingNotifier.reset();
+    Q_ASSERT_X(buffer, "enqueue", "buffer must be valid");
 
     if (!m_streaming) {
         return;
     }
-    pw_stream_queue_buffer(pwStream, m_pendingBuffer);
+    glFlush();
+    pw_stream_queue_buffer(pwStream, buffer);
 
-    if (m_pendingBuffer->buffer->datas[0].chunk->flags != SPA_CHUNK_FLAG_CORRUPTED) {
+    if (buffer->buffer->datas[0].chunk->flags != SPA_CHUNK_FLAG_CORRUPTED) {
         m_lastSent = QDateTime::currentDateTimeUtc();
     }
 
-    m_pendingBuffer = nullptr;
+    buffer = nullptr;
 }
 
 QVector<const spa_pod *> ScreenCastStream::buildFormats(bool fixate, char buffer[2048])

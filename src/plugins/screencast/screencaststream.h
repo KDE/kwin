@@ -34,7 +34,6 @@ namespace KWin
 {
 
 class Cursor;
-class EGLNativeFence;
 class GLTexture;
 class PipeWireCore;
 class ScreenCastSource;
@@ -88,8 +87,7 @@ private:
     void addHeader(spa_buffer *spaBuffer);
     void addDamage(spa_buffer *spaBuffer, const QRegion &damagedRegion);
     void newStreamParams();
-    void tryEnqueue(pw_buffer *buffer);
-    void enqueue();
+    void enqueue(pw_buffer *buffer);
     spa_pod *buildFormat(struct spa_pod_builder *b, enum spa_video_format format, struct spa_rectangle *resolution,
                          struct spa_fraction *defaultFramerate, struct spa_fraction *minFramerate, struct spa_fraction *maxFramerate,
                          const QVector<uint64_t> &modifiers, quint32 modifiersFlags);
@@ -127,9 +125,6 @@ private:
 
     QHash<struct pw_buffer *, std::shared_ptr<DmaBufTexture>> m_dmabufDataForPwBuffer;
 
-    pw_buffer *m_pendingBuffer = nullptr;
-    std::unique_ptr<QSocketNotifier> m_pendingNotifier;
-    std::unique_ptr<EGLNativeFence> m_pendingFence;
     quint64 m_sequential = 0;
     bool m_hasDmaBuf = false;
     bool m_waitForNewBuffers = false;
