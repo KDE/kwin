@@ -1,21 +1,21 @@
 # Copyright (C) YEAR This file is copyright:
 # This file is distributed under the same license as the kwin package.
-# Paolo Zamponi <feus73@gmail.com>, 2019.
+# Paolo Zamponi <feus73@gmail.com>, 2019, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-07 02:19+0000\n"
-"PO-Revision-Date: 2019-10-07 15:16+0200\n"
-"Last-Translator: Paolo Zamponi <zapaolo@email.it>\n"
+"PO-Revision-Date: 2023-06-05 19:32+0200\n"
+"Last-Translator: Paolo Zamponi <feus73@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 19.08.1\n"
+"X-Generator: Lokalize 23.04.1\n"
 
 #: ui/Effect.qml:97
 #, kde-format
@@ -33,12 +33,10 @@ msgid "Show/Hide Video"
 msgstr "Mostra/Nascondi video"
 
 #: ui/Effect.qml:134
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Configure..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Configure…"
-msgstr "Configura..."
+msgstr "Configura…"
 
 #: ui/main.qml:25
 #, kde-format

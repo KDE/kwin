@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1653207 2023-06-05 02:13:39Z scripty $
+# $Id: kwin.po 1653615 2023-06-11 02:24:29Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-05 01:59+0000\n"
+"POT-Creation-Date: 2023-06-11 02:11+0000\n"
 "PO-Revision-Date: 2023-04-24 09:35+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -2269,7 +2269,7 @@ msgid "Unknown"
 msgstr "Neznana"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:41
-#: plugins/overview/overvieweffect.cpp:48
+#: plugins/overview/overvieweffect.cpp:47
 #, kde-format
 msgid "Toggle Overview"
 msgstr "Preklopi pregled"

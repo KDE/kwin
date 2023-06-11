@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1653207 $
+# Version: $Revision: 1653615 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # Norbert Popiołek <norbert@kde.com.pl>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-05 01:59+0000\n"
+"POT-Creation-Date: 2023-06-11 02:11+0000\n"
 "PO-Revision-Date: 2023-04-23 11:46+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -2271,7 +2271,7 @@ msgid "Unknown"
 msgstr "Nieznany"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:41
-#: plugins/overview/overvieweffect.cpp:48
+#: plugins/overview/overvieweffect.cpp:47
 #, kde-format
 msgid "Toggle Overview"
 msgstr "Przestaw widok przeglądu"
