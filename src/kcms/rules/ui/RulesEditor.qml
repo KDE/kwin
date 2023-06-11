@@ -226,7 +226,7 @@ KCM.ScrollViewKCM {
                         }
                     }
 
-                    ContextualHelpButton {
+                    KCM.ContextualHelpButton {
                         Layout.rightMargin: Kirigami.Units.largeSpacing
                         visible: model.description.length > 0
                         toolTipText: model.description
