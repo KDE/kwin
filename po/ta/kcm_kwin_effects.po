@@ -1,13 +1,13 @@
 # Copyright (C) YEAR This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
-# Kishore G <kishore96@gmail.com>, 2021.
+# Kishore G <kishore96@gmail.com>, 2021, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-07 02:19+0000\n"
-"PO-Revision-Date: 2021-09-26 18:49+0530\n"
+"PO-Revision-Date: 2023-06-11 18:55+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 21.08.1\n"
+"X-Generator: Lokalize 23.04.2\n"
 
 #: ui/Effect.qml:97
 #, kde-format
@@ -33,9 +33,7 @@ msgid "Show/Hide Video"
 msgstr "ஒளிக்காட்சியை காட்டு/மறை"
 
 #: ui/Effect.qml:134
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Configure..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Configure…"
 msgstr "அமை…"
@@ -44,7 +42,7 @@ msgstr "அமை…"
 #, kde-format
 msgctxt "@action:button get new KWin effects"
 msgid "Get New…"
-msgstr ""
+msgstr "புதியவற்றை பெறு…"
 
 #: ui/main.qml:44
 #, kde-format
