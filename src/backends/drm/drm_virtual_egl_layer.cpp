@@ -154,7 +154,7 @@ bool VirtualEglGbmLayer::scanout(SurfaceItem *surfaceItem)
     }
     m_scanoutBuffer = buffer;
     // damage tracking for screen casting
-    m_currentDamage = m_scanoutSurface == item->surface() ? surfaceItem->damage() : infiniteRegion();
+    m_currentDamage = m_scanoutSurface == item->surface() ? surfaceItem->mapFromBuffer(surfaceItem->damage()) : infiniteRegion();
     surfaceItem->resetDamage();
     // ensure the pixmap is updated when direct scanout ends
     surfaceItem->destroyPixmap();

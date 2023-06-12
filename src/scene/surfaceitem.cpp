@@ -22,12 +22,22 @@ QMatrix4x4 SurfaceItem::surfaceToBufferMatrix() const
 void SurfaceItem::setSurfaceToBufferMatrix(const QMatrix4x4 &matrix)
 {
     m_surfaceToBufferMatrix = matrix;
+    m_bufferToSurfaceMatrix = matrix.inverted();
+}
+
+QRegion SurfaceItem::mapFromBuffer(const QRegion &region) const
+{
+    QRegion result;
+    for (const QRect &rect : region) {
+        result += m_bufferToSurfaceMatrix.mapRect(QRectF(rect)).toAlignedRect();
+    }
+    return result;
 }
 
 void SurfaceItem::addDamage(const QRegion &region)
 {
     m_damage += region;
-    scheduleRepaint(region);
+    scheduleRepaint(mapFromBuffer(region));
     Q_EMIT damaged();
 }
 

@@ -83,7 +83,15 @@ void BackingStore::flush(QWindow *window, const QRegion &region, const QPoint &o
 
     blitImage(m_backBuffer, m_frontBuffer, region);
 
-    internalWindow->present(m_frontBuffer, region);
+    QRegion bufferDamage;
+    for (const QRect &rect : region) {
+        bufferDamage |= QRect(std::floor(rect.x() * m_backBuffer.devicePixelRatio()),
+                              std::floor(rect.y() * m_backBuffer.devicePixelRatio()),
+                              std::ceil(rect.width() * m_backBuffer.devicePixelRatio()),
+                              std::ceil(rect.height() * m_backBuffer.devicePixelRatio()));
+    }
+
+    internalWindow->present(m_frontBuffer, bufferDamage);
 }
 
 }

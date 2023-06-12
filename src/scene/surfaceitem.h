@@ -26,6 +26,8 @@ public:
     QMatrix4x4 surfaceToBufferMatrix() const;
     void setSurfaceToBufferMatrix(const QMatrix4x4 &matrix);
 
+    QRegion mapFromBuffer(const QRegion &region) const;
+
     void addDamage(const QRegion &region);
     void resetDamage();
     QRegion damage() const;
@@ -56,6 +58,7 @@ protected:
     std::unique_ptr<SurfacePixmap> m_pixmap;
     std::unique_ptr<SurfacePixmap> m_previousPixmap;
     QMatrix4x4 m_surfaceToBufferMatrix;
+    QMatrix4x4 m_bufferToSurfaceMatrix;
     int m_referencePixmapCounter = 0;
 };
 

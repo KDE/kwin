@@ -91,8 +91,7 @@ void BasicEGLSurfaceTextureWayland::updateShmTexture(GraphicsBuffer *buffer, con
         return;
     }
 
-    const QRegion damage = mapRegion(m_pixmap->item()->surfaceToBufferMatrix(), region);
-    for (const QRect &rect : damage) {
+    for (const QRect &rect : region) {
         m_texture->update(*view.image(), rect.topLeft(), rect);
     }
 }

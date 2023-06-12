@@ -140,7 +140,7 @@ bool EglGbmLayer::scanout(SurfaceItem *surfaceItem)
     m_scanoutBuffer = m_pipeline->gpu()->importBuffer(buffer);
     if (m_scanoutBuffer && m_pipeline->testScanout()) {
         m_dmabufFeedback.scanoutSuccessful(surface);
-        m_currentDamage = surfaceItem->damage();
+        m_currentDamage = surfaceItem->mapFromBuffer(surfaceItem->damage());
         surfaceItem->resetDamage();
         // ensure the pixmap is updated when direct scanout ends
         surfaceItem->destroyPixmap();

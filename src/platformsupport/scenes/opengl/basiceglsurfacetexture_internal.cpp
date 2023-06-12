@@ -56,19 +56,6 @@ bool BasicEGLSurfaceTextureInternal::updateFromFramebuffer()
     return true;
 }
 
-static QRegion scale(const QRegion &region, qreal scaleFactor)
-{
-    if (scaleFactor == 1) {
-        return region;
-    }
-
-    QRegion scaled;
-    for (const QRect &rect : region) {
-        scaled += QRect(rect.topLeft() * scaleFactor, rect.size() * scaleFactor);
-    }
-    return scaled;
-}
-
 bool BasicEGLSurfaceTextureInternal::updateFromImage(const QRegion &region)
 {
     const QImage image = m_pixmap->image();
@@ -79,8 +66,7 @@ bool BasicEGLSurfaceTextureInternal::updateFromImage(const QRegion &region)
     if (!m_texture) {
         m_texture = GLTexture::upload(image);
     } else {
-        const QRegion nativeRegion = scale(region, image.devicePixelRatio());
-        for (const QRect &rect : nativeRegion) {
+        for (const QRect &rect : region) {
             m_texture->update(image, rect.topLeft(), rect);
         }
     }

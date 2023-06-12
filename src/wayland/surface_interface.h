@@ -70,10 +70,6 @@ class KWIN_EXPORT SurfaceInterface : public QObject
 {
     Q_OBJECT
     /**
-     * The current damage region.
-     */
-    Q_PROPERTY(QRegion damage READ damage NOTIFY damaged)
-    /**
      * The opaque region for a translucent buffer.
      */
     Q_PROPERTY(QRegion opaque READ opaque NOTIFY opaqueChanged)
@@ -118,18 +114,6 @@ public:
      */
     QPointF mapToBuffer(const QPointF &point) const;
     /**
-     * Maps the specified @a point from the buffer pixel coordinates to surface-local coordinates.
-     *
-     * Note that there is no direct connection between points in the surface-local coordinates
-     * and points in the buffer pixel coordinates. In order to map points between the two spaces,
-     * one has to use mapToBuffer() and mapFromBuffer().
-     *
-     * The returned value will become invalid when the surfaceToBufferMatrixChanged() signal is emitted.
-     *
-     * @see surfaceToBufferMatrix(), surfaceToBufferMatrixChanged()
-     */
-    QPointF mapFromBuffer(const QPointF &point) const;
-    /**
      * Maps the specified @a region from the surface-local coordinates to buffer pixel coordinates.
      *
      * Note that there is no direct connection between regions in the surface-local coordinates
@@ -141,18 +125,6 @@ public:
      * @see surfaceToBufferMatrix(), surfaceToBufferMatrixChanged()
      */
     QRegion mapToBuffer(const QRegion &region) const;
-    /**
-     * Maps the specified @a region from the buffer pixel coordinates to surface-local coordinates.
-     *
-     * Note that there is no direct connection between regions in the surface-local coordinates
-     * and regions in the buffer pixel coordinates. In order to map regions between the two spaces,
-     * one has to use mapToBuffer() and mapFromBuffer().
-     *
-     * The returned value will become invalid when the surfaceToBufferMatrixChanged() signal is emitted.
-     *
-     * @see surfaceToBufferMatrix(), surfaceToBufferMatrixChanged()
-     */
-    QRegion mapFromBuffer(const QRegion &region) const;
     /**
      * Returns the projection matrix from the surface-local coordinates to buffer coordinates.
      *
@@ -171,9 +143,9 @@ public:
     void frameRendered(quint32 msec);
     bool hasFrameCallbacks() const;
 
-    QRegion damage() const;
     QRegion opaque() const;
     QRegion input() const;
+    QRegion bufferDamage() const;
     qint32 bufferScale() const;
     /**
      * Returns the buffer transform that had been applied to the buffer to compensate for

@@ -84,15 +84,6 @@ inline MaximizeMode operator^(MaximizeMode m1, MaximizeMode m2)
     return MaximizeMode(int(m1) ^ int(m2));
 }
 
-static inline QRegion mapRegion(const QMatrix4x4 &matrix, const QRegion &region)
-{
-    QRegion result;
-    for (const QRect &rect : region) {
-        result += matrix.mapRect(rect);
-    }
-    return result;
-}
-
 // converting between X11 mouse/keyboard state mask and Qt button/keyboard states
 Qt::MouseButton x11ToQtMouseButton(int button);
 Qt::MouseButton KWIN_EXPORT x11ToQtMouseButton(int button);

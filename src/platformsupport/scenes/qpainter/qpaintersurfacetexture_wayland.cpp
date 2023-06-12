@@ -7,8 +7,6 @@
 #include "qpaintersurfacetexture_wayland.h"
 #include "core/graphicsbufferview.h"
 #include "scene/surfaceitem_wayland.h"
-#include "utils/common.h"
-#include "wayland/surface_interface.h"
 
 #include <QPainter>
 
@@ -40,13 +38,12 @@ void QPainterSurfaceTextureWayland::update(const QRegion &region)
         return;
     }
 
-    const QRegion dirtyRegion = mapRegion(m_pixmap->item()->surfaceToBufferMatrix(), region);
     QPainter painter(&m_image);
     painter.setCompositionMode(QPainter::CompositionMode_Source);
 
     // The buffer data is copied as the buffer interface returns a QImage
     // which doesn't own the data of the underlying wl_shm_buffer object.
-    for (const QRect &rect : dirtyRegion) {
+    for (const QRect &rect : region) {
         painter.drawImage(rect, *view.image(), rect);
     }
 }

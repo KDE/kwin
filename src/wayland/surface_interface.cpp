@@ -636,7 +636,6 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     }
 
     surfaceToBufferMatrix = buildSurfaceToBufferMatrix();
-    bufferToSurfaceMatrix = surfaceToBufferMatrix.inverted();
 
     if (lockedPointer) {
         auto lockedPointerPrivate = LockedPointerV1InterfacePrivate::get(lockedPointer);
@@ -662,14 +661,6 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     if (visibilityChanged) {
         updateEffectiveMapped();
     }
-    if (bufferChanged) {
-        if (current.buffer && (!current.damage.isEmpty() || !current.bufferDamage.isEmpty())) {
-            const QRegion windowRegion = QRegion(0, 0, q->size().width(), q->size().height());
-            const QRegion bufferDamage = q->mapFromBuffer(current.bufferDamage);
-            current.damage = windowRegion.intersected(current.damage.united(bufferDamage));
-            Q_EMIT q->damaged(current.damage);
-        }
-    }
     if (surfaceToBufferMatrix != oldSurfaceToBufferMatrix) {
         Q_EMIT q->surfaceToBufferMatrixChanged();
     }
@@ -694,6 +685,17 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     if (childrenChanged) {
         Q_EMIT q->childSubSurfacesChanged();
     }
+
+    if (bufferChanged) {
+        if (current.buffer && (!current.damage.isEmpty() || !current.bufferDamage.isEmpty())) {
+            const QRect bufferRect = QRect(QPoint(0, 0), current.buffer->size());
+            bufferDamage = current.bufferDamage
+                               .united(q->mapToBuffer(current.damage))
+                               .intersected(bufferRect);
+            Q_EMIT q->damaged(bufferDamage);
+        }
+    }
+
     // The position of a sub-surface is applied when its parent is committed.
     for (SubSurfaceInterface *subsurface : std::as_const(current.below)) {
         auto subsurfacePrivate = SubSurfaceInterfacePrivate::get(subsurface);
@@ -785,9 +787,9 @@ bool SurfaceInterfacePrivate::inputContains(const QPointF &position) const
     return contains(position) && inputRegion.contains(QPoint(std::floor(position.x()), std::floor(position.y())));
 }
 
-QRegion SurfaceInterface::damage() const
+QRegion SurfaceInterface::bufferDamage() const
 {
-    return d->current.damage;
+    return d->bufferDamage;
 }
 
 QRegion SurfaceInterface::opaque() const
@@ -1044,19 +1046,9 @@ QPointF SurfaceInterface::mapToBuffer(const QPointF &point) const
     return d->surfaceToBufferMatrix.map(point);
 }
 
-QPointF SurfaceInterface::mapFromBuffer(const QPointF &point) const
-{
-    return d->bufferToSurfaceMatrix.map(point);
-}
-
 QRegion SurfaceInterface::mapToBuffer(const QRegion &region) const
 {
     return map_helper(d->surfaceToBufferMatrix, region);
-}
-
-QRegion SurfaceInterface::mapFromBuffer(const QRegion &region) const
-{
-    return map_helper(d->bufferToSurfaceMatrix, region);
 }
 
 QMatrix4x4 SurfaceInterface::surfaceToBufferMatrix() const

@@ -386,7 +386,7 @@ void InternalWindow::present(const std::shared_ptr<QOpenGLFramebufferObject> fbo
 
     m_fbo = fbo;
 
-    surfaceItem()->addDamage(surfaceItem()->rect().toAlignedRect());
+    surfaceItem()->addDamage(QRect(0, 0, fbo->width(), fbo->height()));
 }
 
 void InternalWindow::present(const QImage &image, const QRegion &damage)

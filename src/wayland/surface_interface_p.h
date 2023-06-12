@@ -118,7 +118,6 @@ public:
     SurfaceState cached;
     SubSurfaceInterface *subSurface = nullptr;
     QMatrix4x4 surfaceToBufferMatrix;
-    QMatrix4x4 bufferToSurfaceMatrix;
     QSize bufferSize = QSize(0, 0);
     QSizeF implicitSurfaceSize = QSizeF(0, 0);
     QSizeF surfaceSize = QSizeF(0, 0);
@@ -126,6 +125,7 @@ public:
     QRegion inputRegion;
     QRegion opaqueRegion;
     KWin::GraphicsBuffer *bufferRef = nullptr;
+    QRegion bufferDamage;
     bool mapped = false;
     bool hasCacheState = false;
     qreal scaleOverride = 1.;
