@@ -91,10 +91,9 @@ void OffscreenEffect::apply(EffectWindow *window, int mask, WindowPaintData &dat
 
 void OffscreenData::maybeRender(EffectWindow *window)
 {
-    QRectF logicalGeometry = window->expandedGeometry();
-    // FIXME no render target, as this isn't always called from rendering code
-    // The texture size should take the scale into account though...
-    QSize textureSize = logicalGeometry.toAlignedRect().size();
+    const QRectF logicalGeometry = window->expandedGeometry();
+    const qreal scale = window->screen()->devicePixelRatio();
+    const QSize textureSize = (logicalGeometry.size() * scale).toSize();
 
     if (!m_texture || m_texture->size() != textureSize) {
         m_texture = GLTexture::allocate(GL_RGBA8, textureSize);
@@ -109,13 +108,13 @@ void OffscreenData::maybeRender(EffectWindow *window)
 
     if (m_isDirty) {
         RenderTarget renderTarget(m_fbo.get());
-        RenderViewport viewport(logicalGeometry, 1, renderTarget);
+        RenderViewport viewport(logicalGeometry, scale, renderTarget);
         GLFramebuffer::pushFramebuffer(m_fbo.get());
         glClearColor(0.0, 0.0, 0.0, 0.0);
         glClear(GL_COLOR_BUFFER_BIT);
 
         QMatrix4x4 projectionMatrix;
-        projectionMatrix.ortho(QRectF(0, 0, logicalGeometry.width(), logicalGeometry.height()));
+        projectionMatrix.ortho(QRectF(0, 0, textureSize.width(), textureSize.height()));
 
         WindowPaintData data;
         data.setXTranslation(-logicalGeometry.x());
