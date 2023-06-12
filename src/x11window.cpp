@@ -2414,6 +2414,9 @@ void X11Window::getMotifHints()
 
 void X11Window::getIcons()
 {
+    if (isUnmanaged()) {
+        return;
+    }
     // First read icons from the window itself
     const QString themedIconName = iconFromDesktopFile();
     if (!themedIconName.isEmpty()) {
@@ -3791,6 +3794,9 @@ void X11Window::getResourceClass()
  */
 void X11Window::getWmNormalHints()
 {
+    if (isUnmanaged()) {
+        return;
+    }
     const bool hadFixedAspect = m_geometryHints.hasAspect();
     // roundtrip to X server
     m_geometryHints.fetch();
@@ -5073,6 +5079,9 @@ void X11Window::readWmClientLeader(Xcb::Property &prop)
 
 void X11Window::getWmClientLeader()
 {
+    if (isUnmanaged()) {
+        return;
+    }
     auto prop = fetchWmClientLeader();
     readWmClientLeader(prop);
 }
