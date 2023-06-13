@@ -33,7 +33,7 @@ inline std::optional<DmaBufAttributes> dmaBufAttributesForBo(gbm_bo *bo)
     for (int i = 0; i < attributes.planeCount; ++i) {
         attributes.fd[i] = FileDescriptor{gbm_bo_get_fd_for_plane(bo, i)};
         if (!attributes.fd[i].isValid()) {
-            qWarning() << "gbm_bo_get_fd_for_plane() failed:" << strerror(errno);
+            qWarning() << "gbm_bo_get_fd_for_plane(" << bo << "," << i << ") failed:" << strerror(errno);
             return std::nullopt;
         }
         attributes.offset[i] = gbm_bo_get_offset(bo, i);
