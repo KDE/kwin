@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-07 02:19+0000\n"
-"PO-Revision-Date: 2023-06-08 05:55+0200\n"
+"PO-Revision-Date: 2023-06-12 05:11+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -138,6 +138,9 @@ msgid ""
 "The window property will be forced to the given value until it is hidden\n"
 "(this action will be deleted after the window is hidden)."
 msgstr ""
+"ფანჯრის თვისება ძალით იქნება დაყენებული მითითებულ მნიშვნელობაზე მანამდე, "
+"სანამ მას არ დამალავთ\n"
+"(ეს ქმედება წაიშლება მასა შემდეგ, რაც ფანჯარას დამალავთ)."
 
 #: rulesmodel.cpp:218
 #, kde-format
@@ -158,6 +161,10 @@ msgid ""
 "recommended you at least limit the window types to avoid special window "
 "types."
 msgstr ""
+"ფანჯრის კლასი როგორც უმნიშვნელო, ისე მიუთითეთ.\n"
+"ეს ნიშნავს, რომ პარამეტრი ალბათ ყველა აპლიკაციის ფანჯრებზე გადატარდება. თუ "
+"გნებავთ, ზოგადი პარამეტრი შექმნათ, რეკომენდებულია, სულ ცოტა, ფანჯრის ზომა "
+"შეცვალოთ, რათა თავიდან აირიდოთ სპეციალური ფანჯრის ტიპები."
 
 #: rulesmodel.cpp:244
 #, kde-format
@@ -166,6 +173,9 @@ msgid ""
 "initial settings for size and position. To enforce these settings, also "
 "force the property \"%1\" to \"Yes\"."
 msgstr ""
+"ზოგიერთი აპლიკაცია გაშვებისას საკუთარ გეომეტრიას აყენებენ, რითიც თქვენს მიერ "
+"მითითებულ ზომისა და მდებარეობის პარამეტრებს გადაფარავენ. ამ პარამეტრების "
+"ძალით გამოსაყენებლად დააყენეთ თვისება \"%1\" მნიშვნელობაზე \"დიახ\"."
 
 #: rulesmodel.cpp:251
 #, kde-format
