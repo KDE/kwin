@@ -12,6 +12,7 @@
 #include <KDecoration2/Decoration>
 
 #include <KCModule>
+#include <KCMultiDialog>
 #include <KPluginFactory>
 #include <KPluginMetaData>
 
@@ -173,33 +174,23 @@ void PreviewBridge::configure(QQuickItem *ctx)
         qWarning() << "Cannot show an invalid decoration's configuration dialog";
         return;
     }
-    // setup the UI
-    QDialog *dialog = new QDialog();
+
+    KCMultiDialog *dialog = new KCMultiDialog;
     dialog->setAttribute(Qt::WA_DeleteOnClose);
+
     if (m_lastCreatedClient) {
         dialog->setWindowTitle(m_lastCreatedClient->caption());
     }
 
-    // create the KCModule through the plugintrader
     QVariantMap args;
     if (!m_theme.isNull()) {
         args.insert(QStringLiteral("theme"), m_theme);
     }
     Q_ASSERT(!m_kcmoduleName.isEmpty());
-    const auto md = KPluginMetaData::findPluginById(s_kcmName, m_kcmoduleName);
-    const auto result = KPluginFactory::instantiatePlugin<KCModule>(md, dialog, QVariantList({args}));
-    if (!result) {
-        qWarning() << "error loading kcm" << result.errorReason << result.errorText;
-    }
 
-    KCModule *kcm = result.plugin;
-    if (!kcm) {
-        qWarning() << "Could not find the kcm for" << args << m_kcmoduleName << m_theme;
-        return;
-    }
+    dialog->addModule(KPluginMetaData(s_kcmName + QLatin1Char('/') + m_kcmoduleName), {args});
 
-    auto save = [this, kcm] {
-        kcm->save();
+    connect(dialog, &KCMultiDialog::configCommitted, this, [this] {
         if (m_lastCreatedSettings) {
             Q_EMIT m_lastCreatedSettings->decorationSettings()->reconfigured();
         }
@@ -208,26 +199,7 @@ void PreviewBridge::configure(QQuickItem *ctx)
                                                           QStringLiteral("org.kde.KWin"),
                                                           QStringLiteral("reloadConfig"));
         QDBusConnection::sessionBus().send(message);
-    };
-    connect(dialog, &QDialog::accepted, this, save);
-
-    QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::RestoreDefaults | QDialogButtonBox::Reset,
-                                                     dialog);
-
-    QPushButton *reset = buttons->button(QDialogButtonBox::Reset);
-    reset->setEnabled(false);
-    // Here we connect our buttons with the dialog
-    connect(buttons, &QDialogButtonBox::accepted, dialog, &QDialog::accept);
-    connect(buttons, &QDialogButtonBox::rejected, dialog, &QDialog::reject);
-    connect(reset, &QPushButton::clicked, kcm, &KCModule::load);
-    connect(kcm, &KCModule::needsSaveChanged, reset, [reset, kcm]() {
-        reset->setEnabled(kcm->needsSave());
     });
-    connect(buttons->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, kcm, &KCModule::defaults);
-
-    QVBoxLayout *layout = new QVBoxLayout(dialog);
-    layout->addWidget(kcm->widget());
-    layout->addWidget(buttons);
 
     if (ctx->window()) {
         dialog->winId(); // so it creates windowHandle
