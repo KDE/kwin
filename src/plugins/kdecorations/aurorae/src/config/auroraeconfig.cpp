@@ -57,6 +57,7 @@ void ConfigurationModule::initSvg()
     form->layout()->addWidget(label);
     form->layout()->addWidget(sizes);
 
+    widget()->setLayout(new QVBoxLayout);
     widget()->layout()->addWidget(form);
 
     KCoreConfigSkeleton *skel = new KCoreConfigSkeleton(KSharedConfig::openConfig(QStringLiteral("auroraerc")), this);
@@ -108,6 +109,7 @@ void ConfigurationModule::initQml()
     QWidget *customConfigForm = loader->load(&uiFile, widget());
     translator->addContextToMonitor(customConfigForm->objectName());
     uiFile.close();
+    widget()->setLayout(new QVBoxLayout);
     widget()->layout()->addWidget(customConfigForm);
     // connect the ui file with the skeleton
     addConfig(m_skeleton, customConfigForm);
