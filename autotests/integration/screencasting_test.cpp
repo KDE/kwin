@@ -9,6 +9,7 @@
 #include "composite.h"
 #include "core/output.h"
 #include "generic_scene_opengl_test.h"
+#include "libkwineffects/kwinglplatform.h"
 #include "pointer_input.h"
 #include "scene/workspacescene.h"
 #include "wayland_server.h"
@@ -90,6 +91,12 @@ private:
 
 void ScreencastingTest::init()
 {
+    // TODO: Remove this when CI is updated to ubuntu 22.04 or something with a newer kernel.
+    const Version kernelVersion = GLPlatform::instance()->kernelVersion();
+    if (kernelVersion.major() == 5 && kernelVersion.minor() <= 4) {
+        QSKIP("drmPrimeFDToHandle() randomly fails");
+        return;
+    }
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::ScreencastingV1));
     QVERIFY(KWin::Test::screencasting());
     Cursors::self()->hideCursor();
