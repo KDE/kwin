@@ -3404,7 +3404,7 @@ bool X11Window::hasTransientInternal(const X11Window *cl, bool indirect, QList<c
         return false;
     }
     // cl is group transient, search from top
-    if (transients().contains(const_cast<X11Window *>(cl))) {
+    if (transients().contains(cl)) {
         return true;
     }
     if (!indirect) {

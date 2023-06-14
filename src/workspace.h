@@ -306,7 +306,7 @@ public:
      * it's not already.
      */
     void showWindowMenu(const QRect &pos, Window *cl);
-    const UserActionsMenu *userActionsMenu() const
+    UserActionsMenu *userActionsMenu() const
     {
         return m_userActionsMenu;
     }

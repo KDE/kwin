@@ -363,7 +363,7 @@ inline WindowRules::WindowRules()
 
 inline bool WindowRules::contains(const Rules *rule) const
 {
-    return rules.contains(const_cast<Rules *>(rule));
+    return rules.contains(rule);
 }
 
 inline void WindowRules::remove(Rules *rule)

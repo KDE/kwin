@@ -551,7 +551,7 @@ void Workspace::switchToOutput(Output *output)
 
 void Workspace::gotFocusIn(const Window *window)
 {
-    if (should_get_focus.contains(const_cast<Window *>(window))) {
+    if (should_get_focus.contains(window)) {
         // remove also all sooner elements that should have got FocusIn,
         // but didn't for some reason (and also won't anymore, because they were sooner)
         while (should_get_focus.first() != window) {

@@ -1117,7 +1117,7 @@ bool X11Window::buttonReleaseEvent(xcb_window_t w, int button, int state, int x,
         return true;
     }
     if (w == frameId() && workspace()->userActionsMenu() && workspace()->userActionsMenu()->isShown()) {
-        const_cast<UserActionsMenu *>(workspace()->userActionsMenu())->grabInput();
+        workspace()->userActionsMenu()->grabInput();
     }
     x = this->x(); // translate from grab window to local coords
     y = this->y();

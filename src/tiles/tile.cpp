@@ -394,7 +394,7 @@ TileManager *Tile::manager() const
 int Tile::row() const
 {
     if (m_parentTile) {
-        return m_parentTile->m_children.indexOf(const_cast<Tile *>(this));
+        return m_parentTile->m_children.indexOf(this);
     }
 
     return -1;
