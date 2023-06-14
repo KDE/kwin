@@ -296,7 +296,7 @@ void UserActionsMenu::init()
             QStringList args;
             args << QStringLiteral("--icon") << QStringLiteral("preferences-system-windows");
             const QString path = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                                        QStringLiteral("kservices5/kwinfocus.desktop"));
+                                                        QStringLiteral("kservices6/kwinfocus.desktop"));
             if (!path.isEmpty()) {
                 args << QStringLiteral("--desktopfile") << path;
             }
