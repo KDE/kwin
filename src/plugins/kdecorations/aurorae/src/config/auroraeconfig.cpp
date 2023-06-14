@@ -15,7 +15,7 @@
 #include <QLabel>
 #include <QUiLoader>
 
-K_PLUGIN_CLASS(Aurorae::ConfigurationModule)
+K_PLUGIN_CLASS_WITH_JSON(Aurorae::ConfigurationModule, "kcm_auroraeconfig.json")
 
 namespace Aurorae
 {

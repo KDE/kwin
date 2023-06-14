@@ -4,6 +4,5 @@
         "defaultTheme": "kwin4_decoration_qml_plastik",
         "themeListKeyword": "themes",
         "themes": true
-    },
-    "X-KDE-ConfigModule": "kwin4_decoration_qml_plastik"
+    }
 }
