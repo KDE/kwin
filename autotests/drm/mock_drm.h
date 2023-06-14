@@ -22,7 +22,6 @@ class MockFb;
 class MockCrtc;
 class MockEncoder;
 class MockObject;
-class MockDumbBuffer;
 class MockPlane;
 
 class MockProperty {
@@ -102,7 +101,6 @@ public:
     MockFb *currentFb = nullptr;
     MockFb *nextFb = nullptr;
     QRect cursorRect;
-    MockDumbBuffer *cursorBo = nullptr;
     std::shared_ptr<MockPlane> legacyPlane;
 };
 
@@ -134,16 +132,6 @@ public:
     MockGpu *gpu;
 };
 
-class MockDumbBuffer {
-public:
-    MockDumbBuffer(MockGpu *gpu, uint32_t width, uint32_t height, uint32_t bpp);
-
-    uint32_t handle;
-    uint32_t pitch;
-    std::vector<std::byte> data;
-    MockGpu *gpu;
-};
-
 struct Prop {
     uint32_t obj;
     uint32_t prop;
@@ -159,7 +147,7 @@ struct _drmModeAtomicReq {
 
 class MockGpu {
 public:
-    MockGpu(int fd, int numCrtcs, int gammaSize = 255);
+    MockGpu(int fd, const QString &devNode, int numCrtcs, int gammaSize = 255);
     ~MockGpu();
 
     MockConnector *findConnector(uint32_t id) const;
@@ -170,6 +158,7 @@ public:
     void flipPage(uint32_t crtcId);
 
     int fd;
+    QString devNode;
     QByteArray name = QByteArrayLiteral("mock");
     QMap<uint32_t, uint64_t> clientCaps;
     QMap<uint32_t, uint64_t> deviceCaps;
@@ -189,8 +178,7 @@ public:
     QVector<std::shared_ptr<MockPlane>> planes;
     QVector<drmModePlanePtr> drmPlanes;
 
-    QVector<MockFb*> fbs;
-    QVector<std::shared_ptr<MockDumbBuffer>> dumbBuffers;
+    QVector<MockFb *> fbs;
     std::vector<std::unique_ptr<MockPropertyBlob>> propertyBlobs;
 
     QVector<drmModeResPtr> resPtrs;

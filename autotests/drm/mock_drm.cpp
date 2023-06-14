@@ -26,8 +26,9 @@ static MockGpu *getGpu(int fd)
     return s_gpus[fd];
 }
 
-MockGpu::MockGpu(int fd, int numCrtcs, int gammaSize)
+MockGpu::MockGpu(int fd, const QString &devNode, int numCrtcs, int gammaSize)
     : fd(fd)
+    , devNode(devNode)
 {
     s_gpus.insert(fd, this);
     for (int i = 0; i < numCrtcs; i++) {
@@ -270,16 +271,6 @@ MockFb::~MockFb()
     gpu->fbs.removeOne(this);
 }
 
-//
-
-MockDumbBuffer::MockDumbBuffer(MockGpu *gpu, uint32_t width, uint32_t height, uint32_t bpp)
-    : handle(gpu->idCounter++)
-    , pitch(width * ceil(bpp / 8.0))
-    , data(height * pitch)
-    , gpu(gpu)
-{
-}
-
 // drm functions
 
 #define GPU(fd, error) auto gpu = getGpu(fd);\
@@ -338,34 +329,14 @@ int drmHandleEvent(int fd, drmEventContextPtr evctx)
 int drmIoctl(int fd, unsigned long request, void *arg)
 {
     GPU(fd, -EINVAL);
-    if (request == DRM_IOCTL_MODE_CREATE_DUMB) {
-        auto args = static_cast<drm_mode_create_dumb*>(arg);
-        auto dumb = std::make_shared<MockDumbBuffer>(gpu, args->width, args->height, args->bpp);
-        args->handle = dumb->handle;
-        args->pitch = dumb->pitch;
-        args->size = dumb->data.size();
-        gpu->dumbBuffers << dumb;
+    if (request == DRM_IOCTL_PRIME_FD_TO_HANDLE) {
+        auto args = static_cast<drm_prime_handle *>(arg);
+        args->handle = 42; // just pass a dummy value so the request doesn't fail
         return 0;
-    } else if (request == DRM_IOCTL_MODE_DESTROY_DUMB) {
-        auto args = static_cast<drm_mode_destroy_dumb*>(arg);
-        auto it = std::find_if(gpu->dumbBuffers.begin(), gpu->dumbBuffers.end(), [args](const auto &buf){return buf->handle == args->handle;});
-        if (it == gpu->dumbBuffers.end()) {
-            qWarning("buffer %u not found!", args->handle);
-            return -(errno = EINVAL);
-        } else {
-            gpu->dumbBuffers.erase(it);
-            return 0;
-        }
-    } else if (request == DRM_IOCTL_MODE_MAP_DUMB) {
-        auto args = static_cast<drm_mode_map_dumb*>(arg);
-        auto it = std::find_if(gpu->dumbBuffers.begin(), gpu->dumbBuffers.end(), [args](const auto &buf){return buf->handle == args->handle;});
-        if (it == gpu->dumbBuffers.end()) {
-            qWarning("buffer %u not found!", args->handle);
-            return -(errno = EINVAL);
-        } else {
-            args->offset = reinterpret_cast<uintptr_t>((*it)->data.data());
-            return 0;
-        }
+    } else if (request == DRM_IOCTL_PRIME_HANDLE_TO_FD) {
+        return -(errno = ENOTSUP);
+    } else if (request == DRM_IOCTL_GEM_CLOSE) {
+        return 0;
     }
     return -(errno = ENOTSUP);
 }
@@ -566,16 +537,6 @@ int drmModeSetCursor(int fd, uint32_t crtcId, uint32_t bo_handle, uint32_t width
 {
     GPU(fd, -EINVAL);
     if (auto crtc = gpu->findCrtc(crtcId)) {
-        if (bo_handle != 0) {
-            auto it = std::find_if(gpu->dumbBuffers.constBegin(), gpu->dumbBuffers.constEnd(), [bo_handle](const auto &bo){return bo->handle == bo_handle;});
-            if (it == gpu->dumbBuffers.constEnd()) {
-                qWarning("invalid bo_handle %u passed to drmModeSetCursor", bo_handle);
-                return -(errno = EINVAL);
-            }
-            crtc->cursorBo = (*it).get();
-        } else {
-            crtc->cursorBo = nullptr;
-        }
         crtc->cursorRect.setSize(QSize(width, height));
         return 0;
     } else {

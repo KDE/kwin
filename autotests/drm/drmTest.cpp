@@ -12,6 +12,7 @@
 
 #include "mock_drm.h"
 
+#include "core/outputlayer.h"
 #include "core/session.h"
 #include "drm_backend.h"
 #include "drm_connector.h"
@@ -25,13 +26,43 @@
 #include "platformsupport/scenes/qpainter/qpainterbackend.h"
 
 #include <drm_fourcc.h>
+#include <fcntl.h>
+#include <sys/utsname.h>
 
 using namespace KWin;
+
+static std::unique_ptr<MockGpu> findPrimaryDevice(int crtcCount)
+{
+    const int deviceCount = drmGetDevices2(0, nullptr, 0);
+    if (deviceCount <= 0) {
+        return nullptr;
+    }
+
+    QVector<drmDevice *> devices(deviceCount);
+    if (drmGetDevices2(0, devices.data(), devices.size()) < 0) {
+        return nullptr;
+    }
+    auto deviceCleanup = qScopeGuard([&devices]() {
+        drmFreeDevices(devices.data(), devices.size());
+    });
+
+    for (drmDevice *device : std::as_const(devices)) {
+        if (device->available_nodes & (1 << DRM_NODE_PRIMARY)) {
+            int fd = open(device->nodes[DRM_NODE_PRIMARY], O_RDWR | O_CLOEXEC);
+            if (fd != -1) {
+                return std::make_unique<MockGpu>(fd, device->nodes[DRM_NODE_PRIMARY], crtcCount);
+            }
+        }
+    }
+
+    return nullptr;
+}
 
 class DrmTest : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
+    void initTestCase();
     void testAmsDetection();
     void testOutputDetection();
     void testZeroModesHandling();
@@ -41,6 +72,27 @@ private Q_SLOTS:
     void testModeset_data();
     void testModeset();
 };
+
+static Version getKernelVersion()
+{
+    struct utsname name;
+    uname(&name);
+
+    if (qstrcmp(name.sysname, "Linux") == 0) {
+        return Version::parseString(name.release);
+    }
+    return Version(0, 0, 0);
+}
+
+void DrmTest::initTestCase()
+{
+    // TODO: Remove this when CI is updated to ubuntu 22.04 or something with a newer kernel.
+    const Version kernelVersion = getKernelVersion();
+    if (kernelVersion.major() == 5 && kernelVersion.minor() <= 4) {
+        QSKIP("drmPrimeFDToHandle() randomly fails");
+        return;
+    }
+}
 
 static void verifyCleanup(MockGpu *mockGpu)
 {
@@ -57,32 +109,39 @@ static void verifyCleanup(MockGpu *mockGpu)
 
 void DrmTest::testAmsDetection()
 {
-    const auto mockGpu = std::make_unique<MockGpu>(1, 0);
-
     const auto session = Session::create(Session::Type::Noop);
     const auto backend = std::make_unique<DrmBackend>(session.get());
 
     // gpu without planes should use legacy mode
-    auto gpu = std::make_unique<DrmGpu>(backend.get(), "legacy", 1, 0);
-    QVERIFY(!gpu->atomicModeSetting());
+    {
+        const auto mockGpu = findPrimaryDevice(0);
+        auto gpu = std::make_unique<DrmGpu>(backend.get(), mockGpu->devNode, mockGpu->fd, 0);
+        QVERIFY(!gpu->atomicModeSetting());
+    }
 
     // gpu with planes should use AMS
-    mockGpu->planes << std::make_shared<MockPlane>(mockGpu.get(), PlaneType::Primary, 0);
-    gpu = std::make_unique<DrmGpu>(backend.get(), "AMS", 1, 0);
-    QVERIFY(gpu->atomicModeSetting());
+    {
+        const auto mockGpu = findPrimaryDevice(0);
+        mockGpu->planes << std::make_shared<MockPlane>(mockGpu.get(), PlaneType::Primary, 0);
+        auto gpu = std::make_unique<DrmGpu>(backend.get(), mockGpu->devNode, mockGpu->fd, 0);
+        gpu = std::make_unique<DrmGpu>(backend.get(), mockGpu->devNode, mockGpu->fd, 0);
+        QVERIFY(gpu->atomicModeSetting());
+    }
 
     // but not if the kernel doesn't allow it
-    mockGpu->deviceCaps[MOCKDRM_DEVICE_CAP_ATOMIC] = 0;
-    gpu = std::make_unique<DrmGpu>(backend.get(), "legacy 2", 1, 0);
-    QVERIFY(!gpu->atomicModeSetting());
-
-    gpu.reset();
-    verifyCleanup(mockGpu.get());
+    {
+        const auto mockGpu = findPrimaryDevice(0);
+        mockGpu->deviceCaps[MOCKDRM_DEVICE_CAP_ATOMIC] = 0;
+        auto gpu = std::make_unique<DrmGpu>(backend.get(), mockGpu->devNode, mockGpu->fd, 0);
+        QVERIFY(!gpu->atomicModeSetting());
+        gpu.reset();
+        verifyCleanup(mockGpu.get());
+    }
 }
 
 void DrmTest::testOutputDetection()
 {
-    const auto mockGpu = std::make_unique<MockGpu>(1, 5);
+    const auto mockGpu = findPrimaryDevice(5);
 
     const auto one = std::make_shared<MockConnector>(mockGpu.get());
     const auto two = std::make_shared<MockConnector>(mockGpu.get());
@@ -94,7 +153,7 @@ void DrmTest::testOutputDetection()
     const auto session = Session::create(Session::Type::Noop);
     const auto backend = std::make_unique<DrmBackend>(session.get());
     const auto renderBackend = backend->createQPainterBackend();
-    auto gpu = std::make_unique<DrmGpu>(backend.get(), "test", 1, 0);
+    auto gpu = std::make_unique<DrmGpu>(backend.get(), mockGpu->devNode, mockGpu->fd, 0);
     QVERIFY(gpu->updateOutputs());
 
     // 3 outputs should be detected, one of them non-desktop
@@ -133,7 +192,7 @@ void DrmTest::testOutputDetection()
 
 void DrmTest::testZeroModesHandling()
 {
-    const auto mockGpu = std::make_unique<MockGpu>(1, 5);
+    const auto mockGpu = findPrimaryDevice(5);
 
     const auto conn = std::make_shared<MockConnector>(mockGpu.get());
     mockGpu->connectors.push_back(conn);
@@ -141,7 +200,7 @@ void DrmTest::testZeroModesHandling()
     const auto session = Session::create(Session::Type::Noop);
     const auto backend = std::make_unique<DrmBackend>(session.get());
     const auto renderBackend = backend->createQPainterBackend();
-    auto gpu = std::make_unique<DrmGpu>(backend.get(), "test", 1, 0);
+    auto gpu = std::make_unique<DrmGpu>(backend.get(), mockGpu->devNode, mockGpu->fd, 0);
 
     // connector with zero modes should be ignored
     conn->modes.clear();
@@ -250,7 +309,7 @@ void DrmTest::testModeGeneration_data()
 
 void DrmTest::testModeGeneration()
 {
-    const auto mockGpu = std::make_unique<MockGpu>(1, 5);
+    const auto mockGpu = findPrimaryDevice(5);
 
     const auto conn = std::make_shared<MockConnector>(mockGpu.get());
     mockGpu->connectors.push_back(conn);
@@ -258,7 +317,7 @@ void DrmTest::testModeGeneration()
     const auto session = Session::create(Session::Type::Noop);
     const auto backend = std::make_unique<DrmBackend>(session.get());
     const auto renderBackend = backend->createQPainterBackend();
-    auto gpu = std::make_unique<DrmGpu>(backend.get(), "test", 1, 0);
+    auto gpu = std::make_unique<DrmGpu>(backend.get(), mockGpu->devNode, mockGpu->fd, 0);
 
     QFETCH(QSize, nativeMode);
     QFETCH(QVector<QSize>, expectedModes);
@@ -293,7 +352,7 @@ void DrmTest::testModeGeneration()
 void DrmTest::testConnectorLifetime()
 {
     // don't crash if output lifetime is extended beyond the connector
-    const auto mockGpu = std::make_unique<MockGpu>(1, 5);
+    const auto mockGpu = findPrimaryDevice(5);
 
     const auto conn = std::make_shared<MockConnector>(mockGpu.get());
     mockGpu->connectors.push_back(conn);
@@ -301,7 +360,7 @@ void DrmTest::testConnectorLifetime()
     const auto session = Session::create(Session::Type::Noop);
     const auto backend = std::make_unique<DrmBackend>(session.get());
     const auto renderBackend = backend->createQPainterBackend();
-    auto gpu = std::make_unique<DrmGpu>(backend.get(), "test", 1, 0);
+    auto gpu = std::make_unique<DrmGpu>(backend.get(), mockGpu->devNode, mockGpu->fd, 0);
 
     QVERIFY(gpu->updateOutputs());
     QCOMPARE(gpu->drmOutputs().size(), 1);
@@ -329,7 +388,7 @@ void DrmTest::testModeset()
 {
     // test if doing a modeset would succeed
     QFETCH(int, AMS);
-    const auto mockGpu = std::make_unique<MockGpu>(1, 5);
+    const auto mockGpu = findPrimaryDevice(5);
     mockGpu->deviceCaps[MOCKDRM_DEVICE_CAP_ATOMIC] = AMS;
 
     const auto conn = std::make_shared<MockConnector>(mockGpu.get());
@@ -338,13 +397,16 @@ void DrmTest::testModeset()
     const auto session = Session::create(Session::Type::Noop);
     const auto backend = std::make_unique<DrmBackend>(session.get());
     const auto renderBackend = backend->createQPainterBackend();
-    auto gpu = std::make_unique<DrmGpu>(backend.get(), "testModeset", 1, 0);
+    auto gpu = std::make_unique<DrmGpu>(backend.get(), mockGpu->devNode, mockGpu->fd, 0);
 
     QVERIFY(gpu->updateOutputs());
     QCOMPARE(gpu->drmOutputs().size(), 1);
     const auto output = gpu->drmOutputs().front();
+    const auto layer = renderBackend->primaryLayer(output);
+    layer->beginFrame();
     output->renderLoop()->beginFrame();
     output->renderLoop()->endFrame();
+    layer->endFrame(infiniteRegion(), infiniteRegion());
     QVERIFY(gpu->drmOutputs().front()->present());
 
     gpu.reset();
