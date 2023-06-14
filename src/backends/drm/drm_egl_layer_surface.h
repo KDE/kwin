@@ -69,6 +69,7 @@ private:
     };
     struct Surface
     {
+        bool colormanagementEnabled = false;
         std::shared_ptr<GLTexture> shadowTexture;
         std::shared_ptr<GLFramebuffer> shadowBuffer;
         ColorDescription targetColorDescription = ColorDescription::sRGB;

@@ -89,12 +89,13 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
     }
     m_surface.currentBuffer = buffer;
 
-    if (m_surface.targetColorDescription != colorDescription || m_surface.channelFactors != channelFactors) {
+    if (m_surface.targetColorDescription != colorDescription || m_surface.channelFactors != channelFactors || m_surface.colormanagementEnabled != enableColormanagement) {
         m_surface.gbmSwapchain->resetDamage();
         repaint = infiniteRegion();
+        m_surface.colormanagementEnabled = enableColormanagement;
         m_surface.targetColorDescription = colorDescription;
         m_surface.channelFactors = channelFactors;
-        if (colorDescription != ColorDescription::sRGB) {
+        if (enableColormanagement) {
             m_surface.intermediaryColorDescription = ColorDescription(colorDescription.colorimetry(), NamedTransferFunction::linear,
                                                                       colorDescription.sdrBrightness(), colorDescription.minHdrBrightness(),
                                                                       colorDescription.maxHdrBrightness(), colorDescription.maxHdrHighlightBrightness());
@@ -126,7 +127,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
 
 bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion)
 {
-    if (m_surface.shadowTexture) {
+    if (m_surface.colormanagementEnabled) {
         const auto &[texture, fbo] = m_surface.textureCache[m_surface.currentBuffer->bo()];
         GLFramebuffer::pushFramebuffer(fbo.get());
         ShaderBinder binder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
