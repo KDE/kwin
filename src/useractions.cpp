@@ -192,7 +192,7 @@ QStringList configModules(bool controlCenter)
     if (controlCenter) {
         args << QStringLiteral("kwinoptions");
     } else if (KAuthorized::authorizeControlModule(QStringLiteral("kde-kwinoptions.desktop"))) {
-        args << QStringLiteral("kwinactions") << QStringLiteral("kwinfocus") << QStringLiteral("kwinmoving") << QStringLiteral("kwinadvanced")
+        args << QStringLiteral("kcm_kwinoptions")
              << QStringLiteral("kwinrules") << QStringLiteral("kwincompositing") << QStringLiteral("kwineffects")
 #if KWIN_BUILD_TABBOX
              << QStringLiteral("kwintabbox")
