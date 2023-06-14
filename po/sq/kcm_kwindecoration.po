@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdebase-workspace\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-07 02:19+0000\n"
+"POT-Creation-Date: 2023-06-14 02:06+0000\n"
 "PO-Revision-Date: 2009-08-08 18:07+0000\n"
 "Last-Translator: Vilson Gjeci <vilsongjeci@gmail.com>\n"
 "Language-Team: Albanian <sq@li.org>\n"
@@ -201,7 +201,7 @@ msgctxt "@action:button as in, \"Get New Window Decorations\""
 msgid "Get New…"
 msgstr ""
 
-#: ui/Themes.qml:92
+#: ui/Themes.qml:93
 #, kde-format
 msgid "Edit %1 Theme"
 msgstr ""

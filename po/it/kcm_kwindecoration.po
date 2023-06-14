@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-07 02:19+0000\n"
+"POT-Creation-Date: 2023-06-14 02:06+0000\n"
 "PO-Revision-Date: 2023-04-06 14:04+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -220,7 +220,7 @@ msgctxt "@action:button as in, \"Get New Window Decorations\""
 msgid "Get New…"
 msgstr "Scarica nuovo…"
 
-#: ui/Themes.qml:92
+#: ui/Themes.qml:93
 #, kde-format
 msgid "Edit %1 Theme"
 msgstr "Modifica tema %1"
