@@ -22,6 +22,7 @@
         "Description[id]": "Menggeser mundur jendela ketika jendela yang lain dinaikkan",
         "Description[it]": "Fai scivolare indietro le altre finestre quando un'altra finestra viene portata in primo piano",
         "Description[ja]": "ウィンドウが前面に移動されたとき他のウィンドウを背面へスライドします",
+        "Description[ka]": "სხვა ფანჯრების აწევისას ფანჯრების უკან გასრიალებ",
         "Description[ko]": "다른 창을 올렸을 때 창 뒤로 밀기",
         "Description[nl]": "Schuif vensters terug wanneer een ander venster omhoog komt",
         "Description[nn]": "Skli tilbake vindauge som mistar fokus",
