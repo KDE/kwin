@@ -32,7 +32,7 @@ OverviewEffect::OverviewEffect()
     connect(m_state, &EffectTogglableState::inProgressChanged, this, &OverviewEffect::gestureInProgressChanged);
     connect(m_state, &EffectTogglableState::partialActivationFactorChanged, this, &OverviewEffect::partialActivationFactorChanged);
     connect(m_state, &EffectTogglableState::statusChanged, this, [this](EffectTogglableState::Status status) {
-        if (status == EffectTogglableState::Status::Activating) {
+        if (status == EffectTogglableState::Status::Activating || status == EffectTogglableState::Status::Active) {
             m_searchText = QString();
         }
         setRunning(status != EffectTogglableState::Status::Inactive);
