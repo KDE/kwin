@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-25 02:43+0000\n"
-"PO-Revision-Date: 2023-02-08 08:23+0100\n"
+"PO-Revision-Date: 2023-06-14 06:06+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.2.2\n"
+"X-Generator: Poedit 3.3.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -131,6 +131,9 @@ msgid ""
 "created.\n"
 "No further changes will be affected."
 msgstr ""
+"ფანჯრის თვისება მითითებულ მნიშვნელობაზე მხოლოდ ფანჯრის შექმნის შემდეგ "
+"დაყენდება.\n"
+"მეტი ცვლილებები არ შეიცვლება."
 
 #: optionsmodel.cpp:209
 #, kde-format
@@ -144,6 +147,9 @@ msgid ""
 "be affected later\n"
 "(this action will be deleted afterwards)."
 msgstr ""
+"ფანჯრის თვისება მითითებულ მნიშვნელობაზე დაუყოვნებლივ დადგება და მოგვიანებით "
+"აღარ შეიცვლება\n"
+"(შემდეგ ეს ქმედება წაიშლება)."
 
 #: optionsmodel.cpp:213
 #, kde-format
@@ -156,6 +162,9 @@ msgid ""
 "The value of the window property will be remembered and, every time the "
 "window is created, the last remembered value will be applied."
 msgstr ""
+"ფანჯრის თვისების მნიშვნელობა დამახსოვრებული იქნება და ყოველ ჯერზე, "
+"რამდენჯერაც ფანჯარა შეიქმნება, გამოყენებული იქნება ბოლოს დაყენებული "
+"მნიშვნელობა."
 
 #: optionsmodel.cpp:217
 #, kde-format
@@ -169,6 +178,10 @@ msgid ""
 "for it will be used.\n"
 "Specifying this will block more generic window settings from taking effect."
 msgstr ""
+"ფანჯრის თვისება არ შეიცვლება და ამიტომ ნაგულისხმები დამუშავება იქნება "
+"გამოყენებული.\n"
+"ამის მითითებას ფანჯრის კიდევ უფრო მეტი ეფექტის გამოყენებას შეუძლია, ხელი "
+"შეუშალოს."
 
 #: optionsmodel.cpp:221
 #, kde-format
@@ -191,6 +204,9 @@ msgid ""
 "The window property will be forced to the given value until it is hidden\n"
 "(this action will be deleted after the window is hidden)."
 msgstr ""
+"ფანჯრის თვისება ძალით იქნება დაყენებული მითითებულ მნიშვნელობაზე მანამდე, "
+"სანამ მას არ დამალავთ\n"
+"(ეს ქმედება წაიშლება მასა შემდეგ, რაც ფანჯარას დამალავთ)."
 
 #: package/contents/ui/FileDialogLoader.qml:14
 #, kde-format
@@ -400,6 +416,10 @@ msgid ""
 "recommended you at least limit the window types to avoid special window "
 "types."
 msgstr ""
+"ფანჯრის კლასი როგორც უმნიშვნელო, ისე მიუთითეთ.\n"
+"ეს ნიშნავს, რომ პარამეტრი ალბათ ყველა აპლიკაციის ფანჯრებზე გადატარდება. თუ "
+"გნებავთ, ზოგადი პარამეტრი შექმნათ, რეკომენდებულია, სულ ცოტა, ფანჯრის ზომა "
+"შეცვალოთ, რათა თავიდან აირიდოთ სპეციალური ფანჯრის ტიპები."
 
 #: rulesmodel.cpp:244
 #, kde-format
@@ -408,6 +428,9 @@ msgid ""
 "initial settings for size and position. To enforce these settings, also "
 "force the property \"%1\" to \"Yes\"."
 msgstr ""
+"ზოგიერთი აპლიკაცია გაშვებისას საკუთარ გეომეტრიას აყენებენ, რითიც თქვენს მიერ "
+"მითითებულ ზომისა და მდებარეობის პარამეტრებს გადაფარავენ. ამ პარამეტრების "
+"ძალით გამოსაყენებლად დააყენეთ თვისება \"%1\" მნიშვნელობაზე \"დიახ\"."
 
 #: rulesmodel.cpp:359
 #, kde-format
