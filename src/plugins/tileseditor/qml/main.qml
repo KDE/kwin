@@ -10,6 +10,7 @@ import QtQuick.Layouts
 import org.kde.kwin as KWinComponents
 import org.kde.kwin.private.effects
 import org.kde.plasma.core as PlasmaCore
+import org.kde.kirigami 2.20 as Kirigami
 import org.kde.plasma.components 3.0 as PlasmaComponents
 import org.kde.kitemmodels as KitemModels
 
@@ -89,7 +90,7 @@ FocusScope {
 
     Rectangle {
         anchors.fill: parent
-        color: PlasmaCore.Theme.backgroundColor
+        color: Kirigami.Theme.backgroundColor
         opacity: root.active ? 0.4 : 0
         Behavior on opacity {
             OpacityAnimator {
@@ -129,8 +130,8 @@ FocusScope {
         anchors.right: parent.right
         y: root.active ? 0 : -height
         leftPadding: background.margins.left
-        topPadding: PlasmaCore.Units.smallSpacing
-        rightPadding: PlasmaCore.Units.smallSpacing
+        topPadding: Kirigami.Units.smallSpacing
+        rightPadding: Kirigami.Units.smallSpacing
         bottomPadding: background.margins.bottom
         opacity: root.active
         Behavior on opacity {
@@ -151,7 +152,7 @@ FocusScope {
             }
             PlasmaComponents.SpinBox {
                 from: 0
-                to: PlasmaCore.Units.gridUnit * 2
+                to: Kirigami.Units.gridUnit * 2
                 value: KWinComponents.Workspace.tilingForScreen(root.targetScreen.name).rootTile.padding
                 onValueModified: KWinComponents.Workspace.tilingForScreen(root.targetScreen.name).rootTile.padding = value
             }
@@ -163,7 +164,7 @@ FocusScope {
                 MouseArea {
                     anchors {
                         fill: parent
-                        margins: -PlasmaCore.Units.smallSpacing
+                        margins: -Kirigami.Units.smallSpacing
                     }
                     z: -1
                     onClicked: parent.clicked()
@@ -179,7 +180,7 @@ FocusScope {
         id: loadLayoutDialog
         x: Math.round(parent.width / 2 - width / 2)
         y: Math.round(parent.height / 2 - height / 2)
-        width: Math.min(root.width - PlasmaCore.Units.gridUnit * 4, implicitWidth)
+        width: Math.min(root.width - Kirigami.Units.gridUnit * 4, implicitWidth)
         height: Math.round(implicitHeight * (width / implicitWidth))
 
         modal: true

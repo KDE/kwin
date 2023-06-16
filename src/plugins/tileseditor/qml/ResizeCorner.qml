@@ -10,6 +10,7 @@ import QtQuick.Layouts
 import org.kde.kwin as KWinComponents
 import org.kde.kwin.private.effects
 import org.kde.plasma.core as PlasmaCore
+import org.kde.kirigami 2.20 as Kirigami
 
 Rectangle {
     id: handle
@@ -20,11 +21,11 @@ Rectangle {
 
     z: 2
 
-    implicitWidth: PlasmaCore.Units.gridUnit
-    implicitHeight: PlasmaCore.Units.gridUnit
+    implicitWidth: Kirigami.Units.gridUnit
+    implicitHeight: Kirigami.Units.gridUnit
 
     radius: 3
-    color: PlasmaCore.Theme.highlightColor
+    color: Kirigami.Theme.highlightColor
     opacity: hoverHandler.hovered || dragHandler.active ? 0.4 : 0
     visible: tile &&
         (tile.layoutDirection === KWinComponents.Tile.Floating ||

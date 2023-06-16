@@ -12,6 +12,7 @@ import org.kde.kwin as KWinComponents
 import org.kde.kwin.private.effects
 import org.kde.plasma.components 3.0 as PC3
 import org.kde.plasma.core as PlasmaCore
+import org.kde.kirigami 2.20 as Kirigami
 
 Item {
     id: thumb
@@ -126,10 +127,10 @@ Item {
         PlasmaCore.FrameSvgItem {
             anchors {
                 fill: parent
-                topMargin: -PlasmaCore.Units.smallSpacing * 2
-                leftMargin: -PlasmaCore.Units.smallSpacing * 2
-                rightMargin: -PlasmaCore.Units.smallSpacing * 2
-                bottomMargin: -(Math.round(icon.height / 4) + (thumb.windowTitleVisible ? caption.height : 0) + (PlasmaCore.Units.smallSpacing * 2))
+                topMargin: -Kirigami.Units.smallSpacing * 2
+                leftMargin: -Kirigami.Units.smallSpacing * 2
+                rightMargin: -Kirigami.Units.smallSpacing * 2
+                bottomMargin: -(Math.round(icon.height / 4) + (thumb.windowTitleVisible ? caption.height : 0) + (Kirigami.Units.smallSpacing * 2))
             }
             imagePath: "widgets/viewitem"
             prefix: "hover"
@@ -155,8 +156,8 @@ Item {
 
     PlasmaCore.IconItem {
         id: icon
-        width: PlasmaCore.Units.iconSizes.large
-        height: PlasmaCore.Units.iconSizes.large
+        width: Kirigami.Units.iconSizes.large
+        height: Kirigami.Units.iconSizes.large
         source: thumb.window.icon
         usesPlasmaTheme: false
         anchors.horizontalCenter: thumbSource.horizontalCenter
@@ -443,7 +444,7 @@ Item {
         anchors {
             right: thumbSource.right
             top: thumbSource.top
-            margins: PlasmaCore.Units.smallSpacing
+            margins: Kirigami.Units.smallSpacing
         }
 
         visible: thumb.closeButtonVisible && (hoverHandler.hovered || Kirigami.Settings.tabletMode || Kirigami.Settings.hasTransientTouchInput) && thumb.window.closeable && !thumb.activeDragHandler.active

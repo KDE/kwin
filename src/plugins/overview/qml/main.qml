@@ -14,6 +14,7 @@ import org.kde.kwin.private.effects
 import org.kde.milou as Milou
 import org.kde.plasma.components 3.0 as PC3
 import org.kde.plasma.core as PlasmaCore
+import org.kde.kirigami 2.20 as Kirigami
 import org.kde.plasma.extras as PlasmaExtras
 
 FocusScope {
@@ -177,7 +178,7 @@ FocusScope {
             Rectangle {
                 id: desktopBar
                 width: parent.width
-                implicitHeight: bar.implicitHeight + 2 * PlasmaCore.Units.smallSpacing
+                implicitHeight: bar.implicitHeight + 2 * Kirigami.Units.smallSpacing
                 color: container.lightBackground ? Qt.rgba(PlasmaCore.ColorScope.backgroundColor.r,
                                                            PlasmaCore.ColorScope.backgroundColor.g,
                                                            PlasmaCore.ColorScope.backgroundColor.b, 0.75)
@@ -197,12 +198,12 @@ FocusScope {
                 id: searchBar
                 anchors.top: desktopBar.bottom
                 width: parent.width
-                height: searchField.height + 2 * PlasmaCore.Units.largeSpacing
+                height: searchField.height + 2 * Kirigami.Units.gridUnit
 
                 PlasmaExtras.SearchField {
                     id: searchField
                     anchors.centerIn: parent
-                    width: Math.min(parent.width, 20 * PlasmaCore.Units.gridUnit)
+                    width: Math.min(parent.width, 20 * Kirigami.Units.gridUnit)
                     focus: true
                     Keys.priority: Keys.BeforeItem
                     Keys.forwardTo: text && currentHeap.count === 0 ? searchResults : currentHeap
@@ -263,7 +264,7 @@ FocusScope {
                     visible: !(container.organized && effect.searchText.length > 0) || heap.count !== 0
                     layout.mode: effect.layout
                     focus: true
-                    padding: PlasmaCore.Units.largeSpacing
+                    padding: Kirigami.Units.gridUnit
                     animationDuration: effect.animationDuration
                     animationEnabled: container.animationEnabled
                     organized: container.organized
@@ -315,7 +316,7 @@ FocusScope {
                 anchors.bottom: parent.bottom
                 anchors.horizontalCenter: parent.horizontalCenter
                 width: parent.width / 2
-                height: parent.height - placeholderMessage.height - PlasmaCore.Units.largeSpacing
+                height: parent.height - placeholderMessage.height - Kirigami.Units.gridUnit
                 queryString: effect.searchText
                 visible: container.organized && effect.searchText.length > 0 && currentHeap.count === 0
 

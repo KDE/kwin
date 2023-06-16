@@ -9,6 +9,7 @@ import QtQuick.Layouts
 import org.kde.kwin as KWinComponents
 import org.kde.kwin.private.effects
 import org.kde.plasma.core as PlasmaCore
+import org.kde.kirigami 2.20 as Kirigami
 import org.kde.plasma.components 3.0 as PlasmaComponents
 
 Item {
@@ -107,13 +108,13 @@ Item {
         Rectangle {
             anchors {
                 fill: parent
-                margins: PlasmaCore.Units.smallSpacing
+                margins: Kirigami.Units.smallSpacing
             }
             visible: tile.tiles.length === 0
             radius: 3
             opacity: tile.layoutDirection === KWinComponents.Tile.Floating ? 0.6 : 0.3
-            color: tile.layoutDirection === KWinComponents.Tile.Floating ? PlasmaCore.Theme.backgroundColor : "transparent"
-            border.color: PlasmaCore.Theme.textColor
+            color: tile.layoutDirection === KWinComponents.Tile.Floating ? Kirigami.Theme.backgroundColor : "transparent"
+            border.color: Kirigami.Theme.textColor
             Rectangle {
                 anchors {
                     fill: parent
@@ -121,7 +122,7 @@ Item {
                 }
                 radius: 3
                 color: "transparent"
-                border.color: PlasmaCore.Theme.backgroundColor
+                border.color: Kirigami.Theme.backgroundColor
             }
             MouseArea {
                 anchors.fill: parent
@@ -157,7 +158,7 @@ Item {
         GridLayout {
             anchors.centerIn: parent
             visible: tile.tiles.length === 0
-            readonly property bool compact: delegate.width < PlasmaCore.Units.gridUnit * 10 || delegate.height < splitButton.implicitHeight * visibleChildren.length + rowSpacing * visibleChildren.length + PlasmaCore.Units.gridUnit
+            readonly property bool compact: delegate.width < Kirigami.Units.gridUnit * 10 || delegate.height < splitButton.implicitHeight * visibleChildren.length + rowSpacing * visibleChildren.length + Kirigami.Units.gridUnit
             rows: compact ? 1 : -1
             columns: compact ? -1 : 1
             PlasmaComponents.Button {
@@ -204,7 +205,7 @@ Item {
         anchors {
             right: parent.right
             bottom: parent.bottom
-            margins: PlasmaCore.Units.smallSpacing
+            margins: Kirigami.Units.smallSpacing
         }
         visible: tile.layoutDirection === KWinComponents.Tile.Floating && tile.isLayout
         icon.name: "window-duplicate"

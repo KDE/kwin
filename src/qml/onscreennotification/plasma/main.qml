@@ -10,6 +10,7 @@ import QtQuick.Layouts
 import QtQuick.Window
 
 import org.kde.plasma.core as PlasmaCore
+import org.kde.kirigami 2.20 as Kirigami
 import org.kde.plasma.components 3.0 as PlasmaComponents3
 
 PlasmaCore.Dialog {
@@ -20,9 +21,9 @@ PlasmaCore.Dialog {
     outputOnly: true
 
     mainItem: RowLayout {
-        spacing: PlasmaCore.Units.smallSpacing
+        spacing: Kirigami.Units.smallSpacing
         PlasmaCore.IconItem {
-            implicitWidth: PlasmaCore.Units.iconSizes.medium
+            implicitWidth: Kirigami.Units.iconSizes.medium
             implicitHeight: implicitWidth
             source: osd.iconName
             visible: osd.iconName !== ""

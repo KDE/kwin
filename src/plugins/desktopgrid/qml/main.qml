@@ -13,6 +13,7 @@ import QtQuick.Window
 import org.kde.kwin as KWinComponents
 import org.kde.kwin.private.effects
 import org.kde.plasma.core as PlasmaCore
+import org.kde.kirigami 2.20 as Kirigami
 import org.kde.plasma.components 3.0 as PC3
 
 Rectangle {
@@ -196,8 +197,8 @@ Rectangle {
 
         width: (parent.width + columnSpacing) * columns - columnSpacing
         height: (parent.height + rowSpacing) * rows - rowSpacing
-        rowSpacing: PlasmaCore.Units.gridUnit
-        columnSpacing: PlasmaCore.Units.gridUnit
+        rowSpacing: Kirigami.Units.gridUnit
+        columnSpacing: Kirigami.Units.gridUnit
         rows: container.effect.gridRows
         columns: container.effect.gridColumns
         transformOrigin: Item.TopLeft
@@ -274,7 +275,7 @@ Rectangle {
                     anchors.fill: parent
                     color: "transparent"
                     border {
-                        color: PlasmaCore.Theme.highlightColor
+                        color: Kirigami.Theme.highlightColor
                         width: 1 / grid.scale
                     }
                     visible: parent.activeFocus
@@ -295,9 +296,9 @@ Rectangle {
         anchors {
             right: parent.right
             bottom: parent.bottom
-            margins: PlasmaCore.Units.smallSpacing
+            margins: Kirigami.Units.smallSpacing
         }
-        spacing: PlasmaCore.Units.smallSpacing
+        spacing: Kirigami.Units.smallSpacing
         visible: container.effect.showAddRemove
         PC3.Button {
             id: addButton

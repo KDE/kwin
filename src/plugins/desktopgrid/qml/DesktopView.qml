@@ -10,6 +10,7 @@ import QtQuick
 import org.kde.kwin as KWinComponents
 import org.kde.kwin.private.effects
 import org.kde.plasma.core as PlasmaCore
+import org.kde.kirigami 2.20 as Kirigami
 import org.kde.plasma.components 3.0 as PC3
 import org.kde.kwin.private.desktopgrid
 
@@ -175,7 +176,7 @@ FocusScope {
 
     PC3.Control {
         id: desktopLabel
-        anchors.margins: PlasmaCore.Units.largeSpacing
+        anchors.margins: Kirigami.Units.gridUnit
         z: 9999
         visible: effect.desktopNameAlignment !== 0
 
@@ -291,13 +292,13 @@ FocusScope {
         ]
 
         scale: 1 / desktopView.parent.scale
-        leftPadding: PlasmaCore.Units.smallSpacing
-        rightPadding: PlasmaCore.Units.smallSpacing
+        leftPadding: Kirigami.Units.smallSpacing
+        rightPadding: Kirigami.Units.smallSpacing
         contentItem: PC3.Label {
             text: desktopView.desktop.name
         }
         background: Rectangle {
-            color: PlasmaCore.Theme.backgroundColor
+            color: Kirigami.Theme.backgroundColor
             radius: height
             opacity: 0.6
         }

@@ -98,10 +98,10 @@ KWin.TabBoxSwitcher {
 
                 model: tabBox.model
 
-                readonly property int iconSize: PlasmaCore.Units.iconSizes.huge
-                readonly property int captionRowHeight: PlasmaCore.Units.gridUnit * 2
-                readonly property int columnSpacing: PlasmaCore.Units.largeSpacing
-                readonly property int thumbnailWidth: PlasmaCore.Units.gridUnit * 16
+                readonly property int iconSize: Kirigami.Units.iconSizes.huge
+                readonly property int captionRowHeight: Kirigami.Units.gridUnit * 2
+                readonly property int columnSpacing: Kirigami.Units.gridUnit
+                readonly property int thumbnailWidth: Kirigami.Units.gridUnit * 16
                 readonly property int thumbnailHeight: thumbnailWidth * (1.0/dialogMainItem.screenFactor)
                 cellWidth: hoverItem.margins.left + thumbnailWidth + hoverItem.margins.right
                 cellHeight: hoverItem.margins.top + captionRowHeight + thumbnailHeight + hoverItem.margins.bottom
