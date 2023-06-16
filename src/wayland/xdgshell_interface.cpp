@@ -16,7 +16,7 @@
 
 namespace KWaylandServer
 {
-static const int s_version = 4;
+static const int s_version = 6; // FIXME: implement v5
 
 XdgShellInterfacePrivate::XdgShellInterfacePrivate(XdgShellInterface *shell)
     : q(shell)
@@ -540,7 +540,7 @@ quint32 XdgToplevelInterface::sendConfigure(const QSize &size, const States &sta
 {
     // Note that the states listed in the configure event must be an array of uint32_t.
 
-    uint32_t statesData[8] = {0};
+    uint32_t statesData[9] = {0};
     int i = 0;
 
     if (states & State::MaximizedHorizontal && states & State::MaximizedVertical) {
@@ -568,6 +568,12 @@ quint32 XdgToplevelInterface::sendConfigure(const QSize &size, const States &sta
         }
         if (states & State::TiledBottom) {
             statesData[i++] = QtWaylandServer::xdg_toplevel::state_tiled_bottom;
+        }
+    }
+
+    if (d->resource()->version() >= XDG_TOPLEVEL_STATE_SUSPENDED_SINCE_VERSION) {
+        if (states & State::Suspended) {
+            statesData[i++] = QtWaylandServer::xdg_toplevel::state_suspended;
         }
     }
 

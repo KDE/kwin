@@ -703,10 +703,13 @@ void XdgToplevelWindow::handleRoleCommit()
 void XdgToplevelWindow::doMinimize()
 {
     if (isMinimized()) {
+        m_nextStates |= XdgToplevelInterface::State::Suspended;
         workspace()->windowHidden(this);
     } else {
+        m_nextStates &= ~XdgToplevelInterface::State::Suspended;
         Q_EMIT windowShown(this);
     }
+    scheduleConfigure();
     workspace()->updateMinimizedOfTransients(this);
 }
 
