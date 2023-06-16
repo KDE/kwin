@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-11 02:11+0000\n"
+"POT-Creation-Date: 2023-06-16 02:03+0000\n"
 "PO-Revision-Date: 2023-04-21 10:52+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -72,14 +72,14 @@ msgstr "Premi il tasto control destro per acquisire l'inserimento"
 msgid "KDE Wayland Compositor"
 msgstr "Compositore KDE Wayland"
 
-#: composite.cpp:616
+#: composite.cpp:619
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 "Gli effetti del desktop saranno riavviati a causa delle reimpostazioni della "
 "grafica"
 
-#: composite.cpp:843
+#: composite.cpp:846
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -88,7 +88,7 @@ msgstr ""
 "Gli effetti del desktop sono stati sospesi da un'altra applicazione.<br/"
 ">Puoi riattivarla con la scorciatoia «%1»."
 
-#: composite.cpp:1033
+#: composite.cpp:1036
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -102,13 +102,13 @@ msgstr ""
 "driver stabile,< br>puoi ripristinare questa protezione, ma <b>tieni "
 "presente che ciò potrebbe causare un arresto anomalo immediato!</b></p>"
 
-#: composite.cpp:1040
+#: composite.cpp:1043
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr ""
 "Le estensioni necessarie di X (XComposite e XDamage) non sono presenti."
 
-#: composite.cpp:1043
+#: composite.cpp:1046
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL non è disponibile."
@@ -1800,49 +1800,49 @@ msgstr "Attiva/disattiva effetto inversione sulla finestra"
 msgid "Invert Screen Colors"
 msgstr "Inverti i colori dello schermo"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:46
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:46
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Tiny"
 msgstr "Sottile"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:47
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:47
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Normal"
 msgstr "Normale"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:48
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:48
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Large"
 msgstr "Grande"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:49
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:49
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Large"
 msgstr "Molto grande"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:50
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:50
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Huge"
 msgstr "Enorme"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:51
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:51
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Huge"
 msgstr "Davvero enorme"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:52
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:52
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Oversized"
 msgstr "Fuori misura"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:55
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:55
 #, kde-format
 msgid "Button size:"
 msgstr "Dimensione del pulsante:"

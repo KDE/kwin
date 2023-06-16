@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-11 02:11+0000\n"
-"PO-Revision-Date: 2023-05-17 07:19+0100\n"
+"POT-Creation-Date: 2023-06-16 02:03+0000\n"
+"PO-Revision-Date: 2023-06-15 20:56+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -76,12 +76,12 @@ msgstr "Premu dekstran kontrolklavon por kapti enigon"
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland Komponisto"
 
-#: composite.cpp:616
+#: composite.cpp:619
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Labortablaj efikoj estis rekomencitaj pro grafika restarigo"
 
-#: composite.cpp:843
+#: composite.cpp:846
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -90,7 +90,7 @@ msgstr ""
 "Surtablaj efikoj estas malakceptitaj de alia aplikaĵo.<br/>Vi povas "
 "rekomenci uzi la ŝparvojon '%1'."
 
-#: composite.cpp:1033
+#: composite.cpp:1036
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -99,17 +99,17 @@ msgid ""
 "<b>be aware that this might result in an immediate crash!</b></p>"
 msgstr ""
 "<b>OpenGL-komponado (la defaŭlta) paneis KWin en la pasinteco.</b><br>Ĉi tio "
-"estis plej verŝajne pro ŝofora cimo.<p>Se vi pensas, ke vi dume ĝisdatigis "
-"al stabila ŝoforo,<br>vi povas restarigi ĉi tiun protekton, sed <b>konsciu, "
+"estis plej verŝajne pro pelila cimo.<p>Se vi pensas, ke vi dume ĝisdatigis "
+"al stabila pelilo,<br>vi povas restarigi ĉi tiun protekton, sed <b>konsciu, "
 "ke tio povus rezultigi tujan paneon!</b></p>"
 
-#: composite.cpp:1040
+#: composite.cpp:1043
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr ""
 "X-kromprogramoj XComposite kaj XDamage estas bezonitaj sed ne estas haveblaj."
 
-#: composite.cpp:1043
+#: composite.cpp:1046
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL ne disponeblas."
@@ -971,7 +971,7 @@ msgstr "Neniu OpenGL-komponisto funkcias"
 #: debug_console.ui:130
 #, kde-format
 msgid "OpenGL (ES) driver information"
-msgstr "OpenGL (ES) ŝoforinformoj"
+msgstr "OpenGL (ES) pelilinformoj"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: debug_console.ui:136
@@ -1786,49 +1786,49 @@ msgstr "Baskuligi Inversig-Efekton sur Fenestro"
 msgid "Invert Screen Colors"
 msgstr "Inverti Ekranajn Kolorojn"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:46
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:46
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Tiny"
 msgstr "Eta"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:47
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:47
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Normal"
 msgstr "Normala"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:48
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:48
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Large"
 msgstr "Granda"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:49
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:49
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Large"
 msgstr "Grandega"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:50
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:50
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Huge"
 msgstr "Grandega"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:51
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:51
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Huge"
 msgstr "Tre Grandega"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:52
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:52
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Oversized"
 msgstr "Trogranda"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:55
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:55
 #, kde-format
 msgid "Button size:"
 msgstr "Butongrandeco:"

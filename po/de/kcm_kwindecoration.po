@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-14 02:06+0000\n"
-"PO-Revision-Date: 2023-04-15 00:07+0200\n"
+"PO-Revision-Date: 2023-06-15 13:56+0200\n"
 "Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 23.07.70\n"
 
 #: declarative-plugin/buttonsmodel.cpp:53
 #, kde-format
@@ -83,6 +83,9 @@ msgid ""
 "active session, without accidentally setting it to one that is either not "
 "available, or which is already set."
 msgstr ""
+"Dieses Werkzeug ermöglicht es, das Fenster-Design für die aktuelle Sitzung "
+"festzulegen, ohne versehentlich ein nicht verfügbares oder bereits "
+"ausgewähltes zu verwenden."
 
 #: kwin-applywindowdecoration.cpp:33
 #, kde-format

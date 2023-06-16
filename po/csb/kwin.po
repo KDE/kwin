@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-11 02:11+0000\n"
+"POT-Creation-Date: 2023-06-16 02:03+0000\n"
 "PO-Revision-Date: 2009-12-15 22:22+0100\n"
 "Last-Translator: Mark Kwidzińśczi <mark@linuxcsb.org>\n"
 "Language-Team: Kaszëbsczi <i18n-csb@linuxcsb.org>\n"
@@ -71,12 +71,12 @@ msgstr ""
 msgid "KDE Wayland Compositor"
 msgstr ""
 
-#: composite.cpp:616
+#: composite.cpp:619
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 
-#: composite.cpp:843
+#: composite.cpp:846
 #, fuzzy, kde-format
 #| msgid ""
 #| "Compositing has been suspended by another application.<br/>You can resume "
@@ -88,7 +88,7 @@ msgstr ""
 "Compositing òstôł zastãpiony przez jinszą aplikacëjã.<br/>Mòżesz gò zrëszëc "
 "skrodzëną '%1' ."
 
-#: composite.cpp:1033
+#: composite.cpp:1036
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -97,12 +97,12 @@ msgid ""
 "<b>be aware that this might result in an immediate crash!</b></p>"
 msgstr ""
 
-#: composite.cpp:1040
+#: composite.cpp:1043
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Wëmagóné rozszérzenié X (XComposite ë XDamage) nie je przëstãpné."
 
-#: composite.cpp:1043
+#: composite.cpp:1046
 #, fuzzy, kde-format
 #| msgid "GLX/OpenGL and XRender/XFixes are not available."
 msgid "GLX/OpenGL is not available."
@@ -1809,56 +1809,56 @@ msgstr "Przełączë efektë inwertowaniô dlô òknów"
 msgid "Invert Screen Colors"
 msgstr "Òdwrócë farwã klawiszów"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:46
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:46
 #, fuzzy, kde-format
 #| msgid "Tiny"
 msgctxt "@item:inlistbox Button size:"
 msgid "Tiny"
 msgstr "Wąsczi"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:47
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:47
 #, fuzzy, kde-format
 #| msgid "Normal"
 msgctxt "@item:inlistbox Button size:"
 msgid "Normal"
 msgstr "Zwëczajny"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:48
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:48
 #, fuzzy, kde-format
 #| msgid "Large"
 msgctxt "@item:inlistbox Button size:"
 msgid "Large"
 msgstr "Wiôldżi"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:49
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:49
 #, fuzzy, kde-format
 #| msgid "Very Large"
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Large"
 msgstr "Baro wiôldżi"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:50
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:50
 #, fuzzy, kde-format
 #| msgid "Huge"
 msgctxt "@item:inlistbox Button size:"
 msgid "Huge"
 msgstr "Stolemny"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:51
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:51
 #, fuzzy, kde-format
 #| msgid "Very Huge"
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Huge"
 msgstr "Jesz barżi stolemny"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:52
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:52
 #, fuzzy, kde-format
 #| msgid "Re&size"
 msgctxt "@item:inlistbox Button size:"
 msgid "Oversized"
 msgstr "&Zmieni miarã"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:55
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:55
 #, fuzzy, kde-format
 #| msgid "Mouse Emulation"
 msgid "Button size:"

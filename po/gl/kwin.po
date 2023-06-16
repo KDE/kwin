@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-11 02:11+0000\n"
+"POT-Creation-Date: 2023-06-16 02:03+0000\n"
 "PO-Revision-Date: 2020-01-11 11:32+0100\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
@@ -84,12 +84,12 @@ msgstr ""
 msgid "KDE Wayland Compositor"
 msgstr ""
 
-#: composite.cpp:616
+#: composite.cpp:619
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Os efectos do escritorio reiniciáronse debido a un reinicio gráfico"
 
-#: composite.cpp:843
+#: composite.cpp:846
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -98,7 +98,7 @@ msgstr ""
 "Outra aplicación suspendeu os efectos do escritorio.<br/>Pode continuar "
 "empregando o atallo «%1»."
 
-#: composite.cpp:1033
+#: composite.cpp:1036
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -120,14 +120,14 @@ msgstr ""
 "inmediatamente.</b></p><p>Como alternativa pode usar no canto a "
 "infraestrutura XRender.</p>"
 
-#: composite.cpp:1040
+#: composite.cpp:1043
 #, fuzzy, kde-format
 #| msgid "Required X extensions (XComposite and XDamage) are not available."
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr ""
 "Non están dispoñíbeis as extensións das X requiridas (XComposite e XDamage)."
 
-#: composite.cpp:1043
+#: composite.cpp:1046
 #, fuzzy, kde-format
 #| msgid "GLX/OpenGL and XRender/XFixes are not available."
 msgid "GLX/OpenGL is not available."
@@ -1896,7 +1896,7 @@ msgstr "Conmutar o efecto de inversión na xanela"
 msgid "Invert Screen Colors"
 msgstr "Inverter as cores da pantalla"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:46
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:46
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Button size:"
 #| msgid "Tiny"
@@ -1904,7 +1904,7 @@ msgctxt "@item:inlistbox Button size:"
 msgid "Tiny"
 msgstr "Pequerrecha"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:47
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:47
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Button size:"
 #| msgid "Normal"
@@ -1912,7 +1912,7 @@ msgctxt "@item:inlistbox Button size:"
 msgid "Normal"
 msgstr "Normal"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:48
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:48
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Button size:"
 #| msgid "Large"
@@ -1920,7 +1920,7 @@ msgctxt "@item:inlistbox Button size:"
 msgid "Large"
 msgstr "Grande"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:49
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:49
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Button size:"
 #| msgid "Very Large"
@@ -1928,7 +1928,7 @@ msgctxt "@item:inlistbox Button size:"
 msgid "Very Large"
 msgstr "Moi grande"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:50
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:50
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Button size:"
 #| msgid "Huge"
@@ -1936,7 +1936,7 @@ msgctxt "@item:inlistbox Button size:"
 msgid "Huge"
 msgstr "Enorme"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:51
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:51
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Button size:"
 #| msgid "Very Huge"
@@ -1944,14 +1944,14 @@ msgctxt "@item:inlistbox Button size:"
 msgid "Very Huge"
 msgstr "Descomunal"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:52
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:52
 #, fuzzy, kde-format
 #| msgid "&Resize"
 msgctxt "@item:inlistbox Button size:"
 msgid "Oversized"
 msgstr "Cambia&r o tamaño"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:55
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:55
 #, fuzzy, kde-format
 #| msgctxt "A button in a mouse press/release event"
 #| msgid "Button"

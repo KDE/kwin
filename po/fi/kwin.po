@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-11 02:11+0000\n"
+"POT-Creation-Date: 2023-06-16 02:03+0000\n"
 "PO-Revision-Date: 2023-04-27 12:28+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -84,13 +84,13 @@ msgstr "Kaappaa syöte painamalla oikeaa Ctrl-näppäintä"
 msgid "KDE Wayland Compositor"
 msgstr "KDE:n Wayland-koostin"
 
-#: composite.cpp:616
+#: composite.cpp:619
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 "Työpöytätehosteet käynnistettiin uudelleen, koska grafiikka nollattiin."
 
-#: composite.cpp:843
+#: composite.cpp:846
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -100,7 +100,7 @@ msgstr ""
 "Voit palauttaa ne käyttöön pikanäppäimellä %1."
 
 # En pidä sanan ”backend” suomentamisesta tässä. Koostamistyyppi löytyy työpöytätehosteiden lisäasetuksista, vaikka ”koostamistapa” voisi olla vielä parempi.
-#: composite.cpp:1033
+#: composite.cpp:1036
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -113,13 +113,13 @@ msgstr ""
 "vakaaseen ajuriin,<br>voit poistaa tämän suojauksen, mutta <b>tästä saattaa "
 "seurata välitön kaatuminen!</b></p>"
 
-#: composite.cpp:1040
+#: composite.cpp:1043
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr ""
 "Tarvittavat X-laajennukset (XComposite ja XDamage) eivät ole käytettävissä."
 
-#: composite.cpp:1043
+#: composite.cpp:1046
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL ei ole käytettävissä."
@@ -1801,49 +1801,49 @@ msgstr "Vaihda Käännä värit -tehosteen tilaa ikkunalle"
 msgid "Invert Screen Colors"
 msgstr "Käännä näytön värit"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:46
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:46
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Tiny"
 msgstr "Pikkuruinen"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:47
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:47
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Normal"
 msgstr "Tavallinen"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:48
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:48
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Large"
 msgstr "Suuri"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:49
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:49
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Large"
 msgstr "Hyvin suuri"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:50
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:50
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Huge"
 msgstr "Valtava"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:51
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:51
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Huge"
 msgstr "Aivan valtava"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:52
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:52
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Oversized"
 msgstr "Ylisuuri"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:55
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:55
 #, kde-format
 msgid "Button size:"
 msgstr "Painikkeen koko:"

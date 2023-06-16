@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-11 02:11+0000\n"
+"POT-Creation-Date: 2023-06-16 02:03+0000\n"
 "PO-Revision-Date: 2022-09-27 18:25+0700\n"
 "Last-Translator: Wantoyèk <wantoyek@gmail.com>\n"
 "Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
@@ -72,12 +72,12 @@ msgstr ""
 msgid "KDE Wayland Compositor"
 msgstr ""
 
-#: composite.cpp:616
+#: composite.cpp:619
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Efek desktop telah dijalankan ulang karena reset grafis"
 
-#: composite.cpp:843
+#: composite.cpp:846
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -86,7 +86,7 @@ msgstr ""
 "Efek desktop telah disuspensi oleh aplikasi lain.<br/>Anda dapat melanjutkan "
 "dengan menggunakan pintasan '%1'."
 
-#: composite.cpp:1033
+#: composite.cpp:1036
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -108,12 +108,12 @@ msgstr ""
 "p><p>Sebagai alternatif, anda mungkin ingin menggunakan ujung belakang "
 "XRender.</p>"
 
-#: composite.cpp:1040
+#: composite.cpp:1043
 #, fuzzy, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Ekstensi X yang diperlukan (XComposite dan XDamage) tidak tersedia."
 
-#: composite.cpp:1043
+#: composite.cpp:1046
 #, fuzzy, kde-format
 #| msgid "GLX/OpenGL and XRender/XFixes are not available."
 msgid "GLX/OpenGL is not available."
@@ -1851,7 +1851,7 @@ msgstr "Jungkit Efek Invert pada Jendela"
 msgid "Invert Screen Colors"
 msgstr "Balik Warna Layar"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:46
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:46
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Button size:"
 #| msgid "Tiny"
@@ -1859,7 +1859,7 @@ msgctxt "@item:inlistbox Button size:"
 msgid "Tiny"
 msgstr "Mungil"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:47
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:47
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Button size:"
 #| msgid "Normal"
@@ -1868,7 +1868,7 @@ msgid "Normal"
 msgstr "Normal"
 
 # Sengaja diterjemahkan Agak Besar karena tampil satu level dengan tingkat ukuran
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:48
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:48
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Button size:"
 #| msgid "Large"
@@ -1877,7 +1877,7 @@ msgid "Large"
 msgstr "Agak Besar"
 
 # Sengaja diterjemahkan Besar karena tampil satu level dengan tingkat ukuran
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:49
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:49
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Button size:"
 #| msgid "Very Large"
@@ -1886,7 +1886,7 @@ msgid "Very Large"
 msgstr "Besar"
 
 # Sengaja diterjemahkan Besar Banget karena tampil satu level dengan tingkat ukuran
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:50
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:50
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Button size:"
 #| msgid "Huge"
@@ -1894,7 +1894,7 @@ msgctxt "@item:inlistbox Button size:"
 msgid "Huge"
 msgstr "Besar Banget"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:51
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:51
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Button size:"
 #| msgid "Very Huge"
@@ -1902,14 +1902,14 @@ msgctxt "@item:inlistbox Button size:"
 msgid "Very Huge"
 msgstr "Sangat Besar"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:52
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:52
 #, fuzzy, kde-format
 #| msgid "&Resize"
 msgctxt "@item:inlistbox Button size:"
 msgid "Oversized"
 msgstr "Ubah U&kuran"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:55
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:55
 #, fuzzy, kde-format
 #| msgid "Buttons"
 msgid "Button size:"

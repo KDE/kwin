@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-11 02:11+0000\n"
+"POT-Creation-Date: 2023-06-16 02:03+0000\n"
 "PO-Revision-Date: 2012-06-14 11:29+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -68,19 +68,19 @@ msgstr ""
 msgid "KDE Wayland Compositor"
 msgstr ""
 
-#: composite.cpp:616
+#: composite.cpp:619
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 
-#: composite.cpp:843
+#: composite.cpp:846
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
 "resume using the '%1' shortcut."
 msgstr "បែបផែន​ផ្ទៃតុ​ត្រូវបានផ្អាក​ដោយ​កម្មវិធី​ផ្សេង ។<br/>អ្នក​អាច​បន្ត​ ដោយ​ប្រើ​ផ្លូវកាត់ '%1' ។"
 
-#: composite.cpp:1033
+#: composite.cpp:1036
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -100,12 +100,12 @@ msgstr ""
 "អាច​កំណត់​ការការ​ពារ​នេះ​ឡើង​វិញ ប៉ុន្តែ <b>ត្រូវ​ដឹង​ថា វា​​អាច​ធ្វើ​ឲ្យ​គាំង​ភ្លាមៗ​បាន !</b></p><p>ជា​"
 "ជម្រើស អ្នក​ចង់​ប្រើ​កម្មវិធី​ផ្នែក​ខាង​ក្រោយ XRender ជំនួស​វិញ ។</p>"
 
-#: composite.cpp:1040
+#: composite.cpp:1043
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "មិន​មាន​​ផ្នែក​បន្ថែម X (XComposite និង XDamage) ដែល​ទាមទារ ។"
 
-#: composite.cpp:1043
+#: composite.cpp:1046
 #, fuzzy, kde-format
 #| msgid "GLX/OpenGL and XRender/XFixes are not available."
 msgid "GLX/OpenGL is not available."
@@ -1795,7 +1795,7 @@ msgstr "បិទ/បើក​កា​របម្លែង​បែបផែ�
 msgid "Invert Screen Colors"
 msgstr "ត្រឡប់​ពណ៌​អេក្រង់"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:46
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:46
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Border size:"
 #| msgid "Tiny"
@@ -1803,7 +1803,7 @@ msgctxt "@item:inlistbox Button size:"
 msgid "Tiny"
 msgstr "ល្អិត"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:47
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:47
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Button size:"
 #| msgid "Normal"
@@ -1811,7 +1811,7 @@ msgctxt "@item:inlistbox Button size:"
 msgid "Normal"
 msgstr "ធម្មតា"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:48
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:48
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Button size:"
 #| msgid "Large"
@@ -1819,7 +1819,7 @@ msgctxt "@item:inlistbox Button size:"
 msgid "Large"
 msgstr "ធំ"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:49
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:49
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Button size:"
 #| msgid "Very Large"
@@ -1827,7 +1827,7 @@ msgctxt "@item:inlistbox Button size:"
 msgid "Very Large"
 msgstr "ធំណាស់"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:50
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:50
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Button size:"
 #| msgid "Huge"
@@ -1835,7 +1835,7 @@ msgctxt "@item:inlistbox Button size:"
 msgid "Huge"
 msgstr "ធំសម្បើម"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:51
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:51
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Border size:"
 #| msgid "Very Huge"
@@ -1843,14 +1843,14 @@ msgctxt "@item:inlistbox Button size:"
 msgid "Very Huge"
 msgstr "ធំ​សម្បើម​ណាស់"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:52
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:52
 #, fuzzy, kde-format
 #| msgid "Re&size"
 msgctxt "@item:inlistbox Button size:"
 msgid "Oversized"
 msgstr "ប្តូរ​ទំហំ"
 
-#: plugins/kdecorations/aurorae/src/auroraeconfig.cpp:55
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:55
 #, fuzzy, kde-format
 #| msgid "Button size:"
 msgid "Button size:"
