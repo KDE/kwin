@@ -238,6 +238,7 @@ void OffscreenEffect::handleWindowDamaged(EffectWindow *window)
 
 void OffscreenEffect::handleWindowDeleted(EffectWindow *window)
 {
+    effects->makeOpenGLContextCurrent();
     unredirect(window);
 }
 
