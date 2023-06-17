@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-16 02:03+0000\n"
+"POT-Creation-Date: 2023-06-17 02:07+0000\n"
 "PO-Revision-Date: 2013-09-08 07:05+0900\n"
 "Last-Translator: Gheyret Kenji <gheyret@gmail.com>\n"
 "Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
@@ -2327,30 +2327,30 @@ msgstr "جايلاشتۇرۇش ئۇسۇلى:"
 msgid "Ignore minimized windows:"
 msgstr "كۆزنەكنى كىچىكلەت"
 
-#: plugins/overview/qml/DesktopBar.qml:163
+#: plugins/overview/qml/DesktopBar.qml:164
 #, fuzzy, kde-format
 #| msgid "Move To &Desktop"
 msgid "Delete Virtual Desktop"
 msgstr "ئۈستەلئۈستىگە يۆتكە(&D)"
 
-#: plugins/overview/qml/DesktopBar.qml:259
+#: plugins/overview/qml/DesktopBar.qml:260
 #, fuzzy, kde-format
 #| msgid "Window to Next Desktop"
 msgid "Add Virtual Desktop"
 msgstr "كۆزنەكتىن كېيىنكى ئۈستەلئۈستىگە"
 
-#: plugins/overview/qml/main.qml:229
+#: plugins/overview/qml/main.qml:230
 #, fuzzy, kde-format
 #| msgid "Moving windows:"
 msgid "No matching windows"
 msgstr "يۆتكىلىۋاتقان كۆزنەكلەر:"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:151
+#: plugins/private/qml/WindowHeapDelegate.qml:152
 #, kde-format
 msgid "Drag Down To Close"
 msgstr ""
 
-#: plugins/private/qml/WindowHeapDelegate.qml:452
+#: plugins/private/qml/WindowHeapDelegate.qml:453
 #, fuzzy, kde-format
 #| msgid "Close Window"
 msgctxt "@info:tooltip as in: 'close this window'"
@@ -2537,43 +2537,43 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr ""
 
-#: plugins/tileseditor/qml/main.qml:150
+#: plugins/tileseditor/qml/main.qml:151
 #, kde-format
 msgid "Padding:"
 msgstr ""
 
-#: plugins/tileseditor/qml/main.qml:160
+#: plugins/tileseditor/qml/main.qml:161
 #, kde-format
 msgid "Load Layout..."
 msgstr ""
 
-#: plugins/tileseditor/qml/main.qml:274
+#: plugins/tileseditor/qml/main.qml:275
 #, fuzzy, kde-format
 #| msgid "&Close"
 msgid "Close"
 msgstr "ياپ(&C)"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:167
+#: plugins/tileseditor/qml/TileDelegate.qml:168
 #, fuzzy, kde-format
 #| msgid "Maximize Window Horizontally"
 msgid "Split Horizontally"
 msgstr "كۆزنەكنى گورىزونتال چوڭايتىش"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:174
+#: plugins/tileseditor/qml/TileDelegate.qml:175
 #, fuzzy, kde-format
 #| msgid "Maximize Window Vertically"
 msgid "Split Vertically"
 msgstr "كۆزنەكنى تىك ھالەتتە چوڭايتىش"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:182
-#: plugins/tileseditor/qml/TileDelegate.qml:211
+#: plugins/tileseditor/qml/TileDelegate.qml:183
+#: plugins/tileseditor/qml/TileDelegate.qml:212
 #, fuzzy, kde-format
 #| msgctxt "Floating layout, windows aren't tiled at all"
 #| msgid "Floating"
 msgid "Add Floating Tile"
 msgstr "لەيلىتىش"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:191
+#: plugins/tileseditor/qml/TileDelegate.qml:192
 #, kde-format
 msgid "Delete"
 msgstr ""
@@ -2783,18 +2783,18 @@ msgstr "بار كۆزنەكلەرنى ئالماشتۇر(نۆۋەتتىكى ئۈ
 msgid "Ignore &minimized windows"
 msgstr "كۆزنەكنى كىچىكلەت"
 
-#: plugins/windowview/qml/main.qml:107
+#: plugins/windowview/qml/main.qml:108
 #, kde-format
 msgid "No Matches"
 msgstr ""
 
-#: plugins/windowview/qml/main.qml:107
+#: plugins/windowview/qml/main.qml:108
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgid "No Windows"
 msgstr "كۆزنەكلەر"
 
-#: plugins/windowview/qml/main.qml:122
+#: plugins/windowview/qml/main.qml:123
 #, fuzzy, kde-format
 #| msgid "Lower Window"
 msgid "Filter windows…"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-16 02:03+0000\n"
+"POT-Creation-Date: 2023-06-17 02:07+0000\n"
 "PO-Revision-Date: 2022-05-14 17:24+0200\n"
 "Last-Translator: Martin Schlander <mschlander@opensuse.org>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
@@ -2328,31 +2328,31 @@ msgstr "Tablet-tilstand"
 msgid "Ignore minimized windows:"
 msgstr "Minimér vindue"
 
-#: plugins/overview/qml/DesktopBar.qml:163
+#: plugins/overview/qml/DesktopBar.qml:164
 #, fuzzy, kde-format
 #| msgid "Move to &Desktop"
 msgid "Delete Virtual Desktop"
 msgstr "Flyt til &skrivebord"
 
-#: plugins/overview/qml/DesktopBar.qml:259
+#: plugins/overview/qml/DesktopBar.qml:260
 #, fuzzy, kde-format
 #| msgctxt "Create a new desktop and move there the window"
 #| msgid "&New Desktop"
 msgid "Add Virtual Desktop"
 msgstr "&Nyt skrivebord"
 
-#: plugins/overview/qml/main.qml:229
+#: plugins/overview/qml/main.qml:230
 #, fuzzy, kde-format
 #| msgid "X11 Unmanaged Windows"
 msgid "No matching windows"
 msgstr "X11 ikke-håndterede vinduer"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:151
+#: plugins/private/qml/WindowHeapDelegate.qml:152
 #, kde-format
 msgid "Drag Down To Close"
 msgstr ""
 
-#: plugins/private/qml/WindowHeapDelegate.qml:452
+#: plugins/private/qml/WindowHeapDelegate.qml:453
 #, fuzzy, kde-format
 #| msgid "Close Window"
 msgctxt "@info:tooltip as in: 'close this window'"
@@ -2555,45 +2555,45 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr ""
 
-#: plugins/tileseditor/qml/main.qml:150
+#: plugins/tileseditor/qml/main.qml:151
 #, kde-format
 msgid "Padding:"
 msgstr ""
 
-#: plugins/tileseditor/qml/main.qml:160
+#: plugins/tileseditor/qml/main.qml:161
 #, kde-format
 msgid "Load Layout..."
 msgstr ""
 
-#: plugins/tileseditor/qml/main.qml:274
+#: plugins/tileseditor/qml/main.qml:275
 #, fuzzy, kde-format
 #| msgid "&Close"
 msgid "Close"
 msgstr "&Luk"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:167
+#: plugins/tileseditor/qml/TileDelegate.qml:168
 #, fuzzy, kde-format
 #| msgctxt "An orientation of a pointer axis event"
 #| msgid "Horizontal"
 msgid "Split Horizontally"
 msgstr "Vandret"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:174
+#: plugins/tileseditor/qml/TileDelegate.qml:175
 #, fuzzy, kde-format
 #| msgctxt "An orientation of a pointer axis event"
 #| msgid "Vertical"
 msgid "Split Vertically"
 msgstr "Lodret"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:182
-#: plugins/tileseditor/qml/TileDelegate.qml:211
+#: plugins/tileseditor/qml/TileDelegate.qml:183
+#: plugins/tileseditor/qml/TileDelegate.qml:212
 #, fuzzy, kde-format
 #| msgctxt "Floating layout, windows aren't tiled at all"
 #| msgid "Floating"
 msgid "Add Floating Tile"
 msgstr "Flydende"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:191
+#: plugins/tileseditor/qml/TileDelegate.qml:192
 #, kde-format
 msgid "Delete"
 msgstr ""
@@ -2813,18 +2813,18 @@ msgstr "Slå prænsentér vinduer til/fra (aktuelt skrivebord)"
 msgid "Ignore &minimized windows"
 msgstr "Minimér vindue"
 
-#: plugins/windowview/qml/main.qml:107
+#: plugins/windowview/qml/main.qml:108
 #, kde-format
 msgid "No Matches"
 msgstr ""
 
-#: plugins/windowview/qml/main.qml:107
+#: plugins/windowview/qml/main.qml:108
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgid "No Windows"
 msgstr "Vinduer"
 
-#: plugins/windowview/qml/main.qml:122
+#: plugins/windowview/qml/main.qml:123
 #, fuzzy, kde-format
 #| msgid "Internal Windows"
 msgid "Filter windows…"

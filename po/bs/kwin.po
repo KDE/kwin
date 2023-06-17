@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-16 02:03+0000\n"
+"POT-Creation-Date: 2023-06-17 02:07+0000\n"
 "PO-Revision-Date: 2014-10-20 20:21+0000\n"
 "Last-Translator: Lejla Agic <lagic1@etf.unsa.ba>\n"
 "Language-Team: bosanski <bs@li.org>\n"
@@ -2341,31 +2341,31 @@ msgstr "Raspored:"
 msgid "Ignore minimized windows:"
 msgstr "Minimizuj prozor"
 
-#: plugins/overview/qml/DesktopBar.qml:163
+#: plugins/overview/qml/DesktopBar.qml:164
 #, fuzzy, kde-format
 #| msgid "Move To &Desktop"
 msgid "Delete Virtual Desktop"
 msgstr "Pomjeri na ra&dnu površinu"
 
-#: plugins/overview/qml/DesktopBar.qml:259
+#: plugins/overview/qml/DesktopBar.qml:260
 #, fuzzy, kde-format
 #| msgctxt "Create a new desktop and move there the window"
 #| msgid "&New Desktop"
 msgid "Add Virtual Desktop"
 msgstr "&Nova radna površina"
 
-#: plugins/overview/qml/main.qml:229
+#: plugins/overview/qml/main.qml:230
 #, fuzzy, kde-format
 #| msgid "Moving windows:"
 msgid "No matching windows"
 msgstr "Premještani prozori:"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:151
+#: plugins/private/qml/WindowHeapDelegate.qml:152
 #, kde-format
 msgid "Drag Down To Close"
 msgstr ""
 
-#: plugins/private/qml/WindowHeapDelegate.qml:452
+#: plugins/private/qml/WindowHeapDelegate.qml:453
 #, fuzzy, kde-format
 #| msgid "Close Window"
 msgctxt "@info:tooltip as in: 'close this window'"
@@ -2552,41 +2552,41 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr ""
 
-#: plugins/tileseditor/qml/main.qml:150
+#: plugins/tileseditor/qml/main.qml:151
 #, kde-format
 msgid "Padding:"
 msgstr ""
 
-#: plugins/tileseditor/qml/main.qml:160
+#: plugins/tileseditor/qml/main.qml:161
 #, kde-format
 msgid "Load Layout..."
 msgstr ""
 
-#: plugins/tileseditor/qml/main.qml:274
+#: plugins/tileseditor/qml/main.qml:275
 #, fuzzy, kde-format
 #| msgid "&Close"
 msgid "Close"
 msgstr "&Zatvori"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:167
+#: plugins/tileseditor/qml/TileDelegate.qml:168
 #, fuzzy, kde-format
 #| msgid "Maximize Window Horizontally"
 msgid "Split Horizontally"
 msgstr "Vodoravno maksimizuj prozor"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:174
+#: plugins/tileseditor/qml/TileDelegate.qml:175
 #, fuzzy, kde-format
 #| msgid "Maximize Window Vertically"
 msgid "Split Vertically"
 msgstr "Uspravno maksimizuj prozor"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:182
-#: plugins/tileseditor/qml/TileDelegate.qml:211
+#: plugins/tileseditor/qml/TileDelegate.qml:183
+#: plugins/tileseditor/qml/TileDelegate.qml:212
 #, kde-format
 msgid "Add Floating Tile"
 msgstr ""
 
-#: plugins/tileseditor/qml/TileDelegate.qml:191
+#: plugins/tileseditor/qml/TileDelegate.qml:192
 #, kde-format
 msgid "Delete"
 msgstr ""
@@ -2797,18 +2797,18 @@ msgstr "Prisutni prozori (tekuća površ)"
 msgid "Ignore &minimized windows"
 msgstr "Minimizuj prozor"
 
-#: plugins/windowview/qml/main.qml:107
+#: plugins/windowview/qml/main.qml:108
 #, kde-format
 msgid "No Matches"
 msgstr ""
 
-#: plugins/windowview/qml/main.qml:107
+#: plugins/windowview/qml/main.qml:108
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "No Windows"
 msgstr "Pomjeri prozor"
 
-#: plugins/windowview/qml/main.qml:122
+#: plugins/windowview/qml/main.qml:123
 #, fuzzy, kde-format
 #| msgid "Lower Window"
 msgid "Filter windows…"

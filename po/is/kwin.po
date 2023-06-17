@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-16 02:03+0000\n"
+"POT-Creation-Date: 2023-06-17 02:07+0000\n"
 "PO-Revision-Date: 2022-12-31 14:10+0000\n"
 "Last-Translator: gummi <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
@@ -2323,31 +2323,31 @@ msgstr "Teikniborðssnið"
 msgid "Ignore minimized windows:"
 msgstr "Fela glugga"
 
-#: plugins/overview/qml/DesktopBar.qml:163
+#: plugins/overview/qml/DesktopBar.qml:164
 #, fuzzy, kde-format
 #| msgid "Peek at Desktop"
 msgid "Delete Virtual Desktop"
 msgstr "Kíkja á skjáborðið "
 
-#: plugins/overview/qml/DesktopBar.qml:259
+#: plugins/overview/qml/DesktopBar.qml:260
 #, fuzzy, kde-format
 #| msgctxt "Create a new desktop and add the window to that desktop"
 #| msgid "Add to &New Desktop"
 msgid "Add Virtual Desktop"
 msgstr "Bæta &við nýtt skjáborð"
 
-#: plugins/overview/qml/main.qml:229
+#: plugins/overview/qml/main.qml:230
 #, fuzzy, kde-format
 #| msgid "X11 Unmanaged Windows"
 msgid "No matching windows"
 msgstr "Óstýrðir X11-gluggar"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:151
+#: plugins/private/qml/WindowHeapDelegate.qml:152
 #, kde-format
 msgid "Drag Down To Close"
 msgstr "Draga niður til að loka"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:452
+#: plugins/private/qml/WindowHeapDelegate.qml:453
 #, fuzzy, kde-format
 #| msgid "Close Window"
 msgctxt "@info:tooltip as in: 'close this window'"
@@ -2545,44 +2545,44 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr ""
 
-#: plugins/tileseditor/qml/main.qml:150
+#: plugins/tileseditor/qml/main.qml:151
 #, kde-format
 msgid "Padding:"
 msgstr ""
 
-#: plugins/tileseditor/qml/main.qml:160
+#: plugins/tileseditor/qml/main.qml:161
 #, kde-format
 msgid "Load Layout..."
 msgstr ""
 
-#: plugins/tileseditor/qml/main.qml:274
+#: plugins/tileseditor/qml/main.qml:275
 #, fuzzy, kde-format
 #| msgid "&Close"
 msgid "Close"
 msgstr "&Loka"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:167
+#: plugins/tileseditor/qml/TileDelegate.qml:168
 #, fuzzy, kde-format
 #| msgctxt "An orientation of a pointer axis event"
 #| msgid "Horizontal"
 msgid "Split Horizontally"
 msgstr "Lárétt"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:174
+#: plugins/tileseditor/qml/TileDelegate.qml:175
 #, fuzzy, kde-format
 #| msgctxt "An orientation of a pointer axis event"
 #| msgid "Vertical"
 msgid "Split Vertically"
 msgstr "Lóðrétt"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:182
-#: plugins/tileseditor/qml/TileDelegate.qml:211
+#: plugins/tileseditor/qml/TileDelegate.qml:183
+#: plugins/tileseditor/qml/TileDelegate.qml:212
 #, fuzzy, kde-format
 #| msgid "Close Window"
 msgid "Add Floating Tile"
 msgstr "Loka glugga"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:191
+#: plugins/tileseditor/qml/TileDelegate.qml:192
 #, kde-format
 msgid "Delete"
 msgstr ""
@@ -2801,18 +2801,18 @@ msgstr "Víxla Sýna glugga (gluggaflokkur á núverandi skjáborði)"
 msgid "Ignore &minimized windows"
 msgstr "Fela glugga"
 
-#: plugins/windowview/qml/main.qml:107
+#: plugins/windowview/qml/main.qml:108
 #, kde-format
 msgid "No Matches"
 msgstr "Engar samsvaranir"
 
-#: plugins/windowview/qml/main.qml:107
+#: plugins/windowview/qml/main.qml:108
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgid "No Windows"
 msgstr "Gluggar"
 
-#: plugins/windowview/qml/main.qml:122
+#: plugins/windowview/qml/main.qml:123
 #, fuzzy, kde-format
 #| msgid "Internal Windows"
 msgid "Filter windows…"

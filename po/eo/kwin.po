@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-16 02:03+0000\n"
+"POT-Creation-Date: 2023-06-17 02:07+0000\n"
 "PO-Revision-Date: 2023-06-15 20:56+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -2272,27 +2272,27 @@ msgstr "Enpaĝiga reĝimo:"
 msgid "Ignore minimized windows:"
 msgstr "Ignori minimumigitajn fenestrojn:"
 
-#: plugins/overview/qml/DesktopBar.qml:163
+#: plugins/overview/qml/DesktopBar.qml:164
 #, kde-format
 msgid "Delete Virtual Desktop"
 msgstr "Forigi Virtualan Labortablo"
 
-#: plugins/overview/qml/DesktopBar.qml:259
+#: plugins/overview/qml/DesktopBar.qml:260
 #, kde-format
 msgid "Add Virtual Desktop"
 msgstr "Aldoni Virtualan Labortablon"
 
-#: plugins/overview/qml/main.qml:229
+#: plugins/overview/qml/main.qml:230
 #, kde-format
 msgid "No matching windows"
 msgstr "Neniuj kongruaj fenestroj"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:151
+#: plugins/private/qml/WindowHeapDelegate.qml:152
 #, kde-format
 msgid "Drag Down To Close"
 msgstr "Trenu Malsupren Por Fermi"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:452
+#: plugins/private/qml/WindowHeapDelegate.qml:453
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
@@ -2472,38 +2472,38 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr "Baskuligi Kahel-redaktilon"
 
-#: plugins/tileseditor/qml/main.qml:150
+#: plugins/tileseditor/qml/main.qml:151
 #, kde-format
 msgid "Padding:"
 msgstr "Remburaĵo:"
 
-#: plugins/tileseditor/qml/main.qml:160
+#: plugins/tileseditor/qml/main.qml:161
 #, kde-format
 msgid "Load Layout..."
 msgstr "Ŝargi Aranĝon..."
 
-#: plugins/tileseditor/qml/main.qml:274
+#: plugins/tileseditor/qml/main.qml:275
 #, kde-format
 msgid "Close"
 msgstr "Fermi"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:167
+#: plugins/tileseditor/qml/TileDelegate.qml:168
 #, kde-format
 msgid "Split Horizontally"
 msgstr "Dividi Horizontale"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:174
+#: plugins/tileseditor/qml/TileDelegate.qml:175
 #, kde-format
 msgid "Split Vertically"
 msgstr "Dividi Vertikale"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:182
-#: plugins/tileseditor/qml/TileDelegate.qml:211
+#: plugins/tileseditor/qml/TileDelegate.qml:183
+#: plugins/tileseditor/qml/TileDelegate.qml:212
 #, kde-format
 msgid "Add Floating Tile"
 msgstr "Aldoni Flosantan Kahelon"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:191
+#: plugins/tileseditor/qml/TileDelegate.qml:192
 #, kde-format
 msgid "Delete"
 msgstr "Forigi"
@@ -2706,17 +2706,17 @@ msgstr "Baskuligi Prezenti Fenestrojn (Fenestra klaso sur nuna labortablo)"
 msgid "Ignore &minimized windows"
 msgstr "Ignori &minimigitajn fenestrojn"
 
-#: plugins/windowview/qml/main.qml:107
+#: plugins/windowview/qml/main.qml:108
 #, kde-format
 msgid "No Matches"
 msgstr "Neniuj Kongruoj"
 
-#: plugins/windowview/qml/main.qml:107
+#: plugins/windowview/qml/main.qml:108
 #, kde-format
 msgid "No Windows"
 msgstr "Neniu Fenestro"
 
-#: plugins/windowview/qml/main.qml:122
+#: plugins/windowview/qml/main.qml:123
 #, kde-format
 msgid "Filter windows…"
 msgstr "Filtri fenestrojn…"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-16 02:03+0000\n"
+"POT-Creation-Date: 2023-06-17 02:07+0000\n"
 "PO-Revision-Date: 2008-07-08 18:58+0530\n"
 "Last-Translator: \n"
 "Language-Team: SMC <smc.org.in>\n"
@@ -2249,28 +2249,28 @@ msgstr "വിന്യാസ ദശ:"
 msgid "Ignore minimized windows:"
 msgstr "ജാലകം ചെറുതാക്കുക"
 
-#: plugins/overview/qml/DesktopBar.qml:163
+#: plugins/overview/qml/DesktopBar.qml:164
 #, fuzzy, kde-format
 msgid "Delete Virtual Desktop"
 msgstr "&പണിയിടത്തിലേയ്ക്കു്"
 
-#: plugins/overview/qml/DesktopBar.qml:259
+#: plugins/overview/qml/DesktopBar.qml:260
 #, fuzzy, kde-format
 msgid "Add Virtual Desktop"
 msgstr "പണിയിടം ഗ്രിഡ് കാണിക്കുക"
 
-#: plugins/overview/qml/main.qml:229
+#: plugins/overview/qml/main.qml:230
 #, fuzzy, kde-format
 #| msgid "Moving windows:"
 msgid "No matching windows"
 msgstr "നീങ്ങുന്ന ജാലകങ്ങള്‍:"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:151
+#: plugins/private/qml/WindowHeapDelegate.qml:152
 #, kde-format
 msgid "Drag Down To Close"
 msgstr ""
 
-#: plugins/private/qml/WindowHeapDelegate.qml:452
+#: plugins/private/qml/WindowHeapDelegate.qml:453
 #, fuzzy, kde-format
 #| msgid "Close Window"
 msgctxt "@info:tooltip as in: 'close this window'"
@@ -2449,41 +2449,41 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr "വീഡിയോ റിക്കോര്‍ഡ് ചെയ്യുക/ചെയ്യാതിരിക്കുക"
 
-#: plugins/tileseditor/qml/main.qml:150
+#: plugins/tileseditor/qml/main.qml:151
 #, kde-format
 msgid "Padding:"
 msgstr ""
 
-#: plugins/tileseditor/qml/main.qml:160
+#: plugins/tileseditor/qml/main.qml:161
 #, kde-format
 msgid "Load Layout..."
 msgstr ""
 
-#: plugins/tileseditor/qml/main.qml:274
+#: plugins/tileseditor/qml/main.qml:275
 #, fuzzy, kde-format
 #| msgid "&Close"
 msgid "Close"
 msgstr "&അടയ്ക്കുക"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:167
+#: plugins/tileseditor/qml/TileDelegate.qml:168
 #, fuzzy, kde-format
 #| msgid "Maximize Window Horizontally"
 msgid "Split Horizontally"
 msgstr "ജാലകം തിരശ്ചീനമായ് വലുതാക്കുക "
 
-#: plugins/tileseditor/qml/TileDelegate.qml:174
+#: plugins/tileseditor/qml/TileDelegate.qml:175
 #, fuzzy, kde-format
 #| msgid "Maximize Window Vertically"
 msgid "Split Vertically"
 msgstr "ജാലകം ലംബമായ് വലുതാക്കുക "
 
-#: plugins/tileseditor/qml/TileDelegate.qml:182
-#: plugins/tileseditor/qml/TileDelegate.qml:211
+#: plugins/tileseditor/qml/TileDelegate.qml:183
+#: plugins/tileseditor/qml/TileDelegate.qml:212
 #, fuzzy, kde-format
 msgid "Add Floating Tile"
 msgstr "ജാലകം അടയ്ക്കുക"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:191
+#: plugins/tileseditor/qml/TileDelegate.qml:192
 #, kde-format
 msgid "Delete"
 msgstr ""
@@ -2689,17 +2689,17 @@ msgstr "നിലവിലുള്ള പണിയിടത്തിലുള�
 msgid "Ignore &minimized windows"
 msgstr "ജാലകം ചെറുതാക്കുക"
 
-#: plugins/windowview/qml/main.qml:107
+#: plugins/windowview/qml/main.qml:108
 #, kde-format
 msgid "No Matches"
 msgstr ""
 
-#: plugins/windowview/qml/main.qml:107
+#: plugins/windowview/qml/main.qml:108
 #, fuzzy, kde-format
 msgid "No Windows"
 msgstr "ജാലകം നീക്കുക"
 
-#: plugins/windowview/qml/main.qml:122
+#: plugins/windowview/qml/main.qml:123
 #, fuzzy, kde-format
 msgid "Filter windows…"
 msgstr "ജാലകങ്ങള്‍"
