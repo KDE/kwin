@@ -66,6 +66,8 @@ qreal transformAngle(EffectScreen::Transform current, EffectScreen::Transform ol
 
 void ScreenTransformEffect::addScreen(EffectScreen *screen)
 {
+    effects->makeOpenGLContextCurrent();
+
     connect(screen, &EffectScreen::changed, this, [this, screen] {
         auto &state = m_states[screen];
         if (screen->transform() == state.m_oldTransform) {
@@ -99,6 +101,7 @@ void ScreenTransformEffect::addScreen(EffectScreen *screen)
         // Now, the effect can cross-fade between current and previous state.
         state.m_captured = true;
     });
+    effects->doneOpenGLContextCurrent();
 }
 
 void ScreenTransformEffect::removeScreen(EffectScreen *screen)
