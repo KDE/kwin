@@ -1,6 +1,27 @@
 {
     "KPlugin": {
         "Description": "Window Decoration Theme Engine",
-        "Name": "Aurorae"
+        "Description[ca@valencia]": "Motor del tema de decoració de les finestres",
+        "Description[ca]": "Motor de tema de decoració de les finestres",
+        "Description[eo]": "Fenestrodekora Etosmotoro",
+        "Description[es]": "Motor de temas de decoraciones de las ventanas",
+        "Description[ia]": "Motor de Thema de Decoratione de fenestra",
+        "Description[nl]": "Engine voor thema van vensterdecoraties",
+        "Description[sl]": "Stroj za teme okrasitev oken",
+        "Description[tr]": "Pencere Dekorasyon Teması İşletkesi",
+        "Description[uk]": "Рушій тем обрамлення вікон",
+        "Description[x-test]": "xxWindow Decoration Theme Enginexx",
+        "Name": "Aurorae",
+        "Name[ca@valencia]": "Aurorae",
+        "Name[ca]": "Aurorae",
+        "Name[de]": "Aurorae",
+        "Name[eo]": "Aurorae",
+        "Name[es]": "Aurorae",
+        "Name[ia]": "Aurorae",
+        "Name[nl]": "Aurorae",
+        "Name[sl]": "Aurorae",
+        "Name[tr]": "Aurorae",
+        "Name[uk]": "Aurorae",
+        "Name[x-test]": "xxAuroraexx"
     }
 }
