@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-07 02:19+0000\n"
-"PO-Revision-Date: 2023-04-22 10:51+0100\n"
+"PO-Revision-Date: 2023-06-17 12:06+0100\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
 "Language-Team: British English\n"
 "Language: en_GB\n"
@@ -776,12 +776,10 @@ msgid "No rules for specific windows are currently set"
 msgstr "No rules for specific windows are currently set"
 
 #: ui/main.qml:63
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Click the <interface>Add New...</interface> button below to add some"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Click the <interface>Add New…</interface> button below to add some"
-msgstr "Click the <interface>Add New...</interface> button below to add some"
+msgstr "Click the <interface>Add New…</interface> button below to add some"
 
 #: ui/main.qml:71
 #, kde-format
@@ -804,16 +802,14 @@ msgid "Save Rules"
 msgstr "Save Rules"
 
 #: ui/main.qml:100
-#, fuzzy, kde-format
-#| msgid "Add New..."
+#, kde-format
 msgid "Add New…"
-msgstr "Add New..."
+msgstr "Add New…"
 
 #: ui/main.qml:111
-#, fuzzy, kde-format
-#| msgid "Import..."
+#, kde-format
 msgid "Import…"
-msgstr "Import..."
+msgstr "Import…"
 
 #: ui/main.qml:119
 #, kde-format
@@ -821,10 +817,9 @@ msgid "Cancel Export"
 msgstr "Cancel Export"
 
 #: ui/main.qml:119
-#, fuzzy, kde-format
-#| msgid "Export..."
+#, kde-format
 msgid "Export…"
-msgstr "Export..."
+msgstr "Export…"
 
 #: ui/main.qml:209
 #, kde-format

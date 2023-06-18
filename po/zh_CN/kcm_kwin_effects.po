@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-07 02:19+0000\n"
-"PO-Revision-Date: 2023-05-22 13:58\n"
+"PO-Revision-Date: 2023-06-17 04:09\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -33,18 +33,16 @@ msgid "Show/Hide Video"
 msgstr "显示/隐藏特效演示视频"
 
 #: ui/Effect.qml:134
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Configure..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Configure…"
-msgstr "配置..."
+msgstr "配置…"
 
 #: ui/main.qml:25
 #, kde-format
 msgctxt "@action:button get new KWin effects"
 msgid "Get New…"
-msgstr ""
+msgstr "获取新效果…"
 
 #: ui/main.qml:44
 #, kde-format
@@ -68,6 +66,3 @@ msgstr "排除不支持的特效"
 #, kde-format
 msgid "Exclude internal effects"
 msgstr "排除内建特效"
-
-#~ msgid "Get New Desktop Effects..."
-#~ msgstr "获取新桌面特效..."
