@@ -185,24 +185,6 @@ void UserActionsMenu::helperDialog(const QString &message)
     KProcess::startDetached(QStringLiteral("kdialog"), args);
 }
 
-QStringList configModules(bool controlCenter)
-{
-    QStringList args;
-    args << QStringLiteral("kwindecoration");
-    if (controlCenter) {
-        args << QStringLiteral("kwinoptions");
-    } else if (KAuthorized::authorizeControlModule(QStringLiteral("kde-kwinoptions.desktop"))) {
-        args << QStringLiteral("kwinactions") << QStringLiteral("kwinfocus") << QStringLiteral("kwinmoving") << QStringLiteral("kwinadvanced")
-             << QStringLiteral("kwinrules") << QStringLiteral("kwincompositing") << QStringLiteral("kwineffects")
-#if KWIN_BUILD_TABBOX
-             << QStringLiteral("kwintabbox")
-#endif
-             << QStringLiteral("kwinscreenedges")
-             << QStringLiteral("kwinscripts");
-    }
-    return args;
-}
-
 void UserActionsMenu::init()
 {
     if (m_menu) {
@@ -286,34 +268,6 @@ void UserActionsMenu::init()
     action->setIcon(QIcon::fromTheme(QStringLiteral("preferences-system-windows-actions")));
     action->setData(Options::ApplicationRulesOp);
     m_applicationRulesOperation = action;
-    if (!kwinApp()->config()->isImmutable() && !KAuthorized::authorizeControlModules(configModules(true)).isEmpty()) {
-        advancedMenu->addSeparator();
-        action = advancedMenu->addAction(i18nc("Entry in context menu of window decoration to open the configuration module of KWin",
-                                               "Configure W&indow Manager..."));
-        action->setIcon(QIcon::fromTheme(QStringLiteral("configure")));
-        connect(action, &QAction::triggered, this, [this]() {
-            // opens the KWin configuration
-            QStringList args;
-            args << QStringLiteral("--icon") << QStringLiteral("preferences-system-windows");
-            const QString path = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                                        QStringLiteral("kservices5/kwinfocus.desktop"));
-            if (!path.isEmpty()) {
-                args << QStringLiteral("--desktopfile") << path;
-            }
-            args << configModules(false);
-            QProcess *p = new QProcess(this);
-            p->setArguments(args);
-            p->setProcessEnvironment(kwinApp()->processStartupEnvironment());
-            p->setProgram(QStringLiteral("kcmshell6"));
-            connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), p, &QProcess::deleteLater);
-            connect(p, &QProcess::errorOccurred, this, [](QProcess::ProcessError e) {
-                if (e == QProcess::FailedToStart) {
-                    qCDebug(KWIN_CORE) << "Failed to start kcmshell6";
-                }
-            });
-            p->start();
-        });
-    }
 #endif
 
     m_maximizeOperation = m_menu->addAction(i18n("Ma&ximize"));
