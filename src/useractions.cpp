@@ -271,18 +271,18 @@ void UserActionsMenu::init()
 
     advancedMenu->addSeparator();
 
-    m_shortcutOperation = advancedMenu->addAction(i18n("Set Window Short&cut..."));
+    m_shortcutOperation = advancedMenu->addAction(i18n("Set Window Short&cut…"));
     m_shortcutOperation->setIcon(QIcon::fromTheme(QStringLiteral("configure-shortcuts")));
     setShortcut(m_shortcutOperation, QStringLiteral("Setup Window Shortcut"));
     m_shortcutOperation->setData(Options::SetupWindowShortcutOp);
 
 #if KWIN_BUILD_KCMS
-    QAction *action = advancedMenu->addAction(i18n("Configure Special &Window Settings..."));
+    QAction *action = advancedMenu->addAction(i18n("Configure Special &Window Settings…"));
     action->setIcon(QIcon::fromTheme(QStringLiteral("preferences-system-windows-actions")));
     action->setData(Options::WindowRulesOp);
     m_rulesOperation = action;
 
-    action = advancedMenu->addAction(i18n("Configure S&pecial Application Settings..."));
+    action = advancedMenu->addAction(i18n("Configure S&pecial Application Settings…"));
     action->setIcon(QIcon::fromTheme(QStringLiteral("preferences-system-windows-actions")));
     action->setData(Options::ApplicationRulesOp);
     m_applicationRulesOperation = action;
