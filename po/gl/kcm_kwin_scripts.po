@@ -1,31 +1,32 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
-#
 # Marce Villarino <mvillarino@kde-espana.es>, 2012, 2013.
-# Adrián Chaves (Gallaecio) <adrian@chaves.io>, 2017, 2018.
+# Adrián Chaves (Gallaecio) <adrian@chaves.io>, 2017, 2018, 2023.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-07 02:19+0000\n"
-"PO-Revision-Date: 2018-11-01 09:59+0100\n"
+"PO-Revision-Date: 2023-06-18 19:40+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
-"Language-Team: Galician <kde-i18n-doc@kde.org>\n"
+"Language-Team: Galician <proxecto@trasno.gal>\n"
 "Language: gl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 23.04.2\n"
 
 #: module.cpp:50
 #, kde-format
 msgid "Import KWin Script"
-msgstr "Importar un script de KWin"
+msgstr "Importar un guión de KWin"
 
 #: module.cpp:51
 #, kde-format
 msgid "*.kwinscript|KWin scripts (*.kwinscript)"
-msgstr "*.kwinscript|Scripts de KWin (*.kwinscript)"
+msgstr "*.kwinscript|Guións de KWin (*.kwinscript)"
 
 #: module.cpp:62
 #, kde-format
@@ -34,38 +35,36 @@ msgid ""
 "Cannot import selected script.\n"
 "%1"
 msgstr ""
-"Non se pode importar o script seleccionado.\n"
+"Non se pode importar o guión seleccionado.\n"
 "%1"
 
 #: module.cpp:66
 #, kde-format
 msgctxt "Placeholder is name of the script that was imported"
 msgid "The script \"%1\" was successfully imported."
-msgstr "Importouse o script «%1»."
+msgstr "Importouse o guión «%1»."
 
 #: module.cpp:125
 #, kde-format
 msgid "Error when uninstalling KWin Script: %1"
-msgstr ""
+msgstr "Erro ao desinstalar un guión de KWin: %1"
 
 #: ui/main.qml:24
-#, fuzzy, kde-format
-#| msgid "Install from File..."
+#, kde-format
 msgid "Install from File…"
-msgstr "Instalar desde un ficheiro…"
+msgstr "Instalar dun ficheiro…"
 
 #: ui/main.qml:28
-#, fuzzy, kde-format
-#| msgid "Get New Scripts..."
+#, kde-format
 msgctxt "@action:button get new KWin scripts"
 msgid "Get New…"
-msgstr "Obter novos scripts…"
+msgstr "Obter novidades…"
 
 #: ui/main.qml:66
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Delete…"
-msgstr ""
+msgstr "Eliminar…"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

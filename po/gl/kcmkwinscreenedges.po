@@ -1,19 +1,19 @@
 # translation of kcmkwinscreenedges.po to galician
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
-#
 # Marce Villarino <mvillarino@kde-espana.es>, 2009.
 # marce villarino <mvillarino@users.sourceforge.net>, 2009.
 # Marce Villarino <mvillarino@kde-espana.es>, 2009, 2011.
 # Marce Villarino <mvillarino@kde-espana.es>, 2011, 2012, 2013, 2014.
 # Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>, 2016, 2017.
-# Adrián Chaves (Gallaecio) <adrian@chaves.io>, 2017, 2018, 2019.
+# Adrián Chaves (Gallaecio) <adrian@chaves.io>, 2017, 2018, 2019, 2023.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-17 02:32+0000\n"
-"PO-Revision-Date: 2019-10-19 22:03+0200\n"
+"PO-Revision-Date: 2023-06-18 19:39+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
 "Language: gl\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 19.11.70\n"
+"X-Generator: Lokalize 23.04.2\n"
 
 #: main.cpp:124 touch.cpp:116
 #, kde-format
@@ -31,7 +31,7 @@ msgstr "Ningunha acción"
 #: main.cpp:125 touch.cpp:117
 #, kde-format
 msgid "Peek at Desktop"
-msgstr ""
+msgstr "Ollar o escritorio"
 
 #: main.cpp:126 touch.cpp:118
 #, kde-format
@@ -41,7 +41,7 @@ msgstr "Bloquear a pantalla"
 #: main.cpp:127 touch.cpp:119
 #, kde-format
 msgid "Show KRunner"
-msgstr "Mostrar KRunner"
+msgstr "Amosar KRunner"
 
 #: main.cpp:128 touch.cpp:120
 #, kde-format
@@ -56,7 +56,7 @@ msgstr "Iniciador de aplicacións"
 #: main.cpp:133 touch.cpp:125
 #, kde-format
 msgid "Present Windows"
-msgstr ""
+msgstr "Dispor as xanelas"
 
 #: main.cpp:134 touch.cpp:126
 #, kde-format
@@ -90,7 +90,7 @@ msgid ""
 "You can trigger an action by pushing the mouse cursor against the "
 "corresponding screen edge or corner."
 msgstr ""
-"Para desencadear unha acción leve o cursor do rato ao bordo ou esquina de "
+"Para provocar unha acción leve o cursor do rato ao bordo ou esquina de "
 "pantalla correspondente."
 
 #. i18n: ectx: property (text), widget (QLabel, quickMaximizeLabel)
@@ -121,19 +121,19 @@ msgstr "Xanelas arrastradas aos bordos laterais"
 #: main.ui:101
 #, kde-format
 msgid "Behavior:"
-msgstr ""
+msgstr "Comportamento:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, remainActiveOnFullscreen)
 #: main.ui:108
 #, kde-format
 msgid "Remain active when windows are fullscreen"
-msgstr ""
+msgstr "Seguir activo con xanelas a pantalla completa."
 
 #. i18n: ectx: property (text), widget (QLabel, electricBorderCornerRatioLabel)
 #: main.ui:115
 #, kde-format
 msgid "Trigger &quarter tiling in:"
-msgstr "Activar a disposición en &cuartos en:"
+msgstr "Provocar a disposición en &cuartos en:"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, electricBorderCornerRatioSpin)
 #: main.ui:130
@@ -215,8 +215,8 @@ msgid ""
 "Amount of time required after triggering an action until the next trigger "
 "can occur"
 msgstr ""
-"A cantidade de tempo requirida tras desencadear unha acción ata se poida "
-"volver desencadearse"
+"A cantidade de tempo requirida tras provocar unha acción ata se poida "
+"provocar de novo."
 
 #. i18n: ectx: property (text), widget (QLabel, triggerCooldownLabel)
 #: main.ui:241
