@@ -17,4 +17,4 @@ ecm_qt_declare_logging_category(screencast
     DEFAULT_SEVERITY Warning
 )
 
-target_link_libraries(screencast kwin PkgConfig::PipeWire)
+target_link_libraries(screencast kwin PkgConfig::PipeWire Libdrm::Libdrm)

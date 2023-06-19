@@ -1,3 +1,9 @@
+ecm_setup_version(${PROJECT_VERSION}
+                  VARIABLE_PREFIX KWIN
+                  PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KWinConfigVersion.cmake"
+                  SOVERSION ${PROJECT_VERSION_MAJOR}
+)
+
 # for things that are also used by kwin libraries
 configure_file(libkwineffects/kwinconfig.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/libkwineffects/kwinconfig.h)
 configure_file(config-kwin.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kwin.h)
@@ -18,6 +24,7 @@ if (KWIN_BUILD_KCMS)
 endif()
 
 add_library(kwin SHARED)
+target_include_directories(kwin INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/kwin>")
 set_target_properties(kwin PROPERTIES
    VERSION ${PROJECT_VERSION}
    SOVERSION ${PROJECT_VERSION_MAJOR}
@@ -187,19 +194,25 @@ target_sources(kwin PRIVATE
 )
 
 target_link_libraries(kwin
+    PUBLIC
+
     kwineffects
     kwinglutils
 
     Qt::Concurrent
     Qt::DBus
     Qt::Quick
+    Qt::Widgets
+    Wayland::Server
+    KF6::I18n
+
+    PRIVATE
 
     KF6::ConfigCore
     KF6::ConfigWidgets
     KF6::CoreAddons
     KF6::Crash
     KF6::GlobalAccel
-    KF6::I18n
     KF6::Package
     KF6::Service
     KF6::WindowSystem
@@ -230,13 +243,12 @@ target_link_libraries(kwin
     epoxy::epoxy
 
     Threads::Threads
-    Wayland::Server
     lcms2::lcms2
     PkgConfig::libdisplayinfo
 )
 
 if (KWIN_BUILD_NOTIFICATIONS)
-    target_link_libraries(kwin KF6::Notifications)
+    target_link_libraries(kwin PRIVATE KF6::Notifications)
 endif()
 
 kconfig_add_kcfg_files(kwin
@@ -280,12 +292,12 @@ add_subdirectory(xwayland)
 
 if (KWIN_BUILD_ACTIVITIES)
     target_sources(kwin PRIVATE activities.cpp)
-    target_link_libraries(kwin KF6::Activities)
+    target_link_libraries(kwin PRIVATE KF6::Activities)
 endif()
 
 if (KWIN_BUILD_SCREENLOCKER)
     target_sources(kwin PRIVATE screenlockerwatcher.cpp)
-    target_link_libraries(kwin PW::KScreenLocker)
+    target_link_libraries(kwin PRIVATE PW::KScreenLocker)
 endif()
 
 if (KWIN_BUILD_TABBOX)
@@ -298,7 +310,7 @@ if (KWIN_BUILD_TABBOX)
         tabbox/tabboxhandler.cpp
         tabbox/x11_filter.cpp
     )
-    target_link_libraries(kwin Qt::GuiPrivate)
+    target_link_libraries(kwin PRIVATE Qt::GuiPrivate)
     add_subdirectory(tabbox/switchers)
 endif()
 
@@ -311,13 +323,14 @@ add_executable(kwin_x11 main_x11.cpp)
 target_link_libraries(kwin_x11
     KWinX11Platform
     kwin
+    KF6::GlobalAccel
 )
 target_compile_definitions(kwin_x11 PRIVATE
     -DTRANSLATION_DOMAIN=\"kwin\"
 )
 kcoreaddons_target_static_plugins(kwin_x11 "kwin/effects/plugins")
 
-install(TARGETS kwin ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
+install(TARGETS kwin EXPORT KWinTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
 install(TARGETS kwin_x11 ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_executable(kwin_wayland main_wayland.cpp)
@@ -325,6 +338,7 @@ add_executable(kwin_wayland main_wayland.cpp)
 target_link_libraries(kwin_wayland
     kwin
     KWinXwaylandServerModule
+    KF6::Crash
 )
 target_compile_definitions(kwin_wayland PRIVATE
     -DTRANSLATION_DOMAIN=\"kwin\"
@@ -373,3 +387,28 @@ install(
         ${KDE_INSTALL_DBUSINTERFACEDIR}
 )
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/kwin_export.h DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin COMPONENT Devel)
+install(EXPORT KWinTargets DESTINATION "${KDE_INSTALL_CMAKEPACKAGEDIR}/KWin" FILE KWinTargets.cmake NAMESPACE KWin:: )
+install(FILES
+    core/output.h
+    core/renderloop.h
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/core COMPONENT Devel)
+
+install(FILES
+    utils/edid.h
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/utils COMPONENT Devel)
+
+
+set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KWin")
+
+install(FILES  "${CMAKE_CURRENT_BINARY_DIR}/KWinConfig.cmake"
+               "${CMAKE_CURRENT_BINARY_DIR}/KWinConfigVersion.cmake"
+        DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+        COMPONENT Devel )
+
+configure_package_config_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/KWinConfig.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/KWinConfig.cmake"
+  INSTALL_DESTINATION  ${CMAKECONFIG_INSTALL_DIR}
+)
+
+install(EXPORT KWinTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KWinTargets.cmake NAMESPACE KWin:: )

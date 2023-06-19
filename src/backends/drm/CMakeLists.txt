@@ -26,4 +26,4 @@ target_sources(kwin PRIVATE
     drm_virtual_output.cpp
 )
 
-target_link_libraries(kwin Libdrm::Libdrm gbm::gbm PkgConfig::Libxcvt)
+target_link_libraries(kwin PRIVATE Libdrm::Libdrm gbm::gbm PkgConfig::Libxcvt)

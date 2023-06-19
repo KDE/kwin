@@ -1,0 +1,12 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+find_dependency(Qt@QT_MAJOR_VERSION@Core "@QT_MIN_VERSION@")
+find_dependency(Qt@QT_MAJOR_VERSION@Gui "@QT_MIN_VERSION@")
+find_dependency(Qt@QT_MAJOR_VERSION@Concurrent "@QT_MIN_VERSION@")
+find_dependency(Qt@QT_MAJOR_VERSION@Quick "@QT_MIN_VERSION@")
+find_dependency(KF6I18n "@KF6_MIN_VERSION@")
+find_dependency(KWinEffects)
+
+@PACKAGE_SETUP_KWIN_AUTOMOC_VARIABLES@
+include("${CMAKE_CURRENT_LIST_DIR}/KWinTargets.cmake")

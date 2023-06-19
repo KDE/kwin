@@ -40,6 +40,7 @@ target_link_libraries(LibDrmTest
     XCB::XCB
     PkgConfig::Libxcvt
     gbm::gbm
+    Libdrm::Libdrm
     kwin
 )
 target_include_directories(LibDrmTest

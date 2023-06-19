@@ -18,7 +18,8 @@ set(X11PLATFORM_SOURCES
 )
 
 add_library(KWinX11Platform OBJECT ${X11PLATFORM_SOURCES})
-target_link_libraries(KWinX11Platform kwin KF6::Crash X11::X11 XCB::XKB PkgConfig::XKBX11)
+target_link_libraries(KWinX11Platform kwin KF6::Crash X11::X11 XCB::XKB PkgConfig::XKBX11 Qt::GuiPrivate Libdrm::Libdrm
+    XCB::COMPOSITE XCB::KEYSYMS XCB::RANDR)
 if (X11_Xi_FOUND)
     target_sources(KWinX11Platform PRIVATE x11_standalone_xinputintegration.cpp)
     target_link_libraries(KWinX11Platform X11::Xi)

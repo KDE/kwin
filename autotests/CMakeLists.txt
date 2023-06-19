@@ -167,6 +167,7 @@ add_executable(testX11TimestampUpdate test_x11_timestamp_update.cpp)
 target_link_libraries(testX11TimestampUpdate
     KF6::CoreAddons
     Qt::Test
+    Qt::GuiPrivate
     kwin
 )
 add_test(NAME kwin-testX11TimestampUpdate COMMAND testX11TimestampUpdate)

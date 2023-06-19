@@ -10,7 +10,7 @@ endif()
 add_library(WaylandProtocols_xml OBJECT)
 set_property(TARGET WaylandProtocols_xml PROPERTY POSITION_INDEPENDENT_CODE ON)
 target_link_libraries(WaylandProtocols_xml Qt::Core Wayland::Server)
-target_link_libraries(kwin WaylandProtocols_xml)
+target_link_libraries(kwin PRIVATE WaylandProtocols_xml)
 
 ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${Wayland_DATADIR}/wayland.xml
@@ -298,3 +298,71 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
 else()
     message(FATAL_ERROR "Unsupported platform ${CMAKE_SYSTEM_NAME}")
 endif()
+
+install(FILES
+    appmenu_interface.h
+    blur_interface.h
+    compositor_interface.h
+    contenttype_v1_interface.h
+    contrast_interface.h
+    datacontroldevice_v1_interface.h
+    datacontroldevicemanager_v1_interface.h
+    datacontroloffer_v1_interface.h
+    datacontrolsource_v1_interface.h
+    datadevice_interface.h
+    datadevicemanager_interface.h
+    dataoffer_interface.h
+    datasource_interface.h
+    dpms_interface.h
+    drmlease_v1_interface.h
+    fakeinput_interface.h
+    fractionalscale_v1_interface.h
+    idle_interface.h
+    idleinhibit_v1_interface.h
+    idlenotify_v1_interface.h
+    inputmethod_v1_interface.h
+    keyboard_interface.h
+    keyboard_shortcuts_inhibit_v1_interface.h
+    keystate_interface.h
+    layershell_v1_interface.h
+    lockscreen_overlay_v1_interface.h
+    output_interface.h
+    output_order_v1_interface.h
+    outputdevice_v2_interface.h
+    outputmanagement_v2_interface.h
+    plasmashell_interface.h
+    plasmavirtualdesktop_interface.h
+    plasmawindowmanagement_interface.h
+    pointer_interface.h
+    pointerconstraints_v1_interface.h
+    pointergestures_v1_interface.h
+    primaryselectiondevice_v1_interface.h
+    primaryselectiondevicemanager_v1_interface.h
+    primaryselectionoffer_v1_interface.h
+    primaryselectionsource_v1_interface.h
+    relativepointer_v1_interface.h
+    screencast_v1_interface.h
+    screenedge_v1_interface.h
+    seat_interface.h
+    server_decoration_interface.h
+    server_decoration_palette_interface.h
+    shadow_interface.h
+    slide_interface.h
+    subcompositor_interface.h
+    surface_interface.h
+    tablet_v2_interface.h
+    tearingcontrol_v1_interface.h
+    textinput_v1_interface.h
+    textinput_v2_interface.h
+    textinput_v3_interface.h
+    touch_interface.h
+    viewporter_interface.h
+    xdgactivation_v1_interface.h
+    xdgdecoration_v1_interface.h
+    xdgforeign_v2_interface.h
+    xdgoutput_v1_interface.h
+    xdgshell_interface.h
+    xwaylandkeyboardgrab_v1_interface.h
+    xwaylandshell_v1_interface.h
+
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/wayland COMPONENT Devel)

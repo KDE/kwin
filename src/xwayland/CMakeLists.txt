@@ -16,4 +16,7 @@ add_library(KWinXwaylandServerModule OBJECT
     xwldrophandler.cpp
     xwaylandlauncher.cpp
 )
-target_link_libraries(KWinXwaylandServerModule PUBLIC kwin KWinXwaylandCommon)
+target_link_libraries(KWinXwaylandServerModule PUBLIC kwin KWinXwaylandCommon XCB::XCB XCB::RANDR XCB::XFIXES XKB::XKB)
+if(TARGET KF6::Notifications)
+    target_link_libraries(KWinXwaylandServerModule PUBLIC KF6::Notifications)
+endif()
