@@ -16,6 +16,17 @@ kconfig_add_kcfg_files(overview_SOURCES
 )
 
 kwin_add_builtin_effect(overview ${overview_SOURCES})
+
+qt6_add_qml_module(overview
+    NO_PLUGIN
+    URI overview
+    RESOURCE_PREFIX /
+    QML_FILES
+        qml/DesktopBar.qml
+        qml/DesktopView.qml
+        qml/main.qml
+)
+
 target_link_libraries(overview PRIVATE
     kwineffects
 
@@ -25,5 +36,3 @@ target_link_libraries(overview PRIVATE
 
     Qt::Quick
 )
-
-install(DIRECTORY qml DESTINATION ${KDE_INSTALL_DATADIR}/kwin/effects/overview)
