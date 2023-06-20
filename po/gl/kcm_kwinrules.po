@@ -786,7 +786,7 @@ msgstr ""
 "\n"
 "Advertencia:\n"
 "Non ha poder utilizar Alt+Tab fora da xanela nin usar ningún outro \n"
-"atallo global (como Alt+F2 para mostrar o KRunner)\n"
+"atallo global (como Alt+F2 para amosar o KRunner)\n"
 "se está activado!"
 
 #: rulesmodel.cpp:635

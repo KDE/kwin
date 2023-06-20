@@ -235,7 +235,7 @@ msgstr ""
 #, kde-format
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
-msgstr "Mostrar as axudas dos botóns de título de xanela"
+msgstr "Amosar as axudas dos botóns de título de xanela"
 
 #: package/contents/ui/Themes.qml:90
 #, kde-format

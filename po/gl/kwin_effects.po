@@ -74,7 +74,7 @@ msgstr "KWin"
 #: desktopgrid/desktopgrid_config.cpp:54 desktopgrid/desktopgrideffect.cpp:35
 #, kde-format
 msgid "Show Desktop Grid"
-msgstr "Mostrar a grade do escritorio"
+msgstr "Amosar a grade do escritorio"
 
 #: desktopgrid/desktopgrid_config.cpp:61
 #, kde-format
@@ -180,7 +180,7 @@ msgstr "&Aliñamento do nome do escritorio:"
 #: desktopgrid/desktopgrid_config.ui:116
 #, kde-format
 msgid "Show buttons to alter count of virtual desktops"
-msgstr "Mostrar os botóns para alterar o número de escritorios virtuais."
+msgstr "Amosar os botóns para alterar o número de escritorios virtuais."
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: desktopgrid/desktopgrid_config.ui:123
@@ -505,7 +505,7 @@ msgstr "Fonte:"
 #: mouseclick/mouseclick_config.ui:233
 #, kde-format
 msgid "Show Text:"
-msgstr "Mostrar o texto:"
+msgstr "Amosar o texto:"
 
 #: mousemark/mousemark.cpp:39
 #, kde-format
@@ -694,7 +694,7 @@ msgstr "Este efecto non é un banco de probas"
 #: showpaint/showpaint.cpp:38 showpaint/showpaint_config.cpp:38
 #, kde-format
 msgid "Toggle Show Paint"
-msgstr "Conmutar mostrar o pintado"
+msgstr "Conmutar amosar o pintado"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_Gaps)
 #: slide/slide_config.ui:17

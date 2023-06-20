@@ -122,12 +122,12 @@ msgstr "A navegación é cíclica"
 #: package/contents/ui/main.qml:220
 #, kde-format
 msgid "Show animation when switching:"
-msgstr "Mostrar unha animación ao cambiar:"
+msgstr "Amosar unha animación ao cambiar:"
 
 #: package/contents/ui/main.qml:271
 #, kde-format
 msgid "Show on-screen display when switching:"
-msgstr "Mostrar unha visualización en pantalla ao cambiar:"
+msgstr "Amosar unha visualización en pantalla ao cambiar:"
 
 #: package/contents/ui/main.qml:290
 #, kde-format
@@ -137,7 +137,7 @@ msgstr "%1 ms"
 #: package/contents/ui/main.qml:314
 #, kde-format
 msgid "Show desktop layout indicators"
-msgstr "Mostrar indicadores da disposición do escritorio"
+msgstr "Amosar indicadores da disposición do escritorio"
 
 #: virtualdesktops.cpp:33
 #, kde-format

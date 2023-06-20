@@ -126,7 +126,7 @@ msgstr "Nunca"
 #: compositing.ui:164
 #, kde-format
 msgid "Only for Shown Windows"
-msgstr "Só para as xanelas que se mostran"
+msgstr "Só para as xanelas que se amosan"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
 #: compositing.ui:169

@@ -69,7 +69,7 @@ msgstr "Contido"
 #: main.ui:41
 #, kde-format
 msgid "Include \"Show Desktop\" icon"
-msgstr "Incluír a icona de «Mostrar o escritorio»"
+msgstr "Incluír a icona de «Amosar o escritorio»"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
 #: main.ui:55
@@ -239,7 +239,7 @@ msgstr ""
 #: main.ui:562
 #, kde-format
 msgid "Show selected window"
-msgstr "Mostrar a xanela escollida"
+msgstr "Amosar a xanela escollida"
 
 #~ msgid "Tabbox layout preview"
 #~ msgstr "Vista previa da disposición das lapelas"

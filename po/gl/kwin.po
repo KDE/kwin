@@ -54,7 +54,7 @@ msgid ""
 "resume using the '%1' shortcut."
 msgstr ""
 "Outra aplicación suspendeu os efectos do escritorio.<br/>Pode continuar "
-"empregando o atallo «%1»."
+"usando o atallo «%1»."
 
 #: composite.cpp:1064
 #, fuzzy, kde-format
@@ -1466,14 +1466,13 @@ msgid ""
 "replace)\n"
 msgstr ""
 "kwin: non foi posíbel afirmar a selección do xestor, haberá outro xestor "
-"aberto? (intente empregando --replace)\n"
+"aberto? (intente usando --replace)\n"
 
 #: main_x11.cpp:280
 #, kde-format
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr ""
-"kwin: hai outro xestor de xanelas en execución (intente empregando --"
-"replace)\n"
+"kwin: hai outro xestor de xanelas en execución (intente usando --replace)\n"
 
 #: main_x11.cpp:411
 #, kde-format
@@ -2244,7 +2243,7 @@ msgstr "…"
 #, kde-format
 msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
-msgstr "Mostrar o escritorio"
+msgstr "Amosar o escritorio"
 
 #: tabbox/tabbox.cpp:521
 msgid "Walk Through Windows"
@@ -2311,10 +2310,10 @@ msgid ""
 "the mouse: use the window operations menu instead, activated using the %1 "
 "keyboard shortcut."
 msgstr ""
-"Escolleu mostrar unha xanela sen a moldura.\n"
-"Sen esta, non será quen de activala de novo mediante o rato. Empregue o menú "
-"de operacións da xanela no seu lugar, activándoo mediante o atallo de "
-"teclado %1."
+"Escolleu amosar unha xanela sen a moldura.\n"
+"Sen esta, non será quen de activala de novo mediante o rato. Use o menú de "
+"operacións da xanela no seu lugar, activándoo mediante o atallo de teclado "
+"%1."
 
 #: useractions.cpp:168
 #, kde-format
@@ -2324,9 +2323,9 @@ msgid ""
 "mode off you will not be able to disable it again using the mouse: use the "
 "window operations menu instead, activated using the %1 keyboard shortcut."
 msgstr ""
-"Escolleu mostrar unha xanela en modo pantalla completa.\n"
+"Escolleu amosar unha xanela en modo pantalla completa.\n"
 "Se a aplicación en si non ten unha opción para desactivar este modo, non "
-"será quen de desactivalo mediante o rato. Empregue o menú de operacións da "
+"será quen de desactivalo mediante o rato. Use o menú de operacións da "
 "xanela, mediante o atallo de teclado %1."
 
 #: useractions.cpp:238
@@ -2430,7 +2429,7 @@ msgstr "Mover á &pantalla"
 #: useractions.cpp:508
 #, kde-format
 msgid "Show in &Activities"
-msgstr "Mostrar nas &actividades"
+msgstr "Amosar nas &actividades"
 
 #: useractions.cpp:525
 #, fuzzy, kde-format
