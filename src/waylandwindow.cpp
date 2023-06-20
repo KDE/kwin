@@ -291,6 +291,7 @@ void WaylandWindow::markAsMapped()
 {
     if (Q_UNLIKELY(!ready_for_painting)) {
         setupCompositing();
+        updateCaption();
         setReadyForPainting();
     }
 }
