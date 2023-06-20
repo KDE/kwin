@@ -280,6 +280,15 @@ std::optional<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(con
             return std::nullopt;
         }
         renderModifiers = context->displayObject()->allSupportedDrmFormats()[format];
+        // filter out modifiers that the compositing gpu can't render to
+        const auto usableModifiers = m_eglBackend->eglDisplayObject()->supportedDrmFormats().value(format);
+        renderModifiers.erase(std::remove_if(renderModifiers.begin(), renderModifiers.end(), [&usableModifiers](uint64_t mod) {
+                                  return usableModifiers.contains(mod);
+                              }),
+                              renderModifiers.end());
+        if (renderModifiers.empty()) {
+            return std::nullopt;
+        }
     }
     Surface ret;
     ret.importMode = importMode;
