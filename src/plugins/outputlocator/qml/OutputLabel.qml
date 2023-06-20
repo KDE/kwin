@@ -5,7 +5,6 @@
 */
 
 import QtQuick
-import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.components 3.0 as PlasmaComponents3
 
 Rectangle {

@@ -10,8 +10,6 @@ import QtQuick.Window
 import org.kde.kirigami 2.20 as Kirigami
 import org.kde.kwin as KWinComponents
 import org.kde.kwin.private.effects
-import org.kde.plasma.components 3.0 as PC3
-import org.kde.plasma.core as PlasmaCore
 import org.kde.kirigami 2.20 as Kirigami
 
 FocusScope {
