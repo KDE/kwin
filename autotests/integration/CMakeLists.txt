@@ -1,6 +1,6 @@
 add_subdirectory(helper)
 
-add_library(KWinIntegrationTestFramework SHARED)
+add_library(KWinIntegrationTestFramework STATIC)
 
 qt6_generate_wayland_protocol_client_sources(KWinIntegrationTestFramework
     NO_INCLUDE_CORE_ONLY
@@ -43,16 +43,17 @@ target_link_libraries(KWinIntegrationTestFramework
         KF6WindowSystemKWinPlugin
         KF6IdleTimeKWinPlugin
 )
-kcoreaddons_target_static_plugins(KWinIntegrationTestFramework "kwin/effects/plugins" LINK_OPTION "PRIVATE")
-set_target_properties(KWinIntegrationTestFramework PROPERTIES CXX_VISIBILITY_PRESET default)
 
 function(integrationTest)
-    set(optionArgs)
+    set(optionArgs BUILTIN_EFFECTS)
     set(oneValueArgs NAME)
     set(multiValueArgs SRCS LIBS)
     cmake_parse_arguments(ARGS "${optionArgs}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
     add_executable(${ARGS_NAME} ${ARGS_SRCS})
     target_link_libraries(${ARGS_NAME} KWinIntegrationTestFramework Qt::Test ${ARGS_LIBS})
+    if(${ARGS_BUILTIN_EFFECTS})
+        kcoreaddons_target_static_plugins(${ARGS_NAME} "kwin/effects/plugins")
+    endif()
     add_test(NAME kwin-${ARGS_NAME} COMMAND dbus-run-session ${CMAKE_BINARY_DIR}/bin/${ARGS_NAME})
 endfunction()
 
@@ -92,7 +93,7 @@ integrationTest(NAME testLayerShellV1Window SRCS layershellv1window_test.cpp)
 integrationTest(NAME testVirtualDesktop SRCS virtual_desktop_test.cpp)
 integrationTest(NAME testXdgShellWindowRules SRCS xdgshellwindow_rules_test.cpp)
 integrationTest(NAME testIdleInhibition SRCS idle_inhibition_test.cpp)
-integrationTest(NAME testDontCrashReinitializeCompositor SRCS dont_crash_reinitialize_compositor.cpp)
+integrationTest(NAME testDontCrashReinitializeCompositor SRCS dont_crash_reinitialize_compositor.cpp BUILTIN_EFFECTS)
 integrationTest(NAME testNoGlobalShortcuts SRCS no_global_shortcuts_test.cpp)
 integrationTest(NAME testPlacement SRCS placement_test.cpp)
 integrationTest(NAME testActivation SRCS activation_test.cpp)
