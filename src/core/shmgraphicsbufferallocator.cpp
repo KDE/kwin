@@ -21,6 +21,33 @@ ShmGraphicsBuffer::ShmGraphicsBuffer(ShmAttributes &&attributes)
 {
 }
 
+void *ShmGraphicsBuffer::map(MapFlags flags)
+{
+    if (m_memoryMap.isValid()) {
+        return m_memoryMap.data();
+    }
+
+    int prot = 0;
+    if (flags & MapFlag::Read) {
+        prot |= PROT_READ;
+    }
+    if (flags & MapFlag::Write) {
+        prot |= PROT_WRITE;
+    }
+
+    m_memoryMap = MemoryMap(m_attributes.stride * m_attributes.size.height(), prot, MAP_SHARED, m_attributes.fd.get(), m_attributes.offset);
+    if (m_memoryMap.isValid()) {
+        return m_memoryMap.data();
+    }
+
+    return nullptr;
+}
+
+void ShmGraphicsBuffer::unmap()
+{
+    m_memoryMap = MemoryMap{};
+}
+
 QSize ShmGraphicsBuffer::size() const
 {
     return m_attributes.size;

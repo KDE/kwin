@@ -8,7 +8,7 @@
 
 #include "core/graphicsbuffer.h"
 #include "core/graphicsbufferallocator.h"
-#include "utils/filedescriptor.h"
+#include "utils/memorymap.h"
 
 namespace KWin
 {
@@ -20,12 +20,16 @@ class KWIN_EXPORT ShmGraphicsBuffer : public GraphicsBuffer
 public:
     explicit ShmGraphicsBuffer(ShmAttributes &&attributes);
 
+    void *map(MapFlags flags) override;
+    void unmap() override;
+
     QSize size() const override;
     bool hasAlphaChannel() const override;
     const ShmAttributes *shmAttributes() const override;
 
 private:
     ShmAttributes m_attributes;
+    MemoryMap m_memoryMap;
     bool m_hasAlphaChannel;
 };
 
