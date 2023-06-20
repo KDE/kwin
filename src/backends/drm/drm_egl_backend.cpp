@@ -98,7 +98,7 @@ void EglGbmBackend::init()
 
 bool EglGbmBackend::initRenderingContext()
 {
-    return initBufferConfigs(eglDisplayObject()) && createContext(EGL_NO_CONFIG_KHR) && makeCurrent();
+    return createContext(EGL_NO_CONFIG_KHR) && makeCurrent();
 }
 
 EglDisplay *EglGbmBackend::displayForGpu(DrmGpu *gpu)
@@ -130,74 +130,6 @@ EglContext *EglGbmBackend::contextForGpu(DrmGpu *gpu)
         context = EglContext::create(display, EGL_NO_CONFIG_KHR, EGL_NO_CONTEXT);
     }
     return context.get();
-}
-
-bool EglGbmBackend::initBufferConfigs(EglDisplay *display)
-{
-    const EGLint config_attribs[] = {
-        EGL_SURFACE_TYPE,
-        EGL_WINDOW_BIT,
-        EGL_RED_SIZE,
-        1,
-        EGL_GREEN_SIZE,
-        1,
-        EGL_BLUE_SIZE,
-        1,
-        EGL_ALPHA_SIZE,
-        0,
-        EGL_RENDERABLE_TYPE,
-        isOpenGLES() ? EGL_OPENGL_ES2_BIT : EGL_OPENGL_BIT,
-        EGL_CONFIG_CAVEAT,
-        EGL_NONE,
-        EGL_NONE,
-    };
-
-    EGLint count;
-    EGLConfig configs[1024];
-    if (!eglChooseConfig(display->handle(), config_attribs, configs,
-                         sizeof(configs) / sizeof(EGLConfig),
-                         &count)) {
-        qCCritical(KWIN_DRM) << "eglChooseConfig failed:" << getEglErrorString();
-        return false;
-    }
-
-    // Loop through all configs, choosing the first one that has suitable format.
-    auto &formats = m_formats[display];
-    for (EGLint i = 0; i < count; i++) {
-        EGLint gbmFormat;
-        eglGetConfigAttrib(display->handle(), configs[i], EGL_NATIVE_VISUAL_ID, &gbmFormat);
-
-        GbmFormat format;
-        format.drmFormat = gbmFormat;
-        EGLint red, green, blue;
-        // Query number of bits for color channel
-        eglGetConfigAttrib(display->handle(), configs[i], EGL_RED_SIZE, &red);
-        eglGetConfigAttrib(display->handle(), configs[i], EGL_GREEN_SIZE, &green);
-        eglGetConfigAttrib(display->handle(), configs[i], EGL_BLUE_SIZE, &blue);
-        eglGetConfigAttrib(display->handle(), configs[i], EGL_ALPHA_SIZE, &format.alphaSize);
-        format.bpp = red + green + blue;
-        if (formats.contains(gbmFormat)) {
-            continue;
-        }
-        formats[gbmFormat] = format;
-    }
-    if (!formats.isEmpty()) {
-        return true;
-    }
-
-    qCCritical(KWIN_DRM, "Choosing EGL config did not return a supported config. There were %u configs", count);
-    for (EGLint i = 0; i < count; i++) {
-        EGLint gbmFormat, blueSize, redSize, greenSize, alphaSize;
-        eglGetConfigAttrib(display->handle(), configs[i], EGL_NATIVE_VISUAL_ID, &gbmFormat);
-        eglGetConfigAttrib(display->handle(), configs[i], EGL_RED_SIZE, &redSize);
-        eglGetConfigAttrib(display->handle(), configs[i], EGL_GREEN_SIZE, &greenSize);
-        eglGetConfigAttrib(display->handle(), configs[i], EGL_BLUE_SIZE, &blueSize);
-        eglGetConfigAttrib(display->handle(), configs[i], EGL_ALPHA_SIZE, &alphaSize);
-        gbm_format_name_desc name;
-        gbm_format_get_name(gbmFormat, &name);
-        qCCritical(KWIN_DRM, "EGL config %d has format %s with %d,%d,%d,%d bits for r,g,b,a", i, name.name, redSize, greenSize, blueSize, alphaSize);
-    }
-    return false;
 }
 
 std::unique_ptr<SurfaceTexture> EglGbmBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
@@ -232,22 +164,6 @@ std::pair<std::shared_ptr<KWin::GLTexture>, ColorDescription> EglGbmBackend::tex
     return std::make_pair(layer->texture(), layer->colorDescription());
 }
 
-std::optional<GbmFormat> EglGbmBackend::gbmFormatForDrmFormat(uint32_t format) const
-{
-    const auto it = m_formats.find(eglDisplayObject());
-    if (it == m_formats.end()) {
-        return std::nullopt;
-    } else {
-        const auto &formats = *it;
-        const auto formatIt = formats.find(format);
-        if (formatIt == formats.end()) {
-            return std::nullopt;
-        } else {
-            return *formatIt;
-        }
-    }
-}
-
 bool EglGbmBackend::prefer10bpc() const
 {
     static bool ok = false;
@@ -273,11 +189,6 @@ std::shared_ptr<DrmOutputLayer> EglGbmBackend::createLayer(DrmVirtualOutput *out
 DrmGpu *EglGbmBackend::gpu() const
 {
     return m_backend->primaryGpu();
-}
-
-bool operator==(const GbmFormat &lhs, const GbmFormat &rhs)
-{
-    return lhs.drmFormat == rhs.drmFormat;
 }
 
 } // namespace KWin

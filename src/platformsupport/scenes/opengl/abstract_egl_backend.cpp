@@ -18,6 +18,7 @@
 #include "libkwineffects/kwineglimagetexture.h"
 #include "libkwineffects/kwinglplatform.h"
 #include "libkwineffects/kwinglutils.h"
+#include "utils/drm_format_helper.h"
 #include <kwineglutils_p.h>
 // Qt
 #include <QOpenGLContext>
@@ -122,34 +123,6 @@ void AbstractEglBackend::initKWinGL()
     initGL(&getProcAddress);
 }
 
-static int bpcForFormat(uint32_t format)
-{
-    switch (format) {
-    case DRM_FORMAT_XRGB8888:
-    case DRM_FORMAT_XBGR8888:
-    case DRM_FORMAT_RGBX8888:
-    case DRM_FORMAT_BGRX8888:
-    case DRM_FORMAT_ARGB8888:
-    case DRM_FORMAT_ABGR8888:
-    case DRM_FORMAT_RGBA8888:
-    case DRM_FORMAT_BGRA8888:
-    case DRM_FORMAT_RGB888:
-    case DRM_FORMAT_BGR888:
-        return 8;
-    case DRM_FORMAT_XRGB2101010:
-    case DRM_FORMAT_XBGR2101010:
-    case DRM_FORMAT_RGBX1010102:
-    case DRM_FORMAT_BGRX1010102:
-    case DRM_FORMAT_ARGB2101010:
-    case DRM_FORMAT_ABGR2101010:
-    case DRM_FORMAT_RGBA1010102:
-    case DRM_FORMAT_BGRA1010102:
-        return 10;
-    default:
-        return -1;
-    }
-}
-
 void AbstractEglBackend::initWayland()
 {
     if (!WaylandServer::self()) {
@@ -180,11 +153,12 @@ void AbstractEglBackend::initWayland()
         }
     }
 
-    auto filterFormats = [this](int bpc) {
+    auto filterFormats = [this](uint32_t bpc) {
         const auto formats = m_display->supportedDrmFormats();
         QHash<uint32_t, QVector<uint64_t>> set;
         for (auto it = formats.constBegin(); it != formats.constEnd(); it++) {
-            if (bpcForFormat(it.key()) == bpc) {
+            const auto info = formatInfo(it.key());
+            if (info && info->bitsPerColor == bpc) {
                 set.insert(it.key(), it.value());
             }
         }

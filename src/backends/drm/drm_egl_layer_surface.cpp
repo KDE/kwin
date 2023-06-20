@@ -16,6 +16,7 @@
 #include "drm_gpu.h"
 #include "drm_logging.h"
 #include "platformsupport/scenes/opengl/eglnativefence.h"
+#include "utils/drm_format_helper.h"
 
 #include <drm_fourcc.h>
 #include <errno.h>
@@ -203,12 +204,12 @@ bool EglGbmLayerSurface::doesSurfaceFit(const Surface &surface, const QSize &siz
 
 std::optional<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const
 {
-    QVector<GbmFormat> preferredFormats;
-    QVector<GbmFormat> fallbackFormats;
+    QVector<FormatInfo> preferredFormats;
+    QVector<FormatInfo> fallbackFormats;
     for (auto it = formats.begin(); it != formats.end(); it++) {
-        const auto format = m_eglBackend->gbmFormatForDrmFormat(it.key());
-        if (format.has_value() && format->bpp >= 24) {
-            if (format->bpp <= 32) {
+        const auto format = formatInfo(it.key());
+        if (format.has_value() && format->bitsPerColor >= 8) {
+            if (format->bitsPerPixel <= 32) {
                 preferredFormats.push_back(format.value());
             } else {
                 fallbackFormats.push_back(format.value());
@@ -218,18 +219,18 @@ std::optional<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(con
     const auto sort = [this](const auto &lhs, const auto &rhs) {
         if (lhs.drmFormat == rhs.drmFormat) {
             // prefer having an alpha channel
-            return lhs.alphaSize > rhs.alphaSize;
-        } else if (m_eglBackend->prefer10bpc() && ((lhs.bpp == 30) != (rhs.bpp == 30))) {
+            return lhs.alphaBits > rhs.alphaBits;
+        } else if (m_eglBackend->prefer10bpc() && ((lhs.bitsPerColor == 10) != (rhs.bitsPerColor == 10))) {
             // prefer 10bpc / 30bpp formats
-            return lhs.bpp == 30;
+            return lhs.bitsPerColor == 10;
         } else {
             // fallback: prefer formats with lower bandwidth requirements
-            return lhs.bpp < rhs.bpp;
+            return lhs.bitsPerPixel < rhs.bitsPerPixel;
         }
     };
-    const auto doTestFormats = [this, &size, &formats](const QVector<GbmFormat> &gbmFormats, MultiGpuImportMode importMode) -> std::optional<Surface> {
+    const auto doTestFormats = [this, &size, &formats](const QVector<FormatInfo> &gbmFormats, MultiGpuImportMode importMode) -> std::optional<Surface> {
         for (const auto &format : gbmFormats) {
-            if (m_formatOption == FormatOption::RequireAlpha && format.alphaSize == 0) {
+            if (m_formatOption == FormatOption::RequireAlpha && format.alphaBits == 0) {
                 continue;
             }
             const auto surface = createSurface(size, format.drmFormat, formats[format.drmFormat], importMode);
@@ -239,7 +240,7 @@ std::optional<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(con
         }
         return std::nullopt;
     };
-    const auto testFormats = [this, &sort, &doTestFormats](QVector<GbmFormat> &formats) -> std::optional<Surface> {
+    const auto testFormats = [this, &sort, &doTestFormats](QVector<FormatInfo> &formats) -> std::optional<Surface> {
         std::sort(formats.begin(), formats.end(), sort);
         if (m_gpu == m_eglBackend->gpu()) {
             return doTestFormats(formats, MultiGpuImportMode::None);

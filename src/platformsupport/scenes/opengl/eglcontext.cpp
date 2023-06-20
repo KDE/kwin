@@ -13,6 +13,7 @@
 #include "kwineglutils_p.h"
 #include "kwinglutils.h"
 #include "utils/common.h"
+#include "utils/drm_format_helper.h"
 #include "utils/egl_context_attribute_builder.h"
 
 #include <QOpenGLContext>
@@ -189,29 +190,12 @@ bool EglContext::isValid() const
     return EGL_NO_CONTEXT;
 }
 
-static GLint glFormatForDrmFormat(uint32_t format)
-{
-    switch (format) {
-    case DRM_FORMAT_ARGB16161616:
-        return GL_RGBA16;
-    case DRM_FORMAT_ARGB16161616F:
-        return GL_RGBA16F;
-    case DRM_FORMAT_ARGB2101010:
-    case DRM_FORMAT_XRGB2101010:
-        return GL_RGB10_A2;
-    case DRM_FORMAT_ARGB8888:
-    case DRM_FORMAT_XRGB8888:
-    case DRM_FORMAT_ABGR8888:
-    default:
-        return GL_RGBA8;
-    }
-};
-
 std::shared_ptr<GLTexture> EglContext::importDmaBufAsTexture(const DmaBufAttributes &attributes) const
 {
     EGLImageKHR image = m_display->importDmaBufAsImage(attributes);
     if (image != EGL_NO_IMAGE_KHR) {
-        return EGLImageTexture::create(m_display->handle(), image, glFormatForDrmFormat(attributes.format), QSize(attributes.width, attributes.height), m_display->isExternalOnly(attributes.format, attributes.modifier));
+        const auto info = formatInfo(attributes.format);
+        return EGLImageTexture::create(m_display->handle(), image, info ? info->openglFormat : GL_RGBA8, QSize(attributes.width, attributes.height), m_display->isExternalOnly(attributes.format, attributes.modifier));
     } else {
         qCWarning(KWIN_OPENGL) << "Error creating EGLImageKHR: " << getEglErrorString();
         return nullptr;

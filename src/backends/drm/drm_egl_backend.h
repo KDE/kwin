@@ -37,14 +37,6 @@ class DrmPipeline;
 class EglContext;
 class EglDisplay;
 
-struct GbmFormat
-{
-    uint32_t drmFormat = 0;
-    uint32_t bpp;
-    EGLint alphaSize = -1;
-};
-bool operator==(const GbmFormat &lhs, const GbmFormat &rhs);
-
 /**
  * @brief OpenGL Backend using Egl on a GBM surface.
  */
@@ -70,7 +62,6 @@ public:
 
     std::pair<std::shared_ptr<KWin::GLTexture>, ColorDescription> textureForOutput(Output *requestedOutput) const override;
 
-    std::optional<GbmFormat> gbmFormatForDrmFormat(uint32_t format) const;
     DrmGpu *gpu() const;
 
     EglDisplay *displayForGpu(DrmGpu *gpu);
@@ -78,13 +69,11 @@ public:
 
 private:
     bool initializeEgl();
-    bool initBufferConfigs(EglDisplay *display);
     bool initRenderingContext();
     EglDisplay *createEglDisplay(DrmGpu *gpu) const;
 
     DrmBackend *m_backend;
     std::map<EglDisplay *, std::unique_ptr<EglContext>> m_contexts;
-    QHash<EglDisplay *, QHash<uint32_t, GbmFormat>> m_formats;
 
     friend class EglGbmTexture;
 };

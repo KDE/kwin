@@ -5,6 +5,7 @@
 */
 
 #include "core/graphicsbuffer.h"
+#include "utils/drm_format_helper.h"
 
 #include <drm_fourcc.h>
 
@@ -74,39 +75,8 @@ const ShmAttributes *GraphicsBuffer::shmAttributes() const
 
 bool GraphicsBuffer::alphaChannelFromDrmFormat(uint32_t format)
 {
-    switch (format) {
-    case DRM_FORMAT_ARGB4444:
-    case DRM_FORMAT_ABGR4444:
-    case DRM_FORMAT_RGBA4444:
-    case DRM_FORMAT_BGRA4444:
-
-    case DRM_FORMAT_ARGB1555:
-    case DRM_FORMAT_ABGR1555:
-    case DRM_FORMAT_RGBA5551:
-    case DRM_FORMAT_BGRA5551:
-
-    case DRM_FORMAT_ARGB8888:
-    case DRM_FORMAT_ABGR8888:
-    case DRM_FORMAT_RGBA8888:
-    case DRM_FORMAT_BGRA8888:
-
-    case DRM_FORMAT_ARGB2101010:
-    case DRM_FORMAT_ABGR2101010:
-    case DRM_FORMAT_RGBA1010102:
-    case DRM_FORMAT_BGRA1010102:
-
-    case DRM_FORMAT_XRGB8888_A8:
-    case DRM_FORMAT_XBGR8888_A8:
-    case DRM_FORMAT_RGBX8888_A8:
-    case DRM_FORMAT_BGRX8888_A8:
-    case DRM_FORMAT_RGB888_A8:
-    case DRM_FORMAT_BGR888_A8:
-    case DRM_FORMAT_RGB565_A8:
-    case DRM_FORMAT_BGR565_A8:
-        return true;
-    default:
-        return false;
-    }
+    const auto info = formatInfo(format);
+    return info && info->alphaBits > 0;
 }
 
 } // namespace KWin
