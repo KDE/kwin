@@ -118,6 +118,13 @@ double OutputConfigurationStore::chooseScale(Output *output, OutputMode *mode) c
 
 double OutputConfigurationStore::targetDpi(Output *output) const
 {
+    /* The eye's ability to perceive detail diminishes with distance, so objects
+     * that are closer can be smaller and their details remain equally
+     * distinguishable. As a result, each device type has its own ideal physical
+     * size of items on its screen based on how close the user's eyes are
+     * expected to be from it on average, and its target DPI value needs to be
+     * changed accordingly.
+     */
     const auto devices = input()->devices();
     const bool hasLaptopLid = std::any_of(devices.begin(), devices.end(), [](const auto &device) {
         return device->isLidSwitch();
