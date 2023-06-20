@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-17 02:07+0000\n"
+"POT-Creation-Date: 2023-06-20 02:58+0000\n"
 "PO-Revision-Date: 2017-05-22 05:42-0400\n"
 "Last-Translator: Elkana Bardugo <ttv200@gmail.com>\n"
 "Language-Team: Hebrew <kde-i18n-doc@kde.org>\n"
@@ -3726,19 +3726,19 @@ msgstr ""
 #: useractions.cpp:274
 #, fuzzy, kde-format
 #| msgid "Window Short&cut..."
-msgid "Set Window Short&cut..."
+msgid "Set Window Short&cut…"
 msgstr "קיצורי דרך של החלון..."
 
 #: useractions.cpp:280
 #, fuzzy, kde-format
 #| msgid "Special &Window Settings..."
-msgid "Configure Special &Window Settings..."
+msgid "Configure Special &Window Settings…"
 msgstr "הגדרות חלון &מיוחדות..."
 
 #: useractions.cpp:285
 #, fuzzy, kde-format
 #| msgid "S&pecial Application Settings..."
-msgid "Configure S&pecial Application Settings..."
+msgid "Configure S&pecial Application Settings…"
 msgstr "הגדרות יישום &מיוחדות..."
 
 #: useractions.cpp:292

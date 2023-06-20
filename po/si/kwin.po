@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-17 02:07+0000\n"
+"POT-Creation-Date: 2023-06-20 02:58+0000\n"
 "PO-Revision-Date: 2009-12-23 10:11+0530\n"
 "Last-Translator: Danishka Navin <danishka@gmail.com>\n"
 "Language-Team: Sinhala <danishka@gmail.com>\n"
@@ -3713,19 +3713,19 @@ msgstr ""
 #: useractions.cpp:274
 #, fuzzy, kde-format
 #| msgid "Window &Shortcut..."
-msgid "Set Window Short&cut..."
+msgid "Set Window Short&cut…"
 msgstr "කවුළු කෙටිමඟ... (&S)"
 
 #: useractions.cpp:280
 #, fuzzy, kde-format
 #| msgid "&Special Window Settings..."
-msgid "Configure Special &Window Settings..."
+msgid "Configure Special &Window Settings…"
 msgstr "විශේෂ කවුළු සැකසුම්... (&S)"
 
 #: useractions.cpp:285
 #, fuzzy, kde-format
 #| msgid "&Special Application Settings..."
-msgid "Configure S&pecial Application Settings..."
+msgid "Configure S&pecial Application Settings…"
 msgstr "විශේෂ යෙදුම් සැකසුම්... (&S)"
 
 #: useractions.cpp:292

@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1653995 $
+# Version: $Revision: 1654219 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # Norbert Popiołek <norbert@kde.com.pl>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-17 02:07+0000\n"
+"POT-Creation-Date: 2023-06-20 02:58+0000\n"
 "PO-Revision-Date: 2023-04-23 11:46+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -3605,18 +3605,21 @@ msgid "&No Titlebar and Frame"
 msgstr "Bez paska &nazwy i obramowania"
 
 #: useractions.cpp:274
-#, kde-format
-msgid "Set Window Short&cut..."
+#, fuzzy, kde-format
+#| msgid "Set Window Short&cut..."
+msgid "Set Window Short&cut…"
 msgstr "&Ustaw skrót okna..."
 
 #: useractions.cpp:280
-#, kde-format
-msgid "Configure Special &Window Settings..."
+#, fuzzy, kde-format
+#| msgid "Configure Special &Window Settings..."
+msgid "Configure Special &Window Settings…"
 msgstr "Usta&wienia szczególne dla okna..."
 
 #: useractions.cpp:285
-#, kde-format
-msgid "Configure S&pecial Application Settings..."
+#, fuzzy, kde-format
+#| msgid "Configure S&pecial Application Settings..."
+msgid "Configure S&pecial Application Settings…"
 msgstr "Ustawienia szczególne dla a&plikacji..."
 
 #: useractions.cpp:292

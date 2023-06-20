@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-17 02:07+0000\n"
+"POT-Creation-Date: 2023-06-20 02:58+0000\n"
 "PO-Revision-Date: 2017-06-12 16:22+0200\n"
 "Last-Translator: Dimitris Kardarakos <dimkard@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -3852,19 +3852,19 @@ msgstr ""
 #: useractions.cpp:274
 #, fuzzy, kde-format
 #| msgid "Window Short&cut..."
-msgid "Set Window Short&cut..."
+msgid "Set Window Short&cut…"
 msgstr "&Συντόμευση παραθύρου..."
 
 #: useractions.cpp:280
 #, fuzzy, kde-format
 #| msgid "Special &Window Settings..."
-msgid "Configure Special &Window Settings..."
+msgid "Configure Special &Window Settings…"
 msgstr "Ειδικές ρυθμίσεις &παραθύρου..."
 
 #: useractions.cpp:285
 #, fuzzy, kde-format
 #| msgid "S&pecial Application Settings..."
-msgid "Configure S&pecial Application Settings..."
+msgid "Configure S&pecial Application Settings…"
 msgstr "&Ειδικές ρυθμίσεις εφαρμογής..."
 
 #: useractions.cpp:292

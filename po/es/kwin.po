@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-17 02:07+0000\n"
+"POT-Creation-Date: 2023-06-20 02:58+0000\n"
 "PO-Revision-Date: 2023-04-20 18:09+0200\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -3616,18 +3616,21 @@ msgid "&No Titlebar and Frame"
 msgstr "Si&n barra de título ni marco"
 
 #: useractions.cpp:274
-#, kde-format
-msgid "Set Window Short&cut..."
+#, fuzzy, kde-format
+#| msgid "Set Window Short&cut..."
+msgid "Set Window Short&cut…"
 msgstr "Definir a&cceso rápido de la ventana..."
 
 #: useractions.cpp:280
-#, kde-format
-msgid "Configure Special &Window Settings..."
+#, fuzzy, kde-format
+#| msgid "Configure Special &Window Settings..."
+msgid "Configure Special &Window Settings…"
 msgstr "Configurar las preferencias especiales de la &ventana..."
 
 #: useractions.cpp:285
-#, kde-format
-msgid "Configure S&pecial Application Settings..."
+#, fuzzy, kde-format
+#| msgid "Configure S&pecial Application Settings..."
+msgid "Configure S&pecial Application Settings…"
 msgstr "Configurar las &preferencias especiales de la aplicación..."
 
 #: useractions.cpp:292

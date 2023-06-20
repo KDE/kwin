@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-17 02:07+0000\n"
+"POT-Creation-Date: 2023-06-20 02:58+0000\n"
 "PO-Revision-Date: 2022-12-28 21:14+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -3737,18 +3737,21 @@ msgid "&No Titlebar and Frame"
 msgstr "Fără bară de titlu și cadru"
 
 #: useractions.cpp:274
-#, kde-format
-msgid "Set Window Short&cut..."
+#, fuzzy, kde-format
+#| msgid "Set Window Short&cut..."
+msgid "Set Window Short&cut…"
 msgstr "Stabilește s&curtătura ferestrei…"
 
 #: useractions.cpp:280
-#, kde-format
-msgid "Configure Special &Window Settings..."
+#, fuzzy, kde-format
+#| msgid "Configure Special &Window Settings..."
+msgid "Configure Special &Window Settings…"
 msgstr "Configurări &speciale fereastră..."
 
 #: useractions.cpp:285
-#, kde-format
-msgid "Configure S&pecial Application Settings..."
+#, fuzzy, kde-format
+#| msgid "Configure S&pecial Application Settings..."
+msgid "Configure S&pecial Application Settings…"
 msgstr "Configurări s&peciale aplicație..."
 
 #: useractions.cpp:292

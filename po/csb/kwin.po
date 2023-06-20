@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-17 02:07+0000\n"
+"POT-Creation-Date: 2023-06-20 02:58+0000\n"
 "PO-Revision-Date: 2009-12-15 22:22+0100\n"
 "Last-Translator: Mark Kwidzińśczi <mark@linuxcsb.org>\n"
 "Language-Team: Kaszëbsczi <i18n-csb@linuxcsb.org>\n"
@@ -3726,19 +3726,19 @@ msgstr ""
 #: useractions.cpp:274
 #, fuzzy, kde-format
 #| msgid "Window &Shortcut..."
-msgid "Set Window Short&cut..."
+msgid "Set Window Short&cut…"
 msgstr "&Skrodzënë òkna..."
 
 #: useractions.cpp:280
 #, fuzzy, kde-format
 #| msgid "&Special Window Settings..."
-msgid "Configure Special &Window Settings..."
+msgid "Configure Special &Window Settings…"
 msgstr "&Dodôwné nastôwë òkna..."
 
 #: useractions.cpp:285
 #, fuzzy, kde-format
 #| msgid "&Special Application Settings..."
-msgid "Configure S&pecial Application Settings..."
+msgid "Configure S&pecial Application Settings…"
 msgstr "&Dodôwné nastôwë programë..."
 
 #: useractions.cpp:292

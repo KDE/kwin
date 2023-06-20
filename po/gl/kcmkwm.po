@@ -463,8 +463,8 @@ msgid ""
 "Sets the time in milliseconds before the window unshades when the mouse "
 "pointer goes over the shaded window."
 msgstr ""
-"Estabelece o tempo en milisegundos antes de que a xanela se desenrole cando "
-"o punteiro do rato se pouse sobre a xanela enrolada."
+"Define o tempo en milisegundos antes de que a xanela se desenrole cando o "
+"punteiro do rato se pouse sobre a xanela enrolada."
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_DelayFocusInterval)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AutoRaiseInterval)
@@ -808,7 +808,7 @@ msgstr ""
 "indent:0px;\"><span style=\" font-style:italic;\">Alta:</span> As novas "
 "xanelas actívanse só se non hai unha xanela activa ou se pertencen á "
 "aplicación actualmente activada. Esta opción posibelmente non sexa axeitada "
-"cando non se emprega a política de Focalizar co punteiro.</li><li style=\" "
+"cando non se usa a política de Focalizar co punteiro.</li><li style=\" "
 "margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-"
 "block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
 "\">Extrema:</span> Todas as xanelas deben ser activadas explicitamente polo "
@@ -1080,7 +1080,7 @@ msgstr "Pechar"
 #: mouse.ui:75
 #, kde-format
 msgid "Show on all desktops"
-msgstr "Mostrar en todos os escritorios"
+msgstr "Amosar en todos os escritorios"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandTitlebarWheel)
 #: mouse.ui:98
@@ -1129,7 +1129,7 @@ msgstr ""
 #: mouse.ui:558
 #, kde-format
 msgid "Show actions menu"
-msgstr "Mostrar o menú de accións"
+msgstr "Amosar o menú de accións"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar1)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar2)
@@ -1203,7 +1203,7 @@ msgid ""
 "Here you can set the snap zone for screen edges, i.e. the 'strength' of the "
 "magnetic field which will make windows snap to the border when moved near it."
 msgstr ""
-"Aquí pode estabelecer a zona de adherencia para as esquinas da pantalla, é "
+"Aquí pode definir a zona de adherencia para as esquinas da pantalla, é "
 "dicir, a intensidade do campo magnético que fará que as xanelas se xunten á "
 "beira cando se acheguen a ela."
 
@@ -1229,9 +1229,9 @@ msgid ""
 "magnetic field which will make windows snap to each other when they are "
 "moved near another window."
 msgstr ""
-"Aquí pode estabelecer a zona de adherencia das xanelas, é dicir, a "
-"intensidade do campo magnético que fará que as xanelas se xunten con outras "
-"cando se acheguen a elas."
+"Aquí pode definir a zona de adherencia das xanelas, é dicir, a intensidade "
+"do campo magnético que fará que as xanelas se xunten con outras cando se "
+"acheguen a elas."
 
 #. i18n: ectx: property (text), widget (QLabel, centerSnaplabel)
 #: moving.ui:84
@@ -1247,7 +1247,7 @@ msgid ""
 "the magnetic field which will make windows snap to the center of the screen "
 "when moved near it."
 msgstr ""
-"Aquí pode estabelecer a zona de adherencia do centro da pantalla, é dicir, a "
+"Aquí pode definir a zona de adherencia do centro da pantalla, é dicir, a "
 "intensidade do campo magnético que fará que as xanelas se xunten no centro "
 "cando se acheguen a el."
 
@@ -1265,7 +1265,7 @@ msgid ""
 "them, i.e. they will not be snapped if the windows comes only near another "
 "window or border."
 msgstr ""
-"Aquí pode estabelecer que as xanelas só se adhiran se intenta sobrepolas, é "
+"Aquí pode definir que as xanelas só se adhiran se intenta sobrepolas, é "
 "dicir, non se adherirán se as xanelas só se achegan á beira doutras."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SnapOnlyWhenOverlapping)
