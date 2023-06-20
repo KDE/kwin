@@ -11,6 +11,7 @@
 #include "libkwineffects/kwinglutils.h"
 #include "platformsupport/scenes/opengl/basiceglsurfacetexture_internal.h"
 #include "platformsupport/scenes/opengl/basiceglsurfacetexture_wayland.h"
+#include "platformsupport/scenes/opengl/eglswapchain.h"
 #include "utils/softwarevsyncmonitor.h"
 #include "virtual_backend.h"
 #include "virtual_logging.h"
@@ -20,71 +21,6 @@
 
 namespace KWin
 {
-
-VirtualEglLayerBuffer::VirtualEglLayerBuffer(GraphicsBuffer *buffer, VirtualEglBackend *backend)
-    : m_graphicsBuffer(buffer)
-{
-    m_texture = backend->importDmaBufAsTexture(*buffer->dmabufAttributes());
-    m_framebuffer = std::make_unique<GLFramebuffer>(m_texture.get());
-}
-
-VirtualEglLayerBuffer::~VirtualEglLayerBuffer()
-{
-    m_texture.reset();
-    m_framebuffer.reset();
-    m_graphicsBuffer->drop();
-}
-
-GraphicsBuffer *VirtualEglLayerBuffer::graphicsBuffer() const
-{
-    return m_graphicsBuffer;
-}
-
-GLFramebuffer *VirtualEglLayerBuffer::framebuffer() const
-{
-    return m_framebuffer.get();
-}
-
-std::shared_ptr<GLTexture> VirtualEglLayerBuffer::texture() const
-{
-    return m_texture;
-}
-
-VirtualEglSwapchain::VirtualEglSwapchain(const QSize &size, uint32_t format, VirtualEglBackend *backend)
-    : m_backend(backend)
-    , m_size(size)
-    , m_format(format)
-    , m_allocator(std::make_unique<GbmGraphicsBufferAllocator>(backend->backend()->gbmDevice()))
-{
-}
-
-QSize VirtualEglSwapchain::size() const
-{
-    return m_size;
-}
-
-std::shared_ptr<VirtualEglLayerBuffer> VirtualEglSwapchain::acquire()
-{
-    for (const auto &buffer : std::as_const(m_buffers)) {
-        if (!buffer->graphicsBuffer()->isReferenced()) {
-            return buffer;
-        }
-    }
-
-    GraphicsBuffer *graphicsBuffer = m_allocator->allocate(GraphicsBufferOptions{
-        .size = m_size,
-        .format = m_format,
-    });
-    if (!graphicsBuffer) {
-        qCWarning(KWIN_VIRTUAL) << "Failed to allocate layer swapchain buffer";
-        return nullptr;
-    }
-
-    auto buffer = std::make_shared<VirtualEglLayerBuffer>(graphicsBuffer, m_backend);
-    m_buffers.append(buffer);
-
-    return buffer;
-}
 
 VirtualEglLayer::VirtualEglLayer(Output *output, VirtualEglBackend *backend)
     : m_backend(backend)
@@ -103,7 +39,10 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame()
 
     const QSize nativeSize = m_output->modeSize();
     if (!m_swapchain || m_swapchain->size() != nativeSize) {
-        m_swapchain = std::make_unique<VirtualEglSwapchain>(nativeSize, DRM_FORMAT_XRGB8888, m_backend);
+        m_swapchain = EglSwapchain::create(m_backend->graphicsBufferAllocator(), m_backend->contextObject(), nativeSize, DRM_FORMAT_XRGB8888, {DRM_FORMAT_MOD_INVALID});
+        if (!m_swapchain) {
+            return std::nullopt;
+        }
     }
 
     m_current = m_swapchain->acquire();
@@ -132,6 +71,7 @@ quint32 VirtualEglLayer::format() const
 VirtualEglBackend::VirtualEglBackend(VirtualBackend *b)
     : AbstractEglBackend()
     , m_backend(b)
+    , m_allocator(std::make_unique<GbmGraphicsBufferAllocator>(b->gbmDevice()))
 {
     // Egl is always direct rendering
     setIsDirectRendering(true);
@@ -146,6 +86,11 @@ VirtualEglBackend::~VirtualEglBackend()
 VirtualBackend *VirtualEglBackend::backend() const
 {
     return m_backend;
+}
+
+GraphicsBufferAllocator *VirtualEglBackend::graphicsBufferAllocator() const
+{
+    return m_allocator.get();
 }
 
 bool VirtualEglBackend::initializeEgl()

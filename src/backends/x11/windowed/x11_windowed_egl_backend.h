@@ -15,54 +15,18 @@
 namespace KWin
 {
 
+class EglSwapchainSlot;
+class EglSwapchain;
 class GraphicsBufferAllocator;
 class X11WindowedBackend;
 class X11WindowedOutput;
 class X11WindowedEglBackend;
 
-class X11WindowedEglLayerBuffer
-{
-public:
-    X11WindowedEglLayerBuffer(GraphicsBuffer *graphicsBuffers, X11WindowedEglBackend *backend);
-    ~X11WindowedEglLayerBuffer();
-
-    GraphicsBuffer *graphicsBuffer() const;
-    std::shared_ptr<GLTexture> texture() const;
-    GLFramebuffer *framebuffer() const;
-    int age() const;
-
-private:
-    GraphicsBuffer *m_graphicsBuffer;
-    std::unique_ptr<GLFramebuffer> m_framebuffer;
-    std::shared_ptr<GLTexture> m_texture;
-    int m_age = 0;
-    friend class X11WindowedEglLayerSwapchain;
-};
-
-class X11WindowedEglLayerSwapchain
-{
-public:
-    X11WindowedEglLayerSwapchain(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, X11WindowedEglBackend *backend);
-    ~X11WindowedEglLayerSwapchain();
-
-    QSize size() const;
-
-    std::shared_ptr<X11WindowedEglLayerBuffer> acquire();
-    void release(std::shared_ptr<X11WindowedEglLayerBuffer> buffer);
-
-private:
-    X11WindowedEglBackend *m_backend;
-    std::unique_ptr<GraphicsBufferAllocator> m_allocator;
-    QSize m_size;
-    uint32_t m_format;
-    QVector<uint64_t> m_modifiers;
-    QVector<std::shared_ptr<X11WindowedEglLayerBuffer>> m_buffers;
-};
-
 class X11WindowedEglPrimaryLayer : public OutputLayer
 {
 public:
     X11WindowedEglPrimaryLayer(X11WindowedEglBackend *backend, X11WindowedOutput *output);
+    ~X11WindowedEglPrimaryLayer() override;
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
@@ -72,8 +36,8 @@ public:
     void present();
 
 private:
-    std::unique_ptr<X11WindowedEglLayerSwapchain> m_swapchain;
-    std::shared_ptr<X11WindowedEglLayerBuffer> m_buffer;
+    std::shared_ptr<EglSwapchain> m_swapchain;
+    std::shared_ptr<EglSwapchainSlot> m_buffer;
     X11WindowedOutput *const m_output;
     X11WindowedEglBackend *const m_backend;
 };
@@ -109,6 +73,7 @@ public:
     ~X11WindowedEglBackend() override;
 
     X11WindowedBackend *backend() const;
+    GraphicsBufferAllocator *graphicsBufferAllocator() const;
 
     std::unique_ptr<SurfaceTexture> createSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     std::unique_ptr<SurfaceTexture> createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
@@ -132,6 +97,7 @@ private:
         std::unique_ptr<X11WindowedEglCursorLayer> cursorLayer;
     };
 
+    std::unique_ptr<GraphicsBufferAllocator> m_allocator;
     std::map<Output *, Layers> m_outputs;
     X11WindowedBackend *m_backend;
 };

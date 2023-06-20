@@ -8,10 +8,10 @@
 */
 #include "drm_virtual_egl_layer.h"
 #include "drm_egl_backend.h"
-#include "drm_gbm_swapchain.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
 #include "drm_virtual_output.h"
+#include "platformsupport/scenes/opengl/eglswapchain.h"
 #include "scene/surfaceitem_wayland.h"
 #include "wayland/surface_interface.h"
 
@@ -89,7 +89,7 @@ QRegion VirtualEglGbmLayer::currentDamage() const
     return m_currentDamage;
 }
 
-std::shared_ptr<DrmEglSwapchain> VirtualEglGbmLayer::createGbmSwapchain() const
+std::shared_ptr<EglSwapchain> VirtualEglGbmLayer::createGbmSwapchain() const
 {
     static bool modifiersEnvSet = false;
     static const bool modifiersEnv = qEnvironmentVariableIntValue("KWIN_DRM_USE_MODIFIERS", &modifiersEnvSet) != 0;
@@ -103,13 +103,13 @@ std::shared_ptr<DrmEglSwapchain> VirtualEglGbmLayer::createGbmSwapchain() const
             const auto modifiers = it.value();
 
             if (allowModifiers && !modifiers.isEmpty()) {
-                if (auto swapchain = DrmEglSwapchain::create(m_eglBackend->gpu(), m_eglBackend->contextObject(), size, format, modifiers)) {
+                if (auto swapchain = EglSwapchain::create(m_eglBackend->gpu()->graphicsBufferAllocator(), m_eglBackend->contextObject(), size, format, modifiers)) {
                     return swapchain;
                 }
             }
 
             static const QVector<uint64_t> implicitModifier{DRM_FORMAT_MOD_INVALID};
-            if (auto swapchain = DrmEglSwapchain::create(m_eglBackend->gpu(), m_eglBackend->contextObject(), size, format, implicitModifier)) {
+            if (auto swapchain = EglSwapchain::create(m_eglBackend->gpu()->graphicsBufferAllocator(), m_eglBackend->contextObject(), size, format, implicitModifier)) {
                 return swapchain;
             }
         }
@@ -118,7 +118,7 @@ std::shared_ptr<DrmEglSwapchain> VirtualEglGbmLayer::createGbmSwapchain() const
     return nullptr;
 }
 
-bool VirtualEglGbmLayer::doesGbmSwapchainFit(DrmEglSwapchain *swapchain) const
+bool VirtualEglGbmLayer::doesGbmSwapchainFit(EglSwapchain *swapchain) const
 {
     return swapchain && swapchain->size() == m_output->modeSize();
 }

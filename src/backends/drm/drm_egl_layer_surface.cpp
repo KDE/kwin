@@ -11,10 +11,10 @@
 #include "config-kwin.h"
 #include "core/graphicsbufferview.h"
 #include "drm_egl_backend.h"
-#include "drm_gbm_swapchain.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
 #include "platformsupport/scenes/opengl/eglnativefence.h"
+#include "platformsupport/scenes/opengl/eglswapchain.h"
 #include "platformsupport/scenes/qpainter/qpainterswapchain.h"
 #include "utils/drm_format_helper.h"
 
@@ -303,7 +303,7 @@ std::optional<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(con
     return ret;
 }
 
-std::shared_ptr<DrmEglSwapchain> EglGbmLayerSurface::createGbmSwapchain(DrmGpu *gpu, EglContext *context, const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, bool forceLinear) const
+std::shared_ptr<EglSwapchain> EglGbmLayerSurface::createGbmSwapchain(DrmGpu *gpu, EglContext *context, const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, bool forceLinear) const
 {
     static bool modifiersEnvSet = false;
     static const bool modifiersEnv = qEnvironmentVariableIntValue("KWIN_DRM_USE_MODIFIERS", &modifiersEnvSet) != 0;
@@ -313,16 +313,16 @@ std::shared_ptr<DrmEglSwapchain> EglGbmLayerSurface::createGbmSwapchain(DrmGpu *
 #endif
 
     if (forceLinear || (m_gpu != gpu && !allowModifiers)) {
-        return DrmEglSwapchain::create(gpu, context, size, format, linearModifier);
+        return EglSwapchain::create(gpu->graphicsBufferAllocator(), context, size, format, linearModifier);
     }
 
     if (allowModifiers) {
-        if (auto swapchain = DrmEglSwapchain::create(gpu, context, size, format, modifiers)) {
+        if (auto swapchain = EglSwapchain::create(gpu->graphicsBufferAllocator(), context, size, format, modifiers)) {
             return swapchain;
         }
     }
 
-    return DrmEglSwapchain::create(gpu, context, size, format, implicitModifier);
+    return EglSwapchain::create(gpu->graphicsBufferAllocator(), context, size, format, implicitModifier);
 }
 
 std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::doRenderTestBuffer(Surface &surface) const

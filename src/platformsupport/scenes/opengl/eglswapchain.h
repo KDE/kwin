@@ -8,6 +8,8 @@
 */
 #pragma once
 
+#include "kwin_export.h"
+
 #include <QSize>
 #include <QVector>
 
@@ -18,19 +20,17 @@
 namespace KWin
 {
 
-class DrmGpu;
 class GraphicsBufferAllocator;
 class GraphicsBuffer;
 class GLFramebuffer;
 class GLTexture;
 class EglContext;
-class EglGbmBackend;
 
-class DrmEglSwapchainSlot
+class KWIN_EXPORT EglSwapchainSlot
 {
 public:
-    DrmEglSwapchainSlot(EglContext *context, GraphicsBuffer *buffer);
-    ~DrmEglSwapchainSlot();
+    EglSwapchainSlot(EglContext *context, GraphicsBuffer *buffer);
+    ~EglSwapchainSlot();
 
     GraphicsBuffer *buffer() const;
     std::shared_ptr<GLTexture> texture() const;
@@ -42,31 +42,31 @@ private:
     std::unique_ptr<GLFramebuffer> m_framebuffer;
     std::shared_ptr<GLTexture> m_texture;
     int m_age = 0;
-    friend class DrmEglSwapchain;
+    friend class EglSwapchain;
 };
 
-class DrmEglSwapchain
+class KWIN_EXPORT EglSwapchain
 {
 public:
-    DrmEglSwapchain(std::unique_ptr<GraphicsBufferAllocator> allocator, EglContext *context, const QSize &size, uint32_t format, uint64_t modifier, const QVector<std::shared_ptr<DrmEglSwapchainSlot>> &slots);
-    ~DrmEglSwapchain();
+    EglSwapchain(GraphicsBufferAllocator *allocator, EglContext *context, const QSize &size, uint32_t format, uint64_t modifier, const QVector<std::shared_ptr<EglSwapchainSlot>> &slots);
+    ~EglSwapchain();
 
     QSize size() const;
     uint32_t format() const;
     uint64_t modifier() const;
 
-    std::shared_ptr<DrmEglSwapchainSlot> acquire();
-    void release(std::shared_ptr<DrmEglSwapchainSlot> slot);
+    std::shared_ptr<EglSwapchainSlot> acquire();
+    void release(std::shared_ptr<EglSwapchainSlot> slot);
 
-    static std::shared_ptr<DrmEglSwapchain> create(DrmGpu *gpu, EglContext *context, const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers);
+    static std::shared_ptr<EglSwapchain> create(GraphicsBufferAllocator *allocator, EglContext *context, const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers);
 
 private:
-    std::unique_ptr<GraphicsBufferAllocator> m_allocator;
+    GraphicsBufferAllocator *m_allocator;
     EglContext *m_context;
     QSize m_size;
     uint32_t m_format;
     uint64_t m_modifier;
-    QVector<std::shared_ptr<DrmEglSwapchainSlot>> m_slots;
+    QVector<std::shared_ptr<EglSwapchainSlot>> m_slots;
 };
 
 } // namespace KWin

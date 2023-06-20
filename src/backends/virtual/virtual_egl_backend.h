@@ -15,44 +15,13 @@
 namespace KWin
 {
 
+class EglSwapchainSlot;
+class EglSwapchain;
 class GraphicsBufferAllocator;
 class VirtualBackend;
 class GLFramebuffer;
 class GLTexture;
 class VirtualEglBackend;
-
-class VirtualEglLayerBuffer
-{
-public:
-    VirtualEglLayerBuffer(GraphicsBuffer *buffer, VirtualEglBackend *backend);
-    ~VirtualEglLayerBuffer();
-
-    GraphicsBuffer *graphicsBuffer() const;
-    GLFramebuffer *framebuffer() const;
-    std::shared_ptr<GLTexture> texture() const;
-
-private:
-    GraphicsBuffer *m_graphicsBuffer;
-    std::unique_ptr<GLFramebuffer> m_framebuffer;
-    std::shared_ptr<GLTexture> m_texture;
-};
-
-class VirtualEglSwapchain
-{
-public:
-    VirtualEglSwapchain(const QSize &size, uint32_t format, VirtualEglBackend *backend);
-
-    QSize size() const;
-
-    std::shared_ptr<VirtualEglLayerBuffer> acquire();
-
-private:
-    VirtualEglBackend *m_backend;
-    QSize m_size;
-    uint32_t m_format;
-    std::unique_ptr<GraphicsBufferAllocator> m_allocator;
-    QVector<std::shared_ptr<VirtualEglLayerBuffer>> m_buffers;
-};
 
 class VirtualEglLayer : public OutputLayer
 {
@@ -68,8 +37,8 @@ public:
 private:
     VirtualEglBackend *const m_backend;
     Output *m_output;
-    std::unique_ptr<VirtualEglSwapchain> m_swapchain;
-    std::shared_ptr<VirtualEglLayerBuffer> m_current;
+    std::shared_ptr<EglSwapchain> m_swapchain;
+    std::shared_ptr<EglSwapchainSlot> m_current;
 };
 
 /**
@@ -90,6 +59,7 @@ public:
     void init() override;
 
     VirtualBackend *backend() const;
+    GraphicsBufferAllocator *graphicsBufferAllocator() const;
 
 private:
     bool initializeEgl();
@@ -99,6 +69,7 @@ private:
     void removeOutput(Output *output);
 
     VirtualBackend *m_backend;
+    std::unique_ptr<GraphicsBufferAllocator> m_allocator;
     std::map<Output *, std::unique_ptr<VirtualEglLayer>> m_outputs;
 };
 

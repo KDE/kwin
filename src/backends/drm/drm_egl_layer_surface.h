@@ -25,8 +25,8 @@ namespace KWin
 {
 
 class DrmFramebuffer;
-class DrmEglSwapchain;
-class DrmEglSwapchainSlot;
+class EglSwapchain;
+class EglSwapchainSlot;
 class QPainterSwapchain;
 class ShadowBuffer;
 class EglContext;
@@ -79,11 +79,11 @@ private:
         ColorDescription targetColorDescription = ColorDescription::sRGB;
         ColorDescription intermediaryColorDescription = ColorDescription::sRGB;
         QVector3D channelFactors = {1, 1, 1};
-        std::shared_ptr<DrmEglSwapchain> gbmSwapchain;
-        std::shared_ptr<DrmEglSwapchainSlot> currentSlot;
+        std::shared_ptr<EglSwapchain> gbmSwapchain;
+        std::shared_ptr<EglSwapchainSlot> currentSlot;
         DamageJournal damageJournal;
         std::shared_ptr<QPainterSwapchain> importDumbSwapchain;
-        std::shared_ptr<DrmEglSwapchain> importGbmSwapchain;
+        std::shared_ptr<EglSwapchain> importGbmSwapchain;
         QHash<GraphicsBuffer *, std::shared_ptr<GLTexture>> importedTextureCache;
         MultiGpuImportMode importMode;
         std::shared_ptr<DrmFramebuffer> currentFramebuffer;
@@ -93,7 +93,7 @@ private:
     bool doesSurfaceFit(const Surface &surface, const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const;
     std::optional<Surface> createSurface(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const;
     std::optional<Surface> createSurface(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, MultiGpuImportMode importMode) const;
-    std::shared_ptr<DrmEglSwapchain> createGbmSwapchain(DrmGpu *gpu, EglContext *context, const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, bool forceLinear) const;
+    std::shared_ptr<EglSwapchain> createGbmSwapchain(DrmGpu *gpu, EglContext *context, const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, bool forceLinear) const;
 
     std::shared_ptr<DrmFramebuffer> doRenderTestBuffer(Surface &surface) const;
     std::shared_ptr<DrmFramebuffer> importBuffer(Surface &surface, GraphicsBuffer *sourceBuffer) const;

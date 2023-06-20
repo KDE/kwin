@@ -17,6 +17,8 @@
 
 namespace KWin
 {
+class EglSwapchainSlot;
+class EglSwapchain;
 class GLFramebuffer;
 class GraphicsBufferAllocator;
 
@@ -25,45 +27,6 @@ namespace Wayland
 class WaylandBackend;
 class WaylandOutput;
 class WaylandEglBackend;
-
-class WaylandEglLayerBuffer
-{
-public:
-    WaylandEglLayerBuffer(GraphicsBuffer *buffer, WaylandEglBackend *backend);
-    ~WaylandEglLayerBuffer();
-
-    GraphicsBuffer *graphicsBuffer() const;
-    GLFramebuffer *framebuffer() const;
-    std::shared_ptr<GLTexture> texture() const;
-    int age() const;
-
-private:
-    GraphicsBuffer *m_graphicsBuffer;
-    std::unique_ptr<GLFramebuffer> m_framebuffer;
-    std::shared_ptr<GLTexture> m_texture;
-    int m_age = 0;
-    friend class WaylandEglLayerSwapchain;
-};
-
-class WaylandEglLayerSwapchain
-{
-public:
-    WaylandEglLayerSwapchain(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, WaylandEglBackend *backend);
-    ~WaylandEglLayerSwapchain();
-
-    QSize size() const;
-
-    std::shared_ptr<WaylandEglLayerBuffer> acquire();
-    void release(std::shared_ptr<WaylandEglLayerBuffer> buffer);
-
-private:
-    WaylandEglBackend *m_backend;
-    QSize m_size;
-    uint32_t m_format;
-    QVector<uint64_t> m_modifiers;
-    std::unique_ptr<GraphicsBufferAllocator> m_allocator;
-    QVector<std::shared_ptr<WaylandEglLayerBuffer>> m_buffers;
-};
 
 class WaylandEglPrimaryLayer : public OutputLayer
 {
@@ -82,8 +45,8 @@ public:
 private:
     WaylandOutput *m_waylandOutput;
     DamageJournal m_damageJournal;
-    std::unique_ptr<WaylandEglLayerSwapchain> m_swapchain;
-    std::shared_ptr<WaylandEglLayerBuffer> m_buffer;
+    std::shared_ptr<EglSwapchain> m_swapchain;
+    std::shared_ptr<EglSwapchainSlot> m_buffer;
     WaylandEglBackend *const m_backend;
 
     friend class WaylandEglBackend;
@@ -104,8 +67,8 @@ public:
 private:
     WaylandOutput *m_output;
     WaylandEglBackend *m_backend;
-    std::unique_ptr<WaylandEglLayerSwapchain> m_swapchain;
-    std::shared_ptr<WaylandEglLayerBuffer> m_buffer;
+    std::shared_ptr<EglSwapchain> m_swapchain;
+    std::shared_ptr<EglSwapchainSlot> m_buffer;
 };
 
 /**
@@ -128,6 +91,7 @@ public:
     ~WaylandEglBackend() override;
 
     WaylandBackend *backend() const;
+    GraphicsBufferAllocator *graphicsBufferAllocator() const;
 
     std::unique_ptr<SurfaceTexture> createSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     std::unique_ptr<SurfaceTexture> createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
@@ -152,6 +116,7 @@ private:
     };
 
     WaylandBackend *m_backend;
+    std::unique_ptr<GraphicsBufferAllocator> m_allocator;
     std::map<Output *, Layers> m_outputs;
 };
 
