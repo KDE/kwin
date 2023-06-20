@@ -20,40 +20,16 @@ namespace KWin
 {
 
 class GraphicsBufferAllocator;
+class QPainterSwapchainSlot;
+class QPainterSwapchain;
 class VirtualBackend;
-
-class VirtualQPainterBufferSlot
-{
-public:
-    VirtualQPainterBufferSlot(GraphicsBuffer *graphicsBuffer);
-    ~VirtualQPainterBufferSlot();
-
-    GraphicsBuffer *graphicsBuffer;
-    QImage image;
-    void *data = nullptr;
-    int size;
-};
-
-class VirtualQPainterSwapchain
-{
-public:
-    VirtualQPainterSwapchain(const QSize &size, uint32_t format);
-
-    QSize size() const;
-
-    std::shared_ptr<VirtualQPainterBufferSlot> acquire();
-
-private:
-    std::unique_ptr<GraphicsBufferAllocator> m_allocator;
-    QSize m_size;
-    uint32_t m_format;
-    std::vector<std::shared_ptr<VirtualQPainterBufferSlot>> m_slots;
-};
+class VirtualQPainterBackend;
 
 class VirtualQPainterLayer : public OutputLayer
 {
 public:
-    VirtualQPainterLayer(Output *output);
+    VirtualQPainterLayer(Output *output, VirtualQPainterBackend *backend);
+    ~VirtualQPainterLayer() override;
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
@@ -62,8 +38,9 @@ public:
 
 private:
     Output *const m_output;
-    std::unique_ptr<VirtualQPainterSwapchain> m_swapchain;
-    std::shared_ptr<VirtualQPainterBufferSlot> m_current;
+    VirtualQPainterBackend *const m_backend;
+    std::unique_ptr<QPainterSwapchain> m_swapchain;
+    std::shared_ptr<QPainterSwapchainSlot> m_current;
 };
 
 class VirtualQPainterBackend : public QPainterBackend
@@ -73,6 +50,8 @@ public:
     VirtualQPainterBackend(VirtualBackend *backend);
     ~VirtualQPainterBackend() override;
 
+    GraphicsBufferAllocator *graphicsBufferAllocator() const;
+
     void present(Output *output) override;
     VirtualQPainterLayer *primaryLayer(Output *output) override;
 
@@ -80,6 +59,7 @@ private:
     void addOutput(Output *output);
     void removeOutput(Output *output);
 
+    std::unique_ptr<GraphicsBufferAllocator> m_allocator;
     std::map<Output *, std::unique_ptr<VirtualQPainterLayer>> m_outputs;
 };
 

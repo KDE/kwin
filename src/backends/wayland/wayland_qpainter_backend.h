@@ -20,6 +20,8 @@ namespace KWin
 {
 class Output;
 class GraphicsBufferAllocator;
+class QPainterSwapchainSlot;
+class QPainterSwapchain;
 
 namespace Wayland
 {
@@ -28,40 +30,11 @@ class WaylandDisplay;
 class WaylandOutput;
 class WaylandQPainterBackend;
 
-class WaylandQPainterBufferSlot
-{
-public:
-    WaylandQPainterBufferSlot(GraphicsBuffer *graphicsBuffer);
-    ~WaylandQPainterBufferSlot();
-
-    GraphicsBuffer *graphicsBuffer;
-    QImage image;
-    void *data = nullptr;
-    int size;
-    int age = 0;
-};
-
-class WaylandQPainterSwapchain
-{
-public:
-    WaylandQPainterSwapchain(const QSize &size, uint32_t format);
-
-    QSize size() const;
-
-    std::shared_ptr<WaylandQPainterBufferSlot> acquire();
-    void release(std::shared_ptr<WaylandQPainterBufferSlot> buffer);
-
-private:
-    std::unique_ptr<GraphicsBufferAllocator> m_allocator;
-    QSize m_size;
-    uint32_t m_format;
-    std::vector<std::shared_ptr<WaylandQPainterBufferSlot>> m_slots;
-};
-
 class WaylandQPainterPrimaryLayer : public OutputLayer
 {
 public:
-    WaylandQPainterPrimaryLayer(WaylandOutput *output);
+    WaylandQPainterPrimaryLayer(WaylandOutput *output, WaylandQPainterBackend *backend);
+    ~WaylandQPainterPrimaryLayer() override;
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
@@ -73,10 +46,11 @@ public:
 
 private:
     WaylandOutput *m_waylandOutput;
+    WaylandQPainterBackend *m_backend;
     DamageJournal m_damageJournal;
 
-    std::unique_ptr<WaylandQPainterSwapchain> m_swapchain;
-    std::shared_ptr<WaylandQPainterBufferSlot> m_back;
+    std::unique_ptr<QPainterSwapchain> m_swapchain;
+    std::shared_ptr<QPainterSwapchainSlot> m_back;
 
     friend class WaylandQPainterBackend;
 };
@@ -86,7 +60,8 @@ class WaylandQPainterCursorLayer : public OutputLayer
     Q_OBJECT
 
 public:
-    explicit WaylandQPainterCursorLayer(WaylandOutput *output);
+    WaylandQPainterCursorLayer(WaylandOutput *output, WaylandQPainterBackend *backend);
+    ~WaylandQPainterCursorLayer() override;
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
@@ -94,8 +69,9 @@ public:
 
 private:
     WaylandOutput *m_output;
-    std::unique_ptr<WaylandQPainterSwapchain> m_swapchain;
-    std::shared_ptr<WaylandQPainterBufferSlot> m_back;
+    WaylandQPainterBackend *m_backend;
+    std::unique_ptr<QPainterSwapchain> m_swapchain;
+    std::shared_ptr<QPainterSwapchainSlot> m_back;
 };
 
 class WaylandQPainterBackend : public QPainterBackend
@@ -104,6 +80,8 @@ class WaylandQPainterBackend : public QPainterBackend
 public:
     explicit WaylandQPainterBackend(WaylandBackend *b);
     ~WaylandQPainterBackend() override;
+
+    GraphicsBufferAllocator *graphicsBufferAllocator() const;
 
     void present(Output *output) override;
     OutputLayer *primaryLayer(Output *output) override;
@@ -119,6 +97,7 @@ private:
     };
 
     WaylandBackend *m_backend;
+    std::unique_ptr<GraphicsBufferAllocator> m_allocator;
     std::map<Output *, Layers> m_outputs;
 };
 

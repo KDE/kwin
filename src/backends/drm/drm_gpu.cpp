@@ -10,6 +10,7 @@
 
 #include <config-kwin.h>
 
+#include "core/gbmgraphicsbufferallocator.h"
 #include "core/session.h"
 #include "drm_backend.h"
 #include "drm_buffer.h"
@@ -83,6 +84,11 @@ DrmGpu::DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t device
         drmGetMagic(m_gbmFd.get(), &magic);
         drmAuthMagic(m_fd, magic);
         m_gbmDevice = gbm_create_device(m_gbmFd.get());
+        if (!m_gbmDevice) {
+            qCCritical(KWIN_DRM) << "gbm_create_device() failed";
+        } else {
+            m_allocator = std::make_unique<GbmGraphicsBufferAllocator>(m_gbmDevice);
+        }
     }
 
     m_socketNotifier = std::make_unique<QSocketNotifier>(fd, QSocketNotifier::Read);
@@ -104,6 +110,7 @@ DrmGpu::~DrmGpu()
     m_connectors.clear();
     m_planes.clear();
     m_socketNotifier.reset();
+    m_allocator.reset();
     if (m_gbmDevice) {
         gbm_device_destroy(m_gbmDevice);
     }
@@ -819,6 +826,11 @@ void DrmGpu::recreateSurfaces()
     for (const auto &output : std::as_const(m_virtualOutputs)) {
         output->recreateSurface();
     }
+}
+
+GraphicsBufferAllocator *DrmGpu::graphicsBufferAllocator() const
+{
+    return m_allocator.get();
 }
 
 std::shared_ptr<DrmFramebuffer> DrmGpu::importBuffer(GraphicsBuffer *buffer)

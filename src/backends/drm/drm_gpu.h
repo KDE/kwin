@@ -37,6 +37,7 @@ class DrmRenderBackend;
 class DrmVirtualOutput;
 class EglDisplay;
 class GraphicsBuffer;
+class GraphicsBufferAllocator;
 
 class DrmLease : public QObject
 {
@@ -104,6 +105,7 @@ public:
     bool needsModeset() const;
     bool maybeModeset();
 
+    GraphicsBufferAllocator *graphicsBufferAllocator() const;
     std::shared_ptr<DrmFramebuffer> importBuffer(GraphicsBuffer *buffer);
     void releaseBuffers();
     void recreateSurfaces();
@@ -142,6 +144,7 @@ private:
     clockid_t m_presentationClock;
     gbm_device *m_gbmDevice;
     FileDescriptor m_gbmFd;
+    std::unique_ptr<GraphicsBufferAllocator> m_allocator;
     std::unique_ptr<EglDisplay> m_eglDisplay;
     DrmBackend *const m_platform;
 

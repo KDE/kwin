@@ -10,12 +10,12 @@
 
 #include "config-kwin.h"
 #include "core/graphicsbufferview.h"
-#include "drm_dumb_swapchain.h"
 #include "drm_egl_backend.h"
 #include "drm_gbm_swapchain.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
 #include "platformsupport/scenes/opengl/eglnativefence.h"
+#include "platformsupport/scenes/qpainter/qpainterswapchain.h"
 #include "utils/drm_format_helper.h"
 
 #include <drm_fourcc.h>
@@ -290,7 +290,7 @@ std::optional<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(con
         return std::nullopt;
     }
     if (importMode == MultiGpuImportMode::DumbBuffer || m_bufferTarget == BufferTarget::Dumb) {
-        ret.importDumbSwapchain = std::make_shared<DumbSwapchain>(m_gpu, size, format);
+        ret.importDumbSwapchain = std::make_shared<QPainterSwapchain>(m_gpu->graphicsBufferAllocator(), size, format);
     } else if (importMode == MultiGpuImportMode::Egl) {
         ret.importGbmSwapchain = createGbmSwapchain(m_gpu, m_eglBackend->contextForGpu(m_gpu), size, format, modifiers, false);
         if (!ret.importGbmSwapchain) {

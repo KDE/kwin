@@ -8,16 +8,16 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "wayland_qpainter_backend.h"
+#include "core/graphicsbufferview.h"
 #include "core/shmgraphicsbufferallocator.h"
+#include "platformsupport/scenes/qpainter/qpainterswapchain.h"
 #include "wayland_backend.h"
-#include "wayland_logging.h"
 #include "wayland_output.h"
 
 #include <KWayland/Client/surface.h>
 
 #include <cmath>
 #include <drm_fourcc.h>
-#include <sys/mman.h>
 #include <wayland-client-protocol.h>
 
 namespace KWin
@@ -25,97 +25,19 @@ namespace KWin
 namespace Wayland
 {
 
-static QImage::Format drmFormatToQImageFormat(uint32_t drmFormat)
-{
-    switch (drmFormat) {
-    case DRM_FORMAT_ARGB8888:
-        return QImage::Format_ARGB32;
-    case DRM_FORMAT_XRGB8888:
-        return QImage::Format_RGB32;
-    default:
-        Q_UNREACHABLE();
-    }
-}
-
-WaylandQPainterBufferSlot::WaylandQPainterBufferSlot(GraphicsBuffer *graphicsBuffer)
-    : graphicsBuffer(graphicsBuffer)
-{
-    const ShmAttributes *attributes = graphicsBuffer->shmAttributes();
-    size = attributes->size.height() * attributes->stride;
-
-    data = mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_SHARED, attributes->fd.get(), attributes->offset);
-    if (data == MAP_FAILED) {
-        qCWarning(KWIN_WAYLAND_BACKEND) << "Failed to map a shared memory buffer";
-        return;
-    }
-
-    image = QImage(static_cast<uchar *>(data), attributes->size.width(), attributes->size.height(), drmFormatToQImageFormat(attributes->format));
-}
-
-WaylandQPainterBufferSlot::~WaylandQPainterBufferSlot()
-{
-    if (data) {
-        munmap(data, size);
-    }
-
-    graphicsBuffer->drop();
-}
-
-WaylandQPainterSwapchain::WaylandQPainterSwapchain(const QSize &size, uint32_t format)
-    : m_allocator(std::make_unique<ShmGraphicsBufferAllocator>())
-    , m_size(size)
-    , m_format(format)
-{
-}
-
-QSize WaylandQPainterSwapchain::size() const
-{
-    return m_size;
-}
-
-std::shared_ptr<WaylandQPainterBufferSlot> WaylandQPainterSwapchain::acquire()
-{
-    for (const auto &slot : m_slots) {
-        if (!slot->graphicsBuffer->isReferenced()) {
-            return slot;
-        }
-    }
-
-    GraphicsBuffer *buffer = m_allocator->allocate(GraphicsBufferOptions{
-        .size = m_size,
-        .format = m_format,
-        .software = true,
-    });
-    if (!buffer) {
-        qCDebug(KWIN_WAYLAND_BACKEND) << "Did not get a new Buffer from Shm Pool";
-        return nullptr;
-    }
-
-    auto slot = std::make_shared<WaylandQPainterBufferSlot>(buffer);
-    m_slots.push_back(slot);
-
-    return slot;
-}
-
-void WaylandQPainterSwapchain::release(std::shared_ptr<WaylandQPainterBufferSlot> buffer)
-{
-    for (const auto &slot : m_slots) {
-        if (slot == buffer) {
-            slot->age = 1;
-        } else if (slot->age > 0) {
-            slot->age++;
-        }
-    }
-}
-
-WaylandQPainterPrimaryLayer::WaylandQPainterPrimaryLayer(WaylandOutput *output)
+WaylandQPainterPrimaryLayer::WaylandQPainterPrimaryLayer(WaylandOutput *output, WaylandQPainterBackend *backend)
     : m_waylandOutput(output)
+    , m_backend(backend)
+{
+}
+
+WaylandQPainterPrimaryLayer::~WaylandQPainterPrimaryLayer()
 {
 }
 
 void WaylandQPainterPrimaryLayer::present()
 {
-    wl_buffer *buffer = m_waylandOutput->backend()->importBuffer(m_back->graphicsBuffer);
+    wl_buffer *buffer = m_waylandOutput->backend()->importBuffer(m_back->buffer());
     Q_ASSERT(buffer);
 
     auto s = m_waylandOutput->surface();
@@ -136,7 +58,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandQPainterPrimaryLayer::beginFrame
 {
     const QSize nativeSize(m_waylandOutput->modeSize());
     if (!m_swapchain || m_swapchain->size() != nativeSize) {
-        m_swapchain = std::make_unique<WaylandQPainterSwapchain>(nativeSize, DRM_FORMAT_XRGB8888);
+        m_swapchain = std::make_unique<QPainterSwapchain>(m_backend->graphicsBufferAllocator(), nativeSize, DRM_FORMAT_XRGB8888);
     }
 
     m_back = m_swapchain->acquire();
@@ -145,8 +67,8 @@ std::optional<OutputLayerBeginFrameInfo> WaylandQPainterPrimaryLayer::beginFrame
     }
 
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(&m_back->image),
-        .repaint = accumulateDamage(m_back->age),
+        .renderTarget = RenderTarget(m_back->view()->image()),
+        .repaint = accumulateDamage(m_back->age()),
     };
 }
 
@@ -161,8 +83,13 @@ quint32 WaylandQPainterPrimaryLayer::format() const
     return DRM_FORMAT_RGBA8888;
 }
 
-WaylandQPainterCursorLayer::WaylandQPainterCursorLayer(WaylandOutput *output)
+WaylandQPainterCursorLayer::WaylandQPainterCursorLayer(WaylandOutput *output, WaylandQPainterBackend *backend)
     : m_output(output)
+    , m_backend(backend)
+{
+}
+
+WaylandQPainterCursorLayer::~WaylandQPainterCursorLayer()
 {
 }
 
@@ -171,7 +98,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandQPainterCursorLayer::beginFrame(
     const auto tmp = size().expandedTo(QSize(64, 64));
     const QSize bufferSize(std::ceil(tmp.width()), std::ceil(tmp.height()));
     if (!m_swapchain || m_swapchain->size() != bufferSize) {
-        m_swapchain = std::make_unique<WaylandQPainterSwapchain>(bufferSize, DRM_FORMAT_ARGB8888);
+        m_swapchain = std::make_unique<QPainterSwapchain>(m_backend->graphicsBufferAllocator(), bufferSize, DRM_FORMAT_ARGB8888);
     }
 
     m_back = m_swapchain->acquire();
@@ -180,14 +107,14 @@ std::optional<OutputLayerBeginFrameInfo> WaylandQPainterCursorLayer::beginFrame(
     }
 
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(&m_back->image),
+        .renderTarget = RenderTarget(m_back->view()->image()),
         .repaint = infiniteRegion(),
     };
 }
 
 bool WaylandQPainterCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    wl_buffer *buffer = m_output->backend()->importBuffer(m_back->graphicsBuffer);
+    wl_buffer *buffer = m_output->backend()->importBuffer(m_back->buffer());
     Q_ASSERT(buffer);
 
     m_output->cursor()->update(buffer, scale(), hotspot().toPoint());
@@ -203,6 +130,7 @@ quint32 WaylandQPainterCursorLayer::format() const
 WaylandQPainterBackend::WaylandQPainterBackend(Wayland::WaylandBackend *b)
     : QPainterBackend()
     , m_backend(b)
+    , m_allocator(std::make_unique<ShmGraphicsBufferAllocator>())
 {
 
     const auto waylandOutputs = m_backend->waylandOutputs();
@@ -222,9 +150,14 @@ WaylandQPainterBackend::~WaylandQPainterBackend()
 void WaylandQPainterBackend::createOutput(Output *waylandOutput)
 {
     m_outputs[waylandOutput] = Layers{
-        .primaryLayer = std::make_unique<WaylandQPainterPrimaryLayer>(static_cast<WaylandOutput *>(waylandOutput)),
-        .cursorLayer = std::make_unique<WaylandQPainterCursorLayer>(static_cast<WaylandOutput *>(waylandOutput)),
+        .primaryLayer = std::make_unique<WaylandQPainterPrimaryLayer>(static_cast<WaylandOutput *>(waylandOutput), this),
+        .cursorLayer = std::make_unique<WaylandQPainterCursorLayer>(static_cast<WaylandOutput *>(waylandOutput), this),
     };
+}
+
+GraphicsBufferAllocator *WaylandQPainterBackend::graphicsBufferAllocator() const
+{
+    return m_allocator.get();
 }
 
 void WaylandQPainterBackend::present(Output *output)

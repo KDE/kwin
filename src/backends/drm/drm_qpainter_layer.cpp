@@ -9,11 +9,11 @@
 #include "drm_qpainter_layer.h"
 #include "core/graphicsbufferview.h"
 #include "drm_buffer.h"
-#include "drm_dumb_swapchain.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
 #include "drm_pipeline.h"
 #include "drm_virtual_output.h"
+#include "platformsupport/scenes/qpainter/qpainterswapchain.h"
 
 #include <cerrno>
 #include <drm_fourcc.h>
@@ -29,7 +29,7 @@ DrmQPainterLayer::DrmQPainterLayer(DrmPipeline *pipeline)
 std::optional<OutputLayerBeginFrameInfo> DrmQPainterLayer::beginFrame()
 {
     if (!doesSwapchainFit()) {
-        m_swapchain = std::make_shared<DumbSwapchain>(m_pipeline->gpu(), m_pipeline->mode()->size(), DRM_FORMAT_XRGB8888);
+        m_swapchain = std::make_shared<QPainterSwapchain>(m_pipeline->gpu()->graphicsBufferAllocator(), m_pipeline->mode()->size(), DRM_FORMAT_XRGB8888);
         m_damageJournal = DamageJournal();
     }
 
@@ -59,7 +59,7 @@ bool DrmQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion &da
 bool DrmQPainterLayer::checkTestBuffer()
 {
     if (!doesSwapchainFit()) {
-        m_swapchain = std::make_shared<DumbSwapchain>(m_pipeline->gpu(), m_pipeline->mode()->size(), DRM_FORMAT_XRGB8888);
+        m_swapchain = std::make_shared<QPainterSwapchain>(m_pipeline->gpu()->graphicsBufferAllocator(), m_pipeline->mode()->size(), DRM_FORMAT_XRGB8888);
         m_currentBuffer = m_swapchain->acquire();
         if (m_currentBuffer) {
             m_currentFramebuffer = m_pipeline->gpu()->importBuffer(m_currentBuffer->buffer());
@@ -107,7 +107,7 @@ DrmCursorQPainterLayer::DrmCursorQPainterLayer(DrmPipeline *pipeline)
 std::optional<OutputLayerBeginFrameInfo> DrmCursorQPainterLayer::beginFrame()
 {
     if (!m_swapchain) {
-        m_swapchain = std::make_shared<DumbSwapchain>(m_pipeline->gpu(), m_pipeline->gpu()->cursorSize(), DRM_FORMAT_ARGB8888);
+        m_swapchain = std::make_shared<QPainterSwapchain>(m_pipeline->gpu()->graphicsBufferAllocator(), m_pipeline->gpu()->cursorSize(), DRM_FORMAT_ARGB8888);
     }
     m_currentBuffer = m_swapchain->acquire();
     if (!m_currentBuffer) {

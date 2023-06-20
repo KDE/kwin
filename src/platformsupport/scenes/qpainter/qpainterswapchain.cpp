@@ -3,69 +3,68 @@
     This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2021 Xaver Hugl <xaver.hugl@gmail.com>
+    SPDX-FileCopyrightText: 2023 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "backends/drm/drm_dumb_swapchain.h"
-#include "core/gbmgraphicsbufferallocator.h"
+#include "platformsupport/scenes/qpainter/qpainterswapchain.h"
 #include "core/graphicsbufferview.h"
-#include "backends/drm/drm_gpu.h"
-
-#include <memory>
+#include "core/graphicsbufferallocator.h"
+#include "utils/common.h"
 
 namespace KWin
 {
 
-DumbSwapchainSlot::DumbSwapchainSlot(GraphicsBuffer *buffer)
+QPainterSwapchainSlot::QPainterSwapchainSlot(GraphicsBuffer *buffer)
     : m_buffer(buffer)
     , m_view(std::make_unique<GraphicsBufferView>(buffer, GraphicsBuffer::Read | GraphicsBuffer::Write))
 {
 }
 
-DumbSwapchainSlot::~DumbSwapchainSlot()
+QPainterSwapchainSlot::~QPainterSwapchainSlot()
 {
     m_view.reset();
     m_buffer->drop();
 }
 
-GraphicsBuffer *DumbSwapchainSlot::buffer() const
+GraphicsBuffer *QPainterSwapchainSlot::buffer() const
 {
     return m_buffer;
 }
 
-GraphicsBufferView *DumbSwapchainSlot::view() const
+GraphicsBufferView *QPainterSwapchainSlot::view() const
 {
     return m_view.get();
 }
 
-int DumbSwapchainSlot::age() const
+int QPainterSwapchainSlot::age() const
 {
     return m_age;
 }
 
-DumbSwapchain::DumbSwapchain(DrmGpu *gpu, const QSize &size, uint32_t format)
-    : m_allocator(std::make_unique<GbmGraphicsBufferAllocator>(gpu->gbmDevice()))
+QPainterSwapchain::QPainterSwapchain(GraphicsBufferAllocator *allocator, const QSize &size, uint32_t format)
+    : m_allocator(allocator)
     , m_size(size)
     , m_format(format)
 {
 }
 
-DumbSwapchain::~DumbSwapchain()
+QPainterSwapchain::~QPainterSwapchain()
 {
 }
 
-QSize DumbSwapchain::size() const
+QSize QPainterSwapchain::size() const
 {
     return m_size;
 }
 
-uint32_t DumbSwapchain::format() const
+uint32_t QPainterSwapchain::format() const
 {
     return m_format;
 }
 
-std::shared_ptr<DumbSwapchainSlot> DumbSwapchain::acquire()
+std::shared_ptr<QPainterSwapchainSlot> QPainterSwapchain::acquire()
 {
     for (const auto &slot : std::as_const(m_slots)) {
         if (!slot->buffer()->isReferenced()) {
@@ -79,17 +78,17 @@ std::shared_ptr<DumbSwapchainSlot> DumbSwapchain::acquire()
         .software = true,
     });
     if (!buffer) {
-        qCWarning(KWIN_DRM) << "Failed to allocate a dumb buffer";
+        qCWarning(KWIN_QPAINTER) << "Failed to allocate a qpainter swapchain graphics buffer";
         return nullptr;
     }
 
-    auto slot = std::make_shared<DumbSwapchainSlot>(buffer);
+    auto slot = std::make_shared<QPainterSwapchainSlot>(buffer);
     m_slots.append(slot);
 
     return slot;
 }
 
-void DumbSwapchain::release(std::shared_ptr<DumbSwapchainSlot> slot)
+void QPainterSwapchain::release(std::shared_ptr<QPainterSwapchainSlot> slot)
 {
     for (qsizetype i = 0; i < m_slots.count(); ++i) {
         if (m_slots[i] == slot) {

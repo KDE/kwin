@@ -3,4 +3,5 @@ target_sources(kwin PRIVATE
     qpaintersurfacetexture_internal.cpp
     qpaintersurfacetexture_wayland.cpp
     qpainterbackend.cpp
+    qpainterswapchain.cpp
 )

@@ -27,7 +27,7 @@ namespace KWin
 class DrmFramebuffer;
 class DrmEglSwapchain;
 class DrmEglSwapchainSlot;
-class DumbSwapchain;
+class QPainterSwapchain;
 class ShadowBuffer;
 class EglContext;
 class EglGbmBackend;
@@ -82,7 +82,7 @@ private:
         std::shared_ptr<DrmEglSwapchain> gbmSwapchain;
         std::shared_ptr<DrmEglSwapchainSlot> currentSlot;
         DamageJournal damageJournal;
-        std::shared_ptr<DumbSwapchain> importDumbSwapchain;
+        std::shared_ptr<QPainterSwapchain> importDumbSwapchain;
         std::shared_ptr<DrmEglSwapchain> importGbmSwapchain;
         QHash<GraphicsBuffer *, std::shared_ptr<GLTexture>> importedTextureCache;
         MultiGpuImportMode importMode;

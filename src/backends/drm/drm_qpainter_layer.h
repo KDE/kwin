@@ -15,8 +15,8 @@
 namespace KWin
 {
 
-class DumbSwapchain;
-class DumbSwapchainSlot;
+class QPainterSwapchain;
+class QPainterSwapchainSlot;
 class DrmPipeline;
 class DrmVirtualOutput;
 class DrmQPainterBackend;
@@ -38,8 +38,8 @@ public:
 private:
     bool doesSwapchainFit() const;
 
-    std::shared_ptr<DumbSwapchain> m_swapchain;
-    std::shared_ptr<DumbSwapchainSlot> m_currentBuffer;
+    std::shared_ptr<QPainterSwapchain> m_swapchain;
+    std::shared_ptr<QPainterSwapchainSlot> m_currentBuffer;
     std::shared_ptr<DrmFramebuffer> m_currentFramebuffer;
     DamageJournal m_damageJournal;
 };
@@ -58,8 +58,8 @@ public:
     void releaseBuffers() override;
 
 private:
-    std::shared_ptr<DumbSwapchain> m_swapchain;
-    std::shared_ptr<DumbSwapchainSlot> m_currentBuffer;
+    std::shared_ptr<QPainterSwapchain> m_swapchain;
+    std::shared_ptr<QPainterSwapchainSlot> m_currentBuffer;
     std::shared_ptr<DrmFramebuffer> m_currentFramebuffer;
 };
 

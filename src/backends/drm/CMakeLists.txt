@@ -7,7 +7,6 @@ target_sources(kwin PRIVATE
     drm_connector.cpp
     drm_crtc.cpp
     drm_dmabuf_feedback.cpp
-    drm_dumb_swapchain.cpp
     drm_egl_backend.cpp
     drm_egl_cursor_layer.cpp
     drm_egl_layer.cpp

@@ -7,105 +7,28 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "x11_windowed_qpainter_backend.h"
+#include "core/graphicsbufferview.h"
 #include "core/shmgraphicsbufferallocator.h"
+#include "platformsupport/scenes/qpainter/qpainterswapchain.h"
 #include "x11_windowed_backend.h"
-#include "x11_windowed_logging.h"
 #include "x11_windowed_output.h"
 
 #include <cerrno>
 #include <cmath>
 #include <drm_fourcc.h>
 #include <string.h>
-#include <sys/mman.h>
 #include <xcb/present.h>
 
 namespace KWin
 {
 
-static QImage::Format drmFormatToQImageFormat(uint32_t drmFormat)
-{
-    switch (drmFormat) {
-    case DRM_FORMAT_ARGB8888:
-        return QImage::Format_ARGB32;
-    case DRM_FORMAT_XRGB8888:
-        return QImage::Format_RGB32;
-    default:
-        Q_UNREACHABLE();
-    }
-}
-
-X11WindowedQPainterLayerBuffer::X11WindowedQPainterLayerBuffer(GraphicsBuffer *buffer)
-    : m_graphicsBuffer(buffer)
-{
-    const ShmAttributes *attributes = buffer->shmAttributes();
-
-    m_size = attributes->size.height() * attributes->stride;
-    m_data = mmap(nullptr, m_size, PROT_READ | PROT_WRITE, MAP_SHARED, attributes->fd.get(), 0);
-    if (m_data == MAP_FAILED) {
-        qCWarning(KWIN_X11WINDOWED) << "Failed to map a shared memory buffer";
-        return;
-    }
-
-    m_view = std::make_unique<QImage>(static_cast<uchar *>(m_data), attributes->size.width(), attributes->size.height(), drmFormatToQImageFormat(attributes->format));
-}
-
-X11WindowedQPainterLayerBuffer::~X11WindowedQPainterLayerBuffer()
-{
-    if (m_data) {
-        munmap(m_data, m_size);
-    }
-    m_view.reset();
-    m_graphicsBuffer->drop();
-}
-
-GraphicsBuffer *X11WindowedQPainterLayerBuffer::graphicsBuffer() const
-{
-    return m_graphicsBuffer;
-}
-
-QImage *X11WindowedQPainterLayerBuffer::view() const
-{
-    return m_view.get();
-}
-
-X11WindowedQPainterLayerSwapchain::X11WindowedQPainterLayerSwapchain(const QSize &size, uint32_t format)
-    : m_size(size)
-    , m_format(format)
-    , m_allocator(std::make_unique<ShmGraphicsBufferAllocator>())
-{
-}
-
-QSize X11WindowedQPainterLayerSwapchain::size() const
-{
-    return m_size;
-}
-
-std::shared_ptr<X11WindowedQPainterLayerBuffer> X11WindowedQPainterLayerSwapchain::acquire()
-{
-    for (const auto &buffer : m_buffers) {
-        if (!buffer->graphicsBuffer()->isReferenced()) {
-            return buffer;
-        }
-    }
-
-    GraphicsBuffer *graphicsBuffer = m_allocator->allocate(GraphicsBufferOptions{
-        .size = m_size,
-        .format = m_format,
-        .software = true,
-    });
-    if (!graphicsBuffer) {
-        qCWarning(KWIN_X11WINDOWED) << "Failed to allocate a shared memory graphics buffer";
-        return nullptr;
-    }
-
-    auto buffer = std::make_shared<X11WindowedQPainterLayerBuffer>(graphicsBuffer);
-    m_buffers.push_back(buffer);
-
-    return buffer;
-}
-
-X11WindowedQPainterPrimaryLayer::X11WindowedQPainterPrimaryLayer(X11WindowedOutput *output)
+X11WindowedQPainterPrimaryLayer::X11WindowedQPainterPrimaryLayer(X11WindowedOutput *output, X11WindowedQPainterBackend *backend)
     : m_output(output)
+    , m_backend(backend)
+{
+}
+
+X11WindowedQPainterPrimaryLayer::~X11WindowedQPainterPrimaryLayer()
 {
 }
 
@@ -113,7 +36,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedQPainterPrimaryLayer::beginF
 {
     const QSize bufferSize = m_output->modeSize();
     if (!m_swapchain || m_swapchain->size() != bufferSize) {
-        m_swapchain = std::make_unique<X11WindowedQPainterLayerSwapchain>(bufferSize, m_output->backend()->driFormatForDepth(m_output->depth()));
+        m_swapchain = std::make_unique<QPainterSwapchain>(m_backend->graphicsBufferAllocator(), bufferSize, m_output->backend()->driFormatForDepth(m_output->depth()));
     }
 
     m_current = m_swapchain->acquire();
@@ -125,7 +48,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedQPainterPrimaryLayer::beginF
     m_output->clearExposedArea();
 
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_current->view()),
+        .renderTarget = RenderTarget(m_current->view()->image()),
         .repaint = repaint,
     };
 }
@@ -137,7 +60,7 @@ bool X11WindowedQPainterPrimaryLayer::endFrame(const QRegion &renderedRegion, co
 
 void X11WindowedQPainterPrimaryLayer::present()
 {
-    xcb_pixmap_t pixmap = m_output->importBuffer(m_current->graphicsBuffer());
+    xcb_pixmap_t pixmap = m_output->importBuffer(m_current->buffer());
     Q_ASSERT(pixmap != XCB_PIXMAP_NONE);
 
     xcb_xfixes_region_t valid = 0;
@@ -167,13 +90,7 @@ void X11WindowedQPainterPrimaryLayer::present()
 
 quint32 X11WindowedQPainterPrimaryLayer::format() const
 {
-    switch (m_current->view()->format()) {
-    case QImage::Format_A2RGB30_Premultiplied:
-        return DRM_FORMAT_ARGB2101010;
-    case QImage::Format_ARGB32_Premultiplied:
-    default:
-        return DRM_FORMAT_ARGB8888;
-    }
+    return m_current->buffer()->shmAttributes()->format;
 }
 
 X11WindowedQPainterCursorLayer::X11WindowedQPainterCursorLayer(X11WindowedOutput *output)
@@ -209,6 +126,7 @@ bool X11WindowedQPainterCursorLayer::endFrame(const QRegion &renderedRegion, con
 X11WindowedQPainterBackend::X11WindowedQPainterBackend(X11WindowedBackend *backend)
     : QPainterBackend()
     , m_backend(backend)
+    , m_allocator(std::make_unique<ShmGraphicsBufferAllocator>())
 {
     const auto outputs = m_backend->outputs();
     for (Output *output : outputs) {
@@ -228,7 +146,7 @@ void X11WindowedQPainterBackend::addOutput(Output *output)
 {
     X11WindowedOutput *x11Output = static_cast<X11WindowedOutput *>(output);
     m_outputs[output] = Layers{
-        .primaryLayer = std::make_unique<X11WindowedQPainterPrimaryLayer>(x11Output),
+        .primaryLayer = std::make_unique<X11WindowedQPainterPrimaryLayer>(x11Output, this),
         .cursorLayer = std::make_unique<X11WindowedQPainterCursorLayer>(x11Output),
     };
 }
@@ -236,6 +154,11 @@ void X11WindowedQPainterBackend::addOutput(Output *output)
 void X11WindowedQPainterBackend::removeOutput(Output *output)
 {
     m_outputs.erase(output);
+}
+
+GraphicsBufferAllocator *X11WindowedQPainterBackend::graphicsBufferAllocator() const
+{
+    return m_allocator.get();
 }
 
 void X11WindowedQPainterBackend::present(Output *output)
