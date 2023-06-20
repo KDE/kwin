@@ -60,10 +60,6 @@ SurfaceInterfacePrivate::~SurfaceInterfacePrivate()
     wl_resource_for_each_safe (resource, tmp, &cached.frameCallbacks) {
         wl_resource_destroy(resource);
     }
-
-    if (current.buffer) {
-        current.buffer->unref();
-    }
 }
 
 void SurfaceInterfacePrivate::addChild(SubSurfaceInterface *child)
@@ -569,17 +565,8 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     const QRegion oldInputRegion = inputRegion;
 
     next->mergeInto(&current);
+    bufferRef = current.buffer;
     scaleOverride = pendingScaleOverride;
-
-    if (bufferRef != current.buffer) {
-        if (bufferRef) {
-            bufferRef->unref();
-        }
-        bufferRef = current.buffer;
-        if (bufferRef) {
-            bufferRef->ref();
-        }
-    }
 
     // TODO: Refactor the state management code because it gets more clumsy.
     if (current.buffer) {
@@ -805,7 +792,7 @@ KWin::Output::Transform SurfaceInterface::bufferTransform() const
 
 KWin::GraphicsBuffer *SurfaceInterface::buffer() const
 {
-    return d->bufferRef;
+    return d->bufferRef.buffer();
 }
 
 QPoint SurfaceInterface::offset() const

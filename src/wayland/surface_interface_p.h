@@ -6,6 +6,7 @@
 */
 #pragma once
 
+#include "core/graphicsbuffer.h"
 #include "surface_interface.h"
 #include "utils.h"
 // Qt
@@ -124,7 +125,7 @@ public:
 
     QRegion inputRegion;
     QRegion opaqueRegion;
-    KWin::GraphicsBuffer *bufferRef = nullptr;
+    KWin::GraphicsBufferRef bufferRef;
     QRegion bufferDamage;
     bool mapped = false;
     bool hasCacheState = false;

@@ -9,14 +9,13 @@
 */
 #pragma once
 
-#include <stdint.h>
+#include "core/graphicsbuffer.h"
 
 namespace KWin
 {
 
 class DrmGpu;
 class DrmFramebuffer;
-class GraphicsBuffer;
 
 class DrmFramebuffer
 {
@@ -35,7 +34,7 @@ public:
 protected:
     const uint32_t m_framebufferId;
     DrmGpu *const m_gpu;
-    GraphicsBuffer *m_buffer = nullptr;
+    GraphicsBufferRef m_bufferRef;
 };
 
 }

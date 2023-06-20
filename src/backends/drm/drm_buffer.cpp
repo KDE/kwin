@@ -29,17 +29,13 @@ namespace KWin
 DrmFramebuffer::DrmFramebuffer(DrmGpu *gpu, uint32_t fbId, GraphicsBuffer *buffer)
     : m_framebufferId(fbId)
     , m_gpu(gpu)
-    , m_buffer(buffer)
+    , m_bufferRef(buffer)
 {
-    m_buffer->ref();
 }
 
 DrmFramebuffer::~DrmFramebuffer()
 {
     drmModeRmFB(m_gpu->fd(), m_framebufferId);
-    if (m_buffer) {
-        m_buffer->unref();
-    }
 }
 
 uint32_t DrmFramebuffer::framebufferId() const
@@ -49,14 +45,11 @@ uint32_t DrmFramebuffer::framebufferId() const
 
 GraphicsBuffer *DrmFramebuffer::buffer() const
 {
-    return m_buffer;
+    return *m_bufferRef;
 }
 
 void DrmFramebuffer::releaseBuffer()
 {
-    if (m_buffer) {
-        m_buffer->unref();
-        m_buffer = nullptr;
-    }
+    m_bufferRef = nullptr;
 }
 }

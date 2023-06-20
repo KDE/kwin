@@ -89,6 +89,103 @@ protected:
     bool m_dropped = false;
 };
 
+/**
+ * The GraphicsBufferRef type holds a reference to a GraphicsBuffer. While the reference
+ * exists, the graphics buffer cannot be destroyed and the client cannnot modify it.
+ */
+class GraphicsBufferRef
+{
+public:
+    GraphicsBufferRef()
+        : m_buffer(nullptr)
+    {
+    }
+
+    GraphicsBufferRef(GraphicsBuffer *buffer)
+        : m_buffer(buffer)
+    {
+        m_buffer->ref();
+    }
+
+    GraphicsBufferRef(const GraphicsBufferRef &other)
+        : m_buffer(other.m_buffer)
+    {
+        if (m_buffer) {
+            m_buffer->unref();
+        }
+    }
+
+    GraphicsBufferRef(GraphicsBufferRef &&other)
+        : m_buffer(std::exchange(other.m_buffer, nullptr))
+    {
+    }
+
+    ~GraphicsBufferRef()
+    {
+        if (m_buffer) {
+            m_buffer->unref();
+        }
+    }
+
+    GraphicsBufferRef &operator=(const GraphicsBufferRef &other)
+    {
+        if (other.m_buffer) {
+            other.m_buffer->ref();
+        }
+        if (m_buffer) {
+            m_buffer->unref();
+        }
+        m_buffer = other.m_buffer;
+        return *this;
+    }
+
+    GraphicsBufferRef &operator=(GraphicsBufferRef &&other)
+    {
+        if (m_buffer) {
+            m_buffer->unref();
+        }
+        m_buffer = std::exchange(other.m_buffer, nullptr);
+        return *this;
+    }
+
+    GraphicsBufferRef &operator=(GraphicsBuffer *buffer)
+    {
+        if (m_buffer != buffer) {
+            if (m_buffer) {
+                m_buffer->unref();
+            }
+            if (buffer) {
+                buffer->ref();
+            }
+            m_buffer = buffer;
+        }
+        return *this;
+    }
+
+    inline GraphicsBuffer *buffer() const
+    {
+        return m_buffer;
+    }
+
+    inline GraphicsBuffer *operator*() const
+    {
+        return m_buffer;
+    }
+
+    inline GraphicsBuffer *operator->() const
+    {
+        return m_buffer;
+    }
+
+    inline operator bool() const
+    {
+        return m_buffer;
+    }
+
+private:
+    GraphicsBuffer *m_buffer;
+};
+
 } // namespace KWin
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::GraphicsBuffer::MapFlags)
