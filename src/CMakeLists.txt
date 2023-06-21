@@ -212,6 +212,10 @@ target_sources(kwin PRIVATE
     virtualdesktops.cpp
     virtualdesktopsdbustypes.cpp
     virtualkeyboard_dbus.cpp
+    vulkan/vulkan_device.cpp
+    vulkan/vulkan_logging.cpp
+    vulkan/vulkan_swapchain.cpp
+    vulkan/vulkan_texture.cpp
     wayland_server.cpp
     waylandshellintegration.cpp
     waylandwindow.cpp
@@ -256,6 +260,7 @@ target_link_libraries(kwin
         XKB::XKB
         EGL::EGL
         epoxy::epoxy
+        Vulkan::Vulkan
 
         Threads::Threads
         lcms2::lcms2
@@ -643,6 +648,14 @@ install(FILES
     opengl/glvertexbuffer.h
     opengl/openglcontext.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/opengl COMPONENT Devel
+)
+
+install(FILES
+    vulkan/vulkan_device.h
+    vulkan/vulkan_include.h
+    vulkan/vulkan_swapchain.h
+    vulkan/vulkan_texture.h
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/vulkan COMPONENT Devel
 )
 
 install(FILES

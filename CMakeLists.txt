@@ -193,6 +193,8 @@ set_package_properties(epoxy PROPERTIES
     PURPOSE "OpenGL dispatch library"
 )
 
+find_package(Vulkan REQUIRED)
+
 set(HAVE_DL_LIBRARY FALSE)
 if (epoxy_HAS_GLX)
     find_library(DL_LIBRARY dl)
