@@ -60,7 +60,6 @@ private:
     void handleCommitted();
     void handleAcceptsFocusChanged();
     void handleOutputEnabledChanged();
-    void handleOutputDestroyed();
     void scheduleRearrange();
     void activateScreenEdge();
     void deactivateScreenEdge();

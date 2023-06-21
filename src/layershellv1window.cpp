@@ -58,8 +58,6 @@ LayerShellV1Window::LayerShellV1Window(LayerSurfaceV1Interface *shellSurface,
             this, &LayerShellV1Window::scheduleRearrange);
     connect(output, &Output::enabledChanged,
             this, &LayerShellV1Window::handleOutputEnabledChanged);
-    connect(output, &Output::destroyed,
-            this, &LayerShellV1Window::handleOutputDestroyed);
 
     connect(shellSurface->surface(), &SurfaceInterface::sizeChanged,
             this, &LayerShellV1Window::handleSizeChanged);
@@ -180,6 +178,7 @@ void LayerShellV1Window::destroyWindow()
     }
     m_shellSurface->disconnect(this);
     m_shellSurface->surface()->disconnect(this);
+    m_desiredOutput->disconnect(this);
 
     markAsDeleted();
     cleanTabBox();
@@ -277,12 +276,6 @@ void LayerShellV1Window::handleOutputEnabledChanged()
         closeWindow();
         destroyWindow();
     }
-}
-
-void LayerShellV1Window::handleOutputDestroyed()
-{
-    closeWindow();
-    destroyWindow();
 }
 
 void LayerShellV1Window::setVirtualKeyboardGeometry(const QRectF &geo)
