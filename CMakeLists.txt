@@ -201,6 +201,8 @@ set_package_properties(epoxy PROPERTIES
     PURPOSE "OpenGL dispatch library"
 )
 
+find_package(Vulkan REQUIRED)
+
 find_package(Wayland 1.24)
 set_package_properties(Wayland PROPERTIES
     TYPE REQUIRED
