@@ -5,7 +5,6 @@
 */
 import QtQuick
 import org.kde.kwin.decoration
-import org.kde.plasma.core as PlasmaCore
 import org.kde.ksvg 1.0 as KSvg
 
 Decoration {

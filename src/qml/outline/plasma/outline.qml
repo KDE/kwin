@@ -7,7 +7,6 @@
 import QtQuick
 import QtQuick.Window
 import org.kde.kwin
-import org.kde.plasma.core as PlasmaCore
 import org.kde.ksvg 1.0 as KSvg
 
 Window {
