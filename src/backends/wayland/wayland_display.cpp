@@ -299,6 +299,11 @@ QByteArray WaylandLinuxDmabufV1::mainDevice() const
     return m_defaultFeedback->mainDevice;
 }
 
+dev_t WaylandLinuxDmabufV1::mainDeviceId() const
+{
+    return m_defaultFeedback->mainDeviceId;
+}
+
 QHash<uint32_t, QList<uint64_t>> WaylandLinuxDmabufV1::formats() const
 {
     return m_defaultFeedback->formats;

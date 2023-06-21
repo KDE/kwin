@@ -15,6 +15,14 @@ std::optional<FormatInfo> FormatInfo::get(uint32_t drmFormat)
 {
     switch (drmFormat) {
     case DRM_FORMAT_XRGB8888:
+        return FormatInfo{
+            .drmFormat = drmFormat,
+            .bitsPerColor = 8,
+            .alphaBits = 0,
+            .bitsPerPixel = 32,
+            .openglFormat = GL_RGBA8,
+            .vulkanFormat = vk::Format::eB8G8R8A8Unorm,
+        };
     case DRM_FORMAT_XBGR8888:
     case DRM_FORMAT_RGBX8888:
     case DRM_FORMAT_BGRX8888:
@@ -24,9 +32,26 @@ std::optional<FormatInfo> FormatInfo::get(uint32_t drmFormat)
             .alphaBits = 0,
             .bitsPerPixel = 32,
             .openglFormat = GL_RGBA8,
+            .vulkanFormat = vk::Format::eUndefined,
         };
     case DRM_FORMAT_ARGB8888:
+        return FormatInfo{
+            .drmFormat = drmFormat,
+            .bitsPerColor = 8,
+            .alphaBits = 8,
+            .bitsPerPixel = 32,
+            .openglFormat = GL_RGBA8,
+            .vulkanFormat = vk::Format::eB8G8R8A8Unorm,
+        };
     case DRM_FORMAT_ABGR8888:
+        return FormatInfo{
+            .drmFormat = drmFormat,
+            .bitsPerColor = 8,
+            .alphaBits = 8,
+            .bitsPerPixel = 32,
+            .openglFormat = GL_RGBA8,
+            .vulkanFormat = vk::Format::eR8G8B8A8Unorm,
+        };
     case DRM_FORMAT_RGBA8888:
     case DRM_FORMAT_BGRA8888:
         return FormatInfo{
@@ -35,9 +60,26 @@ std::optional<FormatInfo> FormatInfo::get(uint32_t drmFormat)
             .alphaBits = 8,
             .bitsPerPixel = 32,
             .openglFormat = GL_RGBA8,
+            .vulkanFormat = vk::Format::eUndefined,
         };
     case DRM_FORMAT_XRGB2101010:
+        return FormatInfo{
+            .drmFormat = drmFormat,
+            .bitsPerColor = 10,
+            .alphaBits = 0,
+            .bitsPerPixel = 32,
+            .openglFormat = GL_RGB10_A2,
+            .vulkanFormat = vk::Format::eA2R10G10B10UnormPack32,
+        };
     case DRM_FORMAT_XBGR2101010:
+        return FormatInfo{
+            .drmFormat = drmFormat,
+            .bitsPerColor = 10,
+            .alphaBits = 0,
+            .bitsPerPixel = 32,
+            .openglFormat = GL_RGB10_A2,
+            .vulkanFormat = vk::Format::eA2B10G10R10UnormPack32,
+        };
     case DRM_FORMAT_RGBX1010102:
     case DRM_FORMAT_BGRX1010102:
         return FormatInfo{
@@ -46,9 +88,26 @@ std::optional<FormatInfo> FormatInfo::get(uint32_t drmFormat)
             .alphaBits = 0,
             .bitsPerPixel = 32,
             .openglFormat = GL_RGB10_A2,
+            .vulkanFormat = vk::Format::eUndefined,
         };
     case DRM_FORMAT_ARGB2101010:
+        return FormatInfo{
+            .drmFormat = drmFormat,
+            .bitsPerColor = 10,
+            .alphaBits = 2,
+            .bitsPerPixel = 32,
+            .openglFormat = GL_RGB10_A2,
+            .vulkanFormat = vk::Format::eA2R10G10B10UnormPack32,
+        };
     case DRM_FORMAT_ABGR2101010:
+        return FormatInfo{
+            .drmFormat = drmFormat,
+            .bitsPerColor = 10,
+            .alphaBits = 2,
+            .bitsPerPixel = 32,
+            .openglFormat = GL_RGB10_A2,
+            .vulkanFormat = vk::Format::eA2B10G10R10UnormPack32,
+        };
     case DRM_FORMAT_RGBA1010102:
     case DRM_FORMAT_BGRA1010102:
         return FormatInfo{
@@ -57,8 +116,26 @@ std::optional<FormatInfo> FormatInfo::get(uint32_t drmFormat)
             .alphaBits = 2,
             .bitsPerPixel = 32,
             .openglFormat = GL_RGB10_A2,
+            .vulkanFormat = vk::Format::eUndefined,
         };
     case DRM_FORMAT_XRGB16161616F:
+        return FormatInfo{
+            .drmFormat = drmFormat,
+            .bitsPerColor = 16,
+            .alphaBits = 0,
+            .bitsPerPixel = 64,
+            .openglFormat = GL_RGBA16F,
+            .vulkanFormat = vk::Format::eUndefined,
+        };
+    case DRM_FORMAT_ARGB16161616F:
+        return FormatInfo{
+            .drmFormat = drmFormat,
+            .bitsPerColor = 16,
+            .alphaBits = 16,
+            .bitsPerPixel = 64,
+            .openglFormat = GL_RGBA16F,
+            .vulkanFormat = vk::Format::eUndefined,
+        };
     case DRM_FORMAT_XBGR16161616F:
         return FormatInfo{
             .drmFormat = drmFormat,
@@ -66,8 +143,8 @@ std::optional<FormatInfo> FormatInfo::get(uint32_t drmFormat)
             .alphaBits = 0,
             .bitsPerPixel = 64,
             .openglFormat = GL_RGBA16F,
+            .vulkanFormat = vk::Format::eR16G16B16A16Sfloat,
         };
-    case DRM_FORMAT_ARGB16161616F:
     case DRM_FORMAT_ABGR16161616F:
         return FormatInfo{
             .drmFormat = drmFormat,
@@ -75,10 +152,35 @@ std::optional<FormatInfo> FormatInfo::get(uint32_t drmFormat)
             .alphaBits = 16,
             .bitsPerPixel = 64,
             .openglFormat = GL_RGBA16F,
+            .vulkanFormat = vk::Format::eR16G16B16A16Sfloat,
         };
     case DRM_FORMAT_ARGB4444:
+        return FormatInfo{
+            .drmFormat = drmFormat,
+            .bitsPerColor = 4,
+            .alphaBits = 4,
+            .bitsPerPixel = 16,
+            .openglFormat = GL_RGBA4,
+            .vulkanFormat = vk::Format::eA4R4G4B4UnormPack16,
+        };
     case DRM_FORMAT_ABGR4444:
+        return FormatInfo{
+            .drmFormat = drmFormat,
+            .bitsPerColor = 4,
+            .alphaBits = 4,
+            .bitsPerPixel = 16,
+            .openglFormat = GL_RGBA4,
+            .vulkanFormat = vk::Format::eA4B4G4R4UnormPack16,
+        };
     case DRM_FORMAT_RGBA4444:
+        return FormatInfo{
+            .drmFormat = drmFormat,
+            .bitsPerColor = 4,
+            .alphaBits = 4,
+            .bitsPerPixel = 16,
+            .openglFormat = GL_RGBA4,
+            .vulkanFormat = vk::Format::eR4G4B4A4UnormPack16,
+        };
     case DRM_FORMAT_BGRA4444:
         return FormatInfo{
             .drmFormat = drmFormat,
@@ -86,10 +188,35 @@ std::optional<FormatInfo> FormatInfo::get(uint32_t drmFormat)
             .alphaBits = 4,
             .bitsPerPixel = 16,
             .openglFormat = GL_RGBA4,
+            .vulkanFormat = vk::Format::eB4G4R4A4UnormPack16,
         };
     case DRM_FORMAT_ARGB1555:
+        return FormatInfo{
+            .drmFormat = drmFormat,
+            .bitsPerColor = 5,
+            .alphaBits = 1,
+            .bitsPerPixel = 16,
+            .openglFormat = GL_RGB5_A1,
+            .vulkanFormat = vk::Format::eA1R5G5B5UnormPack16,
+        };
     case DRM_FORMAT_ABGR1555:
+        return FormatInfo{
+            .drmFormat = drmFormat,
+            .bitsPerColor = 5,
+            .alphaBits = 1,
+            .bitsPerPixel = 16,
+            .openglFormat = GL_RGB5_A1,
+            .vulkanFormat = vk::Format::eUndefined,
+        };
     case DRM_FORMAT_RGBA5551:
+        return FormatInfo{
+            .drmFormat = drmFormat,
+            .bitsPerColor = 5,
+            .alphaBits = 1,
+            .bitsPerPixel = 16,
+            .openglFormat = GL_RGB5_A1,
+            .vulkanFormat = vk::Format::eR5G5B5A1UnormPack16,
+        };
     case DRM_FORMAT_BGRA5551:
         return FormatInfo{
             .drmFormat = drmFormat,
@@ -97,14 +224,7 @@ std::optional<FormatInfo> FormatInfo::get(uint32_t drmFormat)
             .alphaBits = 1,
             .bitsPerPixel = 16,
             .openglFormat = GL_RGB5_A1,
-        };
-    case DRM_FORMAT_NV12:
-        return FormatInfo{
-            .drmFormat = drmFormat,
-            .bitsPerColor = 8,
-            .alphaBits = 0,
-            .bitsPerPixel = 24,
-            .openglFormat = GL_R8,
+            .vulkanFormat = vk::Format::eB5G5R5A1UnormPack16,
         };
     default:
         return std::nullopt;

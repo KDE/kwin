@@ -46,6 +46,7 @@ public:
 
     zwp_linux_dmabuf_v1 *handle() const;
     QByteArray mainDevice() const;
+    dev_t mainDeviceId() const;
     QHash<uint32_t, QList<uint64_t>> formats() const;
 
 private:

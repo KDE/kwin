@@ -17,6 +17,11 @@
 #include <libdrm/drm_fourcc.h>
 #include <optional>
 #include <stdint.h>
+#define VULKAN_HPP_NO_EXCEPTIONS 1
+#define VULKAN_HPP_ASSERT_ON_RESULT void
+#include <vulkan/vulkan.hpp>
+
+#include <QSysInfo>
 
 namespace KWin
 {
@@ -45,6 +50,7 @@ struct KWIN_EXPORT FormatInfo
     uint32_t alphaBits;
     uint32_t bitsPerPixel;
     GLint openglFormat;
+    vk::Format vulkanFormat;
 
     std::optional<YuvConversion> yuvConversion() const
     {
