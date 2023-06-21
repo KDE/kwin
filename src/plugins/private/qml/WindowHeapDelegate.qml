@@ -13,6 +13,7 @@ import org.kde.kwin.private.effects
 import org.kde.plasma.components 3.0 as PC3
 import org.kde.plasma.core as PlasmaCore
 import org.kde.kirigami 2.20 as Kirigami
+import org.kde.ksvg 1.0 as KSvg
 
 Item {
     id: thumb
@@ -124,7 +125,7 @@ Item {
             thumb.windowHeap.deleteDND(thumb.window.internalId);
         }
 
-        PlasmaCore.FrameSvgItem {
+        KSvg.FrameSvgItem {
             anchors {
                 fill: parent
                 topMargin: -Kirigami.Units.smallSpacing * 2

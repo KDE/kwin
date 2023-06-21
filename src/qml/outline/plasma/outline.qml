@@ -8,6 +8,7 @@ import QtQuick
 import QtQuick.Window
 import org.kde.kwin
 import org.kde.plasma.core as PlasmaCore
+import org.kde.ksvg 1.0 as KSvg
 
 Window {
     id: window
@@ -57,7 +58,7 @@ Window {
         }
     }
 
-    PlasmaCore.FrameSvgItem {
+    KSvg.FrameSvgItem {
         id: svg
 
         // takes into account the offset inside unified geometry
@@ -83,21 +84,21 @@ Window {
             var top = outline.geometry.y === maximizedArea.y;
             var bottom = outline.geometry.y + outline.geometry.height === maximizedArea.y + maximizedArea.height;
 
-            var borders = PlasmaCore.FrameSvgItem.AllBorders;
+            var borders = KSvg.FrameSvgItem.AllBorders;
             if (left) {
-                borders = borders & ~PlasmaCore.FrameSvgItem.LeftBorder;
+                borders = borders & ~KSvg.FrameSvgItem.LeftBorder;
             }
             if (right) {
-                borders = borders & ~PlasmaCore.FrameSvgItem.RightBorder;
+                borders = borders & ~KSvg.FrameSvgItem.RightBorder;
             }
             if (top) {
-                borders = borders & ~PlasmaCore.FrameSvgItem.TopBorder;
+                borders = borders & ~KSvg.FrameSvgItem.TopBorder;
             }
             if (bottom) {
-                borders = borders & ~PlasmaCore.FrameSvgItem.BottomBorder;
+                borders = borders & ~KSvg.FrameSvgItem.BottomBorder;
             }
             if (left && right && bottom && top) {
-                borders = PlasmaCore.FrameSvgItem.AllBorders;
+                borders = KSvg.FrameSvgItem.AllBorders;
             }
             return borders;
         }

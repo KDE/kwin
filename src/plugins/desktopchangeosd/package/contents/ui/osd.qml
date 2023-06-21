@@ -9,6 +9,7 @@
 import QtQuick
 import QtQuick.Window
 import org.kde.plasma.core as PlasmaCore
+import org.kde.ksvg 1.0 as KSvg
 import org.kde.plasma.extras as PlasmaExtras
 import org.kde.kwin
 
@@ -95,12 +96,12 @@ PlasmaCore.Dialog {
                 Item {
                     width: view.itemWidth
                     height: view.itemHeight
-                    PlasmaCore.FrameSvgItem {
+                    KSvg.FrameSvgItem {
                         anchors.fill: parent
                         imagePath: "widgets/pager"
                         prefix: "normal"
                     }
-                    PlasmaCore.FrameSvgItem {
+                    KSvg.FrameSvgItem {
                         id: activeElement
                         anchors.fill: parent
                         imagePath: "widgets/pager"

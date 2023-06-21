@@ -11,6 +11,7 @@ import org.kde.kwin as KWinComponents
 import org.kde.kwin.private.effects
 import org.kde.plasma.core as PlasmaCore
 import org.kde.kirigami 2.20 as Kirigami
+import org.kde.ksvg 1.0 as KSvg
 import org.kde.plasma.components 3.0 as PlasmaComponents
 import org.kde.kitemmodels as KitemModels
 
@@ -171,9 +172,9 @@ FocusScope {
                 }
             }
         }
-        background: PlasmaCore.FrameSvgItem {
+        background: KSvg.FrameSvgItem {
             imagePath: "widgets/background"
-            enabledBorders: PlasmaCore.FrameSvg.LeftBorder | PlasmaCore.FrameSvg.BottomBorder
+            enabledBorders: KSvg.FrameSvg.LeftBorder | KSvg.FrameSvg.BottomBorder
         }
     }
     PlasmaComponents.Popup {
@@ -187,7 +188,7 @@ FocusScope {
         dim: true
         onOpened: forceActiveFocus()
         onClosed: root.forceActiveFocus()
-        PlasmaCore.Svg {
+        KSvg.Svg {
             id: layoutsSvg
             imagePath: Qt.resolvedUrl("layouts.svg")
         }
@@ -196,13 +197,13 @@ FocusScope {
             Layout.fillWidth: true
             Layout.fillHeight: true
             property alias image: svgItem.elementId
-            contentItem: PlasmaCore.SvgItem {
+            contentItem: KSvg.SvgItem {
                 id: svgItem
                 svg: layoutsSvg
                 implicitWidth: naturalSize.width
                 implicitHeight: naturalSize.height
             }
-            background: PlasmaCore.FrameSvgItem {
+            background: KSvg.FrameSvgItem {
                 imagePath: "widgets/viewitem"
                 prefix: "hover"
                 opacity: parent.hovered || parent.focus
