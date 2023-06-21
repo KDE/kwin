@@ -308,7 +308,7 @@ private:
     int m_cursorHideCounter = 0;
 };
 
-class InputConfig
+class KWIN_EXPORT InputConfig
 {
 public:
     KSharedConfigPtr inputConfig() const

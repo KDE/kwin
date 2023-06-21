@@ -22,8 +22,6 @@ qt6_generate_wayland_protocol_client_sources(KWinIntegrationTestFramework
 )
 
 target_sources(KWinIntegrationTestFramework PRIVATE
-    ../../src/cursor.cpp
-
     generic_scene_opengl_test.cpp
     kwin_wayland_test.cpp
     test_helpers.cpp
