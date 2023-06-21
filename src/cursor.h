@@ -308,27 +308,6 @@ private:
     int m_cursorHideCounter = 0;
 };
 
-class KWIN_EXPORT InputConfig
-{
-public:
-    KSharedConfigPtr inputConfig() const
-    {
-        return m_inputConfig;
-    }
-    void setInputConfig(KSharedConfigPtr config)
-    {
-        m_inputConfig = std::move(config);
-    }
-
-    static InputConfig *self();
-
-private:
-    InputConfig();
-
-    KSharedConfigPtr m_inputConfig;
-    static InputConfig *s_self;
-};
-
 inline const QPointF &Cursor::currentPos() const
 {
     return m_pos;

@@ -128,6 +128,9 @@ void Application::start()
     if (!m_kxkbConfig) {
         m_kxkbConfig = KSharedConfig::openConfig(QStringLiteral("kxkbrc"), KConfig::NoGlobals);
     }
+    if (!m_inputConfig) {
+        m_inputConfig = KSharedConfig::openConfig(QStringLiteral("kcminputrc"), KConfig::NoGlobals);
+    }
 
     performStartup();
 }

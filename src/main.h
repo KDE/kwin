@@ -116,6 +116,15 @@ public:
         m_kxkbConfig = std::move(config);
     }
 
+    KSharedConfigPtr inputConfig() const
+    {
+        return m_inputConfig;
+    }
+    void setInputConfig(KSharedConfigPtr config)
+    {
+        m_inputConfig = std::move(config);
+    }
+
     void start();
     /**
      * @brief The operation mode used by KWin.
@@ -354,6 +363,7 @@ private:
     bool m_configLock;
     KSharedConfigPtr m_config;
     KSharedConfigPtr m_kxkbConfig;
+    KSharedConfigPtr m_inputConfig;
     OperationMode m_operationMode;
     xcb_timestamp_t m_x11Time = XCB_TIME_CURRENT_TIME;
     xcb_window_t m_rootWindow = XCB_WINDOW_NONE;

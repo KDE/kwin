@@ -142,7 +142,7 @@ void Cursor::loadThemeSettings()
 
 void Cursor::loadThemeFromKConfig()
 {
-    KConfigGroup mousecfg(InputConfig::self()->inputConfig(), "Mouse");
+    KConfigGroup mousecfg(kwinApp()->inputConfig(), "Mouse");
     const QString themeName = mousecfg.readEntry("cursorTheme", defaultThemeName());
     const uint themeSize = mousecfg.readEntry("cursorSize", defaultThemeSize());
     updateTheme(themeName, themeSize);
@@ -160,9 +160,8 @@ void Cursor::updateTheme(const QString &name, int size)
 
 void Cursor::slotKGlobalSettingsNotifyChange(int type, int arg)
 {
-    // #endif
     if (type == 5 /*CursorChanged*/) {
-        InputConfig::self()->inputConfig()->reparseConfiguration();
+        kwinApp()->inputConfig()->reparseConfiguration();
         loadThemeFromKConfig();
     }
 }
@@ -695,20 +694,6 @@ void Cursor::setSource(CursorSource *source)
     m_source = source;
     connect(m_source, &CursorSource::changed, this, &Cursor::cursorChanged);
     Q_EMIT cursorChanged();
-}
-
-InputConfig *InputConfig::s_self = nullptr;
-InputConfig *InputConfig::self()
-{
-    if (!s_self) {
-        s_self = new InputConfig;
-    }
-    return s_self;
-}
-
-InputConfig::InputConfig()
-    : m_inputConfig(KSharedConfig::openConfig(QStringLiteral("kcminputrc"), KConfig::NoGlobals))
-{
 }
 
 } // namespace

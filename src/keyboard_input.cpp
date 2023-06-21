@@ -117,7 +117,7 @@ void KeyboardInputRedirection::init()
     Q_ASSERT(!m_inited);
     m_inited = true;
     const auto config = kwinApp()->kxkbConfig();
-    m_xkb->setNumLockConfig(InputConfig::self()->inputConfig());
+    m_xkb->setNumLockConfig(kwinApp()->inputConfig());
     m_xkb->setConfig(config);
 
     // Workaround for QTBUG-54371: if there is no real keyboard Qt doesn't request virtual keyboard
@@ -171,7 +171,7 @@ void KeyboardInputRedirection::reconfigure()
         return;
     }
     if (waylandServer()->seat()->keyboard()) {
-        const auto config = InputConfig::self()->inputConfig()->group(QStringLiteral("Keyboard"));
+        const auto config = kwinApp()->inputConfig()->group(QStringLiteral("Keyboard"));
         const int delay = config.readEntry("RepeatDelay", 660);
         const int rate = std::ceil(config.readEntry("RepeatRate", 25.0));
         const QString repeatMode = config.readEntry("KeyRepeat", "repeat");

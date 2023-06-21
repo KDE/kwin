@@ -2640,7 +2640,7 @@ void InputRedirection::uninstallInputEventSpy(InputEventSpy *spy)
 
 void InputRedirection::init()
 {
-    m_inputConfigWatcher = KConfigWatcher::create(InputConfig::self()->inputConfig());
+    m_inputConfigWatcher = KConfigWatcher::create(kwinApp()->inputConfig());
     connect(m_inputConfigWatcher.data(), &KConfigWatcher::configChanged,
             this, &InputRedirection::handleInputConfigChanged);
 
@@ -3066,7 +3066,7 @@ void InputRedirection::addInputBackend(std::unique_ptr<InputBackend> &&inputBack
     connect(inputBackend.get(), &InputBackend::deviceAdded, this, &InputRedirection::addInputDevice);
     connect(inputBackend.get(), &InputBackend::deviceRemoved, this, &InputRedirection::removeInputDevice);
 
-    inputBackend->setConfig(InputConfig::self()->inputConfig());
+    inputBackend->setConfig(kwinApp()->inputConfig());
     inputBackend->initialize();
 
     m_inputBackends.push_back(std::move(inputBackend));
