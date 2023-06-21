@@ -21,6 +21,10 @@ namespace KWin
 
 std::pair<OutputConfiguration, QVector<Output *>> OutputConfigurationStore::queryConfig(const QVector<Output *> &outputs, bool isLidClosed)
 {
+    // TODO to make use of isLidClosed, move config writing into KWin
+    // Currently, the interactions of KWin's config generation on lid close with KScreen's config writing
+    // causes settings changes that shouldn't be happening
+    isLidClosed = false;
     const auto kscreenConfig = KScreenIntegration::readOutputConfig(outputs, KScreenIntegration::connectedOutputsHash(outputs, isLidClosed));
     if (kscreenConfig) {
         return kscreenConfig.value();
