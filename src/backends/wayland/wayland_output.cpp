@@ -176,7 +176,7 @@ RenderLoop *WaylandOutput::renderLoop() const
 
 bool WaylandOutput::updateCursorLayer()
 {
-    if (m_hasPointerLock) {
+    if (m_hasPointerLock || !Compositor::self()->backend()->cursorLayer(this)) {
         m_cursor->setEnabled(false);
         return false;
     } else {

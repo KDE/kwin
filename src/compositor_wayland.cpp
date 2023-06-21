@@ -21,13 +21,17 @@
 #include "opengl/glplatform.h"
 #include "platformsupport/scenes/opengl/openglbackend.h"
 #include "platformsupport/scenes/qpainter/qpainterbackend.h"
+#include "platformsupport/scenes/vulkan/vulkan_backend.h"
 #include "scene/cursordelegate_opengl.h"
 #include "scene/cursordelegate_qpainter.h"
+#include "scene/cursordelegate_vulkan.h"
 #include "scene/cursorscene.h"
 #include "scene/itemrenderer_opengl.h"
 #include "scene/itemrenderer_qpainter.h"
+#include "scene/itemrenderer_vulkan.h"
 #include "scene/workspacescene_opengl.h"
 #include "scene/workspacescene_qpainter.h"
+#include "scene/workspacescene_vulkan.h"
 #include "window.h"
 #include "workspace.h"
 
@@ -108,6 +112,19 @@ bool WaylandCompositor::attemptQPainterCompositing()
     return true;
 }
 
+bool WaylandCompositor::attemptVulkanCompositing()
+{
+    std::unique_ptr<VulkanBackend> backend = kwinApp()->outputBackend()->createVulkanBackend();
+    if (!backend || !backend->init()) {
+        return false;
+    }
+    m_scene = std::make_unique<WorkspaceSceneVulkan>();
+    m_cursorScene = std::make_unique<CursorScene>(std::make_unique<ItemRendererVulkan>());
+    m_backend = std::move(backend);
+    qCDebug(KWIN_CORE) << "Vulkan compositing has been successfully initialized";
+    return true;
+}
+
 void WaylandCompositor::createRenderer()
 {
     // If compositing has been restarted, try to use the last used compositing type.
@@ -138,6 +155,10 @@ void WaylandCompositor::createRenderer()
         case QPainterCompositing:
             qCDebug(KWIN_CORE) << "Attempting to load the QPainter scene";
             stop = attemptQPainterCompositing();
+            break;
+        case VulkanCompositing:
+            qCDebug(KWIN_CORE) << "Attempting to load the Vulkan scene";
+            stop = attemptVulkanCompositing();
             break;
         case NoCompositing:
             qCDebug(KWIN_CORE) << "Starting without compositing...";
@@ -199,6 +220,9 @@ void WaylandCompositor::start()
         case NoCompositing:
             break;
         case OpenGLCompositing:
+            QQuickWindow::setGraphicsApi(QSGRendererInterface::OpenGL);
+            break;
+        case VulkanCompositing:
             QQuickWindow::setGraphicsApi(QSGRendererInterface::OpenGL);
             break;
         case QPainterCompositing:
@@ -472,10 +496,18 @@ void WaylandCompositor::addOutput(Output *output)
 
     auto cursorLayer = new RenderLayer(output->renderLoop());
     cursorLayer->setVisible(false);
-    if (m_backend->compositingType() == OpenGLCompositing) {
+    switch (m_backend->compositingType()) {
+    case OpenGLCompositing:
         cursorLayer->setDelegate(std::make_unique<CursorDelegateOpenGL>(m_cursorScene.get(), output));
-    } else {
+        break;
+    case VulkanCompositing:
+        cursorLayer->setDelegate(std::make_unique<CursorDelegateVulkan>(m_cursorScene.get(), output));
+        break;
+    case QPainterCompositing:
         cursorLayer->setDelegate(std::make_unique<CursorDelegateQPainter>(m_cursorScene.get(), output));
+        break;
+    case NoCompositing:
+        Q_UNREACHABLE();
     }
     cursorLayer->setParent(workspaceLayer);
     cursorLayer->setSuperlayer(workspaceLayer);
