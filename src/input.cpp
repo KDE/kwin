@@ -1185,6 +1185,10 @@ class InternalWindowEventFilter : public InputEventFilter
             return false;
         }
         QWindow *internal = static_cast<InternalWindow *>(input()->pointer()->focus())->handle();
+        if (!internal) {
+            // the handle can be nullptr if the tooltip gets closed while focus updates are blocked
+            return false;
+        }
         QMouseEvent mouseEvent(event->type(),
                                event->pos() - internal->position(),
                                event->globalPos(),
