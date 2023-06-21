@@ -8,11 +8,13 @@
 */
 #pragma once
 #include "kwin_export.h"
+#include "vulkan/vulkan_include.h"
 
 #include <QHash>
 #include <QList>
 #include <QString>
 
+#include <array>
 #include <epoxy/gl.h>
 #include <libdrm/drm_fourcc.h>
 #include <optional>
@@ -38,6 +40,37 @@ static const QHash<uint32_t, YuvConversion> s_drmConversions = {
                       }},
 };
 
+static constexpr std::array s_knownDrmFormats = {
+    DRM_FORMAT_XRGB8888,
+    DRM_FORMAT_XBGR8888,
+    DRM_FORMAT_RGBX8888,
+    DRM_FORMAT_BGRX8888,
+    DRM_FORMAT_ARGB8888,
+    DRM_FORMAT_ABGR8888,
+    DRM_FORMAT_RGBA8888,
+    DRM_FORMAT_BGRA8888,
+    DRM_FORMAT_XRGB2101010,
+    DRM_FORMAT_XBGR2101010,
+    DRM_FORMAT_RGBX1010102,
+    DRM_FORMAT_BGRX1010102,
+    DRM_FORMAT_ARGB2101010,
+    DRM_FORMAT_ABGR2101010,
+    DRM_FORMAT_RGBA1010102,
+    DRM_FORMAT_BGRA1010102,
+    DRM_FORMAT_XRGB16161616F,
+    DRM_FORMAT_ARGB16161616F,
+    DRM_FORMAT_XBGR16161616F,
+    DRM_FORMAT_ABGR16161616F,
+    DRM_FORMAT_ARGB4444,
+    DRM_FORMAT_ABGR4444,
+    DRM_FORMAT_RGBA4444,
+    DRM_FORMAT_BGRA4444,
+    DRM_FORMAT_ARGB1555,
+    DRM_FORMAT_ABGR1555,
+    DRM_FORMAT_RGBA5551,
+    DRM_FORMAT_BGRA5551,
+};
+
 struct KWIN_EXPORT FormatInfo
 {
     uint32_t drmFormat;
@@ -46,6 +79,7 @@ struct KWIN_EXPORT FormatInfo
     uint32_t bitsPerPixel;
     GLint openglFormat;
     bool floatingPoint;
+    vk::Format vulkanFormat;
 
     std::optional<YuvConversion> yuvConversion() const
     {
