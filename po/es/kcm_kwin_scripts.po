@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-07 02:19+0000\n"
+"POT-Creation-Date: 2023-06-21 02:02+0000\n"
 "PO-Revision-Date: 2023-06-03 01:06+0200\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -48,18 +48,18 @@ msgstr "El guion «%1» se ha importado con éxito."
 msgid "Error when uninstalling KWin Script: %1"
 msgstr "Ha ocurrido un error al desinstalar el guion de KWin: %1"
 
-#: ui/main.qml:24
+#: ui/main.qml:23
 #, kde-format
 msgid "Install from File…"
 msgstr "Instalar desde archivo..."
 
-#: ui/main.qml:28
+#: ui/main.qml:27
 #, kde-format
 msgctxt "@action:button get new KWin scripts"
 msgid "Get New…"
 msgstr "Obtener novedades..."
 
-#: ui/main.qml:66
+#: ui/main.qml:65
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Delete…"

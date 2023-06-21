@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-20 02:58+0000\n"
+"POT-Creation-Date: 2023-06-21 02:02+0000\n"
 "PO-Revision-Date: 2022-12-28 21:14+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -2349,7 +2349,7 @@ msgstr "M&ută la biroul"
 msgid "Add Virtual Desktop"
 msgstr "Adaugă la birou &nou"
 
-#: plugins/overview/qml/main.qml:230
+#: plugins/overview/qml/main.qml:229
 #, fuzzy, kde-format
 #| msgid "X11 Unmanaged Windows"
 msgid "No matching windows"
@@ -2579,29 +2579,29 @@ msgstr ""
 msgid "Close"
 msgstr "În&chide"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:168
+#: plugins/tileseditor/qml/TileDelegate.qml:167
 #, fuzzy, kde-format
 #| msgctxt "An orientation of a pointer axis event"
 #| msgid "Horizontal"
 msgid "Split Horizontally"
 msgstr "Orizontal"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:175
+#: plugins/tileseditor/qml/TileDelegate.qml:174
 #, fuzzy, kde-format
 #| msgctxt "An orientation of a pointer axis event"
 #| msgid "Vertical"
 msgid "Split Vertically"
 msgstr "Vertical"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:183
-#: plugins/tileseditor/qml/TileDelegate.qml:212
+#: plugins/tileseditor/qml/TileDelegate.qml:182
+#: plugins/tileseditor/qml/TileDelegate.qml:211
 #, fuzzy, kde-format
 #| msgctxt "Floating layout, windows aren't tiled at all"
 #| msgid "Floating"
 msgid "Add Floating Tile"
 msgstr "Mod flotant"
 
-#: plugins/tileseditor/qml/TileDelegate.qml:192
+#: plugins/tileseditor/qml/TileDelegate.qml:191
 #, kde-format
 msgid "Delete"
 msgstr ""
@@ -3700,149 +3700,141 @@ msgstr ""
 "Folosiți în schimb meniul de sistem al ferestrei, pe care îl puteți activa "
 "folosind combinația de taste %1."
 
-#: useractions.cpp:232
+#: useractions.cpp:214
 #, kde-format
 msgid "&Move"
 msgstr "&Mută"
 
-#: useractions.cpp:237
+#: useractions.cpp:219
 #, kde-format
 msgid "&Resize"
 msgstr "&Redimensionează"
 
-#: useractions.cpp:242
+#: useractions.cpp:224
 #, kde-format
 msgid "Keep &Above Others"
 msgstr "Ține de&asupra celorlalte"
 
-#: useractions.cpp:248
+#: useractions.cpp:230
 #, kde-format
 msgid "Keep &Below Others"
 msgstr "Ține su&b celelalte"
 
-#: useractions.cpp:254
+#: useractions.cpp:236
 #, kde-format
 msgid "&Fullscreen"
 msgstr "&Ecran complet"
 
-#: useractions.cpp:260
+#: useractions.cpp:242
 #, kde-format
 msgid "&Shade"
 msgstr "&Strânge"
 
-#: useractions.cpp:266
+#: useractions.cpp:248
 #, fuzzy, kde-format
 #| msgid "No titlebar and frame"
 msgid "&No Titlebar and Frame"
 msgstr "Fără bară de titlu și cadru"
 
-#: useractions.cpp:274
+#: useractions.cpp:256
 #, fuzzy, kde-format
 #| msgid "Set Window Short&cut..."
 msgid "Set Window Short&cut…"
 msgstr "Stabilește s&curtătura ferestrei…"
 
-#: useractions.cpp:280
+#: useractions.cpp:262
 #, fuzzy, kde-format
 #| msgid "Configure Special &Window Settings..."
 msgid "Configure Special &Window Settings…"
 msgstr "Configurări &speciale fereastră..."
 
-#: useractions.cpp:285
+#: useractions.cpp:267
 #, fuzzy, kde-format
 #| msgid "Configure S&pecial Application Settings..."
 msgid "Configure S&pecial Application Settings…"
 msgstr "Configurări s&peciale aplicație..."
 
-#: useractions.cpp:292
-#, kde-format
-msgctxt ""
-"Entry in context menu of window decoration to open the configuration module "
-"of KWin"
-msgid "Configure W&indow Manager..."
-msgstr "Conf&igurare gestionar de ferestre..."
-
-#: useractions.cpp:319
+#: useractions.cpp:273
 #, kde-format
 msgid "Ma&ximize"
 msgstr "Ma&ximizează"
 
-#: useractions.cpp:325
+#: useractions.cpp:279
 #, kde-format
 msgid "Mi&nimize"
 msgstr "Mi&nimizează"
 
-#: useractions.cpp:331
+#: useractions.cpp:285
 #, kde-format
 msgid "&More Actions"
 msgstr "&Acțiuni suplimentare"
 
-#: useractions.cpp:336
+#: useractions.cpp:290
 #, kde-format
 msgid "&Close"
 msgstr "În&chide"
 
-#: useractions.cpp:406
+#: useractions.cpp:360
 #, kde-format
 msgid "&Extensions"
 msgstr "&Extensii"
 
-#: useractions.cpp:457
+#: useractions.cpp:411
 #, kde-format
 msgid "&Desktops"
 msgstr "&Birouri"
 
-#: useractions.cpp:471
+#: useractions.cpp:425
 #, kde-format
 msgid "Move to &Desktop"
 msgstr "M&ută la biroul"
 
-#: useractions.cpp:488
+#: useractions.cpp:442
 #, kde-format
 msgid "Move to &Screen"
 msgstr "Mută la &ecranul"
 
-#: useractions.cpp:504
+#: useractions.cpp:458
 #, kde-format
 msgid "Show in &Activities"
 msgstr "&Arată în activități"
 
-#: useractions.cpp:521
+#: useractions.cpp:475
 #, fuzzy, kde-format
 #| msgctxt "Create a new desktop and move the window to that desktop"
 #| msgid "Move to New Desktop"
 msgid "Move &To Current Desktop"
 msgstr "Mută la birou nou"
 
-#: useractions.cpp:531 useractions.cpp:598
+#: useractions.cpp:485 useractions.cpp:552
 #, kde-format
 msgid "&All Desktops"
 msgstr "To&ate birourile"
 
-#: useractions.cpp:571
+#: useractions.cpp:525
 #, kde-format
 msgctxt "Create a new desktop and move the window there"
 msgid "&New Desktop"
 msgstr "Birou &nou"
 
-#: useractions.cpp:642
+#: useractions.cpp:596
 #, kde-format
 msgid "Move to %1 %2"
 msgstr "Mută la %1 %2"
 
-#: useractions.cpp:655
+#: useractions.cpp:609
 #, kde-format
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
 msgstr "Adaugă la birou &nou"
 
-#: useractions.cpp:667
+#: useractions.cpp:621
 #, kde-format
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
 msgstr "Mută la birou nou"
 
-#: useractions.cpp:698
+#: useractions.cpp:652
 #, kde-format
 msgctxt ""
 "@item:inmenu List of all Screens to send a window to. First argument is a "
@@ -3850,380 +3842,380 @@ msgctxt ""
 msgid "Screen &%1 (%2)"
 msgstr "Ecranul &%1 (%2)"
 
-#: useractions.cpp:724
+#: useractions.cpp:678
 #, kde-format
 msgid "&All Activities"
 msgstr "Toate &activitățile"
 
-#: useractions.cpp:772
+#: useractions.cpp:726
 #, fuzzy, kde-format
 #| msgid "Move to %1 %2"
 msgid "Move to %1"
 msgstr "Mută la %1 %2"
 
-#: useractions.cpp:891
+#: useractions.cpp:845
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr "<b>%1</b> este deja folosit"
 
-#: useractions.cpp:893
+#: useractions.cpp:847
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> este folosit de %2 în %3"
 
-#: useractions.cpp:973
+#: useractions.cpp:927
 #, kde-format
 msgid "Window Operations Menu"
 msgstr "Meniul de operații al ferestrei"
 
-#: useractions.cpp:975
+#: useractions.cpp:929
 #, kde-format
 msgid "Close Window"
 msgstr "Închide fereastra"
 
-#: useractions.cpp:977
+#: useractions.cpp:931
 #, kde-format
 msgid "Maximize Window"
 msgstr "Maximizează fereastra"
 
-#: useractions.cpp:979
+#: useractions.cpp:933
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "Maximizează fereastra pe verticală"
 
-#: useractions.cpp:981
+#: useractions.cpp:935
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "Maximizează fereastra pe orizontală"
 
-#: useractions.cpp:983
+#: useractions.cpp:937
 #, kde-format
 msgid "Minimize Window"
 msgstr "Minimizează fereastra"
 
-#: useractions.cpp:985
+#: useractions.cpp:939
 #, kde-format
 msgid "Shade Window"
 msgstr "Strânge fereastra"
 
-#: useractions.cpp:987
+#: useractions.cpp:941
 #, kde-format
 msgid "Move Window"
 msgstr "Mută fereastra"
 
-#: useractions.cpp:989
+#: useractions.cpp:943
 #, kde-format
 msgid "Resize Window"
 msgstr "Redimensionează fereastra"
 
-#: useractions.cpp:991
+#: useractions.cpp:945
 #, kde-format
 msgid "Raise Window"
 msgstr "Ridică fereastra"
 
-#: useractions.cpp:993
+#: useractions.cpp:947
 #, kde-format
 msgid "Lower Window"
 msgstr "Coboară fereastra"
 
-#: useractions.cpp:995
+#: useractions.cpp:949
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "Comută ridicarea/coborârea ferestrei"
 
-#: useractions.cpp:997
+#: useractions.cpp:951
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "Ocupă tot biroul"
 
-#: useractions.cpp:999
+#: useractions.cpp:953
 #, fuzzy, kde-format
 #| msgid "No titlebar and frame"
 msgid "Toggle Window Titlebar and Frame"
 msgstr "Fără bară de titlu și cadru"
 
-#: useractions.cpp:1001
+#: useractions.cpp:955
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "Fereastra este deasupra celorlalte"
 
-#: useractions.cpp:1003
+#: useractions.cpp:957
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "Fereastra este sub celelalte"
 
-#: useractions.cpp:1005
+#: useractions.cpp:959
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "Activează fereastra care cere atenție"
 
-#: useractions.cpp:1007
+#: useractions.cpp:961
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "Setează acceleratorul ferestrei"
 
-#: useractions.cpp:1009
+#: useractions.cpp:963
 #, kde-format
 msgid "Move Window to the Center"
 msgstr "Mută fereastra la centru"
 
-#: useractions.cpp:1011
+#: useractions.cpp:965
 #, kde-format
 msgid "Move Window Right"
 msgstr "Mută fereastra la dreapta"
 
-#: useractions.cpp:1013
+#: useractions.cpp:967
 #, kde-format
 msgid "Move Window Left"
 msgstr "Mută fereastra la stânga"
 
-#: useractions.cpp:1015
+#: useractions.cpp:969
 #, kde-format
 msgid "Move Window Up"
 msgstr "Mută fereastra în sus"
 
-#: useractions.cpp:1017
+#: useractions.cpp:971
 #, kde-format
 msgid "Move Window Down"
 msgstr "Mută fereastra în jos"
 
-#: useractions.cpp:1019
+#: useractions.cpp:973
 #, kde-format
 msgid "Expand Window Horizontally"
 msgstr "Desfășoară fereastra pe orizontală"
 
-#: useractions.cpp:1021
+#: useractions.cpp:975
 #, kde-format
 msgid "Expand Window Vertically"
 msgstr "Desfășoară fereastra pe verticală"
 
-#: useractions.cpp:1023
+#: useractions.cpp:977
 #, kde-format
 msgid "Shrink Window Horizontally"
 msgstr "Îngustează fereastra pe orizontală"
 
-#: useractions.cpp:1025
+#: useractions.cpp:979
 #, kde-format
 msgid "Shrink Window Vertically"
 msgstr "Îngustează fereastra pe verticală"
 
-#: useractions.cpp:1027
+#: useractions.cpp:981
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "Așează fereastra rapid în mozaic la stânga"
 
-#: useractions.cpp:1029
+#: useractions.cpp:983
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "Așează fereastra rapid în mozaic la dreapta"
 
-#: useractions.cpp:1031
+#: useractions.cpp:985
 #, kde-format
 msgid "Quick Tile Window to the Top"
 msgstr "Așează fereastra rapid în mozaic deasupra"
 
-#: useractions.cpp:1033
+#: useractions.cpp:987
 #, kde-format
 msgid "Quick Tile Window to the Bottom"
 msgstr "Așează fereastra rapid în mozaic dedesubt"
 
-#: useractions.cpp:1035
+#: useractions.cpp:989
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
 msgstr "Așează fereastra rapid în mozaic la stânga-sus"
 
-#: useractions.cpp:1037
+#: useractions.cpp:991
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "Așează fereastra rapid în mozaic la stânga-jos"
 
-#: useractions.cpp:1039
+#: useractions.cpp:993
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
 msgstr "Așează fereastra rapid în mozaic la dreapta-sus"
 
-#: useractions.cpp:1041
+#: useractions.cpp:995
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "Așează fereastra rapid în mozaic la dreapta-jos"
 
-#: useractions.cpp:1043
+#: useractions.cpp:997
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "Schimbă la fereastra de deasupra"
 
-#: useractions.cpp:1045
+#: useractions.cpp:999
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "Comută la fereastra dedesubt"
 
-#: useractions.cpp:1047
+#: useractions.cpp:1001
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "Schimbă la fereastra din dreapta"
 
-#: useractions.cpp:1049
+#: useractions.cpp:1003
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "Schimbă la fereastra din stânga"
 
-#: useractions.cpp:1051
+#: useractions.cpp:1005
 #, fuzzy, kde-format
 #| msgid "Increase Opacity of Active Window by 5 %"
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "Crește opacitatea ferestrei active cu 5%"
 
-#: useractions.cpp:1053
+#: useractions.cpp:1007
 #, fuzzy, kde-format
 #| msgid "Decrease Opacity of Active Window by 5 %"
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "Scade opacitatea ferestrei active cu 5%"
 
-#: useractions.cpp:1056
+#: useractions.cpp:1010
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "Ține fereastra pe toate birourile"
 
-#: useractions.cpp:1067
+#: useractions.cpp:1021
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "Fereastra către biroul %1"
 
-#: useractions.cpp:1069
+#: useractions.cpp:1023
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Fereastră către biroul următor"
 
-#: useractions.cpp:1070
+#: useractions.cpp:1024
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Fereastră către biroul precedent"
 
-#: useractions.cpp:1071
+#: useractions.cpp:1025
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Fereastra cu un birou la dreapta"
 
-#: useractions.cpp:1073
+#: useractions.cpp:1027
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Fereastra cu un birou la stânga"
 
-#: useractions.cpp:1075
+#: useractions.cpp:1029
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "Fereastra cu un birou mai sus"
 
-#: useractions.cpp:1077
+#: useractions.cpp:1031
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "Fereastra cu un birou mai jos"
 
-#: useractions.cpp:1081
+#: useractions.cpp:1035
 #, fuzzy, kde-format
 #| msgid "Window to Screen %1"
 msgid "Move Window to Screen %1"
 msgstr "Fereastra către ecranul %1"
 
-#: useractions.cpp:1088
+#: useractions.cpp:1042
 #, fuzzy, kde-format
 #| msgid "Window to Next Screen"
 msgid "Move Window to Next Screen"
 msgstr "Fereastră către ecranul următor"
 
-#: useractions.cpp:1090
+#: useractions.cpp:1044
 #, fuzzy, kde-format
 #| msgid "Window to Previous Screen"
 msgid "Move Window to Previous Screen"
 msgstr "Fereastră către ecranul precedent"
 
-#: useractions.cpp:1092
+#: useractions.cpp:1046
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Window One Screen to the Right"
 msgstr "Fereastra cu un birou la dreapta"
 
-#: useractions.cpp:1094
+#: useractions.cpp:1048
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Window One Screen to the Left"
 msgstr "Fereastra cu un birou la stânga"
 
-#: useractions.cpp:1096
+#: useractions.cpp:1050
 #, fuzzy, kde-format
 #| msgid "Window to Screen 2"
 msgid "Move Window One Screen Up"
 msgstr "Fereastră în biroul 2"
 
-#: useractions.cpp:1098
+#: useractions.cpp:1052
 #, fuzzy, kde-format
 #| msgid "Window One Desktop Down"
 msgid "Move Window One Screen Down"
 msgstr "Fereastra cu un birou mai jos"
 
-#: useractions.cpp:1102
+#: useractions.cpp:1056
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr "Schimbă la ecranul %1"
 
-#: useractions.cpp:1109
+#: useractions.cpp:1063
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "Schimbă la ecranul următor"
 
-#: useractions.cpp:1110
+#: useractions.cpp:1064
 #, kde-format
 msgid "Switch to Previous Screen"
 msgstr "Schimbă la ecranul precedent"
 
-#: useractions.cpp:1111
+#: useractions.cpp:1065
 #, fuzzy, kde-format
 #| msgid "Switch to Window to the Right"
 msgid "Switch to Screen to the Right"
 msgstr "Schimbă la fereastra din dreapta"
 
-#: useractions.cpp:1113
+#: useractions.cpp:1067
 #, fuzzy, kde-format
 #| msgid "Switch to Window to the Left"
 msgid "Switch to Screen to the Left"
 msgstr "Schimbă la fereastra din stânga"
 
-#: useractions.cpp:1115
+#: useractions.cpp:1069
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Screen Above"
 msgstr "Comută la biroul 0"
 
-#: useractions.cpp:1117
+#: useractions.cpp:1071
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Screen Below"
 msgstr "Comută la biroul 0"
 
-#: useractions.cpp:1120
+#: useractions.cpp:1074
 #, fuzzy, kde-format
 #| msgid "Move to &Desktop"
 msgid "Peek at Desktop"
 msgstr "M&ută la biroul"
 
-#: useractions.cpp:1123
+#: useractions.cpp:1077
 #, kde-format
 msgid "Kill Window"
 msgstr "Omoară fereastra"
 
-#: useractions.cpp:1124
+#: useractions.cpp:1078
 #, kde-format
 msgid "Suspend Compositing"
 msgstr "Suspendă compoziționarea"
 
-#: useractions.cpp:1185
+#: useractions.cpp:1139
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Activează fereastra (%1)"
 
-#: useractions.cpp:1322
+#: useractions.cpp:1276
 #, kde-format
 msgid ""
 "The window manager is configured to consider the screen with the mouse on it "
@@ -4304,6 +4296,12 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#~ msgctxt ""
+#~ "Entry in context menu of window decoration to open the configuration "
+#~ "module of KWin"
+#~ msgid "Configure W&indow Manager..."
+#~ msgstr "Conf&igurare gestionar de ferestre..."
 
 #~ msgid "Walk Through Desktops"
 #~ msgstr "Comută printre birouri"

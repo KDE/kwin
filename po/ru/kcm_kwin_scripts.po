@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-07 02:19+0000\n"
+"POT-Creation-Date: 2023-06-21 02:02+0000\n"
 "PO-Revision-Date: 2022-10-01 15:10+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -56,20 +56,20 @@ msgstr "Сценарий «%1» успешно импортирован."
 msgid "Error when uninstalling KWin Script: %1"
 msgstr "Ошибка при удалении сценария KWin: %1"
 
-#: ui/main.qml:24
+#: ui/main.qml:23
 #, fuzzy, kde-format
 #| msgid "Install from File..."
 msgid "Install from File…"
 msgstr "Установить из файла..."
 
-#: ui/main.qml:28
+#: ui/main.qml:27
 #, fuzzy, kde-format
 #| msgid "Get New Scripts..."
 msgctxt "@action:button get new KWin scripts"
 msgid "Get New…"
 msgstr "Загрузить новые сценарии..."
 
-#: ui/main.qml:66
+#: ui/main.qml:65
 #, fuzzy, kde-format
 #| msgctxt "@info:tooltip"
 #| msgid "Delete..."

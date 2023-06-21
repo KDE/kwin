@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-07 02:19+0000\n"
+"POT-Creation-Date: 2023-06-21 02:02+0000\n"
 "PO-Revision-Date: 2023-06-11 18:54+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -48,18 +48,18 @@ msgstr "\"%1\" என்ற சிறுநிரல் வெற்றிகர
 msgid "Error when uninstalling KWin Script: %1"
 msgstr "கேவின் சிறுநிரலை நீக்குவதில் சிக்கல்: %1"
 
-#: ui/main.qml:24
+#: ui/main.qml:23
 #, kde-format
 msgid "Install from File…"
 msgstr "கோப்பிலிருந்து நிறுவு…"
 
-#: ui/main.qml:28
+#: ui/main.qml:27
 #, kde-format
 msgctxt "@action:button get new KWin scripts"
 msgid "Get New…"
 msgstr "புதியவற்றை பெறு…"
 
-#: ui/main.qml:66
+#: ui/main.qml:65
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Delete…"

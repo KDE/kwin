@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-07 02:19+0000\n"
+"POT-Creation-Date: 2023-06-21 02:02+0000\n"
 "PO-Revision-Date: 2023-06-10 09:25+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -49,18 +49,18 @@ msgstr "Skrypt \"%1\" został pomyślnie zaimportowany."
 msgid "Error when uninstalling KWin Script: %1"
 msgstr "Błąd podczas usuwania skryptu KWin: %1"
 
-#: ui/main.qml:24
+#: ui/main.qml:23
 #, kde-format
 msgid "Install from File…"
 msgstr "Wgraj z pliku..."
 
-#: ui/main.qml:28
+#: ui/main.qml:27
 #, kde-format
 msgctxt "@action:button get new KWin scripts"
 msgid "Get New…"
 msgstr "Pobierz nowe…"
 
-#: ui/main.qml:66
+#: ui/main.qml:65
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Delete…"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-07 02:19+0000\n"
+"POT-Creation-Date: 2023-06-21 02:02+0000\n"
 "PO-Revision-Date: 2013-10-04 02:05+0600\n"
 "Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
 "Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
@@ -46,19 +46,19 @@ msgstr ""
 msgid "Error when uninstalling KWin Script: %1"
 msgstr ""
 
-#: ui/main.qml:24
+#: ui/main.qml:23
 #, kde-format
 msgid "Install from File…"
 msgstr ""
 
-#: ui/main.qml:28
+#: ui/main.qml:27
 #, fuzzy, kde-format
 #| msgid "Get New Script..."
 msgctxt "@action:button get new KWin scripts"
 msgid "Get New…"
 msgstr "Жаңа скриптін табу..."
 
-#: ui/main.qml:66
+#: ui/main.qml:65
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Delete…"

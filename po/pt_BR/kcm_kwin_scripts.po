@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm-kwin-scripts\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-07 02:19+0000\n"
+"POT-Creation-Date: 2023-06-21 02:02+0000\n"
 "PO-Revision-Date: 2022-10-19 15:08-0300\n"
 "Last-Translator: Luiz Fernando Ranghetti <elchevive@opensuse.org>\n"
 "Language-Team: Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -50,20 +50,20 @@ msgstr "O script \"%1\" foi importado com sucesso."
 msgid "Error when uninstalling KWin Script: %1"
 msgstr "Erro ao desinstalar o script KWin: %1"
 
-#: ui/main.qml:24
+#: ui/main.qml:23
 #, fuzzy, kde-format
 #| msgid "Install from File..."
 msgid "Install from File…"
 msgstr "Instalar a partir do arquivo..."
 
-#: ui/main.qml:28
+#: ui/main.qml:27
 #, fuzzy, kde-format
 #| msgid "Get New Scripts..."
 msgctxt "@action:button get new KWin scripts"
 msgid "Get New…"
 msgstr "Baixar novos scripts..."
 
-#: ui/main.qml:66
+#: ui/main.qml:65
 #, fuzzy, kde-format
 #| msgctxt "@info:tooltip"
 #| msgid "Delete..."

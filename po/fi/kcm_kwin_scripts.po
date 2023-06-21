@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm-kwin-scripts\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-07 02:19+0000\n"
+"POT-Creation-Date: 2023-06-21 02:02+0000\n"
 "PO-Revision-Date: 2022-10-28 22:07+0300\n"
 "Last-Translator: Lasse Liehu <lasse.liehu@iki.fi>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -50,20 +50,20 @@ msgstr "Skripti ”%1” tuotiin onnistuneesti."
 msgid "Error when uninstalling KWin Script: %1"
 msgstr "Virhe poistettaessa KWin-skriptin asennusta: %1"
 
-#: ui/main.qml:24
+#: ui/main.qml:23
 #, fuzzy, kde-format
 #| msgid "Install from File..."
 msgid "Install from File…"
 msgstr "Asenna tiedostosta…"
 
-#: ui/main.qml:28
+#: ui/main.qml:27
 #, fuzzy, kde-format
 #| msgid "Get New Scripts..."
 msgctxt "@action:button get new KWin scripts"
 msgid "Get New…"
 msgstr "Hae uusia skriptejä…"
 
-#: ui/main.qml:66
+#: ui/main.qml:65
 #, fuzzy, kde-format
 #| msgctxt "@info:tooltip"
 #| msgid "Delete..."

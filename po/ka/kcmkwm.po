@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-15 02:18+0000\n"
-"PO-Revision-Date: 2023-06-07 05:53+0200\n"
+"PO-Revision-Date: 2023-06-20 06:18+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -437,6 +437,9 @@ msgid ""
 "unshade automatically when the mouse pointer has been over the titlebar for "
 "some time.</p></body></html>"
 msgstr ""
+"<html><head/><body><p>თუ ეს პარამეტრი ჩართულია, როცა თაგუნას მაჩვენებელს "
+"სათაურის ზოლზე ცოტა ხანს გააჩერებთ, დაჩრდილული ფანჯარა ავტომატურად "
+"განიჩრდილება.</p></body></html>"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ShadeHover)
 #: advanced.ui:35
@@ -451,6 +454,8 @@ msgid ""
 "Sets the time in milliseconds before the window unshades when the mouse "
 "pointer goes over the shaded window."
 msgstr ""
+"დრო მილიწამებში, რომლის შემდეგაც დაჩრდილული ფანჯრის განჩრდილვა მოხდება, როცა "
+"თაგუნას კურსორს დაჩრდილულ ფანჯარაზე გადაატარებთ."
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_DelayFocusInterval)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AutoRaiseInterval)
@@ -539,6 +544,9 @@ msgid ""
 "windows are allowed to do so. This will override the window placement mode "
 "defined above."
 msgstr ""
+"როცა ჩართულია, აპებს, რომლებსაც აქვთ საშუალება, დაიმახსოვრონ თავიანთი "
+"ფანჯრის მდებარეობები, ამისი უფლება მიეცემათ. ეს გადაფარავს ფანჯრების "
+"მოთავსების რეჟიმს, რომელიც ზემოთ აირჩიეთ."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
 #: advanced.ui:116
