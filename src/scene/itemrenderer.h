@@ -32,7 +32,7 @@ public:
     virtual QPainter *painter() const;
 
     virtual void beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport);
-    virtual void endFrame();
+    virtual void endFrame(const RenderTarget &renderTarget);
 
     virtual void renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &region) = 0;
     virtual void renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &region, const WindowPaintData &data) = 0;

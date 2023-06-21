@@ -160,6 +160,7 @@ target_sources(kwin PRIVATE
     rules.cpp
     scene/cursordelegate_opengl.cpp
     scene/cursordelegate_qpainter.cpp
+    scene/cursordelegate_vulkan.cpp
     scene/cursoritem.cpp
     scene/cursorscene.cpp
     scene/decorationitem.cpp
@@ -170,6 +171,7 @@ target_sources(kwin PRIVATE
     scene/itemrenderer.cpp
     scene/itemrenderer_opengl.cpp
     scene/itemrenderer_qpainter.cpp
+    scene/itemrenderer_vulkan.cpp
     scene/rootitem.cpp
     scene/scene.cpp
     scene/shadowitem.cpp
@@ -180,6 +182,7 @@ target_sources(kwin PRIVATE
     scene/workspacescene.cpp
     scene/workspacescene_opengl.cpp
     scene/workspacescene_qpainter.cpp
+    scene/workspacescene_vulkan.cpp
     screenedge.cpp
     scripting/dbuscall.cpp
     scripting/desktopbackgrounditem.cpp

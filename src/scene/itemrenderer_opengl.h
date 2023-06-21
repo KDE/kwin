@@ -49,7 +49,7 @@ public:
     ItemRendererOpenGL(EglDisplay *eglDisplay);
 
     void beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport) override;
-    void endFrame() override;
+    void endFrame(const RenderTarget &renderTarget) override;
 
     void renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &region) override;
     void renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &region, const WindowPaintData &data) override;

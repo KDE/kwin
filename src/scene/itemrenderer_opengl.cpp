@@ -46,7 +46,7 @@ void ItemRendererOpenGL::beginFrame(const RenderTarget &renderTarget, const Rend
     GLVertexBuffer::streamingBuffer()->beginFrame();
 }
 
-void ItemRendererOpenGL::endFrame()
+void ItemRendererOpenGL::endFrame(const RenderTarget &renderTarget)
 {
     GLVertexBuffer::streamingBuffer()->endOfFrame();
     GLFramebuffer::popFramebuffer();

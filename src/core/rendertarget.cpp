@@ -11,27 +11,31 @@ namespace KWin
 {
 
 RenderTarget::RenderTarget(GLFramebuffer *fbo, const ColorDescription &colorDescription)
-    : m_framebuffer(fbo)
+    : m_size(fbo->size())
+    , m_framebuffer(fbo)
     , m_transform(fbo->colorAttachment() ? fbo->colorAttachment()->contentTransform() : OutputTransform())
     , m_colorDescription(colorDescription)
 {
 }
 
 RenderTarget::RenderTarget(QImage *image, const ColorDescription &colorDescription)
-    : m_image(image)
+    : m_size(image->size())
+    , m_image(image)
+    , m_colorDescription(colorDescription)
+{
+}
+
+RenderTarget::RenderTarget(vk::CommandBuffer cmd, vk::ImageView view, const QSize &framebufferSize, const ColorDescription &colorDescription)
+    : m_size(framebufferSize)
+    , m_commandBuffer(cmd)
+    , m_imageView(view)
     , m_colorDescription(colorDescription)
 {
 }
 
 QSize RenderTarget::size() const
 {
-    if (m_framebuffer) {
-        return m_framebuffer->size();
-    } else if (m_image) {
-        return m_image->size();
-    } else {
-        Q_UNREACHABLE();
-    }
+    return m_size;
 }
 
 OutputTransform RenderTarget::transform() const
@@ -52,6 +56,16 @@ GLTexture *RenderTarget::texture() const
 QImage *RenderTarget::image() const
 {
     return m_image;
+}
+
+vk::CommandBuffer RenderTarget::commandBuffer() const
+{
+    return m_commandBuffer;
+}
+
+vk::ImageView RenderTarget::imageView() const
+{
+    return m_imageView;
 }
 
 const ColorDescription &RenderTarget::colorDescription() const

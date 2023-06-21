@@ -37,6 +37,7 @@ KWIN_EXPORT Q_NAMESPACE
         OpenGLCompositing = 1,
         /* XRenderCompositing = 1<<1, */
         QPainterCompositing = 1 << 2,
+        VulkanCompositing = 1 << 3,
     };
 
 enum OpenGLPlatformInterface {

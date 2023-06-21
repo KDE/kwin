@@ -15,6 +15,7 @@
 #include "outputconfiguration.h"
 #include "platformsupport/scenes/opengl/openglbackend.h"
 #include "platformsupport/scenes/qpainter/qpainterbackend.h"
+#include "platformsupport/scenes/vulkan/vulkan_backend.h"
 
 namespace KWin
 {
@@ -39,6 +40,11 @@ std::unique_ptr<OpenGLBackend> OutputBackend::createOpenGLBackend()
 }
 
 std::unique_ptr<QPainterBackend> OutputBackend::createQPainterBackend()
+{
+    return nullptr;
+}
+
+std::unique_ptr<VulkanBackend> OutputBackend::createVulkanBackend()
 {
     return nullptr;
 }

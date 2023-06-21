@@ -25,6 +25,7 @@ class Output;
 class InputBackend;
 class OpenGLBackend;
 class QPainterBackend;
+class VulkanBackend;
 class OutputConfiguration;
 class EglDisplay;
 class Session;
@@ -51,6 +52,7 @@ public:
     virtual std::unique_ptr<InputBackend> createInputBackend();
     virtual std::unique_ptr<OpenGLBackend> createOpenGLBackend();
     virtual std::unique_ptr<QPainterBackend> createQPainterBackend();
+    virtual std::unique_ptr<VulkanBackend> createVulkanBackend();
 
     virtual EglDisplay *sceneEglDisplayObject() const = 0;
     /**

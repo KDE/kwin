@@ -28,7 +28,7 @@ void ItemRenderer::beginFrame(const RenderTarget &renderTarget, const RenderView
 {
 }
 
-void ItemRenderer::endFrame()
+void ItemRenderer::endFrame(const RenderTarget &renderTarget)
 {
 }
 
