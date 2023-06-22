@@ -6,7 +6,6 @@
 
 #include "scene/item.h"
 #include "core/renderlayer.h"
-#include "core/renderloop.h"
 #include "scene/scene.h"
 #include "utils/common.h"
 
@@ -310,7 +309,7 @@ void Item::scheduleRepaintInternal(const QRegion &region)
         const QRegion dirtyRegion = globalRegion & delegate->viewport();
         if (!dirtyRegion.isEmpty()) {
             m_repaints[delegate] += dirtyRegion;
-            delegate->layer()->loop()->scheduleRepaint(this);
+            delegate->layer()->scheduleRepaint(this);
         }
     }
 }
@@ -321,7 +320,7 @@ void Item::scheduleRepaintInternal(SceneDelegate *delegate, const QRegion &regio
     const QRegion dirtyRegion = globalRegion & delegate->viewport();
     if (!dirtyRegion.isEmpty()) {
         m_repaints[delegate] += dirtyRegion;
-        delegate->layer()->loop()->scheduleRepaint(this);
+        delegate->layer()->scheduleRepaint(this);
     }
 }
 
@@ -334,7 +333,7 @@ void Item::scheduleFrame()
     const QList<SceneDelegate *> delegates = m_scene->delegates();
     for (SceneDelegate *delegate : delegates) {
         if (delegate->viewport().intersects(geometry)) {
-            delegate->layer()->loop()->scheduleRepaint(this);
+            delegate->layer()->scheduleRepaint(this);
         }
     }
 }

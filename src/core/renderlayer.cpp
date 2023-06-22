@@ -134,6 +134,25 @@ void RenderLayer::setGeometry(const QRectF &geometry)
     }
 }
 
+void RenderLayer::scheduleRepaint(Item *item)
+{
+    m_repaintScheduled = true;
+    m_loop->scheduleRepaint(item);
+}
+
+bool RenderLayer::needsRepaint() const
+{
+    if (m_repaintScheduled) {
+        return true;
+    }
+    if (!m_repaints.isEmpty()) {
+        return true;
+    }
+    return std::any_of(m_sublayers.constBegin(), m_sublayers.constEnd(), [](RenderLayer *layer) {
+        return layer->needsRepaint();
+    });
+}
+
 void RenderLayer::updateBoundingRect()
 {
     QRectF boundingRect = rect();
@@ -183,6 +202,7 @@ QRegion RenderLayer::repaints() const
 void RenderLayer::resetRepaints()
 {
     m_repaints = QRegion();
+    m_repaintScheduled = false;
 }
 
 bool RenderLayer::isVisible() const

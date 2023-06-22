@@ -49,6 +49,11 @@ void SceneDelegate::paint(const RenderTarget &renderTarget, const QRegion &regio
     m_scene->paint(renderTarget, region == infiniteRegion() ? infiniteRegion() : region.translated(viewport().topLeft()));
 }
 
+void SceneDelegate::frame()
+{
+    m_scene->frame(this);
+}
+
 Output *SceneDelegate::output() const
 {
     return m_output;
@@ -137,6 +142,10 @@ void Scene::removeDelegate(SceneDelegate *delegate)
 SurfaceItem *Scene::scanoutCandidate() const
 {
     return nullptr;
+}
+
+void Scene::frame(SceneDelegate *delegate)
+{
 }
 
 } // namespace KWin

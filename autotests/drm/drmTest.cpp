@@ -404,7 +404,8 @@ void DrmTest::testModeset()
     const auto output = gpu->drmOutputs().front();
     const auto layer = renderBackend->primaryLayer(output);
     layer->beginFrame();
-    output->renderLoop()->beginFrame();
+    output->renderLoop()->prepareNewFrame();
+    output->renderLoop()->beginPaint();
     layer->endFrame(infiniteRegion(), infiniteRegion());
     QVERIFY(gpu->drmOutputs().front()->present());
 

@@ -35,13 +35,18 @@ public:
     virtual QRegion repaints() const;
 
     /**
-     * This function is called by the compositor before starting compositing. Reimplement
+     * This function is called by the compositor after compositing the frame.
+     */
+    virtual void frame();
+
+    /**
+     * This function is called by the compositor before starting painting. Reimplement
      * this function to do frame initialization.
      */
     virtual void prePaint();
 
     /**
-     * This function is called by the compositor after finishing compositing. Reimplement
+     * This function is called by the compositor after finishing painting. Reimplement
      * this function to do post frame cleanup.
      */
     virtual void postPaint();

@@ -198,10 +198,14 @@ void RenderLoop::uninhibit()
     }
 }
 
-void RenderLoop::beginFrame()
+void RenderLoop::prepareNewFrame()
+{
+    d->pendingFrameCount++;
+}
+
+void RenderLoop::beginPaint()
 {
     d->pendingRepaint = false;
-    d->pendingFrameCount++;
 }
 
 int RenderLoop::refreshRate() const

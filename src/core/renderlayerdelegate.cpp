@@ -24,6 +24,10 @@ QRegion RenderLayerDelegate::repaints() const
     return QRegion();
 }
 
+void RenderLayerDelegate::frame()
+{
+}
+
 void RenderLayerDelegate::prePaint()
 {
 }

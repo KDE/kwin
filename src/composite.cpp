@@ -31,11 +31,9 @@
 #include "scene/surfaceitem_x11.h"
 #include "scene/workspacescene_opengl.h"
 #include "scene/workspacescene_qpainter.h"
-#include "shadow.h"
 #include "useractions.h"
 #include "utils/common.h"
 #include "utils/xcbutils.h"
-#include "wayland/surface_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "x11syncmanager.h"
@@ -685,43 +683,50 @@ void Compositor::composite(RenderLoop *renderLoop)
     fTraceDuration("Paint (", output->name(), ")");
 
     RenderLayer *superLayer = m_superlayers[renderLoop];
-    prePaintPass(superLayer);
     superLayer->setOutputLayer(primaryLayer);
 
-    SurfaceItem *scanoutCandidate = superLayer->delegate()->scanoutCandidate();
-    renderLoop->setFullscreenSurface(scanoutCandidate);
-    output->setContentType(scanoutCandidate ? scanoutCandidate->contentType() : ContentType::None);
+    renderLoop->prepareNewFrame();
 
-    renderLoop->beginFrame();
-    bool directScanout = false;
-    if (scanoutCandidate) {
-        const auto sublayers = superLayer->sublayers();
-        const bool scanoutPossible = std::none_of(sublayers.begin(), sublayers.end(), [](RenderLayer *sublayer) {
-            return sublayer->isVisible();
-        });
-        if (scanoutPossible && !output->directScanoutInhibited()) {
-            directScanout = primaryLayer->scanout(scanoutCandidate);
+    if (superLayer->needsRepaint()) {
+        renderLoop->beginPaint();
+        prePaintPass(superLayer);
+
+        SurfaceItem *scanoutCandidate = superLayer->delegate()->scanoutCandidate();
+        renderLoop->setFullscreenSurface(scanoutCandidate);
+        output->setContentType(scanoutCandidate ? scanoutCandidate->contentType() : ContentType::None);
+
+        bool directScanout = false;
+        if (scanoutCandidate) {
+            const auto sublayers = superLayer->sublayers();
+            const bool scanoutPossible = std::none_of(sublayers.begin(), sublayers.end(), [](RenderLayer *sublayer) {
+                return sublayer->isVisible();
+            });
+            if (scanoutPossible && !output->directScanoutInhibited()) {
+                directScanout = primaryLayer->scanout(scanoutCandidate);
+            }
         }
-    }
 
-    if (!directScanout) {
-        QRegion surfaceDamage = primaryLayer->repaints();
-        primaryLayer->resetRepaints();
-        preparePaintPass(superLayer, &surfaceDamage);
+        if (!directScanout) {
+            QRegion surfaceDamage = primaryLayer->repaints();
+            primaryLayer->resetRepaints();
+            preparePaintPass(superLayer, &surfaceDamage);
 
-        if (auto beginInfo = primaryLayer->beginFrame()) {
-            auto &[renderTarget, repaint] = beginInfo.value();
+            if (auto beginInfo = primaryLayer->beginFrame()) {
+                auto &[renderTarget, repaint] = beginInfo.value();
 
-            const QRegion bufferDamage = surfaceDamage.united(repaint).intersected(superLayer->rect().toAlignedRect());
+                const QRegion bufferDamage = surfaceDamage.united(repaint).intersected(superLayer->rect().toAlignedRect());
 
-            paintPass(superLayer, renderTarget, bufferDamage);
-            primaryLayer->endFrame(bufferDamage, surfaceDamage);
+                paintPass(superLayer, renderTarget, bufferDamage);
+                primaryLayer->endFrame(bufferDamage, surfaceDamage);
+            }
         }
-    }
 
-    postPaintPass(superLayer);
+        postPaintPass(superLayer);
+    }
 
     m_backend->present(output);
+
+    framePass(superLayer);
 
     // TODO: Put it inside the cursor layer once the cursor layer can be backed by a real output layer.
     if (waylandServer()) {
@@ -734,6 +739,15 @@ void Compositor::composite(RenderLoop *renderLoop)
                 cursor->markAsRendered(frameTime);
             }
         }
+    }
+}
+
+void Compositor::framePass(RenderLayer *layer)
+{
+    layer->delegate()->frame();
+    const auto sublayers = layer->sublayers();
+    for (RenderLayer *sublayer : sublayers) {
+        framePass(sublayer);
     }
 }
 

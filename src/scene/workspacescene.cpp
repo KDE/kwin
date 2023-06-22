@@ -184,6 +184,33 @@ SurfaceItem *WorkspaceScene::scanoutCandidate() const
     return candidate;
 }
 
+void WorkspaceScene::frame(SceneDelegate *delegate)
+{
+    if (waylandServer()) {
+        Output *output = delegate->output();
+        const std::chrono::milliseconds frameTime =
+            std::chrono::duration_cast<std::chrono::milliseconds>(output->renderLoop()->lastPresentationTimestamp());
+
+        const QList<Item *> items = m_containerItem->sortedChildItems();
+        for (Item *item : items) {
+            if (!item->isVisible()) {
+                continue;
+            }
+            Window *window = static_cast<WindowItem *>(item)->window();
+            if (!window->isOnOutput(output)) {
+                continue;
+            }
+            if (auto surface = window->surface()) {
+                surface->frameRendered(frameTime.count());
+            }
+        }
+
+        if (m_dndIcon) {
+            m_dndIcon->frameRendered(frameTime.count());
+        }
+    }
+}
+
 void WorkspaceScene::prePaint(SceneDelegate *delegate)
 {
     createStackingOrder();
@@ -320,25 +347,6 @@ void WorkspaceScene::preparePaintSimpleScreen()
 
 void WorkspaceScene::postPaint()
 {
-    if (waylandServer()) {
-        const std::chrono::milliseconds frameTime =
-            std::chrono::duration_cast<std::chrono::milliseconds>(painted_screen->renderLoop()->lastPresentationTimestamp());
-
-        for (WindowItem *windowItem : std::as_const(stacking_order)) {
-            Window *window = windowItem->window();
-            if (!window->isOnOutput(painted_screen)) {
-                continue;
-            }
-            if (auto surface = window->surface()) {
-                surface->frameRendered(frameTime.count());
-            }
-        }
-
-        if (m_dndIcon) {
-            m_dndIcon->frameRendered(frameTime.count());
-        }
-    }
-
     for (WindowItem *w : std::as_const(stacking_order)) {
         effects->postPaintWindow(w->window()->effectWindow());
     }

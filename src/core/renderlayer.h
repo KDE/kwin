@@ -21,6 +21,7 @@ namespace KWin
 class OutputLayer;
 class RenderLayerDelegate;
 class RenderLoop;
+class Item;
 
 /**
  * The RenderLayer class represents a composited layer.
@@ -72,6 +73,16 @@ public:
     QRectF geometry() const;
     void setGeometry(const QRectF &rect);
 
+    /**
+     * Mark this layer as dirty and trigger a repaint
+     * on the render loop
+     */
+    void scheduleRepaint(Item *item);
+    /**
+     * Returns true if this or a sublayer has requested an update
+     */
+    bool needsRepaint() const;
+
     void addRepaint(const QRegion &region);
     void addRepaint(const QRect &rect);
     void addRepaint(int x, int y, int width, int height);
@@ -87,6 +98,7 @@ private:
     bool computeEffectiveVisibility() const;
 
     RenderLoop *m_loop;
+    bool m_repaintScheduled = false;
     std::unique_ptr<RenderLayerDelegate> m_delegate;
     QRegion m_repaints;
     QRectF m_boundingRect;

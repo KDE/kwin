@@ -203,6 +203,7 @@ private:
     void postPaintPass(RenderLayer *layer);
     void preparePaintPass(RenderLayer *layer, QRegion *repaint);
     void paintPass(RenderLayer *layer, const RenderTarget &renderTarget, const QRegion &region);
+    void framePass(RenderLayer *layer);
 
     State m_state = State::Off;
     std::unique_ptr<CompositorSelectionOwner> m_selectionOwner;

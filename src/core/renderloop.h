@@ -47,10 +47,16 @@ public:
     void uninhibit();
 
     /**
+     * This function must be called before the Compositor sumbits the next
+     * frame.
+     */
+    void prepareNewFrame();
+
+    /**
      * This function must be called before the Compositor starts rendering the next
      * frame.
      */
-    void beginFrame();
+    void beginPaint();
 
     /**
      * Returns the refresh rate at which the output is being updated, in millihertz.

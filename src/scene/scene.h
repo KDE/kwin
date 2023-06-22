@@ -31,6 +31,7 @@ public:
 
     QRegion repaints() const override;
     SurfaceItem *scanoutCandidate() const override;
+    void frame() override;
     void prePaint() override;
     void postPaint() override;
     void paint(const RenderTarget &renderTarget, const QRegion &region) override;
@@ -85,6 +86,7 @@ public:
     virtual void prePaint(SceneDelegate *delegate) = 0;
     virtual void postPaint() = 0;
     virtual void paint(const RenderTarget &renderTarget, const QRegion &region) = 0;
+    virtual void frame(SceneDelegate *delegate);
 
 Q_SIGNALS:
     void delegateRemoved(SceneDelegate *delegate);
