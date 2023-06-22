@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-17 02:36+0000\n"
+"POT-Creation-Date: 2023-06-22 02:43+0000\n"
 "PO-Revision-Date: 2023-02-14 21:59+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -1158,22 +1158,22 @@ msgstr "%1 என்ற செயலியை &கட்டாயமாக ம�
 msgid "Wait Longer"
 msgstr "காத்திரு"
 
-#: input.cpp:2010
+#: input.cpp:2014
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "வரைபலகையை அடுத்த திரைக்கு நகர்த்து"
 
-#: input.cpp:2089
+#: input.cpp:2093
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "வரைபலகை %1-க்கு நகர்த்தப்பட்டது"
 
-#: input.cpp:2089
+#: input.cpp:2093
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "வரைபலகை வேறு திரைக்கு மாற்றப்பட்டது"
 
-#: input.cpp:3094
+#: input.cpp:3098
 #, kde-format
 msgid "Touchpad"
 msgstr "தொடுபலகை"
