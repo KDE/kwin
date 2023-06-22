@@ -7,7 +7,6 @@
 #pragma once
 
 #include "libkwineffects/kwinglobals.h"
-#include "options.h"
 
 #include <QObject>
 
@@ -110,6 +109,17 @@ public:
      */
     void setVrrPolicy(VrrPolicy vrrPolicy);
 
+    /**
+     * This enum type specifies the latency level configured by the user.
+     */
+    enum LatencyPolicy {
+        LatencyExtremelyLow,
+        LatencyLow,
+        LatencyMedium,
+        LatencyHigh,
+        LatencyExtremelyHigh,
+    };
+    Q_ENUM(LatencyPolicy);
     /**
      * Returns the latency policy for this render loop.
      */

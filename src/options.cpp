@@ -629,12 +629,12 @@ void Options::setGlPreferBufferSwap(char glPreferBufferSwap)
     Q_EMIT glPreferBufferSwapChanged();
 }
 
-LatencyPolicy Options::latencyPolicy() const
+KWin::RenderLoop::LatencyPolicy Options::latencyPolicy() const
 {
     return m_latencyPolicy;
 }
 
-void Options::setLatencyPolicy(LatencyPolicy policy)
+void Options::setLatencyPolicy(KWin::RenderLoop::LatencyPolicy policy)
 {
     if (m_latencyPolicy == policy) {
         return;

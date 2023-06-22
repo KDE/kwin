@@ -14,6 +14,8 @@
 #include "libkwineffects/kwingltexture.h"
 #include "libkwineffects/kwingltexture_p.h"
 
+typedef struct _XDisplay Display;
+
 namespace KWin
 {
 

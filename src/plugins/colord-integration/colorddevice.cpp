@@ -10,6 +10,7 @@
 #include "colors/colordevice.h"
 #include "colors/colormanager.h"
 #include "core/output.h"
+#include "main.h"
 
 namespace KWin
 {

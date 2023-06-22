@@ -43,7 +43,7 @@ public:
     bool pendingReschedule = false;
     bool pendingRepaint = false;
     RenderLoop::VrrPolicy vrrPolicy = RenderLoop::VrrPolicy::Never;
-    std::optional<LatencyPolicy> latencyPolicy;
+    std::optional<KWin::RenderLoop::LatencyPolicy> latencyPolicy;
     Item *fullscreenItem = nullptr;
     bool allowTearing = false;
 

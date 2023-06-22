@@ -15,6 +15,7 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QStandardPaths>
 
 #include <algorithm>
 #include <cmath>

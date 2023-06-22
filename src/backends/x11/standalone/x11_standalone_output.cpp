@@ -8,6 +8,7 @@
 */
 #include "x11_standalone_output.h"
 #include "core/colorlut.h"
+#include "main.h"
 #include "x11_standalone_backend.h"
 
 namespace KWin

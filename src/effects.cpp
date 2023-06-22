@@ -483,7 +483,7 @@ void EffectsHandlerImpl::setActiveFullScreenEffect(Effect *e)
         for (SceneDelegate *delegate : delegates) {
             RenderLoop *loop = delegate->layer()->loop();
             if (fullscreen_effect) {
-                loop->setLatencyPolicy(LatencyPolicy::LatencyExtremelyHigh);
+                loop->setLatencyPolicy(KWin::RenderLoop::LatencyPolicy::LatencyExtremelyHigh);
             } else {
                 loop->resetLatencyPolicy();
             }

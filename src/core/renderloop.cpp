@@ -5,6 +5,7 @@
 */
 
 #include "renderloop.h"
+#include "options.h"
 #include "renderloop_p.h"
 #include "scene/surfaceitem.h"
 #include "scene/surfaceitem_wayland.h"
@@ -59,19 +60,19 @@ void RenderLoopPrivate::scheduleRepaint()
 
     std::chrono::nanoseconds renderTime;
     switch (q->latencyPolicy()) {
-    case LatencyExtremelyLow:
+    case KWin::RenderLoop::LatencyExtremelyLow:
         renderTime = std::chrono::nanoseconds(long(vblankInterval.count() * 0.1));
         break;
-    case LatencyLow:
+    case KWin::RenderLoop::LatencyLow:
         renderTime = std::chrono::nanoseconds(long(vblankInterval.count() * 0.25));
         break;
-    case LatencyMedium:
+    case KWin::RenderLoop::LatencyMedium:
         renderTime = std::chrono::nanoseconds(long(vblankInterval.count() * 0.5));
         break;
-    case LatencyHigh:
+    case KWin::RenderLoop::LatencyHigh:
         renderTime = std::chrono::nanoseconds(long(vblankInterval.count() * 0.75));
         break;
-    case LatencyExtremelyHigh:
+    case KWin::RenderLoop::LatencyExtremelyHigh:
         renderTime = std::chrono::nanoseconds(long(vblankInterval.count() * 0.9));
         break;
     }
@@ -234,7 +235,7 @@ void RenderLoop::scheduleRepaint(Item *item)
     }
 }
 
-LatencyPolicy RenderLoop::latencyPolicy() const
+KWin::RenderLoop::LatencyPolicy RenderLoop::latencyPolicy() const
 {
     return d->latencyPolicy.value_or(options->latencyPolicy());
 }

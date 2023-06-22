@@ -11,6 +11,7 @@
 
 #pragma once
 
+#include "core/renderloop.h"
 #include "main.h"
 
 #include <KConfigWatcher>
@@ -48,17 +49,6 @@ enum XwaylandCrashPolicy {
 };
 
 /**
- * This enum type specifies the latency level configured by the user.
- */
-enum LatencyPolicy {
-    LatencyExtremelyLow,
-    LatencyLow,
-    LatencyMedium,
-    LatencyHigh,
-    LatencyExtremelyHigh,
-};
-
-/**
  * This enum type specifies the method for estimating the expected render time.
  */
 enum RenderTimeEstimator {
@@ -92,7 +82,6 @@ class KWIN_EXPORT Options : public QObject
 {
     Q_OBJECT
     Q_ENUM(XwaylandCrashPolicy)
-    Q_ENUM(LatencyPolicy)
     Q_ENUM(RenderTimeEstimator)
     Q_ENUM(PlacementPolicy)
     Q_PROPERTY(FocusPolicy focusPolicy READ focusPolicy WRITE setFocusPolicy NOTIFY focusPolicyChanged)
@@ -218,7 +207,7 @@ class KWIN_EXPORT Options : public QObject
     Q_PROPERTY(GlSwapStrategy glPreferBufferSwap READ glPreferBufferSwap WRITE setGlPreferBufferSwap NOTIFY glPreferBufferSwapChanged)
     Q_PROPERTY(KWin::OpenGLPlatformInterface glPlatformInterface READ glPlatformInterface WRITE setGlPlatformInterface NOTIFY glPlatformInterfaceChanged)
     Q_PROPERTY(bool windowsBlockCompositing READ windowsBlockCompositing WRITE setWindowsBlockCompositing NOTIFY windowsBlockCompositingChanged)
-    Q_PROPERTY(LatencyPolicy latencyPolicy READ latencyPolicy WRITE setLatencyPolicy NOTIFY latencyPolicyChanged)
+    Q_PROPERTY(KWin::RenderLoop::LatencyPolicy latencyPolicy READ latencyPolicy WRITE setLatencyPolicy NOTIFY latencyPolicyChanged)
     Q_PROPERTY(RenderTimeEstimator renderTimeEstimator READ renderTimeEstimator WRITE setRenderTimeEstimator NOTIFY renderTimeEstimatorChanged)
     Q_PROPERTY(bool allowTearing READ allowTearing WRITE setAllowTearing NOTIFY allowTearingChanged)
 public:
@@ -709,7 +698,7 @@ public:
     }
 
     QStringList modifierOnlyDBusShortcut(Qt::KeyboardModifier mod) const;
-    LatencyPolicy latencyPolicy() const;
+    KWin::RenderLoop::LatencyPolicy latencyPolicy() const;
     RenderTimeEstimator renderTimeEstimator() const;
     bool allowTearing() const;
 
@@ -769,7 +758,7 @@ public:
     void setGlPreferBufferSwap(char glPreferBufferSwap);
     void setGlPlatformInterface(OpenGLPlatformInterface interface);
     void setWindowsBlockCompositing(bool set);
-    void setLatencyPolicy(LatencyPolicy policy);
+    void setLatencyPolicy(KWin::RenderLoop::LatencyPolicy policy);
     void setRenderTimeEstimator(RenderTimeEstimator estimator);
     void setAllowTearing(bool allow);
 
@@ -898,9 +887,9 @@ public:
     {
         return None;
     }
-    static LatencyPolicy defaultLatencyPolicy()
+    static KWin::RenderLoop::LatencyPolicy defaultLatencyPolicy()
     {
-        return LatencyExtremelyHigh;
+        return KWin::RenderLoop::LatencyExtremelyHigh;
     }
     static RenderTimeEstimator defaultRenderTimeEstimator()
     {
@@ -1014,7 +1003,7 @@ private:
     XwaylandCrashPolicy m_xwaylandCrashPolicy;
     int m_xwaylandMaxCrashCount;
     XwaylandEavesdropsMode m_xwaylandEavesdrops;
-    LatencyPolicy m_latencyPolicy;
+    KWin::RenderLoop::LatencyPolicy m_latencyPolicy;
     RenderTimeEstimator m_renderTimeEstimator;
 
     CompositingType m_compositingMode;
