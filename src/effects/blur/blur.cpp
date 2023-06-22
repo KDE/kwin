@@ -625,17 +625,24 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, const QRegion &region, Wi
             QPoint pt = shape.boundingRect().topLeft();
             QRegion scaledShape;
             for (QRect r : shape) {
-                r.moveTo(pt.x() + (r.x() - pt.x()) * data.xScale() + data.xTranslation(),
-                         pt.y() + (r.y() - pt.y()) * data.yScale() + data.yTranslation());
-                r.setWidth(std::ceil(r.width() * data.xScale()));
-                r.setHeight(std::ceil(r.height() * data.yScale()));
-                scaledShape |= r;
+                const QPointF topLeft(pt.x() + (r.x() - pt.x()) * data.xScale() + data.xTranslation(),
+                                      pt.y() + (r.y() - pt.y()) * data.yScale() + data.yTranslation());
+                const QPoint bottomRight(std::floor(topLeft.x() + r.width() * data.xScale()) - 1,
+                                         std::floor(topLeft.y() + r.height() * data.yScale()) - 1);
+                scaledShape |= QRect(QPoint(std::floor(topLeft.x()), std::floor(topLeft.y())), bottomRight);
             }
             shape = scaledShape;
 
             // Only translated, not scaled
         } else if (translated) {
-            shape = shape.translated(data.xTranslation(), data.yTranslation());
+            QRegion translated;
+            for (QRect r : shape) {
+                const QRectF t = QRectF(r).translated(data.xTranslation(), data.yTranslation());
+                const QPoint topLeft(std::ceil(t.x()), std::ceil(t.y()));
+                const QPoint bottomRight(std::floor(t.x() + t.width() - 1), std::floor(t.y() + t.height() - 1));
+                translated |= QRect(topLeft, bottomRight);
+            }
+            shape = translated;
         }
 
         EffectWindow *modal = w->transientFor();
