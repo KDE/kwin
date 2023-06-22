@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-21 02:02+0000\n"
+"POT-Creation-Date: 2023-06-22 02:07+0000\n"
 "PO-Revision-Date: 2007-11-01 14:27+0545\n"
 "Last-Translator: Shyam Krishna Bal <shyamkrishna_bal@yahoo.com>\n"
 "Language-Team: Nepali <info@mpp.org.np>\n"
@@ -1209,22 +1209,22 @@ msgstr ""
 msgid "Wait Longer"
 msgstr ""
 
-#: input.cpp:1996
+#: input.cpp:2000
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr ""
 
-#: input.cpp:2075
+#: input.cpp:2079
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr ""
 
-#: input.cpp:2075
+#: input.cpp:2079
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr ""
 
-#: input.cpp:3092
+#: input.cpp:3096
 #, kde-format
 msgid "Touchpad"
 msgstr ""
@@ -1241,7 +1241,7 @@ msgid ""
 "Escape or right click to cancel."
 msgstr ""
 
-#: main.cpp:177 plugins/desktopgrid/desktopgrid_config.cpp:49
+#: main.cpp:180 plugins/desktopgrid/desktopgrid_config.cpp:49
 #: plugins/invert/invert_config.cpp:35
 #: plugins/magnifier/magnifier_config.cpp:55
 #: plugins/mouseclick/mouseclick_config.cpp:48
@@ -1257,63 +1257,63 @@ msgstr ""
 msgid "KWin"
 msgstr "केडीई विन"
 
-#: main.cpp:179 main.cpp:202
+#: main.cpp:182 main.cpp:205
 #, kde-format
 msgid "KDE window manager"
 msgstr "केडीई सञ्झ्याल प्रबन्धक"
 
-#: main.cpp:181
+#: main.cpp:184
 #, fuzzy, kde-format
 #| msgid "(c) 1999-2005, The KDE Developers"
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "(प्रतिलिपि अधिकार) १९९९-२००५, केडीई विकासकर्ता"
 
-#: main.cpp:183
+#: main.cpp:186
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "माथियस इट्रिच"
 
-#: main.cpp:184
+#: main.cpp:187
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "क्रिस्टियन टिबिर्ना"
 
-#: main.cpp:185
+#: main.cpp:188
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "डानियल एम.डुले"
 
-#: main.cpp:186
+#: main.cpp:189
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "लुबोस लुनाक"
 
-#: main.cpp:187
+#: main.cpp:190
 #, kde-format
 msgid "Martin Flöser"
 msgstr ""
 
-#: main.cpp:188
+#: main.cpp:191
 #, kde-format
 msgid "David Edmundson"
 msgstr ""
 
-#: main.cpp:189
+#: main.cpp:192
 #, kde-format
 msgid "Roman Gilg"
 msgstr ""
 
-#: main.cpp:190
+#: main.cpp:193
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr ""
 
-#: main.cpp:199
+#: main.cpp:202
 #, kde-format
 msgid "Disable configuration options"
 msgstr "कन्फिगरेसन विकल्प अक्षम पार्नुहोस्"
 
-#: main.cpp:200
+#: main.cpp:203
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "भर्खरै केडीई विन एन पटक नष्ट भयो भन्ने इङ्कित गर्नुहोस्"
@@ -2336,12 +2336,12 @@ msgstr "डेस्कटप ग्रिड देखाउनुहोस्"
 msgid "No matching windows"
 msgstr ""
 
-#: plugins/private/qml/WindowHeapDelegate.qml:152
+#: plugins/private/qml/WindowHeapDelegate.qml:153
 #, kde-format
 msgid "Drag Down To Close"
 msgstr ""
 
-#: plugins/private/qml/WindowHeapDelegate.qml:453
+#: plugins/private/qml/WindowHeapDelegate.qml:454
 #, fuzzy, kde-format
 #| msgid "Close Window"
 msgctxt "@info:tooltip as in: 'close this window'"

@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-21 02:02+0000\n"
+"POT-Creation-Date: 2023-06-22 02:07+0000\n"
 "PO-Revision-Date: 2023-05-05 21:30+0200\n"
 "Last-Translator: Xavier BESNARD <xavier.besnard@neuf.fr>\n"
 "Language-Team: fr\n"
@@ -1231,22 +1231,22 @@ msgstr "Fermer l'applica&tion %1"
 msgid "Wait Longer"
 msgstr "Attendre plus longtemps"
 
-#: input.cpp:1996
+#: input.cpp:2000
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Déplacer la tablette vers la prochaine sortie"
 
-#: input.cpp:2075
+#: input.cpp:2079
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Tablette déplacée vers %1"
 
-#: input.cpp:2075
+#: input.cpp:2079
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Sorties commutées des tablettes"
 
-#: input.cpp:3092
+#: input.cpp:3096
 #, kde-format
 msgid "Touchpad"
 msgstr "Pavé tactile"
@@ -1265,7 +1265,7 @@ msgstr ""
 "Sélectionnez la fenêtre à fermer de force par clic gauche ou entrée.\n"
 "Échap ou clic droit pour annuler."
 
-#: main.cpp:177 plugins/desktopgrid/desktopgrid_config.cpp:49
+#: main.cpp:180 plugins/desktopgrid/desktopgrid_config.cpp:49
 #: plugins/invert/invert_config.cpp:35
 #: plugins/magnifier/magnifier_config.cpp:55
 #: plugins/mouseclick/mouseclick_config.cpp:48
@@ -1281,62 +1281,62 @@ msgstr ""
 msgid "KWin"
 msgstr "KWin"
 
-#: main.cpp:179 main.cpp:202
+#: main.cpp:182 main.cpp:205
 #, kde-format
 msgid "KDE window manager"
 msgstr "Le gestionnaire de fenêtres de KDE"
 
-#: main.cpp:181
+#: main.cpp:184
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "(c) 1999-2019, Les développeurs de KDE"
 
-#: main.cpp:183
+#: main.cpp:186
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "Matthias Ettrich"
 
-#: main.cpp:184
+#: main.cpp:187
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "Cristian Tibirna"
 
-#: main.cpp:185
+#: main.cpp:188
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "Daniel M. Duley"
 
-#: main.cpp:186
+#: main.cpp:189
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "Luboš Luňák"
 
-#: main.cpp:187
+#: main.cpp:190
 #, kde-format
 msgid "Martin Flöser"
 msgstr "Martin Flöser"
 
-#: main.cpp:188
+#: main.cpp:191
 #, kde-format
 msgid "David Edmundson"
 msgstr "David Edmundson"
 
-#: main.cpp:189
+#: main.cpp:192
 #, kde-format
 msgid "Roman Gilg"
 msgstr "Roman Gilg"
 
-#: main.cpp:190
+#: main.cpp:193
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr "Vlad Zahorodnii"
 
-#: main.cpp:199
+#: main.cpp:202
 #, kde-format
 msgid "Disable configuration options"
 msgstr "Désactiver les options de configuration"
 
-#: main.cpp:200
+#: main.cpp:203
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "Indiquer que KWin s'est arrêté brutalement un certain nombre de fois"
@@ -2364,13 +2364,13 @@ msgstr "Ajouter un bureau virtuel"
 msgid "No matching windows"
 msgstr "Aucune correspondance de fenêtres"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:152
+#: plugins/private/qml/WindowHeapDelegate.qml:153
 #, fuzzy, kde-format
 #| msgid "Drag Down To Close"
 msgid "Drag Down To Close"
 msgstr "Glisser vers le bas pour fermer"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:453
+#: plugins/private/qml/WindowHeapDelegate.qml:454
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-21 02:02+0000\n"
+"POT-Creation-Date: 2023-06-22 02:07+0000\n"
 "PO-Revision-Date: 2023-04-30 21:30+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -1200,22 +1200,22 @@ msgstr "%1 என்ற செயலியை &கட்டாயமாக ம�
 msgid "Wait Longer"
 msgstr "காத்திரு"
 
-#: input.cpp:1996
+#: input.cpp:2000
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "வரைபலகையை அடுத்த திரைக்கு நகர்த்து"
 
-#: input.cpp:2075
+#: input.cpp:2079
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "வரைபலகை %1-க்கு நகர்த்தப்பட்டது"
 
-#: input.cpp:2075
+#: input.cpp:2079
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "வரைபலகை வேறு திரைக்கு மாற்றப்பட்டது"
 
-#: input.cpp:3092
+#: input.cpp:3096
 #, kde-format
 msgid "Touchpad"
 msgstr "தொடுபலகை"
@@ -1234,7 +1234,7 @@ msgstr ""
 "இடது க்ளிக் அல்லது enter விசையை கொண்டு கட்டாயமாக மூட வேண்டிய சாளரத்தை தேர்ந்தெடுங்கள்.\n"
 "கைவிட, Escape விசையையோ வலது க்ளிக்கையோ பயன்படுத்துங்கள்."
 
-#: main.cpp:177 plugins/desktopgrid/desktopgrid_config.cpp:49
+#: main.cpp:180 plugins/desktopgrid/desktopgrid_config.cpp:49
 #: plugins/invert/invert_config.cpp:35
 #: plugins/magnifier/magnifier_config.cpp:55
 #: plugins/mouseclick/mouseclick_config.cpp:48
@@ -1250,62 +1250,62 @@ msgstr ""
 msgid "KWin"
 msgstr "கேவின்"
 
-#: main.cpp:179 main.cpp:202
+#: main.cpp:182 main.cpp:205
 #, kde-format
 msgid "KDE window manager"
 msgstr "கேடியி சாளர மேலாளர்"
 
-#: main.cpp:181
+#: main.cpp:184
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "(c) 1999-2001, கே.டீ.யீ. நிரலாளர்கள்"
 
-#: main.cpp:183
+#: main.cpp:186
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "மத்தையாஸ் எட்ரிச்"
 
-#: main.cpp:184
+#: main.cpp:187
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "கிரிஸ்டியன் டிபிர்னா"
 
-#: main.cpp:185
+#: main.cpp:188
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "டேனியல் எம். டூலீ"
 
-#: main.cpp:186
+#: main.cpp:189
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "லுபோசு லுனாக்"
 
-#: main.cpp:187
+#: main.cpp:190
 #, kde-format
 msgid "Martin Flöser"
 msgstr "மார்ட்டின் ஃபலோசர்"
 
-#: main.cpp:188
+#: main.cpp:191
 #, kde-format
 msgid "David Edmundson"
 msgstr "டேவிட் எட்மண்டுஸன்"
 
-#: main.cpp:189
+#: main.cpp:192
 #, kde-format
 msgid "Roman Gilg"
 msgstr "ரோமன் கில்கு"
 
-#: main.cpp:190
+#: main.cpp:193
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr "விலாட் ஜாஹொரிடுனி"
 
-#: main.cpp:199
+#: main.cpp:202
 #, kde-format
 msgid "Disable configuration options"
 msgstr "விருப்பத்தேர்வுகளை முடக்கு"
 
-#: main.cpp:200
+#: main.cpp:203
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "சமீபத்தில் கேவின் n முறை முறிவடைந்துள்ளதென்பதை குறிக்கும்"
@@ -2277,12 +2277,12 @@ msgstr "மெய்நிகர் பணிமேடையைச் சேர�
 msgid "No matching windows"
 msgstr "எந்த சாளரமும் பொருந்தவில்லை"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:152
+#: plugins/private/qml/WindowHeapDelegate.qml:153
 #, kde-format
 msgid "Drag Down To Close"
 msgstr "மூட கீழே இழுக்கவும்"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:453
+#: plugins/private/qml/WindowHeapDelegate.qml:454
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
