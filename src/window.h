@@ -1695,13 +1695,7 @@ protected:
 
     virtual void setShortcutInternal();
     QString shortcutCaptionSuffix() const;
-    virtual void updateCaption() = 0;
-
-    /**
-     * Looks for another Window with same captionNormal and captionSuffix.
-     * If no such Window exists @c nullptr is returned.
-     */
-    Window *findWindowWithSameCaption() const;
+    virtual void updateCaption();
 
     void startShadeHoverTimer();
     void startShadeUnhoverTimer();

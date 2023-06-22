@@ -3062,12 +3062,8 @@ QString Window::shortcutCaptionSuffix() const
     return QLatin1String(" {") + shortcut().toString() + QLatin1Char('}');
 }
 
-Window *Window::findWindowWithSameCaption() const
+void Window::updateCaption()
 {
-    auto fetchNameInternalPredicate = [this](const Window *cl) {
-        return (!cl->isSpecialWindow() || cl->isToolbar()) && cl != this && cl->captionNormal() == captionNormal() && cl->captionSuffix() == captionSuffix();
-    };
-    return workspace()->findWindow(fetchNameInternalPredicate);
 }
 
 QString Window::caption() const

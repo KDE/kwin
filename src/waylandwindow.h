@@ -37,7 +37,6 @@ protected:
     bool belongsToSameApplication(const Window *other, SameApplicationChecks checks) const override;
     bool belongsToDesktop() const override;
     void doSetActive() override;
-    void updateCaption() override;
     std::unique_ptr<WindowItem> createItem(Scene *scene) override;
 
     void cleanGrouping();

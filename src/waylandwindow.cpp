@@ -185,30 +185,11 @@ void WaylandWindow::updateResourceName()
     }
 }
 
-void WaylandWindow::updateCaption()
-{
-    const QString oldSuffix = m_captionSuffix;
-    const auto shortcut = shortcutCaptionSuffix();
-    m_captionSuffix = shortcut;
-    if ((!isSpecialWindow() || isToolbar()) && findWindowWithSameCaption()) {
-        int i = 2;
-        do {
-            m_captionSuffix = shortcut + QLatin1String(" <") + QString::number(i) + QLatin1Char('>');
-            i++;
-        } while (findWindowWithSameCaption());
-    }
-    if (m_captionSuffix != oldSuffix) {
-        Q_EMIT captionChanged();
-    }
-}
-
 void WaylandWindow::setCaption(const QString &caption)
 {
-    const QString oldSuffix = m_captionSuffix;
-    m_captionNormal = caption.simplified();
-    updateCaption();
-    if (m_captionSuffix == oldSuffix) {
-        // Don't emit caption change twice it already got emitted by the changing suffix.
+    const QString simplifiedCaption = caption.simplified();
+    if (m_captionNormal != simplifiedCaption) {
+        m_captionNormal = simplifiedCaption;
         Q_EMIT captionChanged();
     }
 }
@@ -291,7 +272,6 @@ void WaylandWindow::markAsMapped()
 {
     if (Q_UNLIKELY(!ready_for_painting)) {
         setupCompositing();
-        updateCaption();
         setReadyForPainting();
     }
 }
