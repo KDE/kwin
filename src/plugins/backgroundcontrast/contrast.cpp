@@ -384,25 +384,31 @@ void ContrastEffect::drawWindow(const RenderTarget &renderTarget, const RenderVi
         const QRect screen = viewport.renderRect().toRect();
         QRegion shape = region & contrastRegion(w).translated(w->pos().toPoint()) & screen;
 
-        // let's do the evil parts - someone wants to blur behind a transformed window
+        // let's do the evil parts - someone wants to contrast behind a transformed window
         const bool translated = data.xTranslation() || data.yTranslation();
         const bool scaled = data.xScale() != 1 || data.yScale() != 1;
         if (scaled) {
             QPoint pt = shape.boundingRect().topLeft();
             QRegion scaledShape;
             for (QRect r : shape) {
-                r.moveTo(pt.x() + (r.x() - pt.x()) * data.xScale() + data.xTranslation(),
-                         pt.y() + (r.y() - pt.y()) * data.yScale() + data.yTranslation());
-                r.setWidth(std::ceil(r.width() * data.xScale()));
-                r.setHeight(std::ceil(r.height() * data.yScale()));
-                scaledShape |= r;
+                const QPointF topLeft(pt.x() + (r.x() - pt.x()) * data.xScale() + data.xTranslation(),
+                                      pt.y() + (r.y() - pt.y()) * data.yScale() + data.yTranslation());
+                const QPoint bottomRight(std::floor(topLeft.x() + r.width() * data.xScale()) - 1,
+                                         std::floor(topLeft.y() + r.height() * data.yScale()) - 1);
+                scaledShape |= QRect(QPoint(std::floor(topLeft.x()), std::floor(topLeft.y())), bottomRight);
             }
             shape = scaledShape & region;
 
             // Only translated, not scaled
         } else if (translated) {
-            shape = shape.translated(data.xTranslation(), data.yTranslation());
-            shape = shape & region;
+            QRegion translated;
+            for (QRect r : shape) {
+                const QRectF t = QRectF(r).translated(data.xTranslation(), data.yTranslation());
+                const QPoint topLeft(std::ceil(t.x()), std::ceil(t.y()));
+                const QPoint bottomRight(std::floor(t.x() + t.width() - 1), std::floor(t.y() + t.height() - 1));
+                translated |= QRect(topLeft, bottomRight);
+            }
+            shape = translated & region;
         }
 
         if (!shape.isEmpty()) {
