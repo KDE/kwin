@@ -3560,22 +3560,19 @@ msgid "&No Titlebar and Frame"
 msgstr "&Bez titulku a rámu"
 
 #: useractions.cpp:256
-#, fuzzy, kde-format
-#| msgid "Set Window Short&cut..."
+#, kde-format
 msgid "Set Window Short&cut…"
-msgstr "Nastavte z&kratku okna..."
+msgstr ""
 
 #: useractions.cpp:262
-#, fuzzy, kde-format
-#| msgid "Configure Special &Window Settings..."
+#, kde-format
 msgid "Configure Special &Window Settings…"
-msgstr "Nastavte s&peciální efekty okna..."
+msgstr ""
 
 #: useractions.cpp:267
-#, fuzzy, kde-format
-#| msgid "Configure S&pecial Application Settings..."
+#, kde-format
 msgid "Configure S&pecial Application Settings…"
-msgstr "Nastavte s&peciální volby aplikace..."
+msgstr ""
 
 #: useractions.cpp:273
 #, kde-format
@@ -4098,9 +4095,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland spadnul"
-
-#~ msgctxt ""
-#~ "Entry in context menu of window decoration to open the configuration "
-#~ "module of KWin"
-#~ msgid "Configure W&indow Manager..."
-#~ msgstr "Nastavit s&právce oken..."

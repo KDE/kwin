@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-15 02:18+0000\n"
-"PO-Revision-Date: 2023-06-20 06:18+0200\n"
+"PO-Revision-Date: 2023-06-22 12:09+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -1117,6 +1117,9 @@ msgid ""
 "the magnetic field which will make windows snap to the center of the screen "
 "when moved near it."
 msgstr ""
+"აქ შეგიძლიათ დააყენოთ მიბმის ზონა ეკრანის ცენტრისთვის, ანუ იმ მაგნიტური "
+"ველის \"ძალა\", რომელიც ფანჯრებს ეკრანის ცენტრზე მიამაგრებს, როცა ახლის "
+"გადაიტანთ."
 
 #. i18n: ectx: property (text), widget (QLabel, OverlapSnapLabel)
 #: moving.ui:113
@@ -1132,6 +1135,9 @@ msgid ""
 "them, i.e. they will not be snapped if the windows comes only near another "
 "window or border."
 msgstr ""
+"აქ შეგიძლიათ დააყენოთ, რომ ფანჯრები მხოლოდ მაშინ მიებმება, როცა ერთმანეთს "
+"გადაადებთ. ანუ, ისინი არ მიებმება, თუ ფანჯარა სხვა ფანჯარასთან ან საზღვართან "
+"ახლოს მივა."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SnapOnlyWhenOverlapping)
 #: moving.ui:126
@@ -1145,6 +1151,9 @@ msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
 "This behavior is common on other operating systems and likely what you want."
 msgstr ""
+"<em>ფოკუსისთვის დააწკაპუნეთ:</em> ფანჯარა აქტიური მაშინ გახდება, როცა ზედ "
+"დააწკაპუნეთ. ეს ქცევა საერთოა ოპერაციულ სისტემებს შორის და როგორც წესი ისაა, "
+"რაც თქვენ გჭირდებათ."
 
 #: windows.cpp:101
 #, kde-format
@@ -1173,6 +1182,10 @@ msgid ""
 "closed) the window under the mouse is the preferred candidate. Choose this, "
 "if you want a hover controlled focus."
 msgstr ""
+"ეს თითქმის იგივეა, რაც <em>ფოკუსი თაგუნას დაყვება</em>. თუ აქტიური ფანჯარა, "
+"რომელიც სისტემამ აირჩია (მაგ: იმიტომ, რომ აქტიური ფანჯარა დახურეთ), ფანჯარა, "
+"რომელიც თაგუნა კურსორის ქვეშ იმყოფება, ფოკუსის მისაღებად სასურველი კანდიდატი "
+"გახდება. აირჩიეთ, თუ გადატარებით მართვადი ფოკუსი გჭირდებათ."
 
 #: windows.cpp:115
 #, kde-format

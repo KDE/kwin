@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-22 02:07+0000\n"
-"PO-Revision-Date: 2023-04-27 12:56+0400\n"
+"PO-Revision-Date: 2023-06-22 09:38+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 "X-Loco-Source-Locale: en_GB\n"
-"X-Generator: Lokalize 21.12.3\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -3570,22 +3570,19 @@ msgid "&No Titlebar and Frame"
 msgstr "بدون &شريط العنوان والإطار"
 
 #: useractions.cpp:256
-#, fuzzy, kde-format
-#| msgid "Set Window Short&cut..."
+#, kde-format
 msgid "Set Window Short&cut…"
-msgstr "عين اختصار ال&نّافذة..."
+msgstr "عين اختصار ال&نّافذة…"
 
 #: useractions.cpp:262
-#, fuzzy, kde-format
-#| msgid "Configure Special &Window Settings..."
+#, kde-format
 msgid "Configure Special &Window Settings…"
-msgstr "اضبط إعدادات &خاصّة للنّافذة..."
+msgstr "اضبط إعدادات &خاصّة للنّافذة…"
 
 #: useractions.cpp:267
-#, fuzzy, kde-format
-#| msgid "Configure S&pecial Application Settings..."
+#, kde-format
 msgid "Configure S&pecial Application Settings…"
-msgstr "اضبط إعدادات خا&صّة للتّطبيق..."
+msgstr "اضبط إعدادات خا&صّة للتّطبيق…"
 
 #: useractions.cpp:273
 #, kde-format

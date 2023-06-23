@@ -1,17 +1,16 @@
 # Translation for kcm-kwin-scripts.po to Euskara/Basque (eu).
-# Copyright (C) 2018, Free Software Foundation, Inc.
-# Copyright (C) 2019-2022, This file is copyright:
+# Copyright (C) 2018-2023 This file is copyright:
 # This file is distributed under the same license as kwin package.
 # KDE euskaratzeko proiektuko arduraduna <xalba@ni.eus>.
 #
 # Translators:
-# Iñigo Salvador Azurmendi <xalba@ni.eus>, 2018, 2019, 2020, 2022.
+# Iñigo Salvador Azurmendi <xalba@ni.eus>, 2018, 2019, 2020, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-21 02:02+0000\n"
-"PO-Revision-Date: 2022-09-20 20:43+0200\n"
+"PO-Revision-Date: 2023-06-22 17:57+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -19,17 +18,17 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 22.08.0\n"
+"X-Generator: Lokalize 23.04.2\n"
 
 #: module.cpp:50
 #, kde-format
 msgid "Import KWin Script"
-msgstr "Inportatu KWin scripta"
+msgstr "Inportatu KWin gidoia"
 
 #: module.cpp:51
 #, kde-format
 msgid "*.kwinscript|KWin scripts (*.kwinscript)"
-msgstr "*.kwinscript|KWin scriptak (*.kwinscript)"
+msgstr "*.kwinscript|KWin gidoiak (*.kwinscript)"
 
 #: module.cpp:62
 #, kde-format
@@ -38,37 +37,33 @@ msgid ""
 "Cannot import selected script.\n"
 "%1"
 msgstr ""
-"Ezin da inportatu hautatutako scripta.\n"
+"Ezin da inportatu hautatutako gidoia.\n"
 "%1"
 
 #: module.cpp:66
 #, kde-format
 msgctxt "Placeholder is name of the script that was imported"
 msgid "The script \"%1\" was successfully imported."
-msgstr "\"%1\" scripta ondo inportatu da."
+msgstr "\"%1\" gidoia ondo inportatu da."
 
 #: module.cpp:125
 #, kde-format
 msgid "Error when uninstalling KWin Script: %1"
-msgstr "Errorea KWin-en script-a desinstalatzean: %1"
+msgstr "Errorea KWin-en gidoia desinstalatzean: %1"
 
 #: ui/main.qml:23
-#, fuzzy, kde-format
-#| msgid "Install from File..."
+#, kde-format
 msgid "Install from File…"
 msgstr "Instalatu fitxategitik..."
 
 #: ui/main.qml:27
-#, fuzzy, kde-format
-#| msgid "Get New Scripts..."
+#, kde-format
 msgctxt "@action:button get new KWin scripts"
 msgid "Get New…"
-msgstr "Lortu script berria..."
+msgstr "Lortu ... berria"
 
 #: ui/main.qml:65
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Delete..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Delete…"
 msgstr "Ezabatu..."
