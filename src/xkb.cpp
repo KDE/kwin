@@ -246,16 +246,24 @@ xkb_keymap *Xkb::loadKeymapFromLocale1()
 {
     OrgFreedesktopDBusPropertiesInterface locale1Properties(s_locale1Interface, "/org/freedesktop/locale1", QDBusConnection::systemBus(), this);
     const QVariantMap properties = locale1Properties.GetAll(s_locale1Interface);
-    const QString layouts = properties["X11Layout"].toString();
+
+    const QByteArray model = properties["X11Model"].toByteArray();
+    const QByteArray layout = properties["X11Layout"].toByteArray();
+    const QByteArray variant = properties["X11Variant"].toByteArray();
+    const QByteArray options = properties["X11Options"].toByteArray();
+
     xkb_rule_names ruleNames = {
-        nullptr,
-        qPrintable(properties["X11Model"].toString()),
-        qPrintable(layouts),
-        qPrintable(properties["X11Variant"].toString()),
-        qPrintable(properties["X11Options"].toString()),
+        .rules = nullptr,
+        .model = model.constData(),
+        .layout = layout.constData(),
+        .variant = variant.constData(),
+        .options = options.constData(),
     };
+
     applyEnvironmentRules(ruleNames);
-    m_layoutList = layouts.split(QLatin1Char(','));
+
+    m_layoutList = QString::fromLatin1(ruleNames.layout).split(QLatin1Char(','));
+
     return xkb_keymap_new_from_names(m_context, &ruleNames, XKB_KEYMAP_COMPILE_NO_FLAGS);
 }
 
