@@ -13,6 +13,7 @@
 
 #include <QVector2D>
 #include <QVector>
+#include <unordered_map>
 
 namespace KWaylandServer
 {
@@ -71,8 +72,10 @@ private:
     {
         QMatrix4x4 colorMatrix;
         QRegion contrastRegion;
+        std::unique_ptr<GLTexture> texture;
+        std::unique_ptr<GLFramebuffer> fbo;
     };
-    QHash<const EffectWindow *, Data> m_windowData;
+    std::unordered_map<const EffectWindow *, Data> m_windowData;
     static KWaylandServer::ContrastManagerInterface *s_contrastManager;
     static QTimer *s_contrastManagerRemoveTimer;
 };

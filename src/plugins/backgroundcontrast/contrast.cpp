@@ -160,12 +160,14 @@ void ContrastEffect::updateContrastRegion(EffectWindow *w)
     }
 
     if (valid) {
-        m_windowData[w] = {
-            .colorMatrix = matrix,
-            .contrastRegion = region,
-        };
+        Data &data = m_windowData[w];
+        data.colorMatrix = matrix;
+        data.contrastRegion = region;
     } else {
-        m_windowData.remove(w);
+        if (auto it = m_windowData.find(w); it != m_windowData.end()) {
+            effects->makeOpenGLContextCurrent();
+            m_windowData.erase(it);
+        }
     }
 }
 
@@ -208,7 +210,10 @@ void ContrastEffect::slotWindowDeleted(EffectWindow *w)
         disconnect(m_contrastChangedConnections[w]);
         m_contrastChangedConnections.remove(w);
     }
-    m_windowData.remove(w);
+    if (auto it = m_windowData.find(w); it != m_windowData.end()) {
+        effects->makeOpenGLContextCurrent();
+        m_windowData.erase(it);
+    }
 }
 
 void ContrastEffect::slotPropertyNotify(EffectWindow *w, long atom)
@@ -297,7 +302,7 @@ QRegion ContrastEffect::contrastRegion(const EffectWindow *w) const
 {
     QRegion region;
     if (const auto it = m_windowData.find(w); it != m_windowData.end()) {
-        const QRegion &appRegion = it->contrastRegion;
+        const QRegion &appRegion = it->second.contrastRegion;
         if (!appRegion.isEmpty()) {
             region |= appRegion.translated(w->contentsRect().topLeft().toPoint()) & w->decorationInnerRect().toRect();
         } else {
@@ -434,23 +439,26 @@ void ContrastEffect::doContrast(const RenderTarget &renderTarget, const RenderVi
     }
     vbo->bindArrays();
 
-    // Create a scratch texture and copy the area in the back buffer that we're
-    // going to blur into it
-    const auto scratch = GLTexture::allocate(GL_RGBA8, r.size().toSize());
-    if (!scratch) {
-        return;
+    Q_ASSERT(m_windowData.contains(w));
+    auto &windowData = m_windowData[w];
+    if (!windowData.texture || windowData.texture->size() != r.size()) {
+        windowData.texture = GLTexture::allocate(GL_RGBA8, r.size().toSize());
+        if (!windowData.texture) {
+            return;
+        }
+        windowData.fbo = std::make_unique<GLFramebuffer>(windowData.texture.get());
+        windowData.texture->setFilter(GL_LINEAR);
+        windowData.texture->setWrapMode(GL_CLAMP_TO_EDGE);
     }
-    scratch->setFilter(GL_LINEAR);
-    scratch->setWrapMode(GL_CLAMP_TO_EDGE);
-    scratch->bind();
+    GLTexture *contrastTexture = windowData.texture.get();
+    contrastTexture->bind();
 
-    const QRectF sg = viewport.mapToRenderTarget(viewport.renderRect());
-    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, (r.x() - sg.x()), (sg.height() - (r.y() - sg.y() + r.height())),
-                        scratch->width(), scratch->height());
+    const QRect logicalSourceRect = actualShape.boundingRect();
+    windowData.fbo->blitFromRenderTarget(renderTarget, viewport, logicalSourceRect, QRect(0, 0, contrastTexture->width(), contrastTexture->height()));
 
     // Draw the texture on the offscreen framebuffer object, while blurring it horizontally
 
-    m_shader->setColorMatrix(m_windowData.value(w).colorMatrix);
+    m_shader->setColorMatrix(m_windowData[w].colorMatrix);
     m_shader->bind();
 
     m_shader->setOpacity(opacity);
@@ -463,8 +471,6 @@ void ContrastEffect::doContrast(const RenderTarget &renderTarget, const RenderVi
     textureMatrix *= renderTarget.transformation();
     textureMatrix.translate(-0.5, -0.5);
     // scaled logical to texture coordinates
-    textureMatrix.scale(1, -1);
-    textureMatrix.translate(0, -1);
     textureMatrix.scale(1.0 / boundingRect.width(), 1.0 / boundingRect.height(), 1);
     textureMatrix.translate(-boundingRect.x(), -boundingRect.y(), 0);
     textureMatrix.scale(1.0 / viewport.scale(), 1.0 / viewport.scale());
@@ -474,7 +480,7 @@ void ContrastEffect::doContrast(const RenderTarget &renderTarget, const RenderVi
 
     vbo->draw(GL_TRIANGLES, 0, actualShape.rectCount() * 6);
 
-    scratch->unbind();
+    contrastTexture->unbind();
 
     vbo->unbindArrays();
 
