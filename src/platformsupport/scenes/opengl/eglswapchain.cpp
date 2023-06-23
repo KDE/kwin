@@ -102,6 +102,9 @@ std::shared_ptr<EglSwapchainSlot> EglSwapchain::acquire()
     }
 
     auto slot = std::make_shared<EglSwapchainSlot>(m_context, buffer);
+    if (!slot->framebuffer()->valid()) {
+        return nullptr;
+    }
     m_slots.append(slot);
     return slot;
 }
@@ -134,6 +137,9 @@ std::shared_ptr<EglSwapchain> EglSwapchain::create(GraphicsBufferAllocator *allo
     }
 
     const QVector<std::shared_ptr<EglSwapchainSlot>> slots{std::make_shared<EglSwapchainSlot>(context, seed)};
+    if (!slots.front()->framebuffer()->valid()) {
+        return nullptr;
+    }
     return std::make_shared<EglSwapchain>(std::move(allocator),
                                              context,
                                              size,

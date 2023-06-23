@@ -85,6 +85,7 @@ private:
         std::shared_ptr<QPainterSwapchain> importDumbSwapchain;
         std::shared_ptr<EglSwapchain> importGbmSwapchain;
         QHash<GraphicsBuffer *, std::shared_ptr<GLTexture>> importedTextureCache;
+        QImage cpuCopyCache;
         MultiGpuImportMode importMode;
         std::shared_ptr<DrmFramebuffer> currentFramebuffer;
         bool forceLinear = false;
@@ -96,9 +97,9 @@ private:
     std::shared_ptr<EglSwapchain> createGbmSwapchain(DrmGpu *gpu, EglContext *context, const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, bool forceLinear) const;
 
     std::shared_ptr<DrmFramebuffer> doRenderTestBuffer(Surface &surface) const;
-    std::shared_ptr<DrmFramebuffer> importBuffer(Surface &surface, GraphicsBuffer *sourceBuffer) const;
+    std::shared_ptr<DrmFramebuffer> importBuffer(Surface &surface, EglSwapchainSlot *source) const;
     std::shared_ptr<DrmFramebuffer> importWithEgl(Surface &surface, GraphicsBuffer *sourceBuffer) const;
-    std::shared_ptr<DrmFramebuffer> importWithCpu(Surface &surface, GraphicsBuffer *sourceBuffer) const;
+    std::shared_ptr<DrmFramebuffer> importWithCpu(Surface &surface, EglSwapchainSlot *source) const;
 
     Surface m_surface;
     Surface m_oldSurface;

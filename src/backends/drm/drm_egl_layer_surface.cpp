@@ -28,6 +28,7 @@ namespace KWin
 
 static const QVector<uint64_t> linearModifier = {DRM_FORMAT_MOD_LINEAR};
 static const QVector<uint64_t> implicitModifier = {DRM_FORMAT_MOD_INVALID};
+static const QVector<uint32_t> cpuCopyFormats = {DRM_FORMAT_ARGB8888, DRM_FORMAT_XRGB8888};
 
 static gbm_format_name_desc formatName(uint32_t format)
 {
@@ -133,7 +134,7 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion)
     m_surface.damageJournal.add(damagedRegion);
     m_surface.gbmSwapchain->release(m_surface.currentSlot);
     glFlush();
-    const auto buffer = importBuffer(m_surface, m_surface.currentSlot->buffer());
+    const auto buffer = importBuffer(m_surface, m_surface.currentSlot.get());
     if (buffer) {
         m_surface.currentFramebuffer = buffer;
         return true;
@@ -272,15 +273,37 @@ std::optional<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(con
     }
 }
 
+static QVector<uint64_t> filterModifiers(const QVector<uint64_t> &one, const QVector<uint64_t> &two)
+{
+    QVector<uint64_t> ret = one;
+    ret.erase(std::remove_if(ret.begin(), ret.end(), [&two](uint64_t mod) {
+                  return !two.contains(mod);
+              }),
+              ret.end());
+    return ret;
+}
+
 std::optional<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, MultiGpuImportMode importMode) const
 {
-    QVector<uint64_t> renderModifiers = modifiers;
+    const bool cpuCopy = importMode == MultiGpuImportMode::DumbBuffer || m_bufferTarget == BufferTarget::Dumb;
+    QVector<uint64_t> renderModifiers;
     if (importMode == MultiGpuImportMode::Egl) {
         const auto context = m_eglBackend->contextForGpu(m_gpu);
         if (!context || context->isSoftwareRenderer()) {
             return std::nullopt;
         }
-        renderModifiers = context->displayObject()->allSupportedDrmFormats()[format];
+        renderModifiers = filterModifiers(context->displayObject()->allSupportedDrmFormats()[format],
+                                          m_eglBackend->eglDisplayObject()->supportedDrmFormats().value(format));
+    } else if (cpuCopy) {
+        if (!cpuCopyFormats.contains(format)) {
+            return std::nullopt;
+        }
+        renderModifiers = m_eglBackend->eglDisplayObject()->supportedDrmFormats().value(format);
+    } else {
+        renderModifiers = filterModifiers(modifiers, m_eglBackend->eglDisplayObject()->supportedDrmFormats().value(format));
+    }
+    if (renderModifiers.empty()) {
+        return std::nullopt;
     }
     Surface ret;
     ret.importMode = importMode;
@@ -289,7 +312,7 @@ std::optional<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(con
     if (!ret.gbmSwapchain) {
         return std::nullopt;
     }
-    if (importMode == MultiGpuImportMode::DumbBuffer || m_bufferTarget == BufferTarget::Dumb) {
+    if (cpuCopy) {
         ret.importDumbSwapchain = std::make_shared<QPainterSwapchain>(m_gpu->graphicsBufferAllocator(), size, format);
     } else if (importMode == MultiGpuImportMode::Egl) {
         ret.importGbmSwapchain = createGbmSwapchain(m_gpu, m_eglBackend->contextForGpu(m_gpu), size, format, modifiers, false);
@@ -303,7 +326,7 @@ std::optional<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(con
     return ret;
 }
 
-std::shared_ptr<EglSwapchain> EglGbmLayerSurface::createGbmSwapchain(DrmGpu *gpu, EglContext *context, const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, bool forceLinear) const
+std::shared_ptr<EglSwapchain> EglGbmLayerSurface::createGbmSwapchain(DrmGpu *gpu, EglContext *context, const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, bool preferLinear) const
 {
     static bool modifiersEnvSet = false;
     static const bool modifiersEnv = qEnvironmentVariableIntValue("KWIN_DRM_USE_MODIFIERS", &modifiersEnvSet) != 0;
@@ -311,9 +334,17 @@ std::shared_ptr<EglSwapchain> EglGbmLayerSurface::createGbmSwapchain(DrmGpu *gpu
 #if !HAVE_GBM_BO_GET_FD_FOR_PLANE
     allowModifiers &= m_gpu == gpu;
 #endif
-
-    if (forceLinear || (m_gpu != gpu && !allowModifiers)) {
-        return EglSwapchain::create(gpu->graphicsBufferAllocator(), context, size, format, linearModifier);
+    const bool linearSupported = modifiers.contains(DRM_FORMAT_MOD_LINEAR);
+    const bool forceLinear = m_gpu != gpu && !allowModifiers;
+    if (forceLinear && !linearSupported) {
+        return nullptr;
+    }
+    if (linearSupported && (preferLinear || forceLinear)) {
+        if (const auto swapchain = EglSwapchain::create(gpu->graphicsBufferAllocator(), context, size, format, linearModifier)) {
+            return swapchain;
+        } else if (forceLinear) {
+            return nullptr;
+        }
     }
 
     if (allowModifiers) {
@@ -331,7 +362,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::doRenderTestBuffer(Surface &
     if (!slot) {
         return nullptr;
     }
-    if (const auto ret = importBuffer(surface, slot->buffer())) {
+    if (const auto ret = importBuffer(surface, slot.get())) {
         surface.currentSlot = slot;
         surface.currentFramebuffer = ret;
         return ret;
@@ -340,14 +371,14 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::doRenderTestBuffer(Surface &
     }
 }
 
-std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importBuffer(Surface &surface, GraphicsBuffer *buffer) const
+std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importBuffer(Surface &surface, EglSwapchainSlot *slot) const
 {
     if (m_bufferTarget == BufferTarget::Dumb || surface.importMode == MultiGpuImportMode::DumbBuffer) {
-        return importWithCpu(surface, buffer);
+        return importWithCpu(surface, slot);
     } else if (surface.importMode == MultiGpuImportMode::Egl) {
-        return importWithEgl(surface, buffer);
+        return importWithEgl(surface, slot->buffer());
     } else {
-        const auto ret = m_gpu->importBuffer(buffer);
+        const auto ret = m_gpu->importBuffer(slot->buffer());
         if (!ret) {
             qCWarning(KWIN_DRM, "Failed to create framebuffer: %s", strerror(errno));
         }
@@ -416,31 +447,31 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface &surfa
     return m_gpu->importBuffer(slot->buffer());
 }
 
-std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithCpu(Surface &surface, GraphicsBuffer *sourceBuffer) const
+std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithCpu(Surface &surface, EglSwapchainSlot *source) const
 {
     Q_ASSERT(surface.importDumbSwapchain);
-    const GraphicsBufferView sourceView(sourceBuffer);
-    if (sourceView.isNull()) {
-        qCWarning(KWIN_DRM) << "EglGbmLayerSurface::importWithCpu: failed to map the source buffer";
-        return nullptr;
-    }
     const auto slot = surface.importDumbSwapchain->acquire();
     if (!slot) {
         qCWarning(KWIN_DRM) << "EglGbmLayerSurface::importWithCpu: failed to get a target dumb buffer";
         return nullptr;
     }
-
-    if (sourceView.image()->bytesPerLine() == slot->view()->image()->bytesPerLine()) {
-        std::memcpy(slot->view()->image()->bits(), sourceView.image()->bits(), sourceView.image()->sizeInBytes());
+    const auto size = source->buffer()->size();
+    const qsizetype srcStride = 4 * size.width();
+    GLFramebuffer::pushFramebuffer(source->framebuffer());
+    QImage *const dst = slot->view()->image();
+    if (dst->bytesPerLine() == srcStride) {
+        glReadPixels(0, 0, dst->width(), dst->height(), GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, dst->bits());
     } else {
-        // copy line by line
-        QImage *const src = slot->view()->image();
-        QImage *const dst = slot->view()->image();
-        const uint64_t lineWidth = std::min(src->bytesPerLine(), dst->bytesPerLine());
-        for (int i = 0; i < src->height(); i++) {
-            std::memcpy(dst->scanLine(i), src->scanLine(i), lineWidth);
+        // there's padding, need to copy line by line
+        if (surface.cpuCopyCache.size() != dst->size()) {
+            surface.cpuCopyCache = QImage(dst->size(), QImage::Format_RGBA8888);
+        }
+        glReadPixels(0, 0, dst->width(), dst->height(), GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, surface.cpuCopyCache.bits());
+        for (int i = 0; i < dst->height(); i++) {
+            std::memcpy(dst->scanLine(i), surface.cpuCopyCache.scanLine(i), srcStride);
         }
     }
+    GLFramebuffer::popFramebuffer();
 
     const auto ret = m_gpu->importBuffer(slot->buffer());
     if (!ret) {
