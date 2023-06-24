@@ -656,9 +656,9 @@ void DrmPipeline::setGammaRamp(const std::shared_ptr<ColorTransformation> &trans
 static uint64_t doubleToFixed(double value)
 {
     // ctm values are in S31.32 sign-magnitude format
-    uint64_t ret = std::abs(value) * (1ul << 32);
+    uint64_t ret = std::abs(value) * (1ull << 32);
     if (value < 0) {
-        ret |= 1ul << 63;
+        ret |= 1ull << 63;
     }
     return ret;
 }
