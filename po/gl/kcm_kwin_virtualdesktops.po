@@ -59,7 +59,7 @@ msgstr "Produciuse un erro ao solicitar información do compositor."
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Rename"
-msgstr "Cambiar de nome"
+msgstr "Renomear"
 
 #: ui/main.qml:100
 #, kde-format
