@@ -68,7 +68,7 @@ msgstr ""
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Rename"
-msgstr "Cambiar de nome"
+msgstr "Renomear"
 
 #: package/contents/ui/main.qml:102
 #, kde-format

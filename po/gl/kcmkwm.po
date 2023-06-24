@@ -641,7 +641,7 @@ msgid ""
 "with the proper window type for this feature to work."
 msgstr ""
 "Cando se sinale, as xanelas de utilidade (xanelas de ferramentas, menús "
-"desprendíbeis …) das aplicacións inactivas mostraranse só cando a aplicación "
+"desprendíbeis …) das aplicacións inactivas amosaranse só cando a aplicación "
 "se active. Lembre que as aplicacións deben etiquetar as xanelas co tipo "
 "axeitado para que esta funcionalidade funcione."
 
