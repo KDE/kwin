@@ -889,6 +889,13 @@ bool TabBox::startKDEWalkThroughWindows(TabBoxMode mode)
     m_noModifierGrab = false;
     setMode(mode);
     reset();
+
+    // Show the switcher only when there are two or more clients.
+    if (m_tabBox->clientList().size() <= 1) {
+        close();
+        return false;
+    }
+
     return true;
 }
 
