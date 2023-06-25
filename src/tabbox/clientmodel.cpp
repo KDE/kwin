@@ -224,7 +224,7 @@ void ClientModel::createClientList(bool partialReset)
     }
 
     if (tabBox->config().clientApplicationsMode() != TabBoxConfig::AllWindowsCurrentApplication
-        && (tabBox->config().showDesktopMode() == TabBoxConfig::ShowDesktopClient || m_mutableClientList.isEmpty())) {
+        && tabBox->config().showDesktopMode() == TabBoxConfig::ShowDesktopClient) {
         Window *desktopClient = tabBox->desktopClient();
         if (desktopClient) {
             m_mutableClientList.append(desktopClient);
