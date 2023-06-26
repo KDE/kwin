@@ -1,8 +1,8 @@
 @PACKAGE_INIT@
 
 include(CMakeFindDependencyMacro)
-find_dependency(Qt@QT_MAJOR_VERSION@Core "@QT_MIN_VERSION@")
-find_dependency(Qt@QT_MAJOR_VERSION@Gui "@QT_MIN_VERSION@")
+find_dependency(Qt6Core "@QT_MIN_VERSION@")
+find_dependency(Qt6Gui "@QT_MIN_VERSION@")
 find_dependency(KF6Config "@KF6_MIN_VERSION@")
 find_dependency(KF6CoreAddons "@KF6_MIN_VERSION@")
 find_dependency(KF6WindowSystem "@KF6_MIN_VERSION@")
