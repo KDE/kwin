@@ -1267,10 +1267,10 @@ void X11Window::detectNoBorder()
 void X11Window::updateFrameExtents()
 {
     NETStrut strut;
-    strut.left = borderLeft();
-    strut.right = borderRight();
-    strut.top = borderTop();
-    strut.bottom = borderBottom();
+    strut.left = Xcb::toXNative(borderLeft());
+    strut.right = Xcb::toXNative(borderRight());
+    strut.top = Xcb::toXNative(borderTop());
+    strut.bottom = Xcb::toXNative(borderBottom());
     info->setFrameExtents(strut);
 }
 
