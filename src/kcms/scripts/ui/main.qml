@@ -9,7 +9,7 @@ import QtQuick
 import QtQuick.Layouts
 
 import org.kde.config
-import org.kde.kirigami 2.10 as Kirigami
+import org.kde.kirigami 2 as Kirigami
 import org.kde.newstuff as NewStuff
 import org.kde.kcmutils as KCMUtils
 
