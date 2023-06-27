@@ -62,7 +62,9 @@ KCMUtils.ScrollViewKCM {
                 Kirigami.Action {
                     enabled: kcm.canDeleteEntry(model.metaData)
                     icon.name: kcm.pendingDeletions.indexOf(model.metaData) === -1 ? "delete" : "edit-undo"
-                    tooltip: i18nc("@info:tooltip", "Delete…")
+                    text: i18nc("@info:tooltip", "Delete…")
+                    displayHint: Kirigami.DisplayHint.IconOnly
+
                     onTriggered: kcm.togglePendingDeletion(model.metaData)
                 }
             ]
