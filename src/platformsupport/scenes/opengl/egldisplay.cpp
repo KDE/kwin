@@ -288,7 +288,9 @@ QHash<uint32_t, QList<uint64_t>> EglDisplay::queryImportFormats(Filter filter) c
                 }
             }
         }
-        ret.insert(format, {DRM_FORMAT_MOD_INVALID});
+        if (filter != Filter::ExternalOnly) {
+            ret.insert(format, {DRM_FORMAT_MOD_INVALID});
+        }
     }
     return ret;
 }
