@@ -44,7 +44,6 @@ GraphicsBufferView::GraphicsBufferView(GraphicsBuffer *buffer, GraphicsBuffer::M
 {
     int width;
     int height;
-    int stride;
     int format;
 
     if (auto dmabuf = buffer->dmabufAttributes()) {
@@ -53,19 +52,17 @@ GraphicsBufferView::GraphicsBufferView(GraphicsBuffer *buffer, GraphicsBuffer::M
         }
         width = dmabuf->width;
         height = dmabuf->height;
-        stride = dmabuf->pitch[0];
         format = dmabuf->format;
     } else if (auto shm = buffer->shmAttributes()) {
         width = shm->size.width();
         height = shm->size.height();
-        stride = shm->stride;
         format = shm->format;
     } else {
         qCWarning(KWIN_CORE) << "Cannot create a graphics buffer view for unknown buffer type" << buffer;
         return;
     }
 
-    void *data = buffer->map(accessFlags);
+    const auto [data, stride] = buffer->map(accessFlags);
     if (data) {
         m_image = QImage(static_cast<uchar *>(data), width, height, stride, drmFormatToQImageFormat(format));
     }

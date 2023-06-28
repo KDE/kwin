@@ -20,7 +20,7 @@ class KWIN_EXPORT ShmGraphicsBuffer : public GraphicsBuffer
 public:
     explicit ShmGraphicsBuffer(ShmAttributes &&attributes);
 
-    void *map(MapFlags flags) override;
+    Map map(MapFlags flags) override;
     void unmap() override;
 
     QSize size() const override;

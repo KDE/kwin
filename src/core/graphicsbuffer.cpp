@@ -54,9 +54,9 @@ void GraphicsBuffer::drop()
     }
 }
 
-void *GraphicsBuffer::map(MapFlags flags)
+GraphicsBuffer::Map GraphicsBuffer::map(MapFlags flags)
 {
-    return nullptr;
+    return {};
 }
 
 void GraphicsBuffer::unmap()

@@ -23,7 +23,7 @@ public:
     GbmGraphicsBuffer(DmaBufAttributes attributes, gbm_bo *handle);
     ~GbmGraphicsBuffer() override;
 
-    void *map(MapFlags flags) override;
+    Map map(MapFlags flags) override;
     void unmap() override;
 
     QSize size() const override;
@@ -34,6 +34,8 @@ private:
     gbm_bo *m_bo;
     void *m_mapPtr = nullptr;
     void *m_mapData = nullptr;
+    // the stride of the buffer mapping can be different from the stride of the buffer itself
+    uint32_t m_mapStride = 0;
     DmaBufAttributes m_dmabufAttributes;
     QSize m_size;
     bool m_hasAlphaChannel;
@@ -47,7 +49,7 @@ public:
     DumbGraphicsBuffer(int drmFd, uint32_t handle, DmaBufAttributes attributes);
     ~DumbGraphicsBuffer() override;
 
-    void *map(MapFlags flags) override;
+    Map map(MapFlags flags) override;
     void unmap() override;
 
     QSize size() const override;

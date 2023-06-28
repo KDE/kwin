@@ -150,23 +150,22 @@ const DmaBufAttributes *GbmGraphicsBuffer::dmabufAttributes() const
     return &m_dmabufAttributes;
 }
 
-void *GbmGraphicsBuffer::map(MapFlags flags)
+GraphicsBuffer::Map GbmGraphicsBuffer::map(MapFlags flags)
 {
-    if (m_mapPtr) {
-        return m_mapPtr;
+    if (!m_mapPtr) {
+        uint32_t access = 0;
+        if (flags & MapFlag::Read) {
+            access |= GBM_BO_TRANSFER_READ;
+        }
+        if (flags & MapFlag::Write) {
+            access |= GBM_BO_TRANSFER_WRITE;
+        }
+        m_mapPtr = gbm_bo_map(m_bo, 0, 0, m_dmabufAttributes.width, m_dmabufAttributes.height, access, &m_mapStride, &m_mapData);
     }
-
-    uint32_t access = 0;
-    if (flags & MapFlag::Read) {
-        access |= GBM_BO_TRANSFER_READ;
-    }
-    if (flags & MapFlag::Write) {
-        access |= GBM_BO_TRANSFER_WRITE;
-    }
-
-    uint32_t stride = 0;
-    m_mapPtr = gbm_bo_map(m_bo, 0, 0, m_dmabufAttributes.width, m_dmabufAttributes.height, access, &stride, &m_mapData);
-    return m_mapPtr;
+    return Map{
+        .data = m_mapPtr,
+        .stride = m_mapStride,
+    };
 }
 
 void GbmGraphicsBuffer::unmap()
@@ -212,28 +211,29 @@ const DmaBufAttributes *DumbGraphicsBuffer::dmabufAttributes() const
     return &m_dmabufAttributes;
 }
 
-void *DumbGraphicsBuffer::map(MapFlags flags)
+GraphicsBuffer::Map DumbGraphicsBuffer::map(MapFlags flags)
 {
-    if (m_data) {
-        return m_data;
-    }
+    if (!m_data) {
+        drm_mode_map_dumb mapArgs{
+            .handle = m_handle,
+        };
+        if (drmIoctl(m_drmFd, DRM_IOCTL_MODE_MAP_DUMB, &mapArgs) != 0) {
+            qCWarning(KWIN_CORE) << "DRM_IOCTL_MODE_MAP_DUMB failed:" << strerror(errno);
+            return {};
+        }
 
-    drm_mode_map_dumb mapArgs{
-        .handle = m_handle,
+        void *address = mmap(nullptr, m_size, PROT_READ | PROT_WRITE, MAP_SHARED, m_drmFd, mapArgs.offset);
+        if (address == MAP_FAILED) {
+            qCWarning(KWIN_CORE) << "mmap() failed:" << strerror(errno);
+            return {};
+        }
+
+        m_data = address;
+    }
+    return Map{
+        .data = m_data,
+        .stride = m_dmabufAttributes.pitch[0],
     };
-    if (drmIoctl(m_drmFd, DRM_IOCTL_MODE_MAP_DUMB, &mapArgs) != 0) {
-        qCWarning(KWIN_CORE) << "DRM_IOCTL_MODE_MAP_DUMB failed:" << strerror(errno);
-        return nullptr;
-    }
-
-    void *address = mmap(nullptr, m_size, PROT_READ | PROT_WRITE, MAP_SHARED, m_drmFd, mapArgs.offset);
-    if (address == MAP_FAILED) {
-        qCWarning(KWIN_CORE) << "mmap() failed:" << strerror(errno);
-        return nullptr;
-    }
-
-    m_data = address;
-    return m_data;
 }
 
 void DumbGraphicsBuffer::unmap()

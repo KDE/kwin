@@ -11,6 +11,7 @@
 
 #include <QObject>
 #include <QSize>
+#include <utility>
 
 namespace KWin
 {
@@ -64,7 +65,12 @@ public:
     };
     Q_DECLARE_FLAGS(MapFlags, MapFlag)
 
-    virtual void *map(MapFlags flags);
+    struct Map
+    {
+        void *data = nullptr;
+        uint32_t stride = 0;
+    };
+    virtual Map map(MapFlags flags);
     virtual void unmap();
 
     virtual QSize size() const = 0;

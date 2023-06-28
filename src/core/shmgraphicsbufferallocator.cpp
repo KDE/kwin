@@ -21,26 +21,30 @@ ShmGraphicsBuffer::ShmGraphicsBuffer(ShmAttributes &&attributes)
 {
 }
 
-void *ShmGraphicsBuffer::map(MapFlags flags)
+GraphicsBuffer::Map ShmGraphicsBuffer::map(MapFlags flags)
 {
+    if (!m_memoryMap.isValid()) {
+        int prot = 0;
+        if (flags & MapFlag::Read) {
+            prot |= PROT_READ;
+        }
+        if (flags & MapFlag::Write) {
+            prot |= PROT_WRITE;
+        }
+
+        m_memoryMap = MemoryMap(m_attributes.stride * m_attributes.size.height(), prot, MAP_SHARED, m_attributes.fd.get(), m_attributes.offset);
+    }
     if (m_memoryMap.isValid()) {
-        return m_memoryMap.data();
+        return Map{
+            .data = m_memoryMap.data(),
+            .stride = uint32_t(m_attributes.stride),
+        };
+    } else {
+        return Map{
+            .data = nullptr,
+            .stride = uint32_t(m_attributes.stride),
+        };
     }
-
-    int prot = 0;
-    if (flags & MapFlag::Read) {
-        prot |= PROT_READ;
-    }
-    if (flags & MapFlag::Write) {
-        prot |= PROT_WRITE;
-    }
-
-    m_memoryMap = MemoryMap(m_attributes.stride * m_attributes.size.height(), prot, MAP_SHARED, m_attributes.fd.get(), m_attributes.offset);
-    if (m_memoryMap.isValid()) {
-        return m_memoryMap.data();
-    }
-
-    return nullptr;
 }
 
 void ShmGraphicsBuffer::unmap()

@@ -233,7 +233,7 @@ static void sigbusHandler(int signum, siginfo_t *info, void *context)
     }
 }
 
-void *ShmClientBuffer::map(MapFlags flags)
+GraphicsBuffer::Map ShmClientBuffer::map(MapFlags flags)
 {
     if (!m_shmPool->sigbusImpossible) {
         // A SIGBUS signal may be emitted if the backing file is shrinked and we access now
@@ -255,7 +255,10 @@ void *ShmClientBuffer::map(MapFlags flags)
         ++sigbusData.accessCount;
     }
 
-    return reinterpret_cast<uchar *>(m_shmPool->mapping.data()) + m_shmAttributes.offset;
+    return Map{
+        .data = reinterpret_cast<uchar *>(m_shmPool->mapping.data()) + m_shmAttributes.offset,
+        .stride = uint32_t(m_shmAttributes.stride),
+    };
 }
 
 void ShmClientBuffer::unmap()
