@@ -242,7 +242,12 @@ void OffscreenQuickView::update()
     }
 
     if (d->m_useBlit) {
-        d->m_image = d->m_view->grabWindow();
+        if (usingGl) {
+            d->m_image = d->m_fbo->toImage();
+            d->m_image.setDevicePixelRatio(d->m_view->devicePixelRatio());
+        } else {
+            d->m_image = d->m_view->grabWindow();
+        }
     }
 
     if (usingGl) {
