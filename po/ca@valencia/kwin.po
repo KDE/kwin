@@ -13,14 +13,14 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-22 02:07+0000\n"
-"PO-Revision-Date: 2023-04-20 12:34+0200\n"
+"PO-Revision-Date: 2023-06-20 09:40+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 20.12.0\n"
+"X-Generator: Lokalize 22.12.3\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Accelerator-Marker: &\n"
 
@@ -2832,22 +2832,22 @@ msgstr "Mou el ratolí al centre"
 #: plugins/zoom/zoom_config.cpp:80
 #, kde-format
 msgid "Move Left"
-msgstr "Mou a l'esquerra"
+msgstr "Mou cap a l'esquerra"
 
 #: plugins/zoom/zoom_config.cpp:87
 #, kde-format
 msgid "Move Right"
-msgstr "Mou a la dreta"
+msgstr "Mou cap a la dreta"
 
 #: plugins/zoom/zoom_config.cpp:94
 #, kde-format
 msgid "Move Up"
-msgstr "Mou amunt"
+msgstr "Mou cap amunt"
 
 #: plugins/zoom/zoom_config.cpp:101
 #, kde-format
 msgid "Move Down"
-msgstr "Mou avall"
+msgstr "Mou cap avall"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label)
 #. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
@@ -3606,22 +3606,19 @@ msgid "&No Titlebar and Frame"
 msgstr "Se&nse barra de títol ni marc"
 
 #: useractions.cpp:256
-#, fuzzy, kde-format
-#| msgid "Set Window Short&cut..."
+#, kde-format
 msgid "Set Window Short&cut…"
-msgstr "Establix la dre&cera de la finestra..."
+msgstr "Establix la dre&cera de la finestra…"
 
 #: useractions.cpp:262
-#, fuzzy, kde-format
-#| msgid "Configure Special &Window Settings..."
+#, kde-format
 msgid "Configure Special &Window Settings…"
-msgstr "Configura la configuració e&special de la finestra..."
+msgstr "Configura la configuració e&special de la finestra…"
 
 #: useractions.cpp:267
-#, fuzzy, kde-format
-#| msgid "Configure S&pecial Application Settings..."
+#, kde-format
 msgid "Configure S&pecial Application Settings…"
-msgstr "Configura la configuració es&pecial de l'aplicació..."
+msgstr "Configura la configuració es&pecial de l'aplicació…"
 
 #: useractions.cpp:273
 #, kde-format
@@ -4156,9 +4153,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "XWayland ha fallat"
-
-#~ msgctxt ""
-#~ "Entry in context menu of window decoration to open the configuration "
-#~ "module of KWin"
-#~ msgid "Configure W&indow Manager..."
-#~ msgstr "Configura el gestor de f&inestres..."
