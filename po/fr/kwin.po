@@ -25,7 +25,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-22 02:07+0000\n"
-"PO-Revision-Date: 2023-05-05 21:30+0200\n"
+"PO-Revision-Date: 2023-06-27 09:14+0200\n"
 "Last-Translator: Xavier BESNARD <xavier.besnard@neuf.fr>\n"
 "Language-Team: fr\n"
 "Language: fr\n"
@@ -33,7 +33,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 23.04.2\n"
 "X-Environment: kde\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
@@ -44,7 +44,7 @@ msgid "Your names"
 msgstr ""
 "Xavier Besnard, François-Xavier Duranceau,Gilles Caulier, Thibaut Cousin, "
 "Gérard Delafond, Yann Verley, Nicolas Ternisien, Sébastien Renard, Simon "
-"Depiets"
+"Depiets, Xavier Besnard"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
@@ -52,7 +52,7 @@ msgid "Your emails"
 msgstr ""
 "xavier.besnard@neuf.fr, duranceau@kde.org, caulier.gilles@free.fr, "
 "cousin@kde.org,gerard@delafond.org, yann.verley@free.fr, nicolas."
-"ternisien@gmail.com,renard@kde.org,sdepiets@gmail.com"
+"ternisien@gmail.com,renard@kde.org,sdepiets@gmail.com, xavier.besnard@neuf.fr"
 
 #: backends/wayland/wayland_output.cpp:294
 #, kde-format
@@ -69,12 +69,12 @@ msgstr ""
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1 (%2)"
-msgstr ""
+msgstr "Compositeur Wayland de KDE %1 (%2)"
 
 #: backends/wayland/wayland_output.cpp:303
 #, kde-format
 msgid "- Output disabled"
-msgstr ""
+msgstr "- Sortie désactivée"
 
 #: backends/wayland/wayland_output.cpp:305
 #, kde-format
@@ -94,7 +94,7 @@ msgstr ""
 #: backends/x11/windowed/x11_windowed_backend.cpp:517
 #, kde-format
 msgid "KDE Wayland Compositor"
-msgstr ""
+msgstr "Compositeur Wayland de KDE"
 
 #: composite.cpp:619
 #, kde-format
@@ -1542,16 +1542,14 @@ msgid "Noise strength:"
 msgstr "Intensité du bruit :"
 
 #: plugins/colorpicker/colorpicker.cpp:102
-#, fuzzy, kde-format
-#| msgid ""
-#| "Select window to force close with left click or enter.\n"
-#| "Escape or right click to cancel."
+#, kde-format
 msgid ""
 "Select a position for color picking with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
-"Sélectionnez la fenêtre à fermer de force par clic gauche ou entrée.\n"
-"Échap ou clic droit pour annuler."
+"Sélectionnez une position pour une sélection de couleur avec un clic gauche "
+"ou un appui sur la touche « Entrée ».\n"
+"Appuyez sur la touche « Échap » ou faire un clic droit pour annuler."
 
 #: plugins/desktopgrid/desktopgrid_config.cpp:54
 #: plugins/desktopgrid/desktopgrideffect.cpp:43
@@ -1656,10 +1654,9 @@ msgstr "Personnalisé"
 
 #. i18n: ectx: property (text), widget (QLabel, layoutRowsLabel)
 #: plugins/desktopgrid/desktopgrid_config.ui:48
-#, fuzzy, kde-format
-#| msgid "N&umber of rows:"
+#, kde-format
 msgid "N&umber of rows:"
-msgstr "Nomb&re de lignes :"
+msgstr "N&ombre de lignes : "
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: plugins/desktopgrid/desktopgrid_config.ui:103
@@ -1778,10 +1775,9 @@ msgstr "Par défaut"
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Duration)
 #: plugins/glide/glide_config.ui:35
 #: plugins/scale/package/contents/ui/config.ui:33
-#, fuzzy, kde-format
-#| msgid " milliseconds"
+#, kde-format
 msgid " milliseconds"
-msgstr " millisecondes"
+msgstr " milli-secondes"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_InAnimation)
 #: plugins/glide/glide_config.ui:50
@@ -1888,10 +1884,9 @@ msgstr "Boîte de dialogue de configuration"
 
 #. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:23
-#, fuzzy, kde-format
-#| msgid "Title &Alignment"
+#, kde-format
 msgid "Title &Alignment"
-msgstr "&Alignement du titre"
+msgstr "A&lignement du titre"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:53
@@ -1928,8 +1923,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:69
-#, fuzzy, kde-format
-#| msgid "Animate buttons"
+#, kde-format
 msgid "Animate buttons"
 msgstr "Animer les boutons"
 
@@ -2087,8 +2081,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: plugins/magiclamp/magiclamp_config.ui:17
-#, fuzzy, kde-format
-#| msgid "Animation duration:"
+#, kde-format
 msgid "Animation duration:"
 msgstr "Durée d'animation :"
 
@@ -2183,11 +2176,9 @@ msgstr "Couleur du bouton droit de souris :"
 
 #. i18n: ectx: attribute (title), widget (QWidget, advanced_tab)
 #: plugins/mouseclick/mouseclick_config.ui:91
-#, fuzzy, kde-format
-#| msgctxt "@title:tab Advanced Settings"
-#| msgid "Advanced"
+#, kde-format
 msgid "Advanced Settings"
-msgstr "Avancé"
+msgstr "Configuration avancée"
 
 #. i18n: ectx: property (title), widget (QGroupBox, rings)
 #: plugins/mouseclick/mouseclick_config.ui:97
@@ -2217,8 +2208,7 @@ msgstr " msec"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_duration_label)
 #: plugins/mouseclick/mouseclick_config.ui:145
-#, fuzzy, kde-format
-#| msgid "Ring Duration:"
+#, kde-format
 msgid "Ring Duration:"
 msgstr "Durée de sonnerie :"
 
@@ -2230,11 +2220,9 @@ msgstr "Rayon de l'anneau :"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_count_label)
 #: plugins/mouseclick/mouseclick_config.ui:184
-#, fuzzy, kde-format
-#| msgctxt "Number of fingers in this pinch gesture"
-#| msgid "Finger count"
+#, kde-format
 msgid "Ring Count:"
-msgstr "Nombre de doigts"
+msgstr "Compteur de sonneries :"
 
 #. i18n: ectx: property (title), widget (QGroupBox, font)
 #: plugins/mouseclick/mouseclick_config.ui:210
@@ -2277,8 +2265,8 @@ msgstr "Effacer les traces de souris"
 msgctxt "Suffix"
 msgid " pixel"
 msgid_plural " pixels"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] " pixel"
+msgstr[1] " pixels"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/mousemark/mousemark_config.ui:23
@@ -2414,12 +2402,12 @@ msgstr "Impossible de trouver l'identifiant de fenêtre %1"
 #: plugins/screencast/screencastmanager.cpp:145
 #, kde-format
 msgid "Could not find output"
-msgstr ""
+msgstr "Impossible de trouver une sortie"
 
 #: plugins/screencast/screencastmanager.cpp:172
 #, kde-format
 msgid "Invalid region"
-msgstr ""
+msgstr "Région non valable"
 
 #: plugins/screencast/screencastmanager.cpp:203
 #, kde-format
@@ -2432,28 +2420,24 @@ msgid "Failed to create PipeWire stream"
 msgstr ""
 
 #: plugins/screenshot/screenshotdbusinterface2.cpp:525
-#, fuzzy, kde-format
-#| msgid ""
-#| "Select window to force close with left click or enter.\n"
-#| "Escape or right click to cancel."
+#, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
-"Sélectionnez la fenêtre à fermer de force par clic gauche ou entrée.\n"
-"Échap ou clic droit pour annuler."
+"Sélectionnez une fenêtre pour en faire une copie d'écran avec un clic gauche "
+"ou un appui sur la touche « Entrée ».\n"
+"Appuyez sur la touche « Échap » ou faire un clic droit pour annuler."
 
 #: plugins/screenshot/screenshotdbusinterface2.cpp:543
-#, fuzzy, kde-format
-#| msgid ""
-#| "Select window to force close with left click or enter.\n"
-#| "Escape or right click to cancel."
+#, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
-"Sélectionnez la fenêtre à fermer de force par clic gauche ou entrée.\n"
-"Échap ou clic droit pour annuler."
+"Créer une copie d'écran avec un clic gauche ou un appui sur la touche "
+"« Entrée ».\n"
+"Appuyez sur la touche « Échap » ou faire un clic droit pour annuler."
 
 #: plugins/showfps/qml/main.qml:110
 #, kde-format
@@ -2470,16 +2454,13 @@ msgid "Paint Amount"
 msgstr "Quantité de peinture"
 
 #: plugins/showfps/qml/main.qml:175
-#, fuzzy, kde-format
-#| msgid "Current Layout:"
+#, kde-format
 msgctxt "@label"
 msgid "Current FPS"
-msgstr "Disposition actuelle :"
+msgstr "FPS courant"
 
 #: plugins/showfps/qml/main.qml:184
-#, fuzzy, kde-format
-#| msgctxt "@label"
-#| msgid "Maximum FPS"
+#, kde-format
 msgctxt "@label"
 msgid "Maximum FPS"
 msgstr "FPS maximal"
@@ -2500,10 +2481,9 @@ msgstr "Activer / désactiver le flottement"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_Gaps)
 #: plugins/slide/slide_config.ui:17
-#, fuzzy, kde-format
-#| msgid "Gap between desktops"
+#, kde-format
 msgid "Gap between desktops"
-msgstr "Espacement entre les bureaux"
+msgstr "Écart entre bureaux"
 
 #. i18n: ectx: property (text), widget (QLabel, label_HorizontalGap)
 #: plugins/slide/slide_config.ui:23
@@ -2533,10 +2513,9 @@ msgstr "Activer/désactiver la vignette pour la fenêtre courante"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/thumbnailaside/thumbnailaside_config.ui:23
-#, fuzzy, kde-format
-#| msgid "Maximum &width:"
+#, kde-format
 msgid "Maximum &width:"
-msgstr "&Largeur maximale :"
+msgstr "Largeur &maximale :"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/thumbnailaside/thumbnailaside_config.ui:36
@@ -2707,10 +2686,9 @@ msgstr "Menus :"
 
 #. i18n: ectx: property (text), widget (QLabel, moveresize_label)
 #: plugins/translucency/package/contents/ui/config.ui:207
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Moving windows:"
-msgstr "Déplacer une fenêtre"
+msgstr "Déplacement de fenêtres :"
 
 #. i18n: ectx: property (text), widget (QLabel, inactive_label)
 #: plugins/translucency/package/contents/ui/config.ui:226
@@ -2759,8 +2737,7 @@ msgstr "Appliquer à"
 
 #. i18n: ectx: property (text), widget (QLineEdit, kcfg_Whitelist)
 #: plugins/videowall/package/contents/ui/config.ui:32
-#, fuzzy, kde-format
-#| msgid "vlc, xv, vdpau, smplayer, dragon, xine, ffplay"
+#, kde-format
 msgid "vlc, xv, vdpau, smplayer, dragon, xine, ffplay"
 msgstr "vlc, xv, vdpau, smplayer, dragon, xine, ffplay"
 
@@ -2874,8 +2851,7 @@ msgstr "Trembler lors d'un &re-dimensionnement"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AdvancedMode)
 #: plugins/wobblywindows/wobblywindows_config.ui:182
-#, fuzzy, kde-format
-#| msgid "Enable &advanced mode"
+#, kde-format
 msgid "Enable &advanced mode"
 msgstr "Activer le mode &avancé"
 
@@ -2964,8 +2940,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/zoom/zoom_config.ui:28
-#, fuzzy, kde-format
-#| msgid "Zoom Factor:"
+#, kde-format
 msgid "Zoom Factor:"
 msgstr "Facteur de zoom :"
 
@@ -3013,17 +2988,15 @@ msgstr "Activer le suivi du pointeur de texte"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/zoom/zoom_config.ui:86
-#, fuzzy, kde-format
-#| msgid "Mouse Pointer:"
+#, kde-format
 msgid "Mouse Pointer:"
-msgstr "Pointeur de souris :"
+msgstr "Curseur de souris :"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MousePointer)
 #: plugins/zoom/zoom_config.ui:99
-#, fuzzy, kde-format
-#| msgid "Visibility of the mouse-pointer."
+#, kde-format
 msgid "Visibility of the mouse-pointer."
-msgstr "Visibilité du pointeur de souris."
+msgstr "Visibilité du curseur de souris."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
 #: plugins/zoom/zoom_config.ui:103
@@ -3729,22 +3702,19 @@ msgid "&No Titlebar and Frame"
 msgstr "Aucu&ne barre de titre et aucun cadre"
 
 #: useractions.cpp:256
-#, fuzzy, kde-format
-#| msgid "Set Window Short&cut..."
+#, kde-format
 msgid "Set Window Short&cut…"
-msgstr "Définir les raccour&cis de fenêtres..."
+msgstr "Définir un raccour&ci de fenêtres..."
 
 #: useractions.cpp:262
-#, fuzzy, kde-format
-#| msgid "Configure Special &Window Settings..."
+#, kde-format
 msgid "Configure Special &Window Settings…"
-msgstr "&Configurer les paramètres spéciaux des fenêtres..."
+msgstr "Configurer les paramètres spécifiques de &fenêtres..."
 
 #: useractions.cpp:267
-#, fuzzy, kde-format
-#| msgid "Configure S&pecial Application Settings..."
+#, kde-format
 msgid "Configure S&pecial Application Settings…"
-msgstr "Configurer les &paramètres spéciaux des applications..."
+msgstr "Configurer les &paramètres spéciaux des applications…"
 
 #: useractions.cpp:273
 #, kde-format
@@ -4279,7 +4249,7 @@ msgstr ""
 #: xwayland/xwaylandlauncher.cpp:272
 #, kde-format
 msgid "Xwayland has crashed"
-msgstr ""
+msgstr "Xwayland s'est planté."
 
 #~ msgctxt ""
 #~ "Entry in context menu of window decoration to open the configuration "

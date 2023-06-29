@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-15 02:18+0000\n"
-"PO-Revision-Date: 2023-06-27 09:04+0200\n"
+"PO-Revision-Date: 2023-06-28 05:25+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -861,6 +861,9 @@ msgid ""
 "for example) is the screen containing the mouse pointer. When disabled, the "
 "active screen is the screen containing the focused window."
 msgstr ""
+"როცა ეს პარამეტრი ჩართულია, აქტიური ეკრანი (სადაც ახალი ფანჯრები ჩნდებიან) "
+"არის ეკრანი, რომელიც თაგუნას კურსორს შეიცავს. თუ ჩართულია, აქტიური ეკრანი "
+"ფოკუსის მქონე ფანჯრის შემცველი ეკრანია."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
 #: focus.ui:206
@@ -1145,6 +1148,8 @@ msgid ""
 "magnetic field which will make windows snap to each other when they are "
 "moved near another window."
 msgstr ""
+"აქ შეგიძლია ფანჯრების მიბმის ზონა დააყენთ, ანუ მაგნიტური ველის \"სიძლიერე\", "
+"რომელიც ფანჯრებს ერთმანეთს აწებებს, თუ ისინი ახლოს არიან ერთმანეთთან."
 
 #. i18n: ectx: property (text), widget (QLabel, centerSnaplabel)
 #: moving.ui:84
