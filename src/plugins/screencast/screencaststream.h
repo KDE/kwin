@@ -94,20 +94,20 @@ private:
                          struct spa_fraction *defaultFramerate, struct spa_fraction *minFramerate, struct spa_fraction *maxFramerate,
                          const QVector<uint64_t> &modifiers, quint32 modifiersFlags);
 
-    std::shared_ptr<PipeWireCore> pwCore;
+    std::shared_ptr<PipeWireCore> m_pwCore;
     std::unique_ptr<ScreenCastSource> m_source;
-    struct pw_stream *pwStream = nullptr;
-    struct spa_source *pwRenegotiate = nullptr;
-    spa_hook streamListener;
-    pw_stream_events pwStreamEvents = {};
+    struct pw_stream *m_pwStream = nullptr;
+    struct spa_source *m_pwRenegotiate = nullptr;
+    spa_hook m_streamListener;
+    pw_stream_events m_pwStreamEvents = {};
 
-    uint32_t pwNodeId = 0;
+    uint32_t m_pwNodeId = 0;
 
     QSize m_resolution;
     bool m_stopped = false;
     bool m_streaming = false;
 
-    spa_video_info_raw videoFormat;
+    spa_video_info_raw m_videoFormat;
     QString m_error;
     QVector<uint64_t> m_modifiers;
     std::optional<DmaBufParams> m_dmabufParams; // when fixated
