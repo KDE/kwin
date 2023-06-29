@@ -1,15 +1,15 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
-#
 # Marce Villarino <mvillarino@kde-espana.es>, 2009, 2011.
 # Marce Villarino <mvillarino@kde-espana.es>, 2011, 2012.
-# Adrián Chaves (Gallaecio) <adrian@chaves.io>, 2018, 2019.
+# Adrián Chaves (Gallaecio) <adrian@chaves.io>, 2018, 2019, 2023.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-13 00:58+0000\n"
-"PO-Revision-Date: 2019-10-19 22:07+0200\n"
+"PO-Revision-Date: 2023-06-28 07:54+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
 "Language: gl\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 19.11.70\n"
+"X-Generator: Lokalize 23.04.2\n"
 
 #: kwintabboxconfigform.cpp:80
 #, kde-format
@@ -25,10 +25,9 @@ msgid "KWin"
 msgstr "KWin"
 
 #: layoutpreview.cpp:133
-#, fuzzy, kde-format
-#| msgid "Show desktop:"
+#, kde-format
 msgid "Show Desktop"
-msgstr "Mostrar o escritorio:"
+msgstr "Amosar o escritorio"
 
 #: layoutpreview.cpp:163
 #, kde-format
@@ -69,13 +68,13 @@ msgstr "Contido"
 #: main.ui:41
 #, kde-format
 msgid "Include \"Show Desktop\" icon"
-msgstr "Incluír a icona de «Amosar o escritorio»"
+msgstr "Incluír a icona de «Amosar o escritorio»."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
 #: main.ui:55
 #, kde-format
 msgid "Recently used"
-msgstr "Empregados recentemente"
+msgstr "Usado recentemente"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
 #: main.ui:60
@@ -87,13 +86,13 @@ msgstr "Orde de amoreamento"
 #: main.ui:68
 #, kde-format
 msgid "Only one window per application"
-msgstr "Só unha xanela de cada aplicación"
+msgstr "Só unha xanela de cada aplicación."
 
 #. i18n: ectx: property (text), widget (QCheckBox, orderMinimized)
 #: main.ui:78
 #, kde-format
 msgid "Order minimized windows after unminimized windows"
-msgstr ""
+msgstr "Ao ordenar, colocar as xanelas minimizadas ao final."
 
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 #: main.ui:88
@@ -111,7 +110,7 @@ msgstr "Filtrar as xanelas segundo"
 #: main.ui:123
 #, kde-format
 msgid "Virtual desktops"
-msgstr "Escritorios virtuais"
+msgstr "Escritorios virtuais."
 
 #. i18n: ectx: property (text), widget (QRadioButton, currentDesktop)
 #: main.ui:167
@@ -129,7 +128,7 @@ msgstr "Os demais escritorios"
 #: main.ui:184
 #, kde-format
 msgid "Activities"
-msgstr "Actividades"
+msgstr "Actividades."
 
 #. i18n: ectx: property (text), widget (QRadioButton, currentActivity)
 #: main.ui:228
@@ -147,7 +146,7 @@ msgstr "As demais actividades"
 #: main.ui:245
 #, kde-format
 msgid "Screens"
-msgstr "Pantallas"
+msgstr "Pantallas."
 
 #. i18n: ectx: property (text), widget (QRadioButton, currentScreen)
 #: main.ui:289
@@ -165,7 +164,7 @@ msgstr "As demais pantallas"
 #: main.ui:306
 #, kde-format
 msgid "Minimization"
-msgstr "Minimización"
+msgstr "Minimización."
 
 #. i18n: ectx: property (text), widget (QRadioButton, visibleWindows)
 #: main.ui:350
@@ -239,7 +238,7 @@ msgstr ""
 #: main.ui:562
 #, kde-format
 msgid "Show selected window"
-msgstr "Amosar a xanela escollida"
+msgstr "Amosar a xanela escollida."
 
 #~ msgid "Tabbox layout preview"
 #~ msgstr "Vista previa da disposición das lapelas"
