@@ -453,10 +453,7 @@ void ContrastEffect::doContrast(const RenderTarget &renderTarget, const RenderVi
     GLTexture *contrastTexture = windowData.texture.get();
     contrastTexture->bind();
 
-    const QRect logicalSourceRect = actualShape.boundingRect();
-    windowData.fbo->blitFromRenderTarget(renderTarget, viewport, logicalSourceRect, QRect(0, 0, contrastTexture->width(), contrastTexture->height()));
-
-    // Draw the texture on the offscreen framebuffer object, while blurring it horizontally
+    windowData.fbo->blitFromFramebuffer(r.toRect(), QRect(QPoint(), contrastTexture->size()));
 
     m_shader->setColorMatrix(m_windowData[w].colorMatrix);
     m_shader->bind();
@@ -471,6 +468,8 @@ void ContrastEffect::doContrast(const RenderTarget &renderTarget, const RenderVi
     textureMatrix *= renderTarget.transformation();
     textureMatrix.translate(-0.5, -0.5);
     // scaled logical to texture coordinates
+    textureMatrix.scale(1, -1);
+    textureMatrix.translate(0, -1);
     textureMatrix.scale(1.0 / boundingRect.width(), 1.0 / boundingRect.height(), 1);
     textureMatrix.translate(-boundingRect.x(), -boundingRect.y(), 0);
     textureMatrix.scale(1.0 / viewport.scale(), 1.0 / viewport.scale());
