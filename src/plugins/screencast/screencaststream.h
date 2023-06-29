@@ -74,11 +74,11 @@ Q_SIGNALS:
     void stopStreaming();
 
 private:
-    static void onStreamParamChanged(void *data, uint32_t id, const struct spa_pod *format);
-    static void onStreamStateChanged(void *data, pw_stream_state old, pw_stream_state state, const char *error_message);
-    static void onStreamAddBuffer(void *data, pw_buffer *buffer);
-    static void onStreamRemoveBuffer(void *data, pw_buffer *buffer);
-    static void onStreamRenegotiateFormat(void *data, uint64_t);
+    void onStreamParamChanged(uint32_t id, const struct spa_pod *format);
+    void onStreamStateChanged(pw_stream_state old, pw_stream_state state, const char *error_message);
+    void onStreamAddBuffer(pw_buffer *buffer);
+    void onStreamRemoveBuffer(pw_buffer *buffer);
+    void onStreamRenegotiateFormat(uint64_t);
 
     bool createStream();
     QVector<const spa_pod *> buildFormats(bool fixate, char buffer[2048]);
