@@ -71,35 +71,34 @@ static spa_video_format drmFourCCToSpaVideoFormat(quint32 format)
     }
 }
 
-void ScreenCastStream::onStreamStateChanged(void *data, pw_stream_state old, pw_stream_state state, const char *error_message)
+void ScreenCastStream::onStreamStateChanged(pw_stream_state old, pw_stream_state state, const char *error_message)
 {
-    ScreenCastStream *pw = static_cast<ScreenCastStream *>(data);
     qCDebug(KWIN_SCREENCAST) << "state changed" << pw_stream_state_as_string(old) << " -> " << pw_stream_state_as_string(state) << error_message;
 
-    pw->m_streaming = false;
-    pw->m_pendingBuffer = nullptr;
-    pw->m_pendingNotifier.reset();
-    pw->m_pendingFence.reset();
+    m_streaming = false;
+    m_pendingBuffer = nullptr;
+    m_pendingNotifier.reset();
+    m_pendingFence.reset();
 
     switch (state) {
     case PW_STREAM_STATE_ERROR:
         qCWarning(KWIN_SCREENCAST) << "Stream error: " << error_message;
         break;
     case PW_STREAM_STATE_PAUSED:
-        if (pw->nodeId() == 0 && pw->m_pwStream) {
-            pw->m_pwNodeId = pw_stream_get_node_id(pw->m_pwStream);
-            Q_EMIT pw->streamReady(pw->nodeId());
+        if (nodeId() == 0 && m_pwStream) {
+            m_pwNodeId = pw_stream_get_node_id(m_pwStream);
+            Q_EMIT streamReady(nodeId());
         }
         break;
     case PW_STREAM_STATE_STREAMING:
-        pw->m_streaming = true;
-        Q_EMIT pw->startStreaming();
+        m_streaming = true;
+        Q_EMIT startStreaming();
         break;
     case PW_STREAM_STATE_CONNECTING:
         break;
     case PW_STREAM_STATE_UNCONNECTED:
-        if (!pw->m_stopped) {
-            Q_EMIT pw->stopStreaming();
+        if (!m_stopped) {
+            Q_EMIT stopStreaming();
         }
         break;
     }
@@ -154,14 +153,13 @@ void ScreenCastStream::newStreamParams()
     pw_stream_update_params(m_pwStream, params.data(), params.count());
 }
 
-void ScreenCastStream::onStreamParamChanged(void *data, uint32_t id, const struct spa_pod *format)
+void ScreenCastStream::onStreamParamChanged(uint32_t id, const struct spa_pod *format)
 {
     if (!format || id != SPA_PARAM_Format) {
         return;
     }
 
-    ScreenCastStream *pw = static_cast<ScreenCastStream *>(data);
-    spa_format_video_raw_parse(format, &pw->m_videoFormat);
+    spa_format_video_raw_parse(format, &m_videoFormat);
     auto modifierProperty = spa_pod_find_prop(format, nullptr, SPA_FORMAT_VIDEO_modifier);
     QVector<uint64_t> receivedModifiers;
     if (modifierProperty) {
@@ -174,46 +172,45 @@ void ScreenCastStream::onStreamParamChanged(void *data, uint32_t id, const struc
         std::sort(receivedModifiers.begin(), receivedModifiers.end());
         receivedModifiers.erase(std::unique(receivedModifiers.begin(), receivedModifiers.end()), receivedModifiers.end());
     }
-    if (modifierProperty && (!pw->m_dmabufParams || !receivedModifiers.contains(pw->m_dmabufParams->modifier))) {
+    if (modifierProperty && (!m_dmabufParams || !receivedModifiers.contains(m_dmabufParams->modifier))) {
         if (modifierProperty->flags & SPA_POD_PROP_FLAG_DONT_FIXATE) {
             // DRM_MOD_INVALID should be used as a last option. Do not just remove it it's the only
             // item on the list
             if (receivedModifiers.count() > 1) {
                 receivedModifiers.removeAll(DRM_FORMAT_MOD_INVALID);
             }
-            pw->m_dmabufParams = kwinApp()->outputBackend()->testCreateDmaBuf(pw->m_resolution, pw->m_drmFormat, receivedModifiers);
+            m_dmabufParams = kwinApp()->outputBackend()->testCreateDmaBuf(m_resolution, m_drmFormat, receivedModifiers);
         } else {
-            pw->m_dmabufParams = kwinApp()->outputBackend()->testCreateDmaBuf(pw->m_resolution, pw->m_drmFormat, {DRM_FORMAT_MOD_INVALID});
+            m_dmabufParams = kwinApp()->outputBackend()->testCreateDmaBuf(m_resolution, m_drmFormat, {DRM_FORMAT_MOD_INVALID});
         }
 
         // In case we fail to use any modifier from the list of offered ones, remove these
         // from our all future offerings, otherwise there will be no indication that it cannot
         // be used and clients can go for it over and over
-        if (!pw->m_dmabufParams.has_value()) {
+        if (!m_dmabufParams.has_value()) {
             for (uint64_t modifier : receivedModifiers) {
-                pw->m_modifiers.removeAll(modifier);
+                m_modifiers.removeAll(modifier);
             }
         // Also in case DRM_FORMAT_MOD_INVALID was used and didn't fail, we still need to
         // set it as our modifier, otherwise it would be set to default value (0) which is
         // also a valid modifier, but not the one we want to actually use
         } else if (receivedModifiers.count() == 1 && receivedModifiers.constFirst() == DRM_FORMAT_MOD_INVALID) {
-            pw->m_dmabufParams->modifier = DRM_FORMAT_MOD_INVALID;
+            m_dmabufParams->modifier = DRM_FORMAT_MOD_INVALID;
         }
 
-        qCDebug(KWIN_SCREENCAST) << "Stream dmabuf modifiers received, offering our best suited modifier" << pw->m_dmabufParams.has_value();
+        qCDebug(KWIN_SCREENCAST) << "Stream dmabuf modifiers received, offering our best suited modifier" << m_dmabufParams.has_value();
         char buffer[2048];
-        auto params = pw->buildFormats(pw->m_dmabufParams.has_value(), buffer);
-        pw_stream_update_params(pw->m_pwStream, params.data(), params.count());
+        auto params = buildFormats(m_dmabufParams.has_value(), buffer);
+        pw_stream_update_params(m_pwStream, params.data(), params.count());
         return;
     }
 
     qCDebug(KWIN_SCREENCAST) << "Stream format found, defining buffers";
-    pw->newStreamParams();
+    newStreamParams();
 }
 
-void ScreenCastStream::onStreamAddBuffer(void *data, pw_buffer *buffer)
+void ScreenCastStream::onStreamAddBuffer(pw_buffer *buffer)
 {
-    ScreenCastStream *stream = static_cast<ScreenCastStream *>(data);
     struct spa_data *spa_data = buffer->buffer->datas;
 
     spa_data->mapoffset = 0;
@@ -222,12 +219,12 @@ void ScreenCastStream::onStreamAddBuffer(void *data, pw_buffer *buffer)
     std::shared_ptr<DmaBufTexture> dmabuff;
 
     if (spa_data[0].type != SPA_ID_INVALID && spa_data[0].type & (1 << SPA_DATA_DmaBuf)) {
-        Q_ASSERT(stream->m_dmabufParams);
-        dmabuff = kwinApp()->outputBackend()->createDmaBufTexture(*stream->m_dmabufParams);
+        Q_ASSERT(m_dmabufParams);
+        dmabuff = kwinApp()->outputBackend()->createDmaBufTexture(*m_dmabufParams);
     }
 
     if (dmabuff) {
-        spa_data->maxsize = dmabuff->attributes().pitch[0] * stream->m_resolution.height();
+        spa_data->maxsize = dmabuff->attributes().pitch[0] * m_resolution.height();
 
         const DmaBufAttributes &dmabufAttribs = dmabuff->attributes();
         Q_ASSERT(buffer->buffer->n_datas >= uint(dmabufAttribs.planeCount));
@@ -236,7 +233,7 @@ void ScreenCastStream::onStreamAddBuffer(void *data, pw_buffer *buffer)
             buffer->buffer->datas[i].fd = dmabufAttribs.fd[i].get();
             buffer->buffer->datas[i].data = nullptr;
         }
-        stream->m_dmabufDataForPwBuffer.insert(buffer, dmabuff);
+        m_dmabufDataForPwBuffer.insert(buffer, dmabuff);
 #ifdef F_SEAL_SEAL // Disable memfd on systems that don't have it, like BSD < 12
     } else {
         if (!(spa_data[0].type & (1 << SPA_DATA_MemFd))) {
@@ -244,9 +241,9 @@ void ScreenCastStream::onStreamAddBuffer(void *data, pw_buffer *buffer)
             return;
         }
 
-        const int bytesPerPixel = stream->m_source->hasAlphaChannel() ? 4 : 3;
-        const int stride = SPA_ROUND_UP_N(stream->m_resolution.width() * bytesPerPixel, 4);
-        spa_data->maxsize = stride * stream->m_resolution.height();
+        const int bytesPerPixel = m_source->hasAlphaChannel() ? 4 : 3;
+        const int stride = SPA_ROUND_UP_N(m_resolution.width() * bytesPerPixel, 4);
+        spa_data->maxsize = stride * m_resolution.height();
         spa_data->type = SPA_DATA_MemFd;
         spa_data->fd = memfd_create("kwin-screencast-memfd", MFD_CLOEXEC | MFD_ALLOW_SEALING);
         if (spa_data->fd == -1) {
@@ -279,13 +276,12 @@ void ScreenCastStream::onStreamAddBuffer(void *data, pw_buffer *buffer)
 #endif
     }
 
-    stream->m_waitForNewBuffers = false;
+    m_waitForNewBuffers = false;
 }
 
-void ScreenCastStream::onStreamRemoveBuffer(void *data, pw_buffer *buffer)
+void ScreenCastStream::onStreamRemoveBuffer(pw_buffer *buffer)
 {
-    ScreenCastStream *stream = static_cast<ScreenCastStream *>(data);
-    stream->m_dmabufDataForPwBuffer.remove(buffer);
+    m_dmabufDataForPwBuffer.remove(buffer);
 
     struct spa_buffer *spa_buffer = buffer->buffer;
     struct spa_data *spa_data = spa_buffer->datas;
@@ -299,14 +295,12 @@ void ScreenCastStream::onStreamRemoveBuffer(void *data, pw_buffer *buffer)
     }
 }
 
-void ScreenCastStream::onStreamRenegotiateFormat(void *data, uint64_t)
+void ScreenCastStream::onStreamRenegotiateFormat(uint64_t)
 {
-    ScreenCastStream *stream = static_cast<ScreenCastStream *>(data);
-
-    stream->m_streaming = false; // pause streaming as we wait for the renegotiation
+    m_streaming = false; // pause streaming as we wait for the renegotiation
     char buffer[2048];
-    auto params = stream->buildFormats(stream->m_dmabufParams.has_value(), buffer);
-    pw_stream_update_params(stream->m_pwStream, params.data(), params.count());
+    auto params = buildFormats(m_dmabufParams.has_value(), buffer);
+    pw_stream_update_params(m_pwStream, params.data(), params.count());
 }
 
 ScreenCastStream::ScreenCastStream(ScreenCastSource *source, QObject *parent)
@@ -320,10 +314,22 @@ ScreenCastStream::ScreenCastStream(ScreenCastSource *source, QObject *parent)
     });
 
     m_pwStreamEvents.version = PW_VERSION_STREAM_EVENTS;
-    m_pwStreamEvents.add_buffer = &ScreenCastStream::onStreamAddBuffer;
-    m_pwStreamEvents.remove_buffer = &ScreenCastStream::onStreamRemoveBuffer;
-    m_pwStreamEvents.state_changed = &ScreenCastStream::onStreamStateChanged;
-    m_pwStreamEvents.param_changed = &ScreenCastStream::onStreamParamChanged;
+    m_pwStreamEvents.add_buffer = [](void *data, struct pw_buffer *buffer) {
+        auto _this = static_cast<ScreenCastStream *>(data);
+        _this->onStreamAddBuffer(buffer);
+    };
+    m_pwStreamEvents.remove_buffer = [](void *data, struct pw_buffer *buffer) {
+        auto _this = static_cast<ScreenCastStream *>(data);
+        _this->onStreamRemoveBuffer(buffer);
+    };
+    m_pwStreamEvents.state_changed = [](void *data, pw_stream_state old, pw_stream_state state, const char *error_message) {
+        auto _this = static_cast<ScreenCastStream *>(data);
+        _this->onStreamStateChanged(old, state, error_message);
+    };
+    m_pwStreamEvents.param_changed = [](void *data, uint32_t id, const struct spa_pod *param) {
+        auto _this = static_cast<ScreenCastStream *>(data);
+        _this->onStreamParamChanged(id, param);
+    };
 
     connect(&m_pendingFrame, &QTimer::timeout, this, [this] {
         recordFrame(m_pendingDamages);
@@ -354,7 +360,12 @@ bool ScreenCastStream::init()
         return false;
     }
 
-    m_pwRenegotiate = pw_loop_add_event(m_pwCore->pwMainLoop, onStreamRenegotiateFormat, this);
+    m_pwRenegotiate = pw_loop_add_event(
+        m_pwCore->pwMainLoop, [](void *data, uint64_t format) {
+            auto _this = static_cast<ScreenCastStream *>(data);
+            _this->onStreamRenegotiateFormat(format);
+        },
+        this);
 
     return true;
 }
