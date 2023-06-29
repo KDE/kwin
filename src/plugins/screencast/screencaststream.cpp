@@ -12,8 +12,6 @@
 #include "cursor.h"
 #include "dmabuftexture.h"
 #include "kwinscreencast_logging.h"
-#include "libkwineffects/kwineffects.h"
-#include "libkwineffects/kwinglplatform.h"
 #include "libkwineffects/kwingltexture.h"
 #include "libkwineffects/kwinglutils.h"
 #include "main.h"
@@ -22,7 +20,6 @@
 #include "platformsupport/scenes/opengl/openglbackend.h"
 #include "scene/workspacescene.h"
 #include "screencastsource.h"
-#include "utils/common.h"
 
 #include <KLocalizedString>
 
