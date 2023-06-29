@@ -86,8 +86,8 @@ void ScreenCastStream::onStreamStateChanged(void *data, pw_stream_state old, pw_
         qCWarning(KWIN_SCREENCAST) << "Stream error: " << error_message;
         break;
     case PW_STREAM_STATE_PAUSED:
-        if (pw->nodeId() == 0 && pw->pwStream) {
-            pw->pwNodeId = pw_stream_get_node_id(pw->pwStream);
+        if (pw->nodeId() == 0 && pw->m_pwStream) {
+            pw->m_pwNodeId = pw_stream_get_node_id(pw->m_pwStream);
             Q_EMIT pw->streamReady(pw->nodeId());
         }
         break;
@@ -115,7 +115,7 @@ void ScreenCastStream::newStreamParams()
     uint8_t paramsBuffer[1024];
     spa_pod_builder pod_builder = SPA_POD_BUILDER_INIT(paramsBuffer, sizeof(paramsBuffer));
     const int buffertypes = m_dmabufParams ? (1 << SPA_DATA_DmaBuf) | (1 << SPA_DATA_MemFd) : (1 << SPA_DATA_MemFd);
-    const int bpp = videoFormat.format == SPA_VIDEO_FORMAT_RGB || videoFormat.format == SPA_VIDEO_FORMAT_BGR ? 3 : 4;
+    const int bpp = m_videoFormat.format == SPA_VIDEO_FORMAT_RGB || m_videoFormat.format == SPA_VIDEO_FORMAT_BGR ? 3 : 4;
     const int stride = SPA_ROUND_UP_N(m_resolution.width() * bpp, 4);
 
     struct spa_pod_frame f;
@@ -151,7 +151,7 @@ void ScreenCastStream::newStreamParams()
                                               SPA_PARAM_META_size, SPA_POD_Int(sizeof(struct spa_meta_header))),
     };
 
-    pw_stream_update_params(pwStream, params.data(), params.count());
+    pw_stream_update_params(m_pwStream, params.data(), params.count());
 }
 
 void ScreenCastStream::onStreamParamChanged(void *data, uint32_t id, const struct spa_pod *format)
@@ -161,7 +161,7 @@ void ScreenCastStream::onStreamParamChanged(void *data, uint32_t id, const struc
     }
 
     ScreenCastStream *pw = static_cast<ScreenCastStream *>(data);
-    spa_format_video_raw_parse(format, &pw->videoFormat);
+    spa_format_video_raw_parse(format, &pw->m_videoFormat);
     auto modifierProperty = spa_pod_find_prop(format, nullptr, SPA_FORMAT_VIDEO_modifier);
     QVector<uint64_t> receivedModifiers;
     if (modifierProperty) {
@@ -203,7 +203,7 @@ void ScreenCastStream::onStreamParamChanged(void *data, uint32_t id, const struc
         qCDebug(KWIN_SCREENCAST) << "Stream dmabuf modifiers received, offering our best suited modifier" << pw->m_dmabufParams.has_value();
         char buffer[2048];
         auto params = pw->buildFormats(pw->m_dmabufParams.has_value(), buffer);
-        pw_stream_update_params(pw->pwStream, params.data(), params.count());
+        pw_stream_update_params(pw->m_pwStream, params.data(), params.count());
         return;
     }
 
@@ -306,7 +306,7 @@ void ScreenCastStream::onStreamRenegotiateFormat(void *data, uint64_t)
     stream->m_streaming = false; // pause streaming as we wait for the renegotiation
     char buffer[2048];
     auto params = stream->buildFormats(stream->m_dmabufParams.has_value(), buffer);
-    pw_stream_update_params(stream->pwStream, params.data(), params.count());
+    pw_stream_update_params(stream->m_pwStream, params.data(), params.count());
 }
 
 ScreenCastStream::ScreenCastStream(ScreenCastSource *source, QObject *parent)
@@ -319,11 +319,11 @@ ScreenCastStream::ScreenCastStream(ScreenCastSource *source, QObject *parent)
         Q_EMIT stopStreaming();
     });
 
-    pwStreamEvents.version = PW_VERSION_STREAM_EVENTS;
-    pwStreamEvents.add_buffer = &ScreenCastStream::onStreamAddBuffer;
-    pwStreamEvents.remove_buffer = &ScreenCastStream::onStreamRemoveBuffer;
-    pwStreamEvents.state_changed = &ScreenCastStream::onStreamStateChanged;
-    pwStreamEvents.param_changed = &ScreenCastStream::onStreamParamChanged;
+    m_pwStreamEvents.version = PW_VERSION_STREAM_EVENTS;
+    m_pwStreamEvents.add_buffer = &ScreenCastStream::onStreamAddBuffer;
+    m_pwStreamEvents.remove_buffer = &ScreenCastStream::onStreamRemoveBuffer;
+    m_pwStreamEvents.state_changed = &ScreenCastStream::onStreamStateChanged;
+    m_pwStreamEvents.param_changed = &ScreenCastStream::onStreamParamChanged;
 
     connect(&m_pendingFrame, &QTimer::timeout, this, [this] {
         recordFrame(m_pendingDamages);
@@ -333,20 +333,20 @@ ScreenCastStream::ScreenCastStream(ScreenCastSource *source, QObject *parent)
 ScreenCastStream::~ScreenCastStream()
 {
     m_stopped = true;
-    if (pwStream) {
-        pw_stream_destroy(pwStream);
+    if (m_pwStream) {
+        pw_stream_destroy(m_pwStream);
     }
 }
 
 bool ScreenCastStream::init()
 {
-    pwCore = PipeWireCore::self();
-    if (!pwCore->m_error.isEmpty()) {
-        m_error = pwCore->m_error;
+    m_pwCore = PipeWireCore::self();
+    if (!m_pwCore->m_error.isEmpty()) {
+        m_error = m_pwCore->m_error;
         return false;
     }
 
-    connect(pwCore.get(), &PipeWireCore::pipewireFailed, this, &ScreenCastStream::coreFailed);
+    connect(m_pwCore.get(), &PipeWireCore::pipewireFailed, this, &ScreenCastStream::coreFailed);
 
     if (!createStream()) {
         qCWarning(KWIN_SCREENCAST) << "Failed to create PipeWire stream";
@@ -354,15 +354,15 @@ bool ScreenCastStream::init()
         return false;
     }
 
-    pwRenegotiate = pw_loop_add_event(pwCore.get()->pwMainLoop, onStreamRenegotiateFormat, this);
+    m_pwRenegotiate = pw_loop_add_event(m_pwCore->pwMainLoop, onStreamRenegotiateFormat, this);
 
     return true;
 }
 
 uint ScreenCastStream::framerate()
 {
-    if (pwStream) {
-        return videoFormat.max_framerate.num / videoFormat.max_framerate.denom;
+    if (m_pwStream) {
+        return m_videoFormat.max_framerate.num / m_videoFormat.max_framerate.denom;
     }
 
     return 0;
@@ -370,13 +370,13 @@ uint ScreenCastStream::framerate()
 
 uint ScreenCastStream::nodeId()
 {
-    return pwNodeId;
+    return m_pwNodeId;
 }
 
 bool ScreenCastStream::createStream()
 {
     const QByteArray objname = "kwin-screencast-" + objectName().toUtf8();
-    pwStream = pw_stream_new(pwCore->pwCore, objname, nullptr);
+    m_pwStream = pw_stream_new(m_pwCore->pwCore, objname, nullptr);
 
     const auto supported = Compositor::self()->backend()->supportedFormats();
     auto itModifiers = supported.constFind(m_source->drmFormat());
@@ -403,13 +403,13 @@ bool ScreenCastStream::createStream()
     char buffer[2048];
     QVector<const spa_pod *> params = buildFormats(false, buffer);
 
-    pw_stream_add_listener(pwStream, &streamListener, &pwStreamEvents, this);
+    pw_stream_add_listener(m_pwStream, &m_streamListener, &m_pwStreamEvents, this);
     auto flags = pw_stream_flags(PW_STREAM_FLAG_DRIVER | PW_STREAM_FLAG_ALLOC_BUFFERS);
 
-    if (pw_stream_connect(pwStream, PW_DIRECTION_OUTPUT, SPA_ID_INVALID, flags, params.data(), params.count()) != 0) {
+    if (pw_stream_connect(m_pwStream, PW_DIRECTION_OUTPUT, SPA_ID_INVALID, flags, params.data(), params.count()) != 0) {
         qCWarning(KWIN_SCREENCAST) << "Could not connect to stream";
-        pw_stream_destroy(pwStream);
-        pwStream = nullptr;
+        pw_stream_destroy(m_pwStream);
+        m_pwStream = nullptr;
         return false;
     }
 
@@ -447,8 +447,8 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
         return;
     }
 
-    if (videoFormat.max_framerate.num != 0 && !m_lastSent.isNull()) {
-        auto frameInterval = (1000. * videoFormat.max_framerate.denom / videoFormat.max_framerate.num);
+    if (m_videoFormat.max_framerate.num != 0 && !m_lastSent.isNull()) {
+        auto frameInterval = (1000. * m_videoFormat.max_framerate.denom / m_videoFormat.max_framerate.num);
         auto lastSentAgo = m_lastSent.msecsTo(QDateTime::currentDateTimeUtc());
         if (lastSentAgo < frameInterval) {
             m_pendingDamages |= damagedRegion;
@@ -474,12 +474,12 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
         m_resolution = size;
         m_waitForNewBuffers = true;
         m_dmabufParams = std::nullopt;
-        pw_loop_signal_event(pwCore.get()->pwMainLoop, pwRenegotiate);
+        pw_loop_signal_event(m_pwCore->pwMainLoop, m_pwRenegotiate);
         return;
     }
 
     const char *error = "";
-    auto state = pw_stream_get_state(pwStream, &error);
+    auto state = pw_stream_get_state(m_pwStream, &error);
     if (state != PW_STREAM_STATE_STREAMING) {
         if (error) {
             qCWarning(KWIN_SCREENCAST) << "Failed to record frame: stream is not active" << error;
@@ -487,7 +487,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
         return;
     }
 
-    struct pw_buffer *buffer = pw_stream_dequeue_buffer(pwStream);
+    struct pw_buffer *buffer = pw_stream_dequeue_buffer(m_pwStream);
 
     if (!buffer) {
         return;
@@ -499,7 +499,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
     uint8_t *data = (uint8_t *)spa_data->data;
     if (!data && spa_buffer->datas->type != SPA_DATA_DmaBuf) {
         qCWarning(KWIN_SCREENCAST) << "Failed to record frame: invalid buffer data";
-        pw_stream_queue_buffer(pwStream, buffer);
+        pw_stream_queue_buffer(m_pwStream, buffer);
         return;
     }
 
@@ -513,14 +513,14 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
 
         if ((stride * size.height()) > spa_data->maxsize) {
             qCDebug(KWIN_SCREENCAST) << "Failed to record frame: frame is too big";
-            pw_stream_queue_buffer(pwStream, buffer);
+            pw_stream_queue_buffer(m_pwStream, buffer);
             return;
         }
 
         spa_data->chunk->stride = stride;
         spa_data->chunk->size = stride * size.height();
 
-        m_source->render(spa_data, videoFormat.format);
+        m_source->render(spa_data, m_videoFormat.format);
 
         auto cursor = Cursors::self()->currentCursor();
         if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Embedded && exclusiveContains(m_cursor.viewport, cursor->pos())) {
@@ -652,7 +652,7 @@ void ScreenCastStream::recordCursor()
     }
 
     const char *error = "";
-    auto state = pw_stream_get_state(pwStream, &error);
+    auto state = pw_stream_get_state(m_pwStream, &error);
     if (state != PW_STREAM_STATE_STREAMING) {
         if (error) {
             qCWarning(KWIN_SCREENCAST) << "Failed to record cursor position: stream is not active" << error;
@@ -664,7 +664,7 @@ void ScreenCastStream::recordCursor()
         return;
     }
 
-    m_pendingBuffer = pw_stream_dequeue_buffer(pwStream);
+    m_pendingBuffer = pw_stream_dequeue_buffer(m_pwStream);
     if (!m_pendingBuffer) {
         return;
     }
@@ -719,7 +719,7 @@ void ScreenCastStream::enqueue()
     if (!m_streaming) {
         return;
     }
-    pw_stream_queue_buffer(pwStream, m_pendingBuffer);
+    pw_stream_queue_buffer(m_pwStream, m_pendingBuffer);
 
     if (m_pendingBuffer->buffer->datas[0].chunk->flags != SPA_CHUNK_FLAG_CORRUPTED) {
         m_lastSent = QDateTime::currentDateTimeUtc();
