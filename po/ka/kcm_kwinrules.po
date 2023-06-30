@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-07 02:19+0000\n"
-"PO-Revision-Date: 2023-06-25 10:02+0200\n"
+"PO-Revision-Date: 2023-06-29 05:58+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.3.1\n"
+"X-Generator: Poedit 3.3.2\n"
 
 #: kcmrules.cpp:226
 #, kde-format
@@ -316,6 +316,13 @@ msgid ""
 "<interface>Fullscreen</interface> states.<nl/><nl/>Note that the position "
 "can also be used to map to a different <interface>Screen</interface>"
 msgstr ""
+"ზოგიერთ აპლიკაციას თავისი გეომეტრიის დაყენება შეუძლია, რითიც ფანჯრების "
+"მმართველის პარამეტრების გადაფარვას ახდენს. ამ პარამეტრის დაყენება მათი "
+"განთავსების მოთხოვნებს გადაფარავს.<nl/><nl/>ამას გავლენა "
+"აქვს<interface>ზომაზე</interface> და <interface>მდებარეობაზე</interface>, "
+"მაგრამ არა <interface>გაშლილ</interface> და <interface>მთელ ეკრანზე გაშლილ</"
+"interface>მდგომარეობებზე.<nl/><nl/>დაიმახსოვრეთ, რომ მდებარეობა სხვა "
+"<interface>ეკრანზე</interface> მისაბმელადაც შეგიძლიათ, გამოიყენოთ"
 
 #: rulesmodel.cpp:546
 #, kde-format

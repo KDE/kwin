@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-22 02:07+0000\n"
-"PO-Revision-Date: 2023-06-20 22:48+0200\n"
+"PO-Revision-Date: 2023-06-29 12:53+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 23.04.2\n"
+"X-Generator: Lokalize 22.12.3\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -95,7 +95,7 @@ msgid ""
 msgstr ""
 "<b>Composition de OpenGL (le predefinite) ha fracassate KWin in le passato.</"
 "b> <br> Isto plus probabilemente es debite a un defecto del driver.<p>Si tu "
-"pensa de haber actualisate a un driver stabile, <br>Tu pote re-fixar iste "
+"pensa de haber actualisate a un driver stabile, <br>Tu pote re-assignar iste "
 "protection ma <b>tu debe saper que isto poterea procurar un crash immediate!"
 "</b></p>"
 
@@ -1322,7 +1322,8 @@ msgstr "Initia un servior Xwayland sin radice."
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
 msgstr ""
-"Nomine del socket Wayland ubi ascoltar. Si non fixate \"wayland-0\" es usate."
+"Nomine del socket Wayland ubi ascoltar. Si non assignate \"wayland-0\" es "
+"usate."
 
 #: main_wayland.cpp:301
 #, kde-format
@@ -1382,7 +1383,7 @@ msgid ""
 "multiple times"
 msgstr ""
 "Socket XWayland a usr per connexiones de Wwayland in arrivata. Isto poter "
-"esser fixate multiple vices"
+"esser assignate multiple vices"
 
 #: main_wayland.cpp:335
 #, kde-format
@@ -2619,7 +2620,7 @@ msgstr "Fenestra non active:"
 #: plugins/translucency/package/contents/ui/config.ui:267
 #, kde-format
 msgid "Set menu translucency independently"
-msgstr "Fixa independentemente translucentia de menu"
+msgstr "assigna independentemente translucentia de menu"
 
 #. i18n: ectx: property (text), widget (QLabel, dropdownmenus_label)
 #: plugins/translucency/package/contents/ui/config.ui:285
@@ -3178,7 +3179,7 @@ msgstr "Placia typo e fenestra a"
 #: rulesettings.kcfg:189
 #, kde-format
 msgid "Set window type rule type"
-msgstr "Fixa typo de degula de typo de fenestra"
+msgstr "assigna typo de degula de typo de fenestra"
 
 #. i18n: ectx: label, entry (maximizevert), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:194
@@ -3593,7 +3594,7 @@ msgstr "&Nulle barra de titulo e quadro"
 #: useractions.cpp:256
 #, kde-format
 msgid "Set Window Short&cut…"
-msgstr "Fixa Via breve de Fene&stra ..."
+msgstr "assigna Via breve de Fene&stra ..."
 
 #: useractions.cpp:262
 #, kde-format

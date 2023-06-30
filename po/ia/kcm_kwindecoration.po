@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-14 02:06+0000\n"
-"PO-Revision-Date: 2023-04-06 09:10+0200\n"
+"PO-Revision-Date: 2023-06-29 12:50+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 21.12.3\n"
+"X-Generator: Lokalize 22.12.3\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: declarative-plugin/buttonsmodel.cpp:53
@@ -80,9 +80,9 @@ msgid ""
 "active session, without accidentally setting it to one that is either not "
 "available, or which is already set."
 msgstr ""
-"Iste instrumento te  permitte fixar le thema de decoration de fenestra per "
-"le session actualmente active, sin fixar lo accidentalmente a un que o non "
-"es disponiil o que es ja fixate."
+"Iste instrumento te  permitte assignar le thema de decoration de fenestra "
+"per le session actualmente active, sin assignar lo accidentalmente a un que "
+"o non es disponiil o que es ja assignate."
 
 #: kwin-applywindowdecoration.cpp:33
 #, kde-format
@@ -91,7 +91,7 @@ msgid ""
 "full path will attempt to find a theme in that directory, and then apply "
 "that if one can be deduced."
 msgstr ""
-"Le nomine del thema de decoration de fenestra que tu vole fixar per KWin. "
+"Le nomine del thema de decoration de fenestra que tu vole assignar per KWin. "
 "Passar un percurso complete essayara a trovar un thema in ille directorio, e "
 "depoi applicar illo si un pote esser deducite."
 
@@ -109,8 +109,8 @@ msgid ""
 "Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
 "as your current theme."
 msgstr ""
-"Resolvite %1 al thema de KWin AUrorae \"%2\", e essayara a fixar illo como "
-"tu thema currente."
+"Resolvite %1 al thema de KWin AUrorae \"%2\", e essayara a assignar illo "
+"como tu thema currente."
 
 #: kwin-applywindowdecoration.cpp:71
 #, kde-format
@@ -119,14 +119,14 @@ msgid ""
 "theme, and we will have to abort, due to having no theme to set"
 msgstr ""
 "Tu essayava a passar un percurso de file, ma isto non poteva esser resolvite "
-"a un thema, e nos habera un abortion, debite a haber necun thema fixate."
+"a un thema, e nos habera un abortion, debite a haber necun thema assignate."
 
 #: kwin-applywindowdecoration.cpp:77
 #, kde-format
 msgid ""
 "The requested theme \"%1\" is already set as the window decoration theme."
 msgstr ""
-"Le thema requirite \"%1\" ja es fixate como le thema de decoratin de "
+"Le thema requirite \"%1\" ja es assignate como le thema de decoration de "
 "fenestra."
 
 #: kwin-applywindowdecoration.cpp:99
