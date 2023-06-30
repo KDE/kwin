@@ -157,8 +157,9 @@ public:
             return;
         }
 
-        auto client = surface->client();
-        if (waylandServer()->xWaylandConnection() != client) {
+        KWaylandServer::ClientConnection *client = surface->client();
+        KWaylandServer::ClientConnection *xwaylandClient = waylandServer()->xWaylandConnection();
+        if (xwaylandClient && xwaylandClient != client) {
             KWaylandServer::KeyboardKeyState state{event->type() == QEvent::KeyPress};
             if (!updateKey(event->nativeScanCode(), state)) {
                 return;
@@ -170,7 +171,7 @@ public:
                                     xkb->modifierState().locked,
                                     xkb->currentLayout());
 
-            waylandServer()->seat()->keyboard()->sendKey(event->nativeScanCode(), state, waylandServer()->xWaylandConnection());
+            waylandServer()->seat()->keyboard()->sendKey(event->nativeScanCode(), state, xwaylandClient);
         }
     }
 
