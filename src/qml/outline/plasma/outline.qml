@@ -8,11 +8,12 @@ import QtQuick
 import QtQuick.Window
 import org.kde.kwin
 import org.kde.ksvg 1.0 as KSvg
+import org.kde.kirigami 2 as Kirigami
 
 Window {
     id: window
 
-    readonly property int animationDuration: units.longDuration
+    readonly property int animationDuration: Kirigami.Units.longDuration
     property bool animationEnabled: false
 
     flags: Qt.BypassWindowManagerHint | Qt.FramelessWindowHint
