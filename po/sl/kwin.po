@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1654331 2023-06-22 02:25:48Z scripty $
+# $Id: kwin.po 1655086 2023-07-02 02:50:23Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-22 02:07+0000\n"
+"POT-Creation-Date: 2023-07-02 02:36+0000\n"
 "PO-Revision-Date: 2023-06-20 06:27+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -2361,7 +2361,7 @@ msgstr "Neveljavna regija"
 msgid "Region outside the workspace"
 msgstr "Regija izven delovnega prostora"
 
-#: plugins/screencast/screencaststream.cpp:353
+#: plugins/screencast/screencaststream.cpp:356
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Kreiranje toka PipeWire ni uspelo"

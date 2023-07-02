@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1654331 $
+# Version: $Revision: 1655086 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # Norbert Popiołek <norbert@kde.com.pl>
@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-22 02:07+0000\n"
-"PO-Revision-Date: 2023-04-23 11:46+0200\n"
+"POT-Creation-Date: 2023-07-02 02:36+0000\n"
+"PO-Revision-Date: 2023-07-01 07:39+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
@@ -31,7 +31,7 @@ msgstr ""
 ">\n"
 ">\n"
 ">\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 23.04.2\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
 
@@ -2363,7 +2363,7 @@ msgstr "Nieprawidłowy obszar"
 msgid "Region outside the workspace"
 msgstr "Obszar poza przestrzenią pracy"
 
-#: plugins/screencast/screencaststream.cpp:353
+#: plugins/screencast/screencaststream.cpp:356
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Nie udało się utworzyć strumienia PipeWire"
@@ -3605,22 +3605,19 @@ msgid "&No Titlebar and Frame"
 msgstr "Bez paska &nazwy i obramowania"
 
 #: useractions.cpp:256
-#, fuzzy, kde-format
-#| msgid "Set Window Short&cut..."
+#, kde-format
 msgid "Set Window Short&cut…"
-msgstr "&Ustaw skrót okna..."
+msgstr "&Ustaw skrót okna…"
 
 #: useractions.cpp:262
-#, fuzzy, kde-format
-#| msgid "Configure Special &Window Settings..."
+#, kde-format
 msgid "Configure Special &Window Settings…"
-msgstr "Usta&wienia szczególne dla okna..."
+msgstr "Usta&wienia dla poszczególnych okien…"
 
 #: useractions.cpp:267
-#, fuzzy, kde-format
-#| msgid "Configure S&pecial Application Settings..."
+#, kde-format
 msgid "Configure S&pecial Application Settings…"
-msgstr "Ustawienia szczególne dla a&plikacji..."
+msgstr "Ustawienia dla poszczególnych a&plikacji…"
 
 #: useractions.cpp:273
 #, kde-format
