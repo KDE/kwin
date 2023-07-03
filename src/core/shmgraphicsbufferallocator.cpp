@@ -8,12 +8,35 @@
 
 #include "config-kwin.h"
 
+#include "core/graphicsbuffer.h"
+#include "utils/memorymap.h"
+
 #include <drm_fourcc.h>
 #include <fcntl.h>
 #include <sys/mman.h>
 
 namespace KWin
 {
+
+class ShmGraphicsBuffer : public GraphicsBuffer
+{
+    Q_OBJECT
+
+public:
+    explicit ShmGraphicsBuffer(ShmAttributes &&attributes);
+
+    Map map(MapFlags flags) override;
+    void unmap() override;
+
+    QSize size() const override;
+    bool hasAlphaChannel() const override;
+    const ShmAttributes *shmAttributes() const override;
+
+private:
+    ShmAttributes m_attributes;
+    MemoryMap m_memoryMap;
+    bool m_hasAlphaChannel;
+};
 
 ShmGraphicsBuffer::ShmGraphicsBuffer(ShmAttributes &&attributes)
     : m_attributes(std::move(attributes))
@@ -126,3 +149,5 @@ GraphicsBuffer *ShmGraphicsBufferAllocator::allocate(const GraphicsBufferOptions
 }
 
 } // namespace KWin
+
+#include "shmgraphicsbufferallocator.moc"
