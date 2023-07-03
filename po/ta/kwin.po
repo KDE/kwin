@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-07-02 02:36+0000\n"
-"PO-Revision-Date: 2023-04-30 21:30+0530\n"
+"PO-Revision-Date: 2023-07-02 16:44+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 23.04.0\n"
+"X-Generator: Lokalize 23.04.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -99,7 +99,7 @@ msgstr ""
 #: composite.cpp:1043
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
-msgstr ""
+msgstr "தேவையான X நீட்டிப்புகள் (XComposite மற்றும் XDamage) கிடைக்கவில்லை."
 
 #: composite.cpp:1046
 #, kde-format
@@ -1387,9 +1387,9 @@ msgid "Name of the xauthority file "
 msgstr "xauthority கோப்பின் பெயர்"
 
 #: main_wayland.cpp:343
-#, kde-format
+#, fuzzy, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
-msgstr ""
+msgstr "kwin_wayland_wrapper-ஐ பயன்படுத்தி மீள்துவக்க‍க்கூடிய வித‍த்தில் வெளியேறும்."
 
 #: main_wayland.cpp:345
 #, kde-format
@@ -3581,22 +3581,19 @@ msgid "&No Titlebar and Frame"
 msgstr "&விளிம்பும் தலைப்புப்பட்டையும் வேண்டாம்"
 
 #: useractions.cpp:256
-#, fuzzy, kde-format
-#| msgid "Set Window Short&cut..."
+#, kde-format
 msgid "Set Window Short&cut…"
 msgstr "சாளர சுருக்குவழி&யை அமை…"
 
 #: useractions.cpp:262
-#, fuzzy, kde-format
-#| msgid "Configure Special &Window Settings..."
+#, kde-format
 msgid "Configure Special &Window Settings…"
-msgstr "&சாளரத்திற்கான தனிப்பட்ட அமைப்புகளை அமை..."
+msgstr "&சாளரத்திற்கான தனிப்பட்ட அமைப்புகளை அமை…"
 
 #: useractions.cpp:267
-#, fuzzy, kde-format
-#| msgid "Configure S&pecial Application Settings..."
+#, kde-format
 msgid "Configure S&pecial Application Settings…"
-msgstr "செய&லிக்கான தனிப்பட்ட அமைப்புகளை அமை..."
+msgstr "செய&லிக்கான தனிப்பட்ட அமைப்புகளை அமை…"
 
 #: useractions.cpp:273
 #, kde-format
