@@ -8,6 +8,8 @@
 */
 #include <config-kwin.h>
 
+#include <QSignalSpy>
+
 #include "kwin_wayland_test.h"
 
 #if KWIN_BUILD_SCREENLOCKER

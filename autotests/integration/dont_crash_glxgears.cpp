@@ -15,6 +15,8 @@
 
 #include <KDecoration2/Decoration>
 
+#include <QSignalSpy>
+
 namespace KWin
 {
 

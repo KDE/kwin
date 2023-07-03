@@ -11,6 +11,8 @@
 #include "cursor.h"
 #include "wayland_server.h"
 
+#include <QSignalSpy>
+
 namespace KWin
 {
 

@@ -6,7 +6,8 @@
 // Qt
 #include <QImage>
 #include <QPainter>
-#include <QtTest>
+#include <QSignalSpy>
+#include <QTest>
 // KWin
 #include "core/graphicsbuffer.h"
 #include "core/graphicsbufferview.h"

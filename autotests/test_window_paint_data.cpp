@@ -15,7 +15,7 @@
 #include <QGraphicsScale>
 #include <QVector2D>
 
-#include <QtTest>
+#include <QTest>
 
 using namespace KWin;
 

@@ -15,7 +15,8 @@
 
 #include <QDBusConnection>
 #include <QDBusInterface>
-#include <QtTest>
+#include <QSignalSpy>
+#include <QTest>
 
 #include <linux/input.h>
 

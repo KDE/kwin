@@ -18,6 +18,7 @@
 
 #include <QPainter>
 #include <QRasterWindow>
+#include <QSignalSpy>
 
 #include <KWayland/Client/keyboard.h>
 #include <KWayland/Client/seat.h>

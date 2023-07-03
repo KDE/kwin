@@ -15,7 +15,7 @@
 
 #include "utils/ramfile.h"
 
-#include <QtTest>
+#include <QTest>
 
 using namespace KWin;
 

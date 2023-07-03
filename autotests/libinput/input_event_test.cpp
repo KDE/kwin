@@ -11,7 +11,7 @@
 #include "backends/libinput/device.h"
 #include "input_event.h"
 
-#include <QtTest>
+#include <QTest>
 
 Q_DECLARE_METATYPE(KWin::SwitchEvent::State);
 

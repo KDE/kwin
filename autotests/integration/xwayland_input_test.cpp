@@ -15,6 +15,7 @@
 #include "workspace.h"
 #include "x11window.h"
 
+#include <QAbstractEventDispatcher>
 #include <QSocketNotifier>
 
 #include <netwm.h>

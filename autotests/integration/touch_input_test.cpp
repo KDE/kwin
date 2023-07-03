@@ -22,6 +22,7 @@
 #include <KWayland/Client/touch.h>
 
 #include <QAction>
+#include <QSignalSpy>
 
 namespace KWin
 {

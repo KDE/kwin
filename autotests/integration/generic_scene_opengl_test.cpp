@@ -16,6 +16,7 @@
 #include "window.h"
 
 #include <KConfigGroup>
+#include <QSignalSpy>
 
 using namespace KWin;
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_scene_opengl-0");

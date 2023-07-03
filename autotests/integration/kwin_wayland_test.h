@@ -14,7 +14,8 @@
 #include "window.h"
 
 // Qt
-#include <QtTest>
+#include <QSignalSpy>
+#include <QTest>
 
 #include <KWayland/Client/surface.h>
 #include <optional>

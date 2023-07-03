@@ -4,7 +4,9 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 // Qt
-#include <QtTest>
+#include <QMimeType>
+#include <QSignalSpy>
+#include <QTest>
 
 #include "wayland/compositor_interface.h"
 #include "wayland/datadevicemanager_interface.h"

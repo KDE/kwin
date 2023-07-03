@@ -23,6 +23,7 @@
 
 #include <QPainter>
 #include <QRasterWindow>
+#include <QSignalSpy>
 
 namespace KWin
 {

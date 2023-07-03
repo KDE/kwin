@@ -4,7 +4,8 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 // Qt
-#include <QtTest>
+#include <QSignalSpy>
+#include <QTest>
 // client
 #include "KWayland/Client/connection_thread.h"
 #include "KWayland/Client/event_queue.h"

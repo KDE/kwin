@@ -8,7 +8,7 @@
 */
 #include "xkb.h"
 
-#include <QtTest>
+#include <QTest>
 #include <xkbcommon/xkbcommon-keysyms.h>
 
 using namespace KWin;

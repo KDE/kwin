@@ -6,8 +6,9 @@
 
 // Qt
 #include <QHash>
+#include <QSignalSpy>
+#include <QTest>
 #include <QThread>
-#include <QtTest>
 // WaylandServer
 #include "wayland/compositor_interface.h"
 #include "wayland/display.h"

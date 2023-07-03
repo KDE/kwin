@@ -23,7 +23,9 @@
 #include <KConfigGroup>
 #include <KWayland/Client/surface.h>
 
+#include <QAbstractEventDispatcher>
 #include <QAction>
+#include <QSocketNotifier>
 
 #include <xcb/xcb_icccm.h>
 

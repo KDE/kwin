@@ -24,6 +24,8 @@
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
 
+#include <QSignalSpy>
+
 namespace KWin
 {
 

@@ -9,7 +9,7 @@
 
 #include "libkwineffects/kwineffects.h"
 
-#include <QtTest>
+#include <QTest>
 
 using namespace std::chrono_literals;
 

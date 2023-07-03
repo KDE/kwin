@@ -6,7 +6,8 @@
 */
 
 // Qt
-#include <QtTest>
+#include <QSignalSpy>
+#include <QTest>
 // client
 #include "KWayland/Client/compositor.h"
 #include "KWayland/Client/connection_thread.h"

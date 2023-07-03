@@ -8,7 +8,7 @@
 */
 
 #include <QSize>
-#include <QtTest>
+#include <QTest>
 
 #include "mock_drm.h"
 

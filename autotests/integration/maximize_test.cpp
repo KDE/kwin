@@ -24,6 +24,8 @@
 #include <KDecoration2/Decoration>
 #include <KDecoration2/DecorationSettings>
 
+#include <QSignalSpy>
+
 using namespace KWin;
 
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_maximized-0");

@@ -5,7 +5,8 @@
 */
 // Qt
 #include <QImage>
-#include <QtTest>
+#include <QSignalSpy>
+#include <QTest>
 // KWin
 #include "wayland/compositor_interface.h"
 #include "wayland/display.h"

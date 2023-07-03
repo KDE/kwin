@@ -6,8 +6,9 @@
 
 // Qt
 #include <QHash>
+#include <QSignalSpy>
+#include <QTest>
 #include <QThread>
-#include <QtTest>
 
 #include <wayland-client.h>
 

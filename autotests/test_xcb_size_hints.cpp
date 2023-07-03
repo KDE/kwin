@@ -11,9 +11,9 @@
 #include "utils/xcbutils.h"
 // Qt
 #include <QApplication>
-#include <QtTest>
-#include <private/qtx11extras_p.h>
+#include <QTest>
 #include <netwm.h>
+#include <private/qtx11extras_p.h>
 // xcb
 #include <xcb/xcb.h>
 #include <xcb/xcb_icccm.h>

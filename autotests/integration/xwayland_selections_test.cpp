@@ -18,6 +18,7 @@
 
 #include <QProcess>
 #include <QProcessEnvironment>
+#include <QSignalSpy>
 
 using namespace KWin;
 

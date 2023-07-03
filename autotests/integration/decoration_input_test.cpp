@@ -33,6 +33,8 @@
 #include <KDecoration2/Decoration>
 #include <KDecoration2/DecorationSettings>
 
+#include <QSignalSpy>
+
 #include <linux/input.h>
 
 Q_DECLARE_METATYPE(Qt::WindowFrameSection)

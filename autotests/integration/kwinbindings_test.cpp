@@ -22,6 +22,7 @@
 #include <QDBusConnection>
 #include <QDBusMessage>
 #include <QDBusPendingReply>
+#include <QTemporaryFile>
 
 using namespace KWin;
 

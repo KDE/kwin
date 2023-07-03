@@ -12,7 +12,8 @@
 #include <KConfigGroup>
 
 #include <QAction>
-#include <QtTest>
+#include <QSignalSpy>
+#include <QTest>
 
 namespace KWin
 {

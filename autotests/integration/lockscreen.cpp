@@ -36,6 +36,7 @@
 #include <KGlobalAccel>
 
 #include <QAction>
+#include <QSignalSpy>
 
 #include <linux/input.h>
 

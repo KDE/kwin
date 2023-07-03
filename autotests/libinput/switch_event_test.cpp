@@ -11,7 +11,7 @@
 #include "backends/libinput/device.h"
 #include "backends/libinput/events.h"
 
-#include <QtTest>
+#include <QTest>
 
 #include <memory>
 

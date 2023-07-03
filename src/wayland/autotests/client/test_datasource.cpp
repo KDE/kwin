@@ -5,7 +5,9 @@
 */
 // Qt
 #include <QMimeDatabase>
-#include <QtTest>
+#include <QSignalSpy>
+#include <QTemporaryFile>
+#include <QTest>
 
 #include "wayland/datadevicemanager_interface.h"
 #include "wayland/datasource_interface.h"
