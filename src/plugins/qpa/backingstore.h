@@ -30,8 +30,7 @@ public:
     void beginPaint(const QRegion &region) override;
 
 private:
-    QImage m_backBuffer;
-    QImage m_frontBuffer;
+    QImage m_buffer;
 };
 
 }

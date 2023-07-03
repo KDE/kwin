@@ -28,48 +28,31 @@ BackingStore::~BackingStore() = default;
 
 QPaintDevice *BackingStore::paintDevice()
 {
-    return &m_backBuffer;
+    return &m_buffer;
 }
 
 void BackingStore::resize(const QSize &size, const QRegion &staticContents)
 {
-    if (m_backBuffer.size() == size) {
+    if (m_buffer.size() == size) {
         return;
     }
 
     const QPlatformWindow *platformWindow = static_cast<QPlatformWindow *>(window()->handle());
     const qreal devicePixelRatio = platformWindow->devicePixelRatio();
 
-    m_backBuffer = QImage(size * devicePixelRatio, QImage::Format_ARGB32_Premultiplied);
-    m_backBuffer.setDevicePixelRatio(devicePixelRatio);
-
-    m_frontBuffer = QImage(size * devicePixelRatio, QImage::Format_ARGB32_Premultiplied);
-    m_frontBuffer.setDevicePixelRatio(devicePixelRatio);
+    m_buffer = QImage(size * devicePixelRatio, QImage::Format_ARGB32_Premultiplied);
+    m_buffer.setDevicePixelRatio(devicePixelRatio);
 }
 
 void BackingStore::beginPaint(const QRegion &region)
 {
-    if (m_backBuffer.hasAlphaChannel()) {
+    if (m_buffer.hasAlphaChannel()) {
         QPainter p(paintDevice());
         p.setCompositionMode(QPainter::CompositionMode_Source);
         const QColor blank = Qt::transparent;
         for (const QRect &rect : region) {
             p.fillRect(rect, blank);
         }
-    }
-}
-
-static QRect scaledRect(const QRect &rect, qreal devicePixelRatio)
-{
-    return QRect(rect.topLeft() * devicePixelRatio, rect.size() * devicePixelRatio);
-}
-
-static void blitImage(const QImage &source, QImage &target, const QRegion &region)
-{
-    QPainter painter(&target);
-    painter.setCompositionMode(QPainter::CompositionMode_Source);
-    for (const QRect &rect : region) {
-        painter.drawImage(rect, source, scaledRect(rect, source.devicePixelRatio()));
     }
 }
 
@@ -81,17 +64,15 @@ void BackingStore::flush(QWindow *window, const QRegion &region, const QPoint &o
         return;
     }
 
-    blitImage(m_backBuffer, m_frontBuffer, region);
-
     QRegion bufferDamage;
     for (const QRect &rect : region) {
-        bufferDamage |= QRect(std::floor(rect.x() * m_backBuffer.devicePixelRatio()),
-                              std::floor(rect.y() * m_backBuffer.devicePixelRatio()),
-                              std::ceil(rect.width() * m_backBuffer.devicePixelRatio()),
-                              std::ceil(rect.height() * m_backBuffer.devicePixelRatio()));
+        bufferDamage |= QRect(std::floor(rect.x() * m_buffer.devicePixelRatio()),
+                              std::floor(rect.y() * m_buffer.devicePixelRatio()),
+                              std::ceil(rect.width() * m_buffer.devicePixelRatio()),
+                              std::ceil(rect.height() * m_buffer.devicePixelRatio()));
     }
 
-    internalWindow->present(m_frontBuffer, bufferDamage);
+    internalWindow->present(m_buffer, bufferDamage);
 }
 
 }
