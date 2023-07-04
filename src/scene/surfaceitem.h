@@ -26,6 +26,15 @@ public:
     QMatrix4x4 surfaceToBufferMatrix() const;
     void setSurfaceToBufferMatrix(const QMatrix4x4 &matrix);
 
+    QRectF bufferSourceBox() const;
+    void setBufferSourceBox(const QRectF &box);
+
+    Output::Transform bufferTransform() const;
+    void setBufferTransform(Output::Transform transform);
+
+    QSize bufferSize() const;
+    void setBufferSize(const QSize &size);
+
     QRegion mapFromBuffer(const QRegion &region) const;
 
     void addDamage(const QRegion &region);
@@ -55,6 +64,9 @@ protected:
     WindowQuadList buildQuads() const override;
 
     QRegion m_damage;
+    Output::Transform m_bufferTransform;
+    QRectF m_bufferSourceBox;
+    QSize m_bufferSize;
     std::unique_ptr<SurfacePixmap> m_pixmap;
     std::unique_ptr<SurfacePixmap> m_previousPixmap;
     QMatrix4x4 m_surfaceToBufferMatrix;

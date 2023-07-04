@@ -35,6 +35,8 @@ SurfaceItemX11::SurfaceItemX11(X11Window *window, Scene *scene, Item *parent)
     }
 
     setSize(window->bufferGeometry().size());
+    setBufferSourceBox(QRectF(QPointF(0, 0), window->bufferGeometry().size()));
+    setBufferSize(window->bufferGeometry().size().toSize());
 }
 
 SurfaceItemX11::~SurfaceItemX11()
@@ -144,6 +146,8 @@ void SurfaceItemX11::handleBufferGeometryChanged(const QRectF &old)
         discardPixmap();
     }
     setSize(m_window->bufferGeometry().size());
+    setBufferSourceBox(QRectF(QPointF(0, 0), m_window->bufferGeometry().size()));
+    setBufferSize(m_window->bufferGeometry().size().toSize());
 }
 
 void SurfaceItemX11::handleShapeChanged()

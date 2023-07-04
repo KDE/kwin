@@ -99,36 +99,36 @@ QRectF applyOutputTransform(const QRectF &rect, const QSizeF &bounds, Output::Tr
 
     switch (transform) {
     case Output::Transform::Normal:
-        dest.setX(rect.x());
-        dest.setY(rect.y());
+        dest.moveLeft(rect.x());
+        dest.moveTop(rect.y());
         break;
     case Output::Transform::Rotated90:
-        dest.setX(bounds.height() - (rect.y() + rect.height()));
-        dest.setY(rect.x());
+        dest.moveLeft(bounds.height() - (rect.y() + rect.height()));
+        dest.moveTop(rect.x());
         break;
     case Output::Transform::Rotated180:
-        dest.setX(bounds.width() - (rect.x() + rect.width()));
-        dest.setY(bounds.height() - (rect.y() + rect.height()));
+        dest.moveLeft(bounds.width() - (rect.x() + rect.width()));
+        dest.moveTop(bounds.height() - (rect.y() + rect.height()));
         break;
     case Output::Transform::Rotated270:
-        dest.setX(rect.y());
-        dest.setY(bounds.width() - (rect.x() + rect.width()));
+        dest.moveLeft(rect.y());
+        dest.moveTop(bounds.width() - (rect.x() + rect.width()));
         break;
     case Output::Transform::Flipped:
-        dest.setX(bounds.width() - (rect.x() + rect.width()));
-        dest.setY(rect.y());
+        dest.moveLeft(bounds.width() - (rect.x() + rect.width()));
+        dest.moveTop(rect.y());
         break;
     case Output::Transform::Flipped90:
-        dest.setX(rect.y());
-        dest.setY(rect.x());
+        dest.moveLeft(rect.y());
+        dest.moveTop(rect.x());
         break;
     case Output::Transform::Flipped180:
-        dest.setX(rect.x());
-        dest.setY(bounds.height() - (rect.y() + rect.height()));
+        dest.moveLeft(rect.x());
+        dest.moveTop(bounds.height() - (rect.y() + rect.height()));
         break;
     case Output::Transform::Flipped270:
-        dest.setX(bounds.height() - (rect.y() + rect.height()));
-        dest.setY(bounds.width() - (rect.x() + rect.width()));
+        dest.moveLeft(bounds.height() - (rect.y() + rect.height()));
+        dest.moveTop(bounds.width() - (rect.x() + rect.width()));
         break;
     }
 

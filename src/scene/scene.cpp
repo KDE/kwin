@@ -54,6 +54,11 @@ Output *SceneDelegate::output() const
     return m_output;
 }
 
+qreal SceneDelegate::scale() const
+{
+    return m_output ? m_output->scale() : 1.0;
+}
+
 QRect SceneDelegate::viewport() const
 {
     return m_output ? m_output->geometry() : m_scene->geometry();

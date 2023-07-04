@@ -26,6 +26,7 @@ public:
     ~SceneDelegate() override;
 
     Output *output() const;
+    qreal scale() const;
     QRect viewport() const;
 
     QRegion repaints() const override;

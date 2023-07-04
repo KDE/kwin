@@ -5,6 +5,7 @@
 */
 
 #include "scene/surfaceitem.h"
+#include "scene/scene.h"
 
 namespace KWin
 {
@@ -25,6 +26,36 @@ void SurfaceItem::setSurfaceToBufferMatrix(const QMatrix4x4 &matrix)
     m_bufferToSurfaceMatrix = matrix.inverted();
 }
 
+QRectF SurfaceItem::bufferSourceBox() const
+{
+    return m_bufferSourceBox;
+}
+
+void SurfaceItem::setBufferSourceBox(const QRectF &box)
+{
+    m_bufferSourceBox = box;
+}
+
+Output::Transform SurfaceItem::bufferTransform() const
+{
+    return m_bufferTransform;
+}
+
+void SurfaceItem::setBufferTransform(Output::Transform transform)
+{
+    m_bufferTransform = transform;
+}
+
+QSize SurfaceItem::bufferSize() const
+{
+    return m_bufferSize;
+}
+
+void SurfaceItem::setBufferSize(const QSize &size)
+{
+    m_bufferSize = size;
+}
+
 QRegion SurfaceItem::mapFromBuffer(const QRegion &region) const
 {
     QRegion result;
@@ -34,10 +65,42 @@ QRegion SurfaceItem::mapFromBuffer(const QRegion &region) const
     return result;
 }
 
+static QRegion expandRegion(const QRegion &region, const QMargins &padding)
+{
+    if (region.isEmpty()) {
+        return QRegion();
+    }
+
+    QRegion ret;
+    for (const QRect &rect : region) {
+        ret += rect.marginsAdded(padding);
+    }
+
+    return ret;
+}
+
 void SurfaceItem::addDamage(const QRegion &region)
 {
     m_damage += region;
-    scheduleRepaint(mapFromBuffer(region));
+
+    const QRectF sourceBox = applyOutputTransform(m_bufferSourceBox, m_bufferSize, m_bufferTransform);
+    const qreal xScale = sourceBox.width() / size().width();
+    const qreal yScale = sourceBox.height() / size().height();
+    const QRegion logicalDamage = mapFromBuffer(region);
+
+    const auto delegates = scene()->delegates();
+    for (SceneDelegate *delegate : delegates) {
+        QRegion delegateDamage = logicalDamage;
+        const qreal delegateScale = delegate->scale();
+        if (xScale != delegateScale || yScale != delegateScale) {
+            // Simplified version of ceil(ceil(0.5 * output_scale / surface_scale) / output_scale)
+            const int xPadding = std::ceil(0.5 / xScale);
+            const int yPadding = std::ceil(0.5 / yScale);
+            delegateDamage = expandRegion(delegateDamage, QMargins(xPadding, yPadding, xPadding, yPadding));
+        }
+        scheduleRepaint(delegate, delegateDamage);
+    }
+
     Q_EMIT damaged();
 }
 

@@ -295,6 +295,13 @@ void Item::scheduleRepaint(const QRegion &region)
     }
 }
 
+void Item::scheduleRepaint(SceneDelegate *delegate, const QRegion &region)
+{
+    if (isVisible()) {
+        scheduleRepaintInternal(delegate, region);
+    }
+}
+
 void Item::scheduleRepaintInternal(const QRegion &region)
 {
     const QRegion globalRegion = mapToGlobal(region);
@@ -305,6 +312,16 @@ void Item::scheduleRepaintInternal(const QRegion &region)
             m_repaints[delegate] += dirtyRegion;
             delegate->layer()->loop()->scheduleRepaint(this);
         }
+    }
+}
+
+void Item::scheduleRepaintInternal(SceneDelegate *delegate, const QRegion &region)
+{
+    const QRegion globalRegion = mapToGlobal(region);
+    const QRegion dirtyRegion = globalRegion & delegate->viewport();
+    if (!dirtyRegion.isEmpty()) {
+        m_repaints[delegate] += dirtyRegion;
+        delegate->layer()->loop()->scheduleRepaint(this);
     }
 }
 

@@ -104,6 +104,7 @@ public:
 
     void scheduleRepaint(const QRectF &region);
     void scheduleRepaint(const QRegion &region);
+    void scheduleRepaint(SceneDelegate *delegate, const QRegion &region);
     void scheduleFrame();
     QRegion repaints(SceneDelegate *delegate) const;
     void resetRepaints(SceneDelegate *delegate);
@@ -137,6 +138,7 @@ private:
     void removeChild(Item *item);
     void updateBoundingRect();
     void scheduleRepaintInternal(const QRegion &region);
+    void scheduleRepaintInternal(SceneDelegate *delegate, const QRegion &region);
     void markSortedChildItemsDirty();
 
     bool computeEffectiveVisibility() const;
