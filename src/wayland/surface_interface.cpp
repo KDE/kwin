@@ -555,7 +555,6 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
 {
     const bool bufferChanged = next->bufferIsSet;
     const bool opaqueRegionChanged = next->opaqueIsSet;
-    const bool scaleFactorChanged = next->bufferScaleIsSet && (current.bufferScale != next->bufferScale);
     const bool transformChanged = next->bufferTransformIsSet && (current.bufferTransform != next->bufferTransform);
     const bool shadowChanged = next->shadowIsSet;
     const bool blurChanged = next->blurIsSet;
@@ -651,9 +650,6 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     }
     if (oldInputRegion != inputRegion) {
         Q_EMIT q->inputChanged(inputRegion);
-    }
-    if (scaleFactorChanged) {
-        Q_EMIT q->bufferScaleChanged(current.bufferScale);
     }
     if (transformChanged) {
         Q_EMIT q->bufferTransformChanged(current.bufferTransform);
@@ -800,11 +796,6 @@ QRegion SurfaceInterface::opaque() const
 QRegion SurfaceInterface::input() const
 {
     return d->inputRegion;
-}
-
-qint32 SurfaceInterface::bufferScale() const
-{
-    return d->current.bufferScale;
 }
 
 KWin::Output::Transform SurfaceInterface::bufferTransform() const

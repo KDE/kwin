@@ -77,7 +77,6 @@ class KWIN_EXPORT SurfaceInterface : public QObject
      * The current input region.
      */
     Q_PROPERTY(QRegion input READ input NOTIFY inputChanged)
-    Q_PROPERTY(qint32 bufferScale READ bufferScale NOTIFY bufferScaleChanged)
     Q_PROPERTY(KWin::Output::Transform bufferTransform READ bufferTransform NOTIFY bufferTransformChanged)
     Q_PROPERTY(QSizeF size READ size NOTIFY sizeChanged)
 public:
@@ -146,7 +145,6 @@ public:
     QRegion opaque() const;
     QRegion input() const;
     QRegion bufferDamage() const;
-    qint32 bufferScale() const;
     /**
      * Returns the buffer transform that had been applied to the buffer to compensate for
      * output rotation.
@@ -369,10 +367,6 @@ Q_SIGNALS:
     void damaged(const QRegion &);
     void opaqueChanged(const QRegion &);
     void inputChanged(const QRegion &);
-    /**
-     * This signal is emitted when the scale of the attached buffer has changed.
-     */
-    void bufferScaleChanged(qint32);
     /**
      * This signal is emitted when the buffer transform has changed.
      */
