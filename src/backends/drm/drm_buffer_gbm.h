@@ -42,7 +42,12 @@ public:
     KWaylandServer::ClientBuffer *clientBuffer() const;
     uint32_t flags() const;
 
-    bool map(uint32_t flags);
+    struct Map
+    {
+        void *data;
+        uint32_t stride;
+    };
+    Map map(uint32_t flags);
 
     static std::shared_ptr<GbmBuffer> importBuffer(DrmGpu *gpu, KWaylandServer::LinuxDmaBufV1ClientBuffer *clientBuffer);
     static std::shared_ptr<GbmBuffer> importBuffer(DrmGpu *gpu, GbmBuffer *buffer, uint32_t flags = GBM_BO_USE_SCANOUT);
@@ -56,6 +61,7 @@ private:
     const uint32_t m_flags;
     void *m_data = nullptr;
     void *m_mapping = nullptr;
+    uint32_t m_mapStride = 0;
 };
 
 }

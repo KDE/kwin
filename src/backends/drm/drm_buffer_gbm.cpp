@@ -127,14 +127,15 @@ uint32_t GbmBuffer::flags() const
     return m_flags;
 }
 
-bool GbmBuffer::map(uint32_t flags)
+GbmBuffer::Map GbmBuffer::map(uint32_t flags)
 {
-    if (m_data) {
-        return true;
+    if (!m_data) {
+        m_data = gbm_bo_map(m_bo, 0, 0, m_size.width(), m_size.height(), flags, &m_mapStride, &m_mapping);
     }
-    uint32_t stride = m_strides[0];
-    m_data = gbm_bo_map(m_bo, 0, 0, m_size.width(), m_size.height(), flags, &stride, &m_mapping);
-    return m_data;
+    return Map{
+        .data = m_data,
+        .stride = m_mapStride,
+    };
 }
 
 void GbmBuffer::createFds()

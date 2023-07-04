@@ -24,6 +24,7 @@
 #include "wayland/linuxdmabufv1clientbuffer.h"
 #include "wayland/surface_interface.h"
 
+#include <cstring>
 #include <drm_fourcc.h>
 #include <errno.h>
 #include <gbm.h>
@@ -382,18 +383,21 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importDmabuf(GbmBuffer *sour
 std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithCpu(Surface &surface, GbmBuffer *sourceBuffer) const
 {
     Q_ASSERT(surface.importSwapchain && !surface.importSwapchain->isEmpty());
-    if (!sourceBuffer->map(GBM_BO_TRANSFER_READ)) {
+    const auto map = sourceBuffer->map(GBM_BO_TRANSFER_READ);
+    if (!map.data) {
         qCWarning(KWIN_DRM, "mapping a %s gbm_bo failed: %s", formatName(sourceBuffer->format()).name, strerror(errno));
         return nullptr;
     }
     const auto importBuffer = surface.importSwapchain->acquireBuffer();
-    if (sourceBuffer->planeCount() != 1 || sourceBuffer->strides()[0] != importBuffer->strides()[0]) {
-        qCCritical(KWIN_DRM, "stride of gbm_bo (%d) and dumb buffer (%d) with format %s don't match!",
-                   sourceBuffer->strides()[0], importBuffer->strides()[0], formatName(sourceBuffer->format()).name);
-        return nullptr;
-    }
-    if (!memcpy(importBuffer->data(), sourceBuffer->mappedData(), importBuffer->size().height() * importBuffer->strides()[0])) {
-        return nullptr;
+    if (map.stride == importBuffer->strides()[0]) {
+        std::memcpy(importBuffer->data(), map.data, importBuffer->size().height() * importBuffer->strides()[0]);
+    } else {
+        const uint64_t usedLineWidth = std::min(map.stride, importBuffer->strides()[0]);
+        for (int i = 0; i < importBuffer->size().height(); i++) {
+            const char *srcAddress = reinterpret_cast<const char *>(map.data) + map.stride * i;
+            char *dstAddress = reinterpret_cast<char *>(importBuffer->data()) + importBuffer->strides()[0] * i;
+            std::memcpy(dstAddress, srcAddress, usedLineWidth);
+        }
     }
     const auto ret = DrmFramebuffer::createFramebuffer(importBuffer);
     if (!ret) {
