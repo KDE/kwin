@@ -429,24 +429,24 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithCpu(Surface &surfa
         qCWarning(KWIN_DRM) << "EglGbmLayerSurface::importWithCpu: failed to get a target dumb buffer";
         return nullptr;
     }
-    auto releaseSlot = qScopeGuard([&surface, &slot]() {
-        surface.importDumbSwapchain->release(slot);
-    });
 
-    if (sourceView.image()->bytesPerLine() != slot->view()->image()->bytesPerLine()) {
-        qCCritical(KWIN_DRM, "EglGbmLayerSurface::importWithCpu: stride of source (%" PRIdQSIZETYPE ") and target buffer (%" PRIdQSIZETYPE ") don't match",
-                   sourceView.image()->bytesPerLine(),
-                   slot->view()->image()->bytesPerLine());
-        return nullptr;
+    if (sourceView.image()->bytesPerLine() == slot->view()->image()->bytesPerLine()) {
+        std::memcpy(slot->view()->image()->bits(), sourceView.image()->bits(), sourceView.image()->sizeInBytes());
+    } else {
+        // copy line by line
+        QImage *const src = slot->view()->image();
+        QImage *const dst = slot->view()->image();
+        const uint64_t lineWidth = std::min(src->bytesPerLine(), dst->bytesPerLine());
+        for (int i = 0; i < src->height(); i++) {
+            std::memcpy(dst->scanLine(i), src->scanLine(i), lineWidth);
+        }
     }
-
-    std::memcpy(slot->view()->image()->bits(), sourceView.image()->bits(), sourceView.image()->sizeInBytes());
 
     const auto ret = m_gpu->importBuffer(slot->buffer());
     if (!ret) {
         qCWarning(KWIN_DRM, "Failed to create a framebuffer: %s", strerror(errno));
     }
-
+    surface.importDumbSwapchain->release(slot);
     return ret;
 }
 }
