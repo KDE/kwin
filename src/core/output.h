@@ -371,6 +371,10 @@ protected:
     friend class EffectScreenImpl; // to access m_effectScreen
 };
 
+// TODO: Introduce an OutputTransform type with two methods: invert + apply?
+KWIN_EXPORT Output::Transform invertOutputTransform(Output::Transform transform);
+KWIN_EXPORT QRectF applyOutputTransform(const QRectF &rect, const QSizeF &bounds, Output::Transform transform);
+
 inline QRect Output::rect() const
 {
     return QRect(QPoint(0, 0), geometry().size());

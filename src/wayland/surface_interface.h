@@ -145,6 +145,7 @@ public:
     QRegion opaque() const;
     QRegion input() const;
     QRegion bufferDamage() const;
+    QRectF bufferSourceBox() const;
     /**
      * Returns the buffer transform that had been applied to the buffer to compensate for
      * output rotation.

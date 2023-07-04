@@ -60,6 +60,81 @@ OutputMode::Flags OutputMode::flags() const
     return m_flags;
 }
 
+Output::Transform invertOutputTransform(Output::Transform transform)
+{
+    switch (transform) {
+    case Output::Transform::Normal:
+        return Output::Transform::Normal;
+    case Output::Transform::Rotated90:
+        return Output::Transform::Rotated270;
+    case Output::Transform::Rotated180:
+        return Output::Transform::Rotated180;
+    case Output::Transform::Rotated270:
+        return Output::Transform::Rotated90;
+    case Output::Transform::Flipped:
+    case Output::Transform::Flipped90:
+    case Output::Transform::Flipped180:
+    case Output::Transform::Flipped270:
+        return transform; // inverse transform of a flip transform is itself
+    }
+}
+
+QRectF applyOutputTransform(const QRectF &rect, const QSizeF &bounds, Output::Transform transform)
+{
+    QRectF dest;
+
+    switch (transform) {
+    case Output::Transform::Normal:
+    case Output::Transform::Rotated180:
+    case Output::Transform::Flipped:
+    case Output::Transform::Flipped180:
+        dest.setWidth(rect.width());
+        dest.setHeight(rect.height());
+        break;
+    default:
+        dest.setWidth(rect.height());
+        dest.setHeight(rect.width());
+        break;
+    }
+
+    switch (transform) {
+    case Output::Transform::Normal:
+        dest.setX(rect.x());
+        dest.setY(rect.y());
+        break;
+    case Output::Transform::Rotated90:
+        dest.setX(bounds.height() - (rect.y() + rect.height()));
+        dest.setY(rect.x());
+        break;
+    case Output::Transform::Rotated180:
+        dest.setX(bounds.width() - (rect.x() + rect.width()));
+        dest.setY(bounds.height() - (rect.y() + rect.height()));
+        break;
+    case Output::Transform::Rotated270:
+        dest.setX(rect.y());
+        dest.setY(bounds.width() - (rect.x() + rect.width()));
+        break;
+    case Output::Transform::Flipped:
+        dest.setX(bounds.width() - (rect.x() + rect.width()));
+        dest.setY(rect.y());
+        break;
+    case Output::Transform::Flipped90:
+        dest.setX(rect.y());
+        dest.setY(rect.x());
+        break;
+    case Output::Transform::Flipped180:
+        dest.setX(rect.x());
+        dest.setY(bounds.height() - (rect.y() + rect.height()));
+        break;
+    case Output::Transform::Flipped270:
+        dest.setX(bounds.height() - (rect.y() + rect.height()));
+        dest.setY(bounds.width() - (rect.x() + rect.width()));
+        break;
+    }
+
+    return dest;
+}
+
 Output::Output(QObject *parent)
     : QObject(parent)
 {

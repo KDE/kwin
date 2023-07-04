@@ -785,6 +785,20 @@ QRegion SurfaceInterface::input() const
     return d->inputRegion;
 }
 
+QRectF SurfaceInterface::bufferSourceBox() const
+{
+    if (!d->current.viewport.sourceGeometryIsSet) {
+        return QRectF(0, 0, d->bufferSize.width(), d->bufferSize.height());
+    }
+
+    const QRectF box(d->current.viewport.sourceGeometry.x() * d->current.bufferScale,
+                     d->current.viewport.sourceGeometry.y() * d->current.bufferScale,
+                     d->current.viewport.sourceGeometry.width() * d->current.bufferScale,
+                     d->current.viewport.sourceGeometry.height() * d->current.bufferScale);
+
+    return KWin::applyOutputTransform(box, d->bufferSize, KWin::invertOutputTransform(d->current.bufferTransform));
+}
+
 KWin::Output::Transform SurfaceInterface::bufferTransform() const
 {
     return d->current.bufferTransform;
