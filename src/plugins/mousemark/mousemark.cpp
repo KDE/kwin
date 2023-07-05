@@ -4,11 +4,13 @@
 
     SPDX-FileCopyrightText: 2006 Lubos Lunak <l.lunak@kde.org>
     SPDX-FileCopyrightText: 2007 Christian Nitschkowski <christian.nitschkowski@kdemail.net>
+    SPDX-FileCopyrightText: 2023 Andrew Shark <ashark at linuxcomp.ru>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
 #include "mousemark.h"
+#include "mousemarklogging.h"
 
 // KConfigSkeleton
 #include "mousemarkconfig.h"
@@ -52,7 +54,7 @@ MouseMarkEffect::MouseMarkEffect()
     connect(effects, &EffectsHandler::mouseChanged, this, &MouseMarkEffect::slotMouseChanged);
     connect(effects, &EffectsHandler::screenLockingChanged, this, &MouseMarkEffect::screenLockingChanged);
     reconfigure(ReconfigureAll);
-    arrow_start = nullPoint();
+    arrow_tail = nullPoint();
     effects->startMousePolling(); // We require it to detect activation as well
 }
 
@@ -64,11 +66,38 @@ MouseMarkEffect::~MouseMarkEffect()
 static int width_2 = 1;
 void MouseMarkEffect::reconfigure(ReconfigureFlags)
 {
+    m_freedraw_modifiers = Qt::KeyboardModifiers();
+    m_arrowdraw_modifiers = Qt::KeyboardModifiers();
     MouseMarkConfig::self()->read();
     width = MouseMarkConfig::lineWidth();
     width_2 = width / 2;
     color = MouseMarkConfig::color();
     color.setAlphaF(1.0);
+    if (MouseMarkConfig::freedrawshift()) {
+        m_freedraw_modifiers |= Qt::ShiftModifier;
+    }
+    if (MouseMarkConfig::freedrawalt()) {
+        m_freedraw_modifiers |= Qt::AltModifier;
+    }
+    if (MouseMarkConfig::freedrawcontrol()) {
+        m_freedraw_modifiers |= Qt::ControlModifier;
+    }
+    if (MouseMarkConfig::freedrawmeta()) {
+        m_freedraw_modifiers |= Qt::MetaModifier;
+    }
+
+    if (MouseMarkConfig::arrowdrawshift()) {
+        m_arrowdraw_modifiers |= Qt::ShiftModifier;
+    }
+    if (MouseMarkConfig::arrowdrawalt()) {
+        m_arrowdraw_modifiers |= Qt::AltModifier;
+    }
+    if (MouseMarkConfig::arrowdrawcontrol()) {
+        m_arrowdraw_modifiers |= Qt::ControlModifier;
+    }
+    if (MouseMarkConfig::arrowdrawmeta()) {
+        m_arrowdraw_modifiers |= Qt::MetaModifier;
+    }
 }
 
 void MouseMarkEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
@@ -146,21 +175,28 @@ void MouseMarkEffect::slotMouseChanged(const QPointF &pos, const QPointF &,
                                        Qt::MouseButtons, Qt::MouseButtons,
                                        Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers)
 {
-    if (modifiers == (Qt::META | Qt::SHIFT | Qt::CTRL)) { // start/finish arrow
-        if (arrow_start != nullPoint()) {
-            marks.append(createArrow(arrow_start, pos));
-            arrow_start = nullPoint();
+    qCDebug(KWIN_MOUSEMARK) << "MouseChanged" << pos;
+    if (modifiers == m_arrowdraw_modifiers && m_arrowdraw_modifiers != Qt::NoModifier) { // start/finish arrow
+        if (arrow_tail != nullPoint()) {
+            if (drawing.length() != 0) {
+                clearLast();  // clear our arrow with tail at previous position
+            }
+            drawing = createArrow(pos, arrow_tail);
             effects->addRepaintFull();
             return;
         } else {
-            arrow_start = pos;
+            if (drawing.length() > 0) { // has unfinished freedraw right before arrowdraw
+                marks.append(drawing);
+                drawing.clear();
+            }
+            arrow_tail = pos;
         }
-    }
-    if (arrow_start != nullPoint()) {
-        return;
-    }
-    // TODO the shortcuts now trigger this right before they're activated
-    if (modifiers == (Qt::META | Qt::SHIFT)) { // activated
+    } else if (modifiers == m_freedraw_modifiers && m_freedraw_modifiers != Qt::NoModifier ) { // activated
+        if (arrow_tail != nullPoint()) {
+            arrow_tail = nullPoint(); // for the case when user started freedraw right after arrowdraw
+            marks.append(drawing);
+            drawing.clear();
+        }
         if (drawing.isEmpty()) {
             drawing.append(pos);
         }
@@ -173,14 +209,18 @@ void MouseMarkEffect::slotMouseChanged(const QPointF &pos, const QPointF &,
                               std::max(pos.x(), pos2.x()), std::max(pos.y(), pos2.y()));
         repaint.adjust(-width, -width, width, width);
         effects->addRepaint(repaint);
-    } else if (!drawing.isEmpty()) {
-        marks.append(drawing);
-        drawing.clear();
+    } else { // neither freedraw, nor arrowdraw modifiers pressed, but mouse moved
+        if (drawing.length() > 1) {
+            marks.append(drawing);
+            drawing.clear();
+        }
+        arrow_tail = nullPoint();
     }
 }
 
 void MouseMarkEffect::clear()
 {
+    arrow_tail = nullPoint();
     drawing.clear();
     marks.clear();
     effects->addRepaintFull();
@@ -188,9 +228,7 @@ void MouseMarkEffect::clear()
 
 void MouseMarkEffect::clearLast()
 {
-    if (arrow_start != nullPoint()) {
-        arrow_start = nullPoint();
-    } else if (!drawing.isEmpty()) {
+    if (drawing.length() > 1) { // just pressing a modifiers already create a drawing with 1 point (so not visible), treat it as non-existent
         drawing.clear();
         effects->addRepaintFull();
     } else if (!marks.isEmpty()) {
@@ -199,17 +237,19 @@ void MouseMarkEffect::clearLast()
     }
 }
 
-MouseMarkEffect::Mark MouseMarkEffect::createArrow(QPointF arrow_start, QPointF arrow_end)
+MouseMarkEffect::Mark MouseMarkEffect::createArrow(QPointF arrow_head, QPointF arrow_tail)
 {
     Mark ret;
-    double angle = atan2((double)(arrow_end.y() - arrow_start.y()), (double)(arrow_end.x() - arrow_start.x()));
-    ret += arrow_start + QPoint(50 * cos(angle + M_PI / 6),
+    double angle = atan2((double)(arrow_tail.y() - arrow_head.y()), (double)(arrow_tail.x() - arrow_head.x()));
+    // Arrow is made of connected lines. We make it's last point at tail, so freedraw can begin from the tail
+    ret += arrow_head;
+    ret += arrow_head + QPoint(50 * cos(angle + M_PI / 6),
                                 50 * sin(angle + M_PI / 6)); // right one
-    ret += arrow_start;
-    ret += arrow_end;
-    ret += arrow_start; // it's connected lines, so go back with the middle one
-    ret += arrow_start + QPoint(50 * cos(angle - M_PI / 6),
+    ret += arrow_head;
+    ret += arrow_head + QPoint(50 * cos(angle - M_PI / 6),
                                 50 * sin(angle - M_PI / 6)); // left one
+    ret += arrow_head;
+    ret += arrow_tail;
     return ret;
 }
 

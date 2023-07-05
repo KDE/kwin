@@ -20,6 +20,13 @@ target_link_libraries(mousemark PRIVATE
     KF6::I18n
 )
 
+ecm_qt_declare_logging_category(mousemark
+        HEADER mousemarklogging.h
+        IDENTIFIER KWIN_MOUSEMARK
+        CATEGORY_NAME kwin_effect_mousemark
+        DEFAULT_SEVERITY Warning
+)
+
 #######################################
 # Config
 if (KWIN_BUILD_KCMS)

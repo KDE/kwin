@@ -11,5 +11,30 @@
         <entry name="Color" type="Color">
             <default>255,0,0</default>
         </entry>
+        <entry name="Freedrawmeta" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="Freedrawcontrol" type="Bool">
+            <default>false</default>
+        </entry>
+        <entry name="Freedrawalt" type="Bool">
+            <default>false</default>
+        </entry>
+        <entry name="Freedrawshift" type="Bool">
+            <default>true</default>
+        </entry>
+
+        <entry name="Arrowdrawmeta" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="Arrowdrawcontrol" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="Arrowdrawalt" type="Bool">
+            <default>false</default>
+        </entry>
+        <entry name="Arrowdrawshift" type="Bool">
+            <default>true</default>
+        </entry>
     </group>
 </kcfg>

@@ -3,6 +3,7 @@
     This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2007 Christian Nitschkowski <christian.nitschkowski@kdemail.net>
+    SPDX-FileCopyrightText: 2023 Andrew Shark <ashark at linuxcomp.ru>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
