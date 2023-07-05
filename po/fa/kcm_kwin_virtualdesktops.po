@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Lokalize 1.4\n"
 
 #, kde-format
@@ -34,6 +34,7 @@ msgctxt "A numbered name for virtual desktops"
 msgid "Desktop %1"
 msgid_plural "Desktop %1"
 msgstr[0] "رومیزی %1"
+msgstr[1] ""
 
 #: desktopsmodel.cpp:479
 #, kde-format
@@ -91,6 +92,7 @@ msgstr ""
 msgid "1 Row"
 msgid_plural "%1 Rows"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ui/main.qml:198
 #, kde-format
