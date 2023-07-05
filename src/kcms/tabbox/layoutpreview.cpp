@@ -253,3 +253,5 @@ void SwitcherItem::decrementIndex()
 
 } // namespace KWin
 } // namespace TabBox
+
+#include "moc_layoutpreview.cpp"

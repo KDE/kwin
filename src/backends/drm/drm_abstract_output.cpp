@@ -49,3 +49,5 @@ void DrmAbstractOutput::updateEnabled(bool enabled)
 }
 
 }
+
+#include "moc_drm_abstract_output.cpp"

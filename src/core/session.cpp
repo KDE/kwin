@@ -44,3 +44,5 @@ std::unique_ptr<Session> Session::create(Type type)
 }
 
 } // namespace KWin
+
+#include "moc_session.cpp"

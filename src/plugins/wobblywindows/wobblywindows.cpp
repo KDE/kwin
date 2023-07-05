@@ -1154,3 +1154,5 @@ bool WobblyWindowsEffect::isResizeWobble() const
 }
 
 } // namespace KWin
+
+#include "moc_wobblywindows.cpp"

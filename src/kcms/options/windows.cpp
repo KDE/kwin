@@ -317,3 +317,5 @@ bool KMovingConfig::isSaveNeeded() const
 {
     return managedWidgetChangeState();
 }
+
+#include "moc_windows.cpp"

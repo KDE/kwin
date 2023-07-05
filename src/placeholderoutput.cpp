@@ -40,3 +40,5 @@ RenderLoop *PlaceholderOutput::renderLoop() const
 }
 
 } // namespace KWin
+
+#include "moc_placeholderoutput.cpp"

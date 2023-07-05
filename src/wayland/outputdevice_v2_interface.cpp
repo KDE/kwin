@@ -730,3 +730,5 @@ OutputDeviceModeV2Interface *OutputDeviceModeV2Interface::get(wl_resource *nativ
 }
 
 }
+
+#include "moc_outputdevice_v2_interface.cpp"

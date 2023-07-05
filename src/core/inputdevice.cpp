@@ -24,3 +24,5 @@ void InputDevice::setOutputName(const QString &outputName)
 }
 
 } // namespace KWin
+
+#include "moc_inputdevice.cpp"

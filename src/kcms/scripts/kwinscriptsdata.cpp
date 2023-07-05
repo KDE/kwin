@@ -40,3 +40,5 @@ bool KWinScriptsData::isDefaults() const
 
     return true;
 }
+
+#include "moc_kwinscriptsdata.cpp"

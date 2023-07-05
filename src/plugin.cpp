@@ -14,3 +14,5 @@ Plugin::Plugin() = default;
 PluginFactory::PluginFactory() = default;
 
 } // namespace KWin
+
+#include "moc_plugin.cpp"

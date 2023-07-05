@@ -983,3 +983,5 @@ void VirtualDesktopManager::slotUp()
 }
 
 } // KWin
+
+#include "moc_virtualdesktops.cpp"

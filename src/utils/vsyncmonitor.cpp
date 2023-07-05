@@ -12,3 +12,5 @@ namespace KWin
 VsyncMonitor::VsyncMonitor() = default;
 
 } // namespace KWin
+
+#include "moc_vsyncmonitor.cpp"

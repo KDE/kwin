@@ -87,3 +87,5 @@ void SubSurfaceMonitor::unregisterSurface(SurfaceInterface *surface)
 }
 
 } // namespace KWin
+
+#include "moc_subsurfacemonitor.cpp"

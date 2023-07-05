@@ -15,3 +15,5 @@ WaylandShellIntegration::WaylandShellIntegration(QObject *parent)
 }
 
 } // namespace KWin
+
+#include "moc_waylandshellintegration.cpp"

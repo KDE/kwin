@@ -260,3 +260,5 @@ SurfaceInterface *SubSurfaceInterface::mainSurface() const
 }
 
 } // namespace KWaylandServer
+
+#include "moc_subcompositor_interface.cpp"

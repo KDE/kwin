@@ -178,3 +178,5 @@ void Primary::x11OffersChanged(const QStringList &added, const QStringList &remo
 
 } // namespace Xwl
 } // namespace KWin
+
+#include "moc_primary.cpp"

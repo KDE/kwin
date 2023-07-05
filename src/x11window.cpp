@@ -5152,3 +5152,5 @@ void X11Window::getSkipCloseAnimation()
 }
 
 } // namespace
+
+#include "moc_x11window.cpp"

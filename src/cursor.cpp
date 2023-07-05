@@ -697,3 +697,5 @@ void Cursor::setSource(CursorSource *source)
 }
 
 } // namespace
+
+#include "moc_cursor.cpp"

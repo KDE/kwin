@@ -359,3 +359,5 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
 
 }
 #include "outputmanagement_v2_interface.moc"
+
+#include "moc_outputmanagement_v2_interface.cpp"

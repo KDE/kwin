@@ -706,3 +706,5 @@ void ExpoLayout::resetTransformations()
         cell->setHeight(cell->naturalHeight());
     }
 }
+
+#include "moc_expolayout.cpp"

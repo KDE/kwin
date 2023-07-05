@@ -325,3 +325,5 @@ BUFFER(bottom)
 BUFFER(bottomLeft)
 
 }
+
+#include "moc_shadow_interface.cpp"

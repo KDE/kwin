@@ -111,3 +111,5 @@ Window *ApplicationMenu::findWindowWithApplicationMenu(const QString &serviceNam
 }
 
 } // namespace KWin
+
+#include "moc_appmenu.cpp"

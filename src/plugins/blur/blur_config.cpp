@@ -43,3 +43,5 @@ void BlurEffectConfig::save()
 } // namespace KWin
 
 #include "blur_config.moc"
+
+#include "moc_blur_config.cpp"

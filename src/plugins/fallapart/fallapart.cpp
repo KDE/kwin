@@ -206,3 +206,5 @@ bool FallApartEffect::isActive() const
 }
 
 } // namespace
+
+#include "moc_fallapart.cpp"

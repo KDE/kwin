@@ -98,3 +98,5 @@ void BlendChanges::prePaintScreen(ScreenPrePaintData &data, std::chrono::millise
 }
 
 } // namespace KWin
+
+#include "moc_blendchanges.cpp"

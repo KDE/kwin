@@ -89,3 +89,5 @@ int VirtualDesktopModel::rowCount(const QModelIndex &parent) const
 }
 
 } // namespace KWin
+
+#include "moc_virtualdesktopmodel.cpp"

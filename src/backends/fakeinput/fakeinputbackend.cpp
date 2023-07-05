@@ -33,3 +33,5 @@ void FakeInputBackend::initialize()
 }
 
 } // namespace KWin
+
+#include "moc_fakeinputbackend.cpp"

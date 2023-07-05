@@ -46,3 +46,5 @@ void DBusCall::call()
 }
 
 } // KWin
+
+#include "moc_dbuscall.cpp"

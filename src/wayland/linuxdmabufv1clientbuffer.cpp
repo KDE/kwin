@@ -483,3 +483,7 @@ LinuxDmaBufV1FormatTable::LinuxDmaBufV1FormatTable(const QHash<uint32_t, QVector
 }
 
 } // namespace KWaylandServer
+
+#include "moc_linuxdmabufv1clientbuffer_p.cpp"
+
+#include "moc_linuxdmabufv1clientbuffer.cpp"

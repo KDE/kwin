@@ -419,3 +419,5 @@ void WindowThumbnailItem::updateOffscreenTexture()
 }
 
 } // namespace KWin
+
+#include "moc_windowthumbnailitem.cpp"

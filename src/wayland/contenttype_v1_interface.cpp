@@ -82,3 +82,5 @@ void ContentTypeV1Interface::wp_content_type_v1_destroy_resource(Resource *)
 }
 
 }
+
+#include "moc_contenttype_v1_interface.cpp"

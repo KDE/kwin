@@ -516,3 +516,5 @@ QPointF SlideEffect::constrainToDrawableRange(QPointF p)
 }
 
 } // namespace KWin
+
+#include "moc_slide.cpp"

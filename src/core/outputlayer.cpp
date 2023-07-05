@@ -65,3 +65,5 @@ bool OutputLayer::scanout(SurfaceItem *surfaceItem)
 }
 
 } // namespace KWin
+
+#include "moc_outputlayer.cpp"

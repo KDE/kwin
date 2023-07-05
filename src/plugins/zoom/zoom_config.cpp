@@ -139,3 +139,5 @@ void ZoomEffectConfig::save()
 } // namespace
 
 #include "zoom_config.moc"
+
+#include "moc_zoom_config.cpp"

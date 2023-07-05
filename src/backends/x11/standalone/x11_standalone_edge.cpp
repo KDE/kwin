@@ -127,3 +127,5 @@ void WindowBasedEdge::doUpdateBlocking()
 }
 
 }
+
+#include "moc_x11_standalone_edge.cpp"

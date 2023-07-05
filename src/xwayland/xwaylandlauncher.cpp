@@ -322,3 +322,5 @@ void XwaylandLauncher::handleXwaylandError(QProcess::ProcessError error)
 
 }
 }
+
+#include "moc_xwaylandlauncher.cpp"

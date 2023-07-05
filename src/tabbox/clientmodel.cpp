@@ -264,3 +264,5 @@ void ClientModel::activate(int i)
 
 } // namespace Tabbox
 } // namespace KWin
+
+#include "moc_clientmodel.cpp"

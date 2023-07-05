@@ -201,3 +201,5 @@ void PlacementTracker::uninhibit()
     m_inhibitCount--;
 }
 }
+
+#include "moc_placementtracker.cpp"

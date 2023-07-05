@@ -579,3 +579,5 @@ int GestureRecognizer::startSwipeGesture(const QPointF &startPos)
 }
 
 }
+
+#include "moc_gestures.cpp"

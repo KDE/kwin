@@ -127,3 +127,5 @@ void TouchInterface::sendDown(qint32 id, quint32 serial, const QPointF &localPos
 }
 
 } // namespace KWaylandServer
+
+#include "moc_touch_interface.cpp"

@@ -223,3 +223,5 @@ void KActionsOptions::moduleChanged(bool state)
 }
 
 #include "main.moc"
+
+#include "moc_main.cpp"

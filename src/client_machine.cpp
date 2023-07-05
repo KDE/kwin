@@ -231,3 +231,5 @@ void ClientMachine::resolveFinished()
 }
 
 } // namespace
+
+#include "moc_client_machine.cpp"

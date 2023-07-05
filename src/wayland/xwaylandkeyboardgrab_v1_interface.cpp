@@ -108,3 +108,5 @@ XWaylandKeyboardGrabV1Interface::~XWaylandKeyboardGrabV1Interface()
 }
 
 }
+
+#include "moc_xwaylandkeyboardgrab_v1_interface.cpp"

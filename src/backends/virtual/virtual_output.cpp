@@ -75,3 +75,5 @@ void VirtualOutput::vblank(std::chrono::nanoseconds timestamp)
 }
 
 }
+
+#include "moc_virtual_output.cpp"

@@ -3072,3 +3072,5 @@ Activities *Workspace::activities() const
 #endif
 
 } // namespace
+
+#include "moc_workspace.cpp"

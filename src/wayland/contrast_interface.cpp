@@ -206,3 +206,5 @@ QColor ContrastInterface::frost() const
 }
 
 }
+
+#include "moc_contrast_interface.cpp"

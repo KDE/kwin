@@ -43,3 +43,5 @@ void GlideEffectConfig::save()
 } // namespace KWin
 
 #include "glide_config.moc"
+
+#include "moc_glide_config.cpp"

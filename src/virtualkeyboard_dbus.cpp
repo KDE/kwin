@@ -73,3 +73,5 @@ void VirtualKeyboardDBus::forceActivate()
     m_inputMethod->forceActivate();
 }
 }
+
+#include "moc_virtualkeyboard_dbus.cpp"

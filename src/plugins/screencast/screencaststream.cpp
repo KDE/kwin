@@ -878,3 +878,5 @@ void ScreenCastStream::setCursorMode(KWaylandServer::ScreencastV1Interface::Curs
 }
 
 } // namespace KWin
+
+#include "moc_screencaststream.cpp"

@@ -91,3 +91,5 @@ DataControlSourceV1Interface *DataControlSourceV1Interface::get(wl_resource *nat
 }
 
 }
+
+#include "moc_datacontrolsource_v1_interface.cpp"

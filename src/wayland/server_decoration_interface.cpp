@@ -232,3 +232,5 @@ ServerSideDecorationInterface *ServerSideDecorationInterface::get(SurfaceInterfa
 }
 
 }
+
+#include "moc_server_decoration_interface.cpp"

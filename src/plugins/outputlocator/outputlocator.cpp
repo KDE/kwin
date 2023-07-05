@@ -116,3 +116,5 @@ void OutputLocatorEffect::paintScreen(const RenderTarget &renderTarget, const Re
     }
 }
 }
+
+#include "moc_outputlocator.cpp"

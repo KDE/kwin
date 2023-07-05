@@ -54,3 +54,5 @@ KeyStateInterface::KeyStateInterface(Display *display, QObject *parent)
 KeyStateInterface::~KeyStateInterface() = default;
 
 }
+
+#include "moc_keystate_interface.cpp"

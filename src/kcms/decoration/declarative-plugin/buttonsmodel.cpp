@@ -180,3 +180,5 @@ void ButtonsModel::replace(const QVector<DecorationButtonType> &buttons)
 
 }
 }
+
+#include "moc_buttonsmodel.cpp"

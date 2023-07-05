@@ -610,3 +610,5 @@ qreal ZoomEffect::targetZoom() const
 }
 
 } // namespace
+
+#include "moc_zoom.cpp"

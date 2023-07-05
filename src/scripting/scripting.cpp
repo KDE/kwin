@@ -838,3 +838,5 @@ QList<QAction *> KWin::Scripting::actionsForUserActionMenu(KWin::Window *c, QMen
     }
     return actions;
 }
+
+#include "moc_scripting.cpp"

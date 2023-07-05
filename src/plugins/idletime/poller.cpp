@@ -87,3 +87,5 @@ void KWinIdleTimePoller::simulateUserActivity()
 }
 
 } // namespace KWin
+
+#include "moc_poller.cpp"

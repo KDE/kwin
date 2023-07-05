@@ -82,3 +82,5 @@ wl_resource *DataControlOfferV1Interface::resource() const
 }
 
 }
+
+#include "moc_datacontroloffer_v1_interface.cpp"

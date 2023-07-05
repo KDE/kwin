@@ -333,3 +333,5 @@ OutputLayer *WaylandEglBackend::cursorLayer(Output *output)
 
 }
 }
+
+#include "moc_wayland_egl_backend.cpp"

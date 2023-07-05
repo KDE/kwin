@@ -941,3 +941,5 @@ uint32_t DrmLease::lesseeId() const
     return m_lesseeId;
 }
 }
+
+#include "moc_drm_gpu.cpp"

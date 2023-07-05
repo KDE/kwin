@@ -157,3 +157,5 @@ qreal ClientConnection::scaleOverride() const
     return d->scaleOverride;
 }
 }
+
+#include "moc_clientconnection.cpp"

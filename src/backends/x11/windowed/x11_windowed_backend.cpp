@@ -819,3 +819,5 @@ EglDisplay *X11WindowedBackend::sceneEglDisplayObject() const
 }
 
 } // namespace KWin
+
+#include "moc_x11_windowed_backend.cpp"

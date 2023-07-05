@@ -204,3 +204,5 @@ void DataOfferInterface::dndAction(DataDeviceManagerInterface::DnDAction action)
 }
 
 }
+
+#include "moc_dataoffer_interface.cpp"

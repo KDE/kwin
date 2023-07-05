@@ -738,3 +738,5 @@ void Application::startInteractivePositionSelection(std::function<void(const QPo
 }
 
 } // namespace
+
+#include "moc_main.cpp"

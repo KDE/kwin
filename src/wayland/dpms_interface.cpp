@@ -175,3 +175,5 @@ void DpmsInterface::sendDone()
 }
 
 #include "dpms_interface.moc"
+
+#include "moc_dpms_interface.cpp"

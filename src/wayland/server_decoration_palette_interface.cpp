@@ -140,3 +140,5 @@ SurfaceInterface *ServerSideDecorationPaletteInterface::surface() const
 }
 
 } // namespace
+
+#include "moc_server_decoration_palette_interface.cpp"

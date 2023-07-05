@@ -109,3 +109,5 @@ void WindowThumbnailItem::setSourceSize(const QSize &size)
 }
 
 } // namespace KWin
+
+#include "moc_thumbnailitem.cpp"

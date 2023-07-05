@@ -336,3 +336,5 @@ bool GlideEffect::isGlideWindow(EffectWindow *w) const
 }
 
 } // namespace KWin
+
+#include "moc_glide.cpp"

@@ -206,3 +206,5 @@ void DataSourceInterface::setAccepted(bool accepted)
 }
 
 }
+
+#include "moc_datasource_interface.cpp"

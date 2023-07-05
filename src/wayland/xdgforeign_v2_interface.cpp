@@ -263,3 +263,7 @@ void XdgImportedV2Interface::handleExportedDestroyed()
 }
 
 }
+
+#include "moc_xdgforeign_v2_interface_p.cpp"
+
+#include "moc_xdgforeign_v2_interface.cpp"

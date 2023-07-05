@@ -89,3 +89,5 @@ void GenericSceneOpenGLTest::testRestart()
     // TODO: introduce frameRendered signal in SceneOpenGL
     QTest::qWait(100);
 }
+
+#include "moc_generic_scene_opengl_test.cpp"

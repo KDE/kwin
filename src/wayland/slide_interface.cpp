@@ -151,3 +151,5 @@ qint32 SlideInterface::offset() const
 }
 
 }
+
+#include "moc_slide_interface.cpp"

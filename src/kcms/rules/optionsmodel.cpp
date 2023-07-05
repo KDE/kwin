@@ -245,3 +245,5 @@ QList<RulePolicy::Data> RulePolicy::policyOptions(RulePolicy::Type type)
 }
 
 } // namespace
+
+#include "moc_optionsmodel.cpp"

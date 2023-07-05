@@ -400,3 +400,5 @@ void CrossFadeEffect::setShader(EffectWindow *window, GLShader *shader)
 }
 
 } // namespace KWin
+
+#include "moc_kwinoffscreeneffect.cpp"

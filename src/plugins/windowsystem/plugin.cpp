@@ -36,3 +36,5 @@ KWindowShadowPrivate *KWindowSystemKWinPlugin::createWindowShadow()
 {
     return new KWin::WindowShadow();
 }
+
+#include "moc_plugin.cpp"

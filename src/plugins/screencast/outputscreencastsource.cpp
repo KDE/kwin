@@ -82,3 +82,5 @@ uint OutputScreenCastSource::refreshRate() const
 }
 
 } // namespace KWin
+
+#include "moc_outputscreencastsource.cpp"

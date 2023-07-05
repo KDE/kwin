@@ -175,3 +175,5 @@ void Clipboard::x11OffersChanged(const QStringList &added, const QStringList &re
 
 } // namespace Xwl
 } // namespace KWin
+
+#include "moc_clipboard.cpp"

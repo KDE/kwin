@@ -260,3 +260,5 @@ void Settings::setBorderSizesIndex(int index)
 
 }
 }
+
+#include "moc_previewsettings.cpp"

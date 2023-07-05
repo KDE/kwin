@@ -474,3 +474,5 @@ xcb_pixmap_t X11WindowedOutput::importBuffer(GraphicsBuffer *graphicsBuffer)
 }
 
 } // namespace KWin
+
+#include "moc_x11_windowed_output.cpp"

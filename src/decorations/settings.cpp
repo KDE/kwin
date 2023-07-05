@@ -177,3 +177,5 @@ void SettingsImpl::readSettings()
 
 }
 }
+
+#include "moc_settings.cpp"

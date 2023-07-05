@@ -5,3 +5,5 @@
 */
 
 #include "textinput.h"
+
+#include "moc_textinput.cpp"

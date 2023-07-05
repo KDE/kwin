@@ -501,3 +501,5 @@ bool ContrastEffect::blocksDirectScanout() const
 }
 
 } // namespace KWin
+
+#include "moc_contrast.cpp"

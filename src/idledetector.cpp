@@ -72,3 +72,5 @@ void IdleDetector::markAsResumed()
 }
 
 } // namespace KWin
+
+#include "moc_idledetector.cpp"

@@ -65,3 +65,5 @@ void CursorScene::paint(const RenderTarget &renderTarget, const QRegion &region)
 }
 
 } // namespace KWin
+
+#include "moc_cursorscene.cpp"

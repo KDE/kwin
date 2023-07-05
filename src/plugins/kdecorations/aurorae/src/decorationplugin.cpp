@@ -15,3 +15,5 @@ void DecorationPlugin::registerTypes(const char *uri)
     qmlRegisterType<KWin::DecorationOptions>(uri, 0, 1, "DecorationOptions");
     qmlRegisterType<KWin::Borders>(uri, 0, 1, "Borders");
 }
+
+#include "moc_decorationplugin.cpp"

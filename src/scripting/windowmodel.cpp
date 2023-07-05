@@ -328,3 +328,5 @@ WindowFilterModel::WindowTypes WindowFilterModel::windowTypeMask(Window *window)
 }
 
 } // namespace KWin
+
+#include "moc_windowmodel.cpp"

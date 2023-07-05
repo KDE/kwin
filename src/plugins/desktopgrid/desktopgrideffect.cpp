@@ -246,3 +246,5 @@ void DesktopGridEffect::realDeactivate()
 }
 
 } // namespace KWin
+
+#include "moc_desktopgrideffect.cpp"

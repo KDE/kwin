@@ -50,3 +50,5 @@ AnimationsModel *VirtualDesktopsData::animationsModel() const
 }
 
 }
+
+#include "moc_virtualdesktopsdata.cpp"

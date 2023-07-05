@@ -208,3 +208,5 @@ xcb_atom_t Dnd::clientActionToAtom(DnDAction action)
 
 } // namespace Xwl
 } // namespace KWin
+
+#include "moc_dnd.cpp"

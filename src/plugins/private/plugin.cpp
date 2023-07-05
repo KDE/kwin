@@ -16,3 +16,5 @@ void EffectKitExtensionPlugin::registerTypes(const char *uri)
     qmlRegisterType<ExpoLayout>(uri, 1, 0, "ExpoLayout");
     qmlRegisterType<ExpoCell>(uri, 1, 0, "ExpoCell");
 }
+
+#include "moc_plugin.cpp"

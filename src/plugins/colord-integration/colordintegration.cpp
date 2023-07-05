@@ -131,3 +131,5 @@ void ColordIntegration::handleOutputRemoved(Output *output)
 }
 
 } // namespace KWin
+
+#include "moc_colordintegration.cpp"

@@ -281,3 +281,5 @@ void RenderLoop::setVrrPolicy(VrrPolicy policy)
 }
 
 } // namespace KWin
+
+#include "moc_renderloop.cpp"

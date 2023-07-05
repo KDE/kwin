@@ -264,3 +264,5 @@ Borders::operator QMargins() const
 }
 
 } // namespace
+
+#include "moc_decorationoptions.cpp"

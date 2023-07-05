@@ -64,3 +64,5 @@ bool XwlDataSource::isAccepted() const
 }
 }
 }
+
+#include "moc_datasource.cpp"

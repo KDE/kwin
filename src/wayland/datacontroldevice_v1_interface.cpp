@@ -149,3 +149,5 @@ void DataControlDeviceV1Interface::sendPrimarySelection(KWaylandServer::Abstract
     }
 }
 }
+
+#include "moc_datacontroldevice_v1_interface.cpp"

@@ -119,3 +119,5 @@ FTraceDuration::~FTraceDuration()
 }
 
 }
+
+#include "moc_ftrace.cpp"

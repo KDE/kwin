@@ -58,3 +58,5 @@ DragEventReply DataBridge::dragMoveFilter(Window *target)
 
 } // namespace Xwl
 } // namespace KWin
+
+#include "moc_databridge.cpp"

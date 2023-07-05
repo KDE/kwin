@@ -231,3 +231,5 @@ void Activities::reallyStop(const QString &id)
 }
 
 } // namespace
+
+#include "moc_activities.cpp"

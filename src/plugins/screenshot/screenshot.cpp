@@ -438,3 +438,5 @@ void ScreenShotEffect::handleWindowClosed(EffectWindow *window)
 }
 
 } // namespace KWin
+
+#include "moc_screenshot.cpp"

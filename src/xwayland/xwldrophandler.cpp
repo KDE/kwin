@@ -74,3 +74,5 @@ void XwlDropHandler::updateDragTarget(KWaylandServer::SurfaceInterface *surface,
     }
 }
 }
+
+#include "moc_xwldrophandler.cpp"

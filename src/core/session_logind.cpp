@@ -348,3 +348,5 @@ void LogindSession::handlePrepareForSleep(bool sleep)
 }
 
 } // namespace KWin
+
+#include "moc_session_logind.cpp"

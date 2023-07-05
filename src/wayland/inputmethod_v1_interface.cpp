@@ -459,3 +459,5 @@ InputMethodContextV1Interface *InputMethodV1Interface::context() const
 }
 
 }
+
+#include "moc_inputmethod_v1_interface.cpp"

@@ -230,3 +230,5 @@ void OnScreenNotification::setSkipCloseAnimation(bool skip)
 }
 
 } // namespace KWin
+
+#include "moc_onscreennotification.cpp"

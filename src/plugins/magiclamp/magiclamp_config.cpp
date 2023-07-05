@@ -54,3 +54,5 @@ void MagicLampEffectConfig::save()
 } // namespace
 
 #include "magiclamp_config.moc"
+
+#include "moc_magiclamp_config.cpp"

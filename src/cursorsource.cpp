@@ -161,3 +161,5 @@ void SurfaceCursorSource::update(KWaylandServer::SurfaceInterface *surface, cons
 }
 
 } // namespace KWin
+
+#include "moc_cursorsource.cpp"

@@ -442,3 +442,5 @@ bool StartupFeedbackEffect::isActive() const
 }
 
 } // namespace
+
+#include "moc_startupfeedback.cpp"

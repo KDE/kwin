@@ -35,3 +35,5 @@ void Plugin::registerTypes(const char *uri)
 
 }
 }
+
+#include "moc_plugin.cpp"

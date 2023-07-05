@@ -247,3 +247,5 @@ void TouchPointsEffect::paintScreenFinishGl()
 }
 
 } // namespace
+
+#include "moc_touchpoints.cpp"

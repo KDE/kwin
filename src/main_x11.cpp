@@ -449,3 +449,5 @@ int main(int argc, char *argv[])
 }
 
 #include "main_x11.moc"
+
+#include "moc_main_x11.cpp"

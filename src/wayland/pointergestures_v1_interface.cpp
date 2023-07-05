@@ -324,3 +324,5 @@ void PointerHoldGestureV1Interface::sendCancel(quint32 serial)
 }
 
 } // namespace KWaylandServer
+
+#include "moc_pointergestures_v1_interface.cpp"

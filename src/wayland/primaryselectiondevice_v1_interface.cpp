@@ -128,3 +128,5 @@ wl_client *PrimarySelectionDeviceV1Interface::client() const
 }
 
 }
+
+#include "moc_primaryselectiondevice_v1_interface.cpp"

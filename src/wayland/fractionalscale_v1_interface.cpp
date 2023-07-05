@@ -92,3 +92,5 @@ FractionalScaleManagerV1Interface::~FractionalScaleManagerV1Interface()
 }
 
 } // namespace KWaylandServer
+
+#include "moc_fractionalscale_v1_interface.cpp"

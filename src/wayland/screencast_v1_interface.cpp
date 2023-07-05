@@ -142,3 +142,5 @@ ScreencastV1Interface::ScreencastV1Interface(Display *display, QObject *parent)
 ScreencastV1Interface::~ScreencastV1Interface() = default;
 
 } // namespace KWaylandServer
+
+#include "moc_screencast_v1_interface.cpp"

@@ -357,3 +357,5 @@ QSize Shadow::elementSize(Shadow::ShadowElements element) const
 }
 
 } // namespace
+
+#include "moc_shadow.cpp"

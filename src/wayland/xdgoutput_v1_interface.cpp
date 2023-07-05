@@ -216,3 +216,5 @@ void XdgOutputV1Interface::resend()
     }
 }
 }
+
+#include "moc_xdgoutput_v1_interface.cpp"

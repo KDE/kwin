@@ -382,3 +382,5 @@ SurfaceInterface *Cursor::surface() const
 }
 
 } // namespace KWaylandServer
+
+#include "moc_pointer_interface.cpp"

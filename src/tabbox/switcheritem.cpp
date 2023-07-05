@@ -125,3 +125,5 @@ bool SwitcherItem::compositing()
 
 }
 }
+
+#include "moc_switcheritem.cpp"

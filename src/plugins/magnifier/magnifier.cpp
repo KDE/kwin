@@ -291,3 +291,5 @@ qreal MagnifierEffect::targetZoom() const
 }
 
 } // namespace
+
+#include "moc_magnifier.cpp"

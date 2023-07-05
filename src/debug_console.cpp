@@ -1685,3 +1685,5 @@ void DataSourceModel::setSource(KWaylandServer::AbstractDataSource *source)
     endResetModel();
 }
 }
+
+#include "moc_debug_console.cpp"

@@ -160,3 +160,5 @@ void DecorationPalette::update()
 
 }
 }
+
+#include "moc_decorationpalette.cpp"

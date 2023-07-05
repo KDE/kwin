@@ -482,3 +482,5 @@ int SceneOpenGLDecorationRenderer::toNativeSize(int size) const
 }
 
 } // namespace
+
+#include "moc_workspacescene_opengl.cpp"

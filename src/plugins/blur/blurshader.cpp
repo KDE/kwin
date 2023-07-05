@@ -306,3 +306,5 @@ void BlurShader::unbind()
 }
 
 } // namespace KWin
+
+#include "moc_blurshader.cpp"

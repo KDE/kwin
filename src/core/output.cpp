@@ -460,3 +460,5 @@ bool Output::moveCursor(const QPointF &position)
 }
 
 } // namespace KWin
+
+#include "moc_output.cpp"

@@ -128,3 +128,5 @@ uint RegionScreenCastSource::refreshRate() const
     return ret;
 }
 }
+
+#include "moc_regionscreencastsource.cpp"

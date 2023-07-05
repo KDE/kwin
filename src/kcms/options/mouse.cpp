@@ -99,3 +99,5 @@ bool KWindowActionsConfig::isSaveNeeded() const
 {
     return managedWidgetChangeState();
 }
+
+#include "moc_mouse.cpp"

@@ -346,3 +346,5 @@ void WaylandOutput::lockPointer(Pointer *pointer, bool lock)
 
 }
 }
+
+#include "moc_wayland_output.cpp"

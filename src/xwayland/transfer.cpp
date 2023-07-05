@@ -479,3 +479,5 @@ void TransferXtoWl::dataSourceWrite()
 
 } // namespace Xwl
 } // namespace KWin
+
+#include "moc_transfer.cpp"

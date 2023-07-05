@@ -144,3 +144,5 @@ ViewporterInterface::~ViewporterInterface()
 }
 
 } // namespace KWaylandServer
+
+#include "moc_viewporter_interface.cpp"

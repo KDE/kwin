@@ -235,3 +235,5 @@ void Test::setOutputConfig(const QVector<OutputInfo> &infos)
     static_cast<VirtualBackend *>(kwinApp()->outputBackend())->setVirtualOutputs(converted);
 }
 }
+
+#include "moc_kwin_wayland_test.cpp"

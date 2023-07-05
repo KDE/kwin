@@ -396,3 +396,5 @@ void KWinTabBoxConfigForm::applyDefaultIndicator(QList<QWidget *> widgets, bool 
 }
 
 } // namespace
+
+#include "moc_kwintabboxconfigform.cpp"

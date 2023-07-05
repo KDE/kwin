@@ -174,3 +174,5 @@ bool AnimationsModel::needsSave() const
 }
 
 }
+
+#include "moc_animationsmodel.cpp"

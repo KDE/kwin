@@ -323,3 +323,5 @@ EglContext *AbstractEglBackend::contextObject()
     return m_context.get();
 }
 }
+
+#include "moc_abstract_egl_backend.cpp"

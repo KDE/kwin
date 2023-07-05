@@ -52,3 +52,5 @@ void LibinputBackend::updateScreens()
 }
 
 } // namespace KWin
+
+#include "moc_libinputbackend.cpp"

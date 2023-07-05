@@ -532,3 +532,5 @@ void PluginManagerDBusInterface::UnloadPlugin(const QString &name)
 }
 
 } // namespace
+
+#include "moc_dbusinterface.cpp"

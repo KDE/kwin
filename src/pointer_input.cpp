@@ -1145,3 +1145,5 @@ void InputRedirectionCursor::slotPointerButtonChanged()
 }
 
 }
+
+#include "moc_pointer_input.cpp"

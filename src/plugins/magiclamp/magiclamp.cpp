@@ -418,3 +418,5 @@ bool MagicLampEffect::isActive() const
 }
 
 } // namespace
+
+#include "moc_magiclamp.cpp"

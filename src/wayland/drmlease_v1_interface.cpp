@@ -446,3 +446,7 @@ QVector<DrmLeaseConnectorV1Interface *> DrmLeaseV1Interface::connectors() const
 }
 
 }
+
+#include "moc_drmlease_v1_interface.cpp"
+
+#include "moc_drmlease_v1_interface_p.cpp"

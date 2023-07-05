@@ -329,3 +329,5 @@ void ColorDevice::scheduleUpdate()
 }
 
 } // namespace KWin
+
+#include "moc_colordevice.cpp"

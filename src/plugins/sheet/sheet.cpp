@@ -228,3 +228,5 @@ bool SheetEffect::isSheetWindow(EffectWindow *w) const
 }
 
 } // namespace KWin
+
+#include "moc_sheet.cpp"

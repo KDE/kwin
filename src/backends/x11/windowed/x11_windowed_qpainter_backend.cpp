@@ -177,3 +177,5 @@ OutputLayer *X11WindowedQPainterBackend::cursorLayer(Output *output)
 }
 
 }
+
+#include "moc_x11_windowed_qpainter_backend.cpp"

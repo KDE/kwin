@@ -939,3 +939,5 @@ bool BlurEffect::blocksDirectScanout() const
 }
 
 } // namespace KWin
+
+#include "moc_blur.cpp"

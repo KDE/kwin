@@ -512,3 +512,5 @@ void WlVisit::unmapProxyWindow()
 
 } // namespace Xwl
 } // namespace KWin
+
+#include "moc_drag_x.cpp"

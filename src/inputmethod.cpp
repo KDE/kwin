@@ -977,3 +977,5 @@ void InputMethod::textInputInterfaceV3EnableRequested()
     show();
 }
 }
+
+#include "moc_inputmethod.cpp"

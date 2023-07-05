@@ -274,3 +274,5 @@ bool HighlightWindowEffect::perform(Feature feature, const QVariantList &argumen
 }
 
 } // namespace
+
+#include "moc_highlightwindow.cpp"

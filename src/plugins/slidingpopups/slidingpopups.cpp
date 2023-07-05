@@ -584,3 +584,5 @@ bool SlidingPopupsEffect::isActive() const
 }
 
 } // namespace
+
+#include "moc_slidingpopups.cpp"

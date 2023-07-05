@@ -30,3 +30,5 @@ void InputPanelV1Integration::createWindow(InputPanelSurfaceV1Interface *shellSu
 }
 
 } // namespace KWin
+
+#include "moc_inputpanelv1integration.cpp"

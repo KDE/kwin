@@ -684,3 +684,5 @@ void DesktopsModel::handleCallError()
 }
 
 }
+
+#include "moc_desktopsmodel.cpp"

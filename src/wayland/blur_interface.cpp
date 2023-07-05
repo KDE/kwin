@@ -143,3 +143,5 @@ QRegion BlurInterface::region()
 }
 
 }
+
+#include "moc_blur_interface.cpp"

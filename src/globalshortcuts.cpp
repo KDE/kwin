@@ -302,3 +302,5 @@ void GlobalShortcutsManager::processPinchEnd()
 }
 
 } // namespace
+
+#include "moc_globalshortcuts.cpp"

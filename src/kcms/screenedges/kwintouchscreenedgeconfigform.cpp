@@ -29,3 +29,5 @@ Monitor *KWinTouchScreenEdgeConfigForm::monitor() const
 }
 
 } // namespace
+
+#include "moc_kwintouchscreenedgeconfigform.cpp"

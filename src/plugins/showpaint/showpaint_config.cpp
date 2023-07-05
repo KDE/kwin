@@ -66,3 +66,5 @@ void ShowPaintEffectConfig::defaults()
 } // namespace KWin
 
 #include "showpaint_config.moc"
+
+#include "moc_showpaint_config.cpp"

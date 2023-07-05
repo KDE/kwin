@@ -1552,3 +1552,5 @@ const std::vector<std::unique_ptr<Edge>> &ScreenEdges::edges() const
 }
 
 } // namespace
+
+#include "moc_screenedge.cpp"

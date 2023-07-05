@@ -61,3 +61,5 @@ void KeyboardRepeat::keyEvent(KeyEvent *event)
 }
 
 }
+
+#include "moc_keyboard_repeat.cpp"

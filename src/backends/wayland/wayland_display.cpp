@@ -468,3 +468,5 @@ void WaylandDisplay::registry_global_remove(void *data, wl_registry *registry, u
 }
 
 #include "wayland_display.moc"
+
+#include "moc_wayland_display.cpp"

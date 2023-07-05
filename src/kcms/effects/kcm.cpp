@@ -88,3 +88,5 @@ void DesktopEffectsKCM::updateNeedsSave()
 } // namespace KWin
 
 #include "kcm.moc"
+
+#include "moc_kcm.cpp"

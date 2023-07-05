@@ -90,3 +90,5 @@ IdleNotifyV1Interface::~IdleNotifyV1Interface()
 }
 
 #include "idlenotify_v1_interface.moc"
+
+#include "moc_idlenotify_v1_interface.cpp"

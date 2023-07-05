@@ -97,3 +97,5 @@ void ZoomAccessibilityIntegration::slotFocusChanged(const AccessibleObject &obje
 }
 
 } // namespace KWin
+
+#include "moc_accessibilityintegration.cpp"

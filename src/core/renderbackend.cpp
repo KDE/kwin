@@ -58,3 +58,5 @@ std::unique_ptr<SurfaceTexture> RenderBackend::createSurfaceTextureWayland(Surfa
 }
 
 } // namespace KWin
+
+#include "moc_renderbackend.cpp"

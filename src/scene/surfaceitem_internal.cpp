@@ -94,3 +94,5 @@ bool SurfacePixmapInternal::isValid() const
 }
 
 } // namespace KWin
+
+#include "moc_surfaceitem_internal.cpp"

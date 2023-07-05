@@ -54,3 +54,5 @@ void LinuxClockSkewNotifierEngine::handleTimerCancelled()
 }
 
 } // namespace KWin
+
+#include "moc_clockskewnotifierengine_linux.cpp"

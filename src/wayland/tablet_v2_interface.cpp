@@ -885,3 +885,5 @@ bool TabletSeatV2Interface::isClientSupported(ClientConnection *client) const
 TabletManagerV2Interface::~TabletManagerV2Interface() = default;
 
 } // namespace KWaylandServer
+
+#include "moc_tablet_v2_interface.cpp"

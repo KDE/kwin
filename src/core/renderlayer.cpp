@@ -294,3 +294,5 @@ QRegion RenderLayer::mapFromGlobal(const QRegion &region) const
 }
 
 } // namespace KWin
+
+#include "moc_renderlayer.cpp"

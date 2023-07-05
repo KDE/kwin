@@ -113,3 +113,5 @@ bool ColorPickerEffect::isActive() const
 }
 
 } // namespace
+
+#include "moc_colorpicker.cpp"

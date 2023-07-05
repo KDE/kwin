@@ -75,3 +75,5 @@ WindowQuadList ImageItemOpenGL::buildQuads() const
 }
 
 } // namespace KWin
+
+#include "moc_imageitem.cpp"

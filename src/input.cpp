@@ -3449,3 +3449,5 @@ Decoration::DecoratedClientImpl *InputDeviceHandler::decoration() const
 } // namespace
 
 #include "input.moc"
+
+#include "moc_input.cpp"

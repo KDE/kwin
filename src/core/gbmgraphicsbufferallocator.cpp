@@ -298,3 +298,4 @@ void DumbGraphicsBuffer::unmap()
 } // namespace KWin
 
 #include "gbmgraphicsbufferallocator.moc"
+#include "moc_gbmgraphicsbufferallocator.cpp"

@@ -166,3 +166,5 @@ void OverviewEffect::grabbedKeyboardEvent(QKeyEvent *keyEvent)
 }
 
 } // namespace KWin
+
+#include "moc_overvieweffect.cpp"

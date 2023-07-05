@@ -47,3 +47,5 @@ void SlideEffectConfig::save()
 } // namespace KWin
 
 #include "slide_config.moc"
+
+#include "moc_slide_config.cpp"

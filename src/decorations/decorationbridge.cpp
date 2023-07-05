@@ -289,3 +289,5 @@ QString DecorationBridge::supportInformation() const
 
 } // Decoration
 } // KWin
+
+#include "moc_decorationbridge.cpp"

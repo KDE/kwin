@@ -152,3 +152,5 @@ EglDisplay *VirtualBackend::sceneEglDisplayObject() const
 }
 
 } // namespace KWin
+
+#include "moc_virtual_backend.cpp"

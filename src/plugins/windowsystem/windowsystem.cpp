@@ -220,3 +220,5 @@ quint32 WindowSystem::lastInputSerial(QWindow *window)
     return w->lastUsageSerial();
 }
 }
+
+#include "moc_windowsystem.cpp"

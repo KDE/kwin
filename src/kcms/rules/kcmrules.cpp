@@ -477,3 +477,5 @@ K_PLUGIN_CLASS_WITH_JSON(KCMKWinRules, "kcm_kwinrules.json");
 } // namespace
 
 #include "kcmrules.moc"
+
+#include "moc_kcmrules.cpp"

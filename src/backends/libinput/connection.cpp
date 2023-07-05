@@ -704,3 +704,5 @@ QStringList Connection::devicesSysNames() const
 }
 
 #include "connection.moc"
+
+#include "moc_connection.cpp"

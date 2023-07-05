@@ -160,3 +160,5 @@ bool InvertEffect::provides(Feature f)
 }
 
 } // namespace
+
+#include "moc_invert.cpp"

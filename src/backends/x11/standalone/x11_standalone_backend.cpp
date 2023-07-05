@@ -519,3 +519,5 @@ EglDisplay *X11StandaloneBackend::sceneEglDisplayObject() const
     return m_eglDisplay.get();
 }
 }
+
+#include "moc_x11_standalone_backend.cpp"

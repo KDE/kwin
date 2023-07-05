@@ -135,3 +135,5 @@ void X11Cursor::notifyCursorChanged()
 }
 
 }
+
+#include "moc_x11_standalone_cursor.cpp"

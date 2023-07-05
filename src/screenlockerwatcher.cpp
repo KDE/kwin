@@ -83,3 +83,5 @@ bool ScreenLockerWatcher::isLocked() const
     return m_locked;
 }
 }
+
+#include "moc_screenlockerwatcher.cpp"

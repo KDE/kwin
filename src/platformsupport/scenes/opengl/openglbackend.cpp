@@ -95,3 +95,5 @@ bool OpenGLBackend::checkGraphicsReset()
 }
 
 }
+
+#include "moc_openglbackend.cpp"

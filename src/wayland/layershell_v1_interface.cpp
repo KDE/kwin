@@ -465,3 +465,5 @@ void LayerSurfaceV1Interface::sendClosed()
 }
 
 } // namespace KWaylandServer
+
+#include "moc_layershell_v1_interface.cpp"

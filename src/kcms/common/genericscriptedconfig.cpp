@@ -181,3 +181,5 @@ void ScriptingConfig::reload()
 }
 
 } // namespace
+
+#include "moc_genericscriptedconfig.cpp"

@@ -1012,3 +1012,5 @@ XdgPositioner::XdgPositioner(const QSharedDataPointer<XdgPositionerData> &data)
 }
 
 } // namespace KWaylandServer
+
+#include "moc_xdgshell_interface.cpp"

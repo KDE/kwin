@@ -140,3 +140,5 @@ XdgToplevelDecorationV1Interface *XdgToplevelDecorationV1Interface::get(XdgTople
 }
 
 } // namespace KWaylandServer
+
+#include "moc_xdgdecoration_v1_interface.cpp"

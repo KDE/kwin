@@ -67,3 +67,5 @@ void OutputOrderV1InterfacePrivate::kde_output_order_v1_destroy(Resource *resour
     wl_resource_destroy(resource->handle);
 }
 }
+
+#include "moc_output_order_v1_interface.cpp"

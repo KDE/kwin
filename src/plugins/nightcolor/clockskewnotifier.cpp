@@ -76,3 +76,5 @@ void ClockSkewNotifier::setActive(bool set)
 }
 
 } // namespace KWin
+
+#include "moc_clockskewnotifier.cpp"

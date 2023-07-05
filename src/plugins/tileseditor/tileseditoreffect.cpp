@@ -112,3 +112,5 @@ void TilesEditorEffect::grabbedKeyboardEvent(QKeyEvent *keyEvent)
 }
 
 } // namespace KWin
+
+#include "moc_tileseditoreffect.cpp"

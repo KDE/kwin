@@ -961,3 +961,5 @@ void RulesModel::updateVirtualDesktops()
 }
 
 } // namespace
+
+#include "moc_rulesmodel.cpp"

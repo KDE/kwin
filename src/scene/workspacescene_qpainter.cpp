@@ -131,3 +131,5 @@ void SceneQPainterDecorationRenderer::resizeImages()
 }
 
 } // KWin
+
+#include "moc_workspacescene_qpainter.cpp"

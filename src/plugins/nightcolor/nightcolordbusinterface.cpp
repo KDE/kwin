@@ -305,3 +305,5 @@ void NightColorDBusInterface::stopPreview()
 }
 
 }
+
+#include "moc_nightcolordbusinterface.cpp"

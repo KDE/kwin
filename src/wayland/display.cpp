@@ -228,3 +228,5 @@ KWin::GraphicsBuffer *Display::bufferForResource(wl_resource *resource)
 }
 
 } // namespace KWaylandServer
+
+#include "moc_display.cpp"

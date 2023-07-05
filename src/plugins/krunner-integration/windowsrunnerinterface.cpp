@@ -353,3 +353,5 @@ bool WindowsRunner::actionSupported(const Window *window, const WindowsRunnerAct
 }
 
 }
+
+#include "moc_windowsrunnerinterface.cpp"

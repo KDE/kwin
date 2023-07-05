@@ -83,3 +83,5 @@ void DrmVirtualOutput::recreateSurface()
 }
 
 }
+
+#include "moc_drm_virtual_output.cpp"

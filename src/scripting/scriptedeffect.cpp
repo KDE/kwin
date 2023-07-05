@@ -872,3 +872,5 @@ void ScriptedEffect::setUniform(uint shaderId, const QString &name, const QJSVal
 }
 
 } // namespace
+
+#include "moc_scriptedeffect.cpp"

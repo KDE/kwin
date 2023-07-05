@@ -412,3 +412,5 @@ bool MouseClickEffect::isEnabled() const
 }
 
 } // namespace
+
+#include "moc_mouseclick.cpp"

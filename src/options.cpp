@@ -1108,3 +1108,5 @@ bool Options::isUseCompositing() const
 }
 
 } // namespace
+
+#include "moc_options.cpp"

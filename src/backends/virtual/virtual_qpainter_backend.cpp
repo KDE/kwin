@@ -101,3 +101,5 @@ VirtualQPainterLayer *VirtualQPainterBackend::primaryLayer(Output *output)
     return m_outputs[output].get();
 }
 }
+
+#include "moc_virtual_qpainter_backend.cpp"

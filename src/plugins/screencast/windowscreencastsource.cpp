@@ -89,3 +89,5 @@ uint WindowScreenCastSource::refreshRate() const
 }
 
 } // namespace KWin
+
+#include "moc_windowscreencastsource.cpp"

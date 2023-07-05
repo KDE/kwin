@@ -977,3 +977,5 @@ void RuleBook::setUpdatesDisabled(bool disable)
 #endif
 
 } // namespace
+
+#include "moc_rules.cpp"

@@ -68,3 +68,5 @@ void X11Output::updateEnabled(bool enabled)
 }
 
 } // namespace KWin
+
+#include "moc_x11_standalone_output.cpp"

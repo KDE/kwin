@@ -61,3 +61,5 @@ void CursorItem::setImage(const QImage &image)
 }
 
 } // namespace KWin
+
+#include "moc_cursoritem.cpp"

@@ -47,3 +47,5 @@ void QPainterBackend::setFailed(const QString &reason)
 }
 
 }
+
+#include "moc_qpainterbackend.cpp"

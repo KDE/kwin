@@ -191,3 +191,5 @@ void RuleBookModel::copySettingsTo(RuleSettings *dest, const RuleSettings &sourc
 }
 
 } // namespace
+
+#include "moc_rulebookmodel.cpp"

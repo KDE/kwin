@@ -603,3 +603,5 @@ bool EffectsModel::shouldStore(const EffectData &data) const
 }
 
 }
+
+#include "moc_effectsmodel.cpp"

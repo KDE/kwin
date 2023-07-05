@@ -488,3 +488,5 @@ EglDisplay *DrmBackend::sceneEglDisplayObject() const
     return m_gpus.front()->eglDisplay();
 }
 }
+
+#include "moc_drm_backend.cpp"

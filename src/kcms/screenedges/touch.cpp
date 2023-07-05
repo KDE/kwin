@@ -320,3 +320,5 @@ QString KWinScreenEdgesConfig::electricBorderActionToString(int action)
 } // namespace
 
 #include "touch.moc"
+
+#include "moc_touch.cpp"

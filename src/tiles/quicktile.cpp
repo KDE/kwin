@@ -206,3 +206,5 @@ void QuickRootTile::setVerticalSplit(qreal split)
 }
 
 } // namespace KWin
+
+#include "moc_quicktile.cpp"

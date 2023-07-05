@@ -536,3 +536,5 @@ void InternalWindow::updateInternalWindowGeometry()
 }
 
 }
+
+#include "moc_internalwindow.cpp"

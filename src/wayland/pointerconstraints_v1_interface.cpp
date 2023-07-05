@@ -339,3 +339,5 @@ void ConfinedPointerV1Interface::setConfined(bool confined)
 }
 
 } // namespace KWaylandServer
+
+#include "moc_pointerconstraints_v1_interface.cpp"

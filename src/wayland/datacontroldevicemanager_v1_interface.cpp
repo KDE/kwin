@@ -76,3 +76,5 @@ DataControlDeviceManagerV1Interface::DataControlDeviceManagerV1Interface(Display
 DataControlDeviceManagerV1Interface::~DataControlDeviceManagerV1Interface() = default;
 
 }
+
+#include "moc_datacontroldevicemanager_v1_interface.cpp"

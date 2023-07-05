@@ -74,3 +74,5 @@ DataDeviceManagerInterface::DataDeviceManagerInterface(Display *display, QObject
 DataDeviceManagerInterface::~DataDeviceManagerInterface() = default;
 
 }
+
+#include "moc_datadevicemanager_interface.cpp"

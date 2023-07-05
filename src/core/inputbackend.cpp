@@ -25,3 +25,5 @@ void InputBackend::setConfig(KSharedConfigPtr config)
 }
 
 } // namespace KWin
+
+#include "moc_inputbackend.cpp"

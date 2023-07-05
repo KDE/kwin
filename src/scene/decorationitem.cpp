@@ -247,3 +247,5 @@ WindowQuadList DecorationItem::buildQuads() const
 }
 
 } // namespace KWin
+
+#include "moc_decorationitem.cpp"

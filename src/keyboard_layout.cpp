@@ -252,3 +252,5 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, KeyboardLayoutDBu
 }
 
 }
+
+#include "moc_keyboard_layout.cpp"

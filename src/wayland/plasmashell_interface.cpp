@@ -326,3 +326,5 @@ PlasmaShellSurfaceInterface *PlasmaShellSurfaceInterface::get(SurfaceInterface *
 }
 
 }
+
+#include "moc_plasmashell_interface.cpp"

@@ -112,3 +112,5 @@ void ShowPaintEffect::toggle()
 }
 
 } // namespace KWin
+
+#include "moc_showpaint.cpp"

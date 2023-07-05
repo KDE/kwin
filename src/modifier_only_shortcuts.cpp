@@ -93,3 +93,5 @@ void ModifierOnlyShortcuts::wheelEvent(WheelEvent *event)
 }
 
 }
+
+#include "moc_modifier_only_shortcuts.cpp"

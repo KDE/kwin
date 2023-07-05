@@ -85,3 +85,5 @@ void ColorManager::handleSessionActiveChanged(bool active)
 }
 
 } // namespace KWin
+
+#include "moc_colormanager.cpp"

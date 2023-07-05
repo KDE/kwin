@@ -158,3 +158,5 @@ bool FakeInputDevice::isLidSwitch() const
 }
 
 } // namespace KWin
+
+#include "moc_fakeinputdevice.cpp"

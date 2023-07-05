@@ -207,3 +207,5 @@ QPlatformServices *Integration::services() const
 
 }
 }
+
+#include "moc_integration.cpp"

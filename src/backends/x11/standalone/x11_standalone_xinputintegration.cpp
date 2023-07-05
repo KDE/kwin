@@ -286,3 +286,5 @@ void XInputIntegration::startListening()
 }
 
 }
+
+#include "moc_x11_standalone_xinputintegration.cpp"

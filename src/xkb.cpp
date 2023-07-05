@@ -717,3 +717,5 @@ std::optional<int> Xkb::keycodeFromKeysym(xkb_keysym_t keysym)
     return {};
 }
 }
+
+#include "moc_xkb.cpp"

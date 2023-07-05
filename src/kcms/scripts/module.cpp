@@ -146,3 +146,5 @@ K_PLUGIN_FACTORY_WITH_JSON(KcmKWinScriptsFactory, "kcm_kwin_scripts.json",
                            registerPlugin<KWinScriptsData>();)
 
 #include "module.moc"
+
+#include "moc_module.cpp"

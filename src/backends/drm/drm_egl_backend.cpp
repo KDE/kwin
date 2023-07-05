@@ -192,3 +192,5 @@ DrmGpu *EglGbmBackend::gpu() const
 }
 
 } // namespace KWin
+
+#include "moc_drm_egl_backend.cpp"

@@ -35,3 +35,5 @@ void LidSwitchTracker::switchEvent(KWin::SwitchEvent *event)
 }
 
 }
+
+#include "moc_lidswitchtracker.cpp"

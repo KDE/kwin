@@ -277,3 +277,5 @@ int MouseMarkEffect::requestedEffectChainPosition() const
 }
 
 } // namespace
+
+#include "moc_mousemark.cpp"

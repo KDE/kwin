@@ -107,3 +107,5 @@ std::shared_ptr<PipeWireCore> PipeWireCore::self()
 }
 
 } // namespace KWin
+
+#include "moc_pipewirecore.cpp"

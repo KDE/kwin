@@ -131,3 +131,5 @@ void KWinScreenEdgesConfigForm::updateDefaultIndicators()
 }
 
 } // namespace
+
+#include "moc_kwinscreenedgeconfigform.cpp"

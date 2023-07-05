@@ -147,3 +147,5 @@ ElectricBorder AutoHideScreenEdgeV1Interface::border() const
 }
 
 } // namespace KWaylandServer
+
+#include "moc_screenedge_v1_interface.cpp"

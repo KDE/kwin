@@ -427,3 +427,5 @@ void Item::markSortedChildItemsDirty()
 }
 
 } // namespace KWin
+
+#include "moc_item.cpp"

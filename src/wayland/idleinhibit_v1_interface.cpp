@@ -68,3 +68,7 @@ void IdleInhibitorV1Interface::zwp_idle_inhibitor_v1_destroy_resource(Resource *
 }
 
 }
+
+#include "moc_idleinhibit_v1_interface_p.cpp"
+
+#include "moc_idleinhibit_v1_interface.cpp"

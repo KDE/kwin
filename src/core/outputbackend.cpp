@@ -128,3 +128,5 @@ void OutputBackend::setSceneEglGlobalShareContext(::EGLContext context)
 }
 
 } // namespace KWin
+
+#include "moc_outputbackend.cpp"

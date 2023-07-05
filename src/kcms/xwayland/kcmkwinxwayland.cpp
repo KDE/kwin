@@ -28,3 +28,5 @@ KcmXwayland::KcmXwayland(QObject *parent, const KPluginMetaData &metaData)
 KcmXwayland::~KcmXwayland() = default;
 
 #include "kcmkwinxwayland.moc"
+
+#include "moc_kcmkwinxwayland.cpp"

@@ -81,3 +81,5 @@ void ExpoArea::update()
 }
 
 } // namespace KWin
+
+#include "moc_expoarea.cpp"

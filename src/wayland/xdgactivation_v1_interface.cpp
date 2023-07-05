@@ -134,3 +134,5 @@ void XdgActivationV1Interface::setActivationTokenCreator(const CreatorFunction &
 }
 
 }
+
+#include "moc_xdgactivation_v1_interface.cpp"

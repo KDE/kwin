@@ -52,3 +52,5 @@ LockscreenOverlayV1Interface::LockscreenOverlayV1Interface(Display *display, QOb
 }
 
 }
+
+#include "moc_lockscreen_overlay_v1_interface.cpp"

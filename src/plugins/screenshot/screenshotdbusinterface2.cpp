@@ -606,3 +606,5 @@ void ScreenShotDBusInterface2::takeScreenShot(EffectWindow *window, ScreenShotFl
 } // namespace KWin
 
 #include "screenshotdbusinterface2.moc"
+
+#include "moc_screenshotdbusinterface2.cpp"

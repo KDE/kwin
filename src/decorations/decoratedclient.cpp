@@ -343,3 +343,5 @@ QString DecoratedClientImpl::windowClass() const
 
 }
 }
+
+#include "moc_decoratedclient.cpp"

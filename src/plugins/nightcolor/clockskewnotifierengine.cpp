@@ -27,3 +27,5 @@ ClockSkewNotifierEngine::ClockSkewNotifierEngine(QObject *parent)
 }
 
 } // namespace KWin
+
+#include "moc_clockskewnotifierengine_p.cpp"

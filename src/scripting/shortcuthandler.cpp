@@ -93,3 +93,5 @@ void ShortcutHandler::setSequence(const QVariant &sequence)
 }
 
 } // namespace KWin
+
+#include "moc_shortcuthandler.cpp"

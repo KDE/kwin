@@ -118,3 +118,5 @@ QDpi PlaceholderScreen::logicalDpi() const
 
 }
 }
+
+#include "moc_screen.cpp"

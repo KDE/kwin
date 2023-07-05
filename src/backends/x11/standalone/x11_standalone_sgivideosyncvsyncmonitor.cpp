@@ -153,3 +153,5 @@ void SGIVideoSyncVsyncMonitor::arm()
 }
 
 } // namespace KWin
+
+#include "moc_x11_standalone_sgivideosyncvsyncmonitor.cpp"

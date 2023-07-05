@@ -90,3 +90,5 @@ void FakeOutput::setModel(const QString &model)
     info.model = model;
     setInformation(info);
 }
+
+#include "moc_fakeoutput.cpp"

@@ -1099,3 +1099,5 @@ void PlasmaWindowActivationInterface::sendAppId(const QString &appid)
 }
 
 }
+
+#include "moc_plasmawindowmanagement_interface.cpp"

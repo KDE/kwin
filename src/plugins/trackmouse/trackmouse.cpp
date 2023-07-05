@@ -252,3 +252,5 @@ bool TrackMouseEffect::isActive() const
 }
 
 } // namespace
+
+#include "moc_trackmouse.cpp"

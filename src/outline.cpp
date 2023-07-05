@@ -186,3 +186,5 @@ void CompositedOutlineVisual::show()
 }
 
 } // namespace
+
+#include "moc_outline.cpp"

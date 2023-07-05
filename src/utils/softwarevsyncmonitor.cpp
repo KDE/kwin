@@ -56,3 +56,5 @@ void SoftwareVsyncMonitor::arm()
 }
 
 } // namespace KWin
+
+#include "moc_softwarevsyncmonitor.cpp"

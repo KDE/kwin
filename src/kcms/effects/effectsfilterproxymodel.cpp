@@ -89,3 +89,5 @@ bool EffectsFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex 
 }
 
 } // namespace KWin
+
+#include "moc_effectsfilterproxymodel.cpp"

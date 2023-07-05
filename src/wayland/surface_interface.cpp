@@ -1123,3 +1123,5 @@ void SurfaceInterface::setPreferredBufferTransform(KWin::Output::Transform trans
 }
 
 } // namespace KWaylandServer
+
+#include "moc_surface_interface.cpp"

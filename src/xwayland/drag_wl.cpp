@@ -379,3 +379,5 @@ void Xvisit::stopConnections()
 
 } // namespace Xwl
 } // namespace KWin
+
+#include "moc_drag_wl.cpp"

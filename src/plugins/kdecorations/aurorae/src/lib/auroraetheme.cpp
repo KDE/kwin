@@ -494,3 +494,5 @@ DecorationPosition AuroraeTheme::decorationPosition() const
 }
 
 } // namespace
+
+#include "moc_auroraetheme.cpp"

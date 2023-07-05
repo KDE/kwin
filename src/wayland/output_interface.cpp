@@ -326,3 +326,5 @@ OutputInterface *OutputInterface::get(wl_resource *native)
 }
 
 } // namespace KWaylandServer
+
+#include "moc_output_interface.cpp"

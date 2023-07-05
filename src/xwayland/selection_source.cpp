@@ -286,3 +286,5 @@ void X11Source::startTransfer(const QString &mimeName, qint32 fd)
 
 } // namespace Xwl
 } // namespace KWin
+
+#include "moc_selection_source.cpp"

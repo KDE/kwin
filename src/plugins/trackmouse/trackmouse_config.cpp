@@ -107,3 +107,5 @@ void TrackMouseEffectConfig::shortcutChanged(const QKeySequence &seq)
 } // namespace
 
 #include "trackmouse_config.moc"
+
+#include "moc_trackmouse_config.cpp"

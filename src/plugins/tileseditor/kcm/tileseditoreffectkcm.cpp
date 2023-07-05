@@ -69,3 +69,5 @@ void TilesEditorEffectConfig::defaults()
 } // namespace KWin
 
 #include "tileseditoreffectkcm.moc"
+
+#include "moc_tileseditoreffectkcm.cpp"

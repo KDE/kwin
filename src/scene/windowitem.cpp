@@ -315,3 +315,5 @@ WindowItemInternal::WindowItemInternal(InternalWindow *window, Scene *scene, Ite
 }
 
 } // namespace KWin
+
+#include "moc_windowitem.cpp"

@@ -491,3 +491,5 @@ bool TextInputV3Interface::clientSupportsTextInput(ClientConnection *client) con
     return client && d->resourceMap().contains(*client);
 }
 }
+
+#include "moc_textinput_v3_interface.cpp"

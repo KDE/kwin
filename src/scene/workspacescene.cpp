@@ -498,3 +498,5 @@ bool WorkspaceScene::supportsNativeFence() const
 }
 
 } // namespace
+
+#include "moc_workspacescene.cpp"

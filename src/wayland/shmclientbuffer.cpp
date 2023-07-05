@@ -316,3 +316,7 @@ ShmClientBufferIntegration::~ShmClientBufferIntegration()
 }
 
 } // namespace KWaylandServer
+
+#include "moc_shmclientbuffer_p.cpp"
+
+#include "moc_shmclientbuffer.cpp"

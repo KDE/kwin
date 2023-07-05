@@ -417,3 +417,5 @@ void EffectLoader::clear()
 }
 
 } // namespace KWin
+
+#include "moc_effectloader.cpp"

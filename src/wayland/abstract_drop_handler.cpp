@@ -15,3 +15,5 @@ AbstractDropHandler::AbstractDropHandler(QObject *parent)
 }
 
 }
+
+#include "moc_abstract_drop_handler.cpp"

@@ -31,3 +31,5 @@ bool DesktopEffectsData::isDefaults() const
 }
 
 }
+
+#include "moc_desktopeffectsdata.cpp"

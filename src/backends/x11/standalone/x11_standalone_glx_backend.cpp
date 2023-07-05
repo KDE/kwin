@@ -944,3 +944,5 @@ void GlxPixmapTexture::onDamage()
 }
 
 } // namespace
+
+#include "moc_x11_standalone_glx_backend.cpp"

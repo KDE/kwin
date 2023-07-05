@@ -354,3 +354,5 @@ QString KWinScreenEdgesConfig::electricBorderActionToString(int action)
 } // namespace
 
 #include "main.moc"
+
+#include "moc_main.cpp"

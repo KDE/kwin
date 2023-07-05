@@ -1136,3 +1136,5 @@ void X11Compositor::createOpenGLSafePoint(OpenGLSafePoint safePoint)
 
 // included for CompositorSelectionOwner
 #include "composite.moc"
+
+#include "moc_composite.cpp"

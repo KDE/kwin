@@ -1368,3 +1368,5 @@ DragAndDropIcon *SeatInterface::dragIcon() const
     return d->drag.dragIcon;
 }
 }
+
+#include "moc_seat_interface.cpp"

@@ -1880,3 +1880,5 @@ bool Workspace::shortcutAvailable(const QKeySequence &cut, Window *ignore) const
 }
 
 } // namespace
+
+#include "moc_useractions.cpp"

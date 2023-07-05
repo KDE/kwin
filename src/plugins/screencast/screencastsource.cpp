@@ -15,3 +15,5 @@ ScreenCastSource::ScreenCastSource(QObject *parent)
 }
 
 } // namespace KWin
+
+#include "moc_screencastsource.cpp"

@@ -761,3 +761,5 @@ void WaylandBuffer::unlock()
 }
 
 } // KWin
+
+#include "moc_wayland_backend.cpp"

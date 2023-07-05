@@ -177,3 +177,5 @@ OutputLayer *WaylandQPainterBackend::cursorLayer(Output *output)
 
 }
 }
+
+#include "moc_wayland_qpainter_backend.cpp"

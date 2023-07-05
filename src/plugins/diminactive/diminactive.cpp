@@ -405,3 +405,5 @@ void DimInactiveEffect::updateActiveWindow(EffectWindow *w)
 }
 
 } // namespace KWin
+
+#include "moc_diminactive.cpp"

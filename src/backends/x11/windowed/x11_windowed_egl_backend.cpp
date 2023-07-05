@@ -281,3 +281,5 @@ std::pair<std::shared_ptr<GLTexture>, ColorDescription> X11WindowedEglBackend::t
 }
 
 } // namespace
+
+#include "moc_x11_windowed_egl_backend.cpp"

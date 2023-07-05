@@ -71,3 +71,5 @@ Display *CompositorInterface::display() const
 }
 
 } // namespace KWaylandServer
+
+#include "moc_compositor_interface.cpp"

@@ -51,3 +51,5 @@ bool KGlobalAccelImpl::checkKeyReleased(int keyQt)
 {
     return keyReleased(keyQt);
 }
+
+#include "moc_kglobalaccel_plugin.cpp"

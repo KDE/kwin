@@ -333,3 +333,5 @@ bool ButtonRebindsFilter::sendTabletToolButton(quint32 button, bool pressed, std
     Q_EMIT m_inputDevice.tabletToolButtonEvent(button, pressed, *m_tabletTool, time);
     return true;
 }
+
+#include "moc_buttonrebindsfilter.cpp"

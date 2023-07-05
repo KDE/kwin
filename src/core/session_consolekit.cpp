@@ -349,3 +349,5 @@ void ConsoleKitSession::handlePrepareForSleep(bool sleep)
 }
 
 } // namespace KWin
+
+#include "moc_session_consolekit.cpp"

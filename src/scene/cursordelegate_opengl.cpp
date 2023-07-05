@@ -78,3 +78,5 @@ void CursorDelegateOpenGL::paint(const RenderTarget &renderTarget, const QRegion
 }
 
 } // namespace KWin
+
+#include "moc_cursordelegate_opengl.cpp"

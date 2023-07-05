@@ -577,3 +577,5 @@ TabBoxHandler *tabBox = nullptr;
 
 } // namespace TabBox
 } // namespace KWin
+
+#include "moc_tabboxhandler.cpp"

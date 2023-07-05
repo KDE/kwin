@@ -91,3 +91,5 @@ PrimarySelectionSourceV1Interface *PrimarySelectionSourceV1Interface::get(wl_res
 }
 
 }
+
+#include "moc_primaryselectionsource_v1_interface.cpp"

@@ -151,3 +151,5 @@ void OMLSyncControlVsyncMonitor::arm()
 }
 
 } // namespace KWin
+
+#include "moc_x11_standalone_omlsynccontrolvsyncmonitor.cpp"

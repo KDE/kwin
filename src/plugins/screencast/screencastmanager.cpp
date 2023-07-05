@@ -223,3 +223,5 @@ void ScreencastManager::integrateStreams(KWaylandServer::ScreencastStreamV1Inter
 }
 
 } // namespace KWin
+
+#include "moc_screencastmanager.cpp"

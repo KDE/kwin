@@ -38,3 +38,5 @@ void DragAndDropIconItem::frameRendered(quint32 timestamp)
 }
 
 } // namespace KWin
+
+#include "moc_dndiconitem.cpp"

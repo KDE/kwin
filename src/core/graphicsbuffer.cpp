@@ -80,3 +80,5 @@ bool GraphicsBuffer::alphaChannelFromDrmFormat(uint32_t format)
 }
 
 } // namespace KWin
+
+#include "moc_graphicsbuffer.cpp"

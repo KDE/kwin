@@ -265,3 +265,5 @@ bool ScreenTransformEffect::isActive() const
 }
 
 } // namespace KWin
+
+#include "moc_screentransform.cpp"

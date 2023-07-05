@@ -166,3 +166,5 @@ QModelIndex DecorationsModel::findDecoration(const QString &pluginName, const QS
 
 }
 }
+
+#include "moc_decorationmodel.cpp"

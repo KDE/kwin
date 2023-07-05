@@ -135,3 +135,5 @@ SurfaceItem *Scene::scanoutCandidate() const
 }
 
 } // namespace KWin
+
+#include "moc_scene.cpp"

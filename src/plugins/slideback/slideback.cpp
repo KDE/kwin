@@ -337,3 +337,5 @@ bool SlideBackEffect::isActive() const
 }
 
 } // Namespace
+
+#include "moc_slideback.cpp"

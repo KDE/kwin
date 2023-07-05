@@ -278,3 +278,5 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
 }
 
 }
+
+#include "moc_keyboard_input.cpp"

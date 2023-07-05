@@ -228,3 +228,5 @@ KWin::TabletModeManager::ConfiguredMode KWin::TabletModeManager::configuredMode(
 }
 
 } // namespace KWin
+
+#include "moc_tabletmodemanager.cpp"

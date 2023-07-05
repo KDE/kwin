@@ -220,3 +220,5 @@ bool KWinScreenEdge::isDefault() const
 }
 
 } // namespace
+
+#include "moc_kwinscreenedge.cpp"

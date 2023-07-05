@@ -297,3 +297,5 @@ void WaylandWindow::markAsMapped()
 }
 
 } // namespace KWin
+
+#include "moc_waylandwindow.cpp"

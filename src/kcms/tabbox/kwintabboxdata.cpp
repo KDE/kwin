@@ -52,3 +52,5 @@ ShortcutSettings *KWinTabboxData::shortcutConfig() const
 }
 }
 }
+
+#include "moc_kwintabboxdata.cpp"

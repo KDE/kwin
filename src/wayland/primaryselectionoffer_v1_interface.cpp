@@ -83,3 +83,5 @@ wl_resource *PrimarySelectionOfferV1Interface::resource() const
 }
 
 }
+
+#include "moc_primaryselectionoffer_v1_interface.cpp"

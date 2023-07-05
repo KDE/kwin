@@ -327,3 +327,5 @@ void ApplicationPolicy::layoutChanged(uint index)
 
 }
 }
+
+#include "moc_keyboard_layout_switching.cpp"

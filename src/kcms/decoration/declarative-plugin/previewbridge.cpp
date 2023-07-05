@@ -227,3 +227,5 @@ BridgeItem::~BridgeItem()
 
 }
 }
+
+#include "moc_previewbridge.cpp"

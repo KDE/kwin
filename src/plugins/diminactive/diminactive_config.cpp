@@ -48,3 +48,5 @@ void DimInactiveEffectConfig::save()
 } // namespace KWin
 
 #include "diminactive_config.moc"
+
+#include "moc_diminactive_config.cpp"

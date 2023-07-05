@@ -110,3 +110,5 @@ void EffectsHandlerImplX11::doCheckInputWindowStacking()
 }
 
 }
+
+#include "moc_x11_standalone_effects.cpp"

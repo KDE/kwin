@@ -245,3 +245,5 @@ void EffectTogglableTouchBorder::setBorders(const QList<int> &touchActivateBorde
 }
 
 }
+
+#include "moc_effecttogglablestate.cpp"

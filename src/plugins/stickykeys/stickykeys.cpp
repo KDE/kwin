@@ -79,3 +79,5 @@ bool StickyKeysFilter::keyEvent(KWin::KeyEvent *event)
 
     return false;
 }
+
+#include "moc_stickykeys.cpp"

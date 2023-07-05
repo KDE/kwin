@@ -236,3 +236,5 @@ bool FocusChain::contains(Window *window, VirtualDesktop *desktop) const
 }
 
 } // namespace
+
+#include "moc_focuschain.cpp"

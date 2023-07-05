@@ -121,3 +121,5 @@ bool ShowFpsEffect::supported()
 }
 
 } // namespace KWin
+
+#include "moc_showfpseffect.cpp"

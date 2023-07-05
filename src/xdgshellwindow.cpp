@@ -1819,3 +1819,5 @@ void XdgPopupWindow::initialize()
 }
 
 } // namespace KWin
+
+#include "moc_xdgshellwindow.cpp"

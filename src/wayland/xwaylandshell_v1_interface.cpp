@@ -163,3 +163,5 @@ std::optional<uint64_t> XwaylandSurfaceV1Interface::serial() const
 }
 
 } // namespace KWaylandServer
+
+#include "moc_xwaylandshell_v1_interface.cpp"

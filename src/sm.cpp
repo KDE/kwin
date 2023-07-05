@@ -407,3 +407,5 @@ void SessionManager::quit()
 }
 
 } // namespace
+
+#include "moc_sm.cpp"

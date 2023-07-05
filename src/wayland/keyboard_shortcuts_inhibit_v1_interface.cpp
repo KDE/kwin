@@ -187,3 +187,5 @@ void KeyboardShortcutsInhibitManagerV1Interface::removeInhibitor(SurfaceInterfac
 }
 
 }
+
+#include "moc_keyboard_shortcuts_inhibit_v1_interface.cpp"

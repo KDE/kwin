@@ -72,3 +72,7 @@ void IdleTimeoutInterface::org_kde_kwin_idle_timeout_simulate_user_activity(Reso
 }
 
 }
+
+#include "moc_idle_interface_p.cpp"
+
+#include "moc_idle_interface.cpp"

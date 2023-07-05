@@ -48,3 +48,5 @@ void Drag::sendClientMessage(xcb_window_t target, xcb_atom_t type, xcb_client_me
 
 } // namespace Xwl
 } // namespace KWin
+
+#include "moc_drag.cpp"

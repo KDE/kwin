@@ -204,3 +204,5 @@ void TouchInputRedirection::frame()
 }
 
 }
+
+#include "moc_touch_input.cpp"

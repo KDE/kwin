@@ -46,3 +46,5 @@ void X11PlaceholderOutput::updateEnabled(bool enabled)
 }
 
 } // namespace KWin
+
+#include "moc_x11_standalone_placeholderoutput.cpp"

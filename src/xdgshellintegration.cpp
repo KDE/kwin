@@ -76,3 +76,5 @@ void XdgShellIntegration::registerXdgPopup(XdgPopupInterface *popup)
 }
 
 } // namespace KWin
+
+#include "moc_xdgshellintegration.cpp"

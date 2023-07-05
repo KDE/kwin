@@ -94,3 +94,5 @@ void RelativePointerV1Interface::sendRelativeMotion(const QPointF &delta, const 
 }
 
 } // namespace KWaylandServer
+
+#include "moc_relativepointer_v1_interface.cpp"

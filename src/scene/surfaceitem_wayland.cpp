@@ -223,3 +223,5 @@ QVector<QRectF> SurfaceItemXwayland::shape() const
 }
 
 } // namespace KWin
+
+#include "moc_surfaceitem_wayland.cpp"

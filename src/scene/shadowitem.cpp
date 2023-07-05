@@ -306,3 +306,5 @@ void ShadowItem::preprocess()
 }
 
 } // namespace KWin
+
+#include "moc_shadowitem.cpp"

@@ -474,3 +474,5 @@ void EglPixmapTexture::onDamage()
 }
 
 } // namespace KWin
+
+#include "moc_x11_standalone_egl_backend.cpp"

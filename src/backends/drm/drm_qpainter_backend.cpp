@@ -62,3 +62,5 @@ std::shared_ptr<DrmOutputLayer> DrmQPainterBackend::createLayer(DrmVirtualOutput
 }
 
 }
+
+#include "moc_drm_qpainter_backend.cpp"

@@ -467,3 +467,5 @@ KWaylandServer::AbstractDropHandler *Xwayland::xwlDropHandler()
 
 } // namespace Xwl
 } // namespace KWin
+
+#include "moc_xwayland.cpp"

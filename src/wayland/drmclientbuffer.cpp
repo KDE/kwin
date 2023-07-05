@@ -134,3 +134,5 @@ void DrmClientBufferIntegration::setDevice(const QString &node)
 }
 
 } // namespace KWaylandServer
+
+#include "moc_drmclientbuffer.cpp"

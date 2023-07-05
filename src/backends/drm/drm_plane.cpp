@@ -187,3 +187,5 @@ int32_t DrmPlane::transformationToDegrees(DrmPlane::Transformations transformati
     }
 }
 }
+
+#include "moc_drm_plane.cpp"

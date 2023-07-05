@@ -52,3 +52,5 @@ void NoopSession::switchTo(uint terminal)
 }
 
 } // namespace KWin
+
+#include "moc_session_noop.cpp"

@@ -710,3 +710,5 @@ void NightColorManager::setMode(NightColorMode mode)
 }
 
 } // namespace KWin
+
+#include "moc_nightcolormanager.cpp"

@@ -256,3 +256,5 @@ void SurfacePixmapX11::create()
 }
 
 } // namespace KWin
+
+#include "moc_surfaceitem_x11.cpp"

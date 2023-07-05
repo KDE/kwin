@@ -2513,3 +2513,5 @@ void EffectFrameImpl::setCrossFadeProgress(qreal progress)
 }
 
 } // namespace
+
+#include "moc_effects.cpp"

@@ -264,3 +264,5 @@ qint32 KeyboardInterface::keyRepeatRate() const
 }
 
 }
+
+#include "moc_keyboard_interface.cpp"

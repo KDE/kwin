@@ -12,3 +12,5 @@ AbstractDataSource::AbstractDataSource(QObject *parent)
     : QObject(parent)
 {
 }
+
+#include "moc_abstract_data_source.cpp"

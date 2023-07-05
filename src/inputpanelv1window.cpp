@@ -197,3 +197,5 @@ void InputPanelV1Window::maybeShow()
 }
 
 } // namespace KWin
+
+#include "moc_inputpanelv1window.cpp"

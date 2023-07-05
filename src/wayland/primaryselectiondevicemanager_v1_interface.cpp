@@ -75,3 +75,5 @@ PrimarySelectionDeviceManagerV1Interface::PrimarySelectionDeviceManagerV1Interfa
 
 PrimarySelectionDeviceManagerV1Interface::~PrimarySelectionDeviceManagerV1Interface() = default;
 }
+
+#include "moc_primaryselectiondevicemanager_v1_interface.cpp"

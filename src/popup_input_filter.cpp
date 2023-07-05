@@ -120,3 +120,5 @@ void PopupInputFilter::cancelPopups()
 }
 
 }
+
+#include "moc_popup_input_filter.cpp"

@@ -152,3 +152,5 @@ void XdgActivationV1Integration::clear()
 }
 
 }
+
+#include "moc_xdgactivationv1.cpp"

@@ -185,3 +185,5 @@ void TabletInputRedirection::focusUpdate(Window *focusOld, Window *focusNow)
 }
 
 }
+
+#include "moc_tablet_input.cpp"

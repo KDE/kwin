@@ -351,3 +351,5 @@ void Selection::timeoutTransfers()
 
 } // namespace Xwl
 } // namespace KWin
+
+#include "moc_selection.cpp"

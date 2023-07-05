@@ -302,3 +302,5 @@ bool ScreenEdgeEffect::isActive() const
 }
 
 } // namespace
+
+#include "moc_screenedgeeffect.cpp"

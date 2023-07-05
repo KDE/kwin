@@ -464,3 +464,5 @@ void WindowViewEffect::setSelectedIds(const QList<QUuid> &ids)
 }
 
 } // namespace KWin
+
+#include "moc_windowvieweffect.cpp"

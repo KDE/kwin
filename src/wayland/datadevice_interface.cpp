@@ -322,3 +322,5 @@ wl_client *DataDeviceInterface::client()
 }
 
 }
+
+#include "moc_datadevice_interface.cpp"

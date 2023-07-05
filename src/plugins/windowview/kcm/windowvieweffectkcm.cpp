@@ -94,3 +94,5 @@ void WindowViewEffectConfig::defaults()
 } // namespace KWin
 
 #include "windowvieweffectkcm.moc"
+
+#include "moc_windowvieweffectkcm.cpp"

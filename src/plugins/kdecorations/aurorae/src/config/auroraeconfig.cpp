@@ -122,3 +122,5 @@ void ConfigurationModule::initQml()
 }
 
 #include "auroraeconfig.moc"
+
+#include "moc_auroraeconfig.cpp"

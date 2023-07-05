@@ -266,3 +266,5 @@ bool SnapHelperEffect::isActive() const
 }
 
 } // namespace KWin
+
+#include "moc_snaphelper.cpp"

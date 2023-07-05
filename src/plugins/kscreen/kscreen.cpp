@@ -216,3 +216,5 @@ bool KscreenEffect::isScreenActive(EffectScreen *screen) const
 }
 
 } // namespace KWin
+
+#include "moc_kscreen.cpp"

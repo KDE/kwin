@@ -527,3 +527,5 @@ bool DrmOutput::needsColormanagement() const
     return m_pipeline->colorimetry() != NamedColorimetry::BT709 || m_pipeline->transferFunction() != NamedTransferFunction::sRGB || m_gpu->isNVidia();
 }
 }
+
+#include "moc_drm_output.cpp"

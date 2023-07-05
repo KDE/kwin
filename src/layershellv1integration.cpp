@@ -218,3 +218,5 @@ void LayerShellV1Integration::scheduleRearrange()
 }
 
 } // namespace KWin
+
+#include "moc_layershellv1integration.cpp"

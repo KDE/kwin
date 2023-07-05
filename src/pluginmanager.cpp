@@ -130,3 +130,5 @@ void PluginManager::unloadPlugin(const QString &pluginId)
 }
 
 } // namespace KWin
+
+#include "moc_pluginmanager.cpp"

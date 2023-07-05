@@ -94,3 +94,5 @@ void IdleInhibition::slotDesktopChanged()
 }
 
 }
+
+#include "moc_idle_inhibition.cpp"

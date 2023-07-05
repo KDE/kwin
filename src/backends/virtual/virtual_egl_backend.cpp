@@ -192,3 +192,5 @@ std::pair<std::shared_ptr<KWin::GLTexture>, ColorDescription> VirtualEglBackend:
 }
 
 } // namespace
+
+#include "moc_virtual_egl_backend.cpp"

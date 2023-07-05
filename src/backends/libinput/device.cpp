@@ -713,3 +713,5 @@ void Device::setOutputArea(const QRectF &outputArea)
 }
 }
 }
+
+#include "moc_device.cpp"

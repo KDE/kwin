@@ -204,3 +204,5 @@ void SurfacePixmap::markAsDiscarded()
 }
 
 } // namespace KWin
+
+#include "moc_surfaceitem.cpp"

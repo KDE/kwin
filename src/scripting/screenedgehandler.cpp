@@ -108,3 +108,5 @@ void ScreenEdgeHandler::setMode(Mode mode)
 }
 
 } // namespace
+
+#include "moc_screenedgehandler.cpp"

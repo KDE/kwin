@@ -341,3 +341,5 @@ void LayerShellV1Window::deactivateScreenEdge()
 }
 
 } // namespace KWin
+
+#include "moc_layershellv1window.cpp"
