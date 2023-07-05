@@ -333,6 +333,9 @@ void DrmPipeline::atomicCommitSuccessful()
     m_pending.needsModeset = false;
     if (activePending()) {
         m_pageflipPending = true;
+    } else {
+        m_pending.layer->releaseBuffers();
+        m_pending.cursorLayer->releaseBuffers();
     }
     if (m_pending.crtc) {
         m_pending.crtc->primaryPlane()->setNext(m_pending.layer->currentBuffer());
