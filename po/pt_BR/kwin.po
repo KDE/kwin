@@ -18,15 +18,15 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-22 02:43+0000\n"
-"PO-Revision-Date: 2023-02-24 16:25-0300\n"
+"PO-Revision-Date: 2023-07-04 10:42-0300\n"
 "Last-Translator: Luiz Fernando Ranghetti <elchevive@opensuse.org>\n"
-"Language-Team: Portuguese <kde-i18n-pt_BR@kde.org>\n"
+"Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 21.12.3\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -70,6 +70,7 @@ msgstr ""
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr ""
+"As extensões X solicitadas (XComposite e XDamage) não estão disponíveis."
 
 #: composite.cpp:1074
 #, kde-format
@@ -1363,6 +1364,8 @@ msgstr "Renderizar pelo nó de DRM."
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
+"Extrair informações de localidade de locale1 ao invés da configuração do "
+"usuário"
 
 #: main_wayland.cpp:386
 #, kde-format
@@ -2474,10 +2477,9 @@ msgid "Make Window Fullscreen"
 msgstr "Janela em tela inteira"
 
 #: useractions.cpp:1009
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "Toggle Window Titlebar and Frame"
-msgstr "Sem barra de título e moldura"
+msgstr "Alternar barra de título da janela e moldura"
 
 #: useractions.cpp:1011
 #, kde-format
@@ -2670,28 +2672,24 @@ msgid "Window to Previous Screen"
 msgstr "Janela para a tela anterior"
 
 #: useractions.cpp:1102
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Window One Screen to the Right"
-msgstr "Janela em uma área de trabalho à direita"
+msgstr "Janela em uma tela à direita"
 
 #: useractions.cpp:1104
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Window One Screen to the Left"
-msgstr "Janela em uma área de trabalho à esquerda"
+msgstr "Janela em uma tela à esquerda"
 
 #: useractions.cpp:1106
-#, fuzzy, kde-format
-#| msgid "Window to Screen %1"
+#, kde-format
 msgid "Window One Screen Up"
-msgstr "Janela para a tela %1"
+msgstr "Janela em uma tela acima"
 
 #: useractions.cpp:1108
-#, fuzzy, kde-format
-#| msgid "Window One Desktop Down"
+#, kde-format
 msgid "Window One Screen Down"
-msgstr "Janela em uma área de trabalho abaixo"
+msgstr "Janela em uma tela abaixo"
 
 #: useractions.cpp:1112
 #, kde-format
@@ -2709,28 +2707,24 @@ msgid "Switch to Previous Screen"
 msgstr "Mudar para a tela anterior"
 
 #: useractions.cpp:1121
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Right"
+#, kde-format
 msgid "Switch to Screen to the Right"
-msgstr "Mudar para a janela à direita"
+msgstr "Mudar para a tela à direita"
 
 #: useractions.cpp:1123
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Left"
+#, kde-format
 msgid "Switch to Screen to the Left"
-msgstr "Mudar para a janela à esquerda"
+msgstr "Mudar para a tela à esquerda"
 
 #: useractions.cpp:1125
-#, fuzzy, kde-format
-#| msgid "Switch to Screen %1"
+#, kde-format
 msgid "Switch to Screen Above"
-msgstr "Mudar para a tela %1"
+msgstr "Mudar para a tela acima"
 
 #: useractions.cpp:1127
-#, fuzzy, kde-format
-#| msgid "Switch to Screen %1"
+#, kde-format
 msgid "Switch to Screen Below"
-msgstr "Mudar para a tela %1"
+msgstr "Mudar para a tela abaixo"
 
 #: useractions.cpp:1130
 #, kde-format
