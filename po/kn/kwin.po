@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-02 02:36+0000\n"
+"POT-Creation-Date: 2023-07-06 02:52+0000\n"
 "PO-Revision-Date: 2011-07-11 12:17+0530\n"
 "Last-Translator: Shankar Prasad <svenkate@redhat.com>\n"
 "Language-Team: Kannada <kde-l10n-kn@kde.org>\n"
@@ -1244,7 +1244,7 @@ msgstr ""
 #: plugins/invert/invert_config.cpp:35
 #: plugins/magnifier/magnifier_config.cpp:55
 #: plugins/mouseclick/mouseclick_config.cpp:48
-#: plugins/mousemark/mousemark_config.cpp:50
+#: plugins/mousemark/mousemark_config.cpp:51
 #: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/showpaint/showpaint_config.cpp:33
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:54
@@ -2236,22 +2236,22 @@ msgstr ""
 msgid "Show Text:"
 msgstr "ಗಣಕತೆರೆಯನ್ನು ತೋರಿಸು"
 
-#: plugins/mousemark/mousemark.cpp:41
+#: plugins/mousemark/mousemark.cpp:43
 #, fuzzy, kde-format
 msgid "Clear All Mouse Marks"
 msgstr "ಮೂಷಕ ಗುರುತುಗಳನ್ನು ತೆರವುಗೊಳಿಸು"
 
-#: plugins/mousemark/mousemark.cpp:47 plugins/mousemark/mousemark_config.cpp:59
+#: plugins/mousemark/mousemark.cpp:49 plugins/mousemark/mousemark_config.cpp:60
 #, fuzzy, kde-format
 msgid "Clear Last Mouse Mark"
 msgstr "ಮೂಷಕ ಗುರುತುಗಳನ್ನು ತೆರವುಗೊಳಿಸು"
 
-#: plugins/mousemark/mousemark_config.cpp:53
+#: plugins/mousemark/mousemark_config.cpp:54
 #, fuzzy, kde-format
 msgid "Clear Mouse Marks"
 msgstr "ಮೂಷಕ ಗುರುತುಗಳನ್ನು ತೆರವುಗೊಳಿಸು"
 
-#: plugins/mousemark/mousemark_config.cpp:100
+#: plugins/mousemark/mousemark_config.cpp:101
 #, kde-format
 msgctxt "Suffix"
 msgid " pixel"
@@ -2271,11 +2271,65 @@ msgstr ""
 msgid "&Color:"
 msgstr "ಬಣ್ಣ(&C):"
 
-#. i18n: ectx: property (text), widget (QLabel, label_3)
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox2)
 #: plugins/mousemark/mousemark_config.ui:82
-#, kde-format
-msgid "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
+#, fuzzy, kde-format
+#| msgid "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
+msgid "Draw with the mouse by holding modifier keys and moving the mouse"
 msgstr "ಮೌಸಿನೊಂದಿಗೆ ಎಳೆಯಲು ಶಿಫ್ಟ್‍+ಮೆಟಾ ಕೀಲಿಗಳನ್ನು ಒತ್ತಿಹಿಡಿಯಿರಿ ಹಾಗು ಮೌಸನ್ನು ಜರುಗಿಸಿ."
+
+#. i18n: ectx: property (text), widget (QLabel, label_FreedrawModifierKeys)
+#: plugins/mousemark/mousemark_config.ui:103
+#, kde-format
+msgid "Free draw modifier keys:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Freedrawalt)
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Arrowdrawalt)
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Alt)
+#: plugins/mousemark/mousemark_config.ui:125
+#: plugins/mousemark/mousemark_config.ui:179
+#: plugins/trackmouse/trackmouse_config.ui:65
+#, kde-format
+msgid "Alt"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Freedrawcontrol)
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Arrowdrawcontrol)
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Control)
+#: plugins/mousemark/mousemark_config.ui:132
+#: plugins/mousemark/mousemark_config.ui:186
+#: plugins/trackmouse/trackmouse_config.ui:72
+#, fuzzy, kde-format
+#| msgid "Center"
+msgid "Ctrl"
+msgstr "ಮಧ್ಯ"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Freedrawshift)
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Arrowdrawshift)
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Shift)
+#: plugins/mousemark/mousemark_config.ui:139
+#: plugins/mousemark/mousemark_config.ui:193
+#: plugins/trackmouse/trackmouse_config.ui:79
+#, kde-format
+msgid "Shift"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Freedrawmeta)
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Arrowdrawmeta)
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Meta)
+#: plugins/mousemark/mousemark_config.ui:146
+#: plugins/mousemark/mousemark_config.ui:200
+#: plugins/trackmouse/trackmouse_config.ui:86
+#, kde-format
+msgid "Meta"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_ArrowdrawModifierKeys)
+#: plugins/mousemark/mousemark_config.ui:157
+#, kde-format
+msgid "Arrow draw modifier keys:"
+msgstr ""
 
 #: plugins/nightcolor/nightcolormanager.cpp:63
 #, kde-format
@@ -2599,31 +2653,6 @@ msgstr "ಮುಂದಿನ ವಿನ್ಯಾಸ"
 #: plugins/trackmouse/trackmouse_config.ui:43
 #, kde-format
 msgid "Modifier keys:"
-msgstr ""
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Alt)
-#: plugins/trackmouse/trackmouse_config.ui:65
-#, kde-format
-msgid "Alt"
-msgstr ""
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Control)
-#: plugins/trackmouse/trackmouse_config.ui:72
-#, fuzzy, kde-format
-#| msgid "Center"
-msgid "Ctrl"
-msgstr "ಮಧ್ಯ"
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Shift)
-#: plugins/trackmouse/trackmouse_config.ui:79
-#, kde-format
-msgid "Shift"
-msgstr ""
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Meta)
-#: plugins/trackmouse/trackmouse_config.ui:86
-#, kde-format
-msgid "Meta"
 msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, KWin::TranslucencyEffectConfigForm)

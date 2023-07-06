@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-02 02:36+0000\n"
+"POT-Creation-Date: 2023-07-06 02:52+0000\n"
 "PO-Revision-Date: 2022-05-14 17:24+0200\n"
 "Last-Translator: Martin Schlander <mschlander@opensuse.org>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
@@ -1248,7 +1248,7 @@ msgstr ""
 #: plugins/invert/invert_config.cpp:35
 #: plugins/magnifier/magnifier_config.cpp:55
 #: plugins/mouseclick/mouseclick_config.cpp:48
-#: plugins/mousemark/mousemark_config.cpp:50
+#: plugins/mousemark/mousemark_config.cpp:51
 #: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/showpaint/showpaint_config.cpp:33
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:54
@@ -2234,22 +2234,22 @@ msgstr "Skrifttype:"
 msgid "Show Text:"
 msgstr "Vis skrivebord"
 
-#: plugins/mousemark/mousemark.cpp:41
+#: plugins/mousemark/mousemark.cpp:43
 #, kde-format
 msgid "Clear All Mouse Marks"
 msgstr "Ryd alle musemærker"
 
-#: plugins/mousemark/mousemark.cpp:47 plugins/mousemark/mousemark_config.cpp:59
+#: plugins/mousemark/mousemark.cpp:49 plugins/mousemark/mousemark_config.cpp:60
 #, kde-format
 msgid "Clear Last Mouse Mark"
 msgstr "Ryd seneste musemærke"
 
-#: plugins/mousemark/mousemark_config.cpp:53
+#: plugins/mousemark/mousemark_config.cpp:54
 #, kde-format
 msgid "Clear Mouse Marks"
 msgstr "Ryd musemærker"
 
-#: plugins/mousemark/mousemark_config.cpp:100
+#: plugins/mousemark/mousemark_config.cpp:101
 #, kde-format
 msgctxt "Suffix"
 msgid " pixel"
@@ -2269,11 +2269,72 @@ msgstr "Bre&dde:"
 msgid "&Color:"
 msgstr "&Farve:"
 
-#. i18n: ectx: property (text), widget (QLabel, label_3)
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox2)
 #: plugins/mousemark/mousemark_config.ui:82
-#, kde-format
-msgid "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
+#, fuzzy, kde-format
+#| msgid "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
+msgid "Draw with the mouse by holding modifier keys and moving the mouse"
 msgstr "Tegn med musen ved at holde Skift+Meta-tasterne og flytte musen."
+
+#. i18n: ectx: property (text), widget (QLabel, label_FreedrawModifierKeys)
+#: plugins/mousemark/mousemark_config.ui:103
+#, fuzzy, kde-format
+#| msgid "Modifiers"
+msgid "Free draw modifier keys:"
+msgstr "Ændringstaster"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Freedrawalt)
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Arrowdrawalt)
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Alt)
+#: plugins/mousemark/mousemark_config.ui:125
+#: plugins/mousemark/mousemark_config.ui:179
+#: plugins/trackmouse/trackmouse_config.ui:65
+#, fuzzy, kde-format
+#| msgctxt "A keyboard modifier"
+#| msgid "Alt"
+msgid "Alt"
+msgstr "Alt"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Freedrawcontrol)
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Arrowdrawcontrol)
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Control)
+#: plugins/mousemark/mousemark_config.ui:132
+#: plugins/mousemark/mousemark_config.ui:186
+#: plugins/trackmouse/trackmouse_config.ui:72
+#, kde-format
+msgid "Ctrl"
+msgstr "Ctrl"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Freedrawshift)
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Arrowdrawshift)
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Shift)
+#: plugins/mousemark/mousemark_config.ui:139
+#: plugins/mousemark/mousemark_config.ui:193
+#: plugins/trackmouse/trackmouse_config.ui:79
+#, fuzzy, kde-format
+#| msgctxt "A keyboard modifier"
+#| msgid "Shift"
+msgid "Shift"
+msgstr "Skift"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Freedrawmeta)
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Arrowdrawmeta)
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Meta)
+#: plugins/mousemark/mousemark_config.ui:146
+#: plugins/mousemark/mousemark_config.ui:200
+#: plugins/trackmouse/trackmouse_config.ui:86
+#, fuzzy, kde-format
+#| msgctxt "A keyboard modifier"
+#| msgid "Meta"
+msgid "Meta"
+msgstr "Meta"
+
+#. i18n: ectx: property (text), widget (QLabel, label_ArrowdrawModifierKeys)
+#: plugins/mousemark/mousemark_config.ui:157
+#, fuzzy, kde-format
+#| msgid "Modifiers"
+msgid "Arrow draw modifier keys:"
+msgstr "Ændringstaster"
 
 #: plugins/nightcolor/nightcolormanager.cpp:63
 #, kde-format
@@ -2623,36 +2684,6 @@ msgstr "Tastatur"
 #| msgid "Modifiers"
 msgid "Modifier keys:"
 msgstr "Ændringstaster"
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Alt)
-#: plugins/trackmouse/trackmouse_config.ui:65
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Alt"
-msgid "Alt"
-msgstr "Alt"
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Control)
-#: plugins/trackmouse/trackmouse_config.ui:72
-#, kde-format
-msgid "Ctrl"
-msgstr "Ctrl"
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Shift)
-#: plugins/trackmouse/trackmouse_config.ui:79
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Shift"
-msgid "Shift"
-msgstr "Skift"
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Meta)
-#: plugins/trackmouse/trackmouse_config.ui:86
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Meta"
-msgid "Meta"
-msgstr "Meta"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, KWin::TranslucencyEffectConfigForm)
 #: plugins/translucency/package/contents/ui/config.ui:14
