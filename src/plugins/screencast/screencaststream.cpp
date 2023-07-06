@@ -754,7 +754,7 @@ QVector<const spa_pod *> ScreenCastStream::buildFormats(bool fixate, char buffer
     if (m_hasDmaBuf) {
         params.append(buildFormat(&podBuilder, SPA_VIDEO_FORMAT_BGRA, &resolution, &defFramerate, &minFramerate, &maxFramerate, m_modifiers, SPA_POD_PROP_FLAG_MANDATORY | SPA_POD_PROP_FLAG_DONT_FIXATE));
     }
-    params.append(buildFormat(&podBuilder, format, &resolution, &defFramerate, &minFramerate, &maxFramerate, {}, SPA_POD_PROP_FLAG_MANDATORY | SPA_POD_PROP_FLAG_DONT_FIXATE));
+    params.append(buildFormat(&podBuilder, format, &resolution, &defFramerate, &minFramerate, &maxFramerate, {}, 0));
     return params;
 }
 
