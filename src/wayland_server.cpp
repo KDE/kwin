@@ -15,9 +15,11 @@
 #include "core/outputbackend.h"
 #include "idle_inhibition.h"
 #include "inputpanelv1integration.h"
+#include "keyboard_input.h"
 #include "layershellv1integration.h"
 #include "layershellv1window.h"
 #include "main.h"
+#include "pointer_input.h"
 #include "utils/serviceutils.h"
 #include "virtualdesktops.h"
 #include "wayland/appmenu_interface.h"
@@ -64,6 +66,7 @@
 #include "wayland/xdgforeign_v2_interface.h"
 #include "wayland/xdgoutput_v1_interface.h"
 #include "wayland/xdgshell_interface.h"
+#include "wayland/xdgwmgestures_v1_interface.h"
 #include "wayland/xwaylandkeyboardgrab_v1_interface.h"
 #include "wayland/xwaylandshell_v1_interface.h"
 #include "workspace.h"
@@ -516,6 +519,38 @@ bool WaylandServer::init(InitializationFlags flags)
     connect(screenEdgeManager, &KWaylandServer::ScreenEdgeManagerV1Interface::edgeRequested, this, [this](KWaylandServer::AutoHideScreenEdgeV1Interface *edge) {
         if (auto window = qobject_cast<LayerShellV1Window *>(findWindow(edge->surface()))) {
             window->installAutoHideScreenEdgeV1(edge);
+        }
+    });
+
+    auto wmGestures = new KWaylandServer::XdgWmGesturesV1Interface(m_display, m_display);
+    connect(wmGestures, &KWaylandServer::XdgWmGesturesV1Interface::action, this, [this](const KWaylandServer::XdgWmGesturesV1Interface::GestureAction &action) {
+        if (!action.seat->hasImplicitPointerGrab(action.serial)) {
+            return;
+        }
+        auto toplevel = findXdgToplevelWindow(action.toplevel->surface());
+        if (!toplevel) {
+            return;
+        }
+        const QPointF pos = input()->pointer()->pos();
+        using enum KWaylandServer::XdgWmGesturesV1Interface::Location;
+        using enum KWaylandServer::XdgWmGesturesV1Interface::Action;
+        // We only need to handle titlebar actions as the the modifier + button commands have already been handled by the WindowActionInputFilter
+        // Raise + Activate on click is also handled before passing the event to the client so only normal titlebar actions need to be considered here
+        if (action.location == Titlebar) {
+            switch (action.action) {
+            // case: LeftClick
+            // toplevel->performMouseCommand(toplevel->isActive() ? options->commandActiveTitlebar1() : options->commandInactiveTitlebar1(), pos);
+            // break;
+            case DoubleClick:
+                workspace()->performWindowOperation(toplevel, options->operationTitlebarDblClick());
+                break;
+            case RightClick:
+                toplevel->performMouseCommand(toplevel->isActive() ? options->commandActiveTitlebar2() : options->commandInactiveTitlebar2(), pos);
+                break;
+            case MiddleClick:
+                toplevel->performMouseCommand(toplevel->isActive() ? options->commandActiveTitlebar3() : options->commandInactiveTitlebar3(), pos);
+                break;
+            }
         }
     });
 

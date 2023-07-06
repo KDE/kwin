@@ -212,6 +212,10 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-screen-edge-v1.xml
     BASENAME kde-screen-edge-v1
 )
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PROTOCOL ${PROJECT_SOURCE_DIR}/src/wayland/protocols/wm-gestures-v1.xml
+    BASENAME wm-gestures-v1
+)
 
 target_sources(kwin PRIVATE
     abstract_data_source.cpp
@@ -287,6 +291,7 @@ target_sources(kwin PRIVATE
     xdgforeign_v2_interface.cpp
     xdgoutput_v1_interface.cpp
     xdgshell_interface.cpp
+    xdgwmgestures_v1_interface.cpp
     xwaylandkeyboardgrab_v1_interface.cpp
     xwaylandshell_v1_interface.cpp
 )
