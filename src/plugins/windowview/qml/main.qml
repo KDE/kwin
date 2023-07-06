@@ -10,7 +10,6 @@ import Qt5Compat.GraphicalEffects
 import QtQuick.Layouts
 import org.kde.kwin as KWinComponents
 import org.kde.kwin.private.effects
-import org.kde.plasma.core as PlasmaCore
 import org.kde.kirigami 2.20 as Kirigami
 import org.kde.plasma.extras as PlasmaExtras
 import org.kde.KWin.Effect.WindowView
@@ -78,7 +77,7 @@ Item {
 
     Rectangle {
         anchors.fill: parent
-        color: PlasmaCore.ColorScope.backgroundColor
+        color: Kirigami.Theme.backgroundColor
         opacity: container.organized ? 0.75 : 0
 
         TapHandler {

@@ -13,7 +13,6 @@ import org.kde.kirigami 2.20 as Kirigami
 import org.kde.kwin as KWinComponents
 import org.kde.kwin.private.effects
 import org.kde.plasma.components 3.0 as PC3
-import org.kde.plasma.core as PlasmaCore
 import org.kde.kirigami 2.20 as Kirigami
 
 Item {
@@ -127,7 +126,7 @@ Item {
                             radius: 3
                             color: "transparent"
                             border.width: 2
-                            border.color: active ? PlasmaCore.ColorScope.highlightColor : PlasmaCore.ColorScope.textColor
+                            border.color: active ? Kirigami.Theme.highlightColor : Kirigami.Theme.textColor
                             opacity: dropArea.containsDrag || !active ? 0.5 : 1.0
                         }
 

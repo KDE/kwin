@@ -12,7 +12,6 @@ import org.kde.kirigami 2.20 as Kirigami
 import org.kde.kwin as KWinComponents
 import org.kde.kwin.private.effects
 import org.kde.milou as Milou
-import org.kde.plasma.core as PlasmaCore
 import org.kde.kirigami 2.20 as Kirigami
 import org.kde.plasma.extras as PlasmaExtras
 
@@ -23,9 +22,9 @@ FocusScope {
     readonly property QtObject effect: KWinComponents.SceneView.effect
     readonly property QtObject targetScreen: KWinComponents.SceneView.screen
 
-    readonly property bool lightBackground: Math.max(PlasmaCore.ColorScope.backgroundColor.r,
-                                                     PlasmaCore.ColorScope.backgroundColor.g,
-                                                     PlasmaCore.ColorScope.backgroundColor.b) > 0.5
+    readonly property bool lightBackground: Math.max(Kirigami.Theme.backgroundColor.r,
+                                                     Kirigami.Theme.backgroundColor.g,
+                                                     Kirigami.Theme.backgroundColor.b) > 0.5
 
     property bool animationEnabled: false
     property bool organized: false
@@ -159,7 +158,7 @@ FocusScope {
     Rectangle {
         id: underlay
         anchors.fill: parent
-        color: PlasmaCore.ColorScope.backgroundColor
+        color: Kirigami.Theme.backgroundColor
 
         TapHandler {
             onTapped: effect.deactivate();
@@ -178,9 +177,9 @@ FocusScope {
                 id: desktopBar
                 width: parent.width
                 implicitHeight: bar.implicitHeight + 2 * Kirigami.Units.smallSpacing
-                color: container.lightBackground ? Qt.rgba(PlasmaCore.ColorScope.backgroundColor.r,
-                                                           PlasmaCore.ColorScope.backgroundColor.g,
-                                                           PlasmaCore.ColorScope.backgroundColor.b, 0.75)
+                color: container.lightBackground ? Qt.rgba(Kirigami.Theme.backgroundColor.r,
+                                                           Kirigami.Theme.backgroundColor.g,
+                                                           Kirigami.Theme.backgroundColor.b, 0.75)
                                                  : Qt.rgba(0, 0, 0, 0.25)
 
                 DesktopBar {
