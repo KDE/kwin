@@ -305,6 +305,10 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${WaylandProtocols_DATADIR}/staging/alpha-modifier/alpha-modifier-v1.xml
     BASENAME alpha-modifier-v1
 )
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PROTOCOL ${WaylandProtocols_DATADIR}/staging/xdg-system-bell/xdg-system-bell-v1.xml
+    BASENAME xdg-system-bell-v1
+)
 
 target_sources(kwin PRIVATE
     abstract_data_source.cpp
@@ -387,6 +391,7 @@ target_sources(kwin PRIVATE
     xdgforeign_v2.cpp
     xdgoutput_v1.cpp
     xdgshell.cpp
+    xdgsystembell_v1.cpp
     xdgtopleveldrag_v1.cpp
     xwaylandkeyboardgrab_v1.cpp
     xwaylandshell_v1.cpp
@@ -466,6 +471,7 @@ install(FILES
     xdgforeign_v2.h
     xdgoutput_v1.h
     xdgshell.h
+    xdgsystembell_v1.h
     xwaylandkeyboardgrab_v1.h
     xwaylandshell_v1.h
     xx_colormanagement_v4.h
