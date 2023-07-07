@@ -12,6 +12,10 @@
 #include "effect/effecthandler.h"
 #include "opengl/glshader.h"
 #include "opengl/glshadermanager.h"
+#include "wayland/surface.h"
+#include "wayland/systembell_v1.h"
+#include "wayland_server.h"
+#include "window.h"
 
 #include <QDBusConnection>
 #include <QFile>
@@ -19,6 +23,7 @@
 #include <QTimer>
 
 #include <canberra.h>
+#include <ranges>
 
 Q_LOGGING_CATEGORY(KWIN_SYSTEMBELL, "kwin_effect_systembell", QtWarningMsg)
 
@@ -30,6 +35,9 @@ static void ensureResources()
 
 namespace KWin
 {
+
+QTimer *SystemBellEffect::s_systemBellRemoveTimer = nullptr;
+SystemBellV1Interface *SystemBellEffect::s_systemBell = nullptr;
 
 SystemBellEffect::SystemBellEffect()
     : m_configWatcher(KConfigWatcher::create(KSharedConfig::openConfig("kaccessrc")))
@@ -67,12 +75,41 @@ SystemBellEffect::SystemBellEffect()
             qCWarning(KWIN_SYSTEMBELL) << "Failed to set application properties on canberra context for audio notification:" << ca_strerror(ret);
         }
     }
+
+    if (waylandServer()) {
+        if (!s_systemBellRemoveTimer) {
+            s_systemBellRemoveTimer = new QTimer(QCoreApplication::instance());
+            s_systemBellRemoveTimer->setSingleShot(true);
+            s_systemBellRemoveTimer->callOnTimeout([]() {
+                s_systemBell->remove();
+                s_systemBell = nullptr;
+            });
+        }
+        s_systemBellRemoveTimer->stop();
+        if (!s_systemBell) {
+            s_systemBell = new SystemBellV1Interface(waylandServer()->display(), s_systemBellRemoveTimer);
+            connect(s_systemBell, &SystemBellV1Interface::ringSurface, this, [this](SurfaceInterface *surface) {
+                triggerWindow(effects->findWindow(surface));
+            });
+            connect(s_systemBell, &SystemBellV1Interface::ring, this, [this](ClientConnection *client) {
+                if (effects->activeWindow()) {
+                    if (effects->activeWindow()->surface() && effects->activeWindow()->surface()->client() == client) {
+                        triggerWindow(effects->activeWindow());
+                    }
+                }
+            });
+        }
+    }
 }
 
 SystemBellEffect::~SystemBellEffect()
 {
     if (m_caContext) {
         ca_context_destroy(m_caContext);
+    }
+    // When compositing is restarted, avoid removing the system bell immediately
+    if (s_systemBell) {
+        s_systemBellRemoveTimer->start(1000);
     }
 }
 
@@ -169,7 +206,11 @@ void SystemBellEffect::triggerScreen()
 
 void SystemBellEffect::triggerWindow()
 {
-    const auto window = effects->activeWindow();
+    triggerWindow(effects->activeWindow());
+}
+
+void SystemBellEffect::triggerWindow(EffectWindow *window)
+{
 
     if (!window || m_windows.contains(window)) {
         return;

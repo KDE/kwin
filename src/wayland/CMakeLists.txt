@@ -256,6 +256,10 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-external-brightness-v1.xml
     BASENAME kde-external-brightness-v1
 )
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PROTOCOL ${PROJECT_SOURCE_DIR}/src/wayland/protocols/system-bell-v1.xml
+    BASENAME system-bell-v1
+)
 
 target_sources(kwin PRIVATE
     abstract_data_source.cpp
@@ -322,6 +326,7 @@ target_sources(kwin PRIVATE
     slide.cpp
     subcompositor.cpp
     surface.cpp
+    systembell_v1.cpp
     tablet_v2.cpp
     tearingcontrol_v1.cpp
     textinput.cpp
@@ -402,6 +407,7 @@ install(FILES
     slide.h
     subcompositor.h
     surface.h
+    systembell_v1.h
     tablet_v2.h
     tearingcontrol_v1.h
     textinput_v1.h
