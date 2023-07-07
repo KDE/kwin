@@ -20,6 +20,7 @@ namespace KWin
 {
 
 class GLShader;
+class XdgSystemBellV1Interface;
 
 class SystemBellEffect : public OffscreenEffect
 {
@@ -52,6 +53,7 @@ private:
         Color,
     };
 
+    void triggerWindow(EffectWindow *window);
     void flash(EffectWindow *window);
     void unflash(EffectWindow *window);
     void loadConfig(const KConfigGroup &group);
@@ -73,6 +75,9 @@ private:
     KConfigWatcher::Ptr m_configWatcher;
     KConfig m_kdeglobals;
     KConfigGroup m_bellConfig;
+
+    static QTimer *s_systemBellRemoveTimer;
+    static XdgSystemBellV1Interface *s_systemBell;
 };
 
 inline int SystemBellEffect::requestedEffectChainPosition() const
