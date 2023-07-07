@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-15 02:18+0000\n"
-"PO-Revision-Date: 2023-06-28 05:25+0200\n"
+"PO-Revision-Date: 2023-07-06 06:08+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -1212,6 +1212,11 @@ msgid ""
 "preferred candidate. Unusual, but possible variant of <em>Click to focus</"
 "em>."
 msgstr ""
+"<em>წკაპი ფოკუსისთვის (თაგუნას უპირატესობა):</em> ძირითადად იგივეა, რაც "
+"<em>წკაპი ფოკუსისთვის</em>. თუ აქტიური ფანჯარა სისტემის მიერ იქნა არჩეული "
+"(მაგ იმიტომ, რომ ამჟამად აქტიური დაიხურა), ფანჯარა, რომელიც თაგუნას კურსორის "
+"ქვეშაა, სასურველი კანდიდატი ხდება. <em>წკაპი ფოკუსისთვის</em>-ის უცნაური, "
+"მაგრამ შესაძლო ვარიანტი."
 
 #: windows.cpp:106
 #, kde-format
@@ -1221,6 +1226,11 @@ msgid ""
 "<em>Focus stealing prevention</em> takes place as usual. Think as <em>Click "
 "to focus</em> just without having to actually click."
 msgstr ""
+"<em>ფოკუსი დაყვება თაგუნას:</em> თაგუნას კურსორის შეტანა ფანჯრის შიგნით "
+"გაააქტიურებს მას. მაგ: ფანჯრები, რომლებიც თაგუნას კურსორის ქვეშ გაჩნდებიან, "
+"ფოკუსს ვერ მიიღებენ. როგორც ყოველთვის, <em>ფოკუსის მოპარვის თავიდან აცილება</"
+"em> ხდება. იფიქრეთ ამაზ, როგორც <em>დააწკაპუნეთ კურსორისთვის</em>-ზე, "
+"დაწკაპუნების საჭიროების გარეშე."
 
 #: windows.cpp:110
 #, kde-format
@@ -1244,6 +1254,11 @@ msgid ""
 "not work. You very likely want to use <em>Focus follows mouse (mouse "
 "precedence)</em> instead!"
 msgstr ""
+"<em>ფოკუსი თაგუნას ქვეშ:</em> ფოკუსი ყოველთვის თაგუნას კურსორის ქვეშ მდებარე "
+"ფანჯარაზე იქნება. <br/><strong>გაფრთხილება:</strong> <em>ფოკუსის მოპარვის "
+"თავიდან აცილება</em> და <em>tabbox ('Alt+Tab')</em> ეწინააღმდეგება "
+"აქტივაციის ამ პოლიტიკას და არ იმუშავებენ. ალბათ, სჯობს, <em>ფოკუსი დასდევს "
+"თაგუნას (თაგუნას უპირატესობა)</em> აირჩიოთ!"
 
 #: windows.cpp:119
 #, kde-format
