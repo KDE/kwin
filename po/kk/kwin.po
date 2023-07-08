@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-06 02:52+0000\n"
+"POT-Creation-Date: 2023-07-08 02:34+0000\n"
 "PO-Revision-Date: 2013-10-01 03:27+0600\n"
 "Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
 "Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
@@ -2417,20 +2417,20 @@ msgstr "Орналастыру тәртібі:"
 msgid "Ignore minimized windows:"
 msgstr "Терезені түю"
 
-#: plugins/overview/qml/DesktopBar.qml:164
+#: plugins/overview/qml/DesktopBar.qml:163
 #, fuzzy, kde-format
 #| msgid "Move To &Desktop"
 msgid "Delete Virtual Desktop"
 msgstr "&Үстелге жылжыту"
 
-#: plugins/overview/qml/DesktopBar.qml:260
+#: plugins/overview/qml/DesktopBar.qml:259
 #, fuzzy, kde-format
 #| msgctxt "Create a new desktop and move there the window"
 #| msgid "&New Desktop"
 msgid "Add Virtual Desktop"
 msgstr "&Жаңа Үстел"
 
-#: plugins/overview/qml/main.qml:229
+#: plugins/overview/qml/main.qml:228
 #, fuzzy, kde-format
 #| msgid "Moving windows:"
 msgid "No matching windows"
@@ -2854,18 +2854,18 @@ msgstr "Көрсететін терезесін ауыстыру (Назарда
 msgid "Ignore &minimized windows"
 msgstr "Терезені түю"
 
-#: plugins/windowview/qml/main.qml:108
+#: plugins/windowview/qml/main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr ""
 
-#: plugins/windowview/qml/main.qml:108
+#: plugins/windowview/qml/main.qml:107
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgid "No Windows"
 msgstr "Терезелер"
 
-#: plugins/windowview/qml/main.qml:123
+#: plugins/windowview/qml/main.qml:122
 #, fuzzy, kde-format
 #| msgid "Lower Window"
 msgid "Filter windows…"

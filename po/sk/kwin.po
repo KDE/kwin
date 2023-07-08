@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-06 02:52+0000\n"
+"POT-Creation-Date: 2023-07-08 02:34+0000\n"
 "PO-Revision-Date: 2023-05-22 18:51+0200\n"
 "Last-Translator: Ferdinand Galko <galko.ferdinand@gmail.com>\n"
 "Language-Team: Slovak <opensuse-translation@opensuse.org>\n"
@@ -2330,17 +2330,17 @@ msgstr "Režim rozloženia:"
 msgid "Ignore minimized windows:"
 msgstr "Ignorovať minimalizované okná:"
 
-#: plugins/overview/qml/DesktopBar.qml:164
+#: plugins/overview/qml/DesktopBar.qml:163
 #, kde-format
 msgid "Delete Virtual Desktop"
 msgstr "Vymazať virtuálnu plochu"
 
-#: plugins/overview/qml/DesktopBar.qml:260
+#: plugins/overview/qml/DesktopBar.qml:259
 #, kde-format
 msgid "Add Virtual Desktop"
 msgstr "Pridať virtuálnu plochu"
 
-#: plugins/overview/qml/main.qml:229
+#: plugins/overview/qml/main.qml:228
 #, kde-format
 msgid "No matching windows"
 msgstr "Žiadne zhodné okná"
@@ -2742,17 +2742,17 @@ msgstr "Zapnúť efekt súčasné okná (Trieda okna na aktuálnej ploche)"
 msgid "Ignore &minimized windows"
 msgstr "Ignorovať &minimalizované okná"
 
-#: plugins/windowview/qml/main.qml:108
+#: plugins/windowview/qml/main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr "Žiadne zhody"
 
-#: plugins/windowview/qml/main.qml:108
+#: plugins/windowview/qml/main.qml:107
 #, kde-format
 msgid "No Windows"
 msgstr "Žiadne okná"
 
-#: plugins/windowview/qml/main.qml:123
+#: plugins/windowview/qml/main.qml:122
 #, kde-format
 msgid "Filter windows…"
 msgstr "Filtrovať okná..."

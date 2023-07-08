@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-06 02:52+0000\n"
+"POT-Creation-Date: 2023-07-08 02:34+0000\n"
 "PO-Revision-Date: 2023-02-24 16:25-0300\n"
 "Last-Translator: Luiz Fernando Ranghetti <elchevive@opensuse.org>\n"
 "Language-Team: Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -2396,20 +2396,20 @@ msgstr "Modo tablet"
 msgid "Ignore minimized windows:"
 msgstr "Minimizar janela"
 
-#: plugins/overview/qml/DesktopBar.qml:164
+#: plugins/overview/qml/DesktopBar.qml:163
 #, fuzzy, kde-format
 #| msgid "Peek at Desktop"
 msgid "Delete Virtual Desktop"
 msgstr "Espiar área de trabalho"
 
-#: plugins/overview/qml/DesktopBar.qml:260
+#: plugins/overview/qml/DesktopBar.qml:259
 #, fuzzy, kde-format
 #| msgctxt "Create a new desktop and add the window to that desktop"
 #| msgid "Add to &New Desktop"
 msgid "Add Virtual Desktop"
 msgstr "Adicionar à &nova área de trabalho"
 
-#: plugins/overview/qml/main.qml:229
+#: plugins/overview/qml/main.qml:228
 #, fuzzy, kde-format
 #| msgid "X11 Unmanaged Windows"
 msgid "No matching windows"
@@ -2842,18 +2842,18 @@ msgstr "Alternar as janelas presentes (área de trabalho atual)"
 msgid "Ignore &minimized windows"
 msgstr "Minimizar janela"
 
-#: plugins/windowview/qml/main.qml:108
+#: plugins/windowview/qml/main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr "Nenhuma ocorrência"
 
-#: plugins/windowview/qml/main.qml:108
+#: plugins/windowview/qml/main.qml:107
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgid "No Windows"
 msgstr "Janelas"
 
-#: plugins/windowview/qml/main.qml:123
+#: plugins/windowview/qml/main.qml:122
 #, fuzzy, kde-format
 #| msgid "Internal Windows"
 msgid "Filter windows…"

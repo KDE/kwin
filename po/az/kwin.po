@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-06 02:52+0000\n"
+"POT-Creation-Date: 2023-07-08 02:34+0000\n"
 "PO-Revision-Date: 2022-10-17 23:50+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -2379,20 +2379,20 @@ msgstr "Planşet rejimi"
 msgid "Ignore minimized windows:"
 msgstr "Pəncərəni Yığmaq"
 
-#: plugins/overview/qml/DesktopBar.qml:164
+#: plugins/overview/qml/DesktopBar.qml:163
 #, fuzzy, kde-format
 #| msgid "Peek at Desktop"
 msgid "Delete Virtual Desktop"
 msgstr "İş masasına nəzər salın"
 
-#: plugins/overview/qml/DesktopBar.qml:260
+#: plugins/overview/qml/DesktopBar.qml:259
 #, fuzzy, kde-format
 #| msgctxt "Create a new desktop and add the window to that desktop"
 #| msgid "Add to &New Desktop"
 msgid "Add Virtual Desktop"
 msgstr "&Yeni İş masasına əlavə edin"
 
-#: plugins/overview/qml/main.qml:229
+#: plugins/overview/qml/main.qml:228
 #, fuzzy, kde-format
 #| msgid "X11 Unmanaged Windows"
 msgid "No matching windows"
@@ -2826,18 +2826,18 @@ msgstr ""
 msgid "Ignore &minimized windows"
 msgstr "Pəncərəni Yığmaq"
 
-#: plugins/windowview/qml/main.qml:108
+#: plugins/windowview/qml/main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr "Oxşarları yoxdur"
 
-#: plugins/windowview/qml/main.qml:108
+#: plugins/windowview/qml/main.qml:107
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgid "No Windows"
 msgstr "Pəncərələr"
 
-#: plugins/windowview/qml/main.qml:123
+#: plugins/windowview/qml/main.qml:122
 #, fuzzy, kde-format
 #| msgid "Internal Windows"
 msgid "Filter windows…"

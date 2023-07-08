@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-06 02:52+0000\n"
+"POT-Creation-Date: 2023-07-08 02:34+0000\n"
 "PO-Revision-Date: 2008-08-05 22:26+0200\n"
 "Last-Translator: Yannig Marchegay (Kokoyaya) <yannig@marchegay.org>\n"
 "Language-Team: Occitan (lengadocian) <ubuntu-l10n-oci@lists.ubuntu.com>\n"
@@ -2324,19 +2324,19 @@ msgstr ""
 msgid "Ignore minimized windows:"
 msgstr "Redusir la fenèstra"
 
-#: plugins/overview/qml/DesktopBar.qml:164
+#: plugins/overview/qml/DesktopBar.qml:163
 #, fuzzy, kde-format
 #| msgid "Desktop %1"
 msgid "Delete Virtual Desktop"
 msgstr "Burèu %1"
 
-#: plugins/overview/qml/DesktopBar.qml:260
+#: plugins/overview/qml/DesktopBar.qml:259
 #, fuzzy, kde-format
 #| msgid "Desktop %1"
 msgid "Add Virtual Desktop"
 msgstr "Burèu %1"
 
-#: plugins/overview/qml/main.qml:229
+#: plugins/overview/qml/main.qml:228
 #, kde-format
 msgid "No matching windows"
 msgstr ""
@@ -2741,18 +2741,18 @@ msgstr ""
 msgid "Ignore &minimized windows"
 msgstr "Redusir la fenèstra"
 
-#: plugins/windowview/qml/main.qml:108
+#: plugins/windowview/qml/main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr ""
 
-#: plugins/windowview/qml/main.qml:108
+#: plugins/windowview/qml/main.qml:107
 #, fuzzy, kde-format
 #| msgid "Close Window"
 msgid "No Windows"
 msgstr "Tampar la fenèstra"
 
-#: plugins/windowview/qml/main.qml:123
+#: plugins/windowview/qml/main.qml:122
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgid "Filter windows…"

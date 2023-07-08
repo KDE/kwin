@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-06 02:52+0000\n"
+"POT-Creation-Date: 2023-07-08 02:34+0000\n"
 "PO-Revision-Date: 2023-07-06 09:12+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -2341,17 +2341,17 @@ msgstr "Indelingsmodus:"
 msgid "Ignore minimized windows:"
 msgstr "Geminimaliseerde vensters negeren:"
 
-#: plugins/overview/qml/DesktopBar.qml:164
+#: plugins/overview/qml/DesktopBar.qml:163
 #, kde-format
 msgid "Delete Virtual Desktop"
 msgstr "Virtueel bureaublad verwijderen"
 
-#: plugins/overview/qml/DesktopBar.qml:260
+#: plugins/overview/qml/DesktopBar.qml:259
 #, kde-format
 msgid "Add Virtual Desktop"
 msgstr "Virtueel bureaublad toevoegen"
 
-#: plugins/overview/qml/main.qml:229
+#: plugins/overview/qml/main.qml:228
 #, kde-format
 msgid "No matching windows"
 msgstr "Geen overeenkomende vensters"
@@ -2751,17 +2751,17 @@ msgstr "Aanwezige vensters aan/uit (vensterklasse op huidig bureaublad)"
 msgid "Ignore &minimized windows"
 msgstr "Ge&minimaliseerde vensters negeren"
 
-#: plugins/windowview/qml/main.qml:108
+#: plugins/windowview/qml/main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr "Geen overeenkomsten"
 
-#: plugins/windowview/qml/main.qml:108
+#: plugins/windowview/qml/main.qml:107
 #, kde-format
 msgid "No Windows"
 msgstr "Geen vensters"
 
-#: plugins/windowview/qml/main.qml:123
+#: plugins/windowview/qml/main.qml:122
 #, kde-format
 msgid "Filter windows…"
 msgstr "Vensters filteren…"

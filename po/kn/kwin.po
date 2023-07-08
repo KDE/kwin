@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-06 02:52+0000\n"
+"POT-Creation-Date: 2023-07-08 02:34+0000\n"
 "PO-Revision-Date: 2011-07-11 12:17+0530\n"
 "Last-Translator: Shankar Prasad <svenkate@redhat.com>\n"
 "Language-Team: Kannada <kde-l10n-kn@kde.org>\n"
@@ -2378,19 +2378,19 @@ msgstr "ವಿನ್ಯಾಸ ಕ್ರಮ:"
 msgid "Ignore minimized windows:"
 msgstr "ಕಿಟಕಿಯ ಗಾತ್ರಬದಲಿಸು"
 
-#: plugins/overview/qml/DesktopBar.qml:164
+#: plugins/overview/qml/DesktopBar.qml:163
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Delete Virtual Desktop"
 msgstr "ಗಣಕತೆರೆಗೆ(&D)"
 
-#: plugins/overview/qml/DesktopBar.qml:260
+#: plugins/overview/qml/DesktopBar.qml:259
 #, fuzzy, kde-format
 #| msgid "Show Desktop"
 msgid "Add Virtual Desktop"
 msgstr "ಗಣಕತೆರೆಯನ್ನು ತೋರಿಸು"
 
-#: plugins/overview/qml/main.qml:229
+#: plugins/overview/qml/main.qml:228
 #, fuzzy, kde-format
 #| msgid "Moving windows:"
 msgid "No matching windows"
@@ -2809,18 +2809,18 @@ msgstr "ಮುಂದಿನ ಗಣಕತೆರೆಗೆ ಕಿಟಕಿ"
 msgid "Ignore &minimized windows"
 msgstr "ಕಿಟಕಿಯನ್ನು ಚಿಕ್ಕದಾಗಿಸು"
 
-#: plugins/windowview/qml/main.qml:108
+#: plugins/windowview/qml/main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr ""
 
-#: plugins/windowview/qml/main.qml:108
+#: plugins/windowview/qml/main.qml:107
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgid "No Windows"
 msgstr "ಕಿಟಕಿಗಳು"
 
-#: plugins/windowview/qml/main.qml:123
+#: plugins/windowview/qml/main.qml:122
 #, fuzzy, kde-format
 msgid "Filter windows…"
 msgstr "ಕಿಟಕಿಯನ್ನು ಏರಿಸು"

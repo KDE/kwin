@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-06 02:52+0000\n"
+"POT-Creation-Date: 2023-07-08 02:34+0000\n"
 "PO-Revision-Date: 2023-06-22 21:33+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -2329,17 +2329,17 @@ msgstr "Режим на оформление:"
 msgid "Ignore minimized windows:"
 msgstr "Игнориране на минимизираните прозорци:"
 
-#: plugins/overview/qml/DesktopBar.qml:164
+#: plugins/overview/qml/DesktopBar.qml:163
 #, kde-format
 msgid "Delete Virtual Desktop"
 msgstr "Изтриване на виртуален работен плот"
 
-#: plugins/overview/qml/DesktopBar.qml:260
+#: plugins/overview/qml/DesktopBar.qml:259
 #, kde-format
 msgid "Add Virtual Desktop"
 msgstr "Добавяне на виртуален работен плот"
 
-#: plugins/overview/qml/main.qml:229
+#: plugins/overview/qml/main.qml:228
 #, kde-format
 msgid "No matching windows"
 msgstr "Няма съвпадащи прозорци"
@@ -2739,17 +2739,17 @@ msgstr "Превключване на настоящи прозорци (тек�
 msgid "Ignore &minimized windows"
 msgstr "Игнориране на минимизираните прозорци"
 
-#: plugins/windowview/qml/main.qml:108
+#: plugins/windowview/qml/main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr "Няма съвпадения"
 
-#: plugins/windowview/qml/main.qml:108
+#: plugins/windowview/qml/main.qml:107
 #, kde-format
 msgid "No Windows"
 msgstr "Без прозорци"
 
-#: plugins/windowview/qml/main.qml:123
+#: plugins/windowview/qml/main.qml:122
 #, kde-format
 msgid "Filter windows…"
 msgstr "Филтриране на прозорците…"

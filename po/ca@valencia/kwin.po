@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-06 02:52+0000\n"
+"POT-Creation-Date: 2023-07-08 02:34+0000\n"
 "PO-Revision-Date: 2023-07-06 11:30+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -2341,17 +2341,17 @@ msgstr "Mode de disposició:"
 msgid "Ignore minimized windows:"
 msgstr "Ignora les finestres minimitzades:"
 
-#: plugins/overview/qml/DesktopBar.qml:164
+#: plugins/overview/qml/DesktopBar.qml:163
 #, kde-format
 msgid "Delete Virtual Desktop"
 msgstr "Suprimix l'escriptori virtual"
 
-#: plugins/overview/qml/DesktopBar.qml:260
+#: plugins/overview/qml/DesktopBar.qml:259
 #, kde-format
 msgid "Add Virtual Desktop"
 msgstr "Afig un escriptori virtual"
 
-#: plugins/overview/qml/main.qml:229
+#: plugins/overview/qml/main.qml:228
 #, kde-format
 msgid "No matching windows"
 msgstr "No coincidix amb cap finestra"
@@ -2753,17 +2753,17 @@ msgstr ""
 msgid "Ignore &minimized windows"
 msgstr "Ignora les finestres &minimitzades"
 
-#: plugins/windowview/qml/main.qml:108
+#: plugins/windowview/qml/main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr "Sense coincidències"
 
-#: plugins/windowview/qml/main.qml:108
+#: plugins/windowview/qml/main.qml:107
 #, kde-format
 msgid "No Windows"
 msgstr "Sense finestres"
 
-#: plugins/windowview/qml/main.qml:123
+#: plugins/windowview/qml/main.qml:122
 #, kde-format
 msgid "Filter windows…"
 msgstr "Filtra les finestres…"

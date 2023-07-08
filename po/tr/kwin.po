@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-06 02:52+0000\n"
+"POT-Creation-Date: 2023-07-08 02:34+0000\n"
 "PO-Revision-Date: 2023-07-06 13:15+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -2326,17 +2326,17 @@ msgstr "Yerleşim kipi:"
 msgid "Ignore minimized windows:"
 msgstr "Simge durumuna küçültülen pencereleri yok say:"
 
-#: plugins/overview/qml/DesktopBar.qml:164
+#: plugins/overview/qml/DesktopBar.qml:163
 #, kde-format
 msgid "Delete Virtual Desktop"
 msgstr "Sanal Masaüstünü Sil"
 
-#: plugins/overview/qml/DesktopBar.qml:260
+#: plugins/overview/qml/DesktopBar.qml:259
 #, kde-format
 msgid "Add Virtual Desktop"
 msgstr "Sanal Masaüstü Ekle"
 
-#: plugins/overview/qml/main.qml:229
+#: plugins/overview/qml/main.qml:228
 #, kde-format
 msgid "No matching windows"
 msgstr "Eşleşen pencere yok"
@@ -2736,17 +2736,17 @@ msgstr "Pencereleri Sunmayı Aç/Kapat (Geçerli masaüstündeki pencere sınıf
 msgid "Ignore &minimized windows"
 msgstr "&Simge durumuna küçültülen pencereleri yok say"
 
-#: plugins/windowview/qml/main.qml:108
+#: plugins/windowview/qml/main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr "Eşleşme Yok"
 
-#: plugins/windowview/qml/main.qml:108
+#: plugins/windowview/qml/main.qml:107
 #, kde-format
 msgid "No Windows"
 msgstr "Pencere Yok"
 
-#: plugins/windowview/qml/main.qml:123
+#: plugins/windowview/qml/main.qml:122
 #, kde-format
 msgid "Filter windows…"
 msgstr "Pencereleri süz…"

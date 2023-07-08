@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-06 02:52+0000\n"
-"PO-Revision-Date: 2023-06-21 06:01+0200\n"
+"POT-Creation-Date: 2023-07-08 02:34+0000\n"
+"PO-Revision-Date: 2023-07-07 06:00+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.3.1\n"
+"X-Generator: Poedit 3.3.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -2212,17 +2212,15 @@ msgstr "&ფერი:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox2)
 #: plugins/mousemark/mousemark_config.ui:82
-#, fuzzy, kde-format
-#| msgid "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
+#, kde-format
 msgid "Draw with the mouse by holding modifier keys and moving the mouse"
-msgstr "დახატეთ თაგუნათი Shift+Meta ღილაკების დაჭერით და თაგუნას მოძრაობით."
+msgstr "დახატეთ თაგუნათი მოდიფიკატორი ღილაკების დაჭერით და თაგუნას მოძრაობით"
 
 #. i18n: ectx: property (text), widget (QLabel, label_FreedrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:103
-#, fuzzy, kde-format
-#| msgid "Modifier keys:"
+#, kde-format
 msgid "Free draw modifier keys:"
-msgstr "მოდიფიკატორი ღილაკები:"
+msgstr "თავისუფალი ხატვის მოდიფიკატორი ღილაკები:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Freedrawalt)
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Arrowdrawalt)
@@ -2266,10 +2264,9 @@ msgstr "მეტა"
 
 #. i18n: ectx: property (text), widget (QLabel, label_ArrowdrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:157
-#, fuzzy, kde-format
-#| msgid "Modifier keys:"
+#, kde-format
 msgid "Arrow draw modifier keys:"
-msgstr "მოდიფიკატორი ღილაკები:"
+msgstr "ისრებით ხატვის მოდიფიკატორი ღილაკები:"
 
 #: plugins/nightcolor/nightcolormanager.cpp:63
 #, kde-format
@@ -2318,17 +2315,17 @@ msgstr "&განლაგების რეჟიმი:"
 msgid "Ignore minimized windows:"
 msgstr "ჩაკეცილი ფანჯრების იგნორი:"
 
-#: plugins/overview/qml/DesktopBar.qml:164
+#: plugins/overview/qml/DesktopBar.qml:163
 #, kde-format
 msgid "Delete Virtual Desktop"
 msgstr "ვირტუალური სამუშაო მაგიდის წაშლა"
 
-#: plugins/overview/qml/DesktopBar.qml:260
+#: plugins/overview/qml/DesktopBar.qml:259
 #, kde-format
 msgid "Add Virtual Desktop"
 msgstr "ვირტუალური სამუშაო მაგიდის დამატება"
 
-#: plugins/overview/qml/main.qml:229
+#: plugins/overview/qml/main.qml:228
 #, kde-format
 msgid "No matching windows"
 msgstr "შესაბამისი ფანჯრების გარეშე"
@@ -2728,17 +2725,17 @@ msgstr "არსებული ფანჯრების გადართ�
 msgid "Ignore &minimized windows"
 msgstr "&ჩაკეცილი ფანჯრების იგნორი"
 
-#: plugins/windowview/qml/main.qml:108
+#: plugins/windowview/qml/main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr "დამთხვევის გარეშე"
 
-#: plugins/windowview/qml/main.qml:108
+#: plugins/windowview/qml/main.qml:107
 #, kde-format
 msgid "No Windows"
 msgstr "ფანჯრების გარეშე"
 
-#: plugins/windowview/qml/main.qml:123
+#: plugins/windowview/qml/main.qml:122
 #, kde-format
 msgid "Filter windows…"
 msgstr "ფანჯრების ფილტრი…"
