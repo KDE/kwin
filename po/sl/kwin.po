@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1655460 2023-07-08 02:48:15Z scripty $
+# $Id: kwin.po 1655556 2023-07-10 02:27:05Z scripty $
 # $Source$
 #
 #
@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-07-08 02:34+0000\n"
-"PO-Revision-Date: 2023-07-07 06:19+0200\n"
+"PO-Revision-Date: 2023-07-08 07:02+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -2235,18 +2235,15 @@ msgstr "Barva:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox2)
 #: plugins/mousemark/mousemark_config.ui:82
-#, fuzzy, kde-format
-#| msgid "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
+#, kde-format
 msgid "Draw with the mouse by holding modifier keys and moving the mouse"
-msgstr ""
-"Narišite z miško tako, da držite tipki Dvigalka+meta in premikate miško."
+msgstr "Rišite z miško tako, da držite tipke spremenilnika in premikate miško"
 
 #. i18n: ectx: property (text), widget (QLabel, label_FreedrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:103
-#, fuzzy, kde-format
-#| msgid "Modifier keys:"
+#, kde-format
 msgid "Free draw modifier keys:"
-msgstr "Tipke spremenilniki:"
+msgstr "Proste tipke za spremenilnike risanja:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Freedrawalt)
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Arrowdrawalt)
@@ -2290,10 +2287,9 @@ msgstr "Meta"
 
 #. i18n: ectx: property (text), widget (QLabel, label_ArrowdrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:157
-#, fuzzy, kde-format
-#| msgid "Modifier keys:"
+#, kde-format
 msgid "Arrow draw modifier keys:"
-msgstr "Tipke spremenilniki:"
+msgstr "Tipke puščic kot spremenilniki za risanje:"
 
 #: plugins/nightcolor/nightcolormanager.cpp:63
 #, kde-format

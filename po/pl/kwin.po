@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1655460 $
+# Version: $Revision: 1655556 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # Norbert Popiołek <norbert@kde.com.pl>
@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-07-08 02:34+0000\n"
-"PO-Revision-Date: 2023-07-01 07:39+0200\n"
+"PO-Revision-Date: 2023-07-08 07:37+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
@@ -2238,17 +2238,17 @@ msgstr "&Barwa:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox2)
 #: plugins/mousemark/mousemark_config.ui:82
-#, fuzzy, kde-format
-#| msgid "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
+#, kde-format
 msgid "Draw with the mouse by holding modifier keys and moving the mouse"
-msgstr "Rysowanie za pomocą myszy przy naciśniętych Shift+Meta."
+msgstr ""
+"Rysowanie za pomocą myszy przy naciśniętych klawiszach odmieniających i "
+"ruchu myszą"
 
 #. i18n: ectx: property (text), widget (QLabel, label_FreedrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:103
-#, fuzzy, kde-format
-#| msgid "Modifier keys:"
+#, kde-format
 msgid "Free draw modifier keys:"
-msgstr "Klawisze odmieniające:"
+msgstr "Klawisze odmieniające do odręcznego rysowania:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Freedrawalt)
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Arrowdrawalt)
@@ -2292,10 +2292,9 @@ msgstr "Meta"
 
 #. i18n: ectx: property (text), widget (QLabel, label_ArrowdrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:157
-#, fuzzy, kde-format
-#| msgid "Modifier keys:"
+#, kde-format
 msgid "Arrow draw modifier keys:"
-msgstr "Klawisze odmieniające:"
+msgstr "Klawisze odmieniające do rysowania strzałkami:"
 
 #: plugins/nightcolor/nightcolormanager.cpp:63
 #, kde-format
