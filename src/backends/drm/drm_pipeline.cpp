@@ -30,8 +30,9 @@
 namespace KWin
 {
 
-static const QMap<uint32_t, QVector<uint64_t>> legacyFormats = {{DRM_FORMAT_XRGB8888, {}}};
-static const QMap<uint32_t, QVector<uint64_t>> legacyCursorFormats = {{DRM_FORMAT_ARGB8888, {}}};
+static const QVector<uint64_t> implicitModifier = {DRM_FORMAT_MOD_INVALID};
+static const QMap<uint32_t, QVector<uint64_t>> legacyFormats = {{DRM_FORMAT_XRGB8888, implicitModifier}};
+static const QMap<uint32_t, QVector<uint64_t>> legacyCursorFormats = {{DRM_FORMAT_ARGB8888, implicitModifier}};
 
 DrmPipeline::DrmPipeline(DrmConnector *conn)
     : m_connector(conn)
@@ -450,16 +451,14 @@ QMap<uint32_t, QVector<uint64_t>> DrmPipeline::cursorFormats() const
 bool DrmPipeline::pruneModifier()
 {
     const DmaBufAttributes *dmabufAttributes = m_pending.layer->currentBuffer() ? m_pending.layer->currentBuffer()->buffer()->dmabufAttributes() : nullptr;
-    if (!dmabufAttributes
-        || dmabufAttributes->modifier == DRM_FORMAT_MOD_NONE
-        || dmabufAttributes->modifier == DRM_FORMAT_MOD_INVALID) {
+    if (!dmabufAttributes) {
         return false;
     }
     auto &modifiers = m_pending.formats[dmabufAttributes->format];
-    if (modifiers.empty()) {
+    if (modifiers == implicitModifier) {
         return false;
     } else {
-        modifiers.clear();
+        modifiers = implicitModifier;
         return true;
     }
 }

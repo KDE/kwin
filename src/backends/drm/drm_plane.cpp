@@ -95,13 +95,14 @@ bool DrmPlane::updateProperties()
             m_supportedFormats[iterator.fmt].push_back(iterator.mod);
         }
     } else {
+        const QVector<uint64_t> modifiers = {DRM_FORMAT_MOD_INVALID};
         for (uint32_t i = 0; i < p->count_formats; i++) {
-            m_supportedFormats.insert(p->formats[i], {DRM_FORMAT_MOD_LINEAR});
+            m_supportedFormats.insert(p->formats[i], modifiers);
         }
-    }
-    if (m_supportedFormats.isEmpty()) {
-        qCWarning(KWIN_DRM) << "Driver doesn't advertise any formats for this plane. Falling back to XRGB8888 without explicit modifiers";
-        m_supportedFormats.insert(DRM_FORMAT_XRGB8888, {});
+        if (m_supportedFormats.isEmpty()) {
+            qCWarning(KWIN_DRM) << "Driver doesn't advertise any formats for this plane. Falling back to XRGB8888 without explicit modifiers";
+            m_supportedFormats.insert(DRM_FORMAT_XRGB8888, modifiers);
+        }
     }
     return true;
 }
