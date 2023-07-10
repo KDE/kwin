@@ -77,7 +77,7 @@ void OutputInterfacePrivate::sendScale(Resource *resource)
 
 static quint32 kwaylandServerTransformToWaylandTransform(KWin::OutputTransform transform)
 {
-    switch (transform) {
+    switch (transform.kind()) {
     case KWin::OutputTransform::Normal:
         return OutputInterfacePrivate::transform_normal;
     case KWin::OutputTransform::Rotated90:

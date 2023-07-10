@@ -301,7 +301,7 @@ DrmPlane::Transformations outputToPlaneTransform(OutputTransform transform)
 
     // TODO: Do we want to support reflections (flips)?
 
-    switch (transform) {
+    switch (transform.kind()) {
     case OutputTransform::Normal:
     case OutputTransform::Flipped:
         return PlaneTrans::Rotate0;

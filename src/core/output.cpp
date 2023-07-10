@@ -60,34 +60,41 @@ OutputMode::Flags OutputMode::flags() const
     return m_flags;
 }
 
-OutputTransform invertOutputTransform(OutputTransform transform)
+OutputTransform::Kind OutputTransform::kind() const
 {
-    switch (transform) {
-    case OutputTransform::Normal:
-        return OutputTransform::Normal;
-    case OutputTransform::Rotated90:
-        return OutputTransform::Rotated270;
-    case OutputTransform::Rotated180:
-        return OutputTransform::Rotated180;
-    case OutputTransform::Rotated270:
-        return OutputTransform::Rotated90;
-    case OutputTransform::Flipped:
-    case OutputTransform::Flipped90:
-    case OutputTransform::Flipped180:
-    case OutputTransform::Flipped270:
-        return transform; // inverse transform of a flip transform is itself
-    }
+    return m_kind;
 }
 
-QRectF applyOutputTransform(const QRectF &rect, const QSizeF &bounds, OutputTransform transform)
+OutputTransform OutputTransform::inverted() const
+{
+    switch (m_kind) {
+    case Kind::Normal:
+        return Kind::Normal;
+    case Kind::Rotated90:
+        return Kind::Rotated270;
+    case Kind::Rotated180:
+        return Kind::Rotated180;
+    case Kind::Rotated270:
+        return Kind::Rotated90;
+    case Kind::Flipped:
+    case Kind::Flipped90:
+    case Kind::Flipped180:
+    case Kind::Flipped270:
+        return m_kind; // inverse transform of a flip transform is itself
+    }
+
+    Q_UNREACHABLE();
+}
+
+QRectF OutputTransform::map(const QRectF &rect, const QSizeF &bounds) const
 {
     QRectF dest;
 
-    switch (transform) {
-    case OutputTransform::Normal:
-    case OutputTransform::Rotated180:
-    case OutputTransform::Flipped:
-    case OutputTransform::Flipped180:
+    switch (m_kind) {
+    case Kind::Normal:
+    case Kind::Rotated180:
+    case Kind::Flipped:
+    case Kind::Flipped180:
         dest.setWidth(rect.width());
         dest.setHeight(rect.height());
         break;
@@ -97,36 +104,36 @@ QRectF applyOutputTransform(const QRectF &rect, const QSizeF &bounds, OutputTran
         break;
     }
 
-    switch (transform) {
-    case OutputTransform::Normal:
+    switch (m_kind) {
+    case Kind::Normal:
         dest.moveLeft(rect.x());
         dest.moveTop(rect.y());
         break;
-    case OutputTransform::Rotated90:
+    case Kind::Rotated90:
         dest.moveLeft(bounds.height() - (rect.y() + rect.height()));
         dest.moveTop(rect.x());
         break;
-    case OutputTransform::Rotated180:
+    case Kind::Rotated180:
         dest.moveLeft(bounds.width() - (rect.x() + rect.width()));
         dest.moveTop(bounds.height() - (rect.y() + rect.height()));
         break;
-    case OutputTransform::Rotated270:
+    case Kind::Rotated270:
         dest.moveLeft(rect.y());
         dest.moveTop(bounds.width() - (rect.x() + rect.width()));
         break;
-    case OutputTransform::Flipped:
+    case Kind::Flipped:
         dest.moveLeft(bounds.width() - (rect.x() + rect.width()));
         dest.moveTop(rect.y());
         break;
-    case OutputTransform::Flipped90:
+    case Kind::Flipped90:
         dest.moveLeft(rect.y());
         dest.moveTop(rect.x());
         break;
-    case OutputTransform::Flipped180:
+    case Kind::Flipped180:
         dest.moveLeft(rect.x());
         dest.moveTop(bounds.height() - (rect.y() + rect.height()));
         break;
-    case OutputTransform::Flipped270:
+    case Kind::Flipped270:
         dest.moveLeft(bounds.height() - (rect.y() + rect.height()));
         dest.moveTop(bounds.width() - (rect.x() + rect.width()));
         break;
@@ -388,7 +395,7 @@ void Output::setState(const State &state)
 
 QSize Output::orientateSize(const QSize &size) const
 {
-    switch (m_state.transform) {
+    switch (m_state.transform.kind()) {
     case OutputTransform::Rotated90:
     case OutputTransform::Rotated270:
     case OutputTransform::Flipped90:
@@ -413,7 +420,7 @@ QMatrix4x4 Output::logicalToNativeMatrix(const QRectF &rect, qreal scale, Output
     QMatrix4x4 matrix;
     matrix.scale(scale);
 
-    switch (transform) {
+    switch (transform.kind()) {
     case OutputTransform::Normal:
     case OutputTransform::Flipped:
         break;
@@ -434,7 +441,7 @@ QMatrix4x4 Output::logicalToNativeMatrix(const QRectF &rect, qreal scale, Output
         break;
     }
 
-    switch (transform) {
+    switch (transform.kind()) {
     case OutputTransform::Flipped:
     case OutputTransform::Flipped90:
     case OutputTransform::Flipped180:

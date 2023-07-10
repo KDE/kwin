@@ -83,7 +83,7 @@ void SurfaceItem::addDamage(const QRegion &region)
 {
     m_damage += region;
 
-    const QRectF sourceBox = applyOutputTransform(m_bufferSourceBox, m_bufferSize, m_bufferTransform);
+    const QRectF sourceBox = m_bufferTransform.map(m_bufferSourceBox, m_bufferSize);
     const qreal xScale = sourceBox.width() / size().width();
     const qreal yScale = sourceBox.height() / size().height();
     const QRegion logicalDamage = mapFromBuffer(region);

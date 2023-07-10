@@ -38,15 +38,50 @@ enum class ContentType {
     Game = 3,
 };
 
-enum class OutputTransform {
-    Normal,
-    Rotated90,
-    Rotated180,
-    Rotated270,
-    Flipped,
-    Flipped90,
-    Flipped180,
-    Flipped270
+/**
+ * The OutputTransform type is used to describe the transform applied to the output content.
+ * Rotation is clockwise.
+ */
+class KWIN_EXPORT OutputTransform
+{
+public:
+    enum Kind {
+        Normal,
+        Rotated90,
+        Rotated180,
+        Rotated270,
+        Flipped,
+        Flipped90,
+        Flipped180,
+        Flipped270
+    };
+
+    OutputTransform() = default;
+    OutputTransform(Kind kind)
+        : m_kind(kind)
+    {
+    }
+
+    bool operator<=>(const OutputTransform &other) const = default;
+
+    /**
+     * Returns the transform kind.
+     */
+    Kind kind() const;
+
+    /**
+     * Returns the inverse transform. The inverse transform can be used for mapping between
+     * surface and buffer coordinate systems.
+     */
+    OutputTransform inverted() const;
+
+    /**
+     * Applies the output transform to the given @a rect within a buffer with dimensions @a bounds.
+     */
+    QRectF map(const QRectF &rect, const QSizeF &bounds) const;
+
+private:
+    Kind m_kind = Kind::Normal;
 };
 
 class KWIN_EXPORT OutputMode
@@ -370,10 +405,6 @@ protected:
     ContentType m_contentType = ContentType::None;
     friend class EffectScreenImpl; // to access m_effectScreen
 };
-
-// TODO: Introduce an OutputTransform type with two methods: invert + apply?
-KWIN_EXPORT OutputTransform invertOutputTransform(OutputTransform transform);
-KWIN_EXPORT QRectF applyOutputTransform(const QRectF &rect, const QSizeF &bounds, OutputTransform transform);
 
 inline QRect Output::rect() const
 {

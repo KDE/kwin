@@ -322,7 +322,7 @@ void SurfaceInterfacePrivate::surface_set_buffer_transform(Resource *resource, i
         wl_resource_post_error(resource->handle, error_invalid_transform, "buffer transform must be a valid transform (%d specified)", transform);
         return;
     }
-    pending.bufferTransform = KWin::OutputTransform(transform);
+    pending.bufferTransform = KWin::OutputTransform::Kind(transform);
     pending.bufferTransformIsSet = true;
 }
 
@@ -422,7 +422,7 @@ QMatrix4x4 SurfaceInterfacePrivate::buildSurfaceToBufferMatrix()
     surfaceToBufferMatrix.scale(current.bufferScale, current.bufferScale);
     surfaceToBufferMatrix.scale(scaleOverride, scaleOverride);
 
-    switch (current.bufferTransform) {
+    switch (current.bufferTransform.kind()) {
     case KWin::OutputTransform::Normal:
     case KWin::OutputTransform::Flipped:
         break;
@@ -443,7 +443,7 @@ QMatrix4x4 SurfaceInterfacePrivate::buildSurfaceToBufferMatrix()
         break;
     }
 
-    switch (current.bufferTransform) {
+    switch (current.bufferTransform.kind()) {
     case KWin::OutputTransform::Flipped:
     case KWin::OutputTransform::Flipped180:
         surfaceToBufferMatrix.translate(bufferSize.width() / current.bufferScale, 0);
@@ -573,7 +573,7 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
         bufferSize = current.buffer->size();
 
         implicitSurfaceSize = current.buffer->size() / current.bufferScale;
-        switch (current.bufferTransform) {
+        switch (current.bufferTransform.kind()) {
         case KWin::OutputTransform::Rotated90:
         case KWin::OutputTransform::Rotated270:
         case KWin::OutputTransform::Flipped90:
@@ -796,7 +796,7 @@ QRectF SurfaceInterface::bufferSourceBox() const
                      d->current.viewport.sourceGeometry.width() * d->current.bufferScale,
                      d->current.viewport.sourceGeometry.height() * d->current.bufferScale);
 
-    return KWin::applyOutputTransform(box, d->bufferSize, KWin::invertOutputTransform(d->current.bufferTransform));
+    return d->current.bufferTransform.inverted().map(box, d->bufferSize);
 }
 
 KWin::OutputTransform SurfaceInterface::bufferTransform() const
@@ -1125,7 +1125,7 @@ void SurfaceInterface::setPreferredBufferTransform(KWin::OutputTransform transfo
     d->preferredBufferTransform = transform;
 
     if (d->resource()->version() >= WL_SURFACE_PREFERRED_BUFFER_TRANSFORM_SINCE_VERSION) {
-        d->send_preferred_buffer_transform(uint32_t(transform));
+        d->send_preferred_buffer_transform(uint32_t(transform.kind()));
     }
 
     for (auto child : qAsConst(d->current.below)) {

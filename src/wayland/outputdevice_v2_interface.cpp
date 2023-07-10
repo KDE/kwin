@@ -28,7 +28,7 @@ static const quint32 s_version = 3;
 
 static QtWaylandServer::kde_output_device_v2::transform kwinTransformToOutputDeviceTransform(OutputTransform transform)
 {
-    return static_cast<QtWaylandServer::kde_output_device_v2::transform>(transform);
+    return static_cast<QtWaylandServer::kde_output_device_v2::transform>(transform.kind());
 }
 
 static QtWaylandServer::kde_output_device_v2::subpixel kwinSubPixelToOutputDeviceSubPixel(Output::SubPixel subPixel)

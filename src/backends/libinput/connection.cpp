@@ -170,7 +170,7 @@ QPointF devicePointToGlobalPosition(const QPointF &devicePos, const Output *outp
 {
     QPointF pos = devicePos;
     // TODO: Do we need to handle the flipped cases differently?
-    switch (output->transform()) {
+    switch (output->transform().kind()) {
     case OutputTransform::Normal:
     case OutputTransform::Flipped:
         break;

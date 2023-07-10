@@ -1812,7 +1812,7 @@ int EffectScreenImpl::refreshRate() const
 
 EffectScreen::Transform EffectScreenImpl::transform() const
 {
-    return EffectScreen::Transform(m_platformOutput->transform());
+    return EffectScreen::Transform(m_platformOutput->transform().kind());
 }
 
 //****************************************

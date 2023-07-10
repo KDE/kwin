@@ -277,7 +277,7 @@ void TestWaylandOutput::testSubPixel()
 void TestWaylandOutput::testTransform_data()
 {
     QTest::addColumn<KWayland::Client::Output::Transform>("expected");
-    QTest::addColumn<KWin::OutputTransform>("actual");
+    QTest::addColumn<KWin::OutputTransform::Kind>("actual");
 
     QTest::newRow("90") << KWayland::Client::Output::Transform::Rotated90 << KWin::OutputTransform::Rotated90;
     QTest::newRow("180") << KWayland::Client::Output::Transform::Rotated180 << KWin::OutputTransform::Rotated180;
@@ -290,7 +290,7 @@ void TestWaylandOutput::testTransform_data()
 
 void TestWaylandOutput::testTransform()
 {
-    QFETCH(KWin::OutputTransform, actual);
+    QFETCH(KWin::OutputTransform::Kind, actual);
 
     auto outputHandle = std::make_unique<FakeOutput>();
     outputHandle->setMode(QSize(1024, 768), 60000);
