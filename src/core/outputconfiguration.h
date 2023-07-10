@@ -25,7 +25,7 @@ public:
     std::optional<bool> enabled;
     std::optional<QPoint> pos;
     std::optional<double> scale;
-    std::optional<Output::Transform> transform;
+    std::optional<OutputTransform> transform;
     std::optional<uint32_t> overscan;
     std::optional<Output::RgbRange> rgbRange;
     std::optional<RenderLoop::VrrPolicy> vrrPolicy;

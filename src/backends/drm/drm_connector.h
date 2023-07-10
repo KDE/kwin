@@ -130,7 +130,7 @@ public:
     DrmEnumProperty<Colorspace> colorspace;
 
     static DrmContentType kwinToDrmContentType(ContentType type);
-    static Output::Transform toKWinTransform(PanelOrientation orientation);
+    static OutputTransform toKWinTransform(PanelOrientation orientation);
     static BroadcastRgbOptions rgbRangeToBroadcastRgb(Output::RgbRange rgbRange);
     static Output::RgbRange broadcastRgbToRgbRange(BroadcastRgbOptions rgbRange);
 

@@ -77,7 +77,6 @@ class KWIN_EXPORT SurfaceInterface : public QObject
      * The current input region.
      */
     Q_PROPERTY(QRegion input READ input NOTIFY inputChanged)
-    Q_PROPERTY(KWin::Output::Transform bufferTransform READ bufferTransform NOTIFY bufferTransformChanged)
     Q_PROPERTY(QSizeF size READ size NOTIFY sizeChanged)
 public:
     explicit SurfaceInterface(CompositorInterface *compositor, wl_resource *resource);
@@ -153,7 +152,7 @@ public:
      * If the surface is on an output that is rotated 90 degrees clockwise, the buffer will
      * be rotated 90 degrees counter clockwise.
      */
-    KWin::Output::Transform bufferTransform() const;
+    KWin::OutputTransform bufferTransform() const;
     /**
      * @returns the current GraphicsBuffer, might be @c nullptr.
      */
@@ -336,7 +335,7 @@ public:
      * This indicates to the client the preferred buffer transform to use when
      * attaching buffers to this surface.
      */
-    void setPreferredBufferTransform(KWin::Output::Transform transform);
+    void setPreferredBufferTransform(KWin::OutputTransform transform);
 
 Q_SIGNALS:
     /**
@@ -371,7 +370,7 @@ Q_SIGNALS:
     /**
      * This signal is emitted when the buffer transform has changed.
      */
-    void bufferTransformChanged(KWin::Output::Transform);
+    void bufferTransformChanged(KWin::OutputTransform);
     /**
      * This signal is emitted when the size of the attached buffer has changed.
      */

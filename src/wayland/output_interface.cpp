@@ -42,7 +42,7 @@ public:
     QString model;
     int scale = 1;
     KWin::Output::SubPixel subPixel = KWin::Output::SubPixel::Unknown;
-    KWin::Output::Transform transform = KWin::Output::Transform::Normal;
+    KWin::OutputTransform transform = KWin::OutputTransform::Normal;
     QSize modeSize;
     int refreshRate = 0;
     QString name;
@@ -75,24 +75,24 @@ void OutputInterfacePrivate::sendScale(Resource *resource)
     }
 }
 
-static quint32 kwaylandServerTransformToWaylandTransform(KWin::Output::Transform transform)
+static quint32 kwaylandServerTransformToWaylandTransform(KWin::OutputTransform transform)
 {
     switch (transform) {
-    case KWin::Output::Transform::Normal:
+    case KWin::OutputTransform::Normal:
         return OutputInterfacePrivate::transform_normal;
-    case KWin::Output::Transform::Rotated90:
+    case KWin::OutputTransform::Rotated90:
         return OutputInterfacePrivate::transform_90;
-    case KWin::Output::Transform::Rotated180:
+    case KWin::OutputTransform::Rotated180:
         return OutputInterfacePrivate::transform_180;
-    case KWin::Output::Transform::Rotated270:
+    case KWin::OutputTransform::Rotated270:
         return OutputInterfacePrivate::transform_270;
-    case KWin::Output::Transform::Flipped:
+    case KWin::OutputTransform::Flipped:
         return OutputInterfacePrivate::transform_flipped;
-    case KWin::Output::Transform::Flipped90:
+    case KWin::OutputTransform::Flipped90:
         return OutputInterfacePrivate::transform_flipped_90;
-    case KWin::Output::Transform::Flipped180:
+    case KWin::OutputTransform::Flipped180:
         return OutputInterfacePrivate::transform_flipped_180;
-    case KWin::Output::Transform::Flipped270:
+    case KWin::OutputTransform::Flipped270:
         return OutputInterfacePrivate::transform_flipped_270;
     default:
         Q_UNREACHABLE();
@@ -224,7 +224,7 @@ OutputInterface::OutputInterface(Display *display, KWin::Output *handle, QObject
     });
 
     connect(handle, &KWin::Output::transformChanged, this, [this]() {
-        const KWin::Output::Transform transform = d->handle->transform();
+        const KWin::OutputTransform transform = d->handle->transform();
         if (d->transform != transform) {
             d->transform = transform;
             const auto resources = d->resourceMap();

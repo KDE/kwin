@@ -26,7 +26,7 @@ namespace KWaylandServer
 
 static const quint32 s_version = 3;
 
-static QtWaylandServer::kde_output_device_v2::transform kwinTransformToOutputDeviceTransform(Output::Transform transform)
+static QtWaylandServer::kde_output_device_v2::transform kwinTransformToOutputDeviceTransform(OutputTransform transform)
 {
     return static_cast<QtWaylandServer::kde_output_device_v2::transform>(transform);
 }

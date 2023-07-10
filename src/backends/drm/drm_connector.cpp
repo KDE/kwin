@@ -437,17 +437,17 @@ DrmConnector::DrmContentType DrmConnector::kwinToDrmContentType(ContentType type
     }
 }
 
-Output::Transform DrmConnector::toKWinTransform(PanelOrientation orientation)
+OutputTransform DrmConnector::toKWinTransform(PanelOrientation orientation)
 {
     switch (orientation) {
     case PanelOrientation::Normal:
-        return KWin::Output::Transform::Normal;
+        return KWin::OutputTransform::Normal;
     case PanelOrientation::RightUp:
-        return KWin::Output::Transform::Rotated270;
+        return KWin::OutputTransform::Rotated270;
     case PanelOrientation::LeftUp:
-        return KWin::Output::Transform::Rotated90;
+        return KWin::OutputTransform::Rotated90;
     case PanelOrientation::UpsideDown:
-        return KWin::Output::Transform::Rotated180;
+        return KWin::OutputTransform::Rotated180;
     default:
         Q_UNREACHABLE();
     }

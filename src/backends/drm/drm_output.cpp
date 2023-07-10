@@ -81,7 +81,7 @@ DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn)
         .edid = *edid,
         .subPixel = conn->subpixel(),
         .capabilities = capabilities,
-        .panelOrientation = conn->panelOrientation.isValid() ? DrmConnector::toKWinTransform(conn->panelOrientation.enumValue()) : Transform::Normal,
+        .panelOrientation = conn->panelOrientation.isValid() ? DrmConnector::toKWinTransform(conn->panelOrientation.enumValue()) : OutputTransform::Normal,
         .internal = conn->isInternal(),
         .nonDesktop = conn->isNonDesktop(),
     });
@@ -295,25 +295,24 @@ bool DrmOutput::setDrmDpmsMode(DpmsMode mode)
     }
 }
 
-DrmPlane::Transformations outputToPlaneTransform(DrmOutput::Transform transform)
+DrmPlane::Transformations outputToPlaneTransform(OutputTransform transform)
 {
-    using OutTrans = DrmOutput::Transform;
     using PlaneTrans = DrmPlane::Transformation;
 
     // TODO: Do we want to support reflections (flips)?
 
     switch (transform) {
-    case OutTrans::Normal:
-    case OutTrans::Flipped:
+    case OutputTransform::Normal:
+    case OutputTransform::Flipped:
         return PlaneTrans::Rotate0;
-    case OutTrans::Rotated90:
-    case OutTrans::Flipped90:
+    case OutputTransform::Rotated90:
+    case OutputTransform::Flipped90:
         return PlaneTrans::Rotate90;
-    case OutTrans::Rotated180:
-    case OutTrans::Flipped180:
+    case OutputTransform::Rotated180:
+    case OutputTransform::Flipped180:
         return PlaneTrans::Rotate180;
-    case OutTrans::Rotated270:
-    case OutTrans::Flipped270:
+    case OutputTransform::Rotated270:
+    case OutputTransform::Flipped270:
         return PlaneTrans::Rotate270;
     default:
         Q_UNREACHABLE();

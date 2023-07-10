@@ -36,12 +36,12 @@ void SurfaceItem::setBufferSourceBox(const QRectF &box)
     m_bufferSourceBox = box;
 }
 
-Output::Transform SurfaceItem::bufferTransform() const
+OutputTransform SurfaceItem::bufferTransform() const
 {
     return m_bufferTransform;
 }
 
-void SurfaceItem::setBufferTransform(Output::Transform transform)
+void SurfaceItem::setBufferTransform(OutputTransform transform)
 {
     m_bufferTransform = transform;
 }

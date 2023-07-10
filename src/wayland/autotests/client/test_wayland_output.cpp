@@ -277,20 +277,20 @@ void TestWaylandOutput::testSubPixel()
 void TestWaylandOutput::testTransform_data()
 {
     QTest::addColumn<KWayland::Client::Output::Transform>("expected");
-    QTest::addColumn<KWin::Output::Transform>("actual");
+    QTest::addColumn<KWin::OutputTransform>("actual");
 
-    QTest::newRow("90") << KWayland::Client::Output::Transform::Rotated90 << KWin::Output::Transform::Rotated90;
-    QTest::newRow("180") << KWayland::Client::Output::Transform::Rotated180 << KWin::Output::Transform::Rotated180;
-    QTest::newRow("270") << KWayland::Client::Output::Transform::Rotated270 << KWin::Output::Transform::Rotated270;
-    QTest::newRow("Flipped") << KWayland::Client::Output::Transform::Flipped << KWin::Output::Transform::Flipped;
-    QTest::newRow("Flipped 90") << KWayland::Client::Output::Transform::Flipped90 << KWin::Output::Transform::Flipped90;
-    QTest::newRow("Flipped 180") << KWayland::Client::Output::Transform::Flipped180 << KWin::Output::Transform::Flipped180;
-    QTest::newRow("Flipped 280") << KWayland::Client::Output::Transform::Flipped270 << KWin::Output::Transform::Flipped270;
+    QTest::newRow("90") << KWayland::Client::Output::Transform::Rotated90 << KWin::OutputTransform::Rotated90;
+    QTest::newRow("180") << KWayland::Client::Output::Transform::Rotated180 << KWin::OutputTransform::Rotated180;
+    QTest::newRow("270") << KWayland::Client::Output::Transform::Rotated270 << KWin::OutputTransform::Rotated270;
+    QTest::newRow("Flipped") << KWayland::Client::Output::Transform::Flipped << KWin::OutputTransform::Flipped;
+    QTest::newRow("Flipped 90") << KWayland::Client::Output::Transform::Flipped90 << KWin::OutputTransform::Flipped90;
+    QTest::newRow("Flipped 180") << KWayland::Client::Output::Transform::Flipped180 << KWin::OutputTransform::Flipped180;
+    QTest::newRow("Flipped 280") << KWayland::Client::Output::Transform::Flipped270 << KWin::OutputTransform::Flipped270;
 }
 
 void TestWaylandOutput::testTransform()
 {
-    QFETCH(KWin::Output::Transform, actual);
+    QFETCH(KWin::OutputTransform, actual);
 
     auto outputHandle = std::make_unique<FakeOutput>();
     outputHandle->setMode(QSize(1024, 768), 60000);
@@ -319,7 +319,7 @@ void TestWaylandOutput::testTransform()
 
     // change back to normal
     outputChanged.clear();
-    outputHandle->setTransform(KWin::Output::Transform::Normal);
+    outputHandle->setTransform(KWin::OutputTransform::Normal);
     if (outputChanged.isEmpty()) {
         QVERIFY(outputChanged.wait());
     }

@@ -168,25 +168,23 @@ void Connection::handleEvent()
 #ifndef KWIN_BUILD_TESTING
 QPointF devicePointToGlobalPosition(const QPointF &devicePos, const Output *output)
 {
-    using Transform = Output::Transform;
-
     QPointF pos = devicePos;
     // TODO: Do we need to handle the flipped cases differently?
     switch (output->transform()) {
-    case Transform::Normal:
-    case Transform::Flipped:
+    case OutputTransform::Normal:
+    case OutputTransform::Flipped:
         break;
-    case Transform::Rotated90:
-    case Transform::Flipped90:
+    case OutputTransform::Rotated90:
+    case OutputTransform::Flipped90:
         pos = QPointF(output->modeSize().height() - devicePos.y(), devicePos.x());
         break;
-    case Transform::Rotated180:
-    case Transform::Flipped180:
+    case OutputTransform::Rotated180:
+    case OutputTransform::Flipped180:
         pos = QPointF(output->modeSize().width() - devicePos.x(),
                       output->modeSize().height() - devicePos.y());
         break;
-    case Transform::Rotated270:
-    case Transform::Flipped270:
+    case OutputTransform::Rotated270:
+    case OutputTransform::Flipped270:
         pos = QPointF(devicePos.y(), output->modeSize().width() - devicePos.x());
         break;
     default:

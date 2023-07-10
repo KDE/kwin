@@ -131,22 +131,22 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_transform(Resou
     auto toTransform = [transform]() {
         switch (transform) {
         case WL_OUTPUT_TRANSFORM_90:
-            return Output::Transform::Rotated90;
+            return OutputTransform::Rotated90;
         case WL_OUTPUT_TRANSFORM_180:
-            return Output::Transform::Rotated180;
+            return OutputTransform::Rotated180;
         case WL_OUTPUT_TRANSFORM_270:
-            return Output::Transform::Rotated270;
+            return OutputTransform::Rotated270;
         case WL_OUTPUT_TRANSFORM_FLIPPED:
-            return Output::Transform::Flipped;
+            return OutputTransform::Flipped;
         case WL_OUTPUT_TRANSFORM_FLIPPED_90:
-            return Output::Transform::Flipped90;
+            return OutputTransform::Flipped90;
         case WL_OUTPUT_TRANSFORM_FLIPPED_180:
-            return Output::Transform::Flipped180;
+            return OutputTransform::Flipped180;
         case WL_OUTPUT_TRANSFORM_FLIPPED_270:
-            return Output::Transform::Flipped270;
+            return OutputTransform::Flipped270;
         case WL_OUTPUT_TRANSFORM_NORMAL:
         default:
-            return Output::Transform::Normal;
+            return OutputTransform::Normal;
         }
     };
     auto _transform = toTransform();

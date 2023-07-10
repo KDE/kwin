@@ -45,7 +45,7 @@ struct SurfaceState
     bool contentTypeIsSet = false;
     bool tearingIsSet = false;
     qint32 bufferScale = 1;
-    KWin::Output::Transform bufferTransform = KWin::Output::Transform::Normal;
+    KWin::OutputTransform bufferTransform = KWin::OutputTransform::Normal;
     wl_list frameCallbacks;
     QPoint offset = QPoint();
     QPointer<KWin::GraphicsBuffer> buffer;
@@ -134,7 +134,7 @@ public:
 
     QVector<OutputInterface *> outputs;
     qreal preferredBufferScale = 1.0;
-    KWin::Output::Transform preferredBufferTransform = KWin::Output::Transform::Normal;
+    KWin::OutputTransform preferredBufferTransform = KWin::OutputTransform::Normal;
 
     LockedPointerV1Interface *lockedPointer = nullptr;
     ConfinedPointerV1Interface *confinedPointer = nullptr;

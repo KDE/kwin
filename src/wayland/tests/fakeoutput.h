@@ -25,7 +25,7 @@ public:
     void setSubPixel(SubPixel subPixel);
     void setDpmsSupported(bool supported);
     void setPhysicalSize(QSize size);
-    void setTransform(Transform transform);
+    void setTransform(KWin::OutputTransform transform);
     void moveTo(const QPoint &pos);
     void setScale(qreal scale);
 };

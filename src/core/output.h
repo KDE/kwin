@@ -38,6 +38,17 @@ enum class ContentType {
     Game = 3,
 };
 
+enum class OutputTransform {
+    Normal,
+    Rotated90,
+    Rotated180,
+    Rotated270,
+    Flipped,
+    Flipped90,
+    Flipped180,
+    Flipped270
+};
+
 class KWIN_EXPORT OutputMode
 {
 public:
@@ -214,18 +225,7 @@ public:
      */
     static std::chrono::milliseconds dimAnimationTime();
 
-    enum class Transform {
-        Normal,
-        Rotated90,
-        Rotated180,
-        Rotated270,
-        Flipped,
-        Flipped90,
-        Flipped180,
-        Flipped270
-    };
-    Q_ENUM(Transform)
-    Transform transform() const;
+    OutputTransform transform() const;
     QSize orientateSize(const QSize &size) const;
 
     void applyChanges(const OutputConfiguration &config);
@@ -244,7 +244,7 @@ public:
     /**
      * Returns a matrix that can translate into the display's coordinates system
      */
-    static QMatrix4x4 logicalToNativeMatrix(const QRectF &rect, qreal scale, Transform transform);
+    static QMatrix4x4 logicalToNativeMatrix(const QRectF &rect, qreal scale, OutputTransform transform);
 
     void setVrrPolicy(RenderLoop::VrrPolicy policy);
     RenderLoop::VrrPolicy vrrPolicy() const;
@@ -255,7 +255,7 @@ public:
 
     bool isPlaceholder() const;
     bool isNonDesktop() const;
-    Transform panelOrientation() const;
+    OutputTransform panelOrientation() const;
     bool wideColorGamut() const;
     bool highDynamicRange() const;
     uint32_t sdrBrightness() const;
@@ -335,7 +335,7 @@ protected:
         Edid edid;
         SubPixel subPixel = SubPixel::Unknown;
         Capabilities capabilities;
-        Transform panelOrientation = Transform::Normal;
+        OutputTransform panelOrientation = OutputTransform::Normal;
         bool internal = false;
         bool placeholder = false;
         bool nonDesktop = false;
@@ -345,7 +345,7 @@ protected:
     {
         QPoint position;
         qreal scale = 1;
-        Transform transform = Transform::Normal;
+        OutputTransform transform = OutputTransform::Normal;
         QList<std::shared_ptr<OutputMode>> modes;
         std::shared_ptr<OutputMode> currentMode;
         DpmsMode dpmsMode = DpmsMode::On;
@@ -372,8 +372,8 @@ protected:
 };
 
 // TODO: Introduce an OutputTransform type with two methods: invert + apply?
-KWIN_EXPORT Output::Transform invertOutputTransform(Output::Transform transform);
-KWIN_EXPORT QRectF applyOutputTransform(const QRectF &rect, const QSizeF &bounds, Output::Transform transform);
+KWIN_EXPORT OutputTransform invertOutputTransform(OutputTransform transform);
+KWIN_EXPORT QRectF applyOutputTransform(const QRectF &rect, const QSizeF &bounds, OutputTransform transform);
 
 inline QRect Output::rect() const
 {

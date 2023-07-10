@@ -322,7 +322,7 @@ void SurfaceInterfacePrivate::surface_set_buffer_transform(Resource *resource, i
         wl_resource_post_error(resource->handle, error_invalid_transform, "buffer transform must be a valid transform (%d specified)", transform);
         return;
     }
-    pending.bufferTransform = KWin::Output::Transform(transform);
+    pending.bufferTransform = KWin::OutputTransform(transform);
     pending.bufferTransformIsSet = true;
 }
 
@@ -423,34 +423,34 @@ QMatrix4x4 SurfaceInterfacePrivate::buildSurfaceToBufferMatrix()
     surfaceToBufferMatrix.scale(scaleOverride, scaleOverride);
 
     switch (current.bufferTransform) {
-    case KWin::Output::Transform::Normal:
-    case KWin::Output::Transform::Flipped:
+    case KWin::OutputTransform::Normal:
+    case KWin::OutputTransform::Flipped:
         break;
-    case KWin::Output::Transform::Rotated90:
-    case KWin::Output::Transform::Flipped90:
+    case KWin::OutputTransform::Rotated90:
+    case KWin::OutputTransform::Flipped90:
         surfaceToBufferMatrix.translate(0, bufferSize.height() / current.bufferScale);
         surfaceToBufferMatrix.rotate(-90, 0, 0, 1);
         break;
-    case KWin::Output::Transform::Rotated180:
-    case KWin::Output::Transform::Flipped180:
+    case KWin::OutputTransform::Rotated180:
+    case KWin::OutputTransform::Flipped180:
         surfaceToBufferMatrix.translate(bufferSize.width() / current.bufferScale, bufferSize.height() / current.bufferScale);
         surfaceToBufferMatrix.rotate(-180, 0, 0, 1);
         break;
-    case KWin::Output::Transform::Rotated270:
-    case KWin::Output::Transform::Flipped270:
+    case KWin::OutputTransform::Rotated270:
+    case KWin::OutputTransform::Flipped270:
         surfaceToBufferMatrix.translate(bufferSize.width() / current.bufferScale, 0);
         surfaceToBufferMatrix.rotate(-270, 0, 0, 1);
         break;
     }
 
     switch (current.bufferTransform) {
-    case KWin::Output::Transform::Flipped:
-    case KWin::Output::Transform::Flipped180:
+    case KWin::OutputTransform::Flipped:
+    case KWin::OutputTransform::Flipped180:
         surfaceToBufferMatrix.translate(bufferSize.width() / current.bufferScale, 0);
         surfaceToBufferMatrix.scale(-1, 1);
         break;
-    case KWin::Output::Transform::Flipped90:
-    case KWin::Output::Transform::Flipped270:
+    case KWin::OutputTransform::Flipped90:
+    case KWin::OutputTransform::Flipped270:
         surfaceToBufferMatrix.translate(bufferSize.height() / current.bufferScale, 0);
         surfaceToBufferMatrix.scale(-1, 1);
         break;
@@ -574,16 +574,16 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
 
         implicitSurfaceSize = current.buffer->size() / current.bufferScale;
         switch (current.bufferTransform) {
-        case KWin::Output::Transform::Rotated90:
-        case KWin::Output::Transform::Rotated270:
-        case KWin::Output::Transform::Flipped90:
-        case KWin::Output::Transform::Flipped270:
+        case KWin::OutputTransform::Rotated90:
+        case KWin::OutputTransform::Rotated270:
+        case KWin::OutputTransform::Flipped90:
+        case KWin::OutputTransform::Flipped270:
             implicitSurfaceSize.transpose();
             break;
-        case KWin::Output::Transform::Normal:
-        case KWin::Output::Transform::Rotated180:
-        case KWin::Output::Transform::Flipped:
-        case KWin::Output::Transform::Flipped180:
+        case KWin::OutputTransform::Normal:
+        case KWin::OutputTransform::Rotated180:
+        case KWin::OutputTransform::Flipped:
+        case KWin::OutputTransform::Flipped180:
             break;
         }
 
@@ -799,7 +799,7 @@ QRectF SurfaceInterface::bufferSourceBox() const
     return KWin::applyOutputTransform(box, d->bufferSize, KWin::invertOutputTransform(d->current.bufferTransform));
 }
 
-KWin::Output::Transform SurfaceInterface::bufferTransform() const
+KWin::OutputTransform SurfaceInterface::bufferTransform() const
 {
     return d->current.bufferTransform;
 }
@@ -1117,7 +1117,7 @@ void SurfaceInterface::setPreferredBufferScale(qreal scale)
     }
 }
 
-void SurfaceInterface::setPreferredBufferTransform(KWin::Output::Transform transform)
+void SurfaceInterface::setPreferredBufferTransform(KWin::OutputTransform transform)
 {
     if (transform == d->preferredBufferTransform) {
         return;

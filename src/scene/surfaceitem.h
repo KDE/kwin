@@ -29,8 +29,8 @@ public:
     QRectF bufferSourceBox() const;
     void setBufferSourceBox(const QRectF &box);
 
-    Output::Transform bufferTransform() const;
-    void setBufferTransform(Output::Transform transform);
+    OutputTransform bufferTransform() const;
+    void setBufferTransform(OutputTransform transform);
 
     QSize bufferSize() const;
     void setBufferSize(const QSize &size);
@@ -64,7 +64,7 @@ protected:
     WindowQuadList buildQuads() const override;
 
     QRegion m_damage;
-    Output::Transform m_bufferTransform;
+    OutputTransform m_bufferTransform;
     QRectF m_bufferSourceBox;
     QSize m_bufferSize;
     std::unique_ptr<SurfacePixmap> m_pixmap;

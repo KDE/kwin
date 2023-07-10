@@ -60,34 +60,34 @@ OutputMode::Flags OutputMode::flags() const
     return m_flags;
 }
 
-Output::Transform invertOutputTransform(Output::Transform transform)
+OutputTransform invertOutputTransform(OutputTransform transform)
 {
     switch (transform) {
-    case Output::Transform::Normal:
-        return Output::Transform::Normal;
-    case Output::Transform::Rotated90:
-        return Output::Transform::Rotated270;
-    case Output::Transform::Rotated180:
-        return Output::Transform::Rotated180;
-    case Output::Transform::Rotated270:
-        return Output::Transform::Rotated90;
-    case Output::Transform::Flipped:
-    case Output::Transform::Flipped90:
-    case Output::Transform::Flipped180:
-    case Output::Transform::Flipped270:
+    case OutputTransform::Normal:
+        return OutputTransform::Normal;
+    case OutputTransform::Rotated90:
+        return OutputTransform::Rotated270;
+    case OutputTransform::Rotated180:
+        return OutputTransform::Rotated180;
+    case OutputTransform::Rotated270:
+        return OutputTransform::Rotated90;
+    case OutputTransform::Flipped:
+    case OutputTransform::Flipped90:
+    case OutputTransform::Flipped180:
+    case OutputTransform::Flipped270:
         return transform; // inverse transform of a flip transform is itself
     }
 }
 
-QRectF applyOutputTransform(const QRectF &rect, const QSizeF &bounds, Output::Transform transform)
+QRectF applyOutputTransform(const QRectF &rect, const QSizeF &bounds, OutputTransform transform)
 {
     QRectF dest;
 
     switch (transform) {
-    case Output::Transform::Normal:
-    case Output::Transform::Rotated180:
-    case Output::Transform::Flipped:
-    case Output::Transform::Flipped180:
+    case OutputTransform::Normal:
+    case OutputTransform::Rotated180:
+    case OutputTransform::Flipped:
+    case OutputTransform::Flipped180:
         dest.setWidth(rect.width());
         dest.setHeight(rect.height());
         break;
@@ -98,35 +98,35 @@ QRectF applyOutputTransform(const QRectF &rect, const QSizeF &bounds, Output::Tr
     }
 
     switch (transform) {
-    case Output::Transform::Normal:
+    case OutputTransform::Normal:
         dest.moveLeft(rect.x());
         dest.moveTop(rect.y());
         break;
-    case Output::Transform::Rotated90:
+    case OutputTransform::Rotated90:
         dest.moveLeft(bounds.height() - (rect.y() + rect.height()));
         dest.moveTop(rect.x());
         break;
-    case Output::Transform::Rotated180:
+    case OutputTransform::Rotated180:
         dest.moveLeft(bounds.width() - (rect.x() + rect.width()));
         dest.moveTop(bounds.height() - (rect.y() + rect.height()));
         break;
-    case Output::Transform::Rotated270:
+    case OutputTransform::Rotated270:
         dest.moveLeft(rect.y());
         dest.moveTop(bounds.width() - (rect.x() + rect.width()));
         break;
-    case Output::Transform::Flipped:
+    case OutputTransform::Flipped:
         dest.moveLeft(bounds.width() - (rect.x() + rect.width()));
         dest.moveTop(rect.y());
         break;
-    case Output::Transform::Flipped90:
+    case OutputTransform::Flipped90:
         dest.moveLeft(rect.y());
         dest.moveTop(rect.x());
         break;
-    case Output::Transform::Flipped180:
+    case OutputTransform::Flipped180:
         dest.moveLeft(rect.x());
         dest.moveTop(bounds.height() - (rect.y() + rect.height()));
         break;
-    case Output::Transform::Flipped270:
+    case OutputTransform::Flipped270:
         dest.moveLeft(bounds.height() - (rect.y() + rect.height()));
         dest.moveTop(bounds.width() - (rect.x() + rect.width()));
         break;
@@ -168,7 +168,7 @@ QUuid Output::uuid() const
     return m_uuid;
 }
 
-Output::Transform Output::transform() const
+OutputTransform Output::transform() const
 {
     return m_state.transform;
 }
@@ -389,10 +389,10 @@ void Output::setState(const State &state)
 QSize Output::orientateSize(const QSize &size) const
 {
     switch (m_state.transform) {
-    case Transform::Rotated90:
-    case Transform::Rotated270:
-    case Transform::Flipped90:
-    case Transform::Flipped270:
+    case OutputTransform::Rotated90:
+    case OutputTransform::Rotated270:
+    case OutputTransform::Flipped90:
+    case OutputTransform::Flipped270:
         return size.transposed();
     default:
         return size;
@@ -408,37 +408,37 @@ Output::DpmsMode Output::dpmsMode() const
     return m_state.dpmsMode;
 }
 
-QMatrix4x4 Output::logicalToNativeMatrix(const QRectF &rect, qreal scale, Transform transform)
+QMatrix4x4 Output::logicalToNativeMatrix(const QRectF &rect, qreal scale, OutputTransform transform)
 {
     QMatrix4x4 matrix;
     matrix.scale(scale);
 
     switch (transform) {
-    case Transform::Normal:
-    case Transform::Flipped:
+    case OutputTransform::Normal:
+    case OutputTransform::Flipped:
         break;
-    case Transform::Rotated90:
-    case Transform::Flipped90:
+    case OutputTransform::Rotated90:
+    case OutputTransform::Flipped90:
         matrix.translate(0, rect.width());
         matrix.rotate(-90, 0, 0, 1);
         break;
-    case Transform::Rotated180:
-    case Transform::Flipped180:
+    case OutputTransform::Rotated180:
+    case OutputTransform::Flipped180:
         matrix.translate(rect.width(), rect.height());
         matrix.rotate(-180, 0, 0, 1);
         break;
-    case Transform::Rotated270:
-    case Transform::Flipped270:
+    case OutputTransform::Rotated270:
+    case OutputTransform::Flipped270:
         matrix.translate(rect.height(), 0);
         matrix.rotate(-270, 0, 0, 1);
         break;
     }
 
     switch (transform) {
-    case Transform::Flipped:
-    case Transform::Flipped90:
-    case Transform::Flipped180:
-    case Transform::Flipped270:
+    case OutputTransform::Flipped:
+    case OutputTransform::Flipped90:
+    case OutputTransform::Flipped180:
+    case OutputTransform::Flipped270:
         matrix.translate(rect.width(), 0);
         matrix.scale(-1, 1);
         break;
@@ -504,7 +504,7 @@ void Output::setContentType(ContentType contentType)
     m_contentType = contentType;
 }
 
-Output::Transform Output::panelOrientation() const
+OutputTransform Output::panelOrientation() const
 {
     return m_information.panelOrientation;
 }

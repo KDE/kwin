@@ -148,17 +148,17 @@ enum Rotation {
     Right = 8,
 };
 
-Output::Transform toKWinTransform(int rotation)
+OutputTransform toKWinTransform(int rotation)
 {
     switch (Rotation(rotation)) {
     case None:
-        return Output::Transform::Normal;
+        return OutputTransform::Normal;
     case Left:
-        return Output::Transform::Rotated90;
+        return OutputTransform::Rotated90;
     case Inverted:
-        return Output::Transform::Rotated180;
+        return OutputTransform::Rotated180;
     case Right:
-        return Output::Transform::Rotated270;
+        return OutputTransform::Rotated270;
     default:
         Q_UNREACHABLE();
     }

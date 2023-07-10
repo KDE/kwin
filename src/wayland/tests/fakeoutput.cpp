@@ -28,7 +28,7 @@ void FakeOutput::setMode(QSize size, uint32_t refreshRate)
     setState(state);
 }
 
-void FakeOutput::setTransform(Transform transform)
+void FakeOutput::setTransform(KWin::OutputTransform transform)
 {
     State state = m_state;
     state.transform = transform;
