@@ -83,7 +83,7 @@ std::shared_ptr<GLTexture> EglGbmLayer::texture() const
 {
     if (m_scanoutBuffer) {
         const auto ret = m_surface.eglBackend()->importDmaBufAsTexture(*m_scanoutBuffer->buffer()->dmabufAttributes());
-        ret->setContentTransform(drmToTextureRotation(m_pipeline));
+        ret->setContentTransform(drmToTextureRotation(m_pipeline) | TextureTransform::MirrorY);
         return ret;
     } else {
         return m_surface.texture();
