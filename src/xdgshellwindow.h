@@ -27,6 +27,7 @@ class KillPrompt;
 class PlasmaShellSurfaceInterface;
 class ServerSideDecorationInterface;
 class ServerSideDecorationPaletteInterface;
+class XdgDialogV1Interface;
 class XdgToplevelDecorationV1Interface;
 class Output;
 
@@ -159,6 +160,7 @@ public:
     void installServerDecoration(ServerSideDecorationInterface *decoration);
     void installPalette(ServerSideDecorationPaletteInterface *palette);
     void installXdgDecoration(XdgToplevelDecorationV1Interface *decoration);
+    void installXdgDialogV1(XdgDialogV1Interface *dialog);
 
 protected:
     XdgSurfaceConfigure *sendRoleConfigure() const override;
@@ -213,6 +215,7 @@ private:
     QPointer<ServerSideDecorationPaletteInterface> m_paletteInterface;
     QPointer<ServerSideDecorationInterface> m_serverDecoration;
     QPointer<XdgToplevelDecorationV1Interface> m_xdgDecoration;
+    QPointer<XdgDialogV1Interface> m_xdgDialog;
     XdgToplevelInterface *m_shellSurface;
     XdgToplevelInterface::States m_nextStates;
     XdgToplevelInterface::States m_acknowledgedStates;

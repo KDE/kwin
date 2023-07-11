@@ -269,6 +269,21 @@ SecurityContextManagerV1::~SecurityContextManagerV1()
     destroy();
 }
 
+XdgWmDialogV1::~XdgWmDialogV1()
+{
+    destroy();
+}
+
+XdgDialogV1::XdgDialogV1(XdgWmDialogV1 *wm, XdgToplevel *toplevel)
+    : QtWayland::xdg_dialog_v1(wm->get_xdg_dialog(toplevel->object()))
+{
+}
+
+XdgDialogV1::~XdgDialogV1()
+{
+    destroy();
+}
+
 static struct
 {
     KWayland::Client::ConnectionThread *connection = nullptr;
@@ -302,6 +317,7 @@ static struct
     CursorShapeManagerV1 *cursorShapeManagerV1 = nullptr;
     FakeInput *fakeInput = nullptr;
     SecurityContextManagerV1 *securityContextManagerV1 = nullptr;
+    XdgWmDialogV1 *xdgWmDialogV1;
 } s_waylandConnection;
 
 MockInputMethod *inputMethod()
@@ -517,6 +533,12 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
                 s_waylandConnection.securityContextManagerV1->init(*registry, name, version);
             }
         }
+        if (flags & AdditionalWaylandInterface::XdgDialogV1) {
+            if (interface == xdg_wm_dialog_v1_interface.name) {
+                s_waylandConnection.xdgWmDialogV1 = new XdgWmDialogV1();
+                s_waylandConnection.xdgWmDialogV1->init(*registry, name, version);
+            }
+        }
     });
 
     QSignalSpy allAnnounced(registry, &KWayland::Client::Registry::interfacesAnnounced);
@@ -642,6 +664,8 @@ void destroyWaylandConnection()
     s_waylandConnection.fakeInput = nullptr;
     delete s_waylandConnection.securityContextManagerV1;
     s_waylandConnection.securityContextManagerV1 = nullptr;
+    delete s_waylandConnection.xdgWmDialogV1;
+    s_waylandConnection.xdgWmDialogV1 = nullptr;
 
     delete s_waylandConnection.queue; // Must be destroyed last
     s_waylandConnection.queue = nullptr;
@@ -1096,6 +1120,16 @@ std::unique_ptr<CursorShapeDeviceV1> createCursorShapeDeviceV1(KWayland::Client:
     }
 
     return std::make_unique<CursorShapeDeviceV1>(manager, pointer);
+}
+
+std::unique_ptr<XdgDialogV1> createXdgDialogV1(XdgToplevel *toplevel)
+{
+    XdgWmDialogV1 *wm = s_waylandConnection.xdgWmDialogV1;
+    if (!wm) {
+        qWarning() << "Could not create a xdg_dialog_v1 because xdg_wm_dialog_v1 global is not bound";
+        return nullptr;
+    }
+    return std::make_unique<XdgDialogV1>(wm, toplevel);
 }
 
 bool waitForWindowClosed(Window *window)

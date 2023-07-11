@@ -21,6 +21,7 @@
 #include <optional>
 
 #include "qwayland-cursor-shape-v1.h"
+#include "qwayland-dialog-v1.h"
 #include "qwayland-fake-input.h"
 #include "qwayland-fractional-scale-v1.h"
 #include "qwayland-idle-inhibit-unstable-v1.h"
@@ -547,6 +548,19 @@ public:
     ~SecurityContextManagerV1() override;
 };
 
+class XdgWmDialogV1 : public QtWayland::xdg_wm_dialog_v1
+{
+public:
+    ~XdgWmDialogV1() override;
+};
+
+class XdgDialogV1 : public QtWayland::xdg_dialog_v1
+{
+public:
+    XdgDialogV1(XdgWmDialogV1 *wm, XdgToplevel *toplevel);
+    ~XdgDialogV1() override;
+};
+
 enum class AdditionalWaylandInterface {
     Seat = 1 << 0,
     PlasmaShell = 1 << 2,
@@ -568,6 +582,7 @@ enum class AdditionalWaylandInterface {
     CursorShapeV1 = 1 << 18,
     FakeInput = 1 << 19,
     SecurityContextManagerV1 = 1 << 20,
+    XdgDialogV1 = 1 << 21,
 };
 Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
 
@@ -714,6 +729,7 @@ std::unique_ptr<XdgToplevelDecorationV1> createXdgToplevelDecorationV1(XdgToplev
 std::unique_ptr<IdleInhibitorV1> createIdleInhibitorV1(KWayland::Client::Surface *surface);
 std::unique_ptr<AutoHideScreenEdgeV1> createAutoHideScreenEdgeV1(KWayland::Client::Surface *surface, uint32_t border);
 std::unique_ptr<CursorShapeDeviceV1> createCursorShapeDeviceV1(KWayland::Client::Pointer *pointer);
+std::unique_ptr<XdgDialogV1> createXdgDialogV1(XdgToplevel *toplevel);
 
 /**
  * Creates a shared memory buffer of @p size in @p color and attaches it to the @p surface.
