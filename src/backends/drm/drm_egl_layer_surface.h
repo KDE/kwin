@@ -73,7 +73,6 @@ private:
     {
         std::shared_ptr<GbmSurface> gbmSurface;
         std::shared_ptr<DumbSwapchain> importSwapchain;
-        QImage cpuCopyCache;
         MultiGpuImportMode importMode;
         std::shared_ptr<GbmBuffer> currentBuffer;
         std::shared_ptr<DrmFramebuffer> currentFramebuffer;

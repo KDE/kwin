@@ -34,7 +34,6 @@ namespace KWin
 {
 
 static const QVector<uint64_t> linearModifier = {DRM_FORMAT_MOD_LINEAR};
-static const QVector<uint32_t> cpuCopyFormats = {DRM_FORMAT_ARGB8888, DRM_FORMAT_XRGB8888};
 
 static gbm_format_name_desc formatName(uint32_t format)
 {
@@ -281,18 +280,14 @@ std::optional<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(con
 
 std::optional<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, MultiGpuImportMode importMode) const
 {
-    const bool cpuCopy = importMode == MultiGpuImportMode::DumbBuffer || m_bufferTarget == BufferTarget::Dumb;
-    if (cpuCopy && !cpuCopyFormats.contains(format)) {
-        return std::nullopt;
-    }
     Surface ret;
     ret.importMode = importMode;
-    ret.forceLinear = cpuCopy || m_bufferTarget == BufferTarget::Linear;
+    ret.forceLinear = importMode == MultiGpuImportMode::DumbBuffer || m_bufferTarget != BufferTarget::Normal;
     ret.gbmSurface = createGbmSurface(size, format, modifiers, ret.forceLinear);
     if (!ret.gbmSurface) {
         return std::nullopt;
     }
-    if (cpuCopy) {
+    if (importMode == MultiGpuImportMode::DumbBuffer || m_bufferTarget == BufferTarget::Dumb) {
         ret.importSwapchain = std::make_shared<DumbSwapchain>(m_gpu, size, format);
         if (ret.importSwapchain->isEmpty()) {
             return std::nullopt;
@@ -388,26 +383,22 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importDmabuf(GbmBuffer *sour
 std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithCpu(Surface &surface, GbmBuffer *sourceBuffer) const
 {
     Q_ASSERT(surface.importSwapchain && !surface.importSwapchain->isEmpty());
+    const auto map = sourceBuffer->map(GBM_BO_TRANSFER_READ);
+    if (!map.data) {
+        qCWarning(KWIN_DRM, "mapping a %s gbm_bo failed: %s", formatName(sourceBuffer->format()).name, strerror(errno));
+        return nullptr;
+    }
     const auto importBuffer = surface.importSwapchain->acquireBuffer();
-
-    const auto size = sourceBuffer->size();
-    const qsizetype srcStride = 4 * size.width();
-    GLFramebuffer::pushFramebuffer(surface.gbmSurface->fbo());
-    QImage *const dst = importBuffer->image();
-    if (dst->bytesPerLine() == srcStride) {
-        glReadPixels(0, 0, dst->width(), dst->height(), GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, dst->bits());
+    if (map.stride == importBuffer->strides()[0]) {
+        std::memcpy(importBuffer->data(), map.data, importBuffer->size().height() * importBuffer->strides()[0]);
     } else {
-        // there's padding, need to copy line by line
-        if (surface.cpuCopyCache.size() != dst->size()) {
-            surface.cpuCopyCache = QImage(dst->size(), QImage::Format_RGBA8888);
-        }
-        glReadPixels(0, 0, dst->width(), dst->height(), GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, surface.cpuCopyCache.bits());
-        for (int i = 0; i < dst->height(); i++) {
-            std::memcpy(dst->scanLine(i), surface.cpuCopyCache.scanLine(i), srcStride);
+        const uint64_t usedLineWidth = std::min(map.stride, importBuffer->strides()[0]);
+        for (int i = 0; i < importBuffer->size().height(); i++) {
+            const char *srcAddress = reinterpret_cast<const char *>(map.data) + map.stride * i;
+            char *dstAddress = reinterpret_cast<char *>(importBuffer->data()) + importBuffer->strides()[0] * i;
+            std::memcpy(dstAddress, srcAddress, usedLineWidth);
         }
     }
-    GLFramebuffer::popFramebuffer();
-
     const auto ret = DrmFramebuffer::createFramebuffer(importBuffer);
     if (!ret) {
         qCWarning(KWIN_DRM, "Failed to create %s framebuffer for CPU import: %s", formatName(sourceBuffer->format()).name, strerror(errno));
