@@ -50,6 +50,8 @@ class DrmLeaseManagerV1;
 class TearingControlManagerV1Interface;
 class XwaylandShellV1Interface;
 class OutputOrderV1Interface;
+class XdgDialogWmV1Interface;
+
 class Window;
 class Output;
 class XdgActivationV1Integration;
@@ -297,6 +299,7 @@ private:
     DrmLeaseManagerV1 *m_leaseManager = nullptr;
     OutputOrderV1Interface *m_outputOrder = nullptr;
     XXColorManagerV2 *m_xxColorManager = nullptr;
+    XdgDialogWmV1Interface *m_xdgDialogWm = nullptr;
     KWIN_SINGLETON(WaylandServer)
 };
 

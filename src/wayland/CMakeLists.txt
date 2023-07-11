@@ -231,6 +231,10 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${PROJECT_SOURCE_DIR}/src/wayland/protocols/xx-color-management-v2.xml
     BASENAME xx-color-management-v2
 )
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PROTOCOL ${WaylandProtocols_DATADIR}/staging/xdg-dialog/xdg-dialog-v1.xml
+    BASENAME dialog-v1
+)
 
 target_sources(kwin PRIVATE
     abstract_data_source.cpp
@@ -306,6 +310,7 @@ target_sources(kwin PRIVATE
     viewporter.cpp
     xdgactivation_v1.cpp
     xdgdecoration_v1.cpp
+    xdgdialog_v1.cpp
     xdgforeign_v2.cpp
     xdgoutput_v1.cpp
     xdgshell.cpp
@@ -381,6 +386,7 @@ install(FILES
     viewporter.h
     xdgactivation_v1.h
     xdgdecoration_v1.h
+    xdgdialog_v1.h
     xdgforeign_v2.h
     xdgoutput_v1.h
     xdgshell.h

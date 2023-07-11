@@ -104,6 +104,9 @@ private Q_SLOTS:
     void testMaximizeAndChangeDecorationModeAfterInitialCommit();
     void testFullScreenAndChangeDecorationModeAfterInitialCommit();
     void testChangeDecorationModeAfterInitialCommit();
+    void testModal();
+    void testCloseModal();
+    void testCloseInactiveModal();
 };
 
 void TestXdgShellWindow::testXdgPopupReactive_data()
@@ -206,7 +209,7 @@ void TestXdgShellWindow::initTestCase()
 
 void TestXdgShellWindow::init()
 {
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::XdgDecorationV1 | Test::AdditionalWaylandInterface::AppMenu));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::XdgDecorationV1 | Test::AdditionalWaylandInterface::AppMenu | Test::AdditionalWaylandInterface::XdgDialogV1));
     QVERIFY(Test::waitForWaylandPointer());
 
     workspace()->setActiveOutput(QPoint(640, 512));
@@ -2188,6 +2191,135 @@ void TestXdgShellWindow::testChangeDecorationModeAfterInitialCommit()
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), QSize(0, 0));
     QCOMPARE(decorationConfigureRequestedSpy.last().at(0).value<Test::XdgToplevelDecorationV1::mode>(), Test::XdgToplevelDecorationV1::mode_client_side);
+}
+
+void TestXdgShellWindow::testModal()
+{
+    auto parentSurface = Test::createSurface();
+    auto parentToplevel = Test::createXdgToplevelSurface(parentSurface.get());
+    auto parentWindow = Test::renderAndWaitForShown(parentSurface.get(), {200, 200}, Qt::cyan);
+    QVERIFY(parentWindow);
+
+    auto childSurface = Test::createSurface();
+    auto childToplevel = Test::createXdgToplevelSurface(childSurface.get(), [&parentToplevel](Test::XdgToplevel *toplevel) {
+        toplevel->set_parent(parentToplevel->object());
+    });
+    auto childWindow = Test::renderAndWaitForShown(childSurface.get(), {200, 200}, Qt::yellow);
+    QVERIFY(childWindow);
+    QVERIFY(!childWindow->isModal());
+    QCOMPARE(childWindow->transientFor(), parentWindow);
+
+    auto dialog = Test::createXdgDialogV1(childToplevel.get());
+    QVERIFY(Test::waylandSync());
+    QVERIFY(dialog);
+    QVERIFY(!childWindow->isModal());
+
+    QSignalSpy modalChangedSpy(childWindow, &Window::modalChanged);
+
+    dialog->set_modal();
+    Test::flushWaylandConnection();
+    QVERIFY(modalChangedSpy.wait());
+    QVERIFY(childWindow->isModal());
+
+    dialog->unset_modal();
+    Test::flushWaylandConnection();
+    QVERIFY(modalChangedSpy.wait());
+    QVERIFY(!childWindow->isModal());
+
+    dialog->set_modal();
+    Test::flushWaylandConnection();
+    QVERIFY(modalChangedSpy.wait());
+    Workspace::self()->activateWindow(parentWindow);
+    QCOMPARE(Workspace::self()->activeWindow(), childWindow);
+
+    dialog.reset();
+    Test::flushWaylandConnection();
+    QVERIFY(modalChangedSpy.wait());
+    QVERIFY(!childWindow->isModal());
+}
+
+void TestXdgShellWindow::testCloseModal()
+{
+    // This test verifies that the parent window will be activated when an active modal dialog is closed.
+
+    // Create a parent and a child windows.
+    auto parentSurface = Test::createSurface();
+    auto parentToplevel = Test::createXdgToplevelSurface(parentSurface.get());
+    auto parent = Test::renderAndWaitForShown(parentSurface.get(), {200, 200}, Qt::cyan);
+    QVERIFY(parent);
+
+    auto childSurface = Test::createSurface();
+    auto childToplevel = Test::createXdgToplevelSurface(childSurface.get(), [&parentToplevel](Test::XdgToplevel *toplevel) {
+        toplevel->set_parent(parentToplevel->object());
+    });
+    auto child = Test::renderAndWaitForShown(childSurface.get(), {200, 200}, Qt::yellow);
+    QVERIFY(child);
+    QVERIFY(!child->isModal());
+    QCOMPARE(child->transientFor(), parent);
+
+    // Set modal state.
+    auto dialog = Test::createXdgDialogV1(childToplevel.get());
+    QSignalSpy modalChangedSpy(child, &Window::modalChanged);
+    dialog->set_modal();
+    Test::flushWaylandConnection();
+    QVERIFY(modalChangedSpy.wait());
+    QVERIFY(child->isModal());
+    QCOMPARE(workspace()->activeWindow(), child);
+
+    // Close the child.
+    QSignalSpy childClosedSpy(child, &Window::closed);
+    childToplevel.reset();
+    childSurface.reset();
+    dialog.reset();
+    Test::flushWaylandConnection();
+    QVERIFY(childClosedSpy.wait());
+    QCOMPARE(workspace()->activeWindow(), parent);
+}
+
+void TestXdgShellWindow::testCloseInactiveModal()
+{
+    // This test verifies that the parent window will not be activated when an inactive modal dialog is closed.
+
+    // Create a parent and a child windows.
+    auto parentSurface = Test::createSurface();
+    auto parentToplevel = Test::createXdgToplevelSurface(parentSurface.get());
+    auto parent = Test::renderAndWaitForShown(parentSurface.get(), {200, 200}, Qt::cyan);
+    QVERIFY(parent);
+
+    auto childSurface = Test::createSurface();
+    auto childToplevel = Test::createXdgToplevelSurface(childSurface.get(), [&parentToplevel](Test::XdgToplevel *toplevel) {
+        toplevel->set_parent(parentToplevel->object());
+    });
+    auto child = Test::renderAndWaitForShown(childSurface.get(), {200, 200}, Qt::yellow);
+    QVERIFY(child);
+    QVERIFY(!child->isModal());
+    QCOMPARE(child->transientFor(), parent);
+
+    // Set modal state.
+    auto dialog = Test::createXdgDialogV1(childToplevel.get());
+    QSignalSpy modalChangedSpy(child, &Window::modalChanged);
+    dialog->set_modal();
+    Test::flushWaylandConnection();
+    QVERIFY(modalChangedSpy.wait());
+    QVERIFY(child->isModal());
+    QCOMPARE(workspace()->activeWindow(), child);
+
+    // Show another window.
+    auto otherSurface = Test::createSurface();
+    auto otherToplevel = Test::createXdgToplevelSurface(otherSurface.get());
+    auto otherWindow = Test::renderAndWaitForShown(otherSurface.get(), {200, 200}, Qt::magenta);
+    QVERIFY(otherWindow);
+    workspace()->setActiveWindow(otherWindow);
+    QCOMPARE(workspace()->activeWindow(), otherWindow);
+
+    // Close the child.
+    QSignalSpy childClosedSpy(child, &Window::closed);
+    childToplevel.reset();
+    childSurface.reset();
+    dialog.reset();
+    Test::flushWaylandConnection();
+    QVERIFY(childClosedSpy.wait());
+    QCOMPARE(workspace()->activeWindow(), otherWindow);
 }
 
 WAYLANDTEST_MAIN(TestXdgShellWindow)

@@ -30,6 +30,7 @@
 #include "wayland/surface.h"
 #include "wayland/tablet_v2.h"
 #include "wayland/xdgdecoration_v1.h"
+#include "wayland/xdgdialog_v1.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
@@ -488,6 +489,9 @@ void XdgToplevelWindow::handleRoleDestroyed()
     }
     if (m_serverDecoration) {
         m_serverDecoration->disconnect(this);
+    }
+    if (m_xdgDialog) {
+        m_xdgDialog->disconnect(this);
     }
 
     m_shellSurface->disconnect(this);
@@ -1441,6 +1445,17 @@ void XdgToplevelWindow::installPalette(ServerSideDecorationPaletteInterface *pal
     connect(m_paletteInterface, &QObject::destroyed,
             this, &XdgToplevelWindow::updateColorScheme);
     updateColorScheme();
+}
+
+void XdgToplevelWindow::installXdgDialogV1(XdgDialogV1Interface *dialog)
+{
+    m_xdgDialog = dialog;
+
+    connect(dialog, &XdgDialogV1Interface::modalChanged, this, &Window::setModal);
+    connect(dialog, &QObject::destroyed, this, [this] {
+        setModal(false);
+    });
+    setModal(dialog->isModal());
 }
 
 void XdgToplevelWindow::setFullScreen(bool set)

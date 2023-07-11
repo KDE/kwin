@@ -67,6 +67,7 @@
 #include "wayland/viewporter.h"
 #include "wayland/xdgactivation_v1.h"
 #include "wayland/xdgdecoration_v1.h"
+#include "wayland/xdgdialog_v1.h"
 #include "wayland/xdgforeign_v2.h"
 #include "wayland/xdgoutput_v1.h"
 #include "wayland/xdgshell.h"
@@ -241,6 +242,9 @@ void WaylandServer::registerXdgToplevelWindow(XdgToplevelWindow *window)
     }
     if (auto palette = m_paletteManager->paletteForSurface(surface)) {
         window->installPalette(palette);
+    }
+    if (auto dialog = m_xdgDialogWm->dialogForToplevel(window->shellSurface())) {
+        window->installXdgDialogV1(dialog);
     }
 
     connect(m_XdgForeign, &XdgForeignV2Interface::transientChanged, window, [this](SurfaceInterface *child) {
@@ -498,6 +502,13 @@ bool WaylandServer::init(InitializationFlags flags)
     if (qEnvironmentVariableIntValue("KWIN_ENABLE_XX_COLOR_MANAGEMENT")) {
         m_xxColorManager = new XXColorManagerV2(m_display, m_display);
     }
+    m_xdgDialogWm = new KWin::XdgDialogWmV1Interface(m_display, m_display);
+    connect(m_xdgDialogWm, &KWin::XdgDialogWmV1Interface::dialogCreated, this, [this](KWin::XdgDialogV1Interface *dialog) {
+        if (auto window = findXdgToplevelWindow(dialog->toplevel()->surface())) {
+            window->installXdgDialogV1(dialog);
+        }
+    });
+
     return true;
 }
 
