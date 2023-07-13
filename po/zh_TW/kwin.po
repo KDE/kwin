@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-08 02:34+0000\n"
+"POT-Creation-Date: 2023-07-13 02:10+0000\n"
 "PO-Revision-Date: 2023-05-17 04:28+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Chinese <zh-l10n@linux.org.tw>\n"
@@ -1205,22 +1205,22 @@ msgstr "終止應用程式 %1(&T)"
 msgid "Wait Longer"
 msgstr "等久一點"
 
-#: input.cpp:2000
+#: input.cpp:2008
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "移動繪圖板到下一個輸出"
 
-#: input.cpp:2079
+#: input.cpp:2087
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "繪圖板已移動到 %1"
 
-#: input.cpp:2079
+#: input.cpp:2087
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "繪圖板已切換輸出"
 
-#: input.cpp:3096
+#: input.cpp:3104
 #, kde-format
 msgid "Touchpad"
 msgstr "觸控板"

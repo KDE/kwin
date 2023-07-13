@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-08 02:34+0000\n"
+"POT-Creation-Date: 2023-07-13 02:10+0000\n"
 "PO-Revision-Date: 2023-02-15 15:24+0000\n"
 "Last-Translator: Pedro Morais <morais@kde.org>\n"
 "Language-Team: pt <kde-i18n-pt@kde.org>\n"
@@ -1218,22 +1218,22 @@ msgstr "&Terminar a Aplicação %1"
 msgid "Wait Longer"
 msgstr "Esperar um Pouco"
 
-#: input.cpp:2000
+#: input.cpp:2008
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Mover a tablete para a saída seguinte"
 
-#: input.cpp:2079
+#: input.cpp:2087
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Tablete movida para %1"
 
-#: input.cpp:2079
+#: input.cpp:2087
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "As tabletes mudaram de saídas"
 
-#: input.cpp:3096
+#: input.cpp:3104
 #, kde-format
 msgid "Touchpad"
 msgstr "Rato por toque"
