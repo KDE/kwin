@@ -2,7 +2,7 @@
 # Author: Lliehu
 # Author: Niklas Laxström
 # Lasse Liehu <lasse.liehu@gmail.com>, 2013, 2022.
-# Tommi Nieminen <translator@legisign.org>, 2017, 2018, 2020.
+# Tommi Nieminen <translator@legisign.org>, 2017, 2018, 2020, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm-kwin-scripts\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-POT-Import-Date: 2012-12-01 22:22:19+0000\n"
-"X-Generator: Lokalize 22.08.2\n"
+"X-Generator: Lokalize 22.12.3\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, kde-format
