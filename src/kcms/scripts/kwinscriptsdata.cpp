@@ -20,12 +20,8 @@ KWinScriptsData::KWinScriptsData(QObject *parent)
 
 QVector<KPluginMetaData> KWinScriptsData::pluginMetaDataList() const
 {
-    auto filter = [](const KPluginMetaData &md) {
-        return md.isValid() && !md.rawData().value("X-KWin-Exclude-Listing").toBool();
-    };
-
     const QString scriptFolder = QStringLiteral("kwin/scripts/");
-    return KPackage::PackageLoader::self()->findPackages(QStringLiteral("KWin/Script"), scriptFolder, filter).toVector();
+    return KPackage::PackageLoader::self()->findPackages(QStringLiteral("KWin/Script"), scriptFolder);
 }
 
 bool KWinScriptsData::isDefaults() const

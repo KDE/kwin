@@ -170,10 +170,6 @@ void KWinTabBoxConfig::initLayoutLists()
         if (offer.value("X-Plasma-API") != "declarativeappletscript") {
             continue;
         }
-        // we don't have a proper servicetype
-        if (offer.value("X-KWin-Exclude-Listing") == QStringLiteral("true")) {
-            continue;
-        }
         const QString scriptName = offer.value("X-Plasma-MainScript");
         const QString scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
                                                           QLatin1String("kwin/tabbox/") + pluginName + QLatin1String("/contents/")

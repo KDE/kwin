@@ -108,7 +108,6 @@
         "Name[zh_TW]": "桌面變更時的螢幕顯示",
         "Version": "1.0"
     },
-    "X-KWin-Exclude-Listing": "true",
     "X-Plasma-API": "declarativescript",
     "X-Plasma-MainScript": "ui/main.qml"
 }
