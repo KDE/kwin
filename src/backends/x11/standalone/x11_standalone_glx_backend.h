@@ -63,7 +63,7 @@ class GlxLayer : public OutputLayer
 public:
     GlxLayer(GlxBackend *backend);
 
-    std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
+    std::optional<OutputLayerBeginFrameInfo> beginFrame(const OutputLayerDesiredProperties &properties) override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     uint format() const override;
 

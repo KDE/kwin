@@ -26,7 +26,7 @@ DrmQPainterLayer::DrmQPainterLayer(DrmPipeline *pipeline)
 {
 }
 
-std::optional<OutputLayerBeginFrameInfo> DrmQPainterLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> DrmQPainterLayer::beginFrame(const OutputLayerDesiredProperties &properties)
 {
     if (!doesSwapchainFit()) {
         m_swapchain = std::make_shared<QPainterSwapchain>(m_pipeline->gpu()->graphicsBufferAllocator(), m_pipeline->mode()->size(), DRM_FORMAT_XRGB8888);
@@ -104,7 +104,7 @@ DrmCursorQPainterLayer::DrmCursorQPainterLayer(DrmPipeline *pipeline)
 {
 }
 
-std::optional<OutputLayerBeginFrameInfo> DrmCursorQPainterLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> DrmCursorQPainterLayer::beginFrame(const OutputLayerDesiredProperties &properties)
 {
     if (!m_swapchain) {
         m_swapchain = std::make_shared<QPainterSwapchain>(m_pipeline->gpu()->graphicsBufferAllocator(), m_pipeline->gpu()->cursorSize(), DRM_FORMAT_ARGB8888);
@@ -154,7 +154,7 @@ DrmVirtualQPainterLayer::DrmVirtualQPainterLayer(DrmVirtualOutput *output)
 {
 }
 
-std::optional<OutputLayerBeginFrameInfo> DrmVirtualQPainterLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> DrmVirtualQPainterLayer::beginFrame(const OutputLayerDesiredProperties &properties)
 {
     if (m_image.isNull() || m_image.size() != m_output->modeSize()) {
         m_image = QImage(m_output->modeSize(), QImage::Format_RGB32);

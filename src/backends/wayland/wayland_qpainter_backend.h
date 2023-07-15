@@ -36,7 +36,7 @@ public:
     WaylandQPainterPrimaryLayer(WaylandOutput *output, WaylandQPainterBackend *backend);
     ~WaylandQPainterPrimaryLayer() override;
 
-    std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
+    std::optional<OutputLayerBeginFrameInfo> beginFrame(const OutputLayerDesiredProperties &properties) override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     quint32 format() const override;
 
@@ -63,7 +63,7 @@ public:
     WaylandQPainterCursorLayer(WaylandOutput *output, WaylandQPainterBackend *backend);
     ~WaylandQPainterCursorLayer() override;
 
-    std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
+    std::optional<OutputLayerBeginFrameInfo> beginFrame(const OutputLayerDesiredProperties &properties) override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     quint32 format() const override;
 

@@ -651,7 +651,7 @@ void Compositor::composite(RenderLoop *renderLoop)
         primaryLayer->resetRepaints();
         preparePaintPass(superLayer, &surfaceDamage);
 
-        if (auto beginInfo = primaryLayer->beginFrame()) {
+        if (auto beginInfo = primaryLayer->beginFrame(OutputLayerDesiredProperties{})) {
             auto &[renderTarget, repaint] = beginInfo.value();
 
             const QRegion bufferDamage = surfaceDamage.united(repaint).intersected(superLayer->rect().toAlignedRect());

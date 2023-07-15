@@ -28,7 +28,7 @@ class EglGbmLayer : public DrmPipelineLayer
 public:
     EglGbmLayer(EglGbmBackend *eglBackend, DrmPipeline *pipeline);
 
-    std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
+    std::optional<OutputLayerBeginFrameInfo> beginFrame(const OutputLayerDesiredProperties &properties) override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     bool scanout(SurfaceItem *surfaceItem) override;
     bool checkTestBuffer() override;

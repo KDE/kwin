@@ -31,7 +31,7 @@ public:
     VirtualQPainterLayer(Output *output, VirtualQPainterBackend *backend);
     ~VirtualQPainterLayer() override;
 
-    std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
+    std::optional<OutputLayerBeginFrameInfo> beginFrame(const OutputLayerDesiredProperties &properties) override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     QImage *image();
     quint32 format() const override;

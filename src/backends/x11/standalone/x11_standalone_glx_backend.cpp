@@ -103,7 +103,7 @@ GlxLayer::GlxLayer(GlxBackend *backend)
 {
 }
 
-std::optional<OutputLayerBeginFrameInfo> GlxLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> GlxLayer::beginFrame(const OutputLayerDesiredProperties &properties)
 {
     return m_backend->beginFrame();
 }

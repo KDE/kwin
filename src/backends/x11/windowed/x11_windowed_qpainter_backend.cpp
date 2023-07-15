@@ -32,7 +32,7 @@ X11WindowedQPainterPrimaryLayer::~X11WindowedQPainterPrimaryLayer()
 {
 }
 
-std::optional<OutputLayerBeginFrameInfo> X11WindowedQPainterPrimaryLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> X11WindowedQPainterPrimaryLayer::beginFrame(const OutputLayerDesiredProperties &properties)
 {
     const QSize bufferSize = m_output->modeSize();
     if (!m_swapchain || m_swapchain->size() != bufferSize) {
@@ -98,7 +98,7 @@ X11WindowedQPainterCursorLayer::X11WindowedQPainterCursorLayer(X11WindowedOutput
 {
 }
 
-std::optional<OutputLayerBeginFrameInfo> X11WindowedQPainterCursorLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> X11WindowedQPainterCursorLayer::beginFrame(const OutputLayerDesiredProperties &properties)
 {
     const auto tmp = size().expandedTo(QSize(64, 64));
     const QSize bufferSize(std::ceil(tmp.width()), std::ceil(tmp.height()));

@@ -33,7 +33,7 @@ std::shared_ptr<GLTexture> VirtualEglLayer::texture() const
     return m_current->texture();
 }
 
-std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame(const OutputLayerDesiredProperties &properties)
 {
     m_backend->makeCurrent();
 

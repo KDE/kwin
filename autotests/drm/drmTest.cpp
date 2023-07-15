@@ -403,7 +403,7 @@ void DrmTest::testModeset()
     QCOMPARE(gpu->drmOutputs().size(), 1);
     const auto output = gpu->drmOutputs().front();
     const auto layer = renderBackend->primaryLayer(output);
-    layer->beginFrame();
+    layer->beginFrame({});
     output->renderLoop()->beginFrame();
     output->renderLoop()->endFrame();
     layer->endFrame(infiniteRegion(), infiniteRegion());

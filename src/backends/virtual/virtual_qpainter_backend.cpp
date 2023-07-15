@@ -29,7 +29,7 @@ VirtualQPainterLayer::~VirtualQPainterLayer()
 {
 }
 
-std::optional<OutputLayerBeginFrameInfo> VirtualQPainterLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> VirtualQPainterLayer::beginFrame(const OutputLayerDesiredProperties &properties)
 {
     const QSize nativeSize(m_output->modeSize());
     if (!m_swapchain || m_swapchain->size() != nativeSize) {

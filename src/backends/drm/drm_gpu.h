@@ -79,6 +79,7 @@ public:
     bool addFB2ModifiersSupported() const;
     bool asyncPageflipSupported() const;
     bool isNVidia() const;
+    bool isI915() const;
     gbm_device *gbmDevice() const;
     EglDisplay *eglDisplay() const;
     DrmBackend *platform() const;
@@ -137,6 +138,7 @@ private:
     bool m_atomicModeSetting;
     bool m_addFB2ModifiersSupported = false;
     bool m_isNVidia;
+    bool m_isI915;
     bool m_isVirtualMachine;
     bool m_asyncPageflipSupported = false;
     bool m_isRemoved = false;

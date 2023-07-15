@@ -18,6 +18,10 @@ namespace KWin
 
 class SurfaceItem;
 
+struct OutputLayerDesiredProperties
+{
+    QSize minimumSize;
+};
 struct OutputLayerBeginFrameInfo
 {
     RenderTarget renderTarget;
@@ -43,7 +47,7 @@ public:
     void resetRepaints();
     void addRepaint(const QRegion &region);
 
-    virtual std::optional<OutputLayerBeginFrameInfo> beginFrame() = 0;
+    virtual std::optional<OutputLayerBeginFrameInfo> beginFrame(const OutputLayerDesiredProperties &properties) = 0;
     virtual bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) = 0;
 
     /**

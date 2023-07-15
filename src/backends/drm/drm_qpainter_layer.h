@@ -27,7 +27,7 @@ class DrmQPainterLayer : public DrmPipelineLayer
 public:
     DrmQPainterLayer(DrmPipeline *pipeline);
 
-    std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
+    std::optional<OutputLayerBeginFrameInfo> beginFrame(const OutputLayerDesiredProperties &properties) override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     bool checkTestBuffer() override;
     std::shared_ptr<DrmFramebuffer> currentBuffer() const override;
@@ -49,7 +49,7 @@ class DrmCursorQPainterLayer : public DrmOverlayLayer
 public:
     DrmCursorQPainterLayer(DrmPipeline *pipeline);
 
-    std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
+    std::optional<OutputLayerBeginFrameInfo> beginFrame(const OutputLayerDesiredProperties &properties) override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
     bool checkTestBuffer() override;
@@ -68,7 +68,7 @@ class DrmVirtualQPainterLayer : public DrmOutputLayer
 public:
     DrmVirtualQPainterLayer(DrmVirtualOutput *output);
 
-    std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
+    std::optional<OutputLayerBeginFrameInfo> beginFrame(const OutputLayerDesiredProperties &properties) override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
     QRegion currentDamage() const override;

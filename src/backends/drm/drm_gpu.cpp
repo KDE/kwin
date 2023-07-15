@@ -76,6 +76,7 @@ DrmGpu::DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t device
     m_isNVidia = strstr(version->name, "nvidia-drm");
     m_isVirtualMachine = strstr(version->name, "virtio") || strstr(version->name, "qxl")
         || strstr(version->name, "vmwgfx") || strstr(version->name, "vboxvideo");
+    m_isI915 = strstr(version->name, "i915");
 
     // Reopen the drm node to create a new GEM handle namespace.
     m_gbmFd = FileDescriptor{open(devNode.toLocal8Bit(), O_RDWR | O_CLOEXEC)};
@@ -693,6 +694,11 @@ bool DrmGpu::asyncPageflipSupported() const
 bool DrmGpu::isNVidia() const
 {
     return m_isNVidia;
+}
+
+bool DrmGpu::isI915() const
+{
+    return m_isI915;
 }
 
 bool DrmGpu::isRemoved() const

@@ -54,7 +54,7 @@ QRegion WaylandQPainterPrimaryLayer::accumulateDamage(int bufferAge) const
     return m_damageJournal.accumulate(bufferAge, infiniteRegion());
 }
 
-std::optional<OutputLayerBeginFrameInfo> WaylandQPainterPrimaryLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> WaylandQPainterPrimaryLayer::beginFrame(const OutputLayerDesiredProperties &properties)
 {
     const QSize nativeSize(m_waylandOutput->modeSize());
     if (!m_swapchain || m_swapchain->size() != nativeSize) {
@@ -93,7 +93,7 @@ WaylandQPainterCursorLayer::~WaylandQPainterCursorLayer()
 {
 }
 
-std::optional<OutputLayerBeginFrameInfo> WaylandQPainterCursorLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> WaylandQPainterCursorLayer::beginFrame(const OutputLayerDesiredProperties &properties)
 {
     const auto tmp = size().expandedTo(QSize(64, 64));
     const QSize bufferSize(std::ceil(tmp.width()), std::ceil(tmp.height()));

@@ -30,7 +30,7 @@ VirtualEglGbmLayer::VirtualEglGbmLayer(EglGbmBackend *eglBackend, DrmVirtualOutp
 {
 }
 
-std::optional<OutputLayerBeginFrameInfo> VirtualEglGbmLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> VirtualEglGbmLayer::beginFrame(const OutputLayerDesiredProperties &properties)
 {
     // gbm surface
     if (doesGbmSwapchainFit(m_gbmSwapchain.get())) {

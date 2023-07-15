@@ -30,7 +30,7 @@ X11WindowedEglPrimaryLayer::~X11WindowedEglPrimaryLayer()
 {
 }
 
-std::optional<OutputLayerBeginFrameInfo> X11WindowedEglPrimaryLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> X11WindowedEglPrimaryLayer::beginFrame(const OutputLayerDesiredProperties &properties)
 {
     eglMakeCurrent(m_backend->eglDisplay(), EGL_NO_SURFACE, EGL_NO_SURFACE, m_backend->context());
 
@@ -123,7 +123,7 @@ X11WindowedEglCursorLayer::~X11WindowedEglCursorLayer()
     m_texture.reset();
 }
 
-std::optional<OutputLayerBeginFrameInfo> X11WindowedEglCursorLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> X11WindowedEglCursorLayer::beginFrame(const OutputLayerDesiredProperties &properties)
 {
     eglMakeCurrent(m_backend->eglDisplay(), EGL_NO_SURFACE, EGL_NO_SURFACE, m_backend->context());
 

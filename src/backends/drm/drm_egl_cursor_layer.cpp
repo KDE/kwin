@@ -44,9 +44,19 @@ EglGbmCursorLayer::EglGbmCursorLayer(EglGbmBackend *eglBackend, DrmPipeline *pip
 {
 }
 
-std::optional<OutputLayerBeginFrameInfo> EglGbmCursorLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> EglGbmCursorLayer::beginFrame(const OutputLayerDesiredProperties &properties)
 {
-    return m_surface.startRendering(m_pipeline->gpu()->cursorSize(), drmToTextureRotation(m_pipeline) | TextureTransform::MirrorY, m_pipeline->cursorFormats(), m_pipeline->colorDescription(), m_pipeline->output()->channelFactors(), m_pipeline->output()->needsColormanagement());
+    QSize size = m_pipeline->gpu()->cursorSize();
+    if (properties.minimumSize.width() >= size.width() || properties.minimumSize.height() >= size.height()) {
+        return std::nullopt;
+    }
+    // reduce cursor size when possible, to improve power usage on Intel
+    // This is only done on Intel because we know 64 pixel cursors work there.
+    // The same is not true on AMD
+    if (m_pipeline->gpu()->isI915() && properties.minimumSize.width() <= 64 && properties.minimumSize.height() <= 64) {
+        size = QSize(64, 64);
+    }
+    return m_surface.startRendering(size, drmToTextureRotation(m_pipeline) | TextureTransform::MirrorY, m_pipeline->cursorFormats(), m_pipeline->colorDescription(), m_pipeline->output()->channelFactors(), m_pipeline->output()->needsColormanagement());
 }
 
 bool EglGbmCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)

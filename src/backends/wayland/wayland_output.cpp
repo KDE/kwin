@@ -195,7 +195,7 @@ bool WaylandOutput::setCursor(CursorSource *source)
         cursorLayer->setHotspot(QPoint());
     }
 
-    std::optional<OutputLayerBeginFrameInfo> beginInfo = cursorLayer->beginFrame();
+    std::optional<OutputLayerBeginFrameInfo> beginInfo = cursorLayer->beginFrame({});
     if (!beginInfo) {
         return false;
     }
