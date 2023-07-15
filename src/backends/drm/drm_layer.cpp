@@ -66,4 +66,9 @@ bool DrmOverlayLayer::isVisible() const
 {
     return m_visible;
 }
+
+QSize DrmOverlayLayer::contentSize() const
+{
+    return m_contentSize;
+}
 }

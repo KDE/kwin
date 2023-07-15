@@ -167,6 +167,8 @@ private:
     bool m_pageflipPending = false;
     bool m_modesetPresentPending = false;
 
+    QSize m_minCursorSize = QSize(32, 32);
+
     struct State
     {
         DrmCrtc *crtc = nullptr;
@@ -191,6 +193,7 @@ private:
         std::shared_ptr<DrmPipelineLayer> layer;
         std::shared_ptr<DrmOverlayLayer> cursorLayer;
         QPoint cursorHotspot;
+        QSize cursorSize;
 
         // the transformation that buffers submitted to the pipeline should have
         DrmPlane::Transformations renderOrientation = DrmPlane::Transformation::Rotate0;

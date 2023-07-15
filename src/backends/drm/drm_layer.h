@@ -55,9 +55,11 @@ public:
 
     QPoint position() const;
     bool isVisible() const;
+    QSize contentSize() const;
 
 protected:
     QPoint m_position;
     bool m_visible = false;
+    QSize m_contentSize;
 };
 }

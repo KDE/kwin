@@ -37,6 +37,9 @@ static const QMap<uint32_t, QVector<uint64_t>> legacyCursorFormats = {{DRM_FORMA
 DrmPipeline::DrmPipeline(DrmConnector *conn)
     : m_connector(conn)
 {
+    m_pending.cursorSize = gpu()->cursorSize();
+    m_next.cursorSize = gpu()->cursorSize();
+    m_current.cursorSize = gpu()->cursorSize();
 }
 
 DrmPipeline::~DrmPipeline()
@@ -152,7 +155,7 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline 
     }
     case CommitMode::Test: {
         if (!commit->test()) {
-            qCDebug(KWIN_DRM) << "Atomic test failed!" << strerror(errno);
+            // qCDebug(KWIN_DRM) << "Atomic test failed!" << strerror(errno);
             return errnoToError();
         }
         return Error::None;
@@ -212,7 +215,7 @@ bool DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commit)
 
     if (auto plane = m_pending.crtc->cursorPlane()) {
         const auto layer = cursorLayer();
-        plane->set(commit, QPoint(0, 0), gpu()->cursorSize(), QRect(layer->position(), gpu()->cursorSize()));
+        plane->set(commit, QPoint(0, 0), m_pending.cursorSize, QRect(layer->position(), m_pending.cursorSize));
         commit->addProperty(plane->crtcId, layer->isVisible() ? m_pending.crtc->id() : 0);
         commit->addProperty(plane->fbId, layer->isVisible() ? layer->currentBuffer()->framebufferId() : 0);
     }
@@ -359,11 +362,32 @@ bool DrmPipeline::setCursor(const QPoint &hotspot)
     m_pending.cursorHotspot = hotspot;
     // explicitly check for the cursor plane and not for AMS, as we might not always have one
     if (m_pending.crtc->cursorPlane()) {
+        const auto [width, height] = m_pending.cursorLayer->contentSize();
+        const auto [maxWidth, maxHeight] = gpu()->cursorSize();
+        QSize size = m_minCursorSize;
+        while ((width > size.width() || height > size.height())
+               && size.width() < maxWidth && size.height() < maxHeight) {
+            size *= 2;
+        }
+        if (size.width() >= maxWidth || size.height() >= maxHeight) {
+            size = gpu()->cursorSize();
+        }
+        m_pending.cursorSize = size;
         result = commitPipelines({this}, CommitMode::Test) == Error::None;
+        if (!result && size.width() < maxWidth && size.height() < maxHeight) {
+            m_pending.cursorSize = gpu()->cursorSize();
+            result = commitPipelines({this}, CommitMode::Test) == Error::None;
+            if (result) {
+                // test with min cursor size failed -> increase min size
+                // to not test with this size again
+                m_minCursorSize = (m_minCursorSize.expandedTo(size * 2)).boundedTo(gpu()->cursorSize());
+            }
+        }
         if (result && m_output) {
             m_output->renderLoop()->scheduleRepaint();
         }
     } else {
+        m_pending.cursorSize = m_pending.cursorLayer->size().toSize();
         result = setCursorLegacy();
     }
     if (result) {
