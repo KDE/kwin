@@ -143,6 +143,10 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion)
     m_surface.gbmSwapchain->release(m_surface.currentSlot);
     m_surface.timeQuery->end();
     glFlush();
+    if (m_eglBackend->contextObject()->isSoftwareRenderer()) {
+        // llvmpipe doesn't do synchronization properly: https://gitlab.freedesktop.org/mesa/mesa/-/issues/9375
+        glFinish();
+    }
     const auto buffer = importBuffer(m_surface, m_surface.currentSlot.get());
     m_surface.renderEnd = std::chrono::steady_clock::now();
     if (buffer) {
