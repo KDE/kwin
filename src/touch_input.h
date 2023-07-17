@@ -77,7 +77,6 @@ private:
     void focusUpdate(Window *focusOld, Window *focusNow) override;
 
     QSet<qint32> m_activeTouchPoints;
-    bool m_inited = false;
     qint32 m_decorationId = -1;
     qint32 m_internalId = -1;
     QMetaObject::Connection m_focusGeometryConnection;

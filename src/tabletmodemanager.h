@@ -52,7 +52,6 @@ private:
     void refreshSettings();
 
     KConfigWatcher::Ptr m_settingsWatcher;
-    bool m_tabletModeAvailable = false;
     bool m_isTabletMode = false;
     bool m_detecting = false;
     ConfiguredMode m_configuredMode = ConfiguredMode::Auto;

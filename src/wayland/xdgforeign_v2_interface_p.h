@@ -42,7 +42,6 @@ protected:
     void zxdg_exporter_v2_export_toplevel(Resource *resource, uint32_t id, wl_resource *surface) override;
 
 private:
-    XdgForeignV2Interface *m_foreign;
     QHash<QString, XdgExportedV2Interface *> m_exportedSurfaces;
 };
 

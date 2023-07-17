@@ -139,8 +139,6 @@ Q_SIGNALS:
 private:
     void handleTargets();
 
-    xcb_window_t m_owner;
-
     Mimes m_offers;
 
     Q_DISABLE_COPY(X11Source)

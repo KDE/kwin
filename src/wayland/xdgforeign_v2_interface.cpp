@@ -40,7 +40,6 @@ SurfaceInterface *XdgForeignV2Interface::transientFor(SurfaceInterface *surface)
 XdgExporterV2Interface::XdgExporterV2Interface(Display *display, XdgForeignV2Interface *foreign)
     : QObject(foreign)
     , QtWaylandServer::zxdg_exporter_v2(*display, s_exporterVersion)
-    , m_foreign(foreign)
 {
 }
 
