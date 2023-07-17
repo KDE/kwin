@@ -353,7 +353,10 @@ set_package_properties(QAccessibilityClient6 PROPERTIES
 set(HAVE_ACCESSIBILITY ${QAccessibilityClient6_FOUND})
 
 find_package(KGlobalAccelD REQUIRED)
-pkg_check_modules(libdisplayinfo REQUIRED IMPORTED_TARGET libdisplay-info)
+pkg_check_modules(libdisplayinfo IMPORTED_TARGET display-info)
+if (NOT libdisplayinfo_FOUND)
+    pkg_check_modules(libdisplayinfo REQUIRED IMPORTED_TARGET libdisplay-info)
+endif()
 add_feature_info(libdisplayinfo libdisplayinfo_FOUND "EDID and DisplayID library: https://gitlab.freedesktop.org/emersion/libdisplay-info")
 
 ecm_find_qmlmodule(QtQuick 2.3)
