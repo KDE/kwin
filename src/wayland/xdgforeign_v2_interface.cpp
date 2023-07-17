@@ -37,6 +37,15 @@ SurfaceInterface *XdgForeignV2Interface::transientFor(SurfaceInterface *surface)
     return d->importer->transientFor(surface);
 }
 
+SurfaceInterface *XdgForeignV2Interface::exportedSurface(const QString &handle) const
+{
+    if (auto exported = d->exporter->exportedSurface(handle)) {
+        return exported->surface();
+    } else {
+        return nullptr;
+    }
+}
+
 XdgExporterV2Interface::XdgExporterV2Interface(Display *display, XdgForeignV2Interface *foreign)
     : QObject(foreign)
     , QtWaylandServer::zxdg_exporter_v2(*display, s_exporterVersion)

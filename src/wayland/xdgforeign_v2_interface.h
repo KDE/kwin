@@ -39,6 +39,8 @@ public:
      */
     SurfaceInterface *transientFor(SurfaceInterface *surface);
 
+    SurfaceInterface *exportedSurface(const QString &handle) const;
+
 Q_SIGNALS:
     /**
      * A surface got a new imported transient parent

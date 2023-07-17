@@ -81,6 +81,12 @@ XdgActivationV1Integration::XdgActivationV1Integration(XdgActivationV1Interface 
 
         return requestToken(isPrivileged, surface, serial, seat, appId);
     });
+    activation->setWindowActivationChooser([](const QVector<SurfaceInterface *> &candidates, const QString &activationToken) {
+        return XdgActivationV1Interface::ChooserReturn{
+            .chosenSurface = nullptr,
+            .nextBestChoice = candidates.front(),
+        };
+    });
 
     connect(activation, &XdgActivationV1Interface::activateRequested, this, &XdgActivationV1Integration::activateSurface);
 }

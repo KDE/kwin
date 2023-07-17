@@ -492,7 +492,7 @@ bool WaylandServer::init(InitializationFlags flags)
     m_inputMethod = new InputMethodV1Interface(m_display, m_display);
     m_xWaylandKeyboardGrabManager = new XWaylandKeyboardGrabManagerV1Interface(m_display, m_display);
 
-    auto activation = new KWaylandServer::XdgActivationV1Interface(m_display, this);
+    auto activation = new KWaylandServer::XdgActivationV1Interface(m_display, m_XdgForeign, this);
     auto init = [this, activation] {
         m_xdgActivationIntegration = new XdgActivationV1Integration(activation, this);
     };
