@@ -188,7 +188,7 @@ enum class QuickTileFlag {
     Vertical = Top | Bottom,
     Maximize = Left | Right | Top | Bottom,
 };
-Q_ENUM_NS(QuickTileFlag);
+Q_ENUM_NS(QuickTileFlag)
 Q_DECLARE_FLAGS(QuickTileMode, QuickTileFlag)
 
 /**

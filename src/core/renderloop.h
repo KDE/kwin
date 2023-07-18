@@ -119,7 +119,7 @@ public:
         LatencyHigh,
         LatencyExtremelyHigh,
     };
-    Q_ENUM(LatencyPolicy);
+    Q_ENUM(LatencyPolicy)
     /**
      * Returns the latency policy for this render loop.
      */

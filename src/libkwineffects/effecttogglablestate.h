@@ -31,7 +31,7 @@ public:
         Deactivating,
         Active
     };
-    Q_ENUM(Status);
+    Q_ENUM(Status)
 
     /** Constructs the object, passes the effect as the parent. */
     EffectTogglableState(Effect *parent);

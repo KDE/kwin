@@ -60,7 +60,7 @@ public:
         TabletToolButtonType,
         LastType
     };
-    Q_ENUM(TriggerType);
+    Q_ENUM(TriggerType)
     struct TabletToolButton
     {
         quint32 button;
