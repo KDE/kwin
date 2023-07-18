@@ -38,6 +38,7 @@ public:
     QMap<QByteArray, QByteArray> properties() const;
     bool isBootVga() const;
     QString seat() const;
+    bool isHotpluggable() const;
 
     operator udev_device *() const
     {
