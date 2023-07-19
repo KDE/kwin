@@ -16,6 +16,9 @@
 #include <QSocketNotifier>
 #include <QVector>
 
+// system
+#include <sys/types.h>
+
 #include <memory>
 
 struct gbm_bo;
