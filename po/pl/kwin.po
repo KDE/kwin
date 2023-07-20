@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1655712 $
+# Version: $Revision: 1656210 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # Norbert Popiołek <norbert@kde.com.pl>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-13 02:10+0000\n"
+"POT-Creation-Date: 2023-07-20 02:12+0000\n"
 "PO-Revision-Date: 2023-07-08 07:37+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -1268,7 +1268,7 @@ msgstr ""
 msgid "KWin"
 msgstr "KWin"
 
-#: main.cpp:182 main.cpp:205
+#: main.cpp:182 main.cpp:206
 #, kde-format
 msgid "KDE window manager"
 msgstr "Zarządzanie oknami KDE"
@@ -1318,12 +1318,19 @@ msgstr "Roman Gilg"
 msgid "Vlad Zahorodnii"
 msgstr "Vlad Zahorodnii"
 
-#: main.cpp:202
+#: main.cpp:194
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Button size:"
+#| msgid "Very Huge"
+msgid "Xaver Hugl"
+msgstr "Bardzo wielki"
+
+#: main.cpp:203
 #, kde-format
 msgid "Disable configuration options"
 msgstr "Wyłącz możliwość ustawiania"
 
-#: main.cpp:203
+#: main.cpp:204
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "Powiadom, że KWin ostatnio n razy został przerwany z powodu awarii"

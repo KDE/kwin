@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin stable\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-13 02:10+0000\n"
+"POT-Creation-Date: 2023-07-20 02:12+0000\n"
 "PO-Revision-Date: 2005-11-28 12:28+0200\n"
 "Last-Translator: Kobus Venter <kabousv@therugby.co.za>\n"
 "Language-Team: AFRIKAANS <translate-discuss-af@lists.sourceforge.net>\n"
@@ -1244,7 +1244,7 @@ msgstr ""
 msgid "KWin"
 msgstr "Kwin"
 
-#: main.cpp:182 main.cpp:205
+#: main.cpp:182 main.cpp:206
 #, kde-format
 msgid "KDE window manager"
 msgstr "Kde venster bestuurder."
@@ -1295,12 +1295,18 @@ msgstr ""
 msgid "Vlad Zahorodnii"
 msgstr ""
 
-#: main.cpp:202
+#: main.cpp:194
+#, fuzzy, kde-format
+#| msgid "Large"
+msgid "Xaver Hugl"
+msgstr "Groot"
+
+#: main.cpp:203
 #, kde-format
 msgid "Disable configuration options"
 msgstr "Skakel konfigusrie opsies af"
 
-#: main.cpp:203
+#: main.cpp:204
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr ""

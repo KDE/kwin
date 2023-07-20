@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-13 02:10+0000\n"
+"POT-Creation-Date: 2023-07-20 02:12+0000\n"
 "PO-Revision-Date: 2023-02-15 15:24+0000\n"
 "Last-Translator: Pedro Morais <morais@kde.org>\n"
 "Language-Team: pt <kde-i18n-pt@kde.org>\n"
@@ -1268,7 +1268,7 @@ msgstr ""
 msgid "KWin"
 msgstr "KWin"
 
-#: main.cpp:182 main.cpp:205
+#: main.cpp:182 main.cpp:206
 #, kde-format
 msgid "KDE window manager"
 msgstr "O gestor de janelas do KDE"
@@ -1318,12 +1318,19 @@ msgstr "Roman Gilg"
 msgid "Vlad Zahorodnii"
 msgstr "Vlad Zahorodnii"
 
-#: main.cpp:202
+#: main.cpp:194
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Button size:"
+#| msgid "Very Huge"
+msgid "Xaver Hugl"
+msgstr "Mais do que Enorme"
+
+#: main.cpp:203
 #, kde-format
 msgid "Disable configuration options"
 msgstr "Desactivar as opções de configuração"
 
-#: main.cpp:203
+#: main.cpp:204
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "Indica que o KWin estoirou recentemente 'n' vezes"

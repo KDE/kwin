@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-13 02:10+0000\n"
+"POT-Creation-Date: 2023-07-20 02:12+0000\n"
 "PO-Revision-Date: 2019-09-23 21:11+0500\n"
 "Last-Translator: Victor Ibragimov <victor.ibragimov@gmail.com>\n"
 "Language-Team: English <kde-i18n-doc@kde.org>\n"
@@ -1231,7 +1231,7 @@ msgstr ""
 msgid "KWin"
 msgstr ""
 
-#: main.cpp:182 main.cpp:205
+#: main.cpp:182 main.cpp:206
 #, kde-format
 msgid "KDE window manager"
 msgstr ""
@@ -1281,12 +1281,17 @@ msgstr ""
 msgid "Vlad Zahorodnii"
 msgstr ""
 
-#: main.cpp:202
+#: main.cpp:194
+#, kde-format
+msgid "Xaver Hugl"
+msgstr ""
+
+#: main.cpp:203
 #, kde-format
 msgid "Disable configuration options"
 msgstr ""
 
-#: main.cpp:203
+#: main.cpp:204
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr ""

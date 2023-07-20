@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-13 02:10+0000\n"
+"POT-Creation-Date: 2023-07-20 02:12+0000\n"
 "PO-Revision-Date: 2008-07-08 18:58+0530\n"
 "Last-Translator: \n"
 "Language-Team: SMC <smc.org.in>\n"
@@ -1232,7 +1232,7 @@ msgstr ""
 msgid "KWin"
 msgstr "ക്വിന്‍"
 
-#: main.cpp:182 main.cpp:205
+#: main.cpp:182 main.cpp:206
 #, kde-format
 msgid "KDE window manager"
 msgstr "കെഡിഇ ജാലക കാര്യസ്ഥന്‍"
@@ -1282,12 +1282,17 @@ msgstr ""
 msgid "Vlad Zahorodnii"
 msgstr ""
 
-#: main.cpp:202
+#: main.cpp:194
+#, fuzzy, kde-format
+msgid "Xaver Hugl"
+msgstr "വലുത്"
+
+#: main.cpp:203
 #, kde-format
 msgid "Disable configuration options"
 msgstr "ക്രമീകരിക്കുവാനുള്ള ഉപാധികള്‍ പ്രവര്‍ത്തന രഹിതമാക്കുക"
 
-#: main.cpp:203
+#: main.cpp:204
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "ക്വിനില്‍ ഏറ്റവും ഒടുവിലായി n തവണ തകര്‍ച്ച സംഭവിച്ചു എന്നു സൂചിപ്പിക്കുന്നു"

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-13 02:10+0000\n"
+"POT-Creation-Date: 2023-07-20 02:12+0000\n"
 "PO-Revision-Date: 2012-06-14 11:29+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -1249,7 +1249,7 @@ msgstr ""
 msgid "KWin"
 msgstr "KWin"
 
-#: main.cpp:182 main.cpp:205
+#: main.cpp:182 main.cpp:206
 #, kde-format
 msgid "KDE window manager"
 msgstr "កម្មវិធី​គ្រប់គ្រង​បង្អួច KDE"
@@ -1300,12 +1300,19 @@ msgstr ""
 msgid "Vlad Zahorodnii"
 msgstr ""
 
-#: main.cpp:202
+#: main.cpp:194
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "Very Huge"
+msgid "Xaver Hugl"
+msgstr "ធំ​សម្បើម​ណាស់"
+
+#: main.cpp:203
 #, kde-format
 msgid "Disable configuration options"
 msgstr "មិន​អនុញ្ញាត​ជម្រើស​កំណត់​រចនា​សម្ព័ន្ធ​"
 
-#: main.cpp:203
+#: main.cpp:204
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "ចង្អុល​ប្រាប់​ថា KWin បាន​គាំង n ដង​ថ្មីៗ​នេះ"
