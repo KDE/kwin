@@ -150,6 +150,7 @@ public:
     void invalidateDecoration() override;
     QString preferredColorScheme() const override;
     bool supportsWindowRules() const override;
+    void applyWindowRules() override;
     bool takeFocus() override;
     bool wantsInput() const override;
     bool dockWantsInput() const override;
@@ -209,6 +210,7 @@ private:
     void configureXdgDecoration(DecorationMode decorationMode);
     void configureServerDecoration(DecorationMode decorationMode);
     void clearDecoration();
+    void updateCapabilities();
 
     QPointer<KWaylandServer::AppMenuInterface> m_appMenuInterface;
     QPointer<KWaylandServer::ServerSideDecorationPaletteInterface> m_paletteInterface;
@@ -218,6 +220,7 @@ private:
     KWaylandServer::XdgToplevelInterface::States m_nextStates;
     KWaylandServer::XdgToplevelInterface::States m_acknowledgedStates;
     KWaylandServer::XdgToplevelInterface::States m_initialStates;
+    KWaylandServer::XdgToplevelInterface::Capabilities m_capabilities;
     QMap<quint32, PingReason> m_pings;
     MaximizeMode m_maximizeMode = MaximizeRestore;
     MaximizeMode m_requestedMaximizeMode = MaximizeRestore;

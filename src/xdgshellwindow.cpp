@@ -643,6 +643,12 @@ bool XdgToplevelWindow::supportsWindowRules() const
     return true;
 }
 
+void XdgToplevelWindow::applyWindowRules()
+{
+    WaylandWindow::applyWindowRules();
+    updateCapabilities();
+}
+
 void XdgToplevelWindow::closeWindow()
 {
     if (isCloseable()) {
@@ -1120,11 +1126,13 @@ void XdgToplevelWindow::handlePongReceived(quint32 serial)
 
 void XdgToplevelWindow::handleMaximumSizeChanged()
 {
+    updateCapabilities();
     Q_EMIT maximizeableChanged(isMaximizable());
 }
 
 void XdgToplevelWindow::handleMinimumSizeChanged()
 {
+    updateCapabilities();
     Q_EMIT maximizeableChanged(isMaximizable());
 }
 
@@ -1207,6 +1215,7 @@ void XdgToplevelWindow::initialize()
     configureDecoration();
     scheduleConfigure();
     updateColorScheme();
+    updateCapabilities();
     setupWindowManagementInterface();
 
     m_isInitialized = true;
@@ -1232,6 +1241,26 @@ void XdgToplevelWindow::updateFullScreenMode(bool set)
     updateLayer();
     updateWindowRules(Rules::Fullscreen);
     Q_EMIT fullScreenChanged();
+}
+
+void XdgToplevelWindow::updateCapabilities()
+{
+    KWaylandServer::XdgToplevelInterface::Capabilities caps = KWaylandServer::XdgToplevelInterface::Capability::WindowMenu;
+
+    if (isMaximizable()) {
+        caps.setFlag(KWaylandServer::XdgToplevelInterface::Capability::Maximize);
+    }
+    if (isFullScreenable()) {
+        caps.setFlag(KWaylandServer::XdgToplevelInterface::Capability::FullScreen);
+    }
+    if (isMinimizable()) {
+        caps.setFlag(KWaylandServer::XdgToplevelInterface::Capability::Minimize);
+    }
+
+    if (m_capabilities != caps) {
+        m_capabilities = caps;
+        m_shellSurface->sendWmCapabilities(caps);
+    }
 }
 
 QString XdgToplevelWindow::preferredColorScheme() const

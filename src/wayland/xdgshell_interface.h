@@ -224,6 +224,14 @@ public:
     };
     Q_ENUM(ResizeAnchor)
 
+    enum class Capability {
+        WindowMenu = 0x1,
+        Maximize = 0x2,
+        FullScreen = 0x4,
+        Minimize = 0x8,
+    };
+    Q_DECLARE_FLAGS(Capabilities, Capability)
+
     /**
      * Constructs an XdgToplevelInterface for the given xdg-surface \a surface.
      */
@@ -296,6 +304,11 @@ public:
      * called before sendConfigure().
      */
     void sendConfigureBounds(const QSize &size);
+
+    /**
+     * Sends an event to the client specifying allowed actions by the compositor.
+     */
+    void sendWmCapabilities(Capabilities capabilities);
 
     /**
      * Returns the XdgToplevelInterface for the specified wayland resource object \a resource.
@@ -585,5 +598,6 @@ private:
 } // namespace KWaylandServer
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(KWaylandServer::XdgToplevelInterface::States)
+Q_DECLARE_OPERATORS_FOR_FLAGS(KWaylandServer::XdgToplevelInterface::Capabilities)
 Q_DECLARE_METATYPE(KWaylandServer::XdgToplevelInterface::State)
 Q_DECLARE_METATYPE(KWaylandServer::XdgToplevelInterface::States)

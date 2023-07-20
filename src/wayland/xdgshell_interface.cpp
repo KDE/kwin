@@ -16,7 +16,7 @@
 
 namespace KWaylandServer
 {
-static const int s_version = 4;
+static const int s_version = 5;
 
 XdgShellInterfacePrivate::XdgShellInterfacePrivate(XdgShellInterface *shell)
     : q(shell)
@@ -593,6 +593,32 @@ void XdgToplevelInterface::sendConfigureBounds(const QSize &size)
     if (d->resource()->version() >= XDG_TOPLEVEL_CONFIGURE_BOUNDS_SINCE_VERSION) {
         d->send_configure_bounds(size.width(), size.height());
     }
+}
+
+void XdgToplevelInterface::sendWmCapabilities(Capabilities capabilities)
+{
+    if (d->resource()->version() < XDG_TOPLEVEL_WM_CAPABILITIES_SINCE_VERSION) {
+        return;
+    }
+    // Note that the capabilities listed in the event must be an array of uint32_t.
+
+    uint32_t capabilitiesData[4] = {0};
+    int i = 0;
+
+    if (capabilities & Capability::WindowMenu) {
+        capabilitiesData[i++] = QtWaylandServer::xdg_toplevel::wm_capabilities_window_menu;
+    }
+    if (capabilities & Capability::Maximize) {
+        capabilitiesData[i++] = QtWaylandServer::xdg_toplevel::wm_capabilities_maximize;
+    }
+    if (capabilities & Capability::FullScreen) {
+        capabilitiesData[i++] = QtWaylandServer::xdg_toplevel::wm_capabilities_fullscreen;
+    }
+    if (capabilities & Capability::Minimize) {
+        capabilitiesData[i++] = QtWaylandServer::xdg_toplevel::wm_capabilities_minimize;
+    }
+
+    d->send_wm_capabilities(QByteArray::fromRawData(reinterpret_cast<char *>(capabilitiesData), sizeof(uint32_t) * i));
 }
 
 XdgToplevelInterface *XdgToplevelInterface::get(::wl_resource *resource)
