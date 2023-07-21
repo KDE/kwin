@@ -9,6 +9,7 @@
 */
 #pragma once
 
+#include "core/graphicsbuffer.h"
 #include "window.h"
 
 class QOpenGLFramebufferObject;
@@ -60,10 +61,10 @@ public:
     void pointerLeaveEvent() override;
 
     const std::shared_ptr<QOpenGLFramebufferObject> &fbo() const;
-    QImage image() const;
+    GraphicsBuffer *graphicsBuffer() const;
 
     void present(const std::shared_ptr<QOpenGLFramebufferObject> fbo);
-    void present(const QImage &image, const QRegion &damage);
+    void present(GraphicsBuffer *buffer, const QRegion &damage);
     qreal bufferScale() const;
     QWindow *handle() const;
 
@@ -93,7 +94,7 @@ private:
     Qt::WindowFlags m_internalWindowFlags = Qt::WindowFlags();
     bool m_userNoBorder = false;
     std::shared_ptr<QOpenGLFramebufferObject> m_fbo;
-    QImage m_image;
+    GraphicsBufferRef m_graphicsBufferRef;
 
     Q_DISABLE_COPY(InternalWindow)
 };

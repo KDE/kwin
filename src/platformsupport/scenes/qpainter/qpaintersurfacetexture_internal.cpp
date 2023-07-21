@@ -5,6 +5,7 @@
 */
 
 #include "qpaintersurfacetexture_internal.h"
+#include "core/graphicsbufferview.h"
 #include "scene/surfaceitem_internal.h"
 
 namespace KWin
@@ -25,7 +26,16 @@ bool QPainterSurfaceTextureInternal::create()
 
 void QPainterSurfaceTextureInternal::update(const QRegion &region)
 {
-    m_image = m_pixmap->image();
+    if (!m_pixmap->graphicsBuffer()) {
+        return;
+    }
+
+    const GraphicsBufferView view(m_pixmap->graphicsBuffer());
+    if (view.isNull()) {
+        return;
+    }
+
+    m_image = view.image()->copy();
 }
 
 } // namespace KWin

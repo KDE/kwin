@@ -67,9 +67,9 @@ QOpenGLFramebufferObject *SurfacePixmapInternal::fbo() const
     return m_fbo.get();
 }
 
-QImage SurfacePixmapInternal::image() const
+GraphicsBuffer *SurfacePixmapInternal::graphicsBuffer() const
 {
-    return m_rasterBuffer;
+    return m_graphicsBufferRef.buffer();
 }
 
 void SurfacePixmapInternal::create()
@@ -85,16 +85,16 @@ void SurfacePixmapInternal::update()
         m_fbo = window->fbo();
         m_size = m_fbo->size();
         m_hasAlphaChannel = true;
-    } else if (!window->image().isNull()) {
-        m_rasterBuffer = window->image();
-        m_size = m_rasterBuffer.size();
-        m_hasAlphaChannel = m_rasterBuffer.hasAlphaChannel();
+    } else if (window->graphicsBuffer()) {
+        m_graphicsBufferRef = window->graphicsBuffer();
+        m_size = m_graphicsBufferRef->size();
+        m_hasAlphaChannel = m_graphicsBufferRef->hasAlphaChannel();
     }
 }
 
 bool SurfacePixmapInternal::isValid() const
 {
-    return m_fbo != nullptr || !m_rasterBuffer.isNull();
+    return m_fbo || m_graphicsBufferRef;
 }
 
 } // namespace KWin

@@ -18,11 +18,12 @@ namespace KWin
 namespace QPA
 {
 
+class BackingStoreSlot;
+
 class BackingStore : public QPlatformBackingStore
 {
 public:
     explicit BackingStore(QWindow *window);
-    ~BackingStore() override;
 
     QPaintDevice *paintDevice() override;
     void flush(QWindow *window, const QRegion &region, const QPoint &offset) override;
@@ -30,7 +31,13 @@ public:
     void beginPaint(const QRegion &region) override;
 
 private:
-    QImage m_buffer;
+    std::shared_ptr<BackingStoreSlot> allocate(const QSize &size);
+    std::shared_ptr<BackingStoreSlot> acquire();
+
+    std::vector<std::shared_ptr<BackingStoreSlot>> m_slots;
+    std::shared_ptr<BackingStoreSlot> m_backBuffer;
+    QSize m_requestedSize;
+    qreal m_requestedDevicePixelRatio = 1;
 };
 
 }

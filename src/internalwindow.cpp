@@ -366,14 +366,14 @@ const std::shared_ptr<QOpenGLFramebufferObject> &InternalWindow::fbo() const
     return m_fbo;
 }
 
-QImage InternalWindow::image() const
+GraphicsBuffer *InternalWindow::graphicsBuffer() const
 {
-    return m_image;
+    return m_graphicsBufferRef.buffer();
 }
 
 void InternalWindow::present(const std::shared_ptr<QOpenGLFramebufferObject> fbo)
 {
-    Q_ASSERT(m_image.isNull());
+    Q_ASSERT(!m_graphicsBufferRef);
 
     const QSizeF bufferSize = fbo->size() / bufferScale();
     QRectF geometry(pos(), clientSizeToFrameSize(bufferSize));
@@ -389,11 +389,11 @@ void InternalWindow::present(const std::shared_ptr<QOpenGLFramebufferObject> fbo
     surfaceItem()->addDamage(QRect(0, 0, fbo->width(), fbo->height()));
 }
 
-void InternalWindow::present(const QImage &image, const QRegion &damage)
+void InternalWindow::present(GraphicsBuffer *buffer, const QRegion &damage)
 {
     Q_ASSERT(m_fbo == nullptr);
 
-    const QSize bufferSize = image.size() / bufferScale();
+    const QSize bufferSize = buffer->size() / bufferScale();
     QRectF geometry(pos(), clientSizeToFrameSize(bufferSize));
     if (isInteractiveResize()) {
         geometry = gravitateGeometry(geometry, moveResizeGeometry(), interactiveMoveResizeGravity());
@@ -402,7 +402,7 @@ void InternalWindow::present(const QImage &image, const QRegion &damage)
     commitGeometry(geometry);
     markAsMapped();
 
-    m_image = image;
+    m_graphicsBufferRef = buffer;
 
     surfaceItem()->addDamage(damage);
 }

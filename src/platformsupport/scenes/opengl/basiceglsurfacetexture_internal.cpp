@@ -5,6 +5,7 @@
 */
 
 #include "platformsupport/scenes/opengl/basiceglsurfacetexture_internal.h"
+#include "core/graphicsbufferview.h"
 #include "libkwineffects/kwingltexture.h"
 #include "scene/surfaceitem_internal.h"
 #include "utils/common.h"
@@ -24,19 +25,24 @@ bool BasicEGLSurfaceTextureInternal::create()
 {
     if (updateFromFramebuffer()) {
         return true;
-    } else if (updateFromImage(m_pixmap->image().rect())) {
-        return true;
-    } else {
+    }
+
+    GraphicsBuffer *buffer = m_pixmap->graphicsBuffer();
+    if (!buffer) {
         qCDebug(KWIN_OPENGL) << "Failed to create surface texture for internal window";
         return false;
     }
+
+    return updateFromImage(QRect(QPoint(0, 0), buffer->size()));
 }
 
 void BasicEGLSurfaceTextureInternal::update(const QRegion &region)
 {
     if (updateFromFramebuffer()) {
         return;
-    } else if (updateFromImage(region)) {
+    }
+    if (m_pixmap->graphicsBuffer()) {
+        updateFromImage(region);
         return;
     } else {
         qCDebug(KWIN_OPENGL) << "Failed to update surface texture for internal window";
@@ -58,16 +64,16 @@ bool BasicEGLSurfaceTextureInternal::updateFromFramebuffer()
 
 bool BasicEGLSurfaceTextureInternal::updateFromImage(const QRegion &region)
 {
-    const QImage image = m_pixmap->image();
-    if (image.isNull()) {
+    const GraphicsBufferView view(m_pixmap->graphicsBuffer());
+    if (view.isNull()) {
         return false;
     }
 
     if (!m_texture) {
-        m_texture = GLTexture::upload(image);
+        m_texture = GLTexture::upload(*view.image());
     } else {
         for (const QRect &rect : region) {
-            m_texture->update(image, rect.topLeft(), rect);
+            m_texture->update(*view.image(), rect.topLeft(), rect);
         }
     }
 
