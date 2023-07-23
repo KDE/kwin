@@ -23,7 +23,7 @@ class ShmGraphicsBuffer : public GraphicsBuffer
     Q_OBJECT
 
 public:
-    explicit ShmGraphicsBuffer(ShmAttributes &&attributes);
+    ShmGraphicsBuffer(ShmAttributes &&attributes, MemoryMap &&memoryMap);
 
     Map map(MapFlags flags) override;
     void unmap() override;
@@ -38,41 +38,27 @@ private:
     bool m_hasAlphaChannel;
 };
 
-ShmGraphicsBuffer::ShmGraphicsBuffer(ShmAttributes &&attributes)
+ShmGraphicsBuffer::ShmGraphicsBuffer(ShmAttributes &&attributes, MemoryMap &&memoryMap)
     : m_attributes(std::move(attributes))
+    , m_memoryMap(std::move(memoryMap))
     , m_hasAlphaChannel(alphaChannelFromDrmFormat(attributes.format))
 {
 }
 
 GraphicsBuffer::Map ShmGraphicsBuffer::map(MapFlags flags)
 {
-    if (!m_memoryMap.isValid()) {
-        int prot = 0;
-        if (flags & MapFlag::Read) {
-            prot |= PROT_READ;
-        }
-        if (flags & MapFlag::Write) {
-            prot |= PROT_WRITE;
-        }
-
-        m_memoryMap = MemoryMap(m_attributes.stride * m_attributes.size.height(), prot, MAP_SHARED, m_attributes.fd.get(), m_attributes.offset);
-    }
     if (m_memoryMap.isValid()) {
         return Map{
             .data = m_memoryMap.data(),
             .stride = uint32_t(m_attributes.stride),
         };
     } else {
-        return Map{
-            .data = nullptr,
-            .stride = uint32_t(m_attributes.stride),
-        };
+        return Map{};
     }
 }
 
 void ShmGraphicsBuffer::unmap()
 {
-    m_memoryMap = MemoryMap{};
 }
 
 QSize ShmGraphicsBuffer::size() const
@@ -139,13 +125,20 @@ GraphicsBuffer *ShmGraphicsBufferAllocator::allocate(const GraphicsBufferOptions
     }
 #endif
 
-    return new ShmGraphicsBuffer(ShmAttributes{
+    ShmAttributes attributes{
         .fd = std::move(fd),
         .stride = stride,
         .offset = 0,
         .size = options.size,
         .format = options.format,
-    });
+    };
+
+    MemoryMap memoryMap(attributes.stride * attributes.size.height(), PROT_READ | PROT_WRITE, MAP_SHARED, attributes.fd.get(), attributes.offset);
+    if (!memoryMap.isValid()) {
+        return nullptr;
+    }
+
+    return new ShmGraphicsBuffer(std::move(attributes), std::move(memoryMap));
 }
 
 } // namespace KWin
