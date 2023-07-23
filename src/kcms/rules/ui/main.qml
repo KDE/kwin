@@ -16,7 +16,7 @@ KCM.ScrollViewKCM {
 
     // FIXME: ScrollViewKCM.qml:73:13: QML Control: Binding loop detected for property "implicitHeight"
     implicitWidth: Kirigami.Units.gridUnit * 35
-    implicitHeight: Kirigami.Units.gridUnit * 25
+    implicitHeight: Kirigami.Units.gridUnit * 35
 
     KCM.ConfigModule.columnWidth: Kirigami.Units.gridUnit * 23
     KCM.ConfigModule.buttons: KCM.ConfigModule.Help | KCM.ConfigModule.Apply
