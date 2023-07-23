@@ -109,9 +109,8 @@ void Cursors::emitCurrentCursorChanged()
     Q_EMIT currentCursorChanged(m_currentCursor);
 }
 
-Cursor::Cursor(QObject *parent)
-    : QObject(parent)
-    , m_mousePollingCounter(0)
+Cursor::Cursor()
+    : m_mousePollingCounter(0)
     , m_cursorTrackingCounter(0)
     , m_themeName(defaultThemeName())
     , m_themeSize(defaultThemeSize())

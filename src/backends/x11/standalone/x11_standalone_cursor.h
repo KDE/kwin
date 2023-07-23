@@ -20,7 +20,7 @@ class KWIN_EXPORT X11Cursor : public Cursor
 {
     Q_OBJECT
 public:
-    X11Cursor(QObject *parent, bool xInputSupport = false);
+    X11Cursor(bool xInputSupport = false);
     ~X11Cursor() override;
 
     void schedulePoll()

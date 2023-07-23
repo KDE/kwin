@@ -37,6 +37,7 @@ class ColorManager;
 class ScreenLockerWatcher;
 class TabletModeManager;
 class XwaylandInterface;
+class Cursor;
 class Edge;
 class ScreenEdges;
 class Outline;
@@ -258,7 +259,7 @@ public:
     void destroyAtoms();
 
     virtual std::unique_ptr<Edge> createScreenEdge(ScreenEdges *parent);
-    virtual void createPlatformCursor(QObject *parent = nullptr);
+    virtual std::unique_ptr<Cursor> createPlatformCursor();
     virtual std::unique_ptr<OutlineVisual> createOutline(Outline *outline);
     virtual void createEffectsHandler(Compositor *compositor, WorkspaceScene *scene);
 
@@ -383,6 +384,7 @@ private:
 #if KWIN_BUILD_SCREENLOCKER
     std::unique_ptr<ScreenLockerWatcher> m_screenLockerWatcher;
 #endif
+    std::unique_ptr<Cursor> m_platformCursor;
 };
 
 inline static Application *kwinApp()

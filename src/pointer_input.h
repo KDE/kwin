@@ -261,7 +261,7 @@ class InputRedirectionCursor : public KWin::Cursor
 {
     Q_OBJECT
 public:
-    explicit InputRedirectionCursor(QObject *parent);
+    explicit InputRedirectionCursor();
     ~InputRedirectionCursor() override;
 
 protected:

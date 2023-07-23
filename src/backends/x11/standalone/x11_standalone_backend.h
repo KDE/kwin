@@ -33,6 +33,7 @@ class Edge;
 class ScreenEdges;
 class Outline;
 class OutlineVisual;
+class Cursor;
 class Compositor;
 class WorkspaceScene;
 class Window;
@@ -58,7 +59,7 @@ public:
     void updateOutputs();
 
     std::unique_ptr<Edge> createScreenEdge(ScreenEdges *parent);
-    void createPlatformCursor(QObject *parent = nullptr);
+    std::unique_ptr<Cursor> createPlatformCursor();
     void startInteractiveWindowSelection(std::function<void(KWin::Window *)> callback, const QByteArray &cursorName = QByteArray());
     void startInteractivePositionSelection(std::function<void(const QPointF &)> callback);
     PlatformCursorImage cursorImage() const;

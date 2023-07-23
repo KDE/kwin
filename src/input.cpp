@@ -1954,8 +1954,9 @@ class SurfaceCursor : public Cursor
 {
 public:
     explicit SurfaceCursor(KWaylandServer::TabletToolV2Interface *tool)
-        : Cursor(tool)
+        : Cursor()
     {
+        setParent(tool);
         connect(tool, &KWaylandServer::TabletToolV2Interface::cursorChanged, this, [this](const KWaylandServer::TabletCursorSourceV2 &cursor) {
             if (auto surfaceCursor = std::get_if<KWaylandServer::TabletSurfaceCursorV2 *>(&cursor)) {
                 // If the cursor is unset, fallback to the cross cursor.

@@ -15,6 +15,7 @@
 #include "backends/x11/standalone/x11_standalone_backend.h"
 #include "core/outputbackend.h"
 #include "core/session.h"
+#include "cursor.h"
 #include "outline.h"
 #include "screenedge.h"
 #include "sm.h"
@@ -199,9 +200,9 @@ std::unique_ptr<Edge> ApplicationX11::createScreenEdge(ScreenEdges *parent)
     return static_cast<X11StandaloneBackend *>(outputBackend())->createScreenEdge(parent);
 }
 
-void ApplicationX11::createPlatformCursor(QObject *parent)
+std::unique_ptr<Cursor> ApplicationX11::createPlatformCursor()
 {
-    static_cast<X11StandaloneBackend *>(outputBackend())->createPlatformCursor(parent);
+    return static_cast<X11StandaloneBackend *>(outputBackend())->createPlatformCursor();
 }
 
 std::unique_ptr<OutlineVisual> ApplicationX11::createOutline(Outline *outline)

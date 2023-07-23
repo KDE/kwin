@@ -257,7 +257,7 @@ void Application::createInput()
 #endif
     auto input = InputRedirection::create(this);
     input->init();
-    createPlatformCursor(this);
+    m_platformCursor = createPlatformCursor();
 }
 
 void Application::createAtoms()
@@ -335,9 +335,9 @@ std::unique_ptr<Edge> Application::createScreenEdge(ScreenEdges *edges)
     return std::make_unique<Edge>(edges);
 }
 
-void Application::createPlatformCursor(QObject *parent)
+std::unique_ptr<Cursor> Application::createPlatformCursor()
 {
-    new InputRedirectionCursor(parent);
+    return std::make_unique<InputRedirectionCursor>();
 }
 
 std::unique_ptr<OutlineVisual> Application::createOutline(Outline *outline)

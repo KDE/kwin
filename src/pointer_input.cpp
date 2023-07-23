@@ -1095,8 +1095,8 @@ KXcursorTheme CursorImage::theme() const
     return m_waylandImage.theme();
 }
 
-InputRedirectionCursor::InputRedirectionCursor(QObject *parent)
-    : Cursor(parent)
+InputRedirectionCursor::InputRedirectionCursor()
+    : Cursor()
     , m_currentButtons(Qt::NoButton)
 {
     Cursors::self()->setMouse(this);

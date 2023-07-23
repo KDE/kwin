@@ -97,7 +97,7 @@ class KWIN_EXPORT Cursor : public QObject
 {
     Q_OBJECT
 public:
-    Cursor(QObject *parent);
+    Cursor();
     ~Cursor() override;
     void startMousePolling();
     void stopMousePolling();

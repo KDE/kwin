@@ -19,8 +19,8 @@
 namespace KWin
 {
 
-X11Cursor::X11Cursor(QObject *parent, bool xInputSupport)
-    : Cursor(parent)
+X11Cursor::X11Cursor(bool xInputSupport)
+    : Cursor()
     , m_timeStamp(XCB_TIME_CURRENT_TIME)
     , m_buttonMask(0)
     , m_hasXInput(xInputSupport)

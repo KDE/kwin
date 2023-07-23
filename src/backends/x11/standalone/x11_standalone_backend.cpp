@@ -182,19 +182,20 @@ std::unique_ptr<Edge> X11StandaloneBackend::createScreenEdge(ScreenEdges *edges)
     return std::make_unique<WindowBasedEdge>(edges);
 }
 
-void X11StandaloneBackend::createPlatformCursor(QObject *parent)
+std::unique_ptr<Cursor> X11StandaloneBackend::createPlatformCursor()
 {
 #if HAVE_X11_XINPUT
-    auto c = new X11Cursor(parent, m_xinputIntegration != nullptr);
+    auto c = std::make_unique<X11Cursor>(m_xinputIntegration != nullptr);
     if (m_xinputIntegration) {
-        m_xinputIntegration->setCursor(c);
+        m_xinputIntegration->setCursor(c.get());
         // we know we have xkb already
         auto xkb = input()->keyboard()->xkb();
         xkb->setConfig(kwinApp()->kxkbConfig());
         xkb->reconfigure();
     }
+    return c;
 #else
-    new X11Cursor(parent, false);
+    return std::make_unique<X11Cursor>(false);
 #endif
 }
 
