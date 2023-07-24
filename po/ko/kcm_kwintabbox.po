@@ -1,13 +1,13 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
-# Shinjo Park <kde@peremen.name>, 2009, 2010, 2012, 2019, 2020, 2021, 2022.
+# Shinjo Park <kde@peremen.name>, 2009, 2010, 2012, 2019, 2020, 2021, 2022, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-08 01:01+0000\n"
-"PO-Revision-Date: 2022-07-13 15:42+0200\n"
+"PO-Revision-Date: 2023-07-23 21:13+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 21.12.3\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #: layoutpreview.cpp:131
 #, kde-format
@@ -47,7 +47,7 @@ msgstr "새 창 전환기 레이아웃 가져오기..."
 #, kde-format
 msgid ""
 "Focus policy settings limit the functionality of navigating through windows."
-msgstr "초점 정책 설정은 창 사이를 옮겨 다니는 행동을 제한합니다."
+msgstr "포커스 정책 설정은 창 사이를 옮겨 다니는 행동을 제한합니다."
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
 #: main.ui:32
@@ -77,7 +77,7 @@ msgstr "쌓이는 순서"
 #: main.ui:68
 #, kde-format
 msgid "Only one window per application"
-msgstr "프로그램당 창 하나"
+msgstr "앱당 창 하나"
 
 #. i18n: ectx: property (text), widget (QCheckBox, orderMinimized)
 #: main.ui:78
@@ -199,7 +199,7 @@ msgstr "뒤로"
 #: main.ui:480
 #, kde-format
 msgid "Current application"
-msgstr "현재 프로그램"
+msgstr "현재 앱"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 #: main.ui:499
@@ -232,42 +232,42 @@ msgstr "선택한 창 표시"
 #: shortcutsettings.cpp:132
 #, kde-format
 msgid "Walk Through Windows"
-msgstr ""
+msgstr "창간 이동"
 
 #: shortcutsettings.cpp:133
 #, kde-format
 msgid "Walk Through Windows (Reverse)"
-msgstr ""
+msgstr "창간 거꾸로 이동"
 
 #: shortcutsettings.cpp:134
 #, kde-format
 msgid "Walk Through Windows of Current Application"
-msgstr ""
+msgstr "현재 앱의 창간 이동"
 
 #: shortcutsettings.cpp:135
 #, kde-format
 msgid "Walk Through Windows of Current Application (Reverse)"
-msgstr ""
+msgstr "현재 앱의 창간 거꾸로 이동"
 
 #: shortcutsettings.cpp:137
 #, kde-format
 msgid "Walk Through Windows Alternative"
-msgstr ""
+msgstr "창간 다르게 이동"
 
 #: shortcutsettings.cpp:138
 #, kde-format
 msgid "Walk Through Windows Alternative (Reverse)"
-msgstr ""
+msgstr "창간 거꾸로 다르게 이동"
 
 #: shortcutsettings.cpp:139
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative"
-msgstr ""
+msgstr "현재 앱의 창간 다르게 이동"
 
 #: shortcutsettings.cpp:140
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
-msgstr ""
+msgstr "현재 앱의 창간 거꾸로 다르게 이동"
 
 #~ msgid "KWin"
 #~ msgstr "KWin"

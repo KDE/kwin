@@ -1,13 +1,13 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
-# Shinjo Park <kde@peremen.name>, 2012, 2014, 2017, 2019, 2020.
+# Shinjo Park <kde@peremen.name>, 2012, 2014, 2017, 2019, 2020, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-21 02:02+0000\n"
-"PO-Revision-Date: 2020-09-06 01:08+0200\n"
+"PO-Revision-Date: 2023-07-23 21:06+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 19.12.3\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #: module.cpp:50
 #, kde-format
@@ -49,23 +49,21 @@ msgid "Error when uninstalling KWin Script: %1"
 msgstr "KWin 스크립트 삭제 오류: %1"
 
 #: ui/main.qml:23
-#, fuzzy, kde-format
-#| msgid "Install from File..."
+#, kde-format
 msgid "Install from File…"
-msgstr "파일에서 설치..."
+msgstr "파일에서 설치…"
 
 #: ui/main.qml:27
-#, fuzzy, kde-format
-#| msgid "Get New Scripts..."
+#, kde-format
 msgctxt "@action:button get new KWin scripts"
 msgid "Get New…"
-msgstr "새 스크립트 가져오기..."
+msgstr "새 항목 가져오기…"
 
 #: ui/main.qml:65
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Delete…"
-msgstr ""
+msgstr "삭제…"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

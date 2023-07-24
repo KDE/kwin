@@ -2,7 +2,7 @@
 # Copyright (C) 2001-2004, 2007-2008 Free Software Foundation, Inc.
 # Sae-keun Kim <segni@susekorea.net>, 2001.
 # Yeo SunHwa <sunwt@mizi.com>, 2001.
-# Shinjo Park <kde@peremen.name>, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022.
+# Shinjo Park <kde@peremen.name>, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
 #
 #
 msgid ""
@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-07-20 02:12+0000\n"
-"PO-Revision-Date: 2022-08-09 13:31+0200\n"
+"PO-Revision-Date: 2023-07-24 00:08+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 21.12.3\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -33,44 +33,44 @@ msgstr "kde@peremen.name"
 #: backends/wayland/wayland_output.cpp:294
 #, kde-format
 msgid "Press right control to ungrab pointer"
-msgstr ""
+msgstr "오른쪽 Ctrl 키를 누르면 포인터 잡기를 해제함"
 
 #: backends/wayland/wayland_output.cpp:296
 #, kde-format
 msgid "Press right control key to grab pointer"
-msgstr ""
+msgstr "오른쪽 Ctrl 키를 누르면 포인터를 잡음"
 
 #: backends/wayland/wayland_output.cpp:300
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1 (%2)"
-msgstr ""
+msgstr "KDE Wayland 컴포지터 %1(%2)"
 
 #: backends/wayland/wayland_output.cpp:303
 #, kde-format
 msgid "- Output disabled"
-msgstr ""
+msgstr "- 출력 비활성화됨"
 
 #: backends/wayland/wayland_output.cpp:305
 #, kde-format
 msgid "- Output dimmed"
-msgstr ""
+msgstr "- 출력 어두워짐"
 
 #: backends/x11/windowed/x11_windowed_backend.cpp:516
 #, kde-format
 msgid "Press right control to ungrab input"
-msgstr ""
+msgstr "오른쪽 Ctrl 키를 누르면 입력 잡기를 해제함"
 
 #: backends/x11/windowed/x11_windowed_backend.cpp:516
 #, kde-format
 msgid "Press right control key to grab input"
-msgstr ""
+msgstr "오른쪽 Ctrl 키를 누르면 입력을 잡음"
 
 #: backends/x11/windowed/x11_windowed_backend.cpp:517
 #, kde-format
 msgid "KDE Wayland Compositor"
-msgstr ""
+msgstr "KDE Wayland 컴포지터"
 
 #: composite.cpp:619
 #, kde-format
@@ -83,41 +83,31 @@ msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
 "resume using the '%1' shortcut."
 msgstr ""
-"다른 프로그램이 데스크톱 효과를 중지했습니다.<br/>'%1' 키를 눌러서 다시 시작"
-"할 수 있습니다."
+"다른 앱이 데스크톱 효과를 중지했습니다.<br/>'%1' 키를 눌러서 다시 시작할 수 "
+"있습니다."
 
 #: composite.cpp:1036
-#, fuzzy, kde-format
-#| msgid ""
-#| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
-#| "b><br>This was most likely due to a driver bug.<p>If you think that you "
-#| "have meanwhile upgraded to a stable driver,<br>you can reset this "
-#| "protection but <b>be aware that this might result in an immediate crash!</"
-#| "b></p><p>Alternatively, you might want to use the XRender backend instead."
-#| "</p>"
+#, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
 "b><br>This was most likely due to a driver bug.<p>If you think that you have "
 "meanwhile upgraded to a stable driver,<br>you can reset this protection but "
 "<b>be aware that this might result in an immediate crash!</b></p>"
 msgstr ""
-"<b>예전에 KWin을 실행시켰을 때 OpenGL 컴포지팅(기본값)이 충돌했습니다.</b> "
-"<br>드라이버 버그 때문에 문제가 발생했을 수도 있습니다.<p>만약 안정적인 드라"
-"이버로 업그레이드하였다면<br>이 보호 장치를 해제할 수도 있으나 <b>시스템이 언"
-"제든지 충돌할 수도 있습니다!</b></p><p>다른 방법으로는 XRender 백엔드를 사용"
-"할 수도 있습니다.</p>"
+"<b>예전에 KWin을 실행시켰을 때 OpenGL 컴포지팅(기본값)이 충돌했습니다.</"
+"b><br>드라이버 버그 때문에 문제가 발생했을 수도 있습니다.<p>만약 안정적인 드"
+"라이버로 업그레이드했다면 이 보호 장치를 해제할 수도 있으나<br><b>시스템이 언"
+"제든지 충돌할 수도 있습니다!</b></p>"
 
 #: composite.cpp:1043
-#, fuzzy, kde-format
-#| msgid "Required X extensions (XComposite and XDamage) are not available."
+#, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
-msgstr "필요한 X 확장 XComposite와 XDamage를 사용할 수 없습니다."
+msgstr "필요한 X 확장(XComposite와 XDamage)을 사용할 수 없습니다."
 
 #: composite.cpp:1046
-#, fuzzy, kde-format
-#| msgid "GLX/OpenGL and XRender/XFixes are not available."
+#, kde-format
 msgid "GLX/OpenGL is not available."
-msgstr "GLX/OpenGL 또는 XRender/XFixes 확장을 사용할 수 없습니다."
+msgstr "GLX/OpenGL을 사용할 수 없습니다."
 
 #: debug_console.cpp:78
 #, kde-format
@@ -1095,7 +1085,7 @@ msgstr "창 관리자"
 #: helpers/killer/killer.cpp:33
 #, kde-format
 msgid "PID of the application to terminate"
-msgstr "종료할 프로그램의 프로세스 ID"
+msgstr "종료할 앱의 프로세스 ID"
 
 #: helpers/killer/killer.cpp:33
 #, kde-format
@@ -1105,7 +1095,7 @@ msgstr "pid"
 #: helpers/killer/killer.cpp:35
 #, kde-format
 msgid "Hostname on which the application is running"
-msgstr "프로그램이 실행 중인 호스트 이름"
+msgstr "앱이 실행 중인 호스트 이름"
 
 #: helpers/killer/killer.cpp:35
 #, kde-format
@@ -1125,7 +1115,7 @@ msgstr "캡션"
 #: helpers/killer/killer.cpp:39
 #, kde-format
 msgid "Name of the application to be terminated"
-msgstr "종료할 프로그램의 이름"
+msgstr "종료할 앱의 이름"
 
 #: helpers/killer/killer.cpp:39
 #, kde-format
@@ -1135,7 +1125,7 @@ msgstr "이름"
 #: helpers/killer/killer.cpp:41
 #, kde-format
 msgid "ID of resource belonging to the application"
-msgstr "프로그램에 속한 자원의 ID"
+msgstr "앱에 속한 자원의 ID"
 
 #: helpers/killer/killer.cpp:41
 #, kde-format
@@ -1166,7 +1156,7 @@ msgstr "이 도우미 프로그램은 직접 호출되지 않습니다."
 #, kde-format
 msgctxt "@info"
 msgid "<b>Application \"%1\" is not responding</b>"
-msgstr "<b>프로그램 \"%1\"이(가) 응답하지 않음</b>"
+msgstr "<b>\"%1\" 앱이 응답하지 않음</b>"
 
 #: helpers/killer/killer.cpp:81
 #, kde-kuit-format
@@ -1175,8 +1165,8 @@ msgid ""
 "<para>You tried to close window \"%1\" from application \"%2\" (Process ID: "
 "%3) but the application is not responding.</para>"
 msgstr ""
-"<para>프로그램 \"%2\" (프로세스 ID %3)에서 연 창 \"%1\"을(를) 닫으려고 했으"
-"나 프로그램이 응답하지 않습니다.</para>"
+"<para>앱 \"%2\" (프로세스 ID %3)에서 연 창 \"%1\"을(를) 닫으려고 했으나 앱이 "
+"응답하지 않습니다.</para>"
 
 #: helpers/killer/killer.cpp:83
 #, kde-kuit-format
@@ -1185,8 +1175,8 @@ msgid ""
 "<para>You tried to close window \"%1\" from application \"%2\" (Process ID: "
 "%3), running on host \"%4\", but the application is not responding.</para>"
 msgstr ""
-"<para>호스트 \"%4\"에서 실행 중인 프로그램 \"%2\" (프로세스 ID %3)에서 연 창 "
-"\"%1\"을(를) 닫으려고 했으나 프로그램이 응답하지 않습니다.</para>"
+"<para>\"%4\" 호스트에서 실행 중인 \"%2\" 앱(프로세스 ID %3)에서 연 \"%1\" 창"
+"을 닫으려고 했으나 앱이 응답하지 않습니다.</para>"
 
 #: helpers/killer/killer.cpp:86
 #, kde-kuit-format
@@ -1196,14 +1186,13 @@ msgid ""
 "para><para><warning>Terminating the application will close all of its child "
 "windows. Any unsaved data will be lost.</warning></para>"
 msgstr ""
-"<para>이 프로그램을 강제로 종료하시겠습니까?</para><para><warning>프로그램을 "
-"종료하면 자식 창도 종료됩니다. 저장하지 않은 데이터는 손실됩니다.</warning></"
-"para>"
+"<para>이 앱을 강제로 종료하시겠습니까?</para><para><warning>앱을 종료하면 자"
+"식 창도 종료됩니다. 저장하지 않은 데이터는 손실됩니다.</warning></para>"
 
 #: helpers/killer/killer.cpp:89
 #, kde-format
 msgid "&Terminate Application %1"
-msgstr "프로그램 %1 끝내기(&T)"
+msgstr "%1 앱 끝내기(&T)"
 
 #: helpers/killer/killer.cpp:90
 #, kde-format
@@ -1213,19 +1202,17 @@ msgstr "더 기다리기"
 #: input.cpp:2008
 #, kde-format
 msgid "Move the tablet to the next output"
-msgstr ""
+msgstr "다음 출력으로 태블릿 이동"
 
 #: input.cpp:2087
-#, fuzzy, kde-format
-#| msgctxt "Name of a hardware switch"
-#| msgid "Tablet mode"
+#, kde-format
 msgid "Tablet moved to %1"
-msgstr "태블릿 모드"
+msgstr "%1(으)로 태블릿 이동됨"
 
 #: input.cpp:2087
 #, kde-format
 msgid "Tablets switched outputs"
-msgstr ""
+msgstr "태블릿에서 출력 변경됨"
 
 #: input.cpp:3104
 #, kde-format
@@ -1313,11 +1300,9 @@ msgid "Vlad Zahorodnii"
 msgstr "Vlad Zahorodnii"
 
 #: main.cpp:194
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Very Huge"
+#, kde-format
 msgid "Xaver Hugl"
-msgstr "매우 매우 매우 크게"
+msgstr "Xaver Hugl"
 
 #: main.cpp:203
 #, kde-format
@@ -1418,7 +1403,7 @@ msgstr "DRM 노드로 렌더링합니다."
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
-msgstr ""
+msgstr "사용자 설정 대신 locale1에서 로캘 정보 추출"
 
 #: main_wayland.cpp:368
 #, kde-format
@@ -1448,12 +1433,12 @@ msgstr "KActivities 통합을 사용하지 않습니다."
 #: main_wayland.cpp:393
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
-msgstr "KWin에서 시작한 세션 프로그램이 끝난 후에 닫습니다."
+msgstr "KWin에서 시작한 세션 앱이 끝난 후에 닫습니다."
 
 #: main_wayland.cpp:398
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
-msgstr "Wayland 및 Xwayland 서버가 시작되었을 때 시작할 프로그램"
+msgstr "Wayland 및 Xwayland 서버가 시작되었을 때 시작할 앱"
 
 #: main_x11.cpp:63
 #, kde-format
@@ -1495,11 +1480,9 @@ msgstr "흐림 강도:"
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
 #: plugins/blur/blur_config.ui:42 plugins/blur/blur_config.ui:108
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgid "Light"
-msgstr "오른쪽"
+msgstr "밝음"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
@@ -1515,23 +1498,19 @@ msgid "Noise strength:"
 msgstr "잡음 강도:"
 
 #: plugins/colorpicker/colorpicker.cpp:102
-#, fuzzy, kde-format
-#| msgid ""
-#| "Select window to force close with left click or enter.\n"
-#| "Escape or right click to cancel."
+#, kde-format
 msgid ""
 "Select a position for color picking with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
-"왼쪽 단추를 누르거나 Enter 키를 눌러서 강제로 닫을 창을 선택합니다.\n"
-"Esc 키나 오른쪽 단추를 클릭하면 취소합니다."
+"왼쪽 단추를 누르거나 Enter 키를 눌러서 색상을 가져올 지점을 선택합니다.\n"
+"Esc 키나 오른쪽 단추를 누르면 취소합니다."
 
 #: plugins/desktopgrid/desktopgrid_config.cpp:54
 #: plugins/desktopgrid/desktopgrideffect.cpp:43
-#, fuzzy, kde-format
-#| msgid "Show Desktop"
+#, kde-format
 msgid "Show Desktop Grid"
-msgstr "바탕 화면 표시"
+msgstr "바탕 화면 격자 표시"
 
 #: plugins/desktopgrid/desktopgrid_config.cpp:61
 #, kde-format
@@ -1545,14 +1524,12 @@ msgstr "사용 안 함"
 #: plugins/glide/glide_config.ui:70 plugins/glide/glide_config.ui:168
 #, kde-format
 msgid "Top"
-msgstr "위쪽"
+msgstr "위"
 
 #: plugins/desktopgrid/desktopgrid_config.cpp:63
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgid "Top-Right"
-msgstr "오른쪽"
+msgstr "위 오른쪽"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
@@ -1560,9 +1537,7 @@ msgstr "오른쪽"
 #: plugins/desktopgrid/desktopgrid_config.cpp:64
 #: plugins/glide/glide_config.ui:75 plugins/glide/glide_config.ui:173
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:43
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgid "Right"
 msgstr "오른쪽"
 
@@ -1577,7 +1552,7 @@ msgstr "아래 오른쪽"
 #: plugins/glide/glide_config.ui:80 plugins/glide/glide_config.ui:178
 #, kde-format
 msgid "Bottom"
-msgstr "아래쪽"
+msgstr "아래"
 
 #: plugins/desktopgrid/desktopgrid_config.cpp:67
 #, kde-format
@@ -1590,18 +1565,14 @@ msgstr "아래 왼쪽"
 #: plugins/desktopgrid/desktopgrid_config.cpp:68
 #: plugins/glide/glide_config.ui:85 plugins/glide/glide_config.ui:183
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:29
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Left"
+#, kde-format
 msgid "Left"
 msgstr "왼쪽"
 
 #: plugins/desktopgrid/desktopgrid_config.cpp:69
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Left"
+#, kde-format
 msgid "Top-Left"
-msgstr "왼쪽"
+msgstr "왼쪽 위"
 
 #. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
 #: plugins/desktopgrid/desktopgrid_config.cpp:70
@@ -1644,10 +1615,9 @@ msgstr "열 개수(&U):"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: plugins/desktopgrid/desktopgrid_config.ui:103
-#, fuzzy, kde-format
-#| msgid "Desktop file name"
+#, kde-format
 msgid "Desktop &name alignment:"
-msgstr "데스크톱 파일 이름"
+msgstr "바탕 화면 이름 정렬(&N):"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ShowAddRemove)
 #: plugins/desktopgrid/desktopgrid_config.ui:116
@@ -1665,10 +1635,9 @@ msgstr "격자 레이아웃 모드(&L):"
 #: plugins/desktopgrid/desktopgrid_config.ui:137
 #: plugins/overview/kcm/overvieweffectkcm.ui:30
 #: plugins/windowview/kcm/windowvieweffectkcm.ui:30
-#, fuzzy, kde-format
-#| msgid "&Close"
+#, kde-format
 msgid "Closest"
-msgstr "닫기(&C)"
+msgstr "가장 가깝게"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
 #: plugins/desktopgrid/desktopgrid_config.ui:142
@@ -1688,17 +1657,15 @@ msgstr "없음"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/desktopgrid/desktopgrid_config.ui:155
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Windows layout:"
-msgstr "창"
+msgstr "창 레이아웃:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 #: plugins/desktopgrid/desktopgrid_config.ui:171
-#, fuzzy, kde-format
-#| msgid "caption"
+#, kde-format
 msgid "Activation"
-msgstr "캡션"
+msgstr "활성화"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Strength)
 #: plugins/diminactive/diminactive_config.ui:17
@@ -1720,39 +1687,34 @@ msgstr "도크와 패널"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimDesktop)
 #: plugins/diminactive/diminactive_config.ui:54
-#, fuzzy, kde-format
-#| msgid "&Desktops"
+#, kde-format
 msgid "Desktop"
-msgstr "바탕 화면(&D)"
+msgstr "바탕 화면"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimKeepAbove)
 #: plugins/diminactive/diminactive_config.ui:61
-#, fuzzy, kde-format
-#| msgid "Keep above"
+#, kde-format
 msgid "Keep above windows"
-msgstr "항상 위"
+msgstr "창 위에 두기"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimByGroup)
 #: plugins/diminactive/diminactive_config.ui:68
-#, fuzzy, kde-format
-#| msgid "Window role"
+#, kde-format
 msgid "By window group"
-msgstr "창 역할"
+msgstr "창 그룹별"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimFullScreen)
 #: plugins/diminactive/diminactive_config.ui:75
-#, fuzzy, kde-format
-#| msgid "Fullscreen"
+#, kde-format
 msgid "Fullscreen windows"
-msgstr "전체 화면"
+msgstr "전체 화면 창"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Duration)
 #: plugins/glide/glide_config.ui:19
 #: plugins/scale/package/contents/ui/config.ui:17
-#, fuzzy, kde-format
-#| msgid "caption"
+#, kde-format
 msgid "Duration:"
-msgstr "캡션"
+msgstr "지속 시간:"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_Duration)
 #: plugins/glide/glide_config.ui:32
@@ -1770,26 +1732,23 @@ msgstr "밀리초"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_InAnimation)
 #: plugins/glide/glide_config.ui:50
-#, fuzzy, kde-format
-#| msgid "Window position"
+#, kde-format
 msgid "Window Open Animation"
-msgstr "창 위치"
+msgstr "창 열기 애니메이션"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationEdge)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationEdge)
 #: plugins/glide/glide_config.ui:56 plugins/glide/glide_config.ui:154
-#, fuzzy, kde-format
-#| msgid "Rotation"
+#, kde-format
 msgid "Rotation edge:"
-msgstr "회전"
+msgstr "회전 경계:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationAngle)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationAngle)
 #: plugins/glide/glide_config.ui:93 plugins/glide/glide_config.ui:191
-#, fuzzy, kde-format
-#| msgid "Rotation"
+#, kde-format
 msgid "Rotation angle:"
-msgstr "회전"
+msgstr "회전 각도:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InDistance)
 #. i18n: ectx: property (text), widget (QLabel, label_OutDistance)
@@ -1800,20 +1759,19 @@ msgstr "거리:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_OutAnimation)
 #: plugins/glide/glide_config.ui:148
-#, fuzzy, kde-format
-#| msgid "Window position"
+#, kde-format
 msgid "Window Close Animation"
-msgstr "창 위치"
+msgstr "창 닫기 애니메이션"
 
 #: plugins/invert/invert.cpp:42 plugins/invert/invert_config.cpp:38
 #, kde-format
 msgid "Toggle Invert Effect"
-msgstr "반전 효과 켬/끔"
+msgstr "반전 효과 전환"
 
 #: plugins/invert/invert.cpp:49 plugins/invert/invert_config.cpp:44
 #, kde-format
 msgid "Toggle Invert Effect on Window"
-msgstr "창 반전 효과 켬/끔"
+msgstr "창 반전 효과 전환"
 
 #: plugins/invert/invert.cpp:56
 #, kde-format
@@ -1857,24 +1815,21 @@ msgid "Very Huge"
 msgstr "매우 매우 매우 크게"
 
 #: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:52
-#, fuzzy, kde-format
-#| msgid "&Resize"
+#, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Oversized"
-msgstr "크기 조정(&R)"
+msgstr "과다하게 크게"
 
 #: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:55
-#, fuzzy, kde-format
-#| msgid "Buttons"
+#, kde-format
 msgid "Button size:"
-msgstr "단추"
+msgstr "단추 크기:"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:14
-#, fuzzy, kde-format
-#| msgid "Dialog"
+#, kde-format
 msgid "Config Dialog"
-msgstr "대화 상자"
+msgstr "설정 대화 상자"
 
 #. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:23
@@ -1894,10 +1849,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:56
-#, fuzzy, kde-format
-#| msgid "Hide Window Border"
+#, kde-format
 msgid "Colored window border"
-msgstr "창 테두리 숨기기"
+msgstr "색상 있는 창 경계선 사용하기"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:66
@@ -2090,7 +2044,7 @@ msgstr "크기"
 #: plugins/magnifier/magnifier_config.ui:23
 #, kde-format
 msgid "&Width:"
-msgstr "폭(&W):"
+msgstr "너비(&W):"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Width)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Height)
@@ -2098,42 +2052,34 @@ msgstr "폭(&W):"
 #: plugins/magnifier/magnifier_config.ui:74
 #, kde-format
 msgid " px"
-msgstr " 픽셀"
+msgstr "픽셀"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/magnifier/magnifier_config.ui:55
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgid "&Height:"
-msgstr "오른쪽"
+msgstr "높이(&H):"
 
 #: plugins/mouseclick/mouseclick.cpp:37
 #: plugins/mouseclick/mouseclick_config.cpp:51
 #, kde-format
 msgid "Toggle Mouse Click Effect"
-msgstr "마우스 클릭 효과 켬/끔"
+msgstr "마우스 클릭 효과 전환"
 
 #: plugins/mouseclick/mouseclick.cpp:44
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Left"
+#, kde-format
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr "왼쪽"
 
 #: plugins/mouseclick/mouseclick.cpp:45
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Middle"
+#, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "가운데"
 
 #: plugins/mouseclick/mouseclick.cpp:46
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgctxt "Right mouse button"
 msgid "Right"
 msgstr "오른쪽"
@@ -2146,24 +2092,21 @@ msgstr "기본 설정"
 
 #. i18n: ectx: property (text), widget (QLabel, button1_label)
 #: plugins/mouseclick/mouseclick_config.ui:37
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
+#, kde-format
 msgid "Left Mouse Button Color:"
-msgstr "마우스 단추 없음"
+msgstr "왼쪽 마우스 단추 색:"
 
 #. i18n: ectx: property (text), widget (QLabel, button2_label)
 #: plugins/mouseclick/mouseclick_config.ui:50
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
+#, kde-format
 msgid "Middle Mouse Button Color:"
-msgstr "마우스 단추 없음"
+msgstr "가운데 마우스 단추 색:"
 
 #. i18n: ectx: property (text), widget (QLabel, button3_label)
 #: plugins/mouseclick/mouseclick_config.ui:70
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
+#, kde-format
 msgid "Right Mouse Button Color:"
-msgstr "마우스 단추 없음"
+msgstr "오른쪽 마우스 단추 색:"
 
 #. i18n: ectx: attribute (title), widget (QWidget, advanced_tab)
 #: plugins/mouseclick/mouseclick_config.ui:91
@@ -2211,11 +2154,9 @@ msgstr "알림 반지름:"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_count_label)
 #: plugins/mouseclick/mouseclick_config.ui:184
-#, fuzzy, kde-format
-#| msgctxt "Number of fingers in this pinch gesture"
-#| msgid "Finger count"
+#, kde-format
 msgid "Ring Count:"
-msgstr "손가락 개수"
+msgstr "알림 개수:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, font)
 #: plugins/mouseclick/mouseclick_config.ui:210
@@ -2231,10 +2172,9 @@ msgstr "글꼴:"
 
 #. i18n: ectx: property (text), widget (QLabel, showtext_label)
 #: plugins/mouseclick/mouseclick_config.ui:233
-#, fuzzy, kde-format
-#| msgid "Show Desktop"
+#, kde-format
 msgid "Show Text:"
-msgstr "바탕 화면 표시"
+msgstr "텍스트 표시:"
 
 #: plugins/mousemark/mousemark.cpp:43
 #, kde-format
@@ -2268,21 +2208,19 @@ msgstr "폭(&T):"
 #: plugins/mousemark/mousemark_config.ui:36
 #, kde-format
 msgid "&Color:"
-msgstr "색(&C):"
+msgstr "색상(&C):"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox2)
 #: plugins/mousemark/mousemark_config.ui:82
-#, fuzzy, kde-format
-#| msgid "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
+#, kde-format
 msgid "Draw with the mouse by holding modifier keys and moving the mouse"
-msgstr "Shift+Meta 키를 누르면서 마우스를 움직여서 그림을 그리십시오."
+msgstr "수정자 키를 누르면서 마우스를 이동하여 그리기"
 
 #. i18n: ectx: property (text), widget (QLabel, label_FreedrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:103
-#, fuzzy, kde-format
-#| msgid "Modifiers"
+#, kde-format
 msgid "Free draw modifier keys:"
-msgstr "수정자"
+msgstr "자유 그리기 수정자 키:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Freedrawalt)
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Arrowdrawalt)
@@ -2290,9 +2228,7 @@ msgstr "수정자"
 #: plugins/mousemark/mousemark_config.ui:125
 #: plugins/mousemark/mousemark_config.ui:179
 #: plugins/trackmouse/trackmouse_config.ui:65
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Alt"
+#, kde-format
 msgid "Alt"
 msgstr "Alt"
 
@@ -2312,9 +2248,7 @@ msgstr "Ctrl"
 #: plugins/mousemark/mousemark_config.ui:139
 #: plugins/mousemark/mousemark_config.ui:193
 #: plugins/trackmouse/trackmouse_config.ui:79
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Shift"
+#, kde-format
 msgid "Shift"
 msgstr "Shift"
 
@@ -2324,18 +2258,15 @@ msgstr "Shift"
 #: plugins/mousemark/mousemark_config.ui:146
 #: plugins/mousemark/mousemark_config.ui:200
 #: plugins/trackmouse/trackmouse_config.ui:86
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Meta"
+#, kde-format
 msgid "Meta"
 msgstr "Meta"
 
 #. i18n: ectx: property (text), widget (QLabel, label_ArrowdrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:157
-#, fuzzy, kde-format
-#| msgid "Modifiers"
+#, kde-format
 msgid "Arrow draw modifier keys:"
-msgstr "수정자"
+msgstr "화살표 그리기 수정자 키:"
 
 #: plugins/nightcolor/nightcolormanager.cpp:63
 #, kde-format
@@ -2357,12 +2288,10 @@ msgstr "야간 색상 전환"
 #: plugins/nightcolor/nightcolormanager.cpp:462
 #, kde-format
 msgid "Color Temperature Preview"
-msgstr ""
+msgstr "색 온도 미리 보기"
 
 #: plugins/outputlocator/outputlocator.cpp:48
-#, fuzzy, kde-format
-#| msgctxt "The input device of the event is not known"
-#| msgid "Unknown"
+#, kde-format
 msgctxt "@label"
 msgid "Unknown"
 msgstr "알 수 없음"
@@ -2376,37 +2305,30 @@ msgstr "한눈에 보기 전환"
 #. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
 #: plugins/overview/kcm/overvieweffectkcm.ui:22
 #: plugins/windowview/kcm/windowvieweffectkcm.ui:22
-#, fuzzy, kde-format
-#| msgctxt "Name of a hardware switch"
-#| msgid "Tablet mode"
+#, kde-format
 msgid "Layout mode:"
-msgstr "태블릿 모드"
+msgstr "레이아웃 모드:"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/overview/kcm/overvieweffectkcm.ui:43
-#, fuzzy, kde-format
-#| msgid "Minimize Window"
+#, kde-format
 msgid "Ignore minimized windows:"
-msgstr "창 최소화"
+msgstr "최소화된 창 무시:"
 
 #: plugins/overview/qml/DesktopBar.qml:163
-#, fuzzy, kde-format
-#| msgid "Peek at Desktop"
+#, kde-format
 msgid "Delete Virtual Desktop"
-msgstr "바탕 화면 멀리 보기"
+msgstr "가상 바탕 화면 삭제"
 
 #: plugins/overview/qml/DesktopBar.qml:259
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and add the window to that desktop"
-#| msgid "Add to &New Desktop"
+#, kde-format
 msgid "Add Virtual Desktop"
-msgstr "새 바탕 화면에 추가(&N)"
+msgstr "가상 바탕 화면 추가"
 
 #: plugins/overview/qml/main.qml:228
-#, fuzzy, kde-format
-#| msgid "X11 Unmanaged Windows"
+#, kde-format
 msgid "No matching windows"
-msgstr "X11 관리되지 않는 창"
+msgstr "일치하는 창 없음"
 
 #: plugins/private/qml/WindowHeapDelegate.qml:153
 #, kde-format
@@ -2414,124 +2336,108 @@ msgid "Drag Down To Close"
 msgstr "아래로 드래그해서 닫기"
 
 #: plugins/private/qml/WindowHeapDelegate.qml:454
-#, fuzzy, kde-format
-#| msgid "Close Window"
+#, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
 msgstr "창 닫기"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InScale)
 #: plugins/scale/package/contents/ui/config.ui:46
-#, fuzzy, kde-format
-#| msgid "Window role"
+#, kde-format
 msgid "Window open scale:"
-msgstr "창 역할"
+msgstr "창 열 때 크기 조정:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_OutScale)
 #: plugins/scale/package/contents/ui/config.ui:53
-#, fuzzy, kde-format
-#| msgid "Window role"
+#, kde-format
 msgid "Window close scale:"
-msgstr "창 역할"
+msgstr "창 닫을 때 크기 조정:"
 
 #: plugins/screencast/pipewirecore.cpp:60
 #: plugins/screencast/pipewirecore.cpp:89
 #, kde-format
 msgid "Failed to start main PipeWire loop"
-msgstr ""
+msgstr "주 PipeWire 루프를 시작할 수 없음"
 
 #: plugins/screencast/pipewirecore.cpp:76
 #, kde-format
 msgid "Failed to create PipeWire context"
-msgstr ""
+msgstr "PipeWire 콘텍스트를 만들 수 없음"
 
 #: plugins/screencast/pipewirecore.cpp:83
 #, kde-format
 msgid "Failed to connect PipeWire context"
-msgstr ""
+msgstr "PipeWire 콘텍스트에 연결할 수 없음"
 
 #: plugins/screencast/screencastmanager.cpp:105
-#, fuzzy, kde-format
-#| msgid "Close running window on %1"
+#, kde-format
 msgid "Could not find window id %1"
-msgstr "%1에서 실행 중인 창 닫기"
+msgstr "ID가 %1인 창을 찾을 수 없음"
 
 #: plugins/screencast/screencastmanager.cpp:145
 #, kde-format
 msgid "Could not find output"
-msgstr ""
+msgstr "출력을 찾을 수 없음"
 
 #: plugins/screencast/screencastmanager.cpp:172
 #, kde-format
 msgid "Invalid region"
-msgstr ""
+msgstr "잘못된 영역"
 
 #: plugins/screencast/screencastmanager.cpp:203
 #, kde-format
 msgid "Region outside the workspace"
-msgstr ""
+msgstr "작업 공간 밖에 영역이 있음"
 
 #: plugins/screencast/screencaststream.cpp:356
 #, kde-format
 msgid "Failed to create PipeWire stream"
-msgstr ""
+msgstr "PipeWire 스트림을 만들 수 없음"
 
 #: plugins/screenshot/screenshotdbusinterface2.cpp:525
-#, fuzzy, kde-format
-#| msgid ""
-#| "Select window to force close with left click or enter.\n"
-#| "Escape or right click to cancel."
+#, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
-"왼쪽 단추를 누르거나 Enter 키를 눌러서 강제로 닫을 창을 선택합니다.\n"
-"Esc 키나 오른쪽 단추를 클릭하면 취소합니다."
+"왼쪽 단추를 누르거나 Enter 키를 눌러서 스크린샷을 찍을 창을 선택합니다.\n"
+"Esc 키나 오른쪽 단추를 누르면 취소합니다."
 
 #: plugins/screenshot/screenshotdbusinterface2.cpp:543
-#, fuzzy, kde-format
-#| msgid ""
-#| "Select window to force close with left click or enter.\n"
-#| "Escape or right click to cancel."
+#, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
-"왼쪽 단추를 누르거나 Enter 키를 눌러서 강제로 닫을 창을 선택합니다.\n"
-"Esc 키나 오른쪽 단추를 클릭하면 취소합니다."
+"왼쪽 단추를 누르거나 Enter 키를 누르면 스크린샷을 찍습니다.\n"
+"Esc 키나 오른쪽 단추를 누르면 취소합니다."
 
 #: plugins/showfps/qml/main.qml:110
-#, fuzzy, kde-format
-#| msgctxt "A mouse pointer motion event"
-#| msgid "Pointer Motion"
+#, kde-format
 msgctxt "@label"
 msgid "Paint Duration"
-msgstr "포인터 움직임"
+msgstr "그리기 시간"
 
 #: plugins/showfps/qml/main.qml:162
-#, fuzzy, kde-format
-#| msgid "Ring Count:"
+#, kde-format
 msgctxt "@label"
 msgid "Paint Amount"
-msgstr "알림 개수:"
+msgstr "그리기 양"
 
 #: plugins/showfps/qml/main.qml:175
-#, fuzzy, kde-format
-#| msgid "Current Layout:"
+#, kde-format
 msgctxt "@label"
 msgid "Current FPS"
-msgstr "현재 레이아웃:"
+msgstr "현재 FPS"
 
 #: plugins/showfps/qml/main.qml:184
-#, fuzzy, kde-format
-#| msgid "Maximum &width:"
+#, kde-format
 msgctxt "@label"
 msgid "Maximum FPS"
-msgstr "최대 폭(&W):"
+msgstr "최대 FPS"
 
 #: plugins/showfps/qml/main.qml:192
-#, fuzzy, kde-format
-#| msgid "This effect is not a benchmark"
+#, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr "이 효과는 벤치마크가 아닙니다"
@@ -2549,19 +2455,15 @@ msgstr "바탕 화면 사이 간격"
 
 #. i18n: ectx: property (text), widget (QLabel, label_HorizontalGap)
 #: plugins/slide/slide_config.ui:23
-#, fuzzy, kde-format
-#| msgctxt "An orientation of a pointer axis event"
-#| msgid "Horizontal"
+#, kde-format
 msgid "Horizontal:"
-msgstr "수평"
+msgstr "수평:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_VerticalGap)
 #: plugins/slide/slide_config.ui:46
-#, fuzzy, kde-format
-#| msgctxt "An orientation of a pointer axis event"
-#| msgid "Vertical"
+#, kde-format
 msgid "Vertical:"
-msgstr "수직"
+msgstr "수직:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideBackground)
 #: plugins/slide/slide_config.ui:72
@@ -2573,7 +2475,7 @@ msgstr "바탕 화면 배경 슬라이드"
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:59
 #, kde-format
 msgid "Toggle Thumbnail for Current Window"
-msgstr "현재 창의 축소판 켬/끔"
+msgstr "현재 창의 섬네일 전환"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/thumbnailaside/thumbnailaside_config.ui:23
@@ -2593,7 +2495,7 @@ msgstr "간격(&S):"
 #: plugins/thumbnailaside/thumbnailaside_config.ui:106
 #, kde-format
 msgid " pixels"
-msgstr " 픽셀"
+msgstr "픽셀"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: plugins/thumbnailaside/thumbnailaside_config.ui:68
@@ -2611,48 +2513,43 @@ msgstr " %"
 #: plugins/tileseditor/tileseditoreffect.cpp:29
 #, kde-format
 msgid "Toggle Tiles Editor"
-msgstr ""
+msgstr "타일 편집기 전환"
 
 #: plugins/tileseditor/qml/main.qml:151
 #, kde-format
 msgid "Padding:"
-msgstr ""
+msgstr "공백:"
 
 #: plugins/tileseditor/qml/main.qml:161
 #, kde-format
 msgid "Load Layout..."
-msgstr ""
+msgstr "레이아웃 불러오기..."
 
 #: plugins/tileseditor/qml/main.qml:275
-#, fuzzy, kde-format
-#| msgid "&Close"
+#, kde-format
 msgid "Close"
-msgstr "닫기(&C)"
+msgstr "닫기"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:167
-#, fuzzy, kde-format
-#| msgctxt "An orientation of a pointer axis event"
-#| msgid "Horizontal"
+#, kde-format
 msgid "Split Horizontally"
-msgstr "수평"
+msgstr "수평 분할"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:174
-#, fuzzy, kde-format
-#| msgctxt "An orientation of a pointer axis event"
-#| msgid "Vertical"
+#, kde-format
 msgid "Split Vertically"
-msgstr "수직"
+msgstr "수직 분할"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:182
 #: plugins/tileseditor/qml/TileDelegate.qml:211
 #, kde-format
 msgid "Add Floating Tile"
-msgstr ""
+msgstr "떠다니는 타일 추가"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:191
 #, kde-format
 msgid "Delete"
-msgstr ""
+msgstr "삭제"
 
 #: plugins/trackmouse/trackmouse.cpp:46
 #: plugins/trackmouse/trackmouse_config.cpp:57
@@ -2664,33 +2561,31 @@ msgstr "마우스 자취"
 #: plugins/trackmouse/trackmouse_config.ui:26
 #, kde-format
 msgid "Trigger effect with:"
-msgstr "효과 켬/끔 트리거:"
+msgstr "효과 전환 트리거:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_KeyboardShortcut)
 #: plugins/trackmouse/trackmouse_config.ui:33
-#, fuzzy, kde-format
-#| msgid "Keyboard"
+#, kde-format
 msgid "Keyboard shortcut:"
-msgstr "키보드"
+msgstr "키보드 단축키:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_ModifierKeys)
 #: plugins/trackmouse/trackmouse_config.ui:43
-#, fuzzy, kde-format
-#| msgid "Modifiers"
+#, kde-format
 msgid "Modifier keys:"
-msgstr "수정자"
+msgstr "수정자 키:"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, KWin::TranslucencyEffectConfigForm)
 #: plugins/translucency/package/contents/ui/config.ui:14
 #, kde-format
 msgid "Translucency"
-msgstr "투명도"
+msgstr "반투명"
 
 #. i18n: ectx: property (title), widget (QGroupBox, m_opacityGroupBox)
 #: plugins/translucency/package/contents/ui/config.ui:20
 #, kde-format
 msgid "General Translucency Settings"
-msgstr "일반 투명도 설정"
+msgstr "일반 반투명 설정"
 
 #. i18n: ectx: property (text), widget (QLabel, comboboxpopup_label)
 #: plugins/translucency/package/contents/ui/config.ui:64
@@ -2708,10 +2603,9 @@ msgstr "불투명"
 
 #. i18n: ectx: property (text), widget (QLabel, dialogs_label)
 #: plugins/translucency/package/contents/ui/config.ui:137
-#, fuzzy, kde-format
-#| msgid "Dialog"
+#, kde-format
 msgid "Dialogs:"
-msgstr "대화 상자"
+msgstr "대화 상자:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -2729,17 +2623,15 @@ msgstr "메뉴:"
 
 #. i18n: ectx: property (text), widget (QLabel, moveresize_label)
 #: plugins/translucency/package/contents/ui/config.ui:207
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Moving windows:"
-msgstr "창 이동"
+msgstr "이동 중인 창:"
 
 #. i18n: ectx: property (text), widget (QLabel, inactive_label)
 #: plugins/translucency/package/contents/ui/config.ui:226
-#, fuzzy, kde-format
-#| msgid "Internal Windows"
+#, kde-format
 msgid "Inactive windows:"
-msgstr "내부 창"
+msgstr "비활성 창:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, kcfg_IndividualMenuConfig)
 #: plugins/translucency/package/contents/ui/config.ui:267
@@ -2793,11 +2685,9 @@ msgstr "쉼표로 구분한 창 클래스 목록"
 
 #. i18n: ectx: property (text), widget (QLabel, applyLabel)
 #: plugins/videowall/package/contents/ui/config.ui:45
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Alt"
+#, kde-format
 msgid "All"
-msgstr "Alt"
+msgstr "모두"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Ignore)
 #: plugins/videowall/package/contents/ui/config.ui:54
@@ -2813,10 +2703,9 @@ msgstr "보이는 창 바꾸기(현재 바탕 화면)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:49
 #: plugins/windowview/windowvieweffect.cpp:54
-#, fuzzy, kde-format
-#| msgid "Keep Window on All Desktops"
+#, kde-format
 msgid "Toggle Present Windows (All desktops)"
-msgstr "창을 모든 바탕 화면에 표시하기"
+msgstr "보이는 창 바꾸기(모든 바탕 화면)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:56
 #: plugins/windowview/windowvieweffect.cpp:63
@@ -2832,10 +2721,9 @@ msgstr "보이는 창 바꾸기(현재 바탕 화면의 창 클래스)"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
 #: plugins/windowview/kcm/windowvieweffectkcm.ui:56
-#, fuzzy, kde-format
-#| msgid "Minimize Window"
+#, kde-format
 msgid "Ignore &minimized windows"
-msgstr "창 최소화"
+msgstr "최소화된 창 무시하기(&M)"
 
 #: plugins/windowview/qml/main.qml:107
 #, kde-format
@@ -2843,16 +2731,14 @@ msgid "No Matches"
 msgstr "검색 결과 없음"
 
 #: plugins/windowview/qml/main.qml:107
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "No Windows"
-msgstr "창"
+msgstr "창 없음"
 
 #: plugins/windowview/qml/main.qml:122
-#, fuzzy, kde-format
-#| msgid "Internal Windows"
+#, kde-format
 msgid "Filter windows…"
-msgstr "내부 창"
+msgstr "창 필터…"
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
 #: plugins/wobblywindows/wobblywindows_config.ui:20
@@ -2874,10 +2760,9 @@ msgstr "드래그(&G):"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: plugins/wobblywindows/wobblywindows_config.ui:81
-#, fuzzy, kde-format
-#| msgid "Move to %1 %2"
+#, kde-format
 msgid "&Move factor:"
-msgstr "%1 %2(으)로 이동"
+msgstr "이동 인자(&M):"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_MoveWobble)
 #: plugins/wobblywindows/wobblywindows_config.ui:155
@@ -2907,25 +2792,23 @@ msgstr "흔들리는 정도(&W)"
 #: plugins/wobblywindows/wobblywindows_config.ui:201
 #, kde-format
 msgid "Less"
-msgstr "덜"
+msgstr "덜 보기"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/wobblywindows/wobblywindows_config.ui:224
 #, kde-format
 msgid "More"
-msgstr "더"
+msgstr "더 보기"
 
 #: plugins/zoom/zoom.cpp:67
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Move Zoomed Area to Left"
-msgstr "왼쪽 바탕 화면으로 창 이동"
+msgstr "크기 조정된 영역을 왼쪽으로 이동"
 
 #: plugins/zoom/zoom.cpp:74
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Move Zoomed Area to Right"
-msgstr "오른쪽 바탕 화면으로 창 이동"
+msgstr "크기 조정된 영역을 오른쪽으로 이동"
 
 #: plugins/zoom/zoom.cpp:81
 #, kde-format
@@ -2938,40 +2821,34 @@ msgid "Move Zoomed Area Downwards"
 msgstr "크기 조정된 영역을 아래로 이동"
 
 #: plugins/zoom/zoom.cpp:96 plugins/zoom/zoom_config.cpp:108
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
+#, kde-format
 msgid "Move Mouse to Focus"
-msgstr "마우스 단추 없음"
+msgstr "마우스를 포커스로 이동"
 
 #: plugins/zoom/zoom.cpp:103 plugins/zoom/zoom_config.cpp:115
-#, fuzzy, kde-format
-#| msgid "Move Window to the Center"
+#, kde-format
 msgid "Move Mouse to Center"
-msgstr "창을 가운데로 이동"
+msgstr "마우스를 가운데로 이동"
 
 #: plugins/zoom/zoom_config.cpp:80
-#, fuzzy, kde-format
-#| msgid "Move Window Left"
+#, kde-format
 msgid "Move Left"
-msgstr "창을 왼쪽으로 이동"
+msgstr "왼쪽으로 이동"
 
 #: plugins/zoom/zoom_config.cpp:87
-#, fuzzy, kde-format
-#| msgid "Move Window Right"
+#, kde-format
 msgid "Move Right"
-msgstr "창을 오른쪽으로 이동"
+msgstr "오른쪽으로 이동"
 
 #: plugins/zoom/zoom_config.cpp:94
-#, fuzzy, kde-format
-#| msgid "Move Window Up"
+#, kde-format
 msgid "Move Up"
-msgstr "창을 위로 이동"
+msgstr "위로 이동"
 
 #: plugins/zoom/zoom_config.cpp:101
-#, fuzzy, kde-format
-#| msgid "Move Window Down"
+#, kde-format
 msgid "Move Down"
-msgstr "창을 아래로 이동"
+msgstr "아래로 이동"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label)
 #. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
@@ -2993,14 +2870,14 @@ msgid ""
 "Enable tracking of the focused location. This needs QAccessible to be "
 "enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
 msgstr ""
-"초점 위치 추적을 사용합니다. 프로그램마다 QAccessible을 사용할 수 있어야 합니"
-"다(\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+"포커스 위치 추적을 사용합니다. 앱마다 QAccessible을 사용할 수 있어야 합니다"
+"(\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
 #: plugins/zoom/zoom_config.ui:69
 #, kde-format
 msgid "Enable Focus Tracking"
-msgstr "초점 위치 추적 사용하기"
+msgstr "포커스 위치 추적 사용하기"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableTextCaretTracking)
 #: plugins/zoom/zoom_config.ui:76
@@ -3009,8 +2886,8 @@ msgid ""
 "Enable tracking of the text cursor. This needs QAccessible to be enabled per "
 "application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
 msgstr ""
-"텍스트 커서 추적을 사용합니다. 프로그램마다 QAccessible을 사용할 수 있어야 합"
-"니다(\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+"텍스트 커서 추적을 사용합니다. 앱마다 QAccessible을 사용할 수 있어야 합니다"
+"(\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
 #: plugins/zoom/zoom_config.ui:79
@@ -3028,15 +2905,13 @@ msgstr "마우스 포인터:"
 #: plugins/zoom/zoom_config.ui:99
 #, kde-format
 msgid "Visibility of the mouse-pointer."
-msgstr "마우스 포인터를 표시할지 여부입니다."
+msgstr "마우스 포인터를 보일지 여부입니다."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
 #: plugins/zoom/zoom_config.ui:103
-#, fuzzy, kde-format
-#| msgctxt "Current scale in pinch gesture"
-#| msgid "Scale"
+#, kde-format
 msgid "Scale"
-msgstr "크기"
+msgstr "크기 조정"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
 #: plugins/zoom/zoom_config.ui:108
@@ -3058,10 +2933,9 @@ msgstr "마우스의 움직임을 추적합니다."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: plugins/zoom/zoom_config.ui:125
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Proportional"
-msgstr "위치"
+msgstr "비례"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: plugins/zoom/zoom_config.ui:130
@@ -3073,7 +2947,7 @@ msgstr "가운데"
 #: plugins/zoom/zoom_config.ui:135
 #, kde-format
 msgid "Push"
-msgstr "밀기"
+msgstr "푸시"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: plugins/zoom/zoom_config.ui:140
@@ -3121,7 +2995,7 @@ msgstr "이 규칙 삭제(가져올 때 사용)"
 #: rulesettings.kcfg:20
 #, kde-format
 msgid "Window class (application)"
-msgstr "창 클래스(프로그램)"
+msgstr "창 클래스(앱)"
 
 #. i18n: ectx: label, entry (wmclassmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:23
@@ -3481,37 +3355,37 @@ msgstr "컴포지팅 중단하기 규칙 종류"
 #: rulesettings.kcfg:332
 #, kde-format
 msgid "Focus stealing prevention"
-msgstr "초점 훔치기 방지"
+msgstr "포커스 훔치기 방지"
 
 #. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:338
 #, kde-format
 msgid "Focus stealing prevention rule type"
-msgstr "초점 훔치기 방지 규칙 종류"
+msgstr "포커스 훔치기 방지 규칙 종류"
 
 #. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:343
 #, kde-format
 msgid "Focus protection"
-msgstr "초점 보호"
+msgstr "포커스 보호"
 
 #. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:349
 #, kde-format
 msgid "Focus protection rule type"
-msgstr "초점 보호 규칙 종류"
+msgstr "포커스 보호 규칙 종류"
 
 #. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:354
 #, kde-format
 msgid "Accept Focus"
-msgstr "초점 받아들이기"
+msgstr "포커스 받아들이기"
 
 #. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:358
 #, kde-format
 msgid "Accept Focus rule type"
-msgstr "초점 받아들이기 규칙 종류"
+msgstr "포커스 받아들이기 규칙 종류"
 
 #. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:363
@@ -3637,27 +3511,27 @@ msgstr "창간 거꾸로 이동"
 
 #: tabbox/tabbox.cpp:352
 msgid "Walk Through Windows Alternative"
-msgstr "창간 다르게 이동"
+msgstr "현재 앱의 창간 다르게 이동"
 
 #: tabbox/tabbox.cpp:353
 msgid "Walk Through Windows Alternative (Reverse)"
-msgstr "창간 거꾸로 다르게 이동"
+msgstr "현재 앱의 창간 거꾸로 다르게 이동"
 
 #: tabbox/tabbox.cpp:354
 msgid "Walk Through Windows of Current Application"
-msgstr "현재 프로그램의 창간 이동"
+msgstr "현재 앱의 창간 이동"
 
 #: tabbox/tabbox.cpp:355
 msgid "Walk Through Windows of Current Application (Reverse)"
-msgstr "현재 프로그램의 창간 거꾸로 이동"
+msgstr "현재 앱의 창간 거꾸로 이동"
 
 #: tabbox/tabbox.cpp:356
 msgid "Walk Through Windows of Current Application Alternative"
-msgstr "현재 프로그램의 창간 다르게 이동"
+msgstr "현재 앱의 창간 다르게 이동"
 
 #: tabbox/tabbox.cpp:357
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
-msgstr "현재 프로그램의 창간 거꾸로 다르게 이동"
+msgstr "현재 앱의 창간 거꾸로 다르게 이동"
 
 #: tabbox/tabboxhandler.cpp:270
 #, kde-format
@@ -3689,9 +3563,9 @@ msgid ""
 "window operations menu instead, activated using the %1 keyboard shortcut."
 msgstr ""
 "창을 전체 화면 모드로 보이도록 설정했습니다.\n"
-"프로그램에서 전체 화면 모드를 제어할 수 없을 때에는 마우스를 사용해서 전체 화"
-"면 모드에서 벗어날 수 없습니다: 키보드 단축키 %1을(를) 사용해서 창 동작 메뉴"
-"를 부르십시오."
+"앱에서 전체 화면 모드를 제어할 수 없을 때에는 마우스를 사용해서 전체 화면 모"
+"드에서 벗어날 수 없습니다: 키보드 단축키 %1을(를) 사용해서 창 동작 메뉴를 부"
+"르십시오."
 
 #: useractions.cpp:214
 #, kde-format
@@ -3724,28 +3598,24 @@ msgid "&Shade"
 msgstr "말아 올리기(&S)"
 
 #: useractions.cpp:248
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "&No Titlebar and Frame"
-msgstr "제목 표시줄과 프레임 없음"
+msgstr "제목 표시줄과 프레임 없음(&N)"
 
 #: useractions.cpp:256
-#, fuzzy, kde-format
-#| msgid "Set Window Short&cut..."
+#, kde-format
 msgid "Set Window Short&cut…"
-msgstr "창 단축키 설정(&C)..."
+msgstr "창 단축키 설정(&C)…"
 
 #: useractions.cpp:262
-#, fuzzy, kde-format
-#| msgid "Configure Special &Window Settings..."
+#, kde-format
 msgid "Configure Special &Window Settings…"
-msgstr "창 특별 설정(&W)..."
+msgstr "창 특별 설정(&W)…"
 
 #: useractions.cpp:267
-#, fuzzy, kde-format
-#| msgid "Configure S&pecial Application Settings..."
+#, kde-format
 msgid "Configure S&pecial Application Settings…"
-msgstr "프로그램 특별 설정(&P)..."
+msgstr "앱 특별 설정(&P)…"
 
 #: useractions.cpp:273
 #, kde-format
@@ -3793,11 +3663,9 @@ msgid "Show in &Activities"
 msgstr "다음 활동에 표시(&A)"
 
 #: useractions.cpp:475
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move the window to that desktop"
-#| msgid "Move to New Desktop"
+#, kde-format
 msgid "Move &To Current Desktop"
-msgstr "새 바탕 화면으로 이동"
+msgstr "현재 바탕 화면으로 이동(&T)"
 
 #: useractions.cpp:485 useractions.cpp:552
 #, kde-format
@@ -3841,10 +3709,9 @@ msgid "&All Activities"
 msgstr "모든 활동(&A)"
 
 #: useractions.cpp:726
-#, fuzzy, kde-format
-#| msgid "Move to %1 %2"
+#, kde-format
 msgid "Move to %1"
-msgstr "%1 %2(으)로 이동"
+msgstr "%1(으)로 이동"
 
 #: useractions.cpp:845
 #, kde-format
@@ -3924,10 +3791,9 @@ msgid "Make Window Fullscreen"
 msgstr "창을 전체 화면으로"
 
 #: useractions.cpp:953
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "Toggle Window Titlebar and Frame"
-msgstr "제목 표시줄과 프레임 없음"
+msgstr "창 제목 표시줄과 프레임 전환"
 
 #: useractions.cpp:955
 #, kde-format
@@ -4055,14 +3921,12 @@ msgid "Switch to Window to the Left"
 msgstr "왼쪽 창으로 전환"
 
 #: useractions.cpp:1005
-#, fuzzy, kde-format
-#| msgid "Increase Opacity of Active Window by 5 %"
+#, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "활성 창 불투명도 5% 증가"
 
 #: useractions.cpp:1007
-#, fuzzy, kde-format
-#| msgid "Decrease Opacity of Active Window by 5 %"
+#, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "활성 창 불투명도 5% 감소"
 
@@ -4107,46 +3971,39 @@ msgid "Window One Desktop Down"
 msgstr "아래쪽 바탕 화면으로 창 이동"
 
 #: useractions.cpp:1035
-#, fuzzy, kde-format
-#| msgid "Window to Screen %1"
+#, kde-format
 msgid "Move Window to Screen %1"
 msgstr "창을 화면 %1(으)로 보내기"
 
 #: useractions.cpp:1042
-#, fuzzy, kde-format
-#| msgid "Window to Next Screen"
+#, kde-format
 msgid "Move Window to Next Screen"
-msgstr "다음 데스크톱으로 창 이동"
+msgstr "다음 화면으로 창 이동"
 
 #: useractions.cpp:1044
-#, fuzzy, kde-format
-#| msgid "Window to Previous Screen"
+#, kde-format
 msgid "Move Window to Previous Screen"
 msgstr "이전 화면으로 창 이동"
 
 #: useractions.cpp:1046
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Move Window One Screen to the Right"
-msgstr "오른쪽 바탕 화면으로 창 이동"
+msgstr "창을 오른쪽으로 한 화면 이동"
 
 #: useractions.cpp:1048
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Move Window One Screen to the Left"
-msgstr "왼쪽 바탕 화면으로 창 이동"
+msgstr "창을 왼쪽으로 한 화면 이동"
 
 #: useractions.cpp:1050
-#, fuzzy, kde-format
-#| msgid "Window to Screen %1"
+#, kde-format
 msgid "Move Window One Screen Up"
-msgstr "창을 화면 %1(으)로 보내기"
+msgstr "창을 위쪽으로 한 화면 이동"
 
 #: useractions.cpp:1052
-#, fuzzy, kde-format
-#| msgid "Window One Desktop Down"
+#, kde-format
 msgid "Move Window One Screen Down"
-msgstr "아래쪽 바탕 화면으로 창 이동"
+msgstr "창을 아래쪽으로 한 화면 이동"
 
 #: useractions.cpp:1056
 #, kde-format
@@ -4164,28 +4021,24 @@ msgid "Switch to Previous Screen"
 msgstr "이전 화면으로 전환"
 
 #: useractions.cpp:1065
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Right"
+#, kde-format
 msgid "Switch to Screen to the Right"
-msgstr "오른쪽 창으로 전환"
+msgstr "오른쪽 화면으로 전환"
 
 #: useractions.cpp:1067
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Left"
+#, kde-format
 msgid "Switch to Screen to the Left"
-msgstr "왼쪽 창으로 전환"
+msgstr "왼쪽 화면으로 전환"
 
 #: useractions.cpp:1069
-#, fuzzy, kde-format
-#| msgid "Switch to Screen %1"
+#, kde-format
 msgid "Switch to Screen Above"
-msgstr "화면 %1(으)로 전환"
+msgstr "위쪽 화면으로 전환"
 
 #: useractions.cpp:1071
-#, fuzzy, kde-format
-#| msgid "Switch to Screen %1"
+#, kde-format
 msgid "Switch to Screen Below"
-msgstr "화면 %1(으)로 전환"
+msgstr "아래쪽 화면으로 전환"
 
 #: useractions.cpp:1074
 #, kde-format
@@ -4269,18 +4122,7 @@ msgid "(Not Responding)"
 msgstr "(응답 없음)"
 
 #: workspace.cpp:1596
-#, fuzzy, kde-format
-#| msgctxt "Introductory text shown in the support information."
-#| msgid ""
-#| "KWin Support Information:\n"
-#| "The following information should be used when requesting support on e.g. "
-#| "https://forum.kde.org.\n"
-#| "It provides information about the currently running instance, which "
-#| "options are used,\n"
-#| "what OpenGL driver and which effects are running.\n"
-#| "Please post the information provided underneath this introductory text to "
-#| "a paste bin service\n"
-#| "like https://paste.kde.org instead of pasting into support threads.\n"
+#, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
 "KWin Support Information:\n"
@@ -4294,8 +4136,8 @@ msgid ""
 "like https://paste.kde.org instead of pasting into support threads.\n"
 msgstr ""
 "KWin 지원 정보:\n"
-"포럼 (예: https://forum.kde.org) 등에 지원을 요청하려면 다음 정보를 사용하십"
-"시오.\n"
+"포럼 (예: https://discuss.kde.org) 등에 지원을 요청하려면 다음 정보를 사용하"
+"십시오.\n"
 "현재 실행 중인 창 관리자의 옵션, 사용 중인 OpenGL 드라이버, 실행 중인 효과와 "
 "같은\n"
 "창 관리자의 상태 정보를 제공합니다.\n"
@@ -4305,7 +4147,7 @@ msgstr ""
 #: xwayland/xwaylandlauncher.cpp:272
 #, kde-format
 msgid "Xwayland has crashed"
-msgstr ""
+msgstr "Xwayland가 충돌함"
 
 #~ msgctxt ""
 #~ "Entry in context menu of window decoration to open the configuration "

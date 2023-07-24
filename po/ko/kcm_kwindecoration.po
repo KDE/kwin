@@ -1,14 +1,14 @@
 # Translation of kcmkwindecoration to Korean.
 # Copyright (C) 2001, 2007 Free Software Foundation, Inc.
 # KIM KyungHeon <tody@teoal.net>, 2001.
-# Shinjo Park <kde@peremen.name>, 2007, 2008, 2009, 2010, 2012, 2013, 2014, 2015, 2018, 2019, 2020, 2021.
+# Shinjo Park <kde@peremen.name>, 2007, 2008, 2009, 2010, 2012, 2013, 2014, 2015, 2018, 2019, 2020, 2021, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-14 02:06+0000\n"
-"PO-Revision-Date: 2021-06-17 21:11+0200\n"
+"PO-Revision-Date: 2023-07-23 21:08+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 20.12.3\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #: declarative-plugin/buttonsmodel.cpp:53
 #, kde-format
@@ -26,7 +26,7 @@ msgstr "이 창의 더 많은 동작"
 #: declarative-plugin/buttonsmodel.cpp:55
 #, kde-format
 msgid "Application menu"
-msgstr "프로그램 메뉴"
+msgstr "앱 메뉴"
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -167,9 +167,7 @@ msgid "Drag buttons between here and the titlebar"
 msgstr "여기와 제목 표시줄 사이에서 단추를 드래그하십시오"
 
 #: ui/ConfigureTitlebar.qml:16
-#, fuzzy, kde-format
-#| msgctxt "tab label"
-#| msgid "Titlebar Buttons"
+#, kde-format
 msgid "Titlebar Buttons"
 msgstr "제목 표시줄 단추"
 
@@ -198,18 +196,16 @@ msgid "Window border size:"
 msgstr "창 테두리 크기:"
 
 #: ui/main.qml:48
-#, fuzzy, kde-format
-#| msgctxt "tab label"
-#| msgid "Titlebar Buttons"
+#, kde-format
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
-msgstr "제목 표시줄 단추"
+msgstr "제목 표시줄 단추 설정…"
 
 #: ui/main.qml:54
 #, kde-format
 msgctxt "@action:button as in, \"Get New Window Decorations\""
 msgid "Get New…"
-msgstr ""
+msgstr "새 항목 가져오기…"
 
 #: ui/Themes.qml:93
 #, kde-format
@@ -217,62 +213,49 @@ msgid "Edit %1 Theme"
 msgstr "%1 테마 편집"
 
 #: utils.cpp:25
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "No Window Borders"
-msgstr "옆쪽 경계선 없음"
+msgstr "창 경계선 없음"
 
 #: utils.cpp:26
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "No Side Window Borders"
-msgstr "옆쪽 경계선 없음"
+msgstr "창 옆쪽 경계선 없음"
 
 #: utils.cpp:27
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Tiny Window Borders"
-msgstr "창 테두리 크기:"
+msgstr "작은 창 경계선"
 
 #: utils.cpp:28
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "Normal Window Borders"
-msgstr "옆쪽 경계선 없음"
+msgstr "일반적인 창 경계선"
 
 #: utils.cpp:29
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Large Window Borders"
-msgstr "창 테두리 크기:"
+msgstr "큰 창 경계선"
 
 #: utils.cpp:30
 #, kde-format
 msgid "Very Large Window Borders"
-msgstr ""
+msgstr "매우 큰 창 경계선"
 
 #: utils.cpp:31
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Huge Window Borders"
-msgstr "창 테두리 크기:"
+msgstr "매우 매우 큰 창 경계선"
 
 #: utils.cpp:32
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Very Huge Window Borders"
-msgstr "창 테두리 크기:"
+msgstr "매우 매우 매우 큰 창 경계선"
 
 #: utils.cpp:33
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Oversized Window Borders"
-msgstr "창 테두리 크기:"
+msgstr "과다하게 큰 창 경계선"
 
 #, fuzzy
 #~| msgctxt "button text"

@@ -1,14 +1,14 @@
 # translation of kcmkwincompositing.po to Korean.
 # Copyright (C) 2007 This_file_is_part_of_KDE
 # This file is distributed under the same license as the kdebase package.
-# Shinjo Park <kde@peremen.name>, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2016, 2017, 2018, 2019, 2020, 2021.
+# Shinjo Park <kde@peremen.name>, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2016, 2017, 2018, 2019, 2020, 2021, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-29 00:59+0000\n"
-"PO-Revision-Date: 2021-11-14 19:20+0100\n"
+"PO-Revision-Date: 2023-07-23 21:15+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 21.08.1\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #. i18n: ectx: property (text), widget (KMessageWidget, glCrashedWarning)
 #: compositing.ui:31
@@ -40,7 +40,7 @@ msgid ""
 "Keeping the window thumbnail always interferes with the minimized state of "
 "windows. This can result in windows not suspending their work when minimized."
 msgstr ""
-"창 축소판을 항상 그리도록 설정하면 창의 최소화 상태에 영향을 줍니다. 창을 최"
+"창 섬네일을 항상 그리도록 설정하면 창의 최소화 상태에 영향을 줍니다. 창을 최"
 "소화해도 진행 중인 작업이 계속될 수도 있습니다."
 
 #. i18n: ectx: property (text), widget (QLabel, compositingLabel)
@@ -63,7 +63,7 @@ msgid ""
 " This brings performance improvements for e.g. games.\n"
 " The setting can be overruled by window-specific rules."
 msgstr ""
-"프로그램의 창이 열려 있을 때 컴포지팅을 중단하는 신호를 보낼 수 있습니다.\n"
+"앱의 창이 열려 있을 때 컴포지팅을 중단하는 신호를 보낼 수 있습니다.\n"
 "게임과 같은 일부 환경에서 성능을 향상시킬 수 있습니다.\n"
 "창 지정 설정에서 이 설정을 덮어쓸 수 있습니다."
 
@@ -71,7 +71,7 @@ msgstr ""
 #: compositing.ui:75
 #, kde-format
 msgid "Allow applications to block compositing"
-msgstr "프로그램에서 컴포지팅 차단 허용"
+msgstr "앱에서 컴포지팅 차단 허용"
 
 #. i18n: ectx: property (text), widget (QLabel, animationSpeedLabel)
 #: compositing.ui:82
@@ -95,7 +95,7 @@ msgstr "즉시"
 #: compositing.ui:151
 #, kde-format
 msgid "Keep window thumbnails:"
-msgstr "창 축소판 계속 그리기:"
+msgstr "창 섬네일 계속 그리기:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
 #: compositing.ui:159
@@ -156,7 +156,7 @@ msgstr "매우 부드러운 애니메이션 강제"
 #, kde-format
 msgid ""
 "Reduce latency by allowing screen tearing artifacts in fullscreen windows"
-msgstr ""
+msgstr "전체 화면 창의 화면 티어링 흔적을 허용하여 지연 시간 감소"
 
 #: main.cpp:78
 #, kde-format

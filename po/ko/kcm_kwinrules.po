@@ -1,14 +1,14 @@
 # Translation of kcmkwinrules to Korean.
 # Copyright (C) 2007-2008 This_file_is_part_of_KDE
 # This file is distributed under the same license as the kdebase package.
-# Shinjo Park <kde@peremen.name>, 2007, 2008, 2009, 2010, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022.
+# Shinjo Park <kde@peremen.name>, 2007, 2008, 2009, 2010, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-07 02:19+0000\n"
-"PO-Revision-Date: 2022-05-06 00:08+0200\n"
+"PO-Revision-Date: 2023-07-23 21:51+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 21.12.3\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #: kcmrules.cpp:226
 #, kde-format
@@ -26,7 +26,7 @@ msgstr "사본 - %1"
 #: kcmrules.cpp:406
 #, kde-format
 msgid "Application settings for %1"
-msgstr "%1의 프로그램 설정"
+msgstr "%1의 앱 설정"
 
 #: kcmrules.cpp:428 rulesmodel.cpp:215
 #, kde-format
@@ -156,9 +156,9 @@ msgid ""
 "types."
 msgstr ""
 "창 클래스를 중요하지 않음으로 지정했습니다.\n"
-"모든 프로그램의 창에 영향을 끼칠 수도 있습니다. 일반적인 설정을 만들려는 것이"
-"라면 최소한 창 종류의 제한을 두어서 특별한 창에 설정이 적용되지 않도록 하는 "
-"것을 권장합니다."
+"모든 앱의 창에 영향을 끼칠 수도 있습니다. 일반적인 설정을 만들려는 것이라면 "
+"최소한 창 종류의 제한을 두어서 특별한 창에 설정이 적용되지 않도록 하는 것을 "
+"권장합니다."
 
 #: rulesmodel.cpp:244
 #, kde-format
@@ -167,9 +167,9 @@ msgid ""
 "initial settings for size and position. To enforce these settings, also "
 "force the property \"%1\" to \"Yes\"."
 msgstr ""
-"일부 프로그램은 시작한 후 초기 창 크기와 위치를 덮어쓰는 개별적인 창 크기와 "
-"위치를 설정할 수도 있습니다. 이 설정을 강제하려면 \"%1\" 속성을 \"예\"로 변경"
-"하십시오."
+"일부 앱은 시작한 후 초기 창 크기와 위치를 덮어쓰는 개별적인 창 크기와 위치를 "
+"설정할 수도 있습니다. 이 설정을 강제하려면 \"%1\" 속성을 \"예\"로 변경하십시"
+"오."
 
 #: rulesmodel.cpp:251
 #, kde-format
@@ -177,6 +177,8 @@ msgid ""
 "Readability may be impaired with extremely low opacity values. At 0%, the "
 "window becomes invisible."
 msgstr ""
+"불투명도를 너무 낮추면 창의 내용을 읽지 못할 수도 있습니다. 0%에서는 창이 완"
+"전히 숨겨집니다."
 
 #: rulesmodel.cpp:382
 #, kde-format
@@ -192,7 +194,7 @@ msgstr "창 일치"
 #: rulesmodel.cpp:390
 #, kde-format
 msgid "Window class (application)"
-msgstr "창 클래스 (프로그램)"
+msgstr "창 클래스 (앱)"
 
 #: rulesmodel.cpp:398
 #, kde-format
@@ -325,13 +327,7 @@ msgid "Obey geometry restrictions"
 msgstr "크기 제한 받아들이기"
 
 #: rulesmodel.cpp:558
-#, fuzzy, kde-kuit-format
-#| msgid ""
-#| "Eg. terminals or video players can ask to keep a certain aspect ratio\n"
-#| "or only grow by values larger than one\n"
-#| "(eg. by the dimensions of one character).\n"
-#| "This may be pointless and the restriction prevents arbitrary dimensions\n"
-#| "like your complete screen area."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Some apps like video players or terminals can ask KWin to constrain them to "
@@ -340,11 +336,11 @@ msgid ""
 "windows to be resized to arbitrary sizes.<nl/><nl/>This can be helpful for "
 "windows that can't quite fit the full screen area when maximized."
 msgstr ""
-"예를 들어 터미널이나 비디오 재생기는 특정한 화면 비율을 유지하거나\n"
-"특정한 단위(예: 글자 크기)를 기준으로만 증가하거나 감소하도록\n"
-"요청할 수 있습니다.\n"
-"때때로 이 제한이 무의미할 수도 있으며, 전체 화면을 덮는 등\n"
-"임의의 크기로 지정하지 못하게 할 수도 있습니다."
+"터미널이나 비디오 재생기와 같은 앱은 특정한 화면 비율을 유지하거나 글자 크기"
+"와 같은 특정한 단위를 기준으로만 증가하거나 감소하도록 KWin에 요청할 수 있습"
+"니다. 이 속성을 사용하면 이러한 제한을 무시하고 임의 크기로 조정할 수 있도록 "
+"합니다.<nl/><nl/>최대화했을 때 전체 화면을 덮지 못하는 등의 창에 유용할 수 있"
+"습니다."
 
 #: rulesmodel.cpp:569
 #, kde-format
@@ -371,7 +367,7 @@ msgstr "작업 표시줄 건너뛰기"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
-msgstr ""
+msgstr "창을 작업 표시줄에 표시할지 여부를 제어합니다."
 
 #: rulesmodel.cpp:585
 #, kde-format
@@ -383,7 +379,7 @@ msgstr "호출기 건너뛰기"
 msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the Virtual Desktop manager."
-msgstr ""
+msgstr "창을 가상 바탕 화면 관리자에 표시할지 여부를 제어합니다."
 
 #: rulesmodel.cpp:591
 #, kde-format
@@ -397,6 +393,7 @@ msgid ""
 "Controls whether or not the window appears in the <shortcut>Alt+Tab</"
 "shortcut> window list."
 msgstr ""
+"창을 <shortcut>Alt+Tab</shortcut> 창 목록에 표시할지 여부를 제어합니다."
 
 #: rulesmodel.cpp:597
 #, kde-format
@@ -433,7 +430,7 @@ msgstr "비활성 투명도"
 #: rulesmodel.cpp:625
 #, kde-format
 msgid "Focus stealing prevention"
-msgstr "초점 훔쳐가기 방지"
+msgstr "포커스 훔치기 방지"
 
 #: rulesmodel.cpp:627
 #, kde-kuit-format
@@ -460,7 +457,7 @@ msgstr ""
 #: rulesmodel.cpp:652
 #, kde-format
 msgid "Focus protection"
-msgstr "초점 훔쳐가기 방지"
+msgstr "포커스 보호"
 
 #: rulesmodel.cpp:654
 #, kde-kuit-format
@@ -489,12 +486,12 @@ msgstr ""
 #: rulesmodel.cpp:680
 #, kde-format
 msgid "Accept focus"
-msgstr "초점 받아들이기"
+msgstr "포커스 받아들이기"
 
 #: rulesmodel.cpp:682
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
-msgstr ""
+msgstr "창을 클릭했을 때 포커스를 맞출지 여부를 제어합니다."
 
 #: rulesmodel.cpp:686
 #, kde-format
@@ -534,10 +531,9 @@ msgid "Block compositing"
 msgstr "컴포지팅 무시"
 
 #: rulesmodel.cpp:766
-#, fuzzy, kde-format
-#| msgid "Window class (application)"
+#, kde-format
 msgid "Window class not available"
-msgstr "창 클래스 (프로그램)"
+msgstr "창 클래스를 사용할 수 없음"
 
 #: rulesmodel.cpp:767
 #, kde-kuit-format
@@ -698,8 +694,7 @@ msgid "Extreme"
 msgstr "매우 높음"
 
 #: rulesmodel.cpp:928
-#, fuzzy, kde-format
-#| msgid "Unmanaged Window"
+#, kde-format
 msgid "Unmanaged window"
 msgstr "관리되지 않는 창"
 
@@ -724,12 +719,10 @@ msgid "No rules for specific windows are currently set"
 msgstr "창 지정 규칙 없음"
 
 #: ui/main.qml:63
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Click the <interface>Add New...</interface> button below to add some"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Click the <interface>Add New…</interface> button below to add some"
-msgstr "<interface>새로 추가...</interface>를 클릭해서 추가하십시오"
+msgstr "<interface>새로 추가…</interface>를 클릭해서 추가하십시오"
 
 #: ui/main.qml:71
 #, kde-format
@@ -752,16 +745,14 @@ msgid "Save Rules"
 msgstr "규칙 저장"
 
 #: ui/main.qml:100
-#, fuzzy, kde-format
-#| msgid "Add New..."
+#, kde-format
 msgid "Add New…"
-msgstr "새로 추가..."
+msgstr "새로 추가…"
 
 #: ui/main.qml:111
-#, fuzzy, kde-format
-#| msgid "Import..."
+#, kde-format
 msgid "Import…"
-msgstr "가져오기..."
+msgstr "가져오기…"
 
 #: ui/main.qml:119
 #, kde-format
@@ -769,10 +760,9 @@ msgid "Cancel Export"
 msgstr "내보내기 취소"
 
 #: ui/main.qml:119
-#, fuzzy, kde-format
-#| msgid "Export..."
+#, kde-format
 msgid "Export…"
-msgstr "내보내기"
+msgstr "내보내기…"
 
 #: ui/main.qml:209
 #, kde-format
