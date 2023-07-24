@@ -9,6 +9,7 @@
 #include "filedescriptor.h"
 
 #include <fcntl.h>
+#include <sys/poll.h>
 #include <unistd.h>
 #include <utility>
 
@@ -71,5 +72,15 @@ FileDescriptor FileDescriptor::duplicate() const
     } else {
         return {};
     }
+}
+
+bool FileDescriptor::isReadable() const
+{
+    pollfd fd = {
+        .fd = m_fd,
+        .events = POLLIN,
+        .revents = 0,
+    };
+    return poll(&fd, 1, 0) && (fd.revents & (POLLIN | POLLNVAL)) != 0;
 }
 }

@@ -28,6 +28,8 @@ public:
     void reset();
     FileDescriptor duplicate() const;
 
+    bool isReadable() const;
+
 private:
     int m_fd = -1;
 };
