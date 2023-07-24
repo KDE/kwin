@@ -35,15 +35,11 @@ public:
     bool isCrtcSupported(int pipeIndex) const;
     QMap<uint32_t, QVector<uint64_t>> formats() const;
 
-    std::shared_ptr<DrmFramebuffer> current() const;
-    std::shared_ptr<DrmFramebuffer> next() const;
-    void setCurrent(const std::shared_ptr<DrmFramebuffer> &b);
-    void setNext(const std::shared_ptr<DrmFramebuffer> &b);
-    void flipBuffer();
+    std::shared_ptr<DrmFramebuffer> currentBuffer() const;
+    void setCurrentBuffer(const std::shared_ptr<DrmFramebuffer> &b);
+    void releaseCurrentBuffer();
 
     void set(DrmAtomicCommit *commit, const QPoint &srcPos, const QSize &srcSize, const QRect &dst);
-
-    void releaseBuffers();
 
     enum class TypeIndex : uint64_t {
         Overlay = 0,
@@ -86,7 +82,6 @@ public:
 
 private:
     std::shared_ptr<DrmFramebuffer> m_current;
-    std::shared_ptr<DrmFramebuffer> m_next;
 
     QMap<uint32_t, QVector<uint64_t>> m_supportedFormats;
     uint32_t m_possibleCrtcs;

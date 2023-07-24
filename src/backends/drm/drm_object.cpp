@@ -10,7 +10,7 @@
 
 #include <errno.h>
 
-#include "drm_atomic_commit.h"
+#include "drm_commit.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
 #include "drm_pointer.h"

@@ -11,8 +11,8 @@
 
 #include "config-kwin.h"
 
-#include "drm_atomic_commit.h"
 #include "drm_buffer.h"
+#include "drm_commit.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
 #include "drm_pointer.h"
@@ -107,17 +107,6 @@ bool DrmPlane::updateProperties()
     return true;
 }
 
-void DrmPlane::setNext(const std::shared_ptr<DrmFramebuffer> &b)
-{
-    m_next = b;
-}
-
-void DrmPlane::flipBuffer()
-{
-    m_current = m_next;
-    m_next = nullptr;
-}
-
 void DrmPlane::set(DrmAtomicCommit *commit, const QPoint &srcPos, const QSize &srcSize, const QRect &dst)
 {
     // Src* are in 16.16 fixed point format
@@ -142,17 +131,12 @@ QMap<uint32_t, QVector<uint64_t>> DrmPlane::formats() const
     return m_supportedFormats;
 }
 
-std::shared_ptr<DrmFramebuffer> DrmPlane::current() const
+std::shared_ptr<DrmFramebuffer> DrmPlane::currentBuffer() const
 {
     return m_current;
 }
 
-std::shared_ptr<DrmFramebuffer> DrmPlane::next() const
-{
-    return m_next;
-}
-
-void DrmPlane::setCurrent(const std::shared_ptr<DrmFramebuffer> &b)
+void DrmPlane::setCurrentBuffer(const std::shared_ptr<DrmFramebuffer> &b)
 {
     m_current = b;
 }
@@ -160,15 +144,11 @@ void DrmPlane::setCurrent(const std::shared_ptr<DrmFramebuffer> &b)
 void DrmPlane::disable(DrmAtomicCommit *commit)
 {
     commit->addProperty(crtcId, 0);
-    commit->addProperty(fbId, 0);
-    m_next = nullptr;
+    commit->addBuffer(this, nullptr);
 }
 
-void DrmPlane::releaseBuffers()
+void DrmPlane::releaseCurrentBuffer()
 {
-    if (m_next) {
-        m_next->releaseBuffer();
-    }
     if (m_current) {
         m_current->releaseBuffer();
     }

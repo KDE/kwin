@@ -8,7 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "drm_connector.h"
-#include "drm_atomic_commit.h"
+#include "drm_commit.h"
 #include "drm_crtc.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"

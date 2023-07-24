@@ -14,6 +14,7 @@
 #include "core/session.h"
 #include "drm_backend.h"
 #include "drm_buffer.h"
+#include "drm_commit.h"
 #include "drm_connector.h"
 #include "drm_crtc.h"
 #include "drm_egl_backend.h"
@@ -539,7 +540,8 @@ static std::chrono::nanoseconds convertTimestamp(clockid_t sourceClock, clockid_
 
 void DrmGpu::pageFlipHandler(int fd, unsigned int sequence, unsigned int sec, unsigned int usec, unsigned int crtc_id, void *user_data)
 {
-    DrmGpu *gpu = static_cast<DrmGpu *>(user_data);
+    const auto commit = static_cast<DrmCommit *>(user_data);
+    const auto gpu = commit->gpu();
 
     // The static_cast<> here are for a 32-bit environment where
     // sizeof(time_t) == sizeof(unsigned int) == 4 . Putting @p sec
@@ -562,6 +564,7 @@ void DrmGpu::pageFlipHandler(int fd, unsigned int sequence, unsigned int sec, un
     } else {
         (*it)->pageFlipped(timestamp);
     }
+    delete commit;
 }
 
 void DrmGpu::dispatchEvents()
@@ -803,10 +806,10 @@ QSize DrmGpu::cursorSize() const
 void DrmGpu::releaseBuffers()
 {
     for (const auto &plane : std::as_const(m_planes)) {
-        plane->releaseBuffers();
+        plane->releaseCurrentBuffer();
     }
     for (const auto &crtc : std::as_const(m_crtcs)) {
-        crtc->releaseBuffers();
+        crtc->releaseCurrentBuffer();
     }
     for (const auto &pipeline : std::as_const(m_pipelines)) {
         pipeline->primaryLayer()->releaseBuffers();

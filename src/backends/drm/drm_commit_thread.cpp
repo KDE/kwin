@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "drm_commit_thread.h"
-#include "drm_atomic_commit.h"
+#include "drm_commit.h"
 #include "drm_gpu.h"
 #include "utils/realtime.h"
 
@@ -38,10 +38,14 @@ DrmCommitThread::DrmCommitThread()
                 }
                 // the other thread may replace the commit, but not erase it
                 Q_ASSERT(m_commit);
-                if (!m_commit->commit()) {
+                if (m_commit->commit()) {
+                    // the atomic commit takes ownership of the object
+                    m_commit.release();
+                } else {
+                    m_droppedCommits.push_back(std::move(m_commit));
                     QMetaObject::invokeMethod(this, &DrmCommitThread::commitFailed, Qt::ConnectionType::QueuedConnection);
+                    QMetaObject::invokeMethod(this, &DrmCommitThread::clearDroppedCommits, Qt::ConnectionType::QueuedConnection);
                 }
-                m_commit.reset();
             }
         }
     }));
@@ -75,4 +79,9 @@ bool DrmCommitThread::replaceCommit(std::unique_ptr<DrmAtomicCommit> &&commit)
     }
 }
 
+void DrmCommitThread::clearDroppedCommits()
+{
+    std::unique_lock lock(m_mutex);
+    m_droppedCommits.clear();
+}
 }

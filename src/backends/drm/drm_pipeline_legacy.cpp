@@ -7,8 +7,9 @@
  *    SPDX-License-Identifier: GPL-2.0-or-later
  */
 
-#include "drm_buffer.h"
 #include "core/graphicsbuffer.h"
+#include "drm_buffer.h"
+#include "drm_commit.h"
 #include "drm_connector.h"
 #include "drm_crtc.h"
 #include "drm_gpu.h"
@@ -35,12 +36,14 @@ DrmPipeline::Error DrmPipeline::presentLegacy()
     if (m_pending.syncMode == RenderLoopPrivate::SyncMode::Async || m_pending.syncMode == RenderLoopPrivate::SyncMode::AdaptiveAsync) {
         flags |= DRM_MODE_PAGE_FLIP_ASYNC;
     }
-    if (drmModePageFlip(gpu()->fd(), m_pending.crtc->id(), buffer->framebufferId(), flags, gpu()) != 0) {
+    auto commit = std::make_unique<DrmLegacyCommit>(m_pending.crtc, buffer);
+    if (!commit->doPageflip(flags)) {
         qCWarning(KWIN_DRM) << "Page flip failed:" << strerror(errno);
         return errnoToError();
     }
+    // the pageflip takes ownership of the object
+    commit.release();
     m_pageflipPending = true;
-    m_pending.crtc->setNext(buffer);
     return Error::None;
 }
 
@@ -51,20 +54,13 @@ void DrmPipeline::forceLegacyModeset()
 
 DrmPipeline::Error DrmPipeline::legacyModeset()
 {
-    uint32_t connId = m_connector->id();
     if (!m_pending.layer->checkTestBuffer()) {
         return Error::TestBufferFailed;
     }
-    const auto buffer = m_pending.layer->currentBuffer();
-    if (drmModeSetCrtc(gpu()->fd(), m_pending.crtc->id(), buffer->framebufferId(), 0, 0, &connId, 1, m_pending.mode->nativeMode()) != 0) {
+    auto commit = std::make_unique<DrmLegacyCommit>(m_pending.crtc, m_pending.layer->currentBuffer());
+    if (!commit->doModeset(m_connector, m_pending.mode.get())) {
         qCWarning(KWIN_DRM) << "Modeset failed!" << strerror(errno);
         return errnoToError();
-    }
-    // make sure the buffer gets kept alive, or the modeset gets reverted by the kernel
-    if (m_pending.crtc->current()) {
-        m_pending.crtc->setNext(buffer);
-    } else {
-        m_pending.crtc->setCurrent(buffer);
     }
     return Error::None;
 }

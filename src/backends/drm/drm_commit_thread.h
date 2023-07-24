@@ -12,6 +12,7 @@
 #include <QThread>
 #include <condition_variable>
 #include <mutex>
+#include <vector>
 
 namespace KWin
 {
@@ -33,11 +34,14 @@ Q_SIGNALS:
     void commitFailed();
 
 private:
+    void clearDroppedCommits();
+
     std::unique_ptr<DrmAtomicCommit> m_commit;
     std::unique_ptr<QThread> m_thread;
     std::mutex m_mutex;
     std::condition_variable m_commitPending;
     std::chrono::nanoseconds m_targetPageflipTime;
+    std::vector<std::unique_ptr<DrmAtomicCommit>> m_droppedCommits;
 };
 
 }

@@ -7,9 +7,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "drm_crtc.h"
-#include "drm_atomic_commit.h"
 #include "drm_backend.h"
 #include "drm_buffer.h"
+#include "drm_commit.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
 #include "drm_output.h"
@@ -54,12 +54,6 @@ bool DrmCrtc::updateProperties()
     return !gpu()->atomicModeSetting() || (modeId.isValid() && active.isValid());
 }
 
-void DrmCrtc::flipBuffer()
-{
-    m_currentBuffer = m_nextBuffer;
-    m_nextBuffer = nullptr;
-}
-
 drmModeModeInfo DrmCrtc::queryCurrentMode()
 {
     m_crtc.reset(drmModeGetCrtc(gpu()->fd(), id()));
@@ -76,19 +70,9 @@ std::shared_ptr<DrmFramebuffer> DrmCrtc::current() const
     return m_currentBuffer;
 }
 
-std::shared_ptr<DrmFramebuffer> DrmCrtc::next() const
-{
-    return m_nextBuffer;
-}
-
 void DrmCrtc::setCurrent(const std::shared_ptr<DrmFramebuffer> &buffer)
 {
     m_currentBuffer = buffer;
-}
-
-void DrmCrtc::setNext(const std::shared_ptr<DrmFramebuffer> &buffer)
-{
-    m_nextBuffer = buffer;
 }
 
 int DrmCrtc::gammaRampSize() const
@@ -118,11 +102,8 @@ void DrmCrtc::disable(DrmAtomicCommit *commit)
     commit->addProperty(modeId, 0);
 }
 
-void DrmCrtc::releaseBuffers()
+void DrmCrtc::releaseCurrentBuffer()
 {
-    if (m_nextBuffer) {
-        m_nextBuffer->releaseBuffer();
-    }
     if (m_currentBuffer) {
         m_currentBuffer->releaseBuffer();
     }
