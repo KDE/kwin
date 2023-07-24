@@ -1,14 +1,14 @@
 # Translation of kcmkwindecoration to Korean.
 # Copyright (C) 2001, 2007 Free Software Foundation, Inc.
 # KIM KyungHeon <tody@teoal.net>, 2001.
-# Shinjo Park <kde@peremen.name>, 2007, 2008, 2009, 2010, 2012, 2013, 2014, 2015, 2018, 2019, 2020, 2021.
+# Shinjo Park <kde@peremen.name>, 2007, 2008, 2009, 2010, 2012, 2013, 2014, 2015, 2018, 2019, 2020, 2021, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-26 02:32+0000\n"
-"PO-Revision-Date: 2021-06-17 21:11+0200\n"
+"PO-Revision-Date: 2023-07-23 21:08+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 20.12.3\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -36,7 +36,7 @@ msgstr "이 창의 더 많은 동작"
 #: declarative-plugin/buttonsmodel.cpp:55
 #, kde-format
 msgid "Application menu"
-msgstr "프로그램 메뉴"
+msgstr "앱 메뉴"
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format

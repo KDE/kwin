@@ -1,14 +1,14 @@
 # Translation of kcmkwm to Korean.
 # Copyright (C) 1999, 2007 Free Software Foundation, Inc.
 # Linux Korea, Co. <kde@linuxkorea.co.kr>, 1999.
-# Shinjo Park <kde@peremen.name>, 2007, 2008, 2009, 2010, 2012, 2013, 2015, 2019, 2020, 2021, 2022.
+# Shinjo Park <kde@peremen.name>, 2007, 2008, 2009, 2010, 2012, 2013, 2015, 2019, 2020, 2021, 2022, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-03 00:48+0000\n"
-"PO-Revision-Date: 2022-04-16 23:09+0200\n"
+"PO-Revision-Date: 2023-07-23 21:54+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 21.08.1\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -601,15 +601,15 @@ msgid ""
 "windows are allowed to do so. This will override the window placement mode "
 "defined above."
 msgstr ""
-"이 설정을 사용하면 자기 창 위치를 기억할 수 있는 프로그램에서 창 위치를 기억"
-"합니다. 위에서 설정한 창 배치 모드 설정을 덮어씁니다."
+"이 설정을 사용하면 자기 창 위치를 기억할 수 있는 앱에서 창 위치를 기억합니"
+"다. 위에서 설정한 창 배치 모드 설정을 덮어씁니다."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
 #: advanced.ui:116
 #, kde-format
 msgid ""
 "Allow apps to remember the positions of their own windows, if they support it"
-msgstr "지원하는 프로그램에서 자기 창 위치 기억 허용"
+msgstr "지원하는 앱에서 자기 창 위치 기억 허용"
 
 #. i18n: ectx: property (text), widget (QLabel, specialWindowsLabel)
 #: advanced.ui:123
@@ -626,27 +626,27 @@ msgid ""
 "application becomes active. Note that applications have to mark the windows "
 "with the proper window type for this feature to work."
 msgstr ""
-"이 옵션을 사용하면 비활성 프로그램의 유틸리티 창(도구 창, 분리된 메뉴 등)을 "
-"숨기고 프로그램이 활성화될 때에만 표시합니다. 이 기능을 제대로 사용하려면 개"
-"별 프로그램이 창의 용도를 제대로 표시하여야 합니다."
+"이 옵션을 사용하면 비활성 앱의 유틸리티 창(도구 창, 분리된 메뉴 등)을 숨기고 "
+"앱이 활성화될 때에만 표시합니다. 이 기능을 제대로 사용하려면 개별 앱이 창의 "
+"용도를 제대로 표시하여야 합니다."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
 #: advanced.ui:136
 #, kde-format
 msgid "Hide utility windows for inactive applications"
-msgstr "비활성 프로그램의 유틸리티 창 숨기기"
+msgstr "비활성 앱의 유틸리티 창 숨기기"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyLabel)
 #: advanced.ui:143
 #, kde-format
 msgid "Virtual Desktop behavior:"
-msgstr ""
+msgstr "가상 바탕 화면 행동:"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyDescriptionLabel)
 #: advanced.ui:153
 #, kde-format
 msgid "When activating a window on a different Virtual Desktop:"
-msgstr ""
+msgstr "다른 가상 바탕 화면의 창을 활성화할 때:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:160
@@ -665,13 +665,13 @@ msgstr ""
 #: advanced.ui:164
 #, kde-format
 msgid "Switch to that Virtual Desktop"
-msgstr ""
+msgstr "해당 가상 바탕 화면으로 전환"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:169
 #, kde-format
 msgid "Bring window to current Virtual Desktop"
-msgstr ""
+msgstr "창을 현재 가상 바탕 화면으로 가져오기"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyLabel)
 #: focus.ui:22
@@ -683,50 +683,50 @@ msgstr "창 활성화 정책(&A):"
 #: focus.ui:32
 #, kde-format
 msgid "With this option you can specify how and when windows will be focused."
-msgstr "이 옵션을 사용하여 창에 초점을 맞출 시간과 방법을 설정합니다."
+msgstr "이 옵션을 사용하여 창에 포커스를 맞출 시간과 방법을 설정합니다."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:36
 #, kde-format
 msgctxt "sassa asas"
 msgid "Click to focus"
-msgstr "클릭해서 초점 맞추기"
+msgstr "클릭해서 포커스 맞추기"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:41
 #, kde-format
 msgid "Click to focus (mouse precedence)"
-msgstr "클릭해서 초점 맞추기(마우스 우선)"
+msgstr "클릭해서 포커스 맞추기(마우스 우선)"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:46
 #, kde-format
 msgid "Focus follows mouse"
-msgstr "마우스를 따라서 초점 맞추기"
+msgstr "마우스를 따라서 포커스 맞추기"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:51
 #, kde-format
 msgid "Focus follows mouse (mouse precedence)"
-msgstr "마우스를 따라서 초점 맞추기(마우스 우선)"
+msgstr "마우스를 따라서 포커스 맞추기(마우스 우선)"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:56
 #, kde-format
 msgid "Focus under mouse"
-msgstr "마우스 아래에 초점"
+msgstr "마우스 아래에 포커스"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:61
 #, kde-format
 msgid "Focus strictly under mouse"
-msgstr "마우스 아래에만 초점"
+msgstr "마우스 아래에만 포커스"
 
 #. i18n: ectx: property (text), widget (QLabel, delayFocusOnLabel)
 #: focus.ui:69
 #, kde-format
 msgid "&Delay focus by:"
-msgstr "초점 지연 시간(&D):"
+msgstr "포커스 지연 시간(&D):"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_DelayFocusInterval)
 #: focus.ui:82
@@ -734,13 +734,13 @@ msgstr "초점 지연 시간(&D):"
 msgid ""
 "This is the delay after which the window the mouse pointer is over will "
 "automatically receive focus."
-msgstr "마우스 포인터가 지나간 후 초점을 얻기까지 지연 시간입니다."
+msgstr "마우스 포인터가 지나간 후 포커스를 얻기까지 지연 시간입니다."
 
 #. i18n: ectx: property (text), widget (QLabel, focusStealingLabel)
 #: focus.ui:101
 #, kde-format
 msgid "Focus &stealing prevention:"
-msgstr "초점 훔치기 방지(&S):"
+msgstr "포커스 훔치기 방지(&S):"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_FocusStealingPreventionLevel)
 #: focus.ui:114
@@ -777,33 +777,33 @@ msgid ""
 "by default means their taskbar entry will be highlighted. This can be "
 "changed in the Notifications control module.</p></body></html>"
 msgstr ""
-"<html><head/><body><p>이 옵션은 KWin이 새 창의 예상하지 못한 활성화로 초점을 "
-"빼앗기는 것을 방지하는 정도를 결정합니다. (메모: <span style=\" font-style:"
-"italic;\">마우스 아래 초점</span> 및 <span style=\" font-style:italic;\">마우"
-"스 아래 항상 초점</span> 설정을 사용하는 경우 이 기능이 작동하지 않습니다.)</"
-"p><ul style=\"margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-"
-"right: 0px; -qt-list-indent: 1;\"><li style=\" margin-top:12px; margin-"
-"bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
-"indent:0px;\"><span style=\" font-style:italic;\">없음</span>: 초점 훔치기 방"
-"지를 사용하지 않고 새 창은 항상 활성화됩니다.</li><li style=\" margin-"
-"top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
-"indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">낮음</"
-"span>: 초점 훔치기 방지를 사용하며 일부 창이 하부 동작을 지원하지 않으며 KWin"
-"에서 창을 활성화시킬 지 여부를 결정할 수 없을 때 활성화됩니다. 이 설정은 프로"
-"그램에 따라서 중간 단계보다 더 낫거나 나쁜 결과를 가져올 수 있습니다.</"
-"li><li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"<html><head/><body><p>이 옵션은 KWin이 새 창의 예상하지 못한 활성화로 포커스"
+"를 빼앗기는 것을 방지하는 정도를 결정합니다. (메모: <span style=\" font-"
+"style:italic;\">마우스 아래 포커스</span> 및 <span style=\" font-style:"
+"italic;\">마우스 아래 항상 포커스</span> 설정을 사용하는 경우 이 기능이 작동"
+"하지 않습니다.)</p><ul style=\"margin-top: 0px; margin-bottom: 0px; margin-"
+"left: 0px; margin-right: 0px; -qt-list-indent: 1;\"><li style=\" margin-"
+"top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
+"indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">없음</"
+"span>: 포커스 훔치기 방지를 사용하지 않고 새 창은 항상 활성화됩니다.</li><li "
+"style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
-"italic;\">중간</span>: 초점 훔치기 방지를 사용합니다.</li><li style=\" "
-"margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
+"italic;\">낮음</span>: 포커스 훔치기 방지를 사용하며 일부 창이 하부 동작을 지"
+"원하지 않으며 KWin에서 창을 활성화시킬지 여부를 결정할 수 없을 때 활성화됩니"
+"다. 이 설정은 앱에 따라서 중간 단계보다 더 낫거나 나쁜 결과를 가져올 수 있습"
+"니다.</li><li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; "
+"margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+"style:italic;\">중간</span>: 포커스 훔치기 방지를 사용합니다.</li><li style="
+"\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
 "block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">높음</"
-"span>: 현재 활성화된 창이 없거나 새 창이 현재 프로그램에 속한 창인 경우에만 "
-"활성화합니다. 이 설정은 마우스 초점 정책을 사용하지 않는 경우에 사용하기 불편"
-"할 수도 있습니다.</li><li style=\" margin-top:0px; margin-bottom:12px; "
-"margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
-"\"><span style=\" font-style:italic;\">최대</span>: 모든 창은 사용자가 직접 "
-"활성화해야 합니다.</li></ul><p>초점 훔치기를 가로막힌 창은 요청을 필요하는 것"
-"으로 표시되며, 작업 표시줄에서 항목이 강조됩니다. 알림 제어 모듈에서 행동을 "
-"변경할 수 있습니다.</p></body></html>"
+"span>: 현재 활성화된 창이 없거나 새 창이 현재 앱에 속한 창인 경우에만 활성화"
+"합니다. 이 설정은 마우스 포커스 정책을 사용하지 않는 경우에 사용하기 불편할 "
+"수도 있습니다.</li><li style=\" margin-top:0px; margin-bottom:12px; margin-"
+"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+"style=\" font-style:italic;\">최대</span>: 모든 창은 사용자가 직접 활성화해"
+"야 합니다.</li></ul><p>포커스 훔치기를 가로막힌 창은 요청을 필요로 하는 것으"
+"로 표시되며, 작업 표시줄에서 항목이 강조됩니다. 알림 제어 모듈에서 행동을 변"
+"경할 수 있습니다.</p></body></html>"
 
 #. i18n: Focus Stealing Prevention Level
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_BorderSnapZone)
@@ -906,7 +906,7 @@ msgid ""
 msgstr ""
 "이 옵션을 사용하면 현재 활성화된 화면(예를 들어 새 창이 나타나는 화면)은 마우"
 "스 포인터가 있는 화면이 됩니다. 이 옵션을 사용하지 않으면 현재 활성화된 화면"
-"은 초점이 맞춰진 창이 있는 화면이 됩니다."
+"은 포커스가 맞춰진 창이 있는 화면이 됩니다."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
 #: focus.ui:206
@@ -921,13 +921,13 @@ msgid ""
 "When this option is enabled, focus operations are limited only to the active "
 "screen"
 msgstr ""
-"이 옵션을 사용하면 현재 활성화된 화면에 대해서만 초점 동작이 작동합니다"
+"이 옵션을 사용하면 현재 활성화된 화면에 대해서만 포커스 동작이 작동합니다"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
 #: focus.ui:216
 #, kde-format
 msgid "&Separate screen focus"
-msgstr "화면별 초점 분리(&S)"
+msgstr "화면별 포커스 분리(&S)"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
 #: focus.ui:229
@@ -938,7 +938,7 @@ msgstr "창 활성화 정책 설명"
 #: main.cpp:73
 #, kde-format
 msgid "&Focus"
-msgstr "초점(&F)"
+msgstr "포커스(&F)"
 
 #: main.cpp:79
 #, kde-format
@@ -1026,9 +1026,9 @@ msgid ""
 "documentation for how to customize window behavior.</p>"
 msgstr ""
 "<p><h1>창 동작</h1> 이곳에서 창을 옮기거나, 크기를 조정하거나, 클릭했을 때 행"
-"동을 지정할 수 있습니다. 또한 새 창에 대한 배치 및 초점 정책을 설정할 수 있습"
-"니다.</p><p>이 설정은 창 관리자가 KWin일 때에만 작동합니다. 만약 다른 창 관리"
-"자를 사용한다면 창 관리자의 문서를 참고해서 설정하십시오.</p>"
+"동을 지정할 수 있습니다. 또한 새 창에 대한 배치 및 포커스 정책을 설정할 수 있"
+"습니다.</p><p>이 설정은 창 관리자가 KWin일 때에만 작동합니다. 만약 다른 창 관"
+"리자를 사용한다면 창 관리자의 문서를 참고해서 설정하십시오.</p>"
 
 #: main.cpp:202
 #, kde-format
@@ -1311,8 +1311,8 @@ msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
 "This behavior is common on other operating systems and likely what you want."
 msgstr ""
-"<em>클릭해서 초점 맞춤:</em> 창을 클릭하면 초점을 맞춥니다. 이 행동은 다른 운"
-"영체제에서 취하는 방식이며 대부분 경우 원하는 방식입니다."
+"<em>클릭해서 포커스 맞춤:</em> 창을 클릭하면 포커스를 맞춥니다. 이 행동은 다"
+"른 운영체제에서 취하는 방식이며 대부분 경우 원하는 방식입니다."
 
 #: windows.cpp:101
 #, kde-format
@@ -1323,10 +1323,10 @@ msgid ""
 "preferred candidate. Unusual, but possible variant of <em>Click to focus</"
 "em>."
 msgstr ""
-"<em>클릭해서 초점 맞춤(마우스 우선):</em> 이 설정은 <em>클릭하면 초점을 맞춤"
-"</em> 설정과 유사합니다. 만약 현재 창이 닫히는 등 시스템에서 활성 창을 선택하"
-"여야 하면 현재 마우스 포인터 아래의 창을 선택합니다. <em>클릭하면 초점을 맞춤"
-"</em> 설정의 파생형입니다."
+"<em>클릭해서 포커스 맞춤(마우스 우선):</em> 이 설정은 <em>클릭해서 포커스 맞"
+"춤</em> 설정과 유사합니다. 만약 현재 창이 닫히는 등 시스템에서 활성 창을 선택"
+"하여야 하면 현재 마우스 포인터 아래의 창을 선택합니다. <em>클릭해서 포커스 맞"
+"춤</em> 설정의 파생형입니다."
 
 #: windows.cpp:106
 #, kde-format
@@ -1336,10 +1336,10 @@ msgid ""
 "<em>Focus stealing prevention</em> takes place as usual. Think as <em>Click "
 "to focus</em> just without having to actually click."
 msgstr ""
-"<em>마우스가 초점을 따라감:</em> 마우스를 창으로 이동하면 활성화됩니다. 예. "
-"마우스 아래에 무작위적으로 표시되는 창은 초점을 받지 못합니다. 초점 훔치기 방"
-"지는 평소대로 작동합니다. 실제로 클릭하지 않아도 되는 <em>클릭하면 초점을 맞"
-"춤</em>으로 생각하십시오."
+"<em>마우스가 포커스를 따라감:</em> 마우스를 창으로 이동하면 활성화됩니다. "
+"예. 마우스 아래에 무작위적으로 표시되는 창은 포커스를 받지 못합니다. 포커스 "
+"훔치기 방지는 평소대로 작동합니다. 실제로 클릭하지 않아도 되는 <em>클릭해서 "
+"포커스 맞춤</em>으로 생각하십시오."
 
 #: windows.cpp:110
 #, kde-format
@@ -1349,9 +1349,9 @@ msgid ""
 "closed) the window under the mouse is the preferred candidate. Choose this, "
 "if you want a hover controlled focus."
 msgstr ""
-"이 설정은 <em>마우스가 초점을 따라감</em> 설정과 유사합니다. 만약 현재 창이 "
-"닫히는 등 시스템에서 활성 창을 선택하여야 하면 현재 마우스 포인터 아래의 창"
-"을 선택합니다. 호버로 제어하는 초점을 원하면 선택하십시오."
+"이 설정은 <em>마우스가 포커스를 따라감</em> 설정과 유사합니다. 만약 현재 창"
+"이 닫히는 등 시스템에서 활성 창을 선택하여야 하면 현재 마우스 포인터 아래의 "
+"창을 선택합니다. 호버로 제어하는 포커스를 원하면 선택하십시오."
 
 #: windows.cpp:115
 #, kde-format
@@ -1362,10 +1362,11 @@ msgid ""
 "not work. You very likely want to use <em>Focus follows mouse (mouse "
 "precedence)</em> instead!"
 msgstr ""
-"<em>마우스 아래 초점:</em> 창 초점은 항상 마우스 아래에 있는 창에 맞춰집니다."
-"<br/><strong>알림:</strong> <em>초점 훔치기 방지</em> 및 <em>탭 상자(\"Alt"
-"+Tab\")</em>는 이 정책에 모순되며 작동하지 않습니다. 만약 위 설정을 사용해야 "
-"한다면 <em>마우스가 초점을 따라감(마우스 우선)</em> 설정을 사용하십시오!"
+"<em>마우스 아래 포커스:</em> 창 포커스는 항상 마우스 아래에 있는 창에 맞춰집"
+"니다.<br/><strong>알림:</strong> <em>포커스 훔치기 방지</em> 및 <em>탭 상자"
+"(\"Alt+Tab\")</em>는 이 정책에 모순되며 작동하지 않습니다. 만약 위 설정을 사"
+"용해야 한다면 <em>마우스가 포커스를 따라감(마우스 우선)</em> 설정을 사용하십"
+"시오!"
 
 #: windows.cpp:119
 #, kde-format
@@ -1377,12 +1378,12 @@ msgid ""
 "activation policy and will not work. You very likely want to use <em>Focus "
 "follows mouse (mouse precedence)</em> instead!"
 msgstr ""
-"<em>마우스 아래 항상 초점:</em> 창 초점은 항상 마우스 아래에 있는 창에 맞춰지"
-"며 창이 없는 경우에는 아무 창도 초점을 가지지 않습니다. 관리되지 않는 X11 환"
-"경의 기본값과 비슷하게 동작합니다.<br/><strong>알림:</strong> <em>초점 훔치"
-"기 방지</em> 및 <em>탭 상자(\"Alt+Tab\")</em>는 이 정책에 모순되며 작동하지 "
-"않습니다. 만약 위 설정을 사용해야 한다면 <em>마우스가 초점을 따라감(마우스 우"
-"선)</em> 설정을 사용하십시오!"
+"<em>마우스 아래 항상 포커스:</em> 창 포커스는 항상 마우스 아래에 있는 창에 맞"
+"춰지며 창이 없는 경우에는 아무 창도 포커스를 가지지 않습니다. 관리되지 않는 "
+"X11 환경의 기본값과 비슷하게 동작합니다.<br/><strong>알림:</strong> <em>포커"
+"스 훔치기 방지</em> 및 <em>탭 상자(\"Alt+Tab\")</em>는 이 정책에 모순되며 작"
+"동하지 않습니다. 만약 위 설정을 사용해야 한다면 <em>마우스가 포커스를 따라감"
+"(마우스 우선)</em> 설정을 사용하십시오!"
 
 #~ msgid "Cascaded"
 #~ msgstr "계단식 배열"

@@ -2,7 +2,7 @@
 # Copyright (C) 2001-2004, 2007-2008 Free Software Foundation, Inc.
 # Sae-keun Kim <segni@susekorea.net>, 2001.
 # Yeo SunHwa <sunwt@mizi.com>, 2001.
-# Shinjo Park <kde@peremen.name>, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022.
+# Shinjo Park <kde@peremen.name>, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
 #
 #
 msgid ""
@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-22 02:43+0000\n"
-"PO-Revision-Date: 2022-08-09 13:31+0200\n"
+"PO-Revision-Date: 2023-07-24 00:08+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 21.12.3\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -41,41 +41,31 @@ msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
 "resume using the '%1' shortcut."
 msgstr ""
-"다른 프로그램이 데스크톱 효과를 중지했습니다.<br/>'%1' 키를 눌러서 다시 시작"
-"할 수 있습니다."
+"다른 앱이 데스크톱 효과를 중지했습니다.<br/>'%1' 키를 눌러서 다시 시작할 수 "
+"있습니다."
 
 #: composite.cpp:1064
-#, fuzzy, kde-format
-#| msgid ""
-#| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
-#| "b><br>This was most likely due to a driver bug.<p>If you think that you "
-#| "have meanwhile upgraded to a stable driver,<br>you can reset this "
-#| "protection but <b>be aware that this might result in an immediate crash!</"
-#| "b></p><p>Alternatively, you might want to use the XRender backend instead."
-#| "</p>"
+#, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
 "b><br>This was most likely due to a driver bug.<p>If you think that you have "
 "meanwhile upgraded to a stable driver,<br>you can reset this protection but "
 "<b>be aware that this might result in an immediate crash!</b></p>"
 msgstr ""
-"<b>예전에 KWin을 실행시켰을 때 OpenGL 컴포지팅(기본값)이 충돌했습니다.</b> "
-"<br>드라이버 버그 때문에 문제가 발생했을 수도 있습니다.<p>만약 안정적인 드라"
-"이버로 업그레이드하였다면<br>이 보호 장치를 해제할 수도 있으나 <b>시스템이 언"
-"제든지 충돌할 수도 있습니다!</b></p><p>다른 방법으로는 XRender 백엔드를 사용"
-"할 수도 있습니다.</p>"
+"<b>예전에 KWin을 실행시켰을 때 OpenGL 컴포지팅(기본값)이 충돌했습니다.</"
+"b><br>드라이버 버그 때문에 문제가 발생했을 수도 있습니다.<p>만약 안정적인 드"
+"라이버로 업그레이드했다면 이 보호 장치를 해제할 수도 있으나<br><b>시스템이 언"
+"제든지 충돌할 수도 있습니다!</b></p>"
 
 #: composite.cpp:1071
-#, fuzzy, kde-format
-#| msgid "Required X extensions (XComposite and XDamage) are not available."
+#, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
-msgstr "필요한 X 확장 XComposite와 XDamage를 사용할 수 없습니다."
+msgstr "필요한 X 확장(XComposite와 XDamage)을 사용할 수 없습니다."
 
 #: composite.cpp:1074
-#, fuzzy, kde-format
-#| msgid "GLX/OpenGL and XRender/XFixes are not available."
+#, kde-format
 msgid "GLX/OpenGL is not available."
-msgstr "GLX/OpenGL 또는 XRender/XFixes 확장을 사용할 수 없습니다."
+msgstr "GLX/OpenGL을 사용할 수 없습니다."
 
 #: debug_console.cpp:79 debug_console.cpp:84
 #, kde-format
@@ -1053,7 +1043,7 @@ msgstr "창 관리자"
 #: helpers/killer/killer.cpp:38
 #, kde-format
 msgid "PID of the application to terminate"
-msgstr "종료할 프로그램의 프로세스 ID"
+msgstr "종료할 앱의 프로세스 ID"
 
 #: helpers/killer/killer.cpp:38
 #, kde-format
@@ -1063,7 +1053,7 @@ msgstr "pid"
 #: helpers/killer/killer.cpp:40
 #, kde-format
 msgid "Hostname on which the application is running"
-msgstr "프로그램이 실행 중인 호스트 이름"
+msgstr "앱이 실행 중인 호스트 이름"
 
 #: helpers/killer/killer.cpp:40
 #, kde-format
@@ -1083,7 +1073,7 @@ msgstr "캡션"
 #: helpers/killer/killer.cpp:44
 #, kde-format
 msgid "Name of the application to be terminated"
-msgstr "종료할 프로그램의 이름"
+msgstr "종료할 앱의 이름"
 
 #: helpers/killer/killer.cpp:44
 #, kde-format
@@ -1093,7 +1083,7 @@ msgstr "이름"
 #: helpers/killer/killer.cpp:46
 #, kde-format
 msgid "ID of resource belonging to the application"
-msgstr "프로그램에 속한 자원의 ID"
+msgstr "앱에 속한 자원의 ID"
 
 #: helpers/killer/killer.cpp:46
 #, kde-format
@@ -1124,7 +1114,7 @@ msgstr "이 도우미 프로그램은 직접 호출되지 않습니다."
 #, kde-format
 msgctxt "@info"
 msgid "<b>Application \"%1\" is not responding</b>"
-msgstr "<b>프로그램 \"%1\"이(가) 응답하지 않음</b>"
+msgstr "<b>\"%1\" 앱이 응답하지 않음</b>"
 
 #: helpers/killer/killer.cpp:86
 #, kde-kuit-format
@@ -1133,8 +1123,8 @@ msgid ""
 "<para>You tried to close window \"%1\" from application \"%2\" (Process ID: "
 "%3) but the application is not responding.</para>"
 msgstr ""
-"<para>프로그램 \"%2\" (프로세스 ID %3)에서 연 창 \"%1\"을(를) 닫으려고 했으"
-"나 프로그램이 응답하지 않습니다.</para>"
+"<para>앱 \"%2\" (프로세스 ID %3)에서 연 창 \"%1\"을(를) 닫으려고 했으나 앱이 "
+"응답하지 않습니다.</para>"
 
 #: helpers/killer/killer.cpp:88
 #, kde-kuit-format
@@ -1143,8 +1133,8 @@ msgid ""
 "<para>You tried to close window \"%1\" from application \"%2\" (Process ID: "
 "%3), running on host \"%4\", but the application is not responding.</para>"
 msgstr ""
-"<para>호스트 \"%4\"에서 실행 중인 프로그램 \"%2\" (프로세스 ID %3)에서 연 창 "
-"\"%1\"을(를) 닫으려고 했으나 프로그램이 응답하지 않습니다.</para>"
+"<para>\"%4\" 호스트에서 실행 중인 \"%2\" 앱(프로세스 ID %3)에서 연 \"%1\" 창"
+"을 닫으려고 했으나 앱이 응답하지 않습니다.</para>"
 
 #: helpers/killer/killer.cpp:91
 #, kde-kuit-format
@@ -1154,14 +1144,13 @@ msgid ""
 "para><para><warning>Terminating the application will close all of its child "
 "windows. Any unsaved data will be lost.</warning></para>"
 msgstr ""
-"<para>이 프로그램을 강제로 종료하시겠습니까?</para><para><warning>프로그램을 "
-"종료하면 자식 창도 종료됩니다. 저장하지 않은 데이터는 손실됩니다.</warning></"
-"para>"
+"<para>이 앱을 강제로 종료하시겠습니까?</para><para><warning>앱을 종료하면 자"
+"식 창도 종료됩니다. 저장하지 않은 데이터는 손실됩니다.</warning></para>"
 
 #: helpers/killer/killer.cpp:94
 #, kde-format
 msgid "&Terminate Application %1"
-msgstr "프로그램 %1 끝내기(&T)"
+msgstr "%1 앱 끝내기(&T)"
 
 #: helpers/killer/killer.cpp:95
 #, kde-format
@@ -1171,19 +1160,17 @@ msgstr "더 기다리기"
 #: input.cpp:2014
 #, kde-format
 msgid "Move the tablet to the next output"
-msgstr ""
+msgstr "다음 출력으로 태블릿 이동"
 
 #: input.cpp:2093
-#, fuzzy, kde-format
-#| msgctxt "Name of a hardware switch"
-#| msgid "Tablet mode"
+#, kde-format
 msgid "Tablet moved to %1"
-msgstr "태블릿 모드"
+msgstr "%1(으)로 태블릿 이동됨"
 
 #: input.cpp:2093
 #, kde-format
 msgid "Tablets switched outputs"
-msgstr ""
+msgstr "태블릿에서 출력 변경됨"
 
 #: input.cpp:3098
 #, kde-format
@@ -1358,7 +1345,7 @@ msgstr "DRM 노드로 렌더링합니다."
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
-msgstr ""
+msgstr "사용자 설정 대신 locale1에서 로캘 정보 추출"
 
 #: main_wayland.cpp:386
 #, kde-format
@@ -1388,12 +1375,12 @@ msgstr "KActivities 통합을 사용하지 않습니다."
 #: main_wayland.cpp:411
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
-msgstr "KWin에서 시작한 세션 프로그램이 끝난 후에 닫습니다."
+msgstr "KWin에서 시작한 세션 앱이 끝난 후에 닫습니다."
 
 #: main_wayland.cpp:416
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
-msgstr "Wayland 및 Xwayland 서버가 시작되었을 때 시작할 프로그램"
+msgstr "Wayland 및 Xwayland 서버가 시작되었을 때 시작할 앱"
 
 #: main_x11.cpp:67
 #, kde-format
@@ -1588,7 +1575,7 @@ msgstr "야간 색상 전환"
 #: plugins/nightcolor/nightcolormanager.cpp:471
 #, kde-format
 msgid "Color Temperature Preview"
-msgstr ""
+msgstr "색 온도 미리 보기"
 
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
@@ -1624,7 +1611,7 @@ msgstr "이 규칙 삭제(가져올 때 사용)"
 #: rulesettings.kcfg:20
 #, kde-format
 msgid "Window class (application)"
-msgstr "창 클래스(프로그램)"
+msgstr "창 클래스(앱)"
 
 #. i18n: ectx: label, entry (wmclassmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:23
@@ -1984,37 +1971,37 @@ msgstr "컴포지팅 중단하기 규칙 종류"
 #: rulesettings.kcfg:332
 #, kde-format
 msgid "Focus stealing prevention"
-msgstr "초점 훔치기 방지"
+msgstr "포커스 훔치기 방지"
 
 #. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:338
 #, kde-format
 msgid "Focus stealing prevention rule type"
-msgstr "초점 훔치기 방지 규칙 종류"
+msgstr "포커스 훔치기 방지 규칙 종류"
 
 #. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:343
 #, kde-format
 msgid "Focus protection"
-msgstr "초점 보호"
+msgstr "포커스 보호"
 
 #. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:349
 #, kde-format
 msgid "Focus protection rule type"
-msgstr "초점 보호 규칙 종류"
+msgstr "포커스 보호 규칙 종류"
 
 #. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:354
 #, kde-format
 msgid "Accept Focus"
-msgstr "초점 받아들이기"
+msgstr "포커스 받아들이기"
 
 #. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:358
 #, kde-format
 msgid "Accept Focus rule type"
-msgstr "초점 받아들이기 규칙 종류"
+msgstr "포커스 받아들이기 규칙 종류"
 
 #. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:363
@@ -2116,20 +2103,20 @@ msgstr "데스크톱 파일 이름 규칙 종류"
 #, kde-format
 msgctxt "Error message"
 msgid "Could not locate package metadata"
-msgstr ""
+msgstr "패키지 메타데이터를 찾을 수 없음"
 
 #: scripting/genericscriptedconfig.cpp:84
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not contain a valid metadata.json file"
-msgstr ""
+msgstr "%1에 올바른 metadata.json 파일이 없음"
 
 #: scripting/genericscriptedconfig.cpp:90
 #: scripting/genericscriptedconfig.cpp:96
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
-msgstr ""
+msgstr "%1이(가) 없음"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -2159,27 +2146,27 @@ msgstr "창간 거꾸로 이동"
 
 #: tabbox/tabbox.cpp:523
 msgid "Walk Through Windows Alternative"
-msgstr "창간 다르게 이동"
+msgstr "현재 앱의 창간 다르게 이동"
 
 #: tabbox/tabbox.cpp:524
 msgid "Walk Through Windows Alternative (Reverse)"
-msgstr "창간 거꾸로 다르게 이동"
+msgstr "현재 앱의 창간 거꾸로 다르게 이동"
 
 #: tabbox/tabbox.cpp:525
 msgid "Walk Through Windows of Current Application"
-msgstr "현재 프로그램의 창간 이동"
+msgstr "현재 앱의 창간 이동"
 
 #: tabbox/tabbox.cpp:526
 msgid "Walk Through Windows of Current Application (Reverse)"
-msgstr "현재 프로그램의 창간 거꾸로 이동"
+msgstr "현재 앱의 창간 거꾸로 이동"
 
 #: tabbox/tabbox.cpp:527
 msgid "Walk Through Windows of Current Application Alternative"
-msgstr "현재 프로그램의 창간 다르게 이동"
+msgstr "현재 앱의 창간 다르게 이동"
 
 #: tabbox/tabbox.cpp:528
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
-msgstr "현재 프로그램의 창간 거꾸로 다르게 이동"
+msgstr "현재 앱의 창간 거꾸로 다르게 이동"
 
 #: tabbox/tabbox.cpp:529
 msgid "Walk Through Desktops"
@@ -2195,7 +2182,7 @@ msgstr "바탕 화면 목록에서 이동"
 
 #: tabbox/tabbox.cpp:532
 msgid "Walk Through Desktop List (Reverse)"
-msgstr "바탕 화면 목록에서 거꾸로 이동"
+msgstr "바탕 화면간 거꾸로 이동"
 
 #: tabbox/tabboxhandler.cpp:290
 #, kde-format
@@ -2227,9 +2214,9 @@ msgid ""
 "window operations menu instead, activated using the %1 keyboard shortcut."
 msgstr ""
 "창을 전체 화면 모드로 보이도록 설정했습니다.\n"
-"프로그램에서 전체 화면 모드를 제어할 수 없을 때에는 마우스를 사용해서 전체 화"
-"면 모드에서 벗어날 수 없습니다: 키보드 단축키 %1을(를) 사용해서 창 동작 메뉴"
-"를 부르십시오."
+"앱에서 전체 화면 모드를 제어할 수 없을 때에는 마우스를 사용해서 전체 화면 모"
+"드에서 벗어날 수 없습니다: 키보드 단축키 %1을(를) 사용해서 창 동작 메뉴를 부"
+"르십시오."
 
 #: useractions.cpp:238
 #, kde-format
@@ -2262,10 +2249,9 @@ msgid "&Shade"
 msgstr "말아 올리기(&S)"
 
 #: useractions.cpp:272
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "&No Titlebar and Frame"
-msgstr "제목 표시줄과 프레임 없음"
+msgstr "제목 표시줄과 프레임 없음(&N)"
 
 #: useractions.cpp:280
 #, kde-format
@@ -2280,7 +2266,7 @@ msgstr "창 특별 설정(&W)..."
 #: useractions.cpp:291
 #, kde-format
 msgid "Configure S&pecial Application Settings..."
-msgstr "프로그램 특별 설정(&P)..."
+msgstr "앱 특별 설정(&P)..."
 
 #: useractions.cpp:298
 #, kde-format
@@ -2336,11 +2322,9 @@ msgid "Show in &Activities"
 msgstr "다음 활동에 표시(&A)"
 
 #: useractions.cpp:525
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move the window to that desktop"
-#| msgid "Move to New Desktop"
+#, kde-format
 msgid "Move &To Current Desktop"
-msgstr "새 바탕 화면으로 이동"
+msgstr "현재 바탕 화면으로 이동(&T)"
 
 #: useractions.cpp:535 useractions.cpp:602
 #, kde-format
@@ -2384,10 +2368,9 @@ msgid "&All Activities"
 msgstr "모든 활동(&A)"
 
 #: useractions.cpp:776
-#, fuzzy, kde-format
-#| msgid "Move to %1 %2"
+#, kde-format
 msgid "Move to %1"
-msgstr "%1 %2(으)로 이동"
+msgstr "%1(으)로 이동"
 
 #: useractions.cpp:901
 #, kde-format
@@ -2467,10 +2450,9 @@ msgid "Make Window Fullscreen"
 msgstr "창을 전체 화면으로"
 
 #: useractions.cpp:1009
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "Toggle Window Titlebar and Frame"
-msgstr "제목 표시줄과 프레임 없음"
+msgstr "창 제목 표시줄과 프레임 전환"
 
 #: useractions.cpp:1011
 #, kde-format
@@ -2598,14 +2580,12 @@ msgid "Switch to Window to the Left"
 msgstr "왼쪽 창으로 전환"
 
 #: useractions.cpp:1061
-#, fuzzy, kde-format
-#| msgid "Increase Opacity of Active Window by 5 %"
+#, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "활성 창 불투명도 5% 증가"
 
 #: useractions.cpp:1063
-#, fuzzy, kde-format
-#| msgid "Decrease Opacity of Active Window by 5 %"
+#, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "활성 창 불투명도 5% 감소"
 
@@ -2665,28 +2645,24 @@ msgid "Window to Previous Screen"
 msgstr "이전 화면으로 창 이동"
 
 #: useractions.cpp:1102
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Window One Screen to the Right"
-msgstr "오른쪽 바탕 화면으로 창 이동"
+msgstr "창을 오른쪽으로 한 화면"
 
 #: useractions.cpp:1104
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Window One Screen to the Left"
-msgstr "왼쪽 바탕 화면으로 창 이동"
+msgstr "창을 왼쪽으로 한 화면"
 
 #: useractions.cpp:1106
-#, fuzzy, kde-format
-#| msgid "Window to Screen %1"
+#, kde-format
 msgid "Window One Screen Up"
-msgstr "창을 화면 %1(으)로 보내기"
+msgstr "창을 위쪽으로 한 화면"
 
 #: useractions.cpp:1108
-#, fuzzy, kde-format
-#| msgid "Window One Desktop Down"
+#, kde-format
 msgid "Window One Screen Down"
-msgstr "아래쪽 바탕 화면으로 창 이동"
+msgstr "창을 아래쪽으로 한 화면"
 
 #: useractions.cpp:1112
 #, kde-format
@@ -2704,28 +2680,24 @@ msgid "Switch to Previous Screen"
 msgstr "이전 화면으로 전환"
 
 #: useractions.cpp:1121
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Right"
+#, kde-format
 msgid "Switch to Screen to the Right"
-msgstr "오른쪽 창으로 전환"
+msgstr "오른쪽 화면으로 전환"
 
 #: useractions.cpp:1123
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Left"
+#, kde-format
 msgid "Switch to Screen to the Left"
-msgstr "왼쪽 창으로 전환"
+msgstr "왼쪽 화면으로 전환"
 
 #: useractions.cpp:1125
-#, fuzzy, kde-format
-#| msgid "Switch to Screen %1"
+#, kde-format
 msgid "Switch to Screen Above"
-msgstr "화면 %1(으)로 전환"
+msgstr "위쪽 화면으로 전환"
 
 #: useractions.cpp:1127
-#, fuzzy, kde-format
-#| msgid "Switch to Screen %1"
+#, kde-format
 msgid "Switch to Screen Below"
-msgstr "화면 %1(으)로 전환"
+msgstr "아래쪽 화면으로 전환"
 
 #: useractions.cpp:1130
 #, kde-format

@@ -1,14 +1,14 @@
 # Translation of kcmkwinrules to Korean.
 # Copyright (C) 2007-2008 This_file_is_part_of_KDE
 # This file is distributed under the same license as the kdebase package.
-# Shinjo Park <kde@peremen.name>, 2007, 2008, 2009, 2010, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022.
+# Shinjo Park <kde@peremen.name>, 2007, 2008, 2009, 2010, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-25 02:43+0000\n"
-"PO-Revision-Date: 2022-05-06 00:08+0200\n"
+"PO-Revision-Date: 2023-07-23 21:51+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 21.12.3\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -65,7 +65,7 @@ msgstr "사본 - %1"
 #: kcmrules.cpp:423
 #, kde-format
 msgid "Application settings for %1"
-msgstr "%1의 프로그램 설정"
+msgstr "%1의 앱 설정"
 
 #: kcmrules.cpp:445 rulesmodel.cpp:215
 #, kde-format
@@ -85,7 +85,7 @@ msgstr "창 지정 설정에 사용할 창의 KWin ID."
 #: main.cpp:33
 #, kde-format
 msgid "Whether the settings should affect all windows of the application."
-msgstr "설정이 이 프로그램의 모든 창에 영향을 줄지 여부."
+msgstr "설정이 이 앱의 모든 창에 영향을 줄지 여부."
 
 #: main.cpp:40
 #, kde-format
@@ -96,7 +96,7 @@ msgstr "이 도우미 프로그램은 직접 호출되지 않습니다."
 #, kde-format
 msgctxt "Window caption for the application wide rules dialog"
 msgid "Edit Application-Specific Settings"
-msgstr "프로그램 지정 설정 편집하기"
+msgstr "앱 지정 설정 편집하기"
 
 #: main.cpp:45
 #, kde-format
@@ -413,9 +413,9 @@ msgid ""
 "types."
 msgstr ""
 "창 클래스를 중요하지 않음으로 지정했습니다.\n"
-"모든 프로그램의 창에 영향을 끼칠 수도 있습니다. 일반적인 설정을 만들려는 것이"
-"라면 최소한 창 종류의 제한을 두어서 특별한 창에 설정이 적용되지 않도록 하는 "
-"것을 권장합니다."
+"모든 앱의 창에 영향을 끼칠 수도 있습니다. 일반적인 설정을 만들려는 것이라면 "
+"최소한 창 종류의 제한을 두어서 특별한 창에 설정이 적용되지 않도록 하는 것을 "
+"권장합니다."
 
 #: rulesmodel.cpp:244
 #, kde-format
@@ -424,9 +424,9 @@ msgid ""
 "initial settings for size and position. To enforce these settings, also "
 "force the property \"%1\" to \"Yes\"."
 msgstr ""
-"일부 프로그램은 시작한 후 초기 창 크기와 위치를 덮어쓰는 개별적인 창 크기와 "
-"위치를 설정할 수도 있습니다. 이 설정을 강제하려면 \"%1\" 속성을 \"예\"로 변경"
-"하십시오."
+"일부 앱은 시작한 후 초기 창 크기와 위치를 덮어쓰는 개별적인 창 크기와 위치를 "
+"설정할 수도 있습니다. 이 설정을 강제하려면 \"%1\" 속성을 \"예\"로 변경하십시"
+"오."
 
 #: rulesmodel.cpp:359
 #, kde-format
@@ -442,7 +442,7 @@ msgstr "창 일치"
 #: rulesmodel.cpp:367
 #, kde-format
 msgid "Window class (application)"
-msgstr "창 클래스 (프로그램)"
+msgstr "창 클래스 (앱)"
 
 #: rulesmodel.cpp:375
 #, kde-format
@@ -557,7 +557,7 @@ msgid ""
 msgstr ""
 "창이 항상 특정한 위치에 표시되도록 할 수 있습니다.\n"
 "기본적으로 이 동작은 창 위치 배정 정책에 우선하며\n"
-"프로그램에서 이 기능을 잘못 사용하여 항상 화면\n"
+"앱에서 이 기능을 잘못 사용하여 항상 화면\n"
 "가운데에 창을 표시하도록 할 수 있습니다."
 
 #: rulesmodel.cpp:516
@@ -671,7 +671,7 @@ msgstr "비활성 투명도"
 #: rulesmodel.cpp:592
 #, kde-format
 msgid "Focus stealing prevention"
-msgstr "초점 훔쳐가기 방지"
+msgstr "포커스 훔치기 방지"
 
 #: rulesmodel.cpp:594
 #, kde-format
@@ -682,16 +682,16 @@ msgid ""
 "\"None\" will unconditionally allow this window to get the focus while\n"
 "\"Extreme\" will completely prevent it from taking the focus."
 msgstr ""
-"KWin은 다른 창에서 작업하는 동안 창의 초점\n"
-"(\"활성화\")을 빼앗기는 것을 방지하지만,\n"
+"KWin은 다른 창에서 작업하는 동안 창의 포커스\n"
+"(\"활성화\")를 빼앗기는 것을 방지하지만,\n"
 "때때로 작동하지 않거나 오작동할 수 있습니다.\n"
-"\"없음\"을 선택하면 항상 창이 초점을 받을 수 있도록 하며,\n"
-"\"매우 높음\"을 선택하면 초점을 빼앗는 것을 완전히 방지합니다."
+"\"없음\"을 선택하면 항상 창이 포커스를 받을 수 있도록 하며,\n"
+"\"매우 높음\"을 선택하면 포커스를 빼앗는 것을 완전히 방지합니다."
 
 #: rulesmodel.cpp:603
 #, kde-format
 msgid "Focus protection"
-msgstr "초점 훔쳐가기 방지"
+msgstr "포커스 보호"
 
 #: rulesmodel.cpp:605
 #, kde-format
@@ -702,16 +702,16 @@ msgid ""
 "Otherwise it's interleaved with the stealing prevention\n"
 "assigned to the window that wants the focus."
 msgstr ""
-"이 옵션은 현재 활성 창의 초점 훔쳐가기만 제어합니다.\n"
-"없음을 선택하면 항상 초점을 다른 창에 줍니다.\n"
-"매우 높음을 선택하면 항상 초점을 유지합니다.\n"
-"다른 옵션을 선택하면 초점을 받고 싶은 창의 종류에 따라서\n"
-"초점을 넘길 지를 결정합니다."
+"이 옵션은 현재 활성 창의 포커스 훔쳐가기만 제어합니다.\n"
+"없음을 선택하면 항상 포커스를 다른 창에 줍니다.\n"
+"매우 높음을 선택하면 항상 포커스를 유지합니다.\n"
+"다른 옵션을 선택하면 포커스를 받고 싶은 창의 종류에 따라서\n"
+"포커스를 넘길지를 결정합니다."
 
 #: rulesmodel.cpp:614
 #, kde-format
 msgid "Accept focus"
-msgstr "초점 받아들이기"
+msgstr "포커스 받아들이기"
 
 #: rulesmodel.cpp:616
 #, kde-format
@@ -720,8 +720,8 @@ msgid ""
 "On the other hand you might wish to prevent a window\n"
 "from getting focused on a mouse click."
 msgstr ""
-"특정한 창은 마우스를 클릭해도 초점을 받지 않을 수 있습니다.\n"
-"또한, 특정한 창에서 마우스를 클릭해도 초점을 받지 않도록\n"
+"특정한 창은 마우스를 클릭해도 포커스를 받지 않을 수 있습니다.\n"
+"또한, 특정한 창에서 마우스를 클릭해도 포커스를 받지 않도록\n"
 "설정할 수도 있습니다."
 
 #: rulesmodel.cpp:622
@@ -771,10 +771,9 @@ msgid "Block compositing"
 msgstr "컴포지팅 무시"
 
 #: rulesmodel.cpp:703
-#, fuzzy, kde-format
-#| msgid "Window class (application)"
+#, kde-format
 msgid "Window class not available"
-msgstr "창 클래스 (프로그램)"
+msgstr "창 클래스를 사용할 수 없음"
 
 #: rulesmodel.cpp:704
 #, kde-kuit-format
@@ -935,8 +934,7 @@ msgid "Extreme"
 msgstr "매우 높음"
 
 #: rulesmodel.cpp:865
-#, fuzzy, kde-format
-#| msgid "Unmanaged Window"
+#, kde-format
 msgid "Unmanaged window"
 msgstr "관리되지 않는 창"
 

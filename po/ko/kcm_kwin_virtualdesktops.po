@@ -1,13 +1,13 @@
 # Copyright (C) YEAR This file is copyright:
 # This file is distributed under the same license as the kwin package.
-# Shinjo Park <kde@peremen.name>, 2019, 2020, 2021.
+# Shinjo Park <kde@peremen.name>, 2019, 2020, 2021, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-15 00:49+0000\n"
-"PO-Revision-Date: 2021-05-28 02:11+0200\n"
+"PO-Revision-Date: 2023-07-23 21:06+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 20.12.3\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -28,12 +28,11 @@ msgid "Your emails"
 msgstr "kde@peremen.name"
 
 #: desktopsmodel.cpp:191
-#, fuzzy, kde-format
-#| msgid "Desktop %1"
+#, kde-format
 msgctxt "A numbered name for virtual desktops"
 msgid "Desktop %1"
 msgid_plural "Desktop %1"
-msgstr[0] "데스크톱 %1"
+msgstr[0] "바탕 화면 %1"
 
 #: desktopsmodel.cpp:479
 #, kde-format
@@ -81,8 +80,8 @@ msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
 "now will overwrite the changes."
 msgstr ""
-"가상 바탕 화면 설정이 이 프로그램 외부에서 변경되었습니다. 설정을 저장하면 해"
-"당 변경 사항을 덮어씁니다."
+"가상 바탕 화면 설정이 이 앱 외부에서 변경되었습니다. 설정을 저장하면 해당 변"
+"경 사항을 덮어씁니다."
 
 #: package/contents/ui/main.qml:153
 #, kde-format

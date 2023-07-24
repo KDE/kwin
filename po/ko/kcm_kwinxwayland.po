@@ -1,48 +1,50 @@
+# Copyright (C) YEAR This file is copyright:
+# This file is distributed under the same license as the kwin package.
+# Shinjo Park <kde@peremen.name>, 2023.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: kdeorg\n"
+"Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-17 00:51+0000\n"
-"PO-Revision-Date: 2023-07-23 12:30\n"
-"Last-Translator: \n"
-"Language-Team: Chinese Simplified\n"
-"Language: zh_CN\n"
+"PO-Revision-Date: 2023-07-23 21:22+0200\n"
+"Last-Translator: Shinjo Park <kde@peremen.name>\n"
+"Language-Team: Korean <kde-kr@kde.org>\n"
+"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Crowdin-Project: kdeorg\n"
-"X-Crowdin-Project-ID: 269464\n"
-"X-Crowdin-Language: zh-CN\n"
-"X-Crowdin-File: /kf5-stable/messages/kwin/kcm_kwinxwayland.pot\n"
-"X-Crowdin-File-ID: 41651\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Tyson Tan"
+msgstr "박신조"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "tysontan@tysontan.com"
+msgstr "kde@peremen.name"
 
 #: kcmkwinxwayland.cpp:30
 #, kde-format
 msgid "Legacy X11 App Support"
-msgstr "旧式 X11 应用程序支持"
+msgstr "레거시 X11 앱 지원"
 
 #: kcmkwinxwayland.cpp:32
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in other apps"
-msgstr "允许旧式 X11 应用程序读取在其他应用程序中的键盘输入"
+msgstr "레거시 X11 앱에서 다른 앱의 키보드 입력 읽기 허용"
 
 #: package/contents/ui/main.qml:19
 #, kde-format
 msgid ""
 "This module lets configure which keyboard events are forwarded to X11 apps "
 "regardless of their focus."
-msgstr "此模块用于配置被转发到 X11 应用的键盘时间，而不论其焦点位置。"
+msgstr ""
+"이 모듈에서는 포커스와 관계 없이 X11 앱에 전달할 키보드 이벤트를 설정할 수 있"
+"습니다."
 
 #: package/contents/ui/main.qml:49
 #, kde-format
@@ -52,34 +54,35 @@ msgid ""
 "disabled by default for security reasons. If you need to use such apps, you "
 "can choose your preferred balance of security and functionality here."
 msgstr ""
-"旧式 X11 应用程序需要通过读取其他应用程序中的键盘输入事件才能激活使用全局键盘"
-"快捷键的功能。出于安全考虑，此功能默认是禁用的。如果您需要使用这种应用程序，"
-"您可以按需在安全和功能之间作出权衡。"
+"레거시 X11 앱은 전역 키보드 단축키를 사용하여 활성화되는 기능을 수행하기 위해"
+"서 다른 앱으로 전달되어야 할 키보드 입력을 읽을 수 있어야 합니다. 보안 문제"
+"로 인하여 이 기능은 기본적으로 비활성화되어 있습니다. 이러한 앱을 사용해야 한"
+"다면 보안과 기능성 사이에서 선택할 수 있습니다."
 
 #: package/contents/ui/main.qml:66
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
-msgstr "允许旧式 X11 应用程序读取在所有应用程序中的键盘输入："
+msgstr "레거시 X11 앱에서 모든 앱의 키보드 입력 읽기 허용:"
 
 #: package/contents/ui/main.qml:67
 #, kde-format
 msgid "Never"
-msgstr "永不"
+msgstr "하지 않음"
 
 #: package/contents/ui/main.qml:70
 #, kde-format
 msgid "Only Meta, Control, Alt, and Shift keys"
-msgstr "仅 Meta、Ctrl、Alt、Shift 键"
+msgstr "Meta, Ctrl, Alt, Shift 키만"
 
 #: package/contents/ui/main.qml:73
 #, kde-format
 msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
-msgstr "所有键，但仅在按下了 Meta、Ctrl、Alt、Shift 键时"
+msgstr "Meta, Ctrl, Alt, Shift 키가 눌렸을 때에만 모든 키"
 
 #: package/contents/ui/main.qml:77
 #, kde-format
 msgid "Always"
-msgstr "总是"
+msgstr "항상"
 
 #: package/contents/ui/main.qml:84
 #, kde-format
@@ -88,5 +91,6 @@ msgid ""
 "session by permitting malicious software to steal passwords and spy on the "
 "text that you type. Make sure you understand and accept this risk."
 msgstr ""
-"请注意，使用这些设置将使得恶意软件能够盗取密码、监听您输入的内容，从而降低 "
-"X11 桌面进程的系统安全性。请确保您充分理解并接受随之而来的风险。"
+"이 설정을 사용하면 시스템 보안 수준을 X11 수준으로 감소시키며, 악성 소프트웨"
+"어에서 입력하는 텍스트를 엿보거나 암호를 훔칠 수도 있습니다. 위험에 대해서 이"
+"해하는 경우에만 이 설정을 변경하십시오."
