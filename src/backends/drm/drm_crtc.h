@@ -37,11 +37,8 @@ public:
     drmModeModeInfo queryCurrentMode();
 
     std::shared_ptr<DrmFramebuffer> current() const;
-    std::shared_ptr<DrmFramebuffer> next() const;
     void setCurrent(const std::shared_ptr<DrmFramebuffer> &buffer);
-    void setNext(const std::shared_ptr<DrmFramebuffer> &buffer);
-    void flipBuffer();
-    void releaseBuffers();
+    void releaseCurrentBuffer();
 
     DrmProperty modeId;
     DrmProperty active;
@@ -55,7 +52,6 @@ public:
 private:
     DrmUniquePtr<drmModeCrtc> m_crtc;
     std::shared_ptr<DrmFramebuffer> m_currentBuffer;
-    std::shared_ptr<DrmFramebuffer> m_nextBuffer;
     int m_pipeIndex;
     DrmPlane *m_primaryPlane;
     DrmPlane *m_cursorPlane;

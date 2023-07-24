@@ -12,9 +12,9 @@
 #include <errno.h>
 
 #include "core/session.h"
-#include "drm_atomic_commit.h"
 #include "drm_backend.h"
 #include "drm_buffer.h"
+#include "drm_commit.h"
 #include "drm_commit_thread.h"
 #include "drm_connector.h"
 #include "drm_crtc.h"
@@ -139,19 +139,12 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline 
         // The kernel fails commits with DRM_MODE_PAGE_FLIP_EVENT when a crtc is disabled in the commit
         // and already was disabled before, to work around some quirks in old userspace.
         // Instead of using DRM_MODE_PAGE_FLIP_EVENT | DRM_MODE_ATOMIC_NONBLOCK, do the modeset in a blocking
-        // fashion without page flip events and directly call the pageFlipped method afterwards
+        // fashion without page flip events
         if (!commit->commitModeset()) {
             qCCritical(KWIN_DRM) << "Atomic modeset commit failed!" << strerror(errno);
             return errnoToError();
         }
         std::for_each(pipelines.begin(), pipelines.end(), std::mem_fn(&DrmPipeline::atomicModesetSuccessful));
-        for (const auto &obj : unusedObjects) {
-            if (auto crtc = dynamic_cast<DrmCrtc *>(obj)) {
-                crtc->flipBuffer();
-            } else if (auto plane = dynamic_cast<DrmPlane *>(obj)) {
-                plane->flipBuffer();
-            }
-        }
         return Error::None;
     }
     case CommitMode::Test: {
@@ -221,15 +214,15 @@ bool DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commit)
         return false;
     }
 
-    const auto fb = m_pending.layer->currentBuffer().get();
+    const auto fb = m_pending.layer->currentBuffer();
     m_pending.crtc->primaryPlane()->set(commit, QPoint(0, 0), fb->buffer()->size(), centerBuffer(fb->buffer()->size(), m_pending.mode->size()));
-    commit->addProperty(m_pending.crtc->primaryPlane()->fbId, fb->framebufferId());
+    commit->addBuffer(m_pending.crtc->primaryPlane(), fb);
 
     if (auto plane = m_pending.crtc->cursorPlane()) {
         const auto layer = cursorLayer();
         plane->set(commit, QPoint(0, 0), gpu()->cursorSize(), QRect(layer->position(), gpu()->cursorSize()));
         commit->addProperty(plane->crtcId, layer->isVisible() ? m_pending.crtc->id() : 0);
-        commit->addProperty(plane->fbId, layer->isVisible() ? layer->currentBuffer()->framebufferId() : 0);
+        commit->addBuffer(plane, layer->isVisible() ? layer->currentBuffer() : nullptr);
     }
     return true;
 }
@@ -350,12 +343,6 @@ void DrmPipeline::atomicCommitSuccessful()
     if (activePending()) {
         m_pageflipPending = true;
     }
-    if (m_pending.crtc) {
-        m_pending.crtc->primaryPlane()->setNext(m_pending.layer->currentBuffer());
-        if (m_pending.crtc->cursorPlane()) {
-            m_pending.crtc->cursorPlane()->setNext(cursorLayer()->currentBuffer());
-        }
-    }
     m_current = m_pending;
 }
 
@@ -426,13 +413,6 @@ DrmGpu *DrmPipeline::gpu() const
 
 void DrmPipeline::pageFlipped(std::chrono::nanoseconds timestamp)
 {
-    m_current.crtc->flipBuffer();
-    if (m_current.crtc->primaryPlane()) {
-        m_current.crtc->primaryPlane()->flipBuffer();
-    }
-    if (m_current.crtc->cursorPlane()) {
-        m_current.crtc->cursorPlane()->flipBuffer();
-    }
     m_pageflipPending = false;
     if (m_output) {
         m_output->pageFlipped(timestamp);
