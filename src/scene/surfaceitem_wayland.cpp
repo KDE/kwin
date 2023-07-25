@@ -91,6 +91,7 @@ void SurfaceItemWayland::handleSurfaceSizeChanged()
 
 void SurfaceItemWayland::handleBufferSizeChanged()
 {
+    setBufferSourceBox(m_surface->bufferSourceBox());
     setBufferSize(m_surface->bufferSize());
     discardPixmap();
 }
