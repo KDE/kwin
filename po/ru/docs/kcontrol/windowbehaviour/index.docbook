@@ -1288,17 +1288,6 @@
 <varlistentry>
 <term
 ><guilabel
->Каскадом</guilabel
-></term>
-<listitem>
-<para
->Размещать новые окна каскадом, открывая каждое следующее ниже и правее активного окна (если еще не открыто ни одного окна, размещение начнётся с верхнего левого угла экрана).  </para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term
-><guilabel
 >Случайное</guilabel
 ></term>
 <listitem>
