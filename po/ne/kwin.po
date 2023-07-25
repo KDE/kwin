@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-20 02:12+0000\n"
+"POT-Creation-Date: 2023-07-25 02:00+0000\n"
 "PO-Revision-Date: 2007-11-01 14:27+0545\n"
 "Last-Translator: Shyam Krishna Bal <shyamkrishna_bal@yahoo.com>\n"
 "Language-Team: Nepali <info@mpp.org.np>\n"
@@ -1209,22 +1209,22 @@ msgstr ""
 msgid "Wait Longer"
 msgstr ""
 
-#: input.cpp:2008
+#: input.cpp:2009
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr ""
 
-#: input.cpp:2087
+#: input.cpp:2088
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr ""
 
-#: input.cpp:2087
+#: input.cpp:2088
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr ""
 
-#: input.cpp:3104
+#: input.cpp:3105
 #, kde-format
 msgid "Touchpad"
 msgstr ""
@@ -1431,7 +1431,7 @@ msgstr ""
 msgid "Starts the session without global shortcuts support."
 msgstr ""
 
-#: main_wayland.cpp:388 main_x11.cpp:419
+#: main_wayland.cpp:388 main_x11.cpp:420
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr ""
@@ -1446,7 +1446,7 @@ msgstr ""
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
 
-#: main_x11.cpp:63
+#: main_x11.cpp:64
 #, kde-format
 msgid ""
 "KWin is unstable.\n"
@@ -1457,7 +1457,7 @@ msgstr ""
 "यो पङ्क्तिमा धेरै पटक नष्ट भएको देखिन्छ ।\n"
 "तपाईँले चलाउनका लागि अर्को सञ्झ्याल प्रबन्धक चयन गर्न सक्नुहुन्छ:"
 
-#: main_x11.cpp:255
+#: main_x11.cpp:256
 #, kde-format
 msgid ""
 "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1466,7 +1466,7 @@ msgstr ""
 "केडीई विन: प्रबन्धक चयन अनुरोध गर्दा अक्षम, अर्को डब्लु एम चालु छ ? (--'बदल्नुहोस्' प्रयोग "
 "गर्न प्रयास गर्नुहोस्)\n"
 
-#: main_x11.cpp:276
+#: main_x11.cpp:277
 #, fuzzy, kde-format
 #| msgid ""
 #| "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1476,7 +1476,7 @@ msgstr ""
 "केडीई विन: प्रबन्धक चयन अनुरोध गर्दा अक्षम, अर्को डब्लु एम चालु छ ? (--'बदल्नुहोस्' प्रयोग "
 "गर्न प्रयास गर्नुहोस्)\n"
 
-#: main_x11.cpp:412
+#: main_x11.cpp:413
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "चालु ICCCM२.०-कम्प्लेन्ट सञ्झ्याल प्रबन्धक प्रतिस्थापन गर्नुहोस्"

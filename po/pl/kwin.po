@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1656210 $
+# Version: $Revision: 1656585 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # Norbert Popiołek <norbert@kde.com.pl>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-20 02:12+0000\n"
+"POT-Creation-Date: 2023-07-25 02:00+0000\n"
 "PO-Revision-Date: 2023-07-08 07:37+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -1217,22 +1217,22 @@ msgstr "&Zakończ program %1"
 msgid "Wait Longer"
 msgstr "Poczekaj dłużej"
 
-#: input.cpp:2008
+#: input.cpp:2009
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Przenieś tablet na następne wyjście"
 
-#: input.cpp:2087
+#: input.cpp:2088
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Tablet przeniósł się na %1"
 
-#: input.cpp:2087
+#: input.cpp:2088
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Tablet przełączył wyjście"
 
-#: input.cpp:3104
+#: input.cpp:3105
 #, kde-format
 msgid "Touchpad"
 msgstr "Gładzik"
@@ -1452,7 +1452,7 @@ msgstr "Rozpoczyna sesję bez obsługi blokowania ekranu."
 msgid "Starts the session without global shortcuts support."
 msgstr "Rozpoczyna sesję bez obsługi globalnych skrótów."
 
-#: main_wayland.cpp:388 main_x11.cpp:419
+#: main_wayland.cpp:388 main_x11.cpp:420
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Wyłącz integrację KActivities."
@@ -1468,7 +1468,7 @@ msgstr ""
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr "Aplikacja do uruchomienia po uruchomieniu Waylanda oraz Xwaylanda"
 
-#: main_x11.cpp:63
+#: main_x11.cpp:64
 #, kde-format
 msgid ""
 "KWin is unstable.\n"
@@ -1479,7 +1479,7 @@ msgstr ""
 "Wygląda na to, że kilkukrotnie ulegał on awarii.\n"
 "Można wybrać inny program zarządzający oknami:"
 
-#: main_x11.cpp:255
+#: main_x11.cpp:256
 #, kde-format
 msgid ""
 "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1488,14 +1488,14 @@ msgstr ""
 "kwin: nie można przejąć zarządzania oknami, być może działa już inny program "
 "zarządzający oknami? (spróbuj użyć --replace)\n"
 
-#: main_x11.cpp:276
+#: main_x11.cpp:277
 #, kde-format
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr ""
 "kwin: uruchomiony jest inny program zarządzający oknami? (spróbuj użyć --"
 "replace)\n"
 
-#: main_x11.cpp:412
+#: main_x11.cpp:413
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr ""

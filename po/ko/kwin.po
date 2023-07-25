@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-20 02:12+0000\n"
+"POT-Creation-Date: 2023-07-25 02:00+0000\n"
 "PO-Revision-Date: 2023-07-24 00:08+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -1199,22 +1199,22 @@ msgstr "%1 앱 끝내기(&T)"
 msgid "Wait Longer"
 msgstr "더 기다리기"
 
-#: input.cpp:2008
+#: input.cpp:2009
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "다음 출력으로 태블릿 이동"
 
-#: input.cpp:2087
+#: input.cpp:2088
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "%1(으)로 태블릿 이동됨"
 
-#: input.cpp:2087
+#: input.cpp:2088
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "태블릿에서 출력 변경됨"
 
-#: input.cpp:3104
+#: input.cpp:3105
 #, kde-format
 msgid "Touchpad"
 msgstr "터치패드"
@@ -1425,7 +1425,7 @@ msgstr "잠금 화면 지원 없이 세션을 시작합니다."
 msgid "Starts the session without global shortcuts support."
 msgstr "전역 단축키 지원 없이 세션을 시작합니다."
 
-#: main_wayland.cpp:388 main_x11.cpp:419
+#: main_wayland.cpp:388 main_x11.cpp:420
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "KActivities 통합을 사용하지 않습니다."
@@ -1440,7 +1440,7 @@ msgstr "KWin에서 시작한 세션 앱이 끝난 후에 닫습니다."
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr "Wayland 및 Xwayland 서버가 시작되었을 때 시작할 앱"
 
-#: main_x11.cpp:63
+#: main_x11.cpp:64
 #, kde-format
 msgid ""
 "KWin is unstable.\n"
@@ -1451,7 +1451,7 @@ msgstr ""
 "연속으로 몇 번 충돌한 것 같습니다.\n"
 "실행할 또 다른 창 관리자를 선택하실 수 있습니다:"
 
-#: main_x11.cpp:255
+#: main_x11.cpp:256
 #, kde-format
 msgid ""
 "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1460,13 +1460,13 @@ msgstr ""
 "kwin: 창 관리자 영역을 사용할 수 없습니다. 또 다른 창 관리자가 있습니까? (--"
 "replace 옵션을 사용해 보십시오)\n"
 
-#: main_x11.cpp:276
+#: main_x11.cpp:277
 #, kde-format
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr ""
 "kwin: 또 다른 창 관리자가 실행 중입니다 (--replace 옵션을 사용해 보십시오)\n"
 
-#: main_x11.cpp:412
+#: main_x11.cpp:413
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "이미 실행 중인 ICCCM 2.0 호환 창 관리자를 대체하기"

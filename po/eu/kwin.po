@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-20 02:12+0000\n"
+"POT-Creation-Date: 2023-07-25 02:00+0000\n"
 "PO-Revision-Date: 2023-07-20 08:18+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -1211,22 +1211,22 @@ msgstr "&Amaitu aplikazioa %1"
 msgid "Wait Longer"
 msgstr "Itxaron gehiago"
 
-#: input.cpp:2008
+#: input.cpp:2009
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Eraman tableta hurrengo irteerakora"
 
-#: input.cpp:2087
+#: input.cpp:2088
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Tableta %1(e)ra eraman da"
 
-#: input.cpp:2087
+#: input.cpp:2088
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Tabletek irteerakoak trukatu dituzte"
 
-#: input.cpp:3104
+#: input.cpp:3105
 #, kde-format
 msgid "Touchpad"
 msgstr "Ukimen-sagua"
@@ -1446,7 +1446,7 @@ msgstr "Saioa abiatzen du giltzatze-pantaila euskarririk gabe."
 msgid "Starts the session without global shortcuts support."
 msgstr "Saioa abiatzen du lasterbide orokorren euskarririk gabe."
 
-#: main_wayland.cpp:388 main_x11.cpp:419
+#: main_wayland.cpp:388 main_x11.cpp:420
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Desgaitu KActivities bateratzea."
@@ -1462,7 +1462,7 @@ msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
 "Wayland eta Xwayland zerbitzaria abiatu ondoren abiatu beharreko aplikazioak"
 
-#: main_x11.cpp:63
+#: main_x11.cpp:64
 #, kde-format
 msgid ""
 "KWin is unstable.\n"
@@ -1473,7 +1473,7 @@ msgstr ""
 "Zenbait alditan jarraian kraskatu dela dirudi.\n"
 "Beste leiho-kudeatzaile bat aukeratu dezakezu:"
 
-#: main_x11.cpp:255
+#: main_x11.cpp:256
 #, kde-format
 msgid ""
 "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1482,13 +1482,13 @@ msgstr ""
 "kwin: ezin da abiatu hautatutako kudeatzailea; beste leiho-kudeatzaileren "
 "bat dago martxan? (saiatu --replace erabiliz)\n"
 
-#: main_x11.cpp:276
+#: main_x11.cpp:277
 #, kde-format
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr ""
 "kwin: beste leiho-kudeatzaile bat martxan dago (saiatu --replace erabiliz)\n"
 
-#: main_x11.cpp:412
+#: main_x11.cpp:413
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr ""

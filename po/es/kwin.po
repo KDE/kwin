@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-20 02:12+0000\n"
+"POT-Creation-Date: 2023-07-25 02:00+0000\n"
 "PO-Revision-Date: 2023-07-20 05:19+0200\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -1219,22 +1219,22 @@ msgstr "&Terminar la aplicación %1"
 msgid "Wait Longer"
 msgstr "Esperar más tiempo"
 
-#: input.cpp:2008
+#: input.cpp:2009
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Mover la tableta a la siguiente salida"
 
-#: input.cpp:2087
+#: input.cpp:2088
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Tableta movida a %1"
 
-#: input.cpp:2087
+#: input.cpp:2088
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Las tabletas han cambiado de salida"
 
-#: input.cpp:3104
+#: input.cpp:3105
 #, kde-format
 msgid "Touchpad"
 msgstr "Panel táctil"
@@ -1456,7 +1456,7 @@ msgstr "Inicia la sesión sin permitir el bloqueo de pantalla."
 msgid "Starts the session without global shortcuts support."
 msgstr "Inicia la sesión sin usar los accesos rápidos de teclado globales."
 
-#: main_wayland.cpp:388 main_x11.cpp:419
+#: main_wayland.cpp:388 main_x11.cpp:420
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Desactivar la integración con KActivities."
@@ -1472,7 +1472,7 @@ msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
 "Aplicaciones a iniciar tras el arranque de Wayland y del servidor Xwayland"
 
-#: main_x11.cpp:63
+#: main_x11.cpp:64
 #, kde-format
 msgid ""
 "KWin is unstable.\n"
@@ -1483,7 +1483,7 @@ msgstr ""
 "Parece haber terminado inesperadamente varias veces seguidas.\n"
 "Puede seleccionar otro gestor de ventanas:"
 
-#: main_x11.cpp:255
+#: main_x11.cpp:256
 #, kde-format
 msgid ""
 "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1492,12 +1492,12 @@ msgstr ""
 "kwin: no fue posible obtener la selección de gestor, ¿quizá hay otro gestor "
 "de ventanas en marcha? (en dicho caso, intente usar --replace)\n"
 
-#: main_x11.cpp:276
+#: main_x11.cpp:277
 #, kde-format
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr "kwin: hay otro gestor de ventanas en marcha (intente usar --replace)\n"
 
-#: main_x11.cpp:412
+#: main_x11.cpp:413
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr ""

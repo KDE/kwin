@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-20 02:12+0000\n"
+"POT-Creation-Date: 2023-07-25 02:00+0000\n"
 "PO-Revision-Date: 2020-01-11 11:32+0100\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
@@ -1257,24 +1257,24 @@ msgstr "&Terminar a aplicación %1"
 msgid "Wait Longer"
 msgstr "Seguir agardando"
 
-#: input.cpp:2008
+#: input.cpp:2009
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr ""
 
-#: input.cpp:2087
+#: input.cpp:2088
 #, fuzzy, kde-format
 #| msgctxt "Name of a hardware switch"
 #| msgid "Tablet mode"
 msgid "Tablet moved to %1"
 msgstr "Modo de tableta"
 
-#: input.cpp:2087
+#: input.cpp:2088
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr ""
 
-#: input.cpp:3104
+#: input.cpp:3105
 #, fuzzy, kde-format
 #| msgctxt "A touch up event"
 #| msgid "Touch Up"
@@ -1493,7 +1493,7 @@ msgstr "Iniciar a sesión sen funcionalidade de bloqueo de pantalla."
 msgid "Starts the session without global shortcuts support."
 msgstr "Iniciar a sesión sen funcionalidade de atallos globais."
 
-#: main_wayland.cpp:388 main_x11.cpp:419
+#: main_wayland.cpp:388 main_x11.cpp:420
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Desactivar a integración con KActivities."
@@ -1508,7 +1508,7 @@ msgstr "Saír cando peche a aplicación de sesións que KWin inicia."
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr "Aplicacións que iniciar despois dos servidores de Wayland e Xwayland"
 
-#: main_x11.cpp:63
+#: main_x11.cpp:64
 #, kde-format
 msgid ""
 "KWin is unstable.\n"
@@ -1519,7 +1519,7 @@ msgstr ""
 "Parece que quebrou varias veces seguidas.\n"
 "Pode escoller executar outro xestor de xanelas:"
 
-#: main_x11.cpp:255
+#: main_x11.cpp:256
 #, kde-format
 msgid ""
 "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1528,13 +1528,13 @@ msgstr ""
 "kwin: non foi posíbel afirmar a selección do xestor, haberá outro xestor "
 "aberto? (intente usando --replace)\n"
 
-#: main_x11.cpp:276
+#: main_x11.cpp:277
 #, kde-format
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr ""
 "kwin: hai outro xestor de xanelas en execución (intente usando --replace)\n"
 
-#: main_x11.cpp:412
+#: main_x11.cpp:413
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Substituír o xestor de xanelas compatíbel con ICCCM2.0 en execución"

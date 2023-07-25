@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-20 02:12+0000\n"
+"POT-Creation-Date: 2023-07-25 02:00+0000\n"
 "PO-Revision-Date: 2017-05-22 05:42-0400\n"
 "Last-Translator: Elkana Bardugo <ttv200@gmail.com>\n"
 "Language-Team: Hebrew <kde-i18n-doc@kde.org>\n"
@@ -1220,22 +1220,22 @@ msgstr "&הפסק את פעולת היישום %1"
 msgid "Wait Longer"
 msgstr "המתן יותר"
 
-#: input.cpp:2008
+#: input.cpp:2009
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr ""
 
-#: input.cpp:2087
+#: input.cpp:2088
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr ""
 
-#: input.cpp:2087
+#: input.cpp:2088
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr ""
 
-#: input.cpp:3104
+#: input.cpp:3105
 #, fuzzy, kde-format
 #| msgctxt "A touch up event"
 #| msgid "Touch Up"
@@ -1444,7 +1444,7 @@ msgstr ""
 msgid "Starts the session without global shortcuts support."
 msgstr ""
 
-#: main_wayland.cpp:388 main_x11.cpp:419
+#: main_wayland.cpp:388 main_x11.cpp:420
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr ""
@@ -1459,7 +1459,7 @@ msgstr ""
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
 
-#: main_x11.cpp:63
+#: main_x11.cpp:64
 #, kde-format
 msgid ""
 "KWin is unstable.\n"
@@ -1470,7 +1470,7 @@ msgstr ""
 "נראה כי הוא קרס כמה פעמים ברציפות.\n"
 "ניתן לבחור מנהל חלונות אחר להפעלה:"
 
-#: main_x11.cpp:255
+#: main_x11.cpp:256
 #, kde-format
 msgid ""
 "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1479,14 +1479,14 @@ msgstr ""
 "אין אפשרות לתפוס פיקוד על ניהול חלונות, אולי מנהל חלונות אחר מופעל במקביל? "
 "(נסה להשתמש ב־‎--replace‏‏).\n"
 
-#: main_x11.cpp:276
+#: main_x11.cpp:277
 #, fuzzy, kde-format
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr ""
 "אין אפשרות לתפוס פיקוד על ניהול חלונות, אולי מנהל חלונות אחר מופעל במקביל? "
 "(נסה להשתמש ב־‎--replace‏‏).\n"
 
-#: main_x11.cpp:412
+#: main_x11.cpp:413
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "החלף מנהל חלונות תואם ICCCM2.0 קיים"

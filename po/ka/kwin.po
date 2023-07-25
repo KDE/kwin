@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-20 02:12+0000\n"
+"POT-Creation-Date: 2023-07-25 02:00+0000\n"
 "PO-Revision-Date: 2023-07-21 06:30+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -1198,22 +1198,22 @@ msgstr "&შეჩერდება აპლიკაცია %1"
 msgid "Wait Longer"
 msgstr "Wait Longer"
 
-#: input.cpp:2008
+#: input.cpp:2009
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "ტაბლეტის შემდეგ გამოტანაზე გადატანა"
 
-#: input.cpp:2087
+#: input.cpp:2088
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "ტაბლეტი გადატანილია %1-ზე"
 
-#: input.cpp:2087
+#: input.cpp:2088
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "ტაბლეტებმა გამოტანები გადართეს"
 
-#: input.cpp:3104
+#: input.cpp:3105
 #, kde-format
 msgid "Touchpad"
 msgstr "თაჩპედი"
@@ -1428,7 +1428,7 @@ msgstr "სესიის დაბლოკილი ეკრანის მ
 msgid "Starts the session without global shortcuts support."
 msgstr "სესის გლობალური მალსახმობების მხარდაჭერის გარეშე გაშვება."
 
-#: main_wayland.cpp:388 main_x11.cpp:419
+#: main_wayland.cpp:388 main_x11.cpp:420
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "KActivities-ის ინტეგრაციის გამორთვა."
@@ -1444,7 +1444,7 @@ msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
 "აპლიკაციები, რომლებიც Wayland-ის და Xwayland-ის გაშვებასთან ერთად ეშვებიან"
 
-#: main_x11.cpp:63
+#: main_x11.cpp:64
 #, kde-format
 msgid ""
 "KWin is unstable.\n"
@@ -1455,7 +1455,7 @@ msgstr ""
 "როგორც ჩანს ზედიზედ რამდენჯერმე გაფშიკა ფეხები.\n"
 "შეგიძლიათ ფანჯრების სხვა მმართველი გამოიყენოთ:"
 
-#: main_x11.cpp:255
+#: main_x11.cpp:256
 #, kde-format
 msgid ""
 "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1464,13 +1464,13 @@ msgstr ""
 "kwin: მმართველის არჩევნის შეცდომა. არის სხვა ფმ გაშვებული? (სცადეთ --replace "
 "გამოიყენოთ)\n"
 
-#: main_x11.cpp:276
+#: main_x11.cpp:277
 #, kde-format
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr ""
 "kwin: გაშვებულია სხვა ფანჯრების მმართველი (სცადეთ გამოიყენოთ --replace)\n"
 
-#: main_x11.cpp:412
+#: main_x11.cpp:413
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "უკვე გაშვებული ICCCM2.0-თან თავსებადი ფანჯრების მმართველის ჩნაცვლება"

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-20 02:12+0000\n"
+"POT-Creation-Date: 2023-07-25 02:00+0000\n"
 "PO-Revision-Date: 2023-04-27 12:28+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -1220,23 +1220,23 @@ msgid "Wait Longer"
 msgstr "Odota pidempään"
 
 # *** TARKISTA: Onko ”tablet” tabletti vai esim. piirtopöytä tms.? Onko ”output” ulostulo?
-#: input.cpp:2008
+#: input.cpp:2009
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Siirrä tabletti seuraavaan ulostuloon"
 
-#: input.cpp:2087
+#: input.cpp:2088
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Tabletti siirretty ulostuloon %1"
 
-#: input.cpp:2087
+#: input.cpp:2088
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Tabletit vaihtoivat ulostuloja"
 
 # ?!?!
-#: input.cpp:3104
+#: input.cpp:3105
 #, kde-format
 msgid "Touchpad"
 msgstr "Kosketuslevy"
@@ -1454,7 +1454,7 @@ msgstr "Aloittaa istunnon ilman näytönlukitustukea."
 msgid "Starts the session without global shortcuts support."
 msgstr "Aloittaa istunnon ilman yleisten pikanäppäinten tukea."
 
-#: main_wayland.cpp:388 main_x11.cpp:419
+#: main_wayland.cpp:388 main_x11.cpp:420
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Poista KActivities-integraatio käytöstä."
@@ -1470,7 +1470,7 @@ msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
 "Käynnistettävät sovellukset, kun Wayland ja Xwayland-palvelin on käynnistetty"
 
-#: main_x11.cpp:63
+#: main_x11.cpp:64
 #, kde-format
 msgid ""
 "KWin is unstable.\n"
@@ -1481,7 +1481,7 @@ msgstr ""
 "Ohjelma näyttää kaatuneen useasti peräkkäin.\n"
 "Voit valita käyttöön toisen ikkunointiohjelman:"
 
-#: main_x11.cpp:255
+#: main_x11.cpp:256
 #, kde-format
 msgid ""
 "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1490,13 +1490,13 @@ msgstr ""
 "kwin: ikkunanhallintaa ei onnistuttu saamaan haltuun. Onko toinen "
 "ikkunointiohjelma käynnissä? (Kokeile --replace-valitsinta.)\n"
 
-#: main_x11.cpp:276
+#: main_x11.cpp:277
 #, kde-format
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr ""
 "kwin: toinen ikkunointiohjelma on käynnissä (kokeile --replace-valitsinta)\n"
 
-#: main_x11.cpp:412
+#: main_x11.cpp:413
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Korvaa käynnissä oleva ICCCM2.0-yhteensopiva ikkunointiohjelma"

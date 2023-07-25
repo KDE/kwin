@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-20 02:12+0000\n"
+"POT-Creation-Date: 2023-07-25 02:00+0000\n"
 "PO-Revision-Date: 2023-07-23 12:26\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -1195,22 +1195,22 @@ msgstr "终止程序 %1(&T)"
 msgid "Wait Longer"
 msgstr "继续等待"
 
-#: input.cpp:2008
+#: input.cpp:2009
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "移动数位板到下一个输出设备"
 
-#: input.cpp:2087
+#: input.cpp:2088
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "数位板已经移动到 %1"
 
-#: input.cpp:2087
+#: input.cpp:2088
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "数位板已切换输出设备"
 
-#: input.cpp:3104
+#: input.cpp:3105
 #, kde-format
 msgid "Touchpad"
 msgstr "触摸板"
@@ -1418,7 +1418,7 @@ msgstr "在没有锁屏支持的状态下启动会话。"
 msgid "Starts the session without global shortcuts support."
 msgstr "在没有全局快捷键支持的情况状态下启动会话。"
 
-#: main_wayland.cpp:388 main_x11.cpp:419
+#: main_wayland.cpp:388 main_x11.cpp:420
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "禁用 KActivities 集成。"
@@ -1433,7 +1433,7 @@ msgstr "在会话应用程序 (由 KWin 启动) 关闭后退出。"
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr "Wayland 和 Xwayland 服务器启动后立即启动的应用程序"
 
-#: main_x11.cpp:63
+#: main_x11.cpp:64
 #, kde-format
 msgid ""
 "KWin is unstable.\n"
@@ -1444,7 +1444,7 @@ msgstr ""
 "似乎它已在短时间内发生过多次崩溃。\n"
 "您可以选用其他窗口管理器："
 
-#: main_x11.cpp:255
+#: main_x11.cpp:256
 #, kde-format
 msgid ""
 "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1453,12 +1453,12 @@ msgstr ""
 "kwin：无法取得窗口管理器选用状态，本机是否正在运行着其他窗口管理器？(请尝试使"
 "用 --replace 参数)\n"
 
-#: main_x11.cpp:276
+#: main_x11.cpp:277
 #, kde-format
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr "kwin：其他窗口管理器正在运行 (请尝试使用 --replace 参数)\n"
 
-#: main_x11.cpp:412
+#: main_x11.cpp:413
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "替换正在运行的兼容 ICCCM2.0 的窗口管理器"

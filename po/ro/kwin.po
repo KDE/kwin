@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-20 02:12+0000\n"
+"POT-Creation-Date: 2023-07-25 02:00+0000\n"
 "PO-Revision-Date: 2022-12-28 21:14+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -1211,24 +1211,24 @@ msgstr "&Termină aplicația %1"
 msgid "Wait Longer"
 msgstr "Mai așteaptă"
 
-#: input.cpp:2008
+#: input.cpp:2009
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr ""
 
-#: input.cpp:2087
+#: input.cpp:2088
 #, fuzzy, kde-format
 #| msgctxt "Name of a hardware switch"
 #| msgid "Tablet mode"
 msgid "Tablet moved to %1"
 msgstr "Regim tabletă"
 
-#: input.cpp:2087
+#: input.cpp:2088
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr ""
 
-#: input.cpp:3104
+#: input.cpp:3105
 #, kde-format
 msgid "Touchpad"
 msgstr "Zonă tactilă"
@@ -1438,7 +1438,7 @@ msgstr "Pornește sesiunea fără suport pentru blocarea ecranului."
 msgid "Starts the session without global shortcuts support."
 msgstr "Pornește sesiunea fără suport pentru scurtături globale."
 
-#: main_wayland.cpp:388 main_x11.cpp:419
+#: main_wayland.cpp:388 main_x11.cpp:420
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Dezactivează integrarea KActivities"
@@ -1454,7 +1454,7 @@ msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
 "Aplicații de pornit odată ce serverele Wayland și Xwayland au fost pornite"
 
-#: main_x11.cpp:63
+#: main_x11.cpp:64
 #, kde-format
 msgid ""
 "KWin is unstable.\n"
@@ -1465,7 +1465,7 @@ msgstr ""
 "Se pare că a eșuat de câteva ori la rând.\n"
 "Puteți alege alt gestionar de ferestre de pornit:"
 
-#: main_x11.cpp:255
+#: main_x11.cpp:256
 #, kde-format
 msgid ""
 "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1474,7 +1474,7 @@ msgstr ""
 "kwin: nu pot cere selecția gestionarului de ferestre. Rulează alt gestionar? "
 "(încercați să folosiți opțiunea --replace)\n"
 
-#: main_x11.cpp:276
+#: main_x11.cpp:277
 #, fuzzy, kde-format
 #| msgid ""
 #| "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1484,7 +1484,7 @@ msgstr ""
 "kwin: nu pot cere selecția gestionarului de ferestre. Rulează alt gestionar? "
 "(încercați să folosiți opțiunea --replace)\n"
 
-#: main_x11.cpp:412
+#: main_x11.cpp:413
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr ""

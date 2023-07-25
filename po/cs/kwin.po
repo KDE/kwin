@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-20 02:12+0000\n"
+"POT-Creation-Date: 2023-07-25 02:00+0000\n"
 "PO-Revision-Date: 2023-06-23 12:40+0200\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -1202,22 +1202,22 @@ msgstr "Ukonči&t aplikaci %1"
 msgid "Wait Longer"
 msgstr "Čekat delší dobu"
 
-#: input.cpp:2008
+#: input.cpp:2009
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Přesunout tablet na následující výstup"
 
-#: input.cpp:2087
+#: input.cpp:2088
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Tablet přesunut na %1"
 
-#: input.cpp:2087
+#: input.cpp:2088
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Tablety si prohodily výstupy"
 
-#: input.cpp:3104
+#: input.cpp:3105
 #, kde-format
 msgid "Touchpad"
 msgstr "Touchpad"
@@ -1424,7 +1424,7 @@ msgstr ""
 msgid "Starts the session without global shortcuts support."
 msgstr ""
 
-#: main_wayland.cpp:388 main_x11.cpp:419
+#: main_wayland.cpp:388 main_x11.cpp:420
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr ""
@@ -1439,7 +1439,7 @@ msgstr ""
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
 
-#: main_x11.cpp:63
+#: main_x11.cpp:64
 #, kde-format
 msgid ""
 "KWin is unstable.\n"
@@ -1450,7 +1450,7 @@ msgstr ""
 "Zdá se, že havaroval několikrát po sobě.\n"
 "Můžete si zvolit ke spuštění jiného správce oken:"
 
-#: main_x11.cpp:255
+#: main_x11.cpp:256
 #, kde-format
 msgid ""
 "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1459,12 +1459,12 @@ msgstr ""
 "kwin: nelze získat výběr správce oken, je spuštěn jiný správce? (zkuste "
 "použít --replace)\n"
 
-#: main_x11.cpp:276
+#: main_x11.cpp:277
 #, kde-format
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr "kwin: je spuštěn jiný správce oken (zkuste použít --replace)\n"
 
-#: main_x11.cpp:412
+#: main_x11.cpp:413
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Nahradit již běžící správce oken kompatibilní s ICCCM 2.0"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-20 02:12+0000\n"
+"POT-Creation-Date: 2023-07-25 02:00+0000\n"
 "PO-Revision-Date: 2022-11-14 01:16+0100\n"
 "Last-Translator: Mihkel Tõnnov <mihhkel@gmail.com>\n"
 "Language-Team: Estonian <>\n"
@@ -1202,22 +1202,22 @@ msgstr "Lõpe&ta rakenduse %1 töö"
 msgid "Wait Longer"
 msgstr "Oota kauem"
 
-#: input.cpp:2008
+#: input.cpp:2009
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr ""
 
-#: input.cpp:2087
+#: input.cpp:2088
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr ""
 
-#: input.cpp:2087
+#: input.cpp:2088
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr ""
 
-#: input.cpp:3104
+#: input.cpp:3105
 #, kde-format
 msgid "Touchpad"
 msgstr "Puutepadi"
@@ -1431,7 +1431,7 @@ msgstr "Seansi käivitamine ekraani lukustamise toetuseta."
 msgid "Starts the session without global shortcuts support."
 msgstr "Seansi käivitamine globaalsete kiirklahvide toetuseta."
 
-#: main_wayland.cpp:388 main_x11.cpp:419
+#: main_wayland.cpp:388 main_x11.cpp:420
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "KActivitiesi lõimimise keelamine"
@@ -1447,7 +1447,7 @@ msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
 "Pärast Waylandi ja Xwaylandi serveri käivitamist käivitatavad rakendused."
 
-#: main_x11.cpp:63
+#: main_x11.cpp:64
 #, kde-format
 msgid ""
 "KWin is unstable.\n"
@@ -1458,7 +1458,7 @@ msgstr ""
 "Paistab, et seda tabas mitu korda järjest krahh.\n"
 "Kasutamiseks võiks valida mõne muu aknahalduri:"
 
-#: main_x11.cpp:255
+#: main_x11.cpp:256
 #, kde-format
 msgid ""
 "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1467,12 +1467,12 @@ msgstr ""
 "kwin: halduri valikuga on midagi valesti, äkki töötab mõni muu aknahaldur? "
 "(proovi kasutada võtit --replace)\n"
 
-#: main_x11.cpp:276
+#: main_x11.cpp:277
 #, kde-format
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr "kwin: muu aknahaldur töötab (proovi kasutada võtit --replace)\n"
 
-#: main_x11.cpp:412
+#: main_x11.cpp:413
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Asendab juba töötava ICCCM2.0 ühilduva aknahalduri"
