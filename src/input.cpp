@@ -1978,6 +1978,9 @@ public:
             }
 
             static WaylandCursorImage defaultCursor;
+            if (!m_shapeSource) {
+                m_shapeSource = std::make_unique<ShapeCursorSource>();
+            }
             m_shapeSource->setTheme(defaultCursor.theme());
             m_shapeSource->setShape(shape);
             setSource(m_shapeSource.get());
