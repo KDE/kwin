@@ -99,6 +99,7 @@ public:
 
     void commitSubSurface();
     QMatrix4x4 buildSurfaceToBufferMatrix();
+    QRectF computeBufferSourceBox() const;
     void applyState(SurfaceState *next);
 
     bool computeEffectiveMapped() const;
@@ -120,6 +121,7 @@ public:
     SubSurfaceInterface *subSurface = nullptr;
     QMatrix4x4 surfaceToBufferMatrix;
     QSize bufferSize = QSize(0, 0);
+    QRectF bufferSourceBox;
     QSizeF implicitSurfaceSize = QSizeF(0, 0);
     QSizeF surfaceSize = QSizeF(0, 0);
 

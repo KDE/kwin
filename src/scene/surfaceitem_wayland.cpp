@@ -27,6 +27,10 @@ SurfaceItemWayland::SurfaceItemWayland(KWaylandServer::SurfaceInterface *surface
             this, &SurfaceItemWayland::handleSurfaceSizeChanged);
     connect(surface, &KWaylandServer::SurfaceInterface::bufferSizeChanged,
             this, &SurfaceItemWayland::handleBufferSizeChanged);
+    connect(surface, &KWaylandServer::SurfaceInterface::bufferSourceBoxChanged,
+            this, &SurfaceItemWayland::handleBufferSourceBoxChanged);
+    connect(surface, &KWaylandServer::SurfaceInterface::bufferTransformChanged,
+            this, &SurfaceItemWayland::handleBufferTransformChanged);
 
     connect(surface, &KWaylandServer::SurfaceInterface::childSubSurfacesChanged,
             this, &SurfaceItemWayland::handleChildSubSurfacesChanged);
@@ -77,8 +81,6 @@ KWaylandServer::SurfaceInterface *SurfaceItemWayland::surface() const
 
 void SurfaceItemWayland::handleSurfaceToBufferMatrixChanged()
 {
-    setBufferTransform(m_surface->bufferTransform());
-    setBufferSourceBox(m_surface->bufferSourceBox());
     setSurfaceToBufferMatrix(m_surface->surfaceToBufferMatrix());
     discardQuads();
     discardPixmap();
@@ -91,9 +93,18 @@ void SurfaceItemWayland::handleSurfaceSizeChanged()
 
 void SurfaceItemWayland::handleBufferSizeChanged()
 {
-    setBufferSourceBox(m_surface->bufferSourceBox());
     setBufferSize(m_surface->bufferSize());
     discardPixmap();
+}
+
+void SurfaceItemWayland::handleBufferSourceBoxChanged()
+{
+    setBufferSourceBox(m_surface->bufferSourceBox());
+}
+
+void SurfaceItemWayland::handleBufferTransformChanged()
+{
+    setBufferTransform(m_surface->bufferTransform());
 }
 
 void SurfaceItemWayland::handleSurfaceCommitted()

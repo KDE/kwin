@@ -371,6 +371,7 @@ Q_SIGNALS:
      * This signal is emitted when the buffer transform has changed.
      */
     void bufferTransformChanged(KWin::OutputTransform);
+    void bufferSourceBoxChanged();
     /**
      * This signal is emitted when the size of the attached buffer has changed.
      */

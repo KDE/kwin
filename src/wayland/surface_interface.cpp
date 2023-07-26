@@ -476,6 +476,20 @@ QMatrix4x4 SurfaceInterfacePrivate::buildSurfaceToBufferMatrix()
     return surfaceToBufferMatrix;
 }
 
+QRectF SurfaceInterfacePrivate::computeBufferSourceBox() const
+{
+    if (!current.viewport.sourceGeometry.isValid()) {
+        return QRectF(0, 0, bufferSize.width(), bufferSize.height());
+    }
+
+    const QRectF box(current.viewport.sourceGeometry.x() * current.bufferScale,
+                     current.viewport.sourceGeometry.y() * current.bufferScale,
+                     current.viewport.sourceGeometry.width() * current.bufferScale,
+                     current.viewport.sourceGeometry.height() * current.bufferScale);
+
+    return current.bufferTransform.inverted().map(box, bufferSize);
+}
+
 void SurfaceState::mergeInto(SurfaceState *target)
 {
     if (bufferIsSet) {
@@ -561,6 +575,7 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
 
     const QSizeF oldSurfaceSize = surfaceSize;
     const QSize oldBufferSize = bufferSize;
+    const QRectF oldBufferSourceBox = bufferSourceBox;
     const QMatrix4x4 oldSurfaceToBufferMatrix = surfaceToBufferMatrix;
     const QRegion oldInputRegion = inputRegion;
 
@@ -571,6 +586,7 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     // TODO: Refactor the state management code because it gets more clumsy.
     if (current.buffer) {
         bufferSize = current.buffer->size();
+        bufferSourceBox = computeBufferSourceBox();
 
         implicitSurfaceSize = current.buffer->size() / current.bufferScale;
         switch (current.bufferTransform.kind()) {
@@ -617,6 +633,7 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
         surfaceSize = QSizeF(0, 0);
         implicitSurfaceSize = QSizeF(0, 0);
         bufferSize = QSize(0, 0);
+        bufferSourceBox = QRectF();
         inputRegion = QRegion();
         opaqueRegion = QRegion();
     }
@@ -646,6 +663,9 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     }
     if (surfaceToBufferMatrix != oldSurfaceToBufferMatrix) {
         Q_EMIT q->surfaceToBufferMatrixChanged();
+    }
+    if (bufferSourceBox != oldBufferSourceBox) {
+        Q_EMIT q->bufferSourceBoxChanged();
     }
     if (bufferSize != oldBufferSize) {
         Q_EMIT q->bufferSizeChanged();
@@ -787,16 +807,7 @@ QRegion SurfaceInterface::input() const
 
 QRectF SurfaceInterface::bufferSourceBox() const
 {
-    if (!d->current.viewport.sourceGeometry.isValid()) {
-        return QRectF(0, 0, d->bufferSize.width(), d->bufferSize.height());
-    }
-
-    const QRectF box(d->current.viewport.sourceGeometry.x() * d->current.bufferScale,
-                     d->current.viewport.sourceGeometry.y() * d->current.bufferScale,
-                     d->current.viewport.sourceGeometry.width() * d->current.bufferScale,
-                     d->current.viewport.sourceGeometry.height() * d->current.bufferScale);
-
-    return d->current.bufferTransform.inverted().map(box, d->bufferSize);
+    return d->bufferSourceBox;
 }
 
 KWin::OutputTransform SurfaceInterface::bufferTransform() const

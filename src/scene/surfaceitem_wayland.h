@@ -41,6 +41,8 @@ private Q_SLOTS:
     void handleSurfaceCommitted();
     void handleSurfaceSizeChanged();
     void handleBufferSizeChanged();
+    void handleBufferSourceBoxChanged();
+    void handleBufferTransformChanged();
 
     void handleChildSubSurfaceRemoved(KWaylandServer::SubSurfaceInterface *child);
     void handleChildSubSurfacesChanged();
