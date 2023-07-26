@@ -441,8 +441,8 @@ void ContrastEffect::doContrast(const RenderTarget &renderTarget, const RenderVi
 
     Q_ASSERT(m_windowData.contains(w));
     auto &windowData = m_windowData[w];
-    if (!windowData.texture || windowData.texture->size() != r.size()) {
-        windowData.texture = GLTexture::allocate(GL_RGBA8, r.size().toSize());
+    if (!windowData.texture || (renderTarget.texture() && windowData.texture->internalFormat() != renderTarget.texture()->internalFormat()) || windowData.texture->size() != r.size()) {
+        windowData.texture = GLTexture::allocate(renderTarget.texture() ? renderTarget.texture()->internalFormat() : GL_RGBA8, r.size().toSize());
         if (!windowData.texture) {
             return;
         }
