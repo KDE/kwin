@@ -787,7 +787,7 @@ QRegion SurfaceInterface::input() const
 
 QRectF SurfaceInterface::bufferSourceBox() const
 {
-    if (!d->current.viewport.sourceGeometryIsSet) {
+    if (!d->current.viewport.sourceGeometry.isValid()) {
         return QRectF(0, 0, d->bufferSize.width(), d->bufferSize.height());
     }
 
