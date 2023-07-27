@@ -5,6 +5,7 @@
 */
 
 import QtQuick
+import QtQuick.Controls as QQC2
 import Qt5Compat.GraphicalEffects
 import QtQuick.Layouts
 import org.kde.kwin as KWinComponents
@@ -125,7 +126,7 @@ FocusScope {
         }
     }
 
-    PlasmaComponents.Control {
+    QQC2.Control {
         z: 2
         anchors.right: parent.right
         y: root.active ? 0 : -height
@@ -147,7 +148,7 @@ FocusScope {
             }
         }
         contentItem: RowLayout {
-            PlasmaComponents.Label {
+            QQC2.Label {
                 text: i18nd("kwin","Padding:")
             }
             PlasmaComponents.SpinBox {
