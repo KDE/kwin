@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-25 02:00+0000\n"
-"PO-Revision-Date: 2023-04-27 12:28+0300\n"
+"POT-Creation-Date: 2023-07-27 01:59+0000\n"
+"PO-Revision-Date: 2023-07-24 21:32+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-POT-Import-Date: 2012-12-01 22:22:29+0000\n"
-"X-Generator: Lokalize 23.04.0\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1220,23 +1220,23 @@ msgid "Wait Longer"
 msgstr "Odota pidempään"
 
 # *** TARKISTA: Onko ”tablet” tabletti vai esim. piirtopöytä tms.? Onko ”output” ulostulo?
-#: input.cpp:2009
+#: input.cpp:2012
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Siirrä tabletti seuraavaan ulostuloon"
 
-#: input.cpp:2088
+#: input.cpp:2091
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Tabletti siirretty ulostuloon %1"
 
-#: input.cpp:2088
+#: input.cpp:2091
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Tabletit vaihtoivat ulostuloja"
 
 # ?!?!
-#: input.cpp:3105
+#: input.cpp:3108
 #, kde-format
 msgid "Touchpad"
 msgstr "Kosketuslevy"
@@ -2243,19 +2243,15 @@ msgstr "&Väri:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox2)
 #: plugins/mousemark/mousemark_config.ui:82
-#, fuzzy, kde-format
-#| msgid "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
+#, kde-format
 msgid "Draw with the mouse by holding modifier keys and moving the mouse"
-msgstr ""
-"Piirrä hiirellä ruudulle painamalla Shift+Meta-näppäimiä ja siirtämällä "
-"hiirtä."
+msgstr "Piirrä hiirellä ja siirtämällä hiirtä muuntonäppäimet painettuina."
 
 #. i18n: ectx: property (text), widget (QLabel, label_FreedrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:103
-#, fuzzy, kde-format
-#| msgid "Modifier keys:"
+#, kde-format
 msgid "Free draw modifier keys:"
-msgstr "Muuntonäppäimet:"
+msgstr "Vapaan piirron muuntonäppäimet:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Freedrawalt)
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Arrowdrawalt)
@@ -2299,10 +2295,9 @@ msgstr "Meta"
 
 #. i18n: ectx: property (text), widget (QLabel, label_ArrowdrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:157
-#, fuzzy, kde-format
-#| msgid "Modifier keys:"
+#, kde-format
 msgid "Arrow draw modifier keys:"
-msgstr "Muuntonäppäimet:"
+msgstr "Nuolipiirron muuntonäppäimet:"
 
 #: plugins/nightcolor/nightcolormanager.cpp:63
 #, kde-format
@@ -3642,20 +3637,17 @@ msgid "&No Titlebar and Frame"
 msgstr "&Ei otsikkopalkkia eikä kehystä"
 
 #: useractions.cpp:256
-#, fuzzy, kde-format
-#| msgid "Set Window Short&cut..."
+#, kde-format
 msgid "Set Window Short&cut…"
 msgstr "Aseta ikkunan &pikanäppäin…"
 
 #: useractions.cpp:262
-#, fuzzy, kde-format
-#| msgid "Configure Special &Window Settings..."
+#, kde-format
 msgid "Configure Special &Window Settings…"
 msgstr "&Ikkunakohtaiset erityisasetukset…"
 
 #: useractions.cpp:267
-#, fuzzy, kde-format
-#| msgid "Configure S&pecial Application Settings..."
+#, kde-format
 msgid "Configure S&pecial Application Settings…"
 msgstr "&Sovelluskohtaiset erityisasetukset…"
 
@@ -3976,7 +3968,7 @@ msgstr "Lisää aktiivisen ikkunan peittävyyttä 5 %"
 #: useractions.cpp:1007
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
-msgstr "Vähennä aktiivisen ikkunoan peittävyyttä 5 %"
+msgstr "Vähennä aktiivisen ikkunan peittävyyttä 5 %"
 
 #: useractions.cpp:1010
 #, kde-format
