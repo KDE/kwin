@@ -40,8 +40,6 @@ Q_DECLARE_METATYPE(PipeWireFrame);
 namespace KWin
 {
 
-static const QString s_socketName = QStringLiteral("wayland_test_buffer_size_change-0");
-
 class ScreencastingTest : public GenericSceneOpenGLTest
 {
     Q_OBJECT

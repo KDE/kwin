@@ -15,10 +15,12 @@
 #if KWIN_BUILD_SCREENLOCKER
 #include "screenlockerwatcher.h"
 #endif
+#include "gaminginput_v2.h"
 #include "inputmethod.h"
 #include "wayland/display.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include <wayland-gaming-input-unstable-v2-client-protocol.h>
 #include <wayland-zkde-screencast-unstable-v1-client-protocol.h>
 
 #include <KWayland/Client/appmenu.h>
@@ -292,6 +294,7 @@ static struct
     ScreencastingV1 *screencastingV1 = nullptr;
     ScreenEdgeManagerV1 *screenEdgeManagerV1 = nullptr;
     CursorShapeManagerV1 *cursorShapeManagerV1 = nullptr;
+    GamingInput *gamingInputV2 = nullptr;
 } s_waylandConnection;
 
 MockInputMethod *inputMethod()
@@ -481,6 +484,12 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
             if (interface == wp_cursor_shape_manager_v1_interface.name) {
                 s_waylandConnection.cursorShapeManagerV1 = new CursorShapeManagerV1();
                 s_waylandConnection.cursorShapeManagerV1->init(*registry, name, version);
+            }
+        }
+        if (flags & AdditionalWaylandInterface::GamingInputV2) {
+            if (interface == zcr_gaming_input_v2_interface.name) {
+                s_waylandConnection.gamingInputV2 = new GamingInput();
+                s_waylandConnection.gamingInputV2->init(*registry, name, version);
             }
         }
     });
@@ -719,6 +728,11 @@ KWayland::Client::Output *waylandOutput(const QString &name)
 ScreencastingV1 *screencasting()
 {
     return s_waylandConnection.screencastingV1;
+}
+
+GamingInput *gamingInputV2()
+{
+    return s_waylandConnection.gamingInputV2;
 }
 
 QVector<KWin::Test::WaylandOutputDeviceV2 *> waylandOutputDevicesV2()

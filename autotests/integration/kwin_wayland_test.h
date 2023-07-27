@@ -22,6 +22,7 @@
 
 #include "qwayland-cursor-shape-v1.h"
 #include "qwayland-fractional-scale-v1.h"
+#include "qwayland-gaming-input-unstable-v2.h"
 #include "qwayland-idle-inhibit-unstable-v1.h"
 #include "qwayland-input-method-unstable-v1.h"
 #include "qwayland-kde-output-device-v2.h"
@@ -64,6 +65,7 @@ class zwp_text_input_manager_v3;
 }
 
 class ScreencastingV1;
+class GamingInput;
 
 namespace KWin
 {
@@ -541,6 +543,7 @@ enum class AdditionalWaylandInterface {
     ScreencastingV1 = 1 << 16,
     ScreenEdgeV1 = 1 << 17,
     CursorShapeV1 = 1 << 18,
+    GamingInputV2 = 1 << 19,
 };
 Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
 
@@ -636,6 +639,7 @@ QVector<KWayland::Client::Output *> waylandOutputs();
 KWayland::Client::Output *waylandOutput(const QString &name);
 ScreencastingV1 *screencasting();
 QVector<WaylandOutputDeviceV2 *> waylandOutputDevicesV2();
+GamingInput *gamingInputV2();
 
 bool waitForWaylandSurface(Window *window);
 

@@ -11,6 +11,7 @@ qt6_generate_wayland_protocol_client_sources(KWinIntegrationTestFramework
     FILES
         ${WaylandProtocols_DATADIR}/unstable/text-input/text-input-unstable-v3.xml
         ${CMAKE_CURRENT_SOURCE_DIR}/protocols/wlr-layer-shell-unstable-v1.xml
+        ${CMAKE_SOURCE_DIR}/src/plugins/gamepadinput/gaming-input-unstable-v2.xml
         ${WaylandProtocols_DATADIR}/stable/xdg-shell/xdg-shell.xml
         ${WaylandProtocols_DATADIR}/unstable/xdg-decoration/xdg-decoration-unstable-v1.xml
         ${WaylandProtocols_DATADIR}/unstable/idle-inhibit/idle-inhibit-unstable-v1.xml
@@ -26,7 +27,9 @@ target_sources(KWinIntegrationTestFramework PRIVATE
     generic_scene_opengl_test.cpp
     kwin_wayland_test.cpp
     test_helpers.cpp
+    ${CMAKE_SOURCE_DIR}/src/plugins/gamepadinput/tests/gaminginput_v2.cpp
 )
+target_include_directories(KWinIntegrationTestFramework PUBLIC ${CMAKE_SOURCE_DIR}/src/plugins/gamepadinput/tests/)
 target_link_libraries(KWinIntegrationTestFramework
     PUBLIC
         Qt::Test
@@ -44,6 +47,7 @@ target_link_libraries(KWinIntegrationTestFramework
         KF6GlobalAccelKWinPlugin
         KF6WindowSystemKWinPlugin
         KF6IdleTimeKWinPlugin
+        Qt::WaylandClient
 )
 if(TARGET PW::KScreenLocker)
     target_link_libraries(KWinIntegrationTestFramework PUBLIC PW::KScreenLocker)
@@ -123,6 +127,7 @@ integrationTest(NAME testStackingOrder SRCS stacking_order_test.cpp LIBS XCB::IC
 integrationTest(NAME testDbusInterface SRCS dbus_interface_test.cpp LIBS XCB::ICCCM)
 integrationTest(NAME testXwaylandServerCrash SRCS xwaylandserver_crash_test.cpp LIBS XCB::ICCCM)
 integrationTest(NAME testXwaylandServerRestart SRCS xwaylandserver_restart_test.cpp LIBS XCB::ICCCM)
+integrationTest(NAME testGamepadInput SRCS test_gamepadv2.cpp)
 
 qt_add_dbus_interfaces(DBUS_SRCS ${CMAKE_BINARY_DIR}/src/org.kde.kwin.VirtualKeyboard.xml)
 integrationTest(NAME testVirtualKeyboardDBus SRCS test_virtualkeyboard_dbus.cpp ${DBUS_SRCS})

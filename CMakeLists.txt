@@ -85,6 +85,7 @@ find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
     IdleTime
     Package
     Service
+    Solid
     Svg
     WidgetsAddons
     WindowSystem
@@ -397,6 +398,9 @@ add_feature_info("SCHED_RESET_ON_FORK"
 
 pkg_check_modules(PipeWire IMPORTED_TARGET libpipewire-0.3>=0.3.29)
 add_feature_info(PipeWire PipeWire_FOUND "Required for Wayland screencasting")
+
+pkg_check_modules(Evdev REQUIRED IMPORTED_TARGET libevdev)
+add_feature_info(Evdev Evdev_FOUND "Adds support for controllers")
 
 if (KWIN_BUILD_NOTIFICATIONS)
     find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS Notifications)
