@@ -138,27 +138,28 @@ bool LayerShellV1Window::wantsInput() const
 
 StrutRect LayerShellV1Window::strutRect(StrutArea area) const
 {
+    const QRectF geometry = moveResizeGeometry();
     switch (area) {
     case StrutAreaLeft:
         if (m_shellSurface->exclusiveEdge() == Qt::LeftEdge) {
-            return StrutRect(x(), y(), m_shellSurface->exclusiveZone(), height(), StrutAreaLeft);
+            return StrutRect(geometry.x(), geometry.y(), m_shellSurface->exclusiveZone(), geometry.height(), StrutAreaLeft);
         }
         return StrutRect();
     case StrutAreaRight:
         if (m_shellSurface->exclusiveEdge() == Qt::RightEdge) {
-            return StrutRect(x() + width() - m_shellSurface->exclusiveZone(), y(),
-                             m_shellSurface->exclusiveZone(), height(), StrutAreaRight);
+            return StrutRect(geometry.x() + geometry.width() - m_shellSurface->exclusiveZone(), geometry.y(),
+                             m_shellSurface->exclusiveZone(), geometry.height(), StrutAreaRight);
         }
         return StrutRect();
     case StrutAreaTop:
         if (m_shellSurface->exclusiveEdge() == Qt::TopEdge) {
-            return StrutRect(x(), y(), width(), m_shellSurface->exclusiveZone(), StrutAreaTop);
+            return StrutRect(geometry.x(), geometry.y(), geometry.width(), m_shellSurface->exclusiveZone(), StrutAreaTop);
         }
         return StrutRect();
     case StrutAreaBottom:
         if (m_shellSurface->exclusiveEdge() == Qt::BottomEdge) {
-            return StrutRect(x(), y() + height() - m_shellSurface->exclusiveZone(),
-                             width(), m_shellSurface->exclusiveZone(), StrutAreaBottom);
+            return StrutRect(geometry.x(), geometry.y() + geometry.height() - m_shellSurface->exclusiveZone(),
+                             geometry.width(), m_shellSurface->exclusiveZone(), StrutAreaBottom);
         }
         return StrutRect();
     default:
