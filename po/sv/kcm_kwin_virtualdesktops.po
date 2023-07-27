@@ -2,13 +2,13 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
 #
-# Stefan Asserhäll <stefan.asserhall@bredband.net>, 2007, 2009, 2010, 2013, 2014, 2018, 2019, 2021.
+# Stefan Asserhäll <stefan.asserhall@bredband.net>, 2007, 2009, 2010, 2013, 2014, 2018, 2019, 2021, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-15 00:49+0000\n"
-"PO-Revision-Date: 2021-05-27 18:54+0200\n"
+"PO-Revision-Date: 2023-07-26 11:24+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@bredband.net>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
 "Language: sv\n"
@@ -29,8 +29,7 @@ msgid "Your emails"
 msgstr "stefan.asserhall@bredband.net"
 
 #: desktopsmodel.cpp:191
-#, fuzzy, kde-format
-#| msgid "Desktop %1"
+#, kde-format
 msgctxt "A numbered name for virtual desktops"
 msgid "Desktop %1"
 msgid_plural "Desktop %1"

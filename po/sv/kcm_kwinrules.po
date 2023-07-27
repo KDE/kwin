@@ -1,14 +1,14 @@
 # translation of kcmkwinrules.po to Swedish
 # Copyright (C) 2004, 2005, 2007, 2008, 2009 Free Software Foundation, Inc.
 #
-# Stefan Asserhäll <stefan.asserhall@bredband.net>, 2004, 2005, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2015, 2017, 2018, 2019, 2020, 2021, 2022.
+# Stefan Asserhäll <stefan.asserhall@bredband.net>, 2004, 2005, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2015, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
 # Mattias Newzella <newzella@linux.nu>, 2004.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-25 02:43+0000\n"
-"PO-Revision-Date: 2022-04-19 19:39+0200\n"
+"PO-Revision-Date: 2023-07-26 11:27+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@bredband.net>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
 "Language: sv\n"
@@ -779,10 +779,9 @@ msgid "Block compositing"
 msgstr "Blockera skrivbordseffekter"
 
 #: rulesmodel.cpp:703
-#, fuzzy, kde-format
-#| msgid "Window class (application)"
+#, kde-format
 msgid "Window class not available"
-msgstr "Fönsterklass (program)"
+msgstr "Fönsterklass inte tillgänglig"
 
 #: rulesmodel.cpp:704
 #, kde-kuit-format
@@ -793,6 +792,11 @@ msgid ""
 "it, try to match other properties like the window title instead.<nl/><nl/"
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
+"Programmet tillhandahåller inte en klass för fönster, så Kwin kan inte "
+"använda den för att matcha och tillämpa några regler. Om du ändå vill "
+"tillämpa regler för det, försök att matcha andra egenskaper som "
+"fönsterrubriken istället.<nl/><nl/>Överväg gärna att rapportera felet till "
+"programmets utvecklare."
 
 #: rulesmodel.cpp:738
 #, kde-format
@@ -943,8 +947,7 @@ msgid "Extreme"
 msgstr "Extrem"
 
 #: rulesmodel.cpp:865
-#, fuzzy, kde-format
-#| msgid "Unmanaged Window"
+#, kde-format
 msgid "Unmanaged window"
 msgstr "Ohanterat fönster"
 

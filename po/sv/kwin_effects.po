@@ -3,13 +3,13 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Stefan Asserhäll <stefan.asserhall@bredband.net>, 2007, 2008, 2009, 2010.
-# Stefan Asserhall <stefan.asserhall@bredband.net>, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2018, 2019, 2020, 2021, 2022.
+# Stefan Asserhall <stefan.asserhall@bredband.net>, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2018, 2019, 2020, 2021, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-26 02:49+0000\n"
-"PO-Revision-Date: 2022-09-24 16:09+0200\n"
+"PO-Revision-Date: 2023-07-26 11:35+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@bredband.net>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
 "Language: sv\n"
@@ -202,7 +202,7 @@ msgstr "Naturligt"
 #: desktopgrid/desktopgrid_config.ui:147
 #, kde-format
 msgid "None"
-msgstr ""
+msgstr "Ingen"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: desktopgrid/desktopgrid_config.ui:155
@@ -320,10 +320,9 @@ msgid "Toggle Invert Effect on Window"
 msgstr "Sätt på eller stäng av inverteringseffekt för fönster"
 
 #: invert/invert.cpp:56
-#, fuzzy, kde-format
-#| msgid "Invert cursor keys"
+#, kde-format
 msgid "Invert Screen Colors"
-msgstr "Invertera markörtangenter"
+msgstr "Invertera skärmfärger"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_FadeToBlack)
 #: login/package/contents/ui/config.ui:17
@@ -742,45 +741,42 @@ msgstr " %"
 #: tileseditor/tileseditoreffect.cpp:29
 #, kde-format
 msgid "Toggle Tiles Editor"
-msgstr ""
+msgstr "Visa eller dölj ruteditor"
 
 #: tileseditor/qml/main.qml:150
 #, kde-format
 msgid "Padding:"
-msgstr ""
+msgstr "Utfyllnad:"
 
 #: tileseditor/qml/main.qml:160
 #, kde-format
 msgid "Load Layout..."
-msgstr ""
+msgstr "Läs in layout..."
 
 #: tileseditor/qml/main.qml:274
-#, fuzzy, kde-format
-#| msgid "Closest"
+#, kde-format
 msgid "Close"
-msgstr "Närmast"
+msgstr "Stäng"
 
 #: tileseditor/qml/TileDelegate.qml:167
-#, fuzzy, kde-format
-#| msgid "Horizontal:"
+#, kde-format
 msgid "Split Horizontally"
-msgstr "Horisontellt:"
+msgstr "Dela horisontellt"
 
 #: tileseditor/qml/TileDelegate.qml:174
-#, fuzzy, kde-format
-#| msgid "Vertical:"
+#, kde-format
 msgid "Split Vertically"
-msgstr "Vertikalt:"
+msgstr "Dela vertikalt"
 
 #: tileseditor/qml/TileDelegate.qml:182 tileseditor/qml/TileDelegate.qml:211
 #, kde-format
 msgid "Add Floating Tile"
-msgstr ""
+msgstr "Lägg till fri ruta"
 
 #: tileseditor/qml/TileDelegate.qml:191
 #, kde-format
 msgid "Delete"
-msgstr ""
+msgstr "Ta bort"
 
 #: trackmouse/trackmouse.cpp:44 trackmouse/trackmouse_config.cpp:57
 #, kde-format
@@ -948,10 +944,9 @@ msgid "No Windows"
 msgstr "Inga fönster"
 
 #: windowview/qml/main.qml:123
-#, fuzzy, kde-format
-#| msgid "Fullscreen windows"
+#, kde-format
 msgid "Filter windows…"
-msgstr "Fullskärmsfönster"
+msgstr "Filtrera fönster…"
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
 #: wobblywindows/wobblywindows_config.ui:20
