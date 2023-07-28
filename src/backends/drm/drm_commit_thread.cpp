@@ -9,6 +9,7 @@
 #include "drm_commit_thread.h"
 #include "drm_commit.h"
 #include "drm_gpu.h"
+#include "logging_p.h"
 #include "utils/realtime.h"
 
 namespace KWin
@@ -42,6 +43,7 @@ DrmCommitThread::DrmCommitThread()
                     // the atomic commit takes ownership of the object
                     m_commit.release();
                 } else {
+                    qCWarning(KWIN_DRM) << "atomic commit failed:" << strerror(errno);
                     m_droppedCommits.push_back(std::move(m_commit));
                     QMetaObject::invokeMethod(this, &DrmCommitThread::commitFailed, Qt::ConnectionType::QueuedConnection);
                     QMetaObject::invokeMethod(this, &DrmCommitThread::clearDroppedCommits, Qt::ConnectionType::QueuedConnection);

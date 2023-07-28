@@ -41,6 +41,12 @@ DrmPipeline::DrmPipeline(DrmConnector *conn)
     : m_connector(conn)
     , m_commitThread(std::make_unique<DrmCommitThread>())
 {
+    QObject::connect(m_commitThread.get(), &DrmCommitThread::commitFailed, [this]() {
+        m_pageflipPending = false;
+        if (m_output) {
+            m_output->frameFailed();
+        }
+    });
 }
 
 DrmPipeline::~DrmPipeline()
@@ -421,13 +427,7 @@ void DrmPipeline::pageFlipped(std::chrono::nanoseconds timestamp)
 
 void DrmPipeline::setOutput(DrmOutput *output)
 {
-    if (m_output) {
-        QObject::disconnect(m_commitThread.get(), nullptr, m_output, nullptr);
-    }
     m_output = output;
-    if (output) {
-        QObject::connect(m_commitThread.get(), &DrmCommitThread::commitFailed, output, &DrmAbstractOutput::frameFailed);
-    }
 }
 
 DrmOutput *DrmPipeline::output() const
