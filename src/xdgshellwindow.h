@@ -178,6 +178,7 @@ protected:
     bool acceptsFocus() const override;
     Layer layerForDock() const override;
     void doSetQuickTileMode() override;
+    void doSetSuspended() override;
 
 private:
     void handleWindowTitleChanged();

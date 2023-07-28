@@ -4256,6 +4256,26 @@ void Window::setHiddenByShowDesktop(bool hidden)
     }
 }
 
+bool Window::isSuspended() const
+{
+    return m_suspended;
+}
+
+void Window::setSuspended(bool suspended)
+{
+    if (isDeleted()) {
+        return;
+    }
+    if (m_suspended != suspended) {
+        m_suspended = suspended;
+        doSetSuspended();
+    }
+}
+
+void Window::doSetSuspended()
+{
+}
+
 } // namespace KWin
 
 #include "moc_window.cpp"

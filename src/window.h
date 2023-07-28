@@ -988,6 +988,9 @@ public:
     }
     virtual bool isMinimizable() const;
 
+    bool isSuspended() const;
+    void setSuspended(bool suspended);
+
     QRectF fullscreenGeometryRestore() const;
     virtual bool isFullScreenable() const;
     virtual bool isFullScreen() const;
@@ -1502,6 +1505,7 @@ protected:
     virtual void doSetQuickTileMode();
     virtual void doSetHidden();
     virtual void doSetHiddenByShowDesktop();
+    virtual void doSetSuspended();
 
     void setupWindowManagementInterface();
     void destroyWindowManagementInterface();
@@ -1753,6 +1757,7 @@ protected:
     bool m_keepBelow = false;
     bool m_demandsAttention = false;
     bool m_minimized = false;
+    bool m_suspended = false;
     QTimer *m_autoRaiseTimer = nullptr;
     QTimer *m_shadeHoverTimer = nullptr;
     ShadeMode m_shadeMode = ShadeNone;

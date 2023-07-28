@@ -168,7 +168,12 @@ bool WindowItem::computeVisibility() const
 
 void WindowItem::updateVisibility()
 {
-    setVisible(computeVisibility());
+    const bool visible = computeVisibility();
+    setVisible(visible);
+
+    if (m_window->readyForPainting()) {
+        m_window->setSuspended(!visible);
+    }
 }
 
 void WindowItem::updatePosition()

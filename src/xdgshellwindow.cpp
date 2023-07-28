@@ -836,6 +836,17 @@ void XdgToplevelWindow::doFinishInteractiveMoveResize()
     }
 }
 
+void XdgToplevelWindow::doSetSuspended()
+{
+    if (isSuspended()) {
+        m_nextStates |= XdgToplevelInterface::State::Suspended;
+    } else {
+        m_nextStates &= ~XdgToplevelInterface::State::Suspended;
+    }
+
+    scheduleConfigure();
+}
+
 bool XdgToplevelWindow::takeFocus()
 {
     if (wantsInput()) {
