@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-07-27 01:59+0000\n"
-"PO-Revision-Date: 2023-07-17 19:14+0200\n"
+"PO-Revision-Date: 2023-07-27 21:16+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
 "Language: nn\n"
@@ -1308,11 +1308,9 @@ msgid "Vlad Zahorodnii"
 msgstr "Vlad Zahorodnii"
 
 #: main.cpp:194
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Very Huge"
+#, kde-format
 msgid "Xaver Hugl"
-msgstr "Kolossal"
+msgstr "Xaver Hugl"
 
 #: main.cpp:203
 #, kde-format
@@ -2237,9 +2235,9 @@ msgstr "Teikn med musa ved å halda nede valtastar og flytta musa."
 
 #. i18n: ectx: property (text), widget (QLabel, label_FreedrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:103
-#, fuzzy, kde-format
+#, kde-format
 msgid "Free draw modifier keys:"
-msgstr "Valtastar"
+msgstr "Valtastar for frihandsteikning:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Freedrawalt)
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Arrowdrawalt)
@@ -2283,9 +2281,9 @@ msgstr "Meta"
 
 #. i18n: ectx: property (text), widget (QLabel, label_ArrowdrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:157
-#, fuzzy, kde-format
+#, kde-format
 msgid "Arrow draw modifier keys:"
-msgstr "Valtastar"
+msgstr "Valtastar for pilteikning:"
 
 #: plugins/nightcolor/nightcolormanager.cpp:63
 #, kde-format
@@ -2396,7 +2394,7 @@ msgstr "Fann ikkje vindaugs-ID %1"
 #: plugins/screencast/screencastmanager.cpp:145
 #, kde-format
 msgid "Could not find output"
-msgstr ""
+msgstr "Fann ikkje uteining"
 
 #: plugins/screencast/screencastmanager.cpp:172
 #, kde-format
