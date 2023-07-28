@@ -134,7 +134,7 @@ void EglBackend::init()
 
     // check for EGL_NV_post_sub_buffer and whether it can be used on the surface
     if (hasExtension(QByteArrayLiteral("EGL_NV_post_sub_buffer"))) {
-        if (eglQuerySurface(eglDisplay(), surface(), EGL_POST_SUB_BUFFER_SUPPORTED_NV, &m_havePostSubBuffer) == EGL_FALSE) {
+        if (eglQuerySurface(eglDisplayObject()->handle(), surface(), EGL_POST_SUB_BUFFER_SUPPORTED_NV, &m_havePostSubBuffer) == EGL_FALSE) {
             EGLint error = eglGetError();
             if (error != EGL_SUCCESS && error != EGL_BAD_ATTRIBUTE) {
                 setFailed(QStringLiteral("query surface failed"));
@@ -150,9 +150,9 @@ void EglBackend::init()
 
         // check if swap interval 1 is supported
         EGLint val;
-        eglGetConfigAttrib(eglDisplay(), config(), EGL_MAX_SWAP_INTERVAL, &val);
+        eglGetConfigAttrib(eglDisplayObject()->handle(), config(), EGL_MAX_SWAP_INTERVAL, &val);
         if (val >= 1) {
-            if (eglSwapInterval(eglDisplay(), 1)) {
+            if (eglSwapInterval(eglDisplayObject()->handle(), 1)) {
                 qCDebug(KWIN_CORE) << "Enabled v-sync";
             }
         } else {
@@ -165,7 +165,7 @@ void EglBackend::init()
          * eglSwapBuffers() for each frame. eglSwapBuffers() then does the copy (no page flip possible in this mode),
          * which means it is slow and not synced to the v-blank. */
         qCWarning(KWIN_CORE) << "eglPostSubBufferNV not supported, have to enable buffer preservation - which breaks v-sync and performance";
-        eglSurfaceAttrib(eglDisplay(), surface(), EGL_SWAP_BEHAVIOR, EGL_BUFFER_PRESERVED);
+        eglSurfaceAttrib(eglDisplayObject()->handle(), surface(), EGL_SWAP_BEHAVIOR, EGL_BUFFER_PRESERVED);
     }
 }
 
@@ -244,13 +244,13 @@ EGLSurface EglBackend::createSurface(xcb_window_t window)
     EGLSurface surface = EGL_NO_SURFACE;
     if (m_havePlatformBase) {
         // eglCreatePlatformWindowSurfaceEXT() expects a pointer to the Window.
-        surface = eglCreatePlatformWindowSurfaceEXT(eglDisplay(), config(), (void *)&nativeWindow, nullptr);
+        surface = eglCreatePlatformWindowSurfaceEXT(eglDisplayObject()->handle(), config(), (void *)&nativeWindow, nullptr);
     } else {
         // eglCreateWindowSurface() expects a Window, not a pointer to the Window. Use
         // a c style cast as there are (buggy) platforms where the size of the Window
         // type is not the same as the size of EGLNativeWindowType, reinterpret_cast<>()
         // may not compile.
-        surface = eglCreateWindowSurface(eglDisplay(), config(), (EGLNativeWindowType)(uintptr_t)nativeWindow, nullptr);
+        surface = eglCreateWindowSurface(eglDisplayObject()->handle(), config(), (EGLNativeWindowType)(uintptr_t)nativeWindow, nullptr);
     }
 
     return surface;
@@ -278,7 +278,7 @@ EGLConfig EglBackend::chooseBufferConfig()
 
     EGLint count;
     EGLConfig configs[1024];
-    if (eglChooseConfig(eglDisplay(), config_attribs, configs, 1024, &count) == EGL_FALSE) {
+    if (eglChooseConfig(eglDisplayObject()->handle(), config_attribs, configs, 1024, &count) == EGL_FALSE) {
         qCCritical(KWIN_CORE) << "choose config failed";
         return EGL_NO_CONFIG_KHR;
     }
@@ -293,7 +293,7 @@ EGLConfig EglBackend::chooseBufferConfig()
 
     for (int i = 0; i < count; i++) {
         EGLint val;
-        if (eglGetConfigAttrib(eglDisplay(), configs[i], EGL_NATIVE_VISUAL_ID, &val) == EGL_FALSE) {
+        if (eglGetConfigAttrib(eglDisplayObject()->handle(), configs[i], EGL_NATIVE_VISUAL_ID, &val) == EGL_FALSE) {
             qCCritical(KWIN_CORE) << "egl get config attrib failed";
         }
         if (uint32_t(val) == attribs->visual) {
@@ -367,14 +367,14 @@ void EglBackend::presentSurface(EGLSurface surface, const QRegion &damage, const
 
     if (fullRepaint || !m_havePostSubBuffer) {
         // the entire screen changed, or we cannot do partial updates (which implies we enabled surface preservation)
-        eglSwapBuffers(eglDisplay(), surface);
+        eglSwapBuffers(eglDisplayObject()->handle(), surface);
         if (supportsBufferAge()) {
-            eglQuerySurface(eglDisplay(), surface, EGL_BUFFER_AGE_EXT, &m_bufferAge);
+            eglQuerySurface(eglDisplayObject()->handle(), surface, EGL_BUFFER_AGE_EXT, &m_bufferAge);
         }
     } else {
         // a part of the screen changed, and we can use eglPostSubBufferNV to copy the updated area
         for (const QRect &r : damage) {
-            eglPostSubBufferNV(eglDisplay(), surface, r.left(), screenGeometry.height() - r.bottom() - 1, r.width(), r.height());
+            eglPostSubBufferNV(eglDisplayObject()->handle(), surface, r.left(), screenGeometry.height() - r.bottom() - 1, r.width(), r.height());
         }
     }
 }
@@ -426,7 +426,7 @@ EglPixmapTexture::EglPixmapTexture(EglBackend *backend)
 EglPixmapTexture::~EglPixmapTexture()
 {
     if (m_image != EGL_NO_IMAGE_KHR) {
-        eglDestroyImageKHR(m_backend->eglDisplay(), m_image);
+        eglDestroyImageKHR(m_backend->eglDisplayObject()->handle(), m_image);
     }
 }
 
@@ -444,7 +444,7 @@ bool EglPixmapTexture::create(SurfacePixmapX11 *pixmap)
     const EGLint attribs[] = {
         EGL_IMAGE_PRESERVED_KHR, EGL_TRUE,
         EGL_NONE};
-    m_image = eglCreateImageKHR(m_backend->eglDisplay(),
+    m_image = eglCreateImageKHR(m_backend->eglDisplayObject()->handle(),
                                 EGL_NO_CONTEXT,
                                 EGL_NATIVE_PIXMAP_KHR,
                                 reinterpret_cast<EGLClientBuffer>(static_cast<uintptr_t>(nativePixmap)),

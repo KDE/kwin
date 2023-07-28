@@ -7,7 +7,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "libkwineffects/kwineglimagetexture.h"
+#include "kwineglimagetexture.h"
+#include "egldisplay.h"
 #include "libkwineffects/kwingltexture_p.h"
 
 #include <QDebug>
@@ -16,7 +17,7 @@
 namespace KWin
 {
 
-EGLImageTexture::EGLImageTexture(::EGLDisplay display, EGLImage image, uint textureId, int internalFormat, const QSize &size, uint32_t target)
+EGLImageTexture::EGLImageTexture(EglDisplay *display, EGLImage image, uint textureId, int internalFormat, const QSize &size, uint32_t target)
     : GLTexture(target, textureId, internalFormat, size, 1, true, TextureTransform::MirrorY)
     , m_image(image)
     , m_display(display)
@@ -25,10 +26,10 @@ EGLImageTexture::EGLImageTexture(::EGLDisplay display, EGLImage image, uint text
 
 EGLImageTexture::~EGLImageTexture()
 {
-    eglDestroyImageKHR(m_display, m_image);
+    eglDestroyImageKHR(m_display->handle(), m_image);
 }
 
-std::shared_ptr<EGLImageTexture> EGLImageTexture::create(::EGLDisplay display, EGLImageKHR image, int internalFormat, const QSize &size, bool externalOnly)
+std::shared_ptr<EGLImageTexture> EGLImageTexture::create(EglDisplay *display, EGLImageKHR image, int internalFormat, const QSize &size, bool externalOnly)
 {
     if (image == EGL_NO_IMAGE) {
         return nullptr;

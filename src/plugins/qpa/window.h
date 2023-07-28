@@ -52,7 +52,6 @@ private:
     QSurfaceFormat m_format;
     QPointer<InternalWindow> m_handle;
     std::shared_ptr<QOpenGLFramebufferObject> m_contentFBO;
-    ::EGLDisplay m_eglDisplay = EGL_NO_DISPLAY;
     quint32 m_windowId;
     bool m_resized = false;
     qreal m_scale = 1;

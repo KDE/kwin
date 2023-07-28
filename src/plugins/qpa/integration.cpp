@@ -146,8 +146,8 @@ QPlatformOpenGLContext *Integration::createPlatformOpenGLContext(QOpenGLContext 
         qCWarning(KWIN_QPA) << "Attempting to create a QOpenGLContext before the scene is initialized";
         return nullptr;
     }
-    const ::EGLDisplay eglDisplay = kwinApp()->outputBackend()->sceneEglDisplay();
-    if (eglDisplay != EGL_NO_DISPLAY) {
+    EglDisplay *const eglDisplay = kwinApp()->outputBackend()->sceneEglDisplayObject();
+    if (eglDisplay) {
         EGLPlatformContext *platformContext = new EGLPlatformContext(context, eglDisplay);
         return platformContext;
     }

@@ -6,6 +6,7 @@ target_sources(kwin PRIVATE
     egldisplay.cpp
     eglnativefence.cpp
     eglswapchain.cpp
+    kwineglimagetexture.cpp
     openglbackend.cpp
     openglsurfacetexture.cpp
     openglsurfacetexture_internal.cpp

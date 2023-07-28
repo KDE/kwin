@@ -64,10 +64,6 @@ public:
     virtual std::shared_ptr<DmaBufTexture> createDmaBufTexture(const QSize &size, quint32 format, const uint64_t modifier);
     std::shared_ptr<DmaBufTexture> createDmaBufTexture(const DmaBufParams &attributes);
 
-    /**
-     * The EGLDisplay used by the compositing scene.
-     */
-    ::EGLDisplay sceneEglDisplay() const;
     virtual EglDisplay *sceneEglDisplayObject() const = 0;
     /**
      * Returns the compositor-wide shared EGL context. This function may return EGL_NO_CONTEXT

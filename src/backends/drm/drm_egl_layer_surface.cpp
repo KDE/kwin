@@ -390,7 +390,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface &surfa
 {
     Q_ASSERT(surface.importGbmSwapchain);
 
-    EGLNativeFence sourceFence(m_eglBackend->eglDisplay());
+    EGLNativeFence sourceFence(m_eglBackend->eglDisplayObject());
 
     const auto display = m_eglBackend->displayForGpu(m_gpu);
     // the NVidia proprietary driver supports neither implicit sync nor EGL_ANDROID_native_fence_sync
@@ -403,7 +403,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface &surfa
     }
 
     if (sourceFence.isValid()) {
-        const auto destinationFence = EGLNativeFence::importFence(context->displayObject()->handle(), sourceFence.fileDescriptor().duplicate());
+        const auto destinationFence = EGLNativeFence::importFence(context->displayObject(), sourceFence.fileDescriptor().duplicate());
         destinationFence.waitSync();
     }
 

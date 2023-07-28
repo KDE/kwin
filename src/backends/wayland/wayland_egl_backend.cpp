@@ -53,7 +53,7 @@ std::shared_ptr<GLTexture> WaylandEglPrimaryLayer::texture() const
 
 std::optional<OutputLayerBeginFrameInfo> WaylandEglPrimaryLayer::beginFrame()
 {
-    if (eglMakeCurrent(m_backend->eglDisplay(), EGL_NO_SURFACE, EGL_NO_SURFACE, m_backend->context()) == EGL_FALSE) {
+    if (!m_backend->contextObject()->makeCurrent()) {
         qCCritical(KWIN_WAYLAND_BACKEND) << "Make Context Current failed";
         return std::nullopt;
     }
@@ -129,12 +129,12 @@ WaylandEglCursorLayer::WaylandEglCursorLayer(WaylandOutput *output, WaylandEglBa
 
 WaylandEglCursorLayer::~WaylandEglCursorLayer()
 {
-    eglMakeCurrent(m_backend->eglDisplay(), EGL_NO_SURFACE, EGL_NO_SURFACE, m_backend->context());
+    m_backend->contextObject()->makeCurrent();
 }
 
 std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame()
 {
-    if (eglMakeCurrent(m_backend->eglDisplay(), EGL_NO_SURFACE, EGL_NO_SURFACE, m_backend->context()) == EGL_FALSE) {
+    if (!m_backend->contextObject()->makeCurrent()) {
         qCCritical(KWIN_WAYLAND_BACKEND) << "Make Context Current failed";
         return std::nullopt;
     }

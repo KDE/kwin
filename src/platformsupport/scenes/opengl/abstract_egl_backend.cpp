@@ -15,7 +15,7 @@
 #include "wayland/drmclientbuffer.h"
 #include "wayland_server.h"
 // kwin libs
-#include "libkwineffects/kwineglimagetexture.h"
+#include "kwineglimagetexture.h"
 #include "libkwineffects/kwinglplatform.h"
 #include "libkwineffects/kwinglutils.h"
 #include "utils/drm_format_helper.h"
@@ -66,8 +66,8 @@ bool AbstractEglBackend::ensureGlobalShareContext(EGLConfig config)
 
 void AbstractEglBackend::destroyGlobalShareContext()
 {
-    const ::EGLDisplay eglDisplay = kwinApp()->outputBackend()->sceneEglDisplay();
-    if (eglDisplay == EGL_NO_DISPLAY || !s_globalShareContext) {
+    EglDisplay *const eglDisplay = kwinApp()->outputBackend()->sceneEglDisplayObject();
+    if (!eglDisplay || !s_globalShareContext) {
         return;
     }
     s_globalShareContext.reset();
@@ -291,16 +291,6 @@ bool AbstractEglBackend::testImportBuffer(GraphicsBuffer *buffer)
 QHash<uint32_t, QVector<uint64_t>> AbstractEglBackend::supportedFormats() const
 {
     return m_display->supportedDrmFormats();
-}
-
-::EGLDisplay AbstractEglBackend::eglDisplay() const
-{
-    return m_display->handle();
-}
-
-::EGLContext AbstractEglBackend::context() const
-{
-    return m_context->handle();
 }
 
 EGLSurface AbstractEglBackend::surface() const

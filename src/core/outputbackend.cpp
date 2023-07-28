@@ -103,15 +103,6 @@ void OutputBackend::removeVirtualOutput(Output *output)
     Q_ASSERT(!output);
 }
 
-::EGLDisplay KWin::OutputBackend::sceneEglDisplay() const
-{
-    if (auto display = sceneEglDisplayObject()) {
-        return display->handle();
-    } else {
-        return EGL_NO_DISPLAY;
-    }
-}
-
 QString OutputBackend::supportInformation() const
 {
     return QStringLiteral("Name: %1\n").arg(metaObject()->className());

@@ -16,13 +16,17 @@
 
 namespace KWin
 {
+
+class EglDisplay;
+class EglContext;
+
 namespace QPA
 {
 
 class EGLPlatformContext : public QPlatformOpenGLContext
 {
 public:
-    EGLPlatformContext(QOpenGLContext *context, ::EGLDisplay display);
+    EGLPlatformContext(QOpenGLContext *context, EglDisplay *display);
     ~EGLPlatformContext() override;
 
     bool makeCurrent(QPlatformSurface *surface) override;
@@ -34,16 +38,13 @@ public:
     QFunctionPointer getProcAddress(const char *procName) override;
     void swapBuffers(QPlatformSurface *surface) override;
 
-    ::EGLDisplay eglDisplay() const;
-    ::EGLContext eglContext() const;
-
 private:
     void create(const QSurfaceFormat &format, ::EGLContext shareContext);
     void updateFormatFromContext();
 
-    ::EGLDisplay m_eglDisplay;
+    EglDisplay *m_eglDisplay = nullptr;
     EGLConfig m_config = EGL_NO_CONFIG_KHR;
-    ::EGLContext m_context = EGL_NO_CONTEXT;
+    std::unique_ptr<EglContext> m_eglContext;
     QSurfaceFormat m_format;
 };
 

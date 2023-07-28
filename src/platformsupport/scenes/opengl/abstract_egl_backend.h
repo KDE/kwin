@@ -32,8 +32,6 @@ public:
     bool makeCurrent() override;
     void doneCurrent() override;
 
-    ::EGLDisplay eglDisplay() const;
-    ::EGLContext context() const;
     EGLSurface surface() const;
     EGLConfig config() const;
     EglDisplay *eglDisplayObject() const;

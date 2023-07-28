@@ -52,7 +52,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglGbmLayer::beginFrame()
         }
     }
 
-    if (eglMakeCurrent(m_eglBackend->eglDisplay(), EGL_NO_SURFACE, EGL_NO_SURFACE, m_eglBackend->context()) != EGL_TRUE) {
+    if (!m_eglBackend->contextObject()->makeCurrent()) {
         return std::nullopt;
     }
 
@@ -164,7 +164,7 @@ bool VirtualEglGbmLayer::scanout(SurfaceItem *surfaceItem)
 
 void VirtualEglGbmLayer::releaseBuffers()
 {
-    eglMakeCurrent(m_eglBackend->eglDisplay(), EGL_NO_SURFACE, EGL_NO_SURFACE, m_eglBackend->context());
+    m_eglBackend->contextObject()->makeCurrent();
     m_gbmSwapchain.reset();
     m_oldGbmSwapchain.reset();
     m_currentSlot.reset();

@@ -44,7 +44,6 @@ install(TARGETS kwineffects EXPORT KWinEffectsTargets ${KDE_INSTALL_TARGETS_DEFA
 # kwingl(es)utils library
 set(kwin_GLUTILSLIB_SRCS
     colorspace.cpp
-    kwineglimagetexture.cpp
     kwinglplatform.cpp
     kwingltexture.cpp
     kwinglutils.cpp

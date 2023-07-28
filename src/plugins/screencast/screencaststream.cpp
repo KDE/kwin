@@ -700,7 +700,7 @@ void ScreenCastStream::tryEnqueue(pw_buffer *buffer)
     // a corrupted buffer.
     if (Compositor::self()->scene()->supportsNativeFence()) {
         Q_ASSERT_X(eglGetCurrentContext(), "tryEnqueue", "no current context");
-        m_pendingFence = std::make_unique<EGLNativeFence>(kwinApp()->outputBackend()->sceneEglDisplay());
+        m_pendingFence = std::make_unique<EGLNativeFence>(kwinApp()->outputBackend()->sceneEglDisplayObject());
         if (!m_pendingFence->isValid()) {
             qCWarning(KWIN_SCREENCAST) << "Failed to create a native EGL fence";
             glFinish();

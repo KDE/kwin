@@ -13,22 +13,23 @@
 #include "libkwineffects/kwinglutils_export.h"
 
 typedef void *EGLImageKHR;
-typedef void *EGLDisplay;
 typedef void *EGLClientBuffer;
 
 namespace KWin
 {
 
+class EglDisplay;
+
 class KWINGLUTILS_EXPORT EGLImageTexture : public GLTexture
 {
 public:
-    explicit EGLImageTexture(::EGLDisplay display, EGLImageKHR image, uint textureId, int internalFormat, const QSize &size, uint32_t target);
+    explicit EGLImageTexture(EglDisplay *display, EGLImageKHR image, uint textureId, int internalFormat, const QSize &size, uint32_t target);
     ~EGLImageTexture() override;
 
-    static std::shared_ptr<EGLImageTexture> create(::EGLDisplay display, EGLImageKHR image, int internalFormat, const QSize &size, bool externalOnly);
+    static std::shared_ptr<EGLImageTexture> create(EglDisplay *display, EGLImageKHR image, int internalFormat, const QSize &size, bool externalOnly);
 
     EGLImageKHR m_image;
-    ::EGLDisplay m_display;
+    EglDisplay *const m_display;
 };
 
 }

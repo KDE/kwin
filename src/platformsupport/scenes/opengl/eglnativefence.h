@@ -14,11 +14,13 @@
 namespace KWin
 {
 
+class EglDisplay;
+
 class KWIN_EXPORT EGLNativeFence
 {
 public:
-    explicit EGLNativeFence(::EGLDisplay display);
-    explicit EGLNativeFence(::EGLDisplay display, EGLSyncKHR sync);
+    explicit EGLNativeFence(EglDisplay *display);
+    explicit EGLNativeFence(EglDisplay *display, EGLSyncKHR sync);
     EGLNativeFence(EGLNativeFence &&) = delete;
     EGLNativeFence(const EGLNativeFence &) = delete;
     ~EGLNativeFence();
@@ -27,11 +29,11 @@ public:
     const FileDescriptor &fileDescriptor() const;
     bool waitSync() const;
 
-    static EGLNativeFence importFence(::EGLDisplay display, FileDescriptor &&fd);
+    static EGLNativeFence importFence(EglDisplay *display, FileDescriptor &&fd);
 
 private:
     EGLSyncKHR m_sync = EGL_NO_SYNC_KHR;
-    ::EGLDisplay m_display = EGL_NO_DISPLAY;
+    EglDisplay *m_display = nullptr;
     FileDescriptor m_fileDescriptor;
 };
 

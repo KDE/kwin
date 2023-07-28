@@ -11,6 +11,7 @@
 #include "core/outputbackend.h"
 #include "eglhelpers.h"
 #include "main.h"
+#include "platformsupport/scenes/opengl/egldisplay.h"
 
 #include <QOffscreenSurface>
 
@@ -21,7 +22,7 @@ namespace QPA
 
 OffscreenSurface::OffscreenSurface(QOffscreenSurface *surface)
     : QPlatformOffscreenSurface(surface)
-    , m_eglDisplay(kwinApp()->outputBackend()->sceneEglDisplay())
+    , m_eglDisplay(kwinApp()->outputBackend()->sceneEglDisplayObject())
 {
     const QSize size = surface->size();
 

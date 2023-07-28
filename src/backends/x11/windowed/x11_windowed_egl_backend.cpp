@@ -32,7 +32,9 @@ X11WindowedEglPrimaryLayer::~X11WindowedEglPrimaryLayer()
 
 std::optional<OutputLayerBeginFrameInfo> X11WindowedEglPrimaryLayer::beginFrame()
 {
-    eglMakeCurrent(m_backend->eglDisplay(), EGL_NO_SURFACE, EGL_NO_SURFACE, m_backend->context());
+    if (!m_backend->contextObject()->makeCurrent()) {
+        return std::nullopt;
+    }
 
     const QSize bufferSize = m_output->modeSize();
     if (!m_swapchain || m_swapchain->size() != bufferSize) {
@@ -118,14 +120,16 @@ X11WindowedEglCursorLayer::X11WindowedEglCursorLayer(X11WindowedEglBackend *back
 
 X11WindowedEglCursorLayer::~X11WindowedEglCursorLayer()
 {
-    eglMakeCurrent(m_backend->eglDisplay(), EGL_NO_SURFACE, EGL_NO_SURFACE, m_backend->context());
+    m_backend->contextObject()->makeCurrent();
     m_framebuffer.reset();
     m_texture.reset();
 }
 
 std::optional<OutputLayerBeginFrameInfo> X11WindowedEglCursorLayer::beginFrame()
 {
-    eglMakeCurrent(m_backend->eglDisplay(), EGL_NO_SURFACE, EGL_NO_SURFACE, m_backend->context());
+    if (!m_backend->contextObject()->makeCurrent()) {
+        return std::nullopt;
+    }
 
     const auto tmp = size().expandedTo(QSize(64, 64));
     const QSize bufferSize(std::ceil(tmp.width()), std::ceil(tmp.height()));

@@ -15,6 +15,9 @@
 
 namespace KWin
 {
+
+class EglDisplay;
+
 namespace QPA
 {
 
@@ -32,7 +35,7 @@ public:
 private:
     QSurfaceFormat m_format;
 
-    ::EGLDisplay m_eglDisplay = EGL_NO_DISPLAY;
+    EglDisplay *m_eglDisplay = nullptr;
     EGLSurface m_surface = EGL_NO_SURFACE;
 };
 
