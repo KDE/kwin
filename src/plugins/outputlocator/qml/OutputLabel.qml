@@ -5,7 +5,7 @@
 */
 
 import QtQuick
-import QtQuick.Controls as QQC2
+import org.kde.plasma.components 3.0 as PlasmaComponents3
 import org.kde.kirigami 2 as Kirigami
 
 Rectangle {
@@ -20,7 +20,7 @@ Rectangle {
     implicitWidth: childrenRect.width + 2 * childrenRect.x
     implicitHeight: childrenRect.height + 2 * childrenRect.y
 
-    QQC2.Label {
+    PlasmaComponents3.Label {
         id: displayName
         x: Kirigami.Units.largeSpacing * 2
         y: Kirigami.Units.largeSpacing
@@ -30,7 +30,7 @@ Rectangle {
         horizontalAlignment: Text.AlignHCenter;
     }
 
-    QQC2.Label {
+    PlasmaComponents3.Label {
         id: modeLabel;
         anchors {
             horizontalCenter: displayName.horizontalCenter

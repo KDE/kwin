@@ -6,12 +6,12 @@
 */
 
 import QtQuick
-import QtQuick.Controls as QQC2
 import QtQuick.Layouts
 import QtQuick.Window
 
 import org.kde.plasma.core as PlasmaCore
 import org.kde.kirigami 2.20 as Kirigami
+import org.kde.plasma.components 3.0 as PlasmaComponents3
 
 PlasmaCore.Dialog {
     location: PlasmaCore.Types.Floating
@@ -28,7 +28,7 @@ PlasmaCore.Dialog {
             source: osd.iconName
             visible: osd.iconName !== ""
         }
-        QQC2.Label {
+        PlasmaComponents3.Label {
             text: osd.message
         }
     }

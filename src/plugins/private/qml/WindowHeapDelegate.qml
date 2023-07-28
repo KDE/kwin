@@ -6,7 +6,6 @@
 */
 
 import QtQuick
-import QtQuick.Controls as QQC2
 import QtQuick.Window
 import org.kde.kirigami 2.20 as Kirigami
 import org.kde.kwin as KWinComponents
@@ -147,7 +146,7 @@ Item {
         }
     }
 
-    QQC2.Label {
+    PC3.Label {
         anchors.fill: thumbSource
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
@@ -167,7 +166,7 @@ Item {
         anchors.bottomMargin: -Math.round(height / 4)
         visible: !thumb.activeHidden && !activeDragHandler.active
 
-        QQC2.Label {
+        PC3.Label {
             id: caption
             visible: thumb.windowTitleVisible
             width: Math.min(implicitWidth, thumbSource.width)

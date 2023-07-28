@@ -194,7 +194,7 @@ Item {
                         height: Kirigami.Units.gridUnit
                         state: "normal"
 
-                        Label {
+                        PC3.Label {
                             anchors.fill: parent
                             elide: Text.ElideRight
                             text: delegate.desktop.name

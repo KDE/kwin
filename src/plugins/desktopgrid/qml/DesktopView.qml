@@ -7,10 +7,10 @@
 */
 
 import QtQuick
-import QtQuick.Controls as QQC2
 import org.kde.kwin as KWinComponents
 import org.kde.kwin.private.effects
 import org.kde.kirigami 2.20 as Kirigami
+import org.kde.plasma.components 3.0 as PC3
 import org.kde.kwin.private.desktopgrid
 
 FocusScope {
@@ -173,7 +173,7 @@ FocusScope {
         cursorShape: dragHandler.active ? Qt.ClosedHandCursor : Qt.ArrowCursor
     }
 
-    QQC2.Control {
+    PC3.Control {
         id: desktopLabel
         anchors.margins: Kirigami.Units.gridUnit
         z: 9999
@@ -293,7 +293,7 @@ FocusScope {
         scale: 1 / desktopView.parent.scale
         leftPadding: Kirigami.Units.smallSpacing
         rightPadding: Kirigami.Units.smallSpacing
-        contentItem: QQC2.Label {
+        contentItem: PC3.Label {
             text: desktopView.desktop.name
         }
         background: Rectangle {

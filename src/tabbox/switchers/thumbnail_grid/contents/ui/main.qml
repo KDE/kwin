@@ -9,7 +9,6 @@
  */
 
 import QtQuick 2.0
-import QtQuick.Controls as QQC2
 import QtQuick.Layouts 1.1
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.ksvg 1.0 as KSvg
@@ -186,7 +185,7 @@ KWin.TabBoxSwitcher {
                             }
                         }
 
-                        QQC2.Label {
+                        PlasmaComponents3.Label {
                             Layout.fillWidth: true
                             text: model.caption
                             font.weight: thumbnailGridItem.isCurrentItem ? Font.Bold : Font.Normal
