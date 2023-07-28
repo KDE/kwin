@@ -9,8 +9,8 @@
 import QtQuick
 import QtQuick.Window
 import org.kde.plasma.core as PlasmaCore
+import org.kde.kirigami 2.20 as Kirigami
 import org.kde.ksvg 1.0 as KSvg
-import org.kde.plasma.extras as PlasmaExtras
 import org.kde.kwin
 
 PlasmaCore.Dialog {
@@ -66,7 +66,7 @@ PlasmaCore.Dialog {
         width: dialogItem.showGrid ? view.itemWidth * view.columns : Math.ceil(textElement.implicitWidth)
         height: dialogItem.showGrid ? view.itemHeight * view.rows + textElement.height : textElement.height
 
-        PlasmaExtras.Heading {
+        Kirigami.Heading {
             id: textElement
             anchors.top: dialogItem.showGrid ? parent.top : undefined
             anchors.left: parent.left
