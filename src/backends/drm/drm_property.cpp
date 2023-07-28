@@ -65,8 +65,6 @@ void DrmProperty::update(DrmPropertyList &propertyList)
                         m_enumToPropertyMap[j] = en->value;
                         m_propertyToEnumMap[en->value] = j;
                     }
-                } else {
-                    qCWarning(KWIN_DRM, "%s has unrecognized enum '%s'", qPrintable(m_propName), en->name);
                 }
             }
         }
