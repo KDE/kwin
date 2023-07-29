@@ -52,4 +52,16 @@ void DrmFramebuffer::releaseBuffer()
 {
     m_bufferRef = nullptr;
 }
+
+bool DrmFramebuffer::isReadable()
+{
+    if (m_readable) {
+        return true;
+    } else {
+        const auto &fds = m_bufferRef->dmabufAttributes()->fd;
+        return m_readable = std::all_of(fds.begin(), fds.end(), [](const auto &fd) {
+                   return !fd.isValid() || fd.isReadable();
+               });
+    }
+}
 }

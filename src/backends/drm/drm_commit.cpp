@@ -60,6 +60,12 @@ void DrmAtomicCommit::addBuffer(DrmPlane *plane, const std::shared_ptr<DrmFrameb
     m_buffers[plane] = buffer;
 }
 
+void DrmAtomicCommit::setVrr(DrmCrtc *crtc, bool vrr)
+{
+    addProperty(crtc->vrrEnabled, vrr ? 1 : 0);
+    m_vrr = vrr;
+}
+
 bool DrmAtomicCommit::test()
 {
     return drmModeAtomicCommit(gpu()->fd(), m_req.get(), DRM_MODE_ATOMIC_TEST_ONLY | DRM_MODE_ATOMIC_NONBLOCK, this) == 0;
@@ -94,6 +100,19 @@ void DrmAtomicCommit::pageFlipped(std::chrono::nanoseconds timestamp) const
     for (const auto &pipeline : m_pipelines) {
         pipeline->pageFlipped(timestamp);
     }
+}
+
+bool DrmAtomicCommit::areBuffersReadable() const
+{
+    return std::all_of(m_buffers.begin(), m_buffers.end(), [](const auto &pair) {
+        const auto &[plane, buffer] = pair;
+        return !buffer || buffer->isReadable();
+    });
+}
+
+bool DrmAtomicCommit::isVrr() const
+{
+    return m_vrr;
 }
 
 DrmLegacyCommit::DrmLegacyCommit(DrmPipeline *pipeline, const std::shared_ptr<DrmFramebuffer> &buffer)

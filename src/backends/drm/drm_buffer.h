@@ -30,11 +30,13 @@ public:
     GraphicsBuffer *buffer() const;
 
     void releaseBuffer();
+    bool isReadable();
 
 protected:
     const uint32_t m_framebufferId;
     DrmGpu *const m_gpu;
     GraphicsBufferRef m_bufferRef;
+    bool m_readable = false;
 };
 
 }

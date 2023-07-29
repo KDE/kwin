@@ -58,6 +58,7 @@ public:
     }
     void addBlob(const DrmProperty &prop, const std::shared_ptr<DrmBlob> &blob);
     void addBuffer(DrmPlane *plane, const std::shared_ptr<DrmFramebuffer> &buffer);
+    void setVrr(DrmCrtc *crtc, bool vrr);
 
     bool test();
     bool testAllowModeset();
@@ -68,11 +69,15 @@ public:
 
     drmModeAtomicReq *req() const;
 
+    bool areBuffersReadable() const;
+    bool isVrr() const;
+
 private:
     const QVector<DrmPipeline *> m_pipelines;
     DrmUniquePtr<drmModeAtomicReq> m_req;
     QHash<const DrmProperty *, std::shared_ptr<DrmBlob>> m_blobs;
     std::unordered_map<DrmPlane *, std::shared_ptr<DrmFramebuffer>> m_buffers;
+    bool m_vrr = false;
 };
 
 class DrmLegacyCommit : public DrmCommit

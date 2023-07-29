@@ -873,8 +873,8 @@ std::shared_ptr<DrmFramebuffer> DrmGpu::importBuffer(GraphicsBuffer *buffer)
                                          attributes->height,
                                          attributes->format,
                                          handles,
-                                         attributes->pitch,
-                                         attributes->offset,
+                                         attributes->pitch.data(),
+                                         attributes->offset.data(),
                                          modifier,
                                          &framebufferId,
                                          DRM_MODE_FB_MODIFIERS);
@@ -884,8 +884,8 @@ std::shared_ptr<DrmFramebuffer> DrmGpu::importBuffer(GraphicsBuffer *buffer)
                             attributes->height,
                             attributes->format,
                             handles,
-                            attributes->pitch,
-                            attributes->offset,
+                            attributes->pitch.data(),
+                            attributes->offset.data(),
                             &framebufferId,
                             0);
         if (ret == EOPNOTSUPP && attributes->planeCount == 1) {

@@ -12,12 +12,14 @@
 #include "logging_p.h"
 #include "utils/realtime.h"
 
+using namespace std::chrono_literals;
+
 namespace KWin
 {
 
 // This value was chosen experimentally and should be adjusted if needed
 // committing takes about 800µs, the rest is accounting for sleep not being accurate enough
-static constexpr std::chrono::microseconds s_safetyMargin(1800);
+static constexpr auto s_safetyMargin = 1800us;
 
 DrmCommitThread::DrmCommitThread()
 {
@@ -32,15 +34,26 @@ DrmCommitThread::DrmCommitThread()
                 m_commitPending.wait(lock);
             }
             if (m_commit) {
-                const auto now = std::chrono::steady_clock::now().time_since_epoch();
+                const auto now = std::chrono::steady_clock::now();
                 if (m_targetPageflipTime > now + s_safetyMargin) {
                     lock.unlock();
-                    std::this_thread::sleep_for(m_targetPageflipTime - s_safetyMargin - now);
+                    std::this_thread::sleep_until(m_targetPageflipTime - s_safetyMargin);
                     lock.lock();
                 }
                 // the other thread may replace the commit, but not erase it
                 Q_ASSERT(m_commit);
+                if (!m_commit->areBuffersReadable()) {
+                    // reschedule, this commit would not hit the pageflip deadline anyways
+                    if (m_vrr) {
+                        m_targetPageflipTime += 50us;
+                    } else {
+                        m_targetPageflipTime += m_minVblankInterval;
+                    }
+                    continue;
+                }
+                const bool vrr = m_commit->isVrr();
                 if (m_commit->commit()) {
+                    m_vrr = vrr;
                     // the atomic commit takes ownership of the object
                     m_commit.release();
                 } else {
@@ -62,11 +75,16 @@ DrmCommitThread::~DrmCommitThread()
     m_thread->wait();
 }
 
-void DrmCommitThread::setCommit(std::unique_ptr<DrmAtomicCommit> &&commit, std::chrono::nanoseconds targetPageflipTime)
+void DrmCommitThread::setCommit(std::unique_ptr<DrmAtomicCommit> &&commit)
 {
     std::unique_lock lock(m_mutex);
     m_commit = std::move(commit);
-    m_targetPageflipTime = targetPageflipTime;
+    const auto now = std::chrono::steady_clock::now();
+    if (m_vrr && now >= m_lastPageflip + m_minVblankInterval) {
+        m_targetPageflipTime = now;
+    } else {
+        m_targetPageflipTime = estimateNextVblank(now);
+    }
     m_commitPending.notify_all();
 }
 
@@ -86,5 +104,23 @@ void DrmCommitThread::clearDroppedCommits()
 {
     std::unique_lock lock(m_mutex);
     m_droppedCommits.clear();
+}
+
+void DrmCommitThread::setRefreshRate(uint32_t maximum)
+{
+    std::unique_lock lock(m_mutex);
+    m_minVblankInterval = std::chrono::nanoseconds(1'000'000'000'000ull / maximum);
+}
+
+void DrmCommitThread::pageFlipped(std::chrono::nanoseconds timestamp)
+{
+    std::unique_lock lock(m_mutex);
+    m_lastPageflip = TimePoint(timestamp);
+}
+
+TimePoint DrmCommitThread::estimateNextVblank(TimePoint now) const
+{
+    const uint64_t pageflipsSince = (now - m_lastPageflip) / m_minVblankInterval;
+    return m_lastPageflip + m_minVblankInterval * (pageflipsSince + 1);
 }
 }

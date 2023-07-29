@@ -175,7 +175,7 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline 
         Q_ASSERT(pipelines.size() == 1);
         Q_ASSERT(unusedObjects.isEmpty());
         const auto pipeline = pipelines.front();
-        pipeline->m_commitThread->setCommit(std::move(commit), pipeline->m_output->renderLoop()->nextPresentationTimestamp());
+        pipeline->m_commitThread->setCommit(std::move(commit));
         pipeline->atomicCommitSuccessful();
         return Error::None;
     }
@@ -218,7 +218,7 @@ bool DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commit)
     }
 
     if (m_pending.crtc->vrrEnabled.isValid()) {
-        commit->addProperty(m_pending.crtc->vrrEnabled, m_pending.syncMode == RenderLoopPrivate::SyncMode::Adaptive || m_pending.syncMode == RenderLoopPrivate::SyncMode::AdaptiveAsync);
+        commit->setVrr(m_pending.crtc, m_pending.syncMode == RenderLoopPrivate::SyncMode::Adaptive || m_pending.syncMode == RenderLoopPrivate::SyncMode::AdaptiveAsync);
     }
     if (m_pending.crtc->gammaLut.isValid()) {
         commit->addBlob(m_pending.crtc->gammaLut, m_pending.gamma ? m_pending.gamma->blob() : nullptr);
@@ -405,6 +405,7 @@ bool DrmPipeline::moveCursor()
 void DrmPipeline::applyPendingChanges()
 {
     m_next = m_pending;
+    m_commitThread->setRefreshRate(m_pending.mode->refreshRate());
 }
 
 DrmConnector *DrmPipeline::connector() const
@@ -419,6 +420,7 @@ DrmGpu *DrmPipeline::gpu() const
 
 void DrmPipeline::pageFlipped(std::chrono::nanoseconds timestamp)
 {
+    m_commitThread->pageFlipped(timestamp);
     m_pageflipPending = false;
     if (m_output && activePending()) {
         m_output->pageFlipped(timestamp);

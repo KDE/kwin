@@ -24,9 +24,9 @@ struct DmaBufAttributes
     uint32_t format = 0;
     uint64_t modifier = 0;
 
-    FileDescriptor fd[4];
-    uint32_t offset[4] = {0, 0, 0, 0};
-    uint32_t pitch[4] = {0, 0, 0, 0};
+    std::array<FileDescriptor, 4> fd;
+    std::array<uint32_t, 4> offset{0, 0, 0, 0};
+    std::array<uint32_t, 4> pitch{0, 0, 0, 0};
 };
 
 struct ShmAttributes

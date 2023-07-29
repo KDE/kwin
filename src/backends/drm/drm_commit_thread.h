@@ -20,6 +20,8 @@ namespace KWin
 class DrmGpu;
 class DrmAtomicCommit;
 
+using TimePoint = std::chrono::steady_clock::time_point;
+
 class DrmCommitThread : public QObject
 {
     Q_OBJECT
@@ -27,21 +29,28 @@ public:
     explicit DrmCommitThread();
     ~DrmCommitThread();
 
-    void setCommit(std::unique_ptr<DrmAtomicCommit> &&commit, std::chrono::nanoseconds targetPageflipTime);
+    void setCommit(std::unique_ptr<DrmAtomicCommit> &&commit);
     bool replaceCommit(std::unique_ptr<DrmAtomicCommit> &&commit);
+
+    void setRefreshRate(uint32_t maximum);
+    void pageFlipped(std::chrono::nanoseconds timestamp);
 
 Q_SIGNALS:
     void commitFailed();
 
 private:
     void clearDroppedCommits();
+    TimePoint estimateNextVblank(TimePoint now) const;
 
     std::unique_ptr<DrmAtomicCommit> m_commit;
     std::unique_ptr<QThread> m_thread;
     std::mutex m_mutex;
     std::condition_variable m_commitPending;
-    std::chrono::nanoseconds m_targetPageflipTime;
+    TimePoint m_lastPageflip;
+    TimePoint m_targetPageflipTime;
+    std::chrono::nanoseconds m_minVblankInterval;
     std::vector<std::unique_ptr<DrmAtomicCommit>> m_droppedCommits;
+    bool m_vrr = false;
 };
 
 }
