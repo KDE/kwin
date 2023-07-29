@@ -28,6 +28,7 @@ DrmCommit::DrmCommit(DrmGpu *gpu)
 
 DrmCommit::~DrmCommit()
 {
+    Q_ASSERT(QThread::currentThread() == QApplication::instance()->thread());
 }
 
 DrmGpu *DrmCommit::gpu() const
@@ -35,20 +36,11 @@ DrmGpu *DrmCommit::gpu() const
     return m_gpu;
 }
 
-DrmAtomicCommit::DrmAtomicCommit(DrmGpu *gpu)
-    : DrmCommit(gpu)
+DrmAtomicCommit::DrmAtomicCommit(const QVector<DrmPipeline *> &pipelines)
+    : DrmCommit(pipelines.front()->gpu())
+    , m_pipelines(pipelines)
     , m_req(drmModeAtomicAlloc())
 {
-}
-
-DrmAtomicCommit::~DrmAtomicCommit()
-{
-    Q_ASSERT(QThread::currentThread() == QApplication::instance()->thread());
-    if (m_commitSuccessful) {
-        for (const auto &[plane, buffer] : m_buffers) {
-            plane->setCurrentBuffer(buffer);
-        }
-    }
 }
 
 void DrmAtomicCommit::addProperty(const DrmProperty &prop, uint64_t value)
@@ -70,24 +62,22 @@ void DrmAtomicCommit::addBuffer(DrmPlane *plane, const std::shared_ptr<DrmFrameb
 
 bool DrmAtomicCommit::test()
 {
-    return drmModeAtomicCommit(m_gpu->fd(), m_req.get(), DRM_MODE_ATOMIC_TEST_ONLY | DRM_MODE_ATOMIC_NONBLOCK, this) == 0;
+    return drmModeAtomicCommit(gpu()->fd(), m_req.get(), DRM_MODE_ATOMIC_TEST_ONLY | DRM_MODE_ATOMIC_NONBLOCK, this) == 0;
 }
 
 bool DrmAtomicCommit::testAllowModeset()
 {
-    return drmModeAtomicCommit(m_gpu->fd(), m_req.get(), DRM_MODE_ATOMIC_TEST_ONLY | DRM_MODE_ATOMIC_ALLOW_MODESET, this) == 0;
+    return drmModeAtomicCommit(gpu()->fd(), m_req.get(), DRM_MODE_ATOMIC_TEST_ONLY | DRM_MODE_ATOMIC_ALLOW_MODESET, this) == 0;
 }
 
 bool DrmAtomicCommit::commit()
 {
-    m_commitSuccessful = (drmModeAtomicCommit(m_gpu->fd(), m_req.get(), DRM_MODE_ATOMIC_NONBLOCK | DRM_MODE_PAGE_FLIP_EVENT, this) == 0);
-    return m_commitSuccessful;
+    return drmModeAtomicCommit(gpu()->fd(), m_req.get(), DRM_MODE_ATOMIC_NONBLOCK | DRM_MODE_PAGE_FLIP_EVENT, this) == 0;
 }
 
 bool DrmAtomicCommit::commitModeset()
 {
-    m_commitSuccessful = (drmModeAtomicCommit(m_gpu->fd(), m_req.get(), DRM_MODE_ATOMIC_ALLOW_MODESET, this) == 0);
-    return m_commitSuccessful;
+    return drmModeAtomicCommit(gpu()->fd(), m_req.get(), DRM_MODE_ATOMIC_ALLOW_MODESET, this) == 0;
 }
 
 drmModeAtomicReq *DrmAtomicCommit::req() const
@@ -95,32 +85,44 @@ drmModeAtomicReq *DrmAtomicCommit::req() const
     return m_req.get();
 }
 
-DrmLegacyCommit::DrmLegacyCommit(DrmCrtc *crtc, const std::shared_ptr<DrmFramebuffer> &buffer)
-    : DrmCommit(crtc->gpu())
-    , m_crtc(crtc)
-    , m_buffer(buffer)
-{
-}
-
-DrmLegacyCommit::~DrmLegacyCommit()
+void DrmAtomicCommit::pageFlipped(std::chrono::nanoseconds timestamp) const
 {
     Q_ASSERT(QThread::currentThread() == QApplication::instance()->thread());
-    if (m_success) {
-        m_crtc->setCurrent(m_buffer);
+    for (const auto &[plane, buffer] : m_buffers) {
+        plane->setCurrentBuffer(buffer);
     }
+    for (const auto &pipeline : m_pipelines) {
+        pipeline->pageFlipped(timestamp);
+    }
+}
+
+DrmLegacyCommit::DrmLegacyCommit(DrmPipeline *pipeline, const std::shared_ptr<DrmFramebuffer> &buffer)
+    : DrmCommit(pipeline->gpu())
+    , m_pipeline(pipeline)
+    , m_buffer(buffer)
+{
 }
 
 bool DrmLegacyCommit::doModeset(DrmConnector *connector, DrmConnectorMode *mode)
 {
     uint32_t connectorId = connector->id();
-    m_success = (drmModeSetCrtc(gpu()->fd(), m_crtc->id(), m_buffer->framebufferId(), 0, 0, &connectorId, 1, mode->nativeMode()) == 0);
-    return m_success;
+    if (drmModeSetCrtc(gpu()->fd(), m_pipeline->crtc()->id(), m_buffer->framebufferId(), 0, 0, &connectorId, 1, mode->nativeMode()) == 0) {
+        pageFlipped(std::chrono::steady_clock::now().time_since_epoch());
+        return true;
+    } else {
+        return false;
+    }
 }
 
 bool DrmLegacyCommit::doPageflip(uint32_t flags)
 {
-    m_success = (drmModePageFlip(gpu()->fd(), m_crtc->id(), m_buffer->framebufferId(), flags, this) == 0);
-    return m_success;
+    return drmModePageFlip(gpu()->fd(), m_pipeline->crtc()->id(), m_buffer->framebufferId(), flags, this) == 0;
 }
 
+void DrmLegacyCommit::pageFlipped(std::chrono::nanoseconds timestamp) const
+{
+    Q_ASSERT(QThread::currentThread() == QApplication::instance()->thread());
+    m_pipeline->crtc()->setCurrent(m_buffer);
+    m_pipeline->pageFlipped(timestamp);
+}
 }

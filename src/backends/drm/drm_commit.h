@@ -12,6 +12,7 @@
 #include <xf86drmMode.h>
 
 #include <QHash>
+#include <chrono>
 #include <unordered_map>
 
 #include "drm_pointer.h"
@@ -28,6 +29,7 @@ class DrmFramebuffer;
 class DrmGpu;
 class DrmPlane;
 class DrmProperty;
+class DrmPipeline;
 
 class DrmCommit
 {
@@ -35,6 +37,7 @@ public:
     virtual ~DrmCommit();
 
     DrmGpu *gpu() const;
+    virtual void pageFlipped(std::chrono::nanoseconds timestamp) const = 0;
 
 protected:
     DrmCommit(DrmGpu *gpu);
@@ -45,8 +48,7 @@ protected:
 class DrmAtomicCommit : public DrmCommit
 {
 public:
-    DrmAtomicCommit(DrmGpu *gpu);
-    ~DrmAtomicCommit() override;
+    DrmAtomicCommit(const QVector<DrmPipeline *> &pipelines);
 
     void addProperty(const DrmProperty &prop, uint64_t value);
     template<typename T>
@@ -62,28 +64,29 @@ public:
     bool commit();
     bool commitModeset();
 
+    void pageFlipped(std::chrono::nanoseconds timestamp) const override;
+
     drmModeAtomicReq *req() const;
 
 private:
+    const QVector<DrmPipeline *> m_pipelines;
     DrmUniquePtr<drmModeAtomicReq> m_req;
     QHash<const DrmProperty *, std::shared_ptr<DrmBlob>> m_blobs;
     std::unordered_map<DrmPlane *, std::shared_ptr<DrmFramebuffer>> m_buffers;
-    bool m_commitSuccessful = false;
 };
 
 class DrmLegacyCommit : public DrmCommit
 {
 public:
-    DrmLegacyCommit(DrmCrtc *crtc, const std::shared_ptr<DrmFramebuffer> &buffer);
-    ~DrmLegacyCommit() override;
+    DrmLegacyCommit(DrmPipeline *pipeline, const std::shared_ptr<DrmFramebuffer> &buffer);
 
     bool doModeset(DrmConnector *connector, DrmConnectorMode *mode);
     bool doPageflip(uint32_t flags);
+    void pageFlipped(std::chrono::nanoseconds timestamp) const override;
 
 private:
-    DrmCrtc *const m_crtc;
+    DrmPipeline *const m_pipeline;
     const std::shared_ptr<DrmFramebuffer> m_buffer;
-    bool m_success = false;
 };
 
 }

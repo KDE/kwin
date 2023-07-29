@@ -157,7 +157,6 @@ private:
 
     // atomic modesetting only
     void atomicCommitSuccessful();
-    void atomicModesetSuccessful();
     bool prepareAtomicModeset(DrmAtomicCommit *commit);
     bool prepareAtomicPresentation(DrmAtomicCommit *commit);
     void prepareAtomicDisable(DrmAtomicCommit *commit);

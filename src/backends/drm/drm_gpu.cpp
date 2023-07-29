@@ -555,15 +555,7 @@ void DrmGpu::pageFlipHandler(int fd, unsigned int sequence, unsigned int sec, un
                 sec, usec, qPrintable(gpu->devNode()));
         timestamp = std::chrono::steady_clock::now().time_since_epoch();
     }
-    const auto pipelines = gpu->pipelines();
-    auto it = std::find_if(pipelines.begin(), pipelines.end(), [crtc_id](const auto &pipeline) {
-        return pipeline->currentCrtc() && pipeline->currentCrtc()->id() == crtc_id;
-    });
-    if (it == pipelines.end()) {
-        qCWarning(KWIN_DRM, "received invalid page flip event for crtc %u", crtc_id);
-    } else {
-        (*it)->pageFlipped(timestamp);
-    }
+    commit->pageFlipped(timestamp);
     delete commit;
 }
 

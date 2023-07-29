@@ -107,7 +107,7 @@ DrmPipeline::Error DrmPipeline::commitPipelines(const QVector<DrmPipeline *> &pi
 
 DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline *> &pipelines, CommitMode mode, const QVector<DrmObject *> &unusedObjects)
 {
-    auto commit = std::make_unique<DrmAtomicCommit>(pipelines.front()->gpu());
+    auto commit = std::make_unique<DrmAtomicCommit>(pipelines);
     for (const auto &pipeline : pipelines) {
         if (pipeline->activePending()) {
             if (!pipeline->m_pending.layer->checkTestBuffer()) {
@@ -145,12 +145,13 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline 
         // The kernel fails commits with DRM_MODE_PAGE_FLIP_EVENT when a crtc is disabled in the commit
         // and already was disabled before, to work around some quirks in old userspace.
         // Instead of using DRM_MODE_PAGE_FLIP_EVENT | DRM_MODE_ATOMIC_NONBLOCK, do the modeset in a blocking
-        // fashion without page flip events
+        // fashion without page flip events and trigger the pageflip notification directly
         if (!commit->commitModeset()) {
             qCCritical(KWIN_DRM) << "Atomic modeset commit failed!" << strerror(errno);
             return errnoToError();
         }
-        std::for_each(pipelines.begin(), pipelines.end(), std::mem_fn(&DrmPipeline::atomicModesetSuccessful));
+        std::for_each(pipelines.begin(), pipelines.end(), std::mem_fn(&DrmPipeline::atomicCommitSuccessful));
+        commit->pageFlipped(std::chrono::steady_clock::now().time_since_epoch());
         return Error::None;
     }
     case CommitMode::Test: {
@@ -346,19 +347,8 @@ DrmPipeline::Error DrmPipeline::errnoToError()
 void DrmPipeline::atomicCommitSuccessful()
 {
     m_pending.needsModeset = false;
-    if (activePending()) {
-        m_pageflipPending = true;
-    }
+    m_pageflipPending = true;
     m_current = m_pending;
-}
-
-void DrmPipeline::atomicModesetSuccessful()
-{
-    atomicCommitSuccessful();
-    m_pending.needsModeset = false;
-    if (activePending()) {
-        pageFlipped(std::chrono::steady_clock::now().time_since_epoch());
-    }
 }
 
 bool DrmPipeline::setCursor(const QPoint &hotspot)
@@ -420,7 +410,7 @@ DrmGpu *DrmPipeline::gpu() const
 void DrmPipeline::pageFlipped(std::chrono::nanoseconds timestamp)
 {
     m_pageflipPending = false;
-    if (m_output) {
+    if (m_output && activePending()) {
         m_output->pageFlipped(timestamp);
     }
 }

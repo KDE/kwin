@@ -36,7 +36,7 @@ DrmPipeline::Error DrmPipeline::presentLegacy()
     if (m_pending.syncMode == RenderLoopPrivate::SyncMode::Async || m_pending.syncMode == RenderLoopPrivate::SyncMode::AdaptiveAsync) {
         flags |= DRM_MODE_PAGE_FLIP_ASYNC;
     }
-    auto commit = std::make_unique<DrmLegacyCommit>(m_pending.crtc, buffer);
+    auto commit = std::make_unique<DrmLegacyCommit>(this, buffer);
     if (!commit->doPageflip(flags)) {
         qCWarning(KWIN_DRM) << "Page flip failed:" << strerror(errno);
         return errnoToError();
@@ -57,7 +57,7 @@ DrmPipeline::Error DrmPipeline::legacyModeset()
     if (!m_pending.layer->checkTestBuffer()) {
         return Error::TestBufferFailed;
     }
-    auto commit = std::make_unique<DrmLegacyCommit>(m_pending.crtc, m_pending.layer->currentBuffer());
+    auto commit = std::make_unique<DrmLegacyCommit>(this, m_pending.layer->currentBuffer());
     if (!commit->doModeset(m_connector, m_pending.mode.get())) {
         qCWarning(KWIN_DRM) << "Modeset failed!" << strerror(errno);
         return errnoToError();
