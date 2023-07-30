@@ -30,19 +30,20 @@ DrmCommitThread::DrmCommitThread()
                 return;
             }
             std::unique_lock lock(m_mutex);
-            if (!m_commit) {
+            if (m_commits.empty()) {
                 m_commitPending.wait(lock);
             }
-            if (m_commit) {
+            if (!m_commits.empty()) {
                 const auto now = std::chrono::steady_clock::now();
                 if (m_targetPageflipTime > now + s_safetyMargin) {
                     lock.unlock();
                     std::this_thread::sleep_until(m_targetPageflipTime - s_safetyMargin);
                     lock.lock();
                 }
-                // the other thread may replace the commit, but not erase it
-                Q_ASSERT(m_commit);
-                if (!m_commit->areBuffersReadable()) {
+                const auto it = std::find_if(m_commits.rbegin(), m_commits.rend(), [](const auto &commit) {
+                    return commit->areBuffersReadable();
+                });
+                if (it == m_commits.rend()) {
                     // reschedule, this commit would not hit the pageflip deadline anyways
                     if (m_vrr) {
                         m_targetPageflipTime += 50us;
@@ -51,17 +52,23 @@ DrmCommitThread::DrmCommitThread()
                     }
                     continue;
                 }
-                const bool vrr = m_commit->isVrr();
-                if (m_commit->commit()) {
+                auto &commit = *it;
+                const bool vrr = commit->isVrr();
+                const bool success = commit->commit();
+                if (success) {
                     m_vrr = vrr;
                     // the atomic commit takes ownership of the object
-                    m_commit.release();
-                } else {
-                    qCWarning(KWIN_DRM) << "atomic commit failed:" << strerror(errno);
-                    m_droppedCommits.push_back(std::move(m_commit));
-                    QMetaObject::invokeMethod(this, &DrmCommitThread::commitFailed, Qt::ConnectionType::QueuedConnection);
-                    QMetaObject::invokeMethod(this, &DrmCommitThread::clearDroppedCommits, Qt::ConnectionType::QueuedConnection);
+                    commit.release();
                 }
+                for (auto &commit : m_commits) {
+                    m_droppedCommits.push_back(std::move(commit));
+                }
+                m_commits.clear();
+                if (!success) {
+                    qCWarning(KWIN_DRM) << "atomic commit failed:" << strerror(errno);
+                    QMetaObject::invokeMethod(this, &DrmCommitThread::commitFailed, Qt::ConnectionType::QueuedConnection);
+                }
+                QMetaObject::invokeMethod(this, &DrmCommitThread::clearDroppedCommits, Qt::ConnectionType::QueuedConnection);
             }
         }
     }));
@@ -75,10 +82,10 @@ DrmCommitThread::~DrmCommitThread()
     m_thread->wait();
 }
 
-void DrmCommitThread::setCommit(std::unique_ptr<DrmAtomicCommit> &&commit)
+void DrmCommitThread::addCommit(std::unique_ptr<DrmAtomicCommit> &&commit)
 {
     std::unique_lock lock(m_mutex);
-    m_commit = std::move(commit);
+    m_commits.push_back(std::move(commit));
     const auto now = std::chrono::steady_clock::now();
     if (m_vrr && now >= m_lastPageflip + m_minVblankInterval) {
         m_targetPageflipTime = now;
@@ -88,12 +95,11 @@ void DrmCommitThread::setCommit(std::unique_ptr<DrmAtomicCommit> &&commit)
     m_commitPending.notify_all();
 }
 
-bool DrmCommitThread::replaceCommit(std::unique_ptr<DrmAtomicCommit> &&commit)
+bool DrmCommitThread::updateCommit(std::unique_ptr<DrmAtomicCommit> &&commit)
 {
     std::unique_lock lock(m_mutex);
-    if (m_commit) {
-        m_commit = std::move(commit);
-        m_commitPending.notify_all();
+    if (!m_commits.empty()) {
+        m_commits.push_back(std::move(commit));
         return true;
     } else {
         return false;

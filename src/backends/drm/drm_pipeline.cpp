@@ -175,7 +175,7 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline 
         Q_ASSERT(pipelines.size() == 1);
         Q_ASSERT(unusedObjects.isEmpty());
         const auto pipeline = pipelines.front();
-        pipeline->m_commitThread->setCommit(std::move(commit));
+        pipeline->m_commitThread->addCommit(std::move(commit));
         pipeline->atomicCommitSuccessful();
         return Error::None;
     }
@@ -186,7 +186,7 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline 
             return errnoToError();
         }
         const auto pipeline = pipelines.front();
-        if (pipeline->m_commitThread->replaceCommit(std::move(commit))) {
+        if (pipeline->m_commitThread->updateCommit(std::move(commit))) {
             pipeline->atomicCommitSuccessful();
         }
         return Error::None;

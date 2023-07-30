@@ -29,8 +29,8 @@ public:
     explicit DrmCommitThread();
     ~DrmCommitThread();
 
-    void setCommit(std::unique_ptr<DrmAtomicCommit> &&commit);
-    bool replaceCommit(std::unique_ptr<DrmAtomicCommit> &&commit);
+    void addCommit(std::unique_ptr<DrmAtomicCommit> &&commit);
+    bool updateCommit(std::unique_ptr<DrmAtomicCommit> &&commit);
 
     void setRefreshRate(uint32_t maximum);
     void pageFlipped(std::chrono::nanoseconds timestamp);
@@ -42,7 +42,7 @@ private:
     void clearDroppedCommits();
     TimePoint estimateNextVblank(TimePoint now) const;
 
-    std::unique_ptr<DrmAtomicCommit> m_commit;
+    std::vector<std::unique_ptr<DrmAtomicCommit>> m_commits;
     std::unique_ptr<QThread> m_thread;
     std::mutex m_mutex;
     std::condition_variable m_commitPending;
