@@ -4,16 +4,15 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 import QtQuick
-import org.kde.plasma.core as PlasmaCore
+import org.kde.kirigami 2.20 as Kirigami
 import org.kde.kwin.decoration
 
 DecorationButton {
     id: appMenuButton
     buttonType: DecorationOptions.DecorationButtonApplicationMenu
     visible: decoration.client.hasApplicationMenu
-    PlasmaCore.IconItem {
-        usesPlasmaTheme: false
-        source: decoration.client.icon
+    Kirigami.Icon {
         anchors.fill: parent
+        source: decoration.client.icon
     }
 }

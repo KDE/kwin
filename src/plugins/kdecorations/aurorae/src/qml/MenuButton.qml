@@ -5,15 +5,14 @@
 */
 import QtQuick
 import org.kde.kwin.decoration
-import org.kde.plasma.core as PlasmaCore
+import org.kde.kirigami 2.20 as Kirigami
 
 DecorationButton {
     property bool closeOnDoubleClick: decorationSettings.closeOnDoubleClickOnMenu
     id: menuButton
     buttonType: DecorationOptions.DecorationButtonMenu
-    PlasmaCore.IconItem {
+    Kirigami.Icon {
         anchors.fill: parent
-        usesPlasmaTheme: false
         source: decoration.client.icon
     }
     DecorationOptions {

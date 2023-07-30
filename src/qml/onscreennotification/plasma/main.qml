@@ -22,7 +22,7 @@ PlasmaCore.Dialog {
 
     mainItem: RowLayout {
         spacing: Kirigami.Units.smallSpacing
-        PlasmaCore.IconItem {
+        Kirigami.Icon {
             implicitWidth: Kirigami.Units.iconSizes.medium
             implicitHeight: implicitWidth
             source: osd.iconName

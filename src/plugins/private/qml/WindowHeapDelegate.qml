@@ -11,7 +11,6 @@ import org.kde.kirigami 2.20 as Kirigami
 import org.kde.kwin as KWinComponents
 import org.kde.kwin.private.effects
 import org.kde.plasma.components 3.0 as PC3
-import org.kde.plasma.core as PlasmaCore
 import org.kde.kirigami 2.20 as Kirigami
 import org.kde.ksvg 1.0 as KSvg
 
@@ -155,12 +154,11 @@ Item {
         visible: !thumb.activeHidden
     }
 
-    PlasmaCore.IconItem {
+    Kirigami.Icon {
         id: icon
         width: Kirigami.Units.iconSizes.large
         height: Kirigami.Units.iconSizes.large
         source: thumb.window.icon
-        usesPlasmaTheme: false
         anchors.horizontalCenter: thumbSource.horizontalCenter
         anchors.bottom: thumbSource.bottom
         anchors.bottomMargin: -Math.round(height / 4)

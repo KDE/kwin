@@ -114,12 +114,12 @@ PlasmaCore.Dialog {
                     Item {
                         id: arrowsContainer
                         anchors.fill: parent
-                        PlasmaCore.IconItem {
+                        Kirigami.Icon {
                             anchors.fill: parent
                             source: "go-up"
                             visible: false
                         }
-                        PlasmaCore.IconItem {
+                        Kirigami.Icon {
                             anchors.fill: parent
                             source: "go-down"
                             visible: {
@@ -145,7 +145,7 @@ PlasmaCore.Dialog {
                                 return false;
                             }
                         }
-                        PlasmaCore.IconItem {
+                        Kirigami.Icon {
                             anchors.fill: parent
                             source: "go-up"
                             visible: {
@@ -171,7 +171,7 @@ PlasmaCore.Dialog {
                                 return false;
                             }
                         }
-                        PlasmaCore.IconItem {
+                        Kirigami.Icon {
                             anchors.fill: parent
                             source: "go-next"
                             visible: {
@@ -205,7 +205,7 @@ PlasmaCore.Dialog {
                                 return false;
                             }
                         }
-                        PlasmaCore.IconItem {
+                        Kirigami.Icon {
                             anchors.fill: parent
                             source: "go-previous"
                             visible: {
