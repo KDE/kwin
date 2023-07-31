@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-07-27 01:59+0000\n"
-"PO-Revision-Date: 2023-07-02 16:44+0530\n"
+"PO-Revision-Date: 2023-07-30 13:19+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 23.04.2\n"
+"X-Generator: Lokalize 23.04.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -95,6 +95,10 @@ msgid ""
 "meanwhile upgraded to a stable driver,<br>you can reset this protection but "
 "<b>be aware that this might result in an immediate crash!</b></p>"
 msgstr ""
+"<b>OpenGL படவரைவு (இயல்பிருப்பானது) இதற்கு முன்பு கேவின்னை முறிவடைய செய்துள்ளது.</"
+"b><br>பெரும்பாலும், சாதனநிரல் (driver) பிழைகளால் இது நேரும்.<p>இடைக்காலத்தில் "
+"சாதனநிரலை நீங்கள் புதுப்பித்திருந்தால்,<br>இந்த பாதுகாப்பு அம்சத்தை மீட்டமைக்கலாம், "
+"ஆனால்<b>இது உடனடியான முறிவை உண்டாக்கலாம்</b> என்பதை நினைவில் கொள்ளவும்!</p>"
 
 #: composite.cpp:1043
 #, kde-format
@@ -1301,11 +1305,9 @@ msgid "Vlad Zahorodnii"
 msgstr "விலாட் ஜாஹொரிடுனி"
 
 #: main.cpp:194
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Very Huge"
+#, kde-format
 msgid "Xaver Hugl"
-msgstr "மிகப்பிரம்மாண்டமானது"
+msgstr "ஜாவர் ஹுகுல்"
 
 #: main.cpp:203
 #, kde-format
@@ -2218,17 +2220,15 @@ msgstr "&நிறம்;"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox2)
 #: plugins/mousemark/mousemark_config.ui:82
-#, fuzzy, kde-format
-#| msgid "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
+#, kde-format
 msgid "Draw with the mouse by holding modifier keys and moving the mouse"
-msgstr "Shift+Meta விசைகளை அழுத்திக்கொண்டே சுட்டியை நகர்த்தி வரையுங்கள்."
+msgstr "மாற்றிவிசைகளை அழுத்திக்கொண்டே சுட்டியை நகர்த்தி வரையுங்கள்."
 
 #. i18n: ectx: property (text), widget (QLabel, label_FreedrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:103
-#, fuzzy, kde-format
-#| msgid "Modifier keys:"
+#, kde-format
 msgid "Free draw modifier keys:"
-msgstr "மாற்றிவிசைகள்:"
+msgstr "கைவண்ண வரைவிற்கான மாற்றிவிசைகள்:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Freedrawalt)
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Arrowdrawalt)
@@ -2272,10 +2272,9 @@ msgstr "Meta"
 
 #. i18n: ectx: property (text), widget (QLabel, label_ArrowdrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:157
-#, fuzzy, kde-format
-#| msgid "Modifier keys:"
+#, kde-format
 msgid "Arrow draw modifier keys:"
-msgstr "மாற்றிவிசைகள்:"
+msgstr "அம்பு வரைவிற்கான மாற்றிவிசைகள்:"
 
 #: plugins/nightcolor/nightcolormanager.cpp:63
 #, kde-format
