@@ -16,7 +16,8 @@ namespace KWin
 {
 
 // This value was chosen experimentally and should be adjusted if needed
-static constexpr std::chrono::microseconds s_safetyMargin(1000);
+// committing takes about 800µs, the rest is accounting for sleep not being accurate enough
+static constexpr std::chrono::microseconds s_safetyMargin(1800);
 
 DrmCommitThread::DrmCommitThread()
 {
