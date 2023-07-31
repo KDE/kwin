@@ -272,6 +272,9 @@ bool DrmOutput::setDrmDpmsMode(DpmsMode mode)
         updateDpmsMode(mode);
         return true;
     }
+    if (!active) {
+        gpu()->waitIdle();
+    }
     m_pipeline->setActive(active);
     if (DrmPipeline::commitPipelines({m_pipeline}, active ? DrmPipeline::CommitMode::TestAllowModeset : DrmPipeline::CommitMode::CommitModeset) == DrmPipeline::Error::None) {
         m_pipeline->applyPendingChanges();
