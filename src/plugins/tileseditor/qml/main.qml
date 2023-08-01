@@ -187,10 +187,6 @@ FocusScope {
         dim: true
         onOpened: forceActiveFocus()
         onClosed: root.forceActiveFocus()
-        KSvg.Svg {
-            id: layoutsSvg
-            imagePath: Qt.resolvedUrl("layouts.svg")
-        }
         component LayoutButton: PlasmaComponents.AbstractButton {
             id: button
             Layout.fillWidth: true
@@ -198,7 +194,7 @@ FocusScope {
             property alias image: svgItem.elementId
             contentItem: KSvg.SvgItem {
                 id: svgItem
-                svg: layoutsSvg
+                 imagePath: Qt.resolvedUrl("layouts.svg")
                 implicitWidth: naturalSize.width
                 implicitHeight: naturalSize.height
             }
