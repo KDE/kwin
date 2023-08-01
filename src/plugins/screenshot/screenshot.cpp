@@ -366,22 +366,26 @@ QImage ScreenShotEffect::blitScreenshot(const RenderTarget &renderTarget, const 
         const QSize nativeSize = renderTarget.applyTransformation(geometry, screenGeometry).size() * devicePixelRatio;
         image = QImage(nativeSize, QImage::Format_ARGB32);
 
-        if (GLFramebuffer::blitSupported() && !GLPlatform::instance()->isGLES()) {
-            const auto texture = GLTexture::allocate(GL_RGBA8, nativeSize);
-            if (!texture) {
-                return {};
-            }
-            GLFramebuffer target(texture.get());
-            target.blitFromFramebuffer(viewport.mapToRenderTarget(geometry));
-            // copy content from framebuffer into image
-            texture->bind();
-            glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-                          static_cast<GLvoid *>(image.bits()));
-            texture->unbind();
-        } else {
-            glReadPixels(0, 0, nativeSize.width(), nativeSize.height(), GL_RGBA,
-                         GL_UNSIGNED_BYTE, static_cast<GLvoid *>(image.bits()));
+        const auto texture = GLTexture::allocate(GL_RGBA8, nativeSize);
+        if (!texture) {
+            return {};
         }
+        GLFramebuffer target(texture.get());
+        if (renderTarget.texture()) {
+            GLFramebuffer::pushFramebuffer(&target);
+            ShaderBinder binder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
+            binder.shader()->setColorspaceUniformsToSRGB(renderTarget.colorDescription());
+            QMatrix4x4 projectionMatrix = renderTarget.texture()->contentTransformMatrix().inverted();
+            projectionMatrix.ortho(QRect(QPoint(), nativeSize));
+            binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix);
+            renderTarget.texture()->render(viewport.mapToRenderTargetTexture(geometry), infiniteRegion(), nativeSize, 1);
+        } else {
+            target.blitFromFramebuffer(viewport.mapToRenderTarget(geometry));
+            GLFramebuffer::pushFramebuffer(&target);
+        }
+        glReadPixels(0, 0, nativeSize.width(), nativeSize.height(), GL_RGBA,
+                     GL_UNSIGNED_BYTE, static_cast<GLvoid *>(image.bits()));
+        GLFramebuffer::popFramebuffer();
         convertFromGLImage(image, nativeSize.width(), nativeSize.height(), renderTarget.transformation());
     }
 
