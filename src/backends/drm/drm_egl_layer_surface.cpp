@@ -90,7 +90,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
 
     QRegion repaint = m_surface.damageJournal.accumulate(slot->age(), infiniteRegion());
     if (enableColormanagement) {
-        if (!m_surface.shadowBuffer) {
+        if (!m_surface.shadowBuffer || m_surface.shadowTexture->size() != m_surface.gbmSwapchain->size()) {
             m_surface.shadowTexture = GLTexture::allocate(GL_RGBA16F, m_surface.gbmSwapchain->size());
             if (!m_surface.shadowTexture) {
                 return std::nullopt;
