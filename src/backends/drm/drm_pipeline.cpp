@@ -108,6 +108,16 @@ DrmPipeline::Error DrmPipeline::commitPipelines(const QVector<DrmPipeline *> &pi
 DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline *> &pipelines, CommitMode mode, const QVector<DrmObject *> &unusedObjects)
 {
     auto commit = std::make_unique<DrmAtomicCommit>(pipelines);
+    if (mode == CommitMode::Test) {
+        // if there's a modeset pending, the tests on top of that state
+        // also have to allow modesets or they'll always fail
+        const bool wantsModeset = std::any_of(pipelines.begin(), pipelines.end(), [](DrmPipeline *pipeline) {
+            return pipeline->needsModeset();
+        });
+        if (wantsModeset) {
+            mode = CommitMode::TestAllowModeset;
+        }
+    }
     for (const auto &pipeline : pipelines) {
         if (pipeline->activePending()) {
             if (!pipeline->m_pending.layer->checkTestBuffer()) {
