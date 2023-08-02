@@ -188,12 +188,12 @@ bool InternalWindow::isCloseable() const
 
 bool InternalWindow::isMovable() const
 {
-    return true;
+    return !m_internalWindowFlags.testFlag(Qt::BypassWindowManagerHint) && !m_internalWindowFlags.testFlag(Qt::Popup);
 }
 
 bool InternalWindow::isMovableAcrossScreens() const
 {
-    return true;
+    return !m_internalWindowFlags.testFlag(Qt::BypassWindowManagerHint) && !m_internalWindowFlags.testFlag(Qt::Popup);
 }
 
 bool InternalWindow::isResizable() const
