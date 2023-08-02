@@ -100,6 +100,9 @@ void InternalWindow::pointerEnterEvent(const QPointF &globalPos)
 
 void InternalWindow::pointerLeaveEvent()
 {
+    if (!m_handle) {
+        return;
+    }
     Window::pointerLeaveEvent();
 
     QEvent event(QEvent::Leave);
