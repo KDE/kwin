@@ -38,6 +38,7 @@ protected:
     bool belongsToDesktop() const override;
     void doSetActive() override;
     void updateCaption() override;
+    void updateClientOutputs();
     std::unique_ptr<WindowItem> createItem(Scene *scene) override;
 
     void cleanGrouping();
@@ -45,7 +46,6 @@ protected:
     void markAsMapped();
 
 private:
-    void updateClientOutputs();
     void updateIcon();
     void updateResourceName();
 
