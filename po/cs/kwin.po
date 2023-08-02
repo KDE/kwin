@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-08-01 02:16+0000\n"
+"POT-Creation-Date: 2023-08-02 02:09+0000\n"
 "PO-Revision-Date: 2023-06-23 12:40+0200\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -2523,7 +2523,7 @@ msgstr "Odstup:"
 msgid "Load Layout..."
 msgstr "Načíst rozložení..."
 
-#: plugins/tileseditor/qml/main.qml:275
+#: plugins/tileseditor/qml/main.qml:271
 #, kde-format
 msgid "Close"
 msgstr "Zavřít"

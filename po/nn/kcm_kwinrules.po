@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-07 02:19+0000\n"
-"PO-Revision-Date: 2023-07-31 21:07+0200\n"
+"PO-Revision-Date: 2023-08-01 21:33+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
 "Language: nn\n"
@@ -385,7 +385,7 @@ msgstr "Hopp over oppgåvelinje"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
-msgstr ""
+msgstr "Styrer om vindauget skal visast i oppgåvehandsamaren."
 
 #: rulesmodel.cpp:585
 #, kde-format
@@ -398,6 +398,7 @@ msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the Virtual Desktop manager."
 msgstr ""
+"Styrer om vindauget skal visast i handsamaren for virtuelle skrivebord."
 
 #: rulesmodel.cpp:591
 #, kde-format
@@ -411,6 +412,8 @@ msgid ""
 "Controls whether or not the window appears in the <shortcut>Alt+Tab</"
 "shortcut> window list."
 msgstr ""
+"Styrer om vindauget skal visast i <shortcut>Alt + Tab</shortcut>-"
+"vindaugslista."
 
 #: rulesmodel.cpp:597
 #, kde-format
@@ -508,7 +511,7 @@ msgstr "Ta imot fokus"
 #: rulesmodel.cpp:682
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
-msgstr ""
+msgstr "Styrer om vindauget skal få fokus når du trykkjer på det."
 
 #: rulesmodel.cpp:686
 #, kde-format

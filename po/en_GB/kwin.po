@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-08-01 02:16+0000\n"
+"POT-Creation-Date: 2023-08-02 02:09+0000\n"
 "PO-Revision-Date: 2023-04-22 10:52+0100\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
 "Language-Team: British English\n"
@@ -2535,7 +2535,7 @@ msgstr "Padding:"
 msgid "Load Layout..."
 msgstr "Load Layout..."
 
-#: plugins/tileseditor/qml/main.qml:275
+#: plugins/tileseditor/qml/main.qml:271
 #, kde-format
 msgid "Close"
 msgstr "Close"

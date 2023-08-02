@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-08-01 02:16+0000\n"
+"POT-Creation-Date: 2023-08-02 02:09+0000\n"
 "PO-Revision-Date: 2023-07-20 08:18+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -2550,7 +2550,7 @@ msgstr "Betegarria:"
 msgid "Load Layout..."
 msgstr "Zamatu antolaera..."
 
-#: plugins/tileseditor/qml/main.qml:275
+#: plugins/tileseditor/qml/main.qml:271
 #, kde-format
 msgid "Close"
 msgstr "Itxi"
