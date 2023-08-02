@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "core/output.h"
 #include "scene/item.h"
 
 namespace KWaylandServer
@@ -27,6 +28,8 @@ public:
     ~DragAndDropIconItem() override;
 
     void frameRendered(quint32 timestamp);
+
+    void setOutput(Output *output);
 
 private:
     std::unique_ptr<SurfaceItemWayland> m_surfaceItem;

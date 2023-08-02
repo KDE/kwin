@@ -113,15 +113,23 @@ void WorkspaceScene::createDndIconItem()
     }
     m_dndIcon = std::make_unique<DragAndDropIconItem>(dragIcon, this);
     if (waylandServer()->seat()->isDragPointer()) {
-        m_dndIcon->setPosition(waylandServer()->seat()->pointerPos());
-        connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::pointerPosChanged, m_dndIcon.get(), [this]() {
-            m_dndIcon->setPosition(waylandServer()->seat()->pointerPos());
-        });
+        auto updatePosition = [this]() {
+            const auto pointerPos = waylandServer()->seat()->pointerPos();
+            m_dndIcon->setPosition(pointerPos);
+            m_dndIcon->setOutput(workspace()->outputAt(pointerPos));
+        };
+
+        updatePosition();
+        connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::pointerPosChanged, m_dndIcon.get(), updatePosition);
     } else if (waylandServer()->seat()->isDragTouch()) {
-        m_dndIcon->setPosition(waylandServer()->seat()->firstTouchPointPosition());
-        connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::touchMoved, m_dndIcon.get(), [this]() {
-            m_dndIcon->setPosition(waylandServer()->seat()->firstTouchPointPosition());
-        });
+        auto updatePosition = [this]() {
+            const auto touchPos = waylandServer()->seat()->firstTouchPointPosition();
+            m_dndIcon->setPosition(touchPos);
+            m_dndIcon->setOutput(workspace()->outputAt(touchPos));
+        };
+
+        updatePosition();
+        connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::touchMoved, m_dndIcon.get(), updatePosition);
     }
 }
 

@@ -37,6 +37,13 @@ void DragAndDropIconItem::frameRendered(quint32 timestamp)
     }
 }
 
+void DragAndDropIconItem::setOutput(Output *output)
+{
+    if (m_surfaceItem && output) {
+        m_surfaceItem->surface()->setPreferredBufferScale(output->scale());
+    }
+}
+
 } // namespace KWin
 
 #include "moc_dndiconitem.cpp"
