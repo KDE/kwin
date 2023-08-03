@@ -24,7 +24,7 @@ void cleanupGL();
 
 class Version;
 
-enum GLFeature {
+enum class GLFeature {
     /**
      * Set when a texture bound to a pixmap uses the same storage as the pixmap,
      * and thus doesn't need to be rebound when the contents of the pixmap
@@ -75,6 +75,11 @@ enum GLFeature {
      * Set if the extension GL_MESA_pack_invert is present
      */
     PackInvert,
+
+    /**
+     * Set if the driver supports GL_ARB_timer_query extension or OpenGL 3.3.
+     */
+    TimerQuery,
 };
 
 enum Driver {
@@ -479,6 +484,7 @@ private:
     bool m_textureNPOT : 1;
     bool m_limitedNPOT : 1;
     bool m_packInvert : 1;
+    bool m_supportsTimerQuery : 1;
     bool m_virtualMachine : 1;
     bool m_preferBufferSubData : 1;
     OpenGLPlatformInterface m_platformInterface;

@@ -51,7 +51,7 @@ static void doGrabTexture(GLTexture *texture, spa_data *spa, spa_video_format fo
 {
     const QSize size = texture->size();
     const bool invertNeeded = GLPlatform::instance()->isGLES() ^ !(texture->contentTransforms() & TextureTransform::MirrorY);
-    const bool invertNeededAndSupported = invertNeeded && GLPlatform::instance()->supports(PackInvert);
+    const bool invertNeededAndSupported = invertNeeded && GLPlatform::instance()->supports(GLFeature::PackInvert);
     GLboolean prev;
     if (invertNeededAndSupported) {
         glGetBooleanv(GL_PACK_INVERT_MESA, &prev);

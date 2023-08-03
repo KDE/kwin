@@ -357,9 +357,9 @@ bool GLShader::compile(GLuint program, GLenum shaderType, const QByteArray &sour
 bool GLShader::load(const QByteArray &vertexSource, const QByteArray &fragmentSource)
 {
     // Make sure shaders are actually supported
-    if (!(GLPlatform::instance()->supports(GLSL) &&
+    if (!(GLPlatform::instance()->supports(GLFeature::GLSL) &&
           // we lack shader branching for Texture2DRectangle everywhere - and it's probably not worth it
-          GLPlatform::instance()->supports(TextureNPOT))) {
+          GLPlatform::instance()->supports(GLFeature::TextureNPOT))) {
         qCCritical(LIBKWINGLUTILS) << "Shaders are not supported";
         return false;
     }

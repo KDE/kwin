@@ -1775,7 +1775,7 @@ QString Workspace::supportInformation() const
             }
             support.append(QStringLiteral("\n"));
 
-            if (platform->supports(LimitedGLSL) || platform->supports(GLSL)) {
+            if (platform->supports(GLFeature::LimitedGLSL) || platform->supports(GLFeature::GLSL)) {
                 support.append(QStringLiteral("OpenGL shading language version string: ") + QString::fromUtf8(platform->glShadingLanguageVersionString()) + QStringLiteral("\n"));
             }
 
@@ -1788,7 +1788,7 @@ QString Workspace::supportInformation() const
 
             support.append(QStringLiteral("OpenGL version: ") + GLPlatform::versionToString(platform->glVersion()) + QStringLiteral("\n"));
 
-            if (platform->supports(LimitedGLSL) || platform->supports(GLSL)) {
+            if (platform->supports(GLFeature::LimitedGLSL) || platform->supports(GLFeature::GLSL)) {
                 support.append(QStringLiteral("GLSL version: ") + GLPlatform::versionToString(platform->glslVersion()) + QStringLiteral("\n"));
             }
 
@@ -1810,8 +1810,8 @@ QString Workspace::supportInformation() const
                 support.append(QStringLiteral("no\n"));
             }
             support.append(QStringLiteral("GLSL shaders: "));
-            if (platform->supports(GLSL)) {
-                if (platform->supports(LimitedGLSL)) {
+            if (platform->supports(GLFeature::GLSL)) {
+                if (platform->supports(GLFeature::LimitedGLSL)) {
                     support.append(QStringLiteral(" limited\n"));
                 } else {
                     support.append(QStringLiteral(" yes\n"));
@@ -1820,8 +1820,8 @@ QString Workspace::supportInformation() const
                 support.append(QStringLiteral(" no\n"));
             }
             support.append(QStringLiteral("Texture NPOT support: "));
-            if (platform->supports(TextureNPOT)) {
-                if (platform->supports(LimitedNPOT)) {
+            if (platform->supports(GLFeature::TextureNPOT)) {
+                if (platform->supports(GLFeature::LimitedNPOT)) {
                     support.append(QStringLiteral(" limited\n"));
                 } else {
                     support.append(QStringLiteral(" yes\n"));

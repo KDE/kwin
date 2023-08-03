@@ -807,6 +807,16 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
         m_textureNPOT = m_extensions.contains("GL_ARB_texture_non_power_of_two");
     }
 
+    if (!qEnvironmentVariableIsSet("KWIN_NO_TIMER_QUERY")) {
+        if (isGLES()) {
+            // 3.0 is required so query functions can be used without "EXT" suffix.
+            // Timer queries are still not part of the core OpenGL ES specification.
+            m_supportsTimerQuery = glVersion() >= Version(3, 0) && m_extensions.contains("GL_EXT_disjoint_timer_query");
+        } else {
+            m_supportsTimerQuery = glVersion() >= Version(3, 3) || m_extensions.contains("GL_ARB_timer_query");
+        }
+    }
+
     m_serverVersion = getXServerVersion();
     m_kernelVersion = getKernelVersion();
 
@@ -1193,32 +1203,28 @@ void GLPlatform::printResults() const
     print(QByteArrayLiteral("GLSL shaders:"), m_supportsGLSL ? (m_limitedGLSL ? QByteArrayLiteral("limited") : QByteArrayLiteral("yes")) : QByteArrayLiteral("no"));
     print(QByteArrayLiteral("Texture NPOT support:"), m_textureNPOT ? (m_limitedNPOT ? QByteArrayLiteral("limited") : QByteArrayLiteral("yes")) : QByteArrayLiteral("no"));
     print(QByteArrayLiteral("Virtual Machine:"), m_virtualMachine ? QByteArrayLiteral("yes") : QByteArrayLiteral("no"));
+    print(QByteArrayLiteral("Timer query support:"), m_supportsTimerQuery ? QByteArrayLiteral("yes") : QByteArrayLiteral("no"));
 }
 
 bool GLPlatform::supports(GLFeature feature) const
 {
     switch (feature) {
-    case LooseBinding:
+    case GLFeature::LooseBinding:
         return m_looseBinding;
-
-    case GLSL:
+    case GLFeature::GLSL:
         return m_supportsGLSL;
-
-    case LimitedGLSL:
+    case GLFeature::LimitedGLSL:
         return m_limitedGLSL;
-
-    case TextureNPOT:
+    case GLFeature::TextureNPOT:
         return m_textureNPOT;
-
-    case LimitedNPOT:
+    case GLFeature::LimitedNPOT:
         return m_limitedNPOT;
-
-    case PackInvert:
+    case GLFeature::PackInvert:
         return m_packInvert;
-
-    default:
-        return false;
+    case GLFeature::TimerQuery:
+        return m_supportsTimerQuery;
     }
+    return false;
 }
 
 Version GLPlatform::glVersion() const

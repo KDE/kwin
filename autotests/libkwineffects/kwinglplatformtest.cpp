@@ -146,11 +146,11 @@ void GLPlatformTest::testPriorDetect()
 {
     auto *gl = GLPlatform::instance();
     QVERIFY(gl);
-    QCOMPARE(gl->supports(LooseBinding), false);
-    QCOMPARE(gl->supports(GLSL), false);
-    QCOMPARE(gl->supports(LimitedGLSL), false);
-    QCOMPARE(gl->supports(TextureNPOT), false);
-    QCOMPARE(gl->supports(LimitedNPOT), false);
+    QCOMPARE(gl->supports(GLFeature::LooseBinding), false);
+    QCOMPARE(gl->supports(GLFeature::GLSL), false);
+    QCOMPARE(gl->supports(GLFeature::LimitedGLSL), false);
+    QCOMPARE(gl->supports(GLFeature::TextureNPOT), false);
+    QCOMPARE(gl->supports(GLFeature::LimitedNPOT), false);
 
     QCOMPARE(gl->glVersion(), Version());
     QCOMPARE(gl->glslVersion(), Version());
@@ -248,11 +248,11 @@ void GLPlatformTest::testDetect()
 
     const KConfigGroup settingsGroup = config.group("Settings");
 
-    QCOMPARE(gl->supports(LooseBinding), settingsGroup.readEntry("LooseBinding", false));
-    QCOMPARE(gl->supports(GLSL), settingsGroup.readEntry("GLSL", false));
-    QCOMPARE(gl->supports(LimitedGLSL), settingsGroup.readEntry("LimitedGLSL", false));
-    QCOMPARE(gl->supports(TextureNPOT), settingsGroup.readEntry("TextureNPOT", false));
-    QCOMPARE(gl->supports(LimitedNPOT), settingsGroup.readEntry("LimitedNPOT", false));
+    QCOMPARE(gl->supports(GLFeature::LooseBinding), settingsGroup.readEntry("LooseBinding", false));
+    QCOMPARE(gl->supports(GLFeature::GLSL), settingsGroup.readEntry("GLSL", false));
+    QCOMPARE(gl->supports(GLFeature::LimitedGLSL), settingsGroup.readEntry("LimitedGLSL", false));
+    QCOMPARE(gl->supports(GLFeature::TextureNPOT), settingsGroup.readEntry("TextureNPOT", false));
+    QCOMPARE(gl->supports(GLFeature::LimitedNPOT), settingsGroup.readEntry("LimitedNPOT", false));
 
     QCOMPARE(gl->glVersion(), readVersion(settingsGroup, "GLVersion"));
     QCOMPARE(gl->glslVersion(), readVersion(settingsGroup, "GLSLVersion"));
