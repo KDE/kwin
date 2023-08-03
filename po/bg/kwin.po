@@ -4174,21 +4174,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland се срина"
-
-#~ msgctxt ""
-#~ "Entry in context menu of window decoration to open the configuration "
-#~ "module of KWin"
-#~ msgid "Configure W&indow Manager..."
-#~ msgstr "Конфигуриране на мениджър на прозорци..."
-
-#~ msgctxt "Error message"
-#~ msgid "Could not locate package metadata"
-#~ msgstr "Не можа да се намерят метаданните на пакета"
-
-#~ msgctxt "Required file does not exist"
-#~ msgid "%1 does not contain a valid metadata.json file"
-#~ msgstr "%1 не съдържа валиден файл metadata.json"
-
-#~ msgctxt "Required file does not exist"
-#~ msgid "%1 does not exist"
-#~ msgstr "%1 не съществува"

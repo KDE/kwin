@@ -67,6 +67,3 @@ msgstr "Изключване на неподдържаните ефекти"
 #, kde-format
 msgid "Exclude internal effects"
 msgstr "Изключване на вътрешните ефекти"
-
-#~ msgid "Get New Desktop Effects..."
-#~ msgstr "Изтегляне на нови ефекти за работна среда..."
