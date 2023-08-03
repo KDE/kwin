@@ -167,4 +167,9 @@ void EglGbmLayer::releaseBuffers()
     m_scanoutBuffer.reset();
     m_surface.destroyResources();
 }
+
+std::chrono::nanoseconds EglGbmLayer::queryRenderTime() const
+{
+    return m_surface.queryRenderTime();
+}
 }

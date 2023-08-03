@@ -30,11 +30,13 @@ class GraphicsBuffer;
 class GLTexture;
 class EglGbmBackend;
 class DrmVirtualOutput;
+class GLRenderTimeQuery;
 
 class VirtualEglGbmLayer : public DrmOutputLayer
 {
 public:
     VirtualEglGbmLayer(EglGbmBackend *eglBackend, DrmVirtualOutput *output);
+    ~VirtualEglGbmLayer() override;
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
@@ -44,6 +46,7 @@ public:
     std::shared_ptr<GLTexture> texture() const override;
     void releaseBuffers() override;
     quint32 format() const override;
+    std::chrono::nanoseconds queryRenderTime() const override;
 
 private:
     std::shared_ptr<EglSwapchain> createGbmSwapchain() const;
@@ -57,6 +60,7 @@ private:
     std::shared_ptr<EglSwapchain> m_gbmSwapchain;
     std::shared_ptr<EglSwapchain> m_oldGbmSwapchain;
     std::shared_ptr<EglSwapchainSlot> m_currentSlot;
+    std::unique_ptr<GLRenderTimeQuery> m_query;
 
     DrmVirtualOutput *const m_output;
     EglGbmBackend *const m_eglBackend;

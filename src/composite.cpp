@@ -662,7 +662,6 @@ void Compositor::composite(RenderLoop *renderLoop)
     }
 
     postPaintPass(superLayer);
-    renderLoop->endFrame();
 
     m_backend->present(output);
 

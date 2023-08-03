@@ -21,6 +21,7 @@ class GraphicsBufferAllocator;
 class X11WindowedBackend;
 class X11WindowedOutput;
 class X11WindowedEglBackend;
+class GLRenderTimeQuery;
 
 class X11WindowedEglPrimaryLayer : public OutputLayer
 {
@@ -31,6 +32,7 @@ public:
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     quint32 format() const override;
+    std::chrono::nanoseconds queryRenderTime() const override;
 
     std::shared_ptr<GLTexture> texture() const;
     void present();
@@ -38,6 +40,7 @@ public:
 private:
     std::shared_ptr<EglSwapchain> m_swapchain;
     std::shared_ptr<EglSwapchainSlot> m_buffer;
+    std::unique_ptr<GLRenderTimeQuery> m_query;
     X11WindowedOutput *const m_output;
     X11WindowedEglBackend *const m_backend;
 };
@@ -53,12 +56,14 @@ public:
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     quint32 format() const override;
+    std::chrono::nanoseconds queryRenderTime() const override;
 
 private:
     X11WindowedOutput *const m_output;
     X11WindowedEglBackend *const m_backend;
     std::unique_ptr<GLFramebuffer> m_framebuffer;
     std::unique_ptr<GLTexture> m_texture;
+    std::unique_ptr<GLRenderTimeQuery> m_query;
 };
 
 /**

@@ -127,7 +127,7 @@ void RenderLoopPrivate::notifyFrameFailed()
     }
 }
 
-void RenderLoopPrivate::notifyFrameCompleted(std::chrono::nanoseconds timestamp)
+void RenderLoopPrivate::notifyFrameCompleted(std::chrono::nanoseconds timestamp, std::chrono::nanoseconds renderTime)
 {
     Q_ASSERT(pendingFrameCount > 0);
     pendingFrameCount--;
@@ -142,6 +142,7 @@ void RenderLoopPrivate::notifyFrameCompleted(std::chrono::nanoseconds timestamp)
         lastPresentationTimestamp = std::chrono::steady_clock::now().time_since_epoch();
     }
 
+    renderJournal.add(renderTime);
     if (!inhibitCount) {
         maybeScheduleRepaint();
     }
@@ -201,12 +202,6 @@ void RenderLoop::beginFrame()
 {
     d->pendingRepaint = false;
     d->pendingFrameCount++;
-    d->renderJournal.beginFrame();
-}
-
-void RenderLoop::endFrame()
-{
-    d->renderJournal.endFrame();
 }
 
 int RenderLoop::refreshRate() const

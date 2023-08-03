@@ -47,6 +47,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedQPainterPrimaryLayer::beginF
     QRegion repaint = m_output->exposedArea() + m_output->rect();
     m_output->clearExposedArea();
 
+    m_renderStart = std::chrono::steady_clock::now();
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_current->view()->image()),
         .repaint = repaint,
@@ -55,6 +56,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedQPainterPrimaryLayer::beginF
 
 bool X11WindowedQPainterPrimaryLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    m_renderTime = std::chrono::steady_clock::now() - m_renderStart;
     return true;
 }
 
@@ -93,6 +95,11 @@ quint32 X11WindowedQPainterPrimaryLayer::format() const
     return m_current->buffer()->shmAttributes()->format;
 }
 
+std::chrono::nanoseconds X11WindowedQPainterPrimaryLayer::queryRenderTime() const
+{
+    return m_renderTime;
+}
+
 X11WindowedQPainterCursorLayer::X11WindowedQPainterCursorLayer(X11WindowedOutput *output)
     : m_output(output)
 {
@@ -106,6 +113,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedQPainterCursorLayer::beginFr
         m_buffer = QImage(bufferSize, QImage::Format_ARGB32_Premultiplied);
     }
 
+    m_renderStart = std::chrono::steady_clock::now();
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(&m_buffer),
         .repaint = infiniteRegion(),
@@ -117,8 +125,14 @@ quint32 X11WindowedQPainterCursorLayer::format() const
     return DRM_FORMAT_ARGB8888;
 }
 
+std::chrono::nanoseconds X11WindowedQPainterCursorLayer::queryRenderTime() const
+{
+    return m_renderTime;
+}
+
 bool X11WindowedQPainterCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    m_renderTime = std::chrono::steady_clock::now() - m_renderStart;
     m_output->cursor()->update(m_buffer, hotspot());
     return true;
 }

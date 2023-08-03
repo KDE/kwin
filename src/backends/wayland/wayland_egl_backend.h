@@ -21,6 +21,7 @@ class EglSwapchainSlot;
 class EglSwapchain;
 class GLFramebuffer;
 class GraphicsBufferAllocator;
+class GLRenderTimeQuery;
 
 namespace Wayland
 {
@@ -41,12 +42,14 @@ public:
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     quint32 format() const override;
+    std::chrono::nanoseconds queryRenderTime() const override;
 
 private:
     WaylandOutput *m_waylandOutput;
     DamageJournal m_damageJournal;
     std::shared_ptr<EglSwapchain> m_swapchain;
     std::shared_ptr<EglSwapchainSlot> m_buffer;
+    std::unique_ptr<GLRenderTimeQuery> m_query;
     WaylandEglBackend *const m_backend;
 
     friend class WaylandEglBackend;
@@ -63,12 +66,14 @@ public:
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     quint32 format() const override;
+    std::chrono::nanoseconds queryRenderTime() const override;
 
 private:
     WaylandOutput *m_output;
     WaylandEglBackend *m_backend;
     std::shared_ptr<EglSwapchain> m_swapchain;
     std::shared_ptr<EglSwapchainSlot> m_buffer;
+    std::unique_ptr<GLRenderTimeQuery> m_query;
 };
 
 /**

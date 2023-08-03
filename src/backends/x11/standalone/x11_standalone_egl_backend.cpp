@@ -6,11 +6,14 @@
 */
 
 #include "x11_standalone_egl_backend.h"
+#include "composite.h"
 #include "core/outputbackend.h"
+#include "core/outputlayer.h"
 #include "core/overlaywindow.h"
 #include "core/renderloop_p.h"
 #include "libkwineffects/kwinglplatform.h"
 #include "options.h"
+#include "platformsupport/scenes/opengl/glrendertimequery.h"
 #include "scene/surfaceitem_x11.h"
 #include "scene/workspacescene.h"
 #include "utils/c_ptr.h"
@@ -45,6 +48,11 @@ bool EglLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedReg
 uint EglLayer::format() const
 {
     return DRM_FORMAT_RGBA8888;
+}
+
+std::chrono::nanoseconds EglLayer::queryRenderTime() const
+{
+    return m_backend->queryRenderTime();
 }
 
 EglBackend::EglBackend(Display *display, X11StandaloneBackend *backend)
@@ -322,6 +330,10 @@ OutputLayerBeginFrameInfo EglBackend::beginFrame()
     }
     eglWaitNative(EGL_CORE_NATIVE_ENGINE);
 
+    if (!m_query) {
+        m_query = std::make_unique<GLRenderTimeQuery>();
+    }
+    m_query->begin();
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_fbo.get()),
         .repaint = repaint,
@@ -330,6 +342,7 @@ OutputLayerBeginFrameInfo EglBackend::beginFrame()
 
 void EglBackend::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    m_query->end();
     // Save the damaged region to history
     if (supportsBufferAge()) {
         m_damageJournal.add(damagedRegion);
@@ -389,10 +402,16 @@ OutputLayer *EglBackend::primaryLayer(Output *output)
     return m_layer.get();
 }
 
+std::chrono::nanoseconds EglBackend::queryRenderTime()
+{
+    makeCurrent();
+    return m_query->result();
+}
+
 void EglBackend::vblank(std::chrono::nanoseconds timestamp)
 {
     RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_backend->renderLoop());
-    renderLoopPrivate->notifyFrameCompleted(timestamp);
+    renderLoopPrivate->notifyFrameCompleted(timestamp, m_layer->queryRenderTime());
 }
 
 EglSurfaceTextureX11::EglSurfaceTextureX11(EglBackend *backend, SurfacePixmapX11 *texture)

@@ -12,6 +12,7 @@
 #include "drm_logging.h"
 #include "drm_virtual_output.h"
 #include "platformsupport/scenes/opengl/eglswapchain.h"
+#include "platformsupport/scenes/opengl/glrendertimequery.h"
 #include "scene/surfaceitem_wayland.h"
 #include "wayland/surface_interface.h"
 
@@ -29,6 +30,8 @@ VirtualEglGbmLayer::VirtualEglGbmLayer(EglGbmBackend *eglBackend, DrmVirtualOutp
     , m_eglBackend(eglBackend)
 {
 }
+
+VirtualEglGbmLayer::~VirtualEglGbmLayer() = default;
 
 std::optional<OutputLayerBeginFrameInfo> VirtualEglGbmLayer::beginFrame()
 {
@@ -68,6 +71,11 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglGbmLayer::beginFrame()
         m_scanoutBuffer = nullptr;
     }
 
+    if (!m_query) {
+        m_query = std::make_unique<GLRenderTimeQuery>();
+    }
+    m_query->begin();
+
     const QRegion repair = m_damageJournal.accumulate(slot->age(), infiniteRegion());
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(slot->framebuffer()),
@@ -77,6 +85,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglGbmLayer::beginFrame()
 
 bool VirtualEglGbmLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    m_query->end();
     glFlush();
     m_currentDamage = damagedRegion;
     m_damageJournal.add(damagedRegion);
@@ -180,5 +189,11 @@ quint32 VirtualEglGbmLayer::format() const
         return DRM_FORMAT_ARGB8888;
     }
     return m_gbmSwapchain->format();
+}
+
+std::chrono::nanoseconds VirtualEglGbmLayer::queryRenderTime() const
+{
+    m_eglBackend->makeCurrent();
+    return m_query->result();
 }
 }

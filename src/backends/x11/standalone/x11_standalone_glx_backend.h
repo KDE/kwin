@@ -30,6 +30,7 @@ class GlxPixmapTexturePrivate;
 class VsyncMonitor;
 class X11StandaloneBackend;
 class GlxBackend;
+class GLRenderTimeQuery;
 
 // GLX_MESA_swap_interval
 using glXSwapIntervalMESA_func = int (*)(unsigned int interval);
@@ -66,6 +67,7 @@ public:
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     uint format() const override;
+    std::chrono::nanoseconds queryRenderTime() const override;
 
 private:
     GlxBackend *const m_backend;
@@ -84,6 +86,7 @@ public:
     std::unique_ptr<SurfaceTexture> createSurfaceTextureX11(SurfacePixmapX11 *pixmap) override;
     OutputLayerBeginFrameInfo beginFrame();
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion);
+    std::chrono::nanoseconds queryRenderTime();
     void present(Output *output) override;
     bool makeCurrent() override;
     void doneCurrent() override;
@@ -134,6 +137,7 @@ private:
     X11StandaloneBackend *m_backend;
     std::unique_ptr<VsyncMonitor> m_vsyncMonitor;
     std::unique_ptr<GlxLayer> m_layer;
+    std::unique_ptr<GLRenderTimeQuery> m_query;
     friend class GlxPixmapTexture;
 };
 

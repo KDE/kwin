@@ -15,6 +15,7 @@
 
 #include <QImage>
 #include <QObject>
+#include <chrono>
 
 namespace KWin
 {
@@ -39,6 +40,7 @@ public:
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     quint32 format() const override;
+    std::chrono::nanoseconds queryRenderTime() const override;
 
     void present();
 
@@ -51,6 +53,8 @@ private:
 
     std::unique_ptr<QPainterSwapchain> m_swapchain;
     std::shared_ptr<QPainterSwapchainSlot> m_back;
+    std::chrono::steady_clock::time_point m_renderStart;
+    std::chrono::nanoseconds m_renderTime;
 
     friend class WaylandQPainterBackend;
 };
@@ -66,12 +70,15 @@ public:
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     quint32 format() const override;
+    std::chrono::nanoseconds queryRenderTime() const override;
 
 private:
     WaylandOutput *m_output;
     WaylandQPainterBackend *m_backend;
     std::unique_ptr<QPainterSwapchain> m_swapchain;
     std::shared_ptr<QPainterSwapchainSlot> m_back;
+    std::chrono::steady_clock::time_point m_renderStart;
+    std::chrono::nanoseconds m_renderTime;
 };
 
 class WaylandQPainterBackend : public QPainterBackend

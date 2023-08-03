@@ -11,6 +11,7 @@
 #include "libkwineffects/kwinglutils.h"
 #include "platformsupport/scenes/opengl/basiceglsurfacetexture_wayland.h"
 #include "platformsupport/scenes/opengl/eglswapchain.h"
+#include "platformsupport/scenes/opengl/glrendertimequery.h"
 #include "utils/softwarevsyncmonitor.h"
 #include "virtual_backend.h"
 #include "virtual_logging.h"
@@ -49,6 +50,11 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame()
         return std::nullopt;
     }
 
+    if (!m_query) {
+        m_query = std::make_unique<GLRenderTimeQuery>();
+    }
+    m_query->begin();
+
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_current->framebuffer()),
         .repaint = infiniteRegion(),
@@ -57,6 +63,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame()
 
 bool VirtualEglLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    m_query->end();
     glFlush(); // flush pending rendering commands.
     Q_EMIT m_output->outputChange(damagedRegion);
     return true;
@@ -65,6 +72,16 @@ bool VirtualEglLayer::endFrame(const QRegion &renderedRegion, const QRegion &dam
 quint32 VirtualEglLayer::format() const
 {
     return DRM_FORMAT_XRGB8888;
+}
+
+std::chrono::nanoseconds VirtualEglLayer::queryRenderTime() const
+{
+    if (m_query) {
+        m_backend->makeCurrent();
+        return m_query->result();
+    } else {
+        return std::chrono::nanoseconds::zero();
+    }
 }
 
 VirtualEglBackend::VirtualEglBackend(VirtualBackend *b)

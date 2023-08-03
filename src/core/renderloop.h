@@ -53,12 +53,6 @@ public:
     void beginFrame();
 
     /**
-     * This function must be called after the Compositor has finished rendering the
-     * next frame.
-     */
-    void endFrame();
-
-    /**
      * Returns the refresh rate at which the output is being updated, in millihertz.
      */
     int refreshRate() const;

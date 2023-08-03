@@ -15,6 +15,7 @@
 #include "drm_logging.h"
 #include "platformsupport/scenes/opengl/eglnativefence.h"
 #include "platformsupport/scenes/opengl/eglswapchain.h"
+#include "platformsupport/scenes/opengl/glrendertimequery.h"
 #include "platformsupport/scenes/qpainter/qpainterswapchain.h"
 #include "utils/drm_format_helper.h"
 
@@ -98,6 +99,8 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
             }
             m_surface.shadowBuffer = std::make_shared<GLFramebuffer>(m_surface.shadowTexture.get());
         }
+        m_surface.renderStart = std::chrono::steady_clock::now();
+        m_surface.timeQuery->begin();
         return OutputLayerBeginFrameInfo{
             .renderTarget = RenderTarget(m_surface.shadowBuffer.get(), m_surface.intermediaryColorDescription),
             .repaint = repaint,
@@ -105,6 +108,8 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
     } else {
         m_surface.shadowTexture.reset();
         m_surface.shadowBuffer.reset();
+        m_surface.renderStart = std::chrono::steady_clock::now();
+        m_surface.timeQuery->begin();
         return OutputLayerBeginFrameInfo{
             .renderTarget = RenderTarget(m_surface.currentSlot->framebuffer()),
             .repaint = repaint,
@@ -134,13 +139,30 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion)
     }
     m_surface.damageJournal.add(damagedRegion);
     m_surface.gbmSwapchain->release(m_surface.currentSlot);
+    m_surface.timeQuery->end();
     glFlush();
     const auto buffer = importBuffer(m_surface, m_surface.currentSlot.get());
+    m_surface.renderEnd = std::chrono::steady_clock::now();
     if (buffer) {
         m_surface.currentFramebuffer = buffer;
         return true;
     } else {
         return false;
+    }
+}
+
+std::chrono::nanoseconds EglGbmLayerSurface::queryRenderTime() const
+{
+    const auto cpuTime = m_surface.renderEnd - m_surface.renderStart;
+    if (m_surface.timeQuery) {
+        m_eglBackend->makeCurrent();
+        auto gpuTime = m_surface.timeQuery->result();
+        if (m_surface.importTimeQuery && m_eglBackend->contextForGpu(m_gpu)->makeCurrent()) {
+            gpuTime += m_surface.importTimeQuery->result();
+        }
+        return std::max(gpuTime, cpuTime);
+    } else {
+        return cpuTime;
     }
 }
 
@@ -320,7 +342,9 @@ std::optional<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(con
         if (!ret.importGbmSwapchain) {
             return std::nullopt;
         }
+        ret.importTimeQuery = std::make_shared<GLRenderTimeQuery>();
     }
+    ret.timeQuery = std::make_shared<GLRenderTimeQuery>();
     if (!doRenderTestBuffer(ret)) {
         return std::nullopt;
     }
@@ -402,6 +426,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface &surfa
     if (!context || context->isSoftwareRenderer() || !context->makeCurrent()) {
         return nullptr;
     }
+    surface.importTimeQuery->begin();
 
     if (sourceFence.isValid()) {
         const auto destinationFence = EGLNativeFence::importFence(context->displayObject(), sourceFence.fileDescriptor().duplicate());
@@ -441,9 +466,9 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface &surfa
     context->shaderManager()->popShader();
     glFlush();
     surface.importGbmSwapchain->release(slot);
+    surface.importTimeQuery->end();
 
     // restore the old context
-    context->doneCurrent();
     m_eglBackend->makeCurrent();
     return m_gpu->importBuffer(slot->buffer());
 }

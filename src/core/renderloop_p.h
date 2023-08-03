@@ -30,7 +30,7 @@ public:
     void maybeScheduleRepaint();
 
     void notifyFrameFailed();
-    void notifyFrameCompleted(std::chrono::nanoseconds timestamp);
+    void notifyFrameCompleted(std::chrono::nanoseconds timestamp, std::chrono::nanoseconds renderTime);
 
     RenderLoop *q;
     std::chrono::nanoseconds lastPresentationTimestamp = std::chrono::nanoseconds::zero();

@@ -66,6 +66,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandQPainterPrimaryLayer::beginFrame
         return std::nullopt;
     }
 
+    m_renderStart = std::chrono::steady_clock::now();
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_back->view()->image()),
         .repaint = accumulateDamage(m_back->age()),
@@ -74,6 +75,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandQPainterPrimaryLayer::beginFrame
 
 bool WaylandQPainterPrimaryLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    m_renderTime = std::chrono::steady_clock::now() - m_renderStart;
     m_damageJournal.add(damagedRegion);
     return true;
 }
@@ -81,6 +83,11 @@ bool WaylandQPainterPrimaryLayer::endFrame(const QRegion &renderedRegion, const 
 quint32 WaylandQPainterPrimaryLayer::format() const
 {
     return DRM_FORMAT_RGBA8888;
+}
+
+std::chrono::nanoseconds WaylandQPainterPrimaryLayer::queryRenderTime() const
+{
+    return m_renderTime;
 }
 
 WaylandQPainterCursorLayer::WaylandQPainterCursorLayer(WaylandOutput *output, WaylandQPainterBackend *backend)
@@ -106,6 +113,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandQPainterCursorLayer::beginFrame(
         return std::nullopt;
     }
 
+    m_renderStart = std::chrono::steady_clock::now();
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_back->view()->image()),
         .repaint = infiniteRegion(),
@@ -114,6 +122,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandQPainterCursorLayer::beginFrame(
 
 bool WaylandQPainterCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    m_renderTime = std::chrono::steady_clock::now() - m_renderStart;
     wl_buffer *buffer = m_output->backend()->importBuffer(m_back->buffer());
     Q_ASSERT(buffer);
 
@@ -125,6 +134,11 @@ bool WaylandQPainterCursorLayer::endFrame(const QRegion &renderedRegion, const Q
 quint32 WaylandQPainterCursorLayer::format() const
 {
     return DRM_FORMAT_RGBA8888;
+}
+
+std::chrono::nanoseconds WaylandQPainterCursorLayer::queryRenderTime() const
+{
+    return m_renderTime;
 }
 
 WaylandQPainterBackend::WaylandQPainterBackend(Wayland::WaylandBackend *b)

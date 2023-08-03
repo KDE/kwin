@@ -12,6 +12,7 @@
 #include <QMap>
 #include <QPointer>
 #include <QRegion>
+#include <chrono>
 #include <optional>
 
 #include "core/outputlayer.h"
@@ -34,6 +35,7 @@ class EglGbmBackend;
 class GraphicsBuffer;
 class SurfaceItem;
 class GLTexture;
+class GLRenderTimeQuery;
 
 class EglGbmLayerSurface : public QObject
 {
@@ -53,6 +55,7 @@ public:
 
     std::optional<OutputLayerBeginFrameInfo> startRendering(const QSize &bufferSize, TextureTransforms transformation, const QMap<uint32_t, QVector<uint64_t>> &formats, const ColorDescription &colorDescription, const QVector3D &channelFactors, bool enableColormanagement);
     bool endRendering(const QRegion &damagedRegion);
+    std::chrono::nanoseconds queryRenderTime() const;
 
     bool doesSurfaceFit(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const;
     std::shared_ptr<GLTexture> texture() const;
@@ -89,6 +92,12 @@ private:
         MultiGpuImportMode importMode;
         std::shared_ptr<DrmFramebuffer> currentFramebuffer;
         bool forceLinear = false;
+
+        // for render timing
+        std::shared_ptr<GLRenderTimeQuery> timeQuery;
+        std::shared_ptr<GLRenderTimeQuery> importTimeQuery;
+        std::chrono::steady_clock::time_point renderStart;
+        std::chrono::steady_clock::time_point renderEnd;
     };
     bool checkSurface(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats);
     bool doesSurfaceFit(const Surface &surface, const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const;

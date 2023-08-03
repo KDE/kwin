@@ -9,6 +9,9 @@
 #include "virtual_output.h"
 #include "virtual_backend.h"
 
+#include "composite.h"
+#include "core/outputlayer.h"
+#include "core/renderbackend.h"
 #include "core/renderloop_p.h"
 #include "utils/softwarevsyncmonitor.h"
 
@@ -71,7 +74,7 @@ void VirtualOutput::updateEnabled(bool enabled)
 void VirtualOutput::vblank(std::chrono::nanoseconds timestamp)
 {
     RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_renderLoop.get());
-    renderLoopPrivate->notifyFrameCompleted(timestamp);
+    renderLoopPrivate->notifyFrameCompleted(timestamp, Compositor::self()->backend()->primaryLayer(this)->queryRenderTime());
 }
 
 }

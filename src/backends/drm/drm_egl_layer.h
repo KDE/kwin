@@ -38,6 +38,7 @@ public:
     std::shared_ptr<GLTexture> texture() const override;
     ColorDescription colorDescription() const;
     void releaseBuffers() override;
+    std::chrono::nanoseconds queryRenderTime() const override;
 
 private:
     std::shared_ptr<DrmFramebuffer> m_scanoutBuffer;

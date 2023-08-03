@@ -15,6 +15,7 @@
 #include <QObject>
 #include <QVector>
 
+#include <chrono>
 #include <memory>
 
 namespace KWin
@@ -36,6 +37,7 @@ public:
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     quint32 format() const override;
+    std::chrono::nanoseconds queryRenderTime() const override;
 
     void present();
 
@@ -44,6 +46,8 @@ private:
     X11WindowedQPainterBackend *const m_backend;
     std::unique_ptr<QPainterSwapchain> m_swapchain;
     std::shared_ptr<QPainterSwapchainSlot> m_current;
+    std::chrono::steady_clock::time_point m_renderStart;
+    std::chrono::nanoseconds m_renderTime;
 };
 
 class X11WindowedQPainterCursorLayer : public OutputLayer
@@ -56,10 +60,13 @@ public:
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     quint32 format() const override;
+    std::chrono::nanoseconds queryRenderTime() const override;
 
 private:
     QImage m_buffer;
     X11WindowedOutput *m_output;
+    std::chrono::steady_clock::time_point m_renderStart;
+    std::chrono::nanoseconds m_renderTime;
 };
 
 class X11WindowedQPainterBackend : public QPainterBackend

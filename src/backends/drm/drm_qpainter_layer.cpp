@@ -38,6 +38,7 @@ std::optional<OutputLayerBeginFrameInfo> DrmQPainterLayer::beginFrame()
         return std::nullopt;
     }
 
+    m_renderStart = std::chrono::steady_clock::now();
     const QRegion repaint = m_damageJournal.accumulate(m_currentBuffer->age(), infiniteRegion());
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_currentBuffer->view()->image()),
@@ -47,6 +48,7 @@ std::optional<OutputLayerBeginFrameInfo> DrmQPainterLayer::beginFrame()
 
 bool DrmQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    m_renderTime = std::chrono::steady_clock::now() - m_renderStart;
     m_currentFramebuffer = m_pipeline->gpu()->importBuffer(m_currentBuffer->buffer());
     m_damageJournal.add(damagedRegion);
     m_swapchain->release(m_currentBuffer);
@@ -99,6 +101,11 @@ quint32 DrmQPainterLayer::format() const
     return DRM_FORMAT_XRGB8888;
 }
 
+std::chrono::nanoseconds DrmQPainterLayer::queryRenderTime() const
+{
+    return m_renderTime;
+}
+
 DrmCursorQPainterLayer::DrmCursorQPainterLayer(DrmPipeline *pipeline)
     : DrmOverlayLayer(pipeline)
 {
@@ -113,6 +120,7 @@ std::optional<OutputLayerBeginFrameInfo> DrmCursorQPainterLayer::beginFrame()
     if (!m_currentBuffer) {
         return std::nullopt;
     }
+    m_renderStart = std::chrono::steady_clock::now();
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_currentBuffer->view()->image()),
         .repaint = infiniteRegion(),
@@ -121,6 +129,7 @@ std::optional<OutputLayerBeginFrameInfo> DrmCursorQPainterLayer::beginFrame()
 
 bool DrmCursorQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    m_renderTime = std::chrono::steady_clock::now() - m_renderStart;
     m_currentFramebuffer = m_pipeline->gpu()->importBuffer(m_currentBuffer->buffer());
     m_swapchain->release(m_currentBuffer);
     if (!m_currentFramebuffer) {
@@ -149,6 +158,11 @@ void DrmCursorQPainterLayer::releaseBuffers()
     m_swapchain.reset();
 }
 
+std::chrono::nanoseconds DrmCursorQPainterLayer::queryRenderTime() const
+{
+    return m_renderTime;
+}
+
 DrmVirtualQPainterLayer::DrmVirtualQPainterLayer(DrmVirtualOutput *output)
     : m_output(output)
 {
@@ -159,6 +173,7 @@ std::optional<OutputLayerBeginFrameInfo> DrmVirtualQPainterLayer::beginFrame()
     if (m_image.isNull() || m_image.size() != m_output->modeSize()) {
         m_image = QImage(m_output->modeSize(), QImage::Format_RGB32);
     }
+    m_renderStart = std::chrono::steady_clock::now();
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(&m_image),
         .repaint = QRegion(),
@@ -167,6 +182,7 @@ std::optional<OutputLayerBeginFrameInfo> DrmVirtualQPainterLayer::beginFrame()
 
 bool DrmVirtualQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    m_renderTime = std::chrono::steady_clock::now() - m_renderStart;
     m_currentDamage = damagedRegion;
     return true;
 }
@@ -178,5 +194,10 @@ QRegion DrmVirtualQPainterLayer::currentDamage() const
 
 void DrmVirtualQPainterLayer::releaseBuffers()
 {
+}
+
+std::chrono::nanoseconds DrmVirtualQPainterLayer::queryRenderTime() const
+{
+    return m_renderTime;
 }
 }

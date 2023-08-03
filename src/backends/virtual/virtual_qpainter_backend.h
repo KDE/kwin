@@ -14,6 +14,7 @@
 #include <QMap>
 #include <QObject>
 #include <QVector>
+#include <chrono>
 #include <memory>
 
 namespace KWin
@@ -35,12 +36,15 @@ public:
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     QImage *image();
     quint32 format() const override;
+    std::chrono::nanoseconds queryRenderTime() const override;
 
 private:
     Output *const m_output;
     VirtualQPainterBackend *const m_backend;
     std::unique_ptr<QPainterSwapchain> m_swapchain;
     std::shared_ptr<QPainterSwapchainSlot> m_current;
+    std::chrono::steady_clock::time_point m_renderStart;
+    std::chrono::nanoseconds m_renderTime = std::chrono::nanoseconds::zero();
 };
 
 class VirtualQPainterBackend : public QPainterBackend

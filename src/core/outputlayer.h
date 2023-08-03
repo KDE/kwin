@@ -11,6 +11,7 @@
 
 #include <QObject>
 #include <QRegion>
+#include <chrono>
 #include <optional>
 
 namespace KWin
@@ -56,6 +57,11 @@ public:
      * Returns @c true if scanout succeeds, @c false if rendering is necessary
      */
     virtual bool scanout(SurfaceItem *surfaceItem);
+
+    /**
+     * queries the render time of the last frame. If rendering isn't complete yet, this may block until it is
+     */
+    virtual std::chrono::nanoseconds queryRenderTime() const = 0;
 
 private:
     QRegion m_repaints;

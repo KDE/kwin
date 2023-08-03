@@ -23,15 +23,7 @@ class KWIN_EXPORT RenderJournal
 public:
     RenderJournal();
 
-    /**
-     * This function must be called before starting rendering a new frame.
-     */
-    void beginFrame();
-
-    /**
-     * This function must be called after finishing rendering a frame.
-     */
-    void endFrame();
+    void add(std::chrono::nanoseconds renderTime);
 
     /**
      * Returns the maximum estimated amount of time that it takes to render a single frame.
@@ -49,7 +41,6 @@ public:
     std::chrono::nanoseconds average() const;
 
 private:
-    QElapsedTimer m_timer;
     QQueue<std::chrono::nanoseconds> m_log;
     int m_size = 15;
 };

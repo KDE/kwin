@@ -34,6 +34,7 @@ public:
     QRegion currentDamage() const override;
     void releaseBuffers() override;
     quint32 format() const override;
+    std::chrono::nanoseconds queryRenderTime() const override;
 
 private:
     bool doesSwapchainFit() const;
@@ -42,6 +43,8 @@ private:
     std::shared_ptr<QPainterSwapchainSlot> m_currentBuffer;
     std::shared_ptr<DrmFramebuffer> m_currentFramebuffer;
     DamageJournal m_damageJournal;
+    std::chrono::steady_clock::time_point m_renderStart;
+    std::chrono::nanoseconds m_renderTime;
 };
 
 class DrmCursorQPainterLayer : public DrmOverlayLayer
@@ -56,11 +59,14 @@ public:
     std::shared_ptr<DrmFramebuffer> currentBuffer() const override;
     QRegion currentDamage() const override;
     void releaseBuffers() override;
+    std::chrono::nanoseconds queryRenderTime() const override;
 
 private:
     std::shared_ptr<QPainterSwapchain> m_swapchain;
     std::shared_ptr<QPainterSwapchainSlot> m_currentBuffer;
     std::shared_ptr<DrmFramebuffer> m_currentFramebuffer;
+    std::chrono::steady_clock::time_point m_renderStart;
+    std::chrono::nanoseconds m_renderTime;
 };
 
 class DrmVirtualQPainterLayer : public DrmOutputLayer
@@ -73,10 +79,13 @@ public:
 
     QRegion currentDamage() const override;
     void releaseBuffers() override;
+    std::chrono::nanoseconds queryRenderTime() const override;
 
 private:
     QImage m_image;
     QRegion m_currentDamage;
     DrmVirtualOutput *const m_output;
+    std::chrono::steady_clock::time_point m_renderStart;
+    std::chrono::nanoseconds m_renderTime;
 };
 }

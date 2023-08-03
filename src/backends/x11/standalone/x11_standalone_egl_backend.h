@@ -23,6 +23,7 @@ class EglPixmapTexturePrivate;
 class SoftwareVsyncMonitor;
 class X11StandaloneBackend;
 class EglBackend;
+class GLRenderTimeQuery;
 
 class EglLayer : public OutputLayer
 {
@@ -32,6 +33,7 @@ public:
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     uint format() const override;
+    std::chrono::nanoseconds queryRenderTime() const override;
 
 private:
     EglBackend *const m_backend;
@@ -53,6 +55,7 @@ public:
     void present(Output *output) override;
     OverlayWindow *overlayWindow() const override;
     OutputLayer *primaryLayer(Output *output) override;
+    std::chrono::nanoseconds queryRenderTime();
 
 protected:
     EGLConfig chooseBufferConfig();
@@ -72,6 +75,7 @@ private:
     int m_bufferAge = 0;
     QRegion m_lastRenderedRegion;
     std::unique_ptr<EglLayer> m_layer;
+    std::unique_ptr<GLRenderTimeQuery> m_query;
     int m_havePostSubBuffer = false;
     bool m_havePlatformBase = false;
 };

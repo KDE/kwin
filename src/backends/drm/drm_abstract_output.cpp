@@ -10,6 +10,7 @@
 #include "core/renderloop_p.h"
 #include "drm_backend.h"
 #include "drm_gpu.h"
+#include "drm_layer.h"
 
 namespace KWin
 {
@@ -33,7 +34,8 @@ void DrmAbstractOutput::frameFailed() const
 
 void DrmAbstractOutput::pageFlipped(std::chrono::nanoseconds timestamp) const
 {
-    RenderLoopPrivate::get(m_renderLoop.get())->notifyFrameCompleted(timestamp);
+    const auto gpuTime = primaryLayer() ? primaryLayer()->queryRenderTime() : std::chrono::nanoseconds::zero();
+    RenderLoopPrivate::get(m_renderLoop.get())->notifyFrameCompleted(timestamp, gpuTime);
 }
 
 DrmGpu *DrmAbstractOutput::gpu() const

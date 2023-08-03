@@ -10,6 +10,7 @@
 
 #include "core/outputlayer.h"
 #include "platformsupport/scenes/opengl/abstract_egl_backend.h"
+#include <chrono>
 #include <memory>
 
 namespace KWin
@@ -22,6 +23,7 @@ class VirtualBackend;
 class GLFramebuffer;
 class GLTexture;
 class VirtualEglBackend;
+class GLRenderTimeQuery;
 
 class VirtualEglLayer : public OutputLayer
 {
@@ -33,12 +35,14 @@ public:
 
     std::shared_ptr<GLTexture> texture() const;
     quint32 format() const override;
+    std::chrono::nanoseconds queryRenderTime() const override;
 
 private:
     VirtualEglBackend *const m_backend;
     Output *m_output;
     std::shared_ptr<EglSwapchain> m_swapchain;
     std::shared_ptr<EglSwapchainSlot> m_current;
+    std::unique_ptr<GLRenderTimeQuery> m_query;
 };
 
 /**

@@ -28,6 +28,7 @@
 #include "core/overlaywindow.h"
 #include "core/renderloop_p.h"
 #include "options.h"
+#include "platformsupport/scenes/opengl/glrendertimequery.h"
 #include "scene/surfaceitem_x11.h"
 #include "scene/workspacescene.h"
 #include "utils/xcbutils.h"
@@ -93,7 +94,7 @@ bool SwapEventFilter::event(xcb_generic_event_t *event)
     const std::chrono::microseconds timestamp((uint64_t(swapEvent->ust_hi) << 32) | swapEvent->ust_lo);
 
     const auto platform = static_cast<X11StandaloneBackend *>(kwinApp()->outputBackend());
-    RenderLoopPrivate::get(platform->renderLoop())->notifyFrameCompleted(timestamp);
+    RenderLoopPrivate::get(platform->renderLoop())->notifyFrameCompleted(timestamp, Compositor::self()->backend()->primaryLayer(nullptr)->queryRenderTime());
 
     return true;
 }
@@ -117,6 +118,11 @@ bool GlxLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedReg
 uint GlxLayer::format() const
 {
     return DRM_FORMAT_RGBA8888;
+}
+
+std::chrono::nanoseconds GlxLayer::queryRenderTime() const
+{
+    return m_backend->queryRenderTime();
 }
 
 GlxBackend::GlxBackend(Display *display, X11StandaloneBackend *backend)
@@ -770,6 +776,9 @@ OutputLayerBeginFrameInfo GlxBackend::beginFrame()
 {
     QRegion repaint;
     makeCurrent();
+    if (!m_query) {
+        m_query = std::make_unique<GLRenderTimeQuery>();
+    }
 
     if (supportsBufferAge()) {
         repaint = m_damageJournal.accumulate(m_bufferAge, infiniteRegion());
@@ -777,6 +786,10 @@ OutputLayerBeginFrameInfo GlxBackend::beginFrame()
 
     glXWaitX();
 
+    if (!m_query) {
+        m_query = std::make_unique<GLRenderTimeQuery>();
+    }
+    m_query->begin();
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_fbo.get()),
         .repaint = repaint,
@@ -785,11 +798,18 @@ OutputLayerBeginFrameInfo GlxBackend::beginFrame()
 
 void GlxBackend::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    m_query->end();
     // Save the damaged region to history
     if (supportsBufferAge()) {
         m_damageJournal.add(damagedRegion);
     }
     m_lastRenderedRegion = renderedRegion;
+}
+
+std::chrono::nanoseconds GlxBackend::queryRenderTime()
+{
+    makeCurrent();
+    return m_query->result();
 }
 
 void GlxBackend::present(Output *output)
@@ -820,7 +840,7 @@ void GlxBackend::present(Output *output)
 void GlxBackend::vblank(std::chrono::nanoseconds timestamp)
 {
     RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_backend->renderLoop());
-    renderLoopPrivate->notifyFrameCompleted(timestamp);
+    renderLoopPrivate->notifyFrameCompleted(timestamp, queryRenderTime());
 }
 
 bool GlxBackend::makeCurrent()

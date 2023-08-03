@@ -136,7 +136,8 @@ WaylandOutput::WaylandOutput(const QString &name, WaylandBackend *backend)
 
     connect(m_surface.get(), &KWayland::Client::Surface::frameRendered, this, [this]() {
         RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(renderLoop());
-        renderLoopPrivate->notifyFrameCompleted(std::chrono::steady_clock::now().time_since_epoch());
+        const auto primary = Compositor::self()->backend()->primaryLayer(this);
+        renderLoopPrivate->notifyFrameCompleted(std::chrono::steady_clock::now().time_since_epoch(), primary ? primary->queryRenderTime() : std::chrono::nanoseconds::zero());
     });
 
     updateWindowTitle();

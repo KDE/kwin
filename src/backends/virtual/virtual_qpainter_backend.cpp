@@ -41,6 +41,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualQPainterLayer::beginFrame()
         return std::nullopt;
     }
 
+    m_renderStart = std::chrono::steady_clock::now();
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_current->view()->image()),
         .repaint = m_output->rect(),
@@ -49,6 +50,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualQPainterLayer::beginFrame()
 
 bool VirtualQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    m_renderTime = std::chrono::steady_clock::now() - m_renderStart;
     return true;
 }
 
@@ -60,6 +62,11 @@ QImage *VirtualQPainterLayer::image()
 quint32 VirtualQPainterLayer::format() const
 {
     return DRM_FORMAT_XRGB8888;
+}
+
+std::chrono::nanoseconds VirtualQPainterLayer::queryRenderTime() const
+{
+    return m_renderTime;
 }
 
 VirtualQPainterBackend::VirtualQPainterBackend(VirtualBackend *backend)

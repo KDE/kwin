@@ -311,7 +311,7 @@ void X11WindowedOutput::resize(const QSize &pixelSize)
 void X11WindowedOutput::handlePresentCompleteNotify(xcb_present_complete_notify_event_t *event)
 {
     std::chrono::microseconds timestamp(event->ust);
-    RenderLoopPrivate::get(m_renderLoop.get())->notifyFrameCompleted(timestamp);
+    RenderLoopPrivate::get(m_renderLoop.get())->notifyFrameCompleted(timestamp, Compositor::self()->backend()->primaryLayer(this)->queryRenderTime());
 }
 
 void X11WindowedOutput::handlePresentIdleNotify(xcb_present_idle_notify_event_t *event)

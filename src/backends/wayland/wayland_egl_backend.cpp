@@ -13,6 +13,7 @@
 #include "libkwineffects/kwinglutils.h"
 #include "platformsupport/scenes/opengl/basiceglsurfacetexture_wayland.h"
 #include "platformsupport/scenes/opengl/eglswapchain.h"
+#include "platformsupport/scenes/opengl/glrendertimequery.h"
 #include "wayland_backend.h"
 #include "wayland_display.h"
 #include "wayland_logging.h"
@@ -89,7 +90,10 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglPrimaryLayer::beginFrame()
     if (m_backend->supportsBufferAge()) {
         repair = m_damageJournal.accumulate(m_buffer->age(), infiniteRegion());
     }
-
+    if (!m_query) {
+        m_query = std::make_unique<GLRenderTimeQuery>();
+    }
+    m_query->begin();
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_buffer->framebuffer()),
         .repaint = repair,
@@ -98,6 +102,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglPrimaryLayer::beginFrame()
 
 bool WaylandEglPrimaryLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    m_query->end();
     // Flush rendering commands to the dmabuf.
     glFlush();
 
@@ -118,6 +123,17 @@ void WaylandEglPrimaryLayer::present()
     Q_EMIT m_waylandOutput->outputChange(m_damageJournal.lastDamage());
 
     m_swapchain->release(m_buffer);
+}
+
+quint32 WaylandEglPrimaryLayer::format() const
+{
+    return m_buffer->buffer()->dmabufAttributes()->format;
+}
+
+std::chrono::nanoseconds WaylandEglPrimaryLayer::queryRenderTime() const
+{
+    m_backend->makeCurrent();
+    return m_query->result();
 }
 
 WaylandEglCursorLayer::WaylandEglCursorLayer(WaylandOutput *output, WaylandEglBackend *backend)
@@ -160,6 +176,10 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame()
     }
 
     m_buffer = m_swapchain->acquire();
+    if (!m_query) {
+        m_query = std::make_unique<GLRenderTimeQuery>();
+    }
+    m_query->begin();
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_buffer->framebuffer()),
         .repaint = infiniteRegion(),
@@ -168,6 +188,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame()
 
 bool WaylandEglCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    m_query->end();
     // Flush rendering commands to the dmabuf.
     glFlush();
 
@@ -185,9 +206,10 @@ quint32 WaylandEglCursorLayer::format() const
     return m_buffer->buffer()->dmabufAttributes()->format;
 }
 
-quint32 WaylandEglPrimaryLayer::format() const
+std::chrono::nanoseconds WaylandEglCursorLayer::queryRenderTime() const
 {
-    return m_buffer->buffer()->dmabufAttributes()->format;
+    m_backend->makeCurrent();
+    return m_query->result();
 }
 
 WaylandEglBackend::WaylandEglBackend(WaylandBackend *b)
