@@ -27,6 +27,7 @@ public:
     DataDeviceManagerInterface::DnDActions supportedDnDActions = DataDeviceManagerInterface::DnDAction::None;
     DataDeviceManagerInterface::DnDAction selectedDndAction = DataDeviceManagerInterface::DnDAction::None;
     bool isAccepted = false;
+    bool isDropPerformed = false;
 
 protected:
     void data_source_destroy_resource(Resource *resource) override;
@@ -104,6 +105,10 @@ DataSourceInterface::~DataSourceInterface() = default;
 
 void DataSourceInterface::accept(const QString &mimeType)
 {
+    if (d->isDropPerformed) {
+        // Late data from wl_data_offer::accept, ignored
+        return;
+    }
     d->send_target(mimeType);
     d->isAccepted = !mimeType.isNull();
 }
@@ -147,6 +152,7 @@ void DataSourceInterface::dropPerformed()
     if (d->resource()->version() < WL_DATA_SOURCE_DND_DROP_PERFORMED_SINCE_VERSION) {
         return;
     }
+    d->isDropPerformed = true;
     d->send_dnd_drop_performed();
 }
 

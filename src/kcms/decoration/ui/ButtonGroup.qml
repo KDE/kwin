@@ -11,7 +11,7 @@ import org.kde.kwin.private.kdecoration as KDecoration
 ListView {
     id: view
     property string key
-    property bool dragging: false
+    property bool dragActive: false
     property int iconSize: Kirigami.Units.iconSizes.small
     orientation: ListView.Horizontal
     interactive: false
@@ -33,7 +33,7 @@ ListView {
             anchors.fill: Drag.active ? undefined : parent
             Drag.keys: [ "decoButtonRemove", view.key ]
             Drag.active: dragArea.drag.active
-            Drag.onActiveChanged: view.dragging = Drag.active
+            Drag.onActiveChanged: view.dragActive = Drag.active
             color: palette.windowText
             opacity: parent.enabled ? 1.0 : 0.3
         }

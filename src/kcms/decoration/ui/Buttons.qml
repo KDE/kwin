@@ -18,8 +18,8 @@ Rectangle {
 
     readonly property int buttonIconSize: Kirigami.Units.iconSizes.medium
     readonly property int titleBarSpacing: Kirigami.Units.largeSpacing
-    readonly property bool draggingTitlebarButtons: leftButtonsView.dragging || rightButtonsView.dragging
-    readonly property bool hideDragHint: draggingTitlebarButtons || availableButtonsGrid.dragging
+    readonly property bool draggingTitlebarButtons: leftButtonsView.dragActive || rightButtonsView.dragActive
+    readonly property bool hideDragHint: draggingTitlebarButtons || availableButtonsGrid.dragActive
 
     color: palette.base
     radius: Kirigami.Units.smallSpacing
@@ -172,7 +172,7 @@ Rectangle {
         }
         GridView {
             id: availableButtonsGrid
-            property bool dragging: false
+            property bool dragActive: false
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.minimumHeight: availableButtonsGrid.cellHeight * 2
@@ -204,7 +204,7 @@ Rectangle {
                         height: baseLayout.buttonIconSize
                         Drag.keys: [ "decoButtonAdd" ]
                         Drag.active: dragArea.drag.active
-                        Drag.onActiveChanged: availableButtonsGrid.dragging = Drag.active
+                        Drag.onActiveChanged: availableButtonsGrid.dragActive = Drag.active
                         color: palette.windowText
                     }
                     MouseArea {
