@@ -1594,6 +1594,8 @@ XdgPopupWindow::XdgPopupWindow(XdgPopupInterface *shellSurface)
 
 void XdgPopupWindow::handleRoleDestroyed()
 {
+    disconnect(transientFor(), &Window::frameGeometryChanged,
+               this, &XdgPopupWindow::relayout);
     m_shellSurface->disconnect(this);
 
     XdgSurfaceWindow::handleRoleDestroyed();
