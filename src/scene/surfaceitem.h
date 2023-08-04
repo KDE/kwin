@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "core/graphicsbuffer.h"
 #include "core/output.h"
 #include "scene/item.h"
 
@@ -89,6 +90,12 @@ class KWIN_EXPORT SurfacePixmap : public QObject
 public:
     explicit SurfacePixmap(std::unique_ptr<SurfaceTexture> &&texture, QObject *parent = nullptr);
 
+    GraphicsBuffer *buffer() const;
+    void setBuffer(GraphicsBuffer *buffer);
+
+    GraphicsBufferOrigin bufferOrigin() const;
+    void setBufferOrigin(GraphicsBufferOrigin origin);
+
     SurfaceTexture *texture() const;
 
     bool hasAlphaChannel() const;
@@ -103,6 +110,8 @@ public:
     virtual bool isValid() const = 0;
 
 protected:
+    GraphicsBufferRef m_bufferRef;
+    GraphicsBufferOrigin m_bufferOrigin = GraphicsBufferOrigin::TopLeft;
     QSize m_size;
     bool m_hasAlphaChannel = false;
 

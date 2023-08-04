@@ -9,7 +9,6 @@
 #include "virtual_egl_backend.h"
 #include "core/gbmgraphicsbufferallocator.h"
 #include "libkwineffects/kwinglutils.h"
-#include "platformsupport/scenes/opengl/basiceglsurfacetexture_internal.h"
 #include "platformsupport/scenes/opengl/basiceglsurfacetexture_wayland.h"
 #include "platformsupport/scenes/opengl/eglswapchain.h"
 #include "utils/softwarevsyncmonitor.h"
@@ -162,12 +161,7 @@ void VirtualEglBackend::removeOutput(Output *output)
     m_outputs.erase(output);
 }
 
-std::unique_ptr<SurfaceTexture> VirtualEglBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
-{
-    return std::make_unique<BasicEGLSurfaceTextureInternal>(this, pixmap);
-}
-
-std::unique_ptr<SurfaceTexture> VirtualEglBackend::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
+std::unique_ptr<SurfaceTexture> VirtualEglBackend::createSurfaceTextureWayland(SurfacePixmap *pixmap)
 {
     return std::make_unique<BasicEGLSurfaceTextureWayland>(this, pixmap);
 }

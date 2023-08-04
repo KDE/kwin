@@ -8,7 +8,6 @@
 #include "core/graphicsbufferview.h"
 #include "libkwineffects/kwingltexture.h"
 #include "platformsupport/scenes/opengl/abstract_egl_backend.h"
-#include "scene/surfaceitem_wayland.h"
 #include "utils/common.h"
 
 #include <epoxy/egl.h>
@@ -16,8 +15,7 @@
 namespace KWin
 {
 
-BasicEGLSurfaceTextureWayland::BasicEGLSurfaceTextureWayland(OpenGLBackend *backend,
-                                                             SurfacePixmapWayland *pixmap)
+BasicEGLSurfaceTextureWayland::BasicEGLSurfaceTextureWayland(OpenGLBackend *backend, SurfacePixmap *pixmap)
     : OpenGLSurfaceTextureWayland(backend, pixmap)
 {
 }
@@ -112,7 +110,9 @@ bool BasicEGLSurfaceTextureWayland::loadDmabufTexture(GraphicsBuffer *buffer)
     m_texture->bind();
     glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, static_cast<GLeglImageOES>(image));
     m_texture->unbind();
-    m_texture->setContentTransform(TextureTransform::MirrorY);
+    if (m_pixmap->bufferOrigin() == GraphicsBufferOrigin::TopLeft) {
+        m_texture->setContentTransform(TextureTransform::MirrorY);
+    }
     m_bufferType = BufferType::DmaBuf;
 
     return true;

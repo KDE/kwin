@@ -7,7 +7,6 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "drm_egl_backend.h"
-#include "platformsupport/scenes/opengl/basiceglsurfacetexture_internal.h"
 #include "platformsupport/scenes/opengl/basiceglsurfacetexture_wayland.h"
 // kwin
 #include "drm_abstract_output.h"
@@ -132,12 +131,7 @@ EglContext *EglGbmBackend::contextForGpu(DrmGpu *gpu)
     return context.get();
 }
 
-std::unique_ptr<SurfaceTexture> EglGbmBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
-{
-    return std::make_unique<BasicEGLSurfaceTextureInternal>(this, pixmap);
-}
-
-std::unique_ptr<SurfaceTexture> EglGbmBackend::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
+std::unique_ptr<SurfaceTexture> EglGbmBackend::createSurfaceTextureWayland(SurfacePixmap *pixmap)
 {
     return std::make_unique<BasicEGLSurfaceTextureWayland>(this, pixmap);
 }

@@ -16,7 +16,6 @@
 #include <KDecoration2/Decoration>
 
 #include <QMouseEvent>
-#include <QOpenGLFramebufferObject>
 #include <QWindow>
 
 Q_DECLARE_METATYPE(NET::WindowType)
@@ -364,39 +363,19 @@ void InternalWindow::popupDone()
     m_handle->close();
 }
 
-const std::shared_ptr<QOpenGLFramebufferObject> &InternalWindow::fbo() const
-{
-    return m_fbo;
-}
-
 GraphicsBuffer *InternalWindow::graphicsBuffer() const
 {
     return m_graphicsBufferRef.buffer();
 }
 
-void InternalWindow::present(const std::shared_ptr<QOpenGLFramebufferObject> fbo)
+GraphicsBufferOrigin InternalWindow::graphicsBufferOrigin() const
 {
-    Q_ASSERT(!m_graphicsBufferRef);
-
-    const QSizeF bufferSize = fbo->size() / bufferScale();
-    QRectF geometry(pos(), clientSizeToFrameSize(bufferSize));
-    if (isInteractiveResize()) {
-        geometry = gravitateGeometry(geometry, moveResizeGeometry(), interactiveMoveResizeGravity());
-    }
-
-    commitGeometry(geometry);
-    markAsMapped();
-
-    m_fbo = fbo;
-
-    surfaceItem()->addDamage(QRect(0, 0, fbo->width(), fbo->height()));
+    return m_graphicsBufferOrigin;
 }
 
-void InternalWindow::present(GraphicsBuffer *buffer, const QRegion &damage)
+void InternalWindow::present(const InternalWindowFrame &frame)
 {
-    Q_ASSERT(m_fbo == nullptr);
-
-    const QSize bufferSize = buffer->size() / bufferScale();
+    const QSize bufferSize = frame.buffer->size() / bufferScale();
     QRectF geometry(pos(), clientSizeToFrameSize(bufferSize));
     if (isInteractiveResize()) {
         geometry = gravitateGeometry(geometry, moveResizeGeometry(), interactiveMoveResizeGravity());
@@ -405,9 +384,10 @@ void InternalWindow::present(GraphicsBuffer *buffer, const QRegion &damage)
     commitGeometry(geometry);
     markAsMapped();
 
-    m_graphicsBufferRef = buffer;
+    m_graphicsBufferRef = frame.buffer;
+    m_graphicsBufferOrigin = frame.bufferOrigin;
 
-    surfaceItem()->addDamage(damage);
+    surfaceItem()->addDamage(frame.bufferDamage);
 }
 
 QWindow *InternalWindow::handle() const

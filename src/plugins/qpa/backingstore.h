@@ -9,16 +9,20 @@
 */
 #pragma once
 
+#include <QPointer>
+
 #include <epoxy/egl.h>
 
 #include <qpa/qplatformbackingstore.h>
 
 namespace KWin
 {
+
+class GraphicsBuffer;
+class GraphicsBufferView;
+
 namespace QPA
 {
-
-class BackingStoreSlot;
 
 class BackingStore : public QPlatformBackingStore
 {
@@ -29,15 +33,11 @@ public:
     void flush(QWindow *window, const QRegion &region, const QPoint &offset) override;
     void resize(const QSize &size, const QRegion &staticContents) override;
     void beginPaint(const QRegion &region) override;
+    void endPaint() override;
 
 private:
-    std::shared_ptr<BackingStoreSlot> allocate(const QSize &size);
-    std::shared_ptr<BackingStoreSlot> acquire();
-
-    std::vector<std::shared_ptr<BackingStoreSlot>> m_slots;
-    std::shared_ptr<BackingStoreSlot> m_backBuffer;
-    QSize m_requestedSize;
-    qreal m_requestedDevicePixelRatio = 1;
+    QPointer<GraphicsBuffer> m_buffer;
+    std::unique_ptr<GraphicsBufferView> m_bufferView;
 };
 
 }

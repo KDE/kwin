@@ -172,26 +172,6 @@ SurfacePixmapWayland::SurfacePixmapWayland(SurfaceItemWayland *item, QObject *pa
 {
 }
 
-SurfacePixmapWayland::~SurfacePixmapWayland()
-{
-    setBuffer(nullptr);
-}
-
-SurfaceItemWayland *SurfacePixmapWayland::item() const
-{
-    return m_item;
-}
-
-KWaylandServer::SurfaceInterface *SurfacePixmapWayland::surface() const
-{
-    return m_item->surface();
-}
-
-GraphicsBuffer *SurfacePixmapWayland::buffer() const
-{
-    return m_buffer;
-}
-
 void SurfacePixmapWayland::create()
 {
     update();
@@ -207,23 +187,7 @@ void SurfacePixmapWayland::update()
 
 bool SurfacePixmapWayland::isValid() const
 {
-    return m_buffer;
-}
-
-void SurfacePixmapWayland::setBuffer(GraphicsBuffer *buffer)
-{
-    if (m_buffer == buffer) {
-        return;
-    }
-    if (m_buffer) {
-        m_buffer->unref();
-    }
-    m_buffer = buffer;
-    if (m_buffer) {
-        m_buffer->ref();
-        m_hasAlphaChannel = m_buffer->hasAlphaChannel();
-        m_size = m_buffer->size();
-    }
+    return m_bufferRef;
 }
 
 SurfaceItemXwayland::SurfaceItemXwayland(X11Window *window, Scene *scene, Item *parent)

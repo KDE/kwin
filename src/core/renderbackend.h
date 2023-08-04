@@ -21,8 +21,7 @@ class GraphicsBufferAllocator;
 class Output;
 class OverlayWindow;
 class OutputLayer;
-class SurfacePixmapInternal;
-class SurfacePixmapWayland;
+class SurfacePixmap;
 class SurfacePixmapX11;
 class SurfaceTexture;
 
@@ -50,9 +49,8 @@ public:
     virtual bool testImportBuffer(GraphicsBuffer *buffer);
     virtual QHash<uint32_t, QVector<uint64_t>> supportedFormats() const;
 
-    virtual std::unique_ptr<SurfaceTexture> createSurfaceTextureInternal(SurfacePixmapInternal *pixmap);
     virtual std::unique_ptr<SurfaceTexture> createSurfaceTextureX11(SurfacePixmapX11 *pixmap);
-    virtual std::unique_ptr<SurfaceTexture> createSurfaceTextureWayland(SurfacePixmapWayland *pixmap);
+    virtual std::unique_ptr<SurfaceTexture> createSurfaceTextureWayland(SurfacePixmap *pixmap);
 };
 
 } // namespace KWin

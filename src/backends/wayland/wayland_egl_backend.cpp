@@ -11,7 +11,6 @@
 #include "wayland_egl_backend.h"
 #include "core/gbmgraphicsbufferallocator.h"
 #include "libkwineffects/kwinglutils.h"
-#include "platformsupport/scenes/opengl/basiceglsurfacetexture_internal.h"
 #include "platformsupport/scenes/opengl/basiceglsurfacetexture_wayland.h"
 #include "platformsupport/scenes/opengl/eglswapchain.h"
 #include "wayland_backend.h"
@@ -306,12 +305,7 @@ std::pair<std::shared_ptr<KWin::GLTexture>, ColorDescription> WaylandEglBackend:
     return std::make_pair(m_outputs.at(output).primaryLayer->texture(), ColorDescription::sRGB);
 }
 
-std::unique_ptr<SurfaceTexture> WaylandEglBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
-{
-    return std::make_unique<BasicEGLSurfaceTextureInternal>(this, pixmap);
-}
-
-std::unique_ptr<SurfaceTexture> WaylandEglBackend::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
+std::unique_ptr<SurfaceTexture> WaylandEglBackend::createSurfaceTextureWayland(SurfacePixmap *pixmap)
 {
     return std::make_unique<BasicEGLSurfaceTextureWayland>(this, pixmap);
 }

@@ -11,18 +11,16 @@
 namespace KWin
 {
 
-class SurfacePixmapWayland;
-
 class KWIN_EXPORT QPainterSurfaceTextureWayland : public QPainterSurfaceTexture
 {
 public:
-    QPainterSurfaceTextureWayland(QPainterBackend *backend, SurfacePixmapWayland *pixmap);
+    QPainterSurfaceTextureWayland(QPainterBackend *backend, SurfacePixmap *pixmap);
 
     bool create() override;
     void update(const QRegion &region) override;
 
 private:
-    SurfacePixmapWayland *m_pixmap;
+    SurfacePixmap *m_pixmap;
 };
 
 } // namespace KWin

@@ -12,10 +12,15 @@
 #include "core/graphicsbuffer.h"
 #include "window.h"
 
-class QOpenGLFramebufferObject;
-
 namespace KWin
 {
+
+struct InternalWindowFrame
+{
+    GraphicsBuffer *buffer = nullptr;
+    QRegion bufferDamage;
+    GraphicsBufferOrigin bufferOrigin = GraphicsBufferOrigin::TopLeft;
+};
 
 class KWIN_EXPORT InternalWindow : public Window
 {
@@ -60,11 +65,10 @@ public:
     void pointerEnterEvent(const QPointF &globalPos) override;
     void pointerLeaveEvent() override;
 
-    const std::shared_ptr<QOpenGLFramebufferObject> &fbo() const;
     GraphicsBuffer *graphicsBuffer() const;
+    GraphicsBufferOrigin graphicsBufferOrigin() const;
 
-    void present(const std::shared_ptr<QOpenGLFramebufferObject> fbo);
-    void present(GraphicsBuffer *buffer, const QRegion &damage);
+    void present(const InternalWindowFrame &frame);
     qreal bufferScale() const;
     QWindow *handle() const;
 
@@ -93,8 +97,8 @@ private:
     NET::WindowType m_windowType = NET::Normal;
     Qt::WindowFlags m_internalWindowFlags = Qt::WindowFlags();
     bool m_userNoBorder = false;
-    std::shared_ptr<QOpenGLFramebufferObject> m_fbo;
     GraphicsBufferRef m_graphicsBufferRef;
+    GraphicsBufferOrigin m_graphicsBufferOrigin;
 
     Q_DISABLE_COPY(InternalWindow)
 };

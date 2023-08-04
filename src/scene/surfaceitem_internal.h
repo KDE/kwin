@@ -6,10 +6,7 @@
 
 #pragma once
 
-#include "core/graphicsbuffer.h"
 #include "scene/surfaceitem.h"
-
-class QOpenGLFramebufferObject;
 
 namespace KWin
 {
@@ -47,17 +44,12 @@ class KWIN_EXPORT SurfacePixmapInternal final : public SurfacePixmap
 public:
     explicit SurfacePixmapInternal(SurfaceItemInternal *item, QObject *parent = nullptr);
 
-    QOpenGLFramebufferObject *fbo() const;
-    GraphicsBuffer *graphicsBuffer() const;
-
     void create() override;
     void update() override;
     bool isValid() const override;
 
 private:
     SurfaceItemInternal *m_item;
-    std::shared_ptr<QOpenGLFramebufferObject> m_fbo;
-    GraphicsBufferRef m_graphicsBufferRef;
 };
 
 } // namespace KWin

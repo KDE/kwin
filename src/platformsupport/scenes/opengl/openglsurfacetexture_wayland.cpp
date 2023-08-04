@@ -9,7 +9,7 @@
 namespace KWin
 {
 
-OpenGLSurfaceTextureWayland::OpenGLSurfaceTextureWayland(OpenGLBackend *backend, SurfacePixmapWayland *pixmap)
+OpenGLSurfaceTextureWayland::OpenGLSurfaceTextureWayland(OpenGLBackend *backend, SurfacePixmap *pixmap)
     : OpenGLSurfaceTexture(backend)
     , m_pixmap(pixmap)
 {

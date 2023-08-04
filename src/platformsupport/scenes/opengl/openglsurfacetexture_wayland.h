@@ -11,15 +11,15 @@
 namespace KWin
 {
 
-class SurfacePixmapWayland;
+class SurfacePixmap;
 
 class KWIN_EXPORT OpenGLSurfaceTextureWayland : public OpenGLSurfaceTexture
 {
 public:
-    OpenGLSurfaceTextureWayland(OpenGLBackend *backend, SurfacePixmapWayland *pixmap);
+    OpenGLSurfaceTextureWayland(OpenGLBackend *backend, SurfacePixmap *pixmap);
 
 protected:
-    SurfacePixmapWayland *m_pixmap;
+    SurfacePixmap *m_pixmap;
 };
 
 } // namespace KWin

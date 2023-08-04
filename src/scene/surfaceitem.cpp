@@ -237,6 +237,33 @@ SurfacePixmap::SurfacePixmap(std::unique_ptr<SurfaceTexture> &&texture, QObject 
 {
 }
 
+GraphicsBuffer *SurfacePixmap::buffer() const
+{
+    return m_bufferRef.buffer();
+}
+
+void SurfacePixmap::setBuffer(GraphicsBuffer *buffer)
+{
+    if (m_bufferRef.buffer() == buffer) {
+        return;
+    }
+    m_bufferRef = buffer;
+    if (m_bufferRef) {
+        m_hasAlphaChannel = m_bufferRef->hasAlphaChannel();
+        m_size = m_bufferRef->size();
+    }
+}
+
+GraphicsBufferOrigin SurfacePixmap::bufferOrigin() const
+{
+    return m_bufferOrigin;
+}
+
+void SurfacePixmap::setBufferOrigin(GraphicsBufferOrigin origin)
+{
+    m_bufferOrigin = origin;
+}
+
 void SurfacePixmap::update()
 {
 }

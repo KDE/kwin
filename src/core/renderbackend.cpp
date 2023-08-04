@@ -47,17 +47,12 @@ QHash<uint32_t, QVector<uint64_t>> RenderBackend::supportedFormats() const
     return QHash<uint32_t, QVector<uint64_t>>{{DRM_FORMAT_XRGB8888, QVector<uint64_t>{DRM_FORMAT_MOD_LINEAR}}};
 }
 
-std::unique_ptr<SurfaceTexture> RenderBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
-{
-    return nullptr;
-}
-
 std::unique_ptr<SurfaceTexture> RenderBackend::createSurfaceTextureX11(SurfacePixmapX11 *pixmap)
 {
     return nullptr;
 }
 
-std::unique_ptr<SurfaceTexture> RenderBackend::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
+std::unique_ptr<SurfaceTexture> RenderBackend::createSurfaceTextureWayland(SurfacePixmap *pixmap)
 {
     return nullptr;
 }

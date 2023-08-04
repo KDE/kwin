@@ -14,17 +14,37 @@
 
 #include <qpa/qplatformopenglcontext.h>
 
+#include <unordered_map>
+
 namespace KWin
 {
 
+class GLFramebuffer;
+class GLTexture;
+class GraphicsBuffer;
 class EglDisplay;
 class EglContext;
 
 namespace QPA
 {
 
-class EGLPlatformContext : public QPlatformOpenGLContext
+class Window;
+
+class EGLRenderTarget
 {
+public:
+    EGLRenderTarget(GraphicsBuffer *buffer, std::unique_ptr<GLFramebuffer> fbo, std::shared_ptr<GLTexture> texture);
+    ~EGLRenderTarget();
+
+    GraphicsBuffer *buffer;
+    std::unique_ptr<GLFramebuffer> fbo;
+    std::shared_ptr<GLTexture> texture;
+};
+
+class EGLPlatformContext : public QObject, public QPlatformOpenGLContext
+{
+    Q_OBJECT
+
 public:
     EGLPlatformContext(QOpenGLContext *context, EglDisplay *display);
     ~EGLPlatformContext() override;
@@ -43,9 +63,12 @@ private:
     void updateFormatFromContext();
 
     EglDisplay *m_eglDisplay = nullptr;
+    QSurfaceFormat m_format;
     EGLConfig m_config = EGL_NO_CONFIG_KHR;
     std::unique_ptr<EglContext> m_eglContext;
-    QSurfaceFormat m_format;
+    std::unordered_map<GraphicsBuffer *, std::shared_ptr<EGLRenderTarget>> m_renderTargets;
+    std::vector<std::shared_ptr<EGLRenderTarget>> m_zombieRenderTargets;
+    std::shared_ptr<EGLRenderTarget> m_current;
 };
 
 } // namespace QPA

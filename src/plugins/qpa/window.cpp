@@ -8,14 +8,15 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "window.h"
-#include "core/outputbackend.h"
-#include "eglhelpers.h"
-
+#include "composite.h"
+#include "core/renderbackend.h"
+#include "core/shmgraphicsbufferallocator.h"
 #include "internalwindow.h"
+#include "swapchain.h"
 
 #include <logging.h>
 
-#include <QOpenGLFramebufferObject>
+#include <libdrm/drm_fourcc.h>
 #include <qpa/qwindowsysteminterface.h>
 
 namespace KWin
@@ -35,6 +36,34 @@ Window::Window(QWindow *window)
 Window::~Window()
 {
     unmap();
+}
+
+Swapchain *Window::swapchain()
+{
+    const QSize nativeSize = geometry().size() * devicePixelRatio();
+    if (!m_swapchain || m_swapchain->size() != nativeSize) {
+        const bool software = window()->surfaceType() == QSurface::RasterSurface; // RasterGLSurface is unsupported by us
+
+        GraphicsBufferAllocator *allocator;
+        if (software) {
+            static ShmGraphicsBufferAllocator shmAllocator;
+            allocator = &shmAllocator;
+        } else {
+            allocator = Compositor::self()->backend()->graphicsBufferAllocator();
+        }
+
+        m_swapchain = std::make_unique<Swapchain>(allocator, GraphicsBufferOptions{
+                                                                 .size = nativeSize,
+                                                                 .format = DRM_FORMAT_ARGB8888,
+                                                                 .software = software,
+                                                             });
+    }
+    return m_swapchain.get();
+}
+
+void Window::invalidateSurface()
+{
+    m_swapchain.reset();
 }
 
 void Window::setVisible(bool visible)
@@ -64,12 +93,6 @@ void Window::setGeometry(const QRect &rect)
     QPlatformWindow::setGeometry(rect);
 
     if (window()->isVisible() && rect.isValid()) {
-        const QSize nativeSize = rect.size() * m_scale;
-        if (m_contentFBO) {
-            if (m_contentFBO->size() != nativeSize) {
-                m_resized = true;
-            }
-        }
         QWindowSystemInterface::handleGeometryChange(window(), geometry());
     }
 
@@ -88,43 +111,9 @@ qreal Window::devicePixelRatio() const
     return m_scale;
 }
 
-void Window::bindContentFBO()
-{
-    if (m_resized || !m_contentFBO) {
-        createFBO();
-    }
-    m_contentFBO->bind();
-}
-
-const std::shared_ptr<QOpenGLFramebufferObject> &Window::contentFBO() const
-{
-    return m_contentFBO;
-}
-
-std::shared_ptr<QOpenGLFramebufferObject> Window::swapFBO()
-{
-    std::shared_ptr<QOpenGLFramebufferObject> fbo;
-    m_contentFBO.swap(fbo);
-    return fbo;
-}
-
 InternalWindow *Window::internalWindow() const
 {
     return m_handle;
-}
-
-void Window::createFBO()
-{
-    const QRect &r = geometry();
-    if (m_contentFBO && r.size().isEmpty()) {
-        return;
-    }
-    const QSize nativeSize = r.size() * m_scale;
-    m_contentFBO.reset(new QOpenGLFramebufferObject(nativeSize.width(), nativeSize.height(), QOpenGLFramebufferObject::CombinedDepthStencil));
-    if (!m_contentFBO->isValid()) {
-        qCWarning(KWIN_QPA) << "Content FBO is not valid";
-    }
-    m_resized = false;
 }
 
 void Window::map()
@@ -145,7 +134,7 @@ void Window::unmap()
     m_handle->destroyWindow();
     m_handle = nullptr;
 
-    m_contentFBO = nullptr;
+    invalidateSurface();
 }
 
 EGLSurface Window::eglSurface() const

@@ -17,7 +17,7 @@ class GraphicsBuffer;
 class KWIN_EXPORT BasicEGLSurfaceTextureWayland : public OpenGLSurfaceTextureWayland
 {
 public:
-    BasicEGLSurfaceTextureWayland(OpenGLBackend *backend, SurfacePixmapWayland *pixmap);
+    BasicEGLSurfaceTextureWayland(OpenGLBackend *backend, SurfacePixmap *pixmap);
     ~BasicEGLSurfaceTextureWayland() override;
 
     AbstractEglBackend *backend() const;

@@ -10,40 +10,17 @@
 #include "backingstore.h"
 #include "core/graphicsbuffer.h"
 #include "core/graphicsbufferview.h"
-#include "core/shmgraphicsbufferallocator.h"
 #include "internalwindow.h"
+#include "logging.h"
+#include "swapchain.h"
 #include "window.h"
 
 #include <QPainter>
-
-#include <libdrm/drm_fourcc.h>
 
 namespace KWin
 {
 namespace QPA
 {
-
-class BackingStoreSlot
-{
-public:
-    explicit BackingStoreSlot(GraphicsBuffer *graphicsBuffer);
-    ~BackingStoreSlot();
-
-    GraphicsBuffer *graphicsBuffer;
-    std::unique_ptr<GraphicsBufferView> graphicsBufferView;
-};
-
-BackingStoreSlot::BackingStoreSlot(GraphicsBuffer *graphicsBuffer)
-    : graphicsBuffer(graphicsBuffer)
-    , graphicsBufferView(std::make_unique<GraphicsBufferView>(graphicsBuffer, GraphicsBuffer::Read | GraphicsBuffer::Write))
-{
-}
-
-BackingStoreSlot::~BackingStoreSlot()
-{
-    graphicsBufferView.reset();
-    graphicsBuffer->drop();
-}
 
 BackingStore::BackingStore(QWindow *window)
     : QPlatformBackingStore(window)
@@ -52,68 +29,40 @@ BackingStore::BackingStore(QWindow *window)
 
 QPaintDevice *BackingStore::paintDevice()
 {
-    return m_backBuffer->graphicsBufferView->image();
-}
-
-std::shared_ptr<BackingStoreSlot> BackingStore::allocate(const QSize &size)
-{
-    ShmGraphicsBufferAllocator allocator;
-
-    GraphicsBuffer *buffer = allocator.allocate(GraphicsBufferOptions{
-        .size = size,
-        .format = DRM_FORMAT_ARGB8888,
-        .software = true,
-    });
-    if (!buffer) {
-        return nullptr;
-    }
-
-    auto slot = std::make_shared<BackingStoreSlot>(buffer);
-    m_slots.push_back(slot);
-
-    return slot;
-}
-
-std::shared_ptr<BackingStoreSlot> BackingStore::acquire()
-{
-    const QSize bufferSize = m_requestedSize * m_requestedDevicePixelRatio;
-    if (!m_slots.empty()) {
-        const auto front = m_slots.front();
-        if (front->graphicsBuffer->size() == bufferSize) {
-            for (const auto &slot : m_slots) {
-                if (!slot->graphicsBuffer->isReferenced()) {
-                    return slot;
-                }
-            }
-            return allocate(bufferSize);
-        }
-    }
-
-    m_slots.clear();
-    return allocate(bufferSize);
+    return m_bufferView->image();
 }
 
 void BackingStore::resize(const QSize &size, const QRegion &staticContents)
 {
-    m_requestedSize = size;
-
-    const QPlatformWindow *platformWindow = static_cast<QPlatformWindow *>(window()->handle());
-    m_requestedDevicePixelRatio = platformWindow->devicePixelRatio();
+    QPlatformWindow *platformWindow = static_cast<QPlatformWindow *>(window()->handle());
+    platformWindow->invalidateSurface();
 }
 
 void BackingStore::beginPaint(const QRegion &region)
 {
-    const auto oldBackBuffer = m_backBuffer;
-    m_backBuffer = acquire();
+    Window *platformWindow = static_cast<Window *>(window()->handle());
+    Swapchain *swapchain = platformWindow->swapchain();
 
-    if (oldBackBuffer && oldBackBuffer != m_backBuffer && oldBackBuffer->graphicsBuffer->size() == m_backBuffer->graphicsBuffer->size()) {
-        const GraphicsBufferView *oldView = oldBackBuffer->graphicsBufferView.get();
-        GraphicsBufferView *view = m_backBuffer->graphicsBufferView.get();
-        std::memcpy(view->image()->bits(), oldView->image()->constBits(), oldView->image()->sizeInBytes());
+    const auto oldBuffer = m_buffer;
+    m_buffer = swapchain->acquire();
+    if (!m_buffer) {
+        qCCritical(KWIN_QPA, "Failed to acquire a graphics buffer for the backing store");
+        return;
     }
 
-    QImage *image = m_backBuffer->graphicsBufferView->image();
-    image->setDevicePixelRatio(m_requestedDevicePixelRatio);
+    m_bufferView = std::make_unique<GraphicsBufferView>(m_buffer, GraphicsBuffer::Read | GraphicsBuffer::Write);
+    if (m_bufferView->isNull()) {
+        qCCritical(KWIN_QPA) << "Failed to map a graphics buffer for the backing store";
+        return;
+    }
+
+    if (oldBuffer && oldBuffer != m_buffer && oldBuffer->size() == m_buffer->size()) {
+        const GraphicsBufferView oldView(oldBuffer, GraphicsBuffer::Read);
+        std::memcpy(m_bufferView->image()->bits(), oldView.image()->constBits(), oldView.image()->sizeInBytes());
+    }
+
+    QImage *image = m_bufferView->image();
+    image->setDevicePixelRatio(platformWindow->devicePixelRatio());
 
     if (image->hasAlphaChannel()) {
         QPainter p(image);
@@ -125,6 +74,11 @@ void BackingStore::beginPaint(const QRegion &region)
     }
 }
 
+void BackingStore::endPaint()
+{
+    m_bufferView.reset();
+}
+
 void BackingStore::flush(QWindow *window, const QRegion &region, const QPoint &offset)
 {
     Window *platformWindow = static_cast<Window *>(window->handle());
@@ -133,15 +87,16 @@ void BackingStore::flush(QWindow *window, const QRegion &region, const QPoint &o
         return;
     }
 
+    const qreal scale = platformWindow->devicePixelRatio();
     QRegion bufferDamage;
     for (const QRect &rect : region) {
-        bufferDamage |= QRect(std::floor(rect.x() * m_requestedDevicePixelRatio),
-                              std::floor(rect.y() * m_requestedDevicePixelRatio),
-                              std::ceil(rect.width() * m_requestedDevicePixelRatio),
-                              std::ceil(rect.height() * m_requestedDevicePixelRatio));
+        bufferDamage |= QRectF(rect.x() * scale, rect.y() * scale, rect.width() * scale, rect.height() * scale).toAlignedRect();
     }
 
-    internalWindow->present(m_backBuffer->graphicsBuffer, bufferDamage);
+    internalWindow->present(InternalWindowFrame{
+        .buffer = m_buffer,
+        .bufferDamage = bufferDamage,
+    });
 }
 
 }

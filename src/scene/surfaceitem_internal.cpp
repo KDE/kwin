@@ -9,8 +9,6 @@
 #include "core/renderbackend.h"
 #include "internalwindow.h"
 
-#include <QOpenGLFramebufferObject>
-
 namespace KWin
 {
 
@@ -57,19 +55,9 @@ void SurfaceItemInternal::handleBufferGeometryChanged(const QRectF &old)
 }
 
 SurfacePixmapInternal::SurfacePixmapInternal(SurfaceItemInternal *item, QObject *parent)
-    : SurfacePixmap(Compositor::self()->backend()->createSurfaceTextureInternal(this), parent)
+    : SurfacePixmap(Compositor::self()->backend()->createSurfaceTextureWayland(this), parent)
     , m_item(item)
 {
-}
-
-QOpenGLFramebufferObject *SurfacePixmapInternal::fbo() const
-{
-    return m_fbo.get();
-}
-
-GraphicsBuffer *SurfacePixmapInternal::graphicsBuffer() const
-{
-    return m_graphicsBufferRef.buffer();
 }
 
 void SurfacePixmapInternal::create()
@@ -80,21 +68,13 @@ void SurfacePixmapInternal::create()
 void SurfacePixmapInternal::update()
 {
     const InternalWindow *window = m_item->window();
-
-    if (window->fbo()) {
-        m_fbo = window->fbo();
-        m_size = m_fbo->size();
-        m_hasAlphaChannel = true;
-    } else if (window->graphicsBuffer()) {
-        m_graphicsBufferRef = window->graphicsBuffer();
-        m_size = m_graphicsBufferRef->size();
-        m_hasAlphaChannel = m_graphicsBufferRef->hasAlphaChannel();
-    }
+    setBuffer(window->graphicsBuffer());
+    setBufferOrigin(window->graphicsBufferOrigin());
 }
 
 bool SurfacePixmapInternal::isValid() const
 {
-    return m_fbo || m_graphicsBufferRef;
+    return m_bufferRef;
 }
 
 } // namespace KWin

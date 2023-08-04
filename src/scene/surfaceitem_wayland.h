@@ -65,21 +65,13 @@ class KWIN_EXPORT SurfacePixmapWayland final : public SurfacePixmap
 
 public:
     explicit SurfacePixmapWayland(SurfaceItemWayland *item, QObject *parent = nullptr);
-    ~SurfacePixmapWayland() override;
-
-    SurfaceItemWayland *item() const;
-    KWaylandServer::SurfaceInterface *surface() const;
-    GraphicsBuffer *buffer() const;
 
     void create() override;
     void update() override;
     bool isValid() const override;
 
 private:
-    void setBuffer(GraphicsBuffer *buffer);
-
     SurfaceItemWayland *m_item;
-    GraphicsBuffer *m_buffer = nullptr;
 };
 
 /**

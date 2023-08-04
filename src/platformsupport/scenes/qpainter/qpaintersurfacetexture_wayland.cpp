@@ -6,15 +6,13 @@
 
 #include "qpaintersurfacetexture_wayland.h"
 #include "core/graphicsbufferview.h"
-#include "scene/surfaceitem_wayland.h"
 
 #include <QPainter>
 
 namespace KWin
 {
 
-QPainterSurfaceTextureWayland::QPainterSurfaceTextureWayland(QPainterBackend *backend,
-                                                             SurfacePixmapWayland *pixmap)
+QPainterSurfaceTextureWayland::QPainterSurfaceTextureWayland(QPainterBackend *backend, SurfacePixmap *pixmap)
     : QPainterSurfaceTexture(backend)
     , m_pixmap(pixmap)
 {

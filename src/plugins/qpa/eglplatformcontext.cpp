@@ -12,25 +12,36 @@
 #include "core/outputbackend.h"
 #include "eglhelpers.h"
 #include "internalwindow.h"
+#include "libkwineffects/kwinglutils.h"
 #include "offscreensurface.h"
 #include "platformsupport/scenes/opengl/eglcontext.h"
 #include "platformsupport/scenes/opengl/egldisplay.h"
-#include "utils/egl_context_attribute_builder.h"
+#include "swapchain.h"
 #include "window.h"
 
 #include "logging.h"
 
 #include <QOpenGLContext>
-#include <QOpenGLFramebufferObject>
 
 #include <private/qopenglcontext_p.h>
-
-#include <memory>
 
 namespace KWin
 {
 namespace QPA
 {
+
+EGLRenderTarget::EGLRenderTarget(GraphicsBuffer *buffer, std::unique_ptr<GLFramebuffer> fbo, std::shared_ptr<GLTexture> texture)
+    : buffer(buffer)
+    , fbo(std::move(fbo))
+    , texture(std::move(texture))
+{
+}
+
+EGLRenderTarget::~EGLRenderTarget()
+{
+    fbo.reset();
+    texture.reset();
+}
 
 EGLPlatformContext::EGLPlatformContext(QOpenGLContext *context, EglDisplay *display)
     : m_eglDisplay(display)
@@ -38,7 +49,14 @@ EGLPlatformContext::EGLPlatformContext(QOpenGLContext *context, EglDisplay *disp
     create(context->format(), kwinApp()->outputBackend()->sceneEglGlobalShareContext());
 }
 
-EGLPlatformContext::~EGLPlatformContext() = default;
+EGLPlatformContext::~EGLPlatformContext()
+{
+    if (!m_renderTargets.empty() || !m_zombieRenderTargets.empty()) {
+        m_eglContext->makeCurrent();
+        m_renderTargets.clear();
+        m_zombieRenderTargets.clear();
+    }
+}
 
 static EGLSurface eglSurfaceForPlatformSurface(QPlatformSurface *surface)
 {
@@ -57,6 +75,8 @@ bool EGLPlatformContext::makeCurrent(QPlatformSurface *surface)
         return false;
     }
 
+    m_zombieRenderTargets.clear();
+
     if (surface->surface()->surfaceClass() == QSurface::Window) {
         // QOpenGLContextPrivate::setCurrentContext will be called after this
         // method returns, but that's too late, as we need a current context in
@@ -64,7 +84,40 @@ bool EGLPlatformContext::makeCurrent(QPlatformSurface *surface)
         QOpenGLContextPrivate::setCurrentContext(context());
 
         Window *window = static_cast<Window *>(surface);
-        window->bindContentFBO();
+        Swapchain *swapchain = window->swapchain();
+
+        GraphicsBuffer *buffer = swapchain->acquire();
+        if (!buffer) {
+            return false;
+        }
+
+        auto it = m_renderTargets.find(buffer);
+        if (it != m_renderTargets.end()) {
+            m_current = it->second;
+        } else {
+            std::shared_ptr<GLTexture> texture = m_eglContext->importDmaBufAsTexture(*buffer->dmabufAttributes());
+            if (!texture) {
+                return false;
+            }
+
+            std::unique_ptr<GLFramebuffer> fbo = std::make_unique<GLFramebuffer>(texture.get(), GLFramebuffer::CombinedDepthStencil);
+            if (!fbo->valid()) {
+                return false;
+            }
+
+            auto target = std::make_shared<EGLRenderTarget>(buffer, std::move(fbo), std::move(texture));
+            m_renderTargets[buffer] = target;
+            QObject::connect(buffer, &QObject::destroyed, this, [this, buffer]() {
+                if (auto it = m_renderTargets.find(buffer); it != m_renderTargets.end()) {
+                    m_zombieRenderTargets.push_back(std::move(it->second));
+                    m_renderTargets.erase(it);
+                }
+            });
+
+            m_current = target;
+        }
+
+        glBindFramebuffer(GL_FRAMEBUFFER, m_current->fbo->handle());
     }
 
     return true;
@@ -103,19 +156,24 @@ void EGLPlatformContext::swapBuffers(QPlatformSurface *surface)
         if (!internalWindow) {
             return;
         }
-        glFlush();
-        auto fbo = window->swapFBO();
-        window->bindContentFBO();
-        internalWindow->present(fbo);
+
+        glFlush(); // We need to flush pending rendering commands manually
+
+        internalWindow->present(InternalWindowFrame{
+            .buffer = m_current->buffer,
+            .bufferDamage = QRect(QPoint(0, 0), m_current->buffer->size()),
+            .bufferOrigin = GraphicsBufferOrigin::BottomLeft,
+        });
+
+        m_current.reset();
     }
 }
 
 GLuint EGLPlatformContext::defaultFramebufferObject(QPlatformSurface *surface) const
 {
     if (Window *window = dynamic_cast<Window *>(surface)) {
-        const auto &fbo = window->contentFBO();
-        if (fbo) {
-            return fbo->handle();
+        if (m_current) {
+            return m_current->fbo->handle();
         }
         qCDebug(KWIN_QPA) << "No default framebuffer object for internal window";
     }
