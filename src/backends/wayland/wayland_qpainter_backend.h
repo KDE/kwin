@@ -81,7 +81,7 @@ public:
     explicit WaylandQPainterBackend(WaylandBackend *b);
     ~WaylandQPainterBackend() override;
 
-    GraphicsBufferAllocator *graphicsBufferAllocator() const;
+    GraphicsBufferAllocator *graphicsBufferAllocator() const override;
 
     void present(Output *output) override;
     OutputLayer *primaryLayer(Output *output) override;

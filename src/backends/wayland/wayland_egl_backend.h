@@ -91,7 +91,7 @@ public:
     ~WaylandEglBackend() override;
 
     WaylandBackend *backend() const;
-    GraphicsBufferAllocator *graphicsBufferAllocator() const;
+    GraphicsBufferAllocator *graphicsBufferAllocator() const override;
 
     std::unique_ptr<SurfaceTexture> createSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     std::unique_ptr<SurfaceTexture> createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;

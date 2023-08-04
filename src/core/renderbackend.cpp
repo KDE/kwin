@@ -32,6 +32,11 @@ bool RenderBackend::checkGraphicsReset()
     return false;
 }
 
+GraphicsBufferAllocator *RenderBackend::graphicsBufferAllocator() const
+{
+    return nullptr;
+}
+
 bool RenderBackend::testImportBuffer(GraphicsBuffer *buffer)
 {
     return false;

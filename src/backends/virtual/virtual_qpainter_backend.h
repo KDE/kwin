@@ -50,7 +50,7 @@ public:
     VirtualQPainterBackend(VirtualBackend *backend);
     ~VirtualQPainterBackend() override;
 
-    GraphicsBufferAllocator *graphicsBufferAllocator() const;
+    GraphicsBufferAllocator *graphicsBufferAllocator() const override;
 
     void present(Output *output) override;
     VirtualQPainterLayer *primaryLayer(Output *output) override;

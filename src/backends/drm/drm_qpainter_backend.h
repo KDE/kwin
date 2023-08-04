@@ -28,6 +28,8 @@ public:
     DrmQPainterBackend(DrmBackend *backend);
     ~DrmQPainterBackend();
 
+    GraphicsBufferAllocator *graphicsBufferAllocator() const override;
+
     void present(Output *output) override;
     OutputLayer *primaryLayer(Output *output) override;
     OutputLayer *cursorLayer(Output *output) override;

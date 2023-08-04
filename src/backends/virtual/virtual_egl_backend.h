@@ -59,7 +59,7 @@ public:
     void init() override;
 
     VirtualBackend *backend() const;
-    GraphicsBufferAllocator *graphicsBufferAllocator() const;
+    GraphicsBufferAllocator *graphicsBufferAllocator() const override;
 
 private:
     bool initializeEgl();

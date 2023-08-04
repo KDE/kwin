@@ -17,6 +17,7 @@ namespace KWin
 {
 
 class GraphicsBuffer;
+class GraphicsBufferAllocator;
 class Output;
 class OverlayWindow;
 class OutputLayer;
@@ -43,6 +44,8 @@ public:
     virtual OutputLayer *primaryLayer(Output *output) = 0;
     virtual OutputLayer *cursorLayer(Output *output);
     virtual void present(Output *output) = 0;
+
+    virtual GraphicsBufferAllocator *graphicsBufferAllocator() const;
 
     virtual bool testImportBuffer(GraphicsBuffer *buffer);
     virtual QHash<uint32_t, QVector<uint64_t>> supportedFormats() const;

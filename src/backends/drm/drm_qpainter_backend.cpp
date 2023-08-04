@@ -8,6 +8,7 @@
 */
 #include "drm_qpainter_backend.h"
 #include "drm_backend.h"
+#include "drm_gpu.h"
 #include "drm_output.h"
 #include "drm_pipeline.h"
 #include "drm_qpainter_layer.h"
@@ -29,6 +30,11 @@ DrmQPainterBackend::~DrmQPainterBackend()
 {
     m_backend->releaseBuffers();
     m_backend->setRenderBackend(nullptr);
+}
+
+GraphicsBufferAllocator *DrmQPainterBackend::graphicsBufferAllocator() const
+{
+    return m_backend->primaryGpu()->graphicsBufferAllocator();
 }
 
 void DrmQPainterBackend::present(Output *output)
