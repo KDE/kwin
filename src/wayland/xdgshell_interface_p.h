@@ -30,7 +30,7 @@ public:
     static XdgShellInterfacePrivate *get(XdgShellInterface *shell);
 
     XdgShellInterface *q;
-    Display *display;
+    Display *display = nullptr;
     QMap<quint32, QTimer *> pings;
 
 protected:
@@ -100,7 +100,7 @@ public:
     void reset();
 
     XdgSurfaceInterface *q;
-    XdgShellInterface *shell;
+    XdgShellInterface *shell = nullptr;
     QPointer<XdgToplevelInterface> toplevel;
     QPointer<XdgPopupInterface> popup;
     QPointer<SurfaceInterface> surface;
@@ -179,7 +179,7 @@ public:
     void reset();
 
     XdgPopupInterface *q;
-    SurfaceInterface *parentSurface;
+    SurfaceInterface *parentSurface = nullptr;
     XdgSurfaceInterface *xdgSurface;
     XdgPositioner positioner;
 
