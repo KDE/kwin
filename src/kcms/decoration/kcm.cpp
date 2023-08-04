@@ -52,6 +52,10 @@ KCMKWinDecoration::KCMKWinDecoration(QObject *parent, const KPluginMetaData &met
     m_proxyThemesModel->setSortCaseSensitivity(Qt::CaseInsensitive);
     m_proxyThemesModel->sort(0);
 
+    connect(m_proxyThemesModel, &QSortFilterProxyModel::rowsInserted, this, &KCMKWinDecoration::themeChanged);
+    connect(m_proxyThemesModel, &QSortFilterProxyModel::rowsRemoved, this, &KCMKWinDecoration::themeChanged);
+    connect(m_proxyThemesModel, &QSortFilterProxyModel::modelReset, this, &KCMKWinDecoration::themeChanged);
+
     connect(m_data->settings(), &KWinDecorationSettings::themeChanged, this, &KCMKWinDecoration::themeChanged);
     connect(m_data->settings(), &KWinDecorationSettings::borderSizeChanged, this, &KCMKWinDecoration::borderSizeChanged);
 
