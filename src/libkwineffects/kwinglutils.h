@@ -408,6 +408,11 @@ inline GLShader *ShaderBinder::shader()
 class KWINGLUTILS_EXPORT GLFramebuffer
 {
 public:
+    enum Attachment {
+        NoAttachment,
+        CombinedDepthStencil,
+    };
+
     /**
      * Constructs a GLFramebuffer
      * @since 5.13
@@ -420,7 +425,7 @@ public:
      *
      * @param colorAttachment texture where the scene will be rendered onto
      */
-    explicit GLFramebuffer(GLTexture *colorAttachment);
+    explicit GLFramebuffer(GLTexture *colorAttachment, Attachment attachment = NoAttachment);
 
     /**
      * Constructs a wrapper for an already created framebuffer object. The GLFramebuffer
@@ -504,7 +509,8 @@ public:
     GLTexture *colorAttachment() const;
 
 protected:
-    void initFBO(GLTexture *colorAttachment);
+    void initColorAttachment(GLTexture *colorAttachment);
+    void initDepthStencilAttachment();
 
 private:
     bool bind();
@@ -512,10 +518,14 @@ private:
     friend void KWin::cleanupGL();
     static void cleanup();
     static bool sSupported;
+    static bool sSupportsPackedDepthStencil;
+    static bool sSupportsDepth24;
     static bool s_blitSupported;
     static QStack<GLFramebuffer *> s_fbos;
 
     GLuint mFramebuffer = 0;
+    GLuint mDepthBuffer = 0;
+    GLuint mStencilBuffer = 0;
     QSize mSize;
     bool mValid = false;
     bool mForeign = false;

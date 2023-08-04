@@ -1046,6 +1046,8 @@ std::unique_ptr<GLShader> ShaderManager::loadShaderFromCode(const QByteArray &ve
 
 /***  GLFramebuffer  ***/
 bool GLFramebuffer::sSupported = false;
+bool GLFramebuffer::sSupportsPackedDepthStencil = false;
+bool GLFramebuffer::sSupportsDepth24 = false;
 bool GLFramebuffer::s_blitSupported = false;
 QStack<GLFramebuffer *> GLFramebuffer::s_fbos = QStack<GLFramebuffer *>();
 
@@ -1053,10 +1055,12 @@ void GLFramebuffer::initStatic()
 {
     if (GLPlatform::instance()->isGLES()) {
         sSupported = true;
+        sSupportsPackedDepthStencil = hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_OES_packed_depth_stencil"));
+        sSupportsDepth24 = hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_OES_depth24"));
         s_blitSupported = hasGLVersion(3, 0);
     } else {
         sSupported = hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_ARB_framebuffer_object")) || hasGLExtension(QByteArrayLiteral("GL_EXT_framebuffer_object"));
-
+        sSupportsPackedDepthStencil = hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_ARB_framebuffer_object")) || hasGLExtension(QByteArrayLiteral("GL_EXT_packed_depth_stencil"));
         s_blitSupported = hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_ARB_framebuffer_object")) || hasGLExtension(QByteArrayLiteral("GL_EXT_framebuffer_blit"));
     }
 }
@@ -1107,47 +1111,6 @@ GLFramebuffer::GLFramebuffer()
 {
 }
 
-GLFramebuffer::GLFramebuffer(GLTexture *colorAttachment)
-    : mSize(colorAttachment->size())
-    , m_colorAttachment(colorAttachment)
-{
-    // Make sure FBO is supported
-    if (sSupported && !colorAttachment->isNull()) {
-        initFBO(colorAttachment);
-    } else {
-        qCCritical(LIBKWINGLUTILS) << "Framebuffer objects aren't supported!";
-    }
-}
-
-GLFramebuffer::GLFramebuffer(GLuint handle, const QSize &size)
-    : mFramebuffer(handle)
-    , mSize(size)
-    , mValid(true)
-    , mForeign(true)
-    , m_colorAttachment(nullptr)
-{
-}
-
-GLFramebuffer::~GLFramebuffer()
-{
-    if (!mForeign && mValid) {
-        glDeleteFramebuffers(1, &mFramebuffer);
-    }
-}
-
-bool GLFramebuffer::bind()
-{
-    if (!valid()) {
-        qCCritical(LIBKWINGLUTILS) << "Can't enable invalid framebuffer object!";
-        return false;
-    }
-
-    glBindFramebuffer(GL_FRAMEBUFFER, handle());
-    glViewport(0, 0, mSize.width(), mSize.height());
-
-    return true;
-}
-
 static QString formatFramebufferStatus(GLenum status)
 {
     switch (status) {
@@ -1180,13 +1143,14 @@ static QString formatFramebufferStatus(GLenum status)
     }
 }
 
-void GLFramebuffer::initFBO(GLTexture *colorAttachment)
+GLFramebuffer::GLFramebuffer(GLTexture *colorAttachment, Attachment attachment)
+    : mSize(colorAttachment->size())
+    , m_colorAttachment(colorAttachment)
 {
-#if DEBUG_GLFRAMEBUFFER
-    GLenum err = glGetError();
-    if (err != GL_NO_ERROR)
-        qCCritical(LIBKWINGLUTILS) << "Error status when entering GLFramebuffer::initFBO: " << formatGLError(err);
-#endif
+    if (!sSupported) {
+        qCCritical(LIBKWINGLUTILS) << "Framebuffer objects aren't supported!";
+        return;
+    }
 
     GLuint prevFbo = 0;
     if (const GLFramebuffer *current = currentFramebuffer()) {
@@ -1194,38 +1158,14 @@ void GLFramebuffer::initFBO(GLTexture *colorAttachment)
     }
 
     glGenFramebuffers(1, &mFramebuffer);
-
-#if DEBUG_GLFRAMEBUFFER
-    if ((err = glGetError()) != GL_NO_ERROR) {
-        qCCritical(LIBKWINGLUTILS) << "glGenFramebuffers failed: " << formatGLError(err);
-        return;
-    }
-#endif
-
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
 
-#if DEBUG_GLFRAMEBUFFER
-    if ((err = glGetError()) != GL_NO_ERROR) {
-        qCCritical(LIBKWINGLUTILS) << "glBindFramebuffer failed: " << formatGLError(err);
-        glDeleteFramebuffers(1, &mFramebuffer);
-        return;
+    initColorAttachment(colorAttachment);
+    if (attachment == Attachment::CombinedDepthStencil) {
+        initDepthStencilAttachment();
     }
-#endif
-
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                           colorAttachment->target(), colorAttachment->texture(), 0);
-
-#if DEBUG_GLFRAMEBUFFER
-    if ((err = glGetError()) != GL_NO_ERROR) {
-        qCCritical(LIBKWINGLUTILS) << "glFramebufferTexture2D failed: " << formatGLError(err);
-        glBindFramebuffer(GL_FRAMEBUFFER, prevFbo);
-        glDeleteFramebuffers(1, &mFramebuffer);
-        return;
-    }
-#endif
 
     const GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-
     glBindFramebuffer(GL_FRAMEBUFFER, prevFbo);
 
     if (status != GL_FRAMEBUFFER_COMPLETE) {
@@ -1240,6 +1180,109 @@ void GLFramebuffer::initFBO(GLTexture *colorAttachment)
     }
 
     mValid = true;
+}
+
+GLFramebuffer::GLFramebuffer(GLuint handle, const QSize &size)
+    : mFramebuffer(handle)
+    , mSize(size)
+    , mValid(true)
+    , mForeign(true)
+    , m_colorAttachment(nullptr)
+{
+}
+
+GLFramebuffer::~GLFramebuffer()
+{
+    if (!mForeign && mValid) {
+        glDeleteFramebuffers(1, &mFramebuffer);
+    }
+    if (mDepthBuffer) {
+        glDeleteRenderbuffers(1, &mDepthBuffer);
+    }
+    if (mStencilBuffer && mStencilBuffer != mDepthBuffer) {
+        glDeleteRenderbuffers(1, &mStencilBuffer);
+    }
+}
+
+bool GLFramebuffer::bind()
+{
+    if (!valid()) {
+        qCCritical(LIBKWINGLUTILS) << "Can't enable invalid framebuffer object!";
+        return false;
+    }
+
+    glBindFramebuffer(GL_FRAMEBUFFER, handle());
+    glViewport(0, 0, mSize.width(), mSize.height());
+
+    return true;
+}
+
+void GLFramebuffer::initColorAttachment(GLTexture *colorAttachment)
+{
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                           colorAttachment->target(), colorAttachment->texture(), 0);
+}
+
+void GLFramebuffer::initDepthStencilAttachment()
+{
+    GLuint buffer = 0;
+
+    // Try to attach a depth/stencil combined attachment.
+    if (sSupportsPackedDepthStencil) {
+        glGenRenderbuffers(1, &buffer);
+        glBindRenderbuffer(GL_RENDERBUFFER, buffer);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, mSize.width(), mSize.height());
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, buffer);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, buffer);
+
+        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+            glDeleteRenderbuffers(1, &buffer);
+        } else {
+            mDepthBuffer = buffer;
+            mStencilBuffer = buffer;
+            return;
+        }
+    }
+
+    // Try to attach a depth attachment separately.
+    GLenum depthFormat;
+    if (GLPlatform::instance()->isGLES()) {
+        if (sSupportsDepth24) {
+            depthFormat = GL_DEPTH_COMPONENT24;
+        } else {
+            depthFormat = GL_DEPTH_COMPONENT16;
+        }
+    } else {
+        depthFormat = GL_DEPTH_COMPONENT;
+    }
+
+    glGenRenderbuffers(1, &buffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, buffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, depthFormat, mSize.width(), mSize.height());
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, buffer);
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+        glDeleteRenderbuffers(1, &buffer);
+    } else {
+        mDepthBuffer = buffer;
+    }
+
+    // Try to attach a stencil attachment separately.
+    GLenum stencilFormat;
+    if (GLPlatform::instance()->isGLES()) {
+        stencilFormat = GL_STENCIL_INDEX8;
+    } else {
+        stencilFormat = GL_STENCIL_INDEX;
+    }
+
+    glGenRenderbuffers(1, &buffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, buffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, stencilFormat, mSize.width(), mSize.height());
+    glFramebufferRenderbuffer(GL_RENDERBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, buffer);
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+        glDeleteRenderbuffers(1, &buffer);
+    } else {
+        mStencilBuffer = buffer;
+    }
 }
 
 void GLFramebuffer::blitFromFramebuffer(const QRect &source, const QRect &destination, GLenum filter, bool flipX, bool flipY)
