@@ -61,7 +61,7 @@ EGLPlatformContext::~EGLPlatformContext()
 static EGLSurface eglSurfaceForPlatformSurface(QPlatformSurface *surface)
 {
     if (surface->surface()->surfaceClass() == QSurface::Window) {
-        return static_cast<Window *>(surface)->eglSurface();
+        return EGL_NO_SURFACE; // EGL_KHR_surfaceless_context is required
     } else {
         return static_cast<OffscreenSurface *>(surface)->eglSurface();
     }

@@ -9,8 +9,6 @@
 */
 #pragma once
 
-#include <epoxy/egl.h>
-
 #include <QPointer>
 #include <qpa/qplatformwindow.h>
 
@@ -39,7 +37,6 @@ public:
     void requestActivateWindow() override;
 
     InternalWindow *internalWindow() const;
-    EGLSurface eglSurface() const;
     Swapchain *swapchain();
 
 private:

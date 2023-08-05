@@ -137,10 +137,5 @@ void Window::unmap()
     invalidateSurface();
 }
 
-EGLSurface Window::eglSurface() const
-{
-    return EGL_NO_SURFACE; // EGL_KHR_surfaceless_context is required.
-}
-
 }
 }
