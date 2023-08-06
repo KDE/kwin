@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-14 02:06+0000\n"
+"POT-Creation-Date: 2023-08-06 02:04+0000\n"
 "PO-Revision-Date: 2008-12-28 14:32+0200\n"
 "Last-Translator: Omer Ensari <oensari@gmail.com>\n"
 "Language-Team: Kurdish <ubuntu-l10n-kur@lists.ubuntu.com>\n"
@@ -70,7 +70,7 @@ msgstr ""
 msgid "Keep above other windows"
 msgstr ""
 
-#: kcm.cpp:172
+#: kcm.cpp:176
 #, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme's default (%1)"

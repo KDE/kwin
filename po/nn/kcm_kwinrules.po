@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-07 02:19+0000\n"
-"PO-Revision-Date: 2023-08-01 21:33+0200\n"
+"PO-Revision-Date: 2023-08-05 23:12+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
 "Language: nn\n"
@@ -345,7 +345,7 @@ msgid "Obey geometry restrictions"
 msgstr "Følg geometriavgrensingar"
 
 #: rulesmodel.cpp:558
-#, fuzzy, kde-kuit-format
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Some apps like video players or terminals can ask KWin to constrain them to "
@@ -354,11 +354,12 @@ msgid ""
 "windows to be resized to arbitrary sizes.<nl/><nl/>This can be helpful for "
 "windows that can't quite fit the full screen area when maximized."
 msgstr ""
-"For eksempel kan terminalvindauge eller videospelarar be om\n"
-"eit fast høgd/breidd-forhold, eller berre endra storleiken i\n"
-"visse steg (for eksempel storleiken til ein bokstav).\n"
-"Dette kan vera formålslaust, og avgrensinga hindrar vilkårlege\n"
-"dimensjonar, som for eksempel heile skjermområdet."
+"Nokre program, som videoavspelarar og terminalar, kan be KWin om å avgrensa "
+"dei til eit viss breidd/høgd-forhold eller til å berre kunna utvidast med "
+"storleikar større enn eitt teikn. Bruk denne eigenskapen for å ignorera "
+"slike avgrensingar og la vindauga få vilkårleg storleik.<nl/><nl/>Dette kan "
+"vera nyttig for vindauge som ikkje heilt fyller skjermen når dei er "
+"maksimerte."
 
 #: rulesmodel.cpp:569
 #, kde-format
