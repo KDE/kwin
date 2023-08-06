@@ -958,7 +958,7 @@ void SurfaceInterface::setOutputs(const QVector<OutputInterface *> &outputs)
     }
 }
 
-SurfaceInterface *SurfaceInterface::surfaceAt(const QPointF &position)
+SurfaceInterface *SurfaceInterface::surfaceTypeAt(const QPointF &position, SurfaceFinderFunction surfaceFindFunc)
 {
     if (!isMapped()) {
         return nullptr;
@@ -967,7 +967,7 @@ SurfaceInterface *SurfaceInterface::surfaceAt(const QPointF &position)
     for (auto it = d->current.above.crbegin(); it != d->current.above.crend(); ++it) {
         const SubSurfaceInterface *current = *it;
         SurfaceInterface *surface = current->surface();
-        if (auto s = surface->surfaceAt(position - current->position())) {
+        if (auto s = surfaceFindFunc(surface, position - current->position())) {
             return s;
         }
     }
@@ -980,43 +980,25 @@ SurfaceInterface *SurfaceInterface::surfaceAt(const QPointF &position)
     for (auto it = d->current.below.crbegin(); it != d->current.below.crend(); ++it) {
         const SubSurfaceInterface *current = *it;
         SurfaceInterface *surface = current->surface();
-        if (auto s = surface->surfaceAt(position - current->position())) {
+        if (auto s = surfaceFindFunc(surface, position - current->position())) {
             return s;
         }
     }
     return nullptr;
 }
 
+SurfaceInterface *SurfaceInterface::surfaceAt(const QPointF &position)
+{
+    return surfaceTypeAt(position, [](SurfaceInterface *const surface, const QPointF &position) {
+        return surface->surfaceAt(position);
+    });
+}
+
 SurfaceInterface *SurfaceInterface::inputSurfaceAt(const QPointF &position)
 {
-    // TODO: Most of this is very similar to SurfaceInterface::surfaceAt
-    //       Is there a way to reduce the code duplication?
-    if (!isMapped()) {
-        return nullptr;
-    }
-
-    for (auto it = d->current.above.crbegin(); it != d->current.above.crend(); ++it) {
-        const SubSurfaceInterface *current = *it;
-        auto surface = current->surface();
-        if (auto s = surface->inputSurfaceAt(position - current->position())) {
-            return s;
-        }
-    }
-
-    // check whether the geometry and input region contain the pos
-    if (d->inputContains(position)) {
-        return this;
-    }
-
-    for (auto it = d->current.below.crbegin(); it != d->current.below.crend(); ++it) {
-        const SubSurfaceInterface *current = *it;
-        auto surface = current->surface();
-        if (auto s = surface->inputSurfaceAt(position - current->position())) {
-            return s;
-        }
-    }
-
-    return nullptr;
+    return surfaceTypeAt(position, [](SurfaceInterface *const surface, const QPointF &position) {
+        return surface->inputSurfaceAt(position);
+    });
 }
 
 LockedPointerV1Interface *SurfaceInterface::lockedPointer() const
