@@ -112,6 +112,9 @@ public:
     bool contains(const QPointF &position) const;
     bool inputContains(const QPointF &position) const;
 
+    using SurfaceFinderFunction = std::function<SurfaceInterface *(SurfaceInterface *const, const QPointF &)>;
+    SurfaceInterface *surfaceTypeAt(const QPointF &position, SurfaceFinderFunction surfaceFinderFunc);
+
     CompositorInterface *compositor;
     SurfaceInterface *q;
     SurfaceRole *role = nullptr;

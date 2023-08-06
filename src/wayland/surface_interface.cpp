@@ -237,6 +237,35 @@ void SurfaceInterfacePrivate::installIdleInhibitor(IdleInhibitorV1Interface *inh
     }
 }
 
+SurfaceInterface *SurfaceInterfacePrivate::surfaceTypeAt(const QPointF &position, SurfaceFinderFunction surfaceFindFunc)
+{
+    if (!q->isMapped()) {
+        return nullptr;
+    }
+
+    for (auto it = current.above.crbegin(); it != current.above.crend(); ++it) {
+        const SubSurfaceInterface *current = *it;
+        SurfaceInterface *surface = current->surface();
+        if (auto s = surfaceFindFunc(surface, position - current->position())) {
+            return s;
+        }
+    }
+
+    // check whether the geometry contains the pos
+    if (contains(position)) {
+        return q;
+    }
+
+    for (auto it = current.below.crbegin(); it != current.below.crend(); ++it) {
+        const SubSurfaceInterface *current = *it;
+        SurfaceInterface *surface = current->surface();
+        if (auto s = surfaceFindFunc(surface, position - current->position())) {
+            return s;
+        }
+    }
+    return nullptr;
+}
+
 void SurfaceInterfacePrivate::surface_destroy_resource(Resource *)
 {
     Q_EMIT q->aboutToBeDestroyed();
@@ -958,45 +987,16 @@ void SurfaceInterface::setOutputs(const QVector<OutputInterface *> &outputs)
     }
 }
 
-SurfaceInterface *SurfaceInterface::surfaceTypeAt(const QPointF &position, SurfaceFinderFunction surfaceFindFunc)
-{
-    if (!isMapped()) {
-        return nullptr;
-    }
-
-    for (auto it = d->current.above.crbegin(); it != d->current.above.crend(); ++it) {
-        const SubSurfaceInterface *current = *it;
-        SurfaceInterface *surface = current->surface();
-        if (auto s = surfaceFindFunc(surface, position - current->position())) {
-            return s;
-        }
-    }
-
-    // check whether the geometry contains the pos
-    if (d->contains(position)) {
-        return this;
-    }
-
-    for (auto it = d->current.below.crbegin(); it != d->current.below.crend(); ++it) {
-        const SubSurfaceInterface *current = *it;
-        SurfaceInterface *surface = current->surface();
-        if (auto s = surfaceFindFunc(surface, position - current->position())) {
-            return s;
-        }
-    }
-    return nullptr;
-}
-
 SurfaceInterface *SurfaceInterface::surfaceAt(const QPointF &position)
 {
-    return surfaceTypeAt(position, [](SurfaceInterface *const surface, const QPointF &position) {
+    return d->surfaceTypeAt(position, [](SurfaceInterface *const surface, const QPointF &position) {
         return surface->surfaceAt(position);
     });
 }
 
 SurfaceInterface *SurfaceInterface::inputSurfaceAt(const QPointF &position)
 {
-    return surfaceTypeAt(position, [](SurfaceInterface *const surface, const QPointF &position) {
+    return d->surfaceTypeAt(position, [](SurfaceInterface *const surface, const QPointF &position) {
         return surface->inputSurfaceAt(position);
     });
 }

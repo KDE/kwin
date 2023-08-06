@@ -433,9 +433,6 @@ Q_SIGNALS:
 private:
     std::unique_ptr<SurfaceInterfacePrivate> d;
     friend class SurfaceInterfacePrivate;
-
-    using SurfaceFinderFunction = std::function<SurfaceInterface *(SurfaceInterface *const, const QPointF &)>;
-    SurfaceInterface *surfaceTypeAt(const QPointF &position, SurfaceFinderFunction surfaceFinderFunc);
 };
 
 }
