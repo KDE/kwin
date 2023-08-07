@@ -31,8 +31,6 @@ MagnifierEffect::MagnifierEffect()
     , m_targetZoom(1)
     , m_polling(false)
     , m_lastPresentTime(std::chrono::milliseconds::zero())
-    , m_texture(nullptr)
-    , m_fbo(nullptr)
 {
     initConfig<MagnifierConfig>();
     QAction *a;
@@ -91,9 +89,8 @@ void MagnifierEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mill
         } else {
             m_zoom = std::max(m_zoom * std::min(1 - diff, 0.8), m_targetZoom);
             if (m_zoom == 1.0) {
-                // zoom ended - delete FBO and texture
+                // zoom ended - delete FBO
                 m_fbo.reset();
-                m_texture.reset();
             }
         }
     }
@@ -129,7 +126,7 @@ void MagnifierEffect::paintScreen(const RenderTarget &renderTarget, const Render
             QMatrix4x4 mvp = viewport.projectionMatrix();
             mvp.translate(area.x() * scale, area.y() * scale);
             s->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-            m_texture->render(area.size(), scale);
+            m_fbo->colorAttachment()->render(area.size(), scale);
             ShaderManager::instance()->popShader();
 
             GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
@@ -199,14 +196,13 @@ void MagnifierEffect::zoomIn()
         m_polling = true;
         effects->startMousePolling();
     }
-    if (effects->isOpenGLCompositing() && !m_texture) {
+    if (effects->isOpenGLCompositing() && !m_fbo) {
         effects->makeOpenGLContextCurrent();
-        m_texture = GLTexture::allocate(GL_RGBA8, m_magnifierSize);
-        if (!m_texture) {
+        m_fbo = GLFramebuffer::allocate(GL_RGBA8, m_magnifierSize);
+        if (!m_fbo) {
             return;
         }
-        m_texture->setContentTransform(TextureTransforms());
-        m_fbo = GLFramebuffer::create(m_texture.get());
+        m_fbo->colorAttachment()->setContentTransform(TextureTransforms());
     }
     effects->addRepaint(magnifierArea().adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH));
 }
@@ -223,7 +219,6 @@ void MagnifierEffect::zoomOut()
         if (m_zoom == m_targetZoom) {
             effects->makeOpenGLContextCurrent();
             m_fbo.reset();
-            m_texture.reset();
         }
     }
     effects->addRepaint(magnifierArea().adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH));
@@ -239,14 +234,13 @@ void MagnifierEffect::toggle()
             m_polling = true;
             effects->startMousePolling();
         }
-        if (effects->isOpenGLCompositing() && !m_texture) {
+        if (effects->isOpenGLCompositing() && !m_fbo) {
             effects->makeOpenGLContextCurrent();
-            m_texture = GLTexture::allocate(GL_RGBA8, m_magnifierSize);
-            if (!m_texture) {
+            m_fbo = GLFramebuffer::allocate(GL_RGBA8, m_magnifierSize);
+            if (!m_fbo) {
                 return;
             }
-            m_texture->setContentTransform(TextureTransforms());
-            m_fbo = GLFramebuffer::create(m_texture.get());
+            m_fbo->colorAttachment()->setContentTransform(TextureTransforms());
         }
     } else {
         m_targetZoom = 1;

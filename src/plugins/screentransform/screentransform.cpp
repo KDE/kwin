@@ -84,15 +84,14 @@ void ScreenTransformEffect::addScreen(EffectScreen *screen)
         auto &state = m_states[screen];
         state.m_oldTransform = screen->transform();
         state.m_oldGeometry = screen->geometry();
-        state.m_prev.texture = GLTexture::allocate(GL_RGBA8, screen->geometry().size() * screen->devicePixelRatio());
-        if (!state.m_prev.texture) {
+        state.m_prev = GLFramebuffer::allocate(GL_RGBA8, screen->geometry().size() * screen->devicePixelRatio());
+        if (!state.m_prev) {
             m_states.remove(screen);
             return;
         }
-        state.m_prev.framebuffer = GLFramebuffer::create(state.m_prev.texture.get());
 
         // Rendering the current scene into a texture
-        GLFramebuffer::pushFramebuffer(state.m_prev.framebuffer.get());
+        GLFramebuffer::pushFramebuffer(state.m_prev.get());
         effects->renderScreen(screen);
         GLFramebuffer::popFramebuffer();
 
@@ -196,19 +195,18 @@ void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const 
 
     // Render the screen in an offscreen texture.
     const QSize nativeSize = screen->geometry().size() * screen->devicePixelRatio();
-    if (!it->m_current.texture || it->m_current.texture->size() != nativeSize) {
-        it->m_current.texture = GLTexture::allocate(GL_RGBA8, nativeSize);
-        if (!it->m_current.texture) {
+    if (!it->m_current || it->m_current->size() != nativeSize) {
+        it->m_current = GLFramebuffer::allocate(GL_RGBA8, nativeSize);
+        if (!it->m_current) {
             m_states.remove(screen);
             return;
         }
-        it->m_current.framebuffer = GLFramebuffer::create(it->m_current.texture.get());
     }
 
-    RenderTarget fboRenderTarget(it->m_current.framebuffer.get());
+    RenderTarget fboRenderTarget(it->m_current.get());
     RenderViewport fboViewport(viewport.renderRect(), viewport.scale(), fboRenderTarget);
 
-    GLFramebuffer::pushFramebuffer(it->m_current.framebuffer.get());
+    GLFramebuffer::pushFramebuffer(it->m_current.get());
     effects->paintScreen(fboRenderTarget, fboViewport, mask, region, screen);
     GLFramebuffer::popFramebuffer();
 
@@ -226,9 +224,9 @@ void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const 
     modelViewProjectionMatrix.translate(-transformOrigin * scale);
 
     glActiveTexture(GL_TEXTURE1);
-    it->m_prev.texture->bind();
+    it->m_prev->colorAttachment()->bind();
     glActiveTexture(GL_TEXTURE0);
-    it->m_current.texture->bind();
+    it->m_current->colorAttachment()->bind();
 
     // Clear the background.
     glClearColor(0, 0, 0, 0);
@@ -252,9 +250,9 @@ void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const 
     sm->popShader();
 
     glActiveTexture(GL_TEXTURE1);
-    it->m_prev.texture->unbind();
+    it->m_prev->colorAttachment()->unbind();
     glActiveTexture(GL_TEXTURE0);
-    it->m_current.texture->unbind();
+    it->m_current->colorAttachment()->unbind();
 
     effects->addRepaintFull();
 }

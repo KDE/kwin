@@ -87,7 +87,6 @@ private:
 private:
     struct OffscreenData
     {
-        std::unique_ptr<GLTexture> texture;
         std::unique_ptr<GLFramebuffer> framebuffer;
         QRect viewport;
     };

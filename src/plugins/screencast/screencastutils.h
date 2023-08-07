@@ -83,11 +83,10 @@ static void grabTexture(GLTexture *texture, spa_data *spa, spa_video_format form
     constexpr auto everythingExceptY = TextureTransforms() | TextureTransform::MirrorX | TextureTransform::Rotate90 | TextureTransform::Rotate180 | TextureTransform::Rotate270;
     if (texture->contentTransforms() & everythingExceptY) {
         // need to transform the texture to a usable transformation first
-        const auto backingTexture = GLTexture::allocate(GL_RGBA8, size);
-        if (!backingTexture) {
+        const auto fbo = GLFramebuffer::allocate(GL_RGBA8, size);
+        if (!fbo) {
             return;
         }
-        const auto fbo = GLFramebuffer::create(backingTexture.get());
 
         ShaderBinder shaderBinder(ShaderTrait::MapTexture);
         QMatrix4x4 projectionMatrix;
@@ -97,7 +96,7 @@ static void grabTexture(GLTexture *texture, spa_data *spa, spa_video_format form
         GLFramebuffer::pushFramebuffer(fbo.get());
         texture->render(size, 1);
         GLFramebuffer::popFramebuffer();
-        doGrabTexture(backingTexture.get(), spa, format);
+        doGrabTexture(fbo->colorAttachment(), spa, format);
     } else {
         doGrabTexture(texture, spa, format);
     }

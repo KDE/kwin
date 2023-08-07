@@ -166,8 +166,8 @@ bool BlurEffect::updateTexture(EffectScreen *screen, const RenderTarget &renderT
     const auto screenSize = screen ? screen->geometry().size() : effects->virtualScreenSize();
 
     if (auto it = m_screenData.find(screen); it != m_screenData.end()) {
-        const auto &texture = it->second.renderTargetTextures.front();
-        if (texture->internalFormat() == textureFormat && texture->size() == screenSize) {
+        const auto &fbo = it->second.renderTargets.front();
+        if (fbo->colorAttachment()->internalFormat() == textureFormat && fbo->size() == screenSize) {
             return true;
         }
     }
@@ -178,22 +178,17 @@ bool BlurEffect::updateTexture(EffectScreen *screen, const RenderTarget &renderT
      *  - The helper texture (1)
      */
     data.renderTargets.reserve(m_downSampleIterations + 2);
-    data.renderTargetTextures.reserve(m_downSampleIterations + 2);
 
     for (int i = 0; i <= m_downSampleIterations; i++) {
-        data.renderTargetTextures.push_back(GLTexture::allocate(textureFormat, screenSize / (1 << i)));
-
-        if (auto fbo = GLFramebuffer::create(data.renderTargetTextures.back().get())) {
+        if (auto fbo = GLFramebuffer::allocate(textureFormat, screenSize / (1 << i))) {
             data.renderTargets.push_back(std::move(fbo));
         } else {
             return false;
         }
     }
 
-    // This last set is used as a temporary helper texture
-    data.renderTargetTextures.push_back(GLTexture::allocate(textureFormat, screenSize));
-
-    if (auto fbo = GLFramebuffer::create(data.renderTargetTextures.back().get())) {
+    // This last set is used as a temporary helper fbo
+    if (auto fbo = GLFramebuffer::allocate(textureFormat, screenSize)) {
         data.renderTargets.push_back(std::move(fbo));
     } else {
         return false;
@@ -708,7 +703,7 @@ void BlurEffect::doBlur(const RenderTarget &renderTarget, const RenderViewport &
     const auto &outputData = m_screenData[m_currentScreen];
     const QRegion expandedBlurRegion = expand(shape) & expand(screen);
 
-    const bool useSRGB = outputData.renderTargetTextures.front()->internalFormat() == GL_SRGB8_ALPHA8;
+    const bool useSRGB = outputData.renderTargets.front()->colorAttachment()->internalFormat() == GL_SRGB8_ALPHA8;
 
     // Upload geometry for the down and upsample iterations
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
@@ -813,7 +808,7 @@ void BlurEffect::doBlur(const RenderTarget &renderTarget, const RenderViewport &
 
 void BlurEffect::upscaleRenderToScreen(const ScreenData &data, const RenderTarget &renderTarget, const RenderViewport &viewport, GLVertexBuffer *vbo, int vboStart, int blurRectCount, QPoint windowPosition)
 {
-    const auto &tex = data.renderTargetTextures[1];
+    const auto tex = data.renderTargets[1]->colorAttachment();
     tex->bind();
 
     m_shader->bind(BlurShader::UpSampleType);
@@ -869,10 +864,10 @@ void BlurEffect::downSampleTexture(const ScreenData &data, GLVertexBuffer *vbo, 
     m_shader->setModelViewProjectionMatrix(projection);
 
     for (int i = 1; i <= m_downSampleIterations; i++) {
-        m_shader->setTargetTextureSize(data.renderTargetTextures[i]->size());
+        m_shader->setTargetTextureSize(data.renderTargets[i]->size());
 
         // Copy the image from this texture
-        data.renderTargetTextures[i - 1]->bind();
+        data.renderTargets[i - 1]->colorAttachment()->bind();
 
         vbo->draw(GL_TRIANGLES, 0, blurRectCount);
         GLFramebuffer::popFramebuffer();
@@ -888,15 +883,15 @@ void BlurEffect::upSampleTexture(const ScreenData &data, GLVertexBuffer *vbo, in
     m_shader->setModelViewProjectionMatrix(projection);
 
     for (int i = m_downSampleIterations - 1; i >= 1; i--) {
-        const auto &tex = data.renderTargetTextures[i];
+        const QSize size = data.renderTargets[i]->size();
 
         QMatrix4x4 fragCoordToUv;
-        fragCoordToUv.scale(1.0 / tex->width(), 1.0 / tex->height());
+        fragCoordToUv.scale(1.0 / size.width(), 1.0 / size.height());
         m_shader->setFragCoordToUv(fragCoordToUv);
-        m_shader->setTargetTextureSize(tex->size());
+        m_shader->setTargetTextureSize(size);
 
         // Copy the image from this texture
-        data.renderTargetTextures[i + 1]->bind();
+        data.renderTargets[i + 1]->colorAttachment()->bind();
 
         vbo->draw(GL_TRIANGLES, 0, blurRectCount);
         GLFramebuffer::popFramebuffer();
@@ -917,7 +912,7 @@ void BlurEffect::copyScreenSampleTexture(const ScreenData &data, const RenderVie
      * right next to this window.
      */
     m_shader->setBlurRect(boundingRect.adjusted(1, 1, -1, -1), viewport.renderRect().size());
-    data.renderTargetTextures.back()->bind();
+    data.renderTargets.back()->colorAttachment()->bind();
 
     vbo->draw(GL_TRIANGLES, 0, blurRectCount);
     GLFramebuffer::popFramebuffer();

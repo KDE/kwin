@@ -58,7 +58,6 @@ private:
     X11WindowedOutput *const m_output;
     X11WindowedEglBackend *const m_backend;
     std::unique_ptr<GLFramebuffer> m_framebuffer;
-    std::unique_ptr<GLTexture> m_texture;
 };
 
 /**

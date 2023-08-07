@@ -69,7 +69,6 @@ private:
         ScreenData(const ScreenData &) = delete;
         ScreenData &operator=(ScreenData &&) = default;
 
-        std::vector<std::unique_ptr<GLTexture>> renderTargetTextures;
         std::vector<std::unique_ptr<GLFramebuffer>> renderTargets;
         QStack<GLFramebuffer *> renderTargetStack;
     };

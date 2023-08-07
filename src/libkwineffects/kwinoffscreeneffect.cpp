@@ -27,7 +27,6 @@ public:
     void maybeRender(EffectWindow *window);
 
 private:
-    std::unique_ptr<GLTexture> m_texture;
     std::unique_ptr<GLFramebuffer> m_fbo;
     bool m_isDirty = true;
     GLShader *m_shader = nullptr;
@@ -95,12 +94,11 @@ void OffscreenData::maybeRender(EffectWindow *window)
     const qreal scale = window->screen()->devicePixelRatio();
     const QSize textureSize = (logicalGeometry.size() * scale).toSize();
 
-    if (!m_texture || m_texture->size() != textureSize) {
-        m_texture = GLTexture::allocate(GL_RGBA8, textureSize);
-        if (!m_texture) {
+    if (!m_fbo || m_fbo->size() != textureSize) {
+        m_fbo = GLFramebuffer::allocate(GL_RGBA8, textureSize);
+        if (!m_fbo) {
             return;
         }
-        m_fbo = GLFramebuffer::create(m_texture.get());
         m_isDirty = true;
     }
 
@@ -164,7 +162,7 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
     for (auto &quad : quads) {
         geometry.appendWindowQuad(quad, scale);
     }
-    geometry.postProcessTextureCoordinates(m_texture->matrix(NormalizedCoordinates));
+    geometry.postProcessTextureCoordinates(m_fbo->colorAttachment()->matrix(NormalizedCoordinates));
 
     const auto map = vbo->map<GLVertex2D>(geometry.size());
     if (!map) {
@@ -186,8 +184,8 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
     shader->setUniform(GLShader::ModulationConstant, QVector4D(rgb, rgb, rgb, a));
     shader->setUniform(GLShader::Saturation, data.saturation());
     shader->setUniform(GLShader::Vec3Uniform::PrimaryBrightness, QVector3D(toXYZ(1, 0), toXYZ(1, 1), toXYZ(1, 2)));
-    shader->setUniform(GLShader::TextureWidth, m_texture->width());
-    shader->setUniform(GLShader::TextureHeight, m_texture->height());
+    shader->setUniform(GLShader::TextureWidth, m_fbo->size().width());
+    shader->setUniform(GLShader::TextureHeight, m_fbo->size().height());
     shader->setColorspaceUniformsFromSRGB(renderTarget.colorDescription());
 
     const bool clipping = region != infiniteRegion();
@@ -200,9 +198,9 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
-    m_texture->bind();
+    m_fbo->colorAttachment()->bind();
     vbo->draw(clipRegion, GL_TRIANGLES, 0, geometry.count(), clipping);
-    m_texture->unbind();
+    m_fbo->colorAttachment()->unbind();
 
     glDisable(GL_BLEND);
     if (clipping) {

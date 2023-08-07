@@ -29,7 +29,6 @@ public:
 
 private:
     Output *const m_output;
-    std::unique_ptr<GLTexture> m_texture;
     std::unique_ptr<GLFramebuffer> m_framebuffer;
 };
 

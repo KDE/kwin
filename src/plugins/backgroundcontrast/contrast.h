@@ -72,7 +72,6 @@ private:
     {
         QMatrix4x4 colorMatrix;
         QRegion contrastRegion;
-        std::unique_ptr<GLTexture> texture;
         std::unique_ptr<GLFramebuffer> fbo;
     };
     std::unordered_map<const EffectWindow *, Data> m_windowData;

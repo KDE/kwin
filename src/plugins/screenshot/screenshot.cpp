@@ -236,14 +236,9 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
             devicePixelRatio = screen->devicePixelRatio();
         }
     }
-    std::unique_ptr<GLTexture> offscreenTexture;
     std::unique_ptr<GLFramebuffer> target;
     if (effects->isOpenGLCompositing()) {
-        offscreenTexture = GLTexture::allocate(GL_RGBA8, QSizeF(geometry.size() * devicePixelRatio).toSize());
-        if (!offscreenTexture) {
-            return;
-        }
-        target = GLFramebuffer::create(offscreenTexture.get());
+        target = GLFramebuffer::allocate(GL_RGBA8, QSizeF(geometry.size() * devicePixelRatio).toSize());
     }
     if (target) {
         d.setXTranslation(-geometry.x());
@@ -264,7 +259,7 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
         effects->drawWindow(renderTarget, viewport, window, PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_TRANSLUCENT, infiniteRegion(), d);
 
         // copy content from framebuffer into image
-        QImage img = QImage(offscreenTexture->size(), QImage::Format_ARGB32);
+        QImage img = QImage(target->size(), QImage::Format_ARGB32);
         img.setDevicePixelRatio(devicePixelRatio);
         glReadnPixels(0, 0, img.width(), img.height(), GL_RGBA, GL_UNSIGNED_BYTE, img.sizeInBytes(),
                       static_cast<GLvoid *>(img.bits()));
@@ -361,11 +356,7 @@ QImage ScreenShotEffect::blitScreenshot(const RenderTarget &renderTarget, const 
         const QSize nativeSize = renderTarget.applyTransformation(geometry, screenGeometry).size() * devicePixelRatio;
         image = QImage(nativeSize, QImage::Format_ARGB32);
 
-        const auto texture = GLTexture::allocate(GL_RGBA8, nativeSize);
-        if (!texture) {
-            return {};
-        }
-        const auto target = GLFramebuffer::create(texture.get());
+        const auto target = GLFramebuffer::allocate(GL_RGBA8, nativeSize);
         if (renderTarget.texture()) {
             GLFramebuffer::pushFramebuffer(target.get());
             ShaderBinder binder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);

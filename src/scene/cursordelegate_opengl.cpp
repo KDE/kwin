@@ -41,12 +41,11 @@ void CursorDelegateOpenGL::paint(const RenderTarget &renderTarget, const QRegion
 
     // Render the cursor scene in an offscreen render target.
     const QSize bufferSize = (Cursors::self()->currentCursor()->rect().size() * scale).toSize();
-    if (!m_texture || m_texture->size() != bufferSize) {
-        m_texture = GLTexture::allocate(renderTarget.framebuffer()->colorAttachment()->internalFormat(), bufferSize);
-        if (!m_texture) {
+    if (!m_framebuffer || m_framebuffer->size() != bufferSize) {
+        m_framebuffer = GLFramebuffer::allocate(renderTarget.framebuffer()->colorAttachment()->internalFormat(), bufferSize);
+        if (!m_framebuffer) {
             return;
         }
-        m_framebuffer = GLFramebuffer::create(m_texture.get());
     }
 
     RenderTarget offscreenRenderTarget(m_framebuffer.get(), renderTarget.colorDescription());
@@ -71,7 +70,7 @@ void CursorDelegateOpenGL::paint(const RenderTarget &renderTarget, const QRegion
 
     ShaderBinder binder(ShaderTrait::MapTexture);
     binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-    m_texture->render(region, cursorRect.size(), scale);
+    m_framebuffer->colorAttachment()->render(region, cursorRect.size(), scale);
     glDisable(GL_BLEND);
 
     GLFramebuffer::popFramebuffer();

@@ -36,17 +36,11 @@ public:
     static bool supported();
 
 private:
-    struct Snapshot
-    {
-        std::shared_ptr<GLTexture> texture;
-        std::shared_ptr<GLFramebuffer> framebuffer;
-    };
-
     struct ScreenState
     {
         TimeLine m_timeLine;
-        Snapshot m_prev;
-        Snapshot m_current;
+        std::shared_ptr<GLFramebuffer> m_prev;
+        std::shared_ptr<GLFramebuffer> m_current;
         QRect m_oldGeometry;
         EffectScreen::Transform m_oldTransform;
         qreal m_angle = 0;

@@ -121,7 +121,6 @@ X11WindowedEglCursorLayer::~X11WindowedEglCursorLayer()
 {
     m_backend->contextObject()->makeCurrent();
     m_framebuffer.reset();
-    m_texture.reset();
 }
 
 std::optional<OutputLayerBeginFrameInfo> X11WindowedEglCursorLayer::beginFrame()
@@ -132,12 +131,11 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglCursorLayer::beginFrame()
 
     const auto tmp = size().expandedTo(QSize(64, 64));
     const QSize bufferSize(std::ceil(tmp.width()), std::ceil(tmp.height()));
-    if (!m_texture || m_texture->size() != bufferSize) {
-        m_texture = GLTexture::allocate(GL_RGBA8, bufferSize);
-        if (!m_texture) {
+    if (!m_framebuffer || m_framebuffer->size() != bufferSize) {
+        m_framebuffer = GLFramebuffer::allocate(GL_RGBA8, bufferSize);
+        if (!m_framebuffer) {
             return std::nullopt;
         }
-        m_framebuffer = GLFramebuffer::create(m_texture.get());
     }
 
     return OutputLayerBeginFrameInfo{

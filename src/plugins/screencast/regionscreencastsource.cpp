@@ -48,7 +48,7 @@ void RegionScreenCastSource::updateOutput(Output *output)
 {
     m_last = output->renderLoop()->lastPresentationTimestamp();
 
-    if (m_renderedTexture) {
+    if (m_target) {
         const auto [outputTexture, colorDescription] = Compositor::self()->scene()->textureForOutput(output);
         const auto outputGeometry = output->geometry();
         if (!outputTexture || !m_region.intersects(output->geometry())) {
@@ -77,12 +77,11 @@ std::chrono::nanoseconds RegionScreenCastSource::clock() const
 
 void RegionScreenCastSource::ensureTexture()
 {
-    if (!m_renderedTexture) {
-        m_renderedTexture = GLTexture::allocate(GL_RGBA8, textureSize());
-        if (!m_renderedTexture) {
+    if (!m_target) {
+        m_target = GLFramebuffer::allocate(GL_RGBA8, textureSize());
+        if (!m_target) {
             return;
         }
-        m_target = GLFramebuffer::create(m_renderedTexture.get());
         const auto allOutputs = workspace()->outputs();
         for (auto output : allOutputs) {
             if (output->geometry().intersects(m_region)) {
@@ -104,7 +103,7 @@ void RegionScreenCastSource::render(GLFramebuffer *target)
     projectionMatrix.ortho(QRect(QPoint(), target->size()));
     shader->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix);
 
-    m_renderedTexture->render(target->size(), m_scale);
+    m_target->colorAttachment()->render(target->size(), m_scale);
 
     ShaderManager::instance()->popShader();
     GLFramebuffer::popFramebuffer();
@@ -113,7 +112,7 @@ void RegionScreenCastSource::render(GLFramebuffer *target)
 void RegionScreenCastSource::render(spa_data *spa, spa_video_format format)
 {
     ensureTexture();
-    grabTexture(m_renderedTexture.get(), spa, format);
+    grabTexture(m_target->colorAttachment(), spa, format);
 }
 
 uint RegionScreenCastSource::refreshRate() const

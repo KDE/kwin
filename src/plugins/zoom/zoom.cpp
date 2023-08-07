@@ -268,12 +268,11 @@ ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(const RenderTarget &r
     data.viewport = rect;
 
     const GLenum textureFormat = renderTarget.colorDescription() == ColorDescription::sRGB ? GL_RGBA8 : GL_RGBA16F;
-    if (!data.texture || data.texture->size() != nativeSize || data.texture->internalFormat() != textureFormat) {
-        data.texture = GLTexture::allocate(textureFormat, nativeSize);
-        if (!data.texture) {
+    if (!data.framebuffer || data.framebuffer->size() != nativeSize || data.framebuffer->colorAttachment()->internalFormat() != textureFormat) {
+        data.framebuffer = GLFramebuffer::allocate(textureFormat, nativeSize);
+        if (!data.framebuffer) {
             return nullptr;
         }
-        data.framebuffer = GLFramebuffer::create(data.texture.get());
     }
 
     return &data;
@@ -369,7 +368,7 @@ void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewp
 
         shader->setUniform(GLShader::ModelViewProjectionMatrix, viewport.projectionMatrix() * matrix);
 
-        offscreen.texture->render(offscreen.viewport.size(), scale);
+        offscreen.framebuffer->colorAttachment()->render(offscreen.viewport.size(), scale);
     }
     ShaderManager::instance()->popShader();
 
