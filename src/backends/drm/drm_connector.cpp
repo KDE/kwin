@@ -191,8 +191,6 @@ Output::SubPixel DrmConnector::subpixel() const
     switch (m_conn->subpixel) {
     case DRM_MODE_SUBPIXEL_UNKNOWN:
         return Output::SubPixel::Unknown;
-    case DRM_MODE_SUBPIXEL_NONE:
-        return Output::SubPixel::None;
     case DRM_MODE_SUBPIXEL_HORIZONTAL_RGB:
         return Output::SubPixel::Horizontal_RGB;
     case DRM_MODE_SUBPIXEL_HORIZONTAL_BGR:
@@ -201,8 +199,10 @@ Output::SubPixel DrmConnector::subpixel() const
         return Output::SubPixel::Vertical_RGB;
     case DRM_MODE_SUBPIXEL_VERTICAL_BGR:
         return Output::SubPixel::Vertical_BGR;
+    case DRM_MODE_SUBPIXEL_NONE:
+        return Output::SubPixel::None;
     default:
-        Q_UNREACHABLE();
+        return Output::SubPixel::Unknown;
     }
 }
 
