@@ -438,8 +438,6 @@ bool EglPixmapTexture::create(SurfacePixmapX11 *pixmap)
     }
 
     glGenTextures(1, &d->m_texture);
-    setWrapMode(GL_CLAMP_TO_EDGE);
-    setFilter(GL_LINEAR);
     bind();
     const EGLint attribs[] = {
         EGL_IMAGE_PRESERVED_KHR, EGL_TRUE,

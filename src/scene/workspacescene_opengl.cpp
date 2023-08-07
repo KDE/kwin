@@ -166,8 +166,6 @@ std::shared_ptr<GLTexture> DecorationShadowTextureCache::getTexture(ShadowTextur
     if (!d.texture) {
         return nullptr;
     }
-    d.texture->setFilter(GL_LINEAR);
-    d.texture->setWrapMode(GL_CLAMP_TO_EDGE);
     m_cache.insert(decoShadow.get(), d);
     return d.texture;
 }
@@ -259,8 +257,6 @@ void OpenGLShadowTextureProvider::update()
     if (!m_texture) {
         return;
     }
-    m_texture->setFilter(GL_LINEAR);
-    m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
 
     if (m_texture->internalFormat() == GL_R8) {
         // Swizzle red to alpha and all other channels to zero
@@ -468,8 +464,6 @@ void SceneOpenGLDecorationRenderer::resizeTexture()
             return;
         }
         m_texture->setContentTransform(TextureTransform::MirrorY);
-        m_texture->setFilter(GL_LINEAR);
-        m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
         m_texture->clear();
     } else {
         m_texture.reset();

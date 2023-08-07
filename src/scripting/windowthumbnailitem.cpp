@@ -384,8 +384,6 @@ void WindowThumbnailItem::updateOffscreenTexture()
         if (!m_offscreenTexture) {
             return;
         }
-        m_offscreenTexture->setFilter(GL_LINEAR);
-        m_offscreenTexture->setWrapMode(GL_CLAMP_TO_EDGE);
         m_offscreenTarget = GLFramebuffer::create(m_offscreenTexture.get());
     }
 

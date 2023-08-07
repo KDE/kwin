@@ -98,7 +98,7 @@ GLTexture::GLTexture(GLenum target, GLuint textureId, GLenum internalFormat, con
     d->m_size = size;
     d->m_canUseMipmaps = levels > 1;
     d->m_mipLevels = levels;
-    d->m_filter = levels > 1 ? GL_NEAREST_MIPMAP_LINEAR : GL_NEAREST;
+    d->m_filter = levels > 1 ? GL_NEAREST_MIPMAP_LINEAR : GL_LINEAR;
     d->m_internalFormat = internalFormat;
     d->m_textureToBufferTransform = transform;
 
@@ -122,8 +122,8 @@ GLTexturePrivate::GLTexturePrivate()
     : m_texture(0)
     , m_target(0)
     , m_internalFormat(0)
-    , m_filter(GL_NEAREST)
-    , m_wrapMode(GL_REPEAT)
+    , m_filter(GL_LINEAR)
+    , m_wrapMode(GL_CLAMP_TO_EDGE)
     , m_canUseMipmaps(false)
     , m_markedDirty(false)
     , m_filterChanged(true)

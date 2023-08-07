@@ -100,8 +100,6 @@ void OffscreenData::maybeRender(EffectWindow *window)
         if (!m_texture) {
             return;
         }
-        m_texture->setFilter(GL_LINEAR);
-        m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
         m_fbo = GLFramebuffer::create(m_texture.get());
         m_isDirty = true;
     }

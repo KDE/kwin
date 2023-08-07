@@ -243,8 +243,6 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
         if (!offscreenTexture) {
             return;
         }
-        offscreenTexture->setFilter(GL_LINEAR);
-        offscreenTexture->setWrapMode(GL_CLAMP_TO_EDGE);
         target = GLFramebuffer::create(offscreenTexture.get());
     }
     if (target) {

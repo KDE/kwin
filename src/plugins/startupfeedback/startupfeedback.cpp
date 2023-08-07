@@ -363,8 +363,6 @@ void StartupFeedbackEffect::prepareTextures(const QPixmap &pix)
             if (!m_bouncingTextures[i]) {
                 return;
             }
-            m_bouncingTextures[i]->setFilter(GL_LINEAR);
-            m_bouncingTextures[i]->setWrapMode(GL_CLAMP_TO_EDGE);
         }
         break;
     case BlinkingFeedback:
@@ -373,8 +371,6 @@ void StartupFeedbackEffect::prepareTextures(const QPixmap &pix)
         if (!m_texture) {
             return;
         }
-        m_texture->setFilter(GL_LINEAR);
-        m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
         break;
     default:
         // for safety

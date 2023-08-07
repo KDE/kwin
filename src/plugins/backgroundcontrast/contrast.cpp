@@ -447,8 +447,6 @@ void ContrastEffect::doContrast(const RenderTarget &renderTarget, const RenderVi
             return;
         }
         windowData.fbo = GLFramebuffer::create(windowData.texture.get());
-        windowData.texture->setFilter(GL_LINEAR);
-        windowData.texture->setWrapMode(GL_CLAMP_TO_EDGE);
     }
     GLTexture *contrastTexture = windowData.texture.get();
     contrastTexture->bind();

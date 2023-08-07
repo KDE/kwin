@@ -273,8 +273,6 @@ ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(const RenderTarget &r
         if (!data.texture) {
             return nullptr;
         }
-        data.texture->setFilter(GL_LINEAR);
-        data.texture->setWrapMode(GL_CLAMP_TO_EDGE);
         data.framebuffer = GLFramebuffer::create(data.texture.get());
     }
 

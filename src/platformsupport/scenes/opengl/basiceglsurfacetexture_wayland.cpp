@@ -68,8 +68,6 @@ bool BasicEGLSurfaceTextureWayland::loadShmTexture(GraphicsBuffer *buffer)
         return false;
     }
 
-    m_texture->setFilter(GL_LINEAR);
-    m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
     m_texture->setContentTransform(TextureTransform::MirrorY);
     m_bufferType = BufferType::Shm;
 
@@ -105,8 +103,6 @@ bool BasicEGLSurfaceTextureWayland::loadDmabufTexture(GraphicsBuffer *buffer)
     m_texture.reset(new GLTexture(GL_TEXTURE_2D));
     m_texture->setSize(buffer->size());
     m_texture->create();
-    m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
-    m_texture->setFilter(GL_LINEAR);
     m_texture->bind();
     glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, static_cast<GLeglImageOES>(image));
     m_texture->unbind();
