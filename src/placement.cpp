@@ -190,17 +190,17 @@ void Placement::placeSmart(Window *window, const QRectF &area, PlacementPolicy /
     y_optimal = y;
 
     // client gabarit
-    int ch = window->height() - 1;
-    int cw = window->width() - 1;
+    int ch = window->height();
+    int cw = window->width();
 
     bool first_pass = true; // CT lame flag. Don't like it. What else would do?
 
     // loop over possible positions
     do {
         // test if enough room in x and y directions
-        if (y + ch > area.bottom() && ch < area.height()) {
+        if (y + ch > area.y() + area.height() && ch < area.height()) {
             overlap = h_wrong; // this throws the algorithm to an exit
-        } else if (x + cw > area.right()) {
+        } else if (x + cw > area.x() + area.width()) {
             overlap = w_wrong;
         } else {
             overlap = none; // initialize
@@ -257,7 +257,7 @@ void Placement::placeSmart(Window *window, const QRectF &area, PlacementPolicy /
         // really need to loop? test if there's any overlap
         if (overlap > none) {
 
-            possible = area.right();
+            possible = area.x() + area.width();
             if (possible - cw > x) {
                 possible -= cw;
             }
@@ -294,7 +294,7 @@ void Placement::placeSmart(Window *window, const QRectF &area, PlacementPolicy /
         // ... else ==> not enough x dimension (overlap was wrong on horizontal)
         else if (overlap == w_wrong) {
             x = area.left();
-            possible = area.bottom();
+            possible = area.y() + area.height();
 
             if (possible - ch > y) {
                 possible -= ch;
@@ -325,7 +325,7 @@ void Placement::placeSmart(Window *window, const QRectF &area, PlacementPolicy /
             }
             y = possible;
         }
-    } while ((overlap != none) && (overlap != h_wrong) && (y < area.bottom()));
+    } while ((overlap != none) && (overlap != h_wrong) && (y < area.y() + area.height()));
 
     if (ch >= area.height()) {
         y_optimal = area.top();

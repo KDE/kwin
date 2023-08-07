@@ -136,23 +136,33 @@ std::pair<PlaceWindowResult, std::unique_ptr<KWayland::Client::Surface>> TestPla
 
 void TestPlacement::testPlaceSmart()
 {
+    const auto outputs = workspace()->outputs();
+    const QList<QRect> desiredGeometries{
+        QRect(0, 0, 600, 500),
+        QRect(600, 0, 600, 500),
+        QRect(0, 500, 600, 500),
+        QRect(600, 500, 600, 500),
+        QRect(680, 524, 600, 500),
+        QRect(680, 0, 600, 500),
+        QRect(0, 524, 600, 500),
+        QRect(0, 0, 600, 500),
+    };
+
     setPlacementPolicy(PlacementSmart);
 
     std::vector<std::unique_ptr<KWayland::Client::Surface>> surfaces;
-    QRegion usedArea;
 
-    for (int i = 0; i < 4; i++) {
+    for (const QRect &desiredGeometry : desiredGeometries) {
         auto [windowPlacement, surface] = createAndPlaceWindow(QSize(600, 500));
+        surfaces.push_back(std::move(surface));
+
         // smart placement shouldn't define a size on windows
         QCOMPARE(windowPlacement.initiallyConfiguredSize, QSize(0, 0));
         QCOMPARE(windowPlacement.finalGeometry.size(), QSize(600, 500));
 
-        // exact placement isn't a defined concept that should be tested
-        // but the goal of smart placement is to make sure windows don't overlap until they need to
-        // 4 windows of 600, 500 should fit without overlap
-        QVERIFY(!usedArea.intersects(windowPlacement.finalGeometry.toRect()));
-        usedArea += windowPlacement.finalGeometry.toRect();
-        surfaces.push_back(std::move(surface));
+        QVERIFY(outputs[0]->geometry().contains(windowPlacement.finalGeometry.toRect()));
+
+        QCOMPARE(windowPlacement.finalGeometry.toRect(), desiredGeometry);
     }
 }
 
