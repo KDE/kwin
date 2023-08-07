@@ -74,6 +74,11 @@ struct SurfaceState
 class SurfaceInterfacePrivate : public QtWaylandServer::wl_surface
 {
 public:
+    enum class SurfaceInterfaceType {
+        SurfaceInterfaceType,
+        InputReceivingSurfaceInterfaceType,
+    };
+
     static SurfaceInterfacePrivate *get(SurfaceInterface *surface)
     {
         return surface->d.get();
@@ -112,8 +117,8 @@ public:
     bool contains(const QPointF &position) const;
     bool inputContains(const QPointF &position) const;
 
-    using SurfaceFinderFunction = std::function<SurfaceInterface *(SurfaceInterface *const, const QPointF &)>;
-    SurfaceInterface *surfaceTypeAt(const QPointF &position, SurfaceFinderFunction surfaceFinderFunc);
+    SurfaceInterface *surfaceTypeAt(SurfaceInterface *const surface, const SurfaceInterfaceType type, const QPointF &position) const;
+    SurfaceInterface *surfaceAt(const QPointF &position, const SurfaceInterfaceType type) const;
 
     CompositorInterface *compositor;
     SurfaceInterface *q;

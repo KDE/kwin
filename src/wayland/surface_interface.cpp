@@ -237,7 +237,19 @@ void SurfaceInterfacePrivate::installIdleInhibitor(IdleInhibitorV1Interface *inh
     }
 }
 
-SurfaceInterface *SurfaceInterfacePrivate::surfaceTypeAt(const QPointF &position, SurfaceFinderFunction surfaceFindFunc)
+SurfaceInterface *SurfaceInterfacePrivate::surfaceTypeAt(SurfaceInterface *const surface, const SurfaceInterfaceType type, const QPointF &position) const
+{
+    switch (type) {
+    case SurfaceInterfaceType::SurfaceInterfaceType:
+        return surface->surfaceAt(position);
+    case SurfaceInterfaceType::InputReceivingSurfaceInterfaceType:
+        return surface->inputSurfaceAt(position);
+    }
+
+    Q_UNREACHABLE();
+}
+
+SurfaceInterface *SurfaceInterfacePrivate::surfaceAt(const QPointF &position, const SurfaceInterfaceType surfaceType) const
 {
     if (!q->isMapped()) {
         return nullptr;
@@ -246,7 +258,7 @@ SurfaceInterface *SurfaceInterfacePrivate::surfaceTypeAt(const QPointF &position
     for (auto it = current.above.crbegin(); it != current.above.crend(); ++it) {
         const SubSurfaceInterface *current = *it;
         SurfaceInterface *surface = current->surface();
-        if (auto s = surfaceFindFunc(surface, position - current->position())) {
+        if (auto s = surfaceTypeAt(surface, surfaceType, position - current->position())) {
             return s;
         }
     }
@@ -259,7 +271,7 @@ SurfaceInterface *SurfaceInterfacePrivate::surfaceTypeAt(const QPointF &position
     for (auto it = current.below.crbegin(); it != current.below.crend(); ++it) {
         const SubSurfaceInterface *current = *it;
         SurfaceInterface *surface = current->surface();
-        if (auto s = surfaceFindFunc(surface, position - current->position())) {
+        if (auto s = surfaceTypeAt(surface, surfaceType, position - current->position())) {
             return s;
         }
     }
@@ -989,16 +1001,12 @@ void SurfaceInterface::setOutputs(const QVector<OutputInterface *> &outputs)
 
 SurfaceInterface *SurfaceInterface::surfaceAt(const QPointF &position)
 {
-    return d->surfaceTypeAt(position, [](SurfaceInterface *const surface, const QPointF &position) {
-        return surface->surfaceAt(position);
-    });
+    return d->surfaceAt(position, SurfaceInterfacePrivate::SurfaceInterfaceType::SurfaceInterfaceType);
 }
 
 SurfaceInterface *SurfaceInterface::inputSurfaceAt(const QPointF &position)
 {
-    return d->surfaceTypeAt(position, [](SurfaceInterface *const surface, const QPointF &position) {
-        return surface->inputSurfaceAt(position);
-    });
+    return d->surfaceAt(position, SurfaceInterfacePrivate::SurfaceInterfaceType::InputReceivingSurfaceInterfaceType);
 }
 
 LockedPointerV1Interface *SurfaceInterface::lockedPointer() const
