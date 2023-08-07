@@ -206,7 +206,7 @@ void MagnifierEffect::zoomIn()
             return;
         }
         m_texture->setContentTransform(TextureTransforms());
-        m_fbo = std::make_unique<GLFramebuffer>(m_texture.get());
+        m_fbo = GLFramebuffer::create(m_texture.get());
     }
     effects->addRepaint(magnifierArea().adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH));
 }
@@ -246,7 +246,7 @@ void MagnifierEffect::toggle()
                 return;
             }
             m_texture->setContentTransform(TextureTransforms());
-            m_fbo = std::make_unique<GLFramebuffer>(m_texture.get());
+            m_fbo = GLFramebuffer::create(m_texture.get());
         }
     } else {
         m_targetZoom = 1;

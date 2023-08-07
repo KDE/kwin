@@ -137,7 +137,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglCursorLayer::beginFrame()
         if (!m_texture) {
             return std::nullopt;
         }
-        m_framebuffer = std::make_unique<GLFramebuffer>(m_texture.get());
+        m_framebuffer = GLFramebuffer::create(m_texture.get());
     }
 
     return OutputLayerBeginFrameInfo{

@@ -662,8 +662,8 @@ static PlatformCursorImage grabCursorOpenGL()
         return PlatformCursorImage{};
     }
     texture->setContentTransform(TextureTransform::MirrorY);
-    GLFramebuffer framebuffer(texture.get());
-    RenderTarget renderTarget(&framebuffer);
+    const auto framebuffer = GLFramebuffer::create(texture.get());
+    RenderTarget renderTarget(framebuffer.get());
 
     SceneDelegate delegate(scene, output);
     scene->prePaint(&delegate);

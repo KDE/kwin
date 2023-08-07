@@ -236,7 +236,6 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
             devicePixelRatio = screen->devicePixelRatio();
         }
     }
-    bool validTarget = true;
     std::unique_ptr<GLTexture> offscreenTexture;
     std::unique_ptr<GLFramebuffer> target;
     if (effects->isOpenGLCompositing()) {
@@ -246,44 +245,42 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
         }
         offscreenTexture->setFilter(GL_LINEAR);
         offscreenTexture->setWrapMode(GL_CLAMP_TO_EDGE);
-        target.reset(new GLFramebuffer(offscreenTexture.get()));
-        validTarget = target->valid();
+        target = GLFramebuffer::create(offscreenTexture.get());
     }
-    if (validTarget) {
+    if (target) {
         d.setXTranslation(-geometry.x());
         d.setYTranslation(-geometry.y());
 
         // render window into offscreen texture
-        int mask = PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_TRANSLUCENT;
-        QImage img;
-        if (effects->isOpenGLCompositing()) {
-            RenderTarget renderTarget(target.get());
-            RenderViewport viewport(geometry, devicePixelRatio, renderTarget);
-            GLFramebuffer::pushFramebuffer(target.get());
-            glClearColor(0.0, 0.0, 0.0, 0.0);
-            glClear(GL_COLOR_BUFFER_BIT);
-            glClearColor(0.0, 0.0, 0.0, 1.0);
+        RenderTarget renderTarget(target.get());
+        RenderViewport viewport(geometry, devicePixelRatio, renderTarget);
+        GLFramebuffer::pushFramebuffer(target.get());
+        glClearColor(0.0, 0.0, 0.0, 0.0);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glClearColor(0.0, 0.0, 0.0, 1.0);
 
-            QMatrix4x4 projection;
-            projection.ortho(QRect(0, 0, geometry.width() * devicePixelRatio, geometry.height() * devicePixelRatio));
-            d.setProjectionMatrix(projection);
+        QMatrix4x4 projection;
+        projection.ortho(QRect(0, 0, geometry.width() * devicePixelRatio, geometry.height() * devicePixelRatio));
+        d.setProjectionMatrix(projection);
 
-            effects->drawWindow(renderTarget, viewport, window, mask, infiniteRegion(), d);
+        effects->drawWindow(renderTarget, viewport, window, PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_TRANSLUCENT, infiniteRegion(), d);
 
-            // copy content from framebuffer into image
-            img = QImage(offscreenTexture->size(), QImage::Format_ARGB32);
-            img.setDevicePixelRatio(devicePixelRatio);
-            glReadnPixels(0, 0, img.width(), img.height(), GL_RGBA, GL_UNSIGNED_BYTE, img.sizeInBytes(),
-                          static_cast<GLvoid *>(img.bits()));
-            GLFramebuffer::popFramebuffer();
-            convertFromGLImage(img, img.width(), img.height(), renderTarget.transformation());
-        }
+        // copy content from framebuffer into image
+        QImage img = QImage(offscreenTexture->size(), QImage::Format_ARGB32);
+        img.setDevicePixelRatio(devicePixelRatio);
+        glReadnPixels(0, 0, img.width(), img.height(), GL_RGBA, GL_UNSIGNED_BYTE, img.sizeInBytes(),
+                      static_cast<GLvoid *>(img.bits()));
+        GLFramebuffer::popFramebuffer();
+        convertFromGLImage(img, img.width(), img.height(), renderTarget.transformation());
 
         if (screenshot->flags & ScreenShotIncludeCursor) {
             grabPointerImage(img, geometry.x(), geometry.y());
         }
 
         screenshot->promise.addResult(img);
+        screenshot->promise.finish();
+    } else {
+        screenshot->promise.addResult(QImage());
         screenshot->promise.finish();
     }
 }
@@ -370,9 +367,9 @@ QImage ScreenShotEffect::blitScreenshot(const RenderTarget &renderTarget, const 
         if (!texture) {
             return {};
         }
-        GLFramebuffer target(texture.get());
+        const auto target = GLFramebuffer::create(texture.get());
         if (renderTarget.texture()) {
-            GLFramebuffer::pushFramebuffer(&target);
+            GLFramebuffer::pushFramebuffer(target.get());
             ShaderBinder binder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
             binder.shader()->setColorspaceUniformsToSRGB(renderTarget.colorDescription());
             QMatrix4x4 projectionMatrix = renderTarget.texture()->contentTransformMatrix().inverted();
@@ -380,8 +377,8 @@ QImage ScreenShotEffect::blitScreenshot(const RenderTarget &renderTarget, const 
             binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix);
             renderTarget.texture()->render(viewport.mapToRenderTargetTexture(geometry), infiniteRegion(), nativeSize, 1);
         } else {
-            target.blitFromFramebuffer(viewport.mapToRenderTarget(geometry));
-            GLFramebuffer::pushFramebuffer(&target);
+            target->blitFromFramebuffer(viewport.mapToRenderTarget(geometry));
+            GLFramebuffer::pushFramebuffer(target.get());
         }
         glReadPixels(0, 0, nativeSize.width(), nativeSize.height(), GL_RGBA,
                      GL_UNSIGNED_BYTE, static_cast<GLvoid *>(image.bits()));

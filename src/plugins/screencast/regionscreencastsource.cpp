@@ -82,7 +82,7 @@ void RegionScreenCastSource::ensureTexture()
         if (!m_renderedTexture) {
             return;
         }
-        m_target.reset(new GLFramebuffer(m_renderedTexture.get()));
+        m_target = GLFramebuffer::create(m_renderedTexture.get());
         const auto allOutputs = workspace()->outputs();
         for (auto output : allOutputs) {
             if (output->geometry().intersects(m_region)) {

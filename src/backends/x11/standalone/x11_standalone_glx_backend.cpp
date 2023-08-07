@@ -226,7 +226,7 @@ void GlxBackend::init()
     glPlatform->printResults();
     initGL(&getProcAddress);
 
-    m_fbo = std::make_unique<GLFramebuffer>(0, workspace()->geometry().size());
+    m_fbo = GLFramebuffer::createWrapper(0, workspace()->geometry().size());
 
     bool supportsSwapEvent = false;
 
@@ -758,7 +758,7 @@ void GlxBackend::screenGeometryChanged()
 
     // The back buffer contents are now undefined
     m_bufferAge = 0;
-    m_fbo = std::make_unique<GLFramebuffer>(0, size);
+    m_fbo = GLFramebuffer::createWrapper(0, size);
 }
 
 std::unique_ptr<SurfaceTexture> GlxBackend::createSurfaceTextureX11(SurfacePixmapX11 *pixmap)

@@ -15,7 +15,7 @@ namespace KWin
 
 DmaBufTexture::DmaBufTexture(std::shared_ptr<GLTexture> texture, DmaBufAttributes &&attributes)
     : m_texture(texture)
-    , m_framebuffer(std::make_unique<GLFramebuffer>(texture.get()))
+    , m_framebuffer(GLFramebuffer::create(texture.get()))
     , m_attributes(std::move(attributes))
 {
 }

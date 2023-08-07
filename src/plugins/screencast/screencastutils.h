@@ -87,14 +87,14 @@ static void grabTexture(GLTexture *texture, spa_data *spa, spa_video_format form
         if (!backingTexture) {
             return;
         }
-        GLFramebuffer fbo(backingTexture.get());
+        const auto fbo = GLFramebuffer::create(backingTexture.get());
 
         ShaderBinder shaderBinder(ShaderTrait::MapTexture);
         QMatrix4x4 projectionMatrix;
         projectionMatrix.ortho(QRect(QPoint(), size));
         shaderBinder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix);
 
-        GLFramebuffer::pushFramebuffer(&fbo);
+        GLFramebuffer::pushFramebuffer(fbo.get());
         texture->render(size, 1);
         GLFramebuffer::popFramebuffer();
         doGrabTexture(backingTexture.get(), spa, format);

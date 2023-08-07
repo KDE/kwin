@@ -53,9 +53,9 @@ void WindowScreenCastSource::render(spa_data *spa, spa_video_format format)
     if (!offscreenTexture) {
         return;
     }
-    GLFramebuffer offscreenTarget(offscreenTexture.get());
+    const auto offscreenTarget = GLFramebuffer::create(offscreenTexture.get());
 
-    render(&offscreenTarget);
+    render(offscreenTarget.get());
     grabTexture(offscreenTexture.get(), spa, format);
 }
 

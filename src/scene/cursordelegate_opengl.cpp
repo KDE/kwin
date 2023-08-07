@@ -46,7 +46,7 @@ void CursorDelegateOpenGL::paint(const RenderTarget &renderTarget, const QRegion
         if (!m_texture) {
             return;
         }
-        m_framebuffer = std::make_unique<GLFramebuffer>(m_texture.get());
+        m_framebuffer = GLFramebuffer::create(m_texture.get());
     }
 
     RenderTarget offscreenRenderTarget(m_framebuffer.get(), renderTarget.colorDescription());

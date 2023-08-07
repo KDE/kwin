@@ -185,7 +185,11 @@ bool BlurEffect::updateTexture(EffectScreen *screen, const RenderTarget &renderT
         data.renderTargetTextures.back()->setFilter(GL_LINEAR);
         data.renderTargetTextures.back()->setWrapMode(GL_CLAMP_TO_EDGE);
 
-        data.renderTargets.push_back(std::make_unique<GLFramebuffer>(data.renderTargetTextures.back().get()));
+        if (auto fbo = GLFramebuffer::create(data.renderTargetTextures.back().get())) {
+            data.renderTargets.push_back(std::move(fbo));
+        } else {
+            return false;
+        }
     }
 
     // This last set is used as a temporary helper texture
@@ -193,12 +197,9 @@ bool BlurEffect::updateTexture(EffectScreen *screen, const RenderTarget &renderT
     data.renderTargetTextures.back()->setFilter(GL_LINEAR);
     data.renderTargetTextures.back()->setWrapMode(GL_CLAMP_TO_EDGE);
 
-    data.renderTargets.push_back(std::make_unique<GLFramebuffer>(data.renderTargetTextures.back().get()));
-
-    const bool renderTargetsValid = std::all_of(data.renderTargets.begin(), data.renderTargets.end(), [](const auto &fbo) {
-        return fbo->valid();
-    });
-    if (!renderTargetsValid) {
+    if (auto fbo = GLFramebuffer::create(data.renderTargetTextures.back().get())) {
+        data.renderTargets.push_back(std::move(fbo));
+    } else {
         return false;
     }
 

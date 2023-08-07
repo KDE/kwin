@@ -110,7 +110,7 @@ void EglBackend::init()
         return;
     }
 
-    m_fbo = std::make_unique<GLFramebuffer>(0, workspace()->geometry().size());
+    m_fbo = GLFramebuffer::createWrapper(0, workspace()->geometry().size());
 
     m_backend->setEglDisplay(EglDisplay::create(shareDisplay, false));
     kwinApp()->outputBackend()->setSceneEglGlobalShareContext(shareContext);
@@ -309,7 +309,7 @@ void EglBackend::screenGeometryChanged()
 
     // The back buffer contents are now undefined
     m_bufferAge = 0;
-    m_fbo = std::make_unique<GLFramebuffer>(0, workspace()->geometry().size());
+    m_fbo = GLFramebuffer::createWrapper(0, workspace()->geometry().size());
 }
 
 OutputLayerBeginFrameInfo EglBackend::beginFrame()

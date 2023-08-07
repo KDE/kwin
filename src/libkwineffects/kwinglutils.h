@@ -408,30 +408,6 @@ inline GLShader *ShaderBinder::shader()
 class KWINGLUTILS_EXPORT GLFramebuffer
 {
 public:
-    enum Attachment {
-        NoAttachment,
-        CombinedDepthStencil,
-    };
-
-    /**
-     * Constructs a GLFramebuffer
-     * @since 5.13
-     */
-    explicit GLFramebuffer();
-
-    /**
-     * Constructs a GLFramebuffer. Note that ensuring the color attachment outlives
-     * the framebuffer is the responsibility of the caller.
-     *
-     * @param colorAttachment texture where the scene will be rendered onto
-     */
-    explicit GLFramebuffer(GLTexture *colorAttachment, Attachment attachment = NoAttachment);
-
-    /**
-     * Constructs a wrapper for an already created framebuffer object. The GLFramebuffer
-     * does not take the ownership of the framebuffer object handle.
-     */
-    GLFramebuffer(GLuint handle, const QSize &size);
     ~GLFramebuffer();
 
     /**
@@ -439,24 +415,20 @@ public:
      */
     GLuint handle() const
     {
-        return mFramebuffer;
+        return m_framebuffer;
     }
     /**
      * Returns the size of the color attachment to this framebuffer object.
      */
     QSize size() const
     {
-        return mSize;
-    }
-    bool valid() const
-    {
-        return mValid;
+        return m_size;
     }
 
     static void initStatic();
     static bool supported()
     {
-        return sSupported;
+        return s_supported;
     }
 
     /**
@@ -508,27 +480,49 @@ public:
      */
     GLTexture *colorAttachment() const;
 
+    enum Attachment {
+        NoAttachment,
+        CombinedDepthStencil,
+    };
+
+    /**
+     * Create a new framebuffer object, using the provided texture as the color attachment
+     */
+    static std::unique_ptr<GLFramebuffer> create(GLTexture *colorAttachment, Attachment attachment = NoAttachment);
+    /**
+     * Constructs a wrapper for an existing framebuffer object, without taking ownership
+     */
+    static std::unique_ptr<GLFramebuffer> createWrapper(GLuint handle, const QSize &size);
+
 protected:
     void initColorAttachment(GLTexture *colorAttachment);
     void initDepthStencilAttachment();
 
 private:
-    bool bind();
+    GLFramebuffer(GLuint handle, const QSize &size);
+    GLFramebuffer(GLuint handle, GLuint depth, GLuint stencil, GLTexture *colorAttachment);
+
+    void bind();
+    struct DepthStencil
+    {
+        GLuint depth = 0;
+        GLuint stencil = 0;
+    };
+    static std::optional<DepthStencil> createDepthStencilAttachment(const QSize &size);
 
     friend void KWin::cleanupGL();
     static void cleanup();
-    static bool sSupported;
-    static bool sSupportsPackedDepthStencil;
-    static bool sSupportsDepth24;
+    static bool s_supported;
+    static bool s_supportsPackedDepthStencil;
+    static bool s_supportsDepth24;
     static bool s_blitSupported;
     static QStack<GLFramebuffer *> s_fbos;
 
-    GLuint mFramebuffer = 0;
-    GLuint mDepthBuffer = 0;
-    GLuint mStencilBuffer = 0;
-    QSize mSize;
-    bool mValid = false;
-    bool mForeign = false;
+    GLuint m_framebuffer = 0;
+    GLuint m_depthBuffer = 0;
+    GLuint m_stencilBuffer = 0;
+    QSize m_size;
+    bool m_foreign = false;
     GLTexture *const m_colorAttachment;
 };
 
