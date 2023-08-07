@@ -485,7 +485,7 @@ msgid "Focus protection"
 msgstr "حماية التركيز"
 
 #: rulesmodel.cpp:654
-#, kde-kuit-format
+#, fuzzy, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "This property controls the focus protection level of the currently active "

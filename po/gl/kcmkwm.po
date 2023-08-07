@@ -7,14 +7,14 @@
 # Marce Villarino <mvillarino@kde-espana.es>, 2009, 2011.
 # Marce Villarino <mvillarino@kde-espana.es>, 2012, 2013, 2014.
 # Adrián Chaves Fernández <adriyetichaves@gmail.com>, 2015, 2017.
-# Adrián Chaves (Gallaecio) <adrian@chaves.io>, 2017, 2019, 2020.
+# Adrián Chaves (Gallaecio) <adrian@chaves.io>, 2017, 2019, 2020, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-15 02:18+0000\n"
-"PO-Revision-Date: 2020-01-11 11:39+0100\n"
+"PO-Revision-Date: 2023-08-06 05:48+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
 "Language: gl\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 19.08.3\n"
+"X-Generator: Lokalize 23.04.3\n"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:17
@@ -640,7 +640,7 @@ msgstr ""
 #: advanced.ui:136
 #, kde-format
 msgid "Hide utility windows for inactive applications"
-msgstr "Agochar as xanelas de utilidades das aplicacións inactivas"
+msgstr "Agochar as xanelas de utilidades das aplicacións inactivas."
 
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyLabel)
 #: advanced.ui:143
@@ -878,7 +878,7 @@ msgstr ""
 #: focus.ui:156
 #, kde-format
 msgid "&Click raises active window"
-msgstr "Premer eleva a xanela a&ctiva"
+msgstr "Premer eleva a xanela a&ctiva."
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_AutoRaise)
 #: focus.ui:165
@@ -936,7 +936,7 @@ msgstr ""
 #: focus.ui:206
 #, kde-format
 msgid "Active screen follows &mouse"
-msgstr "A pantalla activa &segue o rato"
+msgstr "A pantalla activa &segue o rato."
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
 #: focus.ui:213
@@ -955,7 +955,7 @@ msgstr ""
 #: focus.ui:216
 #, kde-format
 msgid "&Separate screen focus"
-msgstr "&Separar o foco da pantalla"
+msgstr "&Separar o foco da pantalla."
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
 #: focus.ui:229
@@ -1272,7 +1272,7 @@ msgstr ""
 #: moving.ui:126
 #, kde-format
 msgid "Only when overlapping"
-msgstr "Só cando se superpoñan"
+msgstr "Só cando se superpoñan."
 
 #: windows.cpp:97
 #, fuzzy, kde-format

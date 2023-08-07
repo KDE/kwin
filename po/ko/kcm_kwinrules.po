@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-07 02:19+0000\n"
-"PO-Revision-Date: 2023-07-23 21:51+0200\n"
+"PO-Revision-Date: 2023-08-06 22:31+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -509,6 +509,11 @@ msgid ""
 "use any other global shortcuts such as <shortcut>Alt+Space</shortcut> to "
 "activate KRunner."
 msgstr ""
+"이 속성을 사용하면 이 창에 포커스가 맞춰져 있을 때 전역 단축키 동작을 방지합"
+"니다. 해당 전역 단축키를 자체적으로 처리하는 에뮬레이터나 가상 머신 등 앱에 "
+"유용할 수 있습니다.<nl/><nl/>사용 시 <shortcut>Alt+Tab</shortcut> 키를 통해"
+"서 창 밖으로 탈출할 수 없으며, <shortcut>Alt+Space</shortcut> 키를 통해서 "
+"KRunner를 실행시킬 수도 없습니다."
 
 #: rulesmodel.cpp:698
 #, kde-format
@@ -544,6 +549,9 @@ msgid ""
 "it, try to match other properties like the window title instead.<nl/><nl/"
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
+"이 앱은 창 클래스를 제공하지 않습니다. 따라서 KWin에서 창 클래스를 사용하여 "
+"규칙을 적용할 수 없습니다. 일부 창 규칙을 설정하려면 창 제목과 같은 다른 속성"
+"으로 일치를 사용하십시오.<nl/><nl/>앱 개발자에게 문제를 보고해 주십시오."
 
 #: rulesmodel.cpp:801
 #, kde-format
