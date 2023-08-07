@@ -1206,11 +1206,6 @@ std::unique_ptr<GLFramebuffer> GLFramebuffer::create(GLTexture *colorAttachment,
         qCCritical(LIBKWINGLUTILS) << "Framebuffer objects aren't supported!";
         return nullptr;
     }
-    GLuint prevFbo = 0;
-    if (const GLFramebuffer *current = currentFramebuffer()) {
-        prevFbo = current->handle();
-    }
-
     GLuint fbo = 0;
     glGenFramebuffers(1, &fbo);
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
@@ -1225,7 +1220,7 @@ std::unique_ptr<GLFramebuffer> GLFramebuffer::create(GLTexture *colorAttachment,
     }
 
     const GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-    glBindFramebuffer(GL_FRAMEBUFFER, prevFbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, currentFramebuffer() ? currentFramebuffer()->handle() : 0);
 
     if (status != GL_FRAMEBUFFER_COMPLETE) {
         // We have an incomplete framebuffer, consider it invalid
@@ -1251,6 +1246,51 @@ std::unique_ptr<GLFramebuffer> GLFramebuffer::createWrapper(GLuint handle, const
     return std::unique_ptr<GLFramebuffer>(new GLFramebuffer(handle, size));
 }
 
+std::unique_ptr<GLFramebuffer> GLFramebuffer::allocate(GLuint internalFormat, const QSize &size, Attachment attachment)
+{
+    if (!s_supported) {
+        qCCritical(LIBKWINGLUTILS) << "Framebuffer objects aren't supported!";
+        return nullptr;
+    }
+    auto colorAttachment = GLTexture::allocate(internalFormat, size);
+    if (!colorAttachment) {
+        return nullptr;
+    }
+    GLuint fbo = 0;
+    glGenFramebuffers(1, &fbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, colorAttachment->target(), colorAttachment->texture(), 0);
+    DepthStencil depthStencil;
+    if (attachment == Attachment::CombinedDepthStencil) {
+        if (const auto attachments = createDepthStencilAttachment(colorAttachment->size())) {
+            depthStencil = *attachments;
+        } else {
+            return nullptr;
+        }
+    }
+
+    const GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    glBindFramebuffer(GL_FRAMEBUFFER, currentFramebuffer() ? currentFramebuffer()->handle() : 0);
+
+    if (status != GL_FRAMEBUFFER_COMPLETE) {
+        // We have an incomplete framebuffer, consider it invalid
+        if (status == 0) {
+            qCCritical(LIBKWINGLUTILS) << "glCheckFramebufferStatus failed: " << formatGLError(glGetError());
+        } else {
+            qCCritical(LIBKWINGLUTILS) << "Invalid framebuffer status: " << formatFramebufferStatus(status);
+        }
+        glDeleteFramebuffers(1, &fbo);
+        if (depthStencil.depth) {
+            glDeleteRenderbuffers(1, &depthStencil.depth);
+        }
+        if (depthStencil.stencil && depthStencil.depth != depthStencil.stencil) {
+            glDeleteRenderbuffers(1, &depthStencil.stencil);
+        }
+        return nullptr;
+    }
+    return std::unique_ptr<GLFramebuffer>(new GLFramebuffer(fbo, depthStencil.depth, depthStencil.stencil, std::move(colorAttachment)));
+}
+
 GLFramebuffer::GLFramebuffer(GLuint handle, GLuint depth, GLuint stencil, GLTexture *colorAttachment)
     : m_framebuffer(handle)
     , m_depthBuffer(depth)
@@ -1258,6 +1298,17 @@ GLFramebuffer::GLFramebuffer(GLuint handle, GLuint depth, GLuint stencil, GLText
     , m_size(colorAttachment->size())
     , m_foreign(false)
     , m_colorAttachment(colorAttachment)
+{
+}
+
+GLFramebuffer::GLFramebuffer(GLuint handle, GLuint depth, GLuint stencil, std::unique_ptr<GLTexture> &&colorAttachment)
+    : m_framebuffer(handle)
+    , m_depthBuffer(depth)
+    , m_stencilBuffer(stencil)
+    , m_size(colorAttachment->size())
+    , m_foreign(false)
+    , m_colorAttachment(colorAttachment.get())
+    , m_ownedColorAttachment(std::move(colorAttachment))
 {
 }
 

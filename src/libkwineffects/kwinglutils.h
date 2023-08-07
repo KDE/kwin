@@ -490,6 +490,10 @@ public:
      */
     static std::unique_ptr<GLFramebuffer> create(GLTexture *colorAttachment, Attachment attachment = NoAttachment);
     /**
+     * Create a new framebuffer object, using a new color attachment created from the provided parameters
+     */
+    static std::unique_ptr<GLFramebuffer> allocate(GLuint internalFormat, const QSize &size, Attachment attachment = NoAttachment);
+    /**
      * Constructs a wrapper for an existing framebuffer object, without taking ownership
      */
     static std::unique_ptr<GLFramebuffer> createWrapper(GLuint handle, const QSize &size);
@@ -501,6 +505,7 @@ protected:
 private:
     GLFramebuffer(GLuint handle, const QSize &size);
     GLFramebuffer(GLuint handle, GLuint depth, GLuint stencil, GLTexture *colorAttachment);
+    GLFramebuffer(GLuint handle, GLuint depth, GLuint stencil, std::unique_ptr<GLTexture> &&colorAttachment);
 
     void bind();
     struct DepthStencil
@@ -524,6 +529,7 @@ private:
     QSize m_size;
     bool m_foreign = false;
     GLTexture *const m_colorAttachment;
+    const std::unique_ptr<GLTexture> m_ownedColorAttachment;
 };
 
 enum VertexAttributeType {
