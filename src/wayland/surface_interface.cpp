@@ -267,8 +267,7 @@ SurfaceInterface *SurfaceInterfacePrivate::surfaceAt(const QPointF &position, co
         return nullptr;
     }
 
-    for (auto it = current.above.crbegin(); it != current.above.crend(); ++it) {
-        const SubSurfaceInterface *current = *it;
+    for (const auto *const current : current.above) {
         SurfaceInterface *surface = current->surface();
         if (auto s = surfaceTypeAt(surface, surfaceType, position - current->position())) {
             return s;
@@ -280,8 +279,7 @@ SurfaceInterface *SurfaceInterfacePrivate::surfaceAt(const QPointF &position, co
         return q;
     }
 
-    for (auto it = current.below.crbegin(); it != current.below.crend(); ++it) {
-        const SubSurfaceInterface *current = *it;
+    for (const auto *const current : current.above) {
         SurfaceInterface *surface = current->surface();
         if (auto s = surfaceTypeAt(surface, surfaceType, position - current->position())) {
             return s;
