@@ -117,6 +117,7 @@ public:
     bool contains(const QPointF &position) const;
     bool inputContains(const QPointF &position) const;
 
+    bool surfaceTypeContains(const SurfaceInterfaceType type, const QPointF &position) const;
     SurfaceInterface *surfaceTypeAt(SurfaceInterface *const surface, const SurfaceInterfaceType type, const QPointF &position) const;
     SurfaceInterface *surfaceAt(const QPointF &position, const SurfaceInterfaceType type) const;
 

@@ -237,6 +237,18 @@ void SurfaceInterfacePrivate::installIdleInhibitor(IdleInhibitorV1Interface *inh
     }
 }
 
+bool SurfaceInterfacePrivate::surfaceTypeContains(const SurfaceInterfaceType type, const QPointF &position) const
+{
+    switch (type) {
+    case SurfaceInterfaceType::SurfaceInterfaceType:
+        return contains(position);
+    case SurfaceInterfaceType::InputReceivingSurfaceInterfaceType:
+        return inputContains(position);
+    }
+
+    Q_UNREACHABLE();
+}
+
 SurfaceInterface *SurfaceInterfacePrivate::surfaceTypeAt(SurfaceInterface *const surface, const SurfaceInterfaceType type, const QPointF &position) const
 {
     switch (type) {
@@ -264,7 +276,7 @@ SurfaceInterface *SurfaceInterfacePrivate::surfaceAt(const QPointF &position, co
     }
 
     // check whether the geometry contains the pos
-    if (contains(position)) {
+    if (surfaceTypeContains(surfaceType, position)) {
         return q;
     }
 
