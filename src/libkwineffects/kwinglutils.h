@@ -488,7 +488,7 @@ public:
     /**
      * Create a new framebuffer object, using the provided texture as the color attachment
      */
-    static std::unique_ptr<GLFramebuffer> create(GLTexture *colorAttachment, Attachment attachment = NoAttachment);
+    static std::unique_ptr<GLFramebuffer> create(const std::shared_ptr<GLTexture> &colorAttachment, Attachment attachment = NoAttachment);
     /**
      * Create a new framebuffer object, using a new color attachment created from the provided parameters
      */
@@ -504,7 +504,7 @@ protected:
 
 private:
     GLFramebuffer(GLuint handle, const QSize &size);
-    GLFramebuffer(GLuint handle, GLuint depth, GLuint stencil, GLTexture *colorAttachment);
+    GLFramebuffer(GLuint handle, GLuint depth, GLuint stencil, const std::shared_ptr<GLTexture> &colorAttachment);
     GLFramebuffer(GLuint handle, GLuint depth, GLuint stencil, std::unique_ptr<GLTexture> &&colorAttachment);
 
     void bind();
@@ -530,6 +530,7 @@ private:
     bool m_foreign = false;
     GLTexture *const m_colorAttachment;
     const std::unique_ptr<GLTexture> m_ownedColorAttachment;
+    const std::shared_ptr<GLTexture> m_sharedColorAttachment;
 };
 
 enum VertexAttributeType {

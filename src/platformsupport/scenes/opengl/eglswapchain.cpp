@@ -24,7 +24,7 @@ EglSwapchainSlot::EglSwapchainSlot(EglContext *context, GraphicsBuffer *buffer)
     : m_buffer(buffer)
 {
     m_texture = context->importDmaBufAsTexture(*buffer->dmabufAttributes());
-    m_framebuffer = GLFramebuffer::create(m_texture.get());
+    m_framebuffer = GLFramebuffer::create(m_texture);
 }
 
 EglSwapchainSlot::~EglSwapchainSlot()

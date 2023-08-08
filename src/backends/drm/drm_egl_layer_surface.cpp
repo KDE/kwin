@@ -95,7 +95,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
             if (!m_surface.shadowTexture) {
                 return std::nullopt;
             }
-            m_surface.shadowBuffer = GLFramebuffer::create(m_surface.shadowTexture.get());
+            m_surface.shadowBuffer = GLFramebuffer::create(m_surface.shadowTexture);
         }
         return OutputLayerBeginFrameInfo{
             .renderTarget = RenderTarget(m_surface.shadowBuffer.get(), m_surface.intermediaryColorDescription),

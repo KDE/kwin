@@ -384,7 +384,7 @@ void WindowThumbnailItem::updateOffscreenTexture()
         if (!m_offscreenTexture) {
             return;
         }
-        m_offscreenTarget = GLFramebuffer::create(m_offscreenTexture.get());
+        m_offscreenTarget = GLFramebuffer::create(m_offscreenTexture);
     }
 
     RenderTarget offscreenRenderTarget(m_offscreenTarget.get());

@@ -100,7 +100,7 @@ bool EGLPlatformContext::makeCurrent(QPlatformSurface *surface)
                 return false;
             }
 
-            std::unique_ptr<GLFramebuffer> fbo = GLFramebuffer::create(texture.get(), GLFramebuffer::CombinedDepthStencil);
+            std::unique_ptr<GLFramebuffer> fbo = GLFramebuffer::create(texture, GLFramebuffer::CombinedDepthStencil);
             if (!fbo) {
                 return false;
             }

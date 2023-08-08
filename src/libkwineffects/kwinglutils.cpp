@@ -1200,7 +1200,7 @@ std::optional<GLFramebuffer::DepthStencil> GLFramebuffer::createDepthStencilAtta
     return ret;
 }
 
-std::unique_ptr<GLFramebuffer> GLFramebuffer::create(GLTexture *colorAttachment, Attachment attachment)
+std::unique_ptr<GLFramebuffer> GLFramebuffer::create(const std::shared_ptr<GLTexture> &colorAttachment, Attachment attachment)
 {
     if (!s_supported) {
         qCCritical(LIBKWINGLUTILS) << "Framebuffer objects aren't supported!";
@@ -1291,13 +1291,14 @@ std::unique_ptr<GLFramebuffer> GLFramebuffer::allocate(GLuint internalFormat, co
     return std::unique_ptr<GLFramebuffer>(new GLFramebuffer(fbo, depthStencil.depth, depthStencil.stencil, std::move(colorAttachment)));
 }
 
-GLFramebuffer::GLFramebuffer(GLuint handle, GLuint depth, GLuint stencil, GLTexture *colorAttachment)
+GLFramebuffer::GLFramebuffer(GLuint handle, GLuint depth, GLuint stencil, const std::shared_ptr<GLTexture> &colorAttachment)
     : m_framebuffer(handle)
     , m_depthBuffer(depth)
     , m_stencilBuffer(stencil)
     , m_size(colorAttachment->size())
     , m_foreign(false)
-    , m_colorAttachment(colorAttachment)
+    , m_colorAttachment(colorAttachment.get())
+    , m_sharedColorAttachment(colorAttachment)
 {
 }
 
