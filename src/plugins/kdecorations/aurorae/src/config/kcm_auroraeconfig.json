@@ -24,6 +24,7 @@
         "Description[uk]": "Рушій тем обрамлення вікон",
         "Description[x-test]": "xxWindow Decoration Theme Enginexx",
         "Description[zh_CN]": "窗口装饰主题引擎",
+        "Description[zh_TW]": "視窗裝飾主題引擎",
         "Name": "Aurorae",
         "Name[ar]": "أورورا",
         "Name[bg]": "Aurorae",
@@ -48,6 +49,7 @@
         "Name[tr]": "Aurorae",
         "Name[uk]": "Aurorae",
         "Name[x-test]": "xxAuroraexx",
-        "Name[zh_CN]": "Aurorae 极光"
+        "Name[zh_CN]": "Aurorae 极光",
+        "Name[zh_TW]": "Aurorae"
     }
 }
