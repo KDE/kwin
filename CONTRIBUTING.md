@@ -37,8 +37,9 @@ Most window management stuff (layouting, movement, properties, communication bet
 
 ### Window Effects
 
-Window effects are located in the `effects` folder in `src`, with one folder per effect.
-Not everything here is an effect as exposed in the configuration UI, such as the colour picker in `src/effects/colorpicker`.
+Window effects are located in `src/plugins`, one effect plugin per folder.  Folder `src/plugins/private` contains the plugin (`org.kde.kwin.private.effects`) that exposes layouting properties and `WindowHeap.qml` for QML effects.  Not everything here is an effect as exposed in the configuration UI, such as the colour picker in `src/plugins/colorpicker`.
+
+Of note, the Effects QML engine is shared with the Scripting components (see `src/scripting`).
 
 ### Scripting API
 
