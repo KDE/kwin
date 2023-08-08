@@ -8,7 +8,6 @@
 #pragma once
 
 #include "libkwineffects/kwineffects.h"
-#include "libkwineffects/kwinglplatform.h"
 #include "libkwineffects/kwinglutils.h"
 
 #include <QStack>
@@ -22,8 +21,6 @@ class BlurManagerInterface;
 
 namespace KWin
 {
-
-static const int borderSize = 5;
 
 class BlurShader;
 
