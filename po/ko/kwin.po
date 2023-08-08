@@ -1125,7 +1125,7 @@ msgstr "이름"
 #: helpers/killer/killer.cpp:41
 #, kde-format
 msgid "ID of resource belonging to the application"
-msgstr "앱에 속한 자원의 ID"
+msgstr "앱에 속한 리소스의 ID"
 
 #: helpers/killer/killer.cpp:41
 #, kde-format
@@ -3539,7 +3539,7 @@ msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"
 "Contact your distribution about this."
 msgstr ""
-"창 전환기 설치 상태가 올바르지 않습니다. 자원이 없습니다.\n"
+"창 전환기 설치 상태가 올바르지 않습니다. 리소스가 없습니다.\n"
 "배포판 관리자에게 문의하십시오."
 
 #: useractions.cpp:160

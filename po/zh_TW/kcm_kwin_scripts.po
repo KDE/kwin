@@ -4,20 +4,20 @@
 # Franklin Weng <franklin@goodhorse.idv.tw>, 2012, 2013.
 # Jeff Huang <s8321414@gmail.com>, 2017, 2022.
 # pan93412 <pan93412@gmail.com>, 2018.
-# Kisaragi Hiu <mail@kisaragi-hiu.com>, 2022.
+# Kisaragi Hiu <mail@kisaragi-hiu.com>, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-21 02:02+0000\n"
-"PO-Revision-Date: 2022-12-26 03:37+0900\n"
+"PO-Revision-Date: 2023-08-07 19:25+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
-"Language-Team: Traditional Chinese <zh-l10n@linux.org.tw>\n"
+"Language-Team: Chinese <zh-l10n@linux.org.tw>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 22.12.0\n"
+"X-Generator: Lokalize 23.04.3\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: module.cpp:50
@@ -52,22 +52,18 @@ msgid "Error when uninstalling KWin Script: %1"
 msgstr "解除安裝 KWin 指令稿時發生錯誤：%1"
 
 #: ui/main.qml:23
-#, fuzzy, kde-format
-#| msgid "Install from File..."
+#, kde-format
 msgid "Install from File…"
 msgstr "從檔案安裝…"
 
 #: ui/main.qml:27
-#, fuzzy, kde-format
-#| msgid "Get New Scripts..."
+#, kde-format
 msgctxt "@action:button get new KWin scripts"
 msgid "Get New…"
-msgstr "取得新文稿..."
+msgstr "取得新的…"
 
 #: ui/main.qml:65
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Delete..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Delete…"
 msgstr "刪除…"
