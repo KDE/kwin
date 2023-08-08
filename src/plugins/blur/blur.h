@@ -27,6 +27,11 @@ static const int borderSize = 5;
 
 class BlurShader;
 
+struct BlurData
+{
+    QRegion region;
+};
+
 class BlurEffect : public KWin::Effect
 {
     Q_OBJECT
@@ -78,7 +83,7 @@ private:
     QRegion expand(const QRegion &region) const;
     void initBlurStrengthValues();
     bool updateTexture(EffectScreen *screen, const RenderTarget &renderTarget);
-    QRegion blurRegion(const EffectWindow *w) const;
+    QRegion blurRegion(EffectWindow *w) const;
     QRegion decorationBlurRegion(const EffectWindow *w) const;
     bool decorationSupportsBlurBehind(const EffectWindow *w) const;
     bool shouldBlur(const EffectWindow *w, int mask, const WindowPaintData &data) const;
@@ -132,7 +137,7 @@ private:
     QVector<BlurValuesStruct> blurStrengthValues;
 
     QMap<EffectWindow *, QMetaObject::Connection> windowBlurChangedConnections;
-    QMap<const EffectWindow *, QRegion> blurRegions;
+    QHash<EffectWindow *, BlurData> m_windows;
 
     static KWaylandServer::BlurManagerInterface *s_blurManager;
     static QTimer *s_blurManagerRemoveTimer;

@@ -334,9 +334,9 @@ void BlurEffect::updateBlurRegion(EffectWindow *w)
     }
 
     if (valid) {
-        blurRegions[w] = region;
+        m_windows[w].region = region;
     } else {
-        blurRegions.remove(w);
+        m_windows.remove(w);
     }
 }
 
@@ -361,7 +361,7 @@ void BlurEffect::slotWindowAdded(EffectWindow *w)
 
 void BlurEffect::slotWindowDeleted(EffectWindow *w)
 {
-    blurRegions.remove(w);
+    m_windows.remove(w);
     auto it = windowBlurChangedConnections.find(w);
     if (it == windowBlurChangedConnections.end()) {
         return;
@@ -471,12 +471,12 @@ QRegion BlurEffect::expand(const QRegion &region) const
     return expanded;
 }
 
-QRegion BlurEffect::blurRegion(const EffectWindow *w) const
+QRegion BlurEffect::blurRegion(EffectWindow *w) const
 {
     QRegion region;
 
-    if (auto it = blurRegions.find(w); it != blurRegions.end()) {
-        const QRegion &appRegion = *it;
+    if (auto it = m_windows.find(w); it != m_windows.end()) {
+        const QRegion &appRegion = it->region;
         if (!appRegion.isEmpty()) {
             if (w->decorationHasAlpha() && decorationSupportsBlurBehind(w)) {
                 region = decorationBlurRegion(w);
