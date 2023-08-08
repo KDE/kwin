@@ -744,13 +744,8 @@ void BlurEffect::doBlur(const RenderTarget &renderTarget, const RenderViewport &
     // Modulate the blurred texture with the window opacity if the window isn't opaque
     if (opacity < 1.0) {
         glEnable(GL_BLEND);
-#if 1 // bow shape, always above y = x
         float o = 1.0f - opacity;
         o = 1.0f - o * o;
-#else // sigmoid shape, above y = x for x > 0.5, below y = x for x < 0.5
-        float o = 2.0f * opacity - 1.0f;
-        o = 0.5f + o / (1.0f + std::abs(o));
-#endif
         glBlendColor(0, 0, 0, o);
         glBlendFunc(GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA);
     }
