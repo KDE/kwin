@@ -584,20 +584,19 @@ void BlurEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::
     // in case this window has regions to be blurred
     const QRect screen = effects->virtualScreenGeometry();
     const QRegion blurArea = blurRegion(w).translated(w->pos().toPoint()) & screen;
-    const QRegion expandedBlur = (w->isDock() ? blurArea : expand(blurArea)) & screen;
 
     // if this window or a window underneath the blurred area is painted again we have to
     // blur everything
-    if (m_paintedArea.intersects(expandedBlur) || data.paint.intersects(blurArea)) {
-        data.paint |= expandedBlur;
+    if (m_paintedArea.intersects(blurArea) || data.paint.intersects(blurArea)) {
+        data.paint |= blurArea;
         // we have to check again whether we do not damage a blurred area
         // of a window
-        if (expandedBlur.intersects(m_currentBlur)) {
+        if (blurArea.intersects(m_currentBlur)) {
             data.paint |= m_currentBlur;
         }
     }
 
-    m_currentBlur |= expandedBlur;
+    m_currentBlur |= blurArea;
 
     m_paintedArea -= data.opaque;
     m_paintedArea |= data.paint;
@@ -663,13 +662,10 @@ void BlurEffect::drawWindow(const RenderTarget &renderTarget, const RenderViewpo
             shape = translated;
         }
 
-        EffectWindow *modal = w->transientFor();
-        const bool transientForIsDock = (modal ? modal->isDock() : false);
-
         shape &= region;
 
         if (!shape.isEmpty()) {
-            doBlur(renderTarget, viewport, shape, screen, data.opacity(), w->isDock() || transientForIsDock, w->frameGeometry().toRect());
+            doBlur(renderTarget, viewport, shape, screen, data.opacity(), w->frameGeometry().toRect());
         }
     }
 
@@ -707,7 +703,7 @@ void BlurEffect::generateNoiseTexture()
     m_noiseTexture->setWrapMode(GL_REPEAT);
 }
 
-void BlurEffect::doBlur(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &shape, const QRect &screen, const float opacity, bool isDock, QRect windowRect)
+void BlurEffect::doBlur(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &shape, const QRect &screen, const float opacity, QRect windowRect)
 {
     const auto &outputData = m_screenData[m_currentScreen];
     const QRegion expandedBlurRegion = expand(shape) & expand(screen);
@@ -729,41 +725,19 @@ void BlurEffect::doBlur(const RenderTarget &renderTarget, const RenderViewport &
     projection.ortho(viewport.renderRect().x(), viewport.renderRect().x() + viewport.renderRect().width(),
                      viewport.renderRect().y() + viewport.renderRect().height(), viewport.renderRect().y(), 0, 65535);
 
-    /*
-     * If the window is a dock or panel we avoid the "extended blur" effect.
-     * Extended blur is when windows that are not under the blurred area affect
-     * the final blur result.
-     * We want to avoid this on panels, because it looks really weird and ugly
-     * when maximized windows or windows near the panel affect the dock blur.
-     */
-    if (isDock) {
-        // This assumes the source frame buffer is in device coordinates, while
-        // our target framebuffer is in logical coordinates. It's a bit ugly but
-        // to fix it properly we probably need to do blits in normalized
-        // coordinates.
-        outputData.renderTargets.back()->blitFromRenderTarget(renderTarget, viewport, logicalSourceRect, logicalSourceRect.translated(-screen.topLeft()));
-        GLFramebuffer::pushFramebuffers(outputData.renderTargetStack);
+    // This assumes the source frame buffer is in device coordinates, while
+    // our target framebuffer is in logical coordinates. It's a bit ugly but
+    // to fix it properly we probably need to do blits in normalized
+    // coordinates.
+    outputData.renderTargets.back()->blitFromRenderTarget(renderTarget, viewport, logicalSourceRect, logicalSourceRect.translated(-screen.topLeft()));
+    GLFramebuffer::pushFramebuffers(outputData.renderTargetStack);
 
-        if (useSRGB) {
-            glEnable(GL_FRAMEBUFFER_SRGB);
-        }
-
-        vbo->bindArrays();
-        copyScreenSampleTexture(outputData, viewport, outputData.renderTargetStack.top()->size(), vbo, blurRectCount, shape.boundingRect().translated(-screen.topLeft()), projection);
-    } else {
-        RenderTarget offscreenRT(outputData.renderTargetStack.top());
-        outputData.renderTargetStack.top()->blitFromRenderTarget(renderTarget, viewport, logicalSourceRect, logicalSourceRect.translated(-screen.topLeft()));
-        GLFramebuffer::pushFramebuffers(outputData.renderTargetStack);
-
-        if (useSRGB) {
-            glEnable(GL_FRAMEBUFFER_SRGB);
-        }
-
-        // Remove the m_renderTargets[0] from the top of the stack that we will not use
-        GLFramebuffer::popFramebuffer();
+    if (useSRGB) {
+        glEnable(GL_FRAMEBUFFER_SRGB);
     }
 
     vbo->bindArrays();
+    copyScreenSampleTexture(outputData, viewport, outputData.renderTargetStack.top()->size(), vbo, blurRectCount, shape.boundingRect().translated(-screen.topLeft()), projection);
     downSampleTexture(outputData, vbo, blurRectCount, projection);
     upSampleTexture(outputData, vbo, blurRectCount, projection);
 
