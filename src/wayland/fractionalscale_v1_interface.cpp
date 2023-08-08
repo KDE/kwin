@@ -49,7 +49,9 @@ FractionalScaleV1Interface::FractionalScaleV1Interface(SurfaceInterface *surface
 {
     SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(surface);
     surfacePrivate->fractionalScaleExtension = this;
-    setPreferredScale(surfacePrivate->preferredBufferScale);
+    if (surfacePrivate->preferredBufferScale.has_value()) {
+        setPreferredScale(surfacePrivate->preferredBufferScale.value());
+    }
 }
 
 FractionalScaleV1Interface::~FractionalScaleV1Interface()

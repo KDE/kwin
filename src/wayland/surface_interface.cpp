@@ -69,8 +69,12 @@ void SurfaceInterfacePrivate::addChild(SubSurfaceInterface *child)
     cached.above.append(child);
     current.above.append(child);
     child->surface()->setOutputs(outputs);
-    child->surface()->setPreferredBufferScale(preferredBufferScale);
-    child->surface()->setPreferredBufferTransform(preferredBufferTransform);
+    if (preferredBufferScale.has_value()) {
+        child->surface()->setPreferredBufferScale(preferredBufferScale.value());
+    }
+    if (preferredBufferTransform.has_value()) {
+        child->surface()->setPreferredBufferTransform(preferredBufferTransform.value());
+    }
 
     Q_EMIT q->childSubSurfaceAdded(child);
     Q_EMIT q->childSubSurfacesChanged();

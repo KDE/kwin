@@ -14,6 +14,8 @@
 #include <QVector>
 // Wayland
 #include "qwayland-server-wayland.h"
+// C++
+#include <optional>
 
 namespace KWaylandServer
 {
@@ -135,8 +137,8 @@ public:
     qreal pendingScaleOverride = 1.;
 
     QVector<OutputInterface *> outputs;
-    qreal preferredBufferScale = 1.0;
-    KWin::OutputTransform preferredBufferTransform = KWin::OutputTransform::Normal;
+    std::optional<qreal> preferredBufferScale;
+    std::optional<KWin::OutputTransform> preferredBufferTransform;
 
     LockedPointerV1Interface *lockedPointer = nullptr;
     ConfinedPointerV1Interface *confinedPointer = nullptr;
