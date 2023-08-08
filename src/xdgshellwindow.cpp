@@ -1858,6 +1858,9 @@ void XdgPopupWindow::initialize()
 
     const QRectF area = workspace()->clientArea(PlacementArea, this, workspace()->activeOutput());
     workspace()->placement()->place(this, area);
+
+    updateClientOutputs();
+
     scheduleConfigure();
 }
 
