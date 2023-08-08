@@ -17,8 +17,8 @@
 namespace KWin
 {
 
-OutputScreenCastSource::OutputScreenCastSource(Output *output, QObject *parent)
-    : ScreenCastSource(parent)
+OutputScreenCastSource::OutputScreenCastSource(Output *output)
+    : ScreenCastSource()
     , m_output(output)
 {
     connect(m_output, &QObject::destroyed, this, &ScreenCastSource::closed);

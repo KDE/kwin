@@ -20,7 +20,7 @@ class WindowScreenCastSource : public ScreenCastSource
     Q_OBJECT
 
 public:
-    explicit WindowScreenCastSource(Window *window, QObject *parent = nullptr);
+    explicit WindowScreenCastSource(Window *window);
 
     quint32 drmFormat() const override;
     bool hasAlphaChannel() const override;

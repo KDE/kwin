@@ -21,7 +21,7 @@ class RegionScreenCastSource : public ScreenCastSource
     Q_OBJECT
 
 public:
-    explicit RegionScreenCastSource(const QRect &region, qreal scale, QObject *parent = nullptr);
+    explicit RegionScreenCastSource(const QRect &region, qreal scale);
 
     quint32 drmFormat() const override;
     bool hasAlphaChannel() const override;

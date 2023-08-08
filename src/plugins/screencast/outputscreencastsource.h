@@ -20,7 +20,7 @@ class OutputScreenCastSource : public ScreenCastSource
     Q_OBJECT
 
 public:
-    explicit OutputScreenCastSource(Output *output, QObject *parent = nullptr);
+    explicit OutputScreenCastSource(Output *output);
 
     uint refreshRate() const override;
     bool hasAlphaChannel() const override;

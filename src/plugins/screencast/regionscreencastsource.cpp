@@ -20,8 +20,8 @@
 namespace KWin
 {
 
-RegionScreenCastSource::RegionScreenCastSource(const QRect &region, qreal scale, QObject *parent)
-    : ScreenCastSource(parent)
+RegionScreenCastSource::RegionScreenCastSource(const QRect &region, qreal scale)
+    : ScreenCastSource()
     , m_region(region)
     , m_scale(scale)
 {
