@@ -95,9 +95,9 @@
 >När en visualisering väl har valts i kombinationslistan, kan knappen till höger om listan klickas för att visa en förhandsgranskning eller anpassa alternativ specifika för visualiseringen.</para>
 
 <para
->Kryssrutan <guilabel
->Visa valt fönster</guilabel
-> bestämmer hur tydligt användaren vill se vilket fönster som kommer att aktiveras. Om rutan är markerad, blir alla fönster dämpade utom det som för närvarande är valt i aktivitetsbyte.</para>
+>The <guilabel
+>Show selected window</guilabel
+> checkbox determines how clearly the user will see which window will be activated. If this box is checked, then all windows will be dimmed except for the one that is currently highlighted in the Task Switcher.</para>
 
 <note
 ><para
@@ -154,19 +154,19 @@
 >Alternativen under den här sektionen styr delvis vilka fönster som visas i aktivitetsbyteslistan.</para>
 
 <para
->Kombinationslistan <guilabel
->Sorteringsordning</guilabel
-> anger om fönster ska listas i <guilabel
->Lagerordning</guilabel
-> eller i <guilabel
->Senast använda</guilabel
-> ordning. <guilabel
->Lagerordning</guilabel
-> är ordningen som fönstren visas på skärmen, medan ordningen för <guilabel
->Senast använda</guilabel
-> är ordningen som fönstren har används. Ordningen <guilabel
->Senast använda</guilabel
-> gör det mycket enkelt att byta mellan de två oftast använda fönstren eftersom de alltid dyker upp på de två översta platserna i listan.</para>
+>The <guilabel
+>Sort Order</guilabel
+> drop-down list specifies whether the windows should be listed in <guilabel
+>Stacking Order</guilabel
+> or <guilabel
+>Recently Used</guilabel
+> order. <guilabel
+>Stacking Order</guilabel
+> is the order in which the windows appear on the screen, while <guilabel
+>Recently Used</guilabel
+> order is the order in which the windows have been used. <guilabel
+>Recently Used</guilabel
+> order makes it very easy to switch between the two most frequently used windows because they will always appear in the top 2 positions in the list.</para>
 
 <para
 >Alternativet <guilabel

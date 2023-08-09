@@ -71,11 +71,11 @@
 > i den sammanhangsberoende menyn.</para>
 
 <para
->Du kan aktivera <guilabel
->Maximera:Fönster dragna till skärmens överkant </guilabel
-> eller <guilabel
->Sida vid sida: Fönster dragna till skärmens vänster- eller högerkant</guilabel
-> och ställa in procentandel av skärmen som utlöser att fönster läggs sida vid sida. </para>
+>You can enable <guilabel
+>Maximize: Windows dragged to top edge</guilabel
+> or <guilabel
+>Tile: Windows dragged to left or right edge</guilabel
+> and set a percentage of the screen to trigger the tiling. </para>
 
 <para
 >Genom att använda alternativet <guilabel

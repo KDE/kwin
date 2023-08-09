@@ -54,22 +54,22 @@
 >Modulen används för att aktivera och anpassa skrivbordseffekter för Plasma.</para>
 
 <para
->Huvuddelen av den här sidan är en lista med alla tillgängliga effekter grupperade enligt <guilabel
->Handikappstöd</guilabel
+>The main part of this page is a list of all available effects grouped by <guilabel
+>Accessibility</guilabel
 >, <guilabel
->Utseende</guilabel
+>Appearance</guilabel
 >, <guilabel
->Fokus</guilabel
+>Focus</guilabel
 >, <guilabel
->Visa skrivbordsanimering</guilabel
+>Show Desktop Animation</guilabel
 >, <guilabel
->Verktyg</guilabel
+>Tools</guilabel
 >, <guilabel
->Animering vid virtuellt skrivbordsbyte</guilabel
+>Virtual Desktop Switching Animation</guilabel
 >, <guilabel
->Fönsterhantering</guilabel
-> och <guilabel
->Animering av öppna och stäng fönster</guilabel
+>Window Management</guilabel
+>, and <guilabel
+>Window Open/Close Animation</guilabel
 >.</para>
 <para
 > Använd den inkrementella sökraden ovanför listfönstret för att hitta objekt i listan.</para>
