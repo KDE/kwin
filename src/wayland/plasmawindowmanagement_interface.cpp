@@ -71,6 +71,12 @@ public:
     PlasmaWindowInterfacePrivate(PlasmaWindowManagementInterface *wm, PlasmaWindowInterface *q);
     ~PlasmaWindowInterfacePrivate();
 
+    class PlasmaWindowResource : public QtWaylandServer::org_kde_plasma_window::Resource
+    {
+    public:
+        QtWaylandServer::org_kde_plasma_window_management::Resource *wmResource = nullptr;
+    };
+
     void setTitle(const QString &title);
     void setAppId(const QString &appId);
     void setPid(quint32 pid);
@@ -82,6 +88,7 @@ public:
     void setGeometry(const QRect &geometry);
     void setApplicationMenuPaths(const QString &service, const QString &object);
     void setResourceName(const QString &resourceName);
+    void sendInitialState(Resource *resource);
     wl_resource *resourceForParent(PlasmaWindowInterface *parent, Resource *child) const;
 
     quint32 windowId = 0;
@@ -107,7 +114,7 @@ public:
     QString m_resourceName;
 
 protected:
-    void org_kde_plasma_window_bind_resource(Resource *resource) override;
+    Resource *org_kde_plasma_window_allocate() override;
     void org_kde_plasma_window_set_state(Resource *resource, uint32_t flags, uint32_t state) override;
     void org_kde_plasma_window_set_virtual_desktop(Resource *resource, uint32_t number) override;
     void org_kde_plasma_window_set_minimized_geometry(Resource *resource, wl_resource *panel, uint32_t x, uint32_t y, uint32_t width, uint32_t height) override;
@@ -231,13 +238,15 @@ void PlasmaWindowManagementInterfacePrivate::org_kde_plasma_window_management_ge
 {
     for (const auto window : std::as_const(windows)) {
         if (window->d->windowId == internal_window_id) {
-            window->d->add(resource->client(), id, resource->version());
-            return;
+            auto windowResource = window->d->add(resource->client(), id, resource->version());
+            static_cast<PlasmaWindowInterfacePrivate::PlasmaWindowResource *>(windowResource)->wmResource = resource;
+            window->d->sendInitialState(windowResource);
         }
     }
     // create a temp window just for the resource, bind then immediately delete it, sending an unmap event
     PlasmaWindowInterface window(q, q);
-    window.d->add(resource->client(), id, resource->version());
+    auto windowResource = window.d->add(resource->client(), id, resource->version());
+    window.d->sendInitialState(windowResource);
 }
 
 void PlasmaWindowManagementInterfacePrivate::org_kde_plasma_window_management_get_window_by_uuid(Resource *resource,
@@ -251,10 +260,13 @@ void PlasmaWindowManagementInterfacePrivate::org_kde_plasma_window_management_ge
         qCWarning(KWIN_CORE) << "Could not find window with uuid" << internal_window_uuid;
         // create a temp window just for the resource, bind then immediately delete it, sending an unmap event
         PlasmaWindowInterface window(q, q);
-        window.d->add(resource->client(), id, resource->version());
+        auto windowResource = window.d->add(resource->client(), id, resource->version());
+        window.d->sendInitialState(windowResource);
         return;
     }
-    (*it)->d->add(resource->client(), id, resource->version());
+    auto windowResource = (*it)->d->add(resource->client(), id, resource->version());
+    static_cast<PlasmaWindowInterfacePrivate::PlasmaWindowResource *>(windowResource)->wmResource = resource;
+    (*it)->d->sendInitialState(windowResource);
 }
 
 PlasmaWindowManagementInterface::PlasmaWindowManagementInterface(Display *display, QObject *parent)
@@ -345,12 +357,17 @@ PlasmaWindowInterfacePrivate::~PlasmaWindowInterfacePrivate()
     unmap();
 }
 
+QtWaylandServer::org_kde_plasma_window::Resource *PlasmaWindowInterfacePrivate::org_kde_plasma_window_allocate()
+{
+    return new PlasmaWindowResource;
+}
+
 void PlasmaWindowInterfacePrivate::org_kde_plasma_window_destroy(Resource *resource)
 {
     wl_resource_destroy(resource->handle);
 }
 
-void PlasmaWindowInterfacePrivate::org_kde_plasma_window_bind_resource(Resource *resource)
+void PlasmaWindowInterfacePrivate::sendInitialState(Resource *resource)
 {
     for (const auto &desk : std::as_const(plasmaVirtualDesktops)) {
         send_virtual_desktop_entered(resource->handle, desk);
@@ -560,7 +577,7 @@ wl_resource *PlasmaWindowInterfacePrivate::resourceForParent(PlasmaWindowInterfa
     const auto parentResource = parent->d->resourceMap();
 
     for (auto resource : parentResource) {
-        if (child->client() == resource->client()) {
+        if (static_cast<PlasmaWindowResource *>(child)->wmResource == static_cast<PlasmaWindowResource *>(resource)->wmResource) {
             return resource->handle;
         }
     }
