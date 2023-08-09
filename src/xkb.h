@@ -61,6 +61,7 @@ public:
                     bool superAsMeta = false) const;
     Qt::KeyboardModifiers modifiers() const;
     Qt::KeyboardModifiers modifiersRelevantForGlobalShortcuts(uint32_t scanCode = 0) const;
+    Qt::KeyboardModifiers modifiersRelevantForTabBox() const;
     bool shouldKeyRepeat(quint32 key) const;
 
     void switchToNextLayout();
