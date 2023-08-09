@@ -11,8 +11,6 @@
 
 #include <QPointer>
 
-#include <epoxy/egl.h>
-
 #include <qpa/qplatformbackingstore.h>
 
 namespace KWin
