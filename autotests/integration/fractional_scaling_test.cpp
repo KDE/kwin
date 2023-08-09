@@ -42,7 +42,8 @@ private Q_SLOTS:
     void init();
     void cleanup();
 
-    void testShow();
+    void testToplevel();
+    void testPopup();
 };
 
 void TestFractionalScale::initTestCase()
@@ -87,20 +88,73 @@ void TestFractionalScale::cleanup()
     Test::destroyWaylandConnection();
 }
 
-void TestFractionalScale::testShow()
+void TestFractionalScale::testToplevel()
 {
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     std::unique_ptr<Test::FractionalScaleV1> fractionalScale(Test::createFractionalScaleV1(surface.get()));
+    QSignalSpy fractionalScaleChanged(fractionalScale.get(), &Test::FractionalScaleV1::preferredScaleChanged);
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
 
     // above call commits the surface and blocks for the configure event. We should have received the scale already
     // We are sent the value in 120ths
-    QCOMPARE(fractionalScale->preferredScale(), 1.25 * 120);
+    QCOMPARE(fractionalScaleChanged.count(), 1);
+    QCOMPARE(fractionalScale->preferredScale(), std::round(1.25 * 120));
 
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
-    QVERIFY(window);
+    QCOMPARE(fractionalScaleChanged.count(), 1);
+    QCOMPARE(fractionalScale->preferredScale(), std::round(1.25 * 120));
 
-    QCOMPARE(fractionalScale->preferredScale(), 1.25 * 120);
+    // move to screen 2
+    window->move(QPoint(1280, 0));
+
+    QVERIFY(Test::waylandSync());
+    QCOMPARE(fractionalScaleChanged.count(), 2);
+    QCOMPARE(fractionalScale->preferredScale(), std::round(2.0 * 120));
+}
+
+void TestFractionalScale::testPopup()
+{
+    std::unique_ptr<KWayland::Client::Surface> toplevelSurface(Test::createSurface());
+    std::unique_ptr<Test::FractionalScaleV1> toplevelFractionalScale(Test::createFractionalScaleV1(toplevelSurface.get()));
+    QSignalSpy toplevelFractionalScaleChanged(toplevelFractionalScale.get(), &Test::FractionalScaleV1::preferredScaleChanged);
+    std::unique_ptr<Test::XdgToplevel> toplevel(Test::createXdgToplevelSurface(toplevelSurface.get()));
+
+    // above call commits the surface and blocks for the configure event. We should have received the scale already
+    // We are sent the value in 120ths
+    QCOMPARE(toplevelFractionalScaleChanged.count(), 1);
+    QCOMPARE(toplevelFractionalScale->preferredScale(), std::round(1.25 * 120));
+
+    auto toplevelWindow = Test::renderAndWaitForShown(toplevelSurface.get(), QSize(100, 50), Qt::blue);
+    QVERIFY(toplevelWindow);
+    QCOMPARE(toplevelFractionalScaleChanged.count(), 1);
+    QCOMPARE(toplevelFractionalScale->preferredScale(), std::round(1.25 * 120));
+
+    std::unique_ptr<KWayland::Client::Surface> popupSurface(Test::createSurface());
+    std::unique_ptr<Test::FractionalScaleV1> popupFractionalScale(Test::createFractionalScaleV1(popupSurface.get()));
+    QSignalSpy popupFractionalScaleChanged(popupFractionalScale.get(), &Test::FractionalScaleV1::preferredScaleChanged);
+    std::unique_ptr<Test::XdgPositioner> positioner(Test::createXdgPositioner());
+    positioner->set_size(10, 10);
+    positioner->set_anchor_rect(10, 10, 10, 10);
+    std::unique_ptr<Test::XdgPopup> popup(Test::createXdgPopupSurface(popupSurface.get(), toplevel->xdgSurface(), positioner.get()));
+
+    // above call commits the surface and blocks for the configure event. We should have received the scale already
+    // We are sent the value in 120ths
+    QCOMPARE(popupFractionalScaleChanged.count(), 1);
+    QCOMPARE(popupFractionalScale->preferredScale(), std::round(1.25 * 120));
+
+    auto popupWindow = Test::renderAndWaitForShown(popupSurface.get(), QSize(10, 10), Qt::cyan);
+    QVERIFY(popupWindow);
+    QCOMPARE(popupFractionalScaleChanged.count(), 1);
+    QCOMPARE(popupFractionalScale->preferredScale(), std::round(1.25 * 120));
+
+    // move the parent to screen 2
+    toplevelWindow->move(QPoint(1280, 0));
+
+    QVERIFY(Test::waylandSync());
+    QCOMPARE(toplevelFractionalScaleChanged.count(), 2);
+    QCOMPARE(toplevelFractionalScale->preferredScale(), std::round(2.0 * 120));
+    QCOMPARE(popupFractionalScaleChanged.count(), 2);
+    QCOMPARE(popupFractionalScale->preferredScale(), std::round(2.0 * 120));
 }
 
 WAYLANDTEST_MAIN(TestFractionalScale)

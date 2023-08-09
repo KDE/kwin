@@ -506,8 +506,11 @@ public:
 protected:
     void wp_fractional_scale_v1_preferred_scale(uint32_t scale) override;
 
+Q_SIGNALS:
+    void preferredScaleChanged();
+
 private:
-    int m_preferredScale = 120;
+    uint m_preferredScale = 120;
 };
 
 class ScreenEdgeManagerV1 : public QObject, public QtWayland::kde_screen_edge_manager_v1
