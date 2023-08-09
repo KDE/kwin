@@ -925,7 +925,7 @@ void XdgToplevelWindow::handleWindowClassChanged()
 void XdgToplevelWindow::handleWindowMenuRequested(SeatInterface *seat, const QPoint &surfacePos,
                                                   quint32 serial)
 {
-    performMouseCommand(Options::MouseOperationsMenu, pos() + surfacePos);
+    performMouseCommand(Options::MouseOperationsMenu, mapFromLocal(surfacePos));
 }
 
 void XdgToplevelWindow::handleMoveRequested(SeatInterface *seat, quint32 serial)
