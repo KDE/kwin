@@ -65,7 +65,7 @@ public:
     virtual void doneOpenGLContextCurrent();
     virtual bool supportsNativeFence() const;
 
-    virtual DecorationRenderer *createDecorationRenderer(Decoration::DecoratedClientImpl *) = 0;
+    virtual std::unique_ptr<DecorationRenderer> createDecorationRenderer(Decoration::DecoratedClientImpl *) = 0;
     virtual std::unique_ptr<ShadowTextureProvider> createShadowTextureProvider(Shadow *shadow) = 0;
 
     /**

@@ -56,7 +56,7 @@ public:
 
 protected:
     explicit WindowItem(Window *window, Scene *scene, Item *parent = nullptr);
-    void updateSurfaceItem(SurfaceItem *surfaceItem);
+    void updateSurfaceItem(std::unique_ptr<SurfaceItem> &&surfaceItem);
 
 private Q_SLOTS:
     void updateDecorationItem();

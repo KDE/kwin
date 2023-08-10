@@ -192,15 +192,15 @@ void WindowItem::addSurfaceItemDamageConnects(Item *item)
     }
 }
 
-void WindowItem::updateSurfaceItem(SurfaceItem *surfaceItem)
+void WindowItem::updateSurfaceItem(std::unique_ptr<SurfaceItem> &&surfaceItem)
 {
-    m_surfaceItem.reset(surfaceItem);
+    m_surfaceItem = std::move(surfaceItem);
 
     if (m_surfaceItem) {
         connect(m_window, &Window::shadeChanged, this, &WindowItem::updateSurfaceVisibility);
         connect(m_window, &Window::bufferGeometryChanged, this, &WindowItem::updateSurfacePosition);
         connect(m_window, &Window::frameGeometryChanged, this, &WindowItem::updateSurfacePosition);
-        addSurfaceItemDamageConnects(surfaceItem);
+        addSurfaceItemDamageConnects(m_surfaceItem.get());
 
         updateSurfacePosition();
         updateSurfaceVisibility();
@@ -229,7 +229,7 @@ void WindowItem::updateShadowItem()
     Shadow *shadow = m_window->shadow();
     if (shadow) {
         if (!m_shadowItem || m_shadowItem->shadow() != shadow) {
-            m_shadowItem.reset(new ShadowItem(shadow, m_window, scene(), this));
+            m_shadowItem = std::make_unique<ShadowItem>(shadow, m_window, scene(), this);
         }
         if (m_decorationItem) {
             m_shadowItem->stackBefore(m_decorationItem.get());
@@ -248,7 +248,7 @@ void WindowItem::updateDecorationItem()
         return;
     }
     if (m_window->decoration()) {
-        m_decorationItem.reset(new DecorationItem(m_window->decoration(), m_window, scene(), this));
+        m_decorationItem = std::make_unique<DecorationItem>(m_window->decoration(), m_window, scene(), this);
         if (m_shadowItem) {
             m_decorationItem->stackAfter(m_shadowItem.get());
         } else if (m_surfaceItem) {
@@ -293,13 +293,13 @@ void WindowItemX11::initialize()
 {
     switch (kwinApp()->operationMode()) {
     case Application::OperationModeX11:
-        updateSurfaceItem(new SurfaceItemX11(static_cast<X11Window *>(window()), scene(), this));
+        updateSurfaceItem(std::make_unique<SurfaceItemX11>(static_cast<X11Window *>(window()), scene(), this));
         break;
     case Application::OperationModeXwayland:
         if (!window()->surface()) {
             updateSurfaceItem(nullptr);
         } else {
-            updateSurfaceItem(new SurfaceItemXwayland(static_cast<X11Window *>(window()), scene(), this));
+            updateSurfaceItem(std::make_unique<SurfaceItemXwayland>(static_cast<X11Window *>(window()), scene(), this));
         }
         break;
     case Application::OperationModeWaylandOnly:
@@ -310,13 +310,13 @@ void WindowItemX11::initialize()
 WindowItemWayland::WindowItemWayland(Window *window, Scene *scene, Item *parent)
     : WindowItem(window, scene, parent)
 {
-    updateSurfaceItem(new SurfaceItemWayland(window->surface(), scene, this));
+    updateSurfaceItem(std::make_unique<SurfaceItemWayland>(window->surface(), scene, this));
 }
 
 WindowItemInternal::WindowItemInternal(InternalWindow *window, Scene *scene, Item *parent)
     : WindowItem(window, scene, parent)
 {
-    updateSurfaceItem(new SurfaceItemInternal(window, scene, this));
+    updateSurfaceItem(std::make_unique<SurfaceItemInternal>(window, scene, this));
 }
 
 } // namespace KWin

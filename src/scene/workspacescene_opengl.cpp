@@ -70,9 +70,9 @@ bool WorkspaceSceneOpenGL::supportsNativeFence() const
     return m_backend->supportsNativeFence();
 }
 
-DecorationRenderer *WorkspaceSceneOpenGL::createDecorationRenderer(Decoration::DecoratedClientImpl *impl)
+std::unique_ptr<DecorationRenderer> WorkspaceSceneOpenGL::createDecorationRenderer(Decoration::DecoratedClientImpl *impl)
 {
-    return new SceneOpenGLDecorationRenderer(impl);
+    return std::make_unique<SceneOpenGLDecorationRenderer>(impl);
 }
 
 std::unique_ptr<ShadowTextureProvider> WorkspaceSceneOpenGL::createShadowTextureProvider(Shadow *shadow)

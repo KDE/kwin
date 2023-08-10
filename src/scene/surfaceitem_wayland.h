@@ -8,6 +8,8 @@
 
 #include "scene/surfaceitem.h"
 
+#include <unordered_map>
+
 namespace KWaylandServer
 {
 class SubSurfaceInterface;
@@ -56,7 +58,7 @@ private:
     SurfaceItemWayland *getOrCreateSubSurfaceItem(KWaylandServer::SubSurfaceInterface *s);
 
     QPointer<KWaylandServer::SurfaceInterface> m_surface;
-    QHash<KWaylandServer::SubSurfaceInterface *, SurfaceItemWayland *> m_subsurfaces;
+    std::unordered_map<KWaylandServer::SubSurfaceInterface *, std::unique_ptr<SurfaceItemWayland>> m_subsurfaces;
 };
 
 class KWIN_EXPORT SurfacePixmapWayland final : public SurfacePixmap

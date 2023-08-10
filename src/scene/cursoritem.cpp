@@ -54,7 +54,7 @@ void CursorItem::setImage(const QImage &image)
     m_surfaceItem.reset();
 
     if (!m_imageItem) {
-        m_imageItem.reset(scene()->renderer()->createImageItem(scene(), this));
+        m_imageItem = scene()->renderer()->createImageItem(scene(), this);
     }
     m_imageItem->setImage(image);
     m_imageItem->setSize(image.size() / image.devicePixelRatio());

@@ -116,18 +116,17 @@ void SurfaceItemWayland::handleSurfaceCommitted()
 
 SurfaceItemWayland *SurfaceItemWayland::getOrCreateSubSurfaceItem(KWaylandServer::SubSurfaceInterface *child)
 {
-    SurfaceItemWayland *&item = m_subsurfaces[child];
+    auto &item = m_subsurfaces[child];
     if (!item) {
-        item = new SurfaceItemWayland(child->surface(), scene());
-        item->setParent(this);
+        item = std::make_unique<SurfaceItemWayland>(child->surface(), scene());
         item->setParentItem(this);
     }
-    return item;
+    return item.get();
 }
 
 void SurfaceItemWayland::handleChildSubSurfaceRemoved(KWaylandServer::SubSurfaceInterface *child)
 {
-    delete m_subsurfaces.take(child);
+    m_subsurfaces.erase(child);
 }
 
 void SurfaceItemWayland::handleChildSubSurfacesChanged()

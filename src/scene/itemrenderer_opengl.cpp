@@ -26,9 +26,9 @@ ItemRendererOpenGL::ItemRendererOpenGL()
     }
 }
 
-ImageItem *ItemRendererOpenGL::createImageItem(Scene *scene, Item *parent)
+std::unique_ptr<ImageItem> ItemRendererOpenGL::createImageItem(Scene *scene, Item *parent)
 {
-    return new ImageItemOpenGL(scene, parent);
+    return std::make_unique<ImageItemOpenGL>(scene, parent);
 }
 
 void ItemRendererOpenGL::beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport)

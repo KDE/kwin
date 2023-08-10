@@ -91,7 +91,7 @@ DecorationItem::DecorationItem(KDecoration2::Decoration *decoration, Window *win
     : Item(scene, parent)
     , m_window(window)
 {
-    m_renderer.reset(Compositor::self()->scene()->createDecorationRenderer(window->decoratedClient()));
+    m_renderer = Compositor::self()->scene()->createDecorationRenderer(window->decoratedClient());
 
     connect(window, &Window::frameGeometryChanged,
             this, &DecorationItem::handleFrameGeometryChanged);
