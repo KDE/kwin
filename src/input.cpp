@@ -1416,7 +1416,7 @@ public:
             if (!e.isAccepted() && event->type() == QEvent::MouseButtonPress) {
                 decoration->window()->processDecorationButtonPress(&e);
             }
-            if (event->type() == QEvent::MouseButtonRelease) {
+            if (event->type() == QEvent::MouseButtonRelease && !decoration->window()->isDeleted()) {
                 decoration->window()->processDecorationButtonRelease(&e);
             }
             return true;
