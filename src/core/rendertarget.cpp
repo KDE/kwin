@@ -23,6 +23,12 @@ RenderTarget::RenderTarget(QImage *image, const ColorDescription &colorDescripti
 {
 }
 
+RenderTarget::RenderTarget(vk::CommandBuffer cmd, const ColorDescription &colorDescription)
+    : m_colorDescription(colorDescription)
+{
+    // FIXME X
+}
+
 QSize RenderTarget::size() const
 {
     if (m_framebuffer) {

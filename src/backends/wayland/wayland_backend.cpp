@@ -454,9 +454,6 @@ bool WaylandBackend::initialize()
         }
     }
 
-    const auto vk = std::make_unique<WaylandVulkanBackend>(this);
-    vk->init();
-
     createOutputs();
 
     m_seat = std::make_unique<WaylandSeat>(m_display->seat(), this);
@@ -571,6 +568,7 @@ QList<CompositingType> WaylandBackend::supportedCompositors() const
     QList<CompositingType> ret;
     if (m_display->linuxDmabuf() && m_gbmDevice) {
         ret.append(OpenGLCompositing);
+        ret.append(VulkanCompositing);
     }
     ret.append(QPainterCompositing);
     return ret;

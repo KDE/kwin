@@ -32,6 +32,7 @@ private:
 
     bool attemptOpenGLCompositing();
     bool attemptQPainterCompositing();
+    bool attemptVulkanCompositing();
 
     void addOutput(Output *output);
     void removeOutput(Output *output);

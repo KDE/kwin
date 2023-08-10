@@ -51,7 +51,7 @@ bool WaylandVulkanBackend::init()
         qWarning() << "no linux dmabuf available";
         return false;
     }
-    if (!AbstractVulkanBackend::init()) {
+    if (!VulkanBackend::init()) {
         return false;
     }
     m_mainDevice = findDevice(m_backend->display());
@@ -128,6 +128,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandVulkanLayer::beginFrame()
                         auto resources = allocateResources(format, it.value());
                         if (resources.has_value()) {
                             m_resources.push_back(std::move(*resources));
+                            m_currentResources = &m_resources.back();
                             break;
                         }
                     }
@@ -140,10 +141,44 @@ std::optional<OutputLayerBeginFrameInfo> WaylandVulkanLayer::beginFrame()
                 return std::nullopt;
             }
             m_resources.push_back(std::move(*resources));
+            m_currentResources = &m_resources.back();
         }
     }
 
-    return std::nullopt;
+    // TODO should the renderer start and end rendering instead of the backend?
+    std::vector<vk::RenderingAttachmentInfo> colorAttachments{
+        vk::RenderingAttachmentInfo(
+            m_currentResources->texture->view(),
+            vk::ImageLayout::eAttachmentOptimal,
+            vk::ResolveModeFlagBits::eNone,
+            {}, // resolve image view
+            {}, // resolve image layout
+            vk::AttachmentLoadOp::eLoad,
+            vk::AttachmentStoreOp::eStore,
+            vk::ClearColorValue() // would be used with vk::AttachmentLoadOp::eClear
+            )};
+
+    m_currentResources->cmd->beginRendering(vk::RenderingInfo(
+        vk::RenderingFlags(),
+        vk::Rect2D(
+            vk::Offset2D(0, 0),
+            vk::Extent2D(m_currentResources->buffer->size().width(), m_currentResources->buffer->size().height())),
+        1, // layer count
+        0, // view mask
+        colorAttachments,
+        {}, // depth attachment
+        {} // stencil attachment
+        ));
+    // FIXME X the renderer should set the viewport, not this
+    m_currentResources->cmd->setViewport(0, {vk::Viewport(0, 0, // x, y
+                                                          m_currentResources->buffer->size().width(), m_currentResources->buffer->size().height(), // width, height
+                                                          0, 1 // min depth, max depth
+                                                          )});
+
+    return OutputLayerBeginFrameInfo{
+        .renderTarget = RenderTarget(m_currentResources->cmd.get()),
+        .repaint = infiniteRegion(),
+    };
 }
 
 std::optional<WaylandVulkanLayer::Resources> WaylandVulkanLayer::allocateResources(uint32_t format, const QVector<uint64_t> &modifiers) const
@@ -182,7 +217,8 @@ std::optional<WaylandVulkanLayer::Resources> WaylandVulkanLayer::allocateResourc
 
 bool WaylandVulkanLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    return false;
+    m_currentResources->cmd->endRendering();
+    return m_device->submitCommandBufferBlocking(m_currentResources->cmd.get());
 }
 
 quint32 WaylandVulkanLayer::format() const

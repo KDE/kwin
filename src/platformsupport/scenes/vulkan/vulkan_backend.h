@@ -24,12 +24,12 @@ class FileDescriptor;
 class VulkanTexture;
 class VulkanDevice;
 
-class AbstractVulkanBackend : public RenderBackend
+class VulkanBackend : public RenderBackend
 {
     Q_OBJECT
 public:
-    explicit AbstractVulkanBackend();
-    ~AbstractVulkanBackend();
+    explicit VulkanBackend();
+    ~VulkanBackend();
 
     virtual bool init();
     CompositingType compositingType() const override final;

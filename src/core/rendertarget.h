@@ -8,6 +8,7 @@
 
 #include "core/colorspace.h"
 #include "core/output.h"
+#include "platformsupport/scenes/vulkan/vulkan_include.h"
 
 #include <QImage>
 
@@ -22,6 +23,7 @@ class KWIN_EXPORT RenderTarget
 public:
     explicit RenderTarget(GLFramebuffer *fbo, const ColorDescription &colorDescription = ColorDescription::sRGB);
     explicit RenderTarget(QImage *image, const ColorDescription &colorDescription = ColorDescription::sRGB);
+    explicit RenderTarget(vk::CommandBuffer cmd, const ColorDescription &colorDescription = ColorDescription::sRGB);
 
     QSize size() const;
     OutputTransform transform() const;

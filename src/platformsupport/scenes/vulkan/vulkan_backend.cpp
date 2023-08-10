@@ -6,7 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "abstract_vulkan_backend.h"
+#include "vulkan_backend.h"
 
 #include "core/gbmgraphicsbufferallocator.h"
 #include "core/graphicsbuffer.h"
@@ -20,10 +20,10 @@
 namespace KWin
 {
 
-AbstractVulkanBackend::AbstractVulkanBackend() = default;
-AbstractVulkanBackend::~AbstractVulkanBackend() = default;
+VulkanBackend::VulkanBackend() = default;
+VulkanBackend::~VulkanBackend() = default;
 
-bool AbstractVulkanBackend::init()
+bool VulkanBackend::init()
 {
     vk::ApplicationInfo appInfo{
         "kwin_wayland",
@@ -159,17 +159,17 @@ bool AbstractVulkanBackend::init()
     return true;
 }
 
-CompositingType AbstractVulkanBackend::compositingType() const
+CompositingType VulkanBackend::compositingType() const
 {
     return CompositingType::VulkanCompositing;
 }
 
-OutputLayer *AbstractVulkanBackend::primaryLayer(Output *output)
+OutputLayer *VulkanBackend::primaryLayer(Output *output)
 {
     return nullptr;
 }
 
-void AbstractVulkanBackend::present(Output *output)
+void VulkanBackend::present(Output *output)
 {
 }
 

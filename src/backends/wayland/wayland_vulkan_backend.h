@@ -2,7 +2,7 @@
 #include "core/graphicsbuffer.h"
 #include "core/graphicsbufferallocator.h"
 #include "core/outputlayer.h"
-#include "platformsupport/scenes/vulkan/abstract_vulkan_backend.h"
+#include "platformsupport/scenes/vulkan/vulkan_backend.h"
 #include "platformsupport/scenes/vulkan/vulkan_device.h"
 #include "platformsupport/scenes/vulkan/vulkan_texture.h"
 #include "wayland_backend.h"
@@ -16,7 +16,7 @@ namespace Wayland
 class WaylandDisplay;
 class WaylandVulkanLayer;
 
-class WaylandVulkanBackend : public AbstractVulkanBackend
+class WaylandVulkanBackend : public VulkanBackend
 {
 public:
     WaylandVulkanBackend(WaylandBackend *backend);

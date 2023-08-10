@@ -26,8 +26,18 @@ VulkanDevice::VulkanDevice(vk::Instance instance, vk::PhysicalDevice physicalDev
     , m_primaryNode(primaryNode)
     , m_renderNode(renderNode)
     , m_formats(queryFormats(vk::ImageUsageFlagBits::eSampled | vk::ImageUsageFlagBits::eColorAttachment | vk::ImageUsageFlagBits::eTransferSrc | vk::ImageUsageFlagBits::eTransferDst))
+    , m_memoryProperties(physicalDevice.getMemoryProperties())
     , m_loader(instance, vkGetInstanceProcAddr, logicalDevice)
 {
+    auto [result, cmdPool] = m_logical.createCommandPoolUnique(vk::CommandPoolCreateInfo{
+        vk::CommandPoolCreateFlags(),
+        m_queueFamilyIndex,
+    });
+    if (result != vk::Result::eSuccess) {
+        qWarning() << "creating a command pool failed:" << vk::to_string(result);
+        return;
+    }
+    m_commandPool = std::move(cmdPool);
 }
 
 VulkanDevice::VulkanDevice(VulkanDevice &&other)
@@ -38,6 +48,7 @@ VulkanDevice::VulkanDevice(VulkanDevice &&other)
     , m_primaryNode(other.m_primaryNode)
     , m_renderNode(other.m_renderNode)
     , m_formats(other.m_formats)
+    , m_memoryProperties(other.m_memoryProperties)
     , m_loader(std::move(other.m_loader))
     , m_importedTextures(other.m_importedTextures)
 {
@@ -49,6 +60,7 @@ VulkanDevice::~VulkanDevice()
         (void)m_queue.waitIdle();
     }
     m_importedTextures.clear();
+    m_commandPool.reset();
     if (m_logical) {
         vkDestroyDevice(m_logical, nullptr);
     }
@@ -175,7 +187,7 @@ std::optional<VulkanTexture> VulkanDevice::importDmabuf(GraphicsBuffer *buffer) 
             memRequirementsInfo.setPNext(&planeRequirementsInfo);
         }
         const vk::MemoryRequirements2 memRequirements = m_logical.getImageMemoryRequirements2(memRequirementsInfo);
-        const auto memoryIndex = findMemoryType(m_physical, memRequirements.memoryRequirements.memoryTypeBits & memoryFdProperties.memoryTypeBits, {});
+        const auto memoryIndex = findMemoryType(memRequirements.memoryRequirements.memoryTypeBits & memoryFdProperties.memoryTypeBits, {});
         if (!memoryIndex) {
             qWarning() << "couldn't find a suitable memory type";
             return std::nullopt;
@@ -224,17 +236,6 @@ std::optional<VulkanTexture> VulkanDevice::importDmabuf(GraphicsBuffer *buffer) 
     }
 
     return VulkanTexture(format->vulkanFormat, std::move(image), std::move(deviceMemory), std::move(imageView));
-}
-
-std::optional<int> VulkanDevice::findMemoryType(vk::PhysicalDevice physicalDevice, uint32_t typeBits, vk::MemoryPropertyFlags memoryPropertyFlags) const
-{
-    const auto props = physicalDevice.getMemoryProperties();
-    for (uint32_t i = 0; i < props.memoryTypeCount; i++) {
-        if ((typeBits & 1) && ((props.memoryTypes[i].propertyFlags & memoryPropertyFlags) == memoryPropertyFlags)) {
-            return i;
-        }
-    }
-    return std::nullopt;
 }
 
 QHash<uint32_t, QVector<uint64_t>> VulkanDevice::queryFormats(vk::ImageUsageFlags flags) const
@@ -295,6 +296,94 @@ QHash<uint32_t, QVector<uint64_t>> VulkanDevice::queryFormats(vk::ImageUsageFlag
     return ret;
 }
 
+std::optional<uint32_t> VulkanDevice::findMemoryType(uint32_t typeBits, vk::MemoryPropertyFlags memoryPropertyFlags) const
+{
+    for (uint32_t i = 0; i < m_memoryProperties.memoryTypeCount; i++) {
+        if ((typeBits & 1) && ((m_memoryProperties.memoryTypes[i].propertyFlags & memoryPropertyFlags) == memoryPropertyFlags)) {
+            return i;
+        }
+    }
+    return std::nullopt;
+}
+
+vk::UniqueCommandBuffer VulkanDevice::allocateOneshotCommandBuffer()
+{
+    auto [result, buffers] = m_logical.allocateCommandBuffersUnique(vk::CommandBufferAllocateInfo(
+        m_commandPool.get(), vk::CommandBufferLevel::ePrimary, 1));
+    if (result != vk::Result::eSuccess) {
+        qWarning() << "failed to allocate oneshot command buffer:" << vk::to_string(result);
+        return {};
+    }
+    return std::move(buffers.front());
+}
+
+bool VulkanDevice::submitCommandBufferBlocking(vk::CommandBuffer cmd)
+{
+    const std::vector<vk::Semaphore> waitBeforeExecution{};
+    const std::vector<vk::PipelineStageFlags> waitDestinationStageMask{};
+    const auto [semaphoreResult, semaphore] = m_logical.createSemaphoreUnique(vk::SemaphoreCreateInfo());
+    if (semaphoreResult != vk::Result::eSuccess) {
+        qWarning() << "failed to allocate semaphore" << vk::to_string(semaphoreResult);
+        return false;
+    }
+    const std::vector<vk::CommandBuffer> commandBuffers{cmd};
+    const std::vector<vk::Semaphore> executionDone{semaphore.get()};
+    const auto submitResult = m_queue.submit(vk::SubmitInfo(
+        waitBeforeExecution,
+        waitDestinationStageMask,
+        commandBuffers,
+        executionDone));
+    if (submitResult != vk::Result::eSuccess) {
+        qWarning() << "submitting command buffers failed:" << vk::to_string(submitResult);
+        return false;
+    }
+    const std::vector<uint64_t> values{1};
+    const auto waitResult = m_logical.waitSemaphores(vk::SemaphoreWaitInfo(
+                                                         vk::SemaphoreWaitFlags(),
+                                                         executionDone,
+                                                         values),
+                                                     std::numeric_limits<uint64_t>::max());
+    if (waitResult != vk::Result::eSuccess) {
+        qWarning() << "waiting for rendering to complete failed:" << vk::to_string(waitResult);
+        return false;
+    }
+    return true;
+}
+
+vk::UniqueDeviceMemory VulkanDevice::allocateMemory(vk::Buffer buffer, vk::MemoryPropertyFlags memoryProperties) const
+{
+    const auto requirements = m_logical.getBufferMemoryRequirements(buffer);
+    if (const auto typeIndex = findMemoryType(requirements.memoryTypeBits, memoryProperties)) {
+        auto [result, ret] = m_logical.allocateMemoryUnique(vk::MemoryAllocateInfo(requirements.size, *typeIndex));
+        if (result == vk::Result::eSuccess) {
+            return std::move(ret);
+        } else {
+            qWarning() << "Allocating memory for a buffer failed:" << vk::to_string(result);
+            return {};
+        }
+    } else {
+        qWarning() << "could not find a suitable memory index for a buffer";
+        return {};
+    }
+}
+
+vk::UniqueDeviceMemory VulkanDevice::allocateMemory(vk::Image image, vk::MemoryPropertyFlags memoryProperties) const
+{
+    const auto requirements = m_logical.getImageMemoryRequirements(image);
+    if (const auto typeIndex = findMemoryType(requirements.memoryTypeBits, memoryProperties)) {
+        auto [result, ret] = m_logical.allocateMemoryUnique(vk::MemoryAllocateInfo(requirements.size, *typeIndex));
+        if (result == vk::Result::eSuccess) {
+            return std::move(ret);
+        } else {
+            qWarning() << "Allocating memory for an image failed:" << vk::to_string(result);
+            return {};
+        }
+    } else {
+        qWarning() << "could not find a suitable memory index for an image";
+        return {};
+    }
+}
+
 QHash<uint32_t, QVector<uint64_t>> VulkanDevice::supportedFormats() const
 {
     return m_formats;
@@ -318,5 +407,10 @@ std::optional<dev_t> VulkanDevice::primaryNode() const
 std::optional<dev_t> VulkanDevice::renderNode() const
 {
     return m_renderNode;
+}
+
+vk::Queue VulkanDevice::renderQueue() const
+{
+    return m_queue;
 }
 }
