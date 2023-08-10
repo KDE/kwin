@@ -144,7 +144,7 @@ bool DrmBackend::initialize()
         }
     } else {
         const auto devices = m_udev->listGPUs();
-        for (const UdevDevice::Ptr &device : devices) {
+        for (const auto &device : devices) {
             if (device->seat() == m_session->seat()) {
                 addGpu(device->devNode());
             }

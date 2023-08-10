@@ -43,7 +43,7 @@ public:
     };
     void addMatch(Match match, const char *name);
     void scan();
-    std::vector<UdevDevice::Ptr> find();
+    std::vector<std::unique_ptr<UdevDevice>> find();
 
 private:
     Udev *m_udev;
@@ -92,12 +92,12 @@ void UdevEnumerate::scan()
     udev_enumerate_scan_devices(m_enumerate.get());
 }
 
-std::vector<UdevDevice::Ptr> UdevEnumerate::find()
+std::vector<std::unique_ptr<UdevDevice>> UdevEnumerate::find()
 {
     if (!m_enumerate) {
         return {};
     }
-    std::vector<UdevDevice::Ptr> vect;
+    std::vector<std::unique_ptr<UdevDevice>> vect;
     udev_list_entry *it = udev_enumerate_get_list_entry(m_enumerate.get());
     while (it) {
         auto current = it;
@@ -110,13 +110,13 @@ std::vector<UdevDevice::Ptr> UdevEnumerate::find()
     return vect;
 }
 
-std::vector<UdevDevice::Ptr> Udev::listGPUs()
+std::vector<std::unique_ptr<UdevDevice>> Udev::listGPUs()
 {
     if (!m_udev) {
         return {};
     }
 #if defined(Q_OS_FREEBSD)
-    std::vector<UdevDevice::Ptr> r;
+    std::vector<std::unique_ptr<UdevDevice>> r;
     r.push_back(deviceFromSyspath("/dev/dri/card0"));
     return r;
 #else
@@ -125,7 +125,7 @@ std::vector<UdevDevice::Ptr> Udev::listGPUs()
     enumerate.addMatch(UdevEnumerate::Match::SysName, "card[0-9]");
     enumerate.scan();
     auto vect = enumerate.find();
-    std::sort(vect.begin(), vect.end(), [](const UdevDevice::Ptr &device1, const UdevDevice::Ptr &device2) {
+    std::sort(vect.begin(), vect.end(), [](const auto &device1, const auto &device2) {
         // prevent usb devices from becoming the primaryGpu
         if (device1->isHotpluggable()) {
             return false;
@@ -149,7 +149,7 @@ std::vector<UdevDevice::Ptr> Udev::listGPUs()
 #endif
 }
 
-UdevDevice::Ptr Udev::deviceFromSyspath(const char *syspath)
+std::unique_ptr<UdevDevice> Udev::deviceFromSyspath(const char *syspath)
 {
     auto dev = udev_device_new_from_syspath(m_udev, syspath);
     if (!dev) {
@@ -282,10 +282,10 @@ void UdevMonitor::enable()
     udev_monitor_enable_receiving(m_monitor);
 }
 
-UdevDevice::Ptr UdevMonitor::getDevice()
+std::unique_ptr<UdevDevice> UdevMonitor::getDevice()
 {
     if (!m_monitor) {
-        return UdevDevice::Ptr();
+        return nullptr;
     }
     auto dev = udev_monitor_receive_device(m_monitor);
     return dev ? std::make_unique<UdevDevice>(dev) : nullptr;
