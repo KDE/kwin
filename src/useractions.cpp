@@ -1176,7 +1176,7 @@ void Workspace::performWindowOperation(Window *window, Options::WindowOperation 
         window->performMouseCommand(Options::MouseUnrestrictedResize, Cursors::self()->mouse()->pos());
         break;
     case Options::CloseOp:
-        QMetaObject::invokeMethod(window, &Window::closeWindow, Qt::QueuedConnection);
+        window->closeWindow();
         break;
     case Options::MaximizeOp:
         window->maximize(window->maximizeMode() == MaximizeFull
