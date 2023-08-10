@@ -677,7 +677,7 @@ std::unique_ptr<ShaderManager> ShaderManager::s_shaderManager;
 ShaderManager *ShaderManager::instance()
 {
     if (!s_shaderManager) {
-        s_shaderManager.reset(new ShaderManager());
+        s_shaderManager = std::make_unique<ShaderManager>();
     }
     return s_shaderManager.get();
 }

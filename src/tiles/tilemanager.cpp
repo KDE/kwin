@@ -58,7 +58,7 @@ TileManager::TileManager(Output *parent)
     , m_output(parent)
     , m_tileModel(new TileModel(this))
 {
-    m_saveTimer.reset(new QTimer(this));
+    m_saveTimer = std::make_unique<QTimer>(this);
     m_saveTimer->setSingleShot(true);
     m_saveTimer->setInterval(2000);
     connect(m_saveTimer.get(), &QTimer::timeout, this, &TileManager::saveSettings);

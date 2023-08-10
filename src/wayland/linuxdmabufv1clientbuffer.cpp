@@ -322,7 +322,7 @@ void LinuxDmaBufV1ClientBufferIntegration::setSupportedFormatsWithModifiers(cons
         }
         d->supportedModifiers = set;
         d->mainDevice = tranches.first().device;
-        d->table.reset(new LinuxDmaBufV1FormatTable(set));
+        d->table = std::make_unique<LinuxDmaBufV1FormatTable>(set);
         d->defaultFeedback->setTranches(tranches);
     }
 }

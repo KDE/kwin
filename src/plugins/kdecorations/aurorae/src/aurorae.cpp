@@ -85,7 +85,7 @@ void Helper::ref()
 {
     m_refCount++;
     if (m_refCount == 1) {
-        m_engine.reset(new QQmlEngine);
+        m_engine = std::make_unique<QQmlEngine>();
         init();
     }
 }
@@ -117,7 +117,7 @@ QQmlComponent *Helper::component(const QString &themeName)
             while (paths.hasPrevious()) {
                 m_engine->addImportPath(paths.previous());
             }
-            m_svgComponent.reset(new QQmlComponent(m_engine.get()));
+            m_svgComponent = std::make_unique<QQmlComponent>(m_engine.get());
             m_svgComponent->loadUrl(QUrl(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin/aurorae/aurorae.qml"))));
         }
         // verify that the theme exists

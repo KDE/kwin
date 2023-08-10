@@ -160,7 +160,7 @@ void OnScreenNotification::ensureQmlContext()
     if (m_qmlContext) {
         return;
     }
-    m_qmlContext.reset(new QQmlContext(m_qmlEngine));
+    m_qmlContext = std::make_unique<QQmlContext>(m_qmlEngine);
     m_qmlContext->setContextProperty(QStringLiteral("osd"), this);
 }
 
@@ -171,7 +171,7 @@ void OnScreenNotification::ensureQmlComponent()
     if (m_qmlComponent) {
         return;
     }
-    m_qmlComponent.reset(new QQmlComponent(m_qmlEngine));
+    m_qmlComponent = std::make_unique<QQmlComponent>(m_qmlEngine);
     const QString fileName = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
                                                     m_config->group(QStringLiteral("OnScreenNotification")).readEntry("QmlPath", QStringLiteral("kwin/onscreennotification/plasma/main.qml")));
     if (fileName.isEmpty()) {
@@ -189,7 +189,7 @@ void OnScreenNotification::createInputSpy()
 {
     Q_ASSERT(!m_spy);
     if (auto w = qobject_cast<QQuickWindow *>(m_mainItem.get())) {
-        m_spy.reset(new OnScreenNotificationInputEventSpy(this));
+        m_spy = std::make_unique<OnScreenNotificationInputEventSpy>(this);
         input()->installInputEventSpy(m_spy.get());
         if (!m_animation) {
             m_animation = new QPropertyAnimation(w, "opacity", this);

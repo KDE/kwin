@@ -64,7 +64,7 @@ KWinWrapper::KWinWrapper(QObject *parent)
     }
 
     if (qApp->arguments().contains(QLatin1String("--xwayland"))) {
-        m_xwlSocket.reset(new KWin::XwaylandSocket(KWin::XwaylandSocket::OperationMode::TransferFdsOnExec));
+        m_xwlSocket = std::make_unique<KWin::XwaylandSocket>(KWin::XwaylandSocket::OperationMode::TransferFdsOnExec);
         if (!m_xwlSocket->isValid()) {
             qCWarning(KWIN_WRAPPER) << "Failed to create Xwayland connection sockets";
             m_xwlSocket.reset();

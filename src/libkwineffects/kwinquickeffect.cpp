@@ -437,7 +437,7 @@ void QuickSceneEffect::startInternal()
     }
 
     if (!d->qmlComponent) {
-        d->qmlComponent.reset(new QQmlComponent(effects->qmlEngine()));
+        d->qmlComponent = std::make_unique<QQmlComponent>(effects->qmlEngine());
         d->qmlComponent->loadUrl(d->source);
         if (d->qmlComponent->isError()) {
             qWarning().nospace() << "Failed to load " << d->source << ": " << d->qmlComponent->errors();

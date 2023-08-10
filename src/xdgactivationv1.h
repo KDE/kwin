@@ -42,14 +42,14 @@ private:
 
     struct ActivationToken
     {
-        const QString token;
-        const bool isPrivileged;
-        const QPointer<const KWaylandServer::SurfaceInterface> surface;
-        const uint serial;
-        const KWaylandServer::SeatInterface *seat;
-        const QString applicationId;
-        const bool showNotify;
-        const std::unique_ptr<KWaylandServer::PlasmaWindowActivationInterface> activation;
+        QString token;
+        bool isPrivileged;
+        QPointer<const KWaylandServer::SurfaceInterface> surface;
+        uint serial;
+        KWaylandServer::SeatInterface *seat;
+        QString applicationId;
+        bool showNotify;
+        std::unique_ptr<KWaylandServer::PlasmaWindowActivationInterface> activation;
     };
     std::unique_ptr<ActivationToken> m_currentActivationToken;
 };

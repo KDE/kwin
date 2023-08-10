@@ -386,7 +386,7 @@ void WindowThumbnailItem::updateOffscreenTexture()
         }
         m_offscreenTexture->setFilter(GL_LINEAR);
         m_offscreenTexture->setWrapMode(GL_CLAMP_TO_EDGE);
-        m_offscreenTarget.reset(new GLFramebuffer(m_offscreenTexture.get()));
+        m_offscreenTarget = std::make_unique<GLFramebuffer>(m_offscreenTexture.get());
     }
 
     RenderTarget offscreenRenderTarget(m_offscreenTarget.get());

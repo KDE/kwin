@@ -264,7 +264,7 @@ void StartupFeedbackEffect::gotNewStartup(const QString &id, const QIcon &icon)
     Startup &startup = m_startups[id];
     startup.icon = icon;
 
-    startup.expiredTimer.reset(new QTimer());
+    startup.expiredTimer = std::make_unique<QTimer>();
     // Stop the animation if the startup doesn't finish within reasonable interval.
     connect(startup.expiredTimer.get(), &QTimer::timeout, this, [this, id]() {
         gotRemoveStartup(id);

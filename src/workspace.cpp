@@ -307,27 +307,26 @@ void Workspace::initializeX11()
 
     // first initialize the extensions
     Xcb::Extensions::self();
-    m_colorMapper.reset(new ColorMapper(this));
+    m_colorMapper = std::make_unique<ColorMapper>(this);
     connect(this, &Workspace::windowActivated, m_colorMapper.get(), &ColorMapper::update);
 
     // Call this before XSelectInput() on the root window
-    m_startup.reset(new KStartupInfo(
-        KStartupInfo::DisableKWinModule | KStartupInfo::AnnounceSilenceChanges, this));
+    m_startup = std::make_unique<KStartupInfo>(KStartupInfo::DisableKWinModule | KStartupInfo::AnnounceSilenceChanges, this);
 
     // Select windowmanager privileges
     selectWmInputEventMask();
 
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
-        m_wasUserInteractionFilter.reset(new WasUserInteractionX11Filter);
-        m_movingClientFilter.reset(new MovingClientX11Filter);
+        m_wasUserInteractionFilter = std::make_unique<WasUserInteractionX11Filter>();
+        m_movingClientFilter = std::make_unique<MovingClientX11Filter>();
     }
     if (Xcb::Extensions::self()->isSyncAvailable()) {
-        m_syncAlarmFilter.reset(new SyncAlarmX11Filter);
+        m_syncAlarmFilter = std::make_unique<SyncAlarmX11Filter>();
     }
     kwinApp()->updateXTime(); // Needed for proper initialization of user_time in Client ctor
 
     const uint32_t nullFocusValues[] = {true};
-    m_nullFocus.reset(new Xcb::Window(QRect(-1, -1, 1, 1), XCB_WINDOW_CLASS_INPUT_ONLY, XCB_CW_OVERRIDE_REDIRECT, nullFocusValues));
+    m_nullFocus = std::make_unique<Xcb::Window>(QRect(-1, -1, 1, 1), XCB_WINDOW_CLASS_INPUT_ONLY, XCB_CW_OVERRIDE_REDIRECT, nullFocusValues);
     m_nullFocus->map();
 
     RootInfo *rootInfo = RootInfo::create();

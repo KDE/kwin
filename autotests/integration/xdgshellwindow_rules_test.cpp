@@ -233,8 +233,8 @@ void TestXdgShellWindowRules::createTestWindow(ClientFlags flags)
     Test::XdgToplevelDecorationV1 *decoration = Test::createXdgToplevelDecorationV1(m_shellSurface.get(), m_shellSurface.get());
 
     // Add signal watchers
-    m_toplevelConfigureRequestedSpy.reset(new QSignalSpy(m_shellSurface.get(), &Test::XdgToplevel::configureRequested));
-    m_surfaceConfigureRequestedSpy.reset(new QSignalSpy(m_shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested));
+    m_toplevelConfigureRequestedSpy = std::make_unique<QSignalSpy>(m_shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    m_surfaceConfigureRequestedSpy = std::make_unique<QSignalSpy>(m_shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
 
     m_shellSurface->set_app_id(QStringLiteral("org.kde.foo"));
     decoration->set_mode(decorationMode);

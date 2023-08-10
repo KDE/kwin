@@ -102,7 +102,7 @@ bool BasicEGLSurfaceTextureWayland::loadDmabufTexture(GraphicsBuffer *buffer)
         return false;
     }
 
-    m_texture.reset(new GLTexture(GL_TEXTURE_2D));
+    m_texture = std::make_unique<GLTexture>(GL_TEXTURE_2D);
     m_texture->setSize(buffer->size());
     m_texture->create();
     m_texture->setWrapMode(GL_CLAMP_TO_EDGE);

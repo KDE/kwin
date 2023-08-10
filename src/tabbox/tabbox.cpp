@@ -1198,7 +1198,7 @@ bool TabBox::establishTabBoxGrab()
     if (Workspace::self()->activeWindow() != nullptr) {
         Workspace::self()->activeWindow()->updateMouseGrab();
     }
-    m_x11EventFilter.reset(new X11Filter);
+    m_x11EventFilter = std::make_unique<X11Filter>();
     return true;
 }
 

@@ -251,7 +251,7 @@ void ApplicationX11::performStartup()
 {
     crashChecking();
 
-    owner.reset(new KWinSelectionOwner());
+    owner = std::make_unique<KWinSelectionOwner>();
     connect(owner.get(), &KSelectionOwner::failedToClaimOwnership, [] {
         fputs(i18n("kwin: unable to claim manager selection, another wm running? (try using --replace)\n").toLocal8Bit().constData(), stderr);
         ::exit(1);

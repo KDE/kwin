@@ -31,6 +31,8 @@ class RootInfo : public NETRootInfo
 public:
     static RootInfo *create();
     static void destroy();
+    RootInfo(xcb_window_t w, const char *name, NET::Properties properties, NET::WindowTypes types,
+             NET::States states, NET::Properties2 properties2, NET::Actions actions, int scr = -1);
 
     void setActiveClient(Window *client);
 
@@ -47,8 +49,6 @@ protected:
     void changeShowingDesktop(bool showing) override;
 
 private:
-    RootInfo(xcb_window_t w, const char *name, NET::Properties properties, NET::WindowTypes types,
-             NET::States states, NET::Properties2 properties2, NET::Actions actions, int scr = -1);
     static std::unique_ptr<RootInfo> s_self;
     friend RootInfo *rootInfo();
 

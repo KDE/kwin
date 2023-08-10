@@ -95,15 +95,15 @@ WaylandTestApplication::~WaylandTestApplication()
 
 void WaylandTestApplication::createVirtualInputDevices()
 {
-    m_virtualKeyboard.reset(new Test::VirtualInputDevice());
+    m_virtualKeyboard = std::make_unique<Test::VirtualInputDevice>();
     m_virtualKeyboard->setName(QStringLiteral("Virtual Keyboard 1"));
     m_virtualKeyboard->setKeyboard(true);
 
-    m_virtualPointer.reset(new Test::VirtualInputDevice());
+    m_virtualPointer = std::make_unique<Test::VirtualInputDevice>();
     m_virtualPointer->setName(QStringLiteral("Virtual Pointer 1"));
     m_virtualPointer->setPointer(true);
 
-    m_virtualTouch.reset(new Test::VirtualInputDevice());
+    m_virtualTouch = std::make_unique<Test::VirtualInputDevice>();
     m_virtualTouch->setName(QStringLiteral("Virtual Touch 1"));
     m_virtualTouch->setTouch(true);
 

@@ -246,7 +246,7 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
         }
         offscreenTexture->setFilter(GL_LINEAR);
         offscreenTexture->setWrapMode(GL_CLAMP_TO_EDGE);
-        target.reset(new GLFramebuffer(offscreenTexture.get()));
+        target = std::make_unique<GLFramebuffer>(offscreenTexture.get());
         validTarget = target->valid();
     }
     if (validTarget) {

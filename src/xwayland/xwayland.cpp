@@ -309,7 +309,7 @@ void Xwayland::handleXwaylandReady()
     qCInfo(KWIN_XWL) << "Xwayland server started on display" << m_launcher->displayName();
 
     // create selection owner for WM_S0 - magic X display number expected by XWayland
-    m_selectionOwner.reset(new KSelectionOwner("WM_S0", kwinApp()->x11Connection(), kwinApp()->x11RootWindow()));
+    m_selectionOwner = std::make_unique<KSelectionOwner>("WM_S0", kwinApp()->x11Connection(), kwinApp()->x11RootWindow());
     connect(m_selectionOwner.get(), &KSelectionOwner::lostOwnership,
             this, &Xwayland::handleSelectionLostOwnership);
     connect(m_selectionOwner.get(), &KSelectionOwner::claimedOwnership,
@@ -347,7 +347,7 @@ void Xwayland::refreshEavesdropping()
     }
 
     if (enabled) {
-        m_inputSpy.reset(new XwaylandInputSpy);
+        m_inputSpy = std::make_unique<XwaylandInputSpy>();
         input()->installInputEventSpy(m_inputSpy.get());
         m_inputSpy->setMode(options->xwaylandEavesdrops());
     } else {

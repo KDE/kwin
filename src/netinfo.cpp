@@ -115,7 +115,7 @@ RootInfo *RootInfo::create()
         | NET::ActionChangeDesktop
         | NET::ActionClose;
 
-    s_self.reset(new RootInfo(supportWindow, "KWin", properties, types, states, properties2, actions));
+    s_self = std::make_unique<RootInfo>(supportWindow, "KWin", properties, types, states, properties2, actions);
     return s_self.get();
 }
 

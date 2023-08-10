@@ -89,7 +89,7 @@ void ScreenTransformEffect::addScreen(EffectScreen *screen)
             m_states.remove(screen);
             return;
         }
-        state.m_prev.framebuffer.reset(new GLFramebuffer(state.m_prev.texture.get()));
+        state.m_prev.framebuffer = std::make_unique<GLFramebuffer>(state.m_prev.texture.get());
 
         // Rendering the current scene into a texture
         GLFramebuffer::pushFramebuffer(state.m_prev.framebuffer.get());
@@ -202,7 +202,7 @@ void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const 
             m_states.remove(screen);
             return;
         }
-        it->m_current.framebuffer.reset(new GLFramebuffer(it->m_current.texture.get()));
+        it->m_current.framebuffer = std::make_unique<GLFramebuffer>(it->m_current.texture.get());
     }
 
     RenderTarget fboRenderTarget(it->m_current.framebuffer.get());

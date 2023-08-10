@@ -108,13 +108,13 @@ OffscreenQuickView::OffscreenQuickView(QObject *parent, ExportMode exportMode)
         d->m_view->setFormat(format);
 
         auto shareContext = QOpenGLContext::globalShareContext();
-        d->m_glcontext.reset(new QOpenGLContext);
+        d->m_glcontext = std::make_unique<QOpenGLContext>();
         d->m_glcontext->setShareContext(shareContext);
         d->m_glcontext->setFormat(format);
         d->m_glcontext->create();
 
         // and the offscreen surface
-        d->m_offscreenSurface.reset(new QOffscreenSurface);
+        d->m_offscreenSurface = std::make_unique<QOffscreenSurface>();
         d->m_offscreenSurface->setFormat(d->m_glcontext->format());
         d->m_offscreenSurface->create();
 
@@ -217,7 +217,7 @@ void OffscreenQuickView::update()
         const QSize nativeSize = d->m_view->size() * d->m_view->effectiveDevicePixelRatio();
         if (!d->m_fbo || d->m_fbo->size() != nativeSize) {
             d->m_textureExport.reset(nullptr);
-            d->m_fbo.reset(new QOpenGLFramebufferObject(nativeSize, QOpenGLFramebufferObject::CombinedDepthStencil));
+            d->m_fbo = std::make_unique<QOpenGLFramebufferObject>(nativeSize, QOpenGLFramebufferObject::CombinedDepthStencil);
             if (!d->m_fbo->isValid()) {
                 d->m_fbo.reset();
                 d->m_glcontext->doneCurrent();
@@ -542,7 +542,7 @@ void OffscreenQuickScene::setSource(const QUrl &source)
 void OffscreenQuickScene::setSource(const QUrl &source, const QVariantMap &initialProperties)
 {
     if (!d->qmlComponent) {
-        d->qmlComponent.reset(new QQmlComponent(effects->qmlEngine()));
+        d->qmlComponent = std::make_unique<QQmlComponent>(effects->qmlEngine());
     }
 
     d->qmlComponent->loadUrl(source);

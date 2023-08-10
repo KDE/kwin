@@ -80,7 +80,7 @@ void XwaylandLauncher::enable()
     if (!m_listenFds.isEmpty()) {
         Q_ASSERT(!m_displayName.isEmpty());
     } else {
-        m_socket.reset(new XwaylandSocket(XwaylandSocket::OperationMode::CloseFdsOnExec));
+        m_socket = std::make_unique<XwaylandSocket>(XwaylandSocket::OperationMode::CloseFdsOnExec);
         if (!m_socket->isValid()) {
             qFatal("Failed to establish X11 socket");
         }

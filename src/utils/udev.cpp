@@ -156,7 +156,7 @@ UdevDevice::Ptr Udev::deviceFromSyspath(const char *syspath)
         qCWarning(KWIN_CORE) << "failed to retrieve device for" << syspath << strerror(errno);
         return {};
     }
-    return UdevDevice::Ptr(new UdevDevice(dev));
+    return std::make_unique<UdevDevice>(dev);
 }
 
 std::unique_ptr<UdevMonitor> Udev::monitor()
@@ -288,11 +288,7 @@ UdevDevice::Ptr UdevMonitor::getDevice()
         return UdevDevice::Ptr();
     }
     auto dev = udev_monitor_receive_device(m_monitor);
-    if (!dev) {
-        return {};
-    }
-
-    return UdevDevice::Ptr(new UdevDevice(dev));
+    return dev ? std::make_unique<UdevDevice>(dev) : nullptr;
 }
 
 }

@@ -1361,7 +1361,7 @@ void X11Window::maybeCreateX11DecorationRenderer()
         return;
     }
     if (!Compositor::compositing() && decoratedClient()) {
-        m_decorationRenderer.reset(new X11DecorationRenderer(decoratedClient()));
+        m_decorationRenderer = std::make_unique<X11DecorationRenderer>(decoratedClient());
         decoration()->update();
     }
 }
