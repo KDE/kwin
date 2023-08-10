@@ -223,12 +223,8 @@ void SeatInterfacePrivate::registerDataControlDevice(DataControlDeviceV1Interfac
         q->setPrimarySelection(dataDevice->primarySelection());
     });
 
-    if (currentSelection) {
-        dataDevice->sendSelection(currentSelection);
-    }
-    if (currentPrimarySelection) {
-        dataDevice->sendPrimarySelection(currentPrimarySelection);
-    }
+    dataDevice->sendSelection(currentSelection);
+    dataDevice->sendPrimarySelection(currentPrimarySelection);
 }
 
 void SeatInterfacePrivate::registerPrimarySelectionDevice(PrimarySelectionDeviceV1Interface *primarySelectionDevice)
