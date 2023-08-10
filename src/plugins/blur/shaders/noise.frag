@@ -1,10 +1,8 @@
 uniform sampler2D texUnit;
-uniform float offset;
-uniform vec2 renderTextureSize;
-uniform vec2 halfpixel;
-
 uniform vec2 noiseTextureSize;
 uniform vec2 texStartPos;
+
+varying vec2 uv;
 
 void main(void)
 {

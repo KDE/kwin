@@ -1088,12 +1088,6 @@ void GLFramebuffer::pushFramebuffer(GLFramebuffer *fbo)
     s_fbos.push(fbo);
 }
 
-void GLFramebuffer::pushFramebuffers(QStack<GLFramebuffer *> fbos)
-{
-    fbos.top()->bind();
-    s_fbos.append(fbos);
-}
-
 GLFramebuffer *GLFramebuffer::popFramebuffer()
 {
     GLFramebuffer *ret = s_fbos.pop();

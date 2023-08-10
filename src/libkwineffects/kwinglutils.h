@@ -464,13 +464,6 @@ public:
      */
     static GLFramebuffer *currentFramebuffer();
 
-    /**
-     * Pushes the framebuffer stack of the input parameter in reverse order.
-     * @param fbos The stack of GLFramebuffers
-     * @since 5.13
-     */
-    static void pushFramebuffers(QStack<GLFramebuffer *> fbos);
-
     static void pushFramebuffer(GLFramebuffer *fbo);
     static GLFramebuffer *popFramebuffer();
     /**

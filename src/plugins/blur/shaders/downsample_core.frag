@@ -2,15 +2,14 @@
 
 uniform sampler2D texUnit;
 uniform float offset;
-uniform vec2 renderTextureSize;
 uniform vec2 halfpixel;
+
+in vec2 uv;
 
 out vec4 fragColor;
 
 void main(void)
 {
-    vec2 uv = vec2(gl_FragCoord.xy / renderTextureSize);
-
     vec4 sum = texture(texUnit, uv) * 4.0;
     sum += texture(texUnit, uv - halfpixel.xy * offset);
     sum += texture(texUnit, uv + halfpixel.xy * offset);

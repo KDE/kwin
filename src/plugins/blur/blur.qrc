@@ -1,7 +1,5 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource prefix="/effects/blur/">
-  <file>shaders/copy.frag</file>
-  <file>shaders/copy_core.frag</file>
   <file>shaders/downsample.frag</file>
   <file>shaders/downsample_core.frag</file>
   <file>shaders/noise.frag</file>

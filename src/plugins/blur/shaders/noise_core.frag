@@ -1,12 +1,10 @@
 #version 140
 
 uniform sampler2D texUnit;
-uniform float offset;
-uniform vec2 renderTextureSize;
-uniform vec2 halfpixel;
-
 uniform vec2 noiseTextureSize;
 uniform vec2 texStartPos;
+
+in vec2 uv;
 
 out vec4 fragColor;
 
