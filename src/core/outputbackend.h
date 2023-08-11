@@ -65,19 +65,6 @@ public:
     std::shared_ptr<DmaBufTexture> createDmaBufTexture(const DmaBufParams &attributes);
 
     virtual EglDisplay *sceneEglDisplayObject() const = 0;
-    /**
-     * Returns the compositor-wide shared EGL context. This function may return EGL_NO_CONTEXT
-     * if the underlying rendering backend does not use EGL.
-     *
-     * Note that the returned context should never be made current. Instead, create a context
-     * that shares with this one and make the new context current.
-     */
-    ::EGLContext sceneEglGlobalShareContext() const;
-    /**
-     * Sets the global share context to @a context. This function is intended to be called only
-     * by rendering backends.
-     */
-    void setSceneEglGlobalShareContext(::EGLContext context);
 
     /**
      * The CompositingTypes supported by the Platform.

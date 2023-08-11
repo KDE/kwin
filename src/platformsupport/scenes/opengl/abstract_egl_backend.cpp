@@ -31,8 +31,6 @@
 namespace KWin
 {
 
-static std::unique_ptr<EglContext> s_globalShareContext;
-
 static bool isOpenGLES_helper()
 {
     if (qstrcmp(qgetenv("KWIN_COMPOSE"), "O2ES") == 0) {
@@ -44,39 +42,10 @@ static bool isOpenGLES_helper()
 AbstractEglBackend::AbstractEglBackend(dev_t deviceId)
     : m_deviceId(deviceId)
 {
-    connect(Compositor::self(), &Compositor::aboutToDestroy, this, &AbstractEglBackend::teardown);
 }
 
 AbstractEglBackend::~AbstractEglBackend()
 {
-}
-
-bool AbstractEglBackend::ensureGlobalShareContext(EGLConfig config)
-{
-    if (!s_globalShareContext) {
-        s_globalShareContext = EglContext::create(m_display, config, EGL_NO_CONTEXT);
-    }
-    if (s_globalShareContext) {
-        kwinApp()->outputBackend()->setSceneEglGlobalShareContext(s_globalShareContext->handle());
-        return true;
-    } else {
-        return false;
-    }
-}
-
-void AbstractEglBackend::destroyGlobalShareContext()
-{
-    EglDisplay *const eglDisplay = kwinApp()->outputBackend()->sceneEglDisplayObject();
-    if (!eglDisplay || !s_globalShareContext) {
-        return;
-    }
-    s_globalShareContext.reset();
-    kwinApp()->outputBackend()->setSceneEglGlobalShareContext(EGL_NO_CONTEXT);
-}
-
-void AbstractEglBackend::teardown()
-{
-    destroyGlobalShareContext();
 }
 
 void AbstractEglBackend::cleanup()
@@ -227,10 +196,7 @@ bool AbstractEglBackend::isOpenGLES() const
 
 bool AbstractEglBackend::createContext(EGLConfig config)
 {
-    if (!ensureGlobalShareContext(config)) {
-        return false;
-    }
-    m_context = EglContext::create(m_display, config, s_globalShareContext ? s_globalShareContext->handle() : EGL_NO_CONTEXT);
+    m_context = EglContext::create(m_display, config, EGL_NO_CONTEXT);
     return m_context != nullptr;
 }
 

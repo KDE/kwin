@@ -59,7 +59,7 @@ public:
     void swapBuffers(QPlatformSurface *surface) override;
 
 private:
-    void create(const QSurfaceFormat &format, ::EGLContext shareContext);
+    void create(const QSurfaceFormat &format);
     void updateFormatFromContext();
 
     EglDisplay *m_eglDisplay = nullptr;

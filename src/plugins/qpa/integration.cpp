@@ -142,7 +142,7 @@ QStringList Integration::themeNames() const
 
 QPlatformOpenGLContext *Integration::createPlatformOpenGLContext(QOpenGLContext *context) const
 {
-    if (kwinApp()->outputBackend()->sceneEglGlobalShareContext() == EGL_NO_CONTEXT) {
+    if (kwinApp()->outputBackend()->sceneEglDisplayObject() == EGL_NO_CONTEXT) {
         qCWarning(KWIN_QPA) << "Attempting to create a QOpenGLContext before the scene is initialized";
         return nullptr;
     }

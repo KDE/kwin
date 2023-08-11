@@ -46,7 +46,7 @@ EGLRenderTarget::~EGLRenderTarget()
 EGLPlatformContext::EGLPlatformContext(QOpenGLContext *context, EglDisplay *display)
     : m_eglDisplay(display)
 {
-    create(context->format(), kwinApp()->outputBackend()->sceneEglGlobalShareContext());
+    create(context->format());
 }
 
 EGLPlatformContext::~EGLPlatformContext()
@@ -181,7 +181,7 @@ GLuint EGLPlatformContext::defaultFramebufferObject(QPlatformSurface *surface) c
     return 0;
 }
 
-void EGLPlatformContext::create(const QSurfaceFormat &format, ::EGLContext shareContext)
+void EGLPlatformContext::create(const QSurfaceFormat &format)
 {
     if (!eglBindAPI(isOpenGLES() ? EGL_OPENGL_ES_API : EGL_OPENGL_API)) {
         qCWarning(KWIN_QPA, "eglBindAPI failed: 0x%x", eglGetError());
@@ -195,7 +195,7 @@ void EGLPlatformContext::create(const QSurfaceFormat &format, ::EGLContext share
     }
 
     m_format = formatFromConfig(m_eglDisplay, m_config);
-    m_eglContext = EglContext::create(m_eglDisplay, m_config, shareContext);
+    m_eglContext = EglContext::create(m_eglDisplay, m_config, EGL_NO_CONTEXT);
     if (!m_eglContext) {
         qCWarning(KWIN_QPA) << "Failed to create EGL context";
         return;

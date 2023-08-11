@@ -108,16 +108,6 @@ QString OutputBackend::supportInformation() const
     return QStringLiteral("Name: %1\n").arg(metaObject()->className());
 }
 
-::EGLContext OutputBackend::sceneEglGlobalShareContext() const
-{
-    return m_globalShareContext;
-}
-
-void OutputBackend::setSceneEglGlobalShareContext(::EGLContext context)
-{
-    m_globalShareContext = context;
-}
-
 } // namespace KWin
 
 #include "moc_outputbackend.cpp"

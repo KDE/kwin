@@ -62,12 +62,6 @@ protected:
     bool createContext(EGLConfig config);
 
 private:
-    bool ensureGlobalShareContext(EGLConfig config);
-    void destroyGlobalShareContext();
-    ::EGLContext createContextInternal(::EGLContext sharedContext);
-
-    void teardown();
-
     EglDisplay *m_display = nullptr;
     EGLSurface m_surface = EGL_NO_SURFACE;
     std::unique_ptr<EglContext> m_context;

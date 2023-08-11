@@ -93,19 +93,17 @@ void EglBackend::init()
 {
     QOpenGLContext *qtShareContext = QOpenGLContext::globalShareContext();
     ::EGLDisplay shareDisplay = EGL_NO_DISPLAY;
-    ::EGLContext shareContext = EGL_NO_CONTEXT;
     if (qtShareContext) {
         qDebug(KWIN_X11STANDALONE) << "Global share context format:" << qtShareContext->format();
         const auto nativeHandle = qtShareContext->nativeInterface<QNativeInterface::QEGLContext>();
         if (nativeHandle) {
-            shareContext = nativeHandle->nativeContext();
             shareDisplay = nativeHandle->display();
         } else {
             setFailed(QStringLiteral("Invalid QOpenGLContext::globalShareContext()"));
             return;
         }
     }
-    if (shareContext == EGL_NO_CONTEXT) {
+    if (shareDisplay == EGL_NO_DISPLAY) {
         setFailed(QStringLiteral("QOpenGLContext::globalShareContext() is required"));
         return;
     }
@@ -113,7 +111,6 @@ void EglBackend::init()
     m_fbo = std::make_unique<GLFramebuffer>(0, workspace()->geometry().size());
 
     m_backend->setEglDisplay(EglDisplay::create(shareDisplay, false));
-    kwinApp()->outputBackend()->setSceneEglGlobalShareContext(shareContext);
 
     qputenv("EGL_PLATFORM", "x11");
     if (!initRenderingContext()) {
