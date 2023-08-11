@@ -37,7 +37,7 @@ public:
     void requestActivateWindow() override;
 
     InternalWindow *internalWindow() const;
-    Swapchain *swapchain();
+    Swapchain *swapchain(const QHash<uint32_t, QVector<uint64_t>> &formats);
 
 private:
     void map();

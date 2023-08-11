@@ -7,6 +7,10 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
+// this needs to be on top, epoxy has an error if you include it after GL/gl.h,
+// which Qt does include
+#include "utils/drm_format_helper.h"
+
 #include "window.h"
 #include "composite.h"
 #include "core/renderbackend.h"
@@ -38,10 +42,12 @@ Window::~Window()
     unmap();
 }
 
-Swapchain *Window::swapchain()
+Swapchain *Window::swapchain(const QHash<uint32_t, QVector<uint64_t>> &formats)
 {
     const QSize nativeSize = geometry().size() * devicePixelRatio();
-    if (!m_swapchain || m_swapchain->size() != nativeSize) {
+    if (!m_swapchain || m_swapchain->size() != nativeSize
+        || !formats.contains(m_swapchain->format())
+        || m_swapchain->modifiers() != formats[m_swapchain->format()]) {
         const bool software = window()->surfaceType() == QSurface::RasterSurface; // RasterGLSurface is unsupported by us
 
         GraphicsBufferAllocator *allocator;
@@ -52,11 +58,22 @@ Swapchain *Window::swapchain()
             allocator = Compositor::self()->backend()->graphicsBufferAllocator();
         }
 
-        m_swapchain = std::make_unique<Swapchain>(allocator, GraphicsBufferOptions{
-                                                                 .size = nativeSize,
-                                                                 .format = DRM_FORMAT_ARGB8888,
-                                                                 .software = software,
-                                                             });
+        for (auto it = formats.begin(); it != formats.end(); it++) {
+            if (auto info = formatInfo(it.key()); info && info->bitsPerColor == 8 && info->alphaBits == 8) {
+                const auto options = GraphicsBufferOptions{
+                    .size = nativeSize,
+                    .format = it.key(),
+                    .modifiers = it.value(),
+                    .software = software,
+                };
+                auto buffer = allocator->allocate(options);
+                if (!buffer) {
+                    continue;
+                }
+                m_swapchain = std::make_unique<Swapchain>(allocator, options, buffer);
+                break;
+            }
+        }
     }
     return m_swapchain.get();
 }

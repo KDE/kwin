@@ -16,6 +16,7 @@
 #include "window.h"
 
 #include <QPainter>
+#include <libdrm/drm_fourcc.h>
 
 namespace KWin
 {
@@ -41,7 +42,11 @@ void BackingStore::resize(const QSize &size, const QRegion &staticContents)
 void BackingStore::beginPaint(const QRegion &region)
 {
     Window *platformWindow = static_cast<Window *>(window()->handle());
-    Swapchain *swapchain = platformWindow->swapchain();
+    Swapchain *swapchain = platformWindow->swapchain({{DRM_FORMAT_ARGB8888, {DRM_FORMAT_MOD_LINEAR}}});
+    if (!swapchain) {
+        qCCritical(KWIN_QPA, "Failed to ceate a swapchain for the backing store!");
+        return;
+    }
 
     const auto oldBuffer = m_buffer;
     m_buffer = swapchain->acquire();

@@ -18,12 +18,14 @@ namespace QPA
 class Swapchain
 {
 public:
-    Swapchain(GraphicsBufferAllocator *allocator, const GraphicsBufferOptions &options);
+    Swapchain(GraphicsBufferAllocator *allocator, const GraphicsBufferOptions &options, GraphicsBuffer *initialBuffer);
     ~Swapchain();
 
     QSize size() const;
 
     GraphicsBuffer *acquire();
+    uint32_t format() const;
+    QVector<uint64_t> modifiers() const;
 
 private:
     GraphicsBufferAllocator *m_allocator;

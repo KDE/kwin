@@ -11,10 +11,11 @@ namespace KWin
 namespace QPA
 {
 
-Swapchain::Swapchain(GraphicsBufferAllocator *allocator, const GraphicsBufferOptions &options)
+Swapchain::Swapchain(GraphicsBufferAllocator *allocator, const GraphicsBufferOptions &options, GraphicsBuffer *initialBuffer)
     : m_allocator(allocator)
     , m_allocationOptions(options)
 {
+    m_buffers.push_back(initialBuffer);
 }
 
 Swapchain::~Swapchain()
@@ -46,5 +47,14 @@ GraphicsBuffer *Swapchain::acquire()
     return buffer;
 }
 
+uint32_t Swapchain::format() const
+{
+    return m_allocationOptions.format;
+}
+
+QVector<uint64_t> Swapchain::modifiers() const
+{
+    return m_allocationOptions.modifiers;
+}
 }
 }

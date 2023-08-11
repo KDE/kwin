@@ -7,8 +7,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
-#include <drm_fourcc.h>
 #include <epoxy/gl.h>
+#include <libdrm/drm_fourcc.h>
 #include <optional>
 #include <stdint.h>
 
