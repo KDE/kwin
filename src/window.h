@@ -19,6 +19,7 @@
 
 #include <NETWM>
 
+#include <QBindable>
 #include <QElapsedTimer>
 #include <QIcon>
 #include <QKeySequence>
@@ -484,9 +485,8 @@ class KWIN_EXPORT Window : public QObject
 
     /**
      * Whether the Window can be resized. The property is evaluated each time it is invoked.
-     * Because of that there is no notify signal.
      */
-    Q_PROPERTY(bool resizeable READ isResizable)
+    Q_PROPERTY(bool resizeable READ isResizable NOTIFY resizableChanged)
 
     /**
      * The desktop file name of the application this Window belongs to.
@@ -1418,6 +1418,7 @@ Q_SIGNALS:
     void minimizeableChanged(bool);
     void shadeableChanged(bool);
     void maximizeableChanged(bool);
+    void resizableChanged(bool);
     void desktopFileNameChanged();
     void applicationMenuChanged();
     void hasApplicationMenuChanged(bool);
@@ -1807,7 +1808,7 @@ protected:
         QPointF invertedOffset;
         QRectF initialGeometry;
         QRectF initialGeometryRestore;
-        Gravity gravity = Gravity::None;
+        QProperty<Gravity> gravity{Gravity::None};
         bool buttonDown = false;
         CursorShape cursor = Qt::ArrowCursor;
         Output *startOutput = nullptr;

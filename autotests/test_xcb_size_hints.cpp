@@ -195,7 +195,7 @@ void TestXcbSizeHints::testSizeHints()
     QTEST(geoHints.resizeIncrements().toSize(), "expectedResizeIncrements");
     QTEST(qint32(geoHints.windowGravity()), "expectedGravity");
 
-    auto sizeHints = geoHints.m_sizeHints;
+    auto sizeHints = geoHints.m_sizeHints.value();
     QVERIFY(sizeHints);
     QTEST(sizeHints->flags, "expectedFlags");
     QTEST(sizeHints->pad[0], "expectedPad0");
@@ -265,7 +265,7 @@ void TestXcbSizeHints::testSizeHintsEmpty()
     QCOMPARE(hints.resizeIncrements(), QSize(1, 1));
     QCOMPARE(hints.windowGravity(), XCB_GRAVITY_NORTH_WEST);
 
-    auto sizeHints = hints.m_sizeHints;
+    auto sizeHints = hints.m_sizeHints.value();
     QVERIFY(sizeHints);
     QCOMPARE(sizeHints->flags, 0);
     QCOMPARE(sizeHints->pad[0], 0);

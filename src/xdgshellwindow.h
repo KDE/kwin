@@ -14,6 +14,7 @@
 #include "wayland/xdgshell_interface.h"
 #include "waylandwindow.h"
 
+#include <QBindable>
 #include <QQueue>
 #include <QTimer>
 
@@ -226,7 +227,8 @@ private:
     MaximizeMode m_maximizeMode = MaximizeRestore;
     MaximizeMode m_requestedMaximizeMode = MaximizeRestore;
     bool m_isFullScreen = false;
-    bool m_isRequestedFullScreen = false;
+    Q_OBJECT_BINDABLE_PROPERTY_WITH_ARGS(XdgToplevelWindow, bool, m_isRequestedFullScreen, false);
+    Q_OBJECT_BINDABLE_PROPERTY_WITH_ARGS(XdgToplevelWindow, bool, m_resizable, true, &XdgToplevelWindow::resizableChanged);
     bool m_isInitialized = false;
     bool m_userNoBorder = false;
     bool m_isTransient = false;

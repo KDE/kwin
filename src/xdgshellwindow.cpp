@@ -451,6 +451,10 @@ XdgToplevelWindow::XdgToplevelWindow(XdgToplevelInterface *shellSurface)
 
     connect(waylandServer(), &WaylandServer::foreignTransientChanged,
             this, &XdgToplevelWindow::handleForeignTransientForChanged);
+
+    m_resizable.setBinding([this] {
+        return isResizable();
+    });
 }
 
 XdgToplevelWindow::~XdgToplevelWindow()
@@ -514,7 +518,7 @@ bool XdgToplevelWindow::isFullScreen() const
 
 bool XdgToplevelWindow::isRequestedFullScreen() const
 {
-    return m_isRequestedFullScreen;
+    return m_isRequestedFullScreen.value();
 }
 
 bool XdgToplevelWindow::isMovable() const

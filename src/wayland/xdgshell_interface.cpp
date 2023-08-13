@@ -323,11 +323,11 @@ void XdgToplevelInterfacePrivate::commit()
     xdgSurfacePrivate->commit();
 
     if (current.minimumSize != next.minimumSize) {
-        current.minimumSize = next.minimumSize;
+        current.minimumSize = next.minimumSize.value();
         Q_EMIT q->minimumSizeChanged(current.minimumSize);
     }
     if (current.maximumSize != next.maximumSize) {
-        current.maximumSize = next.maximumSize;
+        current.maximumSize = next.maximumSize.value();
         Q_EMIT q->maximumSizeChanged(current.maximumSize);
     }
 
@@ -344,7 +344,10 @@ void XdgToplevelInterfacePrivate::reset()
 
     windowTitle = QString();
     windowClass = QString();
-    current = next = State();
+    current.maximumSize = QSize();
+    current.minimumSize = QSize();
+    next.maximumSize = QSize();
+    next.minimumSize = QSize();
 
     Q_EMIT q->resetOccurred();
 }
@@ -528,12 +531,12 @@ QString XdgToplevelInterface::windowClass() const
 
 QSize XdgToplevelInterface::minimumSize() const
 {
-    return d->current.minimumSize.isEmpty() ? QSize(0, 0) : d->current.minimumSize;
+    return d->current.minimumSize.value().isEmpty() ? QSize(0, 0) : d->current.minimumSize.value();
 }
 
 QSize XdgToplevelInterface::maximumSize() const
 {
-    return d->current.maximumSize.isEmpty() ? QSize(INT_MAX, INT_MAX) : d->current.maximumSize;
+    return d->current.maximumSize.value().isEmpty() ? QSize(INT_MAX, INT_MAX) : d->current.maximumSize.value();
 }
 
 quint32 XdgToplevelInterface::sendConfigure(const QSize &size, const States &states)

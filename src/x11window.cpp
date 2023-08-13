@@ -348,6 +348,9 @@ X11Window::X11Window()
     });
 
     // SELI TODO: Initialize xsizehints??
+    m_resizable.setBinding([this] {
+        return isResizable();
+    });
 }
 
 /**
@@ -434,7 +437,7 @@ void X11Window::releaseWindow(bool on_shutdown)
             info->setDesktop(0);
             info->setState(NET::States(), info->state()); // Reset all state flags
         }
-        if (WinInfo *cinfo = dynamic_cast<WinInfo *>(info)) {
+        if (WinInfo *cinfo = dynamic_cast<WinInfo *>(info.value())) {
             cinfo->disable();
         }
         xcb_connection_t *c = kwinApp()->x11Connection();
@@ -496,7 +499,7 @@ void X11Window::destroyWindow()
         workspace()->windowHidden(this);
         cleanGrouping();
         workspace()->removeX11Window(this);
-        if (WinInfo *cinfo = dynamic_cast<WinInfo *>(info)) {
+        if (WinInfo *cinfo = dynamic_cast<WinInfo *>(info.value())) {
             cinfo->disable();
         }
         m_client.reset(); // invalidate
@@ -4211,7 +4214,7 @@ bool X11Window::isMovableAcrossScreens() const
 
 bool X11Window::isResizable() const
 {
-    if (isUnmanaged()) {
+    if (isUnmanaged() || !info) {
         return false;
     }
     if (!hasNETSupport() && !m_motif.resize()) {

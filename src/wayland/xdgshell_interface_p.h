@@ -12,6 +12,8 @@
 #include "surface_interface.h"
 #include "surfacerole_p.h"
 
+#include <QProperty>
+
 namespace KWaylandServer
 {
 class XdgToplevelDecorationV1Interface;
@@ -143,8 +145,8 @@ public:
 
     struct State
     {
-        QSize minimumSize;
-        QSize maximumSize;
+        QProperty<QSize> minimumSize;
+        QProperty<QSize> maximumSize;
     };
 
     State next;

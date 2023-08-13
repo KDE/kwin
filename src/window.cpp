@@ -1862,6 +1862,12 @@ void Window::setupWindowManagementInterface()
         w->setIcon(icon());
     });
     connect(this, &Window::windowClassChanged, w, updateAppId);
+    connect(this, &Window::maximizeableChanged, w, [w](bool maximizable) {
+        w->setMaximizeable(maximizable);
+    });
+    connect(this, &Window::resizableChanged, w, [w](bool resizable) {
+        w->setResizable(resizable);
+    });
     connect(this, &Window::desktopFileNameChanged, w, updateAppId);
     connect(this, &Window::shadeChanged, w, [w, this] {
         w->setShaded(isShade());

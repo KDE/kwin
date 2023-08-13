@@ -468,7 +468,7 @@ private:
     void checkGroupTransients();
     void setTransient(xcb_window_t new_transient_for_id);
 
-    NETWinInfo *info = nullptr;
+    QProperty<NETWinInfo *> info{nullptr};
     xcb_window_t m_transientForId;
     xcb_window_t m_originalTransientForId;
     X11Window *shade_below;
@@ -482,7 +482,8 @@ private:
     enum FullScreenMode {
         FullScreenNone,
         FullScreenNormal
-    } m_fullscreenMode;
+    };
+    Q_OBJECT_BINDABLE_PROPERTY_WITH_ARGS(X11Window, FullScreenMode, m_fullscreenMode, FullScreenNone);
 
     MaximizeMode max_mode;
     xcb_colormap_t m_colormap;
@@ -525,9 +526,10 @@ private:
     QRectF m_lastBufferGeometry;
     QRectF m_lastFrameGeometry;
     QRectF m_lastClientGeometry;
+    Q_OBJECT_BINDABLE_PROPERTY_WITH_ARGS(X11Window, bool, m_resizable, true, &X11Window::resizableChanged);
     std::unique_ptr<X11DecorationRenderer> m_decorationRenderer;
 
-    bool m_unmanaged = false;
+    Q_OBJECT_BINDABLE_PROPERTY_WITH_ARGS(X11Window, bool, m_unmanaged, false);
     bool m_outline = false;
     quint32 m_pendingSurfaceId = 0;
     quint64 m_surfaceSerial = 0;

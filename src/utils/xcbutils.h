@@ -13,6 +13,7 @@
 #include "main.h"
 #include "utils/c_ptr.h"
 
+#include <QProperty>
 #include <QRect>
 #include <QRegion>
 #include <QVector>
@@ -998,7 +999,7 @@ public:
     }
     QSizeF maxSize() const
     {
-        if (!hasMaxSize()) {
+        if (!hasMaxSize() || !m_sizeHints) {
             return QSize(INT_MAX, INT_MAX);
         }
         const QSize size(std::max(m_sizeHints->maxWidth, 1), std::max(m_sizeHints->maxHeight, 1));
@@ -1006,7 +1007,7 @@ public:
     }
     QSizeF minSize() const
     {
-        if (!hasMinSize()) {
+        if (!hasMinSize() || !m_sizeHints) {
             // according to ICCCM 4.1.23 base size should be used as a fallback
             return baseSize();
         }
@@ -1016,7 +1017,7 @@ public:
     QSizeF baseSize() const
     {
         // Note: not using minSize as fallback
-        if (!hasBaseSize()) {
+        if (!hasBaseSize() || !m_sizeHints) {
             return QSize(0, 0);
         }
         const QSize size(m_sizeHints->baseWidth, m_sizeHints->baseHeight);
@@ -1109,7 +1110,7 @@ private:
     }
     xcb_window_t m_window = XCB_WINDOW_NONE;
     NormalHints m_hints;
-    NormalHints::SizeHints *m_sizeHints = nullptr;
+    QProperty<NormalHints::SizeHints *> m_sizeHints{nullptr};
 };
 
 class MotifHints
