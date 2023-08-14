@@ -113,6 +113,10 @@ void Dnd::doHandleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
     m_currentDrag = new XToWlDrag(source, this);
 }
 
+void Dnd::x11OfferLost()
+{
+}
+
 void Dnd::x11OffersChanged(const QStringList &added, const QStringList &removed)
 {
 }

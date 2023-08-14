@@ -144,6 +144,11 @@ void Primary::doHandleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
     }
 }
 
+void Primary::x11OfferLost()
+{
+    m_primarySelectionSource.reset();
+}
+
 void Primary::x11OffersChanged(const QStringList &added, const QStringList &removed)
 {
     m_waitingForTargets = false;
