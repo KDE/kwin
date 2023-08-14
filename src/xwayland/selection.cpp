@@ -183,12 +183,14 @@ void Selection::setWlSource(WlSource *source)
 
 void Selection::createX11Source(xcb_xfixes_selection_notify_event_t *event)
 {
-    setWlSource(nullptr);
     if (!event || event->owner == XCB_WINDOW_NONE) {
+        x11OfferLost();
+        setWlSource(nullptr);
         return;
     }
-    m_xSource = new X11Source(this, event);
+    setWlSource(nullptr);
 
+    m_xSource = new X11Source(this, event);
     connect(m_xSource, &X11Source::offersChanged, this, &Selection::x11OffersChanged);
     connect(m_xSource, &X11Source::transferReady, this, &Selection::startTransferToWayland);
 }
