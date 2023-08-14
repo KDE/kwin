@@ -25,6 +25,7 @@
 #include "effects.h"
 #include "gestures.h"
 #include "main.h"
+#include "pointer_input.h"
 #include "utils/common.h"
 #include "virtualdesktops.h"
 #include <workspace.h>
@@ -218,17 +219,26 @@ void Edge::unreserve(QObject *object)
 
 bool Edge::activatesForPointer() const
 {
+    bool isMovingWindow = false;
+
+    // Don't activate edge when a mouse button is pressed, except when
+    // moving a window. Dragging a scroll bar all the way to the edge
+    // shouldn't activate the edge.
+    if (input()->pointer()->areButtonsPressed()) {
+        auto c = Workspace::self()->moveResizeWindow();
+        if (!c || c->isInteractiveResize()) {
+            return false;
+        }
+    }
+
     if (m_client) {
         return true;
     }
     if (m_edges->isDesktopSwitching()) {
         return true;
     }
-    if (m_edges->isDesktopSwitchingMovingClients()) {
-        auto c = Workspace::self()->moveResizeWindow();
-        if (c && !c->isInteractiveResize()) {
-            return true;
-        }
+    if (m_edges->isDesktopSwitchingMovingClients() && isMovingWindow) {
+        return true;
     }
     if (!m_callBacks.isEmpty()) {
         return true;
