@@ -172,6 +172,7 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             elide: Text.ElideRight
             text: thumb.window.caption
+            textFormat: Text.PlainText
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
         }

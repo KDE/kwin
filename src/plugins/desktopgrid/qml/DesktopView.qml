@@ -295,6 +295,7 @@ FocusScope {
         rightPadding: Kirigami.Units.smallSpacing
         contentItem: PC3.Label {
             text: desktopView.desktop.name
+            textFormat: Text.PlainText
         }
         background: Rectangle {
             color: Kirigami.Theme.backgroundColor

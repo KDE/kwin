@@ -198,6 +198,7 @@ Item {
                             anchors.fill: parent
                             elide: Text.ElideRight
                             text: delegate.desktop.name
+                            textFormat: Text.PlainText
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
                             visible: label.state === "normal"
