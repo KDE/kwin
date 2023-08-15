@@ -59,6 +59,7 @@ private Q_SLOTS:
     void testEnableDisableV3();
     void testEnableActive();
     void testHidePanel();
+    void testReactivateFocus();
     void testSwitchFocusedSurfaces();
     void testV2V3SameClient();
     void testV3Styling();
@@ -302,6 +303,46 @@ void InputMethodTest::testHidePanel()
     // Destroy the test window.
     shellSurface.reset();
     QVERIFY(Test::waitForWindowDestroyed(window));
+}
+
+void InputMethodTest::testReactivateFocus()
+{
+    touchNow();
+    QVERIFY(!kwinApp()->inputMethod()->isActive());
+
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    Window *window = Test::renderAndWaitForShown(surface.get(), QSize(1280, 1024), Qt::red);
+    QVERIFY(window);
+    QVERIFY(window->isActive());
+    QCOMPARE(window->frameGeometry().size(), QSize(1280, 1024));
+
+    // Show the keyboard
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
+    std::unique_ptr<KWayland::Client::TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
+    textInput->enable(surface.get());
+    QSignalSpy paneladded(kwinApp()->inputMethod(), &KWin::InputMethod::panelChanged);
+    QVERIFY(paneladded.wait());
+    textInput->showInputPanel();
+    QVERIFY(windowAddedSpy.wait());
+    QVERIFY(kwinApp()->inputMethod()->isActive());
+
+    QSignalSpy activeSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
+
+    // Hide keyboard like keyboardToggle button on navigation panel
+    kwinApp()->inputMethod()->setActive(false);
+    activeSpy.wait(200);
+    QVERIFY(!kwinApp()->inputMethod()->isActive());
+
+    // Reactivate
+    textInput->enable(surface.get());
+    textInput->showInputPanel();
+    activeSpy.wait(200);
+    QVERIFY(kwinApp()->inputMethod()->isActive());
+
+    // Destroy the test window
+    shellSurface.reset();
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void InputMethodTest::testSwitchFocusedSurfaces()

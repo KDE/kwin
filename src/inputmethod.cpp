@@ -157,8 +157,15 @@ void InputMethod::show()
     if (m_panel) {
         m_panel->show();
         updateInputPanelState();
-    } else if (isActive()) {
-        adoptInputMethodContext();
+    } else {
+        if (!isActive()) {
+            refreshActive();
+        }
+
+        // refreshActive affects the result of isActive
+        if (isActive()) {
+            adoptInputMethodContext();
+        }
     }
 }
 
