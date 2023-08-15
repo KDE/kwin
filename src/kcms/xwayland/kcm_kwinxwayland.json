@@ -17,6 +17,7 @@
         "Description[fr]": "Sélectionnez quelles touches doivent être totalement disponibles pour les applications anciennes sous X11",
         "Description[ia]": "Selige qual claves essera disponibile globalmente a apps de X11 legacy (hereditage)",
         "Description[it]": "Seleziona quali tasti saranno disponibili a livello globale per le applicazioni X11 originali",
+        "Description[ja]": "レガシーな X11 アプリケーションがグローバルに利用できるキーを選択",
         "Description[ka]": "აირჩიეთ, რომელი ღილაკები იქნება გლობალურად ხელმისაწვდომი მოძველებული X11 აპებისთვის",
         "Description[ko]": "레거시 X11 앱에 전역적으로 전달할 키 선택",
         "Description[nl]": "Selecteer welke toetsen globaal beschikbaar zijn aan verouderde X11 apps",
