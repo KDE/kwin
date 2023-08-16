@@ -1613,27 +1613,25 @@ void XdgPopupWindow::handleRoleDestroyed()
     XdgSurfaceWindow::handleRoleDestroyed();
 }
 
-void XdgPopupWindow::updateReactive()
-{
-    if (m_shellSurface->positioner().isReactive()) {
-        connect(transientFor(), &Window::frameGeometryChanged,
-                this, &XdgPopupWindow::relayout, Qt::UniqueConnection);
-    } else {
-        disconnect(transientFor(), &Window::frameGeometryChanged,
-                   this, &XdgPopupWindow::relayout);
-    }
-}
-
 void XdgPopupWindow::handleRepositionRequested(quint32 token)
 {
-    updateReactive();
+    updateRelativePlacement();
     m_shellSurface->sendRepositioned(token);
     relayout();
 }
 
+void XdgPopupWindow::updateRelativePlacement()
+{
+    const QPointF parentPosition = transientFor()->framePosToClientPos(transientFor()->pos());
+    m_relativePlacement = placement().translated(-parentPosition);
+}
+
 void XdgPopupWindow::relayout()
 {
-    workspace()->placement()->place(this, QRect());
+    if (m_shellSurface->positioner().isReactive()) {
+        updateRelativePlacement();
+    }
+    workspace()->placement()->place(this, QRectF());
     scheduleConfigure();
 }
 
@@ -1681,8 +1679,16 @@ bool XdgPopupWindow::hasTransientPlacementHint() const
     return true;
 }
 
-QRectF XdgPopupWindow::transientPlacement(const QRectF &bounds) const
+QRectF XdgPopupWindow::transientPlacement() const
 {
+    const QPointF parentPosition = transientFor()->framePosToClientPos(transientFor()->pos());
+    return m_relativePlacement.translated(parentPosition);
+}
+
+QRectF XdgPopupWindow::placement() const
+{
+    const QRectF bounds = Workspace::self()->clientArea(transientFor()->isFullScreen() ? FullScreenArea : PlacementArea, transientFor());
+
     const XdgPositioner positioner = m_shellSurface->positioner();
     const QSize desiredSize = positioner.size();
 
@@ -1854,10 +1860,10 @@ void XdgPopupWindow::initialize()
     parent->addTransient(this);
     setTransientFor(parent);
 
-    updateReactive();
+    updateRelativePlacement();
+    connect(parent, &Window::frameGeometryChanged, this, &XdgPopupWindow::relayout);
 
-    const QRectF area = workspace()->clientArea(PlacementArea, this, workspace()->activeOutput());
-    workspace()->placement()->place(this, area);
+    workspace()->placement()->place(this, QRectF());
     scheduleConfigure();
 }
 

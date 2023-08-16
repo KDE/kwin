@@ -93,8 +93,9 @@ private Q_SLOTS:
     void testXdgWindowGeometryInteractiveResize();
     void testXdgWindowGeometryFullScreen();
     void testXdgWindowGeometryMaximize();
-    void testXdgWindowReactive();
-    void testXdgWindowRepositioning();
+    void testXdgPopupReactive_data();
+    void testXdgPopupReactive();
+    void testXdgPopupReposition();
     void testPointerInputTransform();
     void testReentrantSetFrameGeometry();
     void testDoubleMaximize();
@@ -104,12 +105,34 @@ private Q_SLOTS:
     void testChangeDecorationModeAfterInitialCommit();
 };
 
-void TestXdgShellWindow::testXdgWindowReactive()
+void TestXdgShellWindow::testXdgPopupReactive_data()
 {
+    QTest::addColumn<bool>("reactive");
+    QTest::addColumn<QPointF>("parentPos");
+    QTest::addColumn<QPointF>("popupPos");
+
+    QTest::addRow("reactive") << true << QPointF(0, 1024) << QPointF(50, 1024 - 10);
+    QTest::addRow("not reactive") << false << QPointF(0, 1024) << QPointF(50, 1024 + 40);
+}
+
+void TestXdgShellWindow::testXdgPopupReactive()
+{
+    // This test verifies the behavior of reactive popups. If a popup is not reactive,
+    // it only has to move together with its parent. If a popup is reactive, it moves
+    // with its parent and it's reconstrained as needed.
+
     std::unique_ptr<Test::XdgPositioner> positioner(Test::createXdgPositioner());
     positioner->set_size(10, 10);
     positioner->set_anchor_rect(10, 10, 10, 10);
-    positioner->set_reactive();
+    positioner->set_anchor_rect(0, 0, 50, 40);
+    positioner->set_anchor(Test::XdgPositioner::anchor_bottom_right);
+    positioner->set_gravity(Test::XdgPositioner::gravity_bottom_right);
+    positioner->set_constraint_adjustment(Test::XdgPositioner::constraint_adjustment_slide_y);
+
+    QFETCH(bool, reactive);
+    if (reactive) {
+        positioner->set_reactive();
+    }
 
     std::unique_ptr<KWayland::Client::Surface> rootSurface(Test::createSurface());
     std::unique_ptr<Test::XdgToplevel> root(Test::createXdgToplevelSurface(rootSurface.get()));
@@ -121,14 +144,18 @@ void TestXdgShellWindow::testXdgWindowReactive()
     auto childWindow = Test::renderAndWaitForShown(childSurface.get(), QSize(10, 10), Qt::cyan);
     QVERIFY(childWindow);
 
-    QSignalSpy popupConfigureRequested(popup.get(), &Test::XdgPopup::configureRequested);
-    rootWindow->move(rootWindow->pos() + QPoint(20, 20));
+    QFETCH(QPointF, parentPos);
+    QFETCH(QPointF, popupPos);
 
+    QSignalSpy popupConfigureRequested(popup.get(), &Test::XdgPopup::configureRequested);
+    rootWindow->move(parentPos);
     QVERIFY(popupConfigureRequested.wait());
     QCOMPARE(popupConfigureRequested.count(), 1);
+
+    QCOMPARE(childWindow->pos(), popupPos);
 }
 
-void TestXdgShellWindow::testXdgWindowRepositioning()
+void TestXdgShellWindow::testXdgPopupReposition()
 {
     std::unique_ptr<Test::XdgPositioner> positioner(Test::createXdgPositioner());
     positioner->set_size(10, 10);

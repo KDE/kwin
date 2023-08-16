@@ -250,7 +250,7 @@ public:
     bool isMovable() const override;
     bool isMovableAcrossScreens() const override;
     bool hasTransientPlacementHint() const override;
-    QRectF transientPlacement(const QRectF &bounds) const override;
+    QRectF transientPlacement() const override;
     bool isCloseable() const override;
     void closeWindow() override;
     bool wantsInput() const override;
@@ -262,14 +262,17 @@ protected:
     void handleRoleDestroyed() override;
 
 private:
+    QRectF placement() const;
+
     void handleGrabRequested(KWaylandServer::SeatInterface *seat, quint32 serial);
     void handleRepositionRequested(quint32 token);
     void initialize();
+    void updateRelativePlacement();
     void relayout();
-    void updateReactive();
 
     KWaylandServer::XdgPopupInterface *m_shellSurface;
     bool m_haveExplicitGrab = false;
+    QRectF m_relativePlacement;
 };
 
 } // namespace KWin
