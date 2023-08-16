@@ -98,13 +98,15 @@ public:
     void setOutput(DrmOutput *output);
     DrmOutput *output() const;
 
+    void setLayers(const std::shared_ptr<DrmPipelineLayer> &primaryLayer, const std::shared_ptr<DrmOverlayLayer> &cursorLayer);
+    DrmPipelineLayer *primaryLayer() const;
+    DrmOverlayLayer *cursorLayer() const;
+
     DrmCrtc *crtc() const;
     std::shared_ptr<DrmConnectorMode> mode() const;
     bool active() const;
     bool activePending() const;
     bool enabled() const;
-    DrmPipelineLayer *primaryLayer() const;
-    DrmOverlayLayer *cursorLayer() const;
     DrmPlane::Transformations renderOrientation() const;
     RenderLoopPrivate::SyncMode syncMode() const;
     uint32_t overscan() const;
@@ -118,7 +120,6 @@ public:
     void setMode(const std::shared_ptr<DrmConnectorMode> &mode);
     void setActive(bool active);
     void setEnable(bool enable);
-    void setLayers(const std::shared_ptr<DrmPipelineLayer> &primaryLayer, const std::shared_ptr<DrmOverlayLayer> &cursorLayer);
     void setRenderOrientation(DrmPlane::Transformations orientation);
     void setSyncMode(RenderLoopPrivate::SyncMode mode);
     void setOverscan(uint32_t overscan);
@@ -189,8 +190,6 @@ private:
         double sdrBrightness = 200;
         ColorDescription colorDescription = ColorDescription::sRGB;
 
-        std::shared_ptr<DrmPipelineLayer> layer;
-        std::shared_ptr<DrmOverlayLayer> cursorLayer;
         QPoint cursorHotspot;
 
         // the transformation that buffers submitted to the pipeline should have
@@ -204,6 +203,8 @@ private:
     State m_current;
 
     std::unique_ptr<DrmCommitThread> m_commitThread;
+    std::shared_ptr<DrmPipelineLayer> m_primaryLayer;
+    std::shared_ptr<DrmOverlayLayer> m_cursorLayer;
 };
 
 }

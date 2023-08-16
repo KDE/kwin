@@ -31,7 +31,7 @@ DrmPipeline::Error DrmPipeline::presentLegacy()
             return err;
         }
     }
-    const auto buffer = m_pending.layer->currentBuffer();
+    const auto buffer = m_primaryLayer->currentBuffer();
     uint32_t flags = DRM_MODE_PAGE_FLIP_EVENT;
     if (m_pending.syncMode == RenderLoopPrivate::SyncMode::Async || m_pending.syncMode == RenderLoopPrivate::SyncMode::AdaptiveAsync) {
         flags |= DRM_MODE_PAGE_FLIP_ASYNC;
@@ -54,10 +54,10 @@ void DrmPipeline::forceLegacyModeset()
 
 DrmPipeline::Error DrmPipeline::legacyModeset()
 {
-    if (!m_pending.layer->checkTestBuffer()) {
+    if (!m_primaryLayer->checkTestBuffer()) {
         return Error::TestBufferFailed;
     }
-    auto commit = std::make_unique<DrmLegacyCommit>(this, m_pending.layer->currentBuffer());
+    auto commit = std::make_unique<DrmLegacyCommit>(this, m_primaryLayer->currentBuffer());
     if (!commit->doModeset(m_connector, m_pending.mode.get())) {
         qCWarning(KWIN_DRM) << "Modeset failed!" << strerror(errno);
         return errnoToError();
@@ -155,8 +155,8 @@ bool DrmPipeline::setCursorLegacy()
     struct drm_mode_cursor2 arg = {
         .flags = DRM_MODE_CURSOR_BO | DRM_MODE_CURSOR_MOVE,
         .crtc_id = m_pending.crtc->id(),
-        .x = m_pending.cursorLayer->position().x(),
-        .y = m_pending.cursorLayer->position().y(),
+        .x = m_cursorLayer->position().x(),
+        .y = m_cursorLayer->position().y(),
         .width = (uint32_t)gpu()->cursorSize().width(),
         .height = (uint32_t)gpu()->cursorSize().height(),
         .handle = handle,

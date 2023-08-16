@@ -65,7 +65,7 @@ bool DrmPipeline::testScanout()
     if (gpu()->atomicModeSetting()) {
         return commitPipelines({this}, CommitMode::Test) == Error::None;
     } else {
-        if (m_pending.layer->currentBuffer()->buffer()->size() != m_pending.mode->size()) {
+        if (m_primaryLayer->currentBuffer()->buffer()->size() != m_pending.mode->size()) {
             // scaling isn't supported with the legacy API
             return false;
         }
@@ -81,7 +81,7 @@ DrmPipeline::Error DrmPipeline::present()
     if (gpu()->atomicModeSetting()) {
         return commitPipelines({this}, CommitMode::Commit);
     } else {
-        if (m_pending.layer->hasDirectScanoutBuffer()) {
+        if (m_primaryLayer->hasDirectScanoutBuffer()) {
             // already presented
             return Error::None;
         }
@@ -120,7 +120,7 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline 
     }
     for (const auto &pipeline : pipelines) {
         if (pipeline->activePending()) {
-            if (!pipeline->m_pending.layer->checkTestBuffer()) {
+            if (!pipeline->m_primaryLayer->checkTestBuffer()) {
                 qCWarning(KWIN_DRM) << "Checking test buffer failed for" << mode;
                 return Error::TestBufferFailed;
             }
@@ -231,7 +231,7 @@ bool DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commit)
         return false;
     }
 
-    const auto fb = m_pending.layer->currentBuffer();
+    const auto fb = m_primaryLayer->currentBuffer();
     m_pending.crtc->primaryPlane()->set(commit, QPoint(0, 0), fb->buffer()->size(), centerBuffer(fb->buffer()->size(), m_pending.mode->size()));
     commit->addBuffer(m_pending.crtc->primaryPlane(), fb);
 
@@ -453,7 +453,7 @@ QMap<uint32_t, QVector<uint64_t>> DrmPipeline::cursorFormats() const
 
 bool DrmPipeline::pruneModifier()
 {
-    const DmaBufAttributes *dmabufAttributes = m_pending.layer->currentBuffer() ? m_pending.layer->currentBuffer()->buffer()->dmabufAttributes() : nullptr;
+    const DmaBufAttributes *dmabufAttributes = m_primaryLayer->currentBuffer() ? m_primaryLayer->currentBuffer()->buffer()->dmabufAttributes() : nullptr;
     if (!dmabufAttributes) {
         return false;
     }
@@ -547,12 +547,12 @@ bool DrmPipeline::enabled() const
 
 DrmPipelineLayer *DrmPipeline::primaryLayer() const
 {
-    return m_pending.layer.get();
+    return m_primaryLayer.get();
 }
 
 DrmOverlayLayer *DrmPipeline::cursorLayer() const
 {
-    return m_pending.cursorLayer.get();
+    return m_cursorLayer.get();
 }
 
 DrmPlane::Transformations DrmPipeline::renderOrientation() const
@@ -625,8 +625,8 @@ void DrmPipeline::setEnable(bool enable)
 
 void DrmPipeline::setLayers(const std::shared_ptr<DrmPipelineLayer> &primaryLayer, const std::shared_ptr<DrmOverlayLayer> &cursorLayer)
 {
-    m_pending.layer = primaryLayer;
-    m_pending.cursorLayer = cursorLayer;
+    m_primaryLayer = primaryLayer;
+    m_cursorLayer = cursorLayer;
 }
 
 void DrmPipeline::setRenderOrientation(DrmPlane::Transformations orientation)
