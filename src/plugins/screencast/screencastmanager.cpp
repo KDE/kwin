@@ -221,6 +221,7 @@ void ScreencastManager::integrateStreams(KWaylandServer::ScreencastStreamV1Inter
         stream->deleteLater();
     });
     connect(stream, &ScreenCastStream::streamReady, stream, [waylandStream](uint nodeid) {
+        qDebug() << "send node id" << nodeid;
         waylandStream->sendCreated(nodeid);
     });
     if (!stream->init()) {

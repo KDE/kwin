@@ -152,6 +152,7 @@ void ScreenCastStream::newStreamParams()
 
 void ScreenCastStream::onStreamParamChanged(uint32_t id, const struct spa_pod *format)
 {
+    qDebug() << "ScreenCastStream::onStreamParamChanged";
     if (!format || id != SPA_PARAM_Format) {
         return;
     }
@@ -209,6 +210,7 @@ void ScreenCastStream::onStreamParamChanged(uint32_t id, const struct spa_pod *f
 void ScreenCastStream::onStreamAddBuffer(pw_buffer *buffer)
 {
     struct spa_data *spa_data = buffer->buffer->datas;
+    qDebug() << "ScreenCastStream::onStreamAddBuffer";
 
     spa_data->mapoffset = 0;
     spa_data->flags = SPA_DATA_FLAG_READWRITE;
