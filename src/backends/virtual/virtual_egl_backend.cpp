@@ -40,12 +40,14 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame()
     if (!m_swapchain || m_swapchain->size() != nativeSize) {
         m_swapchain = EglSwapchain::create(m_backend->graphicsBufferAllocator(), m_backend->contextObject(), nativeSize, DRM_FORMAT_XRGB8888, {DRM_FORMAT_MOD_INVALID});
         if (!m_swapchain) {
+            qCWarning(KWIN_VIRTUAL) << "Failed to create EGL swapchain with size" << nativeSize;
             return std::nullopt;
         }
     }
 
     m_current = m_swapchain->acquire();
     if (!m_current) {
+        qCWarning(KWIN_VIRTUAL) << "Failed to acquire a graphics buffer from EGL swapchain";
         return std::nullopt;
     }
 
