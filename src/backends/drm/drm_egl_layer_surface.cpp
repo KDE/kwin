@@ -52,6 +52,7 @@ EglGbmLayerSurface::~EglGbmLayerSurface()
 
 void EglGbmLayerSurface::destroyResources()
 {
+    m_eglBackend->makeCurrent();
     m_surface = {};
     m_oldSurface = {};
 }

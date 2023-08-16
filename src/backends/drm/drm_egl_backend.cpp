@@ -15,6 +15,7 @@
 #include "drm_egl_layer.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
+#include "drm_output.h"
 #include "drm_pipeline.h"
 #include "drm_virtual_egl_layer.h"
 #include "kwineglutils_p.h"
@@ -41,6 +42,12 @@ EglGbmBackend::EglGbmBackend(DrmBackend *drmBackend)
 EglGbmBackend::~EglGbmBackend()
 {
     m_backend->releaseBuffers();
+    const auto outputs = m_backend->outputs();
+    for (const auto output : outputs) {
+        if (auto drmOutput = dynamic_cast<DrmOutput *>(output)) {
+            drmOutput->pipeline()->setLayers(nullptr, nullptr);
+        }
+    }
     m_contexts.clear();
     cleanup();
     m_backend->setRenderBackend(nullptr);
