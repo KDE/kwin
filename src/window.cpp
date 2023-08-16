@@ -2146,6 +2146,7 @@ bool Window::performMouseCommand(Options::MouseCommand cmd, const QPointF &globa
     case Options::MouseMove:
     case Options::MouseUnrestrictedMove: {
         if (!isMovableAcrossScreens()) {
+            replay = true;
             break;
         }
         if (isInteractiveMoveResize()) {
