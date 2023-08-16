@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-08-12 02:01+0000\n"
+"POT-Creation-Date: 2023-08-16 01:59+0000\n"
 "PO-Revision-Date: 2023-08-07 19:29+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Chinese <zh-l10n@linux.org.tw>\n"
@@ -2319,7 +2319,7 @@ msgstr "忽略最小化視窗"
 msgid "Delete Virtual Desktop"
 msgstr "刪除虛擬桌面"
 
-#: plugins/overview/qml/DesktopBar.qml:259
+#: plugins/overview/qml/DesktopBar.qml:260
 #, kde-format
 msgid "Add Virtual Desktop"
 msgstr "新增虛擬桌面"
@@ -2334,7 +2334,7 @@ msgstr "沒有相符的視窗"
 msgid "Drag Down To Close"
 msgstr "下拉關閉"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:452
+#: plugins/private/qml/WindowHeapDelegate.qml:453
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"

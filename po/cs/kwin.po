@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-08-12 02:01+0000\n"
+"POT-Creation-Date: 2023-08-16 01:59+0000\n"
 "PO-Revision-Date: 2023-06-23 12:40+0200\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -2322,7 +2322,7 @@ msgstr "Ignorovat minimalizovaná okna:"
 msgid "Delete Virtual Desktop"
 msgstr "Smazat virtuální plochu"
 
-#: plugins/overview/qml/DesktopBar.qml:259
+#: plugins/overview/qml/DesktopBar.qml:260
 #, kde-format
 msgid "Add Virtual Desktop"
 msgstr "Přidat virtuální plochu"
@@ -2337,7 +2337,7 @@ msgstr "Žádná odpovídající okna"
 msgid "Drag Down To Close"
 msgstr "Pro uzavření táhnout dolů"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:452
+#: plugins/private/qml/WindowHeapDelegate.qml:453
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"

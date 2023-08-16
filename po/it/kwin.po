@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-08-12 02:01+0000\n"
+"POT-Creation-Date: 2023-08-16 01:59+0000\n"
 "PO-Revision-Date: 2023-07-21 09:17+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -2354,7 +2354,7 @@ msgstr "Ignora le finestre minimizzate:"
 msgid "Delete Virtual Desktop"
 msgstr "Elimina desktop virtuale"
 
-#: plugins/overview/qml/DesktopBar.qml:259
+#: plugins/overview/qml/DesktopBar.qml:260
 #, kde-format
 msgid "Add Virtual Desktop"
 msgstr "Aggiungi desktop virtuale"
@@ -2369,7 +2369,7 @@ msgstr "Nessuna finestra corrispondente"
 msgid "Drag Down To Close"
 msgstr "Trascina verso il basso per chiudere"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:452
+#: plugins/private/qml/WindowHeapDelegate.qml:453
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"

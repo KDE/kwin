@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-08-12 02:01+0000\n"
+"POT-Creation-Date: 2023-08-16 01:59+0000\n"
 "PO-Revision-Date: 2023-07-21 06:30+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -2325,7 +2325,7 @@ msgstr "ჩაკეცილი ფანჯრების იგნორი:
 msgid "Delete Virtual Desktop"
 msgstr "ვირტუალური სამუშაო მაგიდის წაშლა"
 
-#: plugins/overview/qml/DesktopBar.qml:259
+#: plugins/overview/qml/DesktopBar.qml:260
 #, kde-format
 msgid "Add Virtual Desktop"
 msgstr "ვირტუალური სამუშაო მაგიდის დამატება"
@@ -2340,7 +2340,7 @@ msgstr "შესაბამისი ფანჯრების გარე�
 msgid "Drag Down To Close"
 msgstr "დასახურად ჩამოათრიეთ"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:452
+#: plugins/private/qml/WindowHeapDelegate.qml:453
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
