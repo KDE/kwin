@@ -481,9 +481,7 @@ void Placement::placeOnScreenDisplay(Window *c, const QRect &area)
 
 void Placement::placeTransient(Window *c)
 {
-    const auto parent = c->transientFor();
-    const QRectF screen = Workspace::self()->clientArea(parent->isFullScreen() ? FullScreenArea : PlacementArea, parent);
-    c->moveResize(c->transientPlacement(screen));
+    c->moveResize(c->transientPlacement());
 }
 
 void Placement::placeDialog(Window *c, const QRect &area, PlacementPolicy nextPlacement)

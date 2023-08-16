@@ -2244,7 +2244,7 @@ bool Window::hasTransientPlacementHint() const
     return false;
 }
 
-QRectF Window::transientPlacement(const QRectF &bounds) const
+QRectF Window::transientPlacement() const
 {
     Q_UNREACHABLE();
     return QRectF();

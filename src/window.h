@@ -949,7 +949,7 @@ public:
      * Only valid id hasTransientPlacementHint is true
      * @returns The position the transient wishes to position itself
      */
-    virtual QRectF transientPlacement(const QRectF &bounds) const;
+    virtual QRectF transientPlacement() const;
     const Window *transientFor() const;
     Window *transientFor();
     void setTransientFor(Window *transientFor);
