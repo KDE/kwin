@@ -72,12 +72,14 @@ public:
 private:
     void startFeeding()
     {
+        qDebug() << "start feeding window stream";
         connect(m_window, &Window::damaged, this, &WindowStream::markDirty);
         markDirty();
     }
 
     void stopFeeding()
     {
+        qDebug() << "stop feeding window stream";
         disconnect(m_window, &Window::damaged, this, &WindowStream::markDirty);
         m_timer.stop();
     }
@@ -100,6 +102,7 @@ void ScreencastManager::streamWindow(KWaylandServer::ScreencastStreamV1Interface
                                      const QString &winid,
                                      KWaylandServer::ScreencastV1Interface::CursorMode mode)
 {
+    qDebug() << "create window stream" << winid;
     auto window = Workspace::self()->findWindow(QUuid(winid));
     if (!window) {
         waylandStream->sendFailed(i18n("Could not find window id %1", winid));
@@ -146,15 +149,19 @@ void ScreencastManager::streamOutput(KWaylandServer::ScreencastStreamV1Interface
         return;
     }
 
+    qDebug() << "create output stream" << streamOutput;
+
     auto stream = new ScreenCastStream(new OutputScreenCastSource(streamOutput), this);
     stream->setObjectName(streamOutput->name());
     stream->setCursorMode(mode, streamOutput->scale(), streamOutput->geometry());
     auto bufferToStream = [stream, streamOutput](const QRegion &damagedRegion) {
+        qDebug() << "output buffer to stream";
         if (!damagedRegion.isEmpty()) {
             stream->recordFrame(scaleRegion(damagedRegion, streamOutput->scale()));
         }
     };
     connect(stream, &ScreenCastStream::startStreaming, waylandStream, [streamOutput, stream, bufferToStream] {
+        qDebug() << "start streaming output" << streamOutput;
         Compositor::self()->scene()->addRepaint(streamOutput->geometry());
         connect(streamOutput, &Output::outputChange, stream, bufferToStream);
     });
