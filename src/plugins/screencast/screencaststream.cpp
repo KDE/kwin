@@ -449,9 +449,11 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
 {
     QRegion damagedRegion = _damagedRegion;
     Q_ASSERT(!m_stopped);
+    qDebug() << "ScreenCastStream::recordFrame()";
 
     if (!m_streaming) {
         m_pendingDamages |= damagedRegion;
+        qDebug() << "ScreenCastStream::recordFrame() -> not streaming";
         return;
     }
 
@@ -463,17 +465,20 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
             if (!m_pendingFrame.isActive()) {
                 m_pendingFrame.start(frameInterval - lastSentAgo);
             }
+            qDebug() << "ScreenCastStream::recordFrame() -> frame limiting";
             return;
         }
     }
 
     m_pendingDamages = {};
     if (m_pendingBuffer) {
+        qDebug() << "ScreenCastStream::recordFrame() -> pending buffer";
         return;
     }
 
     if (m_waitForNewBuffers) {
         qCWarning(KWIN_SCREENCAST) << "Waiting for new buffers to be created";
+        qDebug() << "ScreenCastStream::recordFrame() -> waiting for new buffers";
         return;
     }
 
@@ -483,6 +488,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
         m_waitForNewBuffers = true;
         m_dmabufParams = std::nullopt;
         pw_loop_signal_event(m_pwCore->pwMainLoop, m_pwRenegotiate);
+        qDebug() << "ScreenCastStream::recordFrame() -> renegotiate";
         return;
     }
 
@@ -492,12 +498,14 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
         if (error) {
             qCWarning(KWIN_SCREENCAST) << "Failed to record frame: stream is not active" << error;
         }
+        qDebug() << "ScreenCastStream::recordFrame() -> != PW_STREAM_STATE_STREAMING";
         return;
     }
 
     struct pw_buffer *buffer = pw_stream_dequeue_buffer(m_pwStream);
 
     if (!buffer) {
+        qDebug() << "ScreenCastStream::recordFrame() -> no buffer";
         return;
     }
 
@@ -508,6 +516,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
     if (!data && spa_buffer->datas->type != SPA_DATA_DmaBuf) {
         qCWarning(KWIN_SCREENCAST) << "Failed to record frame: invalid buffer data";
         pw_stream_queue_buffer(m_pwStream, buffer);
+        qDebug() << "ScreenCastStream::recordFrame() -> no data ptr";
         return;
     }
 
@@ -522,6 +531,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
         if ((stride * size.height()) > spa_data->maxsize) {
             qCDebug(KWIN_SCREENCAST) << "Failed to record frame: frame is too big";
             pw_stream_queue_buffer(m_pwStream, buffer);
+            qDebug() << "ScreenCastStream::recordFrame() -> > maxsize";
             return;
         }
 
@@ -603,6 +613,8 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
     addDamage(spa_buffer, damagedRegion);
     addHeader(spa_buffer);
     tryEnqueue(buffer);
+
+    qDebug() << "ScreenCastStream::recordFrame() -> OK";
 }
 
 void ScreenCastStream::addHeader(spa_buffer *spaBuffer)
