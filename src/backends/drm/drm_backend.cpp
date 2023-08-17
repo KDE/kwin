@@ -29,6 +29,7 @@
 #include <KLocalizedString>
 // Qt
 #include <QCoreApplication>
+#include <QFileInfo>
 #include <QSocketNotifier>
 #include <QStringBuilder>
 // system
@@ -174,7 +175,10 @@ void DrmBackend::handleUdevEvent()
     while (auto device = m_udevMonitor->getDevice()) {
         // Ignore the device seat if the KWIN_DRM_DEVICES envvar is set.
         if (!m_explicitGpus.isEmpty()) {
-            if (!m_explicitGpus.contains(device->devNode())) {
+            const bool foundMatch = std::any_of(m_explicitGpus.begin(), m_explicitGpus.end(), [&device](const QString &explicitPath) {
+                return QFileInfo(explicitPath).canonicalPath() == QFileInfo(device->devNode()).canonicalPath();
+            });
+            if (!foundMatch) {
                 continue;
             }
         } else {
