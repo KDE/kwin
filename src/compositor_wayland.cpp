@@ -23,6 +23,7 @@
 #include "scene/cursorscene.h"
 #include "scene/itemrenderer_opengl.h"
 #include "scene/itemrenderer_qpainter.h"
+#include "scene/itemrenderer_vulkan.h"
 #include "scene/workspacescene_opengl.h"
 #include "scene/workspacescene_qpainter.h"
 #include "scene/workspacescene_vulkan.h"
@@ -110,14 +111,14 @@ bool WaylandCompositor::attemptQPainterCompositing()
     return true;
 }
 
-bool Compositor::attemptVulkanCompositing()
+bool WaylandCompositor::attemptVulkanCompositing()
 {
     std::unique_ptr<VulkanBackend> backend = kwinApp()->outputBackend()->createVulkanBackend();
     if (!backend || !backend->init()) {
         return false;
     }
     m_scene = std::make_unique<WorkspaceSceneVulkan>(backend.get());
-    m_cursorScene = std::make_unique<CursorScene>(std::make_unique<ItemRendererVulkan>());
+    m_cursorScene = std::make_unique<CursorScene>(std::make_unique<ItemRendererVulkan>(backend.get()));
     m_backend = std::move(backend);
     qCDebug(KWIN_CORE) << "Vulkan compositing has been successfully initialized";
     return true;

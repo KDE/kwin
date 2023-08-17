@@ -173,7 +173,7 @@ std::unique_ptr<VulkanTexture> VulkanTexture::upload(VulkanDevice *device, const
     }
 
     // transition the image to the layout used for copying
-    const auto cmd = device->allocateOneshotCommandBuffer();
+    const auto cmd = device->allocateCommandBuffer();
     const auto cmdBeginResult = cmd->begin(vk::CommandBufferBeginInfo(
         vk::CommandBufferUsageFlagBits::eOneTimeSubmit));
     if (cmdBeginResult != vk::Result::eSuccess) {

@@ -42,7 +42,7 @@ public:
     std::optional<dev_t> primaryNode() const;
     std::optional<dev_t> renderNode() const;
 
-    vk::UniqueCommandBuffer allocateOneshotCommandBuffer();
+    vk::UniqueCommandBuffer allocateCommandBuffer();
     vk::UniqueDeviceMemory allocateMemory(vk::Buffer buffer, vk::MemoryPropertyFlags memoryProperties) const;
     vk::UniqueDeviceMemory allocateMemory(vk::Image image, vk::MemoryPropertyFlags memoryProperties) const;
     bool submitCommandBufferBlocking(vk::CommandBuffer cmd);

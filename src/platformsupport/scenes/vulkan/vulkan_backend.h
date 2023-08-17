@@ -33,8 +33,6 @@ public:
 
     virtual bool init();
     CompositingType compositingType() const override final;
-    OutputLayer *primaryLayer(Output *output) override;
-    void present(Output *output) override;
 
 protected:
     vk::Instance m_instance;

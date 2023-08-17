@@ -10,6 +10,9 @@
 
 namespace KWin
 {
+class VulkanSwapchain;
+class VulkanSwapchainSlot;
+
 namespace Wayland
 {
 
@@ -26,6 +29,7 @@ public:
     bool testImportBuffer(GraphicsBuffer *buffer) override;
     QHash<uint32_t, QVector<uint64_t>> supportedFormats() const override;
     OutputLayer *primaryLayer(Output *output) override;
+    void present(Output *output) override;
 
 private:
     VulkanDevice *findDevice(WaylandDisplay *display) const;
@@ -41,29 +45,21 @@ class WaylandVulkanLayer : public OutputLayer
 {
 public:
     explicit WaylandVulkanLayer(WaylandOutput *output, VulkanDevice *device, GraphicsBufferAllocator *allocator, WaylandDisplay *display);
+    ~WaylandVulkanLayer();
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     quint32 format() const override;
 
 private:
-    struct Resources
-    {
-        GraphicsBufferRef buffer;
-        std::shared_ptr<VulkanTexture> texture;
-        vk::UniqueCommandBuffer cmd;
-        vk::UniqueFence fence;
-    };
-    std::optional<Resources> allocateResources(uint32_t format, const QVector<uint64_t> &modifiers) const;
-
     WaylandOutput *const m_output;
     VulkanDevice *const m_device;
     GraphicsBufferAllocator *const m_allocator;
     WaylandDisplay *const m_display;
 
     vk::UniqueCommandPool m_cmdPool;
-    std::vector<Resources> m_resources;
-    Resources *m_currentResources = nullptr;
+    std::shared_ptr<VulkanSwapchain> m_swapchain;
+    std::shared_ptr<VulkanSwapchainSlot> m_currentSlot;
 };
 
 }

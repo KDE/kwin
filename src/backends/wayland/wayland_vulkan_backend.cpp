@@ -1,5 +1,6 @@
 #include "wayland_vulkan_backend.h"
 #include "core/gbmgraphicsbufferallocator.h"
+#include "platformsupport/scenes/vulkan/vulkan_swapchain.h"
 #include "utils/drm_format_helper.h"
 #include "wayland_display.h"
 
@@ -89,6 +90,11 @@ OutputLayer *WaylandVulkanBackend::primaryLayer(Output *output)
     return m_outputs[output].get();
 }
 
+void WaylandVulkanBackend::present(Output *output)
+{
+    // TODO
+}
+
 WaylandVulkanLayer::WaylandVulkanLayer(WaylandOutput *output, VulkanDevice *device, GraphicsBufferAllocator *allocator, WaylandDisplay *display)
     : m_output(output)
     , m_device(device)
@@ -106,98 +112,52 @@ WaylandVulkanLayer::WaylandVulkanLayer(WaylandOutput *output, VulkanDevice *devi
     m_cmdPool = std::move(cmdPool);
 }
 
+WaylandVulkanLayer::~WaylandVulkanLayer() = default;
+
 std::optional<OutputLayerBeginFrameInfo> WaylandVulkanLayer::beginFrame()
 {
     if (!m_cmdPool) {
         return std::nullopt;
     }
-    m_currentResources = nullptr;
-    for (auto &res : m_resources) {
-        if (m_device->logicalDevice().getFenceStatus(res.fence.get()) == vk::Result::eSuccess) {
-            m_currentResources = &res;
-            break;
-        }
-    }
-    if (!m_currentResources) {
-        if (m_resources.empty()) {
-            // don't have a buffer format yet
-            const auto hostFormats = m_display->linuxDmabuf()->formats();
-            const auto formats = m_device->supportedFormats();
-            for (auto it = formats.begin(); it != formats.end(); it++) {
-                const uint32_t format = it.key();
-                if (hostFormats.contains(format)) {
-                    const auto info = formatInfo(format);
-                    Q_ASSERT(info);
-                    // just pick the first 10 or 8 bpc format. More can be supported later
-                    if (info->bitsPerColor == 8 || info->bitsPerColor == 10) {
-                        auto resources = allocateResources(format, it.value());
-                        if (resources.has_value()) {
-                            m_resources.push_back(std::move(*resources));
-                            m_currentResources = &m_resources.back();
-                            break;
-                        }
+    if (!m_swapchain) {
+        const auto hostFormats = m_display->linuxDmabuf()->formats();
+        const auto formats = m_device->supportedFormats();
+        for (auto it = formats.begin(); it != formats.end(); it++) {
+            const uint32_t format = it.key();
+            if (hostFormats.contains(format)) {
+                const auto info = formatInfo(format);
+                Q_ASSERT(info);
+                // just pick the first 10 or 8 bpc format. More can be supported later
+                if (info->bitsPerColor == 8 || info->bitsPerColor == 10) {
+                    m_swapchain = VulkanSwapchain::create(m_device, m_allocator, m_output->modeSize(), format, it.value());
+                    if (m_swapchain) {
+                        break;
                     }
                 }
             }
-        } else {
-            const auto firstAttributes = m_resources.front().buffer->dmabufAttributes();
-            auto resources = allocateResources(firstAttributes->format, {firstAttributes->modifier});
-            if (!resources.has_value()) {
-                return std::nullopt;
-            }
-            m_resources.push_back(std::move(*resources));
-            m_currentResources = &m_resources.back();
+        }
+        if (!m_swapchain) {
+            return std::nullopt;
         }
     }
-
+    m_currentSlot = m_swapchain->acquire();
+    if (!m_currentSlot) {
+        return std::nullopt;
+    }
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_currentResources->cmd.get(), m_currentResources->texture->view(), m_currentResources->buffer->size()),
+        .renderTarget = RenderTarget(m_currentSlot->commandBuffer(), m_currentSlot->texture()->view(), m_currentSlot->buffer()->size()),
         .repaint = infiniteRegion(),
-    };
-}
-
-std::optional<WaylandVulkanLayer::Resources> WaylandVulkanLayer::allocateResources(uint32_t format, const QVector<uint64_t> &modifiers) const
-{
-    GraphicsBufferRef buffer = m_allocator->allocate(GraphicsBufferOptions{
-        .size = m_output->modeSize(),
-        .format = format,
-        .modifiers = modifiers,
-        .software = false,
-    });
-    if (!buffer) {
-        qWarning() << "buffer allocation failed";
-        return std::nullopt;
-    }
-    auto [result, cmdBuffers] = m_device->logicalDevice().allocateCommandBuffersUnique(vk::CommandBufferAllocateInfo(m_cmdPool.get(), vk::CommandBufferLevel::ePrimary, 1));
-    if (result != vk::Result::eSuccess) {
-        qWarning() << "allocating a command buffer failed:" << vk::to_string(result);
-        return std::nullopt;
-    }
-    auto [fenceResult, fence] = m_device->logicalDevice().createFenceUnique(vk::FenceCreateInfo{});
-    if (fenceResult != vk::Result::eSuccess) {
-        qWarning() << "creating a fence failed:" << vk::to_string(result);
-        return std::nullopt;
-    }
-    auto texture = m_device->importDmabuf(*buffer);
-    if (!texture) {
-        return std::nullopt;
-    }
-    return Resources{
-        .buffer = buffer,
-        .texture = std::make_shared<VulkanTexture>(std::move(*texture)),
-        .cmd = std::move(cmdBuffers.front()),
-        .fence = std::move(fence),
     };
 }
 
 bool WaylandVulkanLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    return m_device->submitCommandBufferBlocking(m_currentResources->cmd.get());
+    return m_device->submitCommandBufferBlocking(m_currentSlot->commandBuffer());
 }
 
 quint32 WaylandVulkanLayer::format() const
 {
-    return m_resources.empty() ? DRM_FORMAT_ARGB8888 : m_resources.front().buffer->dmabufAttributes()->format;
+    return m_swapchain ? m_swapchain->format() : DRM_FORMAT_ARGB8888;
 }
 
 }

@@ -34,7 +34,8 @@ bool VulkanBackend::init()
     // TODO only enable the validation layer if it's installed, creating the instance fails otherwise
     // also, versions lower than 1.3.250 crash when importing dmabufs
     // -> maybe make an env var for this option
-    std::array validationLayers{"VK_LAYER_KHRONOS_validation"};
+    std::vector<const char *> validationLayers;
+    validationLayers.push_back("VK_LAYER_KHRONOS_validation");
     const vk::InstanceCreateInfo instanceCI(
         vk::InstanceCreateFlags(),
         &appInfo,
@@ -163,14 +164,4 @@ CompositingType VulkanBackend::compositingType() const
 {
     return CompositingType::VulkanCompositing;
 }
-
-OutputLayer *VulkanBackend::primaryLayer(Output *output)
-{
-    return nullptr;
-}
-
-void VulkanBackend::present(Output *output)
-{
-}
-
 }

@@ -49,6 +49,7 @@ VulkanDevice::VulkanDevice(VulkanDevice &&other)
     , m_renderNode(other.m_renderNode)
     , m_formats(other.m_formats)
     , m_memoryProperties(other.m_memoryProperties)
+    , m_commandPool(std::move(other.m_commandPool))
     , m_loader(std::move(other.m_loader))
     , m_importedTextures(other.m_importedTextures)
 {
@@ -306,7 +307,7 @@ std::optional<uint32_t> VulkanDevice::findMemoryType(uint32_t typeBits, vk::Memo
     return std::nullopt;
 }
 
-vk::UniqueCommandBuffer VulkanDevice::allocateOneshotCommandBuffer()
+vk::UniqueCommandBuffer VulkanDevice::allocateCommandBuffer()
 {
     auto [result, buffers] = m_logical.allocateCommandBuffersUnique(vk::CommandBufferAllocateInfo(
         m_commandPool.get(), vk::CommandBufferLevel::ePrimary, 1));
