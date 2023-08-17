@@ -43,7 +43,7 @@ void ItemRendererQPainter::beginFrame(const RenderTarget &renderTarget, const Re
     m_painter->setWindow(viewport.renderRect().toRect());
 }
 
-void ItemRendererQPainter::endFrame()
+void ItemRendererQPainter::endFrame(const RenderTarget &renderTarget)
 {
     m_painter->end();
 }

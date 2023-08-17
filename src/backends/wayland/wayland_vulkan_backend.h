@@ -25,6 +25,7 @@ public:
     bool init() override;
     bool testImportBuffer(GraphicsBuffer *buffer) override;
     QHash<uint32_t, QVector<uint64_t>> supportedFormats() const override;
+    OutputLayer *primaryLayer(Output *output) override;
 
 private:
     VulkanDevice *findDevice(WaylandDisplay *display) const;

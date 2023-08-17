@@ -375,7 +375,7 @@ void WorkspaceScene::paint(const RenderTarget &renderTarget, const QRegion &regi
     m_paintScreenCount = 0;
     Q_EMIT frameRendered();
 
-    m_renderer->endFrame();
+    m_renderer->endFrame(renderTarget);
 }
 
 // the function that'll be eventually called by paintScreen() above

@@ -84,6 +84,11 @@ QHash<uint32_t, QVector<uint64_t>> WaylandVulkanBackend::supportedFormats() cons
     return m_mainDevice->supportedFormats();
 }
 
+OutputLayer *WaylandVulkanBackend::primaryLayer(Output *output)
+{
+    return m_outputs[output].get();
+}
+
 WaylandVulkanLayer::WaylandVulkanLayer(WaylandOutput *output, VulkanDevice *device, GraphicsBufferAllocator *allocator, WaylandDisplay *display)
     : m_output(output)
     , m_device(device)
@@ -145,38 +150,8 @@ std::optional<OutputLayerBeginFrameInfo> WaylandVulkanLayer::beginFrame()
         }
     }
 
-    // TODO should the renderer start and end rendering instead of the backend?
-    std::vector<vk::RenderingAttachmentInfo> colorAttachments{
-        vk::RenderingAttachmentInfo(
-            m_currentResources->texture->view(),
-            vk::ImageLayout::eAttachmentOptimal,
-            vk::ResolveModeFlagBits::eNone,
-            {}, // resolve image view
-            {}, // resolve image layout
-            vk::AttachmentLoadOp::eLoad,
-            vk::AttachmentStoreOp::eStore,
-            vk::ClearColorValue() // would be used with vk::AttachmentLoadOp::eClear
-            )};
-
-    m_currentResources->cmd->beginRendering(vk::RenderingInfo(
-        vk::RenderingFlags(),
-        vk::Rect2D(
-            vk::Offset2D(0, 0),
-            vk::Extent2D(m_currentResources->buffer->size().width(), m_currentResources->buffer->size().height())),
-        1, // layer count
-        0, // view mask
-        colorAttachments,
-        {}, // depth attachment
-        {} // stencil attachment
-        ));
-    // FIXME X the renderer should set the viewport, not this
-    m_currentResources->cmd->setViewport(0, {vk::Viewport(0, 0, // x, y
-                                                          m_currentResources->buffer->size().width(), m_currentResources->buffer->size().height(), // width, height
-                                                          0, 1 // min depth, max depth
-                                                          )});
-
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_currentResources->cmd.get()),
+        .renderTarget = RenderTarget(m_currentResources->cmd.get(), m_currentResources->texture->view(), m_currentResources->buffer->size()),
         .repaint = infiniteRegion(),
     };
 }
@@ -217,7 +192,6 @@ std::optional<WaylandVulkanLayer::Resources> WaylandVulkanLayer::allocateResourc
 
 bool WaylandVulkanLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    m_currentResources->cmd->endRendering();
     return m_device->submitCommandBufferBlocking(m_currentResources->cmd.get());
 }
 
