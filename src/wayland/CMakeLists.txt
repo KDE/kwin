@@ -218,8 +218,8 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
 )
 
 ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
-    PROTOCOL protocols/xdg-toplevel-drag-v1.xml
-    BASENAME xdg-toplevel-drag-v1
+    PROTOCOL protocols/qt-toplevel-drag-v1.xml
+    BASENAME qt-toplevel-drag-v1
 )
 
 target_sources(kwin PRIVATE
