@@ -14,9 +14,9 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-07 02:19+0000\n"
-"PO-Revision-Date: 2023-08-07 22:25+0900\n"
+"PO-Revision-Date: 2023-08-17 21:32+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
-"Language-Team: Chinese <zh-l10n@linux.org.tw>\n"
+"Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -402,7 +402,7 @@ msgstr "控制視窗是否於 <shortcut>Alt+Tab</shortcut> 視窗列表中顯示
 #: rulesmodel.cpp:597
 #, kde-format
 msgid "Shortcut"
-msgstr "捷徑"
+msgstr "快捷鍵"
 
 #: rulesmodel.cpp:603
 #, kde-format
@@ -457,6 +457,17 @@ msgid ""
 "currently-focused window.</item><item><emphasis strong='true'>Extreme:</"
 "emphasis> The window will never be raised and focused.</item></list>"
 msgstr ""
+"KWin 會試著防止不是由使用者直接開啟的視窗將自己提到上方並從您正在使用的視窗把"
+"焦點搶走。這個屬性可以用來變更對於個別視窗與應用程式要防止盜取焦點的程度。"
+"<nl/><nl/>以下是各個焦點盜取防止程度對於不是您直接開啟的視窗會有的效果：<nl/"
+"><list>  <item><emphasis strong='true'>無：</emphasis>它會提到上方並且取得焦"
+"點。</item>  <item><emphasis strong='true'>低：</emphasis>會防止盜取焦點，但 "
+"KWin 不確定時還是會讓它提到上方並取得焦點。</item>  <item><emphasis "
+"strong='true'>正常：</emphasis>會防止盜取焦點，而 KWin 不確定時<emphasis>不會"
+"</emphasis>讓它提到上方或取得焦點。</item>  <item><emphasis strong='true'>"
+"高：</emphasis>該視窗與焦點目前所在的視窗屬於同一個應用程式時才會提到上方並取"
+"得焦點。</item>  <item><emphasis strong='true'>極高：</emphasis>它不會自動提"
+"到上方或取得焦點。</item></list>"
 
 #: rulesmodel.cpp:652
 #, kde-format
@@ -486,6 +497,17 @@ msgid ""
 "emphasis> Newly-opened windows never raise themselves and take focus.</"
 "item></list>"
 msgstr ""
+"這個屬性控制目前作用中視窗的焦點盜取防止程度。它會用來覆寫對不是您直接開啟的"
+"新視窗所套用的焦點盜取防止設定。<nl/><nl/>以下是目前持有焦點的視窗有這個屬性"
+"時，各個選項對於不是您直接開啟的視窗會有的效果：<nl/><list>  <item><emphasis "
+"strong='true'>無</emphasis>：新開啟的視窗總是會提到上方並取得焦點。</item>  "
+"<item><emphasis strong='true'>低：</emphasis>會防止新開啟的視窗盜取焦點，但 "
+"KWin 不確定時還是會讓它提到上方並取得焦點。</item>  <item><emphasis "
+"strong='true'>正常：</emphasis>會防止新開啟的視窗盜取焦點，而 KWin 不確定時"
+"<emphasis>不會</emphasis>讓它提到上方或取得焦點。</item>  <item><emphasis "
+"strong='true'>高：</emphasis>新開啟的視窗跟焦點目前所在的視窗屬於同一個應用程"
+"式時才會提到上方並取得焦點。</item>  <item><emphasis strong='true'>極高：</"
+"emphasis>新開啟的視窗不會自動提到上方或取得焦點。</item></list>"
 
 #: rulesmodel.cpp:680
 #, kde-format
@@ -828,7 +850,7 @@ msgid ""
 "Click the <interface>Add Property...</interface> button below to add some "
 "window properties that will be affected by the rule"
 msgstr ""
-"點擊下方的<interface>新增屬性……</interface>按鈕以新增一些會被規則影響的視窗屬"
+"點擊下方的<interface>新增屬性…</interface>按鈕以新增一些會被規則影響的視窗屬"
 "性"
 
 #: ui/RulesEditor.qml:85
