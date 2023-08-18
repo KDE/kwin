@@ -328,7 +328,7 @@ bool ScreenShotEffect::takeScreenShot(ScreenShotAreaData *screenshot)
 
 bool ScreenShotEffect::takeScreenShot(ScreenShotScreenData *screenshot)
 {
-    if (!m_paintedScreen || screenshot->screen == m_paintedScreen) {
+    if (!effects->waylandDisplay() || screenshot->screen == m_paintedScreen) {
         qreal devicePixelRatio = 1.0;
         if (screenshot->flags & ScreenShotNativeResolution) {
             devicePixelRatio = screenshot->screen->devicePixelRatio();
