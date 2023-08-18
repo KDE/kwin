@@ -298,6 +298,8 @@ void PreviewItem::proxyPassEvent(E *event) const
     } else {
         QCoreApplication::instance()->sendEvent(decoration(), event);
     }
+    // Propagate events to parent
+    event->ignore();
 }
 
 void PreviewItem::mouseDoubleClickEvent(QMouseEvent *event)
