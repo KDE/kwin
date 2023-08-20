@@ -76,6 +76,11 @@ public:
     OutputTransform inverted() const;
 
     /**
+     * Applies the output transform to the given @a size.
+     */
+    QSizeF map(const QSizeF &size) const;
+
+    /**
      * Applies the output transform to the given @a rect within a buffer with dimensions @a bounds.
      */
     QRectF map(const QRectF &rect, const QSizeF &bounds) const;

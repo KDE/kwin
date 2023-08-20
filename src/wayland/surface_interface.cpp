@@ -486,12 +486,13 @@ QRectF SurfaceInterfacePrivate::computeBufferSourceBox() const
         return QRectF(0, 0, bufferSize.width(), bufferSize.height());
     }
 
+    const QSizeF bounds = current.bufferTransform.map(bufferSize);
     const QRectF box(current.viewport.sourceGeometry.x() * current.bufferScale,
                      current.viewport.sourceGeometry.y() * current.bufferScale,
                      current.viewport.sourceGeometry.width() * current.bufferScale,
                      current.viewport.sourceGeometry.height() * current.bufferScale);
 
-    return current.bufferTransform.inverted().map(box, bufferSize);
+    return current.bufferTransform.inverted().map(box, bounds);
 }
 
 void SurfaceState::mergeInto(SurfaceState *target)

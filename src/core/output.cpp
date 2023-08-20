@@ -142,6 +142,19 @@ QRectF OutputTransform::map(const QRectF &rect, const QSizeF &bounds) const
     return dest;
 }
 
+QSizeF OutputTransform::map(const QSizeF &size) const
+{
+    switch (m_kind) {
+    case Kind::Normal:
+    case Kind::Rotated180:
+    case Kind::Flipped:
+    case Kind::Flipped180:
+        return size;
+    default:
+        return size.transposed();
+    }
+}
+
 Output::Output(QObject *parent)
     : QObject(parent)
 {
