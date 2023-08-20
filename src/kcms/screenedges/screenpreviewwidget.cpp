@@ -13,8 +13,11 @@
 #include <QDebug>
 #include <QMimeData>
 
-#include <Plasma/FrameSvg>
+#include <KSvg/FrameSvg>
+#include <KSvg/ImageSet>
 #include <kurlmimedata.h>
+
+#include <memory>
 
 class ScreenPreviewWidgetPrivate
 {
@@ -36,7 +39,7 @@ public:
 
     void updateScreenGraphics()
     {
-        int bottomElements = screenGraphics->elementSize("base").height() + screenGraphics->marginSize(Plasma::Types::BottomMargin);
+        int bottomElements = screenGraphics->elementSize("base").height() + screenGraphics->marginSize(KSvg::FrameSvg::BottomMargin);
         QRect bounds(QPoint(0, 0), QSize(q->size().width(), q->height() - bottomElements));
 
         QSize monitorSize(q->size().width(), q->size().width() / ratio);
@@ -56,7 +59,8 @@ public:
     }
 
     ScreenPreviewWidget *q;
-    Plasma::FrameSvg *screenGraphics;
+    std::unique_ptr<KSvg::ImageSet> svgImageSet;
+    KSvg::FrameSvg *screenGraphics;
     QPixmap preview;
     QRect monitorRect;
     qreal ratio;
@@ -67,7 +71,10 @@ ScreenPreviewWidget::ScreenPreviewWidget(QWidget *parent)
     : QWidget(parent)
     , d(std::make_unique<ScreenPreviewWidgetPrivate>(this))
 {
-    d->screenGraphics = new Plasma::FrameSvg(this);
+    d->svgImageSet = std::make_unique<KSvg::ImageSet>();
+    d->svgImageSet->setBasePath("plasma/desktoptheme");
+    d->screenGraphics = new KSvg::FrameSvg(this);
+    d->screenGraphics->setImageSet(d->svgImageSet.get());
     d->screenGraphics->setImagePath("widgets/monitor");
     d->updateScreenGraphics();
 }
@@ -100,6 +107,11 @@ qreal ScreenPreviewWidget::ratio() const
 QRect ScreenPreviewWidget::previewRect() const
 {
     return d->previewRect;
+}
+
+KSvg::ImageSet *ScreenPreviewWidget::svgImageSet() const
+{
+    return d->svgImageSet.get();
 }
 
 void ScreenPreviewWidget::resizeEvent(QResizeEvent *e)

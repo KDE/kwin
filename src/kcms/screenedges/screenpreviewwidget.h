@@ -7,6 +7,11 @@
 
 #include <QWidget>
 
+namespace KSvg
+{
+class ImageSet;
+}
+
 class ScreenPreviewWidgetPrivate;
 
 class ScreenPreviewWidget : public QWidget
@@ -23,6 +28,7 @@ public:
     qreal ratio() const;
 
     QRect previewRect() const;
+    KSvg::ImageSet *svgImageSet() const;
 
 protected:
     void resizeEvent(QResizeEvent *event) override;

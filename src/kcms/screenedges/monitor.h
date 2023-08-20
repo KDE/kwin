@@ -23,7 +23,7 @@ class QGraphicsView;
 class QGraphicsScene;
 class QMenu;
 
-namespace Plasma
+namespace KSvg
 {
 class FrameSvg;
 }
@@ -98,7 +98,7 @@ protected:
 
 private:
     Monitor *const m_monitor;
-    const std::unique_ptr<Plasma::FrameSvg> m_button;
+    const std::unique_ptr<KSvg::FrameSvg> m_button;
     bool m_active = false;
     bool m_hover = false;
 };

@@ -11,7 +11,7 @@
 #include "monitor.h"
 
 #include <KLocalizedString>
-#include <Plasma/FrameSvg>
+#include <KSvg/FrameSvg>
 
 #include <QApplication>
 #include <QDebug>
@@ -211,8 +211,9 @@ void Monitor::flip(Corner *c, QPoint pos)
 
 Monitor::Corner::Corner(Monitor *m)
     : m_monitor(m)
-    , m_button(std::make_unique<Plasma::FrameSvg>())
+    , m_button(std::make_unique<KSvg::FrameSvg>())
 {
+    m_button->setImageSet(m->svgImageSet());
     m_button->setImagePath("widgets/button");
     setAcceptHoverEvents(true);
 }

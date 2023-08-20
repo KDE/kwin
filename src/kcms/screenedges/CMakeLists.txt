@@ -31,7 +31,7 @@ set(kcm_screenedges_LIBS
     KF6::KCMUtils
     KF6::I18n
     KF6::Package
-    KF6::Plasma
+    KF6::Svg
 )
 target_link_libraries(kcm_kwinscreenedges ${X11_LIBRARIES} ${kcm_screenedges_LIBS})
 
