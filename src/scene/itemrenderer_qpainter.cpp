@@ -137,15 +137,61 @@ void ItemRendererQPainter::renderSurfaceItem(QPainter *painter, SurfaceItem *sur
     }
     surfaceItem->resetDamage();
 
+    const OutputTransform surfaceToBufferTransform = surfaceItem->bufferTransform().inverted();
+    const QSizeF transformedSize = surfaceToBufferTransform.map(surfaceItem->size());
+
+    painter->save();
+    switch (surfaceToBufferTransform.kind()) {
+    case OutputTransform::Normal:
+        break;
+    case OutputTransform::Rotated90:
+        painter->translate(0, transformedSize.width());
+        painter->rotate(-90);
+        break;
+    case OutputTransform::Rotated180:
+        painter->translate(transformedSize.width(), transformedSize.height());
+        painter->rotate(-180);
+        break;
+    case OutputTransform::Rotated270:
+        painter->translate(transformedSize.height(), 0);
+        painter->rotate(-270);
+        break;
+    case OutputTransform::Flipped:
+        painter->translate(transformedSize.width(), 0);
+        painter->scale(-1, 1);
+        break;
+    case OutputTransform::Flipped90:
+        painter->rotate(-90);
+        painter->scale(-1, 1);
+        break;
+    case OutputTransform::Flipped180:
+        painter->translate(0, transformedSize.height());
+        painter->rotate(-180);
+        painter->scale(-1, 1);
+        break;
+    case OutputTransform::Flipped270:
+        painter->translate(transformedSize.height(), transformedSize.width());
+        painter->rotate(-270);
+        painter->scale(-1, 1);
+        break;
+    }
+
+    const QRectF sourceBox = surfaceItem->bufferSourceBox();
+    const qreal xSourceBoxScale = sourceBox.width() / transformedSize.width();
+    const qreal ySourceBoxScale = sourceBox.height() / transformedSize.height();
+
     const QVector<QRectF> shape = surfaceItem->shape();
     for (const QRectF rect : shape) {
-        const QMatrix4x4 matrix = surfaceItem->surfaceToBufferMatrix();
-        const QPointF bufferTopLeft = matrix.map(rect.topLeft());
-        const QPointF bufferBottomRight = matrix.map(rect.bottomRight());
+        const QRectF target = surfaceToBufferTransform.map(rect, surfaceItem->size());
+        const QRectF source(sourceBox.x() + target.x() * xSourceBoxScale,
+                            sourceBox.y() + target.y() * ySourceBoxScale,
+                            target.width() * xSourceBoxScale,
+                            target.height() * ySourceBoxScale);
 
-        painter->drawImage(rect, platformSurfaceTexture->image(),
-                           QRectF(bufferTopLeft, bufferBottomRight));
+        painter->drawImage(target, platformSurfaceTexture->image(), source);
     }
+
+    painter->restore();
 }
 
 void ItemRendererQPainter::renderDecorationItem(QPainter *painter, DecorationItem *decorationItem) const
