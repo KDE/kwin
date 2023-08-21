@@ -611,7 +611,7 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
         if (current.viewport.destinationSize.isValid()) {
             surfaceSize = current.viewport.destinationSize;
         } else if (current.viewport.sourceGeometry.isValid()) {
-            surfaceSize = current.viewport.sourceGeometry.size().toSize();
+            surfaceSize = current.viewport.sourceGeometry.size();
         } else {
             surfaceSize = implicitSurfaceSize;
         }
