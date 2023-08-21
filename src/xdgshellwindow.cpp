@@ -1587,12 +1587,6 @@ XdgPopupWindow::XdgPopupWindow(XdgPopupInterface *shellSurface)
     , m_shellSurface(shellSurface)
 {
     m_windowType = NET::Unknown;
-    setDesktops({VirtualDesktopManager::self()->currentDesktop()});
-#if KWIN_BUILD_ACTIVITIES
-    if (auto a = Workspace::self()->activities()) {
-        setOnActivities({a->current()});
-    }
-#endif
 
     connect(shellSurface, &XdgPopupInterface::grabRequested,
             this, &XdgPopupWindow::handleGrabRequested);
@@ -1859,6 +1853,10 @@ void XdgPopupWindow::initialize()
     Window *parent = waylandServer()->findWindow(m_shellSurface->parentSurface());
     parent->addTransient(this);
     setTransientFor(parent);
+    setDesktops(parent->desktops());
+#if KWIN_BUILD_ACTIVITIES
+    setOnActivities(parent->activities());
+#endif
 
     updateRelativePlacement();
     connect(parent, &Window::frameGeometryChanged, this, &XdgPopupWindow::relayout);
