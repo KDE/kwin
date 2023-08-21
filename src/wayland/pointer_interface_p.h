@@ -29,7 +29,7 @@ class PointerInterfacePrivate : public QtWaylandServer::wl_pointer
     {
         struct Axis
         {
-            bool shouldReset(int newDirection) const;
+            bool shouldReset(int newDirection, std::chrono::milliseconds newTimestamp) const;
 
             void reset()
             {
@@ -40,6 +40,7 @@ class PointerInterfacePrivate : public QtWaylandServer::wl_pointer
             qint32 axis120 = 0;
             qreal axis = 0;
             int direction = 0;
+            std::chrono::milliseconds timestamp = std::chrono::milliseconds::zero();
         };
 
         Axis &axis(Qt::Orientation orientation)

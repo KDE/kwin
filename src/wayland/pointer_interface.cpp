@@ -133,8 +133,12 @@ void PointerInterfacePrivate::sendFrame()
     }
 }
 
-bool PointerInterfacePrivate::AxisAccumulator::Axis::shouldReset(int newDirection) const
+bool PointerInterfacePrivate::AxisAccumulator::Axis::shouldReset(int newDirection, std::chrono::milliseconds newTimestamp) const
 {
+    if (newTimestamp.count() - timestamp.count() >= 1000) {
+        return true;
+    }
+
     // Reset the accumulator if the delta has opposite sign.
     return direction && ((direction < 0) != (newDirection < 0));
 }
@@ -220,18 +224,26 @@ static void updateAccumulators(Qt::Orientation orientation, qreal delta, qint32 
     const int newDirection = deltaV120 > 0 ? 1 : -1;
     auto &accum = d->axisAccumulator.axis(orientation);
 
-    if (accum.shouldReset(newDirection)) {
+    if (accum.shouldReset(newDirection, d->seat->timestamp())) {
         accum.reset();
     }
 
+    accum.timestamp = d->seat->timestamp();
     accum.direction = newDirection;
 
     accum.axis += delta;
     accum.axis120 += deltaV120;
 
     // ±120 is a "wheel click"
-    valueDiscrete = accum.axis120 / 120;
-    accum.axis120 -= valueDiscrete * 120;
+    if (std::abs(accum.axis120) >= 60) {
+        const int steps = accum.axis120 / 120;
+        valueDiscrete += steps;
+        if (steps == 0) {
+            valueDiscrete += accum.direction;
+        }
+
+        accum.axis120 -= valueDiscrete * 120;
+    }
 
     if (valueDiscrete) {
         // Accumulate the axis values to send to low-res clients
