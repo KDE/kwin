@@ -25,6 +25,33 @@ class RelativePointerV1Interface;
 
 class PointerInterfacePrivate : public QtWaylandServer::wl_pointer
 {
+    struct AxisAccumulator
+    {
+        struct Axis
+        {
+            bool shouldReset(int newDirection) const;
+
+            void reset()
+            {
+                axis120 = 0;
+                axis = 0;
+            }
+
+            qint32 axis120 = 0;
+            qreal axis = 0;
+            int direction = 0;
+        };
+
+        Axis &axis(Qt::Orientation orientation)
+        {
+            const int index = orientation == Qt::Orientation::Horizontal ? 0 : 1;
+            return m_axis[index];
+        }
+
+    private:
+        Axis m_axis[2];
+    };
+
 public:
     static PointerInterfacePrivate *get(PointerInterface *pointer);
 
@@ -44,8 +71,7 @@ public:
     std::unique_ptr<PointerPinchGestureV1Interface> pinchGesturesV1;
     std::unique_ptr<PointerHoldGestureV1Interface> holdGesturesV1;
     QPointF lastPosition;
-    QPointF accumulatorAxis;
-    QPoint accumulatorV120;
+    AxisAccumulator axisAccumulator;
 
     void sendLeave(quint32 serial);
     void sendEnter(const QPointF &parentSurfacePosition, quint32 serial);
