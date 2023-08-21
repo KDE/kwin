@@ -138,6 +138,12 @@ void PointerInterfacePrivate::sendFrame()
     }
 }
 
+bool PointerInterfacePrivate::AxisAccumulator::Axis::shouldReset(int newDirection) const
+{
+    // Reset the accumulator if the delta has opposite sign.
+    return direction && ((direction < 0) != (newDirection < 0));
+}
+
 PointerInterface::PointerInterface(SeatInterface *seat)
     : d(new PointerInterfacePrivate(this, seat))
 {
@@ -208,41 +214,28 @@ void PointerInterface::sendButton(quint32 button, PointerButtonState state, quin
     }
 }
 
-static bool shouldResetAccumulator(int accumulator, int delta)
-{
-    // Reset the accumulator if the delta has opposite sign.
-    return accumulator && (accumulator < 0 != delta < 0);
-}
-
 static void updateAccumulators(Qt::Orientation orientation, qreal delta, qint32 deltaV120, PointerInterfacePrivate *d, qint32 &valueAxisLowRes, qint32 &valueDiscrete)
 {
-    qint32 *accumulatorV120;
-    qreal *accumulatorAxis;
+    const int newDirection = deltaV120 > 0 ? 1 : -1;
+    auto &accum = d->axisAccumulator.axis(orientation);
 
-    if (orientation == Qt::Horizontal) {
-        accumulatorV120 = &d->accumulatorV120.rx();
-        accumulatorAxis = &d->accumulatorAxis.rx();
-    } else {
-        accumulatorV120 = &d->accumulatorV120.ry();
-        accumulatorAxis = &d->accumulatorAxis.ry();
+    if (accum.shouldReset(newDirection)) {
+        accum.reset();
     }
 
-    if (shouldResetAccumulator(*accumulatorV120, deltaV120)) {
-        *accumulatorV120 = 0;
-        *accumulatorAxis = 0;
-    }
+    accum.direction = newDirection;
 
-    *accumulatorAxis += delta;
-    *accumulatorV120 += deltaV120;
+    accum.axis += delta;
+    accum.axis120 += deltaV120;
 
     // ±120 is a "wheel click"
-    valueDiscrete = *accumulatorV120 / 120;
-    *accumulatorV120 -= valueDiscrete * 120;
+    valueDiscrete = accum.axis120 / 120;
+    accum.axis120 -= valueDiscrete * 120;
 
     if (valueDiscrete) {
         // Accumulate the axis values to send to low-res clients
-        valueAxisLowRes = *accumulatorAxis;
-        *accumulatorAxis = 0;
+        valueAxisLowRes = accum.axis;
+        accum.axis = 0;
     }
 }
 
