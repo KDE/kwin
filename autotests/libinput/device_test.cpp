@@ -386,9 +386,9 @@ void TestLibinputDevice::testTapEnabledByDefault()
     device.tapEnabledByDefault = enabled;
 
     Device d(&device);
-    QCOMPARE(d.tapToClickEnabledByDefault(), enabled);
-    QCOMPARE(d.property("tapToClickEnabledByDefault").toBool(), enabled);
-    QCOMPARE(dbusProperty<bool>(d.sysName(), "tapToClickEnabledByDefault"), enabled);
+    QCOMPARE(d.tapToClickEnabledByDefault(), true);
+    QCOMPARE(d.property("tapToClickEnabledByDefault").toBool(), true);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "tapToClickEnabledByDefault"), true);
 }
 
 void TestLibinputDevice::testMiddleEmulationEnabledByDefault_data()
@@ -1114,9 +1114,9 @@ void TestLibinputDevice::testTapAndDragEnabledByDefault()
     device.tapAndDragEnabledByDefault = enabled;
 
     Device d(&device);
-    QCOMPARE(d.tapAndDragEnabledByDefault(), enabled);
-    QCOMPARE(d.property("tapAndDragEnabledByDefault").toBool(), enabled);
-    QCOMPARE(dbusProperty<bool>(d.sysName(), "tapAndDragEnabledByDefault"), enabled);
+    QCOMPARE(d.tapAndDragEnabledByDefault(), true);
+    QCOMPARE(d.property("tapAndDragEnabledByDefault").toBool(), true);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "tapAndDragEnabledByDefault"), true);
 }
 
 void TestLibinputDevice::testTapAndDrag_data()
