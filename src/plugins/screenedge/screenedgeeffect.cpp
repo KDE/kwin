@@ -13,8 +13,11 @@
 #include "libkwineffects/rendertarget.h"
 #include "libkwineffects/renderviewport.h"
 // KDE
-#include <Plasma/Svg>
+#include <KConfigGroup>
+#include <KSharedConfig>
+#include <KSvg/Svg>
 // Qt
+#include <QFile>
 #include <QPainter>
 #include <QTimer>
 #include <QVector4D>
@@ -45,7 +48,23 @@ ScreenEdgeEffect::~ScreenEdgeEffect()
 void ScreenEdgeEffect::ensureGlowSvg()
 {
     if (!m_glow) {
-        m_glow = new Plasma::Svg(this);
+        m_glow = new KSvg::Svg(this);
+        m_glow->imageSet()->setBasePath(QStringLiteral("plasma/desktoptheme"));
+
+        const QString groupName = QStringLiteral("Theme");
+        KSharedConfig::Ptr config = KSharedConfig::openConfig(QStringLiteral("plasmarc"));
+        KConfigGroup cg = KConfigGroup(config, groupName);
+        m_glow->imageSet()->setImageSetName(cg.readEntry("name", QStringLiteral("default")));
+
+        m_configWatcher = KConfigWatcher::create(config);
+
+        connect(m_configWatcher.data(), &KConfigWatcher::configChanged, this, [this](const KConfigGroup &group, const QByteArrayList &names) {
+            if (group.name() != QStringLiteral("Theme") || !names.contains(QStringLiteral("name"))) {
+                return;
+            }
+            m_glow->imageSet()->setImageSetName(group.readEntry("name", QStringLiteral("default")));
+        });
+
         m_glow->setImagePath(QStringLiteral("widgets/glowbar"));
     }
 }

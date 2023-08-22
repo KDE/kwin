@@ -82,7 +82,6 @@ find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
     I18n
     IdleTime
     Package
-    Plasma
     Service
     Svg
     WidgetsAddons
@@ -136,7 +135,13 @@ add_feature_info("KF6Runner" KF6Runner_FOUND "Enable building of KWin with krunn
 find_package(KF6Kirigami2 ${KF6_MIN_VERSION} CONFIG)
 set_package_properties(KF6Kirigami2 PROPERTIES
     DESCRIPTION "A QtQuick based components set"
-    PURPOSE "Required at runtime for Virtual desktop KCM"
+    PURPOSE "Required at runtime for several QML effects"
+    TYPE RUNTIME
+)
+find_package(KF6Plasma ${KF6_MIN_VERSION} CONFIG)
+set_package_properties(KF6Plasma PROPERTIES
+    DESCRIPTION "A QtQuick based components set"
+    PURPOSE "Required at runtime for several QML effects"
     TYPE RUNTIME
 )
 

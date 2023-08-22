@@ -12,5 +12,6 @@ target_link_libraries(screenedge PRIVATE
     kwineffects
     kwinglutils
 
-    KF6::Plasma
+    KF6::Svg
+    KF6::ConfigCore
 )

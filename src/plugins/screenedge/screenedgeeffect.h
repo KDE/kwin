@@ -9,8 +9,10 @@
 #pragma once
 #include "libkwineffects/kwineffects.h"
 
+#include <KConfigWatcher>
+
 class QTimer;
-namespace Plasma
+namespace KSvg
 {
 class Svg;
 }
@@ -45,7 +47,8 @@ private:
     QImage createCornerGlow(ElectricBorder border);
     QImage createEdgeGlow(ElectricBorder border, const QSize &size);
     QSize cornerGlowSize(ElectricBorder border);
-    Plasma::Svg *m_glow = nullptr;
+    KConfigWatcher::Ptr m_configWatcher;
+    KSvg::Svg *m_glow = nullptr;
     std::map<ElectricBorder, std::unique_ptr<Glow>> m_borders;
     QTimer *m_cleanupTimer;
 };
