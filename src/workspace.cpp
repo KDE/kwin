@@ -827,7 +827,11 @@ void Workspace::addWaylandWindow(Window *window)
     if (window->wantsInput() && !window->isMinimized()) {
         // Never activate a window on its own in "Extreme" mode.
         if (options->focusStealingPreventionLevel() < 4) {
-            activateWindow(window);
+            if (!window->isDesktop()
+                // If there's no active window, make this desktop the active one.
+                || (activeWindow() == nullptr && should_get_focus.count() == 0)) {
+                activateWindow(window);
+            }
         }
     }
     updateTabbox();
