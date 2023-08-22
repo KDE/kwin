@@ -70,6 +70,9 @@ public:
     bool areBuffersReadable() const;
     bool isVrr() const;
 
+    void setCursorOnly(bool cursor);
+    bool isCursorOnly() const;
+
 private:
     bool doCommit(uint32_t flags);
 
@@ -78,6 +81,7 @@ private:
     std::unordered_map<DrmPlane *, std::shared_ptr<DrmFramebuffer>> m_buffers;
     bool m_vrr = false;
     std::unordered_map<uint32_t /* object */, std::unordered_map<uint32_t /* property */, uint64_t /* value */>> m_properties;
+    bool m_cursorOnly = false;
 };
 
 class DrmLegacyCommit : public DrmCommit

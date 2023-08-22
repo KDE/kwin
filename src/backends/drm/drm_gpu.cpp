@@ -491,7 +491,7 @@ void DrmGpu::waitIdle()
     m_socketNotifier->setEnabled(false);
     while (true) {
         const bool idle = std::all_of(m_drmOutputs.constBegin(), m_drmOutputs.constEnd(), [](DrmOutput *output) {
-            return !output->pipeline()->pageflipPending();
+            return !output->pipeline()->pageflipsPending();
         });
         if (idle) {
             break;

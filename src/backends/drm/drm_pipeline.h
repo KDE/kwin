@@ -84,8 +84,12 @@ public:
     DrmCrtc *currentCrtc() const;
     DrmGpu *gpu() const;
 
-    void pageFlipped(std::chrono::nanoseconds timestamp);
-    bool pageflipPending() const;
+    enum class PageflipType {
+        Normal,
+        CursorOnly
+    };
+    void pageFlipped(std::chrono::nanoseconds timestamp, PageflipType type);
+    bool pageflipsPending() const;
     bool modesetPresentPending() const;
     void resetModesetPresentPending();
 
@@ -133,7 +137,7 @@ public:
         Test,
         TestAllowModeset,
         Commit,
-        CommitUpdateOnly,
+        CommitCursor,
         CommitModeset
     };
     Q_ENUM(CommitMode)
@@ -163,7 +167,7 @@ private:
     DrmOutput *m_output = nullptr;
     DrmConnector *m_connector = nullptr;
 
-    bool m_pageflipPending = false;
+    bool m_legacyPageflipPending = false;
     bool m_modesetPresentPending = false;
 
     struct State

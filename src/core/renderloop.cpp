@@ -132,6 +132,18 @@ void RenderLoopPrivate::notifyFrameCompleted(std::chrono::nanoseconds timestamp,
     Q_ASSERT(pendingFrameCount > 0);
     pendingFrameCount--;
 
+    notifyVblank(timestamp);
+
+    renderJournal.add(renderTime);
+    if (!inhibitCount) {
+        maybeScheduleRepaint();
+    }
+
+    Q_EMIT q->framePresented(q, timestamp);
+}
+
+void RenderLoopPrivate::notifyVblank(std::chrono::nanoseconds timestamp)
+{
     if (lastPresentationTimestamp <= timestamp) {
         lastPresentationTimestamp = timestamp;
     } else {
@@ -141,13 +153,6 @@ void RenderLoopPrivate::notifyFrameCompleted(std::chrono::nanoseconds timestamp,
                 static_cast<long long>(lastPresentationTimestamp.count()));
         lastPresentationTimestamp = std::chrono::steady_clock::now().time_since_epoch();
     }
-
-    renderJournal.add(renderTime);
-    if (!inhibitCount) {
-        maybeScheduleRepaint();
-    }
-
-    Q_EMIT q->framePresented(q, timestamp);
 }
 
 void RenderLoopPrivate::dispatch()

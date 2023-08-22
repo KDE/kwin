@@ -126,8 +126,8 @@ void DrmAtomicCommit::pageFlipped(std::chrono::nanoseconds timestamp) const
     for (const auto &[plane, buffer] : m_buffers) {
         plane->setCurrentBuffer(buffer);
     }
-    for (const auto &pipeline : m_pipelines) {
-        pipeline->pageFlipped(timestamp);
+    for (const auto pipeline : std::as_const(m_pipelines)) {
+        pipeline->pageFlipped(timestamp, m_cursorOnly ? DrmPipeline::PageflipType::CursorOnly : DrmPipeline::PageflipType::Normal);
     }
 }
 
@@ -142,6 +142,16 @@ bool DrmAtomicCommit::areBuffersReadable() const
 bool DrmAtomicCommit::isVrr() const
 {
     return m_vrr;
+}
+
+void DrmAtomicCommit::setCursorOnly(bool cursor)
+{
+    m_cursorOnly = cursor;
+}
+
+bool DrmAtomicCommit::isCursorOnly() const
+{
+    return m_cursorOnly;
 }
 
 DrmLegacyCommit::DrmLegacyCommit(DrmPipeline *pipeline, const std::shared_ptr<DrmFramebuffer> &buffer)
@@ -171,6 +181,6 @@ void DrmLegacyCommit::pageFlipped(std::chrono::nanoseconds timestamp) const
 {
     Q_ASSERT(QThread::currentThread() == QApplication::instance()->thread());
     m_pipeline->crtc()->setCurrent(m_buffer);
-    m_pipeline->pageFlipped(timestamp);
+    m_pipeline->pageFlipped(timestamp, DrmPipeline::PageflipType::Normal);
 }
 }
