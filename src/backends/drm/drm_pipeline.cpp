@@ -42,7 +42,6 @@ DrmPipeline::DrmPipeline(DrmConnector *conn)
     , m_commitThread(std::make_unique<DrmCommitThread>())
 {
     QObject::connect(m_commitThread.get(), &DrmCommitThread::commitFailed, [this]() {
-        m_pageflipPending = false;
         if (m_output) {
             m_output->frameFailed();
         }
@@ -51,8 +50,8 @@ DrmPipeline::DrmPipeline(DrmConnector *conn)
 
 DrmPipeline::~DrmPipeline()
 {
-    if (m_pageflipPending && m_current.crtc) {
-        pageFlipped({});
+    if (pageflipsPending()) {
+        gpu()->waitIdle();
     }
 }
 
@@ -179,18 +178,16 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline 
         pipeline->atomicCommitSuccessful();
         return Error::None;
     }
-    case CommitMode::CommitUpdateOnly: {
-        Q_ASSERT(pipelines.size() == 1);
-        Q_ASSERT(unusedObjects.isEmpty());
+    case CommitMode::CommitCursor: {
+        commit->setCursorOnly(true);
         if (!commit->test()) {
             return errnoToError();
         }
         const auto pipeline = pipelines.front();
-        if (pipeline->m_commitThread->updateCommit(std::move(commit))) {
-            pipeline->atomicCommitSuccessful();
-        }
+        pipeline->m_commitThread->addCommit(std::move(commit));
+        pipeline->atomicCommitSuccessful();
         return Error::None;
-    }
+    };
     default:
         Q_UNREACHABLE();
     }
@@ -357,7 +354,6 @@ DrmPipeline::Error DrmPipeline::errnoToError()
 void DrmPipeline::atomicCommitSuccessful()
 {
     m_pending.needsModeset = false;
-    m_pageflipPending = true;
     m_current = m_pending;
 }
 
@@ -369,17 +365,12 @@ bool DrmPipeline::updateCursor()
     bool result;
     // explicitly check for the cursor plane and not for AMS, as we might not always have one
     if (m_pending.crtc->cursorPlane()) {
-        result = commitPipelines({this}, CommitMode::CommitUpdateOnly) == Error::None;
+        if (needsModeset() || !m_current.active) {
+            return false;
+        }
+        result = commitPipelines({this}, CommitMode::CommitCursor) == Error::None;
     } else {
         result = setCursorLegacy();
-    }
-    if (result) {
-        m_next = m_pending;
-        if (result) {
-            m_output->renderLoop()->scheduleRepaint();
-        }
-    } else {
-        m_pending = m_next;
     }
     return result;
 }
@@ -400,12 +391,16 @@ DrmGpu *DrmPipeline::gpu() const
     return m_connector->gpu();
 }
 
-void DrmPipeline::pageFlipped(std::chrono::nanoseconds timestamp)
+void DrmPipeline::pageFlipped(std::chrono::nanoseconds timestamp, PageflipType type)
 {
     m_commitThread->pageFlipped(timestamp);
-    m_pageflipPending = false;
+    m_legacyPageflipPending = false;
     if (m_output && activePending()) {
-        m_output->pageFlipped(timestamp);
+        if (type == PageflipType::Normal) {
+            m_output->pageFlipped(timestamp);
+        } else {
+            RenderLoopPrivate::get(m_output->renderLoop())->notifyVblank(timestamp);
+        }
     }
 }
 
@@ -463,9 +458,9 @@ void DrmPipeline::revertPendingChanges()
     m_pending = m_next;
 }
 
-bool DrmPipeline::pageflipPending() const
+bool DrmPipeline::pageflipsPending() const
 {
-    return m_pageflipPending;
+    return gpu()->atomicModeSetting() ? m_commitThread->pageflipsPending() : m_legacyPageflipPending;
 }
 
 bool DrmPipeline::modesetPresentPending() const

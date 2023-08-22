@@ -30,10 +30,10 @@ public:
     ~DrmCommitThread();
 
     void addCommit(std::unique_ptr<DrmAtomicCommit> &&commit);
-    bool updateCommit(std::unique_ptr<DrmAtomicCommit> &&commit);
 
     void setRefreshRate(uint32_t maximum);
     void pageFlipped(std::chrono::nanoseconds timestamp);
+    bool pageflipsPending();
 
 Q_SIGNALS:
     void commitFailed();
@@ -51,6 +51,7 @@ private:
     std::chrono::nanoseconds m_minVblankInterval;
     std::vector<std::unique_ptr<DrmAtomicCommit>> m_droppedCommits;
     bool m_vrr = false;
+    bool m_pageflipPending = false;
 };
 
 }

@@ -33,6 +33,10 @@ DrmCommitThread::DrmCommitThread()
             if (m_commits.empty()) {
                 m_commitPending.wait(lock);
             }
+            if (m_pageflipPending) {
+                // the commit would fail with EBUSY, wait until the pageflip is done
+                continue;
+            }
             if (!m_commits.empty()) {
                 const auto now = std::chrono::steady_clock::now();
                 if (m_targetPageflipTime > now + s_safetyMargin) {
@@ -53,18 +57,25 @@ DrmCommitThread::DrmCommitThread()
                     continue;
                 }
                 auto &commit = *it;
+                commit->setCursorOnly(std::all_of(m_commits.begin(), it.base(), [](const auto &commit) {
+                    return commit->isCursorOnly();
+                }));
                 const bool vrr = commit->isVrr();
                 const bool success = commit->commit();
                 if (success) {
+                    m_pageflipPending = true;
                     m_vrr = vrr;
                     // the atomic commit takes ownership of the object
                     commit.release();
-                }
-                for (auto &commit : m_commits) {
-                    m_droppedCommits.push_back(std::move(commit));
-                }
-                m_commits.clear();
-                if (!success) {
+                    // commits that were pushed earlier are outdated and can be dropped
+                    std::move(m_commits.begin(), it.base(), std::back_inserter(m_droppedCommits));
+                    m_commits.erase(m_commits.begin(), it.base());
+                    // commits that came after will be rescheduled once the pageflip is done
+                } else {
+                    for (auto &commit : m_commits) {
+                        m_droppedCommits.push_back(std::move(commit));
+                    }
+                    m_commits.clear();
                     qCWarning(KWIN_DRM) << "atomic commit failed:" << strerror(errno);
                     QMetaObject::invokeMethod(this, &DrmCommitThread::commitFailed, Qt::ConnectionType::QueuedConnection);
                 }
@@ -95,17 +106,6 @@ void DrmCommitThread::addCommit(std::unique_ptr<DrmAtomicCommit> &&commit)
     m_commitPending.notify_all();
 }
 
-bool DrmCommitThread::updateCommit(std::unique_ptr<DrmAtomicCommit> &&commit)
-{
-    std::unique_lock lock(m_mutex);
-    if (!m_commits.empty()) {
-        m_commits.push_back(std::move(commit));
-        return true;
-    } else {
-        return false;
-    }
-}
-
 void DrmCommitThread::clearDroppedCommits()
 {
     std::unique_lock lock(m_mutex);
@@ -122,6 +122,17 @@ void DrmCommitThread::pageFlipped(std::chrono::nanoseconds timestamp)
 {
     std::unique_lock lock(m_mutex);
     m_lastPageflip = TimePoint(timestamp);
+    m_pageflipPending = false;
+    if (!m_commits.empty()) {
+        m_targetPageflipTime = estimateNextVblank(std::chrono::steady_clock::now());
+        m_commitPending.notify_all();
+    }
+}
+
+bool DrmCommitThread::pageflipsPending()
+{
+    std::unique_lock lock(m_mutex);
+    return !m_commits.empty() || m_pageflipPending;
 }
 
 TimePoint DrmCommitThread::estimateNextVblank(TimePoint now) const

@@ -43,7 +43,7 @@ DrmPipeline::Error DrmPipeline::presentLegacy()
     }
     // the pageflip takes ownership of the object
     commit.release();
-    m_pageflipPending = true;
+    m_legacyPageflipPending = true;
     return Error::None;
 }
 
@@ -85,7 +85,7 @@ DrmPipeline::Error DrmPipeline::commitPipelinesLegacy(const QVector<DrmPipeline 
             pipeline->applyPendingChanges();
             pipeline->m_current = pipeline->m_pending;
             if (mode == CommitMode::CommitModeset && pipeline->activePending()) {
-                pipeline->pageFlipped(std::chrono::steady_clock::now().time_since_epoch());
+                pipeline->pageFlipped(std::chrono::steady_clock::now().time_since_epoch(), PageflipType::Normal);
             }
         }
     }

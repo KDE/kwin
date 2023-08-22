@@ -31,6 +31,7 @@ public:
 
     void notifyFrameFailed();
     void notifyFrameCompleted(std::chrono::nanoseconds timestamp, std::chrono::nanoseconds renderTime);
+    void notifyVblank(std::chrono::nanoseconds timestamp);
 
     RenderLoop *q;
     std::chrono::nanoseconds lastPresentationTimestamp = std::chrono::nanoseconds::zero();
