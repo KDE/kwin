@@ -17,20 +17,18 @@ Dependencies:
     'frameworks/kglobalaccel': '@latest-kf6'
     'frameworks/ki18n': '@latest-kf6'
     'frameworks/kidletime': '@latest-kf6'
-    'frameworks/kirigami': '@latest-kf6'
     'frameworks/knewstuff': '@latest-kf6'
     'frameworks/knotifications': '@latest-kf6'
     'frameworks/kpackage': '@latest-kf6'
     'frameworks/krunner': '@latest-kf6'
     'frameworks/kservice': '@latest-kf6'
+    'frameworks/ksvg': '@latest-kf6'
     'frameworks/kwayland': '@latest-kf6'
     'frameworks/kwidgetsaddons': '@latest-kf6'
     'frameworks/kwindowsystem': '@latest-kf6'
     'frameworks/kxmlgui': '@latest-kf6'
-    'frameworks/plasma-framework': '@latest-kf6'
     'libraries/libqaccessibilityclient': '@latest-kf6'
     'libraries/plasma-wayland-protocols': '@latest-kf6'
-    'frameworks/ksvg': '@latest-kf6'
     'plasma/breeze': '@same'
     'plasma/kdecoration': '@same'
     'plasma/kglobalacceld': '@same'
@@ -38,6 +36,12 @@ Dependencies:
     'plasma/kscreenlocker': '@same'
     'third-party/wayland': '@latest'
     'third-party/wayland-protocols': '@latest'
+
+RuntimeDependencies:
+- 'on': ['@all']
+  'require':
+    'frameworks/kirigami': '@latest-kf6'
+    'frameworks/plasma-framework': '@latest-kf6'
 
 Options:
   ctest-arguments: '--repeat until-pass:5'
