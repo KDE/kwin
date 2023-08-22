@@ -39,11 +39,16 @@ target_sources(gamepadinput PRIVATE
     main.cpp
     gamepadinput.cpp
     gaminginput_v2_interface.cpp
+    inputfd_v1_interface.cpp
     evdevcontroller.cpp
 )
 ecm_add_qtwayland_server_protocol_kde(gamepadinput
     PROTOCOL gaming-input-unstable-v2.xml
     BASENAME gaming-input-unstable-v2
+)
+ecm_add_qtwayland_server_protocol_kde(gamepadinput
+    PROTOCOL inputfd-v1.xml
+    BASENAME inputfd-v1
 )
 
 ecm_qt_declare_logging_category(gamepadinput

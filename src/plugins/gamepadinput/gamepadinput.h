@@ -10,8 +10,9 @@
 
 namespace KWin
 {
-class GamingInputV2Interface;
 class EvdevController;
+class GamingInputV2Interface;
+class InputFdManagerV1Interface;
 
 class GamePadInput : public Plugin
 {
@@ -22,6 +23,7 @@ public:
 
 private:
     GamingInputV2Interface *const m_interface;
+    InputFdManagerV1Interface *const m_interfaceInputFd;
     EvdevController *const m_evdev;
 };
 
