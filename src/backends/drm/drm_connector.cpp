@@ -92,11 +92,11 @@ DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)
     , edidProp(this, QByteArrayLiteral("EDID"))
     , overscan(this, QByteArrayLiteral("overscan"))
     , vrrCapable(this, QByteArrayLiteral("vrr_capable"))
-    , underscan(this, QByteArrayLiteral("EDID"), {
-                                                     QByteArrayLiteral("off"),
-                                                     QByteArrayLiteral("on"),
-                                                     QByteArrayLiteral("auto"),
-                                                 })
+    , underscan(this, QByteArrayLiteral("underscan"), {
+                                                          QByteArrayLiteral("off"),
+                                                          QByteArrayLiteral("on"),
+                                                          QByteArrayLiteral("auto"),
+                                                      })
     , underscanVBorder(this, QByteArrayLiteral("underscan vborder"))
     , underscanHBorder(this, QByteArrayLiteral("underscan hborder"))
     , broadcastRGB(this, QByteArrayLiteral("Broadcast RGB"), {
