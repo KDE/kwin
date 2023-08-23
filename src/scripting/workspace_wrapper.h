@@ -68,8 +68,8 @@ private:
     Q_DISABLE_COPY(WorkspaceWrapper)
 
 Q_SIGNALS:
-    void clientAdded(KWin::Window *client);
-    void clientRemoved(KWin::Window *client);
+    void windowAdded(KWin::Window *window);
+    void windowRemoved(KWin::Window *window);
     void windowActivated(KWin::Window *window);
     /**
      * This signal is emitted when a virtual desktop is added or removed.
