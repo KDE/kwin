@@ -425,7 +425,8 @@ QVariantMap ScreenShotDBusInterface2::CaptureArea(int x, int y, int width, int h
     }
 
     const QRect area(x, y, width, height);
-    if (area.isEmpty()) {
+    // QRect::isEmpty is only true when size is negative, unlike QSize::isEmpty and QRectF::isEmpty.
+    if (area.size().isEmpty()) {
         sendErrorReply(s_errorInvalidArea, s_errorInvalidAreaMessage);
         return QVariantMap();
     }
