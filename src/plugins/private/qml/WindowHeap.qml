@@ -52,7 +52,7 @@ FocusScope {
     signal activated()
 
     function activateIndex(index) {
-        KWinComponents.Workspace.activeClient = windowsInstantiator.objectAt(index).window;
+        KWinComponents.Workspace.activeWindow = windowsInstantiator.objectAt(index).window;
         activated();
     }
 
@@ -369,7 +369,7 @@ FocusScope {
             }
             if (selectedItem) {
                 handled = true;
-                KWinComponents.Workspace.activeClient = selectedItem.window;
+                KWinComponents.Workspace.activeWindow = selectedItem.window;
                 activated();
             }
             break;

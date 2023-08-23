@@ -30,7 +30,7 @@ class WorkspaceWrapper : public QObject
     Q_OBJECT
     Q_PROPERTY(QVector<KWin::VirtualDesktop *> desktops READ desktops NOTIFY desktopsChanged)
     Q_PROPERTY(KWin::VirtualDesktop *currentDesktop READ currentDesktop WRITE setCurrentDesktop NOTIFY currentDesktopChanged)
-    Q_PROPERTY(KWin::Window *activeClient READ activeClient WRITE setActiveClient NOTIFY clientActivated)
+    Q_PROPERTY(KWin::Window *activeWindow READ activeWindow WRITE setActiveWindow NOTIFY windowActivated)
     // TODO: write and notify?
     Q_PROPERTY(QSize desktopGridSize READ desktopGridSize NOTIFY desktopLayoutChanged)
     Q_PROPERTY(int desktopGridWidth READ desktopGridWidth NOTIFY desktopLayoutChanged)
@@ -70,7 +70,7 @@ private:
 Q_SIGNALS:
     void clientAdded(KWin::Window *client);
     void clientRemoved(KWin::Window *client);
-    void clientActivated(KWin::Window *client);
+    void windowActivated(KWin::Window *window);
     /**
      * This signal is emitted when a virtual desktop is added or removed.
      */
@@ -175,12 +175,12 @@ protected:
     explicit WorkspaceWrapper(QObject *parent = nullptr);
 
 public:
-#define GETTERSETTERDEF(rettype, getter, setter) \
-    rettype getter() const;                      \
-    void setter(rettype val);
-    GETTERSETTERDEF(QString, currentActivity, setCurrentActivity)
-    GETTERSETTERDEF(KWin::Window *, activeClient, setActiveClient)
-#undef GETTERSETTERDEF
+    Window *activeWindow() const;
+    void setActiveWindow(Window *window);
+
+    QString currentActivity() const;
+    void setCurrentActivity(const QString &activity);
+
     QSize desktopGridSize() const;
     int desktopGridWidth() const;
     int desktopGridHeight() const;

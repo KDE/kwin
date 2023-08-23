@@ -33,7 +33,7 @@ WorkspaceWrapper::WorkspaceWrapper(QObject *parent)
     KWin::VirtualDesktopManager *vds = KWin::VirtualDesktopManager::self();
     connect(ws, &Workspace::windowAdded, this, &WorkspaceWrapper::clientAdded);
     connect(ws, &Workspace::windowRemoved, this, &WorkspaceWrapper::clientRemoved);
-    connect(ws, &Workspace::windowActivated, this, &WorkspaceWrapper::clientActivated);
+    connect(ws, &Workspace::windowActivated, this, &WorkspaceWrapper::windowActivated);
     connect(vds, &VirtualDesktopManager::desktopCreated, this, &WorkspaceWrapper::desktopsChanged);
     connect(vds, &VirtualDesktopManager::desktopRemoved, this, &WorkspaceWrapper::desktopsChanged);
     connect(vds, &VirtualDesktopManager::layoutChanged, this, &WorkspaceWrapper::desktopLayoutChanged);
@@ -69,7 +69,7 @@ void WorkspaceWrapper::setCurrentDesktop(VirtualDesktop *desktop)
     VirtualDesktopManager::self()->setCurrent(desktop);
 }
 
-Window *WorkspaceWrapper::activeClient() const
+Window *WorkspaceWrapper::activeWindow() const
 {
     return workspace()->activeWindow();
 }
@@ -86,7 +86,7 @@ QString WorkspaceWrapper::currentActivity() const
 #endif
 }
 
-void WorkspaceWrapper::setCurrentActivity(QString activity)
+void WorkspaceWrapper::setCurrentActivity(const QString &activity)
 {
 #if KWIN_BUILD_ACTIVITIES
     if (Workspace::self()->activities()) {
@@ -219,9 +219,9 @@ SLOTWRAPPER(slotSwitchDesktopDown, Down)
 
 #undef SLOTWRAPPER
 
-void WorkspaceWrapper::setActiveClient(KWin::Window *client)
+void WorkspaceWrapper::setActiveWindow(KWin::Window *window)
 {
-    KWin::Workspace::self()->activateWindow(client);
+    KWin::Workspace::self()->activateWindow(window);
 }
 
 QSize WorkspaceWrapper::workspaceSize() const

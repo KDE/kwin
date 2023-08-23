@@ -28,10 +28,10 @@ Item {
     readonly property bool initialHidden: window.minimized || !presentOnCurrentDesktop
     readonly property bool activeHidden: {
         if (windowHeap.showOnly === "activeClass") {
-            if (!KWinComponents.Workspace.activeClient) {
+            if (!KWinComponents.Workspace.activeWindow) {
                 return true;
             } else {
-                return KWinComponents.Workspace.activeClient.resourceName !== window.resourceName;
+                return KWinComponents.Workspace.activeWindow.resourceName !== window.resourceName;
             }
         } else {
             return windowHeap.showOnly.length !== 0
@@ -355,7 +355,7 @@ Item {
     TapHandler {
         acceptedButtons: Qt.LeftButton
         onTapped: {
-            KWinComponents.Workspace.activeClient = thumb.window;
+            KWinComponents.Workspace.activeWindow = thumb.window;
             thumb.windowHeap.activated();
         }
         onPressedChanged: {
