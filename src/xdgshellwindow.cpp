@@ -600,7 +600,8 @@ MaximizeMode XdgToplevelWindow::requestedMaximizeMode() const
 
 QSizeF XdgToplevelWindow::minSize() const
 {
-    return rules()->checkMinSize(m_shellSurface->minimumSize());
+    const int enforcedMinimum = m_nextDecoration ? 150 : 20;
+    return rules()->checkMinSize(QSize(std::max(enforcedMinimum, m_shellSurface->minimumSize().width()), std::max(enforcedMinimum, m_shellSurface->minimumSize().height())));
 }
 
 QSizeF XdgToplevelWindow::maxSize() const
