@@ -22,21 +22,11 @@ namespace KWin
 {
 
 class Output;
-class DmaBufTexture;
 class InputBackend;
 class OpenGLBackend;
 class QPainterBackend;
 class OutputConfiguration;
 class EglDisplay;
-
-struct DmaBufParams
-{
-    int planeCount = 0;
-    int width = 0;
-    int height = 0;
-    uint32_t format = 0;
-    uint64_t modifier = 0;
-};
 
 class KWIN_EXPORT Outputs : public QVector<Output *>
 {
@@ -60,9 +50,6 @@ public:
     virtual std::unique_ptr<InputBackend> createInputBackend();
     virtual std::unique_ptr<OpenGLBackend> createOpenGLBackend();
     virtual std::unique_ptr<QPainterBackend> createQPainterBackend();
-    virtual std::optional<DmaBufParams> testCreateDmaBuf(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers);
-    virtual std::shared_ptr<DmaBufTexture> createDmaBufTexture(const QSize &size, quint32 format, const uint64_t modifier);
-    std::shared_ptr<DmaBufTexture> createDmaBufTexture(const DmaBufParams &attributes);
 
     virtual EglDisplay *sceneEglDisplayObject() const = 0;
     /**

@@ -10,15 +10,12 @@
 
 #include "config-kwin.h"
 
-#include "core/outputbackend.h"
-#include "dmabuftexture.h"
-#include "libkwineffects/kwinglobals.h"
 #include "wayland/screencast_v1_interface.h"
 
 #include <QDateTime>
 #include <QHash>
 #include <QObject>
-#include <QSize>
+#include <QRegion>
 #include <QSocketNotifier>
 #include <QTimer>
 #include <chrono>
@@ -34,10 +31,20 @@ namespace KWin
 {
 
 class Cursor;
+class ScreenCastDmaBufTexture;
 class EGLNativeFence;
 class GLTexture;
 class PipeWireCore;
 class ScreenCastSource;
+
+struct ScreenCastDmaBufTextureParams
+{
+    int planeCount = 0;
+    int width = 0;
+    int height = 0;
+    uint32_t format = 0;
+    uint64_t modifier = 0;
+};
 
 class KWIN_EXPORT ScreenCastStream : public QObject
 {
@@ -94,6 +101,9 @@ private:
                          struct spa_fraction *defaultFramerate, struct spa_fraction *minFramerate, struct spa_fraction *maxFramerate,
                          const QVector<uint64_t> &modifiers, quint32 modifiersFlags);
 
+    std::optional<ScreenCastDmaBufTextureParams> testCreateDmaBuf(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers);
+    std::shared_ptr<ScreenCastDmaBufTexture> createDmaBufTexture(const ScreenCastDmaBufTextureParams &params);
+
     std::shared_ptr<PipeWireCore> m_pwCore;
     std::unique_ptr<ScreenCastSource> m_source;
     struct pw_stream *m_pwStream = nullptr;
@@ -110,7 +120,7 @@ private:
     spa_video_info_raw m_videoFormat;
     QString m_error;
     QVector<uint64_t> m_modifiers;
-    std::optional<DmaBufParams> m_dmabufParams; // when fixated
+    std::optional<ScreenCastDmaBufTextureParams> m_dmabufParams; // when fixated
 
     struct
     {
@@ -125,7 +135,7 @@ private:
     } m_cursor;
     QRectF cursorGeometry(Cursor *cursor) const;
 
-    QHash<struct pw_buffer *, std::shared_ptr<DmaBufTexture>> m_dmabufDataForPwBuffer;
+    QHash<struct pw_buffer *, std::shared_ptr<ScreenCastDmaBufTexture>> m_dmabufDataForPwBuffer;
 
     pw_buffer *m_pendingBuffer = nullptr;
     std::unique_ptr<QSocketNotifier> m_pendingNotifier;

@@ -6,31 +6,28 @@
 
 #pragma once
 
-#include "kwin_export.h"
-
-#include "core/graphicsbuffer.h"
-
 #include <memory>
 
 namespace KWin
 {
 class GLFramebuffer;
 class GLTexture;
+class GraphicsBuffer;
 
-class KWIN_EXPORT DmaBufTexture
+class ScreenCastDmaBufTexture
 {
 public:
-    explicit DmaBufTexture(std::shared_ptr<GLTexture> texture, DmaBufAttributes &&attributes);
-    virtual ~DmaBufTexture();
+    explicit ScreenCastDmaBufTexture(std::shared_ptr<GLTexture> texture, GraphicsBuffer *buffer);
+    virtual ~ScreenCastDmaBufTexture();
 
-    const DmaBufAttributes &attributes() const;
+    GraphicsBuffer *buffer() const;
     GLTexture *texture() const;
     GLFramebuffer *framebuffer() const;
 
 protected:
     std::shared_ptr<GLTexture> m_texture;
     std::unique_ptr<GLFramebuffer> m_framebuffer;
-    DmaBufAttributes m_attributes;
+    GraphicsBuffer *m_buffer;
 };
 
 }

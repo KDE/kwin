@@ -8,17 +8,20 @@
 
 #include "screencaststream.h"
 #include "composite.h"
+#include "core/graphicsbufferallocator.h"
+#include "core/outputbackend.h"
 #include "core/renderbackend.h"
 #include "cursor.h"
-#include "dmabuftexture.h"
 #include "kwinscreencast_logging.h"
 #include "libkwineffects/kwingltexture.h"
 #include "libkwineffects/kwinglutils.h"
 #include "main.h"
 #include "pipewirecore.h"
+#include "platformsupport/scenes/opengl/abstract_egl_backend.h"
 #include "platformsupport/scenes/opengl/eglnativefence.h"
 #include "platformsupport/scenes/opengl/openglbackend.h"
 #include "scene/workspacescene.h"
+#include "screencastdmabuftexture.h"
 #include "screencastsource.h"
 
 #include <KLocalizedString>
@@ -176,9 +179,9 @@ void ScreenCastStream::onStreamParamChanged(uint32_t id, const struct spa_pod *f
             if (receivedModifiers.count() > 1) {
                 receivedModifiers.removeAll(DRM_FORMAT_MOD_INVALID);
             }
-            m_dmabufParams = kwinApp()->outputBackend()->testCreateDmaBuf(m_resolution, m_drmFormat, receivedModifiers);
+            m_dmabufParams = testCreateDmaBuf(m_resolution, m_drmFormat, receivedModifiers);
         } else {
-            m_dmabufParams = kwinApp()->outputBackend()->testCreateDmaBuf(m_resolution, m_drmFormat, {DRM_FORMAT_MOD_INVALID});
+            m_dmabufParams = testCreateDmaBuf(m_resolution, m_drmFormat, {DRM_FORMAT_MOD_INVALID});
         }
 
         // In case we fail to use any modifier from the list of offered ones, remove these
@@ -213,21 +216,21 @@ void ScreenCastStream::onStreamAddBuffer(pw_buffer *buffer)
     spa_data->mapoffset = 0;
     spa_data->flags = SPA_DATA_FLAG_READWRITE;
 
-    std::shared_ptr<DmaBufTexture> dmabuff;
+    std::shared_ptr<ScreenCastDmaBufTexture> dmabuff;
 
     if (spa_data[0].type != SPA_ID_INVALID && spa_data[0].type & (1 << SPA_DATA_DmaBuf)) {
         Q_ASSERT(m_dmabufParams);
-        dmabuff = kwinApp()->outputBackend()->createDmaBufTexture(*m_dmabufParams);
+        dmabuff = createDmaBufTexture(*m_dmabufParams);
     }
 
     if (dmabuff) {
-        spa_data->maxsize = dmabuff->attributes().pitch[0] * m_resolution.height();
+        const DmaBufAttributes *dmabufAttribs = dmabuff->buffer()->dmabufAttributes();
+        spa_data->maxsize = dmabufAttribs->pitch[0] * m_resolution.height();
 
-        const DmaBufAttributes &dmabufAttribs = dmabuff->attributes();
-        Q_ASSERT(buffer->buffer->n_datas >= uint(dmabufAttribs.planeCount));
-        for (int i = 0; i < dmabufAttribs.planeCount; ++i) {
+        Q_ASSERT(buffer->buffer->n_datas >= uint(dmabufAttribs->planeCount));
+        for (int i = 0; i < dmabufAttribs->planeCount; ++i) {
             buffer->buffer->datas[i].type = SPA_DATA_DmaBuf;
-            buffer->buffer->datas[i].fd = dmabufAttribs.fd[i].get();
+            buffer->buffer->datas[i].fd = dmabufAttribs->fd[i].get();
             buffer->buffer->datas[i].data = nullptr;
         }
         m_dmabufDataForPwBuffer.insert(buffer, dmabuff);
@@ -406,7 +409,7 @@ bool ScreenCastStream::createStream()
         // Also support modifier-less DmaBufs
         m_modifiers += DRM_FORMAT_MOD_INVALID;
     }
-    m_hasDmaBuf = kwinApp()->outputBackend()->testCreateDmaBuf(m_resolution, m_drmFormat, {DRM_FORMAT_MOD_INVALID}).has_value();
+    m_hasDmaBuf = testCreateDmaBuf(m_resolution, m_drmFormat, {DRM_FORMAT_MOD_INVALID}).has_value();
 
     char buffer[2048];
     QVector<const spa_pod *> params = buildFormats(false, buffer);
@@ -542,11 +545,11 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
         auto &buf = m_dmabufDataForPwBuffer[buffer];
         Q_ASSERT(buf);
 
-        const DmaBufAttributes &dmabufAttribs = buf->attributes();
-        Q_ASSERT(buffer->buffer->n_datas >= uint(dmabufAttribs.planeCount));
-        for (int i = 0; i < dmabufAttribs.planeCount; ++i) {
-            buffer->buffer->datas[i].chunk->stride = dmabufAttribs.pitch[i];
-            buffer->buffer->datas[i].chunk->offset = dmabufAttribs.offset[i];
+        const DmaBufAttributes *dmabufAttribs = buf->buffer()->dmabufAttributes();
+        Q_ASSERT(buffer->buffer->n_datas >= uint(dmabufAttribs->planeCount));
+        for (int i = 0; i < dmabufAttribs->planeCount; ++i) {
+            buffer->buffer->datas[i].chunk->stride = dmabufAttribs->pitch[i];
+            buffer->buffer->datas[i].chunk->offset = dmabufAttribs->offset[i];
         }
         spa_data->chunk->size = spa_data->maxsize;
 
@@ -875,6 +878,65 @@ void ScreenCastStream::setCursorMode(KWaylandServer::ScreencastV1Interface::Curs
     m_cursor.mode = mode;
     m_cursor.scale = scale;
     m_cursor.viewport = viewport;
+}
+
+std::optional<ScreenCastDmaBufTextureParams> ScreenCastStream::testCreateDmaBuf(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers)
+{
+    AbstractEglBackend *backend = dynamic_cast<AbstractEglBackend *>(Compositor::self()->backend());
+    if (!backend) {
+        return std::nullopt;
+    }
+
+    GraphicsBuffer *buffer = backend->graphicsBufferAllocator()->allocate(GraphicsBufferOptions{
+        .size = size,
+        .format = format,
+        .modifiers = modifiers,
+    });
+    if (!buffer) {
+        return std::nullopt;
+    }
+    auto drop = qScopeGuard([&buffer]() {
+        buffer->drop();
+    });
+
+    const DmaBufAttributes *attrs = buffer->dmabufAttributes();
+    if (!attrs) {
+        return std::nullopt;
+    }
+
+    return ScreenCastDmaBufTextureParams{
+        .planeCount = attrs->planeCount,
+        .width = attrs->width,
+        .height = attrs->height,
+        .format = attrs->format,
+        .modifier = attrs->modifier,
+    };
+}
+
+std::shared_ptr<ScreenCastDmaBufTexture> ScreenCastStream::createDmaBufTexture(const ScreenCastDmaBufTextureParams &params)
+{
+    AbstractEglBackend *backend = dynamic_cast<AbstractEglBackend *>(Compositor::self()->backend());
+    if (!backend) {
+        return nullptr;
+    }
+
+    GraphicsBuffer *buffer = backend->graphicsBufferAllocator()->allocate(GraphicsBufferOptions{
+        .size = QSize(params.width, params.height),
+        .format = params.format,
+        .modifiers = {params.modifier},
+    });
+    if (!buffer) {
+        return nullptr;
+    }
+
+    const DmaBufAttributes *attrs = buffer->dmabufAttributes();
+    if (!attrs) {
+        buffer->drop();
+        return nullptr;
+    }
+
+    backend->makeCurrent();
+    return std::make_shared<ScreenCastDmaBufTexture>(backend->importDmaBufAsTexture(*attrs), buffer);
 }
 
 } // namespace KWin

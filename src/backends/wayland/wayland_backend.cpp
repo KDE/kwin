@@ -8,7 +8,6 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "wayland_backend.h"
-#include "dmabuftexture.h"
 #include "dpmsinputeventfilter.h"
 #include "input.h"
 #include "wayland_display.h"
@@ -33,8 +32,6 @@
 #include <linux/input.h>
 #include <unistd.h>
 #include <wayland-client-core.h>
-
-#include "../drm/gbm_dmabuf.h"
 
 #include "wayland-linux-dmabuf-unstable-v1-client-protocol.h"
 
@@ -601,37 +598,6 @@ void WaylandBackend::removeVirtualOutput(Output *output)
         Q_EMIT outputRemoved(waylandOutput);
         waylandOutput->unref();
     }
-}
-
-std::optional<DmaBufParams> WaylandBackend::testCreateDmaBuf(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers)
-{
-    gbm_bo *bo = createGbmBo(m_gbmDevice, size, format, modifiers);
-    if (!bo) {
-        return {};
-    }
-
-    auto ret = dmaBufParamsForBo(bo);
-    gbm_bo_destroy(bo);
-    return ret;
-}
-
-std::shared_ptr<DmaBufTexture> WaylandBackend::createDmaBufTexture(const QSize &size, quint32 format, uint64_t modifier)
-{
-    gbm_bo *bo = createGbmBo(m_gbmDevice, size, format, {modifier});
-    if (!bo) {
-        return {};
-    }
-
-    // The bo will be kept around until the last fd is closed.
-    std::optional<DmaBufAttributes> attributes = dmaBufAttributesForBo(bo);
-    gbm_bo_destroy(bo);
-
-    if (!attributes.has_value()) {
-        return nullptr;
-    }
-
-    m_eglBackend->makeCurrent();
-    return std::make_shared<DmaBufTexture>(m_eglBackend->importDmaBufAsTexture(attributes.value()), std::move(attributes.value()));
 }
 
 static wl_buffer *importDmaBufBuffer(WaylandDisplay *display, const DmaBufAttributes *attributes)

@@ -21,8 +21,6 @@
 
 #include <memory>
 
-struct gbm_bo;
-
 namespace KWin
 {
 
@@ -52,8 +50,6 @@ public:
     std::unique_ptr<OpenGLBackend> createOpenGLBackend() override;
     EglDisplay *sceneEglDisplayObject() const override;
 
-    std::optional<DmaBufParams> testCreateDmaBuf(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers) override;
-    std::shared_ptr<DmaBufTexture> createDmaBufTexture(const QSize &size, quint32 format, const uint64_t modifier) override;
     bool initialize() override;
 
     Outputs outputs() const override;
@@ -108,8 +104,6 @@ private:
     std::vector<std::unique_ptr<DrmGpu>> m_gpus;
     std::unique_ptr<DpmsInputEventFilter> m_dpmsFilter;
     DrmRenderBackend *m_renderBackend = nullptr;
-
-    gbm_bo *createBo(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers);
 };
 
 }

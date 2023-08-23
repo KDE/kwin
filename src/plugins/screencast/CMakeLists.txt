@@ -4,6 +4,7 @@ target_sources(screencast PRIVATE
     outputscreencastsource.cpp
     pipewirecore.cpp
     regionscreencastsource.cpp
+    screencastdmabuftexture.cpp
     screencastmanager.cpp
     screencastsource.cpp
     screencaststream.cpp

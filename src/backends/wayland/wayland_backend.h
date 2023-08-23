@@ -26,7 +26,6 @@
 struct wl_buffer;
 struct wl_display;
 struct gbm_device;
-struct gbm_bo;
 
 namespace KWayland
 {
@@ -242,9 +241,6 @@ public:
     void removeVirtualOutput(Output *output) override;
 
     wl_buffer *importBuffer(GraphicsBuffer *graphicsBuffer);
-
-    std::optional<DmaBufParams> testCreateDmaBuf(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers) override;
-    std::shared_ptr<DmaBufTexture> createDmaBufTexture(const QSize &size, quint32 format, uint64_t modifier) override;
 
     gbm_device *gbmDevice() const
     {

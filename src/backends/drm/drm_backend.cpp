@@ -13,7 +13,6 @@
 #include "backends/libinput/libinputbackend.h"
 #include "core/outputconfiguration.h"
 #include "core/session.h"
-#include "dmabuftexture.h"
 #include "drm_egl_backend.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
@@ -22,7 +21,6 @@
 #include "drm_qpainter_backend.h"
 #include "drm_render_backend.h"
 #include "drm_virtual_output.h"
-#include "gbm_dmabuf.h"
 #include "utils/udev.h"
 // KF5
 #include <KCoreAddons>
@@ -348,53 +346,6 @@ void DrmBackend::removeVirtualOutput(Output *output)
     }
     primaryGpu()->removeVirtualOutput(virtualOutput);
     Q_EMIT outputsQueried();
-}
-
-gbm_bo *DrmBackend::createBo(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers)
-{
-    const auto eglBackend = dynamic_cast<EglGbmBackend *>(m_renderBackend);
-    if (!eglBackend || !primaryGpu()->gbmDevice()) {
-        return nullptr;
-    }
-
-    return createGbmBo(primaryGpu()->gbmDevice(), size, format, modifiers);
-}
-
-std::optional<DmaBufParams> DrmBackend::testCreateDmaBuf(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers)
-{
-    gbm_bo *bo = createBo(size, format, modifiers);
-    if (!bo) {
-        return {};
-    }
-
-    auto ret = dmaBufParamsForBo(bo);
-    gbm_bo_destroy(bo);
-    return ret;
-}
-
-std::shared_ptr<DmaBufTexture> DrmBackend::createDmaBufTexture(const QSize &size, quint32 format, uint64_t modifier)
-{
-    QVector<uint64_t> mods = {modifier};
-    gbm_bo *bo = createBo(size, format, mods);
-    if (!bo) {
-        return {};
-    }
-
-    // The bo will be kept around until the last fd is closed.
-    std::optional<DmaBufAttributes> attributes = dmaBufAttributesForBo(bo);
-    gbm_bo_destroy(bo);
-
-    if (!attributes.has_value()) {
-        return nullptr;
-    }
-
-    const auto eglBackend = static_cast<EglGbmBackend *>(m_renderBackend);
-    eglBackend->makeCurrent();
-    if (auto texture = eglBackend->importDmaBufAsTexture(attributes.value())) {
-        return std::make_shared<DmaBufTexture>(texture, std::move(attributes.value()));
-    } else {
-        return nullptr;
-    }
 }
 
 DrmGpu *DrmBackend::primaryGpu() const

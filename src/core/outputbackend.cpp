@@ -9,7 +9,6 @@
 
 #include "outputbackend.h"
 
-#include "dmabuftexture.h"
 #include "inputbackend.h"
 #include "output.h"
 #include "outputconfiguration.h"
@@ -42,21 +41,6 @@ std::unique_ptr<OpenGLBackend> OutputBackend::createOpenGLBackend()
 std::unique_ptr<QPainterBackend> OutputBackend::createQPainterBackend()
 {
     return nullptr;
-}
-
-std::optional<DmaBufParams> OutputBackend::testCreateDmaBuf(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers)
-{
-    return {};
-}
-
-std::shared_ptr<DmaBufTexture> OutputBackend::createDmaBufTexture(const QSize &size, quint32 format, uint64_t modifier)
-{
-    return {};
-}
-
-std::shared_ptr<DmaBufTexture> OutputBackend::createDmaBufTexture(const DmaBufParams &attribs)
-{
-    return createDmaBufTexture({attribs.width, attribs.height}, attribs.format, attribs.modifier);
 }
 
 bool OutputBackend::applyOutputChanges(const OutputConfiguration &config)
