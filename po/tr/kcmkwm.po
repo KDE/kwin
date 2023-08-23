@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-15 02:18+0000\n"
-"PO-Revision-Date: 2023-04-04 00:53+0300\n"
+"PO-Revision-Date: 2023-08-22 22:59+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 23.11.70\n"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:17
@@ -723,7 +723,7 @@ msgid ""
 "This is the delay after which the window the mouse pointer is over will "
 "automatically receive focus."
 msgstr ""
-"Bu, arka plandaki bir pencerenin fare işaretçisinin altında kalmasıyla aktif "
+"Bu, arka plandaki bir pencerenin fare işaretçisinin altında kalmasıyla etkin "
 "olacağı gecikme süresidir."
 
 #. i18n: ectx: property (text), widget (QLabel, focusStealingLabel)
@@ -884,7 +884,7 @@ msgid ""
 "automatically come to the front."
 msgstr ""
 "Bu arka plandaki bir pencerenin fare işaretçisinin üzerinde ne kadar "
-"kalmasıyla aktif olacağı süreyi belirler."
+"kalmasıyla etkin olacağı süreyi belirler."
 
 #. i18n: ectx: property (text), widget (QLabel, multiscreenBehaviorLabel)
 #: focus.ui:196
