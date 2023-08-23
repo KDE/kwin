@@ -364,9 +364,9 @@ class QtScriptWorkspaceWrapper : public WorkspaceWrapper
     Q_OBJECT
 public:
     /**
-     * List of Clients currently managed by KWin.
+     * List of windows currently managed by KWin.
      */
-    Q_INVOKABLE QList<KWin::Window *> clientList() const;
+    Q_INVOKABLE QList<KWin::Window *> windowList() const;
 
     explicit QtScriptWorkspaceWrapper(QObject *parent = nullptr);
 };
@@ -375,11 +375,11 @@ class DeclarativeScriptWorkspaceWrapper : public WorkspaceWrapper
 {
     Q_OBJECT
 
-    Q_PROPERTY(QQmlListProperty<KWin::Window> clients READ clients)
+    Q_PROPERTY(QQmlListProperty<KWin::Window> windows READ windows)
 public:
-    QQmlListProperty<KWin::Window> clients();
-    static qsizetype countClientList(QQmlListProperty<KWin::Window> *clients);
-    static KWin::Window *atClientList(QQmlListProperty<KWin::Window> *clients, qsizetype index);
+    QQmlListProperty<KWin::Window> windows();
+    static qsizetype countWindowList(QQmlListProperty<KWin::Window> *window);
+    static KWin::Window *atWindowList(QQmlListProperty<KWin::Window> *windows, qsizetype index);
 
     explicit DeclarativeScriptWorkspaceWrapper(QObject *parent = nullptr);
 };

@@ -35,4 +35,4 @@ function setup(window) {
 }
 
 workspace.windowAdded.connect(setup);
-workspace.clientList().forEach(setup);
+workspace.windowList().forEach(setup);

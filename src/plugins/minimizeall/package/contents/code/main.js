@@ -16,7 +16,7 @@ function isRelevant(client) {
 }
 
 function minimizeAllWindows() {
-    var allClients = workspace.clientList();
+    var allClients = workspace.windowList();
     var relevantClients = [];
     var minimize = false;
 

@@ -408,22 +408,22 @@ QtScriptWorkspaceWrapper::QtScriptWorkspaceWrapper(QObject *parent)
 {
 }
 
-QList<KWin::Window *> QtScriptWorkspaceWrapper::clientList() const
+QList<KWin::Window *> QtScriptWorkspaceWrapper::windowList() const
 {
     return workspace()->windows();
 }
 
-QQmlListProperty<KWin::Window> DeclarativeScriptWorkspaceWrapper::clients()
+QQmlListProperty<KWin::Window> DeclarativeScriptWorkspaceWrapper::windows()
 {
-    return QQmlListProperty<KWin::Window>(this, nullptr, &DeclarativeScriptWorkspaceWrapper::countClientList, &DeclarativeScriptWorkspaceWrapper::atClientList);
+    return QQmlListProperty<KWin::Window>(this, nullptr, &DeclarativeScriptWorkspaceWrapper::countWindowList, &DeclarativeScriptWorkspaceWrapper::atWindowList);
 }
 
-qsizetype DeclarativeScriptWorkspaceWrapper::countClientList(QQmlListProperty<KWin::Window> *clients)
+qsizetype DeclarativeScriptWorkspaceWrapper::countWindowList(QQmlListProperty<KWin::Window> *windows)
 {
     return workspace()->windows().size();
 }
 
-KWin::Window *DeclarativeScriptWorkspaceWrapper::atClientList(QQmlListProperty<KWin::Window> *clients, qsizetype index)
+KWin::Window *DeclarativeScriptWorkspaceWrapper::atWindowList(QQmlListProperty<KWin::Window> *windows, qsizetype index)
 {
     return workspace()->windows().at(index);
 }
