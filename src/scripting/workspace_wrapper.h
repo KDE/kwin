@@ -82,12 +82,6 @@ Q_SIGNALS:
      */
     void desktopLayoutChanged();
     /**
-     * The demands attention state for Client @p c changed to @p set.
-     * @param c The Client for which demands attention changed
-     * @param set New value of demands attention
-     */
-    void clientDemandsAttentionChanged(KWin::Window *client, bool set);
-    /**
      * Emitted when the output list changes, e.g. an output is connected or removed.
      */
     void screensChanged();

@@ -548,7 +548,6 @@ Q_SIGNALS:
     void windowAdded(KWin::Window *);
     void windowRemoved(KWin::Window *);
     void windowActivated(KWin::Window *);
-    void windowDemandsAttentionChanged(KWin::Window *, bool);
     void windowMinimizedChanged(KWin::Window *);
     void groupAdded(KWin::Group *);
     void deletedRemoved(KWin::Window *);

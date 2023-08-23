@@ -631,7 +631,6 @@ void Workspace::windowAttentionChanged(Window *window, bool set)
     } else {
         attention_chain.removeAll(window);
     }
-    Q_EMIT windowDemandsAttentionChanged(window, set);
 }
 
 //********************************************
