@@ -8,8 +8,6 @@
 #include "expoarea.h"
 #include "expolayout.h"
 
-#include <QQmlEngine>
-
 void EffectKitExtensionPlugin::registerTypes(const char *uri)
 {
     qmlRegisterType<KWin::ExpoArea>(uri, 1, 0, "ExpoArea");

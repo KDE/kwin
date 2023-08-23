@@ -10,7 +10,6 @@ import QtQuick.Window
 import org.kde.kirigami 2.20 as Kirigami
 import org.kde.kwin as KWinComponents
 import org.kde.kwin.private.effects
-import org.kde.kirigami 2.20 as Kirigami
 
 FocusScope {
     id: heap
