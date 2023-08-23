@@ -370,12 +370,12 @@ void TestXdgShellWindow::testFullscreen()
     QVERIFY(surfaceConfigureRequestedSpy.wait());
 
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
-    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(500, 250), Qt::blue);
     QVERIFY(window);
     QVERIFY(window->isActive());
     QCOMPARE(window->layer(), NormalLayer);
     QVERIFY(!window->isFullScreen());
-    QCOMPARE(window->clientSize(), QSize(100, 50));
+    QCOMPARE(window->clientSize(), QSize(500, 250));
     QCOMPARE(window->isDecorated(), decoMode == Test::XdgToplevelDecorationV1::mode_server_side);
     QCOMPARE(window->clientSizeToFrameSize(window->clientSize()), window->size());
 
@@ -412,14 +412,14 @@ void TestXdgShellWindow::testFullscreen()
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 4);
     states = toplevelConfigureRequestedSpy.last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(!(states & Test::XdgToplevel::State::Fullscreen));
-    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), QSize(100, 50));
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), QSize(500, 250));
 
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), Qt::blue);
 
     QVERIFY(fullScreenChangedSpy.wait());
     QCOMPARE(fullScreenChangedSpy.count(), 2);
-    QCOMPARE(window->clientSize(), QSize(100, 50));
+    QCOMPARE(window->clientSize(), QSize(500, 250));
     QVERIFY(!window->isFullScreen());
     QCOMPARE(window->isDecorated(), decoMode == Test::XdgToplevelDecorationV1::mode_server_side);
     QCOMPARE(window->layer(), NormalLayer);
