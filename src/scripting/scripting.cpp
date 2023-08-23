@@ -34,6 +34,7 @@
 // KDE
 #include <KConfigGroup>
 #include <KGlobalAccel>
+#include <KLocalizedContext>
 #include <KPackage/PackageLoader>
 // Qt
 #include <QDBusConnection>
@@ -626,6 +627,7 @@ KWin::Scripting::Scripting(QObject *parent)
     , m_workspaceWrapper(new QtScriptWorkspaceWrapper(this))
 {
     m_qmlEngine->setProperty("_kirigamiTheme", QStringLiteral("KirigamiPlasmaStyle"));
+    m_qmlEngine->rootContext()->setContextObject(new KLocalizedContext(m_qmlEngine));
     init();
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/Scripting"), this, QDBusConnection::ExportScriptableContents | QDBusConnection::ExportScriptableInvokables);
     connect(Workspace::self(), &Workspace::configChanged, this, &Scripting::start);
