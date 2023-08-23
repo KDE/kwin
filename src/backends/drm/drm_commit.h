@@ -72,6 +72,7 @@ public:
     void pageFlipped(std::chrono::nanoseconds timestamp) const override;
 
     bool areBuffersReadable() const;
+    void setDeadline(std::chrono::steady_clock::time_point deadline);
     std::optional<bool> isVrr() const;
     const std::unordered_set<DrmPlane *> &modifiedPlanes() const;
 

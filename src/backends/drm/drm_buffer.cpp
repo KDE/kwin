@@ -15,6 +15,10 @@
 
 // system
 #include <sys/mman.h>
+#if defined(Q_OS_LINUX)
+#include <linux/dma-buf.h>
+#include <linux/sync_file.h>
+#endif
 // c++
 #include <cerrno>
 // drm
@@ -46,17 +50,16 @@ DrmFramebuffer::DrmFramebuffer(DrmGpu *gpu, uint32_t fbId, GraphicsBuffer *buffe
         // buffer readability checks cause frames to be wrongly delayed on some Intel laptops
         // See https://gitlab.freedesktop.org/drm/intel/-/issues/9415
         m_readable = true;
-    } else {
-#if defined(Q_OS_LINUX) && defined(DMA_BUF_IOCTL_EXPORT_SYNC_FILE)
-        dma_buf_export_sync_file req{
-            .flags = DMA_BUF_SYNC_READ,
-            .fd = -1,
-        };
-        if (drmIoctl(buffer->dmabufAttributes()->fd[0].get(), DMA_BUF_IOCTL_EXPORT_SYNC_FILE, &req) == 0) {
-            m_syncFd = FileDescriptor{req.fd};
-        }
-#endif
     }
+#ifdef DMA_BUF_IOCTL_EXPORT_SYNC_FILE
+    dma_buf_export_sync_file req{
+        .flags = DMA_BUF_SYNC_READ,
+        .fd = -1,
+    };
+    if (drmIoctl(buffer->dmabufAttributes()->fd[0].get(), DMA_BUF_IOCTL_EXPORT_SYNC_FILE, &req) == 0) {
+        m_syncFd = FileDescriptor{req.fd};
+    }
+#endif
 }
 
 DrmFramebuffer::~DrmFramebuffer()
@@ -99,5 +102,19 @@ bool DrmFramebuffer::isReadable()
                    return !fd.isValid() || fd.isReadable();
                });
     }
+}
+
+void DrmFramebuffer::setDeadline(std::chrono::steady_clock::time_point deadline)
+{
+#ifdef SYNC_IOC_SET_DEADLINE
+    if (!m_syncFd.isValid()) {
+        return;
+    }
+    sync_set_deadline args{
+        .deadline_ns = uint64_t(deadline.time_since_epoch().count()),
+        .pad = 0,
+    };
+    drmIoctl(m_syncFd.get(), SYNC_IOC_SET_DEADLINE, &args);
+#endif
 }
 }

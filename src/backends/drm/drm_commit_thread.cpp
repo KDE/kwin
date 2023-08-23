@@ -193,6 +193,7 @@ void DrmCommitThread::addCommit(std::unique_ptr<DrmAtomicCommit> &&commit)
     } else {
         m_targetPageflipTime = estimateNextVblank(now);
     }
+    m_commits.back()->setDeadline(m_targetPageflipTime - s_safetyMargin);
     m_commitPending.notify_all();
 }
 

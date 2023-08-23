@@ -12,6 +12,8 @@
 #include "core/graphicsbuffer.h"
 #include "utils/filedescriptor.h"
 
+#include <chrono>
+
 namespace KWin
 {
 
@@ -34,6 +36,7 @@ public:
     bool isReadable();
 
     const FileDescriptor &syncFd() const;
+    void setDeadline(std::chrono::steady_clock::time_point deadline);
 
 protected:
     const uint32_t m_framebufferId;

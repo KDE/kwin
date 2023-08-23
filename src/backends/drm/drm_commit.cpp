@@ -155,6 +155,15 @@ bool DrmAtomicCommit::areBuffersReadable() const
     });
 }
 
+void DrmAtomicCommit::setDeadline(std::chrono::steady_clock::time_point deadline)
+{
+    for (const auto &[plane, buffer] : m_buffers) {
+        if (buffer) {
+            buffer->setDeadline(deadline);
+        }
+    }
+}
+
 std::optional<bool> DrmAtomicCommit::isVrr() const
 {
     return m_vrr;
