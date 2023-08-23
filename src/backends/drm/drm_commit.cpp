@@ -126,7 +126,7 @@ bool DrmLegacyCommit::doModeset(DrmConnector *connector, DrmConnectorMode *mode)
 {
     uint32_t connectorId = connector->id();
     if (drmModeSetCrtc(gpu()->fd(), m_pipeline->crtc()->id(), m_buffer->framebufferId(), 0, 0, &connectorId, 1, mode->nativeMode()) == 0) {
-        pageFlipped(std::chrono::steady_clock::now().time_since_epoch());
+        m_pipeline->crtc()->setCurrent(m_buffer);
         return true;
     } else {
         return false;
