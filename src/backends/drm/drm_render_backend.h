@@ -25,7 +25,7 @@ public:
     virtual ~DrmRenderBackend() = default;
 
     virtual std::shared_ptr<DrmPipelineLayer> createPrimaryLayer(DrmPipeline *pipeline) = 0;
-    virtual std::shared_ptr<DrmOverlayLayer> createCursorLayer(DrmPipeline *pipeline) = 0;
+    virtual std::shared_ptr<DrmPipelineLayer> createCursorLayer(DrmPipeline *pipeline) = 0;
     virtual std::shared_ptr<DrmOutputLayer> createLayer(DrmVirtualOutput *output) = 0;
 };
 

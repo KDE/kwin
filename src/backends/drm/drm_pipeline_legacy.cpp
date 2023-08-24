@@ -131,7 +131,6 @@ DrmPipeline::Error DrmPipeline::applyPendingChangesLegacy()
             m_connector->contentType.setEnumLegacy(m_pending.contentType);
         }
         setCursorLegacy();
-        moveCursorLegacy();
     }
     if (!m_connector->dpms.setPropertyLegacy(activePending() ? DRM_MODE_DPMS_ON : DRM_MODE_DPMS_OFF)) {
         qCWarning(KWIN_DRM) << "Setting legacy dpms failed!" << strerror(errno);
@@ -144,7 +143,7 @@ bool DrmPipeline::setCursorLegacy()
 {
     const auto bo = cursorLayer()->currentBuffer();
     uint32_t handle = 0;
-    if (bo && bo->buffer() && cursorLayer()->isVisible()) {
+    if (bo && bo->buffer() && cursorLayer()->isEnabled()) {
         const DmaBufAttributes *attributes = bo->buffer()->dmabufAttributes();
         if (drmPrimeFDToHandle(gpu()->fd(), attributes->fd[0].get(), &handle) != 0) {
             qCWarning(KWIN_DRM) << "drmPrimeFDToHandle() failed";
@@ -155,13 +154,13 @@ bool DrmPipeline::setCursorLegacy()
     struct drm_mode_cursor2 arg = {
         .flags = DRM_MODE_CURSOR_BO | DRM_MODE_CURSOR_MOVE,
         .crtc_id = m_pending.crtc->id(),
-        .x = m_cursorLayer->position().x(),
-        .y = m_cursorLayer->position().y(),
+        .x = int32_t(m_cursorLayer->position().x()),
+        .y = int32_t(m_cursorLayer->position().y()),
         .width = (uint32_t)gpu()->cursorSize().width(),
         .height = (uint32_t)gpu()->cursorSize().height(),
         .handle = handle,
-        .hot_x = m_pending.cursorHotspot.x(),
-        .hot_y = m_pending.cursorHotspot.y(),
+        .hot_x = int32_t(m_cursorLayer->hotspot().x()),
+        .hot_y = int32_t(m_cursorLayer->hotspot().y()),
     };
     const int ret = drmIoctl(gpu()->fd(), DRM_IOCTL_MODE_CURSOR2, &arg);
 
@@ -170,10 +169,4 @@ bool DrmPipeline::setCursorLegacy()
     }
     return ret == 0;
 }
-
-bool DrmPipeline::moveCursorLegacy()
-{
-    return drmModeMoveCursor(gpu()->fd(), m_pending.crtc->id(), cursorLayer()->position().x(), cursorLayer()->position().y()) == 0;
-}
-
 }

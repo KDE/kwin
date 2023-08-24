@@ -39,10 +39,27 @@ public:
 
     QSizeF size() const;
     void setSize(const QSizeF &size);
+    /**
+     * For most drm drivers, the buffer used for the cursor has to have a fixed size.
+     * If such a fixed size is required by the backend, this function should return it
+     */
+    virtual std::optional<QSize> fixedSize() const;
 
     QRegion repaints() const;
     void resetRepaints();
     void addRepaint(const QRegion &region);
+
+    /**
+     * @arg position in device coordinates
+     */
+    void setPosition(const QPointF &position);
+    QPointF position() const;
+
+    /**
+     * Enables or disables this layer. Note that disabling the primary layer will cause problems
+     */
+    void setEnabled(bool enable);
+    bool isEnabled() const;
 
     virtual std::optional<OutputLayerBeginFrameInfo> beginFrame() = 0;
     virtual bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) = 0;
@@ -66,8 +83,10 @@ public:
 private:
     QRegion m_repaints;
     QPointF m_hotspot;
+    QPointF m_position;
     QSizeF m_size;
     qreal m_scale = 1.0;
+    bool m_enabled = false;
 };
 
 } // namespace KWin

@@ -29,11 +29,6 @@
 #include <libdrm/drm_mode.h>
 #include <xf86drm.h>
 
-#include "composite.h"
-#include "core/renderlayer.h"
-#include "cursorsource.h"
-#include "scene/cursorscene.h"
-
 namespace KWin
 {
 
@@ -137,97 +132,9 @@ DrmLease *DrmOutput::lease() const
     return m_lease;
 }
 
-bool DrmOutput::setCursor(CursorSource *source)
+bool DrmOutput::updateCursorLayer()
 {
-    static bool valid;
-    static const bool forceSoftwareCursor = qEnvironmentVariableIntValue("KWIN_FORCE_SW_CURSOR", &valid) == 1 && valid;
-    // hardware cursors are broken with the NVidia proprietary driver
-    if (forceSoftwareCursor || (!valid && m_gpu->isNVidia())) {
-        m_setCursorSuccessful = false;
-        return false;
-    }
-    const auto layer = m_pipeline->cursorLayer();
-    if (!m_pipeline->crtc() || !layer) {
-        return false;
-    }
-    m_cursor.source = source;
-    if (!m_cursor.source || m_cursor.source->size().isEmpty()) {
-        if (layer->isVisible()) {
-            layer->setVisible(false);
-            m_pipeline->setCursor();
-        }
-        return true;
-    }
-    bool rendered = false;
-    const QMatrix4x4 monitorMatrix = logicalToNativeMatrix(rect(), scale(), transform());
-    const QSizeF cursorSize = m_cursor.source->size();
-    const QRectF cursorRect = QRectF(m_cursor.position, cursorSize);
-    const QRectF nativeCursorRect = monitorMatrix.mapRect(cursorRect);
-    if (nativeCursorRect.width() <= m_gpu->cursorSize().width() && nativeCursorRect.height() <= m_gpu->cursorSize().height()) {
-        if (auto beginInfo = layer->beginFrame()) {
-            const RenderTarget &renderTarget = beginInfo->renderTarget;
-
-            RenderLayer renderLayer(m_renderLoop.get());
-            renderLayer.setDelegate(std::make_unique<SceneDelegate>(Compositor::self()->cursorScene(), this));
-            renderLayer.setOutputLayer(layer);
-
-            renderLayer.delegate()->prePaint();
-            renderLayer.delegate()->paint(renderTarget, infiniteRegion());
-            renderLayer.delegate()->postPaint();
-
-            rendered = layer->endFrame(infiniteRegion(), infiniteRegion());
-        }
-    }
-    if (!rendered) {
-        if (layer->isVisible()) {
-            layer->setVisible(false);
-            m_pipeline->setCursor();
-        }
-        m_setCursorSuccessful = false;
-        return false;
-    }
-
-    const QSize layerSize = m_gpu->cursorSize() / scale();
-    const QRectF layerRect = monitorMatrix.mapRect(QRectF(m_cursor.position, layerSize));
-    layer->setVisible(cursorRect.intersects(rect()));
-    if (layer->isVisible()) {
-        m_setCursorSuccessful = m_pipeline->setCursor(logicalToNativeMatrix(QRectF(QPoint(), layerRect.size()), scale(), transform()).map(m_cursor.source->hotspot()).toPoint());
-        layer->setVisible(m_setCursorSuccessful);
-    }
-    return m_setCursorSuccessful;
-}
-
-bool DrmOutput::moveCursor(const QPointF &position)
-{
-    if (!m_setCursorSuccessful || !m_pipeline->crtc()) {
-        return false;
-    }
-    m_cursor.position = position;
-
-    const QSizeF cursorSize = m_cursor.source ? m_cursor.source->size() : QSize(0, 0);
-    const QRectF cursorRect = QRectF(m_cursor.position, cursorSize);
-
-    if (!cursorRect.intersects(rect())) {
-        const auto layer = m_pipeline->cursorLayer();
-        if (layer->isVisible()) {
-            layer->setVisible(false);
-            m_pipeline->setCursor();
-        }
-        return true;
-    }
-    const QMatrix4x4 monitorMatrix = logicalToNativeMatrix(rect(), scale(), transform());
-    const QSizeF layerSize = m_gpu->cursorSize() / scale();
-    const QRectF layerRect = monitorMatrix.mapRect(QRectF(m_cursor.position, layerSize));
-    const auto layer = m_pipeline->cursorLayer();
-    const bool wasVisible = layer->isVisible();
-    layer->setVisible(true);
-    layer->setPosition(layerRect.topLeft().toPoint());
-    m_moveCursorSuccessful = m_pipeline->moveCursor();
-    layer->setVisible(m_moveCursorSuccessful);
-    if (!m_moveCursorSuccessful || !wasVisible) {
-        m_pipeline->setCursor();
-    }
-    return m_moveCursorSuccessful;
+    return m_pipeline->updateCursor();
 }
 
 QList<std::shared_ptr<OutputMode>> DrmOutput::getModes() const

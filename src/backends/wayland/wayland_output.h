@@ -43,8 +43,7 @@ public:
     KWayland::Client::Pointer *pointer() const;
     void setPointer(KWayland::Client::Pointer *pointer);
 
-    void enable();
-    void disable();
+    void setEnabled(bool enable);
     void update(wl_buffer *buffer, qreal scale, const QPoint &hotspot);
 
 private:
@@ -66,8 +65,7 @@ public:
     ~WaylandOutput() override;
 
     RenderLoop *renderLoop() const override;
-    bool setCursor(CursorSource *source) override;
-    bool moveCursor(const QPointF &position) override;
+    bool updateCursorLayer() override;
 
     void init(const QSize &pixelSize, qreal scale);
 

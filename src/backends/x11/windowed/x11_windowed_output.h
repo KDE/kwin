@@ -102,8 +102,7 @@ public:
      */
     QPointF mapFromGlobal(const QPointF &pos) const;
 
-    bool setCursor(CursorSource *source) override;
-    bool moveCursor(const QPointF &position) override;
+    bool updateCursorLayer() override;
 
     QRegion exposedArea() const;
     void addExposedArea(const QRect &rect);

@@ -58,7 +58,7 @@ public:
     void init() override;
     bool prefer10bpc() const override;
     std::shared_ptr<DrmPipelineLayer> createPrimaryLayer(DrmPipeline *pipeline) override;
-    std::shared_ptr<DrmOverlayLayer> createCursorLayer(DrmPipeline *pipeline) override;
+    std::shared_ptr<DrmPipelineLayer> createCursorLayer(DrmPipeline *pipeline) override;
     std::shared_ptr<DrmOutputLayer> createLayer(DrmVirtualOutput *output) override;
 
     std::pair<std::shared_ptr<KWin::GLTexture>, ColorDescription> textureForOutput(Output *requestedOutput) const override;

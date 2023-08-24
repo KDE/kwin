@@ -25,7 +25,6 @@
 namespace KWin
 {
 
-class CursorSource;
 class EffectScreenImpl;
 class RenderLoop;
 class OutputConfiguration;
@@ -303,8 +302,7 @@ public:
     virtual bool setGammaRamp(const std::shared_ptr<ColorTransformation> &transformation);
     virtual bool setChannelFactors(const QVector3D &rgb);
 
-    virtual bool setCursor(CursorSource *source);
-    virtual bool moveCursor(const QPointF &position);
+    virtual bool updateCursorLayer();
 
 Q_SIGNALS:
     /**

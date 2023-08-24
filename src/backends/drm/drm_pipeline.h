@@ -33,7 +33,6 @@ class DrmCrtc;
 class GammaRamp;
 class DrmConnectorMode;
 class DrmPipelineLayer;
-class DrmOverlayLayer;
 class DrmCommitThread;
 
 class DrmGammaRamp
@@ -79,8 +78,7 @@ public:
     void applyPendingChanges();
     void revertPendingChanges();
 
-    bool setCursor(const QPoint &hotspot = QPoint());
-    bool moveCursor();
+    bool updateCursor();
 
     DrmConnector *connector() const;
     DrmCrtc *currentCrtc() const;
@@ -98,9 +96,9 @@ public:
     void setOutput(DrmOutput *output);
     DrmOutput *output() const;
 
-    void setLayers(const std::shared_ptr<DrmPipelineLayer> &primaryLayer, const std::shared_ptr<DrmOverlayLayer> &cursorLayer);
+    void setLayers(const std::shared_ptr<DrmPipelineLayer> &primaryLayer, const std::shared_ptr<DrmPipelineLayer> &cursorLayer);
     DrmPipelineLayer *primaryLayer() const;
-    DrmOverlayLayer *cursorLayer() const;
+    DrmPipelineLayer *cursorLayer() const;
 
     DrmCrtc *crtc() const;
     std::shared_ptr<DrmConnectorMode> mode() const;
@@ -153,7 +151,6 @@ private:
     Error legacyModeset();
     Error applyPendingChangesLegacy();
     bool setCursorLegacy();
-    bool moveCursorLegacy();
     static Error commitPipelinesLegacy(const QVector<DrmPipeline *> &pipelines, CommitMode mode);
 
     // atomic modesetting only
@@ -190,8 +187,6 @@ private:
         double sdrBrightness = 200;
         ColorDescription colorDescription = ColorDescription::sRGB;
 
-        QPoint cursorHotspot;
-
         // the transformation that buffers submitted to the pipeline should have
         DrmPlane::Transformations renderOrientation = DrmPlane::Transformation::Rotate0;
     };
@@ -204,7 +199,7 @@ private:
 
     std::unique_ptr<DrmCommitThread> m_commitThread;
     std::shared_ptr<DrmPipelineLayer> m_primaryLayer;
-    std::shared_ptr<DrmOverlayLayer> m_cursorLayer;
+    std::shared_ptr<DrmPipelineLayer> m_cursorLayer;
 };
 
 }

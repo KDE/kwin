@@ -237,9 +237,9 @@ bool DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commit)
 
     if (auto plane = m_pending.crtc->cursorPlane()) {
         const auto layer = cursorLayer();
-        plane->set(commit, QPoint(0, 0), gpu()->cursorSize(), QRect(layer->position(), gpu()->cursorSize()));
-        commit->addProperty(plane->crtcId, layer->isVisible() ? m_pending.crtc->id() : 0);
-        commit->addBuffer(plane, layer->isVisible() ? layer->currentBuffer() : nullptr);
+        plane->set(commit, QPoint(0, 0), gpu()->cursorSize(), QRect(layer->position().toPoint(), gpu()->cursorSize()));
+        commit->addProperty(plane->crtcId, layer->isEnabled() ? m_pending.crtc->id() : 0);
+        commit->addBuffer(plane, layer->isEnabled() ? layer->currentBuffer() : nullptr);
     }
     return true;
 }
@@ -361,10 +361,9 @@ void DrmPipeline::atomicCommitSuccessful()
     m_current = m_pending;
 }
 
-bool DrmPipeline::setCursor(const QPoint &hotspot)
+bool DrmPipeline::updateCursor()
 {
     bool result;
-    m_pending.cursorHotspot = hotspot;
     // explicitly check for the cursor plane and not for AMS, as we might not always have one
     if (m_pending.crtc->cursorPlane()) {
         result = commitPipelines({this}, CommitMode::CommitUpdateOnly) == Error::None;
@@ -374,26 +373,6 @@ bool DrmPipeline::setCursor(const QPoint &hotspot)
     if (result) {
         m_next = m_pending;
         if (result) {
-            m_output->renderLoop()->scheduleRepaint();
-        }
-    } else {
-        m_pending = m_next;
-    }
-    return result;
-}
-
-bool DrmPipeline::moveCursor()
-{
-    bool result;
-    // explicitly check for the cursor plane and not for AMS, as we might not always have one
-    if (m_pending.crtc->cursorPlane()) {
-        result = commitPipelines({this}, CommitMode::CommitUpdateOnly) == Error::None;
-    } else {
-        result = moveCursorLegacy();
-    }
-    if (result) {
-        m_next = m_pending;
-        if (m_output) {
             m_output->renderLoop()->scheduleRepaint();
         }
     } else {
@@ -550,7 +529,7 @@ DrmPipelineLayer *DrmPipeline::primaryLayer() const
     return m_primaryLayer.get();
 }
 
-DrmOverlayLayer *DrmPipeline::cursorLayer() const
+DrmPipelineLayer *DrmPipeline::cursorLayer() const
 {
     return m_cursorLayer.get();
 }
@@ -623,7 +602,7 @@ void DrmPipeline::setEnable(bool enable)
     m_pending.enabled = enable;
 }
 
-void DrmPipeline::setLayers(const std::shared_ptr<DrmPipelineLayer> &primaryLayer, const std::shared_ptr<DrmOverlayLayer> &cursorLayer)
+void DrmPipeline::setLayers(const std::shared_ptr<DrmPipelineLayer> &primaryLayer, const std::shared_ptr<DrmPipelineLayer> &cursorLayer)
 {
     m_primaryLayer = primaryLayer;
     m_cursorLayer = cursorLayer;

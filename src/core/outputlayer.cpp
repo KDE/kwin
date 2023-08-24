@@ -44,6 +44,11 @@ void OutputLayer::setSize(const QSizeF &size)
     m_size = size;
 }
 
+std::optional<QSize> OutputLayer::fixedSize() const
+{
+    return std::nullopt;
+}
+
 QRegion OutputLayer::repaints() const
 {
     return m_repaints;
@@ -62,6 +67,26 @@ void OutputLayer::resetRepaints()
 bool OutputLayer::scanout(SurfaceItem *surfaceItem)
 {
     return false;
+}
+
+void OutputLayer::setPosition(const QPointF &position)
+{
+    m_position = position;
+}
+
+QPointF OutputLayer::position() const
+{
+    return m_position;
+}
+
+void OutputLayer::setEnabled(bool enable)
+{
+    m_enabled = enable;
+}
+
+bool OutputLayer::isEnabled() const
+{
+    return m_enabled;
 }
 
 } // namespace KWin

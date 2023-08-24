@@ -23,7 +23,7 @@ namespace KWin
 
 class EglGbmBackend;
 
-class EglGbmCursorLayer : public DrmOverlayLayer
+class EglGbmCursorLayer : public DrmPipelineLayer
 {
 public:
     EglGbmCursorLayer(EglGbmBackend *eglBackend, DrmPipeline *pipeline);

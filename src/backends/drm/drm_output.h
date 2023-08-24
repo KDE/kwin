@@ -51,8 +51,7 @@ public:
     void updateModes();
     void updateDpmsMode(DpmsMode dpmsMode);
 
-    bool setCursor(CursorSource *source) override;
-    bool moveCursor(const QPointF &position) override;
+    bool updateCursorLayer() override;
 
     DrmLease *lease() const;
     bool addLeaseObjects(QVector<uint32_t> &objectList);
@@ -73,15 +72,9 @@ private:
     DrmPipeline *m_pipeline;
     const std::shared_ptr<DrmConnector> m_connector;
 
-    bool m_setCursorSuccessful = false;
-    bool m_moveCursorSuccessful = false;
     QTimer m_turnOffTimer;
     DrmLease *m_lease = nullptr;
 
-    struct {
-        QPointer<CursorSource> source;
-        QPointF position;
-    } m_cursor;
     QVector3D m_channelFactors = {1, 1, 1};
 };
 

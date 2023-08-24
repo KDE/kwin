@@ -15,12 +15,9 @@
 
 #include "composite.h"
 #include "core/graphicsbuffer.h"
+#include "core/outputlayer.h"
 #include "core/renderbackend.h"
-#include "core/renderlayer.h"
 #include "core/renderloop_p.h"
-#include "cursorsource.h"
-#include "libkwineffects/renderviewport.h"
-#include "scene/cursorscene.h"
 
 #include <NETWM>
 
@@ -344,38 +341,15 @@ QPointF X11WindowedOutput::mapFromGlobal(const QPointF &pos) const
     return (pos - hostPosition() + internalPosition()) / scale();
 }
 
-bool X11WindowedOutput::setCursor(CursorSource *source)
+bool X11WindowedOutput::updateCursorLayer()
 {
-    OutputLayer *cursorLayer = Compositor::self()->backend()->cursorLayer(this);
-    if (source) {
-        cursorLayer->setSize(source->size());
-        cursorLayer->setHotspot(source->hotspot());
+    const auto layer = Compositor::self()->backend()->cursorLayer(this);
+    if (layer->isEnabled()) {
+        xcb_xfixes_show_cursor(m_backend->connection(), m_window);
+        // the cursor layers update the image on their own already
     } else {
-        cursorLayer->setSize(QSize());
-        cursorLayer->setHotspot(QPoint());
+        xcb_xfixes_hide_cursor(m_backend->connection(), m_window);
     }
-
-    std::optional<OutputLayerBeginFrameInfo> beginInfo = cursorLayer->beginFrame();
-    if (!beginInfo) {
-        return false;
-    }
-
-    const RenderTarget &renderTarget = beginInfo->renderTarget;
-
-    RenderLayer renderLayer(m_renderLoop.get());
-    renderLayer.setDelegate(std::make_unique<SceneDelegate>(Compositor::self()->cursorScene(), this));
-
-    renderLayer.delegate()->prePaint();
-    renderLayer.delegate()->paint(renderTarget, infiniteRegion());
-    renderLayer.delegate()->postPaint();
-
-    cursorLayer->endFrame(infiniteRegion(), infiniteRegion());
-    return true;
-}
-
-bool X11WindowedOutput::moveCursor(const QPointF &position)
-{
-    // The cursor position is controlled by the host compositor.
     return true;
 }
 

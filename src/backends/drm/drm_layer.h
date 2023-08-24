@@ -44,20 +44,4 @@ public:
 protected:
     DrmPipeline *const m_pipeline;
 };
-
-class DrmOverlayLayer : public DrmPipelineLayer
-{
-public:
-    DrmOverlayLayer(DrmPipeline *pipeline);
-
-    void setPosition(const QPoint &pos);
-    void setVisible(bool visible);
-
-    QPoint position() const;
-    bool isVisible() const;
-
-protected:
-    QPoint m_position;
-    bool m_visible = false;
-};
 }

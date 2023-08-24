@@ -182,7 +182,7 @@ std::shared_ptr<DrmPipelineLayer> EglGbmBackend::createPrimaryLayer(DrmPipeline 
     return std::make_shared<EglGbmLayer>(this, pipeline);
 }
 
-std::shared_ptr<DrmOverlayLayer> EglGbmBackend::createCursorLayer(DrmPipeline *pipeline)
+std::shared_ptr<DrmPipelineLayer> EglGbmBackend::createCursorLayer(DrmPipeline *pipeline)
 {
     return std::make_shared<EglGbmCursorLayer>(this, pipeline);
 }

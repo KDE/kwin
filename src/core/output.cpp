@@ -544,12 +544,7 @@ uint32_t Output::sdrBrightness() const
     return m_state.sdrBrightness;
 }
 
-bool Output::setCursor(CursorSource *source)
-{
-    return false;
-}
-
-bool Output::moveCursor(const QPointF &position)
+bool Output::updateCursorLayer()
 {
     return false;
 }

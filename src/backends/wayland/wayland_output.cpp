@@ -8,25 +8,18 @@
 */
 #include "wayland_output.h"
 #include "composite.h"
+#include "core/outputlayer.h"
+#include "core/renderbackend.h"
 #include "core/renderloop_p.h"
-#include "cursorsource.h"
 #include "wayland_backend.h"
 #include "wayland_display.h"
 #include "wayland_server.h"
-
-#include "libkwineffects/kwingltexture.h"
-#include "libkwineffects/kwinglutils.h"
-#include "libkwineffects/renderviewport.h"
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/pointer.h>
 #include <KWayland/Client/pointerconstraints.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/xdgdecoration.h>
-
-#include "core/renderbackend.h"
-#include "core/renderlayer.h"
-#include "scene/cursorscene.h"
 
 #include <KLocalizedString>
 
@@ -65,18 +58,10 @@ void WaylandCursor::setPointer(KWayland::Client::Pointer *pointer)
     }
 }
 
-void WaylandCursor::enable()
+void WaylandCursor::setEnabled(bool enable)
 {
-    if (!m_enabled) {
-        m_enabled = true;
-        sync();
-    }
-}
-
-void WaylandCursor::disable()
-{
-    if (m_enabled) {
-        m_enabled = false;
+    if (m_enabled != enable) {
+        m_enabled = enable;
         sync();
     }
 }
@@ -180,42 +165,16 @@ RenderLoop *WaylandOutput::renderLoop() const
     return m_renderLoop.get();
 }
 
-bool WaylandOutput::setCursor(CursorSource *source)
+bool WaylandOutput::updateCursorLayer()
 {
     if (m_hasPointerLock) {
+        m_cursor->setEnabled(false);
         return false;
-    }
-
-    OutputLayer *cursorLayer = Compositor::self()->backend()->cursorLayer(this);
-    if (source) {
-        cursorLayer->setSize(source->size());
-        cursorLayer->setScale(scale());
-        cursorLayer->setHotspot(source->hotspot());
     } else {
-        cursorLayer->setSize(QSize());
-        cursorLayer->setHotspot(QPoint());
+        m_cursor->setEnabled(Compositor::self()->backend()->cursorLayer(this)->isEnabled());
+        // the layer already takes care of updating the image
+        return true;
     }
-
-    std::optional<OutputLayerBeginFrameInfo> beginInfo = cursorLayer->beginFrame();
-    if (!beginInfo) {
-        return false;
-    }
-
-    RenderLayer renderLayer(m_renderLoop.get());
-    renderLayer.setDelegate(std::make_unique<SceneDelegate>(Compositor::self()->cursorScene(), this));
-
-    renderLayer.delegate()->prePaint();
-    renderLayer.delegate()->paint(beginInfo->renderTarget, infiniteRegion());
-    renderLayer.delegate()->postPaint();
-
-    cursorLayer->endFrame(infiniteRegion(), infiniteRegion());
-    return true;
-}
-
-bool WaylandOutput::moveCursor(const QPointF &position)
-{
-    // The cursor position is controlled by the host compositor.
-    return !m_hasPointerLock;
 }
 
 void WaylandOutput::init(const QSize &pixelSize, qreal scale)
@@ -318,7 +277,7 @@ void WaylandOutput::lockPointer(Pointer *pointer, bool lock)
         m_hasPointerLock = false;
         if (surfaceWasLocked) {
             updateWindowTitle();
-            m_cursor->enable();
+            updateCursorLayer();
             Q_EMIT m_backend->pointerLockChanged(false);
         }
         return;
@@ -333,14 +292,14 @@ void WaylandOutput::lockPointer(Pointer *pointer, bool lock)
     connect(m_pointerLock.get(), &LockedPointer::locked, this, [this]() {
         m_hasPointerLock = true;
         updateWindowTitle();
-        m_cursor->disable();
+        updateCursorLayer();
         Q_EMIT m_backend->pointerLockChanged(true);
     });
     connect(m_pointerLock.get(), &LockedPointer::unlocked, this, [this]() {
         m_pointerLock.reset();
         m_hasPointerLock = false;
         updateWindowTitle();
-        m_cursor->enable();
+        updateCursorLayer();
         Q_EMIT m_backend->pointerLockChanged(false);
     });
 }

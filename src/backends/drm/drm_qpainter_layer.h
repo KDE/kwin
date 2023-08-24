@@ -47,7 +47,7 @@ private:
     std::chrono::nanoseconds m_renderTime;
 };
 
-class DrmCursorQPainterLayer : public DrmOverlayLayer
+class DrmCursorQPainterLayer : public DrmPipelineLayer
 {
 public:
     DrmCursorQPainterLayer(DrmPipeline *pipeline);

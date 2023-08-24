@@ -107,7 +107,7 @@ std::chrono::nanoseconds DrmQPainterLayer::queryRenderTime() const
 }
 
 DrmCursorQPainterLayer::DrmCursorQPainterLayer(DrmPipeline *pipeline)
-    : DrmOverlayLayer(pipeline)
+    : DrmPipelineLayer(pipeline)
 {
 }
 

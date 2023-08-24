@@ -57,7 +57,7 @@ std::shared_ptr<DrmPipelineLayer> DrmQPainterBackend::createPrimaryLayer(DrmPipe
     return std::make_shared<DrmQPainterLayer>(pipeline);
 }
 
-std::shared_ptr<DrmOverlayLayer> DrmQPainterBackend::createCursorLayer(DrmPipeline *pipeline)
+std::shared_ptr<DrmPipelineLayer> DrmQPainterBackend::createCursorLayer(DrmPipeline *pipeline)
 {
     return std::make_shared<DrmCursorQPainterLayer>(pipeline);
 }
