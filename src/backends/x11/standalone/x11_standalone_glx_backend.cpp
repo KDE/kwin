@@ -153,6 +153,8 @@ GlxBackend::~GlxBackend()
     // if the render backend is about to be destroyed.
     RenderLoopPrivate::get(m_backend->renderLoop())->invalidate();
 
+    m_query.reset();
+
     if (isFailed()) {
         m_overlayWindow->destroy();
     }
