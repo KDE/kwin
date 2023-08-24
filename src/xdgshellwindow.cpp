@@ -21,7 +21,6 @@
 #include "killprompt.h"
 #include "placement.h"
 #include "tiles/tilemanager.h"
-#include "utils/subsurfacemonitor.h"
 #include "virtualdesktops.h"
 #include "wayland/appmenu.h"
 #include "wayland/output.h"
@@ -58,28 +57,7 @@ XdgSurfaceWindow::XdgSurfaceWindow(XdgSurfaceInterface *shellSurface)
             this, &XdgSurfaceWindow::destroyWindow);
     connect(shellSurface->surface(), &SurfaceInterface::aboutToBeDestroyed,
             this, &XdgSurfaceWindow::destroyWindow);
-
-    // The effective window geometry is determined by two things: (a) the rectangle that bounds
-    // the main surface and all of its sub-surfaces, (b) the client-specified window geometry, if
-    // any. If the client hasn't provided the window geometry, we fallback to the bounding sub-
-    // surface rectangle. If the client has provided the window geometry, we intersect it with
-    // the bounding rectangle and that will be the effective window geometry. It's worth to point
-    // out that geometry updates do not occur that frequently, so we don't need to recompute the
-    // bounding geometry every time the client commits the surface.
-
-    SubSurfaceMonitor *treeMonitor = new SubSurfaceMonitor(surface(), this);
-
-    connect(treeMonitor, &SubSurfaceMonitor::subSurfaceAdded,
-            this, &XdgSurfaceWindow::setHaveNextWindowGeometry);
-    connect(treeMonitor, &SubSurfaceMonitor::subSurfaceRemoved,
-            this, &XdgSurfaceWindow::setHaveNextWindowGeometry);
-    connect(treeMonitor, &SubSurfaceMonitor::subSurfaceMoved,
-            this, &XdgSurfaceWindow::setHaveNextWindowGeometry);
-    connect(treeMonitor, &SubSurfaceMonitor::subSurfaceResized,
-            this, &XdgSurfaceWindow::setHaveNextWindowGeometry);
     connect(shellSurface, &XdgSurfaceInterface::windowGeometryChanged,
-            this, &XdgSurfaceWindow::setHaveNextWindowGeometry);
-    connect(surface(), &SurfaceInterface::sizeChanged,
             this, &XdgSurfaceWindow::setHaveNextWindowGeometry);
 
     // Configure events are not sent immediately, but rather scheduled to be sent when the event
@@ -202,26 +180,8 @@ void XdgSurfaceWindow::handleNextWindowGeometry()
     if (const XdgSurfaceConfigure *configureEvent = lastAcknowledgedConfigure()) {
         setTargetScale(configureEvent->scale);
     }
-    const RectF boundingGeometry = surface()->boundingRect();
 
-    // The effective window geometry is defined as the intersection of the window geometry
-    // and the rectangle that bounds the main surface and all of its sub-surfaces. If the
-    // client hasn't specified the window geometry, we must fallback to the bounding geometry.
-    // Note that the xdg-shell spec is not clear about when exactly we have to clamp the
-    // window geometry.
-
-    m_windowGeometry = m_shellSurface->windowGeometry();
-    if (m_windowGeometry.isValid()) {
-        m_windowGeometry &= boundingGeometry;
-    } else {
-        m_windowGeometry = boundingGeometry;
-    }
-
-    if (m_windowGeometry.isEmpty()) {
-        qCWarning(KWIN_CORE) << "Committed empty window geometry, dealing with a buggy client!";
-    } else {
-        m_windowGeometry = snapToPixels(m_windowGeometry, targetScale());
-    }
+    m_windowGeometry = snapToPixels(m_shellSurface->windowGeometry(), targetScale());
 
     RectF frameGeometry(pos(), clientSizeToFrameSize(m_windowGeometry.size()));
     if (const XdgSurfaceConfigure *configureEvent = lastAcknowledgedConfigure()) {

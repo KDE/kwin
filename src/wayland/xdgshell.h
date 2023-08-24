@@ -192,7 +192,7 @@ Q_SIGNALS:
     /**
      * This signal is emitted when the window geometry has been changed.
      */
-    void windowGeometryChanged(const RectF &rect);
+    void windowGeometryChanged();
 
     /**
      * This signal is emitted when the surface has been unmapped and its state has been reset.
