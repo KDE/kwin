@@ -53,8 +53,9 @@ private Q_SLOTS:
     void cleanup();
     void testAxis_data();
     void testAxis();
-    void testDoubleClick_data();
-    void testDoubleClick();
+    void testDoubleClickOnAllDesktops_data();
+    void testDoubleClickOnAllDesktops();
+    void testDoubleClickClose();
     void testDoubleTap_data();
     void testDoubleTap();
     void testHover();
@@ -72,7 +73,7 @@ private Q_SLOTS:
     void testTooltipDoesntEatKeyEvents();
 
 private:
-    std::pair<Window *, std::unique_ptr<KWayland::Client::Surface>> showWindow();
+    std::tuple<Window *, std::unique_ptr<KWayland::Client::Surface>, Test::XdgToplevel *> showWindow();
 };
 
 #define MOTION(target) Test::pointerMotion(target, timestamp++)
@@ -81,14 +82,14 @@ private:
 
 #define RELEASE Test::pointerButtonReleased(BTN_LEFT, timestamp++)
 
-std::pair<Window *, std::unique_ptr<KWayland::Client::Surface>> DecorationInputTest::showWindow()
+std::tuple<Window *, std::unique_ptr<KWayland::Client::Surface>, Test::XdgToplevel *> DecorationInputTest::showWindow()
 {
 #define VERIFY(statement)                                                 \
     if (!QTest::qVerify((statement), #statement, "", __FILE__, __LINE__)) \
-        return {nullptr, nullptr};
+        return {nullptr, nullptr, nullptr};
 #define COMPARE(actual, expected)                                                   \
     if (!QTest::qCompare(actual, expected, #actual, #expected, __FILE__, __LINE__)) \
-        return {nullptr, nullptr};
+        return {nullptr, nullptr, nullptr};
 
     std::unique_ptr<KWayland::Client::Surface> surface{Test::createSurface()};
     VERIFY(surface.get());
@@ -114,7 +115,7 @@ std::pair<Window *, std::unique_ptr<KWayland::Client::Surface>> DecorationInputT
 #undef VERIFY
 #undef COMPARE
 
-    return {window, std::move(surface)};
+    return {window, std::move(surface), shellSurface};
 }
 
 void DecorationInputTest::initTestCase()
@@ -174,7 +175,7 @@ void DecorationInputTest::testAxis()
 {
     static constexpr double oneTick = 15;
 
-    const auto [window, surface] = showWindow();
+    const auto [window, surface, shellSurface] = showWindow();
     QVERIFY(window);
     QVERIFY(window->isDecorated());
     QVERIFY(!window->noBorder());
@@ -211,7 +212,7 @@ void DecorationInputTest::testAxis()
     QVERIFY(!window->keepAbove());
 }
 
-void DecorationInputTest::testDoubleClick_data()
+void DecorationInputTest::testDoubleClickOnAllDesktops_data()
 {
     QTest::addColumn<QPoint>("decoPoint");
     QTest::addColumn<Qt::WindowFrameSection>("expectedSection");
@@ -221,9 +222,14 @@ void DecorationInputTest::testDoubleClick_data()
     QTest::newRow("topRight") << QPoint(499, 0) << Qt::TopRightSection;
 }
 
-void KWin::DecorationInputTest::testDoubleClick()
+void KWin::DecorationInputTest::testDoubleClickOnAllDesktops()
 {
-    const auto [window, surface] = showWindow();
+    KConfigGroup group = kwinApp()->config()->group("Windows");
+    group.writeEntry("TitlebarDoubleClickCommand", QStringLiteral("OnAllDesktops"));
+    group.sync();
+    workspace()->slotReconfigure();
+
+    const auto [window, surface, shellSurface] = showWindow();
     QVERIFY(window);
     QVERIFY(window->isDecorated());
     QVERIFY(!window->noBorder());
@@ -261,6 +267,37 @@ void KWin::DecorationInputTest::testDoubleClick()
     QVERIFY(window->isOnAllDesktops());
 }
 
+void DecorationInputTest::testDoubleClickClose()
+{
+    // this test verifies that no crash occurs when double click is configured to close action
+    KConfigGroup group = kwinApp()->config()->group("Windows");
+    group.writeEntry("TitlebarDoubleClickCommand", QStringLiteral("Close"));
+    group.sync();
+    workspace()->slotReconfigure();
+
+    auto [window, surface, shellSurface] = showWindow();
+    QVERIFY(window);
+    QVERIFY(window->isDecorated());
+    quint32 timestamp = 1;
+    MOTION(QPoint(window->frameGeometry().center().x(), window->frameMargins().top() / 2.0));
+
+    connect(shellSurface, &Test::XdgToplevel::closeRequested, this, [&surface = surface]() {
+        surface.reset();
+    });
+
+    // double click
+    QSignalSpy closedSpy(window, &Window::closed);
+    window->ref();
+    PRESS;
+    RELEASE;
+    PRESS;
+    QVERIFY(closedSpy.wait());
+    RELEASE;
+
+    QVERIFY(window->isDeleted());
+    window->unref();
+}
+
 void DecorationInputTest::testDoubleTap_data()
 {
     QTest::addColumn<QPoint>("decoPoint");
@@ -273,7 +310,12 @@ void DecorationInputTest::testDoubleTap_data()
 
 void KWin::DecorationInputTest::testDoubleTap()
 {
-    const auto [window, surface] = showWindow();
+    KConfigGroup group = kwinApp()->config()->group("Windows");
+    group.writeEntry("TitlebarDoubleClickCommand", QStringLiteral("OnAllDesktops"));
+    group.sync();
+    workspace()->slotReconfigure();
+
+    const auto [window, surface, shellSurface] = showWindow();
     QVERIFY(window);
     QVERIFY(window->isDecorated());
     QVERIFY(!window->noBorder());
@@ -315,7 +357,7 @@ void KWin::DecorationInputTest::testDoubleTap()
 
 void DecorationInputTest::testHover()
 {
-    const auto [window, surface] = showWindow();
+    const auto [window, surface, shellSurface] = showWindow();
     QVERIFY(window);
     QVERIFY(window->isDecorated());
     QVERIFY(!window->noBorder());
@@ -374,7 +416,7 @@ void DecorationInputTest::testPressToMove_data()
 
 void DecorationInputTest::testPressToMove()
 {
-    const auto [window, surface] = showWindow();
+    const auto [window, surface, shellSurface] = showWindow();
     QVERIFY(window);
     QVERIFY(window->isDecorated());
     QVERIFY(!window->noBorder());
@@ -431,7 +473,7 @@ void DecorationInputTest::testTapToMove_data()
 
 void DecorationInputTest::testTapToMove()
 {
-    const auto [window, surface] = showWindow();
+    const auto [window, surface, shellSurface] = showWindow();
     QVERIFY(window);
     QVERIFY(window->isDecorated());
     QVERIFY(!window->noBorder());
@@ -495,7 +537,7 @@ void DecorationInputTest::testResizeOutsideWindow()
     workspace()->slotReconfigure();
 
     // now create window
-    const auto [window, surface] = showWindow();
+    const auto [window, surface, shellSurface] = showWindow();
     QVERIFY(window);
     QVERIFY(window->isDecorated());
     QVERIFY(!window->noBorder());
@@ -589,7 +631,7 @@ void DecorationInputTest::testModifierClickUnrestrictedMove()
     QCOMPARE(options->commandAll3(), Options::MouseUnrestrictedMove);
 
     // create a window
-    const auto [window, surface] = showWindow();
+    const auto [window, surface, shellSurface] = showWindow();
     QVERIFY(window);
     QVERIFY(window->isDecorated());
     QVERIFY(!window->noBorder());
@@ -651,7 +693,7 @@ void DecorationInputTest::testModifierScrollOpacity()
     group.sync();
     workspace()->slotReconfigure();
 
-    const auto [window, surface] = showWindow();
+    const auto [window, surface, shellSurface] = showWindow();
     QVERIFY(window);
     QVERIFY(window->isDecorated());
     QVERIFY(!window->noBorder());
@@ -709,7 +751,7 @@ void DecorationInputTest::testTouchEvents()
 {
     // this test verifies that the decoration gets a hover leave event on touch release
     // see BUG 386231
-    const auto [window, surface] = showWindow();
+    const auto [window, surface, shellSurface] = showWindow();
     QVERIFY(window);
     QVERIFY(window->isDecorated());
     QVERIFY(!window->noBorder());
@@ -755,7 +797,7 @@ void DecorationInputTest::testTooltipDoesntEatKeyEvents()
     QVERIFY(keyboard);
     QSignalSpy enteredSpy(keyboard, &KWayland::Client::Keyboard::entered);
 
-    const auto [window, surface] = showWindow();
+    const auto [window, surface, shellSurface] = showWindow();
     QVERIFY(window);
     QVERIFY(window->isDecorated());
     QVERIFY(!window->noBorder());
