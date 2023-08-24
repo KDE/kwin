@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-08-16 01:59+0000\n"
+"POT-Creation-Date: 2023-08-24 01:56+0000\n"
 "PO-Revision-Date: 2023-08-07 19:29+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Chinese <zh-l10n@linux.org.tw>\n"
@@ -39,29 +39,29 @@ msgstr ""
 "kenduest@i18n.linux.org.tw,iitze@hotmail.com, s8321414@gmail.com, "
 "pan93412@gmail.com, mail@kisaragi-hiu.com"
 
-#: backends/wayland/wayland_output.cpp:294
+#: backends/wayland/wayland_output.cpp:295
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "按下右側 Ctrl 來取消抓取游標"
 
-#: backends/wayland/wayland_output.cpp:296
+#: backends/wayland/wayland_output.cpp:297
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "按下右側 Ctrl 鍵來抓取游標"
 
-#: backends/wayland/wayland_output.cpp:300
+#: backends/wayland/wayland_output.cpp:301
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1 (%2)"
 msgstr "KDE Wayland 合成器 %1 (%2)"
 
-#: backends/wayland/wayland_output.cpp:303
+#: backends/wayland/wayland_output.cpp:304
 #, kde-format
 msgid "- Output disabled"
 msgstr "- 輸出已停用"
 
-#: backends/wayland/wayland_output.cpp:305
+#: backends/wayland/wayland_output.cpp:306
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- 輸出已暗化"
@@ -86,14 +86,14 @@ msgstr "KDE Wayland 合成器"
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "桌面效果會重新啟動，因為圖形已重置"
 
-#: composite.cpp:846
+#: composite.cpp:845
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
 "resume using the '%1' shortcut."
 msgstr "桌面效果已被其它的應用程式暫停。<br/> 您可以用快捷鍵 %1 來恢復。"
 
-#: composite.cpp:1036
+#: composite.cpp:1035
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -105,12 +105,12 @@ msgstr ""
 "問題。<p>如果您認為從上次崩潰到現在您已經更新到了<br>穩定的驅動程式版本，您可"
 "以重設這個保護機制，但<b>請注意這可能會馬上造成崩潰！</b></p>"
 
-#: composite.cpp:1043
+#: composite.cpp:1042
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "需要的 X 擴充功能（XComposite 和 XDamage）無法使用。"
 
-#: composite.cpp:1046
+#: composite.cpp:1045
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL 無法使用。"
@@ -2329,12 +2329,12 @@ msgstr "新增虛擬桌面"
 msgid "No matching windows"
 msgstr "沒有相符的視窗"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:152
+#: plugins/private/qml/WindowHeapDelegate.qml:151
 #, kde-format
 msgid "Drag Down To Close"
 msgstr "下拉關閉"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:453
+#: plugins/private/qml/WindowHeapDelegate.qml:452
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
@@ -2388,7 +2388,7 @@ msgstr "無效的區域"
 msgid "Region outside the workspace"
 msgstr "區域在工作空間外"
 
-#: plugins/screencast/screencaststream.cpp:356
+#: plugins/screencast/screencaststream.cpp:359
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "無法建立 PipeWire 串流"

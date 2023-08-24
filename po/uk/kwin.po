@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-08-16 01:59+0000\n"
+"POT-Creation-Date: 2023-08-24 01:56+0000\n"
 "PO-Revision-Date: 2023-07-20 17:21+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
@@ -34,29 +34,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "rysin@kde.org,kov@tokyo.email.ne.jp,iip@telus.net"
 
-#: backends/wayland/wayland_output.cpp:294
+#: backends/wayland/wayland_output.cpp:295
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Натисніть праву клавішу Ctrl для скасування захоплення вказівника"
 
-#: backends/wayland/wayland_output.cpp:296
+#: backends/wayland/wayland_output.cpp:297
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Натисніть праву клавішу Ctrl для захоплення вказівника"
 
-#: backends/wayland/wayland_output.cpp:300
+#: backends/wayland/wayland_output.cpp:301
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1 (%2)"
 msgstr "Засіб композиції KDE для Wayland %1 (%2)"
 
-#: backends/wayland/wayland_output.cpp:303
+#: backends/wayland/wayland_output.cpp:304
 #, kde-format
 msgid "- Output disabled"
 msgstr "- Виведення вимкнено"
 
-#: backends/wayland/wayland_output.cpp:305
+#: backends/wayland/wayland_output.cpp:306
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- Виведення притлумлено"
@@ -83,7 +83,7 @@ msgstr ""
 "Ефекти стільниці було перезапущено через відновлення початкового стану "
 "графіки"
 
-#: composite.cpp:846
+#: composite.cpp:845
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -92,7 +92,7 @@ msgstr ""
 "Дію ефектів стільниці було призупинено сторонньою програмою.<br/>Ви можете "
 "поновити роботу за допомогою клавіатурного скорочення «%1»."
 
-#: composite.cpp:1036
+#: composite.cpp:1035
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -106,12 +106,12 @@ msgstr ""
 "захист, але <b>зважайте на те, що це може призвести до негайного аварійного "
 "завершення роботи!</b></p>"
 
-#: composite.cpp:1043
+#: composite.cpp:1042
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Немає потрібних розширень X (XComposite і XDamage)."
 
-#: composite.cpp:1046
+#: composite.cpp:1045
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL є недоступним."
@@ -2355,12 +2355,12 @@ msgstr "Додати віртуальну стільницю"
 msgid "No matching windows"
 msgstr "Немає відповідних вікон"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:152
+#: plugins/private/qml/WindowHeapDelegate.qml:151
 #, kde-format
 msgid "Drag Down To Close"
 msgstr "Перетягування вниз для закриття"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:453
+#: plugins/private/qml/WindowHeapDelegate.qml:452
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
@@ -2414,7 +2414,7 @@ msgstr "Некоректна область"
 msgid "Region outside the workspace"
 msgstr "Область поза межами робочого простору"
 
-#: plugins/screencast/screencaststream.cpp:356
+#: plugins/screencast/screencaststream.cpp:359
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Не вдалося створити потік даних PipeWire"

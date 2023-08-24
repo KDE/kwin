@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-08-16 01:59+0000\n"
+"POT-Creation-Date: 2023-08-24 01:56+0000\n"
 "PO-Revision-Date: 2023-07-20 21:58+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -28,29 +28,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "g.sora@tiscali.it"
 
-#: backends/wayland/wayland_output.cpp:294
+#: backends/wayland/wayland_output.cpp:295
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Pressa controlo dextere per lassar punctator"
 
-#: backends/wayland/wayland_output.cpp:296
+#: backends/wayland/wayland_output.cpp:297
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Pressa controlo dextere per prender punctator"
 
-#: backends/wayland/wayland_output.cpp:300
+#: backends/wayland/wayland_output.cpp:301
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1 (%2)"
 msgstr "KDE Wayland Compositor %1 (%2)"
 
-#: backends/wayland/wayland_output.cpp:303
+#: backends/wayland/wayland_output.cpp:304
 #, kde-format
 msgid "- Output disabled"
 msgstr "- Sortita dishabilitate"
 
-#: backends/wayland/wayland_output.cpp:305
+#: backends/wayland/wayland_output.cpp:306
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- Sortita obscurate"
@@ -76,7 +76,7 @@ msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 "Effectos de scriptorio esseva reinitiate debite al reinitio de graphicos"
 
-#: composite.cpp:846
+#: composite.cpp:845
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -85,7 +85,7 @@ msgstr ""
 "Effectos de Scriptorio he essite suspendite per un altere application.<br/"
 ">Tu pote resumer los usante le via breve '%1'."
 
-#: composite.cpp:1036
+#: composite.cpp:1035
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -99,12 +99,12 @@ msgstr ""
 "protection ma <b>tu debe saper que isto poterea procurar un crash immediate!"
 "</b></p>"
 
-#: composite.cpp:1043
+#: composite.cpp:1042
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Extensiones de X Requirite (XComposite e XDamage) non es disponibile."
 
-#: composite.cpp:1046
+#: composite.cpp:1045
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL non es disponibile."
@@ -2347,12 +2347,12 @@ msgstr "Adde Scriptorio Virtual"
 msgid "No matching windows"
 msgstr "Nulle correspondentia de fenestra"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:152
+#: plugins/private/qml/WindowHeapDelegate.qml:151
 #, kde-format
 msgid "Drag Down To Close"
 msgstr "Trahe a basso pro clauder"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:453
+#: plugins/private/qml/WindowHeapDelegate.qml:452
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
@@ -2406,7 +2406,7 @@ msgstr "Region invalide"
 msgid "Region outside the workspace"
 msgstr "Region foras de spatio de labor"
 
-#: plugins/screencast/screencaststream.cpp:356
+#: plugins/screencast/screencaststream.cpp:359
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Falleva a crear fluxo (stream) de PipeWire"

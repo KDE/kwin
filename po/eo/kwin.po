@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-08-16 01:59+0000\n"
+"POT-Creation-Date: 2023-08-24 01:56+0000\n"
 "PO-Revision-Date: 2023-07-21 18:55+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -34,29 +34,29 @@ msgstr ""
 "wolfram@steloj.de,Steffen.Pietsch@BerlinOnline.de,matthias@peick.de,"
 "cfmckee@gmail.com"
 
-#: backends/wayland/wayland_output.cpp:294
+#: backends/wayland/wayland_output.cpp:295
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Premu dekstran kontrolon por malkapti montrilon"
 
-#: backends/wayland/wayland_output.cpp:296
+#: backends/wayland/wayland_output.cpp:297
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Premu dekstran kontrolklavon por kapti montrilon"
 
-#: backends/wayland/wayland_output.cpp:300
+#: backends/wayland/wayland_output.cpp:301
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1 (%2)"
 msgstr "KDE Wayland Komponilo %1 (%2)"
 
-#: backends/wayland/wayland_output.cpp:303
+#: backends/wayland/wayland_output.cpp:304
 #, kde-format
 msgid "- Output disabled"
 msgstr "- Eligo malebligita"
 
-#: backends/wayland/wayland_output.cpp:305
+#: backends/wayland/wayland_output.cpp:306
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- Eligo malheliĝis"
@@ -81,7 +81,7 @@ msgstr "KDE Wayland Komponisto"
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Labortablaj efikoj estis rekomencitaj pro grafika restarigo"
 
-#: composite.cpp:846
+#: composite.cpp:845
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -90,7 +90,7 @@ msgstr ""
 "Surtablaj efikoj estas malakceptitaj de alia aplikaĵo.<br/>Vi povas "
 "rekomenci uzi la ŝparvojon '%1'."
 
-#: composite.cpp:1036
+#: composite.cpp:1035
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -103,13 +103,13 @@ msgstr ""
 "al stabila pelilo,<br>vi povas restarigi ĉi tiun protekton, sed <b>konsciu, "
 "ke tio povus rezultigi tujan paneon!</b></p>"
 
-#: composite.cpp:1043
+#: composite.cpp:1042
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr ""
 "X-kromprogramoj XComposite kaj XDamage estas bezonitaj sed ne estas haveblaj."
 
-#: composite.cpp:1046
+#: composite.cpp:1045
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL ne disponeblas."
@@ -2344,12 +2344,12 @@ msgstr "Aldoni Virtualan Labortablon"
 msgid "No matching windows"
 msgstr "Neniuj kongruaj fenestroj"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:152
+#: plugins/private/qml/WindowHeapDelegate.qml:151
 #, kde-format
 msgid "Drag Down To Close"
 msgstr "Trenu Malsupren Por Fermi"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:453
+#: plugins/private/qml/WindowHeapDelegate.qml:452
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
@@ -2403,7 +2403,7 @@ msgstr "Nevalida regiono"
 msgid "Region outside the workspace"
 msgstr "Regiono ekster la laborspaco"
 
-#: plugins/screencast/screencaststream.cpp:356
+#: plugins/screencast/screencaststream.cpp:359
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Malsukcesis krei PipeWire-rivereton"

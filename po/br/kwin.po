@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-08-16 01:59+0000\n"
+"POT-Creation-Date: 2023-08-24 01:56+0000\n"
 "PO-Revision-Date: 2004-07-08 17:18+0200\n"
 "Last-Translator: Thierry Vignaud <tvignaud.com>\n"
 "Language-Team: Brezhoneg <Suav.Icb.fr>\n"
@@ -24,29 +24,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "tvignaud@mandriva.com, jdrapier@club-internet.fr"
 
-#: backends/wayland/wayland_output.cpp:294
+#: backends/wayland/wayland_output.cpp:295
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:296
+#: backends/wayland/wayland_output.cpp:297
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:300
+#: backends/wayland/wayland_output.cpp:301
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1 (%2)"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:303
+#: backends/wayland/wayland_output.cpp:304
 #, kde-format
 msgid "- Output disabled"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:305
+#: backends/wayland/wayland_output.cpp:306
 #, kde-format
 msgid "- Output dimmed"
 msgstr ""
@@ -71,14 +71,14 @@ msgstr ""
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 
-#: composite.cpp:846
+#: composite.cpp:845
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
 "resume using the '%1' shortcut."
 msgstr ""
 
-#: composite.cpp:1036
+#: composite.cpp:1035
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -87,12 +87,12 @@ msgid ""
 "<b>be aware that this might result in an immediate crash!</b></p>"
 msgstr ""
 
-#: composite.cpp:1043
+#: composite.cpp:1042
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr ""
 
-#: composite.cpp:1046
+#: composite.cpp:1045
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr ""
@@ -2349,12 +2349,12 @@ msgstr "Gwintañ da Burev 1"
 msgid "No matching windows"
 msgstr ""
 
-#: plugins/private/qml/WindowHeapDelegate.qml:152
+#: plugins/private/qml/WindowHeapDelegate.qml:151
 #, kde-format
 msgid "Drag Down To Close"
 msgstr ""
 
-#: plugins/private/qml/WindowHeapDelegate.qml:453
+#: plugins/private/qml/WindowHeapDelegate.qml:452
 #, fuzzy, kde-format
 #| msgid "Close Window"
 msgctxt "@info:tooltip as in: 'close this window'"
@@ -2411,7 +2411,7 @@ msgstr ""
 msgid "Region outside the workspace"
 msgstr ""
 
-#: plugins/screencast/screencaststream.cpp:356
+#: plugins/screencast/screencaststream.cpp:359
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr ""

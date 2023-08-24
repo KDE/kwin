@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-08-16 01:59+0000\n"
+"POT-Creation-Date: 2023-08-24 01:56+0000\n"
 "PO-Revision-Date: 2023-07-24 21:32+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -41,29 +41,29 @@ msgstr ""
 "ilpo@iki.fi, mikko.piippo@helsinki.fi, lliehu@kolumbus.fi, "
 "translator@legisign.org"
 
-#: backends/wayland/wayland_output.cpp:294
+#: backends/wayland/wayland_output.cpp:295
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Peru osoittimen kaappaus painamalla oikeaa Ctrl-näppäintä"
 
-#: backends/wayland/wayland_output.cpp:296
+#: backends/wayland/wayland_output.cpp:297
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Kaappaa osoitin painamalla oikeaa Ctrl-näppäintä"
 
-#: backends/wayland/wayland_output.cpp:300
+#: backends/wayland/wayland_output.cpp:301
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1 (%2)"
 msgstr "KDE:n Wayland-koostin %1 (%2)"
 
-#: backends/wayland/wayland_output.cpp:303
+#: backends/wayland/wayland_output.cpp:304
 #, kde-format
 msgid "- Output disabled"
 msgstr "– Ulostulo ei käytössä"
 
-#: backends/wayland/wayland_output.cpp:305
+#: backends/wayland/wayland_output.cpp:306
 #, kde-format
 msgid "- Output dimmed"
 msgstr "– Ulostulo himmennetty"
@@ -90,7 +90,7 @@ msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 "Työpöytätehosteet käynnistettiin uudelleen, koska grafiikka nollattiin."
 
-#: composite.cpp:846
+#: composite.cpp:845
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -100,7 +100,7 @@ msgstr ""
 "Voit palauttaa ne käyttöön pikanäppäimellä %1."
 
 # En pidä sanan ”backend” suomentamisesta tässä. Koostamistyyppi löytyy työpöytätehosteiden lisäasetuksista, vaikka ”koostamistapa” voisi olla vielä parempi.
-#: composite.cpp:1036
+#: composite.cpp:1035
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -113,13 +113,13 @@ msgstr ""
 "vakaaseen ajuriin,<br>voit poistaa tämän suojauksen, mutta <b>tästä saattaa "
 "seurata välitön kaatuminen!</b></p>"
 
-#: composite.cpp:1043
+#: composite.cpp:1042
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr ""
 "Tarvittavat X-laajennukset (XComposite ja XDamage) eivät ole käytettävissä."
 
-#: composite.cpp:1046
+#: composite.cpp:1045
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL ei ole käytettävissä."
@@ -2361,12 +2361,12 @@ msgstr "Lisää virtuaalityöpöytä"
 msgid "No matching windows"
 msgstr "Ei täsmääviä ikkunoita"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:152
+#: plugins/private/qml/WindowHeapDelegate.qml:151
 #, kde-format
 msgid "Drag Down To Close"
 msgstr "Sulje vetämällä alaspäin"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:453
+#: plugins/private/qml/WindowHeapDelegate.qml:452
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
@@ -2420,7 +2420,7 @@ msgstr "Virheellinen alue"
 msgid "Region outside the workspace"
 msgstr "Alue on työtilan ulkopuolella"
 
-#: plugins/screencast/screencaststream.cpp:356
+#: plugins/screencast/screencaststream.cpp:359
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "PipeWire-virran luominen epäonnistui"

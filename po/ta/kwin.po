@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-08-16 01:59+0000\n"
+"POT-Creation-Date: 2023-08-24 01:56+0000\n"
 "PO-Revision-Date: 2023-07-30 13:19+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -31,29 +31,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "tamilpc@ambalam.com,rajan_agnel@yahoo.co.in,shafi6_loyola@yahoo.co.in"
 
-#: backends/wayland/wayland_output.cpp:294
+#: backends/wayland/wayland_output.cpp:295
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "சுட்டிக்குறியை விடுவிக்க வலது Ctrl விசையை அழுத்தவும்"
 
-#: backends/wayland/wayland_output.cpp:296
+#: backends/wayland/wayland_output.cpp:297
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "சுட்டிக்குறியை கைபற்ற வலது Ctrl விசையை அழுத்தவும்"
 
-#: backends/wayland/wayland_output.cpp:300
+#: backends/wayland/wayland_output.cpp:301
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1 (%2)"
 msgstr "கே.டீ.யீ. Wayland சாளரநிரல் %1 (%2)"
 
-#: backends/wayland/wayland_output.cpp:303
+#: backends/wayland/wayland_output.cpp:304
 #, kde-format
 msgid "- Output disabled"
 msgstr "- வெளியீடு முடக்கப்பட்டுள்ளது"
 
-#: backends/wayland/wayland_output.cpp:305
+#: backends/wayland/wayland_output.cpp:306
 #, kde-format
 msgid "- Output dimmed"
 msgstr "வெளியீடு மங்கலாக்கப்பட்டுள்ளது"
@@ -78,7 +78,7 @@ msgstr "கே.டீ.யீ. Wayland சாளரநிரல்"
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "வரைகலை முறிவடைந்து மீட்டமைக்கப்பட்டதால் பணிமேடை அசைவூட்டங்கள் மீள்துவக்கப்பட்டன"
 
-#: composite.cpp:846
+#: composite.cpp:845
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -87,7 +87,7 @@ msgstr ""
 "பணிமேடை அசைவூட்டங்கள் இன்னொரு செயலியால் முடக்கப்பட்டுள்ளன.<br/> '%1' என்ற சுருக்குவழியை "
 "கொண்டு அவற்றை மறுபடியும் இயக்கலாம்."
 
-#: composite.cpp:1036
+#: composite.cpp:1035
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -100,12 +100,12 @@ msgstr ""
 "சாதனநிரலை நீங்கள் புதுப்பித்திருந்தால்,<br>இந்த பாதுகாப்பு அம்சத்தை மீட்டமைக்கலாம், "
 "ஆனால்<b>இது உடனடியான முறிவை உண்டாக்கலாம்</b> என்பதை நினைவில் கொள்ளவும்!</p>"
 
-#: composite.cpp:1043
+#: composite.cpp:1042
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "தேவையான X நீட்டிப்புகள் (XComposite மற்றும் XDamage) கிடைக்கவில்லை."
 
-#: composite.cpp:1046
+#: composite.cpp:1045
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL கிடைக்கவில்லை."
@@ -2338,12 +2338,12 @@ msgstr "மெய்நிகர் பணிமேடையைச் சேர�
 msgid "No matching windows"
 msgstr "எந்த சாளரமும் பொருந்தவில்லை"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:152
+#: plugins/private/qml/WindowHeapDelegate.qml:151
 #, kde-format
 msgid "Drag Down To Close"
 msgstr "மூட கீழே இழுக்கவும்"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:453
+#: plugins/private/qml/WindowHeapDelegate.qml:452
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
@@ -2397,7 +2397,7 @@ msgstr "செல்லுபடியாகாத பரப்பளவு"
 msgid "Region outside the workspace"
 msgstr "பணிமேடைக்கு வெளியேயான பரப்பளவு"
 
-#: plugins/screencast/screencaststream.cpp:356
+#: plugins/screencast/screencaststream.cpp:359
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr ""

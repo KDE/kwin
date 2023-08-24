@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-08-16 01:59+0000\n"
+"POT-Creation-Date: 2023-08-24 01:56+0000\n"
 "PO-Revision-Date: 2023-07-21 06:30+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -28,29 +28,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "Temuri.doghonadze@gmail.com"
 
-#: backends/wayland/wayland_output.cpp:294
+#: backends/wayland/wayland_output.cpp:295
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "მაჩვენებლის დათრევის მოსახსნელად მარჯვენა control-ს დააწექით"
 
-#: backends/wayland/wayland_output.cpp:296
+#: backends/wayland/wayland_output.cpp:297
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "მაჩვენებლის დასათრევად მარჯვენა Control-ს დააწექით"
 
-#: backends/wayland/wayland_output.cpp:300
+#: backends/wayland/wayland_output.cpp:301
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1 (%2)"
 msgstr "KDE Wayland კომპოზიტორი %1 (%2)"
 
-#: backends/wayland/wayland_output.cpp:303
+#: backends/wayland/wayland_output.cpp:304
 #, kde-format
 msgid "- Output disabled"
 msgstr "- გამოტანა გამორთულია"
 
-#: backends/wayland/wayland_output.cpp:305
+#: backends/wayland/wayland_output.cpp:306
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- გამოტანა დამალულია"
@@ -75,7 +75,7 @@ msgstr "KDE Wayland კომპოზიტორი"
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "სამუშაო მაგიდის ეფექტები დარესტარტდა გრაფიკის გადატვირთვის გამო"
 
-#: composite.cpp:846
+#: composite.cpp:845
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -84,7 +84,7 @@ msgstr ""
 "სამუშაო მაგიდის ეფექტები სხვა აპლიკაციამ აიღო თავის თავზე.<br/>შეგიძლიათ "
 "გააგრძელოთ '%1'-ის მალსახმობის გამოყენება."
 
-#: composite.cpp:1036
+#: composite.cpp:1035
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -97,12 +97,12 @@ msgstr ""
 "რომ დრაივერი უკვე განაახლეთ, ეს დაცვა <b>შეგიძლიათ გამორთოთ, მაგრამ "
 "გაითვალისწინეთ, რომ ის შეიძლება ავარიულად დასრულდეს!</b></p>"
 
-#: composite.cpp:1043
+#: composite.cpp:1042
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "X-ის აუცილებელი გაფართოებები (XComposite და XDamage) აღმოჩენილი არაა."
 
-#: composite.cpp:1046
+#: composite.cpp:1045
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL ხელმიუწვდომელია."
@@ -2335,12 +2335,12 @@ msgstr "ვირტუალური სამუშაო მაგიდი�
 msgid "No matching windows"
 msgstr "შესაბამისი ფანჯრების გარეშე"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:152
+#: plugins/private/qml/WindowHeapDelegate.qml:151
 #, kde-format
 msgid "Drag Down To Close"
 msgstr "დასახურად ჩამოათრიეთ"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:453
+#: plugins/private/qml/WindowHeapDelegate.qml:452
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
@@ -2394,7 +2394,7 @@ msgstr "არასწორი რეგიონი"
 msgid "Region outside the workspace"
 msgstr "რეგიონი სამუშაო სივრცის გარეთ"
 
-#: plugins/screencast/screencaststream.cpp:356
+#: plugins/screencast/screencaststream.cpp:359
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "PipeWire-ის ნაკადის შექმნის შეცდოა"
