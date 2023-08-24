@@ -160,17 +160,28 @@ void XdgSurfaceInterfacePrivate::apply(XdgSurfaceCommit *commit)
     }
 
     if (commit->windowGeometry.has_value()) {
-        windowGeometry = commit->windowGeometry.value();
-        Q_EMIT q->windowGeometryChanged(windowGeometry);
+        explicitWindowGeometry = true;
+        const QRectF geometry = commit->windowGeometry.value() & surface->boundingRect();
+        if (effectiveWindowGeometry != geometry) {
+            effectiveWindowGeometry = geometry;
+            Q_EMIT q->windowGeometryChanged();
+        }
+    } else if (!explicitWindowGeometry) {
+        const QRectF geometry = surface->boundingRect();
+        if (effectiveWindowGeometry != geometry) {
+            effectiveWindowGeometry = geometry;
+            Q_EMIT q->windowGeometryChanged();
+        }
     }
 }
 
 void XdgSurfaceInterfacePrivate::reset()
 {
+    effectiveWindowGeometry = QRectF();
+    explicitWindowGeometry = false;
     firstBufferAttached = false;
     isConfigured = false;
     isInitialized = false;
-    windowGeometry = QRect();
     Q_EMIT q->resetOccurred();
 }
 
@@ -260,7 +271,7 @@ void XdgSurfaceInterfacePrivate::xdg_surface_set_window_geometry(Resource *resou
         return;
     }
 
-    pending->windowGeometry = QRect(x, y, width, height);
+    pending->windowGeometry = QRectF(x, y, width, height);
 }
 
 void XdgSurfaceInterfacePrivate::xdg_surface_ack_configure(Resource *resource, uint32_t serial)
@@ -315,9 +326,9 @@ bool XdgSurfaceInterface::isConfigured() const
     return d->isConfigured;
 }
 
-QRect XdgSurfaceInterface::windowGeometry() const
+QRectF XdgSurfaceInterface::windowGeometry() const
 {
-    return d->windowGeometry;
+    return d->effectiveWindowGeometry;
 }
 
 XdgSurfaceInterface *XdgSurfaceInterface::get(::wl_resource *resource)

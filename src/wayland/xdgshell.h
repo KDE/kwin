@@ -166,7 +166,7 @@ public:
      *
      * This method will return an invalid QRect if the window geometry is not set by the client.
      */
-    QRect windowGeometry() const;
+    QRectF windowGeometry() const;
 
     /**
      * Returns the XdgSurfaceInterface for the specified wayland resource object \a resource.
@@ -187,7 +187,7 @@ Q_SIGNALS:
     /**
      * This signal is emitted when the window geometry has been changed.
      */
-    void windowGeometryChanged(const QRect &rect);
+    void windowGeometryChanged();
 
     /**
      * This signal is emitted when the surface has been unmapped and its state has been reset.

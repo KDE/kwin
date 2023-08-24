@@ -87,7 +87,7 @@ protected:
 
 struct XdgSurfaceCommit
 {
-    std::optional<QRect> windowGeometry;
+    std::optional<QRectF> windowGeometry;
     std::optional<quint32> acknowledgedConfigure;
 };
 
@@ -117,7 +117,8 @@ public:
     QPointer<XdgToplevelInterface> toplevel;
     QPointer<XdgPopupInterface> popup;
     QPointer<SurfaceInterface> surface;
-    QRect windowGeometry;
+    QRectF effectiveWindowGeometry;
+    bool explicitWindowGeometry = false;
     bool firstBufferAttached = false;
     bool isConfigured = false;
     bool isInitialized = false;
