@@ -122,7 +122,8 @@ public:
     QPointer<XdgPopupInterface> popup;
     QPointer<XXPipV1Interface> pip;
     QPointer<SurfaceInterface> surface;
-    RectF windowGeometry;
+    RectF effectiveWindowGeometry;
+    bool explicitWindowGeometry = false;
     bool firstBufferAttached = false;
     bool isConfigured = false;
     bool isInitialized = false;
