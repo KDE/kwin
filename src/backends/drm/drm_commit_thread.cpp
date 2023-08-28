@@ -44,11 +44,10 @@ DrmCommitThread::DrmCommitThread()
                     std::this_thread::sleep_until(m_targetPageflipTime - s_safetyMargin);
                     lock.lock();
                 }
-                const auto it = std::find_if(m_commits.rbegin(), m_commits.rend(), [](const auto &commit) {
-                    return commit->areBuffersReadable();
-                });
-                if (it == m_commits.rend()) {
-                    // reschedule, this commit would not hit the pageflip deadline anyways
+                optimizeCommits();
+                auto &commit = m_commits.front();
+                if (!commit->areBuffersReadable()) {
+                    // no commit is ready yet, reschedule
                     if (m_vrr) {
                         m_targetPageflipTime += 50us;
                     } else {
@@ -56,21 +55,14 @@ DrmCommitThread::DrmCommitThread()
                     }
                     continue;
                 }
-                auto &commit = *it;
-                commit->setCursorOnly(std::all_of(m_commits.begin(), it.base(), [](const auto &commit) {
-                    return commit->isCursorOnly();
-                }));
-                const bool vrr = commit->isVrr();
+                const auto vrr = commit->isVrr();
                 const bool success = commit->commit();
                 if (success) {
                     m_pageflipPending = true;
-                    m_vrr = vrr;
+                    m_vrr = vrr.value_or(m_vrr);
                     // the atomic commit takes ownership of the object
                     commit.release();
-                    // commits that were pushed earlier are outdated and can be dropped
-                    std::move(m_commits.begin(), it.base(), std::back_inserter(m_droppedCommits));
-                    m_commits.erase(m_commits.begin(), it.base());
-                    // commits that came after will be rescheduled once the pageflip is done
+                    m_commits.erase(m_commits.begin());
                 } else {
                     for (auto &commit : m_commits) {
                         m_droppedCommits.push_back(std::move(commit));
@@ -84,6 +76,98 @@ DrmCommitThread::DrmCommitThread()
         }
     }));
     m_thread->start();
+}
+
+void DrmCommitThread::optimizeCommits()
+{
+    if (m_commits.size() <= 1) {
+        return;
+    }
+    // merge commits in the front that are already ready (regardless of which planes they modify)
+    if (m_commits.front()->areBuffersReadable()) {
+        auto it = m_commits.begin() + 1;
+        while (it != m_commits.end() && (*it)->areBuffersReadable()) {
+            m_commits.front()->merge(it->get());
+            m_droppedCommits.push_back(std::move(*it));
+            it = m_commits.erase(it);
+        }
+    }
+    // merge commits that are ready and modify the same drm planes
+    for (auto it = m_commits.begin(); it != m_commits.end();) {
+        DrmAtomicCommit *const commit = it->get();
+        it++;
+        while (it != m_commits.end() && commit->modifiedPlanes() == (*it)->modifiedPlanes() && (*it)->areBuffersReadable()) {
+            commit->merge(it->get());
+            m_droppedCommits.push_back(std::move(*it));
+            it = m_commits.erase(it);
+        }
+    }
+    if (m_commits.size() == 1) {
+        // already done
+        return;
+    }
+    std::unique_ptr<DrmAtomicCommit> front;
+    if (m_commits.front()->areBuffersReadable()) {
+        front = std::move(m_commits.front());
+        m_commits.erase(m_commits.begin());
+    }
+    // try to move commits that are ready to the front
+    for (auto it = m_commits.begin() + 1; it != m_commits.end();) {
+        auto &commit = *it;
+        // commits that target the same plane(s) need to stay in the same order
+        const auto &planes = commit->modifiedPlanes();
+        const bool skipping = std::any_of(m_commits.begin(), it, [&planes](const auto &other) {
+            return std::any_of(planes.begin(), planes.end(), [&other](DrmPlane *plane) {
+                return other->modifiedPlanes().contains(plane);
+            });
+        });
+        if (skipping || !commit->areBuffersReadable()) {
+            it++;
+            continue;
+        }
+        // find out if the modified commit order will actually work
+        std::unique_ptr<DrmAtomicCommit> duplicate;
+        if (front) {
+            duplicate = std::make_unique<DrmAtomicCommit>(*front);
+            duplicate->merge(commit.get());
+            if (!duplicate->test()) {
+                m_droppedCommits.push_back(std::move(duplicate));
+                it++;
+                continue;
+            }
+        } else {
+            if (!commit->test()) {
+                it++;
+                continue;
+            }
+            duplicate = std::make_unique<DrmAtomicCommit>(*commit);
+        }
+        bool success = true;
+        for (const auto &otherCommit : m_commits) {
+            if (otherCommit != commit) {
+                duplicate->merge(otherCommit.get());
+                if (!duplicate->test()) {
+                    success = false;
+                    break;
+                }
+            }
+        }
+        m_droppedCommits.push_back(std::move(duplicate));
+        if (success) {
+            if (front) {
+                front->merge(commit.get());
+                m_droppedCommits.push_back(std::move(commit));
+            } else {
+                front = std::move(commit);
+            }
+            it = m_commits.erase(it);
+        } else {
+            it++;
+        }
+    }
+    if (front) {
+        m_commits.insert(m_commits.begin(), std::move(front));
+    }
 }
 
 DrmCommitThread::~DrmCommitThread()

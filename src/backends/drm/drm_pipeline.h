@@ -136,8 +136,6 @@ public:
     enum class CommitMode {
         Test,
         TestAllowModeset,
-        Commit,
-        CommitCursor,
         CommitModeset
     };
     Q_ENUM(CommitMode)
@@ -161,6 +159,7 @@ private:
     void atomicCommitSuccessful();
     bool prepareAtomicModeset(DrmAtomicCommit *commit);
     bool prepareAtomicPresentation(DrmAtomicCommit *commit);
+    void prepareAtomicCursor(DrmAtomicCommit *commit);
     void prepareAtomicDisable(DrmAtomicCommit *commit);
     static Error commitPipelinesAtomic(const QVector<DrmPipeline *> &pipelines, CommitMode mode, const QVector<DrmObject *> &unusedObjects);
 
