@@ -330,15 +330,35 @@ int drmHandleEvent(int fd, drmEventContextPtr evctx)
 
 int drmIoctl(int fd, unsigned long request, void *arg)
 {
-    GPU(fd, -EINVAL);
     if (request == DRM_IOCTL_PRIME_FD_TO_HANDLE) {
+        GPU(fd, -EINVAL);
         auto args = static_cast<drm_prime_handle *>(arg);
         args->handle = 42; // just pass a dummy value so the request doesn't fail
         return 0;
     } else if (request == DRM_IOCTL_PRIME_HANDLE_TO_FD) {
         return -(errno = ENOTSUP);
     } else if (request == DRM_IOCTL_GEM_CLOSE) {
+        GPU(fd, -EINVAL);
         return 0;
+    } else if (request == DRM_IOCTL_MODE_ATOMIC) {
+        const auto args = static_cast<drm_mode_atomic *>(arg);
+        auto req = drmModeAtomicAlloc();
+        const uint32_t *const objects = reinterpret_cast<const uint32_t *>(args->objs_ptr);
+        const uint32_t *const propsCounts = reinterpret_cast<const uint32_t *>(args->count_props_ptr);
+        const uint32_t *const props = reinterpret_cast<const uint32_t *>(args->props_ptr);
+        const uint64_t *const values = reinterpret_cast<const uint64_t *>(args->prop_values_ptr);
+        uint32_t propIndex = 0;
+        for (uint32_t objIndex = 0; objIndex < args->count_objs; objIndex++) {
+            const uint32_t objectId = objects[objIndex];
+            const uint32_t count = propsCounts[objIndex];
+            for (uint32_t i = 0; i < count; i++) {
+                drmModeAtomicAddProperty(req, objectId, props[propIndex + i], values[propIndex + i]);
+            }
+            propIndex += count;
+        }
+        int ret = drmModeAtomicCommit(fd, req, args->flags, reinterpret_cast<void *>(args->user_data));
+        drmModeAtomicFree(req);
+        return ret;
     }
     return -(errno = ENOTSUP);
 }

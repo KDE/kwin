@@ -39,13 +39,12 @@ DrmGpu *DrmCommit::gpu() const
 DrmAtomicCommit::DrmAtomicCommit(const QVector<DrmPipeline *> &pipelines)
     : DrmCommit(pipelines.front()->gpu())
     , m_pipelines(pipelines)
-    , m_req(drmModeAtomicAlloc())
 {
 }
 
 void DrmAtomicCommit::addProperty(const DrmProperty &prop, uint64_t value)
 {
-    drmModeAtomicAddProperty(m_req.get(), prop.drmObject()->id(), prop.propId(), value);
+    m_properties[prop.drmObject()->id()][prop.propId()] = value;
 }
 
 void DrmAtomicCommit::addBlob(const DrmProperty &prop, const std::shared_ptr<DrmBlob> &blob)
@@ -68,27 +67,57 @@ void DrmAtomicCommit::setVrr(DrmCrtc *crtc, bool vrr)
 
 bool DrmAtomicCommit::test()
 {
-    return drmModeAtomicCommit(gpu()->fd(), m_req.get(), DRM_MODE_ATOMIC_TEST_ONLY | DRM_MODE_ATOMIC_NONBLOCK, this) == 0;
+    return doCommit(DRM_MODE_ATOMIC_TEST_ONLY | DRM_MODE_ATOMIC_NONBLOCK);
 }
 
 bool DrmAtomicCommit::testAllowModeset()
 {
-    return drmModeAtomicCommit(gpu()->fd(), m_req.get(), DRM_MODE_ATOMIC_TEST_ONLY | DRM_MODE_ATOMIC_ALLOW_MODESET, this) == 0;
+    return doCommit(DRM_MODE_ATOMIC_TEST_ONLY | DRM_MODE_ATOMIC_ALLOW_MODESET);
 }
 
 bool DrmAtomicCommit::commit()
 {
-    return drmModeAtomicCommit(gpu()->fd(), m_req.get(), DRM_MODE_ATOMIC_NONBLOCK | DRM_MODE_PAGE_FLIP_EVENT, this) == 0;
+    return doCommit(DRM_MODE_ATOMIC_NONBLOCK | DRM_MODE_PAGE_FLIP_EVENT);
 }
 
 bool DrmAtomicCommit::commitModeset()
 {
-    return drmModeAtomicCommit(gpu()->fd(), m_req.get(), DRM_MODE_ATOMIC_ALLOW_MODESET, this) == 0;
+    return doCommit(DRM_MODE_ATOMIC_ALLOW_MODESET);
 }
 
-drmModeAtomicReq *DrmAtomicCommit::req() const
+bool DrmAtomicCommit::doCommit(uint32_t flags)
 {
-    return m_req.get();
+    std::vector<uint32_t> objects;
+    std::vector<uint32_t> propertyCounts;
+    std::vector<uint32_t> propertyIds;
+    std::vector<uint64_t> values;
+    objects.reserve(m_properties.size());
+    propertyCounts.reserve(m_properties.size());
+    uint64_t totalPropertiesCount = 0;
+    for (const auto &[object, properties] : m_properties) {
+        objects.push_back(object);
+        propertyCounts.push_back(properties.size());
+        totalPropertiesCount += properties.size();
+    }
+    propertyIds.reserve(totalPropertiesCount);
+    values.reserve(totalPropertiesCount);
+    for (const auto &[object, properties] : m_properties) {
+        for (const auto &[property, value] : properties) {
+            propertyIds.push_back(property);
+            values.push_back(value);
+        }
+    }
+    drm_mode_atomic commitData{
+        .flags = flags,
+        .count_objs = uint32_t(objects.size()),
+        .objs_ptr = reinterpret_cast<uint64_t>(objects.data()),
+        .count_props_ptr = reinterpret_cast<uint64_t>(propertyCounts.data()),
+        .props_ptr = reinterpret_cast<uint64_t>(propertyIds.data()),
+        .prop_values_ptr = reinterpret_cast<uint64_t>(values.data()),
+        .reserved = 0,
+        .user_data = reinterpret_cast<uint64_t>(this),
+    };
+    return drmIoctl(m_gpu->fd(), DRM_IOCTL_MODE_ATOMIC, &commitData) == 0;
 }
 
 void DrmAtomicCommit::pageFlipped(std::chrono::nanoseconds timestamp) const
