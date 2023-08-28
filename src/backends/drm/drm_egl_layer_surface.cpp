@@ -31,6 +31,8 @@ static const QVector<uint64_t> linearModifier = {DRM_FORMAT_MOD_LINEAR};
 static const QVector<uint64_t> implicitModifier = {DRM_FORMAT_MOD_INVALID};
 static const QVector<uint32_t> cpuCopyFormats = {DRM_FORMAT_ARGB8888, DRM_FORMAT_XRGB8888};
 
+static const bool bufferAgeEnabled = qEnvironmentVariable("KWIN_USE_BUFFER_AGE") != QStringLiteral("0");
+
 static gbm_format_name_desc formatName(uint32_t format)
 {
     gbm_format_name_desc ret;
@@ -90,7 +92,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
         }
     }
 
-    QRegion repaint = m_surface.damageJournal.accumulate(slot->age(), infiniteRegion());
+    const QRegion repaint = bufferAgeEnabled ? m_surface.damageJournal.accumulate(slot->age(), infiniteRegion()) : infiniteRegion();
     if (enableColormanagement) {
         if (!m_surface.shadowBuffer || m_surface.shadowTexture->size() != m_surface.gbmSwapchain->size()) {
             m_surface.shadowTexture = GLTexture::allocate(GL_RGBA16F, m_surface.gbmSwapchain->size());

@@ -31,6 +31,8 @@ namespace KWin
 namespace Wayland
 {
 
+static const bool bufferAgeEnabled = qEnvironmentVariable("KWIN_USE_BUFFER_AGE") != QStringLiteral("0");
+
 WaylandEglPrimaryLayer::WaylandEglPrimaryLayer(WaylandOutput *output, WaylandEglBackend *backend)
     : m_waylandOutput(output)
     , m_backend(backend)
@@ -86,10 +88,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglPrimaryLayer::beginFrame()
         return std::nullopt;
     }
 
-    QRegion repair;
-    if (m_backend->supportsBufferAge()) {
-        repair = m_damageJournal.accumulate(m_buffer->age(), infiniteRegion());
-    }
+    const QRegion repair = bufferAgeEnabled ? m_damageJournal.accumulate(m_buffer->age(), infiniteRegion()) : infiniteRegion();
     if (!m_query) {
         m_query = std::make_unique<GLRenderTimeQuery>();
     }
