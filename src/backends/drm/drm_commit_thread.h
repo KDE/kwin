@@ -41,6 +41,7 @@ Q_SIGNALS:
 private:
     void clearDroppedCommits();
     TimePoint estimateNextVblank(TimePoint now) const;
+    void optimizeCommits();
 
     std::vector<std::unique_ptr<DrmAtomicCommit>> m_commits;
     std::unique_ptr<QThread> m_thread;

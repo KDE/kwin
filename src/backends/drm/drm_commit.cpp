@@ -139,9 +139,29 @@ bool DrmAtomicCommit::areBuffersReadable() const
     });
 }
 
-bool DrmAtomicCommit::isVrr() const
+std::optional<bool> DrmAtomicCommit::isVrr() const
 {
-    return m_vrr;
+    return m_vrr.value_or(false);
+}
+
+void DrmAtomicCommit::merge(DrmAtomicCommit *onTop)
+{
+    for (const auto &[obj, properties] : onTop->m_properties) {
+        auto &ownProperties = m_properties[obj];
+        for (const auto &[prop, value] : properties) {
+            ownProperties[prop] = value;
+        }
+    }
+    for (const auto &[plane, buffer] : onTop->m_buffers) {
+        m_buffers[plane] = buffer;
+    }
+    for (const auto &[prop, blob] : onTop->m_blobs) {
+        m_blobs[prop] = blob;
+    }
+    if (onTop->m_vrr) {
+        m_vrr = onTop->m_vrr;
+    }
+    m_cursorOnly &= onTop->isCursorOnly();
 }
 
 void DrmAtomicCommit::setCursorOnly(bool cursor)

@@ -49,6 +49,7 @@ class DrmAtomicCommit : public DrmCommit
 {
 public:
     DrmAtomicCommit(const QVector<DrmPipeline *> &pipelines);
+    DrmAtomicCommit(const DrmAtomicCommit &copy) = default;
 
     void addProperty(const DrmProperty &prop, uint64_t value);
     template<typename T>
@@ -68,7 +69,9 @@ public:
     void pageFlipped(std::chrono::nanoseconds timestamp) const override;
 
     bool areBuffersReadable() const;
-    bool isVrr() const;
+    std::optional<bool> isVrr() const;
+
+    void merge(DrmAtomicCommit *onTop);
 
     void setCursorOnly(bool cursor);
     bool isCursorOnly() const;
@@ -77,9 +80,9 @@ private:
     bool doCommit(uint32_t flags);
 
     const QVector<DrmPipeline *> m_pipelines;
-    QHash<const DrmProperty *, std::shared_ptr<DrmBlob>> m_blobs;
+    std::unordered_map<const DrmProperty *, std::shared_ptr<DrmBlob>> m_blobs;
     std::unordered_map<DrmPlane *, std::shared_ptr<DrmFramebuffer>> m_buffers;
-    bool m_vrr = false;
+    std::optional<bool> m_vrr;
     std::unordered_map<uint32_t /* object */, std::unordered_map<uint32_t /* property */, uint64_t /* value */>> m_properties;
     bool m_cursorOnly = false;
 };

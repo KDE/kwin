@@ -78,7 +78,24 @@ DrmPipeline::Error DrmPipeline::present()
 {
     Q_ASSERT(m_pending.crtc);
     if (gpu()->atomicModeSetting()) {
-        return commitPipelines({this}, CommitMode::Commit);
+        // test the full state, to take pending commits into account
+        auto fullState = std::make_unique<DrmAtomicCommit>(QVector<DrmPipeline *>{this});
+        if (!prepareAtomicPresentation(fullState.get())) {
+            return Error::InvalidArguments;
+        }
+        if (m_pending.crtc->cursorPlane()) {
+            prepareAtomicCursor(fullState.get());
+        }
+        if (!fullState->test()) {
+            return errnoToError();
+        }
+        // only give the actual state update to the commit thread, so that it can potentially reorder the commits
+        auto primaryPlaneUpdate = std::make_unique<DrmAtomicCommit>(QVector<DrmPipeline *>{this});
+        if (!prepareAtomicPresentation(primaryPlaneUpdate.get())) {
+            return Error::InvalidArguments;
+        }
+        m_commitThread->addCommit(std::move(primaryPlaneUpdate));
+        return Error::None;
     } else {
         if (m_primaryLayer->hasDirectScanoutBuffer()) {
             // already presented
@@ -126,6 +143,9 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline 
             if (!pipeline->prepareAtomicPresentation(commit.get())) {
                 return Error::InvalidArguments;
             }
+            if (pipeline->m_pending.crtc->cursorPlane()) {
+                pipeline->prepareAtomicCursor(commit.get());
+            }
             if (mode == CommitMode::TestAllowModeset || mode == CommitMode::CommitModeset) {
                 if (!pipeline->prepareAtomicModeset(commit.get())) {
                     return Error::InvalidArguments;
@@ -170,24 +190,6 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline 
         }
         return Error::None;
     }
-    case CommitMode::Commit: {
-        Q_ASSERT(pipelines.size() == 1);
-        Q_ASSERT(unusedObjects.isEmpty());
-        const auto pipeline = pipelines.front();
-        pipeline->m_commitThread->addCommit(std::move(commit));
-        pipeline->atomicCommitSuccessful();
-        return Error::None;
-    }
-    case CommitMode::CommitCursor: {
-        commit->setCursorOnly(true);
-        if (!commit->test()) {
-            return errnoToError();
-        }
-        const auto pipeline = pipelines.front();
-        pipeline->m_commitThread->addCommit(std::move(commit));
-        pipeline->atomicCommitSuccessful();
-        return Error::None;
-    };
     default:
         Q_UNREACHABLE();
     }
@@ -231,14 +233,16 @@ bool DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commit)
     const auto fb = m_primaryLayer->currentBuffer();
     m_pending.crtc->primaryPlane()->set(commit, QPoint(0, 0), fb->buffer()->size(), centerBuffer(fb->buffer()->size(), m_pending.mode->size()));
     commit->addBuffer(m_pending.crtc->primaryPlane(), fb);
-
-    if (auto plane = m_pending.crtc->cursorPlane()) {
-        const auto layer = cursorLayer();
-        plane->set(commit, QPoint(0, 0), gpu()->cursorSize(), QRect(layer->position().toPoint(), gpu()->cursorSize()));
-        commit->addProperty(plane->crtcId, layer->isEnabled() ? m_pending.crtc->id() : 0);
-        commit->addBuffer(plane, layer->isEnabled() ? layer->currentBuffer() : nullptr);
-    }
     return true;
+}
+
+void DrmPipeline::prepareAtomicCursor(DrmAtomicCommit *commit)
+{
+    auto plane = m_pending.crtc->cursorPlane();
+    const auto layer = cursorLayer();
+    plane->set(commit, QPoint(0, 0), gpu()->cursorSize(), QRect(layer->position().toPoint(), gpu()->cursorSize()));
+    commit->addProperty(plane->crtcId, layer->isEnabled() ? m_pending.crtc->id() : 0);
+    commit->addBuffer(plane, layer->isEnabled() ? layer->currentBuffer() : nullptr);
 }
 
 void DrmPipeline::prepareAtomicDisable(DrmAtomicCommit *commit)
@@ -318,6 +322,7 @@ bool DrmPipeline::prepareAtomicModeset(DrmAtomicCommit *commit)
         if (cursor->pixelBlendMode.isValid()) {
             commit->addEnum(cursor->pixelBlendMode, DrmPlane::PixelBlendMode::PreMultiplied);
         }
+        prepareAtomicCursor(commit);
     }
     return true;
 }
@@ -359,17 +364,27 @@ void DrmPipeline::atomicCommitSuccessful()
 
 bool DrmPipeline::updateCursor()
 {
-    bool result;
     // explicitly check for the cursor plane and not for AMS, as we might not always have one
     if (m_pending.crtc->cursorPlane()) {
         if (needsModeset() || !m_current.active) {
             return false;
         }
-        result = commitPipelines({this}, CommitMode::CommitCursor) == Error::None;
+        // test the full state, to take pending commits into account
+        auto fullState = std::make_unique<DrmAtomicCommit>(QVector<DrmPipeline *>{this});
+        prepareAtomicPresentation(fullState.get());
+        prepareAtomicCursor(fullState.get());
+        if (!fullState->test()) {
+            return false;
+        }
+        // only give the actual state update to the commit thread, so that it can potentially reorder the commits
+        auto cursorOnly = std::make_unique<DrmAtomicCommit>(QVector<DrmPipeline *>{this});
+        prepareAtomicCursor(cursorOnly.get());
+        cursorOnly->setCursorOnly(true);
+        m_commitThread->addCommit(std::move(cursorOnly));
+        return true;
     } else {
-        result = setCursorLegacy();
+        return setCursorLegacy();
     }
-    return result;
 }
 
 void DrmPipeline::applyPendingChanges()
