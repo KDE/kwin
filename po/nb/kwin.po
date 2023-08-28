@@ -3589,7 +3589,6 @@ msgstr ""
 
 #: useractions.cpp:256
 #, fuzzy, kde-format
-#| msgid "Setup Window Shortcut"
 msgid "Set Window Short&cut…"
 msgstr "Sett opp vindussnarvei"
 
