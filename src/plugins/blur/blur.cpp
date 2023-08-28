@@ -564,6 +564,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
 
     const QRect backgroundRect = blurShape.boundingRect();
     const QRect deviceBackgroundRect = scaledRect(backgroundRect, viewport.scale()).toRect();
+    const auto opacity = w->opacity() * data.opacity();
 
     if (renderInfo.framebuffers.size() != (m_iterationCount + 1) || renderInfo.textures[0]->size() != backgroundRect.size() || renderInfo.textures[0]->internalFormat() != textureFormat) {
         renderInfo.framebuffers.clear();
@@ -765,9 +766,9 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
         read->colorAttachment()->bind();
 
         // Modulate the blurred texture with the window opacity if the window isn't opaque
-        if (data.opacity() < 1.0) {
+        if (opacity < 1.0) {
             glEnable(GL_BLEND);
-            float o = 1.0f - data.opacity();
+            float o = 1.0f - (opacity);
             o = 1.0f - o * o;
             glBlendColor(0, 0, 0, o);
             glBlendFunc(GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA);
@@ -775,7 +776,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
 
         vbo->draw(GL_TRIANGLES, 6, vertexCount);
 
-        if (data.opacity() < 1.0) {
+        if (opacity < 1.0) {
             glDisable(GL_BLEND);
         }
 
@@ -787,7 +788,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
         // artifacts, which often happens due to the smooth color transitions in the blurred image.
 
         glEnable(GL_BLEND);
-        if (data.opacity() < 1.0) {
+        if (opacity < 1.0) {
             glBlendFunc(GL_CONSTANT_ALPHA, GL_ONE);
         } else {
             glBlendFunc(GL_ONE, GL_ONE);

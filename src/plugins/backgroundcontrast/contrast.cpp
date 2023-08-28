@@ -417,7 +417,7 @@ void ContrastEffect::drawWindow(const RenderTarget &renderTarget, const RenderVi
         }
 
         if (!shape.isEmpty()) {
-            doContrast(renderTarget, viewport, w, shape, screen, data.opacity(), data.projectionMatrix());
+            doContrast(renderTarget, viewport, w, shape, screen, w->opacity() * data.opacity(), data.projectionMatrix());
         }
     }
 
