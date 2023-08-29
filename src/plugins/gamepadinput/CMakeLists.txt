@@ -41,6 +41,7 @@ target_sources(gamepadinput PRIVATE
     gaminginput_v2_interface.cpp
     inputfd_v1_interface.cpp
     evdevcontroller.cpp
+    evdevdevice.cpp
 )
 ecm_add_qtwayland_server_protocol_kde(gamepadinput
     PROTOCOL gaming-input-unstable-v2.xml

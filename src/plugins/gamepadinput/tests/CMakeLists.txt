@@ -9,11 +9,11 @@ install(TARGETS gamepadinspect DESTINATION ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 ################
 
-add_executable(inputfdinspect inputfdinspect.cpp inputfd_v1.cpp)
+add_executable(inputfdinspect inputfdinspect.cpp inputfd_v1.cpp ../evdevdevice.cpp)
 
 qt6_generate_wayland_protocol_client_sources(inputfdinspect
     FILES
         ${CMAKE_CURRENT_SOURCE_DIR}/../inputfd-v1.xml
 )
-target_link_libraries(inputfdinspect Qt::Gui Qt::WaylandClient)
+target_link_libraries(inputfdinspect Qt::Gui Qt::WaylandClient PkgConfig::Evdev)
 install(TARGETS inputfdinspect DESTINATION ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

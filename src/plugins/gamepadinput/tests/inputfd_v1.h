@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "../evdevdevice.h"
 #include "qwayland-inputfd-v1.h"
 #include <QObject>
 #include <qguiapplication_platform.h>
@@ -40,19 +41,17 @@ public:
         qDebug() << "removed" << m_name;
         deleteLater();
     }
-    void wp_inputfd_device_evdev_v1_focus_in(uint32_t serial, int32_t fd, struct ::wl_surface *surface) override
-    {
-        qDebug() << "focus in" << m_name << fd << surface;
-    }
+    void wp_inputfd_device_evdev_v1_focus_in(uint32_t serial, int32_t fd, struct ::wl_surface *surface) override;
     void wp_inputfd_device_evdev_v1_focus_out() override
     {
         qDebug() << "focus out" << m_name;
+        m_dev.reset();
     }
 
 private:
     QString m_name;
     uint32_t m_vid = 0, m_pid = 0;
-    std::optional<int> m_fd;
+    std::unique_ptr<KWin::EvdevDevice> m_dev;
 };
 
 class InputFdSeatV1 : public QtWayland::wp_inputfd_seat_evdev_v1
@@ -65,6 +64,7 @@ public:
 
     void wp_inputfd_seat_evdev_v1_device_added(struct ::wp_inputfd_device_evdev_v1 *id) override
     {
+        qDebug() << "device added";
         new InputFdDeviceV1(id);
     }
 };
