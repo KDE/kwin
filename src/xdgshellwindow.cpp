@@ -1286,8 +1286,9 @@ void XdgToplevelWindow::handlePingDelayed(quint32 serial)
 
 void XdgToplevelWindow::handlePongReceived(quint32 serial)
 {
-    m_pings.remove(serial);
-    setUnresponsive(false);
+    if (m_pings.remove(serial)) {
+        setUnresponsive(false);
+    }
 }
 
 void XdgToplevelWindow::handleMaximumSizeChanged()
