@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-08-24 01:56+0000\n"
+"POT-Creation-Date: 2023-08-29 01:56+0000\n"
 "PO-Revision-Date: 2023-06-23 12:40+0200\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -32,29 +32,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "flidr@kky.zcu.cz,lukas@kde.org,jfriedl@suse.cz,david@kolibac.cz"
 
-#: backends/wayland/wayland_output.cpp:295
+#: backends/wayland/wayland_output.cpp:254
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:297
+#: backends/wayland/wayland_output.cpp:256
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:301
+#: backends/wayland/wayland_output.cpp:260
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1 (%2)"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:304
+#: backends/wayland/wayland_output.cpp:263
 #, kde-format
 msgid "- Output disabled"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:306
+#: backends/wayland/wayland_output.cpp:265
 #, kde-format
 msgid "- Output dimmed"
 msgstr ""
@@ -74,12 +74,12 @@ msgstr ""
 msgid "KDE Wayland Compositor"
 msgstr ""
 
-#: composite.cpp:619
+#: composite.cpp:675
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Grafické efekty byly restartovány kvůli restartu grafiky"
 
-#: composite.cpp:845
+#: composite.cpp:917
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -88,7 +88,7 @@ msgstr ""
 "Efekty na ploše byly pozastaveny jinou aplikací.<br/>Můžete je obnovit "
 "klávesovou zkratkou '%1'."
 
-#: composite.cpp:1035
+#: composite.cpp:1107
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -101,12 +101,12 @@ msgstr ""
 "aktualizovali na stabilní verzi ovladače,<br>můžete resetovat ochranu, ale "
 "mějte na paměti, že to může vést k okamžitému pádu.</b></p>"
 
-#: composite.cpp:1042
+#: composite.cpp:1114
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Požadovaná X rozšíření (XComposite a XDamage) nejsou dostupná."
 
-#: composite.cpp:1045
+#: composite.cpp:1117
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL není dostupné."
@@ -4108,7 +4108,7 @@ msgstr "Přepnout se na plochu dolů"
 msgid "Switch to Desktop %1"
 msgstr "Přepnout se na plochu %1"
 
-#: window.cpp:3078
+#: window.cpp:3079
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-08-24 01:56+0000\n"
+"POT-Creation-Date: 2023-08-29 01:56+0000\n"
 "PO-Revision-Date: 2021-10-03 17:31-0700\n"
 "Last-Translator: Fumiaki Okushi <fumiaki.okushi@gmail.com>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -39,29 +39,29 @@ msgstr ""
 "kom@kde.gr.jp,shinobo@leo.bekkoame.ne.jp,ryuk@user.script.nu,okushi@kde.gr."
 "jp,tsuno@ngy.1st.ne.jp"
 
-#: backends/wayland/wayland_output.cpp:295
+#: backends/wayland/wayland_output.cpp:254
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:297
+#: backends/wayland/wayland_output.cpp:256
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:301
+#: backends/wayland/wayland_output.cpp:260
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1 (%2)"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:304
+#: backends/wayland/wayland_output.cpp:263
 #, kde-format
 msgid "- Output disabled"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:306
+#: backends/wayland/wayland_output.cpp:265
 #, kde-format
 msgid "- Output dimmed"
 msgstr ""
@@ -81,12 +81,12 @@ msgstr ""
 msgid "KDE Wayland Compositor"
 msgstr ""
 
-#: composite.cpp:619
+#: composite.cpp:675
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 
-#: composite.cpp:845
+#: composite.cpp:917
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -95,7 +95,7 @@ msgstr ""
 "デスクトップ効果は他のアプリケーションによって一時停止されました。<br/>ショー"
 "トカット %1 を使って再開できます。"
 
-#: composite.cpp:1035
+#: composite.cpp:1107
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -104,12 +104,12 @@ msgid ""
 "<b>be aware that this might result in an immediate crash!</b></p>"
 msgstr ""
 
-#: composite.cpp:1042
+#: composite.cpp:1114
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "必要な X 拡張 (XComposite と XDamage) がありません"
 
-#: composite.cpp:1045
+#: composite.cpp:1117
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr ""
@@ -4267,7 +4267,7 @@ msgstr "一つ下のデスクトップに切り替え"
 msgid "Switch to Desktop %1"
 msgstr "デスクトップ %1 に切り替え"
 
-#: window.cpp:3078
+#: window.cpp:3079
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
