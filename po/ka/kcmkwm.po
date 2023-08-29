@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-03 00:48+0000\n"
-"PO-Revision-Date: 2023-06-14 06:06+0200\n"
+"PO-Revision-Date: 2023-08-28 06:19+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.3.1\n"
+"X-Generator: Poedit 3.3.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -446,6 +446,9 @@ msgid ""
 "unshade automatically when the mouse pointer has been over the titlebar for "
 "some time.</p></body></html>"
 msgstr ""
+"<html><head/><body><p>თუ ეს პარამეტრი ჩართულია, როცა თაგუნას მაჩვენებელს "
+"სათაურის ზოლზე ცოტა ხანს გააჩერებთ, დაჩრდილული ფანჯარა ავტომატურად "
+"განიჩრდილება.</p></body></html>"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ShadeHover)
 #: advanced.ui:35
@@ -460,6 +463,8 @@ msgid ""
 "Sets the time in milliseconds before the window unshades when the mouse "
 "pointer goes over the shaded window."
 msgstr ""
+"დრო მილიწამებში, რომლის შემდეგაც დაჩრდილული ფანჯრის განჩრდილვა მოხდება, როცა "
+"თაგუნას კურსორს დაჩრდილულ ფანჯარაზე გადაატარებთ."
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_DelayFocusInterval)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AutoRaiseInterval)
@@ -503,6 +508,29 @@ msgid ""
 "\"><span style=\" font-style:italic;\">Under mouse</span> will place the "
 "window under the pointer</li></ul></body></html>"
 msgstr ""
+"<html><head/><body><p>განლაგების პოლიტიკა განსაზღვრავს, სად გამოჩნდება ახალი "
+"ფანჯრები.</p><ul style=\"margin-top: 0px; margin-bottom: 0px; margin-left: "
+"0px; margin-right: 0px; -qt-list-indent: 1;\"><li style=\" margin-top:12px; "
+"margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
+"text-indent:0px;\"><span style=\" font-style:italic;\">ჭკვიანი</span> "
+"ეცდება, ფანჯრებმა ერთმანეთი რაც შეიძლება ნაკლებად გადაფარონ</li><li style=\" "
+"margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
+"block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
+"\">გადიდებული</span> ეცდება, ყველა ფანჯარა მთელ ეკრანზე გაშალოს. შეიძლება "
+"სასარგებლო იყოს ფანჯრების არჩევითად განლაგებისთვის კონკრეტული ტიპის "
+"ფანჯრებისთვის.</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
+"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+"style=\" font-style:italic;\">შემთხვევითი</span> შემთხვევით მდებარეობას "
+"აირჩევს.</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
+"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+"style=\" font-style:italic;\">ცენტრში</span> ფანჯარას ცენტრში განათავსებს</"
+"li><li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
+"italic;\">ნულოვანი-კუთხით</span> ფანჯარას ზედა-მარცენა კუთხეში მოათავსებს</"
+"li><li style=\" margin-top:0px; margin-bottom:12px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
+"italic;\">თაგუნას ქვეშ</span> ფანჯარას კურსორის ქვეშ მოათავსებს</li></ul></"
+"body></html>"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
 #: advanced.ui:80
@@ -548,6 +576,9 @@ msgid ""
 "windows are allowed to do so. This will override the window placement mode "
 "defined above."
 msgstr ""
+"როცა ჩართულია, აპებს, რომლებსაც აქვთ საშუალება, დაიმახსოვრონ თავიანთი "
+"ფანჯრის მდებარეობები, ამისი უფლება მიეცემათ. ეს გადაფარავს ფანჯრების "
+"მოთავსების რეჟიმს, რომელიც ზემოთ აირჩიეთ."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
 #: advanced.ui:116
@@ -573,6 +604,10 @@ msgid ""
 "application becomes active. Note that applications have to mark the windows "
 "with the proper window type for this feature to work."
 msgstr ""
+"როცა ჩართულია, არააქტიური აპლიკაციების დამხმარე ფანჯრები (ხელსაწყოს "
+"ფანჯრები, გამოტანილი მენიუები) დაიმალება და მხოლოდ მაშინ გამოჩნდება, როცა "
+"აპლიკაცია ისევ გააქტიურდება. დაიმახსოვრეთ, რომ იმისათვის, რომ ამან იმუშაოს, "
+"აპლიკაციებმა ფანჯრები სწორად უნდა დანიშნონ."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
 #: advanced.ui:136
@@ -604,6 +639,13 @@ msgid ""
 "Virtual Desktop</span> will cause the window to jump to the active Virtual "
 "Desktop. </p></body></html>"
 msgstr ""
+"<html><head/><body><p>ეს პარამეტრი აკონტროლებს, რა მოხდება, როცა აქტიურდება "
+"ღია ფანჯარა, რომელიც მიმდინარე ვირტუალური სამუშაო მაგიდის გარდა ნებისმიერ "
+"სხვაზე მდებარეობს. </p><p><span style=\" font-style:italic;\">ვირტუალურ "
+"სამუშაო მაგიდაზე გადართვა</span> გადართავს ვირტუალურ სამუშაო მაგიდას იქ, "
+"სადაც ფანჯარა ახლა მდებარეობს. </p><p><span style=\" font-style:italic;"
+"\">ფანჯრის მიმდინარე ვირტუალურ ფანჯარაზე გადმოტანა</span> ფანჯრის აქტიურ "
+"ვირტუალურ სამუშაო მაგიდაზე გადმოტანას გამოიწვევს. </p></body></html>"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:164
@@ -681,6 +723,8 @@ msgid ""
 "This is the delay after which the window the mouse pointer is over will "
 "automatically receive focus."
 msgstr ""
+"პაუზა, რომლის გავლის შემდეგაც ფანჯარა, რომელზეც თაგუნას კურსორი მიუთითებს, "
+"ფოკუსს ავტომატურად მიიღებს."
 
 #. i18n: ectx: property (text), widget (QLabel, focusStealingLabel)
 #: focus.ui:101
@@ -776,6 +820,9 @@ msgid ""
 "when you click somewhere into the window contents. To change it for inactive "
 "windows, you need to change the settings in the Actions tab."
 msgstr ""
+"თუ ეს პარამეტრი ჩართულია, აქტიურ ფანჯარა წინ გადმოვა, როცა მის შემცველობაში "
+"სადმე დააწკაპუნეთ. ამის არააქტიური ფანჯრებისთვის შესაცვლელად შეგიძლიათ "
+"ქმედებების ჩანართში პარამეტრი ჩართოთ."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ClickRaise)
 #: focus.ui:156
@@ -790,6 +837,8 @@ msgid ""
 "When this option is enabled, a window in the background will automatically "
 "come to the front when the mouse pointer has been over it for some time."
 msgstr ""
+"თუ ეს პარამეტრი ჩართულია, თუ თაგუნას კურსორს ფონურ ფანჯარაზე ცოტა ხანს "
+"გააჩერებთ, ის წინ გადმოვა."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AutoRaise)
 #: focus.ui:168
@@ -821,6 +870,9 @@ msgid ""
 "for example) is the screen containing the mouse pointer. When disabled, the "
 "active screen is the screen containing the focused window."
 msgstr ""
+"როცა ეს პარამეტრი ჩართულია, აქტიური ეკრანი (სადაც ახალი ფანჯრები ჩნდებიან) "
+"არის ეკრანი, რომელიც თაგუნას კურსორს შეიცავს. თუ ჩართულია, აქტიური ეკრანი "
+"ფოკუსის მქონე ფანჯრის შემცველი ეკრანია."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
 #: focus.ui:206
@@ -1146,6 +1198,8 @@ msgid ""
 "Here you can set the snap zone for screen edges, i.e. the 'strength' of the "
 "magnetic field which will make windows snap to the border when moved near it."
 msgstr ""
+"აქ შეგიძლიათ დააყენოთ მიბმის ზონა ეკრანის კუთხეებისთვის, ანუ მაგნიტური ველის "
+"'სიძლიერე', რომლებიც ფანჯრებს ერთმანეთს მიამაგრებს, როცა ახლოს მიიტანთ."
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_BorderSnapZone)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_WindowSnapZone)
@@ -1169,6 +1223,8 @@ msgid ""
 "magnetic field which will make windows snap to each other when they are "
 "moved near another window."
 msgstr ""
+"აქ შეგიძლია ფანჯრების მიბმის ზონა დააყენთ, ანუ მაგნიტური ველის \"სიძლიერე\", "
+"რომელიც ფანჯრებს ერთმანეთს აწებებს, თუ ისინი ახლოს არიან ერთმანეთთან."
 
 #. i18n: ectx: property (text), widget (QLabel, centerSnaplabel)
 #: moving.ui:84
@@ -1184,6 +1240,9 @@ msgid ""
 "the magnetic field which will make windows snap to the center of the screen "
 "when moved near it."
 msgstr ""
+"აქ შეგიძლიათ დააყენოთ მიბმის ზონა ეკრანის ცენტრისთვის, ანუ იმ მაგნიტური "
+"ველის \"ძალა\", რომელიც ფანჯრებს ეკრანის ცენტრზე მიამაგრებს, როცა ახლის "
+"გადაიტანთ."
 
 #. i18n: ectx: property (text), widget (QLabel, OverlapSnapLabel)
 #: moving.ui:113
@@ -1199,6 +1258,9 @@ msgid ""
 "them, i.e. they will not be snapped if the windows comes only near another "
 "window or border."
 msgstr ""
+"აქ შეგიძლიათ დააყენოთ, რომ ფანჯრები მხოლოდ მაშინ მიებმება, როცა ერთმანეთს "
+"გადაადებთ. ანუ, ისინი არ მიებმება, თუ ფანჯარა სხვა ფანჯარასთან ან საზღვართან "
+"ახლოს მივა."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SnapOnlyWhenOverlapping)
 #: moving.ui:126
@@ -1212,6 +1274,9 @@ msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
 "This behavior is common on other operating systems and likely what you want."
 msgstr ""
+"<em>ფოკუსისთვის დააწკაპუნეთ:</em> ფანჯარა აქტიური მაშინ გახდება, როცა ზედ "
+"დააწკაპუნეთ. ეს ქცევა საერთოა ოპერაციულ სისტემებს შორის და როგორც წესი ისაა, "
+"რაც თქვენ გჭირდებათ."
 
 #: windows.cpp:101
 #, kde-format
@@ -1222,6 +1287,11 @@ msgid ""
 "preferred candidate. Unusual, but possible variant of <em>Click to focus</"
 "em>."
 msgstr ""
+"<em>წკაპი ფოკუსისთვის (თაგუნას უპირატესობა):</em> ძირითადად იგივეა, რაც "
+"<em>წკაპი ფოკუსისთვის</em>. თუ აქტიური ფანჯარა სისტემის მიერ იქნა არჩეული "
+"(მაგ იმიტომ, რომ ამჟამად აქტიური დაიხურა), ფანჯარა, რომელიც თაგუნას კურსორის "
+"ქვეშაა, სასურველი კანდიდატი ხდება. <em>წკაპი ფოკუსისთვის</em>-ის უცნაური, "
+"მაგრამ შესაძლო ვარიანტი."
 
 #: windows.cpp:106
 #, kde-format
@@ -1231,6 +1301,11 @@ msgid ""
 "<em>Focus stealing prevention</em> takes place as usual. Think as <em>Click "
 "to focus</em> just without having to actually click."
 msgstr ""
+"<em>ფოკუსი დაყვება თაგუნას:</em> თაგუნას კურსორის შეტანა ფანჯრის შიგნით "
+"გაააქტიურებს მას. მაგ: ფანჯრები, რომლებიც თაგუნას კურსორის ქვეშ გაჩნდებიან, "
+"ფოკუსს ვერ მიიღებენ. როგორც ყოველთვის, <em>ფოკუსის მოპარვის თავიდან აცილება</"
+"em> ხდება. იფიქრეთ ამაზ, როგორც <em>დააწკაპუნეთ კურსორისთვის</em>-ზე, "
+"დაწკაპუნების საჭიროების გარეშე."
 
 #: windows.cpp:110
 #, kde-format
@@ -1240,6 +1315,10 @@ msgid ""
 "closed) the window under the mouse is the preferred candidate. Choose this, "
 "if you want a hover controlled focus."
 msgstr ""
+"ეს თითქმის იგივეა, რაც <em>ფოკუსი თაგუნას დაყვება</em>. თუ აქტიური ფანჯარა, "
+"რომელიც სისტემამ აირჩია (მაგ: იმიტომ, რომ აქტიური ფანჯარა დახურეთ), ფანჯარა, "
+"რომელიც თაგუნა კურსორის ქვეშ იმყოფება, ფოკუსის მისაღებად სასურველი კანდიდატი "
+"გახდება. აირჩიეთ, თუ გადატარებით მართვადი ფოკუსი გჭირდებათ."
 
 #: windows.cpp:115
 #, kde-format
@@ -1250,6 +1329,11 @@ msgid ""
 "not work. You very likely want to use <em>Focus follows mouse (mouse "
 "precedence)</em> instead!"
 msgstr ""
+"<em>ფოკუსი თაგუნას ქვეშ:</em> ფოკუსი ყოველთვის თაგუნას კურსორის ქვეშ მდებარე "
+"ფანჯარაზე იქნება. <br/><strong>გაფრთხილება:</strong> <em>ფოკუსის მოპარვის "
+"თავიდან აცილება</em> და <em>tabbox ('Alt+Tab')</em> ეწინააღმდეგება "
+"აქტივაციის ამ პოლიტიკას და არ იმუშავებენ. ალბათ, სჯობს, <em>ფოკუსი დასდევს "
+"თაგუნას (თაგუნას უპირატესობა)</em> აირჩიოთ!"
 
 #: windows.cpp:119
 #, kde-format
@@ -1261,3 +1345,9 @@ msgid ""
 "activation policy and will not work. You very likely want to use <em>Focus "
 "follows mouse (mouse precedence)</em> instead!"
 msgstr ""
+"<em>ფოკუსი ყოველთვის მხოლოდ თაგუნას ქვეშაა:</em> ფოკუსი ყოველთვის "
+"ფანჯარაზეა, რომელიც თაგუნას ქვეშაა, რაც ძალიან წააგავს უმართავ მოძველებულ "
+"X11 გარემოს.<br/><strong>გაფრთხილება:</strong> <em>ფოკუსის მოპარვის თავიდან "
+"აცილება</em> და <em>ამოცანების გადართვა ('Alt+Tab')</em> ხელს უშლიან "
+"აქტივაციის პოლიტიკას და არ იმუშავებენ. ალბათ <em>ფოკუსი თაგუნას დაყვება</em> "
+"პოლიტიკა გირჩევნიათ!"

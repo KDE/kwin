@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-25 02:43+0000\n"
-"PO-Revision-Date: 2023-06-14 06:06+0200\n"
+"PO-Revision-Date: 2023-08-28 06:19+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.3.1\n"
+"X-Generator: Poedit 3.3.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -325,6 +325,8 @@ msgid ""
 "Click the <interface>Add Property...</interface> button below to add some "
 "window properties that will be affected by the rule"
 msgstr ""
+"დააწექით ღილაკს <interface>თვისების დამატება...</interface> წესის მიერ "
+"შეცვლილი ფანჯრის თვისების დასამატებლად"
 
 #: package/contents/ui/RulesEditor.qml:85
 #, kde-format
@@ -758,6 +760,10 @@ msgid ""
 "it, try to match other properties like the window title instead.<nl/><nl/"
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
+"ამ აპლიკაციას ფანჯრისთვის კლასი არ გააჩნია, ასე რომ KWin-ს მასზე წესის "
+"გადატარება არ შეუძლია. თუ გნებავთ, მასზე რამე წესი გამოიყენოთ, სცადეთ, სხვა "
+"თვისებები, მაგალითად ფანჯრის სათაური, დაამთხვიოთ.<nl/><nl/>კარგი იქნება, თუ "
+"ამის შესახებ აპლიკაციის ავტორსაც შეატყობინებთ."
 
 #: rulesmodel.cpp:738
 #, kde-format
@@ -782,7 +788,7 @@ msgstr "ხელსაწყოების ფანჯარა"
 #: rulesmodel.cpp:742
 #, kde-format
 msgid "Dock (panel)"
-msgstr ""
+msgstr "დოკი (პანელი)"
 
 #: rulesmodel.cpp:743
 #, kde-format
