@@ -151,6 +151,11 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion)
     }
 }
 
+static int64_t micros(auto time)
+{
+    return std::chrono::duration_cast<std::chrono::microseconds>(time).count();
+}
+
 std::chrono::nanoseconds EglGbmLayerSurface::queryRenderTime() const
 {
     const auto cpuTime = m_surface.renderEnd - m_surface.renderStart;
@@ -160,6 +165,17 @@ std::chrono::nanoseconds EglGbmLayerSurface::queryRenderTime() const
         if (m_surface.importTimeQuery && m_eglBackend->contextForGpu(m_gpu)->makeCurrent()) {
             gpuTime += m_surface.importTimeQuery->result();
         }
+
+        static RenderJournal cpu;
+        static RenderJournal gpu;
+        static auto lastPrint = std::chrono::steady_clock::now();
+        cpu.add(cpuTime);
+        gpu.add(gpuTime);
+        if (std::chrono::steady_clock::now() > lastPrint + std::chrono::seconds(1)) {
+            qWarning() << "CPU avg" << micros(cpu.average()) << "min" << micros(cpu.minimum()) << "max" << micros(cpu.maximum()) << "GPU avg" << micros(gpu.average()) << "min" << micros(gpu.minimum()) << "max" << micros(gpu.maximum()) << "µs";
+            lastPrint = std::chrono::steady_clock::now();
+        }
+
         return std::max(gpuTime, cpuTime);
     } else {
         return cpuTime;

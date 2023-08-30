@@ -53,6 +53,9 @@ private:
     std::vector<std::unique_ptr<DrmAtomicCommit>> m_droppedCommits;
     bool m_vrr = false;
     bool m_pageflipPending = false;
+
+    TimePoint m_lastCommitTarget;
+    uint64_t m_missedPageflips = 0;
 };
 
 }

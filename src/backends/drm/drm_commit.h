@@ -76,6 +76,16 @@ public:
     void setCursorOnly(bool cursor);
     bool isCursorOnly() const;
 
+    std::chrono::steady_clock::time_point creationTime() const;
+    void setFirstCheck()
+    {
+        m_firstCheck = true;
+    }
+    bool firstCheck() const
+    {
+        return m_firstCheck;
+    }
+
 private:
     bool doCommit(uint32_t flags);
 
@@ -85,6 +95,8 @@ private:
     std::optional<bool> m_vrr;
     std::unordered_map<uint32_t /* object */, std::unordered_map<uint32_t /* property */, uint64_t /* value */>> m_properties;
     bool m_cursorOnly = false;
+    const std::chrono::steady_clock::time_point m_creationTime;
+    bool m_firstCheck = false;
 };
 
 class DrmLegacyCommit : public DrmCommit

@@ -21,9 +21,17 @@ namespace KWin
 // committing takes about 800µs, the rest is accounting for sleep not being accurate enough
 static constexpr auto s_safetyMargin = 1800us;
 
+static int64_t micros(auto time)
+{
+    return std::chrono::duration_cast<std::chrono::microseconds>(time).count();
+}
+
 DrmCommitThread::DrmCommitThread()
 {
     m_thread.reset(QThread::create([this]() {
+        RenderJournal creationToCommit;
+        uint64_t droppedCommits = 0;
+        auto lastPrint = std::chrono::steady_clock::now();
         gainRealTime();
         while (true) {
             if (QThread::currentThread()->isInterruptionRequested()) {
@@ -46,7 +54,12 @@ DrmCommitThread::DrmCommitThread()
                 }
                 optimizeCommits();
                 auto &commit = m_commits.front();
+                if (!commit->firstCheck()) {
+                    creationToCommit.add(std::chrono::steady_clock::now() - commit->creationTime());
+                    commit->setFirstCheck();
+                }
                 if (!commit->areBuffersReadable()) {
+                    droppedCommits++;
                     // no commit is ready yet, reschedule
                     if (m_vrr) {
                         m_targetPageflipTime += 50us;
@@ -56,6 +69,7 @@ DrmCommitThread::DrmCommitThread()
                     continue;
                 }
                 const auto vrr = commit->isVrr();
+                m_lastCommitTarget = m_targetPageflipTime;
                 const bool success = commit->commit();
                 if (success) {
                     m_pageflipPending = true;
@@ -72,6 +86,15 @@ DrmCommitThread::DrmCommitThread()
                     QMetaObject::invokeMethod(this, &DrmCommitThread::commitFailed, Qt::ConnectionType::QueuedConnection);
                 }
                 QMetaObject::invokeMethod(this, &DrmCommitThread::clearDroppedCommits, Qt::ConnectionType::QueuedConnection);
+                if (std::chrono::steady_clock::now() > lastPrint + 1s) {
+                    if (droppedCommits > 0 || m_missedPageflips > 0) {
+                        qWarning() << "dropped" << droppedCommits << "and missed" << m_missedPageflips << "commits over the last second";
+                        droppedCommits = 0;
+                        m_missedPageflips = 0;
+                    }
+                    qWarning() << "creation to buffercheck time:" << micros(creationToCommit.average()) << micros(creationToCommit.minimum()) << micros(creationToCommit.maximum());
+                    lastPrint = std::chrono::steady_clock::now();
+                }
             }
         }
     }));
@@ -187,6 +210,9 @@ void DrmCommitThread::pageFlipped(std::chrono::nanoseconds timestamp)
 {
     std::unique_lock lock(m_mutex);
     m_lastPageflip = TimePoint(timestamp);
+    if (m_lastPageflip > m_targetPageflipTime + m_minVblankInterval / 2) {
+        m_missedPageflips++;
+    }
     m_pageflipPending = false;
     if (!m_commits.empty()) {
         m_targetPageflipTime = estimateNextVblank(std::chrono::steady_clock::now());

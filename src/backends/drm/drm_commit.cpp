@@ -39,7 +39,13 @@ DrmGpu *DrmCommit::gpu() const
 DrmAtomicCommit::DrmAtomicCommit(const QVector<DrmPipeline *> &pipelines)
     : DrmCommit(pipelines.front()->gpu())
     , m_pipelines(pipelines)
+    , m_creationTime(std::chrono::steady_clock::now())
 {
+}
+
+std::chrono::steady_clock::time_point DrmAtomicCommit::creationTime() const
+{
+    return m_creationTime;
 }
 
 void DrmAtomicCommit::addProperty(const DrmProperty &prop, uint64_t value)
