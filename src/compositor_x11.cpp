@@ -8,6 +8,7 @@
 */
 
 #include "compositor_x11.h"
+#include "core/outputbackend.h"
 #include "core/overlaywindow.h"
 #include "core/renderbackend.h"
 #include "core/renderlayer.h"
@@ -15,6 +16,7 @@
 #include "ftrace.h"
 #include "options.h"
 #include "scene/surfaceitem_x11.h"
+#include "scene/workspacescene.h"
 #include "utils/common.h"
 #include "utils/xcbutils.h"
 #include "workspace.h"
@@ -127,6 +129,16 @@ void X11Compositor::resume(X11Compositor::SuspendReason reason)
 
 void X11Compositor::start()
 {
+    if (kwinApp()->isTerminating()) {
+        // Don't start while KWin is terminating. An event to restart might be lingering
+        // in the event queue due to graphics reset.
+        return;
+    }
+
+    if (m_state != State::Off) {
+        return;
+    }
+
     if (m_suspended) {
         QStringList reasons;
         if (m_suspended & UserSuspend) {
@@ -144,18 +156,138 @@ void X11Compositor::start()
         qCWarning(KWIN_CORE) << "Compositing is not possible";
         return;
     }
-    if (!Compositor::setupStart()) {
-        // Internal setup failed, abort.
+
+    m_state = State::Starting;
+
+    options->reloadCompositingSettings(true);
+
+    initializeX11();
+
+    Q_EMIT aboutToToggleCompositing();
+
+    const QVector<CompositingType> availableCompositors = kwinApp()->outputBackend()->supportedCompositors();
+    QVector<CompositingType> candidateCompositors;
+
+    // If compositing has been restarted, try to use the last used compositing type.
+    if (m_selectedCompositor != NoCompositing) {
+        candidateCompositors.append(m_selectedCompositor);
+    } else {
+        candidateCompositors = availableCompositors;
+
+        const auto userConfigIt = std::find(candidateCompositors.begin(), candidateCompositors.end(), options->compositingMode());
+        if (userConfigIt != candidateCompositors.end()) {
+            candidateCompositors.erase(userConfigIt);
+            candidateCompositors.prepend(options->compositingMode());
+        } else {
+            qCWarning(KWIN_CORE) << "Configured compositor not supported by Platform. Falling back to defaults";
+        }
+    }
+
+    for (auto type : std::as_const(candidateCompositors)) {
+        bool stop = false;
+        switch (type) {
+        case OpenGLCompositing:
+            qCDebug(KWIN_CORE) << "Attempting to load the OpenGL scene";
+            stop = attemptOpenGLCompositing();
+            break;
+        case QPainterCompositing:
+            qCDebug(KWIN_CORE) << "Attempting to load the QPainter scene";
+            stop = attemptQPainterCompositing();
+            break;
+        case NoCompositing:
+            qCDebug(KWIN_CORE) << "Starting without compositing...";
+            stop = true;
+            break;
+        }
+
+        if (stop) {
+            break;
+        } else if (qEnvironmentVariableIsSet("KWIN_COMPOSE")) {
+            qCCritical(KWIN_CORE) << "Could not fulfill the requested compositing mode in KWIN_COMPOSE:" << type << ". Exiting.";
+            qApp->quit();
+        }
+    }
+
+    if (!m_backend) {
+        m_state = State::Off;
+
+        xcb_composite_unredirect_subwindows(kwinApp()->x11Connection(), kwinApp()->x11RootWindow(), XCB_COMPOSITE_REDIRECT_MANUAL);
+        cleanupX11();
         return;
     }
-    startupWithWorkspace();
+
+    m_selectedCompositor = m_backend->compositingType();
+    Q_EMIT sceneCreated();
+
+    Q_ASSERT(m_scene);
+    m_scene->initialize();
+
+    const QList<Output *> outputs = workspace()->outputs();
+    auto workspaceLayer = new RenderLayer(outputs.constFirst()->renderLoop());
+    workspaceLayer->setDelegate(std::make_unique<SceneDelegate>(m_scene.get(), nullptr));
+    workspaceLayer->setGeometry(workspace()->geometry());
+    connect(workspace(), &Workspace::geometryChanged, workspaceLayer, [workspaceLayer]() {
+        workspaceLayer->setGeometry(workspace()->geometry());
+    });
+    addSuperLayer(workspaceLayer);
+
+    m_state = State::On;
+
+    const auto windows = workspace()->windows();
+    for (Window *window : windows) {
+        window->setupCompositing();
+    }
+
+    // Sets also the 'effects' pointer.
+    kwinApp()->createEffectsHandler(this, m_scene.get());
+
+    Q_EMIT compositingToggled(true);
+
+    if (m_releaseSelectionTimer.isActive()) {
+        m_releaseSelectionTimer.stop();
+    }
+
     m_syncManager.reset(X11SyncManager::create());
 }
 
 void X11Compositor::stop()
 {
+    if (m_state == State::Off || m_state == State::Stopping) {
+        return;
+    }
+
+    m_state = State::Stopping;
+    Q_EMIT aboutToToggleCompositing();
+
+    m_releaseSelectionTimer.start();
+
+    // Some effects might need access to effect windows when they are about to
+    // be destroyed, for example to unreference deleted windows, so we have to
+    // make sure that effect windows outlive effects.
+    delete effects;
+    effects = nullptr;
+
+    if (Workspace::self()) {
+        const auto windows = workspace()->windows();
+        for (Window *window : windows) {
+            window->finishCompositing();
+        }
+        if (auto *con = kwinApp()->x11Connection()) {
+            xcb_composite_unredirect_subwindows(con, kwinApp()->x11RootWindow(), XCB_COMPOSITE_REDIRECT_MANUAL);
+        }
+    }
+
+    const auto superlayers = m_superlayers;
+    for (auto it = superlayers.begin(); it != superlayers.end(); ++it) {
+        removeSuperLayer(*it);
+    }
+
+    m_scene.reset();
+    m_backend.reset();
     m_syncManager.reset();
-    Compositor::stop();
+
+    m_state = State::Off;
+    Q_EMIT compositingToggled(false);
 }
 
 void X11Compositor::composite(RenderLoop *renderLoop)

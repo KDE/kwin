@@ -309,42 +309,6 @@ void Compositor::cleanupX11()
 
 void Compositor::startupWithWorkspace()
 {
-    Q_ASSERT(m_scene);
-    m_scene->initialize();
-    m_cursorScene->initialize();
-
-    const QList<Output *> outputs = workspace()->outputs();
-    if (kwinApp()->operationMode() == Application::OperationModeX11) {
-        auto workspaceLayer = new RenderLayer(outputs.constFirst()->renderLoop());
-        workspaceLayer->setDelegate(std::make_unique<SceneDelegate>(m_scene.get(), nullptr));
-        workspaceLayer->setGeometry(workspace()->geometry());
-        connect(workspace(), &Workspace::geometryChanged, workspaceLayer, [workspaceLayer]() {
-            workspaceLayer->setGeometry(workspace()->geometry());
-        });
-        addSuperLayer(workspaceLayer);
-    } else {
-        for (Output *output : outputs) {
-            addOutput(output);
-        }
-        connect(workspace(), &Workspace::outputAdded, this, &Compositor::addOutput);
-        connect(workspace(), &Workspace::outputRemoved, this, &Compositor::removeOutput);
-    }
-
-    m_state = State::On;
-
-    const auto windows = workspace()->windows();
-    for (Window *window : windows) {
-        window->setupCompositing();
-    }
-
-    // Sets also the 'effects' pointer.
-    kwinApp()->createEffectsHandler(this, m_scene.get());
-
-    Q_EMIT compositingToggled(true);
-
-    if (m_releaseSelectionTimer.isActive()) {
-        m_releaseSelectionTimer.stop();
-    }
 }
 
 Output *Compositor::findOutput(RenderLoop *loop) const
