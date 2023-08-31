@@ -26,9 +26,16 @@ public:
 
 protected:
     void start() override;
+    void composite(RenderLoop *loop) override;
 
 private:
     explicit WaylandCompositor(QObject *parent);
+
+    void prePaintPass(RenderLayer *layer);
+    void postPaintPass(RenderLayer *layer);
+    void preparePaintPass(RenderLayer *layer, QRegion *repaint);
+    void paintPass(RenderLayer *layer, const RenderTarget &renderTarget, const QRegion &region);
+    void framePass(RenderLayer *layer);
 };
 
 } // namespace KWin

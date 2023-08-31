@@ -10,6 +10,9 @@
 #include "compositor_x11.h"
 #include "core/overlaywindow.h"
 #include "core/renderbackend.h"
+#include "core/renderlayer.h"
+#include "core/renderlayerdelegate.h"
+#include "ftrace.h"
 #include "options.h"
 #include "scene/surfaceitem_x11.h"
 #include "utils/common.h"
@@ -190,7 +193,46 @@ void X11Compositor::composite(RenderLoop *renderLoop)
         createOpenGLSafePoint(OpenGLSafePoint::PreFrame);
     }
 
-    Compositor::composite(renderLoop);
+    if (m_backend->checkGraphicsReset()) {
+        qCDebug(KWIN_CORE) << "Graphics reset occurred";
+#if KWIN_BUILD_NOTIFICATIONS
+        KNotification::event(QStringLiteral("graphicsreset"), i18n("Desktop effects were restarted due to a graphics reset"));
+#endif
+        reinitialize();
+    } else {
+        Output *output = findOutput(renderLoop);
+        OutputLayer *primaryLayer = m_backend->primaryLayer(output);
+        fTraceDuration("Paint (", output->name(), ")");
+
+        RenderLayer *superLayer = m_superlayers[renderLoop];
+        superLayer->setOutputLayer(primaryLayer);
+
+        renderLoop->prepareNewFrame();
+
+        if (superLayer->needsRepaint()) {
+            renderLoop->beginPaint();
+            superLayer->delegate()->prePaint();
+
+            QRegion surfaceDamage = primaryLayer->repaints();
+            primaryLayer->resetRepaints();
+
+            surfaceDamage += superLayer->repaints() + superLayer->delegate()->repaints();
+            superLayer->resetRepaints();
+
+            if (auto beginInfo = primaryLayer->beginFrame()) {
+                auto &[renderTarget, repaint] = beginInfo.value();
+
+                const QRegion bufferDamage = surfaceDamage.united(repaint).intersected(superLayer->rect().toAlignedRect());
+                superLayer->delegate()->paint(renderTarget, bufferDamage);
+
+                primaryLayer->endFrame(bufferDamage, surfaceDamage);
+            }
+
+            superLayer->delegate()->postPaint();
+        }
+
+        m_backend->present(output);
+    }
 
     if (m_syncManager) {
         if (!m_syncManager->endFrame()) {

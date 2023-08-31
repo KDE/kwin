@@ -167,12 +167,12 @@ protected:
     static Compositor *s_compositor;
 
 protected Q_SLOTS:
-    virtual void composite(RenderLoop *renderLoop);
+    virtual void composite(RenderLoop *renderLoop) = 0;
 
 private Q_SLOTS:
     void handleFrameRequested(RenderLoop *renderLoop);
 
-private:
+protected:
     void initializeX11();
     void cleanupX11();
 
@@ -188,12 +188,6 @@ private:
 
     void addSuperLayer(RenderLayer *layer);
     void removeSuperLayer(RenderLayer *layer);
-
-    void prePaintPass(RenderLayer *layer);
-    void postPaintPass(RenderLayer *layer);
-    void preparePaintPass(RenderLayer *layer, QRegion *repaint);
-    void paintPass(RenderLayer *layer, const RenderTarget &renderTarget, const QRegion &region);
-    void framePass(RenderLayer *layer);
 
     State m_state = State::Off;
     std::unique_ptr<CompositorSelectionOwner> m_selectionOwner;
