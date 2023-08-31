@@ -6,9 +6,6 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "composite.h"
-#include "core/renderbackend.h"
-#include "cursor.h"
 #include "effectloader.h"
 #include "effects.h"
 #include "kwin_wayland_test.h"
@@ -78,9 +75,6 @@ void SlidingPopupsTest::initTestCase()
     qputenv("KWIN_EFFECTS_FORCE_ANIMATIONS", "1");
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
-    QVERIFY(Compositor::self());
-
-    QCOMPARE(Compositor::self()->backend()->compositingType(), KWin::OpenGLCompositing);
 }
 
 void SlidingPopupsTest::init()

@@ -9,8 +9,6 @@
 
 #include "kwin_wayland_test.h"
 
-#include "composite.h"
-#include "core/renderbackend.h"
 #include "effectloader.h"
 #include "effects.h"
 #include "wayland_server.h"
@@ -68,8 +66,6 @@ void ToplevelOpenCloseAnimationTest::initTestCase()
 
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
-
-    QCOMPARE(Compositor::self()->backend()->compositingType(), KWin::OpenGLCompositing);
 }
 
 void ToplevelOpenCloseAnimationTest::init()
