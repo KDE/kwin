@@ -780,6 +780,13 @@ QString DebugConsoleDelegate::displayText(const QVariant &value, const QLocale &
                 return QStringLiteral("nullptr");
             }
         }
+        if (value.userType() == qMetaTypeId<KWin::Window *>()) {
+            if (auto w = value.value<KWin::Window *>()) {
+                return w->caption() + QLatin1Char(' ') + QString::fromUtf8(w->metaObject()->className());
+            } else {
+                return QStringLiteral("nullptr");
+            }
+        }
         if (value.userType() == qMetaTypeId<Qt::MouseButtons>()) {
             const auto buttons = value.value<Qt::MouseButtons>();
             if (buttons == Qt::NoButton) {
