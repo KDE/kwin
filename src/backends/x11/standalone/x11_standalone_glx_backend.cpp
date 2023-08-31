@@ -30,7 +30,6 @@
 #include "options.h"
 #include "platformsupport/scenes/opengl/glrendertimequery.h"
 #include "scene/surfaceitem_x11.h"
-#include "scene/workspacescene.h"
 #include "utils/xcbutils.h"
 #include "workspace.h"
 // kwin libs
@@ -127,7 +126,7 @@ std::chrono::nanoseconds GlxLayer::queryRenderTime() const
 
 GlxBackend::GlxBackend(Display *display, X11StandaloneBackend *backend)
     : OpenGLBackend()
-    , m_overlayWindow(std::make_unique<OverlayWindowX11>())
+    , m_overlayWindow(std::make_unique<OverlayWindowX11>(backend))
     , window(None)
     , fbconfig(nullptr)
     , glxWindow(None)

@@ -15,6 +15,7 @@
 #include "utils/common.h"
 #include "utils/xcbutils.h"
 #include "workspace.h"
+#include "x11_standalone_backend.h"
 
 #include <QVector>
 
@@ -26,9 +27,10 @@
 
 namespace KWin
 {
-OverlayWindowX11::OverlayWindowX11()
+OverlayWindowX11::OverlayWindowX11(X11StandaloneBackend *backend)
     : OverlayWindow()
     , X11EventFilter(QVector<int>{XCB_EXPOSE, XCB_VISIBILITY_NOTIFY})
+    , m_backend(backend)
     , m_visible(true)
     , m_shown(false)
     , m_window(XCB_WINDOW_NONE)
@@ -191,7 +193,7 @@ bool OverlayWindowX11::event(xcb_generic_event_t *event)
                     }
                 });
             }
-            compositor->scheduleRepaint();
+            m_backend->renderLoop()->scheduleRepaint();
         }
     }
     return false;

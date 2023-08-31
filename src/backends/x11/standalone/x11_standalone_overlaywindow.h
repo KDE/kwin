@@ -14,10 +14,13 @@
 
 namespace KWin
 {
+
+class X11StandaloneBackend;
+
 class KWIN_EXPORT OverlayWindowX11 : public OverlayWindow, public X11EventFilter
 {
 public:
-    OverlayWindowX11();
+    explicit OverlayWindowX11(X11StandaloneBackend *backend);
     ~OverlayWindowX11() override;
     /// Creates XComposite overlay window, call initOverlay() afterwards
     bool create() override;
@@ -40,6 +43,8 @@ private:
     void setupInputShape(xcb_window_t window);
     bool m_visible;
     bool m_shown; // For showOverlay()
+
+    X11StandaloneBackend *m_backend;
     QRegion m_shape;
     xcb_window_t m_window;
 };

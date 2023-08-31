@@ -15,7 +15,6 @@
 #include "options.h"
 #include "platformsupport/scenes/opengl/glrendertimequery.h"
 #include "scene/surfaceitem_x11.h"
-#include "scene/workspacescene.h"
 #include "utils/c_ptr.h"
 #include "utils/softwarevsyncmonitor.h"
 #include "workspace.h"
@@ -57,7 +56,7 @@ std::chrono::nanoseconds EglLayer::queryRenderTime() const
 
 EglBackend::EglBackend(Display *display, X11StandaloneBackend *backend)
     : m_backend(backend)
-    , m_overlayWindow(std::make_unique<OverlayWindowX11>())
+    , m_overlayWindow(std::make_unique<OverlayWindowX11>(backend))
     , m_layer(std::make_unique<EglLayer>(this))
 {
     setIsDirectRendering(true);
