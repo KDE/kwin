@@ -11,12 +11,12 @@
 // which Qt does include
 #include "utils/drm_format_helper.h"
 
-#include "window.h"
-#include "composite.h"
+#include "compositor.h"
 #include "core/renderbackend.h"
 #include "core/shmgraphicsbufferallocator.h"
 #include "internalwindow.h"
 #include "swapchain.h"
+#include "window.h"
 
 #include <logging.h>
 

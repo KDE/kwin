@@ -15,7 +15,7 @@
 
 #include "libkwineffects/kwinglplatform.h"
 
-#include "composite.h"
+#include "compositor.h"
 #include "core/output.h"
 #include "decorations/decoratedclient.h"
 #include "scene/itemrenderer_opengl.h"

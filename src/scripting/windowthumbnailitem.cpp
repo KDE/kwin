@@ -7,7 +7,7 @@
 */
 
 #include "windowthumbnailitem.h"
-#include "composite.h"
+#include "compositor.h"
 #include "core/renderbackend.h"
 #include "effects.h"
 #include "libkwineffects/rendertarget.h"

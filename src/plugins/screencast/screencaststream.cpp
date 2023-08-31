@@ -7,7 +7,7 @@
 */
 
 #include "screencaststream.h"
-#include "composite.h"
+#include "compositor.h"
 #include "core/graphicsbufferallocator.h"
 #include "core/outputbackend.h"
 #include "core/renderbackend.h"

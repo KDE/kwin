@@ -53,7 +53,7 @@
 */
 
 #include "scene/workspacescene.h"
-#include "composite.h"
+#include "compositor.h"
 #include "core/output.h"
 #include "core/renderlayer.h"
 #include "core/renderloop.h"

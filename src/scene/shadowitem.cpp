@@ -5,7 +5,7 @@
 */
 
 #include "scene/shadowitem.h"
-#include "composite.h"
+#include "compositor.h"
 #include "scene/workspacescene.h"
 #include "shadow.h"
 

@@ -5,7 +5,7 @@
 */
 
 #include "scene/surfaceitem_internal.h"
-#include "composite.h"
+#include "compositor.h"
 #include "core/renderbackend.h"
 #include "internalwindow.h"
 

@@ -5,7 +5,7 @@
 */
 
 #include "scene/cursordelegate_opengl.h"
-#include "composite.h"
+#include "compositor.h"
 #include "core/output.h"
 #include "core/renderlayer.h"
 #include "cursor.h"

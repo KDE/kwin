@@ -8,7 +8,7 @@
 */
 #include "kwin_wayland_test.h"
 
-#include "composite.h"
+#include "compositor.h"
 #include "core/output.h"
 #include "core/renderbackend.h"
 #include "libkwineffects/kwineffects.h"

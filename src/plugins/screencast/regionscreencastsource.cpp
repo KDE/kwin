@@ -9,7 +9,7 @@
 
 #include "libkwineffects/kwingltexture.h"
 #include "libkwineffects/kwinglutils.h"
-#include <composite.h>
+#include <compositor.h>
 #include <core/output.h>
 #include <drm_fourcc.h>
 #include <scene/workspacescene.h>

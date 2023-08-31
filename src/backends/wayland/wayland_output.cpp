@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "wayland_output.h"
-#include "composite.h"
+#include "compositor.h"
 #include "core/outputlayer.h"
 #include "core/renderbackend.h"
 #include "core/renderloop_p.h"

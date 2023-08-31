@@ -9,7 +9,7 @@
 #include "kwin_wayland_test.h"
 
 #include "backends/virtual/virtual_backend.h"
-#include "composite.h"
+#include "compositor.h"
 #include "core/session.h"
 #include "effects.h"
 #include "inputmethod.h"

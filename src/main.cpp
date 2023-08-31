@@ -13,7 +13,7 @@
 
 #include "atoms.h"
 #include "colors/colormanager.h"
-#include "composite.h"
+#include "compositor.h"
 #include "core/outputbackend.h"
 #include "core/session.h"
 #include "cursor.h"

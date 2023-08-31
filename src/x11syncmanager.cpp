@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "x11syncmanager.h"
-#include "composite.h"
+#include "compositor.h"
 #include "core/outputbackend.h"
 #include "core/renderbackend.h"
 #include "main.h"
