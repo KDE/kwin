@@ -49,11 +49,6 @@ public:
     static Compositor *self();
 
     /**
-     * Schedules a new repaint if no repaint is currently scheduled.
-     */
-    void scheduleRepaint();
-
-    /**
      * Toggles compositing, that is if the Compositor is suspended it will be resumed
      * and if the Compositor is active it will be suspended.
      * Invoked by keybinding (shortcut default: Shift + Alt + F12).
