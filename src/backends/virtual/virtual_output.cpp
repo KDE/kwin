@@ -9,7 +9,7 @@
 #include "virtual_output.h"
 #include "virtual_backend.h"
 
-#include "composite.h"
+#include "compositor.h"
 #include "core/outputlayer.h"
 #include "core/renderbackend.h"
 #include "core/renderloop_p.h"

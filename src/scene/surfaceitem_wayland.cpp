@@ -5,7 +5,7 @@
 */
 
 #include "scene/surfaceitem_wayland.h"
-#include "composite.h"
+#include "compositor.h"
 #include "core/graphicsbuffer.h"
 #include "core/renderbackend.h"
 #include "wayland/subcompositor_interface.h"

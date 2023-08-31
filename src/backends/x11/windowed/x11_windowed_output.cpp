@@ -13,7 +13,7 @@
 
 #include <config-kwin.h>
 
-#include "composite.h"
+#include "compositor.h"
 #include "core/graphicsbuffer.h"
 #include "core/outputlayer.h"
 #include "core/renderbackend.h"

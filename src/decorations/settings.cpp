@@ -9,7 +9,7 @@
 #include <config-kwin.h>
 
 #include "appmenu.h"
-#include "composite.h"
+#include "compositor.h"
 #include "decorationbridge.h"
 #include "settings.h"
 #include "virtualdesktops.h"

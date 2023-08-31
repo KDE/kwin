@@ -6,7 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "composite.h"
+#include "compositor.h"
 #include "core/output.h"
 #include "generic_scene_opengl_test.h"
 #include "libkwineffects/glplatform.h"

@@ -49,7 +49,7 @@
 #include <xcb/sync.h>
 #include <xcb/xcb_icccm.h>
 
-#include "composite.h"
+#include "compositor.h"
 #include "x11eventfilter.h"
 
 #ifndef XCB_GE_GENERIC

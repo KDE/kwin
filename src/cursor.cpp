@@ -9,7 +9,7 @@
 
 #include "cursor.h"
 // kwin
-#include "composite.h"
+#include "compositor.h"
 #include "core/output.h"
 #include "cursorsource.h"
 #include "input.h"

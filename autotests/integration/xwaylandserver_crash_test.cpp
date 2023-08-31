@@ -6,7 +6,7 @@
 
 #include "kwin_wayland_test.h"
 
-#include "composite.h"
+#include "compositor.h"
 #include "core/output.h"
 #include "main.h"
 #include "scene/workspacescene.h"

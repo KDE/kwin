@@ -9,7 +9,7 @@
 
 #include "libkwineffects/gltexture.h"
 #include "libkwineffects/glutils.h"
-#include <composite.h>
+#include <compositor.h>
 #include <core/output.h>
 #include <drm_fourcc.h>
 #include <scene/workspacescene.h>

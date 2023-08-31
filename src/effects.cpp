@@ -37,7 +37,7 @@
 #if KWIN_BUILD_SCREENLOCKER
 #include "screenlockerwatcher.h"
 #endif
-#include "composite.h"
+#include "compositor.h"
 #include "decorations/decorationbridge.h"
 #include "inputmethod.h"
 #include "inputpanelv1window.h"

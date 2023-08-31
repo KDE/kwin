@@ -7,7 +7,7 @@
 #include "outputscreencastsource.h"
 #include "screencastutils.h"
 
-#include "composite.h"
+#include "compositor.h"
 #include "core/output.h"
 #include "core/renderloop.h"
 #include "libkwineffects/gltexture.h"

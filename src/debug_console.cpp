@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "debug_console.h"
-#include "composite.h"
+#include "compositor.h"
 #include "core/graphicsbufferview.h"
 #include "core/inputdevice.h"
 #include "input_event.h"

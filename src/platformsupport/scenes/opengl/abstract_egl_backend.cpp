@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "platformsupport/scenes/opengl/abstract_egl_backend.h"
-#include "composite.h"
+#include "compositor.h"
 #include "core/outputbackend.h"
 #include "options.h"
 #include "utils/common.h"

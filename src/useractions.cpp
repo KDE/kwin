@@ -25,7 +25,7 @@
 
 #include <config-kwin.h>
 
-#include "composite.h"
+#include "compositor.h"
 #include "core/output.h"
 #include "cursor.h"
 #include "effects.h"

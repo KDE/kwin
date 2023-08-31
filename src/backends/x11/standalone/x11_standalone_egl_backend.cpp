@@ -6,7 +6,7 @@
 */
 
 #include "x11_standalone_egl_backend.h"
-#include "composite.h"
+#include "compositor.h"
 #include "core/outputbackend.h"
 #include "core/outputlayer.h"
 #include "core/overlaywindow.h"

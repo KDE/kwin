@@ -7,7 +7,7 @@
 */
 
 #include "screencastmanager.h"
-#include "composite.h"
+#include "compositor.h"
 #include "core/output.h"
 #include "core/outputbackend.h"
 #include "effects.h"

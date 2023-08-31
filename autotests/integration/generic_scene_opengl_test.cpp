@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "generic_scene_opengl_test.h"
-#include "composite.h"
+#include "compositor.h"
 #include "core/renderbackend.h"
 #include "cursor.h"
 #include "effectloader.h"

@@ -42,7 +42,7 @@ target_sources(kwin PRIVATE
     client_machine.cpp
     colors/colordevice.cpp
     colors/colormanager.cpp
-    composite.cpp
+    compositor.cpp
     core/colorlut.cpp
     core/colorpipelinestage.cpp
     core/colortransformation.cpp

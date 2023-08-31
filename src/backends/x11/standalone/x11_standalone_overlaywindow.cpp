@@ -9,7 +9,7 @@
 
 #include "x11_standalone_overlaywindow.h"
 
-#include "composite.h"
+#include "compositor.h"
 #include "libkwineffects/kwinglobals.h"
 #include "scene/workspacescene.h"
 #include "utils/common.h"

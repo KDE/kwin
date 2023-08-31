@@ -21,7 +21,7 @@
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
-#include "composite.h"
+#include "compositor.h"
 #include "effects.h"
 #include "focuschain.h"
 #include "input.h"

@@ -6,7 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "composite.h"
+#include "compositor.h"
 
 #include <config-kwin.h>
 
@@ -1196,6 +1196,6 @@ void X11Compositor::createOpenGLSafePoint(OpenGLSafePoint safePoint)
 }
 
 // included for CompositorSelectionOwner
-#include "composite.moc"
+#include "compositor.moc"
 
-#include "moc_composite.cpp"
+#include "moc_compositor.cpp"

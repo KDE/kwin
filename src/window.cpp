@@ -14,7 +14,7 @@
 #endif
 #include "appmenu.h"
 #include "client_machine.h"
-#include "composite.h"
+#include "compositor.h"
 #include "core/output.h"
 #include "decorations/decoratedclient.h"
 #include "decorations/decorationpalette.h"
