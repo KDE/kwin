@@ -15,7 +15,7 @@
 
 // kwin
 #include "atoms.h"
-#include "compositor.h"
+#include "compositor_x11.h"
 #include "core/output.h"
 #include "core/renderbackend.h"
 #include "debug_console.h"
