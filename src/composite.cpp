@@ -528,13 +528,6 @@ void Compositor::removeSuperLayer(RenderLayer *layer)
     delete layer;
 }
 
-void Compositor::scheduleRepaint()
-{
-    for (auto it = m_superlayers.constBegin(); it != m_superlayers.constEnd(); ++it) {
-        it.key()->scheduleRepaint();
-    }
-}
-
 void Compositor::stop()
 {
     if (m_state == State::Off || m_state == State::Stopping) {
