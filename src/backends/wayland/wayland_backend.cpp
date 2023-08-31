@@ -51,6 +51,12 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::Keyboard *keyboard, Way
     : m_seat(seat)
     , m_keyboard(keyboard)
 {
+    connect(keyboard, &Keyboard::left, this, [this](quint32 time) {
+        for (quint32 key : std::as_const(m_pressedKeys)) {
+            Q_EMIT keyChanged(key, InputRedirection::KeyboardKeyReleased, std::chrono::milliseconds(time), this);
+        }
+        m_pressedKeys.clear();
+    });
     connect(keyboard, &Keyboard::keyChanged, this, [this](quint32 key, Keyboard::KeyState nativeState, quint32 time) {
         InputRedirection::KeyboardKeyState state;
         switch (nativeState) {
@@ -59,8 +65,10 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::Keyboard *keyboard, Way
                 m_seat->backend()->togglePointerLock();
             }
             state = InputRedirection::KeyboardKeyPressed;
+            m_pressedKeys.insert(key);
             break;
         case Keyboard::KeyState::Released:
+            m_pressedKeys.remove(key);
             state = InputRedirection::KeyboardKeyReleased;
             break;
         default:

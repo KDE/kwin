@@ -97,6 +97,8 @@ private:
     std::unique_ptr<KWayland::Client::Pointer> m_pointer;
     std::unique_ptr<KWayland::Client::PointerPinchGesture> m_pinchGesture;
     std::unique_ptr<KWayland::Client::PointerSwipeGesture> m_swipeGesture;
+
+    QSet<quint32> m_pressedKeys;
 };
 
 class WaylandInputBackend : public InputBackend
