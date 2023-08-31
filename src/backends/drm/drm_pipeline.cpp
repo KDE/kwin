@@ -363,6 +363,9 @@ void DrmPipeline::atomicCommitSuccessful()
 
 bool DrmPipeline::updateCursor()
 {
+    if (!m_pending.crtc) {
+        return false;
+    }
     bool result;
     // explicitly check for the cursor plane and not for AMS, as we might not always have one
     if (m_pending.crtc->cursorPlane()) {
