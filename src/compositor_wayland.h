@@ -26,10 +26,17 @@ public:
 
 protected:
     void start() override;
+    void stop() override;
     void composite(RenderLoop *loop) override;
 
 private:
     explicit WaylandCompositor(QObject *parent);
+
+    void startupWithWorkspace();
+
+    Output *findOutput(RenderLoop *loop) const;
+    void addOutput(Output *output);
+    void removeOutput(Output *output);
 
     void prePaintPass(RenderLayer *layer);
     void postPaintPass(RenderLayer *layer);

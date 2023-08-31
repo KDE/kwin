@@ -332,7 +332,7 @@ void X11Compositor::composite(RenderLoop *renderLoop)
 #endif
         reinitialize();
     } else {
-        Output *output = findOutput(renderLoop);
+        Output *output = workspace()->outputs().constFirst();
         OutputLayer *primaryLayer = m_backend->primaryLayer(output);
         fTraceDuration("Paint (", output->name(), ")");
 

@@ -148,46 +148,25 @@ protected:
     explicit Compositor(QObject *parent = nullptr);
 
     virtual void start() = 0;
-    virtual void stop();
-
-    /**
-     * @brief Prepares start.
-     * @return bool @c true if start should be continued and @c if not.
-     */
-    bool setupStart();
-    /**
-     * Continues the startup after Scene And Workspace are created
-     */
-    void startupWithWorkspace();
+    virtual void stop() = 0;
+    virtual void composite(RenderLoop *renderLoop) = 0;
 
     virtual void configChanged();
 
-    void destroyCompositorSelection();
-
-    static Compositor *s_compositor;
-
-protected Q_SLOTS:
-    virtual void composite(RenderLoop *renderLoop) = 0;
-
-private Q_SLOTS:
-    void handleFrameRequested(RenderLoop *renderLoop);
-
-protected:
     void initializeX11();
     void cleanupX11();
 
+    void destroyCompositorSelection();
     void releaseCompositorSelection();
     void deleteUnusedSupportProperties();
 
     bool attemptOpenGLCompositing();
     bool attemptQPainterCompositing();
 
-    Output *findOutput(RenderLoop *loop) const;
-    void addOutput(Output *output);
-    void removeOutput(Output *output);
-
     void addSuperLayer(RenderLayer *layer);
     void removeSuperLayer(RenderLayer *layer);
+
+    static Compositor *s_compositor;
 
     State m_state = State::Off;
     std::unique_ptr<CompositorSelectionOwner> m_selectionOwner;
