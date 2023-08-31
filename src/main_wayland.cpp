@@ -14,7 +14,7 @@
 #include "backends/virtual/virtual_backend.h"
 #include "backends/wayland/wayland_backend.h"
 #include "backends/x11/windowed/x11_windowed_backend.h"
-#include "compositor.h"
+#include "compositor_wayland.h"
 #include "core/outputbackend.h"
 #include "core/session.h"
 #include "effects.h"

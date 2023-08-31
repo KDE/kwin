@@ -43,6 +43,8 @@ target_sources(kwin PRIVATE
     colors/colordevice.cpp
     colors/colormanager.cpp
     compositor.cpp
+    compositor_wayland.cpp
+    compositor_x11.cpp
     core/colorlut.cpp
     core/colorpipelinestage.cpp
     core/colortransformation.cpp

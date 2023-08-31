@@ -20,7 +20,7 @@
 #endif
 #include "appmenu.h"
 #include "atoms.h"
-#include "compositor.h"
+#include "compositor_x11.h"
 #include "core/outputbackend.h"
 #include "core/outputconfiguration.h"
 #include "cursor.h"

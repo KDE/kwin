@@ -5,7 +5,7 @@
 */
 
 #include "scene/surfaceitem_x11.h"
-#include "compositor.h"
+#include "compositor_x11.h"
 #include "core/renderbackend.h"
 #include "x11syncmanager.h"
 #include "x11window.h"
