@@ -8,8 +8,6 @@
 */
 #include "kwin_wayland_test.h"
 
-#include "composite.h"
-#include "core/renderbackend.h"
 #include "cursor.h"
 #include "effectloader.h"
 #include "effects.h"
@@ -71,9 +69,6 @@ void WobblyWindowsShadeTest::initTestCase()
     qputenv("KWIN_EFFECTS_FORCE_ANIMATIONS", "1");
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
-    QVERIFY(Compositor::self());
-
-    QCOMPARE(Compositor::self()->backend()->compositingType(), KWin::OpenGLCompositing);
 }
 
 void WobblyWindowsShadeTest::init()

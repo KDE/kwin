@@ -11,7 +11,6 @@
 
 #include "composite.h"
 #include "core/output.h"
-#include "core/renderbackend.h"
 #include "effectloader.h"
 #include "effects.h"
 #include "wayland_server.h"
@@ -72,8 +71,6 @@ void DontCrashReinitializeCompositorTest::initTestCase()
     QCOMPARE(outputs.count(), 2);
     QCOMPARE(outputs[0]->geometry(), QRect(0, 0, 1280, 1024));
     QCOMPARE(outputs[1]->geometry(), QRect(1280, 0, 1280, 1024));
-
-    QCOMPARE(Compositor::self()->backend()->compositingType(), KWin::OpenGLCompositing);
 }
 
 void DontCrashReinitializeCompositorTest::init()

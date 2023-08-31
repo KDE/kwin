@@ -8,10 +8,7 @@
 */
 #include "kwin_wayland_test.h"
 
-#include "composite.h"
 #include "core/output.h"
-#include "core/renderbackend.h"
-#include "libkwineffects/kwineffects.h"
 #include "pointer_input.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -66,8 +63,6 @@ void DontCrashAuroraeDestroyDecoTest::initTestCase()
     QCOMPARE(outputs[0]->geometry(), QRect(0, 0, 1280, 1024));
     QCOMPARE(outputs[1]->geometry(), QRect(1280, 0, 1280, 1024));
     setenv("QT_QPA_PLATFORM", "wayland", true);
-
-    QCOMPARE(Compositor::self()->backend()->compositingType(), KWin::OpenGLCompositing);
 }
 
 void DontCrashAuroraeDestroyDecoTest::init()

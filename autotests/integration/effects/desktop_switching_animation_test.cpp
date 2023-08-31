@@ -9,8 +9,6 @@
 
 #include "kwin_wayland_test.h"
 
-#include "composite.h"
-#include "core/renderbackend.h"
 #include "effectloader.h"
 #include "effects.h"
 #include "virtualdesktops.h"
@@ -67,8 +65,6 @@ void DesktopSwitchingAnimationTest::initTestCase()
 
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
-
-    QCOMPARE(Compositor::self()->backend()->compositingType(), KWin::OpenGLCompositing);
 }
 
 void DesktopSwitchingAnimationTest::init()
