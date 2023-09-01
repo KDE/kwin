@@ -16,7 +16,7 @@ target_sources(effectsplugin PRIVATE
     plugin.cpp
 )
 
-target_link_libraries(effectsplugin
+target_link_libraries(effectsplugin PRIVATE
     kwineffects
     Qt6::Quick
     Qt6::Qml
