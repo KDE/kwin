@@ -53,4 +53,4 @@ ProvidersUrl=https://autoconfig.kde.org/ocs/providers.xml
 Categories=KWin Scripts
 StandardResource=tmp
 Uncompress=kpackage
-KPackageType=KWin/Script
+KPackageStructure=KWin/Script

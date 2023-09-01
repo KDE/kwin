@@ -58,4 +58,4 @@ ProvidersUrl=https://autoconfig.kde.org/ocs/providers.xml
 Categories=KWin Effects
 StandardResource=tmp
 Uncompress=kpackage
-KPackageType=KWin/Effect
+KPackageStructure=KWin/Effect
