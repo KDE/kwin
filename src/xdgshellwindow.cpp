@@ -1611,7 +1611,14 @@ void XdgPopupWindow::handleRepositionRequested(quint32 token)
 void XdgPopupWindow::updateRelativePlacement()
 {
     const QPointF parentPosition = transientFor()->framePosToClientPos(transientFor()->pos());
-    m_relativePlacement = placement().translated(-parentPosition);
+    const QRectF bounds = workspace()->clientArea(transientFor()->isFullScreen() ? FullScreenArea : PlacementArea, transientFor()).translated(-parentPosition);
+    const XdgPositioner positioner = m_shellSurface->positioner();
+
+    if (m_plasmaShellSurface && m_plasmaShellSurface->isPositionSet()) {
+        m_relativePlacement = QRectF(m_plasmaShellSurface->position(), positioner.size()).translated(-parentPosition);
+    } else {
+        m_relativePlacement = positioner.placement(bounds);
+    }
 }
 
 void XdgPopupWindow::relayout()
@@ -1671,132 +1678,6 @@ QRectF XdgPopupWindow::transientPlacement() const
 {
     const QPointF parentPosition = transientFor()->framePosToClientPos(transientFor()->pos());
     return m_relativePlacement.translated(parentPosition);
-}
-
-QRectF XdgPopupWindow::placement() const
-{
-    const QRectF bounds = Workspace::self()->clientArea(transientFor()->isFullScreen() ? FullScreenArea : PlacementArea, transientFor());
-
-    const XdgPositioner positioner = m_shellSurface->positioner();
-    const QSize desiredSize = positioner.size();
-
-    if (m_plasmaShellSurface && m_plasmaShellSurface->isPositionSet()) {
-        return QRectF(m_plasmaShellSurface->position(), desiredSize);
-    }
-
-    const QPointF parentPosition = transientFor()->framePosToClientPos(transientFor()->pos());
-
-    // returns if a target is within the supplied bounds, optional edges argument states which side to check
-    auto inBounds = [bounds](const QRectF &target, Qt::Edges edges = Qt::LeftEdge | Qt::RightEdge | Qt::TopEdge | Qt::BottomEdge) -> bool {
-        if (edges & Qt::LeftEdge && target.left() < bounds.left()) {
-            return false;
-        }
-        if (edges & Qt::TopEdge && target.top() < bounds.top()) {
-            return false;
-        }
-        if (edges & Qt::RightEdge && target.right() > bounds.right()) {
-            // normal QRect::right issue cancels out
-            return false;
-        }
-        if (edges & Qt::BottomEdge && target.bottom() > bounds.bottom()) {
-            return false;
-        }
-        return true;
-    };
-
-    QRectF popupRect(popupOffset(positioner.anchorRect(), positioner.anchorEdges(), positioner.gravityEdges(), desiredSize) + positioner.offset() + parentPosition, desiredSize);
-
-    // if that fits, we don't need to do anything
-    if (inBounds(popupRect)) {
-        return popupRect;
-    }
-    // otherwise apply constraint adjustment per axis in order XDG Shell Popup states
-
-    if (positioner.flipConstraintAdjustments() & Qt::Horizontal) {
-        if (!inBounds(popupRect, Qt::LeftEdge | Qt::RightEdge)) {
-            // flip both edges (if either bit is set, XOR both)
-            auto flippedAnchorEdge = positioner.anchorEdges();
-            if (flippedAnchorEdge & (Qt::LeftEdge | Qt::RightEdge)) {
-                flippedAnchorEdge ^= (Qt::LeftEdge | Qt::RightEdge);
-            }
-            auto flippedGravity = positioner.gravityEdges();
-            if (flippedGravity & (Qt::LeftEdge | Qt::RightEdge)) {
-                flippedGravity ^= (Qt::LeftEdge | Qt::RightEdge);
-            }
-            auto flippedPopupRect = QRectF(popupOffset(positioner.anchorRect(), flippedAnchorEdge, flippedGravity, desiredSize) + positioner.offset() + parentPosition, desiredSize);
-
-            // if it still doesn't fit we should continue with the unflipped version
-            if (inBounds(flippedPopupRect, Qt::LeftEdge | Qt::RightEdge)) {
-                popupRect.moveLeft(flippedPopupRect.left());
-            }
-        }
-    }
-    if (positioner.slideConstraintAdjustments() & Qt::Horizontal) {
-        if (!inBounds(popupRect, Qt::LeftEdge)) {
-            popupRect.moveLeft(bounds.left());
-        }
-        if (!inBounds(popupRect, Qt::RightEdge)) {
-            popupRect.moveRight(bounds.right());
-        }
-    }
-    if (positioner.resizeConstraintAdjustments() & Qt::Horizontal) {
-        QRectF unconstrainedRect = popupRect;
-
-        if (!inBounds(unconstrainedRect, Qt::LeftEdge)) {
-            unconstrainedRect.setLeft(bounds.left());
-        }
-        if (!inBounds(unconstrainedRect, Qt::RightEdge)) {
-            unconstrainedRect.setRight(bounds.right());
-        }
-
-        if (unconstrainedRect.isValid()) {
-            popupRect = unconstrainedRect;
-        }
-    }
-
-    if (positioner.flipConstraintAdjustments() & Qt::Vertical) {
-        if (!inBounds(popupRect, Qt::TopEdge | Qt::BottomEdge)) {
-            // flip both edges (if either bit is set, XOR both)
-            auto flippedAnchorEdge = positioner.anchorEdges();
-            if (flippedAnchorEdge & (Qt::TopEdge | Qt::BottomEdge)) {
-                flippedAnchorEdge ^= (Qt::TopEdge | Qt::BottomEdge);
-            }
-            auto flippedGravity = positioner.gravityEdges();
-            if (flippedGravity & (Qt::TopEdge | Qt::BottomEdge)) {
-                flippedGravity ^= (Qt::TopEdge | Qt::BottomEdge);
-            }
-            auto flippedPopupRect = QRectF(popupOffset(positioner.anchorRect(), flippedAnchorEdge, flippedGravity, desiredSize) + positioner.offset() + parentPosition, desiredSize);
-
-            // if it still doesn't fit we should continue with the unflipped version
-            if (inBounds(flippedPopupRect, Qt::TopEdge | Qt::BottomEdge)) {
-                popupRect.moveTop(flippedPopupRect.top());
-            }
-        }
-    }
-    if (positioner.slideConstraintAdjustments() & Qt::Vertical) {
-        if (!inBounds(popupRect, Qt::TopEdge)) {
-            popupRect.moveTop(bounds.top());
-        }
-        if (!inBounds(popupRect, Qt::BottomEdge)) {
-            popupRect.moveBottom(bounds.bottom());
-        }
-    }
-    if (positioner.resizeConstraintAdjustments() & Qt::Vertical) {
-        QRectF unconstrainedRect = popupRect;
-
-        if (!inBounds(unconstrainedRect, Qt::TopEdge)) {
-            unconstrainedRect.setTop(bounds.top());
-        }
-        if (!inBounds(unconstrainedRect, Qt::BottomEdge)) {
-            unconstrainedRect.setBottom(bounds.bottom());
-        }
-
-        if (unconstrainedRect.isValid()) {
-            popupRect = unconstrainedRect;
-        }
-    }
-
-    return popupRect;
 }
 
 bool XdgPopupWindow::isCloseable() const

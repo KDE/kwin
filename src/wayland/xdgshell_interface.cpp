@@ -11,6 +11,7 @@
 #include "output_interface.h"
 #include "seat_interface.h"
 #include "utils.h"
+#include "utils/common.h"
 
 #include <QTimer>
 
@@ -1073,6 +1074,121 @@ bool XdgPositioner::isReactive() const
 quint32 XdgPositioner::parentConfigure() const
 {
     return d->parentConfigure;
+}
+
+QRectF XdgPositioner::placement(const QRectF &bounds) const
+{
+    // returns if a target is within the supplied bounds, optional edges argument states which side to check
+    auto inBounds = [bounds](const QRectF &target, Qt::Edges edges = Qt::LeftEdge | Qt::RightEdge | Qt::TopEdge | Qt::BottomEdge) -> bool {
+        if (edges & Qt::LeftEdge && target.left() < bounds.left()) {
+            return false;
+        }
+        if (edges & Qt::TopEdge && target.top() < bounds.top()) {
+            return false;
+        }
+        if (edges & Qt::RightEdge && target.right() > bounds.right()) {
+            // normal QRect::right issue cancels out
+            return false;
+        }
+        if (edges & Qt::BottomEdge && target.bottom() > bounds.bottom()) {
+            return false;
+        }
+        return true;
+    };
+
+    QRectF popupRect(KWin::popupOffset(anchorRect(), anchorEdges(), gravityEdges(), size()) + offset(), size());
+
+    // if that fits, we don't need to do anything
+    if (inBounds(popupRect)) {
+        return popupRect;
+    }
+    // otherwise apply constraint adjustment per axis in order XDG Shell Popup states
+
+    if (flipConstraintAdjustments() & Qt::Horizontal) {
+        if (!inBounds(popupRect, Qt::LeftEdge | Qt::RightEdge)) {
+            // flip both edges (if either bit is set, XOR both)
+            auto flippedAnchorEdge = anchorEdges();
+            if (flippedAnchorEdge & (Qt::LeftEdge | Qt::RightEdge)) {
+                flippedAnchorEdge ^= (Qt::LeftEdge | Qt::RightEdge);
+            }
+            auto flippedGravity = gravityEdges();
+            if (flippedGravity & (Qt::LeftEdge | Qt::RightEdge)) {
+                flippedGravity ^= (Qt::LeftEdge | Qt::RightEdge);
+            }
+            auto flippedPopupRect = QRectF(KWin::popupOffset(anchorRect(), flippedAnchorEdge, flippedGravity, size()) + offset(), size());
+
+            // if it still doesn't fit we should continue with the unflipped version
+            if (inBounds(flippedPopupRect, Qt::LeftEdge | Qt::RightEdge)) {
+                popupRect.moveLeft(flippedPopupRect.left());
+            }
+        }
+    }
+    if (slideConstraintAdjustments() & Qt::Horizontal) {
+        if (!inBounds(popupRect, Qt::LeftEdge)) {
+            popupRect.moveLeft(bounds.left());
+        }
+        if (!inBounds(popupRect, Qt::RightEdge)) {
+            popupRect.moveRight(bounds.right());
+        }
+    }
+    if (resizeConstraintAdjustments() & Qt::Horizontal) {
+        QRectF unconstrainedRect = popupRect;
+
+        if (!inBounds(unconstrainedRect, Qt::LeftEdge)) {
+            unconstrainedRect.setLeft(bounds.left());
+        }
+        if (!inBounds(unconstrainedRect, Qt::RightEdge)) {
+            unconstrainedRect.setRight(bounds.right());
+        }
+
+        if (unconstrainedRect.isValid()) {
+            popupRect = unconstrainedRect;
+        }
+    }
+
+    if (flipConstraintAdjustments() & Qt::Vertical) {
+        if (!inBounds(popupRect, Qt::TopEdge | Qt::BottomEdge)) {
+            // flip both edges (if either bit is set, XOR both)
+            auto flippedAnchorEdge = anchorEdges();
+            if (flippedAnchorEdge & (Qt::TopEdge | Qt::BottomEdge)) {
+                flippedAnchorEdge ^= (Qt::TopEdge | Qt::BottomEdge);
+            }
+            auto flippedGravity = gravityEdges();
+            if (flippedGravity & (Qt::TopEdge | Qt::BottomEdge)) {
+                flippedGravity ^= (Qt::TopEdge | Qt::BottomEdge);
+            }
+            auto flippedPopupRect = QRectF(KWin::popupOffset(anchorRect(), flippedAnchorEdge, flippedGravity, size()) + offset(), size());
+
+            // if it still doesn't fit we should continue with the unflipped version
+            if (inBounds(flippedPopupRect, Qt::TopEdge | Qt::BottomEdge)) {
+                popupRect.moveTop(flippedPopupRect.top());
+            }
+        }
+    }
+    if (slideConstraintAdjustments() & Qt::Vertical) {
+        if (!inBounds(popupRect, Qt::TopEdge)) {
+            popupRect.moveTop(bounds.top());
+        }
+        if (!inBounds(popupRect, Qt::BottomEdge)) {
+            popupRect.moveBottom(bounds.bottom());
+        }
+    }
+    if (resizeConstraintAdjustments() & Qt::Vertical) {
+        QRectF unconstrainedRect = popupRect;
+
+        if (!inBounds(unconstrainedRect, Qt::TopEdge)) {
+            unconstrainedRect.setTop(bounds.top());
+        }
+        if (!inBounds(unconstrainedRect, Qt::BottomEdge)) {
+            unconstrainedRect.setBottom(bounds.bottom());
+        }
+
+        if (unconstrainedRect.isValid()) {
+            popupRect = unconstrainedRect;
+        }
+    }
+
+    return popupRect;
 }
 
 XdgPositioner XdgPositioner::get(::wl_resource *resource)

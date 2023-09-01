@@ -261,8 +261,6 @@ protected:
     void handleRoleDestroyed() override;
 
 private:
-    QRectF placement() const;
-
     void handleGrabRequested(KWaylandServer::SeatInterface *seat, quint32 serial);
     void handleRepositionRequested(quint32 token);
     void initialize();

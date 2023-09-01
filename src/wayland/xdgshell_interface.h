@@ -506,6 +506,12 @@ public:
     quint32 parentConfigure() const;
 
     /**
+     * Returns the unconstrained geometry of the popup. The \a bounds is in the parent local
+     * coordinate space.
+     */
+    QRectF placement(const QRectF &bounds) const;
+
+    /**
      * Returns the current state of the xdg positioner object identified by \a resource.
      */
     static XdgPositioner get(::wl_resource *resource);
