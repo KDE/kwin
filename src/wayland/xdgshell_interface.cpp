@@ -219,6 +219,14 @@ void XdgSurfaceInterfacePrivate::xdg_surface_get_popup(Resource *resource, uint3
     XdgSurfaceInterface *parentXdgSurface = XdgSurfaceInterface::get(parentResource);
     SurfaceInterface *parentSurface = nullptr;
     if (parentXdgSurface) {
+        const SurfaceRole *parentSurfaceRole = SurfaceRole::get(parentXdgSurface->surface());
+        if (!parentSurfaceRole) {
+            auto shellPrivate = XdgShellInterfacePrivate::get(shell);
+            wl_resource_post_error(shellPrivate->resourceForXdgSurface(q)->handle,
+                                   QtWaylandServer::xdg_wm_base::error_invalid_popup_parent,
+                                   "parent surface has no surface role");
+            return;
+        }
         parentSurface = parentXdgSurface->surface();
     }
 
