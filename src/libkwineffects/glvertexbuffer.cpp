@@ -106,10 +106,10 @@ public:
         glGenBuffers(1, &buffer);
 
         switch (usageHint) {
-        case GLVertexBuffer::Dynamic:
+        case GLVertexBuffer::UsageHint::Dynamic:
             usage = GL_DYNAMIC_DRAW;
             break;
-        case GLVertexBuffer::Static:
+        case GLVertexBuffer::UsageHint::Static:
             usage = GL_STATIC_DRAW;
             break;
         default:

@@ -286,7 +286,7 @@ void MouseClickEffect::drawCircleGl(const RenderViewport &viewport, const QColor
         y = s * t + c * y;
     }
     if (!m_vbo) {
-        m_vbo = std::make_unique<GLVertexBuffer>(GLVertexBuffer::UsageHint::Stream);
+        m_vbo = std::make_unique<GLVertexBuffer>();
     }
     m_vbo->setVertices(verts);
     ShaderManager::instance()->getBoundShader()->setUniform(GLShader::ColorUniform::Color, color);

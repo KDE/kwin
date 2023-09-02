@@ -148,7 +148,7 @@ void SnapHelperEffect::paintScreen(const RenderTarget &renderTarget, const Rende
             verts.push_back(QVector2D((midX - halfWidth) * scale, (midY - halfHeight + s_lineWidth / 2) * scale));
         }
         if (!m_vbo) {
-            m_vbo = std::make_unique<GLVertexBuffer>(GLVertexBuffer::UsageHint::Stream);
+            m_vbo = std::make_unique<GLVertexBuffer>();
         }
         m_vbo->setVertices(verts);
         m_vbo->render(GL_LINES);

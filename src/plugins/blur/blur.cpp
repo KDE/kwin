@@ -589,7 +589,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
         }
     }
     if (!renderInfo.vbo) {
-        renderInfo.vbo = std::make_unique<GLVertexBuffer>(GLVertexBuffer::UsageHint::Stream);
+        renderInfo.vbo = std::make_unique<GLVertexBuffer>();
     }
 
     // Fetch the pixels behind the shape that is going to be blurred.

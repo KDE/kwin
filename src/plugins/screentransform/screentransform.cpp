@@ -153,7 +153,7 @@ static std::unique_ptr<GLVertexBuffer> texturedRectVbo(const QRectF &geometry, q
         .position = QVector2D(deviceGeometry.right(), deviceGeometry.bottom()),
         .texcoord = QVector2D(1.0, 0.0),
     };
-    auto ret = std::make_unique<GLVertexBuffer>(GLVertexBuffer::UsageHint::Stream);
+    auto ret = std::make_unique<GLVertexBuffer>();
     ret->setVertices(data);
     return ret;
 }

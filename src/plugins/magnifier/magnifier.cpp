@@ -164,7 +164,7 @@ void MagnifierEffect::paintScreen(const RenderTarget &renderTarget, const Render
         verts.push_back(QVector2D(frame.right(), frame.bottom()));
         verts.push_back(QVector2D(frame.right(), areaF.bottom()));
         if (!m_vbo) {
-            m_vbo = std::make_unique<GLVertexBuffer>(GLVertexBuffer::UsageHint::Stream);
+            m_vbo = std::make_unique<GLVertexBuffer>();
         }
         m_vbo->setVertices(verts);
 

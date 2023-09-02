@@ -373,7 +373,7 @@ void GLTexture::render(const QRectF &source, const QRegion &region, const QSizeF
         const QPointF p4 = textureMat.map(QPointF(source.x() + source.width(), source.y() + source.height()));
 
         if (!d->m_vbo) {
-            d->m_vbo = std::make_unique<GLVertexBuffer>(KWin::GLVertexBuffer::Static);
+            d->m_vbo = std::make_unique<GLVertexBuffer>();
         }
         const std::array<GLVertex2D, 4> data{
             GLVertex2D{

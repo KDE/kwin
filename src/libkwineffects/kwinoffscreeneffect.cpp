@@ -166,7 +166,7 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
     geometry.postProcessTextureCoordinates(m_texture->matrix(NormalizedCoordinates));
 
     if (!m_vbo) {
-        m_vbo = std::make_unique<GLVertexBuffer>(GLVertexBuffer::UsageHint::Stream);
+        m_vbo = std::make_unique<GLVertexBuffer>();
     }
     m_vbo->setVertices(geometry);
     m_vbo->bindArrays();

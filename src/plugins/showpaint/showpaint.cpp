@@ -86,7 +86,7 @@ void ShowPaintEffect::paintGL(const QMatrix4x4 &projection, qreal scale)
         verts.push_back(QVector2D(deviceRect.x() + deviceRect.width(), deviceRect.y()));
     }
     if (!m_vbo) {
-        m_vbo = std::make_unique<GLVertexBuffer>(GLVertexBuffer::UsageHint::Stream);
+        m_vbo = std::make_unique<GLVertexBuffer>();
     }
     m_vbo->setVertices(verts);
     m_vbo->render(GL_TRIANGLES);

@@ -312,7 +312,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
     }
 
     if (!m_vbo) {
-        m_vbo = std::make_unique<GLVertexBuffer>(GLVertexBuffer::UsageHint::Stream);
+        m_vbo = std::make_unique<GLVertexBuffer>();
     }
     m_vbo->setVertices(vertices);
     m_vbo->bindArrays();

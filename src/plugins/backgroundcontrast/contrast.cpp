@@ -426,7 +426,7 @@ void ContrastEffect::doContrast(const RenderTarget &renderTarget, const RenderVi
         windowData.texture->setWrapMode(GL_CLAMP_TO_EDGE);
     }
     if (!windowData.vbo) {
-        windowData.vbo = std::make_unique<GLVertexBuffer>(GLVertexBuffer::UsageHint::Stream);
+        windowData.vbo = std::make_unique<GLVertexBuffer>();
     }
     // Upload geometry for the horizontal and vertical passes
     windowData.vbo->setVertices(listVertices(actualShape, scale));
