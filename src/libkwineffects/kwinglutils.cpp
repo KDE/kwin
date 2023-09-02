@@ -30,6 +30,7 @@
 #include <QVector4D>
 
 #include <array>
+#include <bitset>
 #include <cmath>
 #include <deque>
 
@@ -1421,98 +1422,6 @@ void IndexBuffer::bind()
 
 // ------------------------------------------------------------------
 
-class BitRef
-{
-public:
-    BitRef(uint32_t &bitfield, int bit)
-        : m_bitfield(bitfield)
-        , m_mask(1 << bit)
-    {
-    }
-
-    void operator=(bool val)
-    {
-        if (val) {
-            m_bitfield |= m_mask;
-        } else {
-            m_bitfield &= ~m_mask;
-        }
-    }
-
-    operator bool() const
-    {
-        return m_bitfield & m_mask;
-    }
-
-private:
-    uint32_t &m_bitfield;
-    int const m_mask;
-};
-
-// ------------------------------------------------------------------
-
-class Bitfield
-{
-public:
-    Bitfield()
-        : m_bitfield(0)
-    {
-    }
-    Bitfield(uint32_t bits)
-        : m_bitfield(bits)
-    {
-    }
-
-    void set(int i)
-    {
-        m_bitfield |= (1 << i);
-    }
-    void clear(int i)
-    {
-        m_bitfield &= ~(1 << i);
-    }
-
-    BitRef operator[](int i)
-    {
-        return BitRef(m_bitfield, i);
-    }
-    operator uint32_t() const
-    {
-        return m_bitfield;
-    }
-
-private:
-    uint32_t m_bitfield;
-};
-
-// ------------------------------------------------------------------
-
-class BitfieldIterator
-{
-public:
-    BitfieldIterator(uint32_t bitfield)
-        : m_bitfield(bitfield)
-    {
-    }
-
-    bool hasNext() const
-    {
-        return m_bitfield != 0;
-    }
-
-    int next()
-    {
-        const int bit = ffs(m_bitfield) - 1;
-        m_bitfield ^= (1 << bit);
-        return bit;
-    }
-
-private:
-    uint32_t m_bitfield;
-};
-
-// ------------------------------------------------------------------
-
 struct VertexAttrib
 {
     int size;
@@ -1651,7 +1560,7 @@ public:
     std::deque<BufferFence> fences;
     FrameSizesArray<4> frameSizes;
     VertexAttrib attrib[VertexAttributeCount];
-    Bitfield enabledArrays;
+    std::bitset<32> enabledArrays;
     static std::unique_ptr<IndexBuffer> s_indexBuffer;
 };
 
@@ -1712,20 +1621,21 @@ void GLVertexBufferPrivate::bindArrays()
 
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
 
-    BitfieldIterator it(enabledArrays);
-    while (it.hasNext()) {
-        const int index = it.next();
-        glVertexAttribPointer(index, attrib[index].size, attrib[index].type, GL_FALSE, stride,
-                              (const GLvoid *)(baseAddress + attrib[index].offset));
-        glEnableVertexAttribArray(index);
+    for (size_t i = 0; i < enabledArrays.size(); i++) {
+        if (enabledArrays[i]) {
+            glVertexAttribPointer(i, attrib[i].size, attrib[i].type, GL_FALSE, stride,
+                                  (const GLvoid *)(baseAddress + attrib[i].offset));
+            glEnableVertexAttribArray(i);
+        }
     }
 }
 
 void GLVertexBufferPrivate::unbindArrays()
 {
-    BitfieldIterator it(enabledArrays);
-    while (it.hasNext()) {
-        glDisableVertexAttribArray(it.next());
+    for (size_t i = 0; i < enabledArrays.size(); i++) {
+        if (enabledArrays[i]) {
+            glDisableVertexAttribArray(i);
+        }
     }
 }
 
@@ -1975,7 +1885,7 @@ void GLVertexBuffer::setVertexCount(int count)
 void GLVertexBuffer::setAttribLayout(const GLVertexAttrib *attribs, int count, int stride)
 {
     // Start by disabling all arrays
-    d->enabledArrays = 0;
+    d->enabledArrays.reset();
 
     for (int i = 0; i < count; i++) {
         const int index = attribs[i].index;
