@@ -67,10 +67,6 @@ void ShowPaintEffect::paintWindow(const RenderTarget &renderTarget, const Render
 
 void ShowPaintEffect::paintGL(const QMatrix4x4 &projection, qreal scale)
 {
-    if (!m_vbo) {
-        m_vbo = std::make_unique<GLVertexBuffer>(GLVertexBuffer::UsageHint::Stream);
-    }
-    m_vbo->reset();
     ShaderBinder binder(ShaderTrait::UniformColor);
     binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, projection);
     glEnable(GL_BLEND);
@@ -88,6 +84,9 @@ void ShowPaintEffect::paintGL(const QMatrix4x4 &projection, qreal scale)
         verts.push_back(QVector2D(deviceRect.x(), deviceRect.y() + deviceRect.height()));
         verts.push_back(QVector2D(deviceRect.x() + deviceRect.width(), deviceRect.y() + deviceRect.height()));
         verts.push_back(QVector2D(deviceRect.x() + deviceRect.width(), deviceRect.y()));
+    }
+    if (!m_vbo) {
+        m_vbo = std::make_unique<GLVertexBuffer>(GLVertexBuffer::UsageHint::Stream);
     }
     m_vbo->setVertices(verts);
     m_vbo->render(GL_TRIANGLES);

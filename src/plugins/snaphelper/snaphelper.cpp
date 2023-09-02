@@ -150,7 +150,6 @@ void SnapHelperEffect::paintScreen(const RenderTarget &renderTarget, const Rende
         if (!m_vbo) {
             m_vbo = std::make_unique<GLVertexBuffer>(GLVertexBuffer::UsageHint::Stream);
         }
-        m_vbo->reset();
         m_vbo->setVertices(verts);
         m_vbo->render(GL_LINES);
 

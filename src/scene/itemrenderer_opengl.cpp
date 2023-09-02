@@ -290,17 +290,8 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
         shaderTraits |= ShaderTrait::AdjustSaturation;
     }
 
-    if (!m_vbo) {
-        m_vbo = std::make_unique<GLVertexBuffer>(GLVertexBuffer::UsageHint::Stream);
-    }
-    m_vbo->reset();
-    m_vbo->setAttribLayout(std::span(GLVertexBuffer::GLVertex2DLayout), sizeof(GLVertex2D));
-
-    const auto map = m_vbo->map<GLVertex2D>(totalVertexCount);
-    if (!map) {
-        return;
-    }
-
+    QVector<GLVertex2D> vertices;
+    vertices.reserve(totalVertexCount);
     for (int i = 0, v = 0; i < renderContext.renderNodes.count(); i++) {
         RenderNode &renderNode = renderContext.renderNodes[i];
         if (renderNode.geometry.isEmpty() || !renderNode.texture) {
@@ -316,11 +307,14 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
 
         renderNode.geometry.postProcessTextureCoordinates(renderNode.texture->matrix(renderNode.coordinateType));
 
-        renderNode.geometry.copy(map->subspan(v));
+        std::copy(renderNode.geometry.cbegin(), renderNode.geometry.cend(), std::back_inserter(vertices));
         v += renderNode.geometry.count();
     }
 
-    m_vbo->unmap();
+    if (!m_vbo) {
+        m_vbo = std::make_unique<GLVertexBuffer>(GLVertexBuffer::UsageHint::Stream);
+    }
+    m_vbo->setVertices(vertices);
     m_vbo->bindArrays();
 
     GLShader *shader = ShaderManager::instance()->pushShader(shaderTraits);

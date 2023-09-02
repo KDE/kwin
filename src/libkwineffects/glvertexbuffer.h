@@ -142,39 +142,6 @@ public:
     // clang-format on
 
     /**
-     * Maps an unused range of the data store into the client's address space.
-     *
-     * The data store will be reallocated if it is smaller than the given size.
-     *
-     * The buffer object is mapped for writing, not reading. Attempts to read from
-     * the mapped buffer range may result in system errors, including program
-     * termination. The data in the mapped region is undefined until it has been
-     * written to. If subsequent GL calls access unwritten memory, the results are
-     * undefined and system errors, including program termination, may occur.
-     *
-     * No GL calls that access the buffer object must be made while the buffer
-     * object is mapped. The returned pointer must not be passed as a parameter
-     * value to any GL function.
-     *
-     * It is assumed that the GL_ARRAY_BUFFER_BINDING will not be changed while
-     * the buffer object is mapped.
-     */
-    template<typename T>
-    std::optional<std::span<T>> map(size_t count)
-    {
-        if (const auto m = map(sizeof(T) * count)) {
-            return std::span(reinterpret_cast<T *>(m), count);
-        } else {
-            return std::nullopt;
-        }
-    }
-
-    /**
-     * Flushes the mapped buffer range and unmaps the buffer.
-     */
-    void unmap();
-
-    /**
      * Binds the vertex arrays to the context.
      */
     void bindArrays();
@@ -206,13 +173,6 @@ public:
      * It's within the caller's responsibility to enable GL_SCISSOR_TEST.
      */
     void render(const QRegion &region, GLenum primitiveMode, bool hardwareClipping = false);
-
-    /**
-     * Resets the instance to default values.
-     * Useful for shared buffers.
-     * @since 4.7
-     */
-    void reset();
 
     /**
      * @internal
@@ -259,8 +219,6 @@ public:
     };
 
 private:
-    GLvoid *map(size_t size);
-
     const std::unique_ptr<GLVertexBufferPrivate> d;
 };
 

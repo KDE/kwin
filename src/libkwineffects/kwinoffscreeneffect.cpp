@@ -158,12 +158,6 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
 
     const double scale = viewport.scale();
 
-    if (!m_vbo) {
-        m_vbo = std::make_unique<GLVertexBuffer>(GLVertexBuffer::UsageHint::Stream);
-    }
-    m_vbo->reset();
-    m_vbo->setAttribLayout(std::span(GLVertexBuffer::GLVertex2DLayout), sizeof(GLVertex2D));
-
     RenderGeometry geometry;
     geometry.setVertexSnappingMode(m_vertexSnappingMode);
     for (auto &quad : quads) {
@@ -171,13 +165,10 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
     }
     geometry.postProcessTextureCoordinates(m_texture->matrix(NormalizedCoordinates));
 
-    const auto map = m_vbo->map<GLVertex2D>(geometry.size());
-    if (!map) {
-        return;
+    if (!m_vbo) {
+        m_vbo = std::make_unique<GLVertexBuffer>(GLVertexBuffer::UsageHint::Stream);
     }
-    geometry.copy(*map);
-    m_vbo->unmap();
-
+    m_vbo->setVertices(geometry);
     m_vbo->bindArrays();
 
     const qreal rgb = data.brightness() * data.opacity();

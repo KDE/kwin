@@ -600,107 +600,97 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
 
     // Upload the geometry: the first 6 vertices are used when downsampling and upsampling offscreen,
     // the remaining vertices are used when rendering on the screen.
-    renderInfo.vbo->reset();
-    renderInfo.vbo->setAttribLayout(std::span(GLVertexBuffer::GLVertex2DLayout), sizeof(GLVertex2D));
 
     const int vertexCount = effectiveShape.rectCount() * 6;
-    if (auto result = renderInfo.vbo->map<GLVertex2D>(6 + vertexCount)) {
-        auto map = *result;
+    QVector<GLVertex2D> vertices;
+    vertices.reserve(6 + vertexCount);
+    // The geometry that will be blurred offscreen, in logical pixels.
+    {
+        const QRectF localRect = QRectF(0, 0, backgroundRect.width(), backgroundRect.height());
 
-        size_t vboIndex = 0;
+        const float x0 = localRect.left();
+        const float y0 = localRect.top();
+        const float x1 = localRect.right();
+        const float y1 = localRect.bottom();
 
-        // The geometry that will be blurred offscreen, in logical pixels.
-        {
-            const QRectF localRect = QRectF(0, 0, backgroundRect.width(), backgroundRect.height());
+        const float u0 = x0 / backgroundRect.width();
+        const float v0 = 1.0f - y0 / backgroundRect.height();
+        const float u1 = x1 / backgroundRect.width();
+        const float v1 = 1.0f - y1 / backgroundRect.height();
 
-            const float x0 = localRect.left();
-            const float y0 = localRect.top();
-            const float x1 = localRect.right();
-            const float y1 = localRect.bottom();
+        // first triangle
+        vertices.push_back(GLVertex2D{
+            .position = QVector2D(x0, y0),
+            .texcoord = QVector2D(u0, v0),
+        });
+        vertices.push_back(GLVertex2D{
+            .position = QVector2D(x1, y1),
+            .texcoord = QVector2D(u1, v1),
+        });
+        vertices.push_back(GLVertex2D{
+            .position = QVector2D(x0, y1),
+            .texcoord = QVector2D(u0, v1),
+        });
 
-            const float u0 = x0 / backgroundRect.width();
-            const float v0 = 1.0f - y0 / backgroundRect.height();
-            const float u1 = x1 / backgroundRect.width();
-            const float v1 = 1.0f - y1 / backgroundRect.height();
-
-            // first triangle
-            map[vboIndex++] = GLVertex2D{
-                .position = QVector2D(x0, y0),
-                .texcoord = QVector2D(u0, v0),
-            };
-            map[vboIndex++] = GLVertex2D{
-                .position = QVector2D(x1, y1),
-                .texcoord = QVector2D(u1, v1),
-            };
-            map[vboIndex++] = GLVertex2D{
-                .position = QVector2D(x0, y1),
-                .texcoord = QVector2D(u0, v1),
-            };
-
-            // second triangle
-            map[vboIndex++] = GLVertex2D{
-                .position = QVector2D(x0, y0),
-                .texcoord = QVector2D(u0, v0),
-            };
-            map[vboIndex++] = GLVertex2D{
-                .position = QVector2D(x1, y0),
-                .texcoord = QVector2D(u1, v0),
-            };
-            map[vboIndex++] = GLVertex2D{
-                .position = QVector2D(x1, y1),
-                .texcoord = QVector2D(u1, v1),
-            };
-        }
-
-        // The geometry that will be painted on screen, in device pixels.
-        for (const QRect &rect : effectiveShape) {
-            const QRectF localRect = scaledRect(rect, viewport.scale()).translated(-deviceBackgroundRect.topLeft());
-
-            const float x0 = std::round(localRect.left());
-            const float y0 = std::round(localRect.top());
-            const float x1 = std::round(localRect.right());
-            const float y1 = std::round(localRect.bottom());
-
-            const float u0 = x0 / deviceBackgroundRect.width();
-            const float v0 = 1.0f - y0 / deviceBackgroundRect.height();
-            const float u1 = x1 / deviceBackgroundRect.width();
-            const float v1 = 1.0f - y1 / deviceBackgroundRect.height();
-
-            // first triangle
-            map[vboIndex++] = GLVertex2D{
-                .position = QVector2D(x0, y0),
-                .texcoord = QVector2D(u0, v0),
-            };
-            map[vboIndex++] = GLVertex2D{
-                .position = QVector2D(x1, y1),
-                .texcoord = QVector2D(u1, v1),
-            };
-            map[vboIndex++] = GLVertex2D{
-                .position = QVector2D(x0, y1),
-                .texcoord = QVector2D(u0, v1),
-            };
-
-            // second triangle
-            map[vboIndex++] = GLVertex2D{
-                .position = QVector2D(x0, y0),
-                .texcoord = QVector2D(u0, v0),
-            };
-            map[vboIndex++] = GLVertex2D{
-                .position = QVector2D(x1, y0),
-                .texcoord = QVector2D(u1, v0),
-            };
-            map[vboIndex++] = GLVertex2D{
-                .position = QVector2D(x1, y1),
-                .texcoord = QVector2D(u1, v1),
-            };
-        }
-
-        renderInfo.vbo->unmap();
-    } else {
-        qCWarning(KWIN_BLUR) << "Failed to map vertex buffer";
-        return;
+        // second triangle
+        vertices.push_back(GLVertex2D{
+            .position = QVector2D(x0, y0),
+            .texcoord = QVector2D(u0, v0),
+        });
+        vertices.push_back(GLVertex2D{
+            .position = QVector2D(x1, y0),
+            .texcoord = QVector2D(u1, v0),
+        });
+        vertices.push_back(GLVertex2D{
+            .position = QVector2D(x1, y1),
+            .texcoord = QVector2D(u1, v1),
+        });
     }
 
+    // The geometry that will be painted on screen, in device pixels.
+    for (const QRect &rect : effectiveShape) {
+        const QRectF localRect = scaledRect(rect, viewport.scale()).translated(-deviceBackgroundRect.topLeft());
+
+        const float x0 = std::round(localRect.left());
+        const float y0 = std::round(localRect.top());
+        const float x1 = std::round(localRect.right());
+        const float y1 = std::round(localRect.bottom());
+
+        const float u0 = x0 / deviceBackgroundRect.width();
+        const float v0 = 1.0f - y0 / deviceBackgroundRect.height();
+        const float u1 = x1 / deviceBackgroundRect.width();
+        const float v1 = 1.0f - y1 / deviceBackgroundRect.height();
+
+        // first triangle
+        vertices.push_back(GLVertex2D{
+            .position = QVector2D(x0, y0),
+            .texcoord = QVector2D(u0, v0),
+        });
+        vertices.push_back(GLVertex2D{
+            .position = QVector2D(x1, y1),
+            .texcoord = QVector2D(u1, v1),
+        });
+        vertices.push_back(GLVertex2D{
+            .position = QVector2D(x0, y1),
+            .texcoord = QVector2D(u0, v1),
+        });
+
+        // second triangle
+        vertices.push_back(GLVertex2D{
+            .position = QVector2D(x0, y0),
+            .texcoord = QVector2D(u0, v0),
+        });
+        vertices.push_back(GLVertex2D{
+            .position = QVector2D(x1, y0),
+            .texcoord = QVector2D(u1, v0),
+        });
+        vertices.push_back(GLVertex2D{
+            .position = QVector2D(x1, y1),
+            .texcoord = QVector2D(u1, v1),
+        });
+    }
+
+    renderInfo.vbo->setVertices(vertices);
     renderInfo.vbo->bindArrays();
 
     // The downsample pass of the dual Kawase algorithm: the background will be scaled down 50% every iteration.

@@ -123,47 +123,39 @@ void ScreenTransformEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono
 
 static std::unique_ptr<GLVertexBuffer> texturedRectVbo(const QRectF &geometry, qreal scale)
 {
-    auto vbo = std::make_unique<GLVertexBuffer>(GLVertexBuffer::UsageHint::Stream);
-    vbo->setAttribLayout(std::span(GLVertexBuffer::GLVertex2DLayout), sizeof(GLVertex2D));
-
-    const auto opt = vbo->map<GLVertex2D>(6);
-    if (!opt) {
-        return nullptr;
-    }
-    const auto map = *opt;
-
     auto deviceGeometry = scaledRect(geometry, scale);
+    std::array<GLVertex2D, 6> data;
 
     // first triangle
-    map[0] = GLVertex2D{
+    data[0] = GLVertex2D{
         .position = QVector2D(deviceGeometry.left(), deviceGeometry.top()),
         .texcoord = QVector2D(0.0, 1.0),
     };
-    map[1] = GLVertex2D{
+    data[1] = GLVertex2D{
         .position = QVector2D(deviceGeometry.right(), deviceGeometry.bottom()),
         .texcoord = QVector2D(1.0, 0.0),
     };
-    map[2] = GLVertex2D{
+    data[2] = GLVertex2D{
         .position = QVector2D(deviceGeometry.left(), deviceGeometry.bottom()),
         .texcoord = QVector2D(0.0, 0.0),
     };
 
     // second triangle
-    map[3] = GLVertex2D{
+    data[3] = GLVertex2D{
         .position = QVector2D(deviceGeometry.left(), deviceGeometry.top()),
         .texcoord = QVector2D(0.0, 1.0),
     };
-    map[4] = GLVertex2D{
+    data[4] = GLVertex2D{
         .position = QVector2D(deviceGeometry.right(), deviceGeometry.top()),
         .texcoord = QVector2D(1.0, 1.0),
     };
-    map[5] = GLVertex2D{
+    data[5] = GLVertex2D{
         .position = QVector2D(deviceGeometry.right(), deviceGeometry.bottom()),
         .texcoord = QVector2D(1.0, 0.0),
     };
-
-    vbo->unmap();
-    return vbo;
+    auto ret = std::make_unique<GLVertexBuffer>(GLVertexBuffer::UsageHint::Stream);
+    ret->setVertices(data);
+    return ret;
 }
 
 static qreal lerp(qreal a, qreal b, qreal t)
@@ -229,9 +221,6 @@ void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const 
     glClear(GL_COLOR_BUFFER_BIT);
 
     const auto vbo = texturedRectVbo(lerp(it->m_oldGeometry, screenRect, blendFactor), scale);
-    if (!vbo) {
-        return;
-    }
 
     ShaderManager *sm = ShaderManager::instance();
     sm->pushShader(m_shader.get());

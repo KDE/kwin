@@ -315,9 +315,10 @@ QRegion ContrastEffect::contrastRegion(const EffectWindow *w) const
     return region;
 }
 
-void ContrastEffect::uploadRegion(std::span<QVector2D> map, const QRegion &region, qreal scale)
+QVector<QVector2D> ContrastEffect::listVertices(const QRegion &region, qreal scale)
 {
-    size_t index = 0;
+    QVector<QVector2D> ret;
+    ret.reserve(region.rectCount() * 4);
     for (const QRect &r : region) {
         const auto deviceRect = scaledRect(r, scale);
         const QVector2D topLeft = roundVector(QVector2D(deviceRect.x(), deviceRect.y()));
@@ -326,47 +327,16 @@ void ContrastEffect::uploadRegion(std::span<QVector2D> map, const QRegion &regio
         const QVector2D bottomRight = roundVector(QVector2D(deviceRect.x() + deviceRect.width(), deviceRect.y() + deviceRect.height()));
 
         // First triangle
-        map[index++] = topRight;
-        map[index++] = topLeft;
-        map[index++] = bottomLeft;
+        ret.push_back(topRight);
+        ret.push_back(topLeft);
+        ret.push_back(bottomLeft);
 
         // Second triangle
-        map[index++] = bottomLeft;
-        map[index++] = bottomRight;
-        map[index++] = topRight;
+        ret.push_back(bottomLeft);
+        ret.push_back(bottomRight);
+        ret.push_back(topRight);
     }
-}
-
-bool ContrastEffect::uploadGeometry(GLVertexBuffer *vbo, const QRegion &region, qreal scale)
-{
-    const int vertexCount = region.rectCount() * 6;
-    if (!vertexCount) {
-        return false;
-    }
-
-    const auto map = vbo->map<QVector2D>(vertexCount);
-    if (!map) {
-        return false;
-    }
-    uploadRegion(*map, region, scale);
-    vbo->unmap();
-
-    constexpr std::array layout{
-        GLVertexAttrib{
-            .attributeIndex = VA_Position,
-            .componentCount = 2,
-            .type = GL_FLOAT,
-            .relativeOffset = 0,
-        },
-        GLVertexAttrib{
-            .attributeIndex = VA_TexCoord,
-            .componentCount = 2,
-            .type = GL_FLOAT,
-            .relativeOffset = 0,
-        },
-    };
-    vbo->setAttribLayout(std::span(layout), sizeof(QVector2D));
-    return true;
+    return ret;
 }
 
 bool ContrastEffect::shouldContrast(const EffectWindow *w, int mask, const WindowPaintData &data) const
@@ -440,6 +410,9 @@ void ContrastEffect::doContrast(const RenderTarget &renderTarget, const RenderVi
     const qreal scale = viewport.scale();
     const QRegion actualShape = shape & screen;
     const QRectF r = viewport.mapToRenderTarget(actualShape.boundingRect());
+    if (actualShape.isEmpty()) {
+        return;
+    }
 
     Q_ASSERT(m_windowData.contains(w));
     auto &windowData = m_windowData[w];
@@ -456,10 +429,7 @@ void ContrastEffect::doContrast(const RenderTarget &renderTarget, const RenderVi
         windowData.vbo = std::make_unique<GLVertexBuffer>(GLVertexBuffer::UsageHint::Stream);
     }
     // Upload geometry for the horizontal and vertical passes
-    windowData.vbo->reset();
-    if (!uploadGeometry(windowData.vbo.get(), actualShape, scale)) {
-        return;
-    }
+    windowData.vbo->setVertices(listVertices(actualShape, scale));
     GLTexture *contrastTexture = windowData.texture.get();
     contrastTexture->bind();
 
@@ -487,10 +457,11 @@ void ContrastEffect::doContrast(const RenderTarget &renderTarget, const RenderVi
     m_shader->setTextureMatrix(textureMatrix);
     m_shader->setModelViewProjectionMatrix(screenProjection);
 
+    windowData.vbo->bindArrays();
     windowData.vbo->draw(GL_TRIANGLES, 0, actualShape.rectCount() * 6);
+    windowData.vbo->unbindArrays();
 
     contrastTexture->unbind();
-    windowData.vbo->unbindArrays();
 
     if (opacity < 1.0) {
         glDisable(GL_BLEND);

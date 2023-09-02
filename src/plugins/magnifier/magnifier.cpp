@@ -131,11 +131,6 @@ void MagnifierEffect::paintScreen(const RenderTarget &renderTarget, const Render
         m_texture->render(area.size(), scale);
         ShaderManager::instance()->popShader();
 
-        if (!m_vbo) {
-            m_vbo = std::make_unique<GLVertexBuffer>(GLVertexBuffer::UsageHint::Stream);
-        }
-        m_vbo->reset();
-
         QRectF areaF = scaledRect(area, scale);
         const QRectF frame = scaledRect(area.adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH), scale);
         QVector<QVector2D> verts;
@@ -168,6 +163,9 @@ void MagnifierEffect::paintScreen(const RenderTarget &renderTarget, const Render
         verts.push_back(QVector2D(frame.left(), frame.bottom()));
         verts.push_back(QVector2D(frame.right(), frame.bottom()));
         verts.push_back(QVector2D(frame.right(), areaF.bottom()));
+        if (!m_vbo) {
+            m_vbo = std::make_unique<GLVertexBuffer>(GLVertexBuffer::UsageHint::Stream);
+        }
         m_vbo->setVertices(verts);
 
         ShaderBinder binder(ShaderTrait::UniformColor);
