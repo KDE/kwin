@@ -117,12 +117,11 @@ void MouseMarkEffect::paintScreen(const RenderTarget &renderTarget, const Render
         glLineWidth(width);
         GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
         vbo->reset();
-        vbo->setUseColor(true);
-        vbo->setColor(color);
         const auto scale = viewport.scale();
         ShaderBinder binder(ShaderTrait::UniformColor | ShaderTrait::TransformColorspace);
         binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, viewport.projectionMatrix());
         binder.shader()->setColorspaceUniformsFromSRGB(renderTarget.colorDescription());
+        binder.shader()->setUniform(GLShader::ColorUniform::Color, color);
         QVector<QVector2D> verts;
         for (const Mark &mark : std::as_const(marks)) {
             verts.clear();

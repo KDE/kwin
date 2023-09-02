@@ -277,8 +277,6 @@ void MouseClickEffect::drawCircleGl(const RenderViewport &viewport, const QColor
 
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     vbo->reset();
-    vbo->setUseColor(true);
-    vbo->setColor(color);
     QVector<QVector2D> verts;
     verts.reserve(num_segments * 2);
 
@@ -290,6 +288,7 @@ void MouseClickEffect::drawCircleGl(const RenderViewport &viewport, const QColor
         y = s * t + c * y;
     }
     vbo->setVertices(verts);
+    ShaderManager::instance()->getBoundShader()->setUniform(GLShader::ColorUniform::Color, color);
     vbo->render(GL_LINE_LOOP);
 }
 

@@ -134,7 +134,6 @@ void MagnifierEffect::paintScreen(const RenderTarget &renderTarget, const Render
 
             GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
             vbo->reset();
-            vbo->setColor(QColor(0, 0, 0));
 
             QRectF areaF = scaledRect(area, scale);
             const QRectF frame = scaledRect(area.adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH), scale);
@@ -172,6 +171,7 @@ void MagnifierEffect::paintScreen(const RenderTarget &renderTarget, const Render
 
             ShaderBinder binder(ShaderTrait::UniformColor);
             binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, viewport.projectionMatrix());
+            binder.shader()->setUniform(GLShader::ColorUniform::Color, QColor(0, 0, 0));
             vbo->render(GL_TRIANGLES);
         }
     }

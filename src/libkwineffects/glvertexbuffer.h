@@ -206,33 +206,6 @@ public:
      * It's within the caller's responsibility to enable GL_SCISSOR_TEST.
      */
     void render(const QRegion &region, GLenum primitiveMode, bool hardwareClipping = false);
-    /**
-     * Sets the color the geometry will be rendered with.
-     * For legacy rendering glColor is used before rendering the geometry.
-     * For core shader a uniform "geometryColor" is expected and is set.
-     * @param color The color to render the geometry
-     * @param enableColor Whether the geometry should be rendered with a color or not
-     * @see setUseColor
-     * @see isUseColor
-     * @since 4.7
-     */
-    void setColor(const QColor &color, bool enableColor = true);
-    /**
-     * @return @c true if geometry will be painted with a color, @c false otherwise
-     * @see setUseColor
-     * @see setColor
-     * @since 4.7
-     */
-    bool isUseColor() const;
-    /**
-     * Enables/Disables rendering the geometry with a color.
-     * If no color is set an opaque, black color is used.
-     * @param enable Enable/Disable rendering with color
-     * @see isUseColor
-     * @see setColor
-     * @since 4.7
-     */
-    void setUseColor(bool enable);
 
     /**
      * Resets the instance to default values.
