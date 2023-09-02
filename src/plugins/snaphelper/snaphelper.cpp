@@ -117,7 +117,7 @@ void SnapHelperEffect::paintScreen(const RenderTarget &renderTarget, const Rende
         vbo->setColor(color);
 
         glLineWidth(s_lineWidth);
-        QVector<float> verts;
+        QVector<QVector2D> verts;
         verts.reserve(screens.count() * 24);
         for (EffectScreen *screen : screens) {
             const QRectF rect = effects->clientArea(ScreenArea, screen, effects->currentDesktop());
@@ -127,30 +127,30 @@ void SnapHelperEffect::paintScreen(const RenderTarget &renderTarget, const Rende
             const int halfHeight = m_geometry.height() / 2;
 
             // Center vertical line.
-            verts << (rect.x() + rect.width() / 2) * scale << rect.y() * scale;
-            verts << (rect.x() + rect.width() / 2) * scale << (rect.y() + rect.height()) * scale;
+            verts.push_back(QVector2D((rect.x() + rect.width() / 2) * scale, rect.y() * scale));
+            verts.push_back(QVector2D((rect.x() + rect.width() / 2) * scale, (rect.y() + rect.height()) * scale));
 
             // Center horizontal line.
-            verts << rect.x() * scale << (rect.y() + rect.height() / 2) * scale;
-            verts << (rect.x() + rect.width()) * scale << (rect.y() + rect.height() / 2) * scale;
+            verts.push_back(QVector2D(rect.x() * scale, (rect.y() + rect.height() / 2) * scale));
+            verts.push_back(QVector2D((rect.x() + rect.width()) * scale, (rect.y() + rect.height() / 2) * scale));
 
             // Top edge of the window outline.
-            verts << (midX - halfWidth - s_lineWidth / 2) * scale << (midY - halfHeight) * scale;
-            verts << (midX + halfWidth + s_lineWidth / 2) * scale << (midY - halfHeight) * scale;
+            verts.push_back(QVector2D((midX - halfWidth - s_lineWidth / 2) * scale, (midY - halfHeight) * scale));
+            verts.push_back(QVector2D((midX + halfWidth + s_lineWidth / 2) * scale, (midY - halfHeight) * scale));
 
             // Right edge of the window outline.
-            verts << (midX + halfWidth) * scale << (midY - halfHeight + s_lineWidth / 2) * scale;
-            verts << (midX + halfWidth) * scale << (midY + halfHeight - s_lineWidth / 2) * scale;
+            verts.push_back(QVector2D((midX + halfWidth) * scale, (midY - halfHeight + s_lineWidth / 2) * scale));
+            verts.push_back(QVector2D((midX + halfWidth) * scale, (midY + halfHeight - s_lineWidth / 2) * scale));
 
             // Bottom edge of the window outline.
-            verts << (midX + halfWidth + s_lineWidth / 2) * scale << (midY + halfHeight) * scale;
-            verts << (midX - halfWidth - s_lineWidth / 2) * scale << (midY + halfHeight) * scale;
+            verts.push_back(QVector2D((midX + halfWidth + s_lineWidth / 2) * scale, (midY + halfHeight) * scale));
+            verts.push_back(QVector2D((midX - halfWidth - s_lineWidth / 2) * scale, (midY + halfHeight) * scale));
 
             // Left edge of the window outline.
-            verts << (midX - halfWidth) * scale << (midY + halfHeight - s_lineWidth / 2) * scale;
-            verts << (midX - halfWidth) * scale << (midY - halfHeight + s_lineWidth / 2) * scale;
+            verts.push_back(QVector2D((midX - halfWidth) * scale, (midY + halfHeight - s_lineWidth / 2) * scale));
+            verts.push_back(QVector2D((midX - halfWidth) * scale, (midY - halfHeight + s_lineWidth / 2) * scale));
         }
-        vbo->setData(verts.count() / 2, 2, verts.data(), nullptr);
+        vbo->setVertices(verts);
         vbo->render(GL_LINES);
 
         glDisable(GL_BLEND);

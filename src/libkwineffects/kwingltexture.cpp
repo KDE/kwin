@@ -353,15 +353,6 @@ void GLTexture::render(const QRectF &source, const QRegion &region, const QSizeF
     if (destinationSize != d->m_cachedSize || d->m_cachedSource != source) {
         d->m_cachedSize = destinationSize;
         d->m_cachedSource = source;
-        if (!d->m_vbo) {
-            d->m_vbo = std::make_unique<GLVertexBuffer>(KWin::GLVertexBuffer::Static);
-        }
-
-        const float verts[4 * 2] = {
-            0.0f, 0.0f,
-            0.0f, float(destinationSize.height()),
-            float(destinationSize.width()), 0.0f,
-            float(destinationSize.width()), float(destinationSize.height())};
 
         const float texWidth = (target() == GL_TEXTURE_RECTANGLE_ARB) ? width() : 1.0f;
         const float texHeight = (target() == GL_TEXTURE_RECTANGLE_ARB) ? height() : 1.0f;
@@ -381,13 +372,28 @@ void GLTexture::render(const QRectF &source, const QRegion &region, const QSizeF
         const QPointF p3 = textureMat.map(QPointF(source.x() + source.width(), source.y()));
         const QPointF p4 = textureMat.map(QPointF(source.x() + source.width(), source.y() + source.height()));
 
-        const float texcoords[4 * 2] = {
-            float(p1.x()), float(p1.y()),
-            float(p2.x()), float(p2.y()),
-            float(p3.x()), float(p3.y()),
-            float(p4.x()), float(p4.y())};
-
-        d->m_vbo->setData(4, 2, verts, texcoords);
+        if (!d->m_vbo) {
+            d->m_vbo = std::make_unique<GLVertexBuffer>(KWin::GLVertexBuffer::Static);
+        }
+        const std::array<GLVertex2D, 4> data{
+            GLVertex2D{
+                .position = QVector2D(0, 0),
+                .texcoord = QVector2D(p1),
+            },
+            GLVertex2D{
+                .position = QVector2D(0, destinationSize.height()),
+                .texcoord = QVector2D(p2),
+            },
+            GLVertex2D{
+                .position = QVector2D(destinationSize.width(), 0),
+                .texcoord = QVector2D(p3),
+            },
+            GLVertex2D{
+                .position = QVector2D(destinationSize.width(), destinationSize.height()),
+                .texcoord = QVector2D(p4),
+            },
+        };
+        d->m_vbo->setVertices(data);
     }
     bind();
     d->m_vbo->render(region, GL_TRIANGLE_STRIP, hardwareClipping);

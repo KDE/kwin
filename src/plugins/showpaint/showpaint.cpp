@@ -75,18 +75,18 @@ void ShowPaintEffect::paintGL(const QMatrix4x4 &projection, qreal scale)
     QColor color = s_colors[m_colorIndex];
     color.setAlphaF(s_alpha);
     vbo->setColor(color);
-    QVector<float> verts;
+    QVector<QVector2D> verts;
     verts.reserve(m_painted.rectCount() * 12);
     for (const QRect &r : m_painted) {
         const auto deviceRect = scaledRect(r, scale);
-        verts << deviceRect.x() + deviceRect.width() << deviceRect.y();
-        verts << deviceRect.x() << deviceRect.y();
-        verts << deviceRect.x() << deviceRect.y() + deviceRect.height();
-        verts << deviceRect.x() << deviceRect.y() + deviceRect.height();
-        verts << deviceRect.x() + deviceRect.width() << deviceRect.y() + deviceRect.height();
-        verts << deviceRect.x() + deviceRect.width() << deviceRect.y();
+        verts.push_back(QVector2D(deviceRect.x() + deviceRect.width(), deviceRect.y()));
+        verts.push_back(QVector2D(deviceRect.x(), deviceRect.y()));
+        verts.push_back(QVector2D(deviceRect.x(), deviceRect.y() + deviceRect.height()));
+        verts.push_back(QVector2D(deviceRect.x(), deviceRect.y() + deviceRect.height()));
+        verts.push_back(QVector2D(deviceRect.x() + deviceRect.width(), deviceRect.y() + deviceRect.height()));
+        verts.push_back(QVector2D(deviceRect.x() + deviceRect.width(), deviceRect.y()));
     }
-    vbo->setData(verts.count() / 2, 2, verts.data(), nullptr);
+    vbo->setVertices(verts);
     vbo->render(GL_TRIANGLES);
     glDisable(GL_BLEND);
 }

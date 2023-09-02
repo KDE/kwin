@@ -456,23 +456,6 @@ void GLVertexBuffer::setData(const void *data, size_t size)
     unmap();
 }
 
-void GLVertexBuffer::setData(int vertexCount, int dim, const float *vertices, const float *texcoords)
-{
-    const GLVertexAttrib layout[] = {
-        {VA_Position, dim, GL_FLOAT, 0},
-        {VA_TexCoord, 2, GL_FLOAT, int(dim * sizeof(float))}};
-
-    int stride = (texcoords ? dim + 2 : dim) * sizeof(float);
-    int attribCount = texcoords ? 2 : 1;
-
-    setAttribLayout(layout, attribCount, stride);
-    setVertexCount(vertexCount);
-
-    GLvoid *ptr = map(vertexCount * stride);
-    d->interleaveArrays((float *)ptr, dim, vertices, texcoords, vertexCount);
-    unmap();
-}
-
 GLvoid *GLVertexBuffer::map(size_t size)
 {
     d->mappedSize = size;

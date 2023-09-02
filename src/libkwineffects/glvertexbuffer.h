@@ -9,12 +9,14 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
+#include "kwineffects.h"
 #include "libkwineffects/kwinglutils_export.h"
 
 #include <QColor>
 #include <QRegion>
 #include <epoxy/gl.h>
 #include <optional>
+#include <ranges>
 #include <span>
 
 namespace KWin
@@ -104,15 +106,40 @@ public:
      */
     void setVertexCount(int count);
 
-    /**
-     * Sets the vertex data.
-     * @param numberVertices The number of vertices in the arrays
-     * @param dim The dimension of the vertices: 2 for x/y, 3 for x/y/z
-     * @param vertices The vertices, size must equal @a numberVertices * @a dim
-     * @param texcoords The texture coordinates for each vertex.
-     * Size must equal 2 * @a numberVertices.
-     */
-    void setData(int numberVertices, int dim, const float *vertices, const float *texcoords);
+    // clang-format off
+    template<std::ranges::contiguous_range T>
+        requires std::is_same<std::ranges::range_value_t<T>, GLVertex2D>::value
+    void setVertices(const T &range)
+    {
+        setData(range.data(), range.size() * sizeof(GLVertex2D));
+        setVertexCount(range.size());
+        setAttribLayout(GLVertex2DLayout, 2, sizeof(GLVertex2D));
+    }
+
+    template<std::ranges::contiguous_range T>
+        requires std::is_same<std::ranges::range_value_t<T>, GLVertex3D>::value
+    void setVertices(const T &range)
+    {
+        setData(range.data(), range.size() * sizeof(GLVertex3D));
+        setVertexCount(range.size());
+        setAttribLayout(GLVertex3DLayout, 2, sizeof(GLVertex3D));
+    }
+
+    template<std::ranges::contiguous_range T>
+        requires std::is_same<std::ranges::range_value_t<T>, QVector2D>::value
+    void setVertices(const T &range)
+    {
+        setData(range.data(), range.size() * sizeof(QVector2D));
+        setVertexCount(range.size());
+        static constexpr GLVertexAttrib layout{
+            .index = VA_Position,
+            .size = 2,
+            .type = GL_FLOAT,
+            .relativeOffset = 0,
+        };
+        setAttribLayout(&layout, 1, sizeof(QVector2D));
+    }
+    // clang-format on
 
     /**
      * Maps an unused range of the data store into the client's address space.

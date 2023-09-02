@@ -123,23 +123,23 @@ void MouseMarkEffect::paintScreen(const RenderTarget &renderTarget, const Render
         ShaderBinder binder(ShaderTrait::UniformColor | ShaderTrait::TransformColorspace);
         binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, viewport.projectionMatrix());
         binder.shader()->setColorspaceUniformsFromSRGB(renderTarget.colorDescription());
-        QVector<float> verts;
+        QVector<QVector2D> verts;
         for (const Mark &mark : std::as_const(marks)) {
             verts.clear();
             verts.reserve(mark.size() * 2);
             for (const QPointF &p : std::as_const(mark)) {
-                verts << p.x() * scale << p.y() * scale;
+                verts.push_back(QVector2D(p.x() * scale, p.y() * scale));
             }
-            vbo->setData(verts.size() / 2, 2, verts.data(), nullptr);
+            vbo->setVertices(verts);
             vbo->render(GL_LINE_STRIP);
         }
         if (!drawing.isEmpty()) {
             verts.clear();
             verts.reserve(drawing.size() * 2);
             for (const QPointF &p : std::as_const(drawing)) {
-                verts << p.x() * scale << p.y() * scale;
+                verts.push_back(QVector2D(p.x() * scale, p.y() * scale));
             }
-            vbo->setData(verts.size() / 2, 2, verts.data(), nullptr);
+            vbo->setVertices(verts);
             vbo->render(GL_LINE_STRIP);
         }
         glLineWidth(1.0);
