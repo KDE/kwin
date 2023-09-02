@@ -44,6 +44,10 @@ install(TARGETS kwineffects EXPORT KWinEffectsTargets ${KDE_INSTALL_TARGETS_DEFA
 # kwingl(es)utils library
 set(kwin_GLUTILSLIB_SRCS
     colorspace.cpp
+    glframebuffer.cpp
+    glshader.cpp
+    glshadermanager.cpp
+    glvertexbuffer.cpp
     kwinglplatform.cpp
     kwingltexture.cpp
     kwinglutils.cpp
@@ -70,6 +74,10 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/kwineffects_export.h
     ${CMAKE_CURRENT_BINARY_DIR}/kwinglutils_export.h
     colorspace.h
+    glframebuffer.h
+    glshader.h
+    glshadermanager.h
+    glvertexbuffer.h
     kwinanimationeffect.h
     kwineffects.h
     kwinglobals.h
