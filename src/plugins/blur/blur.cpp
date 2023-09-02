@@ -599,7 +599,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
     // the remaining vertices are used when rendering on the screen.
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     vbo->reset();
-    vbo->setAttribLayout(GLVertexBuffer::GLVertex2DLayout, 2, sizeof(GLVertex2D));
+    vbo->setAttribLayout(std::span(GLVertexBuffer::GLVertex2DLayout), sizeof(GLVertex2D));
 
     const int vertexCount = effectiveShape.rectCount() * 6;
     if (auto result = vbo->map<GLVertex2D>(6 + vertexCount)) {

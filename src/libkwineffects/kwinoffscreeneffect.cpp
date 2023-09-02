@@ -159,7 +159,7 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
 
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     vbo->reset();
-    vbo->setAttribLayout(GLVertexBuffer::GLVertex2DLayout, 2, sizeof(GLVertex2D));
+    vbo->setAttribLayout(std::span(GLVertexBuffer::GLVertex2DLayout), sizeof(GLVertex2D));
 
     RenderGeometry geometry;
     geometry.setVertexSnappingMode(m_vertexSnappingMode);

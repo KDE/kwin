@@ -125,12 +125,7 @@ static GLVertexBuffer *texturedRectVbo(const QRectF &geometry, qreal scale)
 {
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     vbo->reset();
-
-    const GLVertexAttrib attribs[] = {
-        {VA_Position, 2, GL_FLOAT, offsetof(GLVertex2D, position)},
-        {VA_TexCoord, 2, GL_FLOAT, offsetof(GLVertex2D, texcoord)},
-    };
-    vbo->setAttribLayout(attribs, 2, sizeof(GLVertex2D));
+    vbo->setAttribLayout(std::span(GLVertexBuffer::GLVertex2DLayout), sizeof(GLVertex2D));
 
     const auto opt = vbo->map<GLVertex2D>(6);
     if (!opt) {

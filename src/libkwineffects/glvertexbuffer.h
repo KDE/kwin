@@ -37,10 +37,10 @@ enum VertexAttributeType {
  */
 struct GLVertexAttrib
 {
-    int index; /** The attribute index */
-    int size; /** The number of components [1..4] */
+    size_t attributeIndex;
+    size_t componentCount;
     GLenum type; /** The type (e.g. GL_FLOAT) */
-    int relativeOffset; /** The relative offset of the attribute */
+    size_t relativeOffset; /** The relative offset of the attribute */
 };
 
 class GLVertexBufferPrivate;
@@ -85,16 +85,16 @@ public:
      *         QVector2D texcoord;
      *     };
      *
-     *     const GLVertexAttrib attribs[] = {
-     *         { VA_Position, 3, GL_FLOAT, offsetof(Vertex, position) },
-     *         { VA_TexCoord, 2, GL_FLOAT, offsetof(Vertex, texcoord) }
+     *     const std::array attribs = {
+     *         GLVertexAttrib{ VA_Position, 3, GL_FLOAT, offsetof(Vertex, position) },
+     *         GLVertexAttrib{ VA_TexCoord, 2, GL_FLOAT, offsetof(Vertex, texcoord) },
      *     };
      *
      *     Vertex vertices[6];
-     *     vbo->setAttribLayout(attribs, 2, sizeof(Vertex));
+     *     vbo->setAttribLayout(std::span(attribs), sizeof(Vertex));
      *     vbo->setData(vertices, sizeof(vertices));
      */
-    void setAttribLayout(const GLVertexAttrib *attribs, int count, int stride);
+    void setAttribLayout(std::span<const GLVertexAttrib> attribs, size_t stride);
 
     /**
      * Uploads data into the buffer object's data store.
@@ -113,7 +113,7 @@ public:
     {
         setData(range.data(), range.size() * sizeof(GLVertex2D));
         setVertexCount(range.size());
-        setAttribLayout(GLVertex2DLayout, 2, sizeof(GLVertex2D));
+        setAttribLayout(std::span(GLVertex2DLayout), sizeof(GLVertex2D));
     }
 
     template<std::ranges::contiguous_range T>
@@ -122,7 +122,7 @@ public:
     {
         setData(range.data(), range.size() * sizeof(GLVertex3D));
         setVertexCount(range.size());
-        setAttribLayout(GLVertex3DLayout, 2, sizeof(GLVertex3D));
+        setAttribLayout(std::span(GLVertex3DLayout), sizeof(GLVertex3D));
     }
 
     template<std::ranges::contiguous_range T>
@@ -132,12 +132,12 @@ public:
         setData(range.data(), range.size() * sizeof(QVector2D));
         setVertexCount(range.size());
         static constexpr GLVertexAttrib layout{
-            .index = VA_Position,
-            .size = 2,
+            .attributeIndex = VA_Position,
+            .componentCount = 2,
             .type = GL_FLOAT,
             .relativeOffset = 0,
         };
-        setAttribLayout(&layout, 1, sizeof(QVector2D));
+        setAttribLayout(std::span(&layout, 1), sizeof(QVector2D));
     }
     // clang-format on
 
@@ -276,8 +276,34 @@ public:
      */
     static GLVertexBuffer *streamingBuffer();
 
-    static const GLVertexAttrib GLVertex2DLayout[2];
-    static const GLVertexAttrib GLVertex3DLayout[2];
+    static constexpr std::array GLVertex2DLayout{
+        GLVertexAttrib{
+            .attributeIndex = VA_Position,
+            .componentCount = 2,
+            .type = GL_FLOAT,
+            .relativeOffset = offsetof(GLVertex2D, position),
+        },
+        GLVertexAttrib{
+            .attributeIndex = VA_TexCoord,
+            .componentCount = 2,
+            .type = GL_FLOAT,
+            .relativeOffset = offsetof(GLVertex2D, texcoord),
+        },
+    };
+    static constexpr std::array GLVertex3DLayout{
+        GLVertexAttrib{
+            .attributeIndex = VA_Position,
+            .componentCount = 3,
+            .type = GL_FLOAT,
+            .relativeOffset = offsetof(GLVertex3D, position),
+        },
+        GLVertexAttrib{
+            .attributeIndex = VA_TexCoord,
+            .componentCount = 2,
+            .type = GL_FLOAT,
+            .relativeOffset = offsetof(GLVertex3D, texcoord),
+        },
+    };
 
 private:
     GLvoid *map(size_t size);
