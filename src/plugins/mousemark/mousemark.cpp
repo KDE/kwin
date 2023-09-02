@@ -115,8 +115,10 @@ void MouseMarkEffect::paintScreen(const RenderTarget &renderTarget, const Render
             glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
         }
         glLineWidth(width);
-        GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
-        vbo->reset();
+        if (!m_vbo) {
+            m_vbo = std::make_unique<GLVertexBuffer>(GLVertexBuffer::UsageHint::Stream);
+        }
+        m_vbo->reset();
         const auto scale = viewport.scale();
         ShaderBinder binder(ShaderTrait::UniformColor | ShaderTrait::TransformColorspace);
         binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, viewport.projectionMatrix());
@@ -129,8 +131,8 @@ void MouseMarkEffect::paintScreen(const RenderTarget &renderTarget, const Render
             for (const QPointF &p : std::as_const(mark)) {
                 verts.push_back(QVector2D(p.x() * scale, p.y() * scale));
             }
-            vbo->setVertices(verts);
-            vbo->render(GL_LINE_STRIP);
+            m_vbo->setVertices(verts);
+            m_vbo->render(GL_LINE_STRIP);
         }
         if (!drawing.isEmpty()) {
             verts.clear();
@@ -138,8 +140,8 @@ void MouseMarkEffect::paintScreen(const RenderTarget &renderTarget, const Render
             for (const QPointF &p : std::as_const(drawing)) {
                 verts.push_back(QVector2D(p.x() * scale, p.y() * scale));
             }
-            vbo->setVertices(verts);
-            vbo->render(GL_LINE_STRIP);
+            m_vbo->setVertices(verts);
+            m_vbo->render(GL_LINE_STRIP);
         }
         glLineWidth(1.0);
         if (!GLPlatform::instance()->isGLES()) {

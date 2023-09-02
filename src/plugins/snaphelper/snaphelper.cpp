@@ -103,8 +103,6 @@ void SnapHelperEffect::paintScreen(const RenderTarget &renderTarget, const Rende
 
     // Display the guide
     if (effects->isOpenGLCompositing()) {
-        GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
-        vbo->reset();
         ShaderBinder binder(ShaderTrait::UniformColor | ShaderTrait::TransformColorspace);
         binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, viewport.projectionMatrix());
         binder.shader()->setColorspaceUniformsFromSRGB(renderTarget.colorDescription());
@@ -149,8 +147,12 @@ void SnapHelperEffect::paintScreen(const RenderTarget &renderTarget, const Rende
             verts.push_back(QVector2D((midX - halfWidth) * scale, (midY + halfHeight - s_lineWidth / 2) * scale));
             verts.push_back(QVector2D((midX - halfWidth) * scale, (midY - halfHeight + s_lineWidth / 2) * scale));
         }
-        vbo->setVertices(verts);
-        vbo->render(GL_LINES);
+        if (!m_vbo) {
+            m_vbo = std::make_unique<GLVertexBuffer>(GLVertexBuffer::UsageHint::Stream);
+        }
+        m_vbo->reset();
+        m_vbo->setVertices(verts);
+        m_vbo->render(GL_LINES);
 
         glDisable(GL_BLEND);
         glLineWidth(1.0);

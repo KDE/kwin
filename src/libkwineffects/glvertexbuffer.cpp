@@ -98,70 +98,11 @@ struct VertexAttrib
     int offset;
 };
 
-// ------------------------------------------------------------------
-
-struct BufferFence
-{
-    GLsync sync;
-    intptr_t nextEnd;
-
-    bool signaled() const
-    {
-        GLint value;
-        glGetSynciv(sync, GL_SYNC_STATUS, 1, nullptr, &value);
-        return value == GL_SIGNALED;
-    }
-};
-
-static void deleteAll(std::deque<BufferFence> &fences)
-{
-    for (const BufferFence &fence : fences) {
-        glDeleteSync(fence.sync);
-    }
-
-    fences.clear();
-}
-
-// ------------------------------------------------------------------
-
-template<size_t Count>
-struct FrameSizesArray
-{
-public:
-    FrameSizesArray()
-    {
-        m_array.fill(0);
-    }
-
-    void push(size_t size)
-    {
-        m_array[m_index] = size;
-        m_index = (m_index + 1) % Count;
-    }
-
-    size_t average() const
-    {
-        size_t sum = 0;
-        for (size_t size : m_array) {
-            sum += size;
-        }
-        return sum / Count;
-    }
-
-private:
-    std::array<size_t, Count> m_array;
-    int m_index = 0;
-};
-
-//*********************************
-// GLVertexBufferPrivate
-//*********************************
 class GLVertexBufferPrivate
 {
 public:
     GLVertexBufferPrivate(GLVertexBuffer::UsageHint usageHint)
         : vertexCount(0)
-        , persistent(false)
         , bufferSize(0)
         , bufferEnd(0)
         , mappedSize(0)
@@ -187,8 +128,6 @@ public:
 
     ~GLVertexBufferPrivate()
     {
-        deleteAll(fences);
-
         if (buffer != 0) {
             glDeleteBuffers(1, &buffer);
             map = nullptr;
@@ -199,20 +138,14 @@ public:
     void unbindArrays();
     void reallocateBuffer(size_t size);
     GLvoid *mapNextFreeRange(size_t size);
-    void reallocatePersistentBuffer(size_t size);
-    bool awaitFence(intptr_t offset);
-    GLvoid *getIdleRange(size_t size);
 
     GLuint buffer;
     GLenum usage;
     int vertexCount;
-    static std::unique_ptr<GLVertexBuffer> streamingBuffer;
     static bool haveBufferStorage;
-    static bool haveSyncFences;
     static bool hasMapBufferRange;
     static bool supportsIndexedQuads;
     QByteArray dataStore;
-    bool persistent;
     size_t bufferSize;
     intptr_t bufferEnd;
     size_t mappedSize;
@@ -220,8 +153,6 @@ public:
     intptr_t nextOffset;
     intptr_t baseAddress;
     uint8_t *map;
-    std::deque<BufferFence> fences;
-    FrameSizesArray<4> frameSizes;
     std::array<VertexAttrib, VertexAttributeCount> attrib;
     size_t attribStride = 0;
     std::bitset<32> enabledArrays;
@@ -230,9 +161,7 @@ public:
 
 bool GLVertexBufferPrivate::hasMapBufferRange = false;
 bool GLVertexBufferPrivate::supportsIndexedQuads = false;
-std::unique_ptr<GLVertexBuffer> GLVertexBufferPrivate::streamingBuffer;
 bool GLVertexBufferPrivate::haveBufferStorage = false;
-bool GLVertexBufferPrivate::haveSyncFences = false;
 std::unique_ptr<IndexBuffer> GLVertexBufferPrivate::s_indexBuffer;
 
 void GLVertexBufferPrivate::bindArrays()
@@ -255,100 +184,6 @@ void GLVertexBufferPrivate::unbindArrays()
             glDisableVertexAttribArray(i);
         }
     }
-}
-
-void GLVertexBufferPrivate::reallocatePersistentBuffer(size_t size)
-{
-    if (buffer != 0) {
-        // This also unmaps and unbinds the buffer
-        glDeleteBuffers(1, &buffer);
-        buffer = 0;
-
-        deleteAll(fences);
-    }
-
-    if (buffer == 0) {
-        glGenBuffers(1, &buffer);
-    }
-
-    // Round the size up to 64 kb
-    size_t minSize = std::max<size_t>(frameSizes.average() * 3, 128 * 1024);
-    bufferSize = std::max(size, minSize);
-
-    const GLbitfield storage = GL_DYNAMIC_STORAGE_BIT;
-    const GLbitfield access = GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
-
-    glBindBuffer(GL_ARRAY_BUFFER, buffer);
-    glBufferStorage(GL_ARRAY_BUFFER, bufferSize, nullptr, storage | access);
-
-    map = (uint8_t *)glMapBufferRange(GL_ARRAY_BUFFER, 0, bufferSize, access);
-
-    nextOffset = 0;
-    bufferEnd = bufferSize;
-}
-
-bool GLVertexBufferPrivate::awaitFence(intptr_t end)
-{
-    // Skip fences until we reach the end offset
-    while (!fences.empty() && fences.front().nextEnd < end) {
-        glDeleteSync(fences.front().sync);
-        fences.pop_front();
-    }
-
-    Q_ASSERT(!fences.empty());
-
-    // Wait on the next fence
-    const BufferFence &fence = fences.front();
-
-    if (!fence.signaled()) {
-        qCDebug(LIBKWINGLUTILS) << "Stalling on VBO fence";
-        const GLenum ret = glClientWaitSync(fence.sync, GL_SYNC_FLUSH_COMMANDS_BIT, 1000000000);
-
-        if (ret == GL_TIMEOUT_EXPIRED || ret == GL_WAIT_FAILED) {
-            qCCritical(LIBKWINGLUTILS) << "Wait failed";
-            return false;
-        }
-    }
-
-    glDeleteSync(fence.sync);
-
-    // Update the end pointer
-    bufferEnd = fence.nextEnd;
-    fences.pop_front();
-
-    return true;
-}
-
-GLvoid *GLVertexBufferPrivate::getIdleRange(size_t size)
-{
-    if (size > bufferSize) {
-        reallocatePersistentBuffer(size * 2);
-    }
-
-    // Handle wrap-around
-    if ((nextOffset + size > bufferSize)) {
-        nextOffset = 0;
-        bufferEnd -= bufferSize;
-
-        for (BufferFence &fence : fences) {
-            fence.nextEnd -= bufferSize;
-        }
-
-        // Emit a fence now
-        if (auto sync = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0)) {
-            fences.push_back(BufferFence{
-                .sync = sync,
-                .nextEnd = intptr_t(bufferSize)});
-        }
-    }
-
-    if (nextOffset + intptr_t(size) > bufferEnd) {
-        if (!awaitFence(nextOffset + size)) {
-            return nullptr;
-        }
-    }
-
-    return map + nextOffset;
 }
 
 void GLVertexBufferPrivate::reallocateBuffer(size_t size)
@@ -403,10 +238,6 @@ GLvoid *GLVertexBuffer::map(size_t size)
     d->mappedSize = size;
     d->frameSize += size;
 
-    if (d->persistent) {
-        return d->getIdleRange(size);
-    }
-
     glBindBuffer(GL_ARRAY_BUFFER, d->buffer);
 
     bool preferBufferSubData = GLPlatform::instance()->preferBufferSubData();
@@ -427,13 +258,6 @@ GLvoid *GLVertexBuffer::map(size_t size)
 
 void GLVertexBuffer::unmap()
 {
-    if (d->persistent) {
-        d->baseAddress = d->nextOffset;
-        d->nextOffset += align(d->mappedSize, 8);
-        d->mappedSize = 0;
-        return;
-    }
-
     bool preferBufferSubData = GLPlatform::instance()->preferBufferSubData();
 
     if (GLVertexBufferPrivate::hasMapBufferRange && !preferBufferSubData) {
@@ -559,53 +383,6 @@ void GLVertexBuffer::reset()
     d->vertexCount = 0;
 }
 
-void GLVertexBuffer::endOfFrame()
-{
-    if (!d->persistent) {
-        return;
-    }
-
-    // Emit a fence if we have uploaded data
-    if (d->frameSize > 0) {
-        d->frameSizes.push(d->frameSize);
-        d->frameSize = 0;
-
-        // Force the buffer to be reallocated at the beginning of the next frame
-        // if the average frame size is greater than half the size of the buffer
-        if (d->frameSizes.average() > d->bufferSize / 2) {
-            deleteAll(d->fences);
-            glDeleteBuffers(1, &d->buffer);
-
-            d->buffer = 0;
-            d->bufferSize = 0;
-            d->nextOffset = 0;
-            d->map = nullptr;
-        } else {
-            if (auto sync = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0)) {
-                d->fences.push_back(BufferFence{
-                    .sync = sync,
-                    .nextEnd = intptr_t(d->nextOffset + d->bufferSize)});
-            }
-        }
-    }
-}
-
-void GLVertexBuffer::beginFrame()
-{
-    if (!d->persistent) {
-        return;
-    }
-
-    // Remove finished fences from the list and update the bufferEnd offset
-    while (d->fences.size() > 1 && d->fences.front().signaled()) {
-        const BufferFence &fence = d->fences.front();
-        glDeleteSync(fence.sync);
-
-        d->bufferEnd = fence.nextEnd;
-        d->fences.pop_front();
-    }
-}
-
 void GLVertexBuffer::initStatic()
 {
     if (GLPlatform::instance()->isGLES()) {
@@ -616,7 +393,6 @@ void GLVertexBuffer::initStatic()
         GLVertexBufferPrivate::hasMapBufferRange = haveMapBufferRange;
         GLVertexBufferPrivate::supportsIndexedQuads = haveBaseVertex && haveCopyBuffer && haveMapBufferRange;
         GLVertexBufferPrivate::haveBufferStorage = hasGLExtension("GL_EXT_buffer_storage");
-        GLVertexBufferPrivate::haveSyncFences = hasGLVersion(3, 0);
     } else {
         bool haveBaseVertex = hasGLVersion(3, 2) || hasGLExtension(QByteArrayLiteral("GL_ARB_draw_elements_base_vertex"));
         bool haveCopyBuffer = hasGLVersion(3, 1) || hasGLExtension(QByteArrayLiteral("GL_ARB_copy_buffer"));
@@ -625,16 +401,8 @@ void GLVertexBuffer::initStatic()
         GLVertexBufferPrivate::hasMapBufferRange = haveMapBufferRange;
         GLVertexBufferPrivate::supportsIndexedQuads = haveBaseVertex && haveCopyBuffer && haveMapBufferRange;
         GLVertexBufferPrivate::haveBufferStorage = hasGLVersion(4, 4) || hasGLExtension("GL_ARB_buffer_storage");
-        GLVertexBufferPrivate::haveSyncFences = hasGLVersion(3, 2) || hasGLExtension("GL_ARB_sync");
     }
     GLVertexBufferPrivate::s_indexBuffer.reset();
-    GLVertexBufferPrivate::streamingBuffer = std::make_unique<GLVertexBuffer>(GLVertexBuffer::Stream);
-
-    if (GLVertexBufferPrivate::haveBufferStorage && GLVertexBufferPrivate::haveSyncFences) {
-        if (qgetenv("KWIN_PERSISTENT_VBO") != QByteArrayLiteral("0")) {
-            GLVertexBufferPrivate::streamingBuffer->d->persistent = true;
-        }
-    }
 }
 
 void GLVertexBuffer::cleanup()
@@ -642,12 +410,6 @@ void GLVertexBuffer::cleanup()
     GLVertexBufferPrivate::s_indexBuffer.reset();
     GLVertexBufferPrivate::hasMapBufferRange = false;
     GLVertexBufferPrivate::supportsIndexedQuads = false;
-    GLVertexBufferPrivate::streamingBuffer.reset();
-}
-
-GLVertexBuffer *GLVertexBuffer::streamingBuffer()
-{
-    return GLVertexBufferPrivate::streamingBuffer.get();
 }
 
 }

@@ -588,6 +588,9 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
             renderInfo.framebuffers.push_back(std::move(framebuffer));
         }
     }
+    if (!renderInfo.vbo) {
+        renderInfo.vbo = std::make_unique<GLVertexBuffer>(GLVertexBuffer::UsageHint::Stream);
+    }
 
     // Fetch the pixels behind the shape that is going to be blurred.
     const QRegion dirtyRegion = region & backgroundRect;
@@ -597,12 +600,11 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
 
     // Upload the geometry: the first 6 vertices are used when downsampling and upsampling offscreen,
     // the remaining vertices are used when rendering on the screen.
-    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
-    vbo->reset();
-    vbo->setAttribLayout(std::span(GLVertexBuffer::GLVertex2DLayout), sizeof(GLVertex2D));
+    renderInfo.vbo->reset();
+    renderInfo.vbo->setAttribLayout(std::span(GLVertexBuffer::GLVertex2DLayout), sizeof(GLVertex2D));
 
     const int vertexCount = effectiveShape.rectCount() * 6;
-    if (auto result = vbo->map<GLVertex2D>(6 + vertexCount)) {
+    if (auto result = renderInfo.vbo->map<GLVertex2D>(6 + vertexCount)) {
         auto map = *result;
 
         size_t vboIndex = 0;
@@ -693,13 +695,13 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
             };
         }
 
-        vbo->unmap();
+        renderInfo.vbo->unmap();
     } else {
         qCWarning(KWIN_BLUR) << "Failed to map vertex buffer";
         return;
     }
 
-    vbo->bindArrays();
+    renderInfo.vbo->bindArrays();
 
     // The downsample pass of the dual Kawase algorithm: the background will be scaled down 50% every iteration.
     {
@@ -722,7 +724,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
             read->colorAttachment()->bind();
 
             GLFramebuffer::pushFramebuffer(draw.get());
-            vbo->draw(GL_TRIANGLES, 0, 6);
+            renderInfo.vbo->draw(GL_TRIANGLES, 0, 6);
         }
 
         ShaderManager::instance()->popShader();
@@ -748,7 +750,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
 
             read->colorAttachment()->bind();
 
-            vbo->draw(GL_TRIANGLES, 0, 6);
+            renderInfo.vbo->draw(GL_TRIANGLES, 0, 6);
         }
 
         // The last upsampling pass is rendered on the screen, not in framebuffers[0].
@@ -774,7 +776,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
             glBlendFunc(GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA);
         }
 
-        vbo->draw(GL_TRIANGLES, 6, vertexCount);
+        renderInfo.vbo->draw(GL_TRIANGLES, 6, vertexCount);
 
         if (opacity < 1.0) {
             glDisable(GL_BLEND);
@@ -806,7 +808,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
 
             noiseTexture->bind();
 
-            vbo->draw(GL_TRIANGLES, 6, vertexCount);
+            renderInfo.vbo->draw(GL_TRIANGLES, 6, vertexCount);
 
             ShaderManager::instance()->popShader();
         }
@@ -814,7 +816,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
         glDisable(GL_BLEND);
     }
 
-    vbo->unbindArrays();
+    renderInfo.vbo->unbindArrays();
 }
 
 bool BlurEffect::isActive() const

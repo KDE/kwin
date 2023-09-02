@@ -121,10 +121,9 @@ void ScreenTransformEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono
     effects->prePaintScreen(data, presentTime);
 }
 
-static GLVertexBuffer *texturedRectVbo(const QRectF &geometry, qreal scale)
+static std::unique_ptr<GLVertexBuffer> texturedRectVbo(const QRectF &geometry, qreal scale)
 {
-    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
-    vbo->reset();
+    auto vbo = std::make_unique<GLVertexBuffer>(GLVertexBuffer::UsageHint::Stream);
     vbo->setAttribLayout(std::span(GLVertexBuffer::GLVertex2DLayout), sizeof(GLVertex2D));
 
     const auto opt = vbo->map<GLVertex2D>(6);
@@ -229,7 +228,7 @@ void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const 
     glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    GLVertexBuffer *vbo = texturedRectVbo(lerp(it->m_oldGeometry, screenRect, blendFactor), scale);
+    const auto vbo = texturedRectVbo(lerp(it->m_oldGeometry, screenRect, blendFactor), scale);
     if (!vbo) {
         return;
     }

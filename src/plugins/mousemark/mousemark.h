@@ -68,6 +68,7 @@ private:
     QColor color;
     Qt::KeyboardModifiers m_freedraw_modifiers;
     Qt::KeyboardModifiers m_arrowdraw_modifiers;
+    std::unique_ptr<GLVertexBuffer> m_vbo;
 };
 
 } // namespace

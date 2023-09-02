@@ -28,6 +28,7 @@ struct BlurRenderData
     /// contains not blurred background behind the window, it's cached.
     std::vector<std::unique_ptr<GLTexture>> textures;
     std::vector<std::unique_ptr<GLFramebuffer>> framebuffers;
+    std::unique_ptr<GLVertexBuffer> vbo;
 };
 
 struct BlurEffectData

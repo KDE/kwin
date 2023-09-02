@@ -15,6 +15,8 @@
 namespace KWin
 {
 
+class GLVertexBuffer;
+
 class SnapHelperEffect : public Effect
 {
     Q_OBJECT
@@ -48,6 +50,7 @@ private:
     };
 
     Animation m_animation;
+    std::unique_ptr<GLVertexBuffer> m_vbo;
 };
 
 } // namespace KWin

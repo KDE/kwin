@@ -35,13 +35,10 @@ void ItemRendererOpenGL::beginFrame(const RenderTarget &renderTarget, const Rend
 {
     GLFramebuffer *fbo = renderTarget.framebuffer();
     GLFramebuffer::pushFramebuffer(fbo);
-
-    GLVertexBuffer::streamingBuffer()->beginFrame();
 }
 
 void ItemRendererOpenGL::endFrame()
 {
-    GLVertexBuffer::streamingBuffer()->endOfFrame();
     GLFramebuffer::popFramebuffer();
 }
 
@@ -293,11 +290,13 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
         shaderTraits |= ShaderTrait::AdjustSaturation;
     }
 
-    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
-    vbo->reset();
-    vbo->setAttribLayout(std::span(GLVertexBuffer::GLVertex2DLayout), sizeof(GLVertex2D));
+    if (!m_vbo) {
+        m_vbo = std::make_unique<GLVertexBuffer>(GLVertexBuffer::UsageHint::Stream);
+    }
+    m_vbo->reset();
+    m_vbo->setAttribLayout(std::span(GLVertexBuffer::GLVertex2DLayout), sizeof(GLVertex2D));
 
-    const auto map = vbo->map<GLVertex2D>(totalVertexCount);
+    const auto map = m_vbo->map<GLVertex2D>(totalVertexCount);
     if (!map) {
         return;
     }
@@ -321,8 +320,8 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
         v += renderNode.geometry.count();
     }
 
-    vbo->unmap();
-    vbo->bindArrays();
+    m_vbo->unmap();
+    m_vbo->bindArrays();
 
     GLShader *shader = ShaderManager::instance()->pushShader(shaderTraits);
     if (shaderTraits & ShaderTrait::AdjustSaturation) {
@@ -366,8 +365,8 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
 
         renderNode.texture->bind();
 
-        vbo->draw(scissorRegion, GL_TRIANGLES, renderNode.firstVertex,
-                  renderNode.vertexCount, renderContext.hardwareClipping);
+        m_vbo->draw(scissorRegion, GL_TRIANGLES, renderNode.firstVertex,
+                    renderNode.vertexCount, renderContext.hardwareClipping);
     }
 
     ShaderManager::instance()->popShader();
@@ -376,7 +375,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
         visualizeFractional(viewport, scissorRegion, renderContext);
     }
 
-    vbo->unbindArrays();
+    m_vbo->unbindArrays();
 
     setBlendEnabled(false);
 
@@ -404,8 +403,6 @@ void ItemRendererOpenGL::visualizeFractional(const RenderViewport &viewport, con
     auto screenSize = viewport.renderRect().size() * viewport.scale();
     m_debug.fractionalShader->setUniform("screenSize", QVector2D(float(screenSize.width()), float(screenSize.height())));
 
-    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
-
     for (int i = 0; i < renderContext.renderNodes.count(); i++) {
         const RenderNode &renderNode = renderContext.renderNodes[i];
         if (renderNode.vertexCount == 0) {
@@ -417,8 +414,8 @@ void ItemRendererOpenGL::visualizeFractional(const RenderViewport &viewport, con
         m_debug.fractionalShader->setUniform("geometrySize", QVector2D(renderNode.texture->width(), renderNode.texture->height()));
         m_debug.fractionalShader->setUniform(GLShader::ModelViewProjectionMatrix, renderContext.projectionMatrix * renderNode.transformMatrix);
 
-        vbo->draw(region, GL_TRIANGLES, renderNode.firstVertex,
-                  renderNode.vertexCount, renderContext.hardwareClipping);
+        m_vbo->draw(region, GL_TRIANGLES, renderNode.firstVertex,
+                    renderNode.vertexCount, renderContext.hardwareClipping);
     }
 }
 

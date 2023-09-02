@@ -64,8 +64,6 @@ void CursorDelegateOpenGL::paint(const RenderTarget &renderTarget, const QRegion
     GLFramebuffer *fbo = renderTarget.framebuffer();
     GLFramebuffer::pushFramebuffer(fbo);
 
-    // Don't need to call GLVertexBuffer::beginFrame() and GLVertexBuffer::endOfFrame() because
-    // the GLVertexBuffer::streamingBuffer() is not being used when painting cursor.
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 

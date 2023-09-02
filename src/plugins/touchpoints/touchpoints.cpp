@@ -201,8 +201,10 @@ void TouchPointsEffect::drawCircleGl(const RenderViewport &viewport, const QColo
     float x = r; // we start at angle = 0
     float y = 0;
 
-    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
-    vbo->reset();
+    if (!m_vbo) {
+        m_vbo = std::make_unique<GLVertexBuffer>(GLVertexBuffer::UsageHint::Stream);
+    }
+    m_vbo->reset();
     ShaderManager::instance()->getBoundShader()->setUniform(GLShader::ColorUniform::Color, color);
     QVector<QVector2D> verts;
     verts.reserve(num_segments);
@@ -214,8 +216,8 @@ void TouchPointsEffect::drawCircleGl(const RenderViewport &viewport, const QColo
         x = c * x - s * y;
         y = s * t + c * y;
     }
-    vbo->setVertices(verts);
-    vbo->render(GL_LINE_LOOP);
+    m_vbo->setVertices(verts);
+    m_vbo->render(GL_LINE_LOOP);
 }
 
 void TouchPointsEffect::drawCircleQPainter(const QColor &color, float cx, float cy, float r)

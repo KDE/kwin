@@ -74,6 +74,7 @@ private:
         QRegion contrastRegion;
         std::unique_ptr<GLTexture> texture;
         std::unique_ptr<GLFramebuffer> fbo;
+        std::unique_ptr<GLVertexBuffer> vbo;
     };
     std::unordered_map<const EffectWindow *, Data> m_windowData;
     static KWaylandServer::ContrastManagerInterface *s_contrastManager;

@@ -17,6 +17,7 @@ namespace KWin
 
 class GLFramebuffer;
 class GLTexture;
+class GLVertexBuffer;
 
 class MagnifierEffect : public Effect
 {
@@ -54,6 +55,7 @@ private:
     QSize m_magnifierSize;
     std::unique_ptr<GLTexture> m_texture;
     std::unique_ptr<GLFramebuffer> m_fbo;
+    std::unique_ptr<GLVertexBuffer> m_vbo;
 };
 
 } // namespace

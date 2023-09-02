@@ -215,20 +215,6 @@ public:
     void reset();
 
     /**
-     * Notifies the vertex buffer that we are done painting the frame.
-     *
-     * @internal
-     */
-    void endOfFrame();
-
-    /**
-     * Notifies the vertex buffer that we are about to paint a frame.
-     *
-     * @internal
-     */
-    void beginFrame();
-
-    /**
      * @internal
      */
     static void initStatic();
@@ -242,12 +228,6 @@ public:
      * Returns true if indexed quad mode is supported, and false otherwise.
      */
     static bool supportsIndexedQuads();
-
-    /**
-     * @return A shared VBO for streaming data
-     * @since 4.7
-     */
-    static GLVertexBuffer *streamingBuffer();
 
     static constexpr std::array GLVertex2DLayout{
         GLVertexAttrib{

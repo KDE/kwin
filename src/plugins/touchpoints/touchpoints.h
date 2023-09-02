@@ -15,6 +15,8 @@
 namespace KWin
 {
 
+class GLVertexBuffer;
+
 class TouchPointsEffect
     : public Effect
 {
@@ -82,6 +84,7 @@ private:
     QHash<quint32, QPointF> m_latestPositions;
     QHash<quint32, Qt::GlobalColor> m_colors;
     std::chrono::milliseconds m_lastPresentTime = std::chrono::milliseconds::zero();
+    std::unique_ptr<GLVertexBuffer> m_vbo;
 };
 
 } // namespace

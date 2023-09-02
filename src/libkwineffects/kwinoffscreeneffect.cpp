@@ -29,6 +29,7 @@ public:
 private:
     std::unique_ptr<GLTexture> m_texture;
     std::unique_ptr<GLFramebuffer> m_fbo;
+    std::unique_ptr<GLVertexBuffer> m_vbo;
     bool m_isDirty = true;
     GLShader *m_shader = nullptr;
     RenderGeometry::VertexSnappingMode m_vertexSnappingMode = RenderGeometry::VertexSnappingMode::Round;
@@ -157,9 +158,11 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
 
     const double scale = viewport.scale();
 
-    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
-    vbo->reset();
-    vbo->setAttribLayout(std::span(GLVertexBuffer::GLVertex2DLayout), sizeof(GLVertex2D));
+    if (!m_vbo) {
+        m_vbo = std::make_unique<GLVertexBuffer>(GLVertexBuffer::UsageHint::Stream);
+    }
+    m_vbo->reset();
+    m_vbo->setAttribLayout(std::span(GLVertexBuffer::GLVertex2DLayout), sizeof(GLVertex2D));
 
     RenderGeometry geometry;
     geometry.setVertexSnappingMode(m_vertexSnappingMode);
@@ -168,14 +171,14 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
     }
     geometry.postProcessTextureCoordinates(m_texture->matrix(NormalizedCoordinates));
 
-    const auto map = vbo->map<GLVertex2D>(geometry.size());
+    const auto map = m_vbo->map<GLVertex2D>(geometry.size());
     if (!map) {
         return;
     }
     geometry.copy(*map);
-    vbo->unmap();
+    m_vbo->unmap();
 
-    vbo->bindArrays();
+    m_vbo->bindArrays();
 
     const qreal rgb = data.brightness() * data.opacity();
     const qreal a = data.opacity();
@@ -203,14 +206,14 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
     m_texture->bind();
-    vbo->draw(clipRegion, GL_TRIANGLES, 0, geometry.count(), clipping);
+    m_vbo->draw(clipRegion, GL_TRIANGLES, 0, geometry.count(), clipping);
     m_texture->unbind();
 
     glDisable(GL_BLEND);
     if (clipping) {
         glDisable(GL_SCISSOR_TEST);
     }
-    vbo->unbindArrays();
+    m_vbo->unbindArrays();
 }
 
 void OffscreenEffect::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, int mask, const QRegion &region, WindowPaintData &data)

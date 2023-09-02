@@ -63,6 +63,7 @@ private:
         bool fractionalEnabled = false;
         std::unique_ptr<GLShader> fractionalShader;
     } m_debug;
+    std::unique_ptr<GLVertexBuffer> m_vbo;
 };
 
 } // namespace KWin

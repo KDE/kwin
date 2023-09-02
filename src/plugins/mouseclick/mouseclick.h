@@ -150,6 +150,7 @@ private:
     std::deque<std::unique_ptr<MouseEvent>> m_clicks;
     std::unique_ptr<MouseButton> m_buttons[BUTTON_COUNT];
     QHash<quint64, TabletToolEvent> m_tabletTools;
+    std::unique_ptr<GLVertexBuffer> m_vbo;
 
     bool m_enabled;
 };

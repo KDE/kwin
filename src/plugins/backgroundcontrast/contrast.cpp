@@ -441,14 +441,6 @@ void ContrastEffect::doContrast(const RenderTarget &renderTarget, const RenderVi
     const QRegion actualShape = shape & screen;
     const QRectF r = viewport.mapToRenderTarget(actualShape.boundingRect());
 
-    // Upload geometry for the horizontal and vertical passes
-    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
-    vbo->reset();
-    if (!uploadGeometry(vbo, actualShape, scale)) {
-        return;
-    }
-    vbo->bindArrays();
-
     Q_ASSERT(m_windowData.contains(w));
     auto &windowData = m_windowData[w];
     if (!windowData.texture || (renderTarget.texture() && windowData.texture->internalFormat() != renderTarget.texture()->internalFormat()) || windowData.texture->size() != r.size()) {
@@ -459,6 +451,14 @@ void ContrastEffect::doContrast(const RenderTarget &renderTarget, const RenderVi
         windowData.fbo = std::make_unique<GLFramebuffer>(windowData.texture.get());
         windowData.texture->setFilter(GL_LINEAR);
         windowData.texture->setWrapMode(GL_CLAMP_TO_EDGE);
+    }
+    if (!windowData.vbo) {
+        windowData.vbo = std::make_unique<GLVertexBuffer>(GLVertexBuffer::UsageHint::Stream);
+    }
+    // Upload geometry for the horizontal and vertical passes
+    windowData.vbo->reset();
+    if (!uploadGeometry(windowData.vbo.get(), actualShape, scale)) {
+        return;
     }
     GLTexture *contrastTexture = windowData.texture.get();
     contrastTexture->bind();
@@ -487,11 +487,10 @@ void ContrastEffect::doContrast(const RenderTarget &renderTarget, const RenderVi
     m_shader->setTextureMatrix(textureMatrix);
     m_shader->setModelViewProjectionMatrix(screenProjection);
 
-    vbo->draw(GL_TRIANGLES, 0, actualShape.rectCount() * 6);
+    windowData.vbo->draw(GL_TRIANGLES, 0, actualShape.rectCount() * 6);
 
     contrastTexture->unbind();
-
-    vbo->unbindArrays();
+    windowData.vbo->unbindArrays();
 
     if (opacity < 1.0) {
         glDisable(GL_BLEND);
