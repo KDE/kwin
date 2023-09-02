@@ -184,11 +184,6 @@ public:
      */
     static void cleanup();
 
-    /**
-     * Returns true if indexed quad mode is supported, and false otherwise.
-     */
-    static bool supportsIndexedQuads();
-
     static constexpr std::array GLVertex2DLayout{
         GLVertexAttrib{
             .attributeIndex = VA_Position,

@@ -131,16 +131,12 @@ public:
     GLuint buffer = 0;
     GLenum usage = 0;
     int vertexCount = 0;
-    static bool haveBufferStorage;
-    static bool supportsIndexedQuads;
     std::array<VertexAttrib, VertexAttributeCount> attrib;
     size_t attribStride = 0;
     std::bitset<32> enabledArrays;
     static std::unique_ptr<IndexBuffer> s_indexBuffer;
 };
 
-bool GLVertexBufferPrivate::supportsIndexedQuads = false;
-bool GLVertexBufferPrivate::haveBufferStorage = false;
 std::unique_ptr<IndexBuffer> GLVertexBufferPrivate::s_indexBuffer;
 
 void GLVertexBufferPrivate::bindArrays()
@@ -259,35 +255,14 @@ void GLVertexBuffer::draw(const QRegion &region, GLenum primitiveMode, int first
     }
 }
 
-bool GLVertexBuffer::supportsIndexedQuads()
-{
-    return GLVertexBufferPrivate::supportsIndexedQuads;
-}
-
 void GLVertexBuffer::initStatic()
 {
-    if (GLPlatform::instance()->isGLES()) {
-        bool haveBaseVertex = hasGLExtension(QByteArrayLiteral("GL_OES_draw_elements_base_vertex"));
-        bool haveCopyBuffer = hasGLVersion(3, 0);
-        bool haveMapBufferRange = hasGLExtension(QByteArrayLiteral("GL_EXT_map_buffer_range"));
-
-        GLVertexBufferPrivate::supportsIndexedQuads = haveBaseVertex && haveCopyBuffer && haveMapBufferRange;
-        GLVertexBufferPrivate::haveBufferStorage = hasGLExtension("GL_EXT_buffer_storage");
-    } else {
-        bool haveBaseVertex = hasGLVersion(3, 2) || hasGLExtension(QByteArrayLiteral("GL_ARB_draw_elements_base_vertex"));
-        bool haveCopyBuffer = hasGLVersion(3, 1) || hasGLExtension(QByteArrayLiteral("GL_ARB_copy_buffer"));
-        bool haveMapBufferRange = hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_ARB_map_buffer_range"));
-
-        GLVertexBufferPrivate::supportsIndexedQuads = haveBaseVertex && haveCopyBuffer && haveMapBufferRange;
-        GLVertexBufferPrivate::haveBufferStorage = hasGLVersion(4, 4) || hasGLExtension("GL_ARB_buffer_storage");
-    }
     GLVertexBufferPrivate::s_indexBuffer.reset();
 }
 
 void GLVertexBuffer::cleanup()
 {
     GLVertexBufferPrivate::s_indexBuffer.reset();
-    GLVertexBufferPrivate::supportsIndexedQuads = false;
 }
 
 }
