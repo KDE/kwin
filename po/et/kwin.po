@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-08-29 01:56+0000\n"
+"POT-Creation-Date: 2023-09-02 02:04+0000\n"
 "PO-Revision-Date: 2022-11-14 01:16+0100\n"
 "Last-Translator: Mihkel Tõnnov <mihhkel@gmail.com>\n"
 "Language-Team: Estonian <>\n"
@@ -717,207 +717,207 @@ msgstr "isFinger"
 msgid "Tablet Pad Ring"
 msgstr "Graafikalaua rõngas"
 
-#: debug_console.cpp:786
+#: debug_console.cpp:793
 #, kde-format
 msgid "No Mouse Buttons"
 msgstr "Hiirenuppe pole"
 
-#: debug_console.cpp:790
+#: debug_console.cpp:797
 #, kde-format
 msgctxt "Mouse Button"
 msgid "left"
 msgstr "vasak"
 
-#: debug_console.cpp:793
+#: debug_console.cpp:800
 #, kde-format
 msgctxt "Mouse Button"
 msgid "right"
 msgstr "parem"
 
-#: debug_console.cpp:796
+#: debug_console.cpp:803
 #, kde-format
 msgctxt "Mouse Button"
 msgid "middle"
 msgstr "keskmine"
 
-#: debug_console.cpp:799
+#: debug_console.cpp:806
 #, kde-format
 msgctxt "Mouse Button"
 msgid "back"
 msgstr "tagasi"
 
-#: debug_console.cpp:802
+#: debug_console.cpp:809
 #, kde-format
 msgctxt "Mouse Button"
 msgid "forward"
 msgstr "edasi"
 
-#: debug_console.cpp:805
+#: debug_console.cpp:812
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 1"
 msgstr "lisa 1"
 
-#: debug_console.cpp:808
+#: debug_console.cpp:815
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 2"
 msgstr "lisa 2"
 
-#: debug_console.cpp:811
+#: debug_console.cpp:818
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 3"
 msgstr "lisa 3"
 
-#: debug_console.cpp:814
+#: debug_console.cpp:821
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 4"
 msgstr "lisa 4"
 
-#: debug_console.cpp:817
+#: debug_console.cpp:824
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 5"
 msgstr "lisa 5"
 
-#: debug_console.cpp:820
+#: debug_console.cpp:827
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 6"
 msgstr "lisa 6"
 
-#: debug_console.cpp:823
+#: debug_console.cpp:830
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 7"
 msgstr "lisa 7"
 
-#: debug_console.cpp:826
+#: debug_console.cpp:833
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 8"
 msgstr "lisa 8"
 
-#: debug_console.cpp:829
+#: debug_console.cpp:836
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 9"
 msgstr "lisa 9"
 
-#: debug_console.cpp:832
+#: debug_console.cpp:839
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 10"
 msgstr "lisa 10"
 
-#: debug_console.cpp:835
+#: debug_console.cpp:842
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 11"
 msgstr "lisa 11"
 
-#: debug_console.cpp:838
+#: debug_console.cpp:845
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 12"
 msgstr "lisa 12"
 
-#: debug_console.cpp:841
+#: debug_console.cpp:848
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 13"
 msgstr "lisa 13"
 
-#: debug_console.cpp:844
+#: debug_console.cpp:851
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 14"
 msgstr "lisa 14"
 
-#: debug_console.cpp:847
+#: debug_console.cpp:854
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 15"
 msgstr "lisa 15"
 
-#: debug_console.cpp:850
+#: debug_console.cpp:857
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 16"
 msgstr "lisa 16"
 
-#: debug_console.cpp:853
+#: debug_console.cpp:860
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 17"
 msgstr "lisa 17"
 
-#: debug_console.cpp:856
+#: debug_console.cpp:863
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 18"
 msgstr "lisa 18"
 
-#: debug_console.cpp:859
+#: debug_console.cpp:866
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 19"
 msgstr "lisa 19"
 
-#: debug_console.cpp:862
+#: debug_console.cpp:869
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 20"
 msgstr "lisa 20"
 
-#: debug_console.cpp:865
+#: debug_console.cpp:872
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 21"
 msgstr "lisa 21"
 
-#: debug_console.cpp:868
+#: debug_console.cpp:875
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 22"
 msgstr "lisa 22"
 
-#: debug_console.cpp:871
+#: debug_console.cpp:878
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 23"
 msgstr "lisa 23"
 
-#: debug_console.cpp:874
+#: debug_console.cpp:881
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 24"
 msgstr "lisa 24"
 
-#: debug_console.cpp:877
+#: debug_console.cpp:884
 #, kde-format
 msgctxt "Mouse Button"
 msgid "task"
 msgstr "ülesanne"
 
-#: debug_console.cpp:1209
+#: debug_console.cpp:1216
 #, kde-format
 msgid "X11 Windows"
 msgstr "X11 aknad"
 
-#: debug_console.cpp:1211
+#: debug_console.cpp:1218
 #, kde-format
 msgid "X11 Unmanaged Windows"
 msgstr "X11 haldamata aknad"
 
-#: debug_console.cpp:1213
+#: debug_console.cpp:1220
 #, kde-format
 msgid "Wayland Windows"
 msgstr "Waylandi aknad"
 
-#: debug_console.cpp:1215
+#: debug_console.cpp:1222
 #, kde-format
 msgid "Internal Windows"
 msgstr "Sisemised aknad"
