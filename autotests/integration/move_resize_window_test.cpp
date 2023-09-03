@@ -653,6 +653,7 @@ void MoveResizeWindowTest::testAdjustClientGeometryOfHiddenWaylandPanel()
     // let's render
     QSignalSpy panelConfigureRequestedSpy(panelShellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
     QVERIFY(panelConfigureRequestedSpy.wait());
+    panelShellSurface->ack_configure(panelConfigureRequestedSpy.last().at(0).toUInt());
     auto panel = Test::renderAndWaitForShown(panelSurface.get(), panelConfigureRequestedSpy.last().at(1).toSize(), Qt::blue);
     QVERIFY(panel);
     QCOMPARE(panel->frameGeometry(), panelGeometry);

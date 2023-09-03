@@ -16,6 +16,12 @@ class LayerSurfaceV1Interface;
 class Output;
 class LayerShellV1Integration;
 
+struct LayerShellV1ConfigureEvent
+{
+    QPointF position;
+    quint32 serial = 0;
+};
+
 class LayerShellV1Window : public WaylandWindow
 {
     Q_OBJECT
@@ -52,7 +58,7 @@ protected:
     void moveResizeInternal(const QRectF &rect, MoveResizeMode mode) override;
 
 private:
-    void handleSizeChanged();
+    void handleConfigureAcknowledged(quint32 serial);
     void handleUnmapped();
     void handleCommitted();
     void handleAcceptsFocusChanged();
@@ -62,11 +68,16 @@ private:
     void deactivateScreenEdge();
     void reserveScreenEdge();
     void unreserveScreenEdge();
+    void scheduleConfigure();
+    void sendConfigure();
 
     Output *m_desiredOutput;
     LayerShellV1Integration *m_integration;
     LayerSurfaceV1Interface *m_shellSurface;
     QPointer<AutoHideScreenEdgeV1Interface> m_screenEdge;
+    QTimer m_configureTimer;
+    QVector<LayerShellV1ConfigureEvent> m_configureEvents;
+    std::optional<LayerShellV1ConfigureEvent> m_ackedConfigureEvent;
     bool m_screenEdgeActive = false;
     WindowType m_windowType;
 };

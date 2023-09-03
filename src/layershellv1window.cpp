@@ -55,13 +55,13 @@ LayerShellV1Window::LayerShellV1Window(LayerSurfaceV1Interface *shellSurface,
     connect(output, &Output::enabledChanged,
             this, &LayerShellV1Window::handleOutputEnabledChanged);
 
-    connect(shellSurface->surface(), &SurfaceInterface::sizeChanged,
-            this, &LayerShellV1Window::handleSizeChanged);
     connect(shellSurface->surface(), &SurfaceInterface::unmapped,
             this, &LayerShellV1Window::handleUnmapped);
     connect(shellSurface->surface(), &SurfaceInterface::committed,
             this, &LayerShellV1Window::handleCommitted);
 
+    connect(shellSurface, &LayerSurfaceV1Interface::configureAcknowledged,
+            this, &LayerShellV1Window::handleConfigureAcknowledged);
     connect(shellSurface, &LayerSurfaceV1Interface::desiredSizeChanged,
             this, &LayerShellV1Window::scheduleRearrange);
     connect(shellSurface, &LayerSurfaceV1Interface::layerChanged,
@@ -74,6 +74,9 @@ LayerShellV1Window::LayerShellV1Window(LayerSurfaceV1Interface *shellSurface,
             this, &LayerShellV1Window::scheduleRearrange);
     connect(shellSurface, &LayerSurfaceV1Interface::acceptsFocusChanged,
             this, &LayerShellV1Window::handleAcceptsFocusChanged);
+
+    m_configureTimer.setSingleShot(true);
+    connect(&m_configureTimer, &QTimer::timeout, this, &LayerShellV1Window::sendConfigure);
 }
 
 LayerSurfaceV1Interface *LayerShellV1Window::shellSurface() const
@@ -190,6 +193,8 @@ bool LayerShellV1Window::hasStrut() const
 
 void LayerShellV1Window::destroyWindow()
 {
+    m_configureTimer.stop();
+
     if (m_screenEdge) {
         m_screenEdge->disconnect(this);
     }
@@ -241,22 +246,21 @@ void LayerShellV1Window::moveResizeInternal(const QRectF &rect, MoveResizeMode m
     }
 
     const QSizeF requestedClientSize = frameSizeToClientSize(rect.size());
-    if (requestedClientSize != clientSize()) {
-        m_shellSurface->sendConfigure(rect.size().toSize());
-    } else {
+    if (m_configureEvents.isEmpty() && requestedClientSize == clientSize()) {
         updateGeometry(rect);
-        return;
+    } else {
+        scheduleConfigure();
     }
-
-    // The surface position is updated synchronously.
-    QRectF updateRect = m_frameGeometry;
-    updateRect.moveTopLeft(rect.topLeft());
-    updateGeometry(updateRect);
 }
 
-void LayerShellV1Window::handleSizeChanged()
+void LayerShellV1Window::handleConfigureAcknowledged(quint32 serial)
 {
-    updateGeometry(QRectF(pos(), clientSizeToFrameSize(surface()->size())));
+    while (!m_configureEvents.isEmpty()) {
+        m_ackedConfigureEvent = m_configureEvents.takeFirst();
+        if (m_ackedConfigureEvent->serial == serial) {
+            break;
+        }
+    }
 }
 
 void LayerShellV1Window::handleUnmapped()
@@ -266,9 +270,18 @@ void LayerShellV1Window::handleUnmapped()
 
 void LayerShellV1Window::handleCommitted()
 {
-    if (surface()->buffer()) {
-        markAsMapped();
+    if (!surface()->buffer()) {
+        return;
     }
+
+    QPointF position = pos();
+    if (m_ackedConfigureEvent) {
+        position = m_ackedConfigureEvent->position;
+        m_ackedConfigureEvent.reset();
+    }
+
+    updateGeometry(QRectF(position, clientSizeToFrameSize(surface()->size())));
+    markAsMapped();
 }
 
 void LayerShellV1Window::handleAcceptsFocusChanged()
@@ -354,6 +367,20 @@ void LayerShellV1Window::deactivateScreenEdge()
 {
     m_screenEdgeActive = false;
     unreserveScreenEdge();
+}
+
+void LayerShellV1Window::scheduleConfigure()
+{
+    m_configureTimer.start();
+}
+
+void LayerShellV1Window::sendConfigure()
+{
+    const quint32 serial = m_shellSurface->sendConfigure(frameSizeToClientSize(moveResizeGeometry().size()).toSize());
+    m_configureEvents.append(LayerShellV1ConfigureEvent{
+        .position = moveResizeGeometry().topLeft(),
+        .serial = serial,
+    });
 }
 
 } // namespace KWin

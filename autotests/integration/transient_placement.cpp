@@ -478,6 +478,7 @@ void TransientPlacementTest::testXdgPopupWithPanel()
     // now render and map the window
     QSignalSpy dockConfigureRequestedSpy(dockShellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
     QVERIFY(dockConfigureRequestedSpy.wait());
+    dockShellSurface->ack_configure(dockConfigureRequestedSpy.last().at(0).toUInt());
     auto dock = Test::renderAndWaitForShown(dockSurface.get(), dockConfigureRequestedSpy.last().at(1).toSize(), Qt::blue);
     QVERIFY(dock);
     QCOMPARE(dock->windowType(), WindowType::Dock);
