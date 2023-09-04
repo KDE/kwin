@@ -30,6 +30,9 @@ class MaximizeEffect {
         if (!window.visible) {
             return;
         }
+        
+        window.oldGeometry = Object.assign({}, window.geometry);
+
         if (window.maximizeAnimation1) {
             cancel(window.maximizeAnimation1);
             delete window.maximizeAnimation1;
@@ -57,12 +60,8 @@ class MaximizeEffect {
             return;
         }
         window.setData(Effect.WindowForceBlurRole, true);
-        let oldGeometry = window.oldGeometry;
+        const oldGeometry = window.oldGeometry;
         const newGeometry = window.geometry;
-        if (oldGeometry.width == newGeometry.width && oldGeometry.height == newGeometry.height)
-            oldGeometry = window.olderGeometry;
-        window.olderGeometry = Object.assign({}, window.oldGeometry);
-        window.oldGeometry = Object.assign({}, newGeometry);
         window.maximizeAnimation1 = animate({
             window: window,
             duration: this.duration,
@@ -97,19 +96,23 @@ class MaximizeEffect {
     }
 
     onWindowFrameGeometryChanged(window, oldGeometry) {
-        if (window.maximizeAnimation1) {
-            if (window.geometry.width != window.oldGeometry.width ||
-                window.geometry.height != window.oldGeometry.height) {
-                cancel(window.maximizeAnimation1);
-                delete window.maximizeAnimation1;
-                if (window.maximizeAnimation2) {
-                    cancel(window.maximizeAnimation2);
-                    delete window.maximizeAnimation2;
-                }
-            }
+        if (!window.maximizeAnimation1 ||
+            // Check only dimension changes.
+            (window.geometry.width == oldGeometry.width && window.geometry.height == oldGeometry.height) || 
+            // Check only if last dimension isn't equal to dimension from which effect was started (window.oldGeometry).   
+            (window.oldGeometry.width == oldGeometry.width && window.oldGeometry.height == oldGeometry.height)  
+        ) {
+            return;
         }
-        window.oldGeometry = Object.assign({}, window.geometry);
-        window.olderGeometry = Object.assign({}, oldGeometry);
+        
+        // Cancel animation if window got resized halfway through it.
+        cancel(window.maximizeAnimation1);
+        delete window.maximizeAnimation1;
+        
+        if (window.maximizeAnimation2) {
+            cancel(window.maximizeAnimation2);
+            delete window.maximizeAnimation2;
+        }
     }
 }
 
