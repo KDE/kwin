@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-02 02:04+0000\n"
+"POT-Creation-Date: 2023-09-05 01:57+0000\n"
 "PO-Revision-Date: 2023-08-24 07:01+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -78,12 +78,12 @@ msgstr "Girdiyi yakalamak için sağ kontrol düğmesine bas"
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland Bileşikleştiricisi"
 
-#: composite.cpp:675
+#: composite.cpp:668
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Grafik sıfırlaması nedeniyle masaüstü efektleri yeniden başlatıldı"
 
-#: composite.cpp:917
+#: composite.cpp:910
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -92,7 +92,7 @@ msgstr ""
 "Masaüstü efektleri başka bir uygulama tarafından beklemeye alındı.<br/>'%1' "
 "kısayolunu kullanarak tekrar etkinleştirebilirsiniz."
 
-#: composite.cpp:1107
+#: composite.cpp:1100
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -106,12 +106,12 @@ msgstr ""
 "düşünüyorsanız<br>bu korumayı sıfırlayabilirsiniz; ancak <b>bir hata "
 "durumunda KWin'in anında çökeceğini not edin!</b></p>"
 
-#: composite.cpp:1114
+#: composite.cpp:1107
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Gereken X genişletmeleri (XComposite ve XDamage) kullanılabilir değil."
 
-#: composite.cpp:1117
+#: composite.cpp:1110
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL, kullanılabilir değil."

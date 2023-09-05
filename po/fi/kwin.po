@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-02 02:04+0000\n"
+"POT-Creation-Date: 2023-09-05 01:57+0000\n"
 "PO-Revision-Date: 2023-07-24 21:32+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -84,13 +84,13 @@ msgstr "Kaappaa syöte painamalla oikeaa Ctrl-näppäintä"
 msgid "KDE Wayland Compositor"
 msgstr "KDE:n Wayland-koostin"
 
-#: composite.cpp:675
+#: composite.cpp:668
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 "Työpöytätehosteet käynnistettiin uudelleen, koska grafiikka nollattiin."
 
-#: composite.cpp:917
+#: composite.cpp:910
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -100,7 +100,7 @@ msgstr ""
 "Voit palauttaa ne käyttöön pikanäppäimellä %1."
 
 # En pidä sanan ”backend” suomentamisesta tässä. Koostamistyyppi löytyy työpöytätehosteiden lisäasetuksista, vaikka ”koostamistapa” voisi olla vielä parempi.
-#: composite.cpp:1107
+#: composite.cpp:1100
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -113,13 +113,13 @@ msgstr ""
 "vakaaseen ajuriin,<br>voit poistaa tämän suojauksen, mutta <b>tästä saattaa "
 "seurata välitön kaatuminen!</b></p>"
 
-#: composite.cpp:1114
+#: composite.cpp:1107
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr ""
 "Tarvittavat X-laajennukset (XComposite ja XDamage) eivät ole käytettävissä."
 
-#: composite.cpp:1117
+#: composite.cpp:1110
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL ei ole käytettävissä."

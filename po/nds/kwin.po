@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-02 02:04+0000\n"
+"POT-Creation-Date: 2023-09-05 01:57+0000\n"
 "PO-Revision-Date: 2014-08-21 16:21+0200\n"
 "Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
 "Language-Team: Low Saxon <kde-i18n-nds@kde.org>\n"
@@ -71,14 +71,14 @@ msgstr ""
 msgid "KDE Wayland Compositor"
 msgstr ""
 
-#: composite.cpp:675
+#: composite.cpp:668
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 "Vun wegen dat Torüchsetten vun de Grafik wöörn de Schriefdischeffekten nieg "
 "start"
 
-#: composite.cpp:917
+#: composite.cpp:910
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -87,7 +87,7 @@ msgstr ""
 "En anner Programm hett de Schriefdischeffekten utsett.<br/>Du kannst se mit "
 "de Tastkombinatschoon \"%1\" wedder anmaken."
 
-#: composite.cpp:1107
+#: composite.cpp:1100
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -108,13 +108,13 @@ msgstr ""
 "kann direktemang to en Afstört föhren!</b></p><p>Villicht bruukst Du beter "
 "dat XRender-Hülpprogramm.</p>"
 
-#: composite.cpp:1114
+#: composite.cpp:1107
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr ""
 "Nödig X-Server-Verwiedern (XComposite un XDamage) laat sik nich finnen."
 
-#: composite.cpp:1117
+#: composite.cpp:1110
 #, fuzzy, kde-format
 #| msgid "GLX/OpenGL and XRender/XFixes are not available."
 msgid "GLX/OpenGL is not available."
