@@ -36,7 +36,7 @@ public:
 
     bool isValid() const
     {
-        return mValid;
+        return m_valid;
     }
 
     void bindAttributeLocation(const char *name, int index);
@@ -142,17 +142,17 @@ protected:
     void resolveLocations();
 
 private:
-    unsigned int mProgram;
-    bool mValid : 1;
-    bool mLocationsResolved : 1;
-    bool mExplicitLinking : 1;
-    int mMatrixLocation[MatrixCount];
-    int mVec2Location[Vec2UniformCount];
+    unsigned int m_program;
+    bool m_valid : 1;
+    bool m_locationsResolved : 1;
+    bool m_explicitLinking : 1;
+    int m_matrixLocation[MatrixCount];
+    int m_vec2Location[Vec2UniformCount];
     QHash<Vec3Uniform, int> m_vec3Locations;
-    int mVec4Location[Vec4UniformCount];
-    int mFloatLocation[FloatUniformCount];
-    int mIntLocation[IntUniformCount];
-    int mColorLocation[ColorUniformCount];
+    int m_vec4Location[Vec4UniformCount];
+    int m_floatLocation[FloatUniformCount];
+    int m_intLocation[IntUniformCount];
+    int m_colorLocation[ColorUniformCount];
 
     friend class ShaderManager;
 };

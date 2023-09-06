@@ -67,24 +67,24 @@ public:
      */
     GLuint handle() const
     {
-        return mFramebuffer;
+        return m_handle;
     }
     /**
      * Returns the size of the color attachment to this framebuffer object.
      */
     QSize size() const
     {
-        return mSize;
+        return m_size;
     }
     bool valid() const
     {
-        return mValid;
+        return m_valid;
     }
 
     static void initStatic();
     static bool supported()
     {
-        return sSupported;
+        return s_supported;
     }
 
     /**
@@ -138,18 +138,18 @@ private:
 
     friend void KWin::cleanupGL();
     static void cleanup();
-    static bool sSupported;
-    static bool sSupportsPackedDepthStencil;
-    static bool sSupportsDepth24;
-    static bool s_blitSupported;
-    static QStack<GLFramebuffer *> s_fbos;
+    inline static bool s_supported = false;
+    inline static bool s_supportsPackedDepthStencil = false;
+    inline static bool s_supportsDepth24 = false;
+    inline static bool s_blitSupported = false;
+    inline static QStack<GLFramebuffer *> s_fbos;
 
-    GLuint mFramebuffer = 0;
-    GLuint mDepthBuffer = 0;
-    GLuint mStencilBuffer = 0;
-    QSize mSize;
-    bool mValid = false;
-    bool mForeign = false;
+    GLuint m_handle = 0;
+    GLuint m_depthBuffer = 0;
+    GLuint m_stencilBuffer = 0;
+    QSize m_size;
+    bool m_valid = false;
+    bool m_foreign = false;
     GLTexture *const m_colorAttachment;
 };
 

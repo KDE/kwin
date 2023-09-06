@@ -19,26 +19,26 @@ namespace KWin
 {
 
 GLShader::GLShader(unsigned int flags)
-    : mValid(false)
-    , mLocationsResolved(false)
-    , mExplicitLinking(flags & ExplicitLinking)
+    : m_valid(false)
+    , m_locationsResolved(false)
+    , m_explicitLinking(flags & ExplicitLinking)
 {
-    mProgram = glCreateProgram();
+    m_program = glCreateProgram();
 }
 
 GLShader::GLShader(const QString &vertexfile, const QString &fragmentfile, unsigned int flags)
-    : mValid(false)
-    , mLocationsResolved(false)
-    , mExplicitLinking(flags & ExplicitLinking)
+    : m_valid(false)
+    , m_locationsResolved(false)
+    , m_explicitLinking(flags & ExplicitLinking)
 {
-    mProgram = glCreateProgram();
+    m_program = glCreateProgram();
     loadFromFiles(vertexfile, fragmentfile);
 }
 
 GLShader::~GLShader()
 {
-    if (mProgram) {
-        glDeleteProgram(mProgram);
+    if (m_program) {
+        glDeleteProgram(m_program);
     }
 }
 
@@ -64,31 +64,31 @@ bool GLShader::loadFromFiles(const QString &vertexFile, const QString &fragmentF
 bool GLShader::link()
 {
     // Be optimistic
-    mValid = true;
+    m_valid = true;
 
-    glLinkProgram(mProgram);
+    glLinkProgram(m_program);
 
     // Get the program info log
     int maxLength, length;
-    glGetProgramiv(mProgram, GL_INFO_LOG_LENGTH, &maxLength);
+    glGetProgramiv(m_program, GL_INFO_LOG_LENGTH, &maxLength);
 
     QByteArray log(maxLength, 0);
-    glGetProgramInfoLog(mProgram, maxLength, &length, log.data());
+    glGetProgramInfoLog(m_program, maxLength, &length, log.data());
 
     // Make sure the program linked successfully
     int status;
-    glGetProgramiv(mProgram, GL_LINK_STATUS, &status);
+    glGetProgramiv(m_program, GL_LINK_STATUS, &status);
 
     if (status == 0) {
         qCCritical(LIBKWINGLUTILS) << "Failed to link shader:"
                                    << "\n"
                                    << log;
-        mValid = false;
+        m_valid = false;
     } else if (length > 0) {
         qCDebug(LIBKWINGLUTILS) << "Shader link log:" << log;
     }
 
-    return mValid;
+    return m_valid;
 }
 
 const QByteArray GLShader::prepareSource(GLenum shaderType, const QByteArray &source) const
@@ -155,11 +155,11 @@ bool GLShader::load(const QByteArray &vertexSource, const QByteArray &fragmentSo
         return false;
     }
 
-    mValid = false;
+    m_valid = false;
 
     // Compile the vertex shader
     if (!vertexSource.isEmpty()) {
-        bool success = compile(mProgram, GL_VERTEX_SHADER, vertexSource);
+        bool success = compile(m_program, GL_VERTEX_SHADER, vertexSource);
 
         if (!success) {
             return false;
@@ -168,14 +168,14 @@ bool GLShader::load(const QByteArray &vertexSource, const QByteArray &fragmentSo
 
     // Compile the fragment shader
     if (!fragmentSource.isEmpty()) {
-        bool success = compile(mProgram, GL_FRAGMENT_SHADER, fragmentSource);
+        bool success = compile(m_program, GL_FRAGMENT_SHADER, fragmentSource);
 
         if (!success) {
             return false;
         }
     }
 
-    if (mExplicitLinking) {
+    if (m_explicitLinking) {
         return true;
     }
 
@@ -185,19 +185,19 @@ bool GLShader::load(const QByteArray &vertexSource, const QByteArray &fragmentSo
 
 void GLShader::bindAttributeLocation(const char *name, int index)
 {
-    glBindAttribLocation(mProgram, index, name);
+    glBindAttribLocation(m_program, index, name);
 }
 
 void GLShader::bindFragDataLocation(const char *name, int index)
 {
     if (!GLPlatform::instance()->isGLES() && (hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_EXT_gpu_shader4")))) {
-        glBindFragDataLocation(mProgram, index, name);
+        glBindFragDataLocation(m_program, index, name);
     }
 }
 
 void GLShader::bind()
 {
-    glUseProgram(mProgram);
+    glUseProgram(m_program);
 }
 
 void GLShader::unbind()
@@ -207,60 +207,60 @@ void GLShader::unbind()
 
 void GLShader::resolveLocations()
 {
-    if (mLocationsResolved) {
+    if (m_locationsResolved) {
         return;
     }
 
-    mMatrixLocation[TextureMatrix] = uniformLocation("textureMatrix");
-    mMatrixLocation[ProjectionMatrix] = uniformLocation("projection");
-    mMatrixLocation[ModelViewMatrix] = uniformLocation("modelview");
-    mMatrixLocation[ModelViewProjectionMatrix] = uniformLocation("modelViewProjectionMatrix");
-    mMatrixLocation[WindowTransformation] = uniformLocation("windowTransformation");
-    mMatrixLocation[ScreenTransformation] = uniformLocation("screenTransformation");
-    mMatrixLocation[ColorimetryTransformation] = uniformLocation("colorimetryTransform");
+    m_matrixLocation[TextureMatrix] = uniformLocation("textureMatrix");
+    m_matrixLocation[ProjectionMatrix] = uniformLocation("projection");
+    m_matrixLocation[ModelViewMatrix] = uniformLocation("modelview");
+    m_matrixLocation[ModelViewProjectionMatrix] = uniformLocation("modelViewProjectionMatrix");
+    m_matrixLocation[WindowTransformation] = uniformLocation("windowTransformation");
+    m_matrixLocation[ScreenTransformation] = uniformLocation("screenTransformation");
+    m_matrixLocation[ColorimetryTransformation] = uniformLocation("colorimetryTransform");
 
-    mVec2Location[Offset] = uniformLocation("offset");
+    m_vec2Location[Offset] = uniformLocation("offset");
 
     m_vec3Locations[Vec3Uniform::PrimaryBrightness] = uniformLocation("primaryBrightness");
 
-    mVec4Location[ModulationConstant] = uniformLocation("modulation");
+    m_vec4Location[ModulationConstant] = uniformLocation("modulation");
 
-    mFloatLocation[Saturation] = uniformLocation("saturation");
-    mFloatLocation[MaxHdrBrightness] = uniformLocation("maxHdrBrightness");
+    m_floatLocation[Saturation] = uniformLocation("saturation");
+    m_floatLocation[MaxHdrBrightness] = uniformLocation("maxHdrBrightness");
 
-    mColorLocation[Color] = uniformLocation("geometryColor");
+    m_colorLocation[Color] = uniformLocation("geometryColor");
 
-    mIntLocation[TextureWidth] = uniformLocation("textureWidth");
-    mIntLocation[TextureHeight] = uniformLocation("textureHeight");
-    mIntLocation[SourceNamedTransferFunction] = uniformLocation("sourceNamedTransferFunction");
-    mIntLocation[DestinationNamedTransferFunction] = uniformLocation("destinationNamedTransferFunction");
-    mIntLocation[SdrBrightness] = uniformLocation("sdrBrightness");
+    m_intLocation[TextureWidth] = uniformLocation("textureWidth");
+    m_intLocation[TextureHeight] = uniformLocation("textureHeight");
+    m_intLocation[SourceNamedTransferFunction] = uniformLocation("sourceNamedTransferFunction");
+    m_intLocation[DestinationNamedTransferFunction] = uniformLocation("destinationNamedTransferFunction");
+    m_intLocation[SdrBrightness] = uniformLocation("sdrBrightness");
 
-    mLocationsResolved = true;
+    m_locationsResolved = true;
 }
 
 int GLShader::uniformLocation(const char *name)
 {
-    const int location = glGetUniformLocation(mProgram, name);
+    const int location = glGetUniformLocation(m_program, name);
     return location;
 }
 
 bool GLShader::setUniform(MatrixUniform uniform, const QMatrix3x3 &value)
 {
     resolveLocations();
-    return setUniform(mMatrixLocation[uniform], value);
+    return setUniform(m_matrixLocation[uniform], value);
 }
 
 bool GLShader::setUniform(GLShader::MatrixUniform uniform, const QMatrix4x4 &matrix)
 {
     resolveLocations();
-    return setUniform(mMatrixLocation[uniform], matrix);
+    return setUniform(m_matrixLocation[uniform], matrix);
 }
 
 bool GLShader::setUniform(GLShader::Vec2Uniform uniform, const QVector2D &value)
 {
     resolveLocations();
-    return setUniform(mVec2Location[uniform], value);
+    return setUniform(m_vec2Location[uniform], value);
 }
 
 bool GLShader::setUniform(Vec3Uniform uniform, const QVector3D &value)
@@ -272,31 +272,31 @@ bool GLShader::setUniform(Vec3Uniform uniform, const QVector3D &value)
 bool GLShader::setUniform(GLShader::Vec4Uniform uniform, const QVector4D &value)
 {
     resolveLocations();
-    return setUniform(mVec4Location[uniform], value);
+    return setUniform(m_vec4Location[uniform], value);
 }
 
 bool GLShader::setUniform(GLShader::FloatUniform uniform, float value)
 {
     resolveLocations();
-    return setUniform(mFloatLocation[uniform], value);
+    return setUniform(m_floatLocation[uniform], value);
 }
 
 bool GLShader::setUniform(GLShader::IntUniform uniform, int value)
 {
     resolveLocations();
-    return setUniform(mIntLocation[uniform], value);
+    return setUniform(m_intLocation[uniform], value);
 }
 
 bool GLShader::setUniform(GLShader::ColorUniform uniform, const QVector4D &value)
 {
     resolveLocations();
-    return setUniform(mColorLocation[uniform], value);
+    return setUniform(m_colorLocation[uniform], value);
 }
 
 bool GLShader::setUniform(GLShader::ColorUniform uniform, const QColor &value)
 {
     resolveLocations();
-    return setUniform(mColorLocation[uniform], value);
+    return setUniform(m_colorLocation[uniform], value);
 }
 
 bool GLShader::setUniform(const char *name, float value)
@@ -407,7 +407,7 @@ bool GLShader::setUniform(int location, const QColor &color)
 
 int GLShader::attributeLocation(const char *name)
 {
-    int location = glGetAttribLocation(mProgram, name);
+    int location = glGetAttribLocation(m_program, name);
     return location;
 }
 
@@ -425,7 +425,7 @@ QMatrix4x4 GLShader::getUniformMatrix4x4(const char *name)
     int location = uniformLocation(name);
     if (location >= 0) {
         GLfloat m[16];
-        glGetnUniformfv(mProgram, location, sizeof(m), m);
+        glGetnUniformfv(m_program, location, sizeof(m), m);
         QMatrix4x4 matrix(m[0], m[4], m[8], m[12],
                           m[1], m[5], m[9], m[13],
                           m[2], m[6], m[10], m[14],
