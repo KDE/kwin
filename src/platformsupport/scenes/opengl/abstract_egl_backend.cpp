@@ -16,8 +16,8 @@
 #include "wayland_server.h"
 // kwin libs
 #include "kwineglimagetexture.h"
-#include "libkwineffects/kwinglplatform.h"
-#include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/glplatform.h"
+#include "libkwineffects/glutils.h"
 #include "utils/drm_format_helper.h"
 #include <kwineglutils_p.h>
 // Qt

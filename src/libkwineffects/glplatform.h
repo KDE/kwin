@@ -9,9 +9,9 @@
 
 #pragma once
 
-#include "openglcontext.h"
 #include "libkwineffects/kwinglobals.h"
 #include "libkwineffects/kwinglutils_export.h"
+#include "openglcontext.h"
 
 #include <QByteArray>
 #include <QSet>
@@ -340,7 +340,7 @@ public:
      **/
     bool isPanfrost() const;
 
-     /**
+    /**
      * @returns @c true if the GPU is a Mali GPU supported by the Lima driver (Mali 400, 450)
      * @since 5.27.1
      **/

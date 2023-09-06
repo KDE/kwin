@@ -9,9 +9,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "glframebuffer.h"
-#include "kwinglplatform.h"
-#include "kwingltexture.h"
-#include "kwinglutils.h"
+#include "glplatform.h"
+#include "gltexture.h"
+#include "glutils.h"
 #include "logging_p.h"
 #include "rendertarget.h"
 #include "renderviewport.h"

@@ -11,8 +11,8 @@
 #include "platformsupport/scenes/opengl/openglsurfacetexture_x11.h"
 #include "utils/damagejournal.h"
 
-#include "libkwineffects/kwingltexture.h"
-#include "libkwineffects/kwingltexture_p.h"
+#include "libkwineffects/gltexture.h"
+#include "libkwineffects/gltexture_p.h"
 
 typedef struct _XDisplay Display;
 

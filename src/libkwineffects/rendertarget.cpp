@@ -5,7 +5,7 @@
 */
 
 #include "libkwineffects/rendertarget.h"
-#include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/glutils.h"
 
 namespace KWin
 {

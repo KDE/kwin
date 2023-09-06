@@ -7,8 +7,8 @@
 
 #pragma once
 
+#include "libkwineffects/glutils.h"
 #include "libkwineffects/kwineffects.h"
-#include "libkwineffects/kwinglutils.h"
 
 #include <QVector>
 

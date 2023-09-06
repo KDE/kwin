@@ -7,8 +7,8 @@
 #include "regionscreencastsource.h"
 #include "screencastutils.h"
 
-#include "libkwineffects/kwingltexture.h"
-#include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/gltexture.h"
+#include "libkwineffects/glutils.h"
 #include <composite.h>
 #include <core/output.h>
 #include <drm_fourcc.h>

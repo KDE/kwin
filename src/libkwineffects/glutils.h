@@ -14,10 +14,10 @@
 #include "libkwineffects/glframebuffer.h"
 #include "libkwineffects/glshader.h"
 #include "libkwineffects/glshadermanager.h"
+#include "libkwineffects/gltexture.h"
+#include "libkwineffects/glutils_funcs.h"
 #include "libkwineffects/glvertexbuffer.h"
-#include "libkwineffects/kwingltexture.h"
 #include "libkwineffects/kwinglutils_export.h"
-#include "libkwineffects/kwinglutils_funcs.h"
 
 #include <QByteArray>
 #include <QList>

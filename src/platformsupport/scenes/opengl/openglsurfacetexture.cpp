@@ -5,7 +5,7 @@
 */
 
 #include "openglsurfacetexture.h"
-#include "libkwineffects/kwingltexture.h"
+#include "libkwineffects/gltexture.h"
 
 namespace KWin
 {

@@ -9,7 +9,7 @@
 
 #include "kwineglimagetexture.h"
 #include "egldisplay.h"
-#include "libkwineffects/kwingltexture_p.h"
+#include "libkwineffects/gltexture_p.h"
 
 #include <QDebug>
 #include <epoxy/egl.h>

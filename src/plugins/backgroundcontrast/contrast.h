@@ -7,9 +7,9 @@
 
 #pragma once
 
+#include "libkwineffects/glplatform.h"
+#include "libkwineffects/glutils.h"
 #include "libkwineffects/kwineffects.h"
-#include "libkwineffects/kwinglplatform.h"
-#include "libkwineffects/kwinglutils.h"
 
 #include <QVector2D>
 #include <QVector>

@@ -9,7 +9,7 @@
 #pragma once
 
 #include "core/outputlayer.h"
-#include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/glutils.h"
 #include "platformsupport/scenes/opengl/abstract_egl_backend.h"
 
 namespace KWin

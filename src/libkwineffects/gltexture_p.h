@@ -11,8 +11,8 @@
 
 #pragma once
 
+#include "libkwineffects/glutils.h"
 #include "libkwineffects/kwinconfig.h" // KWIN_HAVE_OPENGL
-#include "libkwineffects/kwinglutils.h"
 #include "libkwineffects/kwinglutils_export.h"
 
 #include <QImage>

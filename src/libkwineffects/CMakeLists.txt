@@ -45,13 +45,13 @@ install(TARGETS kwineffects EXPORT KWinEffectsTargets ${KDE_INSTALL_TARGETS_DEFA
 set(kwin_GLUTILSLIB_SRCS
     colorspace.cpp
     glframebuffer.cpp
+    glplatform.cpp
     glshader.cpp
     glshadermanager.cpp
+    gltexture.cpp
+    glutils.cpp
+    glutils_funcs.cpp
     glvertexbuffer.cpp
-    kwinglplatform.cpp
-    kwingltexture.cpp
-    kwinglutils.cpp
-    kwinglutils_funcs.cpp
     logging.cpp
     openglcontext.cpp
     rendertarget.cpp
@@ -75,16 +75,16 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/kwinglutils_export.h
     colorspace.h
     glframebuffer.h
+    glplatform.h
     glshader.h
     glshadermanager.h
+    gltexture.h
+    glutils.h
+    glutils_funcs.h
     glvertexbuffer.h
     kwinanimationeffect.h
     kwineffects.h
     kwinglobals.h
-    kwinglplatform.h
-    kwingltexture.h
-    kwinglutils.h
-    kwinglutils_funcs.h
     kwinoffscreeneffect.h
     kwinoffscreenquickview.h
     kwinquickeffect.h

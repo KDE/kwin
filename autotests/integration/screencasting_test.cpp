@@ -9,7 +9,7 @@
 #include "composite.h"
 #include "core/output.h"
 #include "generic_scene_opengl_test.h"
-#include "libkwineffects/kwinglplatform.h"
+#include "libkwineffects/glplatform.h"
 #include "pointer_input.h"
 #include "scene/workspacescene.h"
 #include "wayland_server.h"

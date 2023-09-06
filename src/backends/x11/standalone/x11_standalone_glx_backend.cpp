@@ -33,8 +33,8 @@
 #include "utils/xcbutils.h"
 #include "workspace.h"
 // kwin libs
-#include "libkwineffects/kwinglplatform.h"
-#include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/glplatform.h"
+#include "libkwineffects/glutils.h"
 #include "libkwineffects/kwinoffscreenquickview.h"
 // Qt
 #include <QDebug>

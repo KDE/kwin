@@ -9,9 +9,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "glshadermanager.h"
+#include "glplatform.h"
 #include "glshader.h"
 #include "glvertexbuffer.h"
-#include "kwinglplatform.h"
 #include "logging_p.h"
 
 #include <QFile>

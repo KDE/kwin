@@ -39,8 +39,8 @@
 #include "x11syncmanager.h"
 #include "x11window.h"
 
-#include "libkwineffects/kwinglplatform.h"
-#include "libkwineffects/kwingltexture.h"
+#include "libkwineffects/glplatform.h"
+#include "libkwineffects/gltexture.h"
 
 #include <KCrash>
 #include <KGlobalAccel>

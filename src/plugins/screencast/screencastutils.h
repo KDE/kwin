@@ -6,9 +6,9 @@
 
 #pragma once
 
-#include "libkwineffects/kwinglplatform.h"
-#include "libkwineffects/kwingltexture.h"
-#include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/glplatform.h"
+#include "libkwineffects/gltexture.h"
+#include "libkwineffects/glutils.h"
 #include <spa/buffer/buffer.h>
 #include <spa/param/video/raw.h>
 

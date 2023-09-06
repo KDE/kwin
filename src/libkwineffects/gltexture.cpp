@@ -9,12 +9,12 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "kwingltexture_p.h"
+#include "gltexture_p.h"
+#include "libkwineffects/glplatform.h"
+#include "libkwineffects/glutils.h"
+#include "libkwineffects/glutils_funcs.h"
 #include "libkwineffects/kwinconfig.h" // KWIN_HAVE_OPENGL
 #include "libkwineffects/kwineffects.h"
-#include "libkwineffects/kwinglplatform.h"
-#include "libkwineffects/kwinglutils.h"
-#include "libkwineffects/kwinglutils_funcs.h"
 #include "logging_p.h"
 
 #include <QImage>

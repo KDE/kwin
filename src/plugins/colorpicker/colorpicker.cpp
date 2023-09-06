@@ -7,8 +7,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "colorpicker.h"
-#include "libkwineffects/kwinglutils.h"
-#include "libkwineffects/kwinglutils_funcs.h"
+#include "libkwineffects/glutils.h"
+#include "libkwineffects/glutils_funcs.h"
 #include "libkwineffects/rendertarget.h"
 #include "libkwineffects/renderviewport.h"
 #include <KLocalizedString>

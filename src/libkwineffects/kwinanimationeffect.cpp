@@ -10,7 +10,7 @@
 
 #include "libkwineffects/kwinanimationeffect.h"
 #include "libkwineffects/anidata_p.h"
-#include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/glutils.h"
 
 #include <QDateTime>
 #include <QTimer>

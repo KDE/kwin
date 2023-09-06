@@ -12,7 +12,7 @@
 #include "core/outputbackend.h"
 #include "eglhelpers.h"
 #include "internalwindow.h"
-#include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/glutils.h"
 #include "offscreensurface.h"
 #include "platformsupport/scenes/opengl/eglcontext.h"
 #include "platformsupport/scenes/opengl/egldisplay.h"

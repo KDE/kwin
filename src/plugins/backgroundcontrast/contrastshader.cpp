@@ -7,8 +7,8 @@
 
 #include "contrastshader.h"
 
+#include "libkwineffects/glplatform.h"
 #include "libkwineffects/kwineffects.h"
-#include "libkwineffects/kwinglplatform.h"
 
 #include <QByteArray>
 #include <QMatrix4x4>

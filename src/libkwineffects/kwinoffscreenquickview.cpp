@@ -9,7 +9,7 @@
 
 #include "libkwineffects/kwinoffscreenquickview.h"
 
-#include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/glutils.h"
 #include "logging_p.h"
 
 #include <QGuiApplication>

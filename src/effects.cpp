@@ -41,7 +41,7 @@
 #include "decorations/decorationbridge.h"
 #include "inputmethod.h"
 #include "inputpanelv1window.h"
-#include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/glutils.h"
 #include "libkwineffects/rendertarget.h"
 #include "libkwineffects/renderviewport.h"
 #include "scene/windowitem.h"

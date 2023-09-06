@@ -10,7 +10,7 @@
 #include "drm_render_backend.h"
 #include "platformsupport/scenes/opengl/abstract_egl_backend.h"
 
-#include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/glutils.h"
 
 #include <QHash>
 #include <QPointer>

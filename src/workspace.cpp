@@ -12,7 +12,7 @@
 // own
 #include "workspace.h"
 // kwin libs
-#include "libkwineffects/kwinglplatform.h"
+#include "libkwineffects/glplatform.h"
 // kwin
 #include "core/output.h"
 #if KWIN_BUILD_ACTIVITIES

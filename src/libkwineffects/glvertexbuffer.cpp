@@ -10,11 +10,11 @@
 */
 #include "glvertexbuffer.h"
 #include "glframebuffer.h"
+#include "glplatform.h"
 #include "glshader.h"
 #include "glshadermanager.h"
+#include "glutils.h"
 #include "kwineffects.h"
-#include "kwinglplatform.h"
-#include "kwinglutils.h"
 #include "logging_p.h"
 
 #include <QVector4D>

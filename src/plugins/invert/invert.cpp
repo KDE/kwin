@@ -10,8 +10,8 @@
 
 #include "invert.h"
 
-#include "libkwineffects/kwinglplatform.h"
-#include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/glplatform.h"
+#include "libkwineffects/glutils.h"
 #include <KGlobalAccel>
 #include <KLocalizedString>
 #include <QAction>

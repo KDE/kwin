@@ -7,10 +7,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "libkwineffects/kwinglplatform.h"
+#include "libkwineffects/glplatform.h"
 // include kwinglutils_funcs.h to avoid the redeclaration issues
 // between qopengl.h and epoxy/gl.h
-#include "libkwineffects/kwinglutils_funcs.h"
+#include "libkwineffects/glutils_funcs.h"
 #include "libkwineffects/kwinxcb.h"
 #include <epoxy/gl.h>
 
@@ -504,7 +504,7 @@ static ChipClass detectQualcommClass(QByteArrayView chipClass)
 
 static ChipClass detectPanfrostClass(QByteArrayView chipClass)
 {
-// Keep the list of supported Mali chipset up to date with https://docs.mesa3d.org/drivers/panfrost.html
+    // Keep the list of supported Mali chipset up to date with https://docs.mesa3d.org/drivers/panfrost.html
     if (chipClass.contains("T720") || chipClass.contains("T760")) {
         return MaliT7XX;
     }

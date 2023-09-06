@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/glutils.h"
 
 #include <xcb/sync.h>
 #include <xcb/xcb.h>

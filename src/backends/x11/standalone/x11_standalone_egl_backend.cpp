@@ -11,7 +11,7 @@
 #include "core/outputlayer.h"
 #include "core/overlaywindow.h"
 #include "core/renderloop_p.h"
-#include "libkwineffects/kwinglplatform.h"
+#include "libkwineffects/glplatform.h"
 #include "options.h"
 #include "platformsupport/scenes/opengl/glrendertimequery.h"
 #include "scene/surfaceitem_x11.h"

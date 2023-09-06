@@ -20,8 +20,8 @@
 #include "window.h"
 #include "workspace.h"
 
-#include "libkwineffects/kwingltexture.h"
-#include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/gltexture.h"
+#include "libkwineffects/glutils.h"
 
 #include <QQuickWindow>
 #include <QRunnable>

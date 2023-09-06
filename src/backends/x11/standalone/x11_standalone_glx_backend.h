@@ -17,8 +17,8 @@
 #include <fixx11h.h>
 #include <xcb/glx.h>
 
-#include "libkwineffects/kwingltexture.h"
-#include "libkwineffects/kwingltexture_p.h"
+#include "libkwineffects/gltexture.h"
+#include "libkwineffects/gltexture_p.h"
 
 #include <QHash>
 #include <memory>

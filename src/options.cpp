@@ -19,7 +19,7 @@
 
 #include <QProcess>
 
-#include "libkwineffects/kwinglplatform.h"
+#include "libkwineffects/glplatform.h"
 #include "settings.h"
 #include "workspace.h"
 #include <QOpenGLContext>

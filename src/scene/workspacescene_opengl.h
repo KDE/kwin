@@ -16,7 +16,7 @@
 #include "scene/shadowitem.h"
 #include "scene/workspacescene.h"
 
-#include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/glutils.h"
 
 namespace KWin
 {

@@ -10,7 +10,7 @@
 
 #include "snaphelper.h"
 
-#include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/glutils.h"
 #include "libkwineffects/rendertarget.h"
 #include "libkwineffects/renderviewport.h"
 

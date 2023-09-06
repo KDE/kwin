@@ -11,8 +11,8 @@
 #include "screenshot.h"
 #include "screenshotdbusinterface2.h"
 
-#include "libkwineffects/kwinglplatform.h"
-#include "libkwineffects/kwinglutils.h"
+#include "libkwineffects/glplatform.h"
+#include "libkwineffects/glutils.h"
 #include "libkwineffects/rendertarget.h"
 #include "libkwineffects/renderviewport.h"
 

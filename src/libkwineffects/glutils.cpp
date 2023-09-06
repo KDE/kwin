@@ -9,9 +9,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "libkwineffects/kwinglutils.h"
-#include "kwinglplatform.h"
-#include "kwingltexture_p.h"
+#include "libkwineffects/glutils.h"
+#include "glplatform.h"
+#include "gltexture_p.h"
 #include "logging_p.h"
 
 namespace KWin
