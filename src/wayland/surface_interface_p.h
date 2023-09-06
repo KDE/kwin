@@ -114,7 +114,7 @@ public:
     QRectF computeBufferSourceBox() const;
     void applyState(SurfaceState *next);
 
-    quint32 lockState(SurfaceState *state);
+    quint32 lockState();
     void unlockState(quint32 serial);
 
     bool computeEffectiveMapped() const;

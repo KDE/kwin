@@ -11,6 +11,7 @@
 #include "contrast_interface.h"
 #include "display.h"
 #include "fractionalscale_v1_interface_p.h"
+#include "graphicsbufferwatcher_p.h"
 #include "idleinhibit_v1_interface_p.h"
 #include "linuxdmabufv1clientbuffer.h"
 #include "output_interface.h"
@@ -39,6 +40,29 @@ static QRegion map_helper(const QMatrix4x4 &matrix, const QRegion &region)
         result += matrix.mapRect(QRectF(rect)).toAlignedRect();
     }
     return result;
+}
+
+SurfaceStateLock::~SurfaceStateLock()
+{
+    reset();
+}
+
+void SurfaceStateLock::reset()
+{
+    for (const auto &entry : std::as_const(m_entries)) {
+        if (entry.surface) {
+            SurfaceInterfacePrivate::get(entry.surface)->unlockState(entry.serial);
+        }
+    }
+    m_entries.clear();
+}
+
+void SurfaceStateLock::append(SurfaceInterface *surface)
+{
+    m_entries.push_back(Entry{
+        .surface = surface,
+        .serial = SurfaceInterfacePrivate::get(surface)->lockState(),
+    });
 }
 
 SurfaceInterfacePrivate::SurfaceInterfacePrivate(SurfaceInterface *q)
@@ -328,6 +352,17 @@ void SurfaceInterfacePrivate::surface_commit(Resource *resource)
 {
     if (subSurface) {
         subSurface->commit();
+    }
+
+    if (pending->bufferIsSet && pending->buffer) {
+        if (GraphicsBufferWatcher *watcher = GraphicsBufferWatcher::get(pending->buffer)) {
+            if (watcher->arm()) {
+                SurfaceStateLock lock(q->lockState());
+                QObject::connect(watcher, &GraphicsBufferWatcher::ready, q, [lock = std::move(lock)]() mutable {
+                    lock.reset();
+                }, Qt::SingleShotConnection);
+            }
+        }
     }
 
     // If there are already stashed states, this one will be applied when all the previous
@@ -759,10 +794,10 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     Q_EMIT q->committed();
 }
 
-quint32 SurfaceInterfacePrivate::lockState(SurfaceState *state)
+quint32 SurfaceInterfacePrivate::lockState()
 {
-    state->locks++;
-    return state->serial;
+    pending->locks++;
+    return pending->serial;
 }
 
 void SurfaceInterfacePrivate::unlockState(quint32 serial)
@@ -834,6 +869,25 @@ bool SurfaceInterfacePrivate::contains(const QPointF &position) const
 bool SurfaceInterfacePrivate::inputContains(const QPointF &position) const
 {
     return contains(position) && inputRegion.contains(QPoint(std::floor(position.x()), std::floor(position.y())));
+}
+
+SurfaceStateLock SurfaceInterface::lockState()
+{
+    SurfaceStateLock lock;
+
+    SurfaceInterface *head = this;
+    while (head) {
+        lock.append(head);
+
+        SubSurfaceInterface *subsurface = head->subSurface();
+        if (!subsurface || !subsurface->isSynchronized()) {
+            break;
+        }
+
+        head = subsurface->parentSurface();
+    }
+
+    return lock;
 }
 
 QRegion SurfaceInterface::bufferDamage() const

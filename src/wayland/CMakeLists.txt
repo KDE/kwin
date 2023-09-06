@@ -242,6 +242,7 @@ target_sources(kwin PRIVATE
     fakeinput_interface.cpp
     fractionalscale_v1_interface.cpp
     filtered_display.cpp
+    graphicsbufferwatcher.cpp
     idle_interface.cpp
     idleinhibit_v1_interface.cpp
     idlenotify_v1_interface.cpp

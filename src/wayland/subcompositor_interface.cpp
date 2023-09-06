@@ -272,7 +272,7 @@ void SubSurfaceInterface::commit()
 {
     SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(d->surface);
     if (isSynchronized()) {
-        const quint32 serial = surfacePrivate->lockState(surfacePrivate->pending.get());
+        const quint32 serial = surfacePrivate->lockState();
         const quint32 parentSerial = SurfaceInterfacePrivate::get(d->parent)->pending->serial;
         d->locks.append(SubSurfaceStateLock{
             .serial = serial,

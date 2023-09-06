@@ -10,6 +10,7 @@
 
 #include <QMatrix4x4>
 #include <QObject>
+#include <QPointer>
 #include <QRegion>
 
 struct wl_resource;
@@ -33,10 +34,34 @@ class ShadowInterface;
 class SlideInterface;
 class SubSurfaceInterface;
 class SurfaceInterfacePrivate;
+class SurfaceInterface;
 
 enum class PresentationHint {
     VSync,
     Async
+};
+
+/**
+ * The SurfaceStateLock provides a way to delay applying the pending surface state. The pending
+ * state will not be applied as long as the lock exists.
+ */
+class SurfaceStateLock
+{
+public:
+    SurfaceStateLock() = default;
+    SurfaceStateLock(SurfaceStateLock &&other) = default;
+    ~SurfaceStateLock();
+
+    void reset();
+    void append(SurfaceInterface *surface);
+
+private:
+    struct Entry
+    {
+        QPointer<SurfaceInterface> surface;
+        quint32 serial;
+    };
+    QVector<Entry> m_entries;
 };
 
 /**
@@ -80,6 +105,15 @@ class KWIN_EXPORT SurfaceInterface : public QObject
 public:
     explicit SurfaceInterface(CompositorInterface *compositor, wl_resource *resource);
     ~SurfaceInterface() override;
+
+    /**
+     * Locks the pending state to prevent it from being applied. If the given surface is a
+     * synchronized subsurfaces, this function is also going to lock the pending state of
+     * all ancestors.
+     *
+     * The pending state can be unlocked by either resetting or destroying the SurfaceStateLock.
+     */
+    SurfaceStateLock lockState();
 
     /**
      * Returns the object id for this Wayland surface.
