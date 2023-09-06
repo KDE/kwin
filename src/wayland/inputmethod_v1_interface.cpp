@@ -11,7 +11,6 @@
 #include "output_interface.h"
 #include "seat_interface.h"
 #include "surface_interface.h"
-#include "surfacerole_p.h"
 #include "utils/common.h"
 #include "utils/ramfile.h"
 
@@ -305,15 +304,15 @@ InputMethodGrabV1 *InputMethodContextV1Interface::keyboardGrab() const
     return d->m_keyboardGrab.get();
 }
 
-class InputPanelSurfaceV1InterfacePrivate : public QtWaylandServer::zwp_input_panel_surface_v1, public SurfaceRole
+class InputPanelSurfaceV1InterfacePrivate : public QtWaylandServer::zwp_input_panel_surface_v1
 {
     friend class InputPanelSurfaceV1Interface;
 
 public:
     InputPanelSurfaceV1InterfacePrivate(SurfaceInterface *surface, quint32 id, InputPanelSurfaceV1Interface *q)
         : zwp_input_panel_surface_v1()
-        , SurfaceRole(surface, QByteArrayLiteral("input_panel_surface_v1"))
         , q(q)
+        , surface(surface)
     {
     }
 
@@ -333,6 +332,7 @@ public:
     }
 
     InputPanelSurfaceV1Interface *const q;
+    QPointer<SurfaceInterface> surface;
 };
 
 InputPanelSurfaceV1Interface::InputPanelSurfaceV1Interface(SurfaceInterface *surface, quint32 id, QObject *parent)
@@ -344,6 +344,12 @@ InputPanelSurfaceV1Interface::InputPanelSurfaceV1Interface(SurfaceInterface *sur
 InputPanelSurfaceV1Interface::~InputPanelSurfaceV1Interface()
 {
     Q_EMIT aboutToBeDestroyed();
+}
+
+SurfaceRole *InputPanelSurfaceV1Interface::role()
+{
+    static SurfaceRole role(QByteArrayLiteral("input_panel_surface_v1"));
+    return &role;
 }
 
 class InputPanelV1InterfacePrivate : public QtWaylandServer::zwp_input_panel_v1
@@ -359,10 +365,13 @@ public:
     {
         auto surface = SurfaceInterface::get(surfaceResource);
 
-        SurfaceRole *surfaceRole = SurfaceRole::get(surface);
-        if (surfaceRole) {
-            wl_resource_post_error(resource->handle, 0, "the surface already has a role assigned %s", surfaceRole->name().constData());
-            return;
+        if (const SurfaceRole *role = surface->role()) {
+            if (role != InputPanelSurfaceV1Interface::role()) {
+                wl_resource_post_error(resource->handle, 0, "the surface already has a role assigned %s", role->name().constData());
+                return;
+            }
+        } else {
+            surface->setRole(InputPanelSurfaceV1Interface::role());
         }
 
         auto interface = new InputPanelSurfaceV1Interface(surface, id, nullptr);
@@ -384,7 +393,7 @@ InputPanelV1Interface::~InputPanelV1Interface() = default;
 
 SurfaceInterface *InputPanelSurfaceV1Interface::surface() const
 {
-    return d->surface();
+    return d->surface;
 }
 
 class InputMethodV1InterfacePrivate : public QtWaylandServer::zwp_input_method_v1

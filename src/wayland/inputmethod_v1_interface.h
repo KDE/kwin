@@ -18,6 +18,7 @@ namespace KWaylandServer
 {
 class OutputInterface;
 class SurfaceInterface;
+class SurfaceRole;
 class Display;
 class KeyboardInterface;
 class InputPanelSurfaceV1Interface;
@@ -128,6 +129,8 @@ class KWIN_EXPORT InputPanelSurfaceV1Interface : public QObject
     Q_OBJECT
 public:
     ~InputPanelSurfaceV1Interface() override;
+
+    static SurfaceRole *role();
 
     enum Position {
         CenterBottom = 0,

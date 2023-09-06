@@ -17,6 +17,7 @@ class LayerSurfaceV1Interface;
 class LayerSurfaceV1InterfacePrivate;
 class OutputInterface;
 class SurfaceInterface;
+class SurfaceRole;
 
 /**
  * The LayerShellV1Interface compositor extension allows to create desktop shell surfaces.
@@ -73,6 +74,8 @@ public:
                             const QString &scope,
                             wl_resource *resource);
     ~LayerSurfaceV1Interface() override;
+
+    static SurfaceRole *role();
 
     /**
      * Returns @c true if the initial commit has been performed; otherwise returns @c false.

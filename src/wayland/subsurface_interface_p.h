@@ -8,7 +8,6 @@
 #pragma once
 
 #include "subcompositor_interface.h"
-#include "surfacerole_p.h"
 
 #include <QPoint>
 #include <QPointer>
@@ -35,7 +34,7 @@ struct SubSurfaceStateLock
     const quint32 parentSerial;
 };
 
-class SubSurfaceInterfacePrivate : public SurfaceRole, public QtWaylandServer::wl_subsurface
+class SubSurfaceInterfacePrivate : public QtWaylandServer::wl_subsurface
 {
 public:
     static SubSurfaceInterfacePrivate *get(SubSurfaceInterface *subsurface);

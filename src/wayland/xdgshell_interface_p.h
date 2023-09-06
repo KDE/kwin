@@ -10,7 +10,6 @@
 #include "xdgshell_interface.h"
 
 #include "surface_interface_p.h"
-#include "surfacerole_p.h"
 
 namespace KWaylandServer
 {
@@ -99,17 +98,6 @@ struct XdgPopupCommit : XdgSurfaceCommit
 {
 };
 
-template<typename Commit>
-class XdgSurfaceRole : public SurfaceRole, public SurfaceExtension<Commit>
-{
-public:
-    XdgSurfaceRole(SurfaceInterface *surface, const QByteArray &name)
-        : SurfaceRole(surface, name)
-        , SurfaceExtension<Commit>(surface)
-    {
-    }
-};
-
 class XdgSurfaceInterfacePrivate : public QtWaylandServer::xdg_surface
 {
 public:
@@ -117,10 +105,6 @@ public:
 
     void apply(XdgSurfaceCommit *commit);
     void reset();
-
-    void unassignRole();
-    void assignRole(XdgToplevelInterface *toplevel);
-    void assignRole(XdgPopupInterface *popup);
 
     // These two point into XdgSurfaceRole's state and are valid as long as a role is assigned.
     XdgSurfaceCommit *pending = nullptr;
@@ -146,7 +130,7 @@ protected:
     void xdg_surface_ack_configure(Resource *resource, uint32_t serial) override;
 };
 
-class XdgToplevelInterfacePrivate : public XdgSurfaceRole<XdgToplevelCommit>, public QtWaylandServer::xdg_toplevel
+class XdgToplevelInterfacePrivate : public SurfaceExtension<XdgToplevelCommit>, public QtWaylandServer::xdg_toplevel
 {
 public:
     XdgToplevelInterfacePrivate(XdgToplevelInterface *toplevel, XdgSurfaceInterface *surface);
@@ -184,7 +168,7 @@ protected:
     void xdg_toplevel_set_minimized(Resource *resource) override;
 };
 
-class XdgPopupInterfacePrivate : public XdgSurfaceRole<XdgPopupCommit>, public QtWaylandServer::xdg_popup
+class XdgPopupInterfacePrivate : public SurfaceExtension<XdgPopupCommit>, public QtWaylandServer::xdg_popup
 {
 public:
     static XdgPopupInterfacePrivate *get(XdgPopupInterface *popup);

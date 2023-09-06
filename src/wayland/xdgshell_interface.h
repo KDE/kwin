@@ -20,6 +20,7 @@ class Display;
 class OutputInterface;
 class SeatInterface;
 class SurfaceInterface;
+class SurfaceRole;
 class XdgShellInterfacePrivate;
 class XdgSurfaceInterfacePrivate;
 class XdgToplevelInterfacePrivate;
@@ -241,6 +242,8 @@ public:
      * Destructs the XdgToplevelInterface object.
      */
     ~XdgToplevelInterface() override;
+
+    static SurfaceRole *role();
 
     /**
      * Returns the XdgShellInterface for this XdgToplevelInterface.
@@ -528,6 +531,8 @@ public:
      * Destructs the XdgPopupInterface object.
      */
     ~XdgPopupInterface() override;
+
+    static SurfaceRole *role();
 
     XdgShellInterface *shell() const;
 

@@ -278,7 +278,6 @@ target_sources(kwin PRIVATE
     slide_interface.cpp
     subcompositor_interface.cpp
     surface_interface.cpp
-    surfacerole.cpp
     tablet_v2_interface.cpp
     tearingcontrol_v1_interface.cpp
     textinput.cpp

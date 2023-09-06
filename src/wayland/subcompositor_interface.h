@@ -19,6 +19,7 @@ namespace KWaylandServer
 class Display;
 class SubCompositorInterfacePrivate;
 class SurfaceInterface;
+class SurfaceRole;
 class SubSurfaceInterface;
 class SubSurfaceInterfacePrivate;
 
@@ -56,6 +57,8 @@ class KWIN_EXPORT SubSurfaceInterface : public QObject
 
 public:
     ~SubSurfaceInterface() override;
+
+    static SurfaceRole *role();
 
     /**
      * Returns the position of the sub-surface relative to the upper-left corner of its parent.

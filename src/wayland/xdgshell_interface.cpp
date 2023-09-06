@@ -138,29 +138,6 @@ XdgSurfaceInterfacePrivate::XdgSurfaceInterfacePrivate(XdgSurfaceInterface *xdgS
 {
 }
 
-void XdgSurfaceInterfacePrivate::unassignRole()
-{
-    toplevel = nullptr;
-    popup = nullptr;
-    pending = nullptr;
-}
-
-void XdgSurfaceInterfacePrivate::assignRole(XdgToplevelInterface *toplevel)
-{
-    this->toplevel = toplevel;
-
-    XdgSurfaceRole<XdgToplevelCommit> *role = XdgToplevelInterfacePrivate::get(toplevel);
-    pending = &role->pending;
-}
-
-void XdgSurfaceInterfacePrivate::assignRole(XdgPopupInterface *popup)
-{
-    this->popup = popup;
-
-    XdgSurfaceRole<XdgPopupCommit> *role = XdgPopupInterfacePrivate::get(popup);
-    pending = &role->pending;
-}
-
 void XdgSurfaceInterfacePrivate::apply(XdgSurfaceCommit *commit)
 {
     if (surface->buffer()) {
@@ -206,10 +183,13 @@ void XdgSurfaceInterfacePrivate::xdg_surface_destroy(Resource *resource)
 
 void XdgSurfaceInterfacePrivate::xdg_surface_get_toplevel(Resource *resource, uint32_t id)
 {
-    const SurfaceRole *surfaceRole = SurfaceRole::get(surface);
-    if (surfaceRole) {
-        wl_resource_post_error(resource->handle, error_already_constructed, "the surface already has a role assigned %s", surfaceRole->name().constData());
-        return;
+    if (const SurfaceRole *role = surface->role()) {
+        if (role != XdgToplevelInterface::role()) {
+            wl_resource_post_error(resource->handle, error_already_constructed, "the surface already has a role assigned %s", role->name().constData());
+            return;
+        }
+    } else {
+        surface->setRole(XdgToplevelInterface::role());
     }
 
     wl_resource *toplevelResource = wl_resource_create(resource->client(), &xdg_toplevel_interface, resource->version(), id);
@@ -220,10 +200,13 @@ void XdgSurfaceInterfacePrivate::xdg_surface_get_toplevel(Resource *resource, ui
 
 void XdgSurfaceInterfacePrivate::xdg_surface_get_popup(Resource *resource, uint32_t id, ::wl_resource *parentResource, ::wl_resource *positionerResource)
 {
-    const SurfaceRole *surfaceRole = SurfaceRole::get(surface);
-    if (surfaceRole) {
-        wl_resource_post_error(resource->handle, error_already_constructed, "the surface already has a role assigned %s", surfaceRole->name().constData());
-        return;
+    if (const SurfaceRole *role = surface->role()) {
+        if (role != XdgPopupInterface::role()) {
+            wl_resource_post_error(resource->handle, error_already_constructed, "the surface already has a role assigned %s", role->name().constData());
+            return;
+        }
+    } else {
+        surface->setRole(XdgPopupInterface::role());
     }
 
     XdgPositioner positioner = XdgPositioner::get(positionerResource);
@@ -238,8 +221,7 @@ void XdgSurfaceInterfacePrivate::xdg_surface_get_popup(Resource *resource, uint3
     XdgSurfaceInterface *parentXdgSurface = XdgSurfaceInterface::get(parentResource);
     SurfaceInterface *parentSurface = nullptr;
     if (parentXdgSurface) {
-        const SurfaceRole *parentSurfaceRole = SurfaceRole::get(parentXdgSurface->surface());
-        if (!parentSurfaceRole) {
+        if (!parentXdgSurface->surface()->role()) {
             auto shellPrivate = XdgShellInterfacePrivate::get(shell);
             wl_resource_post_error(shellPrivate->resourceForXdgSurface(q)->handle,
                                    QtWaylandServer::xdg_wm_base::error_invalid_popup_parent,
@@ -335,10 +317,10 @@ XdgSurfaceInterface *XdgSurfaceInterface::get(::wl_resource *resource)
     return nullptr;
 }
 
-XdgToplevelInterfacePrivate::XdgToplevelInterfacePrivate(XdgToplevelInterface *toplevel, XdgSurfaceInterface *surface)
-    : XdgSurfaceRole(surface->surface(), QByteArrayLiteral("xdg_toplevel"))
+XdgToplevelInterfacePrivate::XdgToplevelInterfacePrivate(XdgToplevelInterface *toplevel, XdgSurfaceInterface *xdgSurface)
+    : SurfaceExtension(xdgSurface->surface())
     , q(toplevel)
-    , xdgSurface(surface)
+    , xdgSurface(xdgSurface)
 {
 }
 
@@ -513,11 +495,12 @@ XdgToplevelInterfacePrivate *XdgToplevelInterfacePrivate::get(wl_resource *resou
     return resource_cast<XdgToplevelInterfacePrivate *>(resource);
 }
 
-XdgToplevelInterface::XdgToplevelInterface(XdgSurfaceInterface *surface, ::wl_resource *resource)
-    : d(new XdgToplevelInterfacePrivate(this, surface))
+XdgToplevelInterface::XdgToplevelInterface(XdgSurfaceInterface *xdgSurface, ::wl_resource *resource)
+    : d(new XdgToplevelInterfacePrivate(this, xdgSurface))
 {
-    XdgSurfaceInterfacePrivate *surfacePrivate = XdgSurfaceInterfacePrivate::get(surface);
-    surfacePrivate->assignRole(this);
+    XdgSurfaceInterfacePrivate *surfacePrivate = XdgSurfaceInterfacePrivate::get(xdgSurface);
+    surfacePrivate->toplevel = this;
+    surfacePrivate->pending = &d->pending;
 
     d->init(resource);
 }
@@ -527,7 +510,14 @@ XdgToplevelInterface::~XdgToplevelInterface()
     Q_EMIT aboutToBeDestroyed();
 
     XdgSurfaceInterfacePrivate *surfacePrivate = XdgSurfaceInterfacePrivate::get(d->xdgSurface);
-    surfacePrivate->unassignRole();
+    surfacePrivate->toplevel = nullptr;
+    surfacePrivate->pending = nullptr;
+}
+
+SurfaceRole *XdgToplevelInterface::role()
+{
+    static SurfaceRole role(QByteArrayLiteral("xdg_toplevel"));
+    return &role;
 }
 
 XdgShellInterface *XdgToplevelInterface::shell() const
@@ -679,10 +669,10 @@ XdgPopupInterfacePrivate *XdgPopupInterfacePrivate::get(XdgPopupInterface *popup
     return popup->d.get();
 }
 
-XdgPopupInterfacePrivate::XdgPopupInterfacePrivate(XdgPopupInterface *popup, XdgSurfaceInterface *surface)
-    : XdgSurfaceRole(surface->surface(), QByteArrayLiteral("xdg_popup"))
+XdgPopupInterfacePrivate::XdgPopupInterfacePrivate(XdgPopupInterface *popup, XdgSurfaceInterface *xdgSurface)
+    : SurfaceExtension(xdgSurface->surface())
     , q(popup)
-    , xdgSurface(surface)
+    , xdgSurface(xdgSurface)
 {
 }
 
@@ -747,11 +737,12 @@ void XdgPopupInterfacePrivate::xdg_popup_reposition(Resource *resource, ::wl_res
     Q_EMIT q->repositionRequested(token);
 }
 
-XdgPopupInterface::XdgPopupInterface(XdgSurfaceInterface *surface, SurfaceInterface *parentSurface, const XdgPositioner &positioner, ::wl_resource *resource)
-    : d(new XdgPopupInterfacePrivate(this, surface))
+XdgPopupInterface::XdgPopupInterface(XdgSurfaceInterface *xdgSurface, SurfaceInterface *parentSurface, const XdgPositioner &positioner, ::wl_resource *resource)
+    : d(new XdgPopupInterfacePrivate(this, xdgSurface))
 {
-    XdgSurfaceInterfacePrivate *surfacePrivate = XdgSurfaceInterfacePrivate::get(surface);
-    surfacePrivate->assignRole(this);
+    XdgSurfaceInterfacePrivate *surfacePrivate = XdgSurfaceInterfacePrivate::get(xdgSurface);
+    surfacePrivate->popup = this;
+    surfacePrivate->pending = &d->pending;
 
     d->parentSurface = parentSurface;
     d->positioner = positioner;
@@ -763,7 +754,14 @@ XdgPopupInterface::~XdgPopupInterface()
     Q_EMIT aboutToBeDestroyed();
 
     XdgSurfaceInterfacePrivate *surfacePrivate = XdgSurfaceInterfacePrivate::get(d->xdgSurface);
-    surfacePrivate->unassignRole();
+    surfacePrivate->popup = nullptr;
+    surfacePrivate->pending = nullptr;
+}
+
+SurfaceRole *XdgPopupInterface::role()
+{
+    static SurfaceRole role(QByteArrayLiteral("xdg_popup"));
+    return &role;
 }
 
 SurfaceInterface *XdgPopupInterface::parentSurface() const

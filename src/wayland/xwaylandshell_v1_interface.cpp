@@ -5,12 +5,12 @@
 */
 
 #include "xwaylandshell_v1_interface.h"
-
 #include "display.h"
-#include "surface_interface_p.h"
-#include "surfacerole_p.h"
+#include "surface_interface.h"
 
 #include "qwayland-server-xwayland-shell-v1.h"
+
+#include <QPointer>
 
 namespace KWaylandServer
 {
@@ -35,7 +35,7 @@ struct XwaylandSurfaceV1Commit
     std::optional<uint64_t> serial;
 };
 
-class XwaylandSurfaceV1InterfacePrivate : public SurfaceRole, public SurfaceExtension<XwaylandSurfaceV1Commit>, public QtWaylandServer::xwayland_surface_v1
+class XwaylandSurfaceV1InterfacePrivate : public SurfaceExtension<XwaylandSurfaceV1Commit>, public QtWaylandServer::xwayland_surface_v1
 {
 public:
     XwaylandSurfaceV1InterfacePrivate(XwaylandShellV1Interface *shell, SurfaceInterface *surface, wl_client *client, uint32_t id, int version, XwaylandSurfaceV1Interface *q);
@@ -44,6 +44,7 @@ public:
 
     XwaylandSurfaceV1Interface *q;
     XwaylandShellV1Interface *shell;
+    QPointer<SurfaceInterface> surface;
     std::optional<uint64_t> serial;
 
 protected:
@@ -66,9 +67,14 @@ void XwaylandShellV1InterfacePrivate::xwayland_shell_v1_destroy(Resource *resour
 void XwaylandShellV1InterfacePrivate::xwayland_shell_v1_get_xwayland_surface(Resource *resource, uint32_t id, ::wl_resource *surface_resource)
 {
     SurfaceInterface *surface = SurfaceInterface::get(surface_resource);
-    if (auto role = SurfaceRole::get(surface)) {
-        wl_resource_post_error(resource->handle, error_role, "the surface already has a role assigned %s", role->name().constData());
-        return;
+
+    if (const SurfaceRole *role = surface->role()) {
+        if (role != XwaylandSurfaceV1Interface::role()) {
+            wl_resource_post_error(resource->handle, error_role, "the surface already has a role assigned %s", role->name().constData());
+            return;
+        }
+    } else {
+        surface->setRole(XwaylandSurfaceV1Interface::role());
     }
 
     auto xwaylandSurface = new XwaylandSurfaceV1Interface(q, surface, resource->client(), id, resource->version());
@@ -79,11 +85,11 @@ void XwaylandShellV1InterfacePrivate::xwayland_shell_v1_get_xwayland_surface(Res
 }
 
 XwaylandSurfaceV1InterfacePrivate::XwaylandSurfaceV1InterfacePrivate(XwaylandShellV1Interface *shell, SurfaceInterface *surface, wl_client *client, uint32_t id, int version, XwaylandSurfaceV1Interface *q)
-    : SurfaceRole(surface, QByteArrayLiteral("xwayland_surface_v1"))
-    , SurfaceExtension(surface)
+    : SurfaceExtension(surface)
     , QtWaylandServer::xwayland_surface_v1(client, id, version)
     , q(q)
     , shell(shell)
+    , surface(surface)
 {
 }
 
@@ -151,9 +157,15 @@ XwaylandSurfaceV1Interface::~XwaylandSurfaceV1Interface()
 {
 }
 
+SurfaceRole *XwaylandSurfaceV1Interface::role()
+{
+    static SurfaceRole role(QByteArrayLiteral("xwayland_surface_v1"));
+    return &role;
+}
+
 SurfaceInterface *XwaylandSurfaceV1Interface::surface() const
 {
-    return d->surface();
+    return d->surface;
 }
 
 std::optional<uint64_t> XwaylandSurfaceV1Interface::serial() const

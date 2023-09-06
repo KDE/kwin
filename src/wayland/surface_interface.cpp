@@ -21,7 +21,6 @@
 #include "subcompositor_interface.h"
 #include "subsurface_interface_p.h"
 #include "surface_interface_p.h"
-#include "surfacerole_p.h"
 #include "utils.h"
 
 #include <wayland-server.h>
@@ -39,6 +38,16 @@ static QRegion map_helper(const QMatrix4x4 &matrix, const QRegion &region)
         result += matrix.mapRect(QRectF(rect)).toAlignedRect();
     }
     return result;
+}
+
+SurfaceRole::SurfaceRole(const QByteArray &name)
+    : m_name(name)
+{
+}
+
+QByteArray SurfaceRole::name() const
+{
+    return m_name;
 }
 
 SurfaceInterfacePrivate::SurfaceInterfacePrivate(SurfaceInterface *q)
@@ -393,6 +402,16 @@ SurfaceInterface::SurfaceInterface(CompositorInterface *compositor, wl_resource 
 
 SurfaceInterface::~SurfaceInterface()
 {
+}
+
+SurfaceRole *SurfaceInterface::role() const
+{
+    return d->role;
+}
+
+void SurfaceInterface::setRole(SurfaceRole *role)
+{
+    d->role = role;
 }
 
 uint32_t SurfaceInterface::id() const

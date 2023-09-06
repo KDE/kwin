@@ -25,6 +25,7 @@ class DataSourceInterface;
 class AbstractDataSource;
 class SeatInterface;
 class SurfaceInterface;
+class SurfaceRole;
 class DataDeviceInterfacePrivate;
 class DragAndDropIconPrivate;
 
@@ -40,6 +41,8 @@ class KWIN_EXPORT DragAndDropIcon : public QObject
 
 public:
     ~DragAndDropIcon() override;
+
+    static SurfaceRole *role();
 
     /**
      * Returns the position of the icon relative to the cursor's hotspot.

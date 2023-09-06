@@ -22,7 +22,6 @@
 namespace KWaylandServer
 {
 class IdleInhibitorV1Interface;
-class SurfaceRole;
 class ViewportInterface;
 class ContentTypeV1Interface;
 class TearingControlV1Interface;

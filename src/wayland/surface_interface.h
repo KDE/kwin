@@ -40,6 +40,23 @@ enum class PresentationHint {
 };
 
 /**
+ * The SurfaceRole class represents a role assigned to a wayland surface.
+ */
+class KWIN_EXPORT SurfaceRole
+{
+public:
+    explicit SurfaceRole(const QByteArray &name);
+
+    /**
+     * The human readable name of the surface role.
+     */
+    QByteArray name() const;
+
+private:
+    QByteArray m_name;
+};
+
+/**
  * @brief Resource representing a wl_surface.
  *
  * The SurfaceInterface gets created by the CompositorInterface. A SurfaceInterface normally
@@ -97,6 +114,14 @@ public:
      * Returns the compositor for this SurfaceInterface.
      */
     CompositorInterface *compositor() const;
+
+    /**
+     * Returns the role of this surface, or @c null if no role has been assigned to the surface.
+     *
+     * Once a role is given to the surface, it is permanent.
+     */
+    SurfaceRole *role() const;
+    void setRole(SurfaceRole *role);
 
     /**
      * Maps the specified @a point from the surface-local coordinates to buffer pixel coordinates.

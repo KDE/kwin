@@ -15,20 +15,20 @@
 #include "seat_interface.h"
 #include "seat_interface_p.h"
 #include "surface_interface.h"
-#include "surfacerole_p.h"
 
 namespace KWaylandServer
 {
-class DragAndDropIconPrivate : public SurfaceRole
+class DragAndDropIconPrivate
 {
 public:
     explicit DragAndDropIconPrivate(SurfaceInterface *surface);
 
+    QPointer<SurfaceInterface> surface;
     QPoint position;
 };
 
 DragAndDropIconPrivate::DragAndDropIconPrivate(SurfaceInterface *surface)
-    : SurfaceRole(surface, QByteArrayLiteral("dnd_icon"))
+    : surface(surface)
 {
 }
 
@@ -43,9 +43,15 @@ DragAndDropIcon::~DragAndDropIcon()
 {
 }
 
+SurfaceRole *DragAndDropIcon::role()
+{
+    static SurfaceRole role(QByteArrayLiteral("dnd_icon"));
+    return &role;
+}
+
 void DragAndDropIcon::commit()
 {
-    d->position += d->surface()->offset();
+    d->position += d->surface->offset();
     Q_EMIT changed();
 }
 
@@ -56,7 +62,7 @@ QPoint DragAndDropIcon::position() const
 
 SurfaceInterface *DragAndDropIcon::surface() const
 {
-    return d->surface();
+    return d->surface;
 }
 
 DataDeviceInterfacePrivate *DataDeviceInterfacePrivate::get(DataDeviceInterface *device)
@@ -77,14 +83,6 @@ void DataDeviceInterfacePrivate::data_device_start_drag(Resource *resource,
                                                         wl_resource *iconResource,
                                                         uint32_t serial)
 {
-    SurfaceInterface *iconSurface = SurfaceInterface::get(iconResource);
-
-    const SurfaceRole *surfaceRole = SurfaceRole::get(iconSurface);
-    if (surfaceRole) {
-        wl_resource_post_error(resource->handle, error_role, "the icon surface already has a role assigned %s", surfaceRole->name().constData());
-        return;
-    }
-
     SurfaceInterface *focusSurface = SurfaceInterface::get(originResource);
     DataSourceInterface *dataSource = nullptr;
     if (sourceResource) {
@@ -102,7 +100,17 @@ void DataDeviceInterfacePrivate::data_device_start_drag(Resource *resource,
     }
 
     DragAndDropIcon *dragIcon = nullptr;
-    if (iconSurface) {
+    if (SurfaceInterface *iconSurface = SurfaceInterface::get(iconResource)) {
+        if (const SurfaceRole *role = iconSurface->role()) {
+            if (role != DragAndDropIcon::role()) {
+                wl_resource_post_error(resource->handle, 0,
+                                       "the wl_surface already has a role assigned %s", role->name().constData());
+                return;
+            }
+        } else {
+            iconSurface->setRole(DragAndDropIcon::role());
+        }
+
         // drag icon lifespan is mapped to surface lifespan
         dragIcon = new DragAndDropIcon(iconSurface);
     }

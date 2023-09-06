@@ -7,9 +7,10 @@
 #include "wayland/screenedge_v1_interface.h"
 #include "wayland/display.h"
 #include "wayland/surface_interface.h"
-#include "wayland/surfacerole_p.h"
 
 #include "qwayland-server-kde-screen-edge-v1.h"
+
+#include <QPointer>
 
 using namespace KWin;
 
@@ -63,7 +64,7 @@ void ScreenEdgeManagerV1InterfacePrivate::kde_screen_edge_manager_v1_get_auto_hi
     }
 
     SurfaceInterface *surface = SurfaceInterface::get(surface_resource);
-    SurfaceRole *role = SurfaceRole::get(surface);
+    const SurfaceRole *role = surface->role();
     if (!role || role->name() != "layer_surface_v1") {
         wl_resource_post_error(resource->handle, error_invalid_role, "surface must have layer_surface role");
         return;

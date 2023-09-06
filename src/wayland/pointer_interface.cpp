@@ -14,7 +14,6 @@
 #include "relativepointer_v1_interface_p.h"
 #include "seat_interface.h"
 #include "surface_interface.h"
-#include "surfacerole_p.h"
 #include "utils.h"
 #include "utils/common.h"
 
@@ -73,14 +72,18 @@ void PointerInterfacePrivate::pointer_set_cursor(Resource *resource, uint32_t se
             return;
         }
 
-        const SurfaceRole *surfaceRole = SurfaceRole::get(surface);
-        if (surfaceRole) {
-            wl_resource_post_error(resource->handle, error_role, "the wl_surface already has a role assigned %s", surfaceRole->name().constData());
-            return;
+        static SurfaceRole cursorRole(QByteArrayLiteral("cursor"));
+        if (const SurfaceRole *role = surface->role()) {
+            if (role != &cursorRole) {
+                wl_resource_post_error(resource->handle, error_role, "the wl_surface already has a role assigned %s", role->name().constData());
+                return;
+            }
+        } else {
+            surface->setRole(&cursorRole);
         }
     }
 
-    if (!cursor) { // TODO: Assign the cursor surface role.
+    if (!cursor) {
         cursor = std::make_unique<Cursor>();
     }
     cursor->d->hotspot = QPointF(hotspot_x, hotspot_y) / focusedSurface->client()->scaleOverride();

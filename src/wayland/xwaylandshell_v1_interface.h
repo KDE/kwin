@@ -20,6 +20,7 @@ namespace KWaylandServer
 
 class Display;
 class SurfaceInterface;
+class SurfaceRole;
 class XwaylandShellV1Interface;
 class XwaylandShellV1InterfacePrivate;
 class XwaylandSurfaceV1InterfacePrivate;
@@ -31,6 +32,8 @@ class KWIN_EXPORT XwaylandSurfaceV1Interface : public QObject
 public:
     XwaylandSurfaceV1Interface(XwaylandShellV1Interface *shell, SurfaceInterface *surface, wl_client *client, uint32_t id, int version);
     ~XwaylandSurfaceV1Interface() override;
+
+    static SurfaceRole *role();
 
     SurfaceInterface *surface() const;
     std::optional<uint64_t> serial() const;

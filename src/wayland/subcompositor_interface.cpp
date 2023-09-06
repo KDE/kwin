@@ -41,10 +41,13 @@ void SubCompositorInterfacePrivate::subcompositor_get_subsurface(Resource *resou
         return;
     }
 
-    const SurfaceRole *surfaceRole = SurfaceRole::get(surface);
-    if (surfaceRole) {
-        wl_resource_post_error(resource->handle, error_bad_surface, "the surface already has a role assigned %s", surfaceRole->name().constData());
-        return;
+    if (const SurfaceRole *role = surface->role()) {
+        if (role != SubSurfaceInterface::role()) {
+            wl_resource_post_error(resource->handle, error_bad_surface, "the surface already has a role assigned %s", role->name().constData());
+            return;
+        }
+    } else {
+        surface->setRole(SubSurfaceInterface::role());
     }
 
     if (surface == parent) {
@@ -82,8 +85,7 @@ SubSurfaceInterfacePrivate *SubSurfaceInterfacePrivate::get(SubSurfaceInterface 
 }
 
 SubSurfaceInterfacePrivate::SubSurfaceInterfacePrivate(SubSurfaceInterface *q, SurfaceInterface *surface, SurfaceInterface *parent, ::wl_resource *resource)
-    : SurfaceRole(surface, QByteArrayLiteral("wl_subsurface"))
-    , QtWaylandServer::wl_subsurface(resource)
+    : QtWaylandServer::wl_subsurface(resource)
     , q(q)
     , surface(surface)
     , parent(parent)
@@ -217,6 +219,12 @@ SubSurfaceInterface::~SubSurfaceInterface()
         SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(d->surface);
         surfacePrivate->subSurface = nullptr;
     }
+}
+
+SurfaceRole *SubSurfaceInterface::role()
+{
+    static SurfaceRole role(QByteArrayLiteral("wl_subsurface"));
+    return &role;
 }
 
 QPoint SubSurfaceInterface::position() const

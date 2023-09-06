@@ -8,7 +8,6 @@
 #include "display.h"
 #include "output_interface.h"
 #include "surface_interface.h"
-#include "surfacerole_p.h"
 #include "utils/common.h"
 #include "xdgshell_interface_p.h"
 
@@ -65,7 +64,7 @@ struct LayerSurfaceV1State
     bool firstBufferAttached = false;
 };
 
-class LayerSurfaceV1InterfacePrivate : public SurfaceRole, public SurfaceExtension<LayerSurfaceV1Commit>, public QtWaylandServer::zwlr_layer_surface_v1
+class LayerSurfaceV1InterfacePrivate : public SurfaceExtension<LayerSurfaceV1Commit>, public QtWaylandServer::zwlr_layer_surface_v1
 {
 public:
     LayerSurfaceV1InterfacePrivate(LayerSurfaceV1Interface *q, SurfaceInterface *surface);
@@ -119,10 +118,14 @@ void LayerShellV1InterfacePrivate::zwlr_layer_shell_v1_get_layer_surface(Resourc
         return;
     }
 
-    SurfaceRole *surfaceRole = SurfaceRole::get(surface);
-    if (surfaceRole) {
-        wl_resource_post_error(resource->handle, error_role, "the wl_surface already has a role assigned %s", surfaceRole->name().constData());
-        return;
+    if (const SurfaceRole *role = surface->role()) {
+        if (role != LayerSurfaceV1Interface::role()) {
+            wl_resource_post_error(resource->handle, error_role,
+                                   "the wl_surface already has a role assigned %s", role->name().constData());
+            return;
+        }
+    } else {
+        surface->setRole(LayerSurfaceV1Interface::role());
     }
 
     wl_resource *layerSurfaceResource = wl_resource_create(resource->client(), &zwlr_layer_surface_v1_interface, resource->version(), id);
@@ -156,8 +159,7 @@ Display *LayerShellV1Interface::display() const
 }
 
 LayerSurfaceV1InterfacePrivate::LayerSurfaceV1InterfacePrivate(LayerSurfaceV1Interface *q, SurfaceInterface *surface)
-    : SurfaceRole(surface, QByteArrayLiteral("layer_surface_v1"))
-    , SurfaceExtension(surface)
+    : SurfaceExtension(surface)
     , q(q)
     , surface(surface)
 {
@@ -374,6 +376,12 @@ LayerSurfaceV1Interface::LayerSurfaceV1Interface(LayerShellV1Interface *shell,
 
 LayerSurfaceV1Interface::~LayerSurfaceV1Interface()
 {
+}
+
+SurfaceRole *LayerSurfaceV1Interface::role()
+{
+    static SurfaceRole role(QByteArrayLiteral("layer_surface_v1"));
+    return &role;
 }
 
 bool LayerSurfaceV1Interface::isCommitted() const
