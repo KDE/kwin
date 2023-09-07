@@ -156,7 +156,6 @@ void GLPlatformTest::testPriorDetect()
     QCOMPARE(gl->mesaVersion(), Version());
     QCOMPARE(gl->galliumVersion(), Version());
     QCOMPARE(gl->serverVersion(), Version());
-    QCOMPARE(gl->kernelVersion(), Version());
     QCOMPARE(gl->driverVersion(), Version());
 
     QCOMPARE(gl->driver(), Driver_Unknown);

@@ -12,6 +12,7 @@
 #include "libkwineffects/glplatform.h"
 #include "pointer_input.h"
 #include "scene/workspacescene.h"
+#include "utils/kernel.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
@@ -92,7 +93,7 @@ private:
 void ScreencastingTest::init()
 {
     // TODO: Remove this when CI is updated to ubuntu 22.04 or something with a newer kernel.
-    const Version kernelVersion = GLPlatform::instance()->kernelVersion();
+    const Version kernelVersion = linuxKernelVersion();
     if (kernelVersion.major() == 5 && kernelVersion.minor() <= 4) {
         QSKIP("drmPrimeFDToHandle() randomly fails");
         return;

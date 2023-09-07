@@ -43,17 +43,6 @@ static Version getXServerVersion()
     return Version(0, 0, 0);
 }
 
-static Version getKernelVersion()
-{
-    struct utsname name;
-    uname(&name);
-
-    if (qstrcmp(name.sysname, "Linux") == 0) {
-        return Version::parseString(name.release);
-    }
-    return Version(0, 0, 0);
-}
-
 // Extracts the portion of a string that matches a regular expression
 static QString extract(const QString &text, const QString &pattern)
 {
@@ -817,7 +806,6 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
     }
 
     m_serverVersion = getXServerVersion();
-    m_kernelVersion = getKernelVersion();
 
     if (m_supportsGLSL) {
         // Parse the GLSL version
@@ -1187,9 +1175,6 @@ void GLPlatform::printResults() const
     if (serverVersion().isValid()) {
         print(QByteArrayLiteral("X server version:"), versionToString8(m_serverVersion));
     }
-    if (kernelVersion().isValid()) {
-        print(QByteArrayLiteral("Linux kernel version:"), versionToString8(m_kernelVersion));
-    }
 
     print(QByteArrayLiteral("Requires strict binding:"), !m_looseBinding ? QByteArrayLiteral("yes") : QByteArrayLiteral("no"));
     print(QByteArrayLiteral("GLSL shaders:"), m_supportsGLSL ? QByteArrayLiteral("yes") : QByteArrayLiteral("no"));
@@ -1240,11 +1225,6 @@ Version GLPlatform::galliumVersion() const
 Version GLPlatform::serverVersion() const
 {
     return m_serverVersion;
-}
-
-Version GLPlatform::kernelVersion() const
-{
-    return m_kernelVersion;
 }
 
 Version GLPlatform::driverVersion() const

@@ -54,6 +54,7 @@
 #include "placementtracker.h"
 #include "tiles/tilemanager.h"
 #include "useractions.h"
+#include "utils/kernel.h"
 #include "utils/xcbutils.h"
 #include "virtualdesktops.h"
 #include "was_user_interaction_x11_filter.h"
@@ -1798,8 +1799,8 @@ QString Workspace::supportInformation() const
             if (platform->serverVersion().isValid()) {
                 support.append(QStringLiteral("X server version: ") + GLPlatform::versionToString(platform->serverVersion()) + QStringLiteral("\n"));
             }
-            if (platform->kernelVersion().isValid()) {
-                support.append(QStringLiteral("Linux kernel version: ") + GLPlatform::versionToString(platform->kernelVersion()) + QStringLiteral("\n"));
+            if (auto kernelVersion = linuxKernelVersion(); kernelVersion.isValid()) {
+                support.append(QStringLiteral("Linux kernel version: ") + GLPlatform::versionToString(kernelVersion) + QStringLiteral("\n"));
             }
 
             support.append(QStringLiteral("Direct rendering: "));

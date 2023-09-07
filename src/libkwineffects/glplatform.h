@@ -237,13 +237,6 @@ public:
     Version serverVersion() const;
 
     /**
-     * Returns the Linux kernel version.
-     *
-     * If the kernel is not a Linux kernel, this method returns 0.
-     */
-    Version kernelVersion() const;
-
-    /**
      * Returns the driver version.
      *
      * For Mesa drivers, this is the same as the Mesa version number.
@@ -404,7 +397,6 @@ public:
      * @see driverVersion
      * @see mesaVersion
      * @see galliumVersion
-     * @see kernelVersion
      * @see serverVersion
      */
     static QString versionToString(const Version &version);
@@ -464,7 +456,6 @@ private:
     Version m_driverVersion;
     Version m_galliumVersion;
     Version m_serverVersion;
-    Version m_kernelVersion;
     bool m_looseBinding : 1;
     bool m_supportsGLSL : 1;
     bool m_textureNPOT : 1;
