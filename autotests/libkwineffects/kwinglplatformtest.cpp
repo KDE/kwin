@@ -151,14 +151,12 @@ void GLPlatformTest::testPriorDetect()
     QCOMPARE(gl->glVersion(), Version());
     QCOMPARE(gl->glslVersion(), Version());
     QCOMPARE(gl->mesaVersion(), Version());
-    QCOMPARE(gl->galliumVersion(), Version());
     QCOMPARE(gl->driverVersion(), Version());
 
     QCOMPARE(gl->driver(), Driver_Unknown);
     QCOMPARE(gl->chipClass(), UnknownChipClass);
 
     QCOMPARE(gl->isMesaDriver(), false);
-    QCOMPARE(gl->isGalliumDriver(), false);
     QCOMPARE(gl->isRadeon(), false);
     QCOMPARE(gl->isNvidia(), false);
     QCOMPARE(gl->isIntel(), false);
@@ -247,7 +245,6 @@ void GLPlatformTest::testDetect()
     QCOMPARE(gl->glVersion(), readVersion(settingsGroup, "GLVersion"));
     QCOMPARE(gl->glslVersion(), readVersion(settingsGroup, "GLSLVersion"));
     QCOMPARE(gl->mesaVersion(), readVersion(settingsGroup, "MesaVersion"));
-    QCOMPARE(gl->galliumVersion(), readVersion(settingsGroup, "GalliumVersion"));
     QEXPECT_FAIL("amd-catalyst-radeonhd-7700M-3.1.13399", "Detects GL version instead of driver version", Continue);
     QCOMPARE(gl->driverVersion(), readVersion(settingsGroup, "DriverVersion"));
 
@@ -255,7 +252,6 @@ void GLPlatformTest::testDetect()
     QCOMPARE(gl->chipClass(), ChipClass(settingsGroup.readEntry("ChipClass", int(UnknownChipClass))));
 
     QCOMPARE(gl->isMesaDriver(), settingsGroup.readEntry("Mesa", false));
-    QCOMPARE(gl->isGalliumDriver(), settingsGroup.readEntry("Gallium", false));
     QCOMPARE(gl->isRadeon(), settingsGroup.readEntry("Radeon", false));
     QCOMPARE(gl->isNvidia(), settingsGroup.readEntry("Nvidia", false));
     QCOMPARE(gl->isIntel(), settingsGroup.readEntry("Intel", false));

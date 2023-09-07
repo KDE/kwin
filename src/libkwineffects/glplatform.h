@@ -196,11 +196,6 @@ public:
     Version mesaVersion() const;
 
     /**
-     * Returns the Gallium version if the driver is a Gallium driver, and 0 otherwise.
-     */
-    Version galliumVersion() const;
-
-    /**
      * Returns the driver version.
      *
      * For Mesa drivers, this is the same as the Mesa version number.
@@ -221,11 +216,6 @@ public:
      * Returns true if the driver is a Mesa driver, and false otherwise.
      */
     bool isMesaDriver() const;
-
-    /**
-     * Returns true if the driver is a Gallium driver, and false otherwise.
-     */
-    bool isGalliumDriver() const;
 
     /**
      * Returns true if the GPU is a Radeon GPU, and false otherwise.
@@ -393,7 +383,6 @@ private:
     Version m_glslVersion;
     Version m_mesaVersion;
     Version m_driverVersion;
-    Version m_galliumVersion;
     bool m_looseBinding : 1;
     bool m_packInvert : 1;
     bool m_supportsTimerQuery : 1;
