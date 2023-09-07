@@ -1775,7 +1775,7 @@ QString Workspace::supportInformation() const
             }
             support.append(QStringLiteral("\n"));
 
-            if (platform->supports(GLFeature::LimitedGLSL) || platform->supports(GLFeature::GLSL)) {
+            if (platform->supports(GLFeature::GLSL)) {
                 support.append(QStringLiteral("OpenGL shading language version string: ") + QString::fromUtf8(platform->glShadingLanguageVersionString()) + QStringLiteral("\n"));
             }
 
@@ -1788,7 +1788,7 @@ QString Workspace::supportInformation() const
 
             support.append(QStringLiteral("OpenGL version: ") + GLPlatform::versionToString(platform->glVersion()) + QStringLiteral("\n"));
 
-            if (platform->supports(GLFeature::LimitedGLSL) || platform->supports(GLFeature::GLSL)) {
+            if (platform->supports(GLFeature::GLSL)) {
                 support.append(QStringLiteral("GLSL version: ") + GLPlatform::versionToString(platform->glslVersion()) + QStringLiteral("\n"));
             }
 
@@ -1811,11 +1811,7 @@ QString Workspace::supportInformation() const
             }
             support.append(QStringLiteral("GLSL shaders: "));
             if (platform->supports(GLFeature::GLSL)) {
-                if (platform->supports(GLFeature::LimitedGLSL)) {
-                    support.append(QStringLiteral(" limited\n"));
-                } else {
-                    support.append(QStringLiteral(" yes\n"));
-                }
+                support.append(QStringLiteral(" yes\n"));
             } else {
                 support.append(QStringLiteral(" no\n"));
             }

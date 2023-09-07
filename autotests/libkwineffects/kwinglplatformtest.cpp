@@ -148,7 +148,6 @@ void GLPlatformTest::testPriorDetect()
     QVERIFY(gl);
     QCOMPARE(gl->supports(GLFeature::LooseBinding), false);
     QCOMPARE(gl->supports(GLFeature::GLSL), false);
-    QCOMPARE(gl->supports(GLFeature::LimitedGLSL), false);
     QCOMPARE(gl->supports(GLFeature::TextureNPOT), false);
     QCOMPARE(gl->supports(GLFeature::LimitedNPOT), false);
 
@@ -250,7 +249,6 @@ void GLPlatformTest::testDetect()
 
     QCOMPARE(gl->supports(GLFeature::LooseBinding), settingsGroup.readEntry("LooseBinding", false));
     QCOMPARE(gl->supports(GLFeature::GLSL), settingsGroup.readEntry("GLSL", false));
-    QCOMPARE(gl->supports(GLFeature::LimitedGLSL), settingsGroup.readEntry("LimitedGLSL", false));
     QCOMPARE(gl->supports(GLFeature::TextureNPOT), settingsGroup.readEntry("TextureNPOT", false));
     QCOMPARE(gl->supports(GLFeature::LimitedNPOT), settingsGroup.readEntry("LimitedNPOT", false));
 
