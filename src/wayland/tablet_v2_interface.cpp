@@ -172,8 +172,22 @@ public:
 
     void zwp_tablet_tool_v2_set_cursor(Resource *resource, uint32_t serial, struct ::wl_resource *_surface, int32_t hotspot_x, int32_t hotspot_y) override
     {
+        SurfaceInterface *surface = SurfaceInterface::get(_surface);
+        if (surface) {
+            static SurfaceRole cursorRole(QByteArrayLiteral("tablet_cursor_v2"));
+            if (const SurfaceRole *role = surface->role()) {
+                if (role != &cursorRole) {
+                    wl_resource_post_error(resource->handle, 0,
+                                           "the wl_surface already has a role assigned %s", role->name().constData());
+                    return;
+                }
+            } else {
+                surface->setRole(&cursorRole);
+            }
+        }
+
         TabletSurfaceCursorV2 *c = m_cursors[resource->handle];
-        c->d->update(serial, SurfaceInterface::get(_surface), {hotspot_x, hotspot_y});
+        c->d->update(serial, surface, {hotspot_x, hotspot_y});
         if (resource->handle == targetResource()) {
             Q_EMIT q->cursorChanged(c);
         }
