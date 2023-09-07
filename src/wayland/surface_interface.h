@@ -10,7 +10,6 @@
 
 #include <QMatrix4x4>
 #include <QObject>
-#include <QPointer>
 #include <QRegion>
 
 struct wl_resource;
@@ -196,22 +195,22 @@ public:
     /**
      * @returns The Shadow for this Surface.
      */
-    QPointer<ShadowInterface> shadow() const;
+    ShadowInterface *shadow() const;
 
     /**
      * @returns The Blur for this Surface.
      */
-    QPointer<BlurInterface> blur() const;
+    BlurInterface *blur() const;
 
     /**
      * @returns The Slide for this Surface.
      */
-    QPointer<SlideInterface> slideOnShowHide() const;
+    SlideInterface *slideOnShowHide() const;
 
     /**
      * @returns The Contrast for this Surface.
      */
-    QPointer<ContrastInterface> contrast() const;
+    ContrastInterface *contrast() const;
 
     /**
      * Whether the SurfaceInterface is currently considered to be mapped.

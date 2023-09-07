@@ -5,12 +5,13 @@
 */
 
 #include "keyboard_shortcuts_inhibit_v1_interface.h"
-
-#include <qwayland-server-keyboard-shortcuts-inhibit-unstable-v1.h>
-
 #include "display.h"
 #include "seat_interface.h"
 #include "surface_interface.h"
+
+#include <qwayland-server-keyboard-shortcuts-inhibit-unstable-v1.h>
+
+#include <QPointer>
 
 static const int s_version = 1;
 

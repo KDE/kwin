@@ -150,7 +150,7 @@ void TestSlide::testCreate()
     QCOMPARE(serverSurface->slideOnShowHide()->offset(), 15);
 
     // and destroy
-    QSignalSpy destroyedSpy(serverSurface->slideOnShowHide().data(), &QObject::destroyed);
+    QSignalSpy destroyedSpy(serverSurface->slideOnShowHide(), &QObject::destroyed);
     delete slide;
     QVERIFY(destroyedSpy.wait());
 }
@@ -170,11 +170,11 @@ void TestSlide::testSurfaceDestroy()
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(slideChanged.wait());
     auto serverSlide = serverSurface->slideOnShowHide();
-    QVERIFY(!serverSlide.isNull());
+    QVERIFY(serverSlide);
 
     // destroy the parent surface
     QSignalSpy surfaceDestroyedSpy(serverSurface, &QObject::destroyed);
-    QSignalSpy slideDestroyedSpy(serverSlide.data(), &QObject::destroyed);
+    QSignalSpy slideDestroyedSpy(serverSlide, &QObject::destroyed);
     surface.reset();
     QVERIFY(surfaceDestroyedSpy.wait());
     QVERIFY(slideDestroyedSpy.isEmpty());

@@ -14,6 +14,7 @@
 #include <QHash>
 #include <QIcon>
 #include <QList>
+#include <QPointer>
 #include <QRect>
 #include <QThreadPool>
 #include <QUuid>

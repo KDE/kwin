@@ -10,6 +10,8 @@
 
 #include "qwayland-server-wayland.h"
 
+#include <QPointer>
+
 namespace KWaylandServer
 {
 class ClientConnection;

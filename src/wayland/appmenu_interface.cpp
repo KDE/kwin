@@ -7,6 +7,7 @@
 #include "display.h"
 #include "surface_interface.h"
 
+#include <QPointer>
 #include <QtGlobal>
 
 #include "qwayland-server-appmenu.h"

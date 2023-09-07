@@ -11,6 +11,7 @@
 #include "utils.h"
 // Qt
 #include <QHash>
+#include <QPointer>
 #include <QVector>
 // Wayland
 #include "qwayland-server-wayland.h"

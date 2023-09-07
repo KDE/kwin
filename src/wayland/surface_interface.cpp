@@ -5,9 +5,10 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 #include "surface_interface.h"
+#include "blur_interface.h"
 #include "clientconnection.h"
 #include "compositor_interface.h"
-#include "contenttype_v1_interface.h"
+#include "contrast_interface.h"
 #include "display.h"
 #include "fractionalscale_v1_interface_p.h"
 #include "idleinhibit_v1_interface_p.h"
@@ -15,6 +16,8 @@
 #include "output_interface.h"
 #include "pointerconstraints_v1_interface_p.h"
 #include "region_interface_p.h"
+#include "shadow_interface.h"
+#include "slide_interface.h"
 #include "subcompositor_interface.h"
 #include "subsurface_interface_p.h"
 #include "surface_interface_p.h"
@@ -920,22 +923,22 @@ QRectF SurfaceInterface::boundingRect() const
     return rect;
 }
 
-QPointer<ShadowInterface> SurfaceInterface::shadow() const
+ShadowInterface *SurfaceInterface::shadow() const
 {
     return d->current->shadow;
 }
 
-QPointer<BlurInterface> SurfaceInterface::blur() const
+BlurInterface *SurfaceInterface::blur() const
 {
     return d->current->blur;
 }
 
-QPointer<ContrastInterface> SurfaceInterface::contrast() const
+ContrastInterface *SurfaceInterface::contrast() const
 {
     return d->current->contrast;
 }
 
-QPointer<SlideInterface> SurfaceInterface::slideOnShowHide() const
+SlideInterface *SurfaceInterface::slideOnShowHide() const
 {
     return d->current->slide;
 }

@@ -252,7 +252,7 @@ void ShadowTest::testSurfaceDestroy()
 
     // destroy the parent surface
     QSignalSpy surfaceDestroyedSpy(serverSurface, &QObject::destroyed);
-    QSignalSpy shadowDestroyedSpy(serverShadow.data(), &QObject::destroyed);
+    QSignalSpy shadowDestroyedSpy(serverShadow, &QObject::destroyed);
     surface.reset();
     QVERIFY(surfaceDestroyedSpy.wait());
     QVERIFY(shadowDestroyedSpy.isEmpty());

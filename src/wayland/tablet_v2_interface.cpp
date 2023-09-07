@@ -11,7 +11,9 @@
 #include "utils.h"
 
 #include "qwayland-server-tablet-unstable-v2.h"
+
 #include <QHash>
+#include <QPointer>
 
 namespace KWaylandServer
 {

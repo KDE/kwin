@@ -11,6 +11,8 @@
 
 #include "qwayland-server-xdg-activation-v1.h"
 
+#include <QPointer>
+
 namespace KWaylandServer
 {
 static const int s_version = 1;

@@ -9,6 +9,8 @@
 
 #include "qwayland-server-content-type-v1.h"
 
+#include <QPointer>
+
 namespace KWaylandServer
 {
 

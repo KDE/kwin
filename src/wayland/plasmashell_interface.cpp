@@ -11,6 +11,8 @@
 
 #include <qwayland-server-plasma-shell.h>
 
+#include <QPointer>
+
 namespace KWaylandServer
 {
 static const quint32 s_version = 8;
