@@ -34,6 +34,10 @@ public:
     bool isOpenglES() const;
     bool hasOpenglExtension(QByteArrayView name) const;
     bool isSoftwareRenderer() const;
+    /**
+     * checks whether or not this context supports all the features that KWin requires
+     */
+    bool checkSupported() const;
 
 protected:
     const QByteArrayView m_versionString;

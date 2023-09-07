@@ -125,7 +125,11 @@ std::unique_ptr<GlxContext> GlxContext::create(GlxBackend *backend, GLXFBConfig 
         glXDestroyContext(backend->display(), handle);
         return nullptr;
     }
-    return std::make_unique<GlxContext>(backend->display(), glxWindow, handle);
+    auto ret = std::make_unique<GlxContext>(backend->display(), glxWindow, handle);
+    if (!ret->checkSupported()) {
+        return nullptr;
+    }
+    return ret;
 }
 
 }

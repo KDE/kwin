@@ -147,9 +147,6 @@ void GLPlatformTest::testPriorDetect()
     auto *gl = GLPlatform::instance();
     QVERIFY(gl);
     QCOMPARE(gl->supports(GLFeature::LooseBinding), false);
-    QCOMPARE(gl->supports(GLFeature::GLSL), false);
-    QCOMPARE(gl->supports(GLFeature::TextureNPOT), false);
-    QCOMPARE(gl->supports(GLFeature::LimitedNPOT), false);
 
     QCOMPARE(gl->glVersion(), Version());
     QCOMPARE(gl->glslVersion(), Version());
@@ -246,9 +243,6 @@ void GLPlatformTest::testDetect()
     const KConfigGroup settingsGroup = config.group("Settings");
 
     QCOMPARE(gl->supports(GLFeature::LooseBinding), settingsGroup.readEntry("LooseBinding", false));
-    QCOMPARE(gl->supports(GLFeature::GLSL), settingsGroup.readEntry("GLSL", false));
-    QCOMPARE(gl->supports(GLFeature::TextureNPOT), settingsGroup.readEntry("TextureNPOT", false));
-    QCOMPARE(gl->supports(GLFeature::LimitedNPOT), settingsGroup.readEntry("LimitedNPOT", false));
 
     QCOMPARE(gl->glVersion(), readVersion(settingsGroup, "GLVersion"));
     QCOMPARE(gl->glslVersion(), readVersion(settingsGroup, "GLSLVersion"));

@@ -86,4 +86,11 @@ bool OpenGlContext::isSoftwareRenderer() const
 {
     return m_renderer.contains("softpipe") || m_renderer.contains("Software Rasterizer") || m_renderer.contains("llvmpipe");
 }
+
+bool OpenGlContext::checkSupported() const
+{
+    const bool supportsGLSL = m_isOpenglES || (hasOpenglExtension("GL_ARB_shader_objects") && hasOpenglExtension("GL_ARB_fragment_shader") && hasOpenglExtension("GL_ARB_vertex_shader"));
+    const bool supportsNonPowerOfTwoTextures = m_isOpenglES || hasOpenglExtension("GL_ARB_texture_non_power_of_two");
+    return supportsGLSL && supportsNonPowerOfTwoTextures;
+}
 }

@@ -1776,9 +1776,7 @@ QString Workspace::supportInformation() const
             }
             support.append(QStringLiteral("\n"));
 
-            if (platform->supports(GLFeature::GLSL)) {
-                support.append(QStringLiteral("OpenGL shading language version string: ") + QString::fromUtf8(platform->glShadingLanguageVersionString()) + QStringLiteral("\n"));
-            }
+            support.append(QStringLiteral("OpenGL shading language version string: ") + QString::fromUtf8(platform->glShadingLanguageVersionString()) + QStringLiteral("\n"));
 
             support.append(QStringLiteral("Driver: ") + GLPlatform::driverToString(platform->driver()) + QStringLiteral("\n"));
             if (!platform->isMesaDriver()) {
@@ -1789,9 +1787,7 @@ QString Workspace::supportInformation() const
 
             support.append(QStringLiteral("OpenGL version: ") + platform->glVersion().toString() + QStringLiteral("\n"));
 
-            if (platform->supports(GLFeature::GLSL)) {
-                support.append(QStringLiteral("GLSL version: ") + platform->glslVersion().toString() + QStringLiteral("\n"));
-            }
+            support.append(QStringLiteral("GLSL version: ") + platform->glslVersion().toString() + QStringLiteral("\n"));
 
             if (platform->isMesaDriver()) {
                 support.append(QStringLiteral("Mesa version: ") + platform->mesaVersion().toString() + QStringLiteral("\n"));
@@ -1809,22 +1805,6 @@ QString Workspace::supportInformation() const
                 support.append(QStringLiteral("yes\n"));
             } else {
                 support.append(QStringLiteral("no\n"));
-            }
-            support.append(QStringLiteral("GLSL shaders: "));
-            if (platform->supports(GLFeature::GLSL)) {
-                support.append(QStringLiteral(" yes\n"));
-            } else {
-                support.append(QStringLiteral(" no\n"));
-            }
-            support.append(QStringLiteral("Texture NPOT support: "));
-            if (platform->supports(GLFeature::TextureNPOT)) {
-                if (platform->supports(GLFeature::LimitedNPOT)) {
-                    support.append(QStringLiteral(" limited\n"));
-                } else {
-                    support.append(QStringLiteral(" yes\n"));
-                }
-            } else {
-                support.append(QStringLiteral(" no\n"));
             }
             support.append(QStringLiteral("Virtual Machine: "));
             if (platform->isVirtualMachine()) {

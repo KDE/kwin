@@ -25,15 +25,18 @@ namespace KWin
 std::unique_ptr<EglContext> EglContext::create(EglDisplay *display, EGLConfig config, ::EGLContext sharedContext)
 {
     auto handle = createContext(display, config, sharedContext);
-    if (handle) {
-        if (!eglMakeCurrent(display->handle(), EGL_NO_SURFACE, EGL_NO_SURFACE, handle)) {
-            eglDestroyContext(display->handle(), handle);
-            return nullptr;
-        }
-        return std::make_unique<EglContext>(display, config, handle);
-    } else {
+    if (!handle) {
         return nullptr;
     }
+    if (!eglMakeCurrent(display->handle(), EGL_NO_SURFACE, EGL_NO_SURFACE, handle)) {
+        eglDestroyContext(display->handle(), handle);
+        return nullptr;
+    }
+    auto ret = std::make_unique<EglContext>(display, config, handle);
+    if (!ret->checkSupported()) {
+        return nullptr;
+    }
+    return ret;
 }
 
 EglContext::EglContext(EglDisplay *display, EGLConfig config, ::EGLContext context)
