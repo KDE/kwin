@@ -25,18 +25,12 @@ class OffscreenSurface : public QPlatformOffscreenSurface
 {
 public:
     explicit OffscreenSurface(QOffscreenSurface *surface);
-    ~OffscreenSurface() override;
 
     QSurfaceFormat format() const override;
     bool isValid() const override;
 
-    EGLSurface eglSurface() const;
-
 private:
     QSurfaceFormat m_format;
-
-    EglDisplay *m_eglDisplay = nullptr;
-    EGLSurface m_surface = EGL_NO_SURFACE;
 };
 
 } // namespace QPA

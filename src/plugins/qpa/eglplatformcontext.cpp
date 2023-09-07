@@ -58,18 +58,9 @@ EGLPlatformContext::~EGLPlatformContext()
     }
 }
 
-static EGLSurface eglSurfaceForPlatformSurface(QPlatformSurface *surface)
-{
-    if (surface->surface()->surfaceClass() == QSurface::Window) {
-        return EGL_NO_SURFACE; // EGL_KHR_surfaceless_context is required
-    } else {
-        return static_cast<OffscreenSurface *>(surface)->eglSurface();
-    }
-}
-
 bool EGLPlatformContext::makeCurrent(QPlatformSurface *surface)
 {
-    const bool ok = m_eglContext->makeCurrent(eglSurfaceForPlatformSurface(surface));
+    const bool ok = m_eglContext->makeCurrent();
     if (!ok) {
         qCWarning(KWIN_QPA, "eglMakeCurrent failed: %x", eglGetError());
         return false;
