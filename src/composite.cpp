@@ -189,9 +189,6 @@ bool Compositor::attemptOpenGLCompositing()
             return false;
         }
     } else {
-        if (!backend->isDirectRendering()) {
-            return false;
-        }
         if (GLPlatform::instance()->recommendedCompositor() < OpenGLCompositing) {
             qCDebug(KWIN_CORE) << "Driver does not recommend OpenGL compositing";
             return false;

@@ -59,8 +59,6 @@ EglBackend::EglBackend(Display *display, X11StandaloneBackend *backend)
     , m_overlayWindow(std::make_unique<OverlayWindowX11>(backend))
     , m_layer(std::make_unique<EglLayer>(this))
 {
-    setIsDirectRendering(true);
-
     // There is no any way to determine when a buffer swap completes with EGL. Fallback
     // to software vblank events. Could we use the Present extension to get notified when
     // the overlay window is actually presented on the screen?

@@ -33,7 +33,6 @@ EglGbmBackend::EglGbmBackend(DrmBackend *drmBackend)
     , m_backend(drmBackend)
 {
     drmBackend->setRenderBackend(this);
-    setIsDirectRendering(true);
     connect(m_backend, &DrmBackend::gpuRemoved, this, [this](DrmGpu *gpu) {
         m_contexts.erase(gpu->eglDisplay());
     });

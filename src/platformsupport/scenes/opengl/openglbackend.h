@@ -61,18 +61,6 @@ public:
     {
         return m_failed;
     }
-    /**
-     * @brief Whether the backend uses direct rendering.
-     *
-     * Some OpenGLScene modes require direct rendering. E.g. the OpenGL 2 should not be used
-     * if direct rendering is not supported by the Scene.
-     *
-     * @return bool @c true if the GL context is direct, @c false if indirect
-     */
-    bool isDirectRendering() const
-    {
-        return m_directRendering;
-    }
 
     bool supportsBufferAge() const
     {
@@ -119,19 +107,6 @@ protected:
      * @param reason The reason why the initialization failed.
      */
     void setFailed(const QString &reason);
-    /**
-     * @brief Sets whether the OpenGL context is direct.
-     *
-     * Should be called by the concrete subclass once it is determined whether the OpenGL context is
-     * direct or indirect.
-     * If the subclass does not call this method, the backend defaults to @c false.
-     *
-     * @param direct @c true if the OpenGL context is direct, @c false if indirect
-     */
-    void setIsDirectRendering(bool direct)
-    {
-        m_directRendering = direct;
-    }
 
     void setSupportsBufferAge(bool value)
     {
@@ -154,10 +129,6 @@ protected:
     }
 
 private:
-    /**
-     * @brief Whether direct rendering is used, defaults to @c false.
-     */
-    bool m_directRendering;
     /**
      * @brief Whether the backend supports GLX_EXT_buffer_age / EGL_EXT_buffer_age.
      */

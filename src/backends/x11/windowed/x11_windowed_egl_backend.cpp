@@ -190,7 +190,6 @@ X11WindowedEglBackend::X11WindowedEglBackend(X11WindowedBackend *backend)
     : m_allocator(std::make_unique<GbmGraphicsBufferAllocator>(backend->gbmDevice()))
     , m_backend(backend)
 {
-    setIsDirectRendering(true);
 }
 
 X11WindowedEglBackend::~X11WindowedEglBackend()

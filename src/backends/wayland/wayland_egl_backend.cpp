@@ -216,9 +216,6 @@ WaylandEglBackend::WaylandEglBackend(WaylandBackend *b)
     , m_backend(b)
     , m_allocator(std::make_unique<GbmGraphicsBufferAllocator>(b->gbmDevice()))
 {
-    // Egl is always direct rendering
-    setIsDirectRendering(true);
-
     connect(m_backend, &WaylandBackend::outputAdded, this, &WaylandEglBackend::createEglWaylandOutput);
     connect(m_backend, &WaylandBackend::outputRemoved, this, [this](Output *output) {
         m_outputs.erase(output);

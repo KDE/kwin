@@ -14,6 +14,7 @@
 // own
 #include "x11_standalone_glx_backend.h"
 #include "../common/kwinxrenderutils.h"
+#include "glxcontext.h"
 #include "utils/softwarevsyncmonitor.h"
 #include "x11_standalone_backend.h"
 #include "x11_standalone_glx_context_attribute_builder.h"
@@ -130,7 +131,6 @@ GlxBackend::GlxBackend(Display *display, X11StandaloneBackend *backend)
     , window(None)
     , fbconfig(nullptr)
     , glxWindow(None)
-    , ctx(nullptr)
     , m_bufferAge(0)
     , m_x11Display(display)
     , m_backend(backend)
@@ -162,9 +162,7 @@ GlxBackend::~GlxBackend()
     cleanupGL();
     doneCurrent();
 
-    if (ctx) {
-        glXDestroyContext(display(), ctx);
-    }
+    m_context.reset();
 
     if (glxWindow) {
         glXDestroyWindow(display(), glxWindow);
@@ -218,7 +216,8 @@ void GlxBackend::init()
         return;
     }
 
-    if (!initRenderingContext()) {
+    m_context = GlxContext::create(this, fbconfig, glxWindow);
+    if (!m_context) {
         setFailed(QStringLiteral("Could not initialize rendering context"));
         return;
     }
@@ -323,10 +322,6 @@ void GlxBackend::init()
 
         connect(m_vsyncMonitor.get(), &VsyncMonitor::vblankOccurred, this, &GlxBackend::vblank);
     }
-
-    setIsDirectRendering(bool(glXIsDirect(display(), ctx)));
-
-    qCDebug(KWIN_X11STANDALONE) << "Direct rendering:" << isDirectRendering();
 }
 
 bool GlxBackend::checkVersion()
@@ -340,94 +335,6 @@ void GlxBackend::initExtensions()
 {
     const QByteArray string = (const char *)glXQueryExtensionsString(display(), QX11Info::appScreen());
     setExtensions(string.split(' '));
-}
-
-bool GlxBackend::initRenderingContext()
-{
-    const bool direct = true;
-
-    QOpenGLContext *qtGlobalShareContext = QOpenGLContext::globalShareContext();
-    GLXContext globalShareContext = nullptr;
-    if (qtGlobalShareContext) {
-        qDebug(KWIN_X11STANDALONE) << "Global share context format:" << qtGlobalShareContext->format();
-        const auto nativeHandle = qtGlobalShareContext->nativeInterface<QNativeInterface::QGLXContext>();
-        if (nativeHandle) {
-            globalShareContext = nativeHandle->nativeContext();
-        } else {
-            qCDebug(KWIN_X11STANDALONE) << "Invalid QOpenGLContext::globalShareContext()";
-            return false;
-        }
-    }
-    if (!globalShareContext) {
-        qCWarning(KWIN_X11STANDALONE) << "QOpenGLContext::globalShareContext() is required";
-        return false;
-    }
-
-    // Use glXCreateContextAttribsARB() when it's available
-    if (hasExtension(QByteArrayLiteral("GLX_ARB_create_context"))) {
-        const bool have_robustness = hasExtension(QByteArrayLiteral("GLX_ARB_create_context_robustness"));
-        const bool haveVideoMemoryPurge = hasExtension(QByteArrayLiteral("GLX_NV_robustness_video_memory_purge"));
-
-        std::vector<GlxContextAttributeBuilder> candidates;
-        // core
-        if (have_robustness) {
-            if (haveVideoMemoryPurge) {
-                GlxContextAttributeBuilder purgeMemoryCore;
-                purgeMemoryCore.setVersion(3, 1);
-                purgeMemoryCore.setRobust(true);
-                purgeMemoryCore.setResetOnVideoMemoryPurge(true);
-                candidates.emplace_back(std::move(purgeMemoryCore));
-            }
-            GlxContextAttributeBuilder robustCore;
-            robustCore.setVersion(3, 1);
-            robustCore.setRobust(true);
-            candidates.emplace_back(std::move(robustCore));
-        }
-        GlxContextAttributeBuilder core;
-        core.setVersion(3, 1);
-        candidates.emplace_back(std::move(core));
-        // legacy
-        if (have_robustness) {
-            if (haveVideoMemoryPurge) {
-                GlxContextAttributeBuilder purgeMemoryLegacy;
-                purgeMemoryLegacy.setRobust(true);
-                purgeMemoryLegacy.setResetOnVideoMemoryPurge(true);
-                candidates.emplace_back(std::move(purgeMemoryLegacy));
-            }
-            GlxContextAttributeBuilder robustLegacy;
-            robustLegacy.setRobust(true);
-            candidates.emplace_back(std::move(robustLegacy));
-        }
-        GlxContextAttributeBuilder legacy;
-        legacy.setVersion(2, 1);
-        candidates.emplace_back(std::move(legacy));
-        for (auto it = candidates.begin(); it != candidates.end(); it++) {
-            const auto attribs = it->build();
-            ctx = glXCreateContextAttribsARB(display(), fbconfig, globalShareContext, true, attribs.data());
-            if (ctx) {
-                qCDebug(KWIN_X11STANDALONE) << "Created GLX context with attributes:" << &(*it);
-                break;
-            }
-        }
-    }
-
-    if (!ctx) {
-        ctx = glXCreateNewContext(display(), fbconfig, GLX_RGBA_TYPE, globalShareContext, direct);
-    }
-
-    if (!ctx) {
-        qCDebug(KWIN_X11STANDALONE) << "Failed to create an OpenGL context.";
-        return false;
-    }
-
-    if (!glXMakeCurrent(display(), glxWindow, ctx)) {
-        qCDebug(KWIN_X11STANDALONE) << "Failed to make the OpenGL context current.";
-        glXDestroyContext(display(), ctx);
-        ctx = nullptr;
-        return false;
-    }
-
-    return true;
 }
 
 bool GlxBackend::initBuffer()
@@ -846,17 +753,12 @@ void GlxBackend::vblank(std::chrono::nanoseconds timestamp)
 
 bool GlxBackend::makeCurrent()
 {
-    if (QOpenGLContext *context = QOpenGLContext::currentContext()) {
-        // Workaround to tell Qt that no QOpenGLContext is current
-        context->doneCurrent();
-    }
-    const bool current = glXMakeCurrent(display(), glxWindow, ctx);
-    return current;
+    return m_context->makeCurrent();
 }
 
 void GlxBackend::doneCurrent()
 {
-    glXMakeCurrent(display(), None, nullptr);
+    m_context->doneCurrent();
 }
 
 OverlayWindow *GlxBackend::overlayWindow() const

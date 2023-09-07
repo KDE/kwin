@@ -89,8 +89,6 @@ VirtualEglBackend::VirtualEglBackend(VirtualBackend *b)
     , m_backend(b)
     , m_allocator(std::make_unique<GbmGraphicsBufferAllocator>(b->gbmDevice()))
 {
-    // Egl is always direct rendering
-    setIsDirectRendering(true);
 }
 
 VirtualEglBackend::~VirtualEglBackend()

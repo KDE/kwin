@@ -27,6 +27,7 @@ endif()
 
 if (HAVE_GLX)
     target_sources(KWinX11Platform PRIVATE
+        glxcontext.cpp
         x11_standalone_glx_backend.cpp
         x11_standalone_glx_context_attribute_builder.cpp
         x11_standalone_glxconvenience.cpp

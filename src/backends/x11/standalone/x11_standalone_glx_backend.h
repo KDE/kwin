@@ -31,6 +31,7 @@ class VsyncMonitor;
 class X11StandaloneBackend;
 class GlxBackend;
 class GLRenderTimeQuery;
+class GlxContext;
 
 // GLX_MESA_swap_interval
 using glXSwapIntervalMESA_func = int (*)(unsigned int interval);
@@ -105,7 +106,6 @@ private:
     bool initBuffer();
     bool checkVersion();
     void initExtensions();
-    bool initRenderingContext();
     bool initFbConfig();
     void initVisualDepthHashTable();
     void setSwapInterval(int interval);
@@ -121,7 +121,7 @@ private:
     ::Window window;
     GLXFBConfig fbconfig;
     GLXWindow glxWindow;
-    GLXContext ctx;
+    std::unique_ptr<GlxContext> m_context;
     QHash<xcb_visualid_t, FBConfigInfo> m_fbconfigHash;
     QHash<xcb_visualid_t, int> m_visualDepthHash;
     std::unique_ptr<SwapEventFilter> m_swapEventFilter;
