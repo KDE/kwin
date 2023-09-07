@@ -30,19 +30,6 @@ namespace KWin
 
 std::unique_ptr<GLPlatform> GLPlatform::s_platform;
 
-static Version getXServerVersion()
-{
-    if (xcb_connection_t *c = connection()) {
-        auto setup = xcb_get_setup(c);
-        const QByteArray vendorName(xcb_setup_vendor(setup), xcb_setup_vendor_length(setup));
-        if (vendorName.contains("X.Org")) {
-            const int release = setup->release_number;
-            return Version(release / 10000000, (release / 100000) % 100, (release / 1000) % 100);
-        }
-    }
-    return Version(0, 0, 0);
-}
-
 // Extracts the portion of a string that matches a regular expression
 static QString extract(const QString &text, const QString &pattern)
 {
@@ -791,8 +778,6 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
         }
     }
 
-    m_serverVersion = getXServerVersion();
-
     if (m_supportsGLSL) {
         // Parse the GLSL version
         m_glsl_version = (const char *)glGetString(GL_SHADING_LANGUAGE_VERSION);
@@ -1158,9 +1143,6 @@ void GLPlatform::printResults() const
     }
     // if (galliumVersion() > 0)
     //     print("Gallium version:", versionToString(m_galliumVersion));
-    if (serverVersion().isValid()) {
-        print(QByteArrayLiteral("X server version:"), m_serverVersion.toByteArray());
-    }
 
     print(QByteArrayLiteral("Requires strict binding:"), !m_looseBinding ? QByteArrayLiteral("yes") : QByteArrayLiteral("no"));
     print(QByteArrayLiteral("GLSL shaders:"), m_supportsGLSL ? QByteArrayLiteral("yes") : QByteArrayLiteral("no"));
@@ -1206,11 +1188,6 @@ Version GLPlatform::mesaVersion() const
 Version GLPlatform::galliumVersion() const
 {
     return m_galliumVersion;
-}
-
-Version GLPlatform::serverVersion() const
-{
-    return m_serverVersion;
 }
 
 Version GLPlatform::driverVersion() const

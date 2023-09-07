@@ -227,16 +227,6 @@ public:
     Version galliumVersion() const;
 
     /**
-     * Returns the X server version.
-     *
-     * Note that the version number changed from 7.2 to 1.3 in the first release
-     * following the doupling of the X server from the katamari.
-     *
-     * For non X.org servers, this method returns 0.
-     */
-    Version serverVersion() const;
-
-    /**
      * Returns the driver version.
      *
      * For Mesa drivers, this is the same as the Mesa version number.
@@ -431,7 +421,6 @@ private:
     Version m_mesaVersion;
     Version m_driverVersion;
     Version m_galliumVersion;
-    Version m_serverVersion;
     bool m_looseBinding : 1;
     bool m_supportsGLSL : 1;
     bool m_textureNPOT : 1;

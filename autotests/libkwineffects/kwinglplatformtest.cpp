@@ -155,7 +155,6 @@ void GLPlatformTest::testPriorDetect()
     QCOMPARE(gl->glslVersion(), Version());
     QCOMPARE(gl->mesaVersion(), Version());
     QCOMPARE(gl->galliumVersion(), Version());
-    QCOMPARE(gl->serverVersion(), Version());
     QCOMPARE(gl->driverVersion(), Version());
 
     QCOMPARE(gl->driver(), Driver_Unknown);
@@ -255,7 +254,6 @@ void GLPlatformTest::testDetect()
     QCOMPARE(gl->glslVersion(), readVersion(settingsGroup, "GLSLVersion"));
     QCOMPARE(gl->mesaVersion(), readVersion(settingsGroup, "MesaVersion"));
     QCOMPARE(gl->galliumVersion(), readVersion(settingsGroup, "GalliumVersion"));
-    QCOMPARE(gl->serverVersion(), Version());
     QEXPECT_FAIL("amd-catalyst-radeonhd-7700M-3.1.13399", "Detects GL version instead of driver version", Continue);
     QCOMPARE(gl->driverVersion(), readVersion(settingsGroup, "DriverVersion"));
 

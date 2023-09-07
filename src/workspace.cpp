@@ -1796,8 +1796,8 @@ QString Workspace::supportInformation() const
             if (platform->isMesaDriver()) {
                 support.append(QStringLiteral("Mesa version: ") + platform->mesaVersion().toString() + QStringLiteral("\n"));
             }
-            if (platform->serverVersion().isValid()) {
-                support.append(QStringLiteral("X server version: ") + platform->serverVersion().toString() + QStringLiteral("\n"));
+            if (auto xVersion = Xcb::xServerVersion(); xVersion.isValid()) {
+                support.append(QStringLiteral("X server version: ") + xVersion.toString() + QStringLiteral("\n"));
             }
             if (auto kernelVersion = linuxKernelVersion(); kernelVersion.isValid()) {
                 support.append(QStringLiteral("Linux kernel version: ") + kernelVersion.toString() + QStringLiteral("\n"));

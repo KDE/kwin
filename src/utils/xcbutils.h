@@ -10,6 +10,7 @@
 
 #include "libkwineffects/kwinglobals.h"
 #include "libkwineffects/kwinxcb.h"
+#include "libkwineffects/version.h"
 #include "main.h"
 #include "utils/c_ptr.h"
 
@@ -2077,6 +2078,19 @@ inline int Shm::shmId() const
 inline uint8_t Shm::pixmapFormat() const
 {
     return m_pixmapFormat;
+}
+
+inline static Version xServerVersion()
+{
+    if (xcb_connection_t *c = connection()) {
+        auto setup = xcb_get_setup(c);
+        const QByteArray vendorName(xcb_setup_vendor(setup), xcb_setup_vendor_length(setup));
+        if (vendorName.contains("X.Org")) {
+            const int release = setup->release_number;
+            return Version(release / 10000000, (release / 100000) % 100, (release / 1000) % 100);
+        }
+    }
+    return Version(0, 0, 0);
 }
 
 } // namespace X11
