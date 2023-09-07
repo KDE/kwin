@@ -14,7 +14,7 @@ kwineffects_unit_tests(
     timelinetest
 )
 
-add_executable(kwinglplatformtest kwinglplatformtest.cpp mock_gl.cpp ../../src/libkwineffects/glplatform.cpp ../../src/libkwineffects/openglcontext.cpp)
+add_executable(kwinglplatformtest kwinglplatformtest.cpp mock_gl.cpp ../../src/libkwineffects/glplatform.cpp ../../src/libkwineffects/openglcontext.cpp ../../src/libkwineffects/version.cpp)
 add_test(NAME kwineffects-kwinglplatformtest COMMAND kwinglplatformtest)
 target_link_libraries(kwinglplatformtest Qt::Test Qt::Gui KF6::ConfigCore XCB::XCB)
 ecm_mark_as_test(kwinglplatformtest)

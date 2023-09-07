@@ -56,6 +56,7 @@ set(kwin_GLUTILSLIB_SRCS
     openglcontext.cpp
     rendertarget.cpp
     renderviewport.cpp
+    version.cpp
 )
 
 add_library(kwinglutils SHARED ${kwin_GLUTILSLIB_SRCS})

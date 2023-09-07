@@ -8,6 +8,7 @@
 */
 #pragma once
 #include "libkwineffects/kwinglutils_export.h"
+#include "version.h"
 
 #include <stdint.h>
 #include <string_view>
@@ -17,27 +18,6 @@
 
 namespace KWin
 {
-
-class KWINGLUTILS_EXPORT Version
-{
-public:
-    Version(uint32_t major, uint32_t minor, uint32_t patch = 0);
-    Version() = default;
-
-    int operator<=>(const Version &other) const;
-    bool operator==(const Version &other) const;
-    bool isValid() const;
-    uint32_t major() const;
-    uint32_t minor() const;
-    uint32_t patch() const;
-
-    static Version parseString(QByteArrayView versionString);
-
-private:
-    uint32_t m_major = 0;
-    uint32_t m_minor = 0;
-    uint32_t m_patch = 0;
-};
 
 class KWINGLUTILS_EXPORT OpenGlContext
 {
