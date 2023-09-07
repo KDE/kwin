@@ -736,20 +736,6 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
 
     m_context = std::make_unique<OpenGlContext>();
 
-    if (!isGLES() && m_context->hasVersion(Version(3, 0))) {
-        int count;
-        glGetIntegerv(GL_NUM_EXTENSIONS, &count);
-
-        for (int i = 0; i < count; i++) {
-            const char *name = (const char *)glGetStringi(GL_EXTENSIONS, i);
-            m_extensions.insert(name);
-        }
-    } else {
-        const QByteArray extensions = (const char *)glGetString(GL_EXTENSIONS);
-        QList<QByteArray> extensionsList = extensions.split(' ');
-        m_extensions = {extensionsList.constBegin(), extensionsList.constEnd()};
-    }
-
     // Parse the Mesa version
     const auto versionTokens = m_context->openglVersionString().toByteArray().split(' ');
     const int mesaIndex = versionTokens.indexOf("Mesa");
@@ -761,20 +747,20 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
         m_supportsGLSL = true;
         m_textureNPOT = true;
     } else {
-        m_supportsGLSL = (m_extensions.contains("GL_ARB_shader_objects")
-                          && m_extensions.contains("GL_ARB_fragment_shader")
-                          && m_extensions.contains("GL_ARB_vertex_shader"));
+        m_supportsGLSL = (m_context->hasOpenglExtension("GL_ARB_shader_objects")
+                          && m_context->hasOpenglExtension("GL_ARB_fragment_shader")
+                          && m_context->hasOpenglExtension("GL_ARB_vertex_shader"));
 
-        m_textureNPOT = m_extensions.contains("GL_ARB_texture_non_power_of_two");
+        m_textureNPOT = m_context->hasOpenglExtension("GL_ARB_texture_non_power_of_two");
     }
 
     if (!qEnvironmentVariableIsSet("KWIN_NO_TIMER_QUERY")) {
         if (isGLES()) {
             // 3.0 is required so query functions can be used without "EXT" suffix.
             // Timer queries are still not part of the core OpenGL ES specification.
-            m_supportsTimerQuery = glVersion() >= Version(3, 0) && m_extensions.contains("GL_EXT_disjoint_timer_query");
+            m_supportsTimerQuery = glVersion() >= Version(3, 0) && m_context->hasOpenglExtension("GL_EXT_disjoint_timer_query");
         } else {
-            m_supportsTimerQuery = glVersion() >= Version(3, 3) || m_extensions.contains("GL_ARB_timer_query");
+            m_supportsTimerQuery = glVersion() >= Version(3, 3) || m_context->hasOpenglExtension("GL_ARB_timer_query");
         }
     }
 
@@ -789,7 +775,7 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
 
     m_chipset = QByteArrayLiteral("Unknown");
     m_preferBufferSubData = false;
-    m_packInvert = m_extensions.contains("GL_MESA_pack_invert");
+    m_packInvert = m_context->hasOpenglExtension("GL_MESA_pack_invert");
 
     // Mesa classic drivers
     // ====================================================

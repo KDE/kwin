@@ -413,7 +413,6 @@ private:
 private:
     QByteArray m_glsl_version;
     QByteArrayView m_chipset;
-    QSet<QByteArray> m_extensions;
     Driver m_driver;
     ChipClass m_chipClass;
     CompositingType m_recommendedCompositor;
