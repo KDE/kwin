@@ -1782,25 +1782,25 @@ QString Workspace::supportInformation() const
 
             support.append(QStringLiteral("Driver: ") + GLPlatform::driverToString(platform->driver()) + QStringLiteral("\n"));
             if (!platform->isMesaDriver()) {
-                support.append(QStringLiteral("Driver version: ") + GLPlatform::versionToString(platform->driverVersion()) + QStringLiteral("\n"));
+                support.append(QStringLiteral("Driver version: ") + platform->driverVersion().toString() + QStringLiteral("\n"));
             }
 
             support.append(QStringLiteral("GPU class: ") + GLPlatform::chipClassToString(platform->chipClass()) + QStringLiteral("\n"));
 
-            support.append(QStringLiteral("OpenGL version: ") + GLPlatform::versionToString(platform->glVersion()) + QStringLiteral("\n"));
+            support.append(QStringLiteral("OpenGL version: ") + platform->glVersion().toString() + QStringLiteral("\n"));
 
             if (platform->supports(GLFeature::GLSL)) {
-                support.append(QStringLiteral("GLSL version: ") + GLPlatform::versionToString(platform->glslVersion()) + QStringLiteral("\n"));
+                support.append(QStringLiteral("GLSL version: ") + platform->glslVersion().toString() + QStringLiteral("\n"));
             }
 
             if (platform->isMesaDriver()) {
-                support.append(QStringLiteral("Mesa version: ") + GLPlatform::versionToString(platform->mesaVersion()) + QStringLiteral("\n"));
+                support.append(QStringLiteral("Mesa version: ") + platform->mesaVersion().toString() + QStringLiteral("\n"));
             }
             if (platform->serverVersion().isValid()) {
-                support.append(QStringLiteral("X server version: ") + GLPlatform::versionToString(platform->serverVersion()) + QStringLiteral("\n"));
+                support.append(QStringLiteral("X server version: ") + platform->serverVersion().toString() + QStringLiteral("\n"));
             }
             if (auto kernelVersion = linuxKernelVersion(); kernelVersion.isValid()) {
-                support.append(QStringLiteral("Linux kernel version: ") + GLPlatform::versionToString(kernelVersion) + QStringLiteral("\n"));
+                support.append(QStringLiteral("Linux kernel version: ") + kernelVersion.toString() + QStringLiteral("\n"));
             }
 
             support.append(QStringLiteral("Direct rendering: "));

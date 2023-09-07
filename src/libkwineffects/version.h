@@ -9,7 +9,8 @@
 #pragma once
 #include "libkwineffects/kwinglutils_export.h"
 
-#include <QByteArrayView>
+#include <QByteArray>
+#include <QString>
 
 namespace KWin
 {
@@ -25,6 +26,9 @@ public:
     uint32_t major() const;
     uint32_t minor() const;
     uint32_t patch() const;
+
+    QString toString() const;
+    QByteArray toByteArray() const;
 
     static Version parseString(QByteArrayView versionString);
 

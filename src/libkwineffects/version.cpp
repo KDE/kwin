@@ -8,7 +8,6 @@
 */
 #include "version.h"
 
-#include <QByteArray>
 #include <QChar>
 #include <QList>
 
@@ -68,4 +67,21 @@ Version Version::parseString(QByteArrayView versionString)
     return Version(major, minor, patch);
 }
 
+QString Version::toString() const
+{
+    if (m_patch == 0) {
+        return QString::number(m_major) + '.' + QString::number(m_minor);
+    } else {
+        return QString::number(m_major) + '.' + QString::number(m_minor) + '.' + QString::number(m_patch);
+    }
+}
+
+QByteArray Version::toByteArray() const
+{
+    if (m_patch == 0) {
+        return QByteArray::number(m_major) + '.' + QByteArray::number(m_minor);
+    } else {
+        return QByteArray::number(m_major) + '.' + QByteArray::number(m_minor) + '.' + QByteArray::number(m_patch);
+    }
+}
 }

@@ -666,8 +666,8 @@ void DebugConsole::initGLTab()
     m_ui->glslVersionStringLabel->setText(QString::fromLocal8Bit(gl->glShadingLanguageVersionString()));
     m_ui->glDriverLabel->setText(GLPlatform::driverToString(gl->driver()));
     m_ui->glGPULabel->setText(GLPlatform::chipClassToString(gl->chipClass()));
-    m_ui->glVersionLabel->setText(GLPlatform::versionToString(gl->glVersion()));
-    m_ui->glslLabel->setText(GLPlatform::versionToString(gl->glslVersion()));
+    m_ui->glVersionLabel->setText(gl->glVersion().toString());
+    m_ui->glslLabel->setText(gl->glslVersion().toString());
 
     auto extensionsString = [](const auto &extensions) {
         QString text = QStringLiteral("<ul>");

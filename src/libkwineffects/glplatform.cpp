@@ -540,20 +540,6 @@ static ChipClass detectV3DClass(QByteArrayView chipClass)
     return UnknownVideoCore3D;
 }
 
-QString GLPlatform::versionToString(const Version &version)
-{
-    return QString::fromLatin1(versionToString8(version));
-}
-
-QByteArray GLPlatform::versionToString8(const Version &version)
-{
-    QByteArray string = QByteArray::number(version.major()) + '.' + QByteArray::number(version.minor());
-    if (version.patch() != 0) {
-        string += '.' + QByteArray::number(version.patch());
-    }
-    return string;
-}
-
 QString GLPlatform::driverToString(Driver driver)
 {
     return QString::fromLatin1(driverToString8(driver));
@@ -1156,24 +1142,24 @@ void GLPlatform::printResults() const
 
     print(QByteArrayLiteral("Driver:"), driverToString8(m_driver));
     if (!isMesaDriver()) {
-        print(QByteArrayLiteral("Driver version:"), versionToString8(m_driverVersion));
+        print(QByteArrayLiteral("Driver version:"), m_driverVersion.toByteArray());
     }
 
     print(QByteArrayLiteral("GPU class:"), chipClassToString8(m_chipClass));
 
-    print(QByteArrayLiteral("OpenGL version:"), versionToString8(m_context->openglVersion()));
+    print(QByteArrayLiteral("OpenGL version:"), m_context->openglVersion().toByteArray());
 
     if (m_supportsGLSL) {
-        print(QByteArrayLiteral("GLSL version:"), versionToString8(m_glslVersion));
+        print(QByteArrayLiteral("GLSL version:"), m_glslVersion.toByteArray());
     }
 
     if (isMesaDriver()) {
-        print(QByteArrayLiteral("Mesa version:"), versionToString8(mesaVersion()));
+        print(QByteArrayLiteral("Mesa version:"), mesaVersion().toByteArray());
     }
     // if (galliumVersion() > 0)
     //     print("Gallium version:", versionToString(m_galliumVersion));
     if (serverVersion().isValid()) {
-        print(QByteArrayLiteral("X server version:"), versionToString8(m_serverVersion));
+        print(QByteArrayLiteral("X server version:"), m_serverVersion.toByteArray());
     }
 
     print(QByteArrayLiteral("Requires strict binding:"), !m_looseBinding ? QByteArrayLiteral("yes") : QByteArrayLiteral("no"));

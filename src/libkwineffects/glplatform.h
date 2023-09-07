@@ -390,30 +390,6 @@ public:
     OpenGLPlatformInterface platformInterface() const;
 
     /**
-     * @returns a human readable form of the @p version as a QString.
-     * @since 4.9
-     * @see glVersion
-     * @see glslVersion
-     * @see driverVersion
-     * @see mesaVersion
-     * @see galliumVersion
-     * @see serverVersion
-     */
-    static QString versionToString(const Version &version);
-    /**
-     * @returns a human readable form of the @p version as a QByteArray.
-     * @since 5.5
-     * @see glVersion
-     * @see glslVersion
-     * @see driverVersion
-     * @see mesaVersion
-     * @see galliumVersion
-     * @see kernelVersion
-     * @see serverVersion
-     */
-    static QByteArray versionToString8(const Version &version);
-
-    /**
      * @returns a human readable form for the @p driver as a QString.
      * @since 4.9
      * @see driver
