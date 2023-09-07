@@ -42,7 +42,22 @@ OpenGlContext::OpenGlContext()
     , m_renderer((const char *)glGetString(GL_RENDERER))
     , m_isOpenglES(m_versionString.startsWith("OpenGL ES"))
     , m_extensions(getExtensions(this))
+    , m_supportsTimerQueries(checkTimerQuerySupport())
 {
+}
+
+bool OpenGlContext::checkTimerQuerySupport() const
+{
+    if (qEnvironmentVariableIsSet("KWIN_NO_TIMER_QUERY")) {
+        return false;
+    }
+    if (m_isOpenglES) {
+        // 3.0 is required so query functions can be used without "EXT" suffix.
+        // Timer queries are still not part of the core OpenGL ES specification.
+        return openglVersion() >= Version(3, 0) && hasOpenglExtension("GL_EXT_disjoint_timer_query");
+    } else {
+        return openglVersion() >= Version(3, 3) || hasOpenglExtension("GL_ARB_timer_query");
+    }
 }
 
 bool OpenGlContext::hasVersion(const Version &version) const
@@ -85,6 +100,11 @@ bool OpenGlContext::hasOpenglExtension(QByteArrayView name) const
 bool OpenGlContext::isSoftwareRenderer() const
 {
     return m_renderer.contains("softpipe") || m_renderer.contains("Software Rasterizer") || m_renderer.contains("llvmpipe");
+}
+
+bool OpenGlContext::supportsTimerQueries() const
+{
+    return m_supportsTimerQueries;
 }
 
 bool OpenGlContext::checkSupported() const

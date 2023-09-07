@@ -740,16 +740,6 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
         m_mesaVersion = Version::parseString(versionTokens.at(mesaIndex + 1));
     }
 
-    if (!qEnvironmentVariableIsSet("KWIN_NO_TIMER_QUERY")) {
-        if (isGLES()) {
-            // 3.0 is required so query functions can be used without "EXT" suffix.
-            // Timer queries are still not part of the core OpenGL ES specification.
-            m_supportsTimerQuery = glVersion() >= Version(3, 0) && m_context->hasOpenglExtension("GL_EXT_disjoint_timer_query");
-        } else {
-            m_supportsTimerQuery = glVersion() >= Version(3, 3) || m_context->hasOpenglExtension("GL_ARB_timer_query");
-        }
-    }
-
     m_glsl_version = (const char *)glGetString(GL_SHADING_LANGUAGE_VERSION);
     m_glslVersion = Version::parseString(m_glsl_version);
 
@@ -1060,7 +1050,7 @@ void GLPlatform::printResults() const
     }
     print(QByteArrayLiteral("Requires strict binding:"), !m_looseBinding ? QByteArrayLiteral("yes") : QByteArrayLiteral("no"));
     print(QByteArrayLiteral("Virtual Machine:"), m_virtualMachine ? QByteArrayLiteral("yes") : QByteArrayLiteral("no"));
-    print(QByteArrayLiteral("Timer query support:"), m_supportsTimerQuery ? QByteArrayLiteral("yes") : QByteArrayLiteral("no"));
+    print(QByteArrayLiteral("Timer query support:"), supports(GLFeature::TimerQuery) ? QByteArrayLiteral("yes") : QByteArrayLiteral("no"));
 }
 
 bool GLPlatform::supports(GLFeature feature) const
@@ -1071,7 +1061,7 @@ bool GLPlatform::supports(GLFeature feature) const
     case GLFeature::PackInvert:
         return m_packInvert;
     case GLFeature::TimerQuery:
-        return m_supportsTimerQuery;
+        return m_context && m_context->supportsTimerQueries();
     }
     return false;
 }

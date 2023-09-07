@@ -385,7 +385,6 @@ private:
     Version m_driverVersion;
     bool m_looseBinding : 1;
     bool m_packInvert : 1;
-    bool m_supportsTimerQuery : 1;
     bool m_virtualMachine : 1;
     bool m_preferBufferSubData : 1;
     OpenGLPlatformInterface m_platformInterface;

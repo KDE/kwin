@@ -34,18 +34,23 @@ public:
     bool isOpenglES() const;
     bool hasOpenglExtension(QByteArrayView name) const;
     bool isSoftwareRenderer() const;
+    bool supportsTimerQueries() const;
+
     /**
      * checks whether or not this context supports all the features that KWin requires
      */
     bool checkSupported() const;
 
 protected:
+    bool checkTimerQuerySupport() const;
+
     const QByteArrayView m_versionString;
     const Version m_version;
     const QByteArrayView m_vendor;
     const QByteArrayView m_renderer;
     const bool m_isOpenglES;
     const QSet<QByteArray> m_extensions;
+    const bool m_supportsTimerQueries;
 };
 
 }
