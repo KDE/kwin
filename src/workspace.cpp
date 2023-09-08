@@ -2190,21 +2190,25 @@ void Workspace::saveOldScreenSizes()
  */
 static bool hasOffscreenXineramaStrut(Window *window)
 {
-    // Get strut as a QRegion
-    QRegion region;
-    region += window->strutRect(StrutAreaTop);
-    region += window->strutRect(StrutAreaRight);
-    region += window->strutRect(StrutAreaBottom);
-    region += window->strutRect(StrutAreaLeft);
+    if (qobject_cast<X11Window *>(window)) {
+        // Get strut as a QRegion
+        QRegion region;
+        region += window->strutRect(StrutAreaTop);
+        region += window->strutRect(StrutAreaRight);
+        region += window->strutRect(StrutAreaBottom);
+        region += window->strutRect(StrutAreaLeft);
 
-    // Remove all visible areas so that only the invisible remain
-    const auto outputs = workspace()->outputs();
-    for (const Output *output : outputs) {
-        region -= output->geometry();
+        // Remove all visible areas so that only the invisible remain
+        const auto outputs = workspace()->outputs();
+        for (const Output *output : outputs) {
+            region -= output->geometry();
+        }
+
+        // If there's anything left then we have an offscreen strut
+        return !region.isEmpty();
     }
 
-    // If there's anything left then we have an offscreen strut
-    return !region.isEmpty();
+    return false;
 }
 
 QRectF Workspace::adjustClientArea(Window *window, const QRectF &area) const
@@ -2217,21 +2221,23 @@ QRectF Workspace::adjustClientArea(Window *window, const QRectF &area) const
     QRectF strutBottom = window->strutRect(StrutAreaBottom);
 
     QRectF screenArea = clientArea(ScreenArea, window);
-    // HACK: workarea handling is not xinerama aware, so if this strut
-    // reserves place at a xinerama edge that's inside the virtual screen,
-    // ignore the strut for workspace setting.
-    if (area == QRect(QPoint(0, 0), m_geometry.size())) {
-        if (strutLeft.left() < screenArea.left()) {
-            strutLeft = QRect();
-        }
-        if (strutRight.right() > screenArea.right()) {
-            strutRight = QRect();
-        }
-        if (strutTop.top() < screenArea.top()) {
-            strutTop = QRect();
-        }
-        if (strutBottom.bottom() < screenArea.bottom()) {
-            strutBottom = QRect();
+    if (qobject_cast<X11Window *>(window)) {
+        // HACK: workarea handling is not xinerama aware, so if this strut
+        // reserves place at a xinerama edge that's inside the virtual screen,
+        // ignore the strut for workspace setting.
+        if (area == QRect(QPoint(0, 0), m_geometry.size())) {
+            if (strutLeft.left() < screenArea.left()) {
+                strutLeft = QRect();
+            }
+            if (strutRight.right() > screenArea.right()) {
+                strutRight = QRect();
+            }
+            if (strutTop.top() < screenArea.top()) {
+                strutTop = QRect();
+            }
+            if (strutBottom.bottom() < screenArea.bottom()) {
+                strutBottom = QRect();
+            }
         }
     }
 
