@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-05 01:57+0000\n"
+"POT-Creation-Date: 2023-09-08 01:58+0000\n"
 "PO-Revision-Date: 2023-07-20 10:55+0300\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -76,14 +76,14 @@ msgstr "Premeu la tecla de control dret per a agafar l'entrada"
 msgid "KDE Wayland Compositor"
 msgstr "Compositor de Wayland de KDE"
 
-#: composite.cpp:668
+#: composite.cpp:665
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 "Els efectes de l'escriptori s'han reiniciat a causa d'una reinicialització "
 "dels gràfics"
 
-#: composite.cpp:910
+#: composite.cpp:907
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -92,7 +92,7 @@ msgstr ""
 "Una altra aplicació ha suspés els efectes de l'escriptori.<br/>Podeu "
 "reprendre-ho utilitzant la drecera «%1»."
 
-#: composite.cpp:1100
+#: composite.cpp:1097
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -106,13 +106,13 @@ msgstr ""
 "reiniciar esta protecció però <b>cal tindre present que podria produir-se "
 "una fallada immediata!</b></p>"
 
-#: composite.cpp:1107
+#: composite.cpp:1104
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr ""
 "Les extensions X requerides (XComposite i XDamage) no estan disponibles."
 
-#: composite.cpp:1110
+#: composite.cpp:1107
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "No està disponible el GLX/OpenGL."
@@ -4159,7 +4159,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(No respon)"
 
-#: workspace.cpp:1595
+#: workspace.cpp:1596
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
