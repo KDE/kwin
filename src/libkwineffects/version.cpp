@@ -26,17 +26,17 @@ bool Version::isValid() const
     return m_major > 0 || m_minor > 0 || m_patch > 0;
 }
 
-uint32_t Version::major() const
+uint32_t Version::majorVersion() const
 {
     return m_major;
 }
 
-uint32_t Version::minor() const
+uint32_t Version::minorVersion() const
 {
     return m_minor;
 }
 
-uint32_t Version::patch() const
+uint32_t Version::patchVersion() const
 {
     return m_patch;
 }

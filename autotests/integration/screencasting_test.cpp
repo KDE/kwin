@@ -94,7 +94,7 @@ void ScreencastingTest::init()
 {
     // TODO: Remove this when CI is updated to ubuntu 22.04 or something with a newer kernel.
     const Version kernelVersion = linuxKernelVersion();
-    if (kernelVersion.major() == 5 && kernelVersion.minor() <= 4) {
+    if (kernelVersion.majorVersion() == 5 && kernelVersion.minorVersion() <= 4) {
         QSKIP("drmPrimeFDToHandle() randomly fails");
         return;
     }

@@ -23,9 +23,9 @@ public:
 
     auto operator<=>(const Version &other) const = default;
     bool isValid() const;
-    uint32_t major() const;
-    uint32_t minor() const;
-    uint32_t patch() const;
+    uint32_t majorVersion() const;
+    uint32_t minorVersion() const;
+    uint32_t patchVersion() const;
 
     QString toString() const;
     QByteArray toByteArray() const;
