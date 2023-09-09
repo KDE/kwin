@@ -7,6 +7,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
+
 #include "integration.h"
 #include "backingstore.h"
 #include "eglplatformcontext.h"
@@ -24,6 +25,7 @@
 #include <QTimer>
 #include <QtConcurrentRun>
 
+#include <qpa/qplatformaccessibility.h>
 #include <qpa/qplatformnativeinterface.h>
 #include <qpa/qplatformwindow.h>
 #include <qpa/qwindowsysteminterface.h>
@@ -31,6 +33,7 @@
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <QtEventDispatcherSupport/private/qunixeventdispatcher_qpa_p.h>
 #include <QtFontDatabaseSupport/private/qgenericunixfontdatabase_p.h>
+#include <QtLinuxAccessibilitySupport/private/bridge_p.h>
 #include <QtThemeSupport/private/qgenericunixthemes_p.h>
 #else
 #include <QtGui/private/qgenericunixeventdispatcher_p.h>
@@ -158,6 +161,14 @@ QPlatformOpenGLContext *Integration::createPlatformOpenGLContext(QOpenGLContext 
         return platformContext;
     }
     return nullptr;
+}
+
+QPlatformAccessibility *Integration::accessibility() const
+{
+    if (!m_accessibility) {
+        m_accessibility.reset(new QSpiAccessibleBridge());
+    }
+    return m_accessibility.get();
 }
 
 void Integration::handleWorkspaceCreated()

@@ -34,5 +34,6 @@ if (QT_MAJOR_VERSION EQUAL "5")
         Qt::ThemeSupportPrivate
         Qt::EventDispatcherSupportPrivate
         Qt::ServiceSupportPrivate
+        Qt5::LinuxAccessibilitySupportPrivate
     )
 endif()
