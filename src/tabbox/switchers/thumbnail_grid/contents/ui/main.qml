@@ -110,26 +110,18 @@ KWin.TabBoxSwitcher {
                 keyNavigationWraps: true
                 highlightMoveDuration: 0
 
-                delegate: Item {
+                delegate: MouseArea {
                     id: thumbnailGridItem
                     width: thumbnailGridView.cellWidth
                     height: thumbnailGridView.cellHeight
                     focus: GridView.isCurrentItem
+                    hoverEnabled: true
 
                     Accessible.name: model.caption
                     Accessible.role: Accessible.ListItem
 
-                    MouseArea {
-                        id: mouseArea
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        onClicked: {
-                            thumbnailGridItem.select();
-                        }
-                    }
-                    function select() {
+                    onClicked: {
                         thumbnailGridView.currentIndex = index;
-                        thumbnailGridView.currentIndexChanged(thumbnailGridView.currentIndex);
                     }
 
                     ColumnLayout {
@@ -174,7 +166,7 @@ KWin.TabBoxSwitcher {
                                     topMargin: -columnLayout.anchors.topMargin
                                 }
                                 visible: model.closeable && typeof tabBox.model.close !== 'undefined' &&
-                                        (mouseArea.containsMouse
+                                        (thumbnailGridItem.containsMouse
                                          || closeButton.hovered
                                          || thumbnailGridItem.focus
                                          || Kirigami.Settings.tabletMode
