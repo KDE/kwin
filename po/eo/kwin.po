@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-08 01:58+0000\n"
+"POT-Creation-Date: 2023-09-09 01:58+0000\n"
 "PO-Revision-Date: 2023-07-21 18:55+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -76,12 +76,12 @@ msgstr "Premu dekstran kontrolklavon por kapti enigon"
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland Komponisto"
 
-#: composite.cpp:665
+#: compositor.cpp:628
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Labortablaj efikoj estis rekomencitaj pro grafika restarigo"
 
-#: composite.cpp:907
+#: compositor_x11.cpp:107
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -90,7 +90,7 @@ msgstr ""
 "Surtablaj efikoj estas malakceptitaj de alia aplikaĵo.<br/>Vi povas "
 "rekomenci uzi la ŝparvojon '%1'."
 
-#: composite.cpp:1097
+#: compositor_x11.cpp:297
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -103,13 +103,13 @@ msgstr ""
 "al stabila pelilo,<br>vi povas restarigi ĉi tiun protekton, sed <b>konsciu, "
 "ke tio povus rezultigi tujan paneon!</b></p>"
 
-#: composite.cpp:1104
+#: compositor_x11.cpp:304
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr ""
 "X-kromprogramoj XComposite kaj XDamage estas bezonitaj sed ne estas haveblaj."
 
-#: composite.cpp:1107
+#: compositor_x11.cpp:307
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL ne disponeblas."
