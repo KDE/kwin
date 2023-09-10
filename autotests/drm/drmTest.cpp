@@ -62,7 +62,6 @@ class DrmTest : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
-    void initTestCase();
     void testAmsDetection();
     void testOutputDetection();
     void testZeroModesHandling();
@@ -72,27 +71,6 @@ private Q_SLOTS:
     void testModeset_data();
     void testModeset();
 };
-
-static Version getKernelVersion()
-{
-    struct utsname name;
-    uname(&name);
-
-    if (qstrcmp(name.sysname, "Linux") == 0) {
-        return Version::parseString(name.release);
-    }
-    return Version(0, 0, 0);
-}
-
-void DrmTest::initTestCase()
-{
-    // TODO: Remove this when CI is updated to ubuntu 22.04 or something with a newer kernel.
-    const Version kernelVersion = getKernelVersion();
-    if (kernelVersion.majorVersion() == 5 && kernelVersion.minorVersion() <= 4) {
-        QSKIP("drmPrimeFDToHandle() randomly fails");
-        return;
-    }
-}
 
 static void verifyCleanup(MockGpu *mockGpu)
 {

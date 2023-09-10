@@ -12,7 +12,6 @@
 #include "libkwineffects/glplatform.h"
 #include "pointer_input.h"
 #include "scene/workspacescene.h"
-#include "utils/kernel.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
@@ -92,12 +91,6 @@ private:
 
 void ScreencastingTest::init()
 {
-    // TODO: Remove this when CI is updated to ubuntu 22.04 or something with a newer kernel.
-    const Version kernelVersion = linuxKernelVersion();
-    if (kernelVersion.majorVersion() == 5 && kernelVersion.minorVersion() <= 4) {
-        QSKIP("drmPrimeFDToHandle() randomly fails");
-        return;
-    }
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::ScreencastingV1));
     QVERIFY(KWin::Test::screencasting());
     Cursors::self()->hideCursor();
