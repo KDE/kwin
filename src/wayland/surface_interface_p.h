@@ -30,6 +30,7 @@ class FractionalScaleV1Interface;
 struct SurfaceState
 {
     SurfaceState();
+    ~SurfaceState();
 
     void mergeInto(SurfaceState *target);
 
@@ -95,7 +96,6 @@ public:
     }
 
     explicit SurfaceInterfacePrivate(SurfaceInterface *q);
-    ~SurfaceInterfacePrivate() override;
 
     void addChild(SubSurfaceInterface *subsurface);
     void removeChild(SubSurfaceInterface *subsurface);

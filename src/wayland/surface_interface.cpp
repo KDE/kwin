@@ -57,24 +57,6 @@ SurfaceInterfacePrivate::SurfaceInterfacePrivate(SurfaceInterface *q)
 {
 }
 
-SurfaceInterfacePrivate::~SurfaceInterfacePrivate()
-{
-    wl_resource *resource;
-    wl_resource *tmp;
-
-    wl_resource_for_each_safe (resource, tmp, &current->frameCallbacks) {
-        wl_resource_destroy(resource);
-    }
-    wl_resource_for_each_safe (resource, tmp, &pending->frameCallbacks) {
-        wl_resource_destroy(resource);
-    }
-    for (const auto &stash : std::as_const(stashed)) {
-        wl_resource_for_each_safe (resource, tmp, &stash->frameCallbacks) {
-            wl_resource_destroy(resource);
-        }
-    }
-}
-
 void SurfaceInterfacePrivate::addChild(SubSurfaceInterface *child)
 {
     // protocol is not precise on how to handle the addition of new sub surfaces
@@ -543,6 +525,16 @@ QRectF SurfaceInterfacePrivate::computeBufferSourceBox() const
 SurfaceState::SurfaceState()
 {
     wl_list_init(&frameCallbacks);
+}
+
+SurfaceState::~SurfaceState()
+{
+    wl_resource *resource;
+    wl_resource *tmp;
+
+    wl_resource_for_each_safe (resource, tmp, &frameCallbacks) {
+        wl_resource_destroy(resource);
+    }
 }
 
 void SurfaceState::mergeInto(SurfaceState *target)
