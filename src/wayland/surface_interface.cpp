@@ -558,15 +558,9 @@ void SurfaceState::mergeInto(SurfaceState *target)
         target->viewport.destinationSizeIsSet = true;
     }
 
-    if (subsurfaceOrderChanged) {
-        target->subsurface.below = subsurface.below;
-        target->subsurface.above = subsurface.above;
-        target->subsurfaceOrderChanged = true;
-    }
-    if (subsurfacePositionChanged) {
-        target->subsurface.position = subsurface.position;
-        target->subsurfacePositionChanged = true;
-    }
+    target->subsurface = subsurface;
+    target->subsurfaceOrderChanged = subsurfaceOrderChanged;
+    target->subsurfacePositionChanged = subsurfacePositionChanged;
 
     wl_list_insert_list(&target->frameCallbacks, &frameCallbacks);
 
