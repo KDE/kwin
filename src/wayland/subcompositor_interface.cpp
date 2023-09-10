@@ -8,6 +8,7 @@
 #include "display.h"
 #include "subsurface_interface_p.h"
 #include "surface_interface_p.h"
+#include "transaction.h"
 
 namespace KWaylandServer
 {
@@ -167,33 +168,9 @@ void SubSurfaceInterfacePrivate::subsurface_set_desync(Resource *)
     }
     mode = SubSurfaceInterface::Mode::Desynchronized;
     if (!q->isSynchronized()) {
-        auto surfacePrivate = SurfaceInterfacePrivate::get(surface);
-        while (!locks.isEmpty()) {
-            SubSurfaceStateLock lock = locks.takeFirst();
-            surfacePrivate->unlockState(lock.serial);
-        }
+        q->parentDesynchronized();
     }
     Q_EMIT q->modeChanged(SubSurfaceInterface::Mode::Desynchronized);
-}
-
-void SubSurfaceInterfacePrivate::parentApplyState(quint32 serial)
-{
-    auto parentPrivate = SurfaceInterfacePrivate::get(parent);
-    if (parentPrivate->current->subsurfacePositionChanged) {
-        const QPoint &pos = parentPrivate->current->subsurface.position[q];
-        if (position != pos) {
-            position = pos;
-            Q_EMIT q->positionChanged(pos);
-        }
-    }
-
-    if (mode == SubSurfaceInterface::Mode::Synchronized) {
-        auto surfacePrivate = SurfaceInterfacePrivate::get(surface);
-        while (!locks.isEmpty() && locks[0].parentSerial == serial) {
-            SubSurfaceStateLock lock = locks.takeFirst();
-            surfacePrivate->unlockState(lock.serial);
-        }
-    }
 }
 
 SubSurfaceInterface::SubSurfaceInterface(SurfaceInterface *surface, SurfaceInterface *parent, wl_resource *resource)
@@ -201,7 +178,7 @@ SubSurfaceInterface::SubSurfaceInterface(SurfaceInterface *surface, SurfaceInter
 {
     SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(surface);
     SurfaceInterfacePrivate *parentPrivate = SurfaceInterfacePrivate::get(parent);
-    surfacePrivate->subSurface = this;
+    surfacePrivate->subsurface.handle = this;
     parentPrivate->addChild(this);
 
     connect(surface, &SurfaceInterface::destroyed, this, [this]() {
@@ -217,7 +194,9 @@ SubSurfaceInterface::~SubSurfaceInterface()
     }
     if (d->surface) {
         SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(d->surface);
-        surfacePrivate->subSurface = nullptr;
+        surfacePrivate->subsurface.handle = nullptr;
+        delete surfacePrivate->subsurface.transaction;
+        surfacePrivate->subsurface.transaction = nullptr;
     }
 }
 
@@ -270,26 +249,43 @@ SurfaceInterface *SubSurfaceInterface::mainSurface() const
         return nullptr;
     }
     SurfaceInterfacePrivate *parentPrivate = SurfaceInterfacePrivate::get(d->parent);
-    if (parentPrivate->subSurface) {
-        return parentPrivate->subSurface->mainSurface();
+    if (parentPrivate->subsurface.handle) {
+        return parentPrivate->subsurface.handle->mainSurface();
     }
     return d->parent;
 }
 
-void SubSurfaceInterface::commit()
+void SubSurfaceInterface::parentDesynchronized()
 {
-    SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(d->surface);
-    if (isSynchronized()) {
-        const quint32 serial = surfacePrivate->lockState(surfacePrivate->pending.get());
-        const quint32 parentSerial = SurfaceInterfacePrivate::get(d->parent)->pending->serial;
-        d->locks.append(SubSurfaceStateLock{
-            .serial = serial,
-            .parentSerial = parentSerial,
-        });
-    } else {
-        while (!d->locks.isEmpty()) {
-            SubSurfaceStateLock lock = d->locks.takeFirst();
-            surfacePrivate->unlockState(lock.serial);
+    if (d->mode == SubSurfaceInterface::Mode::Synchronized) {
+        return;
+    }
+
+    auto surfacePrivate = SurfaceInterfacePrivate::get(d->surface);
+    if (surfacePrivate->subsurface.transaction) {
+        surfacePrivate->subsurface.transaction->commit();
+        surfacePrivate->subsurface.transaction = nullptr;
+    }
+
+    const auto below = d->surface->below();
+    for (SubSurfaceInterface *child : below) {
+        child->parentDesynchronized();
+    }
+
+    const auto above = d->surface->above();
+    for (SubSurfaceInterface *child : above) {
+        child->parentDesynchronized();
+    }
+}
+
+void SubSurfaceInterface::parentApplyState(quint32 serial)
+{
+    auto parentPrivate = SurfaceInterfacePrivate::get(d->parent);
+    if (parentPrivate->current->subsurfacePositionChanged) {
+        const QPoint &pos = parentPrivate->current->subsurface.position[this];
+        if (d->position != pos) {
+            d->position = pos;
+            Q_EMIT positionChanged(pos);
         }
     }
 }

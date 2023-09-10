@@ -19,8 +19,8 @@
 #include "shadow_interface.h"
 #include "slide_interface.h"
 #include "subcompositor_interface.h"
-#include "subsurface_interface_p.h"
 #include "surface_interface_p.h"
+#include "transaction.h"
 #include "utils.h"
 
 #include <wayland-server.h>
@@ -63,8 +63,10 @@ void SurfaceInterfacePrivate::addChild(SubSurfaceInterface *child)
     current->subsurface.above.append(child);
     pending->subsurface.above.append(child);
 
-    for (int i = 0; i < stashed.size(); ++i) {
-        stashed[i]->subsurface.above.append(child);
+    for (auto transaction = firstTransaction; transaction; transaction = transaction->next(q)) {
+        transaction->amend(q, [child](SurfaceState *state) {
+            state->subsurface.above.append(child);
+        });
     }
 
     child->surface()->setOutputs(outputs);
@@ -88,9 +90,11 @@ void SurfaceInterfacePrivate::removeChild(SubSurfaceInterface *child)
     pending->subsurface.below.removeAll(child);
     pending->subsurface.above.removeAll(child);
 
-    for (int i = 0; i < stashed.size(); ++i) {
-        stashed[i]->subsurface.below.removeAll(child);
-        stashed[i]->subsurface.above.removeAll(child);
+    for (auto transaction = firstTransaction; transaction; transaction = transaction->next(q)) {
+        transaction->amend(q, [child](SurfaceState *state) {
+            state->subsurface.below.removeOne(child);
+            state->subsurface.above.removeOne(child);
+        });
     }
 
     Q_EMIT q->childSubSurfaceRemoved(child);
@@ -317,21 +321,38 @@ void SurfaceInterfacePrivate::surface_set_input_region(Resource *resource, struc
 
 void SurfaceInterfacePrivate::surface_commit(Resource *resource)
 {
-    if (subSurface) {
-        subSurface->commit();
+    const bool sync = subsurface.handle && subsurface.handle->isSynchronized();
+
+    Transaction *transaction;
+    if (sync) {
+        if (!subsurface.transaction) {
+            subsurface.transaction = new Transaction();
+        }
+        transaction = subsurface.transaction;
+    } else {
+        transaction = new Transaction();
     }
 
-    // If there are already stashed states, this one will be applied when all the previous
-    // states are applied.
-    if (pending->locks || !stashed.empty()) {
-        auto stash = std::make_unique<SurfaceState>();
-        pending->mergeInto(stash.get());
-        const quint32 serial = stash->serial;
+    for (SubSurfaceInterface *subsurface : std::as_const(pending->subsurface.below)) {
+        auto surfacePrivate = SurfaceInterfacePrivate::get(subsurface->surface());
+        if (surfacePrivate->subsurface.transaction) {
+            transaction->merge(surfacePrivate->subsurface.transaction);
+            delete surfacePrivate->subsurface.transaction;
+            surfacePrivate->subsurface.transaction = nullptr;
+        }
+    }
+    for (SubSurfaceInterface *subsurface : std::as_const(pending->subsurface.above)) {
+        auto surfacePrivate = SurfaceInterfacePrivate::get(subsurface->surface());
+        if (surfacePrivate->subsurface.transaction) {
+            transaction->merge(surfacePrivate->subsurface.transaction);
+            delete surfacePrivate->subsurface.transaction;
+            surfacePrivate->subsurface.transaction = nullptr;
+        }
+    }
 
-        stashed.push_back(std::move(stash));
-        Q_EMIT q->stateStashed(serial);
-    } else {
-        applyState(pending.get());
+    transaction->add(q);
+    if (!sync) {
+        transaction->commit();
     }
 
     pending->serial++;
@@ -384,6 +405,12 @@ SurfaceInterface::SurfaceInterface(CompositorInterface *compositor, wl_resource 
 
 SurfaceInterface::~SurfaceInterface()
 {
+    delete d->subsurface.transaction;
+    d->subsurface.transaction = nullptr;
+
+    for (auto transaction = d->firstTransaction; transaction; transaction = transaction->next(this)) {
+        transaction->remove(this);
+    }
 }
 
 SurfaceRole *SurfaceInterface::role() const
@@ -540,7 +567,6 @@ SurfaceState::~SurfaceState()
 void SurfaceState::mergeInto(SurfaceState *target)
 {
     target->serial = serial;
-    target->locks = locks;
 
     if (bufferIsSet) {
         target->buffer = buffer;
@@ -742,43 +768,14 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
 
     // The position of a sub-surface is applied when its parent is committed.
     for (SubSurfaceInterface *subsurface : std::as_const(current->subsurface.below)) {
-        auto subsurfacePrivate = SubSurfaceInterfacePrivate::get(subsurface);
-        subsurfacePrivate->parentApplyState(next->serial);
+        subsurface->parentApplyState(next->serial);
     }
     for (SubSurfaceInterface *subsurface : std::as_const(current->subsurface.above)) {
-        auto subsurfacePrivate = SubSurfaceInterfacePrivate::get(subsurface);
-        subsurfacePrivate->parentApplyState(next->serial);
+        subsurface->parentApplyState(next->serial);
     }
 
     Q_EMIT q->stateApplied(next->serial);
     Q_EMIT q->committed();
-}
-
-quint32 SurfaceInterfacePrivate::lockState(SurfaceState *state)
-{
-    state->locks++;
-    return state->serial;
-}
-
-void SurfaceInterfacePrivate::unlockState(quint32 serial)
-{
-    if (pending->serial == serial) {
-        Q_ASSERT(pending->locks > 0);
-        pending->locks--;
-    } else {
-        for (const auto &state : stashed) {
-            if (state->serial == serial) {
-                Q_ASSERT(state->locks > 0);
-                state->locks--;
-                break;
-            }
-        }
-        while (!stashed.empty() && !stashed[0]->locks) {
-            auto stash = std::move(stashed.front());
-            stashed.pop_front();
-            applyState(stash.get());
-        }
-    }
 }
 
 bool SurfaceInterfacePrivate::computeEffectiveMapped() const
@@ -786,8 +783,8 @@ bool SurfaceInterfacePrivate::computeEffectiveMapped() const
     if (!bufferRef) {
         return false;
     }
-    if (subSurface) {
-        return subSurface->parentSurface() && subSurface->parentSurface()->isMapped();
+    if (subsurface.handle) {
+        return subsurface.handle->parentSurface() && subsurface.handle->parentSurface()->isMapped();
     }
     return true;
 }
@@ -894,7 +891,7 @@ QList<SubSurfaceInterface *> SurfaceInterface::above() const
 
 SubSurfaceInterface *SurfaceInterface::subSurface() const
 {
-    return d->subSurface;
+    return d->subsurface.handle;
 }
 
 QSizeF SurfaceInterface::size() const
@@ -1186,6 +1183,26 @@ void SurfaceInterface::setPreferredBufferTransform(KWin::OutputTransform transfo
     for (auto child : qAsConst(d->current->subsurface.above)) {
         child->surface()->setPreferredBufferTransform(transform);
     }
+}
+
+Transaction *SurfaceInterface::firstTransaction() const
+{
+    return d->firstTransaction;
+}
+
+void SurfaceInterface::setFirstTransaction(Transaction *transaction)
+{
+    d->firstTransaction = transaction;
+}
+
+Transaction *SurfaceInterface::lastTransaction() const
+{
+    return d->lastTransaction;
+}
+
+void SurfaceInterface::setLastTransaction(Transaction *transaction)
+{
+    d->lastTransaction = transaction;
 }
 
 } // namespace KWaylandServer

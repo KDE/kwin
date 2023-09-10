@@ -26,7 +26,8 @@ public:
     uid_t user = 0;
     gid_t group = 0;
     QString executablePath;
-
+    Transaction *firstTransaction = nullptr;
+    Transaction *lastTransaction = nullptr;
     qreal scaleOverride = 1.0;
 
 private:
@@ -156,6 +157,27 @@ qreal ClientConnection::scaleOverride() const
 {
     return d->scaleOverride;
 }
+
+Transaction *ClientConnection::firstTransaction() const
+{
+    return d->firstTransaction;
+}
+
+void ClientConnection::setFirstTransaction(Transaction *transaction)
+{
+    d->firstTransaction = transaction;
+}
+
+Transaction *ClientConnection::lastTransaction() const
+{
+    return d->lastTransaction;
+}
+
+void ClientConnection::setLastTransaction(Transaction *transaction)
+{
+    d->lastTransaction = transaction;
+}
+
 }
 
 #include "moc_clientconnection.cpp"

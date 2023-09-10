@@ -35,7 +35,6 @@ struct SurfaceState
     void mergeInto(SurfaceState *target);
 
     quint32 serial = 0;
-    quint32 locks = 0;
 
     QRegion damage = QRegion();
     QRegion bufferDamage = QRegion();
@@ -113,9 +112,6 @@ public:
     QRectF computeBufferSourceBox() const;
     void applyState(SurfaceState *next);
 
-    quint32 lockState(SurfaceState *state);
-    void unlockState(quint32 serial);
-
     bool computeEffectiveMapped() const;
     void updateEffectiveMapped();
 
@@ -131,8 +127,6 @@ public:
     SurfaceRole *role = nullptr;
     std::unique_ptr<SurfaceState> current;
     std::unique_ptr<SurfaceState> pending;
-    std::deque<std::unique_ptr<SurfaceState>> stashed;
-    SubSurfaceInterface *subSurface = nullptr;
     QMatrix4x4 surfaceToBufferMatrix;
     QSize bufferSize = QSize(0, 0);
     QRectF bufferSourceBox;
@@ -146,6 +140,9 @@ public:
     bool mapped = false;
     qreal scaleOverride = 1.;
     qreal pendingScaleOverride = 1.;
+
+    Transaction *firstTransaction = nullptr;
+    Transaction *lastTransaction = nullptr;
 
     QVector<OutputInterface *> outputs;
     std::optional<qreal> preferredBufferScale;
@@ -163,6 +160,12 @@ public:
     FractionalScaleV1Interface *fractionalScaleExtension = nullptr;
     ClientConnection *client = nullptr;
     TearingControlV1Interface *tearing = nullptr;
+
+    struct
+    {
+        SubSurfaceInterface *handle = nullptr;
+        Transaction *transaction = nullptr;
+    } subsurface;
 
 protected:
     void surface_destroy_resource(Resource *resource) override;

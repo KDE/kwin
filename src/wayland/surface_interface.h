@@ -33,6 +33,7 @@ class ShadowInterface;
 class SlideInterface;
 class SubSurfaceInterface;
 class SurfaceInterfacePrivate;
+class Transaction;
 
 enum class PresentationHint {
     VSync,
@@ -360,6 +361,18 @@ public:
      * attaching buffers to this surface.
      */
     void setPreferredBufferTransform(KWin::OutputTransform transform);
+
+    /**
+     * The first committed transaction that is scheduled to be applied to this surface.
+     */
+    Transaction *firstTransaction() const;
+    void setFirstTransaction(Transaction *transaction);
+
+    /**
+     * The last committed transaction that is scheduled to be applied to this surface.
+     */
+    Transaction *lastTransaction() const;
+    void setLastTransaction(Transaction *transaction);
 
 Q_SIGNALS:
     /**

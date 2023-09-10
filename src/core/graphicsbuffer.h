@@ -112,7 +112,9 @@ public:
     GraphicsBufferRef(GraphicsBuffer *buffer)
         : m_buffer(buffer)
     {
-        m_buffer->ref();
+        if (m_buffer) {
+            m_buffer->ref();
+        }
     }
 
     GraphicsBufferRef(const GraphicsBufferRef &other)

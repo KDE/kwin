@@ -285,6 +285,7 @@ target_sources(kwin PRIVATE
     textinput_v2_interface.cpp
     textinput_v3_interface.cpp
     touch_interface.cpp
+    transaction.cpp
     viewporter_interface.cpp
     xdgactivation_v1_interface.cpp
     xdgdecoration_v1_interface.cpp

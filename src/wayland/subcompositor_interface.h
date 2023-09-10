@@ -120,7 +120,8 @@ Q_SIGNALS:
 private:
     SubSurfaceInterface(SurfaceInterface *surface, SurfaceInterface *parent, wl_resource *resource);
 
-    void commit();
+    void parentDesynchronized();
+    void parentApplyState(quint32 serial);
 
     std::unique_ptr<SubSurfaceInterfacePrivate> d;
     friend class SurfaceInterfacePrivate;

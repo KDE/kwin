@@ -28,12 +28,6 @@ protected:
     void subcompositor_get_subsurface(Resource *resource, uint32_t id, struct ::wl_resource *surface_resource, struct ::wl_resource *parent_resource) override;
 };
 
-struct SubSurfaceStateLock
-{
-    const quint32 serial;
-    const quint32 parentSerial;
-};
-
 class SubSurfaceInterfacePrivate : public QtWaylandServer::wl_subsurface
 {
 public:
@@ -41,14 +35,11 @@ public:
 
     SubSurfaceInterfacePrivate(SubSurfaceInterface *q, SurfaceInterface *surface, SurfaceInterface *parent, ::wl_resource *resource);
 
-    void parentApplyState(quint32 serial);
-
     SubSurfaceInterface *q;
     QPoint position = QPoint(0, 0);
     SubSurfaceInterface::Mode mode = SubSurfaceInterface::Mode::Synchronized;
     QPointer<SurfaceInterface> surface;
     QPointer<SurfaceInterface> parent;
-    QList<SubSurfaceStateLock> locks;
 
 protected:
     void subsurface_destroy_resource(Resource *resource) override;
