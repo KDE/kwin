@@ -542,75 +542,65 @@ void SurfaceState::mergeInto(SurfaceState *target)
     target->serial = serial;
     target->locks = locks;
 
-    target->bufferIsSet = bufferIsSet;
-    if (target->bufferIsSet) {
+    if (bufferIsSet) {
         target->buffer = buffer;
         target->offset = offset;
         target->damage = damage;
         target->bufferDamage = bufferDamage;
+        target->bufferIsSet = true;
     }
-
-    target->viewport.sourceGeometryIsSet = viewport.sourceGeometryIsSet;
-    if (target->viewport.sourceGeometryIsSet) {
+    if (viewport.sourceGeometryIsSet) {
         target->viewport.sourceGeometry = viewport.sourceGeometry;
+        target->viewport.sourceGeometryIsSet = true;
     }
-
-    target->viewport.destinationSizeIsSet = viewport.destinationSizeIsSet;
-    if (target->viewport.destinationSizeIsSet) {
+    if (viewport.destinationSizeIsSet) {
         target->viewport.destinationSize = viewport.destinationSize;
+        target->viewport.destinationSizeIsSet = true;
     }
 
-    target->subsurfaceOrderChanged = subsurfaceOrderChanged;
-    if (target->subsurfaceOrderChanged) {
+    if (subsurfaceOrderChanged) {
         target->subsurface.below = subsurface.below;
         target->subsurface.above = subsurface.above;
+        target->subsurfaceOrderChanged = true;
     }
-
-    target->subsurfacePositionChanged = subsurfacePositionChanged;
-    if (target->subsurfacePositionChanged) {
+    if (subsurfacePositionChanged) {
         target->subsurface.position = subsurface.position;
+        target->subsurfacePositionChanged = true;
     }
 
     wl_list_insert_list(&target->frameCallbacks, &frameCallbacks);
 
-    target->shadowIsSet = shadowIsSet;
-    if (target->shadowIsSet) {
+    if (shadowIsSet) {
         target->shadow = shadow;
+        target->shadowIsSet = true;
     }
-
-    target->blurIsSet = blurIsSet;
-    if (target->blurIsSet) {
+    if (blurIsSet) {
         target->blur = blur;
+        target->blurIsSet = true;
     }
-
-    target->contrastIsSet = contrastIsSet;
-    if (target->contrastIsSet) {
+    if (contrastIsSet) {
         target->contrast = contrast;
+        target->contrastIsSet = true;
     }
-
-    target->slideIsSet = slideIsSet;
-    if (target->slideIsSet) {
+    if (slideIsSet) {
         target->slide = slide;
+        target->slideIsSet = true;
     }
-
-    target->inputIsSet = inputIsSet;
-    if (target->inputIsSet) {
+    if (inputIsSet) {
         target->input = input;
+        target->inputIsSet = true;
     }
-
-    target->opaqueIsSet = opaqueIsSet;
-    if (target->opaqueIsSet) {
+    if (opaqueIsSet) {
         target->opaque = opaque;
+        target->opaqueIsSet = true;
     }
-
-    target->bufferScaleIsSet = bufferScaleIsSet;
-    if (target->bufferScaleIsSet) {
+    if (bufferScaleIsSet) {
         target->bufferScale = bufferScale;
+        target->bufferScaleIsSet = true;
     }
-
-    target->bufferTransformIsSet = bufferTransformIsSet;
-    if (target->bufferTransformIsSet) {
+    if (bufferTransformIsSet) {
         target->bufferTransform = bufferTransform;
+        target->bufferTransformIsSet = true;
     }
     if (contentTypeIsSet) {
         target->contentType = contentType;
