@@ -64,12 +64,17 @@ DrmCommitThread::DrmCommitThread()
                     commit.release();
                     m_commits.erase(m_commits.begin());
                 } else {
+                    const bool cursorOnly = std::all_of(m_commits.begin(), m_commits.end(), [](const auto &commit) {
+                        return commit->isCursorOnly();
+                    });
                     for (auto &commit : m_commits) {
                         m_droppedCommits.push_back(std::move(commit));
                     }
                     m_commits.clear();
                     qCWarning(KWIN_DRM) << "atomic commit failed:" << strerror(errno);
-                    QMetaObject::invokeMethod(this, &DrmCommitThread::commitFailed, Qt::ConnectionType::QueuedConnection);
+                    if (!cursorOnly) {
+                        QMetaObject::invokeMethod(this, &DrmCommitThread::commitFailed, Qt::ConnectionType::QueuedConnection);
+                    }
                 }
                 QMetaObject::invokeMethod(this, &DrmCommitThread::clearDroppedCommits, Qt::ConnectionType::QueuedConnection);
             }
