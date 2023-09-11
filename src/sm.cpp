@@ -16,13 +16,22 @@
 #include <unistd.h>
 
 #include "virtualdesktops.h"
+#include "wayland_server.h"
 #include "workspace.h"
 #include "x11window.h"
+#include "xdgshellwindow.h"
 #include <QDebug>
+
 #include <QSessionManager>
+#if KWIN_BUILD_NOTIFICATIONS
+#include <KLocalizedString>
+#include <KNotification>
+#include <KService>
+#endif
 
 #include "sessionadaptor.h"
-#include <QDBusConnection>
+
+using namespace Qt::StringLiterals;
 
 namespace KWin
 {
@@ -385,6 +394,7 @@ void SessionManager::setState(SessionState state)
             client->setSessionActivityOverride(false);
         });
     }
+
     m_sessionState = state;
     Q_EMIT stateChanged();
 }
@@ -399,6 +409,78 @@ void SessionManager::finishSaveSession(const QString &name)
 {
     Q_EMIT finishSessionSaveRequested(name);
     storeSession(name, SMSavePhase2);
+}
+
+bool SessionManager::closeWaylandWindows()
+{
+    Q_ASSERT(calledFromDBus());
+    if (!waylandServer()) {
+        return true;
+    }
+
+    if (m_closingWindowsGuard) {
+        sendErrorReply(QDBusError::Failed, u"Operation already in progress"_s);
+        return false;
+    }
+
+    m_closingWindowsGuard = std::make_unique<QObject>();
+    qCDebug(KWIN_CORE) << "Closing windows";
+
+    auto dbusMessage = message();
+    setDelayedReply(true);
+
+    const auto windows = workspace()->windows();
+    m_pendingWindows.clear();
+    m_pendingWindows.reserve(windows.size());
+    for (const auto window : windows) {
+        if (auto toplevelWindow = qobject_cast<XdgToplevelWindow *>(window)) {
+            connect(toplevelWindow, &XdgToplevelWindow::closed, m_closingWindowsGuard.get(), [this, toplevelWindow, dbusMessage] {
+                m_pendingWindows.removeOne(toplevelWindow);
+                if (m_pendingWindows.empty()) {
+                    m_closeTimer.stop();
+                    m_closingWindowsGuard.reset();
+                    QDBusConnection::sessionBus().send(dbusMessage.createReply(true));
+                }
+            });
+            m_pendingWindows.push_back(toplevelWindow);
+            toplevelWindow->closeWindow();
+        }
+    }
+    m_closeTimer.start(std::chrono::seconds(10));
+    m_closeTimer.setSingleShot(true);
+    connect(&m_closeTimer, &QTimer::timeout, m_closingWindowsGuard.get(), [this, dbusMessage] {
+#if KWIN_BUILD_NOTIFICATIONS
+        QStringList apps;
+        apps.reserve(m_pendingWindows.size());
+        std::transform(m_pendingWindows.cbegin(), m_pendingWindows.cend(), std::back_inserter(apps), [](const XdgToplevelWindow *window) -> QString {
+            const auto service = KService::serviceByDesktopName(window->desktopFileName());
+            return QChar(u'•') + (service ? service->name() : window->caption());
+        });
+        apps.removeDuplicates();
+        qCDebug(KWIN_CORE) << "Not closed windows" << apps;
+        auto notification = new KNotification("cancellogout", KNotification::DefaultEvent | KNotification::Persistent);
+        notification->setText(i18n("The following applications did not close:\n%1", apps.join('\n')));
+        auto cancel = notification->addAction(i18nc("@action:button", "Cancel Logout"));
+        auto quit = notification->addAction(i18nc("@action::button", "Log Out Anyway"));
+        connect(cancel, &KNotificationAction::activated, m_closingWindowsGuard.get(), [dbusMessage, this] {
+            m_closingWindowsGuard.reset();
+            QDBusConnection::sessionBus().send(dbusMessage.createReply(false));
+        });
+        connect(quit, &KNotificationAction::activated, m_closingWindowsGuard.get(), [dbusMessage, this] {
+            m_closingWindowsGuard.reset();
+            QDBusConnection::sessionBus().send(dbusMessage.createReply(true));
+        });
+        connect(notification, &KNotification::closed, m_closingWindowsGuard.get(), [dbusMessage, this] {
+            m_closingWindowsGuard.reset();
+            QDBusConnection::sessionBus().send(dbusMessage.createReply(false));
+        });
+        notification->sendEvent();
+#else
+        m_closingWindowsGuard.reset();
+        QDBusConnection::sessionBus().send(dbusMessage.createReply(false));
+#endif
+    });
+    return true;
 }
 
 void SessionManager::quit()

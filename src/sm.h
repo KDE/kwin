@@ -10,9 +10,11 @@
 
 #pragma once
 
+#include <QDBusContext>
 #include <QDataStream>
 #include <QRect>
 #include <QStringList>
+#include <QTimer>
 
 #include <KConfigGroup>
 
@@ -24,8 +26,9 @@ namespace KWin
 
 class X11Window;
 struct SessionInfo;
+class XdgToplevelWindow;
 
-class SessionManager : public QObject
+class SessionManager : public QObject, public QDBusContext
 {
     Q_OBJECT
 public:
@@ -57,6 +60,7 @@ public Q_SLOTS: // DBus API
     void loadSession(const QString &name);
     void aboutToSaveSession(const QString &name);
     void finishSaveSession(const QString &name);
+    bool closeWaylandWindows();
     void quit();
 
 private:
@@ -73,6 +77,9 @@ private:
     int m_sessionDesktop;
 
     QList<SessionInfo *> session;
+    QList<XdgToplevelWindow *> m_pendingWindows;
+    QTimer m_closeTimer;
+    std::unique_ptr<QObject> m_closingWindowsGuard;
 };
 
 struct SessionInfo
