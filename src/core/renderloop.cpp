@@ -62,16 +62,16 @@ void RenderLoopPrivate::scheduleRepaint()
     const std::chrono::nanoseconds safetyMargin = std::chrono::milliseconds(3);
     std::chrono::nanoseconds nextRenderTimestamp = nextPresentationTimestamp - renderJournal.result() - safetyMargin;
 
-    // If we can't render the frame before the deadline, start compositing immediately.
+    // If we can't render the frame before the deadline, reschedule it
     if (nextRenderTimestamp < currentTime) {
-        nextRenderTimestamp = currentTime;
+        nextRenderTimestamp += vblankInterval;
     }
 
     if (presentationMode == PresentationMode::Async || presentationMode == PresentationMode::AdaptiveAsync) {
         compositeTimer.start(0);
     } else {
         const std::chrono::nanoseconds waitInterval = nextRenderTimestamp - currentTime;
-        compositeTimer.start(std::chrono::duration_cast<std::chrono::milliseconds>(waitInterval));
+        compositeTimer.start(std::max(std::chrono::duration_cast<std::chrono::milliseconds>(waitInterval), std::chrono::milliseconds::zero()));
     }
 }
 
