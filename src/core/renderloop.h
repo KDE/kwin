@@ -109,6 +109,10 @@ public:
      */
     void setVrrPolicy(VrrPolicy vrrPolicy);
 
+    static RenderLoop *s_forDebugging;
+
+    std::chrono::nanoseconds renderTimeEstimation() const;
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the refresh rate of this RenderLoop has changed.

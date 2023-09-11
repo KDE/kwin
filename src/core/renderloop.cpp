@@ -15,6 +15,8 @@
 namespace KWin
 {
 
+RenderLoop *RenderLoop::s_forDebugging = nullptr;
+
 template<typename T>
 T alignTimestamp(const T &timestamp, const T &alignment)
 {
@@ -149,10 +151,16 @@ void RenderLoopPrivate::invalidate()
 RenderLoop::RenderLoop()
     : d(std::make_unique<RenderLoopPrivate>(this))
 {
+    s_forDebugging = this;
 }
 
 RenderLoop::~RenderLoop()
 {
+}
+
+std::chrono::nanoseconds RenderLoop::renderTimeEstimation() const
+{
+    return d->renderJournal.result();
 }
 
 void RenderLoop::inhibit()

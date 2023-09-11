@@ -35,6 +35,8 @@ public:
     void pageFlipped(std::chrono::nanoseconds timestamp);
     bool pageflipsPending();
 
+    static bool s_frameDropped;
+
 Q_SIGNALS:
     void commitFailed();
 

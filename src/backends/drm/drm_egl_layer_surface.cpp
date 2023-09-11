@@ -12,6 +12,7 @@
 #include "core/colortransformation.h"
 #include "core/graphicsbufferview.h"
 #include "core/iccprofile.h"
+#include "drm_commit_thread.h"
 #include "drm_egl_backend.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
@@ -25,6 +26,7 @@
 
 #include <drm_fourcc.h>
 #include <errno.h>
+#include <fstream>
 #include <gbm.h>
 #include <unistd.h>
 
@@ -190,6 +192,13 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion)
     }
 }
 
+static int64_t micros(std::chrono::nanoseconds time)
+{
+    return std::chrono::duration_cast<std::chrono::microseconds>(time).count();
+}
+
+using namespace std::chrono_literals;
+
 std::chrono::nanoseconds EglGbmLayerSurface::queryRenderTime() const
 {
     if (!m_surface) {
@@ -202,6 +211,33 @@ std::chrono::nanoseconds EglGbmLayerSurface::queryRenderTime() const
         if (m_surface->importTimeQuery && m_eglBackend->contextForGpu(m_gpu)->makeCurrent()) {
             gpuTime += m_surface->importTimeQuery->result();
         }
+
+        std::vector<std::chrono::nanoseconds> cpu;
+        std::vector<std::chrono::nanoseconds> gpu;
+        static auto lastPrint = std::chrono::steady_clock::now();
+        const auto now = std::chrono::steady_clock::now();
+        cpu.push_back(cpuTime);
+        gpu.push_back(gpuTime);
+
+        if (now > lastPrint + 1s) {
+            const auto cpuAvg = std::accumulate(cpu.begin(), cpu.end(), 0ns) / cpu.size();
+            const auto gpuAvg = std::accumulate(gpu.begin(), gpu.end(), 0ns) / gpu.size();
+            const auto [cpuMin, cpuMax] = std::minmax_element(cpu.begin(), cpu.end());
+            const auto [gpuMin, gpuMax] = std::minmax_element(gpu.begin(), gpu.end());
+            qWarning() << "CPU avg" << micros(cpuAvg) << "min" << micros(*cpuMin) << "max" << micros(*cpuMax) << "GPU avg" << micros(gpuAvg) << "min" << micros(*gpuMin) << "max" << micros(*gpuMax) << "µs";
+
+            lastPrint = now;
+        }
+
+        static std::fstream out;
+        if (!out.is_open()) {
+            out.open("kwin_perf_" + std::to_string(uint64_t(this)) + ".csv", std::ios::out);
+            out << "timestamp,cpu time in µs,cpu+gpu time in µs,roughly gpu time in µs,dropped?,render time estimation\n";
+        }
+        out << micros(now.time_since_epoch()) << "," << micros(cpuTime) << "," << micros(gpuTime) << "," << micros(gpuTime - cpuTime)
+            << "," << DrmCommitThread::s_frameDropped << "," << micros(RenderLoop::s_forDebugging->renderTimeEstimation()) << "\n";
+        out.flush();
+
         return std::max(gpuTime, cpuTime);
     } else {
         return cpuTime;

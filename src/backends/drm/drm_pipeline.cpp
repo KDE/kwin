@@ -436,9 +436,9 @@ DrmGpu *DrmPipeline::gpu() const
 
 void DrmPipeline::pageFlipped(std::chrono::nanoseconds timestamp, PageflipType type, PresentationMode mode)
 {
-    m_commitThread->pageFlipped(timestamp);
     m_legacyPageflipPending = false;
     if (type == PageflipType::Modeset && !activePending()) {
+        m_commitThread->pageFlipped(timestamp);
         return;
     }
     if (m_output) {
@@ -448,6 +448,7 @@ void DrmPipeline::pageFlipped(std::chrono::nanoseconds timestamp, PageflipType t
             RenderLoopPrivate::get(m_output->renderLoop())->notifyVblank(timestamp);
         }
     }
+    m_commitThread->pageFlipped(timestamp);
 }
 
 void DrmPipeline::setOutput(DrmOutput *output)

@@ -21,10 +21,14 @@ namespace KWin
 // committing takes about 800µs, the rest is accounting for sleep not being accurate enough
 static constexpr auto s_safetyMargin = 1800us;
 
+bool DrmCommitThread::s_frameDropped = false;
+
 DrmCommitThread::DrmCommitThread(const QString &name)
 {
     m_thread.reset(QThread::create([this]() {
         gainRealTime();
+        uint64_t rescheduledCommits = 0;
+        auto lastprint = std::chrono::steady_clock::now();
         while (true) {
             if (QThread::currentThread()->isInterruptionRequested()) {
                 return;
@@ -51,6 +55,13 @@ DrmCommitThread::DrmCommitThread(const QString &name)
                     if (m_vrr) {
                         m_targetPageflipTime += 50us;
                     } else {
+                        const bool cursorOnly = std::all_of(m_commits.begin(), m_commits.end(), [](const auto &commit) {
+                            return commit->isCursorOnly();
+                        });
+                        if (!cursorOnly) {
+                            s_frameDropped = true;
+                            rescheduledCommits++;
+                        }
                         m_targetPageflipTime += m_minVblankInterval;
                     }
                     continue;
@@ -77,6 +88,13 @@ DrmCommitThread::DrmCommitThread(const QString &name)
                     }
                 }
                 QMetaObject::invokeMethod(this, &DrmCommitThread::clearDroppedCommits, Qt::ConnectionType::QueuedConnection);
+                if (std::chrono::steady_clock::now() > lastprint + 1s) {
+                    if (rescheduledCommits) {
+                        qWarning() << "dropped" << rescheduledCommits << "commits in the last second";
+                        rescheduledCommits = 0;
+                    }
+                    lastprint = std::chrono::steady_clock::now();
+                }
             }
         }
     }));
@@ -218,6 +236,7 @@ void DrmCommitThread::pageFlipped(std::chrono::nanoseconds timestamp)
         m_targetPageflipTime = estimateNextVblank(std::chrono::steady_clock::now());
         m_commitPending.notify_all();
     }
+    s_frameDropped = false;
 }
 
 bool DrmCommitThread::pageflipsPending()
