@@ -76,11 +76,16 @@ FileDescriptor FileDescriptor::duplicate() const
 
 bool FileDescriptor::isReadable() const
 {
-    pollfd fd = {
-        .fd = m_fd,
+    return isReadable(m_fd);
+}
+
+bool FileDescriptor::isReadable(int fd)
+{
+    pollfd pfd = {
+        .fd = fd,
         .events = POLLIN,
         .revents = 0,
     };
-    return poll(&fd, 1, 0) && (fd.revents & (POLLIN | POLLNVAL)) != 0;
+    return poll(&pfd, 1, 0) && (pfd.revents & (POLLIN | POLLNVAL)) != 0;
 }
 }

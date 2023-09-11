@@ -30,6 +30,8 @@ public:
 
     bool isReadable() const;
 
+    static bool isReadable(int fd);
+
 private:
     int m_fd = -1;
 };
