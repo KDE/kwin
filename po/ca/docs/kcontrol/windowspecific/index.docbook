@@ -874,7 +874,7 @@
 >alçada</emphasis
 > X <emphasis
 >amplada</emphasis
-> per demanar el canvia de mida. Típicament, és 1x1. Tot i que, altres finestres, per exemple, els emuladors de terminal o els editors, utilitzen tipus de lletra fixa i demanen l'increment de la seva base en funció de la mida d'un caràcter.</para>
+> per demanar el canvia de mida. Típicament, és 1x1. Tot i que, altres finestres, per exemple, els emuladors de terminal o els editors, utilitzen una lletra fixa i demanen l'increment de la seva base en funció de la mida d'un caràcter.</para>
      </listitem>
   </varlistentry>
 </variablelist>
