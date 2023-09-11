@@ -229,6 +229,7 @@ bool Edge::activatesForPointer() const
         if (!c || c->isInteractiveResize()) {
             return false;
         }
+        isMovingWindow = true;
     }
 
     if (m_client) {
