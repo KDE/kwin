@@ -655,25 +655,10 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     bufferRef = current->buffer;
     scaleOverride = pendingScaleOverride;
 
-    // TODO: Refactor the state management code because it gets more clumsy.
     if (current->buffer) {
         bufferSize = current->buffer->size();
         bufferSourceBox = computeBufferSourceBox();
-
-        implicitSurfaceSize = current->buffer->size() / current->bufferScale;
-        switch (current->bufferTransform.kind()) {
-        case KWin::OutputTransform::Rotated90:
-        case KWin::OutputTransform::Rotated270:
-        case KWin::OutputTransform::Flipped90:
-        case KWin::OutputTransform::Flipped270:
-            implicitSurfaceSize.transpose();
-            break;
-        case KWin::OutputTransform::Normal:
-        case KWin::OutputTransform::Rotated180:
-        case KWin::OutputTransform::Flipped:
-        case KWin::OutputTransform::Flipped180:
-            break;
-        }
+        implicitSurfaceSize = current->bufferTransform.map(current->buffer->size() / current->bufferScale);
 
         if (current->viewport.destinationSize.isValid()) {
             surfaceSize = current->viewport.destinationSize;
