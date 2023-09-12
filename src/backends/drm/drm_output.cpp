@@ -382,7 +382,7 @@ DrmOutputLayer *DrmOutput::cursorLayer() const
 
 bool DrmOutput::setGammaRamp(const std::shared_ptr<ColorTransformation> &transformation)
 {
-    if (!m_pipeline->active() || needsColormanagement()) {
+    if (!m_pipeline->activePending() || needsColormanagement()) {
         return false;
     }
     m_pipeline->setGammaRamp(transformation);
@@ -404,7 +404,7 @@ bool DrmOutput::setChannelFactors(const QVector3D &rgb)
     }
     m_channelFactors = rgb;
     if (needsColormanagement()) {
-        if (!m_pipeline->active()) {
+        if (!m_pipeline->activePending()) {
             return false;
         }
         QMatrix3x3 ctm;
