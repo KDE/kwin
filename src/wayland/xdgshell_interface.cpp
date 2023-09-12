@@ -1021,59 +1021,14 @@ bool XdgPositioner::isComplete() const
     return d->size.isValid() && d->anchorRect.isValid();
 }
 
-Qt::Orientations XdgPositioner::slideConstraintAdjustments() const
-{
-    return d->slideConstraintAdjustments;
-}
-
-Qt::Orientations XdgPositioner::flipConstraintAdjustments() const
-{
-    return d->flipConstraintAdjustments;
-}
-
-Qt::Orientations XdgPositioner::resizeConstraintAdjustments() const
-{
-    return d->resizeConstraintAdjustments;
-}
-
-Qt::Edges XdgPositioner::anchorEdges() const
-{
-    return d->anchorEdges;
-}
-
-Qt::Edges XdgPositioner::gravityEdges() const
-{
-    return d->gravityEdges;
-}
-
 QSize XdgPositioner::size() const
 {
     return d->size;
 }
 
-QRect XdgPositioner::anchorRect() const
-{
-    return d->anchorRect;
-}
-
-QPoint XdgPositioner::offset() const
-{
-    return d->offset;
-}
-
-QSize XdgPositioner::parentSize() const
-{
-    return d->parentSize;
-}
-
 bool XdgPositioner::isReactive() const
 {
     return d->isReactive;
-}
-
-quint32 XdgPositioner::parentConfigure() const
-{
-    return d->parentConfigure;
 }
 
 QRectF XdgPositioner::placement(const QRectF &bounds) const
@@ -1096,7 +1051,7 @@ QRectF XdgPositioner::placement(const QRectF &bounds) const
         return true;
     };
 
-    QRectF popupRect(KWin::popupOffset(anchorRect(), anchorEdges(), gravityEdges(), size()) + offset(), size());
+    QRectF popupRect(KWin::popupOffset(d->anchorRect, d->anchorEdges, d->gravityEdges, d->size) + d->offset, d->size);
 
     // if that fits, we don't need to do anything
     if (inBounds(popupRect)) {
@@ -1104,18 +1059,18 @@ QRectF XdgPositioner::placement(const QRectF &bounds) const
     }
     // otherwise apply constraint adjustment per axis in order XDG Shell Popup states
 
-    if (flipConstraintAdjustments() & Qt::Horizontal) {
+    if (d->flipConstraintAdjustments & Qt::Horizontal) {
         if (!inBounds(popupRect, Qt::LeftEdge | Qt::RightEdge)) {
             // flip both edges (if either bit is set, XOR both)
-            auto flippedAnchorEdge = anchorEdges();
+            auto flippedAnchorEdge = d->anchorEdges;
             if (flippedAnchorEdge & (Qt::LeftEdge | Qt::RightEdge)) {
                 flippedAnchorEdge ^= (Qt::LeftEdge | Qt::RightEdge);
             }
-            auto flippedGravity = gravityEdges();
+            auto flippedGravity = d->gravityEdges;
             if (flippedGravity & (Qt::LeftEdge | Qt::RightEdge)) {
                 flippedGravity ^= (Qt::LeftEdge | Qt::RightEdge);
             }
-            auto flippedPopupRect = QRectF(KWin::popupOffset(anchorRect(), flippedAnchorEdge, flippedGravity, size()) + offset(), size());
+            auto flippedPopupRect = QRectF(KWin::popupOffset(d->anchorRect, flippedAnchorEdge, flippedGravity, d->size) + d->offset, d->size);
 
             // if it still doesn't fit we should continue with the unflipped version
             if (inBounds(flippedPopupRect, Qt::LeftEdge | Qt::RightEdge)) {
@@ -1123,7 +1078,7 @@ QRectF XdgPositioner::placement(const QRectF &bounds) const
             }
         }
     }
-    if (slideConstraintAdjustments() & Qt::Horizontal) {
+    if (d->slideConstraintAdjustments & Qt::Horizontal) {
         if (!inBounds(popupRect, Qt::LeftEdge)) {
             popupRect.moveLeft(bounds.left());
         }
@@ -1131,7 +1086,7 @@ QRectF XdgPositioner::placement(const QRectF &bounds) const
             popupRect.moveRight(bounds.right());
         }
     }
-    if (resizeConstraintAdjustments() & Qt::Horizontal) {
+    if (d->resizeConstraintAdjustments & Qt::Horizontal) {
         QRectF unconstrainedRect = popupRect;
 
         if (!inBounds(unconstrainedRect, Qt::LeftEdge)) {
@@ -1146,18 +1101,18 @@ QRectF XdgPositioner::placement(const QRectF &bounds) const
         }
     }
 
-    if (flipConstraintAdjustments() & Qt::Vertical) {
+    if (d->flipConstraintAdjustments & Qt::Vertical) {
         if (!inBounds(popupRect, Qt::TopEdge | Qt::BottomEdge)) {
             // flip both edges (if either bit is set, XOR both)
-            auto flippedAnchorEdge = anchorEdges();
+            auto flippedAnchorEdge = d->anchorEdges;
             if (flippedAnchorEdge & (Qt::TopEdge | Qt::BottomEdge)) {
                 flippedAnchorEdge ^= (Qt::TopEdge | Qt::BottomEdge);
             }
-            auto flippedGravity = gravityEdges();
+            auto flippedGravity = d->gravityEdges;
             if (flippedGravity & (Qt::TopEdge | Qt::BottomEdge)) {
                 flippedGravity ^= (Qt::TopEdge | Qt::BottomEdge);
             }
-            auto flippedPopupRect = QRectF(KWin::popupOffset(anchorRect(), flippedAnchorEdge, flippedGravity, size()) + offset(), size());
+            auto flippedPopupRect = QRectF(KWin::popupOffset(d->anchorRect, flippedAnchorEdge, flippedGravity, d->size) + d->offset, d->size);
 
             // if it still doesn't fit we should continue with the unflipped version
             if (inBounds(flippedPopupRect, Qt::TopEdge | Qt::BottomEdge)) {
@@ -1165,7 +1120,7 @@ QRectF XdgPositioner::placement(const QRectF &bounds) const
             }
         }
     }
-    if (slideConstraintAdjustments() & Qt::Vertical) {
+    if (d->slideConstraintAdjustments & Qt::Vertical) {
         if (!inBounds(popupRect, Qt::TopEdge)) {
             popupRect.moveTop(bounds.top());
         }
@@ -1173,7 +1128,7 @@ QRectF XdgPositioner::placement(const QRectF &bounds) const
             popupRect.moveBottom(bounds.bottom());
         }
     }
-    if (resizeConstraintAdjustments() & Qt::Vertical) {
+    if (d->resizeConstraintAdjustments & Qt::Vertical) {
         QRectF unconstrainedRect = popupRect;
 
         if (!inBounds(unconstrainedRect, Qt::TopEdge)) {

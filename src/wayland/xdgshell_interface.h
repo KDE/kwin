@@ -444,66 +444,14 @@ public:
     bool isComplete() const;
 
     /**
-     * Returns the set of orientations along which the compositor may slide the popup to ensure
-     * that it is entirely inside the compositor's defined "work area."
-     */
-    Qt::Orientations slideConstraintAdjustments() const;
-
-    /**
-     * Returns the set of orientations along which the compositor may flip the popup to ensure
-     * that it is entirely inside the compositor's defined "work area."
-     */
-    Qt::Orientations flipConstraintAdjustments() const;
-
-    /**
-     * Returns the set of orientations along which the compositor can resize the popup to ensure
-     * that it is entirely inside the compositor's defined "work area."
-     */
-    Qt::Orientations resizeConstraintAdjustments() const;
-
-    /**
-     * Returns the set of edges on the anchor rectangle that the surface should be positioned
-     * around.
-     */
-    Qt::Edges anchorEdges() const;
-
-    /**
-     * Returns the direction in which the surface should be positioned, relative to the anchor
-     * point of the parent surface.
-     */
-    Qt::Edges gravityEdges() const;
-
-    /**
      * Returns the window geometry size of the surface that is to be positioned.
      */
     QSize size() const;
 
     /**
-     * Returns the anchor rectangle relative to the upper left corner of the window geometry of
-     * the parent surface that the popup should be positioned around.
-     */
-    QRect anchorRect() const;
-
-    /**
-     * Returns the surface position offset relative to the position of the anchor on the anchor
-     * rectangle and the anchor on the surface.
-     */
-    QPoint offset() const;
-
-    /**
      * Returns whether the surface should respond to movements in its parent window.
      */
     bool isReactive() const;
-
-    /**
-     * Returns the parent size to use when positioning the popup.
-     */
-    QSize parentSize() const;
-
-    /**
-     * Returns the serial of the configure event for the parent window.
-     */
-    quint32 parentConfigure() const;
 
     /**
      * Returns the unconstrained geometry of the popup. The \a bounds is in the parent local
