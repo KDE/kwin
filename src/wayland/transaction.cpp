@@ -45,10 +45,11 @@ TransactionDmaBufLocker::TransactionDmaBufLocker(const DmaBufAttributes *attribu
             notifier->setEnabled(false);
             m_pending.removeOne(notifier);
             if (m_pending.isEmpty()) {
-                for (Transaction *transition : std::as_const(m_transactions)) {
+                const auto transactions = m_transactions; // unlock() may destroy this
+                m_transactions.clear();
+                for (Transaction *transition : transactions) {
                     transition->unlock();
                 }
-                m_transactions.clear();
             }
         });
         m_notifiers.emplace_back(notifier);
