@@ -171,42 +171,6 @@ you can reset this protection but be aware that this might result in an immediat
      </item>
     </widget>
    </item>
-   <item row="12" column="0">
-    <widget class="QLabel" name="latencyLabel">
-     <property name="text">
-      <string>Latency:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="12" column="1">
-    <widget class="QComboBox" name="kcfg_LatencyPolicy">
-     <item>
-      <property name="text">
-       <string>Force lowest latency (may cause dropped frames)</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Prefer lower latency</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Balance of latency and smoothness</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Prefer smoother animations</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Force smoothest animations</string>
-      </property>
-     </item>
-    </widget>
-   </item>
   </layout>
  </widget>
  <customwidgets>

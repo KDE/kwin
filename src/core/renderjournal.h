@@ -25,24 +25,11 @@ public:
 
     void add(std::chrono::nanoseconds renderTime);
 
-    /**
-     * Returns the maximum estimated amount of time that it takes to render a single frame.
-     */
-    std::chrono::nanoseconds maximum() const;
-
-    /**
-     * Returns the minimum estimated amount of time that it takes to render a single frame.
-     */
-    std::chrono::nanoseconds minimum() const;
-
-    /**
-     * Returns the average estimated amount of time that it takes to render a single frame.
-     */
-    std::chrono::nanoseconds average() const;
+    std::chrono::nanoseconds result() const;
 
 private:
-    QQueue<std::chrono::nanoseconds> m_log;
-    int m_size = 15;
+    std::chrono::nanoseconds m_result{0};
+    std::optional<std::chrono::steady_clock::time_point> m_lastAdd;
 };
 
 } // namespace KWin

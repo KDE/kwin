@@ -386,15 +386,6 @@ void EffectsHandlerImpl::setActiveFullScreenEffect(Effect *e)
     fullscreen_effect = e;
     Q_EMIT activeFullScreenEffectChanged();
     if (activeChanged) {
-        const auto delegates = m_scene->delegates();
-        for (SceneDelegate *delegate : delegates) {
-            RenderLoop *loop = delegate->layer()->loop();
-            if (fullscreen_effect) {
-                loop->setLatencyPolicy(KWin::RenderLoop::LatencyPolicy::LatencyExtremelyHigh);
-            } else {
-                loop->resetLatencyPolicy();
-            }
-        }
         Q_EMIT hasActiveFullScreenEffectChanged();
         workspace()->screenEdges()->checkBlocking();
     }

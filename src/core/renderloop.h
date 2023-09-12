@@ -109,33 +109,6 @@ public:
      */
     void setVrrPolicy(VrrPolicy vrrPolicy);
 
-    /**
-     * This enum type specifies the latency level configured by the user.
-     */
-    enum LatencyPolicy {
-        LatencyExtremelyLow,
-        LatencyLow,
-        LatencyMedium,
-        LatencyHigh,
-        LatencyExtremelyHigh,
-    };
-    Q_ENUM(LatencyPolicy)
-    /**
-     * Returns the latency policy for this render loop.
-     */
-    LatencyPolicy latencyPolicy() const;
-
-    /**
-     * Sets the latecy policy of this render loop to @a policy. By default,
-     * the latency policy of this render loop matches options->latencyPolicy().
-     */
-    void setLatencyPolicy(LatencyPolicy policy);
-
-    /**
-     * Resets the latency policy to the default value.
-     */
-    void resetLatencyPolicy();
-
 Q_SIGNALS:
     /**
      * This signal is emitted when the refresh rate of this RenderLoop has changed.

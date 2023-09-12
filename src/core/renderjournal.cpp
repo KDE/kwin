@@ -15,36 +15,20 @@ RenderJournal::RenderJournal()
 
 void RenderJournal::add(std::chrono::nanoseconds renderTime)
 {
-    if (m_log.count() >= m_size) {
-        m_log.dequeue();
+    if (renderTime > m_result || !m_lastAdd) {
+        m_result = renderTime;
+    } else {
+        static constexpr std::chrono::nanoseconds timeConstant = std::chrono::milliseconds(500);
+        const auto timeDifference = std::chrono::steady_clock::now() - *m_lastAdd;
+        const double ratio = std::min(0.1, double(timeDifference.count()) / double(timeConstant.count()));
+        m_result = std::chrono::nanoseconds(int64_t(renderTime.count() * ratio + m_result.count() * (1 - ratio)));
     }
-    m_log.enqueue(renderTime);
+    m_lastAdd = std::chrono::steady_clock::now();
 }
 
-std::chrono::nanoseconds RenderJournal::minimum() const
+std::chrono::nanoseconds RenderJournal::result() const
 {
-    auto it = std::min_element(m_log.constBegin(), m_log.constEnd());
-    return it != m_log.constEnd() ? (*it) : std::chrono::nanoseconds::zero();
-}
-
-std::chrono::nanoseconds RenderJournal::maximum() const
-{
-    auto it = std::max_element(m_log.constBegin(), m_log.constEnd());
-    return it != m_log.constEnd() ? (*it) : std::chrono::nanoseconds::zero();
-}
-
-std::chrono::nanoseconds RenderJournal::average() const
-{
-    if (m_log.isEmpty()) {
-        return std::chrono::nanoseconds::zero();
-    }
-
-    std::chrono::nanoseconds result = std::chrono::nanoseconds::zero();
-    for (const std::chrono::nanoseconds &entry : m_log) {
-        result += entry;
-    }
-
-    return result / m_log.count();
+    return m_result;
 }
 
 } // namespace KWin

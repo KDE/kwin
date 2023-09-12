@@ -261,24 +261,6 @@
         <entry name="WindowsBlockCompositing" type="Bool">
             <default>true</default>
         </entry>
-        <entry name="LatencyPolicy" type="Enum">
-            <choices name="KWin::RenderLoop::LatencyPolicy">
-                <choice name="LatencyExtremelyLow" value="ExtremelyLow"/>
-                <choice name="LatencyLow" value="Low"/>
-                <choice name="LatencyMedium" value="Medium"/>
-                <choice name="LatencyHigh" value="High"/>
-                <choice name="LatencyExtremelyHigh" value="ExtremelyHigh"/>
-            </choices>
-            <default>KWin::RenderLoop::LatencyExtremelyHigh</default>
-        </entry>
-        <entry name="RenderTimeEstimator" type="Enum">
-            <choices name="KWin::RenderTimeEstimator">
-                <choice name="RenderTimeEstimatorMinimum" value="Minimum"/>
-                <choice name="RenderTimeEstimatorMaximum" value="Maximum"/>
-                <choice name="RenderTimeEstimatorAverage" value="Average"/>
-            </choices>
-            <default>RenderTimeEstimatorMaximum</default>
-        </entry>
         <entry name="AllowTearing" type="Bool">
             <default>true</default>
         </entry>

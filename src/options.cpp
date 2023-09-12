@@ -55,8 +55,6 @@ Options::Options(QObject *parent)
     , m_xwaylandCrashPolicy(Options::defaultXwaylandCrashPolicy())
     , m_xwaylandMaxCrashCount(Options::defaultXwaylandMaxCrashCount())
     , m_xwaylandEavesdrops(Options::defaultXwaylandEavesdrops())
-    , m_latencyPolicy(Options::defaultLatencyPolicy())
-    , m_renderTimeEstimator(Options::defaultRenderTimeEstimator())
     , m_compositingMode(Options::defaultCompositingMode())
     , m_useCompositing(Options::defaultUseCompositing())
     , m_hiddenPreviews(Options::defaultHiddenPreviews())
@@ -619,34 +617,6 @@ void Options::setGlPreferBufferSwap(char glPreferBufferSwap)
     Q_EMIT glPreferBufferSwapChanged();
 }
 
-KWin::RenderLoop::LatencyPolicy Options::latencyPolicy() const
-{
-    return m_latencyPolicy;
-}
-
-void Options::setLatencyPolicy(KWin::RenderLoop::LatencyPolicy policy)
-{
-    if (m_latencyPolicy == policy) {
-        return;
-    }
-    m_latencyPolicy = policy;
-    Q_EMIT latencyPolicyChanged();
-}
-
-RenderTimeEstimator Options::renderTimeEstimator() const
-{
-    return m_renderTimeEstimator;
-}
-
-void Options::setRenderTimeEstimator(RenderTimeEstimator estimator)
-{
-    if (m_renderTimeEstimator == estimator) {
-        return;
-    }
-    m_renderTimeEstimator = estimator;
-    Q_EMIT renderTimeEstimatorChanged();
-}
-
 bool Options::allowTearing() const
 {
     return m_allowTearing;
@@ -875,8 +845,6 @@ void Options::syncFromKcfgc()
     setElectricBorderTiling(m_settings->electricBorderTiling());
     setElectricBorderCornerRatio(m_settings->electricBorderCornerRatio());
     setWindowsBlockCompositing(m_settings->windowsBlockCompositing());
-    setLatencyPolicy(m_settings->latencyPolicy());
-    setRenderTimeEstimator(m_settings->renderTimeEstimator());
     setAllowTearing(m_settings->allowTearing());
 }
 

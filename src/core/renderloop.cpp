@@ -56,40 +56,11 @@ void RenderLoopPrivate::scheduleRepaint()
     }
 
     // Estimate when it's a good time to perform the next compositing cycle.
+    // this safety margin is required for
+    // - the buffer readiness deadline in the drm backend, which is 1.8ms before vblank
+    // - scheduling and timer inaccuracies (estimated to be up to 1.2ms here)
     const std::chrono::nanoseconds safetyMargin = std::chrono::milliseconds(3);
-
-    std::chrono::nanoseconds renderTime;
-    switch (q->latencyPolicy()) {
-    case KWin::RenderLoop::LatencyExtremelyLow:
-        renderTime = std::chrono::nanoseconds(long(vblankInterval.count() * 0.1));
-        break;
-    case KWin::RenderLoop::LatencyLow:
-        renderTime = std::chrono::nanoseconds(long(vblankInterval.count() * 0.25));
-        break;
-    case KWin::RenderLoop::LatencyMedium:
-        renderTime = std::chrono::nanoseconds(long(vblankInterval.count() * 0.5));
-        break;
-    case KWin::RenderLoop::LatencyHigh:
-        renderTime = std::chrono::nanoseconds(long(vblankInterval.count() * 0.75));
-        break;
-    case KWin::RenderLoop::LatencyExtremelyHigh:
-        renderTime = std::chrono::nanoseconds(long(vblankInterval.count() * 0.9));
-        break;
-    }
-
-    switch (options->renderTimeEstimator()) {
-    case RenderTimeEstimatorMinimum:
-        renderTime = std::max(renderTime, renderJournal.minimum());
-        break;
-    case RenderTimeEstimatorMaximum:
-        renderTime = std::max(renderTime, renderJournal.maximum());
-        break;
-    case RenderTimeEstimatorAverage:
-        renderTime = std::max(renderTime, renderJournal.average());
-        break;
-    }
-
-    std::chrono::nanoseconds nextRenderTimestamp = nextPresentationTimestamp - renderTime - safetyMargin;
+    std::chrono::nanoseconds nextRenderTimestamp = nextPresentationTimestamp - renderJournal.result() - safetyMargin;
 
     // If we can't render the frame before the deadline, start compositing immediately.
     if (nextRenderTimestamp < currentTime) {
@@ -237,21 +208,6 @@ void RenderLoop::scheduleRepaint(Item *item)
     } else {
         d->delayScheduleRepaint();
     }
-}
-
-KWin::RenderLoop::LatencyPolicy RenderLoop::latencyPolicy() const
-{
-    return d->latencyPolicy.value_or(options->latencyPolicy());
-}
-
-void RenderLoop::setLatencyPolicy(LatencyPolicy policy)
-{
-    d->latencyPolicy = policy;
-}
-
-void RenderLoop::resetLatencyPolicy()
-{
-    d->latencyPolicy.reset();
 }
 
 std::chrono::nanoseconds RenderLoop::lastPresentationTimestamp() const
