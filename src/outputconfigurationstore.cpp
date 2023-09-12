@@ -52,6 +52,9 @@ std::pair<OutputConfiguration, QVector<Output *>> OutputConfigurationStore::gene
             .overscan = 0,
             .rgbRange = Output::RgbRange::Automatic,
             .vrrPolicy = RenderLoop::VrrPolicy::Automatic,
+            .highDynamicRange = false,
+            .sdrBrightness = 200,
+            .wideColorGamut = false,
         };
         pos.setX(pos.x() + mode->size().width() / scale);
         if (enable) {

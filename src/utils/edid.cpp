@@ -128,6 +128,7 @@ Edid::Edid(const void *data, uint32_t size)
             .green = {chromaticity->green_x, chromaticity->green_y},
             .blue = {chromaticity->blue_x, chromaticity->blue_y},
             .white = {chromaticity->white_x, chromaticity->white_y},
+            .name = std::nullopt,
         };
     } else {
         // assume sRGB

@@ -41,11 +41,11 @@ public:
 private:
     void setNoneBackgroundPixmap(xcb_window_t window);
     void setupInputShape(xcb_window_t window);
-    bool m_visible;
-    bool m_shown; // For showOverlay()
+    bool m_visible = true;
+    bool m_shown = false; // For showOverlay()
 
-    X11StandaloneBackend *m_backend;
+    X11StandaloneBackend *const m_backend;
     QRegion m_shape;
-    xcb_window_t m_window;
+    xcb_window_t m_window = XCB_WINDOW_NONE;
 };
 } // namespace

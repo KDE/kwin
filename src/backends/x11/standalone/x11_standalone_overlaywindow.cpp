@@ -31,9 +31,6 @@ OverlayWindowX11::OverlayWindowX11(X11StandaloneBackend *backend)
     : OverlayWindow()
     , X11EventFilter(QVector<int>{XCB_EXPOSE, XCB_VISIBILITY_NOTIFY})
     , m_backend(backend)
-    , m_visible(true)
-    , m_shown(false)
-    , m_window(XCB_WINDOW_NONE)
 {
 }
 

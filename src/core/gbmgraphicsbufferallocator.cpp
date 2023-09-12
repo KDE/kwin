@@ -125,6 +125,10 @@ static GraphicsBuffer *allocateDumb(gbm_device *device, const GraphicsBufferOpti
         .height = uint32_t(options.size.height()),
         .width = uint32_t(options.size.width()),
         .bpp = 32,
+        .flags = 0,
+        .handle = 0,
+        .pitch = 0,
+        .size = 0,
     };
     if (drmIoctl(gbm_device_get_fd(device), DRM_IOCTL_MODE_CREATE_DUMB, &createArgs) != 0) {
         qCWarning(KWIN_CORE) << "DRM_IOCTL_MODE_CREATE_DUMB failed:" << strerror(errno);
@@ -305,6 +309,8 @@ GraphicsBuffer::Map DumbGraphicsBuffer::map(MapFlags flags)
     if (!m_data) {
         drm_mode_map_dumb mapArgs{
             .handle = m_handle,
+            .pad = 0,
+            .offset = 0,
         };
         if (drmIoctl(m_drmFd, DRM_IOCTL_MODE_MAP_DUMB, &mapArgs) != 0) {
             qCWarning(KWIN_CORE) << "DRM_IOCTL_MODE_MAP_DUMB failed:" << strerror(errno);

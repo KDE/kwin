@@ -199,7 +199,7 @@ KWin::TabletToolId createTabletId(libinput_tablet_tool *tool, Device *dev)
     auto serial = libinput_tablet_tool_get_serial(tool);
     auto toolId = libinput_tablet_tool_get_tool_id(tool);
     auto type = libinput_tablet_tool_get_type(tool);
-    InputRedirection::TabletToolType toolType;
+    InputRedirection::TabletToolType toolType = InputRedirection::Pen;
     switch (type) {
     case LIBINPUT_TABLET_TOOL_TYPE_PEN:
         toolType = InputRedirection::Pen;

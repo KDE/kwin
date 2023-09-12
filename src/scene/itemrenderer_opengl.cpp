@@ -260,6 +260,9 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
     }
 
     RenderContext renderContext{
+        .renderNodes = {},
+        .transformStack = {},
+        .opacityStack = {},
         .projectionMatrix = data.projectionMatrix(),
         .clip = region,
         .hardwareClipping = region != infiniteRegion() && ((mask & Scene::PAINT_WINDOW_TRANSFORMED) || (mask & Scene::PAINT_SCREEN_TRANSFORMED)),

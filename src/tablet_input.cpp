@@ -67,6 +67,8 @@ void TabletInputRedirection::tabletToolEvent(KWin::InputRedirection::TabletEvent
     case InputRedirection::Proximity:
         t = tipNear ? QEvent::TabletEnterProximity : QEvent::TabletLeaveProximity;
         break;
+    default:
+        Q_UNREACHABLE();
     }
 
     update();

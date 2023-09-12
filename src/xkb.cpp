@@ -278,7 +278,8 @@ void Xkb::updateKeymap(xkb_keymap *keymap)
     }
 
     // save Locks
-    bool numLockIsOn, capsLockIsOn;
+    bool numLockIsOn = false;
+    bool capsLockIsOn = false;
     static bool s_startup = true;
     if (!s_startup) {
         numLockIsOn = xkb_state_mod_index_is_active(m_state, m_numModifier, XKB_STATE_MODS_LOCKED);
