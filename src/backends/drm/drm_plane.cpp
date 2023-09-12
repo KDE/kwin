@@ -95,7 +95,8 @@ bool DrmPlane::updateProperties()
             m_supportedFormats[iterator.fmt].push_back(iterator.mod);
         }
     } else {
-        const QVector<uint64_t> modifiers = {DRM_FORMAT_MOD_INVALID};
+        // if we don't have modifier support, assume the cursor needs a linear buffer
+        const QVector<uint64_t> modifiers = {type.enumValue() == TypeIndex::Cursor ? DRM_FORMAT_MOD_LINEAR : DRM_FORMAT_MOD_INVALID};
         for (uint32_t i = 0; i < p->count_formats; i++) {
             m_supportedFormats.insert(p->formats[i], modifiers);
         }
