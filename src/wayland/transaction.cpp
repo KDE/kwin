@@ -103,6 +103,9 @@ bool Transaction::isReady() const
     }
 
     for (const TransactionEntry &entry : m_entries) {
+        if (!entry.surface) {
+            continue;
+        }
         if (entry.surface->firstTransaction() != this) {
             return false;
         }
@@ -142,13 +145,6 @@ void Transaction::add(SurfaceInterface *surface)
         .surface = surface,
         .buffer = GraphicsBufferRef(state->buffer),
         .state = std::move(state),
-    });
-}
-
-void Transaction::remove(SurfaceInterface *surface)
-{
-    std::erase_if(m_entries, [surface](const TransactionEntry &entry) {
-        return entry.surface == surface;
     });
 }
 
@@ -211,17 +207,23 @@ void Transaction::apply()
     });
 
     for (TransactionEntry &entry : m_entries) {
-        SurfaceInterfacePrivate::get(entry.surface)->applyState(entry.state.get());
+        if (entry.surface) {
+            SurfaceInterfacePrivate::get(entry.surface)->applyState(entry.state.get());
+        }
     }
 
     for (TransactionEntry &entry : m_entries) {
-        if (entry.surface->lastTransaction() == this) {
-            entry.surface->setFirstTransaction(nullptr);
-            entry.surface->setLastTransaction(nullptr);
-        } else {
-            Transaction *nextTransaction = entry.nextTransaction;
-            entry.surface->setFirstTransaction(nextTransaction);
-            nextTransaction->tryApply();
+        if (entry.surface) {
+            if (entry.surface->lastTransaction() == this) {
+                entry.surface->setFirstTransaction(nullptr);
+                entry.surface->setLastTransaction(nullptr);
+            } else {
+                entry.surface->setFirstTransaction(entry.nextTransaction);
+            }
+        }
+
+        if (entry.nextTransaction) {
+            entry.nextTransaction->tryApply();
         }
     }
 

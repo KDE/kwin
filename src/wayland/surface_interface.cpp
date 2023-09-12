@@ -407,10 +407,6 @@ SurfaceInterface::~SurfaceInterface()
 {
     delete d->subsurface.transaction;
     d->subsurface.transaction = nullptr;
-
-    for (auto transaction = d->firstTransaction; transaction; transaction = transaction->next(this)) {
-        transaction->remove(this);
-    }
 }
 
 SurfaceRole *SurfaceInterface::role() const

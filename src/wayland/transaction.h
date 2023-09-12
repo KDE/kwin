@@ -8,6 +8,8 @@
 
 #include "core/graphicsbuffer.h"
 
+#include <QPointer>
+
 #include <functional>
 #include <memory>
 #include <vector>
@@ -25,9 +27,11 @@ class Transaction;
 struct TransactionEntry
 {
     /**
-     * The surface that is going to be affected by the transaction.
+     * The surface that is going to be affected by the transaction. Might be
+     * \c null if the surface has been destroyed while the transaction is still
+     * not ready.
      */
-    SurfaceInterface *surface = nullptr;
+    QPointer<SurfaceInterface> surface;
 
     /**
      * Next transaction that is going to affect the surface.
@@ -80,11 +84,6 @@ public:
      * surface state and apply it when it's possible.
      */
     void add(SurfaceInterface *surface);
-
-    /**
-     * Removes the specified \a surface from this transaction.
-     */
-    void remove(SurfaceInterface *surface);
 
     /**
      * Amends already committed state.
