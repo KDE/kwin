@@ -466,7 +466,7 @@ DrmOutputLayer *DrmOutput::primaryLayer() const
 
 bool DrmOutput::setGammaRamp(const std::shared_ptr<ColorTransformation> &transformation)
 {
-    if (!m_pipeline->active()) {
+    if (!m_pipeline->activePending()) {
         return false;
     }
     m_pipeline->setGammaRamp(transformation);
@@ -483,7 +483,7 @@ bool DrmOutput::setGammaRamp(const std::shared_ptr<ColorTransformation> &transfo
 
 bool DrmOutput::setCTM(const QMatrix3x3 &ctm)
 {
-    if (!m_pipeline->active()) {
+    if (!m_pipeline->activePending()) {
         return false;
     }
     m_pipeline->setCTM(ctm);
