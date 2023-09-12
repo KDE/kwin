@@ -19,7 +19,6 @@ namespace KWaylandServer
 {
 class ClientConnectionPrivate;
 class Display;
-class Transaction;
 
 /**
  * @brief Convenient Class which represents a wl_client.
@@ -125,18 +124,6 @@ public:
      */
     void setScaleOverride(qreal scaleOverride);
     qreal scaleOverride() const;
-
-    /**
-     * The first committed transaction that belongs to this client.
-     */
-    Transaction *firstTransaction() const;
-    void setFirstTransaction(Transaction *transaction);
-
-    /**
-     * The last committed transaction that belongs to this client.
-     */
-    Transaction *lastTransaction() const;
-    void setLastTransaction(Transaction *transaction);
 
 Q_SIGNALS:
     /**

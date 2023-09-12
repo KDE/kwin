@@ -15,7 +15,6 @@
 namespace KWaylandServer
 {
 
-class ClientConnection;
 class SurfaceInterface;
 class SurfaceState;
 class Transaction;
@@ -71,11 +70,6 @@ public:
     bool isReady() const;
 
     /**
-     * Returns the next transaction that should be applied after this transaction.
-     */
-    Transaction *next() const;
-
-    /**
      * Returns the next transaction for the specified \a surface. If this transaction does
      * not affect the given surface, \c null is returned.
      */
@@ -116,8 +110,6 @@ private:
     void apply();
     bool tryApply();
 
-    ClientConnection *m_client = nullptr;
-    Transaction *m_nextTransaction = nullptr;
     std::vector<TransactionEntry> m_entries;
     int m_locks = 0;
 };

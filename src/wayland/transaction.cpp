@@ -6,7 +6,6 @@
 
 #include "wayland/transaction.h"
 #include "utils/filedescriptor.h"
-#include "wayland/clientconnection.h"
 #include "wayland/subcompositor_interface.h"
 #include "wayland/surface_interface_p.h"
 #include "wayland/transaction_p.h"
@@ -108,12 +107,7 @@ bool Transaction::isReady() const
         }
     }
 
-    return m_client->firstTransaction() == this;
-}
-
-Transaction *Transaction::next() const
-{
-    return m_nextTransaction;
+    return true;
 }
 
 Transaction *Transaction::next(SurfaceInterface *surface) const
@@ -217,24 +211,17 @@ void Transaction::apply()
 
     for (TransactionEntry &entry : m_entries) {
         SurfaceInterfacePrivate::get(entry.surface)->applyState(entry.state.get());
+    }
 
+    for (TransactionEntry &entry : m_entries) {
         if (entry.surface->lastTransaction() == this) {
             entry.surface->setFirstTransaction(nullptr);
             entry.surface->setLastTransaction(nullptr);
         } else {
-            entry.surface->setFirstTransaction(entry.nextTransaction);
+            Transaction *nextTransaction = entry.nextTransaction;
+            entry.surface->setFirstTransaction(nextTransaction);
+            nextTransaction->tryApply();
         }
-    }
-
-    if (m_client->lastTransaction() == this) {
-        m_client->setFirstTransaction(nullptr);
-        m_client->setLastTransaction(nullptr);
-    } else {
-        m_client->setFirstTransaction(m_nextTransaction);
-    }
-
-    if (m_nextTransaction) {
-        m_nextTransaction->tryApply();
     }
 
     delete this;
@@ -252,10 +239,6 @@ bool Transaction::tryApply()
 void Transaction::commit()
 {
     for (TransactionEntry &entry : m_entries) {
-        if (!m_client) {
-            m_client = entry.surface->client();
-        }
-
         if (entry.state->bufferIsSet && entry.state->buffer) {
             // Avoid applying the transaction until all graphics buffers have become idle.
             if (auto locker = TransactionDmaBufLocker::get(entry.state->buffer)) {
@@ -276,13 +259,6 @@ void Transaction::commit()
 
         entry.surface->setLastTransaction(this);
     }
-
-    if (m_client->firstTransaction()) {
-        m_client->lastTransaction()->m_nextTransaction = this;
-    } else {
-        m_client->setFirstTransaction(this);
-    }
-    m_client->setLastTransaction(this);
 
     if (!tryApply()) {
         for (const TransactionEntry &entry : m_entries) {
