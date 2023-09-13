@@ -127,3 +127,5 @@ XdgToplevelDragManagerV1Interface::XdgToplevelDragManagerV1Interface(KWaylandSer
 
 XdgToplevelDragManagerV1Interface::~XdgToplevelDragManagerV1Interface() = default;
 }
+
+#include "moc_xdgtopleveldrag_v1.cpp"
