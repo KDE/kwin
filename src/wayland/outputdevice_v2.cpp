@@ -22,7 +22,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 3;
+static const quint32 s_version = 4;
 
 static QtWaylandServer::kde_output_device_v2::transform kwinTransformToOutputDeviceTransform(OutputTransform transform)
 {
@@ -52,6 +52,9 @@ static uint32_t kwinCapabilitiesToOutputDeviceCapabilities(Output::Capabilities 
     if (caps & Output::Capability::WideColorGamut) {
         ret |= QtWaylandServer::kde_output_device_v2::capability_wide_color_gamut;
     }
+    if (caps & Output::Capability::AutoRotation) {
+        ret |= QtWaylandServer::kde_output_device_v2::capability_auto_rotate;
+    }
     return ret;
 }
 
@@ -63,6 +66,11 @@ static QtWaylandServer::kde_output_device_v2::vrr_policy kwinVrrPolicyToOutputDe
 static QtWaylandServer::kde_output_device_v2::rgb_range kwinRgbRangeToOutputDeviceRgbRange(Output::RgbRange range)
 {
     return static_cast<QtWaylandServer::kde_output_device_v2::rgb_range>(range);
+}
+
+static QtWaylandServer::kde_output_device_v2::auto_rotate_policy kwinAutoRotationToOutputDeviceAutoRotation(Output::AutoRotationPolicy policy)
+{
+    return static_cast<QtWaylandServer::kde_output_device_v2::auto_rotate_policy>(policy);
 }
 
 class OutputDeviceV2InterfacePrivate : public QtWaylandServer::kde_output_device_v2
@@ -89,6 +97,7 @@ public:
     void sendHighDynamicRange(Resource *resource);
     void sendSdrBrightness(Resource *resource);
     void sendWideColorGamut(Resource *resource);
+    void sendAutoRotationPolicy(Resource *resource);
 
     OutputDeviceV2Interface *q;
     QPointer<Display> m_display;
@@ -115,6 +124,7 @@ public:
     bool m_highDynamicRange = false;
     uint32_t m_sdrBrightness = 200;
     bool m_wideColorGamut = false;
+    auto_rotate_policy m_autoRotation = auto_rotate_policy::auto_rotate_policy_in_tablet_mode;
 
 protected:
     void kde_output_device_v2_bind_resource(Resource *resource) override;
@@ -195,6 +205,7 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, Output *handl
     updateHighDynamicRange();
     updateSdrBrightness();
     updateWideColorGamut();
+    updateAutoRotate();
 
     connect(handle, &Output::geometryChanged,
             this, &OutputDeviceV2Interface::updateGlobalPosition);
@@ -219,6 +230,7 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, Output *handl
     connect(handle, &Output::highDynamicRangeChanged, this, &OutputDeviceV2Interface::updateHighDynamicRange);
     connect(handle, &Output::sdrBrightnessChanged, this, &OutputDeviceV2Interface::updateSdrBrightness);
     connect(handle, &Output::wideColorGamutChanged, this, &OutputDeviceV2Interface::updateWideColorGamut);
+    connect(handle, &Output::autoRotationPolicyChanged, this, &OutputDeviceV2Interface::updateAutoRotate);
 }
 
 OutputDeviceV2Interface::~OutputDeviceV2Interface()
@@ -272,6 +284,7 @@ void OutputDeviceV2InterfacePrivate::kde_output_device_v2_bind_resource(Resource
     sendHighDynamicRange(resource);
     sendSdrBrightness(resource);
     sendWideColorGamut(resource);
+    sendAutoRotationPolicy(resource);
     sendDone(resource);
 }
 
@@ -387,6 +400,13 @@ void OutputDeviceV2InterfacePrivate::sendWideColorGamut(Resource *resource)
 {
     if (resource->version() >= KDE_OUTPUT_DEVICE_V2_WIDE_COLOR_GAMUT_SINCE_VERSION) {
         send_wide_color_gamut(resource->handle, m_wideColorGamut ? 1 : 0);
+    }
+}
+
+void OutputDeviceV2InterfacePrivate::sendAutoRotationPolicy(Resource *resource)
+{
+    if (resource->version() >= KDE_OUTPUT_DEVICE_V2_AUTO_ROTATE_POLICY_SINCE_VERSION) {
+        send_auto_rotate_policy(resource->handle, m_autoRotation);
     }
 }
 
@@ -641,6 +661,19 @@ void OutputDeviceV2Interface::updateWideColorGamut()
         const auto clientResources = d->resourceMap();
         for (const auto &resource : clientResources) {
             d->sendWideColorGamut(resource);
+            d->sendDone(resource);
+        }
+    }
+}
+
+void OutputDeviceV2Interface::updateAutoRotate()
+{
+    const auto policy = kwinAutoRotationToOutputDeviceAutoRotation(d->m_handle->autoRotationPolicy());
+    if (d->m_autoRotation != policy) {
+        d->m_autoRotation = policy;
+        const auto clientResources = d->resourceMap();
+        for (const auto &resource : clientResources) {
+            d->sendAutoRotationPolicy(resource);
             d->sendDone(resource);
         }
     }

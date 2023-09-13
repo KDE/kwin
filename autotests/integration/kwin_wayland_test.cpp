@@ -144,6 +144,7 @@ void WaylandTestApplication::performStartup()
     // try creating the Wayland Backend
     createInput();
     createVirtualInputDevices();
+    createTabletModeManager();
 
     WaylandCompositor::create();
     createWorkspace();

@@ -120,6 +120,9 @@ Edid::Edid(const void *data, uint32_t size)
     hash.addData(m_raw);
     m_hash = QString::fromLatin1(hash.result().toHex());
 
+    m_identifier = QByteArray(productInfo->manufacturer, 3) + " " + QByteArray::number(productInfo->product) + " " + QByteArray::number(productInfo->serial) + " "
+        + QByteArray::number(productInfo->manufacture_week) + " " + QByteArray::number(productInfo->manufacture_year) + " " + QByteArray::number(productInfo->model_year);
+
     // colorimetry and HDR metadata
     const auto chromaticity = di_edid_get_chromaticity_coords(edid);
     if (chromaticity) {
@@ -250,6 +253,11 @@ Colorimetry Edid::colorimetry() const
 std::optional<Edid::HDRMetadata> Edid::hdrMetadata() const
 {
     return m_hdrMetadata;
+}
+
+QByteArray Edid::identifier() const
+{
+    return m_identifier;
 }
 
 } // namespace KWin

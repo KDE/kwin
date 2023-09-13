@@ -285,6 +285,7 @@ public:
 #if KWIN_BUILD_SCREENLOCKER
     ScreenLockerWatcher *screenLockerWatcher() const;
 #endif
+    TabletModeManager *tabletModeManager() const;
 
     /**
      * Starts an interactive window selection process.

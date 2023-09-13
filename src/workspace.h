@@ -79,6 +79,7 @@ class TileManager;
 class OutputConfigurationStore;
 class LidSwitchTracker;
 class DpmsInputEventFilter;
+class OrientationSensor;
 
 class KWIN_EXPORT Workspace : public QObject
 {
@@ -725,6 +726,7 @@ private:
     std::map<Output *, std::unique_ptr<TileManager>> m_tileManagers;
     std::unique_ptr<OutputConfigurationStore> m_outputConfigStore;
     std::unique_ptr<LidSwitchTracker> m_lidSwitchTracker;
+    std::unique_ptr<OrientationSensor> m_orientationSensor;
     std::unique_ptr<DpmsInputEventFilter> m_dpmsFilter;
 
 private:

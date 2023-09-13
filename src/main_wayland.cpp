@@ -177,10 +177,6 @@ void ApplicationWayland::refreshSettings(const KConfigGroup &group, const QByteA
         KDesktopFile file(group.readPathEntry("InputMethod", QString()));
         kwinApp()->inputMethod()->setInputMethodCommand(file.desktopGroup().readEntry("Exec", QString()));
     }
-
-    if (m_startXWayland && group.name() == "Xwayland" && names.contains("Scale")) {
-        setXwaylandScale(group.readEntry("Scale", 1.0));
-    }
 }
 
 void ApplicationWayland::startSession()

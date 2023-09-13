@@ -4,6 +4,7 @@ target_sources(kwin PRIVATE
     edid.cpp
     egl_context_attribute_builder.cpp
     filedescriptor.cpp
+    orientationsensor.cpp
     ramfile.cpp
     realtime.cpp
     softwarevsyncmonitor.cpp

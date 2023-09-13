@@ -63,6 +63,10 @@ DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn)
         && m_connector->edid() && m_connector->edid()->hdrMetadata() && m_connector->edid()->hdrMetadata()->supportsBT2020) {
         capabilities |= Capability::WideColorGamut;
     }
+    if (conn->isInternal()) {
+        // TODO only set this if an orientation sensor is available?
+        capabilities |= Capability::AutoRotation;
+    }
 
     const Edid *edid = conn->edid();
 
@@ -335,6 +339,7 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.highDynamicRange = props->highDynamicRange.value_or(m_state.highDynamicRange);
     next.sdrBrightness = props->sdrBrightness.value_or(m_state.sdrBrightness);
     next.wideColorGamut = props->wideColorGamut.value_or(m_state.wideColorGamut);
+    next.autoRotatePolicy = props->autoRotationPolicy.value_or(m_state.autoRotatePolicy);
     if (m_state.highDynamicRange != next.highDynamicRange || m_state.sdrBrightness != next.sdrBrightness || m_state.wideColorGamut != next.wideColorGamut) {
         m_renderLoop->scheduleRepaint();
     }

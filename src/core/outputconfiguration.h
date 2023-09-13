@@ -32,6 +32,7 @@ public:
     std::optional<bool> highDynamicRange;
     std::optional<uint32_t> sdrBrightness;
     std::optional<bool> wideColorGamut;
+    std::optional<Output::AutoRotationPolicy> autoRotationPolicy;
 };
 
 class KWIN_EXPORT OutputConfiguration

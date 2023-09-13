@@ -23,7 +23,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 4;
+static const quint32 s_version = 5;
 
 class OutputManagementV2InterfacePrivate : public QtWaylandServer::kde_output_management_v2
 {
@@ -62,6 +62,7 @@ protected:
     void kde_output_configuration_v2_set_high_dynamic_range(Resource *resource, wl_resource *outputdevice, uint32_t enable_hdr) override;
     void kde_output_configuration_v2_set_sdr_brightness(Resource *resource, wl_resource *outputdevice, uint32_t sdr_brightness) override;
     void kde_output_configuration_v2_set_wide_color_gamut(Resource *resource, wl_resource *outputdevice, uint32_t enable_wcg) override;
+    void kde_output_configuration_v2_set_auto_rotate_policy(Resource *resource, wl_resource *outputdevice, uint32_t auto_rotation_policy) override;
 };
 
 OutputManagementV2InterfacePrivate::OutputManagementV2InterfacePrivate(Display *display)
@@ -269,6 +270,16 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_set_wide_color_
     }
     if (OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice)) {
         config.changeSet(output->handle())->wideColorGamut = enable_wcg == 1;
+    }
+}
+
+void OutputConfigurationV2Interface::kde_output_configuration_v2_set_auto_rotate_policy(Resource *resource, wl_resource *outputdevice, uint32_t auto_rotation_policy)
+{
+    if (invalid) {
+        return;
+    }
+    if (OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice)) {
+        config.changeSet(output->handle())->autoRotationPolicy = static_cast<Output::AutoRotationPolicy>(auto_rotation_policy);
     }
 }
 

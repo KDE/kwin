@@ -92,6 +92,12 @@ public:
     };
     std::optional<HDRMetadata> hdrMetadata() const;
 
+    /**
+     * @returns a string that is intended to identify the monitor uniquely.
+     * Note that multiple monitors can have the same EDID, so this is not always actually unique
+     */
+    QByteArray identifier() const;
+
 private:
     QSize m_physicalSize;
     QByteArray m_vendor;
@@ -101,6 +107,8 @@ private:
     QString m_hash;
     Colorimetry m_colorimetry;
     std::optional<HDRMetadata> m_hdrMetadata;
+
+    QByteArray m_identifier;
 
     QByteArray m_raw;
     bool m_isValid = false;

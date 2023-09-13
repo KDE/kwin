@@ -328,6 +328,7 @@ void Output::applyChanges(const OutputConfiguration &config)
     next.position = props->pos.value_or(m_state.position);
     next.scale = props->scale.value_or(m_state.scale);
     next.rgbRange = props->rgbRange.value_or(m_state.rgbRange);
+    next.autoRotatePolicy = props->autoRotationPolicy.value_or(m_state.autoRotatePolicy);
 
     setState(next);
     setVrrPolicy(props->vrrPolicy.value_or(vrrPolicy()));
@@ -400,6 +401,9 @@ void Output::setState(const State &state)
     }
     if (oldState.wideColorGamut != state.wideColorGamut) {
         Q_EMIT wideColorGamutChanged();
+    }
+    if (oldState.autoRotatePolicy != state.autoRotatePolicy) {
+        Q_EMIT autoRotationPolicyChanged();
     }
     if (oldState.enabled != state.enabled) {
         Q_EMIT enabledChanged();
@@ -542,6 +546,11 @@ bool Output::highDynamicRange() const
 uint32_t Output::sdrBrightness() const
 {
     return m_state.sdrBrightness;
+}
+
+Output::AutoRotationPolicy Output::autoRotationPolicy() const
+{
+    return m_state.autoRotatePolicy;
 }
 
 bool Output::updateCursorLayer()

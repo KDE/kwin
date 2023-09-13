@@ -290,6 +290,11 @@ void Application::createTabletModeManager()
     m_tabletModeManager = std::make_unique<TabletModeManager>();
 }
 
+TabletModeManager *Application::tabletModeManager() const
+{
+    return m_tabletModeManager.get();
+}
+
 void Application::installNativeX11EventFilter()
 {
     installNativeEventFilter(m_eventFilter.get());
@@ -378,6 +383,8 @@ void Application::setXwaylandScale(qreal scale)
 {
     if (scale != m_xwaylandScale) {
         m_xwaylandScale = scale;
+        // rerun the fonts kcm init that does the appropriate xrdb call with the new settings
+        QProcess::startDetached("kcminit", {"kcm_fonts", "kcm_style"});
         Q_EMIT xwaylandScaleChanged();
     }
 }

@@ -56,6 +56,7 @@ find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     Quick
     UiTools
     Widgets
+    Sensors
 )
 
 find_package(Qt6Test ${QT_MIN_VERSION} CONFIG QUIET)

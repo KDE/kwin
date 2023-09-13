@@ -52,9 +52,11 @@
 #include "placeholderinputeventfilter.h"
 #include "placeholderoutput.h"
 #include "placementtracker.h"
+#include "tabletmodemanager.h"
 #include "tiles/tilemanager.h"
 #include "useractions.h"
 #include "utils/kernel.h"
+#include "utils/orientationsensor.h"
 #include "utils/xcbutils.h"
 #include "virtualdesktops.h"
 #include "was_user_interaction_x11_filter.h"
@@ -104,6 +106,7 @@ Workspace::Workspace()
     , m_placementTracker(std::make_unique<PlacementTracker>(this))
     , m_outputConfigStore(std::make_unique<OutputConfigurationStore>())
     , m_lidSwitchTracker(std::make_unique<LidSwitchTracker>())
+    , m_orientationSensor(std::make_unique<OrientationSensor>())
 {
     _self = this;
 
@@ -231,10 +234,18 @@ void Workspace::init()
     connect(this, &Workspace::windowRemoved, m_placementTracker.get(), &PlacementTracker::remove);
     m_placementTracker->init(getPlacementTrackerHash());
 
-    connect(m_lidSwitchTracker.get(), &LidSwitchTracker::lidStateChanged, this, [this]() {
-        const auto [config, order] = m_outputConfigStore->queryConfig(kwinApp()->outputBackend()->outputs(), m_lidSwitchTracker->isLidClosed());
-        applyOutputConfiguration(config, order);
-    });
+    const auto applySensorChanges = [this]() {
+        m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
+        const auto opt = m_outputConfigStore->queryConfig(kwinApp()->outputBackend()->outputs(), m_lidSwitchTracker->isLidClosed(), m_orientationSensor->reading(), kwinApp()->tabletModeManager()->effectiveTabletMode());
+        if (opt) {
+            const auto &[config, order, type] = *opt;
+            applyOutputConfiguration(config, order);
+        }
+    };
+    connect(m_lidSwitchTracker.get(), &LidSwitchTracker::lidStateChanged, this, applySensorChanges);
+    connect(m_orientationSensor.get(), &OrientationSensor::orientationChanged, this, applySensorChanges);
+    connect(kwinApp()->tabletModeManager(), &TabletModeManager::tabletModeChanged, this, applySensorChanges);
+    m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
 }
 
 QString Workspace::getPlacementTrackerHash()
@@ -462,6 +473,21 @@ bool Workspace::applyOutputConfiguration(const OutputConfiguration &config, cons
         return false;
     }
     updateOutputs(outputOrder);
+    m_outputConfigStore->storeConfig(kwinApp()->outputBackend()->outputs(), m_lidSwitchTracker->isLidClosed(), config, outputOrder);
+    KConfig cfg(QStringLiteral("kdeglobals"));
+    KConfigGroup kscreenGroup = cfg.group("KScreen");
+    const bool xwaylandClientsScale = kscreenGroup.readEntry("XwaylandClientsScale", true);
+    if (xwaylandClientsScale) {
+        double maxScale = 0;
+        for (Output *output : outputOrder) {
+            const auto changeset = config.constChangeSet(output);
+            maxScale = std::max(maxScale, changeset ? changeset->scale.value_or(output->scale()) : output->scale());
+        }
+        kwinApp()->setXwaylandScale(maxScale);
+    } else {
+        kwinApp()->setXwaylandScale(1);
+    }
+    m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
     return true;
 }
 
@@ -492,13 +518,30 @@ void Workspace::updateOutputConfiguration()
         setOutputOrder(newOrder);
     };
 
-    const auto &[cfg, order] = m_outputConfigStore->queryConfig(outputs, m_lidSwitchTracker->isLidClosed());
-    if (!kwinApp()->outputBackend()->applyOutputChanges(cfg)) {
+    const auto opt = m_outputConfigStore->queryConfig(outputs, m_lidSwitchTracker->isLidClosed(), m_orientationSensor->reading(), kwinApp()->tabletModeManager()->effectiveTabletMode());
+    if (!opt) {
+        return;
+    }
+    const auto &[cfg, order, type] = *opt;
+    if (!applyOutputConfiguration(cfg, order)) {
         qCWarning(KWIN_CORE) << "Applying output config failed!";
         setFallbackOutputOrder();
         return;
     }
     setOutputOrder(order);
+    if (type == OutputConfigurationStore::ConfigType::Generated) {
+        const bool hasInternal = std::any_of(outputs.begin(), outputs.end(), [](Output *o) {
+            return o->isInternal();
+        });
+        if (hasInternal && outputs.size() == 2) {
+            // show the OSD with output configuration presets
+            QDBusMessage message = QDBusMessage::createMethodCall(QStringLiteral("org.kde.kscreen.osdService"),
+                                                                  QStringLiteral("/org/kde/kscreen/osdService"),
+                                                                  QStringLiteral("org.kde.kscreen.osdService"),
+                                                                  QStringLiteral("showActionSelector"));
+            QDBusConnection::sessionBus().asyncCall(message);
+        }
+    }
 }
 
 void Workspace::setupWindowConnections(Window *window)

@@ -133,6 +133,7 @@ public:
         RgbRange = 1 << 3,
         HighDynamicRange = 1 << 4,
         WideColorGamut = 1 << 5,
+        AutoRotation = 1 << 6,
     };
     Q_DECLARE_FLAGS(Capabilities, Capability)
 
@@ -152,6 +153,13 @@ public:
         Limited = 2,
     };
     Q_ENUM(RgbRange)
+
+    enum class AutoRotationPolicy {
+        Never = 0,
+        InTabletMode,
+        Always
+    };
+    Q_ENUM(AutoRotationPolicy);
 
     explicit Output(QObject *parent = nullptr);
     ~Output() override;
@@ -299,6 +307,7 @@ public:
     bool wideColorGamut() const;
     bool highDynamicRange() const;
     uint32_t sdrBrightness() const;
+    AutoRotationPolicy autoRotationPolicy() const;
 
     virtual bool setGammaRamp(const std::shared_ptr<ColorTransformation> &transformation);
     virtual bool setChannelFactors(const QVector3D &rgb);
@@ -361,6 +370,7 @@ Q_SIGNALS:
     void wideColorGamutChanged();
     void sdrBrightnessChanged();
     void highDynamicRangeChanged();
+    void autoRotationPolicyChanged();
 
 protected:
     struct Information
@@ -395,6 +405,7 @@ protected:
         bool wideColorGamut = false;
         bool highDynamicRange = false;
         uint32_t sdrBrightness = 200;
+        AutoRotationPolicy autoRotatePolicy = AutoRotationPolicy::InTabletMode;
     };
 
     void setInformation(const Information &information);
