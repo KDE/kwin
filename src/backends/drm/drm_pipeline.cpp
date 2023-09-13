@@ -231,6 +231,9 @@ bool DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commit)
     }
 
     const auto fb = m_primaryLayer->currentBuffer();
+    if (!fb) {
+        return false;
+    }
     m_pending.crtc->primaryPlane()->set(commit, QPoint(0, 0), fb->buffer()->size(), centerBuffer(fb->buffer()->size(), m_pending.mode->size()));
     commit->addBuffer(m_pending.crtc->primaryPlane(), fb);
     return true;
@@ -374,7 +377,9 @@ bool DrmPipeline::updateCursor()
         }
         // test the full state, to take pending commits into account
         auto fullState = std::make_unique<DrmAtomicCommit>(QVector<DrmPipeline *>{this});
-        prepareAtomicPresentation(fullState.get());
+        if (!prepareAtomicPresentation(fullState.get())) {
+            return false;
+        }
         prepareAtomicCursor(fullState.get());
         if (!fullState->test()) {
             return false;
