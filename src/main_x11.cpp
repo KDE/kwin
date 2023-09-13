@@ -402,6 +402,8 @@ int main(int argc, char *argv[])
     qunsetenv("QT_QPA_PLATFORM");
     qunsetenv("QT_ENABLE_HIGHDPI_SCALING");
 
+    a.setProcessStartupEnvironment(QProcessEnvironment(QProcessEnvironment::InheritFromParent));
+
     KSignalHandler::self()->watchSignal(SIGTERM);
     KSignalHandler::self()->watchSignal(SIGINT);
     KSignalHandler::self()->watchSignal(SIGHUP);
