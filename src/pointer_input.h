@@ -23,7 +23,7 @@ class QWindow;
 
 namespace KWaylandServer
 {
-class Cursor;
+class PointerSurfaceCursor;
 class SurfaceInterface;
 }
 
@@ -223,7 +223,7 @@ Q_SIGNALS:
 
 private:
     void reevaluteSource();
-    void updateServerCursor(const std::variant<KWaylandServer::Cursor *, QByteArray> &cursor);
+    void updateServerCursor(const std::variant<KWaylandServer::PointerSurfaceCursor *, QByteArray> &cursor);
     void updateDecoration();
     void updateDecorationCursor();
     void updateMoveResize();

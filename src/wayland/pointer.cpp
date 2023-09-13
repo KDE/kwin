@@ -19,7 +19,7 @@
 
 namespace KWaylandServer
 {
-class CursorPrivate
+class PointerSurfaceCursorPrivate
 {
 public:
     QPointF hotspot;
@@ -84,7 +84,7 @@ void PointerInterfacePrivate::pointer_set_cursor(Resource *resource, uint32_t se
     }
 
     if (!cursor) {
-        cursor = std::make_unique<Cursor>();
+        cursor = std::make_unique<PointerSurfaceCursor>();
     }
     cursor->d->hotspot = QPointF(hotspot_x, hotspot_y) / focusedSurface->client()->scaleOverride();
     cursor->d->surface = surface;
@@ -370,21 +370,21 @@ PointerInterface *PointerInterface::get(wl_resource *native)
     return nullptr;
 }
 
-Cursor::Cursor()
-    : d(new CursorPrivate())
+PointerSurfaceCursor::PointerSurfaceCursor()
+    : d(new PointerSurfaceCursorPrivate())
 {
 }
 
-Cursor::~Cursor()
+PointerSurfaceCursor::~PointerSurfaceCursor()
 {
 }
 
-QPointF Cursor::hotspot() const
+QPointF PointerSurfaceCursor::hotspot() const
 {
     return d->hotspot;
 }
 
-SurfaceInterface *Cursor::surface() const
+SurfaceInterface *PointerSurfaceCursor::surface() const
 {
     return d->surface;
 }

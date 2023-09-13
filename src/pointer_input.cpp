@@ -981,7 +981,7 @@ void CursorImage::updateMoveResize()
 
 void CursorImage::updateServerCursor(const KWaylandServer::PointerCursor &cursor)
 {
-    if (auto surfaceCursor = std::get_if<KWaylandServer::Cursor *>(&cursor)) {
+    if (auto surfaceCursor = std::get_if<KWaylandServer::PointerSurfaceCursor *>(&cursor)) {
         m_serverCursor.surface->update((*surfaceCursor)->surface(), (*surfaceCursor)->hotspot());
         m_serverCursor.cursor = m_serverCursor.surface.get();
     } else if (auto shapeCursor = std::get_if<QByteArray>(&cursor)) {

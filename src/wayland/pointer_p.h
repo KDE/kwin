@@ -66,7 +66,7 @@ public:
     SurfaceInterface *focusedSurface = nullptr;
     quint32 focusedSerial = 0;
     QMetaObject::Connection destroyConnection;
-    std::unique_ptr<Cursor> cursor;
+    std::unique_ptr<PointerSurfaceCursor> cursor;
     std::unique_ptr<RelativePointerV1Interface> relativePointersV1;
     std::unique_ptr<PointerSwipeGestureV1Interface> swipeGesturesV1;
     std::unique_ptr<PointerPinchGestureV1Interface> pinchGesturesV1;

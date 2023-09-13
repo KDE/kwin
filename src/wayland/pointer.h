@@ -16,8 +16,8 @@ struct wl_resource;
 
 namespace KWaylandServer
 {
-class CursorPrivate;
-class Cursor;
+class PointerSurfaceCursorPrivate;
+class PointerSurfaceCursor;
 class PointerInterfacePrivate;
 class SeatInterface;
 class SurfaceInterface;
@@ -25,7 +25,7 @@ class SurfaceInterface;
 enum class PointerAxisSource;
 enum class PointerButtonState : quint32;
 
-using PointerCursor = std::variant<Cursor *, QByteArray>;
+using PointerCursor = std::variant<PointerSurfaceCursor *, QByteArray>;
 
 /**
  * The PointerInterface class represents one or more input devices such as mice, which control
@@ -85,11 +85,11 @@ private:
 /**
  * @brief Class encapsulating a Cursor image.
  */
-class KWIN_EXPORT Cursor
+class KWIN_EXPORT PointerSurfaceCursor
 {
 public:
-    Cursor();
-    ~Cursor();
+    PointerSurfaceCursor();
+    ~PointerSurfaceCursor();
 
     /**
      * The hotspot of the cursor image in surface-relative coordinates.
@@ -101,7 +101,7 @@ public:
     SurfaceInterface *surface() const;
 
 private:
-    std::unique_ptr<CursorPrivate> d;
+    std::unique_ptr<PointerSurfaceCursorPrivate> d;
     friend class PointerInterfacePrivate;
 };
 
