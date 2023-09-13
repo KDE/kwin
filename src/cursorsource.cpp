@@ -116,7 +116,7 @@ SurfaceCursorSource::SurfaceCursorSource(QObject *parent)
 {
 }
 
-KWaylandServer::SurfaceInterface *SurfaceCursorSource::surface() const
+SurfaceInterface *SurfaceCursorSource::surface() const
 {
     return m_surface;
 }
@@ -128,7 +128,7 @@ void SurfaceCursorSource::refresh()
     Q_EMIT changed();
 }
 
-void SurfaceCursorSource::update(KWaylandServer::SurfaceInterface *surface, const QPointF &hotspot)
+void SurfaceCursorSource::update(SurfaceInterface *surface, const QPointF &hotspot)
 {
     bool dirty = false;
 
@@ -141,7 +141,7 @@ void SurfaceCursorSource::update(KWaylandServer::SurfaceInterface *surface, cons
         dirty = true;
 
         if (m_surface) {
-            disconnect(m_surface, &KWaylandServer::SurfaceInterface::committed, this, &SurfaceCursorSource::refresh);
+            disconnect(m_surface, &SurfaceInterface::committed, this, &SurfaceCursorSource::refresh);
         }
 
         m_surface = surface;
@@ -149,7 +149,7 @@ void SurfaceCursorSource::update(KWaylandServer::SurfaceInterface *surface, cons
         if (m_surface) {
             m_size = surface->size();
 
-            connect(m_surface, &KWaylandServer::SurfaceInterface::committed, this, &SurfaceCursorSource::refresh);
+            connect(m_surface, &SurfaceInterface::committed, this, &SurfaceCursorSource::refresh);
         } else {
             m_size = QSizeF(0, 0);
         }

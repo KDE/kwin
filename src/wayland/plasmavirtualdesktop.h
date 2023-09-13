@@ -10,7 +10,7 @@
 #include <QObject>
 #include <memory>
 
-namespace KWaylandServer
+namespace KWin
 {
 class Display;
 class PlasmaVirtualDesktopInterface;

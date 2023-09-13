@@ -20,7 +20,7 @@
 #include "wayland/display.h"
 #include "wayland/shadow.h"
 
-using namespace KWaylandServer;
+using namespace KWin;
 
 class ShadowTest : public QObject
 {
@@ -34,7 +34,7 @@ private Q_SLOTS:
     void testSurfaceDestroy();
 
 private:
-    KWaylandServer::Display *m_display = nullptr;
+    KWin::Display *m_display = nullptr;
 
     KWayland::Client::ConnectionThread *m_connection = nullptr;
     CompositorInterface *m_compositorInterface = nullptr;
@@ -51,7 +51,7 @@ static const QString s_socketName = QStringLiteral("kwayland-test-shadow-0");
 void ShadowTest::init()
 {
     delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = new KWin::Display(this);
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
@@ -235,7 +235,7 @@ void ShadowTest::testShadowElements()
 
 void ShadowTest::testSurfaceDestroy()
 {
-    using namespace KWaylandServer;
+    using namespace KWin;
     QSignalSpy serverSurfaceCreated(m_compositorInterface, &CompositorInterface::surfaceCreated);
 
     std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());

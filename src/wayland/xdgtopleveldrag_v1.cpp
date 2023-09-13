@@ -19,7 +19,7 @@
 
 #include <memory>
 
-namespace KWaylandServer
+namespace KWin
 {
 constexpr int version = 1;
 
@@ -119,7 +119,7 @@ protected:
     XdgToplevelDragManagerV1Interface *q;
 };
 
-XdgToplevelDragManagerV1Interface::XdgToplevelDragManagerV1Interface(KWaylandServer::Display *display, QObject *parent)
+XdgToplevelDragManagerV1Interface::XdgToplevelDragManagerV1Interface(Display *display, QObject *parent)
     : QObject(parent)
     , d(std::make_unique<XdgToplevelDragManagerV1InterfacePrivate>(this, display))
 {

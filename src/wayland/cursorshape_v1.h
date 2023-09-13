@@ -10,7 +10,7 @@
 
 #include <QObject>
 
-namespace KWaylandServer
+namespace KWin
 {
 
 class CursorShapeManagerV1InterfacePrivate;
@@ -28,4 +28,4 @@ private:
     std::unique_ptr<CursorShapeManagerV1InterfacePrivate> d;
 };
 
-} // namespace KWaylandServer
+} // namespace KWin

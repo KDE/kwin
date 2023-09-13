@@ -14,7 +14,7 @@
 
 #include "qwayland-server-wayland.h"
 
-namespace KWaylandServer
+namespace KWin
 {
 class SubCompositorInterfacePrivate : public QtWaylandServer::wl_subcompositor
 {
@@ -51,4 +51,4 @@ protected:
     void subsurface_set_desync(Resource *resource) override;
 };
 
-} // namespace KWaylandServer
+} // namespace KWin

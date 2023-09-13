@@ -44,7 +44,7 @@ class EglBackend : public AbstractEglBackend
     Q_OBJECT
 
 public:
-    EglBackend(Display *display, X11StandaloneBackend *platform);
+    EglBackend(::Display *display, X11StandaloneBackend *platform);
     ~EglBackend() override;
 
     void init() override;

@@ -44,9 +44,8 @@ VirtualDesktop::~VirtualDesktop()
     Q_EMIT aboutToBeDestroyed();
 }
 
-void VirtualDesktopManager::setVirtualDesktopManagement(KWaylandServer::PlasmaVirtualDesktopManagementInterface *management)
+void VirtualDesktopManager::setVirtualDesktopManagement(PlasmaVirtualDesktopManagementInterface *management)
 {
-    using namespace KWaylandServer;
     Q_ASSERT(!m_virtualDesktopManagement);
     m_virtualDesktopManagement = management;
 

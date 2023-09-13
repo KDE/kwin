@@ -45,12 +45,12 @@ private Q_SLOTS:
 
 private:
     KWayland::Client::Surface *createSurface();
-    KWaylandServer::SurfaceInterface *getServerSurface();
+    KWin::SurfaceInterface *getServerSurface();
 
-    KWaylandServer::Display *m_display = nullptr;
-    KWaylandServer::CompositorInterface *m_compositorInterface = nullptr;
-    KWaylandServer::DataDeviceManagerInterface *m_dataDeviceManagerInterface = nullptr;
-    KWaylandServer::SeatInterface *m_seatInterface = nullptr;
+    KWin::Display *m_display = nullptr;
+    KWin::CompositorInterface *m_compositorInterface = nullptr;
+    KWin::DataDeviceManagerInterface *m_dataDeviceManagerInterface = nullptr;
+    KWin::SeatInterface *m_seatInterface = nullptr;
     KWayland::Client::ConnectionThread *m_connection = nullptr;
     KWayland::Client::Compositor *m_compositor = nullptr;
     KWayland::Client::EventQueue *m_queue = nullptr;
@@ -69,9 +69,9 @@ static const QString s_socketName = QStringLiteral("kwayland-test-wayland-drag-n
 
 void TestDragAndDrop::init()
 {
-    using namespace KWaylandServer;
+    using namespace KWin;
     delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = new KWin::Display(this);
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
@@ -177,9 +177,9 @@ KWayland::Client::Surface *TestDragAndDrop::createSurface()
     return s;
 }
 
-KWaylandServer::SurfaceInterface *TestDragAndDrop::getServerSurface()
+KWin::SurfaceInterface *TestDragAndDrop::getServerSurface()
 {
-    using namespace KWaylandServer;
+    using namespace KWin;
     QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
     if (!surfaceCreatedSpy.isValid()) {
         return nullptr;
@@ -193,7 +193,7 @@ KWaylandServer::SurfaceInterface *TestDragAndDrop::getServerSurface()
 void TestDragAndDrop::testPointerDragAndDrop()
 {
     // this test verifies the very basic drag and drop on one surface, an enter, a move and the drop
-    using namespace KWaylandServer;
+    using namespace KWin;
     // first create a window
     std::unique_ptr<KWayland::Client::Surface> s(createSurface());
     auto serverSurface = getServerSurface();
@@ -281,7 +281,7 @@ void TestDragAndDrop::testPointerDragAndDrop()
 void TestDragAndDrop::testTouchDragAndDrop()
 {
     // this test verifies the very basic drag and drop on one surface, an enter, a move and the drop
-    using namespace KWaylandServer;
+    using namespace KWin;
     // first create a window
     std::unique_ptr<KWayland::Client::Surface> s(createSurface());
     s->setSize(QSize(100, 100));
@@ -371,7 +371,7 @@ void TestDragAndDrop::testTouchDragAndDrop()
 void TestDragAndDrop::testDragAndDropWithCancelByDestroyDataSource()
 {
     // this test simulates the problem from BUG 389221
-    using namespace KWaylandServer;
+    using namespace KWin;
     // first create a window
     std::unique_ptr<KWayland::Client::Surface> s(createSurface());
     auto serverSurface = getServerSurface();
@@ -458,7 +458,7 @@ void TestDragAndDrop::testDragAndDropWithCancelByDestroyDataSource()
 void TestDragAndDrop::testPointerEventsIgnored()
 {
     // this test verifies that all pointer events are ignored on the focused Pointer device during drag
-    using namespace KWaylandServer;
+    using namespace KWin;
     // first create a window
     std::unique_ptr<KWayland::Client::Surface> s(createSurface());
     auto serverSurface = getServerSurface();

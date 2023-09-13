@@ -11,7 +11,7 @@
 #include "textinput.h"
 
 struct wl_resource;
-namespace KWaylandServer
+namespace KWin
 {
 class ClientConnection;
 class Display;
@@ -289,5 +289,5 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(KWaylandServer::TextInputV2Interface *)
-Q_DECLARE_METATYPE(KWaylandServer::TextInputV2Interface::UpdateReason)
+Q_DECLARE_METATYPE(KWin::TextInputV2Interface *)
+Q_DECLARE_METATYPE(KWin::TextInputV2Interface::UpdateReason)

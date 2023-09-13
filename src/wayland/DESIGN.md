@@ -18,7 +18,7 @@ An implementation should handle all versions of a given interface, but not diffe
 
 # Implementations
 
-There are 3 modes of operation happening within the exported classes of KWaylandServer
+There are 3 modes of operation happening within the exported classes
 
 The generated classes can behave in all these modes, it is up to our implementation to use the correct methods.
 

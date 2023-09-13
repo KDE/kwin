@@ -13,7 +13,7 @@
 
 struct wl_client;
 
-namespace KWaylandServer
+namespace KWin
 {
 /**
  * @brief The AbstractDataSource class abstracts the data that

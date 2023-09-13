@@ -19,9 +19,7 @@
 
 #include "qwayland-server-kde-output-device-v2.h"
 
-using namespace KWin;
-
-namespace KWaylandServer
+namespace KWin
 {
 
 static const quint32 s_version = 3;
@@ -70,7 +68,7 @@ static QtWaylandServer::kde_output_device_v2::rgb_range kwinRgbRangeToOutputDevi
 class OutputDeviceV2InterfacePrivate : public QtWaylandServer::kde_output_device_v2
 {
 public:
-    OutputDeviceV2InterfacePrivate(OutputDeviceV2Interface *q, Display *display, KWin::Output *handle);
+    OutputDeviceV2InterfacePrivate(OutputDeviceV2Interface *q, Display *display, Output *handle);
     ~OutputDeviceV2InterfacePrivate() override;
 
     void sendGeometry(Resource *resource);
@@ -94,7 +92,7 @@ public:
 
     OutputDeviceV2Interface *q;
     QPointer<Display> m_display;
-    KWin::Output *m_handle;
+    Output *m_handle;
     QSize m_physicalSize;
     QPoint m_globalPosition;
     QString m_manufacturer = QStringLiteral("org.kde.kwin");
@@ -131,7 +129,7 @@ public:
         OutputDeviceV2InterfacePrivate::Resource *output;
     };
 
-    OutputDeviceModeV2InterfacePrivate(OutputDeviceModeV2Interface *q, std::shared_ptr<KWin::OutputMode> handle);
+    OutputDeviceModeV2InterfacePrivate(OutputDeviceModeV2Interface *q, std::shared_ptr<OutputMode> handle);
     ~OutputDeviceModeV2InterfacePrivate() override;
 
     Resource *createResource(OutputDeviceV2InterfacePrivate::Resource *output);
@@ -145,7 +143,7 @@ public:
     }
 
     OutputDeviceModeV2Interface *q;
-    std::weak_ptr<KWin::OutputMode> m_handle;
+    std::weak_ptr<OutputMode> m_handle;
     QSize m_size;
     int m_refreshRate = 60000;
     bool m_preferred = false;
@@ -154,7 +152,7 @@ protected:
     Resource *kde_output_device_mode_v2_allocate() override;
 };
 
-OutputDeviceV2InterfacePrivate::OutputDeviceV2InterfacePrivate(OutputDeviceV2Interface *q, Display *display, KWin::Output *handle)
+OutputDeviceV2InterfacePrivate::OutputDeviceV2InterfacePrivate(OutputDeviceV2Interface *q, Display *display, Output *handle)
     : QtWaylandServer::kde_output_device_v2(*display, s_version)
     , q(q)
     , m_display(display)
@@ -172,7 +170,7 @@ OutputDeviceV2InterfacePrivate::~OutputDeviceV2InterfacePrivate()
     }
 }
 
-OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, KWin::Output *handle, QObject *parent)
+OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, Output *handle, QObject *parent)
     : QObject(parent)
     , d(new OutputDeviceV2InterfacePrivate(this, display, handle))
 {
@@ -242,7 +240,7 @@ void OutputDeviceV2Interface::remove()
     d->globalRemove();
 }
 
-KWin::Output *OutputDeviceV2Interface::handle() const
+Output *OutputDeviceV2Interface::handle() const
 {
     return d->m_handle;
 }
@@ -656,7 +654,7 @@ OutputDeviceV2Interface *OutputDeviceV2Interface::get(wl_resource *native)
     return nullptr;
 }
 
-OutputDeviceModeV2InterfacePrivate::OutputDeviceModeV2InterfacePrivate(OutputDeviceModeV2Interface *q, std::shared_ptr<KWin::OutputMode> handle)
+OutputDeviceModeV2InterfacePrivate::OutputDeviceModeV2InterfacePrivate(OutputDeviceModeV2Interface *q, std::shared_ptr<OutputMode> handle)
     : QtWaylandServer::kde_output_device_mode_v2()
     , q(q)
     , m_handle(handle)
@@ -666,7 +664,7 @@ OutputDeviceModeV2InterfacePrivate::OutputDeviceModeV2InterfacePrivate(OutputDev
 {
 }
 
-OutputDeviceModeV2Interface::OutputDeviceModeV2Interface(std::shared_ptr<KWin::OutputMode> handle, QObject *parent)
+OutputDeviceModeV2Interface::OutputDeviceModeV2Interface(std::shared_ptr<OutputMode> handle, QObject *parent)
     : QObject(parent)
     , d(new OutputDeviceModeV2InterfacePrivate(this, handle))
 {
@@ -706,7 +704,7 @@ OutputDeviceModeV2InterfacePrivate::Resource *OutputDeviceModeV2InterfacePrivate
     return new ModeResource;
 }
 
-std::weak_ptr<KWin::OutputMode> OutputDeviceModeV2Interface::handle() const
+std::weak_ptr<OutputMode> OutputDeviceModeV2Interface::handle() const
 {
     return d->m_handle;
 }

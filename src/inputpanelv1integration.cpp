@@ -10,8 +10,6 @@
 #include "wayland/inputmethod_v1.h"
 #include "wayland_server.h"
 
-using namespace KWaylandServer;
-
 namespace KWin
 {
 

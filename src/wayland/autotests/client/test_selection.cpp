@@ -23,7 +23,7 @@
 #include "wayland/display.h"
 #include "wayland/seat.h"
 
-using namespace KWaylandServer;
+using namespace KWin;
 
 class SelectionTest : public QObject
 {
@@ -34,7 +34,7 @@ private Q_SLOTS:
     void testClearOnEnter();
 
 private:
-    KWaylandServer::Display *m_display = nullptr;
+    KWin::Display *m_display = nullptr;
     CompositorInterface *m_compositorInterface = nullptr;
     SeatInterface *m_seatInterface = nullptr;
     DataDeviceManagerInterface *m_ddmInterface = nullptr;
@@ -62,7 +62,7 @@ static const QString s_socketName = QStringLiteral("kwayland-test-selection-0");
 void SelectionTest::init()
 {
     delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = new KWin::Display(this);
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());

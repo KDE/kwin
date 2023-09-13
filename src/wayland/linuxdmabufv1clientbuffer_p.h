@@ -23,7 +23,7 @@
 
 #include <drm_fourcc.h>
 
-namespace KWaylandServer
+namespace KWin
 {
 
 class LinuxDmaBufV1FormatTable;
@@ -37,7 +37,7 @@ public:
     std::unique_ptr<LinuxDmaBufV1Feedback> defaultFeedback;
     std::unique_ptr<LinuxDmaBufV1FormatTable> table;
     dev_t mainDevice;
-    QPointer<KWin::RenderBackend> renderBackend;
+    QPointer<RenderBackend> renderBackend;
     QHash<uint32_t, QVector<uint64_t>> supportedModifiers;
 
 protected:
@@ -71,20 +71,20 @@ private:
     bool test(Resource *resource, uint32_t width, uint32_t height);
 
     LinuxDmaBufV1ClientBufferIntegration *m_integration;
-    KWin::DmaBufAttributes m_attrs;
+    DmaBufAttributes m_attrs;
     bool m_isUsed = false;
 };
 
-class LinuxDmaBufV1ClientBuffer : public KWin::GraphicsBuffer
+class LinuxDmaBufV1ClientBuffer : public GraphicsBuffer
 {
     Q_OBJECT
 
 public:
-    LinuxDmaBufV1ClientBuffer(KWin::DmaBufAttributes &&attrs);
+    LinuxDmaBufV1ClientBuffer(DmaBufAttributes &&attrs);
 
     QSize size() const override;
     bool hasAlphaChannel() const override;
-    const KWin::DmaBufAttributes *dmabufAttributes() const override;
+    const DmaBufAttributes *dmabufAttributes() const override;
 
     static LinuxDmaBufV1ClientBuffer *get(wl_resource *resource);
 
@@ -96,7 +96,7 @@ private:
     static const struct wl_buffer_interface implementation;
 
     wl_resource *m_resource = nullptr;
-    KWin::DmaBufAttributes m_attrs;
+    DmaBufAttributes m_attrs;
     bool m_hasAlphaChannel = false;
 
     friend class LinuxDmaBufParamsV1;
@@ -107,7 +107,7 @@ class LinuxDmaBufV1FormatTable
 public:
     LinuxDmaBufV1FormatTable(const QHash<uint32_t, QVector<uint64_t>> &supportedModifiers);
 
-    KWin::RamFile file;
+    RamFile file;
     QMap<std::pair<uint32_t, uint64_t>, uint16_t> indices;
 };
 

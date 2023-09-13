@@ -17,7 +17,7 @@
 #include <QPointer>
 #include <QQueue>
 
-namespace KWaylandServer
+namespace KWin
 {
 
 class Display;
@@ -28,11 +28,11 @@ class DrmLeaseV1Interface;
 class DrmLeaseDeviceV1Interface : public QObject, public QtWaylandServer::wp_drm_lease_device_v1
 {
 public:
-    explicit DrmLeaseDeviceV1Interface(Display *display, KWin::DrmGpu *gpu);
+    explicit DrmLeaseDeviceV1Interface(Display *display, DrmGpu *gpu);
     ~DrmLeaseDeviceV1Interface();
 
-    void addOutput(KWin::DrmAbstractOutput *output);
-    void removeOutput(KWin::DrmAbstractOutput *output);
+    void addOutput(DrmAbstractOutput *output);
+    void removeOutput(DrmAbstractOutput *output);
     void setDrmMaster(bool hasDrmMaster);
     void done();
     void remove();
@@ -43,7 +43,7 @@ public:
     void offerConnector(DrmLeaseConnectorV1Interface *connector);
 
     bool hasDrmMaster() const;
-    KWin::DrmGpu *gpu() const;
+    DrmGpu *gpu() const;
 
 private:
     void wp_drm_lease_device_v1_create_lease_request(Resource *resource, uint32_t id) override;
@@ -51,9 +51,9 @@ private:
     void wp_drm_lease_device_v1_bind_resource(Resource *resource) override;
     void wp_drm_lease_device_v1_destroy_global() override;
 
-    KWin::DrmGpu *const m_gpu;
+    DrmGpu *const m_gpu;
     bool m_hasDrmMaster = true;
-    std::map<KWin::DrmAbstractOutput *, std::unique_ptr<DrmLeaseConnectorV1Interface>> m_connectors;
+    std::map<DrmAbstractOutput *, std::unique_ptr<DrmLeaseConnectorV1Interface>> m_connectors;
     QQueue<wl_resource *> m_pendingFds;
     QVector<DrmLeaseRequestV1Interface *> m_leaseRequests;
     QVector<DrmLeaseV1Interface *> m_leases;
@@ -63,14 +63,14 @@ class DrmLeaseConnectorV1Interface : public QObject, public QtWaylandServer::wp_
 {
     Q_OBJECT
 public:
-    explicit DrmLeaseConnectorV1Interface(DrmLeaseDeviceV1Interface *leaseDevice, KWin::DrmOutput *output);
+    explicit DrmLeaseConnectorV1Interface(DrmLeaseDeviceV1Interface *leaseDevice, DrmOutput *output);
 
     uint32_t id() const;
     void send(wl_resource *resource);
     void withdraw();
 
     DrmLeaseDeviceV1Interface *device() const;
-    KWin::DrmOutput *output() const;
+    DrmOutput *output() const;
     bool withdrawn() const;
 
 private:
@@ -78,7 +78,7 @@ private:
 
     QPointer<DrmLeaseDeviceV1Interface> m_device;
     bool m_withdrawn = false;
-    KWin::DrmOutput *const m_output;
+    DrmOutput *const m_output;
 };
 
 class DrmLeaseRequestV1Interface : public QtWaylandServer::wp_drm_lease_request_v1
@@ -107,7 +107,7 @@ public:
     DrmLeaseV1Interface(DrmLeaseDeviceV1Interface *device, const QVector<DrmLeaseConnectorV1Interface *> &connectors, wl_resource *resource);
     ~DrmLeaseV1Interface();
 
-    void grant(std::unique_ptr<KWin::DrmLease> &&lease);
+    void grant(std::unique_ptr<DrmLease> &&lease);
     void deny();
     void revoke();
 
@@ -116,7 +116,7 @@ public:
 private:
     DrmLeaseDeviceV1Interface *m_device;
     QVector<DrmLeaseConnectorV1Interface *> m_connectors;
-    std::unique_ptr<KWin::DrmLease> m_lease;
+    std::unique_ptr<DrmLease> m_lease;
     bool m_finished = false;
 
     void wp_drm_lease_v1_destroy(Resource *resource) override;

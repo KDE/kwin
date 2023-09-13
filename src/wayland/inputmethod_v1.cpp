@@ -22,7 +22,7 @@
 #include "qwayland-server-text-input-unstable-v1.h"
 #include "qwayland-server-wayland.h"
 
-namespace KWaylandServer
+namespace KWin
 {
 static int s_version = 1;
 
@@ -46,7 +46,7 @@ InputMethodGrabV1::~InputMethodGrabV1()
 
 void InputMethodGrabV1::sendKeymap(const QByteArray &keymap)
 {
-    KWin::RamFile keymapFile("kwin-xkb-input-method-grab-keymap", keymap.constData(), keymap.size() + 1); // include QByteArray null terminator
+    RamFile keymapFile("kwin-xkb-input-method-grab-keymap", keymap.constData(), keymap.size() + 1); // include QByteArray null terminator
 
     const auto resources = d->resourceMap();
     for (auto r : resources) {

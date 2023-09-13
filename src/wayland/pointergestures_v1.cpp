@@ -13,7 +13,7 @@
 #include "seat.h"
 #include "surface.h"
 
-namespace KWaylandServer
+namespace KWin
 {
 static const int s_version = 3;
 
@@ -323,6 +323,6 @@ void PointerHoldGestureV1Interface::sendCancel(quint32 serial)
     focusedClient = nullptr;
 }
 
-} // namespace KWaylandServer
+} // namespace KWin
 
 #include "moc_pointergestures_v1.cpp"

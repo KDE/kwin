@@ -13,7 +13,7 @@
 
 #include "qwayland-server-wayland.h"
 
-namespace KWaylandServer
+namespace KWin
 {
 
 class ShmClientBufferIntegrationPrivate : public QtWaylandServer::wl_shm
@@ -31,14 +31,14 @@ protected:
 class ShmPool : public QtWaylandServer::wl_shm_pool
 {
 public:
-    ShmPool(ShmClientBufferIntegration *integration, wl_client *client, int id, uint32_t version, KWin::FileDescriptor &&fd, KWin::MemoryMap &&mapping);
+    ShmPool(ShmClientBufferIntegration *integration, wl_client *client, int id, uint32_t version, FileDescriptor &&fd, MemoryMap &&mapping);
 
     void ref();
     void unref();
 
     ShmClientBufferIntegration *integration;
-    KWin::MemoryMap mapping;
-    KWin::FileDescriptor fd;
+    MemoryMap mapping;
+    FileDescriptor fd;
     int refCount = 1;
     bool sigbusImpossible = false;
 
@@ -49,12 +49,12 @@ protected:
     void shm_pool_resize(Resource *resource, int32_t size) override;
 };
 
-class KWIN_EXPORT ShmClientBuffer : public KWin::GraphicsBuffer
+class KWIN_EXPORT ShmClientBuffer : public GraphicsBuffer
 {
     Q_OBJECT
 
 public:
-    ShmClientBuffer(ShmPool *pool, KWin::ShmAttributes attributes, wl_client *client, uint32_t id);
+    ShmClientBuffer(ShmPool *pool, ShmAttributes attributes, wl_client *client, uint32_t id);
     ~ShmClientBuffer() override;
 
     Map map(MapFlags flags) override;
@@ -62,7 +62,7 @@ public:
 
     QSize size() const override;
     bool hasAlphaChannel() const override;
-    const KWin::ShmAttributes *shmAttributes() const override;
+    const ShmAttributes *shmAttributes() const override;
 
     static ShmClientBuffer *get(wl_resource *resource);
 
@@ -73,7 +73,7 @@ private:
 
     wl_resource *m_resource = nullptr;
     ShmPool *m_shmPool;
-    KWin::ShmAttributes m_shmAttributes;
+    ShmAttributes m_shmAttributes;
 };
 
-} // namespace KWaylandServer
+} // namespace KWin

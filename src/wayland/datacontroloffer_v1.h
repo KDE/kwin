@@ -13,7 +13,7 @@
 
 struct wl_resource;
 
-namespace KWaylandServer
+namespace KWin
 {
 class AbstractDataSource;
 class DataControlDeviceV1Interface;
@@ -44,4 +44,4 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(KWaylandServer::DataControlOfferV1Interface *)
+Q_DECLARE_METATYPE(KWin::DataControlOfferV1Interface *)

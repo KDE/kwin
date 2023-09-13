@@ -13,7 +13,7 @@
 
 #include <QPointer>
 
-namespace KWaylandServer
+namespace KWin
 {
 static const int s_version = 1;
 

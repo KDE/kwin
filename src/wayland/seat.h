@@ -15,7 +15,7 @@
 struct wl_client;
 struct wl_resource;
 
-namespace KWaylandServer
+namespace KWin
 {
 class AbstractDataSource;
 class AbstractDropHandler;
@@ -182,11 +182,11 @@ public:
      * @returns The DataDeviceInterface which started the drag and drop operation.
      * @see isDrag
      */
-    KWaylandServer::AbstractDataSource *dragSource() const;
+    AbstractDataSource *dragSource() const;
     /**
      * @returns the toplevel drag if the current drag is a toplevel drag
      */
-    KWaylandServer::XdgToplevelDragV1Interface *xdgTopleveldrag() const;
+    XdgToplevelDragV1Interface *xdgTopleveldrag() const;
 
     /**
      * Sets the current drag target to @p surface.
@@ -623,7 +623,7 @@ public:
      * @see setSelection
      * This may be null
      */
-    KWaylandServer::AbstractDataSource *selection() const;
+    AbstractDataSource *selection() const;
 
     /**
      * This method allows to manually set the @p dataDevice for the current clipboard selection.
@@ -639,7 +639,7 @@ public:
      */
     void setSelection(AbstractDataSource *selection);
 
-    KWaylandServer::AbstractDataSource *primarySelection() const;
+    AbstractDataSource *primarySelection() const;
     void setPrimarySelection(AbstractDataSource *selection);
 
     void startDrag(AbstractDataSource *source, SurfaceInterface *sourceSurface, int dragSerial = -1, DragAndDropIcon *dragIcon = nullptr);
@@ -666,13 +666,13 @@ Q_SIGNALS:
      * @see selection
      * @see setSelection
      */
-    void selectionChanged(KWaylandServer::AbstractDataSource *);
+    void selectionChanged(KWin::AbstractDataSource *);
 
     /**
      * Emitted whenever the primary selection changes
      * @see primarySelection
      */
-    void primarySelectionChanged(KWaylandServer::AbstractDataSource *);
+    void primarySelectionChanged(KWin::AbstractDataSource *);
 
     /**
      * Emitted when a drag'n'drop operation is started
@@ -712,4 +712,4 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(KWaylandServer::SeatInterface *)
+Q_DECLARE_METATYPE(KWin::SeatInterface *)

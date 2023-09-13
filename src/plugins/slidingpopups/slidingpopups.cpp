@@ -27,14 +27,14 @@ Q_DECLARE_METATYPE(KWindowEffects::SlideFromLocation)
 namespace KWin
 {
 
-KWaylandServer::SlideManagerInterface *SlidingPopupsEffect::s_slideManager = nullptr;
+SlideManagerInterface *SlidingPopupsEffect::s_slideManager = nullptr;
 QTimer *SlidingPopupsEffect::s_slideManagerRemoveTimer = nullptr;
 
 SlidingPopupsEffect::SlidingPopupsEffect()
 {
     initConfig<SlidingPopupsConfig>();
 
-    KWaylandServer::Display *display = effects->waylandDisplay();
+    Display *display = effects->waylandDisplay();
     if (display) {
         if (!s_slideManagerRemoveTimer) {
             s_slideManagerRemoveTimer = new QTimer(QCoreApplication::instance());
@@ -46,7 +46,7 @@ SlidingPopupsEffect::SlidingPopupsEffect()
         }
         s_slideManagerRemoveTimer->stop();
         if (!s_slideManager) {
-            s_slideManager = new KWaylandServer::SlideManagerInterface(display, s_slideManagerRemoveTimer);
+            s_slideManager = new SlideManagerInterface(display, s_slideManagerRemoveTimer);
         }
     }
 
@@ -214,7 +214,7 @@ void SlidingPopupsEffect::setupSlideData(EffectWindow *w)
     // Wayland
     if (auto surf = w->surface()) {
         slotWaylandSlideOnShowChanged(w);
-        connect(surf, &KWaylandServer::SurfaceInterface::slideOnShowHideChanged, this, [this, surf] {
+        connect(surf, &SurfaceInterface::slideOnShowHideChanged, this, [this, surf] {
             slotWaylandSlideOnShowChanged(effects->findWindow(surf));
         });
     }
@@ -378,7 +378,7 @@ void SlidingPopupsEffect::slotWaylandSlideOnShowChanged(EffectWindow *w)
         return;
     }
 
-    KWaylandServer::SurfaceInterface *surf = w->surface();
+    SurfaceInterface *surf = w->surface();
     if (!surf) {
         return;
     }
@@ -389,16 +389,16 @@ void SlidingPopupsEffect::slotWaylandSlideOnShowChanged(EffectWindow *w)
         animData.offset = surf->slideOnShowHide()->offset();
 
         switch (surf->slideOnShowHide()->location()) {
-        case KWaylandServer::SlideInterface::Location::Top:
+        case SlideInterface::Location::Top:
             animData.location = Location::Top;
             break;
-        case KWaylandServer::SlideInterface::Location::Left:
+        case SlideInterface::Location::Left:
             animData.location = Location::Left;
             break;
-        case KWaylandServer::SlideInterface::Location::Right:
+        case SlideInterface::Location::Right:
             animData.location = Location::Right;
             break;
-        case KWaylandServer::SlideInterface::Location::Bottom:
+        case SlideInterface::Location::Bottom:
         default:
             animData.location = Location::Bottom;
             break;

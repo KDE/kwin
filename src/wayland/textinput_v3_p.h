@@ -15,7 +15,7 @@
 
 #include <qwayland-server-text-input-unstable-v3.h>
 
-namespace KWaylandServer
+namespace KWin
 {
 class TextInputManagerV3InterfacePrivate : public QtWaylandServer::zwp_text_input_manager_v3
 {

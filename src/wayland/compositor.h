@@ -12,7 +12,7 @@
 
 #include <QObject>
 
-namespace KWaylandServer
+namespace KWin
 {
 class CompositorInterfacePrivate;
 class Display;
@@ -39,10 +39,10 @@ Q_SIGNALS:
     /**
      * This signal is emitted when a new SurfaceInterface @a surface has been created.
      */
-    void surfaceCreated(KWaylandServer::SurfaceInterface *surface);
+    void surfaceCreated(KWin::SurfaceInterface *surface);
 
 private:
     std::unique_ptr<CompositorInterfacePrivate> d;
 };
 
-} // namespace KWaylandServer
+} // namespace KWin

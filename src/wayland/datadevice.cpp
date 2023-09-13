@@ -17,7 +17,7 @@
 #include "seat_p.h"
 #include "surface.h"
 
-namespace KWaylandServer
+namespace KWin
 {
 class DragAndDropIconPrivate
 {

@@ -31,10 +31,10 @@ private Q_SLOTS:
     void testEnterLeaveActivity();
 
 private:
-    KWaylandServer::Display *m_display;
-    KWaylandServer::CompositorInterface *m_compositorInterface;
-    KWaylandServer::PlasmaWindowManagementInterface *m_windowManagementInterface;
-    KWaylandServer::PlasmaWindowInterface *m_windowInterface;
+    KWin::Display *m_display;
+    KWin::CompositorInterface *m_compositorInterface;
+    KWin::PlasmaWindowManagementInterface *m_windowManagementInterface;
+    KWin::PlasmaWindowInterface *m_windowInterface;
 
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::Compositor *m_compositor;
@@ -60,9 +60,9 @@ TestActivities::TestActivities(QObject *parent)
 
 void TestActivities::init()
 {
-    using namespace KWaylandServer;
+    using namespace KWin;
     delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = new KWin::Display(this);
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
@@ -143,7 +143,7 @@ void TestActivities::cleanup()
 
 void TestActivities::testEnterLeaveActivity()
 {
-    QSignalSpy enterRequestedSpy(m_windowInterface, &KWaylandServer::PlasmaWindowInterface::enterPlasmaActivityRequested);
+    QSignalSpy enterRequestedSpy(m_windowInterface, &KWin::PlasmaWindowInterface::enterPlasmaActivityRequested);
     m_window->requestEnterActivity(QStringLiteral("0-1"));
     enterRequestedSpy.wait();
 
@@ -171,7 +171,7 @@ void TestActivities::testEnterLeaveActivity()
     QCOMPARE(m_window->plasmaActivities()[1], QStringLiteral("0-3"));
 
     // remove an activity
-    QSignalSpy leaveRequestedSpy(m_windowInterface, &KWaylandServer::PlasmaWindowInterface::leavePlasmaActivityRequested);
+    QSignalSpy leaveRequestedSpy(m_windowInterface, &KWin::PlasmaWindowInterface::leavePlasmaActivityRequested);
     m_window->requestLeaveActivity(QStringLiteral("0-1"));
     leaveRequestedSpy.wait();
 

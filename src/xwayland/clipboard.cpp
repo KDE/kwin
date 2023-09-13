@@ -46,11 +46,11 @@ Clipboard::Clipboard(xcb_atom_t atom, QObject *parent)
     registerXfixes();
     xcb_flush(xcbConn);
 
-    connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::selectionChanged,
+    connect(waylandServer()->seat(), &SeatInterface::selectionChanged,
             this, &Clipboard::wlSelectionChanged);
 }
 
-void Clipboard::wlSelectionChanged(KWaylandServer::AbstractDataSource *dsi)
+void Clipboard::wlSelectionChanged(AbstractDataSource *dsi)
 {
     if (m_waitingForTargets) {
         return;
@@ -68,7 +68,7 @@ void Clipboard::wlSelectionChanged(KWaylandServer::AbstractDataSource *dsi)
     checkWlSource();
 }
 
-bool Clipboard::ownsSelection(KWaylandServer::AbstractDataSource *dsi) const
+bool Clipboard::ownsSelection(AbstractDataSource *dsi) const
 {
     return dsi && dsi == m_selectionSource.get();
 }
@@ -170,7 +170,7 @@ void Clipboard::x11OffersChanged(const QStringList &added, const QStringList &re
         std::swap(m_selectionSource, newSelection);
         waylandServer()->seat()->setSelection(m_selectionSource.get());
     } else {
-        KWaylandServer::AbstractDataSource *currentSelection = waylandServer()->seat()->selection();
+        AbstractDataSource *currentSelection = waylandServer()->seat()->selection();
         if (!ownsSelection(currentSelection)) {
             waylandServer()->seat()->setSelection(nullptr);
             m_selectionSource.reset();

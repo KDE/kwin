@@ -10,7 +10,7 @@
 #include "surface_p.h"
 #include "textinput_v3_p.h"
 
-namespace KWaylandServer
+namespace KWin
 {
 namespace
 {

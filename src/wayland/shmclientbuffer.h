@@ -10,7 +10,7 @@
 
 #include <QObject>
 
-namespace KWaylandServer
+namespace KWin
 {
 
 class Display;
@@ -32,4 +32,4 @@ private:
     std::unique_ptr<ShmClientBufferIntegrationPrivate> d;
 };
 
-} // namespace KWaylandServer
+} // namespace KWin

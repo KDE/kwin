@@ -17,7 +17,7 @@
 #include "utils.h"
 #include "utils/common.h"
 
-namespace KWaylandServer
+namespace KWin
 {
 class PointerSurfaceCursorPrivate
 {
@@ -389,6 +389,6 @@ SurfaceInterface *PointerSurfaceCursor::surface() const
     return d->surface;
 }
 
-} // namespace KWaylandServer
+} // namespace KWin
 
 #include "moc_pointer.cpp"

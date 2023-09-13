@@ -19,14 +19,14 @@
 
 #include <cmath>
 
-namespace KWaylandServer
+namespace KWin
 {
 static const int s_version = 4;
 
 class OutputInterfacePrivate : public QtWaylandServer::wl_output
 {
 public:
-    explicit OutputInterfacePrivate(Display *display, OutputInterface *q, KWin::Output *handle);
+    explicit OutputInterfacePrivate(Display *display, OutputInterface *q, Output *handle);
 
     void sendScale(Resource *resource);
     void sendGeometry(Resource *resource);
@@ -35,14 +35,14 @@ public:
 
     OutputInterface *q;
     QPointer<Display> display;
-    QPointer<KWin::Output> handle;
+    QPointer<Output> handle;
     QSize physicalSize;
     QPoint globalPosition;
     QString manufacturer;
     QString model;
     int scale = 1;
-    KWin::Output::SubPixel subPixel = KWin::Output::SubPixel::Unknown;
-    KWin::OutputTransform transform = KWin::OutputTransform::Normal;
+    Output::SubPixel subPixel = Output::SubPixel::Unknown;
+    OutputTransform transform = OutputTransform::Normal;
     QSize modeSize;
     int refreshRate = 0;
     QString name;
@@ -55,7 +55,7 @@ private:
     void output_release(Resource *resource) override;
 };
 
-OutputInterfacePrivate::OutputInterfacePrivate(Display *display, OutputInterface *q, KWin::Output *handle)
+OutputInterfacePrivate::OutputInterfacePrivate(Display *display, OutputInterface *q, Output *handle)
     : QtWaylandServer::wl_output(*display, s_version)
     , q(q)
     , display(display)
@@ -75,44 +75,44 @@ void OutputInterfacePrivate::sendScale(Resource *resource)
     }
 }
 
-static quint32 kwaylandServerTransformToWaylandTransform(KWin::OutputTransform transform)
+static quint32 kwaylandServerTransformToWaylandTransform(OutputTransform transform)
 {
     switch (transform.kind()) {
-    case KWin::OutputTransform::Normal:
+    case OutputTransform::Normal:
         return OutputInterfacePrivate::transform_normal;
-    case KWin::OutputTransform::Rotated90:
+    case OutputTransform::Rotated90:
         return OutputInterfacePrivate::transform_90;
-    case KWin::OutputTransform::Rotated180:
+    case OutputTransform::Rotated180:
         return OutputInterfacePrivate::transform_180;
-    case KWin::OutputTransform::Rotated270:
+    case OutputTransform::Rotated270:
         return OutputInterfacePrivate::transform_270;
-    case KWin::OutputTransform::Flipped:
+    case OutputTransform::Flipped:
         return OutputInterfacePrivate::transform_flipped;
-    case KWin::OutputTransform::Flipped90:
+    case OutputTransform::Flipped90:
         return OutputInterfacePrivate::transform_flipped_90;
-    case KWin::OutputTransform::Flipped180:
+    case OutputTransform::Flipped180:
         return OutputInterfacePrivate::transform_flipped_180;
-    case KWin::OutputTransform::Flipped270:
+    case OutputTransform::Flipped270:
         return OutputInterfacePrivate::transform_flipped_270;
     default:
         Q_UNREACHABLE();
     }
 }
 
-static quint32 kwaylandServerSubPixelToWaylandSubPixel(KWin::Output::SubPixel subPixel)
+static quint32 kwaylandServerSubPixelToWaylandSubPixel(Output::SubPixel subPixel)
 {
     switch (subPixel) {
-    case KWin::Output::SubPixel::Unknown:
+    case Output::SubPixel::Unknown:
         return OutputInterfacePrivate::subpixel_unknown;
-    case KWin::Output::SubPixel::None:
+    case Output::SubPixel::None:
         return OutputInterfacePrivate::subpixel_none;
-    case KWin::Output::SubPixel::Horizontal_RGB:
+    case Output::SubPixel::Horizontal_RGB:
         return OutputInterfacePrivate::subpixel_horizontal_rgb;
-    case KWin::Output::SubPixel::Horizontal_BGR:
+    case Output::SubPixel::Horizontal_BGR:
         return OutputInterfacePrivate::subpixel_horizontal_bgr;
-    case KWin::Output::SubPixel::Vertical_RGB:
+    case Output::SubPixel::Vertical_RGB:
         return OutputInterfacePrivate::subpixel_vertical_rgb;
-    case KWin::Output::SubPixel::Vertical_BGR:
+    case Output::SubPixel::Vertical_BGR:
         return OutputInterfacePrivate::subpixel_vertical_bgr;
     default:
         Q_UNREACHABLE();
@@ -170,7 +170,7 @@ void OutputInterfacePrivate::output_bind_resource(Resource *resource)
     Q_EMIT q->bound(display->getConnection(resource->client()), resource->handle);
 }
 
-OutputInterface::OutputInterface(Display *display, KWin::Output *handle, QObject *parent)
+OutputInterface::OutputInterface(Display *display, Output *handle, QObject *parent)
     : QObject(parent)
     , d(new OutputInterfacePrivate(display, this, handle))
 {
@@ -199,7 +199,7 @@ OutputInterface::OutputInterface(Display *display, KWin::Output *handle, QObject
     d->refreshRate = handle->refreshRate();
     d->subPixel = handle->subPixel();
 
-    connect(handle, &KWin::Output::geometryChanged, this, [this]() {
+    connect(handle, &Output::geometryChanged, this, [this]() {
         const QPoint position = d->handle->geometry().topLeft();
         if (d->globalPosition != position) {
             d->globalPosition = position;
@@ -211,7 +211,7 @@ OutputInterface::OutputInterface(Display *display, KWin::Output *handle, QObject
         }
     });
 
-    connect(handle, &KWin::Output::scaleChanged, this, [this]() {
+    connect(handle, &Output::scaleChanged, this, [this]() {
         const int scale = std::ceil(d->handle->scale());
         if (d->scale != scale) {
             d->scale = scale;
@@ -223,8 +223,8 @@ OutputInterface::OutputInterface(Display *display, KWin::Output *handle, QObject
         }
     });
 
-    connect(handle, &KWin::Output::transformChanged, this, [this]() {
-        const KWin::OutputTransform transform = d->handle->transform();
+    connect(handle, &Output::transformChanged, this, [this]() {
+        const OutputTransform transform = d->handle->transform();
         if (d->transform != transform) {
             d->transform = transform;
             const auto resources = d->resourceMap();
@@ -235,7 +235,7 @@ OutputInterface::OutputInterface(Display *display, KWin::Output *handle, QObject
         }
     });
 
-    connect(handle, &KWin::Output::currentModeChanged, this, [this]() {
+    connect(handle, &Output::currentModeChanged, this, [this]() {
         const QSize size = d->handle->modeSize();
         const int refreshRate = d->handle->refreshRate();
         if (d->modeSize != size || d->refreshRate != refreshRate) {
@@ -260,7 +260,7 @@ Display *OutputInterface::display() const
     return d->display;
 }
 
-KWin::Output *OutputInterface::handle() const
+Output *OutputInterface::handle() const
 {
     return d->handle;
 }
@@ -325,6 +325,6 @@ OutputInterface *OutputInterface::get(wl_resource *native)
     return nullptr;
 }
 
-} // namespace KWaylandServer
+} // namespace KWin
 
 #include "wayland/moc_output.cpp"

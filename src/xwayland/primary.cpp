@@ -47,13 +47,13 @@ Primary::Primary(xcb_atom_t atom, QObject *parent)
     registerXfixes();
     xcb_flush(xcbConn);
 
-    connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::primarySelectionChanged,
+    connect(waylandServer()->seat(), &SeatInterface::primarySelectionChanged,
             this, &Primary::wlPrimarySelectionChanged);
 }
 
 Primary::~Primary() = default;
 
-void Primary::wlPrimarySelectionChanged(KWaylandServer::AbstractDataSource *dsi)
+void Primary::wlPrimarySelectionChanged(AbstractDataSource *dsi)
 {
     if (m_waitingForTargets) {
         return;
@@ -71,7 +71,7 @@ void Primary::wlPrimarySelectionChanged(KWaylandServer::AbstractDataSource *dsi)
     checkWlSource();
 }
 
-bool Primary::ownsSelection(KWaylandServer::AbstractDataSource *dsi) const
+bool Primary::ownsSelection(AbstractDataSource *dsi) const
 {
     return dsi && dsi == m_primarySelectionSource.get();
 }
@@ -106,7 +106,7 @@ void Primary::checkWlSource()
         removeSource();
         return;
     }
-    if (!qobject_cast<KWin::X11Window *>(workspace()->activeWindow())) {
+    if (!qobject_cast<X11Window *>(workspace()->activeWindow())) {
         // no active window or active window is Wayland native
         removeSource();
         return;
@@ -173,7 +173,7 @@ void Primary::x11OffersChanged(const QStringList &added, const QStringList &remo
         std::swap(m_primarySelectionSource, newSelection);
         waylandServer()->seat()->setPrimarySelection(m_primarySelectionSource.get());
     } else {
-        KWaylandServer::AbstractDataSource *currentSelection = waylandServer()->seat()->primarySelection();
+        AbstractDataSource *currentSelection = waylandServer()->seat()->primarySelection();
         if (!ownsSelection(currentSelection)) {
             waylandServer()->seat()->setPrimarySelection(nullptr);
             m_primarySelectionSource.reset();

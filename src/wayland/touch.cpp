@@ -12,7 +12,7 @@
 #include "surface.h"
 #include "touch_p.h"
 
-namespace KWaylandServer
+namespace KWin
 {
 TouchInterfacePrivate *TouchInterfacePrivate::get(TouchInterface *touch)
 {
@@ -126,6 +126,6 @@ void TouchInterface::sendDown(qint32 id, quint32 serial, const QPointF &localPos
     }
 }
 
-} // namespace KWaylandServer
+} // namespace KWin
 
 #include "moc_touch.cpp"

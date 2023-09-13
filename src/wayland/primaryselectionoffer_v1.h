@@ -13,7 +13,7 @@
 #include "primaryselectiondevicemanager_v1.h"
 
 struct wl_resource;
-namespace KWaylandServer
+namespace KWin
 {
 class AbstractDataSource;
 class PrimarySelectionDeviceV1Interface;
@@ -42,4 +42,4 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(KWaylandServer::PrimarySelectionOfferV1Interface *)
+Q_DECLARE_METATYPE(KWin::PrimarySelectionOfferV1Interface *)

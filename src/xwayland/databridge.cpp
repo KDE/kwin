@@ -22,8 +22,6 @@
 #include "window.h"
 #include "workspace.h"
 
-using namespace KWaylandServer;
-
 namespace KWin
 {
 namespace Xwl

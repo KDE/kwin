@@ -12,7 +12,7 @@
 
 struct wl_resource;
 
-namespace KWaylandServer
+namespace KWin
 {
 class AbstractDataSource;
 class DataControlDeviceManagerV1Interface;
@@ -43,9 +43,9 @@ public:
     void sendPrimarySelection(AbstractDataSource *other);
 
 Q_SIGNALS:
-    void selectionChanged(KWaylandServer::DataControlSourceV1Interface *dataSource);
+    void selectionChanged(KWin::DataControlSourceV1Interface *dataSource);
 
-    void primarySelectionChanged(KWaylandServer::DataControlSourceV1Interface *dataSource);
+    void primarySelectionChanged(KWin::DataControlSourceV1Interface *dataSource);
 
 private:
     friend class DataControlDeviceManagerV1InterfacePrivate;
@@ -56,4 +56,4 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(KWaylandServer::DataControlDeviceV1Interface *)
+Q_DECLARE_METATYPE(KWin::DataControlDeviceV1Interface *)

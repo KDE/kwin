@@ -11,7 +11,7 @@
 
 #include "qwayland-server-wayland.h"
 
-namespace KWaylandServer
+namespace KWin
 {
 class AbstractDataSource;
 class DataDeviceInterface;
@@ -52,4 +52,4 @@ protected:
     void data_device_release(Resource *resource) override;
 };
 
-} // namespace KWaylandServer
+} // namespace KWin

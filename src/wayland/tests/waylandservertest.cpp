@@ -65,14 +65,14 @@ static void readDisplayFromPipe(int pipe)
 
 int main(int argc, char **argv)
 {
-    using namespace KWaylandServer;
+    using namespace KWin;
 
     // set our own event dispatcher to be able to dispatch events before the event loop is started
     QAbstractEventDispatcher *eventDispatcher = new QEventDispatcherGlib();
     QCoreApplication::setEventDispatcher(eventDispatcher);
 
     // first create the Server and setup with minimum to get an XWayland connected
-    KWaylandServer::Display display;
+    KWin::Display display;
     display.start();
     display.createShm();
     new CompositorInterface(&display, &display);

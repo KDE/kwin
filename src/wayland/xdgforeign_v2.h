@@ -10,7 +10,7 @@
 
 #include <QObject>
 
-namespace KWaylandServer
+namespace KWin
 {
 class Display;
 class SurfaceInterface;
@@ -49,7 +49,7 @@ Q_SIGNALS:
      * valid anymore and either one of the surfaces has been unmapped, or the parent surface
      * is not exported anymore.
      */
-    void transientChanged(KWaylandServer::SurfaceInterface *child, KWaylandServer::SurfaceInterface *parent);
+    void transientChanged(KWin::SurfaceInterface *child, KWin::SurfaceInterface *parent);
 
 private:
     friend class XdgExporterV2Interface;

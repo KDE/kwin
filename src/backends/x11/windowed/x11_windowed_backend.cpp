@@ -744,7 +744,7 @@ int X11WindowedBackend::screenNumer() const
     return m_screenNumber;
 }
 
-Display *X11WindowedBackend::display() const
+::Display *X11WindowedBackend::display() const
 {
     return m_display;
 }

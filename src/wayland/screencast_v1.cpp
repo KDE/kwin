@@ -13,7 +13,7 @@
 
 #include "qwayland-server-zkde-screencast-unstable-v1.h"
 
-namespace KWaylandServer
+namespace KWin
 {
 static int s_version = 3;
 
@@ -141,6 +141,6 @@ ScreencastV1Interface::ScreencastV1Interface(Display *display, QObject *parent)
 
 ScreencastV1Interface::~ScreencastV1Interface() = default;
 
-} // namespace KWaylandServer
+} // namespace KWin
 
 #include "moc_screencast_v1.cpp"

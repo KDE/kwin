@@ -11,9 +11,7 @@
 
 #include <qwayland-server-dpms.h>
 
-using namespace KWin;
-
-namespace KWaylandServer
+namespace KWin
 {
 
 static const quint32 s_version = 1;
@@ -149,16 +147,16 @@ void DpmsInterface::sendMode()
     const auto mode = m_output->handle()->dpmsMode();
     org_kde_kwin_dpms_mode wlMode;
     switch (mode) {
-    case KWin::Output::DpmsMode::On:
+    case Output::DpmsMode::On:
         wlMode = ORG_KDE_KWIN_DPMS_MODE_ON;
         break;
-    case KWin::Output::DpmsMode::Standby:
+    case Output::DpmsMode::Standby:
         wlMode = ORG_KDE_KWIN_DPMS_MODE_STANDBY;
         break;
-    case KWin::Output::DpmsMode::Suspend:
+    case Output::DpmsMode::Suspend:
         wlMode = ORG_KDE_KWIN_DPMS_MODE_SUSPEND;
         break;
-    case KWin::Output::DpmsMode::Off:
+    case Output::DpmsMode::Off:
         wlMode = ORG_KDE_KWIN_DPMS_MODE_OFF;
         break;
     default:

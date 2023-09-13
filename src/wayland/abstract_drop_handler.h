@@ -11,7 +11,7 @@
 
 #include <QObject>
 
-namespace KWaylandServer
+namespace KWin
 {
 class SurfaceInterface;
 

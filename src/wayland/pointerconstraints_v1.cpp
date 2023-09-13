@@ -12,7 +12,7 @@
 #include "region_p.h"
 #include "surface_p.h"
 
-namespace KWaylandServer
+namespace KWin
 {
 static const int s_version = 1;
 
@@ -344,6 +344,6 @@ void ConfinedPointerV1Interface::setConfined(bool confined)
     Q_EMIT confinedChanged();
 }
 
-} // namespace KWaylandServer
+} // namespace KWin
 
 #include "moc_pointerconstraints_v1.cpp"

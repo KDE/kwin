@@ -13,7 +13,7 @@
 
 struct wl_resource;
 
-namespace KWaylandServer
+namespace KWin
 {
 class Display;
 class OutputInterface;

@@ -14,7 +14,7 @@
 
 struct wl_resource;
 
-namespace KWaylandServer
+namespace KWin
 {
 class PointerSurfaceCursorPrivate;
 class PointerSurfaceCursor;
@@ -105,4 +105,4 @@ private:
     friend class PointerInterfacePrivate;
 };
 
-} // namespace KWaylandServer
+} // namespace KWin

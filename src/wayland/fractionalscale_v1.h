@@ -11,7 +11,7 @@
 #include <QObject>
 #include <memory>
 
-namespace KWaylandServer
+namespace KWin
 {
 class Display;
 class FractionalScaleManagerV1InterfacePrivate;
@@ -28,4 +28,4 @@ private:
     std::unique_ptr<FractionalScaleManagerV1InterfacePrivate> d;
 };
 
-} // namespace KWaylandServer
+} // namespace KWin

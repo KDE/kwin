@@ -11,7 +11,7 @@
 
 #include <QPointer>
 
-namespace KWaylandServer
+namespace KWin
 {
 
 class ContentTypeV1Interface;

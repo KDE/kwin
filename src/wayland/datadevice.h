@@ -17,7 +17,7 @@
 struct wl_client;
 struct wl_resource;
 
-namespace KWaylandServer
+namespace KWin
 {
 class DataDeviceManagerInterface;
 class DataOfferInterface;
@@ -86,7 +86,7 @@ public:
 
     DataSourceInterface *selection() const;
 
-    void sendSelection(KWaylandServer::AbstractDataSource *other);
+    void sendSelection(KWin::AbstractDataSource *other);
     /**
      * The event is sent when a drag-and-drop operation is ended because the implicit grab is removed.
      */
@@ -109,7 +109,7 @@ public:
 Q_SIGNALS:
     void aboutToBeDestroyed();
     void dragStarted(AbstractDataSource *source, SurfaceInterface *originSurface, quint32 serial, DragAndDropIcon *dragIcon);
-    void selectionChanged(KWaylandServer::DataSourceInterface *);
+    void selectionChanged(KWin::DataSourceInterface *);
 
 private:
     friend class DataDeviceManagerInterfacePrivate;
@@ -120,4 +120,4 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(KWaylandServer::DataDeviceInterface *)
+Q_DECLARE_METATYPE(KWin::DataDeviceInterface *)

@@ -10,16 +10,12 @@
 
 #include <unordered_map>
 
-namespace KWaylandServer
-{
-class SubSurfaceInterface;
-class SurfaceInterface;
-}
-
 namespace KWin
 {
 
 class GraphicsBuffer;
+class SubSurfaceInterface;
+class SurfaceInterface;
 class X11Window;
 
 /**
@@ -30,13 +26,13 @@ class KWIN_EXPORT SurfaceItemWayland : public SurfaceItem
     Q_OBJECT
 
 public:
-    explicit SurfaceItemWayland(KWaylandServer::SurfaceInterface *surface, Scene *scene, Item *parent = nullptr);
+    explicit SurfaceItemWayland(SurfaceInterface *surface, Scene *scene, Item *parent = nullptr);
 
     QVector<QRectF> shape() const override;
     QRegion opaque() const override;
     ContentType contentType() const override;
 
-    KWaylandServer::SurfaceInterface *surface() const;
+    SurfaceInterface *surface() const;
 
 private Q_SLOTS:
     void handleSurfaceToBufferMatrixChanged();
@@ -46,7 +42,7 @@ private Q_SLOTS:
     void handleBufferSourceBoxChanged();
     void handleBufferTransformChanged();
 
-    void handleChildSubSurfaceRemoved(KWaylandServer::SubSurfaceInterface *child);
+    void handleChildSubSurfaceRemoved(SubSurfaceInterface *child);
     void handleChildSubSurfacesChanged();
     void handleSubSurfacePositionChanged();
     void handleSubSurfaceMappedChanged();
@@ -55,10 +51,10 @@ protected:
     std::unique_ptr<SurfacePixmap> createPixmap() override;
 
 private:
-    SurfaceItemWayland *getOrCreateSubSurfaceItem(KWaylandServer::SubSurfaceInterface *s);
+    SurfaceItemWayland *getOrCreateSubSurfaceItem(SubSurfaceInterface *s);
 
-    QPointer<KWaylandServer::SurfaceInterface> m_surface;
-    std::unordered_map<KWaylandServer::SubSurfaceInterface *, std::unique_ptr<SurfaceItemWayland>> m_subsurfaces;
+    QPointer<SurfaceInterface> m_surface;
+    std::unordered_map<SubSurfaceInterface *, std::unique_ptr<SurfaceItemWayland>> m_subsurfaces;
 };
 
 class KWIN_EXPORT SurfacePixmapWayland final : public SurfacePixmap

@@ -45,7 +45,7 @@ namespace KWin
 
 static const QByteArray s_blurAtomName = QByteArrayLiteral("_KDE_NET_WM_BLUR_BEHIND_REGION");
 
-KWaylandServer::BlurManagerInterface *BlurEffect::s_blurManager = nullptr;
+BlurManagerInterface *BlurEffect::s_blurManager = nullptr;
 QTimer *BlurEffect::s_blurManagerRemoveTimer = nullptr;
 
 BlurEffect::BlurEffect()
@@ -107,7 +107,7 @@ BlurEffect::BlurEffect()
         }
         s_blurManagerRemoveTimer->stop();
         if (!s_blurManager) {
-            s_blurManager = new KWaylandServer::BlurManagerInterface(effects->waylandDisplay(), s_blurManagerRemoveTimer);
+            s_blurManager = new BlurManagerInterface(effects->waylandDisplay(), s_blurManagerRemoveTimer);
         }
     }
 
@@ -229,7 +229,7 @@ void BlurEffect::updateBlurRegion(EffectWindow *w)
         valid = !value.isNull();
     }
 
-    KWaylandServer::SurfaceInterface *surf = w->surface();
+    SurfaceInterface *surf = w->surface();
 
     if (surf && surf->blur()) {
         region = surf->blur()->region();
@@ -256,10 +256,10 @@ void BlurEffect::updateBlurRegion(EffectWindow *w)
 
 void BlurEffect::slotWindowAdded(EffectWindow *w)
 {
-    KWaylandServer::SurfaceInterface *surf = w->surface();
+    SurfaceInterface *surf = w->surface();
 
     if (surf) {
-        windowBlurChangedConnections[w] = connect(surf, &KWaylandServer::SurfaceInterface::blurChanged, this, [this, w]() {
+        windowBlurChangedConnections[w] = connect(surf, &SurfaceInterface::blurChanged, this, [this, w]() {
             if (w) {
                 updateBlurRegion(w);
             }

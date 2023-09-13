@@ -25,27 +25,27 @@ public:
     explicit ScreencastManager();
 
 private:
-    void streamWindow(KWaylandServer::ScreencastStreamV1Interface *stream,
+    void streamWindow(ScreencastStreamV1Interface *stream,
                       const QString &winid,
-                      KWaylandServer::ScreencastV1Interface::CursorMode mode);
-    void streamWaylandOutput(KWaylandServer::ScreencastStreamV1Interface *stream,
-                             KWaylandServer::OutputInterface *output,
-                             KWaylandServer::ScreencastV1Interface::CursorMode mode);
+                      ScreencastV1Interface::CursorMode mode);
+    void streamWaylandOutput(ScreencastStreamV1Interface *stream,
+                             OutputInterface *output,
+                             ScreencastV1Interface::CursorMode mode);
     void
-    streamOutput(KWaylandServer::ScreencastStreamV1Interface *stream, Output *output, KWaylandServer::ScreencastV1Interface::CursorMode mode);
-    void streamVirtualOutput(KWaylandServer::ScreencastStreamV1Interface *stream,
+    streamOutput(ScreencastStreamV1Interface *stream, Output *output, ScreencastV1Interface::CursorMode mode);
+    void streamVirtualOutput(ScreencastStreamV1Interface *stream,
                              const QString &name,
                              const QSize &size,
                              double scale,
-                             KWaylandServer::ScreencastV1Interface::CursorMode mode);
-    void streamRegion(KWaylandServer::ScreencastStreamV1Interface *stream,
+                             ScreencastV1Interface::CursorMode mode);
+    void streamRegion(ScreencastStreamV1Interface *stream,
                       const QRect &geometry,
                       qreal scale,
-                      KWaylandServer::ScreencastV1Interface::CursorMode mode);
+                      ScreencastV1Interface::CursorMode mode);
 
-    void integrateStreams(KWaylandServer::ScreencastStreamV1Interface *waylandStream, ScreenCastStream *stream);
+    void integrateStreams(ScreencastStreamV1Interface *waylandStream, ScreenCastStream *stream);
 
-    KWaylandServer::ScreencastV1Interface *m_screencast;
+    ScreencastV1Interface *m_screencast;
 };
 
 } // namespace KWin

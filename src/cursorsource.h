@@ -14,13 +14,10 @@
 #include <QPointer>
 #include <QTimer>
 
-namespace KWaylandServer
-{
-class SurfaceInterface;
-}
-
 namespace KWin
 {
+
+class SurfaceInterface;
 
 /**
  * The CursorSource class represents the contents of the Cursor.
@@ -85,15 +82,15 @@ class KWIN_EXPORT SurfaceCursorSource : public CursorSource
 public:
     explicit SurfaceCursorSource(QObject *parent = nullptr);
 
-    KWaylandServer::SurfaceInterface *surface() const;
+    SurfaceInterface *surface() const;
 
 public Q_SLOTS:
-    void update(KWaylandServer::SurfaceInterface *surface, const QPointF &hotspot);
+    void update(SurfaceInterface *surface, const QPointF &hotspot);
 
 private:
     void refresh();
 
-    QPointer<KWaylandServer::SurfaceInterface> m_surface;
+    QPointer<SurfaceInterface> m_surface;
 };
 
 } // namespace KWin

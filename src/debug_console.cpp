@@ -565,7 +565,7 @@ void DebugConsoleFilter::tabletPadRingEvent(int number, int position, bool isFin
     m_textEdit->ensureCursorVisible();
 }
 
-static QString sourceString(const KWaylandServer::AbstractDataSource *const source)
+static QString sourceString(const AbstractDataSource *const source)
 {
     if (!source) {
         return QString();
@@ -577,11 +577,11 @@ static QString sourceString(const KWaylandServer::AbstractDataSource *const sour
 
     const QString executable = waylandServer()->display()->getConnection(source->client())->executablePath();
 
-    if (auto dataSource = qobject_cast<const KWaylandServer::DataSourceInterface *const>(source)) {
+    if (auto dataSource = qobject_cast<const DataSourceInterface *const>(source)) {
         return QStringLiteral("wl_data_source@%1 of %2").arg(wl_resource_get_id(dataSource->resource())).arg(executable);
-    } else if (qobject_cast<const KWaylandServer::PrimarySelectionSourceV1Interface *const>(source)) {
+    } else if (qobject_cast<const PrimarySelectionSourceV1Interface *const>(source)) {
         return QStringLiteral("zwp_primary_selection_source_v1 of %2").arg(executable);
-    } else if (qobject_cast<const KWaylandServer::DataControlSourceV1Interface *const>(source)) {
+    } else if (qobject_cast<const DataControlSourceV1Interface *const>(source)) {
         return QStringLiteral("data control by %1").arg(executable);
     }
     return QStringLiteral("unknown source of").arg(executable);
@@ -632,13 +632,13 @@ DebugConsole::DebugConsole()
         if (index == 6) {
             static_cast<DataSourceModel *>(m_ui->clipboardContent->model())->setSource(waylandServer()->seat()->selection());
             m_ui->clipboardSource->setText(sourceString(waylandServer()->seat()->selection()));
-            connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::selectionChanged, this, [this](KWaylandServer::AbstractDataSource *source) {
+            connect(waylandServer()->seat(), &SeatInterface::selectionChanged, this, [this](AbstractDataSource *source) {
                 static_cast<DataSourceModel *>(m_ui->clipboardContent->model())->setSource(source);
                 m_ui->clipboardSource->setText(sourceString(source));
             });
             static_cast<DataSourceModel *>(m_ui->primaryContent->model())->setSource(waylandServer()->seat()->primarySelection());
             m_ui->primarySource->setText(sourceString(waylandServer()->seat()->primarySelection()));
-            connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::primarySelectionChanged, this, [this](KWaylandServer::AbstractDataSource *source) {
+            connect(waylandServer()->seat(), &SeatInterface::primarySelectionChanged, this, [this](AbstractDataSource *source) {
                 static_cast<DataSourceModel *>(m_ui->primaryContent->model())->setSource(source);
                 m_ui->primarySource->setText(sourceString(source));
             });
@@ -773,9 +773,9 @@ QString DebugConsoleDelegate::displayText(const QVariant &value, const QLocale &
         return QStringLiteral("%1,%2 %3x%4").arg(r.x()).arg(r.y()).arg(r.width()).arg(r.height());
     }
     default:
-        if (value.userType() == qMetaTypeId<KWaylandServer::SurfaceInterface *>()) {
-            if (auto s = value.value<KWaylandServer::SurfaceInterface *>()) {
-                return QStringLiteral("KWaylandServer::SurfaceInterface(0x%1)").arg(qulonglong(s), 0, 16);
+        if (value.userType() == qMetaTypeId<KWin::SurfaceInterface *>()) {
+            if (auto s = value.value<KWin::SurfaceInterface *>()) {
+                return QStringLiteral("KWin::SurfaceInterface(0x%1)").arg(qulonglong(s), 0, 16);
             } else {
                 return QStringLiteral("nullptr");
             }
@@ -1311,7 +1311,6 @@ SurfaceTreeModel::SurfaceTreeModel(QObject *parent)
         beginResetModel();
         endResetModel();
     };
-    using namespace KWaylandServer;
 
     auto watchSubsurfaces = [this, reset](Window *c) {
         if (!c->surface()) {
@@ -1343,7 +1342,6 @@ int SurfaceTreeModel::columnCount(const QModelIndex &parent) const
 int SurfaceTreeModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid()) {
-        using namespace KWaylandServer;
         if (SurfaceInterface *surface = static_cast<SurfaceInterface *>(parent.internalPointer())) {
             return surface->below().count() + surface->above().count();
         }
@@ -1361,7 +1359,6 @@ QModelIndex SurfaceTreeModel::index(int row, int column, const QModelIndex &pare
     }
 
     if (parent.isValid()) {
-        using namespace KWaylandServer;
         if (SurfaceInterface *surface = static_cast<SurfaceInterface *>(parent.internalPointer())) {
             int reference = 0;
             const auto &below = surface->below();
@@ -1389,7 +1386,6 @@ QModelIndex SurfaceTreeModel::index(int row, int column, const QModelIndex &pare
 
 QModelIndex SurfaceTreeModel::parent(const QModelIndex &child) const
 {
-    using namespace KWaylandServer;
     if (SurfaceInterface *surface = static_cast<SurfaceInterface *>(child.internalPointer())) {
         const auto &subsurface = surface->subSurface();
         if (!subsurface) {
@@ -1440,7 +1436,6 @@ QVariant SurfaceTreeModel::data(const QModelIndex &index, int role) const
     if (!index.isValid()) {
         return QVariant();
     }
-    using namespace KWaylandServer;
     if (SurfaceInterface *surface = static_cast<SurfaceInterface *>(index.internalPointer())) {
         if (role == Qt::DisplayRole || role == Qt::ToolTipRole) {
             return QStringLiteral("%1 (%2) - %3").arg(surface->client()->executablePath()).arg(surface->client()->processId()).arg(surface->id());
@@ -1663,7 +1658,7 @@ static QByteArray readData(int fd)
     }
 }
 
-void DataSourceModel::setSource(KWaylandServer::AbstractDataSource *source)
+void DataSourceModel::setSource(AbstractDataSource *source)
 {
     beginResetModel();
     m_source = source;

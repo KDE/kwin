@@ -30,13 +30,10 @@ typedef uint32_t xkb_led_index_t;
 typedef uint32_t xkb_keysym_t;
 typedef uint32_t xkb_layout_index_t;
 
-namespace KWaylandServer
-{
-class SeatInterface;
-}
-
 namespace KWin
 {
+
+class SeatInterface;
 
 class KWIN_EXPORT Xkb : public QObject
 {
@@ -104,7 +101,7 @@ public:
      */
     void forwardModifiers();
 
-    void setSeat(KWaylandServer::SeatInterface *seat);
+    void setSeat(SeatInterface *seat);
     QByteArray keymapContents() const;
 
     std::optional<int> keycodeFromKeysym(xkb_keysym_t keysym);
@@ -161,7 +158,7 @@ private:
         xkb_mod_index_t locked = 0;
     } m_modifierState;
 
-    QPointer<KWaylandServer::SeatInterface> m_seat;
+    QPointer<SeatInterface> m_seat;
     const bool m_followLocale1;
 };
 

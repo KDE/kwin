@@ -21,11 +21,6 @@
 
 class QTextEdit;
 
-namespace KWaylandServer
-{
-class AbstractDataSource;
-}
-
 namespace Ui
 {
 class DebugConsole;
@@ -34,6 +29,7 @@ class DebugConsole;
 namespace KWin
 {
 
+class AbstractDataSource;
 class Window;
 class X11Window;
 class InternalWindow;
@@ -196,10 +192,10 @@ public:
     QVariant data(const QModelIndex &index, int role) const override;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
-    void setSource(KWaylandServer::AbstractDataSource *source);
+    void setSource(AbstractDataSource *source);
 
 private:
-    KWaylandServer::AbstractDataSource *m_source = nullptr;
+    AbstractDataSource *m_source = nullptr;
     QVector<QByteArray> m_data;
 };
 }

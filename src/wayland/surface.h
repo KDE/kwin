@@ -16,11 +16,8 @@ struct wl_resource;
 
 namespace KWin
 {
-class GraphicsBuffer;
-}
 
-namespace KWaylandServer
-{
+class GraphicsBuffer;
 class BlurInterface;
 class ClientConnection;
 class ConfinedPointerV1Interface;
@@ -177,11 +174,11 @@ public:
      * If the surface is on an output that is rotated 90 degrees clockwise, the buffer will
      * be rotated 90 degrees counter clockwise.
      */
-    KWin::OutputTransform bufferTransform() const;
+    OutputTransform bufferTransform() const;
     /**
      * @returns the current GraphicsBuffer, might be @c nullptr.
      */
-    KWin::GraphicsBuffer *buffer() const;
+    GraphicsBuffer *buffer() const;
     QPoint offset() const;
     /**
      * Returns the current size of the surface, in surface coordinates.
@@ -317,7 +314,7 @@ public:
     /**
      * @returns the current content type of this surface
      */
-    KWin::ContentType contentType() const;
+    ContentType contentType() const;
 
     /**
      * @returns The SurfaceInterface for the @p native resource.
@@ -360,7 +357,7 @@ public:
      * This indicates to the client the preferred buffer transform to use when
      * attaching buffers to this surface.
      */
-    void setPreferredBufferTransform(KWin::OutputTransform transform);
+    void setPreferredBufferTransform(OutputTransform transform);
 
     /**
      * The first committed transaction that is scheduled to be applied to this surface.
@@ -525,6 +522,6 @@ private:
     }
 };
 
-} // namespace KWaylandServer
+} // namespace KWin
 
-Q_DECLARE_METATYPE(KWaylandServer::SurfaceInterface *)
+Q_DECLARE_METATYPE(KWin::SurfaceInterface *)

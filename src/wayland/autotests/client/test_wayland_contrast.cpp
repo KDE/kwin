@@ -35,9 +35,9 @@ private Q_SLOTS:
     void testSurfaceDestroy();
 
 private:
-    KWaylandServer::Display *m_display;
-    KWaylandServer::CompositorInterface *m_compositorInterface;
-    KWaylandServer::ContrastManagerInterface *m_contrastManagerInterface;
+    KWin::Display *m_display;
+    KWin::CompositorInterface *m_compositorInterface;
+    KWin::ContrastManagerInterface *m_contrastManagerInterface;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::Compositor *m_compositor;
     KWayland::Client::ContrastManager *m_contrastManager;
@@ -60,9 +60,9 @@ TestContrast::TestContrast(QObject *parent)
 
 void TestContrast::init()
 {
-    using namespace KWaylandServer;
+    using namespace KWin;
     delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = new KWin::Display(this);
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
@@ -136,13 +136,13 @@ void TestContrast::cleanup()
 
 void TestContrast::testCreate()
 {
-    QSignalSpy serverSurfaceCreated(m_compositorInterface, &KWaylandServer::CompositorInterface::surfaceCreated);
+    QSignalSpy serverSurfaceCreated(m_compositorInterface, &KWin::CompositorInterface::surfaceCreated);
 
     std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
 
-    auto serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface *>();
-    QSignalSpy contrastChanged(serverSurface, &KWaylandServer::SurfaceInterface::contrastChanged);
+    auto serverSurface = serverSurfaceCreated.first().first().value<KWin::SurfaceInterface *>();
+    QSignalSpy contrastChanged(serverSurface, &KWin::SurfaceInterface::contrastChanged);
 
     auto contrast = m_contrastManager->createContrast(surface.get(), surface.get());
     contrast->setRegion(m_compositor->createRegion(QRegion(0, 0, 10, 20), nullptr));
@@ -168,13 +168,13 @@ void TestContrast::testCreate()
 
 void TestContrast::testSurfaceDestroy()
 {
-    QSignalSpy serverSurfaceCreated(m_compositorInterface, &KWaylandServer::CompositorInterface::surfaceCreated);
+    QSignalSpy serverSurfaceCreated(m_compositorInterface, &KWin::CompositorInterface::surfaceCreated);
 
     std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
 
-    auto serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface *>();
-    QSignalSpy contrastChanged(serverSurface, &KWaylandServer::SurfaceInterface::contrastChanged);
+    auto serverSurface = serverSurfaceCreated.first().first().value<KWin::SurfaceInterface *>();
+    QSignalSpy contrastChanged(serverSurface, &KWin::SurfaceInterface::contrastChanged);
 
     std::unique_ptr<KWayland::Client::Contrast> contrast(m_contrastManager->createContrast(surface.get()));
     contrast->setRegion(m_compositor->createRegion(QRegion(0, 0, 10, 20), nullptr));

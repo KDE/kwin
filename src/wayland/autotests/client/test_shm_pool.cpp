@@ -36,7 +36,7 @@ private Q_SLOTS:
     void testReuseBuffer();
 
 private:
-    KWaylandServer::Display *m_display;
+    KWin::Display *m_display;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::Compositor *m_compositor;
     KWayland::Client::ShmPool *m_shmPool;
@@ -57,9 +57,9 @@ TestShmPool::TestShmPool(QObject *parent)
 
 void TestShmPool::init()
 {
-    using namespace KWaylandServer;
+    using namespace KWin;
     delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = new KWin::Display(this);
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());

@@ -28,7 +28,7 @@
 
 #include "../../tests/fakeoutput.h"
 
-using namespace KWaylandServer;
+using namespace KWin;
 
 Q_DECLARE_METATYPE(Qt::MouseButton)
 
@@ -63,7 +63,7 @@ private:
     XdgShellInterface *m_xdgShellInterface = nullptr;
     KWayland::Client::Compositor *m_compositor = nullptr;
     KWayland::Client::XdgShell *m_xdgShell = nullptr;
-    KWaylandServer::Display *m_display = nullptr;
+    KWin::Display *m_display = nullptr;
     CompositorInterface *m_compositorInterface = nullptr;
     std::unique_ptr<FakeOutput> m_output1Handle;
     OutputInterface *m_output1Interface = nullptr;
@@ -91,7 +91,7 @@ private:
 void XdgShellTest::init()
 {
     delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = new KWin::Display(this);
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());

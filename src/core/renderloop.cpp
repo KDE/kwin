@@ -268,7 +268,7 @@ void RenderLoop::setFullscreenSurface(Item *surfaceItem)
 {
     d->fullscreenItem = surfaceItem;
     if (SurfaceItemWayland *wayland = qobject_cast<SurfaceItemWayland *>(surfaceItem)) {
-        d->allowTearing = d->canDoTearing && options->allowTearing() && wayland->surface()->presentationHint() == KWaylandServer::PresentationHint::Async;
+        d->allowTearing = d->canDoTearing && options->allowTearing() && wayland->surface()->presentationHint() == PresentationHint::Async;
     } else {
         d->allowTearing = false;
     }

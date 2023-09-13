@@ -23,16 +23,12 @@
 
 class QProcess;
 
-namespace KWaylandServer
-{
-class InputMethodGrabV1;
-}
-
 namespace KWin
 {
 
 class Window;
 class InputPanelV1Window;
+class InputMethodGrabV1;
 
 /**
  * This class implements the zwp_input_method_unstable_v1, which is currently used to provide
@@ -67,7 +63,7 @@ public:
     void setPanel(InputPanelV1Window *panel);
     void setInputMethodCommand(const QString &path);
 
-    KWaylandServer::InputMethodGrabV1 *keyboardGrab();
+    InputMethodGrabV1 *keyboardGrab();
     bool shouldShowOnActive() const;
 
     void forwardModifiers(ForwardModifiersForce force);
@@ -94,7 +90,7 @@ private Q_SLOTS:
     void textInputInterfaceV1StateUpdated(quint32 serial);
     void textInputInterfaceV1Reset();
     void invokeAction(quint32 button, quint32 index);
-    void textInputInterfaceV2StateUpdated(quint32 serial, KWaylandServer::TextInputV2Interface::UpdateReason reason);
+    void textInputInterfaceV2StateUpdated(quint32 serial, KWin::TextInputV2Interface::UpdateReason reason);
     void textInputInterfaceV3EnableRequested();
 
     // inputcontext slots
@@ -116,7 +112,7 @@ private:
     void startInputMethod();
     void stopInputMethod();
     void setTrackedWindow(Window *trackedWindow);
-    void installKeyboardGrab(KWaylandServer::InputMethodGrabV1 *keyboardGrab);
+    void installKeyboardGrab(InputMethodGrabV1 *keyboardGrab);
     void updateModifiersMap(const QByteArray &modifiers);
 
     bool touchEventTriggered() const;
@@ -134,7 +130,7 @@ private:
     quint32 m_serial = 0;
     QPointer<InputPanelV1Window> m_panel;
     QPointer<Window> m_trackedWindow;
-    QPointer<KWaylandServer::InputMethodGrabV1> m_keyboardGrab;
+    QPointer<InputMethodGrabV1> m_keyboardGrab;
 
     QProcess *m_inputMethodProcess = nullptr;
     QTimer m_inputMethodCrashTimer;

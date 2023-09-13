@@ -11,7 +11,7 @@
 
 struct wl_resource;
 
-namespace KWaylandServer
+namespace KWin
 {
 class Display;
 class IdleInhibitManagerV1InterfacePrivate;

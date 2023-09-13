@@ -16,11 +16,6 @@
 #include <QPointer>
 #include <optional>
 
-namespace KWaylandServer
-{
-class SurfaceInterface;
-}
-
 namespace KWin
 {
 

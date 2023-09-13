@@ -27,8 +27,8 @@
 #include <QMouseEvent>
 #include <QTimer>
 
-using DnDAction = KWaylandServer::DataDeviceManagerInterface::DnDAction;
-using DnDActions = KWaylandServer::DataDeviceManagerInterface::DnDActions;
+using DnDAction = KWin::DataDeviceManagerInterface::DnDAction;
+using DnDActions = KWin::DataDeviceManagerInterface::DnDActions;
 
 namespace KWin
 {
@@ -50,7 +50,7 @@ bool WlToXDrag::handleClientMessage(xcb_client_message_event_t *event)
     return m_dnd->dropHandler()->handleClientMessage(event);
 }
 
-Xvisit::Xvisit(X11Window *target, KWaylandServer::AbstractDataSource *dataSource, Dnd *dnd, QObject *parent)
+Xvisit::Xvisit(X11Window *target, AbstractDataSource *dataSource, Dnd *dnd, QObject *parent)
     : QObject(parent)
     , m_dnd(dnd)
     , m_target(target)
@@ -197,7 +197,7 @@ void Xvisit::leave()
 void Xvisit::receiveOffer()
 {
     retrieveSupportedActions();
-    connect(m_dataSource, &KWaylandServer::AbstractDataSource::supportedDragAndDropActionsChanged,
+    connect(m_dataSource, &AbstractDataSource::supportedDragAndDropActionsChanged,
             this, &Xvisit::retrieveSupportedActions);
     enter();
 }
@@ -211,7 +211,7 @@ void Xvisit::enter()
 
     // proxy future pointer position changes
     m_motionConnection = connect(waylandServer()->seat(),
-                                 &KWaylandServer::SeatInterface::pointerPosChanged,
+                                 &SeatInterface::pointerPosChanged,
                                  this, &Xvisit::sendPosition);
 }
 

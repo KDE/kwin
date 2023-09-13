@@ -18,7 +18,7 @@ namespace KWin
 class GlxContext : public OpenGlContext
 {
 public:
-    GlxContext(Display *display, GLXWindow window, GLXContext handle);
+    GlxContext(::Display *display, GLXWindow window, GLXContext handle);
     ~GlxContext() override;
 
     bool makeCurrent() const;
@@ -27,7 +27,7 @@ public:
     static std::unique_ptr<GlxContext> create(GlxBackend *backend, GLXFBConfig fbconfig, GLXWindow glxWindow);
 
 private:
-    Display *const m_display;
+    ::Display *const m_display;
     const GLXWindow m_window;
     const GLXContext m_handle;
 };

@@ -10,7 +10,7 @@
 #include "surface_p.h"
 #include "transaction.h"
 
-namespace KWaylandServer
+namespace KWin
 {
 static const int s_version = 1;
 
@@ -290,6 +290,6 @@ void SubSurfaceInterface::parentApplyState(quint32 serial)
     }
 }
 
-} // namespace KWaylandServer
+} // namespace KWin
 
 #include "moc_subcompositor.cpp"

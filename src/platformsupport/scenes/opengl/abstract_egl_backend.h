@@ -40,7 +40,7 @@ public:
     bool testImportBuffer(GraphicsBuffer *buffer) override;
     QHash<uint32_t, QVector<uint64_t>> supportedFormats() const override;
 
-    QVector<KWaylandServer::LinuxDmaBufV1Feedback::Tranche> tranches() const;
+    QVector<LinuxDmaBufV1Feedback::Tranche> tranches() const;
     dev_t deviceId() const;
     virtual bool prefer10bpc() const;
 
@@ -73,7 +73,7 @@ private:
     std::unique_ptr<EglContext> m_context;
     QList<QByteArray> m_clientExtensions;
     const dev_t m_deviceId;
-    QVector<KWaylandServer::LinuxDmaBufV1Feedback::Tranche> m_tranches;
+    QVector<LinuxDmaBufV1Feedback::Tranche> m_tranches;
     QHash<GraphicsBuffer *, EGLImageKHR> m_importedBuffers;
 };
 

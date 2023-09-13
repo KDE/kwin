@@ -54,7 +54,7 @@ std::chrono::nanoseconds EglLayer::queryRenderTime() const
     return m_backend->queryRenderTime();
 }
 
-EglBackend::EglBackend(Display *display, X11StandaloneBackend *backend)
+EglBackend::EglBackend(::Display *display, X11StandaloneBackend *backend)
     : m_backend(backend)
     , m_overlayWindow(std::make_unique<OverlayWindowX11>(backend))
     , m_layer(std::make_unique<EglLayer>(this))

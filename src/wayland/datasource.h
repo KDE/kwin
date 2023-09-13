@@ -11,7 +11,7 @@
 #include "abstract_data_source.h"
 #include "datadevicemanager.h"
 
-namespace KWaylandServer
+namespace KWin
 {
 class DataSourceInterfacePrivate;
 class XdgToplevelDragV1Interface;
@@ -65,4 +65,4 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(KWaylandServer::DataSourceInterface *)
+Q_DECLARE_METATYPE(KWin::DataSourceInterface *)

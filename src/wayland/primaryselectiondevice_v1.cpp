@@ -14,7 +14,7 @@
 // Wayland
 #include <qwayland-server-wp-primary-selection-unstable-v1.h>
 
-namespace KWaylandServer
+namespace KWin
 {
 class PrimarySelectionDeviceV1InterfacePrivate : public QtWaylandServer::zwp_primary_selection_device_v1
 {

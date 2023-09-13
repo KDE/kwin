@@ -16,38 +16,38 @@
 namespace KWin
 {
 
-SurfaceItemWayland::SurfaceItemWayland(KWaylandServer::SurfaceInterface *surface, Scene *scene, Item *parent)
+SurfaceItemWayland::SurfaceItemWayland(SurfaceInterface *surface, Scene *scene, Item *parent)
     : SurfaceItem(scene, parent)
     , m_surface(surface)
 {
-    connect(surface, &KWaylandServer::SurfaceInterface::surfaceToBufferMatrixChanged,
+    connect(surface, &SurfaceInterface::surfaceToBufferMatrixChanged,
             this, &SurfaceItemWayland::handleSurfaceToBufferMatrixChanged);
 
-    connect(surface, &KWaylandServer::SurfaceInterface::sizeChanged,
+    connect(surface, &SurfaceInterface::sizeChanged,
             this, &SurfaceItemWayland::handleSurfaceSizeChanged);
-    connect(surface, &KWaylandServer::SurfaceInterface::bufferSizeChanged,
+    connect(surface, &SurfaceInterface::bufferSizeChanged,
             this, &SurfaceItemWayland::handleBufferSizeChanged);
-    connect(surface, &KWaylandServer::SurfaceInterface::bufferSourceBoxChanged,
+    connect(surface, &SurfaceInterface::bufferSourceBoxChanged,
             this, &SurfaceItemWayland::handleBufferSourceBoxChanged);
-    connect(surface, &KWaylandServer::SurfaceInterface::bufferTransformChanged,
+    connect(surface, &SurfaceInterface::bufferTransformChanged,
             this, &SurfaceItemWayland::handleBufferTransformChanged);
 
-    connect(surface, &KWaylandServer::SurfaceInterface::childSubSurfacesChanged,
+    connect(surface, &SurfaceInterface::childSubSurfacesChanged,
             this, &SurfaceItemWayland::handleChildSubSurfacesChanged);
-    connect(surface, &KWaylandServer::SurfaceInterface::committed,
+    connect(surface, &SurfaceInterface::committed,
             this, &SurfaceItemWayland::handleSurfaceCommitted);
-    connect(surface, &KWaylandServer::SurfaceInterface::damaged,
+    connect(surface, &SurfaceInterface::damaged,
             this, &SurfaceItemWayland::addDamage);
-    connect(surface, &KWaylandServer::SurfaceInterface::childSubSurfaceRemoved,
+    connect(surface, &SurfaceInterface::childSubSurfaceRemoved,
             this, &SurfaceItemWayland::handleChildSubSurfaceRemoved);
 
-    KWaylandServer::SubSurfaceInterface *subsurface = surface->subSurface();
+    SubSurfaceInterface *subsurface = surface->subSurface();
     if (subsurface) {
-        connect(surface, &KWaylandServer::SurfaceInterface::mapped,
+        connect(surface, &SurfaceInterface::mapped,
                 this, &SurfaceItemWayland::handleSubSurfaceMappedChanged);
-        connect(surface, &KWaylandServer::SurfaceInterface::unmapped,
+        connect(surface, &SurfaceInterface::unmapped,
                 this, &SurfaceItemWayland::handleSubSurfaceMappedChanged);
-        connect(subsurface, &KWaylandServer::SubSurfaceInterface::positionChanged,
+        connect(subsurface, &SubSurfaceInterface::positionChanged,
                 this, &SurfaceItemWayland::handleSubSurfacePositionChanged);
         setVisible(surface->isMapped());
         setPosition(subsurface->position());
@@ -74,7 +74,7 @@ QRegion SurfaceItemWayland::opaque() const
     return QRegion();
 }
 
-KWaylandServer::SurfaceInterface *SurfaceItemWayland::surface() const
+SurfaceInterface *SurfaceItemWayland::surface() const
 {
     return m_surface;
 }
@@ -114,7 +114,7 @@ void SurfaceItemWayland::handleSurfaceCommitted()
     }
 }
 
-SurfaceItemWayland *SurfaceItemWayland::getOrCreateSubSurfaceItem(KWaylandServer::SubSurfaceInterface *child)
+SurfaceItemWayland *SurfaceItemWayland::getOrCreateSubSurfaceItem(SubSurfaceInterface *child)
 {
     auto &item = m_subsurfaces[child];
     if (!item) {
@@ -124,15 +124,15 @@ SurfaceItemWayland *SurfaceItemWayland::getOrCreateSubSurfaceItem(KWaylandServer
     return item.get();
 }
 
-void SurfaceItemWayland::handleChildSubSurfaceRemoved(KWaylandServer::SubSurfaceInterface *child)
+void SurfaceItemWayland::handleChildSubSurfaceRemoved(SubSurfaceInterface *child)
 {
     m_subsurfaces.erase(child);
 }
 
 void SurfaceItemWayland::handleChildSubSurfacesChanged()
 {
-    const QList<KWaylandServer::SubSurfaceInterface *> below = m_surface->below();
-    const QList<KWaylandServer::SubSurfaceInterface *> above = m_surface->above();
+    const QList<SubSurfaceInterface *> below = m_surface->below();
+    const QList<SubSurfaceInterface *> above = m_surface->above();
 
     for (int i = 0; i < below.count(); ++i) {
         SurfaceItemWayland *subsurfaceItem = getOrCreateSubSurfaceItem(below[i]);
@@ -178,7 +178,7 @@ void SurfacePixmapWayland::create()
 
 void SurfacePixmapWayland::update()
 {
-    KWaylandServer::SurfaceInterface *surface = m_item->surface();
+    SurfaceInterface *surface = m_item->surface();
     if (surface) {
         setBuffer(surface->buffer());
     }

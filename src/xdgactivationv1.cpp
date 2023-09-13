@@ -20,8 +20,6 @@
 #include <KApplicationTrader>
 #include <KDesktopFile>
 
-using namespace KWaylandServer;
-
 namespace KWin
 {
 
@@ -104,7 +102,7 @@ QString XdgActivationV1Integration::requestToken(bool isPrivileged, SurfaceInter
         }
         icon = QIcon::fromTheme(df.readIcon(), icon);
     }
-    std::unique_ptr<KWaylandServer::PlasmaWindowActivationInterface> activation;
+    std::unique_ptr<PlasmaWindowActivationInterface> activation;
     if (showNotify) {
         activation = waylandServer()->plasmaActivationFeedback()->createActivation(appId);
     }

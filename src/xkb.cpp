@@ -714,9 +714,9 @@ quint32 Xkb::numberOfLayouts() const
     return xkb_keymap_num_layouts(m_keymap);
 }
 
-void Xkb::setSeat(KWaylandServer::SeatInterface *seat)
+void Xkb::setSeat(SeatInterface *seat)
 {
-    m_seat = QPointer<KWaylandServer::SeatInterface>(seat);
+    m_seat = QPointer<SeatInterface>(seat);
 }
 
 std::optional<int> Xkb::keycodeFromKeysym(xkb_keysym_t keysym)

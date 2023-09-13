@@ -11,7 +11,7 @@
 #include <QObject>
 #include <QSocketNotifier>
 
-namespace KWaylandServer
+namespace KWin
 {
 
 class TransactionDmaBufLocker : public QObject
@@ -19,12 +19,12 @@ class TransactionDmaBufLocker : public QObject
     Q_OBJECT
 
 public:
-    static TransactionDmaBufLocker *get(KWin::GraphicsBuffer *buffer);
+    static TransactionDmaBufLocker *get(GraphicsBuffer *buffer);
 
     void add(Transaction *transaction);
 
 private:
-    explicit TransactionDmaBufLocker(const KWin::DmaBufAttributes *attributes);
+    explicit TransactionDmaBufLocker(const DmaBufAttributes *attributes);
 
     bool arm();
 
@@ -33,4 +33,4 @@ private:
     std::vector<std::unique_ptr<QSocketNotifier>> m_notifiers;
 };
 
-} // namespace KWaylandServer
+} // namespace KWin

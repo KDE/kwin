@@ -10,7 +10,7 @@
 
 #include "qwayland-server-xdg-decoration-unstable-v1.h"
 
-namespace KWaylandServer
+namespace KWin
 {
 class XdgDecorationManagerV1InterfacePrivate : public QtWaylandServer::zxdg_decoration_manager_v1
 {
@@ -40,4 +40,4 @@ protected:
     void zxdg_toplevel_decoration_v1_unset_mode(Resource *resource) override;
 };
 
-} // namespace KWaylandServer
+} // namespace KWin

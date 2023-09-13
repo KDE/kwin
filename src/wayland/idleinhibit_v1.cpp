@@ -7,7 +7,7 @@
 #include "idleinhibit_v1_p.h"
 #include "surface_p.h"
 
-namespace KWaylandServer
+namespace KWin
 {
 static const quint32 s_version = 1;
 

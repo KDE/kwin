@@ -10,7 +10,7 @@
 
 #include <QMargins>
 
-namespace KWaylandServer
+namespace KWin
 {
 class LayerShellV1InterfacePrivate;
 class LayerSurfaceV1Interface;
@@ -189,4 +189,4 @@ private:
     std::unique_ptr<LayerSurfaceV1InterfacePrivate> d;
 };
 
-} // namespace KWaylandServer
+} // namespace KWin

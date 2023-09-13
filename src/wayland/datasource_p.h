@@ -11,7 +11,7 @@
 
 #include "datadevicemanager.h"
 
-namespace KWaylandServer
+namespace KWin
 {
 class DataSourceInterface;
 class XdgToplevelDragV1Interface;

@@ -16,11 +16,6 @@
 #include <epoxy/egl.h>
 #include <optional>
 
-namespace KWaylandServer
-{
-class SurfaceInterface;
-}
-
 namespace KWin
 {
 
@@ -31,6 +26,7 @@ class GLTexture;
 class EglGbmBackend;
 class DrmVirtualOutput;
 class GLRenderTimeQuery;
+class SurfaceInterface;
 
 class VirtualEglGbmLayer : public DrmOutputLayer
 {
@@ -52,7 +48,7 @@ private:
     std::shared_ptr<EglSwapchain> createGbmSwapchain() const;
     bool doesGbmSwapchainFit(EglSwapchain *swapchain) const;
 
-    QPointer<KWaylandServer::SurfaceInterface> m_scanoutSurface;
+    QPointer<SurfaceInterface> m_scanoutSurface;
     QPointer<GraphicsBuffer> m_scanoutBuffer;
     DamageJournal m_damageJournal;
     DamageJournal m_oldDamageJournal;

@@ -37,28 +37,28 @@ private Q_SLOTS:
 
 private:
     TestDisplay *m_display;
-    KWaylandServer::CompositorInterface *m_compositorInterface;
-    KWaylandServer::BlurManagerInterface *m_blurManagerInterface;
+    KWin::CompositorInterface *m_compositorInterface;
+    KWin::BlurManagerInterface *m_blurManagerInterface;
 };
 
 static const QString s_socketName = QStringLiteral("kwayland-test-wayland-blur-0");
 
 // The following non-realistic class allows only clients in the m_allowedClients list to access the blur interface
 // all other interfaces are allowed
-class TestDisplay : public KWaylandServer::FilteredDisplay
+class TestDisplay : public KWin::FilteredDisplay
 {
 public:
     TestDisplay(QObject *parent);
-    bool allowInterface(KWaylandServer::ClientConnection *client, const QByteArray &interfaceName) override;
+    bool allowInterface(KWin::ClientConnection *client, const QByteArray &interfaceName) override;
     QList<wl_client *> m_allowedClients;
 };
 
 TestDisplay::TestDisplay(QObject *parent)
-    : KWaylandServer::FilteredDisplay(parent)
+    : KWin::FilteredDisplay(parent)
 {
 }
 
-bool TestDisplay::allowInterface(KWaylandServer::ClientConnection *client, const QByteArray &interfaceName)
+bool TestDisplay::allowInterface(KWin::ClientConnection *client, const QByteArray &interfaceName)
 {
     if (interfaceName == "org_kde_kwin_blur_manager") {
         return m_allowedClients.contains(*client);
@@ -75,7 +75,7 @@ TestFilter::TestFilter(QObject *parent)
 
 void TestFilter::init()
 {
-    using namespace KWaylandServer;
+    using namespace KWin;
     delete m_display;
     m_display = new TestDisplay(this);
     m_display->addSocketName(s_socketName);

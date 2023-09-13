@@ -981,7 +981,7 @@ EffectWindow *EffectsHandlerImpl::findWindow(WId id) const
     return nullptr;
 }
 
-EffectWindow *EffectsHandlerImpl::findWindow(KWaylandServer::SurfaceInterface *surf) const
+EffectWindow *EffectsHandlerImpl::findWindow(SurfaceInterface *surf) const
 {
     if (waylandServer()) {
         if (Window *w = waylandServer()->findWindow(surf)) {
@@ -1428,7 +1428,7 @@ bool EffectsHandlerImpl::blocksDirectScanout() const
     });
 }
 
-KWaylandServer::Display *EffectsHandlerImpl::waylandDisplay() const
+Display *EffectsHandlerImpl::waylandDisplay() const
 {
     if (waylandServer()) {
         return waylandServer()->display();
@@ -1933,7 +1933,7 @@ WINDOW_HELPER(bool, isDeleted, isDeleted)
 WINDOW_HELPER(QString, windowRole, windowRole)
 WINDOW_HELPER(QStringList, activities, activities)
 WINDOW_HELPER(bool, skipsCloseAnimation, skipsCloseAnimation)
-WINDOW_HELPER(KWaylandServer::SurfaceInterface *, surface, surface)
+WINDOW_HELPER(SurfaceInterface *, surface, surface)
 WINDOW_HELPER(bool, isPopupWindow, isPopupWindow)
 WINDOW_HELPER(bool, isOutline, isOutline)
 WINDOW_HELPER(bool, isLockScreen, isLockScreen)

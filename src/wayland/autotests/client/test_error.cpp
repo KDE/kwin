@@ -24,7 +24,7 @@
 
 #include <cerrno> // For EPROTO
 
-using namespace KWaylandServer;
+using namespace KWin;
 
 class ErrorTest : public QObject
 {
@@ -36,7 +36,7 @@ private Q_SLOTS:
     void testMultiplePlasmaShellSurfacesForSurface();
 
 private:
-    KWaylandServer::Display *m_display = nullptr;
+    KWin::Display *m_display = nullptr;
     CompositorInterface *m_ci = nullptr;
     PlasmaShellInterface *m_psi = nullptr;
     KWayland::Client::ConnectionThread *m_connection = nullptr;
@@ -51,7 +51,7 @@ static const QString s_socketName = QStringLiteral("kwayland-test-error-0");
 void ErrorTest::init()
 {
     delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = new KWin::Display(this);
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());

@@ -14,13 +14,9 @@
 
 #include <QPoint>
 
-namespace KWaylandServer
-{
-class SurfaceInterface;
-}
-
 namespace KWin
 {
+class SurfaceInterface;
 class Window;
 
 namespace Xwl
@@ -51,8 +47,8 @@ public:
 
     DragEventReply dragMoveFilter(Window *target);
 
-    using DnDAction = KWaylandServer::DataDeviceManagerInterface::DnDAction;
-    using DnDActions = KWaylandServer::DataDeviceManagerInterface::DnDActions;
+    using DnDAction = DataDeviceManagerInterface::DnDAction;
+    using DnDActions = DataDeviceManagerInterface::DnDActions;
     static DnDAction atomToClientAction(xcb_atom_t atom);
     static xcb_atom_t clientActionToAtom(DnDAction action);
 

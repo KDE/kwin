@@ -19,13 +19,9 @@ struct wl_resource;
 
 namespace KWin
 {
+
 class Output;
 class OutputMode;
-}
-
-namespace KWaylandServer
-{
-
 class Display;
 class OutputDeviceV2InterfacePrivate;
 class OutputDeviceModeV2Interface;
@@ -43,12 +39,12 @@ class KWIN_EXPORT OutputDeviceV2Interface : public QObject
     Q_OBJECT
 
 public:
-    explicit OutputDeviceV2Interface(Display *display, KWin::Output *handle, QObject *parent = nullptr);
+    explicit OutputDeviceV2Interface(Display *display, Output *handle, QObject *parent = nullptr);
     ~OutputDeviceV2Interface() override;
 
     void remove();
 
-    KWin::Output *handle() const;
+    Output *handle() const;
 
     static OutputDeviceV2Interface *get(wl_resource *native);
 
@@ -92,10 +88,10 @@ class KWIN_EXPORT OutputDeviceModeV2Interface : public QObject
     Q_OBJECT
 
 public:
-    OutputDeviceModeV2Interface(std::shared_ptr<KWin::OutputMode> handle, QObject *parent = nullptr);
+    OutputDeviceModeV2Interface(std::shared_ptr<OutputMode> handle, QObject *parent = nullptr);
     ~OutputDeviceModeV2Interface() override;
 
-    std::weak_ptr<KWin::OutputMode> handle() const;
+    std::weak_ptr<OutputMode> handle() const;
 
     static OutputDeviceModeV2Interface *get(wl_resource *native);
 

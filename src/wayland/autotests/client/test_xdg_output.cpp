@@ -30,10 +30,10 @@ private Q_SLOTS:
     void testChanges();
 
 private:
-    KWaylandServer::Display *m_display;
+    KWin::Display *m_display;
     std::unique_ptr<FakeOutput> m_outputHandle;
-    KWaylandServer::OutputInterface *m_serverOutput;
-    KWaylandServer::XdgOutputManagerV1Interface *m_serverXdgOutputManager;
+    KWin::OutputInterface *m_serverOutput;
+    KWin::XdgOutputManagerV1Interface *m_serverXdgOutputManager;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::EventQueue *m_queue;
     QThread *m_thread;
@@ -52,9 +52,9 @@ TestXdgOutput::TestXdgOutput(QObject *parent)
 
 void TestXdgOutput::init()
 {
-    using namespace KWaylandServer;
+    using namespace KWin;
     delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = new KWin::Display(this);
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
@@ -116,7 +116,7 @@ void TestXdgOutput::cleanup()
 void TestXdgOutput::testChanges()
 {
     // verify the server modes
-    using namespace KWaylandServer;
+    using namespace KWin;
     KWayland::Client::Registry registry;
     QSignalSpy announced(&registry, &KWayland::Client::Registry::outputAnnounced);
     QSignalSpy xdgOutputAnnounced(&registry, &KWayland::Client::Registry::xdgOutputAnnounced);

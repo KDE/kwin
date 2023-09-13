@@ -13,7 +13,7 @@
 #include <qwayland-server-wp-primary-selection-unstable-v1.h>
 
 static const int s_version = 1;
-namespace KWaylandServer
+namespace KWin
 {
 class PrimarySelectionDeviceManagerV1InterfacePrivate : public QtWaylandServer::zwp_primary_selection_device_manager_v1
 {

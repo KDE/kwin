@@ -23,7 +23,7 @@
 
 #include "qwayland-tablet-unstable-v2.h"
 
-using namespace KWaylandServer;
+using namespace KWin;
 using namespace std::literals;
 
 class Tablet : public QtWayland::zwp_tablet_v2
@@ -158,7 +158,7 @@ private:
     KWayland::Client::Seat *m_clientSeat = nullptr;
 
     QThread *m_thread;
-    KWaylandServer::Display m_display;
+    KWin::Display m_display;
     SeatInterface *m_seat;
     CompositorInterface *m_serverCompositor;
 
@@ -267,7 +267,7 @@ void TestTabletInterface::testAdd()
     QCOMPARE(m_tabletSeatClient->m_tablets.count(), 1);
 
     QSignalSpy toolSpy(m_tabletSeatClient, &TabletSeat::toolAdded);
-    m_tool = seatInterface->addTool(KWaylandServer::TabletToolV2Interface::Pen, 0, 0, {TabletToolV2Interface::Tilt, TabletToolV2Interface::Pressure}, "my tablet");
+    m_tool = seatInterface->addTool(KWin::TabletToolV2Interface::Pen, 0, 0, {TabletToolV2Interface::Tilt, TabletToolV2Interface::Pressure}, "my tablet");
     QVERIFY(m_tool);
     QVERIFY(toolSpy.wait() || toolSpy.count() == 1);
     QCOMPARE(m_tabletSeatClient->m_tools.count(), 1);

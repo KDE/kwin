@@ -37,7 +37,7 @@
 
 #include <functional>
 
-namespace KWaylandServer
+namespace KWin
 {
 static const int s_version = 8;
 
@@ -171,7 +171,7 @@ void SeatInterfacePrivate::registerDataDevice(DataDeviceInterface *dataDevice)
     }
 }
 
-KWaylandServer::AbstractDropHandler *SeatInterface::dropHandlerForSurface(SurfaceInterface *surface) const
+AbstractDropHandler *SeatInterface::dropHandlerForSurface(SurfaceInterface *surface) const
 {
     auto list = d->dataDevicesForSurface(surface);
     if (list.isEmpty()) {

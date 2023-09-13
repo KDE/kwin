@@ -11,7 +11,7 @@
 
 #include <QTimer>
 
-namespace KWaylandServer
+namespace KWin
 {
 class Display;
 class SeatInterface;

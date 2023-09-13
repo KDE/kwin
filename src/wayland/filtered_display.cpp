@@ -11,7 +11,7 @@
 
 #include <QByteArray>
 
-namespace KWaylandServer
+namespace KWin
 {
 class FilteredDisplayPrivate
 {

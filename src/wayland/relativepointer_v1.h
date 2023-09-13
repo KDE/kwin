@@ -12,7 +12,7 @@
 #include <QObject>
 #include <memory>
 
-namespace KWaylandServer
+namespace KWin
 {
 class Display;
 class RelativePointerManagerV1InterfacePrivate;
@@ -36,4 +36,4 @@ private:
     std::unique_ptr<RelativePointerManagerV1InterfacePrivate> d;
 };
 
-} // namespace KWaylandServer
+} // namespace KWin

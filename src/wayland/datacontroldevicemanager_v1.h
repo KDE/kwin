@@ -10,7 +10,7 @@
 #include <QObject>
 #include <memory>
 
-namespace KWaylandServer
+namespace KWin
 {
 class Display;
 class DataControlSourceV1Interface;
@@ -32,8 +32,8 @@ public:
     ~DataControlDeviceManagerV1Interface() override;
 
 Q_SIGNALS:
-    void dataSourceCreated(KWaylandServer::DataControlSourceV1Interface *dataSource);
-    void dataDeviceCreated(KWaylandServer::DataControlDeviceV1Interface *dataDevice);
+    void dataSourceCreated(KWin::DataControlSourceV1Interface *dataSource);
+    void dataDeviceCreated(KWin::DataControlDeviceV1Interface *dataDevice);
 
 private:
     std::unique_ptr<DataControlDeviceManagerV1InterfacePrivate> d;

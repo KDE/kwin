@@ -8,15 +8,11 @@
 
 #include "waylandwindow.h"
 
-namespace KWaylandServer
-{
-class AutoHideScreenEdgeV1Interface;
-class LayerSurfaceV1Interface;
-}
-
 namespace KWin
 {
 
+class AutoHideScreenEdgeV1Interface;
+class LayerSurfaceV1Interface;
 class Output;
 class LayerShellV1Integration;
 
@@ -25,11 +21,11 @@ class LayerShellV1Window : public WaylandWindow
     Q_OBJECT
 
 public:
-    explicit LayerShellV1Window(KWaylandServer::LayerSurfaceV1Interface *shellSurface,
+    explicit LayerShellV1Window(LayerSurfaceV1Interface *shellSurface,
                                 Output *output,
                                 LayerShellV1Integration *integration);
 
-    KWaylandServer::LayerSurfaceV1Interface *shellSurface() const;
+    LayerSurfaceV1Interface *shellSurface() const;
     Output *desiredOutput() const;
 
     NET::WindowType windowType(bool direct = false) const override;
@@ -47,7 +43,7 @@ public:
     void setVirtualKeyboardGeometry(const QRectF &geo) override;
     void showOnScreenEdge() override;
 
-    void installAutoHideScreenEdgeV1(KWaylandServer::AutoHideScreenEdgeV1Interface *edge);
+    void installAutoHideScreenEdgeV1(AutoHideScreenEdgeV1Interface *edge);
 
 protected:
     Layer belongsToLayer() const override;
@@ -68,8 +64,8 @@ private:
 
     Output *m_desiredOutput;
     LayerShellV1Integration *m_integration;
-    KWaylandServer::LayerSurfaceV1Interface *m_shellSurface;
-    QPointer<KWaylandServer::AutoHideScreenEdgeV1Interface> m_screenEdge;
+    LayerSurfaceV1Interface *m_shellSurface;
+    QPointer<AutoHideScreenEdgeV1Interface> m_screenEdge;
     bool m_screenEdgeActive = false;
     NET::WindowType m_windowType;
 };

@@ -11,9 +11,7 @@
 
 #include "qwayland-server-ext-idle-notify-v1.h"
 
-using namespace KWin;
-
-namespace KWaylandServer
+namespace KWin
 {
 
 static const quint32 s_version = 1;

@@ -14,7 +14,7 @@
 // system
 #include <unistd.h>
 
-namespace KWaylandServer
+namespace KWin
 {
 class DataControlSourceV1InterfacePrivate : public QtWaylandServer::zwlr_data_control_source_v1
 {

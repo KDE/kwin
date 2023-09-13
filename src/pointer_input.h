@@ -21,12 +21,6 @@
 
 class QWindow;
 
-namespace KWaylandServer
-{
-class PointerSurfaceCursor;
-class SurfaceInterface;
-}
-
 namespace KWin
 {
 class Window;
@@ -36,6 +30,8 @@ class InputRedirection;
 class CursorShape;
 class ShapeCursorSource;
 class SurfaceCursorSource;
+class PointerSurfaceCursor;
+class SurfaceInterface;
 
 namespace Decoration
 {
@@ -163,7 +159,7 @@ private:
     void disconnectConfinedPointerRegionConnection();
     void disconnectLockedPointerAboutToBeUnboundConnection();
     void disconnectPointerConstraintsConnection();
-    void breakPointerConstraints(KWaylandServer::SurfaceInterface *surface);
+    void breakPointerConstraints(SurfaceInterface *surface);
     CursorImage *m_cursor;
     QPointF m_pos;
     QHash<uint32_t, InputRedirection::PointerButtonState> m_buttons;
@@ -223,7 +219,7 @@ Q_SIGNALS:
 
 private:
     void reevaluteSource();
-    void updateServerCursor(const std::variant<KWaylandServer::PointerSurfaceCursor *, QByteArray> &cursor);
+    void updateServerCursor(const std::variant<PointerSurfaceCursor *, QByteArray> &cursor);
     void updateDecoration();
     void updateDecorationCursor();
     void updateMoveResize();

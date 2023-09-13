@@ -18,7 +18,7 @@
 #include "KWayland/Client/registry.h"
 #include "KWayland/Client/surface.h"
 
-using namespace KWaylandServer;
+using namespace KWin;
 
 class TestPlasmaShell : public QObject
 {
@@ -40,7 +40,7 @@ private Q_SLOTS:
     void testWhileDestroying();
 
 private:
-    KWaylandServer::Display *m_display = nullptr;
+    KWin::Display *m_display = nullptr;
     CompositorInterface *m_compositorInterface = nullptr;
     PlasmaShellInterface *m_plasmaShellInterface = nullptr;
 
@@ -57,7 +57,7 @@ static const QString s_socketName = QStringLiteral("kwayland-test-wayland-plasma
 void TestPlasmaShell::init()
 {
     delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = new KWin::Display(this);
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
@@ -134,7 +134,7 @@ void TestPlasmaShell::cleanup()
 void TestPlasmaShell::testRole_data()
 {
     QTest::addColumn<KWayland::Client::PlasmaShellSurface::Role>("clientRole");
-    QTest::addColumn<KWaylandServer::PlasmaShellSurfaceInterface::Role>("serverRole");
+    QTest::addColumn<KWin::PlasmaShellSurfaceInterface::Role>("serverRole");
 
     QTest::newRow("desktop") << KWayland::Client::PlasmaShellSurface::Role::Desktop << PlasmaShellSurfaceInterface::Role::Desktop;
     QTest::newRow("osd") << KWayland::Client::PlasmaShellSurface::Role::OnScreenDisplay << PlasmaShellSurfaceInterface::Role::OnScreenDisplay;

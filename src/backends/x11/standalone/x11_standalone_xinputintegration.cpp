@@ -163,19 +163,19 @@ public:
     {
         m_x11Cursor = cursor;
     }
-    void setDisplay(Display *display)
+    void setDisplay(::Display *display)
     {
         m_x11Display = display;
     }
 
 private:
-    Display *display() const
+    ::Display *display() const
     {
         return m_x11Display;
     }
 
     QPointer<X11Cursor> m_x11Cursor;
-    Display *m_x11Display = nullptr;
+    ::Display *m_x11Display = nullptr;
     uint32_t m_trackingTouchId = 0;
     QHash<uint32_t, QPointF> m_lastTouchPositions;
 };
@@ -204,7 +204,7 @@ public:
     }
 };
 
-XInputIntegration::XInputIntegration(Display *display, QObject *parent)
+XInputIntegration::XInputIntegration(::Display *display, QObject *parent)
     : QObject(parent)
     , m_x11Display(display)
 {
@@ -214,7 +214,7 @@ XInputIntegration::~XInputIntegration() = default;
 
 void XInputIntegration::init()
 {
-    Display *dpy = display();
+    ::Display *dpy = display();
     int xi_opcode, event, error;
     // init XInput extension
     if (!XQueryExtension(dpy, "XInputExtension", &xi_opcode, &event, &error)) {

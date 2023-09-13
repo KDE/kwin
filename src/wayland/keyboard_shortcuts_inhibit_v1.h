@@ -11,7 +11,7 @@
 
 #include <QObject>
 
-namespace KWaylandServer
+namespace KWin
 {
 /**
  * This is an implementation of wayland-protocols/unstable/keyboard-shortcuts-inhibit/keyboard-shortcuts-inhibit-unstable-v1.xml

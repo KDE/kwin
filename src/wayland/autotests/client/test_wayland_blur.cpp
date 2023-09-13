@@ -32,9 +32,9 @@ private Q_SLOTS:
     void testSurfaceDestroy();
 
 private:
-    KWaylandServer::Display *m_display;
-    KWaylandServer::CompositorInterface *m_compositorInterface;
-    KWaylandServer::BlurManagerInterface *m_blurManagerInterface;
+    KWin::Display *m_display;
+    KWin::CompositorInterface *m_compositorInterface;
+    KWin::BlurManagerInterface *m_blurManagerInterface;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::Compositor *m_compositor;
     KWayland::Client::BlurManager *m_blurManager;
@@ -57,9 +57,9 @@ TestBlur::TestBlur(QObject *parent)
 
 void TestBlur::init()
 {
-    using namespace KWaylandServer;
+    using namespace KWin;
     delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = new KWin::Display(this);
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
@@ -132,13 +132,13 @@ void TestBlur::cleanup()
 
 void TestBlur::testCreate()
 {
-    QSignalSpy serverSurfaceCreated(m_compositorInterface, &KWaylandServer::CompositorInterface::surfaceCreated);
+    QSignalSpy serverSurfaceCreated(m_compositorInterface, &KWin::CompositorInterface::surfaceCreated);
 
     std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
 
-    auto serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface *>();
-    QSignalSpy blurChanged(serverSurface, &KWaylandServer::SurfaceInterface::blurChanged);
+    auto serverSurface = serverSurfaceCreated.first().first().value<KWin::SurfaceInterface *>();
+    QSignalSpy blurChanged(serverSurface, &KWin::SurfaceInterface::blurChanged);
 
     auto blur = m_blurManager->createBlur(surface.get(), surface.get());
     blur->setRegion(m_compositor->createRegion(QRegion(0, 0, 10, 20), nullptr));
@@ -156,13 +156,13 @@ void TestBlur::testCreate()
 
 void TestBlur::testSurfaceDestroy()
 {
-    QSignalSpy serverSurfaceCreated(m_compositorInterface, &KWaylandServer::CompositorInterface::surfaceCreated);
+    QSignalSpy serverSurfaceCreated(m_compositorInterface, &KWin::CompositorInterface::surfaceCreated);
 
     std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
 
-    auto serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface *>();
-    QSignalSpy blurChanged(serverSurface, &KWaylandServer::SurfaceInterface::blurChanged);
+    auto serverSurface = serverSurfaceCreated.first().first().value<KWin::SurfaceInterface *>();
+    QSignalSpy blurChanged(serverSurface, &KWin::SurfaceInterface::blurChanged);
 
     std::unique_ptr<KWayland::Client::Blur> blur(m_blurManager->createBlur(surface.get()));
     blur->setRegion(m_compositor->createRegion(QRegion(0, 0, 10, 20), nullptr));

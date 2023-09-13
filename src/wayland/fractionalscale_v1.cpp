@@ -14,7 +14,7 @@
 
 static const int s_version = 1;
 
-namespace KWaylandServer
+namespace KWin
 {
 class FractionalScaleManagerV1InterfacePrivate : public QtWaylandServer::wp_fractional_scale_manager_v1
 {
@@ -93,6 +93,6 @@ FractionalScaleManagerV1Interface::~FractionalScaleManagerV1Interface()
 {
 }
 
-} // namespace KWaylandServer
+} // namespace KWin
 
 #include "moc_fractionalscale_v1.cpp"

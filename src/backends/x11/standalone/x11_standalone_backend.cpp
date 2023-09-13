@@ -123,7 +123,7 @@ X11StandaloneBackend::~X11StandaloneBackend()
     XRenderUtils::cleanup();
 }
 
-Display *X11StandaloneBackend::display() const
+::Display *X11StandaloneBackend::display() const
 {
     return m_x11Display;
 }

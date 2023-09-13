@@ -14,7 +14,7 @@
 
 #include "qwayland-server-pointer-constraints-unstable-v1.h"
 
-namespace KWaylandServer
+namespace KWin
 {
 class PointerConstraintsV1InterfacePrivate : public QtWaylandServer::zwp_pointer_constraints_v1
 {
@@ -98,4 +98,4 @@ protected:
     void zwp_confined_pointer_v1_set_region(Resource *resource, struct ::wl_resource *region_resource) override;
 };
 
-} // namespace KWaylandServer
+} // namespace KWin

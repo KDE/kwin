@@ -11,7 +11,7 @@
 
 #include <qwayland-server-contrast.h>
 
-namespace KWaylandServer
+namespace KWin
 {
 static const quint32 s_version = 2;
 

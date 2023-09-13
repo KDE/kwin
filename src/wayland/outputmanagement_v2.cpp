@@ -20,9 +20,7 @@
 #include <cmath>
 #include <optional>
 
-using namespace KWin;
-
-namespace KWaylandServer
+namespace KWin
 {
 
 static const quint32 s_version = 4;

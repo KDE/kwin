@@ -9,7 +9,7 @@
 
 #include <QObject>
 
-namespace KWaylandServer
+namespace KWin
 {
 class ClientConnection;
 class SeatInterface;
@@ -71,4 +71,4 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(KWaylandServer::KeyboardInterface *)
+Q_DECLARE_METATYPE(KWin::KeyboardInterface *)

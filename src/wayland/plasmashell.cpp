@@ -13,7 +13,7 @@
 
 #include <QPointer>
 
-namespace KWaylandServer
+namespace KWin
 {
 static const quint32 s_version = 8;
 static QList<PlasmaShellSurfaceInterface *> s_shellSurfaces;

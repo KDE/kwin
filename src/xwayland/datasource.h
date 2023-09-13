@@ -19,7 +19,7 @@ namespace Xwl
  * The XwlDataSource class is sealed as its destructor emits the aboutToBeDestroyed() signal.
  * If you decide to unseal it, ensure that the about to be destroyed signal is emitted properly!
  */
-class XwlDataSource final : public KWaylandServer::AbstractDataSource
+class XwlDataSource final : public AbstractDataSource
 {
     Q_OBJECT
 
@@ -32,11 +32,11 @@ public:
     void setMimeTypes(const QStringList &mimeTypes);
 
     void accept(const QString &mimeType) override;
-    KWaylandServer::DataDeviceManagerInterface::DnDActions supportedDragAndDropActions() const override;
-    void setSupportedDndActions(KWaylandServer::DataDeviceManagerInterface::DnDActions dndActions);
+    DataDeviceManagerInterface::DnDActions supportedDragAndDropActions() const override;
+    void setSupportedDndActions(DataDeviceManagerInterface::DnDActions dndActions);
 
-    KWaylandServer::DataDeviceManagerInterface::DnDAction selectedDndAction() const override;
-    void dndAction(KWaylandServer::DataDeviceManagerInterface::DnDAction action) override;
+    DataDeviceManagerInterface::DnDAction selectedDndAction() const override;
+    void dndAction(DataDeviceManagerInterface::DnDAction action) override;
 
     void dropPerformed() override
     {
@@ -61,8 +61,8 @@ Q_SIGNALS:
 
 private:
     QStringList m_mimeTypes;
-    KWaylandServer::DataDeviceManagerInterface::DnDActions m_supportedDndActions;
-    KWaylandServer::DataDeviceManagerInterface::DnDAction m_dndAction = KWaylandServer::DataDeviceManagerInterface::DnDAction::None;
+    DataDeviceManagerInterface::DnDActions m_supportedDndActions;
+    DataDeviceManagerInterface::DnDAction m_dndAction = DataDeviceManagerInterface::DnDAction::None;
     bool m_accepted = false;
 };
 }

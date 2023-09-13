@@ -22,13 +22,10 @@ class DataDevice;
 class DataSource;
 }
 }
-namespace KWaylandServer
-{
-class DataDeviceInterface;
-}
-
 namespace KWin
 {
+class DataDeviceInterface;
+
 namespace Xwl
 {
 

@@ -15,7 +15,7 @@
 
 struct wl_resource;
 
-namespace KWaylandServer
+namespace KWin
 {
 class ConfinedPointerV1InterfacePrivate;
 class Display;
@@ -242,4 +242,4 @@ private:
     friend class PointerConstraintsV1InterfacePrivate;
 };
 
-} // namespace KWaylandServer
+} // namespace KWin

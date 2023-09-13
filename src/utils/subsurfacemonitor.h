@@ -11,7 +11,7 @@
 
 #include <QObject>
 
-namespace KWaylandServer
+namespace KWin
 {
 class SurfaceInterface;
 class SubSurfaceInterface;
@@ -32,7 +32,7 @@ public:
     /**
      * Constructs a SubSurfaceTreeMonitor with the given @a surface and @a parent.
      */
-    SubSurfaceMonitor(KWaylandServer::SurfaceInterface *surface, QObject *parent);
+    SubSurfaceMonitor(SurfaceInterface *surface, QObject *parent);
 
 Q_SIGNALS:
     /**
@@ -68,13 +68,13 @@ Q_SIGNALS:
      * This signal is emitted when the buffer size of a subsurface has changed.
      */
     void subSurfaceBufferSizeChanged();
-    void subSurfaceCommitted(KWaylandServer::SubSurfaceInterface *subSurface);
+    void subSurfaceCommitted(SubSurfaceInterface *subSurface);
 
 private:
-    void registerSubSurface(KWaylandServer::SubSurfaceInterface *subSurface);
-    void unregisterSubSurface(KWaylandServer::SubSurfaceInterface *subSurface);
-    void registerSurface(KWaylandServer::SurfaceInterface *surface);
-    void unregisterSurface(KWaylandServer::SurfaceInterface *surface);
+    void registerSubSurface(SubSurfaceInterface *subSurface);
+    void unregisterSubSurface(SubSurfaceInterface *subSurface);
+    void registerSurface(SurfaceInterface *surface);
+    void unregisterSurface(SurfaceInterface *surface);
 };
 
 } // namespace KWin

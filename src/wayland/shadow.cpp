@@ -10,7 +10,7 @@
 
 #include <qwayland-server-shadow.h>
 
-namespace KWaylandServer
+namespace KWin
 {
 static const quint32 s_version = 2;
 
@@ -97,14 +97,14 @@ public:
             BottomLeftBuffer = 1 << 7,
             Offset = 1 << 8,
         };
-        QPointer<KWin::GraphicsBuffer> left;
-        QPointer<KWin::GraphicsBuffer> topLeft;
-        QPointer<KWin::GraphicsBuffer> top;
-        QPointer<KWin::GraphicsBuffer> topRight;
-        QPointer<KWin::GraphicsBuffer> right;
-        QPointer<KWin::GraphicsBuffer> bottomRight;
-        QPointer<KWin::GraphicsBuffer> bottom;
-        QPointer<KWin::GraphicsBuffer> bottomLeft;
+        QPointer<GraphicsBuffer> left;
+        QPointer<GraphicsBuffer> topLeft;
+        QPointer<GraphicsBuffer> top;
+        QPointer<GraphicsBuffer> topRight;
+        QPointer<GraphicsBuffer> right;
+        QPointer<GraphicsBuffer> bottomRight;
+        QPointer<GraphicsBuffer> bottom;
+        QPointer<GraphicsBuffer> bottomLeft;
         QMarginsF offset;
         Flags flags = Flags::None;
     };
@@ -165,7 +165,7 @@ void ShadowInterfacePrivate::org_kde_kwin_shadow_commit(Resource *resource)
 
 void ShadowInterfacePrivate::attach(ShadowInterfacePrivate::State::Flags flag, wl_resource *buffer)
 {
-    KWin::GraphicsBuffer *b = Display::bufferForResource(buffer);
+    GraphicsBuffer *b = Display::bufferForResource(buffer);
     switch (flag) {
     case State::LeftBuffer:
         pending.left = b;
@@ -309,10 +309,10 @@ QMarginsF ShadowInterface::offset() const
     return d->current.offset;
 }
 
-#define BUFFER(__PART__)                                    \
-    KWin::GraphicsBuffer *ShadowInterface::__PART__() const \
-    {                                                       \
-        return d->current.__PART__;                         \
+#define BUFFER(__PART__)                              \
+    GraphicsBuffer *ShadowInterface::__PART__() const \
+    {                                                 \
+        return d->current.__PART__;                   \
     }
 
 BUFFER(left)

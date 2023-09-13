@@ -15,8 +15,6 @@
 #include "wayland_server.h"
 #include "workspace.h"
 
-using namespace KWaylandServer;
-
 namespace KWin
 {
 
@@ -295,15 +293,15 @@ void LayerShellV1Window::showOnScreenEdge()
     QTimer::singleShot(0, this, &LayerShellV1Window::deactivateScreenEdge);
 }
 
-void LayerShellV1Window::installAutoHideScreenEdgeV1(KWaylandServer::AutoHideScreenEdgeV1Interface *edge)
+void LayerShellV1Window::installAutoHideScreenEdgeV1(AutoHideScreenEdgeV1Interface *edge)
 {
     m_screenEdge = edge;
 
-    connect(edge, &KWaylandServer::AutoHideScreenEdgeV1Interface::destroyed,
+    connect(edge, &AutoHideScreenEdgeV1Interface::destroyed,
             this, &LayerShellV1Window::deactivateScreenEdge);
-    connect(edge, &KWaylandServer::AutoHideScreenEdgeV1Interface::activateRequested,
+    connect(edge, &AutoHideScreenEdgeV1Interface::activateRequested,
             this, &LayerShellV1Window::activateScreenEdge);
-    connect(edge, &KWaylandServer::AutoHideScreenEdgeV1Interface::deactivateRequested,
+    connect(edge, &AutoHideScreenEdgeV1Interface::deactivateRequested,
             this, &LayerShellV1Window::deactivateScreenEdge);
 
     connect(this, &LayerShellV1Window::frameGeometryChanged, edge, [this]() {

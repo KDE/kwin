@@ -11,7 +11,7 @@
 
 #include <qwayland-server-xdg-foreign-unstable-v2.h>
 
-namespace KWaylandServer
+namespace KWin
 {
 class XdgExportedV2Interface;
 class XdgImportedV2Interface;
@@ -107,7 +107,7 @@ public:
     SurfaceInterface *surface() const;
 
 Q_SIGNALS:
-    void childChanged(KWaylandServer::SurfaceInterface *child);
+    void childChanged(KWin::SurfaceInterface *child);
 
 private Q_SLOTS:
     void handleExportedDestroyed();

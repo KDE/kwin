@@ -9,7 +9,7 @@
 #include "xdgdecoration_v1_p.h"
 #include "xdgshell_p.h"
 
-namespace KWaylandServer
+namespace KWin
 {
 // TODO: We need to wait for an ack_configure either here or in xdgshellclient.cpp.
 
@@ -139,6 +139,6 @@ XdgToplevelDecorationV1Interface *XdgToplevelDecorationV1Interface::get(XdgTople
     return toplevelPrivate->decoration;
 }
 
-} // namespace KWaylandServer
+} // namespace KWin
 
 #include "moc_xdgdecoration_v1.cpp"

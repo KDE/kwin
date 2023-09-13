@@ -33,7 +33,7 @@
 
 #include <linux/input-event-codes.h>
 
-using namespace KWaylandServer;
+using namespace KWin;
 
 class InputPanelSurface : public QObject, public QtWayland::zwp_input_panel_surface_v1
 {
@@ -175,14 +175,14 @@ private:
     InputMethodV1 *m_inputMethod;
     InputPanel *m_inputPanel;
     QThread *m_thread;
-    KWaylandServer::Display m_display;
+    KWin::Display m_display;
     SeatInterface *m_seat;
     CompositorInterface *m_serverCompositor;
     std::unique_ptr<FakeOutput> m_outputHandle;
     std::unique_ptr<OutputInterface> m_outputInterface;
 
-    KWaylandServer::InputMethodV1Interface *m_inputMethodIface;
-    KWaylandServer::InputPanelV1Interface *m_inputPanelIface;
+    KWin::InputMethodV1Interface *m_inputMethodIface;
+    KWin::InputPanelV1Interface *m_inputPanelIface;
 
     QVector<SurfaceInterface *> m_surfaces;
 };
@@ -340,7 +340,7 @@ void TestInputMethodInterface::testContext()
     QVERIFY(inputMethodActivateSpy.wait());
     QCOMPARE(inputMethodActivateSpy.count(), 1);
 
-    KWaylandServer::InputMethodContextV1Interface *serverContext = m_inputMethodIface->context();
+    KWin::InputMethodContextV1Interface *serverContext = m_inputMethodIface->context();
     QVERIFY(serverContext);
 
     InputMethodV1Context *imContext = m_inputMethod->context();
@@ -349,7 +349,7 @@ void TestInputMethodInterface::testContext()
     quint32 serial = 1;
 
     // commit some text
-    QSignalSpy commitStringSpy(serverContext, &KWaylandServer::InputMethodContextV1Interface::commitString);
+    QSignalSpy commitStringSpy(serverContext, &KWin::InputMethodContextV1Interface::commitString);
     imContext->commit_string(serial, "hello");
     QVERIFY(commitStringSpy.wait());
     QCOMPARE(commitStringSpy.count(), serial);
@@ -358,7 +358,7 @@ void TestInputMethodInterface::testContext()
     serial++;
 
     // preedit styling event
-    QSignalSpy preeditStylingSpy(serverContext, &KWaylandServer::InputMethodContextV1Interface::preeditStyling);
+    QSignalSpy preeditStylingSpy(serverContext, &KWin::InputMethodContextV1Interface::preeditStyling);
     // protocol does not document 3rd argument mean in much details (styling)
     imContext->preedit_styling(0, 5, 1);
     QVERIFY(preeditStylingSpy.wait());
@@ -368,14 +368,14 @@ void TestInputMethodInterface::testContext()
     QCOMPARE(preeditStylingSpy.last().at(2).value<quint32>(), 1);
 
     // preedit cursor event
-    QSignalSpy preeditCursorSpy(serverContext, &KWaylandServer::InputMethodContextV1Interface::preeditCursor);
+    QSignalSpy preeditCursorSpy(serverContext, &KWin::InputMethodContextV1Interface::preeditCursor);
     imContext->preedit_cursor(3);
     QVERIFY(preeditCursorSpy.wait());
     QCOMPARE(preeditCursorSpy.count(), 1);
     QCOMPARE(preeditCursorSpy.last().at(0).value<quint32>(), 3);
 
     // commit preedit_string
-    QSignalSpy preeditStringSpy(serverContext, &KWaylandServer::InputMethodContextV1Interface::preeditString);
+    QSignalSpy preeditStringSpy(serverContext, &KWin::InputMethodContextV1Interface::preeditString);
     imContext->preedit_string(serial, "hello", "kde");
     QVERIFY(preeditStringSpy.wait());
     QCOMPARE(preeditStringSpy.count(), 1);
@@ -385,7 +385,7 @@ void TestInputMethodInterface::testContext()
     serial++;
 
     // delete surrounding text
-    QSignalSpy deleteSurroundingSpy(serverContext, &KWaylandServer::InputMethodContextV1Interface::deleteSurroundingText);
+    QSignalSpy deleteSurroundingSpy(serverContext, &KWin::InputMethodContextV1Interface::deleteSurroundingText);
     imContext->delete_surrounding_text(0, 5);
     QVERIFY(deleteSurroundingSpy.wait());
     QCOMPARE(deleteSurroundingSpy.count(), 1);
@@ -393,7 +393,7 @@ void TestInputMethodInterface::testContext()
     QCOMPARE(deleteSurroundingSpy.last().at(1).value<quint32>(), 5);
 
     // set cursor position
-    QSignalSpy cursorPositionSpy(serverContext, &KWaylandServer::InputMethodContextV1Interface::cursorPosition);
+    QSignalSpy cursorPositionSpy(serverContext, &KWin::InputMethodContextV1Interface::cursorPosition);
     imContext->cursor_position(2, 4);
     QVERIFY(cursorPositionSpy.wait());
     QCOMPARE(cursorPositionSpy.count(), 1);
@@ -452,18 +452,18 @@ void TestInputMethodInterface::testGrabkeyboard()
     QVERIFY(inputMethodActivateSpy.wait());
     QCOMPARE(inputMethodActivateSpy.count(), 1);
 
-    KWaylandServer::InputMethodContextV1Interface *serverContext = m_inputMethodIface->context();
+    KWin::InputMethodContextV1Interface *serverContext = m_inputMethodIface->context();
     QVERIFY(serverContext);
 
     InputMethodV1Context *imContext = m_inputMethod->context();
     QVERIFY(imContext);
 
-    QSignalSpy keyEventSpy(serverContext, &KWaylandServer::InputMethodContextV1Interface::key);
+    QSignalSpy keyEventSpy(serverContext, &KWin::InputMethodContextV1Interface::key);
     imContext->key(0, 123, 56, 1);
     QEXPECT_FAIL("", "We should be not get key event if keyboard is not grabbed", Continue);
     QVERIFY(!keyEventSpy.wait(200));
 
-    QSignalSpy modifierEventSpy(serverContext, &KWaylandServer::InputMethodContextV1Interface::modifiers);
+    QSignalSpy modifierEventSpy(serverContext, &KWin::InputMethodContextV1Interface::modifiers);
     imContext->modifiers(1234, 0, 0, 0, 0);
     QEXPECT_FAIL("", "We should be not get modifiers event if keyboard is not grabbed", Continue);
     QVERIFY(!modifierEventSpy.wait(200));
@@ -484,7 +484,7 @@ void TestInputMethodInterface::testGrabkeyboard()
 
 void TestInputMethodInterface::testContentHints_data()
 {
-    QTest::addColumn<KWaylandServer::TextInputContentHints>("serverHints");
+    QTest::addColumn<KWin::TextInputContentHints>("serverHints");
     QTest::addColumn<quint32>("imHint");
     QTest::addRow("Spellcheck") << TextInputContentHints(TextInputContentHint::AutoCorrection)
                                 << quint32(QtWaylandServer::zwp_text_input_v1::content_hint_auto_correction);
@@ -518,7 +518,7 @@ void TestInputMethodInterface::testContentHints()
     QVERIFY(inputMethodActivateSpy.wait());
     QCOMPARE(inputMethodActivateSpy.count(), 1);
 
-    KWaylandServer::InputMethodContextV1Interface *serverContext = m_inputMethodIface->context();
+    KWin::InputMethodContextV1Interface *serverContext = m_inputMethodIface->context();
     QVERIFY(serverContext);
 
     InputMethodV1Context *imContext = m_inputMethod->context();
@@ -526,8 +526,8 @@ void TestInputMethodInterface::testContentHints()
 
     QSignalSpy contentTypeChangedSpy(imContext, &InputMethodV1Context::content_type_changed);
 
-    QFETCH(KWaylandServer::TextInputContentHints, serverHints);
-    serverContext->sendContentType(serverHints, KWaylandServer::TextInputContentPurpose::Normal);
+    QFETCH(KWin::TextInputContentHints, serverHints);
+    serverContext->sendContentType(serverHints, KWin::TextInputContentPurpose::Normal);
     QVERIFY(contentTypeChangedSpy.wait());
     QCOMPARE(contentTypeChangedSpy.count(), 1);
     QEXPECT_FAIL("SensitiveData", "SensitiveData content hint need fixing", Continue);
@@ -543,7 +543,7 @@ void TestInputMethodInterface::testContentHints()
 
 void TestInputMethodInterface::testContentPurpose_data()
 {
-    QTest::addColumn<KWaylandServer::TextInputContentPurpose>("serverPurpose");
+    QTest::addColumn<KWin::TextInputContentPurpose>("serverPurpose");
     QTest::addColumn<quint32>("imPurpose");
 
     QTest::newRow("Alpha") << TextInputContentPurpose::Alpha << quint32(QtWaylandServer::zwp_text_input_v1::content_purpose_alpha);
@@ -576,7 +576,7 @@ void TestInputMethodInterface::testContentPurpose()
     QVERIFY(inputMethodActivateSpy.wait());
     QCOMPARE(inputMethodActivateSpy.count(), 1);
 
-    KWaylandServer::InputMethodContextV1Interface *serverContext = m_inputMethodIface->context();
+    KWin::InputMethodContextV1Interface *serverContext = m_inputMethodIface->context();
     QVERIFY(serverContext);
 
     InputMethodV1Context *imContext = m_inputMethod->context();
@@ -584,8 +584,8 @@ void TestInputMethodInterface::testContentPurpose()
 
     QSignalSpy contentTypeChangedSpy(imContext, &InputMethodV1Context::content_type_changed);
 
-    QFETCH(KWaylandServer::TextInputContentPurpose, serverPurpose);
-    serverContext->sendContentType(KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::None), serverPurpose);
+    QFETCH(KWin::TextInputContentPurpose, serverPurpose);
+    serverContext->sendContentType(KWin::TextInputContentHints(KWin::TextInputContentHint::None), serverPurpose);
     QVERIFY(contentTypeChangedSpy.wait());
     QCOMPARE(contentTypeChangedSpy.count(), 1);
     QEXPECT_FAIL("Pin", "Pin should return content_purpose_password", Continue);

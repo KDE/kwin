@@ -15,14 +15,10 @@
 #include <QVector>
 #include <unordered_map>
 
-namespace KWaylandServer
-{
-class ContrastManagerInterface;
-}
-
 namespace KWin
 {
 
+class ContrastManagerInterface;
 class ContrastShader;
 
 class ContrastEffect : public KWin::Effect
@@ -76,7 +72,7 @@ private:
         std::unique_ptr<GLFramebuffer> fbo;
     };
     std::unordered_map<const EffectWindow *, Data> m_windowData;
-    static KWaylandServer::ContrastManagerInterface *s_contrastManager;
+    static ContrastManagerInterface *s_contrastManager;
     static QTimer *s_contrastManagerRemoveTimer;
 };
 

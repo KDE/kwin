@@ -24,7 +24,7 @@
 
 #include "qwayland-keyboard-shortcuts-inhibit-unstable-v1.h"
 
-using namespace KWaylandServer;
+using namespace KWin;
 
 class KeyboardShortcutsInhibitManager : public QObject, public QtWayland::zwp_keyboard_shortcuts_inhibit_manager_v1
 {
@@ -80,7 +80,7 @@ private:
     KWayland::Client::Seat *m_clientSeat = nullptr;
 
     QThread *m_thread;
-    KWaylandServer::Display m_display;
+    KWin::Display m_display;
     SeatInterface *m_seat;
     CompositorInterface *m_serverCompositor;
 

@@ -15,7 +15,7 @@
 
 #include "qwayland-server-wayland.h"
 
-namespace KWaylandServer
+namespace KWin
 {
 class ClientConnection;
 class PointerPinchGestureV1Interface;

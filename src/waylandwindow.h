@@ -16,7 +16,7 @@ class WaylandWindow : public Window
     Q_OBJECT
 
 public:
-    WaylandWindow(KWaylandServer::SurfaceInterface *surface);
+    WaylandWindow(SurfaceInterface *surface);
 
     QString captionNormal() const override;
     QString captionSuffix() const override;

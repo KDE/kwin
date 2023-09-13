@@ -12,7 +12,7 @@
 
 struct wl_resource;
 
-namespace KWaylandServer
+namespace KWin
 {
 class Display;
 class SurfaceInterface;
@@ -44,7 +44,7 @@ Q_SIGNALS:
     /**
      * Emitted whenever a new AppmenuInterface is created.
      */
-    void appMenuCreated(KWaylandServer::AppMenuInterface *);
+    void appMenuCreated(KWin::AppMenuInterface *);
 
 private:
     std::unique_ptr<AppMenuManagerInterfacePrivate> d;
@@ -85,7 +85,7 @@ Q_SIGNALS:
     /**
      * Emitted when the address changes or is first received
      */
-    void addressChanged(KWaylandServer::AppMenuInterface::InterfaceAddress);
+    void addressChanged(KWin::AppMenuInterface::InterfaceAddress);
 
 private:
     explicit AppMenuInterface(SurfaceInterface *s, wl_resource *resource);

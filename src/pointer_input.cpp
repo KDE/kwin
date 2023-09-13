@@ -79,7 +79,7 @@ void PointerInputRedirection::init()
     Q_ASSERT(!inited());
     waylandServer()->seat()->setHasPointer(input()->hasPointer());
     connect(input(), &InputRedirection::hasPointerChanged,
-            waylandServer()->seat(), &KWaylandServer::SeatInterface::setHasPointer);
+            waylandServer()->seat(), &SeatInterface::setHasPointer);
 
     m_cursor = new CursorImage(this);
     setInited(true);
@@ -121,7 +121,7 @@ void PointerInputRedirection::init()
     connect(waylandServer(), &QObject::destroyed, this, [this] {
         setInited(false);
     });
-    connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::dragEnded, this, [this]() {
+    connect(waylandServer()->seat(), &SeatInterface::dragEnded, this, [this]() {
         // need to force a focused pointer change
         setFocus(nullptr);
         update();
@@ -557,14 +557,14 @@ void PointerInputRedirection::focusUpdate(Window *focusOld, Window *focusNow)
         seat->setFocusedPointerSurfaceTransformation(focus()->inputTransformation());
     });
 
-    m_constraintsConnection = connect(focusNow->surface(), &KWaylandServer::SurfaceInterface::pointerConstraintsChanged,
+    m_constraintsConnection = connect(focusNow->surface(), &SurfaceInterface::pointerConstraintsChanged,
                                       this, &PointerInputRedirection::updatePointerConstraints);
     m_constraintsActivatedConnection = connect(workspace(), &Workspace::windowActivated,
                                                this, &PointerInputRedirection::updatePointerConstraints);
     updatePointerConstraints();
 }
 
-void PointerInputRedirection::breakPointerConstraints(KWaylandServer::SurfaceInterface *surface)
+void PointerInputRedirection::breakPointerConstraints(SurfaceInterface *surface)
 {
     // cancel pointer constraints
     if (surface) {
@@ -641,7 +641,7 @@ void PointerInputRedirection::updatePointerConstraints()
         if (canConstrain && cf->region().contains(flooredPoint(focus()->mapToLocal(m_pos)))) {
             cf->setConfined(true);
             m_confined = true;
-            m_confinedPointerRegionConnection = connect(cf, &KWaylandServer::ConfinedPointerV1Interface::regionChanged, this, [this]() {
+            m_confinedPointerRegionConnection = connect(cf, &ConfinedPointerV1Interface::regionChanged, this, [this]() {
                 if (!focus()) {
                     return;
                 }
@@ -687,7 +687,7 @@ void PointerInputRedirection::updatePointerConstraints()
 
             // The client might cancel pointer locking from its side by unbinding the LockedPointerInterface.
             // In this case the cached cursor position hint must be fetched before the resource goes away
-            m_lockedPointerAboutToBeUnboundConnection = connect(lock, &KWaylandServer::LockedPointerV1Interface::aboutToBeDestroyed, this, [this, lock]() {
+            m_lockedPointerAboutToBeUnboundConnection = connect(lock, &LockedPointerV1Interface::aboutToBeDestroyed, this, [this, lock]() {
                 const auto hint = lock->cursorPositionHint();
                 if (hint.x() < 0 || hint.y() < 0 || !focus()) {
                     return;
@@ -695,7 +695,7 @@ void PointerInputRedirection::updatePointerConstraints()
                 auto globalHint = focus()->mapFromLocal(hint);
 
                 // When the resource finally goes away, reposition the cursor according to the hint
-                connect(lock, &KWaylandServer::LockedPointerV1Interface::destroyed, this, [this, globalHint]() {
+                connect(lock, &LockedPointerV1Interface::destroyed, this, [this, globalHint]() {
                     processMotionAbsolute(globalHint, waylandServer()->seat()->timestamp());
                 });
             });
@@ -904,9 +904,9 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
         m_serverCursor.shape->setTheme(m_waylandImage.theme());
     });
 
-    KWaylandServer::PointerInterface *pointer = waylandServer()->seat()->pointer();
+    PointerInterface *pointer = waylandServer()->seat()->pointer();
 
-    connect(pointer, &KWaylandServer::PointerInterface::focusedSurfaceChanged,
+    connect(pointer, &PointerInterface::focusedSurfaceChanged,
             this, &CursorImage::handleFocusedSurfaceChanged);
 
     reevaluteSource();
@@ -937,11 +937,11 @@ void CursorImage::markAsRendered(std::chrono::milliseconds timestamp)
 
 void CursorImage::handleFocusedSurfaceChanged()
 {
-    KWaylandServer::PointerInterface *pointer = waylandServer()->seat()->pointer();
+    PointerInterface *pointer = waylandServer()->seat()->pointer();
     disconnect(m_serverCursor.connection);
 
     if (pointer->focusedSurface()) {
-        m_serverCursor.connection = connect(pointer, &KWaylandServer::PointerInterface::cursorChanged,
+        m_serverCursor.connection = connect(pointer, &PointerInterface::cursorChanged,
                                             this, &CursorImage::updateServerCursor);
     } else {
         m_serverCursor.connection = QMetaObject::Connection();
@@ -979,9 +979,9 @@ void CursorImage::updateMoveResize()
     reevaluteSource();
 }
 
-void CursorImage::updateServerCursor(const KWaylandServer::PointerCursor &cursor)
+void CursorImage::updateServerCursor(const PointerCursor &cursor)
 {
-    if (auto surfaceCursor = std::get_if<KWaylandServer::PointerSurfaceCursor *>(&cursor)) {
+    if (auto surfaceCursor = std::get_if<PointerSurfaceCursor *>(&cursor)) {
         m_serverCursor.surface->update((*surfaceCursor)->surface(), (*surfaceCursor)->hotspot());
         m_serverCursor.cursor = m_serverCursor.surface.get();
     } else if (auto shapeCursor = std::get_if<QByteArray>(&cursor)) {
@@ -1074,7 +1074,7 @@ void CursorImage::reevaluteSource()
         setSource(m_decoration.cursor.get());
         return;
     }
-    const KWaylandServer::PointerInterface *pointer = waylandServer()->seat()->pointer();
+    const PointerInterface *pointer = waylandServer()->seat()->pointer();
     if (pointer && pointer->focusedSurface()) {
         setSource(m_serverCursor.cursor);
         return;

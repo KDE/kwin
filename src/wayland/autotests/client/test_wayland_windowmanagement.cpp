@@ -21,9 +21,9 @@
 #include "KWayland/Client/registry.h"
 #include "KWayland/Client/surface.h"
 
-typedef void (KWaylandServer::PlasmaWindowInterface::*ServerWindowSignal)();
+typedef void (KWin::PlasmaWindowInterface::*ServerWindowSignal)();
 Q_DECLARE_METATYPE(ServerWindowSignal)
-typedef void (KWaylandServer::PlasmaWindowInterface::*ServerWindowBooleanSignal)(bool);
+typedef void (KWin::PlasmaWindowInterface::*ServerWindowBooleanSignal)(bool);
 Q_DECLARE_METATYPE(ServerWindowBooleanSignal)
 typedef void (KWayland::Client::PlasmaWindow::*ClientWindowVoidSetter)();
 Q_DECLARE_METATYPE(ClientWindowVoidSetter)
@@ -62,11 +62,11 @@ private Q_SLOTS:
     void cleanup();
 
 private:
-    KWaylandServer::Display *m_display;
-    KWaylandServer::CompositorInterface *m_compositorInterface;
-    KWaylandServer::PlasmaWindowManagementInterface *m_windowManagementInterface;
-    KWaylandServer::PlasmaWindowInterface *m_windowInterface;
-    QPointer<KWaylandServer::SurfaceInterface> m_surfaceInterface;
+    KWin::Display *m_display;
+    KWin::CompositorInterface *m_compositorInterface;
+    KWin::PlasmaWindowManagementInterface *m_windowManagementInterface;
+    KWin::PlasmaWindowInterface *m_windowInterface;
+    QPointer<KWin::SurfaceInterface> m_surfaceInterface;
 
     KWayland::Client::Surface *m_surface = nullptr;
     KWayland::Client::ConnectionThread *m_connection;
@@ -93,10 +93,10 @@ TestWindowManagement::TestWindowManagement(QObject *parent)
 
 void TestWindowManagement::init()
 {
-    using namespace KWaylandServer;
-    qRegisterMetaType<KWaylandServer::PlasmaWindowManagementInterface::ShowingDesktopState>("ShowingDesktopState");
+    using namespace KWin;
+    qRegisterMetaType<KWin::PlasmaWindowManagementInterface::ShowingDesktopState>("ShowingDesktopState");
     delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = new KWin::Display(this);
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
@@ -148,12 +148,12 @@ void TestWindowManagement::init()
     QVERIFY(windowSpy.wait());
     m_window = windowSpy.first().first().value<KWayland::Client::PlasmaWindow *>();
 
-    QSignalSpy serverSurfaceCreated(m_compositorInterface, &KWaylandServer::CompositorInterface::surfaceCreated);
+    QSignalSpy serverSurfaceCreated(m_compositorInterface, &KWin::CompositorInterface::surfaceCreated);
     m_surface = m_compositor->createSurface(this);
     QVERIFY(m_surface);
 
     QVERIFY(serverSurfaceCreated.wait());
-    m_surfaceInterface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface *>();
+    m_surfaceInterface = serverSurfaceCreated.first().first().value<KWin::SurfaceInterface *>();
     QVERIFY(m_surfaceInterface);
 }
 
@@ -184,7 +184,7 @@ void TestWindowManagement::testMinimizedGeometry()
 {
     m_window->setMinimizedGeometry(m_surface, QRect(5, 10, 100, 200));
 
-    QSignalSpy geometrySpy(m_windowInterface, &KWaylandServer::PlasmaWindowInterface::minimizedGeometriesChanged);
+    QSignalSpy geometrySpy(m_windowInterface, &KWin::PlasmaWindowInterface::minimizedGeometriesChanged);
 
     QVERIFY(geometrySpy.wait());
     QCOMPARE(m_windowInterface->minimizedGeometries().values().first(), QRect(5, 10, 100, 200));
@@ -332,7 +332,7 @@ void TestWindowManagement::testCreateAfterUnmap()
 
 void TestWindowManagement::testRequests_data()
 {
-    using namespace KWaylandServer;
+    using namespace KWin;
     QTest::addColumn<ServerWindowSignal>("changedSignal");
     QTest::addColumn<ClientWindowVoidSetter>("requester");
 
@@ -353,7 +353,7 @@ void TestWindowManagement::testRequests()
 
 void TestWindowManagement::testRequestsBoolean_data()
 {
-    using namespace KWaylandServer;
+    using namespace KWin;
     QTest::addColumn<ServerWindowBooleanSignal>("changedSignal");
     QTest::addColumn<int>("flag");
 
@@ -396,7 +396,7 @@ void TestWindowManagement::testRequestsBoolean()
 
 void TestWindowManagement::testShowingDesktop()
 {
-    using namespace KWaylandServer;
+    using namespace KWin;
     // this test verifies setting the showing desktop state
     QVERIFY(!m_windowManagement->isShowingDesktop());
     QSignalSpy showingDesktopChangedSpy(m_windowManagement, &KWayland::Client::PlasmaWindowManagement::showingDesktopChanged);
@@ -420,7 +420,7 @@ void TestWindowManagement::testShowingDesktop()
 
 void TestWindowManagement::testRequestShowingDesktop_data()
 {
-    using namespace KWaylandServer;
+    using namespace KWin;
     QTest::addColumn<bool>("value");
     QTest::addColumn<PlasmaWindowManagementInterface::ShowingDesktopState>("expectedValue");
 
@@ -431,7 +431,7 @@ void TestWindowManagement::testRequestShowingDesktop_data()
 void TestWindowManagement::testRequestShowingDesktop()
 {
     // this test verifies requesting show desktop state
-    using namespace KWaylandServer;
+    using namespace KWin;
     QSignalSpy requestSpy(m_windowManagementInterface, &PlasmaWindowManagementInterface::requestChangeShowingDesktop);
     QFETCH(bool, value);
     m_windowManagement->setShowingDesktop(value);
@@ -442,7 +442,7 @@ void TestWindowManagement::testRequestShowingDesktop()
 
 void TestWindowManagement::testKeepAbove()
 {
-    using namespace KWaylandServer;
+    using namespace KWin;
     // this test verifies setting the keep above state
     QVERIFY(!m_window->isKeepAbove());
     QSignalSpy keepAboveChangedSpy(m_window, &KWayland::Client::PlasmaWindow::keepAboveChanged);
@@ -463,7 +463,7 @@ void TestWindowManagement::testKeepAbove()
 
 void TestWindowManagement::testKeepBelow()
 {
-    using namespace KWaylandServer;
+    using namespace KWin;
     // this test verifies setting the keep below state
     QVERIFY(!m_window->isKeepBelow());
     QSignalSpy keepBelowChangedSpy(m_window, &KWayland::Client::PlasmaWindow::keepBelowChanged);
@@ -492,7 +492,7 @@ void TestWindowManagement::testParentWindow()
 
     // now let's create a second window
     QSignalSpy windowAddedSpy(m_windowManagement, &KWayland::Client::PlasmaWindowManagement::windowCreated);
-    std::unique_ptr<KWaylandServer::PlasmaWindowInterface> serverTransient(m_windowManagementInterface->createWindow(this, QUuid::createUuid()));
+    std::unique_ptr<KWin::PlasmaWindowInterface> serverTransient(m_windowManagementInterface->createWindow(this, QUuid::createUuid()));
     serverTransient->setParentWindow(m_windowInterface);
     QVERIFY(windowAddedSpy.wait());
     auto transient = windowAddedSpy.first().first().value<KWayland::Client::PlasmaWindow *>();
@@ -579,7 +579,7 @@ void TestWindowManagement::testPid()
     QVERIFY(m_window->pid() == 1337);
 
     // test server not setting a PID for whatever reason
-    std::unique_ptr<KWaylandServer::PlasmaWindowInterface> newWindowInterface(m_windowManagementInterface->createWindow(this, QUuid::createUuid()));
+    std::unique_ptr<KWin::PlasmaWindowInterface> newWindowInterface(m_windowManagementInterface->createWindow(this, QUuid::createUuid()));
     QSignalSpy windowSpy(m_windowManagement, &KWayland::Client::PlasmaWindowManagement::windowCreated);
     QVERIFY(windowSpy.wait());
     std::unique_ptr<KWayland::Client::PlasmaWindow> newWindow(windowSpy.first().first().value<KWayland::Client::PlasmaWindow *>());

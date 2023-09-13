@@ -32,9 +32,9 @@ private Q_SLOTS:
     void testSurfaceDestroy();
 
 private:
-    KWaylandServer::Display *m_display;
-    KWaylandServer::CompositorInterface *m_compositorInterface;
-    KWaylandServer::SlideManagerInterface *m_slideManagerInterface;
+    KWin::Display *m_display;
+    KWin::CompositorInterface *m_compositorInterface;
+    KWin::SlideManagerInterface *m_slideManagerInterface;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::Compositor *m_compositor;
     KWayland::Client::SlideManager *m_slideManager;
@@ -57,9 +57,9 @@ TestSlide::TestSlide(QObject *parent)
 
 void TestSlide::init()
 {
-    using namespace KWaylandServer;
+    using namespace KWin;
     delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = new KWin::Display(this);
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
@@ -132,12 +132,12 @@ void TestSlide::cleanup()
 
 void TestSlide::testCreate()
 {
-    QSignalSpy serverSurfaceCreated(m_compositorInterface, &KWaylandServer::CompositorInterface::surfaceCreated);
+    QSignalSpy serverSurfaceCreated(m_compositorInterface, &KWin::CompositorInterface::surfaceCreated);
     std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
 
-    auto serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface *>();
-    QSignalSpy slideChanged(serverSurface, &KWaylandServer::SurfaceInterface::slideOnShowHideChanged);
+    auto serverSurface = serverSurfaceCreated.first().first().value<KWin::SurfaceInterface *>();
+    QSignalSpy slideChanged(serverSurface, &KWin::SurfaceInterface::slideOnShowHideChanged);
 
     auto slide = m_slideManager->createSlide(surface.get(), surface.get());
     slide->setLocation(KWayland::Client::Slide::Location::Top);
@@ -146,7 +146,7 @@ void TestSlide::testCreate()
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     QVERIFY(slideChanged.wait());
-    QCOMPARE(serverSurface->slideOnShowHide()->location(), KWaylandServer::SlideInterface::Location::Top);
+    QCOMPARE(serverSurface->slideOnShowHide()->location(), KWin::SlideInterface::Location::Top);
     QCOMPARE(serverSurface->slideOnShowHide()->offset(), 15);
 
     // and destroy
@@ -157,7 +157,7 @@ void TestSlide::testCreate()
 
 void TestSlide::testSurfaceDestroy()
 {
-    using namespace KWaylandServer;
+    using namespace KWin;
     QSignalSpy serverSurfaceCreated(m_compositorInterface, &CompositorInterface::surfaceCreated);
     std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());

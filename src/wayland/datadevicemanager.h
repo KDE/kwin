@@ -13,7 +13,7 @@
 
 #include "datadevice.h"
 
-namespace KWaylandServer
+namespace KWin
 {
 class Display;
 class DataSourceInterface;
@@ -43,8 +43,8 @@ public:
     Q_DECLARE_FLAGS(DnDActions, DnDAction)
 
 Q_SIGNALS:
-    void dataSourceCreated(KWaylandServer::DataSourceInterface *);
-    void dataDeviceCreated(KWaylandServer::DataDeviceInterface *);
+    void dataSourceCreated(KWin::DataSourceInterface *);
+    void dataDeviceCreated(KWin::DataDeviceInterface *);
 
 private:
     std::unique_ptr<DataDeviceManagerInterfacePrivate> d;
@@ -52,4 +52,4 @@ private:
 
 }
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(KWaylandServer::DataDeviceManagerInterface::DnDActions)
+Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::DataDeviceManagerInterface::DnDActions)

@@ -33,8 +33,8 @@ namespace KWin
 namespace Xwl
 {
 
-using DnDAction = KWaylandServer::DataDeviceManagerInterface::DnDAction;
-using DnDActions = KWaylandServer::DataDeviceManagerInterface::DnDActions;
+using DnDAction = KWin::DataDeviceManagerInterface::DnDAction;
+using DnDActions = KWin::DataDeviceManagerInterface::DnDActions;
 
 static QStringList atomToMimeTypes(xcb_atom_t atom)
 {

@@ -10,7 +10,7 @@
 
 #include <QObject>
 
-namespace KWaylandServer
+namespace KWin
 {
 
 class Display;
@@ -41,4 +41,4 @@ private:
     std::unique_ptr<DrmClientBufferIntegrationPrivate> d;
 };
 
-} // namespace KWaylandServer
+} // namespace KWin

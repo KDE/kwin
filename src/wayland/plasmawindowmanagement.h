@@ -12,7 +12,7 @@
 
 class QSize;
 
-namespace KWaylandServer
+namespace KWin
 {
 class Display;
 class OutputInterface;
@@ -288,7 +288,7 @@ Q_SIGNALS:
     /**
      * Requests sending the window to @p output
      */
-    void sendToOutput(KWaylandServer::OutputInterface *output);
+    void sendToOutput(KWin::OutputInterface *output);
 
 private:
     friend class PlasmaWindowManagementInterface;
@@ -301,4 +301,4 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(KWaylandServer::PlasmaWindowManagementInterface::ShowingDesktopState)
+Q_DECLARE_METATYPE(KWin::PlasmaWindowManagementInterface::ShowingDesktopState)

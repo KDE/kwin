@@ -12,7 +12,7 @@
 #include "wayland/pointer.h"
 #include "wayland/seat.h"
 
-using namespace KWaylandServer;
+using namespace KWin;
 
 class TestWaylandServerSeat : public QObject
 {
@@ -30,7 +30,7 @@ static const QString s_socketName = QStringLiteral("kwin-wayland-server-seat-tes
 
 void TestWaylandServerSeat::testCapabilities()
 {
-    KWaylandServer::Display display;
+    KWin::Display display;
     display.addSocketName(s_socketName);
     display.start();
     SeatInterface *seat = new SeatInterface(&display, &display);
@@ -77,7 +77,7 @@ void TestWaylandServerSeat::testCapabilities()
 
 void TestWaylandServerSeat::testName()
 {
-    KWaylandServer::Display display;
+    KWin::Display display;
     display.addSocketName(s_socketName);
     display.start();
     SeatInterface *seat = new SeatInterface(&display, &display);
@@ -95,7 +95,7 @@ void TestWaylandServerSeat::testName()
 
 void TestWaylandServerSeat::testPointerButton()
 {
-    KWaylandServer::Display display;
+    KWin::Display display;
     display.addSocketName(s_socketName);
     display.start();
     SeatInterface *seat = new SeatInterface(&display, &display);
@@ -126,7 +126,7 @@ void TestWaylandServerSeat::testPointerButton()
 
 void TestWaylandServerSeat::testPointerPos()
 {
-    KWaylandServer::Display display;
+    KWin::Display display;
     display.addSocketName(s_socketName);
     display.start();
     SeatInterface *seat = new SeatInterface(&display, &display);
@@ -155,7 +155,7 @@ void TestWaylandServerSeat::testPointerPos()
 
 void TestWaylandServerSeat::testRepeatInfo()
 {
-    KWaylandServer::Display display;
+    KWin::Display display;
     display.addSocketName(s_socketName);
     display.start();
     SeatInterface *seat = new SeatInterface(&display, &display);
@@ -173,7 +173,7 @@ void TestWaylandServerSeat::testRepeatInfo()
 
 void TestWaylandServerSeat::testMultiple()
 {
-    KWaylandServer::Display display;
+    KWin::Display display;
     display.addSocketName(s_socketName);
     display.start();
     QVERIFY(display.seats().isEmpty());

@@ -11,16 +11,12 @@
 #include <map>
 #include <memory>
 
-namespace KWaylandServer
-{
-class FakeInputInterface;
-class FakeInputDeviceInterface;
-}
-
 namespace KWin
 {
 
 class FakeInputDevice;
+class FakeInputInterface;
+class FakeInputDeviceInterface;
 
 class FakeInputBackend : public InputBackend
 {
@@ -33,8 +29,8 @@ public:
     void initialize() override;
 
 private:
-    std::unique_ptr<KWaylandServer::FakeInputInterface> m_interface;
-    std::map<KWaylandServer::FakeInputDeviceInterface *, std::unique_ptr<FakeInputDevice>> m_devices;
+    std::unique_ptr<FakeInputInterface> m_interface;
+    std::map<FakeInputDeviceInterface *, std::unique_ptr<FakeInputDevice>> m_devices;
 };
 
 } // namespace KWin

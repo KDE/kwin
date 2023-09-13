@@ -87,8 +87,8 @@ class XwaylandInputSpy : public QObject, public KWin::InputEventSpy
 public:
     XwaylandInputSpy()
     {
-        connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::focusedKeyboardSurfaceAboutToChange,
-                this, [this](KWaylandServer::SurfaceInterface *newSurface) {
+        connect(waylandServer()->seat(), &SeatInterface::focusedKeyboardSurfaceAboutToChange,
+                this, [this](SurfaceInterface *newSurface) {
                     auto keyboard = waylandServer()->seat()->keyboard();
                     if (!newSurface) {
                         return;
@@ -100,8 +100,8 @@ public:
                         // This loop makes sure all key press events are reset before we switch back to the
                         // Xwayland client and the state is correctly restored.
                         for (auto it = m_states.constBegin(); it != m_states.constEnd(); ++it) {
-                            if (it.value() == KWaylandServer::KeyboardKeyState::Pressed) {
-                                keyboard->sendKey(it.key(), KWaylandServer::KeyboardKeyState::Released, waylandServer()->xWaylandConnection());
+                            if (it.value() == KeyboardKeyState::Pressed) {
+                                keyboard->sendKey(it.key(), KeyboardKeyState::Released, waylandServer()->xWaylandConnection());
                             }
                         }
                         m_states.clear();
@@ -157,10 +157,10 @@ public:
             return;
         }
 
-        KWaylandServer::ClientConnection *client = surface->client();
-        KWaylandServer::ClientConnection *xwaylandClient = waylandServer()->xWaylandConnection();
+        ClientConnection *client = surface->client();
+        ClientConnection *xwaylandClient = waylandServer()->xWaylandConnection();
         if (xwaylandClient && xwaylandClient != client) {
-            KWaylandServer::KeyboardKeyState state{event->type() == QEvent::KeyPress};
+            KeyboardKeyState state{event->type() == QEvent::KeyPress};
             if (!updateKey(event->nativeScanCode(), state)) {
                 return;
             }
@@ -175,7 +175,7 @@ public:
         }
     }
 
-    bool updateKey(quint32 key, KWaylandServer::KeyboardKeyState state)
+    bool updateKey(quint32 key, KeyboardKeyState state)
     {
         auto it = m_states.find(key);
         if (it == m_states.end()) {
@@ -189,7 +189,7 @@ public:
         return true;
     }
 
-    QHash<quint32, KWaylandServer::KeyboardKeyState> m_states;
+    QHash<quint32, KeyboardKeyState> m_states;
     std::function<bool(int key, Qt::KeyboardModifiers)> m_filter;
 };
 
@@ -456,7 +456,7 @@ DragEventReply Xwayland::dragMoveFilter(Window *target)
     }
 }
 
-KWaylandServer::AbstractDropHandler *Xwayland::xwlDropHandler()
+AbstractDropHandler *Xwayland::xwlDropHandler()
 {
     if (m_dataBridge) {
         return m_dataBridge->dnd()->dropHandler();

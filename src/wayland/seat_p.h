@@ -18,7 +18,7 @@
 
 #include "qwayland-server-wayland.h"
 
-namespace KWaylandServer
+namespace KWin
 {
 class AbstractDataSource;
 class DataDeviceInterface;
@@ -154,4 +154,4 @@ private:
     void updatePrimarySelection(PrimarySelectionDeviceV1Interface *primarySelectionDevice);
 };
 
-} // namespace KWaylandServer
+} // namespace KWin

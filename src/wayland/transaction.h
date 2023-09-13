@@ -14,7 +14,7 @@
 #include <memory>
 #include <vector>
 
-namespace KWaylandServer
+namespace KWin
 {
 
 class SurfaceInterface;
@@ -41,7 +41,7 @@ struct TransactionEntry
     /**
      * Graphics buffer reference to prevent it from being destroyed.
      */
-    KWin::GraphicsBufferRef buffer;
+    GraphicsBufferRef buffer;
 
     /**
      * The surface state that is going to be applied.
@@ -113,4 +113,4 @@ private:
     int m_locks = 0;
 };
 
-} // namespace KWaylandServer
+} // namespace KWin

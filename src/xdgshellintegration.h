@@ -8,14 +8,11 @@
 
 #include "waylandshellintegration.h"
 
-namespace KWaylandServer
-{
-class XdgToplevelInterface;
-class XdgPopupInterface;
-}
-
 namespace KWin
 {
+
+class XdgToplevelInterface;
+class XdgPopupInterface;
 
 class XdgShellIntegration : public WaylandShellIntegration
 {
@@ -25,9 +22,9 @@ public:
     explicit XdgShellIntegration(QObject *parent = nullptr);
 
 private:
-    void registerXdgToplevel(KWaylandServer::XdgToplevelInterface *toplevel);
-    void registerXdgPopup(KWaylandServer::XdgPopupInterface *popup);
-    void createXdgToplevelWindow(KWaylandServer::XdgToplevelInterface *surface);
+    void registerXdgToplevel(XdgToplevelInterface *toplevel);
+    void registerXdgPopup(XdgPopupInterface *popup);
+    void createXdgToplevelWindow(XdgToplevelInterface *surface);
 };
 
 } // namespace KWin

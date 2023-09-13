@@ -11,7 +11,7 @@
 
 #include <QPointer>
 
-namespace KWaylandServer
+namespace KWin
 {
 class ClientConnection;
 class Display;
@@ -89,4 +89,4 @@ private:
     QPointer<ClientConnection> focusedClient;
 };
 
-} // namespace KWaylandServer
+} // namespace KWin

@@ -210,7 +210,7 @@ static QImage shadowTileForBuffer(GraphicsBuffer *buffer)
     return QImage();
 }
 
-bool Shadow::init(const QPointer<KWaylandServer::ShadowInterface> &shadow)
+bool Shadow::init(const QPointer<ShadowInterface> &shadow)
 {
     if (!shadow) {
         return false;

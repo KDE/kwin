@@ -25,15 +25,11 @@ class KLocalizedString;
 class NETRootInfo;
 class QAction;
 
-namespace KWaylandServer
-{
-class PlasmaVirtualDesktopManagementInterface;
-}
-
 namespace KWin
 {
 
 class Options;
+class PlasmaVirtualDesktopManagementInterface;
 
 class KWIN_EXPORT VirtualDesktop : public QObject
 {
@@ -156,7 +152,7 @@ public:
     /**
      * @internal, for Wayland case
      */
-    void setVirtualDesktopManagement(KWaylandServer::PlasmaVirtualDesktopManagementInterface *management);
+    void setVirtualDesktopManagement(PlasmaVirtualDesktopManagementInterface *management);
     /**
      * @internal
      */
@@ -490,7 +486,7 @@ private:
     VirtualDesktopGrid m_grid;
     // TODO: QPointer
     NETRootInfo *m_rootInfo;
-    KWaylandServer::PlasmaVirtualDesktopManagementInterface *m_virtualDesktopManagement = nullptr;
+    PlasmaVirtualDesktopManagementInterface *m_virtualDesktopManagement = nullptr;
     KSharedConfig::Ptr m_config;
 
     std::unique_ptr<QAction> m_swipeGestureReleasedY;

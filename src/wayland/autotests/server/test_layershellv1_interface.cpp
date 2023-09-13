@@ -23,10 +23,10 @@
 #include "qwayland-wlr-layer-shell-unstable-v1.h"
 #include "qwayland-xdg-shell.h"
 
-Q_DECLARE_METATYPE(KWaylandServer::LayerSurfaceV1Interface::Layer)
-Q_DECLARE_METATYPE(KWaylandServer::LayerSurfaceV1Interface *)
+Q_DECLARE_METATYPE(KWin::LayerSurfaceV1Interface::Layer)
+Q_DECLARE_METATYPE(KWin::LayerSurfaceV1Interface *)
 
-using namespace KWaylandServer;
+using namespace KWin;
 
 class LayerShellV1 : public QtWayland::zwlr_layer_shell_v1
 {
@@ -109,7 +109,7 @@ private:
     KWayland::Client::Compositor *m_clientCompositor;
 
     QThread *m_thread;
-    KWaylandServer::Display m_display;
+    KWin::Display m_display;
     CompositorInterface *m_serverCompositor;
     LayerShellV1 *m_clientLayerShell = nullptr;
     LayerShellV1Interface *m_serverLayerShell = nullptr;

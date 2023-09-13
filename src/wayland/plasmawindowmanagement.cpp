@@ -22,7 +22,7 @@
 
 #include <qwayland-server-plasma-window-management.h>
 
-namespace KWaylandServer
+namespace KWin
 {
 static const quint32 s_version = 16;
 static const quint32 s_activationVersion = 1;
@@ -521,7 +521,7 @@ void PlasmaWindowInterfacePrivate::org_kde_plasma_window_request_leave_activity(
 
 void PlasmaWindowInterfacePrivate::org_kde_plasma_window_send_to_output(Resource *resource, struct wl_resource *output)
 {
-    Q_EMIT q->sendToOutput(KWaylandServer::OutputInterface::get(output));
+    Q_EMIT q->sendToOutput(OutputInterface::get(output));
 }
 
 void PlasmaWindowInterfacePrivate::setTitle(const QString &title)

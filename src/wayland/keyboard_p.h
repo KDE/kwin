@@ -13,7 +13,7 @@
 #include <QHash>
 #include <QPointer>
 
-namespace KWaylandServer
+namespace KWin
 {
 class ClientConnection;
 
@@ -40,7 +40,7 @@ public:
     QMetaObject::Connection destroyConnection;
     QPointer<SurfaceInterface> modifierFocusSurface;
     QByteArray keymap;
-    KWin::RamFile sharedKeymapFile;
+    RamFile sharedKeymapFile;
 
     struct
     {

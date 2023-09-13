@@ -13,7 +13,7 @@
 
 struct wl_resource;
 
-namespace KWaylandServer
+namespace KWin
 {
 class Display;
 class XdgDecorationManagerV1InterfacePrivate;
@@ -106,10 +106,10 @@ Q_SIGNALS:
      * This signal is emitted when the client has specified the preferred decoration mode. The
      * compositor can decide not to use the client's mode and enforce a different mode instead.
      */
-    void preferredModeChanged(KWaylandServer::XdgToplevelDecorationV1Interface::Mode mode);
+    void preferredModeChanged(KWin::XdgToplevelDecorationV1Interface::Mode mode);
 
 private:
     std::unique_ptr<XdgToplevelDecorationV1InterfacePrivate> d;
 };
 
-} // namespace KWaylandServer
+} // namespace KWin

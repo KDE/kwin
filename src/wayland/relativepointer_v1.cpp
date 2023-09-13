@@ -13,7 +13,7 @@
 #include "seat.h"
 #include "surface.h"
 
-namespace KWaylandServer
+namespace KWin
 {
 static const int s_version = 1;
 
@@ -93,6 +93,6 @@ void RelativePointerV1Interface::sendRelativeMotion(const QPointF &delta, const 
     }
 }
 
-} // namespace KWaylandServer
+} // namespace KWin
 
 #include "moc_relativepointer_v1.cpp"

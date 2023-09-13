@@ -10,7 +10,7 @@
 
 #include <QPointer>
 
-namespace KWaylandServer
+namespace KWin
 {
 class SurfaceInterface;
 
@@ -30,4 +30,4 @@ protected:
     void wp_fractional_scale_v1_destroy_resource(Resource *resource) override;
 };
 
-} // namespace KWaylandServer
+} // namespace KWin

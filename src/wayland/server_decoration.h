@@ -12,7 +12,7 @@
 
 struct wl_resource;
 
-namespace KWaylandServer
+namespace KWin
 {
 class Display;
 class ServerSideDecorationInterface;
@@ -65,7 +65,7 @@ Q_SIGNALS:
     /**
      * Emitted whenever a new ServerSideDecorationInterface is created.
      */
-    void decorationCreated(KWaylandServer::ServerSideDecorationInterface *);
+    void decorationCreated(KWin::ServerSideDecorationInterface *);
 
 private:
     std::unique_ptr<ServerSideDecorationManagerInterfacePrivate> d;
@@ -128,5 +128,5 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(KWaylandServer::ServerSideDecorationInterface *)
-Q_DECLARE_METATYPE(KWaylandServer::ServerSideDecorationManagerInterface::Mode)
+Q_DECLARE_METATYPE(KWin::ServerSideDecorationInterface *)
+Q_DECLARE_METATYPE(KWin::ServerSideDecorationManagerInterface::Mode)

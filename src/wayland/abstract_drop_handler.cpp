@@ -7,7 +7,7 @@
 
 #include "abstract_drop_handler.h"
 
-namespace KWaylandServer
+namespace KWin
 {
 AbstractDropHandler::AbstractDropHandler(QObject *parent)
     : QObject(parent)

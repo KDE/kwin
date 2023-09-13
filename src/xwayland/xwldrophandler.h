@@ -22,13 +22,13 @@ namespace Xwl
 class Xvisit;
 class Dnd;
 
-class XwlDropHandler : public KWaylandServer::AbstractDropHandler
+class XwlDropHandler : public AbstractDropHandler
 {
     Q_OBJECT
 public:
     XwlDropHandler(Dnd *dnd);
 
-    void updateDragTarget(KWaylandServer::SurfaceInterface *surface, quint32 serial) override;
+    void updateDragTarget(SurfaceInterface *surface, quint32 serial) override;
     bool handleClientMessage(xcb_client_message_event_t *event);
 
 private:

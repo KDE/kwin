@@ -17,8 +17,6 @@
 #include <algorithm>
 #include <functional>
 
-using KWaylandServer::SurfaceInterface;
-
 namespace KWin
 {
 

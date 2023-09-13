@@ -23,11 +23,11 @@
 #include "wayland/seat.h"
 #include "wayland/surface.h"
 
-using namespace KWaylandServer;
+using namespace KWin;
 
 Q_DECLARE_METATYPE(KWayland::Client::PointerConstraints::LifeTime)
-Q_DECLARE_METATYPE(KWaylandServer::ConfinedPointerV1Interface::LifeTime)
-Q_DECLARE_METATYPE(KWaylandServer::LockedPointerV1Interface::LifeTime)
+Q_DECLARE_METATYPE(KWin::ConfinedPointerV1Interface::LifeTime)
+Q_DECLARE_METATYPE(KWin::LockedPointerV1Interface::LifeTime)
 
 class TestPointerConstraints : public QObject
 {
@@ -45,7 +45,7 @@ private Q_SLOTS:
     void testAlreadyConstrained();
 
 private:
-    KWaylandServer::Display *m_display = nullptr;
+    KWin::Display *m_display = nullptr;
     CompositorInterface *m_compositorInterface = nullptr;
     SeatInterface *m_seatInterface = nullptr;
     PointerConstraintsV1Interface *m_pointerConstraintsInterface = nullptr;
@@ -64,7 +64,7 @@ static const QString s_socketName = QStringLiteral("kwayland-test-pointer_constr
 void TestPointerConstraints::init()
 {
     delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = new KWin::Display(this);
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());

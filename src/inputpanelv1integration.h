@@ -8,13 +8,10 @@
 
 #include "waylandshellintegration.h"
 
-namespace KWaylandServer
-{
-class InputPanelSurfaceV1Interface;
-}
-
 namespace KWin
 {
+
+class InputPanelSurfaceV1Interface;
 
 class InputPanelV1Integration : public WaylandShellIntegration
 {
@@ -23,7 +20,7 @@ class InputPanelV1Integration : public WaylandShellIntegration
 public:
     explicit InputPanelV1Integration(QObject *parent = nullptr);
 
-    void createWindow(KWaylandServer::InputPanelSurfaceV1Interface *shellSurface);
+    void createWindow(InputPanelSurfaceV1Interface *shellSurface);
 };
 
 } // namespace KWin

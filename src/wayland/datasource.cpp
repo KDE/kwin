@@ -16,7 +16,7 @@
 // system
 #include <unistd.h>
 
-namespace KWaylandServer
+namespace KWin
 {
 DataSourceInterfacePrivate::DataSourceInterfacePrivate(DataSourceInterface *_q, ::wl_resource *resource)
     : QtWaylandServer::wl_data_source(resource)

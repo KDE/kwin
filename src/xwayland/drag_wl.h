@@ -16,15 +16,11 @@
 #include <QPointer>
 #include <QVector>
 
-namespace KWaylandServer
+namespace KWin
 {
 class DataDeviceInterface;
 class DataSourceInterface;
 class SurfaceInterface;
-}
-
-namespace KWin
-{
 class Window;
 class X11Window;
 
@@ -58,7 +54,7 @@ class Xvisit : public QObject
 public:
     // TODO: handle ask action
 
-    Xvisit(X11Window *target, KWaylandServer::AbstractDataSource *dataSource, Dnd *dnd, QObject *parent);
+    Xvisit(X11Window *target, AbstractDataSource *dataSource, Dnd *dnd, QObject *parent);
 
     bool handleClientMessage(xcb_client_message_event_t *event);
     bool handleStatus(xcb_client_message_event_t *event);
@@ -97,7 +93,7 @@ private:
 
     Dnd *const m_dnd;
     X11Window *m_target;
-    QPointer<KWaylandServer::AbstractDataSource> m_dataSource;
+    QPointer<AbstractDataSource> m_dataSource;
     uint32_t m_version = 0;
 
     QMetaObject::Connection m_motionConnection;
@@ -110,11 +106,11 @@ private:
     } m_pos;
 
     // supported by the Wl source
-    KWaylandServer::DataDeviceManagerInterface::DnDActions m_supportedActions = KWaylandServer::DataDeviceManagerInterface::DnDAction::None;
+    DataDeviceManagerInterface::DnDActions m_supportedActions = DataDeviceManagerInterface::DnDAction::None;
     // preferred by the X client
-    KWaylandServer::DataDeviceManagerInterface::DnDAction m_preferredAction = KWaylandServer::DataDeviceManagerInterface::DnDAction::None;
+    DataDeviceManagerInterface::DnDAction m_preferredAction = DataDeviceManagerInterface::DnDAction::None;
     // decided upon by the compositor
-    KWaylandServer::DataDeviceManagerInterface::DnDAction m_proposedAction = KWaylandServer::DataDeviceManagerInterface::DnDAction::None;
+    DataDeviceManagerInterface::DnDAction m_proposedAction = DataDeviceManagerInterface::DnDAction::None;
 
     struct
     {

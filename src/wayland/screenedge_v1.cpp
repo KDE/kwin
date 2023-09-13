@@ -12,9 +12,7 @@
 
 #include <QPointer>
 
-using namespace KWin;
-
-namespace KWaylandServer
+namespace KWin
 {
 
 static const int s_version = 1;
@@ -147,6 +145,6 @@ ElectricBorder AutoHideScreenEdgeV1Interface::border() const
     return d->border;
 }
 
-} // namespace KWaylandServer
+} // namespace KWin
 
 #include "moc_screenedge_v1.cpp"

@@ -20,7 +20,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-namespace KWaylandServer
+namespace KWin
 {
 static const int s_version = 4;
 
@@ -125,7 +125,7 @@ void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_add(Resource *resource,
         close(fd);
         return;
     }
-    m_attrs.fd[plane_idx] = KWin::FileDescriptor{fd};
+    m_attrs.fd[plane_idx] = FileDescriptor{fd};
     m_attrs.offset[plane_idx] = offset;
     m_attrs.pitch[plane_idx] = stride;
     m_attrs.modifier = (quint64(modifier_hi) << 32) | modifier_lo;
@@ -143,7 +143,7 @@ void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_create(Resource *resource, 
         return;
     }
 
-    KWin::RenderBackend *renderBackend = m_integration->renderBackend();
+    RenderBackend *renderBackend = m_integration->renderBackend();
     if (Q_UNLIKELY(!renderBackend)) {
         send_failed(resource->handle);
         return;
@@ -194,7 +194,7 @@ void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_create_immed(Resource *reso
         return;
     }
 
-    KWin::RenderBackend *renderBackend = m_integration->renderBackend();
+    RenderBackend *renderBackend = m_integration->renderBackend();
     if (Q_UNLIKELY(!renderBackend)) {
         wl_resource_post_error(resource->handle, error_invalid_wl_buffer, "importing the supplied dmabufs failed");
         return;
@@ -303,12 +303,12 @@ bool operator==(const LinuxDmaBufV1Feedback::Tranche &t1, const LinuxDmaBufV1Fee
     return t1.device == t2.device && t1.flags == t2.flags && t1.formatTable == t2.formatTable;
 }
 
-KWin::RenderBackend *LinuxDmaBufV1ClientBufferIntegration::renderBackend() const
+RenderBackend *LinuxDmaBufV1ClientBufferIntegration::renderBackend() const
 {
     return d->renderBackend;
 }
 
-void LinuxDmaBufV1ClientBufferIntegration::setRenderBackend(KWin::RenderBackend *renderBackend)
+void LinuxDmaBufV1ClientBufferIntegration::setRenderBackend(RenderBackend *renderBackend)
 {
     d->renderBackend = renderBackend;
 }
@@ -344,7 +344,7 @@ const struct wl_buffer_interface LinuxDmaBufV1ClientBuffer::implementation = {
     .destroy = buffer_destroy,
 };
 
-LinuxDmaBufV1ClientBuffer::LinuxDmaBufV1ClientBuffer(KWin::DmaBufAttributes &&attrs)
+LinuxDmaBufV1ClientBuffer::LinuxDmaBufV1ClientBuffer(DmaBufAttributes &&attrs)
 {
     m_attrs = std::move(attrs);
     m_hasAlphaChannel = alphaChannelFromDrmFormat(m_attrs.format);
@@ -360,7 +360,7 @@ void LinuxDmaBufV1ClientBuffer::initialize(wl_resource *resource)
     });
 }
 
-const KWin::DmaBufAttributes *LinuxDmaBufV1ClientBuffer::dmabufAttributes() const
+const DmaBufAttributes *LinuxDmaBufV1ClientBuffer::dmabufAttributes() const
 {
     return &m_attrs;
 }
@@ -475,14 +475,14 @@ LinuxDmaBufV1FormatTable::LinuxDmaBufV1FormatTable(const QHash<uint32_t, QVector
     }
 
     const auto size = data.size() * sizeof(linux_dmabuf_feedback_v1_table_entry);
-    file = KWin::RamFile("kwin-dmabuf-feedback-table", data.constData(), size, KWin::RamFile::Flag::SealWrite);
+    file = RamFile("kwin-dmabuf-feedback-table", data.constData(), size, RamFile::Flag::SealWrite);
     if (!file.isValid()) {
         qCCritical(KWIN_CORE) << "Failed to create RamFile for LinuxDmaBufV1FormatTable";
         return;
     }
 }
 
-} // namespace KWaylandServer
+} // namespace KWin
 
 #include "moc_linuxdmabufv1clientbuffer_p.cpp"
 

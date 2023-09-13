@@ -24,7 +24,7 @@ class XInputIntegration : public QObject
 {
     Q_OBJECT
 public:
-    explicit XInputIntegration(Display *display, QObject *parent);
+    explicit XInputIntegration(::Display *display, QObject *parent);
     ~XInputIntegration() override;
 
     void init();
@@ -37,7 +37,7 @@ public:
     void setCursor(X11Cursor *cursor);
 
 private:
-    Display *display() const
+    ::Display *display() const
     {
         return m_x11Display;
     }
@@ -47,7 +47,7 @@ private:
     int m_majorVersion = 0;
     int m_minorVersion = 0;
     QPointer<X11Cursor> m_x11Cursor;
-    Display *m_x11Display;
+    ::Display *m_x11Display;
 
     std::unique_ptr<XInputEventFilter> m_xiEventFilter;
     std::unique_ptr<XKeyPressReleaseEventFilter> m_keyPressFilter;

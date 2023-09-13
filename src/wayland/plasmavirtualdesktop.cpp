@@ -12,7 +12,7 @@
 #include <qwayland-server-org-kde-plasma-virtual-desktop.h>
 #include <wayland-server.h>
 
-namespace KWaylandServer
+namespace KWin
 {
 static const quint32 s_version = 2;
 

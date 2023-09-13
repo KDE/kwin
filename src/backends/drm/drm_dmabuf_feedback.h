@@ -12,16 +12,12 @@
 #include <QPointer>
 #include <QVector>
 
-namespace KWaylandServer
-{
-class SurfaceInterface;
-}
-
 namespace KWin
 {
 
 class EglGbmBackend;
 class DrmGpu;
+class SurfaceInterface;
 
 class DmabufFeedback
 {
@@ -29,11 +25,11 @@ public:
     DmabufFeedback(DrmGpu *gpu, EglGbmBackend *eglBackend);
 
     void renderingSurface();
-    void scanoutSuccessful(KWaylandServer::SurfaceInterface *surface);
-    void scanoutFailed(KWaylandServer::SurfaceInterface *surface, const QMap<uint32_t, QVector<uint64_t>> &formats);
+    void scanoutSuccessful(SurfaceInterface *surface);
+    void scanoutFailed(SurfaceInterface *surface, const QMap<uint32_t, QVector<uint64_t>> &formats);
 
 private:
-    QPointer<KWaylandServer::SurfaceInterface> m_surface;
+    QPointer<SurfaceInterface> m_surface;
     QMap<uint32_t, QVector<uint64_t>> m_attemptedFormats;
     bool m_attemptedThisFrame = false;
 

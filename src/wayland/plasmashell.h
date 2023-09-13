@@ -14,7 +14,7 @@
 class QSize;
 struct wl_resource;
 
-namespace KWaylandServer
+namespace KWin
 {
 class Display;
 class SurfaceInterface;
@@ -45,7 +45,7 @@ Q_SIGNALS:
     /**
      * Emitted whenever a PlasmaShellSurfaceInterface got created.
      */
-    void surfaceCreated(KWaylandServer::PlasmaShellSurfaceInterface *);
+    void surfaceCreated(KWin::PlasmaShellSurfaceInterface *);
 
 private:
     std::unique_ptr<PlasmaShellInterfacePrivate> d;
@@ -230,5 +230,5 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(KWaylandServer::PlasmaShellSurfaceInterface::Role)
-Q_DECLARE_METATYPE(KWaylandServer::PlasmaShellSurfaceInterface::PanelBehavior)
+Q_DECLARE_METATYPE(KWin::PlasmaShellSurfaceInterface::Role)
+Q_DECLARE_METATYPE(KWin::PlasmaShellSurfaceInterface::PanelBehavior)

@@ -18,15 +18,12 @@ class QSocketNotifier;
 struct xcb_selection_request_event_t;
 struct xcb_xfixes_selection_notify_event_t;
 
-namespace KWaylandServer
+namespace KWin
 {
 class DataDeviceInterface;
 class DataSourceInterface;
 class AbstractDataSource;
-}
 
-namespace KWin
-{
 namespace Xwl
 {
 class Selection;
@@ -81,7 +78,7 @@ class WlSource : public SelectionSource
 
 public:
     WlSource(Selection *selection);
-    void setDataSourceIface(KWaylandServer::AbstractDataSource *dsi);
+    void setDataSourceIface(AbstractDataSource *dsi);
 
     bool handleSelectionRequest(xcb_selection_request_event_t *event);
     void sendTargets(xcb_selection_request_event_t *event);
@@ -96,7 +93,7 @@ Q_SIGNALS:
 private:
     bool checkStartTransfer(xcb_selection_request_event_t *event);
 
-    KWaylandServer::AbstractDataSource *m_dsi = nullptr;
+    AbstractDataSource *m_dsi = nullptr;
 
     QVector<QString> m_offers;
     QMetaObject::Connection m_offerConnection;

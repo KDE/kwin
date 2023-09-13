@@ -16,7 +16,7 @@
 #include <QDebug>
 #include <QRect>
 
-namespace KWaylandServer
+namespace KWin
 {
 DisplayPrivate *DisplayPrivate::get(Display *display)
 {
@@ -216,7 +216,7 @@ ClientConnection *Display::createClient(int fd)
     return getConnection(c);
 }
 
-KWin::GraphicsBuffer *Display::bufferForResource(wl_resource *resource)
+GraphicsBuffer *Display::bufferForResource(wl_resource *resource)
 {
     if (auto buffer = LinuxDmaBufV1ClientBuffer::get(resource)) {
         return buffer;
@@ -227,6 +227,6 @@ KWin::GraphicsBuffer *Display::bufferForResource(wl_resource *resource)
     }
 }
 
-} // namespace KWaylandServer
+} // namespace KWin
 
 #include "moc_display.cpp"

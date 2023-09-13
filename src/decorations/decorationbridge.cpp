@@ -85,7 +85,6 @@ bool DecorationBridge::hasPlugin()
 
 void DecorationBridge::init()
 {
-    using namespace KWaylandServer;
     m_noPlugin = readNoPlugin();
     if (m_noPlugin) {
         if (waylandServer()) {

@@ -16,7 +16,7 @@
 
 #include "qwayland-server-wlr-layer-shell-unstable-v1.h"
 
-namespace KWaylandServer
+namespace KWin
 {
 static const int s_version = 3;
 
@@ -498,6 +498,6 @@ void LayerSurfaceV1Interface::sendClosed()
     }
 }
 
-} // namespace KWaylandServer
+} // namespace KWin
 
 #include "moc_layershell_v1.cpp"

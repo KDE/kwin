@@ -13,7 +13,7 @@
 #include <qwayland-server-fake-input.h>
 #include <wayland-server.h>
 
-namespace KWaylandServer
+namespace KWin
 {
 static const quint32 s_version = 4;
 

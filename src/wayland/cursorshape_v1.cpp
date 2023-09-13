@@ -14,7 +14,7 @@
 
 #include "qwayland-server-cursor-shape-v1.h"
 
-namespace KWaylandServer
+namespace KWin
 {
 
 static constexpr int s_version = 1;
@@ -206,4 +206,4 @@ void CursorShapeDeviceV1Interface::wp_cursor_shape_device_v1_set_shape(Resource 
     }
 }
 
-} // namespace KWaylandServer
+} // namespace KWin

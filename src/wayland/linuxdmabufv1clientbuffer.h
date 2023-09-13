@@ -17,15 +17,11 @@
 
 namespace KWin
 {
-class RenderBackend;
-}
-
-namespace KWaylandServer
-{
 
 class Display;
 class LinuxDmaBufV1ClientBufferIntegrationPrivate;
 class LinuxDmaBufV1FeedbackPrivate;
+class RenderBackend;
 
 class KWIN_EXPORT LinuxDmaBufV1Feedback : public QObject
 {
@@ -69,8 +65,8 @@ public:
     explicit LinuxDmaBufV1ClientBufferIntegration(Display *display);
     ~LinuxDmaBufV1ClientBufferIntegration() override;
 
-    KWin::RenderBackend *renderBackend() const;
-    void setRenderBackend(KWin::RenderBackend *renderBackend);
+    RenderBackend *renderBackend() const;
+    void setRenderBackend(RenderBackend *renderBackend);
 
     void setSupportedFormatsWithModifiers(const QVector<LinuxDmaBufV1Feedback::Tranche> &tranches);
 
@@ -79,4 +75,4 @@ private:
     std::unique_ptr<LinuxDmaBufV1ClientBufferIntegrationPrivate> d;
 };
 
-} // namespace KWaylandServer
+} // namespace KWin

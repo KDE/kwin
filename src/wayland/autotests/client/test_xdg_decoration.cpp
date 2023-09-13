@@ -33,10 +33,10 @@ private Q_SLOTS:
     void testDecoration();
 
 private:
-    KWaylandServer::Display *m_display = nullptr;
-    KWaylandServer::CompositorInterface *m_compositorInterface = nullptr;
-    KWaylandServer::XdgShellInterface *m_xdgShellInterface = nullptr;
-    KWaylandServer::XdgDecorationManagerV1Interface *m_xdgDecorationManagerInterface = nullptr;
+    KWin::Display *m_display = nullptr;
+    KWin::CompositorInterface *m_compositorInterface = nullptr;
+    KWin::XdgShellInterface *m_xdgShellInterface = nullptr;
+    KWin::XdgDecorationManagerV1Interface *m_xdgDecorationManagerInterface = nullptr;
 
     KWayland::Client::ConnectionThread *m_connection = nullptr;
     KWayland::Client::Compositor *m_compositor = nullptr;
@@ -57,13 +57,13 @@ TestXdgDecoration::TestXdgDecoration(QObject *parent)
 
 void TestXdgDecoration::init()
 {
-    using namespace KWaylandServer;
+    using namespace KWin;
 
     qRegisterMetaType<KWayland::Client::XdgDecoration::Mode>();
     qRegisterMetaType<XdgToplevelDecorationV1Interface::Mode>();
 
     delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = new KWin::Display(this);
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
@@ -150,11 +150,11 @@ void TestXdgDecoration::cleanup()
 
 void TestXdgDecoration::testDecoration_data()
 {
-    using namespace KWaylandServer;
-    QTest::addColumn<KWaylandServer::XdgToplevelDecorationV1Interface::Mode>("configuredMode");
+    using namespace KWin;
+    QTest::addColumn<KWin::XdgToplevelDecorationV1Interface::Mode>("configuredMode");
     QTest::addColumn<KWayland::Client::XdgDecoration::Mode>("configuredModeExp");
     QTest::addColumn<KWayland::Client::XdgDecoration::Mode>("setMode");
-    QTest::addColumn<KWaylandServer::XdgToplevelDecorationV1Interface::Mode>("setModeExp");
+    QTest::addColumn<KWin::XdgToplevelDecorationV1Interface::Mode>("setModeExp");
 
     const auto serverClient = XdgToplevelDecorationV1Interface::Mode::Client;
     const auto serverServer = XdgToplevelDecorationV1Interface::Mode::Server;
@@ -169,12 +169,12 @@ void TestXdgDecoration::testDecoration_data()
 
 void TestXdgDecoration::testDecoration()
 {
-    using namespace KWaylandServer;
+    using namespace KWin;
 
-    QFETCH(KWaylandServer::XdgToplevelDecorationV1Interface::Mode, configuredMode);
+    QFETCH(KWin::XdgToplevelDecorationV1Interface::Mode, configuredMode);
     QFETCH(KWayland::Client::XdgDecoration::Mode, configuredModeExp);
     QFETCH(KWayland::Client::XdgDecoration::Mode, setMode);
-    QFETCH(KWaylandServer::XdgToplevelDecorationV1Interface::Mode, setModeExp);
+    QFETCH(KWin::XdgToplevelDecorationV1Interface::Mode, setModeExp);
 
     QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
     QSignalSpy shellSurfaceCreatedSpy(m_xdgShellInterface, &XdgShellInterface::toplevelCreated);

@@ -7,7 +7,7 @@
 #include "region_p.h"
 #include "utils.h"
 
-namespace KWaylandServer
+namespace KWin
 {
 RegionInterface::RegionInterface(wl_resource *resource)
     : QtWaylandServer::wl_region(resource)
@@ -44,4 +44,4 @@ RegionInterface *RegionInterface::get(wl_resource *native)
     return resource_cast<RegionInterface *>(native);
 }
 
-} // namespace KWaylandServer
+} // namespace KWin

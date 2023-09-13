@@ -16,7 +16,7 @@
 // Wayland
 #include <qwayland-server-wlr-data-control-unstable-v1.h>
 
-namespace KWaylandServer
+namespace KWin
 {
 class DataControlDeviceV1InterfacePrivate : public QtWaylandServer::zwlr_data_control_device_v1
 {
@@ -141,7 +141,7 @@ void DataControlDeviceV1Interface::sendSelection(AbstractDataSource *other)
     d->send_selection(offer ? offer->resource() : nullptr);
 }
 
-void DataControlDeviceV1Interface::sendPrimarySelection(KWaylandServer::AbstractDataSource *other)
+void DataControlDeviceV1Interface::sendPrimarySelection(AbstractDataSource *other)
 {
     if (d->resource()->version() >= ZWLR_DATA_CONTROL_DEVICE_V1_PRIMARY_SELECTION_SINCE_VERSION) {
         DataControlOfferV1Interface *offer = d->createDataOffer(other);

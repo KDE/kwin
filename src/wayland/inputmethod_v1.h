@@ -14,7 +14,7 @@
 
 #include "textinput.h"
 
-namespace KWaylandServer
+namespace KWin
 {
 class OutputInterface;
 class SurfaceInterface;
@@ -75,7 +75,7 @@ public:
 
     void sendSurroundingText(const QString &text, quint32 cursor, quint32 anchor);
     void sendReset();
-    void sendContentType(KWaylandServer::TextInputContentHints hint, KWaylandServer::TextInputContentPurpose purpose);
+    void sendContentType(KWin::TextInputContentHints hint, KWin::TextInputContentPurpose purpose);
     void sendInvokeAction(quint32 button, quint32 index);
     void sendCommitState(quint32 serial);
     void sendPreferredLanguage(const QString &language);
@@ -172,5 +172,5 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(KWaylandServer::InputMethodV1Interface *)
-Q_DECLARE_METATYPE(KWaylandServer::InputMethodGrabV1 *)
+Q_DECLARE_METATYPE(KWin::InputMethodV1Interface *)
+Q_DECLARE_METATYPE(KWin::InputMethodGrabV1 *)

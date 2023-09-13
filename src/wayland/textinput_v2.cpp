@@ -8,7 +8,7 @@
 #include "surface_p.h"
 #include "textinput_v2_p.h"
 
-namespace KWaylandServer
+namespace KWin
 {
 
 namespace
@@ -433,7 +433,7 @@ TextInputContentHints TextInputV2Interface::contentHints() const
     return d->contentHints;
 }
 
-TextInputContentPurpose KWaylandServer::TextInputV2Interface::contentPurpose() const
+TextInputContentPurpose TextInputV2Interface::contentPurpose() const
 {
     return d->contentPurpose;
 }

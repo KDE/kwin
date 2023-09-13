@@ -27,7 +27,7 @@
 
 #include "qwayland-wlr-data-control-unstable-v1.h"
 
-using namespace KWaylandServer;
+using namespace KWin;
 
 // Faux-client API for tests
 
@@ -150,7 +150,7 @@ private:
     KWayland::Client::Seat *m_clientSeat = nullptr;
 
     QThread *m_thread;
-    KWaylandServer::Display *m_display;
+    KWin::Display *m_display;
     SeatInterface *m_seat;
     CompositorInterface *m_serverCompositor;
 
@@ -165,7 +165,7 @@ static const QString s_socketName = QStringLiteral("kwin-wayland-datacontrol-tes
 
 void DataControlInterfaceTest::init()
 {
-    m_display = new KWaylandServer::Display();
+    m_display = new KWin::Display();
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());

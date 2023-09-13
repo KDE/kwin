@@ -19,7 +19,7 @@
 #include <deque>
 #include <optional>
 
-namespace KWaylandServer
+namespace KWin
 {
 class IdleInhibitorV1Interface;
 class ViewportInterface;
@@ -54,15 +54,15 @@ struct SurfaceState
     bool contentTypeIsSet = false;
     bool tearingIsSet = false;
     qint32 bufferScale = 1;
-    KWin::OutputTransform bufferTransform = KWin::OutputTransform::Normal;
+    OutputTransform bufferTransform = OutputTransform::Normal;
     wl_list frameCallbacks;
     QPoint offset = QPoint();
-    QPointer<KWin::GraphicsBuffer> buffer;
+    QPointer<GraphicsBuffer> buffer;
     QPointer<ShadowInterface> shadow;
     QPointer<BlurInterface> blur;
     QPointer<ContrastInterface> contrast;
     QPointer<SlideInterface> slide;
-    KWin::ContentType contentType = KWin::ContentType::None;
+    ContentType contentType = ContentType::None;
     PresentationHint presentationHint = PresentationHint::VSync;
 
     struct
@@ -135,7 +135,7 @@ public:
 
     QRegion inputRegion;
     QRegion opaqueRegion;
-    KWin::GraphicsBufferRef bufferRef;
+    GraphicsBufferRef bufferRef;
     QRegion bufferDamage;
     bool mapped = false;
     qreal scaleOverride = 1.;
@@ -146,7 +146,7 @@ public:
 
     QVector<OutputInterface *> outputs;
     std::optional<qreal> preferredBufferScale;
-    std::optional<KWin::OutputTransform> preferredBufferTransform;
+    std::optional<OutputTransform> preferredBufferTransform;
 
     LockedPointerV1Interface *lockedPointer = nullptr;
     ConfinedPointerV1Interface *confinedPointer = nullptr;
@@ -186,4 +186,4 @@ private:
     QMetaObject::Connection constrainsUnboundConnection;
 };
 
-} // namespace KWaylandServer
+} // namespace KWin

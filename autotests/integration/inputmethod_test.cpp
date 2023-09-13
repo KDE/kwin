@@ -581,7 +581,7 @@ void InputMethodTest::testDisableShowInputPanel()
     QVERIFY(inputMethodActiveSpy.count() || inputMethodActiveSpy.wait());
     QVERIFY(!kwinApp()->inputMethod()->isActive());
 
-    QSignalSpy requestShowInputPanelSpy(waylandServer()->seat()->textInputV2(), &KWaylandServer::TextInputV2Interface::requestShowInputPanel);
+    QSignalSpy requestShowInputPanelSpy(waylandServer()->seat()->textInputV2(), &TextInputV2Interface::requestShowInputPanel);
     textInputV2->showInputPanel();
     QVERIFY(requestShowInputPanelSpy.count() || requestShowInputPanelSpy.wait());
     QVERIFY(!kwinApp()->inputMethod()->isActive());
@@ -719,8 +719,8 @@ void InputMethodTest::testFakeEventFallback()
 
     // Special keys are not sent through commit_string but instead use keysym.
     auto enter = input()->keyboard()->xkb()->toKeysym(KEY_ENTER);
-    zwp_input_method_context_v1_keysym(context, 0, 0, enter, uint32_t(KWaylandServer::KeyboardKeyState::Pressed), 0);
-    zwp_input_method_context_v1_keysym(context, 0, 1, enter, uint32_t(KWaylandServer::KeyboardKeyState::Released), 0);
+    zwp_input_method_context_v1_keysym(context, 0, 0, enter, uint32_t(KeyboardKeyState::Pressed), 0);
+    zwp_input_method_context_v1_keysym(context, 0, 1, enter, uint32_t(KeyboardKeyState::Released), 0);
 
     keySpy.wait();
     QVERIFY(keySpy.count() == 2);

@@ -12,12 +12,12 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-namespace KWaylandServer
+namespace KWin
 {
 
 static const quint32 s_version = 1;
 
-DrmLeaseManagerV1::DrmLeaseManagerV1(KWin::DrmBackend *backend, Display *display, QObject *parent)
+DrmLeaseManagerV1::DrmLeaseManagerV1(DrmBackend *backend, Display *display, QObject *parent)
     : QObject(parent)
     , m_backend(backend)
     , m_display(display)
@@ -26,9 +26,9 @@ DrmLeaseManagerV1::DrmLeaseManagerV1(KWin::DrmBackend *backend, Display *display
     for (const auto &gpu : gpus) {
         addGpu(gpu.get());
     }
-    connect(m_backend, &KWin::DrmBackend::gpuAdded, this, &DrmLeaseManagerV1::addGpu);
-    connect(m_backend, &KWin::DrmBackend::gpuRemoved, this, &DrmLeaseManagerV1::removeGpu);
-    connect(m_backend, &KWin::DrmBackend::outputsQueried, this, &DrmLeaseManagerV1::handleOutputsQueried);
+    connect(m_backend, &DrmBackend::gpuAdded, this, &DrmLeaseManagerV1::addGpu);
+    connect(m_backend, &DrmBackend::gpuRemoved, this, &DrmLeaseManagerV1::removeGpu);
+    connect(m_backend, &DrmBackend::outputsQueried, this, &DrmLeaseManagerV1::handleOutputsQueried);
 }
 
 DrmLeaseManagerV1::~DrmLeaseManagerV1()
@@ -38,12 +38,12 @@ DrmLeaseManagerV1::~DrmLeaseManagerV1()
     }
 }
 
-void DrmLeaseManagerV1::addGpu(KWin::DrmGpu *gpu)
+void DrmLeaseManagerV1::addGpu(DrmGpu *gpu)
 {
     m_leaseDevices[gpu] = new DrmLeaseDeviceV1Interface(m_display, gpu);
 }
 
-void DrmLeaseManagerV1::removeGpu(KWin::DrmGpu *gpu)
+void DrmLeaseManagerV1::removeGpu(DrmGpu *gpu)
 {
     if (auto device = m_leaseDevices.take(gpu)) {
         device->remove();
@@ -58,7 +58,7 @@ void DrmLeaseManagerV1::handleOutputsQueried()
     }
 }
 
-DrmLeaseDeviceV1Interface::DrmLeaseDeviceV1Interface(Display *display, KWin::DrmGpu *gpu)
+DrmLeaseDeviceV1Interface::DrmLeaseDeviceV1Interface(Display *display, DrmGpu *gpu)
     : QtWaylandServer::wp_drm_lease_device_v1(*display, s_version)
     , m_gpu(gpu)
 {
@@ -66,9 +66,9 @@ DrmLeaseDeviceV1Interface::DrmLeaseDeviceV1Interface(Display *display, KWin::Drm
     for (const auto output : outputs) {
         addOutput(output);
     }
-    connect(gpu, &KWin::DrmGpu::outputAdded, this, &DrmLeaseDeviceV1Interface::addOutput);
-    connect(gpu, &KWin::DrmGpu::outputRemoved, this, &DrmLeaseDeviceV1Interface::removeOutput);
-    connect(gpu, &KWin::DrmGpu::activeChanged, this, &DrmLeaseDeviceV1Interface::setDrmMaster);
+    connect(gpu, &DrmGpu::outputAdded, this, &DrmLeaseDeviceV1Interface::addOutput);
+    connect(gpu, &DrmGpu::outputRemoved, this, &DrmLeaseDeviceV1Interface::removeOutput);
+    connect(gpu, &DrmGpu::activeChanged, this, &DrmLeaseDeviceV1Interface::setDrmMaster);
 }
 
 DrmLeaseDeviceV1Interface::~DrmLeaseDeviceV1Interface()
@@ -78,9 +78,9 @@ DrmLeaseDeviceV1Interface::~DrmLeaseDeviceV1Interface()
     }
 }
 
-void DrmLeaseDeviceV1Interface::addOutput(KWin::DrmAbstractOutput *output)
+void DrmLeaseDeviceV1Interface::addOutput(DrmAbstractOutput *output)
 {
-    KWin::DrmOutput *drmOutput = qobject_cast<KWin::DrmOutput *>(output);
+    DrmOutput *drmOutput = qobject_cast<DrmOutput *>(output);
     if (!drmOutput || !drmOutput->isNonDesktop()) {
         return;
     }
@@ -91,7 +91,7 @@ void DrmLeaseDeviceV1Interface::addOutput(KWin::DrmAbstractOutput *output)
     }
 }
 
-void DrmLeaseDeviceV1Interface::removeOutput(KWin::DrmAbstractOutput *output)
+void DrmLeaseDeviceV1Interface::removeOutput(DrmAbstractOutput *output)
 {
     const auto it = m_connectors.find(output);
     if (it != m_connectors.end()) {
@@ -120,7 +120,7 @@ void DrmLeaseDeviceV1Interface::setDrmMaster(bool hasDrmMaster)
     if (hasDrmMaster) {
         // send pending drm fds
         while (!m_pendingFds.isEmpty()) {
-            KWin::FileDescriptor fd = m_gpu->createNonMasterFd();
+            FileDescriptor fd = m_gpu->createNonMasterFd();
             send_drm_fd(m_pendingFds.dequeue(), fd.get());
         }
         // offer all connectors again
@@ -189,7 +189,7 @@ bool DrmLeaseDeviceV1Interface::hasDrmMaster() const
     return m_hasDrmMaster;
 }
 
-KWin::DrmGpu *DrmLeaseDeviceV1Interface::gpu() const
+DrmGpu *DrmLeaseDeviceV1Interface::gpu() const
 {
     return m_gpu;
 }
@@ -229,7 +229,7 @@ void DrmLeaseDeviceV1Interface::wp_drm_lease_device_v1_bind_resource(Resource *r
         m_pendingFds << resource->handle;
         return;
     }
-    KWin::FileDescriptor fd = m_gpu->createNonMasterFd();
+    FileDescriptor fd = m_gpu->createNonMasterFd();
     send_drm_fd(resource->handle, fd.get());
     for (const auto &[output, connector] : m_connectors) {
         if (!connector->withdrawn()) {
@@ -246,7 +246,7 @@ void DrmLeaseDeviceV1Interface::wp_drm_lease_device_v1_destroy_global()
     delete this;
 }
 
-DrmLeaseConnectorV1Interface::DrmLeaseConnectorV1Interface(DrmLeaseDeviceV1Interface *leaseDevice, KWin::DrmOutput *output)
+DrmLeaseConnectorV1Interface::DrmLeaseConnectorV1Interface(DrmLeaseDeviceV1Interface *leaseDevice, DrmOutput *output)
     : wp_drm_lease_connector_v1()
     , m_device(leaseDevice)
     , m_output(output)
@@ -263,7 +263,7 @@ DrmLeaseDeviceV1Interface *DrmLeaseConnectorV1Interface::device() const
     return m_device;
 }
 
-KWin::DrmOutput *DrmLeaseConnectorV1Interface::output() const
+DrmOutput *DrmLeaseConnectorV1Interface::output() const
 {
     return m_output;
 }
@@ -356,7 +356,7 @@ void DrmLeaseRequestV1Interface::wp_drm_lease_request_v1_submit(Resource *resour
     } else if (m_connectors.isEmpty()) {
         wl_resource_post_error(resource->handle, WP_DRM_LEASE_REQUEST_V1_ERROR_EMPTY_LEASE, "Requested lease without connectors");
     } else {
-        QVector<KWin::DrmOutput *> outputs;
+        QVector<DrmOutput *> outputs;
         for (const auto &connector : m_connectors) {
             outputs.push_back(connector->output());
         }
@@ -392,12 +392,12 @@ DrmLeaseV1Interface::~DrmLeaseV1Interface()
     m_device->removeLease(this);
 }
 
-void DrmLeaseV1Interface::grant(std::unique_ptr<KWin::DrmLease> &&lease)
+void DrmLeaseV1Interface::grant(std::unique_ptr<DrmLease> &&lease)
 {
-    KWin::FileDescriptor tmp = std::move(lease->fd());
+    FileDescriptor tmp = std::move(lease->fd());
     send_lease_fd(tmp.get());
     m_lease = std::move(lease);
-    connect(m_lease.get(), &KWin::DrmLease::revokeRequested, this, &DrmLeaseV1Interface::revoke);
+    connect(m_lease.get(), &DrmLease::revokeRequested, this, &DrmLeaseV1Interface::revoke);
     for (const auto &connector : std::as_const(m_connectors)) {
         connector->withdraw();
     }

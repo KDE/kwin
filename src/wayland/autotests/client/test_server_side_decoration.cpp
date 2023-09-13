@@ -36,9 +36,9 @@ private Q_SLOTS:
     void testSurfaceDestroy();
 
 private:
-    KWaylandServer::Display *m_display = nullptr;
-    KWaylandServer::CompositorInterface *m_compositorInterface = nullptr;
-    KWaylandServer::ServerSideDecorationManagerInterface *m_serverSideDecorationManagerInterface = nullptr;
+    KWin::Display *m_display = nullptr;
+    KWin::CompositorInterface *m_compositorInterface = nullptr;
+    KWin::ServerSideDecorationManagerInterface *m_serverSideDecorationManagerInterface = nullptr;
     KWayland::Client::ConnectionThread *m_connection = nullptr;
     KWayland::Client::Compositor *m_compositor = nullptr;
     KWayland::Client::EventQueue *m_queue = nullptr;
@@ -56,9 +56,9 @@ TestServerSideDecoration::TestServerSideDecoration(QObject *parent)
 
 void TestServerSideDecoration::init()
 {
-    using namespace KWaylandServer;
+    using namespace KWin;
     delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = new KWin::Display(this);
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
@@ -136,7 +136,7 @@ void TestServerSideDecoration::cleanup()
 
 void TestServerSideDecoration::testCreate_data()
 {
-    using namespace KWaylandServer;
+    using namespace KWin;
     QTest::addColumn<ServerSideDecorationManagerInterface::Mode>("serverMode");
     QTest::addColumn<KWayland::Client::ServerSideDecoration::Mode>("clientMode");
 
@@ -147,8 +147,8 @@ void TestServerSideDecoration::testCreate_data()
 
 void TestServerSideDecoration::testCreate()
 {
-    using namespace KWaylandServer;
-    QFETCH(KWaylandServer::ServerSideDecorationManagerInterface::Mode, serverMode);
+    using namespace KWin;
+    QFETCH(KWin::ServerSideDecorationManagerInterface::Mode, serverMode);
     m_serverSideDecorationManagerInterface->setDefaultMode(serverMode);
     QCOMPARE(m_serverSideDecorationManagerInterface->defaultMode(), serverMode);
 
@@ -186,7 +186,7 @@ void TestServerSideDecoration::testCreate()
 
 void TestServerSideDecoration::testRequest_data()
 {
-    using namespace KWaylandServer;
+    using namespace KWin;
     QTest::addColumn<ServerSideDecorationManagerInterface::Mode>("defaultMode");
     QTest::addColumn<KWayland::Client::ServerSideDecoration::Mode>("clientMode");
     QTest::addColumn<KWayland::Client::ServerSideDecoration::Mode>("clientRequestMode");
@@ -212,8 +212,8 @@ void TestServerSideDecoration::testRequest_data()
 
 void TestServerSideDecoration::testRequest()
 {
-    using namespace KWaylandServer;
-    QFETCH(KWaylandServer::ServerSideDecorationManagerInterface::Mode, defaultMode);
+    using namespace KWin;
+    QFETCH(KWin::ServerSideDecorationManagerInterface::Mode, defaultMode);
     m_serverSideDecorationManagerInterface->setDefaultMode(defaultMode);
     QCOMPARE(m_serverSideDecorationManagerInterface->defaultMode(), defaultMode);
 
@@ -260,7 +260,7 @@ void TestServerSideDecoration::testRequest()
 
 void TestServerSideDecoration::testSurfaceDestroy()
 {
-    using namespace KWaylandServer;
+    using namespace KWin;
     QSignalSpy serverSurfaceCreated(m_compositorInterface, &CompositorInterface::surfaceCreated);
     QSignalSpy decorationCreated(m_serverSideDecorationManagerInterface, &ServerSideDecorationManagerInterface::decorationCreated);
 

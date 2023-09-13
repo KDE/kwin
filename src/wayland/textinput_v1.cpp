@@ -13,7 +13,7 @@
 #include "wayland/surface.h"
 #include <algorithm>
 
-namespace KWaylandServer
+namespace KWin
 {
 
 namespace
@@ -425,7 +425,7 @@ TextInputContentHints TextInputV1Interface::contentHints() const
     return d->contentHints;
 }
 
-TextInputContentPurpose KWaylandServer::TextInputV1Interface::contentPurpose() const
+TextInputContentPurpose TextInputV1Interface::contentPurpose() const
 {
     return d->contentPurpose;
 }

@@ -10,7 +10,7 @@
 #include <QObject>
 #include <memory>
 
-namespace KWaylandServer
+namespace KWin
 {
 class Display;
 class PrimarySelectionSourceV1Interface;
@@ -30,8 +30,8 @@ public:
     ~PrimarySelectionDeviceManagerV1Interface();
 
 Q_SIGNALS:
-    void dataSourceCreated(KWaylandServer::PrimarySelectionSourceV1Interface *dataSource);
-    void dataDeviceCreated(KWaylandServer::PrimarySelectionDeviceV1Interface *dataDevice);
+    void dataSourceCreated(KWin::PrimarySelectionSourceV1Interface *dataSource);
+    void dataDeviceCreated(KWin::PrimarySelectionDeviceV1Interface *dataDevice);
 
 private:
     std::unique_ptr<PrimarySelectionDeviceManagerV1InterfacePrivate> d;

@@ -18,30 +18,13 @@ struct wl_display;
 
 namespace KWin
 {
-class GraphicsBuffer;
-}
-
-namespace KWaylandServer
-{
-/**
- * @short KWayland Server.
- *
- * This namespace groups all classes related to the Server module.
- *
- * The main entry point into the KWaylandServer API is the Display class.
- * It allows to create a Wayland server and create various global objects on it.
- *
- * KWaylandServer is an API to easily create a head-less Wayland server with a
- * Qt style API.
- *
- * @see Display
- */
 
 class ClientConnection;
 class DisplayPrivate;
 class OutputInterface;
 class OutputDeviceV2Interface;
 class SeatInterface;
+class GraphicsBuffer;
 
 /**
  * @brief Class holding the Wayland server display loop.
@@ -132,7 +115,7 @@ public:
     /**
      * Returns the graphics buffer for the given @a resource, or @c null if there's no buffer.
      */
-    static KWin::GraphicsBuffer *bufferForResource(wl_resource *resource);
+    static GraphicsBuffer *bufferForResource(wl_resource *resource);
 
 private Q_SLOTS:
     void flush();
@@ -140,8 +123,8 @@ private Q_SLOTS:
 Q_SIGNALS:
     void socketNamesChanged();
     void runningChanged(bool);
-    void clientConnected(KWaylandServer::ClientConnection *);
-    void clientDisconnected(KWaylandServer::ClientConnection *);
+    void clientConnected(KWin::ClientConnection *);
+    void clientDisconnected(KWin::ClientConnection *);
 
 private:
     friend class DisplayPrivate;

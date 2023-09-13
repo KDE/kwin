@@ -7,7 +7,7 @@
 #include "display.h"
 #include "surface_p.h"
 
-namespace KWaylandServer
+namespace KWin
 {
 
 static constexpr uint32_t s_version = 1;

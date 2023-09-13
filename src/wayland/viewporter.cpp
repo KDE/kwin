@@ -11,7 +11,7 @@
 
 static const int s_version = 1;
 
-namespace KWaylandServer
+namespace KWin
 {
 class ViewporterInterfacePrivate : public QtWaylandServer::wp_viewporter
 {
@@ -143,6 +143,6 @@ ViewporterInterface::~ViewporterInterface()
 {
 }
 
-} // namespace KWaylandServer
+} // namespace KWin
 
 #include "moc_viewporter.cpp"

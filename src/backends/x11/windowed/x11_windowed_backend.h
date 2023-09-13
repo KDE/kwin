@@ -99,7 +99,7 @@ public:
     explicit X11WindowedBackend(const X11WindowedBackendOptions &options);
     ~X11WindowedBackend() override;
 
-    Display *display() const;
+    ::Display *display() const;
     xcb_connection_t *connection() const;
     xcb_screen_t *screen() const;
     int screenNumer() const;
@@ -155,7 +155,7 @@ private:
 
     xcb_atom_t m_protocols = XCB_ATOM_NONE;
     xcb_atom_t m_deleteWindowProtocol = XCB_ATOM_NONE;
-    Display *m_display = nullptr;
+    ::Display *m_display = nullptr;
     bool m_keyboardGrabbed = false;
     std::unique_ptr<QSocketNotifier> m_eventNotifier;
 

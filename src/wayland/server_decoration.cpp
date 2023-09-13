@@ -14,7 +14,7 @@
 
 #include <qwayland-server-server-decoration.h>
 
-namespace KWaylandServer
+namespace KWin
 {
 static const quint32 s_version = 1;
 

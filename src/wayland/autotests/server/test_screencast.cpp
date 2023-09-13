@@ -82,11 +82,11 @@ private:
     KWayland::Client::EventQueue *m_queue = nullptr;
     ScreencastV1 *m_screencast = nullptr;
 
-    KWaylandServer::ScreencastV1Interface *m_screencastInterface = nullptr;
+    KWin::ScreencastV1Interface *m_screencastInterface = nullptr;
 
-    QPointer<KWaylandServer::ScreencastStreamV1Interface> m_triggered = nullptr;
+    QPointer<KWin::ScreencastStreamV1Interface> m_triggered = nullptr;
     QThread *m_thread;
-    KWaylandServer::Display *m_display = nullptr;
+    KWin::Display *m_display = nullptr;
 };
 
 static const QString s_socketName = QStringLiteral("kwin-wayland-server-screencast-test-0");
@@ -94,7 +94,7 @@ static const QString s_socketName = QStringLiteral("kwin-wayland-server-screenca
 void TestScreencastV1Interface::initTestCase()
 {
     delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = new KWin::Display(this);
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
@@ -119,11 +119,11 @@ void TestScreencastV1Interface::initTestCase()
     KWayland::Client::Registry registry;
 
     QSignalSpy screencastSpy(&registry, &KWayland::Client::Registry::interfacesAnnounced);
-    m_screencastInterface = new KWaylandServer::ScreencastV1Interface(m_display, this);
+    m_screencastInterface = new KWin::ScreencastV1Interface(m_display, this);
     connect(m_screencastInterface,
-            &KWaylandServer::ScreencastV1Interface::windowScreencastRequested,
+            &KWin::ScreencastV1Interface::windowScreencastRequested,
             this,
-            [this](KWaylandServer::ScreencastStreamV1Interface *stream, const QString &winid) {
+            [this](KWin::ScreencastStreamV1Interface *stream, const QString &winid) {
                 stream->sendCreated(123);
                 m_triggered = stream;
             });
@@ -174,7 +174,7 @@ void TestScreencastV1Interface::testCreate()
     QVERIFY(spyWorking.count() || spyWorking.wait());
     QVERIFY(m_triggered);
 
-    QSignalSpy spyStop(m_triggered, &KWaylandServer::ScreencastStreamV1Interface::finished);
+    QSignalSpy spyStop(m_triggered, &KWin::ScreencastStreamV1Interface::finished);
     stream->close();
     QVERIFY(spyStop.count() || spyStop.wait());
 }

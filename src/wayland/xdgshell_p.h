@@ -11,7 +11,7 @@
 
 #include "surface_p.h"
 
-namespace KWaylandServer
+namespace KWin
 {
 class XdgToplevelDecorationV1Interface;
 
@@ -190,4 +190,4 @@ protected:
     void xdg_popup_reposition(Resource *resource, struct ::wl_resource *positioner, uint32_t token) override;
 };
 
-} // namespace KWaylandServer
+} // namespace KWin

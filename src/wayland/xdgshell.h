@@ -14,7 +14,7 @@
 
 struct wl_resource;
 
-namespace KWaylandServer
+namespace KWin
 {
 class Display;
 class OutputInterface;
@@ -350,7 +350,7 @@ Q_SIGNALS:
      * This signal is emitted when the toplevel has requested the window menu to be shown at
      * \a pos. The \a seat and the \a serial indicate the user action that triggerred the request.
      */
-    void windowMenuRequested(KWaylandServer::SeatInterface *seat, const QPoint &pos, quint32 serial);
+    void windowMenuRequested(KWin::SeatInterface *seat, const QPoint &pos, quint32 serial);
 
     /**
      * This signal is emitted when the toplevel's minimum size has been changed.
@@ -366,14 +366,14 @@ Q_SIGNALS:
      * This signal is emitted when the toplevel wants to be interactively moved. The \a seat and
      * the \a serial indicate the user action in response to which this request has been issued.
      */
-    void moveRequested(KWaylandServer::SeatInterface *seat, quint32 serial);
+    void moveRequested(KWin::SeatInterface *seat, quint32 serial);
 
     /**
      * This signal is emitted when the toplevel wants to be interactively resized by dragging
      * the specified \a anchor. The \a seat and the \a serial indicate the user action
      * in response to which this request has been issued.
      */
-    void resizeRequested(KWaylandServer::SeatInterface *seat, KWaylandServer::XdgToplevelInterface::ResizeAnchor anchor, quint32 serial);
+    void resizeRequested(KWin::SeatInterface *seat, KWin::XdgToplevelInterface::ResizeAnchor anchor, quint32 serial);
 
     /**
      * This signal is emitted when the toplevel surface wants to become maximized.
@@ -388,7 +388,7 @@ Q_SIGNALS:
     /**
      * This signal is emitted when the toplevel wants to be shown in the full screen mode.
      */
-    void fullscreenRequested(KWaylandServer::OutputInterface *output);
+    void fullscreenRequested(KWin::OutputInterface *output);
 
     /**
      * This signal is emitted when the toplevel surface wants to leave the full screen mode.
@@ -555,9 +555,9 @@ private:
     friend class XdgPopupInterfacePrivate;
 };
 
-} // namespace KWaylandServer
+} // namespace KWin
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(KWaylandServer::XdgToplevelInterface::States)
-Q_DECLARE_OPERATORS_FOR_FLAGS(KWaylandServer::XdgToplevelInterface::Capabilities)
-Q_DECLARE_METATYPE(KWaylandServer::XdgToplevelInterface::State)
-Q_DECLARE_METATYPE(KWaylandServer::XdgToplevelInterface::States)
+Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::XdgToplevelInterface::States)
+Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::XdgToplevelInterface::Capabilities)
+Q_DECLARE_METATYPE(KWin::XdgToplevelInterface::State)
+Q_DECLARE_METATYPE(KWin::XdgToplevelInterface::States)

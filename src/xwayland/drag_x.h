@@ -41,8 +41,8 @@ public:
     DragEventReply moveFilter(Window *target) override;
     bool handleClientMessage(xcb_client_message_event_t *event) override;
 
-    void setDragAndDropAction(KWaylandServer::DataDeviceManagerInterface::DnDAction action);
-    KWaylandServer::DataDeviceManagerInterface::DnDAction selectedDragAndDropAction();
+    void setDragAndDropAction(DataDeviceManagerInterface::DnDAction action);
+    DataDeviceManagerInterface::DnDAction selectedDragAndDropAction();
 
     X11Source *x11Source() const
     {
@@ -67,7 +67,7 @@ private:
     QVector<WlVisit *> m_oldVisits;
 
     bool m_performed = false;
-    KWaylandServer::DataDeviceManagerInterface::DnDAction m_lastSelectedDragAndDropAction = KWaylandServer::DataDeviceManagerInterface::DnDAction::None;
+    DataDeviceManagerInterface::DnDAction m_lastSelectedDragAndDropAction = DataDeviceManagerInterface::DnDAction::None;
 
     Q_DISABLE_COPY(XToWlDrag)
 };
@@ -134,7 +134,7 @@ private:
     uint32_t m_version = 0;
 
     xcb_atom_t m_actionAtom;
-    KWaylandServer::DataDeviceManagerInterface::DnDAction m_action = KWaylandServer::DataDeviceManagerInterface::DnDAction::None;
+    DataDeviceManagerInterface::DnDAction m_action = DataDeviceManagerInterface::DnDAction::None;
 
     bool m_mapped = false;
     bool m_entered = false;

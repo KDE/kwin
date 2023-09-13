@@ -8,23 +8,23 @@
 #include "display.h"
 #include "surface_p.h"
 
-namespace KWaylandServer
+namespace KWin
 {
 
 static constexpr uint32_t s_version = 1;
 
-static KWin::ContentType waylandToKwinContentType(uint32_t type)
+static ContentType waylandToKwinContentType(uint32_t type)
 {
     using Type = QtWaylandServer::wp_content_type_v1::type;
     switch (type) {
     case Type::type_photo:
-        return KWin::ContentType::Photo;
+        return ContentType::Photo;
     case Type::type_video:
-        return KWin::ContentType::Video;
+        return ContentType::Video;
     case Type::type_game:
-        return KWin::ContentType::Game;
+        return ContentType::Game;
     default:
-        return KWin::ContentType::None;
+        return ContentType::None;
     }
 }
 
@@ -70,7 +70,7 @@ void ContentTypeV1Interface::wp_content_type_v1_destroy(Resource *resource)
 {
     if (m_surface) {
         SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(m_surface);
-        surfacePrivate->pending->contentType = KWin::ContentType::None;
+        surfacePrivate->pending->contentType = ContentType::None;
         surfacePrivate->pending->contentTypeIsSet = true;
     }
     wl_resource_destroy(resource->handle);

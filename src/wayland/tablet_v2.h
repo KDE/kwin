@@ -13,7 +13,7 @@
 
 struct wl_resource;
 
-namespace KWaylandServer
+namespace KWin
 {
 class ClientConnection;
 class Display;
@@ -167,7 +167,7 @@ public:
     SurfaceInterface *currentSurface() const;
 
 Q_SIGNALS:
-    void feedback(KWaylandServer::ClientConnection *client, quint32 button, const QString &description, quint32 serial);
+    void feedback(KWin::ClientConnection *client, quint32 button, const QString &description, quint32 serial);
 
 private:
     friend class TabletSeatV2Interface;
@@ -303,4 +303,4 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(KWaylandServer::TabletSeatV2Interface *)
+Q_DECLARE_METATYPE(KWin::TabletSeatV2Interface *)

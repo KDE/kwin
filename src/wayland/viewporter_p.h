@@ -10,7 +10,7 @@
 
 #include <QPointer>
 
-namespace KWaylandServer
+namespace KWin
 {
 class SurfaceInterface;
 
@@ -31,4 +31,4 @@ protected:
     void wp_viewport_set_destination(Resource *resource, int32_t width, int32_t height) override;
 };
 
-} // namespace KWaylandServer
+} // namespace KWin

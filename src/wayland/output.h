@@ -21,7 +21,7 @@ namespace KWin
 class Output;
 }
 
-namespace KWaylandServer
+namespace KWin
 {
 class ClientConnection;
 class Display;
@@ -36,13 +36,13 @@ class KWIN_EXPORT OutputInterface : public QObject
     Q_OBJECT
 
 public:
-    explicit OutputInterface(Display *display, KWin::Output *handle, QObject *parent = nullptr);
+    explicit OutputInterface(Display *display, Output *handle, QObject *parent = nullptr);
     ~OutputInterface() override;
 
     bool isRemoved() const;
     void remove();
 
-    KWin::Output *handle() const;
+    Output *handle() const;
 
     /**
      * @returns all wl_resources bound for the @p client
@@ -76,4 +76,4 @@ private:
     std::unique_ptr<OutputInterfacePrivate> d;
 };
 
-} // namespace KWaylandServer
+} // namespace KWin

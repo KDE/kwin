@@ -47,7 +47,7 @@ public:
     ~X11StandaloneBackend() override;
     bool initialize() override;
 
-    Display *display() const;
+    ::Display *display() const;
     xcb_connection_t *connection() const;
     xcb_window_t rootWindow() const;
 
@@ -95,7 +95,7 @@ private:
     std::unique_ptr<XInputIntegration> m_xinputIntegration;
 #endif
     std::unique_ptr<QTimer> m_updateOutputsTimer;
-    Display *m_x11Display;
+    ::Display *m_x11Display;
     std::unique_ptr<WindowSelector> m_windowSelector;
     std::unique_ptr<X11EventFilter> m_screenEdgesFilter;
     std::unique_ptr<X11EventFilter> m_randrEventFilter;

@@ -11,7 +11,7 @@
 
 #include "qwayland-server-kde-lockscreen-overlay-v1.h"
 
-namespace KWaylandServer
+namespace KWin
 {
 static constexpr int s_version = 1;
 

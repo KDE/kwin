@@ -13,13 +13,10 @@
 // Include with base class for effects.
 #include "libkwineffects/kwineffects.h"
 
-namespace KWaylandServer
-{
-class SlideManagerInterface;
-}
-
 namespace KWin
 {
+
+class SlideManagerInterface;
 
 class SlidingPopupsEffect : public Effect
 {
@@ -66,7 +63,7 @@ private:
     void setupSlideData(EffectWindow *w);
     void setupInputPanelSlide();
 
-    static KWaylandServer::SlideManagerInterface *s_slideManager;
+    static SlideManagerInterface *s_slideManager;
     static QTimer *s_slideManagerRemoveTimer;
     long m_atom = 0;
 

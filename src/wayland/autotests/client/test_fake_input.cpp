@@ -17,7 +17,7 @@
 
 #include <linux/input.h>
 
-using namespace KWaylandServer;
+using namespace KWin;
 
 Q_DECLARE_METATYPE(Qt::MouseButton)
 
@@ -42,7 +42,7 @@ private Q_SLOTS:
     void testKeyboardKeyLinux();
 
 private:
-    KWaylandServer::Display *m_display = nullptr;
+    KWin::Display *m_display = nullptr;
     FakeInputInterface *m_fakeInputInterface = nullptr;
     FakeInputDeviceInterface *m_device = nullptr;
     KWayland::Client::ConnectionThread *m_connection = nullptr;
@@ -56,7 +56,7 @@ static const QString s_socketName = QStringLiteral("kwayland-test-fake-input-0")
 void FakeInputTest::init()
 {
     delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = new KWin::Display(this);
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());

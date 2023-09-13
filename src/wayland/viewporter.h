@@ -11,7 +11,7 @@
 #include <QObject>
 #include <memory>
 
-namespace KWaylandServer
+namespace KWin
 {
 class Display;
 class ViewporterInterfacePrivate;
@@ -36,4 +36,4 @@ private:
     std::unique_ptr<ViewporterInterfacePrivate> d;
 };
 
-} // namespace KWaylandServer
+} // namespace KWin

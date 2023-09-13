@@ -14,7 +14,7 @@
 
 #include <optional>
 
-namespace KWaylandServer
+namespace KWin
 {
 class DataDeviceInterface;
 class AbstractDataSource;
@@ -65,4 +65,4 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(KWaylandServer::DataOfferInterface *)
+Q_DECLARE_METATYPE(KWin::DataOfferInterface *)

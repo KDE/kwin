@@ -14,7 +14,7 @@
 // system
 #include <unistd.h>
 
-namespace KWaylandServer
+namespace KWin
 {
 class DataControlOfferV1InterfacePrivate : public QtWaylandServer::zwlr_data_control_offer_v1
 {

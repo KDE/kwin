@@ -12,7 +12,7 @@
 #include <QObject>
 #include <memory>
 
-namespace KWaylandServer
+namespace KWin
 {
 class SeatInterface;
 class SurfaceInterface;
@@ -45,4 +45,4 @@ private:
     friend class TouchInterfacePrivate;
 };
 
-} // namespace KWaylandServer
+} // namespace KWin

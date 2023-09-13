@@ -29,12 +29,12 @@ namespace KWin
 {
 
 ScreencastManager::ScreencastManager()
-    : m_screencast(new KWaylandServer::ScreencastV1Interface(waylandServer()->display(), this))
+    : m_screencast(new ScreencastV1Interface(waylandServer()->display(), this))
 {
-    connect(m_screencast, &KWaylandServer::ScreencastV1Interface::windowScreencastRequested, this, &ScreencastManager::streamWindow);
-    connect(m_screencast, &KWaylandServer::ScreencastV1Interface::outputScreencastRequested, this, &ScreencastManager::streamWaylandOutput);
-    connect(m_screencast, &KWaylandServer::ScreencastV1Interface::virtualOutputScreencastRequested, this, &ScreencastManager::streamVirtualOutput);
-    connect(m_screencast, &KWaylandServer::ScreencastV1Interface::regionScreencastRequested, this, &ScreencastManager::streamRegion);
+    connect(m_screencast, &ScreencastV1Interface::windowScreencastRequested, this, &ScreencastManager::streamWindow);
+    connect(m_screencast, &ScreencastV1Interface::outputScreencastRequested, this, &ScreencastManager::streamWaylandOutput);
+    connect(m_screencast, &ScreencastV1Interface::virtualOutputScreencastRequested, this, &ScreencastManager::streamVirtualOutput);
+    connect(m_screencast, &ScreencastV1Interface::regionScreencastRequested, this, &ScreencastManager::streamRegion);
 }
 
 static QRegion scaleRegion(const QRegion &_region, qreal scale)
@@ -96,9 +96,9 @@ private:
     QTimer m_timer;
 };
 
-void ScreencastManager::streamWindow(KWaylandServer::ScreencastStreamV1Interface *waylandStream,
+void ScreencastManager::streamWindow(ScreencastStreamV1Interface *waylandStream,
                                      const QString &winid,
-                                     KWaylandServer::ScreencastV1Interface::CursorMode mode)
+                                     ScreencastV1Interface::CursorMode mode)
 {
     auto window = Workspace::self()->findWindow(QUuid(winid));
     if (!window) {
@@ -108,7 +108,7 @@ void ScreencastManager::streamWindow(KWaylandServer::ScreencastStreamV1Interface
 
     auto stream = new WindowStream(window, this);
     stream->setCursorMode(mode, 1, window->clientGeometry());
-    if (mode != KWaylandServer::ScreencastV1Interface::CursorMode::Hidden) {
+    if (mode != ScreencastV1Interface::CursorMode::Hidden) {
         connect(window, &Window::clientGeometryChanged, stream, [window, stream, mode]() {
             stream->setCursorMode(mode, 1, window->clientGeometry().toRect());
         });
@@ -117,29 +117,29 @@ void ScreencastManager::streamWindow(KWaylandServer::ScreencastStreamV1Interface
     integrateStreams(waylandStream, stream);
 }
 
-void ScreencastManager::streamVirtualOutput(KWaylandServer::ScreencastStreamV1Interface *stream,
+void ScreencastManager::streamVirtualOutput(ScreencastStreamV1Interface *stream,
                                             const QString &name,
                                             const QSize &size,
                                             double scale,
-                                            KWaylandServer::ScreencastV1Interface::CursorMode mode)
+                                            ScreencastV1Interface::CursorMode mode)
 {
     auto output = kwinApp()->outputBackend()->createVirtualOutput(name, size, scale);
     streamOutput(stream, output, mode);
-    connect(stream, &KWaylandServer::ScreencastStreamV1Interface::finished, output, [output] {
+    connect(stream, &ScreencastStreamV1Interface::finished, output, [output] {
         kwinApp()->outputBackend()->removeVirtualOutput(output);
     });
 }
 
-void ScreencastManager::streamWaylandOutput(KWaylandServer::ScreencastStreamV1Interface *waylandStream,
-                                            KWaylandServer::OutputInterface *output,
-                                            KWaylandServer::ScreencastV1Interface::CursorMode mode)
+void ScreencastManager::streamWaylandOutput(ScreencastStreamV1Interface *waylandStream,
+                                            OutputInterface *output,
+                                            ScreencastV1Interface::CursorMode mode)
 {
     streamOutput(waylandStream, output->handle(), mode);
 }
 
-void ScreencastManager::streamOutput(KWaylandServer::ScreencastStreamV1Interface *waylandStream,
+void ScreencastManager::streamOutput(ScreencastStreamV1Interface *waylandStream,
                                      Output *streamOutput,
-                                     KWaylandServer::ScreencastV1Interface::CursorMode mode)
+                                     ScreencastV1Interface::CursorMode mode)
 {
     if (!streamOutput) {
         waylandStream->sendFailed(i18n("Could not find output"));
@@ -166,7 +166,7 @@ static QString rectToString(const QRect &rect)
     return QStringLiteral("%1,%2 %3x%4").arg(rect.x()).arg(rect.y()).arg(rect.width()).arg(rect.height());
 }
 
-void ScreencastManager::streamRegion(KWaylandServer::ScreencastStreamV1Interface *waylandStream, const QRect &geometry, qreal scale, KWaylandServer::ScreencastV1Interface::CursorMode mode)
+void ScreencastManager::streamRegion(ScreencastStreamV1Interface *waylandStream, const QRect &geometry, qreal scale, ScreencastV1Interface::CursorMode mode)
 {
     if (!geometry.isValid()) {
         waylandStream->sendFailed(i18n("Invalid region"));
@@ -206,9 +206,9 @@ void ScreencastManager::streamRegion(KWaylandServer::ScreencastStreamV1Interface
     integrateStreams(waylandStream, stream);
 }
 
-void ScreencastManager::integrateStreams(KWaylandServer::ScreencastStreamV1Interface *waylandStream, ScreenCastStream *stream)
+void ScreencastManager::integrateStreams(ScreencastStreamV1Interface *waylandStream, ScreenCastStream *stream)
 {
-    connect(waylandStream, &KWaylandServer::ScreencastStreamV1Interface::finished, stream, &ScreenCastStream::stop);
+    connect(waylandStream, &ScreencastStreamV1Interface::finished, stream, &ScreenCastStream::stop);
     connect(stream, &ScreenCastStream::stopStreaming, waylandStream, [stream, waylandStream] {
         waylandStream->sendClosed();
         stream->deleteLater();

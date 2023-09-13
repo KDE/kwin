@@ -14,13 +14,10 @@
 
 #include <unordered_map>
 
-namespace KWaylandServer
-{
-class BlurManagerInterface;
-}
-
 namespace KWin
 {
+
+class BlurManagerInterface;
 
 struct BlurRenderData
 {
@@ -144,7 +141,7 @@ private:
     QMap<EffectWindow *, QMetaObject::Connection> windowBlurChangedConnections;
     std::unordered_map<EffectWindow *, BlurEffectData> m_windows;
 
-    static KWaylandServer::BlurManagerInterface *s_blurManager;
+    static BlurManagerInterface *s_blurManager;
     static QTimer *s_blurManagerRemoveTimer;
 };
 

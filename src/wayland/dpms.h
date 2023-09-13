@@ -11,7 +11,7 @@
 
 #include <memory>
 
-namespace KWaylandServer
+namespace KWin
 {
 class Display;
 class DpmsManagerInterfacePrivate;
@@ -36,13 +36,13 @@ class DpmsManagerInterfacePrivate;
  * @code
  * // We have our OutputInterface called output.
  * output->setDpmsSupported(true);
- * output->setDpmsMode(KWin::Output::DpmsMode::On);
+ * output->setDpmsMode(Output::DpmsMode::On);
  * @endcode
  *
  * To connect to Dpms change requests use:
  * @code
- * connect(output, &KWin::Output::DpmsModeRequested,
- *         [] (KWaylandServer::KWin::Output::DpmsMode requestedMode) { qDebug() << "Mode change requested"; });
+ * connect(output, &Output::DpmsModeRequested,
+ *         [] (Output::DpmsMode requestedMode) { qDebug() << "Mode change requested"; });
  * @endcode
  *
  * @see Display

@@ -10,7 +10,7 @@
 #include "abstract_data_source.h"
 #include "primaryselectiondevicemanager_v1.h"
 
-namespace KWaylandServer
+namespace KWin
 {
 class PrimarySelectionSourceV1InterfacePrivate;
 
@@ -41,4 +41,4 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(KWaylandServer::PrimarySelectionSourceV1Interface *)
+Q_DECLARE_METATYPE(KWin::PrimarySelectionSourceV1Interface *)

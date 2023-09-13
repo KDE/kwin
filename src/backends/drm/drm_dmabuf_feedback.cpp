@@ -32,7 +32,7 @@ void DmabufFeedback::renderingSurface()
     m_attemptedThisFrame = false;
 }
 
-void DmabufFeedback::scanoutSuccessful(KWaylandServer::SurfaceInterface *surface)
+void DmabufFeedback::scanoutSuccessful(SurfaceInterface *surface)
 {
     if (surface != m_surface) {
         if (m_surface && m_surface->dmabufFeedbackV1()) {
@@ -43,7 +43,7 @@ void DmabufFeedback::scanoutSuccessful(KWaylandServer::SurfaceInterface *surface
     }
 }
 
-void DmabufFeedback::scanoutFailed(KWaylandServer::SurfaceInterface *surface, const QMap<uint32_t, QVector<uint64_t>> &formats)
+void DmabufFeedback::scanoutFailed(SurfaceInterface *surface, const QMap<uint32_t, QVector<uint64_t>> &formats)
 {
     m_attemptedThisFrame = true;
     if (surface != m_surface) {
@@ -57,10 +57,10 @@ void DmabufFeedback::scanoutFailed(KWaylandServer::SurfaceInterface *surface, co
         const DmaBufAttributes *dmabufAttrs = surface->buffer()->dmabufAttributes();
         if (!m_attemptedFormats[dmabufAttrs->format].contains(dmabufAttrs->modifier)) {
             m_attemptedFormats[dmabufAttrs->format] << dmabufAttrs->modifier;
-            QVector<KWaylandServer::LinuxDmaBufV1Feedback::Tranche> scanoutTranches;
+            QVector<LinuxDmaBufV1Feedback::Tranche> scanoutTranches;
             const auto tranches = m_eglBackend->tranches();
             for (const auto &tranche : tranches) {
-                KWaylandServer::LinuxDmaBufV1Feedback::Tranche scanoutTranche;
+                LinuxDmaBufV1Feedback::Tranche scanoutTranche;
                 for (auto it = tranche.formatTable.constBegin(); it != tranche.formatTable.constEnd(); it++) {
                     const uint32_t format = it.key();
                     const auto trancheModifiers = it.value();
@@ -73,7 +73,7 @@ void DmabufFeedback::scanoutFailed(KWaylandServer::SurfaceInterface *surface, co
                 }
                 if (!scanoutTranche.formatTable.isEmpty()) {
                     scanoutTranche.device = m_gpu->deviceId();
-                    scanoutTranche.flags = KWaylandServer::LinuxDmaBufV1Feedback::TrancheFlag::Scanout;
+                    scanoutTranche.flags = LinuxDmaBufV1Feedback::TrancheFlag::Scanout;
                     scanoutTranches << scanoutTranche;
                 }
             }

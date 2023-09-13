@@ -14,7 +14,7 @@
 
 struct wl_resource;
 
-namespace KWaylandServer
+namespace KWin
 {
 class Display;
 class SubCompositorInterfacePrivate;
@@ -42,7 +42,7 @@ Q_SIGNALS:
     /**
      * This signal is emitted when a new sub-surface @subsurface has been created.
      */
-    void subSurfaceCreated(KWaylandServer::SubSurfaceInterface *subsurface);
+    void subSurfaceCreated(KWin::SubSurfaceInterface *subsurface);
 
 private:
     std::unique_ptr<SubCompositorInterfacePrivate> d;
@@ -115,7 +115,7 @@ Q_SIGNALS:
     /**
      * This signal is emitted when the commit mode of the sub-surface has changed.
      */
-    void modeChanged(KWaylandServer::SubSurfaceInterface::Mode mode);
+    void modeChanged(KWin::SubSurfaceInterface::Mode mode);
 
 private:
     SubSurfaceInterface(SurfaceInterface *surface, SurfaceInterface *parent, wl_resource *resource);
@@ -129,6 +129,6 @@ private:
     friend class SubCompositorInterfacePrivate;
 };
 
-} // namespace KWaylandServer
+} // namespace KWin
 
-Q_DECLARE_METATYPE(KWaylandServer::SubSurfaceInterface::Mode)
+Q_DECLARE_METATYPE(KWin::SubSurfaceInterface::Mode)

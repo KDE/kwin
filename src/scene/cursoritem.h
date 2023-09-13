@@ -24,7 +24,7 @@ public:
 
 private:
     void refresh();
-    void setSurface(KWaylandServer::SurfaceInterface *surface);
+    void setSurface(SurfaceInterface *surface);
     void setImage(const QImage &image);
 
     std::unique_ptr<ImageItem> m_imageItem;

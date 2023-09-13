@@ -12,7 +12,7 @@
 #include <QObject>
 #include <memory>
 
-namespace KWaylandServer
+namespace KWin
 {
 class Display;
 class PointerGesturesV1InterfacePrivate;
@@ -35,4 +35,4 @@ private:
     std::unique_ptr<PointerGesturesV1InterfacePrivate> d;
 };
 
-} // namespace KWaylandServer
+} // namespace KWin

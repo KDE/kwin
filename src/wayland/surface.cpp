@@ -28,7 +28,7 @@
 #include <algorithm>
 #include <cmath>
 
-namespace KWaylandServer
+namespace KWin
 {
 
 static QRegion map_helper(const QMatrix4x4 &matrix, const QRegion &region)
@@ -364,7 +364,7 @@ void SurfaceInterfacePrivate::surface_set_buffer_transform(Resource *resource, i
         wl_resource_post_error(resource->handle, error_invalid_transform, "buffer transform must be a valid transform (%d specified)", transform);
         return;
     }
-    pending->bufferTransform = KWin::OutputTransform::Kind(transform);
+    pending->bufferTransform = OutputTransform::Kind(transform);
     pending->bufferTransformIsSet = true;
 }
 
@@ -477,34 +477,34 @@ QMatrix4x4 SurfaceInterfacePrivate::buildSurfaceToBufferMatrix()
     surfaceToBufferMatrix.scale(scaleOverride, scaleOverride);
 
     switch (current->bufferTransform.kind()) {
-    case KWin::OutputTransform::Normal:
-    case KWin::OutputTransform::Flipped:
+    case OutputTransform::Normal:
+    case OutputTransform::Flipped:
         break;
-    case KWin::OutputTransform::Rotated90:
-    case KWin::OutputTransform::Flipped90:
+    case OutputTransform::Rotated90:
+    case OutputTransform::Flipped90:
         surfaceToBufferMatrix.translate(0, bufferSize.height() / current->bufferScale);
         surfaceToBufferMatrix.rotate(-90, 0, 0, 1);
         break;
-    case KWin::OutputTransform::Rotated180:
-    case KWin::OutputTransform::Flipped180:
+    case OutputTransform::Rotated180:
+    case OutputTransform::Flipped180:
         surfaceToBufferMatrix.translate(bufferSize.width() / current->bufferScale, bufferSize.height() / current->bufferScale);
         surfaceToBufferMatrix.rotate(-180, 0, 0, 1);
         break;
-    case KWin::OutputTransform::Rotated270:
-    case KWin::OutputTransform::Flipped270:
+    case OutputTransform::Rotated270:
+    case OutputTransform::Flipped270:
         surfaceToBufferMatrix.translate(bufferSize.width() / current->bufferScale, 0);
         surfaceToBufferMatrix.rotate(-270, 0, 0, 1);
         break;
     }
 
     switch (current->bufferTransform.kind()) {
-    case KWin::OutputTransform::Flipped:
-    case KWin::OutputTransform::Flipped180:
+    case OutputTransform::Flipped:
+    case OutputTransform::Flipped180:
         surfaceToBufferMatrix.translate(bufferSize.width() / current->bufferScale, 0);
         surfaceToBufferMatrix.scale(-1, 1);
         break;
-    case KWin::OutputTransform::Flipped90:
-    case KWin::OutputTransform::Flipped270:
+    case OutputTransform::Flipped90:
+    case OutputTransform::Flipped270:
         surfaceToBufferMatrix.translate(bufferSize.height() / current->bufferScale, 0);
         surfaceToBufferMatrix.scale(-1, 1);
         break;
@@ -829,12 +829,12 @@ QRectF SurfaceInterface::bufferSourceBox() const
     return d->bufferSourceBox;
 }
 
-KWin::OutputTransform SurfaceInterface::bufferTransform() const
+OutputTransform SurfaceInterface::bufferTransform() const
 {
     return d->current->bufferTransform;
 }
 
-KWin::GraphicsBuffer *SurfaceInterface::buffer() const
+GraphicsBuffer *SurfaceInterface::buffer() const
 {
     return d->bufferRef.buffer();
 }
@@ -1058,7 +1058,7 @@ LinuxDmaBufV1Feedback *SurfaceInterface::dmabufFeedbackV1() const
     return d->dmabufFeedbackV1.get();
 }
 
-KWin::ContentType SurfaceInterface::contentType() const
+ContentType SurfaceInterface::contentType() const
 {
     return d->current->contentType;
 }
@@ -1147,7 +1147,7 @@ void SurfaceInterface::setPreferredBufferScale(qreal scale)
     }
 }
 
-void SurfaceInterface::setPreferredBufferTransform(KWin::OutputTransform transform)
+void SurfaceInterface::setPreferredBufferTransform(OutputTransform transform)
 {
     if (transform == d->preferredBufferTransform) {
         return;
@@ -1186,6 +1186,6 @@ void SurfaceInterface::setLastTransaction(Transaction *transaction)
     d->lastTransaction = transaction;
 }
 
-} // namespace KWaylandServer
+} // namespace KWin
 
 #include "moc_surface.cpp"

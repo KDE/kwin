@@ -10,9 +10,7 @@
 #include "wayland/surface_p.h"
 #include "wayland/transaction_p.h"
 
-using namespace KWin;
-
-namespace KWaylandServer
+namespace KWin
 {
 
 TransactionDmaBufLocker *TransactionDmaBufLocker::get(GraphicsBuffer *buffer)
@@ -270,6 +268,6 @@ void Transaction::commit()
     }
 }
 
-} // namespace KWaylandServer
+} // namespace KWin
 
 #include "moc_transaction.cpp"

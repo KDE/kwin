@@ -14,13 +14,9 @@
 
 class QProcess;
 
-namespace KWaylandServer
-{
-class AbstractDropHandler;
-}
-
 namespace KWin
 {
+class AbstractDropHandler;
 class Window;
 
 namespace Xwl
@@ -39,7 +35,7 @@ class KWIN_EXPORT XwaylandInterface
 {
 public:
     virtual Xwl::DragEventReply dragMoveFilter(Window *target) = 0;
-    virtual KWaylandServer::AbstractDropHandler *xwlDropHandler() = 0;
+    virtual AbstractDropHandler *xwlDropHandler() = 0;
 
 protected:
     explicit XwaylandInterface() = default;

@@ -424,12 +424,12 @@ bool ScreenCastStream::createStream()
         return false;
     }
 
-    if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Embedded) {
+    if (m_cursor.mode == ScreencastV1Interface::Embedded) {
         connect(Cursors::self(), &Cursors::currentCursorChanged, this, &ScreenCastStream::invalidateCursor);
         connect(Cursors::self(), &Cursors::positionChanged, this, [this] {
             recordFrame({});
         });
-    } else if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Metadata) {
+    } else if (m_cursor.mode == ScreencastV1Interface::Metadata) {
         connect(Cursors::self(), &Cursors::currentCursorChanged, this, &ScreenCastStream::invalidateCursor);
         connect(Cursors::self(), &Cursors::positionChanged, this, &ScreenCastStream::recordCursor);
     }
@@ -534,7 +534,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
         m_source->render(spa_data, m_videoFormat.format);
 
         auto cursor = Cursors::self()->currentCursor();
-        if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Embedded && exclusiveContains(m_cursor.viewport, cursor->pos())) {
+        if (m_cursor.mode == ScreencastV1Interface::Embedded && exclusiveContains(m_cursor.viewport, cursor->pos())) {
             QImage dest(data, size.width(), size.height(), stride, hasAlpha ? QImage::Format_RGBA8888_Premultiplied : QImage::Format_RGB888);
             QPainter painter(&dest);
             const auto position = (cursor->pos() - m_cursor.viewport.topLeft() - cursor->hotspot()) * m_cursor.scale;
@@ -556,7 +556,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
         m_source->render(buf->framebuffer());
 
         auto cursor = Cursors::self()->currentCursor();
-        if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Embedded && exclusiveContains(m_cursor.viewport, cursor->pos())) {
+        if (m_cursor.mode == ScreencastV1Interface::Embedded && exclusiveContains(m_cursor.viewport, cursor->pos())) {
             if (m_cursor.invalid) {
                 m_cursor.invalid = false;
                 const PlatformCursorImage cursorImage = kwinApp()->cursorImage();
@@ -598,7 +598,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
         }
     }
 
-    if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Metadata) {
+    if (m_cursor.mode == ScreencastV1Interface::Metadata) {
         sendCursorData(Cursors::self()->currentCursor(),
                        (spa_meta_cursor *)spa_buffer_find_meta_data(spa_buffer, SPA_META_Cursor, sizeof(spa_meta_cursor)));
     }
@@ -873,7 +873,7 @@ void ScreenCastStream::sendCursorData(Cursor *cursor, spa_meta_cursor *spa_meta_
     }
 }
 
-void ScreenCastStream::setCursorMode(KWaylandServer::ScreencastV1Interface::CursorMode mode, qreal scale, const QRectF &viewport)
+void ScreenCastStream::setCursorMode(ScreencastV1Interface::CursorMode mode, qreal scale, const QRectF &viewport)
 {
     m_cursor.mode = mode;
     m_cursor.scale = scale;

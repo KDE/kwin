@@ -31,12 +31,6 @@
 
 class QMouseEvent;
 
-namespace KWaylandServer
-{
-class PlasmaWindowInterface;
-class SurfaceInterface;
-}
-
 namespace KDecoration2
 {
 class Decoration;
@@ -44,6 +38,8 @@ class Decoration;
 
 namespace KWin
 {
+class PlasmaWindowInterface;
+class SurfaceInterface;
 class Group;
 class Output;
 class ClientMachine;
@@ -785,8 +781,8 @@ public:
     bool skipsCloseAnimation() const;
     void setSkipCloseAnimation(bool set);
 
-    KWaylandServer::SurfaceInterface *surface() const;
-    void setSurface(KWaylandServer::SurfaceInterface *surface);
+    SurfaceInterface *surface() const;
+    void setSurface(SurfaceInterface *surface);
 
     /**
      * @returns Transformation to map from global to window coordinates.
@@ -1299,7 +1295,7 @@ public:
     /**
      * Return window management interface
      */
-    KWaylandServer::PlasmaWindowInterface *windowManagementInterface() const
+    PlasmaWindowInterface *windowManagementInterface() const
     {
         return m_windowManagementInterface;
     }
@@ -1738,7 +1734,7 @@ protected:
     QString resource_class;
     ClientMachine *m_clientMachine;
     bool m_skipCloseAnimation;
-    QPointer<KWaylandServer::SurfaceInterface> m_surface;
+    QPointer<SurfaceInterface> m_surface;
     qreal m_opacity = 1.0;
     int m_stackingOrder = 0;
 
@@ -1771,7 +1767,7 @@ protected:
     static QHash<QString, std::weak_ptr<Decoration::DecorationPalette>> s_palettes;
     static std::shared_ptr<Decoration::DecorationPalette> s_defaultPalette;
 
-    KWaylandServer::PlasmaWindowInterface *m_windowManagementInterface = nullptr;
+    PlasmaWindowInterface *m_windowManagementInterface = nullptr;
 
     Window *m_transientFor = nullptr;
     QList<Window *> m_transients;

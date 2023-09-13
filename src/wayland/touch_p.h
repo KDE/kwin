@@ -12,7 +12,7 @@
 
 #include <QPointer>
 
-namespace KWaylandServer
+namespace KWin
 {
 class ClientConnection;
 
@@ -33,4 +33,4 @@ protected:
     void touch_release(Resource *resource) override;
 };
 
-} // namespace KWaylandServer
+} // namespace KWin

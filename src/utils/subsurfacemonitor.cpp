@@ -12,8 +12,6 @@
 #include "wayland/subcompositor.h"
 #include "wayland/surface.h"
 
-using namespace KWaylandServer;
-
 namespace KWin
 {
 

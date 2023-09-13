@@ -10,7 +10,7 @@
 #include "abstract_data_source.h"
 #include "datacontroldevicemanager_v1.h"
 
-namespace KWaylandServer
+namespace KWin
 {
 class DataControlSourceV1InterfacePrivate;
 
@@ -43,4 +43,4 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(KWaylandServer::DataControlSourceV1Interface *)
+Q_DECLARE_METATYPE(KWin::DataControlSourceV1Interface *)

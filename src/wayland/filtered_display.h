@@ -8,7 +8,7 @@
 
 #include "display.h"
 
-namespace KWaylandServer
+namespace KWin
 {
 class FilteredDisplayPrivate;
 

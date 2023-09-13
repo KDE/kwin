@@ -12,6 +12,6 @@
 namespace KWin
 {
 
-GLXFBConfig chooseGlxFbConfig(Display *display, const int attributes[]);
+GLXFBConfig chooseGlxFbConfig(::Display *display, const int attributes[]);
 
 } // namespace KWin

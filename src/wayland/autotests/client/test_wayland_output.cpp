@@ -40,7 +40,7 @@ private Q_SLOTS:
     void testTransform();
 
 private:
-    KWaylandServer::Display *m_display;
+    KWin::Display *m_display;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::EventQueue *m_queue;
     QThread *m_thread;
@@ -59,7 +59,7 @@ TestWaylandOutput::TestWaylandOutput(QObject *parent)
 void TestWaylandOutput::init()
 {
     delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = new KWin::Display(this);
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
@@ -108,7 +108,7 @@ void TestWaylandOutput::testRegistry()
     outputHandle->moveTo(QPoint(100, 50));
     outputHandle->setPhysicalSize(QSize(200, 100));
 
-    auto outputInterface = std::make_unique<KWaylandServer::OutputInterface>(m_display, outputHandle.get());
+    auto outputInterface = std::make_unique<KWin::OutputInterface>(m_display, outputHandle.get());
 
     KWayland::Client::Registry registry;
     QSignalSpy announced(&registry, &KWayland::Client::Registry::outputAnnounced);
@@ -158,7 +158,7 @@ void TestWaylandOutput::testModeChange()
     auto outputHandle = std::make_unique<FakeOutput>();
     outputHandle->setMode(QSize(1024, 768), 60000);
 
-    auto outputInterface = std::make_unique<KWaylandServer::OutputInterface>(m_display, outputHandle.get());
+    auto outputInterface = std::make_unique<KWin::OutputInterface>(m_display, outputHandle.get());
 
     KWayland::Client::Registry registry;
     QSignalSpy announced(&registry, &KWayland::Client::Registry::outputAnnounced);
@@ -200,7 +200,7 @@ void TestWaylandOutput::testScaleChange()
     auto outputHandle = std::make_unique<FakeOutput>();
     outputHandle->setMode(QSize(1024, 768), 60000);
 
-    auto outputInterface = std::make_unique<KWaylandServer::OutputInterface>(m_display, outputHandle.get());
+    auto outputInterface = std::make_unique<KWin::OutputInterface>(m_display, outputHandle.get());
 
     KWayland::Client::Registry registry;
     QSignalSpy announced(&registry, &KWayland::Client::Registry::outputAnnounced);
@@ -253,7 +253,7 @@ void TestWaylandOutput::testSubPixel()
     outputHandle->setMode(QSize(1024, 768), 60000);
     outputHandle->setSubPixel(actual);
 
-    auto outputInterface = std::make_unique<KWaylandServer::OutputInterface>(m_display, outputHandle.get());
+    auto outputInterface = std::make_unique<KWin::OutputInterface>(m_display, outputHandle.get());
 
     KWayland::Client::Registry registry;
     QSignalSpy announced(&registry, &KWayland::Client::Registry::outputAnnounced);
@@ -296,9 +296,9 @@ void TestWaylandOutput::testTransform()
     outputHandle->setMode(QSize(1024, 768), 60000);
     outputHandle->setTransform(actual);
 
-    auto outputInterface = std::make_unique<KWaylandServer::OutputInterface>(m_display, outputHandle.get());
+    auto outputInterface = std::make_unique<KWin::OutputInterface>(m_display, outputHandle.get());
 
-    using namespace KWaylandServer;
+    using namespace KWin;
 
     KWayland::Client::Registry registry;
     QSignalSpy announced(&registry, &KWayland::Client::Registry::outputAnnounced);

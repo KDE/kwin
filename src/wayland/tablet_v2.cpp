@@ -15,7 +15,7 @@
 #include <QHash>
 #include <QPointer>
 
-namespace KWaylandServer
+namespace KWin
 {
 static int s_version = 1;
 
@@ -900,6 +900,6 @@ bool TabletSeatV2Interface::isClientSupported(ClientConnection *client) const
 
 TabletManagerV2Interface::~TabletManagerV2Interface() = default;
 
-} // namespace KWaylandServer
+} // namespace KWin
 
 #include "moc_tablet_v2.cpp"

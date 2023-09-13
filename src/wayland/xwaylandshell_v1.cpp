@@ -12,7 +12,7 @@
 
 #include <QPointer>
 
-namespace KWaylandServer
+namespace KWin
 {
 
 static const quint32 s_version = 1;
@@ -173,6 +173,6 @@ std::optional<uint64_t> XwaylandSurfaceV1Interface::serial() const
     return d->serial;
 }
 
-} // namespace KWaylandServer
+} // namespace KWin
 
 #include "moc_xwaylandshell_v1.cpp"

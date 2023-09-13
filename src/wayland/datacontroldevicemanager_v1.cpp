@@ -13,7 +13,7 @@
 #include <qwayland-server-wlr-data-control-unstable-v1.h>
 
 static const int s_version = 2;
-namespace KWaylandServer
+namespace KWin
 {
 class DataControlDeviceManagerV1InterfacePrivate : public QtWaylandServer::zwlr_data_control_manager_v1
 {

@@ -14,7 +14,7 @@
 
 constexpr int version = 1;
 
-namespace KWaylandServer
+namespace KWin
 {
 
 class XWaylandKeyboardGrabManagerV1InterfacePrivate : QtWaylandServer::zwp_xwayland_keyboard_grab_manager_v1

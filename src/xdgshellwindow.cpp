@@ -33,8 +33,6 @@
 #include <KDecoration2/DecoratedClient>
 #include <KDecoration2/Decoration>
 
-using namespace KWaylandServer;
-
 namespace KWin
 {
 
@@ -1253,16 +1251,16 @@ void XdgToplevelWindow::updateFullScreenMode(bool set)
 
 void XdgToplevelWindow::updateCapabilities()
 {
-    KWaylandServer::XdgToplevelInterface::Capabilities caps = KWaylandServer::XdgToplevelInterface::Capability::WindowMenu;
+    XdgToplevelInterface::Capabilities caps = XdgToplevelInterface::Capability::WindowMenu;
 
     if (isMaximizable()) {
-        caps.setFlag(KWaylandServer::XdgToplevelInterface::Capability::Maximize);
+        caps.setFlag(XdgToplevelInterface::Capability::Maximize);
     }
     if (isFullScreenable()) {
-        caps.setFlag(KWaylandServer::XdgToplevelInterface::Capability::FullScreen);
+        caps.setFlag(XdgToplevelInterface::Capability::FullScreen);
     }
     if (isMinimizable()) {
-        caps.setFlag(KWaylandServer::XdgToplevelInterface::Capability::Minimize);
+        caps.setFlag(XdgToplevelInterface::Capability::Minimize);
     }
 
     if (m_capabilities != caps) {
@@ -1484,7 +1482,7 @@ void XdgToplevelWindow::maximize(MaximizeMode mode)
     m_requestedMaximizeMode = mode;
 
     // call into decoration update borders
-    if (m_nextDecoration && !(options->borderlessMaximizedWindows() && m_requestedMaximizeMode == KWin::MaximizeFull)) {
+    if (m_nextDecoration && !(options->borderlessMaximizedWindows() && m_requestedMaximizeMode == MaximizeFull)) {
         changeMaximizeRecursion = true;
         const auto c = m_nextDecoration->client();
         if ((m_requestedMaximizeMode & MaximizeVertical) != (oldMode & MaximizeVertical)) {

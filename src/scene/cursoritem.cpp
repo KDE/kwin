@@ -36,7 +36,7 @@ void CursorItem::refresh()
     }
 }
 
-void CursorItem::setSurface(KWaylandServer::SurfaceInterface *surface)
+void CursorItem::setSurface(SurfaceInterface *surface)
 {
     m_imageItem.reset();
 

@@ -61,15 +61,11 @@ namespace KDecoration2
 class Decoration;
 }
 
-namespace KWaylandServer
-{
-class SurfaceInterface;
-class Display;
-}
-
 namespace KWin
 {
 
+class SurfaceInterface;
+class Display;
 class PaintDataPrivate;
 class WindowPaintDataPrivate;
 
@@ -1101,7 +1097,7 @@ public:
     virtual double animationTimeFactor() const = 0;
 
     Q_SCRIPTABLE virtual KWin::EffectWindow *findWindow(WId id) const = 0;
-    Q_SCRIPTABLE virtual KWin::EffectWindow *findWindow(KWaylandServer::SurfaceInterface *surf) const = 0;
+    Q_SCRIPTABLE virtual KWin::EffectWindow *findWindow(SurfaceInterface *surf) const = 0;
     /**
      * Finds the EffectWindow for the internal window @p w.
      * If there is no such window @c null is returned.
@@ -1266,7 +1262,7 @@ public:
      * on Wayland, on X11 it will be nullptr
      * @since 5.5
      */
-    virtual KWaylandServer::Display *waylandDisplay() const = 0;
+    virtual Display *waylandDisplay() const = 0;
 
     /**
      * Whether animations are supported by the Scene.
@@ -2552,7 +2548,7 @@ public:
     /**
      * @since 5.5
      */
-    virtual KWaylandServer::SurfaceInterface *surface() const = 0;
+    virtual SurfaceInterface *surface() const = 0;
 
     /**
      * @since 5.6

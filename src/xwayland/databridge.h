@@ -14,14 +14,10 @@
 #include <QObject>
 #include <QPoint>
 
-namespace KWaylandServer
+namespace KWin
 {
 class DataDeviceInterface;
 class SurfaceInterface;
-}
-
-namespace KWin
-{
 class Window;
 
 namespace Xwl

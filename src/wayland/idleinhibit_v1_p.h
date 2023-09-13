@@ -9,7 +9,7 @@
 
 #include <qwayland-server-idle-inhibit-unstable-v1.h>
 
-namespace KWaylandServer
+namespace KWin
 {
 class IdleInhibitManagerV1InterfacePrivate : public QtWaylandServer::zwp_idle_inhibit_manager_v1
 {

@@ -74,4 +74,4 @@ private:
     xcb_pixmap_t m_pixmap = XCB_PIXMAP_NONE;
 };
 
-} // namespace KWaylandServer
+} // namespace KWin

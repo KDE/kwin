@@ -14,7 +14,7 @@
 
 #include <unistd.h>
 
-namespace KWaylandServer
+namespace KWin
 {
 KeyboardInterfacePrivate::KeyboardInterfacePrivate(SeatInterface *s)
     : seat(s)
@@ -75,11 +75,11 @@ void KeyboardInterfacePrivate::sendKeymap(Resource *resource)
 {
     // From version 7 on, keymaps must be mapped privately, so that
     // we can seal the fd and reuse it between clients.
-    if (resource->version() >= 7 && sharedKeymapFile.effectiveFlags().testFlag(KWin::RamFile::Flag::SealWrite)) {
+    if (resource->version() >= 7 && sharedKeymapFile.effectiveFlags().testFlag(RamFile::Flag::SealWrite)) {
         send_keymap(resource->handle, keymap_format::keymap_format_xkb_v1, sharedKeymapFile.fd(), sharedKeymapFile.size());
         // otherwise give each client its own unsealed copy.
     } else {
-        KWin::RamFile keymapFile("kwin-xkb-keymap", keymap.constData(), keymap.size() + 1); // Include QByteArray null-terminator.
+        RamFile keymapFile("kwin-xkb-keymap", keymap.constData(), keymap.size() + 1); // Include QByteArray null-terminator.
         send_keymap(resource->handle, keymap_format::keymap_format_xkb_v1, keymapFile.fd(), keymapFile.size());
     }
 }
@@ -92,7 +92,7 @@ void KeyboardInterface::setKeymap(const QByteArray &content)
 
     d->keymap = content;
     // +1 to include QByteArray null terminator.
-    d->sharedKeymapFile = KWin::RamFile("kwin-xkb-keymap-shared", content.constData(), content.size() + 1, KWin::RamFile::Flag::SealWrite);
+    d->sharedKeymapFile = RamFile("kwin-xkb-keymap-shared", content.constData(), content.size() + 1, RamFile::Flag::SealWrite);
 
     const auto keyboardResources = d->resourceMap();
     for (KeyboardInterfacePrivate::Resource *resource : keyboardResources) {

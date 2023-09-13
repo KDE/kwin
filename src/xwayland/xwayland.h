@@ -80,7 +80,7 @@ private:
     void destroyX11Connection();
 
     DragEventReply dragMoveFilter(Window *target) override;
-    KWaylandServer::AbstractDropHandler *xwlDropHandler() override;
+    AbstractDropHandler *xwlDropHandler() override;
     QSocketNotifier *m_socketNotifier = nullptr;
 
     Application *m_app;

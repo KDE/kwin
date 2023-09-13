@@ -10,7 +10,7 @@
 
 #include "qwayland-server-wayland.h"
 
-namespace KWaylandServer
+namespace KWin
 {
 class RegionInterface : public QtWaylandServer::wl_region
 {
@@ -30,4 +30,4 @@ private:
     QRegion m_region;
 };
 
-} // namespace KWaylandServer
+} // namespace KWin

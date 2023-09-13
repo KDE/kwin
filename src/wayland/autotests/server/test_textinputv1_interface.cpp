@@ -23,7 +23,7 @@
 
 #include "qwayland-text-input-unstable-v1.h"
 
-using namespace KWaylandServer;
+using namespace KWin;
 
 Q_DECLARE_METATYPE(QtWayland::zwp_text_input_v1::content_purpose)
 Q_DECLARE_METATYPE(QtWayland::zwp_text_input_v1::content_hint)
@@ -93,7 +93,7 @@ private:
 
     SeatInterface *m_seat;
     QThread *m_thread;
-    KWaylandServer::Display m_display;
+    KWin::Display m_display;
     TextInputV1 *m_clientTextInputV1;
     CompositorInterface *m_serverCompositor;
     TextInputV1Interface *m_serverTextInputV1;
@@ -293,7 +293,7 @@ void TestTextInputV1Interface::testEvents()
 void TestTextInputV1Interface::testContentPurpose_data()
 {
     QTest::addColumn<QtWayland::zwp_text_input_v1::content_purpose>("clientPurpose");
-    QTest::addColumn<KWaylandServer::TextInputContentPurpose>("serverPurpose");
+    QTest::addColumn<KWin::TextInputContentPurpose>("serverPurpose");
 
     QTest::newRow("Alpha") << QtWayland::zwp_text_input_v1::content_purpose_alpha << TextInputContentPurpose::Alpha;
     QTest::newRow("Digits") << QtWayland::zwp_text_input_v1::content_purpose_digits << TextInputContentPurpose::Digits;
@@ -372,7 +372,7 @@ void TestTextInputV1Interface::testContentPurpose()
 void TestTextInputV1Interface::testContentHints_data()
 {
     QTest::addColumn<quint32>("clientHint");
-    QTest::addColumn<KWaylandServer::TextInputContentHints>("serverHints");
+    QTest::addColumn<KWin::TextInputContentHints>("serverHints");
 
     QTest::addRow("Spellcheck") << quint32(QtWayland::zwp_text_input_v1::content_hint_auto_correction)
                                 << TextInputContentHints(TextInputContentHint::AutoCorrection);

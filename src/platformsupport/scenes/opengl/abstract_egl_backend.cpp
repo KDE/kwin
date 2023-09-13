@@ -182,7 +182,7 @@ void AbstractEglBackend::initWayland()
         .formatTable = filterFormats(-1),
     });
 
-    KWaylandServer::LinuxDmaBufV1ClientBufferIntegration *dmabuf = waylandServer()->linuxDmabuf();
+    LinuxDmaBufV1ClientBufferIntegration *dmabuf = waylandServer()->linuxDmabuf();
     dmabuf->setRenderBackend(this);
     dmabuf->setSupportedFormatsWithModifiers(m_tranches);
 }
@@ -239,7 +239,7 @@ void AbstractEglBackend::setSurface(const EGLSurface &surface)
     m_surface = surface;
 }
 
-QVector<KWaylandServer::LinuxDmaBufV1Feedback::Tranche> AbstractEglBackend::tranches() const
+QVector<LinuxDmaBufV1Feedback::Tranche> AbstractEglBackend::tranches() const
 {
     return m_tranches;
 }

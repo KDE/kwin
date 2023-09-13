@@ -12,7 +12,7 @@
 
 struct wl_resource;
 
-namespace KWaylandServer
+namespace KWin
 {
 class Display;
 class SurfaceInterface;
@@ -43,7 +43,7 @@ Q_SIGNALS:
     /**
      * Emitted whenever a new ServerSideDecorationPaletteInterface is created.
      */
-    void paletteCreated(KWaylandServer::ServerSideDecorationPaletteInterface *);
+    void paletteCreated(KWin::ServerSideDecorationPaletteInterface *);
 
 private:
     std::unique_ptr<ServerSideDecorationPaletteManagerInterfacePrivate> d;

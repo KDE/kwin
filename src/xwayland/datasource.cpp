@@ -37,23 +37,23 @@ void XwlDataSource::accept(const QString &mimeType)
     m_accepted = !mimeType.isEmpty();
 }
 
-KWaylandServer::DataDeviceManagerInterface::DnDActions XwlDataSource::supportedDragAndDropActions() const
+DataDeviceManagerInterface::DnDActions XwlDataSource::supportedDragAndDropActions() const
 {
     return m_supportedDndActions;
 }
 
-void XwlDataSource::setSupportedDndActions(KWaylandServer::DataDeviceManagerInterface::DnDActions dndActions)
+void XwlDataSource::setSupportedDndActions(DataDeviceManagerInterface::DnDActions dndActions)
 {
     m_supportedDndActions = dndActions;
     Q_EMIT supportedDragAndDropActionsChanged();
 }
 
-KWaylandServer::DataDeviceManagerInterface::DnDAction XwlDataSource::selectedDndAction() const
+DataDeviceManagerInterface::DnDAction XwlDataSource::selectedDndAction() const
 {
     return m_dndAction;
 }
 
-void XwlDataSource::dndAction(KWaylandServer::DataDeviceManagerInterface::DnDAction action)
+void XwlDataSource::dndAction(DataDeviceManagerInterface::DnDAction action)
 {
     m_dndAction = action;
 }

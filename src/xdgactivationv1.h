@@ -13,43 +13,41 @@
 #include <QObject>
 #include <QPointer>
 
-namespace KWaylandServer
+namespace KWin
 {
+
 class SeatInterface;
 class ClientConnection;
 class SurfaceInterface;
 class XdgActivationV1Interface;
 class PlasmaWindowActivationInterface;
-}
 
-namespace KWin
-{
 class KWIN_EXPORT XdgActivationV1Integration : public QObject
 {
     Q_OBJECT
 public:
-    XdgActivationV1Integration(KWaylandServer::XdgActivationV1Interface *activation, QObject *parent);
+    XdgActivationV1Integration(XdgActivationV1Interface *activation, QObject *parent);
 
-    QString requestPrivilegedToken(KWaylandServer::SurfaceInterface *surface, uint serial, KWaylandServer::SeatInterface *seat, const QString &appId)
+    QString requestPrivilegedToken(SurfaceInterface *surface, uint serial, SeatInterface *seat, const QString &appId)
     {
         return requestToken(true, surface, serial, seat, appId);
     }
-    void activateSurface(KWaylandServer::SurfaceInterface *surface, const QString &token);
+    void activateSurface(SurfaceInterface *surface, const QString &token);
 
 private:
-    QString requestToken(bool isPrivileged, KWaylandServer::SurfaceInterface *surface, uint serial, KWaylandServer::SeatInterface *seat, const QString &appId);
+    QString requestToken(bool isPrivileged, SurfaceInterface *surface, uint serial, SeatInterface *seat, const QString &appId);
     void clear();
 
     struct ActivationToken
     {
         QString token;
         bool isPrivileged;
-        QPointer<const KWaylandServer::SurfaceInterface> surface;
+        QPointer<const SurfaceInterface> surface;
         uint serial;
-        KWaylandServer::SeatInterface *seat;
+        SeatInterface *seat;
         QString applicationId;
         bool showNotify;
-        std::unique_ptr<KWaylandServer::PlasmaWindowActivationInterface> activation;
+        std::unique_ptr<PlasmaWindowActivationInterface> activation;
     };
     std::unique_ptr<ActivationToken> m_currentActivationToken;
 };

@@ -81,9 +81,9 @@ public:
     explicit CompositorWindow(QWidget *parent = nullptr);
     virtual ~CompositorWindow();
 
-    void surfaceCreated(KWaylandServer::XdgToplevelInterface *surface);
+    void surfaceCreated(KWin::XdgToplevelInterface *surface);
 
-    void setSeat(const QPointer<KWaylandServer::SeatInterface> &seat);
+    void setSeat(const QPointer<KWin::SeatInterface> &seat);
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -96,8 +96,8 @@ protected:
 
 private:
     void updateFocus();
-    QList<KWaylandServer::XdgToplevelInterface *> m_stackingOrder;
-    QPointer<KWaylandServer::SeatInterface> m_seat;
+    QList<KWin::XdgToplevelInterface *> m_stackingOrder;
+    QPointer<KWin::SeatInterface> m_seat;
 };
 
 CompositorWindow::CompositorWindow(QWidget *parent)
@@ -108,9 +108,9 @@ CompositorWindow::CompositorWindow(QWidget *parent)
 
 CompositorWindow::~CompositorWindow() = default;
 
-void CompositorWindow::surfaceCreated(KWaylandServer::XdgToplevelInterface *surface)
+void CompositorWindow::surfaceCreated(KWin::XdgToplevelInterface *surface)
 {
-    using namespace KWaylandServer;
+    using namespace KWin;
     surface->sendConfigure(QSize(), XdgToplevelInterface::States());
     m_stackingOrder << surface;
     connect(surface->surface(), &SurfaceInterface::damaged, this, static_cast<void (CompositorWindow::*)()>(&CompositorWindow::update));
@@ -124,7 +124,7 @@ void CompositorWindow::surfaceCreated(KWaylandServer::XdgToplevelInterface *surf
 
 void CompositorWindow::updateFocus()
 {
-    using namespace KWaylandServer;
+    using namespace KWin;
     if (!m_seat || m_stackingOrder.isEmpty()) {
         return;
     }
@@ -138,7 +138,7 @@ void CompositorWindow::updateFocus()
     m_seat->setFocusedKeyboardSurface((*it)->surface());
 }
 
-void CompositorWindow::setSeat(const QPointer<KWaylandServer::SeatInterface> &seat)
+void CompositorWindow::setSeat(const QPointer<KWin::SeatInterface> &seat)
 {
     m_seat = seat;
 }
@@ -148,7 +148,7 @@ void CompositorWindow::paintEvent(QPaintEvent *event)
     QWidget::paintEvent(event);
     QPainter p(this);
     for (auto window : m_stackingOrder) {
-        KWaylandServer::SurfaceInterface *surface = window->surface();
+        KWin::SurfaceInterface *surface = window->surface();
         if (!surface || !surface->isMapped()) {
             continue;
         }
@@ -170,7 +170,7 @@ void CompositorWindow::keyPressEvent(QKeyEvent *event)
         updateFocus();
     }
     m_seat->setTimestamp(std::chrono::milliseconds(event->timestamp()));
-    m_seat->notifyKeyboardKey(event->nativeScanCode() - 8, KWaylandServer::KeyboardKeyState::Pressed);
+    m_seat->notifyKeyboardKey(event->nativeScanCode() - 8, KWin::KeyboardKeyState::Pressed);
 }
 
 void CompositorWindow::keyReleaseEvent(QKeyEvent *event)
@@ -180,7 +180,7 @@ void CompositorWindow::keyReleaseEvent(QKeyEvent *event)
         return;
     }
     m_seat->setTimestamp(std::chrono::milliseconds(event->timestamp()));
-    m_seat->notifyKeyboardKey(event->nativeScanCode() - 8, KWaylandServer::KeyboardKeyState::Released);
+    m_seat->notifyKeyboardKey(event->nativeScanCode() - 8, KWin::KeyboardKeyState::Released);
 }
 
 void CompositorWindow::mouseMoveEvent(QMouseEvent *event)
@@ -203,7 +203,7 @@ void CompositorWindow::mousePressEvent(QMouseEvent *event)
         }
     }
     m_seat->setTimestamp(std::chrono::milliseconds(event->timestamp()));
-    m_seat->notifyPointerButton(event->button(), KWaylandServer::PointerButtonState::Pressed);
+    m_seat->notifyPointerButton(event->button(), KWin::PointerButtonState::Pressed);
     m_seat->notifyPointerFrame();
 }
 
@@ -211,7 +211,7 @@ void CompositorWindow::mouseReleaseEvent(QMouseEvent *event)
 {
     QWidget::mouseReleaseEvent(event);
     m_seat->setTimestamp(std::chrono::milliseconds(event->timestamp()));
-    m_seat->notifyPointerButton(event->button(), KWaylandServer::PointerButtonState::Released);
+    m_seat->notifyPointerButton(event->button(), KWin::PointerButtonState::Released);
     m_seat->notifyPointerFrame();
 }
 
@@ -221,17 +221,17 @@ void CompositorWindow::wheelEvent(QWheelEvent *event)
     m_seat->setTimestamp(std::chrono::milliseconds(event->timestamp()));
     const QPoint &angle = event->angleDelta() / (8 * 15);
     if (angle.x() != 0) {
-        m_seat->notifyPointerAxis(Qt::Horizontal, angle.x(), 1, KWaylandServer::PointerAxisSource::Wheel);
+        m_seat->notifyPointerAxis(Qt::Horizontal, angle.x(), 1, KWin::PointerAxisSource::Wheel);
     }
     if (angle.y() != 0) {
-        m_seat->notifyPointerAxis(Qt::Vertical, angle.y(), 1, KWaylandServer::PointerAxisSource::Wheel);
+        m_seat->notifyPointerAxis(Qt::Vertical, angle.y(), 1, KWin::PointerAxisSource::Wheel);
     }
     m_seat->notifyPointerFrame();
 }
 
 int main(int argc, char **argv)
 {
-    using namespace KWaylandServer;
+    using namespace KWin;
     QApplication app(argc, argv);
 
     QCommandLineParser parser;
@@ -240,7 +240,7 @@ int main(int argc, char **argv)
     parser.addOption(xwaylandOption);
     parser.process(app);
 
-    KWaylandServer::Display display;
+    KWin::Display display;
     display.start();
     new DataDeviceManagerInterface(&display);
     new CompositorInterface(&display, &display);

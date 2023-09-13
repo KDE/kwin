@@ -6,11 +6,14 @@
 
 #include "abstract_data_source.h"
 
-using namespace KWaylandServer;
+namespace KWin
+{
 
 AbstractDataSource::AbstractDataSource(QObject *parent)
     : QObject(parent)
 {
 }
+
+} // namespace KWin
 
 #include "moc_abstract_data_source.cpp"

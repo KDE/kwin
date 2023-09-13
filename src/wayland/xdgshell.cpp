@@ -15,7 +15,7 @@
 
 #include <QTimer>
 
-namespace KWaylandServer
+namespace KWin
 {
 static const int s_version = 6;
 
@@ -1051,7 +1051,7 @@ QRectF XdgPositioner::placement(const QRectF &bounds) const
         return true;
     };
 
-    QRectF popupRect(KWin::popupOffset(d->anchorRect, d->anchorEdges, d->gravityEdges, d->size) + d->offset, d->size);
+    QRectF popupRect(popupOffset(d->anchorRect, d->anchorEdges, d->gravityEdges, d->size) + d->offset, d->size);
 
     // if that fits, we don't need to do anything
     if (inBounds(popupRect)) {
@@ -1070,7 +1070,7 @@ QRectF XdgPositioner::placement(const QRectF &bounds) const
             if (flippedGravity & (Qt::LeftEdge | Qt::RightEdge)) {
                 flippedGravity ^= (Qt::LeftEdge | Qt::RightEdge);
             }
-            auto flippedPopupRect = QRectF(KWin::popupOffset(d->anchorRect, flippedAnchorEdge, flippedGravity, d->size) + d->offset, d->size);
+            auto flippedPopupRect = QRectF(popupOffset(d->anchorRect, flippedAnchorEdge, flippedGravity, d->size) + d->offset, d->size);
 
             // if it still doesn't fit we should continue with the unflipped version
             if (inBounds(flippedPopupRect, Qt::LeftEdge | Qt::RightEdge)) {
@@ -1112,7 +1112,7 @@ QRectF XdgPositioner::placement(const QRectF &bounds) const
             if (flippedGravity & (Qt::TopEdge | Qt::BottomEdge)) {
                 flippedGravity ^= (Qt::TopEdge | Qt::BottomEdge);
             }
-            auto flippedPopupRect = QRectF(KWin::popupOffset(d->anchorRect, flippedAnchorEdge, flippedGravity, d->size) + d->offset, d->size);
+            auto flippedPopupRect = QRectF(popupOffset(d->anchorRect, flippedAnchorEdge, flippedGravity, d->size) + d->offset, d->size);
 
             // if it still doesn't fit we should continue with the unflipped version
             if (inBounds(flippedPopupRect, Qt::TopEdge | Qt::BottomEdge)) {
@@ -1159,6 +1159,6 @@ XdgPositioner::XdgPositioner(const QSharedDataPointer<XdgPositionerData> &data)
 {
 }
 
-} // namespace KWaylandServer
+} // namespace KWin
 
 #include "moc_xdgshell.cpp"

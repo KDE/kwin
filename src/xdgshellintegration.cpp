@@ -11,8 +11,6 @@
 #include "workspace.h"
 #include "xdgshellwindow.h"
 
-using namespace KWaylandServer;
-
 namespace KWin
 {
 

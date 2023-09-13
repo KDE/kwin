@@ -73,8 +73,8 @@ Dnd::Dnd(xcb_atom_t atom, QObject *parent)
                         32, 1, &s_version);
     xcb_flush(xcbConn);
 
-    connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::dragStarted, this, &Dnd::startDrag);
-    connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::dragEnded, this, &Dnd::endDrag);
+    connect(waylandServer()->seat(), &SeatInterface::dragStarted, this, &Dnd::startDrag);
+    connect(waylandServer()->seat(), &SeatInterface::dragEnded, this, &Dnd::endDrag);
 }
 
 void Dnd::doHandleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
@@ -154,7 +154,7 @@ void Dnd::startDrag()
     m_currentDrag = new WlToXDrag(this);
     auto source = new WlSource(this);
     source->setDataSourceIface(dragSource);
-     connect(dragSource, &KWaylandServer::AbstractDataSource::aboutToBeDestroyed, this, [this, source] {
+    connect(dragSource, &AbstractDataSource::aboutToBeDestroyed, this, [this, source] {
         if (source == wlSource()) {
             setWlSource(nullptr);
         }
@@ -179,8 +179,8 @@ void Dnd::clearOldDrag(Drag *drag)
     delete drag;
 }
 
-using DnDAction = KWaylandServer::DataDeviceManagerInterface::DnDAction;
-using DnDActions = KWaylandServer::DataDeviceManagerInterface::DnDActions;
+using DnDAction = DataDeviceManagerInterface::DnDAction;
+using DnDActions = DataDeviceManagerInterface::DnDActions;
 
 DnDAction Dnd::atomToClientAction(xcb_atom_t atom)
 {

@@ -38,7 +38,7 @@ WlSource::WlSource(Selection *selection)
 {
 }
 
-void WlSource::setDataSourceIface(KWaylandServer::AbstractDataSource *dsi)
+void WlSource::setDataSourceIface(AbstractDataSource *dsi)
 {
     if (m_dsi == dsi) {
         return;
@@ -50,7 +50,7 @@ void WlSource::setDataSourceIface(KWaylandServer::AbstractDataSource *dsi)
     // TODO, this can probably be removed after some testing
     // all mime types should be constant after a data source is set
     m_offerConnection = connect(dsi,
-                                &KWaylandServer::DataSourceInterface::mimeTypeOffered,
+                                &DataSourceInterface::mimeTypeOffered,
                                 this, &WlSource::receiveOffer);
 
     m_dsi = dsi;

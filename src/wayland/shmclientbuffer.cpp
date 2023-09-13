@@ -17,9 +17,7 @@
 #include <sys/mman.h>
 #include <sys/stat.h>
 
-using namespace KWin;
-
-namespace KWaylandServer
+namespace KWin
 {
 
 static constexpr int s_version = 1;
@@ -315,7 +313,7 @@ ShmClientBufferIntegration::~ShmClientBufferIntegration()
 {
 }
 
-} // namespace KWaylandServer
+} // namespace KWin
 
 #include "moc_shmclientbuffer_p.cpp"
 

@@ -14,7 +14,7 @@
 namespace KWin
 {
 
-GLXFBConfig chooseGlxFbConfig(Display *display, const int attributes[])
+GLXFBConfig chooseGlxFbConfig(::Display *display, const int attributes[])
 {
     int configCount = 0;
     GLXFBConfig *configs = glXChooseFBConfig(display, DefaultScreen(display),

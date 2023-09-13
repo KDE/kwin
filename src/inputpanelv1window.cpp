@@ -19,8 +19,6 @@
 #include "wayland_server.h"
 #include "workspace.h"
 
-using namespace KWaylandServer;
-
 namespace KWin
 {
 
@@ -78,7 +76,7 @@ void InputPanelV1Window::hide()
     }
 }
 
-void KWin::InputPanelV1Window::reposition()
+void InputPanelV1Window::reposition()
 {
     if (!readyForPainting()) {
         return;

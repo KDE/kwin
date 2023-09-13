@@ -82,7 +82,7 @@ class GlxBackend : public OpenGLBackend
     Q_OBJECT
 
 public:
-    GlxBackend(Display *display, X11StandaloneBackend *backend);
+    GlxBackend(::Display *display, X11StandaloneBackend *backend);
     ~GlxBackend() override;
     std::unique_ptr<SurfaceTexture> createSurfaceTextureX11(SurfacePixmapX11 *pixmap) override;
     OutputLayerBeginFrameInfo beginFrame();
@@ -95,7 +95,7 @@ public:
     void init() override;
     OutputLayer *primaryLayer(Output *output) override;
 
-    Display *display() const
+    ::Display *display() const
     {
         return m_x11Display;
     }
@@ -133,7 +133,7 @@ private:
     bool m_haveMESASwapControl = false;
     bool m_haveEXTSwapControl = false;
     bool m_haveSGISwapControl = false;
-    Display *m_x11Display;
+    ::Display *m_x11Display;
     X11StandaloneBackend *m_backend;
     std::unique_ptr<VsyncMonitor> m_vsyncMonitor;
     std::unique_ptr<GlxLayer> m_layer;

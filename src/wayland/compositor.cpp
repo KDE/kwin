@@ -11,7 +11,7 @@
 
 #include "qwayland-server-wayland.h"
 
-namespace KWaylandServer
+namespace KWin
 {
 static const int s_version = 6;
 
@@ -70,6 +70,6 @@ Display *CompositorInterface::display() const
     return d->display;
 }
 
-} // namespace KWaylandServer
+} // namespace KWin
 
 #include "wayland/moc_compositor.cpp"

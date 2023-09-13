@@ -23,16 +23,12 @@
 class QMouseEvent;
 class QWheelEvent;
 
-namespace KWaylandServer
-{
-class Display;
-}
-
 class QDBusPendingCallWatcher;
 class QDBusServiceWatcher;
 
 namespace KWin
 {
+class Display;
 class Window;
 class Compositor;
 class EffectLoader;
@@ -107,7 +103,7 @@ public:
     void startMousePolling() override;
     void stopMousePolling() override;
     EffectWindow *findWindow(WId id) const override;
-    EffectWindow *findWindow(KWaylandServer::SurfaceInterface *surf) const override;
+    EffectWindow *findWindow(SurfaceInterface *surf) const override;
     EffectWindow *findWindow(QWindow *w) const override;
     EffectWindow *findWindow(const QUuid &id) const override;
     EffectWindowList stackingOrder() const override;
@@ -187,7 +183,7 @@ public:
      */
     bool blocksDirectScanout() const;
 
-    KWaylandServer::Display *waylandDisplay() const override;
+    Display *waylandDisplay() const override;
 
     bool animationsSupported() const override;
 
@@ -430,7 +426,7 @@ public:
     bool isOutline() const override;
     bool isLockScreen() const override;
 
-    KWaylandServer::SurfaceInterface *surface() const override;
+    SurfaceInterface *surface() const override;
     bool isFullScreen() const override;
     bool isUnresponsive() const override;
 

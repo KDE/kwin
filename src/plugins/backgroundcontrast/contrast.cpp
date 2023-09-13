@@ -28,7 +28,7 @@ namespace KWin
 
 static const QByteArray s_contrastAtomName = QByteArrayLiteral("_KDE_NET_WM_BACKGROUND_CONTRAST_REGION");
 
-KWaylandServer::ContrastManagerInterface *ContrastEffect::s_contrastManager = nullptr;
+ContrastManagerInterface *ContrastEffect::s_contrastManager = nullptr;
 QTimer *ContrastEffect::s_contrastManagerRemoveTimer = nullptr;
 
 ContrastEffect::ContrastEffect()
@@ -53,7 +53,7 @@ ContrastEffect::ContrastEffect()
             }
             s_contrastManagerRemoveTimer->stop();
             if (!s_contrastManager) {
-                s_contrastManager = new KWaylandServer::ContrastManagerInterface(effects->waylandDisplay(), s_contrastManagerRemoveTimer);
+                s_contrastManager = new ContrastManagerInterface(effects->waylandDisplay(), s_contrastManagerRemoveTimer);
             }
         }
     }
@@ -129,7 +129,7 @@ void ContrastEffect::updateContrastRegion(EffectWindow *w)
         valid = !value.isNull();
     }
 
-    KWaylandServer::SurfaceInterface *surf = w->surface();
+    SurfaceInterface *surf = w->surface();
 
     if (surf && surf->contrast()) {
         region = surf->contrast()->region();
@@ -173,10 +173,10 @@ void ContrastEffect::updateContrastRegion(EffectWindow *w)
 
 void ContrastEffect::slotWindowAdded(EffectWindow *w)
 {
-    KWaylandServer::SurfaceInterface *surf = w->surface();
+    SurfaceInterface *surf = w->surface();
 
     if (surf) {
-        m_contrastChangedConnections[w] = connect(surf, &KWaylandServer::SurfaceInterface::contrastChanged, this, [this, w]() {
+        m_contrastChangedConnections[w] = connect(surf, &SurfaceInterface::contrastChanged, this, [this, w]() {
             if (w) {
                 updateContrastRegion(w);
             }

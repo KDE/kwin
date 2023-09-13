@@ -14,7 +14,7 @@
 // system
 #include <unistd.h>
 
-namespace KWaylandServer
+namespace KWin
 {
 class PrimarySelectionOfferV1InterfacePrivate : public QtWaylandServer::zwp_primary_selection_offer_v1
 {

@@ -18,14 +18,10 @@ class Decoration;
 class DecorationShadow;
 }
 
-namespace KWaylandServer
-{
-class ShadowInterface;
-}
-
 namespace KWin
 {
 
+class ShadowInterface;
 class Window;
 
 /**
@@ -128,7 +124,7 @@ private:
     static QVector<uint32_t> readX11ShadowProperty(xcb_window_t id);
     bool init(const QVector<uint32_t> &data);
     bool init(KDecoration2::Decoration *decoration);
-    bool init(const QPointer<KWaylandServer::ShadowInterface> &shadow);
+    bool init(const QPointer<ShadowInterface> &shadow);
     bool init(const QWindow *window);
     Window *m_window;
     // shadow elements

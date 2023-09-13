@@ -10,7 +10,7 @@
 
 #include "qwayland-server-drm.h"
 
-namespace KWaylandServer
+namespace KWin
 {
 
 static constexpr int s_version = 2;
@@ -133,6 +133,6 @@ void DrmClientBufferIntegration::setDevice(const QString &node)
     d->nodeName = node;
 }
 
-} // namespace KWaylandServer
+} // namespace KWin
 
 #include "moc_drmclientbuffer.cpp"

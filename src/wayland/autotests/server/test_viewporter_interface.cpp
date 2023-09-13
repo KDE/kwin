@@ -22,7 +22,7 @@
 
 #include "qwayland-viewporter.h"
 
-using namespace KWaylandServer;
+using namespace KWin;
 
 class Viewporter : public QtWayland::wp_viewporter
 {
@@ -50,7 +50,7 @@ private:
     KWayland::Client::ShmPool *m_shm;
 
     QThread *m_thread;
-    KWaylandServer::Display m_display;
+    KWin::Display m_display;
     CompositorInterface *m_serverCompositor;
     Viewporter *m_viewporter;
 };

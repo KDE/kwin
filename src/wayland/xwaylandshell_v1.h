@@ -15,7 +15,7 @@
 
 struct wl_client;
 
-namespace KWaylandServer
+namespace KWin
 {
 
 class Display;
@@ -59,4 +59,4 @@ private:
     std::unique_ptr<XwaylandShellV1InterfacePrivate> d;
 };
 
-} // namespace KWaylandServer
+} // namespace KWin

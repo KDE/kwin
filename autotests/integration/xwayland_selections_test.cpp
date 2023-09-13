@@ -88,7 +88,7 @@ void XwaylandSelectionsTest::testSync()
     QVERIFY(!paste.isEmpty());
 
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
-    QSignalSpy clipboardChangedSpy(waylandServer()->seat(), &KWaylandServer::SeatInterface::selectionChanged);
+    QSignalSpy clipboardChangedSpy(waylandServer()->seat(), &SeatInterface::selectionChanged);
 
     QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();
 

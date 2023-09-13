@@ -100,14 +100,14 @@ void WorkspaceScene::initialize()
     });
 
     if (waylandServer()) {
-        connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::dragStarted, this, &WorkspaceScene::createDndIconItem);
-        connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::dragEnded, this, &WorkspaceScene::destroyDndIconItem);
+        connect(waylandServer()->seat(), &SeatInterface::dragStarted, this, &WorkspaceScene::createDndIconItem);
+        connect(waylandServer()->seat(), &SeatInterface::dragEnded, this, &WorkspaceScene::destroyDndIconItem);
     }
 }
 
 void WorkspaceScene::createDndIconItem()
 {
-    KWaylandServer::DragAndDropIcon *dragIcon = waylandServer()->seat()->dragIcon();
+    DragAndDropIcon *dragIcon = waylandServer()->seat()->dragIcon();
     if (!dragIcon) {
         return;
     }
@@ -120,7 +120,7 @@ void WorkspaceScene::createDndIconItem()
         };
 
         updatePosition();
-        connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::pointerPosChanged, m_dndIcon.get(), updatePosition);
+        connect(waylandServer()->seat(), &SeatInterface::pointerPosChanged, m_dndIcon.get(), updatePosition);
     } else if (waylandServer()->seat()->isDragTouch()) {
         auto updatePosition = [this]() {
             const auto touchPos = waylandServer()->seat()->firstTouchPointPosition();
@@ -129,7 +129,7 @@ void WorkspaceScene::createDndIconItem()
         };
 
         updatePosition();
-        connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::touchMoved, m_dndIcon.get(), updatePosition);
+        connect(waylandServer()->seat(), &SeatInterface::touchMoved, m_dndIcon.get(), updatePosition);
     }
 }
 

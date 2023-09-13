@@ -12,7 +12,7 @@
 // Wayland
 #include <wayland-server.h>
 
-namespace KWaylandServer
+namespace KWin
 {
 class ClientConnectionPrivate
 {

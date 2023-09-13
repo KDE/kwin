@@ -12,13 +12,9 @@
 
 namespace KWin
 {
+
 class DrmBackend;
 class DrmGpu;
-}
-
-namespace KWaylandServer
-{
-
 class DrmLeaseDeviceV1Interface;
 class DrmLeaseConnectorV1Interface;
 class Display;
@@ -27,16 +23,16 @@ class DrmLeaseManagerV1 : public QObject
 {
     Q_OBJECT
 public:
-    DrmLeaseManagerV1(KWin::DrmBackend *backend, Display *display, QObject *parent = nullptr);
+    DrmLeaseManagerV1(DrmBackend *backend, Display *display, QObject *parent = nullptr);
     ~DrmLeaseManagerV1();
 
 private:
-    void addGpu(KWin::DrmGpu *gpu);
-    void removeGpu(KWin::DrmGpu *gpu);
+    void addGpu(DrmGpu *gpu);
+    void removeGpu(DrmGpu *gpu);
     void handleOutputsQueried();
 
-    KWin::DrmBackend *const m_backend;
+    DrmBackend *const m_backend;
     Display *const m_display;
-    QHash<KWin::DrmGpu *, DrmLeaseDeviceV1Interface *> m_leaseDevices;
+    QHash<DrmGpu *, DrmLeaseDeviceV1Interface *> m_leaseDevices;
 };
 }

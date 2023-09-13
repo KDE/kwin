@@ -133,7 +133,7 @@ QDebug operator<<(QDebug debug, const Window *window)
     debug.nospace();
     if (window) {
         debug << window->metaObject()->className() << '(' << static_cast<const void *>(window);
-        if (const KWaylandServer::SurfaceInterface *surface = window->surface()) {
+        if (const SurfaceInterface *surface = window->surface()) {
             debug << ", surface=" << surface;
         }
         if (window->isClient()) {
@@ -337,12 +337,12 @@ void Window::setSkipCloseAnimation(bool set)
     Q_EMIT skipCloseAnimationChanged();
 }
 
-KWaylandServer::SurfaceInterface *Window::surface() const
+SurfaceInterface *Window::surface() const
 {
     return m_surface;
 }
 
-void Window::setSurface(KWaylandServer::SurfaceInterface *surface)
+void Window::setSurface(SurfaceInterface *surface)
 {
     if (m_surface == surface) {
         return;
@@ -1800,7 +1800,6 @@ void Window::setupWindowManagementInterface()
     if (!waylandServer() || !waylandServer()->windowManagement()) {
         return;
     }
-    using namespace KWaylandServer;
     auto w = waylandServer()->windowManagement()->createWindow(this, internalId());
     w->setTitle(caption());
     w->setActive(isActive());
@@ -1968,7 +1967,7 @@ void Window::setupWindowManagementInterface()
     connect(w, &PlasmaWindowInterface::leavePlasmaActivityRequested, this, [this](const QString &activityId) {
         setOnActivity(activityId, false);
     });
-    connect(w, &PlasmaWindowInterface::sendToOutput, this, [this](KWaylandServer::OutputInterface *output) {
+    connect(w, &PlasmaWindowInterface::sendToOutput, this, [this](OutputInterface *output) {
         sendToOutput(output->handle());
     });
 

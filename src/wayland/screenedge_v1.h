@@ -13,7 +13,7 @@
 
 struct wl_resource;
 
-namespace KWaylandServer
+namespace KWin
 {
 
 class Display;
@@ -42,11 +42,11 @@ class KWIN_EXPORT AutoHideScreenEdgeV1Interface : public QObject
     Q_OBJECT
 
 public:
-    AutoHideScreenEdgeV1Interface(SurfaceInterface *surface, KWin::ElectricBorder border, wl_resource *resource);
+    AutoHideScreenEdgeV1Interface(SurfaceInterface *surface, ElectricBorder border, wl_resource *resource);
     ~AutoHideScreenEdgeV1Interface() override;
 
     SurfaceInterface *surface() const;
-    KWin::ElectricBorder border() const;
+    ElectricBorder border() const;
 
 Q_SIGNALS:
     void deactivateRequested();
@@ -56,4 +56,4 @@ private:
     std::unique_ptr<AutoHideScreenEdgeV1InterfacePrivate> d;
 };
 
-} // namespace KWaylandServer
+} // namespace KWin

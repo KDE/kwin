@@ -11,7 +11,7 @@
 
 #include <QPointF>
 
-namespace KWaylandServer
+namespace KWin
 {
 class ClientConnection;
 class Display;
@@ -42,4 +42,4 @@ private:
     PointerInterface *pointer;
 };
 
-} // namespace KWaylandServer
+} // namespace KWin

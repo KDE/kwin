@@ -16,7 +16,7 @@
 
 struct wl_resource;
 
-namespace KWaylandServer
+namespace KWin
 {
 class ClientConnection;
 class Display;
@@ -44,4 +44,4 @@ public:
     QStringList socketNames;
 };
 
-} // namespace KWaylandServer
+} // namespace KWin

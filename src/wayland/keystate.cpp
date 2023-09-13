@@ -14,9 +14,7 @@
 #include <QVector>
 #include <qwayland-server-keystate.h>
 
-using namespace KWin;
-
-namespace KWaylandServer
+namespace KWin
 {
 
 static const quint32 s_version = 1;

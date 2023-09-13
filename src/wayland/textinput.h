@@ -13,7 +13,7 @@
 
 #include <inttypes.h>
 
-namespace KWaylandServer
+namespace KWin
 {
 Q_NAMESPACE_EXPORT(KWIN_EXPORT)
 /**
@@ -150,8 +150,8 @@ Q_ENUM_NS(TextInputChangeCause)
 
 }
 
-Q_DECLARE_METATYPE(KWaylandServer::TextInputContentHint)
-Q_DECLARE_METATYPE(KWaylandServer::TextInputContentHints)
-Q_DECLARE_OPERATORS_FOR_FLAGS(KWaylandServer::TextInputContentHints)
-Q_DECLARE_METATYPE(KWaylandServer::TextInputContentPurpose)
-Q_DECLARE_METATYPE(KWaylandServer::TextInputChangeCause)
+Q_DECLARE_METATYPE(KWin::TextInputContentHint)
+Q_DECLARE_METATYPE(KWin::TextInputContentHints)
+Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::TextInputContentHints)
+Q_DECLARE_METATYPE(KWin::TextInputContentPurpose)
+Q_DECLARE_METATYPE(KWin::TextInputChangeCause)
