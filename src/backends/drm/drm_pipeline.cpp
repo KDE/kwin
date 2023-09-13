@@ -80,8 +80,8 @@ DrmPipeline::Error DrmPipeline::present()
     if (gpu()->atomicModeSetting()) {
         // test the full state, to take pending commits into account
         auto fullState = std::make_unique<DrmAtomicCommit>(QVector<DrmPipeline *>{this});
-        if (!prepareAtomicPresentation(fullState.get())) {
-            return Error::InvalidArguments;
+        if (Error err = prepareAtomicPresentation(fullState.get()); err != Error::None) {
+            return err;
         }
         if (m_pending.crtc->cursorPlane()) {
             prepareAtomicCursor(fullState.get());
@@ -91,8 +91,8 @@ DrmPipeline::Error DrmPipeline::present()
         }
         // only give the actual state update to the commit thread, so that it can potentially reorder the commits
         auto primaryPlaneUpdate = std::make_unique<DrmAtomicCommit>(QVector<DrmPipeline *>{this});
-        if (!prepareAtomicPresentation(primaryPlaneUpdate.get())) {
-            return Error::InvalidArguments;
+        if (Error err = prepareAtomicPresentation(primaryPlaneUpdate.get()); err != Error::None) {
+            return err;
         }
         m_commitThread->addCommit(std::move(primaryPlaneUpdate));
         return Error::None;
@@ -136,11 +136,7 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline 
     }
     for (const auto &pipeline : pipelines) {
         if (pipeline->activePending()) {
-            if (!pipeline->m_primaryLayer->checkTestBuffer()) {
-                qCWarning(KWIN_DRM) << "Checking test buffer failed for" << mode;
-                return Error::TestBufferFailed;
-            }
-            if (!pipeline->prepareAtomicPresentation(commit.get())) {
+            if (pipeline->prepareAtomicPresentation(commit.get()) != Error::None) {
                 return Error::InvalidArguments;
             }
             if (pipeline->m_pending.crtc->cursorPlane()) {
@@ -210,7 +206,7 @@ static QRect centerBuffer(const QSize &bufferSize, const QSize &modeSize)
     }
 }
 
-bool DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commit)
+DrmPipeline::Error DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commit)
 {
     if (m_connector->contentType.isValid()) {
         commit->addEnum(m_connector->contentType, m_pending.contentType);
@@ -222,21 +218,25 @@ bool DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commit)
     if (m_pending.crtc->gammaLut.isValid()) {
         commit->addBlob(m_pending.crtc->gammaLut, m_pending.gamma ? m_pending.gamma->blob() : nullptr);
     } else if (m_pending.gamma) {
-        return false;
+        return Error::InvalidArguments;
     }
     if (m_pending.crtc->ctm.isValid()) {
         commit->addBlob(m_pending.crtc->ctm, m_pending.ctm);
     } else if (m_pending.ctm) {
-        return false;
+        return Error::InvalidArguments;
     }
 
+    if (!m_primaryLayer->checkTestBuffer()) {
+        qCWarning(KWIN_DRM) << "Checking test buffer failed!";
+        return Error::TestBufferFailed;
+    }
     const auto fb = m_primaryLayer->currentBuffer();
     if (!fb) {
-        return false;
+        return Error::InvalidArguments;
     }
     m_pending.crtc->primaryPlane()->set(commit, QPoint(0, 0), fb->buffer()->size(), centerBuffer(fb->buffer()->size(), m_pending.mode->size()));
     commit->addBuffer(m_pending.crtc->primaryPlane(), fb);
-    return true;
+    return Error::None;
 }
 
 void DrmPipeline::prepareAtomicCursor(DrmAtomicCommit *commit)
@@ -377,7 +377,7 @@ bool DrmPipeline::updateCursor()
         }
         // test the full state, to take pending commits into account
         auto fullState = std::make_unique<DrmAtomicCommit>(QVector<DrmPipeline *>{this});
-        if (!prepareAtomicPresentation(fullState.get())) {
+        if (prepareAtomicPresentation(fullState.get()) != Error::None) {
             return false;
         }
         prepareAtomicCursor(fullState.get());

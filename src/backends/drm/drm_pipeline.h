@@ -158,7 +158,7 @@ private:
     // atomic modesetting only
     void atomicCommitSuccessful();
     bool prepareAtomicModeset(DrmAtomicCommit *commit);
-    bool prepareAtomicPresentation(DrmAtomicCommit *commit);
+    Error prepareAtomicPresentation(DrmAtomicCommit *commit);
     void prepareAtomicCursor(DrmAtomicCommit *commit);
     void prepareAtomicDisable(DrmAtomicCommit *commit);
     static Error commitPipelinesAtomic(const QVector<DrmPipeline *> &pipelines, CommitMode mode, const QVector<DrmObject *> &unusedObjects);
