@@ -11,9 +11,9 @@
 #include "inputmethod.h"
 #include "utils/c_ptr.h"
 #include "utils/common.h"
-#include "wayland/inputmethod_v1_interface.h"
-#include "wayland/keyboard_interface.h"
-#include "wayland/seat_interface.h"
+#include "wayland/inputmethod_v1.h"
+#include "wayland/keyboard.h"
+#include "wayland/seat.h"
 // frameworks
 #include <KConfigGroup>
 // Qt

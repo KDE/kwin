@@ -8,9 +8,9 @@
 #include <QTest>
 // WaylandServer
 #include "wayland/display.h"
-#include "wayland/keyboard_interface.h"
-#include "wayland/pointer_interface.h"
-#include "wayland/seat_interface.h"
+#include "wayland/keyboard.h"
+#include "wayland/pointer.h"
+#include "wayland/seat.h"
 
 using namespace KWaylandServer;
 

@@ -14,9 +14,9 @@
 #include "libkwineffects/rendertarget.h"
 #include "libkwineffects/renderviewport.h"
 #include "utils/xcbutils.h"
-#include "wayland/blur_interface.h"
+#include "wayland/blur.h"
 #include "wayland/display.h"
-#include "wayland/surface_interface.h"
+#include "wayland/surface.h"
 
 #include <QGuiApplication>
 #include <QMatrix4x4>

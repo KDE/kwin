@@ -30,7 +30,7 @@
 #include "screenedge.h"
 #include "shadow.h"
 #include "virtualdesktops.h"
-#include "wayland/surface_interface.h"
+#include "wayland/surface.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include <KDecoration2/DecoratedClient>

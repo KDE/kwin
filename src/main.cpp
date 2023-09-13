@@ -33,7 +33,7 @@
 #include "sm.h"
 #include "tabletmodemanager.h"
 #include "utils/xcbutils.h"
-#include "wayland/surface_interface.h"
+#include "wayland/surface.h"
 #include "workspace.h"
 #include "x11eventfilter.h"
 

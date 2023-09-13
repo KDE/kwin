@@ -17,7 +17,7 @@
 #include "scene/workspacescene.h"
 #include "screencaststream.h"
 #include "wayland/display.h"
-#include "wayland/output_interface.h"
+#include "wayland/output.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "windowscreencastsource.h"

@@ -13,7 +13,7 @@
 #include "linuxdmabufv1clientbuffer.h"
 #include "core/renderbackend.h"
 #include "linuxdmabufv1clientbuffer_p.h"
-#include "surface_interface_p.h"
+#include "surface_p.h"
 #include "utils/common.h"
 
 #include <errno.h>

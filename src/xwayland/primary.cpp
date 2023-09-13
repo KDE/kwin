@@ -12,7 +12,7 @@
 #include "datasource.h"
 #include "selection_source.h"
 
-#include "wayland/seat_interface.h"
+#include "wayland/seat.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "x11window.h"

@@ -8,17 +8,17 @@
 #include <QSignalSpy>
 #include <QTest>
 // KWin
-#include "wayland/compositor_interface.h"
-#include "wayland/datadevicemanager_interface.h"
-#include "wayland/datasource_interface.h"
+#include "wayland/compositor.h"
+#include "wayland/datadevicemanager.h"
+#include "wayland/datasource.h"
 #include "wayland/display.h"
-#include "wayland/keyboard_interface.h"
-#include "wayland/pointer_interface.h"
-#include "wayland/pointergestures_v1_interface.h"
-#include "wayland/relativepointer_v1_interface.h"
-#include "wayland/seat_interface.h"
-#include "wayland/subcompositor_interface.h"
-#include "wayland/surface_interface.h"
+#include "wayland/keyboard.h"
+#include "wayland/pointer.h"
+#include "wayland/pointergestures_v1.h"
+#include "wayland/relativepointer_v1.h"
+#include "wayland/seat.h"
+#include "wayland/subcompositor.h"
+#include "wayland/surface.h"
 
 #include "KWayland/Client/compositor.h"
 #include "KWayland/Client/connection_thread.h"

@@ -9,7 +9,7 @@
 */
 #include "virtualdesktops.h"
 #include "input.h"
-#include "wayland/plasmavirtualdesktop_interface.h"
+#include "wayland/plasmavirtualdesktop.h"
 // KDE
 #include <KConfigGroup>
 #include <KGlobalAccel>

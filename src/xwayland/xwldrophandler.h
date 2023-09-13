@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "wayland/datadevice_interface.h"
+#include "wayland/datadevice.h"
 
 #include <xcb/xcb.h>
 

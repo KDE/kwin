@@ -10,7 +10,7 @@
 #include "scene/surfaceitem.h"
 #include "scene/surfaceitem_wayland.h"
 #include "utils/common.h"
-#include "wayland/surface_interface.h"
+#include "wayland/surface.h"
 
 namespace KWin
 {

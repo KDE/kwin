@@ -13,11 +13,11 @@
 #include "../../tests/fakeoutput.h"
 
 // WaylandServer
-#include "wayland/compositor_interface.h"
+#include "wayland/compositor.h"
 #include "wayland/display.h"
-#include "wayland/inputmethod_v1_interface.h"
-#include "wayland/output_interface.h"
-#include "wayland/seat_interface.h"
+#include "wayland/inputmethod_v1.h"
+#include "wayland/output.h"
+#include "wayland/seat.h"
 
 #include "KWayland/Client/compositor.h"
 #include "KWayland/Client/connection_thread.h"

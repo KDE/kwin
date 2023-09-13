@@ -10,7 +10,7 @@
 #include "idle_inhibition.h"
 #include "input.h"
 #include "virtualdesktops.h"
-#include "wayland/surface_interface.h"
+#include "wayland/surface.h"
 #include "window.h"
 #include "workspace.h"
 

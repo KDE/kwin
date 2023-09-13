@@ -10,7 +10,7 @@
 #include "core/output.h"
 #include "input_event.h"
 #include "main.h"
-#include "wayland/seat_interface.h"
+#include "wayland/seat.h"
 #include "wayland_server.h"
 #include "workspace.h"
 

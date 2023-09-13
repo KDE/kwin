@@ -22,7 +22,7 @@
 #include "tabletmodemanager.h"
 #include "utils/realtime.h"
 #include "wayland/display.h"
-#include "wayland/seat_interface.h"
+#include "wayland/seat.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "xwayland/xwayland.h"

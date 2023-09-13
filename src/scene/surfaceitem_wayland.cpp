@@ -8,8 +8,8 @@
 #include "compositor.h"
 #include "core/graphicsbuffer.h"
 #include "core/renderbackend.h"
-#include "wayland/subcompositor_interface.h"
-#include "wayland/surface_interface.h"
+#include "wayland/subcompositor.h"
+#include "wayland/surface.h"
 #include "window.h"
 #include "x11window.h"
 

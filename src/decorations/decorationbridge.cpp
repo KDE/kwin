@@ -14,7 +14,7 @@
 #include "decorations_logging.h"
 #include "settings.h"
 // KWin core
-#include "wayland/server_decoration_interface.h"
+#include "wayland/server_decoration.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"

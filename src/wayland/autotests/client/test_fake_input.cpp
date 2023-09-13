@@ -13,7 +13,7 @@
 #include "KWayland/Client/registry.h"
 // server
 #include "wayland/display.h"
-#include "wayland/fakeinput_interface.h"
+#include "wayland/fakeinput.h"
 
 #include <linux/input.h>
 

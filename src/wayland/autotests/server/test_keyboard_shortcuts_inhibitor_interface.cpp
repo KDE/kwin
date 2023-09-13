@@ -10,10 +10,10 @@
 #include <QTest>
 #include <QThread>
 // WaylandServer
-#include "wayland/compositor_interface.h"
+#include "wayland/compositor.h"
 #include "wayland/display.h"
-#include "wayland/keyboard_shortcuts_inhibit_v1_interface.h"
-#include "wayland/seat_interface.h"
+#include "wayland/keyboard_shortcuts_inhibit_v1.h"
+#include "wayland/seat.h"
 
 #include "KWayland/Client/compositor.h"
 #include "KWayland/Client/connection_thread.h"

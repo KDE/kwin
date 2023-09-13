@@ -15,9 +15,9 @@
 #include "selection_source.h"
 
 #include "atoms.h"
-#include "wayland/compositor_interface.h"
-#include "wayland/datasource_interface.h"
-#include "wayland/seat_interface.h"
+#include "wayland/compositor.h"
+#include "wayland/datasource.h"
+#include "wayland/seat.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"

@@ -7,8 +7,8 @@
 #include <QSignalSpy>
 #include <QTest>
 // KWin
-#include "wayland/blur_interface.h"
-#include "wayland/compositor_interface.h"
+#include "wayland/blur.h"
+#include "wayland/compositor.h"
 #include "wayland/display.h"
 #include "wayland/filtered_display.h"
 

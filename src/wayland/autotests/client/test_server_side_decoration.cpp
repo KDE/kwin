@@ -7,9 +7,9 @@
 #include <QSignalSpy>
 #include <QTest>
 // KWin
-#include "wayland/compositor_interface.h"
+#include "wayland/compositor.h"
 #include "wayland/display.h"
-#include "wayland/server_decoration_interface.h"
+#include "wayland/server_decoration.h"
 
 #include "KWayland/Client/compositor.h"
 #include "KWayland/Client/connection_thread.h"

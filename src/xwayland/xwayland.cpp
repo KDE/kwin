@@ -32,9 +32,9 @@
 #include "xwayland_logging.h"
 
 #include <KSelectionOwner>
-#include <wayland/keyboard_interface.h>
-#include <wayland/seat_interface.h>
-#include <wayland/surface_interface.h>
+#include <wayland/keyboard.h>
+#include <wayland/seat.h>
+#include <wayland/surface.h>
 
 #include <QAbstractEventDispatcher>
 #include <QDataStream>

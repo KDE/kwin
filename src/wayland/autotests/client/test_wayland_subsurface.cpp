@@ -7,10 +7,10 @@
 #include <QSignalSpy>
 #include <QTest>
 // KWin
-#include "wayland/compositor_interface.h"
+#include "wayland/compositor.h"
 #include "wayland/display.h"
-#include "wayland/subcompositor_interface.h"
-#include "wayland/surface_interface.h"
+#include "wayland/subcompositor.h"
+#include "wayland/surface.h"
 
 #include "KWayland/Client/compositor.h"
 #include "KWayland/Client/connection_thread.h"

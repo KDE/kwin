@@ -14,7 +14,7 @@
 #include "platformsupport/scenes/opengl/eglswapchain.h"
 #include "platformsupport/scenes/opengl/glrendertimequery.h"
 #include "scene/surfaceitem_wayland.h"
-#include "wayland/surface_interface.h"
+#include "wayland/surface.h"
 
 #include <QRegion>
 #include <drm_fourcc.h>

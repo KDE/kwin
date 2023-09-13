@@ -8,9 +8,9 @@
 #include <QTest>
 
 // server
-#include "wayland/compositor_interface.h"
+#include "wayland/compositor.h"
 #include "wayland/display.h"
-#include "wayland/plasmashell_interface.h"
+#include "wayland/plasmashell.h"
 
 // client
 #include "KWayland/Client/compositor.h"

@@ -3,11 +3,11 @@
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
-#include "../compositor_interface.h"
+#include "../compositor.h"
 #include "../display.h"
-#include "../output_interface.h"
-#include "../seat_interface.h"
-#include "../xdgshell_interface.h"
+#include "../output.h"
+#include "../seat.h"
+#include "../xdgshell.h"
 
 #include "fakeoutput.h"
 

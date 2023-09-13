@@ -19,12 +19,12 @@
 #include "KWayland/Client/surface.h"
 #include "KWayland/Client/xdgshell.h"
 // server
-#include "wayland/compositor_interface.h"
+#include "wayland/compositor.h"
 #include "wayland/display.h"
-#include "wayland/output_interface.h"
-#include "wayland/seat_interface.h"
-#include "wayland/surface_interface.h"
-#include "wayland/xdgshell_interface.h"
+#include "wayland/output.h"
+#include "wayland/seat.h"
+#include "wayland/surface.h"
+#include "wayland/xdgshell.h"
 
 #include "../../tests/fakeoutput.h"
 

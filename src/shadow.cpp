@@ -12,8 +12,8 @@
 #include "atoms.h"
 #include "core/graphicsbufferview.h"
 #include "internalwindow.h"
-#include "wayland/shadow_interface.h"
-#include "wayland/surface_interface.h"
+#include "wayland/shadow.h"
+#include "wayland/surface.h"
 #include "wayland_server.h"
 #include "x11window.h"
 

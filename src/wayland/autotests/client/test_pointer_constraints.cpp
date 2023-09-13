@@ -17,11 +17,11 @@
 #include "KWayland/Client/shm_pool.h"
 #include "KWayland/Client/surface.h"
 // server
-#include "wayland/compositor_interface.h"
+#include "wayland/compositor.h"
 #include "wayland/display.h"
-#include "wayland/pointerconstraints_v1_interface.h"
-#include "wayland/seat_interface.h"
-#include "wayland/surface_interface.h"
+#include "wayland/pointerconstraints_v1.h"
+#include "wayland/seat.h"
+#include "wayland/surface.h"
 
 using namespace KWaylandServer;
 

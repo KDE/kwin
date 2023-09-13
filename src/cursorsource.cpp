@@ -6,7 +6,7 @@
 
 #include "cursorsource.h"
 #include "cursor.h"
-#include "wayland/surface_interface.h"
+#include "wayland/surface.h"
 
 namespace KWin
 {

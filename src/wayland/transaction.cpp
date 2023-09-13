@@ -6,8 +6,8 @@
 
 #include "wayland/transaction.h"
 #include "utils/filedescriptor.h"
-#include "wayland/subcompositor_interface.h"
-#include "wayland/surface_interface_p.h"
+#include "wayland/subcompositor.h"
+#include "wayland/surface_p.h"
 #include "wayland/transaction_p.h"
 
 using namespace KWin;

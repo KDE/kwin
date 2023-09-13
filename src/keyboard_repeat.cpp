@@ -9,8 +9,8 @@
 #include "keyboard_repeat.h"
 #include "input_event.h"
 #include "keyboard_input.h"
-#include "wayland/keyboard_interface.h"
-#include "wayland/seat_interface.h"
+#include "wayland/keyboard.h"
+#include "wayland/seat.h"
 #include "wayland_server.h"
 #include "xkb.h"
 

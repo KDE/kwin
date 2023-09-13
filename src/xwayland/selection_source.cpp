@@ -11,9 +11,9 @@
 #include "transfer.h"
 
 #include "atoms.h"
-#include "wayland/datadevice_interface.h"
-#include "wayland/datasource_interface.h"
-#include "wayland/seat_interface.h"
+#include "wayland/datadevice.h"
+#include "wayland/datasource.h"
+#include "wayland/seat.h"
 #include "wayland_server.h"
 
 #include <fcntl.h>

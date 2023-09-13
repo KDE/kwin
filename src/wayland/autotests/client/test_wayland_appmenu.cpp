@@ -8,8 +8,8 @@
 #include <QSignalSpy>
 #include <QTest>
 // KWin
-#include "wayland/appmenu_interface.h"
-#include "wayland/compositor_interface.h"
+#include "wayland/appmenu.h"
+#include "wayland/compositor.h"
 #include "wayland/display.h"
 
 #include "KWayland/Client/appmenu.h"

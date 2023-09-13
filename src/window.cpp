@@ -32,9 +32,9 @@
 #include "tiles/tilemanager.h"
 #include "useractions.h"
 #include "virtualdesktops.h"
-#include "wayland/output_interface.h"
-#include "wayland/plasmawindowmanagement_interface.h"
-#include "wayland/surface_interface.h"
+#include "wayland/output.h"
+#include "wayland/plasmawindowmanagement.h"
+#include "wayland/surface.h"
 #include "wayland_server.h"
 #include "workspace.h"
 

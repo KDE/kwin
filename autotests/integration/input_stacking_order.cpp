@@ -11,7 +11,7 @@
 #include "core/output.h"
 #include "libkwineffects/kwineffects.h"
 #include "pointer_input.h"
-#include "wayland/seat_interface.h"
+#include "wayland/seat.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"

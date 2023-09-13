@@ -15,9 +15,9 @@
 
 #include "atoms.h"
 #include "wayland/clientconnection.h"
-#include "wayland/datadevice_interface.h"
-#include "wayland/datadevicemanager_interface.h"
-#include "wayland/seat_interface.h"
+#include "wayland/datadevice.h"
+#include "wayland/datadevicemanager.h"
+#include "wayland/seat.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"

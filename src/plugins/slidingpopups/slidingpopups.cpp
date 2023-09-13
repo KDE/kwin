@@ -12,8 +12,8 @@
 #include "slidingpopupsconfig.h"
 
 #include "wayland/display.h"
-#include "wayland/slide_interface.h"
-#include "wayland/surface_interface.h"
+#include "wayland/slide.h"
+#include "wayland/surface.h"
 
 #include <QFontMetrics>
 #include <QGuiApplication>

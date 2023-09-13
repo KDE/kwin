@@ -29,8 +29,8 @@
 #include "screenedge.h"
 #include "useractions.h"
 #include "utils/xcbutils.h"
-#include "wayland/surface_interface.h"
-#include "wayland/xwaylandshell_v1_interface.h"
+#include "wayland/surface.h"
+#include "wayland/xwaylandshell_v1.h"
 #include "wayland_server.h"
 
 #include <KDecoration2/Decoration>

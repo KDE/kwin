@@ -10,7 +10,7 @@
 
 #include "drm_egl_backend.h"
 #include "drm_gpu.h"
-#include "wayland/surface_interface.h"
+#include "wayland/surface.h"
 
 namespace KWin
 {

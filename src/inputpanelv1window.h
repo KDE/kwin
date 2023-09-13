@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "wayland/inputmethod_v1_interface.h"
+#include "wayland/inputmethod_v1.h"
 #include "waylandwindow.h"
 #include <QPointer>
 

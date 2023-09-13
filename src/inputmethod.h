@@ -8,7 +8,7 @@
 */
 #pragma once
 
-#include "wayland/textinput_v2_interface.h"
+#include "wayland/textinput_v2.h"
 
 #include <utility>
 #include <vector>

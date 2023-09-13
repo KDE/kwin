@@ -16,9 +16,9 @@
 #include "KWayland/Client/surface.h"
 // server
 #include "core/graphicsbufferview.h"
-#include "wayland/compositor_interface.h"
+#include "wayland/compositor.h"
 #include "wayland/display.h"
-#include "wayland/shadow_interface.h"
+#include "wayland/shadow.h"
 
 using namespace KWaylandServer;
 

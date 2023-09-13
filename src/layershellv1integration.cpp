@@ -8,8 +8,8 @@
 #include "core/output.h"
 #include "layershellv1window.h"
 #include "wayland/display.h"
-#include "wayland/layershell_v1_interface.h"
-#include "wayland/output_interface.h"
+#include "wayland/layershell_v1.h"
+#include "wayland/output.h"
 #include "wayland_server.h"
 #include "workspace.h"
 

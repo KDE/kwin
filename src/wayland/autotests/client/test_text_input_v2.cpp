@@ -16,11 +16,11 @@
 #include "KWayland/Client/surface.h"
 #include "KWayland/Client/textinput.h"
 // server
-#include "wayland/compositor_interface.h"
+#include "wayland/compositor.h"
 #include "wayland/display.h"
-#include "wayland/seat_interface.h"
+#include "wayland/seat.h"
 #include "wayland/textinput.h"
-#include "wayland/textinput_v2_interface.h"
+#include "wayland/textinput_v2.h"
 
 using namespace KWaylandServer;
 using namespace std::literals;

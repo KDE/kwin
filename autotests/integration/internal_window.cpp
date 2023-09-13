@@ -12,7 +12,7 @@
 #include "effects.h"
 #include "internalwindow.h"
 #include "pointer_input.h"
-#include "wayland/surface_interface.h"
+#include "wayland/surface.h"
 #include "wayland_server.h"
 #include "workspace.h"
 

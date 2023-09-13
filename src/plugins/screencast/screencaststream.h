@@ -10,7 +10,7 @@
 
 #include "config-kwin.h"
 
-#include "wayland/screencast_v1_interface.h"
+#include "wayland/screencast_v1.h"
 
 #include <QDateTime>
 #include <QHash>

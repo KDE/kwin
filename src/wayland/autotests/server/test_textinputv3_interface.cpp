@@ -8,11 +8,11 @@
 #include <QTest>
 #include <QThread>
 
-#include "wayland/compositor_interface.h"
+#include "wayland/compositor.h"
 #include "wayland/display.h"
-#include "wayland/seat_interface.h"
-#include "wayland/surface_interface.h"
-#include "wayland/textinput_v3_interface.h"
+#include "wayland/seat.h"
+#include "wayland/surface.h"
+#include "wayland/textinput_v3.h"
 
 #include "KWayland/Client/compositor.h"
 #include "KWayland/Client/connection_thread.h"

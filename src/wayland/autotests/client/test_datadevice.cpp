@@ -8,13 +8,13 @@
 #include <QSignalSpy>
 #include <QTest>
 
-#include "wayland/compositor_interface.h"
-#include "wayland/datadevicemanager_interface.h"
-#include "wayland/datasource_interface.h"
+#include "wayland/compositor.h"
+#include "wayland/datadevicemanager.h"
+#include "wayland/datasource.h"
 #include "wayland/display.h"
-#include "wayland/pointer_interface.h"
-#include "wayland/seat_interface.h"
-#include "wayland/surface_interface.h"
+#include "wayland/pointer.h"
+#include "wayland/seat.h"
+#include "wayland/surface.h"
 
 // KWayland
 #include "KWayland/Client/compositor.h"

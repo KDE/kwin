@@ -9,8 +9,8 @@
 #include <QTemporaryFile>
 #include <QTest>
 
-#include "wayland/datadevicemanager_interface.h"
-#include "wayland/datasource_interface.h"
+#include "wayland/datadevicemanager.h"
+#include "wayland/datasource.h"
 #include "wayland/display.h"
 
 // KWayland

@@ -29,7 +29,7 @@
 #include "pointer_input.h"
 #include "tablet_input.h"
 #include "touch_input.h"
-#include "wayland/xdgtopleveldrag_v1_interface.h"
+#include "wayland/xdgtopleveldrag_v1.h"
 #include "x11window.h"
 #if KWIN_BUILD_TABBOX
 #include "tabbox/tabbox.h"
@@ -43,10 +43,10 @@
 #include "screenedge.h"
 #include "virtualdesktops.h"
 #include "wayland/display.h"
-#include "wayland/inputmethod_v1_interface.h"
-#include "wayland/seat_interface.h"
-#include "wayland/surface_interface.h"
-#include "wayland/tablet_v2_interface.h"
+#include "wayland/inputmethod_v1.h"
+#include "wayland/seat.h"
+#include "wayland/surface.h"
+#include "wayland/tablet_v2.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "xkb.h"
@@ -73,7 +73,7 @@
 #include <xkbcommon/xkbcommon.h>
 
 #include "osd.h"
-#include "wayland/xdgshell_interface.h"
+#include "wayland/xdgshell.h"
 #include <cmath>
 
 using namespace std::literals;

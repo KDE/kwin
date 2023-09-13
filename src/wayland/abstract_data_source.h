@@ -9,7 +9,7 @@
 #include "kwin_export.h"
 
 #include "clientconnection.h"
-#include "datadevicemanager_interface.h"
+#include "datadevicemanager.h"
 
 struct wl_client;
 

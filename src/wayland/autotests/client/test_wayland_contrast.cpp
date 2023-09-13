@@ -8,8 +8,8 @@
 #include <QSignalSpy>
 #include <QTest>
 // KWin
-#include "wayland/compositor_interface.h"
-#include "wayland/contrast_interface.h"
+#include "wayland/compositor.h"
+#include "wayland/contrast.h"
 #include "wayland/display.h"
 
 #include "KWayland/Client/compositor.h"

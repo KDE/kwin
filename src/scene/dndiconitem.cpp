@@ -6,8 +6,8 @@
 
 #include "scene/dndiconitem.h"
 #include "scene/surfaceitem_wayland.h"
-#include "wayland/datadevice_interface.h"
-#include "wayland/surface_interface.h"
+#include "wayland/datadevice.h"
+#include "wayland/surface.h"
 
 namespace KWin
 {

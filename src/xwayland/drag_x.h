@@ -11,7 +11,7 @@
 #include "datasource.h"
 #include "drag.h"
 
-#include "wayland/datadevicemanager_interface.h"
+#include "wayland/datadevicemanager.h"
 
 #include <QPoint>
 #include <QPointer>

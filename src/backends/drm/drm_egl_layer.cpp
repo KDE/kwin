@@ -14,7 +14,7 @@
 #include "drm_output.h"
 #include "drm_pipeline.h"
 #include "scene/surfaceitem_wayland.h"
-#include "wayland/surface_interface.h"
+#include "wayland/surface.h"
 
 #include <QRegion>
 #include <drm_fourcc.h>

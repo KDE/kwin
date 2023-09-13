@@ -6,7 +6,7 @@
 
 #include "xdgshellintegration.h"
 #include "wayland/display.h"
-#include "wayland/xdgshell_interface.h"
+#include "wayland/xdgshell.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "xdgshellwindow.h"
