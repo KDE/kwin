@@ -146,7 +146,7 @@ OffscreenQuickView::OffscreenQuickView(QObject *parent, ExportMode exportMode)
     connect(d->m_renderControl.get(), &QQuickRenderControl::renderRequested, this, &OffscreenQuickView::handleRenderRequested);
     connect(d->m_renderControl.get(), &QQuickRenderControl::sceneChanged, this, &OffscreenQuickView::handleSceneChanged);
 
-    d->touchDevice = new QPointingDevice({}, {}, QInputDevice::DeviceType::TouchScreen, {}, QInputDevice::Capability::Position, 10, {});
+    d->touchDevice = new QPointingDevice(QStringLiteral("ForwardingTouchDevice"), {}, QInputDevice::DeviceType::TouchScreen, QPointingDevice::PointerType::Finger, QInputDevice::Capability::Position, 10, {});
 }
 
 OffscreenQuickView::~OffscreenQuickView()
