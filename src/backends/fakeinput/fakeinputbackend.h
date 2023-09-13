@@ -14,7 +14,7 @@
 namespace KWaylandServer
 {
 class FakeInputInterface;
-class FakeInputDevice;
+class FakeInputDeviceInterface;
 }
 
 namespace KWin
@@ -34,7 +34,7 @@ public:
 
 private:
     std::unique_ptr<KWaylandServer::FakeInputInterface> m_interface;
-    std::map<KWaylandServer::FakeInputDevice *, std::unique_ptr<FakeInputDevice>> m_devices;
+    std::map<KWaylandServer::FakeInputDeviceInterface *, std::unique_ptr<FakeInputDevice>> m_devices;
 };
 
 } // namespace KWin

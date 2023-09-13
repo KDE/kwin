@@ -16,8 +16,8 @@ struct wl_resource;
 namespace KWaylandServer
 {
 class Display;
-class FakeInputDevice;
-class FakeInputDevicePrivate;
+class FakeInputDeviceInterface;
+class FakeInputDeviceInterfacePrivate;
 class FakeInputInterfacePrivate;
 
 /**
@@ -49,9 +49,9 @@ Q_SIGNALS:
      * Signal emitted whenever a client bound the fake input @p device.
      * @param device The created FakeInputDevice
      */
-    void deviceCreated(KWaylandServer::FakeInputDevice *device);
+    void deviceCreated(KWaylandServer::FakeInputDeviceInterface *device);
 
-    void deviceDestroyed(KWaylandServer::FakeInputDevice *device);
+    void deviceDestroyed(KWaylandServer::FakeInputDeviceInterface *device);
 
 private:
     std::unique_ptr<FakeInputInterfacePrivate> d;
@@ -62,11 +62,11 @@ private:
  *
  * @see FakeInputInterface
  */
-class KWIN_EXPORT FakeInputDevice : public QObject
+class KWIN_EXPORT FakeInputDeviceInterface : public QObject
 {
     Q_OBJECT
 public:
-    ~FakeInputDevice() override;
+    ~FakeInputDeviceInterface() override;
     /**
      * @returns the native wl_resource.
      */
@@ -147,10 +147,10 @@ Q_SIGNALS:
 
 private:
     friend class FakeInputInterfacePrivate;
-    FakeInputDevice(FakeInputInterface *parent, wl_resource *resource);
-    std::unique_ptr<FakeInputDevicePrivate> d;
+    FakeInputDeviceInterface(FakeInputInterface *parent, wl_resource *resource);
+    std::unique_ptr<FakeInputDeviceInterfacePrivate> d;
 };
 
 }
 
-Q_DECLARE_METATYPE(KWaylandServer::FakeInputDevice *)
+Q_DECLARE_METATYPE(KWaylandServer::FakeInputDeviceInterface *)

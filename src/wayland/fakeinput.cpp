@@ -21,10 +21,10 @@ class FakeInputInterfacePrivate : public QtWaylandServer::org_kde_kwin_fake_inpu
 {
 public:
     FakeInputInterfacePrivate(FakeInputInterface *_q, Display *display);
-    std::map<wl_resource *, std::unique_ptr<FakeInputDevice>> devices;
+    std::map<wl_resource *, std::unique_ptr<FakeInputDeviceInterface>> devices;
 
 private:
-    FakeInputDevice *device(wl_resource *r);
+    FakeInputDeviceInterface *device(wl_resource *r);
 
     FakeInputInterface *q;
     static QList<quint32> touchIds;
@@ -62,8 +62,8 @@ FakeInputInterface::~FakeInputInterface() = default;
 
 void FakeInputInterfacePrivate::org_kde_kwin_fake_input_bind_resource(Resource *resource)
 {
-    auto device = new FakeInputDevice(q, resource->handle);
-    devices[resource->handle] = std::unique_ptr<FakeInputDevice>(device);
+    auto device = new FakeInputDeviceInterface(q, resource->handle);
+    devices[resource->handle] = std::unique_ptr<FakeInputDeviceInterface>(device);
     Q_EMIT q->deviceCreated(device);
 }
 
@@ -77,14 +77,14 @@ void FakeInputInterfacePrivate::org_kde_kwin_fake_input_destroy_resource(Resourc
     }
 }
 
-FakeInputDevice *FakeInputInterfacePrivate::device(wl_resource *r)
+FakeInputDeviceInterface *FakeInputInterfacePrivate::device(wl_resource *r)
 {
     return devices[r].get();
 }
 
 void FakeInputInterfacePrivate::org_kde_kwin_fake_input_authenticate(Resource *resource, const QString &application, const QString &reason)
 {
-    FakeInputDevice *d = device(resource->handle);
+    FakeInputDeviceInterface *d = device(resource->handle);
     if (!d) {
         return;
     }
@@ -93,7 +93,7 @@ void FakeInputInterfacePrivate::org_kde_kwin_fake_input_authenticate(Resource *r
 
 void FakeInputInterfacePrivate::org_kde_kwin_fake_input_pointer_motion(Resource *resource, wl_fixed_t delta_x, wl_fixed_t delta_y)
 {
-    FakeInputDevice *d = device(resource->handle);
+    FakeInputDeviceInterface *d = device(resource->handle);
     if (!d || !d->isAuthenticated()) {
         return;
     }
@@ -102,7 +102,7 @@ void FakeInputInterfacePrivate::org_kde_kwin_fake_input_pointer_motion(Resource 
 
 void FakeInputInterfacePrivate::org_kde_kwin_fake_input_button(Resource *resource, uint32_t button, uint32_t state)
 {
-    FakeInputDevice *d = device(resource->handle);
+    FakeInputDeviceInterface *d = device(resource->handle);
     if (!d || !d->isAuthenticated()) {
         return;
     }
@@ -120,7 +120,7 @@ void FakeInputInterfacePrivate::org_kde_kwin_fake_input_button(Resource *resourc
 }
 void FakeInputInterfacePrivate::org_kde_kwin_fake_input_axis(Resource *resource, uint32_t axis, wl_fixed_t value)
 {
-    FakeInputDevice *d = device(resource->handle);
+    FakeInputDeviceInterface *d = device(resource->handle);
     if (!d || !d->isAuthenticated()) {
         return;
     }
@@ -141,7 +141,7 @@ void FakeInputInterfacePrivate::org_kde_kwin_fake_input_axis(Resource *resource,
 
 void FakeInputInterfacePrivate::org_kde_kwin_fake_input_touch_down(Resource *resource, uint32_t id, wl_fixed_t x, wl_fixed_t y)
 {
-    FakeInputDevice *d = device(resource->handle);
+    FakeInputDeviceInterface *d = device(resource->handle);
     if (!d || !d->isAuthenticated()) {
         return;
     }
@@ -154,7 +154,7 @@ void FakeInputInterfacePrivate::org_kde_kwin_fake_input_touch_down(Resource *res
 
 void FakeInputInterfacePrivate::org_kde_kwin_fake_input_touch_motion(Resource *resource, uint32_t id, wl_fixed_t x, wl_fixed_t y)
 {
-    FakeInputDevice *d = device(resource->handle);
+    FakeInputDeviceInterface *d = device(resource->handle);
     if (!d || !d->isAuthenticated()) {
         return;
     }
@@ -166,7 +166,7 @@ void FakeInputInterfacePrivate::org_kde_kwin_fake_input_touch_motion(Resource *r
 
 void FakeInputInterfacePrivate::org_kde_kwin_fake_input_touch_up(Resource *resource, uint32_t id)
 {
-    FakeInputDevice *d = device(resource->handle);
+    FakeInputDeviceInterface *d = device(resource->handle);
     if (!d || !d->isAuthenticated()) {
         return;
     }
@@ -179,7 +179,7 @@ void FakeInputInterfacePrivate::org_kde_kwin_fake_input_touch_up(Resource *resou
 
 void FakeInputInterfacePrivate::org_kde_kwin_fake_input_touch_cancel(Resource *resource)
 {
-    FakeInputDevice *d = device(resource->handle);
+    FakeInputDeviceInterface *d = device(resource->handle);
     if (!d || !d->isAuthenticated()) {
         return;
     }
@@ -189,7 +189,7 @@ void FakeInputInterfacePrivate::org_kde_kwin_fake_input_touch_cancel(Resource *r
 
 void FakeInputInterfacePrivate::org_kde_kwin_fake_input_touch_frame(Resource *resource)
 {
-    FakeInputDevice *d = device(resource->handle);
+    FakeInputDeviceInterface *d = device(resource->handle);
     if (!d || !d->isAuthenticated()) {
         return;
     }
@@ -198,7 +198,7 @@ void FakeInputInterfacePrivate::org_kde_kwin_fake_input_touch_frame(Resource *re
 
 void FakeInputInterfacePrivate::org_kde_kwin_fake_input_pointer_motion_absolute(Resource *resource, wl_fixed_t x, wl_fixed_t y)
 {
-    FakeInputDevice *d = device(resource->handle);
+    FakeInputDeviceInterface *d = device(resource->handle);
     if (!d || !d->isAuthenticated()) {
         return;
     }
@@ -207,7 +207,7 @@ void FakeInputInterfacePrivate::org_kde_kwin_fake_input_pointer_motion_absolute(
 
 void FakeInputInterfacePrivate::org_kde_kwin_fake_input_keyboard_key(Resource *resource, uint32_t button, uint32_t state)
 {
-    FakeInputDevice *d = device(resource->handle);
+    FakeInputDeviceInterface *d = device(resource->handle);
     if (!d || !d->isAuthenticated()) {
         return;
     }
@@ -224,39 +224,39 @@ void FakeInputInterfacePrivate::org_kde_kwin_fake_input_keyboard_key(Resource *r
     }
 }
 
-class FakeInputDevicePrivate
+class FakeInputDeviceInterfacePrivate
 {
 public:
-    FakeInputDevicePrivate(FakeInputInterface *interface, wl_resource *resource);
+    FakeInputDeviceInterfacePrivate(FakeInputInterface *interface, wl_resource *resource);
     wl_resource *resource;
     FakeInputInterface *interface;
     bool authenticated = false;
 };
 
-FakeInputDevicePrivate::FakeInputDevicePrivate(FakeInputInterface *interface, wl_resource *resource)
+FakeInputDeviceInterfacePrivate::FakeInputDeviceInterfacePrivate(FakeInputInterface *interface, wl_resource *resource)
     : resource(resource)
     , interface(interface)
 {
 }
 
-FakeInputDevice::FakeInputDevice(FakeInputInterface *parent, wl_resource *resource)
-    : d(std::make_unique<FakeInputDevicePrivate>(parent, resource))
+FakeInputDeviceInterface::FakeInputDeviceInterface(FakeInputInterface *parent, wl_resource *resource)
+    : d(std::make_unique<FakeInputDeviceInterfacePrivate>(parent, resource))
 {
 }
 
-FakeInputDevice::~FakeInputDevice() = default;
+FakeInputDeviceInterface::~FakeInputDeviceInterface() = default;
 
-void FakeInputDevice::setAuthentication(bool authenticated)
+void FakeInputDeviceInterface::setAuthentication(bool authenticated)
 {
     d->authenticated = authenticated;
 }
 
-wl_resource *FakeInputDevice::resource()
+wl_resource *FakeInputDeviceInterface::resource()
 {
     return d->resource;
 }
 
-bool FakeInputDevice::isAuthenticated() const
+bool FakeInputDeviceInterface::isAuthenticated() const
 {
     return d->authenticated;
 }

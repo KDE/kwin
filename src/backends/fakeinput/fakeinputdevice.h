@@ -10,7 +10,7 @@
 
 namespace KWaylandServer
 {
-class FakeInputDevice;
+class FakeInputDeviceInterface;
 }
 
 namespace KWin
@@ -21,7 +21,7 @@ class KWIN_EXPORT FakeInputDevice : public InputDevice
     Q_OBJECT
 
 public:
-    explicit FakeInputDevice(KWaylandServer::FakeInputDevice *device, QObject *parent = nullptr);
+    explicit FakeInputDevice(KWaylandServer::FakeInputDeviceInterface *device, QObject *parent = nullptr);
 
     QString sysName() const override;
     QString name() const override;
