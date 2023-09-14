@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-09 01:58+0000\n"
+"POT-Creation-Date: 2023-09-14 01:55+0000\n"
 "PO-Revision-Date: 2023-05-22 18:51+0200\n"
 "Last-Translator: Ferdinand Galko <galko.ferdinand@gmail.com>\n"
 "Language-Team: Slovak <opensuse-translation@opensuse.org>\n"
@@ -1208,22 +1208,22 @@ msgstr "&Ukončiť aplikáciu %1"
 msgid "Wait Longer"
 msgstr "Čakať dlhšie"
 
-#: input.cpp:2012
+#: input.cpp:2014
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Presun tabletu na ďalší výstup"
 
-#: input.cpp:2091
+#: input.cpp:2093
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Tablet presunutý na %1"
 
-#: input.cpp:2091
+#: input.cpp:2093
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Tablety si prehodili výstupy"
 
-#: input.cpp:3108
+#: input.cpp:3155
 #, kde-format
 msgid "Touchpad"
 msgstr "Touchpad"

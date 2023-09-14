@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-09 01:58+0000\n"
+"POT-Creation-Date: 2023-09-14 01:55+0000\n"
 "PO-Revision-Date: 2023-07-28 20:53+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
@@ -1207,22 +1207,22 @@ msgstr "&Tvangsavslutt programmet %1"
 msgid "Wait Longer"
 msgstr "Vent lenger"
 
-#: input.cpp:2012
+#: input.cpp:2014
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Flytt teikneplata til neste uteining"
 
-#: input.cpp:2091
+#: input.cpp:2093
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Teikneplate flytta til %1"
 
-#: input.cpp:2091
+#: input.cpp:2093
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Teikneplate fekk nye uteining"
 
-#: input.cpp:3108
+#: input.cpp:3155
 #, kde-format
 msgid "Touchpad"
 msgstr "Styreplate"
