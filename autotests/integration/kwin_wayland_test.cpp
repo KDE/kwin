@@ -146,16 +146,16 @@ void WaylandTestApplication::performStartup()
     createVirtualInputDevices();
 
     WaylandCompositor::create();
+    createWorkspace();
+    createColorManager();
+    createPlugins();
+
     connect(Compositor::self(), &Compositor::sceneCreated, this, &WaylandTestApplication::continueStartupWithScene);
 }
 
 void WaylandTestApplication::continueStartupWithScene()
 {
     disconnect(Compositor::self(), &Compositor::sceneCreated, this, &WaylandTestApplication::continueStartupWithScene);
-
-    createWorkspace();
-    createColorManager();
-    createPlugins();
 
     waylandServer()->initWorkspace();
 

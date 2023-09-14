@@ -45,12 +45,7 @@ void WaylandCompositor::start()
         return;
     }
 
-    if (Workspace::self()) {
-        startupWithWorkspace();
-    } else {
-        connect(kwinApp(), &Application::workspaceCreated,
-                this, &WaylandCompositor::startupWithWorkspace);
-    }
+    startupWithWorkspace();
 }
 
 } // namespace KWin

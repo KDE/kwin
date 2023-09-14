@@ -145,6 +145,9 @@ void ApplicationWayland::performStartup()
     createTabletModeManager();
 
     WaylandCompositor::create();
+    createWorkspace();
+    createColorManager();
+    createPlugins();
 
     connect(Compositor::self(), &Compositor::sceneCreated, outputBackend(), &OutputBackend::sceneInitialized);
     connect(Compositor::self(), &Compositor::sceneCreated, this, &ApplicationWayland::continueStartupWithScene, Qt::SingleShotConnection);
@@ -153,10 +156,6 @@ void ApplicationWayland::performStartup()
 void ApplicationWayland::continueStartupWithScene()
 {
     // Note that we start accepting client connections after creating the Workspace.
-    createWorkspace();
-    createColorManager();
-    createPlugins();
-
     if (!waylandServer()->start()) {
         qFatal("Failed to initialze the Wayland server, exiting now");
     }
