@@ -159,6 +159,7 @@ bool WaylandWindow::belongsToDesktop() const
 void WaylandWindow::updateClientOutputs()
 {
     surface()->setOutputs(waylandServer()->display()->outputsIntersecting(frameGeometry().toAlignedRect()));
+    surface()->setLargestOutput(waylandServer()->display()->largestOutputIntersecting(frameGeometry().toAlignedRect()));
     if (output()) {
         surface()->setPreferredScale(output()->scale());
     }

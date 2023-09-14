@@ -144,6 +144,11 @@ Q_SIGNALS:
      */
     void frameRequested(RenderLoop *loop);
 
+    /**
+     * This signal is emitted when a frame has been fail to present on the screen.
+     */
+    void frameFailed();
+
 private:
     std::unique_ptr<RenderLoopPrivate> d;
     friend class RenderLoopPrivate;

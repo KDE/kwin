@@ -284,6 +284,16 @@ public:
     void setOutputs(const QVector<OutputInterface *> &outputs);
 
     /**
+     * Sets the largest Output of this SurfaceInterface overlaps with, may be empty.
+     *
+     * The compositor should update whenever the SurfaceInterface becomes visible on
+     * an OutputInterface by e.g. getting (un)mapped, resized, moved, etc.
+     *
+     * @see outputs
+     */
+    void setLargestOutput(OutputInterface *output);
+
+    /**
      * @returns All OutputInterfaces the SurfaceInterface is on.
      * @see setOutputs
      */

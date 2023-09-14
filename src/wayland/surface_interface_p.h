@@ -22,6 +22,8 @@ class ViewportInterface;
 class ContentTypeV1Interface;
 class TearingControlV1Interface;
 class FractionalScaleV1Interface;
+class PresentationFeedbackInterface;
+class PresentationFeedbacks;
 
 struct SurfaceState
 {
@@ -93,6 +95,8 @@ public:
     void installPointerConstraint(ConfinedPointerV1Interface *confinement);
     void installIdleInhibitor(IdleInhibitorV1Interface *inhibitor);
 
+    void addPresentationFeedback(PresentationFeedbackInterface *feedback) const;
+
     void commitToCache();
     void commitFromCache();
 
@@ -132,6 +136,7 @@ public:
     qreal pendingScaleOverride = 1.;
 
     QVector<OutputInterface *> outputs;
+    OutputInterface *largestOutput = nullptr;
     qreal preferredScale = 1.0;
 
     LockedPointerV1Interface *lockedPointer = nullptr;
@@ -146,6 +151,7 @@ public:
     FractionalScaleV1Interface *fractionalScaleExtension = nullptr;
     ClientConnection *client = nullptr;
     TearingControlV1Interface *tearing = nullptr;
+    PresentationFeedbacks *feedbacks = nullptr;
 
 protected:
     void surface_destroy_resource(Resource *resource) override;

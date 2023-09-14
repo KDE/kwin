@@ -124,6 +124,8 @@ void RenderLoopPrivate::notifyFrameFailed()
     if (!inhibitCount) {
         maybeScheduleRepaint();
     }
+
+    Q_EMIT q->frameFailed();
 }
 
 void RenderLoopPrivate::notifyFrameCompleted(std::chrono::nanoseconds timestamp)

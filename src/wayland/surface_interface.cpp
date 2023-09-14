@@ -14,6 +14,7 @@
 #include "idleinhibit_v1_interface_p.h"
 #include "linuxdmabufv1clientbuffer.h"
 #include "pointerconstraints_v1_interface_p.h"
+#include "presentation_time_interface.h"
 #include "region_interface_p.h"
 #include "subcompositor_interface.h"
 #include "subsurface_interface_p.h"
@@ -44,6 +45,7 @@ SurfaceInterfacePrivate::SurfaceInterfacePrivate(SurfaceInterface *q)
     wl_list_init(&current.frameCallbacks);
     wl_list_init(&pending.frameCallbacks);
     wl_list_init(&cached.frameCallbacks);
+    this->feedbacks = new PresentationFeedbacks(q);
 }
 
 SurfaceInterfacePrivate::~SurfaceInterfacePrivate()
@@ -393,7 +395,7 @@ void SurfaceInterface::frameRendered(quint32 msec)
     // notify all callbacks
     wl_resource *resource;
     wl_resource *tmp;
-
+    d->feedbacks->presented(std::chrono::milliseconds(msec));
     wl_resource_for_each_safe (resource, tmp, &d->current.frameCallbacks) {
         wl_callback_send_done(resource, msec);
         wl_resource_destroy(resource);
@@ -405,6 +407,11 @@ void SurfaceInterface::frameRendered(quint32 msec)
     for (SubSurfaceInterface *subsurface : std::as_const(d->current.above)) {
         subsurface->surface()->frameRendered(msec);
     }
+}
+
+void SurfaceInterfacePrivate::addPresentationFeedback(PresentationFeedbackInterface *feedback) const
+{
+    this->feedbacks->add(feedback);
 }
 
 bool SurfaceInterface::hasFrameCallbacks() const
@@ -911,6 +918,7 @@ void SurfaceInterface::setOutputs(const QVector<OutputInterface *> &outputs)
         const auto resources = (*it)->clientResources(client());
         for (wl_resource *outputResource : resources) {
             d->send_leave(outputResource);
+            d->feedbacks->unsetOutput(*it);
         }
         disconnect(d->outputDestroyedConnections.take(*it));
         disconnect(d->outputBoundConnections.take(*it));
@@ -948,6 +956,16 @@ void SurfaceInterface::setOutputs(const QVector<OutputInterface *> &outputs)
     }
     for (auto child : std::as_const(d->current.above)) {
         child->surface()->setOutputs(outputs);
+    }
+}
+
+void SurfaceInterface::setLargestOutput(OutputInterface *output)
+{
+    d->largestOutput = output;
+
+    // Use the largest output for feedback
+    if (output != nullptr) {
+        d->feedbacks->setOutput(output);
     }
 }
 

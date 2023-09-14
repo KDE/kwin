@@ -291,6 +291,12 @@ void OutputInterface::remove()
 QVector<wl_resource *> OutputInterface::clientResources(ClientConnection *client) const
 {
     const auto outputResources = d->resourceMap().values(client->client());
+    return clientResources(client->client());
+}
+
+QVector<wl_resource *> OutputInterface::clientResources(wl_client *client) const
+{
+    const auto outputResources = d->resourceMap().values(client);
     QVector<wl_resource *> ret;
     ret.reserve(outputResources.count());
 

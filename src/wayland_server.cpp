@@ -52,6 +52,7 @@
 #include "wayland/plasmawindowmanagement_interface.h"
 #include "wayland/pointerconstraints_v1_interface.h"
 #include "wayland/pointergestures_v1_interface.h"
+#include "wayland/presentation_time_interface.h"
 #include "wayland/primaryselectiondevicemanager_v1_interface.h"
 #include "wayland/relativepointer_v1_interface.h"
 #include "wayland/seat_interface.h"
@@ -416,6 +417,7 @@ bool WaylandServer::init(InitializationFlags flags)
     new PointerGesturesV1Interface(m_display, m_display);
     new PointerConstraintsV1Interface(m_display, m_display);
     new RelativePointerManagerV1Interface(m_display, m_display);
+    m_presentation_manager = new PresentationManagerInterface(m_display, m_display);
     m_dataDeviceManager = new DataDeviceManagerInterface(m_display, m_display);
     new DataControlDeviceManagerV1Interface(m_display, m_display);
 

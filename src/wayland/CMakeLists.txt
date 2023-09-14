@@ -97,6 +97,10 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     BASENAME pointer-constraints-unstable-v1
 )
 ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PROTOCOL ${WaylandProtocols_DATADIR}/stable/presentation-time/presentation-time.xml
+    BASENAME presentation-time
+)
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${WaylandProtocols_DATADIR}/unstable/xdg-foreign/xdg-foreign-unstable-v2.xml
     BASENAME xdg-foreign-unstable-v2
 )
@@ -256,6 +260,7 @@ target_sources(kwin PRIVATE
     primaryselectiondevicemanager_v1_interface.cpp
     primaryselectionoffer_v1_interface.cpp
     primaryselectionsource_v1_interface.cpp
+    presentation_time_interface.cpp
     region_interface.cpp
     relativepointer_v1_interface.cpp
     screencast_v1_interface.cpp
