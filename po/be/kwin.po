@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 86ff119b1606fcaa910d6b44fc14b611\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-14 01:55+0000\n"
+"POT-Creation-Date: 2023-09-15 01:54+0000\n"
 "PO-Revision-Date: 2023-02-09 08:31\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -1443,7 +1443,7 @@ msgstr "Запускае сеанс без падтрымкі экрана бл�
 msgid "Starts the session without global shortcuts support."
 msgstr "Запускае сеанс без падтрымкі глабальных спалучэнняў клавіш."
 
-#: main_wayland.cpp:388 main_x11.cpp:420
+#: main_wayland.cpp:388 main_x11.cpp:422
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Адключыць інтэграцыю KActivities."
@@ -1483,7 +1483,7 @@ msgstr ""
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr "kwin: запушчаны іншы кіраўнік акон (паспрабуйце --replace)\n"
 
-#: main_x11.cpp:413
+#: main_x11.cpp:415
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Замяніць ужо запушчаны кіраўнік акон, сумяшчальны з ICCCM2.0"

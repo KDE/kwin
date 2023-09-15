@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-14 01:55+0000\n"
+"POT-Creation-Date: 2023-09-15 01:54+0000\n"
 "PO-Revision-Date: 2010-12-17 20:20+0700\n"
 "Last-Translator: Thanomsub Noppaburana <donga.nb@gmail.com>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
@@ -1430,7 +1430,7 @@ msgstr ""
 msgid "Starts the session without global shortcuts support."
 msgstr ""
 
-#: main_wayland.cpp:388 main_x11.cpp:420
+#: main_wayland.cpp:388 main_x11.cpp:422
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr ""
@@ -1475,7 +1475,7 @@ msgstr ""
 "kwin: ไม่สามารถเรียกตัวจัดการการเลือกได้ มีโปรแกรมจัดการหน้าต่างอื่นทำงานอยู่หรือไม่ ? "
 "(ลองใช้ตัวเลือก --replace)\n"
 
-#: main_x11.cpp:413
+#: main_x11.cpp:415
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "แทนที่ตัวจัดการหน้าต่างที่เข้ากันได้กับ ICCCM2.0 ที่กำลังทำงานอยู่"

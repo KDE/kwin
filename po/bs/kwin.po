@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-14 01:55+0000\n"
+"POT-Creation-Date: 2023-09-15 01:54+0000\n"
 "PO-Revision-Date: 2014-10-20 20:21+0000\n"
 "Last-Translator: Lejla Agic <lagic1@etf.unsa.ba>\n"
 "Language-Team: bosanski <bs@li.org>\n"
@@ -1442,7 +1442,7 @@ msgstr ""
 msgid "Starts the session without global shortcuts support."
 msgstr ""
 
-#: main_wayland.cpp:388 main_x11.cpp:420
+#: main_wayland.cpp:388 main_x11.cpp:422
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr ""
@@ -1483,7 +1483,7 @@ msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr ""
 "kwin: drugi upravitelj prozora je aktivan (pokusajte koristiti --zamjenu)\n"
 
-#: main_x11.cpp:413
+#: main_x11.cpp:415
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Zamijeni već pokrenuti ICCCM‑u 2.0 saglasni menadžer prozora"

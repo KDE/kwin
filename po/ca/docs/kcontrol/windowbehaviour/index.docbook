@@ -238,7 +238,7 @@
 >Retard del focus en</title>
 
 <para
->Aquest és el retard després del qual rebrà automàticament el focus la finestra damunt de la qual hi ha l'apuntador del ratolí. </para>
+>Aquest és el retard després del qual rebrà automàticament el focus la finestra damunt de la qual hi ha el punter del ratolí. </para>
 
 </sect3>
 
@@ -332,7 +332,7 @@
 <para
 >En activar <guilabel
 >Eleva en passar per sobre, amb retard de</guilabel
-> podeu portar una finestra al capdavant si el ratolí està sobre aquesta finestra durant un període determinat de temps. Podeu determinar el retard d'aquesta opció utilitzant el control del botó de selecció de valors. Aquesta opció d'elevació d'automàtica només està disponible amb una política de focus en passar-hi per sobre. </para>
+> podeu portar una finestra al capdavant si el punter del ratolí està sobre aquesta finestra durant un període determinat de temps. Podeu determinar el retard d'aquesta opció utilitzant el control del botó de selecció de valors. Aquesta opció d'elevació d'automàtica només està disponible amb una política de focus en passar-hi per sobre. </para>
 
 <tip>
 <para
@@ -357,7 +357,7 @@
 ></term>
 <listitem>
 <para
->Quan aquesta opció està activada, la pantalla activa (p. ex. a on apareixen les noves finestres) és la pantalla amb el cursor del ratolí. Quan està desactivada, la pantalla activa és la pantalla amb la finestra enfocada. </para>
+>Quan aquesta opció està activada, la pantalla activa (p. ex. a on apareixen les noves finestres) és la pantalla amb el punter del ratolí. Quan està desactivada, la pantalla activa és la pantalla amb la finestra enfocada. </para>
 </listitem>
 </varlistentry>
 
