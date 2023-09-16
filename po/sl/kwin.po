@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1660204 2023-09-15 02:08:55Z scripty $
+# $Id: kwin.po 1660270 2023-09-16 02:11:06Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-15 01:54+0000\n"
+"POT-Creation-Date: 2023-09-16 01:55+0000\n"
 "PO-Revision-Date: 2023-07-20 06:15+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -1231,7 +1231,7 @@ msgstr "Tablični računalnik prenesen na %1"
 msgid "Tablets switched outputs"
 msgstr "Tablični računalniki so preklopili izhode"
 
-#: input.cpp:3155
+#: input.cpp:3152
 #, kde-format
 msgid "Touchpad"
 msgstr "Drsna ploščica"
@@ -4105,47 +4105,47 @@ msgstr ""
 msgid "unknown"
 msgstr "neznano"
 
-#: virtualdesktops.cpp:692 virtualdesktops.cpp:763
+#: virtualdesktops.cpp:691 virtualdesktops.cpp:762
 #, kde-format
 msgid "Desktop %1"
 msgstr "Namizje %1"
 
-#: virtualdesktops.cpp:799
+#: virtualdesktops.cpp:798
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Preklopi na naslednje namizje"
 
-#: virtualdesktops.cpp:800
+#: virtualdesktops.cpp:799
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Preklopi na prejšnje namizje"
 
-#: virtualdesktops.cpp:803
+#: virtualdesktops.cpp:802
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Preklopi na eno namizje desno"
 
-#: virtualdesktops.cpp:805
+#: virtualdesktops.cpp:804
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Preklopi na eno namizje levo"
 
-#: virtualdesktops.cpp:807
+#: virtualdesktops.cpp:806
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Preklopi na eno namizje navzgor"
 
-#: virtualdesktops.cpp:809
+#: virtualdesktops.cpp:808
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Preklopi na eno namizje navzdol"
 
-#: virtualdesktops.cpp:898
+#: virtualdesktops.cpp:897
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "Preklopi na namizje %1"
 
-#: window.cpp:3079
+#: window.cpp:3078
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-15 01:54+0000\n"
+"POT-Creation-Date: 2023-09-16 01:55+0000\n"
 "PO-Revision-Date: 2022-11-14 01:16+0100\n"
 "Last-Translator: Mihkel Tõnnov <mihhkel@gmail.com>\n"
 "Language-Team: Estonian <>\n"
@@ -1217,7 +1217,7 @@ msgstr ""
 msgid "Tablets switched outputs"
 msgstr ""
 
-#: input.cpp:3155
+#: input.cpp:3152
 #, kde-format
 msgid "Touchpad"
 msgstr "Puutepadi"
@@ -4235,47 +4235,47 @@ msgstr ""
 msgid "unknown"
 msgstr "tundmatu"
 
-#: virtualdesktops.cpp:692 virtualdesktops.cpp:763
+#: virtualdesktops.cpp:691 virtualdesktops.cpp:762
 #, kde-format
 msgid "Desktop %1"
 msgstr "Töölaud %1"
 
-#: virtualdesktops.cpp:799
+#: virtualdesktops.cpp:798
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Lülitumine järgmisele töölauale"
 
-#: virtualdesktops.cpp:800
+#: virtualdesktops.cpp:799
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Lülitumine eelmisele töölauale"
 
-#: virtualdesktops.cpp:803
+#: virtualdesktops.cpp:802
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Lülitumine üks töölaud paremale"
 
-#: virtualdesktops.cpp:805
+#: virtualdesktops.cpp:804
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Lülitumine üks töölaud vasakule"
 
-#: virtualdesktops.cpp:807
+#: virtualdesktops.cpp:806
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Lülitumine üks töölaud üles"
 
-#: virtualdesktops.cpp:809
+#: virtualdesktops.cpp:808
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Lülitumine üks töölaud alla"
 
-#: virtualdesktops.cpp:898
+#: virtualdesktops.cpp:897
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "Lülitumine töölauale %1"
 
-#: window.cpp:3079
+#: window.cpp:3078
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

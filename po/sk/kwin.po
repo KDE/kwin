@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-15 01:54+0000\n"
+"POT-Creation-Date: 2023-09-16 01:55+0000\n"
 "PO-Revision-Date: 2023-05-22 18:51+0200\n"
 "Last-Translator: Ferdinand Galko <galko.ferdinand@gmail.com>\n"
 "Language-Team: Slovak <opensuse-translation@opensuse.org>\n"
@@ -1223,7 +1223,7 @@ msgstr "Tablet presunutý na %1"
 msgid "Tablets switched outputs"
 msgstr "Tablety si prehodili výstupy"
 
-#: input.cpp:3155
+#: input.cpp:3152
 #, kde-format
 msgid "Touchpad"
 msgstr "Touchpad"
@@ -4105,47 +4105,47 @@ msgstr ""
 msgid "unknown"
 msgstr "neznáme"
 
-#: virtualdesktops.cpp:692 virtualdesktops.cpp:763
+#: virtualdesktops.cpp:691 virtualdesktops.cpp:762
 #, kde-format
 msgid "Desktop %1"
 msgstr "Plocha %1"
 
-#: virtualdesktops.cpp:799
+#: virtualdesktops.cpp:798
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Prepnúť na nasledujúcu plochu"
 
-#: virtualdesktops.cpp:800
+#: virtualdesktops.cpp:799
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Prepnúť na predchádzajúcu plochu"
 
-#: virtualdesktops.cpp:803
+#: virtualdesktops.cpp:802
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Prepnúť o jednu plochu doprava"
 
-#: virtualdesktops.cpp:805
+#: virtualdesktops.cpp:804
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Prepnúť o jednu plochu doľava"
 
-#: virtualdesktops.cpp:807
+#: virtualdesktops.cpp:806
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Prepnúť o jednu plochu hore"
 
-#: virtualdesktops.cpp:809
+#: virtualdesktops.cpp:808
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Prepnúť o jednu plochu dolu"
 
-#: virtualdesktops.cpp:898
+#: virtualdesktops.cpp:897
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "Prepnúť na plochu %1"
 
-#: window.cpp:3079
+#: window.cpp:3078
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

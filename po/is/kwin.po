@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-15 01:54+0000\n"
+"POT-Creation-Date: 2023-09-16 01:55+0000\n"
 "PO-Revision-Date: 2022-12-31 14:10+0000\n"
 "Last-Translator: gummi <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
@@ -1222,7 +1222,7 @@ msgstr "Teikniborðssnið"
 msgid "Tablets switched outputs"
 msgstr ""
 
-#: input.cpp:3155
+#: input.cpp:3152
 #, kde-format
 msgid "Touchpad"
 msgstr "Snertiplatti"
@@ -4230,47 +4230,47 @@ msgstr ""
 msgid "unknown"
 msgstr "Óþekkt"
 
-#: virtualdesktops.cpp:692 virtualdesktops.cpp:763
+#: virtualdesktops.cpp:691 virtualdesktops.cpp:762
 #, kde-format
 msgid "Desktop %1"
 msgstr "Skjáborð %1"
 
-#: virtualdesktops.cpp:799
+#: virtualdesktops.cpp:798
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Á næsta skjáborð"
 
-#: virtualdesktops.cpp:800
+#: virtualdesktops.cpp:799
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Á fyrra skjáborð"
 
-#: virtualdesktops.cpp:803
+#: virtualdesktops.cpp:802
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Eitt skjáborð til hægri"
 
-#: virtualdesktops.cpp:805
+#: virtualdesktops.cpp:804
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Eitt skjáborð til vinstri"
 
-#: virtualdesktops.cpp:807
+#: virtualdesktops.cpp:806
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Eitt skjáborð upp"
 
-#: virtualdesktops.cpp:809
+#: virtualdesktops.cpp:808
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Eitt skjáborð niður"
 
-#: virtualdesktops.cpp:898
+#: virtualdesktops.cpp:897
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "Skipta á skjáborð %1"
 
-#: window.cpp:3079
+#: window.cpp:3078
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

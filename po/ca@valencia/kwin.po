@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-15 01:54+0000\n"
-"PO-Revision-Date: 2023-07-20 10:55+0300\n"
+"POT-Creation-Date: 2023-09-16 01:55+0000\n"
+"PO-Revision-Date: 2023-09-14 18:42+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -324,6 +324,7 @@ msgctxt "The global mouse pointer position"
 msgid "Global Position"
 msgstr "Posició global"
 
+# skip-rule: kf6-pointer
 #: debug_console.cpp:204
 #, kde-format
 msgctxt "A mouse pointer button press event"
@@ -348,12 +349,14 @@ msgctxt "All currently pressed buttons in a mouse press/release event"
 msgid "Pressed Buttons"
 msgstr "Botons premuts"
 
+# skip-rule: kf6-pointer
 #: debug_console.cpp:212
 #, kde-format
 msgctxt "A mouse pointer button release event"
 msgid "Pointer Button Release"
 msgstr "Botó alliberat de l'apuntador"
 
+# skip-rule: kf6-pointer
 #: debug_console.cpp:232
 #, kde-format
 msgctxt "A mouse pointer axis (wheel) event"
@@ -1224,7 +1227,7 @@ msgstr "La tauleta s'ha mogut a %1"
 msgid "Tablets switched outputs"
 msgstr "Les tauletes han intercanviat les eixides"
 
-#: input.cpp:3155
+#: input.cpp:3152
 #, kde-format
 msgid "Touchpad"
 msgstr "Ratolí tàctil"
@@ -1242,7 +1245,7 @@ msgid ""
 msgstr ""
 "Seleccioneu la finestra a forçar el tancament amb el clic esquerre o "
 "retorn.\n"
-"La tecla Esc o un clic dret per a cancel·lar."
+"La tecla «Esc» o un clic dret per a cancel·lar."
 
 #: main.cpp:180 plugins/desktopgrid/desktopgrid_config.cpp:49
 #: plugins/invert/invert_config.cpp:35
@@ -1888,7 +1891,7 @@ msgid ""
 "Check this option if you want the buttons to fade in when the mouse pointer "
 "hovers over them and fade out again when it moves away."
 msgstr ""
-"Marqueu esta opció si voleu que els botons sobreïsquen quan l'apuntador del "
+"Marqueu esta opció si voleu que els botons sobreïsquen quan el punter del "
 "ratolí passe per damunt i tornen a l'estat normal quan s'allunye."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
@@ -4113,47 +4116,47 @@ msgstr ""
 msgid "unknown"
 msgstr "desconegut"
 
-#: virtualdesktops.cpp:692 virtualdesktops.cpp:763
+#: virtualdesktops.cpp:691 virtualdesktops.cpp:762
 #, kde-format
 msgid "Desktop %1"
 msgstr "Escriptori %1"
 
-#: virtualdesktops.cpp:799
+#: virtualdesktops.cpp:798
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Canvia a l'escriptori següent"
 
-#: virtualdesktops.cpp:800
+#: virtualdesktops.cpp:799
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Canvia a l'escriptori anterior"
 
-#: virtualdesktops.cpp:803
+#: virtualdesktops.cpp:802
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Canvia un escriptori a la dreta"
 
-#: virtualdesktops.cpp:805
+#: virtualdesktops.cpp:804
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Canvia un escriptori a l'esquerra"
 
-#: virtualdesktops.cpp:807
+#: virtualdesktops.cpp:806
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Canvia un escriptori amunt"
 
-#: virtualdesktops.cpp:809
+#: virtualdesktops.cpp:808
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Canvia un escriptori avall"
 
-#: virtualdesktops.cpp:898
+#: virtualdesktops.cpp:897
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "Canvia a l'escriptori %1"
 
-#: window.cpp:3079
+#: window.cpp:3078
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

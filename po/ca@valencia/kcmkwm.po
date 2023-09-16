@@ -1,12 +1,12 @@
 # Translation of kcmkwm.po to Catalan (Valencian)
-# Copyright (C) 1998-2022 This_file_is_part_of_KDE
+# Copyright (C) 1998-2023 This_file_is_part_of_KDE
 # This file is distributed under the license LGPL version 2.1 or
 # version 3 or later versions approved by the membership of KDE e.V.
 #
 # Sebastià Pla i Sanz <sps@sastia.com>, 1998, 1999, 2000, 2001, 2002, 2004, 2005, 2006.
 # Antoni Bella Pérez <antonibella5@yahoo.com>, 2003, 2011, 2013, 2015, 2020, 2021, 2022.
 # Albert Astals Cid <aacid@kde.org>, 2005.
-# Josep M. Ferrer <txemaq@gmail.com>, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022.
+# Josep M. Ferrer <txemaq@gmail.com>, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
 # Manuel Tortosa Moreno <manutortosa@chakra-project.org>, 2009.
 # Empar Montoro Martín <montoro_mde@gva.es>, 2019.
 msgid ""
@@ -14,14 +14,14 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-15 02:18+0000\n"
-"PO-Revision-Date: 2022-12-03 12:39+0100\n"
+"PO-Revision-Date: 2023-09-14 19:10+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 20.12.0\n"
+"X-Generator: Lokalize 22.12.3\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Accelerator-Marker: &\n"
 
@@ -180,8 +180,8 @@ msgid ""
 "Here you select whether holding the Meta key or Alt key will allow you to "
 "perform the following actions."
 msgstr ""
-"Ací seleccioneu si en mantindre les tecles Meta o Alt podreu efectuar les "
-"accions següents."
+"Ací seleccioneu si en mantindre les tecles «Meta» o «Alt» podreu efectuar "
+"les accions següents."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllKey)
 #: actions.ui:209
@@ -449,8 +449,8 @@ msgid ""
 "some time.</p></body></html>"
 msgstr ""
 "<html><head/><body><p>Si el desplegat automàtic està activat, una finestra "
-"plegada es desplegarà automàticament quan l'apuntador del ratolí estiga "
-"damunt de la barra de títol durant un temps</p></body></html>"
+"plegada es desplegarà automàticament quan el punter del ratolí estiga damunt "
+"de la barra de títol durant un temps</p></body></html>"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ShadeHover)
 #: advanced.ui:35
@@ -465,8 +465,8 @@ msgid ""
 "Sets the time in milliseconds before the window unshades when the mouse "
 "pointer goes over the shaded window."
 msgstr ""
-"Establix el temps en mil·lisegons abans que la finestra es desplegue si "
-"l'apuntador del ratolí està per damunt de la finestra plegada."
+"Establix el temps en mil·lisegons abans que la finestra es desplegue si el "
+"punter del ratolí està per damunt de la finestra plegada."
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_DelayFocusInterval)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AutoRaiseInterval)
@@ -533,7 +533,7 @@ msgstr ""
 "finestra en el cantó superior esquerre</li><li style=\" margin-top:0px; "
 "margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
 "text-indent:0px;\"><span style=\" font-style:italic;\">Davall el ratolí</"
-"span> col·locarà la finestra davall l'apuntador</li></ul></body></html>"
+"span> col·locarà la finestra davall el punter</li></ul></body></html>"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
 #: advanced.ui:80
@@ -727,7 +727,7 @@ msgid ""
 "automatically receive focus."
 msgstr ""
 "Este és el retard després del qual rebrà automàticament el focus la finestra "
-"damunt de la qual hi ha l'apuntador del ratolí."
+"damunt de la qual hi ha el punter del ratolí."
 
 #. i18n: ectx: property (text), widget (QLabel, focusStealingLabel)
 #: focus.ui:101
@@ -874,7 +874,7 @@ msgid ""
 "come to the front when the mouse pointer has been over it for some time."
 msgstr ""
 "Quan esta opció està activada, una finestra del fons passarà a primer pla "
-"automàticament quan l'apuntador del ratolí hi estiga damunt durant un temps."
+"automàticament quan el punter del ratolí hi estiga damunt durant un temps."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AutoRaise)
 #: focus.ui:168
@@ -889,8 +889,8 @@ msgid ""
 "This is the delay after which the window that the mouse pointer is over will "
 "automatically come to the front."
 msgstr ""
-"Este és el retard després del qual la finestra damunt de la qual hi està el "
-"ratolí, passarà a primer pla automàticament."
+"Este és el retard després del qual la finestra damunt de la qual hi ha el "
+"punter del ratolí, passarà a primer pla automàticament."
 
 #. i18n: ectx: property (text), widget (QLabel, multiscreenBehaviorLabel)
 #: focus.ui:196
@@ -907,7 +907,7 @@ msgid ""
 "active screen is the screen containing the focused window."
 msgstr ""
 "Quan esta opció està activada, la pantalla activa (p. ex., a on apareixen "
-"les finestres noves) és la pantalla amb el cursor del ratolí. Quan està "
+"les finestres noves) és la pantalla amb el punter del ratolí. Quan està "
 "desactivada, la pantalla activa és la pantalla amb la finestra enfocada."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
