@@ -14,7 +14,7 @@ kcmutils_generate_module_data(
 kconfig_add_kcfg_files(kcm_virtualkeyboard_PART_SRCS virtualkeyboardsettings.kcfgc GENERATE_MOC)
 kcmutils_add_qml_kcm(kcm_virtualkeyboard SOURCES kcmvirtualkeyboard.cpp ${kcm_virtualkeyboard_PART_SRCS})
 
-target_link_libraries(kcm_virtualkeyboard
+target_link_libraries(kcm_virtualkeyboard PRIVATE
     KF6::I18n
     KF6::KCMUtils
     KF6::Service

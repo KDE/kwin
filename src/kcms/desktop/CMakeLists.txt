@@ -15,7 +15,7 @@ kconfig_add_kcfg_files(kcm_kwin_virtualdesktops_PART_SRCS virtualdesktopssetting
 
 kcmutils_add_qml_kcm(kcm_kwin_virtualdesktops SOURCES ${kcm_kwin_virtualdesktops_PART_SRCS})
 
-target_link_libraries(kcm_kwin_virtualdesktops
+target_link_libraries(kcm_kwin_virtualdesktops PRIVATE
     Qt::DBus
 
     KF6::I18n

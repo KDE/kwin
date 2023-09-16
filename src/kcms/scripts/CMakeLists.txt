@@ -8,7 +8,7 @@ target_sources(kcm_kwin_scripts PRIVATE
     kwinscriptsdata.cpp
 )
 
-target_link_libraries(kcm_kwin_scripts
+target_link_libraries(kcm_kwin_scripts PRIVATE
     Qt::DBus
 
     KF6::I18n
