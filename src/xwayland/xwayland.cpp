@@ -39,7 +39,6 @@
 #include <QAbstractEventDispatcher>
 #include <QDataStream>
 #include <QFile>
-#include <QHostInfo>
 #include <QRandomGenerator>
 #include <QScopeGuard>
 #include <QSocketNotifier>
