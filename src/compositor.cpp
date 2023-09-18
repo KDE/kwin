@@ -392,10 +392,7 @@ void Compositor::addOutput(Output *output)
                 outputLayer->setEnabled(false);
                 output->updateCursorLayer();
             }
-            if (cursorLayer->isVisible()) {
-                cursorLayer->setVisible(false);
-                cursorLayer->addRepaintFull();
-            }
+            cursorLayer->setVisible(false);
             return;
         }
         const auto renderHardwareCursor = [&]() {

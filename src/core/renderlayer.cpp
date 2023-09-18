@@ -237,6 +237,7 @@ void RenderLayer::updateEffectiveVisibility()
     } else {
         if (m_outputLayer) {
             m_outputLayer->addRepaint(mapToGlobal(boundingRect()).toAlignedRect());
+            m_loop->scheduleRepaint();
         }
     }
 
