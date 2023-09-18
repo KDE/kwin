@@ -640,7 +640,6 @@ public:
 
     //----------------------
     // Compositing settings
-    void reloadCompositingSettings(bool force = false);
     CompositingType compositingMode() const
     {
         return m_compositingMode;
@@ -903,10 +902,6 @@ public:
      * Performs loading all settings except compositing related.
      */
     void loadConfig();
-    /**
-     * Performs loading of compositing settings which do not depend on OpenGL.
-     */
-    bool loadCompositingConfig(bool force);
     void reparseConfiguration();
 
     //----------------------

@@ -12,14 +12,12 @@
 
 #include "config-kwin.h"
 
-#include "core/outputbackend.h"
 #include "utils/common.h"
 
 #ifndef KCMRULES
 
 #include <QProcess>
 
-#include "libkwineffects/glplatform.h"
 #include "settings.h"
 #include "workspace.h"
 #include <QOpenGLContext>
@@ -92,7 +90,8 @@ Options::Options(QObject *parent)
     , condensed_title(false)
 {
     m_settings->setDefaults();
-    syncFromKcfgc();
+
+    loadConfig();
 
     m_configWatcher = KConfigWatcher::create(m_settings->sharedConfig());
     connect(m_configWatcher.data(), &KConfigWatcher::configChanged, this, [this](const KConfigGroup &group, const QByteArrayList &names) {
@@ -612,16 +611,6 @@ void Options::setWindowsBlockCompositing(bool value)
 
 void Options::setGlPreferBufferSwap(char glPreferBufferSwap)
 {
-    if (glPreferBufferSwap == 'a') {
-        // buffer copying is very fast with the nvidia blob
-        // but due to restrictions in DRI2 *incredibly* slow for all MESA drivers
-        // see https://www.x.org/releases/X11R7.7/doc/dri2proto/dri2proto.txt, item 2.5
-        if (GLPlatform::instance()->driver() == Driver_NVidia) {
-            glPreferBufferSwap = CopyFrontBuffer;
-        } else if (GLPlatform::instance()->driver() != Driver_Unknown) { // undetected, finally resolved when context is initialized
-            glPreferBufferSwap = ExtendDamage;
-        }
-    }
     if (m_glPreferBufferSwap == (GlSwapStrategy)glPreferBufferSwap) {
         return;
     }
@@ -715,16 +704,6 @@ void Options::reparseConfiguration()
 void Options::updateSettings()
 {
     loadConfig();
-    // Read button tooltip animation effect from kdeglobals
-    // Since we want to allow users to enable window decoration tooltips
-    // and not kstyle tooltips and vise-versa, we don't read the
-    // "EffectNoTooltip" setting from kdeglobals.
-
-    //    QToolTip::setGloballyEnabled( d->show_tooltips );
-    // KDE4 this probably needs to be done manually in clients
-
-    // Driver-specific config detection
-    reloadCompositingSettings();
 
     Q_EMIT configChanged();
 }
@@ -775,48 +754,9 @@ void Options::loadConfig()
         m_modifierOnlyShortcuts.insert(Qt::AltModifier, config.readEntry("Alt", QStringList()));
     }
     m_modifierOnlyShortcuts.insert(Qt::MetaModifier, config.readEntry("Meta", QStringList{QStringLiteral("org.kde.plasmashell"), QStringLiteral("/PlasmaShell"), QStringLiteral("org.kde.PlasmaShell"), QStringLiteral("activateLauncherMenu")}));
-}
 
-void Options::syncFromKcfgc()
-{
-    setCondensedTitle(m_settings->condensedTitle());
-    setFocusPolicy(m_settings->focusPolicy());
-    setNextFocusPrefersMouse(m_settings->nextFocusPrefersMouse());
-    setSeparateScreenFocus(m_settings->separateScreenFocus());
-    setActiveMouseScreen(m_settings->activeMouseScreen());
-    setRollOverDesktops(m_settings->rollOverDesktops());
-    setFocusStealingPreventionLevel(m_settings->focusStealingPreventionLevel());
-    setActivationDesktopPolicy(m_settings->activationDesktopPolicy());
-    setXwaylandCrashPolicy(m_settings->xwaylandCrashPolicy());
-    setXwaylandMaxCrashCount(m_settings->xwaylandMaxCrashCount());
-    setXwaylandEavesdrops(XwaylandEavesdropsMode(m_settings->xwaylandEavesdrops()));
-    setPlacement(m_settings->placement());
-    setAutoRaise(m_settings->autoRaise());
-    setAutoRaiseInterval(m_settings->autoRaiseInterval());
-    setDelayFocusInterval(m_settings->delayFocusInterval());
-    setShadeHover(m_settings->shadeHover());
-    setShadeHoverInterval(m_settings->shadeHoverInterval());
-    setClickRaise(m_settings->clickRaise());
-    setBorderSnapZone(m_settings->borderSnapZone());
-    setWindowSnapZone(m_settings->windowSnapZone());
-    setCenterSnapZone(m_settings->centerSnapZone());
-    setSnapOnlyWhenOverlapping(m_settings->snapOnlyWhenOverlapping());
-    setKillPingTimeout(m_settings->killPingTimeout());
-    setHideUtilityWindowsForInactive(m_settings->hideUtilityWindowsForInactive());
-    setBorderlessMaximizedWindows(m_settings->borderlessMaximizedWindows());
-    setElectricBorderMaximize(m_settings->electricBorderMaximize());
-    setElectricBorderTiling(m_settings->electricBorderTiling());
-    setElectricBorderCornerRatio(m_settings->electricBorderCornerRatio());
-    setWindowsBlockCompositing(m_settings->windowsBlockCompositing());
-    setLatencyPolicy(m_settings->latencyPolicy());
-    setRenderTimeEstimator(m_settings->renderTimeEstimator());
-    setAllowTearing(m_settings->allowTearing());
-}
-
-bool Options::loadCompositingConfig(bool force)
-{
-    KConfigGroup config(m_settings->config(), "Compositing");
-
+    // Compositing
+    config = KConfigGroup(m_settings->config(), "Compositing");
     bool useCompositing = false;
     CompositingType compositingMode = NoCompositing;
     QString compositingBackend = config.readEntry("Backend", "OpenGL");
@@ -852,32 +792,7 @@ bool Options::loadCompositingConfig(bool force)
         }
     }
     setCompositingMode(compositingMode);
-
-    const bool platformSupportsNoCompositing = kwinApp()->outputBackend()->supportedCompositors().contains(NoCompositing);
-    if (m_compositingMode == NoCompositing && platformSupportsNoCompositing) {
-        setUseCompositing(false);
-        return false; // do not even detect compositing preferences if explicitly disabled
-    }
-
-    // it's either enforced by env or by initial resume from "suspend" or we check the settings
-    setUseCompositing(useCompositing || force || config.readEntry("Enabled", Options::defaultUseCompositing() || !platformSupportsNoCompositing));
-
-    if (!m_useCompositing) {
-        return false; // not enforced or necessary and not "enabled" by settings
-    }
-    return true;
-}
-
-void Options::reloadCompositingSettings(bool force)
-{
-    if (!loadCompositingConfig(force)) {
-        return;
-    }
-    m_settings->load();
-    syncFromKcfgc();
-
-    // Compositing settings
-    KConfigGroup config(m_settings->config(), "Compositing");
+    setUseCompositing(useCompositing || config.readEntry("Enabled", Options::defaultUseCompositing()));
 
     setGlSmoothScale(std::clamp(config.readEntry("GLTextureFilter", Options::defaultGlSmoothScale()), -1, 2));
     setGlStrictBindingFollowsDriver(!config.hasKey("GLStrictBinding"));
@@ -926,6 +841,42 @@ void Options::reloadCompositingSettings(bool force)
         return defaultGlPlatformInterface();
     };
     setGlPlatformInterface(keyToInterface(config.readEntry("GLPlatformInterface", interfaceToKey(m_glPlatformInterface))));
+}
+
+void Options::syncFromKcfgc()
+{
+    setCondensedTitle(m_settings->condensedTitle());
+    setFocusPolicy(m_settings->focusPolicy());
+    setNextFocusPrefersMouse(m_settings->nextFocusPrefersMouse());
+    setSeparateScreenFocus(m_settings->separateScreenFocus());
+    setActiveMouseScreen(m_settings->activeMouseScreen());
+    setRollOverDesktops(m_settings->rollOverDesktops());
+    setFocusStealingPreventionLevel(m_settings->focusStealingPreventionLevel());
+    setActivationDesktopPolicy(m_settings->activationDesktopPolicy());
+    setXwaylandCrashPolicy(m_settings->xwaylandCrashPolicy());
+    setXwaylandMaxCrashCount(m_settings->xwaylandMaxCrashCount());
+    setXwaylandEavesdrops(XwaylandEavesdropsMode(m_settings->xwaylandEavesdrops()));
+    setPlacement(m_settings->placement());
+    setAutoRaise(m_settings->autoRaise());
+    setAutoRaiseInterval(m_settings->autoRaiseInterval());
+    setDelayFocusInterval(m_settings->delayFocusInterval());
+    setShadeHover(m_settings->shadeHover());
+    setShadeHoverInterval(m_settings->shadeHoverInterval());
+    setClickRaise(m_settings->clickRaise());
+    setBorderSnapZone(m_settings->borderSnapZone());
+    setWindowSnapZone(m_settings->windowSnapZone());
+    setCenterSnapZone(m_settings->centerSnapZone());
+    setSnapOnlyWhenOverlapping(m_settings->snapOnlyWhenOverlapping());
+    setKillPingTimeout(m_settings->killPingTimeout());
+    setHideUtilityWindowsForInactive(m_settings->hideUtilityWindowsForInactive());
+    setBorderlessMaximizedWindows(m_settings->borderlessMaximizedWindows());
+    setElectricBorderMaximize(m_settings->electricBorderMaximize());
+    setElectricBorderTiling(m_settings->electricBorderTiling());
+    setElectricBorderCornerRatio(m_settings->electricBorderCornerRatio());
+    setWindowsBlockCompositing(m_settings->windowsBlockCompositing());
+    setLatencyPolicy(m_settings->latencyPolicy());
+    setRenderTimeEstimator(m_settings->renderTimeEstimator());
+    setAllowTearing(m_settings->allowTearing());
 }
 
 // restricted should be true for operations that the user may not be able to repeat

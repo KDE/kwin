@@ -9,7 +9,7 @@
 #include "platformsupport/scenes/opengl/abstract_egl_backend.h"
 #include "compositor.h"
 #include "core/outputbackend.h"
-#include "options.h"
+#include "main.h"
 #include "utils/common.h"
 #include "utils/egl_context_attribute_builder.h"
 #include "wayland/drmclientbuffer.h"
@@ -115,10 +115,6 @@ void AbstractEglBackend::initKWinGL()
 {
     GLPlatform *glPlatform = GLPlatform::instance();
     glPlatform->detect(EglPlatformInterface);
-    options->setGlPreferBufferSwap(options->glPreferBufferSwap()); // resolve autosetting
-    if (options->glPreferBufferSwap() == Options::AutoSwapStrategy) {
-        options->setGlPreferBufferSwap('e'); // for unknown drivers - should not happen
-    }
     glPlatform->printResults();
     initGL(&getProcAddress);
 }

@@ -7,6 +7,7 @@
 #pragma once
 
 #include "core/outputlayer.h"
+#include "options.h"
 #include "platformsupport/scenes/opengl/abstract_egl_backend.h"
 #include "platformsupport/scenes/opengl/openglsurfacetexture_x11.h"
 #include "utils/damagejournal.h"
@@ -78,6 +79,7 @@ private:
     std::unique_ptr<GLRenderTimeQuery> m_query;
     int m_havePostSubBuffer = false;
     bool m_havePlatformBase = false;
+    Options::GlSwapStrategy m_swapStrategy = Options::AutoSwapStrategy;
 };
 
 class EglPixmapTexture : public GLTexture

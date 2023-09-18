@@ -64,8 +64,6 @@
 #include <KConfigGroup>
 #include <KLocalizedString>
 #include <KStartupInfo>
-// Qt
-#include <QtConcurrentRun>
 // xcb
 #include <xcb/xinerama.h>
 
@@ -133,9 +131,6 @@ Workspace::Workspace()
     , m_outputConfigStore(std::make_unique<OutputConfigurationStore>())
     , m_lidSwitchTracker(std::make_unique<LidSwitchTracker>())
 {
-    // If KWin was already running it saved its configuration after loosing the selection -> Reread
-    QFuture<void> reparseConfigFuture = QtConcurrent::run(&Options::reparseConfiguration, options);
-
     _self = this;
 
 #if KWIN_BUILD_ACTIVITIES
@@ -146,12 +141,6 @@ Workspace::Workspace()
         connect(m_activities.get(), &Activities::currentChanged, this, &Workspace::updateCurrentActivity);
     }
 #endif
-
-    // PluginMgr needs access to the config file, so we need to wait for it for finishing
-    reparseConfigFuture.waitForFinished();
-
-    options->loadConfig();
-    options->loadCompositingConfig(false);
 
     delayFocusTimer = nullptr;
 

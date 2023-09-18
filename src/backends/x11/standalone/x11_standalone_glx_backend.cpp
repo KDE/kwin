@@ -225,10 +225,19 @@ void GlxBackend::init()
     // Initialize OpenGL
     GLPlatform *glPlatform = GLPlatform::instance();
     glPlatform->detect(GlxPlatformInterface);
-    options->setGlPreferBufferSwap(options->glPreferBufferSwap()); // resolve autosetting
-    if (options->glPreferBufferSwap() == Options::AutoSwapStrategy) {
-        options->setGlPreferBufferSwap('e'); // for unknown drivers - should not happen
+
+    m_swapStrategy = options->glPreferBufferSwap();
+    if (m_swapStrategy == Options::AutoSwapStrategy) {
+        // buffer copying is very fast with the nvidia blob
+        // but due to restrictions in DRI2 *incredibly* slow for all MESA drivers
+        // see https://www.x.org/releases/X11R7.7/doc/dri2proto/dri2proto.txt, item 2.5
+        if (GLPlatform::instance()->driver() == Driver_NVidia) {
+            m_swapStrategy = Options::CopyFrontBuffer;
+        } else if (GLPlatform::instance()->driver() != Driver_Unknown) { // undetected, finally resolved when context is initialized
+            m_swapStrategy = Options::ExtendDamage;
+        }
     }
+
     glPlatform->printResults();
     initGL(&getProcAddress);
 
@@ -731,7 +740,7 @@ void GlxBackend::present(Output *output)
     const QRect displayRect = workspace()->geometry();
 
     QRegion effectiveRenderedRegion = m_lastRenderedRegion;
-    if (!supportsBufferAge() && options->glPreferBufferSwap() == Options::CopyFrontBuffer && m_lastRenderedRegion != displayRect) {
+    if (!supportsBufferAge() && m_swapStrategy == Options::CopyFrontBuffer && m_lastRenderedRegion != displayRect) {
         glReadBuffer(GL_FRONT);
         copyPixels(QRegion(displayRect) - m_lastRenderedRegion, displayRect.size());
         glReadBuffer(GL_BACK);

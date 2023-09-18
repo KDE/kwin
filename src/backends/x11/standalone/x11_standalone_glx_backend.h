@@ -8,6 +8,7 @@
 */
 #pragma once
 #include "core/outputlayer.h"
+#include "options.h"
 #include "platformsupport/scenes/opengl/openglbackend.h"
 #include "platformsupport/scenes/opengl/openglsurfacetexture_x11.h"
 #include "utils/damagejournal.h"
@@ -138,6 +139,7 @@ private:
     std::unique_ptr<VsyncMonitor> m_vsyncMonitor;
     std::unique_ptr<GlxLayer> m_layer;
     std::unique_ptr<GLRenderTimeQuery> m_query;
+    Options::GlSwapStrategy m_swapStrategy = Options::AutoSwapStrategy;
     friend class GlxPixmapTexture;
 };
 

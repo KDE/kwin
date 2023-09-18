@@ -204,8 +204,6 @@ bool Compositor::setupStart()
     }
     m_state = State::Starting;
 
-    options->reloadCompositingSettings(true);
-
     initializeX11();
 
     Q_EMIT aboutToToggleCompositing();
