@@ -80,14 +80,14 @@ msgstr "Mai"
 #: package/contents/ui/main.qml:70
 #, kde-format
 msgid "Only Meta, Control, Alt, and Shift keys"
-msgstr "Només les tecles Meta, Control, Alt i Majúscules"
+msgstr "Només les tecles «Meta», «Control», «Alt» i «Majúscules»"
 
 #: package/contents/ui/main.qml:73
 #, kde-format
 msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
 msgstr ""
-"Totes les tecles, però només quan es premen les tecles Meta, Ctrl, Alt o "
-"Majúscules"
+"Totes les tecles, però només quan es premen les tecles «Meta», «Ctrl», «Alt» "
+"o «Majúscules»"
 
 #: package/contents/ui/main.qml:77
 #, kde-format

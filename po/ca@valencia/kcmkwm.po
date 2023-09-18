@@ -190,8 +190,8 @@ msgid ""
 "Here you select whether holding the Meta key or Alt key will allow you to "
 "perform the following actions."
 msgstr ""
-"Ací seleccioneu si en mantindre les tecles Meta o Alt podreu efectuar les "
-"accions següents."
+"Ací seleccioneu si en mantindre les tecles «Meta» o «Alt» podreu efectuar "
+"les accions següents."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllKey)
 #: actions.ui:209
