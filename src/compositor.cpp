@@ -380,12 +380,12 @@ void Compositor::addOutput(Output *output)
     cursorLayer->setParent(workspaceLayer);
     cursorLayer->setSuperlayer(workspaceLayer);
 
-    auto updateCursorLayer = [this, output, cursorLayer]() {
-        static bool valid;
-        static const bool forceSoftwareCursor = qEnvironmentVariableIntValue("KWIN_FORCE_SW_CURSOR", &valid) == 1 && valid;
+    static bool valid;
+    static const bool forceSoftwareCursor = qEnvironmentVariableIntValue("KWIN_FORCE_SW_CURSOR", &valid) == 1 && valid;
 
+    auto updateCursorLayer = [this, output, cursorLayer]() {
         const Cursor *cursor = Cursors::self()->currentCursor();
-        const QRectF layerRect = output->mapFromGlobal(cursor->geometry());
+        const QRectF outputLocalRect = output->mapFromGlobal(cursor->geometry());
         const auto outputLayer = m_backend->cursorLayer(output);
         if (!cursor->isOnOutput(output)) {
             if (outputLayer && outputLayer->isEnabled()) {
@@ -393,23 +393,24 @@ void Compositor::addOutput(Output *output)
                 output->updateCursorLayer();
             }
             cursorLayer->setVisible(false);
-            return;
+            return true;
         }
         const auto renderHardwareCursor = [&]() {
             if (!outputLayer || forceSoftwareCursor) {
                 return false;
             }
             const QMatrix4x4 monitorMatrix = Output::logicalToNativeMatrix(output->rect(), output->scale(), output->transform());
-            const QRectF nativeCursorRect = monitorMatrix.mapRect(layerRect);
+            QRectF nativeCursorRect = monitorMatrix.mapRect(outputLocalRect);
             QSize bufferSize(std::ceil(nativeCursorRect.width()), std::ceil(nativeCursorRect.height()));
             if (const auto fixedSize = outputLayer->fixedSize()) {
                 if (fixedSize->width() < bufferSize.width() || fixedSize->height() < bufferSize.height()) {
                     return false;
                 }
                 bufferSize = *fixedSize;
+                nativeCursorRect = monitorMatrix.mapRect(QRectF(outputLocalRect.topLeft(), QSizeF(bufferSize) / output->scale()));
             }
             outputLayer->setPosition(nativeCursorRect.topLeft());
-            outputLayer->setHotspot(monitorMatrix.map(cursor->hotspot()));
+            outputLayer->setHotspot(Output::logicalToNativeMatrix(QRectF(QPointF(), QSizeF(bufferSize) / output->scale()), output->scale(), output->transform()).map(cursor->hotspot()));
             outputLayer->setSize(bufferSize);
             if (auto beginInfo = outputLayer->beginFrame()) {
                 const RenderTarget &renderTarget = beginInfo->renderTarget;
@@ -431,29 +432,36 @@ void Compositor::addOutput(Output *output)
         };
         if (renderHardwareCursor()) {
             cursorLayer->setVisible(false);
+            return true;
         } else {
             if (outputLayer && outputLayer->isEnabled()) {
                 outputLayer->setEnabled(false);
                 output->updateCursorLayer();
             }
             cursorLayer->setVisible(cursor->isOnOutput(output));
-            cursorLayer->setGeometry(layerRect);
+            cursorLayer->setGeometry(outputLocalRect);
             cursorLayer->addRepaintFull();
+            return false;
         }
     };
-    auto moveCursorLayer = [this, output, cursorLayer]() {
+    auto moveCursorLayer = [this, output, cursorLayer, updateCursorLayer]() {
         const Cursor *cursor = Cursors::self()->currentCursor();
-        const QRectF layerRect = output->mapFromGlobal(cursor->geometry());
-        const QMatrix4x4 monitorMatrix = Output::logicalToNativeMatrix(output->rect(), output->scale(), output->transform());
-        const QRectF nativeCursorRect = monitorMatrix.mapRect(layerRect);
+        const QRectF outputLocalRect = output->mapFromGlobal(cursor->geometry());
         const auto outputLayer = m_backend->cursorLayer(output);
         bool hardwareCursor = false;
-        if (outputLayer && outputLayer->isEnabled()) {
-            outputLayer->setPosition(nativeCursorRect.topLeft());
-            hardwareCursor = output->updateCursorLayer();
+        if (outputLayer) {
+            if (outputLayer->isEnabled()) {
+                const QMatrix4x4 monitorMatrix = Output::logicalToNativeMatrix(output->rect(), output->scale(), output->transform());
+                const QRectF nativeCursorRect = monitorMatrix.mapRect(QRectF(outputLocalRect.topLeft(), outputLayer->size() / output->scale()));
+                outputLayer->setPosition(nativeCursorRect.topLeft());
+                hardwareCursor = output->updateCursorLayer();
+            } else if (!cursorLayer->isVisible() && !forceSoftwareCursor) {
+                // this is for the case that the cursor wasn't visible because it was on a different output before
+                hardwareCursor = updateCursorLayer();
+            }
         }
         cursorLayer->setVisible(cursor->isOnOutput(output) && !hardwareCursor);
-        cursorLayer->setGeometry(layerRect);
+        cursorLayer->setGeometry(outputLocalRect);
         cursorLayer->addRepaintFull();
     };
     updateCursorLayer();

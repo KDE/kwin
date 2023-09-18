@@ -83,4 +83,9 @@ std::chrono::nanoseconds EglGbmCursorLayer::queryRenderTime() const
 {
     return m_surface.queryRenderTime();
 }
+
+std::optional<QSize> EglGbmCursorLayer::fixedSize() const
+{
+    return m_pipeline->gpu()->cursorSize();
+}
 }

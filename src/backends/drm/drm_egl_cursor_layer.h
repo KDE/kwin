@@ -36,6 +36,7 @@ public:
     void releaseBuffers() override;
     quint32 format() const override;
     std::chrono::nanoseconds queryRenderTime() const override;
+    std::optional<QSize> fixedSize() const override;
 
 private:
     EglGbmLayerSurface m_surface;
