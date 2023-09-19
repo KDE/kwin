@@ -14,7 +14,6 @@
 #include "virtualdesktopmanageradaptor.h"
 
 // kwin
-#include "atoms.h"
 #include "compositor.h"
 #include "core/output.h"
 #include "core/renderbackend.h"
