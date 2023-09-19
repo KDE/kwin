@@ -212,7 +212,6 @@ bool Window::setupCompositing()
     }
 
     m_effectWindow = std::make_unique<EffectWindowImpl>(this);
-    updateShadow();
 
     m_windowItem = createItem(scene);
     m_windowItem->setParentItem(scene->containerItem());
@@ -226,7 +225,6 @@ bool Window::setupCompositing()
 
 void Window::finishCompositing()
 {
-    m_shadow.reset();
     m_effectWindow.reset();
     m_windowItem.reset();
 }
@@ -271,9 +269,6 @@ Shadow *Window::shadow() const
 
 void Window::updateShadow()
 {
-    if (!Compositor::compositing()) {
-        return;
-    }
     if (m_shadow) {
         if (!m_shadow->updateShadow()) {
             m_shadow.reset();

@@ -49,6 +49,7 @@ InternalWindow::InternalWindow(QWindow *handle)
     setOpacity(m_handle->opacity());
     setSkipCloseAnimation(m_handle->property(s_skipClosePropertyName).toBool());
     updateColorScheme();
+    updateShadow();
 
     setMoveResizeGeometry(m_handle->geometry());
     commitGeometry(m_handle->geometry());

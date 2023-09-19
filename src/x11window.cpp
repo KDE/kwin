@@ -551,6 +551,7 @@ bool X11Window::track(xcb_window_t w)
     detectShape();
     getWmOpaqueRegion();
     getSkipCloseAnimation();
+    updateShadow();
     setupCompositing();
     if (QWindow *internalWindow = findInternalWindow()) {
         m_outline = internalWindow->property("__kwin_outline").toBool();
@@ -673,6 +674,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     getMotifHints();
     getWmOpaqueRegion();
     readSkipCloseAnimation(skipCloseAnimationCookie);
+    updateShadow();
 
     // TODO: Try to obey all state information from info->state()
 
