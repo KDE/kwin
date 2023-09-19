@@ -182,6 +182,14 @@ public:
     }
 
     /**
+     * @returns the X11 composite overlay window handle.
+     */
+    xcb_window_t x11CompositeWindow() const
+    {
+        return m_compositeWindow;
+    }
+
+    /**
      * @returns the X11 xcb connection
      */
     xcb_connection_t *x11Connection() const
@@ -204,6 +212,10 @@ public:
     void setX11Connection(xcb_connection_t *c)
     {
         m_connection = c;
+    }
+    void setX11CompositeWindow(xcb_window_t window)
+    {
+        m_compositeWindow = window;
     }
 
     qreal xwaylandScale() const
@@ -368,6 +380,7 @@ private:
     OperationMode m_operationMode;
     xcb_timestamp_t m_x11Time = XCB_TIME_CURRENT_TIME;
     xcb_window_t m_rootWindow = XCB_WINDOW_NONE;
+    xcb_window_t m_compositeWindow = XCB_WINDOW_NONE;
     xcb_connection_t *m_connection = nullptr;
 #if KWIN_BUILD_ACTIVITIES
     bool m_useKActivities = true;

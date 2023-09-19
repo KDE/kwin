@@ -149,6 +149,7 @@ void X11Compositor::start()
         // Internal setup failed, abort.
         return;
     }
+    kwinApp()->setX11CompositeWindow(backend()->overlayWindow()->window());
     startupWithWorkspace();
     m_syncManager.reset(X11SyncManager::create());
 }
@@ -157,6 +158,7 @@ void X11Compositor::stop()
 {
     m_syncManager.reset();
     Compositor::stop();
+    kwinApp()->setX11CompositeWindow(XCB_WINDOW_NONE);
 }
 
 void X11Compositor::composite(RenderLoop *renderLoop)
@@ -213,20 +215,6 @@ void X11Compositor::composite(RenderLoop *renderLoop)
             createOpenGLSafePoint(OpenGLSafePoint::PostLastGuardedFrame);
         }
     }
-}
-
-bool X11Compositor::checkForOverlayWindow(WId w) const
-{
-    if (!backend()) {
-        // No backend, so it cannot be the overlay window.
-        return false;
-    }
-    if (!backend()->overlayWindow()) {
-        // No overlay window, it cannot be the overlay.
-        return false;
-    }
-    // Compare the window ID's.
-    return w == backend()->overlayWindow()->window();
 }
 
 bool X11Compositor::isOverlayWindowVisible() const

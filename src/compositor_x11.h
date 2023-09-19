@@ -81,11 +81,6 @@ public:
     void createOpenGLSafePoint(OpenGLSafePoint safePoint) override;
 
     /**
-     * Checks whether @p w is the Scene's overlay window.
-     */
-    bool checkForOverlayWindow(WId w) const;
-
-    /**
      * @returns Whether the Scene's Overlay X Window is visible.
      */
     bool isOverlayWindowVisible() const;
