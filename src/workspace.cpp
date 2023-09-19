@@ -20,7 +20,6 @@
 #endif
 #include "appmenu.h"
 #include "atoms.h"
-#include "compositor_x11.h"
 #include "core/outputbackend.h"
 #include "core/outputconfiguration.h"
 #include "cursor.h"
@@ -163,11 +162,6 @@ Workspace::Workspace()
     // need to create the tabbox before compositing scene is setup
     m_tabbox = std::make_unique<TabBox::TabBox>();
 #endif
-
-    if (!Compositor::self()) {
-        Q_ASSERT(kwinApp()->operationMode() == Application::OperationMode::OperationModeX11);
-        X11Compositor::create(this);
-    }
 
     m_decorationBridge = std::make_unique<Decoration::DecorationBridge>();
     m_decorationBridge->init();

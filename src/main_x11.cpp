@@ -13,6 +13,7 @@
 #include <config-kwin.h>
 
 #include "backends/x11/standalone/x11_standalone_backend.h"
+#include "compositor_x11.h"
 #include "core/outputbackend.h"
 #include "core/session.h"
 #include "cursor.h"
@@ -181,9 +182,9 @@ ApplicationX11::~ApplicationX11()
 {
     setTerminating();
     destroyPlugins();
-    destroyCompositor();
     destroyColorManager();
     destroyWorkspace();
+    destroyCompositor();
     // If there was no --replace (no new WM)
     if (owner != nullptr && owner->ownerWindow() != XCB_WINDOW_NONE) {
         Xcb::setInputFocus(XCB_INPUT_FOCUS_POINTER_ROOT);
@@ -238,9 +239,9 @@ void ApplicationX11::lostSelection()
 {
     sendPostedEvents();
     destroyPlugins();
-    destroyCompositor();
     destroyColorManager();
     destroyWorkspace();
+    destroyCompositor();
     // Remove windowmanager privileges
     Xcb::selectInput(kwinApp()->x11RootWindow(), XCB_EVENT_MASK_PROPERTY_CHANGE);
     removeNativeX11EventFilter();
@@ -291,6 +292,7 @@ void ApplicationX11::performStartup()
         });
 
         createInput();
+        X11Compositor::create(this);
         createWorkspace();
         createColorManager();
         createPlugins();
