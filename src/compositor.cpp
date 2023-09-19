@@ -104,9 +104,6 @@ Compositor::Compositor(QObject *workspace)
     // in undefined behavior. This is fixed by using a delayed invocation.
     QTimer::singleShot(0, this, &Compositor::start);
 
-    connect(kwinApp(), &Application::x11ConnectionChanged, this, &Compositor::initializeX11);
-    connect(kwinApp(), &Application::x11ConnectionAboutToBeDestroyed, this, &Compositor::cleanupX11);
-
     // register DBus
     new CompositorDBusInterface(this);
     FTraceLogger::create();
@@ -204,7 +201,21 @@ bool Compositor::setupStart()
     }
     m_state = State::Starting;
 
-    initializeX11();
+    if (kwinApp()->operationMode() == Application::OperationModeX11) {
+        if (!m_selectionOwner) {
+            m_selectionOwner = std::make_unique<CompositorSelectionOwner>("_NET_WM_CM_S0");
+            connect(m_selectionOwner.get(), &CompositorSelectionOwner::lostOwnership, this, &Compositor::stop);
+        }
+        if (!m_selectionOwner->owning()) {
+            // Force claim ownership.
+            m_selectionOwner->claim(true);
+            m_selectionOwner->setOwning(true);
+        }
+
+        xcb_composite_redirect_subwindows(kwinApp()->x11Connection(),
+                                          kwinApp()->x11RootWindow(),
+                                          XCB_COMPOSITE_REDIRECT_MANUAL);
+    }
 
     Q_EMIT aboutToToggleCompositing();
 
@@ -254,13 +265,14 @@ bool Compositor::setupStart()
     if (!m_backend) {
         m_state = State::Off;
 
-        if (auto *con = kwinApp()->x11Connection()) {
-            xcb_composite_unredirect_subwindows(con, kwinApp()->x11RootWindow(),
+        if (kwinApp()->operationMode() == Application::OperationModeX11) {
+            xcb_composite_unredirect_subwindows(kwinApp()->x11Connection(),
+                                                kwinApp()->x11RootWindow(),
                                                 XCB_COMPOSITE_REDIRECT_MANUAL);
-        }
-        if (m_selectionOwner) {
-            m_selectionOwner->setOwning(false);
-            m_selectionOwner->release();
+            if (m_selectionOwner) {
+                m_selectionOwner->setOwning(false);
+                m_selectionOwner->release();
+            }
         }
         if (!availableCompositors.contains(NoCompositing)) {
             qCCritical(KWIN_CORE) << "The used windowing system requires compositing";
@@ -280,32 +292,6 @@ bool Compositor::setupStart()
     Q_EMIT sceneCreated();
 
     return true;
-}
-
-void Compositor::initializeX11()
-{
-    xcb_connection_t *connection = kwinApp()->x11Connection();
-    if (!connection) {
-        return;
-    }
-
-    if (!m_selectionOwner) {
-        m_selectionOwner = std::make_unique<CompositorSelectionOwner>("_NET_WM_CM_S0");
-        connect(m_selectionOwner.get(), &CompositorSelectionOwner::lostOwnership, this, &Compositor::stop);
-    }
-    if (!m_selectionOwner->owning()) {
-        // Force claim ownership.
-        m_selectionOwner->claim(true);
-        m_selectionOwner->setOwning(true);
-    }
-
-    xcb_composite_redirect_subwindows(connection, kwinApp()->x11RootWindow(),
-                                      XCB_COMPOSITE_REDIRECT_MANUAL);
-}
-
-void Compositor::cleanupX11()
-{
-    m_selectionOwner.reset();
 }
 
 void Compositor::startupWithWorkspace()
@@ -512,8 +498,9 @@ void Compositor::stop()
         for (Window *window : windows) {
             window->finishCompositing();
         }
-        if (auto *con = kwinApp()->x11Connection()) {
-            xcb_composite_unredirect_subwindows(con, kwinApp()->x11RootWindow(),
+        if (kwinApp()->operationMode() == Application::OperationModeX11) {
+            xcb_composite_unredirect_subwindows(kwinApp()->x11Connection(),
+                                                kwinApp()->x11RootWindow(),
                                                 XCB_COMPOSITE_REDIRECT_MANUAL);
         }
 

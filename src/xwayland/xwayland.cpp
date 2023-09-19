@@ -290,7 +290,8 @@ void Xwayland::handleXwaylandFinished()
     uninstallSocketNotifier();
 
     m_dataBridge.reset();
-    m_selectionOwner.reset();
+    m_compositingManagerSelectionOwner.reset();
+    m_windowManagerSelectionOwner.reset();
 
     m_inputSpy.reset();
     disconnect(options, &Options::xwaylandEavesdropsChanged, this, &Xwayland::refreshEavesdropping);
@@ -307,15 +308,22 @@ void Xwayland::handleXwaylandReady()
 
     qCInfo(KWIN_XWL) << "Xwayland server started on display" << m_launcher->displayName();
 
+    m_compositingManagerSelectionOwner = std::make_unique<KSelectionOwner>("_NET_WM_CM_S0", kwinApp()->x11Connection(), kwinApp()->x11RootWindow());
+    m_compositingManagerSelectionOwner->claim(true);
+
+    xcb_composite_redirect_subwindows(kwinApp()->x11Connection(),
+                                      kwinApp()->x11RootWindow(),
+                                      XCB_COMPOSITE_REDIRECT_MANUAL);
+
     // create selection owner for WM_S0 - magic X display number expected by XWayland
-    m_selectionOwner = std::make_unique<KSelectionOwner>("WM_S0", kwinApp()->x11Connection(), kwinApp()->x11RootWindow());
-    connect(m_selectionOwner.get(), &KSelectionOwner::lostOwnership,
+    m_windowManagerSelectionOwner = std::make_unique<KSelectionOwner>("WM_S0", kwinApp()->x11Connection(), kwinApp()->x11RootWindow());
+    connect(m_windowManagerSelectionOwner.get(), &KSelectionOwner::lostOwnership,
             this, &Xwayland::handleSelectionLostOwnership);
-    connect(m_selectionOwner.get(), &KSelectionOwner::claimedOwnership,
+    connect(m_windowManagerSelectionOwner.get(), &KSelectionOwner::claimedOwnership,
             this, &Xwayland::handleSelectionClaimedOwnership);
-    connect(m_selectionOwner.get(), &KSelectionOwner::failedToClaimOwnership,
+    connect(m_windowManagerSelectionOwner.get(), &KSelectionOwner::failedToClaimOwnership,
             this, &Xwayland::handleSelectionFailedToClaimOwnership);
-    m_selectionOwner->claim(true);
+    m_windowManagerSelectionOwner->claim(true);
 
     m_dataBridge = std::make_unique<DataBridge>();
 

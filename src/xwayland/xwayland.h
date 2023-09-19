@@ -84,7 +84,8 @@ private:
     QSocketNotifier *m_socketNotifier = nullptr;
 
     Application *m_app;
-    std::unique_ptr<KSelectionOwner> m_selectionOwner;
+    std::unique_ptr<KSelectionOwner> m_windowManagerSelectionOwner;
+    std::unique_ptr<KSelectionOwner> m_compositingManagerSelectionOwner;
     std::unique_ptr<DataBridge> m_dataBridge;
 
     XrandrEventFilter *m_xrandrEventsFilter = nullptr;

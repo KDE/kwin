@@ -173,9 +173,6 @@ private Q_SLOTS:
     void handleFrameRequested(RenderLoop *renderLoop);
 
 private:
-    void initializeX11();
-    void cleanupX11();
-
     void releaseCompositorSelection();
     void deleteUnusedSupportProperties();
 
