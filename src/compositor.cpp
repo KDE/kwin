@@ -590,10 +590,6 @@ void Compositor::reinitialize()
     // Restart compositing
     stop();
     start();
-
-    if (effects) { // start() may fail
-        effects->reconfigure();
-    }
 }
 
 void Compositor::handleFrameRequested(RenderLoop *renderLoop)
