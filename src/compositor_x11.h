@@ -69,6 +69,9 @@ public:
      */
     void resume(SuspendReason reason);
 
+    void inhibit(Window *window) override;
+    void uninhibit(Window *window) override;
+
     void toggleCompositing() override;
     void reinitialize() override;
     void configChanged() override;
@@ -87,8 +90,6 @@ public:
      */
     bool isOverlayWindowVisible() const;
 
-    void updateClientCompositeBlocking(X11Window *client = nullptr);
-
     static X11Compositor *self();
 
 protected:
@@ -106,6 +107,7 @@ private:
      * Whether the Compositor is currently suspended, 8 bits encoding the reason
      */
     SuspendReasons m_suspended;
+    QSet<Window *> m_inhibitors;
     int m_framesToTestForSafety = 3;
 };
 

@@ -650,9 +650,6 @@ X11Window *Workspace::createX11Window(xcb_window_t windowId, bool is_mapped)
     StackingUpdatesBlocker blocker(this);
     X11Window *window = new X11Window();
     setupWindowConnections(window);
-    if (X11Compositor *compositor = X11Compositor::self()) {
-        connect(window, &X11Window::blockingCompositingChanged, compositor, &X11Compositor::updateClientCompositeBlocking);
-    }
     if (!window->manage(windowId, is_mapped)) {
         X11Window::deleteClient(window);
         return nullptr;
@@ -758,9 +755,6 @@ void Workspace::removeDeleted(Window *c)
     Q_EMIT deletedRemoved(c);
     deleted.removeAll(c);
     removeFromStack(c);
-    if (X11Compositor *compositor = X11Compositor::self()) {
-        compositor->updateClientCompositeBlocking();
-    }
 }
 
 void Workspace::addWaylandWindow(Window *window)

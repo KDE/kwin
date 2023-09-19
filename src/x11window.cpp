@@ -460,6 +460,7 @@ void X11Window::releaseWindow(bool on_shutdown)
         ungrabXServer();
     }
 
+    unblockCompositing();
     unref();
 }
 
@@ -505,6 +506,7 @@ void X11Window::destroyWindow()
         unblockGeometryUpdates(); // Don't use GeometryUpdatesBlocker, it would now set the geometry
     }
 
+    unblockCompositing();
     unref();
 }
 
@@ -2585,11 +2587,30 @@ bool X11Window::acceptsFocus() const
 
 void X11Window::setBlockingCompositing(bool block)
 {
-    const bool usedToBlock = blocks_compositing;
-    blocks_compositing = rules()->checkBlockCompositing(block && options->windowsBlockCompositing());
-    if (usedToBlock != blocks_compositing) {
-        Q_EMIT blockingCompositingChanged(blocks_compositing ? this : nullptr);
+    const bool blocks = rules()->checkBlockCompositing(block && options->windowsBlockCompositing());
+    if (blocks) {
+        blockCompositing();
+    } else {
+        unblockCompositing();
     }
+}
+
+void X11Window::blockCompositing()
+{
+    if (blocks_compositing) {
+        return;
+    }
+    blocks_compositing = true;
+    Compositor::self()->inhibit(this);
+}
+
+void X11Window::unblockCompositing()
+{
+    if (!blocks_compositing) {
+        return;
+    }
+    blocks_compositing = false;
+    Compositor::self()->uninhibit(this);
 }
 
 void X11Window::updateAllowedActions(bool force)

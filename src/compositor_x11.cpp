@@ -81,6 +81,7 @@ void X11Compositor::reinitialize()
 {
     // Resume compositing if suspended.
     m_suspended = NoReasonSuspend;
+    m_inhibitors.clear();
     Compositor::reinitialize();
 }
 
@@ -119,6 +120,9 @@ void X11Compositor::resume(X11Compositor::SuspendReason reason)
 {
     Q_ASSERT(reason != NoReasonSuspend);
     m_suspended &= ~reason;
+    if (reason & BlockRuleSuspend) {
+        m_inhibitors.clear();
+    }
     start();
 }
 
@@ -236,32 +240,26 @@ bool X11Compositor::isOverlayWindowVisible() const
     return backend()->overlayWindow()->isVisible();
 }
 
-void X11Compositor::updateClientCompositeBlocking(X11Window *c)
+void X11Compositor::inhibit(Window *window)
 {
-    if (c) {
-        if (c->isBlockingCompositing()) {
-            // Do NOT attempt to call suspend(true) from within the eventchain!
-            if (!(m_suspended & BlockRuleSuspend)) {
-                QMetaObject::invokeMethod(
-                    this, [this]() {
-                        suspend(BlockRuleSuspend);
-                    },
-                    Qt::QueuedConnection);
-            }
-        }
-    } else if (m_suspended & BlockRuleSuspend) {
-        // If !c we just check if we can resume in case a blocking client was lost.
-        bool shouldResume = true;
+    m_inhibitors.insert(window);
+    // Do NOT attempt to call suspend(true) from within the eventchain!
+    if (!(m_suspended & BlockRuleSuspend)) {
+        QMetaObject::invokeMethod(
+            this, [this]() {
+                suspend(BlockRuleSuspend);
+            },
+            Qt::QueuedConnection);
+    }
+}
 
-        const auto windows = workspace()->windows();
-        for (Window *window : windows) {
-            X11Window *x11Window = qobject_cast<X11Window *>(window);
-            if (x11Window && x11Window->isBlockingCompositing()) {
-                shouldResume = false;
-                break;
-            }
-        }
-        if (shouldResume) {
+void X11Compositor::uninhibit(Window *window)
+{
+    if (!m_inhibitors.remove(window)) {
+        return;
+    }
+    if (m_suspended & BlockRuleSuspend) {
+        if (m_inhibitors.isEmpty()) {
             // Do NOT attempt to call suspend(false) from within the eventchain!
             QMetaObject::invokeMethod(
                 this, [this]() {

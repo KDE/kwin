@@ -200,10 +200,8 @@ public:
     bool setupCompositing() override;
     void finishCompositing() override;
     void setBlockingCompositing(bool block);
-    inline bool isBlockingCompositing()
-    {
-        return blocks_compositing;
-    }
+    void blockCompositing();
+    void unblockCompositing();
 
     QString captionNormal() const override
     {
@@ -347,10 +345,6 @@ protected:
     std::unique_ptr<WindowItem> createItem(Scene *scene) override;
 
 Q_SIGNALS:
-    /**
-     * Emitted whenever the Client's block compositing state changes.
-     */
-    void blockingCompositingChanged(KWin::X11Window *client);
     void shapeChanged();
 
 private:

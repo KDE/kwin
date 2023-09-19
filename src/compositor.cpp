@@ -754,6 +754,14 @@ void Compositor::createOpenGLSafePoint(OpenGLSafePoint safePoint)
 {
 }
 
+void Compositor::inhibit(Window *window)
+{
+}
+
+void Compositor::uninhibit(Window *window)
+{
+}
+
 } // namespace KWin
 
 // included for CompositorSelectionOwner

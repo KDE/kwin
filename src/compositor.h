@@ -28,6 +28,7 @@ class RenderLayer;
 class RenderLoop;
 class RenderTarget;
 class WorkspaceScene;
+class Window;
 
 class KWIN_EXPORT Compositor : public QObject
 {
@@ -137,6 +138,9 @@ public:
      * This format is provided using the drm fourcc encoding
      */
     uint outputFormat(Output *output);
+
+    virtual void inhibit(Window *window);
+    virtual void uninhibit(Window *window);
 
 Q_SIGNALS:
     void compositingToggled(bool active);
