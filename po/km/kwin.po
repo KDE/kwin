@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-16 01:55+0000\n"
+"POT-Creation-Date: 2023-09-19 01:56+0000\n"
 "PO-Revision-Date: 2012-06-14 11:29+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -68,7 +68,7 @@ msgstr ""
 msgid "KDE Wayland Compositor"
 msgstr ""
 
-#: compositor.cpp:628
+#: compositor.cpp:626
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
@@ -1317,124 +1317,124 @@ msgstr "មិន​អនុញ្ញាត​ជម្រើស​កំណត
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "ចង្អុល​ប្រាប់​ថា KWin បាន​គាំង n ដង​ថ្មីៗ​នេះ"
 
-#: main_wayland.cpp:296
+#: main_wayland.cpp:295
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr ""
 
-#: main_wayland.cpp:298
+#: main_wayland.cpp:297
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
 msgstr ""
 
-#: main_wayland.cpp:301
+#: main_wayland.cpp:300
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr ""
 
-#: main_wayland.cpp:304
+#: main_wayland.cpp:303
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr ""
 
-#: main_wayland.cpp:306
+#: main_wayland.cpp:305
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr ""
 
-#: main_wayland.cpp:308
+#: main_wayland.cpp:307
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr ""
 
-#: main_wayland.cpp:312
+#: main_wayland.cpp:311
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr ""
 
-#: main_wayland.cpp:317
+#: main_wayland.cpp:316
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr ""
 
-#: main_wayland.cpp:322
+#: main_wayland.cpp:321
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
 msgstr ""
 
-#: main_wayland.cpp:327
+#: main_wayland.cpp:326
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
 "socket to name the socket"
 msgstr ""
 
-#: main_wayland.cpp:331
+#: main_wayland.cpp:330
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
 "multiple times"
 msgstr ""
 
-#: main_wayland.cpp:335
+#: main_wayland.cpp:334
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr ""
 
-#: main_wayland.cpp:339
+#: main_wayland.cpp:338
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr ""
 
-#: main_wayland.cpp:343
+#: main_wayland.cpp:342
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 
-#: main_wayland.cpp:345
+#: main_wayland.cpp:344
 #, kde-format
 msgid "Render through drm node."
 msgstr ""
 
-#: main_wayland.cpp:346
+#: main_wayland.cpp:345
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
 
-#: main_wayland.cpp:368
+#: main_wayland.cpp:367
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr ""
 
-#: main_wayland.cpp:374
+#: main_wayland.cpp:373
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr ""
 
-#: main_wayland.cpp:378
+#: main_wayland.cpp:377
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr ""
 
-#: main_wayland.cpp:383
+#: main_wayland.cpp:382
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr ""
 
-#: main_wayland.cpp:388 main_x11.cpp:422
+#: main_wayland.cpp:387 main_x11.cpp:421
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr ""
 
-#: main_wayland.cpp:393
+#: main_wayland.cpp:392
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr ""
 
-#: main_wayland.cpp:398
+#: main_wayland.cpp:397
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
@@ -1459,7 +1459,7 @@ msgstr ""
 "kwin ៖ មិន​អាច​ទាមទារ​ជម្រើស​កម្មវិធី​គ្រប់គ្រង តើ​មាន wm មួយ​ទៀត​កំពុង​រត់​ឬ ? (ព្យាយាម​ប្រើ --"
 "replace)\n"
 
-#: main_x11.cpp:277
+#: main_x11.cpp:276
 #, fuzzy, kde-format
 #| msgid ""
 #| "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1469,7 +1469,7 @@ msgstr ""
 "kwin ៖ មិន​អាច​ទាមទារ​ជម្រើស​កម្មវិធី​គ្រប់គ្រង តើ​មាន wm មួយ​ទៀត​កំពុង​រត់​ឬ ? (ព្យាយាម​ប្រើ --"
 "replace)\n"
 
-#: main_x11.cpp:415
+#: main_x11.cpp:414
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "ជំនួស​កម្មវិធី​គ្រប់គ្រង​បង្អួច​ដែល​ប្រើ​បាន​ជាមួយ ICCCM2.0 ដែល​កំពុង​រត់"
@@ -4303,7 +4303,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr ""
 
-#: workspace.cpp:1596
+#: workspace.cpp:1585
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""
@@ -4338,7 +4338,7 @@ msgstr ""
 "paste bin service\n"
 "like http://paste.kde.org instead of pasting into support threads.\n"
 
-#: xwayland/xwaylandlauncher.cpp:272
+#: xwayland/xwaylandlauncher.cpp:271
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
