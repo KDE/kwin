@@ -587,9 +587,6 @@ void Compositor::configChanged()
 
 void Compositor::reinitialize()
 {
-    // Reparse config. Config options will be reloaded by start()
-    kwinApp()->config()->reparseConfiguration();
-
     // Restart compositing
     stop();
     start();
