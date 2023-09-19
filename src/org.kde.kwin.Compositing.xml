@@ -11,9 +11,5 @@
     <signal name="compositingToggled">
       <arg name="active" type="b" direction="out"/>
     </signal>
-    <method name="suspend">
-    </method>
-    <method name="resume">
-    </method>
   </interface>
 </node>

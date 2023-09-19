@@ -15,7 +15,7 @@
 
 // kwin
 #include "atoms.h"
-#include "compositor_x11.h"
+#include "compositor.h"
 #include "core/output.h"
 #include "core/renderbackend.h"
 #include "debug_console.h"
@@ -311,20 +311,6 @@ bool CompositorDBusInterface::isOpenGLBroken() const
 bool CompositorDBusInterface::platformRequiresCompositing() const
 {
     return kwinApp()->operationMode() != Application::OperationModeX11; // TODO: Remove this property?
-}
-
-void CompositorDBusInterface::resume()
-{
-    if (kwinApp()->operationMode() == Application::OperationModeX11) {
-        static_cast<X11Compositor *>(m_compositor)->resume(X11Compositor::ScriptSuspend);
-    }
-}
-
-void CompositorDBusInterface::suspend()
-{
-    if (kwinApp()->operationMode() == Application::OperationModeX11) {
-        static_cast<X11Compositor *>(m_compositor)->suspend(X11Compositor::ScriptSuspend);
-    }
 }
 
 void CompositorDBusInterface::reinitialize()

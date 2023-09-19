@@ -19,13 +19,8 @@
 #include "x11window.h"
 
 #include <KCrash>
-#include <KGlobalAccel>
 #include <KLocalizedString>
-#if KWIN_BUILD_NOTIFICATIONS
-#include <KNotification>
-#endif
 
-#include <QAction>
 #include <QOpenGLContext>
 #include <QThread>
 
@@ -98,21 +93,6 @@ void X11Compositor::suspend(X11Compositor::SuspendReason reason)
 {
     Q_ASSERT(reason != NoReasonSuspend);
     m_suspended |= reason;
-
-    if (reason & ScriptSuspend) {
-        // When disabled show a shortcut how the user can get back compositing.
-        const auto shortcuts = KGlobalAccel::self()->shortcut(workspace()->findChild<QAction *>(QStringLiteral("Suspend Compositing")));
-        if (!shortcuts.isEmpty()) {
-            // Display notification only if there is the shortcut.
-            const QString message =
-                i18n("Desktop effects have been suspended by another application.<br/>"
-                     "You can resume using the '%1' shortcut.",
-                     shortcuts.first().toString(QKeySequence::NativeText));
-#if KWIN_BUILD_NOTIFICATIONS
-            KNotification::event(QStringLiteral("compositingsuspendeddbus"), message);
-#endif
-        }
-    }
     stop();
 }
 
@@ -135,9 +115,6 @@ void X11Compositor::start()
         }
         if (m_suspended & BlockRuleSuspend) {
             reasons << QStringLiteral("Disabled by Window");
-        }
-        if (m_suspended & ScriptSuspend) {
-            reasons << QStringLiteral("Disabled by Script");
         }
         qCInfo(KWIN_CORE) << "Compositing is suspended, reason:" << reasons;
         return;

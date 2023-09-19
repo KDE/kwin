@@ -26,7 +26,6 @@ public:
         NoReasonSuspend = 0,
         UserSuspend = 1 << 0,
         BlockRuleSuspend = 1 << 1,
-        ScriptSuspend = 1 << 2,
         AllReasonSuspend = 0xff
     };
     Q_DECLARE_FLAGS(SuspendReasons, SuspendReason)
