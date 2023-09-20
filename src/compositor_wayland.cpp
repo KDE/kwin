@@ -25,8 +25,6 @@ WaylandCompositor *WaylandCompositor::create(QObject *parent)
 WaylandCompositor::WaylandCompositor(QObject *parent)
     : Compositor(parent)
 {
-    connect(kwinApp(), &Application::x11ConnectionAboutToBeDestroyed,
-            this, &WaylandCompositor::destroyCompositorSelection);
 }
 
 WaylandCompositor::~WaylandCompositor()
