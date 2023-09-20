@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-19 01:56+0000\n"
+"POT-Creation-Date: 2023-09-20 01:55+0000\n"
 "PO-Revision-Date: 2022-12-28 21:14+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -73,12 +73,12 @@ msgstr ""
 msgid "KDE Wayland Compositor"
 msgstr ""
 
-#: compositor.cpp:626
+#: compositor.cpp:611
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Efectele de birou au fost repornite din cauza reinițializării graficii"
 
-#: compositor_x11.cpp:107
+#: compositor_x11.cpp:108
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -87,7 +87,7 @@ msgstr ""
 "Efectele de birou au fost suspendate de altă aplicație.<br/> O puteți relua "
 "utilizând scurtătura „%1”."
 
-#: compositor_x11.cpp:297
+#: compositor_x11.cpp:283
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -109,12 +109,12 @@ msgstr ""
 "rezulta într-o prăbușire imediată!</b></p><p>Altfel puteți folosi în loc "
 "suportul XRender.</p>"
 
-#: compositor_x11.cpp:304
+#: compositor_x11.cpp:290
 #, fuzzy, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Extensiile X necesare (XComposite și XDamage) nu sunt disponibile."
 
-#: compositor_x11.cpp:307
+#: compositor_x11.cpp:293
 #, fuzzy, kde-format
 #| msgid "GLX/OpenGL and XRender/XFixes are not available."
 msgid "GLX/OpenGL is not available."
@@ -1438,7 +1438,7 @@ msgstr "Pornește sesiunea fără suport pentru blocarea ecranului."
 msgid "Starts the session without global shortcuts support."
 msgstr "Pornește sesiunea fără suport pentru scurtături globale."
 
-#: main_wayland.cpp:387 main_x11.cpp:421
+#: main_wayland.cpp:387 main_x11.cpp:423
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Dezactivează integrarea KActivities"
@@ -1454,7 +1454,7 @@ msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
 "Aplicații de pornit odată ce serverele Wayland și Xwayland au fost pornite"
 
-#: main_x11.cpp:64
+#: main_x11.cpp:65
 #, kde-format
 msgid ""
 "KWin is unstable.\n"
@@ -1465,7 +1465,7 @@ msgstr ""
 "Se pare că a eșuat de câteva ori la rând.\n"
 "Puteți alege alt gestionar de ferestre de pornit:"
 
-#: main_x11.cpp:256
+#: main_x11.cpp:257
 #, kde-format
 msgid ""
 "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1474,7 +1474,7 @@ msgstr ""
 "kwin: nu pot cere selecția gestionarului de ferestre. Rulează alt gestionar? "
 "(încercați să folosiți opțiunea --replace)\n"
 
-#: main_x11.cpp:276
+#: main_x11.cpp:277
 #, fuzzy, kde-format
 #| msgid ""
 #| "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1484,7 +1484,7 @@ msgstr ""
 "kwin: nu pot cere selecția gestionarului de ferestre. Rulează alt gestionar? "
 "(încercați să folosiți opțiunea --replace)\n"
 
-#: main_x11.cpp:414
+#: main_x11.cpp:416
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr ""
@@ -4315,7 +4315,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(nu răspunde)"
 
-#: workspace.cpp:1585
+#: workspace.cpp:1571
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

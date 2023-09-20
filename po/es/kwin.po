@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-19 01:56+0000\n"
+"POT-Creation-Date: 2023-09-20 01:55+0000\n"
 "PO-Revision-Date: 2023-07-20 05:19+0200\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -87,13 +87,13 @@ msgstr "Pulse la tecla de Control derecha para capturar la entrada"
 msgid "KDE Wayland Compositor"
 msgstr "Compositor de KDE Wayland"
 
-#: compositor.cpp:626
+#: compositor.cpp:611
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 "Se han reiniciado los efectos del escritorio debido a un reinicio gráfico"
 
-#: compositor_x11.cpp:107
+#: compositor_x11.cpp:108
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -102,7 +102,7 @@ msgstr ""
 "Los efectos de escritorio han sido suspendidos por otra aplicación.<br/"
 ">Puede reactivarlos usando el acceso rápido «%1»."
 
-#: compositor_x11.cpp:297
+#: compositor_x11.cpp:283
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -116,13 +116,13 @@ msgstr ""
 "<br>puede reiniciar esta protección pero <b>¡tenga en cuenta que puede "
 "provocar un fallo inmediatamente!</b></p>"
 
-#: compositor_x11.cpp:304
+#: compositor_x11.cpp:290
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr ""
 "Las extensiones requeridas (XComposite y XDamage) no están disponibles."
 
-#: compositor_x11.cpp:307
+#: compositor_x11.cpp:293
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL no está disponible."
@@ -1456,7 +1456,7 @@ msgstr "Inicia la sesión sin permitir el bloqueo de pantalla."
 msgid "Starts the session without global shortcuts support."
 msgstr "Inicia la sesión sin usar los accesos rápidos de teclado globales."
 
-#: main_wayland.cpp:387 main_x11.cpp:421
+#: main_wayland.cpp:387 main_x11.cpp:423
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Desactivar la integración con KActivities."
@@ -1472,7 +1472,7 @@ msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
 "Aplicaciones a iniciar tras el arranque de Wayland y del servidor Xwayland"
 
-#: main_x11.cpp:64
+#: main_x11.cpp:65
 #, kde-format
 msgid ""
 "KWin is unstable.\n"
@@ -1483,7 +1483,7 @@ msgstr ""
 "Parece haber terminado inesperadamente varias veces seguidas.\n"
 "Puede seleccionar otro gestor de ventanas:"
 
-#: main_x11.cpp:256
+#: main_x11.cpp:257
 #, kde-format
 msgid ""
 "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1492,12 +1492,12 @@ msgstr ""
 "kwin: no fue posible obtener la selección de gestor, ¿quizá hay otro gestor "
 "de ventanas en marcha? (en dicho caso, intente usar --replace)\n"
 
-#: main_x11.cpp:276
+#: main_x11.cpp:277
 #, kde-format
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr "kwin: hay otro gestor de ventanas en marcha (intente usar --replace)\n"
 
-#: main_x11.cpp:414
+#: main_x11.cpp:416
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr ""
@@ -4168,7 +4168,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(no responde)"
 
-#: workspace.cpp:1585
+#: workspace.cpp:1571
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

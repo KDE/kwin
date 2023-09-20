@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-19 01:56+0000\n"
+"POT-Creation-Date: 2023-09-20 01:55+0000\n"
 "PO-Revision-Date: 2023-08-09 12:45+0200\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -74,12 +74,12 @@ msgstr ""
 msgid "KDE Wayland Compositor"
 msgstr ""
 
-#: compositor.cpp:626
+#: compositor.cpp:611
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Grafické efekty byly restartovány kvůli restartu grafiky"
 
-#: compositor_x11.cpp:107
+#: compositor_x11.cpp:108
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -88,7 +88,7 @@ msgstr ""
 "Efekty na ploše byly pozastaveny jinou aplikací.<br/>Můžete je obnovit "
 "klávesovou zkratkou '%1'."
 
-#: compositor_x11.cpp:297
+#: compositor_x11.cpp:283
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -101,12 +101,12 @@ msgstr ""
 "aktualizovali na stabilní verzi ovladače,<br>můžete resetovat ochranu, ale "
 "mějte na paměti, že to může vést k okamžitému pádu.</b></p>"
 
-#: compositor_x11.cpp:304
+#: compositor_x11.cpp:290
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Požadovaná X rozšíření (XComposite a XDamage) nejsou dostupná."
 
-#: compositor_x11.cpp:307
+#: compositor_x11.cpp:293
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL není dostupné."
@@ -1422,7 +1422,7 @@ msgstr ""
 msgid "Starts the session without global shortcuts support."
 msgstr ""
 
-#: main_wayland.cpp:387 main_x11.cpp:421
+#: main_wayland.cpp:387 main_x11.cpp:423
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr ""
@@ -1437,7 +1437,7 @@ msgstr ""
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
 
-#: main_x11.cpp:64
+#: main_x11.cpp:65
 #, kde-format
 msgid ""
 "KWin is unstable.\n"
@@ -1448,7 +1448,7 @@ msgstr ""
 "Zdá se, že havaroval několikrát po sobě.\n"
 "Můžete si zvolit ke spuštění jiného správce oken:"
 
-#: main_x11.cpp:256
+#: main_x11.cpp:257
 #, kde-format
 msgid ""
 "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1457,12 +1457,12 @@ msgstr ""
 "kwin: nelze získat výběr správce oken, je spuštěn jiný správce? (zkuste "
 "použít --replace)\n"
 
-#: main_x11.cpp:276
+#: main_x11.cpp:277
 #, kde-format
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr "kwin: je spuštěn jiný správce oken (zkuste použít --replace)\n"
 
-#: main_x11.cpp:414
+#: main_x11.cpp:416
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Nahradit již běžící správce oken kompatibilní s ICCCM 2.0"
@@ -4109,7 +4109,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Neodpovídá)"
 
-#: workspace.cpp:1585
+#: workspace.cpp:1571
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
