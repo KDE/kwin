@@ -35,8 +35,8 @@ enum HiddenPreviews {
 
 enum XwaylandEavesdropsMode {
     None,
-    Modifiers,
-    Combinations,
+    NonCharacterKeys,
+    AllKeysWithModifier,
     All
 };
 

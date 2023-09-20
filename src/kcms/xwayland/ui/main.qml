@@ -65,10 +65,10 @@ KCM.SimpleKCM {
                 text: i18n("Never")
             }
             QQC2.RadioButton {
-                text: i18n("Only Meta, Control, Alt, and Shift keys")
+                text: i18n("Only non-character keys")
             }
             QQC2.RadioButton {
-                text: i18n("All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed")
+                text: i18n("As above, plus any key typed while a modifier key is pressed")
             }
             QQC2.RadioButton {
                 id: always
