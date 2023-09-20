@@ -233,9 +233,7 @@ void Window::setReadyForPainting()
 {
     if (!ready_for_painting) {
         ready_for_painting = true;
-        if (Compositor::compositing()) {
-            Q_EMIT windowShown(this);
-        }
+        Q_EMIT windowShown(this);
     }
 }
 
