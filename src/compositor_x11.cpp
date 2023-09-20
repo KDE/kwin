@@ -150,7 +150,7 @@ void X11Compositor::stop()
 
 void X11Compositor::composite(RenderLoop *renderLoop)
 {
-    if (backend()->overlayWindow() && !isOverlayWindowVisible()) {
+    if (backend()->overlayWindow() && !backend()->overlayWindow()->isVisible()) {
         // Return since nothing is visible.
         return;
     }
@@ -202,17 +202,6 @@ void X11Compositor::composite(RenderLoop *renderLoop)
             createOpenGLSafePoint(OpenGLSafePoint::PostLastGuardedFrame);
         }
     }
-}
-
-bool X11Compositor::isOverlayWindowVisible() const
-{
-    if (!backend()) {
-        return false;
-    }
-    if (!backend()->overlayWindow()) {
-        return false;
-    }
-    return backend()->overlayWindow()->isVisible();
 }
 
 void X11Compositor::inhibit(Window *window)

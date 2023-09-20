@@ -85,11 +85,6 @@ public:
     bool openGLCompositingIsBroken() const override;
     void createOpenGLSafePoint(OpenGLSafePoint safePoint) override;
 
-    /**
-     * @returns Whether the Scene's Overlay X Window is visible.
-     */
-    bool isOverlayWindowVisible() const;
-
     static X11Compositor *self();
 
 protected:
