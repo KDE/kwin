@@ -22,8 +22,6 @@ public:
     static WaylandCompositor *create(QObject *parent = nullptr);
     ~WaylandCompositor() override;
 
-    void toggleCompositing() override;
-
 protected:
     void start() override;
 

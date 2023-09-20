@@ -19,8 +19,10 @@
 #include "x11window.h"
 
 #include <KCrash>
+#include <KGlobalAccel>
 #include <KLocalizedString>
 
+#include <QAction>
 #include <QOpenGLContext>
 #include <QThread>
 
@@ -44,6 +46,14 @@ X11Compositor::X11Compositor(QObject *parent)
     if (qEnvironmentVariableIsSet("KWIN_MAX_FRAMES_TESTED")) {
         m_framesToTestForSafety = qEnvironmentVariableIntValue("KWIN_MAX_FRAMES_TESTED");
     }
+
+    QAction *toggleAction = new QAction(this);
+    toggleAction->setProperty("componentName", QStringLiteral("kwin"));
+    toggleAction->setObjectName("Suspend Compositing");
+    toggleAction->setText(i18n("Suspend Compositing"));
+    KGlobalAccel::self()->setDefaultShortcut(toggleAction, QList<QKeySequence>() << (Qt::SHIFT | Qt::ALT | Qt::Key_F12));
+    KGlobalAccel::self()->setShortcut(toggleAction, QList<QKeySequence>() << (Qt::SHIFT | Qt::ALT | Qt::Key_F12));
+    connect(toggleAction, &QAction::triggered, this, &X11Compositor::toggle);
 }
 
 X11Compositor::~X11Compositor()
@@ -61,7 +71,7 @@ X11SyncManager *X11Compositor::syncManager() const
     return m_syncManager.get();
 }
 
-void X11Compositor::toggleCompositing()
+void X11Compositor::toggle()
 {
     if (m_suspended) {
         // Direct user call; clear all bits.

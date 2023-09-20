@@ -33,11 +33,6 @@ WaylandCompositor::~WaylandCompositor()
     stop(); // this can't be called in the destructor of Compositor
 }
 
-void WaylandCompositor::toggleCompositing()
-{
-    // For the shortcut. Not possible on Wayland because we always composite.
-}
-
 void WaylandCompositor::start()
 {
     if (!Compositor::setupStart()) {

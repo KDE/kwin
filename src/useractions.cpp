@@ -25,7 +25,6 @@
 
 #include <config-kwin.h>
 
-#include "compositor.h"
 #include "core/output.h"
 #include "cursor.h"
 #include "effects.h"
@@ -1075,7 +1074,6 @@ void Workspace::initShortcuts()
                  Qt::META | Qt::Key_D, &Workspace::slotToggleShowDesktop);
 
     initShortcut("Kill Window", i18n("Kill Window"), Qt::META | Qt::CTRL | Qt::Key_Escape, &Workspace::slotKillWindow);
-    initShortcut("Suspend Compositing", i18n("Suspend Compositing"), Qt::SHIFT | Qt::ALT | Qt::Key_F12, Compositor::self(), &Compositor::toggleCompositing);
 
 #if KWIN_BUILD_TABBOX
     m_tabbox->initShortcuts();

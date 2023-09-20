@@ -45,13 +45,6 @@ public:
     static Compositor *self();
 
     /**
-     * Toggles compositing, that is if the Compositor is suspended it will be resumed
-     * and if the Compositor is active it will be suspended.
-     * Invoked by keybinding (shortcut default: Shift + Alt + F12).
-     */
-    virtual void toggleCompositing() = 0;
-
-    /**
      * Re-initializes the Compositor completely.
      * Connected to the D-Bus signal org.kde.KWin /KWin reinitCompositing
      */

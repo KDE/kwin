@@ -38,6 +38,13 @@ public:
     X11SyncManager *syncManager() const;
 
     /**
+     * Toggles compositing, that is if the Compositor is suspended it will be resumed
+     * and if the Compositor is active it will be suspended.
+     * Invoked by keybinding (shortcut default: Shift + Alt + F12).
+     */
+    void toggle();
+
+    /**
      * @brief Suspends the Compositor if it is currently active.
      *
      * Note: it is possible that the Compositor is not able to suspend. Use isActive to check
@@ -71,7 +78,6 @@ public:
     void inhibit(Window *window) override;
     void uninhibit(Window *window) override;
 
-    void toggleCompositing() override;
     void reinitialize() override;
     void configChanged() override;
     bool compositingPossible() const override;
