@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-20 01:55+0000\n"
+"POT-Creation-Date: 2023-09-21 01:57+0000\n"
 "PO-Revision-Date: 2010-07-20 13:46+0100\n"
 "Last-Translator: Berend Ytsma <berendy@gmail.com>\n"
 "Language-Team: Frysk <kde-i18n-fry@kde.org>\n"
@@ -75,16 +75,12 @@ msgstr ""
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 
-#: compositor_x11.cpp:108
+#: compositor_x11.cpp:53
 #, kde-format
-msgid ""
-"Desktop effects have been suspended by another application.<br/>You can "
-"resume using the '%1' shortcut."
-msgstr ""
-"Buroblêd effekten binne ûnderbrútsen troch in oare applikaasje.<br/>Jo kinne "
-"it ferfetsje troch de '%1' fluchtoets."
+msgid "Suspend Compositing"
+msgstr "Compositing útstelle"
 
-#: compositor_x11.cpp:283
+#: compositor_x11.cpp:259
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -93,12 +89,12 @@ msgid ""
 "<b>be aware that this might result in an immediate crash!</b></p>"
 msgstr ""
 
-#: compositor_x11.cpp:290
+#: compositor_x11.cpp:266
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Fereaske X taheaksels  (XComposite and XDamage) binne net beskikber."
 
-#: compositor_x11.cpp:293
+#: compositor_x11.cpp:269
 #, fuzzy, kde-format
 #| msgid "GLX/OpenGL and XRender/XFixes are not available."
 msgid "GLX/OpenGL is not available."
@@ -1318,124 +1314,124 @@ msgstr "Konfiguraasje opsjes útsette"
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "Jout oan dat Kwin koartlyn n kear ferûngelokke is"
 
-#: main_wayland.cpp:295
+#: main_wayland.cpp:294
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr ""
 
-#: main_wayland.cpp:297
+#: main_wayland.cpp:296
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
 msgstr ""
 
-#: main_wayland.cpp:300
+#: main_wayland.cpp:299
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr ""
 
-#: main_wayland.cpp:303
+#: main_wayland.cpp:302
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr ""
 
-#: main_wayland.cpp:305
+#: main_wayland.cpp:304
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr ""
 
-#: main_wayland.cpp:307
+#: main_wayland.cpp:306
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr ""
 
-#: main_wayland.cpp:311
+#: main_wayland.cpp:310
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr ""
 
-#: main_wayland.cpp:316
+#: main_wayland.cpp:315
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr ""
 
-#: main_wayland.cpp:321
+#: main_wayland.cpp:320
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
 msgstr ""
 
-#: main_wayland.cpp:326
+#: main_wayland.cpp:325
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
 "socket to name the socket"
 msgstr ""
 
-#: main_wayland.cpp:330
+#: main_wayland.cpp:329
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
 "multiple times"
 msgstr ""
 
-#: main_wayland.cpp:334
+#: main_wayland.cpp:333
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr ""
 
-#: main_wayland.cpp:338
+#: main_wayland.cpp:337
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr ""
 
-#: main_wayland.cpp:342
+#: main_wayland.cpp:341
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 
-#: main_wayland.cpp:344
+#: main_wayland.cpp:343
 #, kde-format
 msgid "Render through drm node."
 msgstr ""
 
-#: main_wayland.cpp:345
+#: main_wayland.cpp:344
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
 
-#: main_wayland.cpp:367
+#: main_wayland.cpp:366
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr ""
 
-#: main_wayland.cpp:373
+#: main_wayland.cpp:372
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr ""
 
-#: main_wayland.cpp:377
+#: main_wayland.cpp:376
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr ""
 
-#: main_wayland.cpp:382
+#: main_wayland.cpp:381
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr ""
 
-#: main_wayland.cpp:387 main_x11.cpp:423
+#: main_wayland.cpp:386 main_x11.cpp:423
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr ""
 
-#: main_wayland.cpp:392
+#: main_wayland.cpp:391
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr ""
 
-#: main_wayland.cpp:397
+#: main_wayland.cpp:396
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
@@ -3690,7 +3686,7 @@ msgid ""
 "Contact your distribution about this."
 msgstr ""
 
-#: useractions.cpp:160
+#: useractions.cpp:159
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -3702,7 +3698,7 @@ msgstr ""
 "Sûnder râne kinne jo it finstermenu net mear mei de mûs oanroppe. Jo kinne "
 "it finstermenu wol oproppe mei de fluchtoets %1."
 
-#: useractions.cpp:167
+#: useractions.cpp:166
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -3716,148 +3712,148 @@ msgstr ""
 "modus wer te ferlitten. Jo kinne it finstermenu wol oproppe mei de "
 "fluchtoets %1."
 
-#: useractions.cpp:214
+#: useractions.cpp:213
 #, kde-format
 msgid "&Move"
 msgstr "Fer&pleatse"
 
-#: useractions.cpp:219
+#: useractions.cpp:218
 #, fuzzy, kde-format
 #| msgid "Re&size"
 msgid "&Resize"
 msgstr "Grutte &Feroarje"
 
-#: useractions.cpp:224
+#: useractions.cpp:223
 #, kde-format
 msgid "Keep &Above Others"
 msgstr "Altyd op &foargrûn"
 
-#: useractions.cpp:230
+#: useractions.cpp:229
 #, kde-format
 msgid "Keep &Below Others"
 msgstr "Altyd op &eftergrûn"
 
-#: useractions.cpp:236
+#: useractions.cpp:235
 #, kde-format
 msgid "&Fullscreen"
 msgstr "F&olslein skerm"
 
-#: useractions.cpp:242
+#: useractions.cpp:241
 #, fuzzy, kde-format
 #| msgid "Shade"
 msgid "&Shade"
 msgstr "Oprolje"
 
-#: useractions.cpp:248
+#: useractions.cpp:247
 #, kde-format
 msgid "&No Titlebar and Frame"
 msgstr ""
 
-#: useractions.cpp:256
+#: useractions.cpp:255
 #, fuzzy, kde-format
 #| msgid "Window &Shortcut..."
 msgid "Set Window Short&cut…"
 msgstr "Finster Fluchtoet&s..."
 
-#: useractions.cpp:262
+#: useractions.cpp:261
 #, fuzzy, kde-format
 #| msgid "&Special Window Settings..."
 msgid "Configure Special &Window Settings…"
 msgstr "&Spesjale finsterynstellings..."
 
-#: useractions.cpp:267
+#: useractions.cpp:266
 #, fuzzy, kde-format
 #| msgid "S&pecial Application Settings..."
 msgid "Configure S&pecial Application Settings…"
 msgstr "&Spesjale applikaasje ynstellings..."
 
-#: useractions.cpp:273
+#: useractions.cpp:272
 #, kde-format
 msgid "Ma&ximize"
 msgstr "Ma&ksimalisearje"
 
-#: useractions.cpp:279
+#: useractions.cpp:278
 #, kde-format
 msgid "Mi&nimize"
 msgstr "Mi&nimalisearje"
 
-#: useractions.cpp:285
+#: useractions.cpp:284
 #, kde-format
 msgid "&More Actions"
 msgstr ""
 
-#: useractions.cpp:290
+#: useractions.cpp:289
 #, kde-format
 msgid "&Close"
 msgstr "S&lúte"
 
-#: useractions.cpp:360
+#: useractions.cpp:359
 #, kde-format
 msgid "&Extensions"
 msgstr ""
 
-#: useractions.cpp:411
+#: useractions.cpp:410
 #, fuzzy, kde-format
 #| msgid "&All Desktops"
 msgid "&Desktops"
 msgstr "&Alle buroblêden"
 
-#: useractions.cpp:425
+#: useractions.cpp:424
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Move to &Desktop"
 msgstr "Nei buroblê&d"
 
-#: useractions.cpp:442
+#: useractions.cpp:441
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Move to &Screen"
 msgstr "Nei buroblê&d"
 
-#: useractions.cpp:458
+#: useractions.cpp:457
 #, fuzzy, kde-format
 #| msgid "Ac&tivities"
 msgid "Show in &Activities"
 msgstr "Ak&tiviteiten"
 
-#: useractions.cpp:475
+#: useractions.cpp:474
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Move &To Current Desktop"
 msgstr "Nei buroblê&d"
 
-#: useractions.cpp:485 useractions.cpp:552
+#: useractions.cpp:484 useractions.cpp:551
 #, kde-format
 msgid "&All Desktops"
 msgstr "&Alle buroblêden"
 
-#: useractions.cpp:525
+#: useractions.cpp:524
 #, fuzzy, kde-format
 #| msgid "Show Desktop"
 msgctxt "Create a new desktop and move the window there"
 msgid "&New Desktop"
 msgstr "Buroblêd sjen litte"
 
-#: useractions.cpp:596
+#: useractions.cpp:595
 #, kde-format
 msgid "Move to %1 %2"
 msgstr ""
 
-#: useractions.cpp:609
+#: useractions.cpp:608
 #, fuzzy, kde-format
 #| msgid "Show Desktop"
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
 msgstr "Buroblêd sjen litte"
 
-#: useractions.cpp:621
+#: useractions.cpp:620
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
 msgstr "Nei buroblê&d"
 
-#: useractions.cpp:652
+#: useractions.cpp:651
 #, fuzzy, kde-format
 #| msgid "Window to Screen 1"
 msgctxt ""
@@ -3866,392 +3862,387 @@ msgctxt ""
 msgid "Screen &%1 (%2)"
 msgstr "Finster nei skerm 1"
 
-#: useractions.cpp:678
+#: useractions.cpp:677
 #, kde-format
 msgid "&All Activities"
 msgstr "&Alle aktiviteiten"
 
-#: useractions.cpp:726
+#: useractions.cpp:725
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Move to %1"
 msgstr "Nei buroblê&d"
 
-#: useractions.cpp:845
+#: useractions.cpp:844
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr ""
 
-#: useractions.cpp:847
+#: useractions.cpp:846
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr ""
 
-#: useractions.cpp:927
+#: useractions.cpp:926
 #, kde-format
 msgid "Window Operations Menu"
 msgstr "Finster hannelingsmenu"
 
-#: useractions.cpp:929
+#: useractions.cpp:928
 #, kde-format
 msgid "Close Window"
 msgstr "Finster slute"
 
-#: useractions.cpp:931
+#: useractions.cpp:930
 #, kde-format
 msgid "Maximize Window"
 msgstr "Finster maksimalisearje "
 
-#: useractions.cpp:933
+#: useractions.cpp:932
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "Finster fertikaal maksimalisearje"
 
-#: useractions.cpp:935
+#: useractions.cpp:934
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "Finster horizontaal maksimalisearje"
 
-#: useractions.cpp:937
+#: useractions.cpp:936
 #, kde-format
 msgid "Minimize Window"
 msgstr "Finster minimalisearje"
 
-#: useractions.cpp:939
+#: useractions.cpp:938
 #, kde-format
 msgid "Shade Window"
 msgstr "Finster oprolje"
 
-#: useractions.cpp:941
+#: useractions.cpp:940
 #, kde-format
 msgid "Move Window"
 msgstr "Finster ferpleatse"
 
-#: useractions.cpp:943
+#: useractions.cpp:942
 #, kde-format
 msgid "Resize Window"
 msgstr "Finstergrutte feroarje"
 
-#: useractions.cpp:945
+#: useractions.cpp:944
 #, kde-format
 msgid "Raise Window"
 msgstr "Finster nei foargrûn"
 
-#: useractions.cpp:947
+#: useractions.cpp:946
 #, kde-format
 msgid "Lower Window"
 msgstr "Finster nei eftergrûn"
 
-#: useractions.cpp:949
+#: useractions.cpp:948
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "Finster nei foar/eftergrûn"
 
-#: useractions.cpp:951
+#: useractions.cpp:950
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "Folslein finster"
 
-#: useractions.cpp:953
+#: useractions.cpp:952
 #, fuzzy, kde-format
 #| msgid "Hide Window Border"
 msgid "Toggle Window Titlebar and Frame"
 msgstr "Finsterrâne ferstopje"
 
-#: useractions.cpp:955
+#: useractions.cpp:954
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "Hâld finster boppe oaren"
 
-#: useractions.cpp:957
+#: useractions.cpp:956
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "Hâld finster ûnder oaren"
 
-#: useractions.cpp:959
+#: useractions.cpp:958
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "\"Finster freget om oandacht\" aktivearje"
 
-#: useractions.cpp:961
+#: useractions.cpp:960
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "Finsterfluchtoets ynstelle"
 
-#: useractions.cpp:963
+#: useractions.cpp:962
 #, fuzzy, kde-format
 #| msgid "Move Window to Group"
 msgid "Move Window to the Center"
 msgstr "Finster ferpleatse nei groep"
 
-#: useractions.cpp:965
+#: useractions.cpp:964
 #, kde-format
 msgid "Move Window Right"
 msgstr "Finster rjochts ferpleatse"
 
-#: useractions.cpp:967
+#: useractions.cpp:966
 #, kde-format
 msgid "Move Window Left"
 msgstr "Finster lofts ferpleatse"
 
-#: useractions.cpp:969
+#: useractions.cpp:968
 #, kde-format
 msgid "Move Window Up"
 msgstr "Finster omheech ferpleatse"
 
-#: useractions.cpp:971
+#: useractions.cpp:970
 #, kde-format
 msgid "Move Window Down"
 msgstr "Finster omleech ferpleatse"
 
-#: useractions.cpp:973
+#: useractions.cpp:972
 #, fuzzy, kde-format
 #| msgid "Maximize Window Horizontally"
 msgid "Expand Window Horizontally"
 msgstr "Finster horizontaal maksimalisearje"
 
-#: useractions.cpp:975
+#: useractions.cpp:974
 #, fuzzy, kde-format
 #| msgid "Maximize Window Vertically"
 msgid "Expand Window Vertically"
 msgstr "Finster fertikaal maksimalisearje"
 
-#: useractions.cpp:977
+#: useractions.cpp:976
 #, fuzzy, kde-format
 #| msgid "Pack Shrink Window Horizontally"
 msgid "Shrink Window Horizontally"
 msgstr "Finster horizontaal oanslutend ferlytsje"
 
-#: useractions.cpp:979
+#: useractions.cpp:978
 #, fuzzy, kde-format
 #| msgid "Pack Shrink Window Vertically"
 msgid "Shrink Window Vertically"
 msgstr "Finster fertikaal oanslutend ferlytsje"
 
-#: useractions.cpp:981
+#: useractions.cpp:980
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "Finsters nei loft fluch yn tegels orderje"
 
-#: useractions.cpp:983
+#: useractions.cpp:982
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "Finsters nei rjochts fluch yn tegels orderje"
 
-#: useractions.cpp:985
+#: useractions.cpp:984
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Left"
 msgid "Quick Tile Window to the Top"
 msgstr "Finsters nei loft fluch yn tegels orderje"
 
-#: useractions.cpp:987
+#: useractions.cpp:986
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Left"
 msgid "Quick Tile Window to the Bottom"
 msgstr "Finsters nei loft fluch yn tegels orderje"
 
-#: useractions.cpp:989
+#: useractions.cpp:988
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Left"
 msgid "Quick Tile Window to the Top Left"
 msgstr "Finsters nei loft fluch yn tegels orderje"
 
-#: useractions.cpp:991
+#: useractions.cpp:990
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Left"
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "Finsters nei loft fluch yn tegels orderje"
 
-#: useractions.cpp:993
+#: useractions.cpp:992
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Right"
 msgid "Quick Tile Window to the Top Right"
 msgstr "Finsters nei rjochts fluch yn tegels orderje"
 
-#: useractions.cpp:995
+#: useractions.cpp:994
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Right"
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "Finsters nei rjochts fluch yn tegels orderje"
 
-#: useractions.cpp:997
+#: useractions.cpp:996
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "Wikselje nei finster omheech"
 
-#: useractions.cpp:999
+#: useractions.cpp:998
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "Wikselje nei finster omleech"
 
-#: useractions.cpp:1001
+#: useractions.cpp:1000
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "Wikselje nei finster rjochts"
 
-#: useractions.cpp:1003
+#: useractions.cpp:1002
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "Wikselje nei finster lofts"
 
-#: useractions.cpp:1005
+#: useractions.cpp:1004
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr ""
 
-#: useractions.cpp:1007
+#: useractions.cpp:1006
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr ""
 
-#: useractions.cpp:1010
+#: useractions.cpp:1009
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "Finster op alle buroblêden hâlde"
 
-#: useractions.cpp:1021
+#: useractions.cpp:1020
 #, fuzzy, kde-format
 #| msgid "Window to Desktop 1"
 msgid "Window to Desktop %1"
 msgstr "Finster nei buroblêd 1"
 
-#: useractions.cpp:1023
+#: useractions.cpp:1022
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Finster nei neikommend buroblêd"
 
-#: useractions.cpp:1024
+#: useractions.cpp:1023
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Finster nei foarich buroblêd"
 
-#: useractions.cpp:1025
+#: useractions.cpp:1024
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Finster ien buroblêd nei rjochts"
 
-#: useractions.cpp:1027
+#: useractions.cpp:1026
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Finster ien buroblêd nei lofts"
 
-#: useractions.cpp:1029
+#: useractions.cpp:1028
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "Finster ien buroblêd omheech"
 
-#: useractions.cpp:1031
+#: useractions.cpp:1030
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "Finster ien buroblêd omleech"
 
-#: useractions.cpp:1035
+#: useractions.cpp:1034
 #, fuzzy, kde-format
 #| msgid "Window to Screen 1"
 msgid "Move Window to Screen %1"
 msgstr "Finster nei skerm 1"
 
-#: useractions.cpp:1042
+#: useractions.cpp:1041
 #, fuzzy, kde-format
 #| msgid "Window to Next Screen"
 msgid "Move Window to Next Screen"
 msgstr "Finster nei folgjend skerm"
 
-#: useractions.cpp:1044
+#: useractions.cpp:1043
 #, fuzzy, kde-format
 #| msgid "Window to Previous Desktop"
 msgid "Move Window to Previous Screen"
 msgstr "Finster nei foarich buroblêd"
 
-#: useractions.cpp:1046
+#: useractions.cpp:1045
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Window One Screen to the Right"
 msgstr "Finster ien buroblêd nei rjochts"
 
-#: useractions.cpp:1048
+#: useractions.cpp:1047
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Window One Screen to the Left"
 msgstr "Finster ien buroblêd nei lofts"
 
-#: useractions.cpp:1050
+#: useractions.cpp:1049
 #, fuzzy, kde-format
 #| msgid "Window to Screen 2"
 msgid "Move Window One Screen Up"
 msgstr "Finster nei skerm 2"
 
-#: useractions.cpp:1052
+#: useractions.cpp:1051
 #, fuzzy, kde-format
 #| msgid "Window One Desktop Down"
 msgid "Move Window One Screen Down"
 msgstr "Finster ien buroblêd omleech"
 
-#: useractions.cpp:1056
+#: useractions.cpp:1055
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 1"
 msgid "Switch to Screen %1"
 msgstr "Wikselje nei skerm 1"
 
-#: useractions.cpp:1063
+#: useractions.cpp:1062
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "Wikselje nei folgjend skerm"
 
-#: useractions.cpp:1064
+#: useractions.cpp:1063
 #, fuzzy, kde-format
 #| msgid "Switch to Previous Desktop"
 msgid "Switch to Previous Screen"
 msgstr "Wikselje nei foarich Buroblêd"
 
-#: useractions.cpp:1065
+#: useractions.cpp:1064
 #, fuzzy, kde-format
 #| msgid "Switch to Window to the Right"
 msgid "Switch to Screen to the Right"
 msgstr "Wikselje nei finster rjochts"
 
-#: useractions.cpp:1067
+#: useractions.cpp:1066
 #, fuzzy, kde-format
 #| msgid "Switch to Window to the Left"
 msgid "Switch to Screen to the Left"
 msgstr "Wikselje nei finster lofts"
 
-#: useractions.cpp:1069
+#: useractions.cpp:1068
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Screen Above"
 msgstr "Wikselje nei skerm 0"
 
-#: useractions.cpp:1071
+#: useractions.cpp:1070
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Screen Below"
 msgstr "Wikselje nei skerm 0"
 
-#: useractions.cpp:1074
+#: useractions.cpp:1073
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Peek at Desktop"
 msgstr "Nei buroblê&d"
 
-#: useractions.cpp:1077
+#: useractions.cpp:1076
 #, kde-format
 msgid "Kill Window"
 msgstr "Finster ôfbrekke"
 
-#: useractions.cpp:1078
-#, kde-format
-msgid "Suspend Compositing"
-msgstr "Compositing útstelle"
-
-#: useractions.cpp:1139
+#: useractions.cpp:1137
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Aktivearje finster (%1)"
 
-#: useractions.cpp:1276
+#: useractions.cpp:1274
 #, kde-format
 msgid ""
 "The window manager is configured to consider the screen with the mouse on it "
@@ -4305,7 +4296,7 @@ msgstr "Wikselje ien buroblêd omleech"
 msgid "Switch to Desktop %1"
 msgstr "Wikselje nei buroblêd 1"
 
-#: window.cpp:3078
+#: window.cpp:3071
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4330,6 +4321,13 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#~ msgid ""
+#~ "Desktop effects have been suspended by another application.<br/>You can "
+#~ "resume using the '%1' shortcut."
+#~ msgstr ""
+#~ "Buroblêd effekten binne ûnderbrútsen troch in oare applikaasje.<br/>Jo "
+#~ "kinne it ferfetsje troch de '%1' fluchtoets."
 
 #, fuzzy
 #~| msgid "KDE window manager"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-20 01:55+0000\n"
+"POT-Creation-Date: 2023-09-21 01:57+0000\n"
 "PO-Revision-Date: 2022-11-14 01:16+0100\n"
 "Last-Translator: Mihkel Tõnnov <mihhkel@gmail.com>\n"
 "Language-Team: Estonian <>\n"
@@ -79,16 +79,12 @@ msgstr ""
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Töölauaefektid taaskäivitati graafika lähtestamise tõttu"
 
-#: compositor_x11.cpp:108
+#: compositor_x11.cpp:53
 #, kde-format
-msgid ""
-"Desktop effects have been suspended by another application.<br/>You can "
-"resume using the '%1' shortcut."
-msgstr ""
-"Mingi rakendus on töölauaefektid välja lülitanud.<br/>Need saab uuesti sisse "
-"lülitada kiirklahviga '%1'."
+msgid "Suspend Compositing"
+msgstr "Komposiidi peatamine"
 
-#: compositor_x11.cpp:283
+#: compositor_x11.cpp:259
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -101,12 +97,12 @@ msgstr ""
 "paigaldanud stabiilse draiveri,<br>võid selle kaitse maha võtta, aga "
 "<b>arvesta, et see võib kaasa tuua kohese krahhi!</b></p>"
 
-#: compositor_x11.cpp:290
+#: compositor_x11.cpp:266
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Nõutavaid X'i laiendusi (XComposite ja XDamage) pole saadaval."
 
-#: compositor_x11.cpp:293
+#: compositor_x11.cpp:269
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL ei ole saadaval."
@@ -1319,55 +1315,55 @@ msgstr "Keelab seadistusvalikud"
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "Annab märku, et KWin'i on viimasel ajal n korda tabanud krahh"
 
-#: main_wayland.cpp:295
+#: main_wayland.cpp:294
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "Juuraknata Xwaylandi serveri käivitamine."
 
-#: main_wayland.cpp:297
+#: main_wayland.cpp:296
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
 msgstr ""
 "Jälgitava Waylandi pesa nimi. Kui on määramata, kasutatakse \"wayland-0\"."
 
-#: main_wayland.cpp:300
+#: main_wayland.cpp:299
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr "X11 kuva X11 platvormil aknarežiimis kasutamiseks."
 
-#: main_wayland.cpp:303
+#: main_wayland.cpp:302
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr "Waylandi kuva Waylandi platvormil aknarežiimis kasutamiseks."
 
-#: main_wayland.cpp:305
+#: main_wayland.cpp:304
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "Renderdamine virtuaalses kaadripuhvris."
 
-#: main_wayland.cpp:307
+#: main_wayland.cpp:306
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "Aknarežiimi laius. Vaikimisi 1024."
 
-#: main_wayland.cpp:311
+#: main_wayland.cpp:310
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "Aknarežiimi kõrgus. Vaikimisi 768."
 
-#: main_wayland.cpp:316
+#: main_wayland.cpp:315
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "Aknarežiimi skaala. Vaikimisi 1."
 
-#: main_wayland.cpp:321
+#: main_wayland.cpp:320
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
 msgstr "Väljundina avatavate akende arv aknarežiimis. Vaikeväärtus on 1"
 
-#: main_wayland.cpp:326
+#: main_wayland.cpp:325
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1376,7 +1372,7 @@ msgstr ""
 "Waylandi pesa, mida sissetulevate ühenduste jaoks kasutada. Pesa nime "
 "määramiseks võib seda kasutada koos võtmega --socket."
 
-#: main_wayland.cpp:330
+#: main_wayland.cpp:329
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1385,63 +1381,63 @@ msgstr ""
 "XWaylandi pesa, mida XWaylandi sissetulevate ühenduste jaoks kasutada. Võib "
 "anda korduvalt."
 
-#: main_wayland.cpp:334
+#: main_wayland.cpp:333
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "Eelseadistatud XWaylandi kuva nimi."
 
-#: main_wayland.cpp:338
+#: main_wayland.cpp:337
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "Xauthority faili nimi."
 
-#: main_wayland.cpp:342
+#: main_wayland.cpp:341
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 
-#: main_wayland.cpp:344
+#: main_wayland.cpp:343
 #, kde-format
 msgid "Render through drm node."
 msgstr "Renderdamine drm režiimis."
 
-#: main_wayland.cpp:345
+#: main_wayland.cpp:344
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
 
-#: main_wayland.cpp:367
+#: main_wayland.cpp:366
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "KWini käivitatav sisestusmeetod."
 
-#: main_wayland.cpp:373
+#: main_wayland.cpp:372
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "Seansi käivitamine lukustatud režiimis."
 
-#: main_wayland.cpp:377
+#: main_wayland.cpp:376
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "Seansi käivitamine ekraani lukustamise toetuseta."
 
-#: main_wayland.cpp:382
+#: main_wayland.cpp:381
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "Seansi käivitamine globaalsete kiirklahvide toetuseta."
 
-#: main_wayland.cpp:387 main_x11.cpp:423
+#: main_wayland.cpp:386 main_x11.cpp:423
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "KActivitiesi lõimimise keelamine"
 
-#: main_wayland.cpp:392
+#: main_wayland.cpp:391
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr "Väljumine pärast KWini käivitatud seansirakenduse sulgemist."
 
-#: main_wayland.cpp:397
+#: main_wayland.cpp:396
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
@@ -3682,7 +3678,7 @@ msgstr ""
 "Akende vahetaja paigaldus on katkine, ressursid puuduvad.\n"
 "Võta selles osas ühendust oma distributsiooniga."
 
-#: useractions.cpp:160
+#: useractions.cpp:159
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -3695,7 +3691,7 @@ msgstr ""
 "Selle asemel tuleb kasutada aknatoimingute menüüd, mille saab avada "
 "kiirklahviga %1."
 
-#: useractions.cpp:167
+#: useractions.cpp:166
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -3708,139 +3704,139 @@ msgstr ""
 "seda teha ka hiirega. Selle asemel tuleb kasutada aknatoimingute menüüd, "
 "mille saab avada kiirklahviga %1."
 
-#: useractions.cpp:214
+#: useractions.cpp:213
 #, kde-format
 msgid "&Move"
 msgstr "Lii&guta"
 
-#: useractions.cpp:219
+#: useractions.cpp:218
 #, kde-format
 msgid "&Resize"
 msgstr "Muuda suu&rust"
 
-#: useractions.cpp:224
+#: useractions.cpp:223
 #, kde-format
 msgid "Keep &Above Others"
 msgstr "Aken teiste &peal"
 
-#: useractions.cpp:230
+#: useractions.cpp:229
 #, kde-format
 msgid "Keep &Below Others"
 msgstr "Aken te&iste all"
 
-#: useractions.cpp:236
+#: useractions.cpp:235
 #, kde-format
 msgid "&Fullscreen"
 msgstr "Täisek&raan"
 
-#: useractions.cpp:242
+#: useractions.cpp:241
 #, kde-format
 msgid "&Shade"
 msgstr "&Keri kokku"
 
-#: useractions.cpp:248
+#: useractions.cpp:247
 #, fuzzy, kde-format
 #| msgid "No titlebar and frame"
 msgid "&No Titlebar and Frame"
 msgstr "Tiitliriba ja raamita"
 
-#: useractions.cpp:256
+#: useractions.cpp:255
 #, fuzzy, kde-format
 #| msgid "Set Window Short&cut..."
 msgid "Set Window Short&cut…"
 msgstr "Määra akna kiirklah&v..."
 
-#: useractions.cpp:262
+#: useractions.cpp:261
 #, fuzzy, kde-format
 #| msgid "Configure Special &Window Settings..."
 msgid "Configure Special &Window Settings…"
 msgstr "Mää&ra spetsiaalsed aknareeglid..."
 
-#: useractions.cpp:267
+#: useractions.cpp:266
 #, fuzzy, kde-format
 #| msgid "Configure S&pecial Application Settings..."
 msgid "Configure S&pecial Application Settings…"
 msgstr "Määra &spetsiaalsed rakenduse reeglid..."
 
-#: useractions.cpp:273
+#: useractions.cpp:272
 #, kde-format
 msgid "Ma&ximize"
 msgstr "Ma&ksimeeri"
 
-#: useractions.cpp:279
+#: useractions.cpp:278
 #, kde-format
 msgid "Mi&nimize"
 msgstr "Mi&nimeeri"
 
-#: useractions.cpp:285
+#: useractions.cpp:284
 #, kde-format
 msgid "&More Actions"
 msgstr "Veel toimin&guid"
 
-#: useractions.cpp:290
+#: useractions.cpp:289
 #, kde-format
 msgid "&Close"
 msgstr "&Sulge"
 
-#: useractions.cpp:360
+#: useractions.cpp:359
 #, kde-format
 msgid "&Extensions"
 msgstr "Lai&endid"
 
-#: useractions.cpp:411
+#: useractions.cpp:410
 #, kde-format
 msgid "&Desktops"
 msgstr "Tööl&auad"
 
-#: useractions.cpp:425
+#: useractions.cpp:424
 #, kde-format
 msgid "Move to &Desktop"
 msgstr "Liiguta &töölauale"
 
-#: useractions.cpp:442
+#: useractions.cpp:441
 #, kde-format
 msgid "Move to &Screen"
 msgstr "Liiguta &ekraanile"
 
-#: useractions.cpp:458
+#: useractions.cpp:457
 #, kde-format
 msgid "Show in &Activities"
 msgstr "Näita &tegevustes"
 
-#: useractions.cpp:475
+#: useractions.cpp:474
 #, kde-format
 msgid "Move &To Current Desktop"
 msgstr "Liiguta &aktiivsele töölauale"
 
-#: useractions.cpp:485 useractions.cpp:552
+#: useractions.cpp:484 useractions.cpp:551
 #, kde-format
 msgid "&All Desktops"
 msgstr "&Kõik töölauad"
 
-#: useractions.cpp:525
+#: useractions.cpp:524
 #, kde-format
 msgctxt "Create a new desktop and move the window there"
 msgid "&New Desktop"
 msgstr "&Uus töölaud"
 
-#: useractions.cpp:596
+#: useractions.cpp:595
 #, kde-format
 msgid "Move to %1 %2"
 msgstr ""
 
-#: useractions.cpp:609
+#: useractions.cpp:608
 #, kde-format
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
 msgstr "Lisa uuele töölauale"
 
-#: useractions.cpp:621
+#: useractions.cpp:620
 #, kde-format
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
 msgstr "Liiguta uuele töölauale"
 
-#: useractions.cpp:652
+#: useractions.cpp:651
 #, kde-format
 msgctxt ""
 "@item:inmenu List of all Screens to send a window to. First argument is a "
@@ -3848,379 +3844,374 @@ msgctxt ""
 msgid "Screen &%1 (%2)"
 msgstr "Ekraan &%1 (%2)"
 
-#: useractions.cpp:678
+#: useractions.cpp:677
 #, kde-format
 msgid "&All Activities"
 msgstr "&Kõik tegevused"
 
-#: useractions.cpp:726
+#: useractions.cpp:725
 #, fuzzy, kde-format
 #| msgid "Move to &Screen"
 msgid "Move to %1"
 msgstr "Liiguta &ekraanile"
 
-#: useractions.cpp:845
+#: useractions.cpp:844
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr "<b>%1</b> on juba kasutusel"
 
-#: useractions.cpp:847
+#: useractions.cpp:846
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> kasutab juba toiming %2 rakenduses %3"
 
-#: useractions.cpp:927
+#: useractions.cpp:926
 #, kde-format
 msgid "Window Operations Menu"
 msgstr "Aknatoimingute menüü"
 
-#: useractions.cpp:929
+#: useractions.cpp:928
 #, kde-format
 msgid "Close Window"
 msgstr "Akna sulgemine"
 
-#: useractions.cpp:931
+#: useractions.cpp:930
 #, kde-format
 msgid "Maximize Window"
 msgstr "Akna maksimeerimine"
 
-#: useractions.cpp:933
+#: useractions.cpp:932
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "Akna maksimeerimine püstiselt"
 
-#: useractions.cpp:935
+#: useractions.cpp:934
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "Akna maksimeerimine rõhtsalt"
 
-#: useractions.cpp:937
+#: useractions.cpp:936
 #, kde-format
 msgid "Minimize Window"
 msgstr "Akna minimeerimine"
 
-#: useractions.cpp:939
+#: useractions.cpp:938
 #, kde-format
 msgid "Shade Window"
 msgstr "Akna varjamine"
 
-#: useractions.cpp:941
+#: useractions.cpp:940
 #, kde-format
 msgid "Move Window"
 msgstr "Akna liigutamine"
 
-#: useractions.cpp:943
+#: useractions.cpp:942
 #, kde-format
 msgid "Resize Window"
 msgstr "Akna suuruse muutmine"
 
-#: useractions.cpp:945
+#: useractions.cpp:944
 #, kde-format
 msgid "Raise Window"
 msgstr "Akna tõstmine"
 
-#: useractions.cpp:947
+#: useractions.cpp:946
 #, kde-format
 msgid "Lower Window"
 msgstr "Akna langetamine"
 
-#: useractions.cpp:949
+#: useractions.cpp:948
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "Akna tõstmine/langetamine"
 
-#: useractions.cpp:951
+#: useractions.cpp:950
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "Aken täisekraani"
 
-#: useractions.cpp:953
+#: useractions.cpp:952
 #, fuzzy, kde-format
 #| msgid "No titlebar and frame"
 msgid "Toggle Window Titlebar and Frame"
 msgstr "Tiitliriba ja raamita"
 
-#: useractions.cpp:955
+#: useractions.cpp:954
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "Aken teiste akende peal"
 
-#: useractions.cpp:957
+#: useractions.cpp:956
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "Aken teiste akende all"
 
-#: useractions.cpp:959
+#: useractions.cpp:958
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "Tähelepanu nõudva akna aktiveerimine"
 
-#: useractions.cpp:961
+#: useractions.cpp:960
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "Akna kiirklahvi määramine"
 
-#: useractions.cpp:963
+#: useractions.cpp:962
 #, kde-format
 msgid "Move Window to the Center"
 msgstr "Akna liigutamine keskele"
 
-#: useractions.cpp:965
+#: useractions.cpp:964
 #, kde-format
 msgid "Move Window Right"
 msgstr "Akna liigutamine paremale"
 
-#: useractions.cpp:967
+#: useractions.cpp:966
 #, kde-format
 msgid "Move Window Left"
 msgstr "Akna liigutamine vasakule"
 
-#: useractions.cpp:969
+#: useractions.cpp:968
 #, kde-format
 msgid "Move Window Up"
 msgstr "Akna liigutamine üles"
 
-#: useractions.cpp:971
+#: useractions.cpp:970
 #, kde-format
 msgid "Move Window Down"
 msgstr "Akna liigutamine alla"
 
-#: useractions.cpp:973
+#: useractions.cpp:972
 #, kde-format
 msgid "Expand Window Horizontally"
 msgstr "Akna kasvatamine rõhtsalt"
 
-#: useractions.cpp:975
+#: useractions.cpp:974
 #, kde-format
 msgid "Expand Window Vertically"
 msgstr "Akna kasvatamine püstiselt"
 
-#: useractions.cpp:977
+#: useractions.cpp:976
 #, kde-format
 msgid "Shrink Window Horizontally"
 msgstr "Akna kahandamine rõhtsalt"
 
-#: useractions.cpp:979
+#: useractions.cpp:978
 #, kde-format
 msgid "Shrink Window Vertically"
 msgstr "Akna kahandamine püstiselt"
 
-#: useractions.cpp:981
+#: useractions.cpp:980
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "Akna kiire nihutamine vasakule"
 
-#: useractions.cpp:983
+#: useractions.cpp:982
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "Akna kiire nihutamine paremale"
 
-#: useractions.cpp:985
+#: useractions.cpp:984
 #, kde-format
 msgid "Quick Tile Window to the Top"
 msgstr "Akna kiire nihutamine üles"
 
-#: useractions.cpp:987
+#: useractions.cpp:986
 #, kde-format
 msgid "Quick Tile Window to the Bottom"
 msgstr "Akna kiire nihutamine alla"
 
-#: useractions.cpp:989
+#: useractions.cpp:988
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
 msgstr "Akna kiire nihutamine üles vasakule"
 
-#: useractions.cpp:991
+#: useractions.cpp:990
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "Akna kiire nihutamine alla vasakule"
 
-#: useractions.cpp:993
+#: useractions.cpp:992
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
 msgstr "Akna kiire nihutamine üles paremale"
 
-#: useractions.cpp:995
+#: useractions.cpp:994
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "Akna kiire nihutamine alla paremale"
 
-#: useractions.cpp:997
+#: useractions.cpp:996
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "Lülitumine ülemisele aknale"
 
-#: useractions.cpp:999
+#: useractions.cpp:998
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "Lülitumine alumisele aknale"
 
-#: useractions.cpp:1001
+#: useractions.cpp:1000
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "Lülitumine parempoolsele aknale"
 
-#: useractions.cpp:1003
+#: useractions.cpp:1002
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "Lülitumine vasakpoolsele aknale"
 
-#: useractions.cpp:1005
+#: useractions.cpp:1004
 #, fuzzy, kde-format
 #| msgid "Increase Opacity of Active Window by 5 %"
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "Aktiivse akna läbipaistmatuse suurendamine 5 %"
 
-#: useractions.cpp:1007
+#: useractions.cpp:1006
 #, fuzzy, kde-format
 #| msgid "Decrease Opacity of Active Window by 5 %"
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "Aktiivse akna läbipaistmatuse vähendamine 5 %"
 
-#: useractions.cpp:1010
+#: useractions.cpp:1009
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "Aken kõigil töölaudadel"
 
-#: useractions.cpp:1021
+#: useractions.cpp:1020
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "Aken töölauale %1"
 
-#: useractions.cpp:1023
+#: useractions.cpp:1022
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Aken järgmisele töölauale"
 
-#: useractions.cpp:1024
+#: useractions.cpp:1023
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Aken eelmisele töölauale"
 
-#: useractions.cpp:1025
+#: useractions.cpp:1024
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Aken üks töölaud paremale"
 
-#: useractions.cpp:1027
+#: useractions.cpp:1026
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Aken üks töölaud vasakule"
 
-#: useractions.cpp:1029
+#: useractions.cpp:1028
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "Aken üks töölaud üles"
 
-#: useractions.cpp:1031
+#: useractions.cpp:1030
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "Aken üks töölaud alla"
 
-#: useractions.cpp:1035
+#: useractions.cpp:1034
 #, fuzzy, kde-format
 #| msgid "Window to Screen %1"
 msgid "Move Window to Screen %1"
 msgstr "Aken ekraanile %1"
 
-#: useractions.cpp:1042
+#: useractions.cpp:1041
 #, fuzzy, kde-format
 #| msgid "Window to Next Screen"
 msgid "Move Window to Next Screen"
 msgstr "Aken järgmisele ekraanile"
 
-#: useractions.cpp:1044
+#: useractions.cpp:1043
 #, fuzzy, kde-format
 #| msgid "Window to Previous Screen"
 msgid "Move Window to Previous Screen"
 msgstr "Aken eelmisele ekraanile"
 
-#: useractions.cpp:1046
+#: useractions.cpp:1045
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Window One Screen to the Right"
 msgstr "Aken üks töölaud paremale"
 
-#: useractions.cpp:1048
+#: useractions.cpp:1047
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Window One Screen to the Left"
 msgstr "Aken üks töölaud vasakule"
 
-#: useractions.cpp:1050
+#: useractions.cpp:1049
 #, fuzzy, kde-format
 #| msgid "Window to Screen 2"
 msgid "Move Window One Screen Up"
 msgstr "Aken ekraanile 2"
 
-#: useractions.cpp:1052
+#: useractions.cpp:1051
 #, fuzzy, kde-format
 #| msgid "Window One Desktop Down"
 msgid "Move Window One Screen Down"
 msgstr "Aken üks töölaud alla"
 
-#: useractions.cpp:1056
+#: useractions.cpp:1055
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr "Lülitumine ekraanile %1"
 
-#: useractions.cpp:1063
+#: useractions.cpp:1062
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "Lülitumine järgmisele ekraanile"
 
-#: useractions.cpp:1064
+#: useractions.cpp:1063
 #, kde-format
 msgid "Switch to Previous Screen"
 msgstr "Lülitumine eelmisele ekraanile"
 
-#: useractions.cpp:1065
+#: useractions.cpp:1064
 #, fuzzy, kde-format
 #| msgid "Switch to Window to the Right"
 msgid "Switch to Screen to the Right"
 msgstr "Lülitumine parempoolsele aknale"
 
-#: useractions.cpp:1067
+#: useractions.cpp:1066
 #, fuzzy, kde-format
 #| msgid "Switch to Window to the Left"
 msgid "Switch to Screen to the Left"
 msgstr "Lülitumine vasakpoolsele aknale"
 
-#: useractions.cpp:1069
+#: useractions.cpp:1068
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Screen Above"
 msgstr "Lülitumine ekraanile 0"
 
-#: useractions.cpp:1071
+#: useractions.cpp:1070
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Screen Below"
 msgstr "Lülitumine ekraanile 0"
 
-#: useractions.cpp:1074
+#: useractions.cpp:1073
 #, kde-format
 msgid "Peek at Desktop"
 msgstr "Töölaua näitamine"
 
-#: useractions.cpp:1077
+#: useractions.cpp:1076
 #, kde-format
 msgid "Kill Window"
 msgstr "Akna tapmine"
 
-#: useractions.cpp:1078
-#, kde-format
-msgid "Suspend Compositing"
-msgstr "Komposiidi peatamine"
-
-#: useractions.cpp:1139
+#: useractions.cpp:1137
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Akna aktiveerimine (%1)"
 
-#: useractions.cpp:1276
+#: useractions.cpp:1274
 #, kde-format
 msgid ""
 "The window manager is configured to consider the screen with the mouse on it "
@@ -4275,7 +4266,7 @@ msgstr "Lülitumine üks töölaud alla"
 msgid "Switch to Desktop %1"
 msgstr "Lülitumine töölauale %1"
 
-#: window.cpp:3078
+#: window.cpp:3071
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4319,6 +4310,13 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#~ msgid ""
+#~ "Desktop effects have been suspended by another application.<br/>You can "
+#~ "resume using the '%1' shortcut."
+#~ msgstr ""
+#~ "Mingi rakendus on töölauaefektid välja lülitanud.<br/>Need saab uuesti "
+#~ "sisse lülitada kiirklahviga '%1'."
 
 #~ msgctxt ""
 #~ "Entry in context menu of window decoration to open the configuration "

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-20 01:55+0000\n"
+"POT-Creation-Date: 2023-09-21 01:57+0000\n"
 "PO-Revision-Date: 2023-07-24 21:32+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -90,17 +90,13 @@ msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 "Työpöytätehosteet käynnistettiin uudelleen, koska grafiikka nollattiin."
 
-#: compositor_x11.cpp:108
+#: compositor_x11.cpp:53
 #, kde-format
-msgid ""
-"Desktop effects have been suspended by another application.<br/>You can "
-"resume using the '%1' shortcut."
-msgstr ""
-"Jokin sovellus on poistanut työpöytätehosteet väliaikaisesti<br/>käytöstä. "
-"Voit palauttaa ne käyttöön pikanäppäimellä %1."
+msgid "Suspend Compositing"
+msgstr "Keskeytä koostaminen"
 
 # En pidä sanan ”backend” suomentamisesta tässä. Koostamistyyppi löytyy työpöytätehosteiden lisäasetuksista, vaikka ”koostamistapa” voisi olla vielä parempi.
-#: compositor_x11.cpp:283
+#: compositor_x11.cpp:259
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -113,13 +109,13 @@ msgstr ""
 "vakaaseen ajuriin,<br>voit poistaa tämän suojauksen, mutta <b>tästä saattaa "
 "seurata välitön kaatuminen!</b></p>"
 
-#: compositor_x11.cpp:290
+#: compositor_x11.cpp:266
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr ""
 "Tarvittavat X-laajennukset (XComposite ja XDamage) eivät ole käytettävissä."
 
-#: compositor_x11.cpp:293
+#: compositor_x11.cpp:269
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL ei ole käytettävissä."
@@ -1338,50 +1334,50 @@ msgstr "Poista asetukset käytöstä"
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "Ilmoita, että KWin on kaatunut n kertaa"
 
-#: main_wayland.cpp:295
+#: main_wayland.cpp:294
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr ""
 "Käynnistä tavallisena käyttäjänä suoritettava (rootless) Xwayland-palvelin."
 
-#: main_wayland.cpp:297
+#: main_wayland.cpp:296
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
 msgstr ""
 "Kuunneltavan Wayland-pistokkeen nimi. Ellei aseteta, käytetään ”wayland-0”."
 
-#: main_wayland.cpp:300
+#: main_wayland.cpp:299
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr "X11-näyttö, jota käytetään ikkunoidussa tilassa X11-alustalla."
 
-#: main_wayland.cpp:303
+#: main_wayland.cpp:302
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr "Wayland-alustan ikkunoituun tilaan käytettävä Wayland-näyttö."
 
-#: main_wayland.cpp:305
+#: main_wayland.cpp:304
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "Hahmonna virtuaalikehyspuskuriin."
 
-#: main_wayland.cpp:307
+#: main_wayland.cpp:306
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "Ikkunoidun tilan leveys. Oletusleveys on 1024."
 
-#: main_wayland.cpp:311
+#: main_wayland.cpp:310
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "Ikkunoidun tilan korkeus. Oletuskorkeus on 768."
 
-#: main_wayland.cpp:316
+#: main_wayland.cpp:315
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "Ikkunoidun tilan mittakaava. Oletusarvo on 1."
 
-#: main_wayland.cpp:321
+#: main_wayland.cpp:320
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
@@ -1389,7 +1385,7 @@ msgstr ""
 "Ulostuloiksi avattavien ikkunoiden määrä ikkunoidussa tilassa. Oletusarvo on "
 "1."
 
-#: main_wayland.cpp:326
+#: main_wayland.cpp:325
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1398,7 +1394,7 @@ msgstr ""
 "Saapuviin yhteyksiin käytettävä Wayland-pistoke. Pistokkeelle voi antaa "
 "nimen --socket-valitsimella."
 
-#: main_wayland.cpp:330
+#: main_wayland.cpp:329
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1406,65 +1402,65 @@ msgid ""
 msgstr ""
 "Saapuviin yhteyksiin käytettävä Wayland-pistoke. Tämän voi asettaa useammasti"
 
-#: main_wayland.cpp:334
+#: main_wayland.cpp:333
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "Esiasetetun XWayland-näytön nimi"
 
-#: main_wayland.cpp:338
+#: main_wayland.cpp:337
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "xauthority-tiedoston nimi"
 
-#: main_wayland.cpp:342
+#: main_wayland.cpp:341
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 "Lopettaa tämän instanssin, jotta kwin_wayland_wrapper voi käynnistää sen "
 "uudelleen."
 
-#: main_wayland.cpp:344
+#: main_wayland.cpp:343
 #, kde-format
 msgid "Render through drm node."
 msgstr "Hahmonna DRM-solmun kautta."
 
-#: main_wayland.cpp:345
+#: main_wayland.cpp:344
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr "Selvitä maa-asetusto käyttäjäasetusten sijaan locale1:stä"
 
-#: main_wayland.cpp:367
+#: main_wayland.cpp:366
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "Syötemenetelmä, jonka KWin käynnistää."
 
-#: main_wayland.cpp:373
+#: main_wayland.cpp:372
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "Aloittaa istunnon lukittuna."
 
-#: main_wayland.cpp:377
+#: main_wayland.cpp:376
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "Aloittaa istunnon ilman näytönlukitustukea."
 
-#: main_wayland.cpp:382
+#: main_wayland.cpp:381
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "Aloittaa istunnon ilman yleisten pikanäppäinten tukea."
 
-#: main_wayland.cpp:387 main_x11.cpp:423
+#: main_wayland.cpp:386 main_x11.cpp:423
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Poista KActivities-integraatio käytöstä."
 
-#: main_wayland.cpp:392
+#: main_wayland.cpp:391
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr "Lopeta, kun KWinin käynnistämä istuntosovellus sulkeutuu."
 
-#: main_wayland.cpp:397
+#: main_wayland.cpp:396
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
@@ -3575,7 +3571,7 @@ msgstr ""
 "Ikkunanvalitsimen asennus on rikki. Resurssit puuttuvat.\n"
 "Ilmoita tästä jakelullesi."
 
-#: useractions.cpp:160
+#: useractions.cpp:159
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -3588,7 +3584,7 @@ msgstr ""
 "avulla. Käytä ikkunatoimintojen valikkoa, jonka saat näkyville painamalla "
 "pikanäppäintä %1."
 
-#: useractions.cpp:167
+#: useractions.cpp:166
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -3601,136 +3597,136 @@ msgstr ""
 "poistua siitä hiiren avulla. Käytä ikkunatoimintojen valikkoa, jonka saat "
 "näkyviin painamalla pikanäppäintä %1."
 
-#: useractions.cpp:214
+#: useractions.cpp:213
 #, kde-format
 msgid "&Move"
 msgstr "S&iirrä"
 
-#: useractions.cpp:219
+#: useractions.cpp:218
 #, kde-format
 msgid "&Resize"
 msgstr "&Muuta kokoa"
 
-#: useractions.cpp:224
+#: useractions.cpp:223
 #, kde-format
 msgid "Keep &Above Others"
 msgstr "Pidä &ylinnä"
 
-#: useractions.cpp:230
+#: useractions.cpp:229
 #, kde-format
 msgid "Keep &Below Others"
 msgstr "Pidä &alinna"
 
-#: useractions.cpp:236
+#: useractions.cpp:235
 #, kde-format
 msgid "&Fullscreen"
 msgstr "&Koko näyttö"
 
-#: useractions.cpp:242
+#: useractions.cpp:241
 #, kde-format
 msgid "&Shade"
 msgstr "&Rullaa"
 
-#: useractions.cpp:248
+#: useractions.cpp:247
 #, kde-format
 msgid "&No Titlebar and Frame"
 msgstr "&Ei otsikkopalkkia eikä kehystä"
 
-#: useractions.cpp:256
+#: useractions.cpp:255
 #, kde-format
 msgid "Set Window Short&cut…"
 msgstr "Aseta ikkunan &pikanäppäin…"
 
-#: useractions.cpp:262
+#: useractions.cpp:261
 #, kde-format
 msgid "Configure Special &Window Settings…"
 msgstr "&Ikkunakohtaiset erityisasetukset…"
 
-#: useractions.cpp:267
+#: useractions.cpp:266
 #, kde-format
 msgid "Configure S&pecial Application Settings…"
 msgstr "&Sovelluskohtaiset erityisasetukset…"
 
-#: useractions.cpp:273
+#: useractions.cpp:272
 #, kde-format
 msgid "Ma&ximize"
 msgstr "S&uurenna"
 
-#: useractions.cpp:279
+#: useractions.cpp:278
 #, kde-format
 msgid "Mi&nimize"
 msgstr "P&ienennä"
 
-#: useractions.cpp:285
+#: useractions.cpp:284
 #, kde-format
 msgid "&More Actions"
 msgstr "&Lisää toimintoja"
 
-#: useractions.cpp:290
+#: useractions.cpp:289
 #, kde-format
 msgid "&Close"
 msgstr "&Sulje"
 
-#: useractions.cpp:360
+#: useractions.cpp:359
 #, kde-format
 msgid "&Extensions"
 msgstr "&Laajennukset"
 
-#: useractions.cpp:411
+#: useractions.cpp:410
 #, kde-format
 msgid "&Desktops"
 msgstr "&Työpöydät"
 
-#: useractions.cpp:425
+#: useractions.cpp:424
 #, kde-format
 msgid "Move to &Desktop"
 msgstr "Siirrä t&yöpöydälle"
 
-#: useractions.cpp:442
+#: useractions.cpp:441
 #, kde-format
 msgid "Move to &Screen"
 msgstr "&Siirrä näytölle"
 
-#: useractions.cpp:458
+#: useractions.cpp:457
 #, kde-format
 msgid "Show in &Activities"
 msgstr "Näytä &aktiviteeteissa"
 
-#: useractions.cpp:475
+#: useractions.cpp:474
 #, kde-format
 msgid "Move &To Current Desktop"
 msgstr "Siirrä &nykyiselle työpöydälle"
 
-#: useractions.cpp:485 useractions.cpp:552
+#: useractions.cpp:484 useractions.cpp:551
 #, kde-format
 msgid "&All Desktops"
 msgstr "Näytä k&aikilla työpöydillä"
 
-#: useractions.cpp:525
+#: useractions.cpp:524
 #, kde-format
 msgctxt "Create a new desktop and move the window there"
 msgid "&New Desktop"
 msgstr "Uusi työ&pöytä"
 
 # *** TARKISTA: Mitä %1 %2 ovat?
-#: useractions.cpp:596
+#: useractions.cpp:595
 #, kde-format
 msgid "Move to %1 %2"
 msgstr "Siirrä kohtaan %1 %2"
 
-#: useractions.cpp:609
+#: useractions.cpp:608
 #, kde-format
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
 msgstr "Lisää &uudelle työpöydälle"
 
-#: useractions.cpp:621
+#: useractions.cpp:620
 #, kde-format
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
 msgstr "Siirrä uudelle työpöydälle"
 
-#: useractions.cpp:652
+#: useractions.cpp:651
 #, kde-format
 msgctxt ""
 "@item:inmenu List of all Screens to send a window to. First argument is a "
@@ -3738,371 +3734,366 @@ msgctxt ""
 msgid "Screen &%1 (%2)"
 msgstr "Näyttö &%1 (%2)"
 
-#: useractions.cpp:678
+#: useractions.cpp:677
 #, kde-format
 msgid "&All Activities"
 msgstr "Kaikissa &aktiviteeteissa"
 
 # *** TARKISTA: Mitä %1 on?
-#: useractions.cpp:726
+#: useractions.cpp:725
 #, kde-format
 msgid "Move to %1"
 msgstr "Siirrä → %1"
 
-#: useractions.cpp:845
+#: useractions.cpp:844
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr "<b>%1</b> on jo käytössä"
 
-#: useractions.cpp:847
+#: useractions.cpp:846
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr "%3 käyttää näppäinyhdistelmää <b>%1</b> toiminnossa %2"
 
-#: useractions.cpp:927
+#: useractions.cpp:926
 #, kde-format
 msgid "Window Operations Menu"
 msgstr "Ikkunan pikavalikko"
 
-#: useractions.cpp:929
+#: useractions.cpp:928
 #, kde-format
 msgid "Close Window"
 msgstr "Sulje ikkuna"
 
-#: useractions.cpp:931
+#: useractions.cpp:930
 #, kde-format
 msgid "Maximize Window"
 msgstr "Suurenna ikkuna"
 
-#: useractions.cpp:933
+#: useractions.cpp:932
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "Suurenna ikkuna pystysuunnassa"
 
-#: useractions.cpp:935
+#: useractions.cpp:934
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "Suurenna ikkuna vaakasuunnassa"
 
-#: useractions.cpp:937
+#: useractions.cpp:936
 #, kde-format
 msgid "Minimize Window"
 msgstr "Pienennä ikkuna"
 
-#: useractions.cpp:939
+#: useractions.cpp:938
 #, kde-format
 msgid "Shade Window"
 msgstr "Rullaa ikkuna"
 
-#: useractions.cpp:941
+#: useractions.cpp:940
 #, kde-format
 msgid "Move Window"
 msgstr "Siirrä ikkunaa"
 
-#: useractions.cpp:943
+#: useractions.cpp:942
 #, kde-format
 msgid "Resize Window"
 msgstr "Muuta ikkunan kokoa"
 
-#: useractions.cpp:945
+#: useractions.cpp:944
 #, kde-format
 msgid "Raise Window"
 msgstr "Nosta ikkunaa"
 
-#: useractions.cpp:947
+#: useractions.cpp:946
 #, kde-format
 msgid "Lower Window"
 msgstr "Laske ikkunaa"
 
-#: useractions.cpp:949
+#: useractions.cpp:948
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "Nosta tai laske ikkuna"
 
-#: useractions.cpp:951
+#: useractions.cpp:950
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "Tee ikkunasta koko näytön kokoinen"
 
 # *** TARKISTA: ”Togglen” merkitys arvoitus
-#: useractions.cpp:953
+#: useractions.cpp:952
 #, kde-format
 msgid "Toggle Window Titlebar and Frame"
 msgstr "Näytä tai piilota otsikkopalkki ja kehys"
 
-#: useractions.cpp:955
+#: useractions.cpp:954
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "Pidä ikkuna muiden yllä"
 
-#: useractions.cpp:957
+#: useractions.cpp:956
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "Pidä ikkuna muiden alla"
 
-#: useractions.cpp:959
+#: useractions.cpp:958
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "Aktivoi huomiota vaativa ikkuna"
 
-#: useractions.cpp:961
+#: useractions.cpp:960
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "Aseta ikkunan pikanäppäin"
 
-#: useractions.cpp:963
+#: useractions.cpp:962
 #, kde-format
 msgid "Move Window to the Center"
 msgstr "Siirrä ikkuna keskelle"
 
-#: useractions.cpp:965
+#: useractions.cpp:964
 #, kde-format
 msgid "Move Window Right"
 msgstr "Siirrä ikkunaa oikealle"
 
-#: useractions.cpp:967
+#: useractions.cpp:966
 #, kde-format
 msgid "Move Window Left"
 msgstr "Siirrä ikkunaa vasemmalle"
 
-#: useractions.cpp:969
+#: useractions.cpp:968
 #, kde-format
 msgid "Move Window Up"
 msgstr "Siirrä ikkunaa ylemmäs"
 
-#: useractions.cpp:971
+#: useractions.cpp:970
 #, kde-format
 msgid "Move Window Down"
 msgstr "Siirrä ikkunaa alemmas"
 
-#: useractions.cpp:973
+#: useractions.cpp:972
 #, kde-format
 msgid "Expand Window Horizontally"
 msgstr "Laajenna ikkuna vaakasuunnassa"
 
-#: useractions.cpp:975
+#: useractions.cpp:974
 #, kde-format
 msgid "Expand Window Vertically"
 msgstr "Laajenna ikkuna pystysuunnassa"
 
 # HUOM! Ei tarkoita ”minimize” vaan astettaista koon muuttamista!
-#: useractions.cpp:977
+#: useractions.cpp:976
 #, kde-format
 msgid "Shrink Window Horizontally"
 msgstr "Pienennä ikkunan kokoa vaakasuunnassa"
 
 # HUOM! Ei tarkoita ”minimize” vaan astettaista koon muuttamista!
-#: useractions.cpp:979
+#: useractions.cpp:978
 #, kde-format
 msgid "Shrink Window Vertically"
 msgstr "Pienennä ikkunan kokoa pystysuunnassa"
 
-#: useractions.cpp:981
+#: useractions.cpp:980
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "Pinoa ikkuna vasemmalle"
 
-#: useractions.cpp:983
+#: useractions.cpp:982
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "Pinoa ikkuna oikealle"
 
-#: useractions.cpp:985
+#: useractions.cpp:984
 #, kde-format
 msgid "Quick Tile Window to the Top"
 msgstr "Pinoa ikkuna ylös"
 
-#: useractions.cpp:987
+#: useractions.cpp:986
 #, kde-format
 msgid "Quick Tile Window to the Bottom"
 msgstr "Pinoa ikkuna alas"
 
-#: useractions.cpp:989
+#: useractions.cpp:988
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
 msgstr "Pinoa ikkuna vasempaan yläkulmaan"
 
-#: useractions.cpp:991
+#: useractions.cpp:990
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "Pinoa ikkuna vasempaan alakulmaan"
 
-#: useractions.cpp:993
+#: useractions.cpp:992
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
 msgstr "Pinoa ikkuna oikeaan yläkulmaan"
 
-#: useractions.cpp:995
+#: useractions.cpp:994
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "Pinoa ikkuna oikeaan alakulmaan"
 
 # Nämä Switch to Window... -jonot on yritetty suomentaa niin, että ne tulisivat listassa peräkkäin – siksi vähän outo sanajärjestys. Listassa muodot tukevat toisiaan.
-#: useractions.cpp:997
+#: useractions.cpp:996
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "Vaihda ikkunaa ylemmäs"
 
-#: useractions.cpp:999
+#: useractions.cpp:998
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "Vaihda ikkunaa alemmas"
 
-#: useractions.cpp:1001
+#: useractions.cpp:1000
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "Vaihda ikkunaa oikealle"
 
-#: useractions.cpp:1003
+#: useractions.cpp:1002
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "Vaihda ikkunaa vasemmalle"
 
-#: useractions.cpp:1005
+#: useractions.cpp:1004
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "Lisää aktiivisen ikkunan peittävyyttä 5 %"
 
-#: useractions.cpp:1007
+#: useractions.cpp:1006
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "Vähennä aktiivisen ikkunan peittävyyttä 5 %"
 
-#: useractions.cpp:1010
+#: useractions.cpp:1009
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "Näytä ikkuna kaikilla työpöydillä"
 
-#: useractions.cpp:1021
+#: useractions.cpp:1020
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "Ikkuna työpöydälle %1"
 
-#: useractions.cpp:1023
+#: useractions.cpp:1022
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Ikkuna seuraavalle työpöydälle"
 
-#: useractions.cpp:1024
+#: useractions.cpp:1023
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Ikkuna edelliselle työpöydälle"
 
 # Nämä Window One Desktop... -jonot on yritetty suomentaa niin, että ne tulisivat listassa peräkkäin – siksi vähän outo sanajärjestys. Listassa muodot tukevat toisiaan.
-#: useractions.cpp:1025
+#: useractions.cpp:1024
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Ikkuna yhden työpöydän oikeaan"
 
-#: useractions.cpp:1027
+#: useractions.cpp:1026
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Ikkuna yhden työpöydän vasempaan"
 
-#: useractions.cpp:1029
+#: useractions.cpp:1028
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "Ikkuna yhden työpöydän ylös"
 
-#: useractions.cpp:1031
+#: useractions.cpp:1030
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "Ikkuna yhden työpöydän alas"
 
-#: useractions.cpp:1035
+#: useractions.cpp:1034
 #, kde-format
 msgid "Move Window to Screen %1"
 msgstr "Siirrä ikkuna näytölle %1"
 
-#: useractions.cpp:1042
+#: useractions.cpp:1041
 #, kde-format
 msgid "Move Window to Next Screen"
 msgstr "Siirrä ikkuna seuraavaan näyttöön"
 
-#: useractions.cpp:1044
+#: useractions.cpp:1043
 #, kde-format
 msgid "Move Window to Previous Screen"
 msgstr "Siirrä ikkuna edelliseen näyttöön"
 
 # Nämä Window One Desktop... -jonot on yritetty suomentaa niin, että ne tulisivat listassa peräkkäin – siksi vähän outo sanajärjestys. Listassa muodot tukevat toisiaan.
-#: useractions.cpp:1046
+#: useractions.cpp:1045
 #, kde-format
 msgid "Move Window One Screen to the Right"
 msgstr "Siirrä ikkuna yhtä näyttöä oikealle"
 
-#: useractions.cpp:1048
+#: useractions.cpp:1047
 #, kde-format
 msgid "Move Window One Screen to the Left"
 msgstr "Siirrä ikkuna yhtä näyttöä vasemmalle"
 
-#: useractions.cpp:1050
+#: useractions.cpp:1049
 #, kde-format
 msgid "Move Window One Screen Up"
 msgstr "Siirrä ikkunaa yhtä näyttöä ylemmäs"
 
-#: useractions.cpp:1052
+#: useractions.cpp:1051
 #, kde-format
 msgid "Move Window One Screen Down"
 msgstr "Siirrä ikkunaa yhtä näyttöä alemmas"
 
-#: useractions.cpp:1056
+#: useractions.cpp:1055
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr "Vaihda näyttöön %1"
 
-#: useractions.cpp:1063
+#: useractions.cpp:1062
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "Vaihda seuraavaan näyttöön"
 
-#: useractions.cpp:1064
+#: useractions.cpp:1063
 #, kde-format
 msgid "Switch to Previous Screen"
 msgstr "Vaihda edelliseen näyttöön"
 
-#: useractions.cpp:1065
+#: useractions.cpp:1064
 #, kde-format
 msgid "Switch to Screen to the Right"
 msgstr "Vaihda oikeanpuoleiseen näyttöön"
 
-#: useractions.cpp:1067
+#: useractions.cpp:1066
 #, kde-format
 msgid "Switch to Screen to the Left"
 msgstr "Vaihda vasemmanpuoleiseen näyttöön"
 
-#: useractions.cpp:1069
+#: useractions.cpp:1068
 #, kde-format
 msgid "Switch to Screen Above"
 msgstr "Vaihda ylempään näyttöön"
 
-#: useractions.cpp:1071
+#: useractions.cpp:1070
 #, kde-format
 msgid "Switch to Screen Below"
 msgstr "Vaihda alempaan näyttöön"
 
-#: useractions.cpp:1074
+#: useractions.cpp:1073
 #, kde-format
 msgid "Peek at Desktop"
 msgstr "Kurkista työpöydälle"
 
-#: useractions.cpp:1077
+#: useractions.cpp:1076
 #, kde-format
 msgid "Kill Window"
 msgstr "Tapa ikkuna"
 
-#: useractions.cpp:1078
-#, kde-format
-msgid "Suspend Compositing"
-msgstr "Keskeytä koostaminen"
-
-#: useractions.cpp:1139
+#: useractions.cpp:1137
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Aktivoi ikkuna (%1)"
 
-#: useractions.cpp:1276
+#: useractions.cpp:1274
 #, kde-format
 msgid ""
 "The window manager is configured to consider the screen with the mouse on it "
@@ -4159,7 +4150,7 @@ msgstr "Vaihda työpöytää alas päin"
 msgid "Switch to Desktop %1"
 msgstr "Vaihda työpöydälle %1"
 
-#: window.cpp:3078
+#: window.cpp:3071
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4192,6 +4183,13 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "XWayland on kaatunut"
+
+#~ msgid ""
+#~ "Desktop effects have been suspended by another application.<br/>You can "
+#~ "resume using the '%1' shortcut."
+#~ msgstr ""
+#~ "Jokin sovellus on poistanut työpöytätehosteet väliaikaisesti<br/"
+#~ ">käytöstä. Voit palauttaa ne käyttöön pikanäppäimellä %1."
 
 #~ msgctxt ""
 #~ "Entry in context menu of window decoration to open the configuration "
