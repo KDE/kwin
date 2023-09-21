@@ -21,7 +21,6 @@ namespace KWin
 {
 
 class Output;
-class CompositorSelectionOwner;
 class CursorScene;
 class RenderBackend;
 class RenderLayer;
@@ -108,22 +107,6 @@ public:
      * @see createOpenGLSafePoint
      */
     virtual bool openGLCompositingIsBroken() const;
-    enum class OpenGLSafePoint {
-        PreInit,
-        PostInit,
-        PreFrame,
-        PostFrame,
-        PostLastGuardedFrame
-    };
-    /**
-     * This method is invoked before and after creating the OpenGL rendering Scene.
-     * An implementing Platform can use it to detect crashes triggered by the OpenGL implementation.
-     * This can be used for openGLCompositingIsBroken.
-     *
-     * The default implementation does nothing.
-     * @see openGLCompositingIsBroken.
-     */
-    virtual void createOpenGLSafePoint(OpenGLSafePoint safePoint);
 
     /**
      * @returns the format of the contents in the @p output
@@ -145,21 +128,9 @@ protected:
     explicit Compositor(QObject *parent = nullptr);
 
     virtual void start() = 0;
-    virtual void stop();
-
-    /**
-     * @brief Prepares start.
-     * @return bool @c true if start should be continued and @c if not.
-     */
-    bool setupStart();
-    /**
-     * Continues the startup after Scene And Workspace are created
-     */
-    void startupWithWorkspace();
+    virtual void stop() = 0;
 
     virtual void configChanged();
-
-    void destroyCompositorSelection();
 
     static Compositor *s_compositor;
 
@@ -169,16 +140,10 @@ protected Q_SLOTS:
 private Q_SLOTS:
     void handleFrameRequested(RenderLoop *renderLoop);
 
-private:
-    void releaseCompositorSelection();
+protected:
     void deleteUnusedSupportProperties();
 
-    bool attemptOpenGLCompositing();
-    bool attemptQPainterCompositing();
-
     Output *findOutput(RenderLoop *loop) const;
-    void addOutput(Output *output);
-    void removeOutput(Output *output);
 
     void addSuperLayer(RenderLayer *layer);
     void removeSuperLayer(RenderLayer *layer);
@@ -190,15 +155,12 @@ private:
     void framePass(RenderLayer *layer);
 
     State m_state = State::Off;
-    std::unique_ptr<CompositorSelectionOwner> m_selectionOwner;
-    QTimer m_releaseSelectionTimer;
     QList<xcb_atom_t> m_unusedSupportProperties;
     QTimer m_unusedSupportPropertyTimer;
     std::unique_ptr<WorkspaceScene> m_scene;
     std::unique_ptr<CursorScene> m_cursorScene;
     std::unique_ptr<RenderBackend> m_backend;
     QHash<RenderLoop *, RenderLayer *> m_superlayers;
-    CompositingType m_selectedCompositor = NoCompositing;
 };
 
 } // namespace KWin

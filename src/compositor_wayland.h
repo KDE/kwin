@@ -24,9 +24,18 @@ public:
 
 protected:
     void start() override;
+    void stop() override;
 
 private:
     explicit WaylandCompositor(QObject *parent);
+
+    bool attemptOpenGLCompositing();
+    bool attemptQPainterCompositing();
+
+    void addOutput(Output *output);
+    void removeOutput(Output *output);
+
+    CompositingType m_selectedCompositor = NoCompositing;
 };
 
 } // namespace KWin

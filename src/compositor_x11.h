@@ -15,6 +15,7 @@
 namespace KWin
 {
 
+class X11CompositorSelectionOwner;
 class X11SyncManager;
 class X11Window;
 
@@ -75,6 +76,23 @@ public:
      */
     void resume(SuspendReason reason);
 
+    enum class OpenGLSafePoint {
+        PreInit,
+        PostInit,
+        PreFrame,
+        PostFrame,
+        PostLastGuardedFrame
+    };
+    /**
+     * This method is invoked before and after creating the OpenGL rendering Scene.
+     * An implementing Platform can use it to detect crashes triggered by the OpenGL implementation.
+     * This can be used for openGLCompositingIsBroken.
+     *
+     * The default implementation does nothing.
+     * @see openGLCompositingIsBroken.
+     */
+    void createOpenGLSafePoint(OpenGLSafePoint safePoint);
+
     void inhibit(Window *window) override;
     void uninhibit(Window *window) override;
 
@@ -83,7 +101,6 @@ public:
     bool compositingPossible() const override;
     QString compositingNotPossibleReason() const override;
     bool openGLCompositingIsBroken() const override;
-    void createOpenGLSafePoint(OpenGLSafePoint safePoint) override;
 
     static X11Compositor *self();
 
@@ -95,9 +112,16 @@ protected:
 private:
     explicit X11Compositor(QObject *parent);
 
+    bool attemptOpenGLCompositing();
+
+    void releaseCompositorSelection();
+    void destroyCompositorSelection();
+
     std::unique_ptr<QThread> m_openGLFreezeProtectionThread;
     std::unique_ptr<QTimer> m_openGLFreezeProtection;
     std::unique_ptr<X11SyncManager> m_syncManager;
+    std::unique_ptr<X11CompositorSelectionOwner> m_selectionOwner;
+    QTimer m_releaseSelectionTimer;
     /**
      * Whether the Compositor is currently suspended, 8 bits encoding the reason
      */

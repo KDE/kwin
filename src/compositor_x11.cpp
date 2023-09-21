@@ -8,19 +8,25 @@
 */
 
 #include "compositor_x11.h"
+#include "core/outputbackend.h"
 #include "core/overlaywindow.h"
 #include "core/renderbackend.h"
+#include "core/renderlayer.h"
+#include "libkwineffects/glplatform.h"
 #include "options.h"
+#include "platformsupport/scenes/opengl/openglbackend.h"
 #include "scene/surfaceitem_x11.h"
+#include "scene/workspacescene_opengl.h"
 #include "utils/common.h"
 #include "utils/xcbutils.h"
+#include "window.h"
 #include "workspace.h"
 #include "x11syncmanager.h"
-#include "x11window.h"
 
 #include <KCrash>
 #include <KGlobalAccel>
 #include <KLocalizedString>
+#include <KSelectionOwner>
 
 #include <QAction>
 #include <QOpenGLContext>
@@ -30,6 +36,32 @@ Q_DECLARE_METATYPE(KWin::X11Compositor::SuspendReason)
 
 namespace KWin
 {
+
+class X11CompositorSelectionOwner : public KSelectionOwner
+{
+    Q_OBJECT
+
+public:
+    X11CompositorSelectionOwner(const char *selection)
+        : KSelectionOwner(selection, kwinApp()->x11Connection(), kwinApp()->x11RootWindow())
+        , m_owning(false)
+    {
+        connect(this, &X11CompositorSelectionOwner::lostOwnership, this, [this]() {
+            m_owning = false;
+        });
+    }
+    bool owning() const
+    {
+        return m_owning;
+    }
+    void setOwning(bool own)
+    {
+        m_owning = own;
+    }
+
+private:
+    bool m_owning;
+};
 
 X11Compositor *X11Compositor::create(QObject *parent)
 {
@@ -46,6 +78,10 @@ X11Compositor::X11Compositor(QObject *parent)
     if (qEnvironmentVariableIsSet("KWIN_MAX_FRAMES_TESTED")) {
         m_framesToTestForSafety = qEnvironmentVariableIntValue("KWIN_MAX_FRAMES_TESTED");
     }
+
+    m_releaseSelectionTimer.setSingleShot(true);
+    m_releaseSelectionTimer.setInterval(2000);
+    connect(&m_releaseSelectionTimer, &QTimer::timeout, this, &X11Compositor::releaseCompositorSelection);
 
     QAction *toggleAction = new QAction(this);
     toggleAction->setProperty("componentName", QStringLiteral("kwin"));
@@ -64,6 +100,7 @@ X11Compositor::~X11Compositor()
         m_openGLFreezeProtectionThread->wait();
     }
     stop(); // this can't be called in the destructor of Compositor
+    destroyCompositorSelection();
 }
 
 X11SyncManager *X11Compositor::syncManager() const
@@ -116,6 +153,90 @@ void X11Compositor::resume(X11Compositor::SuspendReason reason)
     start();
 }
 
+void X11Compositor::destroyCompositorSelection()
+{
+    m_selectionOwner.reset();
+}
+
+void X11Compositor::releaseCompositorSelection()
+{
+    switch (m_state) {
+    case State::On:
+        // We are compositing at the moment. Don't release.
+        break;
+    case State::Off:
+        if (m_selectionOwner) {
+            qCDebug(KWIN_CORE) << "Releasing compositor selection";
+            m_selectionOwner->setOwning(false);
+            m_selectionOwner->release();
+        }
+        break;
+    case State::Starting:
+    case State::Stopping:
+        // Still starting or shutting down the compositor. Starting might fail
+        // or after stopping a restart might follow. So test again later on.
+        m_releaseSelectionTimer.start();
+        break;
+    }
+}
+
+bool X11Compositor::attemptOpenGLCompositing()
+{
+    // Some broken drivers crash on glXQuery() so to prevent constant KWin crashes:
+    if (openGLCompositingIsBroken()) {
+        qCWarning(KWIN_CORE) << "KWin has detected that your OpenGL library is unsafe to use";
+        return false;
+    }
+
+    createOpenGLSafePoint(OpenGLSafePoint::PreInit);
+    auto safePointScope = qScopeGuard([this]() {
+        createOpenGLSafePoint(OpenGLSafePoint::PostInit);
+    });
+
+    std::unique_ptr<OpenGLBackend> backend = kwinApp()->outputBackend()->createOpenGLBackend();
+    if (!backend) {
+        return false;
+    }
+    if (!backend->isFailed()) {
+        backend->init();
+    }
+    if (backend->isFailed()) {
+        return false;
+    }
+
+    const QByteArray forceEnv = qgetenv("KWIN_COMPOSE");
+    if (!forceEnv.isEmpty()) {
+        if (qstrcmp(forceEnv, "O2") == 0 || qstrcmp(forceEnv, "O2ES") == 0) {
+            qCDebug(KWIN_CORE) << "OpenGL 2 compositing enforced by environment variable";
+        } else {
+            // OpenGL 2 disabled by environment variable
+            return false;
+        }
+    } else {
+        if (GLPlatform::instance()->recommendedCompositor() < OpenGLCompositing) {
+            qCDebug(KWIN_CORE) << "Driver does not recommend OpenGL compositing";
+            return false;
+        }
+    }
+
+    // We only support the OpenGL 2+ shader API, not GL_ARB_shader_objects
+    if (!hasGLVersion(2, 0)) {
+        qCDebug(KWIN_CORE) << "OpenGL 2.0 is not supported";
+        return false;
+    }
+
+    m_scene = std::make_unique<WorkspaceSceneOpenGL>(backend.get());
+    m_backend = std::move(backend);
+
+    // set strict binding
+    if (options->isGlStrictBindingFollowsDriver()) {
+        options->setGlStrictBinding(!GLPlatform::instance()->supports(GLFeature::LooseBinding));
+    }
+
+    qCDebug(KWIN_CORE) << "OpenGL compositing has been successfully initialized";
+    return true;
+}
+
 void X11Compositor::start()
 {
     if (m_suspended) {
@@ -132,20 +253,156 @@ void X11Compositor::start()
         qCWarning(KWIN_CORE) << "Compositing is not possible";
         return;
     }
-    if (!Compositor::setupStart()) {
-        // Internal setup failed, abort.
+
+    if (kwinApp()->isTerminating()) {
         return;
     }
+    if (m_state != State::Off) {
+        return;
+    }
+
+    Q_EMIT aboutToToggleCompositing();
+    m_state = State::Starting;
+
+    // Claim special _NET_WM_CM_S0 selection and redirect child windows of the root window.
+    if (!m_selectionOwner) {
+        m_selectionOwner = std::make_unique<X11CompositorSelectionOwner>("_NET_WM_CM_S0");
+        connect(m_selectionOwner.get(), &X11CompositorSelectionOwner::lostOwnership, this, &X11Compositor::stop);
+    }
+    if (!m_selectionOwner->owning()) {
+        // Force claim ownership.
+        m_selectionOwner->claim(true);
+        m_selectionOwner->setOwning(true);
+    }
+
+    xcb_composite_redirect_subwindows(kwinApp()->x11Connection(),
+                                      kwinApp()->x11RootWindow(),
+                                      XCB_COMPOSITE_REDIRECT_MANUAL);
+
+    // Decide what compositing types can be used.
+    QVector<CompositingType> candidateCompositors = kwinApp()->outputBackend()->supportedCompositors();
+    const auto userConfigIt = std::find(candidateCompositors.begin(), candidateCompositors.end(), options->compositingMode());
+    if (userConfigIt != candidateCompositors.end()) {
+        candidateCompositors.erase(userConfigIt);
+        candidateCompositors.prepend(options->compositingMode());
+    } else {
+        qCWarning(KWIN_CORE) << "Configured compositor not supported by Platform. Falling back to defaults";
+    }
+
+    for (auto type : std::as_const(candidateCompositors)) {
+        bool stop = false;
+        switch (type) {
+        case OpenGLCompositing:
+            qCDebug(KWIN_CORE) << "Attempting to load the OpenGL scene";
+            stop = attemptOpenGLCompositing();
+            break;
+        case QPainterCompositing:
+            qCDebug(KWIN_CORE) << "QPainter compositing is unsupported on X11";
+            break;
+        case NoCompositing:
+            qCDebug(KWIN_CORE) << "Starting without compositing...";
+            stop = true;
+            break;
+        }
+
+        if (stop) {
+            break;
+        } else if (qEnvironmentVariableIsSet("KWIN_COMPOSE")) {
+            qCCritical(KWIN_CORE) << "Could not fulfill the requested compositing mode in KWIN_COMPOSE:" << type << ". Exiting.";
+            qApp->quit();
+        }
+    }
+
+    if (!m_backend) {
+        m_state = State::Off;
+
+        xcb_composite_unredirect_subwindows(kwinApp()->x11Connection(),
+                                            kwinApp()->x11RootWindow(),
+                                            XCB_COMPOSITE_REDIRECT_MANUAL);
+        if (m_selectionOwner) {
+            m_selectionOwner->setOwning(false);
+            m_selectionOwner->release();
+        }
+        return;
+    }
+
+    Q_EMIT sceneCreated();
+
     kwinApp()->setX11CompositeWindow(backend()->overlayWindow()->window());
-    startupWithWorkspace();
+
+    Q_ASSERT(m_scene);
+    m_scene->initialize();
+
+    auto workspaceLayer = new RenderLayer(workspace()->outputs()[0]->renderLoop());
+    workspaceLayer->setDelegate(std::make_unique<SceneDelegate>(m_scene.get(), nullptr));
+    workspaceLayer->setGeometry(workspace()->geometry());
+    connect(workspace(), &Workspace::geometryChanged, workspaceLayer, [workspaceLayer]() {
+        workspaceLayer->setGeometry(workspace()->geometry());
+    });
+    addSuperLayer(workspaceLayer);
+
+    m_state = State::On;
+
+    const auto windows = workspace()->windows();
+    for (Window *window : windows) {
+        window->setupCompositing();
+    }
+
+    // Sets also the 'effects' pointer.
+    kwinApp()->createEffectsHandler(this, m_scene.get());
+
     m_syncManager.reset(X11SyncManager::create());
+    if (m_releaseSelectionTimer.isActive()) {
+        m_releaseSelectionTimer.stop();
+    }
+
+    Q_EMIT compositingToggled(true);
 }
 
 void X11Compositor::stop()
 {
+    if (m_state == State::Off || m_state == State::Stopping) {
+        return;
+    }
+    m_state = State::Stopping;
+    Q_EMIT aboutToToggleCompositing();
+
+    m_releaseSelectionTimer.start();
+
+    // Some effects might need access to effect windows when they are about to
+    // be destroyed, for example to unreference deleted windows, so we have to
+    // make sure that effect windows outlive effects.
+    delete effects;
+    effects = nullptr;
+
+    if (Workspace::self()) {
+        const auto windows = workspace()->windows();
+        for (Window *window : windows) {
+            window->finishCompositing();
+        }
+        xcb_composite_unredirect_subwindows(kwinApp()->x11Connection(),
+                                            kwinApp()->x11RootWindow(),
+                                            XCB_COMPOSITE_REDIRECT_MANUAL);
+    }
+
+    if (m_backend->compositingType() == OpenGLCompositing) {
+        // some layers need a context current for destruction
+        static_cast<OpenGLBackend *>(m_backend.get())->makeCurrent();
+    }
+
+    const auto superlayers = m_superlayers;
+    for (auto it = superlayers.begin(); it != superlayers.end(); ++it) {
+        removeSuperLayer(*it);
+    }
+
     m_syncManager.reset();
-    Compositor::stop();
+    m_scene.reset();
+    m_backend.reset();
+
     kwinApp()->setX11CompositeWindow(XCB_WINDOW_NONE);
+
+    m_state = State::Off;
+    Q_EMIT compositingToggled(false);
 }
 
 void X11Compositor::composite(RenderLoop *renderLoop)
@@ -357,4 +614,5 @@ void X11Compositor::createOpenGLSafePoint(OpenGLSafePoint safePoint)
 
 } // namespace KWin
 
+#include "compositor_x11.moc"
 #include "moc_compositor_x11.cpp"
