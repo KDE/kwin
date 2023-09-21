@@ -86,14 +86,6 @@ WorkspaceScene::WorkspaceScene(std::unique_ptr<ItemRenderer> renderer)
     : Scene(std::move(renderer))
     , m_containerItem(std::make_unique<Item>(this))
 {
-}
-
-WorkspaceScene::~WorkspaceScene()
-{
-}
-
-void WorkspaceScene::initialize()
-{
     setGeometry(workspace()->geometry());
     connect(workspace(), &Workspace::geometryChanged, this, [this]() {
         setGeometry(workspace()->geometry());
@@ -103,6 +95,10 @@ void WorkspaceScene::initialize()
         connect(waylandServer()->seat(), &SeatInterface::dragStarted, this, &WorkspaceScene::createDndIconItem);
         connect(waylandServer()->seat(), &SeatInterface::dragEnded, this, &WorkspaceScene::destroyDndIconItem);
     }
+}
+
+WorkspaceScene::~WorkspaceScene()
+{
 }
 
 void WorkspaceScene::createDndIconItem()

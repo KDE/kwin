@@ -17,6 +17,11 @@ namespace KWin
 CursorScene::CursorScene(std::unique_ptr<ItemRenderer> &&renderer)
     : Scene(std::move(renderer))
 {
+    m_rootItem = std::make_unique<CursorItem>(this);
+    setGeometry(m_rootItem->boundingRect().toRect());
+    connect(m_rootItem.get(), &Item::boundingRectChanged, this, [this]() {
+        setGeometry(m_rootItem->boundingRect().toRect());
+    });
 }
 
 CursorScene::~CursorScene()
@@ -24,15 +29,6 @@ CursorScene::~CursorScene()
     // Avoid accessing m_rootItem if the boundingRectChanged signal is emitted.
     disconnect(m_rootItem.get(), nullptr, this, nullptr);
     m_rootItem.reset();
-}
-
-void CursorScene::initialize()
-{
-    m_rootItem = std::make_unique<CursorItem>(this);
-    setGeometry(m_rootItem->boundingRect().toRect());
-    connect(m_rootItem.get(), &Item::boundingRectChanged, this, [this]() {
-        setGeometry(m_rootItem->boundingRect().toRect());
-    });
 }
 
 static void resetRepaintsHelper(Item *item, SceneDelegate *delegate)

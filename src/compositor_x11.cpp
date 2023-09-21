@@ -330,9 +330,6 @@ void X11Compositor::start()
 
     kwinApp()->setX11CompositeWindow(backend()->overlayWindow()->window());
 
-    Q_ASSERT(m_scene);
-    m_scene->initialize();
-
     auto workspaceLayer = new RenderLayer(workspace()->outputs()[0]->renderLoop());
     workspaceLayer->setDelegate(std::make_unique<SceneDelegate>(m_scene.get(), nullptr));
     workspaceLayer->setGeometry(workspace()->geometry());

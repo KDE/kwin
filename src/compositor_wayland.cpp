@@ -182,10 +182,6 @@ void WaylandCompositor::start()
 
     Q_EMIT sceneCreated();
 
-    Q_ASSERT(m_scene);
-    m_scene->initialize();
-    m_cursorScene->initialize();
-
     const QList<Output *> outputs = workspace()->outputs();
     for (Output *output : outputs) {
         addOutput(output);
