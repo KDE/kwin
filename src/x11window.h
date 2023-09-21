@@ -191,8 +191,6 @@ public:
 
     bool providesContextHelp() const override;
 
-    xcb_colormap_t colormap() const;
-
     /// Updates visibility depending on being shaded, virtual desktop, etc.
     void updateVisibility();
     bool hiddenPreview() const; ///< Window is mapped in order to get a window pixmap
@@ -478,7 +476,6 @@ private:
     } m_fullscreenMode;
 
     MaximizeMode max_mode;
-    xcb_colormap_t m_colormap;
     QString cap_normal, cap_iconic, cap_suffix;
     Group *in_group;
     QTimer *ping_timer;
@@ -584,11 +581,6 @@ inline bool X11Window::isFullScreen() const
 inline bool X11Window::hasNETSupport() const
 {
     return info->hasNETSupport();
-}
-
-inline xcb_colormap_t X11Window::colormap() const
-{
-    return m_colormap;
 }
 
 inline int X11Window::sessionStackingOrder() const

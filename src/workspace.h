@@ -52,7 +52,6 @@ class TabBox;
 
 class Window;
 class Output;
-class ColorMapper;
 class Compositor;
 class Group;
 class InternalWindow;
@@ -682,7 +681,6 @@ private:
     static Workspace *_self;
 
     std::unique_ptr<KStartupInfo> m_startup;
-    std::unique_ptr<ColorMapper> m_colorMapper;
 
     QHash<const VirtualDesktop *, QRectF> m_workAreas;
     QHash<const VirtualDesktop *, StrutRects> m_restrictedAreas;
@@ -748,20 +746,6 @@ public:
 
 private:
     Workspace *ws;
-};
-
-class ColorMapper : public QObject
-{
-    Q_OBJECT
-public:
-    ColorMapper(QObject *parent);
-    ~ColorMapper() override;
-public Q_SLOTS:
-    void update();
-
-private:
-    xcb_colormap_t m_default;
-    xcb_colormap_t m_installed;
 };
 
 //---------------------------------------------------------

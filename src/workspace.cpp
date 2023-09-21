@@ -79,32 +79,6 @@ X11EventFilter *X11EventFilterContainer::filter() const
     return m_filter;
 }
 
-ColorMapper::ColorMapper(QObject *parent)
-    : QObject(parent)
-{
-    const xcb_screen_t *screen = Xcb::defaultScreen();
-    m_default = screen->default_colormap;
-    m_installed = screen->default_colormap;
-}
-
-ColorMapper::~ColorMapper()
-{
-}
-
-void ColorMapper::update()
-{
-    xcb_colormap_t cmap = m_default;
-    if (X11Window *c = dynamic_cast<X11Window *>(Workspace::self()->activeWindow())) {
-        if (c->colormap() != XCB_COLORMAP_NONE) {
-            cmap = c->colormap();
-        }
-    }
-    if (cmap != m_installed) {
-        xcb_install_colormap(kwinApp()->x11Connection(), cmap);
-        m_installed = cmap;
-    }
-}
-
 Workspace *Workspace::_self = nullptr;
 
 Workspace::Workspace()
@@ -291,8 +265,6 @@ void Workspace::initializeX11()
 
     // first initialize the extensions
     Xcb::Extensions::self();
-    m_colorMapper = std::make_unique<ColorMapper>(this);
-    connect(this, &Workspace::windowActivated, m_colorMapper.get(), &ColorMapper::update);
 
     // Call this before XSelectInput() on the root window
     m_startup = std::make_unique<KStartupInfo>(KStartupInfo::DisableKWinModule | KStartupInfo::AnnounceSilenceChanges, this);
@@ -441,7 +413,6 @@ void Workspace::cleanupX11()
     RootInfo::destroy();
     Xcb::Extensions::destroy();
 
-    m_colorMapper.reset();
     m_movingClientFilter.reset();
     m_startup.reset();
     m_nullFocus.reset();

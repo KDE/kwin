@@ -288,7 +288,6 @@ X11Window::X11Window()
     , shade_below(nullptr)
     , m_motif(atoms->motif_wm_hints)
     , blocks_compositing(false)
-    , m_colormap(XCB_COLORMAP_NONE)
     , in_group(nullptr)
     , ping_timer(nullptr)
     , m_killHelperPID(0)
@@ -631,8 +630,6 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
 
     // If it's already mapped, ignore hint
     bool init_minimize = !isMapped && (info->initialMappingState() == NET::Iconic);
-
-    m_colormap = attr->colormap;
 
     getResourceClass();
     readWmClientLeader(wmClientLeaderCookie);
