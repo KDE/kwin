@@ -20,6 +20,7 @@ qt6_generate_wayland_protocol_client_sources(KWinIntegrationTestFramework
         ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-output-management-v2.xml
         ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-screen-edge-v1.xml
         ${PLASMA_WAYLAND_PROTOCOLS_DIR}/zkde-screencast-unstable-v1.xml
+        ${PLASMA_WAYLAND_PROTOCOLS_DIR}/fake-input.xml
 )
 
 target_sources(KWinIntegrationTestFramework PRIVATE
@@ -123,6 +124,7 @@ integrationTest(NAME testStackingOrder SRCS stacking_order_test.cpp LIBS XCB::IC
 integrationTest(NAME testDbusInterface SRCS dbus_interface_test.cpp LIBS XCB::ICCCM)
 integrationTest(NAME testXwaylandServerCrash SRCS xwaylandserver_crash_test.cpp LIBS XCB::ICCCM)
 integrationTest(NAME testXwaylandServerRestart SRCS xwaylandserver_restart_test.cpp LIBS XCB::ICCCM)
+integrationTest(NAME testFakeInput SRCS fakeinput_test.cpp)
 
 qt_add_dbus_interfaces(DBUS_SRCS ${CMAKE_BINARY_DIR}/src/org.kde.kwin.VirtualKeyboard.xml)
 integrationTest(NAME testVirtualKeyboardDBus SRCS test_virtualkeyboard_dbus.cpp ${DBUS_SRCS})

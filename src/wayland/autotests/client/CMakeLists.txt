@@ -169,17 +169,6 @@ add_test(NAME kwayland-testShadow COMMAND testShadow)
 ecm_mark_as_test(testShadow)
 
 ########################################################
-# Test FakeInput
-########################################################
-set( testFakeInput_SRCS
-        test_fake_input.cpp
-    )
-add_executable(testFakeInput ${testFakeInput_SRCS})
-target_link_libraries( testFakeInput Qt::Test Qt::Gui KF6::WaylandClient kwin)
-add_test(NAME kwayland-testFakeInput COMMAND testFakeInput)
-ecm_mark_as_test(testFakeInput)
-
-########################################################
 # Test TextInputV2
 ########################################################
 set( testTextInputV2_SRCS

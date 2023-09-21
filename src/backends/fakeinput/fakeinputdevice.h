@@ -11,14 +11,12 @@
 namespace KWin
 {
 
-class FakeInputDeviceInterface;
-
 class KWIN_EXPORT FakeInputDevice : public InputDevice
 {
     Q_OBJECT
 
 public:
-    explicit FakeInputDevice(FakeInputDeviceInterface *device, QObject *parent = nullptr);
+    explicit FakeInputDevice(QObject *parent = nullptr);
 
     QString sysName() const override;
     QString name() const override;
@@ -39,8 +37,12 @@ public:
     bool isTabletModeSwitch() const override;
     bool isLidSwitch() const override;
 
+    void setAuthenticated(bool authenticated);
+    bool isAuthenticated() const;
+
 private:
     QString m_name;
+    bool m_authenticated = false;
 };
 
 } // namespace KWin

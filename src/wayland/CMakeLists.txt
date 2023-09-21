@@ -244,7 +244,6 @@ target_sources(kwin PRIVATE
     dpms.cpp
     drmclientbuffer.cpp
     drmlease_v1.cpp
-    fakeinput.cpp
     fractionalscale_v1.cpp
     filtered_display.cpp
     idle.cpp
@@ -327,7 +326,6 @@ install(FILES
     datasource.h
     dpms.h
     drmlease_v1.h
-    fakeinput.h
     fractionalscale_v1.h
     idle.h
     idleinhibit_v1.h

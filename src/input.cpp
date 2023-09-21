@@ -3139,7 +3139,7 @@ void InputRedirection::setupInputBackends()
         addInputBackend(std::move(inputBackend));
     }
     if (waylandServer()) {
-        addInputBackend(std::make_unique<FakeInputBackend>());
+        addInputBackend(std::make_unique<FakeInputBackend>(waylandServer()->display()));
     }
 }
 

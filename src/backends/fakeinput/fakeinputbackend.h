@@ -14,23 +14,22 @@
 namespace KWin
 {
 
+class Display;
+class FakeInputBackendPrivate;
 class FakeInputDevice;
-class FakeInputInterface;
-class FakeInputDeviceInterface;
 
 class FakeInputBackend : public InputBackend
 {
     Q_OBJECT
 
 public:
-    explicit FakeInputBackend();
+    explicit FakeInputBackend(Display *display);
     ~FakeInputBackend();
 
     void initialize() override;
 
 private:
-    std::unique_ptr<FakeInputInterface> m_interface;
-    std::map<FakeInputDeviceInterface *, std::unique_ptr<FakeInputDevice>> m_devices;
+    std::unique_ptr<FakeInputBackendPrivate> d;
 };
 
 } // namespace KWin

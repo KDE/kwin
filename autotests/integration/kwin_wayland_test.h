@@ -21,6 +21,7 @@
 #include <optional>
 
 #include "qwayland-cursor-shape-v1.h"
+#include "qwayland-fake-input.h"
 #include "qwayland-fractional-scale-v1.h"
 #include "qwayland-idle-inhibit-unstable-v1.h"
 #include "qwayland-input-method-unstable-v1.h"
@@ -521,6 +522,10 @@ public:
     ~CursorShapeDeviceV1() override;
 };
 
+class FakeInput : public QtWayland::org_kde_kwin_fake_input
+{
+};
+
 enum class AdditionalWaylandInterface {
     Seat = 1 << 0,
     Decoration = 1 << 1,
@@ -541,6 +546,7 @@ enum class AdditionalWaylandInterface {
     ScreencastingV1 = 1 << 16,
     ScreenEdgeV1 = 1 << 17,
     CursorShapeV1 = 1 << 18,
+    FakeInput = 1 << 19,
 };
 Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
 
@@ -636,6 +642,7 @@ QVector<KWayland::Client::Output *> waylandOutputs();
 KWayland::Client::Output *waylandOutput(const QString &name);
 ScreencastingV1 *screencasting();
 QVector<WaylandOutputDeviceV2 *> waylandOutputDevicesV2();
+FakeInput *waylandFakeInput();
 
 bool waitForWaylandSurface(Window *window);
 

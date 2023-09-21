@@ -292,6 +292,7 @@ static struct
     ScreencastingV1 *screencastingV1 = nullptr;
     ScreenEdgeManagerV1 *screenEdgeManagerV1 = nullptr;
     CursorShapeManagerV1 *cursorShapeManagerV1 = nullptr;
+    FakeInput *fakeInput = nullptr;
 } s_waylandConnection;
 
 MockInputMethod *inputMethod()
@@ -477,10 +478,16 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
                 return;
             }
         }
-        if (flags &AdditionalWaylandInterface::CursorShapeV1) {
+        if (flags & AdditionalWaylandInterface::CursorShapeV1) {
             if (interface == wp_cursor_shape_manager_v1_interface.name) {
                 s_waylandConnection.cursorShapeManagerV1 = new CursorShapeManagerV1();
                 s_waylandConnection.cursorShapeManagerV1->init(*registry, name, version);
+            }
+        }
+        if (flags & AdditionalWaylandInterface::FakeInput) {
+            if (interface == org_kde_kwin_fake_input_interface.name) {
+                s_waylandConnection.fakeInput = new FakeInput();
+                s_waylandConnection.fakeInput->init(*registry, name, version);
             }
         }
     });
@@ -615,6 +622,8 @@ void destroyWaylandConnection()
     s_waylandConnection.screenEdgeManagerV1 = nullptr;
     delete s_waylandConnection.cursorShapeManagerV1;
     s_waylandConnection.cursorShapeManagerV1 = nullptr;
+    delete s_waylandConnection.fakeInput;
+    s_waylandConnection.fakeInput = nullptr;
 
     delete s_waylandConnection.queue; // Must be destroyed last
     s_waylandConnection.queue = nullptr;
@@ -724,6 +733,11 @@ ScreencastingV1 *screencasting()
 QVector<KWin::Test::WaylandOutputDeviceV2 *> waylandOutputDevicesV2()
 {
     return s_waylandConnection.outputDevicesV2;
+}
+
+FakeInput *waylandFakeInput()
+{
+    return s_waylandConnection.fakeInput;
 }
 
 bool waitForWaylandSurface(Window *window)
