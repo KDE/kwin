@@ -364,7 +364,6 @@ void Workspace::initializeX11()
         desktop_geometry.width = m_geometry.width();
         desktop_geometry.height = m_geometry.height();
         rootInfo->setDesktopGeometry(desktop_geometry);
-        setShowingDesktop(false);
 
     } // End updates blocker block
 
