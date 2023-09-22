@@ -524,6 +524,8 @@ public:
 
 class FakeInput : public QtWayland::org_kde_kwin_fake_input
 {
+public:
+    ~FakeInput() override;
 };
 
 enum class AdditionalWaylandInterface {

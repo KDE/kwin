@@ -260,6 +260,11 @@ CursorShapeDeviceV1::~CursorShapeDeviceV1()
     destroy();
 }
 
+FakeInput::~FakeInput()
+{
+    destroy();
+}
+
 static struct
 {
     KWayland::Client::ConnectionThread *connection = nullptr;

@@ -13,7 +13,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 4;
+static const quint32 s_version = 5;
 
 class FakeInputBackendPrivate : public QtWaylandServer::org_kde_kwin_fake_input
 {
@@ -42,6 +42,7 @@ protected:
     void org_kde_kwin_fake_input_touch_frame(Resource *resource) override;
     void org_kde_kwin_fake_input_pointer_motion_absolute(Resource *resource, wl_fixed_t x, wl_fixed_t y) override;
     void org_kde_kwin_fake_input_keyboard_key(Resource *resource, uint32_t button, uint32_t state) override;
+    void org_kde_kwin_fake_input_destroy(Resource *resource) override;
 };
 
 QList<quint32> FakeInputBackendPrivate::touchIds = QList<quint32>();
@@ -57,6 +58,11 @@ void FakeInputBackendPrivate::org_kde_kwin_fake_input_bind_resource(Resource *re
     auto device = new FakeInputDevice(q);
     devices[resource] = std::unique_ptr<FakeInputDevice>(device);
     Q_EMIT q->deviceAdded(device);
+}
+
+void FakeInputBackendPrivate::org_kde_kwin_fake_input_destroy(Resource *resource)
+{
+    wl_resource_destroy(resource->handle);
 }
 
 void FakeInputBackendPrivate::org_kde_kwin_fake_input_destroy_resource(Resource *resource)
