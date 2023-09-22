@@ -352,7 +352,6 @@ void Workspace::initializeX11()
         // Propagate windows, will really happen at the end of the updates blocker block
         updateStackingOrder(true);
 
-        saveOldScreenSizes();
         updateClientArea();
 
         // NETWM spec says we have to set it to (0,0) if we don't support it
