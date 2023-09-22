@@ -17,15 +17,15 @@
 # Vincent Pinon <vpinon@kde.org>, 2016, 2017.
 # Yoann Laissus <yoann.laissus@gmail.com>, 2017, 2018.
 # Simon Depiets <sdepiets@gmail.com>, 2018, 2019, 2020.
-# Xavier Besnard <xavier.besnard@neuf.fr>, 2020, 2021, 2022.
+# SPDX-FileCopyrightText: 2020, 2021, 2022, 2023 Xavier Besnard <xavier.besnard@neuf.fr>
 # Xavier BESNARD <xavier.besnard@neuf.fr>, 2022, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-21 01:57+0000\n"
-"PO-Revision-Date: 2023-06-27 09:14+0200\n"
+"POT-Creation-Date: 2023-09-22 01:46+0000\n"
+"PO-Revision-Date: 2023-09-20 18:07+0200\n"
 "Last-Translator: Xavier BESNARD <xavier.besnard@neuf.fr>\n"
 "Language-Team: fr\n"
 "Language: fr\n"
@@ -33,9 +33,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 23.04.2\n"
-"X-Environment: kde\n"
 "X-Accelerator-Marker: &\n"
+"X-Environment: kde\n"
+"X-Generator: Lokalize 23.08.1\n"
 "X-Text-Markup: kde4\n"
 
 #, kde-format
@@ -79,7 +79,7 @@ msgstr "- Sortie désactivée"
 #: backends/wayland/wayland_output.cpp:265
 #, kde-format
 msgid "- Output dimmed"
-msgstr ""
+msgstr "- Sortie ajustée"
 
 #: backends/x11/windowed/x11_windowed_backend.cpp:516
 #, kde-format
@@ -1539,10 +1539,9 @@ msgstr "Fort"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseDescription)
 #: plugins/blur/blur_config.ui:83
-#, fuzzy, kde-format
-#| msgid "Noise strength:"
+#, kde-format
 msgid "Noise strength:"
-msgstr "Intensité du bruit :"
+msgstr "Force du bruit :"
 
 #: plugins/colorpicker/colorpicker.cpp:102
 #, kde-format
@@ -2154,10 +2153,9 @@ msgstr "Droite"
 
 #. i18n: ectx: attribute (title), widget (QWidget, basic_tab)
 #: plugins/mouseclick/mouseclick_config.ui:21
-#, fuzzy, kde-format
-#| msgid "Basic Settings"
+#, kde-format
 msgid "Basic Settings"
-msgstr "Configuration basique"
+msgstr "Configuration de base"
 
 #. i18n: ectx: property (text), widget (QLabel, button1_label)
 #: plugins/mouseclick/mouseclick_config.ui:37
@@ -2376,10 +2374,9 @@ msgstr "Inconnu"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:41
 #: plugins/overview/overvieweffect.cpp:47
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
+#, kde-format
 msgid "Toggle Overview"
-msgstr "Activer/désactiver l'effet d'inversion"
+msgstr "Basculer l'aperçu"
 
 #. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
 #: plugins/overview/kcm/overvieweffectkcm.ui:22
@@ -2503,9 +2500,7 @@ msgid "Paint Duration"
 msgstr "Durée de peinture"
 
 #: plugins/showfps/qml/main.qml:162
-#, fuzzy, kde-format
-#| msgctxt "@label"
-#| msgid "Paint Amount"
+#, kde-format
 msgctxt "@label"
 msgid "Paint Amount"
 msgstr "Quantité de peinture"
@@ -2645,8 +2640,7 @@ msgstr "Supprimer"
 
 #: plugins/trackmouse/trackmouse.cpp:46
 #: plugins/trackmouse/trackmouse_config.cpp:57
-#, fuzzy, kde-format
-#| msgid "Track mouse"
+#, kde-format
 msgid "Track mouse"
 msgstr "Suivre la souris"
 
@@ -2684,10 +2678,9 @@ msgstr "Paramètres généraux de transparence"
 
 #. i18n: ectx: property (text), widget (QLabel, comboboxpopup_label)
 #: plugins/translucency/package/contents/ui/config.ui:64
-#, fuzzy, kde-format
-#| msgid "Combobox popups:"
+#, kde-format
 msgid "Combobox popups:"
-msgstr "Fenêtres contextuelles de listes déroulantes :"
+msgstr "Menus contextuels à liste déroulante :"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label_7)
@@ -2738,8 +2731,7 @@ msgstr "Régler la transparence des menus de manière indépendante"
 
 #. i18n: ectx: property (text), widget (QLabel, dropdownmenus_label)
 #: plugins/translucency/package/contents/ui/config.ui:285
-#, fuzzy, kde-format
-#| msgid "Dropdown menus:"
+#, kde-format
 msgid "Dropdown menus:"
 msgstr "Menus déroulants :"
 
@@ -3082,8 +3074,7 @@ msgstr "Désactivé"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: plugins/zoom/zoom_config.ui:148
-#, fuzzy, kde-format
-#| msgid "Mouse Tracking:"
+#, kde-format
 msgid "Mouse Tracking:"
 msgstr "Suivi de la souris :"
 
@@ -4249,7 +4240,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Ne répond plus)"
 
-#: workspace.cpp:1571
+#: workspace.cpp:1542
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
