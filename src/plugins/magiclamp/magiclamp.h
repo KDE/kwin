@@ -44,6 +44,7 @@ protected:
     void apply(EffectWindow *window, int mask, WindowPaintData &data, WindowQuadList &quads) override;
 
 public Q_SLOTS:
+    void slotWindowAdded(KWin::EffectWindow *w);
     void slotWindowDeleted(KWin::EffectWindow *w);
     void slotWindowMinimized(KWin::EffectWindow *w);
     void slotWindowUnminimized(KWin::EffectWindow *w);

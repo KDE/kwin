@@ -6,13 +6,13 @@ effects.windowAdded.connect(function (window) {
         type: Effect.Opacity,
         from: 0.0,
         to: 1.0
-    })
-});
+    });
 
-effects.windowMinimized.connect(function (window) {
-    if (redirect(window.animation, Effect.Backward, Effect.TerminateAtSource)) {
-        sendTestResponse('ok');
-    } else {
-        sendTestResponse('fail');
-    }
+    window.windowMinimized.connect(() => {
+        if (redirect(window.animation, Effect.Backward, Effect.TerminateAtSource)) {
+            sendTestResponse('ok');
+        } else {
+            sendTestResponse('fail');
+        }
+    });
 });

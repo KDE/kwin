@@ -92,6 +92,7 @@ protected:
     void apply(EffectWindow *w, int mask, WindowPaintData &data, WindowQuadList &quads) override;
 
 public Q_SLOTS:
+    void slotWindowAdded(KWin::EffectWindow *w);
     void slotWindowStartUserMovedResized(KWin::EffectWindow *w);
     void slotWindowStepUserMovedResized(KWin::EffectWindow *w, const QRectF &geometry);
     void slotWindowFinishUserMovedResized(KWin::EffectWindow *w);

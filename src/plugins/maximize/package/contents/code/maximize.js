@@ -11,13 +11,12 @@
 class MaximizeEffect {
     constructor() {
         effect.configChanged.connect(this.loadConfig.bind(this));
-        effects.windowFrameGeometryChanged.connect(
-                this.onWindowFrameGeometryChanged.bind(this));
-        effects.windowMaximizedStateChanged.connect(
-                this.onWindowMaximizedStateChanged.bind(this));
         effect.animationEnded.connect(this.restoreForceBlurState.bind(this));
-        effects.windowMaximizedStateAboutToChange.connect(
-                this.onWindowMaximizedStateAboutToChange.bind(this));
+
+        effects.windowAdded.connect(this.manage.bind(this));
+        for (const window of effects.stackingOrder) {
+            this.manage(window);
+        }
 
         this.loadConfig();
     }
@@ -26,11 +25,17 @@ class MaximizeEffect {
         this.duration = animationTime(250);
     }
 
+    manage(window) {
+        window.windowFrameGeometryChanged.connect(this.onWindowFrameGeometryChanged.bind(this));
+        window.windowMaximizedStateChanged.connect(this.onWindowMaximizedStateChanged.bind(this));
+        window.windowMaximizedStateAboutToChange.connect(this.onWindowMaximizedStateAboutToChange.bind(this));
+    }
+
     onWindowMaximizedStateAboutToChange(window) {
         if (!window.visible) {
             return;
         }
-        
+
         window.oldGeometry = Object.assign({}, window.geometry);
 
         if (window.maximizeAnimation1) {
@@ -98,17 +103,17 @@ class MaximizeEffect {
     onWindowFrameGeometryChanged(window, oldGeometry) {
         if (!window.maximizeAnimation1 ||
             // Check only dimension changes.
-            (window.geometry.width == oldGeometry.width && window.geometry.height == oldGeometry.height) || 
-            // Check only if last dimension isn't equal to dimension from which effect was started (window.oldGeometry).   
-            (window.oldGeometry.width == oldGeometry.width && window.oldGeometry.height == oldGeometry.height)  
+            (window.geometry.width == oldGeometry.width && window.geometry.height == oldGeometry.height) ||
+            // Check only if last dimension isn't equal to dimension from which effect was started (window.oldGeometry).
+            (window.oldGeometry.width == oldGeometry.width && window.oldGeometry.height == oldGeometry.height)
         ) {
             return;
         }
-        
+
         // Cancel animation if window got resized halfway through it.
         cancel(window.maximizeAnimation1);
         delete window.maximizeAnimation1;
-        
+
         if (window.maximizeAnimation2) {
             cancel(window.maximizeAnimation2);
             delete window.maximizeAnimation2;

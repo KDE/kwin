@@ -128,7 +128,7 @@ void WobblyWindowsShadeTest::testShadeMove()
     workspace()->slotWindowShade();
     QVERIFY(window->isShade());
 
-    QSignalSpy windowStartUserMovedResizedSpy(e, &EffectsHandler::windowStartUserMovedResized);
+    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
 
     // begin move
     QVERIFY(workspace()->moveResizeWindow() == nullptr);
@@ -136,7 +136,7 @@ void WobblyWindowsShadeTest::testShadeMove()
     workspace()->slotWindowMove();
     QCOMPARE(workspace()->moveResizeWindow(), window);
     QCOMPARE(window->isInteractiveMove(), true);
-    QCOMPARE(windowStartUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 1);
 
     // wait for frame rendered
     QTest::qWait(100);

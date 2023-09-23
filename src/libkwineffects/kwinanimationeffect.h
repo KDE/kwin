@@ -509,7 +509,6 @@ private:
     QRect clipRect(const QRect &windowRect, const AniData &) const;
     float interpolated(const AniData &, int i = 0) const;
     float progress(const AniData &) const;
-    void disconnectGeometryChanges();
     void updateLayerRepaints();
     void validate(Attribute a, uint &meta, FPx2 *from, FPx2 *to, const EffectWindow *w) const;
 

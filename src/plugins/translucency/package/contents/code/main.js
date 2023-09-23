@@ -204,19 +204,27 @@ var translucencyEffect = {
             }
         }
     },
+    manage: function (window) {
+        window.windowDesktopsChanged.connect(translucencyEffect.cancelAnimations);
+        window.windowDesktopsChanged.connect(translucencyEffect.startAnimation);
+        window.windowUnminimized.connect(translucencyEffect.startAnimation);
+        window.windowMinimized.connect(translucencyEffect.cancelAnimations);
+        window.windowUnminimized.connect(translucencyEffect.inactive.animate);
+        window.windowStartUserMovedResized.connect(translucencyEffect.moveResize.start);
+        window.windowFinishUserMovedResized.connect(translucencyEffect.moveResize.finish);
+    },
     init: function () {
         effect.configChanged.connect(translucencyEffect.loadConfig);
-        effects.windowDesktopsChanged.connect(translucencyEffect.cancelAnimations);
-        effects.windowDesktopsChanged.connect(translucencyEffect.startAnimation);
+        effects.windowAdded.connect(translucencyEffect.manage);
         effects.windowAdded.connect(translucencyEffect.startAnimation);
-        effects.windowUnminimized.connect(translucencyEffect.startAnimation);
         effects.windowClosed.connect(translucencyEffect.cancelAnimations);
-        effects.windowMinimized.connect(translucencyEffect.cancelAnimations);
-        effects.windowUnminimized.connect(translucencyEffect.inactive.animate);
-        effects.windowStartUserMovedResized.connect(translucencyEffect.moveResize.start);
-        effects.windowFinishUserMovedResized.connect(translucencyEffect.moveResize.finish);
         effects.windowActivated.connect(translucencyEffect.inactive.activated);
         effects.desktopChanged.connect(translucencyEffect.desktopChanged);
+
+        for (const window of effects.stackingOrder) {
+            translucencyEffect.manage(window);
+        }
+
         translucencyEffect.loadConfig();
     }
 };

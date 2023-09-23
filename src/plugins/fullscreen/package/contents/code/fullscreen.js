@@ -11,17 +11,25 @@
 class FullScreenEffect {
     constructor() {
         effect.configChanged.connect(this.loadConfig.bind(this));
-        effects.windowFrameGeometryChanged.connect(
-                this.onWindowFrameGeometryChanged.bind(this));
-        effects.windowFullScreenChanged.connect(
-                this.onWindowFullScreenChanged.bind(this));
         effect.animationEnded.connect(this.restoreForceBlurState.bind(this));
+
+        effects.windowAdded.connect(this.manage.bind(this));
+        for (const window of effects.stackingOrder) {
+            this.manage(window);
+        }
 
         this.loadConfig();
     }
 
     loadConfig() {
         this.duration = animationTime(250);
+    }
+
+    manage(window) {
+        window.windowFrameGeometryChanged.connect(
+            this.onWindowFrameGeometryChanged.bind(this));
+        window.windowFullScreenChanged.connect(
+            this.onWindowFullScreenChanged.bind(this));
     }
 
     onWindowFullScreenChanged(window) {

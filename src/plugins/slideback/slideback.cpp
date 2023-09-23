@@ -18,10 +18,14 @@ SlideBackEffect::SlideBackEffect()
     m_justMapped = m_upmostWindow = nullptr;
     connect(effects, &EffectsHandler::windowAdded, this, &SlideBackEffect::slotWindowAdded);
     connect(effects, &EffectsHandler::windowDeleted, this, &SlideBackEffect::slotWindowDeleted);
-    connect(effects, &EffectsHandler::windowUnminimized, this, &SlideBackEffect::slotWindowUnminimized);
     connect(effects, &EffectsHandler::tabBoxAdded, this, &SlideBackEffect::slotTabBoxAdded);
     connect(effects, &EffectsHandler::stackingOrderChanged, this, &SlideBackEffect::slotStackingOrderChanged);
     connect(effects, &EffectsHandler::tabBoxClosed, this, &SlideBackEffect::slotTabBoxClosed);
+
+    const auto windows = effects->stackingOrder();
+    for (EffectWindow *window : windows) {
+        slotWindowAdded(window);
+    }
 }
 
 void SlideBackEffect::slotStackingOrderChanged()
@@ -272,6 +276,8 @@ void SlideBackEffect::slotWindowDeleted(EffectWindow *w)
 void SlideBackEffect::slotWindowAdded(EffectWindow *w)
 {
     m_justMapped = w;
+
+    connect(w, &EffectWindow::windowUnminimized, this, &SlideBackEffect::slotWindowUnminimized);
 }
 
 void SlideBackEffect::slotWindowUnminimized(EffectWindow *w)

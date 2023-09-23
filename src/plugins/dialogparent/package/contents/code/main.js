@@ -13,6 +13,12 @@ var dialogParentEffect = {
     duration: animationTime(300),
     windowAdded: function (window) {
         "use strict";
+        window.windowMinimized.connect(dialogParentEffect.cancelAnimationInstant);
+        window.windowUnminimized.connect(dialogParentEffect.restartAnimation);
+        window.windowModalityChanged.connect(dialogParentEffect.modalDialogChanged);
+        window.windowDesktopsChanged.connect(dialogParentEffect.cancelAnimationInstant);
+        window.windowDesktopsChanged.connect(dialogParentEffect.restartAnimation);
+
         if (window.modal) {
             dialogParentEffect.dialogGotModality(window);
         }
@@ -134,19 +140,13 @@ var dialogParentEffect = {
         var i, windows;
         effects.windowAdded.connect(dialogParentEffect.windowAdded);
         effects.windowClosed.connect(dialogParentEffect.windowClosed);
-        effects.windowMinimized.connect(dialogParentEffect.cancelAnimationInstant);
-        effects.windowUnminimized.connect(dialogParentEffect.restartAnimation);
-        effects.windowModalityChanged.connect(dialogParentEffect.modalDialogChanged)
         effects.desktopChanged.connect(dialogParentEffect.desktopChanged);
-        effects.windowDesktopsChanged.connect(dialogParentEffect.cancelAnimationInstant);
-        effects.windowDesktopsChanged.connect(dialogParentEffect.restartAnimation);
         effects.activeFullScreenEffectChanged.connect(
             dialogParentEffect.activeFullScreenEffectChanged);
 
-        // start animation
         windows = effects.stackingOrder;
         for (i = 0; i < windows.length; i += 1) {
-            dialogParentEffect.restartAnimation(windows[i]);
+            dialogParentEffect.windowAdded(windows[i]);
         }
     }
 };

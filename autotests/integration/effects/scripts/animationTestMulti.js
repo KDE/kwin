@@ -13,12 +13,7 @@ effects.windowAdded.connect(function(w) {
         }]
     });
     sendTestResponse(typeof(w.anim1) == "object" && Array.isArray(w.anim1));
-});
 
-effects.windowUnminimized.connect(function(w) {
-    cancel(w.anim1);
-});
-
-effects.windowMinimized.connect(function(w) {
-    retarget(w.anim1, 1.5, 200);
+    w.windowUnminimized.connect(() => cancel(w.anim1));
+    w.windowMinimized.connect(() => retarget(w.anim1, 1.5, 200));
 });

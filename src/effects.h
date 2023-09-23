@@ -263,9 +263,6 @@ public Q_SLOTS:
     Q_SCRIPTABLE QString debug(const QString &name, const QString &parameter = QString()) const;
 
 protected Q_SLOTS:
-    void slotOpacityChanged(KWin::Window *window, qreal oldOpacity);
-    void slotClientModalityChanged();
-    void slotWindowDamaged(KWin::Window *window);
     void slotOutputAdded(Output *output);
     void slotOutputRemoved(Output *output);
 

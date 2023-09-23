@@ -49,6 +49,7 @@ public:
 
 private Q_SLOTS:
     void windowActivated(EffectWindow *w);
+    void windowAdded(EffectWindow *w);
     void windowClosed(EffectWindow *w);
     void windowDeleted(EffectWindow *w);
     void activeFullScreenEffectChanged();

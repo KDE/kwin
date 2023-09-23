@@ -109,13 +109,18 @@ ZoomEffect::ZoomEffect()
     timeline.setFrameRange(0, 100);
     connect(&timeline, &QTimeLine::frameChanged, this, &ZoomEffect::timelineFrameChanged);
     connect(effects, &EffectsHandler::mouseChanged, this, &ZoomEffect::slotMouseChanged);
-    connect(effects, &EffectsHandler::windowDamaged, this, &ZoomEffect::slotWindowDamaged);
+    connect(effects, &EffectsHandler::windowAdded, this, &ZoomEffect::slotWindowAdded);
     connect(effects, &EffectsHandler::screenRemoved, this, &ZoomEffect::slotScreenRemoved);
 
 #if HAVE_ACCESSIBILITY
     m_accessibilityIntegration = new ZoomAccessibilityIntegration(this);
     connect(m_accessibilityIntegration, &ZoomAccessibilityIntegration::focusPointChanged, this, &ZoomEffect::moveFocus);
 #endif
+
+    const auto windows = effects->stackingOrder();
+    for (EffectWindow *w : windows) {
+        slotWindowAdded(w);
+    }
 
     source_zoom = -1; // used to trigger initialZoom reading
     reconfigure(ReconfigureAll);
@@ -542,6 +547,11 @@ void ZoomEffect::slotMouseChanged(const QPointF &pos, const QPointF &old, Qt::Mo
         lastMouseEvent = QTime::currentTime();
         effects->addRepaintFull();
     }
+}
+
+void ZoomEffect::slotWindowAdded(EffectWindow *w)
+{
+    connect(w, &EffectWindow::windowDamaged, this, &ZoomEffect::slotWindowDamaged);
 }
 
 void ZoomEffect::slotWindowDamaged()

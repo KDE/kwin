@@ -121,11 +121,6 @@ void MoveResizeWindowTest::testMove()
     QSignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
     QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
 
-    // effects signal handlers
-    QSignalSpy windowStartUserMovedResizedSpy(effects, &EffectsHandler::windowStartUserMovedResized);
-    QSignalSpy windowStepUserMovedResizedSpy(effects, &EffectsHandler::windowStepUserMovedResized);
-    QSignalSpy windowFinishUserMovedResizedSpy(effects, &EffectsHandler::windowFinishUserMovedResized);
-
     // begin move
     QVERIFY(workspace()->moveResizeWindow() == nullptr);
     QCOMPARE(window->isInteractiveMove(), false);
@@ -133,7 +128,6 @@ void MoveResizeWindowTest::testMove()
     QCOMPARE(workspace()->moveResizeWindow(), window);
     QCOMPARE(interactiveMoveResizeStartedSpy.count(), 1);
     QCOMPARE(moveResizedChangedSpy.count(), 1);
-    QCOMPARE(windowStartUserMovedResizedSpy.count(), 1);
     QCOMPARE(window->isInteractiveMove(), true);
     QCOMPARE(window->geometryRestore(), QRect());
 
@@ -145,18 +139,15 @@ void MoveResizeWindowTest::testMove()
     QEXPECT_FAIL("", "First event is ignored", Continue);
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
     interactiveMoveResizeSteppedSpy.clear();
-    windowStepUserMovedResizedSpy.clear();
 
     window->keyPressEvent(Qt::Key_Right);
     window->updateInteractiveMoveResize(Cursors::self()->mouse()->pos());
     QCOMPARE(Cursors::self()->mouse()->pos(), cursorPos + QPoint(16, 0));
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
-    QCOMPARE(windowStepUserMovedResizedSpy.count(), 1);
 
     window->keyPressEvent(Qt::Key_Down | Qt::ALT);
     window->updateInteractiveMoveResize(Cursors::self()->mouse()->pos());
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 2);
-    QCOMPARE(windowStepUserMovedResizedSpy.count(), 2);
     QCOMPARE(window->frameGeometry(), QRect(16, 32, 100, 50));
     QCOMPARE(Cursors::self()->mouse()->pos(), cursorPos + QPoint(16, 32));
 
@@ -165,7 +156,6 @@ void MoveResizeWindowTest::testMove()
     window->keyPressEvent(Qt::Key_Enter);
     QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 1);
     QCOMPARE(moveResizedChangedSpy.count(), 2);
-    QCOMPARE(windowFinishUserMovedResizedSpy.count(), 1);
     QCOMPARE(window->frameGeometry(), QRect(16, 32, 100, 50));
     QCOMPARE(window->isInteractiveMove(), false);
     QVERIFY(workspace()->moveResizeWindow() == nullptr);

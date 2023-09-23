@@ -145,10 +145,17 @@ var squashEffect = {
             ]
         });
     },
+    slotWindowAdded: function (window) {
+        window.windowMinimized.connect(squashEffect.slotWindowMinimized);
+        window.windowUnminimized.connect(squashEffect.slotWindowUnminimized);
+    },
     init: function () {
         effect.configChanged.connect(squashEffect.loadConfig);
-        effects.windowMinimized.connect(squashEffect.slotWindowMinimized);
-        effects.windowUnminimized.connect(squashEffect.slotWindowUnminimized);
+
+        effects.windowAdded.connect(squashEffect.slotWindowAdded);
+        for (const window of effects.stackingOrder) {
+            squashEffect.slotWindowAdded(window);
+        }
     }
 };
 

@@ -32,6 +32,7 @@ public:
     bool isActive() const override;
 
 private Q_SLOTS:
+    void slotWindowAdded(EffectWindow *w);
     void slotWindowClosed(EffectWindow *w);
     void slotWindowStartUserMovedResized(EffectWindow *w);
     void slotWindowFinishUserMovedResized(EffectWindow *w);

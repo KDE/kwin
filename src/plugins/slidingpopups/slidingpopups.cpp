@@ -57,8 +57,6 @@ SlidingPopupsEffect::SlidingPopupsEffect()
     connect(effects, &EffectsHandler::windowClosed, this, &SlidingPopupsEffect::slideOut);
     connect(effects, &EffectsHandler::windowDeleted, this, &SlidingPopupsEffect::slotWindowDeleted);
     connect(effects, &EffectsHandler::propertyNotify, this, &SlidingPopupsEffect::slotPropertyNotify);
-    connect(effects, &EffectsHandler::windowShown, this, &SlidingPopupsEffect::slideIn);
-    connect(effects, &EffectsHandler::windowHidden, this, &SlidingPopupsEffect::slideOut);
     connect(effects, &EffectsHandler::xcbConnectionChanged, this, [this]() {
         m_atom = effects->announceSupportProperty(QByteArrayLiteral("_KDE_SLIDE"), this);
     });
@@ -66,7 +64,6 @@ SlidingPopupsEffect::SlidingPopupsEffect()
             this, &SlidingPopupsEffect::stopAnimations);
     connect(effects, &EffectsHandler::activeFullScreenEffectChanged,
             this, &SlidingPopupsEffect::stopAnimations);
-    connect(effects, &EffectsHandler::windowFrameGeometryChanged, this, &SlidingPopupsEffect::slotWindowFrameGeometryChanged);
 
     reconfigure(ReconfigureAll);
 
@@ -206,6 +203,10 @@ void SlidingPopupsEffect::postPaintWindow(EffectWindow *w)
 
 void SlidingPopupsEffect::setupSlideData(EffectWindow *w)
 {
+    connect(w, &EffectWindow::windowFrameGeometryChanged, this, &SlidingPopupsEffect::slotWindowFrameGeometryChanged);
+    connect(w, &EffectWindow::windowShown, this, &SlidingPopupsEffect::slideIn);
+    connect(w, &EffectWindow::windowHidden, this, &SlidingPopupsEffect::slideOut);
+
     // X11
     if (m_atom != XCB_ATOM_NONE) {
         slotPropertyNotify(w, m_atom);

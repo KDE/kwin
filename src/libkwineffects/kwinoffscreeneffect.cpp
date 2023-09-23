@@ -26,19 +26,18 @@ public:
 
     void maybeRender(EffectWindow *window);
 
-private:
     std::unique_ptr<GLTexture> m_texture;
     std::unique_ptr<GLFramebuffer> m_fbo;
     bool m_isDirty = true;
     GLShader *m_shader = nullptr;
     RenderGeometry::VertexSnappingMode m_vertexSnappingMode = RenderGeometry::VertexSnappingMode::Round;
+    QMetaObject::Connection m_windowDamagedConnection;
 };
 
 class OffscreenEffectPrivate
 {
 public:
     std::map<EffectWindow *, std::unique_ptr<OffscreenData>> windows;
-    QMetaObject::Connection windowDamagedConnection;
     QMetaObject::Connection windowDeletedConnection;
     RenderGeometry::VertexSnappingMode vertexSnappingMode = RenderGeometry::VertexSnappingMode::Round;
 };
@@ -64,6 +63,9 @@ void OffscreenEffect::redirect(EffectWindow *window)
     }
     offscreenData = std::make_unique<OffscreenData>();
     offscreenData->setVertexSnappingMode(d->vertexSnappingMode);
+
+    offscreenData->m_windowDamagedConnection =
+        connect(window, &EffectWindow::windowDamaged, this, &OffscreenEffect::handleWindowDamaged);
 
     if (d->windows.size() == 1) {
         setupConnections();
@@ -132,6 +134,7 @@ void OffscreenData::maybeRender(EffectWindow *window)
 
 OffscreenData::~OffscreenData()
 {
+    QObject::disconnect(m_windowDamagedConnection);
 }
 
 void OffscreenData::setDirty()
@@ -256,19 +259,14 @@ void OffscreenEffect::handleWindowDeleted(EffectWindow *window)
 
 void OffscreenEffect::setupConnections()
 {
-    d->windowDamagedConnection =
-        connect(effects, &EffectsHandler::windowDamaged, this, &OffscreenEffect::handleWindowDamaged);
-
     d->windowDeletedConnection =
         connect(effects, &EffectsHandler::windowDeleted, this, &OffscreenEffect::handleWindowDeleted);
 }
 
 void OffscreenEffect::destroyConnections()
 {
-    disconnect(d->windowDamagedConnection);
     disconnect(d->windowDeletedConnection);
 
-    d->windowDamagedConnection = {};
     d->windowDeletedConnection = {};
 }
 

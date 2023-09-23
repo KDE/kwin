@@ -261,78 +261,9 @@ void EffectsHandlerImpl::unloadAllEffects()
 void EffectsHandlerImpl::setupWindowConnections(Window *window)
 {
     connect(window, &Window::closed, this, [this, window]() {
-        window->disconnect(this);
         if (window->effectWindow()) {
             Q_EMIT windowClosed(window->effectWindow());
         }
-    });
-    connect(window, &Window::maximizedChanged, this, [this, window]() {
-        if (EffectWindowImpl *w = window->effectWindow()) {
-            const MaximizeMode mode = window->maximizeMode();
-            Q_EMIT windowMaximizedStateChanged(w, mode & MaximizeHorizontal, mode & MaximizeVertical);
-        }
-    });
-    connect(window, &Window::maximizedAboutToChange, this, [this, window](MaximizeMode m) {
-        if (EffectWindowImpl *w = window->effectWindow()) {
-            Q_EMIT windowMaximizedStateAboutToChange(w, m & MaximizeHorizontal, m & MaximizeVertical);
-        }
-    });
-    connect(window, &Window::frameGeometryAboutToChange,  this, [this, window]() {
-        if (EffectWindowImpl *w = window->effectWindow()) {
-            Q_EMIT windowFrameGeometryAboutToChange(w);
-        }
-    });
-    connect(window, &Window::interactiveMoveResizeStarted, this, [this, window]() {
-        Q_EMIT windowStartUserMovedResized(window->effectWindow());
-    });
-    connect(window, &Window::interactiveMoveResizeStepped, this, [this, window](const QRectF &geometry) {
-        Q_EMIT windowStepUserMovedResized(window->effectWindow(), geometry);
-    });
-    connect(window, &Window::interactiveMoveResizeFinished, this, [this, window]() {
-        Q_EMIT windowFinishUserMovedResized(window->effectWindow());
-    });
-    connect(window, &Window::opacityChanged, this, &EffectsHandlerImpl::slotOpacityChanged);
-    connect(window, &Window::minimizedChanged, this, [this, window]() {
-        if (window->isMinimized()) {
-            Q_EMIT windowMinimized(window->effectWindow());
-        } else {
-            Q_EMIT windowUnminimized(window->effectWindow());
-        }
-    });
-    connect(window, &Window::modalChanged, this, &EffectsHandlerImpl::slotClientModalityChanged);
-    connect(window, &Window::frameGeometryChanged, this, [this, window](const QRectF &oldGeometry) {
-        // effectWindow() might be nullptr during tear down of the client.
-        if (window->effectWindow()) {
-            Q_EMIT windowFrameGeometryChanged(window->effectWindow(), oldGeometry);
-        }
-    });
-    connect(window, &Window::damaged, this, &EffectsHandlerImpl::slotWindowDamaged);
-    connect(window, &Window::unresponsiveChanged, this, [this, window](bool unresponsive) {
-        Q_EMIT windowUnresponsiveChanged(window->effectWindow(), unresponsive);
-    });
-    connect(window, &Window::windowShown, this, [this](Window *window) {
-        Q_EMIT windowShown(window->effectWindow());
-    });
-    connect(window, &Window::windowHidden, this, [this](Window *window) {
-        Q_EMIT windowHidden(window->effectWindow());
-    });
-    connect(window, &Window::keepAboveChanged, this, [this, window](bool above) {
-        Q_EMIT windowKeepAboveChanged(window->effectWindow());
-    });
-    connect(window, &Window::keepBelowChanged, this, [this, window](bool below) {
-        Q_EMIT windowKeepBelowChanged(window->effectWindow());
-    });
-    connect(window, &Window::fullScreenChanged, this, [this, window]() {
-        Q_EMIT windowFullScreenChanged(window->effectWindow());
-    });
-    connect(window, &Window::visibleGeometryChanged, this, [this, window]() {
-        Q_EMIT windowExpandedGeometryChanged(window->effectWindow());
-    });
-    connect(window, &Window::decorationChanged, this, [this, window]() {
-        Q_EMIT windowDecorationChanged(window->effectWindow());
-    });
-    connect(window, &Window::desktopsChanged, this, [this, window]() {
-        Q_EMIT windowDesktopsChanged(window->effectWindow());
     });
 }
 
@@ -446,28 +377,6 @@ void EffectsHandlerImpl::startPaint()
     m_currentDrawWindowIterator = m_activeEffects.constBegin();
     m_currentPaintWindowIterator = m_activeEffects.constBegin();
     m_currentPaintScreenIterator = m_activeEffects.constBegin();
-}
-
-void EffectsHandlerImpl::slotOpacityChanged(Window *window, qreal oldOpacity)
-{
-    if (window->opacity() == oldOpacity || !window->effectWindow()) {
-        return;
-    }
-    Q_EMIT windowOpacityChanged(window->effectWindow(), oldOpacity, (qreal)window->opacity());
-}
-
-void EffectsHandlerImpl::slotClientModalityChanged()
-{
-    Q_EMIT windowModalityChanged(static_cast<X11Window *>(sender())->effectWindow());
-}
-
-void EffectsHandlerImpl::slotWindowDamaged(Window *window)
-{
-    if (!window->effectWindow()) {
-        // can happen during tear down of window
-        return;
-    }
-    Q_EMIT windowDamaged(window->effectWindow());
 }
 
 void EffectsHandlerImpl::setActiveFullScreenEffect(Effect *e)
@@ -1845,6 +1754,72 @@ EffectWindowImpl::EffectWindowImpl(Window *window)
 
     m_waylandWindow = qobject_cast<KWin::WaylandWindow *>(window) != nullptr;
     m_x11Window = qobject_cast<KWin::X11Window *>(window) != nullptr;
+
+    connect(window, &Window::windowShown, this, [this]() {
+        Q_EMIT windowShown(this);
+    });
+    connect(window, &Window::windowHidden, this, [this]() {
+        Q_EMIT windowHidden(this);
+    });
+    connect(window, &Window::maximizedChanged, this, [this, window]() {
+        const MaximizeMode mode = window->maximizeMode();
+        Q_EMIT windowMaximizedStateChanged(this, mode & MaximizeHorizontal, mode & MaximizeVertical);
+    });
+    connect(window, &Window::maximizedAboutToChange, this, [this](MaximizeMode m) {
+        Q_EMIT windowMaximizedStateAboutToChange(this, m & MaximizeHorizontal, m & MaximizeVertical);
+    });
+    connect(window, &Window::frameGeometryAboutToChange, this, [this]() {
+        Q_EMIT windowFrameGeometryAboutToChange(this);
+    });
+    connect(window, &Window::interactiveMoveResizeStarted, this, [this]() {
+        Q_EMIT windowStartUserMovedResized(this);
+    });
+    connect(window, &Window::interactiveMoveResizeStepped, this, [this](const QRectF &geometry) {
+        Q_EMIT windowStepUserMovedResized(this, geometry);
+    });
+    connect(window, &Window::interactiveMoveResizeFinished, this, [this]() {
+        Q_EMIT windowFinishUserMovedResized(this);
+    });
+    connect(window, &Window::opacityChanged, this, [this](Window *window, qreal oldOpacity) {
+        Q_EMIT windowOpacityChanged(this, oldOpacity, window->opacity());
+    });
+    connect(window, &Window::minimizedChanged, this, [this, window]() {
+        if (window->isMinimized()) {
+            Q_EMIT windowMinimized(this);
+        } else {
+            Q_EMIT windowUnminimized(this);
+        }
+    });
+    connect(window, &Window::modalChanged, this, [this]() {
+        Q_EMIT windowModalityChanged(this);
+    });
+    connect(window, &Window::frameGeometryChanged, this, [this](const QRectF &oldGeometry) {
+        Q_EMIT windowFrameGeometryChanged(this, oldGeometry);
+    });
+    connect(window, &Window::damaged, this, [this]() {
+        Q_EMIT windowDamaged(this);
+    });
+    connect(window, &Window::unresponsiveChanged, this, [this](bool unresponsive) {
+        Q_EMIT windowUnresponsiveChanged(this, unresponsive);
+    });
+    connect(window, &Window::keepAboveChanged, this, [this]() {
+        Q_EMIT windowKeepAboveChanged(this);
+    });
+    connect(window, &Window::keepBelowChanged, this, [this]() {
+        Q_EMIT windowKeepBelowChanged(this);
+    });
+    connect(window, &Window::fullScreenChanged, this, [this]() {
+        Q_EMIT windowFullScreenChanged(this);
+    });
+    connect(window, &Window::visibleGeometryChanged, this, [this]() {
+        Q_EMIT windowExpandedGeometryChanged(this);
+    });
+    connect(window, &Window::decorationChanged, this, [this]() {
+        Q_EMIT windowDecorationChanged(this);
+    });
+    connect(window, &Window::desktopsChanged, this, [this]() {
+        Q_EMIT windowDesktopsChanged(this);
+    });
 }
 
 EffectWindowImpl::~EffectWindowImpl()

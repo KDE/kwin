@@ -4,12 +4,12 @@ effects.windowAdded.connect(function (window) {
     } else {
         sendTestResponse('fail');
     }
-});
 
-effects.windowMinimized.connect(function (window) {
-    if (effect.ungrab(window, Effect.WindowAddedGrabRole)) {
-        sendTestResponse('ok');
-    } else {
-        sendTestResponse('fail');
-    }
+    window.windowMinimized.connect(() => {
+        if (effect.ungrab(window, Effect.WindowAddedGrabRole)) {
+            sendTestResponse('ok');
+        } else {
+            sendTestResponse('fail');
+        }
+    });
 });

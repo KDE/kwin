@@ -20,9 +20,13 @@ MagicLampEffect::MagicLampEffect()
 {
     initConfig<MagicLampConfig>();
     reconfigure(ReconfigureAll);
+    connect(effects, &EffectsHandler::windowAdded, this, &MagicLampEffect::slotWindowAdded);
     connect(effects, &EffectsHandler::windowDeleted, this, &MagicLampEffect::slotWindowDeleted);
-    connect(effects, &EffectsHandler::windowMinimized, this, &MagicLampEffect::slotWindowMinimized);
-    connect(effects, &EffectsHandler::windowUnminimized, this, &MagicLampEffect::slotWindowUnminimized);
+
+    const auto windows = effects->stackingOrder();
+    for (EffectWindow *window : windows) {
+        slotWindowAdded(window);
+    }
 
     setVertexSnappingMode(RenderGeometry::VertexSnappingMode::None);
 }
@@ -363,6 +367,12 @@ void MagicLampEffect::postPaintScreen()
 
     // Call the next effect.
     effects->postPaintScreen();
+}
+
+void MagicLampEffect::slotWindowAdded(EffectWindow *w)
+{
+    connect(w, &EffectWindow::windowMinimized, this, &MagicLampEffect::slotWindowMinimized);
+    connect(w, &EffectWindow::windowUnminimized, this, &MagicLampEffect::slotWindowUnminimized);
 }
 
 void MagicLampEffect::slotWindowDeleted(EffectWindow *w)

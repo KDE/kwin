@@ -16,10 +16,6 @@ var morphingEffect = {
     },
 
     handleFrameGeometryAboutToChange: function (window) {
-        //only tooltips and notifications
-        if (!window.tooltip && !window.notification && !window.criticalNotification) {
-            return;
-        }
         var couldRetarget = false;
         if (window.fadeAnimation) {
             couldRetarget = retarget(window.fadeAnimation[0], 1.0, morphingEffect.duration);
@@ -38,11 +34,6 @@ var morphingEffect = {
         }
     },
     handleFrameGeometryChanged: function (window, oldGeometry) {
-        //only tooltips and notifications
-        if (!window.tooltip && !window.notification && !window.criticalNotification) {
-            return;
-        }
-
         var newGeometry = window.geometry;
 
         //only do the transition for near enough tooltips,
@@ -122,10 +113,23 @@ var morphingEffect = {
         }
     },
 
+    manage: function (window) {
+        //only tooltips and notifications
+        if (!window.tooltip && !window.notification && !window.criticalNotification) {
+            return;
+        }
+
+        window.windowFrameGeometryAboutToChange.connect(morphingEffect.handleFrameGeometryAboutToChange);
+        window.windowFrameGeometryChanged.connect(morphingEffect.handleFrameGeometryChanged);
+    },
+
     init: function () {
         effect.configChanged.connect(morphingEffect.loadConfig);
-        effects.windowFrameGeometryAboutToChange.connect(morphingEffect.handleFrameGeometryAboutToChange);
-        effects.windowFrameGeometryChanged.connect(morphingEffect.handleFrameGeometryChanged);
+        effects.windowAdded.connect(morphingEffect.manage);
+
+        for (const window of effects.stackingOrder) {
+            morphingEffect.manage(window);
+        }
     }
 };
 morphingEffect.init();

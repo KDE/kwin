@@ -49,7 +49,12 @@ MagnifierEffect::MagnifierEffect()
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_0));
 
     connect(effects, &EffectsHandler::mouseChanged, this, &MagnifierEffect::slotMouseChanged);
-    connect(effects, &EffectsHandler::windowDamaged, this, &MagnifierEffect::slotWindowDamaged);
+    connect(effects, &EffectsHandler::windowAdded, this, &MagnifierEffect::slotWindowAdded);
+
+    const auto windows = effects->stackingOrder();
+    for (EffectWindow *window : windows) {
+        slotWindowAdded(window);
+    }
 
     reconfigure(ReconfigureAll);
 }
@@ -266,6 +271,11 @@ void MagnifierEffect::slotMouseChanged(const QPointF &pos, const QPointF &old,
         // see Bug 187658
         effects->addRepaintFull();
     }
+}
+
+void MagnifierEffect::slotWindowAdded(EffectWindow *w)
+{
+    connect(w, &EffectWindow::windowDamaged, this, &MagnifierEffect::slotWindowDamaged);
 }
 
 void MagnifierEffect::slotWindowDamaged()

@@ -65,10 +65,13 @@ SnapHelperEffect::SnapHelperEffect()
 {
     reconfigure(ReconfigureAll);
 
+    connect(effects, &EffectsHandler::windowAdded, this, &SnapHelperEffect::slotWindowAdded);
     connect(effects, &EffectsHandler::windowClosed, this, &SnapHelperEffect::slotWindowClosed);
-    connect(effects, &EffectsHandler::windowStartUserMovedResized, this, &SnapHelperEffect::slotWindowStartUserMovedResized);
-    connect(effects, &EffectsHandler::windowFinishUserMovedResized, this, &SnapHelperEffect::slotWindowFinishUserMovedResized);
-    connect(effects, &EffectsHandler::windowFrameGeometryChanged, this, &SnapHelperEffect::slotWindowFrameGeometryChanged);
+
+    const auto windows = effects->stackingOrder();
+    for (EffectWindow *window : windows) {
+        slotWindowAdded(window);
+    }
 }
 
 SnapHelperEffect::~SnapHelperEffect()
@@ -190,6 +193,13 @@ void SnapHelperEffect::postPaintScreen()
     }
 
     effects->postPaintScreen();
+}
+
+void SnapHelperEffect::slotWindowAdded(EffectWindow *w)
+{
+    connect(w, &EffectWindow::windowStartUserMovedResized, this, &SnapHelperEffect::slotWindowStartUserMovedResized);
+    connect(w, &EffectWindow::windowFinishUserMovedResized, this, &SnapHelperEffect::slotWindowFinishUserMovedResized);
+    connect(w, &EffectWindow::windowFrameGeometryChanged, this, &SnapHelperEffect::slotWindowFrameGeometryChanged);
 }
 
 void SnapHelperEffect::slotWindowClosed(EffectWindow *w)

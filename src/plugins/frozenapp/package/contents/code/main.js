@@ -17,10 +17,15 @@ var frozenAppEffect = {
         frozenAppEffect.outDuration = animationTime(250);
     },
     windowAdded: function (window) {
-        if (!window || !window.unresponsive) {
-            return;
+        window.windowMinimized.connect(frozenAppEffect.cancelAnimation);
+        window.windowUnminimized.connect(frozenAppEffect.restartAnimation);
+        window.windowUnresponsiveChanged.connect(frozenAppEffect.unresponsiveChanged);
+        window.windowDesktopsChanged.connect(frozenAppEffect.cancelAnimation);
+        window.windowDesktopsChanged.connect(frozenAppEffect.restartAnimation);
+
+        if (window.unresponsive) {
+            frozenAppEffect.startAnimation(window, 1);
         }
-        frozenAppEffect.windowBecameUnresponsive(window);
     },
     windowBecameUnresponsive: function (window) {
         if (window.unresponsiveAnimation) {
@@ -102,16 +107,11 @@ var frozenAppEffect = {
     init: function () {
         effects.windowAdded.connect(frozenAppEffect.windowAdded);
         effects.windowClosed.connect(frozenAppEffect.windowClosed);
-        effects.windowMinimized.connect(frozenAppEffect.cancelAnimation);
-        effects.windowUnminimized.connect(frozenAppEffect.restartAnimation);
-        effects.windowUnresponsiveChanged.connect(frozenAppEffect.unresponsiveChanged);
         effects.desktopChanged.connect(frozenAppEffect.desktopChanged);
-        effects.windowDesktopsChanged.connect(frozenAppEffect.cancelAnimation);
-        effects.windowDesktopsChanged.connect(frozenAppEffect.restartAnimation);
 
         var windows = effects.stackingOrder;
         for (var i = 0, length = windows.length; i < length; ++i) {
-            frozenAppEffect.restartAnimation(windows[i]);
+            frozenAppEffect.windowAdded(windows[i]);
         }
     }
 };

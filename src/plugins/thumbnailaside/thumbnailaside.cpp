@@ -33,10 +33,15 @@ ThumbnailAsideEffect::ThumbnailAsideEffect()
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::CTRL | Qt::Key_T));
     connect(a, &QAction::triggered, this, &ThumbnailAsideEffect::toggleCurrentThumbnail);
 
+    connect(effects, &EffectsHandler::windowAdded, this, &ThumbnailAsideEffect::slotWindowAdded);
     connect(effects, &EffectsHandler::windowClosed, this, &ThumbnailAsideEffect::slotWindowClosed);
-    connect(effects, &EffectsHandler::windowFrameGeometryChanged, this, &ThumbnailAsideEffect::slotWindowFrameGeometryChanged);
-    connect(effects, &EffectsHandler::windowDamaged, this, &ThumbnailAsideEffect::slotWindowDamaged);
     connect(effects, &EffectsHandler::screenLockingChanged, this, &ThumbnailAsideEffect::repaintAll);
+
+    const auto windows = effects->stackingOrder();
+    for (EffectWindow *window : windows) {
+        slotWindowAdded(window);
+    }
+
     reconfigure(ReconfigureAll);
 }
 
@@ -93,6 +98,12 @@ void ThumbnailAsideEffect::slotWindowFrameGeometryChanged(EffectWindow *w, const
             return;
         }
     }
+}
+
+void ThumbnailAsideEffect::slotWindowAdded(EffectWindow *w)
+{
+    connect(w, &EffectWindow::windowFrameGeometryChanged, this, &ThumbnailAsideEffect::slotWindowFrameGeometryChanged);
+    connect(w, &EffectWindow::windowDamaged, this, &ThumbnailAsideEffect::slotWindowDamaged);
 }
 
 void ThumbnailAsideEffect::slotWindowClosed(EffectWindow *w)
