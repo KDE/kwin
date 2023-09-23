@@ -843,6 +843,18 @@ void VirtualDesktopManager::initShortcuts()
     });
     input()->registerTouchscreenSwipeShortcut(SwipeDirection::Left, 3, m_swipeGestureReleasedX.get(), left);
     input()->registerTouchscreenSwipeShortcut(SwipeDirection::Right, 3, m_swipeGestureReleasedX.get(), right);
+    input()->registerTouchscreenSwipeShortcut(SwipeDirection::Down, 3, m_swipeGestureReleasedY.get(), [this](qreal cb) {
+        if (grid().height() > 1) {
+            m_currentDesktopOffset.setY(-cb);
+            Q_EMIT currentChanging(currentDesktop(), m_currentDesktopOffset);
+        }
+    });
+    input()->registerTouchscreenSwipeShortcut(SwipeDirection::Up, 3, m_swipeGestureReleasedY.get(), [this](qreal cb) {
+        if (grid().height() > 1) {
+            m_currentDesktopOffset.setY(cb);
+            Q_EMIT currentChanging(currentDesktop(), m_currentDesktopOffset);
+        }
+    });
 
     // axis events
     input()->registerAxisShortcut(Qt::MetaModifier | Qt::AltModifier, PointerAxisDown,

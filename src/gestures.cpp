@@ -66,7 +66,7 @@ bool SwipeGesture::minimumDeltaReached(const QPointF &delta) const
 
 bool SwipeGesture::correctDirection(const QPointF &delta) const
 {
-    switch (direction()) {
+    switch (m_direction) {
     case SwipeDirection::Up:
         return delta.y() < 0;
         break;
@@ -153,9 +153,6 @@ void GestureRecognizer::unregisterPinchGesture(KWin::PinchGesture *gesture)
 int GestureRecognizer::startSwipeGesture(uint fingerCount, const QPointF &startPos, StartPositionBehavior startPosBehavior)
 {
     m_currentFingerCount = fingerCount;
-    /*if (!m_activeSwipeGestures.isEmpty() || !m_activePinchGestures.isEmpty()) {
-        return 0;
-    }*/
     int count = 0;
     for (SwipeGesture *gesture : std::as_const(m_swipeGestures)) {
         if (gesture->minimumFingerCountIsRelevant()) {
