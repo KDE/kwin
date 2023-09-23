@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-22 01:46+0000\n"
+"POT-Creation-Date: 2023-09-23 01:46+0000\n"
 "PO-Revision-Date: 2023-07-30 13:19+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -73,17 +73,17 @@ msgstr "உள்ளீட்டை கைபற்ற வலது Ctrl வி�
 msgid "KDE Wayland Compositor"
 msgstr "கே.டீ.யீ. Wayland சாளரநிரல்"
 
-#: compositor.cpp:611
+#: compositor.cpp:151
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "வரைகலை முறிவடைந்து மீட்டமைக்கப்பட்டதால் பணிமேடை அசைவூட்டங்கள் மீள்துவக்கப்பட்டன"
 
-#: compositor_x11.cpp:53
+#: compositor_x11.cpp:89
 #, kde-format
 msgid "Suspend Compositing"
 msgstr "Compositing-ஐ முடக்கு"
 
-#: compositor_x11.cpp:259
+#: compositor_x11.cpp:513
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -96,12 +96,12 @@ msgstr ""
 "சாதனநிரலை நீங்கள் புதுப்பித்திருந்தால்,<br>இந்த பாதுகாப்பு அம்சத்தை மீட்டமைக்கலாம், "
 "ஆனால்<b>இது உடனடியான முறிவை உண்டாக்கலாம்</b> என்பதை நினைவில் கொள்ளவும்!</p>"
 
-#: compositor_x11.cpp:266
+#: compositor_x11.cpp:520
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "தேவையான X நீட்டிப்புகள் (XComposite மற்றும் XDamage) கிடைக்கவில்லை."
 
-#: compositor_x11.cpp:269
+#: compositor_x11.cpp:523
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL கிடைக்கவில்லை."
@@ -4127,7 +4127,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(பதிலளிக்கவில்லை)"
 
-#: workspace.cpp:1542
+#: workspace.cpp:1540
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-22 01:46+0000\n"
+"POT-Creation-Date: 2023-09-23 01:46+0000\n"
 "PO-Revision-Date: 2012-06-14 11:29+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -68,17 +68,17 @@ msgstr ""
 msgid "KDE Wayland Compositor"
 msgstr ""
 
-#: compositor.cpp:611
+#: compositor.cpp:151
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 
-#: compositor_x11.cpp:53
+#: compositor_x11.cpp:89
 #, kde-format
 msgid "Suspend Compositing"
 msgstr "ផ្អាក​ការ​តែង"
 
-#: compositor_x11.cpp:259
+#: compositor_x11.cpp:513
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -98,12 +98,12 @@ msgstr ""
 "អាច​កំណត់​ការការ​ពារ​នេះ​ឡើង​វិញ ប៉ុន្តែ <b>ត្រូវ​ដឹង​ថា វា​​អាច​ធ្វើ​ឲ្យ​គាំង​ភ្លាមៗ​បាន !</b></p><p>ជា​"
 "ជម្រើស អ្នក​ចង់​ប្រើ​កម្មវិធី​ផ្នែក​ខាង​ក្រោយ XRender ជំនួស​វិញ ។</p>"
 
-#: compositor_x11.cpp:266
+#: compositor_x11.cpp:520
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "មិន​មាន​​ផ្នែក​បន្ថែម X (XComposite និង XDamage) ដែល​ទាមទារ ។"
 
-#: compositor_x11.cpp:269
+#: compositor_x11.cpp:523
 #, fuzzy, kde-format
 #| msgid "GLX/OpenGL and XRender/XFixes are not available."
 msgid "GLX/OpenGL is not available."
@@ -4296,7 +4296,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr ""
 
-#: workspace.cpp:1542
+#: workspace.cpp:1540
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""

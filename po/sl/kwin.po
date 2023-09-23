@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1660699 2023-09-22 02:05:14Z scripty $
+# $Id: kwin.po 1660749 2023-09-23 02:04:31Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-22 01:46+0000\n"
+"POT-Creation-Date: 2023-09-23 01:46+0000\n"
 "PO-Revision-Date: 2023-07-20 06:15+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -85,19 +85,19 @@ msgstr "Pritisnite puščico desno da zgrabite vhod"
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland Compositor"
 
-#: compositor.cpp:611
+#: compositor.cpp:151
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 "Namizni učinki so bili znova zagnani zaradi ponovnega zagona grafičnega "
 "sistema"
 
-#: compositor_x11.cpp:53
+#: compositor_x11.cpp:89
 #, kde-format
 msgid "Suspend Compositing"
 msgstr "Skladnja 3D v pripravljenost"
 
-#: compositor_x11.cpp:259
+#: compositor_x11.cpp:513
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -111,12 +111,12 @@ msgstr ""
 "to zaščito, a <b>zavedajte se, da ima to lahko za posledico takojšnje "
 "sesutje!</b></p>"
 
-#: compositor_x11.cpp:266
+#: compositor_x11.cpp:520
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Zahtevani razširitvi X (XComposite in XDamage) nista na voljo."
 
-#: compositor_x11.cpp:269
+#: compositor_x11.cpp:523
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL ni na voljo."
@@ -4142,7 +4142,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(se ne odziva)"
 
-#: workspace.cpp:1542
+#: workspace.cpp:1540
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

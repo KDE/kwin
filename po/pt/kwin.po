@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-22 01:46+0000\n"
+"POT-Creation-Date: 2023-09-23 01:46+0000\n"
 "PO-Revision-Date: 2023-02-15 15:24+0000\n"
 "Last-Translator: Pedro Morais <morais@kde.org>\n"
 "Language-Team: pt <kde-i18n-pt@kde.org>\n"
@@ -85,19 +85,19 @@ msgstr ""
 msgid "KDE Wayland Compositor"
 msgstr ""
 
-#: compositor.cpp:611
+#: compositor.cpp:151
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 "Os efeitos do ambiente de trabalho foram reiniciados devido a um reinício da "
 "infra-estrutura gráfica"
 
-#: compositor_x11.cpp:53
+#: compositor_x11.cpp:89
 #, kde-format
 msgid "Suspend Compositing"
 msgstr "Suspender a Composição"
 
-#: compositor_x11.cpp:259
+#: compositor_x11.cpp:513
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -111,13 +111,13 @@ msgstr ""
 "protecção mas <b>tenha atenção que isto poderá resultar num estoiro imediato!"
 "</b></p>"
 
-#: compositor_x11.cpp:266
+#: compositor_x11.cpp:520
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr ""
 "As extensões do X necessárias (XComposite e XDamage) não estão disponíveis."
 
-#: compositor_x11.cpp:269
+#: compositor_x11.cpp:523
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "O GLX/OpenGL não está disponível."
@@ -4266,7 +4266,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Não Responde)"
 
-#: workspace.cpp:1542
+#: workspace.cpp:1540
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""
