@@ -17,6 +17,7 @@ namespace KWin
 {
 class Window;
 class DecorationItem;
+class EffectWindowImpl;
 class InternalWindow;
 class Shadow;
 class ShadowItem;
@@ -47,6 +48,7 @@ public:
     DecorationItem *decorationItem() const;
     ShadowItem *shadowItem() const;
     Window *window() const;
+    EffectWindowImpl *effectWindow() const;
 
     void refVisible(int reason);
     void unrefVisible(int reason);
@@ -77,6 +79,7 @@ private:
     std::unique_ptr<SurfaceItem> m_surfaceItem;
     std::unique_ptr<DecorationItem> m_decorationItem;
     std::unique_ptr<ShadowItem> m_shadowItem;
+    std::unique_ptr<EffectWindowImpl> m_effectWindow;
     std::optional<int> m_elevation;
     int m_forceVisibleByHiddenCount = 0;
     int m_forceVisibleByDesktopCount = 0;

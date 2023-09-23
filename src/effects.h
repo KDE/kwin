@@ -352,7 +352,7 @@ class EffectWindowImpl : public EffectWindow
 {
     Q_OBJECT
 public:
-    explicit EffectWindowImpl(Window *window);
+    explicit EffectWindowImpl(WindowItem *windowItem);
     ~EffectWindowImpl() override;
 
     void addRepaint(const QRect &r) override;
@@ -462,7 +462,6 @@ public:
     const Window *window() const;
     Window *window();
 
-    void setWindowItem(WindowItem *item); // internal
     WindowItem *windowItem() const; // internal
 
     void elevate(bool elevate);

@@ -1739,9 +1739,9 @@ EffectScreen::Transform EffectScreenImpl::transform() const
 // EffectWindowImpl
 //****************************************
 
-EffectWindowImpl::EffectWindowImpl(Window *window)
-    : m_window(window)
-    , m_windowItem(nullptr)
+EffectWindowImpl::EffectWindowImpl(WindowItem *windowItem)
+    : m_window(windowItem->window())
+    , m_windowItem(windowItem)
 {
     // Deleted windows are not managed. So, when windowClosed signal is
     // emitted, effects can't distinguish managed windows from unmanaged
@@ -1750,74 +1750,74 @@ EffectWindowImpl::EffectWindowImpl(Window *window)
     // parent can be Client, XdgShellClient, or Unmanaged. So, later on, when
     // an instance of Deleted becomes parent of the EffectWindow, effects
     // can still figure out whether it is/was a managed window.
-    managed = window->isClient();
+    managed = m_window->isClient();
 
-    m_waylandWindow = qobject_cast<KWin::WaylandWindow *>(window) != nullptr;
-    m_x11Window = qobject_cast<KWin::X11Window *>(window) != nullptr;
+    m_waylandWindow = qobject_cast<KWin::WaylandWindow *>(m_window) != nullptr;
+    m_x11Window = qobject_cast<KWin::X11Window *>(m_window) != nullptr;
 
-    connect(window, &Window::windowShown, this, [this]() {
+    connect(m_window, &Window::windowShown, this, [this]() {
         Q_EMIT windowShown(this);
     });
-    connect(window, &Window::windowHidden, this, [this]() {
+    connect(m_window, &Window::windowHidden, this, [this]() {
         Q_EMIT windowHidden(this);
     });
-    connect(window, &Window::maximizedChanged, this, [this, window]() {
-        const MaximizeMode mode = window->maximizeMode();
+    connect(m_window, &Window::maximizedChanged, this, [this]() {
+        const MaximizeMode mode = m_window->maximizeMode();
         Q_EMIT windowMaximizedStateChanged(this, mode & MaximizeHorizontal, mode & MaximizeVertical);
     });
-    connect(window, &Window::maximizedAboutToChange, this, [this](MaximizeMode m) {
+    connect(m_window, &Window::maximizedAboutToChange, this, [this](MaximizeMode m) {
         Q_EMIT windowMaximizedStateAboutToChange(this, m & MaximizeHorizontal, m & MaximizeVertical);
     });
-    connect(window, &Window::frameGeometryAboutToChange, this, [this]() {
+    connect(m_window, &Window::frameGeometryAboutToChange, this, [this]() {
         Q_EMIT windowFrameGeometryAboutToChange(this);
     });
-    connect(window, &Window::interactiveMoveResizeStarted, this, [this]() {
+    connect(m_window, &Window::interactiveMoveResizeStarted, this, [this]() {
         Q_EMIT windowStartUserMovedResized(this);
     });
-    connect(window, &Window::interactiveMoveResizeStepped, this, [this](const QRectF &geometry) {
+    connect(m_window, &Window::interactiveMoveResizeStepped, this, [this](const QRectF &geometry) {
         Q_EMIT windowStepUserMovedResized(this, geometry);
     });
-    connect(window, &Window::interactiveMoveResizeFinished, this, [this]() {
+    connect(m_window, &Window::interactiveMoveResizeFinished, this, [this]() {
         Q_EMIT windowFinishUserMovedResized(this);
     });
-    connect(window, &Window::opacityChanged, this, [this](Window *window, qreal oldOpacity) {
+    connect(m_window, &Window::opacityChanged, this, [this](Window *window, qreal oldOpacity) {
         Q_EMIT windowOpacityChanged(this, oldOpacity, window->opacity());
     });
-    connect(window, &Window::minimizedChanged, this, [this, window]() {
-        if (window->isMinimized()) {
+    connect(m_window, &Window::minimizedChanged, this, [this]() {
+        if (m_window->isMinimized()) {
             Q_EMIT windowMinimized(this);
         } else {
             Q_EMIT windowUnminimized(this);
         }
     });
-    connect(window, &Window::modalChanged, this, [this]() {
+    connect(m_window, &Window::modalChanged, this, [this]() {
         Q_EMIT windowModalityChanged(this);
     });
-    connect(window, &Window::frameGeometryChanged, this, [this](const QRectF &oldGeometry) {
+    connect(m_window, &Window::frameGeometryChanged, this, [this](const QRectF &oldGeometry) {
         Q_EMIT windowFrameGeometryChanged(this, oldGeometry);
     });
-    connect(window, &Window::damaged, this, [this]() {
+    connect(m_window, &Window::damaged, this, [this]() {
         Q_EMIT windowDamaged(this);
     });
-    connect(window, &Window::unresponsiveChanged, this, [this](bool unresponsive) {
+    connect(m_window, &Window::unresponsiveChanged, this, [this](bool unresponsive) {
         Q_EMIT windowUnresponsiveChanged(this, unresponsive);
     });
-    connect(window, &Window::keepAboveChanged, this, [this]() {
+    connect(m_window, &Window::keepAboveChanged, this, [this]() {
         Q_EMIT windowKeepAboveChanged(this);
     });
-    connect(window, &Window::keepBelowChanged, this, [this]() {
+    connect(m_window, &Window::keepBelowChanged, this, [this]() {
         Q_EMIT windowKeepBelowChanged(this);
     });
-    connect(window, &Window::fullScreenChanged, this, [this]() {
+    connect(m_window, &Window::fullScreenChanged, this, [this]() {
         Q_EMIT windowFullScreenChanged(this);
     });
-    connect(window, &Window::visibleGeometryChanged, this, [this]() {
+    connect(m_window, &Window::visibleGeometryChanged, this, [this]() {
         Q_EMIT windowExpandedGeometryChanged(this);
     });
-    connect(window, &Window::decorationChanged, this, [this]() {
+    connect(m_window, &Window::decorationChanged, this, [this]() {
         Q_EMIT windowDecorationChanged(this);
     });
-    connect(window, &Window::desktopsChanged, this, [this]() {
+    connect(m_window, &Window::desktopsChanged, this, [this]() {
         Q_EMIT windowDesktopsChanged(this);
     });
 }
@@ -1987,11 +1987,6 @@ QSizeF EffectWindowImpl::basicUnit() const
         return window->basicUnit();
     }
     return QSize(1, 1);
-}
-
-void EffectWindowImpl::setWindowItem(WindowItem *item)
-{
-    m_windowItem = item;
 }
 
 QRectF EffectWindowImpl::decorationInnerRect() const

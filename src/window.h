@@ -1727,7 +1727,6 @@ protected:
 
     int m_refCount = 1;
     QUuid m_internalId;
-    std::unique_ptr<EffectWindowImpl> m_effectWindow;
     std::unique_ptr<WindowItem> m_windowItem;
     std::unique_ptr<Shadow> m_shadow;
     QString resource_name;
@@ -2019,16 +2018,6 @@ inline bool Window::isOutline() const
 inline bool Window::isInternal() const
 {
     return false;
-}
-
-inline EffectWindowImpl *Window::effectWindow()
-{
-    return m_effectWindow.get();
-}
-
-inline const EffectWindowImpl *Window::effectWindow() const
-{
-    return m_effectWindow.get();
 }
 
 inline WindowItem *Window::windowItem() const

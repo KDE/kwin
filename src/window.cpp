@@ -18,12 +18,12 @@
 #include "core/output.h"
 #include "decorations/decoratedclient.h"
 #include "decorations/decorationpalette.h"
-#include "effects.h"
 #include "focuschain.h"
 #include "input.h"
 #include "outline.h"
 #include "placement.h"
 #include "scene/windowitem.h"
+#include "scene/workspacescene.h"
 #include "screenedge.h"
 #include "shadow.h"
 #if KWIN_BUILD_TABBOX
@@ -211,11 +211,8 @@ bool Window::setupCompositing()
         return false;
     }
 
-    m_effectWindow = std::make_unique<EffectWindowImpl>(this);
-
     m_windowItem = createItem(scene);
     m_windowItem->setParentItem(scene->containerItem());
-    m_effectWindow->setWindowItem(m_windowItem.get());
 
     connect(windowItem(), &WindowItem::positionChanged, this, &Window::visibleGeometryChanged);
     connect(windowItem(), &WindowItem::boundingRectChanged, this, &Window::visibleGeometryChanged);
@@ -225,7 +222,6 @@ bool Window::setupCompositing()
 
 void Window::finishCompositing()
 {
-    m_effectWindow.reset();
     m_windowItem.reset();
 }
 
@@ -280,6 +276,16 @@ void Window::updateShadow()
     }
 }
 
+EffectWindowImpl *Window::effectWindow()
+{
+    return m_windowItem ? m_windowItem->effectWindow() : nullptr;
+}
+
+const EffectWindowImpl *Window::effectWindow() const
+{
+    return m_windowItem ? m_windowItem->effectWindow() : nullptr;
+}
+
 SurfaceItem *Window::surfaceItem() const
 {
     if (m_windowItem) {
@@ -305,10 +311,13 @@ bool Window::isUnmanaged() const
 
 void Window::elevate(bool elevate)
 {
-    if (!effectWindow()) {
-        return;
+    if (m_windowItem) {
+        if (elevate) {
+            m_windowItem->elevate();
+        } else {
+            m_windowItem->deelevate();
+        }
     }
-    effectWindow()->elevate(elevate);
 }
 
 pid_t Window::pid() const

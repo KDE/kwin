@@ -292,7 +292,7 @@ void WorkspaceScene::preparePaintGenericScreen()
         data.mask = m_paintContext.mask;
         data.paint = infiniteRegion(); // no clipping, so doesn't really matter
 
-        effects->prePaintWindow(windowItem->window()->effectWindow(), data, m_expectedPresentTimestamp);
+        effects->prePaintWindow(windowItem->effectWindow(), data, m_expectedPresentTimestamp);
         m_paintContext.phase2Data.append(Phase2Data{
             .item = windowItem,
             .region = infiniteRegion(),
@@ -325,7 +325,7 @@ void WorkspaceScene::preparePaintSimpleScreen()
             }
         }
 
-        effects->prePaintWindow(window->effectWindow(), data, m_expectedPresentTimestamp);
+        effects->prePaintWindow(windowItem->effectWindow(), data, m_expectedPresentTimestamp);
         m_paintContext.phase2Data.append(Phase2Data{
             .item = windowItem,
             .region = data.paint,
@@ -352,7 +352,7 @@ void WorkspaceScene::preparePaintSimpleScreen()
 void WorkspaceScene::postPaint()
 {
     for (WindowItem *w : std::as_const(stacking_order)) {
-        effects->postPaintWindow(w->window()->effectWindow());
+        effects->postPaintWindow(w->effectWindow());
     }
 
     effects->postPaintScreen();
@@ -459,7 +459,7 @@ void WorkspaceScene::paintWindow(const RenderTarget &renderTarget, const RenderV
     }
 
     WindowPaintData data(viewport.projectionMatrix());
-    effects->paintWindow(renderTarget, viewport, item->window()->effectWindow(), mask, region, data);
+    effects->paintWindow(renderTarget, viewport, item->effectWindow(), mask, region, data);
 }
 
 // the function that'll be eventually called by paintWindow() above
