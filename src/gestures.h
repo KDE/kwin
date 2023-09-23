@@ -89,6 +89,7 @@ public:
 
     qreal deltaToProgress(const QPointF &delta) const;
     bool minimumDeltaReached(const QPointF &delta) const;
+    bool correctDirection(const QPointF &delta) const;
 
 Q_SIGNALS:
     /**

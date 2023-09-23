@@ -122,6 +122,7 @@ void EffectTogglableState::toggle()
 void EffectTogglableState::setProgress(qreal progress)
 {
     if (m_status == Status::Stopped) {
+        qDebug() << "BUT AM STOPPED";
         return;
     }
     if (!effects->hasActiveFullScreenEffect() || effects->activeFullScreenEffect() == parent()) {
@@ -190,6 +191,7 @@ static SwipeDirection opposite(SwipeDirection direction)
 std::function<void(qreal progress)> EffectTogglableState::progressCallback()
 {
     return [this](qreal progress) {
+        qDebug() << "I GOT PROGRESS" << progress;
         setProgress(progress);
     };
 }

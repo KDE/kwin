@@ -47,7 +47,7 @@ qreal SwipeGesture::deltaToProgress(const QPointF &delta) const
         return 1.0;
     }
 
-    switch (m_direction) {
+    switch (direction()) {
     case SwipeDirection::Up:
     case SwipeDirection::Down:
         return std::min(std::abs(delta.y()) / std::abs(m_minimumDelta.y()), 1.0);
@@ -62,6 +62,26 @@ qreal SwipeGesture::deltaToProgress(const QPointF &delta) const
 bool SwipeGesture::minimumDeltaReached(const QPointF &delta) const
 {
     return deltaToProgress(delta) >= 1.0;
+}
+
+bool SwipeGesture::correctDirection(const QPointF &delta) const
+{
+    switch (direction()) {
+    case SwipeDirection::Up:
+        return delta.y() < 0;
+        break;
+    case SwipeDirection::Down:
+        return delta.y() > 0;
+        break;
+    case SwipeDirection::Left:
+        return delta.x() < 0;
+        break;
+    case SwipeDirection::Right:
+        return delta.x() > 0;
+        break;
+    default:
+        Q_UNREACHABLE();
+    }
 }
 
 PinchGesture::PinchGesture(QObject *parent)
@@ -133,9 +153,9 @@ void GestureRecognizer::unregisterPinchGesture(KWin::PinchGesture *gesture)
 int GestureRecognizer::startSwipeGesture(uint fingerCount, const QPointF &startPos, StartPositionBehavior startPosBehavior)
 {
     m_currentFingerCount = fingerCount;
-    if (!m_activeSwipeGestures.isEmpty() || !m_activePinchGestures.isEmpty()) {
+    /*if (!m_activeSwipeGestures.isEmpty() || !m_activePinchGestures.isEmpty()) {
         return 0;
-    }
+    }*/
     int count = 0;
     for (SwipeGesture *gesture : std::as_const(m_swipeGestures)) {
         if (gesture->minimumFingerCountIsRelevant()) {
@@ -170,23 +190,12 @@ int GestureRecognizer::startSwipeGesture(uint fingerCount, const QPointF &startP
                 }
             }
         }
+        if (m_activeSwipeGestures.contains(gesture)) {
+            continue;
+        }
 
-        // Only add gestures who's direction aligns with current swipe axis
-        switch (gesture->direction()) {
-        case SwipeDirection::Up:
-        case SwipeDirection::Down:
-            if (m_currentSwipeAxis == Axis::Horizontal) {
-                continue;
-            }
-            break;
-        case SwipeDirection::Left:
-        case SwipeDirection::Right:
-            if (m_currentSwipeAxis == Axis::Vertical) {
-                continue;
-            }
-            break;
-        case SwipeDirection::Invalid:
-            Q_UNREACHABLE();
+        if (!gesture->correctDirection(m_currentDelta)) {
+            continue;
         }
 
         m_activeSwipeGestures << gesture;
@@ -200,56 +209,22 @@ void GestureRecognizer::updateSwipeGesture(const QPointF &delta)
 {
     m_currentDelta += delta;
 
-    SwipeDirection direction; // Overall direction
-    Axis swipeAxis;
-
-    // Pick an axis for gestures so horizontal ones don't change to vertical ones without lifting fingers
-    if (m_currentSwipeAxis == Axis::None) {
-        if (std::abs(m_currentDelta.x()) >= std::abs(m_currentDelta.y())) {
-            swipeAxis = Axis::Horizontal;
-            direction = m_currentDelta.x() < 0 ? SwipeDirection::Left : SwipeDirection::Right;
-        } else {
-            swipeAxis = Axis::Vertical;
-            direction = m_currentDelta.y() < 0 ? SwipeDirection::Up : SwipeDirection::Down;
-        }
-        if (std::abs(m_currentDelta.x()) >= 5 || std::abs(m_currentDelta.y()) >= 5) {
-            // only lock in a direction if the delta is big enough
-            // to prevent accidentally choosing the wrong direction
-            m_currentSwipeAxis = swipeAxis;
-        }
-    } else {
-        swipeAxis = m_currentSwipeAxis;
-    }
-
-    // Find the current swipe direction
-    switch (swipeAxis) {
-    case Axis::Vertical:
-        direction = m_currentDelta.y() < 0 ? SwipeDirection::Up : SwipeDirection::Down;
-        break;
-    case Axis::Horizontal:
-        direction = m_currentDelta.x() < 0 ? SwipeDirection::Left : SwipeDirection::Right;
-        break;
-    default:
-        Q_UNREACHABLE();
-    }
+    startSwipeGesture(m_currentFingerCount);
 
     // Eliminate wrong gestures (takes two iterations)
     for (int i = 0; i < 2; i++) {
 
-        if (m_activeSwipeGestures.isEmpty()) {
-            startSwipeGesture(m_currentFingerCount);
-        }
-
         for (auto it = m_activeSwipeGestures.begin(); it != m_activeSwipeGestures.end();) {
             auto g = static_cast<SwipeGesture *>(*it);
 
-            if (g->direction() != direction) {
-                // If a gesture was started from a touchscreen border never cancel it
-                if (!g->minimumXIsRelevant() || !g->maximumXIsRelevant() || !g->minimumYIsRelevant() || !g->maximumYIsRelevant()) {
-                    Q_EMIT g->cancelled();
-                    it = m_activeSwipeGestures.erase(it);
-                    continue;
-                }
+            if (g->minimumXIsRelevant() && g->maximumXIsRelevant() && g->minimumYIsRelevant() && g->maximumYIsRelevant()) {
+                continue;
+            }
+
+            if (!g->correctDirection(m_currentDelta)) {
+                Q_EMIT g->cancelled();
+                it = m_activeSwipeGestures.erase(it);
+                continue;
             }
 
             it++;

@@ -868,7 +868,7 @@ void VirtualDesktopManager::gestureReleasedY()
     } else {
         Q_EMIT currentChangingCancelled();
     }
-    m_currentDesktopOffset = QPointF(0, 0);
+    m_currentDesktopOffset.setY(0);
 }
 
 void VirtualDesktopManager::gestureReleasedX()
@@ -888,7 +888,7 @@ void VirtualDesktopManager::gestureReleasedX()
     } else {
         Q_EMIT currentChangingCancelled();
     }
-    m_currentDesktopOffset = QPointF(0, 0);
+    m_currentDesktopOffset.setX(0);
 }
 
 void VirtualDesktopManager::initSwitchToShortcuts()
