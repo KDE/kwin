@@ -32,7 +32,6 @@
 #include <KWayland/Client/pointerconstraints.h>
 #include <KWayland/Client/registry.h>
 #include <KWayland/Client/seat.h>
-#include <KWayland/Client/server_decoration.h>
 #include <KWayland/Client/shadow.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/subcompositor.h>
@@ -271,7 +270,6 @@ static struct
     KWayland::Client::EventQueue *queue = nullptr;
     KWayland::Client::Compositor *compositor = nullptr;
     KWayland::Client::SubCompositor *subCompositor = nullptr;
-    KWayland::Client::ServerSideDecorationManager *decoration = nullptr;
     KWayland::Client::ShadowManager *shadowManager = nullptr;
     XdgShell *xdgShell = nullptr;
     KWayland::Client::ShmPool *shm = nullptr;
@@ -535,13 +533,6 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
             return false;
         }
     }
-    if (flags.testFlag(AdditionalWaylandInterface::Decoration)) {
-        s_waylandConnection.decoration = registry->createServerSideDecorationManager(registry->interface(KWayland::Client::Registry::Interface::ServerSideDecorationManager).name,
-                                                                                     registry->interface(KWayland::Client::Registry::Interface::ServerSideDecorationManager).version);
-        if (!s_waylandConnection.decoration->isValid()) {
-            return false;
-        }
-    }
     if (flags.testFlag(AdditionalWaylandInterface::PlasmaShell)) {
         s_waylandConnection.plasmaShell = registry->createPlasmaShell(registry->interface(KWayland::Client::Registry::Interface::PlasmaShell).name,
                                                                       registry->interface(KWayland::Client::Registry::Interface::PlasmaShell).version);
@@ -589,10 +580,6 @@ void destroyWaylandConnection()
     s_waylandConnection.windowManagement = nullptr;
     delete s_waylandConnection.plasmaShell;
     s_waylandConnection.plasmaShell = nullptr;
-    delete s_waylandConnection.decoration;
-    s_waylandConnection.decoration = nullptr;
-    delete s_waylandConnection.decoration;
-    s_waylandConnection.decoration = nullptr;
     delete s_waylandConnection.seat;
     s_waylandConnection.seat = nullptr;
     delete s_waylandConnection.pointerConstraints;
@@ -673,11 +660,6 @@ KWayland::Client::ShmPool *waylandShmPool()
 KWayland::Client::Seat *waylandSeat()
 {
     return s_waylandConnection.seat;
-}
-
-KWayland::Client::ServerSideDecorationManager *waylandServerSideDecoration()
-{
-    return s_waylandConnection.decoration;
 }
 
 KWayland::Client::PlasmaShell *waylandPlasmaShell()

@@ -19,7 +19,6 @@
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/output.h>
-#include <KWayland/Client/server_decoration.h>
 #include <KWayland/Client/surface.h>
 
 #include <QDBusConnection>

@@ -47,7 +47,6 @@ class PlasmaWindowManagement;
 class Pointer;
 class PointerConstraints;
 class Seat;
-class ServerSideDecorationManager;
 class ShadowManager;
 class ShmPool;
 class SubCompositor;
@@ -530,7 +529,6 @@ public:
 
 enum class AdditionalWaylandInterface {
     Seat = 1 << 0,
-    Decoration = 1 << 1,
     PlasmaShell = 1 << 2,
     WindowManagement = 1 << 3,
     PointerConstraints = 1 << 4,
@@ -633,7 +631,6 @@ KWayland::Client::SubCompositor *waylandSubCompositor();
 KWayland::Client::ShadowManager *waylandShadowManager();
 KWayland::Client::ShmPool *waylandShmPool();
 KWayland::Client::Seat *waylandSeat();
-KWayland::Client::ServerSideDecorationManager *waylandServerSideDecoration();
 KWayland::Client::PlasmaShell *waylandPlasmaShell();
 KWayland::Client::PlasmaWindowManagement *waylandWindowManagement();
 KWayland::Client::PointerConstraints *waylandPointerConstraints();

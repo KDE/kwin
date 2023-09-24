@@ -9,7 +9,6 @@
 #include "KWayland/Client/connection_thread.h"
 #include "KWayland/Client/event_queue.h"
 #include "KWayland/Client/registry.h"
-#include "KWayland/Client/server_decoration.h"
 #include "KWayland/Client/shell.h"
 #include "KWayland/Client/shm_pool.h"
 #include "KWayland/Client/xdgshell.h"
@@ -49,7 +48,6 @@ private:
     KWayland::Client::XdgImporter *m_importer = nullptr;
     KWayland::Client::XdgExported *m_exported = nullptr;
     KWayland::Client::XdgImported *m_imported = nullptr;
-    KWayland::Client::ServerSideDecorationManager *m_decoration = nullptr;
 };
 
 XdgForeignTest::XdgForeignTest(QObject *parent)
@@ -105,10 +103,6 @@ void XdgForeignTest::setupRegistry(Registry *registry)
         m_importer = registry->createXdgImporter(name, version, this);
         m_importer->setEventQueue(m_eventQueue);
     });
-    connect(registry, &Registry::serverSideDecorationManagerAnnounced, this, [this, registry](quint32 name, quint32 version) {
-        m_decoration = registry->createServerSideDecorationManager(name, version, this);
-        m_decoration->setEventQueue(m_eventQueue);
-    });
     connect(registry, &Registry::interfacesAnnounced, this, [this] {
         Q_ASSERT(m_compositor);
         Q_ASSERT(m_shell);
@@ -117,22 +111,17 @@ void XdgForeignTest::setupRegistry(Registry *registry)
         Q_ASSERT(m_importer);
         m_surface = m_compositor->createSurface(this);
         Q_ASSERT(m_surface);
-        auto parentDeco = m_decoration->create(m_surface, this);
-        Q_ASSERT(parentDeco);
         m_shellSurface = m_shell->createSurface(m_surface, this);
         Q_ASSERT(m_shellSurface);
         connect(m_shellSurface, &XdgShellSurface::sizeChanged, this, &XdgForeignTest::render);
 
         m_childSurface = m_compositor->createSurface(this);
         Q_ASSERT(m_childSurface);
-        auto childDeco = m_decoration->create(m_childSurface, this);
-        Q_ASSERT(childDeco);
         m_childShellSurface = m_shell->createSurface(m_childSurface, this);
         Q_ASSERT(m_childShellSurface);
         connect(m_childShellSurface, &XdgShellSurface::sizeChanged, this, &XdgForeignTest::render);
 
         m_exported = m_exporter->exportTopLevel(m_surface, this);
-        Q_ASSERT(m_decoration);
         connect(m_exported, &XdgExported::done, this, [this]() {
             m_imported = m_importer->importTopLevel(m_exported->handle(), this);
             m_imported->setParentOf(m_childSurface);
