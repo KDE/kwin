@@ -12,13 +12,28 @@
 #include "wayland/display.h"
 #include "wayland/server_decoration_palette.h"
 
+#include "qwayland-server-decoration-palette.h"
+
 #include "KWayland/Client/compositor.h"
 #include "KWayland/Client/connection_thread.h"
 #include "KWayland/Client/event_queue.h"
-#include "KWayland/Client/region.h"
 #include "KWayland/Client/registry.h"
-#include "KWayland/Client/server_decoration_palette.h"
 #include "KWayland/Client/surface.h"
+
+class ServerSideDecorationPaletteManager : public QtWayland::org_kde_kwin_server_decoration_palette_manager
+{
+};
+
+class ServerSideDecorationPalette : public QObject, public QtWayland::org_kde_kwin_server_decoration_palette
+{
+    Q_OBJECT
+
+public:
+    ~ServerSideDecorationPalette()
+    {
+        release();
+    }
+};
 
 class TestServerSideDecorationPalette : public QObject
 {
@@ -37,7 +52,7 @@ private:
     KWin::ServerSideDecorationPaletteManagerInterface *m_paletteManagerInterface;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::Compositor *m_compositor;
-    KWayland::Client::ServerSideDecorationPaletteManager *m_paletteManager;
+    ServerSideDecorationPaletteManager *m_paletteManager;
     KWayland::Client::EventQueue *m_queue;
     QThread *m_thread;
 };
@@ -81,10 +96,20 @@ void TestServerSideDecorationPalette::init()
     m_queue->setup(m_connection);
     QVERIFY(m_queue->isValid());
 
-    KWayland::Client::Registry registry;
-    QSignalSpy compositorSpy(&registry, &KWayland::Client::Registry::compositorAnnounced);
+    m_compositorInterface = new CompositorInterface(m_display, m_display);
+    m_paletteManagerInterface = new ServerSideDecorationPaletteManagerInterface(m_display, m_display);
 
-    QSignalSpy registrySpy(&registry, &KWayland::Client::Registry::serverSideDecorationPaletteManagerAnnounced);
+    KWayland::Client::Registry registry;
+
+    connect(&registry, &KWayland::Client::Registry::interfaceAnnounced, this, [this, &registry](const QByteArray &interfaceName, quint32 name, quint32 version) {
+        if (interfaceName == org_kde_kwin_server_decoration_palette_manager_interface.name) {
+            m_paletteManager = new ServerSideDecorationPaletteManager();
+            m_paletteManager->init(registry.registry(), name, version);
+        }
+    });
+
+    QSignalSpy interfacesAnnouncedSpy(&registry, &KWayland::Client::Registry::interfacesAnnounced);
+    QSignalSpy compositorSpy(&registry, &KWayland::Client::Registry::compositorAnnounced);
 
     QVERIFY(!registry.eventQueue());
     registry.setEventQueue(m_queue);
@@ -92,16 +117,12 @@ void TestServerSideDecorationPalette::init()
     registry.create(m_connection->display());
     QVERIFY(registry.isValid());
     registry.setup();
+    QVERIFY(interfacesAnnouncedSpy.wait());
 
-    m_compositorInterface = new CompositorInterface(m_display, m_display);
-    QVERIFY(compositorSpy.wait());
     m_compositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
 
-    m_paletteManagerInterface = new ServerSideDecorationPaletteManagerInterface(m_display, m_display);
-
-    QVERIFY(registrySpy.wait());
-    m_paletteManager =
-        registry.createServerSideDecorationPaletteManager(registrySpy.first().first().value<quint32>(), registrySpy.first().last().value<quint32>(), this);
+    QVERIFY(m_compositor);
+    QVERIFY(m_paletteManager);
 }
 
 void TestServerSideDecorationPalette::cleanup()
@@ -142,7 +163,8 @@ void TestServerSideDecorationPalette::testCreateAndSet()
 
     QVERIFY(!m_paletteManagerInterface->paletteForSurface(serverSurface));
 
-    auto palette = m_paletteManager->create(surface.get(), surface.get());
+    auto palette = std::make_unique<ServerSideDecorationPalette>();
+    palette->init(m_paletteManager->create(*surface.get()));
     QVERIFY(paletteCreatedSpy.wait());
     auto paletteInterface = paletteCreatedSpy.first().first().value<KWin::ServerSideDecorationPaletteInterface *>();
     QCOMPARE(m_paletteManagerInterface->paletteForSurface(serverSurface), paletteInterface);
@@ -150,15 +172,13 @@ void TestServerSideDecorationPalette::testCreateAndSet()
     QCOMPARE(paletteInterface->palette(), QString());
 
     QSignalSpy changedSpy(paletteInterface, &KWin::ServerSideDecorationPaletteInterface::paletteChanged);
-
-    palette->setPalette("foobar");
-
+    palette->set_palette(QStringLiteral("foobar"));
     QVERIFY(changedSpy.wait());
     QCOMPARE(paletteInterface->palette(), QString("foobar"));
 
     // and destroy
     QSignalSpy destroyedSpy(paletteInterface, &QObject::destroyed);
-    delete palette;
+    palette.reset();
     QVERIFY(destroyedSpy.wait());
     QVERIFY(!m_paletteManagerInterface->paletteForSurface(serverSurface));
 }

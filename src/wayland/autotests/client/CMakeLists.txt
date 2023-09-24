@@ -261,7 +261,9 @@ set( testServerSideDecorationPalette_SRCS
         test_server_side_decoration_palette.cpp
     )
 add_executable(testServerSideDecorationPalette ${testServerSideDecorationPalette_SRCS})
-target_link_libraries( testServerSideDecorationPalette Qt::Test Qt::Gui KF6::WaylandClient kwin)
+qt6_generate_wayland_protocol_client_sources(testServerSideDecorationPalette FILES
+    ${PLASMA_WAYLAND_PROTOCOLS_DIR}/server-decoration-palette.xml)
+target_link_libraries( testServerSideDecorationPalette Qt::Test Qt::Gui KF6::WaylandClient Wayland::Client kwin)
 add_test(NAME kwayland-testServerSideDecorationPalette COMMAND testServerSideDecorationPalette)
 ecm_mark_as_test(testServerSideDecorationPalette)
 
