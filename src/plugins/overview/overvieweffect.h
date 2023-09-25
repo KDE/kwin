@@ -18,9 +18,15 @@ class OverviewEffect : public QuickSceneEffect
     Q_PROPERTY(int animationDuration READ animationDuration NOTIFY animationDurationChanged)
     Q_PROPERTY(int layout READ layout NOTIFY layoutChanged)
     Q_PROPERTY(bool ignoreMinimized READ ignoreMinimized NOTIFY ignoreMinimizedChanged)
-    Q_PROPERTY(qreal partialActivationFactor READ partialActivationFactor NOTIFY partialActivationFactorChanged)
-    // More efficient from a property binding pov rather than binding to partialActivationFactor !== 0
-    Q_PROPERTY(bool gestureInProgress READ gestureInProgress NOTIFY gestureInProgressChanged)
+    Q_PROPERTY(bool organizedGrid READ organizedGrid NOTIFY organizedGridChanged)
+    Q_PROPERTY(qreal overviewPartialActivationFactor READ overviewPartialActivationFactor NOTIFY overviewPartialActivationFactorChanged)
+    // More efficient from a property binding pov rather than checking if partialActivationFactor is strictly between 0 and 1
+    Q_PROPERTY(bool overviewGestureInProgress READ overviewGestureInProgress NOTIFY overviewGestureInProgressChanged)
+    Q_PROPERTY(qreal transitionPartialActivationFactor READ transitionPartialActivationFactor NOTIFY transitionPartialActivationFactorChanged)
+    Q_PROPERTY(bool transitionGestureInProgress READ transitionGestureInProgress NOTIFY transitionGestureInProgressChanged)
+    Q_PROPERTY(qreal gridPartialActivationFactor READ gridPartialActivationFactor NOTIFY gridPartialActivationFactorChanged)
+    Q_PROPERTY(bool gridGestureInProgress READ gridGestureInProgress NOTIFY gridGestureInProgressChanged)
+    Q_PROPERTY(QPointF desktopOffset READ desktopOffset NOTIFY desktopOffsetChanged)
     Q_PROPERTY(QString searchText MEMBER m_searchText NOTIFY searchTextChanged)
 
 public:
@@ -31,31 +37,38 @@ public:
     void setLayout(int layout);
 
     bool ignoreMinimized() const;
+    bool organizedGrid() const;
 
     int animationDuration() const;
     void setAnimationDuration(int duration);
 
-    qreal partialActivationFactor() const
-    {
-        return m_state->partialActivationFactor();
-    }
-
-    bool gestureInProgress() const
-    {
-        return m_state->inProgress();
-    }
+    qreal overviewPartialActivationFactor() const;
+    bool overviewGestureInProgress() const;
+    qreal transitionPartialActivationFactor() const;
+    bool transitionGestureInProgress() const;
+    qreal gridPartialActivationFactor() const;
+    bool gridGestureInProgress() const;
+    QPointF desktopOffset() const;
 
     int requestedEffectChainPosition() const override;
     bool borderActivated(ElectricBorder border) override;
     void reconfigure(ReconfigureFlags flags) override;
     void grabbedKeyboardEvent(QKeyEvent *keyEvent) override;
 
+    Q_INVOKABLE void swapDesktops(int from, int to);
+
 Q_SIGNALS:
     void animationDurationChanged();
     void layoutChanged();
-    void partialActivationFactorChanged();
-    void gestureInProgressChanged();
+    void overviewPartialActivationFactorChanged();
+    void overviewGestureInProgressChanged();
+    void transitionPartialActivationFactorChanged();
+    void transitionGestureInProgressChanged();
+    void gridPartialActivationFactorChanged();
+    void gridGestureInProgressChanged();
     void ignoreMinimizedChanged();
+    void organizedGridChanged();
+    void desktopOffsetChanged();
     void searchTextChanged();
 
 public Q_SLOTS:
@@ -64,14 +77,22 @@ public Q_SLOTS:
 
 private:
     void realDeactivate();
+    void cycle();
+    void reverseCycle();
 
-    EffectTogglableState *const m_state;
+    EffectTogglableState *const m_overviewState;
+    EffectTogglableState *const m_transitionState;
+    EffectTogglableState *const m_gridState;
     EffectTogglableTouchBorder *const m_border;
 
     QTimer *m_shutdownTimer;
-    QList<QKeySequence> m_toggleShortcut;
+    QList<QKeySequence> m_cycleShortcut;
+    QList<QKeySequence> m_reverseCycleShortcut;
+    QList<QKeySequence> m_overviewShortcut;
+    QList<QKeySequence> m_gridShortcut;
     QList<ElectricBorder> m_borderActivate;
     QString m_searchText;
+    QPointF m_desktopOffset;
     int m_animationDuration = 400;
     int m_layout = 1;
 };

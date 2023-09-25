@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: 2023 Niccolò Venerandi <niccolo.venerandi@kde.org>
+# SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
+
+Version=5
+
+# Changes the default Activities shortcut from Meta+Tab to Meta+A,
+# so that the Overview can take its place
+Id=change-activities-overview-shortcuts
+File=kglobalshortcutsrc
+Group=plasmashell,kwin
+Script=kwin-6.0-overview-activities-shortcuts.py,python3

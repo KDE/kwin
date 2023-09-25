@@ -1,9 +1,0 @@
-# SPDX-FileCopyrightText: 2021 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
-#
-# SPDX-License-Identifier: CC0-1.0
-
-File=desktopgridconfig.kcfg
-ClassName=DesktopGridConfig
-NameSpace=KWin
-Singleton=true
-Mutators=true

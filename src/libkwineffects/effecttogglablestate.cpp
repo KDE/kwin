@@ -43,9 +43,9 @@ EffectTogglableState::EffectTogglableState(Effect *effect)
 
 void EffectTogglableState::activate()
 {
-    setStatus(Status::Active);
     setInProgress(false);
-    setPartialActivationFactor(0.0);
+    setPartialActivationFactor(1.0);
+    setStatus(Status::Active);
 }
 
 void EffectTogglableState::setPartialActivationFactor(qreal factor)
@@ -60,6 +60,13 @@ void EffectTogglableState::deactivate()
 {
     setInProgress(false);
     setPartialActivationFactor(0.0);
+    setStatus(Status::Inactive);
+}
+
+void EffectTogglableState::stop()
+{
+    setInProgress(false);
+    setStatus(Status::Stopped);
 }
 
 bool EffectTogglableState::inProgress() const
@@ -103,7 +110,7 @@ void EffectTogglableState::partialDeactivate(qreal factor)
 
 void EffectTogglableState::toggle()
 {
-    if (m_status == Status::Inactive || m_partialActivationFactor > 0.5) {
+    if (m_status == Status::Inactive) {
         activate();
         Q_EMIT activated();
     } else {
@@ -114,6 +121,9 @@ void EffectTogglableState::toggle()
 
 void EffectTogglableState::setProgress(qreal progress)
 {
+    if (m_status == Status::Stopped) {
+        return;
+    }
     if (!effects->hasActiveFullScreenEffect() || effects->activeFullScreenEffect() == parent()) {
         switch (m_status) {
         case Status::Inactive:
@@ -128,6 +138,9 @@ void EffectTogglableState::setProgress(qreal progress)
 
 void EffectTogglableState::setRegress(qreal regress)
 {
+    if (m_status == Status::Stopped) {
+        return;
+    }
     if (!effects->hasActiveFullScreenEffect() || effects->activeFullScreenEffect() == parent()) {
         switch (m_status) {
         case Status::Active:

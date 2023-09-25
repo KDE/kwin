@@ -51,6 +51,7 @@ option(KWIN_BUILD_TABBOX "Enable building of KWin Tabbox functionality" ON)
 find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     Concurrent
     Core
+    Core5Compat
     DBus
     Quick
     UiTools
@@ -455,6 +456,7 @@ if (KF6DocTools_FOUND)
 endif()
 
 add_subdirectory(data)
+add_subdirectory(kconf_update)
 add_subdirectory(src)
 
 if (BUILD_TESTING)

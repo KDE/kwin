@@ -16,6 +16,9 @@
         <entry name="IgnoreMinimized" type="bool">
             <default>false</default>
         </entry>
+        <entry name="OrganizedGrid" type="bool">
+            <default>true</default>
+        </entry>
 
         <entry name="BorderActivate" type="IntList" />
         <entry name="TouchBorderActivate" type="IntList" />

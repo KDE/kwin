@@ -29,7 +29,8 @@ public:
         Inactive,
         Activating,
         Deactivating,
-        Active
+        Active,
+        Stopped
     };
     Q_ENUM(Status)
 
@@ -61,6 +62,7 @@ public:
     void activate();
     void deactivate();
     void toggle();
+    void stop();
     void setStatus(Status status);
     Status status() const
     {

@@ -201,6 +201,7 @@ Item {
             }
             delegate: WindowHeapDelegate {
                 windowHeap: heap
+                partialActivationFactor: container.organized ? 1 : 0
                 opacity: 1 - downGestureProgress
                 onDownGestureTriggered: window.closeWindow()
 

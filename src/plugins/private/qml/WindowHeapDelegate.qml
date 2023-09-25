@@ -7,10 +7,12 @@
 
 import QtQuick
 import QtQuick.Window
+import Qt5Compat.GraphicalEffects
 import org.kde.kirigami 2.20 as Kirigami
 import org.kde.kwin as KWinComponents
 import org.kde.kwin.private.effects
 import org.kde.plasma.components 3.0 as PC3
+import org.kde.plasma.workspace.components 2.0 as WorkspaceComponents
 import org.kde.ksvg 1.0 as KSvg
 
 Item {
@@ -21,6 +23,8 @@ Item {
     required property Item windowHeap
 
     readonly property bool selected: windowHeap.selectedIndex === index
+    property real partialActivationFactor: effect.partialActivationFactor
+    property bool gestureInProgress: effect.gestureInProgress
 
     // no desktops is a special value which means "All Desktops"
     readonly property bool presentOnCurrentDesktop: !window.desktops.length || window.desktops.indexOf(KWinComponents.Workspace.currentDesktop) !== -1
@@ -59,10 +63,10 @@ Item {
     property string substate: "normal"
 
     state: {
-        if (effect.gestureInProgress) {
+        if (thumb.gestureInProgress) {
             return "partial";
         }
-        if (windowHeap.effectiveOrganized) {
+        if (thumb.partialActivationFactor > 0.5 && cell.isReady) {
             return activeHidden ? "active-hidden" : `active-${substate}`;
         }
         return initialHidden ? "initial-hidden" : "initial";
@@ -163,10 +167,11 @@ Item {
         anchors.bottomMargin: -Math.round(height / 4)
         visible: !thumb.activeHidden && !activeDragHandler.active
 
-        PC3.Label {
+
+        WorkspaceComponents.ShadowedLabel {
             id: caption
             visible: thumb.windowTitleVisible
-            width: Math.min(implicitWidth, thumbSource.width)
+            width: Math.min(implicitWidth, thumb.width)
             anchors.top: parent.bottom
             anchors.horizontalCenter: parent.horizontalCenter
             elide: Text.ElideRight
@@ -187,6 +192,7 @@ Item {
         naturalHeight: thumb.window.height
         persistentKey: thumb.window.internalId
         bottomMargin: icon.height / 4 + (thumb.windowTitleVisible ? caption.height : 0)
+        property bool isReady: width !== 0 && height !== 0
     }
 
     states: [
@@ -219,13 +225,13 @@ Item {
             name: "partial"
             PropertyChanges {
                 target: thumb
-                x: (thumb.window.x - targetScreen.geometry.x - (thumb.windowHeap.absolutePositioning ?  windowHeap.layout.Kirigami.ScenePosition.x : 0)) * (1 - effect.partialActivationFactor) + cell.x * effect.partialActivationFactor
-                y: (thumb.window.y - targetScreen.geometry.y - (thumb.windowHeap.absolutePositioning ?  windowHeap.layout.Kirigami.ScenePosition.y : 0)) * (1 - effect.partialActivationFactor) + cell.y * effect.partialActivationFactor
-                width: thumb.window.width * (1 - effect.partialActivationFactor) + cell.width * effect.partialActivationFactor
-                height: thumb.window.height * (1 - effect.partialActivationFactor) + cell.height * effect.partialActivationFactor
+                x: (thumb.window.x - targetScreen.geometry.x - (thumb.windowHeap.absolutePositioning ?  windowHeap.layout.Kirigami.ScenePosition.x : 0)) * (1 - thumb.partialActivationFactor) + cell.x * thumb.partialActivationFactor
+                y: (thumb.window.y - targetScreen.geometry.y - (thumb.windowHeap.absolutePositioning ?  windowHeap.layout.Kirigami.ScenePosition.y : 0)) * (1 - thumb.partialActivationFactor) + cell.y * thumb.partialActivationFactor
+                width: thumb.window.width * (1 - thumb.partialActivationFactor) + cell.width * thumb.partialActivationFactor
+                height: thumb.window.height * (1 - thumb.partialActivationFactor) + cell.height * thumb.partialActivationFactor
                 opacity: thumb.initialHidden
-                    ? (thumb.activeHidden ? 0 : effect.partialActivationFactor)
-                    : (thumb.activeHidden ? 1 - effect.partialActivationFactor : 1)
+                    ? (thumb.activeHidden ? 0 : thumb.partialActivationFactor)
+                    : (thumb.activeHidden ? 1 - thumb.partialActivationFactor : 1)
             }
             PropertyChanges {
                 target: thumbSource
@@ -236,11 +242,11 @@ Item {
             }
             PropertyChanges {
                 target: icon
-                opacity: effect.partialActivationFactor
+                opacity: thumb.partialActivationFactor
             }
             PropertyChanges {
                 target: closeButton
-                opacity: effect.partialActivationFactor
+                opacity: thumb.partialActivationFactor
             }
         },
         State {
@@ -289,8 +295,8 @@ Item {
                 target: thumbSource
                 x: 0
                 y: 0
-                width: cell.width
-                height: cell.height
+                width: thumb.width
+                height: thumb.height
             }
         },
         State {
@@ -298,8 +304,8 @@ Item {
             extend: "active"
             PropertyChanges {
                 target: thumbSource
-                width: cell.width
-                height: cell.height
+                width: thumb.width
+                height: thumb.height
             }
         },
         State {
@@ -311,8 +317,8 @@ Item {
                         thumb.activeDragHandler.centroid.position.x
                 y: -thumb.activeDragHandler.centroid.pressPosition.y * thumb.targetScale +
                         thumb.activeDragHandler.centroid.position.y
-                width: cell.width * thumb.targetScale
-                height: cell.height * thumb.targetScale
+                width: thumb.width * thumb.targetScale
+                height: thumb.height * thumb.targetScale
             }
         },
         State {

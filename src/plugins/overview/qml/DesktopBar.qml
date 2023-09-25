@@ -6,28 +6,31 @@
 */
 
 import QtQuick
-import Qt5Compat.GraphicalEffects
 import QtQuick.Controls
 import QtQuick.Layouts
+import Qt5Compat.GraphicalEffects
 import org.kde.kirigami 2.20 as Kirigami
 import org.kde.kwin as KWinComponents
-import org.kde.kwin.private.effects
-import org.kde.plasma.components 3.0 as PC3
-import org.kde.kirigami 2.20 as Kirigami
+import org.kde.kwin.private.effects 1.0
+import org.kde.plasma.components as PC3
 
 Item {
     id: bar
 
-    readonly property real desktopHeight: Kirigami.Units.gridUnit * 4
+    readonly property real desktopHeight: Kirigami.Units.gridUnit * 5
     readonly property real desktopWidth: desktopHeight * targetScreen.geometry.width / targetScreen.geometry.height
     readonly property real columnHeight: desktopHeight + Kirigami.Units.gridUnit
+    readonly property real columnWidth: desktopWidth + Kirigami.Units.gridUnit
+    readonly property int desktopCount: desktopRepeater.count
 
+    property bool verticalDesktopBar
     property QtObject windowModel
     property alias desktopModel: desktopRepeater.model
     property QtObject selectedDesktop: null
-    property WindowHeap heap
+    property var heap
 
     implicitHeight: columnHeight + 2 * Kirigami.Units.smallSpacing
+    implicitWidth: columnWidth + 2 * Kirigami.Units.smallSpacing
 
     Flickable {
         anchors.fill: parent
@@ -39,8 +42,9 @@ Item {
         clip: true
         flickableDirection: Flickable.HorizontalFlick
 
-        Row {
-            spacing: Kirigami.Units.gridUnit
+        Grid {
+            spacing: Kirigami.Units.largeSpacing
+            columns: verticalDesktopBar ? 1 : desktopCount + 1
 
             Repeater {
                 id: desktopRepeater
@@ -71,7 +75,11 @@ Item {
                     Keys.onRightPressed: nextItemInFocusChain(!LayoutMirroring.enabled).forceActiveFocus(Qt.TabFocusReason);
 
                     function activate() {
-                        KWinComponents.Workspace.currentDesktop = delegate.desktop;
+                        if (KWinComponents.Workspace.currentDesktop === delegate.desktop) {
+                            effect.deactivate()
+                        } else {
+                            KWinComponents.Workspace.currentDesktop = delegate.desktop;
+                        }
                     }
 
                     function remove() {
@@ -92,40 +100,48 @@ Item {
                         width: bar.desktopWidth
                         height: bar.desktopHeight
 
+                        scale: thumbnailHover.hovered ? 1.03 : 1
+
+                        Behavior on scale {
+                            NumberAnimation {
+                                duration: Kirigami.Units.Kirigami.Units.shortDuration
+                            }
+                        }
+
+                        HoverHandler {
+                            id: thumbnailHover
+                        }
+
                         DesktopView {
                             id: thumbnail
 
                             width: targetScreen.geometry.width
                             height: targetScreen.geometry.height
-                            visible: false
                             windowModel: bar.windowModel
                             desktop: delegate.desktop
                             scale: bar.desktopHeight / targetScreen.geometry.height
                             transformOrigin: Item.TopLeft
 
-                            // Disable the item layer while being scaled.
-                            layer.enabled: true
-                            layer.textureSize: Qt.size(bar.desktopWidth, bar.desktopHeight)
-                        }
 
-                        OpacityMask {
-                            anchors.fill: parent
-                            cached: true
-                            source: thumbnail
-                            maskSource: Rectangle {
-                                width: bar.desktopWidth
-                                height: bar.desktopHeight
-                                radius: 3
+                            layer.textureSize: Qt.size(bar.desktopWidth, bar.desktopHeight)
+                            layer.enabled: true
+                            layer.effect: OpacityMask {
+                                maskSource: Rectangle {
+                                    anchors.centerIn: parent
+                                    width: thumbnail.width
+                                    height: thumbnail.height
+                                    // Using 5% of width since that's constant even under scaling:
+                                    radius: width / 20
+                                }
                             }
                         }
 
                         Rectangle {
-                            readonly property bool active: delegate.activeFocus || dropArea.containsDrag || mouseArea.containsPress || bar.selectedDesktop === delegate.desktop
+                            readonly property bool active: (delegate.activeFocus || dropArea.containsDrag || mouseArea.containsPress || bar.selectedDesktop === delegate.desktop)
                             anchors.fill: parent
-                            anchors.margins: -border.width
-                            radius: 3
+                            radius: width / 20
                             color: "transparent"
-                            border.width: 2
+                            border.width: active ? 2 : 1
                             border.color: active ? Kirigami.Theme.highlightColor : Kirigami.Theme.textColor
                             opacity: dropArea.containsDrag || !active ? 0.5 : 1.0
                         }
@@ -145,18 +161,11 @@ Item {
                                     break;
                                 }
                             }
-                            onDoubleClicked: {
-                                if (mouse.button == Qt.LeftButton) {
-                                    mouse.accepted = true;
-                                    delegate.activate();
-                                    effect.deactivate();
-                                }
-                            }
                         }
 
                         Loader {
                             LayoutMirroring.enabled: Qt.application.layoutDirection === Qt.RightToLeft
-                            active: !heap.dragActive && (hoverHandler.hovered || Kirigami.Settings.tabletMode || Kirigami.Settings.hasTransientTouchInput) && desktopRepeater.count > 1
+                            active: !bar.heap.dragActive && (hoverHandler.hovered || Kirigami.Settings.tabletMode || Kirigami.Settings.hasTransientTouchInput) && desktopCount > 1
                             anchors.right: parent.right
                             anchors.top: parent.top
                             sourceComponent: PC3.Button {
@@ -281,8 +290,7 @@ Item {
                         drag.accepted = desktopModel.rowCount() < 20
                     }
                     onDropped: {
-                        const desktop = desktopModel.create(desktopModel.rowCount());
-                        drag.source.desktops = [desktop];
+                        drag.source.desktops = [desktopModel.create(desktopModel.rowCount())];
                     }
                 }
             }
