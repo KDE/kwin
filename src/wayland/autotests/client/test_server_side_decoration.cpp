@@ -143,14 +143,16 @@ void TestServerSideDecoration::cleanup()
         delete m_serverSideDecorationManager;
         m_serverSideDecorationManager = nullptr;
     }
-    if (m_queue) {
-        delete m_queue;
-        m_queue = nullptr;
-    }
     if (m_registry) {
         delete m_registry;
         m_registry = nullptr;
     }
+
+    if (m_queue) {
+        delete m_queue;
+        m_queue = nullptr;
+    }
+
     if (m_thread) {
         m_thread->quit();
         m_thread->wait();
