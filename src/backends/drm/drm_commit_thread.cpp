@@ -226,7 +226,8 @@ bool DrmCommitThread::pageflipsPending()
 
 TimePoint DrmCommitThread::estimateNextVblank(TimePoint now) const
 {
-    const uint64_t pageflipsSince = (now - m_lastPageflip) / m_minVblankInterval;
+    // the pageflip timestamp may be in the future
+    const uint64_t pageflipsSince = now >= m_lastPageflip ? (now - m_lastPageflip) / m_minVblankInterval : 0;
     return m_lastPageflip + m_minVblankInterval * (pageflipsSince + 1);
 }
 }
