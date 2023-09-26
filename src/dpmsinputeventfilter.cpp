@@ -53,6 +53,8 @@ bool DpmsInputEventFilter::keyEvent(KeyEvent *event)
 {
     if (event->type() == QKeyEvent::KeyPress) {
         notify();
+    } else if (event->type() == QKeyEvent::KeyRelease) {
+        return false;
     }
     return true;
 }
