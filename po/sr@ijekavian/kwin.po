@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-23 01:46+0000\n"
+"POT-Creation-Date: 2023-09-26 01:47+0000\n"
 "PO-Revision-Date: 2017-12-03 22:53+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -1366,8 +1366,7 @@ msgstr ""
 "Изаберите прозор за принудно затварање левим кликом или Enter‑ом.\n"
 "Escape или десни клик да одустанете."
 
-#: main.cpp:180 plugins/desktopgrid/desktopgrid_config.cpp:49
-#: plugins/invert/invert_config.cpp:35
+#: main.cpp:180 plugins/invert/invert_config.cpp:35
 #: plugins/magnifier/magnifier_config.cpp:55
 #: plugins/mouseclick/mouseclick_config.cpp:48
 #: plugins/mousemark/mousemark_config.cpp:51
@@ -1654,192 +1653,6 @@ msgstr ""
 "Изаберите прозор за принудно затварање левим кликом или Enter‑ом.\n"
 "Escape или десни клик да одустанете."
 
-#: plugins/desktopgrid/desktopgrid_config.cpp:54
-#: plugins/desktopgrid/desktopgrideffect.cpp:43
-#, fuzzy, kde-format
-#| msgid "Show Desktop"
-msgid "Show Desktop Grid"
-msgstr "Прикажи површ"
-
-# >> @item:inlistbox +
-#: plugins/desktopgrid/desktopgrid_config.cpp:61
-#, kde-format
-msgctxt "Desktop name alignment:"
-msgid "Disabled"
-msgstr "искључено"
-
-# >> @item:inlistbox Desktop name alignment
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
-#: plugins/desktopgrid/desktopgrid_config.cpp:62
-#: plugins/glide/glide_config.ui:70 plugins/glide/glide_config.ui:168
-#, kde-format
-msgid "Top"
-msgstr "горе"
-
-# >> @item
-#: plugins/desktopgrid/desktopgrid_config.cpp:63
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
-msgid "Top-Right"
-msgstr "десно"
-
-# >> @item
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
-#: plugins/desktopgrid/desktopgrid_config.cpp:64
-#: plugins/glide/glide_config.ui:75 plugins/glide/glide_config.ui:173
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:43
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
-msgid "Right"
-msgstr "десно"
-
-# >> @item:inlistbox Desktop name alignment
-#: plugins/desktopgrid/desktopgrid_config.cpp:65
-#, kde-format
-msgid "Bottom-Right"
-msgstr "доље десно"
-
-# >> @item:inlistbox Desktop name alignment
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
-#: plugins/desktopgrid/desktopgrid_config.cpp:66
-#: plugins/glide/glide_config.ui:80 plugins/glide/glide_config.ui:178
-#, kde-format
-msgid "Bottom"
-msgstr "доље"
-
-# >> @item:inlistbox Desktop name alignment
-#: plugins/desktopgrid/desktopgrid_config.cpp:67
-#, kde-format
-msgid "Bottom-Left"
-msgstr "доље лијево"
-
-# >> @item
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
-#: plugins/desktopgrid/desktopgrid_config.cpp:68
-#: plugins/glide/glide_config.ui:85 plugins/glide/glide_config.ui:183
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:29
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Left"
-msgid "Left"
-msgstr "лево"
-
-# >> @item
-#: plugins/desktopgrid/desktopgrid_config.cpp:69
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Left"
-msgid "Top-Left"
-msgstr "лево"
-
-# >> @option:radio
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
-#: plugins/desktopgrid/desktopgrid_config.cpp:70
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:36
-#, kde-format
-msgid "Center"
-msgstr "средина"
-
-#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
-#: plugins/desktopgrid/desktopgrid_config.ui:17
-#: plugins/mousemark/mousemark_config.ui:17
-#: plugins/thumbnailaside/thumbnailaside_config.ui:17
-#, kde-format
-msgid "Appearance"
-msgstr "Изглед"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
-#: plugins/desktopgrid/desktopgrid_config.ui:30
-#, kde-format
-msgid "Pager"
-msgstr "листач"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
-#: plugins/desktopgrid/desktopgrid_config.ui:35
-#, kde-format
-msgid "Automatic"
-msgstr "аутоматски"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
-#: plugins/desktopgrid/desktopgrid_config.ui:40
-#, kde-format
-msgid "Custom"
-msgstr "посебно"
-
-#. i18n: ectx: property (text), widget (QLabel, layoutRowsLabel)
-#: plugins/desktopgrid/desktopgrid_config.ui:48
-#, kde-format
-msgid "N&umber of rows:"
-msgstr "Број &врста:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_6)
-#: plugins/desktopgrid/desktopgrid_config.ui:103
-#, kde-format
-msgid "Desktop &name alignment:"
-msgstr "Поравнање &имена површи:"
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ShowAddRemove)
-#: plugins/desktopgrid/desktopgrid_config.ui:116
-#, kde-format
-msgid "Show buttons to alter count of virtual desktops"
-msgstr "Дугмад за мењање броја виртуелних површи"
-
-#. i18n: ectx: property (text), widget (QLabel, label_7)
-#: plugins/desktopgrid/desktopgrid_config.ui:123
-#, fuzzy, kde-format
-#| msgid "&Layout mode:"
-msgid "&Grid layout mode:"
-msgstr "&Распоред:"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
-#: plugins/desktopgrid/desktopgrid_config.ui:137
-#: plugins/overview/kcm/overvieweffectkcm.ui:30
-#: plugins/windowview/kcm/windowvieweffectkcm.ui:30
-#, fuzzy, kde-format
-#| msgid "&Close"
-msgid "Closest"
-msgstr "&Затвори"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
-#: plugins/desktopgrid/desktopgrid_config.ui:142
-#: plugins/overview/kcm/overvieweffectkcm.ui:35
-#: plugins/windowview/kcm/windowvieweffectkcm.ui:35
-#, kde-format
-msgid "Natural"
-msgstr "природан"
-
-# >> @item:intext Ignore
-#. i18n: ectx: property (text), widget (QLabel, ignoreLabel)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
-#: plugins/desktopgrid/desktopgrid_config.ui:147
-#: plugins/videowall/package/contents/ui/config.ui:73
-#, kde-format
-msgid "None"
-msgstr "ништа"
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/desktopgrid/desktopgrid_config.ui:155
-#, fuzzy, kde-format
-#| msgid "Move Window"
-msgid "Windows layout:"
-msgstr "Помјери прозор"
-
-# rewrite-msgid: /caption/title/
-#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
-#: plugins/desktopgrid/desktopgrid_config.ui:171
-#, fuzzy, kde-format
-#| msgid "caption"
-msgid "Activation"
-msgstr "наслов"
-
 #. i18n: ectx: property (text), widget (QLabel, label_Strength)
 #: plugins/diminactive/diminactive_config.ui:17
 #, fuzzy, kde-format
@@ -1930,6 +1743,46 @@ msgstr "глобални положај"
 #| msgid "caption"
 msgid "Rotation edge:"
 msgstr "наслов"
+
+# >> @item:inlistbox Desktop name alignment
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#: plugins/glide/glide_config.ui:70 plugins/glide/glide_config.ui:168
+#, kde-format
+msgid "Top"
+msgstr "горе"
+
+# >> @item
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
+#: plugins/glide/glide_config.ui:75 plugins/glide/glide_config.ui:173
+#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:43
+#, fuzzy, kde-format
+#| msgctxt "A mouse button"
+#| msgid "Right"
+msgid "Right"
+msgstr "десно"
+
+# >> @item:inlistbox Desktop name alignment
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#: plugins/glide/glide_config.ui:80 plugins/glide/glide_config.ui:178
+#, kde-format
+msgid "Bottom"
+msgstr "доље"
+
+# >> @item
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
+#: plugins/glide/glide_config.ui:85 plugins/glide/glide_config.ui:183
+#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:29
+#, fuzzy, kde-format
+#| msgctxt "A mouse button"
+#| msgid "Left"
+msgid "Left"
+msgstr "лево"
 
 # rewrite-msgid: /caption/title/
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationAngle)
@@ -2035,6 +1888,13 @@ msgstr "Дијалог за подешавање"
 #, kde-format
 msgid "Title &Alignment"
 msgstr "&Поравнање наслова"
+
+# >> @option:radio
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
+#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:36
+#, kde-format
+msgid "Center"
+msgstr "средина"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:53
@@ -2444,6 +2304,13 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#: plugins/mousemark/mousemark_config.ui:17
+#: plugins/thumbnailaside/thumbnailaside_config.ui:17
+#, kde-format
+msgid "Appearance"
+msgstr "Изглед"
+
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/mousemark/mousemark_config.ui:23
 #, kde-format
@@ -2562,10 +2429,30 @@ msgid "Unknown"
 msgstr "непознат"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:41
-#: plugins/overview/overvieweffect.cpp:47
+#, kde-format
+msgctxt "@action Overview and Grid View are the name of KWin effects"
+msgid "Cycle through Overview and Grid View"
+msgstr ""
+
+#: plugins/overview/kcm/overvieweffectkcm.cpp:48
+#: plugins/overview/overvieweffect.cpp:133
+#, kde-format
+msgctxt "@action Grid View and Overview are the name of KWin effects"
+msgid "Cycle through Grid View and Overview"
+msgstr ""
+
+#: plugins/overview/kcm/overvieweffectkcm.cpp:55
 #, fuzzy, kde-format
 #| msgid "Toggle Invert Effect"
+msgctxt "@action Overview is the name of a KWin effect"
 msgid "Toggle Overview"
+msgstr "Ефекат извртања"
+
+#: plugins/overview/kcm/overvieweffectkcm.cpp:62
+#, fuzzy, kde-format
+#| msgid "Toggle Invert Effect"
+msgctxt "@action Grid View is the name of a KWin effect"
+msgid "Toggle Grid View"
 msgstr "Ефекат извртања"
 
 #. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
@@ -2575,6 +2462,21 @@ msgstr "Ефекат извртања"
 msgid "Layout mode:"
 msgstr "Распоред:"
 
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
+#: plugins/overview/kcm/overvieweffectkcm.ui:30
+#: plugins/windowview/kcm/windowvieweffectkcm.ui:30
+#, fuzzy, kde-format
+#| msgid "&Close"
+msgid "Closest"
+msgstr "&Затвори"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
+#: plugins/overview/kcm/overvieweffectkcm.ui:35
+#: plugins/windowview/kcm/windowvieweffectkcm.ui:35
+#, kde-format
+msgid "Natural"
+msgstr "природан"
+
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/overview/kcm/overvieweffectkcm.ui:43
 #, fuzzy, kde-format
@@ -2582,32 +2484,81 @@ msgstr "Распоред:"
 msgid "Ignore minimized windows:"
 msgstr "Минимизуј прозор"
 
-#: plugins/overview/qml/DesktopBar.qml:163
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: plugins/overview/kcm/overvieweffectkcm.ui:57
+#, kde-format
+msgid "Organize windows in the Grid View:"
+msgstr ""
+
+#: plugins/overview/overvieweffect.cpp:124
+#, kde-format
+msgctxt "@action Grid View and Overview are the name of KWin effects"
+msgid "Cycle through Overview and Grid View"
+msgstr ""
+
+#: plugins/overview/overvieweffect.cpp:141
+#, fuzzy, kde-format
+#| msgid "Toggle Invert Effect"
+msgctxt "@action Overview is the name of a Kwin effect"
+msgid "Toggle Overview"
+msgstr "Ефекат извртања"
+
+#: plugins/overview/overvieweffect.cpp:149
+#, fuzzy, kde-format
+#| msgid "Toggle Invert Effect"
+msgctxt "@action Grid view is the name of a Kwin effect"
+msgid "Toggle Grid View"
+msgstr "Ефекат извртања"
+
+#: plugins/overview/qml/DesktopBar.qml:172
 #, fuzzy, kde-format
 #| msgid "Move To &Desktop"
 msgid "Delete Virtual Desktop"
 msgstr "Премести на &површ"
 
-#: plugins/overview/qml/DesktopBar.qml:260
+#: plugins/overview/qml/DesktopBar.qml:269
 #, fuzzy, kde-format
 #| msgctxt "Create a new desktop and move there the window"
 #| msgid "&New Desktop"
 msgid "Add Virtual Desktop"
 msgstr "&Нова површ"
 
+#: plugins/overview/qml/main.qml:318
+#, fuzzy, kde-format
+#| msgid "Move To &Desktop"
+msgctxt "@info:placeholder"
+msgid "No other Virtual Desktops to show"
+msgstr "Премести на &површ"
+
+#: plugins/overview/qml/main.qml:324
+#, fuzzy, kde-format
+#| msgctxt "Create a new desktop and move there the window"
+#| msgid "&New Desktop"
+msgctxt "@action:button"
+msgid "Add Virtual Desktop"
+msgstr "&Нова површ"
+
+#: plugins/overview/qml/main.qml:331
+#, fuzzy, kde-format
+#| msgid "Move To &Desktop"
+msgctxt "@action:button"
+msgid "Configure Virtual Desktops…"
+msgstr "Премести на &површ"
+
 # >> @item
-#: plugins/overview/qml/main.qml:228
+#: plugins/overview/qml/main.qml:658
 #, fuzzy, kde-format
 #| msgid "X11 Unmanaged Windows"
+msgctxt "@info:placeholder"
 msgid "No matching windows"
 msgstr "неуправљани икс11 прозори"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:151
+#: plugins/private/qml/WindowHeapDelegate.qml:155
 #, kde-format
 msgid "Drag Down To Close"
 msgstr ""
 
-#: plugins/private/qml/WindowHeapDelegate.qml:452
+#: plugins/private/qml/WindowHeapDelegate.qml:458
 #, fuzzy, kde-format
 #| msgid "Close Window"
 msgctxt "@info:tooltip as in: 'close this window'"
@@ -3013,6 +2964,13 @@ msgstr "Alt"
 #, kde-format
 msgid "Ignore"
 msgstr "Игнориши"
+
+# >> @item:intext Ignore
+#. i18n: ectx: property (text), widget (QLabel, ignoreLabel)
+#: plugins/videowall/package/contents/ui/config.ui:73
+#, kde-format
+msgid "None"
+msgstr "ништа"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:42
 #: plugins/windowview/windowvieweffect.cpp:45
@@ -4575,6 +4533,72 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#, fuzzy
+#~| msgid "Show Desktop"
+#~ msgid "Show Desktop Grid"
+#~ msgstr "Прикажи површ"
+
+# >> @item:inlistbox +
+#~ msgctxt "Desktop name alignment:"
+#~ msgid "Disabled"
+#~ msgstr "искључено"
+
+# >> @item
+#, fuzzy
+#~| msgctxt "A mouse button"
+#~| msgid "Right"
+#~ msgid "Top-Right"
+#~ msgstr "десно"
+
+# >> @item:inlistbox Desktop name alignment
+#~ msgid "Bottom-Right"
+#~ msgstr "доље десно"
+
+# >> @item:inlistbox Desktop name alignment
+#~ msgid "Bottom-Left"
+#~ msgstr "доље лијево"
+
+# >> @item
+#, fuzzy
+#~| msgctxt "A mouse button"
+#~| msgid "Left"
+#~ msgid "Top-Left"
+#~ msgstr "лево"
+
+#~ msgid "Pager"
+#~ msgstr "листач"
+
+#~ msgid "Automatic"
+#~ msgstr "аутоматски"
+
+#~ msgid "Custom"
+#~ msgstr "посебно"
+
+#~ msgid "N&umber of rows:"
+#~ msgstr "Број &врста:"
+
+#~ msgid "Desktop &name alignment:"
+#~ msgstr "Поравнање &имена површи:"
+
+#~ msgid "Show buttons to alter count of virtual desktops"
+#~ msgstr "Дугмад за мењање броја виртуелних површи"
+
+#, fuzzy
+#~| msgid "&Layout mode:"
+#~ msgid "&Grid layout mode:"
+#~ msgstr "&Распоред:"
+
+#, fuzzy
+#~| msgid "Move Window"
+#~ msgid "Windows layout:"
+#~ msgstr "Помјери прозор"
+
+# rewrite-msgid: /caption/title/
+#, fuzzy
+#~| msgid "caption"
+#~ msgid "Activation"
+#~ msgstr "наслов"
 
 #~ msgid ""
 #~ "Desktop effects have been suspended by another application.<br/>You can "

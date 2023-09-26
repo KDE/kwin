@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-23 01:46+0000\n"
+"POT-Creation-Date: 2023-09-26 01:47+0000\n"
 "PO-Revision-Date: 2022-12-12 22:06+0200\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -1244,8 +1244,7 @@ msgstr ""
 "Norėdami atsisakyti, paspauskite Grįžties (Escape) klavišą arba\n"
 "spustelėkite dešiniuoju pelės mygtuku."
 
-#: main.cpp:180 plugins/desktopgrid/desktopgrid_config.cpp:49
-#: plugins/invert/invert_config.cpp:35
+#: main.cpp:180 plugins/invert/invert_config.cpp:35
 #: plugins/magnifier/magnifier_config.cpp:55
 #: plugins/mouseclick/mouseclick_config.cpp:48
 #: plugins/mousemark/mousemark_config.cpp:51
@@ -1527,181 +1526,6 @@ msgstr ""
 "Norėdami atsisakyti, paspauskite Grįžties (Escape) klavišą arba\n"
 "spustelėkite dešiniuoju pelės mygtuku."
 
-#: plugins/desktopgrid/desktopgrid_config.cpp:54
-#: plugins/desktopgrid/desktopgrideffect.cpp:43
-#, fuzzy, kde-format
-#| msgid "Show Desktop"
-msgid "Show Desktop Grid"
-msgstr "Rodyti darbalaukį"
-
-#: plugins/desktopgrid/desktopgrid_config.cpp:61
-#, kde-format
-msgctxt "Desktop name alignment:"
-msgid "Disabled"
-msgstr "Išjungtas"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
-#: plugins/desktopgrid/desktopgrid_config.cpp:62
-#: plugins/glide/glide_config.ui:70 plugins/glide/glide_config.ui:168
-#, kde-format
-msgid "Top"
-msgstr "Viršuje"
-
-#: plugins/desktopgrid/desktopgrid_config.cpp:63
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
-msgid "Top-Right"
-msgstr "Dešinysis"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
-#: plugins/desktopgrid/desktopgrid_config.cpp:64
-#: plugins/glide/glide_config.ui:75 plugins/glide/glide_config.ui:173
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:43
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
-msgid "Right"
-msgstr "Dešinysis"
-
-#: plugins/desktopgrid/desktopgrid_config.cpp:65
-#, kde-format
-msgid "Bottom-Right"
-msgstr "Apatinėje dešinėje"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
-#: plugins/desktopgrid/desktopgrid_config.cpp:66
-#: plugins/glide/glide_config.ui:80 plugins/glide/glide_config.ui:178
-#, kde-format
-msgid "Bottom"
-msgstr "Apačioje"
-
-#: plugins/desktopgrid/desktopgrid_config.cpp:67
-#, kde-format
-msgid "Bottom-Left"
-msgstr "Apatinėje kairėje"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
-#: plugins/desktopgrid/desktopgrid_config.cpp:68
-#: plugins/glide/glide_config.ui:85 plugins/glide/glide_config.ui:183
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:29
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Left"
-msgid "Left"
-msgstr "Kairysis"
-
-#: plugins/desktopgrid/desktopgrid_config.cpp:69
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Left"
-msgid "Top-Left"
-msgstr "Kairysis"
-
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
-#: plugins/desktopgrid/desktopgrid_config.cpp:70
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:36
-#, kde-format
-msgid "Center"
-msgstr "Centras"
-
-#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
-#: plugins/desktopgrid/desktopgrid_config.ui:17
-#: plugins/mousemark/mousemark_config.ui:17
-#: plugins/thumbnailaside/thumbnailaside_config.ui:17
-#, kde-format
-msgid "Appearance"
-msgstr "Išvaizda"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
-#: plugins/desktopgrid/desktopgrid_config.ui:30
-#, kde-format
-msgid "Pager"
-msgstr "Perjungiklis"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
-#: plugins/desktopgrid/desktopgrid_config.ui:35
-#, kde-format
-msgid "Automatic"
-msgstr "Automatinė"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
-#: plugins/desktopgrid/desktopgrid_config.ui:40
-#, kde-format
-msgid "Custom"
-msgstr "Tinkinta"
-
-#. i18n: ectx: property (text), widget (QLabel, layoutRowsLabel)
-#: plugins/desktopgrid/desktopgrid_config.ui:48
-#, kde-format
-msgid "N&umber of rows:"
-msgstr "&Eilučių skaičius:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_6)
-#: plugins/desktopgrid/desktopgrid_config.ui:103
-#, fuzzy, kde-format
-#| msgid "Desktop file name"
-msgid "Desktop &name alignment:"
-msgstr "Darbalaukio failo pavadinimas"
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ShowAddRemove)
-#: plugins/desktopgrid/desktopgrid_config.ui:116
-#, kde-format
-msgid "Show buttons to alter count of virtual desktops"
-msgstr "Rodyti mygtukus, skirtus keisti virtualių darbalaukių skaičių"
-
-#. i18n: ectx: property (text), widget (QLabel, label_7)
-#: plugins/desktopgrid/desktopgrid_config.ui:123
-#, fuzzy, kde-format
-#| msgid "&Layout mode:"
-msgid "&Grid layout mode:"
-msgstr "&Išdėstymo veiksena:"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
-#: plugins/desktopgrid/desktopgrid_config.ui:137
-#: plugins/overview/kcm/overvieweffectkcm.ui:30
-#: plugins/windowview/kcm/windowvieweffectkcm.ui:30
-#, fuzzy, kde-format
-#| msgid "&Close"
-msgid "Closest"
-msgstr "&Užverti"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
-#: plugins/desktopgrid/desktopgrid_config.ui:142
-#: plugins/overview/kcm/overvieweffectkcm.ui:35
-#: plugins/windowview/kcm/windowvieweffectkcm.ui:35
-#, kde-format
-msgid "Natural"
-msgstr "Natūrali"
-
-#. i18n: ectx: property (text), widget (QLabel, ignoreLabel)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
-#: plugins/desktopgrid/desktopgrid_config.ui:147
-#: plugins/videowall/package/contents/ui/config.ui:73
-#, kde-format
-msgid "None"
-msgstr "Nėra"
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/desktopgrid/desktopgrid_config.ui:155
-#, fuzzy, kde-format
-#| msgid "Windows"
-msgid "Windows layout:"
-msgstr "Langai"
-
-#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
-#: plugins/desktopgrid/desktopgrid_config.ui:171
-#, fuzzy, kde-format
-#| msgid "caption"
-msgid "Activation"
-msgstr "antraštė"
-
 #. i18n: ectx: property (text), widget (QLabel, label_Strength)
 #: plugins/diminactive/diminactive_config.ui:17
 #, kde-format
@@ -1784,6 +1608,42 @@ msgstr "Lango pozicija"
 #| msgid "Rotation"
 msgid "Rotation edge:"
 msgstr "Pasukimas"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#: plugins/glide/glide_config.ui:70 plugins/glide/glide_config.ui:168
+#, kde-format
+msgid "Top"
+msgstr "Viršuje"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
+#: plugins/glide/glide_config.ui:75 plugins/glide/glide_config.ui:173
+#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:43
+#, fuzzy, kde-format
+#| msgctxt "A mouse button"
+#| msgid "Right"
+msgid "Right"
+msgstr "Dešinysis"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#: plugins/glide/glide_config.ui:80 plugins/glide/glide_config.ui:178
+#, kde-format
+msgid "Bottom"
+msgstr "Apačioje"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
+#: plugins/glide/glide_config.ui:85 plugins/glide/glide_config.ui:183
+#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:29
+#, fuzzy, kde-format
+#| msgctxt "A mouse button"
+#| msgid "Left"
+msgid "Left"
+msgstr "Kairysis"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationAngle)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationAngle)
@@ -1883,6 +1743,12 @@ msgstr "Dialogas"
 #, kde-format
 msgid "Title &Alignment"
 msgstr "Antraščių &lygiavimas"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
+#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:36
+#, kde-format
+msgid "Center"
+msgstr "Centras"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:53
@@ -2272,6 +2138,13 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#: plugins/mousemark/mousemark_config.ui:17
+#: plugins/thumbnailaside/thumbnailaside_config.ui:17
+#, kde-format
+msgid "Appearance"
+msgstr "Išvaizda"
+
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/mousemark/mousemark_config.ui:23
 #, kde-format
@@ -2383,10 +2256,30 @@ msgid "Unknown"
 msgstr "Nežinomas"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:41
-#: plugins/overview/overvieweffect.cpp:47
+#, kde-format
+msgctxt "@action Overview and Grid View are the name of KWin effects"
+msgid "Cycle through Overview and Grid View"
+msgstr ""
+
+#: plugins/overview/kcm/overvieweffectkcm.cpp:48
+#: plugins/overview/overvieweffect.cpp:133
+#, kde-format
+msgctxt "@action Grid View and Overview are the name of KWin effects"
+msgid "Cycle through Grid View and Overview"
+msgstr ""
+
+#: plugins/overview/kcm/overvieweffectkcm.cpp:55
 #, fuzzy, kde-format
 #| msgid "Toggle Invert Effect"
+msgctxt "@action Overview is the name of a KWin effect"
 msgid "Toggle Overview"
+msgstr "Perjungti invertavimo efektą"
+
+#: plugins/overview/kcm/overvieweffectkcm.cpp:62
+#, fuzzy, kde-format
+#| msgid "Toggle Invert Effect"
+msgctxt "@action Grid View is the name of a KWin effect"
+msgid "Toggle Grid View"
 msgstr "Perjungti invertavimo efektą"
 
 #. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
@@ -2398,6 +2291,21 @@ msgstr "Perjungti invertavimo efektą"
 msgid "Layout mode:"
 msgstr "Planšetės veiksena"
 
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
+#: plugins/overview/kcm/overvieweffectkcm.ui:30
+#: plugins/windowview/kcm/windowvieweffectkcm.ui:30
+#, fuzzy, kde-format
+#| msgid "&Close"
+msgid "Closest"
+msgstr "&Užverti"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
+#: plugins/overview/kcm/overvieweffectkcm.ui:35
+#: plugins/windowview/kcm/windowvieweffectkcm.ui:35
+#, kde-format
+msgid "Natural"
+msgstr "Natūrali"
+
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/overview/kcm/overvieweffectkcm.ui:43
 #, fuzzy, kde-format
@@ -2405,31 +2313,80 @@ msgstr "Planšetės veiksena"
 msgid "Ignore minimized windows:"
 msgstr "Suskleisti langą"
 
-#: plugins/overview/qml/DesktopBar.qml:163
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: plugins/overview/kcm/overvieweffectkcm.ui:57
+#, kde-format
+msgid "Organize windows in the Grid View:"
+msgstr ""
+
+#: plugins/overview/overvieweffect.cpp:124
+#, kde-format
+msgctxt "@action Grid View and Overview are the name of KWin effects"
+msgid "Cycle through Overview and Grid View"
+msgstr ""
+
+#: plugins/overview/overvieweffect.cpp:141
+#, fuzzy, kde-format
+#| msgid "Toggle Invert Effect"
+msgctxt "@action Overview is the name of a Kwin effect"
+msgid "Toggle Overview"
+msgstr "Perjungti invertavimo efektą"
+
+#: plugins/overview/overvieweffect.cpp:149
+#, fuzzy, kde-format
+#| msgid "Toggle Invert Effect"
+msgctxt "@action Grid view is the name of a Kwin effect"
+msgid "Toggle Grid View"
+msgstr "Perjungti invertavimo efektą"
+
+#: plugins/overview/qml/DesktopBar.qml:172
 #, fuzzy, kde-format
 #| msgid "Peek at Desktop"
 msgid "Delete Virtual Desktop"
 msgstr "Žvilgsnis į darbalaukį"
 
-#: plugins/overview/qml/DesktopBar.qml:260
+#: plugins/overview/qml/DesktopBar.qml:269
 #, fuzzy, kde-format
 #| msgctxt "Create a new desktop and add the window to that desktop"
 #| msgid "Add to &New Desktop"
 msgid "Add Virtual Desktop"
 msgstr "Pridėti į &naują darbalaukį"
 
-#: plugins/overview/qml/main.qml:228
+#: plugins/overview/qml/main.qml:318
+#, fuzzy, kde-format
+#| msgid "Peek at Desktop"
+msgctxt "@info:placeholder"
+msgid "No other Virtual Desktops to show"
+msgstr "Žvilgsnis į darbalaukį"
+
+#: plugins/overview/qml/main.qml:324
+#, fuzzy, kde-format
+#| msgctxt "Create a new desktop and add the window to that desktop"
+#| msgid "Add to &New Desktop"
+msgctxt "@action:button"
+msgid "Add Virtual Desktop"
+msgstr "Pridėti į &naują darbalaukį"
+
+#: plugins/overview/qml/main.qml:331
+#, fuzzy, kde-format
+#| msgid "Configure Layouts..."
+msgctxt "@action:button"
+msgid "Configure Virtual Desktops…"
+msgstr "Konfigūruoti išdėstymus..."
+
+#: plugins/overview/qml/main.qml:658
 #, fuzzy, kde-format
 #| msgid "X11 Unmanaged Windows"
+msgctxt "@info:placeholder"
 msgid "No matching windows"
 msgstr "X11 netvarkomi langai"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:151
+#: plugins/private/qml/WindowHeapDelegate.qml:155
 #, kde-format
 msgid "Drag Down To Close"
 msgstr ""
 
-#: plugins/private/qml/WindowHeapDelegate.qml:452
+#: plugins/private/qml/WindowHeapDelegate.qml:458
 #, fuzzy, kde-format
 #| msgid "Close Window"
 msgctxt "@info:tooltip as in: 'close this window'"
@@ -2823,6 +2780,12 @@ msgstr "Alt"
 #, kde-format
 msgid "Ignore"
 msgstr "Nepaisyti"
+
+#. i18n: ectx: property (text), widget (QLabel, ignoreLabel)
+#: plugins/videowall/package/contents/ui/config.ui:73
+#, kde-format
+msgid "None"
+msgstr "Nėra"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:42
 #: plugins/windowview/windowvieweffect.cpp:45
@@ -4334,6 +4297,68 @@ msgstr ""
 msgid "Xwayland has crashed"
 msgstr ""
 
+#, fuzzy
+#~| msgid "Show Desktop"
+#~ msgid "Show Desktop Grid"
+#~ msgstr "Rodyti darbalaukį"
+
+#~ msgctxt "Desktop name alignment:"
+#~ msgid "Disabled"
+#~ msgstr "Išjungtas"
+
+#, fuzzy
+#~| msgctxt "A mouse button"
+#~| msgid "Right"
+#~ msgid "Top-Right"
+#~ msgstr "Dešinysis"
+
+#~ msgid "Bottom-Right"
+#~ msgstr "Apatinėje dešinėje"
+
+#~ msgid "Bottom-Left"
+#~ msgstr "Apatinėje kairėje"
+
+#, fuzzy
+#~| msgctxt "A mouse button"
+#~| msgid "Left"
+#~ msgid "Top-Left"
+#~ msgstr "Kairysis"
+
+#~ msgid "Pager"
+#~ msgstr "Perjungiklis"
+
+#~ msgid "Automatic"
+#~ msgstr "Automatinė"
+
+#~ msgid "Custom"
+#~ msgstr "Tinkinta"
+
+#~ msgid "N&umber of rows:"
+#~ msgstr "&Eilučių skaičius:"
+
+#, fuzzy
+#~| msgid "Desktop file name"
+#~ msgid "Desktop &name alignment:"
+#~ msgstr "Darbalaukio failo pavadinimas"
+
+#~ msgid "Show buttons to alter count of virtual desktops"
+#~ msgstr "Rodyti mygtukus, skirtus keisti virtualių darbalaukių skaičių"
+
+#, fuzzy
+#~| msgid "&Layout mode:"
+#~ msgid "&Grid layout mode:"
+#~ msgstr "&Išdėstymo veiksena:"
+
+#, fuzzy
+#~| msgid "Windows"
+#~ msgid "Windows layout:"
+#~ msgstr "Langai"
+
+#, fuzzy
+#~| msgid "caption"
+#~ msgid "Activation"
+#~ msgstr "antraštė"
+
 #~ msgid ""
 #~ "Desktop effects have been suspended by another application.<br/>You can "
 #~ "resume using the '%1' shortcut."
@@ -4423,11 +4448,6 @@ msgstr ""
 
 #~ msgid "Desktop number"
 #~ msgstr "Darbalaukio numeris"
-
-#, fuzzy
-#~| msgid "Configure Layouts..."
-#~ msgid "Configure virtual keyboards..."
-#~ msgstr "Konfigūruoti išdėstymus..."
 
 #~ msgid "Virtual Keyboard"
 #~ msgstr "Virtuali klaviatūra"

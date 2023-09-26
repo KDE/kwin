@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-23 01:46+0000\n"
+"POT-Creation-Date: 2023-09-26 01:47+0000\n"
 "PO-Revision-Date: 2020-01-11 11:32+0100\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
@@ -1293,8 +1293,7 @@ msgstr ""
 "Clic esquerdo ou Intro para seleccionar a xanela que pechar forzosamente.\n"
 "Esc ou clic secundario para cancelar."
 
-#: main.cpp:180 plugins/desktopgrid/desktopgrid_config.cpp:49
-#: plugins/invert/invert_config.cpp:35
+#: main.cpp:180 plugins/invert/invert_config.cpp:35
 #: plugins/magnifier/magnifier_config.cpp:55
 #: plugins/mouseclick/mouseclick_config.cpp:48
 #: plugins/mousemark/mousemark_config.cpp:51
@@ -1578,196 +1577,6 @@ msgstr ""
 "Clic esquerdo ou Intro para seleccionar a xanela que pechar forzosamente.\n"
 "Esc ou clic secundario para cancelar."
 
-#: plugins/desktopgrid/desktopgrid_config.cpp:54
-#: plugins/desktopgrid/desktopgrideffect.cpp:43
-#, fuzzy, kde-format
-#| msgid "Show Desktop"
-msgid "Show Desktop Grid"
-msgstr "Mostrar o escritorio"
-
-#: plugins/desktopgrid/desktopgrid_config.cpp:61
-#, fuzzy, kde-format
-#| msgctxt "Desktop name alignment:"
-#| msgid "Disabled"
-msgctxt "Desktop name alignment:"
-msgid "Disabled"
-msgstr "Desactivado"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
-#: plugins/desktopgrid/desktopgrid_config.cpp:62
-#: plugins/glide/glide_config.ui:70 plugins/glide/glide_config.ui:168
-#, fuzzy, kde-format
-#| msgid "Top"
-msgid "Top"
-msgstr "Cume"
-
-#: plugins/desktopgrid/desktopgrid_config.cpp:63
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
-msgid "Top-Right"
-msgstr "Dereita"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
-#: plugins/desktopgrid/desktopgrid_config.cpp:64
-#: plugins/glide/glide_config.ui:75 plugins/glide/glide_config.ui:173
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:43
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
-msgid "Right"
-msgstr "Dereita"
-
-#: plugins/desktopgrid/desktopgrid_config.cpp:65
-#, fuzzy, kde-format
-#| msgid "Bottom-Right"
-msgid "Bottom-Right"
-msgstr "Fondo dereita"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
-#: plugins/desktopgrid/desktopgrid_config.cpp:66
-#: plugins/glide/glide_config.ui:80 plugins/glide/glide_config.ui:178
-#, fuzzy, kde-format
-#| msgid "Bottom"
-msgid "Bottom"
-msgstr "Fondo"
-
-#: plugins/desktopgrid/desktopgrid_config.cpp:67
-#, fuzzy, kde-format
-#| msgid "Bottom-Left"
-msgid "Bottom-Left"
-msgstr "Fondo esquerda"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
-#: plugins/desktopgrid/desktopgrid_config.cpp:68
-#: plugins/glide/glide_config.ui:85 plugins/glide/glide_config.ui:183
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:29
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Left"
-msgid "Left"
-msgstr "Esquerda"
-
-#: plugins/desktopgrid/desktopgrid_config.cpp:69
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Left"
-msgid "Top-Left"
-msgstr "Esquerda"
-
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
-#: plugins/desktopgrid/desktopgrid_config.cpp:70
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:36
-#, fuzzy, kde-format
-#| msgid "Center"
-msgid "Center"
-msgstr "Centrado"
-
-#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
-#: plugins/desktopgrid/desktopgrid_config.ui:17
-#: plugins/mousemark/mousemark_config.ui:17
-#: plugins/thumbnailaside/thumbnailaside_config.ui:17
-#, fuzzy, kde-format
-#| msgid "Appearance"
-msgid "Appearance"
-msgstr "Aparencia"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
-#: plugins/desktopgrid/desktopgrid_config.ui:30
-#, fuzzy, kde-format
-#| msgid "Pager"
-msgid "Pager"
-msgstr "Paxinador"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
-#: plugins/desktopgrid/desktopgrid_config.ui:35
-#, fuzzy, kde-format
-#| msgid "Automatic"
-msgid "Automatic"
-msgstr "Automático"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
-#: plugins/desktopgrid/desktopgrid_config.ui:40
-#, fuzzy, kde-format
-#| msgid "Custom"
-msgid "Custom"
-msgstr "Personalizado"
-
-#. i18n: ectx: property (text), widget (QLabel, layoutRowsLabel)
-#: plugins/desktopgrid/desktopgrid_config.ui:48
-#, fuzzy, kde-format
-#| msgid "N&umber of rows:"
-msgid "N&umber of rows:"
-msgstr "Nú&mero de filas:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_6)
-#: plugins/desktopgrid/desktopgrid_config.ui:103
-#, fuzzy, kde-format
-#| msgid "Desktop &name alignment:"
-msgid "Desktop &name alignment:"
-msgstr "&Aliñamento do nome do escritorio:"
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ShowAddRemove)
-#: plugins/desktopgrid/desktopgrid_config.ui:116
-#, fuzzy, kde-format
-#| msgid "Show buttons to alter count of virtual desktops"
-msgid "Show buttons to alter count of virtual desktops"
-msgstr "Mostrar os botóns para alterar o número de escritorios virtuais."
-
-#. i18n: ectx: property (text), widget (QLabel, label_7)
-#: plugins/desktopgrid/desktopgrid_config.ui:123
-#, fuzzy, kde-format
-#| msgid "&Layout mode:"
-msgid "&Grid layout mode:"
-msgstr "Modo de &disposición:"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
-#: plugins/desktopgrid/desktopgrid_config.ui:137
-#: plugins/overview/kcm/overvieweffectkcm.ui:30
-#: plugins/windowview/kcm/windowvieweffectkcm.ui:30
-#, fuzzy, kde-format
-#| msgid "&Close"
-msgid "Closest"
-msgstr "&Pechar"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
-#: plugins/desktopgrid/desktopgrid_config.ui:142
-#: plugins/overview/kcm/overvieweffectkcm.ui:35
-#: plugins/windowview/kcm/windowvieweffectkcm.ui:35
-#, fuzzy, kde-format
-#| msgid "Natural"
-msgid "Natural"
-msgstr "Natural"
-
-#. i18n: ectx: property (text), widget (QLabel, ignoreLabel)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
-#: plugins/desktopgrid/desktopgrid_config.ui:147
-#: plugins/videowall/package/contents/ui/config.ui:73
-#, fuzzy, kde-format
-#| msgid "None"
-msgid "None"
-msgstr "Ningunha"
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/desktopgrid/desktopgrid_config.ui:155
-#, fuzzy, kde-format
-#| msgid "Windows"
-msgid "Windows layout:"
-msgstr "Xanelas"
-
-#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
-#: plugins/desktopgrid/desktopgrid_config.ui:171
-#, fuzzy, kde-format
-#| msgid "caption"
-msgid "Activation"
-msgstr "título"
-
 #. i18n: ectx: property (text), widget (QLabel, label_Strength)
 #: plugins/diminactive/diminactive_config.ui:17
 #, fuzzy, kde-format
@@ -1856,6 +1665,44 @@ msgstr "Posición global"
 #| msgid "Allow Rotation"
 msgid "Rotation edge:"
 msgstr "Permitir a rotación"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#: plugins/glide/glide_config.ui:70 plugins/glide/glide_config.ui:168
+#, fuzzy, kde-format
+#| msgid "Top"
+msgid "Top"
+msgstr "Cume"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
+#: plugins/glide/glide_config.ui:75 plugins/glide/glide_config.ui:173
+#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:43
+#, fuzzy, kde-format
+#| msgctxt "A mouse button"
+#| msgid "Right"
+msgid "Right"
+msgstr "Dereita"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#: plugins/glide/glide_config.ui:80 plugins/glide/glide_config.ui:178
+#, fuzzy, kde-format
+#| msgid "Bottom"
+msgid "Bottom"
+msgstr "Fondo"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
+#: plugins/glide/glide_config.ui:85 plugins/glide/glide_config.ui:183
+#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:29
+#, fuzzy, kde-format
+#| msgctxt "A mouse button"
+#| msgid "Left"
+msgid "Left"
+msgstr "Esquerda"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationAngle)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationAngle)
@@ -1973,6 +1820,13 @@ msgstr "Diálogo"
 #| msgid "Title &Alignment"
 msgid "Title &Alignment"
 msgstr "&Aliñamento do título"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
+#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:36
+#, fuzzy, kde-format
+#| msgid "Center"
+msgid "Center"
+msgstr "Centrado"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:53
@@ -2395,6 +2249,14 @@ msgid_plural " pixels"
 msgstr[0] ""
 msgstr[1] ""
 
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#: plugins/mousemark/mousemark_config.ui:17
+#: plugins/thumbnailaside/thumbnailaside_config.ui:17
+#, fuzzy, kde-format
+#| msgid "Appearance"
+msgid "Appearance"
+msgstr "Aparencia"
+
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/mousemark/mousemark_config.ui:23
 #, fuzzy, kde-format
@@ -2509,10 +2371,30 @@ msgid "Unknown"
 msgstr "Descoñecido"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:41
-#: plugins/overview/overvieweffect.cpp:47
+#, kde-format
+msgctxt "@action Overview and Grid View are the name of KWin effects"
+msgid "Cycle through Overview and Grid View"
+msgstr ""
+
+#: plugins/overview/kcm/overvieweffectkcm.cpp:48
+#: plugins/overview/overvieweffect.cpp:133
+#, kde-format
+msgctxt "@action Grid View and Overview are the name of KWin effects"
+msgid "Cycle through Grid View and Overview"
+msgstr ""
+
+#: plugins/overview/kcm/overvieweffectkcm.cpp:55
 #, fuzzy, kde-format
 #| msgid "Toggle Invert Effect"
+msgctxt "@action Overview is the name of a KWin effect"
 msgid "Toggle Overview"
+msgstr "Conmutar o efecto de inversión"
+
+#: plugins/overview/kcm/overvieweffectkcm.cpp:62
+#, fuzzy, kde-format
+#| msgid "Toggle Invert Effect"
+msgctxt "@action Grid View is the name of a KWin effect"
+msgid "Toggle Grid View"
 msgstr "Conmutar o efecto de inversión"
 
 #. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
@@ -2524,6 +2406,22 @@ msgstr "Conmutar o efecto de inversión"
 msgid "Layout mode:"
 msgstr "Modo de tableta"
 
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
+#: plugins/overview/kcm/overvieweffectkcm.ui:30
+#: plugins/windowview/kcm/windowvieweffectkcm.ui:30
+#, fuzzy, kde-format
+#| msgid "&Close"
+msgid "Closest"
+msgstr "&Pechar"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
+#: plugins/overview/kcm/overvieweffectkcm.ui:35
+#: plugins/windowview/kcm/windowvieweffectkcm.ui:35
+#, fuzzy, kde-format
+#| msgid "Natural"
+msgid "Natural"
+msgstr "Natural"
+
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/overview/kcm/overvieweffectkcm.ui:43
 #, fuzzy, kde-format
@@ -2531,31 +2429,80 @@ msgstr "Modo de tableta"
 msgid "Ignore minimized windows:"
 msgstr "Minimizar a xanela"
 
-#: plugins/overview/qml/DesktopBar.qml:163
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: plugins/overview/kcm/overvieweffectkcm.ui:57
+#, kde-format
+msgid "Organize windows in the Grid View:"
+msgstr ""
+
+#: plugins/overview/overvieweffect.cpp:124
+#, kde-format
+msgctxt "@action Grid View and Overview are the name of KWin effects"
+msgid "Cycle through Overview and Grid View"
+msgstr ""
+
+#: plugins/overview/overvieweffect.cpp:141
+#, fuzzy, kde-format
+#| msgid "Toggle Invert Effect"
+msgctxt "@action Overview is the name of a Kwin effect"
+msgid "Toggle Overview"
+msgstr "Conmutar o efecto de inversión"
+
+#: plugins/overview/overvieweffect.cpp:149
+#, fuzzy, kde-format
+#| msgid "Toggle Invert Effect"
+msgctxt "@action Grid view is the name of a Kwin effect"
+msgid "Toggle Grid View"
+msgstr "Conmutar o efecto de inversión"
+
+#: plugins/overview/qml/DesktopBar.qml:172
 #, fuzzy, kde-format
 #| msgid "Move to &Desktop"
 msgid "Delete Virtual Desktop"
 msgstr "Mover ao &escritorio"
 
-#: plugins/overview/qml/DesktopBar.qml:260
+#: plugins/overview/qml/DesktopBar.qml:269
 #, fuzzy, kde-format
 #| msgctxt "Create a new desktop and move there the window"
 #| msgid "&New Desktop"
 msgid "Add Virtual Desktop"
 msgstr "&Novo escritorio"
 
-#: plugins/overview/qml/main.qml:228
+#: plugins/overview/qml/main.qml:318
+#, fuzzy, kde-format
+#| msgid "Move to &Desktop"
+msgctxt "@info:placeholder"
+msgid "No other Virtual Desktops to show"
+msgstr "Mover ao &escritorio"
+
+#: plugins/overview/qml/main.qml:324
+#, fuzzy, kde-format
+#| msgctxt "Create a new desktop and move there the window"
+#| msgid "&New Desktop"
+msgctxt "@action:button"
+msgid "Add Virtual Desktop"
+msgstr "&Novo escritorio"
+
+#: plugins/overview/qml/main.qml:331
+#, fuzzy, kde-format
+#| msgid "Configure Layouts..."
+msgctxt "@action:button"
+msgid "Configure Virtual Desktops…"
+msgstr "Configurar as disposicións…"
+
+#: plugins/overview/qml/main.qml:658
 #, fuzzy, kde-format
 #| msgid "X11 Unmanaged Windows"
+msgctxt "@info:placeholder"
 msgid "No matching windows"
 msgstr "Xanelas non xestionadas de X11"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:151
+#: plugins/private/qml/WindowHeapDelegate.qml:155
 #, kde-format
 msgid "Drag Down To Close"
 msgstr ""
 
-#: plugins/private/qml/WindowHeapDelegate.qml:452
+#: plugins/private/qml/WindowHeapDelegate.qml:458
 #, fuzzy, kde-format
 #| msgid "Close Window"
 msgctxt "@info:tooltip as in: 'close this window'"
@@ -2973,6 +2920,13 @@ msgstr "Alt"
 #| msgid "Ignore"
 msgid "Ignore"
 msgstr "Ignorar"
+
+#. i18n: ectx: property (text), widget (QLabel, ignoreLabel)
+#: plugins/videowall/package/contents/ui/config.ui:73
+#, fuzzy, kde-format
+#| msgid "None"
+msgid "None"
+msgstr "Ningunha"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:42
 #: plugins/windowview/windowvieweffect.cpp:45
@@ -4554,6 +4508,85 @@ msgstr ""
 msgid "Xwayland has crashed"
 msgstr ""
 
+#, fuzzy
+#~| msgid "Show Desktop"
+#~ msgid "Show Desktop Grid"
+#~ msgstr "Mostrar o escritorio"
+
+#, fuzzy
+#~| msgctxt "Desktop name alignment:"
+#~| msgid "Disabled"
+#~ msgctxt "Desktop name alignment:"
+#~ msgid "Disabled"
+#~ msgstr "Desactivado"
+
+#, fuzzy
+#~| msgctxt "A mouse button"
+#~| msgid "Right"
+#~ msgid "Top-Right"
+#~ msgstr "Dereita"
+
+#, fuzzy
+#~| msgid "Bottom-Right"
+#~ msgid "Bottom-Right"
+#~ msgstr "Fondo dereita"
+
+#, fuzzy
+#~| msgid "Bottom-Left"
+#~ msgid "Bottom-Left"
+#~ msgstr "Fondo esquerda"
+
+#, fuzzy
+#~| msgctxt "A mouse button"
+#~| msgid "Left"
+#~ msgid "Top-Left"
+#~ msgstr "Esquerda"
+
+#, fuzzy
+#~| msgid "Pager"
+#~ msgid "Pager"
+#~ msgstr "Paxinador"
+
+#, fuzzy
+#~| msgid "Automatic"
+#~ msgid "Automatic"
+#~ msgstr "Automático"
+
+#, fuzzy
+#~| msgid "Custom"
+#~ msgid "Custom"
+#~ msgstr "Personalizado"
+
+#, fuzzy
+#~| msgid "N&umber of rows:"
+#~ msgid "N&umber of rows:"
+#~ msgstr "Nú&mero de filas:"
+
+#, fuzzy
+#~| msgid "Desktop &name alignment:"
+#~ msgid "Desktop &name alignment:"
+#~ msgstr "&Aliñamento do nome do escritorio:"
+
+#, fuzzy
+#~| msgid "Show buttons to alter count of virtual desktops"
+#~ msgid "Show buttons to alter count of virtual desktops"
+#~ msgstr "Mostrar os botóns para alterar o número de escritorios virtuais."
+
+#, fuzzy
+#~| msgid "&Layout mode:"
+#~ msgid "&Grid layout mode:"
+#~ msgstr "Modo de &disposición:"
+
+#, fuzzy
+#~| msgid "Windows"
+#~ msgid "Windows layout:"
+#~ msgstr "Xanelas"
+
+#, fuzzy
+#~| msgid "caption"
+#~ msgid "Activation"
+#~ msgstr "título"
+
 #~ msgid ""
 #~ "Desktop effects have been suspended by another application.<br/>You can "
 #~ "resume using the '%1' shortcut."
@@ -4633,11 +4666,6 @@ msgstr ""
 #~| msgid "Desktop %1"
 #~ msgid "Desktop number"
 #~ msgstr "Escritorio %1"
-
-#, fuzzy
-#~| msgid "Configure Layouts..."
-#~ msgid "Configure virtual keyboards..."
-#~ msgstr "Configurar as disposicións…"
 
 #~ msgid "Virtual Keyboard"
 #~ msgstr "Teclado virtual"

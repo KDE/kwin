@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-23 01:46+0000\n"
+"POT-Creation-Date: 2023-09-26 01:47+0000\n"
 "PO-Revision-Date: 2023-09-09 09:37+0000\n"
 "Last-Translator: Guðmundur Erlingsson <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
@@ -1238,8 +1238,7 @@ msgstr ""
 "Veldu glugga til að þvinga lokun með vinstrismelli eða færsluhnappi.\n"
 "Ýttu á Esc eða hægrismelltu til að hætta við."
 
-#: main.cpp:180 plugins/desktopgrid/desktopgrid_config.cpp:49
-#: plugins/invert/invert_config.cpp:35
+#: main.cpp:180 plugins/invert/invert_config.cpp:35
 #: plugins/magnifier/magnifier_config.cpp:55
 #: plugins/mouseclick/mouseclick_config.cpp:48
 #: plugins/mousemark/mousemark_config.cpp:51
@@ -1516,167 +1515,6 @@ msgstr ""
 "Veldu staðsetningu fyrir litaplokkun með vinstri smelli eða færsluhnappi.\n"
 "Ýttu á Esc eða hægrismelltu til að hætta við."
 
-#: plugins/desktopgrid/desktopgrid_config.cpp:54
-#: plugins/desktopgrid/desktopgrideffect.cpp:43
-#, kde-format
-msgid "Show Desktop Grid"
-msgstr "Sýna skjáborðsmöskva"
-
-#: plugins/desktopgrid/desktopgrid_config.cpp:61
-#, kde-format
-msgctxt "Desktop name alignment:"
-msgid "Disabled"
-msgstr "Óvirkt"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
-#: plugins/desktopgrid/desktopgrid_config.cpp:62
-#: plugins/glide/glide_config.ui:70 plugins/glide/glide_config.ui:168
-#, kde-format
-msgid "Top"
-msgstr "Efst"
-
-#: plugins/desktopgrid/desktopgrid_config.cpp:63
-#, kde-format
-msgid "Top-Right"
-msgstr "Efst til hægri"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
-#: plugins/desktopgrid/desktopgrid_config.cpp:64
-#: plugins/glide/glide_config.ui:75 plugins/glide/glide_config.ui:173
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:43
-#, kde-format
-msgid "Right"
-msgstr "Hægri"
-
-#: plugins/desktopgrid/desktopgrid_config.cpp:65
-#, kde-format
-msgid "Bottom-Right"
-msgstr "Neðst til hægri"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
-#: plugins/desktopgrid/desktopgrid_config.cpp:66
-#: plugins/glide/glide_config.ui:80 plugins/glide/glide_config.ui:178
-#, kde-format
-msgid "Bottom"
-msgstr "Neðst"
-
-#: plugins/desktopgrid/desktopgrid_config.cpp:67
-#, kde-format
-msgid "Bottom-Left"
-msgstr "Neðst til vinstri"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
-#: plugins/desktopgrid/desktopgrid_config.cpp:68
-#: plugins/glide/glide_config.ui:85 plugins/glide/glide_config.ui:183
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:29
-#, kde-format
-msgid "Left"
-msgstr "Vinstri"
-
-#: plugins/desktopgrid/desktopgrid_config.cpp:69
-#, kde-format
-msgid "Top-Left"
-msgstr "Efst til vinstri"
-
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
-#: plugins/desktopgrid/desktopgrid_config.cpp:70
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:36
-#, kde-format
-msgid "Center"
-msgstr "Miðja"
-
-#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
-#: plugins/desktopgrid/desktopgrid_config.ui:17
-#: plugins/mousemark/mousemark_config.ui:17
-#: plugins/thumbnailaside/thumbnailaside_config.ui:17
-#, kde-format
-msgid "Appearance"
-msgstr "Útlit"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
-#: plugins/desktopgrid/desktopgrid_config.ui:30
-#, kde-format
-msgid "Pager"
-msgstr "Flettir"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
-#: plugins/desktopgrid/desktopgrid_config.ui:35
-#, kde-format
-msgid "Automatic"
-msgstr "Sjálfvirkt"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
-#: plugins/desktopgrid/desktopgrid_config.ui:40
-#, kde-format
-msgid "Custom"
-msgstr "Sérsniðið"
-
-#. i18n: ectx: property (text), widget (QLabel, layoutRowsLabel)
-#: plugins/desktopgrid/desktopgrid_config.ui:48
-#, kde-format
-msgid "N&umber of rows:"
-msgstr "Fjöldi &raða:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_6)
-#: plugins/desktopgrid/desktopgrid_config.ui:103
-#, kde-format
-msgid "Desktop &name alignment:"
-msgstr "Jöfnu&n á skjáborðsheiti:"
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ShowAddRemove)
-#: plugins/desktopgrid/desktopgrid_config.ui:116
-#, kde-format
-msgid "Show buttons to alter count of virtual desktops"
-msgstr "Sýna hnappa til að breyta fjölda sýndarskjáborða"
-
-#. i18n: ectx: property (text), widget (QLabel, label_7)
-#: plugins/desktopgrid/desktopgrid_config.ui:123
-#, kde-format
-msgid "&Grid layout mode:"
-msgstr "&Yfirlitssnið:"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
-#: plugins/desktopgrid/desktopgrid_config.ui:137
-#: plugins/overview/kcm/overvieweffectkcm.ui:30
-#: plugins/windowview/kcm/windowvieweffectkcm.ui:30
-#, kde-format
-msgid "Closest"
-msgstr "Nálægast"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
-#: plugins/desktopgrid/desktopgrid_config.ui:142
-#: plugins/overview/kcm/overvieweffectkcm.ui:35
-#: plugins/windowview/kcm/windowvieweffectkcm.ui:35
-#, kde-format
-msgid "Natural"
-msgstr "Eðlilegt"
-
-#. i18n: ectx: property (text), widget (QLabel, ignoreLabel)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
-#: plugins/desktopgrid/desktopgrid_config.ui:147
-#: plugins/videowall/package/contents/ui/config.ui:73
-#, kde-format
-msgid "None"
-msgstr "Ekkert"
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/desktopgrid/desktopgrid_config.ui:155
-#, kde-format
-msgid "Windows layout:"
-msgstr "Gluggayfirlit:"
-
-#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
-#: plugins/desktopgrid/desktopgrid_config.ui:171
-#, kde-format
-msgid "Activation"
-msgstr "Virkjun"
-
 #. i18n: ectx: property (text), widget (QLabel, label_Strength)
 #: plugins/diminactive/diminactive_config.ui:17
 #, kde-format
@@ -1752,6 +1590,38 @@ msgstr "Hreyfiáhrif við opnun glugga"
 #, kde-format
 msgid "Rotation edge:"
 msgstr "Snúningsbrún:"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#: plugins/glide/glide_config.ui:70 plugins/glide/glide_config.ui:168
+#, kde-format
+msgid "Top"
+msgstr "Efst"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
+#: plugins/glide/glide_config.ui:75 plugins/glide/glide_config.ui:173
+#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:43
+#, kde-format
+msgid "Right"
+msgstr "Hægri"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#: plugins/glide/glide_config.ui:80 plugins/glide/glide_config.ui:178
+#, kde-format
+msgid "Bottom"
+msgstr "Neðst"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
+#: plugins/glide/glide_config.ui:85 plugins/glide/glide_config.ui:183
+#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:29
+#, kde-format
+msgid "Left"
+msgstr "Vinstri"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationAngle)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationAngle)
@@ -1846,6 +1716,12 @@ msgstr "Stillingagluggi"
 #, kde-format
 msgid "Title &Alignment"
 msgstr "Jö&fnun titils"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
+#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:36
+#, kde-format
+msgid "Center"
+msgstr "Miðja"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:53
@@ -2209,6 +2085,13 @@ msgid_plural " pixels"
 msgstr[0] " díll"
 msgstr[1] " dílar"
 
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#: plugins/mousemark/mousemark_config.ui:17
+#: plugins/thumbnailaside/thumbnailaside_config.ui:17
+#, kde-format
+msgid "Appearance"
+msgstr "Útlit"
+
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/mousemark/mousemark_config.ui:23
 #, kde-format
@@ -2310,9 +2193,30 @@ msgid "Unknown"
 msgstr "Óþekkt"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:41
-#: plugins/overview/overvieweffect.cpp:47
 #, kde-format
+msgctxt "@action Overview and Grid View are the name of KWin effects"
+msgid "Cycle through Overview and Grid View"
+msgstr ""
+
+#: plugins/overview/kcm/overvieweffectkcm.cpp:48
+#: plugins/overview/overvieweffect.cpp:133
+#, kde-format
+msgctxt "@action Grid View and Overview are the name of KWin effects"
+msgid "Cycle through Grid View and Overview"
+msgstr ""
+
+#: plugins/overview/kcm/overvieweffectkcm.cpp:55
+#, fuzzy, kde-format
+#| msgid "Toggle Overview"
+msgctxt "@action Overview is the name of a KWin effect"
 msgid "Toggle Overview"
+msgstr "Víxla yfirsýn"
+
+#: plugins/overview/kcm/overvieweffectkcm.cpp:62
+#, fuzzy, kde-format
+#| msgid "Toggle Overview"
+msgctxt "@action Grid View is the name of a KWin effect"
+msgid "Toggle Grid View"
 msgstr "Víxla yfirsýn"
 
 #. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
@@ -2322,33 +2226,96 @@ msgstr "Víxla yfirsýn"
 msgid "Layout mode:"
 msgstr "Yfirlitssnið:"
 
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
+#: plugins/overview/kcm/overvieweffectkcm.ui:30
+#: plugins/windowview/kcm/windowvieweffectkcm.ui:30
+#, kde-format
+msgid "Closest"
+msgstr "Nálægast"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
+#: plugins/overview/kcm/overvieweffectkcm.ui:35
+#: plugins/windowview/kcm/windowvieweffectkcm.ui:35
+#, kde-format
+msgid "Natural"
+msgstr "Eðlilegt"
+
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/overview/kcm/overvieweffectkcm.ui:43
 #, kde-format
 msgid "Ignore minimized windows:"
 msgstr "Hunsa minnkaða glugga:"
 
-#: plugins/overview/qml/DesktopBar.qml:163
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: plugins/overview/kcm/overvieweffectkcm.ui:57
+#, kde-format
+msgid "Organize windows in the Grid View:"
+msgstr ""
+
+#: plugins/overview/overvieweffect.cpp:124
+#, kde-format
+msgctxt "@action Grid View and Overview are the name of KWin effects"
+msgid "Cycle through Overview and Grid View"
+msgstr ""
+
+#: plugins/overview/overvieweffect.cpp:141
+#, fuzzy, kde-format
+#| msgid "Toggle Overview"
+msgctxt "@action Overview is the name of a Kwin effect"
+msgid "Toggle Overview"
+msgstr "Víxla yfirsýn"
+
+#: plugins/overview/overvieweffect.cpp:149
+#, fuzzy, kde-format
+#| msgid "Toggle Overview"
+msgctxt "@action Grid view is the name of a Kwin effect"
+msgid "Toggle Grid View"
+msgstr "Víxla yfirsýn"
+
+#: plugins/overview/qml/DesktopBar.qml:172
 #, kde-format
 msgid "Delete Virtual Desktop"
 msgstr "Eyða sýndarskjáborði"
 
-#: plugins/overview/qml/DesktopBar.qml:260
+#: plugins/overview/qml/DesktopBar.qml:269
 #, kde-format
 msgid "Add Virtual Desktop"
 msgstr "Bæta við sýndarskjáborði"
 
-#: plugins/overview/qml/main.qml:228
-#, kde-format
+#: plugins/overview/qml/main.qml:318
+#, fuzzy, kde-format
+#| msgid "Delete Virtual Desktop"
+msgctxt "@info:placeholder"
+msgid "No other Virtual Desktops to show"
+msgstr "Eyða sýndarskjáborði"
+
+#: plugins/overview/qml/main.qml:324
+#, fuzzy, kde-format
+#| msgid "Add Virtual Desktop"
+msgctxt "@action:button"
+msgid "Add Virtual Desktop"
+msgstr "Bæta við sýndarskjáborði"
+
+#: plugins/overview/qml/main.qml:331
+#, fuzzy, kde-format
+#| msgid "Configur&e Window Behavior..."
+msgctxt "@action:button"
+msgid "Configure Virtual Desktops…"
+msgstr "S&tilla gluggahegðan..."
+
+#: plugins/overview/qml/main.qml:658
+#, fuzzy, kde-format
+#| msgid "No matching windows"
+msgctxt "@info:placeholder"
 msgid "No matching windows"
 msgstr "Engir samsvarandi gluggar"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:151
+#: plugins/private/qml/WindowHeapDelegate.qml:155
 #, kde-format
 msgid "Drag Down To Close"
 msgstr "Draga niður til að loka"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:452
+#: plugins/private/qml/WindowHeapDelegate.qml:458
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
@@ -2707,6 +2674,12 @@ msgstr "Allt"
 #, kde-format
 msgid "Ignore"
 msgstr "Hunsa"
+
+#. i18n: ectx: property (text), widget (QLabel, ignoreLabel)
+#: plugins/videowall/package/contents/ui/config.ui:73
+#, kde-format
+msgid "None"
+msgstr "Ekkert"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:42
 #: plugins/windowview/windowvieweffect.cpp:45
@@ -4160,6 +4133,52 @@ msgstr ""
 msgid "Xwayland has crashed"
 msgstr "Xwayland hrundi"
 
+#~ msgid "Show Desktop Grid"
+#~ msgstr "Sýna skjáborðsmöskva"
+
+#~ msgctxt "Desktop name alignment:"
+#~ msgid "Disabled"
+#~ msgstr "Óvirkt"
+
+#~ msgid "Top-Right"
+#~ msgstr "Efst til hægri"
+
+#~ msgid "Bottom-Right"
+#~ msgstr "Neðst til hægri"
+
+#~ msgid "Bottom-Left"
+#~ msgstr "Neðst til vinstri"
+
+#~ msgid "Top-Left"
+#~ msgstr "Efst til vinstri"
+
+#~ msgid "Pager"
+#~ msgstr "Flettir"
+
+#~ msgid "Automatic"
+#~ msgstr "Sjálfvirkt"
+
+#~ msgid "Custom"
+#~ msgstr "Sérsniðið"
+
+#~ msgid "N&umber of rows:"
+#~ msgstr "Fjöldi &raða:"
+
+#~ msgid "Desktop &name alignment:"
+#~ msgstr "Jöfnu&n á skjáborðsheiti:"
+
+#~ msgid "Show buttons to alter count of virtual desktops"
+#~ msgstr "Sýna hnappa til að breyta fjölda sýndarskjáborða"
+
+#~ msgid "&Grid layout mode:"
+#~ msgstr "&Yfirlitssnið:"
+
+#~ msgid "Windows layout:"
+#~ msgstr "Gluggayfirlit:"
+
+#~ msgid "Activation"
+#~ msgstr "Virkjun"
+
 #~ msgid ""
 #~ "Desktop effects have been suspended by another application.<br/>You can "
 #~ "resume using the '%1' shortcut."
@@ -4220,11 +4239,6 @@ msgstr "Xwayland hrundi"
 #~| msgid "Desktop %1"
 #~ msgid "Desktop number"
 #~ msgstr "Skjáborð %1"
-
-#, fuzzy
-#~| msgid "Configur&e Window Behavior..."
-#~ msgid "Configure virtual keyboards..."
-#~ msgstr "S&tilla gluggahegðan..."
 
 #~ msgid "Walk Through Window Tabs"
 #~ msgstr "Flipar fyrir flakk milli glugga"
