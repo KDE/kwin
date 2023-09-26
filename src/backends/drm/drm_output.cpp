@@ -156,11 +156,7 @@ void DrmOutput::setDpmsMode(DpmsMode mode)
             Q_EMIT aboutToTurnOff(std::chrono::milliseconds(m_turnOffTimer.interval()));
             m_turnOffTimer.start();
         }
-        if (isEnabled()) {
-            m_gpu->platform()->createDpmsFilter();
-        }
     } else {
-        m_gpu->platform()->checkOutputsAreOn();
         if (m_turnOffTimer.isActive() || (mode != dpmsMode() && setDrmDpmsMode(mode))) {
             Q_EMIT wakeUp();
         }
@@ -187,20 +183,15 @@ bool DrmOutput::setDrmDpmsMode(DpmsMode mode)
         m_pipeline->applyPendingChanges();
         updateDpmsMode(mode);
         if (active) {
-            m_gpu->platform()->checkOutputsAreOn();
             m_renderLoop->uninhibit();
             m_renderLoop->scheduleRepaint();
         } else {
             m_renderLoop->inhibit();
-            m_gpu->platform()->createDpmsFilter();
         }
         return true;
     } else {
         qCWarning(KWIN_DRM) << "Setting dpms mode failed!";
         m_pipeline->revertPendingChanges();
-        if (isEnabled() && isActive && !active) {
-            m_gpu->platform()->checkOutputsAreOn();
-        }
         return false;
     }
 }
@@ -359,10 +350,6 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     m_renderLoop->scheduleRepaint();
 
     Q_EMIT changed();
-
-    if (isEnabled() && dpmsMode() == DpmsMode::On) {
-        m_gpu->platform()->turnOutputsOn();
-    }
 }
 
 void DrmOutput::revertQueuedChanges()

@@ -78,6 +78,7 @@ class OutputConfiguration;
 class TileManager;
 class OutputConfigurationStore;
 class LidSwitchTracker;
+class DpmsInputEventFilter;
 
 class KWIN_EXPORT Workspace : public QObject
 {
@@ -607,6 +608,8 @@ private:
 
     void updateOutputConfiguration();
     void updateOutputs(const QVector<Output *> &outputOrder = {});
+    void createDpmsFilter();
+    void maybeDestroyDpmsFilter();
 
     struct Constraint
     {
@@ -722,6 +725,7 @@ private:
     std::map<Output *, std::unique_ptr<TileManager>> m_tileManagers;
     std::unique_ptr<OutputConfigurationStore> m_outputConfigStore;
     std::unique_ptr<LidSwitchTracker> m_lidSwitchTracker;
+    std::unique_ptr<DpmsInputEventFilter> m_dpmsFilter;
 
 private:
     friend bool performTransiencyCheck();

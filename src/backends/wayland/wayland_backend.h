@@ -44,7 +44,6 @@ class Touch;
 
 namespace KWin
 {
-class DpmsInputEventFilter;
 class GraphicsBuffer;
 
 namespace Wayland
@@ -236,8 +235,6 @@ public:
     {
         return m_outputs;
     }
-    void createDpmsFilter();
-    void clearDpmsFilter();
 
     Output *createVirtualOutput(const QString &name, const QSize &size, double scale) override;
     void removeVirtualOutput(Output *output) override;
@@ -269,7 +266,6 @@ private:
     std::unique_ptr<WaylandSeat> m_seat;
     WaylandEglBackend *m_eglBackend = nullptr;
     QVector<WaylandOutput *> m_outputs;
-    std::unique_ptr<DpmsInputEventFilter> m_dpmsFilter;
     bool m_pointerLockRequested = false;
     FileDescriptor m_drmFileDescriptor;
     gbm_device *m_gbmDevice = nullptr;

@@ -9,17 +9,13 @@
 #pragma once
 #include "core/outputbackend.h"
 
-#include "dpmsinputeventfilter.h"
-
 #include <QPointer>
 #include <QSize>
 #include <QSocketNotifier>
 #include <QVector>
 
-// system
-#include <sys/types.h>
-
 #include <memory>
+#include <sys/types.h>
 
 namespace KWin
 {
@@ -43,8 +39,6 @@ public:
     explicit DrmBackend(Session *session, QObject *parent = nullptr);
     ~DrmBackend() override;
 
-    Session *session() const;
-
     std::unique_ptr<InputBackend> createInputBackend() override;
     std::unique_ptr<QPainterBackend> createQPainterBackend() override;
     std::unique_ptr<OpenGLBackend> createOpenGLBackend() override;
@@ -53,9 +47,7 @@ public:
     bool initialize() override;
 
     Outputs outputs() const override;
-
-    void createDpmsFilter();
-    void checkOutputsAreOn();
+    Session *session() const override;
 
     QVector<CompositingType> supportedCompositors() const override;
 
@@ -76,7 +68,6 @@ public:
     const std::vector<std::unique_ptr<DrmGpu>> &gpus() const;
 
 public Q_SLOTS:
-    void turnOutputsOn();
     void sceneInitialized() override;
 
 Q_SIGNALS:
@@ -102,7 +93,6 @@ private:
 
     const QStringList m_explicitGpus;
     std::vector<std::unique_ptr<DrmGpu>> m_gpus;
-    std::unique_ptr<DpmsInputEventFilter> m_dpmsFilter;
     DrmRenderBackend *m_renderBackend = nullptr;
 };
 

@@ -211,11 +211,8 @@ void WaylandOutput::setDpmsMode(DpmsMode mode)
             Q_EMIT aboutToTurnOff(std::chrono::milliseconds(m_turnOffTimer.interval()));
             m_turnOffTimer.start();
         }
-        m_backend->createDpmsFilter();
     } else {
         m_turnOffTimer.stop();
-        m_backend->clearDpmsFilter();
-
         if (mode != dpmsMode()) {
             updateDpmsMode(mode);
             Q_EMIT wakeUp();

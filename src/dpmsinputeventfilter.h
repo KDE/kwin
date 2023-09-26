@@ -10,6 +10,7 @@
 #include "input.h"
 
 #include <QElapsedTimer>
+#include <QObject>
 
 #include <kwin_export.h>
 
@@ -18,8 +19,9 @@ namespace KWin
 
 class DrmBackend;
 
-class KWIN_EXPORT DpmsInputEventFilter : public InputEventFilter
+class KWIN_EXPORT DpmsInputEventFilter : public QObject, public InputEventFilter
 {
+    Q_OBJECT
 public:
     DpmsInputEventFilter();
     ~DpmsInputEventFilter() override;

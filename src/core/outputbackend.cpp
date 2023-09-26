@@ -102,6 +102,11 @@ void OutputBackend::setSceneEglGlobalShareContext(::EGLContext context)
     m_globalShareContext = context;
 }
 
+Session *OutputBackend::session() const
+{
+    return nullptr;
+}
+
 } // namespace KWin
 
 #include "moc_outputbackend.cpp"

@@ -8,6 +8,8 @@
 */
 #include "dpmsinputeventfilter.h"
 #include "core/output.h"
+#include "core/outputbackend.h"
+#include "core/session.h"
 #include "input_event.h"
 #include "main.h"
 #include "wayland/seat.h"
@@ -25,9 +27,15 @@ DpmsInputEventFilter::DpmsInputEventFilter()
 {
     KSharedConfig::Ptr kwinSettings = kwinApp()->config();
     m_enableDoubleTap = kwinSettings->group("Wayland").readEntry<bool>("DoubleTapWakeup", true);
+    if (Session *session = kwinApp()->outputBackend()->session()) {
+        connect(session, &Session::awoke, this, &DpmsInputEventFilter::notify);
+    }
 }
 
-DpmsInputEventFilter::~DpmsInputEventFilter() = default;
+DpmsInputEventFilter::~DpmsInputEventFilter()
+{
+    notify();
+}
 
 bool DpmsInputEventFilter::pointerEvent(MouseEvent *event, quint32 nativeButton)
 {
@@ -105,3 +113,4 @@ void DpmsInputEventFilter::notify()
 }
 
 }
+#include "moc_dpmsinputeventfilter.cpp"

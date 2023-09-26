@@ -71,7 +71,6 @@ DrmBackend::DrmBackend(Session *session, QObject *parent)
     , m_udevMonitor(m_udev->monitor())
     , m_session(session)
     , m_explicitGpus(splitPathList(qEnvironmentVariable("KWIN_DRM_DEVICES"), ':'))
-    , m_dpmsFilter()
 {
 }
 
@@ -87,42 +86,6 @@ Outputs DrmBackend::outputs() const
     return m_outputs;
 }
 
-void DrmBackend::createDpmsFilter()
-{
-    if (m_dpmsFilter) {
-        // already another output is off
-        return;
-    }
-    m_dpmsFilter = std::make_unique<DpmsInputEventFilter>();
-    input()->prependInputEventFilter(m_dpmsFilter.get());
-}
-
-void DrmBackend::turnOutputsOn()
-{
-    m_dpmsFilter.reset();
-    for (Output *output : std::as_const(m_outputs)) {
-        if (output->isEnabled()) {
-            output->setDpmsMode(Output::DpmsMode::On);
-        }
-    }
-}
-
-void DrmBackend::checkOutputsAreOn()
-{
-    if (!m_dpmsFilter) {
-        // already disabled, all outputs are on
-        return;
-    }
-    for (Output *output : std::as_const(m_outputs)) {
-        if (output->isEnabled() && output->dpmsMode() != Output::DpmsMode::On) {
-            // dpms still disabled, need to keep the filter
-            return;
-        }
-    }
-    // all outputs are on, disable the filter
-    m_dpmsFilter.reset();
-}
-
 bool DrmBackend::initialize()
 {
     connect(m_session, &Session::devicePaused, this, [this](dev_t deviceId) {
@@ -135,7 +98,6 @@ bool DrmBackend::initialize()
             gpu->setActive(true);
         }
     });
-    connect(m_session, &Session::awoke, this, &DrmBackend::turnOutputsOn);
 
     if (!m_explicitGpus.isEmpty()) {
         for (const QString &fileName : m_explicitGpus) {

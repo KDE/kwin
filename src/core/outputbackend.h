@@ -27,6 +27,7 @@ class OpenGLBackend;
 class QPainterBackend;
 class OutputConfiguration;
 class EglDisplay;
+class Session;
 
 class KWIN_EXPORT Outputs : public QVector<Output *>
 {
@@ -92,6 +93,8 @@ public:
      * Applies the output changes. Default implementation only sets values common between platforms
      */
     virtual bool applyOutputChanges(const OutputConfiguration &config);
+
+    virtual Session *session() const;
 
 public Q_SLOTS:
     virtual void sceneInitialized(){};

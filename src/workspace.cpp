@@ -45,6 +45,7 @@
 #include "tabbox/tabbox.h"
 #endif
 #include "decorations/decorationbridge.h"
+#include "dpmsinputeventfilter.h"
 #include "lidswitchtracker.h"
 #include "main.h"
 #include "outputconfigurationstore.h"
@@ -1289,8 +1290,11 @@ void Workspace::updateOutputs(const QVector<Output *> &outputOrder)
     for (Output *output : added) {
         output->ref();
         m_tileManagers[output] = std::make_unique<TileManager>(output);
+        connect(output, &Output::aboutToTurnOff, this, &Workspace::createDpmsFilter);
+        connect(output, &Output::dpmsModeChanged, this, &Workspace::maybeDestroyDpmsFilter);
         Q_EMIT outputAdded(output);
     }
+    maybeDestroyDpmsFilter();
 
     const auto removed = oldOutputsSet - outputsSet;
     for (Output *output : removed) {
@@ -1341,6 +1345,24 @@ void Workspace::updateOutputs(const QVector<Output *> &outputOrder)
     }
 
     Q_EMIT outputsChanged();
+}
+
+void Workspace::createDpmsFilter()
+{
+    if (!m_dpmsFilter) {
+        m_dpmsFilter = std::make_unique<DpmsInputEventFilter>();
+        input()->prependInputEventFilter(m_dpmsFilter.get());
+    }
+}
+
+void Workspace::maybeDestroyDpmsFilter()
+{
+    const bool allOn = std::all_of(m_outputs.begin(), m_outputs.end(), [](Output *output) {
+        return output->dpmsMode() == Output::DpmsMode::On;
+    });
+    if (allOn) {
+        m_dpmsFilter.reset();
+    }
 }
 
 void Workspace::slotDesktopAdded(VirtualDesktop *desktop)

@@ -8,7 +8,6 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "wayland_backend.h"
-#include "dpmsinputeventfilter.h"
 #include "input.h"
 #include "wayland_display.h"
 #include "wayland_egl_backend.h"
@@ -576,21 +575,6 @@ QVector<CompositingType> WaylandBackend::supportedCompositors() const
 Outputs WaylandBackend::outputs() const
 {
     return m_outputs;
-}
-
-void WaylandBackend::createDpmsFilter()
-{
-    if (m_dpmsFilter) {
-        // already another output is off
-        return;
-    }
-    m_dpmsFilter = std::make_unique<DpmsInputEventFilter>();
-    input()->prependInputEventFilter(m_dpmsFilter.get());
-}
-
-void WaylandBackend::clearDpmsFilter()
-{
-    m_dpmsFilter.reset();
 }
 
 Output *WaylandBackend::createVirtualOutput(const QString &name, const QSize &size, double scale)
