@@ -1409,7 +1409,7 @@ void Workspace::createDpmsFilter()
 void Workspace::maybeDestroyDpmsFilter()
 {
     const bool allOn = std::all_of(m_outputs.begin(), m_outputs.end(), [](Output *output) {
-        return output->dpmsMode() == Output::DpmsMode::On;
+        return output->dpmsMode() == Output::DpmsMode::On && !output->isPlaceholder();
     });
     if (allOn) {
         m_dpmsFilter.reset();
