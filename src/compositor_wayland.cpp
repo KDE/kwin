@@ -245,6 +245,9 @@ void WaylandCompositor::stop()
 
 void WaylandCompositor::addOutput(Output *output)
 {
+    if (output->isPlaceholder()) {
+        return;
+    }
     auto workspaceLayer = new RenderLayer(output->renderLoop());
     workspaceLayer->setDelegate(std::make_unique<SceneDelegate>(m_scene.get(), output));
     workspaceLayer->setGeometry(output->rect());
@@ -357,6 +360,9 @@ void WaylandCompositor::addOutput(Output *output)
 
 void WaylandCompositor::removeOutput(Output *output)
 {
+    if (output->isPlaceholder()) {
+        return;
+    }
     removeSuperLayer(m_superlayers[output->renderLoop()]);
 }
 
