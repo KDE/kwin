@@ -50,17 +50,17 @@ static quint64 refreshRateForMode(_drmModeModeInfo *m)
     return refreshRate;
 }
 
-static OutputMode::Flags flagsForMode(const drmModeModeInfo *info)
+static OutputMode::Flags flagsForMode(const drmModeModeInfo *info, OutputMode::Flags additionalFlags)
 {
-    OutputMode::Flags flags;
+    OutputMode::Flags flags = additionalFlags;
     if (info->type & DRM_MODE_TYPE_PREFERRED) {
         flags |= OutputMode::Flag::Preferred;
     }
     return flags;
 }
 
-DrmConnectorMode::DrmConnectorMode(DrmConnector *connector, drmModeModeInfo nativeMode)
-    : OutputMode(resolutionForMode(&nativeMode), refreshRateForMode(&nativeMode), flagsForMode(&nativeMode))
+DrmConnectorMode::DrmConnectorMode(DrmConnector *connector, drmModeModeInfo nativeMode, Flags additionalFlags)
+    : OutputMode(resolutionForMode(&nativeMode), refreshRateForMode(&nativeMode), flagsForMode(&nativeMode, additionalFlags))
     , m_connector(connector)
     , m_nativeMode(nativeMode)
 {
@@ -276,7 +276,7 @@ bool DrmConnector::updateProperties()
         // reload modes
         m_driverModes.clear();
         for (int i = 0; i < m_conn->count_modes; i++) {
-            m_driverModes.append(std::make_shared<DrmConnectorMode>(this, m_conn->modes[i]));
+            m_driverModes.append(std::make_shared<DrmConnectorMode>(this, m_conn->modes[i], OutputMode::Flags()));
         }
         m_modes.clear();
         m_modes.append(m_driverModes);
@@ -398,7 +398,7 @@ std::shared_ptr<DrmConnectorMode> DrmConnector::generateMode(const QSize &size, 
     sprintf(mode.name, "%dx%d@%d", size.width(), size.height(), mode.vrefresh);
 
     free(modeInfo);
-    return std::make_shared<DrmConnectorMode>(this, mode);
+    return std::make_shared<DrmConnectorMode>(this, mode, OutputMode::Flag::Generated);
 }
 
 QDebug &operator<<(QDebug &s, const KWin::DrmConnector *obj)

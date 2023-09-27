@@ -93,6 +93,7 @@ class KWIN_EXPORT OutputMode
 public:
     enum class Flag : uint {
         Preferred = 0x1,
+        Generated = 0x2,
     };
     Q_DECLARE_FLAGS(Flags, Flag)
 

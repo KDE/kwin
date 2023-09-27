@@ -88,6 +88,10 @@ std::shared_ptr<OutputMode> OutputConfigurationStore::chooseMode(Output *output)
 
     std::shared_ptr<OutputMode> ret;
     for (auto mode : modes) {
+        if (mode->flags() & OutputMode::Flag::Generated) {
+            // generated modes aren't guaranteed to work, so don't choose one as the default
+            continue;
+        }
         if (!ret) {
             ret = mode;
             continue;

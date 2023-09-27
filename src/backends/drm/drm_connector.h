@@ -33,7 +33,7 @@ class DrmCrtc;
 class DrmConnectorMode : public OutputMode
 {
 public:
-    DrmConnectorMode(DrmConnector *connector, drmModeModeInfo nativeMode);
+    DrmConnectorMode(DrmConnector *connector, drmModeModeInfo nativeMode, Flags additionalFlags);
 
     drmModeModeInfo *nativeMode();
     std::shared_ptr<DrmBlob> blob();
