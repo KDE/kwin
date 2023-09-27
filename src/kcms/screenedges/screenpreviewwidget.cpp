@@ -15,7 +15,6 @@
 
 #include <KSvg/FrameSvg>
 #include <KSvg/ImageSet>
-#include <kurlmimedata.h>
 
 #include <memory>
 
@@ -139,21 +138,6 @@ void ScreenPreviewWidget::paintEvent(QPaintEvent *event)
     painter.restore();
 
     d->screenGraphics->paint(&painter, d->previewRect, "glass");
-}
-
-void ScreenPreviewWidget::dropEvent(QDropEvent *e)
-{
-    if (!e->mimeData()->hasUrls()) {
-        return;
-    }
-
-    QList<QUrl> uris(KUrlMimeData::urlsFromMimeData(e->mimeData()));
-    if (!uris.isEmpty()) {
-        // TODO: Download remote file
-        if (uris.first().isLocalFile()) {
-            Q_EMIT imageDropped(uris.first().path());
-        }
-    }
 }
 
 #include "moc_screenpreviewwidget.cpp"
