@@ -24,7 +24,9 @@ EglSwapchainSlot::EglSwapchainSlot(EglContext *context, GraphicsBuffer *buffer)
     : m_buffer(buffer)
 {
     m_texture = context->importDmaBufAsTexture(*buffer->dmabufAttributes());
-    m_framebuffer = std::make_unique<GLFramebuffer>(m_texture.get());
+    if (m_texture) {
+        m_framebuffer = std::make_unique<GLFramebuffer>(m_texture.get());
+    }
 }
 
 EglSwapchainSlot::~EglSwapchainSlot()
@@ -137,7 +139,7 @@ std::shared_ptr<EglSwapchain> EglSwapchain::create(GraphicsBufferAllocator *allo
     }
 
     const QVector<std::shared_ptr<EglSwapchainSlot>> slots{std::make_shared<EglSwapchainSlot>(context, seed)};
-    if (!slots.front()->framebuffer()->valid()) {
+    if (!slots.front()->framebuffer() || !slots.front()->framebuffer()->valid()) {
         return nullptr;
     }
     return std::make_shared<EglSwapchain>(std::move(allocator),
