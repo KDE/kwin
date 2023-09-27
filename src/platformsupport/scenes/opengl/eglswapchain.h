@@ -29,13 +29,15 @@ class EglContext;
 class KWIN_EXPORT EglSwapchainSlot
 {
 public:
-    EglSwapchainSlot(EglContext *context, GraphicsBuffer *buffer);
+    EglSwapchainSlot(GraphicsBuffer *buffer, std::unique_ptr<GLFramebuffer> &&framebuffer, const std::shared_ptr<GLTexture> &texture);
     ~EglSwapchainSlot();
 
     GraphicsBuffer *buffer() const;
     std::shared_ptr<GLTexture> texture() const;
     GLFramebuffer *framebuffer() const;
     int age() const;
+
+    static std::shared_ptr<EglSwapchainSlot> create(EglContext *context, GraphicsBuffer *buffer);
 
 private:
     GraphicsBuffer *m_buffer;
@@ -48,7 +50,7 @@ private:
 class KWIN_EXPORT EglSwapchain
 {
 public:
-    EglSwapchain(GraphicsBufferAllocator *allocator, EglContext *context, const QSize &size, uint32_t format, uint64_t modifier, const QVector<std::shared_ptr<EglSwapchainSlot>> &slots);
+    EglSwapchain(GraphicsBufferAllocator *allocator, EglContext *context, const QSize &size, uint32_t format, uint64_t modifier, const std::shared_ptr<EglSwapchainSlot> &seed);
     ~EglSwapchain();
 
     QSize size() const;

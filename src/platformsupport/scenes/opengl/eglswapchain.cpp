@@ -20,13 +20,11 @@
 namespace KWin
 {
 
-EglSwapchainSlot::EglSwapchainSlot(EglContext *context, GraphicsBuffer *buffer)
+EglSwapchainSlot::EglSwapchainSlot(GraphicsBuffer *buffer, std::unique_ptr<GLFramebuffer> &&framebuffer, const std::shared_ptr<GLTexture> &texture)
     : m_buffer(buffer)
+    , m_framebuffer(std::move(framebuffer))
+    , m_texture(texture)
 {
-    m_texture = context->importDmaBufAsTexture(*buffer->dmabufAttributes());
-    if (m_texture) {
-        m_framebuffer = std::make_unique<GLFramebuffer>(m_texture.get());
-    }
 }
 
 EglSwapchainSlot::~EglSwapchainSlot()
@@ -56,13 +54,28 @@ int EglSwapchainSlot::age() const
     return m_age;
 }
 
-EglSwapchain::EglSwapchain(GraphicsBufferAllocator *allocator, EglContext *context, const QSize &size, uint32_t format, uint64_t modifier, const QVector<std::shared_ptr<EglSwapchainSlot>> &slots)
+std::shared_ptr<EglSwapchainSlot> EglSwapchainSlot::create(EglContext *context, GraphicsBuffer *buffer)
+{
+    auto texture = context->importDmaBufAsTexture(*buffer->dmabufAttributes());
+    if (!texture) {
+        buffer->drop();
+        return nullptr;
+    }
+    auto framebuffer = std::make_unique<GLFramebuffer>(texture.get());
+    if (!framebuffer->valid()) {
+        buffer->drop();
+        return nullptr;
+    }
+    return std::make_shared<EglSwapchainSlot>(buffer, std::move(framebuffer), texture);
+}
+
+EglSwapchain::EglSwapchain(GraphicsBufferAllocator *allocator, EglContext *context, const QSize &size, uint32_t format, uint64_t modifier, const std::shared_ptr<EglSwapchainSlot> &seed)
     : m_allocator(allocator)
     , m_context(context)
     , m_size(size)
     , m_format(format)
     , m_modifier(modifier)
-    , m_slots(slots)
+    , m_slots({seed})
 {
 }
 
@@ -103,8 +116,8 @@ std::shared_ptr<EglSwapchainSlot> EglSwapchain::acquire()
         return nullptr;
     }
 
-    auto slot = std::make_shared<EglSwapchainSlot>(m_context, buffer);
-    if (!slot->framebuffer()->valid()) {
+    auto slot = EglSwapchainSlot::create(m_context, buffer);
+    if (!slot) {
         return nullptr;
     }
     m_slots.append(slot);
@@ -137,17 +150,16 @@ std::shared_ptr<EglSwapchain> EglSwapchain::create(GraphicsBufferAllocator *allo
     if (!seed) {
         return nullptr;
     }
-
-    const QVector<std::shared_ptr<EglSwapchainSlot>> slots{std::make_shared<EglSwapchainSlot>(context, seed)};
-    if (!slots.front()->framebuffer() || !slots.front()->framebuffer()->valid()) {
+    const auto first = EglSwapchainSlot::create(context, seed);
+    if (!first) {
         return nullptr;
     }
     return std::make_shared<EglSwapchain>(std::move(allocator),
-                                             context,
-                                             size,
-                                             format,
-                                             seed->dmabufAttributes()->modifier,
-                                             slots);
+                                          context,
+                                          size,
+                                          format,
+                                          seed->dmabufAttributes()->modifier,
+                                          first);
 }
 
 } // namespace KWin
