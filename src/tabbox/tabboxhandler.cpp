@@ -224,40 +224,17 @@ QObject *TabBoxHandlerPrivate::createSwitcherItem()
         QStandardPaths::GenericDataLocation,
         QStringLiteral("plasma/look-and-feel/%1/contents/windowswitcher/WindowSwitcher.qml").arg(config.layoutName()));
     if (file.isNull()) {
-        const QString folderName = QLatin1String("kwin/tabbox/");
-        auto findSwitcher = [this, folderName] {
-            const QString type = QStringLiteral("KWin/WindowSwitcher");
-            auto offers = KPackage::PackageLoader::self()->findPackages(type, folderName,
-                                                                        [this](const KPluginMetaData &data) {
-                                                                            return data.pluginId().compare(config.layoutName(), Qt::CaseInsensitive) == 0;
-                                                                        });
-            if (offers.isEmpty()) {
-                // load default
-                offers = KPackage::PackageLoader::self()->findPackages(type, folderName,
-                                                                       [](const KPluginMetaData &data) {
-                                                                           return data.pluginId().compare(QStringLiteral("thumbnail_grid"), Qt::CaseInsensitive) == 0;
-                                                                       });
-                if (offers.isEmpty()) {
-                    qCDebug(KWIN_TABBOX) << "could not find default window switcher layout";
-                    return KPluginMetaData();
-                }
-            }
-            return offers.first();
-        };
-        auto service = findSwitcher();
-        if (!service.isValid()) {
-            return nullptr;
+        const QString type = QStringLiteral("KWin/WindowSwitcher");
+
+        KPackage::Package pkg = KPackage::PackageLoader::self()->loadPackage(type, config.layoutName());
+
+        if (!pkg.isValid()) {
+            // load default
+            qCWarning(KWIN_TABBOX) << "Could not load window switcher package" << config.layoutName() << ". Falling back to default";
+            pkg = KPackage::PackageLoader::self()->loadPackage(type, TabBoxConfig::defaultLayoutName());
         }
-        if (service.value(QStringLiteral("X-Plasma-API")) != QLatin1String("declarativeappletscript")) {
-            qCDebug(KWIN_TABBOX) << "Window Switcher Layout is no declarativeappletscript";
-            return nullptr;
-        }
-        auto findScriptFile = [service, folderName] {
-            const QString pluginName = service.pluginId();
-            const QString scriptName = service.value(QStringLiteral("X-Plasma-MainScript"));
-            return QStandardPaths::locate(QStandardPaths::GenericDataLocation, folderName + pluginName + QLatin1String("/contents/") + scriptName);
-        };
-        file = findScriptFile();
+
+        file = pkg.filePath("mainscript");
     }
     if (file.isNull()) {
         qCDebug(KWIN_TABBOX) << "Could not find QML file for window switcher";
