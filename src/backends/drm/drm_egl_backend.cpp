@@ -118,10 +118,10 @@ EglDisplay *EglGbmBackend::displayForGpu(DrmGpu *gpu)
     return display;
 }
 
-EglContext *EglGbmBackend::contextForGpu(DrmGpu *gpu)
+std::shared_ptr<EglContext> EglGbmBackend::contextForGpu(DrmGpu *gpu)
 {
     if (gpu == m_backend->primaryGpu()) {
-        return contextObject();
+        return m_context;
     }
     auto display = gpu->eglDisplay();
     if (!display) {
@@ -131,10 +131,12 @@ EglContext *EglGbmBackend::contextForGpu(DrmGpu *gpu)
         }
     }
     auto &context = m_contexts[display];
-    if (!context) {
-        context = EglContext::create(display, EGL_NO_CONFIG_KHR, EGL_NO_CONTEXT);
+    if (const auto c = context.lock()) {
+        return c;
     }
-    return context.get();
+    const auto ret = std::shared_ptr<EglContext>(EglContext::create(display, EGL_NO_CONFIG_KHR, EGL_NO_CONTEXT));
+    context = ret;
+    return ret;
 }
 
 std::unique_ptr<SurfaceTexture> EglGbmBackend::createSurfaceTextureWayland(SurfacePixmap *pixmap)

@@ -53,9 +53,21 @@ EglGbmLayerSurface::~EglGbmLayerSurface()
     destroyResources();
 }
 
+EglGbmLayerSurface::Surface::~Surface()
+{
+    if (importContext) {
+        importContext->makeCurrent();
+        importGbmSwapchain.reset();
+        importedTextureCache.clear();
+        importContext.reset();
+    }
+    if (context) {
+        context->makeCurrent();
+    }
+}
+
 void EglGbmLayerSurface::destroyResources()
 {
-    m_eglBackend->makeCurrent();
     m_surface = {};
     m_oldSurface = {};
 }
@@ -316,12 +328,13 @@ std::optional<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(con
 {
     const bool cpuCopy = importMode == MultiGpuImportMode::DumbBuffer || m_bufferTarget == BufferTarget::Dumb;
     QVector<uint64_t> renderModifiers;
+    Surface ret;
     if (importMode == MultiGpuImportMode::Egl) {
-        const auto context = m_eglBackend->contextForGpu(m_gpu);
-        if (!context || context->isSoftwareRenderer()) {
+        ret.importContext = m_eglBackend->contextForGpu(m_gpu);
+        if (!ret.importContext || ret.importContext->isSoftwareRenderer()) {
             return std::nullopt;
         }
-        renderModifiers = filterModifiers(context->displayObject()->allSupportedDrmFormats()[format],
+        renderModifiers = filterModifiers(ret.importContext->displayObject()->allSupportedDrmFormats()[format],
                                           m_eglBackend->eglDisplayObject()->supportedDrmFormats().value(format));
     } else if (cpuCopy) {
         if (!cpuCopyFormats.contains(format)) {
@@ -334,7 +347,7 @@ std::optional<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(con
     if (renderModifiers.empty()) {
         return std::nullopt;
     }
-    Surface ret;
+    ret.context = m_eglBackend->contextForGpu(m_eglBackend->gpu());
     ret.importMode = importMode;
     ret.forceLinear = importMode == MultiGpuImportMode::DumbBuffer || importMode == MultiGpuImportMode::LinearDmabuf || m_bufferTarget != BufferTarget::Normal;
     ret.gbmSwapchain = createGbmSwapchain(m_eglBackend->gpu(), m_eglBackend->contextObject(), size, format, renderModifiers, ret.forceLinear);
@@ -344,7 +357,7 @@ std::optional<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(con
     if (cpuCopy) {
         ret.importDumbSwapchain = std::make_shared<QPainterSwapchain>(m_gpu->graphicsBufferAllocator(), size, format);
     } else if (importMode == MultiGpuImportMode::Egl) {
-        ret.importGbmSwapchain = createGbmSwapchain(m_gpu, m_eglBackend->contextForGpu(m_gpu), size, format, modifiers, false);
+        ret.importGbmSwapchain = createGbmSwapchain(m_gpu, ret.importContext.get(), size, format, modifiers, false);
         if (!ret.importGbmSwapchain) {
             return std::nullopt;
         }
@@ -428,20 +441,19 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface &surfa
     if (!sourceFence.isValid() || !display->supportsNativeFence()) {
         glFinish();
     }
-    const auto context = m_eglBackend->contextForGpu(m_gpu);
-    if (!context || context->isSoftwareRenderer() || !context->makeCurrent()) {
+    if (!surface.importContext->makeCurrent()) {
         return nullptr;
     }
     surface.importTimeQuery->begin();
 
     if (sourceFence.isValid()) {
-        const auto destinationFence = EGLNativeFence::importFence(context->displayObject(), sourceFence.fileDescriptor().duplicate());
+        const auto destinationFence = EGLNativeFence::importFence(surface.importContext->displayObject(), sourceFence.fileDescriptor().duplicate());
         destinationFence.waitSync();
     }
 
     auto &sourceTexture = surface.importedTextureCache[sourceBuffer];
     if (!sourceTexture) {
-        sourceTexture = context->importDmaBufAsTexture(*sourceBuffer->dmabufAttributes());
+        sourceTexture = surface.importContext->importDmaBufAsTexture(*sourceBuffer->dmabufAttributes());
     }
     if (!sourceTexture) {
         qCWarning(KWIN_DRM, "failed to import the source texture!");
@@ -457,7 +469,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface &surfa
     glBindFramebuffer(GL_FRAMEBUFFER, fbo->handle());
     glViewport(0, 0, fbo->size().width(), fbo->size().height());
 
-    const auto shader = context->shaderManager()->pushShader(sourceTexture->target() == GL_TEXTURE_EXTERNAL_OES ? ShaderTrait::MapExternalTexture : ShaderTrait::MapTexture);
+    const auto shader = surface.importContext->shaderManager()->pushShader(sourceTexture->target() == GL_TEXTURE_EXTERNAL_OES ? ShaderTrait::MapExternalTexture : ShaderTrait::MapTexture);
     QMatrix4x4 mat;
     mat.scale(1, -1);
     mat.ortho(QRect(QPoint(), fbo->size()));
@@ -469,7 +481,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface &surfa
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-    context->shaderManager()->popShader();
+    surface.importContext->shaderManager()->popShader();
     glFlush();
     surface.importGbmSwapchain->release(slot);
     surface.importTimeQuery->end();

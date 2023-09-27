@@ -76,6 +76,9 @@ private:
     };
     struct Surface
     {
+        ~Surface();
+
+        std::shared_ptr<EglContext> context;
         bool colormanagementEnabled = false;
         std::shared_ptr<GLTexture> shadowTexture;
         std::shared_ptr<GLFramebuffer> shadowBuffer;
@@ -86,6 +89,7 @@ private:
         std::shared_ptr<EglSwapchainSlot> currentSlot;
         DamageJournal damageJournal;
         std::shared_ptr<QPainterSwapchain> importDumbSwapchain;
+        std::shared_ptr<EglContext> importContext;
         std::shared_ptr<EglSwapchain> importGbmSwapchain;
         QHash<GraphicsBuffer *, std::shared_ptr<GLTexture>> importedTextureCache;
         QImage cpuCopyCache;

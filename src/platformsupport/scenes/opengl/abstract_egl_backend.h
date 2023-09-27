@@ -61,16 +61,14 @@ protected:
     bool isOpenGLES() const;
     bool createContext(EGLConfig config);
 
-private:
     bool ensureGlobalShareContext(EGLConfig config);
     void destroyGlobalShareContext();
     ::EGLContext createContextInternal(::EGLContext sharedContext);
-
     void teardown();
 
     EglDisplay *m_display = nullptr;
     EGLSurface m_surface = EGL_NO_SURFACE;
-    std::unique_ptr<EglContext> m_context;
+    std::shared_ptr<EglContext> m_context;
     QList<QByteArray> m_clientExtensions;
     const dev_t m_deviceId;
     QVector<LinuxDmaBufV1Feedback::Tranche> m_tranches;
