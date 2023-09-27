@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-26 01:47+0000\n"
+"POT-Creation-Date: 2023-09-27 01:42+0000\n"
 "PO-Revision-Date: 2023-07-24 21:32+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -41,29 +41,29 @@ msgstr ""
 "ilpo@iki.fi, mikko.piippo@helsinki.fi, lliehu@kolumbus.fi, "
 "translator@legisign.org"
 
-#: backends/wayland/wayland_output.cpp:254
+#: backends/wayland/wayland_output.cpp:251
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Peru osoittimen kaappaus painamalla oikeaa Ctrl-näppäintä"
 
-#: backends/wayland/wayland_output.cpp:256
+#: backends/wayland/wayland_output.cpp:253
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Kaappaa osoitin painamalla oikeaa Ctrl-näppäintä"
 
-#: backends/wayland/wayland_output.cpp:260
+#: backends/wayland/wayland_output.cpp:257
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1 (%2)"
 msgstr "KDE:n Wayland-koostin %1 (%2)"
 
-#: backends/wayland/wayland_output.cpp:263
+#: backends/wayland/wayland_output.cpp:260
 #, kde-format
 msgid "- Output disabled"
 msgstr "– Ulostulo ei käytössä"
 
-#: backends/wayland/wayland_output.cpp:265
+#: backends/wayland/wayland_output.cpp:262
 #, kde-format
 msgid "- Output dimmed"
 msgstr "– Ulostulo himmennetty"
@@ -4129,7 +4129,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Ei vastaa)"
 
-#: workspace.cpp:1540
+#: workspace.cpp:1565
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

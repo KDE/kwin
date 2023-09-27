@@ -10,13 +10,13 @@
 # Serdar SOYTETİR <tulliana@gmail.com>, 2010, 2012.
 # Volkan Gezer <volkangezer@gmail.com>, 2013, 2014, 2017.
 # Kaan Ozdincer <kaanozdincer@gmail.com>, 2014.
-# Emir SARI <emir_sari@icloud.com>, 2022, 2023.
+# SPDX-FileCopyrightText: 2022, 2023 Emir SARI <emir_sari@icloud.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-26 01:47+0000\n"
-"PO-Revision-Date: 2023-08-24 07:01+0300\n"
+"POT-Creation-Date: 2023-09-27 01:42+0000\n"
+"PO-Revision-Date: 2023-09-26 06:56+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 23.11.70\n"
+"X-Generator: Lokalize 23.08.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -36,29 +36,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "tulliana@gmail.com, volkangezer@gmail.com, emir_sari@icloud.com"
 
-#: backends/wayland/wayland_output.cpp:254
+#: backends/wayland/wayland_output.cpp:251
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "İşaretçiyi bırakmak için sağ kontrol düğmesine bas"
 
-#: backends/wayland/wayland_output.cpp:256
+#: backends/wayland/wayland_output.cpp:253
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "İşaretçiyi yakalamak için sağ kontrol düğmesine bas"
 
-#: backends/wayland/wayland_output.cpp:260
+#: backends/wayland/wayland_output.cpp:257
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1 (%2)"
 msgstr "KDE Wayland Bileşikleştiricisi %1 (%2)"
 
-#: backends/wayland/wayland_output.cpp:263
+#: backends/wayland/wayland_output.cpp:260
 #, kde-format
 msgid "- Output disabled"
 msgstr "- Çıktı devre dışı"
 
-#: backends/wayland/wayland_output.cpp:265
+#: backends/wayland/wayland_output.cpp:262
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- Çıktı karartıldı"
@@ -2195,28 +2195,26 @@ msgstr "Bilinmiyor"
 #, kde-format
 msgctxt "@action Overview and Grid View are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "Genel Görünüm/Izgara Görünümü Arasında Geçiş Yap"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:48
 #: plugins/overview/overvieweffect.cpp:133
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
-msgstr ""
+msgstr "Izgara Görünümü/Genel Görünüm Arasında Geçiş Yap"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:55
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Overview is the name of a KWin effect"
 msgid "Toggle Overview"
 msgstr "Genel Görünümü Aç/Kapat"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:62
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Grid View is the name of a KWin effect"
 msgid "Toggle Grid View"
-msgstr "Genel Görünümü Aç/Kapat"
+msgstr "Izgara Görünümünü Aç/Kapat"
 
 #. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
 #: plugins/overview/kcm/overvieweffectkcm.ui:22
@@ -2249,27 +2247,25 @@ msgstr "Simge durumuna küçültülen pencereleri yok say:"
 #: plugins/overview/kcm/overvieweffectkcm.ui:57
 #, kde-format
 msgid "Organize windows in the Grid View:"
-msgstr ""
+msgstr "Izgara görünümünde pencereleri organize et:"
 
 #: plugins/overview/overvieweffect.cpp:124
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "Genel Görünüm/Izgara Görünümü Arasında Geçiş Yap"
 
 #: plugins/overview/overvieweffect.cpp:141
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
 msgstr "Genel Görünümü Aç/Kapat"
 
 #: plugins/overview/overvieweffect.cpp:149
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
-msgstr "Genel Görünümü Aç/Kapat"
+msgstr "Izgara Görünümünü Aç/Kapat"
 
 #: plugins/overview/qml/DesktopBar.qml:172
 #, kde-format
@@ -2282,29 +2278,25 @@ msgid "Add Virtual Desktop"
 msgstr "Sanal Masaüstü Ekle"
 
 #: plugins/overview/qml/main.qml:318
-#, fuzzy, kde-format
-#| msgid "Delete Virtual Desktop"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
-msgstr "Sanal Masaüstünü Sil"
+msgstr "Gösterilecek başka sanal masaüstü yok"
 
 #: plugins/overview/qml/main.qml:324
-#, fuzzy, kde-format
-#| msgid "Add Virtual Desktop"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "Sanal Masaüstü Ekle"
 
 #: plugins/overview/qml/main.qml:331
-#, fuzzy, kde-format
-#| msgid "Delete Virtual Desktop"
+#, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
-msgstr "Sanal Masaüstünü Sil"
+msgstr "Sanal Masaüstlerini Yapılandır…"
 
 #: plugins/overview/qml/main.qml:658
-#, fuzzy, kde-format
-#| msgid "No matching windows"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
 msgstr "Eşleşen pencere yok"
@@ -4107,7 +4099,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Yanıt Vermiyor)"
 
-#: workspace.cpp:1540
+#: workspace.cpp:1565
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-26 01:47+0000\n"
-"PO-Revision-Date: 2023-07-21 18:55+0100\n"
+"POT-Creation-Date: 2023-09-27 01:42+0000\n"
+"PO-Revision-Date: 2023-09-26 20:18+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -34,29 +34,29 @@ msgstr ""
 "wolfram@steloj.de,Steffen.Pietsch@BerlinOnline.de,matthias@peick.de,"
 "cfmckee@gmail.com"
 
-#: backends/wayland/wayland_output.cpp:254
+#: backends/wayland/wayland_output.cpp:251
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Premu dekstran kontrolon por malkapti montrilon"
 
-#: backends/wayland/wayland_output.cpp:256
+#: backends/wayland/wayland_output.cpp:253
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Premu dekstran kontrolklavon por kapti montrilon"
 
-#: backends/wayland/wayland_output.cpp:260
+#: backends/wayland/wayland_output.cpp:257
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1 (%2)"
 msgstr "KDE Wayland Komponilo %1 (%2)"
 
-#: backends/wayland/wayland_output.cpp:263
+#: backends/wayland/wayland_output.cpp:260
 #, kde-format
 msgid "- Output disabled"
 msgstr "- Eligo malebligita"
 
-#: backends/wayland/wayland_output.cpp:265
+#: backends/wayland/wayland_output.cpp:262
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- Eligo malheliĝis"
@@ -2193,28 +2193,26 @@ msgstr "Nekonata"
 #, kde-format
 msgctxt "@action Overview and Grid View are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "Cirkuli tra Overview kaj Grid-View"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:48
 #: plugins/overview/overvieweffect.cpp:133
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
-msgstr ""
+msgstr "Cirkuli tra Grid-View kaj Overview"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:55
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Overview is the name of a KWin effect"
 msgid "Toggle Overview"
-msgstr "Baskuligi Superrigardon"
+msgstr "Baskuligi Overview"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:62
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Grid View is the name of a KWin effect"
 msgid "Toggle Grid View"
-msgstr "Baskuligi Superrigardon"
+msgstr "Baskuligi Grid-View"
 
 #. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
 #: plugins/overview/kcm/overvieweffectkcm.ui:22
@@ -2247,27 +2245,25 @@ msgstr "Ignori minimumigitajn fenestrojn:"
 #: plugins/overview/kcm/overvieweffectkcm.ui:57
 #, kde-format
 msgid "Organize windows in the Grid View:"
-msgstr ""
+msgstr "Organizi fenestrojn en la Grid-View:"
 
 #: plugins/overview/overvieweffect.cpp:124
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "Cirkuli tra Overview kaj Grid-View"
 
 #: plugins/overview/overvieweffect.cpp:141
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
-msgstr "Baskuligi Superrigardon"
+msgstr "Baskuligi Overview"
 
 #: plugins/overview/overvieweffect.cpp:149
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
-msgstr "Baskuligi Superrigardon"
+msgstr "Baskuligi Grid-View"
 
 #: plugins/overview/qml/DesktopBar.qml:172
 #, kde-format
@@ -2280,29 +2276,25 @@ msgid "Add Virtual Desktop"
 msgstr "Aldoni Virtualan Labortablon"
 
 #: plugins/overview/qml/main.qml:318
-#, fuzzy, kde-format
-#| msgid "Delete Virtual Desktop"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
-msgstr "Forigi Virtualan Labortablo"
+msgstr "Neniu alia Virtuala Labortablo por montri"
 
 #: plugins/overview/qml/main.qml:324
-#, fuzzy, kde-format
-#| msgid "Add Virtual Desktop"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "Aldoni Virtualan Labortablon"
 
 #: plugins/overview/qml/main.qml:331
-#, fuzzy, kde-format
-#| msgid "Delete Virtual Desktop"
+#, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
-msgstr "Forigi Virtualan Labortablo"
+msgstr "Agordgi Virtualajn Labortablojn…"
 
 #: plugins/overview/qml/main.qml:658
-#, fuzzy, kde-format
-#| msgid "No matching windows"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
 msgstr "Neniuj kongruaj fenestroj"
@@ -4101,7 +4093,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Ne respondante)"
 
-#: workspace.cpp:1540
+#: workspace.cpp:1565
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4129,56 +4121,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland paneis"
-
-#~ msgid "Show Desktop Grid"
-#~ msgstr "Montri labortablan kradon"
-
-#~ msgctxt "Desktop name alignment:"
-#~ msgid "Disabled"
-#~ msgstr "Malebligita"
-
-#~ msgid "Top-Right"
-#~ msgstr "Supre-dekstra"
-
-#~ msgid "Bottom-Right"
-#~ msgstr "Malsupre-dekstra"
-
-#~ msgid "Bottom-Left"
-#~ msgstr "Malsupre-Maldekstre"
-
-#~ msgid "Top-Left"
-#~ msgstr "Supre-Maldekstre"
-
-#~ msgid "Pager"
-#~ msgstr "Televokilo"
-
-#~ msgid "Automatic"
-#~ msgstr "Aŭtomata"
-
-#~ msgid "Custom"
-#~ msgstr "Propra"
-
-#~ msgid "N&umber of rows:"
-#~ msgstr "N&ombro de vicoj:"
-
-#~ msgid "Desktop &name alignment:"
-#~ msgstr "Labortablo&noma vicigo:"
-
-#~ msgid "Show buttons to alter count of virtual desktops"
-#~ msgstr "Montri butonojn por ŝanĝi la nombron de virtualaj labortabloj"
-
-#~ msgid "&Grid layout mode:"
-#~ msgstr "&Krad-aranĝa reĝimo:"
-
-#~ msgid "Windows layout:"
-#~ msgstr "Fenestra aranĝo:"
-
-#~ msgid "Activation"
-#~ msgstr "Aktivigo"
-
-#~ msgid ""
-#~ "Desktop effects have been suspended by another application.<br/>You can "
-#~ "resume using the '%1' shortcut."
-#~ msgstr ""
-#~ "Surtablaj efikoj estas malakceptitaj de alia aplikaĵo.<br/>Vi povas "
-#~ "rekomenci uzi la ŝparvojon '%1'."

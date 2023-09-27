@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-26 01:47+0000\n"
-"PO-Revision-Date: 2023-09-14 18:42+0200\n"
+"POT-Creation-Date: 2023-09-27 01:42+0000\n"
+"PO-Revision-Date: 2023-09-26 12:28+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -34,29 +34,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "alviboi@gmail.com,sps@sastia.com"
 
-#: backends/wayland/wayland_output.cpp:254
+#: backends/wayland/wayland_output.cpp:251
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Premeu la tecla de control dret per a deixar anar el punter"
 
-#: backends/wayland/wayland_output.cpp:256
+#: backends/wayland/wayland_output.cpp:253
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Premeu la tecla de control dret per a agafar el punter"
 
-#: backends/wayland/wayland_output.cpp:260
+#: backends/wayland/wayland_output.cpp:257
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1 (%2)"
 msgstr "Compositor de Wayland de KDE %1 (%2)"
 
-#: backends/wayland/wayland_output.cpp:263
+#: backends/wayland/wayland_output.cpp:260
 #, kde-format
 msgid "- Output disabled"
 msgstr "- Eixida desactivada"
 
-#: backends/wayland/wayland_output.cpp:265
+#: backends/wayland/wayland_output.cpp:262
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- Eixida enfosquida"
@@ -2213,28 +2213,26 @@ msgstr "Desconegut"
 #, kde-format
 msgctxt "@action Overview and Grid View are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "Circula entre la vista general i la vista de quadrícula"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:48
 #: plugins/overview/overvieweffect.cpp:133
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
-msgstr ""
+msgstr "Circula entre la vista de quadrícula i la vista general"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:55
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Overview is the name of a KWin effect"
 msgid "Toggle Overview"
 msgstr "Canvia la vista general"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:62
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Grid View is the name of a KWin effect"
 msgid "Toggle Grid View"
-msgstr "Canvia la vista general"
+msgstr "Canvia la vista de quadrícula"
 
 #. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
 #: plugins/overview/kcm/overvieweffectkcm.ui:22
@@ -2267,27 +2265,25 @@ msgstr "Ignora les finestres minimitzades:"
 #: plugins/overview/kcm/overvieweffectkcm.ui:57
 #, kde-format
 msgid "Organize windows in the Grid View:"
-msgstr ""
+msgstr "Organitza les finestres en la vista de quadrícula:"
 
 #: plugins/overview/overvieweffect.cpp:124
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "Circula entre la vista general i la vista de quadrícula"
 
 #: plugins/overview/overvieweffect.cpp:141
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
 msgstr "Canvia la vista general"
 
 #: plugins/overview/overvieweffect.cpp:149
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
-msgstr "Canvia la vista general"
+msgstr "Canvia la vista de quadrícula"
 
 #: plugins/overview/qml/DesktopBar.qml:172
 #, kde-format
@@ -2300,29 +2296,25 @@ msgid "Add Virtual Desktop"
 msgstr "Afig un escriptori virtual"
 
 #: plugins/overview/qml/main.qml:318
-#, fuzzy, kde-format
-#| msgid "Delete Virtual Desktop"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
-msgstr "Suprimix l'escriptori virtual"
+msgstr "No hi ha cap altre escriptori virtual que s'haja de mostrar"
 
 #: plugins/overview/qml/main.qml:324
-#, fuzzy, kde-format
-#| msgid "Add Virtual Desktop"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "Afig un escriptori virtual"
 
 #: plugins/overview/qml/main.qml:331
-#, fuzzy, kde-format
-#| msgid "Delete Virtual Desktop"
+#, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
-msgstr "Suprimix l'escriptori virtual"
+msgstr "Configura els escriptoris virtuals…"
 
 #: plugins/overview/qml/main.qml:658
-#, fuzzy, kde-format
-#| msgid "No matching windows"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
 msgstr "No coincidix amb cap finestra"
@@ -4126,7 +4118,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(No respon)"
 
-#: workspace.cpp:1540
+#: workspace.cpp:1565
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4154,56 +4146,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "XWayland ha fallat"
-
-#~ msgid "Show Desktop Grid"
-#~ msgstr "Mostra la quadrícula de l'escriptori"
-
-#~ msgctxt "Desktop name alignment:"
-#~ msgid "Disabled"
-#~ msgstr "Desactivat"
-
-#~ msgid "Top-Right"
-#~ msgstr "Superior-dreta"
-
-#~ msgid "Bottom-Right"
-#~ msgstr "Inferior dreta"
-
-#~ msgid "Bottom-Left"
-#~ msgstr "Inferior esquerra"
-
-#~ msgid "Top-Left"
-#~ msgstr "Superior esquerra"
-
-#~ msgid "Pager"
-#~ msgstr "Paginador"
-
-#~ msgid "Automatic"
-#~ msgstr "Automàtic"
-
-#~ msgid "Custom"
-#~ msgstr "Personalitzat"
-
-#~ msgid "N&umber of rows:"
-#~ msgstr "N&ombre de files:"
-
-#~ msgid "Desktop &name alignment:"
-#~ msgstr "Alineació del &nom d'escriptori:"
-
-#~ msgid "Show buttons to alter count of virtual desktops"
-#~ msgstr "Mostra els botons per a alterar el comptador d'escriptoris virtuals"
-
-#~ msgid "&Grid layout mode:"
-#~ msgstr "Mode de disposició de &quadrícula::"
-
-#~ msgid "Windows layout:"
-#~ msgstr "Disposició de les finestres:"
-
-#~ msgid "Activation"
-#~ msgstr "Activació"
-
-#~ msgid ""
-#~ "Desktop effects have been suspended by another application.<br/>You can "
-#~ "resume using the '%1' shortcut."
-#~ msgstr ""
-#~ "Una altra aplicació ha suspés els efectes de l'escriptori.<br/>Podeu "
-#~ "reprendre-ho utilitzant la drecera «%1»."
