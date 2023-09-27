@@ -33,8 +33,8 @@ DecoratedClientImpl::DecoratedClientImpl(Window *window, KDecoration2::Decorated
     , m_clientSize(window->clientSize().toSize())
 {
     window->setDecoratedClient(this);
-    connect(window, &Window::activeChanged, this, [decoratedClient, window]() {
-        Q_EMIT decoratedClient->activeChanged(window->isActive());
+    connect(window, &Window::decorationActiveChanged, this, [decoratedClient, window]() {
+        Q_EMIT decoratedClient->activeChanged(window->isDecorationActive());
     });
     connect(window, &Window::clientGeometryChanged, this, [decoratedClient, this]() {
         if (m_window->clientSize() == m_clientSize) {
@@ -97,6 +97,11 @@ void DecoratedClientImpl::signalShadeChange()
     Q_EMIT decoratedClient()->shadedChanged(m_window->isShade());
 }
 
+bool DecoratedClientImpl::isActive() const
+{
+    return m_window->isDecorationActive();
+}
+
 #define DELEGATE(type, name, clientName)   \
     type DecoratedClientImpl::name() const \
     {                                      \
@@ -106,7 +111,6 @@ void DecoratedClientImpl::signalShadeChange()
 #define DELEGATE2(type, name) DELEGATE(type, name, name)
 
 DELEGATE2(QString, caption)
-DELEGATE2(bool, isActive)
 DELEGATE2(bool, isCloseable)
 DELEGATE(bool, isMaximizeable, isMaximizable)
 DELEGATE(bool, isMinimizeable, isMinimizable)

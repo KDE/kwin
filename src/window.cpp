@@ -4258,6 +4258,11 @@ void Window::doSetSuspended()
 {
 }
 
+bool Window::isDecorationActive() const
+{
+    return m_decorationActive;
+}
+
 } // namespace KWin
 
 #include "moc_window.cpp"

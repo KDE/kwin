@@ -1014,6 +1014,9 @@ void XdgToplevelWindow::handleStatesAcknowledged(const XdgToplevelInterface::Sta
     if (delta & XdgToplevelInterface::State::FullScreen) {
         updateFullScreenMode(states & XdgToplevelInterface::State::FullScreen);
     }
+    if (delta & XdgToplevelInterface::State::Activated) {
+        updateDecorationActive(states & XdgToplevelInterface::State::Activated);
+    }
 
     m_acknowledgedStates = states;
 }
@@ -1247,6 +1250,14 @@ void XdgToplevelWindow::updateFullScreenMode(bool set)
     updateLayer();
     updateWindowRules(Rules::Fullscreen);
     Q_EMIT fullScreenChanged();
+}
+
+void XdgToplevelWindow::updateDecorationActive(bool active)
+{
+    if (m_decorationActive != active) {
+        m_decorationActive = active;
+        Q_EMIT decorationActiveChanged();
+    }
 }
 
 void XdgToplevelWindow::updateCapabilities()

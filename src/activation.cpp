@@ -763,6 +763,11 @@ xcb_timestamp_t X11Window::userTime() const
 
 void X11Window::doSetActive()
 {
+    if (m_decorationActive != m_active) {
+        m_decorationActive = m_active;
+        Q_EMIT decorationActiveChanged();
+    }
+
     updateUrgency(); // demand attention again if it's still urgent
     info->setState(isActive() ? NET::Focused : NET::States(), NET::Focused);
 }

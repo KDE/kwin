@@ -887,6 +887,7 @@ public:
      * its own.
      */
     void setActive(bool);
+    bool isDecorationActive() const;
 
     bool keepAbove() const
     {
@@ -1387,6 +1388,7 @@ Q_SIGNALS:
     void skipSwitcherChanged();
     void iconChanged();
     void activeChanged();
+    void decorationActiveChanged();
     void keepAboveChanged(bool);
     void keepBelowChanged(bool);
     /**
@@ -1747,6 +1749,7 @@ protected:
     bool m_skipSwitcher = false;
     QIcon m_icon;
     bool m_active = false;
+    bool m_decorationActive = false;
     bool m_deleted = false;
     bool m_keepAbove = false;
     bool m_keepBelow = false;
