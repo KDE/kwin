@@ -118,5 +118,5 @@
     "X-KDE-Keywords[x-test]": "xxsizexx,xxpositionxx,xxstatexx,xxwindow behaviorxx,xxwindowsxx,xxspecificxx,xxworkaroundsxx,xxrememberxx,xxrulesxx,xxwindow rulesxx,xxappsxx,xxapplicationsxx",
     "X-KDE-Keywords[zh_CN]": "size,position,state,window behavior,windows,specific,workarounds,remember,rules,大小,位置,窗口行为,特定,个别,指定,记住,记忆,记录,规则,窗口规则,应用,应用程序",
     "X-KDE-System-Settings-Parent-Category": "windowmanagement",
-    "X-KDE-Weight": 120
+    "X-KDE-Weight": 40
 }

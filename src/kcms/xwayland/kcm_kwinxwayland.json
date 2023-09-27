@@ -74,5 +74,6 @@
     "X-KDE-OnlyShowOnQtPlatforms": [
         "wayland"
     ],
-    "X-KDE-System-Settings-Parent-Category": "applications"
+    "X-KDE-System-Settings-Parent-Category": "applications-permissions",
+    "X-KDE-Weight": 20
 }
