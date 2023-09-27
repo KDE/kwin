@@ -81,14 +81,14 @@ private:
         std::shared_ptr<EglContext> context;
         bool colormanagementEnabled = false;
         std::shared_ptr<GLTexture> shadowTexture;
-        std::shared_ptr<GLFramebuffer> shadowBuffer;
+        std::unique_ptr<GLFramebuffer> shadowBuffer;
         ColorDescription targetColorDescription = ColorDescription::sRGB;
         ColorDescription intermediaryColorDescription = ColorDescription::sRGB;
         QVector3D channelFactors = {1, 1, 1};
         std::shared_ptr<EglSwapchain> gbmSwapchain;
         std::shared_ptr<EglSwapchainSlot> currentSlot;
         DamageJournal damageJournal;
-        std::shared_ptr<QPainterSwapchain> importDumbSwapchain;
+        std::unique_ptr<QPainterSwapchain> importDumbSwapchain;
         std::shared_ptr<EglContext> importContext;
         std::shared_ptr<EglSwapchain> importGbmSwapchain;
         QHash<GraphicsBuffer *, std::shared_ptr<GLTexture>> importedTextureCache;
@@ -98,24 +98,24 @@ private:
         bool forceLinear = false;
 
         // for render timing
-        std::shared_ptr<GLRenderTimeQuery> timeQuery;
-        std::shared_ptr<GLRenderTimeQuery> importTimeQuery;
+        std::unique_ptr<GLRenderTimeQuery> timeQuery;
+        std::unique_ptr<GLRenderTimeQuery> importTimeQuery;
         std::chrono::steady_clock::time_point renderStart;
         std::chrono::steady_clock::time_point renderEnd;
     };
     bool checkSurface(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats);
-    bool doesSurfaceFit(const Surface &surface, const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const;
-    std::optional<Surface> createSurface(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const;
-    std::optional<Surface> createSurface(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, MultiGpuImportMode importMode) const;
+    bool doesSurfaceFit(Surface *surface, const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const;
+    std::unique_ptr<Surface> createSurface(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const;
+    std::unique_ptr<Surface> createSurface(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, MultiGpuImportMode importMode) const;
     std::shared_ptr<EglSwapchain> createGbmSwapchain(DrmGpu *gpu, EglContext *context, const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, bool forceLinear) const;
 
-    std::shared_ptr<DrmFramebuffer> doRenderTestBuffer(Surface &surface) const;
-    std::shared_ptr<DrmFramebuffer> importBuffer(Surface &surface, EglSwapchainSlot *source) const;
-    std::shared_ptr<DrmFramebuffer> importWithEgl(Surface &surface, GraphicsBuffer *sourceBuffer) const;
-    std::shared_ptr<DrmFramebuffer> importWithCpu(Surface &surface, EglSwapchainSlot *source) const;
+    std::shared_ptr<DrmFramebuffer> doRenderTestBuffer(Surface *surface) const;
+    std::shared_ptr<DrmFramebuffer> importBuffer(Surface *surface, EglSwapchainSlot *source) const;
+    std::shared_ptr<DrmFramebuffer> importWithEgl(Surface *surface, GraphicsBuffer *sourceBuffer) const;
+    std::shared_ptr<DrmFramebuffer> importWithCpu(Surface *surface, EglSwapchainSlot *source) const;
 
-    Surface m_surface;
-    Surface m_oldSurface;
+    std::unique_ptr<Surface> m_surface;
+    std::unique_ptr<Surface> m_oldSurface;
 
     DrmGpu *const m_gpu;
     EglGbmBackend *const m_eglBackend;
