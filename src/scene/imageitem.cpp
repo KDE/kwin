@@ -50,6 +50,9 @@ void ImageItemOpenGL::preprocess()
 
         if (!m_texture || m_texture->size() != m_image.size()) {
             m_texture = GLTexture::upload(m_image);
+            if (!m_texture) {
+                return;
+            }
             m_texture->setFilter(GL_LINEAR);
             m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
         } else {
