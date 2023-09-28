@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-09-27 01:42+0000\n"
-"PO-Revision-Date: 2023-07-21 06:30+0200\n"
+"PO-Revision-Date: 2023-09-27 05:32+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -2184,28 +2184,26 @@ msgstr "უცნობი"
 #, kde-format
 msgctxt "@action Overview and Grid View are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "გადახედვისა და ბადის ხედებს შორის გადართვა"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:48
 #: plugins/overview/overvieweffect.cpp:133
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
-msgstr ""
+msgstr "ბადის ხედსა და გადახედვას შორის გადართვა"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:55
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Overview is the name of a KWin effect"
 msgid "Toggle Overview"
 msgstr "გადახედვის გადართვა"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:62
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Grid View is the name of a KWin effect"
 msgid "Toggle Grid View"
-msgstr "გადახედვის გადართვა"
+msgstr "ბადის ხედის გადართვა"
 
 #. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
 #: plugins/overview/kcm/overvieweffectkcm.ui:22
@@ -2238,27 +2236,25 @@ msgstr "ჩაკეცილი ფანჯრების იგნორი:
 #: plugins/overview/kcm/overvieweffectkcm.ui:57
 #, kde-format
 msgid "Organize windows in the Grid View:"
-msgstr ""
+msgstr "ფანჯრების დალაგება ბადის ხედში:"
 
 #: plugins/overview/overvieweffect.cpp:124
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "გადახედვისა და ბადის ხედებს შორის გადართვა"
 
 #: plugins/overview/overvieweffect.cpp:141
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
 msgstr "გადახედვის გადართვა"
 
 #: plugins/overview/overvieweffect.cpp:149
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
-msgstr "გადახედვის გადართვა"
+msgstr "ბადის ხედის გადართვა"
 
 #: plugins/overview/qml/DesktopBar.qml:172
 #, kde-format
@@ -2271,29 +2267,25 @@ msgid "Add Virtual Desktop"
 msgstr "ვირტუალური სამუშაო მაგიდის დამატება"
 
 #: plugins/overview/qml/main.qml:318
-#, fuzzy, kde-format
-#| msgid "Delete Virtual Desktop"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
-msgstr "ვირტუალური სამუშაო მაგიდის წაშლა"
+msgstr "სხვა ვირტუალური სამუშაო მაგიდების გარეშე"
 
 #: plugins/overview/qml/main.qml:324
-#, fuzzy, kde-format
-#| msgid "Add Virtual Desktop"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "ვირტუალური სამუშაო მაგიდის დამატება"
 
 #: plugins/overview/qml/main.qml:331
-#, fuzzy, kde-format
-#| msgid "Delete Virtual Desktop"
+#, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
-msgstr "ვირტუალური სამუშაო მაგიდის წაშლა"
+msgstr "ვირტუალური სამუშაო მაგიდის მორგება…"
 
 #: plugins/overview/qml/main.qml:658
-#, fuzzy, kde-format
-#| msgid "No matching windows"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
 msgstr "შესაბამისი ფანჯრების გარეშე"
