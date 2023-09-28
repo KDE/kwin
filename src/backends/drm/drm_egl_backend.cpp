@@ -167,6 +167,9 @@ OutputLayer *EglGbmBackend::cursorLayer(Output *output)
 std::pair<std::shared_ptr<KWin::GLTexture>, ColorDescription> EglGbmBackend::textureForOutput(Output *output) const
 {
     const auto drmOutput = static_cast<DrmAbstractOutput *>(output);
+    if (const auto virtualLayer = dynamic_cast<VirtualEglGbmLayer *>(drmOutput->primaryLayer())) {
+        return std::make_pair(virtualLayer->texture(), ColorDescription::sRGB);
+    }
     const auto layer = static_cast<EglGbmLayer *>(drmOutput->primaryLayer());
     return std::make_pair(layer->texture(), layer->colorDescription());
 }
