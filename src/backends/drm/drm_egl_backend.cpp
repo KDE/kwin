@@ -214,6 +214,9 @@ OutputLayer *EglGbmBackend::primaryLayer(Output *output)
 std::shared_ptr<GLTexture> EglGbmBackend::textureForOutput(Output *output) const
 {
     const auto drmOutput = static_cast<DrmAbstractOutput *>(output);
+    if (const auto virtualLayer = dynamic_cast<VirtualEglGbmLayer *>(drmOutput->primaryLayer())) {
+        return virtualLayer->texture();
+    }
     return static_cast<EglGbmLayer *>(drmOutput->primaryLayer())->texture();
 }
 
