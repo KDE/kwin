@@ -32,6 +32,9 @@ public:
     QRegion opaque() const override;
     ContentType contentType() const override;
 
+    void sendScannedOut(Output *output) override;
+    void sendCopied(Output *output) override;
+
     SurfaceInterface *surface() const;
 
 private Q_SLOTS:

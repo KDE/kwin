@@ -44,11 +44,13 @@ static void resetRepaintsHelper(Item *item, SceneDelegate *delegate)
 void CursorScene::prePaint(SceneDelegate *delegate)
 {
     resetRepaintsHelper(m_rootItem.get(), delegate);
+    m_paintedDelegate = delegate;
     m_paintedOutput = delegate->output();
 }
 
 void CursorScene::postPaint()
 {
+    m_paintedDelegate = nullptr;
 }
 
 void CursorScene::paint(const RenderTarget &renderTarget, const QRegion &region)

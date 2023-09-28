@@ -15,6 +15,7 @@
 #include "linuxdmabufv1clientbuffer.h"
 #include "output.h"
 #include "pointerconstraints_v1_p.h"
+#include "presentationtime.h"
 #include "region_p.h"
 #include "shadow.h"
 #include "slide.h"
@@ -558,6 +559,8 @@ SurfaceState::~SurfaceState()
     wl_resource_for_each_safe (resource, tmp, &frameCallbacks) {
         wl_resource_destroy(resource);
     }
+
+    delete presentationFeedback;
 }
 
 void SurfaceState::mergeInto(SurfaceState *target)
@@ -625,6 +628,12 @@ void SurfaceState::mergeInto(SurfaceState *target)
     if (tearingIsSet) {
         target->presentationHint = presentationHint;
         target->tearingIsSet = true;
+    }
+
+    if (presentationFeedback) {
+        delete target->presentationFeedback;
+        target->presentationFeedback = presentationFeedback;
+        presentationFeedback = nullptr;
     }
 
     *this = SurfaceState{};

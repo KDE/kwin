@@ -219,11 +219,11 @@ void WorkspaceScene::prePaint(SceneDelegate *delegate)
 {
     createStackingOrder();
 
-    painted_delegate = delegate;
+    m_paintedDelegate = delegate;
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
         painted_screen = workspace()->outputs().constFirst();
     } else {
-        painted_screen = painted_delegate->output();
+        painted_screen = m_paintedDelegate->output();
     }
 
     const RenderLoop *renderLoop = painted_screen->renderLoop();
@@ -286,7 +286,7 @@ static void accumulateRepaints(Item *item, SceneDelegate *delegate, QRegion *rep
 void WorkspaceScene::preparePaintGenericScreen()
 {
     for (WindowItem *windowItem : std::as_const(stacking_order)) {
-        resetRepaintsHelper(windowItem, painted_delegate);
+        resetRepaintsHelper(windowItem, m_paintedDelegate);
 
         WindowPrePaintData data;
         data.mask = m_paintContext.mask;
@@ -310,7 +310,7 @@ void WorkspaceScene::preparePaintSimpleScreen()
         Window *window = windowItem->window();
         WindowPrePaintData data;
         data.mask = m_paintContext.mask;
-        accumulateRepaints(windowItem, painted_delegate, &data.paint);
+        accumulateRepaints(windowItem, m_paintedDelegate, &data.paint);
 
         // Clip out the decoration for opaque windows; the decoration is drawn in the second pass.
         if (window->opacity() == 1.0) {
@@ -345,7 +345,7 @@ void WorkspaceScene::preparePaintSimpleScreen()
     }
 
     if (m_dndIcon) {
-        accumulateRepaints(m_dndIcon.get(), painted_delegate, &m_paintContext.damage);
+        accumulateRepaints(m_dndIcon.get(), m_paintedDelegate, &m_paintContext.damage);
     }
 }
 
@@ -358,6 +358,7 @@ void WorkspaceScene::postPaint()
     effects->postPaintScreen();
 
     clearStackingOrder();
+    m_paintedDelegate = nullptr;
 }
 
 void WorkspaceScene::paint(const RenderTarget &renderTarget, const QRegion &region)

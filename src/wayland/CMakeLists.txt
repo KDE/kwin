@@ -216,10 +216,13 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${WaylandProtocols_DATADIR}/staging/cursor-shape/cursor-shape-v1.xml
     BASENAME cursor-shape-v1
 )
-
 ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL protocols/qt-toplevel-drag-v1.xml
     BASENAME qt-toplevel-drag-v1
+)
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PROTOCOL ${WaylandProtocols_DATADIR}/stable/presentation-time/presentation-time.xml
+    BASENAME presentation-time
 )
 
 target_sources(kwin PRIVATE
@@ -266,6 +269,7 @@ target_sources(kwin PRIVATE
     pointer.cpp
     pointerconstraints_v1.cpp
     pointergestures_v1.cpp
+    presentationtime.cpp
     primaryselectiondevice_v1.cpp
     primaryselectiondevicemanager_v1.cpp
     primaryselectionoffer_v1.cpp
@@ -346,6 +350,7 @@ install(FILES
     pointer.h
     pointerconstraints_v1.h
     pointergestures_v1.h
+    presentationtime.h
     primaryselectiondevice_v1.h
     primaryselectiondevicemanager_v1.h
     primaryselectionoffer_v1.h

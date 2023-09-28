@@ -54,6 +54,9 @@ public:
 
     virtual ContentType contentType() const;
 
+    virtual void sendScannedOut(Output *output);
+    virtual void sendCopied(Output *output);
+
 Q_SIGNALS:
     void damaged();
 

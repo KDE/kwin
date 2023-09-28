@@ -124,7 +124,6 @@ protected:
 
     // The screen that is being currently painted
     Output *painted_screen = nullptr;
-    SceneDelegate *painted_delegate = nullptr;
 
     // windows in their stacking order
     QVector<WindowItem *> stacking_order;

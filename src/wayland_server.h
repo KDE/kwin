@@ -55,6 +55,7 @@ class XdgActivationV1Integration;
 class XdgPopupWindow;
 class XdgSurfaceWindow;
 class XdgToplevelWindow;
+class PresentationInterface;
 
 class KWIN_EXPORT WaylandServer : public QObject
 {
@@ -123,6 +124,15 @@ public:
     XwaylandShellV1Interface *xwaylandShell() const
     {
         return m_xwaylandShell;
+    }
+    PresentationInterface *presentation() const
+    {
+        return m_presentation;
+    }
+
+    OutputInterface *waylandOutput(Output *output) const
+    {
+        return m_waylandOutputs.value(output);
     }
 
     bool isKeyboardShortcutsInhibited() const;
@@ -281,6 +291,7 @@ private:
     QHash<Output *, OutputDeviceV2Interface *> m_waylandOutputDevices;
     DrmLeaseManagerV1 *m_leaseManager = nullptr;
     OutputOrderV1Interface *m_outputOrder = nullptr;
+    PresentationInterface *m_presentation = nullptr;
     KWIN_SINGLETON(WaylandServer)
 };
 

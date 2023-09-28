@@ -21,6 +21,7 @@
 #include "scene/surfaceitem.h"
 #include "scene/workspacescene.h"
 #include "utils/common.h"
+#include "wayland/presentationtime.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
@@ -182,7 +183,9 @@ void Compositor::composite(RenderLoop *renderLoop)
             }
         }
 
-        if (!directScanout) {
+        if (directScanout) {
+            scanoutCandidate->sendScannedOut(output);
+        } else {
             QRegion surfaceDamage = primaryLayer->repaints();
             primaryLayer->resetRepaints();
             preparePaintPass(superLayer, &surfaceDamage);

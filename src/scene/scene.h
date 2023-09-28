@@ -83,6 +83,7 @@ public:
     void removeDelegate(SceneDelegate *delegate);
 
     virtual SurfaceItem *scanoutCandidate() const;
+    SceneDelegate *paintedDelegate() const;
     virtual void prePaint(SceneDelegate *delegate) = 0;
     virtual void postPaint() = 0;
     virtual void paint(const RenderTarget &renderTarget, const QRegion &region) = 0;
@@ -94,6 +95,7 @@ Q_SIGNALS:
 protected:
     std::unique_ptr<ItemRenderer> m_renderer;
     QList<SceneDelegate *> m_delegates;
+    SceneDelegate *m_paintedDelegate = nullptr;
     QRect m_geometry;
 };
 

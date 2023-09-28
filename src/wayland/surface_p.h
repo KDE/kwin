@@ -26,6 +26,7 @@ class ViewportInterface;
 class ContentTypeV1Interface;
 class TearingControlV1Interface;
 class FractionalScaleV1Interface;
+class PresentationFeedback;
 
 struct SurfaceState
 {
@@ -64,6 +65,7 @@ struct SurfaceState
     QPointer<SlideInterface> slide;
     ContentType contentType = ContentType::None;
     PresentationHint presentationHint = PresentationHint::VSync;
+    QPointer<PresentationFeedback> presentationFeedback;
 
     struct
     {

@@ -8,8 +8,10 @@
 #include "compositor.h"
 #include "core/graphicsbuffer.h"
 #include "core/renderbackend.h"
+#include "wayland/presentationtime.h"
 #include "wayland/subcompositor.h"
 #include "wayland/surface.h"
+#include "wayland_server.h"
 #include "window.h"
 #include "x11window.h"
 
@@ -163,6 +165,26 @@ std::unique_ptr<SurfacePixmap> SurfaceItemWayland::createPixmap()
 ContentType SurfaceItemWayland::contentType() const
 {
     return m_surface->contentType();
+}
+
+void SurfaceItemWayland::sendCopied(Output *output)
+{
+    if (!m_surface) {
+        return;
+    }
+    if (OutputInterface *waylandOutput = waylandServer()->waylandOutput(output)) {
+        waylandServer()->presentation()->surfaceCopied(m_surface, waylandOutput);
+    }
+}
+
+void SurfaceItemWayland::sendScannedOut(Output *output)
+{
+    if (!m_surface) {
+        return;
+    }
+    if (OutputInterface *waylandOutput = waylandServer()->waylandOutput(output)) {
+        waylandServer()->presentation()->surfaceScannedOut(m_surface, waylandOutput);
+    }
 }
 
 SurfacePixmapWayland::SurfacePixmapWayland(SurfaceItemWayland *item, QObject *parent)

@@ -144,6 +144,11 @@ SurfaceItem *Scene::scanoutCandidate() const
     return nullptr;
 }
 
+SceneDelegate *Scene::paintedDelegate() const
+{
+    return m_paintedDelegate;
+}
+
 void Scene::frame(SceneDelegate *delegate)
 {
 }

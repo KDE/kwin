@@ -184,6 +184,9 @@ void SurfaceItem::destroyPixmap()
 
 void SurfaceItem::preprocess()
 {
+    if (SceneDelegate *delegate = scene()->paintedDelegate()) {
+        sendCopied(delegate->output());
+    }
     updatePixmap();
 }
 
@@ -220,6 +223,14 @@ WindowQuadList SurfaceItem::buildQuads() const
     }
 
     return quads;
+}
+
+void SurfaceItem::sendScannedOut(Output *output)
+{
+}
+
+void SurfaceItem::sendCopied(Output *output)
+{
 }
 
 ContentType SurfaceItem::contentType() const

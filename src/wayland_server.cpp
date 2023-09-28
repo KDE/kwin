@@ -49,6 +49,7 @@
 #include "wayland/plasmawindowmanagement.h"
 #include "wayland/pointerconstraints_v1.h"
 #include "wayland/pointergestures_v1.h"
+#include "wayland/presentationtime.h"
 #include "wayland/primaryselectiondevicemanager_v1.h"
 #include "wayland/relativepointer_v1.h"
 #include "wayland/screenedge_v1.h"
@@ -601,6 +602,9 @@ void WaylandServer::initWorkspace()
     connect(workspace(), &Workspace::outputOrderChanged, m_outputOrder, [this]() {
         m_outputOrder->setOutputOrder(workspace()->outputOrder());
     });
+
+    m_presentation = new PresentationInterface(m_display, m_display);
+    m_presentation->setClockId(CLOCK_MONOTONIC);
 
     Q_EMIT initialized();
 }
