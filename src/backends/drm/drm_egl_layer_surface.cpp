@@ -168,6 +168,9 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion)
 
 std::chrono::nanoseconds EglGbmLayerSurface::queryRenderTime() const
 {
+    if (!m_surface) {
+        return std::chrono::nanoseconds::zero();
+    }
     const auto cpuTime = m_surface->renderEnd - m_surface->renderStart;
     if (m_surface->timeQuery) {
         m_eglBackend->makeCurrent();
