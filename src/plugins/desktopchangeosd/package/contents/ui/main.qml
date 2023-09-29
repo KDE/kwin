@@ -9,12 +9,8 @@
 import QtQuick
 import org.kde.kwin
 
-Item {
-    id: root
-
-    Loader {
-        id: mainItemLoader
-    }
+Loader {
+    id: mainItemLoader
 
     Connections {
         target: Workspace
