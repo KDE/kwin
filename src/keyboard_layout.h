@@ -12,6 +12,7 @@
 #include <QObject>
 #include <QVector>
 #include <memory>
+#include <optional>
 
 #include <KConfigGroup>
 #include <KSharedConfig>
@@ -43,6 +44,7 @@ public:
     void checkLayoutChange(uint previousLayout);
     void switchToNextLayout();
     void switchToPreviousLayout();
+    void switchToLastUsedLayout();
     void resetLayout();
 
 Q_SIGNALS:
@@ -63,6 +65,7 @@ private:
     QVector<QAction *> m_layoutShortcuts;
     KeyboardLayoutDBusInterface *m_dbusInterface = nullptr;
     std::unique_ptr<KeyboardLayoutSwitching::Policy> m_policy;
+    std::optional<uint> m_lastUsedLayout;
 };
 
 class KeyboardLayoutDBusInterface : public QObject

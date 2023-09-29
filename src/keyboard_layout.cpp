@@ -49,6 +49,16 @@ void KeyboardLayout::init()
 
     connect(switchKeyboardAction, &QAction::triggered, this, &KeyboardLayout::switchToNextLayout);
 
+    QAction *switchLastUsedKeyboardAction = new QAction(this);
+    switchLastUsedKeyboardAction->setObjectName(QStringLiteral("Switch to Last-Used Keyboard Layout"));
+    switchLastUsedKeyboardAction->setProperty("componentName", QStringLiteral("KDE Keyboard Layout Switcher"));
+    switchLastUsedKeyboardAction->setProperty("componentDisplayName", i18n("Keyboard Layout Switcher"));
+    const QKeySequence sequenceLastUsed = QKeySequence(Qt::META | Qt::ALT | Qt::Key_L);
+    KGlobalAccel::self()->setDefaultShortcut(switchLastUsedKeyboardAction, QList<QKeySequence>({sequenceLastUsed}));
+    KGlobalAccel::self()->setShortcut(switchLastUsedKeyboardAction, QList<QKeySequence>({sequenceLastUsed}));
+
+    connect(switchLastUsedKeyboardAction, &QAction::triggered, this, &KeyboardLayout::switchToLastUsedLayout);
+    
     QDBusConnection::sessionBus().connect(QString(),
                                           QStringLiteral("/Layouts"),
                                           QStringLiteral("org.kde.keyboard"),
@@ -97,6 +107,16 @@ void KeyboardLayout::switchToLayout(xkb_layout_index_t index)
     const quint32 previousLayout = m_xkb->currentLayout();
     m_xkb->switchToLayout(index);
     checkLayoutChange(previousLayout);
+}
+
+void KeyboardLayout::switchToLastUsedLayout()
+{
+    const quint32 count = m_xkb->numberOfLayouts();
+    if (!m_lastUsedLayout.has_value() || *m_lastUsedLayout >= count) {
+        switchToPreviousLayout();
+    } else {
+        switchToLayout(*m_lastUsedLayout);
+    }
 }
 
 void KeyboardLayout::reconfigure()
@@ -154,6 +174,7 @@ void KeyboardLayout::checkLayoutChange(uint previousLayout)
     // We need OSD if current layout deviates from any of these
     const uint currentLayout = m_xkb->currentLayout();
     if (m_layout != currentLayout || previousLayout != currentLayout) {
+        m_lastUsedLayout = std::optional<uint>{previousLayout};
         m_layout = currentLayout;
         notifyLayoutChange();
         Q_EMIT layoutChanged(currentLayout);
