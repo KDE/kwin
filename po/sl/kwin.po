@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1661039 2023-09-27 02:20:00Z scripty $
+# $Id: kwin.po 1661189 2023-09-29 02:01:31Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-27 01:42+0000\n"
+"POT-Creation-Date: 2023-09-29 01:40+0000\n"
 "PO-Revision-Date: 2023-09-26 09:39+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -3523,7 +3523,7 @@ msgstr "Alternativen sprehod med okni trenutnega programa"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Alternativen sprehod med okni trenutnega programa (obratno)"
 
-#: tabbox/tabboxhandler.cpp:270
+#: tabbox/tabboxhandler.cpp:247
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"

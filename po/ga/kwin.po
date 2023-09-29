@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-27 01:42+0000\n"
+"POT-Creation-Date: 2023-09-29 01:40+0000\n"
 "PO-Revision-Date: 2004-12-03 14:52-0500\n"
 "Last-Translator: Kevin Scannell <kscanne@gmail.com>\n"
 "Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
@@ -3633,7 +3633,7 @@ msgstr ""
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr ""
 
-#: tabbox/tabboxhandler.cpp:270
+#: tabbox/tabboxhandler.cpp:247
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"

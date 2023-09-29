@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1661036 $
+# Version: $Revision: 1661189 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # Norbert Popiołek <norbert@kde.com.pl>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-27 01:42+0000\n"
+"POT-Creation-Date: 2023-09-29 01:40+0000\n"
 "PO-Revision-Date: 2023-09-24 08:05+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -3539,7 +3539,7 @@ msgstr "Alternatywne przełączanie okien bieżącego programu"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Alternatywne przełączanie okien bieżącego programu (odwrotne)"
 
-#: tabbox/tabboxhandler.cpp:270
+#: tabbox/tabboxhandler.cpp:247
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"
