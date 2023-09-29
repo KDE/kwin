@@ -171,9 +171,8 @@ Item {
         WorkspaceComponents.ShadowedLabel {
             id: caption
             visible: thumb.windowTitleVisible
-            width: Math.min(implicitWidth, thumb.width)
+            width: thumb.width
             anchors.top: parent.bottom
-            anchors.horizontalCenter: parent.horizontalCenter
             elide: Text.ElideRight
             text: thumb.window.caption
             textFormat: Text.PlainText
