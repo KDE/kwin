@@ -256,6 +256,14 @@ public:
      */
     Q_INVOKABLE QList<KWin::Window *> windowAt(const QPointF &pos, int count = 1) const;
 
+    /**
+     * Checks if a specific effect is currently active.
+     * @param pluginId The plugin Id of the effect to check.
+     * @return @c true if the effect is loaded and currently active, @c false otherwise.
+     * @since 6.0
+     */
+    Q_INVOKABLE bool isEffectActive(const QString &pluginId) const;
+
 public Q_SLOTS:
     // all the available key bindings
     void slotSwitchDesktopNext();

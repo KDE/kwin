@@ -177,6 +177,7 @@ public:
     QStringList listOfEffects() const;
     void unloadAllEffects();
     QStringList activeEffects() const;
+    bool isEffectActive(const QString &pluginId) const;
 
     /**
      * @returns whether or not any effect is currently active where KWin should not use direct scanout

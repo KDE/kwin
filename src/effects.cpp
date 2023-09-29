@@ -1421,6 +1421,17 @@ QStringList EffectsHandlerImpl::activeEffects() const
     return ret;
 }
 
+bool EffectsHandlerImpl::isEffectActive(const QString &pluginId) const
+{
+    auto it = std::find_if(loaded_effects.cbegin(), loaded_effects.cend(), [&pluginId](const EffectPair &p) {
+        return p.first == pluginId;
+    });
+    if (it == loaded_effects.cend()) {
+        return false;
+    }
+    return it->second->isActive();
+}
+
 bool EffectsHandlerImpl::blocksDirectScanout() const
 {
     return std::any_of(m_activeEffects.constBegin(), m_activeEffects.constEnd(), [](const Effect *effect) {

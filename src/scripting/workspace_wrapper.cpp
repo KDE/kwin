@@ -12,6 +12,7 @@
 #include "core/output.h"
 #include "core/outputbackend.h"
 #include "cursor.h"
+#include "effects.h"
 #include "outline.h"
 #include "tiles/tilemanager.h"
 #include "virtualdesktops.h"
@@ -325,6 +326,14 @@ QList<KWin::Window *> WorkspaceWrapper::windowAt(const QPointF &pos, int count) 
         }
     } while (it != stacking.begin());
     return result;
+}
+
+bool WorkspaceWrapper::isEffectActive(const QString &pluginId) const
+{
+    if (!effects) {
+        return false;
+    }
+    return static_cast<EffectsHandlerImpl *>(effects)->isEffectActive(pluginId);
 }
 
 QSize WorkspaceWrapper::desktopGridSize() const
