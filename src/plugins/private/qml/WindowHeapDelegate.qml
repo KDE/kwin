@@ -173,6 +173,7 @@ Item {
             visible: thumb.windowTitleVisible
             width: thumb.width
             anchors.top: parent.bottom
+            anchors.horizontalCenter: parent.horizontalCenter
             elide: Text.ElideRight
             text: thumb.window.caption
             textFormat: Text.PlainText
