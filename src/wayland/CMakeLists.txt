@@ -301,14 +301,6 @@ target_sources(kwin PRIVATE
     xwaylandshell_v1.cpp
 )
 
-if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-    target_sources(kwin PRIVATE utils/executable_path_proc.cpp)
-elseif(CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
-    target_sources(kwin PRIVATE utils/executable_path_sysctl.cpp)
-else()
-    message(FATAL_ERROR "Unsupported platform ${CMAKE_SYSTEM_NAME}")
-endif()
-
 install(FILES
     appmenu.h
     blur.h
