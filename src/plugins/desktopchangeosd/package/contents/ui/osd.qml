@@ -31,6 +31,9 @@ PlasmaCore.Dialog {
         }
 
         function show() {
+            if (Workspace.isEffectActive("overview")) {
+                return;
+            }
             const index = Workspace.desktops.indexOf(Workspace.currentDesktop);
             if (dialogItem.currentIndex === index) {
                 return;
