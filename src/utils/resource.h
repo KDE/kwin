@@ -6,8 +6,6 @@
 
 #pragma once
 
-#include "kwin_export.h"
-
 #include <limits>
 #include <type_traits>
 

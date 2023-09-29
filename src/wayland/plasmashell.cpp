@@ -7,7 +7,7 @@
 #include "plasmashell.h"
 #include "display.h"
 #include "surface.h"
-#include "utils.h"
+#include "utils/resource.h"
 
 #include <qwayland-server-plasma-shell.h>
 

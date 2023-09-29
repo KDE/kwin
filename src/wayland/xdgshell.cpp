@@ -10,8 +10,8 @@
 #include "display.h"
 #include "output.h"
 #include "seat.h"
-#include "utils.h"
 #include "utils/common.h"
+#include "utils/resource.h"
 
 #include <QTimer>
 

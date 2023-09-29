@@ -6,7 +6,7 @@
 #include "datacontrolsource_v1.h"
 #include "clientconnection.h"
 #include "datacontroldevicemanager_v1.h"
-#include "utils.h"
+#include "utils/resource.h"
 // Qt
 #include <QStringList>
 // Wayland

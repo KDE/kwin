@@ -14,8 +14,8 @@
 #include "relativepointer_v1_p.h"
 #include "seat.h"
 #include "surface.h"
-#include "utils.h"
 #include "utils/common.h"
+#include "utils/resource.h"
 
 namespace KWin
 {

@@ -6,7 +6,7 @@
 #include "primaryselectionsource_v1.h"
 #include "clientconnection.h"
 #include "primaryselectiondevicemanager_v1.h"
-#include "utils.h"
+#include "utils/resource.h"
 // Qt
 #include <QStringList>
 // Wayland

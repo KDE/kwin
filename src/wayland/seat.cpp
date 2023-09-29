@@ -29,8 +29,8 @@
 #include "textinput_v2_p.h"
 #include "textinput_v3_p.h"
 #include "touch_p.h"
-#include "utils.h"
 #include "utils/common.h"
+#include "utils/resource.h"
 #include "xdgtopleveldrag_v1.h"
 
 #include <linux/input.h>

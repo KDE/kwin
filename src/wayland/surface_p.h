@@ -8,7 +8,6 @@
 
 #include "core/graphicsbuffer.h"
 #include "surface.h"
-#include "utils.h"
 // Qt
 #include <QHash>
 #include <QPointer>

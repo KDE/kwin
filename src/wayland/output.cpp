@@ -7,7 +7,7 @@
 #include "output.h"
 #include "display.h"
 #include "display_p.h"
-#include "utils.h"
+#include "utils/resource.h"
 
 #include "core/output.h"
 

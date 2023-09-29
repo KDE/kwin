@@ -10,7 +10,7 @@
 #include "datasource_p.h"
 #include "display.h"
 #include "surface.h"
-#include "utils.h"
+#include "utils/resource.h"
 #include "xdgshell.h"
 
 #include <qwayland-server-qt-toplevel-drag-v1.h>

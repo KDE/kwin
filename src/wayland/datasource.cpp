@@ -8,7 +8,7 @@
 #include "clientconnection.h"
 #include "datadevicemanager.h"
 #include "datasource_p.h"
-#include "utils.h"
+#include "utils/resource.h"
 // Qt
 #include <QStringList>
 // Wayland

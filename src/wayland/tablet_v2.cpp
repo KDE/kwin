@@ -8,7 +8,7 @@
 #include "display.h"
 #include "seat.h"
 #include "surface.h"
-#include "utils.h"
+#include "utils/resource.h"
 
 #include "qwayland-server-tablet-unstable-v2.h"
 

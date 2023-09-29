@@ -6,8 +6,8 @@
 #include "drmlease_v1.h"
 #include "display.h"
 #include "drmlease_v1_p.h"
-#include "utils.h"
 #include "utils/common.h"
+#include "utils/resource.h"
 
 #include <fcntl.h>
 #include <unistd.h>

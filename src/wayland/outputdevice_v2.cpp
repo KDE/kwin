@@ -8,8 +8,8 @@
 
 #include "display.h"
 #include "display_p.h"
-#include "utils.h"
 #include "utils/common.h"
+#include "utils/resource.h"
 
 #include "core/output.h"
 

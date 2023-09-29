@@ -21,7 +21,7 @@
 #include "subcompositor.h"
 #include "surface_p.h"
 #include "transaction.h"
-#include "utils.h"
+#include "utils/resource.h"
 
 #include <wayland-server.h>
 // std

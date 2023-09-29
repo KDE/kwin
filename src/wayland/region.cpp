@@ -5,7 +5,7 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 #include "region_p.h"
-#include "utils.h"
+#include "utils/resource.h"
 
 namespace KWin
 {
