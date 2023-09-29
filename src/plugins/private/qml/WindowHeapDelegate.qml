@@ -179,6 +179,10 @@ Item {
             textFormat: Text.PlainText
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
+            // cell.bottomMargin depends on caption.height. For small windows
+            // QRect::marginsRemoved will produce negative size if caption.height
+            // is too big, so limit the maximum line count here to limit height.
+            maximumLineCount: 2
         }
     }
 
