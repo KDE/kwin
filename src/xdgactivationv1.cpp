@@ -40,7 +40,7 @@ static const QString windowDesktopFileName(Window *window)
     // Fallback to StartupWMClass for legacy apps
     const auto resourceName = window->resourceName();
     const auto service = KApplicationTrader::query([&resourceName](const KService::Ptr &service) {
-        return service->property("StartupWMClass").toString().compare(resourceName, Qt::CaseInsensitive) == 0;
+        return service->property<QString>("StartupWMClass").compare(resourceName, Qt::CaseInsensitive) == 0;
     });
 
     if (!service.isEmpty()) {
