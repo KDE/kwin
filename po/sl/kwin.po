@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1661189 2023-09-29 02:01:31Z scripty $
+# $Id: kwin.po 1661270 2023-09-30 02:04:22Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-29 01:40+0000\n"
+"POT-Creation-Date: 2023-09-30 01:42+0000\n"
 "PO-Revision-Date: 2023-09-26 09:39+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -1212,27 +1212,27 @@ msgstr "Uniči program %1"
 msgid "Wait Longer"
 msgstr "Čakaj dlje"
 
-#: input.cpp:2014
+#: input.cpp:2016
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Premakni tablični računalnik na naslednji izhod"
 
-#: input.cpp:2093
+#: input.cpp:2095
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Tablični računalnik prenesen na %1"
 
-#: input.cpp:2093
+#: input.cpp:2095
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Tablični računalniki so preklopili izhode"
 
-#: input.cpp:3152
+#: input.cpp:3154
 #, kde-format
 msgid "Touchpad"
 msgstr "Drsna ploščica"
 
-#: keyboard_layout.cpp:45
+#: keyboard_layout.cpp:45 keyboard_layout.cpp:55
 #, kde-format
 msgid "Keyboard Layout Switcher"
 msgstr "Preklopnik razporeditve tipk"

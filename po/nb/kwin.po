@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-29 01:40+0000\n"
+"POT-Creation-Date: 2023-09-30 01:42+0000\n"
 "PO-Revision-Date: 2015-08-27 20:54+0200\n"
 "Last-Translator: Bjørn Steensrud <bjornst@skogkatt.homelinux.org>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
@@ -1193,27 +1193,27 @@ msgstr "&Avslutt program %1"
 msgid "Wait Longer"
 msgstr "Vent lenger"
 
-#: input.cpp:2014
+#: input.cpp:2016
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr ""
 
-#: input.cpp:2093
+#: input.cpp:2095
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr ""
 
-#: input.cpp:2093
+#: input.cpp:2095
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr ""
 
-#: input.cpp:3152
+#: input.cpp:3154
 #, kde-format
 msgid "Touchpad"
 msgstr ""
 
-#: keyboard_layout.cpp:45
+#: keyboard_layout.cpp:45 keyboard_layout.cpp:55
 #, kde-format
 msgid "Keyboard Layout Switcher"
 msgstr ""
@@ -4084,59 +4084,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
-
-#, fuzzy
-#~ msgid "Show Desktop Grid"
-#~ msgstr "Vis skrivebordet"
-
-#, fuzzy
-#~ msgctxt "Desktop name alignment:"
-#~ msgid "Disabled"
-#~ msgstr "Slått av"
-
-#, fuzzy
-#~ msgid "Top-Right"
-#~ msgstr "Øverst til høyre"
-
-#, fuzzy
-#~ msgid "Bottom-Right"
-#~ msgstr "Nederst til høyre"
-
-#, fuzzy
-#~ msgid "Bottom-Left"
-#~ msgstr "Nederst til venstre"
-
-#, fuzzy
-#~ msgid "Top-Left"
-#~ msgstr "Øverst til venstre"
-
-#, fuzzy
-#~ msgid "Pager"
-#~ msgstr "Sideveksler"
-
-#, fuzzy
-#~ msgid "Automatic"
-#~ msgstr "Automatisk"
-
-#, fuzzy
-#~ msgid "Custom"
-#~ msgstr "Selvvalgt"
-
-#, fuzzy
-#~ msgid "N&umber of rows:"
-#~ msgstr "A&ntall rader:"
-
-#, fuzzy
-#~ msgid "Desktop &name alignment:"
-#~ msgstr "Innretting av skrivebordnavn:"
-
-#, fuzzy
-#~ msgid "Activation"
-#~ msgstr "overskrift"
-
-#~ msgid ""
-#~ "Desktop effects have been suspended by another application.<br/>You can "
-#~ "resume using the '%1' shortcut."
-#~ msgstr ""
-#~ "Skrivebordseffekter er blitt suspendert av et annet program.<br/> Du kan "
-#~ "gjenoppta med snarveien «%1»."

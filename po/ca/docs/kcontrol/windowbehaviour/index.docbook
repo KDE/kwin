@@ -494,7 +494,7 @@
 <para
 >La roda del ratolí <guilabel
 ></guilabel
-> es pot utilitzar per activar una acció depenent de si es desplaça cap amunt o cap avall: </para>
+> es pot utilitzar per a activar una acció depenent de si es desplaça cap amunt o cap avall: </para>
 
 <variablelist>
 
@@ -1306,7 +1306,7 @@
 <para
 >Si voleu que algunes finestres apareguin en posicions específiques, pantalles o escriptoris virtuals, podeu configurar <guilabel
 >Regles de les finestres</guilabel
-> per establir una configuració especial de les finestres o aplicacions. Podeu trobar-ho fent clic dret sobre la barra de títol d'una finestra i seleccionant <guimenu
+> per a establir una configuració especial de les finestres o aplicacions. Podeu trobar-ho fent clic dret sobre la barra de títol d'una finestra i seleccionant <guimenu
 >Més accions</guimenu
 >, o en el mòdul <guilabel
 >Regles de les finestres</guilabel

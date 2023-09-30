@@ -98,7 +98,7 @@
 <para
 >Per exemple, quan s'inicia una aplicació, podeu obligar-la a executar-se sempre a l'<emphasis
 >Escriptori virtual 2</emphasis
->. O un defecte en una aplicació pot ser l'alternativa per forçar la finestra sobre les altres. </para>
+>. O un defecte en una aplicació pot ser l'alternativa per a forçar la finestra sobre les altres. </para>
 <para
 >Es proporcionen <link linkend="examples"
 >exemples</link
@@ -294,7 +294,7 @@
 <para
 >Cada regla de finestra té un criteri de <link linkend="window-matching"
 >Coincidència de finestra</link
-> especificat per l'usuari. &kwin; utilitza els criteris per determinar si la regla és aplicable a una aplicació. </para>
+> especificat per l'usuari. &kwin; utilitza els criteris per a determinar si la regla és aplicable a una aplicació. </para>
 </sect2>
 <sect2 id="window-attributes"
 ><title
@@ -671,7 +671,7 @@
 ><para
 >Els arguments <guilabel
 >Sí/No</guilabel
-> s'utilitzen per activar o desactivar els atributs. Ser indulgents amb la gramàtica, ens ajudarà a comprendre com serà processada una opció. <inlinemediaobject
+> s'utilitzen per a activar o desactivar els atributs. Ser indulgents amb la gramàtica, ens ajudarà a comprendre com serà processada una opció. <inlinemediaobject
 > <imageobject
 > <imagedata fileref="Face-smile.png" format="PNG"/> </imageobject
 ></inlinemediaobject
@@ -848,7 +848,7 @@
 ></term>
     <listitem>
     <para
->Alterna la possibilitat d'acceptar o ignorar la geometria de posició sol·licitada per la finestra. Per evitar conflictes entre l'estratègia de l'emplaçament predeterminat i la sol·licitud de la finestra, l'estratègia d'emplaçament serà ignorada quan s'accepti la sol·licitud de la finestra.</para>
+>Alterna la possibilitat d'acceptar o ignorar la geometria de posició sol·licitada per la finestra. Per a evitar conflictes entre l'estratègia de l'emplaçament predeterminat i la sol·licitud de la finestra, l'estratègia d'emplaçament serà ignorada quan s'accepti la sol·licitud de la finestra.</para>
      </listitem>
   </varlistentry>
   <varlistentry
@@ -868,13 +868,13 @@
 ></term>
     <listitem>
     <para
->Alterna la possibilitat de complir amb relació d'aspecte sol·licitada per la finestra o per <emphasis
+>Alterna la possibilitat de complir amb relació d'aspecte sol·licitada per la finestra o per a <emphasis
 >incrementar la base</emphasis
->. Per entendre aquest atribut, es requereix alguna ambientació. En poques paraules, les finestres han de demanar al gestor de finestres, un increment de la base: el nombre mínim de píxels <emphasis
+>. Per a entendre aquest atribut, es requereix alguna ambientació. En poques paraules, les finestres han de demanar al gestor de finestres, un increment de la base: el nombre mínim de píxels <emphasis
 >alçada</emphasis
 > X <emphasis
 >amplada</emphasis
-> per demanar el canvia de mida. Típicament, és 1x1. Tot i que, altres finestres, per exemple, els emuladors de terminal o els editors, utilitzen una lletra fixa i demanen l'increment de la seva base en funció de la mida d'un caràcter.</para>
+> per a demanar el canvi de mida. Típicament, és 1x1. Tot i que, altres finestres, per exemple, els emuladors de terminal o els editors, utilitzen una lletra fixa i demanen l'increment de la seva base en funció de la mida d'un caràcter.</para>
      </listitem>
   </varlistentry>
 </variablelist>
@@ -924,7 +924,7 @@
 ></term>
     <listitem>
     <para
->Crea un grup a través d'un ID definit per l'usuari. Més d'una regla pot compartir el mateix ID per permetre que s'agrupin finestres aparentment no relacionades.</para>
+>Crea un grup a través d'un ID definit per l'usuari. Més d'una regla pot compartir el mateix ID per a permetre que s'agrupin finestres aparentment no relacionades.</para>
      </listitem>
   </varlistentry>
 
@@ -1467,7 +1467,7 @@
 >Força</guilabel
 > perquè no es pugui substituir. </para>
 <para
->Per dur a terme tot l'anterior, s'han de crear dues regles: </para>
+>Per a dur a terme tot l'anterior, s'han de crear dues regles: </para>
 <orderedlist>
 <listitem
 ><para
@@ -1851,7 +1851,7 @@
 >Thunderbird: Principal</guilabel
 >. Marqueu la casella <guilabel
 >Funció de la finestra</guilabel
-> per restringir els criteris a la finestra principal -per a obtenir més informació, vegeu <link linkend="window-matching"
+> per a restringir els criteris a la finestra principal -per a obtenir més informació, vegeu <link linkend="window-matching"
 >Coincidència de finestra</link
 >-: <screenshot>
 <screeninfo

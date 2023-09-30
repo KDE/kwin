@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-29 01:40+0000\n"
+"POT-Creation-Date: 2023-09-30 01:42+0000\n"
 "PO-Revision-Date: 2023-07-28 20:53+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
@@ -1203,27 +1203,27 @@ msgstr "&Tvangsavslutt programmet %1"
 msgid "Wait Longer"
 msgstr "Vent lenger"
 
-#: input.cpp:2014
+#: input.cpp:2016
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Flytt teikneplata til neste uteining"
 
-#: input.cpp:2093
+#: input.cpp:2095
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Teikneplate flytta til %1"
 
-#: input.cpp:2093
+#: input.cpp:2095
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Teikneplate fekk nye uteining"
 
-#: input.cpp:3152
+#: input.cpp:3154
 #, kde-format
 msgid "Touchpad"
 msgstr "Styreplate"
 
-#: keyboard_layout.cpp:45
+#: keyboard_layout.cpp:45 keyboard_layout.cpp:55
 #, kde-format
 msgid "Keyboard Layout Switcher"
 msgstr "Tastaturoppsett-bytar"
@@ -4132,56 +4132,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland krasja"
-
-#~ msgid "Show Desktop Grid"
-#~ msgstr "Vis skrivebordsoversikt"
-
-#~ msgctxt "Desktop name alignment:"
-#~ msgid "Disabled"
-#~ msgstr "Av"
-
-#~ msgid "Top-Right"
-#~ msgstr "Oppe til høgre"
-
-#~ msgid "Bottom-Right"
-#~ msgstr "Nede til høgre"
-
-#~ msgid "Bottom-Left"
-#~ msgstr "Nede til venstre"
-
-#~ msgid "Top-Left"
-#~ msgstr "Oppe til venstre"
-
-#~ msgid "Pager"
-#~ msgstr "Skrivebords­bytar"
-
-#~ msgid "Automatic"
-#~ msgstr "Automatisk"
-
-#~ msgid "Custom"
-#~ msgstr "Tilpassa"
-
-#~ msgid "N&umber of rows:"
-#~ msgstr "T&al på rader:"
-
-#~ msgid "Desktop &name alignment:"
-#~ msgstr "Justering av skrivebords&namn:"
-
-#~ msgid "Show buttons to alter count of virtual desktops"
-#~ msgstr "Vis knappar for å endra talet på virtuelle skrivebord"
-
-#~ msgid "&Grid layout mode:"
-#~ msgstr "&Rutenett-utforming:"
-
-#~ msgid "Windows layout:"
-#~ msgstr "Vindaugsutformingar:"
-
-#~ msgid "Activation"
-#~ msgstr "Bruk"
-
-#~ msgid ""
-#~ "Desktop effects have been suspended by another application.<br/>You can "
-#~ "resume using the '%1' shortcut."
-#~ msgstr ""
-#~ "Skrivebordseffektane er stoppa av eit anna program.<br/>Du kan starta dei "
-#~ "att ved å bruka snarvegen «%1»."

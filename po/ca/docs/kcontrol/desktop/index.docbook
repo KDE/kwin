@@ -51,7 +51,7 @@
 >Escriptori nou</guilabel
 >) a la llista. </para>
 <para
->Podeu configurar el nombre de files en l'element paginador del plafó. Senzillament utilitzeu el quadre d'entrada de files que hi ha a sota de la llista per a ajustar el nombre d'escriptoris. Els escriptoris es reorganitzaran automàticament per files. </para>
+>Podeu configurar el nombre de files en l'element paginador del plafó. Senzillament, utilitzeu el quadre d'entrada de files que hi ha a sota de la llista per a ajustar el nombre d'escriptoris. Els escriptoris es reorganitzaran automàticament per files. </para>
 
 <variablelist>
 <varlistentry>
@@ -78,7 +78,7 @@
 >Animació de cub per a l'escriptori</guilabel
 > o <guilabel
 >Esvaïment de l'escriptori</guilabel
-> des de la llista desplegable o desactiveu les animacions desmarcant l'element. Si l'animació seleccionada disposa d'opcions de configuració, feu clic sobre la icona d'eines a la dreta de la llista desplegable per iniciar un diàleg de configuració. </para
+> des de la llista desplegable o desactiveu les animacions desmarcant l'element. Si l'animació seleccionada disposa d'opcions de configuració, feu clic sobre la icona d'eines a la dreta de la llista desplegable per a iniciar un diàleg de configuració. </para
 ></listitem>
 </varlistentry>
 
