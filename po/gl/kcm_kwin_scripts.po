@@ -35,7 +35,7 @@ msgid ""
 "Cannot import selected script.\n"
 "%1"
 msgstr ""
-"Non se pode importar o guión seleccionado.\n"
+"Non é posíbel importar o guión seleccionado.\n"
 "%1"
 
 #: module.cpp:66
