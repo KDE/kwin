@@ -7,8 +7,8 @@
 #pragma once
 
 #include <KQuickManagedConfigModule>
-
 #include <KService>
+#include <QAbstractListModel>
 
 class KDesktopFile;
 class VirtualKeyboardData;

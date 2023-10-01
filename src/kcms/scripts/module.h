@@ -11,7 +11,7 @@
 #include <KPluginMetaData>
 #include <KPluginModel>
 #include <KQuickConfigModule>
-#include <kpluginmetadata.h>
+#include <QFileInfo>
 
 class KJob;
 class KWinScriptsData;

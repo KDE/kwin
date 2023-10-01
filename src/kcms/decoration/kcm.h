@@ -10,6 +10,7 @@
 #include "utils.h"
 
 #include <KQuickManagedConfigModule>
+#include <QAbstractListModel>
 
 class QAbstractItemModel;
 class QSortFilterProxyModel;
