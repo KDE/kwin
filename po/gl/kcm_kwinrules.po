@@ -785,7 +785,7 @@ msgstr ""
 "Isto é especialmente interesante para emuladores ou máquinas virtuais.\n"
 "\n"
 "Advertencia:\n"
-"Non ha poder utilizar Alt+Tab fora da xanela nin usar ningún outro \n"
+"Non ha poder usar Alt+Tab fora da xanela nin usar ningún outro \n"
 "atallo global (como Alt+F2 para amosar o KRunner)\n"
 "se está activado!"
 
