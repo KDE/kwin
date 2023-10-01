@@ -11,6 +11,8 @@
 #include <KLocalizedTranslator>
 #include <KPluginFactory>
 #include <QComboBox>
+#include <QCoreApplication>
+#include <QFileInfo>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QUiLoader>
