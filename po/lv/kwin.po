@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-30 01:42+0000\n"
+"POT-Creation-Date: 2023-10-02 01:42+0000\n"
 "PO-Revision-Date: 2009-12-05 20:43+0200\n"
 "Last-Translator: Viesturs Zarins <viesturs.zarins@mii.lu.lv>\n"
 "Language-Team: Latvian <locale@laka.lv>\n"
@@ -1670,50 +1670,50 @@ msgstr "Pārslēgt loga invertēšanas efektu"
 msgid "Invert Screen Colors"
 msgstr "Invertēt kursora taustiņus"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:46
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:48
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Tiny"
 msgstr "Niecīgs"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:47
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:49
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Normal"
 msgstr "Normāls"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:48
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:50
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Large"
 msgstr "Liels"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:49
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:51
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Large"
 msgstr "Ļoti liels"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:50
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:52
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Huge"
 msgstr "Milzīgs"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:51
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:53
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Huge"
 msgstr "Ļoti milzīgs"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:52
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:54
 #, fuzzy, kde-format
 #| msgid "Re&size"
 msgctxt "@item:inlistbox Button size:"
 msgid "Oversized"
 msgstr "Mainīt &izmēru"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:55
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:57
 #, fuzzy, kde-format
 #| msgid "Mouse Emulation"
 msgid "Button size:"

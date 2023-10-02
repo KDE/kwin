@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-30 01:42+0000\n"
+"POT-Creation-Date: 2023-10-02 01:42+0000\n"
 "PO-Revision-Date: 2015-08-27 20:54+0200\n"
 "Last-Translator: Bjørn Steensrud <bjornst@skogkatt.homelinux.org>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
@@ -1635,49 +1635,49 @@ msgstr "Slå av/på omsnuingseffekt på vindu"
 msgid "Invert Screen Colors"
 msgstr "Inverter skjermfarger"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:46
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:48
 #, fuzzy, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Tiny"
 msgstr "Bitteliten"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:47
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:49
 #, fuzzy, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Normal"
 msgstr "Normal"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:48
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:50
 #, fuzzy, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Large"
 msgstr "Stor"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:49
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:51
 #, fuzzy, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Large"
 msgstr "Svært stor"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:50
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:52
 #, fuzzy, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Huge"
 msgstr "Enorm"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:51
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:53
 #, fuzzy, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Huge"
 msgstr "Veldig enorm"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:52
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:54
 #, fuzzy, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Oversized"
 msgstr "Forstørret"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:55
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:57
 #, fuzzy, kde-format
 msgid "Button size:"
 msgstr "Knappestørrelse:"

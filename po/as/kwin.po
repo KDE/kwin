@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-30 01:42+0000\n"
+"POT-Creation-Date: 2023-10-02 01:42+0000\n"
 "PO-Revision-Date: 2009-01-16 16:49+0530\n"
 "Last-Translator: Amitakhya Phukan <অমিতাক্ষ ফুকন>\n"
 "Language-Team: Assamese <fedora-trans-as@redhat.com>\n"
@@ -1654,50 +1654,50 @@ msgstr ""
 msgid "Invert Screen Colors"
 msgstr ""
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:46
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:48
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Tiny"
 msgstr ""
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:47
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:49
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Normal"
 msgstr ""
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:48
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:50
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Large"
 msgstr ""
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:49
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:51
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Large"
 msgstr ""
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:50
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:52
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Huge"
 msgstr ""
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:51
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:53
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Huge"
 msgstr ""
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:52
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:54
 #, fuzzy, kde-format
 #| msgid "Re&size"
 msgctxt "@item:inlistbox Button size:"
 msgid "Oversized"
 msgstr "মাপ পৰিবৰ্তন (&s)"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:55
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:57
 #, fuzzy, kde-format
 #| msgid "Mouse Emulation"
 msgid "Button size:"

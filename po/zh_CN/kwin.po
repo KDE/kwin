@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-30 01:42+0000\n"
+"POT-Creation-Date: 2023-10-02 01:42+0000\n"
 "PO-Revision-Date: 2023-09-16 10:06\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -1638,49 +1638,49 @@ msgstr "开启/关闭窗口反相显示"
 msgid "Invert Screen Colors"
 msgstr "屏幕反色"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:46
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:48
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Tiny"
 msgstr "小"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:47
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:49
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Normal"
 msgstr "正常"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:48
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:50
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Large"
 msgstr "大"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:49
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:51
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Large"
 msgstr "特大"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:50
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:52
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Huge"
 msgstr "超大"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:51
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:53
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Huge"
 msgstr "超特大"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:52
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:54
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Oversized"
 msgstr "极大"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:55
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:57
 #, kde-format
 msgid "Button size:"
 msgstr "按钮大小："

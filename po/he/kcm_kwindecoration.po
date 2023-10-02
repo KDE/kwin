@@ -18,20 +18,20 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-08-06 02:04+0000\n"
-"PO-Revision-Date: 2017-05-16 06:53-0400\n"
+"PO-Revision-Date: 2023-10-01 07:42+0300\n"
 "Last-Translator: Copied by Zanata <copied-by-zanata@zanata.org>\n"
 "Language-Team: Hebrew <kde-i18n-doc@kde.org>\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Zanata 3.9.6\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 3.3.2\n"
 
 #: declarative-plugin/buttonsmodel.cpp:53
 #, kde-format
 msgid "More actions for this window"
-msgstr ""
+msgstr "פעולות נוספות לחלון הזה"
 
 #: declarative-plugin/buttonsmodel.cpp:55
 #, kde-format
@@ -41,48 +41,48 @@ msgstr "תפריט יישום"
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
 msgid "On all desktops"
-msgstr "בכל השולחנות עבודה"
+msgstr "בכל שולחנות העבודה"
 
 #: declarative-plugin/buttonsmodel.cpp:59
 #, kde-format
 msgid "Minimize"
-msgstr "מזער"
+msgstr "מזעור"
 
 #: declarative-plugin/buttonsmodel.cpp:61
 #, kde-format
 msgid "Maximize"
-msgstr "הגדל"
+msgstr "הגדלה"
 
 #: declarative-plugin/buttonsmodel.cpp:63
 #, kde-format
 msgid "Close"
-msgstr "סגור"
+msgstr "סגירה"
 
 #: declarative-plugin/buttonsmodel.cpp:65
 #, kde-format
 msgid "Context help"
-msgstr "לחצן עזרה"
+msgstr "עזרה לפי הקשר"
 
 #: declarative-plugin/buttonsmodel.cpp:67
 #, kde-format
 msgid "Shade"
-msgstr "גלול"
+msgstr "האפלה"
 
 #: declarative-plugin/buttonsmodel.cpp:69
 #, kde-format
 msgid "Keep below other windows"
-msgstr ""
+msgstr "להנמיך מתחת לחלונות אחרים"
 
 #: declarative-plugin/buttonsmodel.cpp:71
 #, kde-format
 msgid "Keep above other windows"
-msgstr ""
+msgstr "להגביה מעל לחלונות אחרים"
 
 #: kcm.cpp:176
 #, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme's default (%1)"
-msgstr ""
+msgstr "ברירת המחדל של ערכת העיצוב (%1)"
 
 #: kwin-applywindowdecoration.cpp:32
 #, kde-format
@@ -91,6 +91,8 @@ msgid ""
 "active session, without accidentally setting it to one that is either not "
 "available, or which is already set."
 msgstr ""
+"כלי זה מאפשר להגדיר את ערכת עיצוב עיטורי החלונות להפעלה שפעילה כרגע, מבלי "
+"להגדיר אותה בטעות לערכה שלא זמינה או שכבר מוגדרת."
 
 #: kwin-applywindowdecoration.cpp:33
 #, kde-format
@@ -99,12 +101,14 @@ msgid ""
 "full path will attempt to find a theme in that directory, and then apply "
 "that if one can be deduced."
 msgstr ""
+"שם ערכת עיצוב עיטורי החלונות שברצונך להגדיר ל־KWin. העברת נתיב מלא תנסה לאתר "
+"ערכת נושא באותה התיקייה ואז להחיל אותה אם ניתן להסיק כזאת מסקנה."
 
 #: kwin-applywindowdecoration.cpp:34
 #, kde-format
 msgid ""
 "Show all the themes available on the system (and which is the current theme)"
-msgstr ""
+msgstr "להציג את כל ערכות העיצוב שזמינות במערכת (ומה הנוכחית)"
 
 #: kwin-applywindowdecoration.cpp:65
 #, kde-format
@@ -112,6 +116,8 @@ msgid ""
 "Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
 "as your current theme."
 msgstr ""
+"%1 נפתר לכדי ערכת עיצוב מסוג Aurora KWin בשם „%2” ויתבצע ניסיון להגדיר אותה "
+"כערכת העיצוב הנוכחית שלך."
 
 #: kwin-applywindowdecoration.cpp:71
 #, kde-format
@@ -119,17 +125,19 @@ msgid ""
 "You attempted to pass a file path, but this could not be resolved to a "
 "theme, and we will have to abort, due to having no theme to set"
 msgstr ""
+"ניסית להעביר נתיב לקובץ אך לא ניתן לפתור את זה לערכת עיצוב ויהיה עלינו "
+"להפסיק כיוון שלא הוגדרה אף ערכת עיצוב"
 
 #: kwin-applywindowdecoration.cpp:77
 #, kde-format
 msgid ""
 "The requested theme \"%1\" is already set as the window decoration theme."
-msgstr ""
+msgstr "ערכת העיצוב המבוקשת „%1” כבר מוגדרת כערכת עיצוב העיטורים של החלונות."
 
 #: kwin-applywindowdecoration.cpp:99
 #, kde-format
 msgid "Successfully applied the cursor theme %1 to your current Plasma session"
-msgstr ""
+msgstr "ערכת עיצוב הסמנים %1 הוחלה בהצלחה על הפעלת הפלזמה הנוכחית שלך"
 
 #: kwin-applywindowdecoration.cpp:103
 #, kde-format
@@ -137,6 +145,8 @@ msgid ""
 "Failed to save your theme settings - the reason is unknown, but this is an "
 "unrecoverable error. You may find that simply trying again will work."
 msgstr ""
+"שמירת הגדרות ערכת העיצוב שלך נכשלה - הסיבה אינה ידועה אך זאת שגיאה שלא ניתן "
+"להשתקם ממנה. יכול להיות שניסיון חוזר פשוט יעבוד."
 
 #: kwin-applywindowdecoration.cpp:107
 #, kde-format
@@ -144,11 +154,13 @@ msgid ""
 "Could not find theme \"%1\". The theme should be one of the following "
 "options: %2"
 msgstr ""
+"לא ניתן למצוא את ערכת העיצוב „%1”. ערכת העיצוב אמורה להיות אחת מהאפשרויות "
+"הבאות: %2"
 
 #: kwin-applywindowdecoration.cpp:112
 #, kde-format
 msgid "You have the following KWin window decoration themes on your system:"
-msgstr ""
+msgstr "במערכת שלך יש את ערכות עיצוב עיטורי החלונות הבאים:"
 
 #: ui/Buttons.qml:85
 #, kde-format
@@ -156,122 +168,105 @@ msgid "Titlebar"
 msgstr "שורת הכותרת"
 
 #: ui/Buttons.qml:245
-#, fuzzy, kde-format
-#| msgid "Drop here to remove button"
+#, kde-format
 msgid "Drop button here to remove it"
-msgstr "שחרר כאן כדי להסיר כפתור"
+msgstr "יש לשחרר כפתור כאן כדי להסיר אותו"
 
 #: ui/Buttons.qml:261
 #, kde-format
 msgid "Drag buttons between here and the titlebar"
-msgstr "גרור בין כאן לשורת הכותרת"
+msgstr "כפתורי גרירה בין כאן לבין שורת הכותרת"
 
 #: ui/ConfigureTitlebar.qml:16
-#, fuzzy, kde-format
-#| msgid "Titlebar"
+#, kde-format
 msgid "Titlebar Buttons"
-msgstr "שורת הכותרת"
+msgstr "כפתורי שורת הכותרת"
 
 #: ui/ConfigureTitlebar.qml:35
-#, fuzzy, kde-format
-#| msgid "Close windows by double clicking &the menu button"
+#, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the menu button"
-msgstr "סגור חלונות על ידי לחיצה כפולה על תפריט החלון"
+msgstr "סגירת חלונות בלחיצה כפולה על כפתור התפריט"
 
 #: ui/ConfigureTitlebar.qml:52
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the menu button to show the menu."
-msgstr ""
+msgstr "יש ללחוץ ולהחזיק את כפתור התפריט כדי להציג את התפריט."
 
 #: ui/ConfigureTitlebar.qml:59
-#, fuzzy, kde-format
-#| msgid "Titlebar"
+#, kde-format
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
-msgstr "שורת הכותרת"
+msgstr "הצגת חלוניות מידע על כפתורי שורת הכותרת"
 
 #: ui/main.qml:29
-#, fuzzy, kde-format
-#| msgid "Border si&ze:"
+#, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
-msgstr "גודל מסגרת: "
+msgstr "גודל גבול החלון:"
 
 #: ui/main.qml:48
-#, fuzzy, kde-format
-#| msgid "Titlebar"
+#, kde-format
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
-msgstr "שורת הכותרת"
+msgstr "הגדרת כפתורי שורת כותרת…"
 
 #: ui/main.qml:54
 #, kde-format
 msgctxt "@action:button as in, \"Get New Window Decorations\""
 msgid "Get New…"
-msgstr ""
+msgstr "קבלת חדשים…"
 
 #: ui/Themes.qml:93
 #, kde-format
 msgid "Edit %1 Theme"
-msgstr ""
+msgstr "עריכת ערכת העיצוב %1"
 
 #: utils.cpp:25
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "No Side Borders"
+#, kde-format
 msgid "No Window Borders"
-msgstr "ללא גבולות צד"
+msgstr "ללא גבולות חלון"
 
 #: utils.cpp:26
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "No Side Borders"
+#, kde-format
 msgid "No Side Window Borders"
-msgstr "ללא גבולות צד"
+msgstr "גבולות חלון ללא צדדים"
 
 #: utils.cpp:27
-#, fuzzy, kde-format
-#| msgid "Border si&ze:"
+#, kde-format
 msgid "Tiny Window Borders"
-msgstr "גודל מסגרת: "
+msgstr "גבולות חלונות מזעריים"
 
 #: utils.cpp:28
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "No Side Borders"
+#, kde-format
 msgid "Normal Window Borders"
-msgstr "ללא גבולות צד"
+msgstr "גבולות חלונות רגילים"
 
 #: utils.cpp:29
-#, fuzzy, kde-format
-#| msgid "Border si&ze:"
+#, kde-format
 msgid "Large Window Borders"
-msgstr "גודל מסגרת: "
+msgstr "גבולות חלון גדולים"
 
 #: utils.cpp:30
 #, kde-format
 msgid "Very Large Window Borders"
-msgstr ""
+msgstr "גבולות חלון גדולים מאוד"
 
 #: utils.cpp:31
-#, fuzzy, kde-format
-#| msgid "Border si&ze:"
+#, kde-format
 msgid "Huge Window Borders"
-msgstr "גודל מסגרת: "
+msgstr "גבולות חלון ענקיים"
 
 #: utils.cpp:32
-#, fuzzy, kde-format
-#| msgid "Border si&ze:"
+#, kde-format
 msgid "Very Huge Window Borders"
-msgstr "גודל מסגרת: "
+msgstr "גבולות חלון ענקיים בהחלט"
 
 #: utils.cpp:33
-#, fuzzy, kde-format
-#| msgid "Border si&ze:"
+#, kde-format
 msgid "Oversized Window Borders"
-msgstr "גודל מסגרת: "
+msgstr "גבולות חלון מוגדלים"
 
 #, fuzzy
 #~| msgid "Get New Decorations..."

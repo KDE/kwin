@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-30 01:42+0000\n"
+"POT-Creation-Date: 2023-10-02 01:42+0000\n"
 "PO-Revision-Date: 2004-12-03 14:52-0500\n"
 "Last-Translator: Kevin Scannell <kscanne@gmail.com>\n"
 "Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
@@ -1674,55 +1674,55 @@ msgstr "Scoránaigh an Mhaisíocht Inbhéartaithe ar Fhuinneog"
 msgid "Invert Screen Colors"
 msgstr "Inbhéartaigh eochracha cúrsóra"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:46
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:48
 #, fuzzy, kde-format
 #| msgid "Tiny"
 msgctxt "@item:inlistbox Button size:"
 msgid "Tiny"
 msgstr "An-bheag"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:47
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:49
 #, fuzzy, kde-format
 #| msgid "Normal"
 msgctxt "@item:inlistbox Button size:"
 msgid "Normal"
 msgstr "Gnáthmhéid"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:48
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:50
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Large"
 msgstr "Mór"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:49
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:51
 #, fuzzy, kde-format
 #| msgid "Very Large"
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Large"
 msgstr "An-Mhór"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:50
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:52
 #, fuzzy, kde-format
 #| msgid "Huge"
 msgctxt "@item:inlistbox Button size:"
 msgid "Huge"
 msgstr "Ollmhór"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:51
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:53
 #, fuzzy, kde-format
 #| msgid "Very Huge"
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Huge"
 msgstr "Fíor-ollmhór"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:52
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:54
 #, fuzzy, kde-format
 #| msgid "Re&size"
 msgctxt "@item:inlistbox Button size:"
 msgid "Oversized"
 msgstr "Athraigh an &mhéid"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:55
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:57
 #, fuzzy, kde-format
 #| msgid "Mouse Emulation"
 msgid "Button size:"

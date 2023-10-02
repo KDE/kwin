@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-30 01:42+0000\n"
+"POT-Creation-Date: 2023-10-02 01:42+0000\n"
 "PO-Revision-Date: 2010-01-30 17:37+0100\n"
 "Last-Translator: Bozidar Proevski <bobibobi@freemail.com.mk>\n"
 "Language-Team: Macedonian <mkde-l10n@lists.sourceforge.net>\n"
@@ -1666,56 +1666,56 @@ msgstr ""
 msgid "Invert Screen Colors"
 msgstr ""
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:46
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:48
 #, fuzzy, kde-format
 #| msgid "Tiny"
 msgctxt "@item:inlistbox Button size:"
 msgid "Tiny"
 msgstr "Ситно"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:47
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:49
 #, fuzzy, kde-format
 #| msgid "Normal"
 msgctxt "@item:inlistbox Button size:"
 msgid "Normal"
 msgstr "Нормално"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:48
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:50
 #, fuzzy, kde-format
 #| msgid "Large"
 msgctxt "@item:inlistbox Button size:"
 msgid "Large"
 msgstr "Голема"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:49
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:51
 #, fuzzy, kde-format
 #| msgid "Very Large"
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Large"
 msgstr "Многу големо"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:50
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:52
 #, fuzzy, kde-format
 #| msgid "Huge"
 msgctxt "@item:inlistbox Button size:"
 msgid "Huge"
 msgstr "Огромно"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:51
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:53
 #, fuzzy, kde-format
 #| msgid "Very Huge"
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Huge"
 msgstr "Многу огромно"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:52
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:54
 #, fuzzy, kde-format
 #| msgid "Re&size"
 msgctxt "@item:inlistbox Button size:"
 msgid "Oversized"
 msgstr "Смени &големина"
 
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:55
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:57
 #, fuzzy, kde-format
 #| msgid "Mouse Emulation"
 msgid "Button size:"
