@@ -65,6 +65,7 @@ private:
         std::optional<ModeData> mode;
         std::optional<double> scale;
         std::optional<OutputTransform> transform;
+        std::optional<OutputTransform> manualTransform;
         std::optional<uint32_t> overscan;
         std::optional<Output::RgbRange> rgbRange;
         std::optional<RenderLoop::VrrPolicy> vrrPolicy;

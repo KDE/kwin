@@ -65,9 +65,6 @@ std::optional<std::tuple<OutputConfiguration, QVector<Output *>, OutputConfigura
 
 void OutputConfigurationStore::applyOrientationReading(OutputConfiguration &config, const QVector<Output *> &outputs, QOrientationReading *orientation, bool isTabletMode)
 {
-    if (!isAutoRotateActive(outputs, isTabletMode) || !orientation || orientation->orientation() == QOrientationReading::Orientation::Undefined) {
-        return;
-    }
     const auto output = std::find_if(outputs.begin(), outputs.end(), [&config](Output *output) {
         return output->isInternal() && config.changeSet(output)->enabled.value_or(output->isEnabled());
     });
@@ -76,6 +73,10 @@ void OutputConfigurationStore::applyOrientationReading(OutputConfiguration &conf
     }
     // TODO move other outputs to matching positions
     const auto changeset = config.changeSet(*output);
+    if (!isAutoRotateActive(outputs, isTabletMode)) {
+        changeset->transform = changeset->manualTransform;
+        return;
+    }
     switch (orientation->orientation()) {
     case QOrientationReading::Orientation::TopUp:
         changeset->transform = OutputTransform::Kind::Normal;
@@ -91,7 +92,9 @@ void OutputConfigurationStore::applyOrientationReading(OutputConfiguration &conf
         return;
     case QOrientationReading::Orientation::FaceUp:
     case QOrientationReading::Orientation::FaceDown:
+        return;
     case QOrientationReading::Orientation::Undefined:
+        changeset->transform = changeset->manualTransform;
         return;
     }
 }
@@ -184,6 +187,7 @@ void OutputConfigurationStore::storeConfig(const QVector<Output *> &allOutputs, 
                 },
                 .scale = changeSet->scale.value_or(output->scale()),
                 .transform = changeSet->transform.value_or(output->transform()),
+                .manualTransform = changeSet->manualTransform.value_or(output->manualTransform()),
                 .overscan = changeSet->overscan.value_or(output->overscan()),
                 .rgbRange = changeSet->rgbRange.value_or(output->rgbRange()),
                 .vrrPolicy = changeSet->vrrPolicy.value_or(output->vrrPolicy()),
@@ -209,6 +213,7 @@ void OutputConfigurationStore::storeConfig(const QVector<Output *> &allOutputs, 
                 },
                 .scale = output->scale(),
                 .transform = output->transform(),
+                .manualTransform = output->manualTransform(),
                 .overscan = output->overscan(),
                 .rgbRange = output->rgbRange(),
                 .vrrPolicy = output->vrrPolicy(),
@@ -249,6 +254,7 @@ std::pair<OutputConfiguration, QVector<Output *>> OutputConfigurationStore::setu
             .pos = setupState.position,
             .scale = state.scale,
             .transform = state.transform,
+            .manualTransform = state.manualTransform,
             .overscan = state.overscan,
             .rgbRange = state.rgbRange,
             .vrrPolicy = state.vrrPolicy,
@@ -362,6 +368,7 @@ std::pair<OutputConfiguration, QVector<Output *>> OutputConfigurationStore::gene
             .pos = pos,
             .scale = existingData.scale.value_or(chooseScale(output, mode.get())),
             .transform = existingData.transform.value_or(output->panelOrientation()),
+            .manualTransform = existingData.manualTransform.value_or(output->panelOrientation()),
             .overscan = existingData.overscan.value_or(0),
             .rgbRange = existingData.rgbRange.value_or(Output::RgbRange::Automatic),
             .vrrPolicy = existingData.vrrPolicy.value_or(RenderLoop::VrrPolicy::Automatic),
@@ -545,13 +552,13 @@ void OutputConfigurationStore::load()
         if (const auto it = data.find("transform"); it != data.end()) {
             const auto str = it->toString();
             if (str == "Normal") {
-                state.transform = OutputTransform::Kind::Normal;
+                state.transform = state.manualTransform = OutputTransform::Kind::Normal;
             } else if (str == "Rotated90") {
-                state.transform = OutputTransform::Kind::Rotated90;
+                state.transform = state.manualTransform = OutputTransform::Kind::Rotated90;
             } else if (str == "Rotated180") {
-                state.transform = OutputTransform::Kind::Rotated180;
+                state.transform = state.manualTransform = OutputTransform::Kind::Rotated180;
             } else if (str == "Rotated270") {
-                state.transform = OutputTransform::Kind::Rotated270;
+                state.transform = state.manualTransform = OutputTransform::Kind::Rotated270;
             }
         }
         if (const auto it = data.find("overscan"); it != data.end()) {
@@ -729,13 +736,13 @@ void OutputConfigurationStore::save()
         if (output.scale) {
             o["scale"] = *output.scale;
         }
-        if (output.transform == OutputTransform::Kind::Normal) {
+        if (output.manualTransform == OutputTransform::Kind::Normal) {
             o["transform"] = "Normal";
-        } else if (output.transform == OutputTransform::Kind::Rotated90) {
+        } else if (output.manualTransform == OutputTransform::Kind::Rotated90) {
             o["transform"] = "Rotated90";
-        } else if (output.transform == OutputTransform::Kind::Rotated180) {
+        } else if (output.manualTransform == OutputTransform::Kind::Rotated180) {
             o["transform"] = "Rotated180";
-        } else if (output.transform == OutputTransform::Kind::Rotated270) {
+        } else if (output.manualTransform == OutputTransform::Kind::Rotated270) {
             o["transform"] = "Rotated270";
         }
         if (output.overscan) {

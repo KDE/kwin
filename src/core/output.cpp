@@ -193,6 +193,11 @@ OutputTransform Output::transform() const
     return m_state.transform;
 }
 
+OutputTransform Output::manualTransform() const
+{
+    return m_state.manualTransform;
+}
+
 QString Output::eisaId() const
 {
     return m_information.eisaId;

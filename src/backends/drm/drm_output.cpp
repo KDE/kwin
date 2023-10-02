@@ -333,6 +333,7 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.position = props->pos.value_or(m_state.position);
     next.scale = props->scale.value_or(m_state.scale);
     next.transform = props->transform.value_or(m_state.transform);
+    next.manualTransform = props->manualTransform.value_or(m_state.manualTransform);
     next.currentMode = m_pipeline->mode();
     next.overscan = m_pipeline->overscan();
     next.rgbRange = m_pipeline->rgbRange();

@@ -150,7 +150,8 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_transform(Resou
     };
     auto _transform = toTransform();
     if (OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice)) {
-        config.changeSet(output->handle())->transform = _transform;
+        const auto changeset = config.changeSet(output->handle());
+        changeset->transform = changeset->manualTransform = _transform;
     }
 }
 

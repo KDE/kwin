@@ -274,6 +274,11 @@ public:
     static std::chrono::milliseconds dimAnimationTime();
 
     OutputTransform transform() const;
+    /**
+     * The transform that the user has configured, and which doesn't get changed
+     * by automatic rotation
+     */
+    OutputTransform manualTransform() const;
     QSize orientateSize(const QSize &size) const;
 
     void applyChanges(const OutputConfiguration &config);
@@ -395,6 +400,7 @@ protected:
         QPoint position;
         qreal scale = 1;
         OutputTransform transform = OutputTransform::Normal;
+        OutputTransform manualTransform = OutputTransform::Normal;
         QList<std::shared_ptr<OutputMode>> modes;
         std::shared_ptr<OutputMode> currentMode;
         DpmsMode dpmsMode = DpmsMode::On;
