@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-10-02 01:42+0000\n"
-"PO-Revision-Date: 2023-09-27 00:25+0200\n"
+"PO-Revision-Date: 2023-10-02 22:30+0200\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -1449,7 +1449,7 @@ msgstr "Inicia la sesión sin permitir el bloqueo de pantalla."
 #: main_wayland.cpp:381
 #, kde-format
 msgid "Starts the session without global shortcuts support."
-msgstr "Inicia la sesión sin usar los accesos rápidos de teclado globales."
+msgstr "Inicia la sesión sin usar los atajos de teclado globales."
 
 #: main_wayland.cpp:386 main_x11.cpp:423
 #, kde-format
@@ -3454,25 +3454,25 @@ msgstr "Tipo de regla para obedecer restricciones de geometría"
 #: rulesettings.kcfg:407
 #, kde-format
 msgid "Shortcut"
-msgstr "Acceso rápido"
+msgstr "Atajo de teclado"
 
 #. i18n: ectx: label, entry (shortcutrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:410
 #, kde-format
 msgid "Shortcut rule type"
-msgstr "Tipo de regla para acceso rápido"
+msgstr "Tipo de regla para atajo de teclado"
 
 #. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:417
 #, kde-format
 msgid "Ignore global shortcuts"
-msgstr "Ignorar accesos rápidos globales"
+msgstr "Ignorar atajos de teclado globales"
 
 #. i18n: ectx: label, entry (disableglobalshortcutsrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:421
 #, kde-format
 msgid "Ignore global shortcuts rule type"
-msgstr "Tipo de regla para ignorar accesos rápidos globales"
+msgstr "Tipo de regla para ignorar atajos de teclado globales"
 
 #. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:426
@@ -3558,7 +3558,7 @@ msgstr ""
 "Ha seleccionado mostrar una ventana sin borde.\n"
 "Al no tener borde, no podrá habilitarlo de nuevo utilizando el ratón. "
 "Utilice, en su lugar, el menú de operaciones de la ventana, que se activa "
-"con el acceso rápido por teclado «%1»."
+"con el atajo de teclado «%1»."
 
 #: useractions.cpp:166
 #, kde-format
@@ -3571,8 +3571,8 @@ msgstr ""
 "Ha seleccionado mostrar una ventana en modo de pantalla completa.\n"
 "Si la propia aplicación no tiene la opción de desactivar el modo de pantalla "
 "completa, no podrá hacerlo utilizando el ratón. Utilice, en su lugar, el "
-"menú de operaciones de la ventana, que se activa con el acceso rápido por "
-"teclado «%1»."
+"menú de operaciones de la ventana, que se activa con el atajo de teclado "
+"«%1»."
 
 #: useractions.cpp:213
 #, kde-format
@@ -3612,7 +3612,7 @@ msgstr "Si&n barra de título ni marco"
 #: useractions.cpp:255
 #, kde-format
 msgid "Set Window Short&cut…"
-msgstr "Definir a&cceso rápido de la ventana..."
+msgstr "Definir a&tajo de teclado para la ventana..."
 
 #: useractions.cpp:261
 #, kde-format
@@ -3820,7 +3820,7 @@ msgstr "Activar la ventana que necesite atención"
 #: useractions.cpp:960
 #, kde-format
 msgid "Setup Window Shortcut"
-msgstr "Configurar el acceso rápido de la ventana"
+msgstr "Configurar el atajo de teclado de la ventana"
 
 #: useractions.cpp:962
 #, kde-format

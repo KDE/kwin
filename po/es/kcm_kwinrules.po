@@ -7,14 +7,14 @@
 # Enrique Matias Sanchez (aka Quique) <cronopios@gmail.com>, 2007.
 # Jaime Robles <jaime@kde.org>, 2008.
 # Cristina Yenyxe González García <the.blue.valkyrie@gmail.com>, 2010, 2011.
-# Eloy Cuadra <ecuadra@eloihr.net>, 2010, 2012, 2013, 2014, 2015, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
+# SPDX-FileCopyrightText: 2010, 2012, 2013, 2014, 2015, 2017, 2018, 2019, 2020, 2021, 2022, 2023 Eloy Cuadra <ecuadra@eloihr.net>
 # Javier Vinal <fjvinal@gmail.com>, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-07 02:19+0000\n"
-"PO-Revision-Date: 2023-06-04 01:58+0200\n"
+"PO-Revision-Date: 2023-10-02 22:01+0200\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "com>\n"
-"X-Generator: Lokalize 23.04.1\n"
+"X-Generator: Lokalize 23.08.1\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: kcmrules.cpp:226
@@ -420,7 +420,7 @@ msgstr ""
 #: rulesmodel.cpp:597
 #, kde-format
 msgid "Shortcut"
-msgstr "Acceso rápido"
+msgstr "Atajo de teclado"
 
 #: rulesmodel.cpp:603
 #, kde-format
@@ -555,7 +555,7 @@ msgstr "Controla si la ventana obtiene el foco cuando se pulsa sobre ella."
 #: rulesmodel.cpp:686
 #, kde-format
 msgid "Ignore global shortcuts"
-msgstr "Ignorar accesos rápidos globales"
+msgstr "Ignorar atajos de teclado globales"
 
 #: rulesmodel.cpp:688
 #, kde-kuit-format
@@ -568,13 +568,12 @@ msgid ""
 "use any other global shortcuts such as <shortcut>Alt+Space</shortcut> to "
 "activate KRunner."
 msgstr ""
-"Use esta propiedad para evitar que los accesos rápidos de teclado globales "
-"funcionen mientras la ventana tiene el foco. Esto puede ser útil para "
-"algunas aplicaciones, como emuladores o máquinas virtuales, que usan algunos "
-"de los mismos accesos rápidos de teclado.<nl/><nl/>Tenga en cuenta que no "
-"podrá usar <shortcut>Alt+Tab</shortcut> fuera de la ventana ni usar otros "
-"accesos rápidos globales, como <shortcut>Alt+Espacio</shortcut> para activar "
-"KRunner."
+"Use esta propiedad para evitar que los atajos de teclado globales funcionen "
+"mientras la ventana tiene el foco. Esto puede ser útil para algunas "
+"aplicaciones, como emuladores o máquinas virtuales, que usan algunos de los "
+"mismos atajos de teclado.<nl/><nl/>Tenga en cuenta que no podrá usar "
+"<shortcut>Alt+Tab</shortcut> fuera de la ventana ni usar otros atajos de "
+"teclado globales, como <shortcut>Alt+Espacio</shortcut> para activar KRunner."
 
 #: rulesmodel.cpp:698
 #, kde-format
