@@ -45,6 +45,19 @@ ColorTransformation::~ColorTransformation()
     }
 }
 
+void ColorTransformation::append(ColorTransformation *transformation)
+{
+    for (auto &stage : transformation->m_stages) {
+        auto dup = stage->dup();
+        if (!cmsPipelineInsertStage(m_pipeline, cmsAT_END, dup->stage())) {
+            qCWarning(KWIN_CORE) << "Failed to insert cmsPipeline stage!";
+            m_valid = false;
+            return;
+        }
+        m_stages.push_back(std::move(dup));
+    }
+}
+
 bool ColorTransformation::valid() const
 {
     return m_valid;

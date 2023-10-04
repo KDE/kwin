@@ -7,6 +7,7 @@
 #include "colordevice.h"
 #include "core/colorpipelinestage.h"
 #include "core/colortransformation.h"
+#include "core/iccprofile.h"
 #include "core/output.h"
 #include "utils/common.h"
 
@@ -49,7 +50,7 @@ public:
     Output *output;
     DirtyToneCurves dirtyCurves;
     QTimer *updateTimer;
-    QString profile;
+    QString profilePath;
     uint brightness = 100;
     uint temperature = 6500;
 
@@ -57,7 +58,7 @@ public:
     QVector3D temperatureFactors = QVector3D(1, 1, 1);
     std::unique_ptr<ColorPipelineStage> brightnessStage;
     QVector3D brightnessFactors = QVector3D(1, 1, 1);
-    std::unique_ptr<ColorPipelineStage> calibrationStage;
+    std::unique_ptr<IccProfile> iccProfile;
 
     std::shared_ptr<ColorTransformation> transformation;
     // used if only limited per-channel multiplication is available
@@ -78,13 +79,6 @@ void ColorDevicePrivate::rebuildPipeline()
     dirtyCurves = DirtyToneCurves();
 
     std::vector<std::unique_ptr<ColorPipelineStage>> stages;
-    if (calibrationStage) {
-        if (auto s = calibrationStage->dup()) {
-            stages.push_back(std::move(s));
-        } else {
-            return;
-        }
-    }
     if (brightnessStage) {
         if (auto s = brightnessStage->dup()) {
             stages.push_back(std::move(s));
@@ -101,6 +95,9 @@ void ColorDevicePrivate::rebuildPipeline()
     }
 
     const auto tmp = std::make_shared<ColorTransformation>(std::move(stages));
+    if (iccProfile && iccProfile->vcgt()) {
+        tmp->append(iccProfile->vcgt().get());
+    }
     if (tmp->valid()) {
         transformation = tmp;
         simpleTransformation = brightnessFactors * temperatureFactors;
@@ -114,7 +111,7 @@ static qreal interpolate(qreal a, qreal b, qreal blendFactor)
 
 QString ColorDevice::profile() const
 {
-    return d->profile;
+    return d->profilePath;
 }
 
 void ColorDevicePrivate::updateTemperatureToneCurves()
@@ -210,32 +207,7 @@ void ColorDevicePrivate::updateBrightnessToneCurves()
 
 void ColorDevicePrivate::updateCalibrationToneCurves()
 {
-    calibrationStage.reset();
-
-    if (profile.isNull()) {
-        return;
-    }
-
-    cmsHPROFILE handle = cmsOpenProfileFromFile(profile.toUtf8(), "r");
-    if (!handle) {
-        qCWarning(KWIN_CORE) << "Failed to open color profile file:" << profile;
-        return;
-    }
-
-    cmsToneCurve **vcgt = static_cast<cmsToneCurve **>(cmsReadTag(handle, cmsSigVcgtTag));
-    if (!vcgt || !vcgt[0]) {
-        qCWarning(KWIN_CORE) << "Profile" << profile << "has no VCGT tag";
-    } else {
-        // Need to duplicate the VCGT tone curves as they are owned by the profile.
-        cmsToneCurve *toneCurves[] = {
-            cmsDupToneCurve(vcgt[0]),
-            cmsDupToneCurve(vcgt[1]),
-            cmsDupToneCurve(vcgt[2]),
-        };
-        calibrationStage = std::make_unique<ColorPipelineStage>(cmsStageAllocToneCurves(nullptr, 3, toneCurves));
-    }
-
-    cmsCloseProfile(handle);
+    iccProfile = IccProfile::load(profilePath);
 }
 
 ColorDevice::ColorDevice(Output *output, QObject *parent)
@@ -306,10 +278,10 @@ void ColorDevice::setTemperature(uint temperature)
 
 void ColorDevice::setProfile(const QString &profile)
 {
-    if (d->profile == profile) {
+    if (d->profilePath == profile) {
         return;
     }
-    d->profile = profile;
+    d->profilePath = profile;
     d->dirtyCurves |= ColorDevicePrivate::DirtyCalibrationToneCurve;
     scheduleUpdate();
     Q_EMIT profileChanged();

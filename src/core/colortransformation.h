@@ -28,13 +28,15 @@ public:
     ColorTransformation(std::vector<std::unique_ptr<ColorPipelineStage>> &&stages);
     ~ColorTransformation();
 
+    void append(ColorTransformation *transformation);
+
     bool valid() const;
 
     std::tuple<uint16_t, uint16_t, uint16_t> transform(uint16_t r, uint16_t g, uint16_t b) const;
 
 private:
     cmsPipeline *const m_pipeline;
-    const std::vector<std::unique_ptr<ColorPipelineStage>> m_stages;
+    std::vector<std::unique_ptr<ColorPipelineStage>> m_stages;
     bool m_valid = true;
 };
 
