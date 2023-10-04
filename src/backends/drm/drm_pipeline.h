@@ -114,9 +114,8 @@ public:
     uint32_t overscan() const;
     Output::RgbRange rgbRange() const;
     DrmConnector::DrmContentType contentType() const;
-    NamedColorimetry colorimetry() const;
-    NamedTransferFunction transferFunction() const;
     const ColorDescription &colorDescription() const;
+    const std::shared_ptr<IccProfile> &iccProfile() const;
 
     void setCrtc(DrmCrtc *crtc);
     void setMode(const std::shared_ptr<DrmConnectorMode> &mode);
@@ -129,8 +128,9 @@ public:
     void setGammaRamp(const std::shared_ptr<ColorTransformation> &transformation);
     void setCTM(const QMatrix3x3 &ctm);
     void setContentType(DrmConnector::DrmContentType type);
-    void setColorimetry(NamedColorimetry name);
+    void setBT2020(bool useBT2020);
     void setNamedTransferFunction(NamedTransferFunction tf);
+    void setIccProfile(const std::shared_ptr<IccProfile> &profile);
     void setSdrBrightness(double sdrBrightness);
 
     enum class CommitMode {
@@ -185,9 +185,10 @@ private:
         std::shared_ptr<DrmBlob> ctm;
         DrmConnector::DrmContentType contentType = DrmConnector::DrmContentType::Graphics;
 
-        NamedColorimetry colorimetry = NamedColorimetry::BT709;
+        bool BT2020 = false;
         NamedTransferFunction transferFunction = NamedTransferFunction::sRGB;
         double sdrBrightness = 200;
+        std::shared_ptr<IccProfile> iccProfile;
         ColorDescription colorDescription = ColorDescription::sRGB;
 
         // the transformation that buffers submitted to the pipeline should have

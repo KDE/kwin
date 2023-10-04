@@ -25,6 +25,8 @@ target_sources(kwin PRIVATE
     drm_qpainter_layer.cpp
     drm_virtual_egl_layer.cpp
     drm_virtual_output.cpp
+    icc.qrc
+    icc_shader.cpp
 )
 
 target_link_libraries(kwin PRIVATE Libdrm::Libdrm gbm::gbm PkgConfig::Libxcvt)

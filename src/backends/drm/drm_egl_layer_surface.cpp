@@ -9,10 +9,14 @@
 #include "drm_egl_layer_surface.h"
 
 #include "config-kwin.h"
+#include "core/colortransformation.h"
 #include "core/graphicsbufferview.h"
+#include "core/iccprofile.h"
 #include "drm_egl_backend.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
+#include "icc_shader.h"
+#include "libkwineffects/gllut.h"
 #include "platformsupport/scenes/opengl/eglnativefence.h"
 #include "platformsupport/scenes/opengl/eglswapchain.h"
 #include "platformsupport/scenes/opengl/glrendertimequery.h"
@@ -69,7 +73,7 @@ void EglGbmLayerSurface::destroyResources()
     m_oldSurface = {};
 }
 
-std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(const QSize &bufferSize, TextureTransforms transformation, const QMap<uint32_t, QList<uint64_t>> &formats, const ColorDescription &colorDescription, const QVector3D &channelFactors, bool enableColormanagement)
+std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(const QSize &bufferSize, TextureTransforms transformation, const QMap<uint32_t, QList<uint64_t>> &formats, const ColorDescription &colorDescription, const QVector3D &channelFactors, const std::shared_ptr<IccProfile> &iccProfile, bool enableColormanagement)
 {
     if (!checkSurface(bufferSize, formats)) {
         return std::nullopt;
@@ -90,11 +94,20 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
     slot->framebuffer()->colorAttachment()->setContentTransform(transformation);
     m_surface->currentSlot = slot;
 
-    if (m_surface->targetColorDescription != colorDescription || m_surface->channelFactors != channelFactors || m_surface->colormanagementEnabled != enableColormanagement) {
+    if (m_surface->targetColorDescription != colorDescription || m_surface->channelFactors != channelFactors
+        || m_surface->colormanagementEnabled != enableColormanagement || m_surface->iccProfile != iccProfile) {
         m_surface->damageJournal.clear();
         m_surface->colormanagementEnabled = enableColormanagement;
         m_surface->targetColorDescription = colorDescription;
         m_surface->channelFactors = channelFactors;
+        m_surface->iccProfile = iccProfile;
+        if (iccProfile) {
+            if (!m_surface->iccShader) {
+                m_surface->iccShader = std::make_unique<IccShader>();
+            }
+        } else {
+            m_surface->iccShader.reset();
+        }
         if (enableColormanagement) {
             m_surface->intermediaryColorDescription = ColorDescription(colorDescription.colorimetry(), NamedTransferFunction::linear,
                                                                        colorDescription.sdrBrightness(), colorDescription.minHdrBrightness(),
@@ -135,19 +148,25 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion)
 {
     if (m_surface->colormanagementEnabled) {
         GLFramebuffer *fbo = m_surface->currentSlot->framebuffer();
-        GLTexture *texture = fbo->colorAttachment();
         GLFramebuffer::pushFramebuffer(fbo);
-        ShaderBinder binder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
-        QMatrix4x4 mat = texture->contentTransformMatrix();
+        ShaderBinder binder = m_surface->iccShader ? ShaderBinder(m_surface->iccShader->shader()) : ShaderBinder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
+        if (m_surface->iccShader) {
+            m_surface->iccShader->setUniforms(m_surface->iccProfile, m_surface->intermediaryColorDescription.sdrBrightness());
+        } else {
+            QMatrix3x3 ctm;
+            ctm(0, 0) = m_surface->channelFactors.x();
+            ctm(1, 1) = m_surface->channelFactors.y();
+            ctm(2, 2) = m_surface->channelFactors.z();
+            binder.shader()->setUniform(GLShader::MatrixUniform::ColorimetryTransformation, ctm);
+            binder.shader()->setUniform(GLShader::IntUniform::SourceNamedTransferFunction, int(m_surface->intermediaryColorDescription.transferFunction()));
+            binder.shader()->setUniform(GLShader::IntUniform::DestinationNamedTransferFunction, int(m_surface->targetColorDescription.transferFunction()));
+            binder.shader()->setUniform(GLShader::IntUniform::SdrBrightness, m_surface->intermediaryColorDescription.sdrBrightness());
+            binder.shader()->setUniform(GLShader::FloatUniform::MaxHdrBrightness, m_surface->intermediaryColorDescription.maxHdrHighlightBrightness());
+        }
+        QMatrix4x4 mat = fbo->colorAttachment()->contentTransformMatrix();
         mat.ortho(QRectF(QPointF(), fbo->size()));
         binder.shader()->setUniform(GLShader::MatrixUniform::ModelViewProjectionMatrix, mat);
-        QMatrix3x3 ctm;
-        ctm(0, 0) = m_surface->channelFactors.x();
-        ctm(1, 1) = m_surface->channelFactors.y();
-        ctm(2, 2) = m_surface->channelFactors.z();
-        binder.shader()->setUniform(GLShader::MatrixUniform::ColorimetryTransformation, ctm);
-        binder.shader()->setUniform(GLShader::IntUniform::SourceNamedTransferFunction, int(m_surface->intermediaryColorDescription.transferFunction()));
-        binder.shader()->setUniform(GLShader::IntUniform::DestinationNamedTransferFunction, int(m_surface->targetColorDescription.transferFunction()));
+        glDisable(GL_BLEND);
         m_surface->shadowTexture->render(m_surface->gbmSwapchain->size(), 1);
         GLFramebuffer::popFramebuffer();
     }

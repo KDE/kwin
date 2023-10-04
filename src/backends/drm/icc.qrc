@@ -1,0 +1,6 @@
+<!DOCTYPE RCC><RCC version="1.0">
+    <qresource prefix="/backends/drm/">
+        <file>icc.frag</file>
+        <file>icc_core.frag</file>
+    </qresource>
+</RCC>

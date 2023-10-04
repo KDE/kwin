@@ -318,7 +318,7 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
     m_pipeline->setRgbRange(props->rgbRange.value_or(m_pipeline->rgbRange()));
     m_pipeline->setRenderOrientation(outputToPlaneTransform(props->transform.value_or(transform())));
     m_pipeline->setEnable(props->enabled.value_or(m_pipeline->enabled()));
-    m_pipeline->setColorimetry(props->wideColorGamut.value_or(m_state.wideColorGamut) ? NamedColorimetry::BT2020 : NamedColorimetry::BT709);
+    m_pipeline->setBT2020(props->wideColorGamut.value_or(m_state.wideColorGamut));
     m_pipeline->setNamedTransferFunction(props->highDynamicRange.value_or(m_state.highDynamicRange) ? NamedTransferFunction::PerceptualQuantizer : NamedTransferFunction::sRGB);
     m_pipeline->setSdrBrightness(props->sdrBrightness.value_or(m_state.sdrBrightness));
     return true;
@@ -347,6 +347,7 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.autoRotatePolicy = props->autoRotationPolicy.value_or(m_state.autoRotatePolicy);
     if (props->iccProfilePath) {
         next.iccProfile = IccProfile::load(*props->iccProfilePath);
+        m_pipeline->setIccProfile(next.iccProfile);
     }
     if (m_state.highDynamicRange != next.highDynamicRange || m_state.sdrBrightness != next.sdrBrightness || m_state.wideColorGamut != next.wideColorGamut || m_state.iccProfile != next.iccProfile) {
         m_renderLoop->scheduleRepaint();
@@ -384,9 +385,6 @@ bool DrmOutput::setGammaRamp(const std::shared_ptr<ColorTransformation> &transfo
 {
     if (!m_pipeline->activePending() || needsColormanagement()) {
         return false;
-    }
-    if (m_state.iccProfile && m_state.iccProfile->vcgt()) {
-        transformation->append(m_state.iccProfile->vcgt().get());
     }
     m_pipeline->setGammaRamp(transformation);
     m_pipeline->setCTM(QMatrix3x3());
@@ -436,7 +434,7 @@ QVector3D DrmOutput::channelFactors() const
 
 bool DrmOutput::needsColormanagement() const
 {
-    return m_pipeline->colorimetry() != NamedColorimetry::BT709 || m_pipeline->transferFunction() != NamedTransferFunction::sRGB || m_gpu->isNVidia();
+    return m_state.wideColorGamut || m_state.highDynamicRange || m_state.iccProfile || m_gpu->isNVidia();
 }
 }
 

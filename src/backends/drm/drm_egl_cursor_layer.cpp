@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "drm_egl_cursor_layer.h"
+#include "core/iccprofile.h"
 #include "drm_buffer.h"
 #include "drm_egl_backend.h"
 #include "drm_gpu.h"
@@ -51,7 +52,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmCursorLayer::beginFrame()
         // TODO for hardware cursors to work with color management, KWin needs to offload post-blending color management steps to KMS
         return std::nullopt;
     }
-    return m_surface.startRendering(m_pipeline->gpu()->cursorSize(), drmToTextureRotation(m_pipeline) | TextureTransform::MirrorY, m_pipeline->cursorFormats(), m_pipeline->colorDescription(), m_pipeline->output()->channelFactors(), m_pipeline->output()->needsColormanagement());
+    return m_surface.startRendering(m_pipeline->gpu()->cursorSize(), drmToTextureRotation(m_pipeline) | TextureTransform::MirrorY, m_pipeline->cursorFormats(), m_pipeline->colorDescription(), m_pipeline->output()->channelFactors(), m_pipeline->iccProfile(), m_pipeline->output()->needsColormanagement());
 }
 
 bool EglGbmCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)

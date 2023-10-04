@@ -55,6 +55,7 @@ public:
 
     bool setUniform(int location, float value);
     bool setUniform(int location, int value);
+    bool setUniform(int location, int xValue, int yValue, int zValue);
     bool setUniform(int location, const QVector2D &value);
     bool setUniform(int location, const QVector3D &value);
     bool setUniform(int location, const QVector4D &value);

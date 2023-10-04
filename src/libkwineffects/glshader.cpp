@@ -349,6 +349,14 @@ bool GLShader::setUniform(int location, int value)
     return (location >= 0);
 }
 
+bool GLShader::setUniform(int location, int xValue, int yValue, int zValue)
+{
+    if (location >= 0) {
+        glUniform3i(location, xValue, yValue, zValue);
+    }
+    return location >= 0;
+}
+
 bool GLShader::setUniform(int location, const QVector2D &value)
 {
     if (location >= 0) {

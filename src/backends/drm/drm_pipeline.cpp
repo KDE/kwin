@@ -11,6 +11,7 @@
 
 #include <errno.h>
 
+#include "core/iccprofile.h"
 #include "core/session.h"
 #include "drm_backend.h"
 #include "drm_buffer.h"
@@ -289,10 +290,13 @@ bool DrmPipeline::prepareAtomicModeset(DrmAtomicCommit *commit)
     } else if (m_pending.transferFunction != NamedTransferFunction::sRGB) {
         return false;
     }
-    if (m_connector->colorspace.isValid() && m_connector->colorspace.hasEnum(DrmConnector::Colorspace::BT2020_RGB)) {
-        commit->addEnum(m_connector->colorspace, m_pending.colorimetry == NamedColorimetry::BT2020 ? DrmConnector::Colorspace::BT2020_RGB : DrmConnector::Colorspace::Default);
-    } else if (m_pending.colorimetry != NamedColorimetry::BT709) {
-        return false;
+    if (m_pending.BT2020) {
+        if (!m_connector->colorspace.isValid() || !m_connector->colorspace.hasEnum(DrmConnector::Colorspace::BT2020_RGB)) {
+            return false;
+        }
+        commit->addEnum(m_connector->colorspace, DrmConnector::Colorspace::BT2020_RGB);
+    } else if (m_connector->colorspace.isValid()) {
+        commit->addEnum(m_connector->colorspace, DrmConnector::Colorspace::Default);
     }
     if (m_connector->scalingMode.isValid() && m_connector->scalingMode.hasEnum(DrmConnector::ScalingMode::None)) {
         commit->addEnum(m_connector->scalingMode, DrmConnector::ScalingMode::None);
@@ -577,19 +581,14 @@ DrmConnector::DrmContentType DrmPipeline::contentType() const
     return m_pending.contentType;
 }
 
-NamedColorimetry DrmPipeline::colorimetry() const
-{
-    return m_pending.colorimetry;
-}
-
-NamedTransferFunction DrmPipeline::transferFunction() const
-{
-    return m_pending.transferFunction;
-}
-
 const ColorDescription &DrmPipeline::colorDescription() const
 {
     return m_pending.colorDescription;
+}
+
+const std::shared_ptr<IccProfile> &DrmPipeline::iccProfile() const
+{
+    return m_pending.iccProfile;
 }
 
 void DrmPipeline::setCrtc(DrmCrtc *crtc)
@@ -682,10 +681,10 @@ void DrmPipeline::setContentType(DrmConnector::DrmContentType type)
     m_pending.contentType = type;
 }
 
-void DrmPipeline::setColorimetry(NamedColorimetry name)
+void DrmPipeline::setBT2020(bool useBT2020)
 {
-    if (m_pending.colorimetry != name) {
-        m_pending.colorimetry = name;
+    if (m_pending.BT2020 != useBT2020) {
+        m_pending.BT2020 = useBT2020;
         m_pending.colorDescription = createColorDescription();
     }
 }
@@ -706,14 +705,25 @@ void DrmPipeline::setSdrBrightness(double sdrBrightness)
     }
 }
 
+void DrmPipeline::setIccProfile(const std::shared_ptr<IccProfile> &profile)
+{
+    if (m_pending.iccProfile != profile) {
+        m_pending.iccProfile = profile;
+        m_pending.colorDescription = createColorDescription();
+    }
+}
+
 ColorDescription DrmPipeline::createColorDescription() const
 {
-    if (m_connector->edid() && (m_pending.colorimetry != NamedColorimetry::BT709 || m_pending.transferFunction != NamedTransferFunction::sRGB)) {
+    if (m_pending.transferFunction == NamedTransferFunction::PerceptualQuantizer && m_connector->edid()) {
+        const auto colorimetry = m_pending.BT2020 ? NamedColorimetry::BT2020 : NamedColorimetry::BT709;
         if (const auto hdr = m_connector->edid()->hdrMetadata(); hdr && hdr->hasValidBrightnessValues) {
-            return ColorDescription(m_pending.colorimetry, m_pending.transferFunction, m_pending.sdrBrightness, hdr->desiredContentMinLuminance, hdr->desiredMaxFrameAverageLuminance, hdr->desiredContentMaxLuminance);
+            return ColorDescription(colorimetry, m_pending.transferFunction, m_pending.sdrBrightness, hdr->desiredContentMinLuminance, hdr->desiredMaxFrameAverageLuminance, hdr->desiredContentMaxLuminance);
         } else {
-            return ColorDescription(m_pending.colorimetry, m_pending.transferFunction, m_pending.sdrBrightness, 0, m_pending.sdrBrightness, m_pending.sdrBrightness);
+            return ColorDescription(colorimetry, m_pending.transferFunction, m_pending.sdrBrightness, 0, m_pending.sdrBrightness, m_pending.sdrBrightness);
         }
+    } else if (m_pending.iccProfile) {
+        return ColorDescription(m_pending.iccProfile->colorimetry(), NamedTransferFunction::sRGB, 200, 0, 200, 200);
     } else {
         return ColorDescription::sRGB;
     }

@@ -36,6 +36,10 @@ class GraphicsBuffer;
 class SurfaceItem;
 class GLTexture;
 class GLRenderTimeQuery;
+class ColorTransformation;
+class GlLookUpTable;
+class IccProfile;
+class IccShader;
 
 class EglGbmLayerSurface : public QObject
 {
@@ -53,7 +57,7 @@ public:
     EglGbmLayerSurface(DrmGpu *gpu, EglGbmBackend *eglBackend, BufferTarget target = BufferTarget::Normal, FormatOption formatOption = FormatOption::PreferAlpha);
     ~EglGbmLayerSurface();
 
-    std::optional<OutputLayerBeginFrameInfo> startRendering(const QSize &bufferSize, TextureTransforms transformation, const QMap<uint32_t, QList<uint64_t>> &formats, const ColorDescription &colorDescription, const QVector3D &channelFactors, bool enableColormanagement);
+    std::optional<OutputLayerBeginFrameInfo> startRendering(const QSize &bufferSize, TextureTransforms transformation, const QMap<uint32_t, QList<uint64_t>> &formats, const ColorDescription &colorDescription, const QVector3D &channelFactors, const std::shared_ptr<IccProfile> &iccProfile, bool enableColormanagement);
     bool endRendering(const QRegion &damagedRegion);
     std::chrono::nanoseconds queryRenderTime() const;
 
@@ -79,12 +83,6 @@ private:
         ~Surface();
 
         std::shared_ptr<EglContext> context;
-        bool colormanagementEnabled = false;
-        std::shared_ptr<GLTexture> shadowTexture;
-        std::unique_ptr<GLFramebuffer> shadowBuffer;
-        ColorDescription targetColorDescription = ColorDescription::sRGB;
-        ColorDescription intermediaryColorDescription = ColorDescription::sRGB;
-        QVector3D channelFactors = {1, 1, 1};
         std::shared_ptr<EglSwapchain> gbmSwapchain;
         std::shared_ptr<EglSwapchainSlot> currentSlot;
         DamageJournal damageJournal;
@@ -96,6 +94,16 @@ private:
         MultiGpuImportMode importMode;
         std::shared_ptr<DrmFramebuffer> currentFramebuffer;
         bool forceLinear = false;
+
+        // for color management
+        bool colormanagementEnabled = false;
+        std::shared_ptr<GLTexture> shadowTexture;
+        std::unique_ptr<GLFramebuffer> shadowBuffer;
+        ColorDescription targetColorDescription = ColorDescription::sRGB;
+        ColorDescription intermediaryColorDescription = ColorDescription::sRGB;
+        QVector3D channelFactors = {1, 1, 1};
+        std::unique_ptr<IccShader> iccShader;
+        std::shared_ptr<IccProfile> iccProfile;
 
         // for render timing
         std::unique_ptr<GLRenderTimeQuery> timeQuery;

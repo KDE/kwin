@@ -26,6 +26,7 @@ set(mockDRM_SRCS
     ../../src/backends/drm/drm_qpainter_layer.cpp
     ../../src/backends/drm/drm_virtual_egl_layer.cpp
     ../../src/backends/drm/drm_virtual_output.cpp
+    ../../src/backends/drm/icc_shader.cpp
 )
 
 include_directories(${Libdrm_INCLUDE_DIRS})
