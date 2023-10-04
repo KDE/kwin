@@ -18,6 +18,8 @@
 namespace KWin
 {
 
+class IccProfile;
+
 class KWIN_EXPORT OutputChangeSet
 {
 public:
@@ -34,6 +36,7 @@ public:
     std::optional<uint32_t> sdrBrightness;
     std::optional<bool> wideColorGamut;
     std::optional<Output::AutoRotationPolicy> autoRotationPolicy;
+    std::optional<QString> iccProfilePath;
 };
 
 class KWIN_EXPORT OutputConfiguration

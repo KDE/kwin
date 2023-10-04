@@ -29,6 +29,7 @@ class EffectScreenImpl;
 class RenderLoop;
 class OutputConfiguration;
 class ColorTransformation;
+class IccProfile;
 
 enum class ContentType {
     None = 0,
@@ -313,6 +314,7 @@ public:
     bool highDynamicRange() const;
     uint32_t sdrBrightness() const;
     AutoRotationPolicy autoRotationPolicy() const;
+    std::shared_ptr<IccProfile> iccProfile() const;
 
     virtual bool setGammaRamp(const std::shared_ptr<ColorTransformation> &transformation);
     virtual bool setChannelFactors(const QVector3D &rgb);
@@ -376,6 +378,7 @@ Q_SIGNALS:
     void sdrBrightnessChanged();
     void highDynamicRangeChanged();
     void autoRotationPolicyChanged();
+    void iccProfileChanged();
 
 protected:
     struct Information
@@ -412,6 +415,7 @@ protected:
         bool highDynamicRange = false;
         uint32_t sdrBrightness = 200;
         AutoRotationPolicy autoRotatePolicy = AutoRotationPolicy::InTabletMode;
+        std::shared_ptr<IccProfile> iccProfile;
     };
 
     void setInformation(const Information &information);

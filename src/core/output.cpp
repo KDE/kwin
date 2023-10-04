@@ -8,6 +8,7 @@
 */
 
 #include "output.h"
+#include "iccprofile.h"
 #include "outputconfiguration.h"
 
 #include <KConfigGroup>
@@ -334,6 +335,9 @@ void Output::applyChanges(const OutputConfiguration &config)
     next.scale = props->scale.value_or(m_state.scale);
     next.rgbRange = props->rgbRange.value_or(m_state.rgbRange);
     next.autoRotatePolicy = props->autoRotationPolicy.value_or(m_state.autoRotatePolicy);
+    if (props->iccProfilePath) {
+        next.iccProfile = IccProfile::load(*props->iccProfilePath);
+    }
 
     setState(next);
     setVrrPolicy(props->vrrPolicy.value_or(vrrPolicy()));
@@ -409,6 +413,9 @@ void Output::setState(const State &state)
     }
     if (oldState.autoRotatePolicy != state.autoRotatePolicy) {
         Q_EMIT autoRotationPolicyChanged();
+    }
+    if (oldState.iccProfile != state.iccProfile) {
+        Q_EMIT iccProfileChanged();
     }
     if (oldState.enabled != state.enabled) {
         Q_EMIT enabledChanged();
@@ -556,6 +563,11 @@ uint32_t Output::sdrBrightness() const
 Output::AutoRotationPolicy Output::autoRotationPolicy() const
 {
     return m_state.autoRotatePolicy;
+}
+
+std::shared_ptr<IccProfile> Output::iccProfile() const
+{
+    return m_state.iccProfile;
 }
 
 bool Output::updateCursorLayer()

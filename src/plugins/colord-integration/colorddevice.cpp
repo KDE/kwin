@@ -10,7 +10,9 @@
 #include "colors/colordevice.h"
 #include "colors/colormanager.h"
 #include "core/output.h"
+#include "core/outputconfiguration.h"
 #include "main.h"
+#include "workspace.h"
 
 namespace KWin
 {
@@ -55,10 +57,9 @@ void ColordDevice::updateProfile()
         return;
     }
 
-    ColorDevice *device = kwinApp()->colorManager()->findDevice(m_output);
-    if (device) {
-        device->setProfile(profile.filename());
-    }
+    OutputConfiguration cfg;
+    cfg.changeSet(m_output)->iccProfilePath = profile.filename();
+    workspace()->applyOutputConfiguration(cfg);
 }
 
 } // namespace KWin

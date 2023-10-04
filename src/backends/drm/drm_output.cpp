@@ -13,6 +13,8 @@
 #include "drm_gpu.h"
 #include "drm_pipeline.h"
 
+#include "core/colortransformation.h"
+#include "core/iccprofile.h"
 #include "core/outputconfiguration.h"
 #include "core/renderloop.h"
 #include "core/renderloop_p.h"
@@ -343,7 +345,10 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.sdrBrightness = props->sdrBrightness.value_or(m_state.sdrBrightness);
     next.wideColorGamut = props->wideColorGamut.value_or(m_state.wideColorGamut);
     next.autoRotatePolicy = props->autoRotationPolicy.value_or(m_state.autoRotatePolicy);
-    if (m_state.highDynamicRange != next.highDynamicRange || m_state.sdrBrightness != next.sdrBrightness || m_state.wideColorGamut != next.wideColorGamut) {
+    if (props->iccProfilePath) {
+        next.iccProfile = IccProfile::load(*props->iccProfilePath);
+    }
+    if (m_state.highDynamicRange != next.highDynamicRange || m_state.sdrBrightness != next.sdrBrightness || m_state.wideColorGamut != next.wideColorGamut || m_state.iccProfile != next.iccProfile) {
         m_renderLoop->scheduleRepaint();
     }
 
@@ -379,6 +384,9 @@ bool DrmOutput::setGammaRamp(const std::shared_ptr<ColorTransformation> &transfo
 {
     if (!m_pipeline->activePending() || needsColormanagement()) {
         return false;
+    }
+    if (m_state.iccProfile && m_state.iccProfile->vcgt()) {
+        transformation->append(m_state.iccProfile->vcgt().get());
     }
     m_pipeline->setGammaRamp(transformation);
     m_pipeline->setCTM(QMatrix3x3());

@@ -7,7 +7,6 @@
 #include "colordevice.h"
 #include "core/colorpipelinestage.h"
 #include "core/colortransformation.h"
-#include "core/iccprofile.h"
 #include "core/output.h"
 #include "utils/common.h"
 
@@ -37,7 +36,6 @@ public:
     enum DirtyToneCurveBit {
         DirtyTemperatureToneCurve = 0x1,
         DirtyBrightnessToneCurve = 0x2,
-        DirtyCalibrationToneCurve = 0x4,
     };
     Q_DECLARE_FLAGS(DirtyToneCurves, DirtyToneCurveBit)
 
@@ -45,12 +43,10 @@ public:
 
     void updateTemperatureToneCurves();
     void updateBrightnessToneCurves();
-    void updateCalibrationToneCurves();
 
     Output *output;
     DirtyToneCurves dirtyCurves;
     QTimer *updateTimer;
-    QString profilePath;
     uint brightness = 100;
     uint temperature = 6500;
 
@@ -58,7 +54,6 @@ public:
     QVector3D temperatureFactors = QVector3D(1, 1, 1);
     std::unique_ptr<ColorPipelineStage> brightnessStage;
     QVector3D brightnessFactors = QVector3D(1, 1, 1);
-    std::unique_ptr<IccProfile> iccProfile;
 
     std::shared_ptr<ColorTransformation> transformation;
     // used if only limited per-channel multiplication is available
@@ -67,9 +62,6 @@ public:
 
 void ColorDevicePrivate::rebuildPipeline()
 {
-    if (dirtyCurves & DirtyCalibrationToneCurve) {
-        updateCalibrationToneCurves();
-    }
     if (dirtyCurves & DirtyBrightnessToneCurve) {
         updateBrightnessToneCurves();
     }
@@ -95,9 +87,6 @@ void ColorDevicePrivate::rebuildPipeline()
     }
 
     const auto tmp = std::make_shared<ColorTransformation>(std::move(stages));
-    if (iccProfile && iccProfile->vcgt()) {
-        tmp->append(iccProfile->vcgt().get());
-    }
     if (tmp->valid()) {
         transformation = tmp;
         simpleTransformation = brightnessFactors * temperatureFactors;
@@ -107,11 +96,6 @@ void ColorDevicePrivate::rebuildPipeline()
 static qreal interpolate(qreal a, qreal b, qreal blendFactor)
 {
     return (1 - blendFactor) * a + blendFactor * b;
-}
-
-QString ColorDevice::profile() const
-{
-    return d->profilePath;
 }
 
 void ColorDevicePrivate::updateTemperatureToneCurves()
@@ -205,11 +189,6 @@ void ColorDevicePrivate::updateBrightnessToneCurves()
     }
 }
 
-void ColorDevicePrivate::updateCalibrationToneCurves()
-{
-    iccProfile = IccProfile::load(profilePath);
-}
-
 ColorDevice::ColorDevice(Output *output, QObject *parent)
     : QObject(parent)
     , d(new ColorDevicePrivate)
@@ -274,17 +253,6 @@ void ColorDevice::setTemperature(uint temperature)
     d->dirtyCurves |= ColorDevicePrivate::DirtyTemperatureToneCurve;
     scheduleUpdate();
     Q_EMIT temperatureChanged();
-}
-
-void ColorDevice::setProfile(const QString &profile)
-{
-    if (d->profilePath == profile) {
-        return;
-    }
-    d->profilePath = profile;
-    d->dirtyCurves |= ColorDevicePrivate::DirtyCalibrationToneCurve;
-    scheduleUpdate();
-    Q_EMIT profileChanged();
 }
 
 void ColorDevice::update()

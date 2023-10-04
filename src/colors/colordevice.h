@@ -53,16 +53,6 @@ public:
      */
     void setTemperature(uint temperature);
 
-    /**
-     * Returns the color profile for this device.
-     */
-    QString profile() const;
-
-    /**
-     * Sets the color profile for this device to @a profile.
-     */
-    void setProfile(const QString &profile);
-
 public Q_SLOTS:
     void update();
     void scheduleUpdate();
@@ -76,10 +66,6 @@ Q_SIGNALS:
      * This signal is emitted when the color temperature of this device has changed.
      */
     void temperatureChanged();
-    /**
-     * This signal is emitted when the color profile of this device has changed.
-     */
-    void profileChanged();
 
 private:
     std::unique_ptr<ColorDevicePrivate> d;
