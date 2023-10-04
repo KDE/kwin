@@ -109,6 +109,7 @@ target_sources(kwin PRIVATE
     libkwineffects/colorspace.cpp
     libkwineffects/effecttogglablestate.cpp
     libkwineffects/glframebuffer.cpp
+    libkwineffects/gllut.cpp
     libkwineffects/glplatform.cpp
     libkwineffects/glshader.cpp
     libkwineffects/glshadermanager.cpp
@@ -122,11 +123,8 @@ target_sources(kwin PRIVATE
     libkwineffects/kwinoffscreenquickview.cpp
     libkwineffects/kwinquickeffect.cpp
     libkwineffects/logging.cpp
-    libkwineffects/logging.cpp
     libkwineffects/openglcontext.cpp
     libkwineffects/rendertarget.cpp
-    libkwineffects/rendertarget.cpp
-    libkwineffects/renderviewport.cpp
     libkwineffects/renderviewport.cpp
     libkwineffects/version.cpp
     lidswitchtracker.cpp
@@ -433,6 +431,7 @@ install(FILES
 install(FILES
     libkwineffects/colorspace.h
     libkwineffects/glframebuffer.h
+    libkwineffects/gllut.h
     libkwineffects/glplatform.h
     libkwineffects/glshader.h
     libkwineffects/glshadermanager.h
