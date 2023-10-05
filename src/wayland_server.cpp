@@ -693,7 +693,9 @@ int WaylandServer::createXWaylandConnection()
 
     m_xwaylandConnection->setScaleOverride(kwinApp()->xwaylandScale());
     connect(kwinApp(), &Application::xwaylandScaleChanged, m_xwaylandConnection, [this]() {
-        m_xwaylandConnection->setScaleOverride(kwinApp()->xwaylandScale());
+        if (m_xwaylandConnection) {
+            m_xwaylandConnection->setScaleOverride(kwinApp()->xwaylandScale());
+        }
     });
 
     return socket.fd;
