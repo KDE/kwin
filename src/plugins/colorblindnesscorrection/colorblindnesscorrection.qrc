@@ -1,0 +1,10 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource prefix="/effects/colorblindnesscorrection/">
+  <file>shaders/Deutranopia.frag</file>
+  <file>shaders/Deutranopia_core.frag</file>
+  <file>shaders/Protanopia.frag</file>
+  <file>shaders/Protanopia_core.frag</file>
+  <file>shaders/Tritanopia.frag</file>
+  <file>shaders/Tritanopia_core.frag</file>
+</qresource>
+</RCC>

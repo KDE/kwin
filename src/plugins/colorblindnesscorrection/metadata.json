@@ -1,0 +1,10 @@
+{
+    "KPlugin": {
+        "Category": "Accessibility",
+        "Description": "Enhances color perception for color blindness",
+        "EnabledByDefault": false,
+        "License": "GPL-2.0+",
+        "Name": "Colorblindness Correction"
+    },
+    "X-KDE-ConfigModule": "kwin_colorblindnesscorrection_config"
+}
