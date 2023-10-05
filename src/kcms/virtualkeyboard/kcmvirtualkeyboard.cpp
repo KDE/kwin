@@ -36,7 +36,7 @@ VirtualKeyboardsModel::VirtualKeyboardsModel(QObject *parent)
     : QAbstractListModel(parent)
 {
     m_services = KApplicationTrader::query([](const KService::Ptr &service) {
-        return service->property("X-KDE-Wayland-VirtualKeyboard", QMetaType::Bool).toBool();
+        return service->property<bool>("X-KDE-Wayland-VirtualKeyboard");
     });
 
     m_services.prepend({});
