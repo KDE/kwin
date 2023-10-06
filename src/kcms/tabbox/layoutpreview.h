@@ -10,6 +10,7 @@
 
 #include <QAbstractListModel>
 #include <QQuickView>
+#include <QRasterWindow>
 #include <QRect>
 
 #include "thumbnailitem.h"
@@ -22,14 +23,17 @@ namespace TabBox
 
 class SwitcherItem;
 
-class LayoutPreview : public QObject
+class LayoutPreview : public QRasterWindow
 {
     Q_OBJECT
 public:
     explicit LayoutPreview(const QString &path, bool showDesktopThumbnail = false, QObject *parent = nullptr);
     ~LayoutPreview() override;
 
-    bool eventFilter(QObject *object, QEvent *event) override;
+protected:
+    void paintEvent(QPaintEvent *event) override;
+    void keyPressEvent(QKeyEvent *) override;
+    void mousePressEvent(QMouseEvent *) override;
 
 private:
     SwitcherItem *m_item;

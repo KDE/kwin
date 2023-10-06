@@ -15,6 +15,7 @@
 #include <KLocalizedString>
 #include <QApplication>
 #include <QDebug>
+#include <QPainter>
 #include <QQmlContext>
 #include <QQmlEngine>
 #include <QScreen>
@@ -26,9 +27,12 @@ namespace TabBox
 {
 
 LayoutPreview::LayoutPreview(const QString &path, bool showDesktopThumbnail, QObject *parent)
-    : QObject(parent)
+    : QRasterWindow(nullptr)
     , m_item(nullptr)
 {
+    setMouseGrabEnabled(true);
+    setKeyboardGrabEnabled(true);
+
     QQmlEngine *engine = new QQmlEngine(this);
     QQmlComponent *component = new QQmlComponent(engine, this);
     qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 3, 0, "WindowThumbnail");
@@ -38,6 +42,7 @@ LayoutPreview::LayoutPreview(const QString &path, bool showDesktopThumbnail, QOb
     if (component->isError()) {
         qDebug() << component->errorString();
     }
+    // Dave, lifespan?
     QObject *item = component->create();
     auto findSwitcher = [item]() -> SwitcherItem * {
         if (!item) {
@@ -53,7 +58,6 @@ LayoutPreview::LayoutPreview(const QString &path, bool showDesktopThumbnail, QOb
     if (SwitcherItem *switcher = findSwitcher()) {
         m_item = switcher;
         static_cast<ExampleClientModel *>(switcher->model())->showDesktopThumbnail(showDesktopThumbnail);
-        switcher->setVisible(true);
     }
     auto findWindow = [item]() -> QQuickWindow * {
         if (!item) {
@@ -65,9 +69,8 @@ LayoutPreview::LayoutPreview(const QString &path, bool showDesktopThumbnail, QOb
         return item->findChild<QQuickWindow *>();
     };
     if (QQuickWindow *w = findWindow()) {
-        w->setKeyboardGrabEnabled(true);
-        w->setMouseGrabEnabled(true);
-        w->installEventFilter(this);
+        w->setParent(this);
+        w->show();
     }
 }
 
@@ -75,29 +78,28 @@ LayoutPreview::~LayoutPreview()
 {
 }
 
-bool LayoutPreview::eventFilter(QObject *object, QEvent *event)
+void LayoutPreview::paintEvent(QPaintEvent *event)
 {
-    if (event->type() == QEvent::KeyPress) {
-        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-        if (keyEvent->key() == Qt::Key_Escape || keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter || keyEvent->key() == Qt::Key_Space) {
-            object->deleteLater();
-            deleteLater();
-        }
-        if (m_item && keyEvent->key() == Qt::Key_Tab) {
-            m_item->incrementIndex();
-        }
-        if (m_item && keyEvent->key() == Qt::Key_Backtab) {
-            m_item->decrementIndex();
-        }
-    } else if (event->type() == QEvent::MouseButtonPress) {
-        if (QWindow *w = qobject_cast<QWindow *>(object)) {
-            if (!w->geometry().contains(static_cast<QMouseEvent *>(event)->globalPos())) {
-                object->deleteLater();
-                deleteLater();
-            }
-        }
+    QPainter p(this);
+    //    p.fillRect(QRect(0, 0, width(), height()), Qt::red);
+}
+
+void LayoutPreview::mousePressEvent(QMouseEvent *event)
+{
+    deleteLater();
+}
+
+void LayoutPreview::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Escape || event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter || event->key() == Qt::Key_Space) {
+        deleteLater();
     }
-    return QObject::eventFilter(object, event);
+    if (m_item && event->key() == Qt::Key_Tab) {
+        m_item->incrementIndex();
+    }
+    if (m_item && event->key() == Qt::Key_Backtab) {
+        m_item->decrementIndex();
+    }
 }
 
 ExampleClientModel::ExampleClientModel(QObject *parent)
