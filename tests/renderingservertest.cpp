@@ -4,15 +4,15 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 
-#include "../compositor.h"
-#include "../datadevicemanager.h"
-#include "../display.h"
-#include "../keyboard.h"
-#include "../output.h"
-#include "../pointer.h"
-#include "../seat.h"
-#include "../xdgshell.h"
 #include "core/graphicsbufferview.h"
+#include "wayland/compositor.h"
+#include "wayland/datadevicemanager.h"
+#include "wayland/display.h"
+#include "wayland/keyboard.h"
+#include "wayland/output.h"
+#include "wayland/pointer.h"
+#include "wayland/seat.h"
+#include "wayland/xdgshell.h"
 
 #include "fakeoutput.h"
 

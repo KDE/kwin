@@ -3,11 +3,11 @@
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
-#include "../compositor.h"
-#include "../display.h"
-#include "../output.h"
-#include "../seat.h"
-#include "../xdgshell.h"
+#include "wayland/compositor.h"
+#include "wayland/display.h"
+#include "wayland/output.h"
+#include "wayland/seat.h"
+#include "wayland/xdgshell.h"
 
 #include "fakeoutput.h"
 

@@ -92,7 +92,11 @@ qt6_generate_wayland_protocol_client_sources(testInputMethodInterface
     FILES
         ${WaylandProtocols_DATADIR}/unstable/input-method/input-method-unstable-v1.xml
 )
-target_sources(testInputMethodInterface PRIVATE test_inputmethod_interface.cpp ../../tests/fakeoutput.cpp ${INPUTMETHOD_SRCS})
+target_sources(testInputMethodInterface PRIVATE
+    test_inputmethod_interface.cpp
+    ${PROJECT_SOURCE_DIR}/tests/fakeoutput.cpp
+    ${INPUTMETHOD_SRCS}
+)
 target_link_libraries(testInputMethodInterface Qt::Test kwin KF6::WaylandClient Wayland::Client)
 add_test(NAME kwayland-testInputMethodInterface COMMAND testInputMethodInterface)
 ecm_mark_as_test(testInputMethodInterface)
