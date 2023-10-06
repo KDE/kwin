@@ -84,6 +84,12 @@ public:
      */
     QRectF map(const QRectF &rect, const QSizeF &bounds) const;
 
+    /**
+     * Returns an output transform that is equivalent to applying this transform and @a other
+     * transform sequentially.
+     */
+    OutputTransform combine(OutputTransform other) const;
+
 private:
     Kind m_kind = Kind::Normal;
 };
