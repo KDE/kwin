@@ -63,6 +63,12 @@ void SurfaceInterfacePrivate::addChild(SubSurfaceInterface *child)
     current->subsurface.above.append(child);
     pending->subsurface.above.append(child);
 
+    if (subsurface.transaction) {
+        subsurface.transaction->amend(q, [child](SurfaceState *state) {
+            state->subsurface.above.append(child);
+        });
+    }
+
     for (auto transaction = firstTransaction; transaction; transaction = transaction->next(q)) {
         transaction->amend(q, [child](SurfaceState *state) {
             state->subsurface.above.append(child);
@@ -89,6 +95,13 @@ void SurfaceInterfacePrivate::removeChild(SubSurfaceInterface *child)
 
     pending->subsurface.below.removeAll(child);
     pending->subsurface.above.removeAll(child);
+
+    if (subsurface.transaction) {
+        subsurface.transaction->amend(q, [child](SurfaceState *state) {
+            state->subsurface.below.removeOne(child);
+            state->subsurface.above.removeOne(child);
+        });
+    }
 
     for (auto transaction = firstTransaction; transaction; transaction = transaction->next(q)) {
         transaction->amend(q, [child](SurfaceState *state) {
