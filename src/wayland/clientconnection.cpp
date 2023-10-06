@@ -30,8 +30,10 @@ public:
 
 private:
     static void destroyListenerCallback(wl_listener *listener, void *data);
+    static void destroyLateListenerCallback(wl_listener *listener, void *data);
     ClientConnection *q;
-    wl_listener listener;
+    wl_listener destroyListener;
+    wl_listener destroyLateListener;
     static QVector<ClientConnectionPrivate *> s_allClients;
 };
 
@@ -43,17 +45,19 @@ ClientConnectionPrivate::ClientConnectionPrivate(wl_client *c, Display *display,
     , q(q)
 {
     s_allClients << this;
-    listener.notify = destroyListenerCallback;
-    wl_client_add_destroy_listener(c, &listener);
+
+    destroyListener.notify = destroyListenerCallback;
+    wl_client_add_destroy_listener(c, &destroyListener);
+
+    destroyLateListener.notify = destroyLateListenerCallback;
+    wl_client_add_destroy_late_listener(c, &destroyLateListener);
+
     wl_client_get_credentials(client, &pid, &user, &group);
     executablePath = executablePathFromPid(pid);
 }
 
 ClientConnectionPrivate::~ClientConnectionPrivate()
 {
-    if (client) {
-        wl_list_remove(&listener.link);
-    }
     s_allClients.removeAt(s_allClients.indexOf(this));
 }
 
@@ -66,11 +70,24 @@ void ClientConnectionPrivate::destroyListenerCallback(wl_listener *listener, voi
     Q_ASSERT(it != s_allClients.constEnd());
     auto p = (*it);
     auto q = p->q;
+
     Q_EMIT q->aboutToBeDestroyed();
-    p->client = nullptr;
-    wl_list_remove(&p->listener.link);
+    wl_list_remove(&p->destroyListener.link);
     Q_EMIT q->disconnected(q);
-    q->deleteLater();
+}
+
+void ClientConnectionPrivate::destroyLateListenerCallback(wl_listener *listener, void *data)
+{
+    wl_client *client = reinterpret_cast<wl_client *>(data);
+    auto it = std::find_if(s_allClients.constBegin(), s_allClients.constEnd(), [client](ClientConnectionPrivate *c) {
+        return c->client == client;
+    });
+    Q_ASSERT(it != s_allClients.constEnd());
+    auto p = (*it);
+    auto q = p->q;
+
+    wl_list_remove(&p->destroyLateListener.link);
+    delete q;
 }
 
 ClientConnection::ClientConnection(wl_client *c, Display *parent)
@@ -83,25 +100,16 @@ ClientConnection::~ClientConnection() = default;
 
 void ClientConnection::flush()
 {
-    if (!d->client) {
-        return;
-    }
     wl_client_flush(d->client);
 }
 
 void ClientConnection::destroy()
 {
-    if (!d->client) {
-        return;
-    }
     wl_client_destroy(d->client);
 }
 
 wl_resource *ClientConnection::getResource(quint32 id) const
 {
-    if (!d->client) {
-        return nullptr;
-    }
     return wl_client_get_object(d->client, id);
 }
 

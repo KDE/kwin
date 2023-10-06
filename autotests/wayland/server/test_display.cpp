@@ -130,7 +130,7 @@ void TestWaylandServerDisplay::testClientConnection()
     QCOMPARE(disconnectedSpy.count(), 1);
     QSignalSpy clientDestroyedSpy(client2, &QObject::destroyed);
     client2->destroy();
-    QVERIFY(clientDestroyedSpy.wait());
+    QCOMPARE(clientDestroyedSpy.count(), 1);
     QCOMPARE(disconnectedSpy.count(), 2);
     close(sv[0]);
     close(sv[1]);
