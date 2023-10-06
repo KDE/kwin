@@ -360,6 +360,7 @@ protected:
     void destroyColorManager();
     void destroyInputMethod();
     void destroyPlatform();
+    void applyXwaylandScale();
 
     void setTerminating()
     {
