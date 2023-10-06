@@ -78,18 +78,19 @@ void OutputConfigurationStore::applyOrientationReading(OutputConfiguration &conf
         changeset->transform = changeset->manualTransform;
         return;
     }
+    const auto panelOrientation = (*output)->panelOrientation();
     switch (orientation->orientation()) {
     case QOrientationReading::Orientation::TopUp:
-        changeset->transform = OutputTransform::Kind::Normal;
+        changeset->transform = panelOrientation;
         return;
     case QOrientationReading::Orientation::TopDown:
-        changeset->transform = OutputTransform::Kind::Rotated180;
+        changeset->transform = panelOrientation.combine(OutputTransform::Kind::Rotated180);
         return;
     case QOrientationReading::Orientation::LeftUp:
-        changeset->transform = OutputTransform::Kind::Rotated90;
+        changeset->transform = panelOrientation.combine(OutputTransform::Kind::Rotated90);
         return;
     case QOrientationReading::Orientation::RightUp:
-        changeset->transform = OutputTransform::Kind::Rotated270;
+        changeset->transform = panelOrientation.combine(OutputTransform::Kind::Rotated270);
         return;
     case QOrientationReading::Orientation::FaceUp:
     case QOrientationReading::Orientation::FaceDown:
