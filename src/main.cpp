@@ -384,8 +384,18 @@ void Application::setXwaylandScale(qreal scale)
     Q_ASSERT(scale != 0);
     if (scale != m_xwaylandScale) {
         m_xwaylandScale = scale;
-        // rerun the fonts kcm init that does the appropriate xrdb call with the new settings
-        QProcess::startDetached("kcminit", {"kcm_fonts", "kcm_style"});
+        KConfig cfg(QStringLiteral("kdeglobals"));
+        KConfigGroup kscreenGroup = cfg.group("KScreen");
+        const bool xwaylandClientsScale = kscreenGroup.readEntry("XwaylandClientsScale", true);
+        if (xwaylandClientsScale) {
+            kwinApp()->config()->group("Xwayland").writeEntry("Scale", m_xwaylandScale, KConfig::Notify);
+        } else {
+            kwinApp()->config()->group("Xwayland").deleteEntry("Scale", KConfig::Notify);
+        }
+        if (x11Connection()) {
+            // rerun the fonts kcm init that does the appropriate xrdb call with the new settings
+            QProcess::startDetached("kcminit", {"kcm_fonts", "kcm_style"});
+        }
         Q_EMIT xwaylandScaleChanged();
     }
 }
