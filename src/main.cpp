@@ -384,15 +384,8 @@ void Application::setXwaylandScale(qreal scale)
     Q_ASSERT(scale != 0);
     if (scale != m_xwaylandScale) {
         m_xwaylandScale = scale;
-        // change the font dpi to match
-        const int dpi = std::round(scale * 96);
-        const QByteArray input = "Xft.dpi: " + QByteArray::number(dpi);
-        QProcess p;
-        p.start(QStringLiteral("xrdb"), {QStringLiteral("-quiet"), QStringLiteral("-merge"), QStringLiteral("-nocpp")});
-        p.setProcessChannelMode(QProcess::ForwardedChannels);
-        p.write(input);
-        p.closeWriteChannel();
-        p.waitForFinished(-1);
+        // rerun the fonts kcm init that does the appropriate xrdb call with the new settings
+        QProcess::startDetached("kcminit", {"kcm_fonts", "kcm_style"});
         Q_EMIT xwaylandScaleChanged();
     }
 }
