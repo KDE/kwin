@@ -311,6 +311,8 @@ void WaylandCompositor::addOutput(Output *output)
                 if (!outputLayer->endFrame(infiniteRegion(), infiniteRegion())) {
                     return false;
                 }
+            } else {
+                return false;
             }
             outputLayer->setEnabled(true);
             return output->updateCursorLayer();
