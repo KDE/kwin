@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-02 01:42+0000\n"
+"POT-Creation-Date: 2023-10-06 01:41+0000\n"
 "PO-Revision-Date: 2023-07-24 00:08+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -1309,55 +1309,55 @@ msgstr "설정 옵션 사용하지 않기"
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "KWin이 최근 n번 충돌했다는 것을 알리기"
 
-#: main_wayland.cpp:294
+#: main_wayland.cpp:290
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "루트 창이 없는 Xwayland 서버를 시작합니다."
 
-#: main_wayland.cpp:296
+#: main_wayland.cpp:292
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
 msgstr ""
 "들을 Wayland 소켓을 지정합니다. 설정하지 않으면 \"wayland-0\"을 사용합니다."
 
-#: main_wayland.cpp:299
+#: main_wayland.cpp:295
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr "X11 플랫폼의 창 모드에서 사용할 X11 디스플레이입니다."
 
-#: main_wayland.cpp:302
+#: main_wayland.cpp:298
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr "Wayland 플랫폼의 창 모드에서 사용할 Wayland 디스플레이입니다."
 
-#: main_wayland.cpp:304
+#: main_wayland.cpp:300
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "가상 프레임버퍼에 렌더링합니다."
 
-#: main_wayland.cpp:306
+#: main_wayland.cpp:302
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "창 모드의 폭입니다. 기본 폭은 1024입니다."
 
-#: main_wayland.cpp:310
+#: main_wayland.cpp:306
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "창 모드의 높이입니다. 기본 높이는 768입니다."
 
-#: main_wayland.cpp:315
+#: main_wayland.cpp:311
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "창 모드의 크기 조정 비율입니다. 기본값은 1입니다."
 
-#: main_wayland.cpp:320
+#: main_wayland.cpp:316
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
 msgstr "창 모드에서 출력으로 열 창 개수입니다. 기본값은 1입니다."
 
-#: main_wayland.cpp:325
+#: main_wayland.cpp:321
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1366,71 +1366,71 @@ msgstr ""
 "들어오는 연결에 사용할 Wayland 소켓입니다. --socket 옵션을 사용하여 이름을 지"
 "정할 수도 있습니다."
 
-#: main_wayland.cpp:329
+#: main_wayland.cpp:325
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
 "multiple times"
 msgstr "들어오는 연결에 사용할 XWayland 소켓입니다. 여러 번 지정할 수 있습니다"
 
-#: main_wayland.cpp:333
+#: main_wayland.cpp:329
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "사전에 설정된 XWayland 디스플레이 이름"
 
-#: main_wayland.cpp:337
+#: main_wayland.cpp:333
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "xauthority 파일의 이름"
 
-#: main_wayland.cpp:341
+#: main_wayland.cpp:337
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 "kwin_wayland_wrapper에서 다시 시작할 수 있도록 이 인스턴스를 종료합니다."
 
-#: main_wayland.cpp:343
+#: main_wayland.cpp:339
 #, kde-format
 msgid "Render through drm node."
 msgstr "DRM 노드로 렌더링합니다."
 
-#: main_wayland.cpp:344
+#: main_wayland.cpp:340
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr "사용자 설정 대신 locale1에서 로캘 정보 추출"
 
-#: main_wayland.cpp:366
+#: main_wayland.cpp:362
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "KWin에서 불러오는 입력기입니다."
 
-#: main_wayland.cpp:372
+#: main_wayland.cpp:368
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "세션을 잠긴 상태로 시작합니다."
 
-#: main_wayland.cpp:376
+#: main_wayland.cpp:372
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "잠금 화면 지원 없이 세션을 시작합니다."
 
-#: main_wayland.cpp:381
+#: main_wayland.cpp:377
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "전역 단축키 지원 없이 세션을 시작합니다."
 
-#: main_wayland.cpp:386 main_x11.cpp:423
+#: main_wayland.cpp:382 main_x11.cpp:423
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "KActivities 통합을 사용하지 않습니다."
 
-#: main_wayland.cpp:391
+#: main_wayland.cpp:387
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr "KWin에서 시작한 세션 앱이 끝난 후에 닫습니다."
 
-#: main_wayland.cpp:396
+#: main_wayland.cpp:392
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr "Wayland 및 Xwayland 서버가 시작되었을 때 시작할 앱"
@@ -4034,7 +4034,7 @@ msgstr ""
 "창 관리자는 마우스가 있는 화면을 활성 화면으로 간주합니다.\n"
 "따라서 화면을 명시적으로 전환할 수 없습니다."
 
-#: utils/edid.cpp:236
+#: utils/edid.cpp:239
 #, kde-format
 msgid "unknown"
 msgstr "알 수 없음"
@@ -4085,7 +4085,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(응답 없음)"
 
-#: workspace.cpp:1565
+#: workspace.cpp:1608
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
