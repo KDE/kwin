@@ -41,7 +41,7 @@ void CursorDelegateOpenGL::paint(const RenderTarget &renderTarget, const QRegion
 
     // Render the cursor scene in an offscreen render target.
     const QSize bufferSize = (Cursors::self()->currentCursor()->rect().size() * scale).toSize();
-    if (!m_texture || m_texture->size() != bufferSize) {
+    if (!m_texture || m_texture->size() != bufferSize || m_texture->internalFormat() != renderTarget.framebuffer()->colorAttachment()->internalFormat()) {
         m_texture = GLTexture::allocate(renderTarget.framebuffer()->colorAttachment()->internalFormat(), bufferSize);
         if (!m_texture) {
             return;
