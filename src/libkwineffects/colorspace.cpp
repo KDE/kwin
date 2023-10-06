@@ -70,9 +70,62 @@ QMatrix3x3 Colorimetry::toXYZ() const
     return matrixFromColumns(r_xyz * component_scale.x(), g_xyz * component_scale.y(), b_xyz * component_scale.z());
 }
 
+QMatrix3x3 Colorimetry::chromaticAdaptationMatrix(QVector2D sourceWhitepoint, QVector2D destinationWhitepoint)
+{
+    static const QMatrix3x3 bradford = []() {
+        QMatrix3x3 ret;
+        ret(0, 0) = 0.8951;
+        ret(0, 1) = 0.2664;
+        ret(0, 2) = -0.1614;
+        ret(1, 0) = -0.7502;
+        ret(1, 1) = 1.7135;
+        ret(1, 2) = 0.0367;
+        ret(2, 0) = 0.0389;
+        ret(2, 1) = -0.0685;
+        ret(2, 2) = 1.0296;
+        return ret;
+    }();
+    static const QMatrix3x3 inverseBradford = []() {
+        QMatrix3x3 ret;
+        ret(0, 0) = 0.9869929;
+        ret(0, 1) = -0.1470543;
+        ret(0, 2) = 0.1599627;
+        ret(1, 0) = 0.4323053;
+        ret(1, 1) = 0.5183603;
+        ret(1, 2) = 0.0492912;
+        ret(2, 0) = -0.0085287;
+        ret(2, 1) = 0.0400428;
+        ret(2, 2) = 0.9684867;
+        return ret;
+    }();
+    const QVector3D factors = (bradford * xyToXYZ(destinationWhitepoint)) / (bradford * xyToXYZ(sourceWhitepoint));
+    QMatrix3x3 adaptation{};
+    adaptation(0, 0) = factors.x();
+    adaptation(1, 1) = factors.y();
+    adaptation(2, 2) = factors.z();
+    return inverseBradford * adaptation * bradford;
+}
+
 QMatrix3x3 Colorimetry::toOther(const Colorimetry &other) const
 {
-    return toXYZ() * inverse(other.toXYZ());
+    // rendering intent is relative colorimetric, so adapt to the different whitepoint
+    if (white == other.white) {
+        return inverse(other.toXYZ()) * toXYZ();
+    } else {
+        return inverse(other.toXYZ()) * chromaticAdaptationMatrix(this->white, other.white) * toXYZ();
+    }
+}
+
+Colorimetry Colorimetry::adaptedTo(QVector2D newWhitepoint) const
+{
+    const auto mat = chromaticAdaptationMatrix(this->white, newWhitepoint);
+    return Colorimetry{
+        .red = xyzToXY(mat * xyToXYZ(red)),
+        .green = xyzToXY(mat * xyToXYZ(green)),
+        .blue = xyzToXY(mat * xyToXYZ(blue)),
+        .white = newWhitepoint,
+        .name = std::nullopt,
+    };
 }
 
 bool Colorimetry::operator==(const Colorimetry &other) const

@@ -31,10 +31,12 @@ public:
     static Colorimetry fromXYZ(QVector3D red, QVector3D green, QVector3D blue, QVector3D white);
     static QVector3D xyToXYZ(QVector2D xy);
     static QVector2D xyzToXY(QVector3D xyz);
+    static QMatrix3x3 chromaticAdaptationMatrix(QVector2D sourceWhitepoint, QVector2D destinationWhitepoint);
 
     QMatrix3x3 toXYZ() const;
     QMatrix3x3 toOther(const Colorimetry &colorimetry) const;
     bool operator==(const Colorimetry &other) const;
+    Colorimetry adaptedTo(QVector2D newWhitepoint) const;
 
     QVector2D red;
     QVector2D green;
