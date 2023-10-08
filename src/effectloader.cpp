@@ -64,8 +64,6 @@ LoadEffectFlags AbstractEffectLoader::readConfig(const QString &effectName, bool
     return LoadEffectFlags();
 }
 
-static const QString s_nameProperty = QStringLiteral("X-KDE-PluginInfo-Name");
-static const QString s_jsConstraint = QStringLiteral("[X-Plasma-API] == 'javascript'");
 static const QString s_serviceType = QStringLiteral("KWin/Effect");
 
 ScriptedEffectLoader::ScriptedEffectLoader(QObject *parent)
