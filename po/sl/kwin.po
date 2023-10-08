@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1661778 2023-10-06 02:03:49Z scripty $
+# $Id: kwin.po 1661907 2023-10-08 02:01:35Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-06 01:41+0000\n"
+"POT-Creation-Date: 2023-10-08 01:39+0000\n"
 "PO-Revision-Date: 2023-09-26 09:39+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -1516,6 +1516,50 @@ msgstr "Krepko"
 #, kde-format
 msgid "Noise strength:"
 msgstr "Moč šuma:"
+
+#: plugins/colorblindnesscorrection/ui/main.qml:32
+#, kde-format
+msgid "Red"
+msgstr ""
+
+#: plugins/colorblindnesscorrection/ui/main.qml:33
+#, kde-format
+msgid "Green"
+msgstr ""
+
+#: plugins/colorblindnesscorrection/ui/main.qml:34
+#, kde-format
+msgid "Blue"
+msgstr ""
+
+#: plugins/colorblindnesscorrection/ui/main.qml:35
+#, kde-format
+msgid "Purple"
+msgstr ""
+
+#: plugins/colorblindnesscorrection/ui/main.qml:70
+#, kde-format
+msgctxt "@label"
+msgid "Mode:"
+msgstr ""
+
+#: plugins/colorblindnesscorrection/ui/main.qml:75
+#, kde-format
+msgctxt "@option"
+msgid "Protanopia (red weak)"
+msgstr ""
+
+#: plugins/colorblindnesscorrection/ui/main.qml:76
+#, kde-format
+msgctxt "@option"
+msgid "Deuteranopia (green weak)"
+msgstr ""
+
+#: plugins/colorblindnesscorrection/ui/main.qml:77
+#, kde-format
+msgctxt "@option"
+msgid "Tritanopia (blue-yellow)"
+msgstr ""
 
 #: plugins/colorpicker/colorpicker.cpp:102
 #, kde-format

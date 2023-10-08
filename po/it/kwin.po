@@ -5,13 +5,14 @@
 # Luciano Montanaro <mikelima@cirulla.net>, 2007, 2008, 2010, 2011, 2012.
 # Andrea Rizzi <rizzi@sns.it>, 2007.
 # Federico Zenith <federico.zenith@member.fsf.org>, 2009.
+# SPDX-FileCopyrightText: 2023 Paolo Zamponi <feus73@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-06 01:41+0000\n"
-"PO-Revision-Date: 2023-09-27 14:16+0200\n"
-"Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
+"POT-Creation-Date: 2023-10-08 01:39+0000\n"
+"PO-Revision-Date: 2023-10-05 22:42+0200\n"
+"Last-Translator: Paolo Zamponi <feus73@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -1503,7 +1504,7 @@ msgstr "Intensità della sfocatura:"
 #: plugins/blur/blur_config.ui:42 plugins/blur/blur_config.ui:108
 #, kde-format
 msgid "Light"
-msgstr "Chiaro"
+msgstr "Leggera"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
@@ -1517,6 +1518,50 @@ msgstr "Forte"
 #, kde-format
 msgid "Noise strength:"
 msgstr "Intensità del rumore:"
+
+#: plugins/colorblindnesscorrection/ui/main.qml:32
+#, kde-format
+msgid "Red"
+msgstr ""
+
+#: plugins/colorblindnesscorrection/ui/main.qml:33
+#, kde-format
+msgid "Green"
+msgstr ""
+
+#: plugins/colorblindnesscorrection/ui/main.qml:34
+#, kde-format
+msgid "Blue"
+msgstr ""
+
+#: plugins/colorblindnesscorrection/ui/main.qml:35
+#, kde-format
+msgid "Purple"
+msgstr ""
+
+#: plugins/colorblindnesscorrection/ui/main.qml:70
+#, kde-format
+msgctxt "@label"
+msgid "Mode:"
+msgstr ""
+
+#: plugins/colorblindnesscorrection/ui/main.qml:75
+#, kde-format
+msgctxt "@option"
+msgid "Protanopia (red weak)"
+msgstr ""
+
+#: plugins/colorblindnesscorrection/ui/main.qml:76
+#, kde-format
+msgctxt "@option"
+msgid "Deuteranopia (green weak)"
+msgstr ""
+
+#: plugins/colorblindnesscorrection/ui/main.qml:77
+#, kde-format
+msgctxt "@option"
+msgid "Tritanopia (blue-yellow)"
+msgstr ""
 
 #: plugins/colorpicker/colorpicker.cpp:102
 #, kde-format
@@ -1538,7 +1583,7 @@ msgstr "Forza:"
 #: plugins/diminactive/diminactive_config.ui:40
 #, kde-format
 msgid "Dim:"
-msgstr "Dim:"
+msgstr "Oscura:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimPanels)
 #: plugins/diminactive/diminactive_config.ui:47
@@ -1582,7 +1627,7 @@ msgstr "Durata:"
 #: plugins/scale/package/contents/ui/config.ui:30
 #, kde-format
 msgid "Default"
-msgstr "Predefinito"
+msgstr "Predefinita"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Duration)
 #: plugins/glide/glide_config.ui:35
@@ -2589,7 +2634,7 @@ msgstr "Menu dei pulsanti combinati:"
 #: plugins/translucency/package/contents/ui/config.ui:431
 #, kde-format
 msgid "Opaque"
-msgstr "Opaco"
+msgstr "Opaca"
 
 #. i18n: ectx: property (text), widget (QLabel, dialogs_label)
 #: plugins/translucency/package/contents/ui/config.ui:137
@@ -2784,19 +2829,19 @@ msgstr "Abilita modalità &avanzata"
 #: plugins/wobblywindows/wobblywindows_config.ui:192
 #, kde-format
 msgid "&Wobbliness"
-msgstr "&Traballamento:"
+msgstr "&Traballamento"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/wobblywindows/wobblywindows_config.ui:201
 #, kde-format
 msgid "Less"
-msgstr "Meno"
+msgstr "Di meno"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/wobblywindows/wobblywindows_config.ui:224
 #, kde-format
 msgid "More"
-msgstr "Altro"
+msgstr "Di più"
 
 #: plugins/zoom/zoom.cpp:67
 #, kde-format
