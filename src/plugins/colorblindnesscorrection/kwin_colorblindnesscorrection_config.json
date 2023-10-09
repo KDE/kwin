@@ -1,6 +1,17 @@
 {
     "KPlugin": {
         "License": "GPL-2.0+",
-        "Name": "Colorblindness Correction"
+        "Name": "Colorblindness Correction",
+        "Name[ca]": "Correcció del daltonisme",
+        "Name[eo]": "Korekto de Kolorblindeco",
+        "Name[eu]": "Kolore itsutasunerako zuzenketa",
+        "Name[ia]": "Correction de cecitate de color",
+        "Name[ko]": "색각 이상 보정",
+        "Name[nl]": "Correctie voor kleurenblindheid",
+        "Name[pl]": "Poprawki dla ślepych na barwy",
+        "Name[sl]": "Popravek za barvno slepoto",
+        "Name[tr]": "Renk Körlüğü Düzeltmesi",
+        "Name[uk]": "Виправлення для дальтонізму",
+        "Name[x-test]": "xxColorblindness Correctionxx"
     }
 }

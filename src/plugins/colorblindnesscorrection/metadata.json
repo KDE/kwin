@@ -2,9 +2,31 @@
     "KPlugin": {
         "Category": "Accessibility",
         "Description": "Enhances color perception for color blindness",
+        "Description[ca]": "Millora la percepció del color dels daltònics",
+        "Description[eo]": "Plibonigas kolorpercepton por kolora blindeco",
+        "Description[eu]": "Kolore itsutasunerako koloreen zorroztasuna areagotzen du",
+        "Description[ia]": "Intensifica perceprion de color per cecitate de color",
+        "Description[ko]": "색각 이상 사용자를 위한 색 분별력 향상",
+        "Description[nl]": "Perceptie van kleur verbeteren voor kleurenblindheid",
+        "Description[pl]": "Polepsza rozpoznawanie barw dla ślepych na barwy",
+        "Description[sl]": "Izboljša dojemanje barv za barvno slepe",
+        "Description[tr]": "Renk körlüğü aralığında renk algısını iyileştirir",
+        "Description[uk]": "Удосконалює сприйняття кольорів для випадків дальтонізму",
+        "Description[x-test]": "xxEnhances color perception for color blindnessxx",
         "EnabledByDefault": false,
         "License": "GPL-2.0+",
-        "Name": "Colorblindness Correction"
+        "Name": "Colorblindness Correction",
+        "Name[ca]": "Correcció del daltonisme",
+        "Name[eo]": "Korekto de Kolorblindeco",
+        "Name[eu]": "Kolore itsutasunerako zuzenketa",
+        "Name[ia]": "Correction de cecitate de color",
+        "Name[ko]": "색각 이상 보정",
+        "Name[nl]": "Correctie voor kleurenblindheid",
+        "Name[pl]": "Poprawki dla ślepych na barwy",
+        "Name[sl]": "Popravek za barvno slepoto",
+        "Name[tr]": "Renk Körlüğü Düzeltmesi",
+        "Name[uk]": "Виправлення для дальтонізму",
+        "Name[x-test]": "xxColorblindness Correctionxx"
     },
     "X-KDE-ConfigModule": "kwin_colorblindnesscorrection_config"
 }
