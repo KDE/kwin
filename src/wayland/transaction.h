@@ -18,7 +18,7 @@ namespace KWin
 {
 
 class SurfaceInterface;
-class SurfaceState;
+struct SurfaceState;
 class Transaction;
 
 /**
