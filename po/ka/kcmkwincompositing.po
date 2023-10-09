@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-13 00:58+0000\n"
-"PO-Revision-Date: 2023-08-28 06:20+0200\n"
+"PO-Revision-Date: 2023-10-08 06:59+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.3.2\n"
+"X-Generator: Poedit 3.4\n"
 
 #. i18n: ectx: property (text), widget (KMessageWidget, glCrashedWarning)
 #: compositing.ui:31
@@ -28,6 +28,11 @@ msgid ""
 "you can reset this protection but be aware that this might result in an "
 "immediate crash!"
 msgstr ""
+"OpenGL-ის კომპიზიტორმა (ნაგულისხმევი) წარსულში KWin უკვე გამორთო.\n"
+"ეს, ალბათ, დრაივერის შეცდომის გამო მოხდა.\n"
+"თუ ამასობაში დრაივერის უფრო სტაბილურ ვერსიაზე გადახვედით,\n"
+"ეს დაცვა შეგიძლიათ, გამორთოთ, მაგრამ ფრთხილად, მან დაუყოვნებლივი ავარია "
+"შეიძლება, გამოიწვიოს!"
 
 #. i18n: ectx: property (text), widget (KMessageWidget, windowThumbnailWarning)
 #: compositing.ui:44

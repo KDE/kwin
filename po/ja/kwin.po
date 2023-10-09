@@ -2892,6 +2892,3 @@ msgid ""
 "paste bin service\n"
 "like https://paste.kde.org instead of pasting into support threads.\n"
 msgstr ""
-
-#~ msgid "&No Border"
-#~ msgstr "枠なし(&N)"

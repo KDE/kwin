@@ -1,0 +1,84 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-12-17 00:51+0000\n"
+"PO-Revision-Date: 2022-12-16 21:39-0800\n"
+"Last-Translator: Japanese KDE translation team <kde-jp@kde.org>\n"
+"Language-Team: Japanese <kde-jp@kde.org>\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Accelerator-Marker: &\n"
+"X-Text-Markup: kde4\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr ""
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr ""
+
+#: kcmkwinxwayland.cpp:30
+#, kde-format
+msgid "Legacy X11 App Support"
+msgstr ""
+
+#: kcmkwinxwayland.cpp:32
+#, kde-format
+msgid "Allow legacy X11 apps to read keystrokes typed in other apps"
+msgstr ""
+
+#: package/contents/ui/main.qml:19
+#, kde-format
+msgid ""
+"This module lets configure which keyboard events are forwarded to X11 apps "
+"regardless of their focus."
+msgstr ""
+
+#: package/contents/ui/main.qml:49
+#, kde-format
+msgid ""
+"Legacy X11 apps require the ability to read keystrokes typed in other apps "
+"for features that are activated using global keyboard shortcuts. This is "
+"disabled by default for security reasons. If you need to use such apps, you "
+"can choose your preferred balance of security and functionality here."
+msgstr ""
+
+#: package/contents/ui/main.qml:66
+#, kde-format
+msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
+msgstr ""
+
+#: package/contents/ui/main.qml:67
+#, kde-format
+msgid "Never"
+msgstr ""
+
+#: package/contents/ui/main.qml:70
+#, kde-format
+msgid "Only Meta, Control, Alt, and Shift keys"
+msgstr ""
+
+#: package/contents/ui/main.qml:73
+#, kde-format
+msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
+msgstr ""
+
+#: package/contents/ui/main.qml:77
+#, kde-format
+msgid "Always"
+msgstr ""
+
+#: package/contents/ui/main.qml:84
+#, kde-format
+msgid ""
+"Note that using this setting will reduce system security to that of the X11 "
+"session by permitting malicious software to steal passwords and spy on the "
+"text that you type. Make sure you understand and accept this risk."
+msgstr ""
