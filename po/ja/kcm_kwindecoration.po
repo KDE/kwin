@@ -280,34 +280,3 @@ msgstr "ウィンドウの枠のサイズ:"
 #| msgid "Window border size:"
 msgid "Oversized Window Borders"
 msgstr "ウィンドウの枠のサイズ:"
-
-#~ msgctxt "button text"
-#~ msgid "Get New Window Decorations…"
-#~ msgstr "新しいウィンドウの装飾を取得..."
-
-#~ msgid "No Borders"
-#~ msgstr "枠なし"
-
-#~ msgid "Tiny"
-#~ msgstr "小"
-
-#~ msgid "Normal"
-#~ msgstr "普通"
-
-#~ msgid "Large"
-#~ msgstr "大"
-
-#~ msgid "Very Large"
-#~ msgstr "より大"
-
-#~ msgid "Huge"
-#~ msgstr "とても大"
-
-#~ msgid "Very Huge"
-#~ msgstr "さらに大"
-
-#~ msgid "Oversized"
-#~ msgstr "特大"
-
-#~ msgid "This module lets you configure the window decorations."
-#~ msgstr "このモジュールでウィンドウ装飾を設定できます。"

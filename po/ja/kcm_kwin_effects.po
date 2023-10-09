@@ -69,23 +69,3 @@ msgstr "サポートされていないエフェクトを除外する"
 #, kde-format
 msgid "Exclude internal effects"
 msgstr "内部エフェクトを除外する"
-
-#~ msgid "Get New Desktop Effects..."
-#~ msgstr "新しいデスクトップエフェクトを取得..."
-
-#~ msgid "This module lets you configure desktop effects."
-#~ msgstr "このモジュールでデスクトップエフェクトを設定できます。"
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Your names"
-#~ msgstr "R.Suga"
-
-#~ msgctxt "EMAIL OF TRANSLATORS"
-#~ msgid "Your emails"
-#~ msgstr "21r.suga@gmail.com"
-
-#~ msgid "Desktop Effects"
-#~ msgstr "デスクトップエフェクト"
-
-#~ msgid "Vlad Zahorodnii"
-#~ msgstr "Vlad Zahorodnii"

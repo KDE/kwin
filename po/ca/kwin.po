@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-10-08 01:39+0000\n"
-"PO-Revision-Date: 2023-09-26 12:28+0200\n"
+"PO-Revision-Date: 2023-10-08 11:38+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
@@ -1522,46 +1522,46 @@ msgstr "Intensitat del soroll:"
 #: plugins/colorblindnesscorrection/ui/main.qml:32
 #, kde-format
 msgid "Red"
-msgstr ""
+msgstr "Vermell"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:33
 #, kde-format
 msgid "Green"
-msgstr ""
+msgstr "Verd"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:34
 #, kde-format
 msgid "Blue"
-msgstr ""
+msgstr "Blau"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:35
 #, kde-format
 msgid "Purple"
-msgstr ""
+msgstr "Púrpura"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:70
 #, kde-format
 msgctxt "@label"
 msgid "Mode:"
-msgstr ""
+msgstr "Mode:"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:75
 #, kde-format
 msgctxt "@option"
 msgid "Protanopia (red weak)"
-msgstr ""
+msgstr "Protanopia (vermell dèbil)"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:76
 #, kde-format
 msgctxt "@option"
 msgid "Deuteranopia (green weak)"
-msgstr ""
+msgstr "Deuteranopia (verd dèbil)"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:77
 #, kde-format
 msgctxt "@option"
 msgid "Tritanopia (blue-yellow)"
-msgstr ""
+msgstr "Tritanopia (blau-groc)"
 
 #: plugins/colorpicker/colorpicker.cpp:102
 #, kde-format
@@ -4187,56 +4187,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "L'Xwayland ha fallat"
-
-#~ msgid "Show Desktop Grid"
-#~ msgstr "Mostra la quadrícula de l'escriptori"
-
-#~ msgctxt "Desktop name alignment:"
-#~ msgid "Disabled"
-#~ msgstr "Desactivat"
-
-#~ msgid "Top-Right"
-#~ msgstr "Superior-dreta"
-
-#~ msgid "Bottom-Right"
-#~ msgstr "Inferior dreta"
-
-#~ msgid "Bottom-Left"
-#~ msgstr "Inferior esquerra"
-
-#~ msgid "Top-Left"
-#~ msgstr "Superior esquerra"
-
-#~ msgid "Pager"
-#~ msgstr "Paginador"
-
-#~ msgid "Automatic"
-#~ msgstr "Automàtic"
-
-#~ msgid "Custom"
-#~ msgstr "Personalitzat"
-
-#~ msgid "N&umber of rows:"
-#~ msgstr "N&ombre de files:"
-
-#~ msgid "Desktop &name alignment:"
-#~ msgstr "Alineació del &nom d'escriptori:"
-
-#~ msgid "Show buttons to alter count of virtual desktops"
-#~ msgstr "Mostra els botons per a alterar el comptador d'escriptoris virtuals"
-
-#~ msgid "&Grid layout mode:"
-#~ msgstr "Mode de disposició de &quadrícula::"
-
-#~ msgid "Windows layout:"
-#~ msgstr "Disposició de les finestres:"
-
-#~ msgid "Activation"
-#~ msgstr "Activació"
-
-#~ msgid ""
-#~ "Desktop effects have been suspended by another application.<br/>You can "
-#~ "resume using the '%1' shortcut."
-#~ msgstr ""
-#~ "Una altra aplicació ha suspès els efectes d'escriptori.<br/>Podeu "
-#~ "reprendre-ho usant la drecera «%1»."

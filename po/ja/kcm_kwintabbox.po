@@ -240,12 +240,12 @@ msgstr "選択したウィンドウを表示する"
 #: shortcutsettings.cpp:132
 #, kde-format
 msgid "Walk Through Windows"
-msgstr ""
+msgstr "ウィンドウを巡回"
 
 #: shortcutsettings.cpp:133
 #, kde-format
 msgid "Walk Through Windows (Reverse)"
-msgstr ""
+msgstr "ウィンドウを巡回 (反対回り)"
 
 #: shortcutsettings.cpp:134
 #, kde-format
@@ -260,12 +260,12 @@ msgstr ""
 #: shortcutsettings.cpp:137
 #, kde-format
 msgid "Walk Through Windows Alternative"
-msgstr ""
+msgstr "ウィンドウを巡回の代替"
 
 #: shortcutsettings.cpp:138
 #, kde-format
 msgid "Walk Through Windows Alternative (Reverse)"
-msgstr ""
+msgstr "ウィンドウを巡回 (反対回り) の代替"
 
 #: shortcutsettings.cpp:139
 #, kde-format
