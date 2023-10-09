@@ -49,9 +49,15 @@ static QVector3D operator*(const QMatrix3x3 &mat, const QVector3D &v)
         mat(2, 0) * v.x() + mat(2, 1) * v.y() + mat(2, 2) * v.z());
 }
 
-static QVector3D xyToXYZ(QVector2D xy)
+QVector3D Colorimetry::xyToXYZ(QVector2D xy)
 {
     return QVector3D(xy.x() / xy.y(), 1, (1 - xy.x() - xy.y()) / xy.y());
+}
+
+QVector2D Colorimetry::xyzToXY(QVector3D xyz)
+{
+    xyz /= xyz.y();
+    return QVector2D(xyz.x() / (xyz.x() + xyz.y() + xyz.z()), xyz.y() / (xyz.x() + xyz.y() + xyz.z()));
 }
 
 QMatrix3x3 Colorimetry::toXYZ() const
@@ -75,7 +81,7 @@ bool Colorimetry::operator==(const Colorimetry &other) const
                                 : (red == other.red && green == other.green && blue == other.blue && white == other.white);
 }
 
-constexpr Colorimetry Colorimetry::createFromName(NamedColorimetry name)
+constexpr Colorimetry Colorimetry::fromName(NamedColorimetry name)
 {
     switch (name) {
     case NamedColorimetry::BT709:
@@ -98,6 +104,17 @@ constexpr Colorimetry Colorimetry::createFromName(NamedColorimetry name)
     Q_UNREACHABLE();
 }
 
+Colorimetry Colorimetry::fromXYZ(QVector3D red, QVector3D green, QVector3D blue, QVector3D white)
+{
+    return Colorimetry{
+        .red = xyzToXY(red),
+        .green = xyzToXY(green),
+        .blue = xyzToXY(blue),
+        .white = xyzToXY(white),
+        .name = std::nullopt,
+    };
+}
+
 const ColorDescription ColorDescription::sRGB = ColorDescription(NamedColorimetry::BT709, NamedTransferFunction::sRGB, 100, 0, 100, 100);
 
 ColorDescription::ColorDescription(const Colorimetry &colorimety, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxFrameAverageBrightness, double maxHdrHighlightBrightness)
@@ -111,7 +128,7 @@ ColorDescription::ColorDescription(const Colorimetry &colorimety, NamedTransferF
 }
 
 ColorDescription::ColorDescription(NamedColorimetry colorimetry, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxFrameAverageBrightness, double maxHdrHighlightBrightness)
-    : m_colorimetry(Colorimetry::createFromName(colorimetry))
+    : m_colorimetry(Colorimetry::fromName(colorimetry))
     , m_transferFunction(tf)
     , m_sdrBrightness(sdrBrightness)
     , m_minHdrBrightness(minHdrBrightness)

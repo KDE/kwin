@@ -27,7 +27,10 @@ enum class NamedColorimetry {
 class KWIN_EXPORT Colorimetry
 {
 public:
-    static constexpr Colorimetry createFromName(NamedColorimetry name);
+    static constexpr Colorimetry fromName(NamedColorimetry name);
+    static Colorimetry fromXYZ(QVector3D red, QVector3D green, QVector3D blue, QVector3D white);
+    static QVector3D xyToXYZ(QVector2D xy);
+    static QVector2D xyzToXY(QVector3D xyz);
 
     QMatrix3x3 toXYZ() const;
     QMatrix3x3 toOther(const Colorimetry &colorimetry) const;

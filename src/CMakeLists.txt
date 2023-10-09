@@ -43,6 +43,7 @@ target_sources(kwin PRIVATE
     compositor_wayland.cpp
     compositor_x11.cpp
     core/colorlut.cpp
+    core/colorlut3d.cpp
     core/colorpipelinestage.cpp
     core/colortransformation.cpp
     core/gbmgraphicsbufferallocator.cpp
