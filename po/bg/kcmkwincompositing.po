@@ -171,11 +171,3 @@ msgstr ""
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr "Повторно активиране на откриване на OpenGL"
-
-#~ msgid "Allows applications to cause screen tearing in fullscreen."
-#~ msgstr ""
-#~ "Позволява на приложенията да предизвикват разделяне на образа в режим на "
-#~ "цял екран."
-
-#~ msgid "Allow tearing in fullscreen"
-#~ msgstr "Позволяване на разделяне на образа в режим на цял екран"
