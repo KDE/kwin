@@ -24,6 +24,11 @@ class Effect;
 class KWIN_EXPORT EffectTogglableState : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(qreal partialActivationFactor READ partialActivationFactor NOTIFY partialActivationFactorChanged)
+    Q_PROPERTY(QAction *activateAction READ activateAction CONSTANT)
+    Q_PROPERTY(QAction *deactivateAction READ deactivateAction CONSTANT)
+    Q_PROPERTY(QAction *toggleAction READ toggleAction CONSTANT)
+    Q_PROPERTY(Status status READ status WRITE setStatus NOTIFY statusChanged)
 public:
     enum class Status {
         Inactive,
@@ -35,10 +40,9 @@ public:
     Q_ENUM(Status)
 
     /** Constructs the object, passes the effect as the parent. */
-    EffectTogglableState(Effect *parent);
+    EffectTogglableState(Effect *parent = nullptr);
 
     bool inProgress() const;
-    void setInProgress(bool gesture);
 
     qreal partialActivationFactor() const
     {
@@ -85,6 +89,7 @@ protected:
     void setRegress(qreal regress);
 
 private:
+    void setInProgress(bool gesture);
     void partialActivate(qreal factor);
     void partialDeactivate(qreal factor);
 
@@ -108,15 +113,14 @@ public:
      * The gesture will activate it and once enabled the opposite will disable it back.
      *
      * @param state the state we care about. This state will become the parent object and will take care to clean it up.
+     *
+     * If the @p state is nullptr, it will use the parent as the state
      */
-    EffectTogglableGesture(EffectTogglableState *state);
+    EffectTogglableGesture(EffectTogglableState *state = nullptr);
 
-    void addTouchpadPinchGesture(PinchDirection dir, uint fingerCount);
-    void addTouchpadSwipeGesture(SwipeDirection dir, uint fingerCount);
-    void addTouchscreenSwipeGesture(SwipeDirection direction, uint fingerCount);
-
-private:
-    EffectTogglableState *const m_state;
+    Q_INVOKABLE void addTouchpadPinchGesture(PinchDirection dir, uint fingerCount);
+    Q_INVOKABLE void addTouchpadSwipeGesture(SwipeDirection dir, uint fingerCount);
+    Q_INVOKABLE void addTouchscreenSwipeGesture(SwipeDirection direction, uint fingerCount);
 };
 
 class KWIN_EXPORT EffectTogglableTouchBorder : public QObject

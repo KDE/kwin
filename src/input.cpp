@@ -943,10 +943,13 @@ public:
         }
         return false;
     }
+
+    static const int s_gestureMinimumTouchPoints = 3;
+
     bool swipeGestureBegin(int fingerCount, std::chrono::microseconds time) override
     {
         m_touchpadGestureFingerCount = fingerCount;
-        if (m_touchpadGestureFingerCount >= 3) {
+        if (m_touchpadGestureFingerCount >= s_gestureMinimumTouchPoints) {
             input()->shortcuts()->processSwipeStart(DeviceType::Touchpad, fingerCount);
             return true;
         } else {
@@ -955,7 +958,7 @@ public:
     }
     bool swipeGestureUpdate(const QPointF &delta, std::chrono::microseconds time) override
     {
-        if (m_touchpadGestureFingerCount >= 3) {
+        if (m_touchpadGestureFingerCount >= s_gestureMinimumTouchPoints) {
             input()->shortcuts()->processSwipeUpdate(DeviceType::Touchpad, delta);
             return true;
         } else {
@@ -964,7 +967,7 @@ public:
     }
     bool swipeGestureCancelled(std::chrono::microseconds time) override
     {
-        if (m_touchpadGestureFingerCount >= 3) {
+        if (m_touchpadGestureFingerCount >= s_gestureMinimumTouchPoints) {
             input()->shortcuts()->processSwipeCancel(DeviceType::Touchpad);
             return true;
         } else {
@@ -973,7 +976,7 @@ public:
     }
     bool swipeGestureEnd(std::chrono::microseconds time) override
     {
-        if (m_touchpadGestureFingerCount >= 3) {
+        if (m_touchpadGestureFingerCount >= s_gestureMinimumTouchPoints) {
             input()->shortcuts()->processSwipeEnd(DeviceType::Touchpad);
             return true;
         } else {
@@ -983,7 +986,7 @@ public:
     bool pinchGestureBegin(int fingerCount, std::chrono::microseconds time) override
     {
         m_touchpadGestureFingerCount = fingerCount;
-        if (m_touchpadGestureFingerCount >= 3) {
+        if (m_touchpadGestureFingerCount >= s_gestureMinimumTouchPoints) {
             input()->shortcuts()->processPinchStart(fingerCount);
             return true;
         } else {
@@ -992,7 +995,7 @@ public:
     }
     bool pinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, std::chrono::microseconds time) override
     {
-        if (m_touchpadGestureFingerCount >= 3) {
+        if (m_touchpadGestureFingerCount >= s_gestureMinimumTouchPoints) {
             input()->shortcuts()->processPinchUpdate(scale, angleDelta, delta);
             return true;
         } else {
@@ -1001,7 +1004,7 @@ public:
     }
     bool pinchGestureEnd(std::chrono::microseconds time) override
     {
-        if (m_touchpadGestureFingerCount >= 3) {
+        if (m_touchpadGestureFingerCount >= s_gestureMinimumTouchPoints) {
             input()->shortcuts()->processPinchEnd();
             return true;
         } else {
@@ -1010,7 +1013,7 @@ public:
     }
     bool pinchGestureCancelled(std::chrono::microseconds time) override
     {
-        if (m_touchpadGestureFingerCount >= 3) {
+        if (m_touchpadGestureFingerCount >= s_gestureMinimumTouchPoints) {
             input()->shortcuts()->processPinchCancel();
             return true;
         } else {
@@ -1049,7 +1052,7 @@ public:
                     return false;
                 }
             }
-            if (m_touchPoints.count() >= 3 && !m_gestureCancelled) {
+            if (m_touchPoints.count() >= s_gestureMinimumTouchPoints && !m_gestureCancelled) {
                 m_gestureTaken = true;
                 m_syntheticCancel = true;
                 input()->processFilters(std::bind(&InputEventFilter::touchCancel, std::placeholders::_1));

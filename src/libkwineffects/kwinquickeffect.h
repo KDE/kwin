@@ -75,6 +75,7 @@ private:
 class KWIN_EXPORT QuickSceneEffect : public Effect
 {
     Q_OBJECT
+    Q_PROPERTY(bool isRunning READ isRunning WRITE setRunning)
     Q_PROPERTY(QuickSceneView *activeView READ activeView NOTIFY activeViewChanged)
     Q_PROPERTY(QQmlComponent *delegate READ delegate WRITE setDelegate NOTIFY delegateChanged)
 

@@ -118,11 +118,13 @@ enum class SwipeDirection {
     Up,
     Right,
 };
+Q_ENUM_NS(SwipeDirection)
 
 enum class PinchDirection {
     Expanding,
     Contracting
 };
+Q_ENUM_NS(PinchDirection)
 
 /**
  * Represents the state of the session running outside kwin

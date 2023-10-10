@@ -1,0 +1,10 @@
+{
+    "KPlugin": {
+        "Category": "Window Management",
+        "Description": "Peek into a window on the side",
+        "EnabledByDefault": true,
+        "License": "GPL",
+        "Name": "Side Peek"
+    },
+    "X-KDE-ConfigModule": "kwin_sidepeek_config"
+}

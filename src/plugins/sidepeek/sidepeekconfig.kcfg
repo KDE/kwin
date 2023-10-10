@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    SPDX-FileCopyrightText: 2021 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+
+    SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
+-->
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+                          http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+    <kcfgfile arg="true"/>
+    <group name="Effect-windowview">
+        <entry name="LayoutMode" type="Int">
+            <default>1</default>
+        </entry>
+        <entry name="IgnoreMinimized" type="bool">
+            <default>false</default>
+        </entry>
+
+        <entry name="BorderActivate" type="IntList" />
+        <entry name="BorderActivateAll" type="IntList">
+            <default code="true">QList&lt;int&gt;() &lt;&lt; int(ElectricTopLeft)</default>
+        </entry>
+        <entry name="BorderActivateClass" type="IntList" />
+        <entry name="BorderActivateClassCurrentDesktop" type="IntList" />
+
+        <entry name="TouchBorderActivate" type="IntList" />
+        <entry name="TouchBorderActivateAll" type="IntList" />
+        <entry name="TouchBorderActivateClass" type="IntList" />
+        <entry name="TouchBorderActivateClassCurrentDesktop" type="IntList" />
+    </group>
+</kcfg>

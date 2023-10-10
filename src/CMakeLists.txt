@@ -120,6 +120,7 @@ target_sources(kwin PRIVATE
     libkwineffects/glvertexbuffer.cpp
     libkwineffects/kwinanimationeffect.cpp
     libkwineffects/kwineffects.cpp
+    libkwineffects/kwinglobals.cpp
     libkwineffects/kwinoffscreeneffect.cpp
     libkwineffects/kwinoffscreenquickview.cpp
     libkwineffects/kwinquickeffect.cpp

@@ -149,6 +149,7 @@ ecm_mark_as_test(testOnScreenNotification)
 ########################################################
 set(testGestures_SRCS
     ../src/gestures.cpp
+    ../src/libkwineffects/kwinglobals.cpp
     test_gestures.cpp
 )
 add_executable(testGestures ${testGestures_SRCS})

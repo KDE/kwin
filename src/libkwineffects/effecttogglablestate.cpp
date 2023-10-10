@@ -6,6 +6,7 @@
 
 #include "effecttogglablestate.h"
 #include "kwineffects.h"
+#include "logging_p.h"
 
 namespace KWin
 {
@@ -155,7 +156,6 @@ void EffectTogglableState::setRegress(qreal regress)
 
 EffectTogglableGesture::EffectTogglableGesture(EffectTogglableState *state)
     : QObject(state)
-    , m_state(state)
 {
 }
 
@@ -203,20 +203,35 @@ std::function<void(qreal progress)> EffectTogglableState::regressCallback()
 
 void EffectTogglableGesture::addTouchpadPinchGesture(PinchDirection direction, uint fingerCount)
 {
-    effects->registerTouchpadPinchShortcut(direction, fingerCount, m_state->activateAction(), m_state->progressCallback());
-    effects->registerTouchpadPinchShortcut(opposite(direction), fingerCount, m_state->deactivateAction(), m_state->regressCallback());
+    auto state = qobject_cast<EffectTogglableState *>(parent());
+    if (!state) {
+        qCDebug(LIBKWINGLUTILS) << "Unable to register gesture" << direction << fingerCount;
+        return;
+    }
+    effects->registerTouchpadPinchShortcut(direction, fingerCount, state->activateAction(), state->progressCallback());
+    effects->registerTouchpadPinchShortcut(opposite(direction), fingerCount, state->deactivateAction(), state->regressCallback());
 }
 
 void EffectTogglableGesture::addTouchpadSwipeGesture(SwipeDirection direction, uint fingerCount)
 {
-    effects->registerTouchpadSwipeShortcut(direction, fingerCount, m_state->activateAction(), m_state->progressCallback());
-    effects->registerTouchpadSwipeShortcut(opposite(direction), fingerCount, m_state->deactivateAction(), m_state->regressCallback());
+    auto state = qobject_cast<EffectTogglableState *>(parent());
+    if (!state) {
+        qCDebug(LIBKWINGLUTILS) << "Unable to register gesture" << direction << fingerCount;
+        return;
+    }
+    effects->registerTouchpadSwipeShortcut(direction, fingerCount, state->activateAction(), state->progressCallback());
+    effects->registerTouchpadSwipeShortcut(opposite(direction), fingerCount, state->deactivateAction(), state->regressCallback());
 }
 
 void EffectTogglableGesture::addTouchscreenSwipeGesture(SwipeDirection direction, uint fingerCount)
 {
-    effects->registerTouchscreenSwipeShortcut(direction, fingerCount, m_state->activateAction(), m_state->progressCallback());
-    effects->registerTouchscreenSwipeShortcut(opposite(direction), fingerCount, m_state->deactivateAction(), m_state->regressCallback());
+    auto state = qobject_cast<EffectTogglableState *>(parent());
+    if (!state) {
+        qCDebug(LIBKWINGLUTILS) << "Unable to register gesture" << direction << fingerCount;
+        return;
+    }
+    effects->registerTouchscreenSwipeShortcut(direction, fingerCount, state->activateAction(), state->progressCallback());
+    effects->registerTouchscreenSwipeShortcut(opposite(direction), fingerCount, state->deactivateAction(), state->regressCallback());
 }
 
 EffectTogglableTouchBorder::EffectTogglableTouchBorder(EffectTogglableState *state)
