@@ -16,6 +16,7 @@
 #include "kwin_export.h"
 
 typedef struct _cmsPipeline_struct cmsPipeline;
+class QVector3D;
 
 namespace KWin
 {
@@ -33,6 +34,7 @@ public:
     bool valid() const;
 
     std::tuple<uint16_t, uint16_t, uint16_t> transform(uint16_t r, uint16_t g, uint16_t b) const;
+    QVector3D transform(QVector3D in) const;
 
 private:
     cmsPipeline *const m_pipeline;

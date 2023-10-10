@@ -71,4 +71,10 @@ std::tuple<uint16_t, uint16_t, uint16_t> ColorTransformation::transform(uint16_t
     return {out[0], out[1], out[2]};
 }
 
+QVector3D ColorTransformation::transform(QVector3D in) const
+{
+    QVector3D ret;
+    cmsPipelineEvalFloat(&in[0], &ret[0], m_pipeline);
+    return ret;
+}
 }
