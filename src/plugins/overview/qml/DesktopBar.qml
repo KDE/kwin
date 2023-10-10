@@ -9,9 +9,9 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects
-import org.kde.kirigami 2.20 as Kirigami
+import org.kde.kirigami as Kirigami
 import org.kde.kwin as KWinComponents
-import org.kde.kwin.private.effects 1.0
+import org.kde.kwin.private.effects
 import org.kde.plasma.components as PC3
 
 Item {
@@ -104,7 +104,7 @@ Item {
 
                         Behavior on scale {
                             NumberAnimation {
-                                duration: Kirigami.Units.Kirigami.Units.shortDuration
+                                duration: Kirigami.Units.shortDuration
                             }
                         }
 
