@@ -191,12 +191,16 @@ EglGbmBackend *EglGbmLayerSurface::eglBackend() const
 
 std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::currentBuffer() const
 {
-    return m_surface->currentFramebuffer;
+    return m_surface ? m_surface->currentFramebuffer : nullptr;
 }
 
 const ColorDescription &EglGbmLayerSurface::colorDescription() const
 {
-    return m_surface->shadowTexture ? m_surface->intermediaryColorDescription : m_surface->targetColorDescription;
+    if (m_surface) {
+        return m_surface->shadowTexture ? m_surface->intermediaryColorDescription : m_surface->targetColorDescription;
+    } else {
+        return ColorDescription::sRGB;
+    }
 }
 
 bool EglGbmLayerSurface::doesSurfaceFit(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const
@@ -206,7 +210,11 @@ bool EglGbmLayerSurface::doesSurfaceFit(const QSize &size, const QMap<uint32_t, 
 
 std::shared_ptr<GLTexture> EglGbmLayerSurface::texture() const
 {
-    return m_surface->shadowTexture ? m_surface->shadowTexture : m_surface->currentSlot->texture();
+    if (m_surface) {
+        return m_surface->shadowTexture ? m_surface->shadowTexture : m_surface->currentSlot->texture();
+    } else {
+        return nullptr;
+    }
 }
 
 std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::renderTestBuffer(const QSize &bufferSize, const QMap<uint32_t, QVector<uint64_t>> &formats)
