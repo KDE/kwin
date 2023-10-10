@@ -63,7 +63,8 @@ void ColorPickerEffect::paintScreen(const RenderTarget &renderTarget, const Rend
         const QPoint texturePosition = viewport.mapToRenderTarget(m_scheduledPosition).toPoint();
 
         glReadnPixels(texturePosition.x(), renderTarget.size().height() - texturePosition.y() - PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE, GL_RGBA, GL_UNSIGNED_BYTE, 4, data);
-        QDBusConnection::sessionBus().send(m_replyMessage.createReply(QColor(data[0], data[1], data[2])));
+        QVector3D sRGB = renderTarget.colorDescription().mapTo(QVector3D(data[0] / 255.0, data[1] / 255.0, data[2] / 255.0), ColorDescription::sRGB);
+        QDBusConnection::sessionBus().send(m_replyMessage.createReply(QColor(255 * sRGB.x(), 255 * sRGB.y(), 255 * sRGB.z())));
         m_picking = false;
         m_scheduledPosition = QPoint(-1, -1);
     }

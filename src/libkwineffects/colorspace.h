@@ -76,6 +76,8 @@ public:
 
     bool operator==(const ColorDescription &other) const;
 
+    QVector3D mapTo(QVector3D rgb, const ColorDescription &other) const;
+
     static const ColorDescription sRGB;
 
 private:

@@ -159,4 +159,48 @@ bool ColorDescription::operator==(const ColorDescription &other) const
         && m_maxHdrBrightness == other.maxHdrBrightness()
         && m_maxHdrHighlightBrightness == other.maxHdrHighlightBrightness();
 }
+
+static float srgbToLinear(float sRGB)
+{
+    if (sRGB < 0.04045) {
+        return std::max(sRGB / 12.92, 0.0);
+    } else {
+        return std::clamp(std::pow((sRGB + 0.055) / 1.055, 12.0 / 5.0), 0.0, 1.0);
+    }
+}
+
+static float linearToSRGB(float linear)
+{
+    if (linear < 0.0031308) {
+        return std::max(linear / 12.92, 0.0);
+    } else {
+        return std::clamp(std::pow(linear, 5.0 / 12.0) * 1.055 - 0.055, 0.0, 1.0);
+    }
+}
+
+QVector3D ColorDescription::mapTo(QVector3D rgb, const ColorDescription &dst) const
+{
+    Q_ASSERT_X(m_transferFunction != NamedTransferFunction::PerceptualQuantizer && dst.transferFunction() != NamedTransferFunction::PerceptualQuantizer,
+               "ColorDescription::mapTo", "PQ isn't supported yet");
+    switch (m_transferFunction) {
+    case NamedTransferFunction::sRGB:
+        rgb = QVector3D(srgbToLinear(rgb.x()), srgbToLinear(rgb.y()), srgbToLinear(rgb.z()));
+        break;
+    case NamedTransferFunction::linear:
+        rgb /= m_sdrBrightness;
+        break;
+    case NamedTransferFunction::PerceptualQuantizer:
+        return QVector3D();
+    }
+    rgb = m_colorimetry.toOther(dst.colorimetry()) * rgb;
+    switch (dst.transferFunction()) {
+    case NamedTransferFunction::sRGB:
+        return QVector3D(linearToSRGB(rgb.x()), linearToSRGB(rgb.y()), linearToSRGB(rgb.z()));
+    case NamedTransferFunction::linear:
+        return rgb * dst.sdrBrightness();
+    case NamedTransferFunction::PerceptualQuantizer:
+        return QVector3D();
+    }
+    return QVector3D();
+}
 }
