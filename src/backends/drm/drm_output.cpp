@@ -204,21 +204,23 @@ DrmPlane::Transformations outputToPlaneTransform(OutputTransform transform)
 {
     using PlaneTrans = DrmPlane::Transformation;
 
-    // TODO: Do we want to support reflections (flips)?
-
     switch (transform.kind()) {
     case OutputTransform::Normal:
-    case OutputTransform::Flipped:
         return PlaneTrans::Rotate0;
+    case OutputTransform::Flipped:
+        return PlaneTrans::ReflectX | PlaneTrans::Rotate0;
     case OutputTransform::Rotated90:
-    case OutputTransform::Flipped90:
         return PlaneTrans::Rotate90;
+    case OutputTransform::Flipped90:
+        return PlaneTrans::ReflectX | PlaneTrans::Rotate90;
     case OutputTransform::Rotated180:
-    case OutputTransform::Flipped180:
         return PlaneTrans::Rotate180;
+    case OutputTransform::Flipped180:
+        return PlaneTrans::ReflectX | PlaneTrans::Rotate180;
     case OutputTransform::Rotated270:
-    case OutputTransform::Flipped270:
         return PlaneTrans::Rotate270;
+    case OutputTransform::Flipped270:
+        return PlaneTrans::ReflectX | PlaneTrans::Rotate270;
     default:
         Q_UNREACHABLE();
     }

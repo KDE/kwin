@@ -68,7 +68,7 @@ void ScreenTransformEffect::addScreen(EffectScreen *screen)
 {
     connect(screen, &EffectScreen::changed, this, [this, screen] {
         auto &state = m_states[screen];
-        if (screen->transform() == state.m_oldTransform) {
+        if (transformAngle(screen->transform(), state.m_oldTransform) == 0) {
             effects->makeOpenGLContextCurrent();
             m_states.remove(screen);
             return;

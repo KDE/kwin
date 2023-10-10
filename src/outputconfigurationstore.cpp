@@ -559,6 +559,14 @@ void OutputConfigurationStore::load()
                 state.transform = state.manualTransform = OutputTransform::Kind::Rotated180;
             } else if (str == "Rotated270") {
                 state.transform = state.manualTransform = OutputTransform::Kind::Rotated270;
+            } else if (str == "Flipped") {
+                state.transform = state.manualTransform = OutputTransform::Kind::Flipped;
+            } else if (str == "Flipped90") {
+                state.transform = state.manualTransform = OutputTransform::Kind::Flipped90;
+            } else if (str == "Flipped180") {
+                state.transform = state.manualTransform = OutputTransform::Kind::Flipped180;
+            } else if (str == "Flipped270") {
+                state.transform = state.manualTransform = OutputTransform::Kind::Flipped270;
             }
         }
         if (const auto it = data.find("overscan"); it != data.end()) {
@@ -744,6 +752,14 @@ void OutputConfigurationStore::save()
             o["transform"] = "Rotated180";
         } else if (output.manualTransform == OutputTransform::Kind::Rotated270) {
             o["transform"] = "Rotated270";
+        } else if (output.manualTransform == OutputTransform::Kind::Flipped) {
+            o["transform"] = "Flipped";
+        } else if (output.manualTransform == OutputTransform::Kind::Flipped90) {
+            o["transform"] = "Flipped90";
+        } else if (output.manualTransform == OutputTransform::Kind::Flipped180) {
+            o["transform"] = "Flipped180";
+        } else if (output.manualTransform == OutputTransform::Kind::Flipped270) {
+            o["transform"] = "Flipped270";
         }
         if (output.overscan) {
             o["overscan"] = int(*output.overscan);

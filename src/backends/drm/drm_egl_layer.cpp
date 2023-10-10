@@ -31,15 +31,16 @@ static TextureTransforms drmToTextureRotation(DrmPipeline *pipeline)
     if (angle < 0) {
         angle += 360;
     }
+    TextureTransforms flip = (pipeline->renderOrientation() & DrmPlane::Transformation::ReflectX) ? TextureTransform::MirrorX : TextureTransforms();
     switch (angle % 360) {
     case 0:
-        return TextureTransforms();
+        return TextureTransforms() | flip;
     case 90:
-        return TextureTransform::Rotate90;
+        return TextureTransforms(TextureTransform::Rotate90) | flip;
     case 180:
-        return TextureTransform::Rotate180;
+        return TextureTransforms(TextureTransform::Rotate180) | flip;
     case 270:
-        return TextureTransform::Rotate270;
+        return TextureTransforms(TextureTransform::Rotate270) | flip;
     default:
         Q_UNREACHABLE();
     }

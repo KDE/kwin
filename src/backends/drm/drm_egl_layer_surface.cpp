@@ -84,6 +84,9 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
         return std::nullopt;
     }
 
+    if (slot->framebuffer()->colorAttachment()->contentTransforms() != transformation) {
+        m_surface->damageJournal.clear();
+    }
     slot->framebuffer()->colorAttachment()->setContentTransform(transformation);
     m_surface->currentSlot = slot;
 
