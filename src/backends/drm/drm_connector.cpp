@@ -136,8 +136,8 @@ DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)
                                                             QByteArrayLiteral("BT2020_RGB"),
                                                             QByteArrayLiteral("BT2020_YCC"),
                                                         })
-    , m_pipeline(std::make_unique<DrmPipeline>(this))
     , m_conn(drmModeGetConnector(gpu->fd(), connectorId))
+    , m_pipeline(m_conn ? std::make_unique<DrmPipeline>(this) : nullptr)
 {
     if (m_conn) {
         for (int i = 0; i < m_conn->count_encoders; ++i) {

@@ -39,7 +39,7 @@ static const QMap<uint32_t, QVector<uint64_t>> legacyCursorFormats = {{DRM_FORMA
 
 DrmPipeline::DrmPipeline(DrmConnector *conn)
     : m_connector(conn)
-    , m_commitThread(std::make_unique<DrmCommitThread>())
+    , m_commitThread(std::make_unique<DrmCommitThread>(conn->connectorName()))
 {
     QObject::connect(m_commitThread.get(), &DrmCommitThread::commitFailed, [this]() {
         if (m_output) {

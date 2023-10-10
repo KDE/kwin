@@ -26,7 +26,7 @@ class DrmCommitThread : public QObject
 {
     Q_OBJECT
 public:
-    explicit DrmCommitThread();
+    explicit DrmCommitThread(const QString &name);
     ~DrmCommitThread();
 
     void addCommit(std::unique_ptr<DrmAtomicCommit> &&commit);

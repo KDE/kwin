@@ -21,7 +21,7 @@ namespace KWin
 // committing takes about 800µs, the rest is accounting for sleep not being accurate enough
 static constexpr auto s_safetyMargin = 1800us;
 
-DrmCommitThread::DrmCommitThread()
+DrmCommitThread::DrmCommitThread(const QString &name)
 {
     m_thread.reset(QThread::create([this]() {
         gainRealTime();
@@ -80,6 +80,7 @@ DrmCommitThread::DrmCommitThread()
             }
         }
     }));
+    m_thread->setObjectName(name);
     m_thread->start();
 }
 

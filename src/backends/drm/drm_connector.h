@@ -138,8 +138,8 @@ private:
     QList<std::shared_ptr<DrmConnectorMode>> generateCommonModes();
     std::shared_ptr<DrmConnectorMode> generateMode(const QSize &size, float refreshRate);
 
-    std::unique_ptr<DrmPipeline> m_pipeline;
     DrmUniquePtr<drmModeConnector> m_conn;
+    std::unique_ptr<DrmPipeline> m_pipeline;
     Edid m_edid;
     QSize m_physicalSize = QSize(-1, -1);
     QList<std::shared_ptr<DrmConnectorMode>> m_driverModes;
