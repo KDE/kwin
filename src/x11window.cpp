@@ -360,9 +360,7 @@ X11Window::~X11Window()
         ::kill(m_killHelperPID, SIGTERM);
         m_killHelperPID = 0;
     }
-    if (m_syncRequest.alarm != XCB_NONE) {
-        xcb_sync_destroy_alarm(kwinApp()->x11Connection(), m_syncRequest.alarm);
-    }
+
     Q_ASSERT(!isInteractiveMoveResize());
     Q_ASSERT(!check_active_modal);
 }
@@ -458,7 +456,10 @@ void X11Window::releaseWindow(bool on_shutdown)
         unblockGeometryUpdates(); // Don't use GeometryUpdatesBlocker, it would now set the geometry
         ungrabXServer();
     }
-
+    if (m_syncRequest.alarm != XCB_NONE) {
+        xcb_sync_destroy_alarm(kwinApp()->x11Connection(), m_syncRequest.alarm);
+        m_syncRequest.alarm = XCB_NONE;
+    }
     unblockCompositing();
     unref();
 }
@@ -503,6 +504,10 @@ void X11Window::destroyWindow()
         m_wrapper.reset();
         m_frame.reset();
         unblockGeometryUpdates(); // Don't use GeometryUpdatesBlocker, it would now set the geometry
+    }
+    if (m_syncRequest.alarm != XCB_NONE) {
+        xcb_sync_destroy_alarm(kwinApp()->x11Connection(), m_syncRequest.alarm);
+        m_syncRequest.alarm = XCB_NONE;
     }
 
     unblockCompositing();
