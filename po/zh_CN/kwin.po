@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-10-10 01:47+0000\n"
-"PO-Revision-Date: 2023-09-16 10:06\n"
+"PO-Revision-Date: 2023-10-10 14:24\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -1489,46 +1489,46 @@ msgstr "噪点程度："
 #: plugins/colorblindnesscorrection/ui/main.qml:32
 #, kde-format
 msgid "Red"
-msgstr ""
+msgstr "红"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:33
 #, kde-format
 msgid "Green"
-msgstr ""
+msgstr "绿"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:34
 #, kde-format
 msgid "Blue"
-msgstr ""
+msgstr "蓝"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:35
 #, kde-format
 msgid "Purple"
-msgstr ""
+msgstr "紫"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:70
 #, kde-format
 msgctxt "@label"
 msgid "Mode:"
-msgstr ""
+msgstr "模式："
 
 #: plugins/colorblindnesscorrection/ui/main.qml:75
 #, kde-format
 msgctxt "@option"
 msgid "Protanopia (red weak)"
-msgstr ""
+msgstr "甲型色盲 (红色盲)"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:76
 #, kde-format
 msgctxt "@option"
 msgid "Deuteranopia (green weak)"
-msgstr ""
+msgstr "乙型色盲 (绿色盲)"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:77
 #, kde-format
 msgctxt "@option"
 msgid "Tritanopia (blue-yellow)"
-msgstr ""
+msgstr "丙型色盲 (蓝黄色盲)"
 
 #: plugins/colorpicker/colorpicker.cpp:102
 #, kde-format
@@ -2213,28 +2213,26 @@ msgstr "未知"
 #, kde-format
 msgctxt "@action Overview and Grid View are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "循环显示桌面概览和网格视图"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:48
 #: plugins/overview/overvieweffect.cpp:133
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
-msgstr ""
+msgstr "循环显示网格视图和桌面概览"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:55
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Overview is the name of a KWin effect"
 msgid "Toggle Overview"
 msgstr "显示/隐藏桌面总览"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:62
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Grid View is the name of a KWin effect"
 msgid "Toggle Grid View"
-msgstr "显示/隐藏桌面总览"
+msgstr "切换网格视图"
 
 #. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
 #: plugins/overview/kcm/overvieweffectkcm.ui:22
@@ -2267,27 +2265,25 @@ msgstr "忽略最小化的窗口："
 #: plugins/overview/kcm/overvieweffectkcm.ui:57
 #, kde-format
 msgid "Organize windows in the Grid View:"
-msgstr ""
+msgstr "使用网格视图组织窗口："
 
 #: plugins/overview/overvieweffect.cpp:124
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "循环显示桌面概览和网格视图"
 
 #: plugins/overview/overvieweffect.cpp:141
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
 msgstr "显示/隐藏桌面总览"
 
 #: plugins/overview/overvieweffect.cpp:149
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
-msgstr "显示/隐藏桌面总览"
+msgstr "切换网格视图"
 
 #: plugins/overview/qml/DesktopBar.qml:172
 #, kde-format
@@ -2300,29 +2296,25 @@ msgid "Add Virtual Desktop"
 msgstr "添加虚拟桌面"
 
 #: plugins/overview/qml/main.qml:318
-#, fuzzy, kde-format
-#| msgid "Delete Virtual Desktop"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
-msgstr "删除虚拟桌面"
+msgstr "没有其他可显示的虚拟桌面"
 
 #: plugins/overview/qml/main.qml:324
-#, fuzzy, kde-format
-#| msgid "Add Virtual Desktop"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "添加虚拟桌面"
 
 #: plugins/overview/qml/main.qml:331
-#, fuzzy, kde-format
-#| msgid "Delete Virtual Desktop"
+#, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
-msgstr "删除虚拟桌面"
+msgstr "配置虚拟桌面…"
 
 #: plugins/overview/qml/main.qml:658
-#, fuzzy, kde-format
-#| msgid "No matching windows"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
 msgstr "没有匹配的窗口"
@@ -4144,54 +4136,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland 已崩溃"
-
-#~ msgid "Show Desktop Grid"
-#~ msgstr "显示虚拟桌面网格"
-
-#~ msgctxt "Desktop name alignment:"
-#~ msgid "Disabled"
-#~ msgstr "已禁用"
-
-#~ msgid "Top-Right"
-#~ msgstr "右上"
-
-#~ msgid "Bottom-Right"
-#~ msgstr "右下"
-
-#~ msgid "Bottom-Left"
-#~ msgstr "左下"
-
-#~ msgid "Top-Left"
-#~ msgstr "左上"
-
-#~ msgid "Pager"
-#~ msgstr "虚拟桌面切换器"
-
-#~ msgid "Automatic"
-#~ msgstr "自动"
-
-#~ msgid "Custom"
-#~ msgstr "自定义"
-
-#~ msgid "N&umber of rows:"
-#~ msgstr "网格行数(&U)："
-
-#~ msgid "Desktop &name alignment:"
-#~ msgstr "虚拟桌面名称对齐(&N)："
-
-#~ msgid "Show buttons to alter count of virtual desktops"
-#~ msgstr "显示虚拟桌面数量调整按钮"
-
-#~ msgid "&Grid layout mode:"
-#~ msgstr "网格布局模式(&G)："
-
-#~ msgid "Windows layout:"
-#~ msgstr "窗口布局："
-
-#~ msgid "Activation"
-#~ msgstr "激活"
-
-#~ msgid ""
-#~ "Desktop effects have been suspended by another application.<br/>You can "
-#~ "resume using the '%1' shortcut."
-#~ msgstr "桌面特效已被某个程序暂停。<br/>按“%1”快捷键可以恢复特效。"

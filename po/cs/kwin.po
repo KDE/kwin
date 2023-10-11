@@ -1491,22 +1491,22 @@ msgstr "Síla šumu:"
 #: plugins/colorblindnesscorrection/ui/main.qml:32
 #, kde-format
 msgid "Red"
-msgstr ""
+msgstr "Červená"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:33
 #, kde-format
 msgid "Green"
-msgstr ""
+msgstr "Zelená"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:34
 #, kde-format
 msgid "Blue"
-msgstr ""
+msgstr "Modrá"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:35
 #, kde-format
 msgid "Purple"
-msgstr ""
+msgstr "Nachová"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:70
 #, kde-format
@@ -2229,18 +2229,16 @@ msgid "Cycle through Grid View and Overview"
 msgstr ""
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:55
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Overview is the name of a KWin effect"
 msgid "Toggle Overview"
-msgstr "Přepnout přehled"
+msgstr ""
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:62
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Grid View is the name of a KWin effect"
 msgid "Toggle Grid View"
-msgstr "Přepnout přehled"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
 #: plugins/overview/kcm/overvieweffectkcm.ui:22
@@ -2282,18 +2280,16 @@ msgid "Cycle through Overview and Grid View"
 msgstr ""
 
 #: plugins/overview/overvieweffect.cpp:141
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
-msgstr "Přepnout přehled"
+msgstr ""
 
 #: plugins/overview/overvieweffect.cpp:149
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
-msgstr "Přepnout přehled"
+msgstr ""
 
 #: plugins/overview/qml/DesktopBar.qml:172
 #, kde-format
@@ -2306,32 +2302,28 @@ msgid "Add Virtual Desktop"
 msgstr "Přidat virtuální plochu"
 
 #: plugins/overview/qml/main.qml:318
-#, fuzzy, kde-format
-#| msgid "Delete Virtual Desktop"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
-msgstr "Smazat virtuální plochu"
+msgstr ""
 
 #: plugins/overview/qml/main.qml:324
-#, fuzzy, kde-format
-#| msgid "Add Virtual Desktop"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
-msgstr "Přidat virtuální plochu"
+msgstr ""
 
 #: plugins/overview/qml/main.qml:331
-#, fuzzy, kde-format
-#| msgid "Delete Virtual Desktop"
+#, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
-msgstr "Smazat virtuální plochu"
+msgstr ""
 
 #: plugins/overview/qml/main.qml:658
-#, fuzzy, kde-format
-#| msgid "No matching windows"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
-msgstr "Žádná odpovídající okna"
+msgstr ""
 
 #: plugins/private/qml/WindowHeapDelegate.qml:155
 #, kde-format
@@ -4136,46 +4128,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland spadnul"
-
-#~ msgid "Show Desktop Grid"
-#~ msgstr "Zobrazit mřížku ploch"
-
-#~ msgctxt "Desktop name alignment:"
-#~ msgid "Disabled"
-#~ msgstr "Zakázáno"
-
-#~ msgid "Top-Right"
-#~ msgstr "Vpravo nahoře"
-
-#~ msgid "Bottom-Right"
-#~ msgstr "Vpravo dole"
-
-#~ msgid "Bottom-Left"
-#~ msgstr "Vlevo dole"
-
-#~ msgid "Top-Left"
-#~ msgstr "Vlevo nahoře"
-
-#~ msgid "Pager"
-#~ msgstr "Pager"
-
-#~ msgid "Automatic"
-#~ msgstr "Automaticky"
-
-#~ msgid "Custom"
-#~ msgstr "Vlastní"
-
-#~ msgid "N&umber of rows:"
-#~ msgstr "Počet řád&ků:"
-
-#~ msgid "Desktop &name alignment:"
-#~ msgstr "Zarov&nání názvu plochy:"
-
-#~ msgid "&Grid layout mode:"
-#~ msgstr "Režim roz&ložení mřížky:"
-
-#~ msgid "Windows layout:"
-#~ msgstr "Rozložení oken"
-
-#~ msgid "Activation"
-#~ msgstr "Aktivace"
