@@ -150,7 +150,7 @@ Item {
                             id: mouseArea
                             anchors.fill: parent
                             acceptedButtons: Qt.LeftButton | Qt.MiddleButton
-                            onClicked: {
+                            onClicked: mouse => {
                                 mouse.accepted = true;
                                 switch (mouse.button) {
                                 case Qt.LeftButton:
@@ -215,7 +215,7 @@ Item {
 
                         MouseArea {
                             anchors.fill: parent
-                            onPressed: {
+                            onPressed: mouse => {
                                 mouse.accepted = true;
                                 label.startEditing();
                             }
@@ -286,10 +286,10 @@ Item {
 
                 DropArea {
                     anchors.fill: parent
-                    onEntered: {
+                    onEntered: drag => {
                         drag.accepted = desktopModel.rowCount() < 20
                     }
-                    onDropped: {
+                    onDropped: drag => {
                         drag.source.desktops = [desktopModel.create(desktopModel.rowCount())];
                     }
                 }
