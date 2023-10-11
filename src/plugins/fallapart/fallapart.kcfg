@@ -6,7 +6,7 @@
     <kcfgfile arg="true"/>
     <group name="Effect-fallapart">
         <entry name="BlockSize" type="Int">
-            <default>40</default>
+            <default>60</default>
             <min>1</min>
             <max>100000</max>
         </entry>

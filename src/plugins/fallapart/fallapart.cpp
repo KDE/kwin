@@ -68,6 +68,22 @@ void FallApartEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, Wi
         const qreal t = animationIt->progress;
         // Request the window to be divided into cells
         quads = quads.makeGrid(blockSize);
+        // Divide cells into triangles with random directions for the diagonal cuts.
+        WindowQuadList triangles;
+        for (const WindowQuad &quad : std::as_const(quads)) {
+            auto triangle1 = quad;
+            auto triangle2 = quad;
+            if (std::rand() % 2) {
+                triangle1[3] = triangle1[0]; // bottom left moved to top left
+                triangle2[1] = triangle2[2]; // top right moved to bottom right
+            } else {
+                triangle1[2] = triangle1[1]; // bottom right moved to top right
+                triangle2[0] = triangle2[3]; // top left moved to bottom left
+            }
+            triangles.append(triangle1);
+            triangles.append(triangle2);
+        }
+        quads = triangles;
         int cnt = 0;
         for (WindowQuad &quad : quads) {
             // make fragments move in various directions, based on where
