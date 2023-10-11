@@ -80,11 +80,8 @@ DrmPipeline::Error DrmPipeline::present()
     if (gpu()->atomicModeSetting()) {
         // test the full state, to take pending commits into account
         auto fullState = std::make_unique<DrmAtomicCommit>(QList<DrmPipeline *>{this});
-        if (Error err = prepareAtomicPresentation(fullState.get()); err != Error::None) {
+        if (Error err = prepareAtomicCommit(fullState.get(), CommitMode::Test); err != Error::None) {
             return err;
-        }
-        if (m_pending.crtc->cursorPlane()) {
-            prepareAtomicCursor(fullState.get());
         }
         if (!fullState->test()) {
             return errnoToError();
@@ -94,6 +91,10 @@ DrmPipeline::Error DrmPipeline::present()
         if (Error err = prepareAtomicPresentation(primaryPlaneUpdate.get()); err != Error::None) {
             return err;
         }
+        if (m_pending.needsModesetProperties && !prepareAtomicModeset(primaryPlaneUpdate.get())) {
+            return Error::InvalidArguments;
+        }
+        atomicCommitSuccessful();
         m_commitThread->addCommit(std::move(primaryPlaneUpdate));
         return Error::None;
     } else {
@@ -135,20 +136,8 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QList<DrmPipeline *>
         }
     }
     for (const auto &pipeline : pipelines) {
-        if (pipeline->activePending()) {
-            if (pipeline->prepareAtomicPresentation(commit.get()) != Error::None) {
-                return Error::InvalidArguments;
-            }
-            if (pipeline->m_pending.crtc->cursorPlane()) {
-                pipeline->prepareAtomicCursor(commit.get());
-            }
-            if (mode == CommitMode::TestAllowModeset || mode == CommitMode::CommitModeset) {
-                if (!pipeline->prepareAtomicModeset(commit.get())) {
-                    return Error::InvalidArguments;
-                }
-            }
-        } else {
-            pipeline->prepareAtomicDisable(commit.get());
+        if (Error err = pipeline->prepareAtomicCommit(commit.get(), mode); err != Error::None) {
+            return err;
         }
     }
     for (const auto &unused : unusedObjects) {
@@ -160,9 +149,13 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QList<DrmPipeline *>
             qCDebug(KWIN_DRM) << "Atomic modeset test failed!" << strerror(errno);
             return errnoToError();
         }
-        const bool withoutModeset = commit->test();
+        const bool withoutModeset = std::all_of(pipelines.begin(), pipelines.end(), [](DrmPipeline *pipeline) {
+            auto commit = std::make_unique<DrmAtomicCommit>(QVector<DrmPipeline *>{pipeline});
+            return pipeline->prepareAtomicCommit(commit.get(), CommitMode::TestAllowModeset) == Error::None && commit->test();
+        });
         for (const auto &pipeline : pipelines) {
             pipeline->m_pending.needsModeset = !withoutModeset;
+            pipeline->m_pending.needsModesetProperties = true;
         }
         return Error::None;
     }
@@ -189,6 +182,26 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QList<DrmPipeline *>
     default:
         Q_UNREACHABLE();
     }
+}
+
+DrmPipeline::Error DrmPipeline::prepareAtomicCommit(DrmAtomicCommit *commit, CommitMode mode)
+{
+    if (activePending()) {
+        if (Error err = prepareAtomicPresentation(commit); err != Error::None) {
+            return err;
+        }
+        if (m_pending.crtc->cursorPlane()) {
+            prepareAtomicCursor(commit);
+        }
+        if (mode == CommitMode::TestAllowModeset || mode == CommitMode::CommitModeset || m_pending.needsModesetProperties) {
+            if (!prepareAtomicModeset(commit)) {
+                return Error::InvalidArguments;
+            }
+        }
+    } else {
+        prepareAtomicDisable(commit);
+    }
+    return Error::None;
 }
 
 static QRect centerBuffer(const QSize &bufferSize, const QSize &modeSize)
@@ -365,6 +378,7 @@ DrmPipeline::Error DrmPipeline::errnoToError()
 void DrmPipeline::atomicCommitSuccessful()
 {
     m_pending.needsModeset = false;
+    m_pending.needsModesetProperties = false;
     m_current = m_pending;
 }
 

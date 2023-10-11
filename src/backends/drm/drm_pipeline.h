@@ -157,6 +157,7 @@ private:
 
     // atomic modesetting only
     void atomicCommitSuccessful();
+    Error prepareAtomicCommit(DrmAtomicCommit *commit, CommitMode mode);
     bool prepareAtomicModeset(DrmAtomicCommit *commit);
     Error prepareAtomicPresentation(DrmAtomicCommit *commit);
     void prepareAtomicCursor(DrmAtomicCommit *commit);
@@ -176,6 +177,7 @@ private:
         bool active = true; // whether or not the pipeline should be currently used
         bool enabled = true; // whether or not the pipeline needs a crtc
         bool needsModeset = false;
+        bool needsModesetProperties = false;
         std::shared_ptr<DrmConnectorMode> mode;
         uint32_t overscan = 0;
         Output::RgbRange rgbRange = Output::RgbRange::Automatic;
