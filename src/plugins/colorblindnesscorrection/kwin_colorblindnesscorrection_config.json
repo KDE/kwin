@@ -16,6 +16,7 @@
         "Name[sl]": "Popravek za barvno slepoto",
         "Name[tr]": "Renk Körlüğü Düzeltmesi",
         "Name[uk]": "Виправлення для дальтонізму",
-        "Name[x-test]": "xxColorblindness Correctionxx"
+        "Name[x-test]": "xxColorblindness Correctionxx",
+        "Name[zh_CN]": "色盲校正"
     }
 }

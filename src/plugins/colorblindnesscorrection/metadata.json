@@ -17,6 +17,7 @@
         "Description[tr]": "Renk körlüğü aralığında renk algısını iyileştirir",
         "Description[uk]": "Удосконалює сприйняття кольорів для випадків дальтонізму",
         "Description[x-test]": "xxEnhances color perception for color blindnessxx",
+        "Description[zh_CN]": "增强色盲人士的颜色感知",
         "EnabledByDefault": false,
         "License": "GPL-2.0+",
         "Name": "Colorblindness Correction",
@@ -34,7 +35,8 @@
         "Name[sl]": "Popravek za barvno slepoto",
         "Name[tr]": "Renk Körlüğü Düzeltmesi",
         "Name[uk]": "Виправлення для дальтонізму",
-        "Name[x-test]": "xxColorblindness Correctionxx"
+        "Name[x-test]": "xxColorblindness Correctionxx",
+        "Name[zh_CN]": "色盲校正"
     },
     "X-KDE-ConfigModule": "kwin_colorblindnesscorrection_config"
 }
