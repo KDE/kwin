@@ -26,6 +26,7 @@ enum ScreenShotFlag {
     ScreenShotIncludeDecoration = 0x1, ///< Include window titlebar and borders
     ScreenShotIncludeCursor = 0x2, ///< Include the cursor
     ScreenShotNativeResolution = 0x4, ///< Take the screenshot at the native resolution
+    ScreenShotIncludeShadow = 0x8, ///< Include the window shadow
 };
 Q_DECLARE_FLAGS(ScreenShotFlags, ScreenShotFlag)
 
