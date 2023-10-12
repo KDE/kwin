@@ -110,6 +110,7 @@ target_sources(kwin PRIVATE
     libkwineffects/effecttogglablestate.cpp
     libkwineffects/glframebuffer.cpp
     libkwineffects/gllut.cpp
+    libkwineffects/gllut3D.cpp
     libkwineffects/glplatform.cpp
     libkwineffects/glshader.cpp
     libkwineffects/glshadermanager.cpp
@@ -432,6 +433,7 @@ install(FILES
     libkwineffects/colorspace.h
     libkwineffects/glframebuffer.h
     libkwineffects/gllut.h
+    libkwineffects/gllut3D.h
     libkwineffects/glplatform.h
     libkwineffects/glshader.h
     libkwineffects/glshadermanager.h
