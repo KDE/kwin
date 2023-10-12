@@ -16,7 +16,9 @@
 #include "libkwineffects/rendertarget.h"
 #include "libkwineffects/renderviewport.h"
 
+#include <QGuiApplication>
 #include <QPainter>
+#include <QScreen>
 
 namespace KWin
 {
@@ -142,7 +144,17 @@ QFuture<QImage> ScreenShotEffect::scheduleScreenShot(const QRect &area, ScreenSh
 
     qreal devicePixelRatio = 1.0;
     if (flags & ScreenShotNativeResolution) {
-        for (const EffectScreen *screen : std::as_const(data.screens)) {
+        // We can't use EffectScreen DPR here because its DPR doesn't match the real DPR set by the
+        // Display Configuration KCM on X11, even though its geometry is scaled by the real DPR.
+        // That behavior is intentional. https://bugs.kde.org/show_bug.cgi?id=474778
+        const auto screens = QGuiApplication::screens();
+        QList<QScreen *> intersectingScreens;
+        for (auto screen : screens) {
+            if (screen->geometry().intersects(area)) {
+                intersectingScreens.append(screen);
+            }
+        }
+        for (const auto *screen : std::as_const(intersectingScreens)) {
             if (screen->devicePixelRatio() > devicePixelRatio) {
                 devicePixelRatio = screen->devicePixelRatio();
             }
