@@ -93,10 +93,6 @@ int WindowSystem::numberOfDesktops()
     return 1;
 }
 
-void WindowSystem::raiseWindow(WId win)
-{
-}
-
 QString WindowSystem::readNameProperty(WId window, long unsigned int atom)
 {
     return QString();

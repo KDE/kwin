@@ -35,7 +35,6 @@ public:
     void clearState(WId win, NET::States state) override;
     void minimizeWindow(WId win) override;
     void unminimizeWindow(WId win) override;
-    void raiseWindow(WId win) override;
     QRect workArea(int desktop) override;
     QRect workArea(const QList<WId> &excludes, int desktop) override;
     QString desktopName(int desktop) override;
