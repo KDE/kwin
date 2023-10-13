@@ -555,6 +555,18 @@ void OutputConfigurationStore::load()
             // without an identifier the settings are useless
             // we still have to push something into the list so that the indices stay correct
             outputDatas.push_back(std::nullopt);
+            qCWarning(KWIN_CORE, "Output in config is missing identifiers");
+            continue;
+        }
+        const bool hasDuplicate = std::any_of(outputDatas.begin(), outputDatas.end(), [&state](const auto &data) {
+            return data
+                && data->edidIdentifier == state.edidIdentifier
+                && data->mstPath == state.mstPath
+                && data->connectorName == state.connectorName;
+        });
+        if (hasDuplicate) {
+            qCWarning(KWIN_CORE, "Duplicate output found in config");
+            outputDatas.push_back(std::nullopt);
             continue;
         }
         if (const auto it = data.find("mode"); it != data.end()) {
