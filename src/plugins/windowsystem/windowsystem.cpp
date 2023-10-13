@@ -74,10 +74,6 @@ QPixmap WindowSystem::icon(WId win, int width, int height, bool scale, int flags
     return QPixmap();
 }
 
-void WindowSystem::lowerWindow(WId win)
-{
-}
-
 bool WindowSystem::mapViewport()
 {
     return false;
