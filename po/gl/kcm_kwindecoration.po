@@ -1,6 +1,5 @@
 # translation of kcmkwindecoration.po to galician
 # Copyright (C) 2002, 2003, 2004, 2006, 2007, 2008, 2009 Free Software Foundation, Inc.
-#
 # Javier Jardón <javierjc@mundo-r.com>, 2002, 2003.
 # Xabier García Feal <xabigf@gmx.net>, 2004.
 # Xabi G. Feal <xabigf@gmx.net>, 2006.
@@ -9,13 +8,14 @@
 # Marce Villarino <mvillarino@kde-espana.es>, 2009, 2011.
 # Marce Villarino <mvillarino@kde-espana.es>, 2012, 2013, 2014.
 # Adrián Chaves Fernández <adriyetichaves@gmail.com>, 2015.
-# Adrian Chaves <adrian@chaves.io>, 2018, 2019.
+# SPDX-FileCopyrightText: 2018, 2019, 2023 Adrian Chaves <adrian@chaves.io>
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-26 02:32+0000\n"
-"PO-Revision-Date: 2019-10-19 22:07+0200\n"
+"PO-Revision-Date: 2023-10-12 23:43+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
 "Language: gl\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 19.11.70\n"
+"X-Generator: Lokalize 23.08.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -39,7 +39,7 @@ msgstr ""
 #: declarative-plugin/buttonsmodel.cpp:53
 #, kde-format
 msgid "More actions for this window"
-msgstr ""
+msgstr "Máis accións para esta xanela"
 
 #: declarative-plugin/buttonsmodel.cpp:55
 #, kde-format
@@ -79,12 +79,12 @@ msgstr "Recoller"
 #: declarative-plugin/buttonsmodel.cpp:69
 #, kde-format
 msgid "Keep below other windows"
-msgstr ""
+msgstr "Manter debaixo doutras xanelas"
 
 #: declarative-plugin/buttonsmodel.cpp:71
 #, kde-format
 msgid "Keep above other windows"
-msgstr ""
+msgstr "Manter enriba doutras xanelas"
 
 #: kcm.cpp:49
 #, kde-format
@@ -99,13 +99,13 @@ msgstr "Valerio Pilo"
 #: kcm.cpp:54
 #, kde-format
 msgid "Author"
-msgstr "Autor"
+msgstr "Autoría"
 
 #: kcm.cpp:183
 #, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme's default (%1)"
-msgstr ""
+msgstr "Predeterminado do tema (%1)"
 
 #: kwin-applywindowdecoration.cpp:32
 #, kde-format
@@ -114,6 +114,9 @@ msgid ""
 "active session, without accidentally setting it to one that is either not "
 "available, or which is already set."
 msgstr ""
+"Esta ferramenta permítelle definir o tema de decoración de xanela para a "
+"sesión activa, sen definir accidentalmente unha que non estea dispoñíbel ou "
+"xa estea definida."
 
 #: kwin-applywindowdecoration.cpp:33
 #, kde-format
@@ -122,12 +125,15 @@ msgid ""
 "full path will attempt to find a theme in that directory, and then apply "
 "that if one can be deduced."
 msgstr ""
+"O nome do tema de decoración de xanela que quere definir para KWin. Se "
+"indica a ruta completa intentarase atopar un tema no cartafol indicado, e "
+"aplicalo en caso de atopalo."
 
 #: kwin-applywindowdecoration.cpp:34
 #, kde-format
 msgid ""
 "Show all the themes available on the system (and which is the current theme)"
-msgstr ""
+msgstr "Amosar todos os temas dispoñíbeis no sistema (e cal é o actual)."
 
 #: kwin-applywindowdecoration.cpp:65
 #, kde-format
@@ -135,6 +141,8 @@ msgid ""
 "Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
 "as your current theme."
 msgstr ""
+"Resolveuse %1 ao tema Aurorae de KWin «%2», e intentarase definilo como o "
+"tema actual."
 
 #: kwin-applywindowdecoration.cpp:71
 #, kde-format
@@ -142,17 +150,21 @@ msgid ""
 "You attempted to pass a file path, but this could not be resolved to a "
 "theme, and we will have to abort, due to having no theme to set"
 msgstr ""
+"Intentou indicar unha ruta de ficheiro, pero non foi posíbel resolvela a un "
+"tema, e o proceso interromperase por non haber un tema para definir."
 
 #: kwin-applywindowdecoration.cpp:77
 #, kde-format
 msgid ""
 "The requested theme \"%1\" is already set as the window decoration theme."
 msgstr ""
+"O tema solicitado, «%1», xa está definido como o tema de decoración de "
+"xanelas."
 
 #: kwin-applywindowdecoration.cpp:99
 #, kde-format
 msgid "Successfully applied the cursor theme %1 to your current Plasma session"
-msgstr ""
+msgstr "Aplicouse o tema de cursores %1 á sesión actual de Plasma."
 
 #: kwin-applywindowdecoration.cpp:103
 #, kde-format
@@ -160,6 +172,8 @@ msgid ""
 "Failed to save your theme settings - the reason is unknown, but this is an "
 "unrecoverable error. You may find that simply trying again will work."
 msgstr ""
+"Non foi posíbel gardar a configuración do tema. Descoñécese o motivo, pero "
+"trátase dun erro irrecuperábel. Pode que intentalo de novo funcione."
 
 #: kwin-applywindowdecoration.cpp:107
 #, kde-format
@@ -167,11 +181,13 @@ msgid ""
 "Could not find theme \"%1\". The theme should be one of the following "
 "options: %2"
 msgstr ""
+"Non foi posíbel atopar o tema «%1». O tema debería ser unha das seguintes "
+"opcións: %2"
 
 #: kwin-applywindowdecoration.cpp:112
 #, kde-format
 msgid "You have the following KWin window decoration themes on your system:"
-msgstr ""
+msgstr "Ten os seguintes temas de decoración de xanelas de KWin no sistema:"
 
 #: package/contents/ui/Buttons.qml:85
 #, kde-format
@@ -206,9 +222,7 @@ msgid "Titlebar Buttons"
 msgstr "Botóns da barra de título"
 
 #: package/contents/ui/main.qml:92
-#, fuzzy, kde-format
-#| msgctxt "combobox label"
-#| msgid "Window border size:"
+#, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "Tamaño dos bordos de xanela:"
@@ -229,13 +243,13 @@ msgstr "Pechar as xanelas cun dobre clic no botón do menú"
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the menu button to show the menu."
-msgstr ""
+msgstr "Manteña premido o botón do menú para amosar o menú."
 
 #: package/contents/ui/main.qml:163
 #, kde-format
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
-msgstr "Amosar as axudas dos botóns de título de xanela"
+msgstr "Amosar indicacións emerxentes nos botóns da barra de título."
 
 #: package/contents/ui/Themes.qml:90
 #, kde-format
@@ -255,7 +269,7 @@ msgstr "Sen bordos laterais"
 #: utils.cpp:27
 #, kde-format
 msgid "Tiny"
-msgstr "Pequerrechos"
+msgstr "Ananos"
 
 #: utils.cpp:28
 #, kde-format
