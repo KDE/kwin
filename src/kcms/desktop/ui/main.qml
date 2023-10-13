@@ -151,11 +151,8 @@ KCM.ScrollViewKCM {
             label: i18n("Row %1", section)
         }
 
-        delegate: Kirigami.DelegateRecycler {
-            width: desktopsList.width
-
-            sourceComponent: desktopsListItemComponent
-        }
+        delegate: desktopsListItemComponent
+        reuseItems: true
     }
 
     footer: ColumnLayout {
