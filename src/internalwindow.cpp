@@ -38,11 +38,6 @@ InternalWindow::InternalWindow(QWindow *handle)
     connect(m_handle, &QWindow::opacityChanged, this, &InternalWindow::setOpacity);
     connect(m_handle, &QWindow::destroyed, this, &InternalWindow::destroyWindow);
 
-    const QVariant windowType = m_handle->property("kwin_windowType");
-    if (!windowType.isNull()) {
-        m_windowType = windowType.value<NET::WindowType>();
-    }
-
     setCaption(m_handle->title());
     setIcon(QIcon::fromTheme(QStringLiteral("kwin")));
     setOnAllDesktops(true);
@@ -118,10 +113,6 @@ bool InternalWindow::eventFilter(QObject *watched, QEvent *event)
         if (pe->propertyName() == s_shadowEnabledPropertyName) {
             updateShadow();
         }
-        if (pe->propertyName() == "kwin_windowType") {
-            m_windowType = m_handle->property("kwin_windowType").value<NET::WindowType>();
-            workspace()->updateClientArea();
-        }
     }
     return false;
 }
@@ -156,7 +147,7 @@ QSizeF InternalWindow::maxSize() const
 
 NET::WindowType InternalWindow::windowType(bool direct) const
 {
-    return m_windowType;
+    return NET::Normal;
 }
 
 void InternalWindow::killWindow()

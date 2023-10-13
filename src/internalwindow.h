@@ -94,7 +94,6 @@ private:
     QWindow *m_handle = nullptr;
     QString m_captionNormal;
     QString m_captionSuffix;
-    NET::WindowType m_windowType = NET::Normal;
     Qt::WindowFlags m_internalWindowFlags = Qt::WindowFlags();
     bool m_userNoBorder = false;
     GraphicsBufferRef m_graphicsBufferRef;

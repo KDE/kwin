@@ -27,8 +27,6 @@
 
 #include <linux/input.h>
 
-Q_DECLARE_METATYPE(NET::WindowType);
-
 namespace KWin
 {
 
@@ -57,10 +55,6 @@ private Q_SLOTS:
     void testModifierScroll();
     void testPopup();
     void testScale();
-    void testWindowType_data();
-    void testWindowType();
-    void testChangeWindowType_data();
-    void testChangeWindowType();
     void testEffectWindow();
     void testReentrantMoveResize();
     void testDismissPopup();
@@ -657,82 +651,6 @@ void InternalWindowTest::testScale()
     QTRY_COMPARE(windowAddedSpy.count(), 1);
     auto internalWindow = windowAddedSpy.first().first().value<InternalWindow *>();
     QCOMPARE(internalWindow->bufferScale(), 2);
-}
-
-void InternalWindowTest::testWindowType_data()
-{
-    QTest::addColumn<NET::WindowType>("windowType");
-
-    QTest::newRow("normal") << NET::Normal;
-    QTest::newRow("desktop") << NET::Desktop;
-    QTest::newRow("Dock") << NET::Dock;
-    QTest::newRow("Toolbar") << NET::Toolbar;
-    QTest::newRow("Menu") << NET::Menu;
-    QTest::newRow("Dialog") << NET::Dialog;
-    QTest::newRow("Utility") << NET::Utility;
-    QTest::newRow("Splash") << NET::Splash;
-    QTest::newRow("DropdownMenu") << NET::DropdownMenu;
-    QTest::newRow("PopupMenu") << NET::PopupMenu;
-    QTest::newRow("Tooltip") << NET::Tooltip;
-    QTest::newRow("Notification") << NET::Notification;
-    QTest::newRow("ComboBox") << NET::ComboBox;
-    QTest::newRow("OnScreenDisplay") << NET::OnScreenDisplay;
-    QTest::newRow("CriticalNotification") << NET::CriticalNotification;
-    QTest::newRow("AppletPopup") << NET::AppletPopup;
-}
-
-void InternalWindowTest::testWindowType()
-{
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
-    HelperWindow win;
-    win.setGeometry(0, 0, 100, 100);
-    QFETCH(NET::WindowType, windowType);
-    KWindowSystem::setType(win.winId(), windowType);
-    win.show();
-    QTRY_COMPARE(windowAddedSpy.count(), 1);
-    auto internalWindow = windowAddedSpy.first().first().value<InternalWindow *>();
-    QVERIFY(internalWindow);
-    QCOMPARE(internalWindow->windowType(), windowType);
-}
-
-void InternalWindowTest::testChangeWindowType_data()
-{
-    QTest::addColumn<NET::WindowType>("windowType");
-
-    QTest::newRow("desktop") << NET::Desktop;
-    QTest::newRow("Dock") << NET::Dock;
-    QTest::newRow("Toolbar") << NET::Toolbar;
-    QTest::newRow("Menu") << NET::Menu;
-    QTest::newRow("Dialog") << NET::Dialog;
-    QTest::newRow("Utility") << NET::Utility;
-    QTest::newRow("Splash") << NET::Splash;
-    QTest::newRow("DropdownMenu") << NET::DropdownMenu;
-    QTest::newRow("PopupMenu") << NET::PopupMenu;
-    QTest::newRow("Tooltip") << NET::Tooltip;
-    QTest::newRow("Notification") << NET::Notification;
-    QTest::newRow("ComboBox") << NET::ComboBox;
-    QTest::newRow("OnScreenDisplay") << NET::OnScreenDisplay;
-    QTest::newRow("CriticalNotification") << NET::CriticalNotification;
-    QTest::newRow("AppletPopup") << NET::AppletPopup;
-}
-
-void InternalWindowTest::testChangeWindowType()
-{
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
-    HelperWindow win;
-    win.setGeometry(0, 0, 100, 100);
-    win.show();
-    QTRY_COMPARE(windowAddedSpy.count(), 1);
-    auto internalWindow = windowAddedSpy.first().first().value<InternalWindow *>();
-    QVERIFY(internalWindow);
-    QCOMPARE(internalWindow->windowType(), NET::Normal);
-
-    QFETCH(NET::WindowType, windowType);
-    KWindowSystem::setType(win.winId(), windowType);
-    QTRY_COMPARE(internalWindow->windowType(), windowType);
-
-    KWindowSystem::setType(win.winId(), NET::Normal);
-    QTRY_COMPARE(internalWindow->windowType(), NET::Normal);
 }
 
 void InternalWindowTest::testEffectWindow()
