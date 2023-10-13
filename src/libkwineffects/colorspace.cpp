@@ -57,8 +57,8 @@ static QVector3D xyToXYZ(QVector2D xy)
 QMatrix3x3 Colorimetry::toXYZ() const
 {
     const auto r_xyz = xyToXYZ(red);
-    const auto g_xyz = xyToXYZ(blue);
-    const auto b_xyz = xyToXYZ(green);
+    const auto g_xyz = xyToXYZ(green);
+    const auto b_xyz = xyToXYZ(blue);
     const auto w_xyz = xyToXYZ(white);
     const auto component_scale = inverse(matrixFromColumns(r_xyz, g_xyz, b_xyz)) * w_xyz;
     return matrixFromColumns(r_xyz * component_scale.x(), g_xyz * component_scale.y(), b_xyz * component_scale.z());
