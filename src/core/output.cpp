@@ -579,6 +579,11 @@ QString Output::iccProfilePath() const
     return m_state.iccProfilePath;
 }
 
+QByteArray Output::mstPath() const
+{
+    return m_information.mstPath;
+}
+
 bool Output::updateCursorLayer()
 {
     return false;

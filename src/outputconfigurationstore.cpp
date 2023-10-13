@@ -128,12 +128,27 @@ std::optional<std::pair<OutputConfigurationStore::Setup *, std::unordered_map<Ou
 
 std::optional<size_t> OutputConfigurationStore::findOutput(Output *output, const QList<Output *> &allOutputs) const
 {
-    const bool hasDuplicate = std::any_of(allOutputs.begin(), allOutputs.end(), [output](Output *otherOutput) {
+    const bool duplicateEdid = std::any_of(allOutputs.begin(), allOutputs.end(), [output](Output *otherOutput) {
         return otherOutput != output && otherOutput->edid().identifier() == output->edid().identifier();
     });
-    const auto it = std::find_if(m_outputs.begin(), m_outputs.end(), [hasDuplicate, output](const auto &outputState) {
-        return outputState.edidIdentifier == output->edid().identifier()
-            && (!hasDuplicate || outputState.connectorName == output->name());
+    const bool duplicateMst = std::any_of(allOutputs.begin(), allOutputs.end(), [output](Output *otherOutput) {
+        return otherOutput != output && otherOutput->edid().identifier() == output->edid().identifier() && otherOutput->mstPath() == output->mstPath();
+    });
+    const auto it = std::find_if(m_outputs.begin(), m_outputs.end(), [duplicateEdid, duplicateMst, output](const auto &outputState) {
+        if (outputState.edidIdentifier != output->edid().identifier()) {
+            return false;
+        }
+        if (!duplicateEdid) {
+            return true;
+        }
+        if (!output->mstPath().isEmpty()) {
+            if (outputState.mstPath != output->mstPath()) {
+                return false;
+            } else if (!duplicateMst) {
+                return true;
+            }
+        }
+        return outputState.connectorName == output->name();
     });
     if (it != m_outputs.end()) {
         return std::distance(m_outputs.begin(), it);
@@ -181,6 +196,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
             m_outputs[*outputIndex] = OutputState{
                 .edidIdentifier = output->edid().identifier(),
                 .connectorName = output->name(),
+                .mstPath = output->mstPath(),
                 .mode = ModeData{
                     .size = mode->size(),
                     .refreshRate = mode->refreshRate(),
@@ -208,6 +224,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
             m_outputs[*outputIndex] = OutputState{
                 .edidIdentifier = output->edid().identifier(),
                 .connectorName = output->name(),
+                .mstPath = output->mstPath(),
                 .mode = ModeData{
                     .size = mode->size(),
                     .refreshRate = mode->refreshRate(),
@@ -528,6 +545,12 @@ void OutputConfigurationStore::load()
                 hasIdentifier = true;
             }
         }
+        if (const auto it = data.find("mstPath"); it != data.end()) {
+            if (const auto str = it->toString(); !str.isEmpty()) {
+                state.mstPath = str;
+                hasIdentifier = true;
+            }
+        }
         if (!hasIdentifier) {
             // without an identifier the settings are useless
             // we still have to push something into the list so that the indices stay correct
@@ -739,6 +762,9 @@ void OutputConfigurationStore::save()
         }
         if (output.connectorName) {
             o["connectorName"] = *output.connectorName;
+        }
+        if (!output.mstPath.isEmpty()) {
+            o["mstPath"] = output.mstPath;
         }
         if (output.mode) {
             QJsonObject mode;

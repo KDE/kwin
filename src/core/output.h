@@ -317,6 +317,10 @@ public:
     AutoRotationPolicy autoRotationPolicy() const;
     std::shared_ptr<IccProfile> iccProfile() const;
     QString iccProfilePath() const;
+    /**
+     * @returns the mst path of this output. Is empty if invalid
+     */
+    QByteArray mstPath() const;
 
     virtual bool setGammaRamp(const std::shared_ptr<ColorTransformation> &transformation);
     virtual bool setChannelFactors(const QVector3D &rgb);
@@ -399,6 +403,7 @@ protected:
         bool internal = false;
         bool placeholder = false;
         bool nonDesktop = false;
+        QByteArray mstPath;
     };
 
     struct State

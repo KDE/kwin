@@ -136,6 +136,7 @@ DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)
                                                             QByteArrayLiteral("BT2020_RGB"),
                                                             QByteArrayLiteral("BT2020_YCC"),
                                                         })
+    , path(this, QByteArrayLiteral("PATH"))
     , m_conn(drmModeGetConnector(gpu->fd(), connectorId))
     , m_pipeline(m_conn ? std::make_unique<DrmPipeline>(this) : nullptr)
 {
@@ -185,6 +186,11 @@ bool DrmConnector::isInternal() const
 QSize DrmConnector::physicalSize() const
 {
     return m_physicalSize;
+}
+
+QByteArray DrmConnector::mstPath() const
+{
+    return m_mstPath;
 }
 
 QList<std::shared_ptr<DrmConnectorMode>> DrmConnector::modes() const
@@ -245,6 +251,7 @@ bool DrmConnector::updateProperties()
     hdrMetadata.update(props);
     scalingMode.update(props);
     colorspace.update(props);
+    path.update(props);
 
     if (gpu()->atomicModeSetting() && !crtcId.isValid()) {
         return false;
@@ -295,6 +302,23 @@ bool DrmConnector::updateProperties()
         m_pipeline->applyPendingChanges();
         if (m_pipeline->output()) {
             m_pipeline->output()->updateModes();
+        }
+    }
+
+    m_mstPath.clear();
+    if (auto blob = path.immutableBlob()) {
+        QByteArray value = QByteArray(static_cast<const char *>(blob->data), blob->length);
+        if (value.startsWith("mst:")) {
+            // for backwards compatibility reasons the string also contains the drm connector id
+            // remove that to get a more stable identifier
+            const ssize_t firstHyphen = value.indexOf('-');
+            if (firstHyphen > 0) {
+                m_mstPath = value.mid(firstHyphen);
+            } else {
+                qCWarning(KWIN_DRM) << "Unexpected format in path property:" << value;
+            }
+        } else {
+            qCWarning(KWIN_DRM) << "Unknown path type detected:" << value;
         }
     }
 

@@ -85,6 +85,7 @@ DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn)
         .panelOrientation = conn->panelOrientation.isValid() ? DrmConnector::toKWinTransform(conn->panelOrientation.enumValue()) : OutputTransform::Normal,
         .internal = conn->isInternal(),
         .nonDesktop = conn->isNonDesktop(),
+        .mstPath = conn->mstPath(),
     });
 
     initialState.modes = getModes();

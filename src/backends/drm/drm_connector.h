@@ -64,6 +64,10 @@ public:
     QString connectorName() const;
     QString modelName() const;
     QSize physicalSize() const;
+    /**
+     * @returns the mst path of the connector. Is empty if invalid
+     */
+    QByteArray mstPath() const;
 
     QList<std::shared_ptr<DrmConnectorMode>> modes() const;
     std::shared_ptr<DrmConnectorMode> findMode(const drmModeModeInfo &modeInfo) const;
@@ -128,6 +132,7 @@ public:
     DrmProperty hdrMetadata;
     DrmEnumProperty<ScalingMode> scalingMode;
     DrmEnumProperty<Colorspace> colorspace;
+    DrmProperty path;
 
     static DrmContentType kwinToDrmContentType(ContentType type);
     static OutputTransform toKWinTransform(PanelOrientation orientation);
@@ -145,6 +150,7 @@ private:
     QList<std::shared_ptr<DrmConnectorMode>> m_driverModes;
     QList<std::shared_ptr<DrmConnectorMode>> m_modes;
     uint32_t m_possibleCrtcs = 0;
+    QByteArray m_mstPath;
 
     friend QDebug &operator<<(QDebug &s, const KWin::DrmConnector *obj);
 };
