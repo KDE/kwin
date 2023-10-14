@@ -120,6 +120,7 @@ public:
     bool isClientSupported() const;
 
     quint32 proximitySerial() const;
+    std::optional<quint32> downSerial() const;
 
     void sendProximityIn(TabletV2Interface *tablet);
     void sendProximityOut();
@@ -294,6 +295,8 @@ public:
     void removeDevice(const QString &sysname);
 
     bool isClientSupported(ClientConnection *client) const;
+
+    bool hasImplicitGrab(quint32 serial) const;
 
 private:
     friend class TabletManagerV2InterfacePrivate;
