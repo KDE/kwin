@@ -17,6 +17,7 @@
 #include "killprompt.h"
 #include "placement.h"
 #include "pointer_input.h"
+#include "tablet_input.h"
 #include "touch_input.h"
 #include "utils/subsurfacemonitor.h"
 #include "virtualdesktops.h"
@@ -27,6 +28,7 @@
 #include "wayland/server_decoration.h"
 #include "wayland/server_decoration_palette.h"
 #include "wayland/surface.h"
+#include "wayland/tablet_v2.h"
 #include "wayland/xdgdecoration_v1.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -913,15 +915,18 @@ void XdgToplevelWindow::handleWindowMenuRequested(SeatInterface *seat, const QPo
 
 void XdgToplevelWindow::handleMoveRequested(SeatInterface *seat, quint32 serial)
 {
-    if (!seat->hasImplicitPointerGrab(serial) && !seat->hasImplicitTouchGrab(serial)) {
+    if (!seat->hasImplicitPointerGrab(serial) && !seat->hasImplicitTouchGrab(serial)
+        && !waylandServer()->tabletManagerV2()->seat(seat)->hasImplicitGrab(serial)) {
         return;
     }
     if (isMovable()) {
         QPointF cursorPos;
         if (seat->hasImplicitPointerGrab(serial)) {
             cursorPos = input()->pointer()->pos();
-        } else {
+        } else if (seat->hasImplicitTouchGrab(serial)) {
             cursorPos = input()->touch()->position();
+        } else {
+            cursorPos = input()->tablet()->position();
         }
         performMouseCommand(Options::MouseMove, cursorPos);
     } else {
@@ -931,7 +936,8 @@ void XdgToplevelWindow::handleMoveRequested(SeatInterface *seat, quint32 serial)
 
 void XdgToplevelWindow::handleResizeRequested(SeatInterface *seat, XdgToplevelInterface::ResizeAnchor anchor, quint32 serial)
 {
-    if (!seat->hasImplicitPointerGrab(serial) && !seat->hasImplicitTouchGrab(serial)) {
+    if (!seat->hasImplicitPointerGrab(serial) && !seat->hasImplicitTouchGrab(serial)
+        && !waylandServer()->tabletManagerV2()->seat(seat)->hasImplicitGrab(serial)) {
         return;
     }
     if (!isResizable() || isShade()) {
@@ -944,8 +950,10 @@ void XdgToplevelWindow::handleResizeRequested(SeatInterface *seat, XdgToplevelIn
     QPointF cursorPos;
     if (seat->hasImplicitPointerGrab(serial)) {
         cursorPos = input()->pointer()->pos();
-    } else {
+    } else if (seat->hasImplicitTouchGrab(serial)) {
         cursorPos = input()->touch()->position();
+    } else {
+        cursorPos = input()->tablet()->position();
     }
     setInteractiveMoveOffset(cursorPos - pos()); // map from global
     setInvertedInteractiveMoveOffset(rect().bottomRight() - interactiveMoveOffset());

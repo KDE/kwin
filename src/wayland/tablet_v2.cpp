@@ -215,6 +215,7 @@ public:
 
     Display *const m_display;
     quint32 m_proximitySerial = 0;
+    std::optional<quint32> m_downSerial;
     bool m_cleanup = false;
     bool m_removed = false;
     QPointer<SurfaceInterface> m_surface;
@@ -293,6 +294,11 @@ void TabletToolV2Interface::setCurrentSurface(SurfaceInterface *surface)
 quint32 TabletToolV2Interface::proximitySerial() const
 {
     return d->m_proximitySerial;
+}
+
+std::optional<quint32> TabletToolV2Interface::downSerial() const
+{
+    return d->m_downSerial;
 }
 
 bool TabletToolV2Interface::isClientSupported() const
@@ -399,6 +405,7 @@ void TabletToolV2Interface::sendDown()
     for (auto *resource : d->targetResources()) {
         d->send_down(resource->handle, serial);
     }
+    d->m_downSerial = serial;
 }
 
 void TabletToolV2Interface::sendUp()
@@ -406,6 +413,7 @@ void TabletToolV2Interface::sendUp()
     for (auto *resource : d->targetResources()) {
         d->send_up(resource->handle);
     }
+    d->m_downSerial.reset();
 }
 
 class TabletPadRingV2InterfacePrivate : public QtWaylandServer::zwp_tablet_pad_ring_v2
@@ -961,6 +969,15 @@ TabletSeatV2Interface *TabletManagerV2Interface::seat(SeatInterface *seat) const
 bool TabletSeatV2Interface::isClientSupported(ClientConnection *client) const
 {
     return d->resourceMap().value(*client);
+}
+
+bool TabletSeatV2Interface::hasImplicitGrab(quint32 serial) const
+{
+    return std::any_of(d->m_tools.cbegin(), d->m_tools.cend(), [serial](const auto &tools) {
+        return std::any_of(tools.cbegin(), tools.cend(), [serial](const auto tool) {
+            return tool->downSerial() == serial;
+        });
+    });
 }
 
 TabletManagerV2Interface::~TabletManagerV2Interface() = default;
