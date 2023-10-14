@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-07 02:19+0000\n"
+"POT-Creation-Date: 2023-10-14 01:49+0000\n"
 "PO-Revision-Date: 2023-02-19 20:07+0100\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
@@ -85,45 +85,45 @@ msgstr ""
 msgid "Row %1"
 msgstr "Rad %1"
 
-#: ui/main.qml:164
+#: ui/main.qml:161
 #, kde-format
 msgctxt "@action:button"
 msgid "Add"
 msgstr "Legg til"
 
-#: ui/main.qml:182
+#: ui/main.qml:179
 #, kde-format
 msgid "1 Row"
 msgid_plural "%1 Rows"
 msgstr[0] "1 rad"
 msgstr[1] "%1 rader"
 
-#: ui/main.qml:198
+#: ui/main.qml:195
 #, kde-format
 msgid "Options:"
 msgstr "Val:"
 
-#: ui/main.qml:200
+#: ui/main.qml:197
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "Navigering går rundt"
 
-#: ui/main.qml:218
+#: ui/main.qml:215
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "Vis animasjon ved byte:"
 
-#: ui/main.qml:269
+#: ui/main.qml:266
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "Vis skjermmeldingar ved byte:"
 
-#: ui/main.qml:288
+#: ui/main.qml:285
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 ms"
 
-#: ui/main.qml:312
+#: ui/main.qml:309
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Vis skrivebordoppsett-indikatorar"

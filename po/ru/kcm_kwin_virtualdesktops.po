@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-07 02:19+0000\n"
+"POT-Creation-Date: 2023-10-14 01:49+0000\n"
 "PO-Revision-Date: 2022-12-23 10:32+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -94,13 +94,13 @@ msgstr ""
 msgid "Row %1"
 msgstr "Строка %1"
 
-#: ui/main.qml:164
+#: ui/main.qml:161
 #, kde-format
 msgctxt "@action:button"
 msgid "Add"
 msgstr "Добавить"
 
-#: ui/main.qml:182
+#: ui/main.qml:179
 #, kde-format
 msgid "1 Row"
 msgid_plural "%1 Rows"
@@ -109,32 +109,32 @@ msgstr[1] "%1 строки"
 msgstr[2] "%1 строк"
 msgstr[3] "1 строка"
 
-#: ui/main.qml:198
+#: ui/main.qml:195
 #, kde-format
 msgid "Options:"
 msgstr "Параметры:"
 
-#: ui/main.qml:200
+#: ui/main.qml:197
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "С переходом по циклу"
 
-#: ui/main.qml:218
+#: ui/main.qml:215
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "Анимация при переключении:"
 
-#: ui/main.qml:269
+#: ui/main.qml:266
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "Показывать экранное уведомление при переключении:"
 
-#: ui/main.qml:288
+#: ui/main.qml:285
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 мс"
 
-#: ui/main.qml:312
+#: ui/main.qml:309
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Схематический обзор всех рабочих столов"

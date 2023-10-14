@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-07 02:19+0000\n"
+"POT-Creation-Date: 2023-10-14 01:49+0000\n"
 "PO-Revision-Date: 2010-05-24 08:42+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer <support@khmeros.info>\n"
@@ -82,45 +82,45 @@ msgstr ""
 msgid "Row %1"
 msgstr ""
 
-#: ui/main.qml:164
+#: ui/main.qml:161
 #, kde-format
 msgctxt "@action:button"
 msgid "Add"
 msgstr ""
 
-#: ui/main.qml:182
+#: ui/main.qml:179
 #, kde-format
 msgid "1 Row"
 msgid_plural "%1 Rows"
 msgstr[0] ""
 
-#: ui/main.qml:198
+#: ui/main.qml:195
 #, kde-format
 msgid "Options:"
 msgstr ""
 
-#: ui/main.qml:200
+#: ui/main.qml:197
 #, fuzzy, kde-format
 #| msgid "Desktop navigation wraps around"
 msgid "Navigation wraps around"
 msgstr "កា​ររុករក​ផ្ទៃតុ​រុំ​ជុំវិញ"
 
-#: ui/main.qml:218
+#: ui/main.qml:215
 #, kde-format
 msgid "Show animation when switching:"
 msgstr ""
 
-#: ui/main.qml:269
+#: ui/main.qml:266
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr ""
 
-#: ui/main.qml:288
+#: ui/main.qml:285
 #, kde-format
 msgid "%1 ms"
 msgstr ""
 
-#: ui/main.qml:312
+#: ui/main.qml:309
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "បង្ហាញឧបករណ៍​បង្ហាញ​ប្លង់​ផ្ទៃតុ"

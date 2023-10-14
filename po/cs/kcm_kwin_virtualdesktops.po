@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-07 02:19+0000\n"
+"POT-Creation-Date: 2023-10-14 01:49+0000\n"
 "PO-Revision-Date: 2023-01-28 07:42+0100\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -83,13 +83,13 @@ msgstr ""
 msgid "Row %1"
 msgstr "Řádek %1"
 
-#: ui/main.qml:164
+#: ui/main.qml:161
 #, kde-format
 msgctxt "@action:button"
 msgid "Add"
 msgstr "Přidat"
 
-#: ui/main.qml:182
+#: ui/main.qml:179
 #, kde-format
 msgid "1 Row"
 msgid_plural "%1 Rows"
@@ -97,32 +97,32 @@ msgstr[0] "1 řádek"
 msgstr[1] "%1 řádky"
 msgstr[2] "%1 řádků"
 
-#: ui/main.qml:198
+#: ui/main.qml:195
 #, kde-format
 msgid "Options:"
 msgstr "Možnosti:"
 
-#: ui/main.qml:200
+#: ui/main.qml:197
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "Přepínání rotuje dokola"
 
-#: ui/main.qml:218
+#: ui/main.qml:215
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "Při přepínání zobrazit animaci:"
 
-#: ui/main.qml:269
+#: ui/main.qml:266
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "Zobrazit On Screen Display při přepínání:"
 
-#: ui/main.qml:288
+#: ui/main.qml:285
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 ms"
 
-#: ui/main.qml:312
+#: ui/main.qml:309
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Zobrazit ukazatele rozložení plochy"

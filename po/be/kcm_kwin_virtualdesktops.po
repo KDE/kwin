@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 86ff119b1606fcaa910d6b44fc14b611\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-07 02:19+0000\n"
+"POT-Creation-Date: 2023-10-14 01:49+0000\n"
 "PO-Revision-Date: 2023-02-08 13:45\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@gmail.com>\n"
 "Language-Team: Belarusian\n"
@@ -89,13 +89,13 @@ msgstr ""
 msgid "Row %1"
 msgstr "Радок %1"
 
-#: ui/main.qml:164
+#: ui/main.qml:161
 #, kde-format
 msgctxt "@action:button"
 msgid "Add"
 msgstr "Дадаць"
 
-#: ui/main.qml:182
+#: ui/main.qml:179
 #, kde-format
 msgid "1 Row"
 msgid_plural "%1 Rows"
@@ -104,32 +104,32 @@ msgstr[1] "%1 радкі"
 msgstr[2] "%1 радкоў"
 msgstr[3] "%1 радкі"
 
-#: ui/main.qml:198
+#: ui/main.qml:195
 #, kde-format
 msgid "Options:"
 msgstr "Параметры:"
 
-#: ui/main.qml:200
+#: ui/main.qml:197
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "Навігацыя па коле"
 
-#: ui/main.qml:218
+#: ui/main.qml:215
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "Паказ анімацыі пры пераключэнні:"
 
-#: ui/main.qml:269
+#: ui/main.qml:266
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "Паказ індыкацыі пры пераключэнні:"
 
-#: ui/main.qml:288
+#: ui/main.qml:285
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 мс"
 
-#: ui/main.qml:312
+#: ui/main.qml:309
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Паказваць індыкатары макета працоўных сталоў"

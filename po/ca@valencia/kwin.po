@@ -1211,7 +1211,7 @@ msgstr "Espera més llarga"
 #: input.cpp:2016
 #, kde-format
 msgid "Move the tablet to the next output"
-msgstr "Mou la tauleta a l'eixida següent"
+msgstr "Mou la tauleta cap a l'eixida següent"
 
 #: input.cpp:2095
 #, kde-format
@@ -3695,12 +3695,12 @@ msgstr "&Escriptoris"
 #: useractions.cpp:424
 #, kde-format
 msgid "Move to &Desktop"
-msgstr "Mou a l'&escriptori"
+msgstr "Mou cap a l'&escriptori"
 
 #: useractions.cpp:441
 #, kde-format
 msgid "Move to &Screen"
-msgstr "Mou a la &pantalla"
+msgstr "Mou cap a la &pantalla"
 
 #: useractions.cpp:457
 #, kde-format
@@ -3710,7 +3710,7 @@ msgstr "Mostra en les &activitats"
 #: useractions.cpp:474
 #, kde-format
 msgid "Move &To Current Desktop"
-msgstr "Mou a l'escriptori ac&tual"
+msgstr "Mou cap a l'escriptori ac&tual"
 
 #: useractions.cpp:484 useractions.cpp:551
 #, kde-format
@@ -3726,7 +3726,7 @@ msgstr "Escriptori &nou"
 #: useractions.cpp:595
 #, kde-format
 msgid "Move to %1 %2"
-msgstr "Mou a %1 %2"
+msgstr "Mou cap a %1 %2"
 
 #: useractions.cpp:608
 #, kde-format
@@ -3738,7 +3738,7 @@ msgstr "Afig a un escriptori &nou"
 #, kde-format
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
-msgstr "Mou a un escriptori nou"
+msgstr "Mou cap a un escriptori nou"
 
 #: useractions.cpp:651
 #, kde-format
@@ -3756,7 +3756,7 @@ msgstr "&Totes les activitats"
 #: useractions.cpp:725
 #, kde-format
 msgid "Move to %1"
-msgstr "Mou a %1"
+msgstr "Mou cap a %1"
 
 #: useractions.cpp:844
 #, kde-format
@@ -3863,17 +3863,17 @@ msgstr "Drecera de configuració de la finestra"
 #: useractions.cpp:962
 #, kde-format
 msgid "Move Window to the Center"
-msgstr "Mou la finestra al centre"
+msgstr "Mou la finestra cap al centre"
 
 #: useractions.cpp:964
 #, kde-format
 msgid "Move Window Right"
-msgstr "Mou la finestra a la dreta"
+msgstr "Mou la finestra cap a la dreta"
 
 #: useractions.cpp:966
 #, kde-format
 msgid "Move Window Left"
-msgstr "Mou la finestra a l'esquerra"
+msgstr "Mou la finestra cap a l'esquerra"
 
 #: useractions.cpp:968
 #, kde-format
@@ -4018,37 +4018,37 @@ msgstr "Envia la finestra un escriptori avall"
 #: useractions.cpp:1034
 #, kde-format
 msgid "Move Window to Screen %1"
-msgstr "Mou la finestra a la pantalla %1"
+msgstr "Mou la finestra cap a la pantalla %1"
 
 #: useractions.cpp:1041
 #, kde-format
 msgid "Move Window to Next Screen"
-msgstr "Mou la finestra a la pantalla següent"
+msgstr "Mou la finestra cap a la pantalla següent"
 
 #: useractions.cpp:1043
 #, kde-format
 msgid "Move Window to Previous Screen"
-msgstr "Mou la finestra a la pantalla anterior"
+msgstr "Mou la finestra cap a la pantalla anterior"
 
 #: useractions.cpp:1045
 #, kde-format
 msgid "Move Window One Screen to the Right"
-msgstr "Mou la finestra una pantalla a la dreta"
+msgstr "Mou la finestra una pantalla cap a la dreta"
 
 #: useractions.cpp:1047
 #, kde-format
 msgid "Move Window One Screen to the Left"
-msgstr "Mou la finestra una pantalla a l'esquerra"
+msgstr "Mou la finestra una pantalla cap a l'esquerra"
 
 #: useractions.cpp:1049
 #, kde-format
 msgid "Move Window One Screen Up"
-msgstr "Mou la finestra una pantalla amunt"
+msgstr "Mou la finestra una pantalla cap amunt"
 
 #: useractions.cpp:1051
 #, kde-format
 msgid "Move Window One Screen Down"
-msgstr "Mou la finestra una pantalla avall"
+msgstr "Mou la finestra una pantalla cap avall"
 
 #: useractions.cpp:1055
 #, kde-format
