@@ -228,17 +228,21 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
     WindowPaintData d;
     QRectF geometry = window->expandedGeometry();
     qreal devicePixelRatio = 1;
-    if (window->hasDecoration() && !(screenshot->flags & ScreenShotIncludeDecoration)) {
+    bool includeDecorations = (screenshot->flags & ScreenShotIncludeDecoration);
+    bool includeShadow = (screenshot->flags & ScreenShotIncludeShadow);
+
+    if (window->hasDecoration() && !includeDecorations) {
         geometry = window->clientGeometry();
-    }
-    if (window->hasDecoration() && !(screenshot->flags & ScreenShotIncludeShadow)) {
+    } else if (window->hasDecoration() && !includeShadow) {
         geometry = window->frameGeometry();
     }
+
     if (screenshot->flags & ScreenShotNativeResolution) {
         if (const EffectScreen *screen = window->screen()) {
             devicePixelRatio = screen->devicePixelRatio();
         }
     }
+
     bool validTarget = true;
     std::unique_ptr<GLTexture> offscreenTexture;
     std::unique_ptr<GLFramebuffer> target;
