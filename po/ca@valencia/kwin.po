@@ -1170,7 +1170,7 @@ msgstr "Espera més llarga"
 #: input.cpp:2014
 #, kde-format
 msgid "Move the tablet to the next output"
-msgstr "Mou la tauleta a l'eixida següent"
+msgstr "Mou la tauleta cap a l'eixida següent"
 
 #: input.cpp:2093
 #, kde-format
@@ -2340,12 +2340,12 @@ msgstr "&Escriptoris"
 #: useractions.cpp:475
 #, kde-format
 msgid "Move to &Desktop"
-msgstr "Mou a l'&escriptori"
+msgstr "Mou cap a l'&escriptori"
 
 #: useractions.cpp:492
 #, kde-format
 msgid "Move to &Screen"
-msgstr "Mou a la &pantalla"
+msgstr "Mou cap a la &pantalla"
 
 #: useractions.cpp:508
 #, kde-format
@@ -2355,7 +2355,7 @@ msgstr "Mostra en les &activitats"
 #: useractions.cpp:525
 #, kde-format
 msgid "Move &To Current Desktop"
-msgstr "Mou a l'escriptori ac&tual"
+msgstr "Mou cap a l'escriptori ac&tual"
 
 #: useractions.cpp:535 useractions.cpp:602
 #, kde-format
@@ -2371,7 +2371,7 @@ msgstr "Escriptori &nou"
 #: useractions.cpp:646
 #, kde-format
 msgid "Move to %1 %2"
-msgstr "Mou a %1 %2"
+msgstr "Mou cap a %1 %2"
 
 #: useractions.cpp:659
 #, kde-format
@@ -2383,7 +2383,7 @@ msgstr "Afig a un escriptori &nou"
 #, kde-format
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
-msgstr "Mou a un escriptori nou"
+msgstr "Mou cap a un escriptori nou"
 
 #: useractions.cpp:702
 #, kde-format
@@ -2401,7 +2401,7 @@ msgstr "&Totes les activitats"
 #: useractions.cpp:776
 #, kde-format
 msgid "Move to %1"
-msgstr "Mou a %1"
+msgstr "Mou cap a %1"
 
 #: useractions.cpp:901
 #, kde-format
@@ -2508,17 +2508,17 @@ msgstr "Drecera de configuració de la finestra"
 #: useractions.cpp:1019
 #, kde-format
 msgid "Move Window to the Center"
-msgstr "Mou la finestra al centre"
+msgstr "Mou la finestra cap al centre"
 
 #: useractions.cpp:1021
 #, kde-format
 msgid "Move Window Right"
-msgstr "Mou la finestra a la dreta"
+msgstr "Mou la finestra cap a la dreta"
 
 #: useractions.cpp:1023
 #, kde-format
 msgid "Move Window Left"
-msgstr "Mou la finestra a l'esquerra"
+msgstr "Mou la finestra cap a l'esquerra"
 
 #: useractions.cpp:1025
 #, kde-format
