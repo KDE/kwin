@@ -1,9 +1,10 @@
 # SPDX-FileCopyrightText: 2023 Fushan Wen <qydwhotmail@gmail.com>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
-File=colorblindnesscorrection_settings.kcfg
+File=@SETTINGS_HEADERS@.kcfg
 ClassName=ColorBlindnessCorrectionSettings
+DefaultValueGetters=@GENERATE_MOC@
+GenerateProperties=@GENERATE_MOC@
+ParentInConstructor=@GENERATE_MOC@
+Singleton=@USE_SINGLETON@
 Mutators=true
-DefaultValueGetters=true
-GenerateProperties=true
-ParentInConstructor=true

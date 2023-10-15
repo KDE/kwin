@@ -16,7 +16,7 @@ KCM.SimpleKCM {
     id: root
 
     implicitWidth: Kirigami.Units.gridUnit * 30
-    implicitHeight: Kirigami.Units.gridUnit * 22
+    implicitHeight: Kirigami.Units.gridUnit * 24
 
     RowLayout {
         id: previewArea
@@ -67,6 +67,7 @@ KCM.SimpleKCM {
         }
 
         QQC.ComboBox {
+            id: colorComboBox
             Kirigami.FormData.label: i18nc("@label", "Mode:")
             currentIndex: kcm.settings.mode
             textRole: "text"
@@ -78,6 +79,16 @@ KCM.SimpleKCM {
             ]
 
             onActivated: kcm.settings.mode = currentValue
+        }
+
+        QQC.Slider {
+            Kirigami.FormData.label: i18nc("@label", "Intensity:")
+            Layout.preferredWidth: colorComboBox.implicitWidth
+            from: 0.0
+            to: 1.0
+            value: kcm.settings.intensity
+
+            onMoved: kcm.settings.intensity = value
         }
     }
 }

@@ -3,6 +3,7 @@
 uniform sampler2D sampler;
 uniform vec4 modulation;
 uniform float saturation;
+uniform float intensity;
 varying vec2 texcoord0;
 
 void main()
@@ -27,7 +28,7 @@ void main()
     vec3 error = vec3((0.0809444479 * l) + (-0.130504409 * m) + (0.116721066 * s),
                       (-0.0102485335 * l) + (0.0540193266 * m) + (-0.113614708 * s),
                       (-0.000365296938 * l) + (-0.00412161469 * m) + (0.693511405 * s));
-    vec3 diff = tex.rgb - error;
+    vec3 diff = (tex.rgb - error) * vec3(intensity);
     vec3 correction = vec3(0.0,
                            (diff.r * 0.7) + (diff.g * 1.0),
                            (diff.r * 0.7) + (diff.b * 1.0));

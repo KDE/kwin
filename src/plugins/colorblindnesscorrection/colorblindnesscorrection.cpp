@@ -6,12 +6,10 @@
 
 #include "colorblindnesscorrection.h"
 
-#include <KSharedConfig>
-
 #include "effect/effecthandler.h"
 #include "opengl/glshader.h"
 
-#include "colorblindnesscorrection_settings.h"
+#include "colorblindnesscorrection_settings_singleton.h"
 
 Q_LOGGING_CATEGORY(KWIN_COLORBLINDNESS_CORRECTION, "kwin_effect_colorblindnesscorrection", QtWarningMsg)
 
@@ -26,8 +24,11 @@ namespace KWin
 
 ColorBlindnessCorrectionEffect::ColorBlindnessCorrectionEffect()
     : OffscreenEffect()
-    , m_mode(static_cast<Mode>(ColorBlindnessCorrectionSettings().mode()))
 {
+    ColorBlindnessCorrectionSettings::instance(effects->config());
+    m_mode = static_cast<Mode>(ColorBlindnessCorrectionSettings::mode());
+    m_intensity = std::clamp<float>(ColorBlindnessCorrectionSettings::intensity(), 0.0f, 1.0f);
+
     loadData();
 }
 
@@ -63,6 +64,10 @@ void ColorBlindnessCorrectionEffect::loadData()
     if (!m_shader->isValid()) {
         qCCritical(KWIN_COLORBLINDNESS_CORRECTION) << "Failed to load the shader!";
         return;
+    }
+
+    if (ShaderBinder binder{m_shader.get()}; !m_shader->setUniform("intensity", m_intensity)) {
+        qCWarning(KWIN_COLORBLINDNESS_CORRECTION) << "Failed to set intensity";
     }
 
     for (const auto windows = effects->stackingOrder(); EffectWindow * w : windows) {
@@ -108,12 +113,15 @@ void ColorBlindnessCorrectionEffect::reconfigure(ReconfigureFlags flags)
         return;
     }
 
-    auto newMode = static_cast<Mode>(ColorBlindnessCorrectionSettings().mode());
-    if (m_mode == newMode) {
+    ColorBlindnessCorrectionSettings::self()->read();
+    const auto newMode = static_cast<Mode>(ColorBlindnessCorrectionSettings::mode());
+    const auto newIntensity = std::clamp<float>(ColorBlindnessCorrectionSettings::intensity(), 0.0f, 1.0f);
+    if (m_mode == newMode && qFuzzyCompare(m_intensity, newIntensity)) {
         return;
     }
 
     m_mode = newMode;
+    m_intensity = newIntensity;
 
     disconnect(effects, &EffectsHandler::windowDeleted, this, &ColorBlindnessCorrectionEffect::slotWindowDeleted);
     disconnect(effects, &EffectsHandler::windowAdded, this, &ColorBlindnessCorrectionEffect::correctColor);
