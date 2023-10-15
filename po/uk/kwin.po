@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-10 01:47+0000\n"
+"POT-Creation-Date: 2023-10-15 01:40+0000\n"
 "PO-Revision-Date: 2023-10-08 08:51+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
@@ -1557,7 +1557,7 @@ msgctxt "@option"
 msgid "Tritanopia (blue-yellow)"
 msgstr "Тритаопія (нечутливість до синього-жовтого)"
 
-#: plugins/colorpicker/colorpicker.cpp:102
+#: plugins/colorpicker/colorpicker.cpp:103
 #, kde-format
 msgid ""
 "Select a position for color picking with left click or enter.\n"
