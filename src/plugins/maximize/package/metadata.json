@@ -116,7 +116,6 @@
         "Name[zh_TW]": "最大化"
     },
     "X-KDE-Ordering": "60",
-    "X-KDE-ParentApp": "",
     "X-KWin-Video-Url": "https://files.kde.org/plasma/kwin/effect-videos/maximize.ogv",
     "X-Plasma-API": "javascript"
 }
