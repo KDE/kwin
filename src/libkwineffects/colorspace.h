@@ -61,17 +61,17 @@ public:
      * @param tf the transfer function of this description
      * @param sdrBrightness the brightness of SDR content
      * @param minHdrBrightness the minimum brightness of HDR content
-     * @param maxHdrBrightness the maximum brightness of HDR content, if the whole screen is white
+     * @param maxFrameAverageBrightness the maximum brightness of HDR content, if the whole screen is white
      * @param maxHdrHighlightBrightness the maximum brightness of HDR content, for a small part of the screen only
      */
-    explicit ColorDescription(const Colorimetry &colorimety, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxHdrBrightness, double maxHdrHighlightBrightness);
-    explicit ColorDescription(NamedColorimetry colorimetry, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxHdrBrightness, double maxHdrHighlightBrightness);
+    explicit ColorDescription(const Colorimetry &colorimety, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxFrameAverageBrightness, double maxHdrHighlightBrightness);
+    explicit ColorDescription(NamedColorimetry colorimetry, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxFrameAverageBrightness, double maxHdrHighlightBrightness);
 
     const Colorimetry &colorimetry() const;
     NamedTransferFunction transferFunction() const;
     double sdrBrightness() const;
     double minHdrBrightness() const;
-    double maxHdrBrightness() const;
+    double maxFrameAverageBrightness() const;
     double maxHdrHighlightBrightness() const;
 
     bool operator==(const ColorDescription &other) const;
@@ -85,7 +85,7 @@ private:
     NamedTransferFunction m_transferFunction;
     double m_sdrBrightness;
     double m_minHdrBrightness;
-    double m_maxHdrBrightness;
+    double m_maxFrameAverageBrightness;
     double m_maxHdrHighlightBrightness;
 };
 }

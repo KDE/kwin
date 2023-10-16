@@ -100,22 +100,22 @@ constexpr Colorimetry Colorimetry::createFromName(NamedColorimetry name)
 
 const ColorDescription ColorDescription::sRGB = ColorDescription(NamedColorimetry::BT709, NamedTransferFunction::sRGB, 100, 0, 100, 100);
 
-ColorDescription::ColorDescription(const Colorimetry &colorimety, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxHdrBrightness, double maxHdrHighlightBrightness)
+ColorDescription::ColorDescription(const Colorimetry &colorimety, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxFrameAverageBrightness, double maxHdrHighlightBrightness)
     : m_colorimetry(colorimety)
     , m_transferFunction(tf)
     , m_sdrBrightness(sdrBrightness)
     , m_minHdrBrightness(minHdrBrightness)
-    , m_maxHdrBrightness(maxHdrBrightness)
+    , m_maxFrameAverageBrightness(maxFrameAverageBrightness)
     , m_maxHdrHighlightBrightness(maxHdrHighlightBrightness)
 {
 }
 
-ColorDescription::ColorDescription(NamedColorimetry colorimetry, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxHdrBrightness, double maxHdrHighlightBrightness)
+ColorDescription::ColorDescription(NamedColorimetry colorimetry, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxFrameAverageBrightness, double maxHdrHighlightBrightness)
     : m_colorimetry(Colorimetry::createFromName(colorimetry))
     , m_transferFunction(tf)
     , m_sdrBrightness(sdrBrightness)
     , m_minHdrBrightness(minHdrBrightness)
-    , m_maxHdrBrightness(maxHdrBrightness)
+    , m_maxFrameAverageBrightness(maxFrameAverageBrightness)
     , m_maxHdrHighlightBrightness(maxHdrHighlightBrightness)
 {
 }
@@ -140,9 +140,9 @@ double ColorDescription::minHdrBrightness() const
     return m_minHdrBrightness;
 }
 
-double ColorDescription::maxHdrBrightness() const
+double ColorDescription::maxFrameAverageBrightness() const
 {
-    return m_maxHdrBrightness;
+    return m_maxFrameAverageBrightness;
 }
 
 double ColorDescription::maxHdrHighlightBrightness() const
@@ -156,7 +156,7 @@ bool ColorDescription::operator==(const ColorDescription &other) const
         && m_transferFunction == other.transferFunction()
         && m_sdrBrightness == other.sdrBrightness()
         && m_minHdrBrightness == other.minHdrBrightness()
-        && m_maxHdrBrightness == other.maxHdrBrightness()
+        && m_maxFrameAverageBrightness == other.maxFrameAverageBrightness()
         && m_maxHdrHighlightBrightness == other.maxHdrHighlightBrightness();
 }
 
