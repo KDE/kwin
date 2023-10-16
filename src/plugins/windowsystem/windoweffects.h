@@ -18,9 +18,9 @@ public:
     ~WindowEffects() override;
 
     bool isEffectAvailable(KWindowEffects::Effect effect) override;
-    void slideWindow(WId id, KWindowEffects::SlideFromLocation location, int offset) override;
-    void enableBlurBehind(WId window, bool enable = true, const QRegion &region = QRegion()) override;
-    void enableBackgroundContrast(WId window, bool enable = true, qreal contrast = 1, qreal intensity = 1, qreal saturation = 1, const QRegion &region = QRegion()) override;
+    void slideWindow(QWindow *window, KWindowEffects::SlideFromLocation location, int offset) override;
+    void enableBlurBehind(QWindow *window, bool enable = true, const QRegion &region = QRegion()) override;
+    void enableBackgroundContrast(QWindow *window, bool enable = true, qreal contrast = 1, qreal intensity = 1, qreal saturation = 1, const QRegion &region = QRegion()) override;
 };
 
 }

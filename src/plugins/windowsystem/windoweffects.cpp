@@ -25,21 +25,6 @@ WindowEffects::~WindowEffects()
 {
 }
 
-namespace
-{
-QWindow *findWindow(WId win)
-{
-    const auto windows = qApp->allWindows();
-    auto it = std::find_if(windows.begin(), windows.end(), [win](QWindow *w) {
-        return w->handle() && w->winId() == win;
-    });
-    if (it == windows.end()) {
-        return nullptr;
-    }
-    return *it;
-}
-}
-
 bool WindowEffects::isEffectAvailable(KWindowEffects::Effect effect)
 {
     if (!effects) {
@@ -59,46 +44,33 @@ bool WindowEffects::isEffectAvailable(KWindowEffects::Effect effect)
     }
 }
 
-void WindowEffects::slideWindow(WId id, KWindowEffects::SlideFromLocation location, int offset)
+void WindowEffects::slideWindow(QWindow *window, KWindowEffects::SlideFromLocation location, int offset)
 {
-    auto w = findWindow(id);
-    if (!w) {
-        return;
-    }
-    w->setProperty("kwin_slide", QVariant::fromValue(location));
-    w->setProperty("kwin_slide_offset", offset);
+    window->setProperty("kwin_slide", QVariant::fromValue(location));
+    window->setProperty("kwin_slide_offset", offset);
 }
 
-void WindowEffects::enableBlurBehind(WId window, bool enable, const QRegion &region)
+void WindowEffects::enableBlurBehind(QWindow *window, bool enable, const QRegion &region)
 {
-    auto w = findWindow(window);
-    if (!w) {
-        return;
-    }
     if (enable) {
-        w->setProperty("kwin_blur", region);
+        window->setProperty("kwin_blur", region);
     } else {
-        w->setProperty("kwin_blur", {});
+        window->setProperty("kwin_blur", {});
     }
 }
 
-void WindowEffects::enableBackgroundContrast(WId window, bool enable, qreal contrast, qreal intensity, qreal saturation, const QRegion &region)
+void WindowEffects::enableBackgroundContrast(QWindow *window, bool enable, qreal contrast, qreal intensity, qreal saturation, const QRegion &region)
 {
-    auto w = findWindow(window);
-    if (!w) {
-        return;
-    }
     if (enable) {
-        w->setProperty("kwin_background_region", region);
-        w->setProperty("kwin_background_contrast", contrast);
-        w->setProperty("kwin_background_intensity", intensity);
-        w->setProperty("kwin_background_saturation", saturation);
+        window->setProperty("kwin_background_region", region);
+        window->setProperty("kwin_background_contrast", contrast);
+        window->setProperty("kwin_background_intensity", intensity);
+        window->setProperty("kwin_background_saturation", saturation);
     } else {
-        w->setProperty("kwin_background_region", {});
-        w->setProperty("kwin_background_contrast", {});
-        w->setProperty("kwin_background_intensity", {});
-        w->setProperty("kwin_background_saturation", {});
+        window->setProperty("kwin_background_region", {});
+        window->setProperty("kwin_background_contrast", {});
+        window->setProperty("kwin_background_intensity", {});
+        window->setProperty("kwin_background_saturation", {});
     }
 }
-
 }
