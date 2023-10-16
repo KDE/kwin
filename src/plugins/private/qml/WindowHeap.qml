@@ -7,7 +7,7 @@
 
 import QtQuick
 import QtQuick.Window
-import org.kde.kirigami 2.20 as Kirigami
+import org.kde.kirigami as Kirigami
 import org.kde.kwin as KWinComponents
 import org.kde.kwin.private.effects
 
@@ -309,7 +309,7 @@ FocusScope {
     }
 
 
-    Keys.onPressed: {
+    Keys.onPressed: event => {
         let handled = false;
         switch (event.key) {
         case Qt.Key_Up:
