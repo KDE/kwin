@@ -115,7 +115,7 @@
         "Name[zh_CN]": "无响应窗口灰化",
         "Name[zh_TW]": "降低無回應應用程式的飽和度"
     },
-    "X-KDE-Ordering": "60",
+    "X-KDE-Ordering": 60,
     "X-KDE-PluginKeyword": "frozenapp",
     "X-KWin-Config-TranslationDomain": "kwin",
     "X-Plasma-API": "javascript"

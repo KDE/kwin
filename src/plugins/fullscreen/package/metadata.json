@@ -115,6 +115,6 @@
         "Name[zh_CN]": "全屏模式过渡动画",
         "Name[zh_TW]": "全螢幕"
     },
-    "X-KDE-Ordering": "60",
+    "X-KDE-Ordering": 60,
     "X-Plasma-API": "javascript"
 }

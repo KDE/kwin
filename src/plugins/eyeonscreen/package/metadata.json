@@ -115,7 +115,7 @@
         "Name[zh_CN]": "窗口内收",
         "Name[zh_TW]": "螢幕之眼"
     },
-    "X-KDE-Ordering": "50",
+    "X-KDE-Ordering": 50,
     "X-KWin-Exclusive-Category": "show-desktop",
     "X-Plasma-API": "javascript"
 }

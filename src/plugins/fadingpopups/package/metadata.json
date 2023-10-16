@@ -122,6 +122,6 @@
         "Name[zh_CN]": "气泡显隐渐变动画",
         "Name[zh_TW]": "淡化彈出視窗"
     },
-    "X-KDE-Ordering": "60",
+    "X-KDE-Ordering": 60,
     "X-Plasma-API": "javascript"
 }

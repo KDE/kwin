@@ -115,7 +115,7 @@
         "Name[zh_CN]": "淡出桌面",
         "Name[zh_TW]": "淡出淡入桌面"
     },
-    "X-KDE-Ordering": "50",
+    "X-KDE-Ordering": 50,
     "X-KWin-Exclusive-Category": "desktop-animations",
     "X-KWin-Video-Url": "https://files.kde.org/plasma/kwin/effect-videos/fade_desktop.ogv",
     "X-Plasma-API": "javascript"

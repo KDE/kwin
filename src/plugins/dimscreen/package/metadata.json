@@ -114,7 +114,7 @@
         "Name[zh_CN]": "请求管理员模式时降低屏幕亮度",
         "Name[zh_TW]": "為管理員模式暗化螢幕"
     },
-    "X-KDE-Ordering": "60",
+    "X-KDE-Ordering": 60,
     "X-KWin-Video-Url": "https://files.kde.org/plasma/kwin/effect-videos/dim_administration.mp4",
     "X-Plasma-API": "javascript"
 }

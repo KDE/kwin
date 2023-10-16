@@ -115,6 +115,6 @@
         "Name[zh_CN]": "注销过渡动画",
         "Name[zh_TW]": "登出"
     },
-    "X-KDE-Ordering": "40",
+    "X-KDE-Ordering": 40,
     "X-Plasma-API": "javascript"
 }
