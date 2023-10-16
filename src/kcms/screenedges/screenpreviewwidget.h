@@ -24,8 +24,12 @@ public:
 
     void setPreview(const QPixmap &preview);
     const QPixmap preview() const;
+
     void setRatio(const qreal ratio);
     qreal ratio() const;
+
+    void setMinimumContentWidth(qreal minw);
+    qreal minimumContentWidth() const;
 
     QRect previewRect() const;
     KSvg::ImageSet *svgImageSet() const;
