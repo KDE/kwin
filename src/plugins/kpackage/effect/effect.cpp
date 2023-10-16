@@ -27,20 +27,6 @@ public:
         package->addFileDefinition("configui", QStringLiteral("ui/config.ui"));
         package->setMimeTypes("configui", QStringList{QStringLiteral("text/xml")});
     }
-
-    void pathChanged(KPackage::Package *package) override
-    {
-        if (package->path().isEmpty()) {
-            return;
-        }
-
-        const QString mainScript = package->metadata().value("X-Plasma-MainScript");
-        if (mainScript.isEmpty()) {
-            return;
-        }
-
-        package->addFileDefinition("mainscript", mainScript);
-    }
 };
 
 K_PLUGIN_CLASS_WITH_JSON(EffectPackageStructure, "effect.json")
