@@ -91,8 +91,6 @@ bool Monitor::event(QEvent *event)
 void Monitor::checkSize()
 {
     QRect contentsRect = previewRect();
-    // int w = 151;
-    // int h = 115;
     m_view->setGeometry(contentsRect);
     m_scene->setSceneRect(QRect(QPoint(0, 0), contentsRect.size()));
     const int x2 = (contentsRect.width() - 20) / 2;
