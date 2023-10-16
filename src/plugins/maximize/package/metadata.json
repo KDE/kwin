@@ -121,5 +121,5 @@
     "X-KDE-ParentApp": "",
     "X-KWin-Video-Url": "https://files.kde.org/plasma/kwin/effect-videos/maximize.ogv",
     "X-Plasma-API": "javascript",
-    "X-Plasma-MainScript": "code/maximize.js"
+    "X-Plasma-MainScript": "code/main.js"
 }
