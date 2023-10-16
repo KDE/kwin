@@ -119,6 +119,5 @@
     },
     "X-KDE-Ordering": "60",
     "X-KDE-ParentApp": "",
-    "X-Plasma-API": "javascript",
-    "X-Plasma-MainScript": "code/fullscreen.js"
+    "X-Plasma-API": "javascript"
 }

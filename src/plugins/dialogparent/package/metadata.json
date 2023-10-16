@@ -116,6 +116,5 @@
         "Version": "0.1.0"
     },
     "X-KDE-Ordering": "70",
-    "X-Plasma-API": "javascript",
-    "X-Plasma-MainScript": "code/main.js"
+    "X-Plasma-API": "javascript"
 }

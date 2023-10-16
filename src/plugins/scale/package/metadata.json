@@ -127,6 +127,5 @@
     "X-KDE-PluginKeyword": "scale",
     "X-KWin-Config-TranslationDomain": "kwin",
     "X-KWin-Exclusive-Category": "toplevel-open-close-animation",
-    "X-Plasma-API": "javascript",
-    "X-Plasma-MainScript": "code/main.js"
+    "X-Plasma-API": "javascript"
 }

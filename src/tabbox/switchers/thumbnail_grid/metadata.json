@@ -95,6 +95,5 @@
         "Name[zh_TW]": "縮圖格線",
         "Version": "6"
     },
-    "X-Plasma-API": "declarativeappletscript",
-    "X-Plasma-MainScript": "ui/main.qml"
+    "X-Plasma-API": "declarativeappletscript"
 }

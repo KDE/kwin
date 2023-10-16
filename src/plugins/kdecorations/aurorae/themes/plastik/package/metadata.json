@@ -112,6 +112,5 @@
         "Name[zh_TW]": "Plastik",
         "Version": "1.0"
     },
-    "X-KWin-Config-TranslationDomain": "kwin",
-    "X-Plasma-MainScript": "ui/main.qml"
+    "X-KWin-Config-TranslationDomain": "kwin"
 }

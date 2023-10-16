@@ -119,6 +119,5 @@
     "X-KDE-Ordering": "60",
     "X-KDE-ParentApp": "",
     "X-KWin-Video-Url": "https://files.kde.org/plasma/kwin/effect-videos/dim_administration.mp4",
-    "X-Plasma-API": "javascript",
-    "X-Plasma-MainScript": "code/main.js"
+    "X-Plasma-API": "javascript"
 }

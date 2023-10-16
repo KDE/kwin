@@ -115,6 +115,5 @@
     },
     "X-KDE-ConfigModule": "kwin/effects/configs/kcm_kwin4_genericscripted",
     "X-KDE-PluginKeyword": "videowall",
-    "X-Plasma-API": "javascript",
-    "X-Plasma-MainScript": "code/main.js"
+    "X-Plasma-API": "javascript"
 }
