@@ -117,6 +117,5 @@
     },
     "X-KDE-Ordering": "50",
     "X-KWin-Exclusive-Category": "show-desktop",
-    "X-Plasma-API": "javascript",
-    "X-Plasma-MainScript": "code/main.js"
+    "X-Plasma-API": "javascript"
 }

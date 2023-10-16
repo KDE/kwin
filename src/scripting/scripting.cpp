@@ -709,7 +709,13 @@ LoadScriptList KWin::Scripting::queryScriptsToLoad()
         const bool enabled = value.isNull() ? service.isEnabledByDefault() : QVariant(value).toBool();
         const bool javaScript = service.value(QStringLiteral("X-Plasma-API")) == QLatin1String("javascript");
         const bool declarativeScript = service.value(QStringLiteral("X-Plasma-API")) == QLatin1String("declarativescript");
-        if (!javaScript && !declarativeScript) {
+
+        QString scriptName;
+        if (javaScript) {
+            scriptName = QStringLiteral("code/main.js");
+        } else if (declarativeScript) {
+            scriptName = QStringLiteral("ui/main.qml");
+        } else {
             continue;
         }
 
@@ -721,7 +727,6 @@ LoadScriptList KWin::Scripting::queryScriptsToLoad()
             continue;
         }
         const QString pluginName = service.pluginId();
-        const QString scriptName = service.value(QStringLiteral("X-Plasma-MainScript"));
         const QString file = QStandardPaths::locate(QStandardPaths::GenericDataLocation, scriptFolder + pluginName + QLatin1String("/contents/") + scriptName);
         if (file.isNull()) {
             qCDebug(KWIN_SCRIPTING) << "Could not find script file for " << pluginName;

@@ -27,18 +27,6 @@ public:
 
         package->setMimeTypes("scripts", QStringList{QStringLiteral("text/plain")});
     }
-
-    void pathChanged(KPackage::Package *package) override
-    {
-        if (package->path().isEmpty()) {
-            return;
-        }
-
-        const QString mainScript = package->metadata().value("X-Plasma-MainScript");
-        if (!mainScript.isEmpty()) {
-            package->addFileDefinition("mainscript", mainScript);
-        }
-    }
 };
 
 K_PLUGIN_CLASS_WITH_JSON(ScriptsPackage, "scripts.json")

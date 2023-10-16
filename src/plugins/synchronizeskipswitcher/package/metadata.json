@@ -113,6 +113,5 @@
         "Name[zh_TW]": "同步忽略切換器標記與忽略工作列標記",
         "Version": "1.0"
     },
-    "X-Plasma-API": "javascript",
-    "X-Plasma-MainScript": "code/main.js"
+    "X-Plasma-API": "javascript"
 }
