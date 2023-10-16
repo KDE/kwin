@@ -359,6 +359,8 @@ int drmIoctl(int fd, unsigned long request, void *arg)
         int ret = drmModeAtomicCommit(fd, req, args->flags, reinterpret_cast<void *>(args->user_data));
         drmModeAtomicFree(req);
         return ret;
+    } else if (request == DRM_IOCTL_MODE_RMFB) {
+        drmModeRmFB(fd, *static_cast<const uint32_t *>(arg));
     }
     return -(errno = ENOTSUP);
 }
