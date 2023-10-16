@@ -39,16 +39,16 @@ public:
     void updateScreenGraphics()
     {
         int bottomElements = screenGraphics->elementSize("base").height() + screenGraphics->marginSize(KSvg::FrameSvg::BottomMargin);
-        QRect bounds(QPoint(0, 0), QSize(q->size().width(), q->height() - bottomElements));
+        QRect bounds(QPoint(0, 0), QSize(q->width(), q->height() - bottomElements));
 
-        QSize monitorSize(q->size().width(), q->size().width() / ratio);
+        QSizeF monitorSize(1.0, 1.0 / ratio);
         monitorSize.scale(bounds.size(), Qt::KeepAspectRatio);
 
         if (monitorSize.isEmpty()) {
             return;
         }
 
-        monitorRect = QRect(QPoint(0, 0), monitorSize);
+        monitorRect = QRect(QPoint(0, 0), monitorSize.toSize());
         monitorRect.moveCenter(bounds.center());
 
         screenGraphics->resizeFrame(monitorRect.size());
