@@ -110,8 +110,7 @@
         "Name[vi]": "Màn hình ghép",
         "Name[x-test]": "xxVideo Wallxx",
         "Name[zh_CN]": "视频墙",
-        "Name[zh_TW]": "影片牆",
-        "Version": "1.0"
+        "Name[zh_TW]": "影片牆"
     },
     "X-KDE-ConfigModule": "kwin/effects/configs/kcm_kwin4_genericscripted",
     "X-KDE-PluginKeyword": "videowall",

@@ -112,8 +112,7 @@
         "Name[vi]": "Độ mở cửa sổ",
         "Name[x-test]": "xxWindow Aperturexx",
         "Name[zh_CN]": "窗口外推",
-        "Name[zh_TW]": "視窗光圈",
-        "Version": "0.1.0"
+        "Name[zh_TW]": "視窗光圈"
     },
     "X-KDE-Ordering": "50",
     "X-KWin-Exclusive-Category": "show-desktop",

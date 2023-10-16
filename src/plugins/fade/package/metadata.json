@@ -113,8 +113,7 @@
         "Name[vi]": "Làm mờ dần",
         "Name[x-test]": "xxFadexx",
         "Name[zh_CN]": "淡出淡入动画",
-        "Name[zh_TW]": "淡化",
-        "Version": "0.2.0"
+        "Name[zh_TW]": "淡化"
     },
     "X-KDE-Ordering": "60",
     "X-KWin-Exclusive-Category": "toplevel-open-close-animation",

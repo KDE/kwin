@@ -92,8 +92,7 @@
         "Name[uk]": "Таблиця мініатюр",
         "Name[x-test]": "xxThumbnail Gridxx",
         "Name[zh_CN]": "缩略图网格",
-        "Name[zh_TW]": "縮圖格線",
-        "Version": "6"
+        "Name[zh_TW]": "縮圖格線"
     },
     "X-Plasma-API": "declarativeappletscript"
 }

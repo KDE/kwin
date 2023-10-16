@@ -113,8 +113,7 @@
         "Name[vi]": "Đăng nhập",
         "Name[x-test]": "xxLoginxx",
         "Name[zh_CN]": "登录渐变动画",
-        "Name[zh_TW]": "登入",
-        "Version": "0.2.0"
+        "Name[zh_TW]": "登入"
     },
     "X-KDE-Ordering": "40",
     "X-KDE-PluginKeyword": "login",

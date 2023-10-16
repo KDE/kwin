@@ -110,8 +110,7 @@
         "Name[vi]": "Đồng bộ hoá việc bỏ qua trình chuyển với thanh tác vụ",
         "Name[x-test]": "xxSynchronize Skip Switcher with Taskbarxx",
         "Name[zh_CN]": "窗口切换器与任务栏同步跳过窗口设置",
-        "Name[zh_TW]": "同步忽略切換器標記與忽略工作列標記",
-        "Version": "1.0"
+        "Name[zh_TW]": "同步忽略切換器標記與忽略工作列標記"
     },
     "X-Plasma-API": "javascript"
 }

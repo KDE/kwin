@@ -112,8 +112,7 @@
         "Name[vi]": "Cha hộp thoại",
         "Name[x-test]": "xxDialog Parentxx",
         "Name[zh_CN]": "对话框父级窗口变暗",
-        "Name[zh_TW]": "對話框上層",
-        "Version": "0.1.0"
+        "Name[zh_TW]": "對話框上層"
     },
     "X-KDE-Ordering": "70",
     "X-Plasma-API": "javascript"

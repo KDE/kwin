@@ -112,8 +112,7 @@
         "Name[vi]": "Thoát phiên",
         "Name[x-test]": "xxSession Quitxx",
         "Name[zh_CN]": "会话退出优化",
-        "Name[zh_TW]": "離開工作階段",
-        "Version": "0.2.0"
+        "Name[zh_TW]": "離開工作階段"
     },
     "X-KDE-Ordering": "40",
     "X-KWin-Internal": "true",

@@ -113,7 +113,6 @@
         "Name[x-test]": "xxDim Screen for Administrator Modexx",
         "Name[zh_CN]": "请求管理员模式时降低屏幕亮度",
         "Name[zh_TW]": "為管理員模式暗化螢幕",
-        "Version": "1",
         "Website": ""
     },
     "X-KDE-Ordering": "60",

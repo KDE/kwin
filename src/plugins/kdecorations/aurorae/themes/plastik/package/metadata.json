@@ -109,8 +109,7 @@
         "Name[vi]": "Plastik",
         "Name[x-test]": "xxPlastikxx",
         "Name[zh_CN]": "Plastik 百相",
-        "Name[zh_TW]": "Plastik",
-        "Version": "1.0"
+        "Name[zh_TW]": "Plastik"
     },
     "X-KWin-Config-TranslationDomain": "kwin"
 }

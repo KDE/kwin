@@ -111,8 +111,7 @@
         "Name[vi]": "Thu nhỏ tất cả",
         "Name[x-test]": "xxMinimizeAllxx",
         "Name[zh_CN]": "最小化全部",
-        "Name[zh_TW]": "全部最小化",
-        "Version": "1.0"
+        "Name[zh_TW]": "全部最小化"
     },
     "X-KDE-PluginKeyword": "minimizeall",
     "X-KWin-Border-Activate": "true",

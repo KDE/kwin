@@ -112,8 +112,7 @@
         "Name[vi]": "Độ trong mờ",
         "Name[x-test]": "xxTranslucencyxx",
         "Name[zh_CN]": "窗口透明度",
-        "Name[zh_TW]": "半透明",
-        "Version": "0.1.0"
+        "Name[zh_TW]": "半透明"
     },
     "X-KDE-Ordering": "50",
     "X-KDE-PluginKeyword": "translucency",

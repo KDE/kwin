@@ -113,8 +113,7 @@
         "Name[vi]": "Đăng xuất",
         "Name[x-test]": "xxLogoutxx",
         "Name[zh_CN]": "注销过渡动画",
-        "Name[zh_TW]": "登出",
-        "Version": "0.2.0"
+        "Name[zh_TW]": "登出"
     },
     "X-KDE-Ordering": "40",
     "X-Plasma-API": "javascript"

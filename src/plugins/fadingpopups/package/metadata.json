@@ -120,8 +120,7 @@
         "Name[vi]": "Ô bật lên ngả màu",
         "Name[x-test]": "xxFading Popupsxx",
         "Name[zh_CN]": "气泡显隐渐变动画",
-        "Name[zh_TW]": "淡化彈出視窗",
-        "Version": "1.0"
+        "Name[zh_TW]": "淡化彈出視窗"
     },
     "X-KDE-Ordering": "60",
     "X-Plasma-API": "javascript"

@@ -110,8 +110,7 @@
         "Name[vi]": "Ô hiện nổi thay đổi bàn làm việc",
         "Name[x-test]": "xxDesktop Change OSDxx",
         "Name[zh_CN]": "桌面变化突出显示",
-        "Name[zh_TW]": "桌面變更時的螢幕顯示",
-        "Version": "1.0"
+        "Name[zh_TW]": "桌面變更時的螢幕顯示"
     },
     "X-Plasma-API": "declarativescript"
 }

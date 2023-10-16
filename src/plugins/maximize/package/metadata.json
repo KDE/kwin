@@ -114,7 +114,7 @@
         "Name[x-test]": "xxMaximizexx",
         "Name[zh_CN]": "最大化过渡动画",
         "Name[zh_TW]": "最大化",
-        "Version": "1",
+
         "Website": ""
     },
     "X-KDE-Ordering": "60",
