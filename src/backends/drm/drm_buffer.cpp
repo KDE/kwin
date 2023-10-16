@@ -23,6 +23,10 @@
 #include <xf86drm.h>
 #include <xf86drmMode.h>
 
+#ifndef DRM_IOCTL_MODE_CLOSEFB
+#define DRM_IOCTL_MODE_CLOSEFB 0xD0
+#endif
+
 namespace KWin
 {
 
@@ -43,7 +47,10 @@ DrmFramebuffer::DrmFramebuffer(DrmGpu *gpu, uint32_t fbId, GraphicsBuffer *buffe
 
 DrmFramebuffer::~DrmFramebuffer()
 {
-    drmModeRmFB(m_gpu->fd(), m_framebufferId);
+    uint32_t nonConstFb = m_framebufferId;
+    if (drmIoctl(m_gpu->fd(), DRM_IOCTL_MODE_CLOSEFB, &nonConstFb) != 0) {
+        drmIoctl(m_gpu->fd(), DRM_IOCTL_MODE_RMFB, &nonConstFb);
+    }
 }
 
 uint32_t DrmFramebuffer::framebufferId() const
