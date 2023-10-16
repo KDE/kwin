@@ -142,6 +142,16 @@ void SpringMotion::advance(std::chrono::milliseconds delta)
         return;
     }
 
+    // If m_springConstant is infinite, we have an animation time factor of zero.
+    // As such, we should advance to the target immediately.
+    if (std::isinf(m_springConstant)) {
+        m_next = State{
+            .position = m_anchor,
+            .velocity = 0.0,
+        };
+        return;
+    }
+
     // If the delta interval is not multiple of m_timestep precisely, the previous and
     // the next samples will be linearly interpolated to get current position and velocity.
     const qreal steps = (delta.count() / 1000.0) / m_timestep;
