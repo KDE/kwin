@@ -107,7 +107,7 @@ static ScreenShotFlags screenShotFlagsFromOptions(const QVariantMap &options)
         flags |= ScreenShotIncludeDecoration;
     }
 
-    const QVariant includeShadow = options.value(QStringLiteral("include-shadow"));
+    const QVariant includeShadow = options.value(QStringLiteral("include-shadow"), true);
     if (includeShadow.toBool()) {
         flags |= ScreenShotIncludeShadow;
     }

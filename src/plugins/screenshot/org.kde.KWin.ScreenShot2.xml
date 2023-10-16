@@ -39,7 +39,7 @@
             * "include-decoration" (b): Whether the decoration should be included.
                                         Defaults to false
             * "include-shadow" (b): Whether the shadow should be included.
-                                    Defaults to false
+                                    Defaults to true
             * "native-resolution" (b): Whether the screenshot should be in
                                        native size. Defaults to false
 
@@ -89,7 +89,7 @@
             * "include-decoration" (b): Whether the decoration should be included.
                                         Defaults to false
             * "include-shadow" (b): Whether the shadow should be included.
-                                    Defaults to false
+                                    Defaults to true
             * "native-resolution" (b): Whether the screenshot should be in
                                        native size. Defaults to false
 
@@ -273,7 +273,7 @@
             * "include-decoration" (b): Whether the decoration should be included.
                                         Defaults to false
             * "include-shadow" (b): Whether the shadow should be included.
-                                    Defaults to false
+                                    Defaults to true
             * "native-resolution" (b): Whether the screenshot should be in
                                        native size. Defaults to false
 
