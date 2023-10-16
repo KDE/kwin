@@ -113,9 +113,7 @@
         "Name[vi]": "Toàn màn hình",
         "Name[x-test]": "xxFull Screenxx",
         "Name[zh_CN]": "全屏模式过渡动画",
-        "Name[zh_TW]": "全螢幕",
-
-        "Website": ""
+        "Name[zh_TW]": "全螢幕"
     },
     "X-KDE-Ordering": "60",
     "X-KDE-ParentApp": "",

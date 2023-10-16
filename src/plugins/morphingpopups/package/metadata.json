@@ -119,9 +119,7 @@
         "Name[vi]": "Ô bật lên biến dạng",
         "Name[x-test]": "xxMorphing Popupsxx",
         "Name[zh_CN]": "气泡大小渐变动画",
-        "Name[zh_TW]": "交錯彈出視窗",
-
-        "Website": ""
+        "Name[zh_TW]": "交錯彈出視窗"
     },
     "X-KDE-Ordering": "60",
     "X-KDE-ParentApp": "",

@@ -113,9 +113,7 @@
         "Name[vi]": "Phóng to",
         "Name[x-test]": "xxMaximizexx",
         "Name[zh_CN]": "最大化过渡动画",
-        "Name[zh_TW]": "最大化",
-
-        "Website": ""
+        "Name[zh_TW]": "最大化"
     },
     "X-KDE-Ordering": "60",
     "X-KDE-ParentApp": "",
