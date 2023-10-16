@@ -167,14 +167,10 @@ void KWinTabBoxConfig::initLayoutLists()
 
     for (const auto &offer : offers) {
         const QString pluginName = offer.pluginId();
-        if (offer.value("X-Plasma-API") != "declarativeappletscript") {
-            continue;
-        }
-        const QString scriptName = offer.value("X-Plasma-MainScript");
         const QString scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                                          QLatin1String("kwin/tabbox/") + pluginName + QLatin1String("/contents/")
-                                                              + scriptName);
-        if (scriptFile.isNull()) {
+                                                          QLatin1String("kwin/tabbox/") + pluginName + QLatin1String("/contents/ui/main.qml"));
+        if (scriptFile.isEmpty()) {
+            qWarning() << "scriptfile is null" << pluginName;
             continue;
         }
 

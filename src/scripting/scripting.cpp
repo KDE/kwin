@@ -721,9 +721,10 @@ LoadScriptList KWin::Scripting::queryScriptsToLoad()
             continue;
         }
         const QString pluginName = service.pluginId();
-        const QString scriptName = service.value(QStringLiteral("X-Plasma-MainScript"));
-        const QString file = QStandardPaths::locate(QStandardPaths::GenericDataLocation, scriptFolder + pluginName + QLatin1String("/contents/") + scriptName);
-        if (file.isNull()) {
+        // The file we want to load depends on the specified API. We could check if one or the other file exists, but that is more error prone and causes IO overhead
+        const QString relScriptPath = scriptFolder + pluginName + QLatin1String("/contents/") + (javaScript ? QLatin1String("code/main.js") : QLatin1String("ui/main.qml"));
+        const QString file = QStandardPaths::locate(QStandardPaths::GenericDataLocation, relScriptPath);
+        if (file.isEmpty()) {
             qCDebug(KWIN_SCRIPTING) << "Could not find script file for " << pluginName;
             continue;
         }

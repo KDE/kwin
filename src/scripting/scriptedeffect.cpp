@@ -156,15 +156,10 @@ static KWin::FPx2 fpx2FromScriptValue(const QJSValue &value)
 ScriptedEffect *ScriptedEffect::create(const KPluginMetaData &effect)
 {
     const QString name = effect.pluginId();
-    const QString scriptName = effect.value(QStringLiteral("X-Plasma-MainScript"));
-    if (scriptName.isEmpty()) {
-        qCDebug(KWIN_SCRIPTING) << "X-Plasma-MainScript not set";
-        return nullptr;
-    }
     const QString scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                                      QLatin1String("kwin/effects/") + name + QLatin1String("/contents/") + scriptName);
-    if (scriptFile.isNull()) {
-        qCDebug(KWIN_SCRIPTING) << "Could not locate the effect script";
+                                                      QLatin1String("kwin/effects/") + name + QLatin1String("/contents/code/main.js"));
+    if (scriptFile.isEmpty()) {
+        qCDebug(KWIN_SCRIPTING) << "Could not locate effect script" << name;
         return nullptr;
     }
 
@@ -830,8 +825,7 @@ void ScriptedEffect::setUniform(uint shaderId, const QString &name, const QJSVal
         m_engine->throwError(QStringLiteral("Failed to make OpenGL context current"));
         return;
     }
-    auto setColorUniform = [this, shader, name] (const QColor &color)
-    {
+    auto setColorUniform = [this, shader, name](const QColor &color) {
         if (!color.isValid()) {
             return;
         }
