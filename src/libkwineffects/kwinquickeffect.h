@@ -30,6 +30,7 @@ class KWINEFFECTS_EXPORT QuickSceneView : public OffscreenQuickView
     Q_OBJECT
     Q_PROPERTY(QuickSceneEffect *effect READ effect CONSTANT)
     Q_PROPERTY(EffectScreen *screen READ screen CONSTANT)
+    Q_PROPERTY(QQuickItem *rootItem READ rootItem CONSTANT)
 
 public:
     explicit QuickSceneView(QuickSceneEffect *effect, EffectScreen *screen);
