@@ -113,7 +113,7 @@
         "Name[zh_CN]": "最小化全部",
         "Name[zh_TW]": "全部最小化"
     },
-    "X-KDE-PluginKeyword": "minimizeall",
+    "X-KDE-ConfigModule": "kcm_kwin4_genericscripted",
     "X-KWin-Border-Activate": "true",
     "X-Plasma-API": "javascript"
 }

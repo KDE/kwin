@@ -114,8 +114,8 @@
         "Name[zh_CN]": "窗口透明度",
         "Name[zh_TW]": "半透明"
     },
+    "X-KDE-ConfigModule": "kcm_kwin4_genericscripted",
     "X-KDE-Ordering": 50,
-    "X-KDE-PluginKeyword": "translucency",
     "X-KWin-Config-TranslationDomain": "kwin",
     "X-Plasma-API": "javascript"
 }

@@ -115,8 +115,8 @@
         "Name[zh_CN]": "登录渐变动画",
         "Name[zh_TW]": "登入"
     },
+    "X-KDE-ConfigModule": "kcm_kwin4_genericscripted",
     "X-KDE-Ordering": 40,
-    "X-KDE-PluginKeyword": "login",
     "X-KWin-Config-TranslationDomain": "kwin",
     "X-Plasma-API": "javascript"
 }

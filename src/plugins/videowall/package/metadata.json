@@ -113,6 +113,5 @@
         "Name[zh_TW]": "影片牆"
     },
     "X-KDE-ConfigModule": "kwin/effects/configs/kcm_kwin4_genericscripted",
-    "X-KDE-PluginKeyword": "videowall",
     "X-Plasma-API": "javascript"
 }

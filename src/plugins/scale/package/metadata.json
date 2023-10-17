@@ -122,8 +122,8 @@
         "Name[zh_CN]": "按比例缩放",
         "Name[zh_TW]": "縮放"
     },
+    "X-KDE-ConfigModule": "kcm_kwin4_genericscripted",
     "X-KDE-Ordering": 60,
-    "X-KDE-PluginKeyword": "scale",
     "X-KWin-Config-TranslationDomain": "kwin",
     "X-KWin-Exclusive-Category": "toplevel-open-close-animation",
     "X-Plasma-API": "javascript"

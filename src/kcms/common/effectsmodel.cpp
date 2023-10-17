@@ -298,13 +298,16 @@ void EffectsModel::loadJavascriptEffects(const KConfigGroup &kwinConfig)
         effect.exclusiveGroup = plugin.value(QStringLiteral("X-KWin-Exclusive-Category"));
         effect.internal = plugin.value(QStringLiteral("X-KWin-Internal"), false);
 
-        const QString pluginKeyword = plugin.value(QStringLiteral("X-KDE-PluginKeyword"));
-        if (!pluginKeyword.isEmpty()) {
-            const QString xmlFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kwin/effects/") + plugin.pluginId() + QLatin1String("/contents/config/main.xml"));
-            const QString uiFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kwin/effects/") + plugin.pluginId() + QLatin1String("/contents/ui/config.ui"));
-            if (QFileInfo::exists(xmlFile) && QFileInfo::exists(uiFile)) {
-                effect.configModule = QStringLiteral("kcm_kwin4_genericscripted");
-                effect.configArgs = QVariantList{plugin.pluginId(), QStringLiteral("KWin/Effect")};
+        if (const QString configModule = plugin.value(QStringLiteral("X-KDE-ConfigModule")); !configModule.isEmpty()) {
+            if (configModule == QStringLiteral("kcm_kwin4_genericscripted")) {
+                const QString xmlFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kwin/effects/") + plugin.pluginId() + QLatin1String("/contents/config/main.xml"));
+                const QString uiFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kwin/effects/") + plugin.pluginId() + QLatin1String("/contents/ui/config.ui"));
+                if (QFileInfo::exists(xmlFile) && QFileInfo::exists(uiFile)) {
+                    effect.configModule = configModule;
+                    effect.configArgs = QVariantList{plugin.pluginId(), QStringLiteral("KWin/Effect")};
+                }
+            } else {
+                effect.configModule = configModule;
             }
         }
 
