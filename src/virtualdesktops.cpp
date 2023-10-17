@@ -795,18 +795,14 @@ void VirtualDesktopManager::initShortcuts()
 {
     initSwitchToShortcuts();
 
-    addAction(QStringLiteral("Switch to Next Desktop"), i18n("Switch to Next Desktop"), &VirtualDesktopManager::slotNext);
-    addAction(QStringLiteral("Switch to Previous Desktop"), i18n("Switch to Previous Desktop"), &VirtualDesktopManager::slotPrevious);
+    addAction(QStringLiteral("Switch to Next Desktop"), i18n("Switch to Next Desktop"), QKeySequence(), &VirtualDesktopManager::slotNext);
+    addAction(QStringLiteral("Switch to Previous Desktop"), i18n("Switch to Previous Desktop"), QKeySequence(), &VirtualDesktopManager::slotPrevious);
 
     // shortcuts
-    QAction *slotRightAction = addAction(QStringLiteral("Switch One Desktop to the Right"), i18n("Switch One Desktop to the Right"), &VirtualDesktopManager::slotRight);
-    KGlobalAccel::setGlobalShortcut(slotRightAction, QKeySequence(Qt::CTRL | Qt::META | Qt::Key_Right));
-    QAction *slotLeftAction = addAction(QStringLiteral("Switch One Desktop to the Left"), i18n("Switch One Desktop to the Left"), &VirtualDesktopManager::slotLeft);
-    KGlobalAccel::setGlobalShortcut(slotLeftAction, QKeySequence(Qt::CTRL | Qt::META | Qt::Key_Left));
-    QAction *slotUpAction = addAction(QStringLiteral("Switch One Desktop Up"), i18n("Switch One Desktop Up"), &VirtualDesktopManager::slotUp);
-    KGlobalAccel::setGlobalShortcut(slotUpAction, QKeySequence(Qt::CTRL | Qt::META | Qt::Key_Up));
-    QAction *slotDownAction = addAction(QStringLiteral("Switch One Desktop Down"), i18n("Switch One Desktop Down"), &VirtualDesktopManager::slotDown);
-    KGlobalAccel::setGlobalShortcut(slotDownAction, QKeySequence(Qt::CTRL | Qt::META | Qt::Key_Down));
+    addAction(QStringLiteral("Switch One Desktop to the Right"), i18n("Switch One Desktop to the Right"), QKeySequence(Qt::CTRL | Qt::META | Qt::Key_Right), &VirtualDesktopManager::slotRight);
+    addAction(QStringLiteral("Switch One Desktop to the Left"), i18n("Switch One Desktop to the Left"), QKeySequence(Qt::CTRL | Qt::META | Qt::Key_Left), &VirtualDesktopManager::slotLeft);
+    addAction(QStringLiteral("Switch One Desktop Up"), i18n("Switch One Desktop Up"), QKeySequence(Qt::CTRL | Qt::META | Qt::Key_Up), &VirtualDesktopManager::slotUp);
+    addAction(QStringLiteral("Switch One Desktop Down"), i18n("Switch One Desktop Down"), QKeySequence(Qt::CTRL | Qt::META | Qt::Key_Down), &VirtualDesktopManager::slotDown);
 
     // Gestures
     // These connections decide which desktop to end on after gesture ends
@@ -917,13 +913,13 @@ QAction *VirtualDesktopManager::addAction(const QString &name, const KLocalizedS
     return a;
 }
 
-QAction *VirtualDesktopManager::addAction(const QString &name, const QString &label, void (VirtualDesktopManager::*slot)())
+QAction *VirtualDesktopManager::addAction(const QString &name, const QString &label, const QKeySequence &key, void (VirtualDesktopManager::*slot)())
 {
     QAction *a = new QAction(this);
     a->setProperty("componentName", QStringLiteral("kwin"));
     a->setObjectName(name);
     a->setText(label);
-    KGlobalAccel::setGlobalShortcut(a, QKeySequence());
+    KGlobalAccel::setGlobalShortcut(a, key);
     connect(a, &QAction::triggered, this, slot);
     return a;
 }
