@@ -474,13 +474,13 @@ private:
     QAction *addAction(const QString &name, const KLocalizedString &label, uint value, const QKeySequence &key, void (VirtualDesktopManager::*slot)());
     /**
      * Creates an action and connects it to the @p slot in this Manager.
-     * Overloaded method for the case that no additional value needs to be passed to the action and
-     * no global shortcut is defined by default.
+     * Overloaded method for the case that no additional value needs to be passed to the action.
      * @param name The name of the action to be created
      * @param label The localized name for the action to be created
+     * @param key The global shortcut for the action. If an empty QKeySequence is passed, no global shortcut is defined by default.
      * @param slot The slot to invoke when the action is triggered
      */
-    QAction *addAction(const QString &name, const QString &label, void (VirtualDesktopManager::*slot)());
+    QAction *addAction(const QString &name, const QString &label, const QKeySequence &key, void (VirtualDesktopManager::*slot)());
 
     QVector<VirtualDesktop *> m_desktops;
     QPointer<VirtualDesktop> m_current;
