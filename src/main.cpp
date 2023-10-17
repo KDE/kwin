@@ -381,6 +381,7 @@ static X11EventFilterContainer *takeEventFilter(X11EventFilter *eventFilter,
 
 void Application::setXwaylandScale(qreal scale)
 {
+    Q_ASSERT(scale != 0);
     if (scale != m_xwaylandScale) {
         m_xwaylandScale = scale;
         // change the font dpi to match

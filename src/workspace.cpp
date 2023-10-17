@@ -477,7 +477,7 @@ bool Workspace::applyOutputConfiguration(const OutputConfiguration &config, cons
     KConfig cfg(QStringLiteral("kdeglobals"));
     KConfigGroup kscreenGroup = cfg.group("KScreen");
     const bool xwaylandClientsScale = kscreenGroup.readEntry("XwaylandClientsScale", true);
-    if (xwaylandClientsScale) {
+    if (xwaylandClientsScale && !outputOrder.isEmpty()) {
         double maxScale = 0;
         for (Output *output : outputOrder) {
             const auto changeset = config.constChangeSet(output);

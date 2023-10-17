@@ -155,6 +155,7 @@ QString ClientConnection::executablePath() const
 
 void ClientConnection::setScaleOverride(qreal scaleOveride)
 {
+    Q_ASSERT(scaleOveride != 0);
     d->scaleOverride = scaleOveride;
     Q_EMIT scaleOverrideChanged();
 }
