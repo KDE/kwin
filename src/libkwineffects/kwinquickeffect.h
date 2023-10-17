@@ -95,12 +95,12 @@ public:
     /**
      * Returns the scene view on the specified screen
      */
-    QuickSceneView *viewForScreen(EffectScreen *screen) const;
+    Q_INVOKABLE QuickSceneView *viewForScreen(EffectScreen *screen) const;
 
     /**
      * Returns the view at the specified @a pos in the global screen coordinates.
      */
-    QuickSceneView *viewAt(const QPoint &pos) const;
+    Q_INVOKABLE QuickSceneView *viewAt(const QPoint &pos) const;
 
     /**
      * Get a view at the given direction from the active view
