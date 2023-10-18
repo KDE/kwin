@@ -1,5 +1,8 @@
-// SPDX-FileCopyrightText: None
-// SPDX-License-Identifier: CC0-1.0
+/*
+    SPDX-FileCopyrightText: 2023 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+
+    SPDX-License-Identifier: MIT
+*/
 
 import QtQuick
 import org.kde.kwin
