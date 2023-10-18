@@ -367,14 +367,14 @@ void QuickSceneEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mil
     if (effects->waylandDisplay()) {
         const auto it = d->views.find(data.screen);
         if (it != d->views.end() && it->second->isDirty()) {
-            it->second->update();
             it->second->resetDirty();
+            it->second->update();
         }
     } else {
         for (const auto &[screen, screenView] : d->views) {
             if (screenView->isDirty()) {
-                screenView->update();
                 screenView->resetDirty();
+                screenView->update();
             }
         }
     }
