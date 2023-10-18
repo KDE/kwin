@@ -428,9 +428,6 @@ void QuickSceneEffect::addScreen(EffectScreen *screen)
             if (view->contentItem()) {
                 view->contentItem()->setFocus(false);
             }
-            connect(view.get(), &QuickSceneView::repaintNeeded, this, [screen]() {
-                effects->addRepaint(screen->geometry());
-            });
             connect(view.get(), &QuickSceneView::renderRequested, view.get(), &QuickSceneView::scheduleRepaint);
             connect(view.get(), &QuickSceneView::sceneChanged, view.get(), &QuickSceneView::scheduleRepaint);
             view->scheduleRepaint();
