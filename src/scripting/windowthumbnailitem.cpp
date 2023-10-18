@@ -106,8 +106,6 @@ WindowThumbnailItem::WindowThumbnailItem(QQuickItem *parent)
             this, &WindowThumbnailItem::destroyOffscreenTexture);
     connect(Compositor::self(), &Compositor::compositingToggled,
             this, &WindowThumbnailItem::updateFrameRenderingConnection);
-    connect(this, &QQuickItem::windowChanged,
-            this, &WindowThumbnailItem::updateFrameRenderingConnection);
 }
 
 WindowThumbnailItem::~WindowThumbnailItem()
@@ -131,6 +129,14 @@ void WindowThumbnailItem::releaseResources()
                                     QQuickWindow::AfterSynchronizingStage);
         m_provider = nullptr;
     }
+}
+
+void WindowThumbnailItem::itemChange(QQuickItem::ItemChange change, const QQuickItem::ItemChangeData &value)
+{
+    if (change == QQuickItem::ItemSceneChange) {
+        updateFrameRenderingConnection();
+    }
+    QQuickItem::itemChange(change, value);
 }
 
 bool WindowThumbnailItem::isTextureProvider() const
