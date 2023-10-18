@@ -157,8 +157,10 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
         stream << "uniform mat3 colorimetryTransform;\n";
         stream << "uniform int sourceNamedTransferFunction;\n";
         stream << "uniform int destinationNamedTransferFunction;\n";
-        stream << "uniform int sdrBrightness;// in nits\n";
-        stream << "uniform float maxHdrBrightness; // in nits\n";
+        stream << "// in nits:\n";
+        stream << "uniform int sdrBrightness;\n";
+        stream << "uniform float maxInputBrightness;\n";
+        stream << "uniform float maxHdrBrightness;\n";
         stream << "\n";
         stream << "vec3 nitsToPq(vec3 nits) {\n";
         stream << "    vec3 normalized = clamp(nits / 10000.0, vec3(0), vec3(1));\n";
@@ -196,8 +198,11 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
         stream << "}\n";
         stream << "\n";
         stream << "vec3 doTonemapping(vec3 color, float maxBrightness) {\n";
-        stream << "    // colorimetric 'tonemapping': just clip to the output color space\n";
-        stream << "    return clamp(color, vec3(0.0), vec3(maxBrightness));\n";
+        stream << "    if (maxInputBrightness > maxBrightness && destinationNamedTransferFunction == sRGB_EOTF) {\n";
+        stream << "        return color * maxBrightness / maxInputBrightness;\n";
+        stream << "    } else {\n";
+        stream << "        return color;\n";
+        stream << "    }\n";
         stream << "}\n";
         stream << "\n";
     }

@@ -219,6 +219,7 @@ void GLShader::resolveLocations()
 
     m_floatLocation[Saturation] = uniformLocation("saturation");
     m_floatLocation[MaxHdrBrightness] = uniformLocation("maxHdrBrightness");
+    m_floatLocation[MaxInputBrightness] = uniformLocation("maxInputBrightness");
 
     m_colorLocation[Color] = uniformLocation("geometryColor");
 
@@ -443,7 +444,8 @@ bool GLShader::setColorspaceUniforms(const ColorDescription &src, const ColorDes
         && setUniform(GLShader::IntUniform::SourceNamedTransferFunction, int(src.transferFunction()))
         && setUniform(GLShader::IntUniform::DestinationNamedTransferFunction, int(dst.transferFunction()))
         && setUniform(IntUniform::SdrBrightness, dst.sdrBrightness())
-        && setUniform(FloatUniform::MaxHdrBrightness, dst.maxHdrHighlightBrightness());
+        && setUniform(FloatUniform::MaxHdrBrightness, dst.maxHdrHighlightBrightness())
+        && setUniform(FloatUniform::MaxInputBrightness, src.maxHdrHighlightBrightness());
 }
 
 bool GLShader::setColorspaceUniformsFromSRGB(const ColorDescription &dst)
@@ -453,11 +455,7 @@ bool GLShader::setColorspaceUniformsFromSRGB(const ColorDescription &dst)
 
 bool GLShader::setColorspaceUniformsToSRGB(const ColorDescription &src)
 {
-    return setUniform(GLShader::MatrixUniform::ColorimetryTransformation, src.colorimetry().toOther(ColorDescription::sRGB.colorimetry()))
-        && setUniform(GLShader::IntUniform::SourceNamedTransferFunction, int(src.transferFunction()))
-        && setUniform(GLShader::IntUniform::DestinationNamedTransferFunction, int(NamedTransferFunction::sRGB))
-        && setUniform(IntUniform::SdrBrightness, src.sdrBrightness())
-        && setUniform(FloatUniform::MaxHdrBrightness, src.sdrBrightness());
+    return setColorspaceUniforms(src, ColorDescription::sRGB);
 }
 
 }

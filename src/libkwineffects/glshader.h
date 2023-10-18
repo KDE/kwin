@@ -99,6 +99,7 @@ public:
     enum FloatUniform {
         Saturation,
         MaxHdrBrightness,
+        MaxInputBrightness,
         FloatUniformCount
     };
 
