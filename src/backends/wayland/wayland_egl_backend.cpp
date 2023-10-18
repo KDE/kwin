@@ -84,17 +84,21 @@ WaylandEglLayerBuffer::WaylandEglLayerBuffer(const QSize &size, uint32_t format,
                                        attributes.modifier & 0xffffffff);
     }
 
-    m_buffer = zwp_linux_buffer_params_v1_create_immed(params, size.width(), size.height(), format, ZWP_LINUX_BUFFER_PARAMS_V1_FLAGS_Y_INVERT);
+    m_buffer = zwp_linux_buffer_params_v1_create_immed(params, size.width(), size.height(), format, 0);
     zwp_linux_buffer_params_v1_destroy(params);
 
     m_texture = backend->importDmaBufAsTexture(std::move(attributes));
+    m_shadowTexture = std::make_unique<GLTexture>(m_texture->internalFormat(), m_texture->size());
     m_framebuffer = std::make_unique<GLFramebuffer>(m_texture.get());
+    m_shadowFramebuffer = std::make_unique<GLFramebuffer>(m_shadowTexture.get());
 }
 
 WaylandEglLayerBuffer::~WaylandEglLayerBuffer()
 {
     m_texture.reset();
     m_framebuffer.reset();
+    m_shadowTexture.reset();
+    m_shadowFramebuffer.reset();
 
     if (m_buffer) {
         wl_buffer_destroy(m_buffer);
@@ -117,6 +121,16 @@ GLFramebuffer *WaylandEglLayerBuffer::framebuffer() const
 int WaylandEglLayerBuffer::age() const
 {
     return m_age;
+}
+
+GLFramebuffer *WaylandEglLayerBuffer::shadowFramebuffer() const
+{
+    return m_shadowFramebuffer.get();
+}
+
+GLTexture *WaylandEglLayerBuffer::shadowTexture() const
+{
+    return m_shadowTexture.get();
 }
 
 WaylandEglLayerSwapchain::WaylandEglLayerSwapchain(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, WaylandEglBackend *backend)
@@ -198,13 +212,27 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglPrimaryLayer::beginFrame()
     }
 
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_buffer->framebuffer()),
+        .renderTarget = RenderTarget(m_buffer->shadowFramebuffer()),
         .repaint = repair,
     };
 }
 
 bool WaylandEglPrimaryLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    GLFramebuffer::pushFramebuffer(m_buffer->framebuffer());
+    auto texture = m_buffer->shadowTexture();
+    QRect outputGeometry(0, 0, texture->size().width(), texture->size().height());
+
+    ShaderBinder shaderBinder(ShaderTrait::MapTexture);
+    QMatrix4x4 projectionMatrix;
+    projectionMatrix.scale(1, -1);
+    projectionMatrix.ortho(outputGeometry);
+    shaderBinder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix);
+
+    texture->bind();
+    texture->render(outputGeometry, 1);
+    texture->unbind();
+    GLFramebuffer::popFramebuffer();
     // Flush rendering commands to the dmabuf.
     glFlush();
 
@@ -286,13 +314,28 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame()
 
     m_buffer = m_swapchain->acquire();
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_buffer->framebuffer()),
+        .renderTarget = RenderTarget(m_buffer->shadowFramebuffer()),
         .repaint = infiniteRegion(),
     };
 }
 
 bool WaylandEglCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    GLFramebuffer::pushFramebuffer(m_buffer->framebuffer());
+    auto texture = m_buffer->shadowTexture();
+    QRect outputGeometry(0, 0, texture->size().width(), texture->size().height());
+
+    ShaderBinder shaderBinder(ShaderTrait::MapTexture);
+    QMatrix4x4 projectionMatrix;
+    projectionMatrix.scale(1, -1);
+    projectionMatrix.ortho(outputGeometry);
+    shaderBinder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix);
+
+    texture->bind();
+    texture->render(outputGeometry, 1);
+    texture->unbind();
+    GLFramebuffer::popFramebuffer();
+
     // Flush rendering commands to the dmabuf.
     glFlush();
 

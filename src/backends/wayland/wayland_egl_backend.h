@@ -40,6 +40,8 @@ public:
 
     wl_buffer *buffer() const;
     GLFramebuffer *framebuffer() const;
+    GLFramebuffer *shadowFramebuffer() const;
+    GLTexture *shadowTexture() const;
     int age() const;
 
 private:
@@ -47,7 +49,9 @@ private:
     wl_buffer *m_buffer = nullptr;
     gbm_bo *m_bo = nullptr;
     std::unique_ptr<GLFramebuffer> m_framebuffer;
+    std::unique_ptr<GLFramebuffer> m_shadowFramebuffer;
     std::shared_ptr<GLTexture> m_texture;
+    std::shared_ptr<GLTexture> m_shadowTexture;
     int m_age = 0;
     friend class WaylandEglLayerSwapchain;
 };
