@@ -21,7 +21,7 @@ Kirigami.AbstractListItem {
     highlighted: false
     hoverEnabled: false
 
-    RowLayout {
+    contentItem: RowLayout {
 
         Kirigami.Icon {
             id: itemIcon

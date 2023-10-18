@@ -197,7 +197,7 @@ KCM.ScrollViewKCM {
                 highlighted: false
                 width: ListView.view.width
 
-                RowLayout {
+                contentItem: RowLayout {
                     Kirigami.Icon {
                         source: model.icon
                         Layout.preferredHeight: Kirigami.Units.iconSizes.smallMedium

@@ -143,7 +143,7 @@ KCM.ScrollViewKCM {
         Kirigami.SwipeListItem {
             id: ruleBookItem
 
-            RowLayout {
+            contentItem: RowLayout {
                 Kirigami.ListItemDragHandle {
                     visible: !exportInfo.visible
                     listItem: ruleBookItem
