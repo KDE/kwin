@@ -18,6 +18,7 @@ class OverviewEffect : public QuickSceneEffect
     Q_PROPERTY(int animationDuration READ animationDuration NOTIFY animationDurationChanged)
     Q_PROPERTY(int layout READ layout NOTIFY layoutChanged)
     Q_PROPERTY(bool ignoreMinimized READ ignoreMinimized NOTIFY ignoreMinimizedChanged)
+    Q_PROPERTY(bool filterWindows READ filterWindows NOTIFY filterWindowsChanged)
     Q_PROPERTY(bool organizedGrid READ organizedGrid NOTIFY organizedGridChanged)
     Q_PROPERTY(qreal overviewPartialActivationFactor READ overviewPartialActivationFactor NOTIFY overviewPartialActivationFactorChanged)
     // More efficient from a property binding pov rather than checking if partialActivationFactor is strictly between 0 and 1
@@ -38,6 +39,9 @@ public:
 
     bool ignoreMinimized() const;
     bool organizedGrid() const;
+
+    bool filterWindows() const;
+    void setFilterWindows(bool filterWindows);
 
     int animationDuration() const;
     void setAnimationDuration(int duration);
@@ -67,6 +71,7 @@ Q_SIGNALS:
     void gridPartialActivationFactorChanged();
     void gridGestureInProgressChanged();
     void ignoreMinimizedChanged();
+    void filterWindowsChanged();
     void organizedGridChanged();
     void desktopOffsetChanged();
     void searchTextChanged();
@@ -93,6 +98,7 @@ private:
     QList<ElectricBorder> m_borderActivate;
     QString m_searchText;
     QPointF m_desktopOffset;
+    bool m_filterWindows = true;
     int m_animationDuration = 400;
     int m_layout = 1;
 };

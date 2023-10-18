@@ -262,7 +262,7 @@ FocusScope {
                 effect.searchTextChanged()
             }
             Keys.priority: Keys.BeforeItem
-            Keys.forwardTo: text && allDesktopHeaps.currentHeap.count === 0 ? searchResults : allDesktopHeaps.currentHeap
+            Keys.forwardTo: text && (allDesktopHeaps.currentHeap.count === 0 || !effect.filterWindows) ? searchResults : allDesktopHeaps.currentHeap
             text: effect.searchText
             onTextEdited: {
                 effect.searchText = text;
@@ -351,7 +351,7 @@ FocusScope {
                 color: Kirigami.Theme.highlightColor
                 visible: gridVal > 0 || nearCurrent
                 anchors.fill: parent
-                property bool shouldBeVisibleInOverview: !(container.organized && effect.searchText.length > 0 && current) || heap.count !== 0
+                property bool shouldBeVisibleInOverview: !(container.organized && effect.searchText.length > 0 && current) || (heap.count !== 0 && effect.filterWindows)
                 opacity: 1 - overviewVal * (shouldBeVisibleInOverview ? 0 : 1)
 
                 function selectLastItem(direction) {
@@ -648,11 +648,12 @@ FocusScope {
         Item {
             width: parent.width
             height: parent.height - topBar.height
-            visible: container.organized && effect.searchText.length > 0 && allDesktopHeaps.currentHeap.count === 0
+            visible: container.organized && effect.searchText.length > 0 && (allDesktopHeaps.currentHeap.count === 0 || !effect.filterWindows)
             opacity: overviewVal
 
             PlasmaExtras.PlaceholderMessage {
                 id: placeholderMessage
+                visible: container.organized && effect.searchText.length > 0 && allDesktopHeaps.currentHeap.count === 0 && effect.filterWindows
                 anchors.top: parent.top
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: i18ndc("kwin", "@info:placeholder", "No matching windows")
@@ -663,7 +664,7 @@ FocusScope {
                 anchors.bottom: parent.bottom
                 anchors.horizontalCenter: parent.horizontalCenter
                 width: parent.width / 2
-                height: parent.height - placeholderMessage.height - Kirigami.Units.largeSpacing
+                height: effect.filterWindows ? parent.height - placeholderMessage.height - Kirigami.Units.largeSpacing : parent.height - Kirigami.Units.largeSpacing
                 queryString: effect.searchText
 
                 onActivated: {

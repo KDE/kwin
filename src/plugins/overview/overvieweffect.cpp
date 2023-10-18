@@ -168,6 +168,7 @@ void OverviewEffect::reconfigure(ReconfigureFlags)
     OverviewConfig::self()->read();
     setLayout(OverviewConfig::layoutMode());
     setAnimationDuration(animationTime(300));
+    setFilterWindows(OverviewConfig::filterWindows());
 
     for (const ElectricBorder &border : std::as_const(m_borderActivate)) {
         effects->unreserveElectricBorder(border, this);
@@ -194,6 +195,19 @@ void OverviewEffect::setAnimationDuration(int duration)
     if (m_animationDuration != duration) {
         m_animationDuration = duration;
         Q_EMIT animationDurationChanged();
+    }
+}
+
+bool OverviewEffect::filterWindows() const
+{
+    return m_filterWindows;
+}
+
+void OverviewEffect::setFilterWindows(bool filterWindows)
+{
+    if (m_filterWindows != filterWindows) {
+        m_filterWindows = filterWindows;
+        Q_EMIT filterWindowsChanged();
     }
 }
 
