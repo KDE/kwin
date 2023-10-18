@@ -439,8 +439,15 @@ void QuickSceneEffect::addScreen(EffectScreen *screen)
     });
     incubator->setInitialProperties(properties);
 
-    QQmlContext *creationContext = d->delegate->creationContext();
-    QQmlContext *context = new QQmlContext(creationContext ? creationContext : qmlContext(this));
+    QQmlContext *parentContext;
+    if (QQmlContext *context = d->delegate->creationContext()) {
+        parentContext = context;
+    } else if (QQmlContext *context = qmlContext(this)) {
+        parentContext = context;
+    } else {
+        parentContext = d->delegate->engine()->rootContext();
+    }
+    QQmlContext *context = new QQmlContext(parentContext);
 
     d->contexts[screen].reset(context);
     d->incubators[screen].reset(incubator);
