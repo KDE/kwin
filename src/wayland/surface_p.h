@@ -26,6 +26,7 @@ class ContentTypeV1Interface;
 class TearingControlV1Interface;
 class FractionalScaleV1Interface;
 class PresentationTimeFeedback;
+class ColorManagementSurface;
 
 struct SurfaceState
 {
@@ -166,6 +167,7 @@ public:
     FractionalScaleV1Interface *fractionalScaleExtension = nullptr;
     ClientConnection *client = nullptr;
     TearingControlV1Interface *tearing = nullptr;
+    ColorManagementSurface *colorManagement = nullptr;
 
     struct
     {

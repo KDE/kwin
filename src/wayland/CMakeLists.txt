@@ -220,6 +220,14 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${WaylandProtocols_DATADIR}/stable/presentation-time/presentation-time.xml
     BASENAME presentation-time
 )
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PROTOCOL protocols/color-management-v1.xml
+    BASENAME color-management-v1
+)
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PROTOCOL protocols/color-representation-v1.xml
+    BASENAME color-representation-v1
+)
 
 target_sources(kwin PRIVATE
     abstract_data_source.cpp
@@ -227,6 +235,8 @@ target_sources(kwin PRIVATE
     appmenu.cpp
     blur.cpp
     clientconnection.cpp
+    colormanagement.cpp
+    colorrepresentation.cpp
     compositor.cpp
     contenttype_v1.cpp
     contrast.cpp
@@ -243,8 +253,8 @@ target_sources(kwin PRIVATE
     dpms.cpp
     drmclientbuffer.cpp
     drmlease_v1.cpp
-    fractionalscale_v1.cpp
     filtered_display.cpp
+    fractionalscale_v1.cpp
     idle.cpp
     idleinhibit_v1.cpp
     idlenotify_v1.cpp

@@ -21,6 +21,8 @@
 #include "utils/serviceutils.h"
 #include "virtualdesktops.h"
 #include "wayland/appmenu.h"
+#include "wayland/colormanagement.h"
+#include "wayland/colorrepresentation.h"
 #include "wayland/compositor.h"
 #include "wayland/contenttype_v1.h"
 #include "wayland/cursorshape_v1.h"
@@ -523,6 +525,9 @@ bool WaylandServer::init(InitializationFlags flags)
     });
 
     new PresentationTime(m_display, m_display);
+    new ColorRepresentationManager(m_display, m_display);
+    new ColorManagerV1Interface(m_display, m_display);
+
     return true;
 }
 
