@@ -639,6 +639,10 @@ void SurfaceState::mergeInto(SurfaceState *target)
         target->presentationHint = presentationHint;
         target->tearingIsSet = true;
     }
+    if (colorDescriptionIsSet) {
+        target->colorDescription = colorDescription;
+        target->colorDescriptionIsSet = true;
+    }
 
     *this = SurfaceState{};
     serial = target->serial;
@@ -657,6 +661,7 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     const bool slideChanged = next->slideIsSet;
     const bool subsurfaceOrderChanged = next->subsurfaceOrderChanged;
     const bool visibilityChanged = bufferChanged && bool(current->buffer) != bool(next->buffer);
+    const bool colorDescriptionChanged = next->colorDescriptionIsSet;
 
     const QSizeF oldSurfaceSize = surfaceSize;
     const QSize oldBufferSize = bufferSize;
@@ -748,6 +753,9 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     }
     if (subsurfaceOrderChanged) {
         Q_EMIT q->childSubSurfacesChanged();
+    }
+    if (colorDescriptionChanged) {
+        Q_EMIT q->colorDescriptionChanged();
     }
 
     if (bufferChanged) {
@@ -1136,6 +1144,11 @@ QPointF SurfaceInterface::toSurfaceLocal(const QPointF &point) const
 PresentationHint SurfaceInterface::presentationHint() const
 {
     return d->current->presentationHint;
+}
+
+const ColorDescription &SurfaceInterface::colorDescription() const
+{
+    return d->current->colorDescription;
 }
 
 void SurfaceInterface::setPreferredBufferScale(qreal scale)

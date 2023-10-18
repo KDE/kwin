@@ -175,6 +175,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
                 .hasAlpha = true,
                 .coordinateType = UnnormalizedCoordinates,
                 .scale = scale,
+                .colorDescription = item->colorDescription(),
             });
         }
     } else if (auto decorationItem = qobject_cast<DecorationItem *>(item)) {
@@ -188,6 +189,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
                 .hasAlpha = true,
                 .coordinateType = UnnormalizedCoordinates,
                 .scale = scale,
+                .colorDescription = item->colorDescription(),
             });
         }
     } else if (auto surfaceItem = qobject_cast<SurfaceItem *>(item)) {
@@ -202,6 +204,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
                     .hasAlpha = pixmap->hasAlphaChannel(),
                     .coordinateType = NormalizedCoordinates,
                     .scale = scale,
+                    .colorDescription = item->colorDescription(),
                 });
             }
         }
@@ -215,6 +218,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
                 .hasAlpha = imageItem->image().hasAlphaChannel(),
                 .coordinateType = NormalizedCoordinates,
                 .scale = scale,
+                .colorDescription = item->colorDescription(),
             });
         }
     }
@@ -281,10 +285,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
         return;
     }
 
-    ShaderTraits shaderTraits = ShaderTrait::MapTexture;
-    if (renderTarget.colorDescription() != ColorDescription::sRGB) {
-        shaderTraits |= ShaderTrait::TransformColorspace;
-    }
+    ShaderTraits shaderTraits = ShaderTrait::MapTexture | ShaderTrait::TransformColorspace;
 
     if (data.brightness() != 1.0) {
         shaderTraits |= ShaderTrait::Modulate;
@@ -330,9 +331,6 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
         shader->setUniform(GLShader::Saturation, data.saturation());
         shader->setUniform(GLShader::Vec3Uniform::PrimaryBrightness, QVector3D(toXYZ(1, 0), toXYZ(1, 1), toXYZ(1, 2)));
     }
-    if (shaderTraits & ShaderTrait::TransformColorspace) {
-        shader->setColorspaceUniformsFromSRGB(renderTarget.colorDescription());
-    }
 
     if (renderContext.hardwareClipping) {
         glEnable(GL_SCISSOR_TEST);
@@ -363,6 +361,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
                                modulate(renderNode.opacity, data.brightness()));
             opacity = renderNode.opacity;
         }
+        shader->setColorspaceUniforms(renderNode.colorDescription, renderTarget.colorDescription());
 
         renderNode.texture->bind();
 

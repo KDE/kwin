@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "libkwineffects/colorspace.h"
 #include "libkwineffects/kwineffects.h"
 #include "libkwineffects/kwinglobals.h"
 
@@ -111,6 +112,7 @@ public:
 
     WindowQuadList quads() const;
     virtual void preprocess();
+    const ColorDescription &colorDescription() const;
 
 Q_SIGNALS:
     void childAdded(Item *item);
@@ -132,6 +134,7 @@ Q_SIGNALS:
 protected:
     virtual WindowQuadList buildQuads() const;
     void discardQuads();
+    void setColorDescription(const ColorDescription &description);
 
 private:
     void addChild(Item *item);
@@ -159,6 +162,7 @@ private:
     QMap<SceneDelegate *, QRegion> m_repaints;
     mutable std::optional<WindowQuadList> m_quads;
     mutable std::optional<QList<Item *>> m_sortedChildItems;
+    ColorDescription m_colorDescription = ColorDescription::sRGB;
 };
 
 } // namespace KWin

@@ -7,6 +7,7 @@
 #pragma once
 
 #include "core/output.h"
+#include "libkwineffects/colorspace.h"
 
 #include <QMatrix4x4>
 #include <QObject>
@@ -371,6 +372,8 @@ public:
     Transaction *lastTransaction() const;
     void setLastTransaction(Transaction *transaction);
 
+    const ColorDescription &colorDescription() const;
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the underlying wl_surface resource is about to be freed.
@@ -455,6 +458,8 @@ Q_SIGNALS:
      * @see inhibitsIdle
      */
     void inhibitsIdleChanged();
+
+    void colorDescriptionChanged();
 
     /**
      * Emitted when the Surface has been committed.

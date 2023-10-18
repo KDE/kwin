@@ -27,6 +27,7 @@ public:
         bool hasAlpha = false;
         TextureCoordinateType coordinateType = UnnormalizedCoordinates;
         qreal scale = 1.0;
+        ColorDescription colorDescription;
     };
 
     struct RenderContext

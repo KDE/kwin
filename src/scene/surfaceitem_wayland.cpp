@@ -40,6 +40,8 @@ SurfaceItemWayland::SurfaceItemWayland(SurfaceInterface *surface, Scene *scene, 
             this, &SurfaceItemWayland::addDamage);
     connect(surface, &SurfaceInterface::childSubSurfaceRemoved,
             this, &SurfaceItemWayland::handleChildSubSurfaceRemoved);
+    connect(surface, &SurfaceInterface::colorDescriptionChanged,
+            this, &SurfaceItemWayland::handleColorDescriptionChanged);
 
     SubSurfaceInterface *subsurface = surface->subSurface();
     if (subsurface) {
@@ -162,7 +164,12 @@ std::unique_ptr<SurfacePixmap> SurfaceItemWayland::createPixmap()
 
 ContentType SurfaceItemWayland::contentType() const
 {
-    return m_surface->contentType();
+    return m_surface ? m_surface->contentType() : ContentType::None;
+}
+
+void SurfaceItemWayland::handleColorDescriptionChanged()
+{
+    setColorDescription(m_surface->colorDescription());
 }
 
 SurfacePixmapWayland::SurfacePixmapWayland(SurfaceItemWayland *item, QObject *parent)

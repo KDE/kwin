@@ -442,6 +442,16 @@ void Item::markSortedChildItemsDirty()
     m_sortedChildItems.reset();
 }
 
+const ColorDescription &Item::colorDescription() const
+{
+    return m_colorDescription;
+}
+
+void Item::setColorDescription(const ColorDescription &description)
+{
+    m_colorDescription = description;
+}
+
 } // namespace KWin
 
 #include "moc_item.cpp"
