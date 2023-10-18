@@ -242,13 +242,13 @@ QSize ScreenEdgeEffect::cornerGlowSize(ElectricBorder border)
 
     switch (border) {
     case ElectricTopLeft:
-        return m_glow->elementSize(QStringLiteral("bottomright"));
+        return m_glow->elementSize(QStringLiteral("bottomright")).toSize();
     case ElectricTopRight:
-        return m_glow->elementSize(QStringLiteral("bottomleft"));
+        return m_glow->elementSize(QStringLiteral("bottomleft")).toSize();
     case ElectricBottomRight:
-        return m_glow->elementSize(QStringLiteral("topleft"));
+        return m_glow->elementSize(QStringLiteral("topleft")).toSize();
     case ElectricBottomLeft:
-        return m_glow->elementSize(QStringLiteral("topright"));
+        return m_glow->elementSize(QStringLiteral("topright")).toSize();
     default:
         return QSize();
     }

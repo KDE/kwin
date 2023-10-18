@@ -145,7 +145,7 @@ void ScreenPreviewWidget::paintEvent(QPaintEvent *event)
     QPainter painter(this);
     QPoint standPosition(d->monitorRect.center().x() - d->screenGraphics->elementSize("base").width() / 2, d->previewRect.bottom());
 
-    d->screenGraphics->paint(&painter, QRect(standPosition, d->screenGraphics->elementSize("base")), "base");
+    d->screenGraphics->paint(&painter, QRect(standPosition, d->screenGraphics->elementSize("base").toSize()), "base");
     d->screenGraphics->paintFrame(&painter, d->monitorRect.topLeft());
 
     painter.save();
