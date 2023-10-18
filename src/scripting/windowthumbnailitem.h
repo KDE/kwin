@@ -70,6 +70,7 @@ public:
 
 protected:
     void releaseResources() override;
+    void itemChange(QQuickItem::ItemChange change, const QQuickItem::ItemChangeData &value) override;
 
 Q_SIGNALS:
     void wIdChanged();
