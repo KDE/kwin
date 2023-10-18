@@ -87,7 +87,7 @@ void XwaylandLauncher::enable()
         m_listenFds = m_socket->fileDescriptors();
     }
 
-    for (int socket : qAsConst(m_listenFds)) {
+    for (int socket : std::as_const(m_listenFds)) {
         QSocketNotifier *notifier = new QSocketNotifier(socket, QSocketNotifier::Read, this);
         connect(notifier, &QSocketNotifier::activated, this, [this]() {
             if (!m_xwaylandProcess) {

@@ -1152,10 +1152,10 @@ void SurfaceInterface::setPreferredBufferScale(qreal scale)
         d->send_preferred_buffer_scale(std::ceil(scale));
     }
 
-    for (auto child : qAsConst(d->current->subsurface.below)) {
+    for (auto child : std::as_const(d->current->subsurface.below)) {
         child->surface()->setPreferredBufferScale(scale);
     }
-    for (auto child : qAsConst(d->current->subsurface.above)) {
+    for (auto child : std::as_const(d->current->subsurface.above)) {
         child->surface()->setPreferredBufferScale(scale);
     }
 }
@@ -1171,10 +1171,10 @@ void SurfaceInterface::setPreferredBufferTransform(OutputTransform transform)
         d->send_preferred_buffer_transform(uint32_t(transform.kind()));
     }
 
-    for (auto child : qAsConst(d->current->subsurface.below)) {
+    for (auto child : std::as_const(d->current->subsurface.below)) {
         child->surface()->setPreferredBufferTransform(transform);
     }
-    for (auto child : qAsConst(d->current->subsurface.above)) {
+    for (auto child : std::as_const(d->current->subsurface.above)) {
         child->surface()->setPreferredBufferTransform(transform);
     }
 }
