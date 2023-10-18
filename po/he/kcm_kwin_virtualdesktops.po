@@ -11,15 +11,15 @@ msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-10-14 01:49+0000\n"
-"PO-Revision-Date: 2017-05-16 11:37-0400\n"
+"PO-Revision-Date: 2023-10-17 15:27+0300\n"
 "Last-Translator: Elkana Bardugo <ttv200@gmail.com>\n"
 "Language-Team: Hebrew <kde-i18n-doc@kde.org>\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Zanata 3.9.6\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 3.3.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -32,46 +32,45 @@ msgid "Your emails"
 msgstr "kde-l10n-he@kde.org"
 
 #: desktopsmodel.cpp:191
-#, fuzzy, kde-format
-#| msgid "Desktop %1"
+#, kde-format
 msgctxt "A numbered name for virtual desktops"
 msgid "Desktop %1"
 msgid_plural "Desktop %1"
-msgstr[0] "שולחן עבודה מספר %1"
-msgstr[1] "שולחן עבודה מספר %1"
+msgstr[0] "שולחן עבודה %1"
+msgstr[1] "שולחן עבודה %1"
 
 #: desktopsmodel.cpp:479
 #, kde-format
 msgid "There was an error connecting to the compositor."
-msgstr ""
+msgstr "אירעה שגיאה בהתחברות למנהל החלונאי."
 
 #: desktopsmodel.cpp:678
 #, kde-format
 msgid "There was an error saving the settings to the compositor."
-msgstr ""
+msgstr "אירעה שגיאה בשמירת ההגדרות למנהל החלונאי."
 
 #: desktopsmodel.cpp:681
 #, kde-format
 msgid "There was an error requesting information from the compositor."
-msgstr ""
+msgstr "אירעה שגיאה בבקשת מידע מהמנהל החלונאי."
 
 #: ui/main.qml:89
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Rename"
-msgstr ""
+msgstr "שינוי שם"
 
 #: ui/main.qml:100
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Confirm new name"
-msgstr ""
+msgstr "אישור השם החדש"
 
 #: ui/main.qml:108
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
-msgstr ""
+msgstr "הסרה"
 
 #: ui/main.qml:135
 #, kde-format
@@ -79,55 +78,56 @@ msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
 "now will overwrite the changes."
 msgstr ""
+"שולחנות העבודה הווירטואליים השתנו מחוץ ליישום הגדרות זה. השמירה תדרוס את "
+"השינויים האלה."
 
 #: ui/main.qml:151
 #, kde-format
 msgid "Row %1"
-msgstr ""
+msgstr "שורה %1"
 
 #: ui/main.qml:161
 #, kde-format
 msgctxt "@action:button"
 msgid "Add"
-msgstr ""
+msgstr "הוספה"
 
 #: ui/main.qml:179
 #, kde-format
 msgid "1 Row"
 msgid_plural "%1 Rows"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "שורה"
+msgstr[1] "%1 שורות"
 
 #: ui/main.qml:195
 #, kde-format
 msgid "Options:"
-msgstr ""
+msgstr "אפשרויות:"
 
 #: ui/main.qml:197
-#, fuzzy, kde-format
-#| msgid "Desktop navigation wraps around"
+#, kde-format
 msgid "Navigation wraps around"
-msgstr "ניווט שולחני מעגלי"
+msgstr "ניווט חוזר להתחלה אחרי הסוף"
 
 #: ui/main.qml:215
 #, kde-format
 msgid "Show animation when switching:"
-msgstr ""
+msgstr "הצגת הנפשה במעבר:"
 
 #: ui/main.qml:266
 #, kde-format
 msgid "Show on-screen display when switching:"
-msgstr ""
+msgstr "הצגת תצוגה על המסך בעת מעבר:"
 
 #: ui/main.qml:285
 #, kde-format
 msgid "%1 ms"
-msgstr ""
+msgstr "%1 מ״ש"
 
 #: ui/main.qml:309
 #, kde-format
 msgid "Show desktop layout indicators"
-msgstr "הראה את  מחווני פריסת שולחן העבודה"
+msgstr "הצגת מחווני פריסת שולחן העבודה"
 
 #, fuzzy
 #~| msgid "Desktops"

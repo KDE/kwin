@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcm-kwin-scripts\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-21 02:02+0000\n"
-"PO-Revision-Date: 2017-05-16 11:31-0400\n"
+"PO-Revision-Date: 2023-10-17 15:20+0300\n"
 "Last-Translator: Elkana Bardugo <ttv200@gmail.com>\n"
 "Language-Team: Hebrew <kde-i18n-doc@kde.org>\n"
 "Language: he\n"
@@ -17,17 +17,17 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Zanata 3.9.6\n"
+"X-Generator: Poedit 3.3.2\n"
 
 #: module.cpp:50
 #, kde-format
 msgid "Import KWin Script"
-msgstr "ייבא סקריפט של KWin"
+msgstr "ייבוא סקריפט של KWin"
 
 #: module.cpp:51
 #, kde-format
 msgid "*.kwinscript|KWin scripts (*.kwinscript)"
-msgstr "*.kwinscript|KWin סקריפט (*.kwinscript)"
+msgstr "*.kwinscript|סקריפטים של KWin‏ (‎*.kwinscript)"
 
 #: module.cpp:62
 #, kde-format
@@ -43,30 +43,29 @@ msgstr ""
 #, kde-format
 msgctxt "Placeholder is name of the script that was imported"
 msgid "The script \"%1\" was successfully imported."
-msgstr "הסקריפט \"%1\" יובא בהצלחה"
+msgstr "הסקריפט „%1” יובא בהצלחה."
 
 #: module.cpp:125
 #, kde-format
 msgid "Error when uninstalling KWin Script: %1"
-msgstr ""
+msgstr "שגיאה בהסרת סקריפט KWin:‏ %1"
 
 #: ui/main.qml:23
 #, kde-format
 msgid "Install from File…"
-msgstr ""
+msgstr "התקנה מקובץ…"
 
 #: ui/main.qml:27
-#, fuzzy, kde-format
-#| msgid "Get New Script..."
+#, kde-format
 msgctxt "@action:button get new KWin scripts"
 msgid "Get New…"
-msgstr "קבל סקריפט חדש..."
+msgstr "הורדת חדש…"
 
 #: ui/main.qml:65
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Delete…"
-msgstr ""
+msgstr "מחיקה…"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"
