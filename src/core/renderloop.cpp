@@ -41,16 +41,16 @@ void RenderLoopPrivate::scheduleRepaint()
         return;
     }
     if (vrrPolicy == RenderLoop::VrrPolicy::Always || (vrrPolicy == RenderLoop::VrrPolicy::Automatic && fullscreenItem != nullptr)) {
-        presentMode = allowTearing ? SyncMode::AdaptiveAsync : SyncMode::Adaptive;
+        presentationMode = allowTearing ? PresentationMode::AdaptiveAsync : PresentationMode::AdaptiveSync;
     } else {
-        presentMode = allowTearing ? SyncMode::Async : SyncMode::Fixed;
+        presentationMode = allowTearing ? PresentationMode::Async : PresentationMode::VSync;
     }
     const std::chrono::nanoseconds vblankInterval(1'000'000'000'000ull / refreshRate);
     const std::chrono::nanoseconds currentTime(std::chrono::steady_clock::now().time_since_epoch());
 
     // Estimate when the next presentation will occur. Note that this is a prediction.
     nextPresentationTimestamp = lastPresentationTimestamp + vblankInterval;
-    if (nextPresentationTimestamp < currentTime && presentMode == SyncMode::Fixed) {
+    if (nextPresentationTimestamp < currentTime && presentationMode == PresentationMode::VSync) {
         nextPresentationTimestamp = lastPresentationTimestamp
             + alignTimestamp(currentTime - lastPresentationTimestamp, vblankInterval);
     }
@@ -67,7 +67,7 @@ void RenderLoopPrivate::scheduleRepaint()
         nextRenderTimestamp = currentTime;
     }
 
-    if (presentMode == SyncMode::Async || presentMode == SyncMode::AdaptiveAsync) {
+    if (presentationMode == PresentationMode::Async || presentationMode == PresentationMode::AdaptiveAsync) {
         compositeTimer.start(0);
     } else {
         const std::chrono::nanoseconds waitInterval = nextRenderTimestamp - currentTime;
@@ -98,7 +98,7 @@ void RenderLoopPrivate::notifyFrameFailed()
     }
 }
 
-void RenderLoopPrivate::notifyFrameCompleted(std::chrono::nanoseconds timestamp, std::chrono::nanoseconds renderTime)
+void RenderLoopPrivate::notifyFrameCompleted(std::chrono::nanoseconds timestamp, std::chrono::nanoseconds renderTime, PresentationMode mode)
 {
     Q_ASSERT(pendingFrameCount > 0);
     pendingFrameCount--;
@@ -110,7 +110,7 @@ void RenderLoopPrivate::notifyFrameCompleted(std::chrono::nanoseconds timestamp,
         maybeScheduleRepaint();
     }
 
-    Q_EMIT q->framePresented(q, timestamp);
+    Q_EMIT q->framePresented(q, timestamp, mode);
 }
 
 void RenderLoopPrivate::notifyVblank(std::chrono::nanoseconds timestamp)

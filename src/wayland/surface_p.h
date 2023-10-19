@@ -26,11 +26,14 @@ class ContentTypeV1Interface;
 class TearingControlV1Interface;
 class FractionalScaleV1Interface;
 class FrogColorManagementSurfaceV1;
+class PresentationTimeFeedback;
 
 struct SurfaceState
 {
     SurfaceState();
+    SurfaceState(const SurfaceState &cpy) = delete;
     ~SurfaceState();
+    SurfaceState &operator=(SurfaceState &&mv) = default;
 
     void mergeInto(SurfaceState *target);
 
@@ -66,6 +69,7 @@ struct SurfaceState
     ContentType contentType = ContentType::None;
     PresentationHint presentationHint = PresentationHint::VSync;
     ColorDescription colorDescription = ColorDescription::sRGB;
+    std::vector<std::unique_ptr<PresentationTimeFeedback>> presentationFeedbacks;
 
     struct
     {
@@ -171,6 +175,8 @@ public:
         SubSurfaceInterface *handle = nullptr;
         Transaction *transaction = nullptr;
     } subsurface;
+
+    std::vector<std::unique_ptr<PresentationTimeFeedback>> pendingPresentationFeedbacks;
 
 protected:
     void surface_destroy_resource(Resource *resource) override;

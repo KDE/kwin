@@ -18,6 +18,7 @@ namespace KWin
 
 class SoftwareVsyncMonitor;
 class VirtualBackend;
+class OutputFrame;
 
 class VirtualOutput : public Output
 {
@@ -28,7 +29,7 @@ public:
     ~VirtualOutput() override;
 
     RenderLoop *renderLoop() const override;
-    SoftwareVsyncMonitor *vsyncMonitor() const;
+    void present(const std::shared_ptr<OutputFrame> &frame);
 
     void init(const QPoint &logicalPosition, const QSize &pixelSize, qreal scale);
     void updateEnabled(bool enabled);
@@ -45,6 +46,7 @@ private:
     int m_gammaSize = 200;
     bool m_gammaResult = true;
     int m_identifier;
+    std::shared_ptr<OutputFrame> m_frame;
 };
 
 } // namespace KWin

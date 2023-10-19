@@ -29,7 +29,7 @@ public:
     DrmVirtualOutput(const QString &name, DrmGpu *gpu, const QSize &size, qreal scale);
     ~DrmVirtualOutput() override;
 
-    bool present() override;
+    bool present(const std::shared_ptr<OutputFrame> &frame) override;
     DrmOutputLayer *primaryLayer() const override;
     DrmOutputLayer *cursorLayer() const override;
     void recreateSurface();

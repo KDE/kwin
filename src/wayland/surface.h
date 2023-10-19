@@ -7,6 +7,7 @@
 #pragma once
 
 #include "core/output.h"
+#include "core/renderbackend.h"
 #include "libkwineffects/colorspace.h"
 
 #include <QMatrix4x4>
@@ -163,6 +164,8 @@ public:
 
     void frameRendered(quint32 msec);
     bool hasFrameCallbacks() const;
+
+    std::unique_ptr<PresentationFeedback> takePresentationFeedback(Output *output);
 
     QRegion opaque() const;
     QRegion input() const;

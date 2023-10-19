@@ -45,8 +45,9 @@ DrmVirtualOutput::~DrmVirtualOutput()
 {
 }
 
-bool DrmVirtualOutput::present()
+bool DrmVirtualOutput::present(const std::shared_ptr<OutputFrame> &frame)
 {
+    m_frame = frame;
     m_vsyncMonitor->arm();
     m_pageFlipPending = true;
     Q_EMIT outputChange(m_layer->currentDamage());
@@ -56,7 +57,7 @@ bool DrmVirtualOutput::present()
 void DrmVirtualOutput::vblank(std::chrono::nanoseconds timestamp)
 {
     if (m_pageFlipPending) {
-        DrmAbstractOutput::pageFlipped(timestamp);
+        DrmAbstractOutput::pageFlipped(timestamp, PresentationMode::VSync);
     }
 }
 

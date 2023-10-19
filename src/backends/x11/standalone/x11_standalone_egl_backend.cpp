@@ -361,8 +361,9 @@ void EglBackend::endFrame(const QRegion &renderedRegion, const QRegion &damagedR
     m_lastRenderedRegion = renderedRegion;
 }
 
-void EglBackend::present(Output *output)
+void EglBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)
 {
+    m_frame = frame;
     // Start the software vsync monitor. There is no any reliable way to determine when
     // eglSwapBuffers() or eglSwapBuffersWithDamageEXT() completes.
     m_vsyncMonitor->arm();
@@ -421,8 +422,8 @@ std::chrono::nanoseconds EglBackend::queryRenderTime()
 
 void EglBackend::vblank(std::chrono::nanoseconds timestamp)
 {
-    RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_backend->renderLoop());
-    renderLoopPrivate->notifyFrameCompleted(timestamp, m_layer->queryRenderTime());
+    m_frame->presented(std::chrono::nanoseconds::zero(), timestamp, queryRenderTime(), PresentationMode::VSync);
+    m_frame.reset();
 }
 
 EglSurfaceTextureX11::EglSurfaceTextureX11(EglBackend *backend, SurfacePixmapX11 *texture)

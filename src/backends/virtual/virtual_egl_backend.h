@@ -58,7 +58,7 @@ public:
     std::unique_ptr<SurfaceTexture> createSurfaceTextureWayland(SurfacePixmap *pixmap) override;
     std::pair<std::shared_ptr<KWin::GLTexture>, ColorDescription> textureForOutput(Output *output) const override;
     OutputLayer *primaryLayer(Output *output) override;
-    void present(Output *output) override;
+    void present(Output *output, const std::shared_ptr<OutputFrame> &frame) override;
     void init() override;
 
     VirtualBackend *backend() const;

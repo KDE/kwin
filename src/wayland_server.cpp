@@ -50,6 +50,7 @@
 #include "wayland/plasmawindowmanagement.h"
 #include "wayland/pointerconstraints_v1.h"
 #include "wayland/pointergestures_v1.h"
+#include "wayland/presentationtime.h"
 #include "wayland/primaryselectiondevicemanager_v1.h"
 #include "wayland/relativepointer_v1.h"
 #include "wayland/screenedge_v1.h"
@@ -495,6 +496,7 @@ bool WaylandServer::init(InitializationFlags flags)
     });
 
     new FrogColorManagementV1(m_display, m_display);
+    new PresentationTime(m_display, m_display);
     return true;
 }
 

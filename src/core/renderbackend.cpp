@@ -5,12 +5,38 @@
 */
 
 #include "renderbackend.h"
+#include "renderloop_p.h"
 #include "scene/surfaceitem.h"
 
 #include <drm_fourcc.h>
 
 namespace KWin
 {
+
+OutputFrame::OutputFrame(RenderLoop *loop)
+    : m_loop(loop)
+{
+}
+
+OutputFrame::~OutputFrame() = default;
+
+void OutputFrame::addFeedback(std::unique_ptr<PresentationFeedback> &&feedback)
+{
+    m_feedbacks.push_back(std::move(feedback));
+}
+
+void OutputFrame::presented(std::chrono::nanoseconds refreshDuration, std::chrono::nanoseconds timestamp, std::chrono::nanoseconds renderTime, PresentationMode mode)
+{
+    RenderLoopPrivate::get(m_loop)->notifyFrameCompleted(timestamp, renderTime, mode);
+    for (const auto &feedback : m_feedbacks) {
+        feedback->presented(refreshDuration, timestamp, mode);
+    }
+}
+
+void OutputFrame::failed()
+{
+    RenderLoopPrivate::get(m_loop)->notifyFrameFailed();
+}
 
 RenderBackend::RenderBackend(QObject *parent)
     : QObject(parent)
@@ -55,6 +81,18 @@ std::unique_ptr<SurfaceTexture> RenderBackend::createSurfaceTextureX11(SurfacePi
 std::unique_ptr<SurfaceTexture> RenderBackend::createSurfaceTextureWayland(SurfacePixmap *pixmap)
 {
     return nullptr;
+}
+
+PresentationFeedback::PresentationFeedback(std::vector<std::unique_ptr<PresentationFeedback>> &&feedbacks)
+    : m_subFeedbacks(std::move(feedbacks))
+{
+}
+
+void PresentationFeedback::presented(std::chrono::nanoseconds refreshCycleDuration, std::chrono::nanoseconds timestamp, PresentationMode mode)
+{
+    for (const auto &feedback : m_subFeedbacks) {
+        feedback->presented(refreshCycleDuration, timestamp, mode);
+    }
 }
 
 } // namespace KWin

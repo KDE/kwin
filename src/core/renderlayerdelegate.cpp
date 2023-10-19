@@ -19,7 +19,7 @@ void RenderLayerDelegate::setLayer(RenderLayer *layer)
     m_layer = layer;
 }
 
-void RenderLayerDelegate::frame()
+void RenderLayerDelegate::frame(OutputFrame *frame)
 {
 }
 

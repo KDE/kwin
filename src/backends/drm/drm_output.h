@@ -41,7 +41,7 @@ public:
     DrmConnector *connector() const;
     DrmPipeline *pipeline() const;
 
-    bool present() override;
+    bool present(const std::shared_ptr<OutputFrame> &frame) override;
     DrmOutputLayer *primaryLayer() const override;
     DrmOutputLayer *cursorLayer() const override;
 

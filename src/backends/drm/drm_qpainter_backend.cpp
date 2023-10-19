@@ -37,9 +37,9 @@ GraphicsBufferAllocator *DrmQPainterBackend::graphicsBufferAllocator() const
     return m_backend->primaryGpu()->graphicsBufferAllocator();
 }
 
-void DrmQPainterBackend::present(Output *output)
+void DrmQPainterBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)
 {
-    static_cast<DrmAbstractOutput *>(output)->present();
+    static_cast<DrmAbstractOutput *>(output)->present(frame);
 }
 
 OutputLayer *DrmQPainterBackend::primaryLayer(Output *output)

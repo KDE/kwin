@@ -55,6 +55,7 @@ class XdgActivationV1Integration;
 class XdgPopupWindow;
 class XdgSurfaceWindow;
 class XdgToplevelWindow;
+class PresentationTime;
 
 class KWIN_EXPORT WaylandServer : public QObject
 {
@@ -275,6 +276,7 @@ private:
     ContentTypeManagerV1Interface *m_contentTypeManager = nullptr;
     TearingControlManagerV1Interface *m_tearingControlInterface = nullptr;
     XwaylandShellV1Interface *m_xwaylandShell = nullptr;
+    PresentationTime *m_presentationTime = nullptr;
     QList<Window *> m_windows;
     InitializationFlags m_initFlags;
     QHash<Output *, OutputInterface *> m_waylandOutputs;

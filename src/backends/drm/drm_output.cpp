@@ -16,6 +16,7 @@
 #include "core/colortransformation.h"
 #include "core/iccprofile.h"
 #include "core/outputconfiguration.h"
+#include "core/renderbackend.h"
 #include "core/renderloop.h"
 #include "core/renderloop_p.h"
 #include "drm_layer.h"
@@ -264,12 +265,13 @@ void DrmOutput::updateDpmsMode(DpmsMode dpmsMode)
     setState(next);
 }
 
-bool DrmOutput::present()
+bool DrmOutput::present(const std::shared_ptr<OutputFrame> &frame)
 {
+    m_frame = frame;
     RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_renderLoop.get());
     const auto type = DrmConnector::kwinToDrmContentType(contentType());
-    if (m_pipeline->syncMode() != renderLoopPrivate->presentMode || type != m_pipeline->contentType()) {
-        m_pipeline->setSyncMode(renderLoopPrivate->presentMode);
+    if (m_pipeline->presentationMode() != renderLoopPrivate->presentationMode || type != m_pipeline->contentType()) {
+        m_pipeline->setPresentationMode(renderLoopPrivate->presentationMode);
         m_pipeline->setContentType(type);
         if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
             m_pipeline->applyPendingChanges();
@@ -293,7 +295,7 @@ bool DrmOutput::present()
         return true;
     } else if (!needsModeset) {
         qCWarning(KWIN_DRM) << "Presentation failed!" << strerror(errno);
-        frameFailed();
+        m_frame->failed();
     }
     return false;
 }

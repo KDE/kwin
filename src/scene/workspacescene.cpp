@@ -55,6 +55,7 @@
 #include "scene/workspacescene.h"
 #include "compositor.h"
 #include "core/output.h"
+#include "core/renderbackend.h"
 #include "core/renderlayer.h"
 #include "core/renderloop.h"
 #include "effects.h"
@@ -183,7 +184,7 @@ SurfaceItem *WorkspaceScene::scanoutCandidate() const
     return candidate;
 }
 
-void WorkspaceScene::frame(SceneDelegate *delegate)
+void WorkspaceScene::frame(SceneDelegate *delegate, OutputFrame *frame)
 {
     if (waylandServer()) {
         Output *output = delegate->output();
@@ -201,11 +202,17 @@ void WorkspaceScene::frame(SceneDelegate *delegate)
             }
             if (auto surface = window->surface()) {
                 surface->frameRendered(frameTime.count());
+                if (auto feedback = surface->takePresentationFeedback(output)) {
+                    frame->addFeedback(std::move(feedback));
+                }
             }
         }
 
         if (m_dndIcon) {
             m_dndIcon->frameRendered(frameTime.count());
+            if (auto feedback = m_dndIcon->takePresentationFeedback(output)) {
+                frame->addFeedback(std::move(feedback));
+            }
         }
     }
 }

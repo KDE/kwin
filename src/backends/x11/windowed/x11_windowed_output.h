@@ -28,6 +28,7 @@ namespace KWin
 class GraphicsBuffer;
 class X11WindowedBackend;
 class X11WindowedOutput;
+class OutputFrame;
 
 struct DmaBufAttributes;
 struct ShmAttributes;
@@ -112,6 +113,7 @@ public:
 
     void handlePresentCompleteNotify(xcb_present_complete_notify_event_t *event);
     void handlePresentIdleNotify(xcb_present_idle_notify_event_t *event);
+    void framePending(const std::shared_ptr<OutputFrame> &frame);
 
 private:
     void initXInputForWindow();
@@ -127,6 +129,7 @@ private:
     std::unordered_map<GraphicsBuffer *, std::unique_ptr<X11WindowedBuffer>> m_buffers;
     QPoint m_hostPosition;
     QRegion m_exposedArea;
+    std::shared_ptr<OutputFrame> m_frame;
 
     X11WindowedBackend *m_backend;
 };

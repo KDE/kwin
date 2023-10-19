@@ -729,8 +729,9 @@ std::chrono::nanoseconds GlxBackend::queryRenderTime()
     return m_query->result();
 }
 
-void GlxBackend::present(Output *output)
+void GlxBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)
 {
+    m_frame = frame;
     // If the GLX_INTEL_swap_event extension is not used for getting presentation feedback,
     // assume that the frame will be presented at the next vblank event, this is racy.
     if (m_vsyncMonitor) {
@@ -756,8 +757,8 @@ void GlxBackend::present(Output *output)
 
 void GlxBackend::vblank(std::chrono::nanoseconds timestamp)
 {
-    RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_backend->renderLoop());
-    renderLoopPrivate->notifyFrameCompleted(timestamp, queryRenderTime());
+    m_frame->presented(std::chrono::nanoseconds::zero(), timestamp, queryRenderTime(), PresentationMode::VSync);
+    m_frame.reset();
 }
 
 bool GlxBackend::makeCurrent()

@@ -154,6 +154,7 @@ void Compositor::composite(RenderLoop *renderLoop)
     superLayer->setOutputLayer(primaryLayer);
 
     renderLoop->prepareNewFrame();
+    auto frame = std::make_shared<OutputFrame>(renderLoop);
 
     if (superLayer->needsRepaint()) {
         renderLoop->beginPaint();
@@ -191,9 +192,9 @@ void Compositor::composite(RenderLoop *renderLoop)
         postPaintPass(superLayer);
     }
 
-    m_backend->present(output);
+    m_backend->present(output, frame);
 
-    framePass(superLayer);
+    framePass(superLayer, frame.get());
 
     // TODO: Put it inside the cursor layer once the cursor layer can be backed by a real output layer.
     if (waylandServer()) {
@@ -209,12 +210,12 @@ void Compositor::composite(RenderLoop *renderLoop)
     }
 }
 
-void Compositor::framePass(RenderLayer *layer)
+void Compositor::framePass(RenderLayer *layer, OutputFrame *frame)
 {
-    layer->delegate()->frame();
+    layer->delegate()->frame(frame);
     const auto sublayers = layer->sublayers();
     for (RenderLayer *sublayer : sublayers) {
-        framePass(sublayer);
+        framePass(sublayer, frame);
     }
 }
 

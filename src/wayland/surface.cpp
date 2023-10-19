@@ -16,6 +16,7 @@
 #include "linuxdmabufv1clientbuffer.h"
 #include "output.h"
 #include "pointerconstraints_v1_p.h"
+#include "presentationtime.h"
 #include "region_p.h"
 #include "shadow.h"
 #include "slide.h"
@@ -475,6 +476,27 @@ void SurfaceInterface::frameRendered(quint32 msec)
     }
 }
 
+std::unique_ptr<PresentationFeedback> SurfaceInterface::takePresentationFeedback(Output *output)
+{
+    if (output && (!d->primaryOutput || d->primaryOutput->handle() != output)) {
+        return nullptr;
+    }
+    std::vector<std::unique_ptr<PresentationFeedback>> feedbacks;
+    std::move(d->current->presentationFeedbacks.begin(), d->current->presentationFeedbacks.end(), std::back_inserter(feedbacks));
+    d->current->presentationFeedbacks.clear();
+    for (SubSurfaceInterface *subsurface : std::as_const(d->current->subsurface.below)) {
+        auto &subSurfaceFeedbacks = subsurface->surface()->d->current->presentationFeedbacks;
+        std::move(subSurfaceFeedbacks.begin(), subSurfaceFeedbacks.end(), std::back_inserter(feedbacks));
+        subSurfaceFeedbacks.clear();
+    }
+    for (SubSurfaceInterface *subsurface : std::as_const(d->current->subsurface.above)) {
+        auto &subSurfaceFeedbacks = subsurface->surface()->d->current->presentationFeedbacks;
+        std::move(subSurfaceFeedbacks.begin(), subSurfaceFeedbacks.end(), std::back_inserter(feedbacks));
+        subSurfaceFeedbacks.clear();
+    }
+    return std::make_unique<PresentationFeedback>(std::move(feedbacks));
+}
+
 bool SurfaceInterface::hasFrameCallbacks() const
 {
     return !wl_list_empty(&d->current->frameCallbacks);
@@ -647,6 +669,10 @@ void SurfaceState::mergeInto(SurfaceState *target)
         target->colorDescription = colorDescription;
         target->colorDescriptionIsSet = true;
     }
+    for (auto &f : presentationFeedbacks) {
+        target->presentationFeedbacks.push_back(std::move(f));
+    }
+    presentationFeedbacks.clear();
 
     *this = SurfaceState{};
     serial = target->serial;
@@ -673,6 +699,9 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     const QMatrix4x4 oldSurfaceToBufferMatrix = surfaceToBufferMatrix;
     const QRegion oldInputRegion = inputRegion;
 
+    if (!next->damage.isEmpty() || !next->bufferDamage.isEmpty()) {
+        current->presentationFeedbacks.clear();
+    }
     next->mergeInto(current.get());
     bufferRef = current->buffer;
     scaleOverride = pendingScaleOverride;
@@ -959,7 +988,7 @@ void SurfaceInterface::setOutputs(const QList<OutputInterface *> &outputs, Outpu
         removedOutputs.removeOne(o);
     }
     for (auto it = removedOutputs.constBegin(), end = removedOutputs.constEnd(); it != end; ++it) {
-        const auto resources = (*it)->clientResources(client());
+        const auto resources = (*it)->clientResources(client()->client());
         for (wl_resource *outputResource : resources) {
             d->send_leave(outputResource);
         }
@@ -973,7 +1002,7 @@ void SurfaceInterface::setOutputs(const QList<OutputInterface *> &outputs, Outpu
     }
     for (auto it = addedOutputsOutputs.constBegin(), end = addedOutputsOutputs.constEnd(); it != end; ++it) {
         const auto o = *it;
-        const auto resources = o->clientResources(client());
+        const auto resources = o->clientResources(client()->client());
         for (wl_resource *outputResource : resources) {
             d->send_enter(outputResource);
         }

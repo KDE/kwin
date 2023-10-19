@@ -270,9 +270,10 @@ void X11WindowedEglBackend::cleanupSurfaces()
     m_outputs.clear();
 }
 
-void X11WindowedEglBackend::present(Output *output)
+void X11WindowedEglBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)
 {
     m_outputs[output].primaryLayer->present();
+    static_cast<X11WindowedOutput *>(output)->framePending(frame);
 }
 
 OutputLayer *X11WindowedEglBackend::primaryLayer(Output *output)

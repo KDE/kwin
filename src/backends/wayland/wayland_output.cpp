@@ -120,9 +120,10 @@ WaylandOutput::WaylandOutput(const QString &name, WaylandBackend *backend)
     });
 
     connect(m_surface.get(), &KWayland::Client::Surface::frameRendered, this, [this]() {
-        RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(renderLoop());
+        Q_ASSERT(m_frame);
         const auto primary = Compositor::self()->backend()->primaryLayer(this);
-        renderLoopPrivate->notifyFrameCompleted(std::chrono::steady_clock::now().time_since_epoch(), primary ? primary->queryRenderTime() : std::chrono::nanoseconds::zero());
+        m_frame->presented(std::chrono::nanoseconds(1'000'000'000'000 / refreshRate()), std::chrono::steady_clock::now().time_since_epoch(), primary ? primary->queryRenderTime() : std::chrono::nanoseconds::zero(), PresentationMode::VSync);
+        m_frame.reset();
     });
 
     updateWindowTitle();
@@ -138,6 +139,11 @@ WaylandOutput::~WaylandOutput()
     m_xdgDecoration.reset();
     m_xdgShellSurface.reset();
     m_surface.reset();
+}
+
+void WaylandOutput::framePending(const std::shared_ptr<OutputFrame> &frame)
+{
+    m_frame = frame;
 }
 
 bool WaylandOutput::isReady() const

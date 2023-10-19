@@ -90,7 +90,7 @@ public:
 
     GraphicsBufferAllocator *graphicsBufferAllocator() const override;
 
-    void present(Output *output) override;
+    void present(Output *output, const std::shared_ptr<OutputFrame> &frame) override;
     OutputLayer *primaryLayer(Output *output) override;
     OutputLayer *cursorLayer(Output *output) override;
 

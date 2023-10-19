@@ -57,7 +57,7 @@ void ShowFpsEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::millis
     m_paintAmount = 0;
 
     // detect highest monitor refresh rate
-    int maximumFps = 0;
+    uint32_t maximumFps = 0;
     const auto screens = effects->screens();
     for (auto screen : screens) {
         maximumFps = std::max(screen->refreshRate(), maximumFps);

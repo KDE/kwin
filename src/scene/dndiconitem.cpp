@@ -37,9 +37,15 @@ void DragAndDropIconItem::frameRendered(quint32 timestamp)
     }
 }
 
+std::unique_ptr<PresentationFeedback> DragAndDropIconItem::takePresentationFeedback(Output *output)
+{
+    return m_surfaceItem ? m_surfaceItem->surface()->takePresentationFeedback(output) : nullptr;
+}
+
 void DragAndDropIconItem::setOutput(Output *output)
 {
     if (m_surfaceItem && output) {
+        m_output = output;
         m_surfaceItem->surface()->setPreferredBufferScale(output->scale());
         m_surfaceItem->surface()->setPreferredColorDescription(output->colorDescription());
     }

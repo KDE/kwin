@@ -30,6 +30,8 @@ struct wl_buffer;
 
 namespace KWin
 {
+class OutputFrame;
+
 namespace Wayland
 {
 class WaylandBackend;
@@ -80,6 +82,8 @@ public:
     void updateDpmsMode(DpmsMode dpmsMode);
     void updateEnabled(bool enabled);
 
+    void framePending(const std::shared_ptr<OutputFrame> &frame);
+
 private:
     void handleConfigure(const QSize &size, KWayland::Client::XdgShellSurface::States states, quint32 serial);
     void updateWindowTitle();
@@ -94,6 +98,7 @@ private:
     QTimer m_turnOffTimer;
     bool m_hasPointerLock = false;
     bool m_ready = false;
+    std::shared_ptr<OutputFrame> m_frame;
 };
 
 } // namespace Wayland

@@ -84,7 +84,7 @@ public:
     std::pair<std::shared_ptr<GLTexture>, ColorDescription> textureForOutput(Output *output) const override;
     void init() override;
     void endFrame(Output *output, const QRegion &renderedRegion, const QRegion &damagedRegion);
-    void present(Output *output) override;
+    void present(Output *output, const std::shared_ptr<OutputFrame> &frame) override;
     OutputLayer *primaryLayer(Output *output) override;
     OutputLayer *cursorLayer(Output *output) override;
 

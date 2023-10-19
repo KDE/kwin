@@ -175,9 +175,10 @@ GraphicsBufferAllocator *X11WindowedQPainterBackend::graphicsBufferAllocator() c
     return m_allocator.get();
 }
 
-void X11WindowedQPainterBackend::present(Output *output)
+void X11WindowedQPainterBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)
 {
     m_outputs[output].primaryLayer->present();
+    static_cast<X11WindowedOutput *>(output)->framePending(frame);
 }
 
 OutputLayer *X11WindowedQPainterBackend::primaryLayer(Output *output)

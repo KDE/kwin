@@ -24,6 +24,39 @@ class OutputLayer;
 class SurfacePixmap;
 class SurfacePixmapX11;
 class SurfaceTexture;
+class PresentationFeedback;
+class RenderLoop;
+
+class PresentationFeedback
+{
+public:
+    explicit PresentationFeedback() = default;
+    explicit PresentationFeedback(std::vector<std::unique_ptr<PresentationFeedback>> &&feedbacks);
+    PresentationFeedback(const PresentationFeedback &copy) = delete;
+    PresentationFeedback(PresentationFeedback &&move) = default;
+    virtual ~PresentationFeedback() = default;
+
+    virtual void presented(std::chrono::nanoseconds refreshCycleDuration, std::chrono::nanoseconds timestamp, PresentationMode mode);
+
+private:
+    std::vector<std::unique_ptr<PresentationFeedback>> m_subFeedbacks;
+};
+
+class KWIN_EXPORT OutputFrame
+{
+public:
+    explicit OutputFrame(RenderLoop *loop);
+    ~OutputFrame();
+
+    void presented(std::chrono::nanoseconds refreshDuration, std::chrono::nanoseconds timestamp, std::chrono::nanoseconds renderTime, PresentationMode mode);
+    void failed();
+
+    void addFeedback(std::unique_ptr<PresentationFeedback> &&feedback);
+
+private:
+    RenderLoop *const m_loop;
+    std::vector<std::unique_ptr<PresentationFeedback>> m_feedbacks;
+};
 
 /**
  * The RenderBackend class is the base class for all rendering backends.
@@ -42,7 +75,7 @@ public:
 
     virtual OutputLayer *primaryLayer(Output *output) = 0;
     virtual OutputLayer *cursorLayer(Output *output);
-    virtual void present(Output *output) = 0;
+    virtual void present(Output *output, const std::shared_ptr<OutputFrame> &frame) = 0;
 
     virtual GraphicsBufferAllocator *graphicsBufferAllocator() const;
 

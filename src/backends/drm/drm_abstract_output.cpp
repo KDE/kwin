@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "drm_abstract_output.h"
+#include "core/renderbackend.h"
 #include "core/renderloop_p.h"
 #include "drm_backend.h"
 #include "drm_gpu.h"
@@ -29,13 +30,14 @@ RenderLoop *DrmAbstractOutput::renderLoop() const
 
 void DrmAbstractOutput::frameFailed() const
 {
-    RenderLoopPrivate::get(m_renderLoop.get())->notifyFrameFailed();
+    m_frame->failed();
 }
 
-void DrmAbstractOutput::pageFlipped(std::chrono::nanoseconds timestamp) const
+void DrmAbstractOutput::pageFlipped(std::chrono::nanoseconds timestamp, PresentationMode mode)
 {
     const auto gpuTime = primaryLayer() ? primaryLayer()->queryRenderTime() : std::chrono::nanoseconds::zero();
-    RenderLoopPrivate::get(m_renderLoop.get())->notifyFrameCompleted(timestamp, gpuTime);
+    m_frame->presented(std::chrono::nanoseconds(1'000'000'000'000 / refreshRate()), timestamp, gpuTime, mode);
+    m_frame.reset();
 }
 
 DrmGpu *DrmAbstractOutput::gpu() const

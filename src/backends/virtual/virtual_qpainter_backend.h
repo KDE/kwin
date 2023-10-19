@@ -56,7 +56,7 @@ public:
 
     GraphicsBufferAllocator *graphicsBufferAllocator() const override;
 
-    void present(Output *output) override;
+    void present(Output *output, const std::shared_ptr<OutputFrame> &frame) override;
     VirtualQPainterLayer *primaryLayer(Output *output) override;
 
 private:

@@ -59,7 +59,7 @@ public:
     QRegion prePaint(SceneDelegate *delegate) override;
     void postPaint() override;
     void paint(const RenderTarget &renderTarget, const QRegion &region) override;
-    void frame(SceneDelegate *delegate) override;
+    void frame(SceneDelegate *delegate, OutputFrame *frame) override;
 
     virtual bool makeOpenGLContextCurrent();
     virtual void doneOpenGLContextCurrent();

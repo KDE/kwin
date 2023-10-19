@@ -89,7 +89,7 @@ public:
     OutputLayerBeginFrameInfo beginFrame();
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion);
     std::chrono::nanoseconds queryRenderTime();
-    void present(Output *output) override;
+    void present(Output *output, const std::shared_ptr<OutputFrame> &frame) override;
     bool makeCurrent() override;
     void doneCurrent() override;
     OverlayWindow *overlayWindow() const override;
@@ -140,6 +140,7 @@ private:
     std::unique_ptr<GlxLayer> m_layer;
     std::unique_ptr<GLRenderTimeQuery> m_query;
     Options::GlSwapStrategy m_swapStrategy = Options::AutoSwapStrategy;
+    std::shared_ptr<OutputFrame> m_frame;
     friend class GlxPixmapTexture;
 };
 

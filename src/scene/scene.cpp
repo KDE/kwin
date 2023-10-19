@@ -44,9 +44,9 @@ void SceneDelegate::paint(const RenderTarget &renderTarget, const QRegion &regio
     m_scene->paint(renderTarget, region == infiniteRegion() ? infiniteRegion() : region.translated(viewport().topLeft()));
 }
 
-void SceneDelegate::frame()
+void SceneDelegate::frame(OutputFrame *frame)
 {
-    m_scene->frame(this);
+    m_scene->frame(this, frame);
 }
 
 Output *SceneDelegate::output() const
@@ -139,7 +139,7 @@ SurfaceItem *Scene::scanoutCandidate() const
     return nullptr;
 }
 
-void Scene::frame(SceneDelegate *delegate)
+void Scene::frame(SceneDelegate *delegate, OutputFrame *frame)
 {
 }
 

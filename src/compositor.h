@@ -28,6 +28,7 @@ class RenderLoop;
 class RenderTarget;
 class WorkspaceScene;
 class Window;
+class OutputFrame;
 
 class KWIN_EXPORT Compositor : public QObject
 {
@@ -149,7 +150,7 @@ protected:
     void prePaintPass(RenderLayer *layer, QRegion *damage);
     void postPaintPass(RenderLayer *layer);
     void paintPass(RenderLayer *layer, const RenderTarget &renderTarget, const QRegion &region);
-    void framePass(RenderLayer *layer);
+    void framePass(RenderLayer *layer, OutputFrame *frame);
 
     State m_state = State::Off;
     QList<xcb_atom_t> m_unusedSupportProperties;

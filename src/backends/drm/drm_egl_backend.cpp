@@ -149,9 +149,9 @@ GraphicsBufferAllocator *EglGbmBackend::graphicsBufferAllocator() const
     return gpu()->graphicsBufferAllocator();
 }
 
-void EglGbmBackend::present(Output *output)
+void EglGbmBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)
 {
-    static_cast<DrmAbstractOutput *>(output)->present();
+    static_cast<DrmAbstractOutput *>(output)->present(frame);
 }
 
 OutputLayer *EglGbmBackend::primaryLayer(Output *output)

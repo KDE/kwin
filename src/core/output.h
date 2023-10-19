@@ -225,7 +225,7 @@ public:
     /**
      * Returns the approximate vertical refresh rate of this output, in mHz.
      */
-    int refreshRate() const;
+    uint32_t refreshRate() const;
 
     /**
      * Returns whether this output is connected through an internal connector,

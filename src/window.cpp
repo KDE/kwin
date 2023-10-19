@@ -4198,6 +4198,10 @@ void Window::maybeSendFrameCallback()
 {
     if (m_surface && !m_windowItem->isVisible()) {
         m_surface->frameRendered(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
+        const auto feedback = m_surface->takePresentationFeedback(nullptr);
+        if (feedback) {
+            feedback->presented(std::chrono::nanoseconds(1'000'000'000'000 / output()->refreshRate()), std::chrono::steady_clock::now().time_since_epoch(), PresentationMode::VSync);
+        }
         // update refresh rate, it might have changed
         m_offscreenFramecallbackTimer.start(1'000'000 / output()->refreshRate());
     }

@@ -66,6 +66,11 @@ void DrmAtomicCommit::setVrr(DrmCrtc *crtc, bool vrr)
     m_vrr = vrr;
 }
 
+void DrmAtomicCommit::setPresentationMode(PresentationMode mode)
+{
+    m_mode = mode;
+}
+
 bool DrmAtomicCommit::test()
 {
     return doCommit(DRM_MODE_ATOMIC_TEST_ONLY | DRM_MODE_ATOMIC_NONBLOCK);
@@ -135,7 +140,7 @@ void DrmAtomicCommit::pageFlipped(std::chrono::nanoseconds timestamp) const
         type = DrmPipeline::PageflipType::CursorOnly;
     }
     for (const auto pipeline : std::as_const(m_pipelines)) {
-        pipeline->pageFlipped(timestamp, type);
+        pipeline->pageFlipped(timestamp, type, m_mode);
     }
 }
 
@@ -207,8 +212,13 @@ bool DrmLegacyCommit::doModeset(DrmConnector *connector, DrmConnectorMode *mode)
     }
 }
 
-bool DrmLegacyCommit::doPageflip(uint32_t flags)
+bool DrmLegacyCommit::doPageflip(PresentationMode mode)
 {
+    m_mode = mode;
+    uint32_t flags = DRM_MODE_PAGE_FLIP_EVENT;
+    if (mode == PresentationMode::Async || mode == PresentationMode::AdaptiveAsync) {
+        flags |= DRM_MODE_PAGE_FLIP_ASYNC;
+    }
     return drmModePageFlip(gpu()->fd(), m_pipeline->crtc()->id(), m_buffer->framebufferId(), flags, this) == 0;
 }
 
@@ -216,6 +226,6 @@ void DrmLegacyCommit::pageFlipped(std::chrono::nanoseconds timestamp) const
 {
     Q_ASSERT(QThread::currentThread() == QApplication::instance()->thread());
     m_pipeline->crtc()->setCurrent(m_buffer);
-    m_pipeline->pageFlipped(timestamp, m_modeset ? DrmPipeline::PageflipType::Modeset : DrmPipeline::PageflipType::Normal);
+    m_pipeline->pageFlipped(timestamp, m_modeset ? DrmPipeline::PageflipType::Modeset : DrmPipeline::PageflipType::Normal, m_mode);
 }
 }

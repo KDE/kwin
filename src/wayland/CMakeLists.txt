@@ -220,6 +220,10 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${PROJECT_SOURCE_DIR}/src/wayland/protocols/frog-color-management-v1.xml
     BASENAME frog-color-management-v1
 )
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PROTOCOL ${WaylandProtocols_DATADIR}/stable/presentation-time/presentation-time.xml
+    BASENAME presentation-time
+)
 
 ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${WaylandProtocols_DATADIR}/staging/security-context/security-context-v1.xml
@@ -271,6 +275,7 @@ target_sources(kwin PRIVATE
     pointer.cpp
     pointerconstraints_v1.cpp
     pointergestures_v1.cpp
+    presentationtime.cpp
     primaryselectiondevice_v1.cpp
     primaryselectiondevicemanager_v1.cpp
     primaryselectionoffer_v1.cpp
@@ -345,6 +350,7 @@ install(FILES
     pointer.h
     pointerconstraints_v1.h
     pointergestures_v1.h
+    presentationtime.h
     primaryselectiondevice_v1.h
     primaryselectiondevicemanager_v1.h
     primaryselectionoffer_v1.h

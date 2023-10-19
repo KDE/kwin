@@ -16,6 +16,7 @@ namespace KWin
 class DrmBackend;
 class DrmGpu;
 class DrmOutputLayer;
+class OutputFrame;
 
 class DrmAbstractOutput : public Output
 {
@@ -25,10 +26,10 @@ public:
 
     RenderLoop *renderLoop() const override;
     void frameFailed() const;
-    void pageFlipped(std::chrono::nanoseconds timestamp) const;
+    void pageFlipped(std::chrono::nanoseconds timestamp, PresentationMode mode);
     DrmGpu *gpu() const;
 
-    virtual bool present() = 0;
+    virtual bool present(const std::shared_ptr<OutputFrame> &frame) = 0;
     virtual DrmOutputLayer *primaryLayer() const = 0;
     virtual DrmOutputLayer *cursorLayer() const = 0;
 
@@ -38,6 +39,7 @@ protected:
     friend class DrmGpu;
 
     std::unique_ptr<RenderLoop> m_renderLoop;
+    std::shared_ptr<OutputFrame> m_frame;
     DrmGpu *const m_gpu;
 };
 

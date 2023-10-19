@@ -30,7 +30,7 @@ public:
     QRect viewport() const;
 
     SurfaceItem *scanoutCandidate() const override;
-    void frame() override;
+    void frame(OutputFrame *frame) override;
     QRegion prePaint() override;
     void postPaint() override;
     void paint(const RenderTarget &renderTarget, const QRegion &region) override;
@@ -85,7 +85,7 @@ public:
     virtual QRegion prePaint(SceneDelegate *delegate) = 0;
     virtual void postPaint() = 0;
     virtual void paint(const RenderTarget &renderTarget, const QRegion &region) = 0;
-    virtual void frame(SceneDelegate *delegate);
+    virtual void frame(SceneDelegate *delegate, OutputFrame *frame);
 
 Q_SIGNALS:
     void delegateRemoved(SceneDelegate *delegate);

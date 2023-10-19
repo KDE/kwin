@@ -53,7 +53,7 @@ public:
     std::unique_ptr<SurfaceTexture> createSurfaceTextureX11(SurfacePixmapX11 *texture) override;
     OutputLayerBeginFrameInfo beginFrame();
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion);
-    void present(Output *output) override;
+    void present(Output *output, const std::shared_ptr<OutputFrame> &frame) override;
     OverlayWindow *overlayWindow() const override;
     OutputLayer *primaryLayer(Output *output) override;
     std::chrono::nanoseconds queryRenderTime();
@@ -80,6 +80,7 @@ private:
     int m_havePostSubBuffer = false;
     bool m_havePlatformBase = false;
     Options::GlSwapStrategy m_swapStrategy = Options::AutoSwapStrategy;
+    std::shared_ptr<OutputFrame> m_frame;
 };
 
 class EglPixmapTexture : public GLTexture

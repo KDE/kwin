@@ -7,8 +7,10 @@
 #pragma once
 
 #include "kwin_export.h"
+#include "libkwineffects/kwinglobals.h"
 
 #include <QRegion>
+#include <chrono>
 
 namespace KWin
 {
@@ -17,6 +19,7 @@ class RenderLayer;
 class RenderTarget;
 class RenderViewport;
 class SurfaceItem;
+class OutputFrame;
 
 /**
  * The RenderLayerDelegate class represents a render layer's contents.
@@ -32,7 +35,7 @@ public:
     /**
      * This function is called by the compositor after compositing the frame.
      */
-    virtual void frame();
+    virtual void frame(OutputFrame *frame);
 
     /**
      * This function is called by the compositor before starting painting. Reimplement

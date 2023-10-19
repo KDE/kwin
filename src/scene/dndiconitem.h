@@ -7,6 +7,7 @@
 #pragma once
 
 #include "core/output.h"
+#include "libkwineffects/kwinglobals.h"
 #include "scene/item.h"
 
 namespace KWin
@@ -14,6 +15,7 @@ namespace KWin
 
 class DragAndDropIcon;
 class SurfaceItemWayland;
+class PresentationFeedback;
 
 class DragAndDropIconItem : public Item
 {
@@ -24,11 +26,13 @@ public:
     ~DragAndDropIconItem() override;
 
     void frameRendered(quint32 timestamp);
+    std::unique_ptr<PresentationFeedback> takePresentationFeedback(Output *output);
 
     void setOutput(Output *output);
 
 private:
     std::unique_ptr<SurfaceItemWayland> m_surfaceItem;
+    Output *m_output = nullptr;
 };
 
 } // namespace KWin

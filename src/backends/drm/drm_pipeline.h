@@ -88,7 +88,7 @@ public:
         CursorOnly,
         Modeset,
     };
-    void pageFlipped(std::chrono::nanoseconds timestamp, PageflipType type);
+    void pageFlipped(std::chrono::nanoseconds timestamp, PageflipType type, PresentationMode mode);
     bool pageflipsPending() const;
     bool modesetPresentPending() const;
     void resetModesetPresentPending();
@@ -110,7 +110,7 @@ public:
     bool activePending() const;
     bool enabled() const;
     DrmPlane::Transformations renderOrientation() const;
-    RenderLoopPrivate::SyncMode syncMode() const;
+    PresentationMode presentationMode() const;
     uint32_t overscan() const;
     Output::RgbRange rgbRange() const;
     DrmConnector::DrmContentType contentType() const;
@@ -122,7 +122,7 @@ public:
     void setActive(bool active);
     void setEnable(bool enable);
     void setRenderOrientation(DrmPlane::Transformations orientation);
-    void setSyncMode(RenderLoopPrivate::SyncMode mode);
+    void setPresentationMode(PresentationMode mode);
     void setOverscan(uint32_t overscan);
     void setRgbRange(Output::RgbRange range);
     void setGammaRamp(const std::shared_ptr<ColorTransformation> &transformation);
@@ -180,7 +180,7 @@ private:
         std::shared_ptr<DrmConnectorMode> mode;
         uint32_t overscan = 0;
         Output::RgbRange rgbRange = Output::RgbRange::Automatic;
-        RenderLoopPrivate::SyncMode syncMode = RenderLoopPrivate::SyncMode::Fixed;
+        PresentationMode presentationMode = PresentationMode::VSync;
         std::shared_ptr<ColorTransformation> colorTransformation;
         std::shared_ptr<DrmGammaRamp> gamma;
         std::shared_ptr<DrmBlob> ctm;

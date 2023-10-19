@@ -43,9 +43,10 @@ RenderLoop *VirtualOutput::renderLoop() const
     return m_renderLoop.get();
 }
 
-SoftwareVsyncMonitor *VirtualOutput::vsyncMonitor() const
+void VirtualOutput::present(const std::shared_ptr<OutputFrame> &frame)
 {
-    return m_vsyncMonitor.get();
+    m_frame = frame;
+    m_vsyncMonitor->arm();
 }
 
 void VirtualOutput::init(const QPoint &logicalPosition, const QSize &pixelSize, qreal scale)
