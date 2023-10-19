@@ -105,7 +105,7 @@ DrmOutput::~DrmOutput()
     m_pipeline->setOutput(nullptr);
 }
 
-bool DrmOutput::addLeaseObjects(QVector<uint32_t> &objectList)
+bool DrmOutput::addLeaseObjects(QList<uint32_t> &objectList)
 {
     if (!m_pipeline->crtc()) {
         qCWarning(KWIN_DRM) << "Can't lease connector: No suitable crtc available";

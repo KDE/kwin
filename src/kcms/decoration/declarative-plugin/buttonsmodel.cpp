@@ -15,23 +15,23 @@ namespace KDecoration2
 namespace Preview
 {
 
-ButtonsModel::ButtonsModel(const QVector<DecorationButtonType> &buttons, QObject *parent)
+ButtonsModel::ButtonsModel(const QList<DecorationButtonType> &buttons, QObject *parent)
     : QAbstractListModel(parent)
     , m_buttons(buttons)
 {
 }
 
 ButtonsModel::ButtonsModel(QObject *parent)
-    : ButtonsModel(QVector<DecorationButtonType>({DecorationButtonType::Menu,
-                                                  DecorationButtonType::ApplicationMenu,
-                                                  DecorationButtonType::OnAllDesktops,
-                                                  DecorationButtonType::Minimize,
-                                                  DecorationButtonType::Maximize,
-                                                  DecorationButtonType::Close,
-                                                  DecorationButtonType::ContextHelp,
-                                                  DecorationButtonType::Shade,
-                                                  DecorationButtonType::KeepBelow,
-                                                  DecorationButtonType::KeepAbove}),
+    : ButtonsModel(QList<DecorationButtonType>({DecorationButtonType::Menu,
+                                                DecorationButtonType::ApplicationMenu,
+                                                DecorationButtonType::OnAllDesktops,
+                                                DecorationButtonType::Minimize,
+                                                DecorationButtonType::Maximize,
+                                                DecorationButtonType::Close,
+                                                DecorationButtonType::ContextHelp,
+                                                DecorationButtonType::Shade,
+                                                DecorationButtonType::KeepBelow,
+                                                DecorationButtonType::KeepAbove}),
                    parent)
 {
 }
@@ -167,7 +167,7 @@ void ButtonsModel::clear()
     endResetModel();
 }
 
-void ButtonsModel::replace(const QVector<DecorationButtonType> &buttons)
+void ButtonsModel::replace(const QList<DecorationButtonType> &buttons)
 {
     if (buttons.isEmpty()) {
         return;

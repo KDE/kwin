@@ -65,7 +65,7 @@ DrmPipeline::Error DrmPipeline::legacyModeset()
     return Error::None;
 }
 
-DrmPipeline::Error DrmPipeline::commitPipelinesLegacy(const QVector<DrmPipeline *> &pipelines, CommitMode mode)
+DrmPipeline::Error DrmPipeline::commitPipelinesLegacy(const QList<DrmPipeline *> &pipelines, CommitMode mode)
 {
     Error err = Error::None;
     for (const auto &pipeline : pipelines) {

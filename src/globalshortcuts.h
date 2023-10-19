@@ -115,7 +115,7 @@ private:
     void objectDeleted(QObject *object);
     bool add(GlobalShortcut sc, DeviceType device = DeviceType::Touchpad);
 
-    QVector<GlobalShortcut> m_shortcuts;
+    QList<GlobalShortcut> m_shortcuts;
 
     std::unique_ptr<KGlobalAccelD> m_kglobalAccel;
     KGlobalAccelInterface *m_kglobalAccelInterface = nullptr;

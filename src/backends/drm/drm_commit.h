@@ -49,7 +49,7 @@ protected:
 class DrmAtomicCommit : public DrmCommit
 {
 public:
-    DrmAtomicCommit(const QVector<DrmPipeline *> &pipelines);
+    DrmAtomicCommit(const QList<DrmPipeline *> &pipelines);
     DrmAtomicCommit(const DrmAtomicCommit &copy) = default;
 
     void addProperty(const DrmProperty &prop, uint64_t value);
@@ -81,7 +81,7 @@ public:
 private:
     bool doCommit(uint32_t flags);
 
-    const QVector<DrmPipeline *> m_pipelines;
+    const QList<DrmPipeline *> m_pipelines;
     std::unordered_map<const DrmProperty *, std::shared_ptr<DrmBlob>> m_blobs;
     std::unordered_map<DrmPlane *, std::shared_ptr<DrmFramebuffer>> m_buffers;
     std::unordered_set<DrmPlane *> m_planes;

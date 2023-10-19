@@ -158,7 +158,7 @@ private:
 
     DataControlDeviceManager *m_dataControlDeviceManager;
 
-    QVector<SurfaceInterface *> m_surfaces;
+    QList<SurfaceInterface *> m_surfaces;
 };
 
 static const QString s_socketName = QStringLiteral("kwin-wayland-datacontrol-test-0");

@@ -42,7 +42,7 @@ Window::~Window()
     unmap();
 }
 
-Swapchain *Window::swapchain(const QHash<uint32_t, QVector<uint64_t>> &formats)
+Swapchain *Window::swapchain(const QHash<uint32_t, QList<uint64_t>> &formats)
 {
     const QSize nativeSize = geometry().size() * devicePixelRatio();
     if (!m_swapchain || m_swapchain->size() != nativeSize

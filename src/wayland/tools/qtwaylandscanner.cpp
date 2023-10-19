@@ -124,13 +124,13 @@ private:
     QByteArray m_scannerName;
     QByteArray m_headerPath;
     QByteArray m_prefix;
-    QVector <QByteArray> m_includes;
+    QList <QByteArray> m_includes;
     QXmlStreamReader *m_xml = nullptr;
 };
 
 bool Scanner::parseArguments(int argc, char **argv)
 {
-    QVector<QByteArray> args;
+    QList<QByteArray> args;
     args.reserve(argc);
     for (int i = 0; i < argc; ++i)
         args << QByteArray(argv[i]);

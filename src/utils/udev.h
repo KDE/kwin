@@ -10,7 +10,7 @@
 #include <kwin_export.h>
 #include <memory>
 
-#include <QVector>
+#include <QList>
 #include <vector>
 
 #include <sys/types.h>

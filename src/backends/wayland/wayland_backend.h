@@ -227,11 +227,11 @@ public:
     bool supportsPointerLock();
     void togglePointerLock();
 
-    QVector<CompositingType> supportedCompositors() const override;
+    QList<CompositingType> supportedCompositors() const override;
 
     WaylandOutput *findOutput(KWayland::Client::Surface *nativeSurface) const;
     Outputs outputs() const override;
-    QVector<WaylandOutput *> waylandOutputs() const
+    QList<WaylandOutput *> waylandOutputs() const
     {
         return m_outputs;
     }
@@ -265,7 +265,7 @@ private:
     std::unique_ptr<WaylandDisplay> m_display;
     std::unique_ptr<WaylandSeat> m_seat;
     WaylandEglBackend *m_eglBackend = nullptr;
-    QVector<WaylandOutput *> m_outputs;
+    QList<WaylandOutput *> m_outputs;
     bool m_pointerLockRequested = false;
     FileDescriptor m_drmFileDescriptor;
     gbm_device *m_gbmDevice = nullptr;

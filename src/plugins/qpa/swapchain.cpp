@@ -52,7 +52,7 @@ uint32_t Swapchain::format() const
     return m_allocationOptions.format;
 }
 
-QVector<uint64_t> Swapchain::modifiers() const
+QList<uint64_t> Swapchain::modifiers() const
 {
     return m_allocationOptions.modifiers;
 }

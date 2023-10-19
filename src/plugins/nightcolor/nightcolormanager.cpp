@@ -640,7 +640,7 @@ int NightColorManager::currentTargetTemp() const
 
 void NightColorManager::commitGammaRamps(int temperature)
 {
-    const QVector<ColorDevice *> devices = kwinApp()->colorManager()->devices();
+    const QList<ColorDevice *> devices = kwinApp()->colorManager()->devices();
     for (ColorDevice *device : devices) {
         device->setTemperature(temperature);
     }

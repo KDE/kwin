@@ -47,224 +47,224 @@ static const int RENDER_MAX_MINOR = 11;
 static const int XFIXES_MAX_MAJOR = 5;
 static const int XFIXES_MAX_MINOR = 0;
 
-QVector<QByteArray> shapeOpCodes()
+QList<QByteArray> shapeOpCodes()
 {
     // see https://www.x.org/releases/X11R7.7/doc/xextproto/shape.html
     // extracted from <xcb/shape.h>
-    return QVector<QByteArray>({QByteArrayLiteral("QueryVersion"),
-                                QByteArrayLiteral("Rectangles"),
-                                QByteArrayLiteral("Mask"),
-                                QByteArrayLiteral("Combine"),
-                                QByteArrayLiteral("Offset"),
-                                QByteArrayLiteral("Extents"),
-                                QByteArrayLiteral("Input"),
-                                QByteArrayLiteral("InputSelected"),
-                                QByteArrayLiteral("GetRectangles")});
+    return QList<QByteArray>({QByteArrayLiteral("QueryVersion"),
+                              QByteArrayLiteral("Rectangles"),
+                              QByteArrayLiteral("Mask"),
+                              QByteArrayLiteral("Combine"),
+                              QByteArrayLiteral("Offset"),
+                              QByteArrayLiteral("Extents"),
+                              QByteArrayLiteral("Input"),
+                              QByteArrayLiteral("InputSelected"),
+                              QByteArrayLiteral("GetRectangles")});
 }
 
-QVector<QByteArray> randrOpCodes()
+QList<QByteArray> randrOpCodes()
 {
     // see https://www.x.org/releases/X11R7.7/doc/randrproto/randrproto.txt
     // extracted from <xcb/randr.h>
-    return QVector<QByteArray>({QByteArrayLiteral("QueryVersion"),
-                                QByteArray(""), // doesn't exist
-                                QByteArrayLiteral("SetScreenConfig"),
-                                QByteArray(""), // doesn't exits
-                                QByteArrayLiteral("SelectInput"),
-                                QByteArrayLiteral("GetScreenInfo"),
-                                QByteArrayLiteral("GetScreenSizeRange"),
-                                QByteArrayLiteral("SetScreenSize"),
-                                QByteArrayLiteral("GetScreenResources"),
-                                QByteArrayLiteral("GetOutputInfo"),
-                                QByteArrayLiteral("ListOutputProperties"),
-                                QByteArrayLiteral("QueryOutputProperty"),
-                                QByteArrayLiteral("ConfigureOutputProperty"),
-                                QByteArrayLiteral("ChangeOutputProperty"),
-                                QByteArrayLiteral("DeleteOutputProperty"),
-                                QByteArrayLiteral("GetOutputproperty"),
-                                QByteArrayLiteral("CreateMode"),
-                                QByteArrayLiteral("DestroyMode"),
-                                QByteArrayLiteral("AddOutputMode"),
-                                QByteArrayLiteral("DeleteOutputMode"),
-                                QByteArrayLiteral("GetCrtcInfo"),
-                                QByteArrayLiteral("SetCrtcConfig"),
-                                QByteArrayLiteral("GetCrtcGammaSize"),
-                                QByteArrayLiteral("GetCrtcGamma"),
-                                QByteArrayLiteral("SetCrtcGamma"),
-                                QByteArrayLiteral("GetScreenResourcesCurrent"),
-                                QByteArrayLiteral("SetCrtcTransform"),
-                                QByteArrayLiteral("GetCrtcTransform"),
-                                QByteArrayLiteral("GetPanning"),
-                                QByteArrayLiteral("SetPanning"),
-                                QByteArrayLiteral("SetOutputPrimary"),
-                                QByteArrayLiteral("GetOutputPrimary"),
-                                QByteArrayLiteral("GetProviders"),
-                                QByteArrayLiteral("GetProviderInfo"),
-                                QByteArrayLiteral("SetProviderOffloadSink"),
-                                QByteArrayLiteral("SetProviderOutputSource"),
-                                QByteArrayLiteral("ListProviderProperties"),
-                                QByteArrayLiteral("QueryProviderProperty"),
-                                QByteArrayLiteral("ConfigureProviderroperty"),
-                                QByteArrayLiteral("ChangeProviderProperty"),
-                                QByteArrayLiteral("DeleteProviderProperty"),
-                                QByteArrayLiteral("GetProviderProperty")});
+    return QList<QByteArray>({QByteArrayLiteral("QueryVersion"),
+                              QByteArray(""), // doesn't exist
+                              QByteArrayLiteral("SetScreenConfig"),
+                              QByteArray(""), // doesn't exits
+                              QByteArrayLiteral("SelectInput"),
+                              QByteArrayLiteral("GetScreenInfo"),
+                              QByteArrayLiteral("GetScreenSizeRange"),
+                              QByteArrayLiteral("SetScreenSize"),
+                              QByteArrayLiteral("GetScreenResources"),
+                              QByteArrayLiteral("GetOutputInfo"),
+                              QByteArrayLiteral("ListOutputProperties"),
+                              QByteArrayLiteral("QueryOutputProperty"),
+                              QByteArrayLiteral("ConfigureOutputProperty"),
+                              QByteArrayLiteral("ChangeOutputProperty"),
+                              QByteArrayLiteral("DeleteOutputProperty"),
+                              QByteArrayLiteral("GetOutputproperty"),
+                              QByteArrayLiteral("CreateMode"),
+                              QByteArrayLiteral("DestroyMode"),
+                              QByteArrayLiteral("AddOutputMode"),
+                              QByteArrayLiteral("DeleteOutputMode"),
+                              QByteArrayLiteral("GetCrtcInfo"),
+                              QByteArrayLiteral("SetCrtcConfig"),
+                              QByteArrayLiteral("GetCrtcGammaSize"),
+                              QByteArrayLiteral("GetCrtcGamma"),
+                              QByteArrayLiteral("SetCrtcGamma"),
+                              QByteArrayLiteral("GetScreenResourcesCurrent"),
+                              QByteArrayLiteral("SetCrtcTransform"),
+                              QByteArrayLiteral("GetCrtcTransform"),
+                              QByteArrayLiteral("GetPanning"),
+                              QByteArrayLiteral("SetPanning"),
+                              QByteArrayLiteral("SetOutputPrimary"),
+                              QByteArrayLiteral("GetOutputPrimary"),
+                              QByteArrayLiteral("GetProviders"),
+                              QByteArrayLiteral("GetProviderInfo"),
+                              QByteArrayLiteral("SetProviderOffloadSink"),
+                              QByteArrayLiteral("SetProviderOutputSource"),
+                              QByteArrayLiteral("ListProviderProperties"),
+                              QByteArrayLiteral("QueryProviderProperty"),
+                              QByteArrayLiteral("ConfigureProviderroperty"),
+                              QByteArrayLiteral("ChangeProviderProperty"),
+                              QByteArrayLiteral("DeleteProviderProperty"),
+                              QByteArrayLiteral("GetProviderProperty")});
 }
 
-QVector<QByteArray> randrErrorCodes()
+QList<QByteArray> randrErrorCodes()
 {
     // see https://www.x.org/releases/X11R7.7/doc/randrproto/randrproto.txt
     // extracted from <xcb/randr.h>
-    return QVector<QByteArray>({QByteArrayLiteral("BadOutput"),
-                                QByteArrayLiteral("BadCrtc"),
-                                QByteArrayLiteral("BadMode"),
-                                QByteArrayLiteral("BadProvider")});
+    return QList<QByteArray>({QByteArrayLiteral("BadOutput"),
+                              QByteArrayLiteral("BadCrtc"),
+                              QByteArrayLiteral("BadMode"),
+                              QByteArrayLiteral("BadProvider")});
 }
 
-QVector<QByteArray> damageOpCodes()
+QList<QByteArray> damageOpCodes()
 {
     // see https://www.x.org/releases/X11R7.7/doc/damageproto/damageproto.txt
     // extracted from <xcb/damage.h>
-    return QVector<QByteArray>({QByteArrayLiteral("QueryVersion"),
-                                QByteArrayLiteral("Create"),
-                                QByteArrayLiteral("Destroy"),
-                                QByteArrayLiteral("Subtract"),
-                                QByteArrayLiteral("Add")});
+    return QList<QByteArray>({QByteArrayLiteral("QueryVersion"),
+                              QByteArrayLiteral("Create"),
+                              QByteArrayLiteral("Destroy"),
+                              QByteArrayLiteral("Subtract"),
+                              QByteArrayLiteral("Add")});
 }
 
-QVector<QByteArray> damageErrorCodes()
+QList<QByteArray> damageErrorCodes()
 {
     // see https://www.x.org/releases/X11R7.7/doc/damageproto/damageproto.txt
     // extracted from <xcb/damage.h>
-    return QVector<QByteArray>({QByteArrayLiteral("BadDamage")});
+    return QList<QByteArray>({QByteArrayLiteral("BadDamage")});
 }
 
-QVector<QByteArray> compositeOpCodes()
+QList<QByteArray> compositeOpCodes()
 {
     // see https://www.x.org/releases/X11R7.7/doc/compositeproto/compositeproto.txt
     // extracted from <xcb/composite.h>
-    return QVector<QByteArray>({QByteArrayLiteral("QueryVersion"),
-                                QByteArrayLiteral("RedirectWindow"),
-                                QByteArrayLiteral("RedirectSubwindows"),
-                                QByteArrayLiteral("UnredirectWindow"),
-                                QByteArrayLiteral("UnredirectSubwindows"),
-                                QByteArrayLiteral("CreateRegionFromBorderClip"),
-                                QByteArrayLiteral("NameWindowPixmap"),
-                                QByteArrayLiteral("GetOverlayWindow"),
-                                QByteArrayLiteral("ReleaseOverlayWindow")});
+    return QList<QByteArray>({QByteArrayLiteral("QueryVersion"),
+                              QByteArrayLiteral("RedirectWindow"),
+                              QByteArrayLiteral("RedirectSubwindows"),
+                              QByteArrayLiteral("UnredirectWindow"),
+                              QByteArrayLiteral("UnredirectSubwindows"),
+                              QByteArrayLiteral("CreateRegionFromBorderClip"),
+                              QByteArrayLiteral("NameWindowPixmap"),
+                              QByteArrayLiteral("GetOverlayWindow"),
+                              QByteArrayLiteral("ReleaseOverlayWindow")});
 }
 
-QVector<QByteArray> fixesOpCodes()
+QList<QByteArray> fixesOpCodes()
 {
     // see https://www.x.org/releases/X11R7.7/doc/fixesproto/fixesproto.txt
     // extracted from <xcb/xfixes.h>
-    return QVector<QByteArray>({QByteArrayLiteral("QueryVersion"),
-                                QByteArrayLiteral("ChangeSaveSet"),
-                                QByteArrayLiteral("SelectSelectionInput"),
-                                QByteArrayLiteral("SelectCursorInput"),
-                                QByteArrayLiteral("GetCursorImage"),
-                                QByteArrayLiteral("CreateRegion"),
-                                QByteArrayLiteral("CreateRegionFromBitmap"),
-                                QByteArrayLiteral("CreateRegionFromWindow"),
-                                QByteArrayLiteral("CreateRegionFromGc"),
-                                QByteArrayLiteral("CreateRegionFromPicture"),
-                                QByteArrayLiteral("DestroyRegion"),
-                                QByteArrayLiteral("SetRegion"),
-                                QByteArrayLiteral("CopyRegion"),
-                                QByteArrayLiteral("UnionRegion"),
-                                QByteArrayLiteral("IntersectRegion"),
-                                QByteArrayLiteral("SubtractRegion"),
-                                QByteArrayLiteral("InvertRegion"),
-                                QByteArrayLiteral("TranslateRegion"),
-                                QByteArrayLiteral("RegionExtents"),
-                                QByteArrayLiteral("FetchRegion"),
-                                QByteArrayLiteral("SetGcClipRegion"),
-                                QByteArrayLiteral("SetWindowShapeRegion"),
-                                QByteArrayLiteral("SetPictureClipRegion"),
-                                QByteArrayLiteral("SetCursorName"),
-                                QByteArrayLiteral("GetCursorName"),
-                                QByteArrayLiteral("GetCursorImageAndName"),
-                                QByteArrayLiteral("ChangeCursor"),
-                                QByteArrayLiteral("ChangeCursorByName"),
-                                QByteArrayLiteral("ExpandRegion"),
-                                QByteArrayLiteral("HideCursor"),
-                                QByteArrayLiteral("ShowCursor"),
-                                QByteArrayLiteral("CreatePointerBarrier"),
-                                QByteArrayLiteral("DeletePointerBarrier")});
+    return QList<QByteArray>({QByteArrayLiteral("QueryVersion"),
+                              QByteArrayLiteral("ChangeSaveSet"),
+                              QByteArrayLiteral("SelectSelectionInput"),
+                              QByteArrayLiteral("SelectCursorInput"),
+                              QByteArrayLiteral("GetCursorImage"),
+                              QByteArrayLiteral("CreateRegion"),
+                              QByteArrayLiteral("CreateRegionFromBitmap"),
+                              QByteArrayLiteral("CreateRegionFromWindow"),
+                              QByteArrayLiteral("CreateRegionFromGc"),
+                              QByteArrayLiteral("CreateRegionFromPicture"),
+                              QByteArrayLiteral("DestroyRegion"),
+                              QByteArrayLiteral("SetRegion"),
+                              QByteArrayLiteral("CopyRegion"),
+                              QByteArrayLiteral("UnionRegion"),
+                              QByteArrayLiteral("IntersectRegion"),
+                              QByteArrayLiteral("SubtractRegion"),
+                              QByteArrayLiteral("InvertRegion"),
+                              QByteArrayLiteral("TranslateRegion"),
+                              QByteArrayLiteral("RegionExtents"),
+                              QByteArrayLiteral("FetchRegion"),
+                              QByteArrayLiteral("SetGcClipRegion"),
+                              QByteArrayLiteral("SetWindowShapeRegion"),
+                              QByteArrayLiteral("SetPictureClipRegion"),
+                              QByteArrayLiteral("SetCursorName"),
+                              QByteArrayLiteral("GetCursorName"),
+                              QByteArrayLiteral("GetCursorImageAndName"),
+                              QByteArrayLiteral("ChangeCursor"),
+                              QByteArrayLiteral("ChangeCursorByName"),
+                              QByteArrayLiteral("ExpandRegion"),
+                              QByteArrayLiteral("HideCursor"),
+                              QByteArrayLiteral("ShowCursor"),
+                              QByteArrayLiteral("CreatePointerBarrier"),
+                              QByteArrayLiteral("DeletePointerBarrier")});
 }
 
-QVector<QByteArray> fixesErrorCodes()
+QList<QByteArray> fixesErrorCodes()
 {
     // see https://www.x.org/releases/X11R7.7/doc/fixesproto/fixesproto.txt
     // extracted from <xcb/xfixes.h>
-    return QVector<QByteArray>({QByteArrayLiteral("BadRegion")});
+    return QList<QByteArray>({QByteArrayLiteral("BadRegion")});
 }
 
-QVector<QByteArray> renderOpCodes()
+QList<QByteArray> renderOpCodes()
 {
     // see https://www.x.org/releases/X11R7.7/doc/renderproto/renderproto.txt
     // extracted from <xcb/render.h>
-    return QVector<QByteArray>({QByteArrayLiteral("QueryVersion"),
-                                QByteArrayLiteral("QueryPictFormats"),
-                                QByteArrayLiteral("QueryPictIndexValues"),
-                                QByteArrayLiteral("CreatePicture"),
-                                QByteArrayLiteral("ChangePicture"),
-                                QByteArrayLiteral("SetPictureClipRectangles"),
-                                QByteArrayLiteral("FreePicture"),
-                                QByteArrayLiteral("Composite"),
-                                QByteArrayLiteral("Trapezoids"),
-                                QByteArrayLiteral("Triangles"),
-                                QByteArrayLiteral("TriStrip"),
-                                QByteArrayLiteral("TriFan"),
-                                QByteArrayLiteral("CreateGlyphSet"),
-                                QByteArrayLiteral("ReferenceGlyphSet"),
-                                QByteArrayLiteral("FreeGlyphSet"),
-                                QByteArrayLiteral("AddGlyphs"),
-                                QByteArrayLiteral("FreeGlyphs"),
-                                QByteArrayLiteral("CompositeGlyphs8"),
-                                QByteArrayLiteral("CompositeGlyphs16"),
-                                QByteArrayLiteral("CompositeGlyphs32"),
-                                QByteArrayLiteral("FillRectangles"),
-                                QByteArrayLiteral("CreateCursor"),
-                                QByteArrayLiteral("SetPictureTransform"),
-                                QByteArrayLiteral("QueryFilters"),
-                                QByteArrayLiteral("SetPictureFilter"),
-                                QByteArrayLiteral("CreateAnimCursor"),
-                                QByteArrayLiteral("AddTraps"),
-                                QByteArrayLiteral("CreateSolidFill"),
-                                QByteArrayLiteral("CreateLinearGradient"),
-                                QByteArrayLiteral("CreateRadialGradient"),
-                                QByteArrayLiteral("CreateConicalGradient")});
+    return QList<QByteArray>({QByteArrayLiteral("QueryVersion"),
+                              QByteArrayLiteral("QueryPictFormats"),
+                              QByteArrayLiteral("QueryPictIndexValues"),
+                              QByteArrayLiteral("CreatePicture"),
+                              QByteArrayLiteral("ChangePicture"),
+                              QByteArrayLiteral("SetPictureClipRectangles"),
+                              QByteArrayLiteral("FreePicture"),
+                              QByteArrayLiteral("Composite"),
+                              QByteArrayLiteral("Trapezoids"),
+                              QByteArrayLiteral("Triangles"),
+                              QByteArrayLiteral("TriStrip"),
+                              QByteArrayLiteral("TriFan"),
+                              QByteArrayLiteral("CreateGlyphSet"),
+                              QByteArrayLiteral("ReferenceGlyphSet"),
+                              QByteArrayLiteral("FreeGlyphSet"),
+                              QByteArrayLiteral("AddGlyphs"),
+                              QByteArrayLiteral("FreeGlyphs"),
+                              QByteArrayLiteral("CompositeGlyphs8"),
+                              QByteArrayLiteral("CompositeGlyphs16"),
+                              QByteArrayLiteral("CompositeGlyphs32"),
+                              QByteArrayLiteral("FillRectangles"),
+                              QByteArrayLiteral("CreateCursor"),
+                              QByteArrayLiteral("SetPictureTransform"),
+                              QByteArrayLiteral("QueryFilters"),
+                              QByteArrayLiteral("SetPictureFilter"),
+                              QByteArrayLiteral("CreateAnimCursor"),
+                              QByteArrayLiteral("AddTraps"),
+                              QByteArrayLiteral("CreateSolidFill"),
+                              QByteArrayLiteral("CreateLinearGradient"),
+                              QByteArrayLiteral("CreateRadialGradient"),
+                              QByteArrayLiteral("CreateConicalGradient")});
 }
 
-QVector<QByteArray> syncOpCodes()
+QList<QByteArray> syncOpCodes()
 {
     // see https://www.x.org/releases/X11R7.7/doc/xextproto/sync.html
     // extracted from <xcb/sync.h>
-    return QVector<QByteArray>({QByteArrayLiteral("Initialize"),
-                                QByteArrayLiteral("ListSystemCounters"),
-                                QByteArrayLiteral("CreateCounter"),
-                                QByteArrayLiteral("DestroyCounter"),
-                                QByteArrayLiteral("QueryCounter"),
-                                QByteArrayLiteral("Await"),
-                                QByteArrayLiteral("ChangeCounter"),
-                                QByteArrayLiteral("SetCounter"),
-                                QByteArrayLiteral("CreateAlarm"),
-                                QByteArrayLiteral("ChangeAlarm"),
-                                QByteArrayLiteral("DestroyAlarm"),
-                                QByteArrayLiteral("QueryAlarm"),
-                                QByteArrayLiteral("SetPriority"),
-                                QByteArrayLiteral("GetPriority"),
-                                QByteArrayLiteral("CreateFence"),
-                                QByteArrayLiteral("TriggerFence"),
-                                QByteArrayLiteral("ResetFence"),
-                                QByteArrayLiteral("DestroyFence"),
-                                QByteArrayLiteral("QueryFence"),
-                                QByteArrayLiteral("AwaitFence")});
+    return QList<QByteArray>({QByteArrayLiteral("Initialize"),
+                              QByteArrayLiteral("ListSystemCounters"),
+                              QByteArrayLiteral("CreateCounter"),
+                              QByteArrayLiteral("DestroyCounter"),
+                              QByteArrayLiteral("QueryCounter"),
+                              QByteArrayLiteral("Await"),
+                              QByteArrayLiteral("ChangeCounter"),
+                              QByteArrayLiteral("SetCounter"),
+                              QByteArrayLiteral("CreateAlarm"),
+                              QByteArrayLiteral("ChangeAlarm"),
+                              QByteArrayLiteral("DestroyAlarm"),
+                              QByteArrayLiteral("QueryAlarm"),
+                              QByteArrayLiteral("SetPriority"),
+                              QByteArrayLiteral("GetPriority"),
+                              QByteArrayLiteral("CreateFence"),
+                              QByteArrayLiteral("TriggerFence"),
+                              QByteArrayLiteral("ResetFence"),
+                              QByteArrayLiteral("DestroyFence"),
+                              QByteArrayLiteral("QueryFence"),
+                              QByteArrayLiteral("AwaitFence")});
 }
 
-static QVector<QByteArray> glxOpCodes()
+static QList<QByteArray> glxOpCodes()
 {
-    return QVector<QByteArray>{
+    return QList<QByteArray>{
         QByteArrayLiteral(""),
         QByteArrayLiteral("Render"),
         QByteArrayLiteral("RenderLarge"),
@@ -306,9 +306,9 @@ static QVector<QByteArray> glxOpCodes()
     };
 }
 
-static QVector<QByteArray> glxErrorCodes()
+static QList<QByteArray> glxErrorCodes()
 {
-    return QVector<QByteArray>{
+    return QList<QByteArray>{
         QByteArrayLiteral("BadContext"),
         QByteArrayLiteral("BadContextState"),
         QByteArrayLiteral("BadDrawable"),
@@ -541,7 +541,7 @@ int Extensions::syncAlarmNotifyEvent() const
     return m_sync.eventBase + XCB_SYNC_ALARM_NOTIFY;
 }
 
-QVector<ExtensionData> Extensions::extensions() const
+QList<ExtensionData> Extensions::extensions() const
 {
     return {
         m_shape,

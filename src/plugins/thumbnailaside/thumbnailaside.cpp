@@ -159,7 +159,7 @@ void ThumbnailAsideEffect::arrange()
         return;
     }
     int height = 0;
-    QVector<int> pos(windows.size());
+    QList<int> pos(windows.size());
     qreal mwidth = 0;
     for (const Data &d : std::as_const(windows)) {
         height += d.window->height();

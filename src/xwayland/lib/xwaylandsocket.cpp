@@ -177,7 +177,7 @@ XwaylandSocket::XwaylandSocket(OperationMode mode)
             continue;
         }
 
-        QVector<int> fileDescriptors;
+        QList<int> fileDescriptors;
         auto socketCleanup = qScopeGuard([&fileDescriptors]() {
             for (const int &fileDescriptor : std::as_const(fileDescriptors)) {
                 close(fileDescriptor);
@@ -232,7 +232,7 @@ bool XwaylandSocket::isValid() const
     return m_display != -1;
 }
 
-QVector<int> XwaylandSocket::fileDescriptors() const
+QList<int> XwaylandSocket::fileDescriptors() const
 {
     return m_fileDescriptors;
 }

@@ -125,9 +125,9 @@ public:
         Q_EMIT padAdded();
     }
 
-    QVector<Tablet *> m_tablets;
-    QVector<TabletPad *> m_pads;
-    QVector<Tool *> m_tools;
+    QList<Tablet *> m_tablets;
+    QList<TabletPad *> m_pads;
+    QList<Tool *> m_tools;
 
 Q_SIGNALS:
     void padAdded();
@@ -164,13 +164,13 @@ private:
 
     TabletSeat *m_tabletSeatClient = nullptr;
     TabletManagerV2Interface *m_tabletManager;
-    QVector<KWayland::Client::Surface *> m_surfacesClient;
+    QList<KWayland::Client::Surface *> m_surfacesClient;
 
     TabletV2Interface *m_tablet;
     TabletPadV2Interface *m_tabletPad = nullptr;
     TabletToolV2Interface *m_tool;
 
-    QVector<SurfaceInterface *> m_surfaces;
+    QList<SurfaceInterface *> m_surfaces;
 };
 
 static const QString s_socketName = QStringLiteral("kwin-wayland-server-tablet-test-0");

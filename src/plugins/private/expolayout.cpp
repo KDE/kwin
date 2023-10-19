@@ -349,12 +349,12 @@ void ExpoLayout::calculateWindowTransformationsClosest()
     // Assign slots
     const int slotWidth = area.width() / columns;
     const int slotHeight = area.height() / rows;
-    QVector<ExpoCell *> takenSlots;
+    QList<ExpoCell *> takenSlots;
     takenSlots.resize(rows * columns);
     takenSlots.fill(nullptr);
 
     // precalculate all slot centers
-    QVector<QPoint> slotCenters;
+    QList<QPoint> slotCenters;
     slotCenters.resize(rows * columns);
     for (int x = 0; x < columns; ++x) {
         for (int y = 0; y < rows; ++y) {

@@ -276,7 +276,7 @@ RemoteMatch WindowsRunner::windowsMatch(const Window *window, const WindowsRunne
     match.type = type;
     QVariantMap properties;
 
-    const QVector<VirtualDesktop *> desktops = window->desktops();
+    const QList<VirtualDesktop *> desktops = window->desktops();
     bool allDesktops = window->isOnAllDesktops();
 
     const VirtualDesktop *targetDesktop = VirtualDesktopManager::self()->currentDesktop();

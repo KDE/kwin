@@ -160,7 +160,7 @@ void VirtualDesktopTest::testWindowOnMultipleDesktops()
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
-    QCOMPARE(window->desktops(), (QVector<VirtualDesktop *>{desktops.at(2)}));
+    QCOMPARE(window->desktops(), (QList<VirtualDesktop *>{desktops.at(2)}));
 
     // Set the window on desktop 2 as well
     window->enterDesktop(VirtualDesktopManager::self()->desktopForX11Id(2));
@@ -170,10 +170,10 @@ void VirtualDesktopTest::testWindowOnMultipleDesktops()
 
     // leave desktop 3
     window->leaveDesktop(desktops.at(2));
-    QCOMPARE(window->desktops(), (QVector<VirtualDesktop *>{desktops.at(1)}));
+    QCOMPARE(window->desktops(), (QList<VirtualDesktop *>{desktops.at(1)}));
     // leave desktop 2
     window->leaveDesktop(desktops.at(1));
-    QCOMPARE(window->desktops(), QVector<VirtualDesktop *>{});
+    QCOMPARE(window->desktops(), QList<VirtualDesktop *>{});
     // we should be on all desktops now
     QVERIFY(window->isOnAllDesktops());
     // put on desktop 1

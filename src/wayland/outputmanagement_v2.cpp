@@ -43,7 +43,7 @@ public:
     bool applied = false;
     bool invalid = false;
     OutputConfiguration config;
-    QVector<std::pair<uint32_t, OutputDeviceV2Interface *>> outputOrder;
+    QList<std::pair<uint32_t, OutputDeviceV2Interface *>> outputOrder;
 
 protected:
     void kde_output_configuration_v2_enable(Resource *resource, wl_resource *outputdevice, int32_t enable) override;
@@ -323,7 +323,7 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
         return;
     }
 
-    QVector<Output *> sortedOrder;
+    QList<Output *> sortedOrder;
     if (!outputOrder.empty()) {
         const int desktopOutputs = std::count_if(allOutputs.begin(), allOutputs.end(), [](Output *output) {
             return !output->isNonDesktop();

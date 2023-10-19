@@ -934,14 +934,14 @@ bool SurfaceInterface::isMapped() const
     return d->mapped;
 }
 
-QVector<OutputInterface *> SurfaceInterface::outputs() const
+QList<OutputInterface *> SurfaceInterface::outputs() const
 {
     return d->outputs;
 }
 
-void SurfaceInterface::setOutputs(const QVector<OutputInterface *> &outputs)
+void SurfaceInterface::setOutputs(const QList<OutputInterface *> &outputs)
 {
-    QVector<OutputInterface *> removedOutputs = d->outputs;
+    QList<OutputInterface *> removedOutputs = d->outputs;
     for (auto it = outputs.constBegin(), end = outputs.constEnd(); it != end; ++it) {
         const auto o = *it;
         removedOutputs.removeOne(o);
@@ -954,7 +954,7 @@ void SurfaceInterface::setOutputs(const QVector<OutputInterface *> &outputs)
         disconnect(d->outputDestroyedConnections.take(*it));
         disconnect(d->outputBoundConnections.take(*it));
     }
-    QVector<OutputInterface *> addedOutputsOutputs = outputs;
+    QList<OutputInterface *> addedOutputsOutputs = outputs;
     for (auto it = d->outputs.constBegin(), end = d->outputs.constEnd(); it != end; ++it) {
         const auto o = *it;
         addedOutputsOutputs.removeOne(o);

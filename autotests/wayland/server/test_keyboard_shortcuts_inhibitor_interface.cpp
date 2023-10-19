@@ -85,8 +85,8 @@ private:
     CompositorInterface *m_serverCompositor;
 
     KeyboardShortcutsInhibitManagerV1Interface *m_manager;
-    QVector<SurfaceInterface *> m_surfaces;
-    QVector<wl_surface *> m_clientSurfaces;
+    QList<SurfaceInterface *> m_surfaces;
+    QList<wl_surface *> m_clientSurfaces;
     KeyboardShortcutsInhibitManager *m_inhibitManagerClient = nullptr;
 };
 

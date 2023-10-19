@@ -637,10 +637,10 @@ KWayland::Client::PointerConstraints *waylandPointerConstraints();
 KWayland::Client::AppMenuManager *waylandAppMenuManager();
 WaylandOutputManagementV2 *waylandOutputManagementV2();
 KWayland::Client::TextInputManager *waylandTextInputManager();
-QVector<KWayland::Client::Output *> waylandOutputs();
+QList<KWayland::Client::Output *> waylandOutputs();
 KWayland::Client::Output *waylandOutput(const QString &name);
 ScreencastingV1 *screencasting();
-QVector<WaylandOutputDeviceV2 *> waylandOutputDevicesV2();
+QList<WaylandOutputDeviceV2 *> waylandOutputDevicesV2();
 FakeInput *waylandFakeInput();
 
 bool waitForWaylandSurface(Window *window);
@@ -839,8 +839,8 @@ struct OutputInfo
     double scale = 1;
     bool internal = false;
 };
-void setOutputConfig(const QVector<QRect> &geometries);
-void setOutputConfig(const QVector<OutputInfo> &infos);
+void setOutputConfig(const QList<QRect> &geometries);
+void setOutputConfig(const QList<OutputInfo> &infos);
 }
 
 }

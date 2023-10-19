@@ -36,7 +36,7 @@ PluginManager::PluginManager()
         return readPluginInfo(metadata, QStringLiteral("EnabledByDefault")).toBool(false);
     };
 
-    const QVector<KPluginMetaData> plugins = KPluginMetaData::findPlugins(s_pluginDirectory);
+    const QList<KPluginMetaData> plugins = KPluginMetaData::findPlugins(s_pluginDirectory);
     for (const KPluginMetaData &metadata : plugins) {
         if (m_plugins.find(metadata.pluginId()) != m_plugins.end()) {
             qCWarning(KWIN_CORE) << "Conflicting plugin id" << metadata.pluginId();
@@ -64,7 +64,7 @@ QStringList PluginManager::loadedPlugins() const
 
 QStringList PluginManager::availablePlugins() const
 {
-    const QVector<KPluginMetaData> plugins = KPluginMetaData::findPlugins(s_pluginDirectory);
+    const QList<KPluginMetaData> plugins = KPluginMetaData::findPlugins(s_pluginDirectory);
 
     QStringList ret;
     ret.reserve(plugins.size());

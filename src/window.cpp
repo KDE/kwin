@@ -731,11 +731,11 @@ void Window::doSetDemandsAttention()
 {
 }
 
-void Window::setDesktops(QVector<VirtualDesktop *> desktops)
+void Window::setDesktops(QList<VirtualDesktop *> desktops)
 {
     // on x11 we can have only one desktop at a time
     if (kwinApp()->operationMode() == Application::OperationModeX11 && desktops.size() > 1) {
-        desktops = QVector<VirtualDesktop *>({desktops.last()});
+        desktops = QList<VirtualDesktop *>({desktops.last()});
     }
 
     desktops = rules()->checkDesktops(desktops);
@@ -803,7 +803,7 @@ void Window::enterDesktop(VirtualDesktop *virtualDesktop)
 
 void Window::leaveDesktop(VirtualDesktop *virtualDesktop)
 {
-    QVector<VirtualDesktop *> currentDesktops;
+    QList<VirtualDesktop *> currentDesktops;
     if (m_desktops.isEmpty()) {
         currentDesktops = VirtualDesktopManager::self()->desktops();
     } else {
@@ -830,7 +830,7 @@ void Window::setOnAllDesktops(bool b)
     }
 }
 
-QVector<VirtualDesktop *> Window::desktops() const
+QList<VirtualDesktop *> Window::desktops() const
 {
     return m_desktops;
 }

@@ -13,8 +13,8 @@
 #include "kwin_export.h"
 
 #include <QImage>
+#include <QList>
 #include <QSize>
-#include <QVector>
 
 #include <memory>
 
@@ -56,7 +56,7 @@ public:
 
 private:
     GraphicsBufferAllocator *m_allocator;
-    QVector<std::shared_ptr<QPainterSwapchainSlot>> m_slots;
+    QList<std::shared_ptr<QPainterSwapchainSlot>> m_slots;
     QSize m_size;
     uint32_t m_format;
 };

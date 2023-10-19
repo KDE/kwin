@@ -204,9 +204,9 @@ KeyboardLayoutDBusInterface::KeyboardLayoutDBusInterface(Xkb *xkb, const KConfig
     , m_configGroup(configGroup)
     , m_keyboardLayout(parent)
 {
-    qRegisterMetaType<QVector<LayoutNames>>("QVector<LayoutNames>");
+    qRegisterMetaType<QList<LayoutNames>>("QList<LayoutNames>");
     qDBusRegisterMetaType<LayoutNames>();
-    qDBusRegisterMetaType<QVector<LayoutNames>>();
+    qDBusRegisterMetaType<QList<LayoutNames>>();
 
     QDBusConnection::sessionBus().registerObject(s_keyboardObject, this, QDBusConnection::ExportAllSlots | QDBusConnection::ExportAllSignals);
     QDBusConnection::sessionBus().registerService(s_keyboardService);
@@ -242,12 +242,12 @@ uint KeyboardLayoutDBusInterface::getLayout() const
     return m_xkb->currentLayout();
 }
 
-QVector<KeyboardLayoutDBusInterface::LayoutNames> KeyboardLayoutDBusInterface::getLayoutsList() const
+QList<KeyboardLayoutDBusInterface::LayoutNames> KeyboardLayoutDBusInterface::getLayoutsList() const
 {
     // TODO: - should be handled by layout applet itself, it has nothing to do with KWin
     const QStringList displayNames = m_configGroup.readEntry("DisplayNames", QStringList());
 
-    QVector<LayoutNames> ret;
+    QList<LayoutNames> ret;
     const int layoutsSize = m_xkb->numberOfLayouts();
     const int displayNamesSize = displayNames.size();
     for (int i = 0; i < layoutsSize; ++i) {

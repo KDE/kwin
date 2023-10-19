@@ -12,9 +12,9 @@
 
 #include "wayland/datadevicemanager.h"
 
+#include <QList>
 #include <QPoint>
 #include <QPointer>
-#include <QVector>
 
 namespace KWin
 {

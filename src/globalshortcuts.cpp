@@ -220,7 +220,7 @@ bool GlobalShortcutsManager::processKeyRelease(Qt::KeyboardModifiers mods, int k
 }
 
 template<typename ShortcutKind, typename... Args>
-bool match(QVector<GlobalShortcut> &shortcuts, Args... args)
+bool match(QList<GlobalShortcut> &shortcuts, Args... args)
 {
     for (auto &sc : shortcuts) {
         if (std::holds_alternative<ShortcutKind>(sc.shortcut())) {

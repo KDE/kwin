@@ -190,7 +190,7 @@ void PlasmaSurfaceTest::testOSDPlacement()
     QCOMPARE(window->frameGeometry(), QRect(1280 / 2 - 100 / 2, 2 * 1024 / 3 - 50 / 2, 100, 50));
 
     // change the screen size
-    const QVector<QRect> geometries{QRect(0, 0, 1280, 1024), QRect(1280, 0, 1280, 1024)};
+    const QList<QRect> geometries{QRect(0, 0, 1280, 1024), QRect(1280, 0, 1280, 1024)};
     Test::setOutputConfig(geometries);
     const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);

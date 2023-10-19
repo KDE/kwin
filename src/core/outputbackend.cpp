@@ -46,8 +46,8 @@ std::unique_ptr<QPainterBackend> OutputBackend::createQPainterBackend()
 bool OutputBackend::applyOutputChanges(const OutputConfiguration &config)
 {
     const auto availableOutputs = outputs();
-    QVector<Output *> toBeEnabledOutputs;
-    QVector<Output *> toBeDisabledOutputs;
+    QList<Output *> toBeEnabledOutputs;
+    QList<Output *> toBeDisabledOutputs;
     for (const auto &output : availableOutputs) {
         if (const auto changeset = config.constChangeSet(output)) {
             if (changeset->enabled) {

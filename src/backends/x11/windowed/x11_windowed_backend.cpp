@@ -324,7 +324,7 @@ void X11WindowedBackend::initDri3()
     while (it.rem > 0) {
         uint32_t format = driFormatForDepth(it.data->depth);
         if (format) {
-            QVector<uint64_t> &mods = m_driFormats[format];
+            QList<uint64_t> &mods = m_driFormats[format];
 
             if (m_driMajorVersion > 1 || m_driMinorVersion >= 2) {
                 xcb_dri3_get_supported_modifiers_cookie_t cookie = xcb_dri3_get_supported_modifiers(m_connection, m_screen->root, it.data->depth, 32);
@@ -754,7 +754,7 @@ bool X11WindowedBackend::hasXInput() const
     return m_hasXInput;
 }
 
-QHash<uint32_t, QVector<uint64_t>> X11WindowedBackend::driFormats() const
+QHash<uint32_t, QList<uint64_t>> X11WindowedBackend::driFormats() const
 {
     return m_driFormats;
 }
@@ -781,9 +781,9 @@ int X11WindowedBackend::driMinorVersion() const
     return m_driMinorVersion;
 }
 
-QVector<CompositingType> X11WindowedBackend::supportedCompositors() const
+QList<CompositingType> X11WindowedBackend::supportedCompositors() const
 {
-    QVector<CompositingType> ret;
+    QList<CompositingType> ret;
     if (m_gbmDevice) {
         ret.append(OpenGLCompositing);
     }

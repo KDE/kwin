@@ -24,7 +24,7 @@ namespace KWin
 {
 
 WindowSelector::WindowSelector()
-    : X11EventFilter(QVector<int>{
+    : X11EventFilter(QList<int>{
         XCB_BUTTON_PRESS,
         XCB_BUTTON_RELEASE,
         XCB_MOTION_NOTIFY,

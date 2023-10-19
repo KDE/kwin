@@ -82,7 +82,7 @@ static void initButtons()
     s_buttonNames[KDecoration2::DecorationButtonType::Shade] = QChar('L');
 }
 
-static QString buttonsToString(const QVector<KDecoration2::DecorationButtonType> &buttons)
+static QString buttonsToString(const QList<KDecoration2::DecorationButtonType> &buttons)
 {
     auto buttonToString = [](KDecoration2::DecorationButtonType button) -> QChar {
         const auto it = s_buttonNames.constFind(button);
@@ -98,13 +98,13 @@ static QString buttonsToString(const QVector<KDecoration2::DecorationButtonType>
     return ret;
 }
 
-QVector<KDecoration2::DecorationButtonType> SettingsImpl::readDecorationButtons(const KConfigGroup &config,
-                                                                                const char *key,
-                                                                                const QVector<KDecoration2::DecorationButtonType> &defaultValue) const
+QList<KDecoration2::DecorationButtonType> SettingsImpl::readDecorationButtons(const KConfigGroup &config,
+                                                                              const char *key,
+                                                                              const QList<KDecoration2::DecorationButtonType> &defaultValue) const
 {
     initButtons();
-    auto buttonsFromString = [](const QString &buttons) -> QVector<KDecoration2::DecorationButtonType> {
-        QVector<KDecoration2::DecorationButtonType> ret;
+    auto buttonsFromString = [](const QString &buttons) -> QList<KDecoration2::DecorationButtonType> {
+        QList<KDecoration2::DecorationButtonType> ret;
         for (auto it = buttons.begin(); it != buttons.end(); ++it) {
             for (auto it2 = s_buttonNames.constBegin(); it2 != s_buttonNames.constEnd(); ++it2) {
                 if (it2.value() == (*it)) {
@@ -139,12 +139,12 @@ static KDecoration2::BorderSize stringToSize(const QString &name)
 void SettingsImpl::readSettings()
 {
     KConfigGroup config = kwinApp()->config()->group(QStringLiteral("org.kde.kdecoration2"));
-    const auto &left = readDecorationButtons(config, "ButtonsOnLeft", QVector<KDecoration2::DecorationButtonType>({KDecoration2::DecorationButtonType::Menu, KDecoration2::DecorationButtonType::OnAllDesktops}));
+    const auto &left = readDecorationButtons(config, "ButtonsOnLeft", QList<KDecoration2::DecorationButtonType>({KDecoration2::DecorationButtonType::Menu, KDecoration2::DecorationButtonType::OnAllDesktops}));
     if (left != m_leftButtons) {
         m_leftButtons = left;
         Q_EMIT decorationSettings()->decorationButtonsLeftChanged(m_leftButtons);
     }
-    const auto &right = readDecorationButtons(config, "ButtonsOnRight", QVector<KDecoration2::DecorationButtonType>({KDecoration2::DecorationButtonType::ContextHelp, KDecoration2::DecorationButtonType::Minimize, KDecoration2::DecorationButtonType::Maximize, KDecoration2::DecorationButtonType::Close}));
+    const auto &right = readDecorationButtons(config, "ButtonsOnRight", QList<KDecoration2::DecorationButtonType>({KDecoration2::DecorationButtonType::ContextHelp, KDecoration2::DecorationButtonType::Minimize, KDecoration2::DecorationButtonType::Maximize, KDecoration2::DecorationButtonType::Close}));
     if (right != m_rightButtons) {
         m_rightButtons = right;
         Q_EMIT decorationSettings()->decorationButtonsRightChanged(m_rightButtons);

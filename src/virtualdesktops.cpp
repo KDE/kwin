@@ -135,13 +135,13 @@ void VirtualDesktop::setName(const QString &name)
 
 VirtualDesktopGrid::VirtualDesktopGrid()
     : m_size(1, 2) // Default to tow rows
-    , m_grid(QVector<QVector<VirtualDesktop *>>{QVector<VirtualDesktop *>{}, QVector<VirtualDesktop *>{}})
+    , m_grid(QList<QList<VirtualDesktop *>>{QList<VirtualDesktop *>{}, QList<VirtualDesktop *>{}})
 {
 }
 
 VirtualDesktopGrid::~VirtualDesktopGrid() = default;
 
-void VirtualDesktopGrid::update(const QSize &size, Qt::Orientation orientation, const QVector<VirtualDesktop *> &desktops)
+void VirtualDesktopGrid::update(const QSize &size, Qt::Orientation orientation, const QList<VirtualDesktop *> &desktops)
 {
     // Set private variables
     m_size = size;
@@ -153,7 +153,7 @@ void VirtualDesktopGrid::update(const QSize &size, Qt::Orientation orientation, 
     auto end = desktops.end();
     if (orientation == Qt::Horizontal) {
         for (uint y = 0; y < height; ++y) {
-            QVector<VirtualDesktop *> row;
+            QList<VirtualDesktop *> row;
             for (uint x = 0; x < width && it != end; ++x) {
                 row << *it;
                 it++;
@@ -162,7 +162,7 @@ void VirtualDesktopGrid::update(const QSize &size, Qt::Orientation orientation, 
         }
     } else {
         for (uint y = 0; y < height; ++y) {
-            m_grid << QVector<VirtualDesktop *>();
+            m_grid << QList<VirtualDesktop *>();
         }
         for (uint x = 0; x < width; ++x) {
             for (uint y = 0; y < height && it != end; ++y) {

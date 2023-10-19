@@ -16,7 +16,7 @@ namespace KWin
 {
 
 SyncAlarmX11Filter::SyncAlarmX11Filter()
-    : X11EventFilter(QVector<int>{Xcb::Extensions::self()->syncAlarmNotifyEvent()})
+    : X11EventFilter(QList<int>{Xcb::Extensions::self()->syncAlarmNotifyEvent()})
 {
 }
 

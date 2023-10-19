@@ -308,7 +308,7 @@ DrmLeaseRequestV1Interface::~DrmLeaseRequestV1Interface()
     m_device->removeLeaseRequest(this);
 }
 
-QVector<DrmLeaseConnectorV1Interface *> DrmLeaseRequestV1Interface::connectors() const
+QList<DrmLeaseConnectorV1Interface *> DrmLeaseRequestV1Interface::connectors() const
 {
     return m_connectors;
 }
@@ -356,7 +356,7 @@ void DrmLeaseRequestV1Interface::wp_drm_lease_request_v1_submit(Resource *resour
     } else if (m_connectors.isEmpty()) {
         wl_resource_post_error(resource->handle, WP_DRM_LEASE_REQUEST_V1_ERROR_EMPTY_LEASE, "Requested lease without connectors");
     } else {
-        QVector<DrmOutput *> outputs;
+        QList<DrmOutput *> outputs;
         for (const auto &connector : m_connectors) {
             outputs.push_back(connector->output());
         }
@@ -375,7 +375,7 @@ void DrmLeaseRequestV1Interface::wp_drm_lease_request_v1_destroy_resource(Resour
     delete this;
 }
 
-DrmLeaseV1Interface::DrmLeaseV1Interface(DrmLeaseDeviceV1Interface *device, const QVector<DrmLeaseConnectorV1Interface *> &connectors, wl_resource *resource)
+DrmLeaseV1Interface::DrmLeaseV1Interface(DrmLeaseDeviceV1Interface *device, const QList<DrmLeaseConnectorV1Interface *> &connectors, wl_resource *resource)
     : wp_drm_lease_v1(resource)
     , m_device(device)
     , m_connectors(connectors)
@@ -440,7 +440,7 @@ void DrmLeaseV1Interface::wp_drm_lease_v1_destroy_resource(Resource *resource)
     delete this;
 }
 
-QVector<DrmLeaseConnectorV1Interface *> DrmLeaseV1Interface::connectors() const
+QList<DrmLeaseConnectorV1Interface *> DrmLeaseV1Interface::connectors() const
 {
     return m_connectors;
 }

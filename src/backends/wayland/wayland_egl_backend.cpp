@@ -62,9 +62,9 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglPrimaryLayer::beginFrame()
 
     const QSize nativeSize = m_waylandOutput->modeSize();
     if (!m_swapchain || m_swapchain->size() != nativeSize) {
-        const QHash<uint32_t, QVector<uint64_t>> formatTable = m_backend->backend()->display()->linuxDmabuf()->formats();
+        const QHash<uint32_t, QList<uint64_t>> formatTable = m_backend->backend()->display()->linuxDmabuf()->formats();
         uint32_t format = DRM_FORMAT_INVALID;
-        QVector<uint64_t> modifiers;
+        QList<uint64_t> modifiers;
         for (const uint32_t &candidateFormat : {DRM_FORMAT_XRGB2101010, DRM_FORMAT_XRGB8888}) {
             auto it = formatTable.constFind(candidateFormat);
             if (it != formatTable.constEnd()) {
@@ -156,9 +156,9 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame()
     const auto tmp = size().expandedTo(QSize(64, 64));
     const QSize bufferSize(std::ceil(tmp.width()), std::ceil(tmp.height()));
     if (!m_swapchain || m_swapchain->size() != bufferSize) {
-        const QHash<uint32_t, QVector<uint64_t>> formatTable = m_backend->backend()->display()->linuxDmabuf()->formats();
+        const QHash<uint32_t, QList<uint64_t>> formatTable = m_backend->backend()->display()->linuxDmabuf()->formats();
         uint32_t format = DRM_FORMAT_INVALID;
-        QVector<uint64_t> modifiers;
+        QList<uint64_t> modifiers;
         for (const uint32_t &candidateFormat : {DRM_FORMAT_ARGB2101010, DRM_FORMAT_ARGB8888}) {
             auto it = formatTable.constFind(candidateFormat);
             if (it != formatTable.constEnd()) {

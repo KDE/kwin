@@ -8,8 +8,8 @@
 
 #include "kwin_export.h"
 
+#include <QList>
 #include <QObject>
-#include <QVector>
 #include <functional>
 #include <memory>
 #include <optional>

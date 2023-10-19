@@ -7,8 +7,8 @@
 
 #include "kwin_export.h"
 
+#include <QList>
 #include <QObject>
-#include <QVector>
 #include <memory>
 
 struct wl_resource;
@@ -149,7 +149,7 @@ private:
                                    quint32 hsl,
                                    quint32 hih,
                                    quint32 hil,
-                                   const QVector<Capability> &capability);
+                                   const QList<Capability> &capability);
     std::unique_ptr<TabletToolV2InterfacePrivate> d;
 };
 
@@ -285,7 +285,7 @@ public:
                                        quint32 currentMode,
                                        TabletV2Interface *tablet);
     TabletToolV2Interface *
-    addTool(TabletToolV2Interface::Type type, quint64 hardwareSerial, quint64 hardwareId, const QVector<TabletToolV2Interface::Capability> &capabilities, const QString &deviceSysName);
+    addTool(TabletToolV2Interface::Type type, quint64 hardwareSerial, quint64 hardwareId, const QList<TabletToolV2Interface::Capability> &capabilities, const QString &deviceSysName);
 
     TabletToolV2Interface *toolByHardwareId(quint64 hardwareId) const;
     TabletToolV2Interface *toolByHardwareSerial(quint64 hardwareSerial, TabletToolV2Interface::Type type) const;

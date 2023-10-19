@@ -161,9 +161,9 @@ QList<OutputDeviceV2Interface *> Display::outputDevices() const
     return d->outputdevicesV2;
 }
 
-QVector<OutputInterface *> Display::outputsIntersecting(const QRect &rect) const
+QList<OutputInterface *> Display::outputsIntersecting(const QRect &rect) const
 {
-    QVector<OutputInterface *> outputs;
+    QList<OutputInterface *> outputs;
     for (auto *output : std::as_const(d->outputs)) {
         if (output->handle()->geometry().intersects(rect)) {
             outputs << output;
@@ -172,7 +172,7 @@ QVector<OutputInterface *> Display::outputsIntersecting(const QRect &rect) const
     return outputs;
 }
 
-QVector<SeatInterface *> Display::seats() const
+QList<SeatInterface *> Display::seats() const
 {
     return d->seats;
 }
@@ -200,7 +200,7 @@ ClientConnection *Display::getConnection(wl_client *client)
     return c;
 }
 
-QVector<ClientConnection *> Display::connections() const
+QList<ClientConnection *> Display::connections() const
 {
     return d->clients;
 }

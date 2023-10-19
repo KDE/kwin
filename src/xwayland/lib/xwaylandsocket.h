@@ -7,8 +7,8 @@
 #pragma once
 
 #include <QByteArray>
+#include <QList>
 #include <QString>
-#include <QVector>
 
 namespace KWin
 {
@@ -28,10 +28,10 @@ public:
     int display() const;
     QString name() const;
 
-    QVector<int> fileDescriptors() const;
+    QList<int> fileDescriptors() const;
 
 private:
-    QVector<int> m_fileDescriptors;
+    QList<int> m_fileDescriptors;
     int m_display = -1;
     QString m_socketFilePath;
     QString m_lockFilePath;

@@ -357,9 +357,9 @@ void InputMethodTest::testSwitchFocusedSurfaces()
     QSignalSpy activateSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
     std::unique_ptr<KWayland::Client::TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
 
-    QVector<Window *> windows;
+    QList<Window *> windows;
     std::vector<std::unique_ptr<KWayland::Client::Surface>> surfaces;
-    QVector<Test::XdgToplevel *> toplevels;
+    QList<Test::XdgToplevel *> toplevels;
     // We create 3 surfaces
     for (int i = 0; i < 3; ++i) {
         std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();

@@ -327,8 +327,8 @@ private:
     QList<Window *> m_idleInhibitors;
     WindowSelectorFilter *m_windowSelector = nullptr;
 
-    QVector<InputEventFilter *> m_filters;
-    QVector<InputEventSpy *> m_spies;
+    QList<InputEventFilter *> m_filters;
+    QList<InputEventSpy *> m_spies;
     KConfigWatcher::Ptr m_inputConfigWatcher;
 
     LEDs m_leds;

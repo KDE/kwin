@@ -280,8 +280,8 @@ static struct
     KWayland::Client::Registry *registry = nullptr;
     WaylandOutputManagementV2 *outputManagementV2 = nullptr;
     QThread *thread = nullptr;
-    QVector<KWayland::Client::Output *> outputs;
-    QVector<WaylandOutputDeviceV2 *> outputDevicesV2;
+    QList<KWayland::Client::Output *> outputs;
+    QList<WaylandOutputDeviceV2 *> outputDevicesV2;
     IdleInhibitManagerV1 *idleInhibitManagerV1 = nullptr;
     KWayland::Client::AppMenuManager *appMenu = nullptr;
     XdgDecorationManagerV1 *xdgDecorationManagerV1 = nullptr;
@@ -697,7 +697,7 @@ TextInputManagerV3 *waylandTextInputManagerV3()
     return s_waylandConnection.textInputManagerV3;
 }
 
-QVector<KWayland::Client::Output *> waylandOutputs()
+QList<KWayland::Client::Output *> waylandOutputs()
 {
     return s_waylandConnection.outputs;
 }
@@ -717,7 +717,7 @@ ScreencastingV1 *screencasting()
     return s_waylandConnection.screencastingV1;
 }
 
-QVector<KWin::Test::WaylandOutputDeviceV2 *> waylandOutputDevicesV2()
+QList<KWin::Test::WaylandOutputDeviceV2 *> waylandOutputDevicesV2()
 {
     return s_waylandConnection.outputDevicesV2;
 }
@@ -1131,7 +1131,7 @@ bool renderNodeAvailable()
         return false;
     }
 
-    QVector<drmDevice *> devices(deviceCount);
+    QList<drmDevice *> devices(deviceCount);
     if (drmGetDevices2(0, devices.data(), devices.size()) < 0) {
         return false;
     }

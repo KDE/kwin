@@ -52,7 +52,7 @@ public:
     xcb_window_t rootWindow() const;
 
     std::unique_ptr<OpenGLBackend> createOpenGLBackend() override;
-    QVector<CompositingType> supportedCompositors() const override;
+    QList<CompositingType> supportedCompositors() const override;
 
     void initOutputs();
     void scheduleUpdateOutputs();
@@ -101,7 +101,7 @@ private:
     std::unique_ptr<X11EventFilter> m_randrEventFilter;
     std::unique_ptr<X11Keyboard> m_keyboard;
     std::unique_ptr<RenderLoop> m_renderLoop;
-    QVector<Output *> m_outputs;
+    QList<Output *> m_outputs;
     std::unique_ptr<EglDisplay> m_eglDisplay;
 };
 

@@ -317,7 +317,7 @@ public:
     void setPluginSubDirectory(const QString &directory);
 
 private:
-    QVector<KPluginMetaData> findAllEffects() const;
+    QList<KPluginMetaData> findAllEffects() const;
     KPluginMetaData findEffect(const QString &name) const;
     EffectPluginFactory *factory(const KPluginMetaData &info) const;
     QStringList m_loadedEffects;

@@ -11,10 +11,10 @@
 #include "libkwineffects/kwinglobals.h"
 #include <kwin_export.h>
 
+#include <QList>
 #include <QMap>
 #include <QObject>
 #include <QPointF>
-#include <QVector>
 
 namespace KWin
 {
@@ -203,10 +203,10 @@ private:
         None,
     };
     int startSwipeGesture(uint fingerCount, const QPointF &startPos, StartPositionBehavior startPosBehavior);
-    QVector<SwipeGesture *> m_swipeGestures;
-    QVector<PinchGesture *> m_pinchGestures;
-    QVector<SwipeGesture *> m_activeSwipeGestures;
-    QVector<PinchGesture *> m_activePinchGestures;
+    QList<SwipeGesture *> m_swipeGestures;
+    QList<PinchGesture *> m_pinchGestures;
+    QList<SwipeGesture *> m_activeSwipeGestures;
+    QList<PinchGesture *> m_activePinchGestures;
     QMap<Gesture *, QMetaObject::Connection> m_destroyConnections;
 
     QPointF m_currentDelta = QPointF(0, 0);

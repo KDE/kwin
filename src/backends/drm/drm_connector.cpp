@@ -326,7 +326,7 @@ void DrmConnector::disable(DrmAtomicCommit *commit)
     commit->addProperty(crtcId, 0);
 }
 
-static const QVector<QSize> s_commonModes = {
+static const QList<QSize> s_commonModes = {
     /* 4:3 (1.33) */
     QSize(1600, 1200),
     QSize(1280, 1024), /* 5:4 (1.25) */

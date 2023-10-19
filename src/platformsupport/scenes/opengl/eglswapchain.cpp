@@ -135,7 +135,7 @@ void EglSwapchain::release(std::shared_ptr<EglSwapchainSlot> slot)
     }
 }
 
-std::shared_ptr<EglSwapchain> EglSwapchain::create(GraphicsBufferAllocator *allocator, EglContext *context, const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers)
+std::shared_ptr<EglSwapchain> EglSwapchain::create(GraphicsBufferAllocator *allocator, EglContext *context, const QSize &size, uint32_t format, const QList<uint64_t> &modifiers)
 {
     if (!context->makeCurrent()) {
         return nullptr;

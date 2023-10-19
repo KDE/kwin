@@ -109,7 +109,7 @@ DecorationItem::DecorationItem(KDecoration2::Decoration *decoration, Window *win
     handleOutputChanged();
 }
 
-QVector<QRectF> DecorationItem::shape() const
+QList<QRectF> DecorationItem::shape() const
 {
     QRectF left, top, right, bottom;
     m_window->layoutDecorationRects(left, top, right, bottom);

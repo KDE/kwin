@@ -66,7 +66,7 @@ private:
 
     KXcursorTheme m_theme;
     QByteArray m_shape;
-    QVector<KXcursorSprite> m_sprites;
+    QList<KXcursorSprite> m_sprites;
     QTimer m_delayTimer;
     QImage m_image;
     int m_currentSprite = -1;

@@ -40,7 +40,7 @@ private:
     void handleVirtualDesktopAdded(KWin::VirtualDesktop *desktop);
     void handleVirtualDesktopRemoved(KWin::VirtualDesktop *desktop);
 
-    QVector<KWin::VirtualDesktop *> m_virtualDesktops;
+    QList<KWin::VirtualDesktop *> m_virtualDesktops;
 };
 
 } // namespace KWin

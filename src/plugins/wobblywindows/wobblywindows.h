@@ -105,21 +105,21 @@ private:
 
     struct WindowWobblyInfos
     {
-        QVector<Pair> origin;
-        QVector<Pair> position;
-        QVector<Pair> velocity;
-        QVector<Pair> acceleration;
-        QVector<Pair> buffer;
+        QList<Pair> origin;
+        QList<Pair> position;
+        QList<Pair> velocity;
+        QList<Pair> acceleration;
+        QList<Pair> buffer;
 
         // if true, the physics system moves this point based only on it "normal" destination
         // given by the window position, ignoring neighbour points.
-        QVector<bool> constraint;
+        QList<bool> constraint;
 
         unsigned int width;
         unsigned int height;
         unsigned int count;
 
-        QVector<Pair> bezierSurface;
+        QList<Pair> bezierSurface;
         unsigned int bezierWidth;
         unsigned int bezierHeight;
         unsigned int bezierCount;
@@ -161,7 +161,7 @@ private:
 
     WobblyWindowsEffect::Pair computeBezierPoint(const WindowWobblyInfos &wwi, Pair point) const;
 
-    static void heightRingLinearMean(QVector<Pair> &data, WindowWobblyInfos &wwi);
+    static void heightRingLinearMean(QList<Pair> &data, WindowWobblyInfos &wwi);
 
     void setParameterSet(const ParameterSet &pset);
 };

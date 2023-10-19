@@ -73,7 +73,7 @@ private:
     X11SyncManager();
 
     X11SyncObject *m_currentFence = nullptr;
-    QVector<X11SyncObject *> m_fences;
+    QList<X11SyncObject *> m_fences;
     int m_next = 0;
 };
 

@@ -40,7 +40,7 @@ RuleBookSettings::~RuleBookSettings()
     qDeleteAll(m_list);
 }
 
-void RuleBookSettings::setRules(const QVector<Rules *> &rules)
+void RuleBookSettings::setRules(const QList<Rules *> &rules)
 {
     mCount = rules.count();
     mRuleGroupList.clear();
@@ -72,9 +72,9 @@ void RuleBookSettings::setRules(const QVector<Rules *> &rules)
     }
 }
 
-QVector<Rules *> RuleBookSettings::rules()
+QList<Rules *> RuleBookSettings::rules()
 {
-    QVector<Rules *> result;
+    QList<Rules *> result;
     result.reserve(m_list.count());
     for (const auto &settings : std::as_const(m_list)) {
         result.append(new Rules(settings));

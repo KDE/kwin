@@ -9,8 +9,8 @@
 #pragma once
 
 #include "input_event_spy.h"
+#include <QList>
 #include <QObject>
-#include <QVector>
 #include <memory>
 #include <optional>
 
@@ -62,7 +62,7 @@ private:
     Xkb *m_xkb;
     xkb_layout_index_t m_layout = 0;
     KConfigGroup m_configGroup;
-    QVector<QAction *> m_layoutShortcuts;
+    QList<QAction *> m_layoutShortcuts;
     KeyboardLayoutDBusInterface *m_dbusInterface = nullptr;
     std::unique_ptr<KeyboardLayoutSwitching::Policy> m_policy;
     std::optional<uint> m_lastUsedLayout;
@@ -89,7 +89,7 @@ public Q_SLOTS:
     void switchToPreviousLayout();
     bool setLayout(uint index);
     uint getLayout() const;
-    QVector<LayoutNames> getLayoutsList() const;
+    QList<LayoutNames> getLayoutsList() const;
 
 Q_SIGNALS:
     void layoutChanged(uint index);

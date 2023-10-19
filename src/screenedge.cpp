@@ -489,7 +489,7 @@ void Edge::switchDesktop(const QPoint &cursorPos)
         }
     }
     if (Window *c = Workspace::self()->moveResizeWindow()) {
-        const QVector<VirtualDesktop *> desktops{desktop};
+        const QList<VirtualDesktop *> desktops{desktop};
         if (c->rules()->checkDesktops(desktops) != desktops) {
             // user attempts to move a client to another desktop where it is ruleforced to not be
             return;
@@ -1535,9 +1535,9 @@ void ScreenEdges::ensureOnTop()
     Xcb::restackWindowsWithRaise(windows());
 }
 
-QVector<xcb_window_t> ScreenEdges::windows() const
+QList<xcb_window_t> ScreenEdges::windows() const
 {
-    QVector<xcb_window_t> wins;
+    QList<xcb_window_t> wins;
     for (const auto &edge : m_edges) {
         xcb_window_t w = edge->window();
         if (w != XCB_WINDOW_NONE) {

@@ -88,7 +88,7 @@ private:
     void onStreamRenegotiateFormat(uint64_t);
 
     bool createStream();
-    QVector<const spa_pod *> buildFormats(bool fixate, char buffer[2048]);
+    QList<const spa_pod *> buildFormats(bool fixate, char buffer[2048]);
     void updateParams();
     void coreFailed(const QString &errorMessage);
     void sendCursorData(Cursor *cursor, spa_meta_cursor *spa_cursor);
@@ -99,9 +99,9 @@ private:
     void enqueue();
     spa_pod *buildFormat(struct spa_pod_builder *b, enum spa_video_format format, struct spa_rectangle *resolution,
                          struct spa_fraction *defaultFramerate, struct spa_fraction *minFramerate, struct spa_fraction *maxFramerate,
-                         const QVector<uint64_t> &modifiers, quint32 modifiersFlags);
+                         const QList<uint64_t> &modifiers, quint32 modifiersFlags);
 
-    std::optional<ScreenCastDmaBufTextureParams> testCreateDmaBuf(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers);
+    std::optional<ScreenCastDmaBufTextureParams> testCreateDmaBuf(const QSize &size, quint32 format, const QList<uint64_t> &modifiers);
     std::shared_ptr<ScreenCastDmaBufTexture> createDmaBufTexture(const ScreenCastDmaBufTextureParams &params);
 
     std::shared_ptr<PipeWireCore> m_pwCore;
@@ -119,7 +119,7 @@ private:
 
     spa_video_info_raw m_videoFormat;
     QString m_error;
-    QVector<uint64_t> m_modifiers;
+    QList<uint64_t> m_modifiers;
     std::optional<ScreenCastDmaBufTextureParams> m_dmabufParams; // when fixated
 
     struct

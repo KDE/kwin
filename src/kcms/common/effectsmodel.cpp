@@ -32,7 +32,7 @@ namespace KWin
 
 static QString translatedCategory(const QString &category)
 {
-    static const QVector<QString> knownCategories = {
+    static const QList<QString> knownCategories = {
         QStringLiteral("Accessibility"),
         QStringLiteral("Appearance"),
         QStringLiteral("Focus"),
@@ -42,7 +42,7 @@ static QString translatedCategory(const QString &category)
         QStringLiteral("Window Management"),
         QStringLiteral("Window Open/Close Animation")};
 
-    static const QVector<QString> translatedCategories = {
+    static const QList<QString> translatedCategories = {
         i18nc("Category of Desktop Effects, used as section header", "Accessibility"),
         i18nc("Category of Desktop Effects, used as section header", "Appearance"),
         i18nc("Category of Desktop Effects, used as section header", "Focus"),
@@ -485,7 +485,7 @@ void EffectsModel::save()
 {
     KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Plugins");
 
-    QVector<EffectData> dirtyEffects;
+    QList<EffectData> dirtyEffects;
 
     for (EffectData &effect : m_effects) {
         if (!effect.changed) {

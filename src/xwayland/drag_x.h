@@ -13,9 +13,9 @@
 
 #include "wayland/datadevicemanager.h"
 
+#include <QList>
 #include <QPoint>
 #include <QPointer>
-#include <QVector>
 
 namespace KWin
 {
@@ -28,7 +28,7 @@ enum class DragEventReply;
 class WlVisit;
 class Dnd;
 
-using Mimes = QVector<QPair<QString, xcb_atom_t>>;
+using Mimes = QList<QPair<QString, xcb_atom_t>>;
 
 class XToWlDrag : public Drag
 {
@@ -61,10 +61,10 @@ private:
     XwlDataSource m_selectionSource;
 
     X11Source *m_source;
-    QVector<QPair<xcb_timestamp_t, bool>> m_dataRequests;
+    QList<QPair<xcb_timestamp_t, bool>> m_dataRequests;
 
     WlVisit *m_visit = nullptr;
-    QVector<WlVisit *> m_oldVisits;
+    QList<WlVisit *> m_oldVisits;
 
     bool m_performed = false;
     DataDeviceManagerInterface::DnDAction m_lastSelectedDragAndDropAction = DataDeviceManagerInterface::DnDAction::None;

@@ -29,12 +29,12 @@ class OutputConfiguration;
 class EglDisplay;
 class Session;
 
-class KWIN_EXPORT Outputs : public QVector<Output *>
+class KWIN_EXPORT Outputs : public QList<Output *>
 {
 public:
     Outputs(){};
     template<typename T>
-    Outputs(const QVector<T> &other)
+    Outputs(const QList<T> &other)
     {
         resize(other.size());
         std::copy(other.constBegin(), other.constEnd(), begin());
@@ -72,7 +72,7 @@ public:
      * The first item should be the most preferred one.
      * @since 5.11
      */
-    virtual QVector<CompositingType> supportedCompositors() const = 0;
+    virtual QList<CompositingType> supportedCompositors() const = 0;
 
     virtual Outputs outputs() const = 0;
     Output *findOutput(const QString &name) const;

@@ -10,8 +10,8 @@
 #include "surface.h"
 // Qt
 #include <QHash>
+#include <QList>
 #include <QPointer>
-#include <QVector>
 // Wayland
 #include "qwayland-server-wayland.h"
 // C++
@@ -143,7 +143,7 @@ public:
     Transaction *firstTransaction = nullptr;
     Transaction *lastTransaction = nullptr;
 
-    QVector<OutputInterface *> outputs;
+    QList<OutputInterface *> outputs;
     std::optional<qreal> preferredBufferScale;
     std::optional<OutputTransform> preferredBufferTransform;
 
@@ -152,7 +152,7 @@ public:
     QHash<OutputInterface *, QMetaObject::Connection> outputDestroyedConnections;
     QHash<OutputInterface *, QMetaObject::Connection> outputBoundConnections;
 
-    QVector<IdleInhibitorV1Interface *> idleInhibitors;
+    QList<IdleInhibitorV1Interface *> idleInhibitors;
     ViewportInterface *viewportExtension = nullptr;
     std::unique_ptr<LinuxDmaBufV1Feedback> dmabufFeedbackV1;
     QPointer<ContentTypeV1Interface> contentTypeInterface;

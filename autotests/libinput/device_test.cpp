@@ -966,10 +966,10 @@ void TestLibinputDevice::testSupportedButtons()
 
 void TestLibinputDevice::testAlphaNumericKeyboard_data()
 {
-    QTest::addColumn<QVector<quint32>>("supportedKeys");
+    QTest::addColumn<QList<quint32>>("supportedKeys");
     QTest::addColumn<bool>("isAlpha");
 
-    QVector<quint32> keys;
+    QList<quint32> keys;
 
     for (int i = KEY_1; i <= KEY_0; i++) {
         keys << i;
@@ -1006,7 +1006,7 @@ void TestLibinputDevice::testAlphaNumericKeyboard_data()
 
 void TestLibinputDevice::testAlphaNumericKeyboard()
 {
-    QFETCH(QVector<quint32>, supportedKeys);
+    QFETCH(QList<quint32>, supportedKeys);
     libinput_device device;
     device.keyboard = true;
     device.keys = supportedKeys;

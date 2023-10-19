@@ -151,7 +151,7 @@ void AbstractEglBackend::initWayland()
 
     auto filterFormats = [this](uint32_t bpc) {
         const auto formats = m_display->supportedDrmFormats();
-        QHash<uint32_t, QVector<uint64_t>> set;
+        QHash<uint32_t, QList<uint64_t>> set;
         for (auto it = formats.constBegin(); it != formats.constEnd(); it++) {
             const auto info = formatInfo(it.key());
             if (info && info->bitsPerColor == bpc) {
@@ -235,7 +235,7 @@ void AbstractEglBackend::setSurface(const EGLSurface &surface)
     m_surface = surface;
 }
 
-QVector<LinuxDmaBufV1Feedback::Tranche> AbstractEglBackend::tranches() const
+QList<LinuxDmaBufV1Feedback::Tranche> AbstractEglBackend::tranches() const
 {
     return m_tranches;
 }
@@ -284,7 +284,7 @@ bool AbstractEglBackend::testImportBuffer(GraphicsBuffer *buffer)
     return importBufferAsImage(buffer) != EGL_NO_IMAGE_KHR;
 }
 
-QHash<uint32_t, QVector<uint64_t>> AbstractEglBackend::supportedFormats() const
+QHash<uint32_t, QList<uint64_t>> AbstractEglBackend::supportedFormats() const
 {
     return m_display->supportedDrmFormats();
 }

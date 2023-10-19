@@ -32,11 +32,11 @@ public:
     {
         return m_borderSize;
     }
-    QVector<KDecoration2::DecorationButtonType> decorationButtonsLeft() const override
+    QList<KDecoration2::DecorationButtonType> decorationButtonsLeft() const override
     {
         return m_leftButtons;
     }
-    QVector<KDecoration2::DecorationButtonType> decorationButtonsRight() const override
+    QList<KDecoration2::DecorationButtonType> decorationButtonsRight() const override
     {
         return m_rightButtons;
     }
@@ -47,11 +47,11 @@ public:
 
 private:
     void readSettings();
-    QVector<KDecoration2::DecorationButtonType> readDecorationButtons(const KConfigGroup &config,
-                                                                      const char *key,
-                                                                      const QVector<KDecoration2::DecorationButtonType> &defaultValue) const;
-    QVector<KDecoration2::DecorationButtonType> m_leftButtons;
-    QVector<KDecoration2::DecorationButtonType> m_rightButtons;
+    QList<KDecoration2::DecorationButtonType> readDecorationButtons(const KConfigGroup &config,
+                                                                    const char *key,
+                                                                    const QList<KDecoration2::DecorationButtonType> &defaultValue) const;
+    QList<KDecoration2::DecorationButtonType> m_leftButtons;
+    QList<KDecoration2::DecorationButtonType> m_rightButtons;
     KDecoration2::BorderSize m_borderSize;
     bool m_autoBorderSize = true;
     bool m_closeDoubleClickMenu = false;

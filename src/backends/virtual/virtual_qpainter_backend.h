@@ -11,9 +11,9 @@
 #include "core/outputlayer.h"
 #include "platformsupport/scenes/qpainter/qpainterbackend.h"
 
+#include <QList>
 #include <QMap>
 #include <QObject>
-#include <QVector>
 #include <chrono>
 #include <memory>
 

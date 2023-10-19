@@ -58,10 +58,10 @@ private Q_SLOTS:
     void screenLockingChanged(bool locked);
 
 private:
-    typedef QVector<QPointF> Mark;
+    typedef QList<QPointF> Mark;
     void drawMark(QPainter *painter, const Mark &mark);
     static Mark createArrow(QPointF arrow_head, QPointF arrow_tail);
-    QVector<Mark> marks;
+    QList<Mark> marks;
     Mark drawing;
     QPointF arrow_tail;
     int width;

@@ -9,9 +9,9 @@
 */
 #pragma once
 
+#include <QList>
 #include <QMap>
 #include <QObject>
-#include <QVector>
 
 namespace KWin
 {

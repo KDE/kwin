@@ -11,7 +11,7 @@
 
 #include <xcb/xcb.h>
 
-#include <QVector>
+#include <QList>
 
 #include <kwin_export.h>
 
@@ -25,8 +25,8 @@ public:
      * Creates an event filter for the given event type.
      */
     X11EventFilter(int eventType, int opcode = 0, int genericEventType = 0);
-    X11EventFilter(int eventType, int opcode, const QVector<int> &genericEventTypes);
-    X11EventFilter(const QVector<int> &eventTypes);
+    X11EventFilter(int eventType, int opcode, const QList<int> &genericEventTypes);
+    X11EventFilter(const QList<int> &eventTypes);
 
     /**
      * Destroys the event filter.
@@ -36,7 +36,7 @@ public:
     /**
      * Returns the type of events to filter.
      */
-    QVector<int> eventTypes() const
+    QList<int> eventTypes() const
     {
         return m_eventTypes;
     }
@@ -56,7 +56,7 @@ public:
      *
      * Only used when the event type is XCB_GE_GENERIC.
      */
-    QVector<int> genericEventTypes() const
+    QList<int> genericEventTypes() const
     {
         return m_genericEventTypes;
     }
@@ -74,9 +74,9 @@ public:
     bool isGenericEvent() const;
 
 private:
-    QVector<int> m_eventTypes;
+    QList<int> m_eventTypes;
     int m_extension;
-    QVector<int> m_genericEventTypes;
+    QList<int> m_genericEventTypes;
 };
 
 } // namespace KWin

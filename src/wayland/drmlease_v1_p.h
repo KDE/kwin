@@ -55,8 +55,8 @@ private:
     bool m_hasDrmMaster = true;
     std::map<DrmAbstractOutput *, std::unique_ptr<DrmLeaseConnectorV1Interface>> m_connectors;
     QQueue<wl_resource *> m_pendingFds;
-    QVector<DrmLeaseRequestV1Interface *> m_leaseRequests;
-    QVector<DrmLeaseV1Interface *> m_leases;
+    QList<DrmLeaseRequestV1Interface *> m_leaseRequests;
+    QList<DrmLeaseV1Interface *> m_leases;
 };
 
 class DrmLeaseConnectorV1Interface : public QObject, public QtWaylandServer::wp_drm_lease_connector_v1
@@ -87,7 +87,7 @@ public:
     DrmLeaseRequestV1Interface(DrmLeaseDeviceV1Interface *device, wl_resource *resource);
     ~DrmLeaseRequestV1Interface();
 
-    QVector<DrmLeaseConnectorV1Interface *> connectors() const;
+    QList<DrmLeaseConnectorV1Interface *> connectors() const;
     void invalidate();
 
 protected:
@@ -96,7 +96,7 @@ protected:
     void wp_drm_lease_request_v1_destroy_resource(Resource *resource) override;
 
     DrmLeaseDeviceV1Interface *const m_device;
-    QVector<DrmLeaseConnectorV1Interface *> m_connectors;
+    QList<DrmLeaseConnectorV1Interface *> m_connectors;
     bool m_invalid = false;
 };
 
@@ -104,18 +104,18 @@ class DrmLeaseV1Interface : public QObject, private QtWaylandServer::wp_drm_leas
 {
     Q_OBJECT
 public:
-    DrmLeaseV1Interface(DrmLeaseDeviceV1Interface *device, const QVector<DrmLeaseConnectorV1Interface *> &connectors, wl_resource *resource);
+    DrmLeaseV1Interface(DrmLeaseDeviceV1Interface *device, const QList<DrmLeaseConnectorV1Interface *> &connectors, wl_resource *resource);
     ~DrmLeaseV1Interface();
 
     void grant(std::unique_ptr<DrmLease> &&lease);
     void deny();
     void revoke();
 
-    QVector<DrmLeaseConnectorV1Interface *> connectors() const;
+    QList<DrmLeaseConnectorV1Interface *> connectors() const;
 
 private:
     DrmLeaseDeviceV1Interface *m_device;
-    QVector<DrmLeaseConnectorV1Interface *> m_connectors;
+    QList<DrmLeaseConnectorV1Interface *> m_connectors;
     std::unique_ptr<DrmLease> m_lease;
     bool m_finished = false;
 

@@ -12,12 +12,12 @@
 #include "drm_object.h"
 #include "drm_plane.h"
 
+#include <QList>
 #include <QObject>
 #include <QPoint>
 #include <QPointer>
 #include <QSize>
 #include <QTimer>
-#include <QVector>
 #include <chrono>
 #include <xf86drmMode.h>
 
@@ -54,7 +54,7 @@ public:
     bool updateCursorLayer() override;
 
     DrmLease *lease() const;
-    bool addLeaseObjects(QVector<uint32_t> &objectList);
+    bool addLeaseObjects(QList<uint32_t> &objectList);
     void leased(DrmLease *lease);
     void leaseEnded();
 

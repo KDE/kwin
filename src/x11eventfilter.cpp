@@ -13,7 +13,7 @@
 namespace KWin
 {
 
-X11EventFilter::X11EventFilter(const QVector<int> &eventTypes)
+X11EventFilter::X11EventFilter(const QList<int> &eventTypes)
     : m_eventTypes(eventTypes)
     , m_extension(0)
 {
@@ -21,12 +21,12 @@ X11EventFilter::X11EventFilter(const QVector<int> &eventTypes)
 }
 
 X11EventFilter::X11EventFilter(int eventType, int opcode, int genericEventType)
-    : X11EventFilter(eventType, opcode, QVector<int>{genericEventType})
+    : X11EventFilter(eventType, opcode, QList<int>{genericEventType})
 {
 }
 
-X11EventFilter::X11EventFilter(int eventType, int opcode, const QVector<int> &genericEventTypes)
-    : m_eventTypes(QVector<int>{eventType})
+X11EventFilter::X11EventFilter(int eventType, int opcode, const QList<int> &genericEventTypes)
+    : m_eventTypes(QList<int>{eventType})
     , m_extension(opcode)
     , m_genericEventTypes(genericEventTypes)
 {

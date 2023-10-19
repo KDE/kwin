@@ -10,7 +10,7 @@
 #include "libkwineffects/glutils.h"
 #include "libkwineffects/kwineffects.h"
 
-#include <QVector>
+#include <QList>
 
 #include <unordered_map>
 
@@ -128,7 +128,7 @@ private:
         int expandSize;
     };
 
-    QVector<OffsetStruct> blurOffsets;
+    QList<OffsetStruct> blurOffsets;
 
     struct BlurValuesStruct
     {
@@ -136,7 +136,7 @@ private:
         float offset;
     };
 
-    QVector<BlurValuesStruct> blurStrengthValues;
+    QList<BlurValuesStruct> blurStrengthValues;
 
     QMap<EffectWindow *, QMetaObject::Connection> windowBlurChangedConnections;
     std::unordered_map<EffectWindow *, BlurEffectData> m_windows;

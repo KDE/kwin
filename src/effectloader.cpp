@@ -390,7 +390,7 @@ void PluginEffectLoader::queryAndLoadAll()
     }
 }
 
-QVector<KPluginMetaData> PluginEffectLoader::findAllEffects() const
+QList<KPluginMetaData> PluginEffectLoader::findAllEffects() const
 {
     return KPluginMetaData::findPlugins(m_pluginSubDirectory);
 }

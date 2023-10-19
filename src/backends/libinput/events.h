@@ -84,7 +84,7 @@ public:
     uint32_t button() const;
     InputRedirection::PointerButtonState buttonState() const;
     std::chrono::microseconds time() const;
-    QVector<InputRedirection::PointerAxis> axis() const;
+    QList<InputRedirection::PointerAxis> axis() const;
     qreal scrollValue(InputRedirection::PointerAxis a) const;
     qint32 scrollValueV120(InputRedirection::PointerAxis axis) const;
 

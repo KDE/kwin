@@ -154,7 +154,7 @@ bool RulesModel::setData(const QModelIndex &index, const QVariant &value, int ro
 
     writeToSettings(rule);
 
-    Q_EMIT dataChanged(index, index, QVector<int>{role});
+    Q_EMIT dataChanged(index, index, QList<int>{role});
     if (rule->hasFlag(RuleItem::AffectsDescription)) {
         Q_EMIT descriptionChanged();
     }

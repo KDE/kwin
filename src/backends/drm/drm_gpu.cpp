@@ -180,11 +180,11 @@ void DrmGpu::initDrmResources()
         qCCritical(KWIN_DRM) << "drmModeGetResources for getting CRTCs failed on GPU" << m_devNode;
         return;
     }
-    QVector<DrmPlane *> assignedPlanes;
+    QList<DrmPlane *> assignedPlanes;
     for (int i = 0; i < resources->count_crtcs; ++i) {
         uint32_t crtcId = resources->crtcs[i];
-        QVector<DrmPlane *> primaryCandidates;
-        QVector<DrmPlane *> cursorCandidates;
+        QList<DrmPlane *> primaryCandidates;
+        QList<DrmPlane *> cursorCandidates;
         for (const auto &plane : m_planes) {
             if (plane->isCrtcSupported(i) && !assignedPlanes.contains(plane.get())) {
                 if (plane->type.enumValue() == DrmPlane::TypeIndex::Primary) {
@@ -198,7 +198,7 @@ void DrmGpu::initDrmResources()
             qCWarning(KWIN_DRM) << "Could not find a suitable primary plane for crtc" << resources->crtcs[i];
             continue;
         }
-        const auto findBestPlane = [crtcId](const QVector<DrmPlane *> &list) {
+        const auto findBestPlane = [crtcId](const QList<DrmPlane *> &list) {
             // if the plane is already used with this crtc, prefer it
             const auto connected = std::find_if(list.begin(), list.end(), [crtcId](DrmPlane *plane) {
                 return plane->crtcId.value() == crtcId;
@@ -261,8 +261,8 @@ bool DrmGpu::updateOutputs()
     }
 
     // check for added and removed connectors
-    QVector<DrmConnector *> existing;
-    QVector<DrmOutput *> addedOutputs;
+    QList<DrmConnector *> existing;
+    QList<DrmOutput *> addedOutputs;
     for (int i = 0; i < resources->count_connectors; ++i) {
         const uint32_t currentConnector = resources->connectors[i];
         const auto it = std::find_if(m_connectors.begin(), m_connectors.end(), [currentConnector](const auto &connector) {
@@ -367,7 +367,7 @@ void DrmGpu::removeOutputs()
     }
 }
 
-DrmPipeline::Error DrmGpu::checkCrtcAssignment(QVector<DrmConnector *> connectors, const QVector<DrmCrtc *> &crtcs)
+DrmPipeline::Error DrmGpu::checkCrtcAssignment(QList<DrmConnector *> connectors, const QList<DrmCrtc *> &crtcs)
 {
     if (connectors.isEmpty() || crtcs.isEmpty()) {
         if (m_pipelines.isEmpty()) {
@@ -426,8 +426,8 @@ DrmPipeline::Error DrmGpu::checkCrtcAssignment(QVector<DrmConnector *> connector
 
 DrmPipeline::Error DrmGpu::testPendingConfiguration()
 {
-    QVector<DrmConnector *> connectors;
-    QVector<DrmCrtc *> crtcs;
+    QList<DrmConnector *> connectors;
+    QList<DrmCrtc *> crtcs;
     // only change resources that aren't currently leased away
     for (const auto &conn : m_connectors) {
         bool isLeased = std::any_of(m_drmOutputs.cbegin(), m_drmOutputs.cend(), [&conn](const auto output) {
@@ -456,7 +456,7 @@ DrmPipeline::Error DrmGpu::testPendingConfiguration()
 
 DrmPipeline::Error DrmGpu::testPipelines()
 {
-    QVector<DrmPipeline *> inactivePipelines;
+    QList<DrmPipeline *> inactivePipelines;
     std::copy_if(m_pipelines.constBegin(), m_pipelines.constEnd(), std::back_inserter(inactivePipelines), [](const auto pipeline) {
         return pipeline->enabled() && !pipeline->active();
     });
@@ -582,7 +582,7 @@ DrmBackend *DrmGpu::platform() const
     return m_platform;
 }
 
-const QVector<DrmPipeline *> DrmGpu::pipelines() const
+const QList<DrmPipeline *> DrmGpu::pipelines() const
 {
     return m_pipelines;
 }
@@ -603,9 +603,9 @@ void DrmGpu::removeVirtualOutput(DrmVirtualOutput *output)
     }
 }
 
-std::unique_ptr<DrmLease> DrmGpu::leaseOutputs(const QVector<DrmOutput *> &outputs)
+std::unique_ptr<DrmLease> DrmGpu::leaseOutputs(const QList<DrmOutput *> &outputs)
 {
-    QVector<uint32_t> objects;
+    QList<uint32_t> objects;
     for (DrmOutput *output : outputs) {
         if (output->lease() || !output->addLeaseObjects(objects)) {
             return nullptr;
@@ -630,12 +630,12 @@ std::unique_ptr<DrmLease> DrmGpu::leaseOutputs(const QVector<DrmOutput *> &outpu
     }
 }
 
-QVector<DrmVirtualOutput *> DrmGpu::virtualOutputs() const
+QList<DrmVirtualOutput *> DrmGpu::virtualOutputs() const
 {
     return m_virtualOutputs;
 }
 
-QVector<DrmOutput *> DrmGpu::drmOutputs() const
+QList<DrmOutput *> DrmGpu::drmOutputs() const
 {
     return m_drmOutputs;
 }
@@ -773,12 +773,12 @@ bool DrmGpu::maybeModeset()
     }
 }
 
-QVector<DrmObject *> DrmGpu::unusedObjects() const
+QList<DrmObject *> DrmGpu::unusedObjects() const
 {
     if (!m_atomicModeSetting) {
         return {};
     }
-    QVector<DrmObject *> ret = m_allObjects;
+    QList<DrmObject *> ret = m_allObjects;
     for (const auto &pipeline : m_pipelines) {
         ret.removeOne(pipeline->connector());
         if (pipeline->crtc()) {
@@ -906,7 +906,7 @@ std::shared_ptr<DrmFramebuffer> DrmGpu::importBuffer(GraphicsBuffer *buffer)
     return std::make_shared<DrmFramebuffer>(this, framebufferId, buffer);
 }
 
-DrmLease::DrmLease(DrmGpu *gpu, FileDescriptor &&fd, uint32_t lesseeId, const QVector<DrmOutput *> &outputs)
+DrmLease::DrmLease(DrmGpu *gpu, FileDescriptor &&fd, uint32_t lesseeId, const QList<DrmOutput *> &outputs)
     : m_gpu(gpu)
     , m_fd(std::move(fd))
     , m_lesseeId(lesseeId)

@@ -54,7 +54,7 @@ XwaylandLauncher::~XwaylandLauncher()
 {
 }
 
-void XwaylandLauncher::setListenFDs(const QVector<int> &listenFds)
+void XwaylandLauncher::setListenFDs(const QList<int> &listenFds)
 {
     m_listenFds = listenFds;
 }
@@ -116,7 +116,7 @@ bool XwaylandLauncher::start()
     if (m_xwaylandProcess) {
         return false;
     }
-    QVector<int> fdsToClose;
+    QList<int> fdsToClose;
     auto cleanup = qScopeGuard([&fdsToClose] {
         for (const int fd : std::as_const(fdsToClose)) {
             close(fd);

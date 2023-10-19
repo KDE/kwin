@@ -119,7 +119,7 @@ protected:
     {
         QRegion damage;
         int mask = 0;
-        QVector<Phase2Data> phase2Data;
+        QList<Phase2Data> phase2Data;
     };
 
     // The screen that is being currently painted
@@ -127,7 +127,7 @@ protected:
     SceneDelegate *painted_delegate = nullptr;
 
     // windows in their stacking order
-    QVector<WindowItem *> stacking_order;
+    QList<WindowItem *> stacking_order;
 
 private:
     void createDndIconItem();

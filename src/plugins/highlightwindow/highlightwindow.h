@@ -46,7 +46,7 @@ private:
 
     void prepareHighlighting();
     void finishHighlighting();
-    void highlightWindows(const QVector<KWin::EffectWindow *> &windows);
+    void highlightWindows(const QList<KWin::EffectWindow *> &windows);
 
     long m_atom;
     QList<EffectWindow *> m_highlightedWindows;

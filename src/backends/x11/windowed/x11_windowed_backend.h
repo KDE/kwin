@@ -108,7 +108,7 @@ public:
 
     bool hasXInput() const;
 
-    QHash<uint32_t, QVector<uint64_t>> driFormats() const;
+    QHash<uint32_t, QList<uint64_t>> driFormats() const;
     uint32_t driFormatForDepth(int depth) const;
     int driMajorVersion() const;
     int driMinorVersion() const;
@@ -117,7 +117,7 @@ public:
     std::unique_ptr<OpenGLBackend> createOpenGLBackend() override;
     std::unique_ptr<QPainterBackend> createQPainterBackend() override;
     std::unique_ptr<InputBackend> createInputBackend() override;
-    QVector<CompositingType> supportedCompositors() const override;
+    QList<CompositingType> supportedCompositors() const override;
     Outputs outputs() const override;
 
     X11WindowedInputDevice *pointerDevice() const;
@@ -173,13 +173,13 @@ private:
     bool m_hasDri = false;
     int m_driMajorVersion = 0;
     int m_driMinorVersion = 0;
-    QHash<uint32_t, QVector<uint64_t>> m_driFormats;
+    QHash<uint32_t, QList<uint64_t>> m_driFormats;
 
     FileDescriptor m_drmFileDescriptor;
     gbm_device *m_gbmDevice = nullptr;
     std::unique_ptr<EglDisplay> m_eglDisplay;
 
-    QVector<X11WindowedOutput *> m_outputs;
+    QList<X11WindowedOutput *> m_outputs;
 };
 
 } // namespace KWin

@@ -264,7 +264,7 @@ void TabBoxHandlerImpl::highlightWindows(Window *window, QWindow *controller)
     if (!effects) {
         return;
     }
-    QVector<EffectWindow *> windows;
+    QList<EffectWindow *> windows;
     if (window) {
         windows << window->effectWindow();
     }

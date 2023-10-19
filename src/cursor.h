@@ -139,7 +139,7 @@ public:
     /**
      * @return list of alternative names for the cursor with @p name
      */
-    static QVector<QByteArray> cursorAlternativeNames(const QByteArray &name);
+    static QList<QByteArray> cursorAlternativeNames(const QByteArray &name);
     /**
      * Returns the default Xcursor theme name.
      */
@@ -304,7 +304,7 @@ private:
     static Cursors *s_self;
     Cursor *m_currentCursor = nullptr;
     Cursor *m_mouse = nullptr;
-    QVector<Cursor *> m_cursors;
+    QList<Cursor *> m_cursors;
     int m_cursorHideCounter = 0;
 };
 

@@ -173,7 +173,7 @@ void DesktopsModel::setRows(int rows)
         m_rows = rows;
 
         Q_EMIT rowsChanged();
-        Q_EMIT dataChanged(index(0, 0), index(m_desktops.count() - 1, 0), QVector<int>{DesktopRow});
+        Q_EMIT dataChanged(index(0, 0), index(m_desktops.count() - 1, 0), QList<int>{DesktopRow});
 
         updateModifiedState();
     }
@@ -243,7 +243,7 @@ void DesktopsModel::setDesktopName(const QString &id, const QString &name)
 
     const QModelIndex &idx = index(m_desktops.indexOf(id), 0);
 
-    Q_EMIT dataChanged(idx, idx, QVector<int>{Qt::DisplayRole});
+    Q_EMIT dataChanged(idx, idx, QList<int>{Qt::DisplayRole});
 
     updateModifiedState();
 }
@@ -320,7 +320,7 @@ void DesktopsModel::syncWithServer()
         m_names[newId] = m_names.take(oldId);
     }
 
-    Q_EMIT dataChanged(index(0, 0), index(rowCount() - 1, 0), QVector<int>{Qt::DisplayRole});
+    Q_EMIT dataChanged(index(0, 0), index(rowCount() - 1, 0), QList<int>{Qt::DisplayRole});
 
     // Sync names.
     if (m_names != m_serverSideNames) {
@@ -557,7 +557,7 @@ void DesktopsModel::desktopCreated(const QString &id, const KWin::DBusDesktopDat
         m_names.remove(dummyId);
         m_names[id] = data.name;
         const QModelIndex &idx = index(data.position, 0);
-        Q_EMIT dataChanged(idx, idx, QVector<int>{Id});
+        Q_EMIT dataChanged(idx, idx, QList<int>{Id});
 
         updateModifiedState(/* server */ true);
     }
@@ -597,7 +597,7 @@ void DesktopsModel::desktopDataChanged(const QString &id, const KWin::DBusDeskto
 
         const QModelIndex &idx = index(desktopIndex, 0);
 
-        Q_EMIT dataChanged(idx, idx, QVector<int>{Qt::DisplayRole});
+        Q_EMIT dataChanged(idx, idx, QList<int>{Qt::DisplayRole});
     } else {
         updateModifiedState(/* server */ true);
     }
@@ -617,7 +617,7 @@ void DesktopsModel::desktopRowsChanged(uint rows)
         m_rows = m_serverSideRows;
 
         Q_EMIT rowsChanged();
-        Q_EMIT dataChanged(index(0, 0), index(m_desktops.count() - 1, 0), QVector<int>{DesktopRow});
+        Q_EMIT dataChanged(index(0, 0), index(m_desktops.count() - 1, 0), QList<int>{DesktopRow});
     } else {
         updateModifiedState(/* server */ true);
     }
@@ -640,7 +640,7 @@ void DesktopsModel::updateModifiedState(bool server)
             m_names[newId] = m_names.take(oldId);
         }
 
-        Q_EMIT dataChanged(index(0, 0), index(rowCount() - 1, 0), QVector<int>{Qt::DisplayRole});
+        Q_EMIT dataChanged(index(0, 0), index(rowCount() - 1, 0), QList<int>{Qt::DisplayRole});
     }
 
     if (m_desktops == m_serverSideDesktops

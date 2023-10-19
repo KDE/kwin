@@ -11,9 +11,9 @@
 #include <xf86drm.h>
 #include <xf86drmMode.h>
 
+#include <QList>
 #include <QMap>
 #include <QRect>
-#include <QVector>
 #include <memory>
 #include <mutex>
 #include <vector>
@@ -27,7 +27,7 @@ class MockPlane;
 
 class MockProperty {
 public:
-    MockProperty(MockObject *obj, QString name, uint64_t initialValue, uint32_t flags, QVector<QByteArray> enums = {});
+    MockProperty(MockObject *obj, QString name, uint64_t initialValue, uint32_t flags, QList<QByteArray> enums = {});
     ~MockProperty() = default;
 
     MockObject *obj;
@@ -35,7 +35,7 @@ public:
     uint32_t flags;
     QString name;
     uint64_t value;
-    QVector<QByteArray> enums;
+    QList<QByteArray> enums;
 };
 
 class MockPropertyBlob {
@@ -60,7 +60,7 @@ public:
     uint32_t getPropId(const QString &propName) const;
 
     uint32_t id;
-    QVector<MockProperty> props;
+    QList<MockProperty> props;
     MockGpu *gpu;
 };
 
@@ -75,7 +75,7 @@ public:
     drmModeConnection connection;
     uint32_t type;
     std::shared_ptr<MockEncoder> encoder;
-    QVector<drmModeModeInfo> modes;
+    QList<drmModeModeInfo> modes;
 };
 
 class MockEncoder : public MockObject {
@@ -141,7 +141,7 @@ struct Prop {
 
 struct _drmModeAtomicReq {
     bool legacyEmulation = false;
-    QVector<Prop> props;
+    QList<Prop> props;
 };
 
 #define MOCKDRM_DEVICE_CAP_ATOMIC 0xFF
@@ -165,28 +165,28 @@ public:
     QMap<uint32_t, uint64_t> deviceCaps;
 
     uint32_t idCounter = 1;
-    QVector<MockObject*> objects;
+    QList<MockObject *> objects;
 
-    QVector<std::shared_ptr<MockConnector>> connectors;
-    QVector<drmModeConnectorPtr> drmConnectors;
+    QList<std::shared_ptr<MockConnector>> connectors;
+    QList<drmModeConnectorPtr> drmConnectors;
 
-    QVector<std::shared_ptr<MockEncoder>> encoders;
-    QVector<drmModeEncoderPtr> drmEncoders;
+    QList<std::shared_ptr<MockEncoder>> encoders;
+    QList<drmModeEncoderPtr> drmEncoders;
 
-    QVector<std::shared_ptr<MockCrtc>> crtcs;
-    QVector<drmModeCrtcPtr> drmCrtcs;
+    QList<std::shared_ptr<MockCrtc>> crtcs;
+    QList<drmModeCrtcPtr> drmCrtcs;
 
-    QVector<std::shared_ptr<MockPlane>> planes;
-    QVector<drmModePlanePtr> drmPlanes;
+    QList<std::shared_ptr<MockPlane>> planes;
+    QList<drmModePlanePtr> drmPlanes;
 
-    QVector<MockFb *> fbs;
+    QList<MockFb *> fbs;
     std::vector<std::unique_ptr<MockPropertyBlob>> propertyBlobs;
 
-    QVector<drmModeResPtr> resPtrs;
-    QVector<drmModePropertyPtr> drmProps;
-    QVector<drmModePropertyBlobPtr> drmPropertyBlobs;
-    QVector<drmModeObjectPropertiesPtr> drmObjectProperties;
-    QVector<drmModePlaneResPtr> drmPlaneRes;
+    QList<drmModeResPtr> resPtrs;
+    QList<drmModePropertyPtr> drmProps;
+    QList<drmModePropertyBlobPtr> drmPropertyBlobs;
+    QList<drmModeObjectPropertiesPtr> drmObjectProperties;
+    QList<drmModePlaneResPtr> drmPlaneRes;
     std::mutex m_mutex;
 };
 

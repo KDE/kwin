@@ -38,14 +38,14 @@ public:
     {
         dev_t device;
         TrancheFlags flags;
-        QHash<uint32_t, QVector<uint64_t>> formatTable;
+        QHash<uint32_t, QList<uint64_t>> formatTable;
     };
     /**
      * Sets the list of tranches for this feedback object, with lower indices
      * indicating a higher priority / a more optimal configuration.
      * The main device does not need to be included
      */
-    void setTranches(const QVector<Tranche> &tranches);
+    void setTranches(const QList<Tranche> &tranches);
 
 private:
     LinuxDmaBufV1Feedback(LinuxDmaBufV1ClientBufferIntegrationPrivate *integration);
@@ -68,7 +68,7 @@ public:
     RenderBackend *renderBackend() const;
     void setRenderBackend(RenderBackend *renderBackend);
 
-    void setSupportedFormatsWithModifiers(const QVector<LinuxDmaBufV1Feedback::Tranche> &tranches);
+    void setSupportedFormatsWithModifiers(const QList<LinuxDmaBufV1Feedback::Tranche> &tranches);
 
 private:
     friend class LinuxDmaBufV1ClientBufferIntegrationPrivate;

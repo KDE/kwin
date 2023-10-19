@@ -562,9 +562,9 @@ void WaylandBackend::togglePointerLock()
     m_pointerLockRequested = !m_pointerLockRequested;
 }
 
-QVector<CompositingType> WaylandBackend::supportedCompositors() const
+QList<CompositingType> WaylandBackend::supportedCompositors() const
 {
-    QVector<CompositingType> ret;
+    QList<CompositingType> ret;
     if (m_display->linuxDmabuf() && m_gbmDevice) {
         ret.append(OpenGLCompositing);
     }

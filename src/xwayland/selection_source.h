@@ -8,8 +8,8 @@
 */
 #pragma once
 
+#include <QList>
 #include <QObject>
-#include <QVector>
 
 #include <xcb/xcb.h>
 
@@ -95,13 +95,13 @@ private:
 
     AbstractDataSource *m_dsi = nullptr;
 
-    QVector<QString> m_offers;
+    QList<QString> m_offers;
     QMetaObject::Connection m_offerConnection;
 
     Q_DISABLE_COPY(WlSource)
 };
 
-using Mimes = QVector<QPair<QString, xcb_atom_t>>;
+using Mimes = QList<QPair<QString, xcb_atom_t>>;
 
 /**
  * Representing an X data source.

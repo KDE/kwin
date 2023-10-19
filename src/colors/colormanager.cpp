@@ -18,7 +18,7 @@ namespace KWin
 class ColorManagerPrivate
 {
 public:
-    QVector<ColorDevice *> devices;
+    QList<ColorDevice *> devices;
 };
 
 ColorManager::ColorManager()
@@ -36,7 +36,7 @@ ColorManager::ColorManager()
 
 ColorManager::~ColorManager() = default;
 
-QVector<ColorDevice *> ColorManager::devices() const
+QList<ColorDevice *> ColorManager::devices() const
 {
     return d->devices;
 }

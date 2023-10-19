@@ -85,7 +85,7 @@ bool WlSource::handleSelectionRequest(xcb_selection_request_event_t *event)
 
 void WlSource::sendTargets(xcb_selection_request_event_t *event)
 {
-    QVector<xcb_atom_t> targets;
+    QList<xcb_atom_t> targets;
     targets.resize(m_offers.size() + 2);
     targets[0] = atoms->timestamp;
     targets[1] = atoms->targets;

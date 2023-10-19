@@ -313,10 +313,10 @@ void LinuxDmaBufV1ClientBufferIntegration::setRenderBackend(RenderBackend *rende
     d->renderBackend = renderBackend;
 }
 
-void LinuxDmaBufV1ClientBufferIntegration::setSupportedFormatsWithModifiers(const QVector<LinuxDmaBufV1Feedback::Tranche> &tranches)
+void LinuxDmaBufV1ClientBufferIntegration::setSupportedFormatsWithModifiers(const QList<LinuxDmaBufV1Feedback::Tranche> &tranches)
 {
     if (LinuxDmaBufV1FeedbackPrivate::get(d->defaultFeedback.get())->m_tranches != tranches) {
-        QHash<uint32_t, QVector<uint64_t>> set;
+        QHash<uint32_t, QList<uint64_t>> set;
         for (const auto &tranche : tranches) {
             set.insert(tranche.formatTable);
         }
@@ -390,7 +390,7 @@ LinuxDmaBufV1Feedback::LinuxDmaBufV1Feedback(LinuxDmaBufV1ClientBufferIntegratio
 
 LinuxDmaBufV1Feedback::~LinuxDmaBufV1Feedback() = default;
 
-void LinuxDmaBufV1Feedback::setTranches(const QVector<Tranche> &tranches)
+void LinuxDmaBufV1Feedback::setTranches(const QList<Tranche> &tranches)
 {
     if (d->m_tranches != tranches) {
         d->m_tranches = tranches;
@@ -463,9 +463,9 @@ struct linux_dmabuf_feedback_v1_table_entry
     uint64_t modifier;
 };
 
-LinuxDmaBufV1FormatTable::LinuxDmaBufV1FormatTable(const QHash<uint32_t, QVector<uint64_t>> &supportedModifiers)
+LinuxDmaBufV1FormatTable::LinuxDmaBufV1FormatTable(const QHash<uint32_t, QList<uint64_t>> &supportedModifiers)
 {
-    QVector<linux_dmabuf_feedback_v1_table_entry> data;
+    QList<linux_dmabuf_feedback_v1_table_entry> data;
     for (auto it = supportedModifiers.begin(); it != supportedModifiers.end(); it++) {
         const uint32_t format = it.key();
         for (const uint64_t &mod : *it) {

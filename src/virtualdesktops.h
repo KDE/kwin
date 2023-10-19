@@ -86,7 +86,7 @@ class VirtualDesktopGrid
 public:
     VirtualDesktopGrid();
     ~VirtualDesktopGrid();
-    void update(const QSize &size, Qt::Orientation orientation, const QVector<VirtualDesktop *> &desktops);
+    void update(const QSize &size, Qt::Orientation orientation, const QList<VirtualDesktop *> &desktops);
     /**
      * @returns The coords of desktop @a id in grid units.
      */
@@ -106,7 +106,7 @@ public:
 
 private:
     QSize m_size;
-    QVector<QVector<VirtualDesktop *>> m_grid;
+    QList<QList<VirtualDesktop *>> m_grid;
 };
 
 /**
@@ -249,7 +249,7 @@ public:
     /**
      * @returns all currently managed VirtualDesktops
      */
-    QVector<VirtualDesktop *> desktops() const
+    QList<VirtualDesktop *> desktops() const
     {
         return m_desktops;
     }
@@ -479,7 +479,7 @@ private:
      */
     QAction *addAction(const QString &name, const QString &label, const QKeySequence &key, void (VirtualDesktopManager::*slot)());
 
-    QVector<VirtualDesktop *> m_desktops;
+    QList<VirtualDesktop *> m_desktops;
     QPointer<VirtualDesktop> m_current;
     quint32 m_rows = 2;
     bool m_navigationWrapsAround;

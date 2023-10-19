@@ -27,9 +27,9 @@
 namespace KWin
 {
 
-static const QVector<uint64_t> linearModifier = {DRM_FORMAT_MOD_LINEAR};
-static const QVector<uint64_t> implicitModifier = {DRM_FORMAT_MOD_INVALID};
-static const QVector<uint32_t> cpuCopyFormats = {DRM_FORMAT_ARGB8888, DRM_FORMAT_XRGB8888};
+static const QList<uint64_t> linearModifier = {DRM_FORMAT_MOD_LINEAR};
+static const QList<uint64_t> implicitModifier = {DRM_FORMAT_MOD_INVALID};
+static const QList<uint32_t> cpuCopyFormats = {DRM_FORMAT_ARGB8888, DRM_FORMAT_XRGB8888};
 
 static const bool bufferAgeEnabled = qEnvironmentVariable("KWIN_USE_BUFFER_AGE") != QStringLiteral("0");
 
@@ -69,7 +69,7 @@ void EglGbmLayerSurface::destroyResources()
     m_oldSurface = {};
 }
 
-std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(const QSize &bufferSize, TextureTransforms transformation, const QMap<uint32_t, QVector<uint64_t>> &formats, const ColorDescription &colorDescription, const QVector3D &channelFactors, bool enableColormanagement)
+std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(const QSize &bufferSize, TextureTransforms transformation, const QMap<uint32_t, QList<uint64_t>> &formats, const ColorDescription &colorDescription, const QVector3D &channelFactors, bool enableColormanagement)
 {
     if (!checkSurface(bufferSize, formats)) {
         return std::nullopt;
@@ -206,7 +206,7 @@ const ColorDescription &EglGbmLayerSurface::colorDescription() const
     }
 }
 
-bool EglGbmLayerSurface::doesSurfaceFit(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const
+bool EglGbmLayerSurface::doesSurfaceFit(const QSize &size, const QMap<uint32_t, QList<uint64_t>> &formats) const
 {
     return doesSurfaceFit(m_surface.get(), size, formats);
 }
@@ -220,7 +220,7 @@ std::shared_ptr<GLTexture> EglGbmLayerSurface::texture() const
     }
 }
 
-std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::renderTestBuffer(const QSize &bufferSize, const QMap<uint32_t, QVector<uint64_t>> &formats)
+std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::renderTestBuffer(const QSize &bufferSize, const QMap<uint32_t, QList<uint64_t>> &formats)
 {
     if (checkSurface(bufferSize, formats)) {
         return m_surface->currentFramebuffer;
@@ -229,7 +229,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::renderTestBuffer(const QSize
     }
 }
 
-bool EglGbmLayerSurface::checkSurface(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats)
+bool EglGbmLayerSurface::checkSurface(const QSize &size, const QMap<uint32_t, QList<uint64_t>> &formats)
 {
     if (doesSurfaceFit(m_surface.get(), size, formats)) {
         return true;
@@ -246,7 +246,7 @@ bool EglGbmLayerSurface::checkSurface(const QSize &size, const QMap<uint32_t, QV
     return false;
 }
 
-bool EglGbmLayerSurface::doesSurfaceFit(Surface *surface, const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const
+bool EglGbmLayerSurface::doesSurfaceFit(Surface *surface, const QSize &size, const QMap<uint32_t, QList<uint64_t>> &formats) const
 {
     if (!surface) {
         return false;
@@ -258,10 +258,10 @@ bool EglGbmLayerSurface::doesSurfaceFit(Surface *surface, const QSize &size, con
         && (surface->forceLinear || swapchain->modifier() == DRM_FORMAT_MOD_INVALID || formats[swapchain->format()].contains(swapchain->modifier()));
 }
 
-std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const
+std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(const QSize &size, const QMap<uint32_t, QList<uint64_t>> &formats) const
 {
-    QVector<FormatInfo> preferredFormats;
-    QVector<FormatInfo> fallbackFormats;
+    QList<FormatInfo> preferredFormats;
+    QList<FormatInfo> fallbackFormats;
     for (auto it = formats.begin(); it != formats.end(); it++) {
         const auto format = formatInfo(it.key());
         if (format.has_value() && format->bitsPerColor >= 8) {
@@ -284,7 +284,7 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
             return lhs.bitsPerPixel < rhs.bitsPerPixel;
         }
     };
-    const auto doTestFormats = [this, &size, &formats](const QVector<FormatInfo> &gbmFormats, MultiGpuImportMode importMode) -> std::unique_ptr<Surface> {
+    const auto doTestFormats = [this, &size, &formats](const QList<FormatInfo> &gbmFormats, MultiGpuImportMode importMode) -> std::unique_ptr<Surface> {
         for (const auto &format : gbmFormats) {
             if (m_formatOption == FormatOption::RequireAlpha && format.alphaBits == 0) {
                 continue;
@@ -296,7 +296,7 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
         }
         return nullptr;
     };
-    const auto testFormats = [this, &sort, &doTestFormats](QVector<FormatInfo> &formats) -> std::unique_ptr<Surface> {
+    const auto testFormats = [this, &sort, &doTestFormats](QList<FormatInfo> &formats) -> std::unique_ptr<Surface> {
         std::sort(formats.begin(), formats.end(), sort);
         if (m_gpu == m_eglBackend->gpu()) {
             return doTestFormats(formats, MultiGpuImportMode::None);
@@ -328,9 +328,9 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
     }
 }
 
-static QVector<uint64_t> filterModifiers(const QVector<uint64_t> &one, const QVector<uint64_t> &two)
+static QList<uint64_t> filterModifiers(const QList<uint64_t> &one, const QList<uint64_t> &two)
 {
-    QVector<uint64_t> ret = one;
+    QList<uint64_t> ret = one;
     ret.erase(std::remove_if(ret.begin(), ret.end(), [&two](uint64_t mod) {
                   return !two.contains(mod);
               }),
@@ -338,10 +338,10 @@ static QVector<uint64_t> filterModifiers(const QVector<uint64_t> &one, const QVe
     return ret;
 }
 
-std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, MultiGpuImportMode importMode) const
+std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(const QSize &size, uint32_t format, const QList<uint64_t> &modifiers, MultiGpuImportMode importMode) const
 {
     const bool cpuCopy = importMode == MultiGpuImportMode::DumbBuffer || m_bufferTarget == BufferTarget::Dumb;
-    QVector<uint64_t> renderModifiers;
+    QList<uint64_t> renderModifiers;
     auto ret = std::make_unique<Surface>();
     if (importMode == MultiGpuImportMode::Egl) {
         ret->importContext = m_eglBackend->contextForGpu(m_gpu);
@@ -384,7 +384,7 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
     return ret;
 }
 
-std::shared_ptr<EglSwapchain> EglGbmLayerSurface::createGbmSwapchain(DrmGpu *gpu, EglContext *context, const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, bool preferLinear) const
+std::shared_ptr<EglSwapchain> EglGbmLayerSurface::createGbmSwapchain(DrmGpu *gpu, EglContext *context, const QSize &size, uint32_t format, const QList<uint64_t> &modifiers, bool preferLinear) const
 {
     static bool modifiersEnvSet = false;
     static const bool modifiersEnv = qEnvironmentVariableIntValue("KWIN_DRM_USE_MODIFIERS", &modifiersEnvSet) != 0;

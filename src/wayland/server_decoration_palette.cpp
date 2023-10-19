@@ -21,7 +21,7 @@ class ServerSideDecorationPaletteManagerInterfacePrivate : public QtWaylandServe
 public:
     ServerSideDecorationPaletteManagerInterfacePrivate(ServerSideDecorationPaletteManagerInterface *q, Display *display);
 
-    QVector<ServerSideDecorationPaletteInterface *> palettes;
+    QList<ServerSideDecorationPaletteInterface *> palettes;
     ServerSideDecorationPaletteManagerInterface *q;
 
 protected:

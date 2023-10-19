@@ -38,7 +38,7 @@ static std::unique_ptr<MockGpu> findPrimaryDevice(int crtcCount)
         return nullptr;
     }
 
-    QVector<drmDevice *> devices(deviceCount);
+    QList<drmDevice *> devices(deviceCount);
     if (drmGetDevices2(0, devices.data(), devices.size()) < 0) {
         return nullptr;
     }
@@ -203,9 +203,9 @@ void DrmTest::testZeroModesHandling()
 void DrmTest::testModeGeneration_data()
 {
     QTest::addColumn<QSize>("nativeMode");
-    QTest::addColumn<QVector<QSize>>("expectedModes");
+    QTest::addColumn<QList<QSize>>("expectedModes");
 
-    QTest::newRow("2160p") << QSize(3840, 2160) << QVector<QSize>{
+    QTest::newRow("2160p") << QSize(3840, 2160) << QList<QSize>{
         QSize(1600, 1200),
         QSize(1280, 1024),
         QSize(1024, 768),
@@ -221,7 +221,7 @@ void DrmTest::testModeGeneration_data()
         QSize(1368, 768),
         QSize(1280, 720),
     };
-    QTest::newRow("1440p") << QSize(2560, 1440) << QVector<QSize>{
+    QTest::newRow("1440p") << QSize(2560, 1440) << QList<QSize>{
         QSize(1600, 1200),
         QSize(1280, 1024),
         QSize(1024, 768),
@@ -233,7 +233,7 @@ void DrmTest::testModeGeneration_data()
         QSize(1368, 768),
         QSize(1280, 720),
     };
-    QTest::newRow("1080p") << QSize(1920, 1080) << QVector<QSize>{
+    QTest::newRow("1080p") << QSize(1920, 1080) << QList<QSize>{
         QSize(1280, 1024),
         QSize(1024, 768),
         QSize(1280, 800),
@@ -243,7 +243,7 @@ void DrmTest::testModeGeneration_data()
         QSize(1280, 720),
     };
 
-    QTest::newRow("2160p 21:9") << QSize(5120, 2160) << QVector<QSize>{
+    QTest::newRow("2160p 21:9") << QSize(5120, 2160) << QList<QSize>{
         QSize(5120, 2160),
         QSize(1600, 1200),
         QSize(1280, 1024),
@@ -260,7 +260,7 @@ void DrmTest::testModeGeneration_data()
         QSize(1368, 768),
         QSize(1280, 720),
     };
-    QTest::newRow("1440p 21:9") << QSize(3440, 1440) << QVector<QSize>{
+    QTest::newRow("1440p 21:9") << QSize(3440, 1440) << QList<QSize>{
         QSize(3440, 1440),
         QSize(1600, 1200),
         QSize(1280, 1024),
@@ -273,7 +273,7 @@ void DrmTest::testModeGeneration_data()
         QSize(1368, 768),
         QSize(1280, 720),
     };
-    QTest::newRow("1080p 21:9") << QSize(2560, 1080) << QVector<QSize>{
+    QTest::newRow("1080p 21:9") << QSize(2560, 1080) << QList<QSize>{
         QSize(2560, 1080),
         QSize(1280, 1024),
         QSize(1024, 768),
@@ -298,7 +298,7 @@ void DrmTest::testModeGeneration()
     auto gpu = std::make_unique<DrmGpu>(backend.get(), mockGpu->devNode, mockGpu->fd, 0);
 
     QFETCH(QSize, nativeMode);
-    QFETCH(QVector<QSize>, expectedModes);
+    QFETCH(QList<QSize>, expectedModes);
 
     conn->modes.clear();
     conn->addMode(nativeMode.width(), nativeMode.height(), 60);
@@ -310,7 +310,7 @@ void DrmTest::testModeGeneration()
     mockGpu->connectors.removeAll(conn);
     QVERIFY(gpu->updateOutputs());
 
-    conn->props.emplace_back(conn.get(), QStringLiteral("scaling mode"), 0, DRM_MODE_PROP_ENUM, QVector<QByteArray>{"None", "Full", "Center", "Full aspect"});
+    conn->props.emplace_back(conn.get(), QStringLiteral("scaling mode"), 0, DRM_MODE_PROP_ENUM, QList<QByteArray>{"None", "Full", "Center", "Full aspect"});
     mockGpu->connectors.push_back(conn);
     QVERIFY(gpu->updateOutputs());
 

@@ -18,9 +18,9 @@
 #include "sm.h"
 #include "utils/common.h"
 // Qt
+#include <QList>
 #include <QStringList>
 #include <QTimer>
-#include <QVector>
 // std
 #include <functional>
 #include <memory>
@@ -174,8 +174,8 @@ public:
 
     Output *xineramaIndexToOutput(int index) const;
 
-    void setOutputOrder(const QVector<Output *> &order);
-    QVector<Output *> outputOrder() const;
+    void setOutputOrder(const QList<Output *> &order);
+    QList<Output *> outputOrder() const;
 
     Output *activeOutput() const;
     void setActiveOutput(Output *output);
@@ -288,7 +288,7 @@ public:
     Window *topWindowOnDesktop(VirtualDesktop *desktop, Output *output = nullptr, bool unconstrained = false,
                                bool only_normal = true) const;
     Window *findDesktop(bool topmost, VirtualDesktop *desktop) const;
-    void sendWindowToDesktops(Window *window, const QVector<VirtualDesktop *> &desktops, bool dont_activate);
+    void sendWindowToDesktops(Window *window, const QList<VirtualDesktop *> &desktops, bool dont_activate);
     void windowToPreviousDesktop(Window *window);
     void windowToNextDesktop(Window *window);
     void sendWindowToOutput(Window *window, Output *output);
@@ -441,7 +441,7 @@ public:
      * Apply the requested output configuration. Note that you must use this function
      * instead of Platform::applyOutputChanges().
      */
-    bool applyOutputConfiguration(const OutputConfiguration &config, const QVector<Output *> &outputOrder = {});
+    bool applyOutputConfiguration(const OutputConfiguration &config, const QList<Output *> &outputOrder = {});
 
 public Q_SLOTS:
     void performWindowOperation(KWin::Window *window, Options::WindowOperation op);
@@ -608,7 +608,7 @@ private:
     QString getPlacementTrackerHash();
 
     void updateOutputConfiguration();
-    void updateOutputs(const QVector<Output *> &outputOrder = {});
+    void updateOutputs(const QList<Output *> &outputOrder = {});
     void createDpmsFilter();
     void maybeDestroyDpmsFilter();
 
@@ -635,7 +635,7 @@ private:
     QList<Output *> m_outputs;
     Output *m_activeOutput = nullptr;
     Output *m_activeCursorOutput = nullptr;
-    QVector<Output *> m_outputOrder;
+    QList<Output *> m_outputOrder;
 
     Window *m_activeWindow;
     Window *m_lastActiveWindow;
@@ -651,7 +651,7 @@ private:
 
     QList<Window *> unconstrained_stacking_order; // Topmost last
     QList<Window *> stacking_order; // Topmost last
-    QVector<xcb_window_t> manual_overlays; // Topmost last
+    QList<xcb_window_t> manual_overlays; // Topmost last
     bool force_restacking;
     QList<Window *> should_get_focus; // Last is most recent
     QList<Window *> attention_chain;

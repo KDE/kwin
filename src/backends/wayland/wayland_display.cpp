@@ -187,7 +187,7 @@ public:
     dev_t mainDeviceId = 0;
     dev_t trancheDeviceId = 0;
     MemoryMap formatTable;
-    QHash<uint32_t, QVector<uint64_t>> formats;
+    QHash<uint32_t, QList<uint64_t>> formats;
 
 private:
     static void done(void *data, zwp_linux_dmabuf_feedback_v1 *zwp_linux_dmabuf_feedback_v1)
@@ -299,7 +299,7 @@ QByteArray WaylandLinuxDmabufV1::mainDevice() const
     return m_defaultFeedback->mainDevice;
 }
 
-QHash<uint32_t, QVector<uint64_t>> WaylandLinuxDmabufV1::formats() const
+QHash<uint32_t, QList<uint64_t>> WaylandLinuxDmabufV1::formats() const
 {
     return m_defaultFeedback->formats;
 }

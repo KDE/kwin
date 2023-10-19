@@ -40,11 +40,11 @@ public:
         bool internal = false;
     };
     Output *addOutput(const OutputInfo &info);
-    void setVirtualOutputs(const QVector<OutputInfo> &infos);
+    void setVirtualOutputs(const QList<OutputInfo> &infos);
 
     Outputs outputs() const override;
 
-    QVector<CompositingType> supportedCompositors() const override;
+    QList<CompositingType> supportedCompositors() const override;
 
     void setEglDisplay(std::unique_ptr<EglDisplay> &&display);
     EglDisplay *sceneEglDisplayObject() const override;
@@ -57,7 +57,7 @@ Q_SIGNALS:
 private:
     VirtualOutput *createOutput(const OutputInfo &info);
 
-    QVector<VirtualOutput *> m_outputs;
+    QList<VirtualOutput *> m_outputs;
     std::unique_ptr<EglDisplay> m_display;
     FileDescriptor m_drmFileDescriptor;
     gbm_device *m_gbmDevice = nullptr;

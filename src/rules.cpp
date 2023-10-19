@@ -579,7 +579,7 @@ APPLY_RULE(screen, Screen, int)
 APPLY_RULE(activity, Activity, QStringList)
 APPLY_FORCE_RULE(type, Type, NET::WindowType)
 
-bool Rules::applyDesktops(QVector<VirtualDesktop *> &vds, bool init) const
+bool Rules::applyDesktops(QList<VirtualDesktop *> &vds, bool init) const
 {
     if (checkSetRule(desktopsrule, init)) {
         vds.clear();
@@ -719,7 +719,7 @@ QDebug &operator<<(QDebug &stream, const Rules *r)
 void WindowRules::update(Window *c, int selection)
 {
     bool updated = false;
-    for (QVector<Rules *>::ConstIterator it = rules.constBegin();
+    for (QList<Rules *>::ConstIterator it = rules.constBegin();
          it != rules.constEnd();
          ++it) {
         if ((*it)->update(c, selection)) { // no short-circuiting here
@@ -731,34 +731,34 @@ void WindowRules::update(Window *c, int selection)
     }
 }
 
-#define CHECK_RULE(rule, type)                                        \
-    type WindowRules::check##rule(type arg, bool init) const          \
-    {                                                                 \
-        if (rules.count() == 0)                                       \
-            return arg;                                               \
-        type ret = arg;                                               \
-        for (QVector<Rules *>::ConstIterator it = rules.constBegin(); \
-             it != rules.constEnd();                                  \
-             ++it) {                                                  \
-            if ((*it)->apply##rule(ret, init))                        \
-                break;                                                \
-        }                                                             \
-        return ret;                                                   \
+#define CHECK_RULE(rule, type)                                      \
+    type WindowRules::check##rule(type arg, bool init) const        \
+    {                                                               \
+        if (rules.count() == 0)                                     \
+            return arg;                                             \
+        type ret = arg;                                             \
+        for (QList<Rules *>::ConstIterator it = rules.constBegin(); \
+             it != rules.constEnd();                                \
+             ++it) {                                                \
+            if ((*it)->apply##rule(ret, init))                      \
+                break;                                              \
+        }                                                           \
+        return ret;                                                 \
     }
 
-#define CHECK_FORCE_RULE(rule, type)                             \
-    type WindowRules::check##rule(type arg) const                \
-    {                                                            \
-        if (rules.count() == 0)                                  \
-            return arg;                                          \
-        type ret = arg;                                          \
-        for (QVector<Rules *>::ConstIterator it = rules.begin(); \
-             it != rules.end();                                  \
-             ++it) {                                             \
-            if ((*it)->apply##rule(ret))                         \
-                break;                                           \
-        }                                                        \
-        return ret;                                              \
+#define CHECK_FORCE_RULE(rule, type)                           \
+    type WindowRules::check##rule(type arg) const              \
+    {                                                          \
+        if (rules.count() == 0)                                \
+            return arg;                                        \
+        type ret = arg;                                        \
+        for (QList<Rules *>::ConstIterator it = rules.begin(); \
+             it != rules.end();                                \
+             ++it) {                                           \
+            if ((*it)->apply##rule(ret))                       \
+                break;                                         \
+        }                                                      \
+        return ret;                                            \
     }
 
 CHECK_FORCE_RULE(Placement, PlacementPolicy)
@@ -798,7 +798,7 @@ CHECK_FORCE_RULE(OpacityActive, int)
 CHECK_FORCE_RULE(OpacityInactive, int)
 CHECK_RULE(IgnoreGeometry, bool)
 
-CHECK_RULE(Desktops, QVector<VirtualDesktop *>)
+CHECK_RULE(Desktops, QList<VirtualDesktop *>)
 CHECK_RULE(Activity, QStringList)
 CHECK_FORCE_RULE(Type, NET::WindowType)
 CHECK_RULE(MaximizeVert, MaximizeMode)
@@ -875,7 +875,7 @@ void RuleBook::deleteAll()
 
 WindowRules RuleBook::find(const Window *window) const
 {
-    QVector<Rules *> ret;
+    QList<Rules *> ret;
     for (Rules *rule : m_rules) {
         if (rule->match(window)) {
             qCDebug(KWIN_CORE) << "Rule found:" << rule << ":" << window;
@@ -935,7 +935,7 @@ void RuleBook::save()
 void RuleBook::discardUsed(Window *c, bool withdrawn)
 {
     bool updated = false;
-    for (QVector<Rules *>::Iterator it = m_rules.begin();
+    for (QList<Rules *>::Iterator it = m_rules.begin();
          it != m_rules.end();) {
         if (c->rules()->contains(*it)) {
             if ((*it)->discardUsed(withdrawn)) {

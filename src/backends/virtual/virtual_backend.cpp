@@ -26,7 +26,7 @@ static FileDescriptor findRenderDevice()
         return FileDescriptor{};
     }
 
-    QVector<drmDevice *> devices(deviceCount);
+    QList<drmDevice *> devices(deviceCount);
     if (drmGetDevices2(0, devices.data(), devices.size()) < 0) {
         return FileDescriptor{};
     }
@@ -76,9 +76,9 @@ bool VirtualBackend::initialize()
     return true;
 }
 
-QVector<CompositingType> VirtualBackend::supportedCompositors() const
+QList<CompositingType> VirtualBackend::supportedCompositors() const
 {
-    QVector<CompositingType> compositingTypes;
+    QList<CompositingType> compositingTypes;
     if (m_gbmDevice) {
         compositingTypes.append(OpenGLCompositing);
     }
@@ -123,9 +123,9 @@ Output *VirtualBackend::addOutput(const OutputInfo &info)
     return output;
 }
 
-void VirtualBackend::setVirtualOutputs(const QVector<OutputInfo> &infos)
+void VirtualBackend::setVirtualOutputs(const QList<OutputInfo> &infos)
 {
-    const QVector<VirtualOutput *> removed = m_outputs;
+    const QList<VirtualOutput *> removed = m_outputs;
 
     for (const auto &info : infos) {
         createOutput(info);

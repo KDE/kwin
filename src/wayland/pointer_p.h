@@ -9,9 +9,9 @@
 
 #include "pointer.h"
 
+#include <QList>
 #include <QPointF>
 #include <QPointer>
-#include <QVector>
 
 #include "qwayland-server-wayland.h"
 

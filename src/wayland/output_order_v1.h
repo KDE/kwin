@@ -22,7 +22,7 @@ public:
     explicit OutputOrderV1Interface(Display *display, QObject *parent);
     ~OutputOrderV1Interface() override;
 
-    void setOutputOrder(const QVector<Output *> &outputOrder);
+    void setOutputOrder(const QList<Output *> &outputOrder);
 
 private:
     std::unique_ptr<OutputOrderV1InterfacePrivate> d;

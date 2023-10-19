@@ -206,13 +206,13 @@ private:
         QPointF deltaNonAccelerated;
         std::chrono::microseconds time;
     };
-    static QVector<ScheduledPosition> s_scheduledPositions;
+    static QList<ScheduledPosition> s_scheduledPositions;
 
     PointerInputRedirection *m_pointer;
 };
 
 int PositionUpdateBlocker::s_counter = 0;
-QVector<PositionUpdateBlocker::ScheduledPosition> PositionUpdateBlocker::s_scheduledPositions;
+QList<PositionUpdateBlocker::ScheduledPosition> PositionUpdateBlocker::s_scheduledPositions;
 
 void PointerInputRedirection::processMotionAbsolute(const QPointF &pos, std::chrono::microseconds time, InputDevice *device)
 {

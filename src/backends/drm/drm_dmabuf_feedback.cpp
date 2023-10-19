@@ -43,7 +43,7 @@ void DmabufFeedback::scanoutSuccessful(SurfaceInterface *surface)
     }
 }
 
-void DmabufFeedback::scanoutFailed(SurfaceInterface *surface, const QMap<uint32_t, QVector<uint64_t>> &formats)
+void DmabufFeedback::scanoutFailed(SurfaceInterface *surface, const QMap<uint32_t, QList<uint64_t>> &formats)
 {
     m_attemptedThisFrame = true;
     if (surface != m_surface) {
@@ -57,7 +57,7 @@ void DmabufFeedback::scanoutFailed(SurfaceInterface *surface, const QMap<uint32_
         const DmaBufAttributes *dmabufAttrs = surface->buffer()->dmabufAttributes();
         if (!m_attemptedFormats[dmabufAttrs->format].contains(dmabufAttrs->modifier)) {
             m_attemptedFormats[dmabufAttrs->format] << dmabufAttrs->modifier;
-            QVector<LinuxDmaBufV1Feedback::Tranche> scanoutTranches;
+            QList<LinuxDmaBufV1Feedback::Tranche> scanoutTranches;
             const auto tranches = m_eglBackend->tranches();
             for (const auto &tranche : tranches) {
                 LinuxDmaBufV1Feedback::Tranche scanoutTranche;

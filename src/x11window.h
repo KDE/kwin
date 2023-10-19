@@ -98,7 +98,7 @@ public:
     int depth() const;
     bool hasAlpha() const;
     QRegion opaqueRegion() const;
-    QVector<QRectF> shapeRegion() const;
+    QList<QRectF> shapeRegion() const;
 
     pid_t pid() const override;
     QString windowRole() const override;
@@ -490,7 +490,7 @@ private:
     xcb_visualid_t m_visual = XCB_NONE;
     int bit_depth = 24;
     QRegion opaque_region;
-    mutable QVector<QRectF> m_shapeRegion;
+    mutable QList<QRectF> m_shapeRegion;
     mutable bool m_shapeRegionIsValid = false;
     friend struct ResetupRulesProcedure;
 

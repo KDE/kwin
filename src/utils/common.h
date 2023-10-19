@@ -58,7 +58,7 @@ public:
 private:
     StrutArea m_area;
 };
-typedef QVector<StrutRect> StrutRects;
+typedef QList<StrutRect> StrutRects;
 
 enum ShadeMode {
     ShadeNone, // not shaded

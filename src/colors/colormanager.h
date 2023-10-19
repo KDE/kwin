@@ -38,7 +38,7 @@ public:
     /**
      * Returns the list of all available color devices.
      */
-    QVector<ColorDevice *> devices() const;
+    QList<ColorDevice *> devices() const;
 
 Q_SIGNALS:
     /**

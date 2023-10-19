@@ -186,9 +186,9 @@ InputRedirection::PointerButtonState PointerEvent::buttonState() const
     }
 }
 
-QVector<InputRedirection::PointerAxis> PointerEvent::axis() const
+QList<InputRedirection::PointerAxis> PointerEvent::axis() const
 {
-    QVector<InputRedirection::PointerAxis> a;
+    QList<InputRedirection::PointerAxis> a;
     if (libinput_event_pointer_has_axis(m_pointerEvent, LIBINPUT_POINTER_AXIS_SCROLL_HORIZONTAL)) {
         a << InputRedirection::PointerAxisHorizontal;
     }

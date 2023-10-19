@@ -252,8 +252,8 @@ private:
     void loadJavascriptEffects(const KConfigGroup &kwinConfig);
     void loadPluginEffects(const KConfigGroup &kwinConfig);
 
-    QVector<EffectData> m_effects;
-    QVector<EffectData> m_pendingEffects;
+    QList<EffectData> m_effects;
+    QList<EffectData> m_pendingEffects;
     int m_lastSerial = -1;
 
     Q_DISABLE_COPY(EffectsModel)

@@ -330,9 +330,9 @@ void Cursor::doStopCursorTracking()
 {
 }
 
-QVector<QByteArray> Cursor::cursorAlternativeNames(const QByteArray &name)
+QList<QByteArray> Cursor::cursorAlternativeNames(const QByteArray &name)
 {
-    static const QHash<QByteArray, QVector<QByteArray>> alternatives = {
+    static const QHash<QByteArray, QList<QByteArray>> alternatives = {
         {
             QByteArrayLiteral("left_ptr"),
             {
@@ -604,7 +604,7 @@ QVector<QByteArray> Cursor::cursorAlternativeNames(const QByteArray &name)
     if (it != alternatives.end()) {
         return it.value();
     }
-    return QVector<QByteArray>();
+    return QList<QByteArray>();
 }
 
 QString Cursor::defaultThemeName()

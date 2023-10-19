@@ -61,7 +61,7 @@ SurfaceItemWayland::SurfaceItemWayland(SurfaceInterface *surface, Scene *scene, 
     setSurfaceToBufferMatrix(surface->surfaceToBufferMatrix());
 }
 
-QVector<QRectF> SurfaceItemWayland::shape() const
+QList<QRectF> SurfaceItemWayland::shape() const
 {
     return {rect()};
 }
@@ -196,10 +196,10 @@ SurfaceItemXwayland::SurfaceItemXwayland(X11Window *window, Scene *scene, Item *
     connect(window, &X11Window::shapeChanged, this, &SurfaceItemXwayland::discardQuads);
 }
 
-QVector<QRectF> SurfaceItemXwayland::shape() const
+QList<QRectF> SurfaceItemXwayland::shape() const
 {
     const QRectF clipRect = rect() & m_window->clientGeometry().translated(-m_window->bufferGeometry().topLeft());
-    QVector<QRectF> shape = m_window->shapeRegion();
+    QList<QRectF> shape = m_window->shapeRegion();
 
     // bounded to clipRect
     for (QRectF &shapePart : shape) {

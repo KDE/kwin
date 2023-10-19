@@ -8,10 +8,10 @@
 #include "clientconnection.h"
 #include "textinput_v2.h"
 
+#include <QList>
 #include <QPointer>
 #include <QRect>
 #include <QSet>
-#include <QVector>
 
 #include <qwayland-server-text-input-unstable-v2.h>
 

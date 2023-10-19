@@ -190,10 +190,10 @@ void TestDbusInterface::testGetWindowInfoXdgShellClient()
     // not testing shaded as that's X11
     // not testing fullscreen, maximizeHorizontal, maximizeVertical and noBorder as those require window geometry changes
 
-    const QVector<VirtualDesktop *> desktops = VirtualDesktopManager::self()->desktops();
-    QCOMPARE(window->desktops(), QVector<VirtualDesktop *>{desktops[0]});
+    const QList<VirtualDesktop *> desktops = VirtualDesktopManager::self()->desktops();
+    QCOMPARE(window->desktops(), QList<VirtualDesktop *>{desktops[0]});
     workspace()->sendWindowToDesktops(window, {desktops[1]}, false);
-    QCOMPARE(window->desktops(), QVector<VirtualDesktop *>{desktops[1]});
+    QCOMPARE(window->desktops(), QList<VirtualDesktop *>{desktops[1]});
     reply = getWindowInfo(window->internalId());
     reply.waitForFinished();
     QCOMPARE(reply.value().value(QStringLiteral("desktops")).toStringList(), window->desktopIds());

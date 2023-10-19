@@ -17,7 +17,7 @@
 #include "workspace.h"
 #include "x11_standalone_backend.h"
 
-#include <QVector>
+#include <QList>
 
 #include <xcb/composite.h>
 #include <xcb/shape.h>
@@ -29,7 +29,7 @@ namespace KWin
 {
 OverlayWindowX11::OverlayWindowX11(X11StandaloneBackend *backend)
     : OverlayWindow()
-    , X11EventFilter(QVector<int>{XCB_EXPOSE, XCB_VISIBILITY_NOTIFY})
+    , X11EventFilter(QList<int>{XCB_EXPOSE, XCB_VISIBILITY_NOTIFY})
     , m_backend(backend)
     , m_visible(true)
     , m_shown(false)
@@ -120,7 +120,7 @@ void OverlayWindowX11::setShape(const QRegion &reg)
     if (reg == m_shape) {
         return;
     }
-    const QVector<xcb_rectangle_t> xrects = Xcb::regionToRects(reg);
+    const QList<xcb_rectangle_t> xrects = Xcb::regionToRects(reg);
     xcb_shape_rectangles(connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_BOUNDING, XCB_CLIP_ORDERING_UNSORTED,
                          m_window, 0, 0, xrects.count(), xrects.data());
     setupInputShape(m_window);

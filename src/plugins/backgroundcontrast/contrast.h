@@ -11,8 +11,8 @@
 #include "libkwineffects/glutils.h"
 #include "libkwineffects/kwineffects.h"
 
+#include <QList>
 #include <QVector2D>
-#include <QVector>
 #include <unordered_map>
 
 namespace KWin

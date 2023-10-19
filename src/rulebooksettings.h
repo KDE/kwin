@@ -27,8 +27,8 @@ public:
     RuleBookSettings(QObject *parent = nullptr);
     ~RuleBookSettings();
 
-    void setRules(const QVector<Rules *> &);
-    QVector<Rules *> rules();
+    void setRules(const QList<Rules *> &);
+    QList<Rules *> rules();
 
     bool usrSave() override;
     void usrRead() override;
@@ -44,7 +44,7 @@ private:
     static QString generateGroupName();
 
 private:
-    QVector<RuleSettings *> m_list;
+    QList<RuleSettings *> m_list;
     QStringList m_storedGroups;
 };
 

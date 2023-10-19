@@ -38,9 +38,9 @@ public:
     EglContext *contextObject();
 
     bool testImportBuffer(GraphicsBuffer *buffer) override;
-    QHash<uint32_t, QVector<uint64_t>> supportedFormats() const override;
+    QHash<uint32_t, QList<uint64_t>> supportedFormats() const override;
 
-    QVector<LinuxDmaBufV1Feedback::Tranche> tranches() const;
+    QList<LinuxDmaBufV1Feedback::Tranche> tranches() const;
     dev_t deviceId() const;
     virtual bool prefer10bpc() const;
 
@@ -71,7 +71,7 @@ protected:
     std::shared_ptr<EglContext> m_context;
     QList<QByteArray> m_clientExtensions;
     const dev_t m_deviceId;
-    QVector<LinuxDmaBufV1Feedback::Tranche> m_tranches;
+    QList<LinuxDmaBufV1Feedback::Tranche> m_tranches;
     QHash<GraphicsBuffer *, EGLImageKHR> m_importedBuffers;
 };
 

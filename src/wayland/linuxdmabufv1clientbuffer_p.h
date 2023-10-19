@@ -18,8 +18,8 @@
 #include "qwayland-server-linux-dmabuf-unstable-v1.h"
 
 #include <QDebug>
+#include <QList>
 #include <QPointer>
-#include <QVector>
 
 #include <drm_fourcc.h>
 
@@ -38,7 +38,7 @@ public:
     std::unique_ptr<LinuxDmaBufV1FormatTable> table;
     dev_t mainDevice;
     QPointer<RenderBackend> renderBackend;
-    QHash<uint32_t, QVector<uint64_t>> supportedModifiers;
+    QHash<uint32_t, QList<uint64_t>> supportedModifiers;
 
 protected:
     void zwp_linux_dmabuf_v1_bind_resource(Resource *resource) override;
@@ -105,7 +105,7 @@ private:
 class LinuxDmaBufV1FormatTable
 {
 public:
-    LinuxDmaBufV1FormatTable(const QHash<uint32_t, QVector<uint64_t>> &supportedModifiers);
+    LinuxDmaBufV1FormatTable(const QHash<uint32_t, QList<uint64_t>> &supportedModifiers);
 
     RamFile file;
     QMap<std::pair<uint32_t, uint64_t>, uint16_t> indices;
@@ -119,7 +119,7 @@ public:
     static LinuxDmaBufV1FeedbackPrivate *get(LinuxDmaBufV1Feedback *q);
     void send(Resource *resource);
 
-    QVector<LinuxDmaBufV1Feedback::Tranche> m_tranches;
+    QList<LinuxDmaBufV1Feedback::Tranche> m_tranches;
     LinuxDmaBufV1ClientBufferIntegrationPrivate *m_bufferintegration;
 
 protected:

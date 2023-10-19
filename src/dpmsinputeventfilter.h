@@ -36,7 +36,7 @@ public:
 private:
     void notify();
     QElapsedTimer m_doubleTapTimer;
-    QVector<qint32> m_touchPoints;
+    QList<qint32> m_touchPoints;
     bool m_secondTap = false;
     bool m_enableDoubleTap;
 };

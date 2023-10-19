@@ -15,7 +15,7 @@ namespace KWin
 {
 
 WindowPropertyNotifyX11Filter::WindowPropertyNotifyX11Filter(EffectsHandlerImpl *effects)
-    : X11EventFilter(QVector<int>{XCB_PROPERTY_NOTIFY})
+    : X11EventFilter(QList<int>{XCB_PROPERTY_NOTIFY})
     , m_effects(effects)
 {
 }

@@ -641,7 +641,7 @@ void KWin::Scripting::init()
 {
     qRegisterMetaType<QList<KWin::Output *>>();
     qRegisterMetaType<QList<KWin::Window *>>();
-    qRegisterMetaType<QVector<KWin::VirtualDesktop *>>();
+    qRegisterMetaType<QList<KWin::VirtualDesktop *>>();
 
     qmlRegisterType<DesktopBackgroundItem>("org.kde.kwin", 3, 0, "DesktopBackground");
     qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 3, 0, "WindowThumbnail");

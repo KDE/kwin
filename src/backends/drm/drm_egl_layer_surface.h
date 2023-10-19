@@ -53,15 +53,15 @@ public:
     EglGbmLayerSurface(DrmGpu *gpu, EglGbmBackend *eglBackend, BufferTarget target = BufferTarget::Normal, FormatOption formatOption = FormatOption::PreferAlpha);
     ~EglGbmLayerSurface();
 
-    std::optional<OutputLayerBeginFrameInfo> startRendering(const QSize &bufferSize, TextureTransforms transformation, const QMap<uint32_t, QVector<uint64_t>> &formats, const ColorDescription &colorDescription, const QVector3D &channelFactors, bool enableColormanagement);
+    std::optional<OutputLayerBeginFrameInfo> startRendering(const QSize &bufferSize, TextureTransforms transformation, const QMap<uint32_t, QList<uint64_t>> &formats, const ColorDescription &colorDescription, const QVector3D &channelFactors, bool enableColormanagement);
     bool endRendering(const QRegion &damagedRegion);
     std::chrono::nanoseconds queryRenderTime() const;
 
-    bool doesSurfaceFit(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const;
+    bool doesSurfaceFit(const QSize &size, const QMap<uint32_t, QList<uint64_t>> &formats) const;
     std::shared_ptr<GLTexture> texture() const;
     void destroyResources();
     EglGbmBackend *eglBackend() const;
-    std::shared_ptr<DrmFramebuffer> renderTestBuffer(const QSize &bufferSize, const QMap<uint32_t, QVector<uint64_t>> &formats);
+    std::shared_ptr<DrmFramebuffer> renderTestBuffer(const QSize &bufferSize, const QMap<uint32_t, QList<uint64_t>> &formats);
 
     std::shared_ptr<DrmFramebuffer> currentBuffer() const;
     const ColorDescription &colorDescription() const;
@@ -103,11 +103,11 @@ private:
         std::chrono::steady_clock::time_point renderStart;
         std::chrono::steady_clock::time_point renderEnd;
     };
-    bool checkSurface(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats);
-    bool doesSurfaceFit(Surface *surface, const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const;
-    std::unique_ptr<Surface> createSurface(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const;
-    std::unique_ptr<Surface> createSurface(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, MultiGpuImportMode importMode) const;
-    std::shared_ptr<EglSwapchain> createGbmSwapchain(DrmGpu *gpu, EglContext *context, const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, bool forceLinear) const;
+    bool checkSurface(const QSize &size, const QMap<uint32_t, QList<uint64_t>> &formats);
+    bool doesSurfaceFit(Surface *surface, const QSize &size, const QMap<uint32_t, QList<uint64_t>> &formats) const;
+    std::unique_ptr<Surface> createSurface(const QSize &size, const QMap<uint32_t, QList<uint64_t>> &formats) const;
+    std::unique_ptr<Surface> createSurface(const QSize &size, uint32_t format, const QList<uint64_t> &modifiers, MultiGpuImportMode importMode) const;
+    std::shared_ptr<EglSwapchain> createGbmSwapchain(DrmGpu *gpu, EglContext *context, const QSize &size, uint32_t format, const QList<uint64_t> &modifiers, bool forceLinear) const;
 
     std::shared_ptr<DrmFramebuffer> doRenderTestBuffer(Surface *surface) const;
     std::shared_ptr<DrmFramebuffer> importBuffer(Surface *surface, EglSwapchainSlot *source) const;

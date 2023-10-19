@@ -42,9 +42,9 @@ bool RenderBackend::testImportBuffer(GraphicsBuffer *buffer)
     return false;
 }
 
-QHash<uint32_t, QVector<uint64_t>> RenderBackend::supportedFormats() const
+QHash<uint32_t, QList<uint64_t>> RenderBackend::supportedFormats() const
 {
-    return QHash<uint32_t, QVector<uint64_t>>{{DRM_FORMAT_XRGB8888, QVector<uint64_t>{DRM_FORMAT_MOD_LINEAR}}};
+    return QHash<uint32_t, QList<uint64_t>>{{DRM_FORMAT_XRGB8888, QList<uint64_t>{DRM_FORMAT_MOD_LINEAR}}};
 }
 
 std::unique_ptr<SurfaceTexture> RenderBackend::createSurfaceTextureX11(SurfacePixmapX11 *pixmap)

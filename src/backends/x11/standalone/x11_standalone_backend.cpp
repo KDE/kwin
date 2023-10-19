@@ -256,9 +256,9 @@ void X11StandaloneBackend::createEffectsHandler(Compositor *compositor, Workspac
     new EffectsHandlerImplX11(compositor, scene);
 }
 
-QVector<CompositingType> X11StandaloneBackend::supportedCompositors() const
+QList<CompositingType> X11StandaloneBackend::supportedCompositors() const
 {
-    QVector<CompositingType> compositors;
+    QList<CompositingType> compositors;
 #if HAVE_GLX
     compositors << OpenGLCompositing;
 #endif
@@ -286,9 +286,9 @@ void X11StandaloneBackend::updateOutputs()
 template<typename T>
 void X11StandaloneBackend::doUpdateOutputs()
 {
-    QVector<Output *> changed;
-    QVector<Output *> added;
-    QVector<Output *> removed = m_outputs;
+    QList<Output *> changed;
+    QList<Output *> added;
+    QList<Output *> removed = m_outputs;
 
     if (Xcb::Extensions::self()->isRandrAvailable()) {
         T resources(rootWindow());
@@ -481,7 +481,7 @@ static int currentRefreshRate()
         return refreshRate;
     }
 
-    const QVector<Output *> outputs = kwinApp()->outputBackend()->outputs();
+    const QList<Output *> outputs = kwinApp()->outputBackend()->outputs();
     if (outputs.isEmpty()) {
         return 60000;
     }

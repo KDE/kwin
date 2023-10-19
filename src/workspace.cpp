@@ -329,8 +329,8 @@ void Workspace::initializeX11()
         Xcb::Tree tree(kwinApp()->x11RootWindow());
         xcb_window_t *wins = xcb_query_tree_children(tree.data());
 
-        QVector<Xcb::WindowAttributes> windowAttributes(tree->children_len);
-        QVector<Xcb::WindowGeometry> windowGeometries(tree->children_len);
+        QList<Xcb::WindowAttributes> windowAttributes(tree->children_len);
+        QList<Xcb::WindowGeometry> windowGeometries(tree->children_len);
 
         // Request the attributes and geometries of all toplevel windows
         for (int i = 0; i < tree->children_len; i++) {
@@ -467,7 +467,7 @@ Workspace::~Workspace()
     _self = nullptr;
 }
 
-bool Workspace::applyOutputConfiguration(const OutputConfiguration &config, const QVector<Output *> &outputOrder)
+bool Workspace::applyOutputConfiguration(const OutputConfiguration &config, const QList<Output *> &outputOrder)
 {
     if (!kwinApp()->outputBackend()->applyOutputChanges(config)) {
         return false;
@@ -871,7 +871,7 @@ void Workspace::updateToolWindows(bool also_hide)
     // I.e. if it's not up to date
 
     // SELI TODO: But maybe it should - what if a new window has been added that's not in stacking order yet?
-    QVector<Window *> to_show, to_hide;
+    QList<Window *> to_show, to_hide;
     for (auto it = stacking_order.constBegin(); it != stacking_order.constEnd(); ++it) {
         auto c = *it;
         if (!c->isClient()) {
@@ -1276,7 +1276,7 @@ void Workspace::slotOutputBackendOutputsQueried()
     updateOutputs();
 }
 
-void Workspace::updateOutputs(const QVector<Output *> &outputOrder)
+void Workspace::updateOutputs(const QList<Output *> &outputOrder)
 {
     const auto availableOutputs = kwinApp()->outputBackend()->outputs();
     const auto oldOutputs = m_outputs;
@@ -1467,9 +1467,9 @@ void Workspace::selectWmInputEventMask()
  *
  * Takes care of transients as well.
  */
-void Workspace::sendWindowToDesktops(Window *window, const QVector<VirtualDesktop *> &desktops, bool dont_activate)
+void Workspace::sendWindowToDesktops(Window *window, const QList<VirtualDesktop *> &desktops, bool dont_activate)
 {
-    const QVector<VirtualDesktop *> oldDesktops = window->desktops();
+    const QList<VirtualDesktop *> oldDesktops = window->desktops();
     const bool wasOnCurrent = window->isOnCurrentDesktop();
     window->setDesktops(desktops);
     if (window->desktops() != desktops) { // No change or desktop forced
@@ -1726,7 +1726,7 @@ QString Workspace::supportInformation() const
     } else {
         support.append(QStringLiteral(" no\n"));
     }
-    const QVector<Output *> outputs = kwinApp()->outputBackend()->outputs();
+    const QList<Output *> outputs = kwinApp()->outputBackend()->outputs();
     support.append(QStringLiteral("Number of Screens: %1\n\n").arg(outputs.count()));
     for (int i = 0; i < outputs.count(); ++i) {
         const auto output = outputs[i];
@@ -2288,7 +2288,7 @@ QRectF Workspace::adjustClientArea(Window *window, const QRectF &area) const
  */
 void Workspace::updateClientArea()
 {
-    const QVector<VirtualDesktop *> desktops = VirtualDesktopManager::self()->desktops();
+    const QList<VirtualDesktop *> desktops = VirtualDesktopManager::self()->desktops();
 
     QHash<const VirtualDesktop *, QRectF> workAreas;
     QHash<const VirtualDesktop *, StrutRects> restrictedAreas;
@@ -2518,7 +2518,7 @@ Output *Workspace::xineramaIndexToOutput(int index) const
     return nullptr;
 }
 
-void Workspace::setOutputOrder(const QVector<Output *> &order)
+void Workspace::setOutputOrder(const QList<Output *> &order)
 {
     if (m_outputOrder != order) {
         m_outputOrder = order;
@@ -2526,7 +2526,7 @@ void Workspace::setOutputOrder(const QVector<Output *> &order)
     }
 }
 
-QVector<Output *> Workspace::outputOrder() const
+QList<Output *> Workspace::outputOrder() const
 {
     return m_outputOrder;
 }

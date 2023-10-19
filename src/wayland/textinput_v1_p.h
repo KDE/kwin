@@ -11,10 +11,10 @@
 #include "wayland/surface.h"
 #include "wayland/textinput_v1.h"
 
+#include <QList>
 #include <QPointer>
 #include <QRect>
 #include <QSet>
-#include <QVector>
 
 #include <qwayland-server-text-input-unstable-v1.h>
 

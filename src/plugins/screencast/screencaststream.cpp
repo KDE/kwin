@@ -161,13 +161,13 @@ void ScreenCastStream::onStreamParamChanged(uint32_t id, const struct spa_pod *f
 
     spa_format_video_raw_parse(format, &m_videoFormat);
     auto modifierProperty = spa_pod_find_prop(format, nullptr, SPA_FORMAT_VIDEO_modifier);
-    QVector<uint64_t> receivedModifiers;
+    QList<uint64_t> receivedModifiers;
     if (modifierProperty) {
         const struct spa_pod *modifierPod = &modifierProperty->value;
 
         uint32_t modifiersCount = SPA_POD_CHOICE_N_VALUES(modifierPod);
         uint64_t *modifiers = (uint64_t *)SPA_POD_CHOICE_VALUES(modifierPod);
-        receivedModifiers = QVector<uint64_t>(modifiers, modifiers + modifiersCount);
+        receivedModifiers = QList<uint64_t>(modifiers, modifiers + modifiersCount);
         // Remove duplicates
         std::sort(receivedModifiers.begin(), receivedModifiers.end());
         receivedModifiers.erase(std::unique(receivedModifiers.begin(), receivedModifiers.end()), receivedModifiers.end());
@@ -412,7 +412,7 @@ bool ScreenCastStream::createStream()
     m_hasDmaBuf = testCreateDmaBuf(m_resolution, m_drmFormat, {DRM_FORMAT_MOD_INVALID}).has_value();
 
     char buffer[2048];
-    QVector<const spa_pod *> params = buildFormats(false, buffer);
+    QList<const spa_pod *> params = buildFormats(false, buffer);
 
     pw_stream_add_listener(m_pwStream, &m_streamListener, &m_pwStreamEvents, this);
     auto flags = pw_stream_flags(PW_STREAM_FLAG_DRIVER | PW_STREAM_FLAG_ALLOC_BUFFERS);
@@ -739,7 +739,7 @@ void ScreenCastStream::enqueue()
     m_pendingBuffer = nullptr;
 }
 
-QVector<const spa_pod *> ScreenCastStream::buildFormats(bool fixate, char buffer[2048])
+QList<const spa_pod *> ScreenCastStream::buildFormats(bool fixate, char buffer[2048])
 {
     const auto format = drmFourCCToSpaVideoFormat(m_drmFormat);
     spa_pod_builder podBuilder = SPA_POD_BUILDER_INIT(buffer, 2048);
@@ -749,7 +749,7 @@ QVector<const spa_pod *> ScreenCastStream::buildFormats(bool fixate, char buffer
 
     spa_rectangle resolution = SPA_RECTANGLE(uint32_t(m_resolution.width()), uint32_t(m_resolution.height()));
 
-    QVector<const spa_pod *> params;
+    QList<const spa_pod *> params;
     params.reserve(fixate + m_hasDmaBuf + 1);
     if (fixate) {
         params.append(buildFormat(&podBuilder, SPA_VIDEO_FORMAT_BGRA, &resolution, &defFramerate, &minFramerate, &maxFramerate, {m_dmabufParams->modifier}, SPA_POD_PROP_FLAG_MANDATORY));
@@ -763,7 +763,7 @@ QVector<const spa_pod *> ScreenCastStream::buildFormats(bool fixate, char buffer
 
 spa_pod *ScreenCastStream::buildFormat(struct spa_pod_builder *b, enum spa_video_format format, struct spa_rectangle *resolution,
                                        struct spa_fraction *defaultFramerate, struct spa_fraction *minFramerate, struct spa_fraction *maxFramerate,
-                                       const QVector<uint64_t> &modifiers, quint32 modifiersFlags)
+                                       const QList<uint64_t> &modifiers, quint32 modifiersFlags)
 {
     struct spa_pod_frame f[2];
     spa_pod_builder_push_object(b, &f[0], SPA_TYPE_OBJECT_Format, SPA_PARAM_EnumFormat);
@@ -880,7 +880,7 @@ void ScreenCastStream::setCursorMode(ScreencastV1Interface::CursorMode mode, qre
     m_cursor.viewport = viewport;
 }
 
-std::optional<ScreenCastDmaBufTextureParams> ScreenCastStream::testCreateDmaBuf(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers)
+std::optional<ScreenCastDmaBufTextureParams> ScreenCastStream::testCreateDmaBuf(const QSize &size, quint32 format, const QList<uint64_t> &modifiers)
 {
     AbstractEglBackend *backend = dynamic_cast<AbstractEglBackend *>(Compositor::self()->backend());
     if (!backend) {

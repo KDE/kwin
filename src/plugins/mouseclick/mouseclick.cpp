@@ -277,7 +277,7 @@ void MouseClickEffect::drawCircleGl(const RenderViewport &viewport, const QColor
 
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     vbo->reset();
-    QVector<QVector2D> verts;
+    QList<QVector2D> verts;
     verts.reserve(num_segments * 2);
 
     for (int ii = 0; ii < num_segments; ++ii) {

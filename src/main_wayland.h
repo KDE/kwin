@@ -70,7 +70,7 @@ private:
     QString m_sessionArgument;
 
     std::unique_ptr<Xwl::Xwayland> m_xwayland;
-    QVector<int> m_xwaylandListenFds;
+    QList<int> m_xwaylandListenFds;
     QString m_xwaylandDisplay;
     QString m_xwaylandXauthority;
     KConfigWatcher::Ptr m_settingsWatcher;

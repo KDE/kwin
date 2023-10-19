@@ -843,7 +843,7 @@ void TestWaylandSurface::testOutput()
     QVERIFY(surfaceCreatedSpy.wait());
     auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface *>();
     QVERIFY(serverSurface);
-    QCOMPARE(serverSurface->outputs(), QVector<OutputInterface *>());
+    QCOMPARE(serverSurface->outputs(), QList<OutputInterface *>());
 
     // create another registry to get notified about added outputs
     KWayland::Client::Registry registry;
@@ -865,31 +865,31 @@ void TestWaylandSurface::testOutput()
     m_display->dispatchEvents();
 
     // now enter it
-    serverSurface->setOutputs(QVector<OutputInterface *>{serverOutput.get()});
-    QCOMPARE(serverSurface->outputs(), QVector<OutputInterface *>{serverOutput.get()});
+    serverSurface->setOutputs(QList<OutputInterface *>{serverOutput.get()});
+    QCOMPARE(serverSurface->outputs(), QList<OutputInterface *>{serverOutput.get()});
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 1);
     QCOMPARE(enteredSpy.first().first().value<KWayland::Client::Output *>(), clientOutput.get());
-    QCOMPARE(s->outputs(), QVector<KWayland::Client::Output *>{clientOutput.get()});
+    QCOMPARE(s->outputs(), QList<KWayland::Client::Output *>{clientOutput.get()});
 
     // adding to same should not trigger
-    serverSurface->setOutputs(QVector<OutputInterface *>{serverOutput.get()});
+    serverSurface->setOutputs(QList<OutputInterface *>{serverOutput.get()});
 
     // leave again
-    serverSurface->setOutputs(QVector<OutputInterface *>());
-    QCOMPARE(serverSurface->outputs(), QVector<OutputInterface *>());
+    serverSurface->setOutputs(QList<OutputInterface *>());
+    QCOMPARE(serverSurface->outputs(), QList<OutputInterface *>());
     QVERIFY(leftSpy.wait());
     QCOMPARE(enteredSpy.count(), 1);
     QCOMPARE(leftSpy.count(), 1);
     QCOMPARE(leftSpy.first().first().value<KWayland::Client::Output *>(), clientOutput.get());
-    QCOMPARE(s->outputs(), QVector<KWayland::Client::Output *>());
+    QCOMPARE(s->outputs(), QList<KWayland::Client::Output *>());
 
     // leave again should not trigger
-    serverSurface->setOutputs(QVector<OutputInterface *>());
+    serverSurface->setOutputs(QList<OutputInterface *>());
 
     // and enter again, just to verify
-    serverSurface->setOutputs(QVector<OutputInterface *>{serverOutput.get()});
-    QCOMPARE(serverSurface->outputs(), QVector<OutputInterface *>{serverOutput.get()});
+    serverSurface->setOutputs(QList<OutputInterface *>{serverOutput.get()});
+    QCOMPARE(serverSurface->outputs(), QList<OutputInterface *>{serverOutput.get()});
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 2);
     QCOMPARE(leftSpy.count(), 1);
@@ -899,7 +899,7 @@ void TestWaylandSurface::testOutput()
     serverOutput.reset();
     outputHandle.reset();
     QVERIFY(leftSpy.wait());
-    QCOMPARE(serverSurface->outputs(), QVector<OutputInterface *>());
+    QCOMPARE(serverSurface->outputs(), QList<OutputInterface *>());
 }
 
 void TestWaylandSurface::testInhibit()

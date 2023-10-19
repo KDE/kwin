@@ -34,7 +34,7 @@ InternalWindow *SurfaceItemInternal::window() const
     return m_window;
 }
 
-QVector<QRectF> SurfaceItemInternal::shape() const
+QList<QRectF> SurfaceItemInternal::shape() const
 {
     return {rect()};
 }

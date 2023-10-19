@@ -280,13 +280,13 @@ public:
      *
      * @see outputs
      */
-    void setOutputs(const QVector<OutputInterface *> &outputs);
+    void setOutputs(const QList<OutputInterface *> &outputs);
 
     /**
      * @returns All OutputInterfaces the SurfaceInterface is on.
      * @see setOutputs
      */
-    QVector<OutputInterface *> outputs() const;
+    QList<OutputInterface *> outputs() const;
 
     /**
      * Pointer confinement installed on this SurfaceInterface.

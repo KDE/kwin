@@ -42,7 +42,7 @@ EGLConfig configFromFormat(EglDisplay *display, const QSurfaceFormat &surfaceFor
     const EGLint renderableType = isOpenGLES() ? EGL_OPENGL_ES2_BIT : EGL_OPENGL_BIT;
 
     // Not setting samples as QtQuick doesn't need it.
-    const QVector<EGLint> attributes{
+    const QList<EGLint> attributes{
         EGL_SURFACE_TYPE, surfaceType,
         EGL_RED_SIZE, redSize,
         EGL_GREEN_SIZE, greenSize,
@@ -63,7 +63,7 @@ EGLConfig configFromFormat(EglDisplay *display, const QSurfaceFormat &surfaceFor
         return EGL_NO_CONFIG_KHR;
     }
 
-    QVector<EGLConfig> configs(configCount);
+    QList<EGLConfig> configs(configCount);
     if (!eglChooseConfig(display->handle(), attributes.data(), configs.data(), configCount, &configCount)) {
         qCWarning(KWIN_QPA, "eglChooseConfig failed: %x", eglGetError());
         return EGL_NO_CONFIG_KHR;

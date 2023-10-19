@@ -138,7 +138,7 @@ void TranslucencyTest::testMoveAfterDesktopChange()
     // let's send the window to desktop 2
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
     vds->setCount(2);
-    const QVector<VirtualDesktop *> desktops = vds->desktops();
+    const QList<VirtualDesktop *> desktops = vds->desktops();
     workspace()->sendWindowToDesktops(window, {desktops[1]}, false);
     vds->setCurrent(desktops[1]);
     QVERIFY(!m_translucencyEffect->isActive());

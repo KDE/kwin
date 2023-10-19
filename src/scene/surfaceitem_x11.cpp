@@ -108,7 +108,7 @@ void SurfaceItemX11::waitForDamage()
     if (rectCount > 1 && rectCount < 16) {
         xcb_rectangle_t *rects = xcb_xfixes_fetch_region_rectangles(reply);
 
-        QVector<QRect> qtRects;
+        QList<QRect> qtRects;
         qtRects.reserve(rectCount);
 
         for (int i = 0; i < rectCount; ++i) {
@@ -156,10 +156,10 @@ void SurfaceItemX11::handleShapeChanged()
     discardQuads();
 }
 
-QVector<QRectF> SurfaceItemX11::shape() const
+QList<QRectF> SurfaceItemX11::shape() const
 {
     const QRectF clipRect = m_window->clientGeometry().translated(-m_window->bufferGeometry().topLeft());
-    QVector<QRectF> shape = m_window->shapeRegion();
+    QList<QRectF> shape = m_window->shapeRegion();
     // bounded to clipRect
     for (QRectF &shapePart : shape) {
         shapePart = shapePart.intersected(clipRect);

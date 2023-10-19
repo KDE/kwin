@@ -37,7 +37,7 @@ public:
     void forgetDamage();
     void destroyDamage();
 
-    QVector<QRectF> shape() const override;
+    QList<QRectF> shape() const override;
     QRegion opaque() const override;
 
 private Q_SLOTS:

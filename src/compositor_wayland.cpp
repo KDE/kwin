@@ -120,8 +120,8 @@ void WaylandCompositor::start()
     m_state = State::Starting;
 
     // If compositing has been restarted, try to use the last used compositing type.
-    const QVector<CompositingType> availableCompositors = kwinApp()->outputBackend()->supportedCompositors();
-    QVector<CompositingType> candidateCompositors;
+    const QList<CompositingType> availableCompositors = kwinApp()->outputBackend()->supportedCompositors();
+    QList<CompositingType> candidateCompositors;
 
     if (m_selectedCompositor != NoCompositing) {
         candidateCompositors.append(m_selectedCompositor);

@@ -14,13 +14,13 @@
 #include "utils/edid.h"
 
 #include <QDebug>
+#include <QList>
 #include <QMatrix3x3>
 #include <QMatrix4x4>
 #include <QObject>
 #include <QRect>
 #include <QSize>
 #include <QUuid>
-#include <QVector>
 
 namespace KWin
 {

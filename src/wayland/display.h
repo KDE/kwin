@@ -98,10 +98,10 @@ public:
     /**
      * @returns All SeatInterface currently managed on the Display.
      */
-    QVector<SeatInterface *> seats() const;
+    QList<SeatInterface *> seats() const;
     QList<OutputDeviceV2Interface *> outputDevices() const;
     QList<OutputInterface *> outputs() const;
-    QVector<OutputInterface *> outputsIntersecting(const QRect &rect) const;
+    QList<OutputInterface *> outputsIntersecting(const QRect &rect) const;
 
     /**
      * Gets the ClientConnection for the given @p client.
@@ -110,7 +110,7 @@ public:
      * @return The ClientConnection for the given native client
      */
     ClientConnection *getConnection(wl_client *client);
-    QVector<ClientConnection *> connections() const;
+    QList<ClientConnection *> connections() const;
 
     /**
      * Returns the graphics buffer for the given @a resource, or @c null if there's no buffer.

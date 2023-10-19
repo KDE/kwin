@@ -117,7 +117,7 @@ std::shared_ptr<EglSwapchain> VirtualEglGbmLayer::createGbmSwapchain() const
                 }
             }
 
-            static const QVector<uint64_t> implicitModifier{DRM_FORMAT_MOD_INVALID};
+            static const QList<uint64_t> implicitModifier{DRM_FORMAT_MOD_INVALID};
             if (auto swapchain = EglSwapchain::create(m_eglBackend->gpu()->graphicsBufferAllocator(), m_eglBackend->contextObject(), size, format, implicitModifier)) {
                 return swapchain;
             }

@@ -21,7 +21,7 @@ class AppMenuManagerInterfacePrivate : public QtWaylandServer::org_kde_kwin_appm
 public:
     AppMenuManagerInterfacePrivate(AppMenuManagerInterface *q, Display *d);
 
-    QVector<AppMenuInterface *> appmenus;
+    QList<AppMenuInterface *> appmenus;
     AppMenuManagerInterface *q;
 
 protected:

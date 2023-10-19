@@ -11,10 +11,10 @@
 #include "utils/common.h"
 
 #include <QHash>
+#include <QList>
 #include <QRect>
 #include <QString>
 #include <QUuid>
-#include <QVector>
 
 namespace KWin
 {
@@ -57,7 +57,7 @@ private:
     void saveFullscreen(Window *window);
     WindowData dataForWindow(Window *window) const;
 
-    QVector<Window *> m_savedWindows;
+    QList<Window *> m_savedWindows;
     QHash<QString, QHash<Window *, WindowData>> m_data;
     QHash<Window *, WindowData> m_lastRestoreData;
     QString m_currentKey;

@@ -287,7 +287,7 @@ class KWIN_EXPORT Window : public QObject
     /**
      * The virtual desktops this client is on. If it's on all desktops, the list is empty.
      */
-    Q_PROPERTY(QVector<KWin::VirtualDesktop *> desktops READ desktops WRITE setDesktops NOTIFY desktopsChanged)
+    Q_PROPERTY(QList<KWin::VirtualDesktop *> desktops READ desktops WRITE setDesktops NOTIFY desktopsChanged)
 
     /**
      * Whether the Window is on all desktops. That is desktop is -1.
@@ -716,8 +716,8 @@ public:
     void setLockScreenOverlay(bool allowed);
 
     QStringList desktopIds() const;
-    QVector<VirtualDesktop *> desktops() const;
-    void setDesktops(QVector<VirtualDesktop *> desktops);
+    QList<VirtualDesktop *> desktops() const;
+    void setDesktops(QList<VirtualDesktop *> desktops);
     void enterDesktop(VirtualDesktop *desktop);
     void leaveDesktop(VirtualDesktop *desktop);
     bool isOnDesktop(VirtualDesktop *desktop) const;
@@ -1755,7 +1755,7 @@ protected:
     QTimer *m_autoRaiseTimer = nullptr;
     QTimer *m_shadeHoverTimer = nullptr;
     ShadeMode m_shadeMode = ShadeNone;
-    QVector<VirtualDesktop *> m_desktops;
+    QList<VirtualDesktop *> m_desktops;
 
     QStringList m_activityList;
     int m_activityUpdatesBlocked = 0;

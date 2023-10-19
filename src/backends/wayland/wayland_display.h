@@ -46,7 +46,7 @@ public:
 
     zwp_linux_dmabuf_v1 *handle() const;
     QByteArray mainDevice() const;
-    QHash<uint32_t, QVector<uint64_t>> formats() const;
+    QHash<uint32_t, QList<uint64_t>> formats() const;
 
 private:
     static void format(void *data, struct zwp_linux_dmabuf_v1 *zwp_linux_dmabuf_v1, uint32_t format);

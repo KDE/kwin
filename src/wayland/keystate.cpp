@@ -11,7 +11,7 @@
 #include "xkb.h"
 
 #include <QDebug>
-#include <QVector>
+#include <QList>
 #include <qwayland-server-keystate.h>
 
 namespace KWin

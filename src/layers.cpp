@@ -130,7 +130,7 @@ void Workspace::stackScreenEdgesUnderOverrideRedirect()
     if (!rootInfo()) {
         return;
     }
-    Xcb::restackWindows(QVector<xcb_window_t>() << rootInfo()->supportWindow() << workspace()->screenEdges()->windows());
+    Xcb::restackWindows(QList<xcb_window_t>() << rootInfo()->supportWindow() << workspace()->screenEdges()->windows());
 }
 
 /**
@@ -144,7 +144,7 @@ void Workspace::propagateWindows(bool propagate_new_windows)
     }
     // restack the windows according to the stacking order
     // supportWindow > electric borders > windows > hidden windows
-    QVector<xcb_window_t> newWindowStack;
+    QList<xcb_window_t> newWindowStack;
 
     // Stack all windows under the support window. The support window is
     // not used for anything (besides the NETWM property), and it's not shown,
@@ -188,7 +188,7 @@ void Workspace::propagateWindows(bool propagate_new_windows)
     Q_ASSERT(newWindowStack.at(0) == rootInfo()->supportWindow());
     Xcb::restackWindows(newWindowStack);
 
-    QVector<xcb_window_t> cl;
+    QList<xcb_window_t> cl;
     if (propagate_new_windows) {
         cl.reserve(manual_overlays.size() + m_windows.size());
         for (const auto win : std::as_const(manual_overlays)) {

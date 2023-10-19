@@ -55,7 +55,7 @@ private:
     KWinCompositingSetting *m_settings;
 };
 
-static const QVector<qreal> s_animationMultipliers = {8, 4, 2, 1, 0.5, 0.25, 0.125, 0};
+static const QList<qreal> s_animationMultipliers = {8, 4, 2, 1, 0.5, 0.25, 0.125, 0};
 
 bool KWinCompositingKCM::compositingRequired() const
 {

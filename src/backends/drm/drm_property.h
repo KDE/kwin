@@ -13,8 +13,8 @@
 #include "drm_logging.h"
 
 #include <QByteArray>
+#include <QList>
 #include <QMap>
-#include <QVector>
 
 #include <xf86drmMode.h>
 
@@ -27,7 +27,7 @@ class DrmPropertyList;
 class DrmProperty
 {
 public:
-    DrmProperty(DrmObject *obj, const QByteArray &name, const QVector<QByteArray> &enumNames = {});
+    DrmProperty(DrmObject *obj, const QByteArray &name, const QList<QByteArray> &enumNames = {});
 
     const QByteArray &name() const;
     DrmObject *drmObject() const;
@@ -48,7 +48,7 @@ public:
 protected:
     DrmObject *const m_obj;
     const QByteArray m_propName;
-    const QVector<QByteArray> m_enumNames;
+    const QList<QByteArray> m_enumNames;
 
     uint32_t m_propId = 0;
     // the last known value from the kernel
@@ -69,7 +69,7 @@ template<typename Enum>
 class DrmEnumProperty : public DrmProperty
 {
 public:
-    DrmEnumProperty(DrmObject *obj, const QByteArray &name, const QVector<QByteArray> &enumNames)
+    DrmEnumProperty(DrmObject *obj, const QByteArray &name, const QList<QByteArray> &enumNames)
         : DrmProperty(obj, name, enumNames)
     {
     }

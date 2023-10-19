@@ -81,7 +81,7 @@ void ScreenChangesTest::testScreenAddRemove()
     outputAnnouncedSpy.clear();
 
     // let's announce a new output
-    const QVector<QRect> geometries{QRect(0, 0, 1280, 1024), QRect(1280, 0, 1280, 1024)};
+    const QList<QRect> geometries{QRect(0, 0, 1280, 1024), QRect(1280, 0, 1280, 1024)};
     Test::setOutputConfig(geometries);
     auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);
@@ -145,7 +145,7 @@ void ScreenChangesTest::testScreenAddRemove()
     QSignalSpy o1RemovedSpy(o1.get(), &KWayland::Client::Output::removed);
     QSignalSpy o2RemovedSpy(o2.get(), &KWayland::Client::Output::removed);
 
-    const QVector<QRect> geometries2{QRect(0, 0, 1280, 1024)};
+    const QList<QRect> geometries2{QRect(0, 0, 1280, 1024)};
     Test::setOutputConfig(geometries2);
     outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 1);

@@ -8,8 +8,8 @@
 
 #include "input.h"
 
+#include <QList>
 #include <QObject>
-#include <QVector>
 
 namespace KWin
 {
@@ -28,6 +28,6 @@ private:
     void handleWindowAdded(Window *client);
     void cancelPopups();
 
-    QVector<Window *> m_popupWindows;
+    QList<Window *> m_popupWindows;
 };
 }

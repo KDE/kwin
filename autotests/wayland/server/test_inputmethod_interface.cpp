@@ -184,7 +184,7 @@ private:
     KWin::InputMethodV1Interface *m_inputMethodIface;
     KWin::InputPanelV1Interface *m_inputPanelIface;
 
-    QVector<SurfaceInterface *> m_surfaces;
+    QList<SurfaceInterface *> m_surfaces;
 };
 
 static const QString s_socketName = QStringLiteral("kwin-wayland-server-inputmethod-test-0");

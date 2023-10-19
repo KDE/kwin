@@ -120,7 +120,7 @@ private:
     struct
     {
         bool wrap;
-        QVector<int> visibleDesktops;
+        QList<int> visibleDesktops;
     } m_paintCtx;
 
     struct WindowData

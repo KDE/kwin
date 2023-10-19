@@ -16,7 +16,7 @@ namespace KWin
 {
 
 MovingClientX11Filter::MovingClientX11Filter()
-    : X11EventFilter(QVector<int>{XCB_KEY_PRESS, XCB_MOTION_NOTIFY, XCB_BUTTON_PRESS, XCB_BUTTON_RELEASE})
+    : X11EventFilter(QList<int>{XCB_KEY_PRESS, XCB_MOTION_NOTIFY, XCB_BUTTON_PRESS, XCB_BUTTON_RELEASE})
 {
 }
 

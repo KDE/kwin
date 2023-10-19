@@ -9,9 +9,9 @@
 #include <KDecoration2/DecorationButton>
 #include <KSharedConfig>
 
-#include <QVector>
+#include <QList>
 
-using DecorationButtonsList = QVector<KDecoration2::DecorationButtonType>;
+using DecorationButtonsList = QList<KDecoration2::DecorationButtonType>;
 
 namespace Utils
 {

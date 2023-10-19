@@ -14,9 +14,9 @@
 #include "main.h"
 #include "utils/c_ptr.h"
 
+#include <QList>
 #include <QRect>
 #include <QRegion>
-#include <QVector>
 
 #include <xcb/composite.h>
 #include <xcb/randr.h>
@@ -1462,8 +1462,8 @@ public:
     int majorOpcode;
     bool present;
     QByteArray name;
-    QVector<QByteArray> opCodes;
-    QVector<QByteArray> errorCodes;
+    QList<QByteArray> opCodes;
+    QList<QByteArray> errorCodes;
 };
 
 class KWIN_EXPORT Extensions
@@ -1507,7 +1507,7 @@ public:
         return m_sync.present;
     }
     int syncAlarmNotifyEvent() const;
-    QVector<ExtensionData> extensions() const;
+    QList<ExtensionData> extensions() const;
     bool hasGlx() const
     {
         return m_glx.present;
@@ -1944,7 +1944,7 @@ static inline WindowId createInputWindow(const QRect &geometry, uint32_t mask, c
     return window;
 }
 
-static inline void restackWindows(const QVector<xcb_window_t> &windows)
+static inline void restackWindows(const QList<xcb_window_t> &windows)
 {
     if (windows.count() < 2) {
         // only one window, nothing to do
@@ -1959,7 +1959,7 @@ static inline void restackWindows(const QVector<xcb_window_t> &windows)
     }
 }
 
-static inline void restackWindowsWithRaise(const QVector<xcb_window_t> &windows)
+static inline void restackWindowsWithRaise(const QList<xcb_window_t> &windows)
 {
     if (windows.isEmpty()) {
         return;
@@ -1990,9 +1990,9 @@ static inline xcb_rectangle_t fromQt(const QRect &rect)
     return rectangle;
 }
 
-static inline QVector<xcb_rectangle_t> regionToRects(const QRegion &region)
+static inline QList<xcb_rectangle_t> regionToRects(const QRegion &region)
 {
-    QVector<xcb_rectangle_t> rects;
+    QList<xcb_rectangle_t> rects;
     rects.reserve(region.rectCount());
     for (const QRect &rect : region) {
         rects.append(Xcb::fromQt(rect));

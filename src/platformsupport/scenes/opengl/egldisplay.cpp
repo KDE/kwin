@@ -167,7 +167,7 @@ bool EglDisplay::supportsNativeFence() const
 
 EGLImageKHR EglDisplay::importDmaBufAsImage(const DmaBufAttributes &dmabuf) const
 {
-    QVector<EGLint> attribs;
+    QList<EGLint> attribs;
     attribs.reserve(6 + dmabuf.planeCount * 10 + 1);
 
     attribs << EGL_WIDTH << dmabuf.width
@@ -258,19 +258,19 @@ QHash<uint32_t, QList<uint64_t>> EglDisplay::queryImportFormats(Filter filter) c
         qCCritical(KWIN_OPENGL) << "eglQueryDmaBufFormatsEXT failed!" << getEglErrorString();
         return {};
     }
-    QVector<uint32_t> formats(count);
+    QList<uint32_t> formats(count);
     if (!eglQueryDmaBufFormatsEXT(m_handle, count, (EGLint *)formats.data(), &count)) {
         qCCritical(KWIN_OPENGL) << "eglQueryDmaBufFormatsEXT with count" << count << "failed!" << getEglErrorString();
         return {};
     }
-    QHash<uint32_t, QVector<uint64_t>> ret;
+    QHash<uint32_t, QList<uint64_t>> ret;
     for (const auto format : std::as_const(formats)) {
         if (eglQueryDmaBufModifiersEXT != nullptr) {
             EGLint count = 0;
             const EGLBoolean success = eglQueryDmaBufModifiersEXT(m_handle, format, 0, nullptr, nullptr, &count);
             if (success && count > 0) {
-                QVector<uint64_t> modifiers(count);
-                QVector<EGLBoolean> externalOnly(count);
+                QList<uint64_t> modifiers(count);
+                QList<EGLBoolean> externalOnly(count);
                 if (eglQueryDmaBufModifiersEXT(m_handle, format, count, modifiers.data(), externalOnly.data(), &count)) {
                     if (filter != Filter::None) {
                         const bool external = filter == Filter::Normal;

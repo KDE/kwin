@@ -35,9 +35,9 @@ OutputConfigurationStore::~OutputConfigurationStore()
     save();
 }
 
-std::optional<std::tuple<OutputConfiguration, QVector<Output *>, OutputConfigurationStore::ConfigType>> OutputConfigurationStore::queryConfig(const QVector<Output *> &outputs, bool isLidClosed, QOrientationReading *orientation, bool isTabletMode)
+std::optional<std::tuple<OutputConfiguration, QList<Output *>, OutputConfigurationStore::ConfigType>> OutputConfigurationStore::queryConfig(const QList<Output *> &outputs, bool isLidClosed, QOrientationReading *orientation, bool isTabletMode)
 {
-    QVector<Output *> relevantOutputs;
+    QList<Output *> relevantOutputs;
     std::copy_if(outputs.begin(), outputs.end(), std::back_inserter(relevantOutputs), [](Output *output) {
         return !output->isNonDesktop() && !output->isPlaceholder();
     });
@@ -63,7 +63,7 @@ std::optional<std::tuple<OutputConfiguration, QVector<Output *>, OutputConfigura
     return std::make_tuple(config, order, ConfigType::Generated);
 }
 
-void OutputConfigurationStore::applyOrientationReading(OutputConfiguration &config, const QVector<Output *> &outputs, QOrientationReading *orientation, bool isTabletMode)
+void OutputConfigurationStore::applyOrientationReading(OutputConfiguration &config, const QList<Output *> &outputs, QOrientationReading *orientation, bool isTabletMode)
 {
     const auto output = std::find_if(outputs.begin(), outputs.end(), [&config](Output *output) {
         return output->isInternal() && config.changeSet(output)->enabled.value_or(output->isEnabled());
@@ -99,7 +99,7 @@ void OutputConfigurationStore::applyOrientationReading(OutputConfiguration &conf
     }
 }
 
-std::optional<std::pair<OutputConfigurationStore::Setup *, std::unordered_map<Output *, size_t>>> OutputConfigurationStore::findSetup(const QVector<Output *> &outputs, bool lidClosed)
+std::optional<std::pair<OutputConfigurationStore::Setup *, std::unordered_map<Output *, size_t>>> OutputConfigurationStore::findSetup(const QList<Output *> &outputs, bool lidClosed)
 {
     std::unordered_map<Output *, size_t> outputStates;
     for (Output *output : outputs) {
@@ -126,7 +126,7 @@ std::optional<std::pair<OutputConfigurationStore::Setup *, std::unordered_map<Ou
     }
 }
 
-std::optional<size_t> OutputConfigurationStore::findOutput(Output *output, const QVector<Output *> &allOutputs) const
+std::optional<size_t> OutputConfigurationStore::findOutput(Output *output, const QList<Output *> &allOutputs) const
 {
     const bool hasDuplicate = std::any_of(allOutputs.begin(), allOutputs.end(), [output](Output *otherOutput) {
         return otherOutput != output && otherOutput->edid().identifier() == output->edid().identifier();
@@ -142,9 +142,9 @@ std::optional<size_t> OutputConfigurationStore::findOutput(Output *output, const
     }
 }
 
-void OutputConfigurationStore::storeConfig(const QVector<Output *> &allOutputs, bool isLidClosed, const OutputConfiguration &config, const QVector<Output *> &outputOrder)
+void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bool isLidClosed, const OutputConfiguration &config, const QList<Output *> &outputOrder)
 {
-    QVector<Output *> relevantOutputs;
+    QList<Output *> relevantOutputs;
     std::copy_if(allOutputs.begin(), allOutputs.end(), std::back_inserter(relevantOutputs), [](Output *output) {
         return !output->isNonDesktop() && !output->isPlaceholder();
     });
@@ -233,10 +233,10 @@ void OutputConfigurationStore::storeConfig(const QVector<Output *> &allOutputs, 
     save();
 }
 
-std::pair<OutputConfiguration, QVector<Output *>> OutputConfigurationStore::setupToConfig(Setup *setup, const std::unordered_map<Output *, size_t> &outputMap) const
+std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::setupToConfig(Setup *setup, const std::unordered_map<Output *, size_t> &outputMap) const
 {
     OutputConfiguration ret;
-    QVector<std::pair<Output *, size_t>> priorities;
+    QList<std::pair<Output *, size_t>> priorities;
     for (const auto &[output, outputIndex] : outputMap) {
         const OutputState &state = m_outputs[outputIndex];
         const auto &setupState = *std::find_if(setup->outputs.begin(), setup->outputs.end(), [outputIndex = outputIndex](const auto &state) {
@@ -270,14 +270,14 @@ std::pair<OutputConfiguration, QVector<Output *>> OutputConfigurationStore::setu
     std::sort(priorities.begin(), priorities.end(), [](const auto &left, const auto &right) {
         return left.second < right.second;
     });
-    QVector<Output *> order;
+    QList<Output *> order;
     std::transform(priorities.begin(), priorities.end(), std::back_inserter(order), [](const auto &pair) {
         return pair.first;
     });
     return std::make_pair(ret, order);
 }
 
-std::optional<std::pair<OutputConfiguration, QVector<Output *>>> OutputConfigurationStore::generateLidClosedConfig(const QVector<Output *> &outputs)
+std::optional<std::pair<OutputConfiguration, QList<Output *>>> OutputConfigurationStore::generateLidClosedConfig(const QList<Output *> &outputs)
 {
     const auto internalIt = std::find_if(outputs.begin(), outputs.end(), [](Output *output) {
         return output->isInternal();
@@ -338,7 +338,7 @@ std::optional<std::pair<OutputConfiguration, QVector<Output *>>> OutputConfigura
     return std::make_pair(config, order);
 }
 
-std::pair<OutputConfiguration, QVector<Output *>> OutputConfigurationStore::generateConfig(const QVector<Output *> &outputs, bool isLidClosed)
+std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::generateConfig(const QList<Output *> &outputs, bool isLidClosed)
 {
     if (isLidClosed) {
         if (const auto closedConfig = generateLidClosedConfig(outputs)) {
@@ -346,7 +346,7 @@ std::pair<OutputConfiguration, QVector<Output *>> OutputConfigurationStore::gene
         }
     }
     OutputConfiguration ret;
-    QVector<Output *> outputOrder;
+    QList<Output *> outputOrder;
     QPoint pos(0, 0);
     for (const auto output : outputs) {
         const auto outputIndex = findOutput(output, outputs);
@@ -843,7 +843,7 @@ void OutputConfigurationStore::save()
     f.flush();
 }
 
-bool OutputConfigurationStore::isAutoRotateActive(const QVector<Output *> &outputs, bool isTabletMode) const
+bool OutputConfigurationStore::isAutoRotateActive(const QList<Output *> &outputs, bool isTabletMode) const
 {
     const auto internalIt = std::find_if(outputs.begin(), outputs.end(), [](Output *output) {
         return output->isInternal() && output->isEnabled();

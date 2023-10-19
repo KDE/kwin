@@ -174,9 +174,9 @@ void Item::updateBoundingRect()
     }
 }
 
-QVector<QRectF> Item::shape() const
+QList<QRectF> Item::shape() const
 {
-    return QVector<QRectF>();
+    return QList<QRectF>();
 }
 
 QRegion Item::opaque() const

@@ -41,7 +41,7 @@ namespace KWin
 static PlatformCursorImage loadReferenceThemeCursor_helper(const KXcursorTheme &theme,
                                                            const QByteArray &name)
 {
-    const QVector<KXcursorSprite> sprites = theme.shape(name);
+    const QList<KXcursorSprite> sprites = theme.shape(name);
     if (sprites.isEmpty()) {
         return PlatformCursorImage();
     }
@@ -63,7 +63,7 @@ static PlatformCursorImage loadReferenceThemeCursor(const QByteArray &name)
         return platformCursorImage;
     }
 
-    const QVector<QByteArray> alternativeNames = Cursor::cursorAlternativeNames(name);
+    const QList<QByteArray> alternativeNames = Cursor::cursorAlternativeNames(name);
     for (const QByteArray &alternativeName : alternativeNames) {
         platformCursorImage = loadReferenceThemeCursor_helper(theme, alternativeName);
         if (!platformCursorImage.isNull()) {
@@ -1535,7 +1535,7 @@ void PointerInputTest::testConfineToScreenGeometry()
     // after moving it to off-screen area
 
     // setup screen layout
-    const QVector<QRect> geometries{
+    const QList<QRect> geometries{
         QRect(0, 0, 1280, 1024),
         QRect(1280, 0, 1280, 1024),
         QRect(2560, 0, 1280, 1024),

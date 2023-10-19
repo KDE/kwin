@@ -10,9 +10,9 @@
 #include "seat.h"
 // Qt
 #include <QHash>
+#include <QList>
 #include <QMap>
 #include <QPointer>
-#include <QVector>
 
 #include <optional>
 
@@ -38,7 +38,7 @@ public:
     SeatInterfacePrivate(SeatInterface *q, Display *display);
 
     void sendCapabilities();
-    QVector<DataDeviceInterface *> dataDevicesForSurface(SurfaceInterface *surface) const;
+    QList<DataDeviceInterface *> dataDevicesForSurface(SurfaceInterface *surface) const;
     void registerPrimarySelectionDevice(PrimarySelectionDeviceV1Interface *primarySelectionDevice);
     void registerDataDevice(DataDeviceInterface *dataDevice);
     void registerDataControlDevice(DataControlDeviceV1Interface *dataDevice);
@@ -53,9 +53,9 @@ public:
     std::unique_ptr<KeyboardInterface> keyboard;
     std::unique_ptr<PointerInterface> pointer;
     std::unique_ptr<TouchInterface> touch;
-    QVector<DataDeviceInterface *> dataDevices;
-    QVector<PrimarySelectionDeviceV1Interface *> primarySelectionDevices;
-    QVector<DataControlDeviceV1Interface *> dataControlDevices;
+    QList<DataDeviceInterface *> dataDevices;
+    QList<PrimarySelectionDeviceV1Interface *> primarySelectionDevices;
+    QList<DataControlDeviceV1Interface *> dataControlDevices;
 
     QPointer<TextInputV1Interface> textInputV1;
     // TextInput v2
@@ -101,8 +101,8 @@ public:
             SurfaceInterface *surface = nullptr;
             QMetaObject::Connection destroyConnection;
             quint32 serial = 0;
-            QVector<DataDeviceInterface *> selections;
-            QVector<PrimarySelectionDeviceV1Interface *> primarySelections;
+            QList<DataDeviceInterface *> selections;
+            QList<PrimarySelectionDeviceV1Interface *> primarySelections;
         };
         Focus focus;
     };

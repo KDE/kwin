@@ -237,11 +237,11 @@ void KWinBindingsTest::testWindowToDesktop()
     };
     invokeShortcut(desktop);
     QVERIFY(desktopsChangedSpy.wait());
-    QCOMPARE(window->desktops(), QVector<VirtualDesktop *>{desktops.at(desktop - 1)});
+    QCOMPARE(window->desktops(), QList<VirtualDesktop *>{desktops.at(desktop - 1)});
     // back to desktop 1
     invokeShortcut(1);
     QVERIFY(desktopsChangedSpy.wait());
-    QCOMPARE(window->desktops(), QVector<VirtualDesktop *>{desktops.at(0)});
+    QCOMPARE(window->desktops(), QList<VirtualDesktop *>{desktops.at(0)});
     // invoke with one desktop too many
     invokeShortcut(desktop + 1);
     // that should fail

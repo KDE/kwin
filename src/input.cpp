@@ -2159,7 +2159,7 @@ public:
             }
             return TabletToolV2Interface::Wheel;
         };
-        QVector<TabletToolV2Interface::Capability> ifaceCapabilities;
+        QList<TabletToolV2Interface::Capability> ifaceCapabilities;
         ifaceCapabilities.resize(tabletToolId.m_capabilities.size());
         std::transform(tabletToolId.m_capabilities.constBegin(), tabletToolId.m_capabilities.constEnd(), ifaceCapabilities.begin(), f);
 

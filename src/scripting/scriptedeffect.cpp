@@ -25,9 +25,9 @@
 // Qt
 #include <QAction>
 #include <QFile>
+#include <QList>
 #include <QQmlEngine>
 #include <QStandardPaths>
-#include <QVector>
 
 #include <optional>
 
@@ -336,7 +336,7 @@ QJSValue ScriptedEffect::animate_helper(const QJSValue &object, AnimationType an
         return QJSValue();
     }
 
-    QVector<AnimationSettings> settings{animationSettingsFromObject(object)}; // global
+    QList<AnimationSettings> settings{animationSettingsFromObject(object)}; // global
 
     QJSValue animations = object.property(QStringLiteral("animations")); // array
     if (!animations.isUndefined()) {

@@ -9,8 +9,8 @@
 #pragma once
 
 #include <QByteArray>
+#include <QList>
 #include <QMap>
-#include <QVector>
 
 #include <vector>
 

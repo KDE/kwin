@@ -410,25 +410,25 @@ void Application::unregisterEventFilter(X11EventFilter *filter)
 
 bool Application::dispatchEvent(xcb_generic_event_t *event)
 {
-    static const QVector<QByteArray> s_xcbEerrors({QByteArrayLiteral("Success"),
-                                                   QByteArrayLiteral("BadRequest"),
-                                                   QByteArrayLiteral("BadValue"),
-                                                   QByteArrayLiteral("BadWindow"),
-                                                   QByteArrayLiteral("BadPixmap"),
-                                                   QByteArrayLiteral("BadAtom"),
-                                                   QByteArrayLiteral("BadCursor"),
-                                                   QByteArrayLiteral("BadFont"),
-                                                   QByteArrayLiteral("BadMatch"),
-                                                   QByteArrayLiteral("BadDrawable"),
-                                                   QByteArrayLiteral("BadAccess"),
-                                                   QByteArrayLiteral("BadAlloc"),
-                                                   QByteArrayLiteral("BadColor"),
-                                                   QByteArrayLiteral("BadGC"),
-                                                   QByteArrayLiteral("BadIDChoice"),
-                                                   QByteArrayLiteral("BadName"),
-                                                   QByteArrayLiteral("BadLength"),
-                                                   QByteArrayLiteral("BadImplementation"),
-                                                   QByteArrayLiteral("Unknown")});
+    static const QList<QByteArray> s_xcbEerrors({QByteArrayLiteral("Success"),
+                                                 QByteArrayLiteral("BadRequest"),
+                                                 QByteArrayLiteral("BadValue"),
+                                                 QByteArrayLiteral("BadWindow"),
+                                                 QByteArrayLiteral("BadPixmap"),
+                                                 QByteArrayLiteral("BadAtom"),
+                                                 QByteArrayLiteral("BadCursor"),
+                                                 QByteArrayLiteral("BadFont"),
+                                                 QByteArrayLiteral("BadMatch"),
+                                                 QByteArrayLiteral("BadDrawable"),
+                                                 QByteArrayLiteral("BadAccess"),
+                                                 QByteArrayLiteral("BadAlloc"),
+                                                 QByteArrayLiteral("BadColor"),
+                                                 QByteArrayLiteral("BadGC"),
+                                                 QByteArrayLiteral("BadIDChoice"),
+                                                 QByteArrayLiteral("BadName"),
+                                                 QByteArrayLiteral("BadLength"),
+                                                 QByteArrayLiteral("BadImplementation"),
+                                                 QByteArrayLiteral("Unknown")});
 
     kwinApp()->updateX11Time(event);
 
@@ -436,7 +436,7 @@ bool Application::dispatchEvent(xcb_generic_event_t *event)
     if (!x11EventType) {
         // let's check whether it's an error from one of the extensions KWin uses
         xcb_generic_error_t *error = reinterpret_cast<xcb_generic_error_t *>(event);
-        const QVector<Xcb::ExtensionData> extensions = Xcb::Extensions::self()->extensions();
+        const QList<Xcb::ExtensionData> extensions = Xcb::Extensions::self()->extensions();
         for (const auto &extension : extensions) {
             if (error->major_code == extension.majorOpcode) {
                 QByteArray errorName;

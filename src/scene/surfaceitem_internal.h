@@ -25,7 +25,7 @@ public:
 
     InternalWindow *window() const;
 
-    QVector<QRectF> shape() const override;
+    QList<QRectF> shape() const override;
 
 private Q_SLOTS:
     void handleBufferGeometryChanged(const QRectF &old);

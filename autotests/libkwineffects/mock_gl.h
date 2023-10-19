@@ -10,7 +10,7 @@
 #define MOCK_GL_H
 
 #include <QByteArray>
-#include <QVector>
+#include <QList>
 
 struct MockGL
 {
@@ -19,7 +19,7 @@ struct MockGL
         QByteArray vendor;
         QByteArray renderer;
         QByteArray version;
-        QVector<QByteArray> extensions;
+        QList<QByteArray> extensions;
         QByteArray extensionsString;
         QByteArray shadingLanguageVersion;
     } getString;

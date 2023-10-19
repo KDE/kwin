@@ -36,7 +36,7 @@ DrmGpu *DrmCommit::gpu() const
     return m_gpu;
 }
 
-DrmAtomicCommit::DrmAtomicCommit(const QVector<DrmPipeline *> &pipelines)
+DrmAtomicCommit::DrmAtomicCommit(const QList<DrmPipeline *> &pipelines)
     : DrmCommit(pipelines.front()->gpu())
     , m_pipelines(pipelines)
 {

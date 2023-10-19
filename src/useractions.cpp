@@ -1012,7 +1012,7 @@ void Workspace::initShortcuts()
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
     for (uint i = 0; i < vds->maximum(); ++i) {
         auto handler = [this, i]() {
-            const QVector<VirtualDesktop *> desktops = VirtualDesktopManager::self()->desktops();
+            const QList<VirtualDesktop *> desktops = VirtualDesktopManager::self()->desktops();
             if (i < uint(desktops.count())) {
                 slotWindowToDesktop(desktops[i]);
             }

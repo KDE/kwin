@@ -201,7 +201,7 @@ static Version readVersion(const KConfigGroup &group, const char *entry)
     if (parts.count() < 2) {
         return Version();
     }
-    QVector<qint64> versionParts;
+    QList<qint64> versionParts;
     for (int i = 0; i < parts.count(); ++i) {
         bool ok = false;
         const auto value = parts.at(i).toLongLong(&ok);
@@ -227,10 +227,10 @@ void GLPlatformTest::testDetect()
     s_gl->getString.renderer = driverGroup.readEntry("Renderer").toUtf8();
     s_gl->getString.version = driverGroup.readEntry("Version").toUtf8();
     s_gl->getString.shadingLanguageVersion = driverGroup.readEntry("ShadingLanguageVersion").toUtf8();
-    s_gl->getString.extensions = QVector<QByteArray>{QByteArrayLiteral("GL_ARB_shader_objects"),
-                                                     QByteArrayLiteral("GL_ARB_fragment_shader"),
-                                                     QByteArrayLiteral("GL_ARB_vertex_shader"),
-                                                     QByteArrayLiteral("GL_ARB_texture_non_power_of_two")};
+    s_gl->getString.extensions = QList<QByteArray>{QByteArrayLiteral("GL_ARB_shader_objects"),
+                                                   QByteArrayLiteral("GL_ARB_fragment_shader"),
+                                                   QByteArrayLiteral("GL_ARB_vertex_shader"),
+                                                   QByteArrayLiteral("GL_ARB_texture_non_power_of_two")};
     s_gl->getString.extensionsString = QByteArray();
 
     auto *gl = GLPlatform::instance();

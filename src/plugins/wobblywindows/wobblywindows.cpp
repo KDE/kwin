@@ -955,7 +955,7 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow *w, qreal time)
     return true;
 }
 
-void WobblyWindowsEffect::heightRingLinearMean(QVector<Pair> &data, WindowWobblyInfos &wwi)
+void WobblyWindowsEffect::heightRingLinearMean(QList<Pair> &data, WindowWobblyInfos &wwi)
 {
     Pair neibourgs[8];
 

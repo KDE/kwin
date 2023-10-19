@@ -703,14 +703,14 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     readActivities(activitiesCookie);
 
     // Initial desktop placement
-    std::optional<QVector<VirtualDesktop *>> initialDesktops;
+    std::optional<QList<VirtualDesktop *>> initialDesktops;
     if (session) {
         if (session->onAllDesktops) {
-            initialDesktops = QVector<VirtualDesktop *>{};
+            initialDesktops = QList<VirtualDesktop *>{};
         } else {
             VirtualDesktop *desktop = VirtualDesktopManager::self()->desktopForX11Id(session->desktop);
             if (desktop) {
-                initialDesktops = QVector<VirtualDesktop *>{desktop};
+                initialDesktops = QList<VirtualDesktop *>{desktop};
             }
         }
         setOnActivities(session->activities);
@@ -739,9 +739,9 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
                 }
             }
             if (on_all) {
-                initialDesktops = QVector<VirtualDesktop *>{};
+                initialDesktops = QList<VirtualDesktop *>{};
             } else if (on_current) {
-                initialDesktops = QVector<VirtualDesktop *>{VirtualDesktopManager::self()->currentDesktop()};
+                initialDesktops = QList<VirtualDesktop *>{VirtualDesktopManager::self()->currentDesktop()};
             } else if (maincl) {
                 initialDesktops = maincl->desktops();
             }
@@ -759,11 +759,11 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
             }
             if (desktopId) {
                 if (desktopId == NET::OnAllDesktops) {
-                    initialDesktops = QVector<VirtualDesktop *>{};
+                    initialDesktops = QList<VirtualDesktop *>{};
                 } else {
                     VirtualDesktop *desktop = VirtualDesktopManager::self()->desktopForX11Id(desktopId);
                     if (desktop) {
-                        initialDesktops = QVector<VirtualDesktop *>{desktop};
+                        initialDesktops = QList<VirtualDesktop *>{desktop};
                     }
                 }
             }
@@ -786,9 +786,9 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     // desktop so place it on the current virtual desktop.
     if (!initialDesktops.has_value()) {
         if (isDesktop()) {
-            initialDesktops = QVector<VirtualDesktop *>{};
+            initialDesktops = QList<VirtualDesktop *>{};
         } else {
-            initialDesktops = QVector<VirtualDesktop *>{VirtualDesktopManager::self()->currentDesktop()};
+            initialDesktops = QList<VirtualDesktop *>{VirtualDesktopManager::self()->currentDesktop()};
         }
     }
     setDesktops(rules()->checkDesktops(*initialDesktops, !isMapped));
@@ -1297,7 +1297,7 @@ void X11Window::updateInputWindow()
         m_decoInputExtent.setGeometry(bounds);
     }
 
-    const QVector<xcb_rectangle_t> rects = Xcb::regionToRects(region);
+    const QList<xcb_rectangle_t> rects = Xcb::regionToRects(region);
     xcb_shape_rectangles(kwinApp()->x11Connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT, XCB_CLIP_ORDERING_UNSORTED,
                          m_decoInputExtent, 0, 0, rects.count(), rects.constData());
 }
@@ -5037,7 +5037,7 @@ void X11Window::getWmOpaqueRegion()
     opaque_region = new_opaque_region;
 }
 
-QVector<QRectF> X11Window::shapeRegion() const
+QList<QRectF> X11Window::shapeRegion() const
 {
     if (m_shapeRegionIsValid) {
         return m_shapeRegion;

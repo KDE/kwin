@@ -28,7 +28,7 @@ class VirtualDesktop;
 class WorkspaceWrapper : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QVector<KWin::VirtualDesktop *> desktops READ desktops NOTIFY desktopsChanged)
+    Q_PROPERTY(QList<KWin::VirtualDesktop *> desktops READ desktops NOTIFY desktopsChanged)
     Q_PROPERTY(KWin::VirtualDesktop *currentDesktop READ currentDesktop WRITE setCurrentDesktop NOTIFY currentDesktopChanged)
     Q_PROPERTY(KWin::Window *activeWindow READ activeWindow WRITE setActiveWindow NOTIFY windowActivated)
     // TODO: write and notify?
@@ -188,7 +188,7 @@ public:
     QRect virtualScreenGeometry() const;
     QPoint cursorPos() const;
 
-    QVector<VirtualDesktop *> desktops() const;
+    QList<VirtualDesktop *> desktops() const;
     VirtualDesktop *currentDesktop() const;
     void setCurrentDesktop(VirtualDesktop *desktop);
 

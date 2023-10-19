@@ -297,9 +297,9 @@ void DrmBackend::sceneInitialized()
     }
 }
 
-QVector<CompositingType> DrmBackend::supportedCompositors() const
+QList<CompositingType> DrmBackend::supportedCompositors() const
 {
-    return QVector<CompositingType>{OpenGLCompositing, QPainterCompositing};
+    return QList<CompositingType>{OpenGLCompositing, QPainterCompositing};
 }
 
 QString DrmBackend::supportInformation() const
@@ -352,8 +352,8 @@ size_t DrmBackend::gpuCount() const
 
 bool DrmBackend::applyOutputChanges(const OutputConfiguration &config)
 {
-    QVector<DrmOutput *> toBeEnabled;
-    QVector<DrmOutput *> toBeDisabled;
+    QList<DrmOutput *> toBeEnabled;
+    QList<DrmOutput *> toBeDisabled;
     for (const auto &gpu : std::as_const(m_gpus)) {
         const auto &outputs = gpu->drmOutputs();
         for (const auto &output : outputs) {

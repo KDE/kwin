@@ -8,9 +8,9 @@
 */
 #pragma once
 
+#include <QList>
 #include <QMap>
 #include <QPointer>
-#include <QVector>
 
 namespace KWin
 {
@@ -26,11 +26,11 @@ public:
 
     void renderingSurface();
     void scanoutSuccessful(SurfaceInterface *surface);
-    void scanoutFailed(SurfaceInterface *surface, const QMap<uint32_t, QVector<uint64_t>> &formats);
+    void scanoutFailed(SurfaceInterface *surface, const QMap<uint32_t, QList<uint64_t>> &formats);
 
 private:
     QPointer<SurfaceInterface> m_surface;
-    QMap<uint32_t, QVector<uint64_t>> m_attemptedFormats;
+    QMap<uint32_t, QList<uint64_t>> m_attemptedFormats;
     bool m_attemptedThisFrame = false;
 
     DrmGpu *const m_gpu;

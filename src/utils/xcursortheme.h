@@ -9,8 +9,8 @@
 #include <kwin_export.h>
 
 #include <QImage>
+#include <QList>
 #include <QSharedDataPointer>
-#include <QVector>
 
 #include <chrono>
 
@@ -117,7 +117,7 @@ public:
     /**
      * Returns the list of cursor sprites for the cursor with the given @a name.
      */
-    QVector<KXcursorSprite> shape(const QByteArray &name) const;
+    QList<KXcursorSprite> shape(const QByteArray &name) const;
 
 private:
     QSharedDataPointer<KXcursorThemePrivate> d;

@@ -8,7 +8,7 @@
 #include "utils/executable_path.h"
 // Qt
 #include <QFileInfo>
-#include <QVector>
+#include <QList>
 // Wayland
 #include <wayland-server.h>
 
@@ -34,10 +34,10 @@ private:
     ClientConnection *q;
     wl_listener destroyListener;
     wl_listener destroyLateListener;
-    static QVector<ClientConnectionPrivate *> s_allClients;
+    static QList<ClientConnectionPrivate *> s_allClients;
 };
 
-QVector<ClientConnectionPrivate *> ClientConnectionPrivate::s_allClients;
+QList<ClientConnectionPrivate *> ClientConnectionPrivate::s_allClients;
 
 ClientConnectionPrivate::ClientConnectionPrivate(wl_client *c, Display *display, ClientConnection *q)
     : client(c)

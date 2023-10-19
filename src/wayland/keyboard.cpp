@@ -10,7 +10,7 @@
 #include "surface.h"
 #include "utils/common.h"
 // Qt
-#include <QVector>
+#include <QList>
 
 #include <unistd.h>
 
@@ -38,7 +38,7 @@ void KeyboardInterfacePrivate::keyboard_bind_resource(Resource *resource)
     }
 
     if (focusedClient && focusedClient->client() == resource->client()) {
-        const QVector<quint32> keys = pressedKeys();
+        const QList<quint32> keys = pressedKeys();
         const QByteArray keysData = QByteArray::fromRawData(reinterpret_cast<const char *>(keys.data()), sizeof(quint32) * keys.count());
         const quint32 serial = seat->display()->nextSerial();
 
@@ -170,9 +170,9 @@ void KeyboardInterface::setModifierFocusSurface(SurfaceInterface *surface)
     }
 }
 
-QVector<quint32> KeyboardInterfacePrivate::pressedKeys() const
+QList<quint32> KeyboardInterfacePrivate::pressedKeys() const
 {
-    QVector<quint32> keys;
+    QList<quint32> keys;
     for (auto it = states.constBegin(); it != states.constEnd(); ++it) {
         if (it.value() == KeyboardKeyState::Pressed) {
             keys << it.key();

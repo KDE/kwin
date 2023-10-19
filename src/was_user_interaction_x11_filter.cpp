@@ -13,7 +13,7 @@
 namespace KWin
 {
 WasUserInteractionX11Filter::WasUserInteractionX11Filter()
-    : X11EventFilter(QVector<int>{XCB_KEY_PRESS, XCB_KEY_RELEASE, XCB_BUTTON_PRESS, XCB_BUTTON_RELEASE})
+    : X11EventFilter(QList<int>{XCB_KEY_PRESS, XCB_KEY_RELEASE, XCB_BUTTON_PRESS, XCB_BUTTON_RELEASE})
 {
 }
 

@@ -9,10 +9,10 @@
 #include "libkwineffects/kwineffects.h"
 #include "libkwineffects/kwinglobals.h"
 
+#include <QList>
 #include <QMatrix4x4>
 #include <QObject>
 #include <QPointer>
-#include <QVector>
 
 #include <optional>
 
@@ -56,7 +56,7 @@ public:
      */
     QRectF boundingRect() const;
 
-    virtual QVector<QRectF> shape() const;
+    virtual QList<QRectF> shape() const;
     virtual QRegion opaque() const;
 
     /**

@@ -9,10 +9,10 @@
 #pragma once
 #include "core/outputbackend.h"
 
+#include <QList>
 #include <QPointer>
 #include <QSize>
 #include <QSocketNotifier>
-#include <QVector>
 
 #include <memory>
 #include <sys/types.h>
@@ -49,7 +49,7 @@ public:
     Outputs outputs() const override;
     Session *session() const override;
 
-    QVector<CompositingType> supportedCompositors() const override;
+    QList<CompositingType> supportedCompositors() const override;
 
     QString supportInformation() const override;
     Output *createVirtualOutput(const QString &name, const QSize &size, double scale) override;
@@ -88,8 +88,8 @@ private:
     std::unique_ptr<UdevMonitor> m_udevMonitor;
     std::unique_ptr<QSocketNotifier> m_socketNotifier;
     Session *m_session;
-    QVector<DrmAbstractOutput *> m_outputs;
-    QVector<QUuid> m_recentlyUnpluggedDpmsOffOutputs;
+    QList<DrmAbstractOutput *> m_outputs;
+    QList<QUuid> m_recentlyUnpluggedDpmsOffOutputs;
 
     const QStringList m_explicitGpus;
     std::vector<std::unique_ptr<DrmGpu>> m_gpus;

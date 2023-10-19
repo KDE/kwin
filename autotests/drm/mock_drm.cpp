@@ -133,7 +133,7 @@ uint32_t MockObject::getPropId(const QString &propName) const
 
 //
 
-MockProperty::MockProperty(MockObject *obj, QString name, uint64_t initialValue, uint32_t flags, QVector<QByteArray> enums)
+MockProperty::MockProperty(MockObject *obj, QString name, uint64_t initialValue, uint32_t flags, QList<QByteArray> enums)
     : obj(obj)
     , id(obj->gpu->idCounter++)
     , flags(flags)
@@ -522,7 +522,7 @@ int drmModeSetCrtc(int fd, uint32_t crtcId, uint32_t bufferId,
     req->legacyEmulation = true;
     drmModeAtomicAddProperty(req, crtcId, crtc->getPropId(QStringLiteral("MODE_ID")), modeBlob);
     drmModeAtomicAddProperty(req, crtcId, crtc->getPropId(QStringLiteral("ACTIVE")), modeBlob && count);
-    QVector<uint32_t> conns;
+    QList<uint32_t> conns;
     for (int i = 0; i < count; i++) {
         conns << connectors[i];
     }
@@ -843,7 +843,7 @@ drmModeObjectPropertiesPtr drmModeObjectGetProperties(int fd, uint32_t object_id
             errno = EINVAL;
             return nullptr;
         }
-        QVector<MockProperty> props;
+        QList<MockProperty> props;
         bool deviceAtomic = gpu->clientCaps.contains(DRM_CLIENT_CAP_ATOMIC) && gpu->clientCaps[DRM_CLIENT_CAP_ATOMIC];
         for (const auto &prop : std::as_const(obj->props)) {
             if (deviceAtomic || !(prop.flags & DRM_MODE_PROP_ATOMIC)) {
@@ -899,7 +899,7 @@ int drmModeObjectSetProperty(int fd, uint32_t object_id, uint32_t object_type, u
     }
 }
 
-static QVector<drmModeAtomicReqPtr> s_atomicReqs;
+static QList<drmModeAtomicReqPtr> s_atomicReqs;
 
 drmModeAtomicReqPtr drmModeAtomicAlloc(void)
 {
@@ -963,20 +963,20 @@ int drmModeAtomicCommit(int fd, drmModeAtomicReqPtr req, uint32_t flags, void *u
         return -(errno = EINVAL);
     }
 
-    QVector<MockConnector> connCopies;
+    QList<MockConnector> connCopies;
     for (const auto &conn : std::as_const(gpu->connectors)) {
         connCopies << *conn;
     }
-    QVector<MockCrtc> crtcCopies;
+    QList<MockCrtc> crtcCopies;
     for (const auto &crtc : std::as_const(gpu->crtcs)) {
         crtcCopies << *crtc;
     }
-    QVector<MockPlane> planeCopies;
+    QList<MockPlane> planeCopies;
     for (const auto &plane : std::as_const(gpu->planes)) {
         planeCopies << *plane;
     }
 
-    QVector<MockObject*> objects;
+    QList<MockObject *> objects;
     for (int i = 0; i < connCopies.count(); i++) {
         objects << &connCopies[i];
     }
@@ -1022,10 +1022,10 @@ int drmModeAtomicCommit(int fd, drmModeAtomicReqPtr req, uint32_t flags, void *u
     // check if the desired changes are allowed
     struct Pipeline {
         MockCrtc *crtc;
-        QVector<MockConnector*> conns;
+        QList<MockConnector *> conns;
         MockPlane *primaryPlane = nullptr;
     };
-    QVector<Pipeline> pipelines;
+    QList<Pipeline> pipelines;
     for (int i = 0; i < crtcCopies.count(); i++) {
         if (crtcCopies[i].getProp(QStringLiteral("ACTIVE"))) {
             auto blob = gpu->getBlob(crtcCopies[i].getProp(QStringLiteral("MODE_ID")));

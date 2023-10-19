@@ -60,7 +60,7 @@ private:
 
     // active drag or null when no drag active
     Drag *m_currentDrag = nullptr;
-    QVector<Drag *> m_oldDrags;
+    QList<Drag *> m_oldDrags;
 
     XwlDropHandler *m_dropHandler;
 

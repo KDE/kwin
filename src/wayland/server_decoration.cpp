@@ -8,7 +8,7 @@
 #include "surface.h"
 #include "utils/common.h"
 
-#include <QVector>
+#include <QList>
 
 #include <optional>
 
@@ -123,7 +123,7 @@ public:
 
 private:
     ServerSideDecorationInterface *q;
-    static QVector<ServerSideDecorationInterfacePrivate *> s_all;
+    static QList<ServerSideDecorationInterfacePrivate *> s_all;
 
 protected:
     void org_kde_kwin_server_decoration_destroy_resource(Resource *resource) override;
@@ -131,7 +131,7 @@ protected:
     void org_kde_kwin_server_decoration_request_mode(Resource *resource, uint32_t mode) override;
 };
 
-QVector<ServerSideDecorationInterfacePrivate *> ServerSideDecorationInterfacePrivate::s_all;
+QList<ServerSideDecorationInterfacePrivate *> ServerSideDecorationInterfacePrivate::s_all;
 
 void ServerSideDecorationInterfacePrivate::org_kde_kwin_server_decoration_request_mode(Resource *resource, uint32_t mode)
 {

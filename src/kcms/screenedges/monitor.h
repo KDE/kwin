@@ -14,7 +14,7 @@
 
 #include <QActionGroup>
 #include <QGraphicsItem>
-#include <QVector>
+#include <QList>
 #include <array>
 #include <memory>
 
@@ -77,7 +77,7 @@ private:
     std::array<std::unique_ptr<Corner>, 8> m_items;
     std::array<bool, 8> m_hidden;
     std::array<std::unique_ptr<QMenu>, 8> m_popups;
-    std::array<QVector<QAction *>, 8> m_popupActions;
+    std::array<QList<QAction *>, 8> m_popupActions;
     std::array<std::unique_ptr<QActionGroup>, 8> m_actionGroups;
 };
 

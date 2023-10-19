@@ -34,7 +34,7 @@ public:
     void load(const QString &themeName, int size, qreal devicePixelRatio);
     void loadCursors(const QString &packagePath, int size, qreal devicePixelRatio);
 
-    QHash<QByteArray, QVector<KXcursorSprite>> registry;
+    QHash<QByteArray, QList<KXcursorSprite>> registry;
 };
 
 KXcursorSprite::KXcursorSprite()
@@ -81,14 +81,14 @@ std::chrono::milliseconds KXcursorSprite::delay() const
     return d->delay;
 }
 
-static QVector<KXcursorSprite> loadCursor(const QString &filePath, int desiredSize, qreal devicePixelRatio)
+static QList<KXcursorSprite> loadCursor(const QString &filePath, int desiredSize, qreal devicePixelRatio)
 {
     XcursorImages *images = XcursorFileLoadImages(QFile::encodeName(filePath), desiredSize * devicePixelRatio);
     if (!images) {
         return {};
     }
 
-    QVector<KXcursorSprite> sprites;
+    QList<KXcursorSprite> sprites;
     for (int i = 0; i < images->nimage; ++i) {
         const XcursorImage *nativeCursorImage = images->images[i];
         const qreal scale = std::max(qreal(1), qreal(nativeCursorImage->size) / desiredSize);
@@ -129,7 +129,7 @@ void KXcursorThemePrivate::loadCursors(const QString &packagePath, int size, qre
                 }
             }
         }
-        const QVector<KXcursorSprite> sprites = loadCursor(entry.absoluteFilePath(), size, devicePixelRatio);
+        const QList<KXcursorSprite> sprites = loadCursor(entry.absoluteFilePath(), size, devicePixelRatio);
         if (!sprites.isEmpty()) {
             registry.insert(shape, sprites);
         }
@@ -233,7 +233,7 @@ bool KXcursorTheme::isEmpty() const
     return d->registry.isEmpty();
 }
 
-QVector<KXcursorSprite> KXcursorTheme::shape(const QByteArray &name) const
+QList<KXcursorSprite> KXcursorTheme::shape(const QByteArray &name) const
 {
     return d->registry.value(name);
 }

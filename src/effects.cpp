@@ -128,7 +128,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, WorkspaceScene *s
     , m_effectLoader(new EffectLoader(this))
     , m_trackingCursorChanges(0)
 {
-    qRegisterMetaType<QVector<KWin::EffectWindow *>>();
+    qRegisterMetaType<QList<KWin::EffectWindow *>>();
     qRegisterMetaType<KWin::SessionState>();
     connect(m_effectLoader, &AbstractEffectLoader::effectLoaded, this, [this](Effect *effect, const QString &name) {
         effect_order.insert(effect->requestedEffectChainPosition(), EffectPair(name, effect));
@@ -369,7 +369,7 @@ void EffectsHandlerImpl::startPaint()
 {
     m_activeEffects.clear();
     m_activeEffects.reserve(loaded_effects.count());
-    for (QVector<KWin::EffectPair>::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
+    for (QList<KWin::EffectPair>::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
         if (it->second->isActive()) {
             m_activeEffects << it->second;
         }
@@ -720,20 +720,20 @@ void EffectsHandlerImpl::moveWindow(EffectWindow *w, const QPoint &pos, bool sna
 
 void EffectsHandlerImpl::windowToDesktop(EffectWindow *w, int desktop)
 {
-    QVector<uint> desktopIds;
+    QList<uint> desktopIds;
     if (desktop != -1) {
         desktopIds.append(desktop);
     }
     windowToDesktops(w, desktopIds);
 }
 
-void EffectsHandlerImpl::windowToDesktops(EffectWindow *w, const QVector<uint> &desktopIds)
+void EffectsHandlerImpl::windowToDesktops(EffectWindow *w, const QList<uint> &desktopIds)
 {
     auto window = static_cast<EffectWindowImpl *>(w)->window();
     if (!window->isClient() || window->isDesktop() || window->isDock()) {
         return;
     }
-    QVector<VirtualDesktop *> desktops;
+    QList<VirtualDesktop *> desktops;
     desktops.reserve(desktopIds.count());
     for (uint x11Id : desktopIds) {
         if (x11Id > VirtualDesktopManager::self()->count()) {
@@ -1242,7 +1242,7 @@ void EffectsHandlerImpl::destroyEffect(Effect *effect)
 
 void EffectsHandlerImpl::reconfigureEffect(const QString &name)
 {
-    for (QVector<EffectPair>::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
+    for (QList<EffectPair>::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
         if ((*it).first == name) {
             kwinApp()->config()->reparseConfiguration();
             makeOpenGLContextCurrent();
@@ -1289,7 +1289,7 @@ QList<bool> EffectsHandlerImpl::areEffectsSupported(const QStringList &names)
 void EffectsHandlerImpl::reloadEffect(Effect *effect)
 {
     QString effectName;
-    for (QVector<EffectPair>::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
+    for (QList<EffectPair>::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
         if ((*it).second == effect) {
             effectName = (*it).first;
             break;
@@ -1320,8 +1320,8 @@ void EffectsHandlerImpl::effectsChanged()
 QStringList EffectsHandlerImpl::activeEffects() const
 {
     QStringList ret;
-    for (QVector<KWin::EffectPair>::const_iterator it = loaded_effects.constBegin(),
-                                                   end = loaded_effects.constEnd();
+    for (QList<KWin::EffectPair>::const_iterator it = loaded_effects.constBegin(),
+                                                 end = loaded_effects.constEnd();
          it != end; ++it) {
         if (it->second->isActive()) {
             ret << it->first;
@@ -1413,7 +1413,7 @@ bool EffectsHandlerImpl::isScreenLocked() const
 QString EffectsHandlerImpl::debug(const QString &name, const QString &parameter) const
 {
     QString internalName = name.toLower();
-    for (QVector<EffectPair>::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
+    for (QList<EffectPair>::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
         if ((*it).first == internalName) {
             return it->second->debug(parameter);
         }
@@ -1441,7 +1441,7 @@ bool EffectsHandlerImpl::animationsSupported() const
     return m_scene->animationsSupported();
 }
 
-void EffectsHandlerImpl::highlightWindows(const QVector<EffectWindow *> &windows)
+void EffectsHandlerImpl::highlightWindows(const QList<EffectWindow *> &windows)
 {
     Effect *e = provides(Effect::HighlightWindows);
     if (!e) {
@@ -1955,10 +1955,10 @@ qlonglong EffectWindowImpl::windowId() const
     return 0;
 }
 
-QVector<uint> EffectWindowImpl::desktops() const
+QList<uint> EffectWindowImpl::desktops() const
 {
     const auto desks = m_window->desktops();
-    QVector<uint> ids;
+    QList<uint> ids;
     ids.reserve(desks.count());
     std::transform(desks.constBegin(), desks.constEnd(), std::back_inserter(ids), [](const VirtualDesktop *vd) {
         return vd->x11DesktopNumber();

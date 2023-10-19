@@ -127,12 +127,12 @@ void SeatInterfacePrivate::updatePointerButtonState(quint32 button, Pointer::Sta
     it.value() = state;
 }
 
-QVector<DataDeviceInterface *> SeatInterfacePrivate::dataDevicesForSurface(SurfaceInterface *surface) const
+QList<DataDeviceInterface *> SeatInterfacePrivate::dataDevicesForSurface(SurfaceInterface *surface) const
 {
     if (!surface) {
         return {};
     }
-    QVector<DataDeviceInterface *> primarySelectionDevices;
+    QList<DataDeviceInterface *> primarySelectionDevices;
     for (auto it = dataDevices.constBegin(); it != dataDevices.constEnd(); ++it) {
         if ((*it)->client() == *surface->client()) {
             primarySelectionDevices << *it;
@@ -930,13 +930,13 @@ void SeatInterface::setFocusedKeyboardSurface(SurfaceInterface *surface)
         });
         d->globalKeyboard.focus.serial = serial;
         // selection?
-        const QVector<DataDeviceInterface *> dataDevices = d->dataDevicesForSurface(surface);
+        const QList<DataDeviceInterface *> dataDevices = d->dataDevicesForSurface(surface);
         d->globalKeyboard.focus.selections = dataDevices;
         for (auto dataDevice : dataDevices) {
             dataDevice->sendSelection(d->currentSelection);
         }
         // primary selection
-        QVector<PrimarySelectionDeviceV1Interface *> primarySelectionDevices;
+        QList<PrimarySelectionDeviceV1Interface *> primarySelectionDevices;
         for (auto it = d->primarySelectionDevices.constBegin(); it != d->primarySelectionDevices.constEnd(); ++it) {
             if ((*it)->client() == *surface->client()) {
                 primarySelectionDevices << *it;

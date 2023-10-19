@@ -131,7 +131,7 @@ public:
                                  uint32_t hsl,
                                  uint32_t hih,
                                  uint32_t hil,
-                                 const QVector<TabletToolV2Interface::Capability> &capabilities)
+                                 const QList<TabletToolV2Interface::Capability> &capabilities)
         : zwp_tablet_tool_v2()
         , m_display(display)
         , m_type(type)
@@ -215,7 +215,7 @@ public:
     const uint32_t m_type;
     const uint32_t m_hardwareSerialHigh, m_hardwareSerialLow;
     const uint32_t m_hardwareIdHigh, m_hardwareIdLow;
-    const QVector<TabletToolV2Interface::Capability> m_capabilities;
+    const QList<TabletToolV2Interface::Capability> m_capabilities;
     QHash<wl_resource *, TabletSurfaceCursorV2 *> m_cursors;
     TabletToolV2Interface *const q;
 };
@@ -226,7 +226,7 @@ TabletToolV2Interface::TabletToolV2Interface(Display *display,
                                              uint32_t hsl,
                                              uint32_t hih,
                                              uint32_t hil,
-                                             const QVector<Capability> &capabilities)
+                                             const QList<Capability> &capabilities)
     : d(new TabletToolV2InterfacePrivate(this, display, type, hsh, hsl, hih, hil, capabilities))
 {
 }
@@ -578,11 +578,11 @@ public:
     TabletPadV2Interface *const q;
 
     const QString m_path;
-    QVector<quint32> m_buttons;
+    QList<quint32> m_buttons;
     const int m_modes;
 
-    QVector<TabletPadRingV2Interface *> m_rings;
-    QVector<TabletPadStripV2Interface *> m_strips;
+    QList<TabletPadRingV2Interface *> m_rings;
+    QList<TabletPadStripV2Interface *> m_strips;
     TabletPadGroupV2Interface *const m_padGroup;
     TabletSeatV2Interface *m_seat = nullptr;
     QPointer<SurfaceInterface> m_currentSurface;
@@ -740,7 +740,7 @@ public:
     }
 
     TabletSeatV2Interface *const q;
-    QHash<QString, QVector<TabletToolV2Interface *>> m_tools;
+    QHash<QString, QList<TabletToolV2Interface *>> m_tools;
     QHash<QString, TabletV2Interface *> m_tablets;
     QHash<QString, TabletPadV2Interface *> m_pads;
     Display *const m_display;
@@ -757,7 +757,7 @@ TabletSeatV2Interface::~TabletSeatV2Interface() = default;
 TabletToolV2Interface *TabletSeatV2Interface::addTool(TabletToolV2Interface::Type type,
                                                       quint64 hardwareSerial,
                                                       quint64 hardwareId,
-                                                      const QVector<TabletToolV2Interface::Capability> &capabilities,
+                                                      const QList<TabletToolV2Interface::Capability> &capabilities,
                                                       const QString &deviceSysName)
 {
     constexpr auto MAX_UINT_32 = std::numeric_limits<quint32>::max();

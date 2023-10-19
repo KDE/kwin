@@ -18,7 +18,6 @@
 #include <QRect>
 #include <QThreadPool>
 #include <QUuid>
-#include <QVector>
 
 #include <qwayland-server-plasma-window-management.h>
 
@@ -55,8 +54,8 @@ public:
     QList<PlasmaWindowInterface *> windows;
     QPointer<PlasmaVirtualDesktopManagementInterface> plasmaVirtualDesktopManagementInterface = nullptr;
     quint32 windowIdCounter = 0;
-    QVector<quint32> stackingOrder;
-    QVector<QString> stackingOrderUuids;
+    QList<quint32> stackingOrder;
+    QList<QString> stackingOrderUuids;
     PlasmaWindowManagementInterface *q;
 
 protected:
@@ -314,7 +313,7 @@ QList<PlasmaWindowInterface *> PlasmaWindowManagementInterface::windows() const
     return d->windows;
 }
 
-void PlasmaWindowManagementInterface::setStackingOrder(const QVector<quint32> &stackingOrder)
+void PlasmaWindowManagementInterface::setStackingOrder(const QList<quint32> &stackingOrder)
 {
     if (d->stackingOrder == stackingOrder) {
         return;
@@ -323,7 +322,7 @@ void PlasmaWindowManagementInterface::setStackingOrder(const QVector<quint32> &s
     d->sendStackingOrderChanged();
 }
 
-void PlasmaWindowManagementInterface::setStackingOrderUuids(const QVector<QString> &stackingOrderUuids)
+void PlasmaWindowManagementInterface::setStackingOrderUuids(const QList<QString> &stackingOrderUuids)
 {
     if (d->stackingOrderUuids == stackingOrderUuids) {
         return;

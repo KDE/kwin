@@ -33,9 +33,9 @@ using namespace std::literals;
 namespace KWin
 {
 
-static const QVector<uint64_t> implicitModifier = {DRM_FORMAT_MOD_INVALID};
-static const QMap<uint32_t, QVector<uint64_t>> legacyFormats = {{DRM_FORMAT_XRGB8888, implicitModifier}};
-static const QMap<uint32_t, QVector<uint64_t>> legacyCursorFormats = {{DRM_FORMAT_ARGB8888, implicitModifier}};
+static const QList<uint64_t> implicitModifier = {DRM_FORMAT_MOD_INVALID};
+static const QMap<uint32_t, QList<uint64_t>> legacyFormats = {{DRM_FORMAT_XRGB8888, implicitModifier}};
+static const QMap<uint32_t, QList<uint64_t>> legacyCursorFormats = {{DRM_FORMAT_ARGB8888, implicitModifier}};
 
 DrmPipeline::DrmPipeline(DrmConnector *conn)
     : m_connector(conn)
@@ -79,7 +79,7 @@ DrmPipeline::Error DrmPipeline::present()
     Q_ASSERT(m_pending.crtc);
     if (gpu()->atomicModeSetting()) {
         // test the full state, to take pending commits into account
-        auto fullState = std::make_unique<DrmAtomicCommit>(QVector<DrmPipeline *>{this});
+        auto fullState = std::make_unique<DrmAtomicCommit>(QList<DrmPipeline *>{this});
         if (Error err = prepareAtomicPresentation(fullState.get()); err != Error::None) {
             return err;
         }
@@ -90,7 +90,7 @@ DrmPipeline::Error DrmPipeline::present()
             return errnoToError();
         }
         // only give the actual state update to the commit thread, so that it can potentially reorder the commits
-        auto primaryPlaneUpdate = std::make_unique<DrmAtomicCommit>(QVector<DrmPipeline *>{this});
+        auto primaryPlaneUpdate = std::make_unique<DrmAtomicCommit>(QList<DrmPipeline *>{this});
         if (Error err = prepareAtomicPresentation(primaryPlaneUpdate.get()); err != Error::None) {
             return err;
         }
@@ -111,7 +111,7 @@ bool DrmPipeline::maybeModeset()
     return gpu()->maybeModeset();
 }
 
-DrmPipeline::Error DrmPipeline::commitPipelines(const QVector<DrmPipeline *> &pipelines, CommitMode mode, const QVector<DrmObject *> &unusedObjects)
+DrmPipeline::Error DrmPipeline::commitPipelines(const QList<DrmPipeline *> &pipelines, CommitMode mode, const QList<DrmObject *> &unusedObjects)
 {
     Q_ASSERT(!pipelines.isEmpty());
     if (pipelines[0]->gpu()->atomicModeSetting()) {
@@ -121,7 +121,7 @@ DrmPipeline::Error DrmPipeline::commitPipelines(const QVector<DrmPipeline *> &pi
     }
 }
 
-DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline *> &pipelines, CommitMode mode, const QVector<DrmObject *> &unusedObjects)
+DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QList<DrmPipeline *> &pipelines, CommitMode mode, const QList<DrmObject *> &unusedObjects)
 {
     auto commit = std::make_unique<DrmAtomicCommit>(pipelines);
     if (mode == CommitMode::Test) {
@@ -376,7 +376,7 @@ bool DrmPipeline::updateCursor()
             return false;
         }
         // test the full state, to take pending commits into account
-        auto fullState = std::make_unique<DrmAtomicCommit>(QVector<DrmPipeline *>{this});
+        auto fullState = std::make_unique<DrmAtomicCommit>(QList<DrmPipeline *>{this});
         if (prepareAtomicPresentation(fullState.get()) != Error::None) {
             return false;
         }
@@ -385,7 +385,7 @@ bool DrmPipeline::updateCursor()
             return false;
         }
         // only give the actual state update to the commit thread, so that it can potentially reorder the commits
-        auto cursorOnly = std::make_unique<DrmAtomicCommit>(QVector<DrmPipeline *>{this});
+        auto cursorOnly = std::make_unique<DrmAtomicCommit>(QList<DrmPipeline *>{this});
         prepareAtomicCursor(cursorOnly.get());
         cursorOnly->setCursorOnly(true);
         m_commitThread->addCommit(std::move(cursorOnly));
@@ -434,12 +434,12 @@ DrmOutput *DrmPipeline::output() const
     return m_output;
 }
 
-QMap<uint32_t, QVector<uint64_t>> DrmPipeline::formats() const
+QMap<uint32_t, QList<uint64_t>> DrmPipeline::formats() const
 {
     return m_pending.formats;
 }
 
-QMap<uint32_t, QVector<uint64_t>> DrmPipeline::cursorFormats() const
+QMap<uint32_t, QList<uint64_t>> DrmPipeline::cursorFormats() const
 {
     if (m_pending.crtc && m_pending.crtc->cursorPlane()) {
         return m_pending.crtc->cursorPlane()->formats();
@@ -502,7 +502,7 @@ DrmGammaRamp::DrmGammaRamp(DrmCrtc *crtc, const std::shared_ptr<ColorTransformat
     : m_lut(transformation, crtc->gammaRampSize())
 {
     if (crtc->gpu()->atomicModeSetting()) {
-        QVector<drm_color_lut> atomicLut(m_lut.size());
+        QList<drm_color_lut> atomicLut(m_lut.size());
         for (uint32_t i = 0; i < m_lut.size(); i++) {
             atomicLut[i].red = m_lut.red()[i];
             atomicLut[i].green = m_lut.green()[i];

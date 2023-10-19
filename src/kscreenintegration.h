@@ -10,7 +10,7 @@
 #include "core/output.h"
 #include "core/outputconfiguration.h"
 
-#include <QVector>
+#include <QList>
 #include <optional>
 
 namespace KWin
@@ -18,7 +18,7 @@ namespace KWin
 namespace KScreenIntegration
 {
 
-QString connectedOutputsHash(const QVector<Output *> &outputs, bool isLidClosed);
-std::optional<std::pair<OutputConfiguration, QVector<Output *>>> readOutputConfig(const QVector<Output *> &outputs, const QString &hash);
+QString connectedOutputsHash(const QList<Output *> &outputs, bool isLidClosed);
+std::optional<std::pair<OutputConfiguration, QList<Output *>>> readOutputConfig(const QList<Output *> &outputs, const QString &hash);
 }
 }

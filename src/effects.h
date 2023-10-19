@@ -217,14 +217,14 @@ public:
     bool tabletPadStripEvent(int number, int position, bool isFinger, const KWin::TabletPadId &tabletPadId, std::chrono::microseconds time);
     bool tabletPadRingEvent(int number, int position, bool isFinger, const KWin::TabletPadId &tabletPadId, std::chrono::microseconds time);
 
-    void highlightWindows(const QVector<EffectWindow *> &windows);
+    void highlightWindows(const QList<EffectWindow *> &windows);
 
     bool isPropertyTypeRegistered(xcb_atom_t atom) const
     {
         return registered_atoms.contains(atom);
     }
 
-    void windowToDesktops(EffectWindow *w, const QVector<uint> &desktops) override;
+    void windowToDesktops(EffectWindow *w, const QList<uint> &desktops) override;
 
     /**
      * Finds an effect with the given name.
@@ -305,7 +305,7 @@ private:
     void registerPropertyType(long atom, bool reg);
     void destroyEffect(Effect *effect);
 
-    typedef QVector<Effect *> EffectsList;
+    typedef QList<Effect *> EffectsList;
     typedef EffectsList::const_iterator EffectsIterator;
     EffectsList m_activeEffects;
     EffectsIterator m_currentDrawWindowIterator;
@@ -371,7 +371,7 @@ public:
     double opacity() const override;
 
     QStringList activities() const override;
-    QVector<uint> desktops() const override;
+    QList<uint> desktops() const override;
     qreal x() const override;
     qreal y() const override;
     qreal width() const override;

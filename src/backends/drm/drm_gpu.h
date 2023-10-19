@@ -11,10 +11,10 @@
 #include "drm_pipeline.h"
 #include "utils/filedescriptor.h"
 
+#include <QList>
 #include <QPointer>
 #include <QSize>
 #include <QSocketNotifier>
-#include <QVector>
 #include <qobject.h>
 
 #include <epoxy/egl.h>
@@ -43,7 +43,7 @@ class DrmLease : public QObject
 {
     Q_OBJECT
 public:
-    DrmLease(DrmGpu *gpu, FileDescriptor &&fd, uint32_t lesseeId, const QVector<DrmOutput *> &outputs);
+    DrmLease(DrmGpu *gpu, FileDescriptor &&fd, uint32_t lesseeId, const QList<DrmOutput *> &outputs);
     ~DrmLease();
 
     FileDescriptor &fd();
@@ -56,7 +56,7 @@ private:
     DrmGpu *const m_gpu;
     FileDescriptor m_fd;
     const uint32_t m_lesseeId;
-    const QVector<DrmOutput *> m_outputs;
+    const QList<DrmOutput *> m_outputs;
 };
 
 class DrmGpu : public QObject
@@ -89,9 +89,9 @@ public:
     clockid_t presentationClock() const;
     QSize cursorSize() const;
 
-    QVector<DrmVirtualOutput *> virtualOutputs() const;
-    QVector<DrmOutput *> drmOutputs() const;
-    const QVector<DrmPipeline *> pipelines() const;
+    QList<DrmVirtualOutput *> virtualOutputs() const;
+    QList<DrmOutput *> drmOutputs() const;
+    const QList<DrmPipeline *> pipelines() const;
 
     void setEglDisplay(std::unique_ptr<EglDisplay> &&display);
 
@@ -111,7 +111,7 @@ public:
     void recreateSurfaces();
 
     FileDescriptor createNonMasterFd() const;
-    std::unique_ptr<DrmLease> leaseOutputs(const QVector<DrmOutput *> &outputs);
+    std::unique_ptr<DrmLease> leaseOutputs(const QList<DrmOutput *> &outputs);
     void waitIdle();
 
 Q_SIGNALS:
@@ -125,9 +125,9 @@ private:
     void removeOutput(DrmOutput *output);
     void initDrmResources();
 
-    DrmPipeline::Error checkCrtcAssignment(QVector<DrmConnector *> connectors, const QVector<DrmCrtc *> &crtcs);
+    DrmPipeline::Error checkCrtcAssignment(QList<DrmConnector *> connectors, const QList<DrmCrtc *> &crtcs);
     DrmPipeline::Error testPipelines();
-    QVector<DrmObject *> unusedObjects() const;
+    QList<DrmObject *> unusedObjects() const;
 
     static void pageFlipHandler(int fd, unsigned int sequence, unsigned int sec, unsigned int usec, unsigned int crtc_id, void *user_data);
 
@@ -151,11 +151,11 @@ private:
     std::vector<std::unique_ptr<DrmPlane>> m_planes;
     std::vector<std::unique_ptr<DrmCrtc>> m_crtcs;
     std::vector<std::shared_ptr<DrmConnector>> m_connectors;
-    QVector<DrmObject *> m_allObjects;
-    QVector<DrmPipeline *> m_pipelines;
+    QList<DrmObject *> m_allObjects;
+    QList<DrmPipeline *> m_pipelines;
 
-    QVector<DrmOutput *> m_drmOutputs;
-    QVector<DrmVirtualOutput *> m_virtualOutputs;
+    QList<DrmOutput *> m_drmOutputs;
+    QList<DrmVirtualOutput *> m_virtualOutputs;
 
     std::unique_ptr<QSocketNotifier> m_socketNotifier;
     QSize m_cursorSize;

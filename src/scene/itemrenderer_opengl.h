@@ -31,7 +31,7 @@ public:
 
     struct RenderContext
     {
-        QVector<RenderNode> renderNodes;
+        QList<RenderNode> renderNodes;
         QStack<QMatrix4x4> transformStack;
         QStack<qreal> opacityStack;
         const QMatrix4x4 projectionMatrix;

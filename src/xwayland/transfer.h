@@ -8,9 +8,9 @@
 */
 #pragma once
 
+#include <QList>
 #include <QObject>
 #include <QSocketNotifier>
-#include <QVector>
 
 #include <xcb/xcb.h>
 
@@ -133,7 +133,7 @@ private:
     /* contains all received data portioned in chunks
      * TODO: explain second QPair component
      */
-    QVector<QPair<QByteArray, int>> m_chunks;
+    QList<QPair<QByteArray, int>> m_chunks;
 
     bool m_propertyIsSet = false;
     bool m_flushPropertyOnDelete = false;

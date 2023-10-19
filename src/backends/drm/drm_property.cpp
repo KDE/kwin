@@ -17,7 +17,7 @@
 namespace KWin
 {
 
-DrmProperty::DrmProperty(DrmObject *obj, const QByteArray &name, const QVector<QByteArray> &enumNames)
+DrmProperty::DrmProperty(DrmObject *obj, const QByteArray &name, const QList<QByteArray> &enumNames)
     : m_obj(obj)
     , m_propName(name)
     , m_enumNames(enumNames)

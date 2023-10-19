@@ -35,7 +35,7 @@ private:
     void drop() override;
     Xvisit *m_xvisit = nullptr;
     Dnd *const m_dnd;
-    QVector<Xvisit *> m_previousVisits;
+    QList<Xvisit *> m_previousVisits;
 };
 }
 }

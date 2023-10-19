@@ -108,7 +108,7 @@ private:
     struct Data
     {
         std::shared_ptr<GLTexture> texture;
-        QVector<ShadowTextureProvider *> providers;
+        QList<ShadowTextureProvider *> providers;
     };
     QHash<KDecoration2::DecorationShadow *, Data> m_cache;
 };

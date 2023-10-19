@@ -6,8 +6,8 @@
 
 #pragma once
 
+#include <QList>
 #include <QObject>
-#include <QVector>
 
 #include <KCModuleData>
 #include <KPluginMetaData>
@@ -22,7 +22,7 @@ public:
 
     bool isDefaults() const override;
 
-    QVector<KPluginMetaData> pluginMetaDataList() const;
+    QList<KPluginMetaData> pluginMetaDataList() const;
 
 private:
     KSharedConfigPtr m_kwinConfig;

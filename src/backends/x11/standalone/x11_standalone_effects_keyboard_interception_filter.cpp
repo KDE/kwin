@@ -16,7 +16,7 @@ namespace KWin
 {
 
 EffectsKeyboardInterceptionX11Filter::EffectsKeyboardInterceptionX11Filter(EffectsHandlerImpl *effects, X11Keyboard *keyboard)
-    : X11EventFilter(QVector<int>{XCB_KEY_PRESS, XCB_KEY_RELEASE})
+    : X11EventFilter(QList<int>{XCB_KEY_PRESS, XCB_KEY_RELEASE})
     , m_effects(effects)
     , m_keyboard(keyboard)
 {

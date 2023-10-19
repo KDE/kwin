@@ -59,7 +59,7 @@ static bool isHighlightWindow(EffectWindow *window)
 
 void HighlightWindowEffect::highlightWindows(const QStringList &windows)
 {
-    QVector<EffectWindow *> effectWindows;
+    QList<EffectWindow *> effectWindows;
     effectWindows.reserve(windows.count());
     for (const auto &window : windows) {
         if (auto effectWindow = effects->findWindow(QUuid(window)); effectWindow) {
@@ -192,7 +192,7 @@ void HighlightWindowEffect::finishHighlighting()
     m_highlightedWindows.clear();
 }
 
-void HighlightWindowEffect::highlightWindows(const QVector<KWin::EffectWindow *> &windows)
+void HighlightWindowEffect::highlightWindows(const QList<KWin::EffectWindow *> &windows)
 {
     if (windows.isEmpty()) {
         finishHighlighting();
@@ -269,7 +269,7 @@ bool HighlightWindowEffect::perform(Feature feature, const QVariantList &argumen
     if (arguments.size() != 1) {
         return false;
     }
-    highlightWindows(arguments.first().value<QVector<EffectWindow *>>());
+    highlightWindows(arguments.first().value<QList<EffectWindow *>>());
     return true;
 }
 

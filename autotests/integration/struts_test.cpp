@@ -427,7 +427,7 @@ void StrutsTest::test363804()
 {
     // this test verifies the condition described in BUG 363804
     // two screens in a vertical setup, aligned to right border with panel on the bottom screen
-    const QVector<QRect> geometries{QRect(0, 0, 1920, 1080), QRect(554, 1080, 1366, 768)};
+    const QList<QRect> geometries{QRect(0, 0, 1920, 1080), QRect(554, 1080, 1366, 768)};
     Test::setOutputConfig(geometries);
     QCOMPARE(workspace()->geometry(), QRect(0, 0, 1920, 1848));
 
@@ -504,7 +504,7 @@ void StrutsTest::testLeftScreenSmallerBottomAligned()
 {
     // this test verifies a two screen setup with the left screen smaller than the right and bottom aligned
     // the panel is on the top of the left screen, thus not at 0/0
-    const QVector<QRect> geometries{QRect(0, 282, 1366, 768), QRect(1366, 0, 1680, 1050)};
+    const QList<QRect> geometries{QRect(0, 282, 1366, 768), QRect(1366, 0, 1680, 1050)};
     Test::setOutputConfig(geometries);
     QCOMPARE(workspace()->geometry(), QRect(0, 0, 3046, 1050));
 
@@ -585,7 +585,7 @@ void StrutsTest::testWindowMoveWithPanelBetweenScreens()
     // to the other even if there is a panel in between.
 
     // left screen must be smaller than right screen
-    const QVector<QRect> geometries{QRect(0, 282, 1366, 768), QRect(1366, 0, 1680, 1050)};
+    const QList<QRect> geometries{QRect(0, 282, 1366, 768), QRect(1366, 0, 1680, 1050)};
     Test::setOutputConfig(geometries);
     QCOMPARE(workspace()->geometry(), QRect(0, 0, 3046, 1050));
 

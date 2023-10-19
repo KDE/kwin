@@ -11,9 +11,9 @@
 #include <libinput.h>
 
 #include <QByteArray>
+#include <QList>
 #include <QPointF>
 #include <QSizeF>
-#include <QVector>
 
 #include <array>
 #include <chrono>
@@ -74,7 +74,7 @@ struct libinput_device
     quint32 scrollButton = 0;
     int setScrollButtonReturnValue = 0;
     Qt::MouseButtons supportedButtons;
-    QVector<quint32> keys;
+    QList<quint32> keys;
     bool enabled = true;
     int setEnableModeReturnValue = 0;
     int setTapToClickReturnValue = 0;

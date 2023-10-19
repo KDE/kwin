@@ -13,9 +13,9 @@
 
 #include "qwayland-server-wayland.h"
 
+#include <QList>
 #include <QPointer>
 #include <QTimer>
-#include <QVector>
 
 #include <cmath>
 
@@ -290,10 +290,10 @@ void OutputInterface::remove()
     d->globalRemove();
 }
 
-QVector<wl_resource *> OutputInterface::clientResources(ClientConnection *client) const
+QList<wl_resource *> OutputInterface::clientResources(ClientConnection *client) const
 {
     const auto outputResources = d->resourceMap().values(client->client());
-    QVector<wl_resource *> ret;
+    QList<wl_resource *> ret;
     ret.reserve(outputResources.count());
 
     for (OutputInterfacePrivate::Resource *resource : outputResources) {

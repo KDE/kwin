@@ -29,7 +29,6 @@
 #include <QList>
 #include <QLoggingCategory>
 #include <QStack>
-#include <QVector>
 
 #include <KPluginFactory>
 #include <KSharedConfig>
@@ -981,7 +980,7 @@ public:
      *
      * @arg desktopIds a list of desktops the window should be placed on. NET::OnAllDesktops is not a valid desktop X11Id
      */
-    Q_SCRIPTABLE virtual void windowToDesktops(KWin::EffectWindow *w, const QVector<uint> &desktopIds) = 0;
+    Q_SCRIPTABLE virtual void windowToDesktops(KWin::EffectWindow *w, const QList<uint> &desktopIds) = 0;
 
     Q_SCRIPTABLE virtual void windowToScreen(KWin::EffectWindow *w, EffectScreen *screen) = 0;
     virtual void setShowingDesktop(bool showing) = 0;
@@ -1698,7 +1697,7 @@ Q_SIGNALS:
     void inputPanelChanged();
 
 protected:
-    QVector<EffectPair> loaded_effects;
+    QList<EffectPair> loaded_effects;
     // QHash< QString, EffectFactory* > effect_factories;
     CompositingType compositing_type;
 };
@@ -1817,7 +1816,7 @@ class KWINEFFECTS_EXPORT EffectWindow : public QObject
     Q_PROPERTY(qreal width READ width)
     Q_PROPERTY(qreal x READ x)
     Q_PROPERTY(qreal y READ y)
-    Q_PROPERTY(QVector<uint> desktops READ desktops)
+    Q_PROPERTY(QList<uint> desktops READ desktops)
     Q_PROPERTY(bool onAllDesktops READ isOnAllDesktops)
     Q_PROPERTY(bool onCurrentDesktop READ isOnCurrentDesktop)
     Q_PROPERTY(QRectF rect READ rect)
@@ -2135,7 +2134,7 @@ public:
      * a length of 1, on Wayland can be any subset.
      * If the list is empty it means the window is on all desktops
      */
-    virtual QVector<uint> desktops() const = 0;
+    virtual QList<uint> desktops() const = 0;
 
     virtual qreal x() const = 0;
     virtual qreal y() const = 0;
@@ -2813,7 +2812,7 @@ private:
 };
 
 class KWINEFFECTS_EXPORT WindowQuadList
-    : public QVector<WindowQuad>
+    : public QList<WindowQuad>
 {
 public:
     WindowQuadList splitAtX(double x) const;
@@ -2829,7 +2828,7 @@ public:
  * for easily converting from WindowQuad and related classes to lists of
  * GLVertex2D. This class assumes rendering happens as unindexed triangles.
  */
-class KWINEFFECTS_EXPORT RenderGeometry : public QVector<GLVertex2D>
+class KWINEFFECTS_EXPORT RenderGeometry : public QList<GLVertex2D>
 {
 public:
     /**

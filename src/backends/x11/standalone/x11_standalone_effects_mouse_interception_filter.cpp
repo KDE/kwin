@@ -16,7 +16,7 @@ namespace KWin
 {
 
 EffectsMouseInterceptionX11Filter::EffectsMouseInterceptionX11Filter(xcb_window_t window, EffectsHandlerImpl *effects)
-    : X11EventFilter(QVector<int>{XCB_BUTTON_PRESS, XCB_BUTTON_RELEASE, XCB_MOTION_NOTIFY})
+    : X11EventFilter(QList<int>{XCB_BUTTON_PRESS, XCB_BUTTON_RELEASE, XCB_MOTION_NOTIFY})
     , m_effects(effects)
     , m_window(window)
 {

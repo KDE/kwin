@@ -8,11 +8,11 @@
 
 #include "kwin_export.h"
 
+#include <QList>
 #include <QObject>
 #include <QPoint>
 #include <QSize>
 #include <QUuid>
-#include <QVector>
 #include <memory>
 
 struct wl_resource;

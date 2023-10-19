@@ -10,9 +10,9 @@
 
 #include "core/output.h"
 
+#include <QList>
 #include <QPoint>
 #include <QSize>
-#include <QVector>
 #include <memory>
 #include <optional>
 #include <tuple>
@@ -35,16 +35,16 @@ public:
         Preexisting,
         Generated,
     };
-    std::optional<std::tuple<OutputConfiguration, QVector<Output *>, ConfigType>> queryConfig(const QVector<Output *> &outputs, bool isLidClosed, QOrientationReading *orientation, bool isTabletMode);
+    std::optional<std::tuple<OutputConfiguration, QList<Output *>, ConfigType>> queryConfig(const QList<Output *> &outputs, bool isLidClosed, QOrientationReading *orientation, bool isTabletMode);
 
-    void storeConfig(const QVector<Output *> &allOutputs, bool isLidClosed, const OutputConfiguration &config, const QVector<Output *> &outputOrder);
+    void storeConfig(const QList<Output *> &allOutputs, bool isLidClosed, const OutputConfiguration &config, const QList<Output *> &outputOrder);
 
-    bool isAutoRotateActive(const QVector<Output *> &outputs, bool isTabletMode) const;
+    bool isAutoRotateActive(const QList<Output *> &outputs, bool isTabletMode) const;
 
 private:
-    void applyOrientationReading(OutputConfiguration &config, const QVector<Output *> &outputs, QOrientationReading *orientation, bool isTabletMode);
-    std::optional<std::pair<OutputConfiguration, QVector<Output *>>> generateLidClosedConfig(const QVector<Output *> &outputs);
-    std::pair<OutputConfiguration, QVector<Output *>> generateConfig(const QVector<Output *> &outputs, bool isLidClosed);
+    void applyOrientationReading(OutputConfiguration &config, const QList<Output *> &outputs, QOrientationReading *orientation, bool isTabletMode);
+    std::optional<std::pair<OutputConfiguration, QList<Output *>>> generateLidClosedConfig(const QList<Output *> &outputs);
+    std::pair<OutputConfiguration, QList<Output *>> generateConfig(const QList<Output *> &outputs, bool isLidClosed);
     std::shared_ptr<OutputMode> chooseMode(Output *output) const;
     double chooseScale(Output *output, OutputMode *mode) const;
     double targetDpi(Output *output) const;
@@ -84,14 +84,14 @@ private:
     struct Setup
     {
         bool lidClosed = false;
-        QVector<SetupState> outputs;
+        QList<SetupState> outputs;
     };
 
-    std::pair<OutputConfiguration, QVector<Output *>> setupToConfig(Setup *setup, const std::unordered_map<Output *, size_t> &outputMap) const;
-    std::optional<std::pair<Setup *, std::unordered_map<Output *, size_t>>> findSetup(const QVector<Output *> &outputs, bool lidClosed);
-    std::optional<size_t> findOutput(Output *output, const QVector<Output *> &allOutputs) const;
+    std::pair<OutputConfiguration, QList<Output *>> setupToConfig(Setup *setup, const std::unordered_map<Output *, size_t> &outputMap) const;
+    std::optional<std::pair<Setup *, std::unordered_map<Output *, size_t>>> findSetup(const QList<Output *> &outputs, bool lidClosed);
+    std::optional<size_t> findOutput(Output *output, const QList<Output *> &allOutputs) const;
 
-    QVector<OutputState> m_outputs;
-    QVector<Setup> m_setups;
+    QList<OutputState> m_outputs;
+    QList<Setup> m_setups;
 };
 }

@@ -8,8 +8,8 @@
 */
 #pragma once
 
+#include <QList>
 #include <QObject>
-#include <QVector>
 
 #include <xcb/xcb.h>
 
@@ -123,8 +123,8 @@ private:
     X11Source *m_xSource = nullptr;
 
     // active transfers
-    QVector<TransferWltoX *> m_wlToXTransfers;
-    QVector<TransferXtoWl *> m_xToWlTransfers;
+    QList<TransferWltoX *> m_wlToXTransfers;
+    QList<TransferXtoWl *> m_xToWlTransfers;
     QTimer *m_timeoutTransfers = nullptr;
 
     bool m_disownPending = false;

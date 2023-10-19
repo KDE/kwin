@@ -10,8 +10,8 @@
 
 #include "kwin_export.h"
 
+#include <QList>
 #include <QSize>
-#include <QVector>
 
 #include <cstdint>
 #include <epoxy/egl.h>
@@ -60,7 +60,7 @@ public:
     std::shared_ptr<EglSwapchainSlot> acquire();
     void release(std::shared_ptr<EglSwapchainSlot> slot);
 
-    static std::shared_ptr<EglSwapchain> create(GraphicsBufferAllocator *allocator, EglContext *context, const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers);
+    static std::shared_ptr<EglSwapchain> create(GraphicsBufferAllocator *allocator, EglContext *context, const QSize &size, uint32_t format, const QList<uint64_t> &modifiers);
 
 private:
     GraphicsBufferAllocator *m_allocator;
@@ -68,7 +68,7 @@ private:
     QSize m_size;
     uint32_t m_format;
     uint64_t m_modifier;
-    QVector<std::shared_ptr<EglSwapchainSlot>> m_slots;
+    QList<std::shared_ptr<EglSwapchainSlot>> m_slots;
 };
 
 } // namespace KWin

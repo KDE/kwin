@@ -119,7 +119,7 @@ void SnapHelperEffect::paintScreen(const RenderTarget &renderTarget, const Rende
         binder.shader()->setUniform(GLShader::ColorUniform::Color, color);
 
         glLineWidth(s_lineWidth);
-        QVector<QVector2D> verts;
+        QList<QVector2D> verts;
         verts.reserve(screens.count() * 24);
         for (EffectScreen *screen : screens) {
             const QRectF rect = effects->clientArea(ScreenArea, screen, effects->currentDesktop());

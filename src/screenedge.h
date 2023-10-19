@@ -23,9 +23,9 @@
 #include <KSharedConfig>
 // Qt
 #include <QDateTime>
+#include <QList>
 #include <QObject>
 #include <QRect>
-#include <QVector>
 
 #include <memory>
 #include <xcb/xcb.h>
@@ -150,7 +150,7 @@ private:
     void switchDesktop(const QPoint &cursorPos);
     void pushCursorBack(const QPoint &cursorPos);
     void reserveTouchCallBack(const TouchCallback &callback);
-    QVector<TouchCallback> touchCallBacks() const
+    QList<TouchCallback> touchCallBacks() const
     {
         return m_touchCallbacks;
     }
@@ -172,7 +172,7 @@ private:
     Window *m_client;
     Output *m_output;
     std::unique_ptr<SwipeGesture> m_gesture;
-    QVector<TouchCallback> m_touchCallbacks;
+    QList<TouchCallback> m_touchCallbacks;
     friend class ScreenEdges;
 };
 
@@ -332,10 +332,10 @@ public:
     bool isEntered(QMouseEvent *event);
 
     /**
-     * Returns a QVector of all existing screen edge windows
-     * @return all existing screen edge windows in a QVector
+     * Returns a QList of all existing screen edge windows
+     * @return all existing screen edge windows in a QList
      */
-    QVector<xcb_window_t> windows() const;
+    QList<xcb_window_t> windows() const;
 
     bool isDesktopSwitching() const;
     bool isDesktopSwitchingMovingClients() const;

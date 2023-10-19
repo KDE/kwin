@@ -35,7 +35,7 @@ static QString outputHash(Output *output)
 }
 
 /// See KScreen::Config::connectedOutputsHash in libkscreen
-QString connectedOutputsHash(const QVector<Output *> &outputs, bool isLidClosed)
+QString connectedOutputsHash(const QList<Output *> &outputs, bool isLidClosed)
 {
     QStringList hashedOutputs;
     hashedOutputs.reserve(outputs.count());
@@ -53,7 +53,7 @@ QString connectedOutputsHash(const QVector<Output *> &outputs, bool isLidClosed)
     return QString::fromLatin1(hash.toHex());
 }
 
-static QMap<Output *, QJsonObject> outputsConfig(const QVector<Output *> &outputs, const QString &hash)
+static QMap<Output *, QJsonObject> outputsConfig(const QList<Output *> &outputs, const QString &hash)
 {
     const QString kscreenJsonPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kscreen/") % hash);
     if (kscreenJsonPath.isEmpty()) {
@@ -177,7 +177,7 @@ std::shared_ptr<OutputMode> parseMode(Output *output, const QJsonObject &modeInf
     return (it != modes.end()) ? *it : nullptr;
 }
 
-std::optional<std::pair<OutputConfiguration, QVector<Output *>>> readOutputConfig(const QVector<Output *> &outputs, const QString &hash)
+std::optional<std::pair<OutputConfiguration, QList<Output *>>> readOutputConfig(const QList<Output *> &outputs, const QString &hash)
 {
     const auto outputsInfo = outputsConfig(outputs, hash);
     if (outputsInfo.isEmpty()) {
@@ -270,7 +270,7 @@ std::optional<std::pair<OutputConfiguration, QVector<Output *>>> readOutputConfi
         }
     });
 
-    QVector<Output *> order;
+    QList<Output *> order;
     order.reserve(outputOrder.size());
     std::transform(outputOrder.begin(), outputOrder.end(), std::back_inserter(order), [](const auto &pair) {
         return pair.second;

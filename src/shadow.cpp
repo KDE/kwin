@@ -118,9 +118,9 @@ std::unique_ptr<Shadow> Shadow::createShadowFromInternalWindow(Window *window)
     return shadow;
 }
 
-QVector<uint32_t> Shadow::readX11ShadowProperty(xcb_window_t id)
+QList<uint32_t> Shadow::readX11ShadowProperty(xcb_window_t id)
 {
-    QVector<uint32_t> ret;
+    QList<uint32_t> ret;
     if (id != XCB_WINDOW_NONE) {
         Xcb::Property property(false, id, atoms->kde_net_wm_shadow, XCB_ATOM_CARDINAL, 0, 12);
         uint32_t *shadow = property.value<uint32_t *>();
@@ -134,10 +134,10 @@ QVector<uint32_t> Shadow::readX11ShadowProperty(xcb_window_t id)
     return ret;
 }
 
-bool Shadow::init(const QVector<uint32_t> &data)
+bool Shadow::init(const QList<uint32_t> &data)
 {
-    QVector<Xcb::WindowGeometry> pixmapGeometries(ShadowElementsCount);
-    QVector<xcb_get_image_cookie_t> getImageCookies(ShadowElementsCount);
+    QList<Xcb::WindowGeometry> pixmapGeometries(ShadowElementsCount);
+    QList<xcb_get_image_cookie_t> getImageCookies(ShadowElementsCount);
     auto *c = kwinApp()->x11Connection();
     for (int i = 0; i < ShadowElementsCount; ++i) {
         pixmapGeometries[i] = Xcb::WindowGeometry(data[i]);

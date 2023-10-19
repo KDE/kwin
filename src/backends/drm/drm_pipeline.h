@@ -9,9 +9,9 @@
 
 #pragma once
 
+#include <QList>
 #include <QPoint>
 #include <QSize>
-#include <QVector>
 
 #include <chrono>
 #include <xf86drmMode.h>
@@ -93,8 +93,8 @@ public:
     bool modesetPresentPending() const;
     void resetModesetPresentPending();
 
-    QMap<uint32_t, QVector<uint64_t>> formats() const;
-    QMap<uint32_t, QVector<uint64_t>> cursorFormats() const;
+    QMap<uint32_t, QList<uint64_t>> formats() const;
+    QMap<uint32_t, QList<uint64_t>> cursorFormats() const;
     bool pruneModifier();
 
     void setOutput(DrmOutput *output);
@@ -139,7 +139,7 @@ public:
         CommitModeset
     };
     Q_ENUM(CommitMode)
-    static Error commitPipelines(const QVector<DrmPipeline *> &pipelines, CommitMode mode, const QVector<DrmObject *> &unusedObjects = {});
+    static Error commitPipelines(const QList<DrmPipeline *> &pipelines, CommitMode mode, const QList<DrmObject *> &unusedObjects = {});
 
 private:
     bool isBufferForDirectScanout() const;
@@ -153,7 +153,7 @@ private:
     Error legacyModeset();
     Error applyPendingChangesLegacy();
     bool setCursorLegacy();
-    static Error commitPipelinesLegacy(const QVector<DrmPipeline *> &pipelines, CommitMode mode);
+    static Error commitPipelinesLegacy(const QList<DrmPipeline *> &pipelines, CommitMode mode);
 
     // atomic modesetting only
     void atomicCommitSuccessful();
@@ -161,7 +161,7 @@ private:
     Error prepareAtomicPresentation(DrmAtomicCommit *commit);
     void prepareAtomicCursor(DrmAtomicCommit *commit);
     void prepareAtomicDisable(DrmAtomicCommit *commit);
-    static Error commitPipelinesAtomic(const QVector<DrmPipeline *> &pipelines, CommitMode mode, const QVector<DrmObject *> &unusedObjects);
+    static Error commitPipelinesAtomic(const QList<DrmPipeline *> &pipelines, CommitMode mode, const QList<DrmObject *> &unusedObjects);
 
     DrmOutput *m_output = nullptr;
     DrmConnector *m_connector = nullptr;
@@ -172,7 +172,7 @@ private:
     struct State
     {
         DrmCrtc *crtc = nullptr;
-        QMap<uint32_t, QVector<uint64_t>> formats;
+        QMap<uint32_t, QList<uint64_t>> formats;
         bool active = true; // whether or not the pipeline should be currently used
         bool enabled = true; // whether or not the pipeline needs a crtc
         bool needsModeset = false;

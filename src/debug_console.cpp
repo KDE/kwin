@@ -899,7 +899,7 @@ static const quint32 s_windowBitMask = 0x0000FFFF;
 static const quint32 s_idDistance = 10000;
 
 template<class T>
-void DebugConsoleModel::add(int parentRow, QVector<T *> &windows, T *window)
+void DebugConsoleModel::add(int parentRow, QList<T *> &windows, T *window)
 {
     beginInsertRows(index(parentRow, 0, QModelIndex()), windows.count(), windows.count());
     windows.append(window);
@@ -907,7 +907,7 @@ void DebugConsoleModel::add(int parentRow, QVector<T *> &windows, T *window)
 }
 
 template<class T>
-void DebugConsoleModel::remove(int parentRow, QVector<T *> &windows, T *window)
+void DebugConsoleModel::remove(int parentRow, QList<T *> &windows, T *window)
 {
     const int remove = windows.indexOf(window);
     if (remove == -1) {
@@ -1032,7 +1032,7 @@ int DebugConsoleModel::rowCount(const QModelIndex &parent) const
 }
 
 template<class T>
-QModelIndex DebugConsoleModel::indexForWindow(int row, int column, const QVector<T *> &windows, int id) const
+QModelIndex DebugConsoleModel::indexForWindow(int row, int column, const QList<T *> &windows, int id) const
 {
     if (column != 0) {
         return QModelIndex();
@@ -1187,7 +1187,7 @@ QVariant DebugConsoleModel::propertyData(QObject *object, const QModelIndex &ind
 }
 
 template<class T>
-QVariant DebugConsoleModel::windowData(const QModelIndex &index, int role, const QVector<T *> windows, const std::function<QString(T *)> &toString) const
+QVariant DebugConsoleModel::windowData(const QModelIndex &index, int role, const QList<T *> windows, const std::function<QString(T *)> &toString) const
 {
     if (index.row() >= windows.count()) {
         return QVariant();
@@ -1273,7 +1273,7 @@ QVariant DebugConsoleModel::data(const QModelIndex &index, int role) const
 }
 
 template<class T>
-static T *windowForIndex(const QModelIndex &index, const QVector<T *> &windows, int id)
+static T *windowForIndex(const QModelIndex &index, const QList<T *> &windows, int id)
 {
     const qint32 row = (index.internalId() & s_windowBitMask) - (s_idDistance * id);
     if (row < 0 || row >= windows.count()) {
@@ -1561,7 +1561,7 @@ void InputDeviceModel::slotPropertyChanged()
         if (metaProperty.notifySignalIndex() == senderSignalIndex()) {
             const QModelIndex parent = index(m_devices.indexOf(device), 0, QModelIndex());
             const QModelIndex child = index(i, 1, parent);
-            Q_EMIT dataChanged(child, child, QVector<int>{Qt::DisplayRole});
+            Q_EMIT dataChanged(child, child, QList<int>{Qt::DisplayRole});
         }
     }
 }

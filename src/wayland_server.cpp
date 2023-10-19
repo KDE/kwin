@@ -558,8 +558,8 @@ void WaylandServer::initWorkspace()
 
         connect(workspace(), &Workspace::workspaceInitialized, this, [this] {
             auto f = [this]() {
-                QVector<quint32> ids;
-                QVector<QString> uuids;
+                QList<quint32> ids;
+                QList<QString> uuids;
                 for (Window *toplevel : workspace()->stackingOrder()) {
                     if (toplevel->windowManagementInterface()) {
                         ids << toplevel->windowManagementInterface()->internalId();
@@ -625,7 +625,7 @@ void WaylandServer::initScreenLocker()
 
         new LockScreenPresentationWatcher(this);
 
-        const QVector<SeatInterface *> seatIfaces = m_display->seats();
+        const QList<SeatInterface *> seatIfaces = m_display->seats();
         for (auto *seat : seatIfaces) {
             connect(seat, &SeatInterface::timestampChanged,
                     screenLockerApp, &ScreenLocker::KSldApp::userActivity);
@@ -639,7 +639,7 @@ void WaylandServer::initScreenLocker()
             m_screenLockerClientConnection = nullptr;
         }
 
-        const QVector<SeatInterface *> seatIfaces = m_display->seats();
+        const QList<SeatInterface *> seatIfaces = m_display->seats();
         for (auto *seat : seatIfaces) {
             disconnect(seat, &SeatInterface::timestampChanged,
                        screenLockerApp, &ScreenLocker::KSldApp::userActivity);

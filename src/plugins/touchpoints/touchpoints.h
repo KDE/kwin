@@ -78,7 +78,7 @@ private:
         bool press;
         QColor color;
     };
-    QVector<TouchPoint> m_points;
+    QList<TouchPoint> m_points;
     QHash<quint32, QPointF> m_latestPositions;
     QHash<quint32, Qt::GlobalColor> m_colors;
     std::chrono::milliseconds m_lastPresentTime = std::chrono::milliseconds::zero();

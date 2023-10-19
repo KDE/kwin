@@ -251,8 +251,8 @@ static QString settingsProperty(const QVariant &variant)
 {
     if (QLatin1String(variant.typeName()) == QLatin1String("KDecoration2::BorderSize")) {
         return QString::number(variant.toInt());
-    } else if (QLatin1String(variant.typeName()) == QLatin1String("QVector<KDecoration2::DecorationButtonType>")) {
-        const auto &b = variant.value<QVector<KDecoration2::DecorationButtonType>>();
+    } else if (QLatin1String(variant.typeName()) == QLatin1String("QList<KDecoration2::DecorationButtonType>")) {
+        const auto &b = variant.value<QList<KDecoration2::DecorationButtonType>>();
         QString buffer;
         for (auto it = b.begin(); it != b.end(); ++it) {
             if (it != b.begin()) {

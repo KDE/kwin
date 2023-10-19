@@ -23,7 +23,7 @@ namespace KWin
 {
 
 static const qreal s_alpha = 0.2;
-static const QVector<QColor> s_colors{
+static const QList<QColor> s_colors{
     Qt::red,
     Qt::green,
     Qt::blue,
@@ -74,7 +74,7 @@ void ShowPaintEffect::paintGL(const QMatrix4x4 &projection, qreal scale)
     QColor color = s_colors[m_colorIndex];
     color.setAlphaF(s_alpha);
     binder.shader()->setUniform(GLShader::ColorUniform::Color, color);
-    QVector<QVector2D> verts;
+    QList<QVector2D> verts;
     verts.reserve(m_painted.rectCount() * 12);
     for (const QRect &r : m_painted) {
         const auto deviceRect = scaledRect(r, scale);

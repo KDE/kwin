@@ -8,8 +8,8 @@
 
 #include "kwin_export.h"
 
+#include <QList>
 #include <QSize>
-#include <QVector>
 
 namespace KWin
 {
@@ -28,7 +28,7 @@ struct GraphicsBufferOptions
     uint32_t format;
 
     /// An optional list of modifiers, see DRM_FORMAT_MOD_*.
-    QVector<uint64_t> modifiers;
+    QList<uint64_t> modifiers;
 
     /// Whether the graphics buffer should be suitable for software rendering.
     bool software = false;

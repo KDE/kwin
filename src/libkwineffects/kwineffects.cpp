@@ -700,7 +700,7 @@ bool EffectWindow::isOnCurrentDesktop() const
 
 bool EffectWindow::isOnDesktop(int d) const
 {
-    const QVector<uint> ds = desktops();
+    const QList<uint> ds = desktops();
     return ds.isEmpty() || ds.contains(d);
 }
 

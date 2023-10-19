@@ -142,7 +142,7 @@ void MagnifierEffect::paintScreen(const RenderTarget &renderTarget, const Render
 
             QRectF areaF = scaledRect(area, scale);
             const QRectF frame = scaledRect(area.adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH), scale);
-            QVector<QVector2D> verts;
+            QList<QVector2D> verts;
             verts.reserve(4 * 6 * 2);
             // top frame
             verts.push_back(QVector2D(frame.right(), frame.top()));

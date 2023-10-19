@@ -42,7 +42,7 @@ class XInputEventFilter : public X11EventFilter
 {
 public:
     XInputEventFilter(int xi_opcode)
-        : X11EventFilter(XCB_GE_GENERIC, xi_opcode, QVector<int>{XI_RawMotion, XI_RawButtonPress, XI_RawButtonRelease, XI_RawKeyPress, XI_RawKeyRelease, XI_TouchBegin, XI_TouchUpdate, XI_TouchOwnership, XI_TouchEnd})
+        : X11EventFilter(XCB_GE_GENERIC, xi_opcode, QList<int>{XI_RawMotion, XI_RawButtonPress, XI_RawButtonRelease, XI_RawKeyPress, XI_RawKeyRelease, XI_TouchBegin, XI_TouchUpdate, XI_TouchOwnership, XI_TouchEnd})
     {
     }
     ~XInputEventFilter() override = default;

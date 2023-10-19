@@ -193,7 +193,7 @@ WindowQuadList SurfaceItem::buildQuads() const
         return {};
     }
 
-    const QVector<QRectF> region = shape();
+    const QList<QRectF> region = shape();
     const auto size = pixmap()->size();
 
     WindowQuadList quads;

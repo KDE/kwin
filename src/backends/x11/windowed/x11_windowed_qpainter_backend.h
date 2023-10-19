@@ -12,8 +12,8 @@
 #include "platformsupport/scenes/qpainter/qpainterbackend.h"
 
 #include <QImage>
+#include <QList>
 #include <QObject>
-#include <QVector>
 
 #include <chrono>
 #include <memory>

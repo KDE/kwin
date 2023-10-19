@@ -9,8 +9,8 @@
 
 #pragma once
 
+#include <QList>
 #include <QRectF>
-#include <QVector>
 #include <netwm_def.h>
 
 #include "options.h"
@@ -33,7 +33,7 @@ class VirtualDesktop;
 class WindowRules
 {
 public:
-    explicit WindowRules(const QVector<Rules *> &rules);
+    explicit WindowRules(const QList<Rules *> &rules);
     WindowRules();
     void update(Window *, int selection);
     bool contains(const Rules *rule) const;
@@ -50,7 +50,7 @@ public:
     int checkOpacityActive(int s) const;
     int checkOpacityInactive(int s) const;
     bool checkIgnoreGeometry(bool ignore, bool init = false) const;
-    QVector<VirtualDesktop *> checkDesktops(QVector<VirtualDesktop *> desktops, bool init = false) const;
+    QList<VirtualDesktop *> checkDesktops(QList<VirtualDesktop *> desktops, bool init = false) const;
     Output *checkOutput(Output *output, bool init = false) const;
     QStringList checkActivity(QStringList activity, bool init = false) const;
     NET::WindowType checkType(NET::WindowType type) const;
@@ -81,7 +81,7 @@ public:
 private:
     MaximizeMode checkMaximizeVert(MaximizeMode mode, bool init) const;
     MaximizeMode checkMaximizeHoriz(MaximizeMode mode, bool init) const;
-    QVector<Rules *> rules;
+    QList<Rules *> rules;
 };
 
 #endif
@@ -156,7 +156,7 @@ public:
     bool applyOpacityActive(int &s) const;
     bool applyOpacityInactive(int &s) const;
     bool applyIgnoreGeometry(bool &ignore, bool init) const;
-    bool applyDesktops(QVector<VirtualDesktop *> &desktops, bool init) const;
+    bool applyDesktops(QList<VirtualDesktop *> &desktops, bool init) const;
     bool applyScreen(int &desktop, bool init) const;
     bool applyActivity(QStringList &activity, bool init) const;
     bool applyType(NET::WindowType &type) const;
@@ -317,7 +317,7 @@ private:
     void deleteAll();
     QTimer *m_updateTimer;
     bool m_updatesDisabled;
-    QVector<Rules *> m_rules;
+    QList<Rules *> m_rules;
     KSharedConfig::Ptr m_config;
 };
 
@@ -352,7 +352,7 @@ inline bool Rules::checkForceStop(ForceRule rule)
     return rule != UnusedForceRule;
 }
 
-inline WindowRules::WindowRules(const QVector<Rules *> &r)
+inline WindowRules::WindowRules(const QList<Rules *> &r)
     : rules(r)
 {
 }

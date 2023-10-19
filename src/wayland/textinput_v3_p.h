@@ -9,9 +9,9 @@
 #include "textinput_v3.h"
 
 #include <QHash>
+#include <QList>
 #include <QPointer>
 #include <QRect>
-#include <QVector>
 
 #include <qwayland-server-text-input-unstable-v3.h>
 

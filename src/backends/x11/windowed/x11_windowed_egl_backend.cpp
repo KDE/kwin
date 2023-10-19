@@ -39,7 +39,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglPrimaryLayer::beginFrame(
     const QSize bufferSize = m_output->modeSize();
     if (!m_swapchain || m_swapchain->size() != bufferSize) {
         const uint32_t format = DRM_FORMAT_XRGB8888;
-        const QHash<uint32_t, QVector<uint64_t>> formatTable = m_backend->backend()->driFormats();
+        const QHash<uint32_t, QList<uint64_t>> formatTable = m_backend->backend()->driFormats();
         if (!formatTable.contains(format)) {
             return std::nullopt;
         }

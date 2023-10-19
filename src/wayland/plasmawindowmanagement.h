@@ -89,9 +89,9 @@ public:
     /**
      * Associate stacking order to this window management
      */
-    void setStackingOrder(const QVector<quint32> &stackingOrder);
+    void setStackingOrder(const QList<quint32> &stackingOrder);
 
-    void setStackingOrderUuids(const QVector<QString> &stackingOrderUuids);
+    void setStackingOrderUuids(const QList<QString> &stackingOrderUuids);
 
 Q_SIGNALS:
     void requestChangeShowingDesktop(ShowingDesktopState requestedState);

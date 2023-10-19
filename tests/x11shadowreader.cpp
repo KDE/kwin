@@ -14,10 +14,10 @@
 #include <QWidget>
 #include <private/qtx11extras_p.h>
 
-static QVector<uint32_t> readShadow(quint32 windowId)
+static QList<uint32_t> readShadow(quint32 windowId)
 {
     KWin::Xcb::Atom atom(QByteArrayLiteral("_KDE_NET_WM_SHADOW"), false, QX11Info::connection());
-    QVector<uint32_t> ret;
+    QList<uint32_t> ret;
     if (windowId != XCB_WINDOW) {
         KWin::Xcb::Property property(false, windowId, atom, XCB_ATOM_CARDINAL, 0, 12);
         uint32_t *shadow = property.value<uint32_t *>();
@@ -35,12 +35,12 @@ static QVector<uint32_t> readShadow(quint32 windowId)
     return ret;
 }
 
-static QVector<QPixmap> getPixmaps(const QVector<uint32_t> &data)
+static QList<QPixmap> getPixmaps(const QList<uint32_t> &data)
 {
-    QVector<QPixmap> ret;
+    QList<QPixmap> ret;
     static const int ShadowElementsCount = 8;
-    QVector<KWin::Xcb::WindowGeometry> pixmapGeometries(ShadowElementsCount);
-    QVector<xcb_get_image_cookie_t> getImageCookies(ShadowElementsCount);
+    QList<KWin::Xcb::WindowGeometry> pixmapGeometries(ShadowElementsCount);
+    QList<xcb_get_image_cookie_t> getImageCookies(ShadowElementsCount);
     auto *c = KWin::connection();
     for (int i = 0; i < ShadowElementsCount; ++i) {
         pixmapGeometries[i] = KWin::Xcb::WindowGeometry(data[i]);
@@ -54,7 +54,7 @@ static QVector<QPixmap> getPixmaps(const QVector<uint32_t> &data)
         auto &geo = pixmapGeometries[i];
         if (geo.isNull()) {
             discardReplies(0);
-            return QVector<QPixmap>();
+            return QList<QPixmap>();
         }
         getImageCookies[i] = xcb_get_image_unchecked(c, XCB_IMAGE_FORMAT_Z_PIXMAP, data[i],
                                                      0, 0, geo->width, geo->height, ~0);
@@ -63,7 +63,7 @@ static QVector<QPixmap> getPixmaps(const QVector<uint32_t> &data)
         auto *reply = xcb_get_image_reply(c, getImageCookies.at(i), nullptr);
         if (!reply) {
             discardReplies(i + 1);
-            return QVector<QPixmap>();
+            return QList<QPixmap>();
         }
         auto &geo = pixmapGeometries[i];
         QImage image(xcb_get_image_data(reply), geo->width, geo->height, QImage::Format_ARGB32);

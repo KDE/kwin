@@ -14,11 +14,11 @@
 
 #include <KConfigGroup>
 
+#include <QList>
 #include <QMatrix4x4>
 #include <QObject>
 #include <QPointer>
 #include <QSizeF>
-#include <QVector>
 
 struct libinput_device;
 

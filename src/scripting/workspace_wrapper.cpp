@@ -59,7 +59,7 @@ VirtualDesktop *WorkspaceWrapper::currentDesktop() const
     return VirtualDesktopManager::self()->currentDesktop();
 }
 
-QVector<VirtualDesktop *> WorkspaceWrapper::desktops() const
+QList<VirtualDesktop *> WorkspaceWrapper::desktops() const
 {
     return VirtualDesktopManager::self()->desktops();
 }

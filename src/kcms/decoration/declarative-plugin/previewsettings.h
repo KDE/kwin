@@ -76,8 +76,8 @@ public:
         return m_borderSizes;
     }
 
-    QVector<DecorationButtonType> decorationButtonsLeft() const override;
-    QVector<DecorationButtonType> decorationButtonsRight() const override;
+    QList<DecorationButtonType> decorationButtonsLeft() const override;
+    QList<DecorationButtonType> decorationButtonsRight() const override;
 
     Q_INVOKABLE void addButtonToLeft(int row);
     Q_INVOKABLE void addButtonToRight(int row);

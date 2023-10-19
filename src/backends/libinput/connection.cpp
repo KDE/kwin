@@ -226,7 +226,7 @@ KWin::TabletToolId createTabletId(libinput_tablet_tool *tool, Device *dev)
         toolType = InputRedirection::Totem;
         break;
     }
-    QVector<InputRedirection::Capability> capabilities;
+    QList<InputRedirection::Capability> capabilities;
     if (libinput_tablet_tool_has_pressure(tool)) {
         capabilities << InputRedirection::Pressure;
     }
@@ -586,7 +586,7 @@ void Connection::applyScreenToDevice(Device *device)
     }
 
     Output *deviceOutput = nullptr;
-    const QVector<Output *> outputs = kwinApp()->outputBackend()->outputs();
+    const QList<Output *> outputs = kwinApp()->outputBackend()->outputs();
 
     // let's try to find a screen for it
     if (!device->outputName().isEmpty()) {

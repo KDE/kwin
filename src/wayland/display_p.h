@@ -12,7 +12,6 @@
 #include <QList>
 #include <QSocketNotifier>
 #include <QString>
-#include <QVector>
 
 struct wl_resource;
 
@@ -39,8 +38,8 @@ public:
     bool running = false;
     QList<OutputInterface *> outputs;
     QList<OutputDeviceV2Interface *> outputdevicesV2;
-    QVector<SeatInterface *> seats;
-    QVector<ClientConnection *> clients;
+    QList<SeatInterface *> seats;
+    QList<ClientConnection *> clients;
     QStringList socketNames;
 };
 

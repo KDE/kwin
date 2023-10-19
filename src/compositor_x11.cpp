@@ -280,7 +280,7 @@ void X11Compositor::start()
                                       XCB_COMPOSITE_REDIRECT_MANUAL);
 
     // Decide what compositing types can be used.
-    QVector<CompositingType> candidateCompositors = kwinApp()->outputBackend()->supportedCompositors();
+    QList<CompositingType> candidateCompositors = kwinApp()->outputBackend()->supportedCompositors();
     const auto userConfigIt = std::find(candidateCompositors.begin(), candidateCompositors.end(), options->compositingMode());
     if (userConfigIt != candidateCompositors.end()) {
         candidateCompositors.erase(userConfigIt);

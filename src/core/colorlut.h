@@ -8,7 +8,7 @@
 */
 #pragma once
 
-#include <QVector>
+#include <QList>
 #include <memory>
 
 #include "kwin_export.h"
@@ -30,7 +30,7 @@ public:
     std::shared_ptr<ColorTransformation> transformation() const;
 
 private:
-    QVector<uint16_t> m_data;
+    QList<uint16_t> m_data;
     const std::shared_ptr<ColorTransformation> m_transformation;
 };
 
