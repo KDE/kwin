@@ -119,6 +119,31 @@ void KWinScreenEdgesConfig::defaults()
 //-----------------------------------------------------------------------------
 // Monitor
 
+static QList<KPluginMetaData> listBuiltinEffects()
+{
+    const QString rootDirectory = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
+                                                         QStringLiteral("kwin/builtin-effects"),
+                                                         QStandardPaths::LocateDirectory);
+
+    QList<KPluginMetaData> ret;
+
+    const QStringList nameFilters{QStringLiteral("*.json")};
+    QDirIterator it(rootDirectory, nameFilters, QDir::Files);
+    while (it.hasNext()) {
+        it.next();
+        if (const KPluginMetaData metaData = KPluginMetaData::fromJsonFile(it.filePath()); metaData.isValid()) {
+            ret.append(metaData);
+        }
+    }
+
+    return ret;
+}
+
+static QList<KPluginMetaData> listScriptedEffects()
+{
+    return KPackage::PackageLoader::self()->listPackages(QStringLiteral("KWin/Effect"), QStringLiteral("kwin/effects/"));
+}
+
 void KWinScreenEdgesConfig::monitorInit()
 {
     m_form->monitorAddItem(i18n("No Action"));
@@ -139,7 +164,7 @@ void KWinScreenEdgesConfig::monitorInit()
     m_form->monitorAddItem(i18n("Toggle alternative window switching"));
 
     KConfigGroup config(m_config, "Plugins");
-    const auto effects = KPackage::PackageLoader::self()->listPackages(QStringLiteral("KWin/Effect"), QStringLiteral("kwin/builtin-effects/")) << KPackage::PackageLoader::self()->listPackages(QStringLiteral("KWin/Effect"), QStringLiteral("kwin/effects/"));
+    const auto effects = listBuiltinEffects() << listScriptedEffects();
 
     for (const KPluginMetaData &effect : effects) {
         if (!effect.value(QStringLiteral("X-KWin-Border-Activate"), false)) {
