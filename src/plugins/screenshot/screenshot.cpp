@@ -228,12 +228,10 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
     WindowPaintData d;
     QRectF geometry = window->expandedGeometry();
     qreal devicePixelRatio = 1;
-    bool includeDecorations = (screenshot->flags & ScreenShotIncludeDecoration);
-    bool includeShadow = (screenshot->flags & ScreenShotIncludeShadow);
 
-    if (window->hasDecoration() && !includeDecorations) {
+    if (window->hasDecoration() && !(screenshot->flags & ScreenShotIncludeDecoration)) {
         geometry = window->clientGeometry();
-    } else if (window->hasDecoration() && !includeShadow) {
+    } else if (!(screenshot->flags & ScreenShotIncludeShadow)) {
         geometry = window->frameGeometry();
     }
 
