@@ -118,6 +118,12 @@ Cursor::Cursor()
     loadThemeSettings();
     QDBusConnection::sessionBus().connect(QString(), QStringLiteral("/KGlobalSettings"), QStringLiteral("org.kde.KGlobalSettings"),
                                           QStringLiteral("notifyChange"), this, SLOT(slotKGlobalSettingsNotifyChange(int, int)));
+
+    if (kwinApp()->operationMode() != Application::OperationModeWaylandOnly) {
+        connect(kwinApp(), &Application::x11ConnectionChanged, this, [this]() {
+            m_cursors.clear();
+        });
+    }
 }
 
 Cursor::~Cursor()
