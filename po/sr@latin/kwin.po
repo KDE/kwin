@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-15 01:40+0000\n"
+"POT-Creation-Date: 2023-10-19 01:42+0000\n"
 "PO-Revision-Date: 2017-12-03 22:53+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -2534,6 +2534,12 @@ msgstr "Minimizuj prozor"
 msgid "Organize windows in the Grid View:"
 msgstr ""
 
+#. i18n: ectx: property (text), widget (QLabel, label_FilterWindows)
+#: plugins/overview/kcm/overvieweffectkcm.ui:71
+#, kde-format
+msgid "Search results include filtered windows:"
+msgstr ""
+
 #: plugins/overview/overvieweffect.cpp:124
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
@@ -2590,7 +2596,7 @@ msgid "Configure Virtual Desktops…"
 msgstr "Premesti na &površ"
 
 # >> @item
-#: plugins/overview/qml/main.qml:658
+#: plugins/overview/qml/main.qml:659
 #, fuzzy, kde-format
 #| msgid "X11 Unmanaged Windows"
 msgctxt "@info:placeholder"
