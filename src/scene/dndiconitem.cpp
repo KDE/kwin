@@ -37,9 +37,17 @@ void DragAndDropIconItem::frameRendered(quint32 timestamp)
     }
 }
 
+void DragAndDropIconItem::presented(Output *output, std::chrono::nanoseconds refreshCycleDuration, std::chrono::nanoseconds timestamp, PresentationMode mode)
+{
+    if (m_surfaceItem && output == m_output) {
+        m_surfaceItem->surface()->presented(output, refreshCycleDuration, timestamp, mode);
+    }
+}
+
 void DragAndDropIconItem::setOutput(Output *output)
 {
     if (m_surfaceItem && output) {
+        m_output = output;
         m_surfaceItem->surface()->setPreferredBufferScale(output->scale());
     }
 }

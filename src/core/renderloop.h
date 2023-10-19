@@ -145,7 +145,7 @@ Q_SIGNALS:
      * This signal is emitted when a frame has been actually presented on the screen.
      * @a timestamp indicates the time when it took place.
      */
-    void framePresented(RenderLoop *loop, std::chrono::nanoseconds timestamp);
+    void framePresented(RenderLoop *loop, std::chrono::nanoseconds timestamp, PresentationMode mode);
 
     /**
      * This signal is emitted when the render loop wants a new frame to be composited.

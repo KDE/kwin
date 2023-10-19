@@ -32,12 +32,8 @@ DrmPipeline::Error DrmPipeline::presentLegacy()
         }
     }
     const auto buffer = m_primaryLayer->currentBuffer();
-    uint32_t flags = DRM_MODE_PAGE_FLIP_EVENT;
-    if (m_pending.syncMode == RenderLoopPrivate::SyncMode::Async || m_pending.syncMode == RenderLoopPrivate::SyncMode::AdaptiveAsync) {
-        flags |= DRM_MODE_PAGE_FLIP_ASYNC;
-    }
     auto commit = std::make_unique<DrmLegacyCommit>(this, buffer);
-    if (!commit->doPageflip(flags)) {
+    if (!commit->doPageflip(m_pending.presentationMode)) {
         qCWarning(KWIN_DRM) << "Page flip failed:" << strerror(errno);
         return errnoToError();
     }
@@ -85,7 +81,7 @@ DrmPipeline::Error DrmPipeline::commitPipelinesLegacy(const QList<DrmPipeline *>
             pipeline->applyPendingChanges();
             pipeline->m_current = pipeline->m_pending;
             if (mode == CommitMode::CommitModeset && pipeline->activePending()) {
-                pipeline->pageFlipped(std::chrono::steady_clock::now().time_since_epoch(), PageflipType::Normal);
+                pipeline->pageFlipped(std::chrono::steady_clock::now().time_since_epoch(), PageflipType::Normal, PresentationMode::VSync);
             }
         }
     }
@@ -98,7 +94,7 @@ DrmPipeline::Error DrmPipeline::applyPendingChangesLegacy()
         drmModeSetCursor(gpu()->fd(), m_pending.crtc->id(), 0, 0, 0);
     }
     if (activePending()) {
-        const bool shouldEnableVrr = m_pending.syncMode == RenderLoopPrivate::SyncMode::Adaptive || m_pending.syncMode == RenderLoopPrivate::SyncMode::AdaptiveAsync;
+        const bool shouldEnableVrr = m_pending.presentationMode == PresentationMode::AdaptiveSync || m_pending.presentationMode == PresentationMode::AdaptiveAsync;
         if (m_pending.crtc->vrrEnabled.isValid() && !m_pending.crtc->vrrEnabled.setPropertyLegacy(shouldEnableVrr)) {
             qCWarning(KWIN_DRM) << "Setting vrr failed!" << strerror(errno);
             return errnoToError();

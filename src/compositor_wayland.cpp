@@ -254,6 +254,9 @@ void WaylandCompositor::addOutput(Output *output)
     connect(output, &Output::geometryChanged, workspaceLayer, [output, workspaceLayer]() {
         workspaceLayer->setGeometry(output->rect());
     });
+    connect(output->renderLoop(), &RenderLoop::framePresented, workspaceLayer, [workspaceLayer](RenderLoop *loop, std::chrono::nanoseconds nanos, PresentationMode mode) {
+        workspaceLayer->delegate()->presented(nanos, mode);
+    });
 
     auto cursorLayer = new RenderLayer(output->renderLoop());
     cursorLayer->setVisible(false);

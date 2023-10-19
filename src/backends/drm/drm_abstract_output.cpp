@@ -32,10 +32,10 @@ void DrmAbstractOutput::frameFailed() const
     RenderLoopPrivate::get(m_renderLoop.get())->notifyFrameFailed();
 }
 
-void DrmAbstractOutput::pageFlipped(std::chrono::nanoseconds timestamp) const
+void DrmAbstractOutput::pageFlipped(std::chrono::nanoseconds timestamp, PresentationMode mode) const
 {
     const auto gpuTime = primaryLayer() ? primaryLayer()->queryRenderTime() : std::chrono::nanoseconds::zero();
-    RenderLoopPrivate::get(m_renderLoop.get())->notifyFrameCompleted(timestamp, gpuTime);
+    RenderLoopPrivate::get(m_renderLoop.get())->notifyFrameCompleted(timestamp, gpuTime, mode);
 }
 
 DrmGpu *DrmAbstractOutput::gpu() const

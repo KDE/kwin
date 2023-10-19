@@ -37,4 +37,8 @@ SurfaceItem *RenderLayerDelegate::scanoutCandidate() const
     return nullptr;
 }
 
+void RenderLayerDelegate::presented(std::chrono::nanoseconds nanos, PresentationMode mode)
+{
+}
+
 } // namespace KWin

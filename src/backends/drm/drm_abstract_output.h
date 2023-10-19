@@ -25,7 +25,7 @@ public:
 
     RenderLoop *renderLoop() const override;
     void frameFailed() const;
-    void pageFlipped(std::chrono::nanoseconds timestamp) const;
+    void pageFlipped(std::chrono::nanoseconds timestamp, PresentationMode mode) const;
     DrmGpu *gpu() const;
 
     virtual bool present() = 0;

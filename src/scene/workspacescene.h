@@ -81,6 +81,8 @@ public:
         return {nullptr, ColorDescription::sRGB};
     }
 
+    void presented(SceneDelegate *delegate, std::chrono::nanoseconds nanos, PresentationMode mode) override;
+
 Q_SIGNALS:
     void preFrameRender();
     void frameRendered();

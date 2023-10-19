@@ -290,9 +290,9 @@ void OutputInterface::remove()
     d->globalRemove();
 }
 
-QList<wl_resource *> OutputInterface::clientResources(ClientConnection *client) const
+QList<wl_resource *> OutputInterface::clientResources(wl_client *client) const
 {
-    const auto outputResources = d->resourceMap().values(client->client());
+    const auto outputResources = d->resourceMap().values(client);
     QList<wl_resource *> ret;
     ret.reserve(outputResources.count());
 

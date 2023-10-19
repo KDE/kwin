@@ -210,6 +210,26 @@ void WorkspaceScene::frame(SceneDelegate *delegate)
     }
 }
 
+void WorkspaceScene::presented(SceneDelegate *delegate, std::chrono::nanoseconds nanos, PresentationMode mode)
+{
+    if (waylandServer()) {
+        Output *output = delegate->output();
+        const auto refreshCycleDuration = std::chrono::nanoseconds(1'000'000'000'000 / output->refreshRate());
+
+        const QList<Item *> items = m_containerItem->sortedChildItems();
+        for (Item *item : items) {
+            Window *window = static_cast<WindowItem *>(item)->window();
+            if (auto surface = window->surface()) {
+                surface->presented(output, refreshCycleDuration, nanos, mode);
+            }
+        }
+
+        if (m_dndIcon) {
+            m_dndIcon->presented(output, refreshCycleDuration, nanos, mode);
+        }
+    }
+}
+
 QRegion WorkspaceScene::prePaint(SceneDelegate *delegate)
 {
     createStackingOrder();

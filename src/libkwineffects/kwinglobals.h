@@ -246,6 +246,13 @@ static inline bool exclusiveContains(const QRectF &rect, const QPointF &point)
     return point.x() >= rect.x() && point.y() >= rect.y() && point.x() < (rect.x() + rect.width()) && point.y() < (rect.y() + rect.height());
 }
 
+enum class PresentationMode {
+    VSync,
+    AdaptiveSync,
+    Async,
+    AdaptiveAsync,
+};
+
 } // namespace
 
 Q_DECLARE_METATYPE(std::chrono::nanoseconds)

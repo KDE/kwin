@@ -208,12 +208,13 @@ static QRect centerBuffer(const QSize &bufferSize, const QSize &modeSize)
 
 DrmPipeline::Error DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commit)
 {
+    commit->setPresentationMode(m_pending.presentationMode);
     if (m_connector->contentType.isValid()) {
         commit->addEnum(m_connector->contentType, m_pending.contentType);
     }
 
     if (m_pending.crtc->vrrEnabled.isValid()) {
-        commit->setVrr(m_pending.crtc, m_pending.syncMode == RenderLoopPrivate::SyncMode::Adaptive || m_pending.syncMode == RenderLoopPrivate::SyncMode::AdaptiveAsync);
+        commit->setVrr(m_pending.crtc, m_pending.presentationMode == PresentationMode::AdaptiveSync || m_pending.presentationMode == PresentationMode::AdaptiveAsync);
     }
     if (m_pending.crtc->gammaLut.isValid()) {
         commit->addBlob(m_pending.crtc->gammaLut, m_pending.gamma ? m_pending.gamma->blob() : nullptr);
@@ -414,13 +415,13 @@ DrmGpu *DrmPipeline::gpu() const
     return m_connector->gpu();
 }
 
-void DrmPipeline::pageFlipped(std::chrono::nanoseconds timestamp, PageflipType type)
+void DrmPipeline::pageFlipped(std::chrono::nanoseconds timestamp, PageflipType type, PresentationMode mode)
 {
     m_commitThread->pageFlipped(timestamp);
     m_legacyPageflipPending = false;
     if (m_output && activePending()) {
         if (type == PageflipType::Normal) {
-            m_output->pageFlipped(timestamp);
+            m_output->pageFlipped(timestamp, mode);
         } else {
             RenderLoopPrivate::get(m_output->renderLoop())->notifyVblank(timestamp);
         }
@@ -560,9 +561,9 @@ DrmPlane::Transformations DrmPipeline::renderOrientation() const
     return m_pending.renderOrientation;
 }
 
-RenderLoopPrivate::SyncMode DrmPipeline::syncMode() const
+PresentationMode DrmPipeline::presentationMode() const
 {
-    return m_pending.syncMode;
+    return m_pending.presentationMode;
 }
 
 uint32_t DrmPipeline::overscan() const
@@ -629,9 +630,9 @@ void DrmPipeline::setRenderOrientation(DrmPlane::Transformations orientation)
     m_pending.renderOrientation = orientation;
 }
 
-void DrmPipeline::setSyncMode(RenderLoopPrivate::SyncMode mode)
+void DrmPipeline::setPresentationMode(PresentationMode mode)
 {
-    m_pending.syncMode = mode;
+    m_pending.presentationMode = mode;
 }
 
 void DrmPipeline::setOverscan(uint32_t overscan)

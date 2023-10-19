@@ -64,6 +64,11 @@ QRect SceneDelegate::viewport() const
     return m_output ? m_output->geometry() : m_scene->geometry();
 }
 
+void SceneDelegate::presented(std::chrono::nanoseconds nanos, PresentationMode mode)
+{
+    m_scene->presented(this, nanos, mode);
+}
+
 Scene::Scene(std::unique_ptr<ItemRenderer> &&renderer)
     : m_renderer(std::move(renderer))
 {
@@ -140,6 +145,10 @@ SurfaceItem *Scene::scanoutCandidate() const
 }
 
 void Scene::frame(SceneDelegate *delegate)
+{
+}
+
+void Scene::presented(SceneDelegate *delegate, std::chrono::nanoseconds nanos, PresentationMode mode)
 {
 }
 

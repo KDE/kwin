@@ -162,6 +162,7 @@ public:
     QPointF mapToChild(SurfaceInterface *child, const QPointF &point) const;
 
     void frameRendered(quint32 msec);
+    void presented(Output *output, std::chrono::nanoseconds refreshCycleDuration, std::chrono::nanoseconds timestamp, PresentationMode mode);
     bool hasFrameCallbacks() const;
 
     QRegion opaque() const;

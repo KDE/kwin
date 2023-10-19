@@ -34,6 +34,7 @@ public:
     QRegion prePaint() override;
     void postPaint() override;
     void paint(const RenderTarget &renderTarget, const QRegion &region) override;
+    void presented(std::chrono::nanoseconds nanos, PresentationMode mode) override;
 
 private:
     Scene *m_scene;
@@ -86,6 +87,7 @@ public:
     virtual void postPaint() = 0;
     virtual void paint(const RenderTarget &renderTarget, const QRegion &region) = 0;
     virtual void frame(SceneDelegate *delegate);
+    virtual void presented(SceneDelegate *delegate, std::chrono::nanoseconds nanos, PresentationMode mode);
 
 Q_SIGNALS:
     void delegateRemoved(SceneDelegate *delegate);

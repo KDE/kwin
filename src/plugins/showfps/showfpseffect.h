@@ -50,7 +50,7 @@ Q_SIGNALS:
 private:
     std::unique_ptr<OffscreenQuickScene> m_scene;
 
-    int m_maximumFps = 0;
+    uint32_t m_maximumFps = 0;
 
     int m_fps = 0;
     int m_newFps = 0;

@@ -56,7 +56,7 @@ bool DrmVirtualOutput::present()
 void DrmVirtualOutput::vblank(std::chrono::nanoseconds timestamp)
 {
     if (m_pageFlipPending) {
-        DrmAbstractOutput::pageFlipped(timestamp);
+        DrmAbstractOutput::pageFlipped(timestamp, PresentationMode::VSync);
     }
 }
 

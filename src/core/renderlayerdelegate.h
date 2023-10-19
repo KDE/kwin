@@ -7,8 +7,10 @@
 #pragma once
 
 #include "kwin_export.h"
+#include "libkwineffects/kwinglobals.h"
 
 #include <QRegion>
+#include <chrono>
 
 namespace KWin
 {
@@ -57,6 +59,8 @@ public:
      * to repaint its contents.
      */
     virtual void paint(const RenderTarget &renderTarget, const QRegion &region) = 0;
+
+    virtual void presented(std::chrono::nanoseconds nanos, PresentationMode mode);
 
 private:
     RenderLayer *m_layer = nullptr;

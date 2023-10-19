@@ -216,6 +216,10 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL protocols/qt-toplevel-drag-v1.xml
     BASENAME qt-toplevel-drag-v1
 )
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PROTOCOL ${WaylandProtocols_DATADIR}/stable/presentation-time/presentation-time.xml
+    BASENAME presentation-time
+)
 
 target_sources(kwin PRIVATE
     abstract_data_source.cpp
@@ -277,6 +281,7 @@ target_sources(kwin PRIVATE
     slide.cpp
     subcompositor.cpp
     surface.cpp
+    presentationtime.cpp
     tablet_v2.cpp
     tearingcontrol_v1.cpp
     textinput.cpp
@@ -361,5 +366,6 @@ install(FILES
     xdgshell.h
     xwaylandkeyboardgrab_v1.h
     xwaylandshell_v1.h
+    presentationtime.h
 
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/wayland COMPONENT Devel)

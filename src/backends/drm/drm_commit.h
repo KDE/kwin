@@ -16,6 +16,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "core/renderloop.h"
 #include "drm_pointer.h"
 #include "drm_property.h"
 
@@ -61,6 +62,7 @@ public:
     void addBlob(const DrmProperty &prop, const std::shared_ptr<DrmBlob> &blob);
     void addBuffer(DrmPlane *plane, const std::shared_ptr<DrmFramebuffer> &buffer);
     void setVrr(DrmCrtc *crtc, bool vrr);
+    void setPresentationMode(PresentationMode mode);
 
     bool test();
     bool testAllowModeset();
@@ -88,6 +90,7 @@ private:
     std::optional<bool> m_vrr;
     std::unordered_map<uint32_t /* object */, std::unordered_map<uint32_t /* property */, uint64_t /* value */>> m_properties;
     bool m_cursorOnly = false;
+    PresentationMode m_mode = PresentationMode::VSync;
 };
 
 class DrmLegacyCommit : public DrmCommit
@@ -96,12 +99,13 @@ public:
     DrmLegacyCommit(DrmPipeline *pipeline, const std::shared_ptr<DrmFramebuffer> &buffer);
 
     bool doModeset(DrmConnector *connector, DrmConnectorMode *mode);
-    bool doPageflip(uint32_t flags);
+    bool doPageflip(PresentationMode mode);
     void pageFlipped(std::chrono::nanoseconds timestamp) const override;
 
 private:
     DrmPipeline *const m_pipeline;
     const std::shared_ptr<DrmFramebuffer> m_buffer;
+    PresentationMode m_mode = PresentationMode::VSync;
 };
 
 }

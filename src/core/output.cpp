@@ -295,7 +295,7 @@ QSize Output::physicalSize() const
     return m_information.physicalSize;
 }
 
-int Output::refreshRate() const
+uint32_t Output::refreshRate() const
 {
     return m_state.currentMode ? m_state.currentMode->refreshRate() : 0;
 }

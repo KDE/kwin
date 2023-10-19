@@ -30,7 +30,7 @@ public:
     void maybeScheduleRepaint();
 
     void notifyFrameFailed();
-    void notifyFrameCompleted(std::chrono::nanoseconds timestamp, std::chrono::nanoseconds renderTime);
+    void notifyFrameCompleted(std::chrono::nanoseconds timestamp, std::chrono::nanoseconds renderTime, PresentationMode mode = PresentationMode::VSync);
     void notifyVblank(std::chrono::nanoseconds timestamp);
 
     RenderLoop *q;
@@ -48,14 +48,7 @@ public:
     Item *fullscreenItem = nullptr;
     bool allowTearing = false;
 
-    enum class SyncMode {
-        Fixed,
-        Adaptive,
-        /* adaptive if possible, async if not */
-        AdaptiveAsync,
-        Async
-    };
-    SyncMode presentMode = SyncMode::Fixed;
+    PresentationMode presentMode = PresentationMode::VSync;
     bool canDoTearing = false;
 };
 
