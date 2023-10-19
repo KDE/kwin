@@ -472,7 +472,7 @@ void PointerInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl 
 
     if (old) {
         // send leave event to old decoration
-        QHoverEvent event(QEvent::HoverLeave, QPointF(), QPointF());
+        QHoverEvent event(QEvent::HoverLeave, QPointF(-1, -1), QPointF());
         QCoreApplication::instance()->sendEvent(old->decoration(), &event);
     }
     if (!now) {
@@ -481,7 +481,7 @@ void PointerInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl 
     }
 
     auto pos = m_pos - now->window()->pos();
-    QHoverEvent event(QEvent::HoverEnter, pos, pos);
+    QHoverEvent event(QEvent::HoverEnter, pos, QPointF(-1, -1));
     QCoreApplication::instance()->sendEvent(now->decoration(), &event);
     now->window()->processDecorationMove(pos, m_pos);
 
