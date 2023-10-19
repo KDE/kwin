@@ -22,7 +22,7 @@ public:
     explicit CursorScene(std::unique_ptr<ItemRenderer> &&renderer);
     ~CursorScene() override;
 
-    void prePaint(SceneDelegate *delegate) override;
+    QRegion prePaint(SceneDelegate *delegate) override;
     void postPaint() override;
     void paint(const RenderTarget &renderTarget, const QRegion &region) override;
 

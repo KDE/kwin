@@ -24,19 +24,14 @@ SceneDelegate::~SceneDelegate()
     m_scene->removeDelegate(this);
 }
 
-QRegion SceneDelegate::repaints() const
-{
-    return m_scene->damage().translated(-viewport().topLeft());
-}
-
 SurfaceItem *SceneDelegate::scanoutCandidate() const
 {
     return m_scene->scanoutCandidate();
 }
 
-void SceneDelegate::prePaint()
+QRegion SceneDelegate::prePaint()
 {
-    m_scene->prePaint(this);
+    return m_scene->prePaint(this);
 }
 
 void SceneDelegate::postPaint()

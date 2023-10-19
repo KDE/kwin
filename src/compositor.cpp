@@ -157,7 +157,10 @@ void Compositor::composite(RenderLoop *renderLoop)
 
     if (superLayer->needsRepaint()) {
         renderLoop->beginPaint();
-        prePaintPass(superLayer);
+
+        QRegion surfaceDamage = primaryLayer->repaints();
+        primaryLayer->resetRepaints();
+        prePaintPass(superLayer, &surfaceDamage);
 
         SurfaceItem *scanoutCandidate = superLayer->delegate()->scanoutCandidate();
         renderLoop->setFullscreenSurface(scanoutCandidate);
@@ -175,10 +178,6 @@ void Compositor::composite(RenderLoop *renderLoop)
         }
 
         if (!directScanout) {
-            QRegion surfaceDamage = primaryLayer->repaints();
-            primaryLayer->resetRepaints();
-            preparePaintPass(superLayer, &surfaceDamage);
-
             if (auto beginInfo = primaryLayer->beginFrame()) {
                 auto &[renderTarget, repaint] = beginInfo.value();
 
@@ -219,12 +218,23 @@ void Compositor::framePass(RenderLayer *layer)
     }
 }
 
-void Compositor::prePaintPass(RenderLayer *layer)
+void Compositor::prePaintPass(RenderLayer *layer, QRegion *damage)
 {
-    layer->delegate()->prePaint();
+    if (const QRegion repaints = layer->repaints(); !repaints.isEmpty()) {
+        *damage += layer->mapToGlobal(repaints);
+        layer->resetRepaints();
+    }
+
+    const QRegion repaints = layer->delegate()->prePaint();
+    if (!repaints.isEmpty()) {
+        *damage += layer->mapToGlobal(repaints);
+    }
+
     const auto sublayers = layer->sublayers();
     for (RenderLayer *sublayer : sublayers) {
-        prePaintPass(sublayer);
+        if (sublayer->isVisible()) {
+            prePaintPass(sublayer, damage);
+        }
     }
 }
 
@@ -233,19 +243,8 @@ void Compositor::postPaintPass(RenderLayer *layer)
     layer->delegate()->postPaint();
     const auto sublayers = layer->sublayers();
     for (RenderLayer *sublayer : sublayers) {
-        postPaintPass(sublayer);
-    }
-}
-
-void Compositor::preparePaintPass(RenderLayer *layer, QRegion *repaint)
-{
-    // TODO: Cull opaque region.
-    *repaint += layer->mapToGlobal(layer->repaints() + layer->delegate()->repaints());
-    layer->resetRepaints();
-    const auto sublayers = layer->sublayers();
-    for (RenderLayer *sublayer : sublayers) {
         if (sublayer->isVisible()) {
-            preparePaintPass(sublayer, repaint);
+            postPaintPass(sublayer);
         }
     }
 }

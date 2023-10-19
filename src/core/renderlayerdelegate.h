@@ -30,11 +30,6 @@ public:
     void setLayer(RenderLayer *layer);
 
     /**
-     * Returns the repaints schduled for the next frame.
-     */
-    virtual QRegion repaints() const;
-
-    /**
      * This function is called by the compositor after compositing the frame.
      */
     virtual void frame();
@@ -43,7 +38,7 @@ public:
      * This function is called by the compositor before starting painting. Reimplement
      * this function to do frame initialization.
      */
-    virtual void prePaint();
+    virtual QRegion prePaint();
 
     /**
      * This function is called by the compositor after finishing painting. Reimplement

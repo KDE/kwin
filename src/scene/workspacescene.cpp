@@ -139,11 +139,6 @@ Item *WorkspaceScene::containerItem() const
     return m_containerItem.get();
 }
 
-QRegion WorkspaceScene::damage() const
-{
-    return m_paintContext.damage;
-}
-
 static SurfaceItem *findTopMostSurface(SurfaceItem *item)
 {
     const QList<Item *> children = item->childItems();
@@ -215,7 +210,7 @@ void WorkspaceScene::frame(SceneDelegate *delegate)
     }
 }
 
-void WorkspaceScene::prePaint(SceneDelegate *delegate)
+QRegion WorkspaceScene::prePaint(SceneDelegate *delegate)
 {
     createStackingOrder();
 
@@ -260,6 +255,8 @@ void WorkspaceScene::prePaint(SceneDelegate *delegate)
     } else {
         preparePaintSimpleScreen();
     }
+
+    return m_paintContext.damage.translated(-delegate->viewport().topLeft());
 }
 
 static void resetRepaintsHelper(Item *item, SceneDelegate *delegate)

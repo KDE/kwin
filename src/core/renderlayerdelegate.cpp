@@ -19,17 +19,13 @@ void RenderLayerDelegate::setLayer(RenderLayer *layer)
     m_layer = layer;
 }
 
-QRegion RenderLayerDelegate::repaints() const
-{
-    return QRegion();
-}
-
 void RenderLayerDelegate::frame()
 {
 }
 
-void RenderLayerDelegate::prePaint()
+QRegion RenderLayerDelegate::prePaint()
 {
+    return QRegion();
 }
 
 void RenderLayerDelegate::postPaint()

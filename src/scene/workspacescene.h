@@ -55,9 +55,8 @@ public:
 
     Item *containerItem() const;
 
-    QRegion damage() const override;
     SurfaceItem *scanoutCandidate() const override;
-    void prePaint(SceneDelegate *delegate) override;
+    QRegion prePaint(SceneDelegate *delegate) override;
     void postPaint() override;
     void paint(const RenderTarget &renderTarget, const QRegion &region) override;
     void frame(SceneDelegate *delegate) override;
