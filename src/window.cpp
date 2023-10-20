@@ -2877,6 +2877,14 @@ QRectF Window::iconGeometry() const
         }
     }
     if (!candidatePanel) {
+        // Check all mainwindows of this window.
+        const auto windows = mainWindows();
+        for (Window *mainWindow : windows) {
+            const auto geom = mainWindow->iconGeometry();
+            if (geom.isValid()) {
+                return geom;
+            }
+        }
         return QRectF();
     }
     return candidateGeom.translated(candidatePanel->pos());
