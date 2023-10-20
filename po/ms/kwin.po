@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-22 02:43+0000\n"
+"POT-Creation-Date: 2023-10-20 02:27+0000\n"
 "PO-Revision-Date: 2010-08-23 19:35+0800\n"
 "Last-Translator: Sharuzzaman Ahmat Raslan <sharuzzaman@gmail.com>\n"
 "Language-Team: Malay <kedidiemas@yahoogroups.com>\n"
@@ -2839,22 +2839,22 @@ msgstr "Tukar ke Ruang Kerja Sebelumnya"
 msgid "Switch One Desktop to the Right"
 msgstr "Tukar Satu Ruang Kerja ke Kanan"
 
-#: virtualdesktops.cpp:806
+#: virtualdesktops.cpp:805
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Tukar Satu Ruang Kerja ke Kiri"
 
-#: virtualdesktops.cpp:808
+#: virtualdesktops.cpp:806
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Tukar Satu Ruang Kerja ke Atas"
 
-#: virtualdesktops.cpp:810
+#: virtualdesktops.cpp:807
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Tukar Satu Ruang Kerja ke Bawah"
 
-#: virtualdesktops.cpp:899
+#: virtualdesktops.cpp:895
 #, fuzzy, kde-format
 #| msgid "Switch to Desktop 1"
 msgid "Switch to Desktop %1"

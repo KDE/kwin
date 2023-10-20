@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-22 02:43+0000\n"
+"POT-Creation-Date: 2023-10-20 02:27+0000\n"
 "PO-Revision-Date: 2023-03-05 15:21+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Chinese <zh-l10n@linux.org.tw>\n"
@@ -2748,22 +2748,22 @@ msgstr "切換到上一個桌面"
 msgid "Switch One Desktop to the Right"
 msgstr "切換到右方的桌面"
 
-#: virtualdesktops.cpp:806
+#: virtualdesktops.cpp:805
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "切換到左方的桌面"
 
-#: virtualdesktops.cpp:808
+#: virtualdesktops.cpp:806
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "切換到上面的桌面"
 
-#: virtualdesktops.cpp:810
+#: virtualdesktops.cpp:807
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "切換到下面的桌面"
 
-#: virtualdesktops.cpp:899
+#: virtualdesktops.cpp:895
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "切換到桌面 %1"

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-22 02:43+0000\n"
+"POT-Creation-Date: 2023-10-20 02:27+0000\n"
 "PO-Revision-Date: 2023-04-20 22:53+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -2777,22 +2777,22 @@ msgstr "Aldatu aurreko mahaigainera"
 msgid "Switch One Desktop to the Right"
 msgstr "Aldatu eskuineko mahaigainera"
 
-#: virtualdesktops.cpp:806
+#: virtualdesktops.cpp:805
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Aldatu ezkerreko mahaigainera"
 
-#: virtualdesktops.cpp:808
+#: virtualdesktops.cpp:806
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Aldatu goiko mahaigainera"
 
-#: virtualdesktops.cpp:810
+#: virtualdesktops.cpp:807
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Aldatu beheko mahaigainera"
 
-#: virtualdesktops.cpp:899
+#: virtualdesktops.cpp:895
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "Aldatu %1 mahaigainera"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-22 02:43+0000\n"
+"POT-Creation-Date: 2023-10-20 02:27+0000\n"
 "PO-Revision-Date: 2008-02-27 21:37+0100\n"
 "Last-Translator: Pierre-Marie Pédrot <pedrotpmx@wanadoo.fr>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -2863,22 +2863,22 @@ msgstr "Iri al antaŭa labortablo"
 msgid "Switch One Desktop to the Right"
 msgstr "Iri al labortablo dekstrapuda"
 
-#: virtualdesktops.cpp:806
+#: virtualdesktops.cpp:805
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Iri al labortablo maldekstrapuda"
 
-#: virtualdesktops.cpp:808
+#: virtualdesktops.cpp:806
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Iri al supra labortablo"
 
-#: virtualdesktops.cpp:810
+#: virtualdesktops.cpp:807
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Iri al suba labortablo"
 
-#: virtualdesktops.cpp:899
+#: virtualdesktops.cpp:895
 #, fuzzy, kde-format
 #| msgid "Switch to Desktop 1"
 msgid "Switch to Desktop %1"

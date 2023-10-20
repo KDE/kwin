@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-22 02:43+0000\n"
+"POT-Creation-Date: 2023-10-20 02:27+0000\n"
 "PO-Revision-Date: 2023-01-30 15:44+0100\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -2743,22 +2743,22 @@ msgstr "Přepnout se na předchozí plochu"
 msgid "Switch One Desktop to the Right"
 msgstr "Přepnout se na plochu vpravo"
 
-#: virtualdesktops.cpp:806
+#: virtualdesktops.cpp:805
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Přepnout se na plochu vlevo"
 
-#: virtualdesktops.cpp:808
+#: virtualdesktops.cpp:806
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Přepnout se na plochu nahoru"
 
-#: virtualdesktops.cpp:810
+#: virtualdesktops.cpp:807
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Přepnout se na plochu dolů"
 
-#: virtualdesktops.cpp:899
+#: virtualdesktops.cpp:895
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "Přepnout se na plochu %1"

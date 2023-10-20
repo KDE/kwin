@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-22 02:43+0000\n"
+"POT-Creation-Date: 2023-10-20 02:27+0000\n"
 "PO-Revision-Date: 2022-11-19 06:00-0800\n"
 "Last-Translator: A S Alam <aalam@satluj.org>\n"
 "Language-Team: Punjabi <punjabi-users@lists.sf.net>\n"
@@ -2764,22 +2764,22 @@ msgstr "ਪਿਛਲੇ ਡੈਸਕਟਾਪ ਵਿੱਚ ਜਾਓ"
 msgid "Switch One Desktop to the Right"
 msgstr "ਇੱਕ ਡੈਸਕਟਾਪ ਸੱਜੇ ਜਾਓ"
 
-#: virtualdesktops.cpp:806
+#: virtualdesktops.cpp:805
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "ਇੱਕ ਡੈਸਕਟਾਪ ਖੱਬੇ ਜਾਓ"
 
-#: virtualdesktops.cpp:808
+#: virtualdesktops.cpp:806
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "ਇੱਕ ਡੈਸਕਟਾਪ ਉੱਤੇ ਜਾਓ"
 
-#: virtualdesktops.cpp:810
+#: virtualdesktops.cpp:807
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "ਇੱਕ ਡੈਸਕਟਾਪ ਹੇਠਾਂ ਜਾਓ"
 
-#: virtualdesktops.cpp:899
+#: virtualdesktops.cpp:895
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "ਡੈਸਕਟਾਪ %1 ਉੱਤੇ ਜਾਓ"

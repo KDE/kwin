@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-22 02:43+0000\n"
+"POT-Creation-Date: 2023-10-20 02:27+0000\n"
 "PO-Revision-Date: 2011-07-11 12:17+0530\n"
 "Last-Translator: Shankar Prasad <svenkate@redhat.com>\n"
 "Language-Team: Kannada <kde-l10n-kn@kde.org>\n"
@@ -2838,22 +2838,22 @@ msgstr "ಹಿಂದಿನ ಗಣಕತೆರೆಗೆ ಬದಲಾಯಿಸು"
 msgid "Switch One Desktop to the Right"
 msgstr "ಒಂದು ಗಣಕತೆರೆ ಬಲಗಡೆಗೆ ಬದಲಾಯಿಸು."
 
-#: virtualdesktops.cpp:806
+#: virtualdesktops.cpp:805
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "ಒಂದು ಗಣಕತೆರೆ ಎಡಗಡೆಗೆ ಬದಲಾಯಿಸು."
 
-#: virtualdesktops.cpp:808
+#: virtualdesktops.cpp:806
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "ಒಂದು ಗಣಕತೆರೆ ಮೇಲಕ್ಕೆ ಬದಲಾಯಿಸು."
 
-#: virtualdesktops.cpp:810
+#: virtualdesktops.cpp:807
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "ಒಂದು ಗಣಕತೆರೆ ಕೆಳಕ್ಕೆ ಬದಲಾಯಿಸು."
 
-#: virtualdesktops.cpp:899
+#: virtualdesktops.cpp:895
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "%1ನೇ ಗಣಕತೆರೆಗೆ ಬದಲಾಯಿಸು"
