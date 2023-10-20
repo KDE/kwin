@@ -89,7 +89,6 @@ void AbstractEglBackend::cleanup()
     cleanupGL();
     doneCurrent();
     eglDestroyContext(m_display, m_context);
-    eglReleaseThread();
 }
 
 void AbstractEglBackend::cleanupSurfaces()
