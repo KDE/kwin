@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-19 01:42+0000\n"
+"POT-Creation-Date: 2023-10-20 01:39+0000\n"
 "PO-Revision-Date: 2017-12-03 22:53+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -4520,22 +4520,22 @@ msgstr "Na prethodnu površ"
 msgid "Switch One Desktop to the Right"
 msgstr "Na prvu površ desno"
 
-#: virtualdesktops.cpp:804
+#: virtualdesktops.cpp:803
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Na prvu površ levo"
 
-#: virtualdesktops.cpp:806
+#: virtualdesktops.cpp:804
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Na prvu površ iznad"
 
-#: virtualdesktops.cpp:808
+#: virtualdesktops.cpp:805
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Na prvu površ ispod"
 
-#: virtualdesktops.cpp:897
+#: virtualdesktops.cpp:893
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "Na površ %1"

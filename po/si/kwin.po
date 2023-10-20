@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-19 01:42+0000\n"
+"POT-Creation-Date: 2023-10-20 01:39+0000\n"
 "PO-Revision-Date: 2009-12-23 10:11+0530\n"
 "Last-Translator: Danishka Navin <danishka@gmail.com>\n"
 "Language-Team: Sinhala <danishka@gmail.com>\n"
@@ -4282,22 +4282,22 @@ msgstr "මීට පෙර වැඩතලයට මාරුවන්න"
 msgid "Switch One Desktop to the Right"
 msgstr "එක් වැඩතලයක් දකුණට මාරුවන්න"
 
-#: virtualdesktops.cpp:804
+#: virtualdesktops.cpp:803
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "එක් වැඩතලයක් වමට මාරුවන්න"
 
-#: virtualdesktops.cpp:806
+#: virtualdesktops.cpp:804
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "එක් වැඩතලයක් ඉහළට මාරුවන්න"
 
-#: virtualdesktops.cpp:808
+#: virtualdesktops.cpp:805
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "එක් වැඩතලයක් පහළට මාරුවන්න"
 
-#: virtualdesktops.cpp:897
+#: virtualdesktops.cpp:893
 #, fuzzy, kde-format
 #| msgid "Switch to Desktop 1"
 msgid "Switch to Desktop %1"

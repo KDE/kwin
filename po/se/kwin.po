@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-19 01:42+0000\n"
+"POT-Creation-Date: 2023-10-20 01:39+0000\n"
 "PO-Revision-Date: 2007-12-20 11:35+0100\n"
 "Last-Translator: Børre Gaup <boerre@skolelinux.no>\n"
 "Language-Team: Northern Sami <l10n-no@lister.huftis.org>\n"
@@ -4070,22 +4070,22 @@ msgstr "Lonut ovddit čállinbeavdái"
 msgid "Switch One Desktop to the Right"
 msgstr "Lonut olgeš čállinbeavdái"
 
-#: virtualdesktops.cpp:804
+#: virtualdesktops.cpp:803
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Lonut gurut čállinbeavdái"
 
-#: virtualdesktops.cpp:806
+#: virtualdesktops.cpp:804
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Lonut bajil čállinbeavdái"
 
-#: virtualdesktops.cpp:808
+#: virtualdesktops.cpp:805
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Lonut vuolil čállinbeavdái"
 
-#: virtualdesktops.cpp:897
+#: virtualdesktops.cpp:893
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr ""

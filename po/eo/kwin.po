@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-19 01:42+0000\n"
-"PO-Revision-Date: 2023-10-08 07:59+0100\n"
+"POT-Creation-Date: 2023-10-20 01:39+0000\n"
+"PO-Revision-Date: 2023-10-19 07:22+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -25,14 +25,15 @@ msgstr ""
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Wolfram Diestel,Steffen Pietsch, Matthias Peick,Cindy McKee"
+msgstr ""
+"Wolfram Diestel,Steffen Pietsch, Matthias Peick,Cindy McKee,Oliver Kellogg"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
 "wolfram@steloj.de,Steffen.Pietsch@BerlinOnline.de,matthias@peick.de,"
-"cfmckee@gmail.com"
+"cfmckee@gmail.com,okellogg@users.sourceforge.net"
 
 #: backends/wayland/wayland_output.cpp:251
 #, kde-format
@@ -2295,7 +2296,7 @@ msgstr "Organizi fenestrojn en la Grid-View:"
 #: plugins/overview/kcm/overvieweffectkcm.ui:71
 #, kde-format
 msgid "Search results include filtered windows:"
-msgstr ""
+msgstr "Serĉrezultoj inkluzivas filtritajn fenestrojn:"
 
 #: plugins/overview/overvieweffect.cpp:124
 #, kde-format
@@ -4117,22 +4118,22 @@ msgstr "Iri al antaŭa labortablo"
 msgid "Switch One Desktop to the Right"
 msgstr "Iri al labortablo dekstrapuda"
 
-#: virtualdesktops.cpp:804
+#: virtualdesktops.cpp:803
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Iri al labortablo maldekstrapuda"
 
-#: virtualdesktops.cpp:806
+#: virtualdesktops.cpp:804
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Iri al supra labortablo"
 
-#: virtualdesktops.cpp:808
+#: virtualdesktops.cpp:805
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Iri al suba labortablo"
 
-#: virtualdesktops.cpp:897
+#: virtualdesktops.cpp:893
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "Ŝanĝi al labortablo %1"

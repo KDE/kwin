@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-17 02:32+0000\n"
-"PO-Revision-Date: 2017-05-23 06:52-0400\n"
+"PO-Revision-Date: 2023-10-19 09:29+0300\n"
 "Last-Translator: Elkana Bardugo <ttv200@gmail.com>\n"
 "Language-Team: Hebrew <kde-i18n-doc@kde.org>\n"
 "Language: he\n"
@@ -14,10 +14,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Poedit-Language: Hebrew\n"
-"X-Poedit-Country: ISRAEL\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Generator: Zanata 3.9.6\n"
+"X-Generator: Poedit 3.3.2\n"
 
 #: main.cpp:124 touch.cpp:116
 #, kde-format
@@ -27,17 +25,17 @@ msgstr "ללא פעולה"
 #: main.cpp:125 touch.cpp:117
 #, kde-format
 msgid "Peek at Desktop"
-msgstr ""
+msgstr "הצצה על שולחן העבודה"
 
 #: main.cpp:126 touch.cpp:118
 #, kde-format
 msgid "Lock Screen"
-msgstr "נעל מסך"
+msgstr "נעילת מסך"
 
 #: main.cpp:127 touch.cpp:119
 #, kde-format
 msgid "Show KRunner"
-msgstr ""
+msgstr "הצגת KRunner"
 
 #: main.cpp:128 touch.cpp:120
 #, kde-format
@@ -52,7 +50,7 @@ msgstr "משגר יישומים"
 #: main.cpp:133 touch.cpp:125
 #, kde-format
 msgid "Present Windows"
-msgstr ""
+msgstr "הצגת חלונות"
 
 #: main.cpp:134 touch.cpp:126
 #, kde-format
@@ -81,58 +79,54 @@ msgstr "שינוי מחליף חלונות חילופי"
 
 #. i18n: ectx: property (text), widget (QLabel, infoLabel)
 #: main.ui:23
-#, fuzzy, kde-format
-#| msgid ""
-#| "To trigger an action push your mouse cursor against the edge of the "
-#| "screen in the action's direction."
+#, kde-format
 msgid ""
 "You can trigger an action by pushing the mouse cursor against the "
 "corresponding screen edge or corner."
 msgstr ""
-"כדי לגרום להפעלת פעולה דחף את סמן העכבר שלך אל עבר קצוות המסך בכיוון הפעולה."
+"אפשר להזניק פעולה על ידי דחיפת סמן העכבר כנגד קצה או פינת המסך המתאימים."
 
 #. i18n: ectx: property (text), widget (QLabel, quickMaximizeLabel)
 #: main.ui:67
 #, kde-format
 msgid "&Maximize:"
-msgstr ""
+msgstr "ה&גדלה:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ElectricBorderMaximize)
 #: main.ui:77
 #, kde-format
 msgid "Windows dragged to top edge"
-msgstr ""
+msgstr "חלונות שנגררים לקצה העליון"
 
 #. i18n: ectx: property (text), widget (QLabel, quickTileLabel)
 #: main.ui:84
 #, kde-format
 msgid "&Tile:"
-msgstr ""
+msgstr "&ריצוף:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ElectricBorderTiling)
 #: main.ui:94
-#, fuzzy, kde-format
-#| msgid "Tile windows by dragging them to the side of the screen"
+#, kde-format
 msgid "Windows dragged to left or right edge"
-msgstr "פרוס חלונות (לחצי ולרבע מהמסך) על ידי גרירתם לצד של המסך"
+msgstr "חלונות שנגררים לצידו השמאלו או הימני של המסך"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: main.ui:101
 #, kde-format
 msgid "Behavior:"
-msgstr ""
+msgstr "התנהגות:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, remainActiveOnFullscreen)
 #: main.ui:108
 #, kde-format
 msgid "Remain active when windows are fullscreen"
-msgstr ""
+msgstr "להישאר פעיל כאשר חלונות במסך מלא"
 
 #. i18n: ectx: property (text), widget (QLabel, electricBorderCornerRatioLabel)
 #: main.ui:115
 #, kde-format
 msgid "Trigger &quarter tiling in:"
-msgstr ""
+msgstr "הזנקת ריצוף &רבעים ב־:"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, electricBorderCornerRatioSpin)
 #: main.ui:130
@@ -144,20 +138,20 @@ msgstr "%"
 #: main.ui:133
 #, kde-format
 msgid "Outer "
-msgstr ""
+msgstr "החיצוניים "
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #: main.ui:149
 #, kde-format
 msgid "of the screen"
-msgstr " מהצד החיצוני של המסך"
+msgstr "של המסך"
 
 #. i18n: ectx: property (toolTip), widget (QLabel, desktopSwitchLabel)
 #: main.ui:174
 #, kde-format
 msgid ""
 "Change desktop when the mouse cursor is pushed against the edge of the screen"
-msgstr "שינוי שולחן העבודה כאשר סמן העכבר מגיע אל קצה המסך"
+msgstr "החלפת שולחן העבודה כאשר סמן העכבר נדחף אל קצה המסך"
 
 #. i18n: ectx: property (text), widget (QLabel, desktopSwitchLabel)
 #: main.ui:177
@@ -170,7 +164,7 @@ msgstr "ה&חלפת שולחן עבודה בקצה:"
 #, kde-format
 msgctxt "Switch desktop on edge"
 msgid "Disabled"
-msgstr "מנוטרל"
+msgstr "מושבת"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:193
@@ -190,20 +184,20 @@ msgstr "פעיל תמיד"
 msgid ""
 "Amount of time required for the mouse cursor to be pushed against the edge "
 "of the screen before the action is triggered"
-msgstr "משך הזמן הדרוש לדחיפת העכבר אל עבר הקצה בטרם הפעלת הפעולה"
+msgstr "משך הזמן הדרוש לדחיפת העכבר אל עבר הקצה בטרם הזנקת הפעולה"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDelayLabel)
 #: main.ui:209
 #, kde-format
 msgid "Activation &delay:"
-msgstr "השהיית ה&הפעלה:"
+msgstr "השהיית הה&פעלה:"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_ElectricBorderDelay)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_ElectricBorderCooldown)
 #: main.ui:219 main.ui:254
 #, kde-format
 msgid " ms"
-msgstr " אלפיות שנייה"
+msgstr " מ״ש"
 
 #. i18n: ectx: property (toolTip), widget (QLabel, triggerCooldownLabel)
 #: main.ui:238
@@ -211,24 +205,21 @@ msgstr " אלפיות שנייה"
 msgid ""
 "Amount of time required after triggering an action until the next trigger "
 "can occur"
-msgstr "הזמן הדרוש לאחר הפעלת פעולה עד להפעלת הפעולה הבאה"
+msgstr "הזמן הדרוש לאחר הפעלת פעולה עד להזנקת הפעולה הבאה"
 
 #. i18n: ectx: property (text), widget (QLabel, triggerCooldownLabel)
 #: main.ui:241
 #, kde-format
 msgid "&Reactivation delay:"
-msgstr "השהיית ההפעלה &מחדש:"
+msgstr "השהיית הפעלה &מחדש:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #: touch.ui:17
-#, fuzzy, kde-format
-#| msgid ""
-#| "To trigger an action swipe from the screen edge towards the center of the "
-#| "screen."
+#, kde-format
 msgid ""
 "You can trigger an action by swiping from the screen edge towards the center "
 "of the screen."
-msgstr "להפעלת פעולה החלק מקצה המסך למרכזו"
+msgstr "אפשר להזניק פעולה על ידי החלקה מקצה המסך לעבר מרכז המסך."
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"
