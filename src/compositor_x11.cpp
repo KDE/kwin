@@ -79,6 +79,14 @@ X11Compositor::X11Compositor(QObject *parent)
         m_framesToTestForSafety = qEnvironmentVariableIntValue("KWIN_MAX_FRAMES_TESTED");
     }
 
+    connect(options, &Options::configChanged, this, [this]() {
+        if (m_suspended) {
+            stop();
+        } else {
+            reinitialize();
+        }
+    });
+
     m_releaseSelectionTimer.setSingleShot(true);
     m_releaseSelectionTimer.setInterval(2000);
     connect(&m_releaseSelectionTimer, &QTimer::timeout, this, &X11Compositor::releaseCompositorSelection);
@@ -125,15 +133,6 @@ void X11Compositor::reinitialize()
     m_suspended = NoReasonSuspend;
     m_inhibitors.clear();
     Compositor::reinitialize();
-}
-
-void X11Compositor::configChanged()
-{
-    if (m_suspended) {
-        stop();
-        return;
-    }
-    Compositor::configChanged();
 }
 
 void X11Compositor::suspend(X11Compositor::SuspendReason reason)

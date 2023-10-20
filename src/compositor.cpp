@@ -41,8 +41,6 @@ Compositor *Compositor::self()
 Compositor::Compositor(QObject *workspace)
     : QObject(workspace)
 {
-    connect(options, &Options::configChanged, this, &Compositor::configChanged);
-
     // 2 sec which should be enough to restart the compositor.
     static const int compositorLostMessageDelay = 2000;
 
@@ -117,11 +115,6 @@ void Compositor::deleteUnusedSupportProperties()
         }
         m_unusedSupportProperties.clear();
     }
-}
-
-void Compositor::configChanged()
-{
-    reinitialize();
 }
 
 void Compositor::reinitialize()

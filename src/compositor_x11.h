@@ -97,7 +97,6 @@ public:
     void uninhibit(Window *window) override;
 
     void reinitialize() override;
-    void configChanged() override;
     bool compositingPossible() const override;
     QString compositingNotPossibleReason() const override;
     bool openGLCompositingIsBroken() const override;

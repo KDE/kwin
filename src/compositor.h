@@ -130,8 +130,6 @@ protected:
     virtual void start() = 0;
     virtual void stop() = 0;
 
-    virtual void configChanged();
-
     static Compositor *s_compositor;
 
 protected Q_SLOTS:
