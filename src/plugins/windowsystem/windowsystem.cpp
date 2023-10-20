@@ -5,6 +5,7 @@
 */
 #include "windowsystem.h"
 
+#include <KWaylandExtras>
 #include <KWindowSystem>
 
 #include <QGuiApplication>
@@ -186,7 +187,7 @@ void WindowSystem::requestToken(QWindow *win, uint32_t serial, const QString &ap
     auto token = KWin::waylandServer()->xdgActivationIntegration()->requestPrivilegedToken(nullptr, seat->display()->serial(), seat, appId);
     // Ensure that xdgActivationTokenArrived is always emitted asynchronously
     QTimer::singleShot(0, [serial, token] {
-        Q_EMIT KWindowSystem::self()->xdgActivationTokenArrived(serial, token);
+        Q_EMIT KWaylandExtras::self()->xdgActivationTokenArrived(serial, token);
     });
 }
 
