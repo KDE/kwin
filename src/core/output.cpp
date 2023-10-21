@@ -335,6 +335,7 @@ void Output::applyChanges(const OutputConfiguration &config)
     next.scale = props->scale.value_or(m_state.scale);
     next.rgbRange = props->rgbRange.value_or(m_state.rgbRange);
     next.autoRotatePolicy = props->autoRotationPolicy.value_or(m_state.autoRotatePolicy);
+    next.iccProfilePath = props->iccProfilePath.value_or(m_state.iccProfilePath);
     if (props->iccProfilePath) {
         next.iccProfile = IccProfile::load(*props->iccProfilePath);
     }
@@ -568,6 +569,11 @@ Output::AutoRotationPolicy Output::autoRotationPolicy() const
 std::shared_ptr<IccProfile> Output::iccProfile() const
 {
     return m_state.iccProfile;
+}
+
+QString Output::iccProfilePath() const
+{
+    return m_state.iccProfilePath;
 }
 
 bool Output::updateCursorLayer()

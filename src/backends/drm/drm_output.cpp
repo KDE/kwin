@@ -346,6 +346,7 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.wideColorGamut = props->wideColorGamut.value_or(m_state.wideColorGamut);
     next.autoRotatePolicy = props->autoRotationPolicy.value_or(m_state.autoRotatePolicy);
     if (props->iccProfilePath) {
+        next.iccProfilePath = *props->iccProfilePath;
         next.iccProfile = IccProfile::load(*props->iccProfilePath);
         m_pipeline->setIccProfile(next.iccProfile);
     }

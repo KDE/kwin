@@ -315,6 +315,7 @@ public:
     uint32_t sdrBrightness() const;
     AutoRotationPolicy autoRotationPolicy() const;
     std::shared_ptr<IccProfile> iccProfile() const;
+    QString iccProfilePath() const;
 
     virtual bool setGammaRamp(const std::shared_ptr<ColorTransformation> &transformation);
     virtual bool setChannelFactors(const QVector3D &rgb);
@@ -415,6 +416,7 @@ protected:
         bool highDynamicRange = false;
         uint32_t sdrBrightness = 200;
         AutoRotationPolicy autoRotatePolicy = AutoRotationPolicy::InTabletMode;
+        QString iccProfilePath;
         std::shared_ptr<IccProfile> iccProfile;
     };
 

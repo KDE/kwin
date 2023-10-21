@@ -73,6 +73,7 @@ private:
         std::optional<uint32_t> sdrBrightness;
         std::optional<bool> wideColorGamut;
         std::optional<Output::AutoRotationPolicy> autoRotation;
+        std::optional<QString> iccProfilePath;
     };
     struct SetupState
     {

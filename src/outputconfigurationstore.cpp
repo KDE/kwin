@@ -195,6 +195,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .sdrBrightness = changeSet->sdrBrightness.value_or(output->sdrBrightness()),
                 .wideColorGamut = changeSet->wideColorGamut.value_or(output->wideColorGamut()),
                 .autoRotation = changeSet->autoRotationPolicy.value_or(output->autoRotationPolicy()),
+                .iccProfilePath = changeSet->iccProfilePath.value_or(output->iccProfilePath()),
             };
             *outputIt = SetupState{
                 .outputIndex = *outputIndex,
@@ -221,6 +222,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .sdrBrightness = output->sdrBrightness(),
                 .wideColorGamut = output->wideColorGamut(),
                 .autoRotation = output->autoRotationPolicy(),
+                .iccProfilePath = output->iccProfilePath(),
             };
             *outputIt = SetupState{
                 .outputIndex = *outputIndex,
@@ -262,6 +264,7 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::setupT
             .sdrBrightness = state.sdrBrightness,
             .wideColorGamut = state.wideColorGamut,
             .autoRotationPolicy = state.autoRotation,
+            .iccProfilePath = state.iccProfilePath,
         };
         if (setupState.enabled) {
             priorities.push_back(std::make_pair(output, setupState.priority));
@@ -614,6 +617,9 @@ void OutputConfigurationStore::load()
                 state.autoRotation = Output::AutoRotationPolicy::Always;
             }
         }
+        if (const auto it = data.find("iccProfilePath"); it != data.end()) {
+            state.iccProfilePath = it->toString();
+        }
         outputDatas.push_back(state);
     }
 
@@ -799,6 +805,9 @@ void OutputConfigurationStore::save()
                 o["autoRotation"] = "Always";
                 break;
             }
+        }
+        if (output.iccProfilePath) {
+            o["iccProfilePath"] = *output.iccProfilePath;
         }
         outputsData.append(o);
     }
