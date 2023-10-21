@@ -1793,10 +1793,8 @@ void Window::setShortcut(const QString &_cut)
     }
     const QRegularExpression reg(QStringLiteral("(.*\\+)\\((.*)\\)"));
     QList<QKeySequence> keys;
-    QStringList groups = cut.split(QStringLiteral(" - "));
-    for (QStringList::ConstIterator it = groups.constBegin();
-         it != groups.constEnd();
-         ++it) {
+    const QStringList groups = cut.split(QStringLiteral(" - "));
+    for (auto it = groups.begin(); it != groups.end(); ++it) {
         const QRegularExpressionMatch match = reg.match(*it);
         if (match.hasMatch()) {
             const QString base = match.captured(1);
@@ -1817,16 +1815,12 @@ void Window::setShortcut(const QString &_cut)
             }
         }
     }
-    for (auto it = keys.constBegin();
-         it != keys.constEnd();
-         ++it) {
+    for (auto it = keys.constBegin(); it != keys.cend(); ++it) {
         if (_shortcut == *it) { // current one is in the list
             return;
         }
     }
-    for (auto it = keys.constBegin();
-         it != keys.constEnd();
-         ++it) {
+    for (auto it = keys.cbegin(); it != keys.cend(); ++it) {
         if (workspace()->shortcutAvailable(*it, this)) {
             updateShortcut(*it);
             return;
