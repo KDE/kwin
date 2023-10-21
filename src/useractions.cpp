@@ -1791,7 +1791,7 @@ void Window::setShortcut(const QString &_cut)
         }
         return;
     }
-    const QRegularExpression reg(QStringLiteral("(.*\\+)\\((.*)\\)"));
+    static const QRegularExpression reg(QStringLiteral("(.*\\+)\\((.*)\\)"));
     QList<QKeySequence> keys;
     const QStringList groups = cut.split(QStringLiteral(" - "));
     for (auto it = groups.begin(); it != groups.end(); ++it) {
