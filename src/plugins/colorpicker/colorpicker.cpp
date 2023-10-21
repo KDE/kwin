@@ -58,13 +58,13 @@ void ColorPickerEffect::paintScreen(const RenderTarget &renderTarget, const Rend
 
     const QRectF geo = viewport.renderRect();
     if (m_scheduledPosition != QPoint(-1, -1) && exclusiveContains(geo, m_scheduledPosition)) {
-        uint8_t data[4];
+        std::array<float, 4> data;
         constexpr GLsizei PIXEL_SIZE = 1;
         const QPoint texturePosition = viewport.mapToRenderTarget(m_scheduledPosition).toPoint();
 
-        glReadnPixels(texturePosition.x(), renderTarget.size().height() - texturePosition.y() - PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE, GL_RGBA, GL_UNSIGNED_BYTE, 4, data);
-        QVector3D sRGB = renderTarget.colorDescription().mapTo(QVector3D(data[0] / 255.0, data[1] / 255.0, data[2] / 255.0), ColorDescription::sRGB);
-        QDBusConnection::sessionBus().send(m_replyMessage.createReply(QColor(255 * sRGB.x(), 255 * sRGB.y(), 255 * sRGB.z())));
+        glReadnPixels(texturePosition.x(), renderTarget.size().height() - texturePosition.y() - PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE, GL_RGBA, GL_FLOAT, sizeof(float) * data.size(), data.data());
+        QVector3D sRGB = 255 * renderTarget.colorDescription().mapTo(QVector3D(data[0], data[1], data[2]), ColorDescription::sRGB);
+        QDBusConnection::sessionBus().send(m_replyMessage.createReply(QColor(sRGB.x(), sRGB.y(), sRGB.z())));
         m_picking = false;
         m_scheduledPosition = QPoint(-1, -1);
     }
