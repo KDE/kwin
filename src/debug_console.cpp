@@ -1664,8 +1664,9 @@ void DataSourceModel::setSource(AbstractDataSource *source)
     m_source = source;
     m_data.clear();
     if (source) {
-        m_data.resize(m_source->mimeTypes().size());
-        for (auto type = m_source->mimeTypes().cbegin(); type != m_source->mimeTypes().cend(); ++type) {
+        const QStringList mimeTypes = m_source->mimeTypes();
+        m_data.resize(mimeTypes.size());
+        for (auto type = mimeTypes.begin(); type != mimeTypes.end(); ++type) {
             int pipeFds[2];
             if (pipe2(pipeFds, O_CLOEXEC) != 0) {
                 continue;
@@ -1674,7 +1675,7 @@ void DataSourceModel::setSource(AbstractDataSource *source)
             QFuture<QByteArray> data = QtConcurrent::run(readData, pipeFds[0]);
             auto watcher = new QFutureWatcher<QByteArray>(this);
             watcher->setFuture(data);
-            const int index = type - m_source->mimeTypes().cbegin();
+            const int index = type - mimeTypes.begin();
             connect(watcher, &QFutureWatcher<QByteArray>::finished, this, [this, watcher, index, source = QPointer(source)] {
                 watcher->deleteLater();
                 if (source && source == m_source) {
