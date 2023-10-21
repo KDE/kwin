@@ -110,22 +110,6 @@ WindowViewEffect::WindowViewEffect()
         }
     });
 
-    const auto gestureCallback = [this](qreal progress) {
-        if (!effects->hasActiveFullScreenEffect() || effects->activeFullScreenEffect() == this) {
-            switch (m_status) {
-            case Status::Inactive:
-            case Status::Activating:
-                setMode(ModeAllDesktops);
-                partialActivate(progress);
-                break;
-            case Status::Active:
-            case Status::Deactivating:
-                partialDeactivate(progress);
-                break;
-            }
-        }
-    };
-
     reconfigure(ReconfigureAll);
 }
 
