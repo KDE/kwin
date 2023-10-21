@@ -93,15 +93,15 @@ static QMap<Output *, QJsonObject> outputsConfig(const QList<Output *> &outputs,
     const auto outputsJson = doc.array();
     for (const auto &outputJson : outputsJson) {
         const auto outputObject = outputJson.toObject();
-        const auto id = outputObject["id"];
+        const auto id = outputObject[QLatin1String("id")];
         const auto output = std::find_if(outputs.begin(), outputs.end(), [&duplicate, &id, &outputObject](Output *output) {
             if (outputHash(output) != id.toString()) {
                 return false;
             }
             if (duplicate[output]) {
                 // can't distinguish between outputs by hash alone, need to look at connector names
-                const auto metadata = outputObject[QStringLiteral("metadata")];
-                const auto outputName = metadata[QStringLiteral("name")].toString();
+                const auto metadata = outputObject[QLatin1String("metadata")];
+                const auto outputName = metadata[QLatin1String("name")].toString();
                 return outputName == output->name();
             } else {
                 return true;
