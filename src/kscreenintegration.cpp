@@ -53,7 +53,7 @@ QString connectedOutputsHash(const QList<Output *> &outputs, bool isLidClosed)
     return QString::fromLatin1(hash.toHex());
 }
 
-static QMap<Output *, QJsonObject> outputsConfig(const QList<Output *> &outputs, const QString &hash)
+static QHash<Output *, QJsonObject> outputsConfig(const QList<Output *> &outputs, const QString &hash)
 {
     const QString kscreenJsonPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kscreen/") % hash);
     if (kscreenJsonPath.isEmpty()) {
@@ -89,7 +89,7 @@ static QMap<Output *, QJsonObject> outputsConfig(const QList<Output *> &outputs,
         outputHashes[output] = hash;
     }
 
-    QMap<Output *, QJsonObject> ret;
+    QHash<Output *, QJsonObject> ret;
     const auto outputsJson = doc.array();
     for (const auto &outputJson : outputsJson) {
         const auto outputObject = outputJson.toObject();
