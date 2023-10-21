@@ -239,10 +239,9 @@ Decoration::~Decoration()
     Helper::instance().unref();
 }
 
-void Decoration::init()
+bool Decoration::init()
 {
     Helper::instance().rootContext()->setContextProperty(QStringLiteral("decorationSettings"), settings().get());
-    KDecoration2::Decoration::init();
     auto s = settings();
     connect(s.get(), &KDecoration2::DecorationSettings::reconfigured, this, &Decoration::configChanged);
 
@@ -250,7 +249,7 @@ void Decoration::init()
     m_qmlContext->setContextProperty(QStringLiteral("decoration"), this);
     auto component = Helper::instance().component(m_themeName);
     if (!component) {
-        return;
+        return false;
     }
     if (component == Helper::instance().svgComponent()) {
         // load SVG theme
@@ -281,7 +280,7 @@ void Decoration::init()
                 qCWarning(AURORAE) << error;
             }
         }
-        return;
+        return false;
     }
 
     QVariant visualParent = property("visualParent");
@@ -353,6 +352,7 @@ void Decoration::init()
             setShadow(s);
         }
     }
+    return true;
 }
 
 QVariant Decoration::readConfig(const QString &key, const QVariant &defaultValue)

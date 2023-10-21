@@ -44,7 +44,7 @@ public:
     QQuickItem *item() const;
 
 public Q_SLOTS:
-    void init() override;
+    bool init() override;
     void installTitleItem(QQuickItem *item);
 
     void updateShadow();
