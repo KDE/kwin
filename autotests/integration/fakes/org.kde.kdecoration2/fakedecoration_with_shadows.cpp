@@ -30,7 +30,7 @@ public:
     }
 
 public Q_SLOTS:
-    void init() override
+    bool init() override
     {
         const int shadowSize = 128;
         const int offsetTop = 64;
@@ -52,6 +52,7 @@ public Q_SLOTS:
         decoShadow->setShadow(shadowTexture);
 
         setShadow(decoShadow);
+        return true;
     }
 };
 
