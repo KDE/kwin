@@ -1451,7 +1451,7 @@ void XdgToplevelWindow::clearDecoration()
 
 void XdgToplevelWindow::configureDecoration()
 {
-    const DecorationMode decorationMode = preferredDecorationMode();
+    DecorationMode decorationMode = preferredDecorationMode();
     switch (decorationMode) {
     case DecorationMode::None:
     case DecorationMode::Client:
@@ -1469,6 +1469,10 @@ void XdgToplevelWindow::configureDecoration()
                 connect(m_nextDecoration.get(), &KDecoration3::Decoration::nextStateChanged, this, &XdgToplevelWindow::processDecorationState);
                 m_nextDecorationState = m_nextDecoration->nextState()->clone();
             }
+        }
+        if (!m_nextDecoration) {
+            qCDebug(KWIN_CORE) << "Failed to create decoration for" << this << "falling back to client-side decoration";
+            decorationMode = DecorationMode::Client;
         }
         break;
     }

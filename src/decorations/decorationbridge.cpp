@@ -265,7 +265,11 @@ KDecoration3::Decoration *DecorationBridge::createDecoration(Window *window, KDe
     auto deco = m_factory->create<KDecoration3::Decoration>(window, QVariantList{args});
     deco->setSettings(m_settings);
     deco->create();
-    deco->init();
+    if (!deco->init()) {
+        qCWarning(KWIN_DECORATIONS) << "Failed to initialize decoration theme" << m_theme;
+        delete deco;
+        return nullptr;
+    }
     return deco;
 }
 
