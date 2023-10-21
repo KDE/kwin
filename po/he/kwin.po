@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-20 01:39+0000\n"
+"POT-Creation-Date: 2023-10-21 01:39+0000\n"
 "PO-Revision-Date: 2023-10-19 16:42+0300\n"
 "Last-Translator: Elkana Bardugo <ttv200@gmail.com>\n"
 "Language-Team: Hebrew <kde-i18n-doc@kde.org>\n"
@@ -25,7 +25,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
+"n % 10 == 0) ? 2 : 3));\n"
 "X-Generator: Poedit 3.3.2\n"
 
 #, kde-format
@@ -80,17 +81,17 @@ msgstr "לחיצה על ה־Ctrl הימני לאחיזת קלט"
 msgid "KDE Wayland Compositor"
 msgstr "מנהל חלונאי KDE Wayland"
 
-#: compositor.cpp:151
+#: compositor.cpp:143
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "אפקטים של שולחן עבודה הופעלן מחגד"
 
-#: compositor_x11.cpp:89
+#: compositor_x11.cpp:97
 #, kde-format
 msgid "Suspend Compositing"
 msgstr "השהיית שזירה"
 
-#: compositor_x11.cpp:513
+#: compositor_x11.cpp:512
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -103,12 +104,12 @@ msgstr ""
 "<br>אפשר לאפס את ההגנה הזאת <b>ראוי לשים לב שזה עשוי לגרום לקריסה מיידית!</"
 "b></p>"
 
-#: compositor_x11.cpp:520
+#: compositor_x11.cpp:519
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "הרחבות X נחוצות (XComposite ו־XDamage) אינן זמינות."
 
-#: compositor_x11.cpp:523
+#: compositor_x11.cpp:522
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL לא זמין."
@@ -2117,12 +2118,14 @@ msgid "Clear Mouse Marks"
 msgstr "ניקוי סימוני העכבר"
 
 #: plugins/mousemark/mousemark_config.cpp:101
-#, kde-format
+#, fuzzy, kde-format
 msgctxt "Suffix"
 msgid " pixel"
 msgid_plural " pixels"
 msgstr[0] " פיקסל"
 msgstr[1] " פיקסלים"
+msgstr[2] ""
+msgstr[3] ""
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 #: plugins/mousemark/mousemark_config.ui:17

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-20 01:39+0000\n"
+"POT-Creation-Date: 2023-10-21 01:39+0000\n"
 "PO-Revision-Date: 2014-08-21 16:21+0200\n"
 "Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
 "Language-Team: Low Saxon <kde-i18n-nds@kde.org>\n"
@@ -71,19 +71,19 @@ msgstr ""
 msgid "KDE Wayland Compositor"
 msgstr ""
 
-#: compositor.cpp:151
+#: compositor.cpp:143
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 "Vun wegen dat Torüchsetten vun de Grafik wöörn de Schriefdischeffekten nieg "
 "start"
 
-#: compositor_x11.cpp:89
+#: compositor_x11.cpp:97
 #, kde-format
 msgid "Suspend Compositing"
 msgstr "Tosamensetten utsetten"
 
-#: compositor_x11.cpp:513
+#: compositor_x11.cpp:512
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -104,13 +104,13 @@ msgstr ""
 "kann direktemang to en Afstört föhren!</b></p><p>Villicht bruukst Du beter "
 "dat XRender-Hülpprogramm.</p>"
 
-#: compositor_x11.cpp:520
+#: compositor_x11.cpp:519
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr ""
 "Nödig X-Server-Verwiedern (XComposite un XDamage) laat sik nich finnen."
 
-#: compositor_x11.cpp:523
+#: compositor_x11.cpp:522
 #, fuzzy, kde-format
 #| msgid "GLX/OpenGL and XRender/XFixes are not available."
 msgid "GLX/OpenGL is not available."

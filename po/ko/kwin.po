@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-20 01:39+0000\n"
+"POT-Creation-Date: 2023-10-21 01:39+0000\n"
 "PO-Revision-Date: 2023-10-08 23:38+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -72,17 +72,17 @@ msgstr "오른쪽 Ctrl 키를 누르면 입력을 잡음"
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland 컴포지터"
 
-#: compositor.cpp:151
+#: compositor.cpp:143
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "그래픽 초기화로 인하여 데스크톱 효과가 다시 시작됨"
 
-#: compositor_x11.cpp:89
+#: compositor_x11.cpp:97
 #, kde-format
 msgid "Suspend Compositing"
 msgstr "컴포지팅 중단하기"
 
-#: compositor_x11.cpp:513
+#: compositor_x11.cpp:512
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -95,12 +95,12 @@ msgstr ""
 "라이버로 업그레이드했다면 이 보호 장치를 해제할 수도 있으나<br><b>시스템이 언"
 "제든지 충돌할 수도 있습니다!</b></p>"
 
-#: compositor_x11.cpp:520
+#: compositor_x11.cpp:519
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "필요한 X 확장(XComposite와 XDamage)을 사용할 수 없습니다."
 
-#: compositor_x11.cpp:523
+#: compositor_x11.cpp:522
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL을 사용할 수 없습니다."

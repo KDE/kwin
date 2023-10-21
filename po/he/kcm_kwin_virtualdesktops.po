@@ -18,7 +18,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
+"n % 10 == 0) ? 2 : 3));\n"
 "X-Generator: Poedit 3.3.2\n"
 
 #, kde-format
@@ -32,12 +33,14 @@ msgid "Your emails"
 msgstr "kde-l10n-he@kde.org"
 
 #: desktopsmodel.cpp:191
-#, kde-format
+#, fuzzy, kde-format
 msgctxt "A numbered name for virtual desktops"
 msgid "Desktop %1"
 msgid_plural "Desktop %1"
 msgstr[0] "שולחן עבודה %1"
 msgstr[1] "שולחן עבודה %1"
+msgstr[2] ""
+msgstr[3] ""
 
 #: desktopsmodel.cpp:479
 #, kde-format
@@ -93,11 +96,13 @@ msgid "Add"
 msgstr "הוספה"
 
 #: ui/main.qml:179
-#, kde-format
+#, fuzzy, kde-format
 msgid "1 Row"
 msgid_plural "%1 Rows"
 msgstr[0] "שורה"
 msgstr[1] "%1 שורות"
+msgstr[2] ""
+msgstr[3] ""
 
 #: ui/main.qml:195
 #, kde-format
