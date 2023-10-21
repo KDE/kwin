@@ -401,7 +401,7 @@ void Application::applyXwaylandScale()
     }
     if (x11Connection()) {
         // rerun the fonts kcm init that does the appropriate xrdb call with the new settings
-        QProcess::startDetached("kcminit", {"kcm_fonts", "kcm_style"});
+        QProcess::startDetached("kcminit", {"kcm_fonts_init", "kcm_style_init"});
     }
 }
 
