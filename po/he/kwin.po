@@ -13,21 +13,22 @@
 # tahmar1900 <tahmar1900@gmail.com>, 2008.
 # elkana bardugo <ttv200@gmail.com>, 2016.
 # Elkana Bardugo <ttv200@gmail.com>, 2017. #zanata
+# SPDX-FileCopyrightText: 2023 Yaron Shahrabani <sh.yaron@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-21 01:39+0000\n"
-"PO-Revision-Date: 2023-10-19 16:42+0300\n"
-"Last-Translator: Elkana Bardugo <ttv200@gmail.com>\n"
-"Language-Team: Hebrew <kde-i18n-doc@kde.org>\n"
+"POT-Creation-Date: 2023-10-22 02:06+0000\n"
+"PO-Revision-Date: 2023-10-21 19:39+0300\n"
+"Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
+"Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
-"X-Generator: Poedit 3.3.2\n"
+"X-Generator: Lokalize 23.08.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1318,55 +1319,55 @@ msgstr "השבתת אפשרויות הגדרה"
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "מציין כי KWin קרס לאחרונה n פעמים"
 
-#: main_wayland.cpp:290
+#: main_wayland.cpp:291
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "הפעלת שרת Xwayless לא כמשתמש על."
 
-#: main_wayland.cpp:292
+#: main_wayland.cpp:293
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
 msgstr ""
 "שם שקע (socket) ה־Wayland להאזין לו. אם לא הוגדר, ייעשה שימוש ב־„wayland-0”."
 
-#: main_wayland.cpp:295
+#: main_wayland.cpp:296
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr "תצוגת ה־X11 לשימוש במצב חלוני בפלטפורמת X11."
 
-#: main_wayland.cpp:298
+#: main_wayland.cpp:299
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr "תצוגת ה־Wayland לשימוש במצב חלוני בפלטפורמת Wayland."
 
-#: main_wayland.cpp:300
+#: main_wayland.cpp:301
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "עיבוד למכלא חוזי וירטואלי."
 
-#: main_wayland.cpp:302
+#: main_wayland.cpp:303
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "רוחב למצב חלון. רוחב ברירת המחדל הוא 1024."
 
-#: main_wayland.cpp:306
+#: main_wayland.cpp:307
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "גובה למצב חלון. גובה ברירת המחדל הוא 768."
 
-#: main_wayland.cpp:311
+#: main_wayland.cpp:312
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "קנה המידה למצב חלון. ערך ברירת המחדל הוא 1."
 
-#: main_wayland.cpp:316
+#: main_wayland.cpp:317
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
 msgstr "מספר החלונות לפתיחה כערוצי פלט במצב חלוני. ערך ברירת המחדל הוא 1"
 
-#: main_wayland.cpp:321
+#: main_wayland.cpp:322
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1375,7 +1376,7 @@ msgstr ""
 "שקע (socket) Wayland לשימוש לחיבורים נכנסים. אפשר לשלב את זה עם ‎--socket כדי "
 "לתת שם לשקע"
 
-#: main_wayland.cpp:325
+#: main_wayland.cpp:326
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1384,64 +1385,64 @@ msgstr ""
 "שקע (socket) XWayland לשימוש לחיבורי Xwayland הנכנסים. אפשר להגדיר את זה "
 "מספר פעמים"
 
-#: main_wayland.cpp:329
+#: main_wayland.cpp:330
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "שם תצוגת ה־xwayland שהוקמה מראש"
 
-#: main_wayland.cpp:333
+#: main_wayland.cpp:334
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "שם קובץ ה־xauthority "
 
-#: main_wayland.cpp:337
+#: main_wayland.cpp:338
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 "יוצא מהמופע הזה כדי שניתן יהיה להפעיל אותו מחדש על ידי kwin_wayland_wrapper."
 
-#: main_wayland.cpp:339
+#: main_wayland.cpp:340
 #, kde-format
 msgid "Render through drm node."
 msgstr "עיבוד דרך צומת drm."
 
-#: main_wayland.cpp:340
+#: main_wayland.cpp:341
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr "חילוץ פרטי הגדרות אזוריות מ־locale1 במקום מהגדרות המשתמש"
 
-#: main_wayland.cpp:362
+#: main_wayland.cpp:363
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "שיטת הקלט בה KWin יתחיל."
 
-#: main_wayland.cpp:368
+#: main_wayland.cpp:369
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "מפעיל את ההפעלה במצב נעול."
 
-#: main_wayland.cpp:372
+#: main_wayland.cpp:373
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "מפעיל את ההפעלה ללא תמיכה במסך נעילה."
 
-#: main_wayland.cpp:377
+#: main_wayland.cpp:378
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "מפעיל את ההפעלה ללא תמיכה במקשי קיצור גלובליים."
 
-#: main_wayland.cpp:382 main_x11.cpp:423
+#: main_wayland.cpp:383 main_x11.cpp:423
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "השבתת שילוב מול KActivities."
 
-#: main_wayland.cpp:387
+#: main_wayland.cpp:388
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr "לצאת לאחר יציאת יישום ההפעלה, שהופעל על ידי KWin."
 
-#: main_wayland.cpp:392
+#: main_wayland.cpp:393
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr "יישומים להתחלה מיד לאחר התחלת שרתי Wayland ו־Xwayland"
@@ -2118,14 +2119,14 @@ msgid "Clear Mouse Marks"
 msgstr "ניקוי סימוני העכבר"
 
 #: plugins/mousemark/mousemark_config.cpp:101
-#, fuzzy, kde-format
+#, kde-format
 msgctxt "Suffix"
 msgid " pixel"
 msgid_plural " pixels"
 msgstr[0] " פיקסל"
 msgstr[1] " פיקסלים"
-msgstr[2] ""
-msgstr[3] ""
+msgstr[2] " פיקסלים"
+msgstr[3] " פיקסלים"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 #: plugins/mousemark/mousemark_config.ui:17
@@ -4133,7 +4134,7 @@ msgstr "מעבר שולחן עבודה אחד למטה"
 msgid "Switch to Desktop %1"
 msgstr "מעבר לשולחן עבודה %1"
 
-#: window.cpp:3080
+#: window.cpp:3088
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

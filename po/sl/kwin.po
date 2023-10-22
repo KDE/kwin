@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1662816 2023-10-21 02:02:00Z scripty $
+# $Id: kwin.po 1662892 2023-10-22 02:28:31Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-21 01:39+0000\n"
+"POT-Creation-Date: 2023-10-22 02:06+0000\n"
 "PO-Revision-Date: 2023-10-19 07:40+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -24,8 +24,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100>=3 && n"
-"%100<=4 ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
+"%100==4 ? 3 : 0);\n"
 "Translator: Andrej Mernik <andrejm@ubuntu.si>\n"
 "X-Generator: Poedit 3.4\n"
 
@@ -1326,12 +1326,12 @@ msgstr "Onemogoči nastavitvene možnosti"
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "Nakaži, da se je KWin nedavno sesul n-krat"
 
-#: main_wayland.cpp:290
+#: main_wayland.cpp:291
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "Zaženi neskrbniški strežnik Xwayland."
 
-#: main_wayland.cpp:292
+#: main_wayland.cpp:293
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
@@ -1339,37 +1339,37 @@ msgstr ""
 "Ime vtiča Wayland za poslušanje. Če ni nastavljeno, bo uporabljeno "
 "\"wayland-0\"."
 
-#: main_wayland.cpp:295
+#: main_wayland.cpp:296
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr "Prikaz X11, ki bo uporabljen v okenskem načinu v okolju X11."
 
-#: main_wayland.cpp:298
+#: main_wayland.cpp:299
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr "Prikaz Wayland, ki bo uporabljen v okenskem načinu v okolju Wayland."
 
-#: main_wayland.cpp:300
+#: main_wayland.cpp:301
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "Izriši v navidezni medpomnilnik sličic."
 
-#: main_wayland.cpp:302
+#: main_wayland.cpp:303
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "Širina okenskega načina. Privzeta širina je 1024."
 
-#: main_wayland.cpp:306
+#: main_wayland.cpp:307
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "Višina okenskega načina. Privzeta višina je 768."
 
-#: main_wayland.cpp:311
+#: main_wayland.cpp:312
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "Merilo okenskega načina. Privzeta vrednost je 1."
 
-#: main_wayland.cpp:316
+#: main_wayland.cpp:317
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
@@ -1377,7 +1377,7 @@ msgstr ""
 "Število oken, ki bodo odprta kot izhodi v okenskem načinu. Privzeta vrednost "
 "je 1"
 
-#: main_wayland.cpp:321
+#: main_wayland.cpp:322
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1386,7 +1386,7 @@ msgstr ""
 "Waylandova vtičnica za rabo prihajajočih povezav. Ta je lahko kombinirana z "
 "- vtičnico z imenom"
 
-#: main_wayland.cpp:325
+#: main_wayland.cpp:326
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1395,66 +1395,66 @@ msgstr ""
 "XWaylandova vtičnica za rabo prihajajočih povezav Xwaylanda. To je lahko "
 "nastavljeno večkrat"
 
-#: main_wayland.cpp:329
+#: main_wayland.cpp:330
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "Ime prikazovalnika xwayland, ki je bil prednastavljen"
 
-#: main_wayland.cpp:333
+#: main_wayland.cpp:334
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "Ime datoteke xauthority "
 
-#: main_wayland.cpp:337
+#: main_wayland.cpp:338
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 "Izstopi iz tega pojavka, tako da ga lahko ponovno zažene "
 "kwin_wayland_wrapper."
 
-#: main_wayland.cpp:339
+#: main_wayland.cpp:340
 #, kde-format
 msgid "Render through drm node."
 msgstr "Izriši preko vozlišča drm."
 
-#: main_wayland.cpp:340
+#: main_wayland.cpp:341
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
 "Izvleci lokalne informacije iz locale1 namesto iz uporabnikove konfiguracije"
 
-#: main_wayland.cpp:362
+#: main_wayland.cpp:363
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "Vnosni način, ki ga zažene KWin."
 
-#: main_wayland.cpp:368
+#: main_wayland.cpp:369
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "Zažene sejo v zaklenjenem načinu."
 
-#: main_wayland.cpp:372
+#: main_wayland.cpp:373
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "Zažene sejo brez podpore zaklepanja."
 
-#: main_wayland.cpp:377
+#: main_wayland.cpp:378
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "Začne sejo brez podpore za globalne bližnjice."
 
-#: main_wayland.cpp:382 main_x11.cpp:423
+#: main_wayland.cpp:383 main_x11.cpp:423
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Onemogoči podporo za KActivities."
 
-#: main_wayland.cpp:387
+#: main_wayland.cpp:388
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr "Končaj zatem, ko se program seje, ki ga zažene KWin, zapre."
 
-#: main_wayland.cpp:392
+#: main_wayland.cpp:393
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr "Programi, ki bodo zagnani po zagonu strežnikov Wayland in Xwayland"
@@ -4151,7 +4151,7 @@ msgstr "Preklopi na eno namizje navzdol"
 msgid "Switch to Desktop %1"
 msgstr "Preklopi na namizje %1"
 
-#: window.cpp:3080
+#: window.cpp:3088
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

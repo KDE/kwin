@@ -4,21 +4,22 @@
 # Diego Iastrubni <elcuco@kde.org>, 2005, 2006, 2008, 2012.
 # elkana bardugo <ttv200@gmail.com>, 2016.
 # Elkana Bardugo <ttv200@gmail.com>, 2017. #zanata
+# SPDX-FileCopyrightText: 2023 Yaron Shahrabani <sh.yaron@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-07 02:19+0000\n"
-"PO-Revision-Date: 2023-10-01 08:27+0300\n"
-"Last-Translator: Copied by Zanata <copied-by-zanata@zanata.org>\n"
-"Language-Team: Hebrew <kde-i18n-doc@kde.org>\n"
+"PO-Revision-Date: 2023-10-21 19:40+0300\n"
+"Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
+"Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
-"X-Generator: Poedit 3.3.2\n"
+"X-Generator: Lokalize 23.08.1\n"
 
 #: kcmrules.cpp:226
 #, kde-format
@@ -838,13 +839,13 @@ msgid "All selected"
 msgstr "כולם נבחרו"
 
 #: ui/OptionsComboBox.qml:43
-#, fuzzy, kde-format
+#, kde-format
 msgid "%1 selected"
 msgid_plural "%1 selected"
 msgstr[0] "נבחר %1"
-msgstr[1] "נבחרו %1"
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "נבחרו שניים"
+msgstr[2] "נבחרו %1"
+msgstr[3] "נבחרו %1"
 
 #: ui/RulesEditor.qml:63
 #, kde-format
@@ -882,13 +883,13 @@ msgid "Instantly"
 msgstr "מיידית"
 
 #: ui/RulesEditor.qml:115 ui/RulesEditor.qml:126
-#, fuzzy, kde-format
+#, kde-format
 msgid "After %1 second"
 msgid_plural "After %1 seconds"
 msgstr[0] "לאחר שנייה"
-msgstr[1] "לאחר %1 שניות"
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "לאחר שתי שניות"
+msgstr[2] "לאחר %1 שניות"
+msgstr[3] "לאחר %1 שניות"
 
 #: ui/RulesEditor.qml:175
 #, kde-format

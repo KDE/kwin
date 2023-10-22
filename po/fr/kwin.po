@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-21 01:39+0000\n"
-"PO-Revision-Date: 2023-09-20 18:07+0200\n"
+"POT-Creation-Date: 2023-10-22 02:06+0000\n"
+"PO-Revision-Date: 2023-10-20 12:50+0200\n"
 "Last-Translator: Xavier BESNARD <xavier.besnard@neuf.fr>\n"
 "Language-Team: fr\n"
 "Language: fr\n"
@@ -1327,11 +1327,9 @@ msgid "Vlad Zahorodnii"
 msgstr "Vlad Zahorodnii"
 
 #: main.cpp:194
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Very Huge"
+#, kde-format
 msgid "Xaver Hugl"
-msgstr "Gigantesque"
+msgstr "Xaver Hugl"
 
 #: main.cpp:203
 #, kde-format
@@ -1343,12 +1341,12 @@ msgstr "Désactiver les options de configuration"
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "Indiquer que KWin s'est arrêté brutalement un certain nombre de fois"
 
-#: main_wayland.cpp:290
+#: main_wayland.cpp:291
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "Démarrer un serveur Xwayland rootless."
 
-#: main_wayland.cpp:292
+#: main_wayland.cpp:293
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
@@ -1356,45 +1354,45 @@ msgstr ""
 "Nom du socket Wayland sur lequel écouter. Si non défini, « wayland-0 » sera "
 "utilisé."
 
-#: main_wayland.cpp:295
+#: main_wayland.cpp:296
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr "L'affichage X11 à utiliser en mode fenêtré sur une plate-forme X11."
 
-#: main_wayland.cpp:298
+#: main_wayland.cpp:299
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr ""
 "L'affichage Wayland à utiliser en mode fenêtré sur une plate-forme Wayland."
 
-#: main_wayland.cpp:300
+#: main_wayland.cpp:301
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "Réaliser le rendu dans un framebuffer virtuel"
 
-#: main_wayland.cpp:302
+#: main_wayland.cpp:303
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "Largeur du mode fenêtré. Par défaut à 1024."
 
-#: main_wayland.cpp:306
+#: main_wayland.cpp:307
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "Hauteur du mode fenêtré. Par défaut à 768."
 
-#: main_wayland.cpp:311
+#: main_wayland.cpp:312
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "L'échelle du mode fenêtré. Par défaut à 1."
 
-#: main_wayland.cpp:316
+#: main_wayland.cpp:317
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
 msgstr ""
 "Le nombre de fenêtres à ouvrir en sortie en mode fenêtré. Par défaut 1."
 
-#: main_wayland.cpp:321
+#: main_wayland.cpp:322
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1403,7 +1401,7 @@ msgstr ""
 "Le socket « Wayland » à utiliser pour les connexions entrantes. Ceci peut "
 "être combiné avec le paramètre « --socket » pour nommer le socket."
 
-#: main_wayland.cpp:325
+#: main_wayland.cpp:326
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1412,29 +1410,29 @@ msgstr ""
 "Le socket « Wayland » à utiliser pour les connexions entrantes de "
 "« Xwayland ». Ceci peut être défini plusieurs fois."
 
-#: main_wayland.cpp:329
+#: main_wayland.cpp:330
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "Nom de l'affichage « xwayland » ayant été préconfiguré"
 
-#: main_wayland.cpp:333
+#: main_wayland.cpp:334
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "Nom du fichier « xauthority »"
 
-#: main_wayland.cpp:337
+#: main_wayland.cpp:338
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 "Quitte cette instance. Ainsi, elle peut être redémarrée par "
 "« kwin_wayland_wrapper »."
 
-#: main_wayland.cpp:339
+#: main_wayland.cpp:340
 #, kde-format
 msgid "Render through drm node."
 msgstr "Réaliser le rendu en mode drm."
 
-#: main_wayland.cpp:340
+#: main_wayland.cpp:341
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
@@ -1442,38 +1440,38 @@ msgstr ""
 "Extraire les informations de localisation à partir de « locale1 » plutôt que "
 "la configuration de l'utilisateur"
 
-#: main_wayland.cpp:362
+#: main_wayland.cpp:363
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "Méthode d'entrée utilisée par KWin au démarrage."
 
-#: main_wayland.cpp:368
+#: main_wayland.cpp:369
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "Démarrer la session en mode verrouillé."
 
-#: main_wayland.cpp:372
+#: main_wayland.cpp:373
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "Démarrer la session sans prise en charge du verrouillage d'écran."
 
-#: main_wayland.cpp:377
+#: main_wayland.cpp:378
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "Démarrer la session sans prise en charge des raccourcis globaux."
 
-#: main_wayland.cpp:382 main_x11.cpp:423
+#: main_wayland.cpp:383 main_x11.cpp:423
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Désactiver l'intégration avec KActivities."
 
-#: main_wayland.cpp:387
+#: main_wayland.cpp:388
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr ""
 "Sortir après la fermeture de la session de l'application démarrée par KWin."
 
-#: main_wayland.cpp:392
+#: main_wayland.cpp:393
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
@@ -1517,10 +1515,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurDescription)
 #: plugins/blur/blur_config.ui:17
-#, fuzzy, kde-format
-#| msgid "Blur strength:"
+#, kde-format
 msgid "Blur strength:"
-msgstr "Intensité du flou :"
+msgstr "Force du flou :"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
@@ -1545,46 +1542,46 @@ msgstr "Force du bruit :"
 #: plugins/colorblindnesscorrection/ui/main.qml:32
 #, kde-format
 msgid "Red"
-msgstr ""
+msgstr "Rouge"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:33
 #, kde-format
 msgid "Green"
-msgstr ""
+msgstr "Vert"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:34
 #, kde-format
 msgid "Blue"
-msgstr ""
+msgstr "Bleu"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:35
 #, kde-format
 msgid "Purple"
-msgstr ""
+msgstr "Violet"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:70
 #, kde-format
 msgctxt "@label"
 msgid "Mode:"
-msgstr ""
+msgstr "Mode :"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:75
 #, kde-format
 msgctxt "@option"
 msgid "Protanopia (red weak)"
-msgstr ""
+msgstr "Protanopie (Faiblesse sur le rouge)"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:76
 #, kde-format
 msgctxt "@option"
 msgid "Deuteranopia (green weak)"
-msgstr ""
+msgstr "Deutéranopie (Faiblesse sur le vert)"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:77
 #, kde-format
 msgctxt "@option"
 msgid "Tritanopia (blue-yellow)"
-msgstr ""
+msgstr "Tritanopie (Bleu-jaune)"
 
 #: plugins/colorpicker/colorpicker.cpp:103
 #, kde-format
@@ -2161,22 +2158,19 @@ msgid "Show Text:"
 msgstr "Afficher le texte :"
 
 #: plugins/mousemark/mousemark.cpp:43
-#, fuzzy, kde-format
-#| msgid "Clear All Mouse Marks"
+#, kde-format
 msgid "Clear All Mouse Marks"
-msgstr "Effacer toutes les traces de souris"
+msgstr "Effacer toutes les marques de souris"
 
 #: plugins/mousemark/mousemark.cpp:49 plugins/mousemark/mousemark_config.cpp:60
-#, fuzzy, kde-format
-#| msgid "Clear Last Mouse Mark"
+#, kde-format
 msgid "Clear Last Mouse Mark"
-msgstr "Effacer la dernière trace de souris"
+msgstr "Effacer la dernière marque de souris"
 
 #: plugins/mousemark/mousemark_config.cpp:54
-#, fuzzy, kde-format
-#| msgid "Clear Mouse Marks"
+#, kde-format
 msgid "Clear Mouse Marks"
-msgstr "Effacer les traces de souris"
+msgstr "Effacer les marques de souris"
 
 #: plugins/mousemark/mousemark_config.cpp:101
 #, kde-format
@@ -2300,14 +2294,14 @@ msgstr "Inconnu"
 #, kde-format
 msgctxt "@action Overview and Grid View are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "Faire défiler les vues en aperçu et en grille"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:48
 #: plugins/overview/overvieweffect.cpp:133
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
-msgstr ""
+msgstr "Faire défiler les vues en aperçu et en grille"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:55
 #, fuzzy, kde-format
@@ -2354,19 +2348,19 @@ msgstr "Ignorer les fenêtres minimisées :"
 #: plugins/overview/kcm/overvieweffectkcm.ui:57
 #, kde-format
 msgid "Organize windows in the Grid View:"
-msgstr ""
+msgstr "Permettre d'organiser les fenêtres dans la vue en grille :"
 
 #. i18n: ectx: property (text), widget (QLabel, label_FilterWindows)
 #: plugins/overview/kcm/overvieweffectkcm.ui:71
 #, kde-format
 msgid "Search results include filtered windows:"
-msgstr ""
+msgstr "Les résultats de recherche intègre les fenêtres filtrées :"
 
 #: plugins/overview/overvieweffect.cpp:124
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "Faire défiler les vues en aperçu et en grille"
 
 #: plugins/overview/overvieweffect.cpp:141
 #, fuzzy, kde-format
@@ -4254,7 +4248,7 @@ msgstr "Passer au bureau du dessous"
 msgid "Switch to Desktop %1"
 msgstr "Passer au bureau %1"
 
-#: window.cpp:3080
+#: window.cpp:3088
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

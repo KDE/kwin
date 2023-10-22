@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-21 01:39+0000\n"
+"POT-Creation-Date: 2023-10-22 02:06+0000\n"
 "PO-Revision-Date: 2023-02-21 14:02+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -1345,12 +1345,12 @@ msgstr "Отключить параметры конфигурации"
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "Показывает, что сбои KWin происходили n раз"
 
-#: main_wayland.cpp:290
+#: main_wayland.cpp:291
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "Запустить вложенный сервер Xwayland."
 
-#: main_wayland.cpp:292
+#: main_wayland.cpp:293
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
@@ -1358,37 +1358,37 @@ msgstr ""
 "Имя сокета Wayland для ожидания подключений. По умолчанию используется "
 "«wayland-0»."
 
-#: main_wayland.cpp:295
+#: main_wayland.cpp:296
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr "Экран X11, на котором KWin будет запущен в оконном режиме."
 
-#: main_wayland.cpp:298
+#: main_wayland.cpp:299
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr "Экран Wayland, на котором KWin будет запущен в оконном режиме."
 
-#: main_wayland.cpp:300
+#: main_wayland.cpp:301
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "Отрисовка в виртуальный фреймбуфер."
 
-#: main_wayland.cpp:302
+#: main_wayland.cpp:303
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "Ширина окна в случае оконного режима. Значение по умолчанию — 1024."
 
-#: main_wayland.cpp:306
+#: main_wayland.cpp:307
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "Высота окна в случае оконного режима. Значение по умолчанию — 768."
 
-#: main_wayland.cpp:311
+#: main_wayland.cpp:312
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "Масштаб в случае оконного режима. Значение по умолчанию — 1."
 
-#: main_wayland.cpp:316
+#: main_wayland.cpp:317
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
@@ -1396,7 +1396,7 @@ msgstr ""
 "Количество окон вывода, которые будут открыты в случае оконного режима. "
 "Значение по умолчанию — 1."
 
-#: main_wayland.cpp:321
+#: main_wayland.cpp:322
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1405,7 +1405,7 @@ msgstr ""
 "Сокет Wayland, используемый для входящих подключений. Этот параметр может "
 "быть использован совместно «--socket» для указания имени сокета"
 
-#: main_wayland.cpp:325
+#: main_wayland.cpp:326
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1414,65 +1414,65 @@ msgstr ""
 "Сокет Wayland, используемый для входящих подключений. Этот параметр может "
 "быть использован несколько раз"
 
-#: main_wayland.cpp:329
+#: main_wayland.cpp:330
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "Имя предварительно настроенного экрана xwayland"
 
-#: main_wayland.cpp:333
+#: main_wayland.cpp:334
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "Имя файла xauthority "
 
-#: main_wayland.cpp:337
+#: main_wayland.cpp:338
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 "Выход из этого экземпляра приложения, чтобы было возможно перезапустить с "
 "помощью «kwin_wayland_wrapper»."
 
-#: main_wayland.cpp:339
+#: main_wayland.cpp:340
 #, kde-format
 msgid "Render through drm node."
 msgstr "Отрисовка через DRM."
 
-#: main_wayland.cpp:340
+#: main_wayland.cpp:341
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
 
-#: main_wayland.cpp:362
+#: main_wayland.cpp:363
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "Запускаемый сервер методов ввода."
 
-#: main_wayland.cpp:368
+#: main_wayland.cpp:369
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "Запустить сеанс в заблокированном виде."
 
-#: main_wayland.cpp:372
+#: main_wayland.cpp:373
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "Запустить сеанс без поддержки блокировки экрана."
 
-#: main_wayland.cpp:377
+#: main_wayland.cpp:378
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "Запустить сеанс без поддержки глобальных комбинаций клавиш."
 
-#: main_wayland.cpp:382 main_x11.cpp:423
+#: main_wayland.cpp:383 main_x11.cpp:423
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Выключить интеграцию с комнатами KDE."
 
-#: main_wayland.cpp:387
+#: main_wayland.cpp:388
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr "Выйти после закрытия приложения сеанса, которое запустил KWin."
 
-#: main_wayland.cpp:392
+#: main_wayland.cpp:393
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr "Приложения, открываемые после загрузки Wayland и Xwayland."
@@ -4301,7 +4301,7 @@ msgstr "Переключиться на один рабочий стол вни�
 msgid "Switch to Desktop %1"
 msgstr "Переключиться на рабочий стол %1"
 
-#: window.cpp:3080
+#: window.cpp:3088
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
