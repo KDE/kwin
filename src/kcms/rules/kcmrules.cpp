@@ -10,6 +10,8 @@
 
 #include <QDBusConnection>
 #include <QDBusMessage>
+#include <QDBusPendingCallWatcher>
+#include <QDBusPendingReply>
 
 #include <KConfig>
 #include <KLocalizedString>

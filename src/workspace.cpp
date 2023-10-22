@@ -66,6 +66,11 @@
 #include <KConfigGroup>
 #include <KLocalizedString>
 #include <KStartupInfo>
+// Qt
+#include <QCryptographicHash>
+#include <QDBusConnection>
+#include <QDBusPendingCall>
+#include <QMetaProperty>
 // xcb
 #include <xcb/xinerama.h>
 

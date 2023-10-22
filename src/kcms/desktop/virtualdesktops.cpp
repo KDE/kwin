@@ -16,6 +16,8 @@
 #include <KConfigGroup>
 #include <KLocalizedString>
 #include <KPluginFactory>
+#include <QDBusConnection>
+#include <QDBusMessage>
 
 K_PLUGIN_FACTORY_WITH_JSON(VirtualDesktopsFactory,
                            "kcm_kwin_virtualdesktops.json",

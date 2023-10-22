@@ -13,6 +13,7 @@
 #include <KConfigGroup>
 #include <KPluginFactory>
 #include <KPluginMetaData>
+#include <QPluginLoader>
 
 namespace KWin
 {

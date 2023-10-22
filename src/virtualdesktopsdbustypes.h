@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include <QtDBus>
+#include <QDBusArgument>
 
 namespace KWin
 {

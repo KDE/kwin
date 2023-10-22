@@ -420,7 +420,7 @@ public:
     {
         auto list = defaultValue("CalibrationMatrix", QList<float>{});
         if (list.size() == 16) {
-            return QMatrix4x4{list.toVector().constData()};
+            return QMatrix4x4{list.constData()};
         }
 
         return m_defaultCalibrationMatrix;

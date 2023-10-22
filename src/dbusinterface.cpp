@@ -30,6 +30,7 @@
 #endif
 
 // Qt
+#include <QDBusConnection>
 #include <QOpenGLContext>
 
 namespace KWin

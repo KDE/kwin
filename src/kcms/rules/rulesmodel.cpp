@@ -11,9 +11,15 @@
 #include "activities.h"
 #endif
 
+#include <QDBusConnection>
+#include <QDBusMessage>
+#include <QDBusMetaType>
+#include <QDBusPendingCallWatcher>
+#include <QDBusPendingReply>
+#include <QFileInfo>
 #include <QIcon>
 #include <QQmlEngine>
-#include <QtDBus>
+#include <QTimer>
 
 #include <KColorSchemeManager>
 #include <KConfig>

@@ -46,7 +46,7 @@
 
 #include <QFutureWatcher>
 #include <QThread>
-#include <QtConcurrent>
+#include <QtConcurrentRun>
 
 // system
 #include <sys/socket.h>

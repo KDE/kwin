@@ -9,8 +9,9 @@
 
 #pragma once
 
+#include <QDBusContext>
+#include <QDBusMessage>
 #include <QObject>
-#include <QtDBus>
 
 #include "virtualdesktopsdbustypes.h"
 
