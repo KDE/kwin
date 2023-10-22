@@ -14,6 +14,7 @@
 
 #include <QHash>
 #include <QPointer>
+#include <ranges>
 
 namespace KWin
 {
@@ -144,14 +145,14 @@ public:
     {
     }
 
-    wl_resource *targetResource()
+    std::ranges::subrange<QMultiMap<struct ::wl_client *, Resource *>::const_iterator> targetResources() const
     {
         if (!m_surface)
-            return nullptr;
+            return {};
 
         ClientConnection *client = m_surface->client();
-        const Resource *r = resourceMap().value(*client);
-        return r ? r->handle : nullptr;
+        const auto [start, end] = resourceMap().equal_range(*client);
+        return std::ranges::subrange(start, end);
     }
 
     quint64 hardwareId() const
@@ -165,7 +166,7 @@ public:
 
     void zwp_tablet_tool_v2_bind_resource(QtWaylandServer::zwp_tablet_tool_v2::Resource *resource) override
     {
-        TabletSurfaceCursorV2 *&c = m_cursors[resource->handle];
+        TabletSurfaceCursorV2 *&c = m_cursors[resource->client()];
         if (!c)
             c = new TabletSurfaceCursorV2;
     }
@@ -186,16 +187,21 @@ public:
             }
         }
 
-        TabletSurfaceCursorV2 *c = m_cursors[resource->handle];
+        TabletSurfaceCursorV2 *c = m_cursors[resource->client()];
         c->d->update(serial, surface, {hotspot_x, hotspot_y});
-        if (resource->handle == targetResource()) {
+        const auto resources = targetResources();
+        if (std::any_of(resources.begin(), resources.end(), [resource](const Resource *res) {
+                return res->handle == resource->handle;
+            })) {
             Q_EMIT q->cursorChanged(c);
         }
     }
 
     void zwp_tablet_tool_v2_destroy_resource(Resource *resource) override
     {
-        delete m_cursors.take(resource->handle);
+        if (!resourceMap().contains(resource->client())) {
+            delete m_cursors.take(resource->client());
+        }
         if (m_removed && resourceMap().isEmpty()) {
             delete q;
         }
@@ -216,7 +222,7 @@ public:
     const uint32_t m_hardwareSerialHigh, m_hardwareSerialLow;
     const uint32_t m_hardwareIdHigh, m_hardwareIdLow;
     const QList<TabletToolV2Interface::Capability> m_capabilities;
-    QHash<wl_resource *, TabletSurfaceCursorV2 *> m_cursors;
+    QHash<wl_client *, TabletSurfaceCursorV2 *> m_cursors;
     TabletToolV2Interface *const q;
 };
 
@@ -276,7 +282,11 @@ void TabletToolV2Interface::setCurrentSurface(SurfaceInterface *surface)
         d->m_lastTablet = lastTablet;
     }
 
-    Q_EMIT cursorChanged(d->m_cursors.value(d->targetResource()));
+    if (surface != nullptr) {
+        if (auto *const cursor = d->m_cursors.value(*surface->client())) {
+            Q_EMIT cursorChanged(cursor);
+        }
+    }
 }
 
 quint32 TabletToolV2Interface::proximitySerial() const
@@ -286,31 +296,40 @@ quint32 TabletToolV2Interface::proximitySerial() const
 
 bool TabletToolV2Interface::isClientSupported() const
 {
-    return d->m_surface && d->targetResource();
+    return d->m_surface && !d->targetResources().empty();
 }
 
 void TabletToolV2Interface::sendButton(uint32_t button, bool pressed)
 {
-    d->send_button(d->targetResource(),
-                   d->m_display->nextSerial(),
-                   button,
-                   pressed ? QtWaylandServer::zwp_tablet_tool_v2::button_state_pressed : QtWaylandServer::zwp_tablet_tool_v2::button_state_released);
+    const auto serial = d->m_display->nextSerial();
+    for (auto *resource : d->targetResources()) {
+        d->send_button(resource->handle,
+                       serial,
+                       button,
+                       pressed ? QtWaylandServer::zwp_tablet_tool_v2::button_state_pressed : QtWaylandServer::zwp_tablet_tool_v2::button_state_released);
+    }
 }
 
 void TabletToolV2Interface::sendMotion(const QPointF &pos)
 {
     const QPointF surfacePos = d->m_surface->toSurfaceLocal(pos);
-    d->send_motion(d->targetResource(), wl_fixed_from_double(surfacePos.x()), wl_fixed_from_double(surfacePos.y()));
+    for (auto *resource : d->targetResources()) {
+        d->send_motion(resource->handle, wl_fixed_from_double(surfacePos.x()), wl_fixed_from_double(surfacePos.y()));
+    }
 }
 
 void TabletToolV2Interface::sendDistance(uint32_t distance)
 {
-    d->send_distance(d->targetResource(), distance);
+    for (auto *resource : d->targetResources()) {
+        d->send_distance(resource->handle, distance);
+    }
 }
 
 void TabletToolV2Interface::sendFrame(uint32_t time)
 {
-    d->send_frame(d->targetResource(), time);
+    for (auto *resource : d->targetResources()) {
+        d->send_frame(resource->handle, time);
+    }
 
     if (d->m_cleanup) {
         d->m_surface = nullptr;
@@ -321,53 +340,71 @@ void TabletToolV2Interface::sendFrame(uint32_t time)
 
 void TabletToolV2Interface::sendPressure(uint32_t pressure)
 {
-    d->send_pressure(d->targetResource(), pressure);
+    for (auto *resource : d->targetResources()) {
+        d->send_pressure(resource->handle, pressure);
+    }
 }
 
 void TabletToolV2Interface::sendRotation(qreal rotation)
 {
-    d->send_rotation(d->targetResource(), wl_fixed_from_double(rotation));
+    for (auto *resource : d->targetResources()) {
+        d->send_rotation(resource->handle, wl_fixed_from_double(rotation));
+    }
 }
 
 void TabletToolV2Interface::sendSlider(int32_t position)
 {
-    d->send_slider(d->targetResource(), position);
+    for (auto *resource : d->targetResources()) {
+        d->send_slider(resource->handle, position);
+    }
 }
 
 void TabletToolV2Interface::sendTilt(qreal degreesX, qreal degreesY)
 {
-    d->send_tilt(d->targetResource(), wl_fixed_from_double(degreesX), wl_fixed_from_double(degreesY));
+    for (auto *resource : d->targetResources()) {
+        d->send_tilt(resource->handle, wl_fixed_from_double(degreesX), wl_fixed_from_double(degreesY));
+    }
 }
 
 void TabletToolV2Interface::sendWheel(int32_t degrees, int32_t clicks)
 {
-    d->send_wheel(d->targetResource(), degrees, clicks);
+    for (auto *resource : d->targetResources()) {
+        d->send_wheel(resource->handle, degrees, clicks);
+    }
 }
 
 void TabletToolV2Interface::sendProximityIn(TabletV2Interface *tablet)
 {
     wl_resource *tabletResource = tablet->d->resourceForSurface(d->m_surface);
-    quint32 serial = d->m_display->nextSerial();
-
-    d->send_proximity_in(d->targetResource(), serial, tabletResource, d->m_surface->resource());
+    const auto serial = d->m_display->nextSerial();
+    for (auto *resource : d->targetResources()) {
+        d->send_proximity_in(resource->handle, serial, tabletResource, d->m_surface->resource());
+    }
     d->m_proximitySerial = serial;
     d->m_lastTablet = tablet;
 }
 
 void TabletToolV2Interface::sendProximityOut()
 {
-    d->send_proximity_out(d->targetResource());
+    for (auto *resource : d->targetResources()) {
+        d->send_proximity_out(resource->handle);
+    }
     d->m_cleanup = true;
 }
 
 void TabletToolV2Interface::sendDown()
 {
-    d->send_down(d->targetResource(), d->m_display->nextSerial());
+    const auto serial = d->m_display->nextSerial();
+    for (auto *resource : d->targetResources()) {
+        d->send_down(resource->handle, serial);
+    }
 }
 
 void TabletToolV2Interface::sendUp()
 {
-    d->send_up(d->targetResource());
+    for (auto *resource : d->targetResources()) {
+        d->send_up(resource->handle);
+    }
 }
 
 class TabletPadRingV2InterfacePrivate : public QtWaylandServer::zwp_tablet_pad_ring_v2
@@ -379,11 +416,11 @@ public:
     {
     }
 
-    wl_resource *resourceForSurface(SurfaceInterface *surface) const
+    std::ranges::subrange<QMultiMap<struct ::wl_client *, Resource *>::const_iterator> resourcesForSurface(SurfaceInterface *surface) const
     {
         ClientConnection *client = surface->client();
-        Resource *r = resourceMap().value(*client);
-        return r ? r->handle : nullptr;
+        const auto [start, end] = resourceMap().equal_range(*client);
+        return std::ranges::subrange(start, end);
     }
 
     void zwp_tablet_pad_ring_v2_destroy(Resource *resource) override
@@ -405,22 +442,30 @@ TabletPadRingV2Interface::~TabletPadRingV2Interface() = default;
 
 void TabletPadRingV2Interface::sendAngle(qreal angle)
 {
-    d->send_angle(d->resourceForSurface(d->m_pad->currentSurface()), wl_fixed_from_double(angle));
+    for (auto *resource : d->resourcesForSurface(d->m_pad->currentSurface())) {
+        d->send_angle(resource->handle, wl_fixed_from_double(angle));
+    }
 }
 
 void TabletPadRingV2Interface::sendFrame(quint32 time)
 {
-    d->send_frame(d->resourceForSurface(d->m_pad->currentSurface()), time);
+    for (auto *resource : d->resourcesForSurface(d->m_pad->currentSurface())) {
+        d->send_frame(resource->handle, time);
+    }
 }
 
 void TabletPadRingV2Interface::sendSource(Source source)
 {
-    d->send_source(d->resourceForSurface(d->m_pad->currentSurface()), source);
+    for (auto *resource : d->resourcesForSurface(d->m_pad->currentSurface())) {
+        d->send_source(resource->handle, source);
+    }
 }
 
 void TabletPadRingV2Interface::sendStop()
 {
-    d->send_stop(d->resourceForSurface(d->m_pad->currentSurface()));
+    for (auto *resource : d->resourcesForSurface(d->m_pad->currentSurface())) {
+        d->send_stop(resource->handle);
+    }
 }
 
 class TabletPadStripV2InterfacePrivate : public QtWaylandServer::zwp_tablet_pad_strip_v2
@@ -432,11 +477,11 @@ public:
     {
     }
 
-    wl_resource *resourceForSurface(SurfaceInterface *surface) const
+    std::ranges::subrange<QMultiMap<struct ::wl_client *, Resource *>::const_iterator> resourcesForSurface(SurfaceInterface *surface) const
     {
         ClientConnection *client = surface->client();
-        Resource *r = resourceMap().value(*client);
-        return r ? r->handle : nullptr;
+        const auto [start, end] = resourceMap().equal_range(*client);
+        return std::ranges::subrange(start, end);
     }
 
     void zwp_tablet_pad_strip_v2_destroy(Resource *resource) override
@@ -458,22 +503,30 @@ TabletPadStripV2Interface::~TabletPadStripV2Interface() = default;
 
 void TabletPadStripV2Interface::sendFrame(quint32 time)
 {
-    d->send_frame(d->resourceForSurface(d->m_pad->currentSurface()), time);
+    for (auto *resource : d->resourcesForSurface(d->m_pad->currentSurface())) {
+        d->send_frame(resource->handle, time);
+    }
 }
 
 void TabletPadStripV2Interface::sendPosition(quint32 position)
 {
-    d->send_position(d->resourceForSurface(d->m_pad->currentSurface()), position);
+    for (auto *resource : d->resourcesForSurface(d->m_pad->currentSurface())) {
+        d->send_position(resource->handle, position);
+    }
 }
 
 void TabletPadStripV2Interface::sendSource(Source source)
 {
-    d->send_source(d->resourceForSurface(d->m_pad->currentSurface()), source);
+    for (auto *resource : d->resourcesForSurface(d->m_pad->currentSurface())) {
+        d->send_source(resource->handle, source);
+    }
 }
 
 void TabletPadStripV2Interface::sendStop()
 {
-    d->send_stop(d->resourceForSurface(d->m_pad->currentSurface()));
+    for (auto *resource : d->resourcesForSurface(d->m_pad->currentSurface())) {
+        d->send_stop(resource->handle);
+    }
 }
 
 class TabletPadGroupV2InterfacePrivate : public QtWaylandServer::zwp_tablet_pad_group_v2
@@ -486,11 +539,11 @@ public:
     {
     }
 
-    wl_resource *resourceForSurface(SurfaceInterface *surface) const
+    std::ranges::subrange<QMultiMap<struct ::wl_client *, Resource *>::const_iterator> resourcesForSurface(SurfaceInterface *surface) const
     {
         ClientConnection *client = surface->client();
-        Resource *r = resourceMap().value(*client);
-        return r ? r->handle : nullptr;
+        const auto [start, end] = resourceMap().equal_range(*client);
+        return std::ranges::subrange(start, end);
     }
 
     void zwp_tablet_pad_group_v2_destroy(Resource *resource) override
@@ -515,7 +568,9 @@ TabletPadGroupV2Interface::~TabletPadGroupV2Interface() = default;
 void TabletPadGroupV2Interface::sendModeSwitch(quint32 time, quint32 serial, quint32 mode)
 {
     d->m_currentMode = mode;
-    d->send_mode_switch(d->resourceForSurface(d->m_pad->currentSurface()), time, serial, mode);
+    for (auto *resource : d->resourcesForSurface(d->m_pad->currentSurface())) {
+        d->send_mode_switch(resource->handle, time, serial, mode);
+    }
 }
 
 class TabletPadV2InterfacePrivate : public QtWaylandServer::zwp_tablet_pad_v2
@@ -568,11 +623,11 @@ public:
         Q_EMIT q->feedback(m_display->getConnection(resource->client()), button, description, serial);
     }
 
-    wl_resource *resourceForSurface(SurfaceInterface *surface) const
+    std::ranges::subrange<QMultiMap<struct ::wl_client *, Resource *>::const_iterator> resourcesForSurface(SurfaceInterface *surface) const
     {
         ClientConnection *client = surface->client();
-        Resource *r = resourceMap().value(*client);
-        return r ? r->handle : nullptr;
+        const auto [start, end] = resourceMap().equal_range(*client);
+        return std::ranges::subrange(start, end);
     }
 
     TabletPadV2Interface *const q;
@@ -613,7 +668,10 @@ TabletPadV2Interface::~TabletPadV2Interface()
 
 void TabletPadV2Interface::sendButton(std::chrono::microseconds time, quint32 button, bool pressed)
 {
-    d->send_button(d->resourceForSurface(currentSurface()), std::chrono::duration_cast<std::chrono::milliseconds>(time).count(), button, pressed);
+    const auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(time).count();
+    for (auto *resource : d->resourcesForSurface(currentSurface())) {
+        d->send_button(resource->handle, milliseconds, button, pressed);
+    }
 }
 
 TabletPadRingV2Interface *TabletPadV2Interface::ring(uint at) const
@@ -633,14 +691,20 @@ void TabletPadV2Interface::setCurrentSurface(SurfaceInterface *surface, TabletV2
     }
 
     if (d->m_currentSurface) {
-        d->send_leave(d->resourceForSurface(d->m_currentSurface), d->m_display->nextSerial(), d->m_currentSurface->resource());
+        auto serial = d->m_display->nextSerial();
+        for (auto *resource : d->resourcesForSurface(d->m_currentSurface)) {
+            d->send_leave(resource->handle, serial, d->m_currentSurface->resource());
+        }
     }
 
     d->m_currentSurface = surface;
     if (surface) {
         wl_resource *tabletResource = tablet->d->resourceForSurface(surface);
 
-        d->send_enter(d->resourceForSurface(surface), d->m_display->nextSerial(), tabletResource, surface->resource());
+        auto serial = d->m_display->nextSerial();
+        for (auto *resource : d->resourcesForSurface(surface)) {
+            d->send_enter(resource->handle, serial, tabletResource, surface->resource());
+        }
         d->m_padGroup->sendModeSwitch(0, d->m_display->nextSerial(), d->m_padGroup->d->m_currentMode);
     }
 }

@@ -148,7 +148,9 @@ private Q_SLOTS:
     void initTestCase();
     void testAdd();
     void testAddPad();
+    void testInteractSimple_data();
     void testInteractSimple();
+    void testInteractSurfaceChange_data();
     void testInteractSurfaceChange();
 
 private:
@@ -163,6 +165,8 @@ private:
     CompositorInterface *m_serverCompositor;
 
     TabletSeat *m_tabletSeatClient = nullptr;
+    TabletSeat *m_tabletSeatClient2 = nullptr;
+
     TabletManagerV2Interface *m_tabletManager;
     QList<KWayland::Client::Surface *> m_surfacesClient;
 
@@ -213,6 +217,8 @@ void TestTabletInterface::initTestCase()
             auto tabletClient = new QtWayland::zwp_tablet_manager_v2(registry->registry(), name, version);
             auto _seat = tabletClient->get_tablet_seat(*m_clientSeat);
             m_tabletSeatClient = new TabletSeat(_seat);
+            auto _seat2 = tabletClient->get_tablet_seat(*m_clientSeat);
+            m_tabletSeatClient2 = new TabletSeat(_seat2);
         }
     });
     connect(registry, &KWayland::Client::Registry::seatAnnounced, this, [this, registry](quint32 name, quint32 version) {
@@ -251,6 +257,7 @@ TestTabletInterface::~TestTabletInterface()
         m_thread = nullptr;
     }
     delete m_tabletSeatClient;
+    delete m_tabletSeatClient2;
     m_connection->deleteLater();
     m_connection = nullptr;
 }
@@ -311,9 +318,19 @@ void TestTabletInterface::testAddPad()
 }
 
 static uint s_serial = 0;
+
+void TestTabletInterface::testInteractSimple_data()
+{
+    QTest::addColumn<TabletSeat *>("tabletSeatClient");
+    QTest::newRow("first client") << m_tabletSeatClient;
+    QTest::newRow("second client") << m_tabletSeatClient2;
+}
+
 void TestTabletInterface::testInteractSimple()
 {
-    QSignalSpy frameSpy(m_tabletSeatClient->m_tools[0], &Tool::frame);
+    QFETCH(TabletSeat *, tabletSeatClient);
+    tabletSeatClient->m_tools[0]->surfaceApproximated.clear();
+    QSignalSpy frameSpy(tabletSeatClient->m_tools[0], &Tool::frame);
 
     QVERIFY(!m_tool->isClientSupported());
     m_tool->setCurrentSurface(m_surfaces[0]);
@@ -329,13 +346,22 @@ void TestTabletInterface::testInteractSimple()
     QVERIFY(!m_tool->isClientSupported());
 
     QVERIFY(frameSpy.wait(500));
-    QCOMPARE(m_tabletSeatClient->m_tools[0]->surfaceApproximated.count(), 1);
+    QCOMPARE(tabletSeatClient->m_tools[0]->surfaceApproximated.count(), 1);
+}
+
+void TestTabletInterface::testInteractSurfaceChange_data()
+{
+    QTest::addColumn<TabletSeat *>("tabletSeatClient");
+    QTest::newRow("first client") << m_tabletSeatClient;
+    QTest::newRow("second client") << m_tabletSeatClient2;
 }
 
 void TestTabletInterface::testInteractSurfaceChange()
 {
-    m_tabletSeatClient->m_tools[0]->surfaceApproximated.clear();
-    QSignalSpy frameSpy(m_tabletSeatClient->m_tools[0], &Tool::frame);
+    QFETCH(TabletSeat *, tabletSeatClient);
+    tabletSeatClient->m_tools[0]->surfaceApproximated.clear();
+    QSignalSpy frameSpy(tabletSeatClient->m_tools[0], &Tool::frame);
+
     QVERIFY(!m_tool->isClientSupported());
     m_tool->setCurrentSurface(m_surfaces[0]);
     QVERIFY(m_tool->isClientSupported() && m_tablet->isSurfaceSupported(m_surfaces[0]));
@@ -354,7 +380,7 @@ void TestTabletInterface::testInteractSurfaceChange()
     QVERIFY(!m_tool->isClientSupported());
 
     QVERIFY(frameSpy.wait(500));
-    QCOMPARE(m_tabletSeatClient->m_tools[0]->surfaceApproximated.count(), 2);
+    QCOMPARE(tabletSeatClient->m_tools[0]->surfaceApproximated.count(), 2);
 }
 
 QTEST_GUILESS_MAIN(TestTabletInterface)
