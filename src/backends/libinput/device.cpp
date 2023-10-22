@@ -177,7 +177,7 @@ struct ConfigData<CalibrationMatrix> : public ConfigDataBase
         if (values.hasKey(key.constData())) {
             auto list = values.readEntry(key.constData(), QList<float>());
             if (list.size() == 16) {
-                device->setCalibrationMatrix(QMatrix4x4{list.toVector().constData()});
+                device->setCalibrationMatrix(QMatrix4x4{list.constData()});
                 return;
             }
         }
