@@ -22,7 +22,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 4;
+static const quint32 s_version = 5;
 
 static QtWaylandServer::kde_output_device_v2::transform kwinTransformToOutputDeviceTransform(OutputTransform transform)
 {
@@ -54,6 +54,9 @@ static uint32_t kwinCapabilitiesToOutputDeviceCapabilities(Output::Capabilities 
     }
     if (caps & Output::Capability::AutoRotation) {
         ret |= QtWaylandServer::kde_output_device_v2::capability_auto_rotate;
+    }
+    if (caps & Output::Capability::IccProfile) {
+        ret |= QtWaylandServer::kde_output_device_v2::capability_icc_profile;
     }
     return ret;
 }
@@ -98,6 +101,7 @@ public:
     void sendSdrBrightness(Resource *resource);
     void sendWideColorGamut(Resource *resource);
     void sendAutoRotationPolicy(Resource *resource);
+    void sendIccProfilePath(Resource *resource);
 
     OutputDeviceV2Interface *q;
     QPointer<Display> m_display;
@@ -125,6 +129,7 @@ public:
     uint32_t m_sdrBrightness = 200;
     bool m_wideColorGamut = false;
     auto_rotate_policy m_autoRotation = auto_rotate_policy::auto_rotate_policy_in_tablet_mode;
+    QString m_iccProfilePath;
 
 protected:
     void kde_output_device_v2_bind_resource(Resource *resource) override;
@@ -206,6 +211,7 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, Output *handl
     updateSdrBrightness();
     updateWideColorGamut();
     updateAutoRotate();
+    updateIccProfilePath();
 
     connect(handle, &Output::geometryChanged,
             this, &OutputDeviceV2Interface::updateGlobalPosition);
@@ -231,6 +237,7 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, Output *handl
     connect(handle, &Output::sdrBrightnessChanged, this, &OutputDeviceV2Interface::updateSdrBrightness);
     connect(handle, &Output::wideColorGamutChanged, this, &OutputDeviceV2Interface::updateWideColorGamut);
     connect(handle, &Output::autoRotationPolicyChanged, this, &OutputDeviceV2Interface::updateAutoRotate);
+    connect(handle, &Output::iccProfileChanged, this, &OutputDeviceV2Interface::updateIccProfilePath);
 }
 
 OutputDeviceV2Interface::~OutputDeviceV2Interface()
@@ -285,6 +292,7 @@ void OutputDeviceV2InterfacePrivate::kde_output_device_v2_bind_resource(Resource
     sendSdrBrightness(resource);
     sendWideColorGamut(resource);
     sendAutoRotationPolicy(resource);
+    sendIccProfilePath(resource);
     sendDone(resource);
 }
 
@@ -407,6 +415,13 @@ void OutputDeviceV2InterfacePrivate::sendAutoRotationPolicy(Resource *resource)
 {
     if (resource->version() >= KDE_OUTPUT_DEVICE_V2_AUTO_ROTATE_POLICY_SINCE_VERSION) {
         send_auto_rotate_policy(resource->handle, m_autoRotation);
+    }
+}
+
+void OutputDeviceV2InterfacePrivate::sendIccProfilePath(Resource *resource)
+{
+    if (resource->version() >= KDE_OUTPUT_DEVICE_V2_ICC_PROFILE_PATH_SINCE_VERSION) {
+        send_icc_profile_path(resource->handle, m_iccProfilePath);
     }
 }
 
@@ -674,6 +689,18 @@ void OutputDeviceV2Interface::updateAutoRotate()
         const auto clientResources = d->resourceMap();
         for (const auto &resource : clientResources) {
             d->sendAutoRotationPolicy(resource);
+            d->sendDone(resource);
+        }
+    }
+}
+
+void OutputDeviceV2Interface::updateIccProfilePath()
+{
+    if (d->m_iccProfilePath != d->m_handle->iccProfilePath()) {
+        d->m_iccProfilePath = d->m_handle->iccProfilePath();
+        const auto clientResources = d->resourceMap();
+        for (const auto &resource : clientResources) {
+            d->sendIccProfilePath(resource);
             d->sendDone(resource);
         }
     }

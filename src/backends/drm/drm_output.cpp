@@ -43,7 +43,7 @@ DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn)
     m_pipeline->setOutput(this);
     m_renderLoop->setRefreshRate(m_pipeline->mode()->refreshRate());
 
-    Capabilities capabilities = Capability::Dpms;
+    Capabilities capabilities = Capability::Dpms | Capability::IccProfile;
     State initialState;
 
     if (conn->overscan.isValid() || conn->underscan.isValid()) {

@@ -135,6 +135,7 @@ public:
         HighDynamicRange = 1 << 4,
         WideColorGamut = 1 << 5,
         AutoRotation = 1 << 6,
+        IccProfile = 1 << 7,
     };
     Q_DECLARE_FLAGS(Capabilities, Capability)
 
@@ -380,6 +381,7 @@ Q_SIGNALS:
     void highDynamicRangeChanged();
     void autoRotationPolicyChanged();
     void iccProfileChanged();
+    void iccProfilePathChanged();
 
 protected:
     struct Information

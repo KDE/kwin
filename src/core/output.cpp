@@ -418,6 +418,9 @@ void Output::setState(const State &state)
     if (oldState.iccProfile != state.iccProfile) {
         Q_EMIT iccProfileChanged();
     }
+    if (oldState.iccProfilePath != state.iccProfilePath) {
+        Q_EMIT iccProfilePathChanged();
+    }
     if (oldState.enabled != state.enabled) {
         Q_EMIT enabledChanged();
     }

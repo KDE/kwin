@@ -73,6 +73,7 @@ private:
     void updateSdrBrightness();
     void updateWideColorGamut();
     void updateAutoRotate();
+    void updateIccProfilePath();
 
     std::unique_ptr<OutputDeviceV2InterfacePrivate> d;
 };
