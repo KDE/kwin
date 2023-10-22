@@ -1799,9 +1799,7 @@ void Window::setShortcut(const QString &_cut)
         if (match.hasMatch()) {
             const QString base = match.captured(1);
             const QString list = match.captured(2);
-            for (int i = 0;
-                 i < list.length();
-                 ++i) {
+            for (int i = 0; i < list.length(); ++i) {
                 QKeySequence c(base + list[i]);
                 if (!c.isEmpty()) {
                     keys.append(c);
