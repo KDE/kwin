@@ -152,6 +152,7 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
         stream << "const int sRGB_EOTF = 0;\n";
         stream << "const int linear_EOTF = 1;\n";
         stream << "const int PQ_EOTF = 2;\n";
+        stream << "const int scRGB_EOTF = 3;\n";
         stream << "\n";
         stream << "uniform mat3 colorimetryTransform;\n";
         stream << "uniform int sourceNamedTransferFunction;\n";
@@ -210,6 +211,8 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
         stream << "        result.rgb /= max(result.a, 0.001);\n";
         stream << "        result.rgb = sdrBrightness * srgbToLinear(result.rgb);\n";
         stream << "        result.rgb *= result.a;\n";
+        stream << "    } else if (sourceNamedTransferFunction == scRGB_EOTF) {\n";
+        stream << "        result.rgb *= 80;\n";
         stream << "    }\n";
         stream << "    result.rgb = doTonemapping(colorimetryTransform * result.rgb, maxHdrBrightness);\n";
     }
@@ -229,6 +232,8 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
         stream << "        result.rgb *= result.a;\n";
         stream << "    } else if (destinationNamedTransferFunction == PQ_EOTF) {\n";
         stream << "        result.rgb = nitsToPq(result.rgb);\n";
+        stream << "    } else if (destinationNamedTransferFunction == scRGB_EOTF) {\n";
+        stream << "        result.rgb /= 80.0;\n";
         stream << "    }\n";
     }
 

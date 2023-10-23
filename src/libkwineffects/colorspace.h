@@ -71,6 +71,7 @@ enum class NamedTransferFunction {
     sRGB = 0,
     linear = 1,
     PerceptualQuantizer = 2,
+    scRGB = 3,
 };
 
 /**
