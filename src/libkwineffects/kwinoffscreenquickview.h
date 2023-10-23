@@ -57,15 +57,9 @@ public:
     };
 
     /**
-     * Construct a new KWinQuickView
-     * Export mode will be determined by the current effectsHandler
-     */
-    explicit OffscreenQuickView(QObject *parent = nullptr);
-
-    /**
      * Construct a new KWinQuickView explicitly stating an export mode
      */
-    explicit OffscreenQuickView(ExportMode exportMode = ExportMode::Texture, QObject *parent = nullptr);
+    explicit OffscreenQuickView(ExportMode exportMode = ExportMode::Texture);
 
     /**
      * Note that this may change the current GL Context
@@ -164,8 +158,7 @@ private:
 class KWINEFFECTS_EXPORT OffscreenQuickScene : public OffscreenQuickView
 {
 public:
-    explicit OffscreenQuickScene(QObject *parent = nullptr);
-    explicit OffscreenQuickScene(ExportMode exportMode, QObject *parent = nullptr);
+    explicit OffscreenQuickScene(ExportMode exportMode = ExportMode::Texture);
     ~OffscreenQuickScene();
 
     /** top level item in the given source*/

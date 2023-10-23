@@ -73,14 +73,8 @@ public:
     std::unique_ptr<QQuickItem> quickItem;
 };
 
-OffscreenQuickView::OffscreenQuickView(QObject *parent)
-    : OffscreenQuickView(ExportMode::Texture, parent)
-{
-}
-
-OffscreenQuickView::OffscreenQuickView(ExportMode exportMode, QObject *parent)
-    : QObject(parent)
-    , d(new OffscreenQuickView::Private)
+OffscreenQuickView::OffscreenQuickView(ExportMode exportMode)
+    : d(new OffscreenQuickView::Private)
 {
     d->m_renderControl = std::make_unique<QQuickRenderControl>();
 
@@ -520,14 +514,8 @@ void OffscreenQuickView::Private::updateTouchState(Qt::TouchPointState state, qi
     }
 }
 
-OffscreenQuickScene::OffscreenQuickScene(QObject *parent)
-    : OffscreenQuickView(parent)
-    , d(new OffscreenQuickScene::Private)
-{
-}
-
-OffscreenQuickScene::OffscreenQuickScene(OffscreenQuickView::ExportMode exportMode, QObject *parent)
-    : OffscreenQuickView(exportMode, parent)
+OffscreenQuickScene::OffscreenQuickScene(OffscreenQuickView::ExportMode exportMode)
+    : OffscreenQuickView(exportMode)
     , d(new OffscreenQuickScene::Private)
 {
 }

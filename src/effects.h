@@ -506,8 +506,7 @@ class EffectFrameQuickScene : public OffscreenQuickScene
     Q_PROPERTY(qreal crossFadeProgress READ crossFadeProgress NOTIFY crossFadeProgressChanged)
 
 public:
-    EffectFrameQuickScene(EffectFrameStyle style, bool staticSize, QPoint position,
-                          Qt::Alignment alignment, QObject *parent = nullptr);
+    EffectFrameQuickScene(EffectFrameStyle style, bool staticSize, QPoint position, Qt::Alignment alignment);
     ~EffectFrameQuickScene() override;
 
     EffectFrameStyle style() const;

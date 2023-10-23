@@ -2154,10 +2154,8 @@ EffectWindowList EffectWindowGroupImpl::members() const
 // EffectFrameImpl
 //****************************************
 
-EffectFrameQuickScene::EffectFrameQuickScene(EffectFrameStyle style, bool staticSize, QPoint position,
-                                             Qt::Alignment alignment, QObject *parent)
-    : OffscreenQuickScene(parent)
-    , m_style(style)
+EffectFrameQuickScene::EffectFrameQuickScene(EffectFrameStyle style, bool staticSize, QPoint position, Qt::Alignment alignment)
+    : m_style(style)
     , m_static(staticSize)
     , m_point(position)
     , m_alignment(alignment)
@@ -2366,9 +2364,7 @@ void EffectFrameQuickScene::reposition()
 }
 
 EffectFrameImpl::EffectFrameImpl(EffectFrameStyle style, bool staticSize, QPoint position, Qt::Alignment alignment)
-    : QObject(nullptr)
-    , EffectFrame()
-    , m_view(new EffectFrameQuickScene(style, staticSize, position, alignment, nullptr))
+    : m_view(new EffectFrameQuickScene(style, staticSize, position, alignment))
 {
     connect(m_view, &OffscreenQuickScene::repaintNeeded, this, [this] {
         effects->addRepaint(geometry());
