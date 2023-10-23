@@ -920,7 +920,8 @@ void CursorImage::updateCursorOutputs(const QPointF &pos)
         auto cursorSurface = m_serverCursor.surface->surface();
         if (cursorSurface) {
             const QRectF cursorGeometry(pos - m_currentSource->hotspot(), m_currentSource->size());
-            cursorSurface->setOutputs(waylandServer()->display()->outputsIntersecting(cursorGeometry.toAlignedRect()));
+            cursorSurface->setOutputs(waylandServer()->display()->outputsIntersecting(cursorGeometry.toAlignedRect()),
+                                      waylandServer()->display()->largestIntersectingOutput(cursorGeometry.toAlignedRect()));
         }
     }
 }

@@ -146,6 +146,7 @@ public:
     Transaction *lastTransaction = nullptr;
 
     QList<OutputInterface *> outputs;
+    OutputInterface *primaryOutput = nullptr;
     std::optional<qreal> preferredBufferScale;
     std::optional<OutputTransform> preferredBufferTransform;
 
