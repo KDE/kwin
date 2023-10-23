@@ -13,8 +13,8 @@
 
 #include <drm_fourcc.h>
 #include <fcntl.h>
-#include <unistd.h>
 #include <sys/mman.h>
+#include <unistd.h>
 
 namespace KWin
 {
