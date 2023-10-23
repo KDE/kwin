@@ -74,7 +74,7 @@ public:
 };
 
 OffscreenQuickView::OffscreenQuickView(QObject *parent)
-    : OffscreenQuickView(effects ? ExportMode::Texture : ExportMode::Image, parent)
+    : OffscreenQuickView(ExportMode::Texture, parent)
 {
 }
 

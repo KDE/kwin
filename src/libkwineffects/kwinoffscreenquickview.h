@@ -65,7 +65,7 @@ public:
     /**
      * Construct a new KWinQuickView explicitly stating an export mode
      */
-    explicit OffscreenQuickView(ExportMode exportMode, QObject *parent = nullptr);
+    explicit OffscreenQuickView(ExportMode exportMode = ExportMode::Texture, QObject *parent = nullptr);
 
     /**
      * Note that this may change the current GL Context
