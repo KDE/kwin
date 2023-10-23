@@ -74,11 +74,11 @@ public:
 };
 
 OffscreenQuickView::OffscreenQuickView(QObject *parent)
-    : OffscreenQuickView(parent, effects ? ExportMode::Texture : ExportMode::Image)
+    : OffscreenQuickView(effects ? ExportMode::Texture : ExportMode::Image, parent)
 {
 }
 
-OffscreenQuickView::OffscreenQuickView(QObject *parent, ExportMode exportMode)
+OffscreenQuickView::OffscreenQuickView(ExportMode exportMode, QObject *parent)
     : QObject(parent)
     , d(new OffscreenQuickView::Private)
 {
@@ -526,8 +526,8 @@ OffscreenQuickScene::OffscreenQuickScene(QObject *parent)
 {
 }
 
-OffscreenQuickScene::OffscreenQuickScene(QObject *parent, OffscreenQuickView::ExportMode exportMode)
-    : OffscreenQuickView(parent, exportMode)
+OffscreenQuickScene::OffscreenQuickScene(OffscreenQuickView::ExportMode exportMode, QObject *parent)
+    : OffscreenQuickView(exportMode, parent)
     , d(new OffscreenQuickScene::Private)
 {
 }

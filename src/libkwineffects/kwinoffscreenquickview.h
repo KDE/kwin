@@ -65,7 +65,7 @@ public:
     /**
      * Construct a new KWinQuickView explicitly stating an export mode
      */
-    OffscreenQuickView(QObject *parent, ExportMode exportMode);
+    OffscreenQuickView(ExportMode exportMode, QObject *parent);
 
     /**
      * Note that this may change the current GL Context
@@ -165,7 +165,7 @@ class KWINEFFECTS_EXPORT OffscreenQuickScene : public OffscreenQuickView
 {
 public:
     OffscreenQuickScene(QObject *parent);
-    OffscreenQuickScene(QObject *parent, ExportMode exportMode);
+    OffscreenQuickScene(ExportMode exportMode, QObject *parent);
     ~OffscreenQuickScene();
 
     /** top level item in the given source*/
