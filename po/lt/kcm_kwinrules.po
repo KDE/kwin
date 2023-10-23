@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-07 02:19+0000\n"
+"POT-Creation-Date: 2023-10-23 01:40+0000\n"
 "PO-Revision-Date: 2022-12-12 21:54+0200\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: lt <kde-i18n-lt@kde.org>\n"
@@ -21,17 +21,17 @@ msgstr ""
 "%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3);\n"
 "X-Generator: Poedit 3.2.2\n"
 
-#: kcmrules.cpp:226
+#: kcmrules.cpp:228
 #, kde-format
 msgid "Copy of %1"
 msgstr "%1 kopija"
 
-#: kcmrules.cpp:406
+#: kcmrules.cpp:408
 #, kde-format
 msgid "Application settings for %1"
 msgstr "Programos nuostatos, skirtos %1"
 
-#: kcmrules.cpp:428 rulesmodel.cpp:215
+#: kcmrules.cpp:430 rulesmodel.cpp:221
 #, kde-format
 msgid "Window settings for %1"
 msgstr "Lango nuostatos, skirtos %1"
@@ -143,17 +143,17 @@ msgstr ""
 "nebus paslėptas\n"
 "(paslėpus langą, šis veiksmas bus ištrintas)."
 
-#: rulesmodel.cpp:218
+#: rulesmodel.cpp:224
 #, kde-format
 msgid "Settings for %1"
 msgstr "%1 nuostatos"
 
-#: rulesmodel.cpp:221
+#: rulesmodel.cpp:227
 #, kde-format
 msgid "New window settings"
 msgstr "Naujo lango nuostatos"
 
-#: rulesmodel.cpp:237
+#: rulesmodel.cpp:243
 #, kde-format
 msgid ""
 "You have specified the window class as unimportant.\n"
@@ -167,7 +167,7 @@ msgstr ""
 "Jei iš tikrųjų, norite sukurti bendrinę nuostatą, tuomet yra rekomenduojama, "
 "jog bent apribotumėte lango tipus, kad išvengtumėte specialių lango tipų."
 
-#: rulesmodel.cpp:244
+#: rulesmodel.cpp:250
 #, kde-format
 msgid ""
 "Some applications set their own geometry after starting, overriding your "
@@ -179,133 +179,133 @@ msgstr ""
 "priverstinai naudoti šias nuostatas, nustatykite priverstinai savybę „%1“ į "
 "„Taip“."
 
-#: rulesmodel.cpp:251
+#: rulesmodel.cpp:257
 #, kde-format
 msgid ""
 "Readability may be impaired with extremely low opacity values. At 0%, the "
 "window becomes invisible."
 msgstr ""
 
-#: rulesmodel.cpp:382
+#: rulesmodel.cpp:388
 #, kde-format
 msgid "Description"
 msgstr "Aprašas"
 
-#: rulesmodel.cpp:382 rulesmodel.cpp:390 rulesmodel.cpp:398 rulesmodel.cpp:405
-#: rulesmodel.cpp:411 rulesmodel.cpp:419 rulesmodel.cpp:424 rulesmodel.cpp:430
+#: rulesmodel.cpp:388 rulesmodel.cpp:396 rulesmodel.cpp:404 rulesmodel.cpp:411
+#: rulesmodel.cpp:417 rulesmodel.cpp:425 rulesmodel.cpp:430 rulesmodel.cpp:436
 #, kde-format
 msgid "Window matching"
 msgstr "Langų atitiktis"
 
-#: rulesmodel.cpp:390
+#: rulesmodel.cpp:396
 #, kde-format
 msgid "Window class (application)"
 msgstr "Lango klasė (programa)"
 
-#: rulesmodel.cpp:398
+#: rulesmodel.cpp:404
 #, kde-format
 msgid "Match whole window class"
 msgstr "Atitikti visą lango klasę"
 
-#: rulesmodel.cpp:405
+#: rulesmodel.cpp:411
 #, kde-format
 msgid "Whole window class"
 msgstr "Visa lango klasė"
 
-#: rulesmodel.cpp:411
+#: rulesmodel.cpp:417
 #, kde-format
 msgid "Window types"
 msgstr "Lango tipai"
 
-#: rulesmodel.cpp:419
+#: rulesmodel.cpp:425
 #, kde-format
 msgid "Window role"
 msgstr "Lango vaidmuo"
 
-#: rulesmodel.cpp:424
+#: rulesmodel.cpp:430
 #, kde-format
 msgid "Window title"
 msgstr "Lango antraštė"
 
-#: rulesmodel.cpp:430
+#: rulesmodel.cpp:436
 #, kde-format
 msgid "Machine (hostname)"
 msgstr "Kompiuteris (mazgas)"
 
-#: rulesmodel.cpp:436
+#: rulesmodel.cpp:442
 #, kde-format
 msgid "Position"
 msgstr "Vieta"
 
-#: rulesmodel.cpp:436 rulesmodel.cpp:442 rulesmodel.cpp:448 rulesmodel.cpp:453
-#: rulesmodel.cpp:461 rulesmodel.cpp:467 rulesmodel.cpp:486 rulesmodel.cpp:502
-#: rulesmodel.cpp:507 rulesmodel.cpp:512 rulesmodel.cpp:517 rulesmodel.cpp:522
-#: rulesmodel.cpp:531 rulesmodel.cpp:546 rulesmodel.cpp:551 rulesmodel.cpp:556
+#: rulesmodel.cpp:442 rulesmodel.cpp:448 rulesmodel.cpp:454 rulesmodel.cpp:459
+#: rulesmodel.cpp:467 rulesmodel.cpp:473 rulesmodel.cpp:492 rulesmodel.cpp:508
+#: rulesmodel.cpp:513 rulesmodel.cpp:518 rulesmodel.cpp:523 rulesmodel.cpp:528
+#: rulesmodel.cpp:537 rulesmodel.cpp:552 rulesmodel.cpp:557 rulesmodel.cpp:562
 #, kde-format
 msgid "Size & Position"
 msgstr "Dydis ir vieta"
 
-#: rulesmodel.cpp:442
+#: rulesmodel.cpp:448
 #, kde-format
 msgid "Size"
 msgstr "Dydis"
 
-#: rulesmodel.cpp:448
+#: rulesmodel.cpp:454
 #, kde-format
 msgid "Maximized horizontally"
 msgstr "Išskleistas horizontaliai"
 
-#: rulesmodel.cpp:453
+#: rulesmodel.cpp:459
 #, kde-format
 msgid "Maximized vertically"
 msgstr "Išskleistas vertikaliai"
 
-#: rulesmodel.cpp:461
+#: rulesmodel.cpp:467
 #, kde-format
 msgid "Virtual Desktop"
 msgstr "Virtualus darbalaukis"
 
-#: rulesmodel.cpp:467
+#: rulesmodel.cpp:473
 #, kde-format
 msgid "Virtual Desktops"
 msgstr "Virtualūs darbalaukiai"
 
-#: rulesmodel.cpp:486
+#: rulesmodel.cpp:492
 #, kde-format
 msgid "Activities"
 msgstr "Veiklos"
 
-#: rulesmodel.cpp:502
+#: rulesmodel.cpp:508
 #, kde-format
 msgid "Screen"
 msgstr "Ekranas"
 
-#: rulesmodel.cpp:507
+#: rulesmodel.cpp:513
 #, kde-format
 msgid "Fullscreen"
 msgstr "Visas ekranas"
 
-#: rulesmodel.cpp:512
+#: rulesmodel.cpp:518
 #, kde-format
 msgid "Minimized"
 msgstr "Suskleistas"
 
-#: rulesmodel.cpp:517
+#: rulesmodel.cpp:523
 #, kde-format
 msgid "Shaded"
 msgstr "Pridengtas"
 
-#: rulesmodel.cpp:522
+#: rulesmodel.cpp:528
 #, kde-format
 msgid "Initial placement"
 msgstr "Pradinis išdėstymas"
 
-#: rulesmodel.cpp:531
+#: rulesmodel.cpp:537
 #, kde-format
 msgid "Ignore requested geometry"
 msgstr "Nepaisyti užklaustos geometrijos"
 
-#: rulesmodel.cpp:534
+#: rulesmodel.cpp:540
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -317,22 +317,22 @@ msgid ""
 "can also be used to map to a different <interface>Screen</interface>"
 msgstr ""
 
-#: rulesmodel.cpp:546
+#: rulesmodel.cpp:552
 #, kde-format
 msgid "Minimum Size"
 msgstr "Mažiausias dydis"
 
-#: rulesmodel.cpp:551
+#: rulesmodel.cpp:557
 #, kde-format
 msgid "Maximum Size"
 msgstr "Didžiausias dydis"
 
-#: rulesmodel.cpp:556
+#: rulesmodel.cpp:562
 #, kde-format
 msgid "Obey geometry restrictions"
 msgstr "Paklusti geometrijos apribojimams"
 
-#: rulesmodel.cpp:558
+#: rulesmodel.cpp:564
 #, fuzzy, kde-kuit-format
 #| msgid ""
 #| "Eg. terminals or video players can ask to keep a certain aspect ratio\n"
@@ -356,51 +356,51 @@ msgstr ""
 "tokių kaip\n"
 "pavyzdžiui, visa jūsų ekrano sritis."
 
-#: rulesmodel.cpp:569
+#: rulesmodel.cpp:575
 #, kde-format
 msgid "Keep above other windows"
 msgstr "Laikyti virš kitų langų"
 
-#: rulesmodel.cpp:569 rulesmodel.cpp:574 rulesmodel.cpp:579 rulesmodel.cpp:585
-#: rulesmodel.cpp:591 rulesmodel.cpp:597
+#: rulesmodel.cpp:575 rulesmodel.cpp:580 rulesmodel.cpp:585 rulesmodel.cpp:591
+#: rulesmodel.cpp:597 rulesmodel.cpp:603
 #, kde-format
 msgid "Arrangement & Access"
 msgstr "Išdėstymas ir prieiga"
 
-#: rulesmodel.cpp:574
+#: rulesmodel.cpp:580
 #, kde-format
 msgid "Keep below other windows"
 msgstr "Laikyti po kitais langais"
 
-#: rulesmodel.cpp:579
+#: rulesmodel.cpp:585
 #, kde-format
 msgid "Skip taskbar"
 msgstr "Praleisti užduočių juostą"
 
-#: rulesmodel.cpp:581
+#: rulesmodel.cpp:587
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
 msgstr ""
 
-#: rulesmodel.cpp:585
+#: rulesmodel.cpp:591
 #, kde-format
 msgid "Skip pager"
 msgstr "Praleisti darbalaukių perjungiklį"
 
-#: rulesmodel.cpp:587
+#: rulesmodel.cpp:593
 #, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the Virtual Desktop manager."
 msgstr ""
 
-#: rulesmodel.cpp:591
+#: rulesmodel.cpp:597
 #, kde-format
 msgid "Skip switcher"
 msgstr "Praleisti Alt+Tab perjungiklį"
 
-#: rulesmodel.cpp:593
+#: rulesmodel.cpp:599
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -408,44 +408,44 @@ msgid ""
 "shortcut> window list."
 msgstr ""
 
-#: rulesmodel.cpp:597
+#: rulesmodel.cpp:603
 #, kde-format
 msgid "Shortcut"
 msgstr "Spartusis klavišas"
 
-#: rulesmodel.cpp:603
+#: rulesmodel.cpp:609
 #, kde-format
 msgid "No titlebar and frame"
 msgstr "Be antraštės juostos ir rėmelio"
 
-#: rulesmodel.cpp:603 rulesmodel.cpp:608 rulesmodel.cpp:614 rulesmodel.cpp:619
-#: rulesmodel.cpp:625 rulesmodel.cpp:652 rulesmodel.cpp:680 rulesmodel.cpp:686
-#: rulesmodel.cpp:698 rulesmodel.cpp:703 rulesmodel.cpp:709 rulesmodel.cpp:714
+#: rulesmodel.cpp:609 rulesmodel.cpp:614 rulesmodel.cpp:620 rulesmodel.cpp:625
+#: rulesmodel.cpp:631 rulesmodel.cpp:658 rulesmodel.cpp:686 rulesmodel.cpp:692
+#: rulesmodel.cpp:704 rulesmodel.cpp:709 rulesmodel.cpp:715 rulesmodel.cpp:720
 #, kde-format
 msgid "Appearance & Fixes"
 msgstr "Išvaizda ir pataisymai"
 
-#: rulesmodel.cpp:608
+#: rulesmodel.cpp:614
 #, kde-format
 msgid "Titlebar color scheme"
 msgstr "Antraštės juostos spalvų rinkinys"
 
-#: rulesmodel.cpp:614
+#: rulesmodel.cpp:620
 #, kde-format
 msgid "Active opacity"
 msgstr "Aktyvaus nepermatomumas"
 
-#: rulesmodel.cpp:619
+#: rulesmodel.cpp:625
 #, kde-format
 msgid "Inactive opacity"
 msgstr "Pasyvaus nepermatomumas"
 
-#: rulesmodel.cpp:625
+#: rulesmodel.cpp:631
 #, kde-format
 msgid "Focus stealing prevention"
 msgstr "Fokusavimo vogimo prevencija"
 
-#: rulesmodel.cpp:627
+#: rulesmodel.cpp:633
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -467,12 +467,12 @@ msgid ""
 "emphasis> The window will never be raised and focused.</item></list>"
 msgstr ""
 
-#: rulesmodel.cpp:652
+#: rulesmodel.cpp:658
 #, kde-format
 msgid "Focus protection"
 msgstr "Fokusavimo apsauga"
 
-#: rulesmodel.cpp:654
+#: rulesmodel.cpp:660
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -496,22 +496,22 @@ msgid ""
 "item></list>"
 msgstr ""
 
-#: rulesmodel.cpp:680
+#: rulesmodel.cpp:686
 #, kde-format
 msgid "Accept focus"
 msgstr "Priimti fokusavimą"
 
-#: rulesmodel.cpp:682
+#: rulesmodel.cpp:688
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
 msgstr ""
 
-#: rulesmodel.cpp:686
+#: rulesmodel.cpp:692
 #, kde-format
 msgid "Ignore global shortcuts"
 msgstr "Nepaisyti visuotinių sparčiųjų klavišų"
 
-#: rulesmodel.cpp:688
+#: rulesmodel.cpp:694
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -523,32 +523,32 @@ msgid ""
 "activate KRunner."
 msgstr ""
 
-#: rulesmodel.cpp:698
+#: rulesmodel.cpp:704
 #, kde-format
 msgid "Closeable"
 msgstr "Galimas užverti"
 
-#: rulesmodel.cpp:703
+#: rulesmodel.cpp:709
 #, kde-format
 msgid "Set window type"
 msgstr "Nustatyti lango tipą"
 
-#: rulesmodel.cpp:709
+#: rulesmodel.cpp:715
 #, kde-format
 msgid "Desktop file name"
 msgstr "Darbalaukio failo pavadinimas"
 
-#: rulesmodel.cpp:714
+#: rulesmodel.cpp:720
 #, kde-format
 msgid "Block compositing"
 msgstr "Blokuoti komponavimą"
 
-#: rulesmodel.cpp:766
+#: rulesmodel.cpp:772
 #, kde-format
 msgid "Window class not available"
 msgstr "Lango klasė neprieinama"
 
-#: rulesmodel.cpp:767
+#: rulesmodel.cpp:773
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -563,160 +563,160 @@ msgstr ""
 "savybių atitikmenį, pavyzdžiui, lango pavadinimą.<nl/><nl/>Apsvarstykite "
 "galimybę pranešti apie šią klaidą programos plėtotojams."
 
-#: rulesmodel.cpp:801
+#: rulesmodel.cpp:807
 #, kde-format
 msgid "All Window Types"
 msgstr "Visi langų tipai"
 
-#: rulesmodel.cpp:802
+#: rulesmodel.cpp:808
 #, kde-format
 msgid "Normal Window"
 msgstr "Įprastas langas"
 
-#: rulesmodel.cpp:803
+#: rulesmodel.cpp:809
 #, kde-format
 msgid "Dialog Window"
 msgstr "Dialogo langas"
 
-#: rulesmodel.cpp:804
+#: rulesmodel.cpp:810
 #, kde-format
 msgid "Utility Window"
 msgstr "Paslaugų langas"
 
-#: rulesmodel.cpp:805
+#: rulesmodel.cpp:811
 #, kde-format
 msgid "Dock (panel)"
 msgstr "Dokas (skydelis)"
 
-#: rulesmodel.cpp:806
+#: rulesmodel.cpp:812
 #, kde-format
 msgid "Toolbar"
 msgstr "Įrankių juosta"
 
-#: rulesmodel.cpp:807
+#: rulesmodel.cpp:813
 #, kde-format
 msgid "Torn-Off Menu"
 msgstr "Atskiras meniu"
 
-#: rulesmodel.cpp:808
+#: rulesmodel.cpp:814
 #, kde-format
 msgid "Splash Screen"
 msgstr "Prisistatymo langas"
 
-#: rulesmodel.cpp:809
+#: rulesmodel.cpp:815
 #, kde-format
 msgid "Desktop"
 msgstr "Darbalaukis"
 
 #. i18n("Unmanaged Window")},  deprecated
-#: rulesmodel.cpp:811
+#: rulesmodel.cpp:817
 #, kde-format
 msgid "Standalone Menubar"
 msgstr "Atskira meniu juosta"
 
-#: rulesmodel.cpp:812
+#: rulesmodel.cpp:818
 #, kde-format
 msgid "On Screen Display"
 msgstr "Ekraninis pranešimas"
 
-#: rulesmodel.cpp:822
+#: rulesmodel.cpp:828
 #, kde-format
 msgid "All Desktops"
 msgstr "Visi darbalaukiai"
 
-#: rulesmodel.cpp:824
+#: rulesmodel.cpp:830
 #, kde-format
 msgctxt "@info:tooltip in the virtual desktop list"
 msgid "Make the window available on all desktops"
 msgstr "Padaryti langą prieinamą visuose darbalaukiuose"
 
-#: rulesmodel.cpp:843
+#: rulesmodel.cpp:849
 #, kde-format
 msgid "All Activities"
 msgstr "Visos veiklos"
 
-#: rulesmodel.cpp:845
+#: rulesmodel.cpp:851
 #, kde-format
 msgctxt "@info:tooltip in the activity list"
 msgid "Make the window available on all activities"
 msgstr "Padaryti langą prieinamą visose veiklose"
 
-#: rulesmodel.cpp:866
+#: rulesmodel.cpp:872
 #, kde-format
 msgid "Default"
 msgstr "Numatytasis"
 
-#: rulesmodel.cpp:867
+#: rulesmodel.cpp:873
 #, kde-format
 msgid "No Placement"
 msgstr "Be išdėstymo"
 
-#: rulesmodel.cpp:868
+#: rulesmodel.cpp:874
 #, kde-format
 msgid "Minimal Overlapping"
 msgstr "Mažiausias persidengimas"
 
-#: rulesmodel.cpp:869
+#: rulesmodel.cpp:875
 #, kde-format
 msgid "Maximized"
 msgstr "Išskleistas"
 
-#: rulesmodel.cpp:870
+#: rulesmodel.cpp:876
 #, kde-format
 msgid "Centered"
 msgstr "Per vidurį"
 
-#: rulesmodel.cpp:871
+#: rulesmodel.cpp:877
 #, kde-format
 msgid "Random"
 msgstr "Atsitiktinai"
 
-#: rulesmodel.cpp:872
+#: rulesmodel.cpp:878
 #, kde-format
 msgid "In Top-Left Corner"
 msgstr "Viršutiniame kairiajame kampe"
 
-#: rulesmodel.cpp:873
+#: rulesmodel.cpp:879
 #, kde-format
 msgid "Under Mouse"
 msgstr "Po pele"
 
-#: rulesmodel.cpp:874
+#: rulesmodel.cpp:880
 #, kde-format
 msgid "On Main Window"
 msgstr "Pagrindiniame lange"
 
-#: rulesmodel.cpp:881
+#: rulesmodel.cpp:887
 #, kde-format
 msgid "None"
 msgstr "Nėra"
 
-#: rulesmodel.cpp:882
+#: rulesmodel.cpp:888
 #, kde-format
 msgid "Low"
 msgstr "Žema"
 
-#: rulesmodel.cpp:883
+#: rulesmodel.cpp:889
 #, kde-format
 msgid "Normal"
 msgstr "Įprasta"
 
-#: rulesmodel.cpp:884
+#: rulesmodel.cpp:890
 #, kde-format
 msgid "High"
 msgstr "Aukšta"
 
-#: rulesmodel.cpp:885
+#: rulesmodel.cpp:891
 #, kde-format
 msgid "Extreme"
 msgstr "Ekstremali"
 
-#: rulesmodel.cpp:928
+#: rulesmodel.cpp:934
 #, kde-format
 msgid "Unmanaged window"
 msgstr "Nevaldomas langas"
 
-#: rulesmodel.cpp:929
+#: rulesmodel.cpp:935
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr "Nepavyko aptikti lango savybių. Šis langas nėra valdomas KWin."

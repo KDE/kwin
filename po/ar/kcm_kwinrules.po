@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-07 02:19+0000\n"
+"POT-Creation-Date: 2023-10-23 01:40+0000\n"
 "PO-Revision-Date: 2023-06-08 12:05+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -20,17 +20,17 @@ msgstr ""
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 "X-Generator: Lokalize 22.12.3\n"
 
-#: kcmrules.cpp:226
+#: kcmrules.cpp:228
 #, kde-format
 msgid "Copy of %1"
 msgstr "نسخة عن %1"
 
-#: kcmrules.cpp:406
+#: kcmrules.cpp:408
 #, kde-format
 msgid "Application settings for %1"
 msgstr "إعدادات التطبيق لـِ %1"
 
-#: kcmrules.cpp:428 rulesmodel.cpp:215
+#: kcmrules.cpp:430 rulesmodel.cpp:221
 #, kde-format
 msgid "Window settings for %1"
 msgstr "إعدادات النافذة لـِ %1"
@@ -139,17 +139,17 @@ msgstr ""
 "ستفرض القيمة المعطاة لخاصية النافذة حتى تختفي\n"
 "(هذا الإجراء سيحذف بعد أن تختفي النافذة)"
 
-#: rulesmodel.cpp:218
+#: rulesmodel.cpp:224
 #, kde-format
 msgid "Settings for %1"
 msgstr "الإعدادات لِــ %1"
 
-#: rulesmodel.cpp:221
+#: rulesmodel.cpp:227
 #, kde-format
 msgid "New window settings"
 msgstr "إعدادات النافذة الجديدة"
 
-#: rulesmodel.cpp:237
+#: rulesmodel.cpp:243
 #, kde-format
 msgid ""
 "You have specified the window class as unimportant.\n"
@@ -163,7 +163,7 @@ msgstr ""
 "كنت تريد فعلا إنشاء إعداد عام ، فإنه من الموصى أن تحدد أنواع النوافذ لمنع "
 "أنواع النوافذ الخاصة."
 
-#: rulesmodel.cpp:244
+#: rulesmodel.cpp:250
 #, kde-format
 msgid ""
 "Some applications set their own geometry after starting, overriding your "
@@ -174,7 +174,7 @@ msgstr ""
 "تجاوز الإعدادات الأولية للحجم والموضع. لفرض هذه الإعدادات ، قم أيضًا بفرض "
 "الخاصية \"‏%1\" على \"نعم\"."
 
-#: rulesmodel.cpp:251
+#: rulesmodel.cpp:257
 #, kde-format
 msgid ""
 "Readability may be impaired with extremely low opacity values. At 0%, the "
@@ -183,126 +183,126 @@ msgstr ""
 "قد تكون قابلية القراءة ضعيفة مع قيم عتامة منخفضة للغاية. في 0٪، تصبح النافذة "
 "غير مرئية."
 
-#: rulesmodel.cpp:382
+#: rulesmodel.cpp:388
 #, kde-format
 msgid "Description"
 msgstr "الوصف"
 
-#: rulesmodel.cpp:382 rulesmodel.cpp:390 rulesmodel.cpp:398 rulesmodel.cpp:405
-#: rulesmodel.cpp:411 rulesmodel.cpp:419 rulesmodel.cpp:424 rulesmodel.cpp:430
+#: rulesmodel.cpp:388 rulesmodel.cpp:396 rulesmodel.cpp:404 rulesmodel.cpp:411
+#: rulesmodel.cpp:417 rulesmodel.cpp:425 rulesmodel.cpp:430 rulesmodel.cpp:436
 #, kde-format
 msgid "Window matching"
 msgstr "مطابقة النافذة"
 
-#: rulesmodel.cpp:390
+#: rulesmodel.cpp:396
 #, kde-format
 msgid "Window class (application)"
 msgstr "صنف النافذة (التطبيق)"
 
-#: rulesmodel.cpp:398
+#: rulesmodel.cpp:404
 #, kde-format
 msgid "Match whole window class"
 msgstr "طابق كل صنف النافذة"
 
-#: rulesmodel.cpp:405
+#: rulesmodel.cpp:411
 #, kde-format
 msgid "Whole window class"
 msgstr "كل صنف النافذة"
 
-#: rulesmodel.cpp:411
+#: rulesmodel.cpp:417
 #, kde-format
 msgid "Window types"
 msgstr "أنواع النافذة"
 
-#: rulesmodel.cpp:419
+#: rulesmodel.cpp:425
 #, kde-format
 msgid "Window role"
 msgstr "دور النافذة"
 
-#: rulesmodel.cpp:424
+#: rulesmodel.cpp:430
 #, kde-format
 msgid "Window title"
 msgstr "عنوان النّافذة"
 
-#: rulesmodel.cpp:430
+#: rulesmodel.cpp:436
 #, kde-format
 msgid "Machine (hostname)"
 msgstr "الآلة (اسم المضيف)"
 
-#: rulesmodel.cpp:436
+#: rulesmodel.cpp:442
 #, kde-format
 msgid "Position"
 msgstr "الموقع"
 
-#: rulesmodel.cpp:436 rulesmodel.cpp:442 rulesmodel.cpp:448 rulesmodel.cpp:453
-#: rulesmodel.cpp:461 rulesmodel.cpp:467 rulesmodel.cpp:486 rulesmodel.cpp:502
-#: rulesmodel.cpp:507 rulesmodel.cpp:512 rulesmodel.cpp:517 rulesmodel.cpp:522
-#: rulesmodel.cpp:531 rulesmodel.cpp:546 rulesmodel.cpp:551 rulesmodel.cpp:556
+#: rulesmodel.cpp:442 rulesmodel.cpp:448 rulesmodel.cpp:454 rulesmodel.cpp:459
+#: rulesmodel.cpp:467 rulesmodel.cpp:473 rulesmodel.cpp:492 rulesmodel.cpp:508
+#: rulesmodel.cpp:513 rulesmodel.cpp:518 rulesmodel.cpp:523 rulesmodel.cpp:528
+#: rulesmodel.cpp:537 rulesmodel.cpp:552 rulesmodel.cpp:557 rulesmodel.cpp:562
 #, kde-format
 msgid "Size & Position"
 msgstr "الحجم والموضع"
 
-#: rulesmodel.cpp:442
+#: rulesmodel.cpp:448
 #, kde-format
 msgid "Size"
 msgstr "الحجم"
 
-#: rulesmodel.cpp:448
+#: rulesmodel.cpp:454
 #, kde-format
 msgid "Maximized horizontally"
 msgstr "مكبّرة أفقياً"
 
-#: rulesmodel.cpp:453
+#: rulesmodel.cpp:459
 #, kde-format
 msgid "Maximized vertically"
 msgstr "مكبّرة عمودياً"
 
-#: rulesmodel.cpp:461
+#: rulesmodel.cpp:467
 #, kde-format
 msgid "Virtual Desktop"
 msgstr "كلّ أسطح المكتب الافتراضية"
 
-#: rulesmodel.cpp:467
+#: rulesmodel.cpp:473
 #, kde-format
 msgid "Virtual Desktops"
 msgstr "أسطح المكتب الافتراضية"
 
-#: rulesmodel.cpp:486
+#: rulesmodel.cpp:492
 #, kde-format
 msgid "Activities"
 msgstr "الأنشطة"
 
-#: rulesmodel.cpp:502
+#: rulesmodel.cpp:508
 #, kde-format
 msgid "Screen"
 msgstr "الشّاشة"
 
-#: rulesmodel.cpp:507
+#: rulesmodel.cpp:513
 #, kde-format
 msgid "Fullscreen"
 msgstr "ملء الشّاشة"
 
-#: rulesmodel.cpp:512
+#: rulesmodel.cpp:518
 #, kde-format
 msgid "Minimized"
 msgstr "مصغرة"
 
-#: rulesmodel.cpp:517
+#: rulesmodel.cpp:523
 #, kde-format
 msgid "Shaded"
 msgstr "مظللة"
 
-#: rulesmodel.cpp:522
+#: rulesmodel.cpp:528
 #, kde-format
 msgid "Initial placement"
 msgstr "الموضع المبدئي"
 
-#: rulesmodel.cpp:531
+#: rulesmodel.cpp:537
 #, kde-format
 msgid "Ignore requested geometry"
 msgstr "تجاهل طلب الأبعاد"
 
-#: rulesmodel.cpp:534
+#: rulesmodel.cpp:540
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -320,22 +320,22 @@ msgstr ""
 "interface>.<nl/><nl/> لاحظ أن الموضع يمكن يستخدم في <interface>شاشة</"
 "interface> أخرى."
 
-#: rulesmodel.cpp:546
+#: rulesmodel.cpp:552
 #, kde-format
 msgid "Minimum Size"
 msgstr "الحجم الأدنى:"
 
-#: rulesmodel.cpp:551
+#: rulesmodel.cpp:557
 #, kde-format
 msgid "Maximum Size"
 msgstr "الحجم الأقصى:"
 
-#: rulesmodel.cpp:556
+#: rulesmodel.cpp:562
 #, kde-format
 msgid "Obey geometry restrictions"
 msgstr "التزم بقيود الأبعاد"
 
-#: rulesmodel.cpp:558
+#: rulesmodel.cpp:564
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -351,39 +351,39 @@ msgstr ""
 "لأي قيم.<nl/><nl/> قد يكون هذا مفيداً للنوافذ التي لا تستطيع أن تتلاءم مع "
 "مساحة الشاشة الكاملة عند تكبيرها."
 
-#: rulesmodel.cpp:569
+#: rulesmodel.cpp:575
 #, kde-format
 msgid "Keep above other windows"
 msgstr "أبقها أعلى النوافذ الأخرى"
 
-#: rulesmodel.cpp:569 rulesmodel.cpp:574 rulesmodel.cpp:579 rulesmodel.cpp:585
-#: rulesmodel.cpp:591 rulesmodel.cpp:597
+#: rulesmodel.cpp:575 rulesmodel.cpp:580 rulesmodel.cpp:585 rulesmodel.cpp:591
+#: rulesmodel.cpp:597 rulesmodel.cpp:603
 #, kde-format
 msgid "Arrangement & Access"
 msgstr "الترتيب والوصول"
 
-#: rulesmodel.cpp:574
+#: rulesmodel.cpp:580
 #, kde-format
 msgid "Keep below other windows"
 msgstr "أبقها أسفل النوافذ الأخرى"
 
-#: rulesmodel.cpp:579
+#: rulesmodel.cpp:585
 #, kde-format
 msgid "Skip taskbar"
 msgstr "تخطى شريط المهام"
 
-#: rulesmodel.cpp:581
+#: rulesmodel.cpp:587
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
 msgstr "يتحكم في ما إذا كان يجب أن تظهر النافذة في مدير سطح المهام أم لا."
 
-#: rulesmodel.cpp:585
+#: rulesmodel.cpp:591
 #, kde-format
 msgid "Skip pager"
 msgstr "تخطّى المنادي"
 
-#: rulesmodel.cpp:587
+#: rulesmodel.cpp:593
 #, kde-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -391,12 +391,12 @@ msgid ""
 msgstr ""
 "يتحكم في ما إذا كان يجب أن تظهر النافذة في مدير سطح المكتب الافتراضي أم لا."
 
-#: rulesmodel.cpp:591
+#: rulesmodel.cpp:597
 #, kde-format
 msgid "Skip switcher"
 msgstr "تخطّى مبدل المهام"
 
-#: rulesmodel.cpp:593
+#: rulesmodel.cpp:599
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -406,44 +406,44 @@ msgstr ""
 "يتحكم في ما إذا كان يجب أن تظهر النافذة في قائمة النوافذ <shortcut>Alt+Tab</"
 "shortcut> أم لا."
 
-#: rulesmodel.cpp:597
+#: rulesmodel.cpp:603
 #, kde-format
 msgid "Shortcut"
 msgstr "الاختصار"
 
-#: rulesmodel.cpp:603
+#: rulesmodel.cpp:609
 #, kde-format
 msgid "No titlebar and frame"
 msgstr "بدون شريط العنوان والإطار"
 
-#: rulesmodel.cpp:603 rulesmodel.cpp:608 rulesmodel.cpp:614 rulesmodel.cpp:619
-#: rulesmodel.cpp:625 rulesmodel.cpp:652 rulesmodel.cpp:680 rulesmodel.cpp:686
-#: rulesmodel.cpp:698 rulesmodel.cpp:703 rulesmodel.cpp:709 rulesmodel.cpp:714
+#: rulesmodel.cpp:609 rulesmodel.cpp:614 rulesmodel.cpp:620 rulesmodel.cpp:625
+#: rulesmodel.cpp:631 rulesmodel.cpp:658 rulesmodel.cpp:686 rulesmodel.cpp:692
+#: rulesmodel.cpp:704 rulesmodel.cpp:709 rulesmodel.cpp:715 rulesmodel.cpp:720
 #, kde-format
 msgid "Appearance & Fixes"
 msgstr "المظهر والإصلاحات"
 
-#: rulesmodel.cpp:608
+#: rulesmodel.cpp:614
 #, kde-format
 msgid "Titlebar color scheme"
 msgstr "مخطط لون شريط العنوان"
 
-#: rulesmodel.cpp:614
+#: rulesmodel.cpp:620
 #, kde-format
 msgid "Active opacity"
 msgstr "التعتيم نشط"
 
-#: rulesmodel.cpp:619
+#: rulesmodel.cpp:625
 #, kde-format
 msgid "Inactive opacity"
 msgstr "التعتيم خامل"
 
-#: rulesmodel.cpp:625
+#: rulesmodel.cpp:631
 #, kde-format
 msgid "Focus stealing prevention"
 msgstr "منع سرقة التركيز"
 
-#: rulesmodel.cpp:627
+#: rulesmodel.cpp:633
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -479,12 +479,12 @@ msgstr ""
 "item><item><emphasis strong='true'>قصوى:</emphasis>  لن ترفع النافذة ويركز "
 "عليها.</item></list>"
 
-#: rulesmodel.cpp:652
+#: rulesmodel.cpp:658
 #, kde-format
 msgid "Focus protection"
 msgstr "حماية التركيز"
 
-#: rulesmodel.cpp:654
+#: rulesmodel.cpp:660
 #, fuzzy, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -523,23 +523,23 @@ msgstr ""
 "المركزة حاليًا. </item><item> <focus strong = 'true'> قصوى: </emphasis> "
 "النوافذ المفتوحة حديثًا لا ترفع نفسها أبدًا ولا يركز عليها. </item></list>"
 
-#: rulesmodel.cpp:680
+#: rulesmodel.cpp:686
 #, kde-format
 msgid "Accept focus"
 msgstr "أقبل التركيز"
 
-#: rulesmodel.cpp:682
+#: rulesmodel.cpp:688
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
 msgstr ""
 "يتحكم في ما إذا كان يجب أن تصبح النافذة في وضع التركيز عند النقر عليها أم لا."
 
-#: rulesmodel.cpp:686
+#: rulesmodel.cpp:692
 #, kde-format
 msgid "Ignore global shortcuts"
 msgstr "تجاهل الاختصارات العامة"
 
-#: rulesmodel.cpp:688
+#: rulesmodel.cpp:694
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -557,32 +557,32 @@ msgstr ""
 "استخدم أي اختصارات عامة أخرى مثل <shortcut> Alt+Space </shortcut> لتنشيط "
 "مشغلك."
 
-#: rulesmodel.cpp:698
+#: rulesmodel.cpp:704
 #, kde-format
 msgid "Closeable"
 msgstr "قابلة للإغلاق"
 
-#: rulesmodel.cpp:703
+#: rulesmodel.cpp:709
 #, kde-format
 msgid "Set window type"
 msgstr "حدد نوع النافذة"
 
-#: rulesmodel.cpp:709
+#: rulesmodel.cpp:715
 #, kde-format
 msgid "Desktop file name"
 msgstr "اسم ملف سطح المكتب"
 
-#: rulesmodel.cpp:714
+#: rulesmodel.cpp:720
 #, kde-format
 msgid "Block compositing"
 msgstr "التركيب الكتلي"
 
-#: rulesmodel.cpp:766
+#: rulesmodel.cpp:772
 #, kde-format
 msgid "Window class not available"
 msgstr "صنف النافذة غير متوفر"
 
-#: rulesmodel.cpp:767
+#: rulesmodel.cpp:773
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -596,160 +596,160 @@ msgstr ""
 "مطابقة الخصائص الأخرى مثل عنوان النافذة بدلاً من ذلك. <nl/> <nl/> يرجى "
 "التفكير في الإبلاغ عن هذا الخطأ لمطوري التطبيق."
 
-#: rulesmodel.cpp:801
+#: rulesmodel.cpp:807
 #, kde-format
 msgid "All Window Types"
 msgstr "جميع أنواع النافذة"
 
-#: rulesmodel.cpp:802
+#: rulesmodel.cpp:808
 #, kde-format
 msgid "Normal Window"
 msgstr "نافذة عادية"
 
-#: rulesmodel.cpp:803
+#: rulesmodel.cpp:809
 #, kde-format
 msgid "Dialog Window"
 msgstr "نافذة الحوار"
 
-#: rulesmodel.cpp:804
+#: rulesmodel.cpp:810
 #, kde-format
 msgid "Utility Window"
 msgstr "أداة النافذة"
 
-#: rulesmodel.cpp:805
+#: rulesmodel.cpp:811
 #, kde-format
 msgid "Dock (panel)"
 msgstr "إرساء (اللوحة)"
 
-#: rulesmodel.cpp:806
+#: rulesmodel.cpp:812
 #, kde-format
 msgid "Toolbar"
 msgstr "شريط الأدوات"
 
-#: rulesmodel.cpp:807
+#: rulesmodel.cpp:813
 #, kde-format
 msgid "Torn-Off Menu"
 msgstr "قائمة ممزقة"
 
-#: rulesmodel.cpp:808
+#: rulesmodel.cpp:814
 #, kde-format
 msgid "Splash Screen"
 msgstr "شاشة البداية"
 
-#: rulesmodel.cpp:809
+#: rulesmodel.cpp:815
 #, kde-format
 msgid "Desktop"
 msgstr "سطح المكتب"
 
 #. i18n("Unmanaged Window")},  deprecated
-#: rulesmodel.cpp:811
+#: rulesmodel.cpp:817
 #, kde-format
 msgid "Standalone Menubar"
 msgstr "شريط أدوات مستقل"
 
-#: rulesmodel.cpp:812
+#: rulesmodel.cpp:818
 #, kde-format
 msgid "On Screen Display"
 msgstr "على شاشة العرض"
 
-#: rulesmodel.cpp:822
+#: rulesmodel.cpp:828
 #, kde-format
 msgid "All Desktops"
 msgstr "كلّ أسطح المكتب"
 
-#: rulesmodel.cpp:824
+#: rulesmodel.cpp:830
 #, kde-format
 msgctxt "@info:tooltip in the virtual desktop list"
 msgid "Make the window available on all desktops"
 msgstr "اجعل النافذة متوفرة على كلّ أسطح المكتب"
 
-#: rulesmodel.cpp:843
+#: rulesmodel.cpp:849
 #, kde-format
 msgid "All Activities"
 msgstr "كلّ الأنشطة"
 
-#: rulesmodel.cpp:845
+#: rulesmodel.cpp:851
 #, kde-format
 msgctxt "@info:tooltip in the activity list"
 msgid "Make the window available on all activities"
 msgstr "اجعل النافذة متوفرة على كلّ الأنشطة"
 
-#: rulesmodel.cpp:866
+#: rulesmodel.cpp:872
 #, kde-format
 msgid "Default"
 msgstr "افتراضي"
 
-#: rulesmodel.cpp:867
+#: rulesmodel.cpp:873
 #, kde-format
 msgid "No Placement"
 msgstr "موضع غير محدد"
 
-#: rulesmodel.cpp:868
+#: rulesmodel.cpp:874
 #, kde-format
 msgid "Minimal Overlapping"
 msgstr "الحد الأدنى من التراكب"
 
-#: rulesmodel.cpp:869
+#: rulesmodel.cpp:875
 #, kde-format
 msgid "Maximized"
 msgstr "مكبرة"
 
-#: rulesmodel.cpp:870
+#: rulesmodel.cpp:876
 #, kde-format
 msgid "Centered"
 msgstr "موسّطة"
 
-#: rulesmodel.cpp:871
+#: rulesmodel.cpp:877
 #, kde-format
 msgid "Random"
 msgstr "عشوائي"
 
-#: rulesmodel.cpp:872
+#: rulesmodel.cpp:878
 #, kde-format
 msgid "In Top-Left Corner"
 msgstr "في زاوِيَة أعلى اليسار"
 
-#: rulesmodel.cpp:873
+#: rulesmodel.cpp:879
 #, kde-format
 msgid "Under Mouse"
 msgstr "تحت الفأرة"
 
-#: rulesmodel.cpp:874
+#: rulesmodel.cpp:880
 #, kde-format
 msgid "On Main Window"
 msgstr "على النافذة الرئيسية"
 
-#: rulesmodel.cpp:881
+#: rulesmodel.cpp:887
 #, kde-format
 msgid "None"
 msgstr "لا شيء"
 
-#: rulesmodel.cpp:882
+#: rulesmodel.cpp:888
 #, kde-format
 msgid "Low"
 msgstr "منخفض"
 
-#: rulesmodel.cpp:883
+#: rulesmodel.cpp:889
 #, kde-format
 msgid "Normal"
 msgstr "عادي"
 
-#: rulesmodel.cpp:884
+#: rulesmodel.cpp:890
 #, kde-format
 msgid "High"
 msgstr "عالي"
 
-#: rulesmodel.cpp:885
+#: rulesmodel.cpp:891
 #, kde-format
 msgid "Extreme"
 msgstr "قصوى"
 
-#: rulesmodel.cpp:928
+#: rulesmodel.cpp:934
 #, kde-format
 msgid "Unmanaged window"
 msgstr "نافذة غير مدارة"
 
-#: rulesmodel.cpp:929
+#: rulesmodel.cpp:935
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr "لا يمكن اكتشاف خواص النافذة. لا تدار النافذة بواسطة كوين."
