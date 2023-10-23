@@ -1497,10 +1497,17 @@ void EffectsHandlerImpl::renderOffscreenQuickView(const RenderTarget &renderTarg
         }
         shader->setColorspaceUniformsFromSRGB(renderTarget.colorDescription());
 
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+        const bool alphaBlending = w->hasAlphaChannel() || (a != 1.0);
+        if (alphaBlending) {
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+        }
+
         t->render(w->size(), viewport.scale());
-        glDisable(GL_BLEND);
+
+        if (alphaBlending) {
+            glDisable(GL_BLEND);
+        }
 
         ShaderManager::instance()->popShader();
     } else if (compositingType() == QPainterCompositing) {

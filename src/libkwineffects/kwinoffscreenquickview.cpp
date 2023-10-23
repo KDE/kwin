@@ -49,6 +49,7 @@ public:
     // Used for either software QtQuick rendering and nonGL kwin rendering
     bool m_useBlit = false;
     bool m_visible = true;
+    bool m_hasAlphaChannel = true;
     bool m_automaticRepaint = true;
 
     QList<QEventPoint> touchPoints;
@@ -73,7 +74,7 @@ public:
     std::unique_ptr<QQuickItem> quickItem;
 };
 
-OffscreenQuickView::OffscreenQuickView(ExportMode exportMode)
+OffscreenQuickView::OffscreenQuickView(ExportMode exportMode, bool alpha)
     : d(new OffscreenQuickView::Private)
 {
     d->m_renderControl = std::make_unique<QQuickRenderControl>();
@@ -83,6 +84,7 @@ OffscreenQuickView::OffscreenQuickView(ExportMode exportMode)
     d->m_view->setFlags(Qt::FramelessWindowHint);
     d->m_view->setColor(Qt::transparent);
 
+    d->m_hasAlphaChannel = alpha;
     if (exportMode == ExportMode::Image) {
         d->m_useBlit = true;
     }
@@ -98,6 +100,9 @@ OffscreenQuickView::OffscreenQuickView(ExportMode exportMode)
         format.setOption(QSurfaceFormat::ResetNotification);
         format.setDepthBufferSize(16);
         format.setStencilBufferSize(8);
+        if (alpha) {
+            format.setAlphaBufferSize(8);
+        }
 
         d->m_view->setFormat(format);
 
@@ -211,7 +216,12 @@ void OffscreenQuickView::update()
         const QSize nativeSize = d->m_view->size() * d->m_view->effectiveDevicePixelRatio();
         if (!d->m_fbo || d->m_fbo->size() != nativeSize) {
             d->m_textureExport.reset(nullptr);
-            d->m_fbo = std::make_unique<QOpenGLFramebufferObject>(nativeSize, QOpenGLFramebufferObject::CombinedDepthStencil);
+
+            QOpenGLFramebufferObjectFormat fboFormat;
+            fboFormat.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
+            fboFormat.setInternalTextureFormat(d->m_hasAlphaChannel ? GL_RGBA8 : GL_RGB8);
+
+            d->m_fbo = std::make_unique<QOpenGLFramebufferObject>(nativeSize, fboFormat);
             if (!d->m_fbo->isValid()) {
                 d->m_fbo.reset();
                 d->m_glcontext->doneCurrent();
@@ -359,6 +369,11 @@ void OffscreenQuickView::setOpacity(qreal opacity)
 qreal OffscreenQuickView::opacity() const
 {
     return d->m_view->opacity();
+}
+
+bool OffscreenQuickView::hasAlphaChannel() const
+{
+    return d->m_hasAlphaChannel;
 }
 
 QQuickItem *OffscreenQuickView::contentItem() const
@@ -514,8 +529,8 @@ void OffscreenQuickView::Private::updateTouchState(Qt::TouchPointState state, qi
     }
 }
 
-OffscreenQuickScene::OffscreenQuickScene(OffscreenQuickView::ExportMode exportMode)
-    : OffscreenQuickView(exportMode)
+OffscreenQuickScene::OffscreenQuickScene(OffscreenQuickView::ExportMode exportMode, bool alpha)
+    : OffscreenQuickView(exportMode, alpha)
     , d(new OffscreenQuickScene::Private)
 {
 }

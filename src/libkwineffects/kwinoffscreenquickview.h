@@ -55,9 +55,10 @@ public:
     };
 
     /**
-     * Construct a new KWinQuickView explicitly stating an export mode
+     * Construct a new KWinQuickView explicitly stating an export mode. \a alpha indicates
+     * whether the view is translucent or not.
      */
-    explicit OffscreenQuickView(ExportMode exportMode = ExportMode::Texture);
+    explicit OffscreenQuickView(ExportMode exportMode = ExportMode::Texture, bool alpha = true);
 
     /**
      * Note that this may change the current GL Context
@@ -75,6 +76,7 @@ public:
 
     void setOpacity(qreal opacity);
     qreal opacity() const;
+    bool hasAlphaChannel() const;
 
     /**
      * Render the current scene graph into the FBO.
@@ -156,7 +158,7 @@ private:
 class KWIN_EXPORT OffscreenQuickScene : public OffscreenQuickView
 {
 public:
-    explicit OffscreenQuickScene(ExportMode exportMode = ExportMode::Texture);
+    explicit OffscreenQuickScene(ExportMode exportMode = ExportMode::Texture, bool alpha = true);
     ~OffscreenQuickScene();
 
     /** top level item in the given source*/
