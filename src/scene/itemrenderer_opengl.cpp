@@ -285,13 +285,12 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
         return;
     }
 
-    ShaderTraits shaderTraits = ShaderTrait::MapTexture | ShaderTrait::TransformColorspace;
-
+    ShaderTraits baseShaderTraits = ShaderTrait::MapTexture;
     if (data.brightness() != 1.0) {
-        shaderTraits |= ShaderTrait::Modulate;
+        baseShaderTraits |= ShaderTrait::Modulate;
     }
     if (data.saturation() != 1.0) {
-        shaderTraits |= ShaderTrait::AdjustSaturation;
+        baseShaderTraits |= ShaderTrait::AdjustSaturation;
     }
 
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
@@ -309,10 +308,6 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
             continue;
         }
 
-        if (renderNode.opacity != 1.0) {
-            shaderTraits |= ShaderTrait::Modulate;
-        }
-
         renderNode.firstVertex = v;
         renderNode.vertexCount = renderNode.geometry.count();
 
@@ -325,13 +320,6 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
     vbo->unmap();
     vbo->bindArrays();
 
-    GLShader *shader = ShaderManager::instance()->pushShader(shaderTraits);
-    if (shaderTraits & ShaderTrait::AdjustSaturation) {
-        const auto toXYZ = renderTarget.colorDescription().colorimetry().toXYZ();
-        shader->setUniform(GLShader::Saturation, data.saturation());
-        shader->setUniform(GLShader::Vec3Uniform::PrimaryBrightness, QVector3D(toXYZ(1, 0), toXYZ(1, 1), toXYZ(1, 2)));
-    }
-
     if (renderContext.hardwareClipping) {
         glEnable(GL_SCISSOR_TEST);
     }
@@ -339,14 +327,14 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
     // Make sure the blend function is set up correctly in case we will be doing blending
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
-    float opacity = -1.0;
-
     // The scissor region must be in the render target local coordinate system.
     QRegion scissorRegion = infiniteRegion();
     if (renderContext.hardwareClipping) {
         scissorRegion = viewport.mapToRenderTarget(region);
     }
 
+    ShaderTraits lastTraits;
+    GLShader *shader = nullptr;
     for (int i = 0; i < renderContext.renderNodes.count(); i++) {
         const RenderNode &renderNode = renderContext.renderNodes[i];
         if (renderNode.vertexCount == 0) {
@@ -355,21 +343,41 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
 
         setBlendEnabled(renderNode.hasAlpha || renderNode.opacity < 1.0);
 
-        shader->setUniform(GLShader::ModelViewProjectionMatrix, renderContext.projectionMatrix * renderNode.transformMatrix);
-        if (opacity != renderNode.opacity) {
-            shader->setUniform(GLShader::ModulationConstant,
-                               modulate(renderNode.opacity, data.brightness()));
-            opacity = renderNode.opacity;
+        ShaderTraits traits = baseShaderTraits;
+        if (renderNode.opacity != 1.0) {
+            traits |= ShaderTrait::Modulate;
         }
-        shader->setColorspaceUniforms(renderNode.colorDescription, renderTarget.colorDescription());
+        if (renderNode.colorDescription != renderTarget.colorDescription()) {
+            traits |= ShaderTrait::TransformColorspace;
+        }
+        if (!shader || traits != lastTraits) {
+            lastTraits = traits;
+            if (shader) {
+                ShaderManager::instance()->popShader();
+            }
+            shader = ShaderManager::instance()->pushShader(traits);
+            if (traits & ShaderTrait::AdjustSaturation) {
+                const auto toXYZ = renderTarget.colorDescription().colorimetry().toXYZ();
+                shader->setUniform(GLShader::Saturation, data.saturation());
+                shader->setUniform(GLShader::Vec3Uniform::PrimaryBrightness, QVector3D(toXYZ(1, 0), toXYZ(1, 1), toXYZ(1, 2)));
+            }
+        }
+        shader->setUniform(GLShader::ModelViewProjectionMatrix, renderContext.projectionMatrix * renderNode.transformMatrix);
+        if (traits & ShaderTrait::Modulate) {
+            shader->setUniform(GLShader::ModulationConstant, modulate(renderNode.opacity, data.brightness()));
+        }
+        if (traits & ShaderTrait::TransformColorspace) {
+            shader->setColorspaceUniforms(renderNode.colorDescription, renderTarget.colorDescription());
+        }
 
         renderNode.texture->bind();
 
         vbo->draw(scissorRegion, GL_TRIANGLES, renderNode.firstVertex,
                   renderNode.vertexCount, renderContext.hardwareClipping);
     }
-
-    ShaderManager::instance()->popShader();
+    if (shader) {
+        ShaderManager::instance()->popShader();
+    }
 
     if (m_debug.fractionalEnabled) {
         visualizeFractional(viewport, scissorRegion, renderContext);
