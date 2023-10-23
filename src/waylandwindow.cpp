@@ -156,7 +156,8 @@ void WaylandWindow::updateClientOutputs()
     if (isDeleted()) {
         return;
     }
-    surface()->setOutputs(waylandServer()->display()->outputsIntersecting(frameGeometry().toAlignedRect()));
+    surface()->setOutputs(waylandServer()->display()->outputsIntersecting(frameGeometry().toAlignedRect()),
+                          waylandServer()->display()->largestIntersectingOutput(frameGeometry().toAlignedRect()));
     if (output()) {
         surface()->setPreferredBufferScale(output()->scale());
         surface()->setPreferredBufferTransform(output()->transform());

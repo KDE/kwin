@@ -102,6 +102,7 @@ public:
     QList<OutputDeviceV2Interface *> outputDevices() const;
     QList<OutputInterface *> outputs() const;
     QList<OutputInterface *> outputsIntersecting(const QRect &rect) const;
+    OutputInterface *largestIntersectingOutput(const QRect &rect) const;
 
     /**
      * Gets the ClientConnection for the given @p client.

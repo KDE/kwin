@@ -281,7 +281,7 @@ public:
      *
      * @see outputs
      */
-    void setOutputs(const QList<OutputInterface *> &outputs);
+    void setOutputs(const QList<OutputInterface *> &outputs, OutputInterface *primaryOutput);
 
     /**
      * @returns All OutputInterfaces the SurfaceInterface is on.

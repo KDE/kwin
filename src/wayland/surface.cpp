@@ -75,7 +75,7 @@ void SurfaceInterfacePrivate::addChild(SubSurfaceInterface *child)
         });
     }
 
-    child->surface()->setOutputs(outputs);
+    child->surface()->setOutputs(outputs, primaryOutput);
     if (preferredBufferScale.has_value()) {
         child->surface()->setPreferredBufferScale(preferredBufferScale.value());
     }
@@ -947,7 +947,7 @@ QList<OutputInterface *> SurfaceInterface::outputs() const
     return d->outputs;
 }
 
-void SurfaceInterface::setOutputs(const QList<OutputInterface *> &outputs)
+void SurfaceInterface::setOutputs(const QList<OutputInterface *> &outputs, OutputInterface *primaryOutput)
 {
     QList<OutputInterface *> removedOutputs = d->outputs;
     for (auto it = outputs.constBegin(), end = outputs.constEnd(); it != end; ++it) {
@@ -976,7 +976,7 @@ void SurfaceInterface::setOutputs(const QList<OutputInterface *> &outputs)
         d->outputDestroyedConnections[o] = connect(o, &OutputInterface::removed, this, [this, o] {
             auto outputs = d->outputs;
             if (outputs.removeOne(o)) {
-                setOutputs(outputs);
+                setOutputs(outputs, d->primaryOutput);
             }
         });
 
@@ -990,11 +990,12 @@ void SurfaceInterface::setOutputs(const QList<OutputInterface *> &outputs)
     }
 
     d->outputs = outputs;
+    d->primaryOutput = primaryOutput;
     for (auto child : std::as_const(d->current->subsurface.below)) {
-        child->surface()->setOutputs(outputs);
+        child->surface()->setOutputs(outputs, primaryOutput);
     }
     for (auto child : std::as_const(d->current->subsurface.above)) {
-        child->surface()->setOutputs(outputs);
+        child->surface()->setOutputs(outputs, primaryOutput);
     }
 }
 
