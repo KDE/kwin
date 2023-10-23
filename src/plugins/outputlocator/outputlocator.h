@@ -10,6 +10,8 @@
 
 #include <QTimer>
 
+#include <unordered_map>
+
 namespace KWin
 {
 class OffscreenQuickScene;
@@ -30,6 +32,6 @@ public Q_SLOTS:
 private:
     QUrl m_qmlUrl;
     QTimer m_showTimer;
-    QMap<EffectScreen *, OffscreenQuickScene *> m_scenesByScreens;
+    std::unordered_map<EffectScreen *, std::unique_ptr<OffscreenQuickScene>> m_scenesByScreens;
 };
 }

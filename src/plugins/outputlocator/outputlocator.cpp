@@ -76,7 +76,7 @@ void OutputLocatorEffect::show()
 
     const auto screens = effects->screens();
     for (const auto screen : screens) {
-        auto scene = new OffscreenQuickScene(this);
+        auto scene = new OffscreenQuickScene();
         scene->setSource(m_qmlUrl, {{QStringLiteral("outputName"), outputName(screen)}, {QStringLiteral("resolution"), screen->geometry().size()}, {QStringLiteral("scale"), screen->devicePixelRatio()}});
         QRectF geometry(0, 0, scene->rootItem()->implicitWidth(), scene->rootItem()->implicitHeight());
         geometry.moveCenter(screen->geometry().center());
@@ -84,7 +84,7 @@ void OutputLocatorEffect::show()
         connect(scene, &OffscreenQuickView::repaintNeeded, this, [scene] {
             effects->addRepaint(scene->geometry());
         });
-        m_scenesByScreens.insert(screen, scene);
+        m_scenesByScreens[screen].reset(scene);
     }
 
     m_showTimer.start(std::chrono::milliseconds(2500));
@@ -93,10 +93,12 @@ void OutputLocatorEffect::show()
 void OutputLocatorEffect::hide()
 {
     m_showTimer.stop();
-    const QRegion repaintRegion = std::accumulate(m_scenesByScreens.cbegin(), m_scenesByScreens.cend(), QRegion(), [](QRegion region, OffscreenQuickScene *scene) {
-        return region |= scene->geometry();
-    });
-    qDeleteAll(m_scenesByScreens);
+
+    QRegion repaintRegion;
+    for (const auto &[screen, scene] : m_scenesByScreens) {
+        repaintRegion |= scene->geometry();
+    }
+
     m_scenesByScreens.clear();
     effects->addRepaint(repaintRegion);
 }
@@ -106,12 +108,12 @@ void OutputLocatorEffect::paintScreen(const RenderTarget &renderTarget, const Re
     effects->paintScreen(renderTarget, viewport, mask, region, screen);
     // On X11 all screens are painted at once
     if (effects->waylandDisplay()) {
-        if (auto scene = m_scenesByScreens.value(screen)) {
-            effects->renderOffscreenQuickView(renderTarget, viewport, scene);
+        if (auto it = m_scenesByScreens.find(screen); it != m_scenesByScreens.end()) {
+            effects->renderOffscreenQuickView(renderTarget, viewport, it->second.get());
         }
     } else {
-        for (auto scene : m_scenesByScreens) {
-            effects->renderOffscreenQuickView(renderTarget, viewport, scene);
+        for (const auto &[screen, scene] : m_scenesByScreens) {
+            effects->renderOffscreenQuickView(renderTarget, viewport, scene.get());
         }
     }
 }
