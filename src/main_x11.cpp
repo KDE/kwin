@@ -17,6 +17,7 @@
 #include "core/outputbackend.h"
 #include "core/session.h"
 #include "cursor.h"
+#include "effects.h"
 #include "outline.h"
 #include "screenedge.h"
 #include "sm.h"
@@ -181,6 +182,10 @@ ApplicationX11::ApplicationX11(int &argc, char **argv)
 ApplicationX11::~ApplicationX11()
 {
     setTerminating();
+    // need to unload all effects before destroying Workspace, as effects might call into Workspace
+    if (effects) {
+        static_cast<EffectsHandlerImpl *>(effects)->unloadAllEffects();
+    }
     destroyPlugins();
     destroyColorManager();
     destroyWorkspace();
@@ -238,6 +243,10 @@ PlatformCursorImage ApplicationX11::cursorImage() const
 void ApplicationX11::lostSelection()
 {
     sendPostedEvents();
+    // need to unload all effects before destroying Workspace, as effects might call into Workspace
+    if (effects) {
+        static_cast<EffectsHandlerImpl *>(effects)->unloadAllEffects();
+    }
     destroyPlugins();
     destroyColorManager();
     destroyWorkspace();
