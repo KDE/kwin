@@ -11,8 +11,7 @@
 #pragma once
 
 // cmake stuff
-#include "libkwineffects/kwinconfig.h"
-#include <config-kwin.h>
+#include "config-kwin.h"
 // kwin
 #include "libkwineffects/kwinglobals.h"
 #include "libkwineffects/version.h"

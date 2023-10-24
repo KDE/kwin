@@ -5,17 +5,12 @@
 */
 #pragma once
 
-#include "kwin_export.h"
-
-#include <QVariant>
+#include <QMetaType>
 #include <QtGlobal>
-#include <qobjectdefs.h>
-
-#include <inttypes.h>
 
 namespace KWin
 {
-Q_NAMESPACE_EXPORT(KWIN_EXPORT)
+
 /**
  * ContentHint allows to modify the behavior of the text input.
  */
@@ -67,7 +62,6 @@ enum class TextInputContentHint {
 };
 
 Q_DECLARE_FLAGS(TextInputContentHints, TextInputContentHint)
-Q_ENUM_NS(TextInputContentHint)
 
 /**
  * The ContentPurpose allows to specify the primary purpose of a text input.
@@ -133,7 +127,6 @@ enum class TextInputContentPurpose {
      */
     Pin,
 };
-Q_ENUM_NS(TextInputContentPurpose)
 
 enum class TextInputChangeCause {
     /**
@@ -146,8 +139,6 @@ enum class TextInputChangeCause {
      */
     Other,
 };
-Q_ENUM_NS(TextInputChangeCause)
-
 }
 
 Q_DECLARE_METATYPE(KWin::TextInputContentHint)

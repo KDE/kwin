@@ -10,7 +10,6 @@
 */
 #pragma once
 #include "colorspace.h"
-#include "libkwineffects/kwinglutils_export.h"
 
 #include <QColor>
 #include <QMatrix3x3>
@@ -23,7 +22,7 @@
 namespace KWin
 {
 
-class KWINGLUTILS_EXPORT GLShader
+class KWIN_EXPORT GLShader
 {
 public:
     enum Flags {

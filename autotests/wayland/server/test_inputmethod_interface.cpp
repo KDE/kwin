@@ -10,7 +10,7 @@
 #include <QTest>
 #include <QThread>
 
-#include "../../tests/fakeoutput.h"
+#include "../../../tests/fakeoutput.h"
 
 // WaylandServer
 #include "wayland/compositor.h"

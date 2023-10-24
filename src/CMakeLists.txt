@@ -4,8 +4,6 @@ ecm_setup_version(${PROJECT_VERSION}
                   SOVERSION ${PROJECT_VERSION_MAJOR}
 )
 
-# for things that are also used by kwin libraries
-configure_file(libkwineffects/kwinconfig.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/libkwineffects/kwinconfig.h)
 configure_file(config-kwin.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kwin.h)
 
 set(kwin_effects_dbus_xml ${CMAKE_CURRENT_SOURCE_DIR}/org.kde.kwin.Effects.xml)
@@ -18,7 +16,6 @@ target_link_libraries(KWinEffectsInterface Qt::DBus)
 add_subdirectory(helpers)
 add_subdirectory(qml)
 
-add_subdirectory(libkwineffects)
 if (KWIN_BUILD_KCMS)
     add_subdirectory(kcms)
 endif()
@@ -106,6 +103,30 @@ target_sources(kwin PRIVATE
     layers.cpp
     layershellv1integration.cpp
     layershellv1window.cpp
+    libkwineffects/anidata.cpp
+    libkwineffects/colorspace.cpp
+    libkwineffects/effecttogglablestate.cpp
+    libkwineffects/glframebuffer.cpp
+    libkwineffects/glplatform.cpp
+    libkwineffects/glshader.cpp
+    libkwineffects/glshadermanager.cpp
+    libkwineffects/gltexture.cpp
+    libkwineffects/glutils.cpp
+    libkwineffects/glutils_funcs.cpp
+    libkwineffects/glvertexbuffer.cpp
+    libkwineffects/kwinanimationeffect.cpp
+    libkwineffects/kwineffects.cpp
+    libkwineffects/kwinoffscreeneffect.cpp
+    libkwineffects/kwinoffscreenquickview.cpp
+    libkwineffects/kwinquickeffect.cpp
+    libkwineffects/logging.cpp
+    libkwineffects/logging.cpp
+    libkwineffects/openglcontext.cpp
+    libkwineffects/rendertarget.cpp
+    libkwineffects/rendertarget.cpp
+    libkwineffects/renderviewport.cpp
+    libkwineffects/renderviewport.cpp
+    libkwineffects/version.cpp
     lidswitchtracker.cpp
     main.cpp
     modifier_only_shortcuts.cpp
@@ -199,29 +220,27 @@ target_sources(kwin PRIVATE
 target_link_libraries(kwin
     PUBLIC
 
-    kwineffects
-    kwinglutils
-
     Qt::DBus
     Qt::Quick
     Qt::Widgets
     Wayland::Server
+    KF6::ConfigCore
+    KF6::CoreAddons
+    KF6::WindowSystem
+    epoxy::epoxy
 
     PRIVATE
 
     Qt::Concurrent
     Qt::Sensors
 
-    KF6::ConfigCore
     KF6::ConfigQml
     KF6::ConfigWidgets
-    KF6::CoreAddons
     KF6::Crash
     KF6::GlobalAccel
     KF6::I18n
     KF6::Package
     KF6::Service
-    KF6::WindowSystem
 
     KDecoration2::KDecoration
     KDecoration2::KDecoration2Private
@@ -392,8 +411,14 @@ install(
     DESTINATION
         ${KDE_INSTALL_DBUSINTERFACEDIR}
 )
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/kwin_export.h DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin COMPONENT Devel)
+
 install(EXPORT KWinTargets DESTINATION "${KDE_INSTALL_CMAKEPACKAGEDIR}/KWin" FILE KWinTargets.cmake NAMESPACE KWin:: )
+
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/config-kwin.h
+    ${CMAKE_CURRENT_BINARY_DIR}/kwin_export.h
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin COMPONENT Devel)
+
 install(FILES
     core/output.h
     core/renderloop.h
@@ -403,6 +428,25 @@ install(FILES
     utils/edid.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/utils COMPONENT Devel)
 
+install(FILES
+    libkwineffects/colorspace.h
+    libkwineffects/glframebuffer.h
+    libkwineffects/glplatform.h
+    libkwineffects/glshader.h
+    libkwineffects/glshadermanager.h
+    libkwineffects/gltexture.h
+    libkwineffects/glutils.h
+    libkwineffects/glutils_funcs.h
+    libkwineffects/glvertexbuffer.h
+    libkwineffects/kwinanimationeffect.h
+    libkwineffects/kwineffects.h
+    libkwineffects/kwinglobals.h
+    libkwineffects/kwinoffscreeneffect.h
+    libkwineffects/kwinoffscreenquickview.h
+    libkwineffects/kwinquickeffect.h
+    libkwineffects/rendertarget.h
+    libkwineffects/renderviewport.h
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/libkwineffects COMPONENT Devel)
 
 set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KWin")
 

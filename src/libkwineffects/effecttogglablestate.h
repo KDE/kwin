@@ -6,10 +6,10 @@
 
 #pragma once
 
-#include "libkwineffects/kwineffects_export.h"
+#include "libkwineffects/kwinglobals.h"
+
 #include <QAction>
 #include <QObject>
-#include <kwinglobals.h>
 
 namespace KWin
 {
@@ -21,7 +21,7 @@ class Effect;
  * This class helps us simplify this process, especially in the cases where we want activation to happen
  * progressively, like through a touch our touchpad events.
  */
-class KWINEFFECTS_EXPORT EffectTogglableState : public QObject
+class KWIN_EXPORT EffectTogglableState : public QObject
 {
     Q_OBJECT
 public:
@@ -99,7 +99,7 @@ private:
     friend class EffectTogglableTouchBorder;
 };
 
-class KWINEFFECTS_EXPORT EffectTogglableGesture : public QObject
+class KWIN_EXPORT EffectTogglableGesture : public QObject
 {
 public:
     /**
@@ -119,7 +119,7 @@ private:
     EffectTogglableState *const m_state;
 };
 
-class KWINEFFECTS_EXPORT EffectTogglableTouchBorder : public QObject
+class KWIN_EXPORT EffectTogglableTouchBorder : public QObject
 {
 public:
     /**

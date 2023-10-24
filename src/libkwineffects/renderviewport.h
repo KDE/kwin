@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "libkwineffects/kwineffects_export.h"
+#include "kwin_export.h"
 
 #include <QMatrix4x4>
 #include <QRectF>
@@ -17,7 +17,7 @@ namespace KWin
 
 class RenderTarget;
 
-class KWINEFFECTS_EXPORT RenderViewport
+class KWIN_EXPORT RenderViewport
 {
 public:
     explicit RenderViewport(const QRectF &renderRect, double scale, const RenderTarget &renderTarget);

@@ -18,8 +18,7 @@ kconfig_add_kcfg_files(zoom_SOURCES
 
 kwin_add_builtin_effect(zoom ${zoom_SOURCES})
 target_link_libraries(zoom PRIVATE
-    kwineffects
-    kwinglutils
+    kwin
 
     KF6::ConfigGui
     KF6::ConfigWidgets

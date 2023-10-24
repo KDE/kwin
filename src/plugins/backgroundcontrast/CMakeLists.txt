@@ -8,8 +8,4 @@ set(contrast_SOURCES
     main.cpp
 )
 kwin_add_builtin_effect(contrast ${contrast_SOURCES})
-target_link_libraries(contrast PRIVATE
-    kwin
-    kwineffects
-    kwinglutils
-)
+target_link_libraries(contrast PRIVATE kwin)

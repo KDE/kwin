@@ -12,8 +12,7 @@ kconfig_add_kcfg_files(magnifier_SOURCES
 
 kwin_add_builtin_effect(magnifier ${magnifier_SOURCES})
 target_link_libraries(magnifier PRIVATE
-    kwineffects
-    kwinglutils
+    kwin
 
     KF6::ConfigGui
     KF6::ConfigWidgets

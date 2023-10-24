@@ -9,8 +9,7 @@ set(screenedge_SOURCES
 
 kwin_add_builtin_effect(screenedge ${screenedge_SOURCES})
 target_link_libraries(screenedge PRIVATE
-    kwineffects
-    kwinglutils
+    kwin
 
     KF6::Svg
     KF6::ConfigCore

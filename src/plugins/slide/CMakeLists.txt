@@ -13,7 +13,7 @@ kconfig_add_kcfg_files(slide_SOURCES
 
 kwin_add_builtin_effect(slide ${slide_SOURCES})
 target_link_libraries(slide PRIVATE
-    kwineffects
+    kwin
 
     KF6::ConfigGui
 )

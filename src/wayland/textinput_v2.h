@@ -5,6 +5,8 @@
 */
 #pragma once
 
+#include "kwin_export.h"
+
 #include <QObject>
 #include <memory>
 

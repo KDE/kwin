@@ -8,9 +8,10 @@
 */
 #include "x11_standalone_backend.h"
 
+#include "config-kwin.h"
+
 #include "atoms.h"
 #include "core/session.h"
-#include "libkwineffects/kwinconfig.h"
 #include "x11_standalone_cursor.h"
 #include "x11_standalone_edge.h"
 #include "x11_standalone_placeholderoutput.h"

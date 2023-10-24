@@ -9,7 +9,7 @@
 #include <QMatrix3x3>
 #include <QVector2D>
 
-#include "libkwineffects/kwineffects_export.h"
+#include "kwin_export.h"
 
 namespace KWin
 {
@@ -24,7 +24,7 @@ enum class NamedColorimetry {
  * Red, green and blue define the chromaticities ("absolute colors") of the red, green and blue LEDs on a display in xy coordinates
  * White defines the the chromaticity of the reference white in xy coordinates
  */
-class KWINEFFECTS_EXPORT Colorimetry
+class KWIN_EXPORT Colorimetry
 {
 public:
     static constexpr Colorimetry createFromName(NamedColorimetry name);
@@ -53,7 +53,7 @@ enum class NamedTransferFunction {
  * Describes the meaning of encoded color values, with additional metadata for how to convert between different encodings
  * Note that not all properties of this description are relevant in all contexts
  */
-class KWINEFFECTS_EXPORT ColorDescription
+class KWIN_EXPORT ColorDescription
 {
 public:
     /**

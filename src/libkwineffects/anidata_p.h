@@ -30,7 +30,7 @@ private:
     Q_DISABLE_COPY(FullScreenEffectLock)
 };
 
-class KWINEFFECTS_EXPORT AniData
+class KWIN_EXPORT AniData
 {
 public:
     AniData();

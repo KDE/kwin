@@ -7,7 +7,6 @@
 #pragma once
 
 #include "libkwineffects/colorspace.h"
-#include "libkwineffects/kwinglutils_export.h"
 
 #include <QImage>
 #include <QMatrix4x4>
@@ -19,7 +18,7 @@ namespace KWin
 class GLFramebuffer;
 class GLTexture;
 
-class KWINGLUTILS_EXPORT RenderTarget
+class KWIN_EXPORT RenderTarget
 {
 public:
     explicit RenderTarget(GLFramebuffer *fbo, const ColorDescription &colorDescription = ColorDescription::sRGB);

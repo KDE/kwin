@@ -12,8 +12,7 @@ kconfig_add_kcfg_files(mousemark_SOURCES
 
 kwin_add_builtin_effect(mousemark ${mousemark_SOURCES})
 target_link_libraries(mousemark PRIVATE
-    kwineffects
-    kwinglutils
+    kwin
 
     KF6::ConfigGui
     KF6::GlobalAccel

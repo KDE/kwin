@@ -5,7 +5,7 @@
 
 kwin_add_builtin_effect(outputlocator main.cpp outputlocator.cpp)
 target_link_libraries(outputlocator PRIVATE
-    kwineffects
+    kwin
     Qt::DBus
     Qt::Quick
     KF6::I18n

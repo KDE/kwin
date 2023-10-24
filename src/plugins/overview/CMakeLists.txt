@@ -28,7 +28,7 @@ qt6_add_qml_module(overview
 )
 
 target_link_libraries(overview PRIVATE
-    kwineffects
+    kwin
 
     KF6::ConfigGui
     KF6::GlobalAccel

@@ -12,8 +12,7 @@ qt_add_dbus_adaptor(screenshot_SOURCES org.kde.KWin.ScreenShot2.xml screenshotdb
 
 kwin_add_builtin_effect(screenshot ${screenshot_SOURCES})
 target_link_libraries(screenshot PRIVATE
-    kwineffects
-    kwinglutils
+    kwin
 
     KF6::Service
     KF6::I18n

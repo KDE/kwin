@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "libkwineffects/kwinglutils_export.h"
+#include "kwin_export.h"
 
 #include <QExplicitlySharedDataPointer>
 #include <QMatrix4x4>
@@ -45,7 +45,7 @@ enum TextureCoordinateType {
     UnnormalizedCoordinates,
 };
 
-class KWINGLUTILS_EXPORT GLTexture
+class KWIN_EXPORT GLTexture
 {
 public:
     explicit GLTexture(GLenum target);

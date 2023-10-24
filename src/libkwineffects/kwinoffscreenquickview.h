@@ -9,13 +9,11 @@
 
 #pragma once
 
+#include "libkwineffects/kwineffects.h"
+
 #include <QObject>
 #include <QRect>
 #include <QUrl>
-
-#include "libkwineffects/kwineffects_export.h"
-
-#include "libkwineffects/kwineffects.h"
 
 #include <memory>
 
@@ -44,7 +42,7 @@ class OffscreenQuickView;
  * blitting is performed when we update our FBO to keep kwin's render loop
  * as fast as possible.
  */
-class KWINEFFECTS_EXPORT OffscreenQuickView : public QObject
+class KWIN_EXPORT OffscreenQuickView : public QObject
 {
     Q_OBJECT
 
@@ -155,7 +153,7 @@ private:
  * adding QML support. This will represent a context
  * powered by an engine
  */
-class KWINEFFECTS_EXPORT OffscreenQuickScene : public OffscreenQuickView
+class KWIN_EXPORT OffscreenQuickScene : public OffscreenQuickView
 {
 public:
     explicit OffscreenQuickScene(ExportMode exportMode = ExportMode::Texture);

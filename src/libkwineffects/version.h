@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
-#include "libkwineffects/kwinglutils_export.h"
+#include "kwin_export.h"
 
 #include <QByteArray>
 #include <QString>
@@ -15,7 +15,7 @@
 namespace KWin
 {
 
-class KWINGLUTILS_EXPORT Version
+class KWIN_EXPORT Version
 {
 public:
     Version(uint32_t major, uint32_t minor, uint32_t patch = 0);

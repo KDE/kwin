@@ -26,7 +26,7 @@
 #include "wayland/surface.h"
 #include "wayland/xdgshell.h"
 
-#include "../../tests/fakeoutput.h"
+#include "../../../tests/fakeoutput.h"
 
 using namespace KWin;
 

@@ -10,7 +10,6 @@
 #pragma once
 
 #include "libkwineffects/gltexture.h"
-#include "libkwineffects/kwinglutils_export.h"
 
 typedef void *EGLImageKHR;
 typedef void *EGLClientBuffer;
@@ -20,7 +19,7 @@ namespace KWin
 
 class EglDisplay;
 
-class KWINGLUTILS_EXPORT EGLImageTexture : public GLTexture
+class KWIN_EXPORT EGLImageTexture : public GLTexture
 {
 public:
     explicit EGLImageTexture(EglDisplay *display, EGLImageKHR image, uint textureId, int internalFormat, const QSize &size, uint32_t target);

@@ -14,8 +14,7 @@ kconfig_add_kcfg_files(trackmouse_SOURCES
 
 kwin_add_builtin_effect(trackmouse ${trackmouse_SOURCES})
 target_link_libraries(trackmouse PRIVATE
-    kwineffects
-    kwinglutils
+    kwin
 
     KF6::ConfigGui
     KF6::GlobalAccel

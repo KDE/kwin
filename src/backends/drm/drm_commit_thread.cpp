@@ -9,7 +9,7 @@
 #include "drm_commit_thread.h"
 #include "drm_commit.h"
 #include "drm_gpu.h"
-#include "logging_p.h"
+#include "drm_logging.h"
 #include "utils/realtime.h"
 
 using namespace std::chrono_literals;

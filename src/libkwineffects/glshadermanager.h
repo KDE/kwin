@@ -9,7 +9,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
-#include "libkwineffects/kwinglutils_export.h"
+#include "kwin_export.h"
 
 #include <QByteArray>
 #include <QFlags>
@@ -44,7 +44,7 @@ Q_DECLARE_FLAGS(ShaderTraits, ShaderTrait)
  * @author Martin Gräßlin <mgraesslin@kde.org>
  * @since 4.7
  */
-class KWINGLUTILS_EXPORT ShaderManager
+class KWIN_EXPORT ShaderManager
 {
 public:
     explicit ShaderManager();
@@ -177,7 +177,7 @@ private:
  *
  * @since 4.10
  */
-class KWINGLUTILS_EXPORT ShaderBinder
+class KWIN_EXPORT ShaderBinder
 {
 public:
     /**

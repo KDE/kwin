@@ -12,7 +12,7 @@ kconfig_add_kcfg_files(diminactive_SOURCES
 
 kwin_add_builtin_effect(diminactive ${diminactive_SOURCES})
 target_link_libraries(diminactive PRIVATE
-    kwineffects
+    kwin
 
     KF6::ConfigGui
 )

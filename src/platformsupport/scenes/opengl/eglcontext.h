@@ -8,9 +8,8 @@
 */
 #pragma once
 
-#include "gltexture.h"
-#include "kwin_export.h"
-#include "openglcontext.h"
+#include "libkwineffects/gltexture.h"
+#include "libkwineffects/openglcontext.h"
 
 #include <QByteArray>
 #include <QList>

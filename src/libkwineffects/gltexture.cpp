@@ -13,7 +13,6 @@
 #include "libkwineffects/glplatform.h"
 #include "libkwineffects/glutils.h"
 #include "libkwineffects/glutils_funcs.h"
-#include "libkwineffects/kwinconfig.h" // KWIN_HAVE_OPENGL
 #include "libkwineffects/kwineffects.h"
 #include "logging_p.h"
 

@@ -27,7 +27,7 @@
 #include "KWayland/Client/shm_pool.h"
 #include "KWayland/Client/surface.h"
 
-#include "../../tests/fakeoutput.h"
+#include "../../../tests/fakeoutput.h"
 
 // Wayland
 #include <wayland-client-protocol.h>

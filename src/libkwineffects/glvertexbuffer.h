@@ -10,7 +10,6 @@
 */
 #pragma once
 #include "kwineffects.h"
-#include "libkwineffects/kwinglutils_export.h"
 
 #include <QColor>
 #include <QRegion>
@@ -54,7 +53,7 @@ class GLVertexBufferPrivate;
  * @author Martin Gräßlin <mgraesslin@kde.org>
  * @since 4.6
  */
-class KWINGLUTILS_EXPORT GLVertexBuffer
+class KWIN_EXPORT GLVertexBuffer
 {
 public:
     /**

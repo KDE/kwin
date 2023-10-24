@@ -15,7 +15,7 @@ endif()
 ########################################################
 set(testWindowPaintData_SRCS test_window_paint_data.cpp)
 add_executable(testWindowPaintData ${testWindowPaintData_SRCS})
-target_link_libraries(testWindowPaintData kwineffects Qt::Widgets Qt::Test )
+target_link_libraries(testWindowPaintData kwin Qt::Widgets Qt::Test )
 add_test(NAME kwin-testWindowPaintData COMMAND testWindowPaintData)
 ecm_mark_as_test(testWindowPaintData)
 
@@ -204,8 +204,6 @@ target_link_libraries(testXkb
 
     KF6::ConfigCore
     KF6::WindowSystem
-
-    kwineffects
 
     XKB::XKB
 )

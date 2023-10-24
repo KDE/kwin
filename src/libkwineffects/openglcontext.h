@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
-#include "libkwineffects/kwinglutils_export.h"
+#include "kwin_export.h"
 #include "version.h"
 
 #include <stdint.h>
@@ -19,7 +19,7 @@
 namespace KWin
 {
 
-class KWINGLUTILS_EXPORT OpenGlContext
+class KWIN_EXPORT OpenGlContext
 {
 public:
     explicit OpenGlContext();

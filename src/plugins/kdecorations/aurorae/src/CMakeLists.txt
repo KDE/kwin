@@ -24,7 +24,7 @@ target_compile_definitions(kwin5_aurorae PRIVATE
 
 target_link_libraries(kwin5_aurorae
     KDecoration2::KDecoration
-    kwineffects
+    kwin
     KF6::I18n
     KF6::Package
     KF6::WindowSystem

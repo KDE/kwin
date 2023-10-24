@@ -17,7 +17,6 @@
 #include "libkwineffects/gltexture.h"
 #include "libkwineffects/glutils_funcs.h"
 #include "libkwineffects/glvertexbuffer.h"
-#include "libkwineffects/kwinglutils_export.h"
 
 #include <QByteArray>
 #include <QList>
@@ -30,18 +29,18 @@ namespace KWin
 //  well as checking for GL version and extensions
 //  Note that GL context has to be created by the time this function is called
 typedef void (*resolveFuncPtr)();
-void KWINGLUTILS_EXPORT initGL(const std::function<resolveFuncPtr(const char *)> &resolveFunction);
+void KWIN_EXPORT initGL(const std::function<resolveFuncPtr(const char *)> &resolveFunction);
 // Cleans up all resources hold by the GL Context
-void KWINGLUTILS_EXPORT cleanupGL();
+void KWIN_EXPORT cleanupGL();
 
-bool KWINGLUTILS_EXPORT hasGLVersion(int major, int minor, int release = 0);
+bool KWIN_EXPORT hasGLVersion(int major, int minor, int release = 0);
 // use for both OpenGL and GLX extensions
-bool KWINGLUTILS_EXPORT hasGLExtension(const QByteArray &extension);
+bool KWIN_EXPORT hasGLExtension(const QByteArray &extension);
 
 // detect OpenGL error (add to various places in code to pinpoint the place)
-bool KWINGLUTILS_EXPORT checkGLError(const char *txt);
+bool KWIN_EXPORT checkGLError(const char *txt);
 
-QList<QByteArray> KWINGLUTILS_EXPORT openGLExtensions();
+QList<QByteArray> KWIN_EXPORT openGLExtensions();
 
 } // namespace
 

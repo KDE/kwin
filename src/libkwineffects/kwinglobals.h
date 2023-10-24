@@ -9,14 +9,14 @@
 
 #pragma once
 
+#include "config-kwin.h"
+
 #include <QCoreApplication>
 #include <QImage>
 #include <QPoint>
 #include <QVariant>
 
 #include <kwin_export.h>
-
-#include "libkwineffects/kwinconfig.h"
 
 #define KWIN_QT5_PORTING 0
 

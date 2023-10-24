@@ -12,8 +12,7 @@ kconfig_add_kcfg_files(thumbnailaside_SOURCES
 
 kwin_add_builtin_effect(thumbnailaside ${thumbnailaside_SOURCES})
 target_link_libraries(thumbnailaside PRIVATE
-    kwineffects
-    kwinglutils
+    kwin
 
     KF6::ConfigGui
     KF6::GlobalAccel

@@ -25,7 +25,7 @@ class QuickSceneEffectPrivate;
  *
  * @see QuickSceneEffect, OffscreenQuickView
  */
-class KWINEFFECTS_EXPORT QuickSceneView : public OffscreenQuickView
+class KWIN_EXPORT QuickSceneView : public OffscreenQuickView
 {
     Q_OBJECT
     Q_PROPERTY(QuickSceneEffect *effect READ effect CONSTANT)
@@ -71,7 +71,7 @@ private:
  *
  * @see QuickSceneView
  */
-class KWINEFFECTS_EXPORT QuickSceneEffect : public Effect
+class KWIN_EXPORT QuickSceneEffect : public Effect
 {
     Q_OBJECT
     Q_PROPERTY(QuickSceneView *activeView READ activeView NOTIFY activeViewChanged)

@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "libkwineffects/kwinglutils_export.h"
+#include "kwin_export.h"
 
 #include <epoxy/gl.h>
 #include <functional>
@@ -31,7 +31,7 @@ namespace KWin
 {
 
 typedef void (*resolveFuncPtr)();
-void KWINGLUTILS_EXPORT glResolveFunctions(const std::function<resolveFuncPtr(const char *)> &resolveFunction);
+void KWIN_EXPORT glResolveFunctions(const std::function<resolveFuncPtr(const char *)> &resolveFunction);
 
 // GL_ARB_robustness / GL_EXT_robustness
 using glGetGraphicsResetStatus_func = GLenum (*)();
@@ -39,8 +39,8 @@ using glReadnPixels_func = void (*)(GLint x, GLint y, GLsizei width, GLsizei hei
                                     GLenum format, GLenum type, GLsizei bufSize, GLvoid *data);
 using glGetnUniformfv_func = void (*)(GLuint program, GLint location, GLsizei bufSize, GLfloat *params);
 
-extern KWINGLUTILS_EXPORT glGetGraphicsResetStatus_func glGetGraphicsResetStatus;
-extern KWINGLUTILS_EXPORT glReadnPixels_func glReadnPixels;
-extern KWINGLUTILS_EXPORT glGetnUniformfv_func glGetnUniformfv;
+extern KWIN_EXPORT glGetGraphicsResetStatus_func glGetGraphicsResetStatus;
+extern KWIN_EXPORT glReadnPixels_func glReadnPixels;
+extern KWIN_EXPORT glGetnUniformfv_func glGetnUniformfv;
 
 } // namespace

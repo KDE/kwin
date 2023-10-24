@@ -4,9 +4,9 @@
 
 ecm_add_qml_module(effectsplugin URI "org.kde.kwin.private.effects")
 
-ecm_target_qml_sources(effectsplugin 
-    SOURCES 
-        qml/WindowHeap.qml 
+ecm_target_qml_sources(effectsplugin
+    SOURCES
+        qml/WindowHeap.qml
         qml/WindowHeapDelegate.qml
 )
 
@@ -17,7 +17,7 @@ target_sources(effectsplugin PRIVATE
 )
 
 target_link_libraries(effectsplugin PRIVATE
-    kwineffects
+    kwin
     Qt6::Quick
     Qt6::Qml
     KF6::I18n

@@ -15,7 +15,7 @@
 #include "KWayland/Client/output.h"
 #include "KWayland/Client/registry.h"
 
-#include "../../tests/fakeoutput.h"
+#include "../../../tests/fakeoutput.h"
 
 // Wayland
 #include <wayland-client-protocol.h>

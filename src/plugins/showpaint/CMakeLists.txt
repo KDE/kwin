@@ -8,8 +8,7 @@ set(showpaint_SOURCES
 
 kwin_add_builtin_effect(showpaint ${showpaint_SOURCES})
 target_link_libraries(showpaint PRIVATE
-    kwineffects
-    kwinglutils
+    kwin
 
     KF6::GlobalAccel
     KF6::I18n

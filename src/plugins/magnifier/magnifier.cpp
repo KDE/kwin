@@ -13,7 +13,6 @@
 // KConfigSkeleton
 #include "magnifierconfig.h"
 
-#include "libkwineffects/kwinconfig.h"
 #include <QAction>
 #include <kstandardaction.h>
 

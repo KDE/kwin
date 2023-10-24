@@ -10,7 +10,7 @@ set(showfps_SOURCES
 kwin_add_builtin_effect(showfps ${showfps_SOURCES})
 
 target_link_libraries(showfps PRIVATE
-    kwineffects
+    kwin
 
     KF6::I18n
 

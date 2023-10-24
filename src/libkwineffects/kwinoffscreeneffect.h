@@ -29,7 +29,7 @@ class ShaderEffectPrivate;
  * If a window is redirected into offscreen texture, the deform() function will be
  * called to transform the offscreen texture.
  */
-class KWINEFFECTS_EXPORT OffscreenEffect : public Effect
+class KWIN_EXPORT OffscreenEffect : public Effect
 {
     Q_OBJECT
 
@@ -93,7 +93,7 @@ private:
  * If window geometry changes shape after this point our "old" pixmap is resized to fit approximately matching
  * frame geometry
  */
-class KWINEFFECTS_EXPORT CrossFadeEffect : public Effect
+class KWIN_EXPORT CrossFadeEffect : public Effect
 {
     Q_OBJECT
 public:

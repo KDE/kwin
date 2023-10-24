@@ -10,7 +10,8 @@
 
 #pragma once
 
-#include "libkwineffects/kwineffects_export.h"
+#include "kwin_export.h"
+
 #include "libkwineffects/kwinoffscreeneffect.h"
 #include <QEasingCurve>
 #include <QElapsedTimer>
@@ -19,7 +20,7 @@
 namespace KWin
 {
 
-class KWINEFFECTS_EXPORT FPx2
+class KWIN_EXPORT FPx2
 {
 public:
     FPx2()
@@ -190,7 +191,7 @@ class AnimationEffectPrivate;
  *
  * @since 4.8
  */
-class KWINEFFECTS_EXPORT AnimationEffect : public CrossFadeEffect
+class KWIN_EXPORT AnimationEffect : public CrossFadeEffect
 {
     Q_OBJECT
 

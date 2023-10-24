@@ -12,7 +12,7 @@ kconfig_add_kcfg_files(magiclamp_SOURCES
 
 kwin_add_builtin_effect(magiclamp ${magiclamp_SOURCES})
 target_link_libraries(magiclamp PRIVATE
-    kwineffects
+    kwin
 
     KF6::ConfigGui
 )

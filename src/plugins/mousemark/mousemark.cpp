@@ -16,7 +16,6 @@
 #include "mousemarkconfig.h"
 
 #include "libkwineffects/glplatform.h"
-#include "libkwineffects/kwinconfig.h"
 #include "libkwineffects/rendertarget.h"
 #include "libkwineffects/renderviewport.h"
 #include <KGlobalAccel>

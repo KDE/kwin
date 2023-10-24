@@ -12,8 +12,7 @@ kconfig_add_kcfg_files(mouseclick_SOURCES
 
 kwin_add_builtin_effect(mouseclick ${mouseclick_SOURCES})
 target_link_libraries(mouseclick PRIVATE
-    kwineffects
-    kwinglutils
+    kwin
 
     KF6::ConfigGui
     KF6::GlobalAccel

@@ -14,8 +14,6 @@ kconfig_add_kcfg_files(blur_SOURCES
 kwin_add_builtin_effect(blur ${blur_SOURCES})
 target_link_libraries(blur PRIVATE
     kwin
-    kwineffects
-    kwinglutils
 
     KF6::ConfigGui
 

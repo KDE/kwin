@@ -10,8 +10,7 @@ set(startupfeedback_SOURCES
 
 kwin_add_builtin_effect(startupfeedback ${startupfeedback_SOURCES})
 target_link_libraries(startupfeedback PRIVATE
-    kwineffects
-    kwinglutils
+    kwin
 
     Qt::DBus
     Qt::Widgets

@@ -14,7 +14,7 @@ set(tileseditor_SOURCES
 kwin_add_builtin_effect(tileseditor ${tileseditor_SOURCES})
 
 target_link_libraries(tileseditor PRIVATE
-    kwineffects
+    kwin
 
     KF6::ConfigGui
     KF6::GlobalAccel

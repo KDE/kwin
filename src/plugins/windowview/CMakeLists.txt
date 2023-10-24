@@ -20,7 +20,7 @@ qt_add_dbus_adaptor(windowview_SOURCES org.kde.KWin.Effect.WindowView1.xml windo
 kwin_add_builtin_effect(windowview ${windowview_SOURCES})
 
 target_link_libraries(windowview PRIVATE
-    kwineffects
+    kwin
 
     KF6::ConfigGui
     KF6::GlobalAccel

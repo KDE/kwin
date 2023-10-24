@@ -20,7 +20,6 @@
 #include <QTime>
 
 #include "libkwineffects/glutils.h"
-#include "libkwineffects/kwinconfig.h"
 #include "libkwineffects/rendertarget.h"
 #include "libkwineffects/renderviewport.h"
 

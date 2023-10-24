@@ -9,7 +9,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
-#include "libkwineffects/kwinglutils_export.h"
+#include "kwin_export.h"
 
 #include <QRect>
 #include <QStack>
@@ -23,7 +23,7 @@ class RenderTarget;
 class RenderViewport;
 
 // Cleans up all resources hold by the GL Context
-void KWINGLUTILS_EXPORT cleanupGL();
+void KWIN_EXPORT cleanupGL();
 
 /**
  * @short OpenGL framebuffer object
@@ -33,7 +33,7 @@ void KWINGLUTILS_EXPORT cleanupGL();
  *
  * @author Rivo Laks <rivolaks@hot.ee>
  */
-class KWINGLUTILS_EXPORT GLFramebuffer
+class KWIN_EXPORT GLFramebuffer
 {
 public:
     enum Attachment {

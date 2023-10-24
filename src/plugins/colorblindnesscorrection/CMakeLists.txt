@@ -8,8 +8,7 @@ kwin_add_builtin_effect(colorblindnesscorrection
 )
 kconfig_add_kcfg_files(colorblindnesscorrection colorblindnesscorrection_settings.kcfgc GENERATE_MOC)
 target_link_libraries(colorblindnesscorrection PRIVATE
-    kwineffects
-    kwinglutils
+    kwin
 
     KF6::ConfigCore
     KF6::ConfigGui

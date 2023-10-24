@@ -10,7 +10,6 @@
 #pragma once
 
 #include "libkwineffects/kwinglobals.h"
-#include "libkwineffects/kwinglutils_export.h"
 #include "openglcontext.h"
 
 #include <QByteArray>
@@ -155,7 +154,7 @@ enum ChipClass {
 };
 // clang-format on
 
-class KWINGLUTILS_EXPORT GLPlatform
+class KWIN_EXPORT GLPlatform
 {
 public:
     ~GLPlatform();

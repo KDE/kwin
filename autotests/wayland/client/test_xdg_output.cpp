@@ -17,7 +17,7 @@
 #include "KWayland/Client/registry.h"
 #include "KWayland/Client/xdgoutput.h"
 
-#include "../../tests/fakeoutput.h"
+#include "../../../tests/fakeoutput.h"
 
 class TestXdgOutput : public QObject
 {
