@@ -93,15 +93,16 @@ Running it from your build directory looks like this:
 ```bash
 # from the root of your build directory
 
+source prefix.sh
 cd bin
 
 # for wayland, starts nested session: with console
 
-env QT_PLUGIN_PATH=`pwd` dbus-run-session ./kwin_wayland --xwayland konsole
+env QT_PLUGIN_PATH="$(pwd)":"$QT_PLUGIN_PATH" dbus-run-session ./kwin_wayland --xwayland konsole
 
 # or for x11, replaces current kwin instance:
 
-env QT_PLUGIN_PATH=`pwd` ./kwin_x11 --replace
+env QT_PLUGIN_PATH="$(pwd)":"$QT_PLUGIN_PATH" ./kwin_x11 --replace
 
 ```
 
