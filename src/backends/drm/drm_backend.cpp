@@ -185,14 +185,11 @@ DrmGpu *DrmBackend::addGpu(const QString &fileName)
         return nullptr;
     }
 
-    // try to make a simple drm get resource call, if it fails it is not useful for us
-    drmModeRes *resources = drmModeGetResources(fd);
-    if (!resources) {
+    if (!drmIsKMS(fd)) {
         qCDebug(KWIN_DRM) << "Skipping KMS incapable drm device node at" << fileName;
         m_session->closeRestricted(fd);
         return nullptr;
     }
-    drmModeFreeResources(resources);
 
     struct stat buf;
     if (fstat(fd, &buf) == -1) {
