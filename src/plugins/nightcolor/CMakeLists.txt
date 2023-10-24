@@ -25,7 +25,7 @@ if (CMAKE_SYSTEM_NAME MATCHES "Linux")
     target_sources(nightcolor PRIVATE clockskewnotifierengine_linux.cpp)
 endif()
 
-target_link_libraries(nightcolor kwin KF6::ConfigGui KF6::GlobalAccel)
+target_link_libraries(nightcolor kwin KF6::ConfigGui KF6::GlobalAccel KF6::I18n)
 
 install(FILES nightcolorsettings.kcfg DESTINATION ${KDE_INSTALL_KCFGDIR})
 install(FILES org.kde.kwin.ColorCorrect.xml DESTINATION ${KDE_INSTALL_DBUSINTERFACEDIR})

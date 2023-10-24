@@ -207,7 +207,6 @@ target_link_libraries(kwin
     Qt::Quick
     Qt::Widgets
     Wayland::Server
-    KF6::I18n
 
     PRIVATE
 
@@ -219,6 +218,7 @@ target_link_libraries(kwin
     KF6::CoreAddons
     KF6::Crash
     KF6::GlobalAccel
+    KF6::I18n
     KF6::Package
     KF6::Service
     KF6::WindowSystem

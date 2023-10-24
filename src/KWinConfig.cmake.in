@@ -5,7 +5,6 @@ find_dependency(Qt6Core "@QT_MIN_VERSION@")
 find_dependency(Qt6Gui "@QT_MIN_VERSION@")
 find_dependency(Qt6Concurrent "@QT_MIN_VERSION@")
 find_dependency(Qt6Quick "@QT_MIN_VERSION@")
-find_dependency(KF6I18n "@KF6_MIN_VERSION@")
 find_dependency(KWinEffects)
 
 @PACKAGE_SETUP_KWIN_AUTOMOC_VARIABLES@
