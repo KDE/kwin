@@ -721,8 +721,9 @@ void OutputConfigurationStore::load()
     }
 
     // repair the outputs list in case it's broken
-    for (size_t i = 0; i < outputDatas.size(); i++) {
+    for (size_t i = 0; i < outputDatas.size();) {
         if (!outputDatas[i]) {
+            outputDatas.erase(outputDatas.begin() + i);
             for (auto setupIt = m_setups.begin(); setupIt != m_setups.end();) {
                 const bool broken = std::any_of(setupIt->outputs.begin(), setupIt->outputs.end(), [i](const auto &output) {
                     return output.outputIndex == i;
@@ -738,7 +739,8 @@ void OutputConfigurationStore::load()
                 }
                 setupIt++;
             }
-            outputDatas.erase(outputDatas.begin() + i);
+        } else {
+            i++;
         }
     }
 
