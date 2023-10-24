@@ -5,6 +5,7 @@
 */
 
 #include "libkwineffects/kwinoffscreeneffect.h"
+#include "core/output.h"
 #include "libkwineffects/gltexture.h"
 #include "libkwineffects/glutils.h"
 #include "libkwineffects/rendertarget.h"
@@ -94,7 +95,7 @@ void OffscreenEffect::apply(EffectWindow *window, int mask, WindowPaintData &dat
 void OffscreenData::maybeRender(EffectWindow *window)
 {
     const QRectF logicalGeometry = window->expandedGeometry();
-    const qreal scale = window->screen()->devicePixelRatio();
+    const qreal scale = window->screen()->scale();
     const QSize textureSize = (logicalGeometry.size() * scale).toSize();
 
     if (!m_texture || m_texture->size() != textureSize) {

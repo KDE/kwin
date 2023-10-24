@@ -11,6 +11,7 @@
 
 // own
 #include "slide.h"
+#include "core/output.h"
 
 // KConfigSkeleton
 #include "slideconfig.h"
@@ -134,13 +135,13 @@ void SlideEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::millisec
     effects->prePaintScreen(data, presentTime);
 }
 
-void SlideEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
+void SlideEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen)
 {
     m_paintCtx.wrap = effects->optionRollOverDesktops();
     effects->paintScreen(renderTarget, viewport, mask, region, screen);
 }
 
-QPoint SlideEffect::getDrawCoords(QPointF pos, EffectScreen *screen)
+QPoint SlideEffect::getDrawCoords(QPointF pos, Output *screen)
 {
     QPoint c = QPoint();
     c.setX(pos.x() * (screen->geometry().width() + m_hGap));
@@ -226,7 +227,7 @@ void SlideEffect::paintWindow(const RenderTarget &renderTarget, const RenderView
             desktopTranslation = QPointF(desktopTranslation.x(), desktopTranslation.y() + gridHeight);
         }
 
-        for (EffectScreen *screen : screens) {
+        for (Output *screen : screens) {
             QPoint drawTranslation = getDrawCoords(desktopTranslation, screen);
             data += drawTranslation;
 

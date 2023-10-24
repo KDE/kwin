@@ -263,7 +263,7 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
     effects->prePaintScreen(data, presentTime);
 }
 
-ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectScreen *screen)
+ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(const RenderTarget &renderTarget, const RenderViewport &viewport, Output *screen)
 {
     const QRect rect = viewport.renderRect().toRect();
     const qreal devicePixelRatio = viewport.scale();
@@ -286,7 +286,7 @@ ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(const RenderTarget &r
     return &data;
 }
 
-void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
+void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen)
 {
     OffscreenData *offscreenData = ensureOffscreenData(renderTarget, viewport, screen);
     if (!offscreenData) {
@@ -561,7 +561,7 @@ void ZoomEffect::slotWindowDamaged()
     }
 }
 
-void ZoomEffect::slotScreenRemoved(EffectScreen *screen)
+void ZoomEffect::slotScreenRemoved(Output *screen)
 {
     if (auto it = m_offscreenData.find(screen); it != m_offscreenData.end()) {
         effects->makeOpenGLContextCurrent();

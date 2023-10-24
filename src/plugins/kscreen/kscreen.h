@@ -53,12 +53,12 @@ private:
 
     void switchState(ScreenState &state);
     void setState(ScreenState &state, FadeOutState newState);
-    void addScreen(EffectScreen *screen);
-    bool isScreenActive(EffectScreen *screen) const;
+    void addScreen(Output *screen);
+    bool isScreenActive(Output *screen) const;
 
-    QHash<EffectScreen *, ScreenState> m_waylandStates;
+    QHash<Output *, ScreenState> m_waylandStates;
     ScreenState m_xcbState;
-    EffectScreen *m_currentScreen = nullptr;
+    Output *m_currentScreen = nullptr;
     xcb_atom_t m_atom;
 };
 

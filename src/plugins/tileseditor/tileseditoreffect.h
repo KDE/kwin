@@ -37,7 +37,7 @@ Q_SIGNALS:
     void animationDurationChanged();
 
 protected:
-    QVariantMap initialProperties(EffectScreen *screen) override;
+    QVariantMap initialProperties(Output *screen) override;
 
 private:
     void realDeactivate();

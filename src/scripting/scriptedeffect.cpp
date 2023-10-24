@@ -13,6 +13,7 @@
 #include "scriptingutils.h"
 #include "workspace_wrapper.h"
 
+#include "core/output.h"
 #include "input.h"
 #include "screenedge.h"
 #include "workspace.h"
@@ -720,7 +721,7 @@ bool ScriptedEffect::registerRealtimeScreenEdge(int edge, const QJSValue &callba
                 }
             }
         });
-        effects->registerRealtimeTouchBorder(static_cast<KWin::ElectricBorder>(edge), triggerAction, [this](ElectricBorder border, const QPointF &deltaProgress, EffectScreen *screen) {
+        effects->registerRealtimeTouchBorder(static_cast<KWin::ElectricBorder>(edge), triggerAction, [this](ElectricBorder border, const QPointF &deltaProgress, Output *screen) {
             auto it = realtimeScreenEdgeCallbacks().constFind(border);
             if (it != realtimeScreenEdgeCallbacks().constEnd()) {
                 for (const QJSValue &callback : it.value()) {

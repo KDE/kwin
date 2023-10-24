@@ -5,6 +5,7 @@
 */
 
 #include "expoarea.h"
+#include "core/output.h"
 
 namespace KWin
 {
@@ -34,20 +35,20 @@ qreal ExpoArea::height() const
     return m_rect.height();
 }
 
-EffectScreen *ExpoArea::screen() const
+Output *ExpoArea::screen() const
 {
     return m_screen;
 }
 
-void ExpoArea::setScreen(EffectScreen *screen)
+void ExpoArea::setScreen(Output *screen)
 {
     if (m_screen != screen) {
         if (m_screen) {
-            disconnect(m_screen, &EffectScreen::geometryChanged, this, &ExpoArea::update);
+            disconnect(m_screen, &Output::geometryChanged, this, &ExpoArea::update);
         }
         m_screen = screen;
         if (m_screen) {
-            connect(m_screen, &EffectScreen::geometryChanged, this, &ExpoArea::update);
+            connect(m_screen, &Output::geometryChanged, this, &ExpoArea::update);
         }
         update();
         Q_EMIT screenChanged();

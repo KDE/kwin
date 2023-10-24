@@ -44,7 +44,7 @@ public:
     ~ZoomEffect() override;
     void reconfigure(ReconfigureFlags flags) override;
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen) override;
+    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen) override;
     void postPaintScreen() override;
     bool isActive() const override;
     int requestedEffectChainPosition() const override;
@@ -78,7 +78,7 @@ private Q_SLOTS:
                           Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
     void slotWindowAdded(EffectWindow *w);
     void slotWindowDamaged();
-    void slotScreenRemoved(EffectScreen *screen);
+    void slotScreenRemoved(Output *screen);
 
 private:
     void showCursor();
@@ -94,7 +94,7 @@ private:
     };
 
     GLTexture *ensureCursorTexture();
-    OffscreenData *ensureOffscreenData(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectScreen *screen);
+    OffscreenData *ensureOffscreenData(const RenderTarget &renderTarget, const RenderViewport &viewport, Output *screen);
     void markCursorTextureDirty();
 
 #if HAVE_ACCESSIBILITY
@@ -131,7 +131,7 @@ private:
     int xMove, yMove;
     double moveFactor;
     std::chrono::milliseconds lastPresentTime;
-    std::map<EffectScreen *, OffscreenData> m_offscreenData;
+    std::map<Output *, OffscreenData> m_offscreenData;
 };
 
 } // namespace

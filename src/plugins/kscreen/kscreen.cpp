@@ -8,6 +8,7 @@
 */
 // own
 #include "kscreen.h"
+#include "core/output.h"
 // KConfigSkeleton
 #include "kscreenconfig.h"
 #include <QDebug>
@@ -55,12 +56,12 @@ KscreenEffect::KscreenEffect()
     }
     reconfigure(ReconfigureAll);
 
-    const QList<EffectScreen *> screens = effects->screens();
+    const QList<Output *> screens = effects->screens();
     for (auto screen : screens) {
         addScreen(screen);
     }
     connect(effects, &EffectsHandler::screenAdded, this, &KscreenEffect::addScreen);
-    connect(effects, &EffectsHandler::screenRemoved, this, [this](KWin::EffectScreen *screen) {
+    connect(effects, &EffectsHandler::screenRemoved, this, [this](KWin::Output *screen) {
         m_waylandStates.remove(screen);
     });
 }
@@ -69,14 +70,14 @@ KscreenEffect::~KscreenEffect()
 {
 }
 
-void KscreenEffect::addScreen(EffectScreen *screen)
+void KscreenEffect::addScreen(Output *screen)
 {
-    connect(screen, &EffectScreen::wakeUp, this, [this, screen] {
+    connect(screen, &Output::wakeUp, this, [this, screen] {
         auto &state = m_waylandStates[screen];
         state.m_timeLine.setDuration(std::chrono::milliseconds(animationTime<KscreenConfig>(250)));
         setState(state, StateFadingIn);
     });
-    connect(screen, &EffectScreen::aboutToTurnOff, this, [this, screen](std::chrono::milliseconds dimmingIn) {
+    connect(screen, &Output::aboutToTurnOff, this, [this, screen](std::chrono::milliseconds dimmingIn) {
         auto &state = m_waylandStates[screen];
         state.m_timeLine.setDuration(dimmingIn);
         setState(state, StateFadingOut);
@@ -210,7 +211,7 @@ bool KscreenEffect::isActive() const
     return !m_waylandStates.isEmpty() || (!effects->waylandDisplay() && m_atom && m_xcbState.m_state != StateNormal);
 }
 
-bool KscreenEffect::isScreenActive(EffectScreen *screen) const
+bool KscreenEffect::isScreenActive(Output *screen) const
 {
     return m_waylandStates.contains(screen) || (!effects->waylandDisplay() && m_atom && m_xcbState.m_state != StateNormal);
 }

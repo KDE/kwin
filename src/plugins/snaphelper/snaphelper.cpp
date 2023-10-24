@@ -32,8 +32,8 @@ static QRegion computeDirtyRegion(const QRectF &windowRect)
 
     QRegion dirtyRegion;
 
-    const QList<EffectScreen *> screens = effects->screens();
-    for (EffectScreen *screen : screens) {
+    const QList<Output *> screens = effects->screens();
+    for (Output *screen : screens) {
         const QRectF screenRect = effects->clientArea(ScreenArea, screen, effects->currentDesktop());
 
         QRectF screenWindowRect = windowRect;
@@ -93,14 +93,14 @@ void SnapHelperEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mil
     effects->prePaintScreen(data, presentTime);
 }
 
-void SnapHelperEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
+void SnapHelperEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen)
 {
     effects->paintScreen(renderTarget, viewport, mask, region, screen);
 
     const qreal opacityFactor = m_animation.active
         ? m_animation.timeLine.value()
         : 1.0;
-    const QList<EffectScreen *> screens = effects->screens();
+    const QList<Output *> screens = effects->screens();
 
     const auto scale = viewport.scale();
 
@@ -121,7 +121,7 @@ void SnapHelperEffect::paintScreen(const RenderTarget &renderTarget, const Rende
         glLineWidth(s_lineWidth);
         QList<QVector2D> verts;
         verts.reserve(screens.count() * 24);
-        for (EffectScreen *screen : screens) {
+        for (Output *screen : screens) {
             const QRectF rect = effects->clientArea(ScreenArea, screen, effects->currentDesktop());
             const int midX = rect.x() + rect.width() / 2;
             const int midY = rect.y() + rect.height() / 2;
@@ -167,7 +167,7 @@ void SnapHelperEffect::paintScreen(const RenderTarget &renderTarget, const Rende
         painter->setPen(pen);
         painter->setBrush(Qt::NoBrush);
 
-        for (EffectScreen *screen : screens) {
+        for (Output *screen : screens) {
             const QRectF rect = effects->clientArea(ScreenArea, screen, effects->currentDesktop());
             // Center lines.
             painter->drawLine(rect.center().x(), rect.y(), rect.center().x(), rect.y() + rect.height());

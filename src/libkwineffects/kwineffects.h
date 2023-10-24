@@ -73,7 +73,7 @@ class EffectWindowGroup;
 class EffectFrame;
 class EffectFramePrivate;
 class OffscreenQuickView;
-class EffectScreen;
+class Output;
 class Effect;
 class WindowQuad;
 class WindowQuadList;
@@ -380,7 +380,7 @@ public:
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when this method is invoked.
      */
-    virtual void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen);
+    virtual void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen);
     /**
      * Called after all the painting has been finished.
      * In this method you can:
@@ -801,7 +801,7 @@ class KWIN_EXPORT EffectsHandler : public QObject
      */
     Q_PROPERTY(int desktops READ numberOfDesktops WRITE setNumberOfDesktops NOTIFY numberDesktopsChanged)
     Q_PROPERTY(bool optionRollOverDesktops READ optionRollOverDesktops)
-    Q_PROPERTY(KWin::EffectScreen *activeScreen READ activeScreen)
+    Q_PROPERTY(KWin::Output *activeScreen READ activeScreen)
     /**
      * Factor by which animation speed in the effect should be modified (multiplied).
      * If configurable in the effect itself, the option should have also 'default'
@@ -832,13 +832,13 @@ class KWIN_EXPORT EffectsHandler : public QObject
     friend class Effect;
 
 public:
-    using TouchBorderCallback = std::function<void(ElectricBorder border, const QPointF &, EffectScreen *screen)>;
+    using TouchBorderCallback = std::function<void(ElectricBorder border, const QPointF &, Output *screen)>;
 
     explicit EffectsHandler(CompositingType type);
     ~EffectsHandler() override;
     // for use by effects
     virtual void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) = 0;
-    virtual void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen) = 0;
+    virtual void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen) = 0;
     virtual void postPaintScreen() = 0;
     virtual void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) = 0;
     virtual void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) = 0;
@@ -982,7 +982,7 @@ public:
      */
     Q_SCRIPTABLE virtual void windowToDesktops(KWin::EffectWindow *w, const QList<uint> &desktopIds) = 0;
 
-    Q_SCRIPTABLE virtual void windowToScreen(KWin::EffectWindow *w, EffectScreen *screen) = 0;
+    Q_SCRIPTABLE virtual void windowToScreen(KWin::EffectWindow *w, Output *screen) = 0;
     virtual void setShowingDesktop(bool showing) = 0;
 
     // Activities
@@ -1063,8 +1063,8 @@ public:
     Q_SCRIPTABLE virtual QString desktopName(int desktop) const = 0;
     virtual bool optionRollOverDesktops() const = 0;
 
-    virtual EffectScreen *activeScreen() const = 0; // Xinerama
-    virtual QRectF clientArea(clientAreaOption, const EffectScreen *screen, int desktop) const = 0;
+    virtual Output *activeScreen() const = 0; // Xinerama
+    virtual QRectF clientArea(clientAreaOption, const Output *screen, int desktop) const = 0;
     virtual QRectF clientArea(clientAreaOption, const EffectWindow *c) const = 0;
     virtual QRectF clientArea(clientAreaOption, const QPoint &p, int desktop) const = 0;
 
@@ -1392,15 +1392,15 @@ public:
     /**
      * Returns the list of all the screens connected to the system.
      */
-    virtual QList<EffectScreen *> screens() const = 0;
-    virtual EffectScreen *screenAt(const QPoint &point) const = 0;
-    virtual EffectScreen *findScreen(const QString &name) const = 0;
-    virtual EffectScreen *findScreen(int screenId) const = 0;
+    virtual QList<Output *> screens() const = 0;
+    virtual Output *screenAt(const QPoint &point) const = 0;
+    virtual Output *findScreen(const QString &name) const = 0;
+    virtual Output *findScreen(int screenId) const = 0;
 
     /**
      * Renders @p screen in the current render target
      */
-    virtual void renderScreen(EffectScreen *screen) = 0;
+    virtual void renderScreen(Output *screen) = 0;
 
     virtual KWin::EffectWindow *inputPanel() const = 0;
     virtual bool isInputPanelOverlay() const = 0;
@@ -1411,11 +1411,11 @@ Q_SIGNALS:
     /**
      * This signal is emitted whenever a new @a screen is added to the system.
      */
-    void screenAdded(KWin::EffectScreen *screen);
+    void screenAdded(KWin::Output *screen);
     /**
      * This signal is emitted whenever a @a screen is removed from the system.
      */
-    void screenRemoved(KWin::EffectScreen *screen);
+    void screenRemoved(KWin::Output *screen);
     /**
      * Signal emitted when the current desktop changed.
      * @param oldDesktop The previously current desktop
@@ -1702,100 +1702,6 @@ protected:
     CompositingType compositing_type;
 };
 
-/**
- * The EffectScreen class represents a screen used by/for Effect classes.
- */
-class KWIN_EXPORT EffectScreen : public QObject
-{
-    Q_OBJECT
-    Q_PROPERTY(QRect geometry READ geometry NOTIFY geometryChanged)
-    Q_PROPERTY(qreal devicePixelRatio READ devicePixelRatio NOTIFY devicePixelRatioChanged)
-    Q_PROPERTY(QString name READ name CONSTANT)
-    Q_PROPERTY(QString manufacturer READ manufacturer CONSTANT)
-    Q_PROPERTY(QString model READ model CONSTANT)
-    Q_PROPERTY(QString serialNumber READ serialNumber CONSTANT)
-    Q_PROPERTY(qreal refreshRate READ refreshRate CONSTANT)
-
-public:
-    explicit EffectScreen(QObject *parent = nullptr);
-
-    /**
-     * Returns the name of the screen, e.g. "DP-1".
-     */
-    virtual QString name() const = 0;
-
-    /**
-     * Returns the screen's ratio between physical pixels and device-independent pixels.
-     */
-    virtual qreal devicePixelRatio() const = 0;
-
-    /**
-     * Returns the screen's geometry in the device-independent pixels.
-     */
-    virtual QRect geometry() const = 0;
-
-    Q_INVOKABLE QPointF mapToGlobal(const QPointF &pos) const;
-    Q_INVOKABLE QPointF mapFromGlobal(const QPointF &pos) const;
-
-    /**
-     * Returns the screen's refresh rate in milli-hertz.
-     */
-    virtual int refreshRate() const = 0;
-
-    enum class Transform {
-        Normal,
-        Rotated90,
-        Rotated180,
-        Rotated270,
-        Flipped,
-        Flipped90,
-        Flipped180,
-        Flipped270
-    };
-    Q_ENUM(Transform)
-    virtual Transform transform() const = 0;
-
-    virtual QString manufacturer() const = 0;
-    virtual QString model() const = 0;
-    virtual QString serialNumber() const = 0;
-
-Q_SIGNALS:
-    /**
-     * Notifies that the display will be dimmed in @p time ms.
-     */
-    void aboutToTurnOff(std::chrono::milliseconds time);
-
-    /**
-     * Notifies that the output has been turned on and the wake can be decorated.
-     */
-    void wakeUp();
-
-    /**
-     * This signal is emitted when the geometry of this screen changes.
-     */
-    void geometryChanged();
-
-    /**
-     * This signal is emitted when the device pixel ratio of this screen changes.
-     */
-    void devicePixelRatioChanged();
-
-    /**
-     * Notifies that the output is about to change configuration based on a
-     * user interaction.
-     *
-     * Be it because it gets a transformation or moved around.
-     */
-    void aboutToChange();
-
-    /**
-     * Notifies that the output changed based on a user interaction.
-     *
-     * Be it because it gets a transformation or moved around.
-     */
-    void changed();
-};
-
 class EffectWindowVisibleRef;
 /**
  * @short Representation of a window used by/for Effect classes.
@@ -1811,7 +1717,7 @@ class KWIN_EXPORT EffectWindow : public QObject
     Q_PROPERTY(qreal height READ height)
     Q_PROPERTY(qreal opacity READ opacity)
     Q_PROPERTY(QPointF pos READ pos)
-    Q_PROPERTY(KWin::EffectScreen *screen READ screen)
+    Q_PROPERTY(KWin::Output *screen READ screen)
     Q_PROPERTY(QSizeF size READ size)
     Q_PROPERTY(qreal width READ width)
     Q_PROPERTY(qreal x READ x)
@@ -2170,7 +2076,7 @@ public:
      * @since 4.9
      */
     virtual QRectF expandedGeometry() const = 0;
-    virtual EffectScreen *screen() const = 0;
+    virtual Output *screen() const = 0;
     virtual QPointF pos() const = 0;
     virtual QSizeF size() const = 0;
     virtual QRectF rect() const = 0;
@@ -3296,7 +3202,7 @@ class KWIN_EXPORT ScreenPrePaintData
 public:
     int mask;
     QRegion paint;
-    EffectScreen *screen = nullptr;
+    Output *screen = nullptr;
 };
 
 /**

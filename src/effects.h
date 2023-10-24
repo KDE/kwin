@@ -50,7 +50,7 @@ public:
     EffectsHandlerImpl(Compositor *compositor, WorkspaceScene *scene);
     ~EffectsHandlerImpl() override;
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen) override;
+    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen) override;
     void postPaintScreen() override;
     void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) override;
@@ -65,7 +65,7 @@ public:
     EffectWindow *activeWindow() const override;
     void moveWindow(EffectWindow *w, const QPoint &pos, bool snap = false, double snapAdjust = 1.0) override;
     void windowToDesktop(EffectWindow *w, int desktop) override;
-    void windowToScreen(EffectWindow *w, EffectScreen *screen) override;
+    void windowToScreen(EffectWindow *w, Output *screen) override;
     void setShowingDesktop(bool showing) override;
 
     QString currentActivity() const override;
@@ -126,8 +126,8 @@ public:
 
     void addRepaint(const QRegion &r) override;
     void addRepaint(int x, int y, int w, int h) override;
-    EffectScreen *activeScreen() const override;
-    QRectF clientArea(clientAreaOption, const EffectScreen *screen, int desktop) const override;
+    Output *activeScreen() const override;
+    QRectF clientArea(clientAreaOption, const Output *screen, int desktop) const override;
     QRectF clientArea(clientAreaOption, const EffectWindow *c) const override;
     QRectF clientArea(clientAreaOption, const QPoint &p, int desktop) const override;
     QSize virtualScreenSize() const override;
@@ -238,11 +238,11 @@ public:
     void renderOffscreenQuickView(const RenderTarget &renderTarget, const RenderViewport &viewport, OffscreenQuickView *effectQuickView) const override;
 
     SessionState sessionState() const override;
-    QList<EffectScreen *> screens() const override;
-    EffectScreen *screenAt(const QPoint &point) const override;
-    EffectScreen *findScreen(const QString &name) const override;
-    EffectScreen *findScreen(int screenId) const override;
-    void renderScreen(EffectScreen *screen) override;
+    QList<Output *> screens() const override;
+    Output *screenAt(const QPoint &point) const override;
+    Output *findScreen(const QString &name) const override;
+    Output *findScreen(int screenId) const override;
+    void renderScreen(Output *screen) override;
     bool isCursorHidden() const override;
 
     KWin::EffectWindow *inputPanel() const override;
@@ -261,10 +261,6 @@ public Q_SLOTS:
     Q_SCRIPTABLE QList<bool> areEffectsSupported(const QStringList &names);
     Q_SCRIPTABLE QString supportInformation(const QString &name) const;
     Q_SCRIPTABLE QString debug(const QString &name, const QString &parameter = QString()) const;
-
-protected Q_SLOTS:
-    void slotOutputAdded(Output *output);
-    void slotOutputRemoved(Output *output);
 
 protected:
     void connectNotify(const QMetaMethod &signal) override;
@@ -321,32 +317,6 @@ private:
     EffectLoader *m_effectLoader;
     int m_trackingCursorChanges;
     std::unique_ptr<WindowPropertyNotifyX11Filter> m_x11WindowPropertyNotify;
-    QList<EffectScreen *> m_effectScreens;
-};
-
-class EffectScreenImpl : public EffectScreen
-{
-    Q_OBJECT
-
-public:
-    explicit EffectScreenImpl(Output *output, QObject *parent = nullptr);
-    ~EffectScreenImpl() override;
-
-    Output *platformOutput() const;
-
-    QString name() const override;
-    QString manufacturer() const override;
-    QString model() const override;
-    QString serialNumber() const override;
-    qreal devicePixelRatio() const override;
-    QRect geometry() const override;
-    int refreshRate() const override;
-    Transform transform() const override;
-
-    static EffectScreenImpl *get(Output *output);
-
-private:
-    QPointer<Output> m_platformOutput;
 };
 
 class EffectWindowImpl : public EffectWindow
@@ -386,7 +356,7 @@ public:
     QString caption() const override;
 
     QRectF expandedGeometry() const override;
-    EffectScreen *screen() const override;
+    Output *screen() const override;
     QPointF pos() const override;
     QSizeF size() const override;
     QRectF rect() const override;

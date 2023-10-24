@@ -241,7 +241,7 @@ void EffectTogglableTouchBorder::setBorders(const QList<int> &touchActivateBorde
 
     for (const int &border : touchActivateBorders) {
         m_touchBorderActivate.append(ElectricBorder(border));
-        effects->registerRealtimeTouchBorder(ElectricBorder(border), m_state->toggleAction(), [this](ElectricBorder border, const QPointF &deltaProgress, const EffectScreen *screen) {
+        effects->registerRealtimeTouchBorder(ElectricBorder(border), m_state->toggleAction(), [this](ElectricBorder border, const QPointF &deltaProgress, const Output *screen) {
             if (m_state->status() == EffectTogglableState::Status::Active) {
                 return;
             }

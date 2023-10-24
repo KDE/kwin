@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "core/output.h"
 #include "libkwineffects/kwineffects.h"
 #include "libkwineffects/kwinoffscreenquickview.h"
 
@@ -29,15 +30,15 @@ class KWIN_EXPORT QuickSceneView : public OffscreenQuickView
 {
     Q_OBJECT
     Q_PROPERTY(QuickSceneEffect *effect READ effect CONSTANT)
-    Q_PROPERTY(EffectScreen *screen READ screen CONSTANT)
+    Q_PROPERTY(Output *screen READ screen CONSTANT)
     Q_PROPERTY(QQuickItem *rootItem READ rootItem CONSTANT)
 
 public:
-    explicit QuickSceneView(QuickSceneEffect *effect, EffectScreen *screen);
+    explicit QuickSceneView(QuickSceneEffect *effect, Output *screen);
     ~QuickSceneView() override;
 
     QuickSceneEffect *effect() const;
-    EffectScreen *screen() const;
+    Output *screen() const;
 
     QQuickItem *rootItem() const;
     void setRootItem(QQuickItem *item);
@@ -54,7 +55,7 @@ public Q_SLOTS:
 
 private:
     QuickSceneEffect *m_effect;
-    EffectScreen *m_screen;
+    Output *m_screen;
     std::unique_ptr<QQuickItem> m_rootItem;
     bool m_dirty = false;
 };
@@ -96,7 +97,7 @@ public:
     /**
      * Returns the scene view on the specified screen
      */
-    Q_INVOKABLE QuickSceneView *viewForScreen(EffectScreen *screen) const;
+    Q_INVOKABLE QuickSceneView *viewForScreen(Output *screen) const;
 
     /**
      * Returns the view at the specified @a pos in the global screen coordinates.
@@ -139,7 +140,7 @@ public:
     bool eventFilter(QObject *watched, QEvent *event) override;
 
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen) override;
+    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen) override;
     bool isActive() const override;
 
     void windowInputMouseEvent(QEvent *event) override;
@@ -155,8 +156,8 @@ public:
     Q_INVOKABLE void checkItemDroppedOutOfScreen(const QPointF &globalPos, QQuickItem *item);
 
 Q_SIGNALS:
-    void itemDraggedOutOfScreen(QQuickItem *item, QList<EffectScreen *> screens);
-    void itemDroppedOutOfScreen(const QPointF &globalPos, QQuickItem *item, EffectScreen *screen);
+    void itemDraggedOutOfScreen(QQuickItem *item, QList<Output *> screens);
+    void itemDroppedOutOfScreen(const QPointF &globalPos, QQuickItem *item, Output *screen);
     void activeViewChanged(KWin::QuickSceneView *view);
     void delegateChanged();
 
@@ -167,13 +168,13 @@ protected:
      *
      * @see QQmlComponent::createWithInitialProperties()
      */
-    virtual QVariantMap initialProperties(EffectScreen *screen);
+    virtual QVariantMap initialProperties(Output *screen);
 
 private:
-    void handleScreenAdded(EffectScreen *screen);
-    void handleScreenRemoved(EffectScreen *screen);
+    void handleScreenAdded(Output *screen);
+    void handleScreenRemoved(Output *screen);
 
-    void addScreen(EffectScreen *screen);
+    void addScreen(Output *screen);
     void startInternal();
     void stopInternal();
 

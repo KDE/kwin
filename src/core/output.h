@@ -25,7 +25,6 @@
 namespace KWin
 {
 
-class EffectScreenImpl;
 class RenderLoop;
 class OutputConfiguration;
 class ColorTransformation;
@@ -117,6 +116,12 @@ private:
 class KWIN_EXPORT Output : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QRect geometry READ geometry NOTIFY geometryChanged)
+    Q_PROPERTY(qreal devicePixelRatio READ scale NOTIFY scaleChanged)
+    Q_PROPERTY(QString name READ name CONSTANT)
+    Q_PROPERTY(QString manufacturer READ manufacturer CONSTANT)
+    Q_PROPERTY(QString model READ model CONSTANT)
+    Q_PROPERTY(QString serialNumber READ serialNumber CONSTANT)
 
 public:
     enum class DpmsMode {
@@ -183,6 +188,9 @@ public:
      * Maps a @a rect in this output coordinates to the global coordinate system.
      */
     QRectF mapToGlobal(const QRectF &rect) const;
+
+    Q_INVOKABLE QPointF mapToGlobal(const QPointF &pos) const;
+    Q_INVOKABLE QPointF mapFromGlobal(const QPointF &pos) const;
 
     /**
      * Returns a short identifiable name of this output.
@@ -430,14 +438,12 @@ protected:
     void setInformation(const Information &information);
     void setState(const State &state);
 
-    EffectScreenImpl *m_effectScreen = nullptr;
     State m_state;
     Information m_information;
     QUuid m_uuid;
     int m_directScanoutCount = 0;
     int m_refCount = 1;
     ContentType m_contentType = ContentType::None;
-    friend class EffectScreenImpl; // to access m_effectScreen
 };
 
 inline QRect Output::rect() const

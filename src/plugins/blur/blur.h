@@ -33,7 +33,7 @@ struct BlurEffectData
     QRegion region;
 
     /// The render data per screen. Screens can have different color spaces.
-    std::unordered_map<EffectScreen *, BlurRenderData> render;
+    std::unordered_map<Output *, BlurRenderData> render;
 };
 
 class BlurEffect : public KWin::Effect
@@ -67,7 +67,7 @@ public:
 public Q_SLOTS:
     void slotWindowAdded(KWin::EffectWindow *w);
     void slotWindowDeleted(KWin::EffectWindow *w);
-    void slotScreenRemoved(KWin::EffectScreen *screen);
+    void slotScreenRemoved(KWin::Output *screen);
     void slotPropertyNotify(KWin::EffectWindow *w, long atom);
     void setupDecorationConnections(EffectWindow *w);
 
@@ -114,7 +114,7 @@ private:
     long net_wm_blur_region = 0;
     QRegion m_paintedArea; // keeps track of all painted areas (from bottom to top)
     QRegion m_currentBlur; // keeps track of the currently blured area of the windows(from bottom to top)
-    EffectScreen *m_currentScreen = nullptr;
+    Output *m_currentScreen = nullptr;
 
     size_t m_iterationCount; // number of times the texture will be downsized to half size
     int m_offset;

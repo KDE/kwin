@@ -88,7 +88,7 @@ void ScreenEdgeEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mil
     }
 }
 
-void ScreenEdgeEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
+void ScreenEdgeEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen)
 {
     effects->paintScreen(renderTarget, viewport, mask, region, screen);
     for (auto &[border, glow] : m_borders) {

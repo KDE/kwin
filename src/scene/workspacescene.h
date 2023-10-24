@@ -90,11 +90,11 @@ protected:
     void clearStackingOrder();
     friend class EffectsHandlerImpl;
     // called after all effects had their paintScreen() called
-    void finalPaintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen);
+    void finalPaintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen);
     // shared implementation of painting the screen in the generic
     // (unoptimized) way
     void preparePaintGenericScreen();
-    void paintGenericScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, EffectScreen *screen);
+    void paintGenericScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, Output *screen);
     // shared implementation of painting the screen in an optimized way
     void preparePaintSimpleScreen();
     void paintSimpleScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region);

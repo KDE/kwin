@@ -10,6 +10,7 @@
 */
 
 #include "libkwineffects/kwineffects.h"
+#include "core/output.h"
 
 #include "config-kwin.h"
 
@@ -431,7 +432,7 @@ void Effect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds 
     effects->prePaintScreen(data, presentTime);
 }
 
-void Effect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
+void Effect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen)
 {
     effects->paintScreen(renderTarget, viewport, mask, region, screen);
 }
@@ -626,21 +627,6 @@ bool EffectsHandler::isOpenGLCompositing() const
 }
 
 EffectsHandler *effects = nullptr;
-
-EffectScreen::EffectScreen(QObject *parent)
-    : QObject(parent)
-{
-}
-
-QPointF EffectScreen::mapToGlobal(const QPointF &pos) const
-{
-    return pos + geometry().topLeft();
-}
-
-QPointF EffectScreen::mapFromGlobal(const QPointF &pos) const
-{
-    return pos - geometry().topLeft();
-}
 
 //****************************************
 // EffectWindow

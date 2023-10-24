@@ -8,6 +8,7 @@
 */
 #pragma once
 
+#include "core/output.h"
 #include "libkwineffects/kwineffects.h"
 
 namespace KWin
@@ -25,7 +26,7 @@ public:
     ~ScreenTransformEffect() override;
 
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, KWin::EffectScreen *screen) override;
+    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, KWin::Output *screen) override;
 
     bool isActive() const override;
 
@@ -48,15 +49,15 @@ private:
         Snapshot m_prev;
         Snapshot m_current;
         QRect m_oldGeometry;
-        EffectScreen::Transform m_oldTransform;
+        OutputTransform m_oldTransform;
         qreal m_angle = 0;
         bool m_captured = false;
     };
 
-    void addScreen(EffectScreen *screen);
-    void removeScreen(EffectScreen *screen);
+    void addScreen(Output *screen);
+    void removeScreen(Output *screen);
 
-    QHash<EffectScreen *, ScreenState> m_states;
+    QHash<Output *, ScreenState> m_states;
 
     std::unique_ptr<GLShader> m_shader;
     int m_previousTextureLocation = -1;

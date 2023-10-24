@@ -7,6 +7,7 @@
 */
 
 #include "screenshotdbusinterface2.h"
+#include "core/output.h"
 #include "screenshot2adaptor.h"
 #include "screenshotlogging.h"
 #include "utils/filedescriptor.h"
@@ -169,12 +170,12 @@ class ScreenShotSourceScreen2 : public ScreenShotSource2
     Q_OBJECT
 
 public:
-    ScreenShotSourceScreen2(ScreenShotEffect *effect, EffectScreen *screen, ScreenShotFlags flags);
+    ScreenShotSourceScreen2(ScreenShotEffect *effect, Output *screen, ScreenShotFlags flags);
 
     QVariantMap attributes() const override;
 
 private:
-    EffectScreen *m_screen;
+    Output *m_screen;
 };
 
 class ScreenShotSourceArea2 : public ScreenShotSource2
@@ -243,7 +244,7 @@ void ScreenShotSource2::marshal(ScreenShotSinkPipe2 *sink)
 }
 
 ScreenShotSourceScreen2::ScreenShotSourceScreen2(ScreenShotEffect *effect,
-                                                 EffectScreen *screen,
+                                                 Output *screen,
                                                  ScreenShotFlags flags)
     : ScreenShotSource2(effect->scheduleScreenShot(screen, flags))
     , m_screen(screen)
@@ -456,7 +457,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureScreen(const QString &name,
         return QVariantMap();
     }
 
-    EffectScreen *screen = effects->findScreen(name);
+    Output *screen = effects->findScreen(name);
     if (!screen) {
         sendErrorReply(s_errorInvalidScreen, s_errorInvalidScreenMessage);
         return QVariantMap();
@@ -482,7 +483,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureActiveScreen(const QVariantMap &opt
         return QVariantMap();
     }
 
-    EffectScreen *screen = effects->activeScreen();
+    Output *screen = effects->activeScreen();
     if (!screen) {
         sendErrorReply(s_errorInvalidScreen, s_errorInvalidScreenMessage);
         return QVariantMap();
@@ -540,7 +541,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureInteractive(uint kind,
                 QDBusConnection bus = QDBusConnection::sessionBus();
                 bus.send(replyMessage.createErrorReply(s_errorCancelled, s_errorCancelledMessage));
             } else {
-                EffectScreen *screen = effects->screenAt(point.toPoint());
+                Output *screen = effects->screenAt(point.toPoint());
                 takeScreenShot(screen, screenShotFlagsFromOptions(options),
                                new ScreenShotSinkPipe2(fileDescriptor, replyMessage));
             }
@@ -590,7 +591,7 @@ void ScreenShotDBusInterface2::bind(ScreenShotSinkPipe2 *sink, ScreenShotSource2
     });
 }
 
-void ScreenShotDBusInterface2::takeScreenShot(EffectScreen *screen, ScreenShotFlags flags,
+void ScreenShotDBusInterface2::takeScreenShot(Output *screen, ScreenShotFlags flags,
                                               ScreenShotSinkPipe2 *sink)
 {
     bind(sink, new ScreenShotSourceScreen2(m_effect, screen, flags));

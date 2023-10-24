@@ -240,7 +240,7 @@ QRegion WorkspaceScene::prePaint(SceneDelegate *delegate)
 
     ScreenPrePaintData prePaintData;
     prePaintData.mask = 0;
-    prePaintData.screen = EffectScreenImpl::get(painted_screen);
+    prePaintData.screen = painted_screen;
 
     effects->makeOpenGLContextCurrent();
     Q_EMIT preFrameRender();
@@ -364,7 +364,7 @@ void WorkspaceScene::paint(const RenderTarget &renderTarget, const QRegion &regi
 
     m_renderer->beginFrame(renderTarget, viewport);
 
-    effects->paintScreen(renderTarget, viewport, m_paintContext.mask, region, EffectScreenImpl::get(painted_screen));
+    effects->paintScreen(renderTarget, viewport, m_paintContext.mask, region, painted_screen);
     m_paintScreenCount = 0;
     Q_EMIT frameRendered();
 
@@ -372,7 +372,7 @@ void WorkspaceScene::paint(const RenderTarget &renderTarget, const QRegion &regi
 }
 
 // the function that'll be eventually called by paintScreen() above
-void WorkspaceScene::finalPaintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
+void WorkspaceScene::finalPaintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen)
 {
     m_paintScreenCount++;
     if (mask & (PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS)) {
@@ -384,7 +384,7 @@ void WorkspaceScene::finalPaintScreen(const RenderTarget &renderTarget, const Re
 
 // The generic painting code that can handle even transformations.
 // It simply paints bottom-to-top.
-void WorkspaceScene::paintGenericScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int, EffectScreen *screen)
+void WorkspaceScene::paintGenericScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int, Output *screen)
 {
     if (m_paintContext.mask & PAINT_SCREEN_BACKGROUND_FIRST) {
         if (m_paintScreenCount == 1) {

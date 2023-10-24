@@ -57,7 +57,7 @@ public Q_SLOTS:
                                  QDBusUnixFileDescriptor pipe);
 
 private:
-    void takeScreenShot(EffectScreen *screen, ScreenShotFlags flags, ScreenShotSinkPipe2 *sink);
+    void takeScreenShot(Output *screen, ScreenShotFlags flags, ScreenShotSinkPipe2 *sink);
     void takeScreenShot(const QRect &area, ScreenShotFlags flags, ScreenShotSinkPipe2 *sink);
     void takeScreenShot(EffectWindow *window, ScreenShotFlags flags, ScreenShotSinkPipe2 *sink);
 

@@ -260,6 +260,16 @@ QRectF Output::mapToGlobal(const QRectF &rect) const
     return rect.translated(geometry().topLeft());
 }
 
+QPointF Output::mapToGlobal(const QPointF &pos) const
+{
+    return pos + geometry().topLeft();
+}
+
+QPointF Output::mapFromGlobal(const QPointF &pos) const
+{
+    return pos - geometry().topLeft();
+}
+
 Output::Capabilities Output::capabilities() const
 {
     return m_information.capabilities;

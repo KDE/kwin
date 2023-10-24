@@ -97,7 +97,7 @@ public:
     ~MouseClickEffect() override;
     void reconfigure(ReconfigureFlags) override;
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen) override;
+    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen) override;
     void postPaintScreen() override;
     bool isActive() const override;
 

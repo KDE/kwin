@@ -39,7 +39,7 @@ ScreenTransformEffect::ScreenTransformEffect()
     m_previousTextureLocation = m_shader->uniformLocation("previousTexture");
     m_currentTextureLocation = m_shader->uniformLocation("currentTexture");
 
-    const QList<EffectScreen *> screens = effects->screens();
+    const QList<Output *> screens = effects->screens();
     for (auto screen : screens) {
         addScreen(screen);
     }
@@ -54,19 +54,19 @@ bool ScreenTransformEffect::supported()
     return effects->compositingType() == OpenGLCompositing && effects->waylandDisplay() && effects->animationsSupported();
 }
 
-qreal transformAngle(EffectScreen::Transform current, EffectScreen::Transform old)
+qreal transformAngle(OutputTransform current, OutputTransform old)
 {
     auto ensureShort = [](int angle) {
         return angle > 180 ? angle - 360 : angle < -180 ? angle + 360
                                                         : angle;
     };
     // % 4 to ignore flipped cases (for now)
-    return ensureShort((int(current) % 4 - int(old) % 4) * 90);
+    return ensureShort((int(current.kind()) % 4 - int(old.kind()) % 4) * 90);
 }
 
-void ScreenTransformEffect::addScreen(EffectScreen *screen)
+void ScreenTransformEffect::addScreen(Output *screen)
 {
-    connect(screen, &EffectScreen::changed, this, [this, screen] {
+    connect(screen, &Output::changed, this, [this, screen] {
         auto &state = m_states[screen];
         if (transformAngle(screen->transform(), state.m_oldTransform) == 0) {
             effects->makeOpenGLContextCurrent();
@@ -79,12 +79,12 @@ void ScreenTransformEffect::addScreen(EffectScreen *screen)
         Q_ASSERT(state.m_angle != 0);
         effects->addRepaintFull();
     });
-    connect(screen, &EffectScreen::aboutToChange, this, [this, screen] {
+    connect(screen, &Output::aboutToChange, this, [this, screen] {
         effects->makeOpenGLContextCurrent();
         auto &state = m_states[screen];
         state.m_oldTransform = screen->transform();
         state.m_oldGeometry = screen->geometry();
-        state.m_prev.texture = GLTexture::allocate(GL_RGBA8, screen->geometry().size() * screen->devicePixelRatio());
+        state.m_prev.texture = GLTexture::allocate(GL_RGBA8, screen->geometry().size() * screen->scale());
         if (!state.m_prev.texture) {
             m_states.remove(screen);
             return;
@@ -101,7 +101,7 @@ void ScreenTransformEffect::addScreen(EffectScreen *screen)
     });
 }
 
-void ScreenTransformEffect::removeScreen(EffectScreen *screen)
+void ScreenTransformEffect::removeScreen(Output *screen)
 {
     effects->makeOpenGLContextCurrent();
     m_states.remove(screen);
@@ -181,7 +181,7 @@ static QRectF lerp(const QRectF &a, const QRectF &b, qreal t)
     return ret;
 }
 
-void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, KWin::EffectScreen *screen)
+void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, KWin::Output *screen)
 {
     auto it = m_states.find(screen);
     if (it == m_states.end() || !it->m_captured) {
@@ -190,7 +190,7 @@ void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const 
     }
 
     // Render the screen in an offscreen texture.
-    const QSize nativeSize = screen->geometry().size() * screen->devicePixelRatio();
+    const QSize nativeSize = screen->geometry().size() * screen->scale();
     if (!it->m_current.texture || it->m_current.texture->size() != nativeSize) {
         it->m_current.texture = GLTexture::allocate(GL_RGBA8, nativeSize);
         if (!it->m_current.texture) {

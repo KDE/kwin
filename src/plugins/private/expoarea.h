@@ -14,7 +14,7 @@ namespace KWin
 class ExpoArea : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(KWin::EffectScreen *screen READ screen WRITE setScreen NOTIFY screenChanged)
+    Q_PROPERTY(KWin::Output *screen READ screen WRITE setScreen NOTIFY screenChanged)
     Q_PROPERTY(qreal x READ x NOTIFY xChanged)
     Q_PROPERTY(qreal y READ y NOTIFY yChanged)
     Q_PROPERTY(qreal width READ width NOTIFY widthChanged)
@@ -23,8 +23,8 @@ class ExpoArea : public QObject
 public:
     explicit ExpoArea(QObject *parent = nullptr);
 
-    EffectScreen *screen() const;
-    void setScreen(EffectScreen *screen);
+    Output *screen() const;
+    void setScreen(Output *screen);
 
     qreal x() const;
     qreal y() const;
@@ -42,7 +42,7 @@ private:
     void update();
 
     QRectF m_rect;
-    EffectScreen *m_screen = nullptr;
+    Output *m_screen = nullptr;
 };
 
 } // namespace KWin

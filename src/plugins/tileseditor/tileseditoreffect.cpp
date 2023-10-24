@@ -38,7 +38,7 @@ TilesEditorEffect::~TilesEditorEffect()
 {
 }
 
-QVariantMap TilesEditorEffect::initialProperties(EffectScreen *screen)
+QVariantMap TilesEditorEffect::initialProperties(Output *screen)
 {
     return QVariantMap{
         {QStringLiteral("effect"), QVariant::fromValue(this)},

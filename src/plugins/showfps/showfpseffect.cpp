@@ -7,6 +7,7 @@
 */
 
 #include "showfpseffect.h"
+#include "core/output.h"
 #include "libkwineffects/renderviewport.h"
 
 #include <QQmlContext>
@@ -75,7 +76,7 @@ void ShowFpsEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::millis
     }
 }
 
-void ShowFpsEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
+void ShowFpsEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen)
 {
     effects->paintScreen(renderTarget, viewport, mask, region, screen);
 

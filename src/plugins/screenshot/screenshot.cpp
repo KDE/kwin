@@ -11,6 +11,7 @@
 #include "screenshot.h"
 #include "screenshotdbusinterface2.h"
 
+#include "core/output.h"
 #include "libkwineffects/glplatform.h"
 #include "libkwineffects/glutils.h"
 #include "libkwineffects/rendertarget.h"
@@ -34,14 +35,14 @@ struct ScreenShotAreaData
     ScreenShotFlags flags;
     QRect area;
     QImage result;
-    QList<EffectScreen *> screens;
+    QList<Output *> screens;
 };
 
 struct ScreenShotScreenData
 {
     QPromise<QImage> promise;
     ScreenShotFlags flags;
-    EffectScreen *screen = nullptr;
+    Output *screen = nullptr;
 };
 
 static void convertFromGLImage(QImage &img, int w, int h, const QMatrix4x4 &renderTargetTransformation)
@@ -100,7 +101,7 @@ ScreenShotEffect::~ScreenShotEffect()
     cancelScreenScreenShots();
 }
 
-QFuture<QImage> ScreenShotEffect::scheduleScreenShot(EffectScreen *screen, ScreenShotFlags flags)
+QFuture<QImage> ScreenShotEffect::scheduleScreenShot(Output *screen, ScreenShotFlags flags)
 {
     for (const ScreenShotScreenData &data : m_screenScreenShots) {
         if (data.screen == screen && data.flags == flags) {
@@ -133,8 +134,8 @@ QFuture<QImage> ScreenShotEffect::scheduleScreenShot(const QRect &area, ScreenSh
     data.area = area;
     data.flags = flags;
 
-    const QList<EffectScreen *> screens = effects->screens();
-    for (EffectScreen *screen : screens) {
+    const QList<Output *> screens = effects->screens();
+    for (Output *screen : screens) {
         if (screen->geometry().intersects(area)) {
             data.screens.append(screen);
         }
@@ -142,9 +143,9 @@ QFuture<QImage> ScreenShotEffect::scheduleScreenShot(const QRect &area, ScreenSh
 
     qreal devicePixelRatio = 1.0;
     if (flags & ScreenShotNativeResolution) {
-        for (const EffectScreen *screen : std::as_const(data.screens)) {
-            if (screen->devicePixelRatio() > devicePixelRatio) {
-                devicePixelRatio = screen->devicePixelRatio();
+        for (const Output *screen : std::as_const(data.screens)) {
+            if (screen->scale() > devicePixelRatio) {
+                devicePixelRatio = screen->scale();
             }
         }
     }
@@ -198,7 +199,7 @@ void ScreenShotEffect::cancelScreenScreenShots()
     m_screenScreenShots.clear();
 }
 
-void ScreenShotEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
+void ScreenShotEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen)
 {
     m_paintedScreen = screen;
     effects->paintScreen(renderTarget, viewport, mask, region, screen);
@@ -236,8 +237,8 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
     }
 
     if (screenshot->flags & ScreenShotNativeResolution) {
-        if (const EffectScreen *screen = window->screen()) {
-            devicePixelRatio = screen->devicePixelRatio();
+        if (const Output *screen = window->screen()) {
+            devicePixelRatio = screen->scale();
         }
     }
 
@@ -313,7 +314,7 @@ bool ScreenShotEffect::takeScreenShot(const RenderTarget &renderTarget, const Re
         const QRect sourceRect = screenshot->area & m_paintedScreen->geometry();
         qreal sourceDevicePixelRatio = 1.0;
         if (screenshot->flags & ScreenShotNativeResolution) {
-            sourceDevicePixelRatio = m_paintedScreen->devicePixelRatio();
+            sourceDevicePixelRatio = m_paintedScreen->scale();
         }
 
         const QImage snapshot = blitScreenshot(renderTarget, viewport, sourceRect, sourceDevicePixelRatio);
@@ -346,7 +347,7 @@ bool ScreenShotEffect::takeScreenShot(const RenderTarget &renderTarget, const Re
 
     qreal devicePixelRatio = 1.0;
     if (screenshot->flags & ScreenShotNativeResolution) {
-        devicePixelRatio = screenshot->screen->devicePixelRatio();
+        devicePixelRatio = screenshot->screen->scale();
     }
 
     QImage snapshot = blitScreenshot(renderTarget, viewport, screenshot->screen->geometry(), devicePixelRatio);
@@ -430,7 +431,7 @@ void ScreenShotEffect::handleScreenAdded()
     cancelAreaScreenShots();
 }
 
-void ScreenShotEffect::handleScreenRemoved(EffectScreen *screen)
+void ScreenShotEffect::handleScreenRemoved(Output *screen)
 {
     cancelAreaScreenShots();
 

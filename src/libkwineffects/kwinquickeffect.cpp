@@ -5,6 +5,7 @@
 */
 
 #include "libkwineffects/kwinquickeffect.h"
+#include "core/output.h"
 
 #include "logging_p.h"
 
@@ -22,7 +23,7 @@ static QHash<QQuickWindow *, QuickSceneView *> s_views;
 class QuickSceneViewIncubator : public QQmlIncubator
 {
 public:
-    QuickSceneViewIncubator(QuickSceneEffect *effect, EffectScreen *screen, const std::function<void(QuickSceneViewIncubator *)> &statusChangedCallback)
+    QuickSceneViewIncubator(QuickSceneEffect *effect, Output *screen, const std::function<void(QuickSceneViewIncubator *)> &statusChangedCallback)
         : QQmlIncubator(QQmlIncubator::Asynchronous)
         , m_effect(effect)
         , m_screen(screen)
@@ -49,7 +50,7 @@ public:
 
 private:
     QuickSceneEffect *m_effect;
-    EffectScreen *m_screen;
+    Output *m_screen;
     std::function<void(QuickSceneViewIncubator *)> m_statusChangedCallback;
     std::unique_ptr<QuickSceneView> m_view;
 };
@@ -61,18 +62,18 @@ public:
     {
         return effect->d.get();
     }
-    bool isItemOnScreen(QQuickItem *item, EffectScreen *screen) const;
+    bool isItemOnScreen(QQuickItem *item, Output *screen) const;
 
     std::unique_ptr<QQmlComponent> delegate;
     QUrl source;
-    std::map<EffectScreen *, std::unique_ptr<QQmlContext>> contexts;
-    std::map<EffectScreen *, std::unique_ptr<QQmlIncubator>> incubators;
-    std::map<EffectScreen *, std::unique_ptr<QuickSceneView>> views;
+    std::map<Output *, std::unique_ptr<QQmlContext>> contexts;
+    std::map<Output *, std::unique_ptr<QQmlIncubator>> incubators;
+    std::map<Output *, std::unique_ptr<QuickSceneView>> views;
     QPointer<QuickSceneView> mouseImplicitGrab;
     bool running = false;
 };
 
-bool QuickSceneEffectPrivate::isItemOnScreen(QQuickItem *item, EffectScreen *screen) const
+bool QuickSceneEffectPrivate::isItemOnScreen(QQuickItem *item, Output *screen) const
 {
     if (!item || !screen || !views.contains(screen)) {
         return false;
@@ -82,12 +83,12 @@ bool QuickSceneEffectPrivate::isItemOnScreen(QQuickItem *item, EffectScreen *scr
     return item->window() == view->window();
 }
 
-QuickSceneView::QuickSceneView(QuickSceneEffect *effect, EffectScreen *screen)
+QuickSceneView::QuickSceneView(QuickSceneEffect *effect, Output *screen)
     : m_effect(effect)
     , m_screen(screen)
 {
     setGeometry(screen->geometry());
-    connect(screen, &EffectScreen::geometryChanged, this, [this, screen]() {
+    connect(screen, &Output::geometryChanged, this, [this, screen]() {
         setGeometry(screen->geometry());
     });
 
@@ -123,7 +124,7 @@ QuickSceneEffect *QuickSceneView::effect() const
     return m_effect;
 }
 
-EffectScreen *QuickSceneView::screen() const
+Output *QuickSceneView::screen() const
 {
     return m_screen;
 }
@@ -184,7 +185,7 @@ bool QuickSceneEffect::supported()
 void QuickSceneEffect::checkItemDraggedOutOfScreen(QQuickItem *item)
 {
     const QRectF globalGeom = QRectF(item->mapToGlobal(QPointF(0, 0)), QSizeF(item->width(), item->height()));
-    QList<EffectScreen *> screens;
+    QList<Output *> screens;
 
     for (const auto &[screen, view] : d->views) {
         if (!d->isItemOnScreen(item, screen) && screen->geometry().intersects(globalGeom.toRect())) {
@@ -198,7 +199,7 @@ void QuickSceneEffect::checkItemDraggedOutOfScreen(QQuickItem *item)
 void QuickSceneEffect::checkItemDroppedOutOfScreen(const QPointF &globalPos, QQuickItem *item)
 {
     const auto it = std::find_if(d->views.begin(), d->views.end(), [this, globalPos, item](const auto &view) {
-        EffectScreen *screen = view.first;
+        Output *screen = view.first;
         return !d->isItemOnScreen(item, screen) && screen->geometry().contains(globalPos.toPoint());
     });
     if (it != d->views.end()) {
@@ -267,7 +268,7 @@ void QuickSceneEffect::setDelegate(QQmlComponent *delegate)
     }
 }
 
-QuickSceneView *QuickSceneEffect::viewForScreen(EffectScreen *screen) const
+QuickSceneView *QuickSceneEffect::viewForScreen(Output *screen) const
 {
     const auto it = d->views.find(screen);
     return it == d->views.end() ? nullptr : it->second.get();
@@ -379,7 +380,7 @@ void QuickSceneEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mil
     }
 }
 
-void QuickSceneEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
+void QuickSceneEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen)
 {
     if (effects->waylandDisplay()) {
         const auto it = d->views.find(screen);
@@ -398,24 +399,24 @@ bool QuickSceneEffect::isActive() const
     return !d->views.empty() && !effects->isScreenLocked();
 }
 
-QVariantMap QuickSceneEffect::initialProperties(EffectScreen *screen)
+QVariantMap QuickSceneEffect::initialProperties(Output *screen)
 {
     return QVariantMap();
 }
 
-void QuickSceneEffect::handleScreenAdded(EffectScreen *screen)
+void QuickSceneEffect::handleScreenAdded(Output *screen)
 {
     addScreen(screen);
 }
 
-void QuickSceneEffect::handleScreenRemoved(EffectScreen *screen)
+void QuickSceneEffect::handleScreenRemoved(Output *screen)
 {
     d->views.erase(screen);
     d->incubators.erase(screen);
     d->contexts.erase(screen);
 }
 
-void QuickSceneEffect::addScreen(EffectScreen *screen)
+void QuickSceneEffect::addScreen(Output *screen)
 {
     auto properties = initialProperties(screen);
     properties["width"] = screen->geometry().width();
@@ -481,8 +482,8 @@ void QuickSceneEffect::startInternal()
     // Install an event filter to monitor cursor shape changes.
     qApp->installEventFilter(this);
 
-    const QList<EffectScreen *> screens = effects->screens();
-    for (EffectScreen *screen : screens) {
+    const QList<Output *> screens = effects->screens();
+    for (Output *screen : screens) {
         addScreen(screen);
     }
 

@@ -228,13 +228,8 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, WorkspaceScene *s
         setupWindowConnections(window);
     }
 
-    connect(ws, &Workspace::outputAdded, this, &EffectsHandlerImpl::slotOutputAdded);
-    connect(ws, &Workspace::outputRemoved, this, &EffectsHandlerImpl::slotOutputRemoved);
-
-    const QList<Output *> outputs = ws->outputs();
-    for (Output *output : outputs) {
-        slotOutputAdded(output);
-    }
+    connect(ws, &Workspace::outputAdded, this, &EffectsHandlerImpl::screenAdded);
+    connect(ws, &Workspace::outputRemoved, this, &EffectsHandlerImpl::screenRemoved);
 
     if (auto inputMethod = kwinApp()->inputMethod()) {
         connect(inputMethod, &InputMethod::panelChanged, this, &EffectsHandlerImpl::inputPanelChanged);
@@ -284,7 +279,7 @@ void EffectsHandlerImpl::prePaintScreen(ScreenPrePaintData &data, std::chrono::m
     // no special final code
 }
 
-void EffectsHandlerImpl::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
+void EffectsHandlerImpl::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen)
 {
     if (m_currentPaintScreenIterator != m_activeEffects.constEnd()) {
         (*m_currentPaintScreenIterator++)->paintScreen(renderTarget, viewport, mask, region, screen);
@@ -751,12 +746,11 @@ void EffectsHandlerImpl::windowToDesktops(EffectWindow *w, const QList<uint> &de
     window->setDesktops(desktops);
 }
 
-void EffectsHandlerImpl::windowToScreen(EffectWindow *w, EffectScreen *screen)
+void EffectsHandlerImpl::windowToScreen(EffectWindow *w, Output *screen)
 {
     auto window = static_cast<EffectWindowImpl *>(w)->window();
     if (window->isClient() && !window->isDesktop() && !window->isDock()) {
-        EffectScreenImpl *screenImpl = static_cast<EffectScreenImpl *>(screen);
-        Workspace::self()->sendWindowToOutput(window, screenImpl->platformOutput());
+        Workspace::self()->sendWindowToOutput(window, screen);
     }
 }
 
@@ -1024,9 +1018,9 @@ void EffectsHandlerImpl::addRepaint(int x, int y, int w, int h)
     m_compositor->scene()->addRepaint(x, y, w, h);
 }
 
-EffectScreen *EffectsHandlerImpl::activeScreen() const
+Output *EffectsHandlerImpl::activeScreen() const
 {
-    return EffectScreenImpl::get(workspace()->activeOutput());
+    return workspace()->activeOutput();
 }
 
 static VirtualDesktop *resolveVirtualDesktop(int desktopId)
@@ -1038,10 +1032,9 @@ static VirtualDesktop *resolveVirtualDesktop(int desktopId)
     }
 }
 
-QRectF EffectsHandlerImpl::clientArea(clientAreaOption opt, const EffectScreen *screen, int desktop) const
+QRectF EffectsHandlerImpl::clientArea(clientAreaOption opt, const Output *screen, int desktop) const
 {
-    const EffectScreenImpl *screenImpl = static_cast<const EffectScreenImpl *>(screen);
-    return Workspace::self()->clientArea(opt, screenImpl->platformOutput(), resolveVirtualDesktop(desktop));
+    return Workspace::self()->clientArea(opt, screen, resolveVirtualDesktop(desktop));
 }
 
 QRectF EffectsHandlerImpl::clientArea(clientAreaOption opt, const EffectWindow *effectWindow) const
@@ -1152,9 +1145,7 @@ void EffectsHandlerImpl::registerTouchBorder(ElectricBorder border, QAction *act
 
 void EffectsHandlerImpl::registerRealtimeTouchBorder(ElectricBorder border, QAction *action, EffectsHandler::TouchBorderCallback progressCallback)
 {
-    workspace()->screenEdges()->reserveTouch(border, action, [progressCallback](ElectricBorder border, const QPointF &deltaProgress, Output *output) {
-        progressCallback(border, deltaProgress, EffectScreenImpl::get(output));
-    });
+    workspace()->screenEdges()->reserveTouch(border, action, progressCallback);
 }
 
 void EffectsHandlerImpl::unregisterTouchBorder(ElectricBorder border, QAction *action)
@@ -1579,19 +1570,20 @@ SessionState EffectsHandlerImpl::sessionState() const
     return Workspace::self()->sessionManager()->state();
 }
 
-QList<EffectScreen *> EffectsHandlerImpl::screens() const
+QList<Output *> EffectsHandlerImpl::screens() const
 {
-    return m_effectScreens;
+    return Workspace::self()->outputs();
 }
 
-EffectScreen *EffectsHandlerImpl::screenAt(const QPoint &point) const
+Output *EffectsHandlerImpl::screenAt(const QPoint &point) const
 {
-    return EffectScreenImpl::get(Workspace::self()->outputAt(point));
+    return Workspace::self()->outputAt(point);
 }
 
-EffectScreen *EffectsHandlerImpl::findScreen(const QString &name) const
+Output *EffectsHandlerImpl::findScreen(const QString &name) const
 {
-    for (EffectScreen *screen : std::as_const(m_effectScreens)) {
+    const auto outputs = Workspace::self()->outputs();
+    for (Output *screen : outputs) {
         if (screen->name() == name) {
             return screen;
         }
@@ -1599,31 +1591,14 @@ EffectScreen *EffectsHandlerImpl::findScreen(const QString &name) const
     return nullptr;
 }
 
-EffectScreen *EffectsHandlerImpl::findScreen(int screenId) const
+Output *EffectsHandlerImpl::findScreen(int screenId) const
 {
-    return m_effectScreens.value(screenId);
+    return Workspace::self()->outputs().value(screenId);
 }
 
-void EffectsHandlerImpl::slotOutputAdded(Output *output)
-{
-    EffectScreen *screen = new EffectScreenImpl(output, this);
-    m_effectScreens.append(screen);
-    Q_EMIT screenAdded(screen);
-}
-
-void EffectsHandlerImpl::slotOutputRemoved(Output *output)
-{
-    EffectScreen *screen = EffectScreenImpl::get(output);
-    m_effectScreens.removeOne(screen);
-    Q_EMIT screenRemoved(screen);
-    delete screen;
-}
-
-void EffectsHandlerImpl::renderScreen(EffectScreen *screen)
+void EffectsHandlerImpl::renderScreen(Output *output)
 {
     RenderTarget renderTarget(GLFramebuffer::currentFramebuffer());
-
-    auto output = static_cast<EffectScreenImpl *>(screen)->platformOutput();
 
     RenderLayer layer(output->renderLoop());
     SceneDelegate delegate(m_scene, output);
@@ -1668,81 +1643,6 @@ bool EffectsHandlerImpl::isInputPanelOverlay() const
 QQmlEngine *EffectsHandlerImpl::qmlEngine() const
 {
     return Scripting::self()->qmlEngine();
-}
-
-//****************************************
-// EffectScreenImpl
-//****************************************
-
-EffectScreenImpl::EffectScreenImpl(Output *output, QObject *parent)
-    : EffectScreen(parent)
-    , m_platformOutput(output)
-{
-    m_platformOutput->m_effectScreen = this;
-
-    connect(output, &Output::aboutToChange, this, &EffectScreen::aboutToChange);
-    connect(output, &Output::changed, this, &EffectScreen::changed);
-    connect(output, &Output::wakeUp, this, &EffectScreen::wakeUp);
-    connect(output, &Output::aboutToTurnOff, this, &EffectScreen::aboutToTurnOff);
-    connect(output, &Output::scaleChanged, this, &EffectScreen::devicePixelRatioChanged);
-    connect(output, &Output::geometryChanged, this, &EffectScreen::geometryChanged);
-}
-
-EffectScreenImpl::~EffectScreenImpl()
-{
-    if (m_platformOutput) {
-        m_platformOutput->m_effectScreen = nullptr;
-    }
-}
-
-EffectScreenImpl *EffectScreenImpl::get(Output *output)
-{
-    return output->m_effectScreen;
-}
-
-Output *EffectScreenImpl::platformOutput() const
-{
-    return m_platformOutput;
-}
-
-QString EffectScreenImpl::name() const
-{
-    return m_platformOutput->name();
-}
-
-QString EffectScreenImpl::manufacturer() const
-{
-    return m_platformOutput->manufacturer();
-}
-
-QString EffectScreenImpl::model() const
-{
-    return m_platformOutput->model();
-}
-
-QString EffectScreenImpl::serialNumber() const
-{
-    return m_platformOutput->serialNumber();
-}
-
-qreal EffectScreenImpl::devicePixelRatio() const
-{
-    return m_platformOutput->scale();
-}
-
-QRect EffectScreenImpl::geometry() const
-{
-    return m_platformOutput->geometry();
-}
-
-int EffectScreenImpl::refreshRate() const
-{
-    return m_platformOutput->refreshRate();
-}
-
-EffectScreen::Transform EffectScreenImpl::transform() const
-{
-    return EffectScreen::Transform(m_platformOutput->transform().kind());
 }
 
 //****************************************
@@ -1885,9 +1785,9 @@ void EffectWindowImpl::unrefWindow()
     Q_UNREACHABLE(); // TODO
 }
 
-EffectScreen *EffectWindowImpl::screen() const
+Output *EffectWindowImpl::screen() const
 {
-    return EffectScreenImpl::get(m_window->output());
+    return m_window->output();
 }
 
 #define WINDOW_HELPER(rettype, prototype, toplevelPrototype) \

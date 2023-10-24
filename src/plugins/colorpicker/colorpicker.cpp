@@ -52,7 +52,7 @@ ColorPickerEffect::ColorPickerEffect()
 
 ColorPickerEffect::~ColorPickerEffect() = default;
 
-void ColorPickerEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
+void ColorPickerEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen)
 {
     effects->paintScreen(renderTarget, viewport, mask, region, screen);
 

@@ -56,7 +56,7 @@ public:
      * the image data. If the screen is removed before the screenshot is taken, the future will
      * be cancelled.
      */
-    QFuture<QImage> scheduleScreenShot(EffectScreen *screen, ScreenShotFlags flags = {});
+    QFuture<QImage> scheduleScreenShot(Output *screen, ScreenShotFlags flags = {});
 
     /**
      * Schedules a screenshot of the given @a area. The returned QFuture can be used to query the
@@ -71,7 +71,7 @@ public:
      */
     QFuture<QImage> scheduleScreenShot(EffectWindow *window, ScreenShotFlags flags = {});
 
-    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen) override;
+    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen) override;
     bool isActive() const override;
     int requestedEffectChainPosition() const override;
 
@@ -80,7 +80,7 @@ public:
 private Q_SLOTS:
     void handleWindowClosed(EffectWindow *window);
     void handleScreenAdded();
-    void handleScreenRemoved(EffectScreen *screen);
+    void handleScreenRemoved(Output *screen);
 
 private:
     void takeScreenShot(ScreenShotWindowData *screenshot);
@@ -99,7 +99,7 @@ private:
     std::vector<ScreenShotScreenData> m_screenScreenShots;
 
     std::unique_ptr<ScreenShotDBusInterface2> m_dbusInterface2;
-    EffectScreen *m_paintedScreen = nullptr;
+    Output *m_paintedScreen = nullptr;
 };
 
 } // namespace KWin

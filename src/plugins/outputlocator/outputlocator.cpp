@@ -5,8 +5,9 @@
 */
 
 #include "outputlocator.h"
-
+#include "core/output.h"
 #include "libkwineffects/kwinoffscreenquickview.h"
+
 #include <algorithm>
 
 #include <KLocalizedString>
@@ -17,13 +18,13 @@
 namespace KWin
 {
 
-static QString outputName(const EffectScreen *screen)
+static QString outputName(const Output *screen)
 {
     const auto screens = effects->screens();
-    const bool shouldShowSerialNumber = std::any_of(screens.cbegin(), screens.cend(), [screen](const EffectScreen *other) {
+    const bool shouldShowSerialNumber = std::any_of(screens.cbegin(), screens.cend(), [screen](const Output *other) {
         return other != screen && other->manufacturer() == screen->manufacturer() && other->model() == screen->model();
     });
-    const bool shouldShowConnector = shouldShowSerialNumber && std::any_of(screens.cbegin(), screens.cend(), [screen](const EffectScreen *other) {
+    const bool shouldShowConnector = shouldShowSerialNumber && std::any_of(screens.cbegin(), screens.cend(), [screen](const Output *other) {
         return other != screen && other->serialNumber() == screen->serialNumber();
     });
 
@@ -77,7 +78,7 @@ void OutputLocatorEffect::show()
     const auto screens = effects->screens();
     for (const auto screen : screens) {
         auto scene = new OffscreenQuickScene();
-        scene->setSource(m_qmlUrl, {{QStringLiteral("outputName"), outputName(screen)}, {QStringLiteral("resolution"), screen->geometry().size()}, {QStringLiteral("scale"), screen->devicePixelRatio()}});
+        scene->setSource(m_qmlUrl, {{QStringLiteral("outputName"), outputName(screen)}, {QStringLiteral("resolution"), screen->geometry().size()}, {QStringLiteral("scale"), screen->scale()}});
         QRectF geometry(0, 0, scene->rootItem()->implicitWidth(), scene->rootItem()->implicitHeight());
         geometry.moveCenter(screen->geometry().center());
         scene->setGeometry(geometry.toRect());
@@ -103,7 +104,7 @@ void OutputLocatorEffect::hide()
     effects->addRepaint(repaintRegion);
 }
 
-void OutputLocatorEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, KWin::EffectScreen *screen)
+void OutputLocatorEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, KWin::Output *screen)
 {
     effects->paintScreen(renderTarget, viewport, mask, region, screen);
     // On X11 all screens are painted at once
