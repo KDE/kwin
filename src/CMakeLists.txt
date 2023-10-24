@@ -202,7 +202,6 @@ target_link_libraries(kwin
     kwineffects
     kwinglutils
 
-    Qt::Concurrent
     Qt::DBus
     Qt::Quick
     Qt::Widgets
@@ -210,6 +209,7 @@ target_link_libraries(kwin
 
     PRIVATE
 
+    Qt::Concurrent
     Qt::Sensors
 
     KF6::ConfigCore
