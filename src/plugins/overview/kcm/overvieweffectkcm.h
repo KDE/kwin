@@ -19,7 +19,6 @@ class OverviewEffectConfig : public KCModule
 
 public:
     explicit OverviewEffectConfig(QObject *parent, const KPluginMetaData &data);
-    ~OverviewEffectConfig() override;
 
 public Q_SLOTS:
     void save() override;

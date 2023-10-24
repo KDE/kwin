@@ -19,7 +19,6 @@ class WindowViewEffectConfig : public KCModule
 
 public:
     explicit WindowViewEffectConfig(QObject *parent, const KPluginMetaData &data);
-    ~WindowViewEffectConfig() override;
 
 public Q_SLOTS:
     void save() override;

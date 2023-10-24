@@ -64,12 +64,6 @@ ThumbnailAsideEffectConfig::ThumbnailAsideEffectConfig(QObject *parent, const KP
     m_ui.editor->addCollection(m_actionCollection);
 }
 
-ThumbnailAsideEffectConfig::~ThumbnailAsideEffectConfig()
-{
-    // Undo (only) unsaved changes to global key shortcuts
-    m_ui.editor->undo();
-}
-
 void ThumbnailAsideEffectConfig::save()
 {
     KCModule::save();

@@ -43,12 +43,6 @@ TilesEditorEffectConfig::TilesEditorEffectConfig(QObject *parent, const KPluginM
     connect(ui.shortcutsEditor, &KShortcutsEditor::keyChange, this, &KCModule::markAsChanged);
 }
 
-TilesEditorEffectConfig::~TilesEditorEffectConfig()
-{
-    // If save() is called, undo() has no effect.
-    ui.shortcutsEditor->undo();
-}
-
 void TilesEditorEffectConfig::save()
 {
     KCModule::save();

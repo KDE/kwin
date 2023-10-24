@@ -30,7 +30,6 @@ class MagnifierEffectConfig : public KCModule
     Q_OBJECT
 public:
     explicit MagnifierEffectConfig(QObject *parent, const KPluginMetaData &data);
-    ~MagnifierEffectConfig() override;
 
     void save() override;
     void defaults() override;

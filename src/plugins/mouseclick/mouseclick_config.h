@@ -30,7 +30,6 @@ class MouseClickEffectConfig : public KCModule
     Q_OBJECT
 public:
     explicit MouseClickEffectConfig(QObject *parent, const KPluginMetaData &data);
-    ~MouseClickEffectConfig() override;
 
     void save() override;
 

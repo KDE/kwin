@@ -68,12 +68,6 @@ WindowViewEffectConfig::WindowViewEffectConfig(QObject *parent, const KPluginMet
     connect(ui.shortcutsEditor, &KShortcutsEditor::keyChange, this, &KCModule::markAsChanged);
 }
 
-WindowViewEffectConfig::~WindowViewEffectConfig()
-{
-    // If save() is called, undo() has no effect.
-    ui.shortcutsEditor->undo();
-}
-
 void WindowViewEffectConfig::save()
 {
     KCModule::save();

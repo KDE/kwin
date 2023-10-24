@@ -45,12 +45,6 @@ ShowPaintEffectConfig::ShowPaintEffectConfig(QObject *parent, const KPluginMetaD
     connect(m_ui->shortcutsEditor, &KShortcutsEditor::keyChange, this, &KCModule::markAsChanged);
 }
 
-ShowPaintEffectConfig::~ShowPaintEffectConfig()
-{
-    // If save() is called, undo() has no effect.
-    m_ui->shortcutsEditor->undo();
-}
-
 void ShowPaintEffectConfig::save()
 {
     KCModule::save();

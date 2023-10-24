@@ -120,12 +120,6 @@ ZoomEffectConfig::ZoomEffectConfig(QObject *parent, const KPluginMetaData &data)
     m_ui->editor->addCollection(actionCollection);
 }
 
-ZoomEffectConfig::~ZoomEffectConfig()
-{
-    // Undo (only) unsaved changes to global key shortcuts
-    m_ui->editor->undo();
-}
-
 void ZoomEffectConfig::save()
 {
     m_ui->editor->save(); // undo() will restore to this state from now on

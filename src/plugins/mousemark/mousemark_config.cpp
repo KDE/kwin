@@ -69,12 +69,6 @@ MouseMarkEffectConfig::MouseMarkEffectConfig(QObject *parent, const KPluginMetaD
     });
 }
 
-MouseMarkEffectConfig::~MouseMarkEffectConfig()
-{
-    // Undo (only) unsaved changes to global key shortcuts
-    m_ui.editor->undo();
-}
-
 void MouseMarkEffectConfig::load()
 {
     KCModule::load();

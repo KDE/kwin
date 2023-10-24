@@ -19,7 +19,6 @@ class TilesEditorEffectConfig : public KCModule
 
 public:
     explicit TilesEditorEffectConfig(QObject *parent, const KPluginMetaData &data);
-    ~TilesEditorEffectConfig() override;
 
 public Q_SLOTS:
     void save() override;

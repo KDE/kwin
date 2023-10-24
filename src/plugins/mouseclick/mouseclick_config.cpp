@@ -59,12 +59,6 @@ MouseClickEffectConfig::MouseClickEffectConfig(QObject *parent, const KPluginMet
     addConfig(MouseClickConfig::self(), &m_ui);
 }
 
-MouseClickEffectConfig::~MouseClickEffectConfig()
-{
-    // Undo (only) unsaved changes to global key shortcuts
-    m_ui.editor->undo();
-}
-
 void MouseClickEffectConfig::save()
 {
     KCModule::save();

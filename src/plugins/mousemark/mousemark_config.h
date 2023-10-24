@@ -31,7 +31,6 @@ class MouseMarkEffectConfig : public KCModule
     Q_OBJECT
 public:
     explicit MouseMarkEffectConfig(QObject *parent, const KPluginMetaData &data);
-    ~MouseMarkEffectConfig() override;
 
     void load() override;
     void save() override;

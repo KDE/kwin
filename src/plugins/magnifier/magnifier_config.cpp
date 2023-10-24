@@ -75,12 +75,6 @@ MagnifierEffectConfig::MagnifierEffectConfig(QObject *parent, const KPluginMetaD
     m_ui.editor->addCollection(m_actionCollection);
 }
 
-MagnifierEffectConfig::~MagnifierEffectConfig()
-{
-    // Undo (only) unsaved changes to global key shortcuts
-    m_ui.editor->undo();
-}
-
 void MagnifierEffectConfig::save()
 {
     qDebug() << "Saving config of Magnifier";

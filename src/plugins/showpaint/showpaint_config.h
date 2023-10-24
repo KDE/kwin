@@ -22,7 +22,6 @@ class ShowPaintEffectConfig : public KCModule
 
 public:
     explicit ShowPaintEffectConfig(QObject *parent, const KPluginMetaData &data);
-    ~ShowPaintEffectConfig() override;
 
 public Q_SLOTS:
     void save() override;

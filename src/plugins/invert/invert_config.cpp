@@ -52,12 +52,6 @@ InvertEffectConfig::InvertEffectConfig(QObject *parent, const KPluginMetaData &d
     layout->addWidget(mShortcutEditor);
 }
 
-InvertEffectConfig::~InvertEffectConfig()
-{
-    // Undo (only) unsaved changes to global key shortcuts
-    mShortcutEditor->undo();
-}
-
 void InvertEffectConfig::load()
 {
     KCModule::load();
