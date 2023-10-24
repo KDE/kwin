@@ -265,9 +265,9 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
 
 ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectScreen *screen)
 {
-    const QRect rect = effects->waylandDisplay() ? screen->geometry() : effects->virtualScreenGeometry();
-    const qreal devicePixelRatio = effects->waylandDisplay() ? screen->devicePixelRatio() : 1;
-    const QSize nativeSize = rect.size() * devicePixelRatio;
+    const QRect rect = viewport.renderRect().toRect();
+    const qreal devicePixelRatio = viewport.scale();
+    const QSize nativeSize = (viewport.renderRect().size() * devicePixelRatio).toSize();
 
     OffscreenData &data = m_offscreenData[effects->waylandDisplay() ? screen : nullptr];
     data.viewport = rect;
@@ -295,7 +295,7 @@ void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewp
 
     // Render the scene in an offscreen texture and then upscale it.
     RenderTarget offscreenRenderTarget(offscreenData->framebuffer.get(), renderTarget.colorDescription());
-    RenderViewport offscreenViewport(screen->geometry(), screen->devicePixelRatio(), offscreenRenderTarget);
+    RenderViewport offscreenViewport(viewport.renderRect(), viewport.scale(), offscreenRenderTarget);
     GLFramebuffer::pushFramebuffer(offscreenData->framebuffer.get());
     effects->paintScreen(offscreenRenderTarget, offscreenViewport, mask, region, screen);
     GLFramebuffer::popFramebuffer();
