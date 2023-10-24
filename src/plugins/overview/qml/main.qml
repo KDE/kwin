@@ -596,7 +596,7 @@ FocusScope {
                         opacity: 1 - downGestureProgress
                         onDownGestureTriggered: window.closeWindow()
                         TapHandler {
-                            acceptedPointerTypes: PointerDevice.GenericPointer | PointerDevice.Pen
+                            acceptedPointerTypes: PointerDevice.Generic | PointerDevice.Pen
                             acceptedButtons: Qt.MiddleButton | Qt.RightButton
                             onTapped: (eventPoint, button) => {
                                 if (button === Qt.MiddleButton) {
@@ -605,7 +605,7 @@ FocusScope {
                                     if (window.desktops.length > 0) {
                                         window.desktops = [];
                                     } else {
-                                        window.desktops = [desktopView.desktop];
+                                        window.desktops = [mainBackground.desktop];
                                     }
                                 }
                             }
