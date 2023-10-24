@@ -206,11 +206,12 @@ target_link_libraries(kwin
     Qt::DBus
     Qt::Quick
     Qt::Widgets
-    Qt::Sensors
     Wayland::Server
     KF6::I18n
 
     PRIVATE
+
+    Qt::Sensors
 
     KF6::ConfigCore
     KF6::ConfigQml
