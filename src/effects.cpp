@@ -715,15 +715,6 @@ void EffectsHandlerImpl::moveWindow(EffectWindow *w, const QPoint &pos, bool sna
     }
 }
 
-void EffectsHandlerImpl::windowToDesktop(EffectWindow *w, int desktop)
-{
-    QList<uint> desktopIds;
-    if (desktop != -1) {
-        desktopIds.append(desktop);
-    }
-    windowToDesktops(w, desktopIds);
-}
-
 void EffectsHandlerImpl::windowToDesktops(EffectWindow *w, const QList<uint> &desktopIds)
 {
     auto window = static_cast<EffectWindowImpl *>(w)->window();

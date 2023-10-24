@@ -362,7 +362,7 @@ void OverviewEffect::grabbedKeyboardEvent(QKeyEvent *keyEvent)
     QuickSceneEffect::grabbedKeyboardEvent(keyEvent);
 }
 
-void OverviewEffect::swapDesktops(int from, int to)
+void OverviewEffect::swapDesktops(uint from, uint to)
 {
     QList<EffectWindow *> fromList;
     QList<EffectWindow *> toList;
@@ -377,10 +377,10 @@ void OverviewEffect::swapDesktops(int from, int to)
         }
     }
     for (auto *w : fromList) {
-        effects->windowToDesktop(w, to);
+        effects->windowToDesktops(w, {to});
     }
     for (auto *w : toList) {
-        effects->windowToDesktop(w, from);
+        effects->windowToDesktops(w, {from});
     }
 }
 

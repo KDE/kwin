@@ -64,7 +64,6 @@ public:
     void activateWindow(EffectWindow *c) override;
     EffectWindow *activeWindow() const override;
     void moveWindow(EffectWindow *w, const QPoint &pos, bool snap = false, double snapAdjust = 1.0) override;
-    void windowToDesktop(EffectWindow *w, int desktop) override;
     void windowToScreen(EffectWindow *w, Output *screen) override;
     void setShowingDesktop(bool showing) override;
 
