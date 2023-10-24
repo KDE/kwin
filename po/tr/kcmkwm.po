@@ -1,6 +1,7 @@
 # translation of kcmkwm.po to Turkish
 # translation of kcmkwm.po to
 # Copyright (C) 2003, 2004, 2005, 2007, 2008 Free Software Foundation, Inc.
+# SPDX-FileCopyrightText: 2022, 2023 Emir SARI <emir_sari@icloud.com>
 # Serdar Cevher <scevher@anet.com.tr>, 2001.
 # Görkem Çetin <gorkem@kde.org>, 2002, 2003, 2004.
 # Adil Yıldız <adil@linux-sevenler.org>, 2004.
@@ -11,13 +12,13 @@
 # Serdar SOYTETİR <tulliana@gmail.com>, 2010, 2012.
 # Volkan Gezer <volkangezer@gmail.com>, 2013, 2015, 2017.
 # Kaan Ozdincer <kaanozdincer@gmail.com>, 2014.
-# SPDX-FileCopyrightText: 2022, 2023 Emir SARI <emir_sari@icloud.com>
+# Emir SARI <emir_sari@icloud.com>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-03 00:48+0000\n"
-"PO-Revision-Date: 2023-10-05 13:54+0300\n"
+"PO-Revision-Date: 2023-10-23 13:01+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -25,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 23.08.1\n"
+"X-Generator: Lokalize 23.11.70\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -50,7 +51,7 @@ msgstr "Etkin Olmayan İç Pencere Eylemleri"
 #: actions.ui:26 mouse.ui:177
 #, kde-format
 msgid "&Left click:"
-msgstr "&Sol tıklama:"
+msgstr "&Sol tık:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow1)
 #: actions.ui:39
@@ -68,7 +69,7 @@ msgstr ""
 #: actions.ui:43 actions.ui:83 actions.ui:123
 #, kde-format
 msgid "Activate, raise and pass click"
-msgstr "Etkinleştir, yükselt ve tıklama geçir"
+msgstr "Etkinleştir, yükselt ve tıklamayı geçir"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
@@ -76,7 +77,7 @@ msgstr "Etkinleştir, yükselt ve tıklama geçir"
 #: actions.ui:48 actions.ui:88 actions.ui:128
 #, kde-format
 msgid "Activate and pass click"
-msgstr "Etkinleştir ve tıklama geçir"
+msgstr "Etkinleştir ve tıklamayı geçir"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
@@ -107,7 +108,7 @@ msgstr "Etkinleştir ve yükselt"
 #: actions.ui:66 mouse.ui:200
 #, kde-format
 msgid "&Middle click:"
-msgstr "&Orta tıklama:"
+msgstr "&Orta tık:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow2)
 #: actions.ui:79
@@ -124,7 +125,7 @@ msgstr ""
 #: actions.ui:106 mouse.ui:213
 #, kde-format
 msgid "&Right click:"
-msgstr "Sa&ğ tıklama:"
+msgstr "Sa&ğ tık:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow3)
 #: actions.ui:119
@@ -217,7 +218,7 @@ msgstr "  + "
 #: actions.ui:248 mouse.ui:601
 #, kde-format
 msgid "L&eft click:"
-msgstr "&Sol tıklama:"
+msgstr "&Sol tık:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll1)
 #: actions.ui:261
@@ -357,7 +358,7 @@ msgstr "Bir şey yapma"
 #: actions.ui:318
 #, kde-format
 msgid "Middle &click:"
-msgstr "O&rta tıklama:"
+msgstr "O&rta tık:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll2)
 #: actions.ui:331
@@ -374,7 +375,7 @@ msgstr ""
 #: actions.ui:388 mouse.ui:671
 #, kde-format
 msgid "Right clic&k:"
-msgstr "Sağ tı&klama:"
+msgstr "Sağ tı&k:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll3)
 #: actions.ui:401
@@ -1060,7 +1061,7 @@ msgstr "Başlık Çubuğu Eylemleri"
 #: mouse.ui:26
 #, kde-format
 msgid "&Double-click:"
-msgstr "&Çift tıklama:"
+msgstr "&Çift tık:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
 #: mouse.ui:36
@@ -1226,7 +1227,7 @@ msgstr "Ekranı kapla düğmesine <em>orta</em> tuşla tıklandığındaki davra
 #: mouse.ui:636
 #, kde-format
 msgid "Middle c&lick:"
-msgstr "O&rta tıklama:"
+msgstr "O&rta tık:"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label_10)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
