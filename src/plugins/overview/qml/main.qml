@@ -264,7 +264,8 @@ FocusScope {
             Keys.priority: Keys.BeforeItem
             Keys.forwardTo: text && (allDesktopHeaps.currentHeap.count === 0 || !effect.filterWindows) ? searchResults : allDesktopHeaps.currentHeap
             text: effect.searchText
-            onTextEdited: {
+            // not onTextEdited so that the UI always stays in sync
+            onTextChanged: {
                 effect.searchText = text;
                 allDesktopHeaps.currentHeap.resetSelected();
                 allDesktopHeaps.currentHeap.selectNextItem(WindowHeap.Direction.Down);
