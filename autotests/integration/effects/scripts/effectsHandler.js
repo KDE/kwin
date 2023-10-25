@@ -13,5 +13,5 @@ effects.windowClosed.connect(function(window) {
     sendTestResponse("windowClosed - " + window.caption);
 });
 effects.desktopChanged.connect(function(old, current) {
-    sendTestResponse("desktopChanged - " + old + " " + current);
+    sendTestResponse("desktopChanged - " + old.x11DesktopNumber + " " + current.x11DesktopNumber);
 });

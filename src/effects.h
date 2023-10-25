@@ -68,23 +68,22 @@ public:
     void setShowingDesktop(bool showing) override;
 
     QString currentActivity() const override;
-    int currentDesktop() const override;
-    int numberOfDesktops() const override;
-    void setCurrentDesktop(int desktop) override;
-    void setNumberOfDesktops(int desktops) override;
+    VirtualDesktop *currentDesktop() const override;
+    QList<VirtualDesktop *> desktops() const override;
+    void setCurrentDesktop(VirtualDesktop *desktop) override;
     QSize desktopGridSize() const override;
     int desktopGridWidth() const override;
     int desktopGridHeight() const override;
     int workspaceWidth() const override;
     int workspaceHeight() const override;
-    int desktopAtCoords(QPoint coords) const override;
-    QPoint desktopGridCoords(int id) const override;
-    QPoint desktopCoords(int id) const override;
-    int desktopAbove(int desktop = 0, bool wrap = true) const override;
-    int desktopToRight(int desktop = 0, bool wrap = true) const override;
-    int desktopBelow(int desktop = 0, bool wrap = true) const override;
-    int desktopToLeft(int desktop = 0, bool wrap = true) const override;
-    QString desktopName(int desktop) const override;
+    VirtualDesktop *desktopAtCoords(QPoint coords) const override;
+    QPoint desktopGridCoords(VirtualDesktop *desktop) const override;
+    QPoint desktopCoords(VirtualDesktop *desktop) const override;
+    VirtualDesktop *desktopAbove(VirtualDesktop *desktop = nullptr, bool wrap = true) const override;
+    VirtualDesktop *desktopToRight(VirtualDesktop *desktop = nullptr, bool wrap = true) const override;
+    VirtualDesktop *desktopBelow(VirtualDesktop *desktop = nullptr, bool wrap = true) const override;
+    VirtualDesktop *desktopToLeft(VirtualDesktop *desktop = nullptr, bool wrap = true) const override;
+    QString desktopName(VirtualDesktop *desktop) const override;
     bool optionRollOverDesktops() const override;
 
     QPointF cursorPos() const override;
@@ -126,9 +125,9 @@ public:
     void addRepaint(const QRegion &r) override;
     void addRepaint(int x, int y, int w, int h) override;
     Output *activeScreen() const override;
-    QRectF clientArea(clientAreaOption, const Output *screen, int desktop) const override;
+    QRectF clientArea(clientAreaOption, const Output *screen, const VirtualDesktop *desktop) const override;
     QRectF clientArea(clientAreaOption, const EffectWindow *c) const override;
-    QRectF clientArea(clientAreaOption, const QPoint &p, int desktop) const override;
+    QRectF clientArea(clientAreaOption, const QPoint &p, const VirtualDesktop *desktop) const override;
     QSize virtualScreenSize() const override;
     QRect virtualScreenGeometry() const override;
     double animationTimeFactor() const override;
@@ -223,7 +222,7 @@ public:
         return registered_atoms.contains(atom);
     }
 
-    void windowToDesktops(EffectWindow *w, const QList<uint> &desktops) override;
+    void windowToDesktops(EffectWindow *w, const QList<VirtualDesktop *> &desktops) override;
 
     /**
      * Finds an effect with the given name.
@@ -341,7 +340,7 @@ public:
     double opacity() const override;
 
     QStringList activities() const override;
-    QList<uint> desktops() const override;
+    QList<VirtualDesktop *> desktops() const override;
     qreal x() const override;
     qreal y() const override;
     qreal width() const override;

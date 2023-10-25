@@ -73,8 +73,8 @@ public:
     bool slideBackground() const;
 
 private Q_SLOTS:
-    void desktopChanged(int old, int current, EffectWindow *with);
-    void desktopChanging(uint old, QPointF desktopOffset, EffectWindow *with);
+    void desktopChanged(VirtualDesktop *old, VirtualDesktop *current, EffectWindow *with);
+    void desktopChanging(VirtualDesktop *old, QPointF desktopOffset, EffectWindow *with);
     void desktopChangingCancelled();
     void windowAdded(EffectWindow *w);
     void windowDeleted(EffectWindow *w);
@@ -89,7 +89,7 @@ private:
     QPointF forcePositivePosition(QPointF p) const;
     void optimizePath(); // Find the best path to target desktop
 
-    void startAnimation(int old, int current, EffectWindow *movingWindow = nullptr);
+    void startAnimation(VirtualDesktop *old, VirtualDesktop *current, EffectWindow *movingWindow = nullptr);
     void prepareSwitching();
     void finishedSwitching();
 
@@ -120,7 +120,7 @@ private:
     struct
     {
         bool wrap;
-        QList<int> visibleDesktops;
+        QList<VirtualDesktop *> visibleDesktops;
     } m_paintCtx;
 
     struct WindowData

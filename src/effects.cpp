@@ -150,11 +150,11 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, WorkspaceScene *s
         }
     });
     connect(ws, &Workspace::currentDesktopChanged, this, [this](VirtualDesktop *old, Window *window) {
-        const VirtualDesktop *newDesktop = VirtualDesktopManager::self()->currentDesktop();
-        Q_EMIT desktopChanged(old->x11DesktopNumber(), newDesktop->x11DesktopNumber(), window ? window->effectWindow() : nullptr);
+        VirtualDesktop *newDesktop = VirtualDesktopManager::self()->currentDesktop();
+        Q_EMIT desktopChanged(old, newDesktop, window ? window->effectWindow() : nullptr);
     });
     connect(ws, &Workspace::currentDesktopChanging, this, [this](VirtualDesktop *currentDesktop, QPointF offset, KWin::Window *window) {
-        Q_EMIT desktopChanging(currentDesktop->x11DesktopNumber(), offset, window ? window->effectWindow() : nullptr);
+        Q_EMIT desktopChanging(currentDesktop, offset, window ? window->effectWindow() : nullptr);
     });
     connect(ws, &Workspace::currentDesktopChangingCancelled, this, [this]() {
         Q_EMIT desktopChangingCancelled();
@@ -170,12 +170,13 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, WorkspaceScene *s
         Q_EMIT windowDeleted(d->effectWindow());
     });
     connect(ws->sessionManager(), &SessionManager::stateChanged, this, &KWin::EffectsHandler::sessionStateChanged);
-    connect(vds, &VirtualDesktopManager::countChanged, this, &EffectsHandler::numberDesktopsChanged);
     connect(vds, &VirtualDesktopManager::layoutChanged, this, [this](int width, int height) {
         Q_EMIT desktopGridSizeChanged(QSize(width, height));
         Q_EMIT desktopGridWidthChanged(width);
         Q_EMIT desktopGridHeightChanged(height);
     });
+    connect(vds, &VirtualDesktopManager::desktopCreated, this, &EffectsHandler::desktopAdded);
+    connect(vds, &VirtualDesktopManager::desktopRemoved, this, &EffectsHandler::desktopRemoved);
     connect(Cursors::self()->mouse(), &Cursor::mouseChanged, this, &EffectsHandler::mouseChanged);
     connect(ws, &Workspace::geometryChanged, this, &EffectsHandler::virtualScreenSizeChanged);
     connect(ws, &Workspace::geometryChanged, this, &EffectsHandler::virtualScreenGeometryChanged);
@@ -715,24 +716,11 @@ void EffectsHandlerImpl::moveWindow(EffectWindow *w, const QPoint &pos, bool sna
     }
 }
 
-void EffectsHandlerImpl::windowToDesktops(EffectWindow *w, const QList<uint> &desktopIds)
+void EffectsHandlerImpl::windowToDesktops(EffectWindow *w, const QList<VirtualDesktop *> &desktops)
 {
     auto window = static_cast<EffectWindowImpl *>(w)->window();
     if (!window->isClient() || window->isDesktop() || window->isDock()) {
         return;
-    }
-    QList<VirtualDesktop *> desktops;
-    desktops.reserve(desktopIds.count());
-    for (uint x11Id : desktopIds) {
-        if (x11Id > VirtualDesktopManager::self()->count()) {
-            continue;
-        }
-        VirtualDesktop *d = VirtualDesktopManager::self()->desktopForX11Id(x11Id);
-        Q_ASSERT(d);
-        if (desktops.contains(d)) {
-            continue;
-        }
-        desktops << d;
     }
     window->setDesktops(desktops);
 }
@@ -762,24 +750,19 @@ QString EffectsHandlerImpl::currentActivity() const
 #endif
 }
 
-int EffectsHandlerImpl::currentDesktop() const
+VirtualDesktop *EffectsHandlerImpl::currentDesktop() const
 {
-    return VirtualDesktopManager::self()->current();
+    return VirtualDesktopManager::self()->currentDesktop();
 }
 
-int EffectsHandlerImpl::numberOfDesktops() const
+QList<VirtualDesktop *> EffectsHandlerImpl::desktops() const
 {
-    return VirtualDesktopManager::self()->count();
+    return VirtualDesktopManager::self()->desktops();
 }
 
-void EffectsHandlerImpl::setCurrentDesktop(int desktop)
+void EffectsHandlerImpl::setCurrentDesktop(VirtualDesktop *desktop)
 {
     VirtualDesktopManager::self()->setCurrent(desktop);
-}
-
-void EffectsHandlerImpl::setNumberOfDesktops(int desktops)
-{
-    VirtualDesktopManager::self()->setCount(desktops);
 }
 
 QSize EffectsHandlerImpl::desktopGridSize() const
@@ -807,22 +790,19 @@ int EffectsHandlerImpl::workspaceHeight() const
     return desktopGridHeight() * Workspace::self()->geometry().height();
 }
 
-int EffectsHandlerImpl::desktopAtCoords(QPoint coords) const
+VirtualDesktop *EffectsHandlerImpl::desktopAtCoords(QPoint coords) const
 {
-    if (auto vd = VirtualDesktopManager::self()->grid().at(coords)) {
-        return vd->x11DesktopNumber();
-    }
-    return 0;
+    return VirtualDesktopManager::self()->grid().at(coords);
 }
 
-QPoint EffectsHandlerImpl::desktopGridCoords(int id) const
+QPoint EffectsHandlerImpl::desktopGridCoords(VirtualDesktop *desktop) const
 {
-    return VirtualDesktopManager::self()->grid().gridCoords(id);
+    return VirtualDesktopManager::self()->grid().gridCoords(desktop);
 }
 
-QPoint EffectsHandlerImpl::desktopCoords(int id) const
+QPoint EffectsHandlerImpl::desktopCoords(VirtualDesktop *desktop) const
 {
-    QPoint coords = VirtualDesktopManager::self()->grid().gridCoords(id);
+    QPoint coords = VirtualDesktopManager::self()->grid().gridCoords(desktop);
     if (coords.x() == -1) {
         return QPoint(-1, -1);
     }
@@ -830,30 +810,29 @@ QPoint EffectsHandlerImpl::desktopCoords(int id) const
     return QPoint(coords.x() * displaySize.width(), coords.y() * displaySize.height());
 }
 
-int EffectsHandlerImpl::desktopAbove(int desktop, bool wrap) const
+VirtualDesktop *EffectsHandlerImpl::desktopAbove(VirtualDesktop *desktop, bool wrap) const
 {
     return VirtualDesktopManager::self()->inDirection(desktop, VirtualDesktopManager::Direction::Up, wrap);
 }
 
-int EffectsHandlerImpl::desktopToRight(int desktop, bool wrap) const
+VirtualDesktop *EffectsHandlerImpl::desktopToRight(VirtualDesktop *desktop, bool wrap) const
 {
     return VirtualDesktopManager::self()->inDirection(desktop, VirtualDesktopManager::Direction::Right, wrap);
 }
 
-int EffectsHandlerImpl::desktopBelow(int desktop, bool wrap) const
+VirtualDesktop *EffectsHandlerImpl::desktopBelow(VirtualDesktop *desktop, bool wrap) const
 {
     return VirtualDesktopManager::self()->inDirection(desktop, VirtualDesktopManager::Direction::Down, wrap);
 }
 
-int EffectsHandlerImpl::desktopToLeft(int desktop, bool wrap) const
+VirtualDesktop *EffectsHandlerImpl::desktopToLeft(VirtualDesktop *desktop, bool wrap) const
 {
     return VirtualDesktopManager::self()->inDirection(desktop, VirtualDesktopManager::Direction::Left, wrap);
 }
 
-QString EffectsHandlerImpl::desktopName(int desktop) const
+QString EffectsHandlerImpl::desktopName(VirtualDesktop *desktop) const
 {
-    const VirtualDesktop *vd = VirtualDesktopManager::self()->desktopForX11Id(desktop);
-    return vd ? vd->name() : QString();
+    return desktop->name();
 }
 
 bool EffectsHandlerImpl::optionRollOverDesktops() const
@@ -1014,18 +993,9 @@ Output *EffectsHandlerImpl::activeScreen() const
     return workspace()->activeOutput();
 }
 
-static VirtualDesktop *resolveVirtualDesktop(int desktopId)
+QRectF EffectsHandlerImpl::clientArea(clientAreaOption opt, const Output *screen, const VirtualDesktop *desktop) const
 {
-    if (desktopId == 0 || desktopId == -1) {
-        return VirtualDesktopManager::self()->currentDesktop();
-    } else {
-        return VirtualDesktopManager::self()->desktopForX11Id(desktopId);
-    }
-}
-
-QRectF EffectsHandlerImpl::clientArea(clientAreaOption opt, const Output *screen, int desktop) const
-{
-    return Workspace::self()->clientArea(opt, screen, resolveVirtualDesktop(desktop));
+    return Workspace::self()->clientArea(opt, screen, desktop);
 }
 
 QRectF EffectsHandlerImpl::clientArea(clientAreaOption opt, const EffectWindow *effectWindow) const
@@ -1034,11 +1004,10 @@ QRectF EffectsHandlerImpl::clientArea(clientAreaOption opt, const EffectWindow *
     return Workspace::self()->clientArea(opt, window);
 }
 
-QRectF EffectsHandlerImpl::clientArea(clientAreaOption opt, const QPoint &p, int desktop) const
+QRectF EffectsHandlerImpl::clientArea(clientAreaOption opt, const QPoint &p, const VirtualDesktop *desktop) const
 {
     const Output *output = Workspace::self()->outputAt(p);
-    const VirtualDesktop *virtualDesktop = resolveVirtualDesktop(desktop);
-    return Workspace::self()->clientArea(opt, output, virtualDesktop);
+    return Workspace::self()->clientArea(opt, output, desktop);
 }
 
 QRect EffectsHandlerImpl::virtualScreenGeometry() const
@@ -1845,6 +1814,7 @@ WINDOW_HELPER(QIcon, icon, icon)
 WINDOW_HELPER(bool, isSkipSwitcher, skipSwitcher)
 WINDOW_HELPER(bool, decorationHasAlpha, decorationHasAlpha)
 WINDOW_HELPER(bool, isUnresponsive, unresponsive)
+WINDOW_HELPER(QList<VirtualDesktop *>, desktops, desktops)
 
 #undef WINDOW_HELPER
 
@@ -1854,17 +1824,6 @@ qlonglong EffectWindowImpl::windowId() const
         return x11Window->window();
     }
     return 0;
-}
-
-QList<uint> EffectWindowImpl::desktops() const
-{
-    const auto desks = m_window->desktops();
-    QList<uint> ids;
-    ids.reserve(desks.count());
-    std::transform(desks.constBegin(), desks.constEnd(), std::back_inserter(ids), [](const VirtualDesktop *vd) {
-        return vd->x11DesktopNumber();
-    });
-    return ids;
 }
 
 QString EffectWindowImpl::windowClass() const

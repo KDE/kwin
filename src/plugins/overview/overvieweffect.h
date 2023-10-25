@@ -59,7 +59,7 @@ public:
     void reconfigure(ReconfigureFlags flags) override;
     void grabbedKeyboardEvent(QKeyEvent *keyEvent) override;
 
-    Q_INVOKABLE void swapDesktops(uint from, uint to);
+    Q_INVOKABLE void swapDesktops(KWin::VirtualDesktop *from, KWin::VirtualDesktop *to);
 
 Q_SIGNALS:
     void animationDurationChanged();

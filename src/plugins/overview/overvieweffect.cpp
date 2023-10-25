@@ -101,11 +101,11 @@ OverviewEffect::OverviewEffect()
     connect(m_gridState, &EffectTogglableState::inProgressChanged, this, &OverviewEffect::gridGestureInProgressChanged);
     connect(m_gridState, &EffectTogglableState::partialActivationFactorChanged, this, &OverviewEffect::gridPartialActivationFactorChanged);
 
-    connect(effects, &EffectsHandler::desktopChanging, this, [this](uint old, QPointF desktopOffset, EffectWindow *with) {
+    connect(effects, &EffectsHandler::desktopChanging, this, [this](VirtualDesktop *old, QPointF desktopOffset, EffectWindow *with) {
         m_desktopOffset = desktopOffset;
         Q_EMIT desktopOffsetChanged();
     });
-    connect(effects, &EffectsHandler::desktopChanged, this, [this](int old, int current, EffectWindow *with) {
+    connect(effects, &EffectsHandler::desktopChanged, this, [this](VirtualDesktop *old, VirtualDesktop *current, EffectWindow *with) {
         m_desktopOffset = QPointF(0, 0);
         Q_EMIT desktopOffsetChanged();
     });
@@ -362,7 +362,7 @@ void OverviewEffect::grabbedKeyboardEvent(QKeyEvent *keyEvent)
     QuickSceneEffect::grabbedKeyboardEvent(keyEvent);
 }
 
-void OverviewEffect::swapDesktops(uint from, uint to)
+void OverviewEffect::swapDesktops(VirtualDesktop *from, VirtualDesktop *to)
 {
     QList<EffectWindow *> fromList;
     QList<EffectWindow *> toList;

@@ -485,7 +485,7 @@ FocusScope {
                                 drop.action = Qt.IgnoreAction;
                                 return;
                             }
-                            effect.swapDesktops(drag.source.desktop.x11DesktopNumber, desktop.x11DesktopNumber);
+                            effect.swapDesktops(drag.source.desktop, desktop);
                         } else {
                             // dragging a KWin::Window
                             if (drag.source.desktops.length === 0 || drag.source.desktops.indexOf(mainBackground.desktop) !== -1) {

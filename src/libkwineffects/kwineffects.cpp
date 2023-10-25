@@ -11,6 +11,7 @@
 
 #include "libkwineffects/kwineffects.h"
 #include "core/output.h"
+#include "virtualdesktops.h"
 
 #include "config-kwin.h"
 
@@ -684,10 +685,10 @@ bool EffectWindow::isOnCurrentDesktop() const
     return isOnDesktop(effects->currentDesktop());
 }
 
-bool EffectWindow::isOnDesktop(int d) const
+bool EffectWindow::isOnDesktop(VirtualDesktop *desktop) const
 {
-    const QList<uint> ds = desktops();
-    return ds.isEmpty() || ds.contains(d);
+    const QList<VirtualDesktop *> ds = desktops();
+    return ds.isEmpty() || ds.contains(desktop);
 }
 
 bool EffectWindow::isOnAllDesktops() const
