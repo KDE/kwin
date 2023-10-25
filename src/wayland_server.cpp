@@ -32,6 +32,7 @@
 #include "wayland/drmlease_v1.h"
 #include "wayland/filtered_display.h"
 #include "wayland/fractionalscale_v1.h"
+#include "wayland/frog_colormanagement_v1.h"
 #include "wayland/idle.h"
 #include "wayland/idleinhibit_v1.h"
 #include "wayland/idlenotify_v1.h"
@@ -521,6 +522,7 @@ bool WaylandServer::init(InitializationFlags flags)
         }
     });
 
+    new FrogColorManagementV1(m_display, m_display);
     return true;
 }
 

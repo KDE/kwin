@@ -11,6 +11,7 @@
 #include "contrast.h"
 #include "display.h"
 #include "fractionalscale_v1_p.h"
+#include "frog_colormanagement_v1.h"
 #include "idleinhibit_v1_p.h"
 #include "linuxdmabufv1clientbuffer.h"
 #include "output.h"
@@ -81,6 +82,9 @@ void SurfaceInterfacePrivate::addChild(SubSurfaceInterface *child)
     }
     if (preferredBufferTransform.has_value()) {
         child->surface()->setPreferredBufferTransform(preferredBufferTransform.value());
+    }
+    if (preferredColorDescription) {
+        child->surface()->setPreferredColorDescription(preferredColorDescription.value());
     }
 
     Q_EMIT q->childSubSurfaceAdded(child);
@@ -1150,6 +1154,20 @@ PresentationHint SurfaceInterface::presentationHint() const
 const ColorDescription &SurfaceInterface::colorDescription() const
 {
     return d->current->colorDescription;
+}
+
+void SurfaceInterface::setPreferredColorDescription(const ColorDescription &descr)
+{
+    d->preferredColorDescription = descr;
+    if (d->frogColorManagement) {
+        d->frogColorManagement->setPreferredColorDescription(descr);
+    }
+    for (auto child : std::as_const(d->current->subsurface.below)) {
+        child->surface()->setPreferredColorDescription(descr);
+    }
+    for (auto child : std::as_const(d->current->subsurface.above)) {
+        child->surface()->setPreferredColorDescription(descr);
+    }
 }
 
 void SurfaceInterface::setPreferredBufferScale(qreal scale)

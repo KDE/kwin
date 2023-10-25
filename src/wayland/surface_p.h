@@ -25,6 +25,7 @@ class ViewportInterface;
 class ContentTypeV1Interface;
 class TearingControlV1Interface;
 class FractionalScaleV1Interface;
+class FrogColorManagementSurfaceV1;
 
 struct SurfaceState
 {
@@ -149,6 +150,7 @@ public:
     OutputInterface *primaryOutput = nullptr;
     std::optional<qreal> preferredBufferScale;
     std::optional<OutputTransform> preferredBufferTransform;
+    std::optional<ColorDescription> preferredColorDescription;
 
     LockedPointerV1Interface *lockedPointer = nullptr;
     ConfinedPointerV1Interface *confinedPointer = nullptr;
@@ -162,6 +164,7 @@ public:
     FractionalScaleV1Interface *fractionalScaleExtension = nullptr;
     ClientConnection *client = nullptr;
     TearingControlV1Interface *tearing = nullptr;
+    FrogColorManagementSurfaceV1 *frogColorManagement = nullptr;
 
     struct
     {

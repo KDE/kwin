@@ -599,6 +599,11 @@ bool Output::updateCursorLayer()
     return false;
 }
 
+const ColorDescription &Output::colorDescription() const
+{
+    return m_state.colorDescription;
+}
+
 } // namespace KWin
 
 #include "moc_output.cpp"

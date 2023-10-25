@@ -354,6 +354,7 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     if (m_state.highDynamicRange != next.highDynamicRange || m_state.sdrBrightness != next.sdrBrightness || m_state.wideColorGamut != next.wideColorGamut || m_state.iccProfile != next.iccProfile) {
         m_renderLoop->scheduleRepaint();
     }
+    next.colorDescription = m_pipeline->colorDescription();
 
     setState(next);
     setVrrPolicy(props->vrrPolicy.value_or(vrrPolicy()));

@@ -216,6 +216,10 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL protocols/qt-toplevel-drag-v1.xml
     BASENAME qt-toplevel-drag-v1
 )
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PROTOCOL ${PROJECT_SOURCE_DIR}/src/wayland/protocols/frog-color-management-v1.xml
+    BASENAME frog-color-management-v1
+)
 
 target_sources(kwin PRIVATE
     abstract_data_source.cpp
@@ -239,8 +243,9 @@ target_sources(kwin PRIVATE
     dpms.cpp
     drmclientbuffer.cpp
     drmlease_v1.cpp
-    fractionalscale_v1.cpp
     filtered_display.cpp
+    fractionalscale_v1.cpp
+    frog_colormanagement_v1.cpp
     idle.cpp
     idleinhibit_v1.cpp
     idlenotify_v1.cpp
@@ -314,6 +319,7 @@ install(FILES
     dpms.h
     drmlease_v1.h
     fractionalscale_v1.h
+    frog_colormanagement_v1.h
     idle.h
     idleinhibit_v1.h
     idlenotify_v1.h

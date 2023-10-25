@@ -335,6 +335,8 @@ public:
 
     virtual bool updateCursorLayer();
 
+    const ColorDescription &colorDescription() const;
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the geometry of this output has changed.
@@ -433,6 +435,7 @@ protected:
         AutoRotationPolicy autoRotatePolicy = AutoRotationPolicy::InTabletMode;
         QString iccProfilePath;
         std::shared_ptr<IccProfile> iccProfile;
+        ColorDescription colorDescription = ColorDescription::sRGB;
     };
 
     void setInformation(const Information &information);

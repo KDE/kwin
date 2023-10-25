@@ -374,6 +374,8 @@ public:
 
     const ColorDescription &colorDescription() const;
 
+    void setPreferredColorDescription(const ColorDescription &descr);
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the underlying wl_surface resource is about to be freed.

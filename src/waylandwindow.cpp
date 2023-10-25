@@ -161,6 +161,7 @@ void WaylandWindow::updateClientOutputs()
     if (output()) {
         surface()->setPreferredBufferScale(output()->scale());
         surface()->setPreferredBufferTransform(output()->transform());
+        surface()->setPreferredColorDescription(output()->colorDescription());
     }
 }
 
