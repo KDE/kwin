@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-23 01:40+0000\n"
+"POT-Creation-Date: 2023-10-25 01:51+0000\n"
 "PO-Revision-Date: 2023-10-08 23:38+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -2107,7 +2107,7 @@ msgstr "마지막 마우스 자취 지우기"
 msgid "Clear Mouse Marks"
 msgstr "마우스 자취 지우기"
 
-#: plugins/mousemark/mousemark_config.cpp:101
+#: plugins/mousemark/mousemark_config.cpp:95
 #, kde-format
 msgctxt "Suffix"
 msgid " pixel"

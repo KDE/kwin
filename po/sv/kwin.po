@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-23 01:40+0000\n"
+"POT-Creation-Date: 2023-10-25 01:51+0000\n"
 "PO-Revision-Date: 2022-09-24 16:08+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@bredband.net>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
@@ -2165,7 +2165,7 @@ msgstr "Rensa senaste musmarkering"
 msgid "Clear Mouse Marks"
 msgstr "Rensa musmarkeringar"
 
-#: plugins/mousemark/mousemark_config.cpp:101
+#: plugins/mousemark/mousemark_config.cpp:95
 #, kde-format
 msgctxt "Suffix"
 msgid " pixel"

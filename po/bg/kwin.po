@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-23 01:40+0000\n"
+"POT-Creation-Date: 2023-10-25 01:51+0000\n"
 "PO-Revision-Date: 2023-10-09 15:54+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: \n"
@@ -2120,7 +2120,7 @@ msgstr "Изчистване на последната маркировка на
 msgid "Clear Mouse Marks"
 msgstr "Изчистване на маркировки на мишката"
 
-#: plugins/mousemark/mousemark_config.cpp:101
+#: plugins/mousemark/mousemark_config.cpp:95
 #, kde-format
 msgctxt "Suffix"
 msgid " pixel"

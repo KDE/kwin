@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-23 01:40+0000\n"
+"POT-Creation-Date: 2023-10-25 01:51+0000\n"
 "PO-Revision-Date: 2007-07-31 19:27+0330\n"
 "Last-Translator: Nazanin Kazemi <kazemi@itland.ir>\n"
 "Language-Team: Persian <kde-i18n-fa@kde.org>\n"
@@ -2146,7 +2146,7 @@ msgstr "پاک‌سازی نشان‌های موشی"
 msgid "Clear Mouse Marks"
 msgstr "پاک‌سازی نشان‌های موشی"
 
-#: plugins/mousemark/mousemark_config.cpp:101
+#: plugins/mousemark/mousemark_config.cpp:95
 #, kde-format
 msgctxt "Suffix"
 msgid " pixel"

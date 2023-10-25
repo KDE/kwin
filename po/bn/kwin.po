@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-23 01:40+0000\n"
+"POT-Creation-Date: 2023-10-25 01:51+0000\n"
 "PO-Revision-Date: 2009-01-09 21:22-0800\n"
 "Last-Translator: Deepayan Sarkar <deepayan.sarkar@gmail.com>\n"
 "Language-Team: en_US <kde-translation@bengalinux.org>\n"
@@ -2136,7 +2136,7 @@ msgstr "শেষ মাউস চিহ্ন ফাঁকা করো"
 msgid "Clear Mouse Marks"
 msgstr "মাউস চিহ্ন ফাঁকা করো"
 
-#: plugins/mousemark/mousemark_config.cpp:101
+#: plugins/mousemark/mousemark_config.cpp:95
 #, kde-format
 msgctxt "Suffix"
 msgid " pixel"
