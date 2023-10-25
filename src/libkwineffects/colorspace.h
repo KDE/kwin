@@ -29,13 +29,32 @@ class KWIN_EXPORT Colorimetry
 public:
     static constexpr Colorimetry fromName(NamedColorimetry name);
     static Colorimetry fromXYZ(QVector3D red, QVector3D green, QVector3D blue, QVector3D white);
+    /**
+     * @returns the XYZ representation of the xyY color passed in. Y is assumed to be one
+     */
     static QVector3D xyToXYZ(QVector2D xy);
+    /**
+     * @returns the xyY representation of the XYZ color passed in. Y is normalized to be one
+     */
     static QVector2D xyzToXY(QVector3D xyz);
+    /**
+     * @returns a matrix adapting XYZ values from the source whitepoint to the destination whitepoint with the Bradford transform
+     */
     static QMatrix3x3 chromaticAdaptationMatrix(QVector2D sourceWhitepoint, QVector2D destinationWhitepoint);
 
+    /**
+     * @returns a matrix that transforms from the linear RGB representation of colors in this colorimetry to the XYZ representation
+     */
     QMatrix3x3 toXYZ() const;
+    /**
+     * @returns a matrix that transforms from linear RGB in this colorimetry to linear RGB in the other colorimetry
+     * the rendering intent is relative colorimetric
+     */
     QMatrix3x3 toOther(const Colorimetry &colorimetry) const;
     bool operator==(const Colorimetry &other) const;
+    /**
+     * @returns this colorimetry, adapted to the new whitepoint using the Bradford transform
+     */
     Colorimetry adaptedTo(QVector2D newWhitepoint) const;
 
     QVector2D red;
