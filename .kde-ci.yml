@@ -26,7 +26,6 @@ Dependencies:
     'frameworks/kxmlgui': '@latest-kf6'
     'libraries/libqaccessibilityclient': '@latest-kf6'
     'libraries/plasma-wayland-protocols': '@latest-kf6'
-    'plasma/breeze': '@same'
     'plasma/kactivities': '@same'
     'plasma/kdecoration': '@same'
     'plasma/kglobalacceld': '@same'
@@ -40,6 +39,7 @@ RuntimeDependencies:
 - 'on': ['@all']
   'require':
     'frameworks/kirigami': '@latest-kf6'
+    'plasma/breeze': '@same'
     'plasma/plasma-framework': '@same'
 
 Options:

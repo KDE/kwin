@@ -37,13 +37,7 @@ namespace KWin
 namespace Decoration
 {
 
-static const QString s_aurorae = QStringLiteral("org.kde.kwin.aurorae");
 static const QString s_pluginName = QStringLiteral("org.kde.kdecoration2");
-#if HAVE_BREEZE_DECO
-static const QString s_defaultPlugin = BREEZE_KDECORATION_PLUGIN_ID;
-#else
-static const QString s_defaultPlugin = s_aurorae;
-#endif
 
 DecorationBridge::DecorationBridge()
     : m_factory(nullptr)
@@ -56,7 +50,7 @@ DecorationBridge::DecorationBridge()
 
 QString DecorationBridge::readPlugin()
 {
-    return kwinApp()->config()->group(s_pluginName).readEntry("library", s_defaultPlugin);
+    return kwinApp()->config()->group(s_pluginName).readEntry("library", QStringLiteral("org.kde.breeze"));
 }
 
 static bool readNoPlugin()
@@ -92,36 +86,29 @@ void DecorationBridge::init()
         }
         return;
     }
-    m_plugin = readPlugin();
     m_settings = std::make_shared<KDecoration2::DecorationSettings>(this);
-    if (!initPlugin()) {
-        if (m_plugin != s_defaultPlugin) {
-            // try loading default plugin
-            m_plugin = s_defaultPlugin;
-            initPlugin();
-        }
-        // default plugin failed to load, try fallback
-        if (!m_factory) {
-            m_plugin = s_aurorae;
-            initPlugin();
-        }
+
+    if (!initPlugin(readPlugin())) {
+        initPlugin(QLatin1String("org.kde.kwin.aurorae"));
     }
+
     if (waylandServer()) {
         waylandServer()->decorationManager()->setDefaultMode(m_factory ? ServerSideDecorationManagerInterface::Mode::Server : ServerSideDecorationManagerInterface::Mode::None);
     }
 }
 
-bool DecorationBridge::initPlugin()
+bool DecorationBridge::initPlugin(const QString &pluginId)
 {
-    const KPluginMetaData metaData = KPluginMetaData::findPluginById(s_pluginName, m_plugin);
+    const KPluginMetaData metaData = KPluginMetaData::findPluginById(s_pluginName, pluginId);
     if (!metaData.isValid()) {
-        qCWarning(KWIN_DECORATIONS) << "Could not locate decoration plugin" << m_plugin;
+        qCWarning(KWIN_DECORATIONS) << "Could not locate decoration plugin" << pluginId;
         return false;
     }
     qCDebug(KWIN_DECORATIONS) << "Trying to load decoration plugin: " << metaData.fileName();
     auto factoryResult = KPluginFactory::loadFactory(metaData);
     if (factoryResult) {
         m_factory.reset(factoryResult.plugin);
+        m_plugin = pluginId;
         loadMetaData(metaData.rawData());
         return true;
     } else {
@@ -159,15 +146,7 @@ void DecorationBridge::reconfigure()
 
     const QString newPlugin = readPlugin();
     if (newPlugin != m_plugin) {
-        // plugin changed, recreate everything
-        auto oldFactory = std::move(m_factory);
-        const auto oldPluginName = m_plugin;
-        m_plugin = newPlugin;
-        if (!initPlugin()) {
-            // loading new plugin failed
-            m_factory = std::move(oldFactory);
-            m_plugin = oldPluginName;
-        } else {
+        if (initPlugin(newPlugin)) {
             recreateDecorations();
             // TODO: unload and destroy old plugin
         }

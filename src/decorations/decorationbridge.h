@@ -69,7 +69,7 @@ private:
     QString readPlugin();
     void loadMetaData(const QJsonObject &object);
     void findTheme(const QVariantMap &map);
-    bool initPlugin();
+    bool initPlugin(const QString &name);
     QString readTheme() const;
     void readDecorationOptions();
     std::unique_ptr<KPluginFactory> m_factory;
