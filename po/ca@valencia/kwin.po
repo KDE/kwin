@@ -1175,7 +1175,7 @@ msgstr "Mou la tauleta cap a l'eixida següent"
 #: input.cpp:2093
 #, kde-format
 msgid "Tablet moved to %1"
-msgstr "La tauleta s'ha mogut a %1"
+msgstr "La tauleta s'ha mogut cap a %1"
 
 #: input.cpp:2093
 #, kde-format

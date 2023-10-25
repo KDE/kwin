@@ -434,7 +434,7 @@ msgstr "Mantín damunt/davall"
 #: actions.ui:495 mouse.ui:122
 #, kde-format
 msgid "Move to previous/next desktop"
-msgstr "Mou cap a l'escriptori anterior/següent"
+msgstr "Mou cap a l'escriptori anterior o següent"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
