@@ -180,7 +180,7 @@ void Workspace::init()
 
     // create VirtualDesktopManager and perform dependency injection
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
-    connect(vds, &VirtualDesktopManager::desktopCreated, this, &Workspace::slotDesktopAdded);
+    connect(vds, &VirtualDesktopManager::desktopAdded, this, &Workspace::slotDesktopAdded);
     connect(vds, &VirtualDesktopManager::desktopRemoved, this, &Workspace::slotDesktopRemoved);
     connect(vds, &VirtualDesktopManager::currentChanged, this, &Workspace::slotCurrentDesktopChanged);
     connect(vds, &VirtualDesktopManager::currentChanging, this, &Workspace::slotCurrentDesktopChanging);

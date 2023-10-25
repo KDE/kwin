@@ -369,7 +369,7 @@ Q_SIGNALS:
      * A new desktop has been created
      * @param desktop the new just crated desktop
      */
-    void desktopCreated(KWin::VirtualDesktop *desktop);
+    void desktopAdded(KWin::VirtualDesktop *desktop);
 
     /**
      * A desktop has been removed and is about to be deleted

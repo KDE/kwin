@@ -15,7 +15,7 @@ VirtualDesktopModel::VirtualDesktopModel(QObject *parent)
 {
     VirtualDesktopManager *manager = VirtualDesktopManager::self();
 
-    connect(manager, &VirtualDesktopManager::desktopCreated,
+    connect(manager, &VirtualDesktopManager::desktopAdded,
             this, &VirtualDesktopModel::handleVirtualDesktopAdded);
     connect(manager, &VirtualDesktopManager::desktopRemoved,
             this, &VirtualDesktopModel::handleVirtualDesktopRemoved);

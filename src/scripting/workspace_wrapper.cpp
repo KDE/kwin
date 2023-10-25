@@ -35,7 +35,7 @@ WorkspaceWrapper::WorkspaceWrapper(QObject *parent)
     connect(ws, &Workspace::windowAdded, this, &WorkspaceWrapper::windowAdded);
     connect(ws, &Workspace::windowRemoved, this, &WorkspaceWrapper::windowRemoved);
     connect(ws, &Workspace::windowActivated, this, &WorkspaceWrapper::windowActivated);
-    connect(vds, &VirtualDesktopManager::desktopCreated, this, &WorkspaceWrapper::desktopsChanged);
+    connect(vds, &VirtualDesktopManager::desktopAdded, this, &WorkspaceWrapper::desktopsChanged);
     connect(vds, &VirtualDesktopManager::desktopRemoved, this, &WorkspaceWrapper::desktopsChanged);
     connect(vds, &VirtualDesktopManager::layoutChanged, this, &WorkspaceWrapper::desktopLayoutChanged);
     connect(vds, &VirtualDesktopManager::currentChanged, this, &WorkspaceWrapper::currentDesktopChanged);

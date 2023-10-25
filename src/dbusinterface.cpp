@@ -375,7 +375,7 @@ VirtualDesktopManagerDBusInterface::VirtualDesktopManagerDBusInterface(VirtualDe
             Q_EMIT desktopsChanged(desktops());
         });
     }
-    connect(m_manager, &VirtualDesktopManager::desktopCreated, this, [this](VirtualDesktop *vd) {
+    connect(m_manager, &VirtualDesktopManager::desktopAdded, this, [this](VirtualDesktop *vd) {
         connect(vd, &VirtualDesktop::x11DesktopNumberChanged, this, [this, vd]() {
             DBusDesktopDataStruct data{.position = vd->x11DesktopNumber() - 1, .id = vd->id(), .name = vd->name()};
             Q_EMIT desktopDataChanged(vd->id(), data);

@@ -63,7 +63,7 @@ void VirtualDesktopManager::setVirtualDesktopManagement(PlasmaVirtualDesktopMana
         });
     };
 
-    connect(this, &VirtualDesktopManager::desktopCreated, m_virtualDesktopManagement, createPlasmaVirtualDesktop);
+    connect(this, &VirtualDesktopManager::desktopAdded, m_virtualDesktopManagement, createPlasmaVirtualDesktop);
 
     connect(this, &VirtualDesktopManager::rowsChanged, m_virtualDesktopManagement, [this](uint rows) {
         m_virtualDesktopManagement->setRows(rows);
@@ -469,7 +469,7 @@ VirtualDesktop *VirtualDesktopManager::createVirtualDesktop(uint position, const
     save();
 
     updateRootInfo();
-    Q_EMIT desktopCreated(vd);
+    Q_EMIT desktopAdded(vd);
     Q_EMIT countChanged(m_desktops.count() - 1, m_desktops.count());
     return vd;
 }
@@ -599,7 +599,7 @@ void VirtualDesktopManager::setCount(uint count)
         save();
     }
     for (auto vd : std::as_const(newDesktops)) {
-        Q_EMIT desktopCreated(vd);
+        Q_EMIT desktopAdded(vd);
     }
     Q_EMIT countChanged(oldCount, m_desktops.count());
 }

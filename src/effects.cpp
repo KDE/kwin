@@ -175,7 +175,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, WorkspaceScene *s
         Q_EMIT desktopGridWidthChanged(width);
         Q_EMIT desktopGridHeightChanged(height);
     });
-    connect(vds, &VirtualDesktopManager::desktopCreated, this, &EffectsHandler::desktopAdded);
+    connect(vds, &VirtualDesktopManager::desktopAdded, this, &EffectsHandler::desktopAdded);
     connect(vds, &VirtualDesktopManager::desktopRemoved, this, &EffectsHandler::desktopRemoved);
     connect(Cursors::self()->mouse(), &Cursor::mouseChanged, this, &EffectsHandler::mouseChanged);
     connect(ws, &Workspace::geometryChanged, this, &EffectsHandler::virtualScreenSizeChanged);
