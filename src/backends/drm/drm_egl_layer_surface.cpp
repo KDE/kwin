@@ -363,20 +363,22 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
     const bool cpuCopy = importMode == MultiGpuImportMode::DumbBuffer || m_bufferTarget == BufferTarget::Dumb;
     QList<uint64_t> renderModifiers;
     auto ret = std::make_unique<Surface>();
+    const auto drmFormat = m_eglBackend->eglDisplayObject()->allSupportedDrmFormats()[format];
     if (importMode == MultiGpuImportMode::Egl) {
         ret->importContext = m_eglBackend->contextForGpu(m_gpu);
         if (!ret->importContext || ret->importContext->isSoftwareRenderer()) {
             return nullptr;
         }
-        renderModifiers = filterModifiers(ret->importContext->displayObject()->allSupportedDrmFormats()[format],
-                                          m_eglBackend->eglDisplayObject()->supportedDrmFormats().value(format));
+        const auto importDrmFormat = ret->importContext->displayObject()->allSupportedDrmFormats()[format];
+        renderModifiers = filterModifiers(importDrmFormat.allModifiers,
+                                          drmFormat.nonExternalOnlyModifiers);
     } else if (cpuCopy) {
         if (!cpuCopyFormats.contains(format)) {
             return nullptr;
         }
-        renderModifiers = m_eglBackend->eglDisplayObject()->supportedDrmFormats().value(format);
+        renderModifiers = drmFormat.nonExternalOnlyModifiers;
     } else {
-        renderModifiers = filterModifiers(modifiers, m_eglBackend->eglDisplayObject()->supportedDrmFormats().value(format));
+        renderModifiers = filterModifiers(modifiers, drmFormat.nonExternalOnlyModifiers);
     }
     if (renderModifiers.empty()) {
         return nullptr;

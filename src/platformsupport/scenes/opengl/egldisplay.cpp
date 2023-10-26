@@ -80,9 +80,7 @@ EglDisplay::EglDisplay(::EGLDisplay display, const QList<QByteArray> &extensions
     , m_owning(owning)
     , m_supportsBufferAge(extensions.contains(QByteArrayLiteral("EGL_EXT_buffer_age")) && qgetenv("KWIN_USE_BUFFER_AGE") != "0")
     , m_supportsNativeFence(extensions.contains(QByteArrayLiteral("EGL_ANDROID_native_fence_sync")))
-    , m_importFormats(queryImportFormats(Filter::Normal))
-    , m_externalOnlyFormats(queryImportFormats(Filter::ExternalOnly))
-    , m_allImportFormats(queryImportFormats(Filter::None))
+    , m_importFormats(queryImportFormats())
 {
 }
 
@@ -241,26 +239,31 @@ EGLImageKHR EglDisplay::importDmaBufAsImage(const DmaBufAttributes &dmabuf, int 
     return img;
 }
 
-QHash<uint32_t, QList<uint64_t>> EglDisplay::supportedDrmFormats() const
+QHash<uint32_t, EglDisplay::DrmFormatInfo> EglDisplay::allSupportedDrmFormats() const
 {
     return m_importFormats;
 }
 
-QHash<uint32_t, QList<uint64_t>> EglDisplay::allSupportedDrmFormats() const
+QHash<uint32_t, QList<uint64_t>> EglDisplay::nonExternalOnlySupportedDrmFormats() const
 {
-    return m_allImportFormats;
+    QHash<uint32_t, QList<uint64_t>> ret;
+    ret.reserve(m_importFormats.size());
+    for (auto it = m_importFormats.constBegin(), itEnd = m_importFormats.constEnd(); it != itEnd; ++it) {
+        ret[it.key()] = it->nonExternalOnlyModifiers;
+    }
+    return ret;
 }
 
 bool EglDisplay::isExternalOnly(uint32_t format, uint64_t modifier) const
 {
-    if (const auto it = m_externalOnlyFormats.find(format); it != m_externalOnlyFormats.end()) {
-        return it->contains(modifier);
+    if (const auto it = m_importFormats.find(format); it != m_importFormats.end()) {
+        return it->externalOnlyModifiers.contains(modifier);
     } else {
         return false;
     }
 }
 
-QHash<uint32_t, QList<uint64_t>> EglDisplay::queryImportFormats(Filter filter) const
+QHash<uint32_t, EglDisplay::DrmFormatInfo> EglDisplay::queryImportFormats() const
 {
     if (!hasExtension(QByteArrayLiteral("EGL_EXT_image_dma_buf_import")) || !hasExtension(QByteArrayLiteral("EGL_EXT_image_dma_buf_import_modifiers"))) {
         return {};
@@ -287,37 +290,40 @@ QHash<uint32_t, QList<uint64_t>> EglDisplay::queryImportFormats(Filter filter) c
         qCCritical(KWIN_OPENGL) << "eglQueryDmaBufFormatsEXT with count" << count << "failed!" << getEglErrorString();
         return {};
     }
-    QHash<uint32_t, QList<uint64_t>> ret;
+    QHash<uint32_t, DrmFormatInfo> ret;
     for (const auto format : std::as_const(formats)) {
         if (eglQueryDmaBufModifiersEXT != nullptr) {
             EGLint count = 0;
             const EGLBoolean success = eglQueryDmaBufModifiersEXT(m_handle, format, 0, nullptr, nullptr, &count);
             if (success && count > 0) {
-                QList<uint64_t> modifiers(count);
+                DrmFormatInfo drmFormatInfo;
+                drmFormatInfo.allModifiers.resize(count);
                 QList<EGLBoolean> externalOnly(count);
-                if (eglQueryDmaBufModifiersEXT(m_handle, format, count, modifiers.data(), externalOnly.data(), &count)) {
-                    if (filter != Filter::None) {
-                        const bool external = filter == Filter::Normal;
-                        for (int i = modifiers.size() - 1; i >= 0; i--) {
-                            if (externalOnly[i] == external) {
-                                modifiers.remove(i);
-                                externalOnly.remove(i);
-                            }
+                if (eglQueryDmaBufModifiersEXT(m_handle, format, count, drmFormatInfo.allModifiers.data(), externalOnly.data(), &count)) {
+                    drmFormatInfo.externalOnlyModifiers = drmFormatInfo.allModifiers;
+                    drmFormatInfo.nonExternalOnlyModifiers = drmFormatInfo.allModifiers;
+                    for (int i = drmFormatInfo.allModifiers.size() - 1; i >= 0; i--) {
+                        if (externalOnly[i]) {
+                            drmFormatInfo.nonExternalOnlyModifiers.removeAll(drmFormatInfo.allModifiers[i]);
+                        } else {
+                            drmFormatInfo.externalOnlyModifiers.removeAll(drmFormatInfo.allModifiers[i]);
                         }
                     }
-                    if (!modifiers.empty()) {
-                        if (filter != Filter::ExternalOnly && !modifiers.contains(DRM_FORMAT_MOD_INVALID)) {
-                            modifiers.push_back(DRM_FORMAT_MOD_INVALID);
+                    if (!drmFormatInfo.allModifiers.empty()) {
+                        if (!drmFormatInfo.allModifiers.contains(DRM_FORMAT_MOD_INVALID)) {
+                            drmFormatInfo.allModifiers.push_back(DRM_FORMAT_MOD_INVALID);
+                            drmFormatInfo.nonExternalOnlyModifiers.push_back(DRM_FORMAT_MOD_INVALID);
                         }
-                        ret.insert(format, modifiers);
+                        ret.insert(format, drmFormatInfo);
                     }
                     continue;
                 }
             }
         }
-        if (filter != Filter::ExternalOnly) {
-            ret.insert(format, {DRM_FORMAT_MOD_INVALID, DRM_FORMAT_MOD_LINEAR});
-        }
+        DrmFormatInfo drmFormat;
+        drmFormat.allModifiers = {DRM_FORMAT_MOD_INVALID, DRM_FORMAT_MOD_LINEAR};
+        drmFormat.nonExternalOnlyModifiers = {DRM_FORMAT_MOD_INVALID, DRM_FORMAT_MOD_LINEAR};
+        ret.insert(format, drmFormat);
     }
     return ret;
 }

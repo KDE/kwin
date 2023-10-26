@@ -103,19 +103,20 @@ void BasicEGLSurfaceTextureWayland::updateShmTexture(GraphicsBuffer *buffer, con
 
 bool BasicEGLSurfaceTextureWayland::loadDmabufTexture(GraphicsBuffer *buffer)
 {
-    auto createTexture = [this](EGLImageKHR image, const QSize &size) {
+    auto createTexture = [this](EGLImageKHR image, const QSize &size, bool isExternalOnly) {
         if (Q_UNLIKELY(image == EGL_NO_IMAGE_KHR)) {
             qCritical(KWIN_OPENGL) << "Invalid dmabuf-based wl_buffer";
             return std::shared_ptr<GLTexture>();
         }
 
-        auto texture = std::make_shared<GLTexture>(GL_TEXTURE_2D);
+        GLint target = isExternalOnly ? GL_TEXTURE_EXTERNAL_OES : GL_TEXTURE_2D;
+        auto texture = std::make_shared<GLTexture>(target);
         texture->setSize(size);
         texture->create();
         texture->setWrapMode(GL_CLAMP_TO_EDGE);
         texture->setFilter(GL_LINEAR);
         texture->bind();
-        glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, static_cast<GLeglImageOES>(image));
+        glEGLImageTargetTexture2DOES(target, static_cast<GLeglImageOES>(image));
         texture->unbind();
         if (m_pixmap->bufferOrigin() == GraphicsBufferOrigin::TopLeft) {
             texture->setContentTransform(TextureTransform::MirrorY);
@@ -123,17 +124,20 @@ bool BasicEGLSurfaceTextureWayland::loadDmabufTexture(GraphicsBuffer *buffer)
         return texture;
     };
 
-    auto format = formatInfo(buffer->dmabufAttributes()->format);
-    if (format && format->yuvConversion) {
+    const auto attribs = buffer->dmabufAttributes();
+    auto format = formatInfo(attribs->format);
+    if (auto itConv = s_drmConversions.find(buffer->dmabufAttributes()->format); itConv != s_drmConversions.end()) {
         QList<std::shared_ptr<GLTexture>> textures;
-        Q_ASSERT(format->yuvConversion->plane.count() == uint(buffer->dmabufAttributes()->planeCount));
-        for (uint plane = 0; plane < format->yuvConversion->plane.count(); ++plane) {
-            const auto &currentPlane = format->yuvConversion->plane[plane];
+        Q_ASSERT(itConv->plane.count() == uint(buffer->dmabufAttributes()->planeCount));
+
+        for (uint plane = 0; plane < itConv->plane.count(); ++plane) {
+            const auto &currentPlane = itConv->plane[plane];
             QSize size = buffer->size();
             size.rwidth() /= currentPlane.widthDivisor;
             size.rheight() /= currentPlane.heightDivisor;
 
-            auto t = createTexture(backend()->importBufferAsImage(buffer, plane, currentPlane.format, size), size);
+            const bool isExternal = backend()->eglDisplayObject()->isExternalOnly(currentPlane.format, attribs->modifier);
+            auto t = createTexture(backend()->importBufferAsImage(buffer, plane, currentPlane.format, size), size, isExternal);
             if (!t) {
                 return false;
             }
@@ -141,7 +145,8 @@ bool BasicEGLSurfaceTextureWayland::loadDmabufTexture(GraphicsBuffer *buffer)
         }
         m_texture = {textures};
     } else {
-        auto texture = createTexture(backend()->importBufferAsImage(buffer), buffer->size());
+        const bool isExternal = backend()->eglDisplayObject()->isExternalOnly(attribs->format, attribs->modifier);
+        auto texture = createTexture(backend()->importBufferAsImage(buffer), buffer->size(), isExternal);
         if (!texture) {
             return false;
         }
@@ -161,11 +166,10 @@ void BasicEGLSurfaceTextureWayland::updateDmabufTexture(GraphicsBuffer *buffer)
     }
 
     const GLint target = GL_TEXTURE_2D;
-    auto format = formatInfo(buffer->dmabufAttributes()->format);
-    if (format && format->yuvConversion) {
-        Q_ASSERT(format->yuvConversion->plane.count() == uint(buffer->dmabufAttributes()->planeCount));
-        for (uint plane = 0; plane < format->yuvConversion->plane.count(); ++plane) {
-            const auto &currentPlane = format->yuvConversion->plane[plane];
+    if (auto itConv = s_drmConversions.find(buffer->dmabufAttributes()->format); itConv != s_drmConversions.end()) {
+        Q_ASSERT(itConv->plane.count() == uint(buffer->dmabufAttributes()->planeCount));
+        for (uint plane = 0; plane < itConv->plane.count(); ++plane) {
+            const auto &currentPlane = itConv->plane[plane];
             QSize size = buffer->size();
             size.rwidth() /= currentPlane.widthDivisor;
             size.rheight() /= currentPlane.heightDivisor;

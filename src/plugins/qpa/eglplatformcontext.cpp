@@ -75,7 +75,7 @@ bool EGLPlatformContext::makeCurrent(QPlatformSurface *surface)
         QOpenGLContextPrivate::setCurrentContext(context());
 
         Window *window = static_cast<Window *>(surface);
-        Swapchain *swapchain = window->swapchain(m_eglDisplay->supportedDrmFormats());
+        Swapchain *swapchain = window->swapchain(m_eglDisplay->nonExternalOnlySupportedDrmFormats());
 
         GraphicsBuffer *buffer = swapchain->acquire();
         if (!buffer) {

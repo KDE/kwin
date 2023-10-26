@@ -25,6 +25,13 @@ class GLTexture;
 class KWIN_EXPORT EglDisplay
 {
 public:
+    struct DrmFormatInfo
+    {
+        QList<uint64_t> allModifiers;
+        QList<uint64_t> nonExternalOnlyModifiers;
+        QList<uint64_t> externalOnlyModifiers;
+    };
+
     EglDisplay(::EGLDisplay display, const QList<QByteArray> &extensions, bool owning = true);
     ~EglDisplay();
 
@@ -36,11 +43,9 @@ public:
 
     bool supportsBufferAge() const;
     bool supportsNativeFence() const;
-    QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const;
-    /**
-     * includes external formats
-     */
-    QHash<uint32_t, QList<uint64_t>> allSupportedDrmFormats() const;
+
+    QHash<uint32_t, QList<uint64_t>> nonExternalOnlySupportedDrmFormats() const;
+    QHash<uint32_t, DrmFormatInfo> allSupportedDrmFormats() const;
     bool isExternalOnly(uint32_t format, uint64_t modifier) const;
 
     EGLImageKHR importDmaBufAsImage(const DmaBufAttributes &dmabuf) const;
@@ -49,12 +54,7 @@ public:
     static std::unique_ptr<EglDisplay> create(::EGLDisplay display, bool owning = true);
 
 private:
-    enum class Filter {
-        None,
-        Normal,
-        ExternalOnly
-    };
-    QHash<uint32_t, QList<uint64_t>> queryImportFormats(Filter filter) const;
+    QHash<uint32_t, DrmFormatInfo> queryImportFormats() const;
 
     const ::EGLDisplay m_handle;
     const QList<QByteArray> m_extensions;
@@ -62,9 +62,7 @@ private:
 
     const bool m_supportsBufferAge;
     const bool m_supportsNativeFence;
-    const QHash<uint32_t, QList<uint64_t>> m_importFormats;
-    const QHash<uint32_t, QList<uint64_t>> m_externalOnlyFormats;
-    const QHash<uint32_t, QList<uint64_t>> m_allImportFormats;
+    const QHash<uint32_t, DrmFormatInfo> m_importFormats;
 };
 
 }
