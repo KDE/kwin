@@ -64,7 +64,7 @@ void ItemRendererOpenGL::setBlendEnabled(bool enabled)
     m_blendingEnabled = enabled;
 }
 
-static GLTexture *bindSurfaceTexture(SurfaceItem *surfaceItem)
+static OpenGLSurfaceContents bindSurfaceTexture(SurfaceItem *surfaceItem)
 {
     SurfacePixmap *surfacePixmap = surfaceItem->pixmap();
     auto platformSurfaceTexture =
@@ -73,7 +73,7 @@ static GLTexture *bindSurfaceTexture(SurfaceItem *surfaceItem)
         return platformSurfaceTexture->texture();
     }
 
-    if (platformSurfaceTexture->texture()) {
+    if (platformSurfaceTexture->texture().isValid()) {
         const QRegion region = surfaceItem->damage();
         if (!region.isEmpty()) {
             platformSurfaceTexture->update(region);
@@ -81,11 +81,11 @@ static GLTexture *bindSurfaceTexture(SurfaceItem *surfaceItem)
         }
     } else {
         if (!surfacePixmap->isValid()) {
-            return nullptr;
+            return {};
         }
         if (!platformSurfaceTexture->create()) {
             qCDebug(KWIN_OPENGL) << "Failed to bind window";
-            return nullptr;
+            return {};
         }
         surfaceItem->resetDamage();
     }
@@ -304,14 +304,22 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
 
     for (int i = 0, v = 0; i < renderContext.renderNodes.count(); i++) {
         RenderNode &renderNode = renderContext.renderNodes[i];
-        if (renderNode.geometry.isEmpty() || !renderNode.texture) {
+        if (renderNode.geometry.isEmpty()
+            || (std::holds_alternative<GLTexture *>(renderNode.texture) && !std::get<GLTexture *>(renderNode.texture))
+            || (std::holds_alternative<OpenGLSurfaceContents>(renderNode.texture) && !std::get<OpenGLSurfaceContents>(renderNode.texture).isValid())) {
             continue;
         }
 
         renderNode.firstVertex = v;
         renderNode.vertexCount = renderNode.geometry.count();
 
-        renderNode.geometry.postProcessTextureCoordinates(renderNode.texture->matrix(renderNode.coordinateType));
+        GLTexture *texture = nullptr;
+        if (std::holds_alternative<GLTexture *>(renderNode.texture)) {
+            texture = std::get<GLTexture *>(renderNode.texture);
+        } else {
+            texture = std::get<OpenGLSurfaceContents>(renderNode.texture).planes.constFirst().get();
+        }
+        renderNode.geometry.postProcessTextureCoordinates(texture->matrix(renderNode.coordinateType));
 
         renderNode.geometry.copy(map->subspan(v));
         v += renderNode.geometry.count();
@@ -361,6 +369,11 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
                 shader->setUniform(GLShader::Saturation, data.saturation());
                 shader->setUniform(GLShader::Vec3Uniform::PrimaryBrightness, QVector3D(toXYZ(1, 0), toXYZ(1, 1), toXYZ(1, 2)));
             }
+
+            if (traits & ShaderTrait::MapTexture) {
+                shader->setUniform(GLShader::Sampler, 0);
+                shader->setUniform(GLShader::Sampler1, 1);
+            }
         }
         shader->setUniform(GLShader::ModelViewProjectionMatrix, renderContext.projectionMatrix * renderNode.transformMatrix);
         if (traits & ShaderTrait::Modulate) {
@@ -370,10 +383,34 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
             shader->setColorspaceUniforms(renderNode.colorDescription, renderTarget.colorDescription());
         }
 
-        renderNode.texture->bind();
+        if (std::holds_alternative<GLTexture *>(renderNode.texture)) {
+            const auto texture = std::get<GLTexture *>(renderNode.texture);
+            glActiveTexture(GL_TEXTURE0);
+            shader->setUniform("converter", 0);
+            texture->bind();
+        } else {
+            const auto contents = std::get<OpenGLSurfaceContents>(renderNode.texture);
+            shader->setUniform("converter", contents.planes.count() > 1);
+            for (int plane = 0; plane < contents.planes.count(); ++plane) {
+                glActiveTexture(GL_TEXTURE0 + plane);
+                contents.planes[plane]->bind();
+            }
+        }
 
         vbo->draw(scissorRegion, GL_TRIANGLES, renderNode.firstVertex,
                   renderNode.vertexCount, renderContext.hardwareClipping);
+
+        if (std::holds_alternative<GLTexture *>(renderNode.texture)) {
+            auto texture = std::get<GLTexture *>(renderNode.texture);
+            glActiveTexture(GL_TEXTURE0);
+            texture->unbind();
+        } else {
+            const auto contents = std::get<OpenGLSurfaceContents>(renderNode.texture);
+            for (int plane = 0; plane < contents.planes.count(); ++plane) {
+                glActiveTexture(GL_TEXTURE0 + plane);
+                contents.planes[plane]->unbind();
+            }
+        }
     }
     if (shader) {
         ShaderManager::instance()->popShader();
@@ -421,7 +458,16 @@ void ItemRendererOpenGL::visualizeFractional(const RenderViewport &viewport, con
 
         setBlendEnabled(true);
 
-        m_debug.fractionalShader->setUniform("geometrySize", QVector2D(renderNode.texture->width(), renderNode.texture->height()));
+        QVector2D size;
+        if (std::holds_alternative<GLTexture *>(renderNode.texture)) {
+            auto texture = std::get<GLTexture *>(renderNode.texture);
+            size = QVector2D(texture->width(), texture->height());
+        } else {
+            auto texture = std::get<OpenGLSurfaceContents>(renderNode.texture).planes.constFirst().get();
+            size = QVector2D(texture->width(), texture->height());
+        }
+
+        m_debug.fractionalShader->setUniform("geometrySize", size);
         m_debug.fractionalShader->setUniform(GLShader::ModelViewProjectionMatrix, renderContext.projectionMatrix * renderNode.transformMatrix);
 
         vbo->draw(region, GL_TRIANGLES, renderNode.firstVertex,

@@ -7,10 +7,31 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
+#include <QHash>
+#include <QList>
+#include <QString>
+
 #include <epoxy/gl.h>
 #include <libdrm/drm_fourcc.h>
 #include <optional>
 #include <stdint.h>
+
+struct YuvFormat
+{
+    uint32_t format = DRM_FORMAT_YUYV;
+    uint32_t widthDivisor = 1;
+    uint32_t heightDivisor = 1;
+};
+struct YuvConversion
+{
+    QList<struct YuvFormat> plane = {};
+};
+
+static const QHash<uint32_t, YuvConversion> s_drmConversions = {
+    {DRM_FORMAT_NV12, YuvConversion{
+                          {YuvFormat{DRM_FORMAT_R8, 1, 1}, YuvFormat{DRM_FORMAT_GR88, 2, 2}},
+                      }},
+};
 
 struct FormatInfo
 {
@@ -19,6 +40,12 @@ struct FormatInfo
     uint32_t alphaBits;
     uint32_t bitsPerPixel;
     GLint openglFormat;
+
+    std::optional<YuvConversion> yuvConversion() const
+    {
+        const auto it = s_drmConversions.find(drmFormat);
+        return it != s_drmConversions.end() ? *it : std::optional<YuvConversion>{};
+    }
 };
 
 static std::optional<FormatInfo> formatInfo(uint32_t format)
@@ -108,7 +135,27 @@ static std::optional<FormatInfo> formatInfo(uint32_t format)
             .bitsPerPixel = 16,
             .openglFormat = GL_RGB5_A1,
         };
+    case DRM_FORMAT_NV12:
+        return FormatInfo{
+            .drmFormat = format,
+            .bitsPerColor = 8,
+            .alphaBits = 0,
+            .bitsPerPixel = 24,
+            .openglFormat = GL_R8,
+        };
     default:
         return std::nullopt;
     }
+}
+
+static QString drmFormatName(const QString &prefix, uint32_t format)
+{
+    return QString::asprintf(
+        "%s%c%c%c%c %s-endian (0x%08x)", prefix.toUtf8().constData(),
+        QLatin1Char(format & 0xff).toLatin1(),
+        QLatin1Char((format >> 8) & 0xff).toLatin1(),
+        QLatin1Char((format >> 16) & 0xff).toLatin1(),
+        QLatin1Char((format >> 24) & 0x7f).toLatin1(),
+        format & DRM_FORMAT_BIG_ENDIAN ? "big" : "little",
+        format);
 }

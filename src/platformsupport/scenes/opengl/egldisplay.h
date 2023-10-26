@@ -13,6 +13,7 @@
 #include <QByteArray>
 #include <QHash>
 #include <QList>
+#include <QSize>
 #include <epoxy/egl.h>
 
 namespace KWin
@@ -43,6 +44,7 @@ public:
     bool isExternalOnly(uint32_t format, uint64_t modifier) const;
 
     EGLImageKHR importDmaBufAsImage(const DmaBufAttributes &dmabuf) const;
+    EGLImageKHR importDmaBufAsImage(const DmaBufAttributes &dmabuf, int plane, int format, const QSize &size) const;
 
     static std::unique_ptr<EglDisplay> create(::EGLDisplay display, bool owning = true);
 

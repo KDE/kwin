@@ -109,6 +109,8 @@ public:
         TextureHeight,
         SourceNamedTransferFunction,
         DestinationNamedTransferFunction,
+        Sampler,
+        Sampler1,
         IntUniformCount
     };
 

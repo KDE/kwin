@@ -21,7 +21,7 @@ OpenGLSurfaceTexture::~OpenGLSurfaceTexture()
 
 bool OpenGLSurfaceTexture::isValid() const
 {
-    return m_texture != nullptr;
+    return m_texture.isValid();
 }
 
 OpenGLBackend *OpenGLSurfaceTexture::backend() const
@@ -29,9 +29,16 @@ OpenGLBackend *OpenGLSurfaceTexture::backend() const
     return m_backend;
 }
 
-GLTexture *OpenGLSurfaceTexture::texture() const
+OpenGLSurfaceContents OpenGLSurfaceTexture::texture() const
 {
-    return m_texture.get();
+    return m_texture;
+}
+
+void OpenGLSurfaceContents::setDirty()
+{
+    for (auto &plane : planes) {
+        plane->setDirty();
+    }
 }
 
 } // namespace KWin

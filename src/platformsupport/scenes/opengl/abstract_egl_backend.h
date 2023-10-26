@@ -46,7 +46,9 @@ public:
 
     std::shared_ptr<GLTexture> importDmaBufAsTexture(const DmaBufAttributes &attributes) const;
     EGLImageKHR importDmaBufAsImage(const DmaBufAttributes &attributes) const;
+    EGLImageKHR importDmaBufAsImage(const DmaBufAttributes &attributes, int plane, int format, const QSize &size) const;
     EGLImageKHR importBufferAsImage(GraphicsBuffer *buffer);
+    EGLImageKHR importBufferAsImage(GraphicsBuffer *buffer, int plane, int format, const QSize &size);
 
 protected:
     AbstractEglBackend(dev_t deviceId = 0);
@@ -72,7 +74,7 @@ protected:
     QList<QByteArray> m_clientExtensions;
     const dev_t m_deviceId;
     QList<LinuxDmaBufV1Feedback::Tranche> m_tranches;
-    QHash<GraphicsBuffer *, EGLImageKHR> m_importedBuffers;
+    QHash<std::pair<GraphicsBuffer *, int>, EGLImageKHR> m_importedBuffers;
 };
 
 }

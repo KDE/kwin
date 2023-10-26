@@ -15,6 +15,7 @@
 
 #include <QOpenGLContext>
 #include <drm_fourcc.h>
+#include <utils/drm_format_helper.h>
 
 #ifndef EGL_DRM_RENDER_NODE_FILE_EXT
 #define EGL_DRM_RENDER_NODE_FILE_EXT 0x3377
@@ -215,6 +216,29 @@ EGLImageKHR EglDisplay::importDmaBufAsImage(const DmaBufAttributes &dmabuf) cons
     attribs << EGL_NONE;
 
     return eglCreateImageKHR(m_handle, EGL_NO_CONTEXT, EGL_LINUX_DMA_BUF_EXT, nullptr, attribs.data());
+}
+
+EGLImageKHR EglDisplay::importDmaBufAsImage(const DmaBufAttributes &dmabuf, int plane, int format, const QSize &size) const
+{
+    QList<EGLint> attribs;
+    attribs.reserve(6 + 1 * 10 + 1);
+
+    attribs << EGL_WIDTH << size.width()
+            << EGL_HEIGHT << size.height()
+            << EGL_LINUX_DRM_FOURCC_EXT << format;
+
+    attribs << EGL_DMA_BUF_PLANE0_FD_EXT << dmabuf.fd[plane].get()
+            << EGL_DMA_BUF_PLANE0_OFFSET_EXT << dmabuf.offset[plane]
+            << EGL_DMA_BUF_PLANE0_PITCH_EXT << dmabuf.pitch[plane];
+    if (dmabuf.modifier != DRM_FORMAT_MOD_INVALID) {
+        attribs << EGL_DMA_BUF_PLANE0_MODIFIER_LO_EXT << EGLint(dmabuf.modifier & 0xffffffff)
+                << EGL_DMA_BUF_PLANE0_MODIFIER_HI_EXT << EGLint(dmabuf.modifier >> 32);
+    }
+    attribs << EGL_NONE;
+
+    auto img = eglCreateImageKHR(m_handle, EGL_NO_CONTEXT, EGL_LINUX_DMA_BUF_EXT, nullptr, attribs.data());
+    qDebug() << "retrieving plane" << plane << img;
+    return img;
 }
 
 QHash<uint32_t, QList<uint64_t>> EglDisplay::supportedDrmFormats() const

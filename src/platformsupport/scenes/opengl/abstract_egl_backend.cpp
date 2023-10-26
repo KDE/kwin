@@ -257,9 +257,32 @@ bool AbstractEglBackend::prefer10bpc() const
     return false;
 }
 
+EGLImageKHR AbstractEglBackend::importBufferAsImage(GraphicsBuffer *buffer, int plane, int format, const QSize &size)
+{
+    std::pair key(buffer, plane);
+    auto it = m_importedBuffers.constFind(key);
+    if (Q_LIKELY(it != m_importedBuffers.constEnd())) {
+        return *it;
+    }
+
+    Q_ASSERT(buffer->dmabufAttributes());
+    EGLImageKHR image = importDmaBufAsImage(*buffer->dmabufAttributes(), plane, format, size);
+    if (image != EGL_NO_IMAGE_KHR) {
+        m_importedBuffers[key] = image;
+        connect(buffer, &QObject::destroyed, this, [this, key]() {
+            eglDestroyImageKHR(m_display->handle(), m_importedBuffers.take(key));
+        });
+    } else {
+        qCWarning(KWIN_OPENGL) << "failed to import dmabuf" << buffer;
+    }
+
+    return image;
+}
+
 EGLImageKHR AbstractEglBackend::importBufferAsImage(GraphicsBuffer *buffer)
 {
-    auto it = m_importedBuffers.constFind(buffer);
+    auto key = std::pair(buffer, 0);
+    auto it = m_importedBuffers.constFind(key);
     if (Q_LIKELY(it != m_importedBuffers.constEnd())) {
         return *it;
     }
@@ -267,10 +290,12 @@ EGLImageKHR AbstractEglBackend::importBufferAsImage(GraphicsBuffer *buffer)
     Q_ASSERT(buffer->dmabufAttributes());
     EGLImageKHR image = importDmaBufAsImage(*buffer->dmabufAttributes());
     if (image != EGL_NO_IMAGE_KHR) {
-        m_importedBuffers[buffer] = image;
-        connect(buffer, &QObject::destroyed, this, [this, buffer]() {
-            eglDestroyImageKHR(m_display->handle(), m_importedBuffers.take(buffer));
+        m_importedBuffers[key] = image;
+        connect(buffer, &QObject::destroyed, this, [this, key]() {
+            eglDestroyImageKHR(m_display->handle(), m_importedBuffers.take(key));
         });
+    } else {
+        qCWarning(KWIN_OPENGL) << "failed to import dmabuf" << buffer;
     }
 
     return image;
@@ -279,6 +304,11 @@ EGLImageKHR AbstractEglBackend::importBufferAsImage(GraphicsBuffer *buffer)
 EGLImageKHR AbstractEglBackend::importDmaBufAsImage(const DmaBufAttributes &dmabuf) const
 {
     return m_display->importDmaBufAsImage(dmabuf);
+}
+
+EGLImageKHR AbstractEglBackend::importDmaBufAsImage(const DmaBufAttributes &dmabuf, int plane, int format, const QSize &size) const
+{
+    return m_display->importDmaBufAsImage(dmabuf, plane, format, size);
 }
 
 std::shared_ptr<GLTexture> AbstractEglBackend::importDmaBufAsTexture(const DmaBufAttributes &attributes) const

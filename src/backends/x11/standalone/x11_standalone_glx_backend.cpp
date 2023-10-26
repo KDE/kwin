@@ -788,9 +788,9 @@ GlxSurfaceTextureX11::GlxSurfaceTextureX11(GlxBackend *backend, SurfacePixmapX11
 
 bool GlxSurfaceTextureX11::create()
 {
-    auto texture = std::make_unique<GlxPixmapTexture>(static_cast<GlxBackend *>(m_backend));
+    auto texture = std::make_shared<GlxPixmapTexture>(static_cast<GlxBackend *>(m_backend));
     if (texture->create(m_pixmap)) {
-        m_texture = std::move(texture);
+        m_texture = {texture};
         return true;
     } else {
         return false;
@@ -800,7 +800,7 @@ bool GlxSurfaceTextureX11::create()
 void GlxSurfaceTextureX11::update(const QRegion &region)
 {
     // mipmaps need to be updated
-    m_texture->setDirty();
+    m_texture.setDirty();
 }
 
 GlxPixmapTexture::GlxPixmapTexture(GlxBackend *backend)

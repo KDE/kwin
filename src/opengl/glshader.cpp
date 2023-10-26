@@ -225,6 +225,8 @@ void GLShader::resolveLocations()
 
     m_intLocation[TextureWidth] = uniformLocation("textureWidth");
     m_intLocation[TextureHeight] = uniformLocation("textureHeight");
+    m_intLocation[Sampler] = uniformLocation("sampler");
+    m_intLocation[Sampler1] = uniformLocation("sampler1");
     m_intLocation[SourceNamedTransferFunction] = uniformLocation("sourceNamedTransferFunction");
     m_intLocation[DestinationNamedTransferFunction] = uniformLocation("destinationNamedTransferFunction");
 

@@ -8,6 +8,7 @@
 
 #include "libkwineffects/kwineffects.h"
 #include "opengl/glutils.h"
+#include "platformsupport/scenes/opengl/openglsurfacetexture.h"
 #include "scene/itemrenderer.h"
 
 namespace KWin
@@ -18,7 +19,7 @@ class KWIN_EXPORT ItemRendererOpenGL : public ItemRenderer
 public:
     struct RenderNode
     {
-        GLTexture *texture = nullptr;
+        std::variant<GLTexture *, OpenGLSurfaceContents> texture;
         RenderGeometry geometry;
         QMatrix4x4 transformMatrix;
         int firstVertex = 0;

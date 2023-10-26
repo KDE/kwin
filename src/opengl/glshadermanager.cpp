@@ -133,6 +133,8 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
 
     if (traits & ShaderTrait::MapTexture) {
         stream << "uniform sampler2D sampler;\n";
+        stream << "uniform sampler2D sampler1;\n";
+        stream << "uniform int converter;\n";
         stream << varying << " vec2 texcoord0;\n";
     } else if (traits & ShaderTrait::MapExternalTexture) {
         stream << "#extension GL_OES_EGL_image_external : require\n\n";
@@ -208,10 +210,28 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
         stream << "\nout vec4 " << output << ";\n";
     }
 
+    if (traits & ShaderTrait::MapTexture) {
+        // limited range BT601 in -> full range BT709 out
+        stream << "vec4 transformY_UV(sampler2D tex0, sampler2D tex1, vec2 texcoord0) {\n";
+        stream << "    float y = 1.16438356 * (texture2D(tex0, texcoord0).x - 0.0625);\n";
+        stream << "    float u = texture2D(tex1, texcoord0).r - 0.5;\n";
+        stream << "    float v = texture2D(tex1, texcoord0).g - 0.5;\n";
+        stream << "    return vec4(y + 1.59602678 * v"
+                  "              , y - 0.39176229 * u - 0.81296764 * v"
+                  "              , y + 2.01723214 * u"
+                  "              , 1);\n";
+        stream << "}\n";
+        stream << "\n";
+    }
+
     stream << "\nvoid main(void)\n{\n";
     stream << "    vec4 result;\n";
     if (traits & ShaderTrait::MapTexture) {
-        stream << "    result = " << textureLookup << "(sampler, texcoord0);\n";
+        stream << "    if (converter == 0) {\n";
+        stream << "        result = " << textureLookup << "(sampler, texcoord0);\n";
+        stream << "    } else {\n";
+        stream << "        result = transformY_UV(sampler, sampler1, texcoord0);\n";
+        stream << "    }\n";
     } else if (traits & ShaderTrait::MapExternalTexture) {
         // external textures require texture2D for sampling
         stream << "    result = texture2D(sampler, texcoord0);\n";
