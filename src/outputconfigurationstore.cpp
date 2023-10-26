@@ -128,25 +128,22 @@ std::optional<std::pair<OutputConfigurationStore::Setup *, std::unordered_map<Ou
 
 std::optional<size_t> OutputConfigurationStore::findOutput(Output *output, const QList<Output *> &allOutputs) const
 {
-    const bool duplicateEdid = std::any_of(allOutputs.begin(), allOutputs.end(), [output](Output *otherOutput) {
+    const bool uniqueEdid = !output->edid().identifier().isEmpty() && std::none_of(allOutputs.begin(), allOutputs.end(), [output](Output *otherOutput) {
         return otherOutput != output && otherOutput->edid().identifier() == output->edid().identifier();
     });
-    const bool duplicateMst = std::any_of(allOutputs.begin(), allOutputs.end(), [output](Output *otherOutput) {
+    const bool uniqueMst = !output->mstPath().isEmpty() && std::none_of(allOutputs.begin(), allOutputs.end(), [output](Output *otherOutput) {
         return otherOutput != output && otherOutput->edid().identifier() == output->edid().identifier() && otherOutput->mstPath() == output->mstPath();
     });
-    const auto it = std::find_if(m_outputs.begin(), m_outputs.end(), [duplicateEdid, duplicateMst, output](const auto &outputState) {
+    const auto it = std::find_if(m_outputs.begin(), m_outputs.end(), [uniqueEdid, uniqueMst, output](const auto &outputState) {
         if (outputState.edidIdentifier != output->edid().identifier()) {
             return false;
-        }
-        if (!duplicateEdid) {
+        } else if (uniqueEdid) {
             return true;
         }
-        if (!output->mstPath().isEmpty()) {
-            if (outputState.mstPath != output->mstPath()) {
-                return false;
-            } else if (!duplicateMst) {
-                return true;
-            }
+        if (outputState.mstPath != output->mstPath()) {
+            return false;
+        } else if (uniqueMst) {
+            return true;
         }
         return outputState.connectorName == output->name();
     });
