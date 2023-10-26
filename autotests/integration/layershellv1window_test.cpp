@@ -47,7 +47,8 @@ private Q_SLOTS:
     void testFill_data();
     void testFill();
     void testStack();
-    void testFocus();
+    void testKeyboardInteractivityNone();
+    void testKeyboardInteractivityOnDemand();
     void testActivate_data();
     void testActivate();
     void testUnmap();
@@ -508,15 +509,15 @@ void LayerShellV1WindowTest::testStack()
     QVERIFY(Test::waitForWindowClosed(window2));
 }
 
-void LayerShellV1WindowTest::testFocus()
+void LayerShellV1WindowTest::testKeyboardInteractivityNone()
 {
     // Create a layer shell surface.
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     std::unique_ptr<Test::LayerSurfaceV1> shellSurface(Test::createLayerSurfaceV1(surface.get(), QStringLiteral("test")));
 
     // Set the initial state of the layer surface.
-    shellSurface->set_keyboard_interactivity(1);
-    shellSurface->set_size(280, 124);
+    shellSurface->set_keyboard_interactivity(0);
+    shellSurface->set_size(100, 50);
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     // Wait for the compositor to position the surface.
@@ -528,13 +529,60 @@ void LayerShellV1WindowTest::testFocus()
     shellSurface->ack_configure(configureRequestedSpy.last().at(0).toUInt());
     Window *window = Test::renderAndWaitForShown(surface.get(), requestedSize, Qt::red);
     QVERIFY(window);
+    QVERIFY(!window->isActive());
 
-    // The layer surface must be focused when it's mapped.
-    QVERIFY(window->isActive());
+    // Try to activate the surface.
+    workspace()->activateWindow(window);
+    QVERIFY(!window->isActive());
 
     // Destroy the window.
     shellSurface.reset();
     QVERIFY(Test::waitForWindowClosed(window));
+}
+
+void LayerShellV1WindowTest::testKeyboardInteractivityOnDemand()
+{
+    // Create a layer shell surface.
+    std::unique_ptr<KWayland::Client::Surface> surface1(Test::createSurface());
+    std::unique_ptr<Test::LayerSurfaceV1> shellSurface1(Test::createLayerSurfaceV1(surface1.get(), QStringLiteral("test")));
+    shellSurface1->set_keyboard_interactivity(1);
+    shellSurface1->set_size(280, 124);
+    surface1->commit(KWayland::Client::Surface::CommitFlag::None);
+
+    QSignalSpy configureRequestedSpy1(shellSurface1.get(), &Test::LayerSurfaceV1::configureRequested);
+    QVERIFY(configureRequestedSpy1.wait());
+    const QSize requestedSize1 = configureRequestedSpy1.last().at(1).toSize();
+    shellSurface1->ack_configure(configureRequestedSpy1.last().at(0).toUInt());
+    Window *window1 = Test::renderAndWaitForShown(surface1.get(), requestedSize1, Qt::red);
+    QVERIFY(window1);
+    QVERIFY(window1->isActive());
+
+    // Create the second layer shell surface.
+    std::unique_ptr<KWayland::Client::Surface> surface2(Test::createSurface());
+    std::unique_ptr<Test::LayerSurfaceV1> shellSurface2(Test::createLayerSurfaceV1(surface2.get(), QStringLiteral("test")));
+    shellSurface2->set_keyboard_interactivity(1);
+    shellSurface2->set_size(280, 124);
+    surface2->commit(KWayland::Client::Surface::CommitFlag::None);
+
+    QSignalSpy configureRequestedSpy2(shellSurface2.get(), &Test::LayerSurfaceV1::configureRequested);
+    QVERIFY(configureRequestedSpy2.wait());
+    const QSize requestedSize2 = configureRequestedSpy2.last().at(1).toSize();
+    shellSurface2->ack_configure(configureRequestedSpy2.last().at(0).toUInt());
+    Window *window2 = Test::renderAndWaitForShown(surface2.get(), requestedSize2, Qt::red);
+    QVERIFY(window2);
+    QVERIFY(window2->isActive());
+    QVERIFY(!window1->isActive());
+
+    // Activate the first surface.
+    workspace()->activateWindow(window1);
+    QVERIFY(window1->isActive());
+    QVERIFY(!window2->isActive());
+
+    // Destroy the window.
+    shellSurface1.reset();
+    QVERIFY(Test::waitForWindowClosed(window1));
+    shellSurface2.reset();
+    QVERIFY(Test::waitForWindowClosed(window2));
 }
 
 void LayerShellV1WindowTest::testActivate_data()

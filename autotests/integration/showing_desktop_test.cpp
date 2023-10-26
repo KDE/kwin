@@ -80,6 +80,7 @@ void ShowingDesktopTest::testRestoreFocusWithDesktopWindow()
 
     std::unique_ptr<KWayland::Client::Surface> desktopSurface(Test::createSurface());
     std::unique_ptr<Test::LayerSurfaceV1> desktopShellSurface(Test::createLayerSurfaceV1(desktopSurface.get(), QStringLiteral("desktop")));
+    desktopShellSurface->set_keyboard_interactivity(1);
     desktopShellSurface->set_layer(Test::LayerShellV1::layer_background);
     desktopShellSurface->set_size(0, 0);
     desktopShellSurface->set_exclusive_zone(-1);

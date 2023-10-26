@@ -10,7 +10,7 @@ qt6_generate_wayland_protocol_client_sources(KWinIntegrationTestFramework
 qt6_generate_wayland_protocol_client_sources(KWinIntegrationTestFramework
     FILES
         ${WaylandProtocols_DATADIR}/unstable/text-input/text-input-unstable-v3.xml
-        ${CMAKE_CURRENT_SOURCE_DIR}/protocols/wlr-layer-shell-unstable-v1.xml
+        ${CMAKE_SOURCE_DIR}/src/wayland/protocols/wlr-layer-shell-unstable-v1.xml
         ${WaylandProtocols_DATADIR}/stable/xdg-shell/xdg-shell.xml
         ${WaylandProtocols_DATADIR}/unstable/xdg-decoration/xdg-decoration-unstable-v1.xml
         ${WaylandProtocols_DATADIR}/unstable/idle-inhibit/idle-inhibit-unstable-v1.xml
