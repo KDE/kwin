@@ -36,6 +36,7 @@ public:
     bool isResizable() const override;
     bool takeFocus() override;
     bool wantsInput() const override;
+    bool dockWantsInput() const override;
     StrutRect strutRect(StrutArea area) const override;
     bool hasStrut() const override;
     void destroyWindow() override;
