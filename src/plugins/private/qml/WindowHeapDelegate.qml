@@ -66,7 +66,7 @@ Item {
         if (thumb.gestureInProgress) {
             return "partial";
         }
-        if (thumb.partialActivationFactor > 0.5 && cell.isReady) {
+        if (thumb.partialActivationFactor > 0.5 && (cell.isReady || activeHidden)) {
             return activeHidden ? "active-hidden" : `active-${substate}`;
         }
         return initialHidden ? "initial-hidden" : "initial";
