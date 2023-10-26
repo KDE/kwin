@@ -10,6 +10,7 @@
 #include "edid.h"
 
 #include "c_ptr.h"
+#include "common.h"
 #include "config-kwin.h"
 
 #include <QFile>
@@ -103,6 +104,7 @@ Edid::Edid(const void *data, uint32_t size)
 
     auto info = di_info_parse_edid(data, size);
     if (!info) {
+        qCWarning(KWIN_CORE, "parsing edid failed");
         return;
     }
     const di_edid *edid = di_info_get_edid(info);
