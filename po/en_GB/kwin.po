@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-25 01:51+0000\n"
+"POT-Creation-Date: 2023-10-26 01:46+0000\n"
 "PO-Revision-Date: 2023-04-22 10:52+0100\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
 "Language-Team: British English\n"
@@ -2098,12 +2098,12 @@ msgstr "Font:"
 msgid "Show Text:"
 msgstr "Show Text:"
 
-#: plugins/mousemark/mousemark.cpp:43
+#: plugins/mousemark/mousemark.cpp:42
 #, kde-format
 msgid "Clear All Mouse Marks"
 msgstr "Clear All Mouse Marks"
 
-#: plugins/mousemark/mousemark.cpp:49 plugins/mousemark/mousemark_config.cpp:60
+#: plugins/mousemark/mousemark.cpp:48 plugins/mousemark/mousemark_config.cpp:60
 #, kde-format
 msgid "Clear Last Mouse Mark"
 msgstr "Clear Last Mouse Mark"
@@ -2223,7 +2223,7 @@ msgstr "Toggle Night Colour"
 msgid "Color Temperature Preview"
 msgstr "Colour Temperature Preview"
 
-#: plugins/outputlocator/outputlocator.cpp:48
+#: plugins/outputlocator/outputlocator.cpp:49
 #, kde-format
 msgctxt "@label"
 msgid "Unknown"
@@ -2325,28 +2325,28 @@ msgstr "Delete Virtual Desktop"
 msgid "Add Virtual Desktop"
 msgstr "Add Virtual Desktop"
 
-#: plugins/overview/qml/main.qml:318
+#: plugins/overview/qml/main.qml:319
 #, fuzzy, kde-format
 #| msgid "Delete Virtual Desktop"
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "Delete Virtual Desktop"
 
-#: plugins/overview/qml/main.qml:324
+#: plugins/overview/qml/main.qml:325
 #, fuzzy, kde-format
 #| msgid "Add Virtual Desktop"
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "Add Virtual Desktop"
 
-#: plugins/overview/qml/main.qml:331
+#: plugins/overview/qml/main.qml:332
 #, fuzzy, kde-format
 #| msgid "Configure virtual keyboards..."
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Configure virtual keyboards..."
 
-#: plugins/overview/qml/main.qml:659
+#: plugins/overview/qml/main.qml:660
 #, fuzzy, kde-format
 #| msgid "No matching windows"
 msgctxt "@info:placeholder"
@@ -2417,7 +2417,7 @@ msgstr "Region outside the workspace"
 msgid "Failed to create PipeWire stream"
 msgstr "Failed to create PipeWire stream"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:530
+#: plugins/screenshot/screenshotdbusinterface2.cpp:531
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2426,7 +2426,7 @@ msgstr ""
 "Select window to screen shot with left click or enter.\n"
 "Escape or right click to cancel."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:548
+#: plugins/screenshot/screenshotdbusinterface2.cpp:549
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
@@ -2574,7 +2574,7 @@ msgstr "Add Floating Tile"
 msgid "Delete"
 msgstr "Delete"
 
-#: plugins/trackmouse/trackmouse.cpp:46
+#: plugins/trackmouse/trackmouse.cpp:45
 #: plugins/trackmouse/trackmouse_config.cpp:57
 #, kde-format
 msgid "Track mouse"

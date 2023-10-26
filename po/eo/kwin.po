@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-25 01:51+0000\n"
+"POT-Creation-Date: 2023-10-26 01:46+0000\n"
 "PO-Revision-Date: 2023-10-19 07:22+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -2106,12 +2106,12 @@ msgstr "Tiparo:"
 msgid "Show Text:"
 msgstr "Montri Tekston:"
 
-#: plugins/mousemark/mousemark.cpp:43
+#: plugins/mousemark/mousemark.cpp:42
 #, kde-format
 msgid "Clear All Mouse Marks"
 msgstr "Forigi Ĉiujn Musmarkojn"
 
-#: plugins/mousemark/mousemark.cpp:49 plugins/mousemark/mousemark_config.cpp:60
+#: plugins/mousemark/mousemark.cpp:48 plugins/mousemark/mousemark_config.cpp:60
 #, kde-format
 msgid "Clear Last Mouse Mark"
 msgstr "Forigi Lastan Musmarkon"
@@ -2228,7 +2228,7 @@ msgstr "Baskuligi Noktan Koloron"
 msgid "Color Temperature Preview"
 msgstr "Antaŭrigardo de Kolora Temperaturo"
 
-#: plugins/outputlocator/outputlocator.cpp:48
+#: plugins/outputlocator/outputlocator.cpp:49
 #, kde-format
 msgctxt "@label"
 msgid "Unknown"
@@ -2326,25 +2326,25 @@ msgstr "Forigi Virtualan Labortablo"
 msgid "Add Virtual Desktop"
 msgstr "Aldoni Virtualan Labortablon"
 
-#: plugins/overview/qml/main.qml:318
+#: plugins/overview/qml/main.qml:319
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "Neniu alia Virtuala Labortablo por montri"
 
-#: plugins/overview/qml/main.qml:324
+#: plugins/overview/qml/main.qml:325
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "Aldoni Virtualan Labortablon"
 
-#: plugins/overview/qml/main.qml:331
+#: plugins/overview/qml/main.qml:332
 #, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Agordgi Virtualajn Labortablojn…"
 
-#: plugins/overview/qml/main.qml:659
+#: plugins/overview/qml/main.qml:660
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
@@ -2414,7 +2414,7 @@ msgstr "Regiono ekster la laborspaco"
 msgid "Failed to create PipeWire stream"
 msgstr "Malsukcesis krei PipeWire-rivereton"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:530
+#: plugins/screenshot/screenshotdbusinterface2.cpp:531
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2423,7 +2423,7 @@ msgstr ""
 "Elektu fenestron al ekrankopio per maldekstra alklako aŭ enigu.\n"
 "Escape aŭ dekstre alklaku por nuligi."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:548
+#: plugins/screenshot/screenshotdbusinterface2.cpp:549
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
@@ -2571,7 +2571,7 @@ msgstr "Aldoni Flosantan Kahelon"
 msgid "Delete"
 msgstr "Forigi"
 
-#: plugins/trackmouse/trackmouse.cpp:46
+#: plugins/trackmouse/trackmouse.cpp:45
 #: plugins/trackmouse/trackmouse_config.cpp:57
 #, kde-format
 msgid "Track mouse"

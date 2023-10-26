@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-25 01:51+0000\n"
+"POT-Creation-Date: 2023-10-26 01:46+0000\n"
 "PO-Revision-Date: 2023-10-09 15:54+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: \n"
@@ -2105,12 +2105,12 @@ msgstr "Шрифт:"
 msgid "Show Text:"
 msgstr "Показване на текст:"
 
-#: plugins/mousemark/mousemark.cpp:43
+#: plugins/mousemark/mousemark.cpp:42
 #, kde-format
 msgid "Clear All Mouse Marks"
 msgstr "Изчистване на всички маркировки на мишката"
 
-#: plugins/mousemark/mousemark.cpp:49 plugins/mousemark/mousemark_config.cpp:60
+#: plugins/mousemark/mousemark.cpp:48 plugins/mousemark/mousemark_config.cpp:60
 #, kde-format
 msgid "Clear Last Mouse Mark"
 msgstr "Изчистване на последната маркировка на мишката"
@@ -2229,7 +2229,7 @@ msgstr "Превключване на нощния цвят"
 msgid "Color Temperature Preview"
 msgstr "Предварителен преглед на цветната температура"
 
-#: plugins/outputlocator/outputlocator.cpp:48
+#: plugins/outputlocator/outputlocator.cpp:49
 #, kde-format
 msgctxt "@label"
 msgid "Unknown"
@@ -2327,25 +2327,25 @@ msgstr "Изтриване на виртуален работен плот"
 msgid "Add Virtual Desktop"
 msgstr "Добавяне на виртуален работен плот"
 
-#: plugins/overview/qml/main.qml:318
+#: plugins/overview/qml/main.qml:319
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "Няма друг виртуален работен плот за показване"
 
-#: plugins/overview/qml/main.qml:324
+#: plugins/overview/qml/main.qml:325
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "Добавяне на виртуален работен плот"
 
-#: plugins/overview/qml/main.qml:331
+#: plugins/overview/qml/main.qml:332
 #, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Конфигуриране на виртуални работни плотове…"
 
-#: plugins/overview/qml/main.qml:659
+#: plugins/overview/qml/main.qml:660
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
@@ -2415,7 +2415,7 @@ msgstr "Регион извън работното пространство"
 msgid "Failed to create PipeWire stream"
 msgstr "Неуспешно създаване на PipeWire поток"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:530
+#: plugins/screenshot/screenshotdbusinterface2.cpp:531
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2424,7 +2424,7 @@ msgstr ""
 "Изберете прозорец за екранна снимка с левия бутон или въвеждане.\n"
 "Натиснете клавиш Escape  или десния бутон на мишката, за да отмените."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:548
+#: plugins/screenshot/screenshotdbusinterface2.cpp:549
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
@@ -2572,7 +2572,7 @@ msgstr "Добавяне на плаващи плочки"
 msgid "Delete"
 msgstr "Изтриване"
 
-#: plugins/trackmouse/trackmouse.cpp:46
+#: plugins/trackmouse/trackmouse.cpp:45
 #: plugins/trackmouse/trackmouse_config.cpp:57
 #, kde-format
 msgid "Track mouse"

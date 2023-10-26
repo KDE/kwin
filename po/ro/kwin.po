@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-25 01:51+0000\n"
+"POT-Creation-Date: 2023-10-26 01:46+0000\n"
 "PO-Revision-Date: 2022-12-28 21:14+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -2153,12 +2153,12 @@ msgstr "Font:"
 msgid "Show Text:"
 msgstr "Arată biroul"
 
-#: plugins/mousemark/mousemark.cpp:43
+#: plugins/mousemark/mousemark.cpp:42
 #, kde-format
 msgid "Clear All Mouse Marks"
 msgstr "Curăță toate urmele mausului"
 
-#: plugins/mousemark/mousemark.cpp:49 plugins/mousemark/mousemark_config.cpp:60
+#: plugins/mousemark/mousemark.cpp:48 plugins/mousemark/mousemark_config.cpp:60
 #, kde-format
 msgid "Clear Last Mouse Mark"
 msgstr "Curăță ultima urmă a mausului"
@@ -2285,7 +2285,7 @@ msgstr "Comută culoarea nocturnă"
 msgid "Color Temperature Preview"
 msgstr ""
 
-#: plugins/outputlocator/outputlocator.cpp:48
+#: plugins/outputlocator/outputlocator.cpp:49
 #, fuzzy, kde-format
 #| msgctxt "The input device of the event is not known"
 #| msgid "Unknown"
@@ -2396,14 +2396,14 @@ msgstr "M&ută la biroul"
 msgid "Add Virtual Desktop"
 msgstr "Adaugă la birou &nou"
 
-#: plugins/overview/qml/main.qml:318
+#: plugins/overview/qml/main.qml:319
 #, fuzzy, kde-format
 #| msgid "Move to &Desktop"
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "M&ută la biroul"
 
-#: plugins/overview/qml/main.qml:324
+#: plugins/overview/qml/main.qml:325
 #, fuzzy, kde-format
 #| msgctxt "Create a new desktop and add the window to that desktop"
 #| msgid "Add to &New Desktop"
@@ -2411,14 +2411,14 @@ msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "Adaugă la birou &nou"
 
-#: plugins/overview/qml/main.qml:331
+#: plugins/overview/qml/main.qml:332
 #, fuzzy, kde-format
 #| msgid "Configure Layouts..."
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Configurare aranjamente..."
 
-#: plugins/overview/qml/main.qml:659
+#: plugins/overview/qml/main.qml:660
 #, fuzzy, kde-format
 #| msgid "X11 Unmanaged Windows"
 msgctxt "@info:placeholder"
@@ -2493,7 +2493,7 @@ msgstr ""
 msgid "Failed to create PipeWire stream"
 msgstr ""
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:530
+#: plugins/screenshot/screenshotdbusinterface2.cpp:531
 #, fuzzy, kde-format
 #| msgid ""
 #| "Select window to force close with left click or enter.\n"
@@ -2505,7 +2505,7 @@ msgstr ""
 "Alegeți fereastra de închis forțat cu clic stâng sau Enter.\n"
 "Apăsați Escape sau clic drept pentru a renunța."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:548
+#: plugins/screenshot/screenshotdbusinterface2.cpp:549
 #, fuzzy, kde-format
 #| msgid ""
 #| "Select window to force close with left click or enter.\n"
@@ -2676,7 +2676,7 @@ msgstr "Mod flotant"
 msgid "Delete"
 msgstr ""
 
-#: plugins/trackmouse/trackmouse.cpp:46
+#: plugins/trackmouse/trackmouse.cpp:45
 #: plugins/trackmouse/trackmouse_config.cpp:57
 #, kde-format
 msgid "Track mouse"

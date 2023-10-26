@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-25 01:51+0000\n"
+"POT-Creation-Date: 2023-10-26 01:46+0000\n"
 "PO-Revision-Date: 2023-10-20 05:46+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -2096,12 +2096,12 @@ msgstr "ფონტი:"
 msgid "Show Text:"
 msgstr "ტექსტის ჩვენება:"
 
-#: plugins/mousemark/mousemark.cpp:43
+#: plugins/mousemark/mousemark.cpp:42
 #, kde-format
 msgid "Clear All Mouse Marks"
 msgstr "თაგუნას კვალის სრულად გასუფთავება"
 
-#: plugins/mousemark/mousemark.cpp:49 plugins/mousemark/mousemark_config.cpp:60
+#: plugins/mousemark/mousemark.cpp:48 plugins/mousemark/mousemark_config.cpp:60
 #, kde-format
 msgid "Clear Last Mouse Mark"
 msgstr "თაგუნას ბოლო კვალის ფასუფთავება"
@@ -2218,7 +2218,7 @@ msgstr "ღამის ფერების გადართვა"
 msgid "Color Temperature Preview"
 msgstr "ფერის ტემპერატურის გადახედვა"
 
-#: plugins/outputlocator/outputlocator.cpp:48
+#: plugins/outputlocator/outputlocator.cpp:49
 #, kde-format
 msgctxt "@label"
 msgid "Unknown"
@@ -2316,25 +2316,25 @@ msgstr "ვირტუალური სამუშაო მაგიდი�
 msgid "Add Virtual Desktop"
 msgstr "ვირტუალური სამუშაო მაგიდის დამატება"
 
-#: plugins/overview/qml/main.qml:318
+#: plugins/overview/qml/main.qml:319
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "სხვა ვირტუალური სამუშაო მაგიდების გარეშე"
 
-#: plugins/overview/qml/main.qml:324
+#: plugins/overview/qml/main.qml:325
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "ვირტუალური სამუშაო მაგიდის დამატება"
 
-#: plugins/overview/qml/main.qml:331
+#: plugins/overview/qml/main.qml:332
 #, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "ვირტუალური სამუშაო მაგიდის მორგება…"
 
-#: plugins/overview/qml/main.qml:659
+#: plugins/overview/qml/main.qml:660
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
@@ -2404,7 +2404,7 @@ msgstr "რეგიონი სამუშაო სივრცის გა
 msgid "Failed to create PipeWire stream"
 msgstr "PipeWire-ის ნაკადის შექმნის შეცდოა"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:530
+#: plugins/screenshot/screenshotdbusinterface2.cpp:531
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2413,7 +2413,7 @@ msgstr ""
 "ფანჯრის ანაბეჭდის მარცხენა წკაპით ან Enter-ით გადაღება.\n"
 "გასაუქმებლად Esc ან მარჯვენა წკაპი."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:548
+#: plugins/screenshot/screenshotdbusinterface2.cpp:549
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
@@ -2561,7 +2561,7 @@ msgstr "მოლივლივე ფილის დამატება"
 msgid "Delete"
 msgstr "წაშლა"
 
-#: plugins/trackmouse/trackmouse.cpp:46
+#: plugins/trackmouse/trackmouse.cpp:45
 #: plugins/trackmouse/trackmouse_config.cpp:57
 #, kde-format
 msgid "Track mouse"

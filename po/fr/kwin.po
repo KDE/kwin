@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-25 01:51+0000\n"
-"PO-Revision-Date: 2023-10-20 12:50+0200\n"
+"POT-Creation-Date: 2023-10-26 01:46+0000\n"
+"PO-Revision-Date: 2023-10-24 21:19+0200\n"
 "Last-Translator: Xavier BESNARD <xavier.besnard@neuf.fr>\n"
 "Language-Team: fr\n"
 "Language: fr\n"
@@ -2157,12 +2157,12 @@ msgstr "Police :"
 msgid "Show Text:"
 msgstr "Afficher le texte :"
 
-#: plugins/mousemark/mousemark.cpp:43
+#: plugins/mousemark/mousemark.cpp:42
 #, kde-format
 msgid "Clear All Mouse Marks"
 msgstr "Effacer toutes les marques de souris"
 
-#: plugins/mousemark/mousemark.cpp:49 plugins/mousemark/mousemark_config.cpp:60
+#: plugins/mousemark/mousemark.cpp:48 plugins/mousemark/mousemark_config.cpp:60
 #, kde-format
 msgid "Clear Last Mouse Mark"
 msgstr "Effacer la dernière marque de souris"
@@ -2284,7 +2284,7 @@ msgstr "Basculer la couleur de nuit"
 msgid "Color Temperature Preview"
 msgstr "Aperçu de la température de couleurs"
 
-#: plugins/outputlocator/outputlocator.cpp:48
+#: plugins/outputlocator/outputlocator.cpp:49
 #, kde-format
 msgctxt "@label"
 msgid "Unknown"
@@ -2386,28 +2386,28 @@ msgstr "Supprimer un bureau virtuel"
 msgid "Add Virtual Desktop"
 msgstr "Ajouter un bureau virtuel"
 
-#: plugins/overview/qml/main.qml:318
+#: plugins/overview/qml/main.qml:319
 #, fuzzy, kde-format
 #| msgid "Delete Virtual Desktop"
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "Supprimer un bureau virtuel"
 
-#: plugins/overview/qml/main.qml:324
+#: plugins/overview/qml/main.qml:325
 #, fuzzy, kde-format
 #| msgid "Add Virtual Desktop"
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "Ajouter un bureau virtuel"
 
-#: plugins/overview/qml/main.qml:331
+#: plugins/overview/qml/main.qml:332
 #, fuzzy, kde-format
 #| msgid "Configure virtual keyboards..."
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Configurer les claviers virtuels..."
 
-#: plugins/overview/qml/main.qml:659
+#: plugins/overview/qml/main.qml:660
 #, fuzzy, kde-format
 #| msgid "No matching windows"
 msgctxt "@info:placeholder"
@@ -2481,7 +2481,7 @@ msgstr ""
 msgid "Failed to create PipeWire stream"
 msgstr ""
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:530
+#: plugins/screenshot/screenshotdbusinterface2.cpp:531
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2491,7 +2491,7 @@ msgstr ""
 "ou un appui sur la touche « Entrée ».\n"
 "Appuyez sur la touche « Échap » ou faire un clic droit pour annuler."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:548
+#: plugins/screenshot/screenshotdbusinterface2.cpp:549
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
@@ -2601,7 +2601,7 @@ msgstr "&Opacité :"
 #: plugins/thumbnailaside/thumbnailaside_config.ui:87
 #, no-c-format, kde-format
 msgid " %"
-msgstr " %"
+msgstr " %"
 
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:37
 #: plugins/tileseditor/tileseditoreffect.cpp:29
@@ -2646,7 +2646,7 @@ msgstr "Ajouter une tuile flottante"
 msgid "Delete"
 msgstr "Supprimer"
 
-#: plugins/trackmouse/trackmouse.cpp:46
+#: plugins/trackmouse/trackmouse.cpp:45
 #: plugins/trackmouse/trackmouse_config.cpp:57
 #, kde-format
 msgid "Track mouse"
@@ -3029,7 +3029,7 @@ msgstr "Activer le suivi du pointeur de texte"
 #: plugins/zoom/zoom_config.ui:86
 #, kde-format
 msgid "Mouse Pointer:"
-msgstr "Curseur de souris :"
+msgstr "Pointeur de souris :"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MousePointer)
 #: plugins/zoom/zoom_config.ui:99
@@ -4270,7 +4270,7 @@ msgid ""
 msgstr ""
 "Informations de prise en charge sous KWin :\n"
 "Les informations suivantes doivent être utilisées lorsqu'une demande d'aide "
-"est effectuée , par exemple sur la page  « https://discuss.kde.org ».\n"
+"est effectuée, par exemple sur la page « https://discuss.kde.org ».\n"
 "Il s'agit de fournir des informations complémentaires sur l'instance "
 "actuellement lancée,\n"
 "les options utilisées, le pilote OpenGL et les effets actifs.\n"
