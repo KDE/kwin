@@ -20,7 +20,7 @@
 
 int main(int argc, char *argv[])
 {
-    KLocalizedString::setApplicationDomain("kwin");
+    KLocalizedString::setApplicationDomain(QByteArrayLiteral("kwin"));
     qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("xcb"));
     QApplication app(argc, argv);
     QApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("dialog-warning")));

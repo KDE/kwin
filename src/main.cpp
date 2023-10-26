@@ -233,7 +233,7 @@ void Application::setupMalloc()
 
 void Application::setupLocalizedString()
 {
-    KLocalizedString::setApplicationDomain("kwin");
+    KLocalizedString::setApplicationDomain(QByteArrayLiteral("kwin"));
 }
 
 void Application::createWorkspace()

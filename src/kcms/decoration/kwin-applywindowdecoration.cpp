@@ -25,7 +25,7 @@ int main(int argc, char **argv)
     QCoreApplication::setApplicationName(QStringLiteral("kwin-applywindowdecoration"));
     QCoreApplication::setApplicationVersion(QStringLiteral("1.0"));
     QCoreApplication::setOrganizationDomain(QStringLiteral("kde.org"));
-    KLocalizedString::setApplicationDomain("kwin-applywindowdecoration");
+    KLocalizedString::setApplicationDomain(QByteArrayLiteral("kwin-applywindowdecoration"));
 
     QCommandLineParser *parser = new QCommandLineParser;
     parser->addHelpOption();
