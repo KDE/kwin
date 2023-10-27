@@ -94,7 +94,7 @@ DrmPipeline::Error DrmPipeline::present()
         if (m_pending.needsModesetProperties && !prepareAtomicModeset(primaryPlaneUpdate.get())) {
             return Error::InvalidArguments;
         }
-        atomicCommitSuccessful();
+        m_next.needsModesetProperties = m_pending.needsModesetProperties = false;
         m_commitThread->addCommit(std::move(primaryPlaneUpdate));
         return Error::None;
     } else {
@@ -168,7 +168,9 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QList<DrmPipeline *>
             qCCritical(KWIN_DRM) << "Atomic modeset commit failed!" << strerror(errno);
             return errnoToError();
         }
-        std::for_each(pipelines.begin(), pipelines.end(), std::mem_fn(&DrmPipeline::atomicCommitSuccessful));
+        for (const auto pipeline : pipelines) {
+            pipeline->m_next.needsModeset = pipeline->m_pending.needsModeset = false;
+        }
         commit->pageFlipped(std::chrono::steady_clock::now().time_since_epoch());
         return Error::None;
     }
@@ -375,23 +377,13 @@ DrmPipeline::Error DrmPipeline::errnoToError()
     }
 }
 
-void DrmPipeline::atomicCommitSuccessful()
-{
-    m_pending.needsModeset = false;
-    m_pending.needsModesetProperties = false;
-    m_current = m_pending;
-}
-
 bool DrmPipeline::updateCursor()
 {
-    if (!m_pending.crtc) {
+    if (needsModeset() || !m_pending.crtc || !m_pending.active) {
         return false;
     }
     // explicitly check for the cursor plane and not for AMS, as we might not always have one
     if (m_pending.crtc->cursorPlane()) {
-        if (needsModeset() || !m_current.active) {
-            return false;
-        }
         // test the full state, to take pending commits into account
         auto fullState = std::make_unique<DrmAtomicCommit>(QList<DrmPipeline *>{this});
         if (prepareAtomicPresentation(fullState.get()) != Error::None) {
@@ -508,11 +500,6 @@ bool DrmPipeline::modesetPresentPending() const
 void DrmPipeline::resetModesetPresentPending()
 {
     m_modesetPresentPending = false;
-}
-
-DrmCrtc *DrmPipeline::currentCrtc() const
-{
-    return m_current.crtc;
 }
 
 DrmGammaRamp::DrmGammaRamp(DrmCrtc *crtc, const std::shared_ptr<ColorTransformation> &transformation)

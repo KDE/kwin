@@ -81,7 +81,6 @@ public:
     bool updateCursor();
 
     DrmConnector *connector() const;
-    DrmCrtc *currentCrtc() const;
     DrmGpu *gpu() const;
 
     enum class PageflipType {
@@ -156,7 +155,6 @@ private:
     static Error commitPipelinesLegacy(const QList<DrmPipeline *> &pipelines, CommitMode mode);
 
     // atomic modesetting only
-    void atomicCommitSuccessful();
     Error prepareAtomicCommit(DrmAtomicCommit *commit, CommitMode mode);
     bool prepareAtomicModeset(DrmAtomicCommit *commit);
     Error prepareAtomicPresentation(DrmAtomicCommit *commit);
@@ -200,8 +198,6 @@ private:
     State m_pending;
     // the state that will be applied at the next real atomic commit
     State m_next;
-    // the state that is already committed
-    State m_current;
 
     std::unique_ptr<DrmCommitThread> m_commitThread;
     std::shared_ptr<DrmPipelineLayer> m_primaryLayer;

@@ -83,7 +83,6 @@ DrmPipeline::Error DrmPipeline::commitPipelinesLegacy(const QList<DrmPipeline *>
     } else {
         for (const auto &pipeline : pipelines) {
             pipeline->applyPendingChanges();
-            pipeline->m_current = pipeline->m_pending;
             if (mode == CommitMode::CommitModeset && pipeline->activePending()) {
                 pipeline->pageFlipped(std::chrono::steady_clock::now().time_since_epoch(), PageflipType::Normal);
             }
@@ -117,7 +116,7 @@ DrmPipeline::Error DrmPipeline::applyPendingChangesLegacy()
         if (m_connector->scalingMode.isValid() && m_connector->scalingMode.hasEnum(DrmConnector::ScalingMode::None)) {
             m_connector->scalingMode.setEnumLegacy(DrmConnector::ScalingMode::None);
         }
-        if (m_pending.crtc != m_current.crtc || m_pending.mode != m_current.mode) {
+        if (m_pending.crtc != m_next.crtc || m_pending.mode != m_next.mode) {
             Error err = legacyModeset();
             if (err != Error::None) {
                 return err;
