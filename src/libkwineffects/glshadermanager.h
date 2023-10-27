@@ -13,6 +13,7 @@
 
 #include <QByteArray>
 #include <QFlags>
+#include <QHash>
 #include <QStack>
 #include <map>
 #include <memory>
@@ -133,10 +134,12 @@ public:
      * @param traits The shader traits for generating the shader
      * @param vertexFile optional vertex shader source code to be used instead of shader traits
      * @param fragmentFile optional fragment shader source code to be used instead of shader traits
+     * @param vertexPreprocessor optional dictionary used to preprocess the vertex shader source code
+     * @param fragmentPreprocessor optional dictionary used to preprocess the fragment shader source code
      * @return new generated shader
      * @see generateCustomShader
      */
-    std::unique_ptr<GLShader> generateShaderFromFile(ShaderTraits traits, const QString &vertexFile = QString(), const QString &fragmentFile = QString());
+    std::unique_ptr<GLShader> generateShaderFromFile(ShaderTraits traits, const QString &vertexFile = QString(), const QString &fragmentFile = QString(), const QHash<QByteArray, QByteArray> &vertexPreprocessors = {}, const QHash<QByteArray, QByteArray> &fragmentPreprocessors = {});
 
     /**
      * @return a pointer to the ShaderManager instance

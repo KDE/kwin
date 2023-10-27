@@ -313,7 +313,7 @@ static QString resolveShaderFilePath(const QString &filePath)
     return prefix + suffix + extension;
 }
 
-std::unique_ptr<GLShader> ShaderManager::generateShaderFromFile(ShaderTraits traits, const QString &vertexFile, const QString &fragmentFile)
+std::unique_ptr<GLShader> ShaderManager::generateShaderFromFile(ShaderTraits traits, const QString &vertexFile, const QString &fragmentFile, const QHash<QByteArray, QByteArray> &vertexPreprocessors, const QHash<QByteArray, QByteArray> &fragmentPreprocessors)
 {
     auto loadShaderFile = [](const QString &filePath) {
         QFile file(filePath);
@@ -323,6 +323,22 @@ std::unique_ptr<GLShader> ShaderManager::generateShaderFromFile(ShaderTraits tra
         qCCritical(LIBKWINGLUTILS) << "Failed to read shader " << filePath;
         return QByteArray();
     };
+    auto insertPreprocessor = [](QByteArray &source, const QHash<QByteArray, QByteArray> &preprocessors) {
+        if (preprocessors.empty()) {
+            return;
+        }
+        QByteArray preprocessor;
+        preprocessor.reserve(preprocessors.size() * strlen("#define ") * 2);
+        for (auto it = preprocessors.cbegin(); it != preprocessors.cend(); it = std::next(it)) {
+            preprocessor.append(QByteArrayView("#define "));
+            preprocessor.append(it.key());
+            preprocessor.append(' ');
+            preprocessor.append(it.value());
+            preprocessor.append('\n');
+        }
+        const int startPos = source.startsWith(QByteArrayView("#version")) ? source.indexOf('\n') + 1 : 0;
+        source.insert(startPos, preprocessor);
+    };
     QByteArray vertexSource;
     QByteArray fragmentSource;
     if (!vertexFile.isEmpty()) {
@@ -330,12 +346,14 @@ std::unique_ptr<GLShader> ShaderManager::generateShaderFromFile(ShaderTraits tra
         if (vertexSource.isEmpty()) {
             return std::unique_ptr<GLShader>(new GLShader());
         }
+        insertPreprocessor(vertexSource, vertexPreprocessors);
     }
     if (!fragmentFile.isEmpty()) {
         fragmentSource = loadShaderFile(resolveShaderFilePath(fragmentFile));
         if (fragmentSource.isEmpty()) {
             return std::unique_ptr<GLShader>(new GLShader());
         }
+        insertPreprocessor(fragmentSource, fragmentPreprocessors);
     }
     return generateCustomShader(traits, vertexSource, fragmentSource);
 }
