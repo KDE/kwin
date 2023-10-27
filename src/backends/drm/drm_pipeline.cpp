@@ -58,7 +58,6 @@ DrmPipeline::~DrmPipeline()
 
 bool DrmPipeline::testScanout()
 {
-    // TODO make the modeset check only be tested at most once per scanout cycle
     if (gpu()->needsModeset()) {
         return false;
     }
