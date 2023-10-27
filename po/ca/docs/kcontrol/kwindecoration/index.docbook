@@ -71,16 +71,10 @@
 >.</para>
 
 <para
->La decoració predeterminada de les finestres s'anomena <quote
->Brisa</quote
->.</para>
+>La decoració predeterminada de les finestres s'anomena «Brisa».</para>
 
 <para
->Cada estil té un aspecte diferent i un <quote
->comportament</quote
-> diferent. Alguns tenen vores de <quote
->redimensionament</quote
-> (de vegades invisibles) per tot el seu voltant, que en facilita la redimensió però que en dificulta el moviment. Alguns no tenen vores en certs costats.</para>
+>Cada estil té un aspecte diferent i un «comportament» diferent. Alguns tenen vores de «redimensionament» (de vegades invisibles) per tot el seu voltant, que en facilita la redimensió però que en dificulta el moviment. Alguns no tenen vores en certs costats.</para>
 
 <para
 >Us encoratgem a què experimenteu amb els diferents estils fins que en trobeu un que s'ajusti al vostre patró de treball.</para>
@@ -93,9 +87,7 @@
 > per a obrir el diàleg de configuració per a cada decoració.</para>
 
 <para
->Les opcions en aquest diàleg de configuració s'apliquen a totes les finestres. Algunes decoracions de finestra (&pex;, <quote
->Brisa</quote
->) proporcionen una pestanya <guilabel
+>Les opcions en aquest diàleg de configuració s'apliquen a totes les finestres. Algunes decoracions de finestra (&pex;, «Brisa») proporcionen una pestanya <guilabel
 >Substitucions específiques de la finestra</guilabel
 >. En aquesta pestanya podreu canviar la mida de la vora i la visibilitat de la barra de títol per a finestres en particular.</para>
 

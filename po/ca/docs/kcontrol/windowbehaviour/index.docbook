@@ -90,9 +90,7 @@
 >Moviment</guilabel
 > us permet configurar com es mouen i es col·loquen les finestres una vegada obertes. Les opcions a <guilabel
 >Avançat</guilabel
-> cobreixen algunes opcions especialitzades com <quote
->ombreig de la finestra</quote
->. </para>
+> cobreixen algunes opcions especialitzades com «ombreig de la finestra». </para>
 
 <note>
 <para
@@ -104,16 +102,10 @@
 >Focus</title>
 
 <para
->El <quote
->focus</quote
-> de l'espai de treball es refereix a la finestra amb què l'usuari està treballant actualment. A la finestra amb el focus sovint ens hi referim com a la <quote
->finestra activa</quote
->. </para>
+>El «focus» de l'espai de treball es refereix a la finestra amb què l'usuari està treballant actualment. A la finestra amb el focus sovint ens hi referim com a la «finestra activa». </para>
 
 <para
->El focus no significa necessàriament que la finestra és la que es troba al davant -ens hi referirem com a <quote
->elevar</quote
->-, i encara que aquesta també es configura aquí, el focus i elevar les finestres es configuren de forma independent. </para>
+>El focus no significa necessàriament que la finestra és la que es troba al davant -ens hi referirem com a «elevar»-, i encara que aquesta també es configura aquí, el focus i elevar les finestres es configuren de forma independent. </para>
 
 <sect3 id="focus-focuspolicy">
 <title
@@ -165,9 +157,7 @@
 >Clic al focus</guilabel
 > però sense que calgui fer clic. </para>
 <para
->En els altres gestors de finestres, això és conegut de vegades com a <quote
->focus descuidat segueix al ratolí</quote
->. </para>
+>En els altres gestors de finestres, això és conegut de vegades com a «focus descuidat segueix al ratolí». </para>
 </listitem>
 </varlistentry>
 
@@ -623,9 +613,7 @@
 ></term>
 <listitem>
 <para
->Portarà la finestra a la part superior de la pila de finestres. Totes les altres finestres que se sobreposen amb aquesta, restaran ocultades <quote
->sota</quote
-> seu. </para>
+>Portarà la finestra a la part superior de la pila de finestres. Totes les altres finestres que se sobreposen amb aquesta, restaran ocultades «sota» seu. </para>
 </listitem>
 </varlistentry>
 
@@ -953,9 +941,7 @@
 ></term>
 <listitem>
 <para
->Portarà la finestra a la part superior de la pila de finestres. Totes les altres finestres que se sobreposen amb aquesta, restaran ocultades <quote
->sota</quote
-> seu. </para>
+>Portarà la finestra a la part superior de la pila de finestres. Totes les altres finestres que se sobreposen amb aquesta, restaran ocultades «sota» seu. </para>
 </listitem>
 </varlistentry>
 
@@ -1156,9 +1142,7 @@
 ></term>
 <listitem>
 <para
->Aquí podeu establir la zona d'atracció per al centre de la pantalla, &ead;, la <quote
->força</quote
-> del camp magnètic farà que les finestres s'apropin al centre de la pantalla quan us moveu prop. </para>
+>Aquí podeu establir la zona d'atracció per al centre de la pantalla, &ead;, la «força» del camp magnètic farà que les finestres s'apropin al centre de la pantalla quan us moveu prop. </para>
 </listitem>
 </varlistentry>
 
