@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-25 02:43+0000\n"
-"PO-Revision-Date: 2023-04-18 07:15+0200\n"
+"PO-Revision-Date: 2023-10-26 18:53+0200\n"
 "Last-Translator: Xavier BESNARD <xavier.besnard@neuf.fr>\n"
 "Language-Team: fr\n"
 "Language: fr\n"
@@ -52,7 +52,7 @@ msgstr ""
 #: kcmrules.cpp:28
 #, kde-format
 msgid "Window Rules"
-msgstr "Règles de la fenêtre"
+msgstr "Règles de fenêtre"
 
 #: kcmrules.cpp:32
 #, kde-format
@@ -76,8 +76,8 @@ msgstr ""
 "<p> <h1>Paramètres spécifiques à une fenêtre</h1> Vous pouvez personnaliser "
 "ici des paramètres de fenêtres qui ne sont applicables qu'à certaines "
 "d'entre elles.</p><p>Veuillez noter que cette configuration ne prendra effet "
-"que si vous utilisez Kwin comme gestionnaire de fenêtres. Si vous utilisez "
-"un autre gestionnaire de fenêtres que Kwin, veuillez vous reporter à sa "
+"que si vous utilisez KWin comme gestionnaire de fenêtres. Si vous utilisez "
+"un autre gestionnaire de fenêtres que KWin, veuillez vous reporter à sa "
 "documentation pour savoir comment personnaliser le comportement des "
 "fenêtres. </p>"
 
@@ -105,7 +105,7 @@ msgstr "Lanceur « KCM » pour les règles de KWin"
 #, kde-format
 msgid "KWin id of the window for special window settings."
 msgstr ""
-"Identifiant « Kwin » de la fenêtre pour des paramètres spécifiques de "
+"Identifiant « KWin » de la fenêtre pour des paramètres spécifiques de "
 "fenêtre."
 
 #: main.cpp:33
@@ -728,7 +728,7 @@ msgid ""
 "\"None\" will unconditionally allow this window to get the focus while\n"
 "\"Extreme\" will completely prevent it from taking the focus."
 msgstr ""
-"Kwin essaie d'empêcher les fenêtres de prendre le focus\n"
+"KWin essaie d'empêcher les fenêtres de prendre le focus\n"
 "pendant que vous travaillez sur une autre fenêtre,\n"
 "mais cela peut échouer quelquefois ou sur-réagir. \n"
 "« Aucun » autorisera inconditionnellement cette fenêtre à prendre le focus "
