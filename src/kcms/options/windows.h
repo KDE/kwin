@@ -82,6 +82,8 @@ private:
 
     KWinFocusConfigForm *m_ui;
     KWinOptionsSettings *m_settings;
+
+    void updateFocusPolicyExplanatoryText();
 };
 
 class KMovingConfig : public KCModule

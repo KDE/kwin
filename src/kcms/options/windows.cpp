@@ -85,38 +85,59 @@ void KFocusConfig::updateDefaultIndicator()
     m_ui->windowFocusPolicy->update();
 }
 
+void KFocusConfig::updateFocusPolicyExplanatoryText()
+{
+    const int focusPolicy = m_ui->windowFocusPolicy->currentIndex();
+    switch (focusPolicy) {
+    case CLICK_TO_FOCUS:
+        m_ui->windowFocusPolicyDescriptionLabel->setText(i18n("<em>Click to focus:</em> A window becomes active when you click into it. This behavior is common on other operating systems and likely what you want."));
+        break;
+    case CLICK_TO_FOCUS_MOUSE_PRECEDENT:
+        m_ui->windowFocusPolicyDescriptionLabel->setText(i18n("<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to focus</em>. If an active window has to be chosen by the system (eg. because the currently active one was closed) the window under the mouse is the preferred candidate. Unusual, but possible variant of <em>Click to focus</em>."));
+        break;
+    case FOCUS_FOLLOWS_MOUSE:
+        m_ui->windowFocusPolicyDescriptionLabel->setText(i18n("<em>Focus follows mouse:</em> Moving the mouse onto a window will activate it. Eg. windows randomly appearing under the mouse will not gain the focus. <em>Focus stealing prevention</em> takes place as usual. Think as <em>Click to focus</em> just without having to actually click."));
+        break;
+    case FOCUS_FOLLOWS_MOUSE_PRECEDENT:
+        m_ui->windowFocusPolicyDescriptionLabel->setText(i18n("This is mostly the same as <em>Focus follows mouse</em>. If an active window has to be chosen by the system (eg. because the currently active one was closed) the window under the mouse is the preferred candidate. Choose this, if you want a hover controlled focus."));
+        break;
+    case FOCUS_UNDER_MOUSE:
+        m_ui->windowFocusPolicyDescriptionLabel->setText(i18n("<em>Focus under mouse:</em> The focus always remains on the window under the mouse.<br/><strong>Warning:</strong> <em>Focus stealing prevention</em> and the <em>tabbox ('Alt+Tab')</em> contradict the activation policy and will not work. You very likely want to use <em>Focus follows mouse (mouse precedence)</em> instead!"));
+        break;
+    case FOCUS_STRICTLY_UNDER_MOUSE:
+        m_ui->windowFocusPolicyDescriptionLabel->setText(i18n("<em>Focus strictly under mouse:</em> The focus is always on the window under the mouse (in doubt nowhere) very much like the focus behavior in an unmanaged legacy X11 environment.<br/><strong>Warning:</strong> <em>Focus stealing prevention</em> and the <em>tabbox ('Alt+Tab')</em> contradict the activation policy and will not work. You very likely want to use <em>Focus follows mouse (mouse precedence)</em> instead!"));
+        break;
+    }
+}
+
 void KFocusConfig::focusPolicyChanged()
 {
     int selectedFocusPolicy = 0;
     bool selectedNextFocusPrefersMouseItem = false;
     const bool loadedNextFocusPrefersMouseItem = m_settings->nextFocusPrefersMouse();
 
+    updateFocusPolicyExplanatoryText();
+
     int focusPolicy = m_ui->windowFocusPolicy->currentIndex();
     switch (focusPolicy) {
     case CLICK_TO_FOCUS:
-        m_ui->windowFocusPolicyDescriptionLabel->setText(i18n("<em>Click to focus:</em> A window becomes active when you click into it. This behavior is common on other operating systems and likely what you want."));
         selectedFocusPolicy = KWinOptionsSettings::EnumFocusPolicy::ClickToFocus;
         break;
     case CLICK_TO_FOCUS_MOUSE_PRECEDENT:
-        m_ui->windowFocusPolicyDescriptionLabel->setText(i18n("<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to focus</em>. If an active window has to be chosen by the system (eg. because the currently active one was closed) the window under the mouse is the preferred candidate. Unusual, but possible variant of <em>Click to focus</em>."));
         selectedFocusPolicy = KWinOptionsSettings::EnumFocusPolicy::ClickToFocus;
         selectedNextFocusPrefersMouseItem = true;
         break;
     case FOCUS_FOLLOWS_MOUSE:
-        m_ui->windowFocusPolicyDescriptionLabel->setText(i18n("<em>Focus follows mouse:</em> Moving the mouse onto a window will activate it. Eg. windows randomly appearing under the mouse will not gain the focus. <em>Focus stealing prevention</em> takes place as usual. Think as <em>Click to focus</em> just without having to actually click."));
         selectedFocusPolicy = KWinOptionsSettings::EnumFocusPolicy::FocusFollowsMouse;
         break;
     case FOCUS_FOLLOWS_MOUSE_PRECEDENT:
-        m_ui->windowFocusPolicyDescriptionLabel->setText(i18n("This is mostly the same as <em>Focus follows mouse</em>. If an active window has to be chosen by the system (eg. because the currently active one was closed) the window under the mouse is the preferred candidate. Choose this, if you want a hover controlled focus."));
         selectedFocusPolicy = KWinOptionsSettings::EnumFocusPolicy::FocusFollowsMouse;
         selectedNextFocusPrefersMouseItem = true;
         break;
     case FOCUS_UNDER_MOUSE:
-        m_ui->windowFocusPolicyDescriptionLabel->setText(i18n("<em>Focus under mouse:</em> The focus always remains on the window under the mouse.<br/><strong>Warning:</strong> <em>Focus stealing prevention</em> and the <em>tabbox ('Alt+Tab')</em> contradict the activation policy and will not work. You very likely want to use <em>Focus follows mouse (mouse precedence)</em> instead!"));
         selectedFocusPolicy = KWinOptionsSettings::EnumFocusPolicy::FocusUnderMouse;
         break;
     case FOCUS_STRICTLY_UNDER_MOUSE:
-        m_ui->windowFocusPolicyDescriptionLabel->setText(i18n("<em>Focus strictly under mouse:</em> The focus is always on the window under the mouse (in doubt nowhere) very much like the focus behavior in an unmanaged legacy X11 environment.<br/><strong>Warning:</strong> <em>Focus stealing prevention</em> and the <em>tabbox ('Alt+Tab')</em> contradict the activation policy and will not work. You very likely want to use <em>Focus follows mouse (mouse precedence)</em> instead!"));
         selectedFocusPolicy = KWinOptionsSettings::EnumFocusPolicy::FocusStrictlyUnderMouse;
         break;
     }
@@ -159,6 +180,7 @@ void KFocusConfig::load(void)
         m_ui->windowFocusPolicy->setCurrentIndex(focusPolicy + 2);
         break;
     }
+    updateFocusPolicyExplanatoryText();
 }
 
 void KFocusConfig::save(void)
