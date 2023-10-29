@@ -28,105 +28,9 @@ WindowSystem::WindowSystem()
 {
 }
 
-void WindowSystem::activateWindow(WId win, long int time)
+void WindowSystem::activateWindow(QWindow *win, long int time)
 {
     // KWin cannot activate own windows
-}
-
-void WindowSystem::forceActiveWindow(WId win, long int time)
-{
-    // KWin cannot activate own windows
-}
-
-WId WindowSystem::activeWindow()
-{
-    // KWin internal should not use KWindowSystem to find active window
-    return 0;
-}
-
-bool WindowSystem::compositingActive()
-{
-    // wayland is always composited
-    return true;
-}
-
-void WindowSystem::connectNotify(const QMetaMethod &signal)
-{
-}
-
-QPoint WindowSystem::constrainViewportRelativePosition(const QPoint &pos)
-{
-    return QPoint();
-}
-
-int WindowSystem::currentDesktop()
-{
-    // KWin internal should not use KWindowSystem to find current desktop
-    return 0;
-}
-
-QString WindowSystem::desktopName(int desktop)
-{
-    return QString();
-}
-
-QPixmap WindowSystem::icon(WId win, int width, int height, bool scale, int flags)
-{
-    return QPixmap();
-}
-
-bool WindowSystem::mapViewport()
-{
-    return false;
-}
-
-void WindowSystem::minimizeWindow(WId win)
-{
-}
-
-void WindowSystem::unminimizeWindow(WId win)
-{
-}
-
-int WindowSystem::numberOfDesktops()
-{
-    // KWin internal should not use KWindowSystem to find number of desktops
-    return 1;
-}
-
-QString WindowSystem::readNameProperty(WId window, long unsigned int atom)
-{
-    return QString();
-}
-
-void WindowSystem::setCurrentDesktop(int desktop)
-{
-    // KWin internal should not use KWindowSystem to set current desktop
-}
-
-void WindowSystem::setDesktopName(int desktop, const QString &name)
-{
-    // KWin internal should not use KWindowSystem to set desktop name
-}
-
-void WindowSystem::setExtendedStrut(WId win, int left_width, int left_start, int left_end, int right_width, int right_start, int right_end, int top_width, int top_start, int top_end, int bottom_width, int bottom_start, int bottom_end)
-{
-}
-
-void WindowSystem::setStrut(WId win, int left, int right, int top, int bottom)
-{
-}
-
-void WindowSystem::setOnActivities(WId win, const QStringList &activities)
-{
-}
-
-void WindowSystem::setOnAllDesktops(WId win, bool b)
-{
-}
-
-void WindowSystem::setOnDesktop(WId win, int desktop)
-{
 }
 
 void WindowSystem::setShowingDesktop(bool showing)
@@ -134,51 +38,10 @@ void WindowSystem::setShowingDesktop(bool showing)
     // KWin should not use KWindowSystem to set showing desktop state
 }
 
-void WindowSystem::clearState(WId win, NET::States state)
-{
-    // KWin's windows don't support state
-}
-
-void WindowSystem::setState(WId win, NET::States state)
-{
-    // KWin's windows don't support state
-}
-
-void WindowSystem::setType(WId win, NET::WindowType windowType)
-{
-    // KWin's windows don't support types
-}
-
 bool WindowSystem::showingDesktop()
 {
     // KWin should not use KWindowSystem for showing desktop state
     return false;
-}
-
-QList<WId> WindowSystem::stackingOrder()
-{
-    // KWin should not use KWindowSystem for stacking order
-    return {};
-}
-
-int WindowSystem::viewportWindowToDesktop(const QRect &r)
-{
-    return 0;
-}
-
-QList<WId> WindowSystem::windows()
-{
-    return {};
-}
-
-QRect WindowSystem::workArea(const QList<WId> &excludes, int desktop)
-{
-    return {};
-}
-
-QRect WindowSystem::workArea(int desktop)
-{
-    return {};
 }
 
 void WindowSystem::requestToken(QWindow *win, uint32_t serial, const QString &appId)
