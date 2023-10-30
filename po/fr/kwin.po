@@ -25,7 +25,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-10-20 02:27+0000\n"
-"PO-Revision-Date: 2023-06-27 09:14+0200\n"
+"PO-Revision-Date: 2023-10-28 22:16+0200\n"
 "Last-Translator: Xavier BESNARD <xavier.besnard@neuf.fr>\n"
 "Language-Team: fr\n"
 "Language: fr\n"
@@ -427,7 +427,7 @@ msgstr "Code de scan"
 #, kde-format
 msgctxt "Key according to Qt"
 msgid "Qt::Key code"
-msgstr "Code Qt::Key"
+msgstr "Code « Qt::Key »"
 
 #: debug_console.cpp:310
 #, kde-format
@@ -1291,7 +1291,7 @@ msgstr "Indiquer que KWin s'est arrêté brutalement un certain nombre de fois"
 #: main_wayland.cpp:314
 #, kde-format
 msgid "Start a rootless Xwayland server."
-msgstr "Démarrer un serveur Xwayland rootless."
+msgstr "Démarrer un serveur « XWayland » sans privilèges administrateur."
 
 #: main_wayland.cpp:316
 #, kde-format
@@ -1355,12 +1355,12 @@ msgid ""
 "multiple times"
 msgstr ""
 "Le socket « Wayland » à utiliser pour les connexions entrantes de "
-"« Xwayland ». Ceci peut être défini plusieurs fois."
+"« XWayland ». Ceci peut être défini plusieurs fois."
 
 #: main_wayland.cpp:353
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
-msgstr "Nom de l'affichage « xwayland » ayant été préconfiguré"
+msgstr "Nom de l'affichage « XWayland » ayant été préconfiguré"
 
 #: main_wayland.cpp:357
 #, kde-format
@@ -1422,8 +1422,8 @@ msgstr ""
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
-"Applications à démarrer une seule fois quand Wayland et Xwayland sont "
-"démarrés"
+"Applications à démarrer une seule fois quand les services « Wayland » et "
+"« XWayland » sont démarrés"
 
 #: main_x11.cpp:67
 #, kde-format
