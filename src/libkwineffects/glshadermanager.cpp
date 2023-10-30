@@ -171,6 +171,16 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
         stream << "    vec3 denum = vec3(1.0) + c3 * pow(normalized, vec3(m1));\n";
         stream << "    return pow(num / denum, vec3(m2));\n";
         stream << "}\n";
+        stream << "vec3 pqToNits(vec3 pq) {\n";
+        stream << "    const float c1 = 0.8359375;\n";
+        stream << "    const float c2 = 18.8515625;\n";
+        stream << "    const float c3 = 18.6875;\n";
+        stream << "    const float m1_inv = 1.0 / 0.1593017578125;\n";
+        stream << "    const float m2_inv = 1.0 / 78.84375;\n";
+        stream << "    vec3 num = max(pow(pq, vec3(m2_inv)) - c1, vec3(0.0));\n";
+        stream << "    vec3 den = c2 - c3 * pow(pq, vec3(m2_inv));\n";
+        stream << "    return 10000.0 * pow(num / den, vec3(m1_inv));\n";
+        stream << "}\n";
         stream << "vec3 srgbToLinear(vec3 color) {\n";
         stream << "    bvec3 isLow = lessThanEqual(color, vec3(0.04045f));\n";
         stream << "    vec3 loPart = color / 12.92f;\n";
@@ -211,6 +221,10 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
         stream << "        result.rgb /= max(result.a, 0.001);\n";
         stream << "        result.rgb = sdrBrightness * srgbToLinear(result.rgb);\n";
         stream << "        result.rgb *= result.a;\n";
+        stream << "    } else if (sourceNamedTransferFunction == PQ_EOTF) {\n";
+        stream << "        result.rgb /= max(result.a, 0.001);\n";
+        stream << "        result.rgb = pqToNits(result.rgb);\n";
+        stream << "        result.rgb *= result.a;\n";
         stream << "    } else if (sourceNamedTransferFunction == scRGB_EOTF) {\n";
         stream << "        result.rgb *= 80;\n";
         stream << "    }\n";
@@ -231,7 +245,9 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
         stream << "        result.rgb = linearToSrgb(doTonemapping(result.rgb, sdrBrightness) / sdrBrightness);\n";
         stream << "        result.rgb *= result.a;\n";
         stream << "    } else if (destinationNamedTransferFunction == PQ_EOTF) {\n";
+        stream << "        result.rgb /= max(result.a, 0.001);\n";
         stream << "        result.rgb = nitsToPq(result.rgb);\n";
+        stream << "        result.rgb *= result.a;\n";
         stream << "    } else if (destinationNamedTransferFunction == scRGB_EOTF) {\n";
         stream << "        result.rgb /= 80.0;\n";
         stream << "    }\n";
