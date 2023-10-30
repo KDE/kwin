@@ -61,6 +61,7 @@ SurfaceItemWayland::SurfaceItemWayland(SurfaceInterface *surface, Scene *scene, 
     setBufferSourceBox(surface->bufferSourceBox());
     setBufferSize(surface->bufferSize());
     setSurfaceToBufferMatrix(surface->surfaceToBufferMatrix());
+    setColorDescription(surface->colorDescription());
 }
 
 QList<QRectF> SurfaceItemWayland::shape() const
