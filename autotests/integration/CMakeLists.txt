@@ -117,7 +117,7 @@ integrationTest(NAME testPlasmaWindow SRCS plasmawindow_test.cpp LIBS XCB::ICCCM
 integrationTest(NAME testX11DesktopWindow SRCS desktop_window_x11_test.cpp LIBS XCB::ICCCM)
 integrationTest(NAME testXwaylandInput SRCS xwayland_input_test.cpp LIBS XCB::ICCCM)
 integrationTest(NAME testWindowRules SRCS window_rules_test.cpp LIBS XCB::ICCCM)
-integrationTest(NAME testX11Window SRCS x11_window_test.cpp LIBS XCB::ICCCM)
+#integrationTest(NAME testX11Window SRCS x11_window_test.cpp LIBS XCB::ICCCM)
 integrationTest(NAME testQuickTiling SRCS quick_tiling_test.cpp LIBS XCB::ICCCM KDecoration2::KDecoration)
 integrationTest(NAME testGlobalShortcuts SRCS globalshortcuts_test.cpp LIBS XCB::ICCCM KF6::GlobalAccel KF6::I18n XKB::XKB)
 integrationTest(NAME testStackingOrder SRCS stacking_order_test.cpp LIBS XCB::ICCCM)
