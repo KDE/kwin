@@ -192,7 +192,7 @@ KCM.ScrollViewKCM {
                 }
             }
 
-            delegate: Kirigami.AbstractListItem {
+            delegate: QQC2.ItemDelegate {
                 id: propertyDelegate
                 highlighted: false
                 width: ListView.view.width

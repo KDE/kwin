@@ -10,7 +10,7 @@ import QtQuick.Controls as QQC2
 import org.kde.kirigami 2.10 as Kirigami
 import org.kde.kcmutils as KCM
 
-Kirigami.AbstractListItem {
+QQC2.ItemDelegate {
     id: ruleDelegate
 
     property bool ruleEnabled: model.enabled
