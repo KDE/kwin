@@ -103,20 +103,11 @@ void PlacementTracker::restore(const QString &key)
                 }
             }
             if (restore) {
-                window->setFullScreen(false);
-                window->setQuickTileMode(QuickTileFlag::None, true);
-                window->setMaximize(false, false);
-                if (newData.quickTile || newData.maximize) {
-                    window->moveResize(newData.geometryRestore);
-                    window->setQuickTileMode(newData.quickTile, true);
-                    window->setMaximize(newData.maximize & MaximizeMode::MaximizeVertical, newData.maximize & MaximizeMode::MaximizeHorizontal);
-                }
-                if (newData.fullscreen) {
-                    window->moveResize(newData.fullscreenGeometryRestore);
-                    window->setFullScreen(newData.fullscreen);
-                }
+                window->setQuickTileMode(newData.quickTile, true);
+                window->setMaximize(newData.maximize & MaximizeMode::MaximizeVertical, newData.maximize & MaximizeMode::MaximizeHorizontal);
+                window->setFullScreen(newData.fullscreen);
                 if (newData.quickTile || newData.maximize || newData.fullscreen) {
-                    // restore geometry isn't necessarily on the output the window was, so explicitly restore it
+                    // send the window to the correct output
                     const auto outputIt = std::find_if(outputs.begin(), outputs.end(), [&newData](const auto output) {
                         return output->uuid() == newData.outputUuid;
                     });
@@ -126,6 +117,8 @@ void PlacementTracker::restore(const QString &key)
                 } else {
                     window->moveResize(newData.geometry);
                 }
+                window->setGeometryRestore(newData.geometryRestore);
+                window->setFullscreenGeometryRestore(newData.fullscreenGeometryRestore);
                 m_lastRestoreData[window] = dataForWindow(window);
             }
         }

@@ -1021,6 +1021,7 @@ public:
     virtual void setFullScreen(bool set, bool user = true);
 
     QRectF geometryRestore() const;
+    void setGeometryRestore(const QRectF &rect);
     virtual MaximizeMode maximizeMode() const;
     virtual MaximizeMode requestedMaximizeMode() const;
     virtual void maximize(MaximizeMode mode);
@@ -1725,7 +1726,6 @@ protected:
     int borderRight() const;
     int borderTop() const;
     int borderBottom() const;
-    void setGeometryRestore(const QRectF &rect);
 
     void blockGeometryUpdates(bool block);
     void blockGeometryUpdates();
