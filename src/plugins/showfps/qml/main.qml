@@ -44,13 +44,13 @@ Rectangle {
 
                 colorSource: Charts.SingleValueSource { value: Kirigami.Theme.highlightColor }
 
-                Charts.GridLines {
+                ChartControls.GridLines {
                     anchors.fill: parent
                     z: -1
 
                     chart: fpsChart
 
-                    direction: Charts.GridLines.Vertical;
+                    direction: ChartControls.GridLines.Vertical;
 
                     major.visible: false
 
@@ -89,13 +89,13 @@ Rectangle {
                     fillMode: Charts.HistoryProxySource.FillFromStart
                 }
 
-                Charts.GridLines {
+                ChartControls.GridLines {
                     anchors.fill: parent
                     z: -1
 
                     chart: parent
 
-                    direction: Charts.GridLines.Vertical;
+                    direction: ChartControls.GridLines.Vertical;
 
                     major.visible: false
 
@@ -141,13 +141,13 @@ Rectangle {
                     fillMode: Charts.HistoryProxySource.FillFromStart
                 }
 
-                Charts.GridLines {
+                ChartControls.GridLines {
                     anchors.fill: parent
                     z: -1
 
                     chart: parent
 
-                    direction: Charts.GridLines.Vertical;
+                    direction: ChartControls.GridLines.Vertical;
 
                     major.visible: false
 
