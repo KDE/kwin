@@ -995,6 +995,7 @@ public:
     void setSuspended(bool suspended);
 
     QRectF fullscreenGeometryRestore() const;
+    void setFullscreenGeometryRestore(const QRectF &geom);
     virtual bool isFullScreenable() const;
     virtual bool isFullScreen() const;
     virtual bool isRequestedFullScreen() const;
@@ -1003,6 +1004,7 @@ public:
     bool wantsAdaptiveSync() const;
 
     QRectF geometryRestore() const;
+    void setGeometryRestore(const QRectF &rect);
     virtual bool isMaximizable() const;
     virtual MaximizeMode maximizeMode() const;
     virtual MaximizeMode requestedMaximizeMode() const;
@@ -1547,8 +1549,6 @@ protected:
     int borderRight() const;
     int borderTop() const;
     int borderBottom() const;
-    void setGeometryRestore(const QRectF &rect);
-    void setFullscreenGeometryRestore(const QRectF &geom);
 
     void blockGeometryUpdates(bool block);
     void blockGeometryUpdates();
