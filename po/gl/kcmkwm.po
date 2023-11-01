@@ -7,14 +7,14 @@
 # Marce Villarino <mvillarino@kde-espana.es>, 2009, 2011.
 # Marce Villarino <mvillarino@kde-espana.es>, 2012, 2013, 2014.
 # Adrián Chaves Fernández <adriyetichaves@gmail.com>, 2015, 2017.
-# Adrián Chaves (Gallaecio) <adrian@chaves.io>, 2017, 2019, 2020, 2023.
+# SPDX-FileCopyrightText: 2023 Adrián Chaves (Gallaecio)
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-03 00:48+0000\n"
-"PO-Revision-Date: 2023-08-06 05:48+0200\n"
+"PO-Revision-Date: 2023-10-31 06:26+0100\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
 "Language: gl\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 23.04.3\n"
+"X-Generator: Lokalize 23.08.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -491,35 +491,7 @@ msgstr "&Colocación das xanelas:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_Placement)
 #: advanced.ui:76
-#, fuzzy, kde-format
-#| msgid ""
-#| "<html><head/><body><p>The placement policy determines where a new window "
-#| "will appear on the desktop.</p><ul style=\"margin-top: 0px; margin-"
-#| "bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;"
-#| "\"><li style=\" margin-top:12px; margin-bottom:0px; margin-left:0px; "
-#| "margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" "
-#| "font-style:italic;\">Smart</span> will try to achieve a minimum overlap "
-#| "of windows</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
-#| "left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-#| "style=\" font-style:italic;\">Maximizing</span> will try to maximize "
-#| "every window to fill the whole screen. It might be useful to selectively "
-#| "affect placement of some windows using the window-specific settings.</"
-#| "li><li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; "
-#| "margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" "
-#| "font-style:italic;\">Cascade</span> will cascade the windows</li><li "
-#| "style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
-#| "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
-#| "style:italic;\">Random</span> will use a random position</li><li style=\" "
-#| "margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
-#| "block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
-#| "\">Centered</span> will place the window centered</li><li style=\" margin-"
-#| "top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
-#| "indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Zero-"
-#| "cornered</span> will place the window in the top-left corner</li><li "
-#| "style=\" margin-top:0px; margin-bottom:12px; margin-left:0px; margin-"
-#| "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
-#| "style:italic;\">Under mouse</span> will place the window under the "
-#| "pointer</li></ul></body></html>"
+#, kde-format
 msgid ""
 "<html><head/><body><p>The placement policy determines where a new window "
 "will appear on the desktop.</p><ul style=\"margin-top: 0px; margin-bottom: "
@@ -558,10 +530,7 @@ msgstr ""
 "maneira selectiva á colocación dalgunhas xanelas usando a configuración "
 "individual das xanelas.</li><li style=\" margin-top:0px; margin-bottom:0px; "
 "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
-"\"><span style=\" font-style:italic;\">Fervenza</span> disporá as xanelas en "
-"fervenza</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
-"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-"style=\" font-style:italic;\">Aleatoria</span> usará unha posición "
+"\"><span style=\" font-style:italic;\">Aleatoria</span> usará unha posición "
 "aleatoria</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
 "left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
 "style=\" font-style:italic;\">Centrada</span> colocará as xanelas centradas</"
@@ -617,13 +586,16 @@ msgid ""
 "windows are allowed to do so. This will override the window placement mode "
 "defined above."
 msgstr ""
+"Cando se activa, ás aplicacións que poden lembrar as posicións das súas "
+"xanelas permíteselles facelo. Isto sobredefinirá o modo de colocación de "
+"xanelas definido enriba."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
 #: advanced.ui:116
 #, kde-format
 msgid ""
 "Allow apps to remember the positions of their own windows, if they support it"
-msgstr ""
+msgstr "Permitir ás aplicacións lembrar a posición das súas xanelas, se poden."
 
 #. i18n: ectx: property (text), widget (QLabel, specialWindowsLabel)
 #: advanced.ui:123
@@ -655,13 +627,13 @@ msgstr "Agochar as xanelas de utilidades das aplicacións inactivas."
 #: advanced.ui:143
 #, kde-format
 msgid "Virtual Desktop behavior:"
-msgstr ""
+msgstr "Comportamento dos escritorios virtuais:"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyDescriptionLabel)
 #: advanced.ui:153
 #, kde-format
 msgid "When activating a window on a different Virtual Desktop:"
-msgstr ""
+msgstr "Ao activar unha xanela noutro escritorio virtual:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:160
@@ -675,18 +647,24 @@ msgid ""
 "Virtual Desktop</span> will cause the window to jump to the active Virtual "
 "Desktop. </p></body></html>"
 msgstr ""
+"<html><head/><body><p>Esta opción controla o que sucede cando se activa unha "
+"xanela aberta nun escritorio virtual distinto do actual. </p><p><span style="
+"\" font-style:italic;\">Cambiar a ese escritorio virtual</span> cambiará ao "
+"escritorio virtual no que se atopa a xanela.</p><p><span style=\" font-style:"
+"italic;\">Traer a xanela a este escritorio virtual</span> fará que a xanela "
+"salte ao escritorio virtual actual.</p></body></html>"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:164
 #, kde-format
 msgid "Switch to that Virtual Desktop"
-msgstr ""
+msgstr "Cambiar a ese escritorio virtual"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:169
 #, kde-format
 msgid "Bring window to current Virtual Desktop"
-msgstr ""
+msgstr "Traer a xanela ao escritorio virtual actual"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyLabel)
 #: focus.ui:22
@@ -923,23 +901,15 @@ msgstr "Comportamento con varias pantallas"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ActiveMouseScreen)
 #: focus.ui:203
-#, fuzzy, kde-format
-#| msgid ""
-#| "When this option is enabled, the active Xinerama screen (where new "
-#| "windows appear, for example) is the screen containing the mouse pointer. "
-#| "When disabled, the active Xinerama screen is the screen containing the "
-#| "focused window. By default this option is disabled for Click to focus and "
-#| "enabled for other focus policies."
+#, kde-format
 msgid ""
 "When this option is enabled, the active screen (where new windows appear, "
 "for example) is the screen containing the mouse pointer. When disabled, the "
 "active screen is the screen containing the focused window."
 msgstr ""
-"Se escolle esta opción a pantalla activa de Xinerama (onde aparecen as novas "
-"xanelas, por exemplo) será a pantalla co punteiro do rato. Se desmarca esta "
-"opción, a pantalla activa de Xinerama será a pantalla que contén a xanela "
-"focalizada. De maneira predeterminada esta opción está desactivada coa "
-"política de focalización Premer para focalizar e activada para as demais."
+"Se escolle esta opción a pantalla activa (onde aparecen as novas xanelas, "
+"por exemplo) será a pantalla co punteiro do rato. Se desmarca esta opción, a "
+"pantalla activa será a pantalla que contén a xanela focalizada."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
 #: focus.ui:206
@@ -949,16 +919,13 @@ msgstr "A pantalla activa &segue o rato."
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
 #: focus.ui:213
-#, fuzzy, kde-format
-#| msgid ""
-#| "When this option is enabled, focus operations are limited only to the "
-#| "active Xinerama screen"
+#, kde-format
 msgid ""
 "When this option is enabled, focus operations are limited only to the active "
 "screen"
 msgstr ""
 "Se escolle esta opción as operacións de focalización limitaranse só á "
-"pantalla de Xinerama activa"
+"pantalla activa"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
 #: focus.ui:216
@@ -968,10 +935,9 @@ msgstr "&Separar o foco da pantalla."
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
 #: focus.ui:229
-#, fuzzy, kde-format
-#| msgid "Window &activation policy:"
+#, kde-format
 msgid "Window activation policy description"
-msgstr "Política de &activación de xanelas:"
+msgstr "Descrición da política de activación de xanelas"
 
 #: main.cpp:73
 #, kde-format
@@ -1117,7 +1083,7 @@ msgstr "Maximizar"
 #: mouse.ui:45 mouse.ui:620 mouse.ui:655 mouse.ui:690
 #, kde-format
 msgid "Vertically maximize"
-msgstr ""
+msgstr "Maximizar verticalmente"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
@@ -1127,7 +1093,7 @@ msgstr ""
 #: mouse.ui:50 mouse.ui:625 mouse.ui:660 mouse.ui:695
 #, kde-format
 msgid "Horizontally maximize"
-msgstr ""
+msgstr "Maximizar horizontalmente"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
@@ -1357,31 +1323,17 @@ msgid "Only when overlapping"
 msgstr "Só cando se superpoñan."
 
 #: windows.cpp:97
-#, fuzzy, kde-format
-#| msgid ""
-#| "<html><head/><body><p><span style=\" font-style:italic;\">Click to focus:"
-#| "</span> A window becomes active when you click into it. This behavior is "
-#| "common on other operating systems and likely what you want.</p></body></"
-#| "html>"
+#, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
 "This behavior is common on other operating systems and likely what you want."
 msgstr ""
-"<html><head/><body><p><span style=\" font-style:italic;\">Premer para "
-"focalizar:</span> A xanelas actívanse cando as preme. Este comportamento é o "
-"mesmo que noutros sistemas operativos e seguramente é o que quere.</p></"
-"body></html>"
+"<em>Premer para enfocar:</em> as xanelas actívanse ao premelas. Este "
+"comportamento é o habitual noutros sistemas operativos, e probabelmente o "
+"que busca."
 
 #: windows.cpp:101
-#, fuzzy, kde-format
-#| msgid ""
-#| "<html><head/><body><p><span style=\" font-style:italic;\">Click to focus "
-#| "(mouse precedence):</span> Mostly the same as <span style=\" font-style:"
-#| "italic;\">Click to focus</span>. If an active window has to be chosen by "
-#| "the system (eg. because the currently active one was closed) the window "
-#| "under the mouse is the preferred candidate. Unusual, but possible variant "
-#| "of <span style=\" font-style:italic;\">Click to focus</span>.</p></body></"
-#| "html>"
+#, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
 "focus</em>. If an active window has to be chosen by the system (eg. because "
@@ -1389,67 +1341,39 @@ msgid ""
 "preferred candidate. Unusual, but possible variant of <em>Click to focus</"
 "em>."
 msgstr ""
-"<html><head/><body><p><span style=\" font-style:italic;\">Premer para "
-"focalizar (precedencia do rato):</span> Isto é o mesmo que <span style=\" "
-"font-style:italic;\">Premer para focalizar</span>. Se o sistema debe "
-"escoller unha xanela activa (p. ex. porque a actual se pechase)  a xanela "
-"baixo o rato é a candidata preferida. Atípico, pero unha variante posíbel de "
-"<span style=\" font-style:italic;\">Premer para focalizar</span>.</p></"
-"body></html>"
+"<em>Premer para enfocar (precedencia do rato):</em> como <em>Premer para "
+"enfocar</em>, pero se o sistema ten que escoller unha xanela activa (p. ex. "
+"ao pechar a activa) a xanela baixo o rato ten preferencia. Unha variante "
+"pouco habitual pero posíbel de <em>Premer para enfocar</em>."
 
 #: windows.cpp:106
-#, fuzzy, kde-format
-#| msgid ""
-#| "<html><head/><body><p><span style=\" font-style:italic;\">Focus follows "
-#| "mouse:</span> Moving the mouse onto a window will activate it. Eg. "
-#| "windows randomly appearing under the mouse will not gain the focus. <span "
-#| "style=\" font-style:italic;\">Focus stealing prevention</span> takes "
-#| "place as usual. Think as <span style=\" font-style:italic;\">Click to "
-#| "focus</span> just without having to actually click.</p></body></html>"
+#, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
 "it. Eg. windows randomly appearing under the mouse will not gain the focus. "
 "<em>Focus stealing prevention</em> takes place as usual. Think as <em>Click "
 "to focus</em> just without having to actually click."
 msgstr ""
-"<html><head/><body><p><span style=\" font-style:italic;\">O foco segue o "
-"rato:</span> As xanelas actívanse ao mover o rato sobre unha delas. P. ex. "
-"as xanelas que aparezan aleatoriamente baixo o rato non gañarán o foco. A "
-"<span style=\" font-style:italic;\">Prevención do roubo do foco</span> é a "
-"habitual. Pense en <span style=\" font-style:italic;\">Premer para "
-"focalizar</span> pero sen ter que premer.</p></body></html>"
+"<em>Foco tras o rato:</em> ao mover o rato sobre unha xanela, a xanela "
+"activarase. As xanelas que aparezan xa baixo o rato non recibirán o foco. A "
+"<em>prevención de roubo do foco</em> funciona como de costume. É como "
+"<em>Premer para enfocar</em> pero sen premer."
 
 #: windows.cpp:110
-#, fuzzy, kde-format
-#| msgid ""
-#| "<html><head/><body><p>This is mostly the same as <span style=\" font-"
-#| "style:italic;\">Focus follows mouse</span>. If an active window has to be "
-#| "chosen by the system (eg. because the currently active one was closed) "
-#| "the window under the mouse is the preferred candidate. Choose this, if "
-#| "you want a hover controlled focus.</p></body></html>"
+#, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
 "has to be chosen by the system (eg. because the currently active one was "
 "closed) the window under the mouse is the preferred candidate. Choose this, "
 "if you want a hover controlled focus."
 msgstr ""
-"<html><head/><body><p>Isto é o mesmo que <span style=\" font-style:italic;"
-"\">O foco segue o rato</span>. Se o sistema debe escoller unha xanela activa "
-"(p. ex. porque a actual se pechase) a xanela baixo o punteiro é a candidata "
-"preferida. Escolla isto se quere un foco controlado ao pousar o punteiro.</"
-"p></body></html>"
+"Isto é o mesmo que <em>Foco tras o rato</em>. Se o sistema debe escoller "
+"unha xanela activa (p. ex. porque a actual se pechase) a xanela baixo o "
+"punteiro é a candidata preferida. Escolla isto se quere un foco controlado "
+"ao pousar o punteiro."
 
 #: windows.cpp:115
-#, fuzzy, kde-format
-#| msgid ""
-#| "<html><head/><body><p><span style=\" font-style:italic;\">Focus under "
-#| "mouse:</span> The focus always remains on the window under the mouse.<br/"
-#| "><span style=\" font-weight:600;\">Warning: </span><span style=\" font-"
-#| "style:italic;\">Focus stealing prevention</span> and the <span style=\" "
-#| "font-style:italic;\">tabbox ('Alt+Tab') </span>contradict the activation "
-#| "policy and will not work. You very likely want to use <span style=\" font-"
-#| "style:italic;\">Focus follows mouse (mouse precedence)</span> instead!</"
-#| "p></body></html>"
+#, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
 "mouse.<br/><strong>Warning:</strong> <em>Focus stealing prevention</em> and "
@@ -1457,26 +1381,14 @@ msgid ""
 "not work. You very likely want to use <em>Focus follows mouse (mouse "
 "precedence)</em> instead!"
 msgstr ""
-"<html><head/><body><p><span style=\" font-style:italic;\">Foco baixo o rato:"
-"</span> O foco permanece na xanela que haxa baixo o rato.<br/> <span style="
-"\" font-weight:600;\">Aviso: </span> A <span style=\" font-style:italic;"
-"\">prevención do roubo do foco</span> e o <span style=\" font-style:italic;"
-"\">percorrido de xanelas («Alt+Tab»)</span> contradín a política e non han  "
-"funcionar. O máis seguro é que prefira usar <span style=\" font-style:italic;"
-"\">O foco segue o rato (precedencia do rato)</span> no seu lugar!</p>"
+"<em>Foco baixo o rato:</em> O foco permanece sempre na xanela baixo o rato."
+"<br/><strong>Aviso:</strong> A <em>prevención de roubo do foco</em> e a "
+"<em>caixa de tabulación («Alt+Tab»)</em> contradín a política de activación "
+"e non funcionarán. O máis probábel é que prefira <em>Foco tras o rato "
+"(precedencia do rato)</em> en vez de isto!"
 
 #: windows.cpp:119
-#, fuzzy, kde-format
-#| msgid ""
-#| "<html><head/><body><p><span style=\" font-style:italic;\">Focus strictly "
-#| "under mouse:</span> The focus is always on the window under the mouse (in "
-#| "doubt nowhere) very much like the focus behavior in an unmanaged legacy "
-#| "X11 environment.<br/><span style=\" font-weight:600;\">Warning: </"
-#| "span><span style=\" font-style:italic;\">Focus stealing prevention</span> "
-#| "and the <span style=\" font-style:italic;\">tabbox ('Alt+Tab') </"
-#| "span>contradict the activation policy and will not work. You very likely "
-#| "want to use <span style=\" font-style:italic;\">Focus follows mouse "
-#| "(mouse precedence)</span> instead!</p></body></html>"
+#, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "
 "the mouse (in doubt nowhere) very much like the focus behavior in an "
@@ -1485,15 +1397,13 @@ msgid ""
 "activation policy and will not work. You very likely want to use <em>Focus "
 "follows mouse (mouse precedence)</em> instead!"
 msgstr ""
-"<html><head/><body><p><span style=\" font-style:italic;\">Focalizar "
-"estritamente baixo o rato</span> O foco sempre está na xanela baixo o rato, "
-"se hai dúbidas en ningures como se comportaba o foco nun ambiente herdado "
-"X11 sen xestionar.<br/><span style=\" font-weight:600;\">Aviso:</span> A "
-"<span style=\" font-style:italic;\">prevención do roubo do rato</span> e o "
-"<span style=\" font-style:italic;\">selector («Alt+Tab»)</span> contradín a "
-"política e non han funcionar. Posibelmente queira usar <span style=\" font-"
-"style:italic;\">O foco segue o rato (precedencia do rato)</span> no seu "
-"lugar.</p></body></html>"
+"<em>Foco estritamente baixo o rato:</em> O foco está sempre na xanela baixo "
+"o rato, en ningures en caso de dúbida, basicamente como o comportamento do "
+"foco nun contorno de X11 obsoleto non xestionado.<br/><strong>Aviso:</"
+"strong> A <em>prevención de roubo do foco</em> e  a <em>caixa de tabulación "
+"(«Alt+Tab»)</em> contradín a política de activación e non funcionarán. O "
+"máis probábel é que prefira <em>Foco tras o rato (precedencia do rato)</em> "
+"en vez de isto!"
 
 #~ msgid "Cascaded"
 #~ msgstr "En fervenza"
