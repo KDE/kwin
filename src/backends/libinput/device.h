@@ -141,6 +141,8 @@ class KWIN_EXPORT Device : public InputDevice
     Q_PROPERTY(bool supportsOutputArea READ supportsOutputArea CONSTANT)
     Q_PROPERTY(QRectF defaultOutputArea READ defaultOutputArea CONSTANT)
     Q_PROPERTY(QRectF outputArea READ outputArea WRITE setOutputArea NOTIFY outputAreaChanged)
+    Q_PROPERTY(bool defaultMapToWorkspace READ defaultMapToWorkspace CONSTANT)
+    Q_PROPERTY(bool mapToWorkspace READ isMapToWorkspace WRITE setMapToWorkspace NOTIFY mapToWorkspaceChanged)
 
 public:
     explicit Device(libinput_device *device, QObject *parent = nullptr);
@@ -628,6 +630,18 @@ public:
     QRectF outputArea() const;
     void setOutputArea(const QRectF &outputArea);
 
+    bool defaultMapToWorkspace() const
+    {
+        return defaultValue("MapToWorkspace", false);
+    }
+
+    bool isMapToWorkspace() const
+    {
+        return m_mapToWorkspace;
+    }
+
+    void setMapToWorkspace(bool mapToWorkspace);
+
     /**
      * Gets the Device for @p native. @c null if there is no Device for @p native.
      */
@@ -653,6 +667,7 @@ Q_SIGNALS:
     void scrollFactorChanged();
     void clickMethodChanged();
     void outputAreaChanged();
+    void mapToWorkspaceChanged();
 
 private:
     template<typename T>
@@ -740,6 +755,7 @@ private:
 
     LEDs m_leds;
     QRectF m_outputArea = QRectF(0, 0, 1, 1);
+    bool m_mapToWorkspace = false;
 };
 
 }

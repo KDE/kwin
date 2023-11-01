@@ -99,6 +99,7 @@ enum class ConfigKey {
     Calibration,
     OutputName,
     OutputArea,
+    MapToWorkspace
 };
 
 struct ConfigDataBase
@@ -206,6 +207,7 @@ static const QMap<ConfigKey, std::shared_ptr<ConfigDataBase>> s_configData{
     {ConfigKey::Calibration, std::make_shared<ConfigData<CalibrationMatrix>>()},
     {ConfigKey::OutputName, std::make_shared<ConfigData<QString>>(QByteArrayLiteral("OutputName"), &Device::setOutputName, &Device::defaultOutputName)},
     {ConfigKey::OutputArea, std::make_shared<ConfigData<QRectF>>(QByteArrayLiteral("OutputArea"), &Device::setOutputArea, &Device::defaultOutputArea)},
+    {ConfigKey::MapToWorkspace, std::make_shared<ConfigData<bool>>(QByteArrayLiteral("MapToWorkspace"), &Device::setMapToWorkspace, &Device::defaultMapToWorkspace)},
 };
 
 namespace
@@ -709,6 +711,15 @@ void Device::setOutputArea(const QRectF &outputArea)
         m_outputArea = outputArea;
         writeEntry(ConfigKey::OutputArea, m_outputArea);
         Q_EMIT outputAreaChanged();
+    }
+}
+
+void Device::setMapToWorkspace(bool mapToWorkspace)
+{
+    if (m_mapToWorkspace != mapToWorkspace) {
+        m_mapToWorkspace = mapToWorkspace;
+        writeEntry(ConfigKey::MapToWorkspace, m_mapToWorkspace);
+        Q_EMIT mapToWorkspaceChanged();
     }
 }
 }

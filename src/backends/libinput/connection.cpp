@@ -511,16 +511,19 @@ void Connection::processEvents()
 
             if (workspace()) {
 #ifndef KWIN_BUILD_TESTING
-                Output *output = tte->device()->output();
-                if (!output && workspace()->activeWindow()) {
-                    output = workspace()->activeWindow()->output();
+                QPointF globalPos;
+                if (tte->device()->isMapToWorkspace()) {
+                    globalPos = workspace()->geometry().topLeft() + tte->transformedPosition(workspace()->geometry().size());
+                } else {
+                    Output *output = tte->device()->output();
+                    if (!output && workspace()->activeWindow()) {
+                        output = workspace()->activeWindow()->output();
+                    }
+                    if (!output) {
+                        output = workspace()->activeOutput();
+                    }
+                    globalPos = devicePointToGlobalPosition(tte->transformedPosition(output->modeSize()), output);
                 }
-                if (!output) {
-                    output = workspace()->activeOutput();
-                }
-                const QPointF globalPos =
-                    devicePointToGlobalPosition(tte->transformedPosition(output->modeSize()),
-                                                output);
 #else
                 const QPointF globalPos;
 #endif
