@@ -90,8 +90,13 @@ static const TransKey g_rgQtToSymX[] = {
     {XKB_KEY_Super_L, Qt::Key_Super_L, Qt::KeyboardModifiers()},
     {XKB_KEY_Super_R, Qt::Key_Super_R, Qt::KeyboardModifiers()},
     {XKB_KEY_Menu, Qt::Key_Menu, Qt::KeyboardModifiers()},
+#if QT_VERSION < QT_VERSION_CHECK(6, 6, 0)
     {XKB_KEY_Hyper_L, Qt::Key_Hyper_L, Qt::KeyboardModifiers()},
     {XKB_KEY_Hyper_R, Qt::Key_Hyper_R, Qt::KeyboardModifiers()},
+#else
+    {XKB_KEY_Hyper_L, Qt::Key_Meta, Qt::KeyboardModifiers()},
+    {XKB_KEY_Hyper_R, Qt::Key_Meta, Qt::KeyboardModifiers()},
+#endif
     {XKB_KEY_Help, Qt::Key_Help, Qt::KeyboardModifiers()},
     {XKB_KEY_KP_Space, Qt::Key_Space, Qt::KeypadModifier},
     {XKB_KEY_KP_Tab, Qt::Key_Tab, Qt::KeypadModifier},
@@ -253,7 +258,7 @@ static const TransKey g_rgQtToSymX[] = {
     {XKB_KEY_XF86LaunchE, Qt::Key_LaunchE, Qt::KeyboardModifiers()},
     {XKB_KEY_XF86LaunchF, Qt::Key_LaunchF, Qt::KeyboardModifiers()},
 
-     // Latin-1
+    // Latin-1
     {XKB_KEY_exclam, Qt::Key_Exclam, Qt::KeyboardModifiers()},
     {XKB_KEY_quotedbl, Qt::Key_QuoteDbl, Qt::KeyboardModifiers()},
     {XKB_KEY_numbersign, Qt::Key_NumberSign, Qt::KeyboardModifiers()},
