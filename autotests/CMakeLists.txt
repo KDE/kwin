@@ -207,8 +207,8 @@ target_link_libraries(testXkb
 
     XKB::XKB
 )
-#add_test(NAME kwin-testXkb COMMAND testXkb)
-#ecm_mark_as_test(testXkb)
+add_test(NAME kwin-testXkb COMMAND testXkb)
+ecm_mark_as_test(testXkb)
 
 ########################################################
 # Test FTrace
