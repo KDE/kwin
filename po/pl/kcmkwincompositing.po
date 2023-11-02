@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-29 00:59+0000\n"
+"POT-Creation-Date: 2023-11-02 01:40+0000\n"
 "PO-Revision-Date: 2023-01-21 10:04+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -158,18 +158,15 @@ msgstr "Dąż do płynniejszych animacji"
 msgid "Force smoothest animations"
 msgstr "Wymuś najpłynniejsze animacje"
 
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowTearing)
-#: compositing.ui:213
-#, kde-format
-msgid ""
-"Reduce latency by allowing screen tearing artifacts in fullscreen windows"
-msgstr ""
-"Ogranicz opóźnienie zezwalając na strzępienie dla okien pełnoekranowych"
-
 #: main.cpp:78
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr "Włącz wykrywanie OpenGL"
+
+#~ msgid ""
+#~ "Reduce latency by allowing screen tearing artifacts in fullscreen windows"
+#~ msgstr ""
+#~ "Ogranicz opóźnienie zezwalając na strzępienie dla okien pełnoekranowych"
 
 #~ msgid "Allows applications to cause screen tearing in fullscreen."
 #~ msgstr ""

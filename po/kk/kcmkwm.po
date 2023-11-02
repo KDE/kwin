@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-15 02:18+0000\n"
+"POT-Creation-Date: 2023-11-02 01:40+0000\n"
 "PO-Revision-Date: 2013-06-21 05:42+0600\n"
 "Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
 "Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
@@ -1335,7 +1335,7 @@ msgstr ""
 msgid "Only when overlapping"
 msgstr "&Тек қабаттасқан терезелерді ғана жабыстру"
 
-#: windows.cpp:97
+#: windows.cpp:93
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Click To Focus</b><br>\n"
@@ -1351,7 +1351,7 @@ msgstr ""
 "Бұл басқа операциялық жүйелермен ортақ тәртіп.<br>\n"
 "Сіздің де қалауыңыз шығар."
 
-#: windows.cpp:101
+#: windows.cpp:96
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Click To Focus - Mouse Precedence</b><br>\n"
@@ -1374,7 +1374,7 @@ msgstr ""
 "тышқан меңзеп тұрғаны тағайындалады.<br><br>\n"
 "Біртүрлі, бірақ мүмкін <i>Түртуге еру</i>дегеннің варианты."
 
-#: windows.cpp:106
+#: windows.cpp:99
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Follows Mouse</b><br>\n"
@@ -1395,7 +1395,7 @@ msgstr ""
 "Назардан айырылуды болдырмау әдеттегідей істейді.<br><br>\n"
 "<i>Түртуге еру</i> дегендей, бірақ, түртусіз."
 
-#: windows.cpp:110
+#: windows.cpp:102
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Follows Mouse - Mouse Precedence</b><br>\n"
@@ -1417,7 +1417,7 @@ msgstr ""
 "тышқан меңзеп тұрғаны тағайындалады.<br><br>\n"
 "Егер назар меңзегенге ауыссын десеңіз - осыны таңдаңыз."
 
-#: windows.cpp:115
+#: windows.cpp:105
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Under Mouse</b><br>\n"
@@ -1444,7 +1444,7 @@ msgstr ""
 "дегендер бұнымен қайшы, сондықтан <b>істемейді</b>.<br><br>\n"
 "Мүмкін, бұдан гөрі <i>Тышқанға еру - Тышқан басымды</i><br> артық дейсіз!"
 
-#: windows.cpp:119
+#: windows.cpp:108
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Strictly Under Mouse</b><br>\n"

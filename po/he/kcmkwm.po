@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-15 02:18+0000\n"
+"POT-Creation-Date: 2023-11-02 01:40+0000\n"
 "PO-Revision-Date: 2023-10-19 10:10+0300\n"
 "Last-Translator: Elkana Bardugo <ttv200@gmail.com>\n"
 "Language-Team: Hebrew <kde-i18n-doc@kde.org>\n"
@@ -1209,7 +1209,7 @@ msgstr ""
 msgid "Only when overlapping"
 msgstr "רק כשהם חופפים"
 
-#: windows.cpp:97
+#: windows.cpp:93
 #, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
@@ -1218,7 +1218,7 @@ msgstr ""
 "<em>לחיצה למיקוד:</em> חלון יהפוך להיות פעיל בלחיצה עליו. התנהגות זו נפוצה "
 "במערכות הפעלה אחרות וכנראה שזה מה שיהיה לך הכי מוכר."
 
-#: windows.cpp:101
+#: windows.cpp:96
 #, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
@@ -1231,7 +1231,7 @@ msgstr ""
 "חובה על המערכת לבחור בחלון פעיל (למשל: כיוון שהחלון הנוכחי נסגר) החלון שמתחת "
 "לעכבר הוא המועמד המועדף. חריג, אבל חידוד אפשרי של <em>לחיצה למיקוד</em>."
 
-#: windows.cpp:106
+#: windows.cpp:99
 #, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
@@ -1243,7 +1243,7 @@ msgstr ""
 "מיקוד</em> מתרחשת כרגיל. אפשר לחשוב על זה כעל <em>לחיצה למיקוד</em> רק בלי "
 "שצריך ללחוץ בפועל."
 
-#: windows.cpp:110
+#: windows.cpp:102
 #, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
@@ -1255,7 +1255,7 @@ msgstr ""
 "(למשל: כיוון שהחלון הנוכחי נסגר) החלון שמתחת לעכבר הוא המועמד המועדף. כדי "
 "לעבוד עם מיקוד שנשלט בריחוף, יש לבחור בזה."
 
-#: windows.cpp:115
+#: windows.cpp:105
 #, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
@@ -1269,7 +1269,7 @@ msgstr ""
 "+Tab’)</em> סותרות את מדיניות ההפעלה ולא תעבודנה. סביר מאוד להניח שעדיף לך "
 "להשתמש ב<em>מיקוד עוקב עכבר (עדיפות לעכבר)</em> במקום!"
 
-#: windows.cpp:119
+#: windows.cpp:108
 #, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "

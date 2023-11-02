@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-15 02:18+0000\n"
+"POT-Creation-Date: 2023-11-02 01:40+0000\n"
 "PO-Revision-Date: 2017-09-28 17:58+0200\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -1311,7 +1311,7 @@ msgid "Only when overlapping"
 msgstr "Уклапање &само у случају преклапања"
 
 # >> @label
-#: windows.cpp:97
+#: windows.cpp:93
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Click To Focus</b><br>\n"
@@ -1327,7 +1327,7 @@ msgstr ""
 "вероватно оно што желите."
 
 # >> @label
-#: windows.cpp:101
+#: windows.cpp:96
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Click To Focus - Mouse Precedence</b><br>\n"
@@ -1349,7 +1349,7 @@ msgstr ""
 "<br /><br />Необична, али могућа варијанта фокуса кликом."
 
 # >> @label
-#: windows.cpp:106
+#: windows.cpp:99
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Follows Mouse</b><br>\n"
@@ -1370,7 +1370,7 @@ msgstr ""
 "фокусу кликом, само без клика."
 
 # >> @label
-#: windows.cpp:110
+#: windows.cpp:102
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Follows Mouse - Mouse Precedence</b><br>\n"
@@ -1391,7 +1391,7 @@ msgstr ""
 "мишем има предност.<br /><br />На овај начин, фокус одређујете лебдењем."
 
 # >> @label
-#: windows.cpp:115
+#: windows.cpp:105
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Under Mouse</b><br>\n"
@@ -1416,7 +1416,7 @@ msgstr ""
 
 # rewrite-msgid: /legacy//
 # >> @label
-#: windows.cpp:119
+#: windows.cpp:108
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Strictly Under Mouse</b><br>\n"

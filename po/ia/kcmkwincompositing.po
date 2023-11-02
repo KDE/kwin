@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-29 00:59+0000\n"
+"POT-Creation-Date: 2023-11-02 01:40+0000\n"
 "PO-Revision-Date: 2023-06-29 12:52+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -155,19 +155,16 @@ msgstr "Prefere animationes plus lisie"
 msgid "Force smoothest animations"
 msgstr "Fortia animationes plus lisie"
 
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowTearing)
-#: compositing.ui:213
-#, kde-format
-msgid ""
-"Reduce latency by allowing screen tearing artifacts in fullscreen windows"
-msgstr ""
-"Reduce latentia per pemitter al schermo lacerar artificios in fenestra a "
-"schermo plen"
-
 #: main.cpp:78
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr "Re-habilita detection de openGL"
+
+#~ msgid ""
+#~ "Reduce latency by allowing screen tearing artifacts in fullscreen windows"
+#~ msgstr ""
+#~ "Reduce latentia per pemitter al schermo lacerar artificios in fenestra a "
+#~ "schermo plen"
 
 #~ msgid ""
 #~ "Scale method \"Accurate\" is not supported by all hardware and can cause "

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-15 02:18+0000\n"
+"POT-Creation-Date: 2023-11-02 01:40+0000\n"
 "PO-Revision-Date: 2023-09-12 12:29+0000\n"
 "Last-Translator: Guðmundur Erlingsson <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
@@ -1232,7 +1232,7 @@ msgstr ""
 msgid "Only when overlapping"
 msgstr "Aðeins þegar skarast"
 
-#: windows.cpp:97
+#: windows.cpp:93
 #, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
@@ -1241,7 +1241,7 @@ msgstr ""
 "<em>Smella til að fá fókus:</em> Gluggi verður virkur þegar þú smellir á "
 "hann. Þessi hegðun er algeng í stýrikerfum og líklega það sem þú vilt."
 
-#: windows.cpp:101
+#: windows.cpp:96
 #, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
@@ -1256,7 +1256,7 @@ msgstr ""
 "músarbendlinum. Óvenjulegt en mögulegt tilbrigði við <em>Smella til að fá "
 "fókus</em>."
 
-#: windows.cpp:106
+#: windows.cpp:99
 #, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
@@ -1270,7 +1270,7 @@ msgstr ""
 "líta á þetta sem <em>Smella til að fá fókus</em> nema án þess að þurfa að "
 "smella."
 
-#: windows.cpp:110
+#: windows.cpp:102
 #, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
@@ -1283,7 +1283,7 @@ msgstr ""
 "undir músinni valinn. Veldu þetta ef þú vilt stjórna fókusnum með því að "
 "sveima með músinni."
 
-#: windows.cpp:115
+#: windows.cpp:105
 #, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
@@ -1297,7 +1297,7 @@ msgstr ""
 "+Tab</em> stangast á við þessa virknireglu og eru því óvirk. Þú vilt mjög "
 "líklega nota <em>Fókus fylgir mús (mús í forgangi)</em> í staðinn!"
 
-#: windows.cpp:119
+#: windows.cpp:108
 #, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "

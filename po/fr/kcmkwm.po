@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-15 02:18+0000\n"
+"POT-Creation-Date: 2023-11-02 01:40+0000\n"
 "PO-Revision-Date: 2023-01-24 19:00+0100\n"
 "Last-Translator: Xavier BESNARD <xavier.besnard@neuf.fr>\n"
 "Language-Team: fr\n"
@@ -1266,7 +1266,7 @@ msgstr ""
 msgid "Only when overlapping"
 msgstr "Uniquement en cas de chevauchement"
 
-#: windows.cpp:97
+#: windows.cpp:93
 #, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
@@ -1276,7 +1276,7 @@ msgstr ""
 "cliquez dedans. Ce comportement est commun avec d'autres systèmes "
 "d'exploitation et plutôt ce que vous souhaitez."
 
-#: windows.cpp:101
+#: windows.cpp:96
 #, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
@@ -1292,7 +1292,7 @@ msgstr ""
 "désignée. De façon inhabituelle mais une variante possible de <em>Cliquer "
 "pour avoir le focus</em>."
 
-#: windows.cpp:106
+#: windows.cpp:99
 #, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
@@ -1306,7 +1306,7 @@ msgstr ""
 "de vol de focus </em>est appliquée de façon classique. Pensez à <em>Cliquer "
 "pour avoir le focus</em> juste sans avoir à cliquer vraiment."
 
-#: windows.cpp:110
+#: windows.cpp:102
 #, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
@@ -1320,7 +1320,7 @@ msgstr ""
 "toute désignée. Choisissez ceci, si vous voulez un focus piloté par le "
 "survol."
 
-#: windows.cpp:115
+#: windows.cpp:105
 #, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
@@ -1336,7 +1336,7 @@ msgstr ""
 "Vous aimerez très probablement utiliser <em>le focus suit la souris "
 "(Précédence de la souris)</em> à la place !"
 
-#: windows.cpp:119
+#: windows.cpp:108
 #, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "

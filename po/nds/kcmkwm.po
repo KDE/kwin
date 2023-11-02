@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-15 02:18+0000\n"
+"POT-Creation-Date: 2023-11-02 01:40+0000\n"
 "PO-Revision-Date: 2014-02-18 00:50+0100\n"
 "Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
 "Language-Team: Low Saxon <kde-i18n-doc@kde.org>\n"
@@ -1331,7 +1331,7 @@ msgstr ""
 msgid "Only when overlapping"
 msgstr "Bloots bi Ö&verdecken andocken"
 
-#: windows.cpp:97
+#: windows.cpp:93
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Click To Focus</b><br>\n"
@@ -1347,7 +1347,7 @@ msgstr ""
 "Dit Bedregen is normaal op anner Bedriefsystemen un<b>\n"
 "wohrschienlich dat, wat Du wullt."
 
-#: windows.cpp:101
+#: windows.cpp:96
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Click To Focus - Mouse Precedence</b><br>\n"
@@ -1370,7 +1370,7 @@ msgstr ""
 "warrt dat Finster ünner den Muuswieser vörtrocken.<br><br>\n"
 "Nich normaal, man en möögliche Variante vun <i>Fokus op Klick</i>."
 
-#: windows.cpp:106
+#: windows.cpp:99
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Follows Mouse</b><br>\n"
@@ -1392,7 +1392,7 @@ msgstr ""
 "Fokusverleer-Schuul löppt normaal.<br><br>\n"
 "Kann een sik as <i>Fokus op Klick</i> ahn Klicken vörstellen."
 
-#: windows.cpp:110
+#: windows.cpp:102
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Follows Mouse - Mouse Precedence</b><br>\n"
@@ -1414,7 +1414,7 @@ msgstr ""
 "warrt dat Finster ünner den Muuswieser vörtrocken.<br><br>\n"
 "Bruuk dit, wenn Du den Fokus mit de sweven Muus kuntrulleren wullt."
 
-#: windows.cpp:115
+#: windows.cpp:105
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Under Mouse</b><br>\n"
@@ -1441,7 +1441,7 @@ msgstr ""
 "Hööchstwohrschienlich wullt Du ansteed<br>\n"
 "<i>Fokus folgt Muus - Muus geiht vör</i> bruken!"
 
-#: windows.cpp:119
+#: windows.cpp:108
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Strictly Under Mouse</b><br>\n"

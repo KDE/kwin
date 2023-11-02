@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-15 02:18+0000\n"
+"POT-Creation-Date: 2023-11-02 01:40+0000\n"
 "PO-Revision-Date: 2019-09-29 12:19-0700\n"
 "Last-Translator: Fumiaki Okushi <fumiaki.okushi@gmail.com>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -1284,7 +1284,7 @@ msgstr ""
 msgid "Only when overlapping"
 msgstr "重なり合ったときのみウィンドウをくっつける(&Y)"
 
-#: windows.cpp:97
+#: windows.cpp:93
 #, fuzzy, kde-format
 #| msgid ""
 #| "<html><head/><body><p><span style=\" font-style:italic;\">Click to focus:"
@@ -1299,7 +1299,7 @@ msgstr ""
 "カス:</span> クリックしたウィンドウがアクティブになります。この挙動は他の OS "
 "と共通であり、あなたの想定と同じように動作します。</p></body></html>"
 
-#: windows.cpp:101
+#: windows.cpp:96
 #, fuzzy, kde-format
 #| msgid ""
 #| "<html><head/><body><p><span style=\" font-style:italic;\">Click to focus "
@@ -1324,7 +1324,7 @@ msgstr ""
 "style=\" font-style:italic;\">クリックしてフォーカス</span>の変化形です。</"
 "p></body></html>"
 
-#: windows.cpp:106
+#: windows.cpp:99
 #, fuzzy, kde-format
 #| msgid ""
 #| "<html><head/><body><p><span style=\" font-style:italic;\">Focus follows "
@@ -1346,7 +1346,7 @@ msgstr ""
 "リックする必要のない<span style=\" font-style:italic;\">クリックしてフォーカ"
 "ス</span> だと思ってください</p></body></html>"
 
-#: windows.cpp:110
+#: windows.cpp:102
 #, fuzzy, kde-format
 #| msgid ""
 #| "<html><head/><body><p>This is mostly the same as <span style=\" font-"
@@ -1366,7 +1366,7 @@ msgstr ""
 "れているウィンドウが優先的な候補となります。フォーカスをホバーで操作したい場"
 "合はこちらを選択してください。</p></body></html>"
 
-#: windows.cpp:115
+#: windows.cpp:105
 #, fuzzy, kde-format
 #| msgid ""
 #| "<html><head/><body><p><span style=\" font-style:italic;\">Focus under "
@@ -1392,7 +1392,7 @@ msgstr ""
 "に<span style=\" font-style:italic;\">マウスに従ってフォーカス (マウス優先)</"
 "span>を使用するべきでしょう。</p></body></html>"
 
-#: windows.cpp:119
+#: windows.cpp:108
 #, fuzzy, kde-format
 #| msgid ""
 #| "<html><head/><body><p><span style=\" font-style:italic;\">Focus under "

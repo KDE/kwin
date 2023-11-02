@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-15 02:18+0000\n"
+"POT-Creation-Date: 2023-11-02 01:40+0000\n"
 "PO-Revision-Date: 2022-10-18 00:03+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -1259,7 +1259,7 @@ msgstr ""
 msgid "Only when overlapping"
 msgstr "Yalnız üst-üstə gəldikdə yapışdırmaq"
 
-#: windows.cpp:97
+#: windows.cpp:93
 #, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
@@ -1269,7 +1269,7 @@ msgstr ""
 "aktivləşir. Siz ola bilsin ki, bununla başqa əməliyyat sistemlərindən "
 "tanışsını."
 
-#: windows.cpp:101
+#: windows.cpp:96
 #, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
@@ -1284,7 +1284,7 @@ msgstr ""
 "olsa da <em>Fokus üçün klik</em> rejiminə alternativ variant kimi qəbul "
 "olunur."
 
-#: windows.cpp:106
+#: windows.cpp:99
 #, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
@@ -1297,7 +1297,7 @@ msgstr ""
 "ki, <em>Fokusun dəyişməsin qarşısının alınması</em> adi qaydada işləyir. Bu "
 "variant <em>Fokus üçün klik</em>oxşayır, ancaq xüsusi klik tələb olunmur."
 
-#: windows.cpp:110
+#: windows.cpp:102
 #, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
@@ -1310,7 +1310,7 @@ msgstr ""
 "altındakı pəncərəyə verilir. Üstündə saxlayarkən fokuslamaq üçün bu rejimi "
 "seçin."
 
-#: windows.cpp:115
+#: windows.cpp:105
 #, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
@@ -1325,7 +1325,7 @@ msgstr ""
 "işlıməz.Bunun əvəzinə siz <em>Fokus siçanı izləyir</em>variantını işlətmək "
 "istəyə bilərsiniz."
 
-#: windows.cpp:119
+#: windows.cpp:108
 #, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "

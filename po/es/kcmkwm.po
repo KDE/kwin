@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-15 02:18+0000\n"
+"POT-Creation-Date: 2023-11-02 01:40+0000\n"
 "PO-Revision-Date: 2022-12-03 12:06+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -1252,7 +1252,7 @@ msgstr ""
 msgid "Only when overlapping"
 msgstr "Solo cuando se solapen"
 
-#: windows.cpp:97
+#: windows.cpp:93
 #, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
@@ -1262,7 +1262,7 @@ msgstr ""
 "clic sobre ellas. Este comportamiento es común a otros sistemas operativos y "
 "seguramente es el que desea."
 
-#: windows.cpp:101
+#: windows.cpp:96
 #, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
@@ -1277,7 +1277,7 @@ msgstr ""
 "la ventana que queda bajo el puntero del ratón es la candidata preferente. "
 "Es una variante inusual, pero posible de <em>Pulsar para enfocar</em>."
 
-#: windows.cpp:106
+#: windows.cpp:99
 #, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
@@ -1291,7 +1291,7 @@ msgstr ""
 "em> tiene lugar como siempre. Considérelo como <em>Pulsar para enfocar</em>, "
 "pero si tener que hacer clic."
 
-#: windows.cpp:110
+#: windows.cpp:102
 #, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
@@ -1305,7 +1305,7 @@ msgstr ""
 "ventana que queda bajo el puntero del ratón es la candidata preferente. "
 "Elija esta opción si quiere controlar el foco por donde pase el ratón."
 
-#: windows.cpp:115
+#: windows.cpp:105
 #, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
@@ -1321,7 +1321,7 @@ msgstr ""
 "probable que prefiera usar <em>El foco sigue al ratón (el ratón tiene "
 "prioridad</em> en su lugar."
 
-#: windows.cpp:119
+#: windows.cpp:108
 #, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "

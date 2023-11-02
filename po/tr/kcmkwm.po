@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-15 02:18+0000\n"
+"POT-Creation-Date: 2023-11-02 01:40+0000\n"
 "PO-Revision-Date: 2023-10-23 13:01+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -1237,7 +1237,7 @@ msgstr ""
 msgid "Only when overlapping"
 msgstr "Yalnızca örtüştüğünde"
 
-#: windows.cpp:97
+#: windows.cpp:93
 #, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
@@ -1247,7 +1247,7 @@ msgstr ""
 "Bu davranış diğer işletim sistemlerindeki ile ortaktır ve muhtemelen "
 "istediğiniz şeydir."
 
-#: windows.cpp:101
+#: windows.cpp:96
 #, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
@@ -1262,7 +1262,7 @@ msgstr ""
 "altındaki pencere tercih edilen adaydır. Alışılmadık; ancak <em>Odak için "
 "tıkla</em>'nın olası bir çeşididir."
 
-#: windows.cpp:106
+#: windows.cpp:99
 #, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
@@ -1276,7 +1276,7 @@ msgstr ""
 "gibi kullanılır.<em>Odak için tıkla</em> olarak düşünün, yalnızca gerçekten "
 "tıklamadan."
 
-#: windows.cpp:110
+#: windows.cpp:102
 #, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
@@ -1289,7 +1289,7 @@ msgstr ""
 "olabilir) farenin altında olan pencere yeğlenen adaydır. İmleç altı "
 "tarafından denetlenen bir odak istiyorsanız bunu seçin."
 
-#: windows.cpp:115
+#: windows.cpp:105
 #, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
@@ -1304,7 +1304,7 @@ msgstr ""
 "çalışmazlar. Bu durumda <em>Odak fareyi izler (fare önceliği)</em>'ni "
 "kullanmak isteyeceksinizdir!"
 
-#: windows.cpp:119
+#: windows.cpp:108
 #, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "

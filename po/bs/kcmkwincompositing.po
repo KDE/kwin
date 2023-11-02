@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-29 00:59+0000\n"
+"POT-Creation-Date: 2023-11-02 01:40+0000\n"
 "PO-Revision-Date: 2015-02-04 15:48+0000\n"
 "Last-Translator: Samir Ribić <Unknown>\n"
 "Language-Team: Bosnian <bs@li.org>\n"
@@ -161,13 +161,6 @@ msgstr ""
 #: compositing.ui:205
 #, kde-format
 msgid "Force smoothest animations"
-msgstr ""
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowTearing)
-#: compositing.ui:213
-#, kde-format
-msgid ""
-"Reduce latency by allowing screen tearing artifacts in fullscreen windows"
 msgstr ""
 
 #: main.cpp:78

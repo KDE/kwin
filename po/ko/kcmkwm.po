@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-15 02:18+0000\n"
+"POT-Creation-Date: 2023-11-02 01:40+0000\n"
 "PO-Revision-Date: 2023-08-09 00:20+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -1201,7 +1201,7 @@ msgstr ""
 msgid "Only when overlapping"
 msgstr "겹치는 경우에만"
 
-#: windows.cpp:97
+#: windows.cpp:93
 #, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
@@ -1210,7 +1210,7 @@ msgstr ""
 "<em>클릭해서 포커스 맞춤:</em> 창을 클릭하면 포커스를 맞춥니다. 이 행동은 다"
 "른 운영체제에서 취하는 방식이며 대부분 경우 원하는 방식입니다."
 
-#: windows.cpp:101
+#: windows.cpp:96
 #, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
@@ -1224,7 +1224,7 @@ msgstr ""
 "하여야 하면 현재 마우스 포인터 아래의 창을 선택합니다. <em>클릭해서 포커스 맞"
 "춤</em> 설정의 파생형입니다."
 
-#: windows.cpp:106
+#: windows.cpp:99
 #, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
@@ -1237,7 +1237,7 @@ msgstr ""
 "훔치기 방지는 평소대로 작동합니다. 실제로 클릭하지 않아도 되는 <em>클릭해서 "
 "포커스 맞춤</em>으로 생각하십시오."
 
-#: windows.cpp:110
+#: windows.cpp:102
 #, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
@@ -1249,7 +1249,7 @@ msgstr ""
 "이 닫히는 등 시스템에서 활성 창을 선택하여야 하면 현재 마우스 포인터 아래의 "
 "창을 선택합니다. 호버로 제어하는 포커스를 원하면 선택하십시오."
 
-#: windows.cpp:115
+#: windows.cpp:105
 #, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
@@ -1264,7 +1264,7 @@ msgstr ""
 "용해야 한다면 <em>마우스가 포커스를 따라감(마우스 우선)</em> 설정을 사용하십"
 "시오!"
 
-#: windows.cpp:119
+#: windows.cpp:108
 #, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "

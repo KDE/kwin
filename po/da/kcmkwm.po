@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-15 02:18+0000\n"
+"POT-Creation-Date: 2023-11-02 01:40+0000\n"
 "PO-Revision-Date: 2020-02-08 15:20+0100\n"
 "Last-Translator: Martin Schlander <mschlander@opensuse.org>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
@@ -1275,7 +1275,7 @@ msgstr ""
 msgid "Only when overlapping"
 msgstr "Kun ved overlap"
 
-#: windows.cpp:97
+#: windows.cpp:93
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Click To Focus</b><br>\n"
@@ -1291,7 +1291,7 @@ msgstr ""
 "Denne opførsel er almindelig på andre styresystemer og er<br>\n"
 "sandsynligvis det du ønsker."
 
-#: windows.cpp:101
+#: windows.cpp:96
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Click To Focus - Mouse Precedence</b><br>\n"
@@ -1314,7 +1314,7 @@ msgstr ""
 "er vinduet under musen den foretrukne kandidat.<br><br>\n"
 "Usædvanlig, men mulig variant af <i>Klik for fokus</i>."
 
-#: windows.cpp:106
+#: windows.cpp:99
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Follows Mouse</b><br>\n"
@@ -1336,7 +1336,7 @@ msgstr ""
 "Forhindring af at fokus stjæles, finder sted som normalt.<br><br>\n"
 "Tænk <i>Klik for fokus</i> blot uden at du faktisk behøver klikke."
 
-#: windows.cpp:110
+#: windows.cpp:102
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Follows Mouse - Mouse Precedence</b><br>\n"
@@ -1358,7 +1358,7 @@ msgstr ""
 "er vinduet under musen den foretrukne kandidat.<br><br>\n"
 "Vælg dette hvis du vil have fokus kontrolleret af hvad musen er over."
 
-#: windows.cpp:115
+#: windows.cpp:105
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Under Mouse</b><br>\n"
@@ -1386,7 +1386,7 @@ msgstr ""
 "Du vil sikkert hellere bruge<br>\n"
 "<i>Fokus følger musen - musen har forrang</i> i stedet for!"
 
-#: windows.cpp:119
+#: windows.cpp:108
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Strictly Under Mouse</b><br>\n"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-29 00:59+0000\n"
+"POT-Creation-Date: 2023-11-02 01:40+0000\n"
 "PO-Revision-Date: 2023-07-23 21:15+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -151,17 +151,14 @@ msgstr "부드러운 애니메이션 선호"
 msgid "Force smoothest animations"
 msgstr "매우 부드러운 애니메이션 강제"
 
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowTearing)
-#: compositing.ui:213
-#, kde-format
-msgid ""
-"Reduce latency by allowing screen tearing artifacts in fullscreen windows"
-msgstr "전체 화면 창의 화면 티어링 흔적을 허용하여 지연 시간 감소"
-
 #: main.cpp:78
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr "OpenGL 감지 다시 활성화"
+
+#~ msgid ""
+#~ "Reduce latency by allowing screen tearing artifacts in fullscreen windows"
+#~ msgstr "전체 화면 창의 화면 티어링 흔적을 허용하여 지연 시간 감소"
 
 #~ msgid ""
 #~ "Scale method \"Accurate\" is not supported by all hardware and can cause "

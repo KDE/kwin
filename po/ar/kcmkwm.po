@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-15 02:18+0000\n"
+"POT-Creation-Date: 2023-11-02 01:40+0000\n"
 "PO-Revision-Date: 2022-12-22 11:14+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -1217,7 +1217,7 @@ msgstr ""
 msgid "Only when overlapping"
 msgstr "فقط عندما تكون تغطي بعضها"
 
-#: windows.cpp:97
+#: windows.cpp:93
 #, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
@@ -1226,7 +1226,7 @@ msgstr ""
 "<em> انقر للتركيز: </em> تصبح النافذة نشطة عندما تنقر عليها.هذا السلوك شائع "
 "في أنظمة التشغيل الأخرى وعلى الأرجح ما تريده."
 
-#: windows.cpp:101
+#: windows.cpp:96
 #, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
@@ -1240,7 +1240,7 @@ msgstr ""
 "بسبب إغلاق النافذة النشطة حاليًا) ، فإن النافذة الموجودة أسفل الفأرة هي "
 "المرشح المفضل. هذا غير معتاد ولكنه  تنويع ممكن لـ <em> انقر للتركيز </em>."
 
-#: windows.cpp:106
+#: windows.cpp:99
 #, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
@@ -1253,7 +1253,7 @@ msgstr ""
 "يستمر <em> التركيز على منع السرقة </em> كالمعتاد. إنها تشبه <em> انقر "
 "للتركيز </em> دون الحاجة إلى النقر فعليًا."
 
-#: windows.cpp:110
+#: windows.cpp:102
 #, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
@@ -1266,7 +1266,7 @@ msgstr ""
 "حاليًا) ، فإن النافذة الموجودة أسفل الفأرة هي المرشح المفضل. اختر هذا ، إذا "
 "كنت تريد تركيزًا متحكمًا فيه بواسطة التحويم."
 
-#: windows.cpp:115
+#: windows.cpp:105
 #, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
@@ -1281,7 +1281,7 @@ msgstr ""
 "من المحتمل جدًا أنك تريد استخدام <em> التركيز يتبع الفأرة (أولوية الفأرة) </"
 "em> بدلاً من ذلك!"
 
-#: windows.cpp:119
+#: windows.cpp:108
 #, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "
