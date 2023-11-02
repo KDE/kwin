@@ -33,6 +33,7 @@
 
 #include <KSelectionOwner>
 #include <wayland/keyboard.h>
+#include <wayland/pointer.h>
 #include <wayland/seat.h>
 #include <wayland/surface.h>
 
@@ -108,7 +109,7 @@ public:
                 });
     }
 
-    void setMode(XwaylandEavesdropsMode mode)
+    void setMode(XwaylandEavesdropsMode mode, bool eavesdropsMouse)
     {
         static const Qt::KeyboardModifiers modifierKeys = {
             Qt::ControlModifier,
@@ -337,22 +338,26 @@ public:
 
         switch (mode) {
         case None:
-            m_filter = {};
+            m_filterKey = {};
+            m_filterMouse = false;
             break;
         case NonCharacterKeys:
-            m_filter = [](int key, Qt::KeyboardModifiers) {
+            m_filterKey = [](int key, Qt::KeyboardModifiers) {
                 return !characterKeys.contains(key);
             };
+            m_filterMouse = eavesdropsMouse;
             break;
         case AllKeysWithModifier:
-            m_filter = [](int key, Qt::KeyboardModifiers m) {
+            m_filterKey = [](int key, Qt::KeyboardModifiers m) {
                 return m.testAnyFlags(modifierKeys) || !characterKeys.contains(key);
             };
+            m_filterMouse = eavesdropsMouse;
             break;
         case All:
-            m_filter = [](int, Qt::KeyboardModifiers) {
+            m_filterKey = [](int, Qt::KeyboardModifiers) {
                 return true;
             };
+            m_filterMouse = eavesdropsMouse;
             break;
         }
     }
@@ -364,7 +369,7 @@ public:
         }
 
         Window *window = workspace()->activeWindow();
-        if (!m_filter || !m_filter(event->key(), event->modifiers()) || (window && window->isLockScreen())) {
+        if (!m_filterKey || !m_filterKey(event->key(), event->modifiers()) || (window && window->isLockScreen())) {
             return;
         }
 
@@ -388,7 +393,29 @@ public:
                                     xkb->modifierState().locked,
                                     xkb->currentLayout());
 
-            waylandServer()->seat()->keyboard()->sendKey(event->nativeScanCode(), state, xwaylandClient);
+            keyboard->sendKey(event->nativeScanCode(), state, xwaylandClient);
+        }
+    }
+
+    void pointerEvent(KWin::MouseEvent *event) override
+    {
+        Window *window = workspace()->activeWindow();
+        if (!m_filterMouse || (window && window->isLockScreen())) {
+            return;
+        }
+
+        auto pointer = waylandServer()->seat()->pointer();
+        auto surface = pointer->focusedSurface();
+        if (!surface) {
+            return;
+        }
+
+        ClientConnection *client = surface->client();
+        ClientConnection *xwaylandClient = waylandServer()->xWaylandConnection();
+        if (xwaylandClient && xwaylandClient != client) {
+            PointerButtonState state{event->type() == QEvent::MouseButtonPress};
+
+            pointer->sendButton(event->nativeButton(), state, xwaylandClient);
         }
     }
 
@@ -407,7 +434,8 @@ public:
     }
 
     QHash<quint32, KeyboardKeyState> m_states;
-    std::function<bool(int key, Qt::KeyboardModifiers)> m_filter;
+    std::function<bool(int key, Qt::KeyboardModifiers)> m_filterKey;
+    bool m_filterMouse = false;
 };
 
 Xwayland::Xwayland(Application *app)
@@ -547,6 +575,7 @@ void Xwayland::handleXwaylandReady()
 
     refreshEavesdropping();
     connect(options, &Options::xwaylandEavesdropsChanged, this, &Xwayland::refreshEavesdropping);
+    connect(options, &Options::xwaylandEavesdropsMouseChanged, this, &Xwayland::refreshEavesdropping);
 
     Q_EMIT started();
 }
@@ -560,7 +589,7 @@ void Xwayland::refreshEavesdropping()
     const bool enabled = options->xwaylandEavesdrops() != None;
     if (enabled == bool(m_inputSpy)) {
         if (m_inputSpy) {
-            m_inputSpy->setMode(options->xwaylandEavesdrops());
+            m_inputSpy->setMode(options->xwaylandEavesdrops(), options->xwaylandEavesdropsMouse());
         }
         return;
     }
@@ -568,7 +597,7 @@ void Xwayland::refreshEavesdropping()
     if (enabled) {
         m_inputSpy = std::make_unique<XwaylandInputSpy>();
         input()->installInputEventSpy(m_inputSpy.get());
-        m_inputSpy->setMode(options->xwaylandEavesdrops());
+        m_inputSpy->setMode(options->xwaylandEavesdrops(), options->xwaylandEavesdropsMouse());
     } else {
         input()->uninstallInputEventSpy(m_inputSpy.get());
         m_inputSpy.reset();

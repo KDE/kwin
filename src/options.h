@@ -262,6 +262,10 @@ public:
     {
         return m_xwaylandEavesdrops;
     }
+    bool xwaylandEavesdropsMouse() const
+    {
+        return m_xwaylandEavesdropsMouse;
+    }
 
     /**
      * Whether clicking on a window raises it in FocusFollowsMouse
@@ -692,6 +696,7 @@ public:
     void setXwaylandCrashPolicy(XwaylandCrashPolicy crashPolicy);
     void setXwaylandMaxCrashCount(int maxCrashCount);
     void setXwaylandEavesdrops(XwaylandEavesdropsMode mode);
+    void setXwaylandEavesdropsMouse(bool eavesdropsMouse);
     void setNextFocusPrefersMouse(bool nextFocusPrefersMouse);
     void setClickRaise(bool clickRaise);
     void setAutoRaise(bool autoRaise);
@@ -870,6 +875,10 @@ public:
     {
         return None;
     }
+    static bool defaultXwaylandEavesdropsMouse()
+    {
+        return false;
+    }
     static ActivationDesktopPolicy defaultActivationDesktopPolicy()
     {
         return ActivationDesktopPolicy::SwitchToOtherDesktop;
@@ -888,6 +897,7 @@ Q_SIGNALS:
     void xwaylandCrashPolicyChanged();
     void xwaylandMaxCrashCountChanged();
     void xwaylandEavesdropsChanged();
+    void xwaylandEavesdropsMouseChanged();
     void nextFocusPrefersMouseChanged();
     void clickRaiseChanged();
     void autoRaiseChanged();
@@ -972,6 +982,7 @@ private:
     XwaylandCrashPolicy m_xwaylandCrashPolicy;
     int m_xwaylandMaxCrashCount;
     XwaylandEavesdropsMode m_xwaylandEavesdrops;
+    bool m_xwaylandEavesdropsMouse;
 
     CompositingType m_compositingMode;
     bool m_useCompositing;

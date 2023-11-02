@@ -22,21 +22,6 @@ KCM.SimpleKCM {
     implicitWidth: Kirigami.Units.gridUnit * 48
     implicitHeight: Kirigami.Units.gridUnit * 33
 
-    QQC2.ButtonGroup {
-        buttons: form.children
-        exclusive: true
-        checkedButton: buttons[kcm.settings.xwaylandEavesdrops]
-        onCheckedButtonChanged: {
-            let idx = -1
-            for (const x in buttons) {
-                if (buttons[x] === checkedButton) {
-                    idx = x
-                }
-            }
-            kcm.settings.xwaylandEavesdrops = idx
-        }
-    }
-
     ColumnLayout {
         id: column
         spacing: Kirigami.Units.smallSpacing
@@ -55,29 +40,51 @@ KCM.SimpleKCM {
         }
 
         Kirigami.FormLayout {
-            id: form
-
             Layout.leftMargin: Kirigami.Units.gridUnit
             Layout.rightMargin: Kirigami.Units.gridUnit
 
             QQC2.RadioButton {
+                id: never
                 Kirigami.FormData.label: i18n("Allow legacy X11 apps to read keystrokes typed in all apps:")
                 text: i18n("Never")
+                checked: kcm.settings.xwaylandEavesdrops === 0
+                onToggled: if (checked) kcm.settings.xwaylandEavesdrops = 0
             }
+
             QQC2.RadioButton {
-                text: i18n("Only non-character keys")
+                text: i18n("Only Meta, Control, Alt and Shift keys")
+                checked: kcm.settings.xwaylandEavesdrops === 1
+                onToggled: if (checked) kcm.settings.xwaylandEavesdrops = 1
             }
+
             QQC2.RadioButton {
                 text: i18n("As above, plus any key typed while the Control, Alt, or Meta keys are pressed")
+                checked: kcm.settings.xwaylandEavesdrops === 2
+                onToggled: if (checked) kcm.settings.xwaylandEavesdrops = 2
             }
+
             QQC2.RadioButton {
                 id: always
                 text: i18n("Always")
+                checked: kcm.settings.xwaylandEavesdrops === 3
+                onToggled: if (checked) kcm.settings.xwaylandEavesdrops = 3
+            }
+
+            Item {
+                Kirigami.FormData.isSection: true
+            }
+
+            QQC2.CheckBox {
+                text: i18n("Additionally include mouse buttons")
+                checked: kcm.settings.xwaylandEavesdropsMouse
+                onToggled: kcm.settings.xwaylandEavesdropsMouse = checked
+                enabled: !never.checked
             }
         }
 
         Kirigami.InlineMessage {
             Layout.fillWidth: true
+            Layout.margins: Kirigami.Units.gridUnit
             type: Kirigami.MessageType.Warning
             text: i18n("Note that using this setting will reduce system security to that of the X11 session by permitting malicious software to steal passwords and spy on the text that you type. Make sure you understand and accept this risk.")
             visible: always.checked

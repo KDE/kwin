@@ -222,6 +222,15 @@ void PointerInterface::sendButton(quint32 button, PointerButtonState state, quin
     }
 }
 
+void PointerInterface::sendButton(quint32 button, PointerButtonState state, ClientConnection *client)
+{
+    const auto pointerResources = d->pointersForClient(client);
+    const quint32 serial = d->seat->display()->nextSerial();
+    for (PointerInterfacePrivate::Resource *resource : pointerResources) {
+        d->send_button(resource->handle, serial, d->seat->timestamp().count(), button, quint32(state));
+    }
+}
+
 static void updateAccumulators(Qt::Orientation orientation, qreal delta, qint32 deltaV120, PointerInterfacePrivate *d, qint32 &valueAxisLowRes, qint32 &valueDiscrete)
 {
     const int newDirection = deltaV120 > 0 ? 1 : -1;
