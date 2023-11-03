@@ -164,8 +164,3 @@ msgstr "Tving gjennom jamnaste animasjonar"
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr "Slå på OpenGL-oppdaging"
-
-#~ msgid ""
-#~ "Reduce latency by allowing screen tearing artifacts in fullscreen windows"
-#~ msgstr ""
-#~ "Reduser latenstid ved å tillata riftartefaktar i fullskjermsvindauge"
