@@ -149,14 +149,21 @@ void AbstractEglBackend::initWayland()
         }
     }
 
-    auto filterFormats = [this](uint32_t bpc) {
+    auto filterFormats = [this](std::optional<uint32_t> bpc) {
         const auto formats = m_display->supportedDrmFormats();
         QHash<uint32_t, QList<uint64_t>> set;
         for (auto it = formats.constBegin(); it != formats.constEnd(); it++) {
             const auto info = formatInfo(it.key());
-            if (info && info->bitsPerColor == bpc) {
-                set.insert(it.key(), it.value());
+            if (!info || (bpc && bpc != info->bitsPerColor)) {
+                continue;
             }
+            const bool duplicate = std::any_of(m_tranches.begin(), m_tranches.end(), [fmt = it.key()](const auto &tranche) {
+                return tranche.formatTable.contains(fmt);
+            });
+            if (duplicate) {
+                continue;
+            }
+            set.insert(it.key(), it.value());
         }
         return set;
     };
@@ -175,7 +182,7 @@ void AbstractEglBackend::initWayland()
     m_tranches.append({
         .device = deviceId(),
         .flags = {},
-        .formatTable = filterFormats(-1),
+        .formatTable = filterFormats(std::nullopt),
     });
 
     LinuxDmaBufV1ClientBufferIntegration *dmabuf = waylandServer()->linuxDmabuf();
