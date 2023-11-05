@@ -163,9 +163,3 @@ msgstr "Força animacions més suaus"
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr "Torna a activar la detecció d'OpenGL"
-
-#~ msgid ""
-#~ "Reduce latency by allowing screen tearing artifacts in fullscreen windows"
-#~ msgstr ""
-#~ "Reduïx la latència permetent defectes d'esquinçament de la pantalla en "
-#~ "les finestres a pantalla completa"
