@@ -6,7 +6,6 @@ Dependencies:
   'require':
     'frameworks/breeze-icons': '@latest-kf6'
     'frameworks/extra-cmake-modules': '@latest-kf6'
-    'frameworks/kactivities': '@latest-kf6'
     'frameworks/kcmutils': '@latest-kf6'
     'frameworks/kconfig': '@latest-kf6'
     'frameworks/kconfigwidgets': '@latest-kf6'
@@ -29,6 +28,7 @@ Dependencies:
     'frameworks/kxmlgui': '@latest-kf6'
     'libraries/libqaccessibilityclient': '@latest-kf6'
     'libraries/plasma-wayland-protocols': '@latest-kf6'
+    'plasma/kactivities': '@same'
     'plasma/breeze': '@same'
     'plasma/kdecoration': '@same'
     'plasma/kglobalacceld': '@same'
@@ -41,7 +41,7 @@ RuntimeDependencies:
 - 'on': ['@all']
   'require':
     'frameworks/kirigami': '@latest-kf6'
-    'frameworks/plasma-framework': '@latest-kf6'
+    'plasma/plasma-framework': '@same'
 
 Options:
   ctest-arguments: '--repeat until-pass:5'
