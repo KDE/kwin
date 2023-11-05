@@ -6,7 +6,6 @@ Dependencies:
   'require':
     'frameworks/breeze-icons': '@stable'
     'frameworks/extra-cmake-modules': '@stable'
-    'frameworks/kactivities': '@stable'
     'frameworks/kcmutils': '@stable'
     'frameworks/kconfig': '@stable'
     'frameworks/kconfigwidgets': '@stable'
@@ -33,6 +32,7 @@ Dependencies:
     'plasma/breeze': '@same'
     'plasma/kdecoration': '@same'
     'plasma/kscreenlocker': '@same'
+    'plasma/kactivities': '@stable' # Different branch scheme as former Framework
 
 Options:
   ctest-arguments: '--repeat until-pass:5'
