@@ -142,7 +142,7 @@ set_package_properties(KF6Kirigami2 PROPERTIES
     PURPOSE "Required at runtime for several QML effects"
     TYPE RUNTIME
 )
-find_package(KF6Plasma ${KF6_MIN_VERSION} CONFIG)
+find_package(KF6Plasma ${PROJECT_VERSION} CONFIG)
 set_package_properties(KF6Plasma PROPERTIES
     DESCRIPTION "A QtQuick based components set"
     PURPOSE "Required at runtime for several QML effects"
