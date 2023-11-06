@@ -108,7 +108,7 @@ set_package_properties(Threads PROPERTIES
     TYPE REQUIRED
 )
 
-find_package(KF6Wayland ${KF6_MIN_VERSION} CONFIG)
+find_package(KF6Wayland ${PROJECT_VERSION} CONFIG)
 set_package_properties(KF6Wayland PROPERTIES
     PURPOSE "Required to build wayland platform plugin and tests"
     TYPE REQUIRED
