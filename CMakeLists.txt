@@ -115,7 +115,7 @@ set_package_properties(KF6Wayland PROPERTIES
 )
 
 # optional frameworks
-find_package(KF6Activities ${KF6_MIN_VERSION} CONFIG)
+find_package(KF6Activities ${PROJECT_VERSION} CONFIG)
 set_package_properties(KF6Activities PROPERTIES
     PURPOSE "Enable building of KWin with kactivities support"
     TYPE OPTIONAL
