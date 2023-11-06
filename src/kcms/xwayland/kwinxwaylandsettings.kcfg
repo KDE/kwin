@@ -12,7 +12,7 @@
                 <choice name="Combinations"/>
                 <choice name="All"/>
             </choices>
-            <default>None</default>
+            <default>Combinations</default>
         </entry>
         <entry name="XwaylandEavesdropsMouse" type="Bool">
             <default>false</default>
