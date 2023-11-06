@@ -90,13 +90,8 @@ static const TransKey g_rgQtToSymX[] = {
     {XKB_KEY_Super_L, Qt::Key_Super_L, Qt::KeyboardModifiers()},
     {XKB_KEY_Super_R, Qt::Key_Super_R, Qt::KeyboardModifiers()},
     {XKB_KEY_Menu, Qt::Key_Menu, Qt::KeyboardModifiers()},
-#if QT_VERSION < QT_VERSION_CHECK(6, 6, 0)
-    {XKB_KEY_Hyper_L, Qt::Key_Hyper_L, Qt::KeyboardModifiers()},
-    {XKB_KEY_Hyper_R, Qt::Key_Hyper_R, Qt::KeyboardModifiers()},
-#else
     {XKB_KEY_Hyper_L, Qt::Key_Meta, Qt::KeyboardModifiers()},
     {XKB_KEY_Hyper_R, Qt::Key_Meta, Qt::KeyboardModifiers()},
-#endif
     {XKB_KEY_Help, Qt::Key_Help, Qt::KeyboardModifiers()},
     {XKB_KEY_KP_Space, Qt::Key_Space, Qt::KeypadModifier},
     {XKB_KEY_KP_Tab, Qt::Key_Tab, Qt::KeypadModifier},
