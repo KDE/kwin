@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-07 02:19+0000\n"
+"POT-Creation-Date: 2023-11-07 02:44+0000\n"
 "PO-Revision-Date: 2023-04-30 10:50+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
@@ -45,14 +45,13 @@ msgstr "Nunca"
 
 #: ui/main.qml:68
 #, kde-format
-msgid "Only Meta, Control, Alt, and Shift keys"
-msgstr "Só as teclas Meta, Control, Alt e Maiús"
+msgid "Only non-character keys"
+msgstr ""
 
 #: ui/main.qml:71
 #, kde-format
-msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
+msgid "As above, plus any key typed while a modifier key is pressed"
 msgstr ""
-"Todas as teclas, pero só mentres se premen as teclas Meta, Ctrl, Alt ou Maiús"
 
 #: ui/main.qml:75
 #, kde-format
@@ -69,3 +68,11 @@ msgstr ""
 "Teña en conta que usar esta opción reducirá a seguridade do sistema á dunha "
 "sesión de X11 ao permitir que software malicioso roube contrasinais e espíe "
 "todo o que escriba. Asegúrese de que entende e acepta este risco."
+
+#~ msgid "Only Meta, Control, Alt, and Shift keys"
+#~ msgstr "Só as teclas Meta, Control, Alt e Maiús"
+
+#~ msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
+#~ msgstr ""
+#~ "Todas as teclas, pero só mentres se premen as teclas Meta, Ctrl, Alt ou "
+#~ "Maiús"

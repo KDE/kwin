@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-07 02:19+0000\n"
+"POT-Creation-Date: 2023-11-07 02:44+0000\n"
 "PO-Revision-Date: 2022-12-22 13:26+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -43,13 +43,13 @@ msgstr "لا، مطلقاً"
 
 #: ui/main.qml:68
 #, kde-format
-msgid "Only Meta, Control, Alt, and Shift keys"
-msgstr "فقط مفاتيح Meta و Control و Alt و Shift"
+msgid "Only non-character keys"
+msgstr ""
 
 #: ui/main.qml:71
 #, kde-format
-msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
-msgstr "كل المفاتيح لكن فقط حينما تكون Meta أو Alt أو Shift مضغوطة"
+msgid "As above, plus any key typed while a modifier key is pressed"
+msgstr ""
 
 #: ui/main.qml:75
 #, kde-format
@@ -66,6 +66,12 @@ msgstr ""
 "لاحظ أن استخدام هذا الإعداد سيقلل من أمان النظام إلى جلسة اكس11 من خلال "
 "السماح للبرامج الضارة بسرقة كلمات المرور والتجسس على النص الذي تكتبه. تأكد "
 "من فهمك وقبول هذا الخطر."
+
+#~ msgid "Only Meta, Control, Alt, and Shift keys"
+#~ msgstr "فقط مفاتيح Meta و Control و Alt و Shift"
+
+#~ msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
+#~ msgstr "كل المفاتيح لكن فقط حينما تكون Meta أو Alt أو Shift مضغوطة"
 
 #~ msgid ""
 #~ "This module lets configure which keyboard events are forwarded to X11 "

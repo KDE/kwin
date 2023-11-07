@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-07 02:19+0000\n"
+"POT-Creation-Date: 2023-11-07 02:44+0000\n"
 "PO-Revision-Date: 2023-07-23 21:22+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -42,13 +42,13 @@ msgstr "하지 않음"
 
 #: ui/main.qml:68
 #, kde-format
-msgid "Only Meta, Control, Alt, and Shift keys"
-msgstr "Meta, Ctrl, Alt, Shift 키만"
+msgid "Only non-character keys"
+msgstr ""
 
 #: ui/main.qml:71
 #, kde-format
-msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
-msgstr "Meta, Ctrl, Alt, Shift 키가 눌렸을 때에만 모든 키"
+msgid "As above, plus any key typed while a modifier key is pressed"
+msgstr ""
 
 #: ui/main.qml:75
 #, kde-format
@@ -65,3 +65,9 @@ msgstr ""
 "이 설정을 사용하면 시스템 보안 수준을 X11 수준으로 감소시키며, 악성 소프트웨"
 "어에서 입력하는 텍스트를 엿보거나 암호를 훔칠 수도 있습니다. 위험에 대해서 이"
 "해하는 경우에만 이 설정을 변경하십시오."
+
+#~ msgid "Only Meta, Control, Alt, and Shift keys"
+#~ msgstr "Meta, Ctrl, Alt, Shift 키만"
+
+#~ msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
+#~ msgstr "Meta, Ctrl, Alt, Shift 키가 눌렸을 때에만 모든 키"

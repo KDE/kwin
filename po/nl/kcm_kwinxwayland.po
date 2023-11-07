@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-07 02:19+0000\n"
+"POT-Creation-Date: 2023-11-07 02:44+0000\n"
 "PO-Revision-Date: 2022-12-17 11:38+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -44,15 +44,13 @@ msgstr "Nooit"
 
 #: ui/main.qml:68
 #, kde-format
-msgid "Only Meta, Control, Alt, and Shift keys"
-msgstr "Alleen toetsen Meta, Ctrl, Alt en Shift"
+msgid "Only non-character keys"
+msgstr ""
 
 #: ui/main.qml:71
 #, kde-format
-msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
+msgid "As above, plus any key typed while a modifier key is pressed"
 msgstr ""
-"Alle toetsen, maar alleen wanneer toetsen Meta, Ctrl, Alt of Shift zijn "
-"ingedrukt"
 
 #: ui/main.qml:75
 #, kde-format
@@ -70,6 +68,14 @@ msgstr ""
 "van de X11-sessie door toe te staan dat kwaadaardige software wachtwoorden "
 "steelt en spioneert op de tekst die u typt. Ga na dat u dit begrijpt en dit "
 "risico accepteert."
+
+#~ msgid "Only Meta, Control, Alt, and Shift keys"
+#~ msgstr "Alleen toetsen Meta, Ctrl, Alt en Shift"
+
+#~ msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
+#~ msgstr ""
+#~ "Alle toetsen, maar alleen wanneer toetsen Meta, Ctrl, Alt of Shift zijn "
+#~ "ingedrukt"
 
 #~ msgid ""
 #~ "This module lets configure which keyboard events are forwarded to X11 "

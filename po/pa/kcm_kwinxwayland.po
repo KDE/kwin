@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-07 02:19+0000\n"
+"POT-Creation-Date: 2023-11-07 02:44+0000\n"
 "PO-Revision-Date: 2023-04-01 21:09-0700\n"
 "Last-Translator: A S Alam <aalam@satluj.org>\n"
 "Language-Team: Punjabi <kde-i18n-doc@kde.org>\n"
@@ -38,12 +38,12 @@ msgstr "ਕਦੇ ਨਹੀਂ"
 
 #: ui/main.qml:68
 #, kde-format
-msgid "Only Meta, Control, Alt, and Shift keys"
-msgstr "ਸਿਰਫ਼਼ ਮੇਟਾ, ਕੰਟਰੋਲ, ਆਲਟ ਅਤੇ ਸਿਫ਼ਟ ਸਵਿੱਚ ਹੀ"
+msgid "Only non-character keys"
+msgstr ""
 
 #: ui/main.qml:71
 #, kde-format
-msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
+msgid "As above, plus any key typed while a modifier key is pressed"
 msgstr ""
 
 #: ui/main.qml:75
@@ -58,3 +58,6 @@ msgid ""
 "session by permitting malicious software to steal passwords and spy on the "
 "text that you type. Make sure you understand and accept this risk."
 msgstr ""
+
+#~ msgid "Only Meta, Control, Alt, and Shift keys"
+#~ msgstr "ਸਿਰਫ਼਼ ਮੇਟਾ, ਕੰਟਰੋਲ, ਆਲਟ ਅਤੇ ਸਿਫ਼ਟ ਸਵਿੱਚ ਹੀ"

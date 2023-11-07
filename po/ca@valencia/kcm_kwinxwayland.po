@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-07 02:19+0000\n"
+"POT-Creation-Date: 2023-11-07 02:44+0000\n"
 "PO-Revision-Date: 2022-12-17 11:39+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -48,15 +48,13 @@ msgstr "Mai"
 
 #: ui/main.qml:68
 #, kde-format
-msgid "Only Meta, Control, Alt, and Shift keys"
-msgstr "Només les tecles «Meta», «Control», «Alt» i «Majúscules»"
+msgid "Only non-character keys"
+msgstr ""
 
 #: ui/main.qml:71
 #, kde-format
-msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
+msgid "As above, plus any key typed while a modifier key is pressed"
 msgstr ""
-"Totes les tecles, però només quan es premen les tecles «Meta», «Ctrl», «Alt» "
-"o «Majúscules»"
 
 #: ui/main.qml:75
 #, kde-format
@@ -74,3 +72,11 @@ msgstr ""
 "sistema a la de la sessió X11 permetent que programari maliciós robe "
 "contrasenyes i espie el text que escriviu. Assegureu-vos d'entendre i "
 "acceptar este risc."
+
+#~ msgid "Only Meta, Control, Alt, and Shift keys"
+#~ msgstr "Només les tecles «Meta», «Control», «Alt» i «Majúscules»"
+
+#~ msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
+#~ msgstr ""
+#~ "Totes les tecles, però només quan es premen les tecles «Meta», «Ctrl», "
+#~ "«Alt» o «Majúscules»"

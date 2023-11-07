@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-07 02:19+0000\n"
+"POT-Creation-Date: 2023-11-07 02:44+0000\n"
 "PO-Revision-Date: 2022-12-17 07:09+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -46,14 +46,13 @@ msgstr "Nikoli"
 
 #: ui/main.qml:68
 #, kde-format
-msgid "Only Meta, Control, Alt, and Shift keys"
-msgstr "Samo tipke Meta, kontrolka, Alt in dvigalka"
+msgid "Only non-character keys"
+msgstr ""
 
 #: ui/main.qml:71
 #, kde-format
-msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
+msgid "As above, plus any key typed while a modifier key is pressed"
 msgstr ""
-"Vse tipke, ampak samo kadar so pritisnjene Meta, kontrolka, Alt ali dvigalka"
 
 #: ui/main.qml:75
 #, kde-format
@@ -70,6 +69,14 @@ msgstr ""
 "Upoštevajte, da bo ta nastavitev zmanjšala varnost sistema seje X11, ker "
 "dovoljuje zlonamernim programom krajo gesel in vohunjenje za besedilom, ki "
 "ga tipkate. Prepričajte se, če razumete in sprejemate to tveganje."
+
+#~ msgid "Only Meta, Control, Alt, and Shift keys"
+#~ msgstr "Samo tipke Meta, kontrolka, Alt in dvigalka"
+
+#~ msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
+#~ msgstr ""
+#~ "Vse tipke, ampak samo kadar so pritisnjene Meta, kontrolka, Alt ali "
+#~ "dvigalka"
 
 #~ msgid ""
 #~ "This module lets configure which keyboard events are forwarded to X11 "

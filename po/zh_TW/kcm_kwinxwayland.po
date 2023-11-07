@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-07 02:19+0000\n"
+"POT-Creation-Date: 2023-11-07 02:44+0000\n"
 "PO-Revision-Date: 2022-12-26 03:34+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@linux.org.tw>\n"
@@ -41,13 +41,13 @@ msgstr "永不"
 
 #: ui/main.qml:68
 #, kde-format
-msgid "Only Meta, Control, Alt, and Shift keys"
-msgstr "僅 Meta、Control、Alt 與 Shift 鍵"
+msgid "Only non-character keys"
+msgstr ""
 
 #: ui/main.qml:71
 #, kde-format
-msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
-msgstr "所有按鍵，但只在 Meta、Control、Alt 或 Shift 鍵也按下時"
+msgid "As above, plus any key typed while a modifier key is pressed"
+msgstr ""
 
 #: ui/main.qml:75
 #, kde-format
@@ -63,6 +63,12 @@ msgid ""
 msgstr ""
 "請注意，使用這個設定將會使系統安全性降低至與 X11 工作階段相同：惡意軟體執行時"
 "可以監視您所輸入的文字並盜取密碼。請確保您理解並接受這個風險。"
+
+#~ msgid "Only Meta, Control, Alt, and Shift keys"
+#~ msgstr "僅 Meta、Control、Alt 與 Shift 鍵"
+
+#~ msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
+#~ msgstr "所有按鍵，但只在 Meta、Control、Alt 或 Shift 鍵也按下時"
 
 #~ msgid ""
 #~ "This module lets configure which keyboard events are forwarded to X11 "

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-07 02:19+0000\n"
+"POT-Creation-Date: 2023-11-07 02:44+0000\n"
 "PO-Revision-Date: 2022-12-29 10:23+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -46,15 +46,13 @@ msgstr "Nigdy"
 
 #: ui/main.qml:68
 #, kde-format
-msgid "Only Meta, Control, Alt, and Shift keys"
-msgstr "Tylko klawisze: Meta, Ctrl, Alt oraz Shift"
+msgid "Only non-character keys"
+msgstr ""
 
 #: ui/main.qml:71
 #, kde-format
-msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
+msgid "As above, plus any key typed while a modifier key is pressed"
 msgstr ""
-"Wszystkie klawisze, lecz tylko gdy naciśnięty jest klawisz: Meta, Ctrl, Alt "
-"lub Shift"
 
 #: ui/main.qml:75
 #, kde-format
@@ -72,6 +70,14 @@ msgstr ""
 "systemu dla posiedzeń X11, bo umożliwia szkodliwym aplikacją kradnięcie "
 "haseł i podglądanie tekstu, który wpisujesz. Upewnij się, że to rozumiesz i "
 "że odpowiada ci takie ryzyko."
+
+#~ msgid "Only Meta, Control, Alt, and Shift keys"
+#~ msgstr "Tylko klawisze: Meta, Ctrl, Alt oraz Shift"
+
+#~ msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
+#~ msgstr ""
+#~ "Wszystkie klawisze, lecz tylko gdy naciśnięty jest klawisz: Meta, Ctrl, "
+#~ "Alt lub Shift"
 
 #~ msgid ""
 #~ "This module lets configure which keyboard events are forwarded to X11 "

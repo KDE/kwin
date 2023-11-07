@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-07 02:19+0000\n"
+"POT-Creation-Date: 2023-11-07 02:44+0000\n"
 "PO-Revision-Date: 2022-12-17 08:27+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
@@ -45,13 +45,13 @@ msgstr "Ніколи"
 
 #: ui/main.qml:68
 #, kde-format
-msgid "Only Meta, Control, Alt, and Shift keys"
-msgstr "Лише клавіші Meta, Ctrl, Alt і Shift"
+msgid "Only non-character keys"
+msgstr ""
 
 #: ui/main.qml:71
 #, kde-format
-msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
-msgstr "Усі клавіші, але лише якщо натиснуто клавішу Meta, Ctrl, Alt або Shift"
+msgid "As above, plus any key typed while a modifier key is pressed"
+msgstr ""
 
 #: ui/main.qml:75
 #, kde-format
@@ -69,6 +69,13 @@ msgstr ""
 "до рівня сеансу X11, надаючи створеному зловмисниками програмному "
 "забезпеченню можливість викрадати паролі та шпигувати за введенням тексту. "
 "Вам слід розуміти цей ризик та взяти на себе відповідальність за наслідки."
+
+#~ msgid "Only Meta, Control, Alt, and Shift keys"
+#~ msgstr "Лише клавіші Meta, Ctrl, Alt і Shift"
+
+#~ msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
+#~ msgstr ""
+#~ "Усі клавіші, але лише якщо натиснуто клавішу Meta, Ctrl, Alt або Shift"
 
 #~ msgid ""
 #~ "This module lets configure which keyboard events are forwarded to X11 "
