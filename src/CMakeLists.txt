@@ -1,7 +1,7 @@
 ecm_setup_version(${PROJECT_VERSION}
                   VARIABLE_PREFIX KWIN
                   PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KWinConfigVersion.cmake"
-                  SOVERSION ${PROJECT_VERSION_MAJOR}
+                  SOVERSION 6
 )
 
 configure_file(config-kwin.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kwin.h)
@@ -24,7 +24,7 @@ add_library(kwin SHARED)
 target_include_directories(kwin INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/kwin>")
 set_target_properties(kwin PROPERTIES
    VERSION ${PROJECT_VERSION}
-   SOVERSION ${PROJECT_VERSION_MAJOR}
+   SOVERSION 6
 )
 
 target_compile_definitions(kwin PRIVATE

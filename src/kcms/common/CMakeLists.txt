@@ -23,7 +23,7 @@ target_link_libraries(kcmkwincommon
 
 set_target_properties(kcmkwincommon PROPERTIES
     VERSION ${PROJECT_VERSION}
-    SOVERSION ${PROJECT_VERSION_MAJOR}
+    SOVERSION 6
 )
 
 install(TARGETS kcmkwincommon ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
