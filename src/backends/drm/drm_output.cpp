@@ -436,7 +436,7 @@ QVector3D DrmOutput::channelFactors() const
 
 bool DrmOutput::needsColormanagement() const
 {
-    return m_state.wideColorGamut || m_state.highDynamicRange || m_state.iccProfile || m_gpu->isNVidia();
+    return m_state.wideColorGamut || m_state.highDynamicRange || m_state.iccProfile;
 }
 }
 
