@@ -100,16 +100,9 @@ bool Transaction::isReady() const
         return false;
     }
 
-    for (const TransactionEntry &entry : m_entries) {
-        if (!entry.surface) {
-            continue;
-        }
-        if (entry.surface->firstTransaction() != this) {
-            return false;
-        }
-    }
-
-    return true;
+    return std::none_of(m_entries.cbegin(), m_entries.cend(), [](const TransactionEntry &entry) {
+        return entry.previousTransaction;
+    });
 }
 
 Transaction *Transaction::next(SurfaceInterface *surface) const
@@ -195,6 +188,13 @@ void Transaction::apply()
 {
     // Sort surfaces so descendants come first, then their ancestors.
     std::sort(m_entries.begin(), m_entries.end(), [](const TransactionEntry &a, const TransactionEntry &b) {
+        if (!a.surface) {
+            return false;
+        }
+        if (!b.surface) {
+            return true;
+        }
+
         if (isAncestor(a.surface, b.surface)) {
             return true;
         }
@@ -221,6 +221,12 @@ void Transaction::apply()
         }
 
         if (entry.nextTransaction) {
+            for (TransactionEntry &otherEntry : entry.nextTransaction->m_entries) {
+                if (otherEntry.previousTransaction == this) {
+                    otherEntry.previousTransaction = nullptr;
+                    break;
+                }
+            }
             entry.nextTransaction->tryApply();
         }
     }
@@ -258,6 +264,7 @@ void Transaction::commit()
             entry.surface->setFirstTransaction(this);
         }
 
+        entry.previousTransaction = entry.surface->lastTransaction();
         entry.surface->setLastTransaction(this);
     }
 

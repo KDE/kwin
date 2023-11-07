@@ -34,6 +34,11 @@ struct TransactionEntry
     QPointer<SurfaceInterface> surface;
 
     /**
+     * The previous transaction that this transaction depends on.
+     */
+    Transaction *previousTransaction = nullptr;
+
+    /**
      * Next transaction that is going to affect the surface.
      */
     Transaction *nextTransaction = nullptr;
