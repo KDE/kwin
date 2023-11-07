@@ -5,7 +5,6 @@
 */
 
 #include "scene/windowitem.h"
-#include "effects.h"
 #include "internalwindow.h"
 #include "scene/decorationitem.h"
 #include "scene/shadowitem.h"
@@ -55,7 +54,7 @@ WindowItem::WindowItem(Window *window, Scene *scene, Item *parent)
     connect(window, &Window::stackingOrderChanged, this, &WindowItem::updateStackingOrder);
     updateStackingOrder();
 
-    m_effectWindow = std::make_unique<EffectWindowImpl>(this);
+    m_effectWindow = std::make_unique<EffectWindow>(this);
 }
 
 WindowItem::~WindowItem()
@@ -82,7 +81,7 @@ Window *WindowItem::window() const
     return m_window;
 }
 
-EffectWindowImpl *WindowItem::effectWindow() const
+EffectWindow *WindowItem::effectWindow() const
 {
     return m_effectWindow.get();
 }

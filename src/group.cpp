@@ -9,7 +9,6 @@
 */
 
 #include "group.h"
-#include "effects.h"
 #include "workspace.h"
 #include "x11window.h"
 
@@ -35,7 +34,7 @@ Group::Group(xcb_window_t leader_P)
         leader_info = std::make_unique<NETWinInfo>(kwinApp()->x11Connection(), leader_P, kwinApp()->x11RootWindow(),
                                                    NET::Properties(), NET::WM2StartupId);
     }
-    effect_group = std::make_unique<EffectWindowGroupImpl>(this);
+    effect_group = std::make_unique<EffectWindowGroup>(this);
     workspace()->addGroup(this);
 }
 

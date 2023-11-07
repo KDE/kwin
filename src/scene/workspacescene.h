@@ -32,7 +32,7 @@ class DecoratedClientImpl;
 class DecorationRenderer;
 class Deleted;
 class DragAndDropIconItem;
-class EffectWindowImpl;
+class EffectWindow;
 class GLTexture;
 class Item;
 class RenderLoop;
@@ -99,11 +99,11 @@ protected:
     void preparePaintSimpleScreen();
     void paintSimpleScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region);
     // called after all effects had their paintWindow() called
-    void finalPaintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data);
+    void finalPaintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data);
     // shared implementation, starts painting the window
     void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, WindowItem *w, int mask, const QRegion &region);
     // called after all effects had their drawWindow() called
-    void finalDrawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data);
+    void finalDrawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data);
 
     // saved data for 2nd pass of optimized screen painting
     struct Phase2Data

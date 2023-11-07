@@ -32,7 +32,6 @@ class Display;
 class Window;
 class Compositor;
 class EffectLoader;
-class Group;
 class Unmanaged;
 class WindowPropertyNotifyX11Filter;
 class TabletEvent;
@@ -317,150 +316,6 @@ private:
     std::unique_ptr<WindowPropertyNotifyX11Filter> m_x11WindowPropertyNotify;
 };
 
-class EffectWindowImpl : public EffectWindow
-{
-    Q_OBJECT
-public:
-    explicit EffectWindowImpl(WindowItem *windowItem);
-    ~EffectWindowImpl() override;
-
-    void addRepaint(const QRect &r) override;
-    void addRepaintFull() override;
-    void addLayerRepaint(const QRect &r) override;
-
-    void refWindow() override;
-    void unrefWindow() override;
-
-    const EffectWindowGroup *group() const override;
-
-    bool isDeleted() const override;
-    bool isMinimized() const override;
-    bool isHidden() const override;
-    bool isHiddenByShowDesktop() const override;
-    double opacity() const override;
-
-    QStringList activities() const override;
-    QList<VirtualDesktop *> desktops() const override;
-    qreal x() const override;
-    qreal y() const override;
-    qreal width() const override;
-    qreal height() const override;
-
-    QSizeF basicUnit() const override;
-    QRectF frameGeometry() const override;
-    QRectF bufferGeometry() const override;
-    QRectF clientGeometry() const override;
-
-    QString caption() const override;
-
-    QRectF expandedGeometry() const override;
-    Output *screen() const override;
-    QPointF pos() const override;
-    QSizeF size() const override;
-    QRectF rect() const override;
-
-    bool isMovable() const override;
-    bool isMovableAcrossScreens() const override;
-    bool isUserMove() const override;
-    bool isUserResize() const override;
-    QRectF iconGeometry() const override;
-
-    bool isDesktop() const override;
-    bool isDock() const override;
-    bool isToolbar() const override;
-    bool isMenu() const override;
-    bool isNormalWindow() const override;
-    bool isSpecialWindow() const override;
-    bool isDialog() const override;
-    bool isSplash() const override;
-    bool isUtility() const override;
-    bool isDropdownMenu() const override;
-    bool isPopupMenu() const override;
-    bool isTooltip() const override;
-    bool isNotification() const override;
-    bool isCriticalNotification() const override;
-    bool isAppletPopup() const override;
-    bool isOnScreenDisplay() const override;
-    bool isComboBox() const override;
-    bool isDNDIcon() const override;
-    bool skipsCloseAnimation() const override;
-
-    bool acceptsFocus() const override;
-    bool keepAbove() const override;
-    bool keepBelow() const override;
-    bool isModal() const override;
-    bool isPopupWindow() const override;
-    bool isOutline() const override;
-    bool isLockScreen() const override;
-
-    SurfaceInterface *surface() const override;
-    bool isFullScreen() const override;
-    bool isUnresponsive() const override;
-
-    QRectF contentsRect() const override;
-    bool decorationHasAlpha() const override;
-    QIcon icon() const override;
-    QString windowClass() const override;
-    NET::WindowType windowType() const override;
-    bool isSkipSwitcher() const override;
-    QString windowRole() const override;
-
-    bool isManaged() const override;
-    bool isWaylandClient() const override;
-    bool isX11Client() const override;
-
-    pid_t pid() const override;
-    qlonglong windowId() const override;
-    QUuid internalId() const override;
-
-    QRectF decorationInnerRect() const override;
-    KDecoration2::Decoration *decoration() const override;
-    QByteArray readProperty(long atom, long type, int format) const override;
-    void deleteProperty(long atom) const override;
-
-    EffectWindow *findModal() override;
-    EffectWindow *transientFor() override;
-    EffectWindowList mainWindows() const override;
-
-    void minimize() override;
-    void unminimize() override;
-    void closeWindow() override;
-
-    QWindow *internalWindow() const override;
-
-    const Window *window() const;
-    Window *window();
-
-    WindowItem *windowItem() const; // internal
-
-    void elevate(bool elevate);
-
-    void setData(int role, const QVariant &data) override;
-    QVariant data(int role) const override;
-
-private:
-    void refVisible(const EffectWindowVisibleRef *holder) override;
-    void unrefVisible(const EffectWindowVisibleRef *holder) override;
-
-    Window *m_window;
-    WindowItem *m_windowItem; // This one is used only during paint pass.
-    QHash<int, QVariant> dataMap;
-    bool managed = false;
-    bool m_waylandWindow;
-    bool m_x11Window;
-};
-
-class EffectWindowGroupImpl
-    : public EffectWindowGroup
-{
-public:
-    explicit EffectWindowGroupImpl(Group *g);
-    EffectWindowList members() const override;
-
-private:
-    Group *group;
-};
-
 class EffectFrameQuickScene : public OffscreenQuickScene
 {
     Q_OBJECT
@@ -581,26 +436,6 @@ inline xcb_window_t EffectsHandlerImpl::x11RootWindow() const
 inline xcb_connection_t *EffectsHandlerImpl::xcbConnection() const
 {
     return kwinApp()->x11Connection();
-}
-
-inline EffectWindowGroupImpl::EffectWindowGroupImpl(Group *g)
-    : group(g)
-{
-}
-
-inline WindowItem *EffectWindowImpl::windowItem() const
-{
-    return m_windowItem;
-}
-
-inline const Window *EffectWindowImpl::window() const
-{
-    return m_window;
-}
-
-inline Window *EffectWindowImpl::window()
-{
-    return m_window;
 }
 
 } // namespace

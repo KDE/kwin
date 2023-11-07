@@ -276,12 +276,12 @@ void Window::updateShadow()
     }
 }
 
-EffectWindowImpl *Window::effectWindow()
+EffectWindow *Window::effectWindow()
 {
     return m_windowItem ? m_windowItem->effectWindow() : nullptr;
 }
 
-const EffectWindowImpl *Window::effectWindow() const
+const EffectWindow *Window::effectWindow() const
 {
     return m_windowItem ? m_windowItem->effectWindow() : nullptr;
 }

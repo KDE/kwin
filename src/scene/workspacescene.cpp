@@ -460,13 +460,13 @@ void WorkspaceScene::paintWindow(const RenderTarget &renderTarget, const RenderV
 }
 
 // the function that'll be eventually called by paintWindow() above
-void WorkspaceScene::finalPaintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data)
+void WorkspaceScene::finalPaintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data)
 {
     effects->drawWindow(renderTarget, viewport, w, mask, region, data);
 }
 
 // will be eventually called from drawWindow()
-void WorkspaceScene::finalDrawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data)
+void WorkspaceScene::finalDrawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data)
 {
     m_renderer->renderItem(renderTarget, viewport, w->windowItem(), mask, region, data);
 }

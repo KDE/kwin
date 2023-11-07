@@ -89,14 +89,6 @@ static QByteArray readWindowProperty(xcb_window_t win, xcb_atom_t atom, xcb_atom
     }
 }
 
-static void deleteWindowProperty(xcb_window_t win, long int atom)
-{
-    if (win == XCB_WINDOW_NONE) {
-        return;
-    }
-    xcb_delete_property(kwinApp()->x11Connection(), win, atom);
-}
-
 static xcb_atom_t registerSupportProperty(const QByteArray &propertyName)
 {
     auto c = kwinApp()->x11Connection();
@@ -314,7 +306,7 @@ void EffectsHandlerImpl::paintWindow(const RenderTarget &renderTarget, const Ren
         (*m_currentPaintWindowIterator++)->paintWindow(renderTarget, viewport, w, mask, region, data);
         --m_currentPaintWindowIterator;
     } else {
-        m_scene->finalPaintWindow(renderTarget, viewport, static_cast<EffectWindowImpl *>(w), mask, region, data);
+        m_scene->finalPaintWindow(renderTarget, viewport, w, mask, region, data);
     }
 }
 
@@ -343,13 +335,13 @@ void EffectsHandlerImpl::drawWindow(const RenderTarget &renderTarget, const Rend
         (*m_currentDrawWindowIterator++)->drawWindow(renderTarget, viewport, w, mask, region, data);
         --m_currentDrawWindowIterator;
     } else {
-        m_scene->finalDrawWindow(renderTarget, viewport, static_cast<EffectWindowImpl *>(w), mask, region, data);
+        m_scene->finalDrawWindow(renderTarget, viewport, w, mask, region, data);
     }
 }
 
 void EffectsHandlerImpl::renderWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data)
 {
-    m_scene->finalDrawWindow(renderTarget, viewport, static_cast<EffectWindowImpl *>(w), mask, region, data);
+    m_scene->finalDrawWindow(renderTarget, viewport, w, mask, region, data);
 }
 
 bool EffectsHandlerImpl::hasDecorationShadows() const
@@ -682,7 +674,7 @@ QByteArray EffectsHandlerImpl::readRootProperty(long atom, long type, int format
 
 void EffectsHandlerImpl::activateWindow(EffectWindow *effectWindow)
 {
-    auto window = static_cast<EffectWindowImpl *>(effectWindow)->window();
+    auto window = effectWindow->window();
     if (window->isClient()) {
         Workspace::self()->activateWindow(window, true);
     }
@@ -695,7 +687,7 @@ EffectWindow *EffectsHandlerImpl::activeWindow() const
 
 void EffectsHandlerImpl::moveWindow(EffectWindow *w, const QPoint &pos, bool snap, double snapAdjust)
 {
-    auto window = static_cast<EffectWindowImpl *>(w)->window();
+    auto window = w->window();
     if (!window->isClient() || !window->isMovable()) {
         return;
     }
@@ -709,7 +701,7 @@ void EffectsHandlerImpl::moveWindow(EffectWindow *w, const QPoint &pos, bool sna
 
 void EffectsHandlerImpl::windowToDesktops(EffectWindow *w, const QList<VirtualDesktop *> &desktops)
 {
-    auto window = static_cast<EffectWindowImpl *>(w)->window();
+    auto window = w->window();
     if (!window->isClient() || window->isDesktop() || window->isDock()) {
         return;
     }
@@ -718,7 +710,7 @@ void EffectsHandlerImpl::windowToDesktops(EffectWindow *w, const QList<VirtualDe
 
 void EffectsHandlerImpl::windowToScreen(EffectWindow *w, Output *screen)
 {
-    auto window = static_cast<EffectWindowImpl *>(w)->window();
+    auto window = w->window();
     if (window->isClient() && !window->isDesktop() && !window->isDock()) {
         Workspace::self()->sendWindowToOutput(window, screen);
     }
@@ -887,7 +879,7 @@ EffectWindowList EffectsHandlerImpl::stackingOrder() const
 
 void EffectsHandlerImpl::setElevatedWindow(KWin::EffectWindow *w, bool set)
 {
-    WindowItem *item = static_cast<EffectWindowImpl *>(w)->windowItem();
+    WindowItem *item = w->windowItem();
 
     if (set) {
         item->elevate();
@@ -899,7 +891,7 @@ void EffectsHandlerImpl::setElevatedWindow(KWin::EffectWindow *w, bool set)
 void EffectsHandlerImpl::setTabBoxWindow(EffectWindow *w)
 {
 #if KWIN_BUILD_TABBOX
-    auto window = static_cast<EffectWindowImpl *>(w)->window();
+    auto window = w->window();
     if (window->isClient()) {
         workspace()->tabbox()->setCurrentClient(window);
     }
@@ -991,7 +983,7 @@ QRectF EffectsHandlerImpl::clientArea(clientAreaOption opt, const Output *screen
 
 QRectF EffectsHandlerImpl::clientArea(clientAreaOption opt, const EffectWindow *effectWindow) const
 {
-    const Window *window = static_cast<const EffectWindowImpl *>(effectWindow)->window();
+    const Window *window = effectWindow->window();
     return Workspace::self()->clientArea(opt, window);
 }
 
@@ -1601,401 +1593,6 @@ bool EffectsHandlerImpl::isInputPanelOverlay() const
 QQmlEngine *EffectsHandlerImpl::qmlEngine() const
 {
     return Scripting::self()->qmlEngine();
-}
-
-//****************************************
-// EffectWindowImpl
-//****************************************
-
-EffectWindowImpl::EffectWindowImpl(WindowItem *windowItem)
-    : m_window(windowItem->window())
-    , m_windowItem(windowItem)
-{
-    // Deleted windows are not managed. So, when windowClosed signal is
-    // emitted, effects can't distinguish managed windows from unmanaged
-    // windows(e.g. combo box popups, popup menus, etc). Save value of the
-    // managed property during construction of EffectWindow. At that time,
-    // parent can be Client, XdgShellClient, or Unmanaged. So, later on, when
-    // an instance of Deleted becomes parent of the EffectWindow, effects
-    // can still figure out whether it is/was a managed window.
-    managed = m_window->isClient();
-
-    m_waylandWindow = qobject_cast<KWin::WaylandWindow *>(m_window) != nullptr;
-    m_x11Window = qobject_cast<KWin::X11Window *>(m_window) != nullptr;
-
-    connect(m_window, &Window::windowShown, this, [this]() {
-        Q_EMIT windowShown(this);
-    });
-    connect(m_window, &Window::windowHidden, this, [this]() {
-        Q_EMIT windowHidden(this);
-    });
-    connect(m_window, &Window::maximizedChanged, this, [this]() {
-        const MaximizeMode mode = m_window->maximizeMode();
-        Q_EMIT windowMaximizedStateChanged(this, mode & MaximizeHorizontal, mode & MaximizeVertical);
-    });
-    connect(m_window, &Window::maximizedAboutToChange, this, [this](MaximizeMode m) {
-        Q_EMIT windowMaximizedStateAboutToChange(this, m & MaximizeHorizontal, m & MaximizeVertical);
-    });
-    connect(m_window, &Window::frameGeometryAboutToChange, this, [this]() {
-        Q_EMIT windowFrameGeometryAboutToChange(this);
-    });
-    connect(m_window, &Window::interactiveMoveResizeStarted, this, [this]() {
-        Q_EMIT windowStartUserMovedResized(this);
-    });
-    connect(m_window, &Window::interactiveMoveResizeStepped, this, [this](const QRectF &geometry) {
-        Q_EMIT windowStepUserMovedResized(this, geometry);
-    });
-    connect(m_window, &Window::interactiveMoveResizeFinished, this, [this]() {
-        Q_EMIT windowFinishUserMovedResized(this);
-    });
-    connect(m_window, &Window::opacityChanged, this, [this](Window *window, qreal oldOpacity) {
-        Q_EMIT windowOpacityChanged(this, oldOpacity, window->opacity());
-    });
-    connect(m_window, &Window::minimizedChanged, this, [this]() {
-        if (m_window->isMinimized()) {
-            Q_EMIT windowMinimized(this);
-        } else {
-            Q_EMIT windowUnminimized(this);
-        }
-    });
-    connect(m_window, &Window::modalChanged, this, [this]() {
-        Q_EMIT windowModalityChanged(this);
-    });
-    connect(m_window, &Window::frameGeometryChanged, this, [this](const QRectF &oldGeometry) {
-        Q_EMIT windowFrameGeometryChanged(this, oldGeometry);
-    });
-    connect(m_window, &Window::damaged, this, [this]() {
-        Q_EMIT windowDamaged(this);
-    });
-    connect(m_window, &Window::unresponsiveChanged, this, [this](bool unresponsive) {
-        Q_EMIT windowUnresponsiveChanged(this, unresponsive);
-    });
-    connect(m_window, &Window::keepAboveChanged, this, [this]() {
-        Q_EMIT windowKeepAboveChanged(this);
-    });
-    connect(m_window, &Window::keepBelowChanged, this, [this]() {
-        Q_EMIT windowKeepBelowChanged(this);
-    });
-    connect(m_window, &Window::fullScreenChanged, this, [this]() {
-        Q_EMIT windowFullScreenChanged(this);
-    });
-    connect(m_window, &Window::visibleGeometryChanged, this, [this]() {
-        Q_EMIT windowExpandedGeometryChanged(this);
-    });
-    connect(m_window, &Window::decorationChanged, this, [this]() {
-        Q_EMIT windowDecorationChanged(this);
-    });
-    connect(m_window, &Window::desktopsChanged, this, [this]() {
-        Q_EMIT windowDesktopsChanged(this);
-    });
-}
-
-EffectWindowImpl::~EffectWindowImpl()
-{
-}
-
-void EffectWindowImpl::refVisible(const EffectWindowVisibleRef *holder)
-{
-    m_windowItem->refVisible(holder->reason());
-}
-
-void EffectWindowImpl::unrefVisible(const EffectWindowVisibleRef *holder)
-{
-    m_windowItem->unrefVisible(holder->reason());
-}
-
-void EffectWindowImpl::addRepaint(const QRect &r)
-{
-    m_windowItem->scheduleRepaint(QRegion(r));
-}
-
-void EffectWindowImpl::addRepaintFull()
-{
-    m_windowItem->scheduleRepaint(m_windowItem->boundingRect());
-}
-
-void EffectWindowImpl::addLayerRepaint(const QRect &r)
-{
-    m_windowItem->scheduleRepaint(m_windowItem->mapFromGlobal(r));
-}
-
-const EffectWindowGroup *EffectWindowImpl::group() const
-{
-    if (auto c = qobject_cast<X11Window *>(m_window)) {
-        return c->group()->effectGroup();
-    }
-    return nullptr; // TODO
-}
-
-void EffectWindowImpl::refWindow()
-{
-    if (m_window->isDeleted()) {
-        return m_window->ref();
-    }
-    Q_UNREACHABLE(); // TODO
-}
-
-void EffectWindowImpl::unrefWindow()
-{
-    if (m_window->isDeleted()) {
-        return m_window->unref();
-    }
-    Q_UNREACHABLE(); // TODO
-}
-
-Output *EffectWindowImpl::screen() const
-{
-    return m_window->output();
-}
-
-#define WINDOW_HELPER(rettype, prototype, toplevelPrototype) \
-    rettype EffectWindowImpl::prototype() const              \
-    {                                                        \
-        return m_window->toplevelPrototype();                \
-    }
-
-WINDOW_HELPER(double, opacity, opacity)
-WINDOW_HELPER(qreal, x, x)
-WINDOW_HELPER(qreal, y, y)
-WINDOW_HELPER(qreal, width, width)
-WINDOW_HELPER(qreal, height, height)
-WINDOW_HELPER(QPointF, pos, pos)
-WINDOW_HELPER(QSizeF, size, size)
-WINDOW_HELPER(QRectF, frameGeometry, frameGeometry)
-WINDOW_HELPER(QRectF, bufferGeometry, bufferGeometry)
-WINDOW_HELPER(QRectF, clientGeometry, clientGeometry)
-WINDOW_HELPER(QRectF, expandedGeometry, visibleGeometry)
-WINDOW_HELPER(QRectF, rect, rect)
-WINDOW_HELPER(bool, isDesktop, isDesktop)
-WINDOW_HELPER(bool, isDock, isDock)
-WINDOW_HELPER(bool, isToolbar, isToolbar)
-WINDOW_HELPER(bool, isMenu, isMenu)
-WINDOW_HELPER(bool, isNormalWindow, isNormalWindow)
-WINDOW_HELPER(bool, isDialog, isDialog)
-WINDOW_HELPER(bool, isSplash, isSplash)
-WINDOW_HELPER(bool, isUtility, isUtility)
-WINDOW_HELPER(bool, isDropdownMenu, isDropdownMenu)
-WINDOW_HELPER(bool, isPopupMenu, isPopupMenu)
-WINDOW_HELPER(bool, isTooltip, isTooltip)
-WINDOW_HELPER(bool, isNotification, isNotification)
-WINDOW_HELPER(bool, isCriticalNotification, isCriticalNotification)
-WINDOW_HELPER(bool, isAppletPopup, isAppletPopup)
-WINDOW_HELPER(bool, isOnScreenDisplay, isOnScreenDisplay)
-WINDOW_HELPER(bool, isComboBox, isComboBox)
-WINDOW_HELPER(bool, isDNDIcon, isDNDIcon)
-WINDOW_HELPER(bool, isDeleted, isDeleted)
-WINDOW_HELPER(QString, windowRole, windowRole)
-WINDOW_HELPER(QStringList, activities, activities)
-WINDOW_HELPER(bool, skipsCloseAnimation, skipsCloseAnimation)
-WINDOW_HELPER(SurfaceInterface *, surface, surface)
-WINDOW_HELPER(bool, isPopupWindow, isPopupWindow)
-WINDOW_HELPER(bool, isOutline, isOutline)
-WINDOW_HELPER(bool, isLockScreen, isLockScreen)
-WINDOW_HELPER(pid_t, pid, pid)
-WINDOW_HELPER(QUuid, internalId, internalId)
-WINDOW_HELPER(bool, isMinimized, isMinimized)
-WINDOW_HELPER(bool, isHidden, isHidden)
-WINDOW_HELPER(bool, isHiddenByShowDesktop, isHiddenByShowDesktop)
-WINDOW_HELPER(bool, isModal, isModal)
-WINDOW_HELPER(bool, isFullScreen, isFullScreen)
-WINDOW_HELPER(bool, keepAbove, keepAbove)
-WINDOW_HELPER(bool, keepBelow, keepBelow)
-WINDOW_HELPER(QString, caption, caption)
-WINDOW_HELPER(bool, isMovable, isMovable)
-WINDOW_HELPER(bool, isMovableAcrossScreens, isMovableAcrossScreens)
-WINDOW_HELPER(bool, isUserMove, isInteractiveMove)
-WINDOW_HELPER(bool, isUserResize, isInteractiveResize)
-WINDOW_HELPER(QRectF, iconGeometry, iconGeometry)
-WINDOW_HELPER(bool, isSpecialWindow, isSpecialWindow)
-WINDOW_HELPER(bool, acceptsFocus, wantsInput)
-WINDOW_HELPER(QIcon, icon, icon)
-WINDOW_HELPER(bool, isSkipSwitcher, skipSwitcher)
-WINDOW_HELPER(bool, decorationHasAlpha, decorationHasAlpha)
-WINDOW_HELPER(bool, isUnresponsive, unresponsive)
-WINDOW_HELPER(QList<VirtualDesktop *>, desktops, desktops)
-
-#undef WINDOW_HELPER
-
-qlonglong EffectWindowImpl::windowId() const
-{
-    if (X11Window *x11Window = qobject_cast<X11Window *>(m_window)) {
-        return x11Window->window();
-    }
-    return 0;
-}
-
-QString EffectWindowImpl::windowClass() const
-{
-    return m_window->resourceName() + QLatin1Char(' ') + m_window->resourceClass();
-}
-
-QRectF EffectWindowImpl::contentsRect() const
-{
-    return QRectF(m_window->clientPos(), m_window->clientSize());
-}
-
-NET::WindowType EffectWindowImpl::windowType() const
-{
-    return m_window->windowType();
-}
-
-QSizeF EffectWindowImpl::basicUnit() const
-{
-    if (auto window = qobject_cast<X11Window *>(m_window)) {
-        return window->basicUnit();
-    }
-    return QSize(1, 1);
-}
-
-QRectF EffectWindowImpl::decorationInnerRect() const
-{
-    return m_window->rect() - m_window->frameMargins();
-}
-
-KDecoration2::Decoration *EffectWindowImpl::decoration() const
-{
-    return m_window->decoration();
-}
-
-QByteArray EffectWindowImpl::readProperty(long atom, long type, int format) const
-{
-    auto x11Window = qobject_cast<X11Window *>(m_window);
-    if (!x11Window) {
-        return QByteArray();
-    }
-    if (!kwinApp()->x11Connection()) {
-        return QByteArray();
-    }
-    return readWindowProperty(x11Window->window(), atom, type, format);
-}
-
-void EffectWindowImpl::deleteProperty(long int atom) const
-{
-    auto x11Window = qobject_cast<X11Window *>(m_window);
-    if (!x11Window) {
-        return;
-    }
-    if (kwinApp()->x11Connection()) {
-        deleteWindowProperty(x11Window->window(), atom);
-    }
-}
-
-EffectWindow *EffectWindowImpl::findModal()
-{
-    Window *modal = m_window->findModal();
-    if (modal) {
-        return modal->effectWindow();
-    }
-
-    return nullptr;
-}
-
-EffectWindow *EffectWindowImpl::transientFor()
-{
-    Window *transientFor = m_window->transientFor();
-    if (transientFor) {
-        return transientFor->effectWindow();
-    }
-
-    return nullptr;
-}
-
-QWindow *EffectWindowImpl::internalWindow() const
-{
-    if (auto window = qobject_cast<InternalWindow *>(m_window)) {
-        return window->handle();
-    }
-    return nullptr;
-}
-
-template<typename T>
-EffectWindowList getMainWindows(T *c)
-{
-    const auto mainwindows = c->mainWindows();
-    EffectWindowList ret;
-    ret.reserve(mainwindows.size());
-    std::transform(std::cbegin(mainwindows), std::cend(mainwindows),
-                   std::back_inserter(ret),
-                   [](auto window) {
-                       return window->effectWindow();
-                   });
-    return ret;
-}
-
-EffectWindowList EffectWindowImpl::mainWindows() const
-{
-    return getMainWindows(m_window);
-}
-
-void EffectWindowImpl::setData(int role, const QVariant &data)
-{
-    if (!data.isNull()) {
-        dataMap[role] = data;
-    } else {
-        dataMap.remove(role);
-    }
-    Q_EMIT effects->windowDataChanged(this, role);
-}
-
-QVariant EffectWindowImpl::data(int role) const
-{
-    return dataMap.value(role);
-}
-
-void EffectWindowImpl::elevate(bool elevate)
-{
-    effects->setElevatedWindow(this, elevate);
-}
-
-void EffectWindowImpl::minimize()
-{
-    if (m_window->isClient()) {
-        m_window->setMinimized(true);
-    }
-}
-
-void EffectWindowImpl::unminimize()
-{
-    if (m_window->isClient()) {
-        m_window->setMinimized(false);
-    }
-}
-
-void EffectWindowImpl::closeWindow()
-{
-    if (m_window->isClient()) {
-        m_window->closeWindow();
-    }
-}
-
-bool EffectWindowImpl::isManaged() const
-{
-    return managed;
-}
-
-bool EffectWindowImpl::isWaylandClient() const
-{
-    return m_waylandWindow;
-}
-
-bool EffectWindowImpl::isX11Client() const
-{
-    return m_x11Window;
-}
-
-//****************************************
-// EffectWindowGroupImpl
-//****************************************
-
-EffectWindowList EffectWindowGroupImpl::members() const
-{
-    const auto memberList = group->members();
-    EffectWindowList ret;
-    ret.reserve(memberList.size());
-    std::transform(std::cbegin(memberList), std::cend(memberList), std::back_inserter(ret), [](auto window) {
-        return window->effectWindow();
-    });
-    return ret;
 }
 
 //****************************************

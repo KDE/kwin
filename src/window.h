@@ -43,7 +43,7 @@ class SurfaceInterface;
 class Group;
 class Output;
 class ClientMachine;
-class EffectWindowImpl;
+class EffectWindow;
 class Tile;
 class Scene;
 class Shadow;
@@ -754,8 +754,8 @@ public:
     qreal opacity() const;
     virtual bool setupCompositing();
     virtual void finishCompositing();
-    EffectWindowImpl *effectWindow();
-    const EffectWindowImpl *effectWindow() const;
+    EffectWindow *effectWindow();
+    const EffectWindow *effectWindow() const;
     SurfaceItem *surfaceItem() const;
     WindowItem *windowItem() const;
     /**
