@@ -351,6 +351,9 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
         next.iccProfile = IccProfile::load(*props->iccProfilePath);
         m_pipeline->setIccProfile(next.iccProfile);
     }
+    if (isEnabled() != next.enabled) {
+        RenderLoopPrivate::get(m_renderLoop.get())->invalidate();
+    }
     if (m_state.highDynamicRange != next.highDynamicRange || m_state.sdrBrightness != next.sdrBrightness || m_state.wideColorGamut != next.wideColorGamut || m_state.iccProfile != next.iccProfile) {
         m_renderLoop->scheduleRepaint();
     }
