@@ -424,8 +424,11 @@ void DrmPipeline::pageFlipped(std::chrono::nanoseconds timestamp, PageflipType t
 {
     m_commitThread->pageFlipped(timestamp);
     m_legacyPageflipPending = false;
-    if (m_output && activePending()) {
-        if (type == PageflipType::Normal) {
+    if (type == PageflipType::Modeset && !activePending()) {
+        return;
+    }
+    if (m_output) {
+        if (type == PageflipType::Normal || type == PageflipType::Modeset) {
             m_output->pageFlipped(timestamp);
         } else {
             RenderLoopPrivate::get(m_output->renderLoop())->notifyVblank(timestamp);

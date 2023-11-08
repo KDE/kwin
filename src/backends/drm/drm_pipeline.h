@@ -85,7 +85,8 @@ public:
 
     enum class PageflipType {
         Normal,
-        CursorOnly
+        CursorOnly,
+        Modeset,
     };
     void pageFlipped(std::chrono::nanoseconds timestamp, PageflipType type);
     bool pageflipsPending() const;

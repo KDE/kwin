@@ -88,6 +88,7 @@ private:
     std::optional<bool> m_vrr;
     std::unordered_map<uint32_t /* object */, std::unordered_map<uint32_t /* property */, uint64_t /* value */>> m_properties;
     bool m_cursorOnly = false;
+    bool m_modeset = false;
 };
 
 class DrmLegacyCommit : public DrmCommit
@@ -102,6 +103,7 @@ public:
 private:
     DrmPipeline *const m_pipeline;
     const std::shared_ptr<DrmFramebuffer> m_buffer;
+    bool m_modeset = false;
 };
 
 }
