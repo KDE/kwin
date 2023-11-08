@@ -28,7 +28,7 @@ Dependencies:
     'libraries/libqaccessibilityclient': '@latest'
     'libraries/plasma-wayland-protocols': '@latest'
     'plasma/plasma-framework': 'kf5'
-    'frameworks/kwayland': 'kf5'
+    'plasma/kwayland': 'kf5'
     'plasma/breeze': '@same'
     'plasma/kdecoration': '@same'
     'plasma/kscreenlocker': '@same'
