@@ -349,7 +349,12 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     if (props->iccProfilePath) {
         next.iccProfilePath = *props->iccProfilePath;
         next.iccProfile = IccProfile::load(*props->iccProfilePath);
+    }
+    if (!next.highDynamicRange && !next.wideColorGamut) {
         m_pipeline->setIccProfile(next.iccProfile);
+    } else {
+        // ICC profiles don't support HDR (yet)
+        m_pipeline->setIccProfile(nullptr);
     }
     if (m_state.highDynamicRange != next.highDynamicRange || m_state.sdrBrightness != next.sdrBrightness || m_state.wideColorGamut != next.wideColorGamut || m_state.iccProfile != next.iccProfile) {
         m_renderLoop->scheduleRepaint();
