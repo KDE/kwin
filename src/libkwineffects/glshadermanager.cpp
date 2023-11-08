@@ -228,7 +228,7 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
         stream << "        result.rgb = pqToNits(result.rgb);\n";
         stream << "        result.rgb *= result.a;\n";
         stream << "    } else if (sourceNamedTransferFunction == scRGB_EOTF) {\n";
-        stream << "        result.rgb *= 80;\n";
+        stream << "        result.rgb *= 80.0;\n";
         stream << "    }\n";
         stream << "    result.rgb = doTonemapping(colorimetryTransform * result.rgb, maxHdrBrightness);\n";
     }
