@@ -99,6 +99,7 @@ public:
     enum FloatUniform {
         Saturation,
         MaxHdrBrightness,
+        SdrBrightness,
         FloatUniformCount
     };
 
@@ -108,7 +109,6 @@ public:
         TextureHeight,
         SourceNamedTransferFunction,
         DestinationNamedTransferFunction,
-        SdrBrightness,
         IntUniformCount
     };
 

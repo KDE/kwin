@@ -219,6 +219,7 @@ void GLShader::resolveLocations()
 
     m_floatLocation[Saturation] = uniformLocation("saturation");
     m_floatLocation[MaxHdrBrightness] = uniformLocation("maxHdrBrightness");
+    m_floatLocation[SdrBrightness] = uniformLocation("sdrBrightness");
 
     m_colorLocation[Color] = uniformLocation("geometryColor");
 
@@ -226,7 +227,6 @@ void GLShader::resolveLocations()
     m_intLocation[TextureHeight] = uniformLocation("textureHeight");
     m_intLocation[SourceNamedTransferFunction] = uniformLocation("sourceNamedTransferFunction");
     m_intLocation[DestinationNamedTransferFunction] = uniformLocation("destinationNamedTransferFunction");
-    m_intLocation[SdrBrightness] = uniformLocation("sdrBrightness");
 
     m_locationsResolved = true;
 }
@@ -442,7 +442,7 @@ bool GLShader::setColorspaceUniforms(const ColorDescription &src, const ColorDes
     return setUniform(GLShader::MatrixUniform::ColorimetryTransformation, src.colorimetry().toOther(dst.colorimetry()))
         && setUniform(GLShader::IntUniform::SourceNamedTransferFunction, int(src.transferFunction()))
         && setUniform(GLShader::IntUniform::DestinationNamedTransferFunction, int(dst.transferFunction()))
-        && setUniform(IntUniform::SdrBrightness, dst.sdrBrightness())
+        && setUniform(FloatUniform::SdrBrightness, dst.sdrBrightness())
         && setUniform(FloatUniform::MaxHdrBrightness, dst.maxHdrHighlightBrightness());
 }
 
@@ -456,8 +456,7 @@ bool GLShader::setColorspaceUniformsToSRGB(const ColorDescription &src)
     return setUniform(GLShader::MatrixUniform::ColorimetryTransformation, src.colorimetry().toOther(ColorDescription::sRGB.colorimetry()))
         && setUniform(GLShader::IntUniform::SourceNamedTransferFunction, int(src.transferFunction()))
         && setUniform(GLShader::IntUniform::DestinationNamedTransferFunction, int(NamedTransferFunction::sRGB))
-        && setUniform(IntUniform::SdrBrightness, src.sdrBrightness())
+        && setUniform(FloatUniform::SdrBrightness, src.sdrBrightness())
         && setUniform(FloatUniform::MaxHdrBrightness, src.sdrBrightness());
 }
-
 }

@@ -157,7 +157,7 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
         stream << "uniform mat3 colorimetryTransform;\n";
         stream << "uniform int sourceNamedTransferFunction;\n";
         stream << "uniform int destinationNamedTransferFunction;\n";
-        stream << "uniform int sdrBrightness;// in nits\n";
+        stream << "uniform float sdrBrightness;// in nits\n";
         stream << "uniform float maxHdrBrightness; // in nits\n";
         stream << "\n";
         stream << "vec3 nitsToPq(vec3 nits) {\n";
