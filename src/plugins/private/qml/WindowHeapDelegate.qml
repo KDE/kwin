@@ -12,7 +12,7 @@ import org.kde.kirigami 2.20 as Kirigami
 import org.kde.kwin as KWinComponents
 import org.kde.kwin.private.effects
 import org.kde.plasma.components 3.0 as PC3
-import org.kde.plasma.workspace.components 2.0 as WorkspaceComponents
+import org.kde.plasma.extras as PlasmaExtras
 import org.kde.ksvg 1.0 as KSvg
 
 Item {
@@ -168,7 +168,7 @@ Item {
         visible: !thumb.activeHidden && !activeDragHandler.active
 
 
-        WorkspaceComponents.ShadowedLabel {
+        PlasmaExtras.ShadowedLabel {
             id: caption
             visible: thumb.windowTitleVisible
             width: thumb.width
