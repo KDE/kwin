@@ -356,7 +356,7 @@ target_compile_definitions(kwin_x11 PRIVATE
 )
 kcoreaddons_target_static_plugins(kwin_x11 NAMESPACE "kwin/effects/plugins")
 
-install(TARGETS kwin EXPORT KWinTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
+install(TARGETS kwin EXPORT KWinTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 install(TARGETS kwin_x11 ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_executable(kwin_wayland main_wayland.cpp)
