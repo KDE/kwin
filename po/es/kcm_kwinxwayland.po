@@ -3,13 +3,13 @@
 # This file is distributed under the same license as the kwin package.
 #
 # Automatically generated, 2022.
-# Eloy Cuadra <ecuadra@eloihr.net>, 2022.
+# SPDX-FileCopyrightText: 2022, 2023 Eloy Cuadra <ecuadra@eloihr.net>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwinxwayland\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-07 02:44+0000\n"
-"PO-Revision-Date: 2022-12-17 18:52+0100\n"
+"PO-Revision-Date: 2023-11-07 21:39+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 22.12.0\n"
+"X-Generator: Lokalize 23.08.2\n"
 
 #: ui/main.qml:47
 #, kde-format
@@ -38,8 +38,8 @@ msgstr ""
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
 msgstr ""
-"Permitir que las aplicaciones X11 heredadas lean las pulsaciones de teclas "
-"escritas en todas las aplicaciones:"
+"Permitir que las aplicaciones X11 heredadas lean pulsaciones de teclas de "
+"todas las aplicaciones:"
 
 #: ui/main.qml:65
 #, kde-format
@@ -49,12 +49,12 @@ msgstr "Nunca"
 #: ui/main.qml:68
 #, kde-format
 msgid "Only non-character keys"
-msgstr ""
+msgstr "Solo teclas que no sean caracteres"
 
 #: ui/main.qml:71
 #, kde-format
 msgid "As above, plus any key typed while a modifier key is pressed"
-msgstr ""
+msgstr "Como más arriba, además de cualquier tecla pulsada con un modificador"
 
 #: ui/main.qml:75
 #, kde-format

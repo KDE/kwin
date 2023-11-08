@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-07 02:44+0000\n"
-"PO-Revision-Date: 2022-12-17 07:09+0100\n"
+"PO-Revision-Date: 2023-11-07 18:18+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
 "%100==4 ? 3 : 0);\n"
-"X-Generator: Lokalize 22.08.3\n"
+"X-Generator: Poedit 3.4.1\n"
 
 #: ui/main.qml:47
 #, kde-format
@@ -47,12 +47,14 @@ msgstr "Nikoli"
 #: ui/main.qml:68
 #, kde-format
 msgid "Only non-character keys"
-msgstr ""
+msgstr "Samo tipke brez znakov"
 
 #: ui/main.qml:71
 #, kde-format
 msgid "As above, plus any key typed while a modifier key is pressed"
 msgstr ""
+"Kot zgoraj in katerikoli pritisnjena tipka s hkratnim pritiskom tipke za "
+"spremenilnik"
 
 #: ui/main.qml:75
 #, kde-format

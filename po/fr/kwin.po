@@ -25,7 +25,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-10-26 01:46+0000\n"
-"PO-Revision-Date: 2023-10-28 22:16+0200\n"
+"PO-Revision-Date: 2023-11-05 19:26+0100\n"
 "Last-Translator: Xavier BESNARD <xavier.besnard@neuf.fr>\n"
 "Language-Team: fr\n"
 "Language: fr\n"
@@ -35,7 +35,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Accelerator-Marker: &\n"
 "X-Environment: kde\n"
-"X-Generator: Lokalize 23.08.1\n"
+"X-Generator: Lokalize 23.08.2\n"
 "X-Text-Markup: kde4\n"
 
 #, kde-format
@@ -1729,10 +1729,9 @@ msgid "Toggle Invert Effect"
 msgstr "Activer/désactiver l'effet d'inversion"
 
 #: plugins/invert/invert.cpp:49 plugins/invert/invert_config.cpp:44
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect on Window"
+#, kde-format
 msgid "Toggle Invert Effect on Window"
-msgstr "Activer/désactiver l'effet d'inversion sur les fenêtres"
+msgstr "Basculer l'effet inversé sur une fenêtre"
 
 #: plugins/invert/invert.cpp:56
 #, kde-format
@@ -2387,11 +2386,10 @@ msgid "Add Virtual Desktop"
 msgstr "Ajouter un bureau virtuel"
 
 #: plugins/overview/qml/main.qml:319
-#, fuzzy, kde-format
-#| msgid "Delete Virtual Desktop"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
-msgstr "Supprimer un bureau virtuel"
+msgstr "Aucun autre bureau virtuel à afficher"
 
 #: plugins/overview/qml/main.qml:325
 #, fuzzy, kde-format
@@ -2401,8 +2399,7 @@ msgid "Add Virtual Desktop"
 msgstr "Ajouter un bureau virtuel"
 
 #: plugins/overview/qml/main.qml:332
-#, fuzzy, kde-format
-#| msgid "Configure virtual keyboards..."
+#, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Configurer les claviers virtuels..."
@@ -2444,17 +2441,17 @@ msgstr "Rôle de fenêtre"
 #: plugins/screencast/pipewirecore.cpp:89
 #, kde-format
 msgid "Failed to start main PipeWire loop"
-msgstr ""
+msgstr "Impossible de créer une boucle principale « PipeWire »"
 
 #: plugins/screencast/pipewirecore.cpp:76
 #, kde-format
 msgid "Failed to create PipeWire context"
-msgstr ""
+msgstr "Impossible de créer un context « PipeWire »"
 
 #: plugins/screencast/pipewirecore.cpp:83
 #, kde-format
 msgid "Failed to connect PipeWire context"
-msgstr ""
+msgstr "Impossible de se connecter à un context « PipeWire »"
 
 #: plugins/screencast/screencastmanager.cpp:105
 #, kde-format
@@ -2474,12 +2471,12 @@ msgstr "Région non valable"
 #: plugins/screencast/screencastmanager.cpp:203
 #, kde-format
 msgid "Region outside the workspace"
-msgstr ""
+msgstr "Région en dehors de l'espace de travail"
 
 #: plugins/screencast/screencaststream.cpp:359
 #, kde-format
 msgid "Failed to create PipeWire stream"
-msgstr ""
+msgstr "Impossible de créer un flux « PipeWire »"
 
 #: plugins/screenshot/screenshotdbusinterface2.cpp:531
 #, kde-format
@@ -2526,12 +2523,10 @@ msgid "Maximum FPS"
 msgstr "FPS maximal"
 
 #: plugins/showfps/qml/main.qml:192
-#, fuzzy, kde-format
-#| msgctxt "@label"
-#| msgid "This effect is not a benchmark"
+#, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
-msgstr "Cet effet n'est pas une mesure de performances."
+msgstr "Cet effet n'est pas un outil de mesure de performances"
 
 #: plugins/showpaint/showpaint.cpp:39 plugins/showpaint/showpaint_config.cpp:38
 #, fuzzy, kde-format
@@ -2679,10 +2674,9 @@ msgstr "Translucidité"
 
 #. i18n: ectx: property (title), widget (QGroupBox, m_opacityGroupBox)
 #: plugins/translucency/package/contents/ui/config.ui:20
-#, fuzzy, kde-format
-#| msgid "General Translucency Settings"
+#, kde-format
 msgid "General Translucency Settings"
-msgstr "Paramètres généraux de transparence"
+msgstr "Paramètres généraux de translucidité"
 
 #. i18n: ectx: property (text), widget (QLabel, comboboxpopup_label)
 #: plugins/translucency/package/contents/ui/config.ui:64
@@ -2732,10 +2726,9 @@ msgstr "Fenêtres inactives :"
 
 #. i18n: ectx: property (title), widget (QGroupBox, kcfg_IndividualMenuConfig)
 #: plugins/translucency/package/contents/ui/config.ui:267
-#, fuzzy, kde-format
-#| msgid "Set menu translucency independently"
+#, kde-format
 msgid "Set menu translucency independently"
-msgstr "Régler la transparence des menus de manière indépendante"
+msgstr "Définir la transparence de menu indépendamment"
 
 #. i18n: ectx: property (text), widget (QLabel, dropdownmenus_label)
 #: plugins/translucency/package/contents/ui/config.ui:285
@@ -2857,10 +2850,9 @@ msgstr "Avancé"
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #: plugins/wobblywindows/wobblywindows_config.ui:26
-#, fuzzy, kde-format
-#| msgid "&Stiffness:"
+#, kde-format
 msgid "&Stiffness:"
-msgstr "Éla&sticité :"
+msgstr "&Raideur :"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: plugins/wobblywindows/wobblywindows_config.ui:68
@@ -2896,10 +2888,9 @@ msgstr "Activer le mode &avancé"
 
 #. i18n: ectx: property (title), widget (QGroupBox, basicGroup)
 #: plugins/wobblywindows/wobblywindows_config.ui:192
-#, fuzzy, kde-format
-#| msgid "&Wobbliness"
+#, kde-format
 msgid "&Wobbliness"
-msgstr "T&remblement"
+msgstr "Insta&bilité"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/wobblywindows/wobblywindows_config.ui:201
@@ -3020,10 +3011,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
 #: plugins/zoom/zoom_config.ui:79
-#, fuzzy, kde-format
-#| msgid "Enable Text Cursor Tracking"
+#, kde-format
 msgid "Enable Text Cursor Tracking"
-msgstr "Activer le suivi du pointeur de texte"
+msgstr "Activer le suivi du curseur de texte"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/zoom/zoom_config.ui:86

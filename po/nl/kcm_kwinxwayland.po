@@ -1,13 +1,13 @@
-# Copyright (C) YEAR This file is copyright:
+# Copyright (C) 2023 This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
-# Freek de Kruijf <freekdekruijf@kde.nl>, 2022.
+# SPDX-FileCopyrightText: 2022, 2023 Freek de Kruijf <freekdekruijf@kde.nl>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-07 02:44+0000\n"
-"PO-Revision-Date: 2022-12-17 11:38+0100\n"
+"PO-Revision-Date: 2023-11-07 09:52+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 22.12.0\n"
+"X-Generator: Lokalize 23.08.2\n"
 
 #: ui/main.qml:47
 #, kde-format
@@ -45,12 +45,14 @@ msgstr "Nooit"
 #: ui/main.qml:68
 #, kde-format
 msgid "Only non-character keys"
-msgstr ""
+msgstr "Alleen niet-tekentoetsen"
 
 #: ui/main.qml:71
 #, kde-format
 msgid "As above, plus any key typed while a modifier key is pressed"
 msgstr ""
+"Zoals bovenstaand, plus elke getypte toets terwijl een modifier-toets is "
+"ingedrukt"
 
 #: ui/main.qml:75
 #, kde-format
