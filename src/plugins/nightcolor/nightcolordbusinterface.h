@@ -28,6 +28,7 @@ class NightColorDBusInterface : public QObject, public QDBusContext
     Q_PROPERTY(int currentTemperature READ currentTemperature)
     Q_PROPERTY(int targetTemperature READ targetTemperature)
     Q_PROPERTY(int mode READ mode)
+    Q_PROPERTY(bool daylight READ daylight)
     Q_PROPERTY(quint64 previousTransitionDateTime READ previousTransitionDateTime)
     Q_PROPERTY(quint32 previousTransitionDuration READ previousTransitionDuration)
     Q_PROPERTY(quint64 scheduledTransitionDateTime READ scheduledTransitionDateTime)
@@ -44,6 +45,7 @@ public:
     int currentTemperature() const;
     int targetTemperature() const;
     int mode() const;
+    bool daylight() const;
     quint64 previousTransitionDateTime() const;
     quint32 previousTransitionDuration() const;
     quint64 scheduledTransitionDateTime() const;

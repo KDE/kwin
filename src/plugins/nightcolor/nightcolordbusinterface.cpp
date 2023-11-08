@@ -134,6 +134,24 @@ NightColorDBusInterface::NightColorDBusInterface(NightColorManager *parent)
         QDBusConnection::sessionBus().send(message);
     });
 
+    connect(m_manager, &NightColorManager::daylightChanged, this, [this] {
+        QVariantMap changedProperties;
+        changedProperties.insert(QStringLiteral("mode"), uint(m_manager->daylight()));
+
+        QDBusMessage message = QDBusMessage::createSignal(
+            QStringLiteral("/ColorCorrect"),
+            QStringLiteral("org.freedesktop.DBus.Properties"),
+            QStringLiteral("PropertiesChanged"));
+
+        message.setArguments({
+            QStringLiteral("org.kde.kwin.ColorCorrect"),
+            changedProperties,
+            QStringList(), // invalidated_properties
+        });
+
+        QDBusConnection::sessionBus().send(message);
+    });
+
     connect(m_manager, &NightColorManager::previousTransitionTimingsChanged, this, [this] {
         QVariantMap changedProperties;
         changedProperties.insert(QStringLiteral("previousTransitionDateTime"), previousTransitionDateTime());
@@ -215,6 +233,11 @@ int NightColorDBusInterface::targetTemperature() const
 int NightColorDBusInterface::mode() const
 {
     return m_manager->mode();
+}
+
+bool NightColorDBusInterface::daylight() const
+{
+    return m_manager->daylight();
 }
 
 quint64 NightColorDBusInterface::previousTransitionDateTime() const

@@ -145,6 +145,11 @@ public:
     NightColorMode mode() const;
 
     /**
+     * Returns whether Night Color is currently on day time.
+     */
+    bool daylight() const;
+
+    /**
      * Returns the datetime that specifies when the previous screen color temperature transition
      * had started. Notice that when Night Color operates in the Constant mode, the returned date
      * time object is not valid.
@@ -219,6 +224,11 @@ Q_SIGNALS:
     void modeChanged();
 
     /**
+     * Emitted whenver night color has switched between day and night time.
+     */
+    void daylightChanged();
+
+    /**
      * Emitted whenever the timings of the previous color temperature transition have changed.
      */
     void previousTransitionTimingsChanged();
@@ -248,7 +258,6 @@ private:
     void updateTransitionTimings(bool force);
     DateTimes getSunTimings(const QDateTime &dateTime, double latitude, double longitude, bool morning) const;
     bool checkAutomaticSunTimings() const;
-    bool daylight() const;
 
     void commitGammaRamps(int temperature);
 
@@ -256,6 +265,7 @@ private:
     void setRunning(bool running);
     void setCurrentTemperature(int temperature);
     void setMode(NightColorMode mode);
+    void setDaylight(bool daylight);
 
     NightColorDBusInterface *m_iface;
     ClockSkewNotifier *m_skewNotifier;

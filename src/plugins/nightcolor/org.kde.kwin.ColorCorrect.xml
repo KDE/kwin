@@ -91,6 +91,13 @@
     <property name="mode" type="u" access="read"/>
 
     <!--
+        This property holds a value to indicate whether nightcolor is currently on day or night time.
+
+        True = day time, false = night time
+    -->
+    <property name="daylight" type="b" access="read"/>
+    
+    <!--
         This property holds a Unix timestamp that specifies when the previous color
         temperature transition had started. Note that when Night Color operates in
         the constant mode, this property holds a value of 0.

@@ -491,6 +491,7 @@ void NightColorManager::updateTransitionTimings(bool force)
     const auto oldNext = m_next;
 
     if (m_mode == NightColorMode::Constant) {
+        setDaylight(false);
         m_next = DateTimes();
         m_prev = DateTimes();
     } else if (m_mode == NightColorMode::Timings) {
@@ -502,11 +503,11 @@ void NightColorManager::updateTransitionTimings(bool force)
         const QDateTime nextEveE = nextEveB.addSecs(m_trTime * 60);
 
         if (nextEveB < nextMorB) {
-            m_daylight = true;
+            setDaylight(true);
             m_next = DateTimes(nextEveB, nextEveE);
             m_prev = DateTimes(nextMorB.addDays(-1), nextMorE.addDays(-1));
         } else {
-            m_daylight = false;
+            setDaylight(false);
             m_next = DateTimes(nextMorB, nextMorE);
             m_prev = DateTimes(nextEveB.addDays(-1), nextEveE.addDays(-1));
         }
@@ -526,12 +527,12 @@ void NightColorManager::updateTransitionTimings(bool force)
             // first try by only switching the timings
             if (m_prev.first.date() == m_next.first.date()) {
                 // next is evening
-                m_daylight = true;
+                setDaylight(true);
                 m_prev = m_next;
                 m_next = getSunTimings(todayNow, lat, lng, false);
             } else {
                 // next is morning
-                m_daylight = false;
+                setDaylight(false);
                 m_prev = m_next;
                 m_next = getSunTimings(todayNow.addDays(1), lat, lng, true);
             }
@@ -541,17 +542,17 @@ void NightColorManager::updateTransitionTimings(bool force)
             // in case this fails, reset them
             DateTimes morning = getSunTimings(todayNow, lat, lng, true);
             if (todayNow < morning.first) {
-                m_daylight = false;
+                setDaylight(false);
                 m_prev = getSunTimings(todayNow.addDays(-1), lat, lng, false);
                 m_next = morning;
             } else {
                 DateTimes evening = getSunTimings(todayNow, lat, lng, false);
                 if (todayNow < evening.first) {
-                    m_daylight = true;
+                    setDaylight(true);
                     m_prev = morning;
                     m_next = evening;
                 } else {
-                    m_daylight = false;
+                    setDaylight(false);
                     m_prev = evening;
                     m_next = getSunTimings(todayNow.addDays(1), lat, lng, true);
                 }
@@ -707,6 +708,15 @@ void NightColorManager::setMode(NightColorMode mode)
     }
     m_mode = mode;
     Q_EMIT modeChanged();
+}
+
+void NightColorManager::setDaylight(bool daylight)
+{
+    if (m_daylight == daylight) {
+        return;
+    }
+    m_daylight = daylight;
+    Q_EMIT daylightChanged();
 }
 
 } // namespace KWin
