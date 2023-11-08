@@ -61,6 +61,15 @@ public:
         PreMultiplied,
         Coverage
     };
+    enum class ColorEncoding : uint64_t {
+        BT601_YCbCr,
+        BT701_YCbCr,
+        BT2020_YCbCr
+    };
+    enum class ColorRange : uint64_t {
+        Limited_YCbCr,
+        Full_YCbCr
+    };
 
     DrmEnumProperty<TypeIndex> type;
     DrmProperty srcX;
@@ -77,6 +86,8 @@ public:
     DrmProperty inFormats;
     DrmProperty alpha;
     DrmEnumProperty<PixelBlendMode> pixelBlendMode;
+    DrmEnumProperty<ColorEncoding> colorEncoding;
+    DrmEnumProperty<ColorRange> colorRange;
 
     static int32_t transformationToDegrees(Transformations transformation);
 

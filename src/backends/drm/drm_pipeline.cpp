@@ -249,8 +249,17 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commi
     if (!fb) {
         return Error::InvalidArguments;
     }
-    m_pending.crtc->primaryPlane()->set(commit, QPoint(0, 0), fb->buffer()->size(), centerBuffer(fb->buffer()->size(), m_pending.mode->size()));
+    const auto primary = m_pending.crtc->primaryPlane();
+    primary->set(commit, QPoint(0, 0), fb->buffer()->size(), centerBuffer(fb->buffer()->size(), m_pending.mode->size()));
     commit->addBuffer(m_pending.crtc->primaryPlane(), fb);
+    if (fb->buffer()->dmabufAttributes()->format == DRM_FORMAT_NV12) {
+        if (!primary->colorEncoding.isValid() || !primary->colorRange.isValid()) {
+            // don't allow NV12 direct scanout if we don't know what the driver will do
+            return Error::InvalidArguments;
+        }
+        commit->addEnum(primary->colorEncoding, DrmPlane::ColorEncoding::BT701_YCbCr);
+        commit->addEnum(primary->colorRange, DrmPlane::ColorRange::Limited_YCbCr);
+    }
     return Error::None;
 }
 

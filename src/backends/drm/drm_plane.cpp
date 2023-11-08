@@ -54,6 +54,15 @@ DrmPlane::DrmPlane(DrmGpu *gpu, uint32_t planeId)
                                                                       QByteArrayLiteral("Pre-multiplied"),
                                                                       QByteArrayLiteral("Coverage"),
                                                                   })
+    , colorEncoding(this, QByteArrayLiteral("COLOR_ENCODING"), {
+                                                                   QByteArrayLiteral("ITU-R BT.601 YCbCr"),
+                                                                   QByteArrayLiteral("ITU-R BT.709 YCbCr"),
+                                                                   QByteArrayLiteral("ITU-R BT.2020 YCbCr"),
+                                                               })
+    , colorRange(this, QByteArrayLiteral("COLOR_RANGE"), {
+                                                             QByteArrayLiteral("YCbCr limited range"),
+                                                             QByteArrayLiteral("YCbCr full range"),
+                                                         })
 {
 }
 
@@ -80,6 +89,8 @@ bool DrmPlane::updateProperties()
     inFormats.update(props);
     alpha.update(props);
     pixelBlendMode.update(props);
+    colorEncoding.update(props);
+    colorRange.update(props);
 
     if (!type.isValid() || !srcX.isValid() || !srcY.isValid() || !srcW.isValid() || !srcH.isValid()
         || !crtcX.isValid() || !crtcY.isValid() || !crtcW.isValid() || !crtcH.isValid() || !fbId.isValid()) {
