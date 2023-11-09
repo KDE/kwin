@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-02 01:40+0000\n"
+"POT-Creation-Date: 2023-11-09 01:39+0000\n"
 "PO-Revision-Date: 2021-11-14 09:17+0100\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@bredband.net>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
@@ -119,46 +119,28 @@ msgstr "Bara för visade fönster"
 msgid "Always"
 msgstr "Alltid"
 
-#. i18n: ectx: property (text), widget (QLabel, latencyLabel)
-#: compositing.ui:177
-#, kde-format
-msgid "Latency:"
-msgstr "Latens:"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:185
-#, kde-format
-msgid "Force lowest latency (may cause dropped frames)"
-msgstr "Tvinga lägsta latens (kan ge saknade bildrutor)"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:190
-#, kde-format
-msgid "Prefer lower latency"
-msgstr "Föredra lägre latens"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:195
-#, kde-format
-msgid "Balance of latency and smoothness"
-msgstr "Balans mellan latens och jämnhet"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:200
-#, kde-format
-msgid "Prefer smoother animations"
-msgstr "Föredra jämnare animeringar"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:205
-#, kde-format
-msgid "Force smoothest animations"
-msgstr "Tvinga jämnaste animeringar"
-
 #: main.cpp:78
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr "Aktivera detektering av OpenGL igen"
+
+#~ msgid "Latency:"
+#~ msgstr "Latens:"
+
+#~ msgid "Force lowest latency (may cause dropped frames)"
+#~ msgstr "Tvinga lägsta latens (kan ge saknade bildrutor)"
+
+#~ msgid "Prefer lower latency"
+#~ msgstr "Föredra lägre latens"
+
+#~ msgid "Balance of latency and smoothness"
+#~ msgstr "Balans mellan latens och jämnhet"
+
+#~ msgid "Prefer smoother animations"
+#~ msgstr "Föredra jämnare animeringar"
+
+#~ msgid "Force smoothest animations"
+#~ msgstr "Tvinga jämnaste animeringar"
 
 #~ msgid ""
 #~ "Scale method \"Accurate\" is not supported by all hardware and can cause "

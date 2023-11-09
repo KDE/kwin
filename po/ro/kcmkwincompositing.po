@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-02 01:40+0000\n"
+"POT-Creation-Date: 2023-11-09 01:39+0000\n"
 "PO-Revision-Date: 2022-04-01 10:26+0100\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -124,46 +124,28 @@ msgstr "Doar pentru ferestre arătate"
 msgid "Always"
 msgstr "Întotdeauna"
 
-#. i18n: ectx: property (text), widget (QLabel, latencyLabel)
-#: compositing.ui:177
-#, kde-format
-msgid "Latency:"
-msgstr "Latență:"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:185
-#, kde-format
-msgid "Force lowest latency (may cause dropped frames)"
-msgstr "Forțează cea mai mică latență (poate provoca cadre scăpate)"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:190
-#, kde-format
-msgid "Prefer lower latency"
-msgstr "Preferă latență mai mică"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:195
-#, kde-format
-msgid "Balance of latency and smoothness"
-msgstr "Balanță între latență și netezime"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:200
-#, kde-format
-msgid "Prefer smoother animations"
-msgstr "Preferă animații mai netede"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:205
-#, kde-format
-msgid "Force smoothest animations"
-msgstr "Forțează cele mai netede animații"
-
 #: main.cpp:78
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr "Reactivează detectarea OpenGL"
+
+#~ msgid "Latency:"
+#~ msgstr "Latență:"
+
+#~ msgid "Force lowest latency (may cause dropped frames)"
+#~ msgstr "Forțează cea mai mică latență (poate provoca cadre scăpate)"
+
+#~ msgid "Prefer lower latency"
+#~ msgstr "Preferă latență mai mică"
+
+#~ msgid "Balance of latency and smoothness"
+#~ msgstr "Balanță între latență și netezime"
+
+#~ msgid "Prefer smoother animations"
+#~ msgstr "Preferă animații mai netede"
+
+#~ msgid "Force smoothest animations"
+#~ msgstr "Forțează cele mai netede animații"
 
 #~ msgid ""
 #~ "Scale method \"Accurate\" is not supported by all hardware and can cause "

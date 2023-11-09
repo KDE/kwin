@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdebase/kcmkwincompositing.po\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-02 01:40+0000\n"
+"POT-Creation-Date: 2023-11-09 01:39+0000\n"
 "PO-Revision-Date: 2007-07-22 14:30-0500\n"
 "Last-Translator: Kevin Scannell <kscanne@gmail.com>\n"
 "Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
@@ -119,47 +119,15 @@ msgstr "D'fhuinneoga Ar Taispeáint Amháin"
 msgid "Always"
 msgstr "I gcónaí"
 
-#. i18n: ectx: property (text), widget (QLabel, latencyLabel)
-#: compositing.ui:177
-#, kde-format
-msgid "Latency:"
-msgstr ""
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:185
-#, kde-format
-msgid "Force lowest latency (may cause dropped frames)"
-msgstr ""
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:190
-#, kde-format
-msgid "Prefer lower latency"
-msgstr ""
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:195
-#, kde-format
-msgid "Balance of latency and smoothness"
-msgstr ""
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:200
-#, kde-format
-msgid "Prefer smoother animations"
-msgstr ""
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:205
-#, fuzzy, kde-format
-#| msgid "Various animations"
-msgid "Force smoothest animations"
-msgstr "Íomhánna beo éagsúla"
-
 #: main.cpp:78
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr ""
+
+#, fuzzy
+#~| msgid "Various animations"
+#~ msgid "Force smoothest animations"
+#~ msgstr "Íomhánna beo éagsúla"
 
 #, fuzzy
 #~| msgid "Scale method:"

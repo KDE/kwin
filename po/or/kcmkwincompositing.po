@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-02 01:40+0000\n"
+"POT-Creation-Date: 2023-11-09 01:39+0000\n"
 "PO-Revision-Date: 2009-01-02 11:45+0530\n"
 "Last-Translator: Manoj Kumar Giri <mgiri@redhat.com>\n"
 "Language-Team: Oriya <oriya-it@googlegroups.com>\n"
@@ -106,42 +106,6 @@ msgstr ""
 #: compositing.ui:169
 #, kde-format
 msgid "Always"
-msgstr ""
-
-#. i18n: ectx: property (text), widget (QLabel, latencyLabel)
-#: compositing.ui:177
-#, kde-format
-msgid "Latency:"
-msgstr ""
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:185
-#, kde-format
-msgid "Force lowest latency (may cause dropped frames)"
-msgstr ""
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:190
-#, kde-format
-msgid "Prefer lower latency"
-msgstr ""
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:195
-#, kde-format
-msgid "Balance of latency and smoothness"
-msgstr ""
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:200
-#, kde-format
-msgid "Prefer smoother animations"
-msgstr ""
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:205
-#, kde-format
-msgid "Force smoothest animations"
 msgstr ""
 
 #: main.cpp:78

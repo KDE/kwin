@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-02 01:40+0000\n"
+"POT-Creation-Date: 2023-11-09 01:39+0000\n"
 "PO-Revision-Date: 2023-10-21 13:51\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -114,46 +114,28 @@ msgstr "只对显示的窗口"
 msgid "Always"
 msgstr "总是"
 
-#. i18n: ectx: property (text), widget (QLabel, latencyLabel)
-#: compositing.ui:177
-#, kde-format
-msgid "Latency:"
-msgstr "延迟："
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:185
-#, kde-format
-msgid "Force lowest latency (may cause dropped frames)"
-msgstr "强制最低延迟 (可能会导致掉帧)"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:190
-#, kde-format
-msgid "Prefer lower latency"
-msgstr "低延迟优先"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:195
-#, kde-format
-msgid "Balance of latency and smoothness"
-msgstr "平衡延迟和显示流畅度"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:200
-#, kde-format
-msgid "Prefer smoother animations"
-msgstr "动效流畅度优先"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:205
-#, kde-format
-msgid "Force smoothest animations"
-msgstr "强制最流畅动效"
-
 #: main.cpp:78
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr "重新启用 OpenGL 检测"
+
+#~ msgid "Latency:"
+#~ msgstr "延迟："
+
+#~ msgid "Force lowest latency (may cause dropped frames)"
+#~ msgstr "强制最低延迟 (可能会导致掉帧)"
+
+#~ msgid "Prefer lower latency"
+#~ msgstr "低延迟优先"
+
+#~ msgid "Balance of latency and smoothness"
+#~ msgstr "平衡延迟和显示流畅度"
+
+#~ msgid "Prefer smoother animations"
+#~ msgstr "动效流畅度优先"
+
+#~ msgid "Force smoothest animations"
+#~ msgstr "强制最流畅动效"
 
 #~ msgid ""
 #~ "Reduce latency by allowing screen tearing artifacts in fullscreen windows"

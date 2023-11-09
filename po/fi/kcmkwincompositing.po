@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-02 01:40+0000\n"
+"POT-Creation-Date: 2023-11-09 01:39+0000\n"
 "PO-Revision-Date: 2023-03-06 13:26+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -128,46 +128,28 @@ msgstr "Vain näytetyille ikkunoille"
 msgid "Always"
 msgstr "Aina"
 
-#. i18n: ectx: property (text), widget (QLabel, latencyLabel)
-#: compositing.ui:177
-#, kde-format
-msgid "Latency:"
-msgstr "Viive:"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:185
-#, kde-format
-msgid "Force lowest latency (may cause dropped frames)"
-msgstr "Pakota vähäisin viive (kuvia voi jäädä pois)"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:190
-#, kde-format
-msgid "Prefer lower latency"
-msgstr "Suosi vähäisempää viivettä"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:195
-#, kde-format
-msgid "Balance of latency and smoothness"
-msgstr "Viipeen ja tasaisuuden tasapaino"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:200
-#, kde-format
-msgid "Prefer smoother animations"
-msgstr "Suosi tasaisempia animaatioita"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:205
-#, kde-format
-msgid "Force smoothest animations"
-msgstr "Pakota tasaisimmat animaatiot"
-
 #: main.cpp:78
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr "Käytä OpenGL-tunnistusta uudestaan"
+
+#~ msgid "Latency:"
+#~ msgstr "Viive:"
+
+#~ msgid "Force lowest latency (may cause dropped frames)"
+#~ msgstr "Pakota vähäisin viive (kuvia voi jäädä pois)"
+
+#~ msgid "Prefer lower latency"
+#~ msgstr "Suosi vähäisempää viivettä"
+
+#~ msgid "Balance of latency and smoothness"
+#~ msgstr "Viipeen ja tasaisuuden tasapaino"
+
+#~ msgid "Prefer smoother animations"
+#~ msgstr "Suosi tasaisempia animaatioita"
+
+#~ msgid "Force smoothest animations"
+#~ msgstr "Pakota tasaisimmat animaatiot"
 
 #~ msgid ""
 #~ "Reduce latency by allowing screen tearing artifacts in fullscreen windows"

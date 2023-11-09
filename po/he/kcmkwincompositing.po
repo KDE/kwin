@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-02 01:40+0000\n"
+"POT-Creation-Date: 2023-11-09 01:39+0000\n"
 "PO-Revision-Date: 2023-09-30 22:59+0300\n"
 "Last-Translator: Copied by Zanata <copied-by-zanata@zanata.org>\n"
 "Language-Team: Hebrew <kde-i18n-doc@kde.org>\n"
@@ -120,46 +120,28 @@ msgstr "רק עבור חלונות מוצגים"
 msgid "Always"
 msgstr "תמיד"
 
-#. i18n: ectx: property (text), widget (QLabel, latencyLabel)
-#: compositing.ui:177
-#, kde-format
-msgid "Latency:"
-msgstr "עיכוב:"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:185
-#, kde-format
-msgid "Force lowest latency (may cause dropped frames)"
-msgstr "אילוץ העיכוב המזערי ביותר (עלול לגרום להשמטת תמוניות)"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:190
-#, kde-format
-msgid "Prefer lower latency"
-msgstr "העדפת העיכוב המזערי ביותר"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:195
-#, kde-format
-msgid "Balance of latency and smoothness"
-msgstr "איזון בין עיכוב לנגינה חלקה"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:200
-#, kde-format
-msgid "Prefer smoother animations"
-msgstr "העדפת הנפשות חלקות יותר"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:205
-#, kde-format
-msgid "Force smoothest animations"
-msgstr "אילוץ הנפשות חלקות יותר"
-
 #: main.cpp:78
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr "הפעלת זיהוי של OpenGL מחדש"
+
+#~ msgid "Latency:"
+#~ msgstr "עיכוב:"
+
+#~ msgid "Force lowest latency (may cause dropped frames)"
+#~ msgstr "אילוץ העיכוב המזערי ביותר (עלול לגרום להשמטת תמוניות)"
+
+#~ msgid "Prefer lower latency"
+#~ msgstr "העדפת העיכוב המזערי ביותר"
+
+#~ msgid "Balance of latency and smoothness"
+#~ msgstr "איזון בין עיכוב לנגינה חלקה"
+
+#~ msgid "Prefer smoother animations"
+#~ msgstr "העדפת הנפשות חלקות יותר"
+
+#~ msgid "Force smoothest animations"
+#~ msgstr "אילוץ הנפשות חלקות יותר"
 
 #~ msgid ""
 #~ "Reduce latency by allowing screen tearing artifacts in fullscreen windows"

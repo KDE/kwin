@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-02 01:40+0000\n"
+"POT-Creation-Date: 2023-11-09 01:39+0000\n"
 "PO-Revision-Date: 2021-11-20 15:48+0400\n"
 "Last-Translator: Kheyyam Gojayev <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -118,46 +118,28 @@ msgstr "Yalnız görünən pəncərərərlər üçün"
 msgid "Always"
 msgstr "Həmişə"
 
-#. i18n: ectx: property (text), widget (QLabel, latencyLabel)
-#: compositing.ui:177
-#, kde-format
-msgid "Latency:"
-msgstr "Gecikmə:"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:185
-#, kde-format
-msgid "Force lowest latency (may cause dropped frames)"
-msgstr "Məcburi minimum gecikmə (kadr itirilməsinə səbəb ola bilər)"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:190
-#, kde-format
-msgid "Prefer lower latency"
-msgstr "Ən az gecikmə tərcihi"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:195
-#, kde-format
-msgid "Balance of latency and smoothness"
-msgstr "Gecikmə və hamarlıq arasında tarazlıq"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:200
-#, kde-format
-msgid "Prefer smoother animations"
-msgstr "Hamar animasiya tərcihi"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:205
-#, kde-format
-msgid "Force smoothest animations"
-msgstr "Məcburi hamar animasiyalar"
-
 #: main.cpp:78
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr "OpenGL-i təkrar aktiv etmək"
+
+#~ msgid "Latency:"
+#~ msgstr "Gecikmə:"
+
+#~ msgid "Force lowest latency (may cause dropped frames)"
+#~ msgstr "Məcburi minimum gecikmə (kadr itirilməsinə səbəb ola bilər)"
+
+#~ msgid "Prefer lower latency"
+#~ msgstr "Ən az gecikmə tərcihi"
+
+#~ msgid "Balance of latency and smoothness"
+#~ msgstr "Gecikmə və hamarlıq arasında tarazlıq"
+
+#~ msgid "Prefer smoother animations"
+#~ msgstr "Hamar animasiya tərcihi"
+
+#~ msgid "Force smoothest animations"
+#~ msgstr "Məcburi hamar animasiyalar"
 
 #~ msgid ""
 #~ "Scale method \"Accurate\" is not supported by all hardware and can cause "

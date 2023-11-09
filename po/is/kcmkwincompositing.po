@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-02 01:40+0000\n"
+"POT-Creation-Date: 2023-11-09 01:39+0000\n"
 "PO-Revision-Date: 2023-09-08 11:21+0000\n"
 "Last-Translator: Guðmundur Erlingsson <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
@@ -121,46 +121,28 @@ msgstr "Aðeins fyrir glugga sem hafa verið sýndir"
 msgid "Always"
 msgstr "Alltaf"
 
-#. i18n: ectx: property (text), widget (QLabel, latencyLabel)
-#: compositing.ui:177
-#, kde-format
-msgid "Latency:"
-msgstr "Biðtími (latency):"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:185
-#, kde-format
-msgid "Force lowest latency (may cause dropped frames)"
-msgstr "Þvinga lægsta biðtíma (getur valdið því að rammar detti út)"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:190
-#, kde-format
-msgid "Prefer lower latency"
-msgstr "Nota frekar lægri biðtíma"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:195
-#, kde-format
-msgid "Balance of latency and smoothness"
-msgstr "Jafnvægi milli biðtíma og mýktar"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:200
-#, kde-format
-msgid "Prefer smoother animations"
-msgstr "Nota frekar mýkri hreyfiáhrif"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:205
-#, kde-format
-msgid "Force smoothest animations"
-msgstr "Þvinga mýkstu hreyfiáhrif"
-
 #: main.cpp:78
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr "Virkja greiningu á OpenGL aftur"
+
+#~ msgid "Latency:"
+#~ msgstr "Biðtími (latency):"
+
+#~ msgid "Force lowest latency (may cause dropped frames)"
+#~ msgstr "Þvinga lægsta biðtíma (getur valdið því að rammar detti út)"
+
+#~ msgid "Prefer lower latency"
+#~ msgstr "Nota frekar lægri biðtíma"
+
+#~ msgid "Balance of latency and smoothness"
+#~ msgstr "Jafnvægi milli biðtíma og mýktar"
+
+#~ msgid "Prefer smoother animations"
+#~ msgstr "Nota frekar mýkri hreyfiáhrif"
+
+#~ msgid "Force smoothest animations"
+#~ msgstr "Þvinga mýkstu hreyfiáhrif"
 
 #~ msgid ""
 #~ "Reduce latency by allowing screen tearing artifacts in fullscreen windows"

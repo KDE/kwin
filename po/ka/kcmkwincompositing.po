@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-02 01:40+0000\n"
+"POT-Creation-Date: 2023-11-09 01:39+0000\n"
 "PO-Revision-Date: 2023-08-27 00:58+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -117,47 +117,29 @@ msgstr "მხოლოდ ნაჩვენები ფანჯრები�
 msgid "Always"
 msgstr "ყოველთვის"
 
-#. i18n: ectx: property (text), widget (QLabel, latencyLabel)
-#: compositing.ui:177
-#, kde-format
-msgid "Latency:"
-msgstr "დაყოვნება:"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:185
-#, kde-format
-msgid "Force lowest latency (may cause dropped frames)"
-msgstr ""
-"ნაძალადევი მინიმალური დაყოვნება (შეიძლება გამოიწვიოს დაკარგული კადრები)"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:190
-#, kde-format
-msgid "Prefer lower latency"
-msgstr "დაბალი დაყოვნების არჩევანი"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:195
-#, kde-format
-msgid "Balance of latency and smoothness"
-msgstr "ბალანსი დაყოვნებასა და სირბილეს შუა"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:200
-#, kde-format
-msgid "Prefer smoother animations"
-msgstr "რბილი ანიმაციების არჩევანი"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:205
-#, kde-format
-msgid "Force smoothest animations"
-msgstr "ნაძალადევი რბილი ანიმაციები"
-
 #: main.cpp:78
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr "OpenGL-ის პოვნის თავიდან ჩართვა"
+
+#~ msgid "Latency:"
+#~ msgstr "დაყოვნება:"
+
+#~ msgid "Force lowest latency (may cause dropped frames)"
+#~ msgstr ""
+#~ "ნაძალადევი მინიმალური დაყოვნება (შეიძლება გამოიწვიოს დაკარგული კადრები)"
+
+#~ msgid "Prefer lower latency"
+#~ msgstr "დაბალი დაყოვნების არჩევანი"
+
+#~ msgid "Balance of latency and smoothness"
+#~ msgstr "ბალანსი დაყოვნებასა და სირბილეს შუა"
+
+#~ msgid "Prefer smoother animations"
+#~ msgstr "რბილი ანიმაციების არჩევანი"
+
+#~ msgid "Force smoothest animations"
+#~ msgstr "ნაძალადევი რბილი ანიმაციები"
 
 #~ msgid ""
 #~ "Reduce latency by allowing screen tearing artifacts in fullscreen windows"

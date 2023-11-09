@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-02 01:40+0000\n"
+"POT-Creation-Date: 2023-11-09 01:39+0000\n"
 "PO-Revision-Date: 2023-01-21 10:04+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -122,46 +122,28 @@ msgstr "Tylko dla pokazywanych okien"
 msgid "Always"
 msgstr "Zawsze"
 
-#. i18n: ectx: property (text), widget (QLabel, latencyLabel)
-#: compositing.ui:177
-#, kde-format
-msgid "Latency:"
-msgstr "Opóźnienie:"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:185
-#, kde-format
-msgid "Force lowest latency (may cause dropped frames)"
-msgstr "Wymuś najmniejsze opóźnienie (może powodować gubienie klatek)"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:190
-#, kde-format
-msgid "Prefer lower latency"
-msgstr "Dąż do najmniejszego opóźnienia"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:195
-#, kde-format
-msgid "Balance of latency and smoothness"
-msgstr "Równowaga pomiędzy opóźnieniem i płynnością"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:200
-#, kde-format
-msgid "Prefer smoother animations"
-msgstr "Dąż do płynniejszych animacji"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:205
-#, kde-format
-msgid "Force smoothest animations"
-msgstr "Wymuś najpłynniejsze animacje"
-
 #: main.cpp:78
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr "Włącz wykrywanie OpenGL"
+
+#~ msgid "Latency:"
+#~ msgstr "Opóźnienie:"
+
+#~ msgid "Force lowest latency (may cause dropped frames)"
+#~ msgstr "Wymuś najmniejsze opóźnienie (może powodować gubienie klatek)"
+
+#~ msgid "Prefer lower latency"
+#~ msgstr "Dąż do najmniejszego opóźnienia"
+
+#~ msgid "Balance of latency and smoothness"
+#~ msgstr "Równowaga pomiędzy opóźnieniem i płynnością"
+
+#~ msgid "Prefer smoother animations"
+#~ msgstr "Dąż do płynniejszych animacji"
+
+#~ msgid "Force smoothest animations"
+#~ msgstr "Wymuś najpłynniejsze animacje"
 
 #~ msgid ""
 #~ "Reduce latency by allowing screen tearing artifacts in fullscreen windows"

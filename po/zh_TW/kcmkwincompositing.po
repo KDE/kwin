@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-02 01:40+0000\n"
+"POT-Creation-Date: 2023-11-09 01:39+0000\n"
 "PO-Revision-Date: 2023-01-15 19:49+0800\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@linux.org.tw>\n"
@@ -121,46 +121,28 @@ msgstr "只對顯示的視窗"
 msgid "Always"
 msgstr "總是"
 
-#. i18n: ectx: property (text), widget (QLabel, latencyLabel)
-#: compositing.ui:177
-#, kde-format
-msgid "Latency:"
-msgstr "延遲："
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:185
-#, kde-format
-msgid "Force lowest latency (may cause dropped frames)"
-msgstr "強制最低延遲（可能會造成畫面遺失）"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:190
-#, kde-format
-msgid "Prefer lower latency"
-msgstr "偏好較低延遲"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:195
-#, kde-format
-msgid "Balance of latency and smoothness"
-msgstr "平衡延遲與平滑"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:200
-#, kde-format
-msgid "Prefer smoother animations"
-msgstr "偏好較平滑的動畫"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:205
-#, kde-format
-msgid "Force smoothest animations"
-msgstr "強制最平滑的動畫"
-
 #: main.cpp:78
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr "重新開啟 OpenGL 偵測"
+
+#~ msgid "Latency:"
+#~ msgstr "延遲："
+
+#~ msgid "Force lowest latency (may cause dropped frames)"
+#~ msgstr "強制最低延遲（可能會造成畫面遺失）"
+
+#~ msgid "Prefer lower latency"
+#~ msgstr "偏好較低延遲"
+
+#~ msgid "Balance of latency and smoothness"
+#~ msgstr "平衡延遲與平滑"
+
+#~ msgid "Prefer smoother animations"
+#~ msgstr "偏好較平滑的動畫"
+
+#~ msgid "Force smoothest animations"
+#~ msgstr "強制最平滑的動畫"
 
 #~ msgid ""
 #~ "Reduce latency by allowing screen tearing artifacts in fullscreen windows"
