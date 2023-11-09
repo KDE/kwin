@@ -50,7 +50,7 @@
             }
         ],
         "Category": "Appearance",
-        "Description": "Cross fade animation when Tooltips or Notifications change their geometry",
+        "Description": "Cross fade animation when Notifications change their geometry",
         "Description[ar]": "تحريك التلاشي المتقاطع عندما يغير التلميح أو الإشعار من أبعاده",
         "Description[be]": "Анімацыя згасання пры змене геаметрыі выплыўных падказак і апавяшчэнняў",
         "Description[bg]": "Кръстосано преливане, когато подсказките или известията променят геометрията си",

@@ -114,8 +114,8 @@ var morphingEffect = {
     },
 
     manage: function (window) {
-        //only tooltips and notifications
-        if (!window.tooltip && !window.notification && !window.criticalNotification) {
+        //only notifications
+        if (!window.notification && !window.criticalNotification) {
             return;
         }
 

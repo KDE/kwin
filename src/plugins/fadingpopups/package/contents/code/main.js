@@ -69,6 +69,7 @@ function isPopupWindow(window) {
 var fadingPopupsEffect = {
     loadConfig: function () {
         fadingPopupsEffect.fadeInDuration = animationTime(150);
+        fadingPopupsEffect.fadeInOutDuration = animationTime(150) * 2;
         fadingPopupsEffect.fadeOutDuration = animationTime(150) * 4;
     },
     slotWindowAdded: function (window) {
@@ -92,6 +93,9 @@ var fadingPopupsEffect = {
             from: 0.0,
             to: 1.0
         });
+        if (window.tooltip) {
+            window.windowFrameGeometryAboutToChange.connect(fadingPopupsEffect.slotWindowFrameGeometryAboutToChange);
+        }
     },
     slotWindowClosed: function (window) {
         if (effects.hasActiveFullScreenEffect) {
@@ -127,6 +131,16 @@ var fadingPopupsEffect = {
                 delete window.fadeOutAnimation;
             }
         }
+    },
+    slotWindowFrameGeometryAboutToChange: function (window) {
+        window.fadeOutAnimation = animate({
+            window: window,
+            curve: QEasingCurve.OutQuart,
+            duration: fadingPopupsEffect.fadeInOutDuration,
+            type: Effect.Opacity,
+            to: 1.0,
+            from: 0.0
+        });
     },
     init: function () {
         fadingPopupsEffect.loadConfig();
