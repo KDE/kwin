@@ -257,7 +257,7 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commi
             // don't allow NV12 direct scanout if we don't know what the driver will do
             return Error::InvalidArguments;
         }
-        commit->addEnum(primary->colorEncoding, DrmPlane::ColorEncoding::BT701_YCbCr);
+        commit->addEnum(primary->colorEncoding, DrmPlane::ColorEncoding::BT709_YCbCr);
         commit->addEnum(primary->colorRange, DrmPlane::ColorRange::Limited_YCbCr);
     }
     return Error::None;

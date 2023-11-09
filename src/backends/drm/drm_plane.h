@@ -63,7 +63,7 @@ public:
     };
     enum class ColorEncoding : uint64_t {
         BT601_YCbCr,
-        BT701_YCbCr,
+        BT709_YCbCr,
         BT2020_YCbCr
     };
     enum class ColorRange : uint64_t {
