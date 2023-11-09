@@ -175,6 +175,7 @@ private:
     bool m_confined = false;
     bool m_locked = false;
     bool m_enableConstraints = true;
+    bool m_lastOutputWasPlaceholder = true;
     friend class PositionUpdateBlocker;
 };
 

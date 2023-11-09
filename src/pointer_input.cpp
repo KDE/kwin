@@ -5,6 +5,7 @@
     SPDX-FileCopyrightText: 2013, 2016 Martin Gräßlin <mgraesslin@kde.org>
     SPDX-FileCopyrightText: 2018 Roman Gilg <subdiff@gmail.com>
     SPDX-FileCopyrightText: 2019 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+    SPDX-FileCopyrightText: 2023 Harald Sitter <sitter@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -805,12 +806,23 @@ void PointerInputRedirection::updateAfterScreenChange()
     if (!inited()) {
         return;
     }
-    if (screenContainsPos(m_pos)) {
-        // pointer still on a screen
-        return;
+
+    Output *output = nullptr;
+    if (m_lastOutputWasPlaceholder) {
+        // previously we've positioned our pointer on a placeholder screen, try
+        // to get us onto the real "primary" screen instead.
+        output = workspace()->outputOrder().at(0);
+    } else {
+        if (screenContainsPos(m_pos)) {
+            // pointer still on a screen
+            return;
+        }
+
+        // pointer no longer on a screen, reposition to closes screen
+        output = workspace()->outputAt(m_pos);
     }
-    // pointer no longer on a screen, reposition to closes screen
-    const Output *output = workspace()->outputAt(m_pos);
+
+    m_lastOutputWasPlaceholder = output->isPlaceholder();
     // TODO: better way to get timestamps
     processMotionAbsolute(output->geometry().center(), waylandServer()->seat()->timestamp());
 }
