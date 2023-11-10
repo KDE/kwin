@@ -172,9 +172,9 @@ RemoteMatches WindowsRunner::Match(const QString &searchTerm)
         const QString appName = window->resourceClass();
         const QString name = window->caption();
         if (name.startsWith(term, Qt::CaseInsensitive) || appName.startsWith(term, Qt::CaseInsensitive)) {
-            matches << windowsMatch(window, action, 0.8, KRunner::QueryMatch::ExactMatch);
+            matches << windowsMatch(window, action, 0.8, HighestCategoryRelevance);
         } else if ((name.contains(term, Qt::CaseInsensitive) || appName.contains(term, Qt::CaseInsensitive)) && actionSupported(window, action)) {
-            matches << windowsMatch(window, action, 0.7, KRunner::QueryMatch::PossibleMatch);
+            matches << windowsMatch(window, action, 0.7, LowCategoryRelevance);
         }
     }
 
@@ -192,7 +192,7 @@ RemoteMatches WindowsRunner::Match(const QString &searchTerm)
                     continue;
                 }
                 if ((window->desktops().contains(desktop) || window->isOnAllDesktops()) && actionSupported(window, action)) {
-                    matches << windowsMatch(window, action, 0.5, KRunner::QueryMatch::PossibleMatch);
+                    matches << windowsMatch(window, action, 0.5, LowCategoryRelevance);
                 }
             }
         }
@@ -254,7 +254,7 @@ RemoteMatch WindowsRunner::desktopMatch(const VirtualDesktop *desktop, const Win
 {
     RemoteMatch match;
     match.id = QString::number(action) + QLatin1Char('_') + desktop->id();
-    match.type = KRunner::QueryMatch::ExactMatch;
+    match.categoryRelevance = HighestCategoryRelevance;
     match.iconName = QStringLiteral("user-desktop");
     match.text = desktop->name();
     match.relevance = relevance;
@@ -266,14 +266,14 @@ RemoteMatch WindowsRunner::desktopMatch(const VirtualDesktop *desktop, const Win
     return match;
 }
 
-RemoteMatch WindowsRunner::windowsMatch(const Window *window, const WindowsRunnerAction action, qreal relevance, KRunner::QueryMatch::Type type) const
+RemoteMatch WindowsRunner::windowsMatch(const Window *window, const WindowsRunnerAction action, qreal relevance, qreal categoryRelevance) const
 {
     RemoteMatch match;
     match.id = QString::number((int)action) + QLatin1Char('_') + window->internalId().toString();
     match.text = window->caption();
     match.iconName = window->icon().name();
     match.relevance = relevance;
-    match.type = type;
+    match.categoryRelevance = categoryRelevance;
     QVariantMap properties;
 
     const QList<VirtualDesktop *> desktops = window->desktops();

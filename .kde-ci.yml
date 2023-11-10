@@ -19,7 +19,6 @@ Dependencies:
     'frameworks/knewstuff': '@latest-kf6'
     'frameworks/knotifications': '@latest-kf6'
     'frameworks/kpackage': '@latest-kf6'
-    'frameworks/krunner': '@latest-kf6'
     'frameworks/kservice': '@latest-kf6'
     'frameworks/ksvg': '@latest-kf6'
     'frameworks/kwidgetsaddons': '@latest-kf6'

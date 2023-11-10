@@ -129,13 +129,6 @@ set_package_properties(KF6DocTools PROPERTIES
 )
 add_feature_info("KF6DocTools" KF6DocTools_FOUND "Enable building documentation")
 
-find_package(KF6Runner ${KF6_MIN_VERSION} CONFIG)
-set_package_properties(KF6Runner PROPERTIES
-    PURPOSE "Enable building of KWin with krunner support"
-    TYPE OPTIONAL
-    )
-add_feature_info("KF6Runner" KF6Runner_FOUND "Enable building of KWin with krunner support")
-
 find_package(KF6Kirigami2 ${KF6_MIN_VERSION} CONFIG)
 set_package_properties(KF6Kirigami2 PROPERTIES
     DESCRIPTION "A QtQuick based components set"
@@ -379,7 +372,7 @@ ecm_find_qmlmodule(org.kde.plasma.components 2.0)
 
 ########### configure tests ###############
 cmake_dependent_option(KWIN_BUILD_ACTIVITIES "Enable building of KWin with kactivities support" ON "KF6Activities_FOUND" OFF)
-cmake_dependent_option(KWIN_BUILD_RUNNERS "Enable building of KWin with krunner support" ON "KF6Runner_FOUND" OFF)
+option(KWIN_BUILD_RUNNERS "Enable building of KWin with krunner support" ON)
 
 set(HAVE_GLX ${epoxy_HAS_GLX})
 get_target_property(QT_DISABLED_FEATURES Qt6::Gui QT_DISABLED_PUBLIC_FEATURES)
