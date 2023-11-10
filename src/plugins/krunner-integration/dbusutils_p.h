@@ -22,7 +22,7 @@ struct RemoteMatch
     QString id;
     QString text;
     QString iconName;
-    KRunner::QueryMatch::Type type = KRunner::QueryMatch::NoMatch;
+    int categoryRelevance = qToUnderlying(KRunner::QueryMatch::CategoryRelevance::Lowest);
     qreal relevance = 0;
     QVariantMap properties;
 };
@@ -56,7 +56,7 @@ inline QDBusArgument &operator<<(QDBusArgument &argument, const RemoteMatch &mat
     argument << match.id;
     argument << match.text;
     argument << match.iconName;
-    argument << match.type;
+    argument << match.categoryRelevance;
     argument << match.relevance;
     argument << match.properties;
     argument.endStructure();
@@ -69,9 +69,7 @@ inline const QDBusArgument &operator>>(const QDBusArgument &argument, RemoteMatc
     argument >> match.id;
     argument >> match.text;
     argument >> match.iconName;
-    uint type;
-    argument >> type;
-    match.type = (KRunner::QueryMatch::Type)type;
+    argument >> match.categoryRelevance;
     argument >> match.relevance;
     argument >> match.properties;
     argument.endStructure();
