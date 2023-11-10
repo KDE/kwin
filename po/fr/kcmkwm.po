@@ -603,8 +603,8 @@ msgstr ""
 msgid ""
 "Allow apps to remember the positions of their own windows, if they support it"
 msgstr ""
-"Permettre aux applications qui le prennent en charge de se rappeler les "
-"positions de leurs fenêtres"
+"Permettre aux applications qui le supportent de se rappeler la position de "
+"leurs fenêtres"
 
 #. i18n: ectx: property (text), widget (QLabel, specialWindowsLabel)
 #: advanced.ui:123
@@ -1256,9 +1256,9 @@ msgid ""
 "them, i.e. they will not be snapped if the windows comes only near another "
 "window or border."
 msgstr ""
-"Vous pouvez choisir ici que les fenêtres ne s'attirent les unes les autres "
-"que si elles se chevauchent. Autrement dit, elles ne s'attirent pas en "
-"passant seulement près d'une autre fenêtre ou d'un bord de l'écran."
+"Vous pouvez choisir ici si les fenêtres ne doivent s'attirer les unes avec "
+"les autres que si elles se chevauchent. Autrement dit, elles ne s'attireront "
+"pas à proximité d'une autre fenêtre ou d'un des bords de l'écran."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SnapOnlyWhenOverlapping)
 #: moving.ui:126
