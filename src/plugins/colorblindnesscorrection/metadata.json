@@ -22,12 +22,14 @@
         "Description[uk]": "Удосконалює сприйняття кольорів для випадків дальтонізму",
         "Description[x-test]": "xxEnhances color perception for color blindnessxx",
         "Description[zh_CN]": "增强色盲视觉的颜色感知",
+        "Description[zh_TW]": "為色盲現象改善顏色辨識",
         "EnabledByDefault": false,
         "License": "GPL-2.0+",
         "Name": "Colorblindness Correction",
         "Name[bg]": "Корекция на цветна слепота",
         "Name[ca@valencia]": "Correcció del daltonisme",
         "Name[ca]": "Correcció del daltonisme",
+        "Name[cs]": "Oprava barvosleposti",
         "Name[eo]": "Korekto de Kolorblindeco",
         "Name[es]": "Corrección para daltonismo",
         "Name[eu]": "Kolore itsutasunerako zuzenketa",
@@ -44,7 +46,8 @@
         "Name[tr]": "Renk Körlüğü Düzeltmesi",
         "Name[uk]": "Виправлення для дальтонізму",
         "Name[x-test]": "xxColorblindness Correctionxx",
-        "Name[zh_CN]": "色盲校正"
+        "Name[zh_CN]": "色盲校正",
+        "Name[zh_TW]": "色盲修正"
     },
     "X-KDE-ConfigModule": "kwin_colorblindnesscorrection_config"
 }
