@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1663266 2023-10-26 02:10:02Z scripty $
+# $Id: kwin.po 1664578 2023-11-11 02:07:49Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-26 01:46+0000\n"
+"POT-Creation-Date: 2023-11-11 01:44+0000\n"
 "PO-Revision-Date: 2023-10-19 07:40+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -4106,7 +4106,7 @@ msgstr ""
 "kot dejavnega.\n"
 "Zato ni mogoče izrecno preklopiti na zaslon."
 
-#: utils/edid.cpp:239
+#: utils/edid.cpp:241
 #, kde-format
 msgid "unknown"
 msgstr "neznano"

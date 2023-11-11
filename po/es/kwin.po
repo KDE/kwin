@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-26 01:46+0000\n"
+"POT-Creation-Date: 2023-11-11 01:44+0000\n"
 "PO-Revision-Date: 2023-10-19 12:49+0200\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -4123,7 +4123,7 @@ msgstr ""
 "pantalla que contiene el ratón.\n"
 "Por lo tanto, no es posible cambiar a una pantalla explícitamente."
 
-#: utils/edid.cpp:239
+#: utils/edid.cpp:241
 #, kde-format
 msgid "unknown"
 msgstr "desconocida"

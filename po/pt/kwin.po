@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-26 01:46+0000\n"
+"POT-Creation-Date: 2023-11-11 01:44+0000\n"
 "PO-Revision-Date: 2023-02-15 15:24+0000\n"
 "Last-Translator: Pedro Morais <morais@kde.org>\n"
 "Language-Team: pt <kde-i18n-pt@kde.org>\n"
@@ -4227,7 +4227,7 @@ msgstr ""
 "rato como sendo o ecrã activo.\n"
 "Como tal, não é possível mudar de forma explícita para um dado ecrã."
 
-#: utils/edid.cpp:239
+#: utils/edid.cpp:241
 #, fuzzy, kde-format
 #| msgctxt "The input device of the event is not known"
 #| msgid "Unknown"

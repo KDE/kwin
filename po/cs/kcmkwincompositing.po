@@ -119,21 +119,3 @@ msgstr "Vždy"
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr "Znovu povolit detekci OpenGL"
-
-#~ msgid "Latency:"
-#~ msgstr "Latence:"
-
-#~ msgid "Force lowest latency (may cause dropped frames)"
-#~ msgstr "Vynutit nejnižší latence (může způsobovat zahazování rámců)"
-
-#~ msgid "Prefer lower latency"
-#~ msgstr "Preferovat nižší latenci"
-
-#~ msgid "Balance of latency and smoothness"
-#~ msgstr "Rovnováha mezi latencí a plynulostí"
-
-#~ msgid "Prefer smoother animations"
-#~ msgstr "Preferovat plynulejší animace"
-
-#~ msgid "Force smoothest animations"
-#~ msgstr "Vynutit nejplynulejší animace"

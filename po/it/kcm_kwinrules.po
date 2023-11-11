@@ -1,16 +1,16 @@
 # translation of kcmkwinrules.po to Italian
+# SPDX-FileCopyrightText: 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023 Paolo Zamponi <feus73@gmail.com>
 # Andrea Rizzi <rizzi@kde.org>, 2004, 2005.
 # Andrea RIZZI <arizzi@pi.infn.it>, 2004.
 # Luciano Montanaro <mikelima@cirulla.net>, 2007, 2008, 2010, 2011.
 # Federico Zenith <federico.zenith@member.fsf.org>, 2010, 2012, 2013, 2014, 2015.
-# Paolo Zamponi <feus73@gmail.com>, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
 # Vincenzo Reale <smart2128vr@gmail.com>, 2020, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-10-23 01:40+0000\n"
-"PO-Revision-Date: 2023-06-05 19:28+0200\n"
+"PO-Revision-Date: 2023-11-01 09:27+0100\n"
 "Last-Translator: Paolo Zamponi <feus73@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 23.04.1\n"
+"X-Generator: Lokalize 23.08.2\n"
 
 #: kcmrules.cpp:228
 #, kde-format
@@ -28,12 +28,12 @@ msgstr "Copia di %1"
 #: kcmrules.cpp:408
 #, kde-format
 msgid "Application settings for %1"
-msgstr "Impostazioni dell'applicazione di %1"
+msgstr "Impostazioni dell'applicazione per %1"
 
 #: kcmrules.cpp:430 rulesmodel.cpp:221
 #, kde-format
 msgid "Window settings for %1"
-msgstr "Impostazioni della finestra di %1"
+msgstr "Impostazioni della finestra per %1"
 
 #: optionsmodel.cpp:198
 #, kde-format
@@ -67,9 +67,9 @@ msgid ""
 "created.\n"
 "No further changes will be affected."
 msgstr ""
-"La proprietà della finestra verrà impostata al valore dato solo dopo la sua "
-"creazione.\n"
-"Ulteriori cambiamenti non saranno interessati."
+"La proprietà della finestra verrà impostata al valore dato solo dopo la "
+"creazione della finestra.\n"
+"Non sarà influenzata da ulteriori cambiamenti."
 
 #: optionsmodel.cpp:209
 #, kde-format
@@ -83,8 +83,8 @@ msgid ""
 "be affected later\n"
 "(this action will be deleted afterwards)."
 msgstr ""
-"La proprietà della finestra verrà immediatamente impostata al valore dato e "
-"non sarà interessata in seguito\n"
+"La proprietà della finestra verrà immediatamente impostata al valore dato, e "
+"non sarà influenzata in seguito\n"
 "(questa azione verrà successivamente eliminata)."
 
 #: optionsmodel.cpp:213
@@ -98,8 +98,8 @@ msgid ""
 "The value of the window property will be remembered and, every time the "
 "window is created, the last remembered value will be applied."
 msgstr ""
-"Il valore della proprietà della finestra verrà ricordato, e l'ultimo usato "
-"verrà applicato ogni volta che la finestra verrà creata."
+"Il valore della proprietà della finestra verrà ricordato, e l'ultimo sarà "
+"applicato ogni volta che verrà creata."
 
 #: optionsmodel.cpp:217
 #, kde-format
@@ -113,15 +113,15 @@ msgid ""
 "for it will be used.\n"
 "Specifying this will block more generic window settings from taking effect."
 msgstr ""
-"La proprietà della finestra non sarà interessata, quindi verrà utilizzato il "
-"gestore predefinito per la finestra.\n"
-"Specificando ciò non verranno applicate le impostazioni più generiche per la "
-"finestra."
+"La proprietà della finestra non sarà interessata, quindi per essa verrà "
+"utilizzato il gestore predefinito.\n"
+"Specificando ciò, delle impostazioni più generiche per la finestra non "
+"avranno effetto."
 
 #: optionsmodel.cpp:221
 #, kde-format
 msgid "Force"
-msgstr "Imponi"
+msgstr "Forza"
 
 #: optionsmodel.cpp:222
 #, kde-format
@@ -131,7 +131,7 @@ msgstr "La proprietà della finestra verrà sempre impostata al valore dato."
 #: optionsmodel.cpp:224
 #, kde-format
 msgid "Force Temporarily"
-msgstr "Imponi temporaneamente"
+msgstr "Forza temporaneamente"
 
 #: optionsmodel.cpp:225
 #, kde-format
@@ -141,7 +141,7 @@ msgid ""
 msgstr ""
 "La proprietà della finestra verrà impostata al valore dato finché non verrà "
 "nascosta\n"
-"(questa azione verrà eliminata dopo che la finestra sarà stata nascosta)."
+"(questa azione verrà eliminata dopo che la finestra è stata nascosta)."
 
 #: rulesmodel.cpp:224
 #, kde-format
@@ -151,7 +151,7 @@ msgstr "Impostazioni per %1"
 #: rulesmodel.cpp:227
 #, kde-format
 msgid "New window settings"
-msgstr "Impostazioni nuova finestra"
+msgstr "Impostazioni della nuova finestra"
 
 #: rulesmodel.cpp:243
 #, kde-format
@@ -165,7 +165,7 @@ msgstr ""
 "Hai specificato che la classe della finestra non è importante.\n"
 "Ciò significa che probabilmente le impostazioni si applicheranno alle "
 "finestre di tutte le applicazioni. Se vuoi davvero creare un'impostazione "
-"generica ti consigliamo almeno di limitare i tipi di finestra ed evitare "
+"generica, ti consigliamo almeno di limitare i tipi di finestra per evitare "
 "quelli speciali."
 
 #: rulesmodel.cpp:250
@@ -207,7 +207,7 @@ msgstr "Classe della finestra (applicazione)"
 #: rulesmodel.cpp:404
 #, kde-format
 msgid "Match whole window class"
-msgstr "Verifica l'intera classe della finestra"
+msgstr "Corrispondenza dell'intera classe della finestra"
 
 #: rulesmodel.cpp:411
 #, kde-format
@@ -422,7 +422,7 @@ msgstr "Scorciatoia"
 #: rulesmodel.cpp:609
 #, kde-format
 msgid "No titlebar and frame"
-msgstr "Senza barra del titolo e cornice"
+msgstr "Nessuna barra del titolo e cornice"
 
 #: rulesmodel.cpp:609 rulesmodel.cpp:614 rulesmodel.cpp:620 rulesmodel.cpp:625
 #: rulesmodel.cpp:631 rulesmodel.cpp:658 rulesmodel.cpp:686 rulesmodel.cpp:692
@@ -874,7 +874,7 @@ msgstr "Nessuna selezionata"
 #: ui/OptionsComboBox.qml:41
 #, kde-format
 msgid "All selected"
-msgstr "Tutte selezionate"
+msgstr "Tutti selezionati"
 
 #: ui/OptionsComboBox.qml:43
 #, kde-format
@@ -912,7 +912,7 @@ msgstr "Aggiungi proprietà..."
 #: ui/RulesEditor.qml:98
 #, kde-format
 msgid "Detect Window Properties"
-msgstr "Rileva proprietà della finestra"
+msgstr "Rileva le proprietà della finestra"
 
 #: ui/RulesEditor.qml:114 ui/RulesEditor.qml:121
 #, kde-format
