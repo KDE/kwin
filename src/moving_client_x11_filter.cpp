@@ -16,7 +16,7 @@ namespace KWin
 {
 
 MovingClientX11Filter::MovingClientX11Filter()
-    : X11EventFilter(QList<int>{XCB_KEY_PRESS, XCB_MOTION_NOTIFY, XCB_BUTTON_PRESS, XCB_BUTTON_RELEASE})
+    : X11EventFilter(QList<int>{XCB_KEY_PRESS, XCB_KEY_RELEASE, XCB_MOTION_NOTIFY, XCB_BUTTON_PRESS, XCB_BUTTON_RELEASE})
 {
 }
 
@@ -37,6 +37,18 @@ bool MovingClientX11Filter::event(xcb_generic_event_t *event)
         xcb_key_press_event_t *keyEvent = reinterpret_cast<xcb_key_press_event_t *>(event);
         KKeyServer::xcbKeyPressEventToQt(keyEvent, &keyQt);
         client->keyPressEvent(keyQt, keyEvent->time);
+        if (client->isInteractiveMove() || client->isInteractiveResize()) {
+            const QPointF global = QPointF(Xcb::fromXNative(keyEvent->root_x), Xcb::fromXNative(keyEvent->root_y));
+            client->updateInteractiveMoveResize(global);
+        }
+        return true;
+    }
+    case XCB_KEY_RELEASE: {
+        if (client->isInteractiveMove() || client->isInteractiveResize()) {
+            auto *keyEvent = reinterpret_cast<xcb_key_release_event_t *>(event);
+            const QPointF global = QPointF(Xcb::fromXNative(keyEvent->root_x), Xcb::fromXNative(keyEvent->root_y));
+            client->updateInteractiveMoveResize(global);
+        }
         return true;
     }
     case XCB_BUTTON_PRESS:

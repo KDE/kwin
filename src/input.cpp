@@ -642,10 +642,10 @@ public:
         }
         if (event->type() == QEvent::KeyPress) {
             window->keyPressEvent(event->key() | event->modifiers());
-            if (window->isInteractiveMove() || window->isInteractiveResize()) {
-                // only update if mode didn't end
-                window->updateInteractiveMoveResize(input()->globalPointer());
-            }
+        }
+        if (window->isInteractiveMove() || window->isInteractiveResize()) {
+            // only update if mode didn't end
+            window->updateInteractiveMoveResize(input()->globalPointer());
         }
         return true;
     }
