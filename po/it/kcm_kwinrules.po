@@ -1,16 +1,16 @@
 # translation of kcmkwinrules.po to Italian
+# SPDX-FileCopyrightText: 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023 Paolo Zamponi <feus73@gmail.com>
 # Andrea Rizzi <rizzi@kde.org>, 2004, 2005.
 # Andrea RIZZI <arizzi@pi.infn.it>, 2004.
 # Luciano Montanaro <mikelima@cirulla.net>, 2007, 2008, 2010, 2011.
 # Federico Zenith <federico.zenith@member.fsf.org>, 2010, 2012, 2013, 2014, 2015.
-# Paolo Zamponi <feus73@gmail.com>, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
 # Vincenzo Reale <smart2128vr@gmail.com>, 2020, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-25 02:43+0000\n"
-"PO-Revision-Date: 2023-04-16 18:31+0200\n"
+"PO-Revision-Date: 2023-11-01 09:27+0100\n"
 "Last-Translator: Paolo Zamponi <feus73@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 23.04.1\n"
+"X-Generator: Lokalize 23.08.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -55,10 +55,10 @@ msgid ""
 "documentation for how to customize window behavior.</p>"
 msgstr ""
 "<p><h1>Impostazioni specifiche delle finestre</h1> Qui puoi personalizzare "
-"le impostazioni di alcune specifiche finestre.</p><p>Nota che questa "
-"configurazione non avrà effetto se non usi KWin come gestore delle finestre. "
-"Se ne utilizzi uno diverso, consulta la sua documentazione per sapere come "
-"personalizzare il comportamento delle finestre.</p>"
+"le impostazioni in maniera specifica solo per alcune finestre.</p><p>Nota "
+"che questa configurazione non avrà effetto se non usi KWin come gestore "
+"delle finestre. Se ne utilizzi uno diverso, consulta la sua documentazione "
+"per sapere come personalizzare il comportamento delle finestre.</p>"
 
 #: kcmrules.cpp:243
 #, kde-format
@@ -68,12 +68,12 @@ msgstr "Copia di %1"
 #: kcmrules.cpp:423
 #, kde-format
 msgid "Application settings for %1"
-msgstr "Impostazioni dell'applicazione di %1"
+msgstr "Impostazioni dell'applicazione per %1"
 
 #: kcmrules.cpp:445 rulesmodel.cpp:215
 #, kde-format
 msgid "Window settings for %1"
-msgstr "Impostazioni della finestra di %1"
+msgstr "Impostazioni della finestra per %1"
 
 #: main.cpp:31
 #, kde-format
@@ -141,9 +141,9 @@ msgid ""
 "created.\n"
 "No further changes will be affected."
 msgstr ""
-"La proprietà della finestra verrà impostata al valore dato solo dopo la sua "
-"creazione.\n"
-"Ulteriori cambiamenti non saranno interessati."
+"La proprietà della finestra verrà impostata al valore dato solo dopo la "
+"creazione della finestra.\n"
+"Non sarà influenzata da ulteriori cambiamenti."
 
 #: optionsmodel.cpp:209
 #, kde-format
@@ -157,8 +157,8 @@ msgid ""
 "be affected later\n"
 "(this action will be deleted afterwards)."
 msgstr ""
-"La proprietà della finestra verrà immediatamente impostata al valore dato e "
-"non sarà interessata in seguito\n"
+"La proprietà della finestra verrà immediatamente impostata al valore dato, e "
+"non sarà influenzata in seguito\n"
 "(questa azione verrà successivamente eliminata)."
 
 #: optionsmodel.cpp:213
@@ -172,8 +172,8 @@ msgid ""
 "The value of the window property will be remembered and, every time the "
 "window is created, the last remembered value will be applied."
 msgstr ""
-"Il valore della proprietà della finestra verrà ricordato, e l'ultimo usato "
-"verrà applicato ogni volta che la finestra verrà creata."
+"Il valore della proprietà della finestra verrà ricordato, e l'ultimo sarà "
+"applicato ogni volta che verrà creata."
 
 #: optionsmodel.cpp:217
 #, kde-format
@@ -187,15 +187,15 @@ msgid ""
 "for it will be used.\n"
 "Specifying this will block more generic window settings from taking effect."
 msgstr ""
-"La proprietà della finestra non sarà interessata, quindi verrà utilizzato il "
-"gestore predefinito per la finestra.\n"
-"Specificando ciò non verranno applicate le impostazioni più generiche per la "
-"finestra."
+"La proprietà della finestra non sarà interessata, quindi per essa verrà "
+"utilizzato il gestore predefinito.\n"
+"Specificando ciò, delle impostazioni più generiche per la finestra non "
+"avranno effetto."
 
 #: optionsmodel.cpp:221
 #, kde-format
 msgid "Force"
-msgstr "Imponi"
+msgstr "Forza"
 
 #: optionsmodel.cpp:222
 #, kde-format
@@ -205,7 +205,7 @@ msgstr "La proprietà della finestra verrà sempre impostata al valore dato."
 #: optionsmodel.cpp:224
 #, kde-format
 msgid "Force Temporarily"
-msgstr "Imponi temporaneamente"
+msgstr "Forza temporaneamente"
 
 #: optionsmodel.cpp:225
 #, kde-format
@@ -215,7 +215,7 @@ msgid ""
 msgstr ""
 "La proprietà della finestra verrà impostata al valore dato finché non verrà "
 "nascosta\n"
-"(questa azione verrà eliminata dopo che la finestra sarà stata nascosta)."
+"(questa azione verrà eliminata dopo che la finestra è stata nascosta)."
 
 #: package/contents/ui/FileDialogLoader.qml:14
 #, kde-format
@@ -314,7 +314,7 @@ msgstr "Nessuna selezionata"
 #: package/contents/ui/OptionsComboBox.qml:41
 #, kde-format
 msgid "All selected"
-msgstr "Tutte selezionate"
+msgstr "Tutti selezionati"
 
 #: package/contents/ui/OptionsComboBox.qml:43
 #, kde-format
@@ -352,7 +352,7 @@ msgstr "Aggiungi proprietà..."
 #: package/contents/ui/RulesEditor.qml:98
 #, kde-format
 msgid "Detect Window Properties"
-msgstr "Rileva proprietà della finestra"
+msgstr "Rileva le proprietà della finestra"
 
 #: package/contents/ui/RulesEditor.qml:114
 #: package/contents/ui/RulesEditor.qml:121
@@ -418,7 +418,7 @@ msgstr "Impostazioni per %1"
 #: rulesmodel.cpp:221
 #, kde-format
 msgid "New window settings"
-msgstr "Impostazioni nuova finestra"
+msgstr "Impostazioni della nuova finestra"
 
 #: rulesmodel.cpp:237
 #, kde-format
@@ -432,7 +432,7 @@ msgstr ""
 "Hai specificato che la classe della finestra non è importante.\n"
 "Ciò significa che probabilmente le impostazioni si applicheranno alle "
 "finestre di tutte le applicazioni. Se vuoi davvero creare un'impostazione "
-"generica ti consigliamo almeno di limitare i tipi di finestra ed evitare "
+"generica, ti consigliamo almeno di limitare i tipi di finestra per evitare "
 "quelli speciali."
 
 #: rulesmodel.cpp:244
@@ -465,7 +465,7 @@ msgstr "Classe della finestra (applicazione)"
 #: rulesmodel.cpp:375
 #, kde-format
 msgid "Match whole window class"
-msgstr "Verifica l'intera classe della finestra"
+msgstr "Corrispondenza dell'intera classe della finestra"
 
 #: rulesmodel.cpp:382
 #, kde-format
@@ -574,7 +574,8 @@ msgid ""
 "to unconditionally popup in the middle of your screen."
 msgstr ""
 "Le finestre possono chiedere di comparire in una certa posizione.\n"
-"Normalmente ciò ha la precedenza sulla strategia di posizionamento,\n"
+"Per impostazione predefinita questo ha la precedenza sulla strategia di "
+"posizionamento,\n"
 "il ché può essere fastidioso se il client abusa di questa funzionalità\n"
 "per comparire incondizionatamente al centro dello schermo."
 
@@ -602,8 +603,8 @@ msgid ""
 "This may be pointless and the restriction prevents arbitrary dimensions\n"
 "like your complete screen area."
 msgstr ""
-"Pere esempio, i terminali o i riproduttori video possono chiedere di\n"
-"mantenere delle certe proporzioni, o di essere ingranditi solo di valori\n"
+"Ad esempio, i terminali o i riproduttori video possono chiedere di\n"
+"mantenere alcune proporzioni, o di essere ingranditi solo di valori\n"
 "maggiori di uno (per esempio della dimensione di un carattere).\n"
 "Questo potrebbe essere inutile, e la restrizione impedisce dimensioni\n"
 "arbitrarie, come l'area di tutto lo schermo."
@@ -642,7 +643,7 @@ msgstr "Togli dal cambiadesktop"
 #: rulesmodel.cpp:555
 #, kde-format
 msgid "Window shall (not) appear in the manager for virtual desktops"
-msgstr "La finestra (non) deve comparire nel gestore dei desktop virtuali"
+msgstr "La finestra (non) deve apparire nel gestore dei desktop virtuali"
 
 #: rulesmodel.cpp:559
 #, kde-format
@@ -662,7 +663,7 @@ msgstr "Scorciatoia"
 #: rulesmodel.cpp:571
 #, kde-format
 msgid "No titlebar and frame"
-msgstr "Senza barra del titolo e cornice"
+msgstr "Nessuna barra del titolo e cornice"
 
 #: rulesmodel.cpp:571 rulesmodel.cpp:576 rulesmodel.cpp:582 rulesmodel.cpp:587
 #: rulesmodel.cpp:592 rulesmodel.cpp:603 rulesmodel.cpp:614 rulesmodel.cpp:622
@@ -701,7 +702,7 @@ msgid ""
 "\"Extreme\" will completely prevent it from taking the focus."
 msgstr ""
 "KWin cerca di impedire che le finestre ottengano il fuoco (si \"attivino\")\n"
-"mentre stai lavorando in un'altra finestra, ma a volte non riesce, o "
+"mentre stai lavorando in un'altra finestra, ma a volte questo non riesce, o "
 "esagera.\n"
 "«Nessuna» permette alla finestra di ottenere incondizionatamente il fuoco\n"
 "mentre «Estrema» impedirà del tutto che possa ottenerlo."
