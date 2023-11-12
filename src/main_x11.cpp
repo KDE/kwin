@@ -138,7 +138,7 @@ private:
     {
         KSelectionOwner::getAtoms();
         if (xa_version == XCB_ATOM_NONE) {
-            const QByteArray name(QByteArrayLiteral("VERSION"));
+            constexpr QByteArrayView name{"VERSION"};
             UniqueCPtr<xcb_intern_atom_reply_t> atom(xcb_intern_atom_reply(
                 kwinApp()->x11Connection(),
                 xcb_intern_atom_unchecked(kwinApp()->x11Connection(), false, name.length(), name.constData()),
@@ -151,7 +151,7 @@ private:
 
     xcb_atom_t make_selection_atom()
     {
-        QByteArray screen(QByteArrayLiteral("WM_S0"));
+        constexpr QByteArrayView screen{"WM_S0"};
         UniqueCPtr<xcb_intern_atom_reply_t> atom(xcb_intern_atom_reply(
             kwinApp()->x11Connection(),
             xcb_intern_atom_unchecked(kwinApp()->x11Connection(), false, screen.length(), screen.constData()),
