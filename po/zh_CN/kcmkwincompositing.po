@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-09 01:39+0000\n"
-"PO-Revision-Date: 2023-10-21 13:51\n"
+"PO-Revision-Date: 2023-11-11 07:19\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -118,25 +118,3 @@ msgstr "总是"
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr "重新启用 OpenGL 检测"
-
-#~ msgid "Latency:"
-#~ msgstr "延迟："
-
-#~ msgid "Force lowest latency (may cause dropped frames)"
-#~ msgstr "强制最低延迟 (可能会导致掉帧)"
-
-#~ msgid "Prefer lower latency"
-#~ msgstr "低延迟优先"
-
-#~ msgid "Balance of latency and smoothness"
-#~ msgstr "平衡延迟和显示流畅度"
-
-#~ msgid "Prefer smoother animations"
-#~ msgstr "动效流畅度优先"
-
-#~ msgid "Force smoothest animations"
-#~ msgstr "强制最流畅动效"
-
-#~ msgid ""
-#~ "Reduce latency by allowing screen tearing artifacts in fullscreen windows"
-#~ msgstr "在全屏窗口中允许画面撕裂以降低延迟"

@@ -2,20 +2,20 @@
 # Richard Frič <Richard.Fric@kdemail.net>, 2012.
 # Roman Paholík <wizzardsk@gmail.com>, 2013, 2017.
 # Mthw <jari_45@hotmail.com>, 2018.
-# Matej Mrenica <matejm98mthw@gmail.com>, 2020, 2022.
+# SPDX-FileCopyrightText: 2020, 2022, 2023 Matej Mrenica <matejm98mthw@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm-kwin-scripts\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-21 02:02+0000\n"
-"PO-Revision-Date: 2022-10-04 17:50+0200\n"
+"PO-Revision-Date: 2023-11-11 15:54+0100\n"
 "Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 22.08.1\n"
+"X-Generator: Lokalize 23.08.3\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #: module.cpp:50
@@ -50,25 +50,21 @@ msgid "Error when uninstalling KWin Script: %1"
 msgstr "Chyba pri odinštalovaní KWin Skriptu: %1"
 
 #: ui/main.qml:23
-#, fuzzy, kde-format
-#| msgid "Install from File..."
+#, kde-format
 msgid "Install from File…"
 msgstr "Nainštalovať zo súboru..."
 
 #: ui/main.qml:27
-#, fuzzy, kde-format
-#| msgid "Get New Scripts..."
+#, kde-format
 msgctxt "@action:button get new KWin scripts"
 msgid "Get New…"
-msgstr "Získať nové skripty..."
+msgstr "Získať nové..."
 
 #: ui/main.qml:65
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Delete..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Delete…"
-msgstr "Vymazať..."
+msgstr "Vymazať…"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

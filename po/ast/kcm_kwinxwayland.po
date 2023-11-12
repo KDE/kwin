@@ -1,13 +1,13 @@
-# Copyright (C) YEAR This file is copyright:
+# Copyright (C) 2023 This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
-# Enol P. <enolp@softastur.org>, 2023.
+# SPDX-FileCopyrightText: 2023 Enol P. <enolp@softastur.org>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-07 02:44+0000\n"
-"PO-Revision-Date: 2023-05-03 21:13+0200\n"
+"PO-Revision-Date: 2023-11-12 00:37+0100\n"
 "Last-Translator: Enol P. <enolp@softastur.org>\n"
 "Language-Team: \n"
 "Language: ast\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 23.04.0\n"
+"X-Generator: Lokalize 23.08.2\n"
 
 #: ui/main.qml:47
 #, kde-format
@@ -25,11 +25,18 @@ msgid ""
 "disabled by default for security reasons. If you need to use such apps, you "
 "can choose your preferred balance of security and functionality here."
 msgstr ""
+"Les aplicaciones heredaes de X11 riquen la capacidá de lleer les pulsaciones "
+"de tecles feches n'otres aplicaciones pa funciones que s'activen colos "
+"atayos globales del tecláu. Por defeutu, esta función ta desactivada por "
+"motivos de seguranza. Si precises usar esti tipu d'aplicaciones, equí pues "
+"escoyer l'equilibriu preferíu ente seguranza ya funcionalidá."
 
 #: ui/main.qml:64
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
 msgstr ""
+"Permitir que les aplicaciones heredaes de X11 llean les pulsaciones de "
+"tecles feches en toles aplicaciones:"
 
 #: ui/main.qml:65
 #, kde-format
@@ -58,3 +65,7 @@ msgid ""
 "session by permitting malicious software to steal passwords and spy on the "
 "text that you type. Make sure you understand and accept this risk."
 msgstr ""
+"Decátate qu'usar esta opción va amenorgar la seguranza del sistema a la de "
+"la sesión X11 permitiendo que'l software malicioso robe contraseñes ya "
+"escluque'l testu qu'escribas. Asegúrate de qu'entiendes ya aceptes esti "
+"riesgu."

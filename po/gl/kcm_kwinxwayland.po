@@ -1,13 +1,13 @@
-# Copyright (C) YEAR This file is copyright:
+# Copyright (C) 2023 This file is copyright:
 # This file is distributed under the same license as the kwin package.
-# Adrián Chaves (Gallaecio) <adrian@chaves.io>, 2023.
+# SPDX-FileCopyrightText: 2023 Adrián Chaves (Gallaecio)
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-07 02:44+0000\n"
-"PO-Revision-Date: 2023-04-30 10:50+0200\n"
+"PO-Revision-Date: 2023-11-11 14:13+0100\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
 "Language: gl\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 23.04.0\n"
+"X-Generator: Lokalize 23.08.2\n"
 
 #: ui/main.qml:47
 #, kde-format
@@ -46,12 +46,14 @@ msgstr "Nunca"
 #: ui/main.qml:68
 #, kde-format
 msgid "Only non-character keys"
-msgstr ""
+msgstr "Só teclas que non son letras"
 
 #: ui/main.qml:71
 #, kde-format
 msgid "As above, plus any key typed while a modifier key is pressed"
 msgstr ""
+"Como enriba, máis calquera tecla premida mentres se preme unha tecla "
+"modificadora."
 
 #: ui/main.qml:75
 #, kde-format
