@@ -50,6 +50,15 @@ static QStringList fetchProcessServiceField(const QString &executablePath, const
     return fieldValues;
 }
 
+static inline QStringList fetchRequestedInterfacesForDesktopId(const QString &desktopId)
+{
+    const auto service = KService::serviceByDesktopName(desktopId);
+    if (!service) {
+        return {};
+    }
+    return service->property<QStringList>(s_waylandInterfaceName);
+}
+
 static inline QStringList fetchRequestedInterfaces(const QString &executablePath)
 {
     return fetchProcessServiceField(executablePath, s_waylandInterfaceName);

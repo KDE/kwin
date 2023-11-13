@@ -131,6 +131,9 @@ public:
 
     QStringList fetchRequestedInterfaces(ClientConnection *client) const
     {
+        if (!client->securityContextAppId().isEmpty()) {
+            return KWin::fetchRequestedInterfacesForDesktopId(client->securityContextAppId());
+        }
         return KWin::fetchRequestedInterfaces(client->executablePath());
     }
 
