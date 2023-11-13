@@ -48,10 +48,9 @@ EglGbmCursorLayer::EglGbmCursorLayer(EglGbmBackend *eglBackend, DrmPipeline *pip
 
 std::optional<OutputLayerBeginFrameInfo> EglGbmCursorLayer::beginFrame()
 {
-    if (m_pipeline->output()->needsColormanagement()) {
-        // TODO for hardware cursors to work with color management, KWin needs to offload post-blending color management steps to KMS
-        return std::nullopt;
-    }
+    // note that this allows blending to happen in sRGB or PQ encoding.
+    // That's technically incorrect, but it looks okay and is intentionally allowed
+    // as the hardware cursor is more important than an incorrectly blended cursor edge
     return m_surface.startRendering(m_pipeline->gpu()->cursorSize(), drmToTextureRotation(m_pipeline) | TextureTransform::MirrorY, m_pipeline->cursorFormats(), m_pipeline->colorDescription(), m_pipeline->output()->channelFactors(), m_pipeline->iccProfile(), m_pipeline->output()->needsColormanagement());
 }
 
