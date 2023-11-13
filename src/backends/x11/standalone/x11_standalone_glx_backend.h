@@ -134,6 +134,7 @@ private:
     bool m_haveMESASwapControl = false;
     bool m_haveEXTSwapControl = false;
     bool m_haveSGISwapControl = false;
+    bool m_framebufferIsSRGB = false;
     ::Display *m_x11Display;
     X11StandaloneBackend *m_backend;
     std::unique_ptr<VsyncMonitor> m_vsyncMonitor;

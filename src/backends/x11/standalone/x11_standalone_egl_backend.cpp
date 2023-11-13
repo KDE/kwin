@@ -277,7 +277,7 @@ EGLSurface EglBackend::createSurface(xcb_window_t window)
 
 EGLConfig EglBackend::chooseBufferConfig()
 {
-    const EGLint config_attribs[] = {
+    std::vector<EGLint> config_attribs = {
         EGL_SURFACE_TYPE,
         EGL_WINDOW_BIT | (supportsBufferAge() ? 0 : EGL_SWAP_BEHAVIOR_PRESERVED_BIT),
         EGL_RED_SIZE,
@@ -292,14 +292,23 @@ EGLConfig EglBackend::chooseBufferConfig()
         isOpenGLES() ? EGL_OPENGL_ES2_BIT : EGL_OPENGL_BIT,
         EGL_CONFIG_CAVEAT,
         EGL_NONE,
+        EGL_GL_COLORSPACE_KHR,
+        EGL_GL_COLORSPACE_SRGB_KHR,
         EGL_NONE,
     };
 
     EGLint count;
     EGLConfig configs[1024];
-    if (eglChooseConfig(eglDisplayObject()->handle(), config_attribs, configs, 1024, &count) == EGL_FALSE) {
-        qCCritical(KWIN_CORE) << "choose config failed";
-        return EGL_NO_CONFIG_KHR;
+    if (eglChooseConfig(eglDisplayObject()->handle(), config_attribs.data(), configs, 1024, &count) == EGL_FALSE) {
+        // try again without sRGB flag
+        std::erase(config_attribs, EGL_GL_COLORSPACE_KHR);
+        std::erase(config_attribs, EGL_GL_COLORSPACE_SRGB_KHR);
+        if (eglChooseConfig(eglDisplayObject()->handle(), config_attribs.data(), configs, 1024, &count) == EGL_FALSE) {
+            qCCritical(KWIN_CORE) << "choose config failed";
+            return EGL_NO_CONFIG_KHR;
+        }
+    } else {
+        m_framebufferIsSRGB = true;
     }
 
     UniqueCPtr<xcb_get_window_attributes_reply_t> attribs(xcb_get_window_attributes_reply(m_backend->connection(),
@@ -331,9 +340,15 @@ void EglBackend::screenGeometryChanged()
     m_fbo = std::make_unique<GLFramebuffer>(0, workspace()->geometry().size());
 }
 
+// if the framebuffer is sRGB, OpenGL expects our shaders to render linear colors
+static const ColorDescription linearColorDescription(NamedColorimetry::BT709, NamedTransferFunction::NormalizedLinear, 100, 0, 100, 100);
+
 OutputLayerBeginFrameInfo EglBackend::beginFrame()
 {
     makeCurrent();
+    if (m_framebufferIsSRGB) {
+        glEnable(GL_FRAMEBUFFER_SRGB_EXT);
+    }
 
     QRegion repaint;
     if (supportsBufferAge()) {
@@ -346,7 +361,7 @@ OutputLayerBeginFrameInfo EglBackend::beginFrame()
     }
     m_query->begin();
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_fbo.get()),
+        .renderTarget = RenderTarget(m_fbo.get(), m_framebufferIsSRGB ? linearColorDescription : ColorDescription::sRGB),
         .repaint = repaint,
     };
 }
@@ -359,6 +374,9 @@ void EglBackend::endFrame(const QRegion &renderedRegion, const QRegion &damagedR
         m_damageJournal.add(damagedRegion);
     }
     m_lastRenderedRegion = renderedRegion;
+    if (m_framebufferIsSRGB) {
+        glDisable(GL_FRAMEBUFFER_SRGB_EXT);
+    }
 }
 
 void EglBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)

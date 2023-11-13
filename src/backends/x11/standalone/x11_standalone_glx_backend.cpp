@@ -416,6 +416,9 @@ bool GlxBackend::initFbConfig()
     // Only request sRGB configurations with default depth 24 as it can cause problems with other default depths. See bugs #408594 and #423014.
     if (Xcb::defaultDepth() == 24) {
         fbconfig = chooseGlxFbConfig(display(), attribs_srgb);
+        if (fbconfig) {
+            m_framebufferIsSRGB = true;
+        }
     }
     if (!fbconfig) {
         fbconfig = chooseGlxFbConfig(display(), attribs);
@@ -689,10 +692,16 @@ std::unique_ptr<SurfaceTexture> GlxBackend::createSurfaceTextureX11(SurfacePixma
     return std::make_unique<GlxSurfaceTextureX11>(this, pixmap);
 }
 
+// if the framebuffer is sRGB, OpenGL expects our shaders to render linear colors
+static const ColorDescription linearColorDescription(NamedColorimetry::BT709, NamedTransferFunction::NormalizedLinear, 100, 0, 100, 100);
+
 OutputLayerBeginFrameInfo GlxBackend::beginFrame()
 {
     QRegion repaint;
     makeCurrent();
+    if (m_framebufferIsSRGB) {
+        glEnable(GL_FRAMEBUFFER_SRGB_EXT);
+    }
     if (!m_query) {
         m_query = std::make_unique<GLRenderTimeQuery>();
     }
@@ -708,7 +717,7 @@ OutputLayerBeginFrameInfo GlxBackend::beginFrame()
     }
     m_query->begin();
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_fbo.get()),
+        .renderTarget = RenderTarget(m_fbo.get(), m_framebufferIsSRGB ? linearColorDescription : ColorDescription::sRGB),
         .repaint = repaint,
     };
 }
@@ -721,6 +730,9 @@ void GlxBackend::endFrame(const QRegion &renderedRegion, const QRegion &damagedR
         m_damageJournal.add(damagedRegion);
     }
     m_lastRenderedRegion = renderedRegion;
+    if (m_framebufferIsSRGB) {
+        glDisable(GL_FRAMEBUFFER_SRGB_EXT);
+    }
 }
 
 std::chrono::nanoseconds GlxBackend::queryRenderTime()

@@ -72,6 +72,7 @@ enum class NamedTransferFunction {
     linear = 1,
     PerceptualQuantizer = 2,
     scRGB = 3,
+    NormalizedLinear = 4,
 };
 
 /**

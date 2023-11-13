@@ -79,6 +79,7 @@ private:
     std::unique_ptr<GLRenderTimeQuery> m_query;
     int m_havePostSubBuffer = false;
     bool m_havePlatformBase = false;
+    bool m_framebufferIsSRGB = false;
     Options::GlSwapStrategy m_swapStrategy = Options::AutoSwapStrategy;
     std::shared_ptr<OutputFrame> m_frame;
 };
