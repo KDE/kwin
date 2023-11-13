@@ -126,6 +126,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
             }
             m_surface->shadowBuffer = std::make_unique<GLFramebuffer>(m_surface->shadowTexture.get());
         }
+        m_surface->shadowTexture->setContentTransform(m_surface->currentSlot->framebuffer()->colorAttachment()->contentTransforms());
         m_surface->renderStart = std::chrono::steady_clock::now();
         m_surface->timeQuery->begin();
         return OutputLayerBeginFrameInfo{
