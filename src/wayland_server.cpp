@@ -54,6 +54,7 @@
 #include "wayland/relativepointer_v1.h"
 #include "wayland/screenedge_v1.h"
 #include "wayland/seat.h"
+#include "wayland/securitycontext_v1.h"
 #include "wayland/server_decoration.h"
 #include "wayland/server_decoration_palette.h"
 #include "wayland/shadow.h"
@@ -153,6 +154,10 @@ public:
 
     bool allowInterface(ClientConnection *client, const QByteArray &interfaceName) override
     {
+        if (!client->securityContextAppId().isEmpty() && interfaceName == QByteArrayLiteral("wp_security_context_manager_v1")) {
+            return false;
+        }
+
         if (client->processId() == getpid()) {
             return true;
         }
@@ -406,6 +411,7 @@ bool WaylandServer::init(InitializationFlags flags)
     });
 
     new ViewporterInterface(m_display, m_display);
+    new SecurityContextManagerV1Interface(m_display, m_display);
     new FractionalScaleManagerV1Interface(m_display, m_display);
     m_display->createShm();
     m_seat = new SeatInterface(m_display, m_display);

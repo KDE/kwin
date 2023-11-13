@@ -9,6 +9,7 @@
 
 #include <wayland-server-core.h>
 
+#include "utils/filedescriptor.h"
 #include <QList>
 #include <QSocketNotifier>
 #include <QString>
@@ -41,6 +42,28 @@ public:
     QList<SeatInterface *> seats;
     QList<ClientConnection *> clients;
     QStringList socketNames;
+};
+
+/**
+ * @brief The SecurityContext is a helper for the SecurityContextProtocol
+ * It stays alive whilst closeFd remains open, listening for new connections on listenFd
+ * Any new clients created via listenFd are tagged with the appId
+ * It is parented to the display
+ */
+class SecurityContext : public QObject
+{
+    Q_OBJECT
+public:
+    SecurityContext(Display *display, FileDescriptor &&listenFd, FileDescriptor &&closeFd, const QString &appId);
+    ~SecurityContext() override;
+
+private:
+    void onCloseFdActivated();
+    void onListenFdActivated(QSocketDescriptor descriptor);
+    Display *m_display;
+    FileDescriptor m_listenFd;
+    FileDescriptor m_closeFd;
+    QString m_appId;
 };
 
 } // namespace KWin

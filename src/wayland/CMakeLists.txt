@@ -221,6 +221,11 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     BASENAME frog-color-management-v1
 )
 
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PROTOCOL ${WaylandProtocols_DATADIR}/staging/security-context/security-context-v1.xml
+    BASENAME security-context-v1
+)
+
 target_sources(kwin PRIVATE
     abstract_data_source.cpp
     abstract_drop_handler.cpp
@@ -275,6 +280,7 @@ target_sources(kwin PRIVATE
     screencast_v1.cpp
     screenedge_v1.cpp
     seat.cpp
+    securitycontext_v1.cpp
     server_decoration.cpp
     server_decoration_palette.cpp
     shadow.cpp
@@ -347,6 +353,7 @@ install(FILES
     screencast_v1.h
     screenedge_v1.h
     seat.h
+    securitycontext_v1.h
     server_decoration.h
     server_decoration_palette.h
     shadow.h

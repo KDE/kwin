@@ -11,6 +11,10 @@
 #include "shmclientbuffer_p.h"
 #include "utils/common.h"
 
+#include <poll.h>
+#include <string.h>
+#include <sys/socket.h>
+
 #include <QAbstractEventDispatcher>
 #include <QCoreApplication>
 #include <QDebug>
@@ -239,6 +243,50 @@ GraphicsBuffer *Display::bufferForResource(wl_resource *resource)
         return buffer;
     } else {
         return nullptr;
+    }
+}
+
+SecurityContext::SecurityContext(Display *display, FileDescriptor &&listenFd, FileDescriptor &&closeFd, const QString &appId)
+    : QObject(display)
+    , m_display(display)
+    , m_listenFd(std::move(listenFd))
+    , m_closeFd(std::move(closeFd))
+    , m_appId(appId)
+{
+    qCDebug(KWIN_CORE) << "Adding listen fd for" << appId;
+
+    auto closeSocketWatcher = new QSocketNotifier(m_closeFd.get(), QSocketNotifier::Read, this);
+    connect(closeSocketWatcher, &QSocketNotifier::activated, this, &SecurityContext::onCloseFdActivated);
+
+    if (m_closeFd.isClosed()) {
+        deleteLater();
+        return;
+    }
+
+    auto listenFdListener = new QSocketNotifier(m_listenFd.get(), QSocketNotifier::Read, this);
+    connect(listenFdListener, &QSocketNotifier::activated, this, &SecurityContext::onListenFdActivated);
+}
+
+SecurityContext::~SecurityContext()
+{
+    qCDebug(KWIN_CORE) << "Removing listen fd for " << m_appId;
+}
+
+void SecurityContext::onListenFdActivated(QSocketDescriptor socketDescriptor)
+{
+    int clientFd = accept4(socketDescriptor, nullptr, nullptr, SOCK_CLOEXEC);
+    if (clientFd < 0) {
+        qCWarning(KWIN_CORE) << "Failed to accept client from security listen FD";
+        return;
+    }
+    auto client = m_display->createClient(clientFd);
+    client->setSecurityContextAppId(m_appId);
+}
+
+void SecurityContext::onCloseFdActivated()
+{
+    if (m_closeFd.isClosed()) {
+        deleteLater();
     }
 }
 

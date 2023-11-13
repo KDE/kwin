@@ -28,6 +28,7 @@
 #include "qwayland-kde-output-device-v2.h"
 #include "qwayland-kde-output-management-v2.h"
 #include "qwayland-kde-screen-edge-v1.h"
+#include "qwayland-security-context-v1.h"
 #include "qwayland-text-input-unstable-v3.h"
 #include "qwayland-wlr-layer-shell-unstable-v1.h"
 #include "qwayland-xdg-decoration-unstable-v1.h"
@@ -527,6 +528,12 @@ public:
     ~FakeInput() override;
 };
 
+class SecurityContextManagerV1 : public QtWayland::wp_security_context_manager_v1
+{
+public:
+    ~SecurityContextManagerV1() override;
+};
+
 enum class AdditionalWaylandInterface {
     Seat = 1 << 0,
     PlasmaShell = 1 << 2,
@@ -547,6 +554,7 @@ enum class AdditionalWaylandInterface {
     ScreenEdgeV1 = 1 << 17,
     CursorShapeV1 = 1 << 18,
     FakeInput = 1 << 19,
+    SecurityContextManagerV1 = 1 << 20,
 };
 Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
 
@@ -642,6 +650,7 @@ KWayland::Client::Output *waylandOutput(const QString &name);
 ScreencastingV1 *screencasting();
 QList<WaylandOutputDeviceV2 *> waylandOutputDevicesV2();
 FakeInput *waylandFakeInput();
+SecurityContextManagerV1 *waylandSecurityContextManagerV1();
 
 bool waitForWaylandSurface(Window *window);
 

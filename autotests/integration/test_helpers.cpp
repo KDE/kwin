@@ -264,6 +264,11 @@ FakeInput::~FakeInput()
     destroy();
 }
 
+SecurityContextManagerV1::~SecurityContextManagerV1()
+{
+    destroy();
+}
+
 static struct
 {
     KWayland::Client::ConnectionThread *connection = nullptr;
@@ -296,6 +301,7 @@ static struct
     ScreenEdgeManagerV1 *screenEdgeManagerV1 = nullptr;
     CursorShapeManagerV1 *cursorShapeManagerV1 = nullptr;
     FakeInput *fakeInput = nullptr;
+    SecurityContextManagerV1 *securityContextManagerV1 = nullptr;
 } s_waylandConnection;
 
 MockInputMethod *inputMethod()
@@ -493,6 +499,12 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
                 s_waylandConnection.fakeInput->init(*registry, name, version);
             }
         }
+        if (flags & AdditionalWaylandInterface::SecurityContextManagerV1) {
+            if (interface == wp_security_context_manager_v1_interface.name) {
+                s_waylandConnection.securityContextManagerV1 = new SecurityContextManagerV1();
+                s_waylandConnection.securityContextManagerV1->init(*registry, name, version);
+            }
+        }
     });
 
     QSignalSpy allAnnounced(registry, &KWayland::Client::Registry::interfacesAnnounced);
@@ -616,6 +628,8 @@ void destroyWaylandConnection()
     s_waylandConnection.cursorShapeManagerV1 = nullptr;
     delete s_waylandConnection.fakeInput;
     s_waylandConnection.fakeInput = nullptr;
+    delete s_waylandConnection.securityContextManagerV1;
+    s_waylandConnection.securityContextManagerV1 = nullptr;
 
     delete s_waylandConnection.queue; // Must be destroyed last
     s_waylandConnection.queue = nullptr;
@@ -725,6 +739,11 @@ QList<KWin::Test::WaylandOutputDeviceV2 *> waylandOutputDevicesV2()
 FakeInput *waylandFakeInput()
 {
     return s_waylandConnection.fakeInput;
+}
+
+SecurityContextManagerV1 *waylandSecurityContextManagerV1()
+{
+    return s_waylandConnection.securityContextManagerV1;
 }
 
 bool waitForWaylandSurface(Window *window)

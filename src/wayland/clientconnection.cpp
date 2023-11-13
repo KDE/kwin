@@ -26,6 +26,7 @@ public:
     uid_t user = 0;
     gid_t group = 0;
     QString executablePath;
+    QString securityContextAppId;
     qreal scaleOverride = 1.0;
 
 private:
@@ -165,6 +166,15 @@ qreal ClientConnection::scaleOverride() const
     return d->scaleOverride;
 }
 
+void ClientConnection::setSecurityContextAppId(const QString &appId)
+{
+    d->securityContextAppId = appId;
+}
+
+QString ClientConnection::securityContextAppId() const
+{
+    return d->securityContextAppId;
+}
 }
 
 #include "moc_clientconnection.cpp"

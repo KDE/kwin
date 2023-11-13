@@ -124,6 +124,9 @@ public:
     void setScaleOverride(qreal scaleOverride);
     qreal scaleOverride() const;
 
+    void setSecurityContextAppId(const QString &appId);
+    QString securityContextAppId() const;
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the client is about to be destroyed.

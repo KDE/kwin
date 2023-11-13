@@ -74,9 +74,27 @@ FileDescriptor FileDescriptor::duplicate() const
     }
 }
 
+bool FileDescriptor::isClosed() const
+{
+    return isClosed(m_fd);
+}
+
 bool FileDescriptor::isReadable() const
 {
     return isReadable(m_fd);
+}
+
+bool FileDescriptor::isClosed(int fd)
+{
+    pollfd pfd = {
+        .fd = fd,
+        .events = POLLIN,
+        .revents = 0,
+    };
+    if (poll(&pfd, 1, 0) < 0) {
+        return true;
+    }
+    return pfd.revents & (POLLHUP | POLLERR);
 }
 
 bool FileDescriptor::isReadable(int fd)
