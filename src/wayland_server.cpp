@@ -77,7 +77,6 @@
 #include "xdgshellwindow.h"
 
 // Qt
-#include <QCryptographicHash>
 #include <QDir>
 #include <QFileInfo>
 
@@ -102,31 +101,6 @@ public:
     KWinDisplay(QObject *parent)
         : FilteredDisplay(parent)
     {
-    }
-
-    static QByteArray sha256(const QString &fileName)
-    {
-        QFile f(fileName);
-        if (f.open(QFile::ReadOnly)) {
-            QCryptographicHash hash(QCryptographicHash::Sha256);
-            if (hash.addData(&f)) {
-                return hash.result();
-            }
-        }
-        return QByteArray();
-    }
-
-    bool isTrustedOrigin(ClientConnection *client) const
-    {
-        const auto fullPathSha = sha256(client->executablePath());
-        const auto localSha = sha256(QLatin1String("/proc/") + QString::number(client->processId()) + QLatin1String("/exe"));
-        const bool trusted = !localSha.isEmpty() && fullPathSha == localSha;
-
-        if (!trusted) {
-            qCWarning(KWIN_CORE) << "Could not trust" << client->executablePath() << "sha" << localSha << fullPathSha;
-        }
-
-        return trusted;
     }
 
     QStringList fetchRequestedInterfaces(ClientConnection *client) const
@@ -201,17 +175,6 @@ public:
             }
         }
 
-        {
-            auto trustedOrigin = client->property("isPrivileged");
-            if (trustedOrigin.isNull()) {
-                trustedOrigin = isTrustedOrigin(client);
-                client->setProperty("isPrivileged", trustedOrigin);
-            }
-
-            if (!trustedOrigin.toBool()) {
-                return false;
-            }
-        }
         qCDebug(KWIN_CORE) << "authorized" << client->executablePath() << interfaceName;
         return true;
     }
