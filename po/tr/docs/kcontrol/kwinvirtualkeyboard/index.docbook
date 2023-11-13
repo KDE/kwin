@@ -53,7 +53,7 @@
 </articleinfo>
 
 <para
->Bu modül, kullanılacak sanal klavyeyi seçmenizi sağlar. Donanım klavyesi algılanmadığında sanal klavye otomatik olarak etkinleştirilir. </para>
+>Bu modül, kullanılacak sanal klavyeyi seçmenizi sağlar. Donanım klavyesi algılanmadığında sanal klavye kendiliğinden etkinleştirilir. </para>
 
 <para
 >Listeden bir <ulink url="https://en.wikipedia.org/wiki/Virtual_keyboard"

@@ -252,7 +252,7 @@
 >Odak gecikmesi</title>
 
 <para
->Bu, fare işaretçisinin üzerinde bulunduğu pencerenin otomatik olarak odağı alacağı gecikmedir. </para>
+>Bu, fare işaretçisinin üzerinde bulunduğu pencerenin kendiliğinden odağı alacağı gecikmedir. </para>
 
 </sect3>
 
@@ -605,7 +605,7 @@
 
 <tip>
 <para
->Pencerelerin panjuru kapalı başlık çubuğuna fare işaretçisini getirince otomatik olarak panjurun açılmasını sağlayabilirsiniz. Yalnızca bu modülün <guilabel
+>Pencerelerin panjuru kapalı başlık çubuğuna fare işaretçisini getirince kendiliğinden panjurun açılmasını sağlayabilirsiniz. Yalnızca bu modülün <guilabel
 >Gelişmiş</guilabel
 > sekmesindeki <link linkend="advanced-unshading"
 ><guilabel
@@ -1219,7 +1219,7 @@
 ></term>
 <listitem>
 <para
->Bu seçenek etkinleştirilirse fare işaretçisi bir süre başlık çubuğunun üzerindeyken panjuru kapalı bir pencerenin panjuru otomatik olarak açılır. Panjuru kapatma gecikmesini yapılandırmak için döndürme kutusunu kullanın. </para>
+>Bu seçenek etkinleştirilirse fare işaretçisi bir süre başlık çubuğunun üzerindeyken panjuru kapalı bir pencerenin panjuru kendiliğinden açılır. Panjuru kapatma gecikmesini yapılandırmak için döndürme kutusunu kullanın. </para>
 </listitem>
 </varlistentry>
 </variablelist>
@@ -1369,7 +1369,7 @@
 <para
 >Pencerenin şu anda bulunduğu Sanal Masaüstü'ne geçer. </para>
 <para
->Etkin Sanal Masaüstü'nün, atanmış Sanal Masaüstü'ne giden pencereleri otomatik olarak izlemesini istiyorsanız bu seçeneği seçin. </para>
+>Etkin Sanal Masaüstü'nün, atanmış Sanal Masaüstü'ne giden pencereleri kendiliğinden izlemesini istiyorsanız bu seçeneği seçin. </para>
 </listitem>
 </varlistentry>
 

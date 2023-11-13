@@ -65,7 +65,7 @@
 >Yeni Masaüstü</guilabel
 >'dür). </para>
 <para
->Paneldeki sayfalayıcıda satır sayısını yapılandırabilirsiniz. Masaüstü sayısını ayarlamak için listenin altındaki satır giriş kutusunu kullanmanız yeterlidir. Masaüstleri, satırlara göre otomatik olarak yeniden düzenlenecektir. </para>
+>Paneldeki sayfalayıcıda satır sayısını yapılandırabilirsiniz. Masaüstü sayısını ayarlamak için listenin altındaki satır giriş kutusunu kullanmanız yeterlidir. Masaüstleri, satırlara göre kendiliğinden yeniden düzenlenecektir. </para>
 
 <variablelist>
 <varlistentry>
