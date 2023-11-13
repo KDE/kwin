@@ -23,6 +23,7 @@
 #include <QKeyEvent>
 #include <QMouseEvent>
 #include <QPainter>
+#include <QPointer>
 #include <QThreadPool>
 #include <QWidget>
 
