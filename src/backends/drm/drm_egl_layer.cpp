@@ -104,8 +104,8 @@ bool EglGbmLayer::scanout(SurfaceItem *surfaceItem)
     if (directScanoutDisabled) {
         return false;
     }
-    // TODO use GAMMA_LUT, CTM and DEGAMMA_LUT to allow direct scanout with HDR
-    if (m_pipeline->output()->needsColormanagement()) {
+    if (surfaceItem->colorDescription() != m_pipeline->colorDescription() || m_pipeline->output()->channelFactors() != QVector3D(1, 1, 1) || m_pipeline->iccProfile()) {
+        // TODO use GAMMA_LUT, CTM and DEGAMMA_LUT to allow direct scanout with HDR
         return false;
     }
 
