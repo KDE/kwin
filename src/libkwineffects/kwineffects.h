@@ -2303,6 +2303,11 @@ public:
     QUuid internalId() const;
 
     /**
+     * @since 6.0
+     */
+    bool isInputMethod() const;
+
+    /**
      * Can be used to by effects to store arbitrary data in the EffectWindow.
      *
      * Invoking this method will emit the signal EffectsHandler::windowDataChanged.

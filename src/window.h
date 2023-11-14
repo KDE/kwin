@@ -533,6 +533,12 @@ class KWIN_EXPORT Window : public QObject
      */
     Q_PROPERTY(KWin::Tile *tile READ tile WRITE setTile NOTIFY tileChanged)
 
+    /**
+     * Returns whether this window is a input method window.
+     * This is only used for Wayland.
+     */
+    Q_PROPERTY(bool inputMethod READ isInputMethod)
+
 public:
     ~Window() override;
 

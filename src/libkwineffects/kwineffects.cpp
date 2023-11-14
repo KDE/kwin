@@ -955,6 +955,7 @@ WINDOW_HELPER(bool, isSkipSwitcher, skipSwitcher)
 WINDOW_HELPER(bool, decorationHasAlpha, decorationHasAlpha)
 WINDOW_HELPER(bool, isUnresponsive, unresponsive)
 WINDOW_HELPER(QList<VirtualDesktop *>, desktops, desktops)
+WINDOW_HELPER(bool, isInputMethod, isInputMethod)
 
 #undef WINDOW_HELPER
 

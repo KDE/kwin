@@ -187,7 +187,7 @@ bool DimInactiveEffect::canDimWindow(const EffectWindow *w) const
         return false;
     }
 
-    if (w->isPopupWindow()) {
+    if (w->isPopupWindow() || w->isInputMethod()) {
         return false;
     }
 
