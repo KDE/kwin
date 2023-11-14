@@ -12,6 +12,7 @@
 
 // Include with base class for effects.
 #include "libkwineffects/kwineffects.h"
+#include "libkwineffects/timeline.h"
 
 namespace KWin
 {

@@ -117,6 +117,7 @@ target_sources(kwin PRIVATE
     libkwineffects/kwinoffscreenquickview.cpp
     libkwineffects/kwinquickeffect.cpp
     libkwineffects/logging.cpp
+    libkwineffects/timeline.cpp
     lidswitchtracker.cpp
     main.cpp
     modifier_only_shortcuts.cpp
@@ -440,6 +441,7 @@ install(FILES
     libkwineffects/kwinoffscreeneffect.h
     libkwineffects/kwinoffscreenquickview.h
     libkwineffects/kwinquickeffect.h
+    libkwineffects/timeline.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/libkwineffects COMPONENT Devel)
 
 install(FILES

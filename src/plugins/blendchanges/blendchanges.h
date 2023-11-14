@@ -9,6 +9,7 @@
 #pragma once
 #include "libkwineffects/kwineffects.h"
 #include "libkwineffects/kwinoffscreeneffect.h"
+#include "libkwineffects/timeline.h"
 #include <chrono>
 
 namespace KWin
