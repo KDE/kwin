@@ -379,6 +379,11 @@ public:
 
     void setPreferredColorDescription(const ColorDescription &descr);
 
+    /**
+     * Traverses the surface sub-tree with this surface as the root.
+     */
+    void traverseTree(std::function<void(SurfaceInterface *surface)> callback);
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the underlying wl_surface resource is about to be freed.

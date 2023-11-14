@@ -201,17 +201,23 @@ void WorkspaceScene::frame(SceneDelegate *delegate, OutputFrame *frame)
                 continue;
             }
             if (auto surface = window->surface()) {
-                surface->frameRendered(frameTime.count());
-                if (auto feedback = surface->takePresentationFeedback(output)) {
-                    frame->addFeedback(std::move(feedback));
-                }
+                surface->traverseTree([&frameTime, &frame, &output](SurfaceInterface *surface) {
+                    surface->frameRendered(frameTime.count());
+                    if (auto feedback = surface->takePresentationFeedback(output)) {
+                        frame->addFeedback(std::move(feedback));
+                    }
+                });
             }
         }
 
         if (m_dndIcon) {
-            m_dndIcon->frameRendered(frameTime.count());
-            if (auto feedback = m_dndIcon->takePresentationFeedback(output)) {
-                frame->addFeedback(std::move(feedback));
+            if (auto surface = m_dndIcon->surface()) {
+                surface->traverseTree([&frameTime, &frame, &output](SurfaceInterface *surface) {
+                    surface->frameRendered(frameTime.count());
+                    if (auto feedback = surface->takePresentationFeedback(output)) {
+                        frame->addFeedback(std::move(feedback));
+                    }
+                });
             }
         }
     }

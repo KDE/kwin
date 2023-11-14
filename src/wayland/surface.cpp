@@ -467,13 +467,6 @@ void SurfaceInterface::frameRendered(quint32 msec)
         wl_callback_send_done(resource, msec);
         wl_resource_destroy(resource);
     }
-
-    for (SubSurfaceInterface *subsurface : std::as_const(d->current->subsurface.below)) {
-        subsurface->surface()->frameRendered(msec);
-    }
-    for (SubSurfaceInterface *subsurface : std::as_const(d->current->subsurface.above)) {
-        subsurface->surface()->frameRendered(msec);
-    }
 }
 
 std::unique_ptr<PresentationFeedback> SurfaceInterface::takePresentationFeedback(Output *output)
@@ -484,16 +477,6 @@ std::unique_ptr<PresentationFeedback> SurfaceInterface::takePresentationFeedback
     std::vector<std::unique_ptr<PresentationFeedback>> feedbacks;
     std::move(d->current->presentationFeedbacks.begin(), d->current->presentationFeedbacks.end(), std::back_inserter(feedbacks));
     d->current->presentationFeedbacks.clear();
-    for (SubSurfaceInterface *subsurface : std::as_const(d->current->subsurface.below)) {
-        auto &subSurfaceFeedbacks = subsurface->surface()->d->current->presentationFeedbacks;
-        std::move(subSurfaceFeedbacks.begin(), subSurfaceFeedbacks.end(), std::back_inserter(feedbacks));
-        subSurfaceFeedbacks.clear();
-    }
-    for (SubSurfaceInterface *subsurface : std::as_const(d->current->subsurface.above)) {
-        auto &subSurfaceFeedbacks = subsurface->surface()->d->current->presentationFeedbacks;
-        std::move(subSurfaceFeedbacks.begin(), subSurfaceFeedbacks.end(), std::back_inserter(feedbacks));
-        subSurfaceFeedbacks.clear();
-    }
     return std::make_unique<PresentationFeedback>(std::move(feedbacks));
 }
 
@@ -1258,6 +1241,18 @@ Transaction *SurfaceInterface::lastTransaction() const
 void SurfaceInterface::setLastTransaction(Transaction *transaction)
 {
     d->lastTransaction = transaction;
+}
+
+void SurfaceInterface::traverseTree(std::function<void(SurfaceInterface *surface)> callback)
+{
+    callback(this);
+
+    for (SubSurfaceInterface *subsurface : std::as_const(d->current->subsurface.below)) {
+        subsurface->surface()->traverseTree(callback);
+    }
+    for (SubSurfaceInterface *subsurface : std::as_const(d->current->subsurface.above)) {
+        subsurface->surface()->traverseTree(callback);
+    }
 }
 
 } // namespace KWin

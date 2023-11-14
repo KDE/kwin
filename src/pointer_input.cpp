@@ -941,9 +941,10 @@ void CursorImage::updateCursorOutputs(const QPointF &pos)
 void CursorImage::markAsRendered(std::chrono::milliseconds timestamp)
 {
     if (m_currentSource == m_serverCursor.surface.get()) {
-        auto cursorSurface = m_serverCursor.surface->surface();
-        if (cursorSurface) {
-            cursorSurface->frameRendered(timestamp.count());
+        if (auto cursorSurface = m_serverCursor.surface->surface()) {
+            cursorSurface->traverseTree([&timestamp](SurfaceInterface *surface) {
+                surface->frameRendered(timestamp.count());
+            });
         }
     }
 }

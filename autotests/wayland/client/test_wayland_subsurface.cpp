@@ -580,11 +580,6 @@ void TestSubSurface::testSyncMode()
     QCOMPARE(childDamagedSpy.count(), 1);
     QVERIFY(childSurface->isMapped());
     QVERIFY(parentSurface->isMapped());
-
-    // sending frame rendered to parent should also send it to child
-    QSignalSpy frameRenderedSpy(surface.get(), &KWayland::Client::Surface::frameRendered);
-    parentSurface->frameRendered(100);
-    QVERIFY(frameRenderedSpy.wait());
 }
 
 void TestSubSurface::testDeSyncMode()

@@ -25,8 +25,7 @@ public:
     explicit DragAndDropIconItem(DragAndDropIcon *icon, Scene *scene, Item *parent = nullptr);
     ~DragAndDropIconItem() override;
 
-    void frameRendered(quint32 timestamp);
-    std::unique_ptr<PresentationFeedback> takePresentationFeedback(Output *output);
+    SurfaceInterface *surface() const;
 
     void setOutput(Output *output);
 

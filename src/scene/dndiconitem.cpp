@@ -30,16 +30,9 @@ DragAndDropIconItem::~DragAndDropIconItem()
 {
 }
 
-void DragAndDropIconItem::frameRendered(quint32 timestamp)
+SurfaceInterface *DragAndDropIconItem::surface() const
 {
-    if (m_surfaceItem) {
-        m_surfaceItem->surface()->frameRendered(timestamp);
-    }
-}
-
-std::unique_ptr<PresentationFeedback> DragAndDropIconItem::takePresentationFeedback(Output *output)
-{
-    return m_surfaceItem ? m_surfaceItem->surface()->takePresentationFeedback(output) : nullptr;
+    return m_surfaceItem ? m_surfaceItem->surface() : nullptr;
 }
 
 void DragAndDropIconItem::setOutput(Output *output)
