@@ -8,7 +8,7 @@
 */
 #pragma once
 #include "kwin_export.h"
-#include "version.h"
+#include "utils/version.h"
 
 #include <stdint.h>
 #include <string_view>

@@ -11,7 +11,7 @@
 #include "glshader.h"
 #include "glplatform.h"
 #include "glutils.h"
-#include "logging_p.h"
+#include "utils/common.h"
 
 #include <QFile>
 
@@ -46,14 +46,14 @@ bool GLShader::loadFromFiles(const QString &vertexFile, const QString &fragmentF
 {
     QFile vf(vertexFile);
     if (!vf.open(QIODevice::ReadOnly)) {
-        qCCritical(LIBKWINGLUTILS) << "Couldn't open" << vertexFile << "for reading!";
+        qCCritical(KWIN_OPENGL) << "Couldn't open" << vertexFile << "for reading!";
         return false;
     }
     const QByteArray vertexSource = vf.readAll();
 
     QFile ff(fragmentFile);
     if (!ff.open(QIODevice::ReadOnly)) {
-        qCCritical(LIBKWINGLUTILS) << "Couldn't open" << fragmentFile << "for reading!";
+        qCCritical(KWIN_OPENGL) << "Couldn't open" << fragmentFile << "for reading!";
         return false;
     }
     const QByteArray fragmentSource = ff.readAll();
@@ -80,12 +80,12 @@ bool GLShader::link()
     glGetProgramiv(m_program, GL_LINK_STATUS, &status);
 
     if (status == 0) {
-        qCCritical(LIBKWINGLUTILS) << "Failed to link shader:"
-                                   << "\n"
-                                   << log;
+        qCCritical(KWIN_OPENGL) << "Failed to link shader:"
+                                << "\n"
+                                << log;
         m_valid = false;
     } else if (length > 0) {
-        qCDebug(LIBKWINGLUTILS) << "Shader link log:" << log;
+        qCDebug(KWIN_OPENGL) << "Shader link log:" << log;
     }
 
     return m_valid;
@@ -130,11 +130,11 @@ bool GLShader::compile(GLuint program, GLenum shaderType, const QByteArray &sour
 
     if (status == 0) {
         const char *typeName = (shaderType == GL_VERTEX_SHADER ? "vertex" : "fragment");
-        qCCritical(LIBKWINGLUTILS) << "Failed to compile" << typeName << "shader:"
-                                   << "\n"
-                                   << log;
+        qCCritical(KWIN_OPENGL) << "Failed to compile" << typeName << "shader:"
+                                << "\n"
+                                << log;
     } else if (length > 0) {
-        qCDebug(LIBKWINGLUTILS) << "Shader compile log:" << log;
+        qCDebug(KWIN_OPENGL) << "Shader compile log:" << log;
     }
 
     if (status != 0) {

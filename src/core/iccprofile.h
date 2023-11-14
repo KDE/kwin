@@ -5,8 +5,8 @@
 */
 #pragma once
 
+#include "core/colorspace.h"
 #include "kwin_export.h"
-#include "libkwineffects/colorspace.h"
 
 #include <QMatrix4x4>
 #include <QString>

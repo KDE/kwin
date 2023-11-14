@@ -6,8 +6,8 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "libkwineffects/glplatform.h"
 #include "mock_gl.h"
+#include "opengl/glplatform.h"
 #include <QTest>
 
 #include <KConfig>

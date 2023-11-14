@@ -16,8 +16,8 @@
 #include <QAction>
 #include <kstandardaction.h>
 
-#include "libkwineffects/glutils.h"
-#include "libkwineffects/renderviewport.h"
+#include "core/renderviewport.h"
+#include "opengl/glutils.h"
 #include <KGlobalAccel>
 
 namespace KWin

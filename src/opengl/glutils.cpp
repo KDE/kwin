@@ -9,10 +9,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "libkwineffects/glutils.h"
+#include "opengl/glutils.h"
 #include "glplatform.h"
 #include "gltexture_p.h"
-#include "logging_p.h"
+#include "utils/common.h"
 
 namespace KWin
 {
@@ -60,7 +60,7 @@ static void initDebugOutput()
         switch (type) {
         case GL_DEBUG_TYPE_ERROR:
         case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
-            qCWarning(LIBKWINGLUTILS, "%#x: %.*s", id, length, message);
+            qCWarning(KWIN_OPENGL, "%#x: %.*s", id, length, message);
             break;
 
         case GL_DEBUG_TYPE_OTHER:
@@ -68,7 +68,7 @@ static void initDebugOutput()
         case GL_DEBUG_TYPE_PORTABILITY:
         case GL_DEBUG_TYPE_PERFORMANCE:
         default:
-            qCDebug(LIBKWINGLUTILS, "%#x: %.*s", id, length, message);
+            qCDebug(KWIN_OPENGL, "%#x: %.*s", id, length, message);
             break;
         }
     };
@@ -171,16 +171,16 @@ bool checkGLError(const char *txt)
 {
     GLenum err = glGetError();
     if (err == GL_CONTEXT_LOST) {
-        qCWarning(LIBKWINGLUTILS) << "GL error: context lost";
+        qCWarning(KWIN_OPENGL) << "GL error: context lost";
         return true;
     }
     bool hasError = false;
     while (err != GL_NO_ERROR) {
-        qCWarning(LIBKWINGLUTILS) << "GL error (" << txt << "): " << formatGLError(err);
+        qCWarning(KWIN_OPENGL) << "GL error (" << txt << "): " << formatGLError(err);
         hasError = true;
         err = glGetError();
         if (err == GL_CONTEXT_LOST) {
-            qCWarning(LIBKWINGLUTILS) << "GL error: context lost";
+            qCWarning(KWIN_OPENGL) << "GL error: context lost";
             break;
         }
     }

@@ -12,10 +12,10 @@
 #include "screenshotdbusinterface2.h"
 
 #include "core/output.h"
-#include "libkwineffects/glplatform.h"
-#include "libkwineffects/glutils.h"
-#include "libkwineffects/rendertarget.h"
-#include "libkwineffects/renderviewport.h"
+#include "core/rendertarget.h"
+#include "core/renderviewport.h"
+#include "opengl/glplatform.h"
+#include "opengl/glutils.h"
 
 #include <QPainter>
 

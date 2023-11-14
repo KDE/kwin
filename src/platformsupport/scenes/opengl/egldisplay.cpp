@@ -10,7 +10,7 @@
 #include "core/graphicsbuffer.h"
 #include "kwineglimagetexture.h"
 #include "kwineglutils_p.h"
-#include "libkwineffects/glutils.h"
+#include "opengl/glutils.h"
 #include "utils/common.h"
 
 #include <QOpenGLContext>

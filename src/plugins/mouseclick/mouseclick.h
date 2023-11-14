@@ -10,8 +10,8 @@
 #pragma once
 
 #include "libkwineffects/effectframe.h"
-#include "libkwineffects/glutils.h"
 #include "libkwineffects/kwineffects.h"
+#include "opengl/glutils.h"
 #include <KLocalizedString>
 #include <QFont>
 #include <QHash>

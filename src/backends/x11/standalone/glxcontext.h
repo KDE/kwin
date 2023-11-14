@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
-#include "libkwineffects/openglcontext.h"
+#include "opengl/openglcontext.h"
 #include "x11_standalone_glx_backend.h"
 
 #include <epoxy/glx.h>

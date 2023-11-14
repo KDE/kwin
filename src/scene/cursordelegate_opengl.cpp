@@ -8,11 +8,11 @@
 #include "compositor.h"
 #include "core/output.h"
 #include "core/renderlayer.h"
+#include "core/rendertarget.h"
+#include "core/renderviewport.h"
 #include "cursor.h"
-#include "libkwineffects/gltexture.h"
-#include "libkwineffects/glutils.h"
-#include "libkwineffects/rendertarget.h"
-#include "libkwineffects/renderviewport.h"
+#include "opengl/gltexture.h"
+#include "opengl/glutils.h"
 #include "scene/cursorscene.h"
 
 #include <cmath>

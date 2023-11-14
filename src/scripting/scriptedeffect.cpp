@@ -18,7 +18,7 @@
 #include "screenedge.h"
 #include "workspace.h"
 // KDE
-#include "libkwineffects/glutils.h"
+#include "opengl/glutils.h"
 #include <KConfigGroup>
 #include <KGlobalAccel>
 #include <KPluginMetaData>

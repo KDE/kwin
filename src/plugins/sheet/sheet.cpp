@@ -15,7 +15,7 @@
 // KConfigSkeleton
 #include "sheetconfig.h"
 
-#include "libkwineffects/renderviewport.h"
+#include "core/renderviewport.h"
 
 // Qt
 #include <QMatrix4x4>

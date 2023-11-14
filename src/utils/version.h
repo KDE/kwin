@@ -21,7 +21,9 @@ public:
     Version(uint32_t major, uint32_t minor, uint32_t patch = 0);
     Version() = default;
 
-    auto operator<=>(const Version &other) const = default;
+    // clang-format off
+    auto operator<=> (const Version &other) const = default;
+    // clang-format on
     bool isValid() const;
     uint32_t majorVersion() const;
     uint32_t minorVersion() const;

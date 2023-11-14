@@ -6,8 +6,8 @@
 
 #include "scene/cursorscene.h"
 #include "core/output.h"
-#include "libkwineffects/rendertarget.h"
-#include "libkwineffects/renderviewport.h"
+#include "core/rendertarget.h"
+#include "core/renderviewport.h"
 #include "scene/cursoritem.h"
 #include "scene/itemrenderer.h"
 

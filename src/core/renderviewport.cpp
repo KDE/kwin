@@ -3,8 +3,8 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "libkwineffects/renderviewport.h"
-#include "libkwineffects/rendertarget.h"
+#include "core/renderviewport.h"
+#include "core/rendertarget.h"
 
 namespace KWin
 {

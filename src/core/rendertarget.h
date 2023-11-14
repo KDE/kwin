@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "libkwineffects/colorspace.h"
+#include "core/colorspace.h"
 
 #include <QImage>
 #include <QMatrix4x4>

@@ -8,8 +8,8 @@
 
 #include <KSharedConfig>
 
-#include "libkwineffects/glshader.h"
 #include "libkwineffects/kwineffects.h"
+#include "opengl/glshader.h"
 
 #include "colorblindnesscorrection_settings.h"
 

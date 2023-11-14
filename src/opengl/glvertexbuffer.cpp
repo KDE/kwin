@@ -14,8 +14,8 @@
 #include "glshader.h"
 #include "glshadermanager.h"
 #include "glutils.h"
-#include "kwineffects.h"
-#include "logging_p.h"
+#include "libkwineffects/kwineffects.h"
+#include "utils/common.h"
 
 #include <QVector4D>
 #include <bitset>
@@ -301,11 +301,11 @@ bool GLVertexBufferPrivate::awaitFence(intptr_t end)
     const BufferFence &fence = fences.front();
 
     if (!fence.signaled()) {
-        qCDebug(LIBKWINGLUTILS) << "Stalling on VBO fence";
+        qCDebug(KWIN_OPENGL) << "Stalling on VBO fence";
         const GLenum ret = glClientWaitSync(fence.sync, GL_SYNC_FLUSH_COMMANDS_BIT, 1000000000);
 
         if (ret == GL_TIMEOUT_EXPIRED || ret == GL_WAIT_FAILED) {
-            qCCritical(LIBKWINGLUTILS) << "Wait failed";
+            qCCritical(KWIN_OPENGL) << "Wait failed";
             return false;
         }
     }

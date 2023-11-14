@@ -8,8 +8,8 @@
 
 #include "screencastsource.h"
 
-#include "libkwineffects/gltexture.h"
-#include "libkwineffects/glutils.h"
+#include "opengl/gltexture.h"
+#include "opengl/glutils.h"
 #include <QImage>
 
 namespace KWin

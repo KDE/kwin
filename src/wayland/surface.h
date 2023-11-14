@@ -6,9 +6,9 @@
 */
 #pragma once
 
+#include "core/colorspace.h"
 #include "core/output.h"
 #include "core/renderbackend.h"
-#include "libkwineffects/colorspace.h"
 
 #include <QMatrix4x4>
 #include <QObject>

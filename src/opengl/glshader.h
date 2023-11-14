@@ -9,7 +9,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
-#include "colorspace.h"
+#include "core/colorspace.h"
 
 #include <QColor>
 #include <QMatrix3x3>

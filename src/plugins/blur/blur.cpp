@@ -10,9 +10,9 @@
 // KConfigSkeleton
 #include "blurconfig.h"
 
-#include "libkwineffects/glplatform.h"
-#include "libkwineffects/rendertarget.h"
-#include "libkwineffects/renderviewport.h"
+#include "core/rendertarget.h"
+#include "core/renderviewport.h"
+#include "opengl/glplatform.h"
 #include "utils/xcbutils.h"
 #include "wayland/blur.h"
 #include "wayland/display.h"

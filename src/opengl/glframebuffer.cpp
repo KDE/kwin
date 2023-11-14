@@ -9,12 +9,12 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "glframebuffer.h"
+#include "core/rendertarget.h"
+#include "core/renderviewport.h"
 #include "glplatform.h"
 #include "gltexture.h"
 #include "glutils.h"
-#include "logging_p.h"
-#include "rendertarget.h"
-#include "renderviewport.h"
+#include "utils/common.h"
 
 namespace KWin
 {
@@ -110,7 +110,7 @@ GLFramebuffer::GLFramebuffer(GLTexture *colorAttachment, Attachment attachment)
     , m_colorAttachment(colorAttachment)
 {
     if (!s_supported) {
-        qCCritical(LIBKWINGLUTILS) << "Framebuffer objects aren't supported!";
+        qCCritical(KWIN_OPENGL) << "Framebuffer objects aren't supported!";
         return;
     }
 
@@ -132,7 +132,7 @@ GLFramebuffer::GLFramebuffer(GLTexture *colorAttachment, Attachment attachment)
 
     if (status != GL_FRAMEBUFFER_COMPLETE) {
         // We have an incomplete framebuffer, consider it invalid
-        qCCritical(LIBKWINGLUTILS) << "Invalid framebuffer status: " << formatFramebufferStatus(status);
+        qCCritical(KWIN_OPENGL) << "Invalid framebuffer status: " << formatFramebufferStatus(status);
         glDeleteFramebuffers(1, &m_handle);
         return;
     }
@@ -165,7 +165,7 @@ GLFramebuffer::~GLFramebuffer()
 bool GLFramebuffer::bind()
 {
     if (!valid()) {
-        qCCritical(LIBKWINGLUTILS) << "Can't enable invalid framebuffer object!";
+        qCCritical(KWIN_OPENGL) << "Can't enable invalid framebuffer object!";
         return false;
     }
 

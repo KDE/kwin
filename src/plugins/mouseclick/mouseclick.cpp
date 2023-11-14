@@ -11,8 +11,8 @@
 // KConfigSkeleton
 #include "mouseclickconfig.h"
 
-#include "libkwineffects/rendertarget.h"
-#include "libkwineffects/renderviewport.h"
+#include "core/rendertarget.h"
+#include "core/renderviewport.h"
 
 #include <QAction>
 

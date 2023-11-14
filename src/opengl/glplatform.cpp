@@ -7,11 +7,11 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "libkwineffects/glplatform.h"
+#include "opengl/glplatform.h"
 // include kwinglutils_funcs.h to avoid the redeclaration issues
 // between qopengl.h and epoxy/gl.h
-#include "libkwineffects/glutils_funcs.h"
 #include "libkwineffects/kwinxcb.h"
+#include "opengl/glutils_funcs.h"
 #include <epoxy/gl.h>
 
 #include <QDebug>

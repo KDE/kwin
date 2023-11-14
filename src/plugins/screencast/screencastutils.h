@@ -6,9 +6,9 @@
 
 #pragma once
 
-#include "libkwineffects/glplatform.h"
-#include "libkwineffects/gltexture.h"
-#include "libkwineffects/glutils.h"
+#include "opengl/glplatform.h"
+#include "opengl/gltexture.h"
+#include "opengl/glutils.h"
 #include <spa/buffer/buffer.h>
 #include <spa/param/video/raw.h>
 

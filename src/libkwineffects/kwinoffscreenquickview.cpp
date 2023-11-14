@@ -9,8 +9,8 @@
 
 #include "libkwineffects/kwinoffscreenquickview.h"
 
-#include "libkwineffects/glutils.h"
 #include "logging_p.h"
+#include "opengl/glutils.h"
 
 #include <QGuiApplication>
 #include <QQmlComponent>

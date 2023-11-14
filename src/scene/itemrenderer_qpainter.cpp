@@ -5,7 +5,7 @@
 */
 
 #include "scene/itemrenderer_qpainter.h"
-#include "libkwineffects/renderviewport.h"
+#include "core/renderviewport.h"
 #include "platformsupport/scenes/qpainter/qpaintersurfacetexture.h"
 #include "scene/imageitem.h"
 #include "scene/workspacescene_qpainter.h"

@@ -18,8 +18,8 @@
 #include <fixx11h.h>
 #include <xcb/glx.h>
 
-#include "libkwineffects/gltexture.h"
-#include "libkwineffects/gltexture_p.h"
+#include "opengl/gltexture.h"
+#include "opengl/gltexture_p.h"
 
 #include <QHash>
 #include <memory>

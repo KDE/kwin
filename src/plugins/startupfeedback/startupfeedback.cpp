@@ -24,9 +24,9 @@
 #include <KSharedConfig>
 #include <KWindowSystem>
 // KWin
-#include "libkwineffects/glutils.h"
-#include "libkwineffects/rendertarget.h"
-#include "libkwineffects/renderviewport.h"
+#include "core/rendertarget.h"
+#include "core/renderviewport.h"
+#include "opengl/glutils.h"
 
 // based on StartupId in KRunner by Lubos Lunak
 // SPDX-FileCopyrightText: 2001 Lubos Lunak <l.lunak@kde.org>

@@ -4,8 +4,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "libkwineffects/rendertarget.h"
-#include "libkwineffects/glutils.h"
+#include "core/rendertarget.h"
+#include "opengl/glutils.h"
 
 namespace KWin
 {

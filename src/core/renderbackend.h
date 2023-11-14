@@ -6,8 +6,8 @@
 
 #pragma once
 
+#include "core/rendertarget.h"
 #include "libkwineffects/kwinglobals.h"
-#include "libkwineffects/rendertarget.h"
 
 #include <QObject>
 

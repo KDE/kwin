@@ -5,7 +5,7 @@
 */
 #pragma once
 
-#include "libkwineffects/colorspace.h"
+#include "core/colorspace.h"
 #include "qwayland-server-frog-color-management-v1.h"
 
 #include <QObject>

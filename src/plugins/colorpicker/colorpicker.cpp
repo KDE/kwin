@@ -7,10 +7,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "colorpicker.h"
-#include "libkwineffects/glutils.h"
-#include "libkwineffects/glutils_funcs.h"
-#include "libkwineffects/rendertarget.h"
-#include "libkwineffects/renderviewport.h"
+#include "core/rendertarget.h"
+#include "core/renderviewport.h"
+#include "opengl/glutils.h"
+#include "opengl/glutils_funcs.h"
 #include <KLocalizedString>
 #include <QDBusConnection>
 #include <QDBusMetaType>

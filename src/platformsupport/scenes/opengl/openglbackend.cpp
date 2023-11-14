@@ -8,7 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "platformsupport/scenes/opengl/openglbackend.h"
-#include "libkwineffects/glutils_funcs.h"
+#include "opengl/glutils_funcs.h"
 
 #include "utils/common.h"
 

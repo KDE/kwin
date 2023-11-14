@@ -11,7 +11,7 @@
 #include "egldisplay.h"
 #include "kwineglimagetexture.h"
 #include "kwineglutils_p.h"
-#include "libkwineffects/glutils.h"
+#include "opengl/glutils.h"
 #include "utils/common.h"
 #include "utils/drm_format_helper.h"
 #include "utils/egl_context_attribute_builder.h"

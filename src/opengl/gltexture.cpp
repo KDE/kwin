@@ -10,11 +10,11 @@
 */
 
 #include "gltexture_p.h"
-#include "libkwineffects/glplatform.h"
-#include "libkwineffects/glutils.h"
-#include "libkwineffects/glutils_funcs.h"
 #include "libkwineffects/kwineffects.h"
-#include "logging_p.h"
+#include "opengl/glplatform.h"
+#include "opengl/glutils.h"
+#include "opengl/glutils_funcs.h"
+#include "utils/common.h"
 
 #include <QImage>
 #include <QPixmap>
@@ -615,7 +615,7 @@ std::unique_ptr<GLTexture> GLTexture::allocate(GLenum internalFormat, const QSiz
     GLuint texture = 0;
     glGenTextures(1, &texture);
     if (texture == 0) {
-        qCWarning(LIBKWINGLUTILS, "generating OpenGL texture handle failed");
+        qCWarning(KWIN_OPENGL, "generating OpenGL texture handle failed");
         return nullptr;
     }
     glBindTexture(GL_TEXTURE_2D, texture);
@@ -651,7 +651,7 @@ std::unique_ptr<GLTexture> GLTexture::upload(const QImage &image)
     GLuint texture = 0;
     glGenTextures(1, &texture);
     if (texture == 0) {
-        qCWarning(LIBKWINGLUTILS, "generating OpenGL texture handle failed");
+        qCWarning(KWIN_OPENGL, "generating OpenGL texture handle failed");
         return nullptr;
     }
     glBindTexture(GL_TEXTURE_2D, texture);

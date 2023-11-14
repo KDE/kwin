@@ -11,7 +11,7 @@
 #include "core/output.h"
 #include "core/outputbackend.h"
 #include "effects.h"
-#include "libkwineffects/gltexture.h"
+#include "opengl/gltexture.h"
 #include "outputscreencastsource.h"
 #include "regionscreencastsource.h"
 #include "scene/workspacescene.h"

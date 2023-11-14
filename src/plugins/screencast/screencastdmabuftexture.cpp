@@ -6,7 +6,7 @@
 
 #include "plugins/screencast/screencastdmabuftexture.h"
 #include "core/graphicsbuffer.h"
-#include "libkwineffects/glutils.h"
+#include "opengl/glutils.h"
 
 namespace KWin
 {

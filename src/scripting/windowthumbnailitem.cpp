@@ -9,9 +9,9 @@
 #include "windowthumbnailitem.h"
 #include "compositor.h"
 #include "core/renderbackend.h"
+#include "core/rendertarget.h"
+#include "core/renderviewport.h"
 #include "effects.h"
-#include "libkwineffects/rendertarget.h"
-#include "libkwineffects/renderviewport.h"
 #include "scene/itemrenderer.h"
 #include "scene/windowitem.h"
 #include "scene/workspacescene.h"
@@ -20,8 +20,8 @@
 #include "window.h"
 #include "workspace.h"
 
-#include "libkwineffects/gltexture.h"
-#include "libkwineffects/glutils.h"
+#include "opengl/gltexture.h"
+#include "opengl/glutils.h"
 
 #include <QQuickWindow>
 #include <QRunnable>

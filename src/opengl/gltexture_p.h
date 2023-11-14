@@ -11,7 +11,7 @@
 
 #pragma once
 
-#include "libkwineffects/glutils.h"
+#include "opengl/glutils.h"
 
 #include <QImage>
 #include <QMatrix4x4>

@@ -45,6 +45,7 @@ target_sources(kwin PRIVATE
     core/colorlut.cpp
     core/colorlut3d.cpp
     core/colorpipelinestage.cpp
+    core/colorspace.cpp
     core/colortransformation.cpp
     core/gbmgraphicsbufferallocator.cpp
     core/graphicsbuffer.cpp
@@ -63,6 +64,8 @@ target_sources(kwin PRIVATE
     core/renderlayer.cpp
     core/renderlayerdelegate.cpp
     core/renderloop.cpp
+    core/rendertarget.cpp
+    core/renderviewport.cpp
     core/session.cpp
     core/session_consolekit.cpp
     core/session_logind.cpp
@@ -106,29 +109,14 @@ target_sources(kwin PRIVATE
     layershellv1integration.cpp
     layershellv1window.cpp
     libkwineffects/anidata.cpp
-    libkwineffects/colorspace.cpp
     libkwineffects/effectframe.cpp
     libkwineffects/effecttogglablestate.cpp
-    libkwineffects/glframebuffer.cpp
-    libkwineffects/gllut.cpp
-    libkwineffects/gllut3D.cpp
-    libkwineffects/glplatform.cpp
-    libkwineffects/glshader.cpp
-    libkwineffects/glshadermanager.cpp
-    libkwineffects/gltexture.cpp
-    libkwineffects/glutils.cpp
-    libkwineffects/glutils_funcs.cpp
-    libkwineffects/glvertexbuffer.cpp
     libkwineffects/kwinanimationeffect.cpp
     libkwineffects/kwineffects.cpp
     libkwineffects/kwinoffscreeneffect.cpp
     libkwineffects/kwinoffscreenquickview.cpp
     libkwineffects/kwinquickeffect.cpp
     libkwineffects/logging.cpp
-    libkwineffects/openglcontext.cpp
-    libkwineffects/rendertarget.cpp
-    libkwineffects/renderviewport.cpp
-    libkwineffects/version.cpp
     lidswitchtracker.cpp
     main.cpp
     modifier_only_shortcuts.cpp
@@ -136,6 +124,17 @@ target_sources(kwin PRIVATE
     moving_client_x11_filter.cpp
     netinfo.cpp
     onscreennotification.cpp
+    opengl/glframebuffer.cpp
+    opengl/gllut.cpp
+    opengl/gllut3D.cpp
+    opengl/glplatform.cpp
+    opengl/glshader.cpp
+    opengl/glshadermanager.cpp
+    opengl/gltexture.cpp
+    opengl/glutils.cpp
+    opengl/glutils_funcs.cpp
+    opengl/glvertexbuffer.cpp
+    opengl/openglcontext.cpp
     options.cpp
     osd.cpp
     outline.cpp
@@ -200,6 +199,7 @@ target_sources(kwin PRIVATE
     tiles/tilemanager.cpp
     touch_input.cpp
     useractions.cpp
+    utils/version.cpp
     virtualdesktops.cpp
     virtualdesktopsdbustypes.cpp
     virtualkeyboard_dbus.cpp
@@ -422,8 +422,11 @@ install(FILES
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin COMPONENT Devel)
 
 install(FILES
+    core/colorspace.h
     core/output.h
     core/renderloop.h
+    core/rendertarget.h
+    core/renderviewport.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/core COMPONENT Devel)
 
 install(FILES
@@ -431,26 +434,28 @@ install(FILES
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/utils COMPONENT Devel)
 
 install(FILES
-    libkwineffects/colorspace.h
-    libkwineffects/glframebuffer.h
-    libkwineffects/gllut.h
-    libkwineffects/gllut3D.h
-    libkwineffects/glplatform.h
-    libkwineffects/glshader.h
-    libkwineffects/glshadermanager.h
-    libkwineffects/gltexture.h
-    libkwineffects/glutils.h
-    libkwineffects/glutils_funcs.h
-    libkwineffects/glvertexbuffer.h
     libkwineffects/kwinanimationeffect.h
     libkwineffects/kwineffects.h
     libkwineffects/kwinglobals.h
     libkwineffects/kwinoffscreeneffect.h
     libkwineffects/kwinoffscreenquickview.h
     libkwineffects/kwinquickeffect.h
-    libkwineffects/rendertarget.h
-    libkwineffects/renderviewport.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/libkwineffects COMPONENT Devel)
+
+install(FILES
+    opengl/glframebuffer.h
+    opengl/gllut.h
+    opengl/gllut3D.h
+    opengl/glplatform.h
+    opengl/glshader.h
+    opengl/glshadermanager.h
+    opengl/gltexture.h
+    opengl/glutils.h
+    opengl/glutils_funcs.h
+    opengl/glvertexbuffer.h
+    opengl/openglcontext.h
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/opengl COMPONENT Devel
+)
 
 set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KWin")
 

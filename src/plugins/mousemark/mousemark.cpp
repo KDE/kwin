@@ -15,9 +15,9 @@
 // KConfigSkeleton
 #include "mousemarkconfig.h"
 
-#include "libkwineffects/glplatform.h"
-#include "libkwineffects/rendertarget.h"
-#include "libkwineffects/renderviewport.h"
+#include "core/rendertarget.h"
+#include "core/renderviewport.h"
+#include "opengl/glplatform.h"
 #include <KGlobalAccel>
 #include <KLocalizedString>
 #include <QAction>

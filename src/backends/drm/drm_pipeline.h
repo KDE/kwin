@@ -17,12 +17,12 @@
 #include <xf86drmMode.h>
 
 #include "core/colorlut.h"
+#include "core/colorspace.h"
 #include "core/output.h"
 #include "core/renderloop_p.h"
 #include "drm_blob.h"
 #include "drm_connector.h"
 #include "drm_plane.h"
-#include "libkwineffects/colorspace.h"
 
 namespace KWin
 {

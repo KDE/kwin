@@ -9,7 +9,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
-#include "kwineffects.h"
+#include "libkwineffects/kwineffects.h"
 
 #include <QColor>
 #include <QRegion>

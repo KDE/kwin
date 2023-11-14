@@ -11,7 +11,7 @@
 
 #include "scene/scene.h"
 
-#include "libkwineffects/colorspace.h"
+#include "core/colorspace.h"
 #include "libkwineffects/kwineffects.h"
 #include "utils/common.h"
 #include "window.h"

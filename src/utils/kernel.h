@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
-#include "libkwineffects/version.h"
+#include "utils/version.h"
 
 #include <sys/utsname.h>
 

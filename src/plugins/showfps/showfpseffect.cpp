@@ -8,7 +8,7 @@
 
 #include "showfpseffect.h"
 #include "core/output.h"
-#include "libkwineffects/renderviewport.h"
+#include "core/renderviewport.h"
 
 #include <QQmlContext>
 

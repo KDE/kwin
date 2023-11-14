@@ -10,9 +10,9 @@
 
 #include "libkwineffects/kwinglobals.h"
 #include "libkwineffects/kwinxcb.h"
-#include "libkwineffects/version.h"
 #include "main.h"
 #include "utils/c_ptr.h"
+#include "utils/version.h"
 
 #include <QList>
 #include <QRect>

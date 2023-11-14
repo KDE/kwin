@@ -8,10 +8,10 @@
 */
 #include "screenedgeeffect.h"
 // KWin
-#include "libkwineffects/gltexture.h"
-#include "libkwineffects/glutils.h"
-#include "libkwineffects/rendertarget.h"
-#include "libkwineffects/renderviewport.h"
+#include "core/rendertarget.h"
+#include "core/renderviewport.h"
+#include "opengl/gltexture.h"
+#include "opengl/glutils.h"
 // KDE
 #include <KConfigGroup>
 #include <KSharedConfig>

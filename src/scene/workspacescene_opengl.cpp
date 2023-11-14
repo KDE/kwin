@@ -13,7 +13,7 @@
 */
 #include "workspacescene_opengl.h"
 
-#include "libkwineffects/glplatform.h"
+#include "opengl/glplatform.h"
 
 #include "compositor.h"
 #include "core/output.h"

@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "libkwineffects/glutils.h"
+#include "opengl/glutils.h"
 
 #include <xcb/sync.h>
 #include <xcb/xcb.h>

@@ -7,8 +7,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "libkwineffects/glplatform.h"
-#include "libkwineffects/glutils.h"
+#include "opengl/glplatform.h"
+#include "opengl/glutils.h"
 
 // Resolves given function, using getProcAddress
 // Useful when functionality is defined in an extension with a different name

@@ -7,11 +7,11 @@
 #include "core/colorlut3d.h"
 #include "core/colortransformation.h"
 #include "core/iccprofile.h"
-#include "libkwineffects/gllut.h"
-#include "libkwineffects/gllut3D.h"
-#include "libkwineffects/glshader.h"
-#include "libkwineffects/glshadermanager.h"
-#include "libkwineffects/gltexture.h"
+#include "opengl/gllut.h"
+#include "opengl/gllut3D.h"
+#include "opengl/glshader.h"
+#include "opengl/glshadermanager.h"
+#include "opengl/gltexture.h"
 
 namespace KWin
 {

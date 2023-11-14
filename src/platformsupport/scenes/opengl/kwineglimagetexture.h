@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "libkwineffects/gltexture.h"
+#include "opengl/gltexture.h"
 
 typedef void *EGLImageKHR;
 typedef void *EGLClientBuffer;

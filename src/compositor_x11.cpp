@@ -12,7 +12,7 @@
 #include "core/overlaywindow.h"
 #include "core/renderbackend.h"
 #include "core/renderlayer.h"
-#include "libkwineffects/glplatform.h"
+#include "opengl/glplatform.h"
 #include "options.h"
 #include "platformsupport/scenes/opengl/openglbackend.h"
 #include "scene/surfaceitem_x11.h"

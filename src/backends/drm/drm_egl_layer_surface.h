@@ -17,7 +17,7 @@
 
 #include "core/outputlayer.h"
 #include "drm_plane.h"
-#include "libkwineffects/gltexture.h"
+#include "opengl/gltexture.h"
 #include "utils/damagejournal.h"
 
 struct gbm_bo;

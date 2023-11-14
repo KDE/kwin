@@ -8,7 +8,7 @@
 */
 // own
 #include "blendchanges.h"
-#include "libkwineffects/glutils.h"
+#include "opengl/glutils.h"
 
 #include <QDBusConnection>
 #include <QTimer>

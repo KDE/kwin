@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "glrendertimequery.h"
-#include "libkwineffects/glplatform.h"
+#include "opengl/glplatform.h"
 
 namespace KWin
 {

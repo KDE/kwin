@@ -10,7 +10,7 @@
 #include "platformsupport/scenes/opengl/eglswapchain.h"
 #include "core/graphicsbuffer.h"
 #include "core/graphicsbufferallocator.h"
-#include "libkwineffects/glutils.h"
+#include "opengl/glutils.h"
 #include "platformsupport/scenes/opengl/eglcontext.h"
 #include "utils/common.h"
 

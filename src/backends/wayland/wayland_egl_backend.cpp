@@ -10,7 +10,7 @@
 
 #include "wayland_egl_backend.h"
 #include "core/gbmgraphicsbufferallocator.h"
-#include "libkwineffects/glutils.h"
+#include "opengl/glutils.h"
 #include "platformsupport/scenes/opengl/basiceglsurfacetexture_wayland.h"
 #include "platformsupport/scenes/opengl/eglswapchain.h"
 #include "platformsupport/scenes/opengl/glrendertimequery.h"

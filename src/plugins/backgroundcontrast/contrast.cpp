@@ -10,8 +10,8 @@
 #include "contrastshader.h"
 // KConfigSkeleton
 
-#include "libkwineffects/rendertarget.h"
-#include "libkwineffects/renderviewport.h"
+#include "core/rendertarget.h"
+#include "core/renderviewport.h"
 #include "utils/xcbutils.h"
 #include "wayland/contrast.h"
 #include "wayland/display.h"

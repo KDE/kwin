@@ -7,8 +7,8 @@
 #include "regionscreencastsource.h"
 #include "screencastutils.h"
 
-#include "libkwineffects/gltexture.h"
-#include "libkwineffects/glutils.h"
+#include "opengl/gltexture.h"
+#include "opengl/glutils.h"
 #include <compositor.h>
 #include <core/output.h>
 #include <drm_fourcc.h>

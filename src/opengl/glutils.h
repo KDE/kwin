@@ -10,13 +10,13 @@
 */
 #pragma once
 
-#include "libkwineffects/colorspace.h"
-#include "libkwineffects/glframebuffer.h"
-#include "libkwineffects/glshader.h"
-#include "libkwineffects/glshadermanager.h"
-#include "libkwineffects/gltexture.h"
-#include "libkwineffects/glutils_funcs.h"
-#include "libkwineffects/glvertexbuffer.h"
+#include "core/colorspace.h"
+#include "opengl/glframebuffer.h"
+#include "opengl/glshader.h"
+#include "opengl/glshadermanager.h"
+#include "opengl/gltexture.h"
+#include "opengl/glutils_funcs.h"
+#include "opengl/glvertexbuffer.h"
 
 #include <QByteArray>
 #include <QList>

@@ -10,8 +10,8 @@
 
 #include "showpaint.h"
 
-#include "libkwineffects/glutils.h"
-#include "libkwineffects/renderviewport.h"
+#include "core/renderviewport.h"
+#include "opengl/glutils.h"
 
 #include <KGlobalAccel>
 #include <KLocalizedString>

@@ -14,7 +14,7 @@
 #include "scene/workspacescene.h"
 #include "utils/common.h"
 
-#include "libkwineffects/glplatform.h"
+#include "opengl/glplatform.h"
 
 namespace KWin
 {

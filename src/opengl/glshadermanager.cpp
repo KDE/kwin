@@ -12,7 +12,7 @@
 #include "glplatform.h"
 #include "glshader.h"
 #include "glvertexbuffer.h"
-#include "logging_p.h"
+#include "utils/common.h"
 
 #include <QFile>
 #include <QTextStream>
@@ -272,11 +272,11 @@ std::unique_ptr<GLShader> ShaderManager::generateCustomShader(ShaderTraits trait
     const QByteArray fragment = fragmentSource.isEmpty() ? generateFragmentSource(traits) : fragmentSource;
 
 #if 0
-    qCDebug(LIBKWINGLUTILS) << "**************";
-    qCDebug(LIBKWINGLUTILS) << vertex;
-    qCDebug(LIBKWINGLUTILS) << "**************";
-    qCDebug(LIBKWINGLUTILS) << fragment;
-    qCDebug(LIBKWINGLUTILS) << "**************";
+    qCDebug(KWIN_OPENGL) << "**************";
+    qCDebug(KWIN_OPENGL) << vertex;
+    qCDebug(KWIN_OPENGL) << "**************";
+    qCDebug(KWIN_OPENGL) << fragment;
+    qCDebug(KWIN_OPENGL) << "**************";
 #endif
 
     std::unique_ptr<GLShader> shader{new GLShader(GLShader::ExplicitLinking)};
@@ -305,7 +305,7 @@ static QString resolveShaderFilePath(const QString &filePath)
     } else if (filePath.endsWith(QStringLiteral(".vert"))) {
         extension = QStringLiteral(".vert");
     } else {
-        qCWarning(LIBKWINGLUTILS) << filePath << "must end either with .vert or .frag";
+        qCWarning(KWIN_OPENGL) << filePath << "must end either with .vert or .frag";
         return QString();
     }
 
@@ -320,7 +320,7 @@ std::unique_ptr<GLShader> ShaderManager::generateShaderFromFile(ShaderTraits tra
         if (file.open(QIODevice::ReadOnly)) {
             return file.readAll();
         }
-        qCCritical(LIBKWINGLUTILS) << "Failed to read shader " << filePath;
+        qCCritical(KWIN_OPENGL) << "Failed to read shader " << filePath;
         return QByteArray();
     };
     QByteArray vertexSource;

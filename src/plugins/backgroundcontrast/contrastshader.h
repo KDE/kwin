@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "libkwineffects/glutils.h"
+#include "opengl/glutils.h"
 
 class QMatrix4x4;
 

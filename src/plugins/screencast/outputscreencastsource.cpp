@@ -10,8 +10,8 @@
 #include "compositor.h"
 #include "core/output.h"
 #include "core/renderloop.h"
-#include "libkwineffects/gltexture.h"
-#include "libkwineffects/glutils.h"
+#include "opengl/gltexture.h"
+#include "opengl/glutils.h"
 #include "scene/workspacescene.h"
 
 namespace KWin

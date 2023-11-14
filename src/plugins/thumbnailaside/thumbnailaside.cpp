@@ -12,7 +12,7 @@
 // KConfigSkeleton
 #include "thumbnailasideconfig.h"
 
-#include "libkwineffects/renderviewport.h"
+#include "core/renderviewport.h"
 
 #include <KGlobalAccel>
 #include <KLocalizedString>

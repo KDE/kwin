@@ -6,7 +6,7 @@
 
 #include "platformsupport/scenes/opengl/basiceglsurfacetexture_wayland.h"
 #include "core/graphicsbufferview.h"
-#include "libkwineffects/gltexture.h"
+#include "opengl/gltexture.h"
 #include "platformsupport/scenes/opengl/abstract_egl_backend.h"
 #include "utils/common.h"
 

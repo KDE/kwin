@@ -9,8 +9,8 @@
 
 #pragma once
 
+#include "core/colorspace.h"
 #include "kwin_export.h"
-#include "libkwineffects/colorspace.h"
 
 #include <QByteArray>
 #include <QList>
