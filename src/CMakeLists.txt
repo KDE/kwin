@@ -107,6 +107,7 @@ target_sources(kwin PRIVATE
     layershellv1window.cpp
     libkwineffects/anidata.cpp
     libkwineffects/colorspace.cpp
+    libkwineffects/effectframe.cpp
     libkwineffects/effecttogglablestate.cpp
     libkwineffects/glframebuffer.cpp
     libkwineffects/gllut.cpp

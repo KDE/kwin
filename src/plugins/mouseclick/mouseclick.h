@@ -9,6 +9,7 @@
 
 #pragma once
 
+#include "libkwineffects/effectframe.h"
 #include "libkwineffects/glutils.h"
 #include "libkwineffects/kwineffects.h"
 #include <KLocalizedString>
@@ -20,6 +21,8 @@ namespace KWin
 {
 
 #define BUTTON_COUNT 3
+
+class EffectFrame;
 
 class MouseEvent
 {

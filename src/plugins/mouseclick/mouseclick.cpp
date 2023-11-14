@@ -188,7 +188,7 @@ std::unique_ptr<EffectFrame> MouseClickEffect::createEffectFrame(const QPoint &p
         return nullptr;
     }
     QPoint point(pos.x() + m_ringMaxSize, pos.y());
-    std::unique_ptr<EffectFrame> frame = effects->effectFrame(EffectFrameStyled, false, point, Qt::AlignLeft);
+    std::unique_ptr<EffectFrame> frame = std::make_unique<EffectFrame>(EffectFrameStyled, false, point, Qt::AlignLeft);
     frame->setFont(m_font);
     frame->setText(text);
     return frame;

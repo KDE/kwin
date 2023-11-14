@@ -70,8 +70,6 @@ class WindowPaintDataPrivate;
 
 class EffectWindow;
 class EffectWindowGroup;
-class EffectFrame;
-class EffectFramePrivate;
 class OffscreenQuickView;
 class Group;
 class Output;
@@ -177,16 +175,6 @@ enum DataRole {
     WindowUnminimizedGrabRole,
     WindowForceBlurRole, ///< For fullscreen effects to enforce blurring of windows,
     WindowForceBackgroundContrastRole, ///< For fullscreen effects to enforce the background contrast,
-};
-
-/**
- * Style types used by @ref EffectFrame.
- * @since 4.6
- */
-enum EffectFrameStyle {
-    EffectFrameNone, ///< Displays no frame around the contents.
-    EffectFrameUnstyled, ///< Displays a basic box around the contents.
-    EffectFrameStyled ///< Displays a Plasma-styled frame around the contents.
 };
 
 /**
@@ -1189,18 +1177,6 @@ public:
      * @since 4.5
      */
     virtual bool decorationsHaveAlpha() const = 0;
-
-    /**
-     * Creates a new frame object. If the frame does not have a static size
-     * then it will be located at @a position with @a alignment. A
-     * non-static frame will automatically adjust its size to fit the contents.
-     * @returns A new @ref EffectFrame. It is the responsibility of the caller to delete the
-     * EffectFrame.
-     * @since 4.6
-     */
-    virtual std::unique_ptr<EffectFrame> effectFrame(EffectFrameStyle style, bool staticSize = true,
-                                                     const QPoint &position = QPoint(-1, -1),
-                                                     Qt::Alignment alignment = Qt::AlignCenter) const = 0;
 
     /**
      * Allows an effect to trigger a reload of itself.
@@ -3495,100 +3471,6 @@ private:
     };
     QHash<EffectWindow *, WindowMotion> m_managedWindows;
     QSet<EffectWindow *> m_movingWindowsSet;
-};
-
-/**
- * @short Helper class for displaying text and icons in frames.
- *
- * Paints text and/or and icon with an optional frame around them. The
- * available frames includes one that follows the default Plasma theme and
- * another that doesn't.
- * It is recommended to use this class whenever displaying text.
- */
-class KWIN_EXPORT EffectFrame
-{
-public:
-    EffectFrame();
-    virtual ~EffectFrame();
-
-    /**
-     * Delete any existing textures to free up graphics memory. They will
-     * be automatically recreated the next time they are required.
-     */
-    virtual void free() = 0;
-
-    /**
-     * Render the frame.
-     */
-    virtual void render(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &region = infiniteRegion(), double opacity = 1.0, double frameOpacity = 1.0) = 0;
-
-    virtual void setPosition(const QPoint &point) = 0;
-    /**
-     * Set the text alignment for static frames and the position alignment
-     * for non-static.
-     */
-    virtual void setAlignment(Qt::Alignment alignment) = 0;
-    virtual Qt::Alignment alignment() const = 0;
-    virtual void setGeometry(const QRect &geometry, bool force = false) = 0;
-    virtual const QRect &geometry() const = 0;
-
-    virtual void setText(const QString &text) = 0;
-    virtual const QString &text() const = 0;
-    virtual void setFont(const QFont &font) = 0;
-    virtual const QFont &font() const = 0;
-    /**
-     * Set the icon that will appear on the left-hand size of the frame.
-     */
-    virtual void setIcon(const QIcon &icon) = 0;
-    virtual const QIcon &icon() const = 0;
-    virtual void setIconSize(const QSize &size) = 0;
-    virtual const QSize &iconSize() const = 0;
-
-    /**
-     * @returns The style of this EffectFrame.
-     */
-    virtual EffectFrameStyle style() const = 0;
-
-    /**
-     * If @p enable is @c true cross fading between icons and text is enabled
-     * By default disabled. Use setCrossFadeProgress to cross fade.
-     * Cross Fading is currently only available if OpenGL is used.
-     * @param enable @c true enables cross fading, @c false disables it again
-     * @see isCrossFade
-     * @see setCrossFadeProgress
-     * @since 4.6
-     */
-    virtual void enableCrossFade(bool enable) = 0;
-    /**
-     * @returns @c true if cross fading is enabled, @c false otherwise
-     * @see enableCrossFade
-     * @since 4.6
-     */
-    virtual bool isCrossFade() const = 0;
-    /**
-     * Sets the current progress for cross fading the last used icon/text
-     * with current icon/text to @p progress.
-     * A value of 0.0 means completely old icon/text, a value of 1.0 means
-     * completely current icon/text.
-     * Default value is 1.0. You have to enable cross fade before using it.
-     * Cross Fading is currently only available if OpenGL is used.
-     * @see enableCrossFade
-     * @see isCrossFade
-     * @see crossFadeProgress
-     * @since 4.6
-     */
-    virtual void setCrossFadeProgress(qreal progress) = 0;
-    /**
-     * @returns The current progress for cross fading
-     * @see setCrossFadeProgress
-     * @see enableCrossFade
-     * @see isCrossFade
-     * @since 4.6
-     */
-    virtual qreal crossFadeProgress() const = 0;
-
-private:
-    const std::unique_ptr<EffectFramePrivate> d;
 };
 
 /**
