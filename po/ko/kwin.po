@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-11 01:44+0000\n"
+"POT-Creation-Date: 2023-11-14 01:39+0000\n"
 "PO-Revision-Date: 2023-10-08 23:38+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -30,29 +30,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "kde@peremen.name"
 
-#: backends/wayland/wayland_output.cpp:251
+#: backends/wayland/wayland_output.cpp:257
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "오른쪽 Ctrl 키를 누르면 포인터 잡기를 해제함"
 
-#: backends/wayland/wayland_output.cpp:253
+#: backends/wayland/wayland_output.cpp:259
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "오른쪽 Ctrl 키를 누르면 포인터를 잡음"
 
-#: backends/wayland/wayland_output.cpp:257
+#: backends/wayland/wayland_output.cpp:263
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1 (%2)"
 msgstr "KDE Wayland 컴포지터 %1(%2)"
 
-#: backends/wayland/wayland_output.cpp:260
+#: backends/wayland/wayland_output.cpp:266
 #, kde-format
 msgid "- Output disabled"
 msgstr "- 출력 비활성화됨"
 
-#: backends/wayland/wayland_output.cpp:262
+#: backends/wayland/wayland_output.cpp:268
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- 출력 어두워짐"
@@ -2192,20 +2192,25 @@ msgid "Arrow draw modifier keys:"
 msgstr "화살표 그리기 수정자 키:"
 
 #: plugins/nightcolor/nightcolormanager.cpp:63
-#, kde-format
-msgctxt "Night Color was disabled"
-msgid "Night Color Off"
+#, fuzzy, kde-format
+#| msgctxt "Night Color was disabled"
+#| msgid "Night Color Off"
+msgctxt "Night Light was disabled"
+msgid "Night Light Off"
 msgstr "야간 색상 꺼짐"
 
 #: plugins/nightcolor/nightcolormanager.cpp:64
-#, kde-format
-msgctxt "Night Color was enabled"
-msgid "Night Color On"
+#, fuzzy, kde-format
+#| msgctxt "Night Color was enabled"
+#| msgid "Night Color On"
+msgctxt "Night Light was enabled"
+msgid "Night Light On"
 msgstr "야간 색상 켜짐"
 
 #: plugins/nightcolor/nightcolormanager.cpp:85
-#, kde-format
-msgid "Toggle Night Color"
+#, fuzzy, kde-format
+#| msgid "Toggle Night Color"
+msgid "Toggle Night Light"
 msgstr "야간 색상 전환"
 
 #: plugins/nightcolor/nightcolormanager.cpp:462

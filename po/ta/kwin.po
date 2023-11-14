@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-11 01:44+0000\n"
+"POT-Creation-Date: 2023-11-14 01:39+0000\n"
 "PO-Revision-Date: 2023-10-22 17:35+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -31,29 +31,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "tamilpc@ambalam.com,rajan_agnel@yahoo.co.in,shafi6_loyola@yahoo.co.in"
 
-#: backends/wayland/wayland_output.cpp:251
+#: backends/wayland/wayland_output.cpp:257
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "சுட்டிக்குறியை விடுவிக்க வலது Ctrl விசையை அழுத்தவும்"
 
-#: backends/wayland/wayland_output.cpp:253
+#: backends/wayland/wayland_output.cpp:259
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "சுட்டிக்குறியை கைபற்ற வலது Ctrl விசையை அழுத்தவும்"
 
-#: backends/wayland/wayland_output.cpp:257
+#: backends/wayland/wayland_output.cpp:263
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1 (%2)"
 msgstr "கே.டீ.யீ. Wayland சாளரநிரல் %1 (%2)"
 
-#: backends/wayland/wayland_output.cpp:260
+#: backends/wayland/wayland_output.cpp:266
 #, kde-format
 msgid "- Output disabled"
 msgstr "- வெளியீடு முடக்கப்பட்டுள்ளது"
 
-#: backends/wayland/wayland_output.cpp:262
+#: backends/wayland/wayland_output.cpp:268
 #, kde-format
 msgid "- Output dimmed"
 msgstr "வெளியீடு மங்கலாக்கப்பட்டுள்ளது"
@@ -2199,20 +2199,25 @@ msgid "Arrow draw modifier keys:"
 msgstr "அம்பு வரைவிற்கான மாற்றிவிசைகள்:"
 
 #: plugins/nightcolor/nightcolormanager.cpp:63
-#, kde-format
-msgctxt "Night Color was disabled"
-msgid "Night Color Off"
+#, fuzzy, kde-format
+#| msgctxt "Night Color was disabled"
+#| msgid "Night Color Off"
+msgctxt "Night Light was disabled"
+msgid "Night Light Off"
 msgstr "இரவு நிறமாற்றம் முடக்கப்பட்டது"
 
 #: plugins/nightcolor/nightcolormanager.cpp:64
-#, kde-format
-msgctxt "Night Color was enabled"
-msgid "Night Color On"
+#, fuzzy, kde-format
+#| msgctxt "Night Color was enabled"
+#| msgid "Night Color On"
+msgctxt "Night Light was enabled"
+msgid "Night Light On"
 msgstr "இரவு நிறமாற்றம் இயக்கப்பட்டது"
 
 #: plugins/nightcolor/nightcolormanager.cpp:85
-#, kde-format
-msgid "Toggle Night Color"
+#, fuzzy, kde-format
+#| msgid "Toggle Night Color"
+msgid "Toggle Night Light"
 msgstr "இரவு நிறமாற்றத்தை நிலைமாற்றி"
 
 #: plugins/nightcolor/nightcolormanager.cpp:462

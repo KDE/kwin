@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin 0\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-11 01:44+0000\n"
+"POT-Creation-Date: 2023-11-14 01:39+0000\n"
 "PO-Revision-Date: 2011-07-12 17:48+0200\n"
 "Last-Translator: Marko Dimjašević <marko@dimjasevic.net>\n"
 "Language-Team: Croatian <kde-croatia-list@lists.sourceforge.net>\n"
@@ -38,29 +38,29 @@ msgstr ""
 "renato@translator-shop.org, zarko.pintar@gmail.com, adundovi@gmail.com, "
 "marko@dimjasevic.net"
 
-#: backends/wayland/wayland_output.cpp:251
+#: backends/wayland/wayland_output.cpp:257
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:253
+#: backends/wayland/wayland_output.cpp:259
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:257
+#: backends/wayland/wayland_output.cpp:263
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1 (%2)"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:260
+#: backends/wayland/wayland_output.cpp:266
 #, kde-format
 msgid "- Output disabled"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:262
+#: backends/wayland/wayland_output.cpp:268
 #, kde-format
 msgid "- Output dimmed"
 msgstr ""
@@ -2270,20 +2270,21 @@ msgstr "Modifikacijske tipke"
 
 #: plugins/nightcolor/nightcolormanager.cpp:63
 #, kde-format
-msgctxt "Night Color was disabled"
-msgid "Night Color Off"
+msgctxt "Night Light was disabled"
+msgid "Night Light Off"
 msgstr ""
 
 #: plugins/nightcolor/nightcolormanager.cpp:64
 #, kde-format
-msgctxt "Night Color was enabled"
-msgid "Night Color On"
+msgctxt "Night Light was enabled"
+msgid "Night Light On"
 msgstr ""
 
 #: plugins/nightcolor/nightcolormanager.cpp:85
-#, kde-format
-msgid "Toggle Night Color"
-msgstr ""
+#, fuzzy, kde-format
+#| msgid "Toggle Floating"
+msgid "Toggle Night Light"
+msgstr "Prebaci lebdenje"
 
 #: plugins/nightcolor/nightcolormanager.cpp:462
 #, kde-format

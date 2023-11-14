@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-11 01:44+0000\n"
+"POT-Creation-Date: 2023-11-14 01:39+0000\n"
 "PO-Revision-Date: 2023-10-19 12:49+0200\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -45,29 +45,29 @@ msgstr ""
 "ecuadra@eloihr.net,jaime@kde.org,vicente@oan.es,yo@miguelrevilla.com,the."
 "blue.valkyrie@gmail.com"
 
-#: backends/wayland/wayland_output.cpp:251
+#: backends/wayland/wayland_output.cpp:257
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Pulse la tecla de Control derecha para liberar el puntero"
 
-#: backends/wayland/wayland_output.cpp:253
+#: backends/wayland/wayland_output.cpp:259
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Pulse la tecla de Control derecha para capturar el puntero"
 
-#: backends/wayland/wayland_output.cpp:257
+#: backends/wayland/wayland_output.cpp:263
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1 (%2)"
 msgstr "Compositor de KDE Wayland %1 (%2)"
 
-#: backends/wayland/wayland_output.cpp:260
+#: backends/wayland/wayland_output.cpp:266
 #, kde-format
 msgid "- Output disabled"
 msgstr "- Salida desactivada"
 
-#: backends/wayland/wayland_output.cpp:262
+#: backends/wayland/wayland_output.cpp:268
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- Salida atenuada"
@@ -2229,20 +2229,25 @@ msgid "Arrow draw modifier keys:"
 msgstr "Teclas modificadoras para dibujo de flechas:"
 
 #: plugins/nightcolor/nightcolormanager.cpp:63
-#, kde-format
-msgctxt "Night Color was disabled"
-msgid "Night Color Off"
+#, fuzzy, kde-format
+#| msgctxt "Night Color was disabled"
+#| msgid "Night Color Off"
+msgctxt "Night Light was disabled"
+msgid "Night Light Off"
 msgstr "Color nocturno desactivado"
 
 #: plugins/nightcolor/nightcolormanager.cpp:64
-#, kde-format
-msgctxt "Night Color was enabled"
-msgid "Night Color On"
+#, fuzzy, kde-format
+#| msgctxt "Night Color was enabled"
+#| msgid "Night Color On"
+msgctxt "Night Light was enabled"
+msgid "Night Light On"
 msgstr "Color nocturno activado"
 
 #: plugins/nightcolor/nightcolormanager.cpp:85
-#, kde-format
-msgid "Toggle Night Color"
+#, fuzzy, kde-format
+#| msgid "Toggle Night Color"
+msgid "Toggle Night Light"
 msgstr "Conmutar color nocturno"
 
 #: plugins/nightcolor/nightcolormanager.cpp:462

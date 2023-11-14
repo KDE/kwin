@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1664578 2023-11-11 02:07:49Z scripty $
+# $Id: kwin.po 1664773 2023-11-14 02:03:04Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-11 01:44+0000\n"
+"POT-Creation-Date: 2023-11-14 01:39+0000\n"
 "PO-Revision-Date: 2023-10-19 07:40+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -43,29 +43,29 @@ msgstr ""
 "roman.maurer@amis.net,gregor.rakar@kiss.si,jlp@holodeck1.com,andrejm@ubuntu."
 "si,matjaz.jeran@amis.net,miles@filmsi.net"
 
-#: backends/wayland/wayland_output.cpp:251
+#: backends/wayland/wayland_output.cpp:257
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Pritisnite desno kontrolko, da spustite kazalko"
 
-#: backends/wayland/wayland_output.cpp:253
+#: backends/wayland/wayland_output.cpp:259
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Pritisnite puščico desno da zgrabite kazalko"
 
-#: backends/wayland/wayland_output.cpp:257
+#: backends/wayland/wayland_output.cpp:263
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1 (%2)"
 msgstr "KDE Wayland Compositor %1 (%2)"
 
-#: backends/wayland/wayland_output.cpp:260
+#: backends/wayland/wayland_output.cpp:266
 #, kde-format
 msgid "- Output disabled"
 msgstr "- Output onemogočen"
 
-#: backends/wayland/wayland_output.cpp:262
+#: backends/wayland/wayland_output.cpp:268
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- Output zamegljen"
@@ -2220,20 +2220,25 @@ msgid "Arrow draw modifier keys:"
 msgstr "Tipke puščic kot spremenilniki za risanje:"
 
 #: plugins/nightcolor/nightcolormanager.cpp:63
-#, kde-format
-msgctxt "Night Color was disabled"
-msgid "Night Color Off"
+#, fuzzy, kde-format
+#| msgctxt "Night Color was disabled"
+#| msgid "Night Color Off"
+msgctxt "Night Light was disabled"
+msgid "Night Light Off"
 msgstr "Izključi nočno barvo"
 
 #: plugins/nightcolor/nightcolormanager.cpp:64
-#, kde-format
-msgctxt "Night Color was enabled"
-msgid "Night Color On"
+#, fuzzy, kde-format
+#| msgctxt "Night Color was enabled"
+#| msgid "Night Color On"
+msgctxt "Night Light was enabled"
+msgid "Night Light On"
 msgstr "Vključi nočno barvo"
 
 #: plugins/nightcolor/nightcolormanager.cpp:85
-#, kde-format
-msgid "Toggle Night Color"
+#, fuzzy, kde-format
+#| msgid "Toggle Night Color"
+msgid "Toggle Night Light"
 msgstr "Preklopi nočno barvo"
 
 #: plugins/nightcolor/nightcolormanager.cpp:462

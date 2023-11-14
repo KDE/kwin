@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-11 01:44+0000\n"
-"PO-Revision-Date: 2023-11-05 19:26+0100\n"
+"POT-Creation-Date: 2023-11-14 01:39+0000\n"
+"PO-Revision-Date: 2023-11-12 21:26+0100\n"
 "Last-Translator: Xavier BESNARD <xavier.besnard@neuf.fr>\n"
 "Language-Team: fr\n"
 "Language: fr\n"
@@ -35,7 +35,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Accelerator-Marker: &\n"
 "X-Environment: kde\n"
-"X-Generator: Lokalize 23.08.2\n"
+"X-Generator: Lokalize 23.08.3\n"
 "X-Text-Markup: kde4\n"
 
 #, kde-format
@@ -54,29 +54,29 @@ msgstr ""
 "cousin@kde.org,gerard@delafond.org, yann.verley@free.fr, nicolas."
 "ternisien@gmail.com,renard@kde.org,sdepiets@gmail.com, xavier.besnard@neuf.fr"
 
-#: backends/wayland/wayland_output.cpp:251
+#: backends/wayland/wayland_output.cpp:257
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:253
+#: backends/wayland/wayland_output.cpp:259
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:257
+#: backends/wayland/wayland_output.cpp:263
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1 (%2)"
 msgstr "Compositeur Wayland de KDE %1 (%2)"
 
-#: backends/wayland/wayland_output.cpp:260
+#: backends/wayland/wayland_output.cpp:266
 #, kde-format
 msgid "- Output disabled"
 msgstr "- Sortie désactivée"
 
-#: backends/wayland/wayland_output.cpp:262
+#: backends/wayland/wayland_output.cpp:268
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- Sortie ajustée"
@@ -1607,10 +1607,9 @@ msgstr "Réglage :"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimPanels)
 #: plugins/diminactive/diminactive_config.ui:47
-#, fuzzy, kde-format
-#| msgid "Docks and panels"
+#, kde-format
 msgid "Docks and panels"
-msgstr "Panneaux et tableaux de bord"
+msgstr "Docks et panneaux"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimDesktop)
 #: plugins/diminactive/diminactive_config.ui:54
@@ -1805,17 +1804,14 @@ msgstr "Centre"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:53
-#, fuzzy, kde-format
-#| msgid ""
-#| "Check this option if the window border should be painted in the titlebar "
-#| "color. Otherwise it will be painted in the background color."
+#, kde-format
 msgid ""
 "Check this option if the window border should be painted in the titlebar "
 "color. Otherwise it will be painted in the background color."
 msgstr ""
-"Si vous cochez cette option, les bordures des fenêtres seront affichées avec "
-"la couleur de la barre de titre. Dans le cas contraire, elles le seront avec "
-"la couleur d'arrière-plan."
+"Cochez cette option si la bordure de la fenêtre doit être peinte avec la "
+"couleur de la barre de titre. Sinon, elle sera peinte avec la couleur "
+"d'arrière-plan."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:56
@@ -1825,16 +1821,14 @@ msgstr "Bordure colorée de fenêtre"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:66
-#, fuzzy, kde-format
-#| msgid ""
-#| "Check this option if you want the buttons to fade in when the mouse "
-#| "pointer hovers over them and fade out again when it moves away."
+#, kde-format
 msgid ""
 "Check this option if you want the buttons to fade in when the mouse pointer "
 "hovers over them and fade out again when it moves away."
 msgstr ""
-"Si vous cochez cette option, les boutons s'estomperont quand le pointeur de "
-"la souris les survole et deviendront plus opaques lorsqu'il s'en éloignera."
+"Cochez cette option si vous voulez que les boutons s'atténuent lorsque le "
+"pointeur de souris les survolent et se renforcent à nouveau lorsqu'il "
+"s'éloigne."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:69
@@ -2262,20 +2256,25 @@ msgid "Arrow draw modifier keys:"
 msgstr "Touches modificatrices :"
 
 #: plugins/nightcolor/nightcolormanager.cpp:63
-#, kde-format
-msgctxt "Night Color was disabled"
-msgid "Night Color Off"
+#, fuzzy, kde-format
+#| msgctxt "Night Color was disabled"
+#| msgid "Night Color Off"
+msgctxt "Night Light was disabled"
+msgid "Night Light Off"
 msgstr "Couleur de nuit désactivée"
 
 #: plugins/nightcolor/nightcolormanager.cpp:64
-#, kde-format
-msgctxt "Night Color was enabled"
-msgid "Night Color On"
+#, fuzzy, kde-format
+#| msgctxt "Night Color was enabled"
+#| msgid "Night Color On"
+msgctxt "Night Light was enabled"
+msgid "Night Light On"
 msgstr "Couleur de nuit activée"
 
 #: plugins/nightcolor/nightcolormanager.cpp:85
-#, kde-format
-msgid "Toggle Night Color"
+#, fuzzy, kde-format
+#| msgid "Toggle Night Color"
+msgid "Toggle Night Light"
 msgstr "Basculer la couleur de nuit"
 
 #: plugins/nightcolor/nightcolormanager.cpp:462
@@ -2392,8 +2391,7 @@ msgid "No other Virtual Desktops to show"
 msgstr "Aucun autre bureau virtuel à afficher"
 
 #: plugins/overview/qml/main.qml:325
-#, fuzzy, kde-format
-#| msgid "Add Virtual Desktop"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "Ajouter un bureau virtuel"
@@ -2405,17 +2403,15 @@ msgid "Configure Virtual Desktops…"
 msgstr "Configurer les claviers virtuels..."
 
 #: plugins/overview/qml/main.qml:660
-#, fuzzy, kde-format
-#| msgid "No matching windows"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
 msgstr "Aucune correspondance de fenêtres"
 
 #: plugins/private/qml/WindowHeapDelegate.qml:155
-#, fuzzy, kde-format
-#| msgid "Drag Down To Close"
+#, kde-format
 msgid "Drag Down To Close"
-msgstr "Glisser vers le bas pour fermer"
+msgstr "Faire glisser vers le bas pour fermer"
 
 #: plugins/private/qml/WindowHeapDelegate.qml:458
 #, kde-format
