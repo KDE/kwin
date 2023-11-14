@@ -474,10 +474,7 @@ std::unique_ptr<PresentationFeedback> SurfaceInterface::takePresentationFeedback
     if (output && (!d->primaryOutput || d->primaryOutput->handle() != output)) {
         return nullptr;
     }
-    std::vector<std::unique_ptr<PresentationFeedback>> feedbacks;
-    std::move(d->current->presentationFeedbacks.begin(), d->current->presentationFeedbacks.end(), std::back_inserter(feedbacks));
-    d->current->presentationFeedbacks.clear();
-    return std::make_unique<PresentationFeedback>(std::move(feedbacks));
+    return std::move(d->current->presentationFeedback);
 }
 
 bool SurfaceInterface::hasFrameCallbacks() const
@@ -652,10 +649,9 @@ void SurfaceState::mergeInto(SurfaceState *target)
         target->colorDescription = colorDescription;
         target->colorDescriptionIsSet = true;
     }
-    for (auto &f : presentationFeedbacks) {
-        target->presentationFeedbacks.push_back(std::move(f));
+    if (presentationFeedback) {
+        target->presentationFeedback = std::move(presentationFeedback);
     }
-    presentationFeedbacks.clear();
 
     *this = SurfaceState{};
     serial = target->serial;
@@ -683,7 +679,7 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     const QRegion oldInputRegion = inputRegion;
 
     if (!next->damage.isEmpty() || !next->bufferDamage.isEmpty()) {
-        current->presentationFeedbacks.clear();
+        current->presentationFeedback.reset();
     }
     next->mergeInto(current.get());
     bufferRef = current->buffer;

@@ -32,29 +32,37 @@ void PresentationTime::wp_presentation_feedback(Resource *resource, wl_resource 
 {
     SurfaceInterface *surf = SurfaceInterface::get(surface);
     SurfaceInterfacePrivate *surfPriv = SurfaceInterfacePrivate::get(surf);
-    surfPriv->pending->presentationFeedbacks.push_back(std::make_unique<PresentationTimeFeedback>(surf, resource->client(), callback));
+
+    auto &feedback = surfPriv->pending->presentationFeedback;
+    if (!feedback) {
+        feedback = std::make_unique<PresentationTimeFeedback>();
+    }
+
+    wl_resource *feedbackResource = wl_resource_create(resource->client(), &wp_presentation_feedback_interface, resource->version(), callback);
+    wl_resource_set_implementation(feedbackResource, nullptr, nullptr, [](wl_resource *resource) {
+        wl_list_remove(wl_resource_get_link(resource));
+    });
+
+    wl_list_insert(feedback->resources.prev, wl_resource_get_link(feedbackResource));
 }
 
-PresentationTimeFeedback::PresentationTimeFeedback(SurfaceInterface *surface, wl_client *client, uint32_t id)
-    : QtWaylandServer::wp_presentation_feedback(client, id, 1)
-    , m_surface(surface)
+PresentationTimeFeedback::PresentationTimeFeedback()
 {
+    wl_list_init(&resources);
 }
 
 PresentationTimeFeedback::~PresentationTimeFeedback()
 {
-    if (m_destroyed) {
-        return;
+    wl_resource *resource;
+    wl_resource *tmp;
+    wl_resource_for_each_safe (resource, tmp, &resources) {
+        wp_presentation_feedback_send_discarded(resource);
+        wl_resource_destroy(resource);
     }
-    send_discarded();
-    wl_resource_destroy(resource()->handle);
 }
 
 void PresentationTimeFeedback::presented(std::chrono::nanoseconds refreshCycleDuration, std::chrono::nanoseconds timestamp, PresentationMode mode)
 {
-    if (m_destroyed) {
-        return;
-    }
     const auto secs = std::chrono::duration_cast<std::chrono::seconds>(timestamp);
     const uint32_t tvSecHi = secs.count() >> 32;
     const uint32_t tvSecLo = secs.count() & 0xffffffff;
@@ -67,13 +75,11 @@ void PresentationTimeFeedback::presented(std::chrono::nanoseconds refreshCycleDu
         flags |= WP_PRESENTATION_FEEDBACK_KIND_VSYNC;
     }
 
-    send_presented(resource()->handle, tvSecHi, tvSecLo, tvNsec, refreshDuration, 0, 0, flags);
-    wl_resource_destroy(resource()->handle);
-    m_destroyed = true;
-}
-
-void PresentationTimeFeedback::wp_presentation_feedback_destroy_resource(Resource *resource)
-{
-    m_destroyed = true;
+    wl_resource *resource;
+    wl_resource *tmp;
+    wl_resource_for_each_safe (resource, tmp, &resources) {
+        wp_presentation_feedback_send_presented(resource, tvSecHi, tvSecLo, tvNsec, refreshDuration, 0, 0, flags);
+        wl_resource_destroy(resource);
+    }
 }
 }

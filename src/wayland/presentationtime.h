@@ -30,19 +30,15 @@ private:
     void wp_presentation_feedback(Resource *resource, wl_resource *surface, uint32_t callback) override;
 };
 
-class PresentationTimeFeedback : public PresentationFeedback, public QtWaylandServer::wp_presentation_feedback
+class PresentationTimeFeedback : public PresentationFeedback
 {
 public:
-    explicit PresentationTimeFeedback(SurfaceInterface *surface, wl_client *client, uint32_t id);
+    PresentationTimeFeedback();
     ~PresentationTimeFeedback() override;
 
+    wl_list resources;
+
     void presented(std::chrono::nanoseconds refreshCycleDuration, std::chrono::nanoseconds timestamp, PresentationMode mode) override;
-
-private:
-    void wp_presentation_feedback_destroy_resource(Resource *resource) override;
-
-    SurfaceInterface *const m_surface;
-    bool m_destroyed = false;
 };
 
 }

@@ -83,18 +83,6 @@ std::unique_ptr<SurfaceTexture> RenderBackend::createSurfaceTextureWayland(Surfa
     return nullptr;
 }
 
-PresentationFeedback::PresentationFeedback(std::vector<std::unique_ptr<PresentationFeedback>> &&feedbacks)
-    : m_subFeedbacks(std::move(feedbacks))
-{
-}
-
-void PresentationFeedback::presented(std::chrono::nanoseconds refreshCycleDuration, std::chrono::nanoseconds timestamp, PresentationMode mode)
-{
-    for (const auto &feedback : m_subFeedbacks) {
-        feedback->presented(refreshCycleDuration, timestamp, mode);
-    }
-}
-
 } // namespace KWin
 
 #include "moc_renderbackend.cpp"

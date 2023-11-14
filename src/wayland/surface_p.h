@@ -69,7 +69,7 @@ struct SurfaceState
     ContentType contentType = ContentType::None;
     PresentationHint presentationHint = PresentationHint::VSync;
     ColorDescription colorDescription = ColorDescription::sRGB;
-    std::vector<std::unique_ptr<PresentationTimeFeedback>> presentationFeedbacks;
+    std::unique_ptr<PresentationTimeFeedback> presentationFeedback;
 
     struct
     {

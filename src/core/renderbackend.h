@@ -31,15 +31,11 @@ class PresentationFeedback
 {
 public:
     explicit PresentationFeedback() = default;
-    explicit PresentationFeedback(std::vector<std::unique_ptr<PresentationFeedback>> &&feedbacks);
     PresentationFeedback(const PresentationFeedback &copy) = delete;
     PresentationFeedback(PresentationFeedback &&move) = default;
     virtual ~PresentationFeedback() = default;
 
-    virtual void presented(std::chrono::nanoseconds refreshCycleDuration, std::chrono::nanoseconds timestamp, PresentationMode mode);
-
-private:
-    std::vector<std::unique_ptr<PresentationFeedback>> m_subFeedbacks;
+    virtual void presented(std::chrono::nanoseconds refreshCycleDuration, std::chrono::nanoseconds timestamp, PresentationMode mode) = 0;
 };
 
 class KWIN_EXPORT OutputFrame
