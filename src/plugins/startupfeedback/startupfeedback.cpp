@@ -82,7 +82,7 @@ StartupFeedbackEffect::StartupFeedbackEffect()
 {
     // TODO: move somewhere that is x11-specific
     if (KWindowSystem::isPlatformX11()) {
-        m_selection = new KSelectionOwner("_KDE_STARTUP_FEEDBACK", xcbConnection(), x11RootWindow(), this);
+        m_selection = new KSelectionOwner("_KDE_STARTUP_FEEDBACK", effects->xcbConnection(), effects->x11RootWindow(), this);
         m_selection->claim(true);
     }
     connect(m_startupInfo, &KStartupInfo::gotNewStartup, this, [](const KStartupInfoId &id, const KStartupInfoData &data) {

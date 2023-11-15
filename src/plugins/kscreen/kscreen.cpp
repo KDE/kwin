@@ -202,7 +202,7 @@ void KscreenEffect::switchState(ScreenState &state)
         value = 0l;
     }
     if (value != -1l && m_atom != XCB_ATOM_NONE) {
-        xcb_change_property(xcbConnection(), XCB_PROP_MODE_REPLACE, x11RootWindow(), m_atom, XCB_ATOM_CARDINAL, 32, 1, &value);
+        xcb_change_property(effects->xcbConnection(), XCB_PROP_MODE_REPLACE, effects->x11RootWindow(), m_atom, XCB_ATOM_CARDINAL, 32, 1, &value);
     }
 }
 

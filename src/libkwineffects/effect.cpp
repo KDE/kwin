@@ -497,16 +497,6 @@ int Effect::requestedEffectChainPosition() const
     return 0;
 }
 
-xcb_connection_t *Effect::xcbConnection() const
-{
-    return effects->xcbConnection();
-}
-
-xcb_window_t Effect::x11RootWindow() const
-{
-    return effects->x11RootWindow();
-}
-
 bool Effect::touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time)
 {
     return false;

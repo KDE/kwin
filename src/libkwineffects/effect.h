@@ -16,8 +16,6 @@
 #include <KPluginFactory>
 #include <KSharedConfig>
 
-#include <xcb/xcb.h> // FIXME: drop it
-
 class QKeyEvent;
 class QTabletEvent;
 
@@ -928,9 +926,6 @@ public Q_SLOTS:
     virtual bool borderActivated(ElectricBorder border);
 
 protected:
-    xcb_connection_t *xcbConnection() const;
-    xcb_window_t x11RootWindow() const;
-
     /**
      * An implementing class can call this with it's kconfig compiled singleton class.
      * This method will perform the instance on the class.
