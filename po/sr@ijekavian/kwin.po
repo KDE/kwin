@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-14 01:39+0000\n"
+"POT-Creation-Date: 2023-11-15 01:39+0000\n"
 "PO-Revision-Date: 2017-12-03 22:53+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -1563,7 +1563,7 @@ msgid "Starts the session without global shortcuts support."
 msgstr "Покреће сесију у закључаном режиму."
 
 # rewrite-msgid: /KActivities/activities/
-#: main_wayland.cpp:383 main_x11.cpp:423
+#: main_wayland.cpp:383 main_x11.cpp:432
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Искључи уклапање са активностима."
@@ -1579,7 +1579,7 @@ msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
 "Програми које треба покренути по покретању вејланда и сервера Икс‑вејланда."
 
-#: main_x11.cpp:65
+#: main_x11.cpp:66
 #, kde-format
 msgid ""
 "KWin is unstable.\n"
@@ -1590,7 +1590,7 @@ msgstr ""
 "Изгледа да је дошло до рушења неколико пута за редом.\n"
 "Можете изабрати неки други менаџер прозора:"
 
-#: main_x11.cpp:257
+#: main_x11.cpp:266
 #, kde-format
 msgid ""
 "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1599,12 +1599,12 @@ msgstr ""
 "kwin: на могу да потврдим избор менаџера, да није већ покренут неки други? "
 "(покушајте са --replace)\n"
 
-#: main_x11.cpp:277
+#: main_x11.cpp:286
 #, kde-format
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr "kwin: у погону је други менаџер прозора (покушајте са --replace)\n"
 
-#: main_x11.cpp:416
+#: main_x11.cpp:425
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Замијени већ покренути ИЦЦЦМ‑у 2.0 сагласни менаџер прозора"

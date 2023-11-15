@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-14 01:39+0000\n"
+"POT-Creation-Date: 2023-11-15 01:39+0000\n"
 "PO-Revision-Date: 2023-11-11 15:53+0100\n"
 "Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
@@ -1435,7 +1435,7 @@ msgstr "Spustí sedenie bez podpory zaknutia obrazovky."
 msgid "Starts the session without global shortcuts support."
 msgstr "Spustí sedenie bez podpory globálnych skratiek."
 
-#: main_wayland.cpp:383 main_x11.cpp:423
+#: main_wayland.cpp:383 main_x11.cpp:432
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Zakázať integrácoi KActivities."
@@ -1450,7 +1450,7 @@ msgstr "Ukončiť po použití sedenia, ktoré je spustené Kwin, zatvorené."
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr "Aplikácie na jedno spustenie servera Wayland a Xwayland sú spustené"
 
-#: main_x11.cpp:65
+#: main_x11.cpp:66
 #, kde-format
 msgid ""
 "KWin is unstable.\n"
@@ -1461,7 +1461,7 @@ msgstr ""
 "Zdá sa, že spadol viackrát po sebe.\n"
 "Vybrať si môžete iného správcu okien, ktorý sa spustí:"
 
-#: main_x11.cpp:257
+#: main_x11.cpp:266
 #, kde-format
 msgid ""
 "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1470,12 +1470,12 @@ msgstr ""
 "kwin: nie je možné získať výber správcu okien, beží už nejaké wm? (skúste "
 "použiť --replace)\n"
 
-#: main_x11.cpp:277
+#: main_x11.cpp:286
 #, kde-format
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr "kwin: beží iný správca okien (skúste použiť --replace)\n"
 
-#: main_x11.cpp:416
+#: main_x11.cpp:425
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Nahradiť už bežiaceho ICCCM2.0 kompatibilného správcu okien"

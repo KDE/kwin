@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-14 01:39+0000\n"
+"POT-Creation-Date: 2023-11-15 01:39+0000\n"
 "PO-Revision-Date: 2023-09-09 09:37+0000\n"
 "Last-Translator: Guðmundur Erlingsson <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
@@ -1434,7 +1434,7 @@ msgstr "Byrjar setuna án stuðnings við lásskjá."
 msgid "Starts the session without global shortcuts support."
 msgstr "Byrjar setuna án stuðnings við altæka flýtilykla."
 
-#: main_wayland.cpp:383 main_x11.cpp:423
+#: main_wayland.cpp:383 main_x11.cpp:432
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Gera samþættingu við KActivities óvirka."
@@ -1449,7 +1449,7 @@ msgstr "Hætta þegar setuforritinu sem KWin ræsti er lokað."
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr "Forrit sem á að ræsa þegar Wayland- og Xwayland-miðlarar eru ræstir"
 
-#: main_x11.cpp:65
+#: main_x11.cpp:66
 #, kde-format
 msgid ""
 "KWin is unstable.\n"
@@ -1460,7 +1460,7 @@ msgstr ""
 "Það virðist hafa hrunið nokkrum sinnum í röð.\n"
 "Þú getur valið annan gluggastjóra til að keyra:"
 
-#: main_x11.cpp:257
+#: main_x11.cpp:266
 #, kde-format
 msgid ""
 "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1469,13 +1469,13 @@ msgstr ""
 "kwin: get ekki gerst gluggastjórinn. Er annar stjóri í gangi? (þú getur "
 "reynt að nota --replace)\n"
 
-#: main_x11.cpp:277
+#: main_x11.cpp:286
 #, kde-format
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr ""
 "kwin: annar gluggastjóri er í gangi (þú getur reynt að nota --replace)\n"
 
-#: main_x11.cpp:416
+#: main_x11.cpp:425
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Skipta út gluggastjóra sem er þegar í gangi og er ICCCM2.0 samhæfður"

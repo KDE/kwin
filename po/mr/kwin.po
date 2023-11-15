@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-14 01:39+0000\n"
+"POT-Creation-Date: 2023-11-15 01:39+0000\n"
 "PO-Revision-Date: 2013-02-24 11:33+0530\n"
 "Last-Translator: Chetan Khona <chetan@kompkin.com>\n"
 "Language-Team: Marathi <kde-i18n-doc@kde.org>\n"
@@ -1419,7 +1419,7 @@ msgstr ""
 msgid "Starts the session without global shortcuts support."
 msgstr ""
 
-#: main_wayland.cpp:383 main_x11.cpp:423
+#: main_wayland.cpp:383 main_x11.cpp:432
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr ""
@@ -1434,7 +1434,7 @@ msgstr ""
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
 
-#: main_x11.cpp:65
+#: main_x11.cpp:66
 #, kde-format
 msgid ""
 "KWin is unstable.\n"
@@ -1445,7 +1445,7 @@ msgstr ""
 "असे वाटते कि ते लागोपाठ बरेच वेळा क्रॅश झाले आहे.\n"
 "चालविण्याकरिता तुम्ही वेगळा चौकट व्यवस्थापक निवडा :"
 
-#: main_x11.cpp:257
+#: main_x11.cpp:266
 #, kde-format
 msgid ""
 "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1454,7 +1454,7 @@ msgstr ""
 "के-विन : चौकट व्यवस्थापक होऊ शकत नाही. वेगळा चौकट व्यवस्थापक चालू आहे का? (--replace "
 "वापरायचा प्रयत्न करा)\n"
 
-#: main_x11.cpp:277
+#: main_x11.cpp:286
 #, fuzzy, kde-format
 #| msgid ""
 #| "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1464,7 +1464,7 @@ msgstr ""
 "के-विन : चौकट व्यवस्थापक होऊ शकत नाही. वेगळा चौकट व्यवस्थापक चालू आहे का? (--replace "
 "वापरायचा प्रयत्न करा)\n"
 
-#: main_x11.cpp:416
+#: main_x11.cpp:425
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "अगोदरच चालू असलेला ICCCM2.0 प्रमाणे चालणारा चौकट व्यवस्थापक बदला"

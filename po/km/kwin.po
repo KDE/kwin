@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-14 01:39+0000\n"
+"POT-Creation-Date: 2023-11-15 01:39+0000\n"
 "PO-Revision-Date: 2012-06-14 11:29+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -1421,7 +1421,7 @@ msgstr ""
 msgid "Starts the session without global shortcuts support."
 msgstr ""
 
-#: main_wayland.cpp:383 main_x11.cpp:423
+#: main_wayland.cpp:383 main_x11.cpp:432
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr ""
@@ -1436,7 +1436,7 @@ msgstr ""
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
 
-#: main_x11.cpp:65
+#: main_x11.cpp:66
 #, kde-format
 msgid ""
 "KWin is unstable.\n"
@@ -1447,7 +1447,7 @@ msgstr ""
 "វា​ហាក់​ដូច​ជា​គាំង​ច្រើន​ដង ។\n"
 "អ្នក​អាច​ជ្រើស​កម្មវិធី​គ្រប់គ្រង​បង្អួច​មួយ​ផ្សេង​ទៀត​ដើម្បី​រត ៖"
 
-#: main_x11.cpp:257
+#: main_x11.cpp:266
 #, kde-format
 msgid ""
 "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1456,7 +1456,7 @@ msgstr ""
 "kwin ៖ មិន​អាច​ទាមទារ​ជម្រើស​កម្មវិធី​គ្រប់គ្រង តើ​មាន wm មួយ​ទៀត​កំពុង​រត់​ឬ ? (ព្យាយាម​ប្រើ --"
 "replace)\n"
 
-#: main_x11.cpp:277
+#: main_x11.cpp:286
 #, fuzzy, kde-format
 #| msgid ""
 #| "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1466,7 +1466,7 @@ msgstr ""
 "kwin ៖ មិន​អាច​ទាមទារ​ជម្រើស​កម្មវិធី​គ្រប់គ្រង តើ​មាន wm មួយ​ទៀត​កំពុង​រត់​ឬ ? (ព្យាយាម​ប្រើ --"
 "replace)\n"
 
-#: main_x11.cpp:416
+#: main_x11.cpp:425
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "ជំនួស​កម្មវិធី​គ្រប់គ្រង​បង្អួច​ដែល​ប្រើ​បាន​ជាមួយ ICCCM2.0 ដែល​កំពុង​រត់"

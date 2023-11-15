@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-14 01:39+0000\n"
+"POT-Creation-Date: 2023-11-15 01:39+0000\n"
 "PO-Revision-Date: 2010-09-24 21:47+0530\n"
 "Last-Translator: Rajesh Ranjan <rajesh672@gmail.com>\n"
 "Language-Team: Maithili <bhashaghar@googlegroups.com>\n"
@@ -1421,7 +1421,7 @@ msgstr ""
 msgid "Starts the session without global shortcuts support."
 msgstr ""
 
-#: main_wayland.cpp:383 main_x11.cpp:423
+#: main_wayland.cpp:383 main_x11.cpp:432
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr ""
@@ -1436,7 +1436,7 @@ msgstr ""
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
 
-#: main_x11.cpp:65
+#: main_x11.cpp:66
 #, kde-format
 msgid ""
 "KWin is unstable.\n"
@@ -1447,7 +1447,7 @@ msgstr ""
 "प्रतीत हाएत अछि जे ई बहुत बेर लगातार क्रैश भए गेल अछि.\n"
 "अहाँ दोसर विंडो प्रबंधक चुनि सकैत छी:"
 
-#: main_x11.cpp:257
+#: main_x11.cpp:266
 #, kde-format
 msgid ""
 "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1456,7 +1456,7 @@ msgstr ""
 "के-विनः प्रबंधक सत्र क्लेम करब मे अक्षम, आन विंडो प्रबंधक चलि रहल अछि. (आजमाबू --replace "
 "कए उपयोग)\n"
 
-#: main_x11.cpp:277
+#: main_x11.cpp:286
 #, fuzzy, kde-format
 #| msgid ""
 #| "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1466,7 +1466,7 @@ msgstr ""
 "के-विनः प्रबंधक सत्र क्लेम करब मे अक्षम, आन विंडो प्रबंधक चलि रहल अछि. (आजमाबू --replace "
 "कए उपयोग)\n"
 
-#: main_x11.cpp:416
+#: main_x11.cpp:425
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "पहिने सँ चलि रहल ICCCM2.0  कम्पलाएँट विंडो प्रबंधक केँ बदलू."

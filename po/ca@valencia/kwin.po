@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-14 01:39+0000\n"
-"PO-Revision-Date: 2023-10-19 11:54+0200\n"
+"POT-Creation-Date: 2023-11-15 01:39+0000\n"
+"PO-Revision-Date: 2023-11-14 10:10+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -1102,12 +1102,12 @@ msgstr "PID"
 #: helpers/killer/killer.cpp:35
 #, kde-format
 msgid "Hostname on which the application is running"
-msgstr "Nom de la màquina on s'executa l'aplicació"
+msgstr "Nom de l'amfitrió on s'executa l'aplicació"
 
 #: helpers/killer/killer.cpp:35
 #, kde-format
 msgid "hostname"
-msgstr "nom de la màquina"
+msgstr "nom de l'amfitrió"
 
 #: helpers/killer/killer.cpp:37
 #, kde-format
@@ -1183,7 +1183,7 @@ msgid ""
 "%3), running on host \"%4\", but the application is not responding.</para>"
 msgstr ""
 "<para>Heu intentat tancar la finestra «%1» de l'aplicació «%2» (ID del "
-"procés: %3), executant-se en el servidor «%4», però l'aplicació no està "
+"procés: %3), executant-se en l'amfitrió «%4», però l'aplicació no està "
 "responent.</para>"
 
 #: helpers/killer/killer.cpp:86
@@ -1444,7 +1444,7 @@ msgstr "Inicia la sessió sense el suport del bloqueig de pantalla."
 msgid "Starts the session without global shortcuts support."
 msgstr "Inicia la sessió sense el suport de les dreceres globals."
 
-#: main_wayland.cpp:383 main_x11.cpp:423
+#: main_wayland.cpp:383 main_x11.cpp:432
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Desactiva la integració de les «KActivities»."
@@ -1463,7 +1463,7 @@ msgstr ""
 "Les aplicacions que s'iniciaran una vegada s'han iniciat Wayland i el "
 "servidor XWayland"
 
-#: main_x11.cpp:65
+#: main_x11.cpp:66
 #, kde-format
 msgid ""
 "KWin is unstable.\n"
@@ -1474,7 +1474,7 @@ msgstr ""
 "Pareix que ha fallat diverses vegades seguides.\n"
 "Podeu seleccionar un altre gestor de finestres que s'haja d'executar:"
 
-#: main_x11.cpp:257
+#: main_x11.cpp:266
 #, kde-format
 msgid ""
 "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1483,14 +1483,14 @@ msgstr ""
 "kwin: no s'ha pogut reclamar la selecció del gestor, hi ha un altre wm "
 "executant-se? (proveu l'ús de --replace)\n"
 
-#: main_x11.cpp:277
+#: main_x11.cpp:286
 #, kde-format
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr ""
 "kwin: hi ha un altre gestor de finestres executant-se (proveu l'ús de --"
 "replace)\n"
 
-#: main_x11.cpp:416
+#: main_x11.cpp:425
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr ""
@@ -1791,8 +1791,8 @@ msgid ""
 "Check this option if the window border should be painted in the titlebar "
 "color. Otherwise it will be painted in the background color."
 msgstr ""
-"Marqueu esta opció si la vora de la finestra s'ha de pintar en el color de "
-"la barra de títol. Altrament es pintarà en el color del fons."
+"Seleccioneu esta opció si la vora de la finestra s'ha de pintar en el color "
+"de la barra de títol. Altrament es pintarà en el color del fons."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:56
@@ -1807,8 +1807,8 @@ msgid ""
 "Check this option if you want the buttons to fade in when the mouse pointer "
 "hovers over them and fade out again when it moves away."
 msgstr ""
-"Marqueu esta opció si voleu que els botons sobreïsquen quan el punter del "
-"ratolí passe per damunt i tornen a l'estat normal quan s'allunye."
+"Seleccioneu esta opció si voleu que els botons sobreïsquen quan el punter "
+"del ratolí passe per damunt i tornen a l'estat normal quan s'allunye."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:69
@@ -2226,26 +2226,21 @@ msgid "Arrow draw modifier keys:"
 msgstr "Tecles modificadores de dibuix amb fletxes:"
 
 #: plugins/nightcolor/nightcolormanager.cpp:63
-#, fuzzy, kde-format
-#| msgctxt "Night Color was disabled"
-#| msgid "Night Color Off"
+#, kde-format
 msgctxt "Night Light was disabled"
 msgid "Night Light Off"
-msgstr "Color de nit desactivat"
+msgstr "Llum de nit desactivada"
 
 #: plugins/nightcolor/nightcolormanager.cpp:64
-#, fuzzy, kde-format
-#| msgctxt "Night Color was enabled"
-#| msgid "Night Color On"
+#, kde-format
 msgctxt "Night Light was enabled"
 msgid "Night Light On"
-msgstr "Color de nit activat"
+msgstr "Llum de nit activada"
 
 #: plugins/nightcolor/nightcolormanager.cpp:85
-#, fuzzy, kde-format
-#| msgid "Toggle Night Color"
+#, kde-format
 msgid "Toggle Night Light"
-msgstr "Canvia el color de nit"
+msgstr "Canvia la llum de nit"
 
 #: plugins/nightcolor/nightcolormanager.cpp:462
 #, kde-format
@@ -3089,7 +3084,7 @@ msgstr "Tipus de coincidència de la cadena de títol de finestra"
 #: rulesettings.kcfg:54
 #, kde-format
 msgid "Machine (hostname)"
-msgstr "Màquina (nom de la màquina)"
+msgstr "Màquina (nom de l'amfitrió)"
 
 #. i18n: ectx: label, entry (clientmachinematch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:57

@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-14 01:39+0000\n"
-"PO-Revision-Date: 2023-10-23 12:56+0300\n"
+"POT-Creation-Date: 2023-11-15 01:39+0000\n"
+"PO-Revision-Date: 2023-11-14 17:58+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -1434,7 +1434,7 @@ msgstr "Oturumu, kilit ekranı desteği olmadan başlatır."
 msgid "Starts the session without global shortcuts support."
 msgstr "Oturumu, global kısayollar desteği olmadan başlatır."
 
-#: main_wayland.cpp:383 main_x11.cpp:423
+#: main_wayland.cpp:383 main_x11.cpp:432
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "KActivities tümleşmesini devre dışı bırak."
@@ -1451,7 +1451,7 @@ msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
 "Wayland ve Xwayland sunucuları başlatıldıktan sonra başlatılacak uygulamalar"
 
-#: main_x11.cpp:65
+#: main_x11.cpp:66
 #, kde-format
 msgid ""
 "KWin is unstable.\n"
@@ -1462,7 +1462,7 @@ msgstr ""
 "Kısa bir sürede birkaç kez çökmüş gibi görünüyor.\n"
 "Çalıştırmak için başka bir pencere yöneticisi seçebilirsiniz:"
 
-#: main_x11.cpp:257
+#: main_x11.cpp:266
 #, kde-format
 msgid ""
 "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1471,12 +1471,12 @@ msgstr ""
 "kwin: yönetici seçimi yapılamıyor, başka bir py(wm) çalışıyor olabilir? (--"
 "replace komutunu deneyin)\n"
 
-#: main_x11.cpp:277
+#: main_x11.cpp:286
 #, kde-format
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr "kwin: farklı bir pencere yöneticisi çalışıyor (--replace deneyin)\n"
 
-#: main_x11.cpp:416
+#: main_x11.cpp:425
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Çalışmakta olan ICCCM2.0 uyumlu pencere yöneticisini değiştir"
@@ -2209,26 +2209,21 @@ msgid "Arrow draw modifier keys:"
 msgstr "Ok çizimi değiştirici düğmeleri:"
 
 #: plugins/nightcolor/nightcolormanager.cpp:63
-#, fuzzy, kde-format
-#| msgctxt "Night Color was disabled"
-#| msgid "Night Color Off"
+#, kde-format
 msgctxt "Night Light was disabled"
 msgid "Night Light Off"
-msgstr "Gece Rengi Kapalı"
+msgstr "Gece Işığı Kapalı"
 
 #: plugins/nightcolor/nightcolormanager.cpp:64
-#, fuzzy, kde-format
-#| msgctxt "Night Color was enabled"
-#| msgid "Night Color On"
+#, kde-format
 msgctxt "Night Light was enabled"
 msgid "Night Light On"
-msgstr "Gece Rengi Açık"
+msgstr "Gece Işığı Açık"
 
 #: plugins/nightcolor/nightcolormanager.cpp:85
-#, fuzzy, kde-format
-#| msgid "Toggle Night Color"
+#, kde-format
 msgid "Toggle Night Light"
-msgstr "Gece Rengini Aç/Kapat"
+msgstr "Gece Işığı Aç/Kapat"
 
 #: plugins/nightcolor/nightcolormanager.cpp:462
 #, kde-format

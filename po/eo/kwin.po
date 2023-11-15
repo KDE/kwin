@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-14 01:39+0000\n"
-"PO-Revision-Date: 2023-10-19 07:22+0100\n"
+"POT-Creation-Date: 2023-11-15 01:39+0000\n"
+"PO-Revision-Date: 2023-11-14 06:59+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -1433,7 +1433,7 @@ msgstr "Komencas la seancon sen subteno de ŝlosa ekrano."
 msgid "Starts the session without global shortcuts support."
 msgstr "Komencas la seancon sen subteno de ĉieaj ŝparvojoj."
 
-#: main_wayland.cpp:383 main_x11.cpp:423
+#: main_wayland.cpp:383 main_x11.cpp:432
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Malebligi KActivities-integriĝon."
@@ -1450,7 +1450,7 @@ msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
 "Aplikoj por komenci post kiam Wayland kaj Xwayland-servilo estas komencitaj"
 
-#: main_x11.cpp:65
+#: main_x11.cpp:66
 #, kde-format
 msgid ""
 "KWin is unstable.\n"
@@ -1461,7 +1461,7 @@ msgstr ""
 "Ŝajne, ĝi kolapsis plurajn fojojn sinsekve.\n"
 "Vi povas elekti alian fenestroadministrilon:"
 
-#: main_x11.cpp:257
+#: main_x11.cpp:266
 #, kde-format
 msgid ""
 "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1470,12 +1470,12 @@ msgstr ""
 "kwin: Ne eblas regi la administradon, ĉu alia fenestroadministrilo ruliĝas? "
 "(Provu --replace)\n"
 
-#: main_x11.cpp:277
+#: main_x11.cpp:286
 #, kde-format
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr "kwin: alia fenestra administranto funkcias (provu uzi --replace)\n"
 
-#: main_x11.cpp:416
+#: main_x11.cpp:425
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Anstataŭigi rulantan ICCCM2.0-konforman fenestroadministrilon"
@@ -2207,26 +2207,21 @@ msgid "Arrow draw modifier keys:"
 msgstr "Modifilaj klavoj por sagdesegnado:"
 
 #: plugins/nightcolor/nightcolormanager.cpp:63
-#, fuzzy, kde-format
-#| msgctxt "Night Color was disabled"
-#| msgid "Night Color Off"
+#, kde-format
 msgctxt "Night Light was disabled"
 msgid "Night Light Off"
-msgstr "Nokta Koloro Malŝaltita"
+msgstr "Nokta Lumo Malŝaltita"
 
 #: plugins/nightcolor/nightcolormanager.cpp:64
-#, fuzzy, kde-format
-#| msgctxt "Night Color was enabled"
-#| msgid "Night Color On"
+#, kde-format
 msgctxt "Night Light was enabled"
 msgid "Night Light On"
-msgstr "Nokta Koloro On"
+msgstr "Nokta Lumo Ŝaltita"
 
 #: plugins/nightcolor/nightcolormanager.cpp:85
-#, fuzzy, kde-format
-#| msgid "Toggle Night Color"
+#, kde-format
 msgid "Toggle Night Light"
-msgstr "Baskuligi Noktan Koloron"
+msgstr "Baskuligi Noktan Lumon"
 
 #: plugins/nightcolor/nightcolormanager.cpp:462
 #, kde-format

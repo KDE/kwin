@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-14 01:39+0000\n"
+"POT-Creation-Date: 2023-11-15 01:39+0000\n"
 "PO-Revision-Date: 2021-11-23 11:35+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -1443,7 +1443,7 @@ msgstr "Munkamenet indítása képernyőzár támogatás nélkül."
 msgid "Starts the session without global shortcuts support."
 msgstr "Munkamenet indítás a globális billentyűparancsok támogatása nélkül."
 
-#: main_wayland.cpp:383 main_x11.cpp:423
+#: main_wayland.cpp:383 main_x11.cpp:432
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "KActivities intergráció kikapcsolása."
@@ -1459,7 +1459,7 @@ msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
 "A Wayland és Xwayland kiszolgálók elindulása után indítandó alkalmazások"
 
-#: main_x11.cpp:65
+#: main_x11.cpp:66
 #, kde-format
 msgid ""
 "KWin is unstable.\n"
@@ -1470,7 +1470,7 @@ msgstr ""
 "egymást követően többször is lefagyott.\n"
 "Válasszon egy másik ablakkezelőt:"
 
-#: main_x11.cpp:257
+#: main_x11.cpp:266
 #, kde-format
 msgid ""
 "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1479,13 +1479,13 @@ msgstr ""
 "Kwin: az ablakkezelő kiválasztása nem sikerült, lehet, hogy már fut egy "
 "másik (próbálja ki a --replace argumentumot)\n"
 
-#: main_x11.cpp:277
+#: main_x11.cpp:286
 #, kde-format
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr ""
 "kwin: egy másik ablakkezelő is fut (próbálja a --replace használatát)\n"
 
-#: main_x11.cpp:416
+#: main_x11.cpp:425
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Átváltás már futó ICCCM2.0-kompatibilis ablakkezelőről"

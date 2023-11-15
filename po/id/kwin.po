@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-14 01:39+0000\n"
+"POT-Creation-Date: 2023-11-15 01:39+0000\n"
 "PO-Revision-Date: 2022-09-27 18:25+0700\n"
 "Last-Translator: Wantoyèk <wantoyek@gmail.com>\n"
 "Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
@@ -1445,7 +1445,7 @@ msgstr "Menjalankan sesi tanpa dukungan layar kunci."
 msgid "Starts the session without global shortcuts support."
 msgstr "Menjalankan sesi tanpa dukungan pintasan global."
 
-#: main_wayland.cpp:383 main_x11.cpp:423
+#: main_wayland.cpp:383 main_x11.cpp:432
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Nonfungsikan integrasi KActivities."
@@ -1462,7 +1462,7 @@ msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
 "Aplikasi untuk menjalankan setelah server Wayland dan Xwayland dijalankan"
 
-#: main_x11.cpp:65
+#: main_x11.cpp:66
 #, kde-format
 msgid ""
 "KWin is unstable.\n"
@@ -1473,7 +1473,7 @@ msgstr ""
 "Kelihatannya KWin telah beberapa kali mogok secara berturut-turut.\n"
 "Kamu bisa memilih pengelola jendela lain untuk dijalankan:"
 
-#: main_x11.cpp:257
+#: main_x11.cpp:266
 #, kde-format
 msgid ""
 "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1482,12 +1482,12 @@ msgstr ""
 "kwin: tak dapat mengklaim pemilihan pengelola. wm lain berjalan? (coba "
 "menggunakan --replace)\n"
 
-#: main_x11.cpp:277
+#: main_x11.cpp:286
 #, kde-format
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr "kwin: pengelola jendela lain berjalan (coba menggunakan --replace)\n"
 
-#: main_x11.cpp:416
+#: main_x11.cpp:425
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Ganti pengelola jendela sesuai-ICCCM2.0 yang telah berjalan"
