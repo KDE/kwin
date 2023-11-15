@@ -390,7 +390,6 @@ int main(int argc, char *argv[])
     // disable highdpi scaling
     setenv("QT_ENABLE_HIGHDPI_SCALING", "0", true);
 
-    qunsetenv("QT_DEVICE_PIXEL_RATIO");
     qunsetenv("QT_SCALE_FACTOR");
     qunsetenv("QT_SCREEN_SCALE_FACTORS");
 

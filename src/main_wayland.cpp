@@ -272,7 +272,6 @@ int main(int argc, char *argv[])
     // enforce our internal qpa plugin, unfortunately command line switch has precedence
     setenv("QT_QPA_PLATFORM", "wayland-org.kde.kwin.qpa", true);
 
-    qunsetenv("QT_DEVICE_PIXEL_RATIO");
     KWin::ApplicationWayland a(argc, argv);
 
     // reset QT_QPA_PLATFORM so we don't propagate it to our children (e.g. apps launched from the overview effect)
