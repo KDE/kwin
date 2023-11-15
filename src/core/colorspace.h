@@ -72,6 +72,7 @@ enum class NamedTransferFunction {
     linear = 1,
     PerceptualQuantizer = 2,
     scRGB = 3,
+    gamma22 = 4,
 };
 
 /**
@@ -106,6 +107,9 @@ public:
 
     QVector3D mapTo(QVector3D rgb, const ColorDescription &other) const;
 
+    /**
+     * This color description describes display-referred sRGB, with a gamma22 transfer function
+     */
     static const ColorDescription sRGB;
 
 private:

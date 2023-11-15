@@ -172,7 +172,7 @@ Colorimetry Colorimetry::fromXYZ(QVector3D red, QVector3D green, QVector3D blue,
     };
 }
 
-const ColorDescription ColorDescription::sRGB = ColorDescription(NamedColorimetry::BT709, NamedTransferFunction::sRGB, 100, 0, 100, 100, 0);
+const ColorDescription ColorDescription::sRGB = ColorDescription(NamedColorimetry::BT709, NamedTransferFunction::gamma22, 100, 0, 100, 100, 0);
 
 static Colorimetry sRGBColorimetry(double factor)
 {
@@ -283,10 +283,18 @@ QVector3D ColorDescription::mapTo(QVector3D rgb, const ColorDescription &dst) co
                "ColorDescription::mapTo", "PQ isn't supported yet");
     switch (m_transferFunction) {
     case NamedTransferFunction::sRGB:
+        rgb /= m_sdrBrightness;
         rgb = QVector3D(srgbToLinear(rgb.x()), srgbToLinear(rgb.y()), srgbToLinear(rgb.z()));
+        break;
+    case NamedTransferFunction::gamma22:
+        rgb /= m_sdrBrightness;
+        rgb = QVector3D(std::pow(rgb.x(), 2.2), std::pow(rgb.y(), 2.2), std::pow(rgb.z(), 2.2));
         break;
     case NamedTransferFunction::linear:
         rgb /= m_sdrBrightness;
+        break;
+    case NamedTransferFunction::scRGB:
+        rgb /= 80.0;
         break;
     case NamedTransferFunction::PerceptualQuantizer:
         return QVector3D();
@@ -295,8 +303,12 @@ QVector3D ColorDescription::mapTo(QVector3D rgb, const ColorDescription &dst) co
     switch (dst.transferFunction()) {
     case NamedTransferFunction::sRGB:
         return QVector3D(linearToSRGB(rgb.x()), linearToSRGB(rgb.y()), linearToSRGB(rgb.z()));
+    case NamedTransferFunction::gamma22:
+        return QVector3D(std::pow(rgb.x(), 1 / 2.2), std::pow(rgb.y(), 1 / 2.2), std::pow(rgb.z(), 1 / 2.2));
     case NamedTransferFunction::linear:
         return rgb * dst.sdrBrightness();
+    case NamedTransferFunction::scRGB:
+        return rgb * 80.0;
     case NamedTransferFunction::PerceptualQuantizer:
         return QVector3D();
     }
