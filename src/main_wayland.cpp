@@ -273,7 +273,6 @@ int main(int argc, char *argv[])
     setenv("QT_QPA_PLATFORM", "wayland-org.kde.kwin.qpa", true);
 
     qunsetenv("QT_DEVICE_PIXEL_RATIO");
-    qputenv("QSG_RENDER_LOOP", "basic");
     KWin::ApplicationWayland a(argc, argv);
 
     // reset QT_QPA_PLATFORM so we don't propagate it to our children (e.g. apps launched from the overview effect)
