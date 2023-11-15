@@ -60,7 +60,10 @@ static void doGrabTexture(GLTexture *texture, spa_data *spa, spa_video_format fo
 
     texture->bind();
     if (GLPlatform::instance()->isGLES()) {
+        GLFramebuffer fbo(texture);
+        GLFramebuffer::pushFramebuffer(&fbo);
         glReadPixels(0, 0, size.width(), size.height(), closestGLType(format), GL_UNSIGNED_BYTE, spa->data);
+        GLFramebuffer::popFramebuffer();
     } else if (GLPlatform::instance()->glVersion() >= Version(4, 5)) {
         glGetTextureImage(texture->texture(), 0, closestGLType(format), GL_UNSIGNED_BYTE, spa->chunk->size, spa->data);
     } else {
