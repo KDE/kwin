@@ -360,7 +360,7 @@ void Workspace::raiseWindow(Window *window, bool nogroup)
         QList<Window *> transients;
         Window *transient_parent = window;
         while ((transient_parent = transient_parent->transientFor())) {
-            transients << transient_parent;
+            transients.prepend(transient_parent);
         }
         for (const auto &transient_parent : std::as_const(transients)) {
             raiseWindow(transient_parent, true);
