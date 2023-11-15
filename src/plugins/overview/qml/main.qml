@@ -41,32 +41,87 @@ FocusScope {
     property real overviewVal: 0
     property real gridVal: 0
 
-    Behavior on overviewVal {
+    states: [
+        State {
+            name: "initial"
+            PropertyChanges {
+                target: container
+                overviewVal: 0
+                gridVal: 0
+            }
+        },
+        State {
+            name: "grid"
+            PropertyChanges {
+                target: container
+                overviewVal: 0
+                gridVal: 1
+            }
+        },
+        State {
+            name: "overview"
+            PropertyChanges {
+                target: container
+                overviewVal: 1
+                gridVal: 0
+            }
+        },
+        State {
+            name: "partialOverview"
+            PropertyChanges {
+                target: container
+                overviewVal: effect.overviewPartialActivationFactor
+                gridVal: 0
+            }
+        },
+        State {
+            name: "partialGrid"
+            PropertyChanges {
+                target: container
+                overviewVal: 0
+                gridVal: effect.gridPartialActivationFactor
+            }
+        },
+        State {
+            name: "transition"
+            PropertyChanges {
+                target: container
+                overviewVal: 1 - effect.transitionPartialActivationFactor
+                gridVal: effect.transitionPartialActivationFactor
+            }
+        }
+    ]
+    state: {
+        // If the effect hasn't started, we remain on the initial state
+        if (!organized) return "initial";
+
+        // If a gesture is ongoing, we use a partial state
+        if (effect.overviewGestureInProgress) return "partialOverview";
+        if (effect.gridGestureInProgress) return "partialGrid";
+        if (effect.transitionGestureInProgress) return "transition";
+
+        // If either the overview or grid gestures are completed, either
+        // by a touchpad/touchscreen gesture or through a shortcut, we use
+        // that state
+        if (effect.overviewPartialActivationFactor === 1) return "overview";
+        if (effect.gridPartialActivationFactor === 1) return "grid";
+
+        // If neither is active, we are in the initial state.
+        if (effect.overviewPartialActivationFactor + effect.gridPartialActivationFactor === 0) return "initial";
+
+        // If we are inbetween a state but no gesture is going on, we snap to
+        // the closest state
+        if (overviewVal >= 0.5) return "overview";
+        if (gridVal >= 0.5) return "grid";
+        return "initial";
+    }
+    transitions: Transition {
+        to: "initial, grid, overview"
         NumberAnimation {
             duration: Kirigami.Units.shortDuration
+            properties: "gridVal, overviewVal"
+            easing.type: Easing.OutCubic
         }
-    }
-
-    Behavior on gridVal {
-        NumberAnimation {
-            duration: Kirigami.Units.shortDuration
-        }
-    }
-
-    function start() {
-        animationEnabled = true;
-        organized = true;
-
-        overviewVal = Qt.binding(() => effect.overviewGestureInProgress ? effect.overviewPartialActivationFactor :
-                                effect.transitionGestureInProgress ?  1 - effect.transitionPartialActivationFactor :
-                                effect.overviewPartialActivationFactor == 1 && effect.transitionPartialActivationFactor == 0)
-        gridVal = Qt.binding(() => effect.transitionGestureInProgress ? effect.transitionPartialActivationFactor :
-                            effect.gridGestureInProgress ? effect.gridPartialActivationFactor :
-                            effect.transitionPartialActivationFactor == 1 && effect.gridPartialActivationFactor == 1)
-    }
-
-    function stop() {
-        organized = false;
     }
 
     function switchTo(desktop) {
@@ -352,7 +407,7 @@ FocusScope {
                 color: Kirigami.Theme.highlightColor
                 visible: gridVal > 0 || nearCurrent
                 anchors.fill: parent
-                property bool shouldBeVisibleInOverview: !(container.organized && effect.searchText.length > 0 && current) || (heap.count !== 0 && effect.filterWindows)
+                property bool shouldBeVisibleInOverview: !(effect.searchText.length > 0 && current) || (heap.count !== 0 && effect.filterWindows)
                 opacity: 1 - overviewVal * (shouldBeVisibleInOverview ? 0 : 1)
 
                 function selectLastItem(direction) {
@@ -550,8 +605,8 @@ FocusScope {
                     focus: current
                     padding: Kirigami.Units.largeSpacing
                     animationDuration: effect.animationDuration
-                    animationEnabled: container.animationEnabled && (gridVal !== 0 || mainBackground.current)
-                    organized: container.organized
+                    animationEnabled:  (gridVal !== 0 || mainBackground.current) && organized
+                    organized: container.state !== "initial"
                     dndManagerStore: desktopGrid.dndManagerStore
                     Keys.priority: Keys.AfterItem
                     Keys.forwardTo: [searchResults, searchField]
@@ -649,12 +704,12 @@ FocusScope {
         Item {
             width: parent.width
             height: parent.height - topBar.height
-            visible: container.organized && effect.searchText.length > 0 && (allDesktopHeaps.currentHeap.count === 0 || !effect.filterWindows)
+            visible: effect.searchText.length > 0 && (allDesktopHeaps.currentHeap.count === 0 || !effect.filterWindows)
             opacity: overviewVal
 
             PlasmaExtras.PlaceholderMessage {
                 id: placeholderMessage
-                visible: container.organized && effect.searchText.length > 0 && allDesktopHeaps.currentHeap.count === 0 && effect.filterWindows
+                visible: effect.searchText.length > 0 && allDesktopHeaps.currentHeap.count === 0 && effect.filterWindows
                 anchors.top: parent.top
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: i18ndc("kwin", "@info:placeholder", "No matching windows")
@@ -710,6 +765,6 @@ FocusScope {
         // don't want the desktop bar changing screenside whilst the user is
         // interacting with it, e.g. by adding desktops
         container.verticalDesktopBar = container.verticalDesktopBar
-        start();
+        organized = true
     }
 }

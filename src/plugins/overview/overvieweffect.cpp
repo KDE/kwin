@@ -296,11 +296,6 @@ void OverviewEffect::activate()
 void OverviewEffect::deactivate()
 {
     const auto screens = effects->screens();
-    for (const auto screen : screens) {
-        if (QuickSceneView *view = viewForScreen(screen)) {
-            QMetaObject::invokeMethod(view->rootItem(), "stop");
-        }
-    }
     m_shutdownTimer->start(animationDuration());
     m_overviewState->deactivate();
 }
