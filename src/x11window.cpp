@@ -20,9 +20,9 @@
 #include "cursor.h"
 #include "decorations/decoratedclient.h"
 #include "decorations/decorationbridge.h"
-#include "effects.h"
 #include "focuschain.h"
 #include "group.h"
+#include "libkwineffects/kwineffects.h"
 #include "netinfo.h"
 #include "placement.h"
 #include "scene/surfaceitem_x11.h"
@@ -561,7 +561,7 @@ bool X11Window::track(xcb_window_t w)
         m_outline = internalWindow->property("__kwin_outline").toBool();
     }
     if (effects) {
-        static_cast<EffectsHandlerImpl *>(effects)->checkInputWindowStacking();
+        effects->checkInputWindowStacking();
     }
 
     switch (kwinApp()->operationMode()) {

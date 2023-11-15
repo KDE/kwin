@@ -15,7 +15,6 @@
 #include "backends/libinput/device.h"
 #include "core/inputbackend.h"
 #include "core/session.h"
-#include "effects.h"
 #include "gestures.h"
 #include "globalshortcuts.h"
 #include "hide_cursor_spy.h"
@@ -529,23 +528,23 @@ public:
         if (!effects) {
             return false;
         }
-        return static_cast<EffectsHandlerImpl *>(effects)->checkInputWindowEvent(event);
+        return effects->checkInputWindowEvent(event);
     }
     bool wheelEvent(WheelEvent *event) override
     {
         if (!effects) {
             return false;
         }
-        return static_cast<EffectsHandlerImpl *>(effects)->checkInputWindowEvent(event);
+        return effects->checkInputWindowEvent(event);
     }
     bool keyEvent(KeyEvent *event) override
     {
-        if (!effects || !static_cast<EffectsHandlerImpl *>(effects)->hasKeyboardGrab()) {
+        if (!effects || !effects->hasKeyboardGrab()) {
             return false;
         }
         waylandServer()->seat()->setFocusedKeyboardSurface(nullptr);
         passToWaylandServer(event);
-        static_cast<EffectsHandlerImpl *>(effects)->grabbedKeyboardEvent(event);
+        effects->grabbedKeyboardEvent(event);
         return true;
     }
     bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override
@@ -553,56 +552,56 @@ public:
         if (!effects) {
             return false;
         }
-        return static_cast<EffectsHandlerImpl *>(effects)->touchDown(id, pos, time);
+        return effects->touchDown(id, pos, time);
     }
     bool touchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time) override
     {
         if (!effects) {
             return false;
         }
-        return static_cast<EffectsHandlerImpl *>(effects)->touchMotion(id, pos, time);
+        return effects->touchMotion(id, pos, time);
     }
     bool touchUp(qint32 id, std::chrono::microseconds time) override
     {
         if (!effects) {
             return false;
         }
-        return static_cast<EffectsHandlerImpl *>(effects)->touchUp(id, time);
+        return effects->touchUp(id, time);
     }
     bool tabletToolEvent(TabletEvent *event) override
     {
         if (!effects) {
             return false;
         }
-        return static_cast<EffectsHandlerImpl *>(effects)->tabletToolEvent(event);
+        return effects->tabletToolEvent(event);
     }
     bool tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId, std::chrono::microseconds time) override
     {
         if (!effects) {
             return false;
         }
-        return static_cast<EffectsHandlerImpl *>(effects)->tabletToolButtonEvent(button, pressed, tabletToolId, time);
+        return effects->tabletToolButtonEvent(button, pressed, tabletToolId, time);
     }
     bool tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId, std::chrono::microseconds time) override
     {
         if (!effects) {
             return false;
         }
-        return static_cast<EffectsHandlerImpl *>(effects)->tabletPadButtonEvent(button, pressed, tabletPadId, time);
+        return effects->tabletPadButtonEvent(button, pressed, tabletPadId, time);
     }
     bool tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time) override
     {
         if (!effects) {
             return false;
         }
-        return static_cast<EffectsHandlerImpl *>(effects)->tabletPadStripEvent(number, position, isFinger, tabletPadId, time);
+        return effects->tabletPadStripEvent(number, position, isFinger, tabletPadId, time);
     }
     bool tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time) override
     {
         if (!effects) {
             return false;
         }
-        return static_cast<EffectsHandlerImpl *>(effects)->tabletPadRingEvent(number, position, isFinger, tabletPadId, time);
+        return effects->tabletPadRingEvent(number, position, isFinger, tabletPadId, time);
     }
 };
 
@@ -3249,7 +3248,7 @@ Window *InputRedirection::findToplevel(const QPointF &pos)
     const bool isScreenLocked = waylandServer() && waylandServer()->isScreenLocked();
     if (!isScreenLocked) {
         // if an effect overrides the cursor we don't have a window to focus
-        if (effects && static_cast<EffectsHandlerImpl *>(effects)->isMouseInterception()) {
+        if (effects && effects->isMouseInterception()) {
             return nullptr;
         }
     }

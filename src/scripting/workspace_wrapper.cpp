@@ -12,7 +12,7 @@
 #include "core/output.h"
 #include "core/outputbackend.h"
 #include "cursor.h"
-#include "effects.h"
+#include "libkwineffects/kwineffects.h"
 #include "outline.h"
 #include "tiles/tilemanager.h"
 #include "virtualdesktops.h"
@@ -333,7 +333,7 @@ bool WorkspaceWrapper::isEffectActive(const QString &pluginId) const
     if (!effects) {
         return false;
     }
-    return static_cast<EffectsHandlerImpl *>(effects)->isEffectActive(pluginId);
+    return effects->isEffectActive(pluginId);
 }
 
 QSize WorkspaceWrapper::desktopGridSize() const

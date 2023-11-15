@@ -11,7 +11,7 @@
 
 #include "compositor.h"
 #include "effectloader.h"
-#include "effects.h"
+#include "libkwineffects/kwineffects.h"
 #include "scene/workspacescene.h"
 #include "wayland_server.h"
 #include "window.h"
@@ -74,10 +74,9 @@ void MaximizeAnimationTest::init()
 
 void MaximizeAnimationTest::cleanup()
 {
-    auto effectsImpl = qobject_cast<EffectsHandlerImpl *>(effects);
-    QVERIFY(effectsImpl);
-    effectsImpl->unloadAllEffects();
-    QVERIFY(effectsImpl->loadedEffects().isEmpty());
+    QVERIFY(effects);
+    effects->unloadAllEffects();
+    QVERIFY(effects->loadedEffects().isEmpty());
 
     Test::destroyWaylandConnection();
 }
@@ -123,12 +122,11 @@ void MaximizeAnimationTest::testMaximizeRestore()
 
     // Load effect that will be tested.
     const QString effectName = QStringLiteral("maximize");
-    auto effectsImpl = qobject_cast<EffectsHandlerImpl *>(effects);
-    QVERIFY(effectsImpl);
-    QVERIFY(effectsImpl->loadEffect(effectName));
-    QCOMPARE(effectsImpl->loadedEffects().count(), 1);
-    QCOMPARE(effectsImpl->loadedEffects().first(), effectName);
-    Effect *effect = effectsImpl->findEffect(effectName);
+    QVERIFY(effects);
+    QVERIFY(effects->loadEffect(effectName));
+    QCOMPARE(effects->loadedEffects().count(), 1);
+    QCOMPARE(effects->loadedEffects().first(), effectName);
+    Effect *effect = effects->findEffect(effectName);
     QVERIFY(effect);
     QVERIFY(!effect->isActive());
 

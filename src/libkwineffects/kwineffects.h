@@ -40,6 +40,8 @@ class KConfigGroup;
 class QFont;
 class QKeyEvent;
 class QMatrix4x4;
+class QMouseEvent;
+class QWheelEvent;
 class QAction;
 class QTabletEvent;
 class QQmlEngine;
@@ -63,16 +65,23 @@ class Display;
 class PaintDataPrivate;
 class WindowPaintDataPrivate;
 
+class Compositor;
+class EffectLoader;
 class EffectWindow;
 class EffectWindowGroup;
 class OffscreenQuickView;
 class Group;
 class Output;
 class Effect;
+class TabletEvent;
+class TabletPadId;
+class TabletToolId;
 class Window;
 class WindowItem;
+class WindowPropertyNotifyX11Filter;
 class WindowQuad;
 class WindowQuadList;
+class WorkspaceScene;
 class VirtualDesktop;
 
 typedef QPair<QString, Effect *> EffectPair;
@@ -133,6 +142,12 @@ KWIN_EXPORT inline QPoint flooredPoint(const QPointF &point)
 class KWIN_EXPORT EffectsHandler : public QObject
 {
     Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.Effects")
+
+    Q_PROPERTY(QStringList activeEffects READ activeEffects)
+    Q_PROPERTY(QStringList loadedEffects READ loadedEffects)
+    Q_PROPERTY(QStringList listOfEffects READ listOfEffects)
+
     Q_PROPERTY(KWin::VirtualDesktop *currentDesktop READ currentDesktop WRITE setCurrentDesktop NOTIFY desktopChanged)
     Q_PROPERTY(QString currentActivity READ currentActivity NOTIFY currentActivityChanged)
     Q_PROPERTY(KWin::EffectWindow *activeWindow READ activeWindow WRITE activateWindow NOTIFY windowActivated)
@@ -176,27 +191,31 @@ class KWIN_EXPORT EffectsHandler : public QObject
 public:
     using TouchBorderCallback = std::function<void(ElectricBorder border, const QPointF &, Output *screen)>;
 
-    explicit EffectsHandler(CompositingType type);
+    EffectsHandler(Compositor *compositor, WorkspaceScene *scene);
     ~EffectsHandler() override;
+
+    // internal (used by kwin core or compositing code)
+    void startPaint();
+
     // for use by effects
-    virtual void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) = 0;
-    virtual void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen) = 0;
-    virtual void postPaintScreen() = 0;
-    virtual void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) = 0;
-    virtual void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) = 0;
-    virtual void postPaintWindow(EffectWindow *w) = 0;
-    virtual void drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) = 0;
-    virtual void renderWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) = 0;
-    virtual QVariant kwinOption(KWinOption kwopt) = 0;
+    void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime);
+    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen);
+    void postPaintScreen();
+    void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime);
+    void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data);
+    void postPaintWindow(EffectWindow *w);
+    void drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data);
+    void renderWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data);
+    QVariant kwinOption(KWinOption kwopt);
     /**
      * Sets the cursor while the mouse is intercepted.
      * @see startMouseInterception
      * @since 4.11
      */
-    virtual void defineCursor(Qt::CursorShape shape) = 0;
-    virtual QPointF cursorPos() const = 0;
-    virtual bool grabKeyboard(Effect *effect) = 0;
-    virtual void ungrabKeyboard() = 0;
+    virtual void defineCursor(Qt::CursorShape shape);
+    QPointF cursorPos() const;
+    bool grabKeyboard(Effect *effect);
+    void ungrabKeyboard();
     /**
      * Ensures that all mouse events are sent to the @p effect.
      * No window will get the mouse events. Only fullscreen effects providing a custom user interface should
@@ -211,13 +230,21 @@ public:
      * @see Effect::windowInputMouseEvent
      * @since 4.11
      */
-    virtual void startMouseInterception(Effect *effect, Qt::CursorShape shape) = 0;
+    void startMouseInterception(Effect *effect, Qt::CursorShape shape);
     /**
      * Releases the hold mouse interception for @p effect
      * @see startMouseInterception
      * @since 4.11
      */
-    virtual void stopMouseInterception(Effect *effect) = 0;
+    void stopMouseInterception(Effect *effect);
+    bool isMouseInterception() const;
+
+    bool checkInputWindowEvent(QMouseEvent *e);
+    bool checkInputWindowEvent(QWheelEvent *e);
+    void checkInputWindowStacking();
+
+    void grabbedKeyboardEvent(QKeyEvent *e);
+    bool hasKeyboardGrab() const;
 
     /**
      * @brief Registers a global pointer shortcut with the provided @p action.
@@ -226,7 +253,7 @@ public:
      * @param pointerButtons The pointer buttons which need to be pressed
      * @param action The action which gets triggered when the shortcut matches
      */
-    virtual void registerPointerShortcut(Qt::KeyboardModifiers modifiers, Qt::MouseButton pointerButtons, QAction *action) = 0;
+    void registerPointerShortcut(Qt::KeyboardModifiers modifiers, Qt::MouseButton pointerButtons, QAction *action);
     /**
      * @brief Registers a global axis shortcut with the provided @p action.
      *
@@ -234,7 +261,7 @@ public:
      * @param axis The direction in which the axis needs to be moved
      * @param action The action which gets triggered when the shortcut matches
      */
-    virtual void registerAxisShortcut(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis, QAction *action) = 0;
+    void registerAxisShortcut(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis, QAction *action);
 
     /**
      * @brief Registers a global touchpad swipe gesture shortcut with the provided @p action.
@@ -243,9 +270,9 @@ public:
      * @param action The action which gets triggered when the gesture triggers
      * @since 5.10
      */
-    virtual void registerTouchpadSwipeShortcut(SwipeDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback = {}) = 0;
+    void registerTouchpadSwipeShortcut(SwipeDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback = {});
 
-    virtual void registerTouchpadPinchShortcut(PinchDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback = {}) = 0;
+    void registerTouchpadPinchShortcut(PinchDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback = {});
 
     /**
      * @brief Registers a global touchscreen swipe gesture shortcut with the provided @p action.
@@ -254,14 +281,14 @@ public:
      * @param action The action which gets triggered when the gesture triggers
      * @since 5.25
      */
-    virtual void registerTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback) = 0;
+    void registerTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback);
 
     // Mouse polling
-    virtual void startMousePolling() = 0;
-    virtual void stopMousePolling() = 0;
+    void startMousePolling();
+    void stopMousePolling();
 
-    virtual void reserveElectricBorder(ElectricBorder border, Effect *effect) = 0;
-    virtual void unreserveElectricBorder(ElectricBorder border, Effect *effect) = 0;
+    void reserveElectricBorder(ElectricBorder border, Effect *effect);
+    void unreserveElectricBorder(ElectricBorder border, Effect *effect);
 
     /**
      * Registers the given @p action for the given @p border to be activated through
@@ -276,7 +303,7 @@ public:
      * @see unregisterTouchBorder
      * @since 5.10
      */
-    virtual void registerTouchBorder(ElectricBorder border, QAction *action) = 0;
+    void registerTouchBorder(ElectricBorder border, QAction *action);
 
     /**
      * Registers the given @p action for the given @p border to be activated through
@@ -294,7 +321,7 @@ public:
      * @see unregisterTouchBorder
      * @since 5.25
      */
-    virtual void registerRealtimeTouchBorder(ElectricBorder border, QAction *action, TouchBorderCallback progressCallback) = 0;
+    void registerRealtimeTouchBorder(ElectricBorder border, QAction *action, TouchBorderCallback progressCallback);
 
     /**
      * Unregisters the given @p action for the given touch @p border.
@@ -302,101 +329,101 @@ public:
      * @see registerTouchBorder
      * @since 5.10
      */
-    virtual void unregisterTouchBorder(ElectricBorder border, QAction *action) = 0;
+    void unregisterTouchBorder(ElectricBorder border, QAction *action);
 
     // functions that allow controlling windows/desktop
-    virtual void activateWindow(KWin::EffectWindow *c) = 0;
-    virtual KWin::EffectWindow *activeWindow() const = 0;
-    Q_SCRIPTABLE virtual void moveWindow(KWin::EffectWindow *w, const QPoint &pos, bool snap = false, double snapAdjust = 1.0) = 0;
+    void activateWindow(KWin::EffectWindow *c);
+    KWin::EffectWindow *activeWindow() const;
+    Q_SCRIPTABLE void moveWindow(KWin::EffectWindow *w, const QPoint &pos, bool snap = false, double snapAdjust = 1.0);
 
     /**
      * Moves a window to the given desktops
      * On X11, the window will end up on the last window in the list
      * Setting this to an empty list will set the window on all desktops
      */
-    Q_SCRIPTABLE virtual void windowToDesktops(KWin::EffectWindow *w, const QList<KWin::VirtualDesktop *> &desktops) = 0;
+    Q_SCRIPTABLE void windowToDesktops(KWin::EffectWindow *w, const QList<KWin::VirtualDesktop *> &desktops);
 
-    Q_SCRIPTABLE virtual void windowToScreen(KWin::EffectWindow *w, Output *screen) = 0;
-    virtual void setShowingDesktop(bool showing) = 0;
+    Q_SCRIPTABLE void windowToScreen(KWin::EffectWindow *w, Output *screen);
+    void setShowingDesktop(bool showing);
 
     // Activities
     /**
      * @returns The ID of the current activity.
      */
-    virtual QString currentActivity() const = 0;
+    QString currentActivity() const;
     // Desktops
     /**
      * @returns The current desktop.
      */
-    virtual VirtualDesktop *currentDesktop() const = 0;
+    VirtualDesktop *currentDesktop() const;
     /**
      * @returns Total number of desktops currently in existence.
      */
-    virtual QList<VirtualDesktop *> desktops() const = 0;
+    QList<VirtualDesktop *> desktops() const;
     /**
      * Set the current desktop to @a desktop.
      */
-    virtual void setCurrentDesktop(KWin::VirtualDesktop *desktop) = 0;
+    void setCurrentDesktop(KWin::VirtualDesktop *desktop);
     /**
      * @returns The size of desktop layout in grid units.
      */
-    virtual QSize desktopGridSize() const = 0;
+    QSize desktopGridSize() const;
     /**
      * @returns The width of desktop layout in grid units.
      */
-    virtual int desktopGridWidth() const = 0;
+    int desktopGridWidth() const;
     /**
      * @returns The height of desktop layout in grid units.
      */
-    virtual int desktopGridHeight() const = 0;
+    int desktopGridHeight() const;
     /**
      * @returns The width of desktop layout in pixels.
      */
-    virtual int workspaceWidth() const = 0;
+    int workspaceWidth() const;
     /**
      * @returns The height of desktop layout in pixels.
      */
-    virtual int workspaceHeight() const = 0;
+    int workspaceHeight() const;
     /**
      * @returns The desktop at the point @a coords or 0 if no desktop exists at that
      * point. @a coords is to be in grid units.
      */
-    virtual VirtualDesktop *desktopAtCoords(QPoint coords) const = 0;
+    VirtualDesktop *desktopAtCoords(QPoint coords) const;
     /**
      * @returns The coords of the specified @a desktop in grid units.
      */
-    virtual QPoint desktopGridCoords(VirtualDesktop *desktop) const = 0;
+    QPoint desktopGridCoords(VirtualDesktop *desktop) const;
     /**
      * @returns The coords of the top-left corner of @a desktop in pixels.
      */
-    virtual QPoint desktopCoords(VirtualDesktop *desktop) const = 0;
+    QPoint desktopCoords(VirtualDesktop *desktop) const;
     /**
      * @returns The desktop above the given @a desktop. Wraps around to the bottom of
      * the layout if @a wrap is set. If @a id is not set use the current one.
      */
-    Q_SCRIPTABLE virtual KWin::VirtualDesktop *desktopAbove(KWin::VirtualDesktop *desktop = nullptr, bool wrap = true) const = 0;
+    Q_SCRIPTABLE KWin::VirtualDesktop *desktopAbove(KWin::VirtualDesktop *desktop = nullptr, bool wrap = true) const;
     /**
      * @returns The desktop to the right of the given @a desktop. Wraps around to the
      * left of the layout if @a wrap is set. If @a id is not set use the current one.
      */
-    Q_SCRIPTABLE virtual KWin::VirtualDesktop *desktopToRight(KWin::VirtualDesktop *desktop = nullptr, bool wrap = true) const = 0;
+    Q_SCRIPTABLE KWin::VirtualDesktop *desktopToRight(KWin::VirtualDesktop *desktop = nullptr, bool wrap = true) const;
     /**
      * @returns The desktop below the given @a desktop. Wraps around to the top of the
      * layout if @a wrap is set. If @a id is not set use the current one.
      */
-    Q_SCRIPTABLE virtual KWin::VirtualDesktop *desktopBelow(KWin::VirtualDesktop *desktop = nullptr, bool wrap = true) const = 0;
+    Q_SCRIPTABLE KWin::VirtualDesktop *desktopBelow(KWin::VirtualDesktop *desktop = nullptr, bool wrap = true) const;
     /**
      * @returns The desktop to the left of the given @a desktop. Wraps around to the
      * right of the layout if @a wrap is set. If @a id is not set use the current one.
      */
-    Q_SCRIPTABLE virtual KWin::VirtualDesktop *desktopToLeft(KWin::VirtualDesktop *desktop = nullptr, bool wrap = true) const = 0;
-    Q_SCRIPTABLE virtual QString desktopName(KWin::VirtualDesktop *desktop) const = 0;
-    virtual bool optionRollOverDesktops() const = 0;
+    Q_SCRIPTABLE KWin::VirtualDesktop *desktopToLeft(KWin::VirtualDesktop *desktop = nullptr, bool wrap = true) const;
+    Q_SCRIPTABLE QString desktopName(KWin::VirtualDesktop *desktop) const;
+    bool optionRollOverDesktops() const;
 
-    virtual Output *activeScreen() const = 0; // Xinerama
-    virtual QRectF clientArea(clientAreaOption, const Output *screen, const VirtualDesktop *desktop) const = 0;
-    virtual QRectF clientArea(clientAreaOption, const EffectWindow *c) const = 0;
-    virtual QRectF clientArea(clientAreaOption, const QPoint &p, const VirtualDesktop *desktop) const = 0;
+    Output *activeScreen() const; // Xinerama
+    QRectF clientArea(clientAreaOption, const Output *screen, const VirtualDesktop *desktop) const;
+    QRectF clientArea(clientAreaOption, const EffectWindow *c) const;
+    QRectF clientArea(clientAreaOption, const QPoint &p, const VirtualDesktop *desktop) const;
 
     /**
      * The bounding size of all screens combined. Overlapping areas
@@ -406,7 +433,7 @@ public:
      * @see virtualScreenSizeChanged()
      * @since 5.0
      */
-    virtual QSize virtualScreenSize() const = 0;
+    QSize virtualScreenSize() const;
     /**
      * The bounding geometry of all outputs combined. Always starts at (0,0) and has
      * virtualScreenSize as it's size.
@@ -415,7 +442,7 @@ public:
      * @see virtualScreenGeometryChanged()
      * @since 5.0
      */
-    virtual QRect virtualScreenGeometry() const = 0;
+    QRect virtualScreenGeometry() const;
     /**
      * Factor by which animation speed in the effect should be modified (multiplied).
      * If configurable in the effect itself, the option should have also 'default'
@@ -423,10 +450,10 @@ public:
      * Note: The factor can be also 0, so make sure your code can cope with 0ms time
      * if used manually.
      */
-    virtual double animationTimeFactor() const = 0;
+    double animationTimeFactor() const;
 
-    Q_SCRIPTABLE virtual KWin::EffectWindow *findWindow(WId id) const = 0;
-    Q_SCRIPTABLE virtual KWin::EffectWindow *findWindow(SurfaceInterface *surf) const = 0;
+    Q_SCRIPTABLE KWin::EffectWindow *findWindow(WId id) const;
+    Q_SCRIPTABLE KWin::EffectWindow *findWindow(SurfaceInterface *surf) const;
     /**
      * Finds the EffectWindow for the internal window @p w.
      * If there is no such window @c null is returned.
@@ -436,38 +463,38 @@ public:
      *
      * @since 5.16
      */
-    Q_SCRIPTABLE virtual KWin::EffectWindow *findWindow(QWindow *w) const = 0;
+    Q_SCRIPTABLE KWin::EffectWindow *findWindow(QWindow *w) const;
     /**
      * Finds the EffectWindow for the Window with KWin internal @p id.
      * If there is no such window @c null is returned.
      *
      * @since 5.16
      */
-    Q_SCRIPTABLE virtual KWin::EffectWindow *findWindow(const QUuid &id) const = 0;
-    virtual EffectWindowList stackingOrder() const = 0;
+    Q_SCRIPTABLE KWin::EffectWindow *findWindow(const QUuid &id) const;
+    EffectWindowList stackingOrder() const;
     // window will be temporarily painted as if being at the top of the stack
-    Q_SCRIPTABLE virtual void setElevatedWindow(KWin::EffectWindow *w, bool set) = 0;
+    Q_SCRIPTABLE void setElevatedWindow(KWin::EffectWindow *w, bool set);
 
-    virtual void setTabBoxWindow(EffectWindow *) = 0;
-    virtual EffectWindowList currentTabBoxWindowList() const = 0;
-    virtual void refTabBox() = 0;
-    virtual void unrefTabBox() = 0;
-    virtual void closeTabBox() = 0;
-    virtual EffectWindow *currentTabBoxWindow() const = 0;
+    void setTabBoxWindow(EffectWindow *);
+    EffectWindowList currentTabBoxWindowList() const;
+    void refTabBox();
+    void unrefTabBox();
+    void closeTabBox();
+    EffectWindow *currentTabBoxWindow() const;
 
-    virtual void setActiveFullScreenEffect(Effect *e) = 0;
-    virtual Effect *activeFullScreenEffect() const = 0;
+    void setActiveFullScreenEffect(Effect *e);
+    Effect *activeFullScreenEffect() const;
 
     /**
      * Schedules the entire workspace to be repainted next time.
      * If you call it during painting (including prepaint) then it does not
      *  affect the current painting.
      */
-    Q_SCRIPTABLE virtual void addRepaintFull() = 0;
-    Q_SCRIPTABLE virtual void addRepaint(const QRectF &r) = 0;
-    Q_SCRIPTABLE virtual void addRepaint(const QRect &r) = 0;
-    Q_SCRIPTABLE virtual void addRepaint(const QRegion &r) = 0;
-    Q_SCRIPTABLE virtual void addRepaint(int x, int y, int w, int h) = 0;
+    Q_SCRIPTABLE void addRepaintFull();
+    Q_SCRIPTABLE void addRepaint(const QRectF &r);
+    Q_SCRIPTABLE void addRepaint(const QRect &r);
+    Q_SCRIPTABLE void addRepaint(const QRegion &r);
+    Q_SCRIPTABLE void addRepaint(int x, int y, int w, int h);
 
     CompositingType compositingType() const;
     /**
@@ -484,10 +511,10 @@ public:
      *
      * @return QPainter* The Scene's QPainter or @c null.
      */
-    virtual QPainter *scenePainter() = 0;
-    virtual void reconfigure() = 0;
+    QPainter *scenePainter();
+    void reconfigure();
 
-    virtual QByteArray readRootProperty(long atom, long type, int format) const = 0;
+    QByteArray readRootProperty(long atom, long type, int format) const;
     /**
      * @brief Announces support for the feature with the given name. If no other Effect
      * has announced support for this feature yet, an X11 property will be installed on
@@ -505,7 +532,7 @@ public:
      * @see removeSupportProperty
      * @since 4.11
      */
-    virtual xcb_atom_t announceSupportProperty(const QByteArray &propertyName, Effect *effect) = 0;
+    xcb_atom_t announceSupportProperty(const QByteArray &propertyName, Effect *effect);
     /**
      * @brief Removes support for the feature with the given name. If there is no other Effect left
      * which has announced support for the given property, the property will be removed from the
@@ -518,18 +545,18 @@ public:
      * @see announceSupportProperty
      * @since 4.11
      */
-    virtual void removeSupportProperty(const QByteArray &propertyName, Effect *effect) = 0;
+    void removeSupportProperty(const QByteArray &propertyName, Effect *effect);
 
     /**
      * Returns @a true if the active window decoration has shadow API hooks.
      */
-    virtual bool hasDecorationShadows() const = 0;
+    bool hasDecorationShadows() const;
 
     /**
      * Returns @a true if the window decorations use the alpha channel, and @a false otherwise.
      * @since 4.5
      */
-    virtual bool decorationsHaveAlpha() const = 0;
+    bool decorationsHaveAlpha() const;
 
     /**
      * Allows an effect to trigger a reload of itself.
@@ -539,7 +566,14 @@ public:
      * @param effect The effect to reload
      * @since 4.8
      */
-    virtual void reloadEffect(Effect *effect) = 0;
+    void reloadEffect(Effect *effect);
+    Effect *provides(Effect::Feature ef);
+    Effect *findEffect(const QString &name) const;
+    QStringList loadedEffects() const;
+    QStringList listOfEffects() const;
+    void unloadAllEffects();
+    QStringList activeEffects() const;
+    bool isEffectActive(const QString &pluginId) const;
 
     /**
      * Whether the screen is currently considered as locked.
@@ -551,7 +585,7 @@ public:
      * @see screenLockingChanged
      * @since 4.11
      */
-    virtual bool isScreenLocked() const = 0;
+    bool isScreenLocked() const;
 
     /**
      * @brief Makes the OpenGL compositing context current.
@@ -560,7 +594,7 @@ public:
      *
      * @return bool @c true if the context became current, @c false otherwise.
      */
-    virtual bool makeOpenGLContextCurrent() = 0;
+    bool makeOpenGLContextCurrent();
     /**
      * @brief Makes a null OpenGL context current resulting in no context
      * being current.
@@ -569,17 +603,17 @@ public:
      *
      * There is normally no reason for an Effect to call this method.
      */
-    virtual void doneOpenGLContextCurrent() = 0;
+    void doneOpenGLContextCurrent();
 
-    virtual xcb_connection_t *xcbConnection() const = 0;
-    virtual xcb_window_t x11RootWindow() const = 0;
+    xcb_connection_t *xcbConnection() const;
+    xcb_window_t x11RootWindow() const;
 
     /**
      * Interface to the Wayland display: this is relevant only
      * on Wayland, on X11 it will be nullptr
      * @since 5.5
      */
-    virtual Display *waylandDisplay() const = 0;
+    Display *waylandDisplay() const;
 
     /**
      * Whether animations are supported by the Scene.
@@ -589,33 +623,33 @@ public:
      * @returns Whether the Scene can drive animations
      * @since 5.8
      */
-    virtual bool animationsSupported() const = 0;
+    bool animationsSupported() const;
 
     /**
      * The current cursor image of the Platform.
      * @see cursorPos
      * @since 5.9
      */
-    virtual PlatformCursorImage cursorImage() const = 0;
+    PlatformCursorImage cursorImage() const;
 
     /**
      * The cursor image should be hidden.
      * @see showCursor
      * @since 5.9
      */
-    virtual void hideCursor() = 0;
+    void hideCursor();
 
     /**
      * The cursor image should be shown again after having been hidden.
      * @see hideCursor
      * @since 5.9
      */
-    virtual void showCursor() = 0;
+    void showCursor();
 
     /**
      * @returns Whether or not the cursor is currently hidden
      */
-    virtual bool isCursorHidden() const = 0;
+    bool isCursorHidden() const;
 
     /**
      * Starts an interactive window selection process.
@@ -629,7 +663,7 @@ public:
      * @param callback The function to invoke once the interactive window selection ends
      * @since 5.9
      */
-    virtual void startInteractiveWindowSelection(std::function<void(KWin::EffectWindow *)> callback) = 0;
+    void startInteractiveWindowSelection(std::function<void(KWin::EffectWindow *)> callback);
 
     /**
      * Starts an interactive position selection process.
@@ -644,7 +678,7 @@ public:
      * @param callback The function to invoke once the interactive position selection ends
      * @since 5.9
      */
-    virtual void startInteractivePositionSelection(std::function<void(const QPointF &)> callback) = 0;
+    void startInteractivePositionSelection(std::function<void(const QPointF &)> callback);
 
     /**
      * Shows an on-screen-message. To hide it again use hideOnScreenMessage.
@@ -654,7 +688,7 @@ public:
      * @see hideOnScreenMessage
      * @since 5.9
      */
-    virtual void showOnScreenMessage(const QString &message, const QString &iconName = QString()) = 0;
+    void showOnScreenMessage(const QString &message, const QString &iconName = QString());
 
     /**
      * Flags for how to hide a shown on-screen-message
@@ -675,55 +709,82 @@ public:
      * @see showOnScreenMessage
      * @since 5.9
      */
-    virtual void hideOnScreenMessage(OnScreenMessageHideFlags flags = OnScreenMessageHideFlags()) = 0;
+    void hideOnScreenMessage(OnScreenMessageHideFlags flags = OnScreenMessageHideFlags());
 
     /*
      * @returns The configuration used by the EffectsHandler.
      * @since 5.10
      */
-    virtual KSharedConfigPtr config() const = 0;
+    KSharedConfigPtr config() const;
 
     /**
      * @returns The global input configuration (kcminputrc)
      * @since 5.10
      */
-    virtual KSharedConfigPtr inputConfig() const = 0;
+    KSharedConfigPtr inputConfig() const;
 
     /**
      * Returns if activeFullScreenEffect is set
      */
-    virtual bool hasActiveFullScreenEffect() const = 0;
+    bool hasActiveFullScreenEffect() const;
 
     /**
      * Render the supplied OffscreenQuickView onto the scene
      * It can be called at any point during the scene rendering
      * @since 5.18
      */
-    virtual void renderOffscreenQuickView(const RenderTarget &renderTarget, const RenderViewport &viewport, OffscreenQuickView *effectQuickView) const = 0;
+    void renderOffscreenQuickView(const RenderTarget &renderTarget, const RenderViewport &viewport, OffscreenQuickView *effectQuickView) const;
 
     /**
      * The status of the session i.e if the user is logging out
      * @since 5.18
      */
-    virtual SessionState sessionState() const = 0;
+    SessionState sessionState() const;
 
     /**
      * Returns the list of all the screens connected to the system.
      */
-    virtual QList<Output *> screens() const = 0;
-    virtual Output *screenAt(const QPoint &point) const = 0;
-    virtual Output *findScreen(const QString &name) const = 0;
-    virtual Output *findScreen(int screenId) const = 0;
+    QList<Output *> screens() const;
+    Output *screenAt(const QPoint &point) const;
+    Output *findScreen(const QString &name) const;
+    Output *findScreen(int screenId) const;
 
     /**
      * Renders @p screen in the current render target
      */
-    virtual void renderScreen(Output *screen) = 0;
+    void renderScreen(Output *screen);
 
-    virtual KWin::EffectWindow *inputPanel() const = 0;
-    virtual bool isInputPanelOverlay() const = 0;
+    KWin::EffectWindow *inputPanel() const;
+    bool isInputPanelOverlay() const;
 
-    virtual QQmlEngine *qmlEngine() const = 0;
+    QQmlEngine *qmlEngine() const;
+
+    /**
+     * @returns whether or not any effect is currently active where KWin should not use direct scanout
+     */
+    bool blocksDirectScanout() const;
+
+    WorkspaceScene *scene() const
+    {
+        return m_scene;
+    }
+
+    bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time);
+    bool touchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time);
+    bool touchUp(qint32 id, std::chrono::microseconds time);
+
+    bool tabletToolEvent(KWin::TabletEvent *event);
+    bool tabletToolButtonEvent(uint button, bool pressed, const KWin::TabletToolId &tabletToolId, std::chrono::microseconds time);
+    bool tabletPadButtonEvent(uint button, bool pressed, const KWin::TabletPadId &tabletPadId, std::chrono::microseconds time);
+    bool tabletPadStripEvent(int number, int position, bool isFinger, const KWin::TabletPadId &tabletPadId, std::chrono::microseconds time);
+    bool tabletPadRingEvent(int number, int position, bool isFinger, const KWin::TabletPadId &tabletPadId, std::chrono::microseconds time);
+
+    void highlightWindows(const QList<EffectWindow *> &windows);
+
+    bool isPropertyTypeRegistered(xcb_atom_t atom) const
+    {
+        return registered_atoms.contains(atom);
+    }
 
 Q_SIGNALS:
     /**
@@ -1009,10 +1070,74 @@ Q_SIGNALS:
 
     void inputPanelChanged();
 
+public Q_SLOTS:
+    // slots for D-Bus interface
+    Q_SCRIPTABLE void reconfigureEffect(const QString &name);
+    Q_SCRIPTABLE bool loadEffect(const QString &name);
+    Q_SCRIPTABLE void toggleEffect(const QString &name);
+    Q_SCRIPTABLE void unloadEffect(const QString &name);
+    Q_SCRIPTABLE bool isEffectLoaded(const QString &name) const;
+    Q_SCRIPTABLE bool isEffectSupported(const QString &name);
+    Q_SCRIPTABLE QList<bool> areEffectsSupported(const QStringList &names);
+    Q_SCRIPTABLE QString supportInformation(const QString &name) const;
+    Q_SCRIPTABLE QString debug(const QString &name, const QString &parameter = QString()) const;
+
 protected:
+    void connectNotify(const QMetaMethod &signal) override;
+    void disconnectNotify(const QMetaMethod &signal) override;
+    void effectsChanged();
+    void setupWindowConnections(KWin::Window *window);
+
+    /**
+     * Default implementation does nothing and returns @c true.
+     */
+    virtual bool doGrabKeyboard();
+    /**
+     * Default implementation does nothing.
+     */
+    virtual void doUngrabKeyboard();
+
+    /**
+     * Default implementation sets Effects override cursor on the PointerInputRedirection.
+     */
+    virtual void doStartMouseInterception(Qt::CursorShape shape);
+
+    /**
+     * Default implementation removes the Effects override cursor on the PointerInputRedirection.
+     */
+    virtual void doStopMouseInterception();
+
+    /**
+     * Default implementation does nothing
+     */
+    virtual void doCheckInputWindowStacking();
+
+    void registerPropertyType(long atom, bool reg);
+    void destroyEffect(Effect *effect);
+    void reconfigureEffects();
+
+    typedef QList<Effect *> EffectsList;
+    typedef EffectsList::const_iterator EffectsIterator;
+
+    Effect *keyboard_grab_effect;
+    Effect *fullscreen_effect;
+    QMultiMap<int, EffectPair> effect_order;
+    QHash<long, int> registered_atoms;
     QList<EffectPair> loaded_effects;
-    // QHash< QString, EffectFactory* > effect_factories;
     CompositingType compositing_type;
+    EffectsList m_activeEffects;
+    EffectsIterator m_currentDrawWindowIterator;
+    EffectsIterator m_currentPaintWindowIterator;
+    EffectsIterator m_currentPaintScreenIterator;
+    typedef QHash<QByteArray, QList<Effect *>> PropertyEffectMap;
+    PropertyEffectMap m_propertiesForEffects;
+    QHash<QByteArray, qulonglong> m_managedProperties;
+    Compositor *m_compositor;
+    WorkspaceScene *m_scene;
+    QList<Effect *> m_grabbedMouseEffects;
+    EffectLoader *m_effectLoader;
+    int m_trackingCursorChanges;
+    std::unique_ptr<WindowPropertyNotifyX11Filter> m_x11WindowPropertyNotify;
 };
 
 class EffectWindowVisibleRef;

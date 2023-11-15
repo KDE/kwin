@@ -12,7 +12,6 @@
 #include "atoms.h"
 #include "core/output.h"
 #include "cursor.h"
-#include "effects.h"
 #include "placement.h"
 #include "pointer_input.h"
 #include "wayland_server.h"

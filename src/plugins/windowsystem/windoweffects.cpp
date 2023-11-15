@@ -4,7 +4,7 @@
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
 #include "windoweffects.h"
-#include "effects.h"
+#include "libkwineffects/kwineffects.h"
 
 #include <QGuiApplication>
 #include <QWidget>
@@ -30,14 +30,13 @@ bool WindowEffects::isEffectAvailable(KWindowEffects::Effect effect)
     if (!effects) {
         return false;
     }
-    auto e = static_cast<EffectsHandlerImpl *>(effects);
     switch (effect) {
     case KWindowEffects::BackgroundContrast:
-        return e->isEffectLoaded(QStringLiteral("contrast"));
+        return effects->isEffectLoaded(QStringLiteral("contrast"));
     case KWindowEffects::BlurBehind:
-        return e->isEffectLoaded(QStringLiteral("blur"));
+        return effects->isEffectLoaded(QStringLiteral("blur"));
     case KWindowEffects::Slide:
-        return e->isEffectLoaded(QStringLiteral("slidingpopups"));
+        return effects->isEffectLoaded(QStringLiteral("slidingpopups"));
     default:
         // plugin does not provide integration for other effects
         return false;

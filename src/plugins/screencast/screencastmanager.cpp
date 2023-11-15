@@ -10,7 +10,6 @@
 #include "compositor.h"
 #include "core/output.h"
 #include "core/outputbackend.h"
-#include "effects.h"
 #include "opengl/gltexture.h"
 #include "outputscreencastsource.h"
 #include "regionscreencastsource.h"

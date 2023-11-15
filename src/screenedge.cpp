@@ -22,8 +22,8 @@
 
 #include "core/output.h"
 #include "cursor.h"
-#include "effects.h"
 #include "gestures.h"
+#include "libkwineffects/kwineffects.h"
 #include "main.h"
 #include "pointer_input.h"
 #include "utils/common.h"

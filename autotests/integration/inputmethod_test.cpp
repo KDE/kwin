@@ -9,7 +9,6 @@
 #include "kwin_wayland_test.h"
 
 #include "core/output.h"
-#include "effects.h"
 #include "inputmethod.h"
 #include "keyboard_input.h"
 #include "pointer_input.h"

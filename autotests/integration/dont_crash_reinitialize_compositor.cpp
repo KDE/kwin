@@ -12,7 +12,7 @@
 #include "compositor.h"
 #include "core/output.h"
 #include "effectloader.h"
-#include "effects.h"
+#include "libkwineffects/kwineffects.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
@@ -81,10 +81,8 @@ void DontCrashReinitializeCompositorTest::init()
 void DontCrashReinitializeCompositorTest::cleanup()
 {
     // Unload all effects.
-    auto effectsImpl = qobject_cast<EffectsHandlerImpl *>(effects);
-    QVERIFY(effectsImpl);
-    effectsImpl->unloadAllEffects();
-    QVERIFY(effectsImpl->loadedEffects().isEmpty());
+    effects->unloadAllEffects();
+    QVERIFY(effects->loadedEffects().isEmpty());
 
     Test::destroyWaylandConnection();
 }
@@ -104,10 +102,6 @@ void DontCrashReinitializeCompositorTest::testReinitializeCompositor()
     // have been changed while a scripted effect animates the disappearing of
     // a window.
 
-    // Make sure that we have the right effects ptr.
-    auto effectsImpl = qobject_cast<EffectsHandlerImpl *>(effects);
-    QVERIFY(effectsImpl);
-
     // Create the test window.
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(surface != nullptr);
@@ -118,10 +112,10 @@ void DontCrashReinitializeCompositorTest::testReinitializeCompositor()
 
     // Make sure that only the test effect is loaded.
     QFETCH(QString, effectName);
-    QVERIFY(effectsImpl->loadEffect(effectName));
-    QCOMPARE(effectsImpl->loadedEffects().count(), 1);
-    QCOMPARE(effectsImpl->loadedEffects().first(), effectName);
-    Effect *effect = effectsImpl->findEffect(effectName);
+    QVERIFY(effects->loadEffect(effectName));
+    QCOMPARE(effects->loadedEffects().count(), 1);
+    QCOMPARE(effects->loadedEffects().first(), effectName);
+    Effect *effect = effects->findEffect(effectName);
     QVERIFY(effect);
     QVERIFY(!effect->isActive());
 

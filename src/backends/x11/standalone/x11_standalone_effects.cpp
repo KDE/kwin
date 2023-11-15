@@ -20,19 +20,19 @@
 namespace KWin
 {
 
-EffectsHandlerImplX11::EffectsHandlerImplX11(Compositor *compositor, WorkspaceScene *scene)
-    : EffectsHandlerImpl(compositor, scene)
+EffectsHandlerX11::EffectsHandlerX11(Compositor *compositor, WorkspaceScene *scene)
+    : EffectsHandler(compositor, scene)
 {
-    connect(this, &EffectsHandlerImpl::virtualScreenGeometryChanged, this, [this]() {
+    connect(this, &EffectsHandler::virtualScreenGeometryChanged, this, [this]() {
         if (m_mouseInterceptionWindow.isValid()) {
             m_mouseInterceptionWindow.setGeometry(virtualScreenGeometry());
         }
     });
 }
 
-EffectsHandlerImplX11::~EffectsHandlerImplX11()
+EffectsHandlerX11::~EffectsHandlerX11()
 {
-    // EffectsHandlerImpl tries to unload all effects when it's destroyed.
+    // EffectsHandler tries to unload all effects when it's destroyed.
     // The routine that unloads effects makes some calls (indirectly) to
     // doUngrabKeyboard and doStopMouseInterception, which are virtual.
     // Given that any call to a virtual function in the destructor of a base
@@ -42,7 +42,7 @@ EffectsHandlerImplX11::~EffectsHandlerImplX11()
     unloadAllEffects();
 }
 
-bool EffectsHandlerImplX11::doGrabKeyboard()
+bool EffectsHandlerX11::doGrabKeyboard()
 {
     auto keyboard = static_cast<X11StandaloneBackend *>(kwinApp()->outputBackend())->keyboard();
     if (!keyboard->xkbKeymap()) {
@@ -56,13 +56,13 @@ bool EffectsHandlerImplX11::doGrabKeyboard()
     return ret;
 }
 
-void EffectsHandlerImplX11::doUngrabKeyboard()
+void EffectsHandlerX11::doUngrabKeyboard()
 {
     ungrabXKeyboard();
     m_x11KeyboardInterception.reset();
 }
 
-void EffectsHandlerImplX11::doStartMouseInterception(Qt::CursorShape shape)
+void EffectsHandlerX11::doStartMouseInterception(Qt::CursorShape shape)
 {
     // NOTE: it is intended to not perform an XPointerGrab on X11. See documentation in kwineffects.h
     // The mouse grab is implemented by using a full screen input only window
@@ -86,14 +86,14 @@ void EffectsHandlerImplX11::doStartMouseInterception(Qt::CursorShape shape)
     workspace()->screenEdges()->ensureOnTop();
 }
 
-void EffectsHandlerImplX11::doStopMouseInterception()
+void EffectsHandlerX11::doStopMouseInterception()
 {
     m_mouseInterceptionWindow.unmap();
     m_x11MouseInterception.reset();
     Workspace::self()->stackScreenEdgesUnderOverrideRedirect();
 }
 
-void EffectsHandlerImplX11::defineCursor(Qt::CursorShape shape)
+void EffectsHandlerX11::defineCursor(Qt::CursorShape shape)
 {
     const xcb_cursor_t c = Cursors::self()->mouse()->x11Cursor(shape);
     if (c != XCB_CURSOR_NONE) {
@@ -101,7 +101,7 @@ void EffectsHandlerImplX11::defineCursor(Qt::CursorShape shape)
     }
 }
 
-void EffectsHandlerImplX11::doCheckInputWindowStacking()
+void EffectsHandlerX11::doCheckInputWindowStacking()
 {
     m_mouseInterceptionWindow.raise();
     // Raise electric border windows above the input windows

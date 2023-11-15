@@ -11,8 +11,8 @@
 #include "backends/virtual/virtual_backend.h"
 #include "compositor_wayland.h"
 #include "core/session.h"
-#include "effects.h"
 #include "inputmethod.h"
+#include "libkwineffects/kwineffects.h"
 #include "placement.h"
 #include "pluginmanager.h"
 #include "utils/xcbutils.h"
@@ -82,7 +82,7 @@ WaylandTestApplication::~WaylandTestApplication()
     // need to unload all effects prior to destroying X connection as they might do X calls
     // also before destroy Workspace, as effects might call into Workspace
     if (effects) {
-        static_cast<EffectsHandlerImpl *>(effects)->unloadAllEffects();
+        effects->unloadAllEffects();
     }
     m_xwayland.reset();
     destroyVirtualInputDevices();

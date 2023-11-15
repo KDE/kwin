@@ -65,10 +65,10 @@
 */
 
 #include "compositor.h"
-#include "effects.h"
 #include "focuschain.h"
 #include "group.h"
 #include "internalwindow.h"
+#include "libkwineffects/kwineffects.h"
 #include "netinfo.h"
 #include "rules.h"
 #include "screenedge.h"
@@ -589,7 +589,7 @@ void Workspace::blockStackingUpdates(bool block)
         if (--m_blockStackingUpdates == 0) {
             updateStackingOrder(m_blockedPropagatingNewWindows);
             if (effects) {
-                static_cast<EffectsHandlerImpl *>(effects)->checkInputWindowStacking();
+                effects->checkInputWindowStacking();
             }
         }
 }

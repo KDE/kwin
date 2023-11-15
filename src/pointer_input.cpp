@@ -16,7 +16,6 @@
 #include "core/output.h"
 #include "cursorsource.h"
 #include "decorations/decoratedclient.h"
-#include "effects.h"
 #include "input_event.h"
 #include "input_event_spy.h"
 #include "mousebuttons.h"
@@ -1076,7 +1075,7 @@ void CursorImage::reevaluteSource()
         setSource(m_windowSelectionCursor.get());
         return;
     }
-    if (effects && static_cast<EffectsHandlerImpl *>(effects)->isMouseInterception()) {
+    if (effects && effects->isMouseInterception()) {
         setSource(m_effectsCursor.get());
         return;
     }

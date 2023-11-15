@@ -12,7 +12,6 @@
 #include "core/output.h"
 #include "decorations/decorationbridge.h"
 #include "decorations/settings.h"
-#include "effects.h"
 #include "pointer_input.h"
 #include "virtualdesktops.h"
 #include "wayland/clientconnection.h"

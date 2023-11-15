@@ -10,8 +10,8 @@
 #include "kwin_wayland_test.h"
 
 #include "effectloader.h"
-#include "effects.h"
 #include "internalwindow.h"
+#include "libkwineffects/kwineffects.h"
 #include "useractions.h"
 #include "wayland_server.h"
 #include "window.h"
@@ -76,10 +76,9 @@ void PopupOpenCloseAnimationTest::init()
 
 void PopupOpenCloseAnimationTest::cleanup()
 {
-    auto effectsImpl = qobject_cast<EffectsHandlerImpl *>(effects);
-    QVERIFY(effectsImpl);
-    effectsImpl->unloadAllEffects();
-    QVERIFY(effectsImpl->loadedEffects().isEmpty());
+    QVERIFY(effects);
+    effects->unloadAllEffects();
+    QVERIFY(effects->loadedEffects().isEmpty());
 
     Test::destroyWaylandConnection();
 }
@@ -88,10 +87,6 @@ void PopupOpenCloseAnimationTest::testAnimatePopups()
 {
     // This test verifies that popup open/close animation effects try
     // to animate popups(e.g. popup menus, tooltips, etc).
-
-    // Make sure that we have the right effects ptr.
-    auto effectsImpl = qobject_cast<EffectsHandlerImpl *>(effects);
-    QVERIFY(effectsImpl);
 
     // Create the main window.
     std::unique_ptr<KWayland::Client::Surface> mainWindowSurface(Test::createSurface());
@@ -103,10 +98,10 @@ void PopupOpenCloseAnimationTest::testAnimatePopups()
 
     // Load effect that will be tested.
     const QString effectName = QStringLiteral("fadingpopups");
-    QVERIFY(effectsImpl->loadEffect(effectName));
-    QCOMPARE(effectsImpl->loadedEffects().count(), 1);
-    QCOMPARE(effectsImpl->loadedEffects().first(), effectName);
-    Effect *effect = effectsImpl->findEffect(effectName);
+    QVERIFY(effects->loadEffect(effectName));
+    QCOMPARE(effects->loadedEffects().count(), 1);
+    QCOMPARE(effects->loadedEffects().first(), effectName);
+    Effect *effect = effects->findEffect(effectName);
     QVERIFY(effect);
     QVERIFY(!effect->isActive());
 
@@ -149,10 +144,6 @@ void PopupOpenCloseAnimationTest::testAnimateUserActionsPopup()
     // This test verifies that popup open/close animation effects try
     // to animate the user actions popup.
 
-    // Make sure that we have the right effects ptr.
-    auto effectsImpl = qobject_cast<EffectsHandlerImpl *>(effects);
-    QVERIFY(effectsImpl);
-
     // Create the test window.
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(surface != nullptr);
@@ -163,10 +154,10 @@ void PopupOpenCloseAnimationTest::testAnimateUserActionsPopup()
 
     // Load effect that will be tested.
     const QString effectName = QStringLiteral("fadingpopups");
-    QVERIFY(effectsImpl->loadEffect(effectName));
-    QCOMPARE(effectsImpl->loadedEffects().count(), 1);
-    QCOMPARE(effectsImpl->loadedEffects().first(), effectName);
-    Effect *effect = effectsImpl->findEffect(effectName);
+    QVERIFY(effects->loadEffect(effectName));
+    QCOMPARE(effects->loadedEffects().count(), 1);
+    QCOMPARE(effects->loadedEffects().first(), effectName);
+    Effect *effect = effects->findEffect(effectName);
     QVERIFY(effect);
     QVERIFY(!effect->isActive());
 
@@ -200,10 +191,6 @@ void PopupOpenCloseAnimationTest::testAnimateDecorationTooltips()
     // This test verifies that popup open/close animation effects try
     // to animate decoration tooltips.
 
-    // Make sure that we have the right effects ptr.
-    auto effectsImpl = qobject_cast<EffectsHandlerImpl *>(effects);
-    QVERIFY(effectsImpl);
-
     // Create the test window.
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(surface != nullptr);
@@ -224,10 +211,10 @@ void PopupOpenCloseAnimationTest::testAnimateDecorationTooltips()
 
     // Load effect that will be tested.
     const QString effectName = QStringLiteral("fadingpopups");
-    QVERIFY(effectsImpl->loadEffect(effectName));
-    QCOMPARE(effectsImpl->loadedEffects().count(), 1);
-    QCOMPARE(effectsImpl->loadedEffects().first(), effectName);
-    Effect *effect = effectsImpl->findEffect(effectName);
+    QVERIFY(effects->loadEffect(effectName));
+    QCOMPARE(effects->loadedEffects().count(), 1);
+    QCOMPARE(effects->loadedEffects().first(), effectName);
+    Effect *effect = effects->findEffect(effectName);
     QVERIFY(effect);
     QVERIFY(!effect->isActive());
 

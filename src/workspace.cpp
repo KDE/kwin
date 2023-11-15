@@ -24,12 +24,12 @@
 #include "core/outputconfiguration.h"
 #include "cursor.h"
 #include "dbusinterface.h"
-#include "effects.h"
 #include "focuschain.h"
 #include "group.h"
 #include "input.h"
 #include "internalwindow.h"
 #include "killwindow.h"
+#include "libkwineffects/kwineffects.h"
 #include "moving_client_x11_filter.h"
 #include "netinfo.h"
 #include "outline.h"
@@ -1842,20 +1842,20 @@ QString Workspace::supportInformation() const
         }
         support.append(QStringLiteral("\nLoaded Effects:\n"));
         support.append(QStringLiteral("---------------\n"));
-        const auto loadedEffects = static_cast<EffectsHandlerImpl *>(effects)->loadedEffects();
+        const auto loadedEffects = effects->loadedEffects();
         for (const QString &effect : loadedEffects) {
             support.append(effect + QStringLiteral("\n"));
         }
         support.append(QStringLiteral("\nCurrently Active Effects:\n"));
         support.append(QStringLiteral("-------------------------\n"));
-        const auto activeEffects = static_cast<EffectsHandlerImpl *>(effects)->activeEffects();
+        const auto activeEffects = effects->activeEffects();
         for (const QString &effect : activeEffects) {
             support.append(effect + QStringLiteral("\n"));
         }
         support.append(QStringLiteral("\nEffect Settings:\n"));
         support.append(QStringLiteral("----------------\n"));
         for (const QString &effect : loadedEffects) {
-            support.append(static_cast<EffectsHandlerImpl *>(effects)->supportInformation(effect));
+            support.append(effects->supportInformation(effect));
             support.append(QStringLiteral("\n"));
         }
         support.append(QLatin1String("\nLoaded Plugins:\n"));

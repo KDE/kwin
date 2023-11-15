@@ -9,7 +9,7 @@
 */
 #pragma once
 
-#include "effects.h"
+#include "libkwineffects/kwineffects.h"
 #include "utils/xcbutils.h"
 
 #include <memory.h>
@@ -19,12 +19,12 @@ namespace KWin
 class EffectsMouseInterceptionX11Filter;
 class EffectsKeyboardInterceptionX11Filter;
 
-class EffectsHandlerImplX11 : public EffectsHandlerImpl
+class EffectsHandlerX11 : public EffectsHandler
 {
     Q_OBJECT
 public:
-    explicit EffectsHandlerImplX11(Compositor *compositor, WorkspaceScene *scene);
-    ~EffectsHandlerImplX11() override;
+    explicit EffectsHandlerX11(Compositor *compositor, WorkspaceScene *scene);
+    ~EffectsHandlerX11() override;
 
     void defineCursor(Qt::CursorShape shape) override;
 

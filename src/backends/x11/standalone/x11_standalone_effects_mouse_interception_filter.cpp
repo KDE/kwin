@@ -7,15 +7,16 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "x11_standalone_effects_mouse_interception_filter.h"
-#include "effects.h"
+#include "libkwineffects/kwineffects.h"
 #include "utils/common.h"
 
+#include <QCursor>
 #include <QMouseEvent>
 
 namespace KWin
 {
 
-EffectsMouseInterceptionX11Filter::EffectsMouseInterceptionX11Filter(xcb_window_t window, EffectsHandlerImpl *effects)
+EffectsMouseInterceptionX11Filter::EffectsMouseInterceptionX11Filter(xcb_window_t window, EffectsHandler *effects)
     : X11EventFilter(QList<int>{XCB_BUTTON_PRESS, XCB_BUTTON_RELEASE, XCB_MOTION_NOTIFY})
     , m_effects(effects)
     , m_window(window)

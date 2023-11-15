@@ -7,8 +7,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "effectloader.h"
-#include "effects.h"
 #include "kwin_wayland_test.h"
+#include "libkwineffects/kwineffects.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "x11window.h"
@@ -85,11 +85,10 @@ void SlidingPopupsTest::init()
 void SlidingPopupsTest::cleanup()
 {
     Test::destroyWaylandConnection();
-    EffectsHandlerImpl *e = static_cast<EffectsHandlerImpl *>(effects);
-    while (!e->loadedEffects().isEmpty()) {
-        const QString effect = e->loadedEffects().first();
-        e->unloadEffect(effect);
-        QVERIFY(!e->isEffectLoaded(effect));
+    while (!effects->loadedEffects().isEmpty()) {
+        const QString effect = effects->loadedEffects().first();
+        effects->unloadEffect(effect);
+        QVERIFY(!effects->isEffectLoaded(effect));
     }
 }
 
@@ -117,9 +116,8 @@ void SlidingPopupsTest::testWithOtherEffect()
     // this test verifies that slidingpopups effect grabs the window added role
     // independently of the sequence how the effects are loaded.
     // see BUG 336866
-    EffectsHandlerImpl *e = static_cast<EffectsHandlerImpl *>(effects);
     // find the effectsloader
-    auto effectloader = e->findChild<AbstractEffectLoader *>();
+    auto effectloader = effects->findChild<AbstractEffectLoader *>();
     QVERIFY(effectloader);
     QSignalSpy effectLoadedSpy(effectloader, &AbstractEffectLoader::effectLoaded);
 
@@ -127,9 +125,9 @@ void SlidingPopupsTest::testWithOtherEffect()
     Effect *otherEffect = nullptr;
     QFETCH(QStringList, effectsToLoad);
     for (const QString &effectName : effectsToLoad) {
-        QVERIFY(!e->isEffectLoaded(effectName));
-        QVERIFY(e->loadEffect(effectName));
-        QVERIFY(e->isEffectLoaded(effectName));
+        QVERIFY(!effects->isEffectLoaded(effectName));
+        QVERIFY(effects->loadEffect(effectName));
+        QVERIFY(effects->isEffectLoaded(effectName));
 
         QCOMPARE(effectLoadedSpy.count(), 1);
         Effect *effect = effectLoadedSpy.first().first().value<Effect *>();
@@ -245,9 +243,8 @@ void SlidingPopupsTest::testWithOtherEffectWayland()
     // independently of the sequence how the effects are loaded.
     // see BUG 336866
     // the test is like testWithOtherEffect, but simulates using a Wayland window
-    EffectsHandlerImpl *e = static_cast<EffectsHandlerImpl *>(effects);
     // find the effectsloader
-    auto effectloader = e->findChild<AbstractEffectLoader *>();
+    auto effectloader = effects->findChild<AbstractEffectLoader *>();
     QVERIFY(effectloader);
     QSignalSpy effectLoadedSpy(effectloader, &AbstractEffectLoader::effectLoaded);
 
@@ -255,9 +252,9 @@ void SlidingPopupsTest::testWithOtherEffectWayland()
     Effect *otherEffect = nullptr;
     QFETCH(QStringList, effectsToLoad);
     for (const QString &effectName : effectsToLoad) {
-        QVERIFY(!e->isEffectLoaded(effectName));
-        QVERIFY(e->loadEffect(effectName));
-        QVERIFY(e->isEffectLoaded(effectName));
+        QVERIFY(!effects->isEffectLoaded(effectName));
+        QVERIFY(effects->loadEffect(effectName));
+        QVERIFY(effects->isEffectLoaded(effectName));
 
         QCOMPARE(effectLoadedSpy.count(), 1);
         Effect *effect = effectLoadedSpy.first().first().value<Effect *>();

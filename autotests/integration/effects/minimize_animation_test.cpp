@@ -10,7 +10,7 @@
 #include "kwin_wayland_test.h"
 
 #include "effectloader.h"
-#include "effects.h"
+#include "libkwineffects/kwineffects.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
@@ -74,10 +74,9 @@ void MinimizeAnimationTest::init()
 
 void MinimizeAnimationTest::cleanup()
 {
-    auto effectsImpl = qobject_cast<EffectsHandlerImpl *>(effects);
-    QVERIFY(effectsImpl);
-    effectsImpl->unloadAllEffects();
-    QVERIFY(effectsImpl->loadedEffects().isEmpty());
+    QVERIFY(effects);
+    effects->unloadAllEffects();
+    QVERIFY(effects->loadedEffects().isEmpty());
 
     Test::destroyWaylandConnection();
 }
@@ -134,12 +133,11 @@ void MinimizeAnimationTest::testMinimizeUnminimize()
 
     // Load effect that will be tested.
     QFETCH(QString, effectName);
-    auto effectsImpl = qobject_cast<EffectsHandlerImpl *>(effects);
-    QVERIFY(effectsImpl);
-    QVERIFY(effectsImpl->loadEffect(effectName));
-    QCOMPARE(effectsImpl->loadedEffects().count(), 1);
-    QCOMPARE(effectsImpl->loadedEffects().first(), effectName);
-    Effect *effect = effectsImpl->findEffect(effectName);
+    QVERIFY(effects);
+    QVERIFY(effects->loadEffect(effectName));
+    QCOMPARE(effects->loadedEffects().count(), 1);
+    QCOMPARE(effects->loadedEffects().first(), effectName);
+    Effect *effect = effects->findEffect(effectName);
     QVERIFY(effect);
     QVERIFY(!effect->isActive());
 

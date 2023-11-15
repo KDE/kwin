@@ -17,8 +17,8 @@
 #include "compositor_wayland.h"
 #include "core/outputbackend.h"
 #include "core/session.h"
-#include "effects.h"
 #include "inputmethod.h"
+#include "libkwineffects/kwineffects.h"
 #include "tabletmodemanager.h"
 #include "utils/realtime.h"
 #include "wayland/display.h"
@@ -117,7 +117,7 @@ ApplicationWayland::~ApplicationWayland()
 
     // need to unload all effects prior to destroying X connection as they might do X calls
     if (effects) {
-        static_cast<EffectsHandlerImpl *>(effects)->unloadAllEffects();
+        effects->unloadAllEffects();
     }
     m_xwayland.reset();
     destroyColorManager();

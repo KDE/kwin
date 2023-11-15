@@ -12,17 +12,17 @@
 
 namespace KWin
 {
-class EffectsHandlerImpl;
+class EffectsHandler;
 
 class EffectsMouseInterceptionX11Filter : public X11EventFilter
 {
 public:
-    explicit EffectsMouseInterceptionX11Filter(xcb_window_t window, EffectsHandlerImpl *effects);
+    explicit EffectsMouseInterceptionX11Filter(xcb_window_t window, EffectsHandler *effects);
 
     bool event(xcb_generic_event_t *event) override;
 
 private:
-    EffectsHandlerImpl *m_effects;
+    EffectsHandler *m_effects;
     xcb_window_t m_window;
 };
 

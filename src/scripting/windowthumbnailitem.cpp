@@ -11,7 +11,6 @@
 #include "core/renderbackend.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
-#include "effects.h"
 #include "scene/itemrenderer.h"
 #include "scene/windowitem.h"
 #include "scene/workspacescene.h"

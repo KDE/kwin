@@ -59,8 +59,8 @@
 #include "core/renderlayer.h"
 #include "core/renderloop.h"
 #include "core/renderviewport.h"
-#include "effects.h"
 #include "internalwindow.h"
+#include "libkwineffects/kwineffects.h"
 #include "scene/dndiconitem.h"
 #include "scene/itemrenderer.h"
 #include "scene/shadowitem.h"
@@ -156,7 +156,7 @@ SurfaceItem *WorkspaceScene::scanoutCandidate() const
         return nullptr;
     }
     SurfaceItem *candidate = nullptr;
-    if (!static_cast<EffectsHandlerImpl *>(effects)->blocksDirectScanout()) {
+    if (!effects->blocksDirectScanout()) {
         for (int i = stacking_order.count() - 1; i >= 0; i--) {
             WindowItem *windowItem = stacking_order[i];
             Window *window = windowItem->window();
@@ -248,8 +248,7 @@ QRegion WorkspaceScene::prePaint(SceneDelegate *delegate)
     }
 
     // preparation step
-    auto effectsImpl = static_cast<EffectsHandlerImpl *>(effects);
-    effectsImpl->startPaint();
+    effects->startPaint();
 
     ScreenPrePaintData prePaintData;
     prePaintData.mask = 0;

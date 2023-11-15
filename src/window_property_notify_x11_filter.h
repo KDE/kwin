@@ -12,17 +12,17 @@
 
 namespace KWin
 {
-class EffectsHandlerImpl;
+class EffectsHandler;
 
 class WindowPropertyNotifyX11Filter : public X11EventFilter
 {
 public:
-    explicit WindowPropertyNotifyX11Filter(EffectsHandlerImpl *effects);
+    explicit WindowPropertyNotifyX11Filter(EffectsHandler *effects);
 
     bool event(xcb_generic_event_t *event) override;
 
 private:
-    EffectsHandlerImpl *m_effects;
+    EffectsHandler *m_effects;
 };
 
 }

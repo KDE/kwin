@@ -19,9 +19,9 @@
 #include "core/session.h"
 #include "cursor.h"
 #include "cursorsource.h"
-#include "effects.h"
 #include "input.h"
 #include "inputmethod.h"
+#include "libkwineffects/kwineffects.h"
 #include "opengl/gltexture.h"
 #include "opengl/glutils.h"
 #include "options.h"
@@ -355,7 +355,7 @@ std::unique_ptr<OutlineVisual> Application::createOutline(Outline *outline)
 
 void Application::createEffectsHandler(Compositor *compositor, WorkspaceScene *scene)
 {
-    new EffectsHandlerImpl(compositor, scene);
+    new EffectsHandler(compositor, scene);
 }
 
 void Application::registerEventFilter(X11EventFilter *filter)

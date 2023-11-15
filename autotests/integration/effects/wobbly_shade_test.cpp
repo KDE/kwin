@@ -10,7 +10,7 @@
 
 #include "cursor.h"
 #include "effectloader.h"
-#include "effects.h"
+#include "libkwineffects/kwineffects.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "x11window.h"
@@ -80,17 +80,15 @@ void WobblyWindowsShadeTest::cleanup()
 {
     Test::destroyWaylandConnection();
 
-    auto effectsImpl = static_cast<EffectsHandlerImpl *>(effects);
-    effectsImpl->unloadAllEffects();
-    QVERIFY(effectsImpl->loadedEffects().isEmpty());
+    effects->unloadAllEffects();
+    QVERIFY(effects->loadedEffects().isEmpty());
 }
 
 void WobblyWindowsShadeTest::testShadeMove()
 {
     // this test simulates the condition from BUG 390953
-    EffectsHandlerImpl *e = static_cast<EffectsHandlerImpl *>(effects);
-    QVERIFY(e->loadEffect(QStringLiteral("wobblywindows")));
-    QVERIFY(e->isEffectLoaded(QStringLiteral("wobblywindows")));
+    QVERIFY(effects->loadEffect(QStringLiteral("wobblywindows")));
+    QVERIFY(effects->isEffectLoaded(QStringLiteral("wobblywindows")));
 
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));

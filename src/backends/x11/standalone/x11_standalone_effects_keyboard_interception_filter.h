@@ -11,20 +11,20 @@
 namespace KWin
 {
 
-class EffectsHandlerImpl;
+class EffectsHandler;
 class X11Keyboard;
 
 class EffectsKeyboardInterceptionX11Filter : public X11EventFilter
 {
 public:
-    explicit EffectsKeyboardInterceptionX11Filter(EffectsHandlerImpl *effects, X11Keyboard *keyboard);
+    explicit EffectsKeyboardInterceptionX11Filter(EffectsHandler *effects, X11Keyboard *keyboard);
 
     bool event(xcb_generic_event_t *event) override;
 
 private:
     void processKey(bool press, xcb_keycode_t keycode, xcb_timestamp_t timestamp);
 
-    EffectsHandlerImpl *m_effects;
+    EffectsHandler *m_effects;
     X11Keyboard *m_keyboard;
 };
 

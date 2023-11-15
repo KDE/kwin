@@ -22,10 +22,10 @@
 #include "activities.h"
 #endif
 #include "compositor.h"
-#include "effects.h"
 #include "focuschain.h"
 #include "input.h"
 #include "keyboard_input.h"
+#include "libkwineffects/kwineffects.h"
 #include "pointer_input.h"
 #include "screenedge.h"
 #include "utils/xcbutils.h"
@@ -271,7 +271,7 @@ void TabBoxHandlerImpl::highlightWindows(Window *window, QWindow *controller)
     if (Window *t = workspace()->findInternal(controller)) {
         windows << t->effectWindow();
     }
-    static_cast<EffectsHandlerImpl *>(effects)->highlightWindows(windows);
+    effects->highlightWindows(windows);
 }
 
 bool TabBoxHandlerImpl::noModifierGrab() const
@@ -606,7 +606,7 @@ bool TabBox::handleMouseEvent(QMouseEvent *event)
 {
     if (!m_isShown && isDisplayed()) {
         // tabbox has been replaced, check effects
-        if (effects && static_cast<EffectsHandlerImpl *>(effects)->checkInputWindowEvent(event)) {
+        if (effects && effects->checkInputWindowEvent(event)) {
             return true;
         }
     }
@@ -636,7 +636,7 @@ bool TabBox::handleWheelEvent(QWheelEvent *event)
 {
     if (!m_isShown && isDisplayed()) {
         // tabbox has been replaced, check effects
-        if (effects && static_cast<EffectsHandlerImpl *>(effects)->checkInputWindowEvent(event)) {
+        if (effects && effects->checkInputWindowEvent(event)) {
             return true;
         }
     }

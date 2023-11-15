@@ -10,7 +10,7 @@
 
 #include "compositor.h"
 #include "effectloader.h"
-#include "effects.h"
+#include "libkwineffects/kwineffects.h"
 #include "scripting/scriptedeffect.h"
 #include "wayland_server.h"
 #include "window.h"
@@ -80,7 +80,7 @@ void DontCrashCancelAnimationFromAnimationEndedTest::testScript()
         QVERIFY(QMetaObject::invokeMethod(*it, "effectLoaded", Q_ARG(KWin::Effect *, effect), Q_ARG(QString, QStringLiteral("crashy"))));
         break;
     }
-    QVERIFY(static_cast<EffectsHandlerImpl *>(effects)->isEffectLoaded(QStringLiteral("crashy")));
+    QVERIFY(effects->isEffectLoaded(QStringLiteral("crashy")));
 
     // create a window
     std::unique_ptr<KWayland::Client::Surface> surface{Test::createSurface()};

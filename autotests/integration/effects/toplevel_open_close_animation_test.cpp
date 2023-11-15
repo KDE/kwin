@@ -10,7 +10,7 @@
 #include "kwin_wayland_test.h"
 
 #include "effectloader.h"
-#include "effects.h"
+#include "libkwineffects/kwineffects.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
@@ -75,10 +75,8 @@ void ToplevelOpenCloseAnimationTest::init()
 
 void ToplevelOpenCloseAnimationTest::cleanup()
 {
-    auto effectsImpl = qobject_cast<EffectsHandlerImpl *>(effects);
-    QVERIFY(effectsImpl);
-    effectsImpl->unloadAllEffects();
-    QVERIFY(effectsImpl->loadedEffects().isEmpty());
+    effects->unloadAllEffects();
+    QVERIFY(effects->loadedEffects().isEmpty());
 
     Test::destroyWaylandConnection();
 }
@@ -97,16 +95,12 @@ void ToplevelOpenCloseAnimationTest::testAnimateToplevels()
     // This test verifies that window open/close animation effects try to
     // animate the appearing and the disappearing of toplevel windows.
 
-    // Make sure that we have the right effects ptr.
-    auto effectsImpl = qobject_cast<EffectsHandlerImpl *>(effects);
-    QVERIFY(effectsImpl);
-
     // Load effect that will be tested.
     QFETCH(QString, effectName);
-    QVERIFY(effectsImpl->loadEffect(effectName));
-    QCOMPARE(effectsImpl->loadedEffects().count(), 1);
-    QCOMPARE(effectsImpl->loadedEffects().first(), effectName);
-    Effect *effect = effectsImpl->findEffect(effectName);
+    QVERIFY(effects->loadEffect(effectName));
+    QCOMPARE(effects->loadedEffects().count(), 1);
+    QCOMPARE(effects->loadedEffects().first(), effectName);
+    Effect *effect = effects->findEffect(effectName);
     QVERIFY(effect);
     QVERIFY(!effect->isActive());
 
@@ -148,10 +142,6 @@ void ToplevelOpenCloseAnimationTest::testDontAnimatePopups()
     // This test verifies that window open/close animation effects don't try
     // to animate popups(e.g. popup menus, tooltips, etc).
 
-    // Make sure that we have the right effects ptr.
-    auto effectsImpl = qobject_cast<EffectsHandlerImpl *>(effects);
-    QVERIFY(effectsImpl);
-
     // Create the main window.
     std::unique_ptr<KWayland::Client::Surface> mainWindowSurface(Test::createSurface());
     QVERIFY(mainWindowSurface != nullptr);
@@ -162,10 +152,10 @@ void ToplevelOpenCloseAnimationTest::testDontAnimatePopups()
 
     // Load effect that will be tested.
     QFETCH(QString, effectName);
-    QVERIFY(effectsImpl->loadEffect(effectName));
-    QCOMPARE(effectsImpl->loadedEffects().count(), 1);
-    QCOMPARE(effectsImpl->loadedEffects().first(), effectName);
-    Effect *effect = effectsImpl->findEffect(effectName);
+    QVERIFY(effects->loadEffect(effectName));
+    QCOMPARE(effects->loadedEffects().count(), 1);
+    QCOMPARE(effects->loadedEffects().first(), effectName);
+    Effect *effect = effects->findEffect(effectName);
     QVERIFY(effect);
     QVERIFY(!effect->isActive());
 

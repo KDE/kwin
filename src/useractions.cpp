@@ -27,7 +27,6 @@
 
 #include "core/output.h"
 #include "cursor.h"
-#include "effects.h"
 #include "input.h"
 #include "options.h"
 #include "scripting/scripting.h"

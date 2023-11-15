@@ -88,7 +88,7 @@ Q_SIGNALS:
 protected:
     void createStackingOrder();
     void clearStackingOrder();
-    friend class EffectsHandlerImpl;
+    friend class EffectsHandler;
     // called after all effects had their paintScreen() called
     void finalPaintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen);
     // shared implementation of painting the screen in the generic

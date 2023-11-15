@@ -8,7 +8,7 @@
 */
 #include "x11_filter.h"
 
-#include "effects.h"
+#include "libkwineffects/kwineffects.h"
 #include "screenedge.h"
 #include "tabbox/tabbox.h"
 #include "utils/xcbutils.h"
@@ -41,7 +41,7 @@ bool X11Filter::event(xcb_generic_event_t *event)
         auto e = reinterpret_cast<xcb_button_press_event_t *>(event);
         xcb_allow_events(connection(), XCB_ALLOW_ASYNC_POINTER, XCB_CURRENT_TIME);
         if (!tab->isShown() && tab->isDisplayed()) {
-            if (effects && static_cast<EffectsHandlerImpl *>(effects)->isMouseInterception()) {
+            if (effects && effects->isMouseInterception()) {
                 // pass on to effects, effects will filter out the event
                 return false;
             }

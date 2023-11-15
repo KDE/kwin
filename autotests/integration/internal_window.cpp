@@ -9,8 +9,8 @@
 #include "kwin_wayland_test.h"
 
 #include "core/output.h"
-#include "effects.h"
 #include "internalwindow.h"
+#include "libkwineffects/kwineffects.h"
 #include "pointer_input.h"
 #include "wayland/surface.h"
 #include "wayland_server.h"

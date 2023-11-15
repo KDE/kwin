@@ -254,7 +254,7 @@ std::unique_ptr<OutlineVisual> X11StandaloneBackend::createOutline(Outline *outl
 
 void X11StandaloneBackend::createEffectsHandler(Compositor *compositor, WorkspaceScene *scene)
 {
-    new EffectsHandlerImplX11(compositor, scene);
+    new EffectsHandlerX11(compositor, scene);
 }
 
 QList<CompositingType> X11StandaloneBackend::supportedCompositors() const

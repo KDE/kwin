@@ -17,14 +17,9 @@
 #include "atoms.h"
 #include "cursor.h"
 #include "focuschain.h"
-#include "netinfo.h"
-#include "workspace.h"
-#include "x11window.h"
-#if KWIN_BUILD_TABBOX
-#include "tabbox/tabbox.h"
-#endif
-#include "effects.h"
 #include "group.h"
+#include "libkwineffects/kwineffects.h"
+#include "netinfo.h"
 #include "rules.h"
 #include "screenedge.h"
 #include "useractions.h"
@@ -32,6 +27,12 @@
 #include "wayland/surface.h"
 #include "wayland/xwaylandshell_v1.h"
 #include "wayland_server.h"
+#include "workspace.h"
+#include "x11window.h"
+
+#if KWIN_BUILD_TABBOX
+#include "tabbox/tabbox.h"
+#endif
 
 #include <KDecoration2/Decoration>
 
@@ -678,7 +679,7 @@ void X11Window::clientMessageEvent(xcb_client_message_event_t *e)
 void X11Window::configureNotifyEvent(xcb_configure_notify_event_t *e)
 {
     if (effects) {
-        static_cast<EffectsHandlerImpl *>(effects)->checkInputWindowStacking(); // keep them on top
+        effects->checkInputWindowStacking(); // keep them on top
     }
     QRectF newgeom(Xcb::fromXNative(e->x), Xcb::fromXNative(e->y), Xcb::fromXNative(e->width), Xcb::fromXNative(e->height));
     if (newgeom != m_frameGeometry) {

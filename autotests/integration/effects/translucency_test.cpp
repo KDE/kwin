@@ -10,7 +10,7 @@
 
 #include "compositor.h"
 #include "effectloader.h"
-#include "effects.h"
+#include "libkwineffects/kwineffects.h"
 #include "pointer_input.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
@@ -73,16 +73,14 @@ void TranslucencyTest::initTestCase()
 
 void TranslucencyTest::init()
 {
-    // load the translucency effect
-    EffectsHandlerImpl *e = static_cast<EffectsHandlerImpl *>(effects);
     // find the effectsloader
-    auto effectloader = e->findChild<AbstractEffectLoader *>();
+    auto effectloader = effects->findChild<AbstractEffectLoader *>();
     QVERIFY(effectloader);
     QSignalSpy effectLoadedSpy(effectloader, &AbstractEffectLoader::effectLoaded);
 
-    QVERIFY(!e->isEffectLoaded(QStringLiteral("translucency")));
-    QVERIFY(e->loadEffect(QStringLiteral("translucency")));
-    QVERIFY(e->isEffectLoaded(QStringLiteral("translucency")));
+    QVERIFY(!effects->isEffectLoaded(QStringLiteral("translucency")));
+    QVERIFY(effects->loadEffect(QStringLiteral("translucency")));
+    QVERIFY(effects->isEffectLoaded(QStringLiteral("translucency")));
 
     QCOMPARE(effectLoadedSpy.count(), 1);
     m_translucencyEffect = effectLoadedSpy.first().first().value<Effect *>();
@@ -91,11 +89,10 @@ void TranslucencyTest::init()
 
 void TranslucencyTest::cleanup()
 {
-    EffectsHandlerImpl *e = static_cast<EffectsHandlerImpl *>(effects);
-    if (e->isEffectLoaded(QStringLiteral("translucency"))) {
-        e->unloadEffect(QStringLiteral("translucency"));
+    if (effects->isEffectLoaded(QStringLiteral("translucency"))) {
+        effects->unloadEffect(QStringLiteral("translucency"));
     }
-    QVERIFY(!e->isEffectLoaded(QStringLiteral("translucency")));
+    QVERIFY(!effects->isEffectLoaded(QStringLiteral("translucency")));
     m_translucencyEffect = nullptr;
 }
 

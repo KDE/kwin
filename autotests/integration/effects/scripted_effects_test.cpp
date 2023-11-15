@@ -10,8 +10,8 @@
 #include "kwin_wayland_test.h"
 
 #include "effectloader.h"
-#include "effects.h"
 #include "libkwineffects/anidata_p.h"
+#include "libkwineffects/kwineffects.h"
 #include "scripting/scriptedeffect.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
@@ -104,7 +104,7 @@ bool ScriptedEffectWithDebugSpy::load(const QString &name)
         return false;
     }
 
-    // inject our newly created effect to be registered with the EffectsHandlerImpl::loaded_effects
+    // inject our newly created effect to be registered with the EffectsHandler::loaded_effects
     // this is private API so some horrible code is used to find the internal effectloader
     // and register ourselves
     auto children = effects->children();
@@ -116,7 +116,7 @@ bool ScriptedEffectWithDebugSpy::load(const QString &name)
         break;
     }
 
-    return (static_cast<EffectsHandlerImpl *>(effects)->isEffectLoaded(name));
+    return effects->isEffectLoaded(name);
 }
 
 void ScriptedEffectsTest::initTestCase()
@@ -159,9 +159,8 @@ void ScriptedEffectsTest::cleanup()
 {
     Test::destroyWaylandConnection();
 
-    auto effectsImpl = static_cast<EffectsHandlerImpl *>(effects);
-    effectsImpl->unloadAllEffects();
-    QVERIFY(effectsImpl->loadedEffects().isEmpty());
+    effects->unloadAllEffects();
+    QVERIFY(effects->loadedEffects().isEmpty());
 
     KWin::VirtualDesktopManager::self()->setCurrent(1);
 }
