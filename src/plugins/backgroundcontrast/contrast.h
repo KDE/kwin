@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/effect.h"
 #include "opengl/glplatform.h"
 #include "opengl/glutils.h"
 

@@ -12,11 +12,13 @@
 #pragma once
 
 // kwineffects
-#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/effect.h"
 #include "libkwineffects/timeline.h"
 
 namespace KWin
 {
+
+class EffectWindowGroup;
 
 class DimInactiveEffect : public Effect
 {

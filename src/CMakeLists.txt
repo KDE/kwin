@@ -109,6 +109,7 @@ target_sources(kwin PRIVATE
     layershellv1integration.cpp
     layershellv1window.cpp
     libkwineffects/anidata.cpp
+    libkwineffects/effect.cpp
     libkwineffects/effectframe.cpp
     libkwineffects/effecttogglablestate.cpp
     libkwineffects/kwinanimationeffect.cpp
@@ -435,6 +436,7 @@ install(FILES
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/utils COMPONENT Devel)
 
 install(FILES
+    libkwineffects/effect.h
     libkwineffects/kwinanimationeffect.h
     libkwineffects/kwineffects.h
     libkwineffects/kwinglobals.h

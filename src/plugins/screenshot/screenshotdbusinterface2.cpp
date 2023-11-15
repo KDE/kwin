@@ -8,6 +8,7 @@
 
 #include "screenshotdbusinterface2.h"
 #include "core/output.h"
+#include "libkwineffects/kwineffects.h"
 #include "screenshot2adaptor.h"
 #include "screenshotlogging.h"
 #include "utils/filedescriptor.h"

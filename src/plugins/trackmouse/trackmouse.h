@@ -11,7 +11,7 @@
 
 #pragma once
 
-#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/effect.h"
 
 class QAction;
 

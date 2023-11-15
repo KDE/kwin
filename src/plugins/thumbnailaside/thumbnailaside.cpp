@@ -9,10 +9,10 @@
 */
 
 #include "thumbnailaside.h"
+#include "core/renderviewport.h"
+#include "libkwineffects/kwineffects.h"
 // KConfigSkeleton
 #include "thumbnailasideconfig.h"
-
-#include "core/renderviewport.h"
 
 #include <KGlobalAccel>
 #include <KLocalizedString>

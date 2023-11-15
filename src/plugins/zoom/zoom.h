@@ -12,7 +12,7 @@
 
 #include <config-kwin.h>
 
-#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/effect.h"
 #include <QTime>
 #include <QTimeLine>
 

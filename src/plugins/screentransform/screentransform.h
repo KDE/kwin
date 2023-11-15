@@ -9,7 +9,7 @@
 #pragma once
 
 #include "core/output.h"
-#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/effect.h"
 #include "libkwineffects/timeline.h"
 
 namespace KWin

@@ -7,7 +7,7 @@
 #pragma once
 
 #include "core/output.h"
-#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/effect.h"
 #include "libkwineffects/kwinoffscreenquickview.h"
 
 #include <QQmlComponent>

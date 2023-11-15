@@ -9,8 +9,8 @@
 
 #pragma once
 
+#include "libkwineffects/effect.h"
 #include "libkwineffects/effectframe.h"
-#include "libkwineffects/kwineffects.h"
 #include "opengl/glutils.h"
 #include <KLocalizedString>
 #include <QFont>

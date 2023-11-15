@@ -8,7 +8,7 @@
 */
 #pragma once
 
-#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/effect.h"
 #include <QColor>
 #include <QDBusContext>
 #include <QDBusMessage>

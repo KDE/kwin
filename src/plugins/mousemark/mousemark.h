@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/effect.h"
 #include "opengl/glutils.h"
 
 namespace KWin
