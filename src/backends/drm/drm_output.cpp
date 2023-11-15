@@ -414,7 +414,7 @@ bool DrmOutput::setChannelFactors(const QVector3D &rgb)
         return true;
     }
     m_channelFactors = rgb;
-    if (needsColormanagement()) {
+    if (!needsColormanagement()) {
         if (!m_pipeline->activePending()) {
             return false;
         }
