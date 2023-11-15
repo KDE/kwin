@@ -11,7 +11,7 @@
 // config
 #include <config-kwin.h>
 // KWin
-#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/effect.h"
 #include "plugin.h"
 #include "scripting/scriptedeffect.h"
 #include "scripting/scriptedquicksceneeffect.h"

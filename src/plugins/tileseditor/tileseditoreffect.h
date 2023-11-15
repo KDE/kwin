@@ -8,6 +8,8 @@
 
 #include "libkwineffects/kwinquickeffect.h"
 
+#include <QAction>
+
 namespace KWin
 {
 

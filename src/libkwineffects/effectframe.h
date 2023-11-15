@@ -7,9 +7,11 @@
 
 #pragma once
 
+#include "libkwineffects/kwineffects.h" // FIXME: move infiniteRegion() elsewhere
 #include "libkwineffects/kwinoffscreenquickview.h"
 
 #include <QFont>
+#include <QIcon>
 
 namespace KWin
 {

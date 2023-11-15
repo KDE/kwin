@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "libkwineffects/kwineffects.h"
+#include "kwin_export.h"
 
 #include <QObject>
 #include <QRect>

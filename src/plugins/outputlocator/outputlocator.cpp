@@ -6,6 +6,7 @@
 
 #include "outputlocator.h"
 #include "core/output.h"
+#include "libkwineffects/kwineffects.h"
 #include "libkwineffects/kwinoffscreenquickview.h"
 
 #include <algorithm>

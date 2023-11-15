@@ -10,7 +10,6 @@
 
 #include "activities.h"
 #include "core/output.h"
-#include "libkwineffects/kwineffects.h"
 #include "pointer_input.h"
 #include "utils/xcbutils.h"
 #include "wayland_server.h"

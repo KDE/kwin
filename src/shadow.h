@@ -9,8 +9,13 @@
 */
 #pragma once
 
-#include "libkwineffects/kwineffects.h"
+#include "kwin_export.h"
+
+#include <QImage>
 #include <QObject>
+#include <QRectF>
+
+#include <xcb/xcb.h>
 
 namespace KDecoration2
 {

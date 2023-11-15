@@ -10,7 +10,6 @@
 */
 
 #include "gltexture_p.h"
-#include "libkwineffects/kwineffects.h"
 #include "opengl/glplatform.h"
 #include "opengl/glutils.h"
 #include "opengl/glutils_funcs.h"

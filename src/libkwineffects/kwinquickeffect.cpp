@@ -6,6 +6,7 @@
 
 #include "libkwineffects/kwinquickeffect.h"
 #include "core/output.h"
+#include "libkwineffects/kwineffects.h"
 
 #include "logging_p.h"
 

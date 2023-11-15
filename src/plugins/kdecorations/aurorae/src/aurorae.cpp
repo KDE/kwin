@@ -6,7 +6,6 @@
 #include "aurorae.h"
 
 #include "config-kwin.h"
-#include "libkwineffects/kwineffects.h"
 
 #include "auroraeshared.h"
 #include "auroraetheme.h"

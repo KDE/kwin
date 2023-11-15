@@ -5,7 +5,8 @@
 */
 
 #include "expoarea.h"
-#include "core/output.h"
+#include "virtualdesktops.h"
+#include "workspace.h"
 
 namespace KWin
 {
@@ -62,7 +63,7 @@ void ExpoArea::update()
     }
     const QRectF oldRect = m_rect;
 
-    m_rect = effects->clientArea(MaximizeArea, m_screen, effects->currentDesktop());
+    m_rect = workspace()->clientArea(MaximizeArea, m_screen, VirtualDesktopManager::self()->currentDesktop());
 
     // Map the area to the output local coordinates.
     m_rect.translate(-m_screen->geometry().topLeft());

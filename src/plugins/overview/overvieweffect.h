@@ -12,6 +12,8 @@
 namespace KWin
 {
 
+class VirtualDesktop;
+
 class OverviewEffect : public QuickSceneEffect
 {
     Q_OBJECT

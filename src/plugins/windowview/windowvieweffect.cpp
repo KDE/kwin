@@ -5,6 +5,7 @@
 */
 
 #include "windowvieweffect.h"
+#include "libkwineffects/kwineffects.h"
 #include "windowview1adaptor.h"
 #include "windowviewconfig.h"
 
