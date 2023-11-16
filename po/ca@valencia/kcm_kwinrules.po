@@ -235,7 +235,7 @@ msgstr "Títol de la finestra"
 #: rulesmodel.cpp:436
 #, kde-format
 msgid "Machine (hostname)"
-msgstr "Màquina (nom de la màquina)"
+msgstr "Màquina (nom de l'amfitrió)"
 
 #: rulesmodel.cpp:442
 #, kde-format

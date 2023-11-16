@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-15 01:39+0000\n"
+"POT-Creation-Date: 2023-11-16 01:45+0000\n"
 "PO-Revision-Date: 2023-11-14 04:49+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -1205,22 +1205,22 @@ msgstr "&חיסול היישום %1"
 msgid "Wait Longer"
 msgstr "להמתין עוד קצת"
 
-#: input.cpp:2016
+#: input.cpp:2015
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "העברת מחשב הלוח לפלט הבא"
 
-#: input.cpp:2095
+#: input.cpp:2094
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "מחשב הלוח הועבר אל %1"
 
-#: input.cpp:2095
+#: input.cpp:2094
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "מחשבי הלוח החליפו אמצעי פלט"
 
-#: input.cpp:3154
+#: input.cpp:3153
 #, kde-format
 msgid "Touchpad"
 msgstr "משטח מגע"
@@ -1319,55 +1319,55 @@ msgstr "השבתת אפשרויות הגדרה"
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "מציין כי KWin קרס לאחרונה n פעמים"
 
-#: main_wayland.cpp:291
+#: main_wayland.cpp:289
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "הפעלת שרת Xwayless לא כמשתמש על."
 
-#: main_wayland.cpp:293
+#: main_wayland.cpp:291
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
 msgstr ""
 "שם שקע (socket) ה־Wayland להאזין לו. אם לא הוגדר, ייעשה שימוש ב־„wayland-0”."
 
-#: main_wayland.cpp:296
+#: main_wayland.cpp:294
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr "תצוגת ה־X11 לשימוש במצב חלוני בפלטפורמת X11."
 
-#: main_wayland.cpp:299
+#: main_wayland.cpp:297
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr "תצוגת ה־Wayland לשימוש במצב חלוני בפלטפורמת Wayland."
 
-#: main_wayland.cpp:301
+#: main_wayland.cpp:299
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "עיבוד למכלא חוזי וירטואלי."
 
-#: main_wayland.cpp:303
+#: main_wayland.cpp:301
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "רוחב למצב חלון. רוחב ברירת המחדל הוא 1024."
 
-#: main_wayland.cpp:307
+#: main_wayland.cpp:305
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "גובה למצב חלון. גובה ברירת המחדל הוא 768."
 
-#: main_wayland.cpp:312
+#: main_wayland.cpp:310
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "קנה המידה למצב חלון. ערך ברירת המחדל הוא 1."
 
-#: main_wayland.cpp:317
+#: main_wayland.cpp:315
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
 msgstr "מספר החלונות לפתיחה כערוצי פלט במצב חלוני. ערך ברירת המחדל הוא 1"
 
-#: main_wayland.cpp:322
+#: main_wayland.cpp:320
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1376,7 +1376,7 @@ msgstr ""
 "שקע (socket) Wayland לשימוש לחיבורים נכנסים. אפשר לשלב את זה עם ‎--socket כדי "
 "לתת שם לשקע"
 
-#: main_wayland.cpp:326
+#: main_wayland.cpp:324
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1385,64 +1385,64 @@ msgstr ""
 "שקע (socket) XWayland לשימוש לחיבורי Xwayland הנכנסים. אפשר להגדיר את זה "
 "מספר פעמים"
 
-#: main_wayland.cpp:330
+#: main_wayland.cpp:328
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "שם תצוגת ה־xwayland שהוקמה מראש"
 
-#: main_wayland.cpp:334
+#: main_wayland.cpp:332
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "שם קובץ ה־xauthority "
 
-#: main_wayland.cpp:338
+#: main_wayland.cpp:336
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 "יוצא מהמופע הזה כדי שניתן יהיה להפעיל אותו מחדש על ידי kwin_wayland_wrapper."
 
-#: main_wayland.cpp:340
+#: main_wayland.cpp:338
 #, kde-format
 msgid "Render through drm node."
 msgstr "עיבוד דרך צומת drm."
 
-#: main_wayland.cpp:341
+#: main_wayland.cpp:339
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr "חילוץ פרטי הגדרות אזוריות מ־locale1 במקום מהגדרות המשתמש"
 
-#: main_wayland.cpp:363
+#: main_wayland.cpp:361
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "שיטת הקלט בה KWin יתחיל."
 
-#: main_wayland.cpp:369
+#: main_wayland.cpp:367
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "מפעיל את ההפעלה במצב נעול."
 
-#: main_wayland.cpp:373
+#: main_wayland.cpp:371
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "מפעיל את ההפעלה ללא תמיכה במסך נעילה."
 
-#: main_wayland.cpp:378
+#: main_wayland.cpp:376
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "מפעיל את ההפעלה ללא תמיכה במקשי קיצור גלובליים."
 
-#: main_wayland.cpp:383 main_x11.cpp:432
+#: main_wayland.cpp:381 main_x11.cpp:431
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "השבתת שילוב מול KActivities."
 
-#: main_wayland.cpp:388
+#: main_wayland.cpp:386
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr "לצאת לאחר יציאת יישום ההפעלה, שהופעל על ידי KWin."
 
-#: main_wayland.cpp:393
+#: main_wayland.cpp:391
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr "יישומים להתחלה מיד לאחר התחלת שרתי Wayland ו־Xwayland"
@@ -1472,7 +1472,7 @@ msgstr ""
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr "kwin: מנהל חלונות אחר פעיל (כדאי לנסות להשתמש ב־‎--replace)\n"
 
-#: main_x11.cpp:425
+#: main_x11.cpp:424
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "החלp, מנהל חלונות תואם ICCCM2.0 קיים"
@@ -2227,7 +2227,7 @@ msgstr "מתג תאורת לילה"
 msgid "Color Temperature Preview"
 msgstr "תצוגת חום צבע מקדימה"
 
-#: plugins/outputlocator/outputlocator.cpp:49
+#: plugins/outputlocator/outputlocator.cpp:50
 #, kde-format
 msgctxt "@label"
 msgid "Unknown"
@@ -2240,7 +2240,7 @@ msgid "Cycle through Overview and Grid View"
 msgstr "החלפה מעגלית בין סקירה ותצוגת רשת"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:48
-#: plugins/overview/overvieweffect.cpp:133
+#: plugins/overview/overvieweffect.cpp:134
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
@@ -2297,19 +2297,19 @@ msgstr "ארגון חלונות בתצוגת רשת:"
 msgid "Search results include filtered windows:"
 msgstr "תוצאות חיפוש כוללות חלונות מסוננים:"
 
-#: plugins/overview/overvieweffect.cpp:124
+#: plugins/overview/overvieweffect.cpp:125
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
 msgstr "החלפה מעגלית בין סקירה ותצוגת רשת"
 
-#: plugins/overview/overvieweffect.cpp:141
+#: plugins/overview/overvieweffect.cpp:142
 #, kde-format
 msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
 msgstr "החלפת מצב סקירה"
 
-#: plugins/overview/overvieweffect.cpp:149
+#: plugins/overview/overvieweffect.cpp:150
 #, kde-format
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
@@ -2325,25 +2325,25 @@ msgstr "מחיקת שולחן עבודה וירטואלי"
 msgid "Add Virtual Desktop"
 msgstr "הוספת שולחן עבודה וירטואלי"
 
-#: plugins/overview/qml/main.qml:319
+#: plugins/overview/qml/main.qml:374
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "אין שולחנות עבודה וירטואליים אחרים להצגה"
 
-#: plugins/overview/qml/main.qml:325
+#: plugins/overview/qml/main.qml:380
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "הוספת שולחן עבודה וירטואלי"
 
-#: plugins/overview/qml/main.qml:332
+#: plugins/overview/qml/main.qml:387
 #, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "הגדרת שולחנות עבודה וירטואליים…"
 
-#: plugins/overview/qml/main.qml:660
+#: plugins/overview/qml/main.qml:715
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
@@ -2388,22 +2388,22 @@ msgstr "יצירת הקשר PipeWire נכשלה"
 msgid "Failed to connect PipeWire context"
 msgstr "התחברות להקשר PipeWire נכשלה"
 
-#: plugins/screencast/screencastmanager.cpp:105
+#: plugins/screencast/screencastmanager.cpp:104
 #, kde-format
 msgid "Could not find window id %1"
 msgstr "לא ניתן למצוא את מזהה החלון %1"
 
-#: plugins/screencast/screencastmanager.cpp:145
+#: plugins/screencast/screencastmanager.cpp:144
 #, kde-format
 msgid "Could not find output"
 msgstr "לא ניתן למצוא פלט"
 
-#: plugins/screencast/screencastmanager.cpp:172
+#: plugins/screencast/screencastmanager.cpp:171
 #, kde-format
 msgid "Invalid region"
 msgstr "אזור שגוי"
 
-#: plugins/screencast/screencastmanager.cpp:203
+#: plugins/screencast/screencastmanager.cpp:202
 #, kde-format
 msgid "Region outside the workspace"
 msgstr "אזור מחוץ למרחב העבודה"
@@ -2413,7 +2413,7 @@ msgstr "אזור מחוץ למרחב העבודה"
 msgid "Failed to create PipeWire stream"
 msgstr "יצירת תזרים PipeWire נכשלה"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:531
+#: plugins/screenshot/screenshotdbusinterface2.cpp:532
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2422,7 +2422,7 @@ msgstr ""
 "נא לבחור חלון לצילום בלחיצה שמאלית או enter.\n"
 "Escape או לחיצה ימנית לביטול."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:549
+#: plugins/screenshot/screenshotdbusinterface2.cpp:550
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
@@ -2529,7 +2529,7 @@ msgid " %"
 msgstr " %"
 
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:37
-#: plugins/tileseditor/tileseditoreffect.cpp:29
+#: plugins/tileseditor/tileseditoreffect.cpp:30
 #, kde-format
 msgid "Toggle Tiles Editor"
 msgstr "החלפת הצגת עורך אריחים"
@@ -2721,25 +2721,25 @@ msgid "None"
 msgstr "כלום"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:42
-#: plugins/windowview/windowvieweffect.cpp:45
+#: plugins/windowview/windowvieweffect.cpp:46
 #, kde-format
 msgid "Toggle Present Windows (Current desktop)"
 msgstr "החלפת החלונות הנוכחיים (שולחן עבודה נוכחי)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:49
-#: plugins/windowview/windowvieweffect.cpp:54
+#: plugins/windowview/windowvieweffect.cpp:55
 #, kde-format
 msgid "Toggle Present Windows (All desktops)"
 msgstr "החלפת החלונות הנוכחיים (כל שולחנות העבודה)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:56
-#: plugins/windowview/windowvieweffect.cpp:63
+#: plugins/windowview/windowvieweffect.cpp:64
 #, kde-format
 msgid "Toggle Present Windows (Window class)"
 msgstr "החלפת החלונות הנוכחיים (מחלקת חלון)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:62
-#: plugins/windowview/windowvieweffect.cpp:72
+#: plugins/windowview/windowvieweffect.cpp:73
 #, kde-format
 msgid "Toggle Present Windows (Window class on current desktop)"
 msgstr "החלפת החלונות הנוכחיים (מחלקת החלון בשולחן העבודה הנוכחי)"
@@ -3567,7 +3567,7 @@ msgstr ""
 "התקנת מחליף החלונות פגומה, המשאבים חסרים.\n"
 "נא ליצור קשר עם אורזי ההפצה שלך בנוגע לזה."
 
-#: useractions.cpp:159
+#: useractions.cpp:158
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -3579,7 +3579,7 @@ msgstr ""
 "ללא המסגרת, אי אפשר להציג חזרה את המסגרת עם העכבר בלבד: כדי להשתמש בתפריט "
 "פעולת החלון, יש להשתמש במקשי הקיצור %1."
 
-#: useractions.cpp:166
+#: useractions.cpp:165
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -3591,135 +3591,135 @@ msgstr ""
 "אם התוכנה לא כוללת אפשרות ליציאה ממסך מלא, אי אפשר להציג חזרה את המסגרת עם "
 "העכבר בלבד: כדי להשתמש בתפריט פעולת החלון, יש להשתמש במקשי הקיצור %1."
 
-#: useractions.cpp:213
+#: useractions.cpp:212
 #, kde-format
 msgid "&Move"
 msgstr "ה&עברה"
 
-#: useractions.cpp:218
+#: useractions.cpp:217
 #, kde-format
 msgid "&Resize"
 msgstr "&שינוי גודל"
 
-#: useractions.cpp:223
+#: useractions.cpp:222
 #, kde-format
 msgid "Keep &Above Others"
 msgstr "ריחוף &מעל כולם"
 
-#: useractions.cpp:229
+#: useractions.cpp:228
 #, kde-format
 msgid "Keep &Below Others"
 msgstr "צלילה מ&תחת לכולם"
 
-#: useractions.cpp:235
+#: useractions.cpp:234
 #, kde-format
 msgid "&Fullscreen"
 msgstr "מ&סך מלא"
 
-#: useractions.cpp:241
+#: useractions.cpp:240
 #, kde-format
 msgid "&Shade"
 msgstr "ה&צללה"
 
-#: useractions.cpp:247
+#: useractions.cpp:246
 #, kde-format
 msgid "&No Titlebar and Frame"
 msgstr "&ללא שורת כותרת ומסגרת"
 
-#: useractions.cpp:255
+#: useractions.cpp:254
 #, kde-format
 msgid "Set Window Short&cut…"
 msgstr "הגדרת &קיצור מקשים לחלון…"
 
-#: useractions.cpp:261
+#: useractions.cpp:260
 #, kde-format
 msgid "Configure Special &Window Settings…"
 msgstr "ה&גדרת תצורת חלון מיוחדת…"
 
-#: useractions.cpp:266
+#: useractions.cpp:265
 #, kde-format
 msgid "Configure S&pecial Application Settings…"
 msgstr "ה&גדרת תצורת יישום מיוחדת…"
 
-#: useractions.cpp:272
+#: useractions.cpp:271
 #, kde-format
 msgid "Ma&ximize"
 msgstr "ה&גדלה"
 
-#: useractions.cpp:278
+#: useractions.cpp:277
 #, kde-format
 msgid "Mi&nimize"
 msgstr "מ&זעור"
 
-#: useractions.cpp:284
+#: useractions.cpp:283
 #, kde-format
 msgid "&More Actions"
 msgstr "פעולות &נוספות"
 
-#: useractions.cpp:289
+#: useractions.cpp:288
 #, kde-format
 msgid "&Close"
 msgstr "&סגירה"
 
-#: useractions.cpp:359
+#: useractions.cpp:358
 #, kde-format
 msgid "&Extensions"
 msgstr "ה&רחבות"
 
-#: useractions.cpp:410
+#: useractions.cpp:409
 #, kde-format
 msgid "&Desktops"
 msgstr "שולחנות &עבודה"
 
-#: useractions.cpp:424
+#: useractions.cpp:423
 #, kde-format
 msgid "Move to &Desktop"
 msgstr "ה&עברה לשולחן עבודה"
 
-#: useractions.cpp:441
+#: useractions.cpp:440
 #, kde-format
 msgid "Move to &Screen"
 msgstr "העברה למ&סך"
 
-#: useractions.cpp:457
+#: useractions.cpp:456
 #, kde-format
 msgid "Show in &Activities"
 msgstr "הצגה ב&פעילויות"
 
-#: useractions.cpp:474
+#: useractions.cpp:473
 #, kde-format
 msgid "Move &To Current Desktop"
 msgstr "העברה לשולחן העבודה ה&נוכחי"
 
-#: useractions.cpp:484 useractions.cpp:551
+#: useractions.cpp:483 useractions.cpp:550
 #, kde-format
 msgid "&All Desktops"
 msgstr "&כל שולחנות העבודה"
 
-#: useractions.cpp:524
+#: useractions.cpp:523
 #, kde-format
 msgctxt "Create a new desktop and move the window there"
 msgid "&New Desktop"
 msgstr "שולחן עבודה &חדש"
 
-#: useractions.cpp:595
+#: useractions.cpp:594
 #, kde-format
 msgid "Move to %1 %2"
 msgstr "העברה אל %1 %2"
 
-#: useractions.cpp:608
+#: useractions.cpp:607
 #, kde-format
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
 msgstr "הוספה ל&שולחן עבודה חדש"
 
-#: useractions.cpp:620
+#: useractions.cpp:619
 #, kde-format
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
 msgstr "העברה לשולחן עבודה חדש"
 
-#: useractions.cpp:651
+#: useractions.cpp:650
 #, kde-format
 msgctxt ""
 "@item:inmenu List of all Screens to send a window to. First argument is a "
@@ -3727,359 +3727,359 @@ msgctxt ""
 msgid "Screen &%1 (%2)"
 msgstr "מסך &%1 (%2)"
 
-#: useractions.cpp:677
+#: useractions.cpp:676
 #, kde-format
 msgid "&All Activities"
 msgstr "&כל הפעילויות"
 
-#: useractions.cpp:725
+#: useractions.cpp:724
 #, kde-format
 msgid "Move to %1"
 msgstr "העברה אל %1"
 
-#: useractions.cpp:844
+#: useractions.cpp:843
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr "‏<b>%1</b> כבר בשימוש"
 
-#: useractions.cpp:846
+#: useractions.cpp:845
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr "‏<b>%1</b> כבר בשימוש על ידי %2 ב־%3"
 
-#: useractions.cpp:926
+#: useractions.cpp:925
 #, kde-format
 msgid "Window Operations Menu"
 msgstr "תפריט פעולות חלון"
 
-#: useractions.cpp:928
+#: useractions.cpp:927
 #, kde-format
 msgid "Close Window"
 msgstr "סגירת חלון"
 
-#: useractions.cpp:930
+#: useractions.cpp:929
 #, kde-format
 msgid "Maximize Window"
 msgstr "הגדלת חלון"
 
-#: useractions.cpp:932
+#: useractions.cpp:931
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "הגדלת חלון אנכית"
 
-#: useractions.cpp:934
+#: useractions.cpp:933
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "הגדלת חלון אופקית"
 
-#: useractions.cpp:936
+#: useractions.cpp:935
 #, kde-format
 msgid "Minimize Window"
 msgstr "מזעור חלון"
 
-#: useractions.cpp:938
+#: useractions.cpp:937
 #, kde-format
 msgid "Shade Window"
 msgstr "הצללת חלון"
 
-#: useractions.cpp:940
+#: useractions.cpp:939
 #, kde-format
 msgid "Move Window"
 msgstr "העברת חלונות"
 
-#: useractions.cpp:942
+#: useractions.cpp:941
 #, kde-format
 msgid "Resize Window"
 msgstr "שינוי גודל חלון"
 
-#: useractions.cpp:944
+#: useractions.cpp:943
 #, kde-format
 msgid "Raise Window"
 msgstr "קידום חלון"
 
-#: useractions.cpp:946
+#: useractions.cpp:945
 #, kde-format
 msgid "Lower Window"
 msgstr "דחיקת חלון"
 
-#: useractions.cpp:948
+#: useractions.cpp:947
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "החלפה בין קידום/דחיקת חלון"
 
-#: useractions.cpp:950
+#: useractions.cpp:949
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "הגדלת חלון למסך מלא"
 
-#: useractions.cpp:952
+#: useractions.cpp:951
 #, kde-format
 msgid "Toggle Window Titlebar and Frame"
 msgstr "החלפת חשיפת כותרת ומסגרת החלון"
 
-#: useractions.cpp:954
+#: useractions.cpp:953
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "ריחוף החלון מעל השאר"
 
-#: useractions.cpp:956
+#: useractions.cpp:955
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "השקעת החלון מתחת לאחרים"
 
-#: useractions.cpp:958
+#: useractions.cpp:957
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "הפעלת החלון הדורש התמקדות"
 
-#: useractions.cpp:960
+#: useractions.cpp:959
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "תצורת מקשי קיצור לחלונות"
 
-#: useractions.cpp:962
+#: useractions.cpp:961
 #, kde-format
 msgid "Move Window to the Center"
 msgstr "העברת החלון למרכז"
 
-#: useractions.cpp:964
+#: useractions.cpp:963
 #, kde-format
 msgid "Move Window Right"
 msgstr "העברת החלון ימינה"
 
-#: useractions.cpp:966
+#: useractions.cpp:965
 #, kde-format
 msgid "Move Window Left"
 msgstr "העברת החלון שמאלה"
 
-#: useractions.cpp:968
+#: useractions.cpp:967
 #, kde-format
 msgid "Move Window Up"
 msgstr "העברת החלון למעלה"
 
-#: useractions.cpp:970
+#: useractions.cpp:969
 #, kde-format
 msgid "Move Window Down"
 msgstr "העברת החלון למטה"
 
-#: useractions.cpp:972
+#: useractions.cpp:971
 #, kde-format
 msgid "Expand Window Horizontally"
 msgstr "הרחבת החלון אופקית"
 
-#: useractions.cpp:974
+#: useractions.cpp:973
 #, kde-format
 msgid "Expand Window Vertically"
 msgstr "הרחבת החלון אנכית"
 
-#: useractions.cpp:976
+#: useractions.cpp:975
 #, kde-format
 msgid "Shrink Window Horizontally"
 msgstr "כיווץ החלון אופקית"
 
-#: useractions.cpp:978
+#: useractions.cpp:977
 #, kde-format
 msgid "Shrink Window Vertically"
 msgstr "כיווץ החלון אנכית"
 
-#: useractions.cpp:980
+#: useractions.cpp:979
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "הצמדת החלון לשמאל כאריח"
 
-#: useractions.cpp:982
+#: useractions.cpp:981
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "הצמדת החלון לימין כאריח"
 
-#: useractions.cpp:984
+#: useractions.cpp:983
 #, kde-format
 msgid "Quick Tile Window to the Top"
 msgstr "הצמדת החלון כאריח למעלה"
 
-#: useractions.cpp:986
+#: useractions.cpp:985
 #, kde-format
 msgid "Quick Tile Window to the Bottom"
 msgstr "הצמגת החלון כאריח למטה"
 
-#: useractions.cpp:988
+#: useractions.cpp:987
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
 msgstr "הצמדת החלון לצד השמאלי למעלה כאריח"
 
-#: useractions.cpp:990
+#: useractions.cpp:989
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "הצמדת החלון לצד השמאלי למטה כאריח"
 
-#: useractions.cpp:992
+#: useractions.cpp:991
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
 msgstr "הצמדת החלון לצד הימני למעלה כאריח"
 
-#: useractions.cpp:994
+#: useractions.cpp:993
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "הצמדת החלון לצד הימני למטה כאריח"
 
-#: useractions.cpp:996
+#: useractions.cpp:995
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "מעבר לחלון מעל"
 
-#: useractions.cpp:998
+#: useractions.cpp:997
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "מעבר לחלון מתחת"
 
-#: useractions.cpp:1000
+#: useractions.cpp:999
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "מעבר לחלון מימין"
 
-#: useractions.cpp:1002
+#: useractions.cpp:1001
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "מעבר לחלון משמאל"
 
-#: useractions.cpp:1004
+#: useractions.cpp:1003
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "הגברת אטימות החלון הפעיל ב־5%"
 
-#: useractions.cpp:1006
+#: useractions.cpp:1005
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "הנמכת אטימות החלון הפעיל ב־5%"
 
-#: useractions.cpp:1009
+#: useractions.cpp:1008
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "להשאיר חלון בכל שולחנות עבודה"
 
-#: useractions.cpp:1020
+#: useractions.cpp:1019
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "העברת חלון לשולחן עבודה %1"
 
-#: useractions.cpp:1022
+#: useractions.cpp:1021
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "העברת חלון לשולחן העבודה הבא"
 
-#: useractions.cpp:1023
+#: useractions.cpp:1022
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "העברת חלון לשולחן העבודה הקודם"
 
-#: useractions.cpp:1024
+#: useractions.cpp:1023
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "מעבר שולחן עבודה אחד ימינה"
 
-#: useractions.cpp:1026
+#: useractions.cpp:1025
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "מעבר שולחן עבודה אחד שמאלה"
 
-#: useractions.cpp:1028
+#: useractions.cpp:1027
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "מעבר שולחן עבודה אחד מעלה"
 
-#: useractions.cpp:1030
+#: useractions.cpp:1029
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "מעבר שולחן עבודה אחד מטה"
 
-#: useractions.cpp:1034
+#: useractions.cpp:1033
 #, kde-format
 msgid "Move Window to Screen %1"
 msgstr "העברת החלון למסך %1"
 
-#: useractions.cpp:1041
+#: useractions.cpp:1040
 #, kde-format
 msgid "Move Window to Next Screen"
 msgstr "העברת החלון למסך הבא"
 
-#: useractions.cpp:1043
+#: useractions.cpp:1042
 #, kde-format
 msgid "Move Window to Previous Screen"
 msgstr "העברת החלון למסך הקודם"
 
-#: useractions.cpp:1045
+#: useractions.cpp:1044
 #, kde-format
 msgid "Move Window One Screen to the Right"
 msgstr "העברת החלון מסך אחד ימינה"
 
-#: useractions.cpp:1047
+#: useractions.cpp:1046
 #, kde-format
 msgid "Move Window One Screen to the Left"
 msgstr "העברת החלון מסך אחד שמאלה"
 
-#: useractions.cpp:1049
+#: useractions.cpp:1048
 #, kde-format
 msgid "Move Window One Screen Up"
 msgstr "העברת החלון מסך אחד למעלה"
 
-#: useractions.cpp:1051
+#: useractions.cpp:1050
 #, kde-format
 msgid "Move Window One Screen Down"
 msgstr "העברת החלון מסך אחד למטה"
 
-#: useractions.cpp:1055
+#: useractions.cpp:1054
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr "מעבר למסך %1"
 
-#: useractions.cpp:1062
+#: useractions.cpp:1061
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "מעבר למסך הבא"
 
-#: useractions.cpp:1063
+#: useractions.cpp:1062
 #, kde-format
 msgid "Switch to Previous Screen"
 msgstr "מעבר למסך הקודם"
 
-#: useractions.cpp:1064
+#: useractions.cpp:1063
 #, kde-format
 msgid "Switch to Screen to the Right"
 msgstr "מעבר למסך מימין"
 
-#: useractions.cpp:1066
+#: useractions.cpp:1065
 #, kde-format
 msgid "Switch to Screen to the Left"
 msgstr "מעבר למסך משמאל"
 
-#: useractions.cpp:1068
+#: useractions.cpp:1067
 #, kde-format
 msgid "Switch to Screen Above"
 msgstr "מעבר למסך שמעל"
 
-#: useractions.cpp:1070
+#: useractions.cpp:1069
 #, kde-format
 msgid "Switch to Screen Below"
 msgstr "מעבר למסך שמתחת"
 
-#: useractions.cpp:1073
+#: useractions.cpp:1072
 #, kde-format
 msgid "Peek at Desktop"
 msgstr "הצצה בשולחן העבודה"
 
-#: useractions.cpp:1076
+#: useractions.cpp:1075
 #, kde-format
 msgid "Kill Window"
 msgstr "חיסול חלון"
 
-#: useractions.cpp:1137
+#: useractions.cpp:1136
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "הפעלת חלון (%1)"
 
-#: useractions.cpp:1274
+#: useractions.cpp:1273
 #, kde-format
 msgid ""
 "The window manager is configured to consider the screen with the mouse on it "

@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1664866 $
+# Version: $Revision: 1664939 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # Norbert Popiołek <norbert@kde.com.pl>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-15 01:39+0000\n"
+"POT-Creation-Date: 2023-11-16 01:45+0000\n"
 "PO-Revision-Date: 2023-10-21 11:33+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -1213,22 +1213,22 @@ msgstr "&Zakończ program %1"
 msgid "Wait Longer"
 msgstr "Poczekaj dłużej"
 
-#: input.cpp:2016
+#: input.cpp:2015
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Przenieś tablet na następne wyjście"
 
-#: input.cpp:2095
+#: input.cpp:2094
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Tablet przeniósł się na %1"
 
-#: input.cpp:2095
+#: input.cpp:2094
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Tablet przełączył wyjście"
 
-#: input.cpp:3154
+#: input.cpp:3153
 #, kde-format
 msgid "Touchpad"
 msgstr "Gładzik"
@@ -1328,12 +1328,12 @@ msgstr "Wyłącz możliwość ustawiania"
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "Powiadom, że KWin ostatnio n razy został przerwany z powodu awarii"
 
-#: main_wayland.cpp:291
+#: main_wayland.cpp:289
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "Uruchom serwer Xwayland bez uprawnień administratora."
 
-#: main_wayland.cpp:293
+#: main_wayland.cpp:291
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
@@ -1341,37 +1341,37 @@ msgstr ""
 "Nazwa gniazda Waylanda, na którym nasłuchiwać. Jeśli nieustawione, to "
 "używane jest \"wayland-0\"."
 
-#: main_wayland.cpp:296
+#: main_wayland.cpp:294
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr "Wyświetlacz X11 do użycia w trybie okien na platformie X11."
 
-#: main_wayland.cpp:299
+#: main_wayland.cpp:297
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr "Wyświetlacz Wayland do użycia w trybie okien na platformie Wayland."
 
-#: main_wayland.cpp:301
+#: main_wayland.cpp:299
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "Wyświetlaj w wirtualnym buforze klatek."
 
-#: main_wayland.cpp:303
+#: main_wayland.cpp:301
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "Szerokość dla trybu okien. Domyślna szerokość to 1024."
 
-#: main_wayland.cpp:307
+#: main_wayland.cpp:305
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "Wysokość dla trybu okien. Domyślna wysokość to 768."
 
-#: main_wayland.cpp:312
+#: main_wayland.cpp:310
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "Podziałka trybu okna. Domyślna wartość to 1."
 
-#: main_wayland.cpp:317
+#: main_wayland.cpp:315
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
@@ -1379,7 +1379,7 @@ msgstr ""
 "Liczba okien do otwarcia jako okna wynikowe w trybie okien. Domyślna wartość "
 "to 1"
 
-#: main_wayland.cpp:322
+#: main_wayland.cpp:320
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1388,7 +1388,7 @@ msgstr ""
 "Gniazdo Wayland do połączeń przychodzących. Można to połączyć z --socket aby "
 "nazwać gniazdo"
 
-#: main_wayland.cpp:326
+#: main_wayland.cpp:324
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1397,66 +1397,66 @@ msgstr ""
 "Gniazdo XWayland do połączeń przychodzących Xwayland. Można to ustawić wiele "
 "razy"
 
-#: main_wayland.cpp:330
+#: main_wayland.cpp:328
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "Nazwa wyświetlacza xwayland, która została nastawiona"
 
-#: main_wayland.cpp:334
+#: main_wayland.cpp:332
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "Nazwa pliku xauthority"
 
-#: main_wayland.cpp:338
+#: main_wayland.cpp:336
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 "Kończy wystąpienie tak, aby można je było ponownie rozpocząć poprzez "
 "kwin_wayland_wrapper."
 
-#: main_wayland.cpp:340
+#: main_wayland.cpp:338
 #, kde-format
 msgid "Render through drm node."
 msgstr "Wyświetl przez węzeł drm."
 
-#: main_wayland.cpp:341
+#: main_wayland.cpp:339
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr "Wydobądź dane językowe z locale1, a nie z ustawień użytkownika"
 
-#: main_wayland.cpp:363
+#: main_wayland.cpp:361
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "Metoda wprowadzania, którą uruchamia KWin."
 
-#: main_wayland.cpp:369
+#: main_wayland.cpp:367
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "Rozpoczyna sesję w trybie zablokowanym"
 
-#: main_wayland.cpp:373
+#: main_wayland.cpp:371
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "Rozpoczyna sesję bez obsługi blokowania ekranu."
 
-#: main_wayland.cpp:378
+#: main_wayland.cpp:376
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "Rozpoczyna sesję bez obsługi globalnych skrótów."
 
-#: main_wayland.cpp:383 main_x11.cpp:432
+#: main_wayland.cpp:381 main_x11.cpp:431
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Wyłącz integrację KActivities."
 
-#: main_wayland.cpp:388
+#: main_wayland.cpp:386
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr ""
 "Wyjdź po zamknięciu aplikacji sesji, która została uruchomiona przez KWin."
 
-#: main_wayland.cpp:393
+#: main_wayland.cpp:391
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr "Aplikacja do uruchomienia po uruchomieniu Waylanda oraz Xwaylanda"
@@ -1488,7 +1488,7 @@ msgstr ""
 "kwin: uruchomiony jest inny program zarządzający oknami? (spróbuj użyć --"
 "replace)\n"
 
-#: main_x11.cpp:425
+#: main_x11.cpp:424
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr ""
@@ -2251,7 +2251,7 @@ msgstr "Przełącz barwy nocne"
 msgid "Color Temperature Preview"
 msgstr "Podgląd temperatury kolorów"
 
-#: plugins/outputlocator/outputlocator.cpp:49
+#: plugins/outputlocator/outputlocator.cpp:50
 #, kde-format
 msgctxt "@label"
 msgid "Unknown"
@@ -2264,7 +2264,7 @@ msgid "Cycle through Overview and Grid View"
 msgstr "Krąż po widoku przeglądu i siatki"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:48
-#: plugins/overview/overvieweffect.cpp:133
+#: plugins/overview/overvieweffect.cpp:134
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
@@ -2321,19 +2321,19 @@ msgstr "Ułóż okna w widok siatki:"
 msgid "Search results include filtered windows:"
 msgstr "Wyniki wyszukiwania uwzględniają odfiltrowane okna:"
 
-#: plugins/overview/overvieweffect.cpp:124
+#: plugins/overview/overvieweffect.cpp:125
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
 msgstr "Krąż po widoku przeglądu i siatki"
 
-#: plugins/overview/overvieweffect.cpp:141
+#: plugins/overview/overvieweffect.cpp:142
 #, kde-format
 msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
 msgstr "Przestaw widok przeglądu"
 
-#: plugins/overview/overvieweffect.cpp:149
+#: plugins/overview/overvieweffect.cpp:150
 #, kde-format
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
@@ -2349,25 +2349,25 @@ msgstr "Usuń pulpit wirtualny"
 msgid "Add Virtual Desktop"
 msgstr "Dodaj wirtualny pulpit"
 
-#: plugins/overview/qml/main.qml:319
+#: plugins/overview/qml/main.qml:374
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "Nie ma już żadnego pulpitu wirtualnego do pokazania"
 
-#: plugins/overview/qml/main.qml:325
+#: plugins/overview/qml/main.qml:380
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "Dodaj wirtualny pulpit"
 
-#: plugins/overview/qml/main.qml:332
+#: plugins/overview/qml/main.qml:387
 #, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Ustawienia pulpitów wirtualnych..."
 
-#: plugins/overview/qml/main.qml:660
+#: plugins/overview/qml/main.qml:715
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
@@ -2412,22 +2412,22 @@ msgstr "Nie udało się utworzyć kontekstu PipeWire"
 msgid "Failed to connect PipeWire context"
 msgstr "Nie udało się połączyć z kontekstem PipeWire"
 
-#: plugins/screencast/screencastmanager.cpp:105
+#: plugins/screencast/screencastmanager.cpp:104
 #, kde-format
 msgid "Could not find window id %1"
 msgstr "Nie można znaleźć id %1 okna"
 
-#: plugins/screencast/screencastmanager.cpp:145
+#: plugins/screencast/screencastmanager.cpp:144
 #, kde-format
 msgid "Could not find output"
 msgstr "Nie można znaleźć wyjścia"
 
-#: plugins/screencast/screencastmanager.cpp:172
+#: plugins/screencast/screencastmanager.cpp:171
 #, kde-format
 msgid "Invalid region"
 msgstr "Nieprawidłowy obszar"
 
-#: plugins/screencast/screencastmanager.cpp:203
+#: plugins/screencast/screencastmanager.cpp:202
 #, kde-format
 msgid "Region outside the workspace"
 msgstr "Obszar poza przestrzenią pracy"
@@ -2437,7 +2437,7 @@ msgstr "Obszar poza przestrzenią pracy"
 msgid "Failed to create PipeWire stream"
 msgstr "Nie udało się utworzyć strumienia PipeWire"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:531
+#: plugins/screenshot/screenshotdbusinterface2.cpp:532
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2447,7 +2447,7 @@ msgstr ""
 "lub enter.\n"
 "Klawisz Escape lub kliknięcie prawym przyciskiem myszy zaniecha."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:549
+#: plugins/screenshot/screenshotdbusinterface2.cpp:550
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
@@ -2555,7 +2555,7 @@ msgid " %"
 msgstr " %"
 
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:37
-#: plugins/tileseditor/tileseditoreffect.cpp:29
+#: plugins/tileseditor/tileseditoreffect.cpp:30
 #, kde-format
 msgid "Toggle Tiles Editor"
 msgstr "Przełącz edytora kafelków"
@@ -2747,25 +2747,25 @@ msgid "None"
 msgstr "Brak"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:42
-#: plugins/windowview/windowvieweffect.cpp:45
+#: plugins/windowview/windowvieweffect.cpp:46
 #, kde-format
 msgid "Toggle Present Windows (Current desktop)"
 msgstr "Włącz/wyłącz prezentację okien (Bieżący pulpit)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:49
-#: plugins/windowview/windowvieweffect.cpp:54
+#: plugins/windowview/windowvieweffect.cpp:55
 #, kde-format
 msgid "Toggle Present Windows (All desktops)"
 msgstr "Włącz/wyłącz prezentację okien (Wszystkie pulpity)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:56
-#: plugins/windowview/windowvieweffect.cpp:63
+#: plugins/windowview/windowvieweffect.cpp:64
 #, kde-format
 msgid "Toggle Present Windows (Window class)"
 msgstr "Włącz/wyłącz prezentację okien (Klasa okna)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:62
-#: plugins/windowview/windowvieweffect.cpp:72
+#: plugins/windowview/windowvieweffect.cpp:73
 #, kde-format
 msgid "Toggle Present Windows (Window class on current desktop)"
 msgstr "Włącz/wyłącz prezentację okien (Klasa okna na bieżącym pulpicie)"
@@ -3595,7 +3595,7 @@ msgstr ""
 "Instalacja przełącznika okien jest uszkodzona, brakuje zasobów.\n"
 "Powiadom o tym swoją dystrybucję."
 
-#: useractions.cpp:159
+#: useractions.cpp:158
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -3607,7 +3607,7 @@ msgstr ""
 "Nie będzie można przywrócić tego obramowania przy użyciu myszy. Aby je "
 "przywrócić, należy wywołać menu działań okna przy użyciu skrótu %1."
 
-#: useractions.cpp:166
+#: useractions.cpp:165
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -3620,135 +3620,135 @@ msgstr ""
 "umożliwia. Aby z niego powrócić, należy wywołać menu działań okna przy "
 "użyciu skrótu %1."
 
-#: useractions.cpp:213
+#: useractions.cpp:212
 #, kde-format
 msgid "&Move"
 msgstr "&Przenieś"
 
-#: useractions.cpp:218
+#: useractions.cpp:217
 #, kde-format
 msgid "&Resize"
 msgstr "Zmień &rozmiar"
 
-#: useractions.cpp:223
+#: useractions.cpp:222
 #, kde-format
 msgid "Keep &Above Others"
 msgstr "Z&awsze na wierzchu"
 
-#: useractions.cpp:229
+#: useractions.cpp:228
 #, kde-format
 msgid "Keep &Below Others"
 msgstr "Zawsze na &spodzie"
 
-#: useractions.cpp:235
+#: useractions.cpp:234
 #, kde-format
 msgid "&Fullscreen"
 msgstr "Na całym &ekranie"
 
-#: useractions.cpp:241
+#: useractions.cpp:240
 #, kde-format
 msgid "&Shade"
 msgstr "&Zwinięte"
 
-#: useractions.cpp:247
+#: useractions.cpp:246
 #, kde-format
 msgid "&No Titlebar and Frame"
 msgstr "Bez paska &nazwy i obramowania"
 
-#: useractions.cpp:255
+#: useractions.cpp:254
 #, kde-format
 msgid "Set Window Short&cut…"
 msgstr "&Ustaw skrót okna…"
 
-#: useractions.cpp:261
+#: useractions.cpp:260
 #, kde-format
 msgid "Configure Special &Window Settings…"
 msgstr "Usta&wienia dla poszczególnych okien…"
 
-#: useractions.cpp:266
+#: useractions.cpp:265
 #, kde-format
 msgid "Configure S&pecial Application Settings…"
 msgstr "Ustawienia dla poszczególnych a&plikacji…"
 
-#: useractions.cpp:272
+#: useractions.cpp:271
 #, kde-format
 msgid "Ma&ximize"
 msgstr "Z&maksymalizuj"
 
-#: useractions.cpp:278
+#: useractions.cpp:277
 #, kde-format
 msgid "Mi&nimize"
 msgstr "Zmi&nimalizuj"
 
-#: useractions.cpp:284
+#: useractions.cpp:283
 #, kde-format
 msgid "&More Actions"
 msgstr "&Więcej działań"
 
-#: useractions.cpp:289
+#: useractions.cpp:288
 #, kde-format
 msgid "&Close"
 msgstr "Z&amknij"
 
-#: useractions.cpp:359
+#: useractions.cpp:358
 #, kde-format
 msgid "&Extensions"
 msgstr "Rozsz&erzenia"
 
-#: useractions.cpp:410
+#: useractions.cpp:409
 #, kde-format
 msgid "&Desktops"
 msgstr "&Pulpity"
 
-#: useractions.cpp:424
+#: useractions.cpp:423
 #, kde-format
 msgid "Move to &Desktop"
 msgstr "Przenieś na &pulpit"
 
-#: useractions.cpp:441
+#: useractions.cpp:440
 #, kde-format
 msgid "Move to &Screen"
 msgstr "Przenieś na &ekran"
 
-#: useractions.cpp:457
+#: useractions.cpp:456
 #, kde-format
 msgid "Show in &Activities"
 msgstr "Pokaż w &aktywnościach"
 
-#: useractions.cpp:474
+#: useractions.cpp:473
 #, kde-format
 msgid "Move &To Current Desktop"
 msgstr "&Przenieś na bieżący pulpit"
 
-#: useractions.cpp:484 useractions.cpp:551
+#: useractions.cpp:483 useractions.cpp:550
 #, kde-format
 msgid "&All Desktops"
 msgstr "Wszystkie &pulpity"
 
-#: useractions.cpp:524
+#: useractions.cpp:523
 #, kde-format
 msgctxt "Create a new desktop and move the window there"
 msgid "&New Desktop"
 msgstr "&Nowy pulpit"
 
-#: useractions.cpp:595
+#: useractions.cpp:594
 #, kde-format
 msgid "Move to %1 %2"
 msgstr "Przenieś do %1 %2"
 
-#: useractions.cpp:608
+#: useractions.cpp:607
 #, kde-format
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
 msgstr "Dodaj &nowy pulpit"
 
-#: useractions.cpp:620
+#: useractions.cpp:619
 #, kde-format
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
 msgstr "Przenieś na nowy pulpit"
 
-#: useractions.cpp:651
+#: useractions.cpp:650
 #, kde-format
 msgctxt ""
 "@item:inmenu List of all Screens to send a window to. First argument is a "
@@ -3756,359 +3756,359 @@ msgctxt ""
 msgid "Screen &%1 (%2)"
 msgstr "Ekran &%1 (%2)"
 
-#: useractions.cpp:677
+#: useractions.cpp:676
 #, kde-format
 msgid "&All Activities"
 msgstr "Wszystkie &aktywności"
 
-#: useractions.cpp:725
+#: useractions.cpp:724
 #, kde-format
 msgid "Move to %1"
 msgstr "Przenieś do %1"
 
-#: useractions.cpp:844
+#: useractions.cpp:843
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr "<b>%1</b> jest już w użyciu"
 
-#: useractions.cpp:846
+#: useractions.cpp:845
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> jest używane przez %2 w %3"
 
-#: useractions.cpp:926
+#: useractions.cpp:925
 #, kde-format
 msgid "Window Operations Menu"
 msgstr "Menu działań na oknie"
 
-#: useractions.cpp:928
+#: useractions.cpp:927
 #, kde-format
 msgid "Close Window"
 msgstr "Zamknij okno"
 
-#: useractions.cpp:930
+#: useractions.cpp:929
 #, kde-format
 msgid "Maximize Window"
 msgstr "Zmaksymalizuj okno"
 
-#: useractions.cpp:932
+#: useractions.cpp:931
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "Zmaksymalizuj okno w pionie"
 
-#: useractions.cpp:934
+#: useractions.cpp:933
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "Zmaksymalizuj okno w poziomie"
 
-#: useractions.cpp:936
+#: useractions.cpp:935
 #, kde-format
 msgid "Minimize Window"
 msgstr "Zminimalizuj okno"
 
-#: useractions.cpp:938
+#: useractions.cpp:937
 #, kde-format
 msgid "Shade Window"
 msgstr "Zwiń okno"
 
-#: useractions.cpp:940
+#: useractions.cpp:939
 #, kde-format
 msgid "Move Window"
 msgstr "Przenieś okno"
 
-#: useractions.cpp:942
+#: useractions.cpp:941
 #, kde-format
 msgid "Resize Window"
 msgstr "Zmień rozmiar okna"
 
-#: useractions.cpp:944
+#: useractions.cpp:943
 #, kde-format
 msgid "Raise Window"
 msgstr "Przywołaj okno"
 
-#: useractions.cpp:946
+#: useractions.cpp:945
 #, kde-format
 msgid "Lower Window"
 msgstr "Odwołaj okno"
 
-#: useractions.cpp:948
+#: useractions.cpp:947
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "Przełącz przywołanie/odwołanie okna"
 
-#: useractions.cpp:950
+#: useractions.cpp:949
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "Uczyń oknem pełnoekranowym"
 
-#: useractions.cpp:952
+#: useractions.cpp:951
 #, kde-format
 msgid "Toggle Window Titlebar and Frame"
 msgstr "Wł./Wył. pasek nazwy i obramowanie"
 
-#: useractions.cpp:954
+#: useractions.cpp:953
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "Okno zawsze na wierzchu"
 
-#: useractions.cpp:956
+#: useractions.cpp:955
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "Okno zawsze pod spodem"
 
-#: useractions.cpp:958
+#: useractions.cpp:957
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "Uaktywnij okno żądające uwagi"
 
-#: useractions.cpp:960
+#: useractions.cpp:959
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "Ustawienia skrótu okna"
 
-#: useractions.cpp:962
+#: useractions.cpp:961
 #, kde-format
 msgid "Move Window to the Center"
 msgstr "Przenieś okno na środek"
 
-#: useractions.cpp:964
+#: useractions.cpp:963
 #, kde-format
 msgid "Move Window Right"
 msgstr "Przenieś okno w prawo"
 
-#: useractions.cpp:966
+#: useractions.cpp:965
 #, kde-format
 msgid "Move Window Left"
 msgstr "Przenieś okno w lewo"
 
-#: useractions.cpp:968
+#: useractions.cpp:967
 #, kde-format
 msgid "Move Window Up"
 msgstr "Przenieś okno wyżej"
 
-#: useractions.cpp:970
+#: useractions.cpp:969
 #, kde-format
 msgid "Move Window Down"
 msgstr "Przenieś okno niżej"
 
-#: useractions.cpp:972
+#: useractions.cpp:971
 #, kde-format
 msgid "Expand Window Horizontally"
 msgstr "Rozszerz okna w poziomie"
 
-#: useractions.cpp:974
+#: useractions.cpp:973
 #, kde-format
 msgid "Expand Window Vertically"
 msgstr "Rozszerz okna w pionie"
 
-#: useractions.cpp:976
+#: useractions.cpp:975
 #, kde-format
 msgid "Shrink Window Horizontally"
 msgstr "Skurcz okna w poziomie"
 
-#: useractions.cpp:978
+#: useractions.cpp:977
 #, kde-format
 msgid "Shrink Window Vertically"
 msgstr "Skurcz okna w pionie"
 
-#: useractions.cpp:980
+#: useractions.cpp:979
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "Kafelka z okna na lewej krawędzi"
 
-#: useractions.cpp:982
+#: useractions.cpp:981
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "Kafelka z okna na prawej krawędzi"
 
-#: useractions.cpp:984
+#: useractions.cpp:983
 #, kde-format
 msgid "Quick Tile Window to the Top"
 msgstr "Kafelka z okna na górnej krawędzi"
 
-#: useractions.cpp:986
+#: useractions.cpp:985
 #, kde-format
 msgid "Quick Tile Window to the Bottom"
 msgstr "Kafelka z okna na dolnej krawędzi"
 
-#: useractions.cpp:988
+#: useractions.cpp:987
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
 msgstr "Kafelka z okna w górnym lewym narożniku"
 
-#: useractions.cpp:990
+#: useractions.cpp:989
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "Kafelka z okna w dolnym lewym narożniku"
 
-#: useractions.cpp:992
+#: useractions.cpp:991
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
 msgstr "Kafelka z okna w górnym prawym narożniku"
 
-#: useractions.cpp:994
+#: useractions.cpp:993
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "Kafelka z okna w dolnym prawym narożniku"
 
-#: useractions.cpp:996
+#: useractions.cpp:995
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "Przełącz do okna powyżej"
 
-#: useractions.cpp:998
+#: useractions.cpp:997
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "Przełącz do okna poniżej"
 
-#: useractions.cpp:1000
+#: useractions.cpp:999
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "Przełącz do okna z prawej"
 
-#: useractions.cpp:1002
+#: useractions.cpp:1001
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "Przełącz do okna z lewej"
 
-#: useractions.cpp:1004
+#: useractions.cpp:1003
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "Zwiększ nieprzezroczystość bieżącego okna o 5 %"
 
-#: useractions.cpp:1006
+#: useractions.cpp:1005
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "Zmniejsz nieprzezroczystość bieżącego okna o 5 %"
 
-#: useractions.cpp:1009
+#: useractions.cpp:1008
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "Na wszystkich pulpitach"
 
-#: useractions.cpp:1020
+#: useractions.cpp:1019
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "Okno na pulpit %1"
 
-#: useractions.cpp:1022
+#: useractions.cpp:1021
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Okno na następny pulpit"
 
-#: useractions.cpp:1023
+#: useractions.cpp:1022
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Okno na poprzedni pulpit"
 
-#: useractions.cpp:1024
+#: useractions.cpp:1023
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Okno na pulpit po prawej"
 
-#: useractions.cpp:1026
+#: useractions.cpp:1025
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Okno na pulpit po lewej"
 
-#: useractions.cpp:1028
+#: useractions.cpp:1027
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "Okno na pulpit wyżej"
 
-#: useractions.cpp:1030
+#: useractions.cpp:1029
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "Okno na pulpit niżej"
 
-#: useractions.cpp:1034
+#: useractions.cpp:1033
 #, kde-format
 msgid "Move Window to Screen %1"
 msgstr "Przenieś okno na ekran %1"
 
-#: useractions.cpp:1041
+#: useractions.cpp:1040
 #, kde-format
 msgid "Move Window to Next Screen"
 msgstr "Przenieś okno na następny ekran"
 
-#: useractions.cpp:1043
+#: useractions.cpp:1042
 #, kde-format
 msgid "Move Window to Previous Screen"
 msgstr "Przenieś okno na poprzedni ekran"
 
-#: useractions.cpp:1045
+#: useractions.cpp:1044
 #, kde-format
 msgid "Move Window One Screen to the Right"
 msgstr "Przenieś okno na ekran po prawej"
 
-#: useractions.cpp:1047
+#: useractions.cpp:1046
 #, kde-format
 msgid "Move Window One Screen to the Left"
 msgstr "Przenieś okno na ekran po lewej"
 
-#: useractions.cpp:1049
+#: useractions.cpp:1048
 #, kde-format
 msgid "Move Window One Screen Up"
 msgstr "Przenieś okno na ekran na górze"
 
-#: useractions.cpp:1051
+#: useractions.cpp:1050
 #, kde-format
 msgid "Move Window One Screen Down"
 msgstr "Przenieś okno na ekran na dole"
 
-#: useractions.cpp:1055
+#: useractions.cpp:1054
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr "Przełącz na ekran %1"
 
-#: useractions.cpp:1062
+#: useractions.cpp:1061
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "Przełącz na następny ekran"
 
-#: useractions.cpp:1063
+#: useractions.cpp:1062
 #, kde-format
 msgid "Switch to Previous Screen"
 msgstr "Przełącz na poprzedni ekran"
 
-#: useractions.cpp:1064
+#: useractions.cpp:1063
 #, kde-format
 msgid "Switch to Screen to the Right"
 msgstr "Przełącz do ekranu po prawej"
 
-#: useractions.cpp:1066
+#: useractions.cpp:1065
 #, kde-format
 msgid "Switch to Screen to the Left"
 msgstr "Przełącz na ekran po lewej"
 
-#: useractions.cpp:1068
+#: useractions.cpp:1067
 #, kde-format
 msgid "Switch to Screen Above"
 msgstr "Przełącz na ekran wyżej"
 
-#: useractions.cpp:1070
+#: useractions.cpp:1069
 #, kde-format
 msgid "Switch to Screen Below"
 msgstr "Przełącz na ekran niżej"
 
-#: useractions.cpp:1073
+#: useractions.cpp:1072
 #, kde-format
 msgid "Peek at Desktop"
 msgstr "Podejrzyj pulpit"
 
-#: useractions.cpp:1076
+#: useractions.cpp:1075
 #, kde-format
 msgid "Kill Window"
 msgstr "Zniszcz okno"
 
-#: useractions.cpp:1137
+#: useractions.cpp:1136
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Uaktywnij okno (%1)"
 
-#: useractions.cpp:1274
+#: useractions.cpp:1273
 #, kde-format
 msgid ""
 "The window manager is configured to consider the screen with the mouse on it "

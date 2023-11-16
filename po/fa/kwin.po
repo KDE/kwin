@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-15 01:39+0000\n"
+"POT-Creation-Date: 2023-11-16 01:45+0000\n"
 "PO-Revision-Date: 2007-07-31 19:27+0330\n"
 "Last-Translator: Nazanin Kazemi <kazemi@itland.ir>\n"
 "Language-Team: Persian <kde-i18n-fa@kde.org>\n"
@@ -1197,22 +1197,22 @@ msgstr ""
 msgid "Wait Longer"
 msgstr ""
 
-#: input.cpp:2016
+#: input.cpp:2015
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr ""
 
-#: input.cpp:2095
+#: input.cpp:2094
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr ""
 
-#: input.cpp:2095
+#: input.cpp:2094
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr ""
 
-#: input.cpp:3154
+#: input.cpp:3153
 #, kde-format
 msgid "Touchpad"
 msgstr ""
@@ -1311,124 +1311,124 @@ msgstr "غیرفعال کردن گزینه‌های پیکربندی"
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "Indicate that KWin has recently crashed n times"
 
-#: main_wayland.cpp:291
+#: main_wayland.cpp:289
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr ""
 
-#: main_wayland.cpp:293
+#: main_wayland.cpp:291
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
 msgstr ""
 
-#: main_wayland.cpp:296
+#: main_wayland.cpp:294
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr ""
 
-#: main_wayland.cpp:299
+#: main_wayland.cpp:297
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr ""
 
-#: main_wayland.cpp:301
+#: main_wayland.cpp:299
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr ""
 
-#: main_wayland.cpp:303
+#: main_wayland.cpp:301
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr ""
 
-#: main_wayland.cpp:307
+#: main_wayland.cpp:305
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr ""
 
-#: main_wayland.cpp:312
+#: main_wayland.cpp:310
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr ""
 
-#: main_wayland.cpp:317
+#: main_wayland.cpp:315
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
 msgstr ""
 
-#: main_wayland.cpp:322
+#: main_wayland.cpp:320
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
 "socket to name the socket"
 msgstr ""
 
-#: main_wayland.cpp:326
+#: main_wayland.cpp:324
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
 "multiple times"
 msgstr ""
 
-#: main_wayland.cpp:330
+#: main_wayland.cpp:328
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr ""
 
-#: main_wayland.cpp:334
+#: main_wayland.cpp:332
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr ""
 
-#: main_wayland.cpp:338
+#: main_wayland.cpp:336
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 
-#: main_wayland.cpp:340
+#: main_wayland.cpp:338
 #, kde-format
 msgid "Render through drm node."
 msgstr ""
 
-#: main_wayland.cpp:341
+#: main_wayland.cpp:339
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
 
-#: main_wayland.cpp:363
+#: main_wayland.cpp:361
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr ""
 
-#: main_wayland.cpp:369
+#: main_wayland.cpp:367
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr ""
 
-#: main_wayland.cpp:373
+#: main_wayland.cpp:371
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr ""
 
-#: main_wayland.cpp:378
+#: main_wayland.cpp:376
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr ""
 
-#: main_wayland.cpp:383 main_x11.cpp:432
+#: main_wayland.cpp:381 main_x11.cpp:431
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr ""
 
-#: main_wayland.cpp:388
+#: main_wayland.cpp:386
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr ""
 
-#: main_wayland.cpp:393
+#: main_wayland.cpp:391
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
@@ -1463,7 +1463,7 @@ msgstr ""
 "kwin:ناتوانی در درخواست گزینش مدیر، wm دیگری در حال اجراست؟ )استفاده از --"
 "replace را امتحان کنید(\n"
 
-#: main_x11.cpp:425
+#: main_x11.cpp:424
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "جایگزینی مدیر پنجره تابع ICCCM2.0 که در حال حاضر در حال اجراست"
@@ -2253,7 +2253,7 @@ msgstr "زدن ضامن جلوه در معرض گذاشتن )شامل سایر �
 msgid "Color Temperature Preview"
 msgstr ""
 
-#: plugins/outputlocator/outputlocator.cpp:49
+#: plugins/outputlocator/outputlocator.cpp:50
 #, kde-format
 msgctxt "@label"
 msgid "Unknown"
@@ -2266,7 +2266,7 @@ msgid "Cycle through Overview and Grid View"
 msgstr ""
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:48
-#: plugins/overview/overvieweffect.cpp:133
+#: plugins/overview/overvieweffect.cpp:134
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
@@ -2325,19 +2325,19 @@ msgstr ""
 msgid "Search results include filtered windows:"
 msgstr ""
 
-#: plugins/overview/overvieweffect.cpp:124
+#: plugins/overview/overvieweffect.cpp:125
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
 msgstr ""
 
-#: plugins/overview/overvieweffect.cpp:141
+#: plugins/overview/overvieweffect.cpp:142
 #, fuzzy, kde-format
 msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
 msgstr "زدن ضامن جلوه معکوس"
 
-#: plugins/overview/overvieweffect.cpp:149
+#: plugins/overview/overvieweffect.cpp:150
 #, fuzzy, kde-format
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
@@ -2355,28 +2355,28 @@ msgstr "به &رومیزی‌"
 msgid "Add Virtual Desktop"
 msgstr "نمایش توری رومیزی"
 
-#: plugins/overview/qml/main.qml:319
+#: plugins/overview/qml/main.qml:374
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "به &رومیزی‌"
 
-#: plugins/overview/qml/main.qml:325
+#: plugins/overview/qml/main.qml:380
 #, fuzzy, kde-format
 #| msgid "Show Desktop Grid"
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "نمایش توری رومیزی"
 
-#: plugins/overview/qml/main.qml:332
+#: plugins/overview/qml/main.qml:387
 #, fuzzy, kde-format
 #| msgid "Configur&e Window Behavior..."
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "&پیکر‌بندی رفتار پنجره...‌"
 
-#: plugins/overview/qml/main.qml:660
+#: plugins/overview/qml/main.qml:715
 #, fuzzy, kde-format
 #| msgid "Moved/resized windows:"
 msgctxt "@info:placeholder"
@@ -2425,22 +2425,22 @@ msgstr ""
 msgid "Failed to connect PipeWire context"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:105
+#: plugins/screencast/screencastmanager.cpp:104
 #, kde-format
 msgid "Could not find window id %1"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:145
+#: plugins/screencast/screencastmanager.cpp:144
 #, kde-format
 msgid "Could not find output"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:172
+#: plugins/screencast/screencastmanager.cpp:171
 #, kde-format
 msgid "Invalid region"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:203
+#: plugins/screencast/screencastmanager.cpp:202
 #, kde-format
 msgid "Region outside the workspace"
 msgstr ""
@@ -2450,14 +2450,14 @@ msgstr ""
 msgid "Failed to create PipeWire stream"
 msgstr ""
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:531
+#: plugins/screenshot/screenshotdbusinterface2.cpp:532
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:549
+#: plugins/screenshot/screenshotdbusinterface2.cpp:550
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
@@ -2564,7 +2564,7 @@ msgid " %"
 msgstr ""
 
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:37
-#: plugins/tileseditor/tileseditoreffect.cpp:29
+#: plugins/tileseditor/tileseditoreffect.cpp:30
 #, fuzzy, kde-format
 #| msgid "Toggle Video Recording"
 msgid "Toggle Tiles Editor"
@@ -2766,28 +2766,28 @@ msgid "None"
 msgstr "هیچ‌کدام"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:42
-#: plugins/windowview/windowvieweffect.cpp:45
+#: plugins/windowview/windowvieweffect.cpp:46
 #, fuzzy, kde-format
 #| msgid "for windows on current desktop: "
 msgid "Toggle Present Windows (Current desktop)"
 msgstr "برای پنجره‌های روی رومیزی جاری: "
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:49
-#: plugins/windowview/windowvieweffect.cpp:54
+#: plugins/windowview/windowvieweffect.cpp:55
 #, fuzzy, kde-format
 #| msgid "Keep Window on All Desktops"
 msgid "Toggle Present Windows (All desktops)"
 msgstr "نگه داشتن پنجره روی تمام رومیزیها"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:56
-#: plugins/windowview/windowvieweffect.cpp:63
+#: plugins/windowview/windowvieweffect.cpp:64
 #, fuzzy, kde-format
 #| msgid "Keep Window on All Desktops"
 msgid "Toggle Present Windows (Window class)"
 msgstr "نگه داشتن پنجره روی تمام رومیزیها"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:62
-#: plugins/windowview/windowvieweffect.cpp:72
+#: plugins/windowview/windowvieweffect.cpp:73
 #, fuzzy, kde-format
 #| msgid "for windows on current desktop: "
 msgid "Toggle Present Windows (Window class on current desktop)"
@@ -3662,7 +3662,7 @@ msgid ""
 "Contact your distribution about this."
 msgstr ""
 
-#: useractions.cpp:159
+#: useractions.cpp:158
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -3674,7 +3674,7 @@ msgstr ""
 "بدون لبه، دوباره قادر به فعال‌سازی لبه با استفاده از موشی نمی‌باشید: به جای "
 "استفاده فعال از میان‌بر %1 صفحه کلید، از گزینگان عملیات پنجره استفاده کنید."
 
-#: useractions.cpp:166
+#: useractions.cpp:165
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -3687,147 +3687,147 @@ msgstr ""
 "قادر به غیرفعال‌سازی آن با استفاده از موشی نمی‌باشید: به جای استفاده فعال از "
 "میان‌بر %1 صفحه کلید، از گزینگان عملیات پنجره استفاده کنید."
 
-#: useractions.cpp:213
+#: useractions.cpp:212
 #, kde-format
 msgid "&Move"
 msgstr "&حرکت‌"
 
-#: useractions.cpp:218
+#: useractions.cpp:217
 #, fuzzy, kde-format
 #| msgid "Re&size"
 msgid "&Resize"
 msgstr "&تغییر اندازه‌"
 
-#: useractions.cpp:223
+#: useractions.cpp:222
 #, kde-format
 msgid "Keep &Above Others"
 msgstr "نگه داشتن &بالای بقیه‌"
 
-#: useractions.cpp:229
+#: useractions.cpp:228
 #, kde-format
 msgid "Keep &Below Others"
 msgstr "نگه داشتن &زیر بقیه‌"
 
-#: useractions.cpp:235
+#: useractions.cpp:234
 #, kde-format
 msgid "&Fullscreen"
 msgstr "&تمام پرده‌"
 
-#: useractions.cpp:241
+#: useractions.cpp:240
 #, fuzzy, kde-format
 #| msgid "Shade"
 msgid "&Shade"
 msgstr "سایه‌دار کردن"
 
-#: useractions.cpp:247
+#: useractions.cpp:246
 #, kde-format
 msgid "&No Titlebar and Frame"
 msgstr ""
 
-#: useractions.cpp:255
+#: useractions.cpp:254
 #, fuzzy, kde-format
 #| msgid "Window &Shortcut..."
 msgid "Set Window Short&cut…"
 msgstr "&میان‌بر پنجره...‌"
 
-#: useractions.cpp:261
+#: useractions.cpp:260
 #, fuzzy, kde-format
 #| msgid "&Special Window Settings..."
 msgid "Configure Special &Window Settings…"
 msgstr "تنظیمات &ویژه پنجره...‌"
 
-#: useractions.cpp:266
+#: useractions.cpp:265
 #, fuzzy, kde-format
 #| msgid "&Special Application Settings..."
 msgid "Configure S&pecial Application Settings…"
 msgstr "تنظیمات &ویژه کاربرد...‌"
 
-#: useractions.cpp:272
+#: useractions.cpp:271
 #, kde-format
 msgid "Ma&ximize"
 msgstr "&بیشینه‌‌‌سازی‌"
 
-#: useractions.cpp:278
+#: useractions.cpp:277
 #, kde-format
 msgid "Mi&nimize"
 msgstr "&کمینه‌سازی‌"
 
-#: useractions.cpp:284
+#: useractions.cpp:283
 #, kde-format
 msgid "&More Actions"
 msgstr ""
 
-#: useractions.cpp:289
+#: useractions.cpp:288
 #, kde-format
 msgid "&Close"
 msgstr "&بستن‌"
 
-#: useractions.cpp:359
+#: useractions.cpp:358
 #, kde-format
 msgid "&Extensions"
 msgstr ""
 
-#: useractions.cpp:410
+#: useractions.cpp:409
 #, fuzzy, kde-format
 #| msgid "&All Desktops"
 msgid "&Desktops"
 msgstr "&تمام رومیزیها‌"
 
-#: useractions.cpp:424
+#: useractions.cpp:423
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Move to &Desktop"
 msgstr "به &رومیزی‌"
 
-#: useractions.cpp:441
+#: useractions.cpp:440
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Move to &Screen"
 msgstr "به &رومیزی‌"
 
-#: useractions.cpp:457
+#: useractions.cpp:456
 #, kde-format
 msgid "Show in &Activities"
 msgstr ""
 
-#: useractions.cpp:474
+#: useractions.cpp:473
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Move &To Current Desktop"
 msgstr "به &رومیزی‌"
 
-#: useractions.cpp:484 useractions.cpp:551
+#: useractions.cpp:483 useractions.cpp:550
 #, kde-format
 msgid "&All Desktops"
 msgstr "&تمام رومیزیها‌"
 
-#: useractions.cpp:524
+#: useractions.cpp:523
 #, fuzzy, kde-format
 #| msgid "Show Desktop Grid"
 msgctxt "Create a new desktop and move the window there"
 msgid "&New Desktop"
 msgstr "نمایش توری رومیزی"
 
-#: useractions.cpp:595
+#: useractions.cpp:594
 #, kde-format
 msgid "Move to %1 %2"
 msgstr ""
 
-#: useractions.cpp:608
+#: useractions.cpp:607
 #, fuzzy, kde-format
 #| msgid "Show Desktop Grid"
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
 msgstr "نمایش توری رومیزی"
 
-#: useractions.cpp:620
+#: useractions.cpp:619
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
 msgstr "به &رومیزی‌"
 
-#: useractions.cpp:651
+#: useractions.cpp:650
 #, fuzzy, kde-format
 #| msgid "Window to Screen 1"
 msgctxt ""
@@ -3836,397 +3836,397 @@ msgctxt ""
 msgid "Screen &%1 (%2)"
 msgstr "پنجره در پرده ۱"
 
-#: useractions.cpp:677
+#: useractions.cpp:676
 #, kde-format
 msgid "&All Activities"
 msgstr ""
 
-#: useractions.cpp:725
+#: useractions.cpp:724
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Move to %1"
 msgstr "به &رومیزی‌"
 
-#: useractions.cpp:844
+#: useractions.cpp:843
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr ""
 
-#: useractions.cpp:846
+#: useractions.cpp:845
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr ""
 
-#: useractions.cpp:926
+#: useractions.cpp:925
 #, kde-format
 msgid "Window Operations Menu"
 msgstr "گزینگان عملیات پنجره"
 
-#: useractions.cpp:928
+#: useractions.cpp:927
 #, kde-format
 msgid "Close Window"
 msgstr "بستن پنجره"
 
-#: useractions.cpp:930
+#: useractions.cpp:929
 #, kde-format
 msgid "Maximize Window"
 msgstr "بیشینه‌سازی پنجره"
 
-#: useractions.cpp:932
+#: useractions.cpp:931
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "بیشینه‌سازی عمودی پنجره"
 
-#: useractions.cpp:934
+#: useractions.cpp:933
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "بیشینه‌سازی افقی پنجره"
 
-#: useractions.cpp:936
+#: useractions.cpp:935
 #, kde-format
 msgid "Minimize Window"
 msgstr "کمینه‌سازی پنجره"
 
-#: useractions.cpp:938
+#: useractions.cpp:937
 #, kde-format
 msgid "Shade Window"
 msgstr "سایه‌دار کردن پنجره"
 
-#: useractions.cpp:940
+#: useractions.cpp:939
 #, kde-format
 msgid "Move Window"
 msgstr "حرکت پنجره"
 
-#: useractions.cpp:942
+#: useractions.cpp:941
 #, kde-format
 msgid "Resize Window"
 msgstr "تغییر اندازه پنجره"
 
-#: useractions.cpp:944
+#: useractions.cpp:943
 #, kde-format
 msgid "Raise Window"
 msgstr "بالا بردن پنجره"
 
-#: useractions.cpp:946
+#: useractions.cpp:945
 #, kde-format
 msgid "Lower Window"
 msgstr "پایین آوردن پنجره"
 
-#: useractions.cpp:948
+#: useractions.cpp:947
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "زدن ضامن بالا بردن/پایین آوردن پنجره"
 
-#: useractions.cpp:950
+#: useractions.cpp:949
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "تمام پرده کردن پنجره"
 
-#: useractions.cpp:952
+#: useractions.cpp:951
 #, fuzzy, kde-format
 #| msgid "Hide Window Border"
 msgid "Toggle Window Titlebar and Frame"
 msgstr "مخفی کردن لبه پنجره"
 
-#: useractions.cpp:954
+#: useractions.cpp:953
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "نگه داشتن پنجره بالای پنجره‌های دیگر"
 
-#: useractions.cpp:956
+#: useractions.cpp:955
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "نگه داشتن پنجره زیر پنجره‌های دیگر"
 
-#: useractions.cpp:958
+#: useractions.cpp:957
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "فعال کردن پنجره تقاضای توجه"
 
-#: useractions.cpp:960
+#: useractions.cpp:959
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "برپایی میان‌بر پنجره"
 
-#: useractions.cpp:962
+#: useractions.cpp:961
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window to the Center"
 msgstr "حرکت پنجره"
 
-#: useractions.cpp:964
+#: useractions.cpp:963
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Right"
 msgstr "حرکت پنجره"
 
-#: useractions.cpp:966
+#: useractions.cpp:965
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Left"
 msgstr "حرکت پنجره"
 
-#: useractions.cpp:968
+#: useractions.cpp:967
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Up"
 msgstr "حرکت پنجره"
 
-#: useractions.cpp:970
+#: useractions.cpp:969
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Down"
 msgstr "حرکت پنجره"
 
-#: useractions.cpp:972
+#: useractions.cpp:971
 #, fuzzy, kde-format
 #| msgid "Maximize Window Horizontally"
 msgid "Expand Window Horizontally"
 msgstr "بیشینه‌سازی افقی پنجره"
 
-#: useractions.cpp:974
+#: useractions.cpp:973
 #, fuzzy, kde-format
 #| msgid "Maximize Window Vertically"
 msgid "Expand Window Vertically"
 msgstr "بیشینه‌سازی عمودی پنجره"
 
-#: useractions.cpp:976
+#: useractions.cpp:975
 #, fuzzy, kde-format
 #| msgid "Pack Shrink Window Horizontally"
 msgid "Shrink Window Horizontally"
 msgstr "فشردن پنجره جمع‌شده به طور افقی"
 
-#: useractions.cpp:978
+#: useractions.cpp:977
 #, fuzzy, kde-format
 #| msgid "Pack Shrink Window Vertically"
 msgid "Shrink Window Vertically"
 msgstr "فشردن پنجره جمع‌شده به طور عمودی"
 
-#: useractions.cpp:980
+#: useractions.cpp:979
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Quick Tile Window to the Left"
 msgstr "فشردن پنجره به چپ"
 
-#: useractions.cpp:982
+#: useractions.cpp:981
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Right"
 msgid "Quick Tile Window to the Right"
 msgstr "فشردن پنجره به راست"
 
-#: useractions.cpp:984
+#: useractions.cpp:983
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Quick Tile Window to the Top"
 msgstr "فشردن پنجره به چپ"
 
-#: useractions.cpp:986
+#: useractions.cpp:985
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Quick Tile Window to the Bottom"
 msgstr "فشردن پنجره به چپ"
 
-#: useractions.cpp:988
+#: useractions.cpp:987
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Quick Tile Window to the Top Left"
 msgstr "فشردن پنجره به چپ"
 
-#: useractions.cpp:990
+#: useractions.cpp:989
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "فشردن پنجره به چپ"
 
-#: useractions.cpp:992
+#: useractions.cpp:991
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Right"
 msgid "Quick Tile Window to the Top Right"
 msgstr "فشردن پنجره به راست"
 
-#: useractions.cpp:994
+#: useractions.cpp:993
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Right"
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "فشردن پنجره به راست"
 
-#: useractions.cpp:996
+#: useractions.cpp:995
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Window Above"
 msgstr "سودهی به پرده ۰"
 
-#: useractions.cpp:998
+#: useractions.cpp:997
 #, fuzzy, kde-format
 #| msgid "Switch to Previous Desktop"
 msgid "Switch to Window Below"
 msgstr "سودهی به رومیزی قبلی"
 
-#: useractions.cpp:1000
+#: useractions.cpp:999
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Right"
 msgid "Switch to Window to the Right"
 msgstr "فشردن پنجره به راست"
 
-#: useractions.cpp:1002
+#: useractions.cpp:1001
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Switch to Window to the Left"
 msgstr "فشردن پنجره به چپ"
 
-#: useractions.cpp:1004
+#: useractions.cpp:1003
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr ""
 
-#: useractions.cpp:1006
+#: useractions.cpp:1005
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr ""
 
-#: useractions.cpp:1009
+#: useractions.cpp:1008
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "نگه داشتن پنجره روی تمام رومیزیها"
 
-#: useractions.cpp:1020
+#: useractions.cpp:1019
 #, fuzzy, kde-format
 #| msgid "Window to Desktop 1"
 msgid "Window to Desktop %1"
 msgstr "پنجره در رومیزی ۱"
 
-#: useractions.cpp:1022
+#: useractions.cpp:1021
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "پنجره در رومیزی بعدی"
 
-#: useractions.cpp:1023
+#: useractions.cpp:1022
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "پنجره در رومیزی قبلی"
 
-#: useractions.cpp:1024
+#: useractions.cpp:1023
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "پنجره یک رومیزی به راست"
 
-#: useractions.cpp:1026
+#: useractions.cpp:1025
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "پنجره یک رومیزی به چپ"
 
-#: useractions.cpp:1028
+#: useractions.cpp:1027
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "پنجره یک رومیزی به بالا"
 
-#: useractions.cpp:1030
+#: useractions.cpp:1029
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "پنجره یک رومیزی به پایین"
 
-#: useractions.cpp:1034
+#: useractions.cpp:1033
 #, fuzzy, kde-format
 #| msgid "Window to Screen 1"
 msgid "Move Window to Screen %1"
 msgstr "پنجره در پرده ۱"
 
-#: useractions.cpp:1041
+#: useractions.cpp:1040
 #, fuzzy, kde-format
 #| msgid "Window to Next Screen"
 msgid "Move Window to Next Screen"
 msgstr "پنجره در پرده بعدی"
 
-#: useractions.cpp:1043
+#: useractions.cpp:1042
 #, fuzzy, kde-format
 #| msgid "Window to Previous Desktop"
 msgid "Move Window to Previous Screen"
 msgstr "پنجره در رومیزی قبلی"
 
-#: useractions.cpp:1045
+#: useractions.cpp:1044
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Window One Screen to the Right"
 msgstr "پنجره یک رومیزی به راست"
 
-#: useractions.cpp:1047
+#: useractions.cpp:1046
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Window One Screen to the Left"
 msgstr "پنجره یک رومیزی به چپ"
 
-#: useractions.cpp:1049
+#: useractions.cpp:1048
 #, fuzzy, kde-format
 #| msgid "Window to Screen 2"
 msgid "Move Window One Screen Up"
 msgstr "پنجره در پرده ۲"
 
-#: useractions.cpp:1051
+#: useractions.cpp:1050
 #, fuzzy, kde-format
 #| msgid "Window One Desktop Down"
 msgid "Move Window One Screen Down"
 msgstr "پنجره یک رومیزی به پایین"
 
-#: useractions.cpp:1055
+#: useractions.cpp:1054
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 1"
 msgid "Switch to Screen %1"
 msgstr "سودهی به پرده ۱"
 
-#: useractions.cpp:1062
+#: useractions.cpp:1061
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "سودهی به پرده بعدی"
 
-#: useractions.cpp:1063
+#: useractions.cpp:1062
 #, fuzzy, kde-format
 #| msgid "Switch to Previous Desktop"
 msgid "Switch to Previous Screen"
 msgstr "سودهی به رومیزی قبلی"
 
-#: useractions.cpp:1064
+#: useractions.cpp:1063
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Right"
 msgid "Switch to Screen to the Right"
 msgstr "فشردن پنجره به راست"
 
-#: useractions.cpp:1066
+#: useractions.cpp:1065
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Switch to Screen to the Left"
 msgstr "فشردن پنجره به چپ"
 
-#: useractions.cpp:1068
+#: useractions.cpp:1067
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Screen Above"
 msgstr "سودهی به پرده ۰"
 
-#: useractions.cpp:1070
+#: useractions.cpp:1069
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Screen Below"
 msgstr "سودهی به پرده ۰"
 
-#: useractions.cpp:1073
+#: useractions.cpp:1072
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Peek at Desktop"
 msgstr "به &رومیزی‌"
 
-#: useractions.cpp:1076
+#: useractions.cpp:1075
 #, kde-format
 msgid "Kill Window"
 msgstr "کشتن پنجره"
 
-#: useractions.cpp:1137
+#: useractions.cpp:1136
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr ""
 
-#: useractions.cpp:1274
+#: useractions.cpp:1273
 #, kde-format
 msgid ""
 "The window manager is configured to consider the screen with the mouse on it "
