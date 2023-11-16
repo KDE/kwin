@@ -926,6 +926,12 @@ public Q_SLOTS:
     virtual bool borderActivated(ElectricBorder border);
 };
 
+template<typename T>
+int Effect::animationTime(int defaultDuration)
+{
+    return animationTime(T::duration() != 0 ? T::duration() : defaultDuration);
+}
+
 /**
  * Prefer the KWIN_EFFECT_FACTORY macros.
  */

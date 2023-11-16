@@ -2738,15 +2738,6 @@ void Motion<T>::finish()
 }
 
 /***************************************************************
- Effect
-***************************************************************/
-template<typename T>
-int Effect::animationTime(int defaultDuration)
-{
-    return animationTime(T::duration() != 0 ? T::duration() : defaultDuration);
-}
-
-/***************************************************************
  EffectWindow
 ***************************************************************/
 
