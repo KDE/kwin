@@ -57,7 +57,8 @@ NightColorManager::NightColorManager()
     connect(this, &NightColorManager::inhibitedChanged, this, [this] {
         const QString iconName = isInhibited()
             ? QStringLiteral("redshift-status-off")
-            : QStringLiteral("redshift-status-on");
+            : m_daylight && m_targetTemperature != DEFAULT_DAY_TEMPERATURE ? QStringLiteral("redshift-status-day")
+                                                                           : QStringLiteral("redshift-status-on");
 
         const QString text = isInhibited()
             ? i18nc("Night Light was disabled", "Night Light Off")
