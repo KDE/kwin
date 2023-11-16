@@ -797,7 +797,10 @@ void Workspace::addWaylandWindow(Window *window)
         updateClientArea();
     }
     if (window->wantsInput() && !window->isMinimized()) {
-        activateWindow(window);
+        // Never activate a window on its own in "Extreme" mode.
+        if (options->focusStealingPreventionLevel() < 4) {
+            activateWindow(window);
+        }
     }
     updateTabbox();
     Q_EMIT windowAdded(window);
