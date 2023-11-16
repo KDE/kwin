@@ -81,7 +81,6 @@ target_sources(kwin PRIVATE
     decorations/decorations_logging.cpp
     decorations/settings.cpp
     dpmsinputeventfilter.cpp
-    effectloader.cpp
     events.cpp
     focuschain.cpp
     ftrace.cpp
@@ -111,6 +110,7 @@ target_sources(kwin PRIVATE
     libkwineffects/animationeffect.cpp
     libkwineffects/effect.cpp
     libkwineffects/effectframe.cpp
+    libkwineffects/effectloader.cpp
     libkwineffects/effects.cpp
     libkwineffects/effecttogglablestate.cpp
     libkwineffects/logging.cpp

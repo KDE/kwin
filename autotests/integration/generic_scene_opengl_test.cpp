@@ -10,7 +10,7 @@
 #include "compositor.h"
 #include "core/renderbackend.h"
 #include "cursor.h"
-#include "effectloader.h"
+#include "libkwineffects/effectloader.h"
 #include "scene/workspacescene.h"
 #include "wayland_server.h"
 #include "window.h"

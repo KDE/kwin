@@ -9,7 +9,7 @@
 #include "kwin_wayland_test.h"
 
 #include "compositor.h"
-#include "effectloader.h"
+#include "libkwineffects/effectloader.h"
 #include "libkwineffects/effects.h"
 #include "pointer_input.h"
 #include "virtualdesktops.h"

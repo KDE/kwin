@@ -10,7 +10,7 @@
 #include "kwin_wayland_test.h"
 
 #include "compositor.h"
-#include "effectloader.h"
+#include "libkwineffects/effectloader.h"
 #include "libkwineffects/effects.h"
 #include "scene/workspacescene.h"
 #include "wayland_server.h"
