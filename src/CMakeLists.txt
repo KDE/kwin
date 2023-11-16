@@ -108,15 +108,15 @@ target_sources(kwin PRIVATE
     layershellv1integration.cpp
     layershellv1window.cpp
     libkwineffects/anidata.cpp
+    libkwineffects/animationeffect.cpp
     libkwineffects/effect.cpp
     libkwineffects/effectframe.cpp
+    libkwineffects/effects.cpp
     libkwineffects/effecttogglablestate.cpp
-    libkwineffects/kwinanimationeffect.cpp
-    libkwineffects/kwineffects.cpp
-    libkwineffects/kwinoffscreeneffect.cpp
-    libkwineffects/kwinoffscreenquickview.cpp
-    libkwineffects/kwinquickeffect.cpp
     libkwineffects/logging.cpp
+    libkwineffects/offscreeneffect.cpp
+    libkwineffects/offscreenquickview.cpp
+    libkwineffects/quickeffect.cpp
     libkwineffects/timeline.cpp
     lidswitchtracker.cpp
     main.cpp
@@ -294,7 +294,7 @@ set(kwin_dbus_SRCS)
 qt_add_dbus_adaptor(kwin_dbus_SRCS scripting/org.kde.kwin.Script.xml scripting/scripting.h KWin::AbstractScript)
 qt_add_dbus_adaptor(kwin_dbus_SRCS org.kde.KWin.xml dbusinterface.h KWin::DBusInterface)
 qt_add_dbus_adaptor(kwin_dbus_SRCS org.kde.kwin.Compositing.xml dbusinterface.h KWin::CompositorDBusInterface)
-qt_add_dbus_adaptor(kwin_dbus_SRCS ${kwin_effects_dbus_xml} libkwineffects/kwineffects.h KWin::EffectsHandler)
+qt_add_dbus_adaptor(kwin_dbus_SRCS ${kwin_effects_dbus_xml} libkwineffects/effects.h KWin::EffectsHandler)
 qt_add_dbus_adaptor(kwin_dbus_SRCS org.kde.KWin.VirtualDesktopManager.xml dbusinterface.h KWin::VirtualDesktopManagerDBusInterface)
 qt_add_dbus_adaptor(kwin_dbus_SRCS org.kde.KWin.Session.xml sm.h KWin::SessionManager)
 qt_add_dbus_adaptor(kwin_dbus_SRCS org.kde.KWin.Plugins.xml dbusinterface.h KWin::PluginManagerDBusInterface)
@@ -435,14 +435,14 @@ install(FILES
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/utils COMPONENT Devel)
 
 install(FILES
+    libkwineffects/animationeffect.h
     libkwineffects/effect.h
+    libkwineffects/effects.h
     libkwineffects/effecttogglablestate.h
-    libkwineffects/kwinanimationeffect.h
-    libkwineffects/kwineffects.h
-    libkwineffects/kwinglobals.h
-    libkwineffects/kwinoffscreeneffect.h
-    libkwineffects/kwinoffscreenquickview.h
-    libkwineffects/kwinquickeffect.h
+    libkwineffects/globals.h
+    libkwineffects/offscreeneffect.h
+    libkwineffects/offscreenquickview.h
+    libkwineffects/quickeffect.h
     libkwineffects/timeline.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/libkwineffects COMPONENT Devel)
 

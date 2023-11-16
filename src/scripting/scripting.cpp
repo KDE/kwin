@@ -14,7 +14,7 @@
 #include "dbuscall.h"
 #include "desktopbackgrounditem.h"
 #include "gesturehandler.h"
-#include "libkwineffects/kwinquickeffect.h"
+#include "libkwineffects/quickeffect.h"
 #include "screenedgehandler.h"
 #include "scriptedquicksceneeffect.h"
 #include "scripting_logging.h"

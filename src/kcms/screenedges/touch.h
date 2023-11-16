@@ -13,7 +13,7 @@
 #include <kcmodule.h>
 #include <ksharedconfig.h>
 
-#include "libkwineffects/kwinglobals.h"
+#include "libkwineffects/globals.h"
 
 class QShowEvent;
 

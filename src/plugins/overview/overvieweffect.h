@@ -7,7 +7,7 @@
 #pragma once
 
 #include "libkwineffects/effecttogglablestate.h"
-#include "libkwineffects/kwinquickeffect.h"
+#include "libkwineffects/quickeffect.h"
 
 namespace KWin
 {

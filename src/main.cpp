@@ -21,7 +21,7 @@
 #include "cursorsource.h"
 #include "input.h"
 #include "inputmethod.h"
-#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/effects.h"
 #include "opengl/gltexture.h"
 #include "opengl/glutils.h"
 #include "options.h"
@@ -41,7 +41,7 @@
 #include "screenlockerwatcher.h"
 #endif
 
-#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/effects.h"
 
 // KDE
 #include <KAboutData>

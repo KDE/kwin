@@ -8,7 +8,7 @@
 
 #include "core/output.h"
 #include "libkwineffects/effect.h"
-#include "libkwineffects/kwinoffscreenquickview.h"
+#include "libkwineffects/offscreenquickview.h"
 
 #include <QQmlComponent>
 

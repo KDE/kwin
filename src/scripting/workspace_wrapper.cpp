@@ -12,7 +12,7 @@
 #include "core/output.h"
 #include "core/outputbackend.h"
 #include "cursor.h"
-#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/effects.h"
 #include "outline.h"
 #include "tiles/tilemanager.h"
 #include "virtualdesktops.h"

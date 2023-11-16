@@ -12,7 +12,7 @@
 #include "compositor_wayland.h"
 #include "core/session.h"
 #include "inputmethod.h"
-#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/effects.h"
 #include "placement.h"
 #include "pluginmanager.h"
 #include "utils/xcbutils.h"

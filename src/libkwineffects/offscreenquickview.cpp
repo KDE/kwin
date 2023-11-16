@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "libkwineffects/kwinoffscreenquickview.h"
+#include "libkwineffects/offscreenquickview.h"
 
 #include "logging_p.h"
 #include "opengl/glutils.h"
@@ -24,10 +24,10 @@
 #include <QOffscreenSurface>
 #include <QOpenGLContext>
 #include <QOpenGLFramebufferObject>
-#include <QTimer>
 #include <QQuickGraphicsDevice>
 #include <QQuickOpenGLUtils>
 #include <QQuickRenderTarget>
+#include <QTimer>
 #include <private/qeventpoint_p.h> // for QMutableEventPoint
 
 namespace KWin
@@ -584,4 +584,4 @@ QQuickItem *OffscreenQuickScene::rootItem() const
 
 } // namespace KWin
 
-#include "moc_kwinoffscreenquickview.cpp"
+#include "moc_offscreenquickview.cpp"

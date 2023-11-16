@@ -10,7 +10,7 @@
 
 #include "core/output.h"
 #include "internalwindow.h"
-#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/effects.h"
 #include "pointer_input.h"
 #include "wayland/surface.h"
 #include "wayland_server.h"

@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "libkwineffects/kwinglobals.h"
+#include "libkwineffects/globals.h"
 #include "openglcontext.h"
 
 #include <QByteArray>

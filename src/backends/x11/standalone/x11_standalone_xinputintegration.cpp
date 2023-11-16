@@ -19,8 +19,8 @@
 #include "../common/ge_event_mem_mover.h"
 
 #include "input.h"
-#include "libkwineffects/kwinglobals.h"
-#include "libkwineffects/kwinxcb.h"
+#include "libkwineffects/globals.h"
+#include "libkwineffects/xcb.h"
 #include "modifier_only_shortcuts.h"
 #include "workspace.h"
 #include "x11eventfilter.h"

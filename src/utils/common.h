@@ -13,7 +13,7 @@
 // cmake stuff
 #include "config-kwin.h"
 // kwin
-#include "libkwineffects/kwinglobals.h"
+#include "libkwineffects/globals.h"
 #include "utils/version.h"
 // Qt
 #include <QList>

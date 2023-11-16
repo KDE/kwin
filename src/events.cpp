@@ -18,7 +18,7 @@
 #include "cursor.h"
 #include "focuschain.h"
 #include "group.h"
-#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/effects.h"
 #include "netinfo.h"
 #include "rules.h"
 #include "screenedge.h"

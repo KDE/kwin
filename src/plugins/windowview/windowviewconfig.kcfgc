@@ -7,4 +7,4 @@ ClassName=WindowViewConfig
 NameSpace=KWin
 Singleton=true
 Mutators=true
-IncludeFiles=\"libkwineffects/kwinglobals.h\"
+IncludeFiles=\"libkwineffects/globals.h\"

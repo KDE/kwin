@@ -7,7 +7,7 @@
 */
 
 #include "libkwineffects/effect.h"
-#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/effects.h"
 
 #include <KConfigGroup>
 

@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "libkwineffects/kwinanimationeffect.h"
+#include "libkwineffects/animationeffect.h"
 
 namespace KWin
 {

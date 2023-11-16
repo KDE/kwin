@@ -11,7 +11,7 @@
 #include "core/output.h"
 #include "cursor.h"
 #include "cursorsource.h"
-#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/effects.h"
 #include "options.h"
 #include "pointer_input.h"
 #include "utils/xcursortheme.h"

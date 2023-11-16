@@ -10,7 +10,7 @@
 
 #include "cursor.h"
 #include "effectloader.h"
-#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/effects.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "x11window.h"

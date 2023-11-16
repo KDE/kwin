@@ -10,7 +10,7 @@
 
 #include "thumbnailaside.h"
 #include "core/renderviewport.h"
-#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/effects.h"
 // KConfigSkeleton
 #include "thumbnailasideconfig.h"
 

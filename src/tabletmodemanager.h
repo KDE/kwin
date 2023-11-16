@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "libkwineffects/kwinglobals.h"
+#include "libkwineffects/globals.h"
 #include <KConfigWatcher>
 #include <QObject>
 #include <config-kwin.h>

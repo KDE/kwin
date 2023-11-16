@@ -10,7 +10,7 @@
 
 #include "compositor.h"
 #include "effectloader.h"
-#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/effects.h"
 #include "pointer_input.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"

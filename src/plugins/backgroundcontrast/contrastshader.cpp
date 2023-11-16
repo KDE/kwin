@@ -7,7 +7,7 @@
 
 #include "contrastshader.h"
 
-#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/effects.h"
 #include "opengl/glplatform.h"
 
 #include <QByteArray>

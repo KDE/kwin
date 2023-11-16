@@ -7,7 +7,7 @@
 #pragma once
 
 #include "kwin_export.h"
-#include "libkwineffects/kwinglobals.h"
+#include "libkwineffects/globals.h"
 
 #include <QRegion>
 #include <chrono>

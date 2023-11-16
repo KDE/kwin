@@ -7,8 +7,8 @@
 #pragma once
 
 #include "core/colorspace.h"
-#include "libkwineffects/kwineffects.h"
-#include "libkwineffects/kwinglobals.h"
+#include "libkwineffects/effects.h"
+#include "libkwineffects/globals.h"
 
 #include <QList>
 #include <QMatrix4x4>

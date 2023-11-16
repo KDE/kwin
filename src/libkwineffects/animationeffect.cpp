@@ -8,7 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "libkwineffects/kwinanimationeffect.h"
+#include "libkwineffects/animationeffect.h"
 #include "libkwineffects/anidata_p.h"
 #include "opengl/glutils.h"
 
@@ -249,8 +249,7 @@ quint64 AnimationEffect::p_animate(EffectWindow *w, Attribute a, uint meta, int 
         waitAtSource, // Whether the animation should be kept at source
         fullscreen, // Full screen effect lock
         keepAlive, // Keep alive flag
-        shader
-        ));
+        shader));
 
     const quint64 ret_id = ++d->m_animCounter;
     AniData &animation = it->first.last();
@@ -413,7 +412,9 @@ bool AnimationEffect::cancel(quint64 animationId)
         for (QList<AniData>::iterator anim = entry->first.begin(), animEnd = entry->first.end(); anim != animEnd; ++anim) {
             if (anim->id == animationId) {
                 EffectWindowDeletedRef ref = std::move(anim->deletedRef); // delete window once we're done updating m_animations
-                if (anim->shader && std::none_of(entry->first.begin(), entry->first.end(), [animationId] (const auto &anim) { return anim.id != animationId && anim.shader; })) {
+                if (anim->shader && std::none_of(entry->first.begin(), entry->first.end(), [animationId](const auto &anim) {
+                        return anim.id != animationId && anim.shader;
+                    })) {
                     unredirect(entry.key());
                 }
                 entry->first.erase(anim); // remove the animation
@@ -664,7 +665,9 @@ void AnimationEffect::postPaintScreen()
             }
             EffectWindow *window = entry.key();
             d->m_justEndedAnimation = anim->id;
-            if (anim->shader && std::none_of(entry->first.begin(), entry->first.end(), [anim] (const auto &other) { return anim->id != other.id && other.shader; })) {
+            if (anim->shader && std::none_of(entry->first.begin(), entry->first.end(), [anim](const auto &other) {
+                    return anim->id != other.id && other.shader;
+                })) {
                 unredirect(window);
             }
             unredirect(window);
@@ -1020,4 +1023,4 @@ AnimationEffect::AniMap AnimationEffect::state() const
 
 } // namespace KWin
 
-#include "moc_kwinanimationeffect.cpp"
+#include "moc_animationeffect.cpp"

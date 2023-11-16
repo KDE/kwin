@@ -12,7 +12,7 @@
 #include "scene/scene.h"
 
 #include "core/colorspace.h"
-#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/effects.h"
 #include "utils/common.h"
 #include "window.h"
 

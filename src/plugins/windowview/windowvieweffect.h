@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "libkwineffects/kwinquickeffect.h"
+#include "libkwineffects/quickeffect.h"
 
 #include <QKeySequence>
 

@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/effects.h"
 
 namespace KWin
 {

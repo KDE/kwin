@@ -4,9 +4,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "libkwineffects/kwinquickeffect.h"
+#include "libkwineffects/quickeffect.h"
 #include "core/output.h"
-#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/effects.h"
 
 #include "logging_p.h"
 
@@ -596,4 +596,4 @@ bool QuickSceneEffect::touchUp(qint32 id, std::chrono::microseconds time)
 
 } // namespace KWin
 
-#include <moc_kwinquickeffect.cpp>
+#include "moc_quickeffect.cpp"

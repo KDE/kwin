@@ -18,7 +18,7 @@
 #include "core/outputbackend.h"
 #include "core/session.h"
 #include "inputmethod.h"
-#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/effects.h"
 #include "tabletmodemanager.h"
 #include "utils/realtime.h"
 #include "wayland/display.h"

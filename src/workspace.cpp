@@ -29,7 +29,7 @@
 #include "input.h"
 #include "internalwindow.h"
 #include "killwindow.h"
-#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/effects.h"
 #include "moving_client_x11_filter.h"
 #include "netinfo.h"
 #include "outline.h"

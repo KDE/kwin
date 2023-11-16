@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "libkwineffects/kwinglobals.h"
+#include "libkwineffects/globals.h"
 
 #include <QHash>
 #include <QObject>

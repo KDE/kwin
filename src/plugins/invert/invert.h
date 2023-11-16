@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "libkwineffects/kwinoffscreeneffect.h"
+#include "libkwineffects/offscreeneffect.h"
 
 namespace KWin
 {

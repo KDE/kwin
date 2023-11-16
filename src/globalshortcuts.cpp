@@ -12,7 +12,7 @@
 #include <config-kwin.h>
 // kwin
 #include "gestures.h"
-#include "libkwineffects/kwinglobals.h"
+#include "libkwineffects/globals.h"
 #include "main.h"
 #include "utils/common.h"
 // KDE

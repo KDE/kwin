@@ -8,7 +8,7 @@
 
 #include <unordered_set>
 
-#include "libkwineffects/kwinoffscreeneffect.h"
+#include "libkwineffects/offscreeneffect.h"
 #include "opengl/glshadermanager.h"
 
 namespace KWin

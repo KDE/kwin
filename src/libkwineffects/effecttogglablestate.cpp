@@ -4,8 +4,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "effecttogglablestate.h"
-#include "kwineffects.h"
+#include "libkwineffects/effecttogglablestate.h"
+#include "libkwineffects/effects.h"
 
 namespace KWin
 {

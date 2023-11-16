@@ -9,8 +9,8 @@
 #ifndef TESTUTILS_H
 #define TESTUTILS_H
 // KWin
-#include "libkwineffects/kwinglobals.h"
-#include "libkwineffects/kwinxcb.h"
+#include "libkwineffects/globals.h"
+#include "libkwineffects/xcb.h"
 
 namespace
 {

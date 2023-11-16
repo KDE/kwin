@@ -9,7 +9,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/effects.h"
 
 #include "config-kwin.h"
 
@@ -28,7 +28,7 @@
 #include "inputmethod.h"
 #include "inputpanelv1window.h"
 #include "internalwindow.h"
-#include "libkwineffects/kwinoffscreenquickview.h"
+#include "libkwineffects/offscreenquickview.h"
 #include "opengl/glutils.h"
 #include "osd.h"
 #include "pointer_input.h"
@@ -2684,5 +2684,5 @@ EffectWindow *WindowMotionManager::windowAtPoint(QPoint point, bool useStackingO
 
 } // namespace
 
-#include "moc_kwineffects.cpp"
-#include "moc_kwinglobals.cpp"
+#include "moc_effects.cpp"
+#include "moc_globals.cpp"

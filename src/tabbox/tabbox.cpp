@@ -25,7 +25,7 @@
 #include "focuschain.h"
 #include "input.h"
 #include "keyboard_input.h"
-#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/effects.h"
 #include "pointer_input.h"
 #include "screenedge.h"
 #include "utils/xcbutils.h"

@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "libkwineffects/kwineffects.h" // FIXME: move infiniteRegion() elsewhere
-#include "libkwineffects/kwinoffscreenquickview.h"
+#include "libkwineffects/effects.h" // FIXME: move infiniteRegion() elsewhere
+#include "libkwineffects/offscreenquickview.h"
 
 #include <QFont>
 #include <QIcon>

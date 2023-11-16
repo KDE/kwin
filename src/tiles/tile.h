@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "libkwineffects/kwinglobals.h"
+#include "libkwineffects/globals.h"
 #include <kwin_export.h>
 #include <utils/common.h>
 

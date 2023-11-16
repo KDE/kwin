@@ -60,7 +60,7 @@
 #include "core/renderloop.h"
 #include "core/renderviewport.h"
 #include "internalwindow.h"
-#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/effects.h"
 #include "scene/dndiconitem.h"
 #include "scene/itemrenderer.h"
 #include "scene/shadowitem.h"

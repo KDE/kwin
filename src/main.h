@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "libkwineffects/kwinglobals.h"
+#include "libkwineffects/globals.h"
 #include <config-kwin.h>
 
 #include <KSharedConfig>

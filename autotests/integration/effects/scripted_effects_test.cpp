@@ -11,7 +11,7 @@
 
 #include "effectloader.h"
 #include "libkwineffects/anidata_p.h"
-#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/effects.h"
 #include "scripting/scriptedeffect.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"

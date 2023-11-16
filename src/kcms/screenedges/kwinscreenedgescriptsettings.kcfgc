@@ -1,7 +1,7 @@
 File=kwinscreenedgescriptsettings.kcfg
 NameSpace=KWin
 ClassName=KWinScreenEdgeScriptSettings
-IncludeFiles=\"libkwineffects/kwinglobals.h\"
+IncludeFiles=\"libkwineffects/globals.h\"
 Mutators=true
 DefaultValueGetters=true
 ParentInConstructor=true

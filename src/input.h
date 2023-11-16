@@ -11,7 +11,7 @@
 #pragma once
 #include <config-kwin.h>
 
-#include "libkwineffects/kwinglobals.h"
+#include "libkwineffects/globals.h"
 #include <QObject>
 #include <QPoint>
 #include <QPointer>

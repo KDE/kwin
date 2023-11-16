@@ -10,7 +10,7 @@
 
 #include <QObject>
 
-#include "libkwineffects/kwinglobals.h"
+#include "libkwineffects/globals.h"
 
 class OrgFreedesktopScreenSaverInterface;
 class OrgKdeScreensaverInterface;

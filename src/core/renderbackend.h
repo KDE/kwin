@@ -7,7 +7,7 @@
 #pragma once
 
 #include "core/rendertarget.h"
-#include "libkwineffects/kwinglobals.h"
+#include "libkwineffects/globals.h"
 
 #include <QObject>
 

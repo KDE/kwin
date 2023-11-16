@@ -11,7 +11,7 @@
 #pragma once
 
 // Include with base class for effects.
-#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/effects.h"
 #include "libkwineffects/timeline.h"
 
 namespace KWin

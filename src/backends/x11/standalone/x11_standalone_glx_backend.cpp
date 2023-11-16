@@ -34,7 +34,7 @@
 #include "utils/xcbutils.h"
 #include "workspace.h"
 // kwin libs
-#include "libkwineffects/kwinoffscreenquickview.h"
+#include "libkwineffects/offscreenquickview.h"
 #include "opengl/glplatform.h"
 #include "opengl/glutils.h"
 // Qt

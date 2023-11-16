@@ -12,7 +12,7 @@
 #include "compositor.h"
 #include "core/output.h"
 #include "effectloader.h"
-#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/effects.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"

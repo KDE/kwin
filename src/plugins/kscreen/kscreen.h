@@ -8,7 +8,7 @@
 */
 #pragma once
 
-#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/effects.h"
 #include "libkwineffects/timeline.h"
 
 namespace KWin

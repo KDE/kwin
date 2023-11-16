@@ -8,7 +8,7 @@
 */
 // own
 #include "client_machine.h"
-#include "libkwineffects/kwinxcb.h"
+#include "libkwineffects/xcb.h"
 #include "main.h"
 #include "utils/common.h"
 // KF5

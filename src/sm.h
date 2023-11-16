@@ -16,7 +16,7 @@
 
 #include <KConfigGroup>
 
-#include "libkwineffects/kwinglobals.h"
+#include "libkwineffects/globals.h"
 #include <netwm_def.h>
 
 namespace KWin

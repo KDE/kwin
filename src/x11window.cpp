@@ -22,7 +22,7 @@
 #include "decorations/decorationbridge.h"
 #include "focuschain.h"
 #include "group.h"
-#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/effects.h"
 #include "netinfo.h"
 #include "placement.h"
 #include "scene/surfaceitem_x11.h"

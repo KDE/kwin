@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "libkwineffects/kwineffects.h"
-#include "libkwineffects/kwinoffscreenquickview.h"
+#include "libkwineffects/effects.h"
+#include "libkwineffects/offscreenquickview.h"
 
 #include <QElapsedTimer>
 

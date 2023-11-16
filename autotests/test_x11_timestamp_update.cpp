@@ -10,7 +10,7 @@
 #include <QTest>
 #include <private/qtx11extras_p.h>
 
-#include "libkwineffects/kwinxcb.h"
+#include "libkwineffects/xcb.h"
 #include "main.h"
 #include "utils/common.h"
 

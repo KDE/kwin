@@ -5,7 +5,7 @@
 */
 
 #include "gesturehandler.h"
-#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/effects.h"
 
 #include <QAction>
 

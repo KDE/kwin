@@ -11,7 +11,7 @@
 
 #include "compositor.h"
 #include "effectloader.h"
-#include "libkwineffects/kwineffects.h"
+#include "libkwineffects/effects.h"
 #include "scene/workspacescene.h"
 #include "wayland_server.h"
 #include "window.h"

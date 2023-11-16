@@ -4,7 +4,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "libkwineffects/kwinoffscreeneffect.h"
+#include "libkwineffects/offscreeneffect.h"
 #include "core/output.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
@@ -400,4 +400,4 @@ void CrossFadeEffect::setShader(EffectWindow *window, GLShader *shader)
 
 } // namespace KWin
 
-#include "moc_kwinoffscreeneffect.cpp"
+#include "moc_offscreeneffect.cpp"
