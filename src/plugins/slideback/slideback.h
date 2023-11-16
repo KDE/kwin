@@ -11,6 +11,7 @@
 
 // Include with base class for effects.
 #include "libkwineffects/effects.h"
+#include "plugins/slideback/motionmanager.h"
 
 namespace KWin
 {

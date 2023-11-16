@@ -1,13 +1,12 @@
 #######################################
 # Effect
 
-# Source files
-set(slideback_SOURCES
+kwin_add_builtin_effect(slideback)
+target_sources(slideback PRIVATE
     main.cpp
+    motionmanager.cpp
     slideback.cpp
 )
-
-kwin_add_builtin_effect(slideback ${slideback_SOURCES})
 target_link_libraries(slideback PRIVATE
     kwin
 )
