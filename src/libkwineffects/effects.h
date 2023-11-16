@@ -2746,12 +2746,6 @@ int Effect::animationTime(int defaultDuration)
     return animationTime(T::duration() != 0 ? T::duration() : defaultDuration);
 }
 
-template<typename T>
-void Effect::initConfig()
-{
-    T::instance(effects->config());
-}
-
 /***************************************************************
  EffectWindow
 ***************************************************************/

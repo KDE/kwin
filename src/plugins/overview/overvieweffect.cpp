@@ -154,7 +154,7 @@ OverviewEffect::OverviewEffect()
 
     connect(effects, &EffectsHandler::screenAboutToLock, this, &OverviewEffect::realDeactivate);
 
-    initConfig<OverviewConfig>();
+    OverviewConfig::instance(effects->config());
     reconfigure(ReconfigureAll);
 
     setSource(QUrl(QStringLiteral("qrc:/overview/qml/main.qml")));

@@ -924,15 +924,6 @@ public:
 
 public Q_SLOTS:
     virtual bool borderActivated(ElectricBorder border);
-
-protected:
-    /**
-     * An implementing class can call this with it's kconfig compiled singleton class.
-     * This method will perform the instance on the class.
-     * @since 5.9
-     */
-    template<typename T>
-    void initConfig();
 };
 
 /**

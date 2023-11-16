@@ -54,7 +54,7 @@ static QMatrix4x4 createPerspectiveMatrix(const QRectF &rect, const qreal scale)
 
 SheetEffect::SheetEffect()
 {
-    initConfig<SheetConfig>();
+    SheetConfig::instance(effects->config());
     reconfigure(ReconfigureAll);
 
     connect(effects, &EffectsHandler::windowAdded, this, &SheetEffect::slotWindowAdded);

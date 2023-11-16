@@ -47,7 +47,7 @@ KscreenEffect::KscreenEffect()
     : Effect()
     , m_atom(effects->waylandDisplay() ? XCB_ATOM_NONE : effects->announceSupportProperty("_KDE_KWIN_KSCREEN_SUPPORT", this))
 {
-    initConfig<KscreenConfig>();
+    KscreenConfig::instance(effects->config());
     if (!effects->waylandDisplay()) {
         connect(effects, &EffectsHandler::propertyNotify, this, &KscreenEffect::propertyNotify);
         connect(effects, &EffectsHandler::xcbConnectionChanged, this, [this]() {

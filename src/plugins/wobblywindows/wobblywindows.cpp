@@ -121,7 +121,7 @@ static const ParameterSet pset[5] = {set_0, set_1, set_2, set_3, set_4};
 
 WobblyWindowsEffect::WobblyWindowsEffect()
 {
-    initConfig<WobblyWindowsConfig>();
+    WobblyWindowsConfig::instance(effects->config());
     reconfigure(ReconfigureAll);
     connect(effects, &EffectsHandler::windowAdded, this, &WobblyWindowsEffect::slotWindowAdded);
 

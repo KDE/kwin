@@ -30,7 +30,7 @@ WindowViewEffect::WindowViewEffect()
     , m_exposeClassCurrentDesktopAction(new QAction(this))
 {
     qmlRegisterUncreatableType<WindowViewEffect>("org.kde.KWin.Effect.WindowView", 1, 0, "WindowView", QStringLiteral("WindowView cannot be created in QML"));
-    initConfig<WindowViewConfig>();
+    WindowViewConfig::instance(effects->config());
     new WindowView1Adaptor(this);
 
     QDBusConnection::sessionBus().registerObject(s_dbusObjectPath, this);

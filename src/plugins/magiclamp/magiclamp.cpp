@@ -18,7 +18,7 @@ namespace KWin
 
 MagicLampEffect::MagicLampEffect()
 {
-    initConfig<MagicLampConfig>();
+    MagicLampConfig::instance(effects->config());
     reconfigure(ReconfigureAll);
     connect(effects, &EffectsHandler::windowAdded, this, &MagicLampEffect::slotWindowAdded);
     connect(effects, &EffectsHandler::windowDeleted, this, &MagicLampEffect::slotWindowDeleted);

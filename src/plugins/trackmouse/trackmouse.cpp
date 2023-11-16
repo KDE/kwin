@@ -34,7 +34,7 @@ namespace KWin
 TrackMouseEffect::TrackMouseEffect()
     : m_angle(0)
 {
-    initConfig<TrackMouseConfig>();
+    TrackMouseConfig::instance(effects->config());
     if (effects->isOpenGLCompositing() || effects->compositingType() == QPainterCompositing) {
         m_angleBase = 90.0;
     }

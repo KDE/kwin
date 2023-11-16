@@ -32,7 +32,7 @@ QTimer *SlidingPopupsEffect::s_slideManagerRemoveTimer = nullptr;
 
 SlidingPopupsEffect::SlidingPopupsEffect()
 {
-    initConfig<SlidingPopupsConfig>();
+    SlidingPopupsConfig::instance(effects->config());
 
     Display *display = effects->waylandDisplay();
     if (display) {

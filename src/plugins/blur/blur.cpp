@@ -50,7 +50,7 @@ QTimer *BlurEffect::s_blurManagerRemoveTimer = nullptr;
 
 BlurEffect::BlurEffect()
 {
-    initConfig<BlurConfig>();
+    BlurConfig::instance(effects->config());
     ensureResources();
 
     m_downsamplePass.shader = ShaderManager::instance()->generateShaderFromFile(ShaderTrait::MapTexture,

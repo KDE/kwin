@@ -23,7 +23,7 @@ namespace KWin
 
 SlideEffect::SlideEffect()
 {
-    initConfig<SlideConfig>();
+    SlideConfig::instance(effects->config());
     reconfigure(ReconfigureAll);
 
     connect(effects, &EffectsHandler::desktopChanged,
