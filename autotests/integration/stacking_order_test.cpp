@@ -46,6 +46,8 @@ private Q_SLOTS:
 
     void testKeepAbove();
     void testKeepBelow();
+
+    void testPreserveRelativeWindowStacking();
 };
 
 void StackingOrderTest::initTestCase()
@@ -831,6 +833,78 @@ void StackingOrderTest::testKeepBelow()
     QVERIFY(window2->isActive());
     QVERIFY(window2->keepBelow());
     QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window2, window1}));
+}
+
+void StackingOrderTest::testPreserveRelativeWindowStacking()
+{
+    // This test verifies that raising a window doesn't affect the order of transient windows that are constrained
+    // to be above it, see BUG: 477262
+
+    const int windowsQuantity = 5;
+
+    std::unique_ptr<KWayland::Client::Surface> surfaces[windowsQuantity];
+    std::unique_ptr<Test::XdgToplevel> shellSurfaces[windowsQuantity];
+    Window *windows[windowsQuantity];
+
+    // Create 5 windows.
+    for (int i = 0; i < windowsQuantity; i++) {
+        surfaces[i] = Test::createSurface();
+        QVERIFY(surfaces[i]);
+        shellSurfaces[i] = std::unique_ptr<Test::XdgToplevel>(Test::createXdgToplevelSurface(surfaces[i].get(), surfaces[i].get()));
+        QVERIFY(shellSurfaces[i]);
+    }
+
+    // link them into the following hierarchy:
+    //      * 0 - parent to all
+    //      * 1, 2, 3 - children of 0
+    //      * 4 - child of 3
+    shellSurfaces[1]->set_parent(shellSurfaces[0]->object());
+    shellSurfaces[2]->set_parent(shellSurfaces[0]->object());
+    shellSurfaces[3]->set_parent(shellSurfaces[0]->object());
+    shellSurfaces[4]->set_parent(shellSurfaces[3]->object());
+
+    for (int i = 0; i < windowsQuantity; i++) {
+        windows[i] = Test::renderAndWaitForShown(surfaces[i].get(), QSize(128, 128), Qt::green);
+        QVERIFY(windows[i]);
+    }
+
+    // verify initial windows order
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{windows[0], windows[1], windows[2], windows[3], windows[4]}));
+
+    // activate parent
+    workspace()->activateWindow(windows[0]);
+    // verify that order hasn't changed
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{windows[0], windows[1], windows[2], windows[3], windows[4]}));
+
+    // change stacking order
+    workspace()->activateWindow(windows[2]);
+    workspace()->activateWindow(windows[1]);
+    // verify order
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{windows[0], windows[3], windows[4], windows[2], windows[1]}));
+
+    // activate parent
+    workspace()->activateWindow(windows[0]);
+    // verify that order hasn't changed
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{windows[0], windows[3], windows[4], windows[2], windows[1]}));
+
+    // activate child 3
+    workspace()->activateWindow(windows[3]);
+    // verify that both child 3 and 4 have been raised
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{windows[0], windows[2], windows[1], windows[3], windows[4]}));
+
+    // activate parent
+    workspace()->activateWindow(windows[0]);
+    // verify that order hasn't changed
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{windows[0], windows[2], windows[1], windows[3], windows[4]}));
+
+    // yet another check - add KeepAbove attribute to parent window (see BUG: 477262)
+    windows[0]->setKeepAbove(true);
+    // verify that order hasn't changed
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{windows[0], windows[2], windows[1], windows[3], windows[4]}));
+    // verify that child windows can still be restacked freely
+    workspace()->activateWindow(windows[1]);
+    workspace()->activateWindow(windows[2]);
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{windows[0], windows[3], windows[4], windows[1], windows[2]}));
 }
 
 WAYLANDTEST_MAIN(StackingOrderTest)
