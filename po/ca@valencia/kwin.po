@@ -1061,12 +1061,12 @@ msgstr "PID"
 #: helpers/killer/killer.cpp:40
 #, kde-format
 msgid "Hostname on which the application is running"
-msgstr "Nom de la màquina on s'executa l'aplicació"
+msgstr "Nom de l'amfitrió on s'executa l'aplicació"
 
 #: helpers/killer/killer.cpp:40
 #, kde-format
 msgid "hostname"
-msgstr "nom de la màquina"
+msgstr "nom de l'amfitrió"
 
 #: helpers/killer/killer.cpp:42
 #, kde-format
@@ -1142,7 +1142,7 @@ msgid ""
 "%3), running on host \"%4\", but the application is not responding.</para>"
 msgstr ""
 "<para>Heu intentat tancar la finestra «%1» de l'aplicació «%2» (ID del "
-"procés: %3), executant-se en el servidor «%4», però l'aplicació no està "
+"procés: %3), executant-se en l'amfitrió «%4», però l'aplicació no està "
 "responent.</para>"
 
 #: helpers/killer/killer.cpp:91
@@ -1680,7 +1680,7 @@ msgstr "Tipus de coincidència de la cadena de títol de finestra"
 #: rulesettings.kcfg:54
 #, kde-format
 msgid "Machine (hostname)"
-msgstr "Màquina (nom de la màquina)"
+msgstr "Màquina (nom de l'amfitrió)"
 
 #. i18n: ectx: label, entry (clientmachinematch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:57

@@ -489,7 +489,7 @@ msgstr "Títol de la finestra"
 #: rulesmodel.cpp:407
 #, kde-format
 msgid "Machine (hostname)"
-msgstr "Màquina (nom de la màquina)"
+msgstr "Màquina (nom de l'amfitrió)"
 
 #: rulesmodel.cpp:413
 #, kde-format
@@ -653,7 +653,7 @@ msgstr "Ignora el commutador"
 #: rulesmodel.cpp:561
 #, kde-format
 msgid "Window shall (not) appear in the Alt+Tab list"
-msgstr "La finestra (no) apareixerà en la llista Alt+Tab"
+msgstr "La finestra (no) apareixerà en la llista «Alt+Tab»"
 
 #: rulesmodel.cpp:565
 #, kde-format
@@ -762,13 +762,13 @@ msgid ""
 "while it's active!"
 msgstr ""
 "Quan s'utilitza, una finestra rebrà\n"
-"totes les entrades de teclat mentre estiga activa, incloent-hi Alt+Tab, "
+"totes les entrades de teclat mentre estiga activa, incloent-hi «Alt+Tab», "
 "etc.\n"
 "Açò és interessant especialment per a emuladors o màquines virtuals.\n"
 "\n"
 "Avís:\n"
-"No podreu fer Alt+Tab fora de la finestra\n"
-"ni utilitzar cap altra drecera global (com Alt+F2 per a mostrar KRunner)\n"
+"No podreu fer «Alt+Tab» fora de la finestra\n"
+"ni utilitzar cap altra drecera global (com «Alt+F2» per a mostrar KRunner)\n"
 "mentre estiga actiu!"
 
 #: rulesmodel.cpp:635

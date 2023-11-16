@@ -54,7 +54,7 @@ msgstr ""
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Show/Hide Video"
-msgstr "Mostra/oculta el vídeo"
+msgstr "Mostra o oculta el vídeo"
 
 #: package/contents/ui/Effect.qml:128
 #, kde-format
