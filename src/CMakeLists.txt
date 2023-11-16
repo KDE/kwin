@@ -436,6 +436,7 @@ install(FILES
 
 install(FILES
     libkwineffects/effect.h
+    libkwineffects/effecttogglablestate.h
     libkwineffects/kwinanimationeffect.h
     libkwineffects/kwineffects.h
     libkwineffects/kwinglobals.h
