@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-16 01:45+0000\n"
+"POT-Creation-Date: 2023-11-17 01:38+0000\n"
 "PO-Revision-Date: 2023-11-14 08:57+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -2209,24 +2209,24 @@ msgstr "Meta"
 msgid "Arrow draw modifier keys:"
 msgstr "Claves de Modificar de dessigno de flecha:"
 
-#: plugins/nightcolor/nightcolormanager.cpp:63
+#: plugins/nightcolor/nightcolormanager.cpp:64
 #, kde-format
 msgctxt "Night Light was disabled"
 msgid "Night Light Off"
 msgstr "Color de Nocte non active"
 
-#: plugins/nightcolor/nightcolormanager.cpp:64
+#: plugins/nightcolor/nightcolormanager.cpp:65
 #, kde-format
 msgctxt "Night Light was enabled"
 msgid "Night Light On"
 msgstr "Color de Nocte active"
 
-#: plugins/nightcolor/nightcolormanager.cpp:85
+#: plugins/nightcolor/nightcolormanager.cpp:86
 #, kde-format
 msgid "Toggle Night Light"
 msgstr "Commuta color de nocte"
 
-#: plugins/nightcolor/nightcolormanager.cpp:462
+#: plugins/nightcolor/nightcolormanager.cpp:463
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "Vista preliminar de Temperatura de Color "

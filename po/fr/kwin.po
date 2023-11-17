@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-16 01:45+0000\n"
+"POT-Creation-Date: 2023-11-17 01:38+0000\n"
 "PO-Revision-Date: 2023-11-12 21:26+0100\n"
 "Last-Translator: Xavier BESNARD <xavier.besnard@neuf.fr>\n"
 "Language-Team: fr\n"
@@ -2255,7 +2255,7 @@ msgstr "Méta"
 msgid "Arrow draw modifier keys:"
 msgstr "Touches modificatrices :"
 
-#: plugins/nightcolor/nightcolormanager.cpp:63
+#: plugins/nightcolor/nightcolormanager.cpp:64
 #, fuzzy, kde-format
 #| msgctxt "Night Color was disabled"
 #| msgid "Night Color Off"
@@ -2263,7 +2263,7 @@ msgctxt "Night Light was disabled"
 msgid "Night Light Off"
 msgstr "Couleur de nuit désactivée"
 
-#: plugins/nightcolor/nightcolormanager.cpp:64
+#: plugins/nightcolor/nightcolormanager.cpp:65
 #, fuzzy, kde-format
 #| msgctxt "Night Color was enabled"
 #| msgid "Night Color On"
@@ -2271,13 +2271,13 @@ msgctxt "Night Light was enabled"
 msgid "Night Light On"
 msgstr "Couleur de nuit activée"
 
-#: plugins/nightcolor/nightcolormanager.cpp:85
+#: plugins/nightcolor/nightcolormanager.cpp:86
 #, fuzzy, kde-format
 #| msgid "Toggle Night Color"
 msgid "Toggle Night Light"
 msgstr "Basculer la couleur de nuit"
 
-#: plugins/nightcolor/nightcolormanager.cpp:462
+#: plugins/nightcolor/nightcolormanager.cpp:463
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "Aperçu de la température de couleurs"

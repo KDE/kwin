@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1664939 2023-11-16 02:09:43Z scripty $
+# $Id: kwin.po 1665121 2023-11-17 02:02:33Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-16 01:45+0000\n"
+"POT-Creation-Date: 2023-11-17 01:38+0000\n"
 "PO-Revision-Date: 2023-11-14 07:27+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -2219,24 +2219,24 @@ msgstr "Meta"
 msgid "Arrow draw modifier keys:"
 msgstr "Tipke puščic kot spremenilniki za risanje:"
 
-#: plugins/nightcolor/nightcolormanager.cpp:63
+#: plugins/nightcolor/nightcolormanager.cpp:64
 #, kde-format
 msgctxt "Night Light was disabled"
 msgid "Night Light Off"
 msgstr "Nočna barva izklopljena"
 
-#: plugins/nightcolor/nightcolormanager.cpp:64
+#: plugins/nightcolor/nightcolormanager.cpp:65
 #, kde-format
 msgctxt "Night Light was enabled"
 msgid "Night Light On"
 msgstr "Nočna barva vklopljena"
 
-#: plugins/nightcolor/nightcolormanager.cpp:85
+#: plugins/nightcolor/nightcolormanager.cpp:86
 #, kde-format
 msgid "Toggle Night Light"
 msgstr "Preklopi nočno barvo"
 
-#: plugins/nightcolor/nightcolormanager.cpp:462
+#: plugins/nightcolor/nightcolormanager.cpp:463
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "Predogled barvne temperature"

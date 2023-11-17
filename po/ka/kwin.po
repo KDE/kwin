@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-16 01:45+0000\n"
+"POT-Creation-Date: 2023-11-17 01:38+0000\n"
 "PO-Revision-Date: 2023-11-15 06:32+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -2196,24 +2196,24 @@ msgstr "მეტა"
 msgid "Arrow draw modifier keys:"
 msgstr "ისრებით ხატვის მოდიფიკატორი ღილაკები:"
 
-#: plugins/nightcolor/nightcolormanager.cpp:63
+#: plugins/nightcolor/nightcolormanager.cpp:64
 #, kde-format
 msgctxt "Night Light was disabled"
 msgid "Night Light Off"
 msgstr "ღამის ფერები გათიშულია"
 
-#: plugins/nightcolor/nightcolormanager.cpp:64
+#: plugins/nightcolor/nightcolormanager.cpp:65
 #, kde-format
 msgctxt "Night Light was enabled"
 msgid "Night Light On"
 msgstr "ღამის ფერები ჩართულია"
 
-#: plugins/nightcolor/nightcolormanager.cpp:85
+#: plugins/nightcolor/nightcolormanager.cpp:86
 #, kde-format
 msgid "Toggle Night Light"
 msgstr "ღამის ფერების გადართვა"
 
-#: plugins/nightcolor/nightcolormanager.cpp:462
+#: plugins/nightcolor/nightcolormanager.cpp:463
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "ფერის ტემპერატურის გადახედვა"

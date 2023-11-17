@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-16 01:45+0000\n"
+"POT-Creation-Date: 2023-11-17 01:38+0000\n"
 "PO-Revision-Date: 2022-10-17 23:50+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -2248,7 +2248,7 @@ msgstr "Meta"
 msgid "Arrow draw modifier keys:"
 msgstr "Dəyişdiricilər"
 
-#: plugins/nightcolor/nightcolormanager.cpp:63
+#: plugins/nightcolor/nightcolormanager.cpp:64
 #, fuzzy, kde-format
 #| msgctxt "Night Color was disabled"
 #| msgid "Night Color Off"
@@ -2256,7 +2256,7 @@ msgctxt "Night Light was disabled"
 msgid "Night Light Off"
 msgstr "Gecə Rəngi söndürülüb"
 
-#: plugins/nightcolor/nightcolormanager.cpp:64
+#: plugins/nightcolor/nightcolormanager.cpp:65
 #, fuzzy, kde-format
 #| msgctxt "Night Color was enabled"
 #| msgid "Night Color On"
@@ -2264,13 +2264,13 @@ msgctxt "Night Light was enabled"
 msgid "Night Light On"
 msgstr "Gecə Rəngi aktivdir"
 
-#: plugins/nightcolor/nightcolormanager.cpp:85
+#: plugins/nightcolor/nightcolormanager.cpp:86
 #, fuzzy, kde-format
 #| msgid "Toggle Night Color"
 msgid "Toggle Night Light"
 msgstr "Gecə Rəngini aktivləşdirmək/söndürmək"
 
-#: plugins/nightcolor/nightcolormanager.cpp:462
+#: plugins/nightcolor/nightcolormanager.cpp:463
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "Rəng temperaturuna nəzər salın"
