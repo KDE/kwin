@@ -12,6 +12,7 @@
 
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
+#include "libkwineffects/effects.h"
 #include "opengl/glutils.h"
 
 #include <QPainter>

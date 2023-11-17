@@ -17,6 +17,7 @@
 
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
+#include "libkwineffects/effects.h"
 #include "opengl/glplatform.h"
 #include <KGlobalAccel>
 #include <KLocalizedString>

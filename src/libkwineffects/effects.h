@@ -13,6 +13,7 @@
 #pragma once
 
 #include "libkwineffects/effect.h"
+#include "opengl/glvertexbuffer.h"
 
 #include <QEasingCurve>
 #include <QIcon>
@@ -2064,18 +2065,6 @@ public:
 
 private:
     Group *m_group;
-};
-
-struct GLVertex2D
-{
-    QVector2D position;
-    QVector2D texcoord;
-};
-
-struct GLVertex3D
-{
-    QVector3D position;
-    QVector2D texcoord;
 };
 
 /**

@@ -14,7 +14,6 @@
 #include "glshader.h"
 #include "glshadermanager.h"
 #include "glutils.h"
-#include "libkwineffects/effects.h"
 #include "utils/common.h"
 
 #include <QVector4D>

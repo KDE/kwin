@@ -9,10 +9,12 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
-#include "libkwineffects/effects.h"
+#include "kwin_export.h"
 
 #include <QColor>
 #include <QRegion>
+#include <QVector2D>
+
 #include <epoxy/gl.h>
 #include <optional>
 #include <ranges>
@@ -25,6 +27,18 @@ enum VertexAttributeType {
     VA_Position = 0,
     VA_TexCoord = 1,
     VertexAttributeCount = 2,
+};
+
+struct GLVertex2D
+{
+    QVector2D position;
+    QVector2D texcoord;
+};
+
+struct GLVertex3D
+{
+    QVector3D position;
+    QVector2D texcoord;
 };
 
 /**

@@ -10,6 +10,7 @@
 // KWin
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
+#include "libkwineffects/effects.h"
 #include "opengl/gltexture.h"
 #include "opengl/glutils.h"
 // KDE

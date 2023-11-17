@@ -8,6 +8,7 @@
 */
 
 #include "libkwineffects/offscreenquickview.h"
+#include "libkwineffects/effects.h"
 
 #include "logging_p.h"
 #include "opengl/glutils.h"
