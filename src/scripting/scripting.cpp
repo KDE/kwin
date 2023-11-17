@@ -13,8 +13,8 @@
 // own
 #include "dbuscall.h"
 #include "desktopbackgrounditem.h"
+#include "effect/quickeffect.h"
 #include "gesturehandler.h"
-#include "libkwineffects/quickeffect.h"
 #include "screenedgehandler.h"
 #include "scriptedquicksceneeffect.h"
 #include "scripting_logging.h"

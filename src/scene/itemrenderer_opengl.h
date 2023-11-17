@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "libkwineffects/effects.h"
+#include "effect/effects.h"
 #include "opengl/glutils.h"
 #include "platformsupport/scenes/opengl/openglsurfacetexture.h"
 #include "scene/itemrenderer.h"

@@ -9,7 +9,7 @@
 #include <chrono>
 
 #include "core/renderbackend.h"
-#include "libkwineffects/globals.h"
+#include "effect/globals.h"
 #include "qwayland-server-presentation-time.h"
 
 namespace KWin

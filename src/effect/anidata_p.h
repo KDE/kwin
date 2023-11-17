@@ -10,8 +10,8 @@
 
 #pragma once
 
-#include "libkwineffects/animationeffect.h"
-#include "libkwineffects/timeline.h"
+#include "effect/animationeffect.h"
+#include "effect/timeline.h"
 
 #include <QEasingCurve>
 

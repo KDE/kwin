@@ -7,11 +7,11 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 // own
-#include "libkwineffects/effectloader.h"
+#include "effect/effectloader.h"
 // config
 #include <config-kwin.h>
 // KWin
-#include "libkwineffects/effect.h"
+#include "effect/effect.h"
 #include "plugin.h"
 #include "scripting/scriptedeffect.h"
 #include "scripting/scriptedquicksceneeffect.h"

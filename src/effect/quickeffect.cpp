@@ -4,9 +4,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "libkwineffects/quickeffect.h"
+#include "effect/quickeffect.h"
 #include "core/output.h"
-#include "libkwineffects/effects.h"
+#include "effect/effects.h"
 
 #include "logging_p.h"
 

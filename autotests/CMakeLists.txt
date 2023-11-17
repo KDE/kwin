@@ -1,6 +1,6 @@
 add_definitions(-DKWIN_UNIT_TEST)
 remove_definitions(-DQT_USE_QSTRINGBUILDER)
-add_subdirectory(libkwineffects)
+add_subdirectory(effect)
 add_subdirectory(integration)
 add_subdirectory(libinput)
 add_subdirectory(wayland)

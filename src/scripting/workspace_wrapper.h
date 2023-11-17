@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "libkwineffects/globals.h"
+#include "effect/globals.h"
 #include <QObject>
 #include <QQmlListProperty>
 #include <QRect>

@@ -11,7 +11,7 @@
 #include "showpaint.h"
 
 #include "core/renderviewport.h"
-#include "libkwineffects/effects.h"
+#include "effect/effects.h"
 #include "opengl/glutils.h"
 
 #include <KGlobalAccel>

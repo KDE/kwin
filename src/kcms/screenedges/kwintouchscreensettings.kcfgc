@@ -1,7 +1,7 @@
 File=kwintouchscreensettings.kcfg
 NameSpace=KWin
 ClassName=KWinTouchScreenSettings
-IncludeFiles=\"libkwineffects/globals.h\"
+IncludeFiles=\"effect/globals.h\"
 Mutators=true
 DefaultValueGetters=true
 ParentInConstructor=true

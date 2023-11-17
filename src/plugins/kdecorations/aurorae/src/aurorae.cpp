@@ -9,7 +9,7 @@
 
 #include "auroraeshared.h"
 #include "auroraetheme.h"
-#include "libkwineffects/offscreenquickview.h"
+#include "effect/offscreenquickview.h"
 // qml imports
 #include "decorationoptions.h"
 // KDecoration2

@@ -11,7 +11,7 @@
 
 // own
 #include "diminactive.h"
-#include "libkwineffects/effects.h"
+#include "effect/effects.h"
 
 // KConfigSkeleton
 #include "diminactiveconfig.h"

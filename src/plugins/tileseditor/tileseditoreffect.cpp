@@ -4,7 +4,7 @@
 */
 
 #include "tileseditoreffect.h"
-#include "libkwineffects/effects.h"
+#include "effect/effects.h"
 
 #include <QAction>
 #include <QQuickItem>

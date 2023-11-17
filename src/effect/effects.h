@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "libkwineffects/effect.h"
+#include "effect/effect.h"
 #include "opengl/glvertexbuffer.h"
 
 #include <QEasingCurve>

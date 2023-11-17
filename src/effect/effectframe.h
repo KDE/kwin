@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "libkwineffects/globals.h"
-#include "libkwineffects/offscreenquickview.h"
+#include "effect/globals.h"
+#include "effect/offscreenquickview.h"
 
 #include <QFont>
 #include <QIcon>

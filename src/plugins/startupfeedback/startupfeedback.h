@@ -8,7 +8,7 @@
 */
 
 #pragma once
-#include "libkwineffects/effect.h"
+#include "effect/effect.h"
 #include <KConfigWatcher>
 #include <KStartupInfo>
 #include <QObject>

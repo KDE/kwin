@@ -9,9 +9,9 @@
 
 #include "kwin_wayland_test.h"
 
-#include "libkwineffects/anidata_p.h"
-#include "libkwineffects/effectloader.h"
-#include "libkwineffects/effects.h"
+#include "effect/anidata_p.h"
+#include "effect/effectloader.h"
+#include "effect/effects.h"
 #include "scripting/scriptedeffect.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"

@@ -10,7 +10,7 @@
 #include "x11_standalone_overlaywindow.h"
 
 #include "compositor.h"
-#include "libkwineffects/globals.h"
+#include "effect/globals.h"
 #include "scene/workspacescene.h"
 #include "utils/common.h"
 #include "utils/xcbutils.h"

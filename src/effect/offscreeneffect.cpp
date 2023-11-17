@@ -4,7 +4,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "libkwineffects/offscreeneffect.h"
+#include "effect/offscreeneffect.h"
 #include "core/output.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"

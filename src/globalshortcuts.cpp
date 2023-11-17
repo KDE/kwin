@@ -11,8 +11,8 @@
 // config
 #include <config-kwin.h>
 // kwin
+#include "effect/globals.h"
 #include "gestures.h"
-#include "libkwineffects/globals.h"
 #include "main.h"
 #include "utils/common.h"
 // KDE

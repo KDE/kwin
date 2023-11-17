@@ -8,7 +8,7 @@
 */
 
 #include "xdgactivationv1.h"
-#include "libkwineffects/effects.h"
+#include "effect/effects.h"
 #include "utils/common.h"
 #include "wayland/display.h"
 #include "wayland/plasmawindowmanagement.h"

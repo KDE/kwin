@@ -9,7 +9,7 @@
 #pragma once
 #include "ui_shortcutdialog.h"
 
-#include "libkwineffects/globals.h"
+#include "effect/globals.h"
 
 // Qt
 #include <QDialog>

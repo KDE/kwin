@@ -1,7 +1,7 @@
 File=kwintouchscreenedgeeffectsettings.kcfg
 NameSpace=KWin
 ClassName=KWinTouchScreenEdgeEffectSettings
-IncludeFiles=\"libkwineffects/globals.h\"
+IncludeFiles=\"effect/globals.h\"
 Mutators=true
 DefaultValueGetters=true
 ParentInConstructor=true

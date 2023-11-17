@@ -9,8 +9,8 @@
 
 #pragma once
 
-#include "libkwineffects/offscreeneffect.h"
-#include "libkwineffects/timeline.h"
+#include "effect/offscreeneffect.h"
+#include "effect/timeline.h"
 
 namespace KWin
 {

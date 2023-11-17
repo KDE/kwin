@@ -12,7 +12,7 @@
 #pragma once
 
 // kwineffects
-#include "libkwineffects/effects.h"
+#include "effect/effects.h"
 
 #include "springmotion.h"
 

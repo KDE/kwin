@@ -8,8 +8,8 @@
 */
 #pragma once
 
-#include "libkwineffects/globals.h"
-#include "libkwineffects/xcb.h"
+#include "effect/globals.h"
+#include "effect/xcb.h"
 #include "main.h"
 #include "utils/c_ptr.h"
 #include "utils/version.h"

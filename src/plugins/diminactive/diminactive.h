@@ -12,8 +12,8 @@
 #pragma once
 
 // kwineffects
-#include "libkwineffects/effect.h"
-#include "libkwineffects/timeline.h"
+#include "effect/effect.h"
+#include "effect/timeline.h"
 
 namespace KWin
 {

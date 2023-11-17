@@ -8,7 +8,7 @@
 */
 #include "x11_filter.h"
 
-#include "libkwineffects/effects.h"
+#include "effect/effects.h"
 #include "screenedge.h"
 #include "tabbox/tabbox.h"
 #include "utils/xcbutils.h"

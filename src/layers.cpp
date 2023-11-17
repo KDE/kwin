@@ -65,10 +65,10 @@
 */
 
 #include "compositor.h"
+#include "effect/effects.h"
 #include "focuschain.h"
 #include "group.h"
 #include "internalwindow.h"
-#include "libkwineffects/effects.h"
 #include "netinfo.h"
 #include "rules.h"
 #include "screenedge.h"

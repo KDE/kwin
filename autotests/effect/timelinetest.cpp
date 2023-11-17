@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "libkwineffects/timeline.h"
+#include "effect/timeline.h"
 
 #include <QTest>
 

@@ -7,7 +7,7 @@
 #pragma once
 
 #include "core/output.h"
-#include "libkwineffects/globals.h"
+#include "effect/globals.h"
 #include "scene/item.h"
 
 namespace KWin

@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "libkwineffects/effects.h"
+#include "effect/effects.h"
 
 namespace KWin
 {

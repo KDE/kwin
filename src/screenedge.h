@@ -18,7 +18,7 @@
 
 #pragma once
 // KWin
-#include "libkwineffects/globals.h"
+#include "effect/globals.h"
 // KDE includes
 #include <KSharedConfig>
 // Qt

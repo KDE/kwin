@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "x11_standalone_effects_mouse_interception_filter.h"
-#include "libkwineffects/effects.h"
+#include "effect/effects.h"
 #include "utils/common.h"
 
 #include <QCursor>

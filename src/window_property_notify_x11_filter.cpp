@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "window_property_notify_x11_filter.h"
-#include "libkwineffects/effects.h"
+#include "effect/effects.h"
 #include "workspace.h"
 #include "x11window.h"
 

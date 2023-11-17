@@ -8,7 +8,7 @@
 */
 #pragma once
 
-#include "libkwineffects/globals.h"
+#include "effect/globals.h"
 
 #include <KSharedConfig>
 

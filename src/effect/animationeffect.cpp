@@ -8,8 +8,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "libkwineffects/animationeffect.h"
-#include "libkwineffects/anidata_p.h"
+#include "effect/animationeffect.h"
+#include "effect/anidata_p.h"
 #include "opengl/glutils.h"
 
 #include <QDateTime>

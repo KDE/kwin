@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include "libkwineffects/effect.h"
+#include "effect/effect.h"
 
 #include <QHash>
 

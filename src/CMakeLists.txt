@@ -81,6 +81,18 @@ target_sources(kwin PRIVATE
     decorations/decorations_logging.cpp
     decorations/settings.cpp
     dpmsinputeventfilter.cpp
+    effect/anidata.cpp
+    effect/animationeffect.cpp
+    effect/effect.cpp
+    effect/effectframe.cpp
+    effect/effectloader.cpp
+    effect/effects.cpp
+    effect/effecttogglablestate.cpp
+    effect/logging.cpp
+    effect/offscreeneffect.cpp
+    effect/offscreenquickview.cpp
+    effect/quickeffect.cpp
+    effect/timeline.cpp
     events.cpp
     focuschain.cpp
     ftrace.cpp
@@ -106,18 +118,6 @@ target_sources(kwin PRIVATE
     layers.cpp
     layershellv1integration.cpp
     layershellv1window.cpp
-    libkwineffects/anidata.cpp
-    libkwineffects/animationeffect.cpp
-    libkwineffects/effect.cpp
-    libkwineffects/effectframe.cpp
-    libkwineffects/effectloader.cpp
-    libkwineffects/effects.cpp
-    libkwineffects/effecttogglablestate.cpp
-    libkwineffects/logging.cpp
-    libkwineffects/offscreeneffect.cpp
-    libkwineffects/offscreenquickview.cpp
-    libkwineffects/quickeffect.cpp
-    libkwineffects/timeline.cpp
     lidswitchtracker.cpp
     main.cpp
     modifier_only_shortcuts.cpp
@@ -294,7 +294,7 @@ set(kwin_dbus_SRCS)
 qt_add_dbus_adaptor(kwin_dbus_SRCS scripting/org.kde.kwin.Script.xml scripting/scripting.h KWin::AbstractScript)
 qt_add_dbus_adaptor(kwin_dbus_SRCS org.kde.KWin.xml dbusinterface.h KWin::DBusInterface)
 qt_add_dbus_adaptor(kwin_dbus_SRCS org.kde.kwin.Compositing.xml dbusinterface.h KWin::CompositorDBusInterface)
-qt_add_dbus_adaptor(kwin_dbus_SRCS ${kwin_effects_dbus_xml} libkwineffects/effects.h KWin::EffectsHandler)
+qt_add_dbus_adaptor(kwin_dbus_SRCS ${kwin_effects_dbus_xml} effect/effects.h KWin::EffectsHandler)
 qt_add_dbus_adaptor(kwin_dbus_SRCS org.kde.KWin.VirtualDesktopManager.xml dbusinterface.h KWin::VirtualDesktopManagerDBusInterface)
 qt_add_dbus_adaptor(kwin_dbus_SRCS org.kde.KWin.Session.xml sm.h KWin::SessionManager)
 qt_add_dbus_adaptor(kwin_dbus_SRCS org.kde.KWin.Plugins.xml dbusinterface.h KWin::PluginManagerDBusInterface)
@@ -435,16 +435,16 @@ install(FILES
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/utils COMPONENT Devel)
 
 install(FILES
-    libkwineffects/animationeffect.h
-    libkwineffects/effect.h
-    libkwineffects/effects.h
-    libkwineffects/effecttogglablestate.h
-    libkwineffects/globals.h
-    libkwineffects/offscreeneffect.h
-    libkwineffects/offscreenquickview.h
-    libkwineffects/quickeffect.h
-    libkwineffects/timeline.h
-    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/libkwineffects COMPONENT Devel)
+    effect/animationeffect.h
+    effect/effect.h
+    effect/effects.h
+    effect/effecttogglablestate.h
+    effect/globals.h
+    effect/offscreeneffect.h
+    effect/offscreenquickview.h
+    effect/quickeffect.h
+    effect/timeline.h
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/effect COMPONENT Devel)
 
 install(FILES
     opengl/glframebuffer.h

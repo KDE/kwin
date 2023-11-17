@@ -7,8 +7,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "libkwineffects/offscreenquickview.h"
-#include "libkwineffects/effects.h"
+#include "effect/offscreenquickview.h"
+#include "effect/effects.h"
 
 #include "logging_p.h"
 #include "opengl/glutils.h"

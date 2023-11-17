@@ -15,7 +15,7 @@
 
 #include <QObject>
 
-#include "libkwineffects/globals.h"
+#include "effect/globals.h"
 #include <kwin_export.h>
 
 #include <QPointer>

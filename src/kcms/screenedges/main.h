@@ -13,7 +13,7 @@
 #include <kcmodule.h>
 #include <ksharedconfig.h>
 
-#include "libkwineffects/globals.h"
+#include "effect/globals.h"
 
 namespace KWin
 {

@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "libkwineffects/effect.h"
+#include "effect/effect.h"
 
 namespace KWin
 {

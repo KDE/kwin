@@ -12,7 +12,7 @@
 // cmake stuff
 #include <config-kwin.h>
 // kwin
-#include "libkwineffects/globals.h"
+#include "effect/globals.h"
 // Qt
 #include <QFileInfo>
 #include <QLoggingCategory>

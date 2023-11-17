@@ -17,7 +17,7 @@
 #include "core/outputbackend.h"
 #include "core/session.h"
 #include "cursor.h"
-#include "libkwineffects/effects.h"
+#include "effect/effects.h"
 #include "outline.h"
 #include "screenedge.h"
 #include "sm.h"

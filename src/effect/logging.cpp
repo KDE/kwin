@@ -7,4 +7,4 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "logging_p.h"
-Q_LOGGING_CATEGORY(LIBKWINEFFECTS, "libkwineffects", QtWarningMsg)
+Q_LOGGING_CATEGORY(LIBKWINEFFECTS, "effect", QtWarningMsg)

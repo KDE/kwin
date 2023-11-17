@@ -9,7 +9,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "libkwineffects/effects.h"
+#include "effect/effects.h"
 
 #include "config-kwin.h"
 
@@ -20,6 +20,8 @@
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "decorations/decorationbridge.h"
+#include "effect/effectloader.h"
+#include "effect/offscreenquickview.h"
 #include "effectsadaptor.h"
 #include "group.h"
 #include "input.h"
@@ -27,8 +29,6 @@
 #include "inputmethod.h"
 #include "inputpanelv1window.h"
 #include "internalwindow.h"
-#include "libkwineffects/effectloader.h"
-#include "libkwineffects/offscreenquickview.h"
 #include "opengl/glutils.h"
 #include "osd.h"
 #include "pointer_input.h"

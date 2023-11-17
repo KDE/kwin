@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "libkwineffects/globals.h"
+#include "effect/globals.h"
 #include <epoxy/egl.h>
 #include <kwin_export.h>
 

@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "libkwineffects/animationeffect.h"
+#include "effect/animationeffect.h"
 
 #include <QJSEngine>
 #include <QJSValue>

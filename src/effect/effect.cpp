@@ -6,8 +6,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "libkwineffects/effect.h"
-#include "libkwineffects/effects.h"
+#include "effect/effect.h"
+#include "effect/effects.h"
 
 #include <KConfigGroup>
 

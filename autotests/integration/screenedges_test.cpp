@@ -12,7 +12,7 @@
 
 #include "atoms.h"
 #include "cursor.h"
-#include "libkwineffects/effectloader.h"
+#include "effect/effectloader.h"
 #include "main.h"
 #include "pointer_input.h"
 #include "screenedge.h"

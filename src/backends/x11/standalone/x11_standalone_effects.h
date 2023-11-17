@@ -9,7 +9,7 @@
 */
 #pragma once
 
-#include "libkwineffects/effects.h"
+#include "effect/effects.h"
 #include "utils/xcbutils.h"
 
 #include <memory.h>

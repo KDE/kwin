@@ -18,9 +18,9 @@
 
 #include "../common/ge_event_mem_mover.h"
 
+#include "effect/globals.h"
+#include "effect/xcb.h"
 #include "input.h"
-#include "libkwineffects/globals.h"
-#include "libkwineffects/xcb.h"
 #include "modifier_only_shortcuts.h"
 #include "workspace.h"
 #include "x11eventfilter.h"

@@ -5,8 +5,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "libkwineffects/effectframe.h"
-#include "libkwineffects/effects.h"
+#include "effect/effectframe.h"
+#include "effect/effects.h"
 
 #include <QQuickItem>
 #include <QStandardPaths>

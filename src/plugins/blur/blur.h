@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "libkwineffects/effect.h"
+#include "effect/effect.h"
 #include "opengl/glutils.h"
 
 #include <QList>

@@ -11,7 +11,7 @@
 #include "atoms.h"
 #include "compositor.h"
 #include "cursor.h"
-#include "libkwineffects/effectloader.h"
+#include "effect/effectloader.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "x11window.h"

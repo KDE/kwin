@@ -22,10 +22,10 @@
 #include "activities.h"
 #endif
 #include "compositor.h"
+#include "effect/effects.h"
 #include "focuschain.h"
 #include "input.h"
 #include "keyboard_input.h"
-#include "libkwineffects/effects.h"
 #include "pointer_input.h"
 #include "screenedge.h"
 #include "utils/xcbutils.h"

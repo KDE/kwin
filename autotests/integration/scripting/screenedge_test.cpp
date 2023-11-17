@@ -8,7 +8,7 @@
 */
 #include "kwin_wayland_test.h"
 
-#include "libkwineffects/effectloader.h"
+#include "effect/effectloader.h"
 #include "pointer_input.h"
 #include "scripting/scripting.h"
 #include "wayland_server.h"

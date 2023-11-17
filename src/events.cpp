@@ -16,9 +16,9 @@
 
 #include "atoms.h"
 #include "cursor.h"
+#include "effect/effects.h"
 #include "focuschain.h"
 #include "group.h"
-#include "libkwineffects/effects.h"
 #include "netinfo.h"
 #include "rules.h"
 #include "screenedge.h"

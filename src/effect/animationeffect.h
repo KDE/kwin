@@ -12,7 +12,7 @@
 
 #include "kwin_export.h"
 
-#include "libkwineffects/offscreeneffect.h"
+#include "effect/offscreeneffect.h"
 #include <QEasingCurve>
 #include <QElapsedTimer>
 #include <QtMath>

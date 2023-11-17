@@ -7,9 +7,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
-#include "libkwineffects/effects.h"
-#include "libkwineffects/offscreeneffect.h"
-#include "libkwineffects/timeline.h"
+#include "effect/effects.h"
+#include "effect/offscreeneffect.h"
+#include "effect/timeline.h"
 #include <chrono>
 
 namespace KWin

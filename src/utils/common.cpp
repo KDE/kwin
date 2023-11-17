@@ -15,7 +15,7 @@
 */
 
 #include "utils/common.h"
-#include "libkwineffects/xcb.h"
+#include "effect/xcb.h"
 #include "utils/c_ptr.h"
 
 #include <QPainter>
