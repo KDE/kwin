@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "libkwineffects/effects.h" // FIXME: move infiniteRegion() elsewhere
+#include "libkwineffects/globals.h"
 #include "libkwineffects/offscreenquickview.h"
 
 #include <QFont>
@@ -15,6 +15,9 @@
 
 namespace KWin
 {
+
+class RenderTarget;
+class RenderViewport;
 
 /**
  * Style types used by @ref EffectFrame.

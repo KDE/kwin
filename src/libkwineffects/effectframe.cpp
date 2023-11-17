@@ -6,8 +6,10 @@
 */
 
 #include "libkwineffects/effectframe.h"
+#include "libkwineffects/effects.h"
 
 #include <QQuickItem>
+#include <QStandardPaths>
 
 namespace KWin
 {
