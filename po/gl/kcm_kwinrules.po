@@ -1,18 +1,18 @@
 # translation of kcmkwinrules.po to galician
 #
+# SPDX-FileCopyrightText: 2023 Adrián Chaves (Gallaecio)
 # Xabier Villar <xabier.villar@gmail.com>, 2005.
 # mvillarino <mvillarino@users.sourceforge.net>, 2007, 2008, 2009.
 # marce villarino <mvillarino@users.sourceforge.net>, 2009.
 # Marce Villarino <mvillarino@kde-espana.es>, 2009, 2011.
 # Marce Villarino <mvillarino@kde-espana.es>, 2012, 2013, 2014.
 # Adrián Chaves Fernández <adriyetichaves@gmail.com>, 2015, 2017.
-# Adrián Chaves (Gallaecio) <adrian@chaves.io>, 2017, 2018, 2019.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-25 02:43+0000\n"
-"PO-Revision-Date: 2019-10-19 22:04+0200\n"
+"PO-Revision-Date: 2023-11-16 20:49+0100\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
 "Language: gl\n"
@@ -20,33 +20,33 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 19.11.70\n"
+"X-Generator: Lokalize 23.08.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Xabier Villar, Marce Villarino"
+msgstr "Xabier Villar, Marce Villarino, Adrian Chaves (Gallaecio)"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "xabier.villar@gmail.com, mvillarino@users.sourceforge.net"
+msgstr ""
+"xabier.villar@gmail.com, mvillarino@users.sourceforge.net, adrian@chaves.io"
 
 #: kcmrules.cpp:28
-#, fuzzy, kde-format
-#| msgid "Window ro&le:"
+#, kde-format
 msgid "Window Rules"
-msgstr "&Rol da xanela:"
+msgstr "Regras de xanelas"
 
 #: kcmrules.cpp:32
 #, kde-format
 msgid "Ismael Asensio"
-msgstr ""
+msgstr "Ismael Asensio"
 
 #: kcmrules.cpp:33
 #, kde-format
 msgid "Author"
-msgstr ""
+msgstr "Autoría"
 
 #: kcmrules.cpp:37
 #, kde-format
@@ -66,7 +66,7 @@ msgstr ""
 #: kcmrules.cpp:243
 #, kde-format
 msgid "Copy of %1"
-msgstr ""
+msgstr "Copia de %1"
 
 #: kcmrules.cpp:423
 #, kde-format
@@ -81,7 +81,7 @@ msgstr "Configuración da xanela %1"
 #: main.cpp:31
 #, kde-format
 msgid "KWinRules KCM launcher"
-msgstr ""
+msgstr "Iniciador de KCM de KWinRules"
 
 #: main.cpp:32
 #, kde-format
@@ -142,6 +142,9 @@ msgid ""
 "created.\n"
 "No further changes will be affected."
 msgstr ""
+"A propiedade da xanela só se definirá co valor indicado despois de crear a "
+"xanela.\n"
+"Non afectará a ningún outro cambio."
 
 #: optionsmodel.cpp:209
 #, kde-format
@@ -155,6 +158,9 @@ msgid ""
 "be affected later\n"
 "(this action will be deleted afterwards)."
 msgstr ""
+"A propiedade da xanela definirase co valor indicado inmediatamente e non se "
+"verá afectada máis tarde\n"
+"(esta acción eliminarase despois)."
 
 #: optionsmodel.cpp:213
 #, kde-format
@@ -167,6 +173,8 @@ msgid ""
 "The value of the window property will be remembered and, every time the "
 "window is created, the last remembered value will be applied."
 msgstr ""
+"O valor da propiedade da xanela lembrarase, e cada vez que se cree a xanela "
+"aplicarase o último valor que se lembre."
 
 #: optionsmodel.cpp:217
 #, kde-format
@@ -180,6 +188,9 @@ msgid ""
 "for it will be used.\n"
 "Specifying this will block more generic window settings from taking effect."
 msgstr ""
+"A propiedade da xanela non se verá afectada e polo tanto usarase a súa "
+"xestión predeterminada.\n"
+"Indicar isto impedirá que xurdan efecto opcións de xanelas máis xenéricas."
 
 #: optionsmodel.cpp:221
 #, kde-format
@@ -189,7 +200,7 @@ msgstr "Forzar"
 #: optionsmodel.cpp:222
 #, kde-format
 msgid "The window property will be always forced to the given value."
-msgstr ""
+msgstr "A propiedade da xanela forzarase sempre co valor indicado."
 
 #: optionsmodel.cpp:224
 #, kde-format
@@ -202,11 +213,13 @@ msgid ""
 "The window property will be forced to the given value until it is hidden\n"
 "(this action will be deleted after the window is hidden)."
 msgstr ""
+"A propiedade da xanela forzarase co valor indicado ata que se agoche\n"
+"(esta acción eliminarase tras agocharse a xanela)."
 
 #: package/contents/ui/FileDialogLoader.qml:14
 #, kde-format
 msgid "Select File"
-msgstr ""
+msgstr "Seleccionar un ficheiro"
 
 #: package/contents/ui/FileDialogLoader.qml:26
 #, kde-format
@@ -216,57 +229,53 @@ msgstr "Regras de KWin (*.kwinrule)"
 #: package/contents/ui/main.qml:59
 #, kde-format
 msgid "No rules for specific windows are currently set"
-msgstr ""
+msgstr "Actualmente non hai regras definidas para xanelas concretas"
 
 #: package/contents/ui/main.qml:60
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Click the <interface>Add New...</interface> button below to add some"
-msgstr ""
+msgstr "Prema o botón <interface>Engadir…</interface> embaixo para engadilas."
 
 #: package/contents/ui/main.qml:68
 #, kde-format
 msgid "Select the rules to export"
-msgstr ""
+msgstr "Seleccione as regras para exportar"
 
 #: package/contents/ui/main.qml:72
 #, kde-format
 msgid "Unselect All"
-msgstr ""
+msgstr "Anular a selección"
 
 #: package/contents/ui/main.qml:72
 #, kde-format
 msgid "Select All"
-msgstr ""
+msgstr "Seleccionalo todo"
 
 #: package/contents/ui/main.qml:86
 #, kde-format
 msgid "Save Rules"
-msgstr ""
+msgstr "Gardar as regras"
 
 #: package/contents/ui/main.qml:97
-#, fuzzy, kde-format
-#| msgid "&New..."
+#, kde-format
 msgid "Add New..."
-msgstr "&Novo…"
+msgstr "Engadir..."
 
 #: package/contents/ui/main.qml:108
-#, fuzzy, kde-format
-#| msgid "&Import"
+#, kde-format
 msgid "Import..."
-msgstr "&Importar"
+msgstr "Importar…"
 
 #: package/contents/ui/main.qml:116
-#, fuzzy, kde-format
-#| msgid "&Export"
+#, kde-format
 msgid "Cancel Export"
-msgstr "&Exportar"
+msgstr "Cancelar a exportación"
 
 #: package/contents/ui/main.qml:116
-#, fuzzy, kde-format
-#| msgid "&Export"
+#, kde-format
 msgid "Export..."
-msgstr "&Exportar"
+msgstr "Exportar..."
 
 #: package/contents/ui/main.qml:206
 #, kde-format
@@ -276,7 +285,7 @@ msgstr "Editar"
 #: package/contents/ui/main.qml:215
 #, kde-format
 msgid "Duplicate"
-msgstr ""
+msgstr "Duplicar"
 
 #: package/contents/ui/main.qml:224
 #, kde-format
@@ -296,25 +305,24 @@ msgstr "Exportar as regras"
 #: package/contents/ui/OptionsComboBox.qml:35
 #, kde-format
 msgid "None selected"
-msgstr ""
+msgstr "Non se seleccionou ningunha"
 
 #: package/contents/ui/OptionsComboBox.qml:41
 #, kde-format
 msgid "All selected"
-msgstr ""
+msgstr "Seleccionáronse todas"
 
 #: package/contents/ui/OptionsComboBox.qml:43
 #, kde-format
 msgid "%1 selected"
 msgid_plural "%1 selected"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%1 seleccionada"
+msgstr[1] "%1 seleccionadas"
 
 #: package/contents/ui/RulesEditor.qml:63
-#, fuzzy, kde-format
-#| msgid "&Detect Window Properties"
+#, kde-format
 msgid "No window properties changed"
-msgstr "&Detectar as propiedades da xanela"
+msgstr "Non cambiou ningunha propiedade de xanela"
 
 #: package/contents/ui/RulesEditor.qml:64
 #, kde-kuit-format
@@ -323,43 +331,42 @@ msgid ""
 "Click the <interface>Add Property...</interface> button below to add some "
 "window properties that will be affected by the rule"
 msgstr ""
+"Prema o botón <interface>Engadir unha propiedade…</interface> embaixo para "
+"engadir algunhas propiedades de xanela ás que afectará a regra."
 
 #: package/contents/ui/RulesEditor.qml:85
-#, fuzzy, kde-format
-#| msgid "&Closeable"
+#, kde-format
 msgid "Close"
-msgstr "Pec&hábel"
+msgstr "Pechar"
 
 #: package/contents/ui/RulesEditor.qml:85
-#, fuzzy, kde-format
-#| msgid "&New..."
+#, kde-format
 msgid "Add Property..."
-msgstr "&Novo…"
+msgstr "Engadir unha propiedade…"
 
 #: package/contents/ui/RulesEditor.qml:98
-#, fuzzy, kde-format
-#| msgid "&Detect Window Properties"
+#, kde-format
 msgid "Detect Window Properties"
-msgstr "&Detectar as propiedades da xanela"
+msgstr "Detectar as propiedades da xanela"
 
 #: package/contents/ui/RulesEditor.qml:114
 #: package/contents/ui/RulesEditor.qml:121
 #, kde-format
 msgid "Instantly"
-msgstr ""
+msgstr "Instantaneamente"
 
 #: package/contents/ui/RulesEditor.qml:115
 #: package/contents/ui/RulesEditor.qml:126
 #, kde-format
 msgid "After %1 second"
 msgid_plural "After %1 seconds"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Tras %1 segundo"
+msgstr[1] "Tras %1 segundos"
 
 #: package/contents/ui/RulesEditor.qml:175
 #, kde-format
 msgid "Add property to the rule"
-msgstr ""
+msgstr "Engadir a propiedade á regra"
 
 #: package/contents/ui/RulesEditor.qml:273
 #: package/contents/ui/ValueEditor.qml:54
@@ -378,25 +385,25 @@ msgstr "Non"
 #: package/contents/ui/ValueEditor.qml:175
 #, kde-format
 msgid "%1 %"
-msgstr ""
+msgstr "%1%"
 
 #: package/contents/ui/RulesEditor.qml:277
 #, kde-format
 msgctxt "Coordinates (x, y)"
 msgid "(%1, %2)"
-msgstr ""
+msgstr "(%1, %2)"
 
 #: package/contents/ui/RulesEditor.qml:279
 #, kde-format
 msgctxt "Size (width, height)"
 msgid "(%1, %2)"
-msgstr ""
+msgstr "(%1, %2)"
 
 #: package/contents/ui/ValueEditor.qml:203
 #, kde-format
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
-msgstr ""
+msgstr "×"
 
 #: rulesmodel.cpp:218
 #, kde-format
@@ -404,10 +411,9 @@ msgid "Settings for %1"
 msgstr "Configuración para %1"
 
 #: rulesmodel.cpp:221
-#, fuzzy, kde-format
-#| msgid "Window settings for %1"
+#, kde-format
 msgid "New window settings"
-msgstr "Configuración da xanela %1"
+msgstr "Configuración da nova xanela"
 
 #: rulesmodel.cpp:237
 #, kde-format
@@ -431,112 +437,98 @@ msgid ""
 "initial settings for size and position. To enforce these settings, also "
 "force the property \"%1\" to \"Yes\"."
 msgstr ""
+"Algunhas aplicacións definen a súa propia xeometría tras iniciar, "
+"sobredefinindo a súa configuración iniciar de tamaño e posición. Para forzar "
+"esta configuración, force tamén a propiedade «%1» a «Si»."
 
 #: rulesmodel.cpp:359
-#, fuzzy, kde-format
-#| msgid "&Description:"
+#, kde-format
 msgid "Description"
-msgstr "&Descrición:"
+msgstr "Descrición"
 
 #: rulesmodel.cpp:359 rulesmodel.cpp:367 rulesmodel.cpp:375 rulesmodel.cpp:382
 #: rulesmodel.cpp:388 rulesmodel.cpp:396 rulesmodel.cpp:401 rulesmodel.cpp:407
-#, fuzzy, kde-format
-#| msgid "&Window matching"
+#, kde-format
 msgid "Window matching"
-msgstr "Concordancia da &Xanela"
+msgstr "Correspondencia de xanelas"
 
 #: rulesmodel.cpp:367
-#, fuzzy, kde-format
-#| msgid "Window &class (application):"
+#, kde-format
 msgid "Window class (application)"
-msgstr "C&lase da xanela (aplicación):"
+msgstr "Clase da xanela (aplicación)"
 
 #: rulesmodel.cpp:375
-#, fuzzy, kde-format
-#| msgid "Match w&hole window class"
+#, kde-format
 msgid "Match whole window class"
-msgstr "Concordar a clase co&mpleta da xanela"
+msgstr "Concordar a clase completa da xanela"
 
 #: rulesmodel.cpp:382
-#, fuzzy, kde-format
-#| msgid "Match w&hole window class"
+#, kde-format
 msgid "Whole window class"
-msgstr "Concordar a clase co&mpleta da xanela"
+msgstr "Clase completa da xanela"
 
 #: rulesmodel.cpp:388
-#, fuzzy, kde-format
-#| msgid "Window &types:"
+#, kde-format
 msgid "Window types"
-msgstr "&Tipos de xanela:"
+msgstr "Tipos de xanela"
 
 #: rulesmodel.cpp:396
-#, fuzzy, kde-format
-#| msgid "Window ro&le:"
+#, kde-format
 msgid "Window role"
-msgstr "&Rol da xanela:"
+msgstr "Rol da xanela"
 
 #: rulesmodel.cpp:401
-#, fuzzy, kde-format
-#| msgid "Window t&itle:"
+#, kde-format
 msgid "Window title"
-msgstr "Título da &xanela:"
+msgstr "Título da xanela"
 
 #: rulesmodel.cpp:407
-#, fuzzy, kde-format
-#| msgid "&Machine (hostname):"
+#, kde-format
 msgid "Machine (hostname)"
-msgstr "&Máquina (nome do servidor):"
+msgstr "Máquina (nome do servidor)"
 
 #: rulesmodel.cpp:413
-#, fuzzy, kde-format
-#| msgid "&Position"
+#, kde-format
 msgid "Position"
-msgstr "&Posición"
+msgstr "Posición"
 
 #: rulesmodel.cpp:413 rulesmodel.cpp:419 rulesmodel.cpp:425 rulesmodel.cpp:430
 #: rulesmodel.cpp:438 rulesmodel.cpp:444 rulesmodel.cpp:463 rulesmodel.cpp:479
 #: rulesmodel.cpp:484 rulesmodel.cpp:489 rulesmodel.cpp:494 rulesmodel.cpp:499
 #: rulesmodel.cpp:506 rulesmodel.cpp:516 rulesmodel.cpp:521 rulesmodel.cpp:526
-#, fuzzy, kde-format
-#| msgid "&Size && Position"
+#, kde-format
 msgid "Size & Position"
-msgstr "&Tamaño e posición"
+msgstr "Tamaño e posición"
 
 #: rulesmodel.cpp:419
-#, fuzzy, kde-format
-#| msgid "&Size"
+#, kde-format
 msgid "Size"
-msgstr "&Tamaño"
+msgstr "Tamaño"
 
 #: rulesmodel.cpp:425
-#, fuzzy, kde-format
-#| msgid "Maximized &horizontally"
+#, kde-format
 msgid "Maximized horizontally"
-msgstr "Maximizar &horizontalmente"
+msgstr "Maximizar horizontalmente"
 
 #: rulesmodel.cpp:430
-#, fuzzy, kde-format
-#| msgid "Maximized &vertically"
+#, kde-format
 msgid "Maximized vertically"
-msgstr "Maximizar &verticalmente"
+msgstr "Maximizar verticalmente"
 
 #: rulesmodel.cpp:438
-#, fuzzy, kde-format
-#| msgid "All Desktops"
+#, kde-format
 msgid "Virtual Desktop"
-msgstr "Todos os escritorios"
+msgstr "Escritorio virtual"
 
 #: rulesmodel.cpp:444
-#, fuzzy, kde-format
-#| msgid "All Desktops"
+#, kde-format
 msgid "Virtual Desktops"
-msgstr "Todos os escritorios"
+msgstr "Escritorios virtuais"
 
 #: rulesmodel.cpp:463
-#, fuzzy, kde-format
-#| msgid "All Activities"
+#, kde-format
 msgid "Activities"
-msgstr "Todas as actividades"
+msgstr "Actividades"
 
 #: rulesmodel.cpp:479
 #, kde-format
@@ -544,34 +536,29 @@ msgid "Screen"
 msgstr "Pantalla"
 
 #: rulesmodel.cpp:484
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Fullscreen"
-msgstr "Pa&ntalla completa"
+msgstr "Pantalla completa"
 
 #: rulesmodel.cpp:489
-#, fuzzy, kde-format
-#| msgid "M&inimized"
+#, kde-format
 msgid "Minimized"
-msgstr "M&inimizada"
+msgstr "Minimizada"
 
 #: rulesmodel.cpp:494
-#, fuzzy, kde-format
-#| msgid "Sh&aded"
+#, kde-format
 msgid "Shaded"
-msgstr "Rec&ollida"
+msgstr "Ensombrecida"
 
 #: rulesmodel.cpp:499
-#, fuzzy, kde-format
-#| msgid "Initial p&lacement"
+#, kde-format
 msgid "Initial placement"
-msgstr "Co&locación inicial"
+msgstr "Colocación inicial"
 
 #: rulesmodel.cpp:506
-#, fuzzy, kde-format
-#| msgid "Ignore requested &geometry"
+#, kde-format
 msgid "Ignore requested geometry"
-msgstr "Ignorar a xeometría &solicitada"
+msgstr "Ignorar a xeometría solicitada"
 
 #: rulesmodel.cpp:508
 #, kde-format
@@ -587,16 +574,14 @@ msgstr ""
 "para aparecer incondicionalmente no centro da pantalla."
 
 #: rulesmodel.cpp:516
-#, fuzzy, kde-format
-#| msgid "M&inimum size"
+#, kde-format
 msgid "Minimum Size"
-msgstr "Tamaño mín&imo"
+msgstr "Tamaño mínimo"
 
 #: rulesmodel.cpp:521
-#, fuzzy, kde-format
-#| msgid "M&aximum size"
+#, kde-format
 msgid "Maximum Size"
-msgstr "Tamaño &máximo"
+msgstr "Tamaño máximo"
 
 #: rulesmodel.cpp:526
 #, kde-format
@@ -621,25 +606,23 @@ msgstr ""
 #: rulesmodel.cpp:537
 #, kde-format
 msgid "Keep above other windows"
-msgstr ""
+msgstr "Manter enriba doutras xanelas"
 
 #: rulesmodel.cpp:537 rulesmodel.cpp:542 rulesmodel.cpp:547 rulesmodel.cpp:553
 #: rulesmodel.cpp:559 rulesmodel.cpp:565
-#, fuzzy, kde-format
-#| msgid "&Arrangement && Access"
+#, kde-format
 msgid "Arrangement & Access"
-msgstr "&Disposición e acceso"
+msgstr "Disposición e acceso"
 
 #: rulesmodel.cpp:542
 #, kde-format
 msgid "Keep below other windows"
-msgstr ""
+msgstr "Manter debaixo doutras xanelas"
 
 #: rulesmodel.cpp:547
-#, fuzzy, kde-format
-#| msgid "Skip &taskbar"
+#, kde-format
 msgid "Skip taskbar"
-msgstr "Saltar a barra de &tarefas"
+msgstr "Saltar a barra de tarefas"
 
 #: rulesmodel.cpp:549
 #, kde-format
@@ -647,10 +630,9 @@ msgid "Window shall (not) appear in the taskbar."
 msgstr "A xanela (non) ha aparecer na barra de tarefas."
 
 #: rulesmodel.cpp:553
-#, fuzzy, kde-format
-#| msgid "Skip pa&ger"
+#, kde-format
 msgid "Skip pager"
-msgstr "Saltar o pax&inador"
+msgstr "Saltar o paxinador"
 
 #: rulesmodel.cpp:555
 #, kde-format
@@ -658,10 +640,9 @@ msgid "Window shall (not) appear in the manager for virtual desktops"
 msgstr "A xanela (non) ha aparecer no xestor de escritorios virtuais"
 
 #: rulesmodel.cpp:559
-#, fuzzy, kde-format
-#| msgid "Skip &switcher"
+#, kde-format
 msgid "Skip switcher"
-msgstr "Saltar o &selector"
+msgstr "Saltar o selector"
 
 #: rulesmodel.cpp:561
 #, kde-format
@@ -674,42 +655,36 @@ msgid "Shortcut"
 msgstr "Atallo"
 
 #: rulesmodel.cpp:571
-#, fuzzy, kde-format
-#| msgid "&No titlebar and frame"
+#, kde-format
 msgid "No titlebar and frame"
-msgstr "&Sen barra de título nin marco"
+msgstr "Sen barra de título nin marco"
 
 #: rulesmodel.cpp:571 rulesmodel.cpp:576 rulesmodel.cpp:582 rulesmodel.cpp:587
 #: rulesmodel.cpp:592 rulesmodel.cpp:603 rulesmodel.cpp:614 rulesmodel.cpp:622
 #: rulesmodel.cpp:635 rulesmodel.cpp:640 rulesmodel.cpp:646 rulesmodel.cpp:651
-#, fuzzy, kde-format
-#| msgid "Appearance && &Fixes"
+#, kde-format
 msgid "Appearance & Fixes"
-msgstr "Aparencia e &arranxos"
+msgstr "Aparencia e arranxos"
 
 #: rulesmodel.cpp:576
-#, fuzzy, kde-format
-#| msgid "Titlebar color &scheme"
+#, kde-format
 msgid "Titlebar color scheme"
-msgstr "Esquema de &cores da barra de título"
+msgstr "Esquema de cores da barra de título"
 
 #: rulesmodel.cpp:582
-#, fuzzy, kde-format
-#| msgid "A&ctive opacity"
+#, kde-format
 msgid "Active opacity"
-msgstr "Acti&var a opacidade"
+msgstr "Activar a opacidade"
 
 #: rulesmodel.cpp:587
-#, fuzzy, kde-format
-#| msgid "I&nactive opacity"
+#, kde-format
 msgid "Inactive opacity"
-msgstr "D&esactivar a opacidade"
+msgstr "Desactivar a opacidade"
 
 #: rulesmodel.cpp:592
-#, fuzzy, kde-format
-#| msgid "&Focus stealing prevention"
+#, kde-format
 msgid "Focus stealing prevention"
-msgstr "Evitar o &roubo do foco."
+msgstr "Evitar o roubo do foco."
 
 #: rulesmodel.cpp:594
 #, kde-format
@@ -748,10 +723,9 @@ msgstr ""
 "asignado á xanela que quere o foco."
 
 #: rulesmodel.cpp:614
-#, fuzzy, kde-format
-#| msgid "Accept &focus"
+#, kde-format
 msgid "Accept focus"
-msgstr "Aceptar o &foco"
+msgstr "Aceptar o foco"
 
 #: rulesmodel.cpp:616
 #, kde-format
@@ -790,16 +764,14 @@ msgstr ""
 "se está activado!"
 
 #: rulesmodel.cpp:635
-#, fuzzy, kde-format
-#| msgid "&Closeable"
+#, kde-format
 msgid "Closeable"
-msgstr "Pec&hábel"
+msgstr "Pechábel"
 
 #: rulesmodel.cpp:640
-#, fuzzy, kde-format
-#| msgid "Window &type"
+#, kde-format
 msgid "Set window type"
-msgstr "&Tipo de xanela"
+msgstr "Definir o tipo de xanela"
 
 #: rulesmodel.cpp:646
 #, kde-format
@@ -812,10 +784,9 @@ msgid "Block compositing"
 msgstr "Bloquear a composición"
 
 #: rulesmodel.cpp:703
-#, fuzzy, kde-format
-#| msgid "Window &class (application):"
+#, kde-format
 msgid "Window class not available"
-msgstr "C&lase da xanela (aplicación):"
+msgstr "A clase de xanela non está dispoñíbel"
 
 #: rulesmodel.cpp:704
 #, kde-kuit-format
@@ -826,12 +797,16 @@ msgid ""
 "it, try to match other properties like the window title instead.<nl/><nl/"
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
+"Esta aplicación non fornece unha clase para a xanela, así que KWin non pode "
+"usala para buscar coincidencias e aplicar ningunha regra. Se aínda así quere "
+"aplicarlle algunha regra, probe a buscar coincidencia con outras propiedades "
+"como o título da xanela.<nl/><nl/>Considere informar deste fallo ao equipo "
+"desenvolvedor da aplicación."
 
 #: rulesmodel.cpp:738
-#, fuzzy, kde-format
-#| msgid "Window &types:"
+#, kde-format
 msgid "All Window Types"
-msgstr "&Tipos de xanela:"
+msgstr "Todos os tipos de xanela"
 
 #: rulesmodel.cpp:739
 #, kde-format
@@ -882,7 +857,7 @@ msgstr "Barra de menú illada"
 #: rulesmodel.cpp:749
 #, kde-format
 msgid "On Screen Display"
-msgstr ""
+msgstr "Visualización na pantalla"
 
 #: rulesmodel.cpp:759
 #, kde-format
@@ -893,7 +868,7 @@ msgstr "Todos os escritorios"
 #, kde-format
 msgctxt "@info:tooltip in the virtual desktop list"
 msgid "Make the window available on all desktops"
-msgstr ""
+msgstr "Facer que a xanela estea dispoñíbel en todos os escritorios"
 
 #: rulesmodel.cpp:780
 #, kde-format
@@ -904,7 +879,7 @@ msgstr "Todas as actividades"
 #, kde-format
 msgctxt "@info:tooltip in the activity list"
 msgid "Make the window available on all activities"
-msgstr ""
+msgstr "Facer que a xanela estea dispoñíbel en todas as actividades"
 
 #: rulesmodel.cpp:803
 #, kde-format
@@ -952,9 +927,7 @@ msgid "On Main Window"
 msgstr "Sobre a xanela principal"
 
 #: rulesmodel.cpp:818
-#, fuzzy, kde-format
-#| msgctxt "no focus stealing prevention"
-#| msgid "None"
+#, kde-format
 msgid "None"
 msgstr "Ningunha"
 
@@ -979,8 +952,7 @@ msgid "Extreme"
 msgstr "Extrema"
 
 #: rulesmodel.cpp:865
-#, fuzzy, kde-format
-#| msgid "Unmanaged Window"
+#, kde-format
 msgid "Unmanaged window"
 msgstr "Xanela non manexada"
 
@@ -988,6 +960,7 @@ msgstr "Xanela non manexada"
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
+"Non foi posíbel detectar propiedades de xanela. KWin non manexa a xanela."
 
 #~ msgid "Cascaded"
 #~ msgstr "En fervenza"
