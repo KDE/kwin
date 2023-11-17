@@ -103,33 +103,6 @@ enum DataRole {
 };
 
 /**
- * Scale a rect by a scalar.
- */
-KWIN_EXPORT inline QRectF scaledRect(const QRectF &rect, qreal scale)
-{
-    return QRectF{rect.x() * scale, rect.y() * scale, rect.width() * scale, rect.height() * scale};
-}
-
-/**
- * Round a vector to nearest integer.
- */
-KWIN_EXPORT inline QVector2D roundVector(const QVector2D &input)
-{
-    return QVector2D(std::round(input.x()), std::round(input.y()));
-}
-
-/**
- * Convert a QPointF to a QPoint by flooring instead of rounding.
- *
- * By default, QPointF::toPoint() rounds which can cause problems in certain
- * cases.
- */
-KWIN_EXPORT inline QPoint flooredPoint(const QPointF &point)
-{
-    return QPoint(std::floor(point.x()), std::floor(point.y()));
-}
-
-/**
  * @short Manager class that handles all the effects.
  *
  * This class creates Effect objects and calls it's appropriate methods.

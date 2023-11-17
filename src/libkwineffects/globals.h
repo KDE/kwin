@@ -15,6 +15,7 @@
 #include <QImage>
 #include <QPoint>
 #include <QVariant>
+#include <QVector2D>
 
 #include <kwin_export.h>
 
@@ -235,6 +236,33 @@ inline KWIN_EXPORT QRect infiniteRegion()
 {
     // INT_MIN / 2 because width/height is used (INT_MIN+INT_MAX==-1)
     return QRect(INT_MIN / 2, INT_MIN / 2, INT_MAX, INT_MAX);
+}
+
+/**
+ * Scale a rect by a scalar.
+ */
+KWIN_EXPORT inline QRectF scaledRect(const QRectF &rect, qreal scale)
+{
+    return QRectF{rect.x() * scale, rect.y() * scale, rect.width() * scale, rect.height() * scale};
+}
+
+/**
+ * Round a vector to nearest integer.
+ */
+KWIN_EXPORT inline QVector2D roundVector(const QVector2D &input)
+{
+    return QVector2D(std::round(input.x()), std::round(input.y()));
+}
+
+/**
+ * Convert a QPointF to a QPoint by flooring instead of rounding.
+ *
+ * By default, QPointF::toPoint() rounds which can cause problems in certain
+ * cases.
+ */
+KWIN_EXPORT inline QPoint flooredPoint(const QPointF &point)
+{
+    return QPoint(std::floor(point.x()), std::floor(point.y()));
 }
 
 /**
