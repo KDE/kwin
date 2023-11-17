@@ -10,6 +10,7 @@
 #include "core/output.h"
 #include "decorations/decoratedclient.h"
 #include "scene/workspacescene.h"
+#include "window.h"
 
 #include <cmath>
 

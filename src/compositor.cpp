@@ -15,6 +15,7 @@
 #include "core/renderbackend.h"
 #include "core/renderlayer.h"
 #include "core/renderloop.h"
+#include "cursor.h"
 #include "dbusinterface.h"
 #include "ftrace.h"
 #include "scene/cursorscene.h"

@@ -9,6 +9,7 @@
 #include "platformsupport/scenes/qpainter/qpaintersurfacetexture.h"
 #include "scene/imageitem.h"
 #include "scene/workspacescene_qpainter.h"
+#include "window.h"
 
 #include <QPainter>
 

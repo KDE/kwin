@@ -8,6 +8,7 @@
 #include "compositor.h"
 #include "scene/workspacescene.h"
 #include "shadow.h"
+#include "window.h"
 
 namespace KWin
 {

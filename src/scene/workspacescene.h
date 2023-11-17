@@ -9,17 +9,8 @@
 
 #pragma once
 
-#include "scene/scene.h"
-
 #include "core/colorspace.h"
-#include "libkwineffects/effects.h"
-#include "utils/common.h"
-#include "window.h"
-
-#include <optional>
-
-#include <QElapsedTimer>
-#include <QMatrix4x4>
+#include "scene/scene.h"
 
 namespace KWin
 {
@@ -42,6 +33,7 @@ class ShadowItem;
 class ShadowTextureProvider;
 class SurfaceItem;
 class WindowItem;
+class WindowPaintData;
 
 class KWIN_EXPORT WorkspaceScene : public Scene
 {
