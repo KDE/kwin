@@ -462,7 +462,7 @@ double OutputConfigurationStore::chooseScale(Output *output, OutputMode *mode) c
     const double outputDpi = mode->size().height() / (output->physicalSize().height() / 25.4);
     const double desiredScale = outputDpi / targetDpi(output);
     // round to 25% steps
-    return std::clamp(std::round(100.0 * desiredScale / 25.0) * 25.0 / 100.0, 1.0, 5.0);
+    return std::clamp(std::round(100.0 * desiredScale / 25.0) * 25.0 / 100.0, 1.0, 3.0);
 }
 
 double OutputConfigurationStore::targetDpi(Output *output) const
