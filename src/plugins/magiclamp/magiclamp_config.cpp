@@ -25,21 +25,13 @@ K_PLUGIN_CLASS(KWin::MagicLampEffectConfig)
 namespace KWin
 {
 
-MagicLampEffectConfigForm::MagicLampEffectConfigForm(QWidget *parent)
-    : QWidget(parent)
-{
-    setupUi(this);
-}
-
 MagicLampEffectConfig::MagicLampEffectConfig(QObject *parent, const KPluginMetaData &data)
     : KCModule(parent, data)
-    , m_ui(widget())
 {
-    QVBoxLayout *layout = new QVBoxLayout(widget());
-    layout->addWidget(&m_ui);
+    m_ui.setupUi(widget());
 
     MagicLampConfig::instance(KWIN_CONFIG);
-    addConfig(MagicLampConfig::self(), &m_ui);
+    addConfig(MagicLampConfig::self(), widget());
 }
 
 void MagicLampEffectConfig::save()

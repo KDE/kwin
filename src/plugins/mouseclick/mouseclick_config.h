@@ -18,13 +18,6 @@ class KActionCollection;
 namespace KWin
 {
 
-class MouseClickEffectConfigForm : public QWidget, public Ui::MouseClickEffectConfigForm
-{
-    Q_OBJECT
-public:
-    explicit MouseClickEffectConfigForm(QWidget *parent);
-};
-
 class MouseClickEffectConfig : public KCModule
 {
     Q_OBJECT
@@ -34,7 +27,7 @@ public:
     void save() override;
 
 private:
-    MouseClickEffectConfigForm m_ui;
+    Ui::MouseClickEffectConfigForm m_ui;
     KActionCollection *m_actionCollection;
 };
 

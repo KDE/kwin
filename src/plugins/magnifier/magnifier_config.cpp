@@ -30,22 +30,13 @@ K_PLUGIN_CLASS(KWin::MagnifierEffectConfig)
 
 namespace KWin
 {
-
-MagnifierEffectConfigForm::MagnifierEffectConfigForm(QWidget *parent)
-    : QWidget(parent)
-{
-    setupUi(this);
-}
-
 MagnifierEffectConfig::MagnifierEffectConfig(QObject *parent, const KPluginMetaData &data)
     : KCModule(parent, data)
-    , m_ui(widget())
 {
-    QVBoxLayout *layout = new QVBoxLayout(widget());
-    layout->addWidget(&m_ui);
+    m_ui.setupUi(widget());
 
     MagnifierConfig::instance(KWIN_CONFIG);
-    addConfig(MagnifierConfig::self(), &m_ui);
+    addConfig(MagnifierConfig::self(), widget());
 
     connect(m_ui.editor, &KShortcutsEditor::keyChange, this, &KCModule::markAsChanged);
 

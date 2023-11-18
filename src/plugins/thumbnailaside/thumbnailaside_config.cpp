@@ -29,19 +29,10 @@ K_PLUGIN_CLASS(KWin::ThumbnailAsideEffectConfig)
 
 namespace KWin
 {
-
-ThumbnailAsideEffectConfigForm::ThumbnailAsideEffectConfigForm(QWidget *parent)
-    : QWidget(parent)
-{
-    setupUi(this);
-}
-
 ThumbnailAsideEffectConfig::ThumbnailAsideEffectConfig(QObject *parent, const KPluginMetaData &data)
     : KCModule(parent, data)
-    , m_ui(widget())
 {
-    QVBoxLayout *layout = new QVBoxLayout(widget());
-    layout->addWidget(&m_ui);
+    m_ui.setupUi(widget());
 
     connect(m_ui.editor, &KShortcutsEditor::keyChange, this, &KCModule::markAsChanged);
 

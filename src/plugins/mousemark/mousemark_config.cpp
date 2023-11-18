@@ -30,21 +30,13 @@ K_PLUGIN_CLASS(KWin::MouseMarkEffectConfig)
 namespace KWin
 {
 
-MouseMarkEffectConfigForm::MouseMarkEffectConfigForm(QWidget *parent)
-    : QWidget(parent)
-{
-    setupUi(this);
-}
-
 MouseMarkEffectConfig::MouseMarkEffectConfig(QObject *parent, const KPluginMetaData &data)
     : KCModule(parent, data)
-    , m_ui(widget())
 {
-    QVBoxLayout *layout = new QVBoxLayout(widget());
-    layout->addWidget(&m_ui);
+    m_ui.setupUi(widget());
 
     MouseMarkConfig::instance(KWIN_CONFIG);
-    addConfig(MouseMarkConfig::self(), &m_ui);
+    addConfig(MouseMarkConfig::self(), widget());
 
     // Shortcut config. The shortcut belongs to the component "kwin"!
     m_actionCollection = new KActionCollection(this, QStringLiteral("kwin"));

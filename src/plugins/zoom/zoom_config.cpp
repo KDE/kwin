@@ -28,25 +28,15 @@ K_PLUGIN_CLASS(KWin::ZoomEffectConfig)
 
 namespace KWin
 {
-
-ZoomEffectConfigForm::ZoomEffectConfigForm(QWidget *parent)
-    : QWidget(parent)
-{
-    setupUi(this);
-}
-
 ZoomEffectConfig::ZoomEffectConfig(QObject *parent, const KPluginMetaData &data)
     : KCModule(parent, data)
 {
     ZoomConfig::instance(KWIN_CONFIG);
-    m_ui = new ZoomEffectConfigForm(widget());
+    m_ui.setupUi(widget());
 
-    QVBoxLayout *layout = new QVBoxLayout(widget());
-    layout->addWidget(m_ui);
+    addConfig(ZoomConfig::self(), widget());
 
-    addConfig(ZoomConfig::self(), m_ui);
-
-    connect(m_ui->editor, &KShortcutsEditor::keyChange, this, &KCModule::markAsChanged);
+    connect(m_ui.editor, &KShortcutsEditor::keyChange, this, &KCModule::markAsChanged);
 
 #if !HAVE_ACCESSIBILITY
     m_ui->kcfg_EnableFocusTracking->setVisible(false);
@@ -117,12 +107,12 @@ ZoomEffectConfig::ZoomEffectConfig(QObject *parent, const KPluginMetaData &data)
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_F6));
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_F6));
 
-    m_ui->editor->addCollection(actionCollection);
+    m_ui.editor->addCollection(actionCollection);
 }
 
 void ZoomEffectConfig::save()
 {
-    m_ui->editor->save(); // undo() will restore to this state from now on
+    m_ui.editor->save(); // undo() will restore to this state from now on
     KCModule::save();
     OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
                                          QStringLiteral("/Effects"),

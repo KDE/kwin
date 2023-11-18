@@ -24,9 +24,8 @@ namespace KWin
 
 ShowPaintEffectConfig::ShowPaintEffectConfig(QObject *parent, const KPluginMetaData &data)
     : KCModule(parent, data)
-    , m_ui(std::make_unique<Ui::ShowPaintEffectConfig>())
 {
-    m_ui->setupUi(widget());
+    m_ui.setupUi(widget());
 
     auto *actionCollection = new KActionCollection(this, QStringLiteral("kwin"));
 
@@ -40,20 +39,20 @@ ShowPaintEffectConfig::ShowPaintEffectConfig(QObject *parent, const KPluginMetaD
     KGlobalAccel::self()->setDefaultShortcut(toggleAction, {});
     KGlobalAccel::self()->setShortcut(toggleAction, {});
 
-    m_ui->shortcutsEditor->addCollection(actionCollection);
+    m_ui.shortcutsEditor->addCollection(actionCollection);
 
-    connect(m_ui->shortcutsEditor, &KShortcutsEditor::keyChange, this, &KCModule::markAsChanged);
+    connect(m_ui.shortcutsEditor, &KShortcutsEditor::keyChange, this, &KCModule::markAsChanged);
 }
 
 void ShowPaintEffectConfig::save()
 {
     KCModule::save();
-    m_ui->shortcutsEditor->save();
+    m_ui.shortcutsEditor->save();
 }
 
 void ShowPaintEffectConfig::defaults()
 {
-    m_ui->shortcutsEditor->allDefault();
+    m_ui.shortcutsEditor->allDefault();
     KCModule::defaults();
 }
 

@@ -18,14 +18,6 @@ class KActionCollection;
 
 namespace KWin
 {
-
-class TrackMouseEffectConfigForm : public QWidget, public Ui::TrackMouseEffectConfigForm
-{
-    Q_OBJECT
-public:
-    explicit TrackMouseEffectConfigForm(QWidget *parent);
-};
-
 class TrackMouseEffectConfig : public KCModule
 {
     Q_OBJECT
@@ -41,7 +33,7 @@ private Q_SLOTS:
     void shortcutChanged(const QKeySequence &seq);
 
 private:
-    TrackMouseEffectConfigForm *m_ui;
+    Ui::TrackMouseEffectConfigForm m_ui;
     KActionCollection *m_actionCollection;
 };
 
