@@ -127,22 +127,3 @@ msgstr "Alltid"
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr "Slå på OpenGL-oppdaging"
-
-#~ msgid "Latency:"
-#~ msgstr "Forseinking:"
-
-#~ msgid "Force lowest latency (may cause dropped frames)"
-#~ msgstr ""
-#~ "Tving gjennom kortast forseinking (kan føra til tapte animasjonsbilete)"
-
-#~ msgid "Prefer lower latency"
-#~ msgstr "Føretrekk kort forseinking"
-
-#~ msgid "Balance of latency and smoothness"
-#~ msgstr "Balanse mellom forseinking og jamne animasjonar"
-
-#~ msgid "Prefer smoother animations"
-#~ msgstr "Føretrekk jamne animasjonar"
-
-#~ msgid "Force smoothest animations"
-#~ msgstr "Tving gjennom jamnaste animasjonar"

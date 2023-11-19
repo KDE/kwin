@@ -68,10 +68,3 @@ msgstr ""
 "ned til tryggleiks­nivået til X11-økta, og du tillèt potensielt vondsinna "
 "programvare å stela passord og spionera på teksten du skriv. Sjå til at du "
 "er klar over denne risikoen, og godtek han."
-
-#~ msgid "Only Meta, Control, Alt, and Shift keys"
-#~ msgstr "Berre «Meta»-, «Control»-, «Alt»- og «Shift»-tastane"
-
-#~ msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
-#~ msgstr ""
-#~ "Alle tastar, men berre når «Meta», «Control», «Alt» eller «Shift» er nede"
