@@ -325,11 +325,32 @@ private:
 
     QList<IdleDetector *> m_idleDetectors;
     QList<Window *> m_idleInhibitors;
-    WindowSelectorFilter *m_windowSelector = nullptr;
+    std::unique_ptr<WindowSelectorFilter> m_windowSelector;
 
     QList<InputEventFilter *> m_filters;
     QList<InputEventSpy *> m_spies;
     KConfigWatcher::Ptr m_inputConfigWatcher;
+
+    std::unique_ptr<InputEventFilter> m_virtualTerminalFilter;
+    std::unique_ptr<InputEventFilter> m_terminateServerFilter;
+    std::unique_ptr<InputEventFilter> m_dragAndDropFilter;
+    std::unique_ptr<InputEventFilter> m_lockscreenFilter;
+    std::unique_ptr<InputEventFilter> m_screenEdgeFilter;
+    std::unique_ptr<InputEventFilter> m_tabboxFilter;
+    std::unique_ptr<InputEventFilter> m_globalShortcutFilter;
+    std::unique_ptr<InputEventFilter> m_effectsFilter;
+    std::unique_ptr<InputEventFilter> m_interactiveMoveResizeFilter;
+    std::unique_ptr<InputEventFilter> m_popupFilter;
+    std::unique_ptr<InputEventFilter> m_decorationFilter;
+    std::unique_ptr<InputEventFilter> m_windowActionFilter;
+    std::unique_ptr<InputEventFilter> m_internalWindowFilter;
+    std::unique_ptr<InputEventFilter> m_inputKeyboardFilter;
+    std::unique_ptr<InputEventFilter> m_forwardFilter;
+    std::unique_ptr<InputEventFilter> m_tabletFilter;
+
+    std::unique_ptr<InputEventSpy> m_hideCursorSpy;
+    std::unique_ptr<InputEventSpy> m_userActivitySpy;
+    std::unique_ptr<InputEventSpy> m_windowInteractedSpy;
 
     LEDs m_leds;
     bool m_hasKeyboard = false;

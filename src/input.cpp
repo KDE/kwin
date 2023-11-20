@@ -2669,8 +2669,6 @@ InputRedirection::~InputRedirection()
     m_inputDevices.clear();
 
     s_self = nullptr;
-    qDeleteAll(m_filters);
-    qDeleteAll(m_spies);
 }
 
 void InputRedirection::installInputEventFilter(InputEventFilter *filter)
@@ -2911,36 +2909,72 @@ void InputRedirection::setupInputFilters()
 {
     const bool hasGlobalShortcutSupport = waylandServer()->hasGlobalShortcutSupport();
     if (kwinApp()->session()->capabilities() & Session::Capability::SwitchTerminal) {
-        installInputEventFilter(new VirtualTerminalFilter);
+        m_virtualTerminalFilter = std::make_unique<VirtualTerminalFilter>();
+        installInputEventFilter(m_virtualTerminalFilter.get());
     }
-    installInputEventSpy(new HideCursorSpy);
-    installInputEventSpy(new UserActivitySpy);
-    installInputEventSpy(new WindowInteractedSpy);
+
+    m_hideCursorSpy = std::make_unique<HideCursorSpy>();
+    installInputEventSpy(m_hideCursorSpy.get());
+
+    m_userActivitySpy = std::make_unique<UserActivitySpy>();
+    installInputEventSpy(m_userActivitySpy.get());
+
+    m_windowInteractedSpy = std::make_unique<WindowInteractedSpy>();
+    installInputEventSpy(m_windowInteractedSpy.get());
+
     if (hasGlobalShortcutSupport) {
-        installInputEventFilter(new TerminateServerFilter);
+        m_terminateServerFilter = std::make_unique<TerminateServerFilter>();
+        installInputEventFilter(m_terminateServerFilter.get());
     }
-    installInputEventFilter(new DragAndDropInputFilter);
-    installInputEventFilter(new LockScreenFilter);
-    m_windowSelector = new WindowSelectorFilter;
-    installInputEventFilter(m_windowSelector);
+
+    m_dragAndDropFilter = std::make_unique<DragAndDropInputFilter>();
+    installInputEventFilter(m_dragAndDropFilter.get());
+
+    m_lockscreenFilter = std::make_unique<LockScreenFilter>();
+    installInputEventFilter(m_lockscreenFilter.get());
+
+    m_windowSelector = std::make_unique<WindowSelectorFilter>();
+    installInputEventFilter(m_windowSelector.get());
+
     if (hasGlobalShortcutSupport) {
-        installInputEventFilter(new ScreenEdgeInputFilter);
+        m_screenEdgeFilter = std::make_unique<ScreenEdgeInputFilter>();
+        installInputEventFilter(m_screenEdgeFilter.get());
     }
 #if KWIN_BUILD_TABBOX
-    installInputEventFilter(new TabBoxInputFilter);
+    m_tabboxFilter = std::make_unique<TabBoxInputFilter>();
+    installInputEventFilter(m_tabboxFilter.get());
 #endif
     if (hasGlobalShortcutSupport) {
-        installInputEventFilter(new GlobalShortcutFilter);
+        m_globalShortcutFilter = std::make_unique<GlobalShortcutFilter>();
+        installInputEventFilter(m_globalShortcutFilter.get());
     }
-    installInputEventFilter(new EffectsFilter);
-    installInputEventFilter(new MoveResizeFilter);
-    installInputEventFilter(new PopupInputFilter);
-    installInputEventFilter(new DecorationEventFilter);
-    installInputEventFilter(new WindowActionInputFilter);
-    installInputEventFilter(new InternalWindowEventFilter);
-    installInputEventFilter(new InputKeyboardFilter);
-    installInputEventFilter(new ForwardInputFilter);
-    installInputEventFilter(new TabletInputFilter);
+
+    m_effectsFilter = std::make_unique<EffectsFilter>();
+    installInputEventFilter(m_effectsFilter.get());
+
+    m_interactiveMoveResizeFilter = std::make_unique<MoveResizeFilter>();
+    installInputEventFilter(m_interactiveMoveResizeFilter.get());
+
+    m_popupFilter = std::make_unique<PopupInputFilter>();
+    installInputEventFilter(m_popupFilter.get());
+
+    m_decorationFilter = std::make_unique<DecorationEventFilter>();
+    installInputEventFilter(m_decorationFilter.get());
+
+    m_windowActionFilter = std::make_unique<WindowActionInputFilter>();
+    installInputEventFilter(m_windowActionFilter.get());
+
+    m_internalWindowFilter = std::make_unique<InternalWindowEventFilter>();
+    installInputEventFilter(m_internalWindowFilter.get());
+
+    m_inputKeyboardFilter = std::make_unique<InputKeyboardFilter>();
+    installInputEventFilter(m_inputKeyboardFilter.get());
+
+    m_forwardFilter = std::make_unique<ForwardInputFilter>();
+    installInputEventFilter(m_forwardFilter.get());
+
+    m_tabletFilter = std::make_unique<TabletInputFilter>();
+    installInputEventFilter(m_tabletFilter.get());
 }
 
 void InputRedirection::handleInputConfigChanged(const KConfigGroup &group)
