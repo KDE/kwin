@@ -881,6 +881,7 @@ private:
     QMap<quint32, QPointF> m_touchPoints;
 };
 
+#if KWIN_BUILD_GLOBALSHORTCUTS
 class GlobalShortcutFilter : public InputEventFilter
 {
 public:
@@ -1127,6 +1128,7 @@ private:
 
     QTimer m_powerDown;
 };
+#endif
 
 namespace
 {
@@ -2658,7 +2660,9 @@ InputRedirection::InputRedirection(QObject *parent)
     , m_pointer(new PointerInputRedirection(this))
     , m_tablet(new TabletInputRedirection(this))
     , m_touch(new TouchInputRedirection(this))
+#if KWIN_BUILD_GLOBALSHORTCUTS
     , m_shortcuts(new GlobalShortcutsManager(this))
+#endif
 {
     qRegisterMetaType<InputRedirection::KeyboardKeyState>();
     qRegisterMetaType<InputRedirection::PointerButtonState>();
@@ -2707,8 +2711,9 @@ void InputRedirection::init()
     m_inputConfigWatcher = KConfigWatcher::create(kwinApp()->inputConfig());
     connect(m_inputConfigWatcher.data(), &KConfigWatcher::configChanged,
             this, &InputRedirection::handleInputConfigChanged);
-
+#if KWIN_BUILD_GLOBALSHORTCUTS
     m_shortcuts->init();
+#endif
 }
 
 void InputRedirection::setupWorkspace()
@@ -2948,10 +2953,12 @@ void InputRedirection::setupInputFilters()
     m_tabboxFilter = std::make_unique<TabBoxInputFilter>();
     installInputEventFilter(m_tabboxFilter.get());
 #endif
+#if KWIN_BUILD_GLOBALSHORTCUTS
     if (hasGlobalShortcutSupport) {
         m_globalShortcutFilter = std::make_unique<GlobalShortcutFilter>();
         installInputEventFilter(m_globalShortcutFilter.get());
     }
+#endif
 
     m_effectsFilter = std::make_unique<EffectsFilter>();
     installInputEventFilter(m_effectsFilter.get());
@@ -3333,37 +3340,51 @@ Qt::KeyboardModifiers InputRedirection::modifiersRelevantForGlobalShortcuts() co
 
 void InputRedirection::registerPointerShortcut(Qt::KeyboardModifiers modifiers, Qt::MouseButton pointerButtons, QAction *action)
 {
+#if KWIN_BUILD_GLOBALSHORTCUTS
     m_shortcuts->registerPointerShortcut(action, modifiers, pointerButtons);
+#endif
 }
 
 void InputRedirection::registerAxisShortcut(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis, QAction *action)
 {
+#if KWIN_BUILD_GLOBALSHORTCUTS
     m_shortcuts->registerAxisShortcut(action, modifiers, axis);
+#endif
 }
 
 void InputRedirection::registerTouchpadSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> cb)
 {
+#if KWIN_BUILD_GLOBALSHORTCUTS
     m_shortcuts->registerTouchpadSwipe(direction, fingerCount, action, cb);
+#endif
 }
 
 void InputRedirection::registerTouchpadPinchShortcut(PinchDirection direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback)
 {
+#if KWIN_BUILD_GLOBALSHORTCUTS
     m_shortcuts->registerTouchpadPinch(direction, fingerCount, onUp, progressCallback);
+#endif
 }
 
 void InputRedirection::registerGlobalAccel(KGlobalAccelInterface *interface)
 {
+#if KWIN_BUILD_GLOBALSHORTCUTS
     m_shortcuts->setKGlobalAccelInterface(interface);
+#endif
 }
 
 void InputRedirection::registerTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback)
 {
+#if KWIN_BUILD_GLOBALSHORTCUTS
     m_shortcuts->registerTouchscreenSwipe(direction, fingerCount, action, progressCallback);
+#endif
 }
 
 void InputRedirection::forceRegisterTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback)
 {
+#if KWIN_BUILD_GLOBALSHORTCUTS
     m_shortcuts->forceRegisterTouchscreenSwipe(direction, fingerCount, action, progressCallback);
+#endif
 }
 
 void InputRedirection::warpPointer(const QPointF &pos)

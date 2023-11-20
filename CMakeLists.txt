@@ -355,7 +355,10 @@ set_package_properties(QAccessibilityClient6 PROPERTIES
 )
 set(HAVE_ACCESSIBILITY ${QAccessibilityClient6_FOUND})
 
-find_package(KGlobalAccelD REQUIRED)
+option(KWIN_BUILD_GLOBALSHORTCUTS "Enable building of KWin with global shortcuts support" ON)
+if(KWIN_BUILD_GLOBALSHORTCUTS)
+    find_package(KGlobalAccelD REQUIRED)
+endif()
 pkg_check_modules(libdisplayinfo IMPORTED_TARGET display-info)
 if (NOT libdisplayinfo_FOUND)
     pkg_check_modules(libdisplayinfo REQUIRED IMPORTED_TARGET libdisplay-info)

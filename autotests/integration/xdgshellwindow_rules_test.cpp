@@ -2255,6 +2255,11 @@ void TestXdgShellWindowRules::testKeepBelowForceTemporarily()
 
 void TestXdgShellWindowRules::testShortcutDontAffect()
 {
+#if !KWIN_BUILD_GLOBALSHORTCUTS
+    QSKIP("Can't test shortcuts without shortcuts");
+    return;
+#endif
+
     setWindowRule("shortcut", "Ctrl+Alt+1", int(Rules::DontAffect));
 
     createTestWindow();
@@ -2279,6 +2284,10 @@ void TestXdgShellWindowRules::testShortcutDontAffect()
 
 void TestXdgShellWindowRules::testShortcutApply()
 {
+#if !KWIN_BUILD_GLOBALSHORTCUTS
+    QSKIP("Can't test shortcuts without shortcuts");
+    return;
+#endif
     setWindowRule("shortcut", "Ctrl+Alt+1", int(Rules::Apply));
 
     createTestWindow();
@@ -2430,6 +2439,11 @@ void TestXdgShellWindowRules::testShortcutForce()
 
 void TestXdgShellWindowRules::testShortcutApplyNow()
 {
+#if !KWIN_BUILD_GLOBALSHORTCUTS
+    QSKIP("Can't test shortcuts without shortcuts");
+    return;
+#endif
+
     createTestWindow();
     QVERIFY(m_window->shortcut().isEmpty());
 

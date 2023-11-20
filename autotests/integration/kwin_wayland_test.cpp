@@ -35,7 +35,9 @@
 #include <unistd.h>
 
 Q_IMPORT_PLUGIN(KWinIntegrationPlugin)
+#if KWIN_BUILD_GLOBALSHORTCUTS
 Q_IMPORT_PLUGIN(KGlobalAccelImpl)
+#endif
 Q_IMPORT_PLUGIN(KWindowSystemKWinPlugin)
 Q_IMPORT_PLUGIN(KWinIdleTimePoller)
 

@@ -100,7 +100,6 @@ target_sources(kwin PRIVATE
     focuschain.cpp
     ftrace.cpp
     gestures.cpp
-    globalshortcuts.cpp
     group.cpp
     hide_cursor_spy.cpp
     idle_inhibition.cpp
@@ -254,8 +253,6 @@ target_link_libraries(kwin
     KDecoration2::KDecoration
     KDecoration2::KDecoration2Private
 
-    K::KGlobalAccelD
-
     XCB::COMPOSITE
     XCB::CURSOR
     XCB::DAMAGE
@@ -280,6 +277,11 @@ target_link_libraries(kwin
     lcms2::lcms2
     PkgConfig::libdisplayinfo
 )
+
+if (TARGET K::KGlobalAccelD)
+    target_sources(kwin PRIVATE globalshortcuts.cpp)
+    target_link_libraries(kwin PRIVATE K::KGlobalAccelD)
+endif()
 
 if (KWIN_BUILD_NOTIFICATIONS)
     target_link_libraries(kwin PRIVATE KF6::Notifications)
@@ -391,10 +393,13 @@ endif()
 
 target_link_libraries(kwin_wayland
     KWinQpaPlugin
-    KF6GlobalAccelKWinPlugin
     KF6WindowSystemKWinPlugin
     KF6IdleTimeKWinPlugin
 )
+
+if (TARGET KF6GlobalAccelKWinPlugin)
+    target_link_libraries(kwin_wayland KF6GlobalAccelKWinPlugin)
+endif()
 
 add_custom_target(
     KWinDBusInterfaces

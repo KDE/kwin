@@ -71,6 +71,11 @@ void TabBoxTest::cleanup()
 
 void TabBoxTest::testCapsLock()
 {
+#if !KWIN_BUILD_GLOBALSHORTCUTS
+    QSKIP("Can't test shortcuts without shortcuts");
+    return;
+#endif
+
     // this test verifies that Alt+tab works correctly also when Capslock is on
     // bug 368590
 
@@ -133,6 +138,11 @@ void TabBoxTest::testCapsLock()
 
 void TabBoxTest::testMoveForward()
 {
+#if !KWIN_BUILD_GLOBALSHORTCUTS
+    QSKIP("Can't test shortcuts without shortcuts");
+    return;
+#endif
+
     // this test verifies that Alt+tab works correctly moving forward
 
     // first create three windows
@@ -182,6 +192,11 @@ void TabBoxTest::testMoveForward()
 
 void TabBoxTest::testMoveBackward()
 {
+#if !KWIN_BUILD_GLOBALSHORTCUTS
+    QSKIP("Can't test shortcuts without shortcuts");
+    return;
+#endif
+
     // this test verifies that Alt+Shift+tab works correctly moving backward
 
     // first create three windows

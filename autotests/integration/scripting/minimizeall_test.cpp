@@ -98,6 +98,11 @@ void MinimizeAllScriptTest::cleanup()
 
 void MinimizeAllScriptTest::testMinimizeUnminimize()
 {
+#if !KWIN_BUILD_GLOBALSHORTCUTS
+    QSKIP("Can't test shortcuts without shortcuts");
+    return;
+#endif
+
     // This test verifies that all windows are minimized when Meta+Shift+D
     // is pressed, and unminimized when the shortcut is pressed once again.
 

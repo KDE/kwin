@@ -592,6 +592,11 @@ void LockScreenTest::testMoveWindow()
 
 void LockScreenTest::testPointerShortcut()
 {
+#if !KWIN_BUILD_GLOBALSHORTCUTS
+    QSKIP("Can't test shortcuts without shortcuts");
+    return;
+#endif
+
     std::unique_ptr<QAction> action(new QAction(nullptr));
     QSignalSpy actionSpy(action.get(), &QAction::triggered);
     input()->registerPointerShortcut(Qt::MetaModifier, Qt::LeftButton, action.get());
@@ -624,6 +629,11 @@ void LockScreenTest::testPointerShortcut()
 
 void LockScreenTest::testAxisShortcut_data()
 {
+#if !KWIN_BUILD_GLOBALSHORTCUTS
+    QSKIP("Can't test shortcuts without shortcuts");
+    return;
+#endif
+
     QTest::addColumn<Qt::Orientation>("direction");
     QTest::addColumn<int>("sign");
 
@@ -677,6 +687,11 @@ void LockScreenTest::testAxisShortcut()
 
 void LockScreenTest::testKeyboardShortcut()
 {
+#if !KWIN_BUILD_GLOBALSHORTCUTS
+    QSKIP("Can't test shortcuts without shortcuts");
+    return;
+#endif
+
     std::unique_ptr<QAction> action(new QAction(nullptr));
     QSignalSpy actionSpy(action.get(), &QAction::triggered);
     action->setProperty("componentName", QStringLiteral("kwin"));

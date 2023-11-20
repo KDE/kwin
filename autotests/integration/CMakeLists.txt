@@ -44,10 +44,13 @@ target_link_libraries(KWinIntegrationTestFramework
 
         # Static plugins
         KWinQpaPlugin
-        KF6GlobalAccelKWinPlugin
         KF6WindowSystemKWinPlugin
         KF6IdleTimeKWinPlugin
 )
+if(TARGET KF6GlobalAccelKWinPlugin)
+    target_link_libraries(KWinIntegrationTestFramework PUBLIC KF6GlobalAccelKWinPlugin)
+endif()
+
 if(TARGET PW::KScreenLocker)
     target_link_libraries(KWinIntegrationTestFramework PUBLIC PW::KScreenLocker)
 endif()
@@ -97,7 +100,6 @@ integrationTest(NAME testKeyboardLayout SRCS keyboard_layout_test.cpp LIBS KF6::
 integrationTest(NAME testKeymapCreationFailure SRCS keymap_creation_failure_test.cpp LIBS KF6::GlobalAccel)
 integrationTest(NAME testShowingDesktop SRCS showing_desktop_test.cpp)
 integrationTest(NAME testDontCrashUseractionsMenu SRCS dont_crash_useractions_menu.cpp LIBS KF6::I18n)
-integrationTest(NAME testKWinBindings SRCS kwinbindings_test.cpp LIBS KF6::I18n)
 integrationTest(NAME testLayerShellV1Window SRCS layershellv1window_test.cpp)
 integrationTest(NAME testVirtualDesktop SRCS virtual_desktop_test.cpp)
 integrationTest(NAME testXdgShellWindowRules SRCS xdgshellwindow_rules_test.cpp)
@@ -122,7 +124,6 @@ integrationTest(NAME testXwaylandInput SRCS xwayland_input_test.cpp LIBS XCB::IC
 integrationTest(NAME testWindowRules SRCS window_rules_test.cpp LIBS XCB::ICCCM)
 integrationTest(NAME testX11Window SRCS x11_window_test.cpp LIBS XCB::ICCCM)
 integrationTest(NAME testQuickTiling SRCS quick_tiling_test.cpp LIBS XCB::ICCCM KDecoration2::KDecoration)
-integrationTest(NAME testGlobalShortcuts SRCS globalshortcuts_test.cpp LIBS XCB::ICCCM KF6::GlobalAccel KF6::I18n XKB::XKB)
 integrationTest(NAME testStackingOrder SRCS stacking_order_test.cpp LIBS XCB::ICCCM)
 integrationTest(NAME testDbusInterface SRCS dbus_interface_test.cpp LIBS XCB::ICCCM)
 integrationTest(NAME testXwaylandServerCrash SRCS xwaylandserver_crash_test.cpp LIBS XCB::ICCCM)
@@ -134,6 +135,10 @@ integrationTest(NAME testStickyKeys SRCS sticky_keys_test.cpp)
 qt_add_dbus_interfaces(DBUS_SRCS ${CMAKE_BINARY_DIR}/src/org.kde.kwin.VirtualKeyboard.xml)
 integrationTest(NAME testVirtualKeyboardDBus SRCS test_virtualkeyboard_dbus.cpp ${DBUS_SRCS})
 
+if (KWIN_BUILD_GLOBALSHORTCUTS)
+integrationTest(NAME testGlobalShortcuts SRCS globalshortcuts_test.cpp LIBS XCB::ICCCM KF6::GlobalAccel KF6::I18n XKB::XKB)
+integrationTest(NAME testKWinBindings SRCS kwinbindings_test.cpp LIBS KF6::I18n)
+endif()
 if (TARGET K::KPipeWire)
     integrationTest(NAME testScreencasting SRCS screencasting_test.cpp LIBS K::KPipeWire)
 endif()

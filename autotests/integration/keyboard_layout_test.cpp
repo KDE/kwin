@@ -256,6 +256,11 @@ void KeyboardLayoutTest::testChangeLayoutThroughDBus()
 
 void KeyboardLayoutTest::testPerLayoutShortcut()
 {
+#if !KWIN_BUILD_GLOBALSHORTCUTS
+    QSKIP("Can't test shortcuts without shortcuts");
+    return;
+#endif
+
     // this test verifies that per-layout global shortcuts are working correctly.
     // first configure layouts
     layoutGroup.writeEntry("LayoutList", QStringLiteral("us,de,de(neo)"));

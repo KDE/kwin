@@ -359,6 +359,11 @@ void TouchInputTest::testUpdateFocusOnDecorationDestroy()
 
 void TouchInputTest::testGestureDetection()
 {
+#if !KWIN_BUILD_GLOBALSHORTCUTS
+    QSKIP("Can't test shortcuts without shortcuts");
+    return;
+#endif
+
     bool callbackTriggered = false;
     const auto callback = [&callbackTriggered](float progress) {
         callbackTriggered = true;

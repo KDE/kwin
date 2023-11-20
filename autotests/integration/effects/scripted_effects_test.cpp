@@ -222,6 +222,11 @@ void ScriptedEffectsTest::testEffectsContext()
 
 void ScriptedEffectsTest::testShortcuts()
 {
+#if !KWIN_BUILD_GLOBALSHORTCUTS
+    QSKIP("Can't test shortcuts without shortcuts");
+    return;
+#endif
+
     // this tests method registerShortcut
     auto *effect = new ScriptedEffectWithDebugSpy; // cleaned up in ::clean
     QSignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
