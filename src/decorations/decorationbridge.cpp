@@ -40,7 +40,7 @@ namespace Decoration
 static const QString s_aurorae = QStringLiteral("org.kde.kwin.aurorae");
 static const QString s_pluginName = QStringLiteral("org.kde.kdecoration2");
 #if HAVE_BREEZE_DECO
-static const QString s_defaultPlugin = QStringLiteral(BREEZE_KDECORATION_PLUGIN_ID);
+static const QString s_defaultPlugin = BREEZE_KDECORATION_PLUGIN_ID;
 #else
 static const QString s_defaultPlugin = s_aurorae;
 #endif

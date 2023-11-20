@@ -144,7 +144,7 @@ QString ScriptedEffectConfig::typeName() const
 
 KConfigGroup ScriptedEffectConfig::configGroup()
 {
-    return KSharedConfig::openConfig(QStringLiteral(KWIN_CONFIG))->group(QLatin1String("Effect-") + packageName());
+    return KSharedConfig::openConfig(KWIN_CONFIG)->group(QLatin1String("Effect-") + packageName());
 }
 
 void ScriptedEffectConfig::reload()
@@ -167,7 +167,7 @@ ScriptingConfig::~ScriptingConfig()
 
 KConfigGroup ScriptingConfig::configGroup()
 {
-    return KSharedConfig::openConfig(QStringLiteral(KWIN_CONFIG))->group(QLatin1String("Script-") + packageName());
+    return KSharedConfig::openConfig(KWIN_CONFIG)->group(QLatin1String("Script-") + packageName());
 }
 
 QString ScriptingConfig::typeName() const

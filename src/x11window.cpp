@@ -2123,7 +2123,7 @@ void X11Window::killProcess(bool ask, xcb_timestamp_t timestamp)
         QString hostname = clientMachine()->isLocal() ? QStringLiteral("localhost") : clientMachine()->hostName();
         // execute helper from build dir or the system installed one
         const QFileInfo buildDirBinary{QDir{QCoreApplication::applicationDirPath()}, QStringLiteral("kwin_killer_helper")};
-        QProcess::startDetached(buildDirBinary.exists() ? buildDirBinary.absoluteFilePath() : QStringLiteral(KWIN_KILLER_BIN),
+        QProcess::startDetached(buildDirBinary.exists() ? buildDirBinary.absoluteFilePath() : KWIN_KILLER_BIN,
                                 QStringList() << QStringLiteral("--pid") << QString::number(unsigned(pid)) << QStringLiteral("--hostname") << hostname
                                               << QStringLiteral("--windowname") << captionNormal()
                                               << QStringLiteral("--applicationname") << resourceClass()

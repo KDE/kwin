@@ -178,7 +178,7 @@ void Application::createAboutData()
 {
     KAboutData aboutData(QStringLiteral("kwin"), // The program name used internally
                          i18n("KWin"), // A displayable program name string
-                         QStringLiteral(KWIN_VERSION_STRING), // The program version string
+                         KWIN_VERSION_STRING, // The program version string
                          i18n("KDE window manager"), // Short description of what the app does
                          KAboutLicense::GPL, // The license this code is released under
                          i18n("(c) 1999-2019, The KDE Developers")); // Copyright Statement

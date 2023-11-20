@@ -1627,13 +1627,13 @@ QString Workspace::supportInformation() const
     support.append(QStringLiteral("Version\n"));
     support.append(QStringLiteral("=======\n"));
     support.append(QStringLiteral("KWin version: "));
-    support.append(QStringLiteral(KWIN_VERSION_STRING));
+    support.append(KWIN_VERSION_STRING);
     support.append(QStringLiteral("\n"));
     support.append(QStringLiteral("Qt Version: "));
     support.append(QString::fromUtf8(qVersion()));
     support.append(QStringLiteral("\n"));
     support.append(QStringLiteral("Qt compile version: %1\n").arg(QStringLiteral(QT_VERSION_STR)));
-    support.append(QStringLiteral("XCB compile version: %1\n\n").arg(QStringLiteral(XCB_VERSION_STRING)));
+    support.append(QStringLiteral("XCB compile version: %1\n\n").arg(XCB_VERSION_STRING));
     support.append(QStringLiteral("Operation Mode: "));
     switch (kwinApp()->operationMode()) {
     case Application::OperationModeX11:
