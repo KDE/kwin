@@ -241,6 +241,7 @@ target_link_libraries(kwin
 
     Qt::Concurrent
     Qt::Sensors
+    Qt::GuiPrivate
 
     KF6::ConfigQml
     KF6::ConfigWidgets
@@ -343,7 +344,6 @@ if (KWIN_BUILD_TABBOX)
         tabbox/tabboxhandler.cpp
         tabbox/x11_filter.cpp
     )
-    target_link_libraries(kwin PRIVATE Qt::GuiPrivate)
     add_subdirectory(tabbox/switchers)
 endif()
 
