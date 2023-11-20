@@ -44,7 +44,7 @@ void KWin::BlendChanges::start(int delay)
         return;
     }
 
-    const EffectWindowList allWindows = effects->stackingOrder();
+    const QList<EffectWindow *> allWindows = effects->stackingOrder();
     for (auto window : allWindows) {
         if (!window->isFullScreen()) {
             redirect(window);
@@ -71,7 +71,7 @@ void BlendChanges::postPaintScreen()
         m_timeline.reset();
         m_state = Off;
 
-        const EffectWindowList allWindows = effects->stackingOrder();
+        const QList<EffectWindow *> allWindows = effects->stackingOrder();
         for (auto window : allWindows) {
             unredirect(window);
         }

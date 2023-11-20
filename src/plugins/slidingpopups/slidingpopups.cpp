@@ -67,7 +67,7 @@ SlidingPopupsEffect::SlidingPopupsEffect()
 
     reconfigure(ReconfigureAll);
 
-    const EffectWindowList windows = effects->stackingOrder();
+    const QList<EffectWindow *> windows = effects->stackingOrder();
     for (EffectWindow *window : windows) {
         setupSlideData(window);
     }

@@ -70,7 +70,7 @@ ContrastEffect::ContrastEffect()
     });
 
     // Fetch the contrast regions for all windows
-    const EffectWindowList windowList = effects->stackingOrder();
+    const QList<EffectWindow *> windowList = effects->stackingOrder();
     for (EffectWindow *window : windowList) {
         slotWindowAdded(window);
     }
@@ -92,7 +92,7 @@ void ContrastEffect::slotScreenGeometryChanged()
         return;
     }
 
-    const EffectWindowList windowList = effects->stackingOrder();
+    const QList<EffectWindow *> windowList = effects->stackingOrder();
     for (EffectWindow *window : windowList) {
         updateContrastRegion(window);
     }

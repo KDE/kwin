@@ -81,7 +81,6 @@ class WorkspaceScene;
 class VirtualDesktop;
 
 typedef QPair<QString, Effect *> EffectPair;
-typedef QList<KWin::EffectWindow *> EffectWindowList;
 
 /**
  * EffectWindow::setData() and EffectWindow::data() global roles.
@@ -136,7 +135,7 @@ class KWIN_EXPORT EffectsHandler : public QObject
      * if used manually.
      */
     Q_PROPERTY(qreal animationTimeFactor READ animationTimeFactor)
-    Q_PROPERTY(KWin::EffectWindowList stackingOrder READ stackingOrder)
+    Q_PROPERTY(QList<EffectWindow *> stackingOrder READ stackingOrder)
     /**
      * Whether window decorations use the alpha channel.
      */
@@ -440,12 +439,12 @@ public:
      * @since 5.16
      */
     Q_SCRIPTABLE KWin::EffectWindow *findWindow(const QUuid &id) const;
-    EffectWindowList stackingOrder() const;
+    QList<EffectWindow *> stackingOrder() const;
     // window will be temporarily painted as if being at the top of the stack
     Q_SCRIPTABLE void setElevatedWindow(KWin::EffectWindow *w, bool set);
 
     void setTabBoxWindow(EffectWindow *);
-    EffectWindowList currentTabBoxWindowList() const;
+    QList<EffectWindow *> currentTabBoxWindowList() const;
     void refTabBox();
     void unrefTabBox();
     void closeTabBox();
@@ -1638,7 +1637,7 @@ public:
     bool isModal() const;
     Q_SCRIPTABLE KWin::EffectWindow *findModal();
     Q_SCRIPTABLE KWin::EffectWindow *transientFor();
-    Q_SCRIPTABLE KWin::EffectWindowList mainWindows() const;
+    Q_SCRIPTABLE QList<KWin::EffectWindow *> mainWindows() const;
 
     /**
      * Returns whether the window should be excluded from window switching effects.
@@ -2056,7 +2055,7 @@ public:
     explicit EffectWindowGroup(Group *group);
     virtual ~EffectWindowGroup();
 
-    EffectWindowList members() const;
+    QList<EffectWindow *> members() const;
 
 private:
     Group *m_group;
@@ -2083,6 +2082,5 @@ inline void EffectWindow::addLayerRepaint(int x, int y, int w, int h)
 
 } // namespace
 Q_DECLARE_METATYPE(KWin::EffectWindow *)
-Q_DECLARE_METATYPE(KWin::EffectWindowList)
 
 /** @} */

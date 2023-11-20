@@ -167,7 +167,7 @@ public:
     /**
      * Register a list of windows for managing.
      */
-    inline void manage(const EffectWindowList &list)
+    inline void manage(const QList<EffectWindow *> &list)
     {
         for (int i = 0; i < list.size(); i++) {
             manage(list.at(i));
@@ -257,7 +257,7 @@ public:
     /**
      * Return a list of all currently registered windows.
      */
-    inline EffectWindowList managedWindows() const
+    inline QList<EffectWindow *> managedWindows() const
     {
         return m_managedWindows.keys();
     }

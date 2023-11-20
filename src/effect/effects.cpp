@@ -904,10 +904,10 @@ EffectWindow *EffectsHandler::findWindow(const QUuid &id) const
     return nullptr;
 }
 
-EffectWindowList EffectsHandler::stackingOrder() const
+QList<EffectWindow *> EffectsHandler::stackingOrder() const
 {
     QList<Window *> list = workspace()->stackingOrder();
-    EffectWindowList ret;
+    QList<EffectWindow *> ret;
     for (Window *t : list) {
         if (EffectWindow *w = t->effectWindow()) {
             ret.append(w);
@@ -937,11 +937,11 @@ void EffectsHandler::setTabBoxWindow(EffectWindow *w)
 #endif
 }
 
-EffectWindowList EffectsHandler::currentTabBoxWindowList() const
+QList<EffectWindow *> EffectsHandler::currentTabBoxWindowList() const
 {
 #if KWIN_BUILD_TABBOX
     const auto clients = workspace()->tabbox()->currentClientList();
-    EffectWindowList ret;
+    QList<EffectWindow *> ret;
     ret.reserve(clients.size());
     std::transform(std::cbegin(clients), std::cend(clients),
                    std::back_inserter(ret),
@@ -950,7 +950,7 @@ EffectWindowList EffectsHandler::currentTabBoxWindowList() const
                    });
     return ret;
 #else
-    return EffectWindowList();
+    return QList<EffectWindow *>();
 #endif
 }
 
@@ -2021,10 +2021,10 @@ QWindow *EffectWindow::internalWindow() const
 }
 
 template<typename T>
-EffectWindowList getMainWindows(T *c)
+QList<EffectWindow *> getMainWindows(T *c)
 {
     const auto mainwindows = c->mainWindows();
-    EffectWindowList ret;
+    QList<EffectWindow *> ret;
     ret.reserve(mainwindows.size());
     std::transform(std::cbegin(mainwindows), std::cend(mainwindows),
                    std::back_inserter(ret),
@@ -2034,7 +2034,7 @@ EffectWindowList getMainWindows(T *c)
     return ret;
 }
 
-EffectWindowList EffectWindow::mainWindows() const
+QList<EffectWindow *> EffectWindow::mainWindows() const
 {
     return getMainWindows(d->m_window);
 }
@@ -2108,10 +2108,10 @@ EffectWindowGroup::~EffectWindowGroup()
 {
 }
 
-EffectWindowList EffectWindowGroup::members() const
+QList<EffectWindow *> EffectWindowGroup::members() const
 {
     const auto memberList = m_group->members();
-    EffectWindowList ret;
+    QList<EffectWindow *> ret;
     ret.reserve(memberList.size());
     std::transform(std::cbegin(memberList), std::cend(memberList), std::back_inserter(ret), [](auto window) {
         return window->effectWindow();

@@ -211,7 +211,7 @@ ScriptedEffect::~ScriptedEffect() = default;
 bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript)
 {
     qRegisterMetaType<QJSValueList>();
-    qRegisterMetaType<EffectWindowList>();
+    qRegisterMetaType<QList<KWin::EffectWindow *>>();
 
     QFile scriptFile(pathToScript);
     if (!scriptFile.open(QIODevice::ReadOnly)) {

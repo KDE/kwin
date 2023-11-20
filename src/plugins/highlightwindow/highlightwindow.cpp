@@ -159,7 +159,7 @@ void HighlightWindowEffect::slotPropertyNotify(EffectWindow *w, long a, EffectWi
 
 void HighlightWindowEffect::prepareHighlighting()
 {
-    const EffectWindowList windows = effects->stackingOrder();
+    const QList<EffectWindow *> windows = effects->stackingOrder();
     for (EffectWindow *window : windows) {
         if (!isHighlightWindow(window)) {
             continue;
@@ -174,7 +174,7 @@ void HighlightWindowEffect::prepareHighlighting()
 
 void HighlightWindowEffect::finishHighlighting()
 {
-    const EffectWindowList windows = effects->stackingOrder();
+    const QList<EffectWindow *> windows = effects->stackingOrder();
     for (EffectWindow *window : windows) {
         if (isHighlightWindow(window)) {
             startRevertAnimation(window);

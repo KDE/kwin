@@ -128,7 +128,7 @@ private:
         EffectWindowVisibleRef visibilityRef;
     };
 
-    EffectWindowList m_elevatedWindows;
+    QList<EffectWindow *> m_elevatedWindows;
     QHash<EffectWindow *, WindowData> m_windowData;
 };
 

@@ -36,8 +36,8 @@ void SlideBackEffect::slotStackingOrderChanged()
         return;
     }
 
-    EffectWindowList newStackingOrder = effects->stackingOrder(),
-                     usableNewStackingOrder = usableWindows(newStackingOrder);
+    QList<EffectWindow *> newStackingOrder = effects->stackingOrder(),
+                          usableNewStackingOrder = usableWindows(newStackingOrder);
     if (usableNewStackingOrder == usableOldStackingOrder || usableNewStackingOrder.isEmpty()) {
         oldStackingOrder = newStackingOrder;
         usableOldStackingOrder = usableNewStackingOrder;
@@ -142,7 +142,7 @@ void SlideBackEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mill
         data.mask |= Effect::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
     }
 
-    const EffectWindowList windows = effects->stackingOrder();
+    const QList<EffectWindow *> windows = effects->stackingOrder();
     for (auto *w : windows) {
         w->setData(WindowForceBlurRole, QVariant(true));
     }
@@ -192,7 +192,7 @@ void SlideBackEffect::postPaintWindow(EffectWindow *w)
                 // If we are still intersecting with the upmostWindow it is moving. slide to somewhere else
                 // restore the stacking order of all windows not intersecting any more except panels
                 if (coveringWindows.contains(w)) {
-                    EffectWindowList tmpList;
+                    QList<EffectWindow *> tmpList;
                     for (EffectWindow *tmp : std::as_const(elevatedList)) {
                         QRect elevatedGeometry = tmp->frameGeometry().toRect();
                         if (motionManager.isManaging(tmp)) {
@@ -311,9 +311,9 @@ bool SlideBackEffect::intersects(EffectWindow *windowUnder, const QRect &windowO
     return windowUnderGeometry.intersects(windowOverGeometry);
 }
 
-EffectWindowList SlideBackEffect::usableWindows(const EffectWindowList &allWindows)
+QList<EffectWindow *> SlideBackEffect::usableWindows(const QList<EffectWindow *> &allWindows)
 {
-    EffectWindowList retList;
+    QList<EffectWindow *> retList;
     auto isWindowVisible = [](const EffectWindow *window) {
         return window && effects->virtualScreenGeometry().intersects(window->frameGeometry().toAlignedRect());
     };
