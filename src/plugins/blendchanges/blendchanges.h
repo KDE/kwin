@@ -7,7 +7,6 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
-#include "effect/effects.h"
 #include "effect/offscreeneffect.h"
 #include "effect/timeline.h"
 #include <chrono>

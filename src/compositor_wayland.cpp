@@ -12,6 +12,7 @@
 #include "core/outputbackend.h"
 #include "core/renderbackend.h"
 #include "core/renderlayer.h"
+#include "effect/effects.h"
 #include "main.h"
 #include "opengl/glplatform.h"
 #include "platformsupport/scenes/opengl/openglbackend.h"

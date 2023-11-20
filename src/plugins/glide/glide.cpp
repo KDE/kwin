@@ -18,6 +18,7 @@
 
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
+#include "effect/effects.h"
 
 // Qt
 #include <QMatrix4x4>

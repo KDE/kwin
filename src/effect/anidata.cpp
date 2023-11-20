@@ -9,6 +9,7 @@
 */
 
 #include "effect/anidata_p.h"
+#include "effect/effects.h"
 
 #include "logging_p.h"
 

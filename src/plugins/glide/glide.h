@@ -13,7 +13,8 @@
 #pragma once
 
 // kwineffects
-#include "effect/effects.h"
+#include "effect/effect.h"
+#include "effect/effectwindow.h"
 #include "effect/timeline.h"
 
 namespace KWin

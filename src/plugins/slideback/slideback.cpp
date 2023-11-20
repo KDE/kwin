@@ -8,6 +8,7 @@
 */
 
 #include "slideback.h"
+#include "effect/effects.h"
 
 namespace KWin
 {

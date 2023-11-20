@@ -8,8 +8,10 @@
 */
 #pragma once
 
-#include "effect/effects.h"
+#include "effect/effect.h"
 #include "effect/timeline.h"
+
+#include <xcb/xcb.h>
 
 namespace KWin
 {

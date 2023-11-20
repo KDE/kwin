@@ -11,7 +11,7 @@
 #pragma once
 
 #include "effect/animationeffect.h"
-#include "effect/effects.h"
+#include "effect/effectwindow.h"
 #include "effect/timeline.h"
 
 #include <QEasingCurve>

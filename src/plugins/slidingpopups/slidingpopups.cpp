@@ -11,6 +11,7 @@
 #include "slidingpopups.h"
 #include "slidingpopupsconfig.h"
 
+#include "effect/effects.h"
 #include "wayland/display.h"
 #include "wayland/slide.h"
 #include "wayland/surface.h"

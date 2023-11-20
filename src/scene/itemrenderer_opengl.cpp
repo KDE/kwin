@@ -7,6 +7,7 @@
 #include "scene/itemrenderer_opengl.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
+#include "effect/effect.h"
 #include "platformsupport/scenes/opengl/openglsurfacetexture.h"
 #include "scene/decorationitem.h"
 #include "scene/imageitem.h"

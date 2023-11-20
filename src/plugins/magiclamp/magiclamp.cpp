@@ -10,6 +10,7 @@
 // based on minimize animation by Rivo Laks <rivolaks@hot.ee>
 
 #include "magiclamp.h"
+#include "effect/effects.h"
 // KConfigSkeleton
 #include "magiclampconfig.h"
 

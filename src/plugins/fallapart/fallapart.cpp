@@ -8,6 +8,7 @@
 */
 
 #include "fallapart.h"
+#include "effect/effects.h"
 // KConfigSkeleton
 #include "fallapartconfig.h"
 

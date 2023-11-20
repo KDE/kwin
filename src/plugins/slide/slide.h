@@ -12,9 +12,9 @@
 #pragma once
 
 // kwineffects
-#include "effect/effects.h"
-
-#include "springmotion.h"
+#include "effect/effect.h"
+#include "effect/effectwindow.h"
+#include "plugins/slide/springmotion.h"
 
 namespace KWin
 {

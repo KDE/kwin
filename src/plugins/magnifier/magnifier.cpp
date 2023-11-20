@@ -17,6 +17,7 @@
 #include <kstandardaction.h>
 
 #include "core/renderviewport.h"
+#include "effect/effects.h"
 #include "opengl/glutils.h"
 #include <KGlobalAccel>
 

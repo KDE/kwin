@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "effect/effects.h"
+#include "effect/effect.h"
 #include "effect/offscreenquickview.h"
 
 #include <QElapsedTimer>
