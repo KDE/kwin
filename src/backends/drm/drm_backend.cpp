@@ -149,6 +149,11 @@ void DrmBackend::handleUdevEvent()
         }
 
         if (device->action() == QStringLiteral("add")) {
+            DrmGpu *gpu = findGpu(device->devNum());
+            if (gpu) {
+                qCWarning(KWIN_DRM) << "Received unexpected add udev event for:" << device->devNode();
+                continue;
+            }
             if (addGpu(device->devNode())) {
                 updateOutputs();
             }
