@@ -39,8 +39,8 @@ ZoomEffectConfig::ZoomEffectConfig(QObject *parent, const KPluginMetaData &data)
     connect(m_ui.editor, &KShortcutsEditor::keyChange, this, &KCModule::markAsChanged);
 
 #if !HAVE_ACCESSIBILITY
-    m_ui->kcfg_EnableFocusTracking->setVisible(false);
-    m_ui->kcfg_EnableTextCaretTracking->setVisible(false);
+    m_ui.kcfg_EnableFocusTracking->setVisible(false);
+    m_ui.kcfg_EnableTextCaretTracking->setVisible(false);
 #endif
 
     // Shortcut config. The shortcut belongs to the component "kwin"!
