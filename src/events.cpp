@@ -16,7 +16,7 @@
 
 #include "atoms.h"
 #include "cursor.h"
-#include "effect/effects.h"
+#include "effect/effecthandler.h"
 #include "focuschain.h"
 #include "group.h"
 #include "netinfo.h"

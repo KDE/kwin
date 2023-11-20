@@ -22,7 +22,7 @@
 #include "activities.h"
 #endif
 #include "compositor.h"
-#include "effect/effects.h"
+#include "effect/effecthandler.h"
 #include "focuschain.h"
 #include "input.h"
 #include "keyboard_input.h"

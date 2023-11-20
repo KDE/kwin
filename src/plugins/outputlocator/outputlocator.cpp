@@ -6,7 +6,7 @@
 
 #include "outputlocator.h"
 #include "core/output.h"
-#include "effect/effects.h"
+#include "effect/effecthandler.h"
 #include "effect/offscreenquickview.h"
 
 #include <algorithm>

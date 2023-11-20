@@ -59,7 +59,7 @@
 #include "core/renderlayer.h"
 #include "core/renderloop.h"
 #include "core/renderviewport.h"
-#include "effect/effects.h"
+#include "effect/effecthandler.h"
 #include "internalwindow.h"
 #include "scene/dndiconitem.h"
 #include "scene/itemrenderer.h"

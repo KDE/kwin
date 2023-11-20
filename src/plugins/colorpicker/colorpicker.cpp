@@ -9,7 +9,7 @@
 #include "colorpicker.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
-#include "effect/effects.h"
+#include "effect/effecthandler.h"
 #include "opengl/glutils.h"
 #include "opengl/glutils_funcs.h"
 #include <KLocalizedString>

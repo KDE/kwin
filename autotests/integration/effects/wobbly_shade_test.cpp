@@ -9,8 +9,8 @@
 #include "kwin_wayland_test.h"
 
 #include "cursor.h"
+#include "effect/effecthandler.h"
 #include "effect/effectloader.h"
-#include "effect/effects.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "x11window.h"

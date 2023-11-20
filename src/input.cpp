@@ -15,7 +15,7 @@
 #include "backends/libinput/device.h"
 #include "core/inputbackend.h"
 #include "core/session.h"
-#include "effect/effects.h"
+#include "effect/effecthandler.h"
 #include "gestures.h"
 #include "globalshortcuts.h"
 #include "hide_cursor_spy.h"

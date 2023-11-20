@@ -9,8 +9,8 @@
 
 #include "kwin_wayland_test.h"
 
+#include "effect/effecthandler.h"
 #include "effect/effectloader.h"
-#include "effect/effects.h"
 #include "internalwindow.h"
 #include "useractions.h"
 #include "wayland_server.h"

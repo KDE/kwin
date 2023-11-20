@@ -7,7 +7,7 @@
 
 #include "contrastshader.h"
 
-#include "effect/effects.h"
+#include "effect/effecthandler.h"
 #include "opengl/glplatform.h"
 
 #include <QByteArray>

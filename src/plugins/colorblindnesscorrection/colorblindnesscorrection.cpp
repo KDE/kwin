@@ -8,7 +8,7 @@
 
 #include <KSharedConfig>
 
-#include "effect/effects.h"
+#include "effect/effecthandler.h"
 #include "opengl/glshader.h"
 
 #include "colorblindnesscorrection_settings.h"

@@ -26,7 +26,7 @@
 // KWin
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
-#include "effect/effects.h"
+#include "effect/effecthandler.h"
 #include "opengl/glutils.h"
 
 // based on StartupId in KRunner by Lubos Lunak

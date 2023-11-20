@@ -16,7 +16,7 @@
 #include "core/output.h"
 #include "cursorsource.h"
 #include "decorations/decoratedclient.h"
-#include "effect/effects.h"
+#include "effect/effecthandler.h"
 #include "input_event.h"
 #include "input_event_spy.h"
 #include "mousebuttons.h"

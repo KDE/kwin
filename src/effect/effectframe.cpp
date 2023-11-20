@@ -6,7 +6,7 @@
 */
 
 #include "effect/effectframe.h"
-#include "effect/effects.h"
+#include "effect/effecthandler.h"
 
 #include <QQuickItem>
 #include <QStandardPaths>

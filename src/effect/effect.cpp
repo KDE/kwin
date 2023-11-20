@@ -7,7 +7,7 @@
 */
 
 #include "effect/effect.h"
-#include "effect/effects.h"
+#include "effect/effecthandler.h"
 
 #include <KConfigGroup>
 

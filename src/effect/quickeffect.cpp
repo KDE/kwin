@@ -6,7 +6,7 @@
 
 #include "effect/quickeffect.h"
 #include "core/output.h"
-#include "effect/effects.h"
+#include "effect/effecthandler.h"
 
 #include "logging_p.h"
 

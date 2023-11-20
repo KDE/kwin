@@ -11,7 +11,7 @@
 #include "compositor.h"
 #include "core/output.h"
 #include "core/renderbackend.h"
-#include "effect/effects.h"
+#include "effect/effecthandler.h"
 #include "pointer_input.h"
 #include "screenedge.h"
 #include "wayland/keyboard.h"

@@ -9,7 +9,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "effect/effects.h"
+#include "effect/effecthandler.h"
 
 #include "config-kwin.h"
 
@@ -1622,5 +1622,5 @@ EffectsHandler *effects = nullptr;
 
 } // namespace
 
-#include "moc_effects.cpp"
+#include "moc_effecthandler.cpp"
 #include "moc_globals.cpp"

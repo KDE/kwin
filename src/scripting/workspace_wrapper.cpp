@@ -12,7 +12,7 @@
 #include "core/output.h"
 #include "core/outputbackend.h"
 #include "cursor.h"
-#include "effect/effects.h"
+#include "effect/effecthandler.h"
 #include "outline.h"
 #include "tiles/tilemanager.h"
 #include "virtualdesktops.h"

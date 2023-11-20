@@ -9,7 +9,7 @@
 // own
 #include "kscreen.h"
 #include "core/output.h"
-#include "effect/effects.h"
+#include "effect/effecthandler.h"
 // KConfigSkeleton
 #include "kscreenconfig.h"
 #include <QDebug>

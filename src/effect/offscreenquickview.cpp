@@ -8,7 +8,7 @@
 */
 
 #include "effect/offscreenquickview.h"
-#include "effect/effects.h"
+#include "effect/effecthandler.h"
 
 #include "logging_p.h"
 #include "opengl/glutils.h"

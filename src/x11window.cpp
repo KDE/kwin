@@ -20,7 +20,7 @@
 #include "cursor.h"
 #include "decorations/decoratedclient.h"
 #include "decorations/decorationbridge.h"
-#include "effect/effects.h"
+#include "effect/effecthandler.h"
 #include "focuschain.h"
 #include "group.h"
 #include "netinfo.h"

@@ -11,7 +11,7 @@
 #include "backends/virtual/virtual_backend.h"
 #include "compositor_wayland.h"
 #include "core/session.h"
-#include "effect/effects.h"
+#include "effect/effecthandler.h"
 #include "inputmethod.h"
 #include "placement.h"
 #include "pluginmanager.h"

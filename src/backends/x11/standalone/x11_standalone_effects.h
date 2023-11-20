@@ -9,7 +9,7 @@
 */
 #pragma once
 
-#include "effect/effects.h"
+#include "effect/effecthandler.h"
 #include "utils/xcbutils.h"
 
 #include <memory.h>

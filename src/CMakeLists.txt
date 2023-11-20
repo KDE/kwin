@@ -85,8 +85,8 @@ target_sources(kwin PRIVATE
     effect/animationeffect.cpp
     effect/effect.cpp
     effect/effectframe.cpp
+    effect/effecthandler.cpp
     effect/effectloader.cpp
-    effect/effects.cpp
     effect/effecttogglablestate.cpp
     effect/effectwindow.cpp
     effect/logging.cpp
@@ -296,7 +296,7 @@ set(kwin_dbus_SRCS)
 qt_add_dbus_adaptor(kwin_dbus_SRCS scripting/org.kde.kwin.Script.xml scripting/scripting.h KWin::AbstractScript)
 qt_add_dbus_adaptor(kwin_dbus_SRCS org.kde.KWin.xml dbusinterface.h KWin::DBusInterface)
 qt_add_dbus_adaptor(kwin_dbus_SRCS org.kde.kwin.Compositing.xml dbusinterface.h KWin::CompositorDBusInterface)
-qt_add_dbus_adaptor(kwin_dbus_SRCS ${kwin_effects_dbus_xml} effect/effects.h KWin::EffectsHandler)
+qt_add_dbus_adaptor(kwin_dbus_SRCS ${kwin_effects_dbus_xml} effect/effecthandler.h KWin::EffectsHandler)
 qt_add_dbus_adaptor(kwin_dbus_SRCS org.kde.KWin.VirtualDesktopManager.xml dbusinterface.h KWin::VirtualDesktopManagerDBusInterface)
 qt_add_dbus_adaptor(kwin_dbus_SRCS org.kde.KWin.Session.xml sm.h KWin::SessionManager)
 qt_add_dbus_adaptor(kwin_dbus_SRCS org.kde.KWin.Plugins.xml dbusinterface.h KWin::PluginManagerDBusInterface)
@@ -439,7 +439,7 @@ install(FILES
 install(FILES
     effect/animationeffect.h
     effect/effect.h
-    effect/effects.h
+    effect/effecthandler.h
     effect/effecttogglablestate.h
     effect/effectwindow.h
     effect/globals.h

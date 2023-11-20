@@ -6,8 +6,8 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
+#include "effect/effecthandler.h"
 #include "effect/effectloader.h"
-#include "effect/effects.h"
 #include "kwin_wayland_test.h"
 #include "wayland_server.h"
 #include "workspace.h"

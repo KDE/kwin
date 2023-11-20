@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "effect/effects.h"
+#include "effect/effecthandler.h"
 
 #include "virtualdesktops.h"
 

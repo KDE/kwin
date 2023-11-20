@@ -24,7 +24,7 @@
 #include "core/outputconfiguration.h"
 #include "cursor.h"
 #include "dbusinterface.h"
-#include "effect/effects.h"
+#include "effect/effecthandler.h"
 #include "focuschain.h"
 #include "group.h"
 #include "input.h"

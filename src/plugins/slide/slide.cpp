@@ -12,7 +12,7 @@
 // own
 #include "slide.h"
 #include "core/output.h"
-#include "effect/effects.h"
+#include "effect/effecthandler.h"
 
 // KConfigSkeleton
 #include "slideconfig.h"

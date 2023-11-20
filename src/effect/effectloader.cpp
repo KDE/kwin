@@ -12,7 +12,7 @@
 #include <config-kwin.h>
 // KWin
 #include "effect/effect.h"
-#include "effect/effects.h"
+#include "effect/effecthandler.h"
 #include "plugin.h"
 #include "scripting/scriptedeffect.h"
 #include "scripting/scriptedquicksceneeffect.h"

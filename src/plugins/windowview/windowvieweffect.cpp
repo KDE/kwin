@@ -5,7 +5,7 @@
 */
 
 #include "windowvieweffect.h"
-#include "effect/effects.h"
+#include "effect/effecthandler.h"
 #include "windowview1adaptor.h"
 #include "windowviewconfig.h"
 

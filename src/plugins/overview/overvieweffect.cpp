@@ -5,7 +5,7 @@
 */
 
 #include "overvieweffect.h"
-#include "effect/effects.h"
+#include "effect/effecthandler.h"
 #include "overviewconfig.h"
 
 #include <KGlobalAccel>

@@ -5,7 +5,7 @@
 */
 
 #include "scene/windowitem.h"
-#include "effect/effects.h"
+#include "effect/effecthandler.h"
 #include "internalwindow.h"
 #include "scene/decorationitem.h"
 #include "scene/shadowitem.h"

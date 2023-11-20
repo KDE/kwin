@@ -65,7 +65,7 @@
 */
 
 #include "compositor.h"
-#include "effect/effects.h"
+#include "effect/effecthandler.h"
 #include "focuschain.h"
 #include "group.h"
 #include "internalwindow.h"

@@ -17,7 +17,7 @@
 #include "compositor_wayland.h"
 #include "core/outputbackend.h"
 #include "core/session.h"
-#include "effect/effects.h"
+#include "effect/effecthandler.h"
 #include "inputmethod.h"
 #include "tabletmodemanager.h"
 #include "utils/realtime.h"

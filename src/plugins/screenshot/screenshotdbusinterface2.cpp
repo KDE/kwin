@@ -8,7 +8,7 @@
 
 #include "screenshotdbusinterface2.h"
 #include "core/output.h"
-#include "effect/effects.h"
+#include "effect/effecthandler.h"
 #include "screenshot2adaptor.h"
 #include "screenshotlogging.h"
 #include "utils/filedescriptor.h"

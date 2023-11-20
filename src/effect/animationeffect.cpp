@@ -10,7 +10,7 @@
 
 #include "effect/animationeffect.h"
 #include "effect/anidata_p.h"
-#include "effect/effects.h"
+#include "effect/effecthandler.h"
 #include "opengl/glutils.h"
 
 #include <QDateTime>

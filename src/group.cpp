@@ -9,7 +9,7 @@
 */
 
 #include "group.h"
-#include "effect/effects.h"
+#include "effect/effecthandler.h"
 #include "workspace.h"
 #include "x11window.h"
 

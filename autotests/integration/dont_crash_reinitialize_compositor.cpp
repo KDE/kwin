@@ -11,8 +11,8 @@
 
 #include "compositor.h"
 #include "core/output.h"
+#include "effect/effecthandler.h"
 #include "effect/effectloader.h"
-#include "effect/effects.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
