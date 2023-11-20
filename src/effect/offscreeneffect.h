@@ -6,7 +6,8 @@
 
 #pragma once
 
-#include "effect/effects.h"
+#include "effect/effect.h"
+#include "scene/itemgeometry.h"
 
 namespace KWin
 {

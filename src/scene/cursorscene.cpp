@@ -8,6 +8,7 @@
 #include "core/output.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
+#include "effect/effect.h"
 #include "scene/cursoritem.h"
 #include "scene/itemrenderer.h"
 

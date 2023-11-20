@@ -6,6 +6,7 @@
 
 #include "scene/itemrenderer_qpainter.h"
 #include "core/renderviewport.h"
+#include "effect/effect.h"
 #include "platformsupport/scenes/qpainter/qpaintersurfacetexture.h"
 #include "scene/imageitem.h"
 #include "scene/workspacescene_qpainter.h"

@@ -8,6 +8,7 @@
 */
 
 #include "wobblywindows.h"
+#include "effect/effects.h"
 #include "wobblywindowsconfig.h"
 
 #include <cmath>

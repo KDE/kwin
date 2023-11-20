@@ -7,6 +7,7 @@
 #include "scene/cursoritem.h"
 #include "cursor.h"
 #include "cursorsource.h"
+#include "effect/effect.h"
 #include "scene/imageitem.h"
 #include "scene/itemrenderer.h"
 #include "scene/scene.h"

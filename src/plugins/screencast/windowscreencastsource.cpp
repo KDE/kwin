@@ -12,6 +12,7 @@
 #include "core/renderloop.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
+#include "effect/effect.h"
 #include "opengl/gltexture.h"
 #include "opengl/glutils.h"
 #include "scene/itemrenderer.h"

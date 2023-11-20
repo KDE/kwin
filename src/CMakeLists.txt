@@ -160,6 +160,7 @@ target_sources(kwin PRIVATE
     scene/dndiconitem.cpp
     scene/imageitem.cpp
     scene/item.cpp
+    scene/itemgeometry.cpp
     scene/itemrenderer.cpp
     scene/itemrenderer_opengl.cpp
     scene/itemrenderer_qpainter.cpp
@@ -459,6 +460,12 @@ install(FILES
     opengl/glvertexbuffer.h
     opengl/openglcontext.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/opengl COMPONENT Devel
+)
+
+install(FILES
+    scene/item.h
+    scene/itemgeometry.h
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/scene COMPONENT Devel
 )
 
 set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KWin")

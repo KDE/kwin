@@ -12,6 +12,7 @@
 #include <config-kwin.h>
 // KWin
 #include "effect/effect.h"
+#include "effect/effects.h"
 #include "plugin.h"
 #include "scripting/scriptedeffect.h"
 #include "scripting/scriptedquicksceneeffect.h"
@@ -350,7 +351,7 @@ bool PluginEffectLoader::loadEffect(const KPluginMetaData &info, LoadEffectFlags
         return false;
     }
 
-    effects->makeOpenGLContextCurrent();
+    effects->makeOpenGLContextCurrent(); // TODO: remove it
     if (!effectFactory->isSupported()) {
         qCDebug(KWIN_CORE) << "Effect is not supported: " << name;
         return false;

@@ -18,6 +18,8 @@
 class KConfigLoader;
 class KPluginMetaData;
 
+class QAction;
+
 namespace KWin
 {
 

@@ -14,6 +14,7 @@
 #include "workspace_wrapper.h"
 
 #include "core/output.h"
+#include "effect/effects.h"
 #include "input.h"
 #include "screenedge.h"
 #include "workspace.h"

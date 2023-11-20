@@ -14,6 +14,7 @@ namespace KWin
 {
 
 class DragAndDropIcon;
+class SurfaceInterface;
 class SurfaceItemWayland;
 class PresentationFeedback;
 

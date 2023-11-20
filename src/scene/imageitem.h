@@ -8,6 +8,8 @@
 
 #include "scene/item.h"
 
+#include <QImage>
+
 namespace KWin
 {
 

@@ -9,6 +9,7 @@
 */
 
 #include "highlightwindow.h"
+#include "effect/effects.h"
 
 #include <QDBusConnection>
 

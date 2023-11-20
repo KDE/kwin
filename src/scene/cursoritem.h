@@ -12,6 +12,7 @@ namespace KWin
 {
 
 class ImageItem;
+class SurfaceInterface;
 class SurfaceItemWayland;
 
 class CursorItem : public Item

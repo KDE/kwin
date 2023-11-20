@@ -10,6 +10,7 @@
 
 #include "invert.h"
 
+#include "effect/effects.h"
 #include "opengl/glplatform.h"
 #include "opengl/glutils.h"
 #include <KGlobalAccel>

@@ -9,6 +9,7 @@
 
 #pragma once
 
+#include "effect/effects.h"
 #include "effect/offscreeneffect.h"
 #include "effect/timeline.h"
 

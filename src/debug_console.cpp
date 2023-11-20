@@ -10,6 +10,7 @@
 #include "compositor.h"
 #include "core/graphicsbufferview.h"
 #include "core/inputdevice.h"
+#include "effect/effects.h"
 #include "input_event.h"
 #include "internalwindow.h"
 #include "keyboard_input.h"
