@@ -76,6 +76,10 @@ private:
         std::optional<bool> wideColorGamut;
         std::optional<Output::AutoRotationPolicy> autoRotation;
         std::optional<QString> iccProfilePath;
+        std::optional<double> maxPeakBrightnessOverride;
+        std::optional<double> maxAverageBrightnessOverride;
+        std::optional<double> minBrightnessOverride;
+        std::optional<double> sdrGamutWideness;
     };
     struct SetupState
     {

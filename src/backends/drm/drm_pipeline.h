@@ -132,6 +132,8 @@ public:
     void setNamedTransferFunction(NamedTransferFunction tf);
     void setIccProfile(const std::shared_ptr<IccProfile> &profile);
     void setSdrBrightness(double sdrBrightness);
+    void setSdrGamutWideness(double sdrGamutWideness);
+    void setBrightnessOverrides(std::optional<double> peakBrightnessOverride, std::optional<double> averageBrightnessOverride, std::optional<double> minBrightnessOverride);
 
     enum class CommitMode {
         Test,
@@ -189,8 +191,12 @@ private:
         bool BT2020 = false;
         NamedTransferFunction transferFunction = NamedTransferFunction::sRGB;
         double sdrBrightness = 200;
+        double sdrGamutWideness = 0;
         std::shared_ptr<IccProfile> iccProfile;
         ColorDescription colorDescription = ColorDescription::sRGB;
+        std::optional<double> peakBrightnessOverride;
+        std::optional<double> averageBrightnessOverride;
+        std::optional<double> minBrightnessOverride;
 
         // the transformation that buffers submitted to the pipeline should have
         DrmPlane::Transformations renderOrientation = DrmPlane::Transformation::Rotate0;

@@ -23,7 +23,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 6;
+static const quint32 s_version = 7;
 
 class OutputManagementV2InterfacePrivate : public QtWaylandServer::kde_output_management_v2
 {
@@ -64,6 +64,8 @@ protected:
     void kde_output_configuration_v2_set_wide_color_gamut(Resource *resource, wl_resource *outputdevice, uint32_t enable_wcg) override;
     void kde_output_configuration_v2_set_auto_rotate_policy(Resource *resource, wl_resource *outputdevice, uint32_t auto_rotation_policy) override;
     void kde_output_configuration_v2_set_icc_profile_path(Resource *resource, wl_resource *outputdevice, const QString &profile_path) override;
+    void kde_output_configuration_v2_set_brightness_overrides(Resource *resource, wl_resource *outputdevice, int32_t max_peak_brightness, int32_t max_average_brightness, int32_t min_brightness) override;
+    void kde_output_configuration_v2_set_sdr_gamut_wideness(Resource *resource, wl_resource *outputdevice, uint32_t gamut_wideness) override;
 };
 
 OutputManagementV2InterfacePrivate::OutputManagementV2InterfacePrivate(Display *display)
@@ -292,6 +294,28 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_set_icc_profile
     }
     if (OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice)) {
         config.changeSet(output->handle())->iccProfilePath = profile_path;
+    }
+}
+
+void OutputConfigurationV2Interface::kde_output_configuration_v2_set_brightness_overrides(Resource *resource, wl_resource *outputdevice, int32_t max_peak_brightness, int32_t max_average_brightness, int32_t min_brightness)
+{
+    if (invalid) {
+        return;
+    }
+    if (OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice)) {
+        config.changeSet(output->handle())->maxPeakBrightnessOverride = max_peak_brightness == -1 ? std::nullopt : std::optional<double>(max_peak_brightness);
+        config.changeSet(output->handle())->maxAverageBrightnessOverride = max_average_brightness == -1 ? std::nullopt : std::optional<double>(max_average_brightness);
+        config.changeSet(output->handle())->minBrightnessOverride = min_brightness == -1 ? std::nullopt : std::optional<double>(min_brightness / 10'000.0);
+    }
+}
+
+void OutputConfigurationV2Interface::kde_output_configuration_v2_set_sdr_gamut_wideness(Resource *resource, wl_resource *outputdevice, uint32_t gamut_wideness)
+{
+    if (invalid) {
+        return;
+    }
+    if (OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice)) {
+        config.changeSet(output->handle())->sdrGamutWideness = gamut_wideness / 10'000.0;
     }
 }
 

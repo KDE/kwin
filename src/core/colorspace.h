@@ -27,7 +27,7 @@ enum class NamedColorimetry {
 class KWIN_EXPORT Colorimetry
 {
 public:
-    static constexpr Colorimetry fromName(NamedColorimetry name);
+    static Colorimetry fromName(NamedColorimetry name);
     static Colorimetry fromXYZ(QVector3D red, QVector3D green, QVector3D blue, QVector3D white);
     /**
      * @returns the XYZ representation of the xyY color passed in. Y is assumed to be one
@@ -88,16 +88,19 @@ public:
      * @param minHdrBrightness the minimum brightness of HDR content
      * @param maxFrameAverageBrightness the maximum brightness of HDR content, if the whole screen is white
      * @param maxHdrHighlightBrightness the maximum brightness of HDR content, for a small part of the screen only
+     * @param sdrGamutWideness the gamut wideness of sRGB content; 0 is rec.709, 1 is rec.2020, everything in between is interpolated
      */
-    explicit ColorDescription(const Colorimetry &colorimety, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxFrameAverageBrightness, double maxHdrHighlightBrightness);
-    explicit ColorDescription(NamedColorimetry colorimetry, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxFrameAverageBrightness, double maxHdrHighlightBrightness);
+    explicit ColorDescription(const Colorimetry &colorimety, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxFrameAverageBrightness, double maxHdrHighlightBrightness, double sdrGamutWideness);
+    explicit ColorDescription(NamedColorimetry colorimetry, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxFrameAverageBrightness, double maxHdrHighlightBrightness, double sdrGamutWideness);
 
     const Colorimetry &colorimetry() const;
+    const Colorimetry &sdrColorimetry() const;
     NamedTransferFunction transferFunction() const;
     double sdrBrightness() const;
     double minHdrBrightness() const;
     double maxFrameAverageBrightness() const;
     double maxHdrHighlightBrightness() const;
+    double sdrGamutWideness() const;
 
     bool operator==(const ColorDescription &other) const;
 
@@ -108,6 +111,8 @@ public:
 private:
     Colorimetry m_colorimetry;
     NamedTransferFunction m_transferFunction;
+    Colorimetry m_sdrColorimetry;
+    double m_sdrGamutWideness;
     double m_sdrBrightness;
     double m_minHdrBrightness;
     double m_maxFrameAverageBrightness;

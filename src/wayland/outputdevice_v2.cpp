@@ -22,7 +22,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 5;
+static const quint32 s_version = 6;
 
 static QtWaylandServer::kde_output_device_v2::transform kwinTransformToOutputDeviceTransform(OutputTransform transform)
 {
@@ -102,6 +102,9 @@ public:
     void sendWideColorGamut(Resource *resource);
     void sendAutoRotationPolicy(Resource *resource);
     void sendIccProfilePath(Resource *resource);
+    void sendBrightnessMetadata(Resource *resource);
+    void sendBrightnessOverrides(Resource *resource);
+    void sendSdrGamutWideness(Resource *resource);
 
     OutputDeviceV2Interface *q;
     QPointer<Display> m_display;
@@ -130,6 +133,13 @@ public:
     bool m_wideColorGamut = false;
     auto_rotate_policy m_autoRotation = auto_rotate_policy::auto_rotate_policy_in_tablet_mode;
     QString m_iccProfilePath;
+    double m_maxPeakBrightness = 0;
+    double m_maxAverageBrightness = 0;
+    double m_minBrightness = 0;
+    double m_sdrGamutWideness = 0;
+    std::optional<double> m_maxPeakBrightnessOverride;
+    std::optional<double> m_maxAverageBrightnessOverride;
+    std::optional<double> m_minBrightnessOverride;
 
 protected:
     void kde_output_device_v2_bind_resource(Resource *resource) override;
@@ -212,6 +222,9 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, Output *handl
     updateWideColorGamut();
     updateAutoRotate();
     updateIccProfilePath();
+    updateBrightnessMetadata();
+    updateBrightnessOverrides();
+    updateSdrGamutWideness();
 
     connect(handle, &Output::geometryChanged,
             this, &OutputDeviceV2Interface::updateGlobalPosition);
@@ -238,6 +251,8 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, Output *handl
     connect(handle, &Output::wideColorGamutChanged, this, &OutputDeviceV2Interface::updateWideColorGamut);
     connect(handle, &Output::autoRotationPolicyChanged, this, &OutputDeviceV2Interface::updateAutoRotate);
     connect(handle, &Output::iccProfileChanged, this, &OutputDeviceV2Interface::updateIccProfilePath);
+    connect(handle, &Output::brightnessMetadataChanged, this, &OutputDeviceV2Interface::updateBrightnessMetadata);
+    connect(handle, &Output::sdrGamutWidenessChanged, this, &OutputDeviceV2Interface::updateSdrGamutWideness);
 }
 
 OutputDeviceV2Interface::~OutputDeviceV2Interface()
@@ -293,6 +308,8 @@ void OutputDeviceV2InterfacePrivate::kde_output_device_v2_bind_resource(Resource
     sendWideColorGamut(resource);
     sendAutoRotationPolicy(resource);
     sendIccProfilePath(resource);
+    sendBrightnessMetadata(resource);
+    sendSdrGamutWideness(resource);
     sendDone(resource);
 }
 
@@ -422,6 +439,27 @@ void OutputDeviceV2InterfacePrivate::sendIccProfilePath(Resource *resource)
 {
     if (resource->version() >= KDE_OUTPUT_DEVICE_V2_ICC_PROFILE_PATH_SINCE_VERSION) {
         send_icc_profile_path(resource->handle, m_iccProfilePath);
+    }
+}
+
+void OutputDeviceV2InterfacePrivate::sendBrightnessMetadata(Resource *resource)
+{
+    if (resource->version() >= KDE_OUTPUT_DEVICE_V2_BRIGHTNESS_METADATA_SINCE_VERSION) {
+        send_brightness_metadata(resource->handle, std::round(m_maxPeakBrightness), std::round(m_maxAverageBrightness), std::round(m_minBrightness * 10'000));
+    }
+}
+
+void OutputDeviceV2InterfacePrivate::sendBrightnessOverrides(Resource *resource)
+{
+    if (resource->version() >= KDE_OUTPUT_DEVICE_V2_BRIGHTNESS_OVERRIDES_SINCE_VERSION) {
+        send_brightness_overrides(resource->handle, std::round(m_maxPeakBrightnessOverride.value_or(-1)), std::round(m_maxAverageBrightnessOverride.value_or(-1)), std::round(m_minBrightnessOverride.value_or(-0.000'1) * 10'000));
+    }
+}
+
+void OutputDeviceV2InterfacePrivate::sendSdrGamutWideness(Resource *resource)
+{
+    if (resource->version() >= KDE_OUTPUT_DEVICE_V2_SDR_GAMUT_WIDENESS_SINCE_VERSION) {
+        send_sdr_gamut_wideness(resource->handle, std::clamp<uint32_t>(m_sdrGamutWideness * 10'000, 0, 10'000));
     }
 }
 
@@ -701,6 +739,46 @@ void OutputDeviceV2Interface::updateIccProfilePath()
         const auto clientResources = d->resourceMap();
         for (const auto &resource : clientResources) {
             d->sendIccProfilePath(resource);
+            d->sendDone(resource);
+        }
+    }
+}
+
+void OutputDeviceV2Interface::updateBrightnessMetadata()
+{
+    if (d->m_maxPeakBrightness != d->m_handle->maxPeakBrightness() || d->m_maxAverageBrightness != d->m_handle->maxAverageBrightness() || d->m_minBrightness != d->m_handle->minBrightness()) {
+        d->m_maxPeakBrightness = d->m_handle->maxPeakBrightness();
+        d->m_maxAverageBrightness = d->m_handle->maxAverageBrightness();
+        d->m_minBrightness = d->m_handle->minBrightness();
+        const auto clientResources = d->resourceMap();
+        for (const auto &resource : clientResources) {
+            d->sendBrightnessMetadata(resource);
+            d->sendDone(resource);
+        }
+    }
+}
+
+void OutputDeviceV2Interface::updateBrightnessOverrides()
+{
+    if (d->m_maxPeakBrightnessOverride != d->m_handle->maxPeakBrightnessOverride() || d->m_maxAverageBrightnessOverride != d->m_handle->maxAverageBrightnessOverride() || d->m_minBrightnessOverride != d->m_handle->minBrightnessOverride()) {
+        d->m_maxPeakBrightnessOverride = d->m_handle->maxPeakBrightnessOverride();
+        d->m_maxAverageBrightnessOverride = d->m_handle->maxAverageBrightnessOverride();
+        d->m_minBrightnessOverride = d->m_handle->minBrightnessOverride();
+        const auto clientResources = d->resourceMap();
+        for (const auto &resource : clientResources) {
+            d->sendBrightnessOverrides(resource);
+            d->sendDone(resource);
+        }
+    }
+}
+
+void OutputDeviceV2Interface::updateSdrGamutWideness()
+{
+    if (d->m_sdrGamutWideness != d->m_handle->sdrGamutWideness()) {
+        d->m_sdrGamutWideness = d->m_handle->sdrGamutWideness();
+        const auto clientResources = d->resourceMap();
+        for (const auto &resource : clientResources) {
+            d->sendSdrGamutWideness(resource);
             d->sendDone(resource);
         }
     }

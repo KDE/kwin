@@ -718,6 +718,24 @@ void DrmPipeline::setSdrBrightness(double sdrBrightness)
     }
 }
 
+void DrmPipeline::setSdrGamutWideness(double sdrGamutWideness)
+{
+    if (m_pending.sdrGamutWideness != sdrGamutWideness) {
+        m_pending.sdrGamutWideness = sdrGamutWideness;
+        m_pending.colorDescription = createColorDescription();
+    }
+}
+
+void DrmPipeline::setBrightnessOverrides(std::optional<double> peakBrightnessOverride, std::optional<double> averageBrightnessOverride, std::optional<double> minBrightnessOverride)
+{
+    if (m_pending.peakBrightnessOverride != peakBrightnessOverride || m_pending.averageBrightnessOverride != averageBrightnessOverride || m_pending.minBrightnessOverride != minBrightnessOverride) {
+        m_pending.peakBrightnessOverride = peakBrightnessOverride;
+        m_pending.averageBrightnessOverride = averageBrightnessOverride;
+        m_pending.minBrightnessOverride = minBrightnessOverride;
+        m_pending.colorDescription = createColorDescription();
+    }
+}
+
 void DrmPipeline::setIccProfile(const std::shared_ptr<IccProfile> &profile)
 {
     if (m_pending.iccProfile != profile) {
@@ -731,12 +749,14 @@ ColorDescription DrmPipeline::createColorDescription() const
     if (m_pending.transferFunction == NamedTransferFunction::PerceptualQuantizer && m_connector->edid()) {
         const auto colorimetry = m_pending.BT2020 ? NamedColorimetry::BT2020 : NamedColorimetry::BT709;
         if (const auto hdr = m_connector->edid()->hdrMetadata(); hdr && hdr->hasValidBrightnessValues) {
-            return ColorDescription(colorimetry, m_pending.transferFunction, m_pending.sdrBrightness, hdr->desiredContentMinLuminance, hdr->desiredMaxFrameAverageLuminance, hdr->desiredContentMaxLuminance);
+            return ColorDescription(colorimetry, m_pending.transferFunction, m_pending.sdrBrightness, hdr->desiredContentMinLuminance, hdr->desiredMaxFrameAverageLuminance, hdr->desiredContentMaxLuminance, m_pending.sdrGamutWideness);
+        } else if (m_pending.peakBrightnessOverride && m_pending.averageBrightnessOverride) {
+            return ColorDescription(colorimetry, m_pending.transferFunction, m_pending.sdrBrightness, m_pending.minBrightnessOverride.value_or(0), *m_pending.averageBrightnessOverride, *m_pending.peakBrightnessOverride, m_pending.sdrGamutWideness);
         } else {
-            return ColorDescription(colorimetry, m_pending.transferFunction, m_pending.sdrBrightness, 0, m_pending.sdrBrightness, m_pending.sdrBrightness);
+            return ColorDescription(colorimetry, m_pending.transferFunction, m_pending.sdrBrightness, 0, m_pending.sdrBrightness, m_pending.sdrBrightness, m_pending.sdrGamutWideness);
         }
     } else if (m_pending.iccProfile) {
-        return ColorDescription(m_pending.iccProfile->colorimetry(), NamedTransferFunction::sRGB, 200, 0, 200, 200);
+        return ColorDescription(m_pending.iccProfile->colorimetry(), NamedTransferFunction::sRGB, 200, 0, 200, 200, 0);
     } else {
         return ColorDescription::sRGB;
     }

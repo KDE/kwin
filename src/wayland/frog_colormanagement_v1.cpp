@@ -148,7 +148,7 @@ void FrogColorManagementSurfaceV1::updateColorDescription()
     if (m_surface) {
         // TODO make brightness values optional in ColorDescription
         SurfaceInterfacePrivate *priv = SurfaceInterfacePrivate::get(m_surface);
-        priv->pending->colorDescription = ColorDescription(m_colorimetry, m_transferFunction, 0, 0, m_maxFrameAverageBrightness, m_maxPeakBrightness);
+        priv->pending->colorDescription = ColorDescription(m_colorimetry, m_transferFunction, 0, 0, m_maxFrameAverageBrightness, m_maxPeakBrightness, 0);
         priv->pending->colorDescriptionIsSet = true;
     }
 }

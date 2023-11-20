@@ -134,25 +134,29 @@ bool Colorimetry::operator==(const Colorimetry &other) const
                                 : (red == other.red && green == other.green && blue == other.blue && white == other.white);
 }
 
-constexpr Colorimetry Colorimetry::fromName(NamedColorimetry name)
+static const Colorimetry BT709 = Colorimetry{
+    .red = {0.64, 0.33},
+    .green = {0.30, 0.60},
+    .blue = {0.15, 0.06},
+    .white = {0.3127, 0.3290},
+    .name = NamedColorimetry::BT709,
+};
+
+static const Colorimetry BT2020 = Colorimetry{
+    .red = {0.708, 0.292},
+    .green = {0.170, 0.797},
+    .blue = {0.131, 0.046},
+    .white = {0.3127, 0.3290},
+    .name = NamedColorimetry::BT2020,
+};
+
+Colorimetry Colorimetry::fromName(NamedColorimetry name)
 {
     switch (name) {
     case NamedColorimetry::BT709:
-        return Colorimetry{
-            .red = {0.64, 0.33},
-            .green = {0.30, 0.60},
-            .blue = {0.15, 0.06},
-            .white = {0.3127, 0.3290},
-            .name = name,
-        };
+        return BT709;
     case NamedColorimetry::BT2020:
-        return Colorimetry{
-            .red = {0.708, 0.292},
-            .green = {0.170, 0.797},
-            .blue = {0.131, 0.046},
-            .white = {0.3127, 0.3290},
-            .name = name,
-        };
+        return BT2020;
     }
     Q_UNREACHABLE();
 }
@@ -168,11 +172,23 @@ Colorimetry Colorimetry::fromXYZ(QVector3D red, QVector3D green, QVector3D blue,
     };
 }
 
-const ColorDescription ColorDescription::sRGB = ColorDescription(NamedColorimetry::BT709, NamedTransferFunction::sRGB, 100, 0, 100, 100);
+const ColorDescription ColorDescription::sRGB = ColorDescription(NamedColorimetry::BT709, NamedTransferFunction::sRGB, 100, 0, 100, 100, 0);
 
-ColorDescription::ColorDescription(const Colorimetry &colorimety, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxFrameAverageBrightness, double maxHdrHighlightBrightness)
+static Colorimetry sRGBColorimetry(double factor)
+{
+    return Colorimetry{
+        .red = BT709.red * (1 - factor) + BT2020.red * factor,
+        .green = BT709.green * (1 - factor) + BT2020.green * factor,
+        .blue = BT709.blue * (1 - factor) + BT2020.blue * factor,
+        .white = BT709.white, // whitepoint is the same
+    };
+}
+
+ColorDescription::ColorDescription(const Colorimetry &colorimety, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxFrameAverageBrightness, double maxHdrHighlightBrightness, double sdrGamutWideness)
     : m_colorimetry(colorimety)
     , m_transferFunction(tf)
+    , m_sdrColorimetry(sRGBColorimetry(sdrGamutWideness))
+    , m_sdrGamutWideness(sdrGamutWideness)
     , m_sdrBrightness(sdrBrightness)
     , m_minHdrBrightness(minHdrBrightness)
     , m_maxFrameAverageBrightness(maxFrameAverageBrightness)
@@ -180,9 +196,11 @@ ColorDescription::ColorDescription(const Colorimetry &colorimety, NamedTransferF
 {
 }
 
-ColorDescription::ColorDescription(NamedColorimetry colorimetry, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxFrameAverageBrightness, double maxHdrHighlightBrightness)
+ColorDescription::ColorDescription(NamedColorimetry colorimetry, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxFrameAverageBrightness, double maxHdrHighlightBrightness, double sdrGamutWideness)
     : m_colorimetry(Colorimetry::fromName(colorimetry))
     , m_transferFunction(tf)
+    , m_sdrColorimetry(sRGBColorimetry(sdrGamutWideness))
+    , m_sdrGamutWideness(sdrGamutWideness)
     , m_sdrBrightness(sdrBrightness)
     , m_minHdrBrightness(minHdrBrightness)
     , m_maxFrameAverageBrightness(maxFrameAverageBrightness)
@@ -193,6 +211,11 @@ ColorDescription::ColorDescription(NamedColorimetry colorimetry, NamedTransferFu
 const Colorimetry &ColorDescription::colorimetry() const
 {
     return m_colorimetry;
+}
+
+const Colorimetry &ColorDescription::sdrColorimetry() const
+{
+    return m_sdrColorimetry;
 }
 
 NamedTransferFunction ColorDescription::transferFunction() const
@@ -220,14 +243,20 @@ double ColorDescription::maxHdrHighlightBrightness() const
     return m_maxHdrHighlightBrightness;
 }
 
+double ColorDescription::sdrGamutWideness() const
+{
+    return m_sdrGamutWideness;
+}
+
 bool ColorDescription::operator==(const ColorDescription &other) const
 {
-    return m_colorimetry == other.colorimetry()
-        && m_transferFunction == other.transferFunction()
-        && m_sdrBrightness == other.sdrBrightness()
-        && m_minHdrBrightness == other.minHdrBrightness()
-        && m_maxFrameAverageBrightness == other.maxFrameAverageBrightness()
-        && m_maxHdrHighlightBrightness == other.maxHdrHighlightBrightness();
+    return m_colorimetry == other.m_colorimetry
+        && m_transferFunction == other.m_transferFunction
+        && m_sdrGamutWideness == other.m_sdrGamutWideness
+        && m_sdrBrightness == other.m_sdrBrightness
+        && m_minHdrBrightness == other.m_minHdrBrightness
+        && m_maxFrameAverageBrightness == other.m_maxFrameAverageBrightness
+        && m_maxHdrHighlightBrightness == other.m_maxHdrHighlightBrightness;
 }
 
 static float srgbToLinear(float sRGB)

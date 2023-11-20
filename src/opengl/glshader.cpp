@@ -441,7 +441,8 @@ QMatrix4x4 GLShader::getUniformMatrix4x4(const char *name)
 
 bool GLShader::setColorspaceUniforms(const ColorDescription &src, const ColorDescription &dst)
 {
-    return setUniform(GLShader::MatrixUniform::ColorimetryTransformation, src.colorimetry().toOther(dst.colorimetry()))
+    const auto &srcColorimetry = src.colorimetry().name == NamedColorimetry::BT709 ? dst.sdrColorimetry() : src.colorimetry();
+    return setUniform(GLShader::MatrixUniform::ColorimetryTransformation, srcColorimetry.toOther(dst.colorimetry()))
         && setUniform(GLShader::IntUniform::SourceNamedTransferFunction, int(src.transferFunction()))
         && setUniform(GLShader::IntUniform::DestinationNamedTransferFunction, int(dst.transferFunction()))
         && setUniform(FloatUniform::SdrBrightness, dst.sdrBrightness())
@@ -455,7 +456,7 @@ bool GLShader::setColorspaceUniformsFromSRGB(const ColorDescription &dst)
 
 bool GLShader::setColorspaceUniformsToSRGB(const ColorDescription &src)
 {
-    return setUniform(GLShader::MatrixUniform::ColorimetryTransformation, src.colorimetry().toOther(ColorDescription::sRGB.colorimetry()))
+    return setUniform(GLShader::MatrixUniform::ColorimetryTransformation, src.colorimetry().toOther(src.sdrColorimetry()))
         && setUniform(GLShader::IntUniform::SourceNamedTransferFunction, int(src.transferFunction()))
         && setUniform(GLShader::IntUniform::DestinationNamedTransferFunction, int(NamedTransferFunction::sRGB))
         && setUniform(FloatUniform::SdrBrightness, src.sdrBrightness())

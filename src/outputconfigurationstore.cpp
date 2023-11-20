@@ -209,6 +209,10 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .wideColorGamut = changeSet->wideColorGamut.value_or(output->wideColorGamut()),
                 .autoRotation = changeSet->autoRotationPolicy.value_or(output->autoRotationPolicy()),
                 .iccProfilePath = changeSet->iccProfilePath.value_or(output->iccProfilePath()),
+                .maxPeakBrightnessOverride = changeSet->maxPeakBrightnessOverride.value_or(output->maxPeakBrightnessOverride()),
+                .maxAverageBrightnessOverride = changeSet->maxAverageBrightnessOverride.value_or(output->maxAverageBrightnessOverride()),
+                .minBrightnessOverride = changeSet->minBrightnessOverride.value_or(output->minBrightnessOverride()),
+                .sdrGamutWideness = changeSet->sdrGamutWideness.value_or(output->sdrGamutWideness()),
             };
             *outputIt = SetupState{
                 .outputIndex = *outputIndex,
@@ -237,6 +241,10 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .wideColorGamut = output->wideColorGamut(),
                 .autoRotation = output->autoRotationPolicy(),
                 .iccProfilePath = output->iccProfilePath(),
+                .maxPeakBrightnessOverride = output->maxPeakBrightnessOverride(),
+                .maxAverageBrightnessOverride = output->maxAverageBrightnessOverride(),
+                .minBrightnessOverride = output->minBrightnessOverride(),
+                .sdrGamutWideness = output->sdrGamutWideness(),
             };
             *outputIt = SetupState{
                 .outputIndex = *outputIndex,
@@ -279,6 +287,10 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::setupT
             .wideColorGamut = state.wideColorGamut,
             .autoRotationPolicy = state.autoRotation,
             .iccProfilePath = state.iccProfilePath,
+            .maxPeakBrightnessOverride = state.maxPeakBrightnessOverride,
+            .maxAverageBrightnessOverride = state.maxAverageBrightnessOverride,
+            .minBrightnessOverride = state.minBrightnessOverride,
+            .sdrGamutWideness = state.sdrGamutWideness,
         };
         if (setupState.enabled) {
             priorities.push_back(std::make_pair(output, setupState.priority));
@@ -652,6 +664,18 @@ void OutputConfigurationStore::load()
         if (const auto it = data.find("iccProfilePath"); it != data.end()) {
             state.iccProfilePath = it->toString();
         }
+        if (const auto it = data.find("maxPeakBrightnessOverride"); it != data.end() && it->isDouble()) {
+            state.maxPeakBrightnessOverride = it->toDouble();
+        }
+        if (const auto it = data.find("maxAverageBrightnessOverride"); it != data.end() && it->isDouble()) {
+            state.maxAverageBrightnessOverride = it->toDouble();
+        }
+        if (const auto it = data.find("minBrightnessOverride"); it != data.end() && it->isDouble()) {
+            state.minBrightnessOverride = it->toDouble();
+        }
+        if (const auto it = data.find("sdrGamutWideness"); it != data.end() && it->isDouble()) {
+            state.sdrGamutWideness = it->toDouble();
+        }
         outputDatas.push_back(state);
     }
 
@@ -845,6 +869,18 @@ void OutputConfigurationStore::save()
         }
         if (output.iccProfilePath) {
             o["iccProfilePath"] = *output.iccProfilePath;
+        }
+        if (output.maxPeakBrightnessOverride) {
+            o["maxPeakBrightnessOverride"] = *output.maxPeakBrightnessOverride;
+        }
+        if (output.maxAverageBrightnessOverride) {
+            o["maxAverageBrightnessOverride"] = *output.maxAverageBrightnessOverride;
+        }
+        if (output.minBrightnessOverride) {
+            o["minBrightnessOverride"] = *output.minBrightnessOverride;
+        }
+        if (output.sdrGamutWideness) {
+            o["sdrGamutWideness"] = *output.sdrGamutWideness;
         }
         outputsData.append(o);
     }

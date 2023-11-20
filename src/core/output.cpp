@@ -431,6 +431,14 @@ void Output::setState(const State &state)
     if (oldState.iccProfilePath != state.iccProfilePath) {
         Q_EMIT iccProfilePathChanged();
     }
+    if (oldState.maxPeakBrightnessOverride != state.maxPeakBrightnessOverride
+        || oldState.maxAverageBrightnessOverride != state.maxAverageBrightnessOverride
+        || oldState.minBrightnessOverride != state.minBrightnessOverride) {
+        Q_EMIT brightnessMetadataChanged();
+    }
+    if (oldState.sdrGamutWideness != state.sdrGamutWideness) {
+        Q_EMIT sdrGamutWidenessChanged();
+    }
     if (oldState.enabled != state.enabled) {
         Q_EMIT enabledChanged();
     }
@@ -604,6 +612,40 @@ const ColorDescription &Output::colorDescription() const
     return m_state.colorDescription;
 }
 
+double Output::maxPeakBrightness() const
+{
+    return m_state.maxPeakBrightnessOverride.value_or(m_information.maxPeakBrightness);
+}
+
+double Output::maxAverageBrightness() const
+{
+    return m_state.maxAverageBrightnessOverride.value_or(m_information.maxAverageBrightness);
+}
+
+double Output::minBrightness() const
+{
+    return m_state.minBrightnessOverride.value_or(m_information.minBrightness);
+}
+
+std::optional<double> Output::maxPeakBrightnessOverride() const
+{
+    return m_state.maxPeakBrightnessOverride;
+}
+
+std::optional<double> Output::maxAverageBrightnessOverride() const
+{
+    return m_state.maxAverageBrightnessOverride;
+}
+
+std::optional<double> Output::minBrightnessOverride() const
+{
+    return m_state.minBrightnessOverride;
+}
+
+double Output::sdrGamutWideness() const
+{
+    return m_state.sdrGamutWideness;
+}
 } // namespace KWin
 
 #include "moc_output.cpp"

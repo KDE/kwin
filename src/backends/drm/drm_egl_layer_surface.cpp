@@ -111,7 +111,8 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
         if (enableColormanagement) {
             m_surface->intermediaryColorDescription = ColorDescription(colorDescription.colorimetry(), NamedTransferFunction::linear,
                                                                        colorDescription.sdrBrightness(), colorDescription.minHdrBrightness(),
-                                                                       colorDescription.maxFrameAverageBrightness(), colorDescription.maxHdrHighlightBrightness());
+                                                                       colorDescription.maxFrameAverageBrightness(), colorDescription.maxHdrHighlightBrightness(),
+                                                                       colorDescription.sdrGamutWideness());
         } else {
             m_surface->intermediaryColorDescription = colorDescription;
         }

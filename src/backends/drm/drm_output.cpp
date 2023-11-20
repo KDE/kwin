@@ -73,6 +73,7 @@ DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn)
 
     const Edid *edid = conn->edid();
 
+    const auto hdrData = edid->hdrMetadata();
     setInformation(Information{
         .name = conn->connectorName(),
         .manufacturer = edid->manufacturerString(),
@@ -87,6 +88,9 @@ DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn)
         .internal = conn->isInternal(),
         .nonDesktop = conn->isNonDesktop(),
         .mstPath = conn->mstPath(),
+        .maxPeakBrightness = hdrData && hdrData->hasValidBrightnessValues ? hdrData->desiredContentMaxLuminance : 0,
+        .maxAverageBrightness = hdrData && hdrData->hasValidBrightnessValues ? hdrData->desiredMaxFrameAverageLuminance : 0,
+        .minBrightness = hdrData && hdrData->hasValidBrightnessValues ? hdrData->desiredContentMinLuminance : 0,
     });
 
     initialState.modes = getModes();
@@ -324,6 +328,10 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
     m_pipeline->setBT2020(props->wideColorGamut.value_or(m_state.wideColorGamut));
     m_pipeline->setNamedTransferFunction(props->highDynamicRange.value_or(m_state.highDynamicRange) ? NamedTransferFunction::PerceptualQuantizer : NamedTransferFunction::sRGB);
     m_pipeline->setSdrBrightness(props->sdrBrightness.value_or(m_state.sdrBrightness));
+    m_pipeline->setSdrGamutWideness(props->sdrGamutWideness.value_or(m_state.sdrGamutWideness));
+    m_pipeline->setBrightnessOverrides(props->maxPeakBrightnessOverride.value_or(m_state.maxPeakBrightnessOverride),
+                                       props->maxAverageBrightnessOverride.value_or(m_state.maxAverageBrightnessOverride),
+                                       props->minBrightnessOverride.value_or(m_state.minBrightnessOverride));
     return true;
 }
 
@@ -348,6 +356,10 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.sdrBrightness = props->sdrBrightness.value_or(m_state.sdrBrightness);
     next.wideColorGamut = props->wideColorGamut.value_or(m_state.wideColorGamut);
     next.autoRotatePolicy = props->autoRotationPolicy.value_or(m_state.autoRotatePolicy);
+    next.maxPeakBrightnessOverride = props->maxPeakBrightnessOverride.value_or(m_state.maxPeakBrightnessOverride);
+    next.maxAverageBrightnessOverride = props->maxAverageBrightnessOverride.value_or(m_state.maxAverageBrightnessOverride);
+    next.minBrightnessOverride = props->minBrightnessOverride.value_or(m_state.minBrightnessOverride);
+    next.sdrGamutWideness = props->sdrGamutWideness.value_or(m_state.sdrGamutWideness);
     if (props->iccProfilePath) {
         next.iccProfilePath = *props->iccProfilePath;
         next.iccProfile = IccProfile::load(*props->iccProfilePath);
@@ -357,9 +369,6 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     } else {
         // ICC profiles don't support HDR (yet)
         m_pipeline->setIccProfile(nullptr);
-    }
-    if (m_state.highDynamicRange != next.highDynamicRange || m_state.sdrBrightness != next.sdrBrightness || m_state.wideColorGamut != next.wideColorGamut || m_state.iccProfile != next.iccProfile) {
-        m_renderLoop->scheduleRepaint();
     }
     next.colorDescription = m_pipeline->colorDescription();
 
