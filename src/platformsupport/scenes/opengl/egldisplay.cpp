@@ -234,9 +234,7 @@ EGLImageKHR EglDisplay::importDmaBufAsImage(const DmaBufAttributes &dmabuf, int 
     }
     attribs << EGL_NONE;
 
-    auto img = eglCreateImageKHR(m_handle, EGL_NO_CONTEXT, EGL_LINUX_DMA_BUF_EXT, nullptr, attribs.data());
-    qDebug() << "retrieving plane" << plane << img;
-    return img;
+    return eglCreateImageKHR(m_handle, EGL_NO_CONTEXT, EGL_LINUX_DMA_BUF_EXT, nullptr, attribs.data());
 }
 
 QHash<uint32_t, EglDisplay::DrmFormatInfo> EglDisplay::allSupportedDrmFormats() const
