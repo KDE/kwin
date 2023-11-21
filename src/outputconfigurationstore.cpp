@@ -735,6 +735,13 @@ void OutputConfigurationStore::load()
         if (fail || setup.outputs.empty()) {
             continue;
         }
+        // one of the outputs must be enabled
+        const bool noneEnabled = std::none_of(setup.outputs.begin(), setup.outputs.end(), [](const auto &output) {
+            return output.enabled;
+        });
+        if (noneEnabled) {
+            continue;
+        }
         setup.lidClosed = data["lidClosed"].toBool(false);
         // there must be only one setup that refers to a given set of outputs
         const bool alreadyExists = std::any_of(m_setups.begin(), m_setups.end(), [&setup](const auto &other) {
