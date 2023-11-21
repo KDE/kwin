@@ -1299,7 +1299,7 @@ void Workspace::updateOutputs(const QList<Output *> &outputOrder)
     // The workspace requires at least one output connected.
     if (m_outputs.isEmpty()) {
         if (!m_placeholderOutput) {
-            m_placeholderOutput = new PlaceholderOutput(QSize(8192, 8192), 1);
+            m_placeholderOutput = new PlaceholderOutput(QSize(1920, 1080), 1);
             m_placeholderFilter = std::make_unique<PlaceholderInputEventFilter>();
             input()->prependInputEventFilter(m_placeholderFilter.get());
         }
