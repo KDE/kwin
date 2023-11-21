@@ -89,6 +89,12 @@ void ScreenTransformEffect::addScreen(Output *screen)
         SceneDelegate delegate(scene, screen);
         delegate.setLayer(&layer);
 
+        // Avoid including this effect while capturing previous screen state.
+        m_capturing = true;
+        auto resetCapturing = qScopeGuard([this]() {
+            m_capturing = false;
+        });
+
         scene->prePaint(&delegate);
 
         effects->makeOpenGLContextCurrent();
@@ -264,7 +270,7 @@ void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const 
 
 bool ScreenTransformEffect::isActive() const
 {
-    return !m_states.isEmpty();
+    return !m_states.isEmpty() && !m_capturing;
 }
 
 } // namespace KWin

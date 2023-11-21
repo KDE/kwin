@@ -64,6 +64,7 @@ private:
     int m_currentTextureLocation = -1;
     int m_modelViewProjectioMatrixLocation = -1;
     int m_blendFactorLocation = -1;
+    bool m_capturing = false;
 };
 
 } // namespace KWin
