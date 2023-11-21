@@ -379,7 +379,7 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::genera
     QPoint pos(0, 0);
     for (const auto output : outputs) {
         const auto outputIndex = findOutput(output, outputs);
-        const bool enable = !isLidClosed || !output->isInternal();
+        const bool enable = !isLidClosed || !output->isInternal() || outputs.size() == 1;
         const OutputState existingData = outputIndex ? m_outputs[*outputIndex] : OutputState{};
 
         const auto modes = output->modes();
