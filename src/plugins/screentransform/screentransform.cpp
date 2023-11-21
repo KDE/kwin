@@ -8,10 +8,12 @@
 */
 // own
 #include "screentransform.h"
+#include "core/renderlayer.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
 #include "opengl/glutils.h"
+#include "scene/workspacescene.h"
 
 #include <QDebug>
 
@@ -81,24 +83,32 @@ void ScreenTransformEffect::addScreen(Output *screen)
         effects->addRepaintFull();
     });
     connect(screen, &Output::aboutToChange, this, [this, screen] {
+        Scene *scene = effects->scene();
+
+        RenderLayer layer(screen->renderLoop());
+        SceneDelegate delegate(scene, screen);
+        delegate.setLayer(&layer);
+
+        scene->prePaint(&delegate);
+
         effects->makeOpenGLContextCurrent();
-        auto &state = m_states[screen];
-        state.m_oldTransform = screen->transform();
-        state.m_oldGeometry = screen->geometry();
-        state.m_prev.texture = GLTexture::allocate(GL_RGBA8, screen->geometry().size() * screen->scale());
-        if (!state.m_prev.texture) {
+        if (auto texture = GLTexture::allocate(GL_RGBA8, screen->geometry().size() * screen->scale())) {
+            auto &state = m_states[screen];
+            state.m_oldTransform = screen->transform();
+            state.m_oldGeometry = screen->geometry();
+            state.m_prev.texture = std::move(texture);
+            state.m_prev.framebuffer = std::make_unique<GLFramebuffer>(state.m_prev.texture.get());
+
+            RenderTarget renderTarget(state.m_prev.framebuffer.get());
+            scene->paint(renderTarget, screen->geometry());
+
+            // Now, the effect can cross-fade between current and previous state.
+            state.m_captured = true;
+        } else {
             m_states.remove(screen);
-            return;
         }
-        state.m_prev.framebuffer = std::make_unique<GLFramebuffer>(state.m_prev.texture.get());
 
-        // Rendering the current scene into a texture
-        GLFramebuffer::pushFramebuffer(state.m_prev.framebuffer.get());
-        effects->renderScreen(screen);
-        GLFramebuffer::popFramebuffer();
-
-        // Now, the effect can cross-fade between current and previous state.
-        state.m_captured = true;
+        scene->postPaint();
     });
 }
 

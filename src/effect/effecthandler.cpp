@@ -1569,23 +1569,6 @@ Output *EffectsHandler::findScreen(int screenId) const
     return Workspace::self()->outputs().value(screenId);
 }
 
-void EffectsHandler::renderScreen(Output *output)
-{
-    Q_ASSERT(effects->isOpenGLCompositing());
-
-    RenderLayer layer(output->renderLoop());
-    SceneDelegate delegate(m_scene, output);
-    delegate.setLayer(&layer);
-
-    m_scene->prePaint(&delegate);
-
-    effects->makeOpenGLContextCurrent(); // TODO: doesn't belong here, but there's no better place atm either
-    RenderTarget renderTarget(GLFramebuffer::currentFramebuffer());
-    m_scene->paint(renderTarget, output->geometry());
-
-    m_scene->postPaint();
-}
-
 bool EffectsHandler::isCursorHidden() const
 {
     return Cursors::self()->isCursorHidden();

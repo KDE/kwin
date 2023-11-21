@@ -718,11 +718,6 @@ public:
     Output *findScreen(const QString &name) const;
     Output *findScreen(int screenId) const;
 
-    /**
-     * Renders @p screen in the current render target
-     */
-    void renderScreen(Output *screen);
-
     KWin::EffectWindow *inputPanel() const;
     bool isInputPanelOverlay() const;
 
