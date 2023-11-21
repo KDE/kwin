@@ -92,8 +92,11 @@ Options::Options(QObject *parent)
     , borderless_maximized_windows(false)
     , condensed_title(false)
 {
+    qDebug() << "options";
     m_settings->setDefaults();
+    qDebug() << "aaa";
     syncFromKcfgc();
+    qDebug() << "bbb";
 
     m_configWatcher = KConfigWatcher::create(m_settings->sharedConfig());
     connect(m_configWatcher.data(), &KConfigWatcher::configChanged, this, [this](const KConfigGroup &group, const QByteArrayList &names) {
@@ -103,6 +106,7 @@ Options::Options(QObject *parent)
             workspace()->reconfigure();
         }
     });
+    qDebug() << "ccc";
 }
 
 Options::~Options()
