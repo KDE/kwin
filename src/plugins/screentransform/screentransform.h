@@ -52,7 +52,6 @@ private:
         QRect m_oldGeometry;
         OutputTransform m_oldTransform;
         qreal m_angle = 0;
-        bool m_captured = false;
     };
 
     void addScreen(Output *screen);

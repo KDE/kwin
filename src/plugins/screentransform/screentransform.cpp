@@ -101,9 +101,6 @@ void ScreenTransformEffect::addScreen(Output *screen)
 
             RenderTarget renderTarget(state.m_prev.framebuffer.get());
             scene->paint(renderTarget, screen->geometry());
-
-            // Now, the effect can cross-fade between current and previous state.
-            state.m_captured = true;
         } else {
             m_states.remove(screen);
         }
@@ -122,7 +119,7 @@ void ScreenTransformEffect::removeScreen(Output *screen)
 void ScreenTransformEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     auto it = m_states.find(data.screen);
-    if (it != m_states.end() && it->m_captured) {
+    if (it != m_states.end()) {
         it->m_timeLine.advance(presentTime);
         if (it->m_timeLine.done()) {
             m_states.remove(data.screen);
@@ -195,7 +192,7 @@ static QRectF lerp(const QRectF &a, const QRectF &b, qreal t)
 void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, KWin::Output *screen)
 {
     auto it = m_states.find(screen);
-    if (it == m_states.end() || !it->m_captured) {
+    if (it == m_states.end()) {
         effects->paintScreen(renderTarget, viewport, mask, region, screen);
         return;
     }
