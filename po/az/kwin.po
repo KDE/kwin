@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-17 01:38+0000\n"
+"POT-Creation-Date: 2023-11-21 01:35+0000\n"
 "PO-Revision-Date: 2022-10-17 23:50+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -69,17 +69,17 @@ msgstr ""
 msgid "KDE Wayland Compositor"
 msgstr ""
 
-#: compositor.cpp:143
+#: compositor.cpp:144
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "İş masası effektləri qrafik sıfırlanması səbəbindən yenidən başladıldı"
 
-#: compositor_x11.cpp:97
+#: compositor_x11.cpp:98
 #, kde-format
 msgid "Suspend Compositing"
 msgstr "Kompozit Effektləri Dayandırmaq"
 
-#: compositor_x11.cpp:512
+#: compositor_x11.cpp:513
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -88,824 +88,824 @@ msgid ""
 "<b>be aware that this might result in an immediate crash!</b></p>"
 msgstr ""
 
-#: compositor_x11.cpp:519
+#: compositor_x11.cpp:520
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr ""
 
-#: compositor_x11.cpp:522
+#: compositor_x11.cpp:523
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr ""
 
-#: debug_console.cpp:78
+#: debug_console.cpp:79
 #, kde-format
 msgid "Timestamp"
 msgstr "Vaxt Möhürü"
 
-#: debug_console.cpp:83
+#: debug_console.cpp:84
 #, kde-format
 msgid "Timestamp (µsec)"
 msgstr "Vaxt Möhürü (µsan)"
 
-#: debug_console.cpp:90
+#: debug_console.cpp:91
 #, kde-format
 msgctxt "A mouse button"
 msgid "Left"
 msgstr "Sol"
 
-#: debug_console.cpp:92
+#: debug_console.cpp:93
 #, kde-format
 msgctxt "A mouse button"
 msgid "Right"
 msgstr "Sağ"
 
-#: debug_console.cpp:94
+#: debug_console.cpp:95
 #, kde-format
 msgctxt "A mouse button"
 msgid "Middle"
 msgstr "Orta"
 
-#: debug_console.cpp:96
+#: debug_console.cpp:97
 #, kde-format
 msgctxt "A mouse button"
 msgid "Back"
 msgstr "Geriyə"
 
-#: debug_console.cpp:98
+#: debug_console.cpp:99
 #, kde-format
 msgctxt "A mouse button"
 msgid "Forward"
 msgstr "İrəli"
 
-#: debug_console.cpp:100
+#: debug_console.cpp:101
 #, kde-format
 msgctxt "A mouse button"
 msgid "Task"
 msgstr "Tapşırıq"
 
-#: debug_console.cpp:102
+#: debug_console.cpp:103
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 4"
 msgstr "Əlavə düymə 4"
 
-#: debug_console.cpp:104
+#: debug_console.cpp:105
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 5"
 msgstr "Əlavə düymə 5"
 
-#: debug_console.cpp:106
+#: debug_console.cpp:107
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 6"
 msgstr "Əlavə düymə 6"
 
-#: debug_console.cpp:108
+#: debug_console.cpp:109
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 7"
 msgstr "Əlavə düymə 7"
 
-#: debug_console.cpp:110
+#: debug_console.cpp:111
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 8"
 msgstr "Əlavə düymə 8"
 
-#: debug_console.cpp:112
+#: debug_console.cpp:113
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 9"
 msgstr "Əlavə düymə 9"
 
-#: debug_console.cpp:114
+#: debug_console.cpp:115
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 10"
 msgstr "Əlavə düymə 10"
 
-#: debug_console.cpp:116
+#: debug_console.cpp:117
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 11"
 msgstr "Əlavə düymə 11"
 
-#: debug_console.cpp:118
+#: debug_console.cpp:119
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 12"
 msgstr "Əlavə düymə 12"
 
-#: debug_console.cpp:120
+#: debug_console.cpp:121
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 13"
 msgstr "Əlavə düymə 13"
 
-#: debug_console.cpp:122
+#: debug_console.cpp:123
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 14"
 msgstr "Əlavə düymə 14"
 
-#: debug_console.cpp:124
+#: debug_console.cpp:125
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 15"
 msgstr "Əlavə düymə 15"
 
-#: debug_console.cpp:126
+#: debug_console.cpp:127
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 16"
 msgstr "Əlavə düymə 16"
 
-#: debug_console.cpp:128
+#: debug_console.cpp:129
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 17"
 msgstr "Əlavə düymə 17"
 
-#: debug_console.cpp:130
+#: debug_console.cpp:131
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 18"
 msgstr "Əlavə düymə 18"
 
-#: debug_console.cpp:132
+#: debug_console.cpp:133
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 19"
 msgstr "Əlavə düymə 19"
 
-#: debug_console.cpp:134
+#: debug_console.cpp:135
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 20"
 msgstr "Əlavə düymə 20"
 
-#: debug_console.cpp:136
+#: debug_console.cpp:137
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 21"
 msgstr "Əlavə düymə 1"
 
-#: debug_console.cpp:138
+#: debug_console.cpp:139
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 22"
 msgstr "Əlavə düymə 22"
 
-#: debug_console.cpp:140
+#: debug_console.cpp:141
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 23"
 msgstr "Əlavə düymə 23"
 
-#: debug_console.cpp:142
+#: debug_console.cpp:143
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 24"
 msgstr "Əlavə düymə 24"
 
-#: debug_console.cpp:151 debug_console.cpp:153
+#: debug_console.cpp:152 debug_console.cpp:154
 #, kde-format
 msgid "Input Device"
 msgstr "Daxiletmə cihazı"
 
-#: debug_console.cpp:151
+#: debug_console.cpp:152
 #, kde-format
 msgctxt "The input device of the event is not known"
 msgid "Unknown"
 msgstr "Naməlum"
 
-#: debug_console.cpp:188
+#: debug_console.cpp:189
 #, kde-format
 msgctxt "A mouse pointer motion event"
 msgid "Pointer Motion"
 msgstr "Göstəricinin hərəkəti"
 
-#: debug_console.cpp:193
+#: debug_console.cpp:194
 #, kde-format
 msgctxt "The relative mouse movement"
 msgid "Delta"
 msgstr "Fərq"
 
-#: debug_console.cpp:197
+#: debug_console.cpp:198
 #, kde-format
 msgctxt "The relative mouse movement"
 msgid "Delta (not accelerated)"
 msgstr "Fərq (sürətləndirilməmiş)"
 
-#: debug_console.cpp:200
+#: debug_console.cpp:201
 #, kde-format
 msgctxt "The global mouse pointer position"
 msgid "Global Position"
 msgstr "Qlobal Mövqe"
 
-#: debug_console.cpp:204
+#: debug_console.cpp:205
 #, kde-format
 msgctxt "A mouse pointer button press event"
 msgid "Pointer Button Press"
 msgstr "Siçanın düyməsinin basılması"
 
-#: debug_console.cpp:207 debug_console.cpp:215
+#: debug_console.cpp:208 debug_console.cpp:216
 #, kde-format
 msgctxt "A button in a mouse press/release event"
 msgid "Button"
 msgstr "Düymə"
 
 # Bu kod libinput_event_pointer_get_button() библиотеки libinput. --aspotashev funksiyalarından gələn kodlardır
-#: debug_console.cpp:208 debug_console.cpp:216
+#: debug_console.cpp:209 debug_console.cpp:217
 #, kde-format
 msgctxt "A button in a mouse press/release event"
 msgid "Native Button code"
 msgstr "Doğma Düymə Kodu"
 
-#: debug_console.cpp:209 debug_console.cpp:217
+#: debug_console.cpp:210 debug_console.cpp:218
 #, kde-format
 msgctxt "All currently pressed buttons in a mouse press/release event"
 msgid "Pressed Buttons"
 msgstr "Basılan düymələr"
 
-#: debug_console.cpp:212
+#: debug_console.cpp:213
 #, kde-format
 msgctxt "A mouse pointer button release event"
 msgid "Pointer Button Release"
 msgstr "Siçanın Düyməsinin Buraxılması"
 
-#: debug_console.cpp:232
+#: debug_console.cpp:233
 #, kde-format
 msgctxt "A mouse pointer axis (wheel) event"
 msgid "Pointer Axis"
 msgstr "Siçanın Diyircəyinin Hərəkəti"
 
-#: debug_console.cpp:236
+#: debug_console.cpp:237
 #, kde-format
 msgctxt "The orientation of a pointer axis event"
 msgid "Orientation"
 msgstr "İstiqamət"
 
-#: debug_console.cpp:237
+#: debug_console.cpp:238
 #, kde-format
 msgctxt "An orientation of a pointer axis event"
 msgid "Horizontal"
 msgstr "Üfüqi"
 
-#: debug_console.cpp:238
+#: debug_console.cpp:239
 #, kde-format
 msgctxt "An orientation of a pointer axis event"
 msgid "Vertical"
 msgstr "Şaquli"
 
-#: debug_console.cpp:239
+#: debug_console.cpp:240
 #, kde-format
 msgctxt "The angle delta of a pointer axis event"
 msgid "Delta"
 msgstr "Dönmə bucağı"
 
-#: debug_console.cpp:254
+#: debug_console.cpp:255
 #, kde-format
 msgctxt "A key press event"
 msgid "Key Press"
 msgstr "Düyməni Basılması"
 
-#: debug_console.cpp:257
+#: debug_console.cpp:258
 #, kde-format
 msgctxt "A key release event"
 msgid "Key Release"
 msgstr "Düymənin Buraxılması"
 
-#: debug_console.cpp:266
+#: debug_console.cpp:267
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Shift"
 msgstr "Shift"
 
-#: debug_console.cpp:270
+#: debug_console.cpp:271
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Control"
 msgstr "Nəzarət"
 
-#: debug_console.cpp:274
+#: debug_console.cpp:275
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Alt"
 msgstr "Alt"
 
-#: debug_console.cpp:278
+#: debug_console.cpp:279
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Meta"
 msgstr "Meta"
 
-#: debug_console.cpp:282
+#: debug_console.cpp:283
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Keypad"
 msgstr "Əlavə Klaviatura"
 
-#: debug_console.cpp:286
+#: debug_console.cpp:287
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Group-switch"
 msgstr "Qrup Dəyişdirici"
 
-#: debug_console.cpp:292
+#: debug_console.cpp:293
 #, kde-format
 msgctxt "Whether the event is an automatic key repeat"
 msgid "Repeat"
 msgstr "Təkrar"
 
-#: debug_console.cpp:296
+#: debug_console.cpp:297
 #, kde-format
 msgctxt "The code as read from the input device"
 msgid "Scan code"
 msgstr "Skan-kod"
 
-#: debug_console.cpp:297
+#: debug_console.cpp:298
 #, kde-format
 msgctxt "Key according to Qt"
 msgid "Qt::Key code"
 msgstr "Qt::Düymə kodu"
 
-#: debug_console.cpp:299
+#: debug_console.cpp:300
 #, kde-format
 msgctxt "The translated code to an Xkb symbol"
 msgid "Xkb symbol"
 msgstr "Xkb simvol"
 
-#: debug_console.cpp:300
+#: debug_console.cpp:301
 #, kde-format
 msgctxt "The translated code interpreted as text"
 msgid "Utf8"
 msgstr "Utf8"
 
-#: debug_console.cpp:301
+#: debug_console.cpp:302
 #, kde-format
 msgctxt "The currently active modifiers"
 msgid "Modifiers"
 msgstr "Dəyişdiricilər"
 
-#: debug_console.cpp:313
+#: debug_console.cpp:314
 #, kde-format
 msgctxt "A touch down event"
 msgid "Touch down"
 msgstr "Aşağı toxunma"
 
-#: debug_console.cpp:315 debug_console.cpp:330 debug_console.cpp:345
+#: debug_console.cpp:316 debug_console.cpp:331 debug_console.cpp:346
 #, kde-format
 msgctxt "The id of the touch point in the touch event"
 msgid "Point identifier"
 msgstr "Nöqtə tanıma"
 
-#: debug_console.cpp:316 debug_console.cpp:331
+#: debug_console.cpp:317 debug_console.cpp:332
 #, kde-format
 msgctxt "The global position of the touch point"
 msgid "Global position"
 msgstr "Qlobal Mövqe"
 
-#: debug_console.cpp:328
+#: debug_console.cpp:329
 #, kde-format
 msgctxt "A touch motion event"
 msgid "Touch Motion"
 msgstr "Toxynma Nöqtəsinin Hərəkəti"
 
-#: debug_console.cpp:343
+#: debug_console.cpp:344
 #, kde-format
 msgctxt "A touch up event"
 msgid "Touch Up"
 msgstr "Yuxarı toxunmaq"
 
-#: debug_console.cpp:356
+#: debug_console.cpp:357
 #, kde-format
 msgctxt "A pinch gesture is started"
 msgid "Pinch start"
 msgstr "Sıxılma başlanğıcı"
 
-#: debug_console.cpp:358
+#: debug_console.cpp:359
 #, kde-format
 msgctxt "Number of fingers in this pinch gesture"
 msgid "Finger count"
 msgstr "Barmaq sayı"
 
-#: debug_console.cpp:369
+#: debug_console.cpp:370
 #, kde-format
 msgctxt "A pinch gesture is updated"
 msgid "Pinch update"
 msgstr "Sıxılma yenilənməsi"
 
-#: debug_console.cpp:371
+#: debug_console.cpp:372
 #, kde-format
 msgctxt "Current scale in pinch gesture"
 msgid "Scale"
 msgstr "Miqyas"
 
-#: debug_console.cpp:372
+#: debug_console.cpp:373
 #, kde-format
 msgctxt "Current angle in pinch gesture"
 msgid "Angle delta"
 msgstr "Hərləmə bucağı"
 
-#: debug_console.cpp:373
+#: debug_console.cpp:374
 #, kde-format
 msgctxt "Current delta in pinch gesture"
 msgid "Delta x"
 msgstr "x üzrə yerdəyişmə"
 
-#: debug_console.cpp:374
+#: debug_console.cpp:375
 #, kde-format
 msgctxt "Current delta in pinch gesture"
 msgid "Delta y"
 msgstr "y üzrə yerdəyişmə"
 
-#: debug_console.cpp:385
+#: debug_console.cpp:386
 #, kde-format
 msgctxt "A pinch gesture ended"
 msgid "Pinch end"
 msgstr "Sıxılmanın sonu"
 
-#: debug_console.cpp:397
+#: debug_console.cpp:398
 #, kde-format
 msgctxt "A pinch gesture got cancelled"
 msgid "Pinch cancelled"
 msgstr "Sıxılmadan imtina"
 
-#: debug_console.cpp:409
+#: debug_console.cpp:410
 #, kde-format
 msgctxt "A swipe gesture is started"
 msgid "Swipe start"
 msgstr "Sürüşdürmə başlanğıcı"
 
-#: debug_console.cpp:411
+#: debug_console.cpp:412
 #, kde-format
 msgctxt "Number of fingers in this swipe gesture"
 msgid "Finger count"
 msgstr "Barmaq sayı"
 
-#: debug_console.cpp:422
+#: debug_console.cpp:423
 #, kde-format
 msgctxt "A swipe gesture is updated"
 msgid "Swipe update"
 msgstr "Sürüşdürmə yenilənməsi"
 
-#: debug_console.cpp:424
+#: debug_console.cpp:425
 #, kde-format
 msgctxt "Current delta in swipe gesture"
 msgid "Delta x"
 msgstr "x üzrə yerdəyişmə"
 
-#: debug_console.cpp:425
+#: debug_console.cpp:426
 #, kde-format
 msgctxt "Current delta in swipe gesture"
 msgid "Delta y"
 msgstr "y üzrə yerdəyişmə"
 
-#: debug_console.cpp:436
+#: debug_console.cpp:437
 #, kde-format
 msgctxt "A swipe gesture ended"
 msgid "Swipe end"
 msgstr "Sürüşdürmənin sonu"
 
-#: debug_console.cpp:448
+#: debug_console.cpp:449
 #, kde-format
 msgctxt "A swipe gesture got cancelled"
 msgid "Swipe cancelled"
 msgstr "Sürüşdürmədəm imtina"
 
-#: debug_console.cpp:460
+#: debug_console.cpp:461
 #, kde-format
 msgctxt "A hardware switch (e.g. notebook lid) got toggled"
 msgid "Switch toggled"
 msgstr "Dəyişdirici açarın işə düşməsi"
 
-#: debug_console.cpp:466
+#: debug_console.cpp:467
 #, kde-format
 msgctxt "Name of a hardware switch"
 msgid "Notebook lid"
 msgstr "Noutbukun qapağı"
 
-#: debug_console.cpp:468
+#: debug_console.cpp:469
 #, kde-format
 msgctxt "Name of a hardware switch"
 msgid "Tablet mode"
 msgstr "Planşet rejimi"
 
-#: debug_console.cpp:470
+#: debug_console.cpp:471
 #, kde-format
 msgctxt "A hardware switch"
 msgid "Switch"
 msgstr "Dəyişdirmək"
 
-#: debug_console.cpp:474
+#: debug_console.cpp:475
 #, kde-format
 msgctxt "The hardware switch got turned off"
 msgid "Off"
 msgstr "Söndürülüb"
 
-#: debug_console.cpp:477
+#: debug_console.cpp:478
 #, kde-format
 msgctxt "The hardware switch got turned on"
 msgid "On"
 msgstr "Aktivdir"
 
-#: debug_console.cpp:482
+#: debug_console.cpp:483
 #, kde-format
 msgctxt "State of a hardware switch (on/off)"
 msgid "State"
 msgstr "Vəziyyət"
 
-#: debug_console.cpp:497
+#: debug_console.cpp:498
 #, kde-format
 msgid "Tablet Tool"
 msgstr "Planşet Aləti"
 
-#: debug_console.cpp:498
+#: debug_console.cpp:499
 #, kde-format
 msgid "EventType"
 msgstr "Hadisənin Növü"
 
-#: debug_console.cpp:499 debug_console.cpp:544 debug_console.cpp:558
+#: debug_console.cpp:500 debug_console.cpp:545 debug_console.cpp:559
 #, kde-format
 msgid "Position"
 msgstr "Mövqe"
 
-#: debug_console.cpp:501
+#: debug_console.cpp:502
 #, kde-format
 msgid "Tilt"
 msgstr "Meyillki"
 
-#: debug_console.cpp:503
+#: debug_console.cpp:504
 #, kde-format
 msgid "Rotation"
 msgstr "Dönmə"
 
-#: debug_console.cpp:504
+#: debug_console.cpp:505
 #, kde-format
 msgid "Pressure"
 msgstr "Basılma təzyiqi"
 
-#: debug_console.cpp:505
+#: debug_console.cpp:506
 #, kde-format
 msgid "Buttons"
 msgstr "Düymələr"
 
 #. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
-#: debug_console.cpp:506 debug_console.ui:356
+#: debug_console.cpp:507 debug_console.ui:356
 #, kde-format
 msgid "Modifiers"
 msgstr "Dəyişdiricilər"
 
-#: debug_console.cpp:515
+#: debug_console.cpp:516
 #, kde-format
 msgid "Tablet Tool Button"
 msgstr "Planşet Aləti Düyməsi"
 
-#: debug_console.cpp:516 debug_console.cpp:530
+#: debug_console.cpp:517 debug_console.cpp:531
 #, kde-format
 msgid "Button"
 msgstr "Düymə"
 
-#: debug_console.cpp:517 debug_console.cpp:531
+#: debug_console.cpp:518 debug_console.cpp:532
 #, kde-format
 msgid "Pressed"
 msgstr "Basılma təzyiqi"
 
-#: debug_console.cpp:518 debug_console.cpp:532 debug_console.cpp:546
-#: debug_console.cpp:560
+#: debug_console.cpp:519 debug_console.cpp:533 debug_console.cpp:547
+#: debug_console.cpp:561
 #, kde-format
 msgid "Tablet"
 msgstr "Planşet"
 
-#: debug_console.cpp:529
+#: debug_console.cpp:530
 #, kde-format
 msgid "Tablet Pad Button"
 msgstr "Planşet Düymələri"
 
-#: debug_console.cpp:542
+#: debug_console.cpp:543
 #, kde-format
 msgid "Tablet Pad Strip"
 msgstr "Planşetin Toxunma Zolağı"
 
-#: debug_console.cpp:543 debug_console.cpp:557
+#: debug_console.cpp:544 debug_console.cpp:558
 #, kde-format
 msgid "Number"
 msgstr "Say"
 
-#: debug_console.cpp:545 debug_console.cpp:559
+#: debug_console.cpp:546 debug_console.cpp:560
 #, kde-format
 msgid "isFinger"
 msgstr "isFinger"
 
-#: debug_console.cpp:556
+#: debug_console.cpp:557
 #, kde-format
 msgid "Tablet Pad Ring"
 msgstr "Planşetin Toxunma Halqası"
 
-#: debug_console.cpp:793
+#: debug_console.cpp:794
 #, kde-format
 msgid "No Mouse Buttons"
 msgstr "Siçan Düymələri Yoxdur"
 
-#: debug_console.cpp:797
+#: debug_console.cpp:798
 #, kde-format
 msgctxt "Mouse Button"
 msgid "left"
 msgstr "sol"
 
-#: debug_console.cpp:800
+#: debug_console.cpp:801
 #, kde-format
 msgctxt "Mouse Button"
 msgid "right"
 msgstr "sağ"
 
-#: debug_console.cpp:803
+#: debug_console.cpp:804
 #, kde-format
 msgctxt "Mouse Button"
 msgid "middle"
 msgstr "orta"
 
-#: debug_console.cpp:806
+#: debug_console.cpp:807
 #, kde-format
 msgctxt "Mouse Button"
 msgid "back"
 msgstr "geriyə"
 
-#: debug_console.cpp:809
+#: debug_console.cpp:810
 #, kde-format
 msgctxt "Mouse Button"
 msgid "forward"
 msgstr "irəli"
 
-#: debug_console.cpp:812
+#: debug_console.cpp:813
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 1"
 msgstr "əlavə 1"
 
-#: debug_console.cpp:815
+#: debug_console.cpp:816
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 2"
 msgstr "əlavə 2"
 
-#: debug_console.cpp:818
+#: debug_console.cpp:819
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 3"
 msgstr "əlavə 3"
 
-#: debug_console.cpp:821
+#: debug_console.cpp:822
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 4"
 msgstr "əlavə 4"
 
-#: debug_console.cpp:824
+#: debug_console.cpp:825
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 5"
 msgstr "əlavə 5"
 
-#: debug_console.cpp:827
+#: debug_console.cpp:828
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 6"
 msgstr "əlavə 6"
 
-#: debug_console.cpp:830
+#: debug_console.cpp:831
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 7"
 msgstr "əlavə 7"
 
-#: debug_console.cpp:833
+#: debug_console.cpp:834
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 8"
 msgstr "əlavə 8"
 
-#: debug_console.cpp:836
+#: debug_console.cpp:837
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 9"
 msgstr "əlavə 9"
 
-#: debug_console.cpp:839
+#: debug_console.cpp:840
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 10"
 msgstr "əlavə 10"
 
-#: debug_console.cpp:842
+#: debug_console.cpp:843
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 11"
 msgstr "əlavə 11"
 
-#: debug_console.cpp:845
+#: debug_console.cpp:846
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 12"
 msgstr "əlavə 12"
 
-#: debug_console.cpp:848
+#: debug_console.cpp:849
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 13"
 msgstr "əlavə 13"
 
-#: debug_console.cpp:851
+#: debug_console.cpp:852
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 14"
 msgstr "əlavə 14"
 
-#: debug_console.cpp:854
+#: debug_console.cpp:855
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 15"
 msgstr "əlavə 15"
 
-#: debug_console.cpp:857
+#: debug_console.cpp:858
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 16"
 msgstr "əlavə 16"
 
-#: debug_console.cpp:860
+#: debug_console.cpp:861
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 17"
 msgstr "əlavə 17"
 
-#: debug_console.cpp:863
+#: debug_console.cpp:864
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 18"
 msgstr "əlavə 18"
 
-#: debug_console.cpp:866
+#: debug_console.cpp:867
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 19"
 msgstr "əlavə 19"
 
-#: debug_console.cpp:869
+#: debug_console.cpp:870
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 20"
 msgstr "əlavə 20"
 
-#: debug_console.cpp:872
+#: debug_console.cpp:873
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 21"
 msgstr "əlavə 21"
 
-#: debug_console.cpp:875
+#: debug_console.cpp:876
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 22"
 msgstr "əlavə 22"
 
-#: debug_console.cpp:878
+#: debug_console.cpp:879
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 23"
 msgstr "əlavə 23"
 
-#: debug_console.cpp:881
+#: debug_console.cpp:882
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 24"
 msgstr "əlavə 24"
 
-#: debug_console.cpp:884
+#: debug_console.cpp:885
 #, kde-format
 msgctxt "Mouse Button"
 msgid "task"
 msgstr "tapşırıq"
 
-#: debug_console.cpp:1216
+#: debug_console.cpp:1217
 #, kde-format
 msgid "X11 Windows"
 msgstr "X11 pəncərələri"
 
-#: debug_console.cpp:1218
+#: debug_console.cpp:1219
 #, kde-format
 msgid "X11 Unmanaged Windows"
 msgstr "X11 İdarəedilməyən Pəncərələri"
 
-#: debug_console.cpp:1220
+#: debug_console.cpp:1221
 #, kde-format
 msgid "Wayland Windows"
 msgstr "Wayland Pəncərələri"
 
-#: debug_console.cpp:1222
+#: debug_console.cpp:1223
 #, kde-format
 msgid "Internal Windows"
 msgstr "Daxili Pəncərələr"
@@ -1193,24 +1193,24 @@ msgstr "%1 &Tətbiqibi bağlamaq"
 msgid "Wait Longer"
 msgstr "Bir az daha gözləmək"
 
-#: input.cpp:2015
+#: input.cpp:2016
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr ""
 
-#: input.cpp:2094
+#: input.cpp:2095
 #, fuzzy, kde-format
 #| msgctxt "Name of a hardware switch"
 #| msgid "Tablet mode"
 msgid "Tablet moved to %1"
 msgstr "Planşet rejimi"
 
-#: input.cpp:2094
+#: input.cpp:2095
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr ""
 
-#: input.cpp:3153
+#: input.cpp:3188
 #, kde-format
 msgid "Touchpad"
 msgstr "Toxunma Paneli"
@@ -1230,16 +1230,16 @@ msgstr ""
 "Ləğv etmək üçün Escape düyməsinə vurun və ya sağ düyməni klikləyin."
 
 #: main.cpp:180 plugins/invert/invert_config.cpp:35
-#: plugins/magnifier/magnifier_config.cpp:55
-#: plugins/mouseclick/mouseclick_config.cpp:48
-#: plugins/mousemark/mousemark_config.cpp:51
+#: plugins/magnifier/magnifier_config.cpp:46
+#: plugins/mouseclick/mouseclick_config.cpp:40
+#: plugins/mousemark/mousemark_config.cpp:43
 #: plugins/overview/kcm/overvieweffectkcm.cpp:35
-#: plugins/showpaint/showpaint_config.cpp:33
-#: plugins/thumbnailaside/thumbnailaside_config.cpp:54
+#: plugins/showpaint/showpaint_config.cpp:32
+#: plugins/thumbnailaside/thumbnailaside_config.cpp:45
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:31
-#: plugins/trackmouse/trackmouse_config.cpp:52
+#: plugins/trackmouse/trackmouse_config.cpp:44
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:36
-#: plugins/zoom/zoom_config.cpp:58
+#: plugins/zoom/zoom_config.cpp:48
 #, kde-format
 msgid "KWin"
 msgstr "KWin"
@@ -1549,7 +1549,7 @@ msgctxt "@option"
 msgid "Tritanopia (blue-yellow)"
 msgstr ""
 
-#: plugins/colorpicker/colorpicker.cpp:103
+#: plugins/colorpicker/colorpicker.cpp:104
 #, fuzzy, kde-format
 #| msgid ""
 #| "Select window to force close with left click or enter.\n"
@@ -1702,17 +1702,17 @@ msgstr "Məsafə:"
 msgid "Window Close Animation"
 msgstr "Pəncərənin mövqeyi"
 
-#: plugins/invert/invert.cpp:42 plugins/invert/invert_config.cpp:38
+#: plugins/invert/invert.cpp:43 plugins/invert/invert_config.cpp:38
 #, kde-format
 msgid "Toggle Invert Effect"
 msgstr "Naqativ effekt açarı"
 
-#: plugins/invert/invert.cpp:49 plugins/invert/invert_config.cpp:44
+#: plugins/invert/invert.cpp:50 plugins/invert/invert_config.cpp:44
 #, kde-format
 msgid "Toggle Invert Effect on Window"
 msgstr "Pəncərədəki neqativ effekt açarı"
 
-#: plugins/invert/invert.cpp:56
+#: plugins/invert/invert.cpp:57
 #, kde-format
 msgid "Invert Screen Colors"
 msgstr "Ekran Rənglərinin Əks Dəyişimi"
@@ -2011,13 +2011,13 @@ msgstr " piksel"
 msgid "&Height:"
 msgstr "Sağ"
 
-#: plugins/mouseclick/mouseclick.cpp:37
-#: plugins/mouseclick/mouseclick_config.cpp:51
+#: plugins/mouseclick/mouseclick.cpp:38
+#: plugins/mouseclick/mouseclick_config.cpp:43
 #, kde-format
 msgid "Toggle Mouse Click Effect"
 msgstr "Siçan kliki effektinin açarı"
 
-#: plugins/mouseclick/mouseclick.cpp:44
+#: plugins/mouseclick/mouseclick.cpp:45
 #, fuzzy, kde-format
 #| msgctxt "A mouse button"
 #| msgid "Left"
@@ -2025,7 +2025,7 @@ msgctxt "Left mouse button"
 msgid "Left"
 msgstr "Sol"
 
-#: plugins/mouseclick/mouseclick.cpp:45
+#: plugins/mouseclick/mouseclick.cpp:46
 #, fuzzy, kde-format
 #| msgctxt "A mouse button"
 #| msgid "Middle"
@@ -2033,7 +2033,7 @@ msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "Orta"
 
-#: plugins/mouseclick/mouseclick.cpp:46
+#: plugins/mouseclick/mouseclick.cpp:47
 #, fuzzy, kde-format
 #| msgctxt "A mouse button"
 #| msgid "Right"
@@ -2139,22 +2139,22 @@ msgstr "Şrift:"
 msgid "Show Text:"
 msgstr "İş masasını Göstərmək"
 
-#: plugins/mousemark/mousemark.cpp:42
+#: plugins/mousemark/mousemark.cpp:43
 #, kde-format
 msgid "Clear All Mouse Marks"
 msgstr "Siçanın bütün nişanlarını silmək"
 
-#: plugins/mousemark/mousemark.cpp:48 plugins/mousemark/mousemark_config.cpp:60
+#: plugins/mousemark/mousemark.cpp:49 plugins/mousemark/mousemark_config.cpp:52
 #, kde-format
 msgid "Clear Last Mouse Mark"
 msgstr "Siçanın sonuncu nişanını silmək"
 
-#: plugins/mousemark/mousemark_config.cpp:54
+#: plugins/mousemark/mousemark_config.cpp:46
 #, kde-format
 msgid "Clear Mouse Marks"
 msgstr "Siçanın nişanlarını silmək"
 
-#: plugins/mousemark/mousemark_config.cpp:95
+#: plugins/mousemark/mousemark_config.cpp:87
 #, kde-format
 msgctxt "Suffix"
 msgid " pixel"
@@ -2540,7 +2540,7 @@ msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr "Bu effekt sürət yoxlaması deyil"
 
-#: plugins/showpaint/showpaint.cpp:39 plugins/showpaint/showpaint_config.cpp:38
+#: plugins/showpaint/showpaint.cpp:40 plugins/showpaint/showpaint_config.cpp:37
 #, kde-format
 msgid "Toggle Show Paint"
 msgstr "Rəsm göstərilmə açarı"
@@ -2574,7 +2574,7 @@ msgid "Slide desktop background"
 msgstr "İş Masaları fonlarını sürüşdürmək"
 
 #: plugins/thumbnailaside/thumbnailaside.cpp:31
-#: plugins/thumbnailaside/thumbnailaside_config.cpp:59
+#: plugins/thumbnailaside/thumbnailaside_config.cpp:50
 #, kde-format
 msgid "Toggle Thumbnail for Current Window"
 msgstr "Cari İç Masasının miniatürlərini göstərmək/gizlətmək"
@@ -2658,8 +2658,8 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: plugins/trackmouse/trackmouse.cpp:45
-#: plugins/trackmouse/trackmouse_config.cpp:57
+#: plugins/trackmouse/trackmouse.cpp:46
+#: plugins/trackmouse/trackmouse_config.cpp:49
 #, kde-format
 msgid "Track mouse"
 msgstr "Kursorun izi"
@@ -2927,59 +2927,59 @@ msgstr "Zəif"
 msgid "More"
 msgstr "Çox"
 
-#: plugins/zoom/zoom.cpp:67
+#: plugins/zoom/zoom.cpp:68
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Zoomed Area to Left"
 msgstr "Pəncərəni Bir İş masası Sola köçürmək"
 
-#: plugins/zoom/zoom.cpp:74
+#: plugins/zoom/zoom.cpp:75
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Zoomed Area to Right"
 msgstr "Pəncərəni Bir İş masası Sağa köçürmək"
 
-#: plugins/zoom/zoom.cpp:81
+#: plugins/zoom/zoom.cpp:82
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Böyümüş sahəni yuxarı hərəkət etdirmək"
 
-#: plugins/zoom/zoom.cpp:88
+#: plugins/zoom/zoom.cpp:89
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Böyümüş sahəni aşağı hərəkət etdirmək"
 
-#: plugins/zoom/zoom.cpp:96 plugins/zoom/zoom_config.cpp:108
+#: plugins/zoom/zoom.cpp:97 plugins/zoom/zoom_config.cpp:98
 #, fuzzy, kde-format
 #| msgid "No Mouse Buttons"
 msgid "Move Mouse to Focus"
 msgstr "Siçan Düymələri Yoxdur"
 
-#: plugins/zoom/zoom.cpp:103 plugins/zoom/zoom_config.cpp:115
+#: plugins/zoom/zoom.cpp:104 plugins/zoom/zoom_config.cpp:105
 #, fuzzy, kde-format
 #| msgid "Move Window to the Center"
 msgid "Move Mouse to Center"
 msgstr "Pəncərəni küncə köçürün"
 
-#: plugins/zoom/zoom_config.cpp:80
+#: plugins/zoom/zoom_config.cpp:70
 #, fuzzy, kde-format
 #| msgid "Move Window Left"
 msgid "Move Left"
 msgstr "Pəncərəni sola köçürün"
 
-#: plugins/zoom/zoom_config.cpp:87
+#: plugins/zoom/zoom_config.cpp:77
 #, fuzzy, kde-format
 #| msgid "Move Window Right"
 msgid "Move Right"
 msgstr "Pəncərəni sağa köçürün"
 
-#: plugins/zoom/zoom_config.cpp:94
+#: plugins/zoom/zoom_config.cpp:84
 #, fuzzy, kde-format
 #| msgid "Move Window Up"
 msgid "Move Up"
 msgstr "Pəncərəni yuxarı köçürün"
 
-#: plugins/zoom/zoom_config.cpp:101
+#: plugins/zoom/zoom_config.cpp:91
 #, fuzzy, kde-format
 #| msgid "Move Window Down"
 msgid "Move Down"
@@ -3633,6 +3633,25 @@ msgstr "Dialoq"
 msgid "..."
 msgstr "..."
 
+#: sm.cpp:462
+#, kde-format
+msgid ""
+"The following applications did not close:\n"
+"%1"
+msgstr ""
+
+#: sm.cpp:463
+#, kde-format
+msgctxt "@action:button"
+msgid "Cancel Logout"
+msgstr ""
+
+#: sm.cpp:464
+#, kde-format
+msgctxt "@action::button"
+msgid "Log Out Anyway"
+msgstr ""
+
 #: tabbox/clientmodel.cpp:58
 #, kde-format
 msgctxt "Special entry in alt+tab list for minimizing all windows"
@@ -4276,7 +4295,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Cavab Yoxdur)"
 
-#: workspace.cpp:1613
+#: workspace.cpp:1616
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""
