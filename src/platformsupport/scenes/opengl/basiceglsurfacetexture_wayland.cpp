@@ -125,7 +125,6 @@ bool BasicEGLSurfaceTextureWayland::loadDmabufTexture(GraphicsBuffer *buffer)
     };
 
     const auto attribs = buffer->dmabufAttributes();
-    auto format = formatInfo(attribs->format);
     if (auto itConv = s_drmConversions.find(buffer->dmabufAttributes()->format); itConv != s_drmConversions.end()) {
         QList<std::shared_ptr<GLTexture>> textures;
         Q_ASSERT(itConv->plane.count() == uint(buffer->dmabufAttributes()->planeCount));
