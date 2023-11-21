@@ -84,7 +84,7 @@ void StackingOrderTest::testTransientIsAboveParent()
     // Create the parent.
     std::unique_ptr<KWayland::Client::Surface> parentSurface = Test::createSurface();
     QVERIFY(parentSurface);
-    Test::XdgToplevel *parentShellSurface = Test::createXdgToplevelSurface(parentSurface.get(), parentSurface.get());
+    std::unique_ptr<Test::XdgToplevel> parentShellSurface(Test::createXdgToplevelSurface(parentSurface.get(), parentSurface.get()));
     QVERIFY(parentShellSurface);
     Window *parent = Test::renderAndWaitForShown(parentSurface.get(), QSize(256, 256), Qt::blue);
     QVERIFY(parent);
@@ -97,7 +97,7 @@ void StackingOrderTest::testTransientIsAboveParent()
     // Create the transient.
     std::unique_ptr<KWayland::Client::Surface> transientSurface = Test::createSurface();
     QVERIFY(transientSurface);
-    Test::XdgToplevel *transientShellSurface = Test::createXdgToplevelSurface(transientSurface.get(), transientSurface.get());
+    std::unique_ptr<Test::XdgToplevel> transientShellSurface(Test::createXdgToplevelSurface(transientSurface.get(), transientSurface.get()));
     QVERIFY(transientShellSurface);
     transientShellSurface->set_parent(parentShellSurface->object());
     Window *transient = Test::renderAndWaitForShown(transientSurface.get(), QSize(128, 128), Qt::red);
@@ -123,7 +123,7 @@ void StackingOrderTest::testRaiseTransient()
     // Create the parent.
     std::unique_ptr<KWayland::Client::Surface> parentSurface = Test::createSurface();
     QVERIFY(parentSurface);
-    Test::XdgToplevel *parentShellSurface = Test::createXdgToplevelSurface(parentSurface.get(), parentSurface.get());
+    std::unique_ptr<Test::XdgToplevel> parentShellSurface(Test::createXdgToplevelSurface(parentSurface.get(), parentSurface.get()));
     QVERIFY(parentShellSurface);
     Window *parent = Test::renderAndWaitForShown(parentSurface.get(), QSize(256, 256), Qt::blue);
     QVERIFY(parent);
@@ -136,7 +136,7 @@ void StackingOrderTest::testRaiseTransient()
     // Create the transient.
     std::unique_ptr<KWayland::Client::Surface> transientSurface = Test::createSurface();
     QVERIFY(transientSurface);
-    Test::XdgToplevel *transientShellSurface = Test::createXdgToplevelSurface(transientSurface.get(), transientSurface.get());
+    std::unique_ptr<Test::XdgToplevel> transientShellSurface(Test::createXdgToplevelSurface(transientSurface.get(), transientSurface.get()));
     QVERIFY(transientShellSurface);
     transientShellSurface->set_parent(parentShellSurface->object());
     Window *transient = Test::renderAndWaitForShown(transientSurface.get(), QSize(128, 128), Qt::red);
@@ -150,7 +150,7 @@ void StackingOrderTest::testRaiseTransient()
     // Create a window that doesn't have any relationship to the parent or the transient.
     std::unique_ptr<KWayland::Client::Surface> anotherSurface = Test::createSurface();
     QVERIFY(anotherSurface);
-    Test::XdgToplevel *anotherShellSurface = Test::createXdgToplevelSurface(anotherSurface.get(), anotherSurface.get());
+    std::unique_ptr<Test::XdgToplevel> anotherShellSurface(Test::createXdgToplevelSurface(anotherSurface.get(), anotherSurface.get()));
     QVERIFY(anotherShellSurface);
     Window *anotherWindow = Test::renderAndWaitForShown(anotherSurface.get(), QSize(128, 128), Qt::green);
     QVERIFY(anotherWindow);
@@ -200,8 +200,8 @@ void StackingOrderTest::testDeletedTransient()
     // Create the parent.
     std::unique_ptr<KWayland::Client::Surface> parentSurface = Test::createSurface();
     QVERIFY(parentSurface);
-    Test::XdgToplevel *parentShellSurface =
-        Test::createXdgToplevelSurface(parentSurface.get(), parentSurface.get());
+    std::unique_ptr<Test::XdgToplevel>
+        parentShellSurface(Test::createXdgToplevelSurface(parentSurface.get(), parentSurface.get()));
     QVERIFY(parentShellSurface);
     Window *parent = Test::renderAndWaitForShown(parentSurface.get(), QSize(256, 256), Qt::blue);
     QVERIFY(parent);
@@ -213,7 +213,7 @@ void StackingOrderTest::testDeletedTransient()
     // Create the first transient.
     std::unique_ptr<KWayland::Client::Surface> transient1Surface = Test::createSurface();
     QVERIFY(transient1Surface);
-    Test::XdgToplevel *transient1ShellSurface = Test::createXdgToplevelSurface(transient1Surface.get(), transient1Surface.get());
+    std::unique_ptr<Test::XdgToplevel> transient1ShellSurface(Test::createXdgToplevelSurface(transient1Surface.get(), transient1Surface.get()));
     QVERIFY(transient1ShellSurface);
     transient1ShellSurface->set_parent(parentShellSurface->object());
     Window *transient1 = Test::renderAndWaitForShown(transient1Surface.get(), QSize(128, 128), Qt::red);
@@ -227,7 +227,7 @@ void StackingOrderTest::testDeletedTransient()
     // Create the second transient.
     std::unique_ptr<KWayland::Client::Surface> transient2Surface = Test::createSurface();
     QVERIFY(transient2Surface);
-    Test::XdgToplevel *transient2ShellSurface = Test::createXdgToplevelSurface(transient2Surface.get(), transient2Surface.get());
+    std::unique_ptr<Test::XdgToplevel> transient2ShellSurface(Test::createXdgToplevelSurface(transient2Surface.get(), transient2Surface.get()));
     QVERIFY(transient2ShellSurface);
     transient2ShellSurface->set_parent(transient1ShellSurface->object());
     Window *transient2 = Test::renderAndWaitForShown(transient2Surface.get(), QSize(128, 128), Qt::red);
@@ -251,7 +251,7 @@ void StackingOrderTest::testDeletedTransient()
     });
 
     QSignalSpy windowClosedSpy(transient2, &Window::closed);
-    delete transient2ShellSurface;
+    transient2ShellSurface.reset();
     transient2Surface.reset();
     QVERIFY(windowClosedSpy.wait());
 
@@ -517,7 +517,7 @@ void StackingOrderTest::testRaiseGroupTransient()
     // Create a Wayland window that is not a member of the window group.
     std::unique_ptr<KWayland::Client::Surface> anotherSurface = Test::createSurface();
     QVERIFY(anotherSurface);
-    Test::XdgToplevel *anotherShellSurface = Test::createXdgToplevelSurface(anotherSurface.get(), anotherSurface.get());
+    std::unique_ptr<Test::XdgToplevel> anotherShellSurface(Test::createXdgToplevelSurface(anotherSurface.get(), anotherSurface.get()));
     QVERIFY(anotherShellSurface);
     Window *anotherWindow = Test::renderAndWaitForShown(anotherSurface.get(), QSize(128, 128), Qt::green);
     QVERIFY(anotherWindow);
@@ -759,7 +759,7 @@ void StackingOrderTest::testKeepAbove()
     // Create the first window.
     std::unique_ptr<KWayland::Client::Surface> surface1 = Test::createSurface();
     QVERIFY(surface1);
-    Test::XdgToplevel *shellSurface1 = Test::createXdgToplevelSurface(surface1.get(), surface1.get());
+    std::unique_ptr<Test::XdgToplevel> shellSurface1(Test::createXdgToplevelSurface(surface1.get(), surface1.get()));
     QVERIFY(shellSurface1);
     Window *window1 = Test::renderAndWaitForShown(surface1.get(), QSize(128, 128), Qt::green);
     QVERIFY(window1);
@@ -771,7 +771,7 @@ void StackingOrderTest::testKeepAbove()
     // Create the second window.
     std::unique_ptr<KWayland::Client::Surface> surface2 = Test::createSurface();
     QVERIFY(surface2);
-    Test::XdgToplevel *shellSurface2 = Test::createXdgToplevelSurface(surface2.get(), surface2.get());
+    std::unique_ptr<Test::XdgToplevel> shellSurface2(Test::createXdgToplevelSurface(surface2.get(), surface2.get()));
     QVERIFY(shellSurface2);
     Window *window2 = Test::renderAndWaitForShown(surface2.get(), QSize(128, 128), Qt::green);
     QVERIFY(window2);
@@ -803,7 +803,7 @@ void StackingOrderTest::testKeepBelow()
     // Create the first window.
     std::unique_ptr<KWayland::Client::Surface> surface1 = Test::createSurface();
     QVERIFY(surface1);
-    Test::XdgToplevel *shellSurface1 = Test::createXdgToplevelSurface(surface1.get(), surface1.get());
+    std::unique_ptr<Test::XdgToplevel> shellSurface1(Test::createXdgToplevelSurface(surface1.get(), surface1.get()));
     QVERIFY(shellSurface1);
     Window *window1 = Test::renderAndWaitForShown(surface1.get(), QSize(128, 128), Qt::green);
     QVERIFY(window1);
@@ -815,7 +815,7 @@ void StackingOrderTest::testKeepBelow()
     // Create the second window.
     std::unique_ptr<KWayland::Client::Surface> surface2 = Test::createSurface();
     QVERIFY(surface2);
-    Test::XdgToplevel *shellSurface2 = Test::createXdgToplevelSurface(surface2.get(), surface2.get());
+    std::unique_ptr<Test::XdgToplevel> shellSurface2(Test::createXdgToplevelSurface(surface2.get(), surface2.get()));
     QVERIFY(shellSurface2);
     Window *window2 = Test::renderAndWaitForShown(surface2.get(), QSize(128, 128), Qt::green);
     QVERIFY(window2);
