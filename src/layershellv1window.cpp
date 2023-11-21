@@ -218,7 +218,7 @@ Layer LayerShellV1Window::belongsToLayer() const
 
 bool LayerShellV1Window::acceptsFocus() const
 {
-    return m_shellSurface->acceptsFocus();
+    return !isDeleted() && m_shellSurface->acceptsFocus();
 }
 
 void LayerShellV1Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
