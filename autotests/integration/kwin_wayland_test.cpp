@@ -45,10 +45,14 @@ namespace KWin
 WaylandTestApplication::WaylandTestApplication(OperationMode mode, int &argc, char **argv)
     : Application(mode, argc, argv)
 {
+    qDebug() << "a";
     QStandardPaths::setTestModeEnabled(true);
+    qDebug() << "b";
     // TODO: add a test move to kglobalaccel instead?
     QFile{QStandardPaths::locate(QStandardPaths::ConfigLocation, QStringLiteral("kglobalshortcutsrc"))}.remove();
+    qDebug() << "c";
     QIcon::setThemeName(QStringLiteral("breeze"));
+    qDebug() << "d";
 #if KWIN_BUILD_ACTIVITIES
     setUseKActivities(false);
 #endif
@@ -60,20 +64,26 @@ WaylandTestApplication::WaylandTestApplication(OperationMode mode, int &argc, ch
     qunsetenv("XKB_DEFAULT_VARIANT");
     qunsetenv("XKB_DEFAULT_OPTIONS");
 
+    qDebug() << "e";
     auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     KConfigGroup windowsGroup = config->group("Windows");
     windowsGroup.writeEntry("Placement", Placement::policyToString(PlacementSmart));
     windowsGroup.sync();
     setConfig(config);
+    qDebug() << "f";
 
     const auto ownPath = libraryPaths().last();
     removeLibraryPath(ownPath);
     addLibraryPath(ownPath);
+    qDebug() << "g";
 
     setSession(Session::create(Session::Type::Noop));
     setOutputBackend(std::make_unique<VirtualBackend>());
+    qDebug() << "h";
     WaylandServer::create(this);
+    qDebug() << "i";
     setProcessStartupEnvironment(QProcessEnvironment::systemEnvironment());
+    qDebug() << "j";
 }
 
 WaylandTestApplication::~WaylandTestApplication()

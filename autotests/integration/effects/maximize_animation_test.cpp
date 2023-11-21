@@ -38,13 +38,16 @@ private Q_SLOTS:
 
 void MaximizeAnimationTest::initTestCase()
 {
+    qDebug() << "k";
     qputenv("XDG_DATA_DIRS", QCoreApplication::applicationDirPath().toUtf8());
 
     qRegisterMetaType<KWin::Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(waylandServer()->init(s_socketName));
+    qDebug() << "l";
     QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(QVector<QRect>, QVector<QRect>() << QRect(0, 0, 1280, 1024) << QRect(1280, 0, 1280, 1024)));
 
+    qDebug() << "m";
     auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     KConfigGroup plugins(config, QStringLiteral("Plugins"));
     const auto builtinNames = EffectLoader().listOfKnownEffects();
@@ -53,12 +56,14 @@ void MaximizeAnimationTest::initTestCase()
     }
     config->sync();
     kwinApp()->setConfig(config);
+    qDebug() << "n";
 
     qputenv("KWIN_COMPOSE", QByteArrayLiteral("O2"));
     qputenv("KWIN_EFFECTS_FORCE_ANIMATIONS", QByteArrayLiteral("1"));
 
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
+    qDebug() << "o";
 }
 
 void MaximizeAnimationTest::init()
