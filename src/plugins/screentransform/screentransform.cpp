@@ -92,7 +92,7 @@ void ScreenTransformEffect::addScreen(Output *screen)
         scene->prePaint(&delegate);
 
         effects->makeOpenGLContextCurrent();
-        if (auto texture = GLTexture::allocate(GL_RGBA8, screen->geometry().size() * screen->scale())) {
+        if (auto texture = GLTexture::allocate(GL_RGBA8, screen->pixelSize())) {
             auto &state = m_states[screen];
             state.m_oldTransform = screen->transform();
             state.m_oldGeometry = screen->geometry();
