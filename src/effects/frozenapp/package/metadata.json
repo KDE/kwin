@@ -121,7 +121,7 @@
         "Name[zh_TW]": "降低無回應應用程式的飽和度",
         "Version": "1.0"
     },
-    "X-KDE-Ordering": "60",
+    "X-KDE-Ordering": 60,
     "X-KDE-PluginKeyword": "kwin4_effect_frozenapp",
     "X-KWin-Config-TranslationDomain": "kwin_effects",
     "X-Plasma-API": "javascript",

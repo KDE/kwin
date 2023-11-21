@@ -168,7 +168,7 @@ ScriptedEffect *ScriptedEffect::create(const KPluginMetaData &effect)
         return nullptr;
     }
 
-    return ScriptedEffect::create(name, scriptFile, effect.value(QStringLiteral("X-KDE-Ordering")).toInt(), effect.value(QStringLiteral("X-KWin-Exclusive-Category")));
+    return ScriptedEffect::create(name, scriptFile, effect.value(QStringLiteral("X-KDE-Ordering"), 0), effect.value(QStringLiteral("X-KWin-Exclusive-Category")));
 }
 
 ScriptedEffect *ScriptedEffect::create(const QString &effectName, const QString &pathToScript, int chainPosition, const QString &exclusiveCategory)

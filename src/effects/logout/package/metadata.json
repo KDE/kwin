@@ -121,7 +121,7 @@
         "Name[zh_TW]": "登出",
         "Version": "0.2.0"
     },
-    "X-KDE-Ordering": "40",
+    "X-KDE-Ordering": 40,
     "X-Plasma-API": "javascript",
     "X-Plasma-MainScript": "code/main.js"
 }

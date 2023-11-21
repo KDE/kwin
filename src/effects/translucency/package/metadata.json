@@ -120,7 +120,7 @@
         "Name[zh_TW]": "半透明",
         "Version": "0.1.0"
     },
-    "X-KDE-Ordering": "50",
+    "X-KDE-Ordering": 50,
     "X-KDE-PluginKeyword": "kwin4_effect_translucency",
     "X-KWin-Config-TranslationDomain": "kwin_effects",
     "X-Plasma-API": "javascript",

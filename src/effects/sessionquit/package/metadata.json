@@ -120,7 +120,7 @@
         "Name[zh_TW]": "離開工作階段",
         "Version": "0.2.0"
     },
-    "X-KDE-Ordering": "40",
+    "X-KDE-Ordering": 40,
     "X-KWin-Internal": "true",
     "X-Plasma-API": "javascript",
     "X-Plasma-MainScript": "code/main.js"

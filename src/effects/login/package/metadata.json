@@ -121,7 +121,7 @@
         "Name[zh_TW]": "登入",
         "Version": "0.2.0"
     },
-    "X-KDE-Ordering": "40",
+    "X-KDE-Ordering": 40,
     "X-KDE-PluginKeyword": "kwin4_effect_login",
     "X-KWin-Config-TranslationDomain": "kwin_effects",
     "X-Plasma-API": "javascript",

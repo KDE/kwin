@@ -126,7 +126,7 @@
         "Name[zh_TW]": "縮放",
         "Version": "1"
     },
-    "X-KDE-Ordering": "60",
+    "X-KDE-Ordering": 60,
     "X-KDE-PluginKeyword": "kwin4_effect_scale",
     "X-KWin-Config-TranslationDomain": "kwin_effects",
     "X-KWin-Exclusive-Category": "toplevel-open-close-animation",

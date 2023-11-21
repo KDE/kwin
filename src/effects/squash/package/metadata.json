@@ -120,7 +120,7 @@
         "Version": "1",
         "Website": ""
     },
-    "X-KDE-Ordering": "60",
+    "X-KDE-Ordering": 60,
     "X-KDE-ParentApp": "",
     "X-KWin-Exclusive-Category": "minimize",
     "X-KWin-Video-Url": "https://files.kde.org/plasma/kwin/effect-videos/minimize.ogv",
