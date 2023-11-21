@@ -2,11 +2,12 @@ effects.windowAdded.connect(function(window) {
     sendTestResponse("windowAdded - " + window.caption);
     sendTestResponse("stackingOrder - " + effects.stackingOrder.length + " " + effects.stackingOrder[0].caption);
 
-    window.windowMinimized.connect(() => {
-        sendTestResponse("windowMinimized - " + window.caption);
-    });
-    window.windowUnminimized.connect(() => {
-        sendTestResponse("windowUnminimized - " + window.caption);
+    window.minimizedChanged.connect(() => {
+        if (window.minimized) {
+            sendTestResponse("windowMinimized - " + window.caption);
+        } else {
+            sendTestResponse("windowUnminimized - " + window.caption);
+        }
     });
 });
 effects.windowClosed.connect(function(window) {

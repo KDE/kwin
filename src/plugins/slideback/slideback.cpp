@@ -278,7 +278,11 @@ void SlideBackEffect::slotWindowAdded(EffectWindow *w)
 {
     m_justMapped = w;
 
-    connect(w, &EffectWindow::windowUnminimized, this, &SlideBackEffect::slotWindowUnminimized);
+    connect(w, &EffectWindow::minimizedChanged, this, [this, w]() {
+        if (!w->isMinimized()) {
+            slotWindowUnminimized(w);
+        }
+    });
 }
 
 void SlideBackEffect::slotWindowUnminimized(EffectWindow *w)

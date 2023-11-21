@@ -85,11 +85,7 @@ EffectWindow::EffectWindow(WindowItem *windowItem)
         Q_EMIT windowOpacityChanged(this, oldOpacity, window->opacity());
     });
     connect(d->m_window, &Window::minimizedChanged, this, [this]() {
-        if (d->m_window->isMinimized()) {
-            Q_EMIT windowMinimized(this);
-        } else {
-            Q_EMIT windowUnminimized(this);
-        }
+        Q_EMIT minimizedChanged(this);
     });
     connect(d->m_window, &Window::modalChanged, this, [this]() {
         Q_EMIT windowModalityChanged(this);

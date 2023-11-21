@@ -160,8 +160,13 @@ var dimScreenEffect = {
         }
     },
     slotWindowAdded: function (window) {
-        window.windowMinimized.connect(dimScreenEffect.cancelAnimationInstant);
-        window.windowUnminimized.connect(dimScreenEffect.restartAnimation);
+        window.minimizedChanged.connect(() => {
+            if (window.minimized) {
+                dimScreenEffect.cancelAnimationInstant(window);
+            } else {
+                dimScreenEffect.restartAnimation(window);
+            }
+        });
 
         // Don't dim authentication agents that just opened.
         var agent = activeAuthenticationAgent();

@@ -17,8 +17,13 @@ var frozenAppEffect = {
         frozenAppEffect.outDuration = animationTime(250);
     },
     windowAdded: function (window) {
-        window.windowMinimized.connect(frozenAppEffect.cancelAnimation);
-        window.windowUnminimized.connect(frozenAppEffect.restartAnimation);
+        window.minimizedChanged.connect(() => {
+            if (window.minimized) {
+                frozenAppEffect.cancelAnimation(window);
+            } else {
+                frozenAppEffect.restartAnimation(window);
+            }
+        });
         window.windowUnresponsiveChanged.connect(frozenAppEffect.unresponsiveChanged);
         window.windowDesktopsChanged.connect(frozenAppEffect.cancelAnimation);
         window.windowDesktopsChanged.connect(frozenAppEffect.restartAnimation);

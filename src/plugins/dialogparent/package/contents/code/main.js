@@ -13,8 +13,13 @@ var dialogParentEffect = {
     duration: animationTime(300),
     windowAdded: function (window) {
         "use strict";
-        window.windowMinimized.connect(dialogParentEffect.cancelAnimationInstant);
-        window.windowUnminimized.connect(dialogParentEffect.restartAnimation);
+        window.minimizedChanged.connect(() => {
+            if (window.minimized) {
+                dialogParentEffect.cancelAnimationInstant(window);
+            } else {
+                dialogParentEffect.restartAnimation(window);
+            }
+        });
         window.windowModalityChanged.connect(dialogParentEffect.modalDialogChanged);
         window.windowDesktopsChanged.connect(dialogParentEffect.cancelAnimationInstant);
         window.windowDesktopsChanged.connect(dialogParentEffect.restartAnimation);

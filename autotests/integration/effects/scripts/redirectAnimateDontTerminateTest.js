@@ -8,7 +8,10 @@ effects.windowAdded.connect(function (window) {
         to: 1.0
     })
 
-    window.windowMinimized.connect(() => {
+    window.minimizedChanged.connect(() => {
+        if (!window.minimized) {
+            return;
+        }
         if (redirect(window.animation, Effect.Backward, Effect.DontTerminate)) {
             sendTestResponse('ok');
         } else {

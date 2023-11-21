@@ -759,15 +759,10 @@ Q_SIGNALS:
      */
     void windowOpacityChanged(KWin::EffectWindow *w, qreal oldOpacity, qreal newOpacity);
     /**
-     * Signal emitted when a window got minimized.
-     * @param w The window which was minimized
+     * Signal emitted when a window is minimized or unminimized.
+     * @param w The window whose minimized state has changed
      */
-    void windowMinimized(KWin::EffectWindow *w);
-    /**
-     * Signal emitted when a window got unminimized.
-     * @param w The window which was unminimized
-     */
-    void windowUnminimized(KWin::EffectWindow *w);
+    void minimizedChanged(KWin::EffectWindow *w);
     /**
      * Signal emitted when a window either becomes modal (ie. blocking for its main client) or looses that state.
      * @param w The window which was unminimized
