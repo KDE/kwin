@@ -131,6 +131,7 @@ void WaylandTestApplication::destroyVirtualInputDevices()
 
 void WaylandTestApplication::performStartup()
 {
+    qDebug() << "1";
     if (!m_inputMethodServerToStart.isEmpty()) {
         createInputMethod();
         if (m_inputMethodServerToStart != QStringLiteral("internal")) {
@@ -139,18 +140,25 @@ void WaylandTestApplication::performStartup()
         }
     }
 
+    qDebug() << "2";
     // first load options - done internally by a different thread
     createOptions();
+    qDebug() << "3";
     if (!outputBackend()->initialize()) {
         std::exit(1);
     }
+    qDebug() << "4";
 
     // try creating the Wayland Backend
     createInput();
+    qDebug() << "5";
     createVirtualInputDevices();
+    qDebug() << "6";
 
     WaylandCompositor::create();
+    qDebug() << "7";
     connect(Compositor::self(), &Compositor::sceneCreated, this, &WaylandTestApplication::continueStartupWithScene);
+    qDebug() << "8";
 }
 
 void WaylandTestApplication::finalizeStartup()
@@ -164,27 +172,38 @@ void WaylandTestApplication::finalizeStartup()
 
 void WaylandTestApplication::continueStartupWithScene()
 {
+    qDebug() << "9";
     disconnect(Compositor::self(), &Compositor::sceneCreated, this, &WaylandTestApplication::continueStartupWithScene);
 
+    qDebug() << "10";
     createWorkspace();
+    qDebug() << "11";
     createColorManager();
+    qDebug() << "12";
     createPlugins();
+    qDebug() << "13";
 
     waylandServer()->initWorkspace();
+    qDebug() << "14";
 
     if (!waylandServer()->start()) {
         qFatal("Failed to initialize the Wayland server, exiting now");
     }
+    qDebug() << "15";
 
     if (operationMode() == OperationModeWaylandOnly) {
+        qDebug() << "16";
         finalizeStartup();
+        qDebug() << "17";
         return;
     }
 
+    qDebug() << "18";
     m_xwayland = std::make_unique<Xwl::Xwayland>(this);
     connect(m_xwayland.get(), &Xwl::Xwayland::errorOccurred, this, &WaylandTestApplication::finalizeStartup);
     connect(m_xwayland.get(), &Xwl::Xwayland::started, this, &WaylandTestApplication::finalizeStartup);
     m_xwayland->start();
+    qDebug() << "19";
 }
 
 Test::VirtualInputDevice *WaylandTestApplication::virtualPointer() const

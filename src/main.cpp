@@ -120,6 +120,7 @@ void Application::start()
     // and it turns out that it leads to a deadlock in the Wayland case
     setProperty("org.kde.KActivities.core.disableAutostart", true);
 
+    qDebug() << "xx";
     setQuitOnLastWindowClosed(false);
 
     if (!m_config->isImmutable() && m_configLock) {
@@ -130,6 +131,7 @@ void Application::start()
     if (!m_kxkbConfig) {
         m_kxkbConfig = KSharedConfig::openConfig(QStringLiteral("kxkbrc"), KConfig::NoGlobals);
     }
+    qDebug() << "yy";
 
     performStartup();
 }
