@@ -84,7 +84,6 @@
 #include <array>
 
 #include <QDebug>
-#include <QQueue>
 
 namespace KWin
 {
@@ -552,22 +551,28 @@ QList<Window *> Workspace::constrainedStackingOrder()
 
     // Apply the stacking order constraints. First, we enqueue the root constraints, i.e.
     // the ones that are not affected by other constraints.
-    QQueue<Constraint *> constraints;
+    QList<Constraint *> constraints;
     constraints.reserve(m_constraints.count());
     for (Constraint *constraint : std::as_const(m_constraints)) {
         if (constraint->parents.isEmpty()) {
             constraint->enqueued = true;
-            constraints.enqueue(constraint);
+            constraints.append(constraint);
         } else {
             constraint->enqueued = false;
         }
     }
 
+    // Preserve the relative order of transient siblings in the unconstrained stacking order.
+    auto constraintComparator = [&stacking](Constraint *a, Constraint *b) {
+        return stacking.indexOf(a->above) > stacking.indexOf(b->above);
+    };
+    std::sort(constraints.begin(), constraints.end(), constraintComparator);
+
     // Once we've enqueued all the root constraints, we traverse the constraints tree in
-    // the breadth-first search fashion. A constraint is applied only if its condition is
+    // the reverse breadth-first search fashion. A constraint is applied only if its condition is
     // not met.
     while (!constraints.isEmpty()) {
-        Constraint *constraint = constraints.dequeue();
+        Constraint *constraint = constraints.takeFirst();
 
         const int belowIndex = stacking.indexOf(constraint->below);
         const int aboveIndex = stacking.indexOf(constraint->above);
@@ -578,10 +583,14 @@ QList<Window *> Workspace::constrainedStackingOrder()
             stacking.insert(belowIndex, constraint->above);
         }
 
-        for (Constraint *child : std::as_const(constraint->children)) {
+        // Preserve the relative order of transient siblings in the unconstrained stacking order.
+        QList<Constraint *> children = constraint->children;
+        std::sort(children.begin(), children.end(), constraintComparator);
+
+        for (Constraint *child : std::as_const(children)) {
             if (!child->enqueued) {
                 child->enqueued = true;
-                constraints.enqueue(child);
+                constraints.append(child);
             }
         }
     }
