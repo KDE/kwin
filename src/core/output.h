@@ -29,6 +29,7 @@ class RenderLoop;
 class OutputConfiguration;
 class ColorTransformation;
 class IccProfile;
+class OutputChangeSet;
 
 enum class ContentType {
     None = 0,
@@ -379,7 +380,7 @@ Q_SIGNALS:
      *
      * Only to be used for effects
      */
-    void aboutToChange();
+    void aboutToChange(OutputChangeSet *changeSet);
 
     /**
      * Notifies that the output changed based on a user interaction.

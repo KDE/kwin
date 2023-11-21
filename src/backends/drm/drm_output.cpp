@@ -353,7 +353,7 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     if (!m_connector->isConnected()) {
         return;
     }
-    Q_EMIT aboutToChange();
+    Q_EMIT aboutToChange(props.get());
     m_pipeline->applyPendingChanges();
 
     State next = m_state;

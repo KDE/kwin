@@ -336,7 +336,7 @@ void Output::applyChanges(const OutputConfiguration &config)
     if (!props) {
         return;
     }
-    Q_EMIT aboutToChange();
+    Q_EMIT aboutToChange(props.get());
 
     State next = m_state;
     next.enabled = props->enabled.value_or(m_state.enabled);

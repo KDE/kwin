@@ -8,6 +8,7 @@
 */
 // own
 #include "screentransform.h"
+#include "core/outputconfiguration.h"
 #include "core/renderlayer.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
@@ -69,22 +70,17 @@ qreal transformAngle(OutputTransform current, OutputTransform old)
 
 void ScreenTransformEffect::addScreen(Output *screen)
 {
-    connect(screen, &Output::changed, this, [this, screen] {
-        auto &state = m_states[screen];
-        if (transformAngle(screen->transform(), state.m_oldTransform) == 0) {
-            effects->makeOpenGLContextCurrent();
-            m_states.remove(screen);
+    connect(screen, &Output::aboutToChange, this, [this, screen](OutputChangeSet *changeSet) {
+        const OutputTransform transform = changeSet->transform.value_or(screen->transform());
+        if (screen->transform() == transform) {
+            if (auto it = m_states.find(screen); it != m_states.end()) {
+                effects->makeOpenGLContextCurrent();
+                m_states.erase(it);
+            }
             return;
         }
-        state.m_timeLine.setDuration(std::chrono::milliseconds(long(animationTime(250))));
-        state.m_timeLine.setEasingCurve(QEasingCurve::InOutCubic);
-        state.m_angle = transformAngle(screen->transform(), state.m_oldTransform);
-        Q_ASSERT(state.m_angle != 0);
-        effects->addRepaintFull();
-    });
-    connect(screen, &Output::aboutToChange, this, [this, screen] {
-        Scene *scene = effects->scene();
 
+        Scene *scene = effects->scene();
         RenderLayer layer(screen->renderLoop());
         SceneDelegate delegate(scene, screen);
         delegate.setLayer(&layer);
@@ -102,6 +98,9 @@ void ScreenTransformEffect::addScreen(Output *screen)
             auto &state = m_states[screen];
             state.m_oldTransform = screen->transform();
             state.m_oldGeometry = screen->geometry();
+            state.m_timeLine.setDuration(std::chrono::milliseconds(long(animationTime(250))));
+            state.m_timeLine.setEasingCurve(QEasingCurve::InOutCubic);
+            state.m_angle = transformAngle(changeSet->transform.value(), state.m_oldTransform);
             state.m_prev.texture = std::move(texture);
             state.m_prev.framebuffer = std::make_unique<GLFramebuffer>(state.m_prev.texture.get());
 
