@@ -2625,20 +2625,32 @@ void Window::setDecoration(std::shared_ptr<KDecoration2::Decoration> decoration)
     }
     if (decoration) {
         QMetaObject::invokeMethod(decoration.get(), QOverload<>::of(&KDecoration2::Decoration::update), Qt::QueuedConnection);
-        connect(decoration.get(), &KDecoration2::Decoration::shadowChanged, this, &Window::updateShadow);
-        connect(decoration.get(), &KDecoration2::Decoration::bordersChanged,
-                this, &Window::updateDecorationInputShape);
-        connect(decoration.get(), &KDecoration2::Decoration::resizeOnlyBordersChanged,
-                this, &Window::updateDecorationInputShape);
+        connect(decoration.get(), &KDecoration2::Decoration::shadowChanged, this, [this]() {
+            if (!isDeleted()) {
+                updateShadow();
+            }
+        });
         connect(decoration.get(), &KDecoration2::Decoration::bordersChanged, this, [this]() {
+            if (isDeleted()) {
+                return;
+            }
             GeometryUpdatesBlocker blocker(this);
             const QRectF oldGeometry = moveResizeGeometry();
             if (!isShade()) {
                 checkWorkspacePosition(oldGeometry);
             }
+            updateDecorationInputShape();
         });
-        connect(decoratedClient()->decoratedClient(), &KDecoration2::DecoratedClient::sizeChanged,
-                this, &Window::updateDecorationInputShape);
+        connect(decoration.get(), &KDecoration2::Decoration::resizeOnlyBordersChanged, this, [this]() {
+            if (!isDeleted()) {
+                updateDecorationInputShape();
+            }
+        });
+        connect(decoratedClient()->decoratedClient(), &KDecoration2::DecoratedClient::sizeChanged, this, [this]() {
+            if (!isDeleted()) {
+                updateDecorationInputShape();
+            }
+        });
     }
     m_decoration.decoration = decoration;
     updateDecorationInputShape();
@@ -3658,6 +3670,10 @@ void Window::sendToOutput(Output *newOutput)
 
 void Window::checkWorkspacePosition(QRectF oldGeometry, const VirtualDesktop *oldDesktop)
 {
+    if (isDeleted()) {
+        qCWarning(KWIN_CORE) << "Window::checkWorkspacePosition: called for a closed window. Consider this a bug";
+        return;
+    }
     if (isDock() || isDesktop() || !isPlaceable()) {
         return;
     }

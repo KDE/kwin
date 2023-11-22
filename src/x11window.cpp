@@ -1340,9 +1340,21 @@ void X11Window::createDecoration()
 {
     std::shared_ptr<KDecoration2::Decoration> decoration(Workspace::self()->decorationBridge()->createDecoration(this));
     if (decoration) {
-        connect(decoration.get(), &KDecoration2::Decoration::resizeOnlyBordersChanged, this, &X11Window::updateInputWindow);
-        connect(decoration.get(), &KDecoration2::Decoration::bordersChanged, this, &X11Window::updateFrameExtents);
-        connect(decoratedClient()->decoratedClient(), &KDecoration2::DecoratedClient::sizeChanged, this, &X11Window::updateInputWindow);
+        connect(decoration.get(), &KDecoration2::Decoration::resizeOnlyBordersChanged, this, [this]() {
+            if (!isDeleted()) {
+                updateInputWindow();
+            }
+        });
+        connect(decoration.get(), &KDecoration2::Decoration::bordersChanged, this, [this]() {
+            if (!isDeleted()) {
+                updateFrameExtents();
+            }
+        });
+        connect(decoratedClient()->decoratedClient(), &KDecoration2::DecoratedClient::sizeChanged, this, [this]() {
+            if (!isDeleted()) {
+                updateInputWindow();
+            }
+        });
     }
     setDecoration(decoration);
 
