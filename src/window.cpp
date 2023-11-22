@@ -593,7 +593,7 @@ Layer Window::belongsToLayer() const
         return NormalLayer; // getting in the way of everything else
     }
     if (isDock() || isAppletPopup()) {
-        return layerForDock();
+        return AboveLayer;
     }
     if (isPopupWindow()) {
         return PopupLayer;
@@ -623,14 +623,6 @@ Layer Window::belongsToLayer() const
 bool Window::belongsToDesktop() const
 {
     return false;
-}
-
-Layer Window::layerForDock() const
-{
-    if (keepAbove()) { // slight hack for the autohiding panels
-        return AboveLayer;
-    }
-    return DockLayer;
 }
 
 void Window::setKeepAbove(bool b)

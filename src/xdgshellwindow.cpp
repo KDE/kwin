@@ -882,25 +882,6 @@ bool XdgToplevelWindow::acceptsFocus() const
     return !isDeleted() && readyForPainting();
 }
 
-Layer XdgToplevelWindow::layerForDock() const
-{
-    if (m_plasmaShellSurface) {
-        switch (m_plasmaShellSurface->panelBehavior()) {
-        case PlasmaShellSurfaceInterface::PanelBehavior::WindowsCanCover:
-            return NormalLayer;
-        case PlasmaShellSurfaceInterface::PanelBehavior::AutoHide:
-        case PlasmaShellSurfaceInterface::PanelBehavior::WindowsGoBelow:
-            return AboveLayer;
-        case PlasmaShellSurfaceInterface::PanelBehavior::AlwaysVisible:
-            return DockLayer;
-        default:
-            Q_UNREACHABLE();
-            break;
-        }
-    }
-    return Window::layerForDock();
-}
-
 void XdgToplevelWindow::handleWindowTitleChanged()
 {
     setCaption(m_shellSurface->windowTitle());

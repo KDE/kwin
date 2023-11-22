@@ -172,7 +172,6 @@ protected:
     bool doStartInteractiveMoveResize() override;
     void doFinishInteractiveMoveResize() override;
     bool acceptsFocus() const override;
-    Layer layerForDock() const override;
     void doSetQuickTileMode() override;
     void doSetSuspended() override;
 

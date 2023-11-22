@@ -100,6 +100,8 @@ public:
     Role role() const;
     /**
      * Describes how a PlasmaShellSurfaceInterface with role @c Role::Panel should behave.
+     *
+     * Deprecated
      */
     enum class PanelBehavior {
         AlwaysVisible, ///< The panel should be always visible
@@ -110,6 +112,8 @@ public:
     /**
      * @returns The PanelBehavior for a PlasmaShellSurfaceInterface with role @c Role::Panel
      * @see role
+     *
+     * Deprecated. This is now ignored
      */
     PanelBehavior panelBehavior() const;
 

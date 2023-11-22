@@ -1516,7 +1516,6 @@ protected:
 
     virtual Layer belongsToLayer() const;
     bool isActiveFullScreen() const;
-    virtual Layer layerForDock() const;
 
     // electric border / quick tiling
     void setElectricBorderMode(QuickTileMode mode);

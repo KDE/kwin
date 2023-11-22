@@ -165,7 +165,6 @@ enum Layer {
     DesktopLayer = FirstLayer,
     BelowLayer,
     NormalLayer,
-    DockLayer,
     AboveLayer,
     NotificationLayer, // layer for windows of type notification
     ActiveLayer, // active fullscreen, or active dialog
