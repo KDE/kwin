@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-21 01:35+0000\n"
-"PO-Revision-Date: 2023-11-14 07:48+0200\n"
+"PO-Revision-Date: 2023-11-21 08:09+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -3541,18 +3541,20 @@ msgid ""
 "The following applications did not close:\n"
 "%1"
 msgstr ""
+"Не завершено роботу таких програм:\n"
+"%1"
 
 #: sm.cpp:463
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
-msgstr ""
+msgstr "Скасувати вихід"
 
 #: sm.cpp:464
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
-msgstr ""
+msgstr "Вийти попри це"
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format

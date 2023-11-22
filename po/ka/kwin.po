@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-21 01:35+0000\n"
-"PO-Revision-Date: 2023-11-15 06:32+0100\n"
+"PO-Revision-Date: 2023-11-21 16:27+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -3519,18 +3519,20 @@ msgid ""
 "The following applications did not close:\n"
 "%1"
 msgstr ""
+"შემდეგი აპლიკაციები არ დაიხურა:\n"
+"%1"
 
 #: sm.cpp:463
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
-msgstr ""
+msgstr "გასვლის გაუქმება"
 
 #: sm.cpp:464
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
-msgstr ""
+msgstr "მაინც გასვლა"
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format

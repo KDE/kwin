@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1665524 2023-11-21 01:59:37Z scripty $
+# $Id: kwin.po 1665588 2023-11-22 02:00:08Z scripty $
 # $Source$
 #
 #
@@ -17,15 +17,15 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-21 01:35+0000\n"
-"PO-Revision-Date: 2023-11-14 07:27+0100\n"
+"PO-Revision-Date: 2023-11-21 07:23+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
-"%100==4 ? 3 : 0);\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100>=3 && n"
+"%100<=4 ? 2 : 3);\n"
 "Translator: Andrej Mernik <andrejm@ubuntu.si>\n"
 "X-Generator: Poedit 3.4.1\n"
 
@@ -3541,18 +3541,20 @@ msgid ""
 "The following applications did not close:\n"
 "%1"
 msgstr ""
+"Naslednje aplikacije se niso zaprle:\n"
+"%1"
 
 #: sm.cpp:463
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
-msgstr ""
+msgstr "Prekliči odjavo"
 
 #: sm.cpp:464
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
-msgstr ""
+msgstr "Kljub temu se odjavi"
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format

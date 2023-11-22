@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-21 01:35+0000\n"
-"PO-Revision-Date: 2023-11-14 10:25+0100\n"
+"PO-Revision-Date: 2023-11-21 10:46+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -3544,18 +3544,20 @@ msgid ""
 "The following applications did not close:\n"
 "%1"
 msgstr ""
+"De volgende toepassingen sloten niet af:\n"
+"%1"
 
 #: sm.cpp:463
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
-msgstr ""
+msgstr "Afmelden annuleren"
 
 #: sm.cpp:464
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
-msgstr ""
+msgstr "Toch afmelden"
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format
