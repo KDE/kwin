@@ -198,7 +198,7 @@ void ClientModel::createClientList(bool partialReset)
     // TODO: new clients are not added at correct position
     if (partialReset && !m_mutableClientList.isEmpty()) {
         Window *firstClient = m_mutableClientList.constFirst();
-        if (firstClient) {
+        if (!firstClient->isDeleted()) {
             start = firstClient;
         }
     }
