@@ -285,6 +285,11 @@ std::chrono::nanoseconds SurfaceItem::frameTimeEstimation() const
     }
 }
 
+std::shared_ptr<SyncReleasePoint> SurfaceItem::bufferReleasePoint() const
+{
+    return m_bufferReleasePoint;
+}
+
 SurfaceTexture::~SurfaceTexture()
 {
 }

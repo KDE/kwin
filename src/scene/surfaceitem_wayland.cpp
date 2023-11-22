@@ -44,6 +44,7 @@ SurfaceItemWayland::SurfaceItemWayland(SurfaceInterface *surface, Item *parent)
             this, &SurfaceItemWayland::handleColorDescriptionChanged);
     connect(surface, &SurfaceInterface::presentationModeHintChanged,
             this, &SurfaceItemWayland::handlePresentationModeHintChanged);
+    connect(surface, &SurfaceInterface::bufferReleasePointChanged, this, &SurfaceItemWayland::handleReleasePointChanged);
 
     SubSurfaceInterface *subsurface = surface->subSurface();
     if (subsurface) {
@@ -184,6 +185,11 @@ void SurfaceItemWayland::handleColorDescriptionChanged()
 void SurfaceItemWayland::handlePresentationModeHintChanged()
 {
     setPresentationHint(m_surface->presentationModeHint());
+}
+
+void SurfaceItemWayland::handleReleasePointChanged()
+{
+    m_bufferReleasePoint = m_surface->bufferReleasePoint();
 }
 
 SurfacePixmapWayland::SurfacePixmapWayland(SurfaceItemWayland *item, QObject *parent)

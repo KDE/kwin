@@ -5,7 +5,9 @@
 */
 
 #include "wayland/transaction.h"
+#include "core/syncobjtimeline.h"
 #include "utils/filedescriptor.h"
+#include "wayland/clientconnection.h"
 #include "wayland/subcompositor.h"
 #include "wayland/surface_p.h"
 #include "wayland/transaction_p.h"
@@ -74,6 +76,24 @@ bool TransactionDmaBufLocker::arm()
         }
     }
     return !m_pending.isEmpty();
+}
+
+TransactionEventFdLocker::TransactionEventFdLocker(Transaction *transaction, FileDescriptor &&eventFd, ClientConnection *client)
+    : m_transaction(transaction)
+    , m_client(client)
+    , m_eventFd(std::move(eventFd))
+    , m_notifier(m_eventFd.get(), QSocketNotifier::Type::Read)
+{
+    transaction->lock();
+    connect(&m_notifier, &QSocketNotifier::activated, this, &TransactionEventFdLocker::unlock);
+    // when the client quits, the eventfd may never be signaled
+    connect(m_client, &ClientConnection::aboutToBeDestroyed, this, &TransactionEventFdLocker::unlock);
+}
+
+void TransactionEventFdLocker::unlock()
+{
+    m_transaction->unlock();
+    delete this;
 }
 
 Transaction::Transaction()
@@ -248,7 +268,12 @@ void Transaction::commit()
     for (TransactionEntry &entry : m_entries) {
         if (entry.state->bufferIsSet && entry.state->buffer) {
             // Avoid applying the transaction until all graphics buffers have become idle.
-            if (auto locker = TransactionDmaBufLocker::get(entry.state->buffer)) {
+            if (entry.state->acquirePoint.timeline) {
+                auto eventFd = entry.state->acquirePoint.timeline->eventFd(entry.state->acquirePoint.point);
+                if (entry.surface && eventFd.isValid()) {
+                    new TransactionEventFdLocker(this, std::move(eventFd), entry.surface->client());
+                }
+            } else if (auto locker = TransactionDmaBufLocker::get(entry.state->buffer)) {
                 locker->add(this);
             }
         }

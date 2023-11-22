@@ -235,6 +235,10 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${WaylandProtocols_DATADIR}/staging/xdg-dialog/xdg-dialog-v1.xml
     BASENAME dialog-v1
 )
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PROTOCOL ${WaylandProtocols_DATADIR}/staging/linux-drm-syncobj/linux-drm-syncobj-v1.xml
+    BASENAME linux-drm-syncobj-v1
+)
 
 target_sources(kwin PRIVATE
     abstract_data_source.cpp
@@ -269,6 +273,7 @@ target_sources(kwin PRIVATE
     keyboard_shortcuts_inhibit_v1.cpp
     keystate.cpp
     layershell_v1.cpp
+    linux_drm_syncobj_v1.cpp
     linuxdmabufv1clientbuffer.cpp
     lockscreen_overlay_v1.cpp
     output.cpp
@@ -349,6 +354,7 @@ install(FILES
     keyboard_shortcuts_inhibit_v1.h
     keystate.h
     layershell_v1.h
+    linux_drm_syncobj_v1.h
     lockscreen_overlay_v1.h
     output.h
     output_order_v1.h
@@ -396,10 +402,12 @@ install(FILES
 
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-content-type-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-frog-color-management-v1.h
+    ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-linux-drm-syncobj-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-presentation-time.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-xx-color-management-v2.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-content-type-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-frog-color-management-v1-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-linux-drm-syncobj-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-presentation-time-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-xx-color-management-v2-server-protocol.h
 

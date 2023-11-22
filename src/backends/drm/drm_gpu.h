@@ -77,6 +77,7 @@ public:
     bool atomicModeSetting() const;
     bool addFB2ModifiersSupported() const;
     bool asyncPageflipSupported() const;
+    bool syncObjTimelinesSupported() const;
     bool isI915() const;
     bool isNVidia() const;
     bool isAmdgpu() const;
@@ -145,6 +146,7 @@ private:
     bool m_isRemoved = false;
     bool m_isActive = true;
     bool m_forceModeset = false;
+    bool m_supportsSyncTimelines = false;
     clockid_t m_presentationClock;
     std::unique_ptr<EglDisplay> m_eglDisplay;
     DrmBackend *const m_platform;
