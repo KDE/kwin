@@ -33,7 +33,7 @@ public:
     void doneCurrent() override;
 
     EGLConfig config() const;
-    EglDisplay *eglDisplayObject() const;
+    EglDisplay *eglDisplayObject() const override;
     EglContext *openglContext() const override;
 
     bool testImportBuffer(GraphicsBuffer *buffer) override;

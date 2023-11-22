@@ -16,6 +16,8 @@
 namespace KWin
 {
 
+class SyncReleasePoint;
+
 struct DmaBufAttributes
 {
     int planeCount = 0;
@@ -87,6 +89,8 @@ public:
     virtual const DmaBufAttributes *dmabufAttributes() const;
     virtual const ShmAttributes *shmAttributes() const;
 
+    void addReleasePoint(const std::shared_ptr<SyncReleasePoint> &releasePoint);
+
     static bool alphaChannelFromDrmFormat(uint32_t format);
 
 Q_SIGNALS:
@@ -95,6 +99,7 @@ Q_SIGNALS:
 protected:
     int m_refCount = 0;
     bool m_dropped = false;
+    std::vector<std::shared_ptr<SyncReleasePoint>> m_releasePoints;
 };
 
 /**

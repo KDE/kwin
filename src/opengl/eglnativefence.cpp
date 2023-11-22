@@ -51,6 +51,11 @@ const FileDescriptor &EGLNativeFence::fileDescriptor() const
     return m_fileDescriptor;
 }
 
+FileDescriptor &&EGLNativeFence::fileDescriptor()
+{
+    return std::move(m_fileDescriptor);
+}
+
 bool EGLNativeFence::waitSync() const
 {
     return eglWaitSync(m_display->handle(), m_sync, 0) == EGL_TRUE;

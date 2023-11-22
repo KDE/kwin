@@ -7,6 +7,7 @@
 #include "renderbackend.h"
 #include "renderloop_p.h"
 #include "scene/surfaceitem.h"
+#include "syncobjtimeline.h"
 
 #include <drm_fourcc.h>
 
@@ -99,6 +100,16 @@ std::unique_ptr<SurfaceTexture> RenderBackend::createSurfaceTextureX11(SurfacePi
 }
 
 std::unique_ptr<SurfaceTexture> RenderBackend::createSurfaceTextureWayland(SurfacePixmap *pixmap)
+{
+    return nullptr;
+}
+
+bool RenderBackend::supportsTimelines() const
+{
+    return false;
+}
+
+std::unique_ptr<SyncTimeline> RenderBackend::importTimeline(FileDescriptor &&syncObjFd)
 {
     return nullptr;
 }

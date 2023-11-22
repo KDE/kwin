@@ -59,6 +59,7 @@ public:
     virtual void freeze();
 
     std::chrono::nanoseconds frameTimeEstimation() const;
+    std::shared_ptr<SyncReleasePoint> bufferReleasePoint() const;
 
 Q_SIGNALS:
     void damaged();
@@ -82,6 +83,7 @@ protected:
     std::deque<std::chrono::nanoseconds> m_lastDamageTimeDiffs;
     std::optional<std::chrono::steady_clock::time_point> m_lastDamage;
     std::chrono::nanoseconds m_frameTimeEstimation = std::chrono::days(1000);
+    std::shared_ptr<SyncReleasePoint> m_bufferReleasePoint;
 };
 
 class KWIN_EXPORT SurfaceTexture
