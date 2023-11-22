@@ -76,6 +76,20 @@ bool TransactionDmaBufLocker::arm()
     return !m_pending.isEmpty();
 }
 
+TransactionEventFdLocker::TransactionEventFdLocker(Transaction *transaction, FileDescriptor &&eventFd)
+    : m_transaction(transaction)
+    , m_eventFd(std::move(eventFd))
+    , m_notifier(m_eventFd.get(), QSocketNotifier::Type::Read)
+{
+    connect(&m_notifier, &QSocketNotifier::activated, this, &TransactionEventFdLocker::unlock);
+}
+
+void TransactionEventFdLocker::unlock()
+{
+    m_transaction->unlock();
+    delete this;
+}
+
 Transaction::Transaction()
 {
 }
@@ -248,7 +262,9 @@ void Transaction::commit()
     for (TransactionEntry &entry : m_entries) {
         if (entry.state->bufferIsSet && entry.state->buffer) {
             // Avoid applying the transaction until all graphics buffers have become idle.
-            if (auto locker = TransactionDmaBufLocker::get(entry.state->buffer)) {
+            if (entry.state->acquireFd.isValid()) {
+                new TransactionEventFdLocker(this, std::move(entry.state->acquireFd));
+            } else if (auto locker = TransactionDmaBufLocker::get(entry.state->buffer)) {
                 locker->add(this);
             }
         }

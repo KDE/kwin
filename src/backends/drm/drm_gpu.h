@@ -77,6 +77,7 @@ public:
     bool atomicModeSetting() const;
     bool addFB2ModifiersSupported() const;
     bool asyncPageflipSupported() const;
+    bool syncObjTimelinesSupported() const;
     bool isI915() const;
     bool isNVidia() const;
     gbm_device *gbmDevice() const;
@@ -144,6 +145,7 @@ private:
     bool m_isRemoved = false;
     bool m_isActive = true;
     bool m_forceModeset = false;
+    bool m_supportsSyncTimelines = false;
     clockid_t m_presentationClock;
     gbm_device *m_gbmDevice;
     FileDescriptor m_gbmFd;

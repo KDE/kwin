@@ -40,7 +40,7 @@ namespace KWin
  ***********************************************/
 
 WorkspaceSceneOpenGL::WorkspaceSceneOpenGL(OpenGLBackend *backend)
-    : WorkspaceScene(std::make_unique<ItemRendererOpenGL>())
+    : WorkspaceScene(std::make_unique<ItemRendererOpenGL>(backend->eglDisplayObject()))
     , m_backend(backend)
 {
 }

@@ -93,6 +93,10 @@ bool OpenGLBackend::checkGraphicsReset()
     return true;
 }
 
+EglDisplay *OpenGLBackend::eglDisplayObject() const
+{
+    return nullptr;
+}
 }
 
 #include "moc_openglbackend.cpp"

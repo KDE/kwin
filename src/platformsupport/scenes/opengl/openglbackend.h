@@ -19,6 +19,7 @@ namespace KWin
 class Output;
 class OpenGLBackend;
 class GLTexture;
+class EglDisplay;
 
 /**
  * @brief The OpenGLBackend creates and holds the OpenGL context and is responsible for Texture from Pixmap.
@@ -96,6 +97,8 @@ public:
     void copyPixels(const QRegion &region, const QSize &screenSize);
 
     virtual std::pair<std::shared_ptr<GLTexture>, ColorDescription> textureForOutput(Output *output) const;
+
+    virtual EglDisplay *eglDisplayObject() const;
 
 protected:
     /**

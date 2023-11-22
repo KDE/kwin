@@ -231,6 +231,10 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${PROJECT_SOURCE_DIR}/src/wayland/protocols/xx-color-management-v2.xml
     BASENAME xx-color-management-v2
 )
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PROTOCOL protocols/linux-drm-syncobj-v1.xml
+    BASENAME linux-drm-syncobj-v1
+)
 
 target_sources(kwin PRIVATE
     abstract_data_source.cpp
@@ -265,6 +269,7 @@ target_sources(kwin PRIVATE
     keyboard_shortcuts_inhibit_v1.cpp
     keystate.cpp
     layershell_v1.cpp
+    linux_drm_syncobj_v1.cpp
     linuxdmabufv1clientbuffer.cpp
     lockscreen_overlay_v1.cpp
     output.cpp
@@ -344,6 +349,7 @@ install(FILES
     keyboard_shortcuts_inhibit_v1.h
     keystate.h
     layershell_v1.h
+    linux_drm_syncobj_v1.h
     lockscreen_overlay_v1.h
     output.h
     output_order_v1.h

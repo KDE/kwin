@@ -6,6 +6,7 @@
 
 #include "scene/item.h"
 #include "core/renderlayer.h"
+#include "core/syncobjtimeline.h"
 #include "scene/scene.h"
 #include "utils/common.h"
 
@@ -461,7 +462,6 @@ void Item::setPresentationHint(PresentationModeHint hint)
 {
     m_presentationHint = hint;
 }
-
 } // namespace KWin
 
 #include "moc_item.cpp"

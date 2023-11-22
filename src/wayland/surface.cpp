@@ -342,6 +342,10 @@ void SurfaceInterfacePrivate::surface_commit(Resource *resource)
 {
     const bool sync = subsurface.handle && subsurface.handle->isSynchronized();
 
+    if (pending->buffer && pending->releasePoint) {
+        pending->buffer->addReleasePoint(pending->releasePoint);
+    }
+
     Transaction *transaction;
     if (sync) {
         if (!subsurface.transaction) {
@@ -518,6 +522,8 @@ void SurfaceState::mergeInto(SurfaceState *target)
         target->offset = offset;
         target->damage = damage;
         target->bufferDamage = bufferDamage;
+        target->acquireFd = std::move(acquireFd);
+        target->releasePoint = std::move(releasePoint);
         target->bufferIsSet = true;
     }
     if (viewport.sourceGeometryIsSet) {
@@ -600,6 +606,7 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     const bool visibilityChanged = bufferChanged && bool(current->buffer) != bool(next->buffer);
     const bool colorDescriptionChanged = next->colorDescriptionIsSet;
     const bool presentationModeHintChanged = next->presentationModeHintIsSet;
+    const bool bufferReleasePointChanged = next->releasePointIsSet;
 
     const QSizeF oldSurfaceSize = surfaceSize;
     const QSize oldBufferSize = bufferSize;
@@ -688,6 +695,9 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     }
     if (presentationModeHintChanged) {
         Q_EMIT q->presentationModeHintChanged();
+    }
+    if (bufferReleasePointChanged) {
+        Q_EMIT q->bufferReleasePointChanged();
     }
 
     if (bufferChanged) {
@@ -1177,6 +1187,11 @@ void SurfaceInterface::traverseTree(std::function<void(SurfaceInterface *surface
     for (SubSurfaceInterface *subsurface : std::as_const(d->current->subsurface.above)) {
         subsurface->surface()->traverseTree(callback);
     }
+}
+
+std::shared_ptr<SyncReleasePoint> SurfaceInterface::bufferReleasePoint() const
+{
+    return d->current->releasePoint;
 }
 
 } // namespace KWin

@@ -28,6 +28,7 @@ class FractionalScaleV1Interface;
 class FrogColorManagementSurfaceV1;
 class PresentationTimeFeedback;
 class XXColorSurfaceV2;
+class LinuxDrmSyncObjSurfaceV1;
 
 struct SurfaceState
 {
@@ -58,6 +59,7 @@ struct SurfaceState
     bool contentTypeIsSet = false;
     bool presentationModeHintIsSet = false;
     bool colorDescriptionIsSet = false;
+    bool releasePointIsSet = false;
     qint32 bufferScale = 1;
     OutputTransform bufferTransform = OutputTransform::Normal;
     wl_list frameCallbacks;
@@ -71,6 +73,8 @@ struct SurfaceState
     PresentationModeHint presentationHint = PresentationModeHint::VSync;
     ColorDescription colorDescription = ColorDescription::sRGB;
     std::unique_ptr<PresentationTimeFeedback> presentationFeedback;
+    FileDescriptor acquireFd;
+    std::shared_ptr<SyncReleasePoint> releasePoint;
 
     struct
     {
@@ -169,6 +173,7 @@ public:
     TearingControlV1Interface *tearing = nullptr;
     FrogColorManagementSurfaceV1 *frogColorManagement = nullptr;
     XXColorSurfaceV2 *xxColorSurface = nullptr;
+    LinuxDrmSyncObjSurfaceV1 *syncObjV1 = nullptr;
 
     struct
     {
