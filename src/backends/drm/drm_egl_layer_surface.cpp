@@ -47,7 +47,7 @@ static gbm_format_name_desc formatName(uint32_t format)
 EglGbmLayerSurface::EglGbmLayerSurface(DrmGpu *gpu, EglGbmBackend *eglBackend, BufferTarget target, FormatOption formatOption)
     : m_gpu(gpu)
     , m_eglBackend(eglBackend)
-    , m_bufferTarget(target)
+    , m_requestedBufferTarget(target)
     , m_formatOption(formatOption)
 {
 }
@@ -293,6 +293,32 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
             }
         }
     }
+
+    // special case: the cursor plane needs linear, but not all GPUs (NVidia) can render to linear
+    auto bufferTarget = m_requestedBufferTarget;
+    if (m_gpu == m_eglBackend->gpu()) {
+        const auto checkSurfaceNeedsLinear = [&formats](const FormatInfo &fmt) {
+            const auto &mods = formats[fmt.drmFormat];
+            return std::all_of(mods.cbegin(), mods.cend(), [](const auto &mod) {
+                return mod == DRM_FORMAT_MOD_LINEAR;
+            });
+        };
+        const bool needsLinear =
+            std::all_of(preferredFormats.cbegin(), preferredFormats.cend(), checkSurfaceNeedsLinear) && std::all_of(fallbackFormats.cbegin(), fallbackFormats.cend(), checkSurfaceNeedsLinear);
+        if (needsLinear) {
+            const auto renderFormats = m_eglBackend->eglDisplayObject()->allSupportedDrmFormats();
+            const auto checkFormatSupportsLinearRender = [&renderFormats](const auto &formatInfo) {
+                const auto it = renderFormats.constFind(formatInfo.drmFormat);
+                return it != renderFormats.cend() && it->nonExternalOnlyModifiers.contains(DRM_FORMAT_MOD_LINEAR);
+            };
+            const bool noLinearSupport =
+                std::none_of(preferredFormats.cbegin(), preferredFormats.cend(), checkFormatSupportsLinearRender) && std::none_of(fallbackFormats.cbegin(), fallbackFormats.cend(), checkFormatSupportsLinearRender);
+            if (noLinearSupport) {
+                bufferTarget = BufferTarget::Dumb;
+            }
+        }
+    }
+
     const auto sort = [this](const auto &lhs, const auto &rhs) {
         if (lhs.drmFormat == rhs.drmFormat) {
             // prefer having an alpha channel
@@ -305,12 +331,12 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
             return lhs.bitsPerPixel < rhs.bitsPerPixel;
         }
     };
-    const auto doTestFormats = [this, &size, &formats](const QList<FormatInfo> &gbmFormats, MultiGpuImportMode importMode) -> std::unique_ptr<Surface> {
+    const auto doTestFormats = [this, &size, &formats, bufferTarget](const QList<FormatInfo> &gbmFormats, MultiGpuImportMode importMode) -> std::unique_ptr<Surface> {
         for (const auto &format : gbmFormats) {
             if (m_formatOption == FormatOption::RequireAlpha && format.alphaBits == 0) {
                 continue;
             }
-            auto surface = createSurface(size, format.drmFormat, formats[format.drmFormat], importMode);
+            auto surface = createSurface(size, format.drmFormat, formats[format.drmFormat], importMode, bufferTarget);
             if (surface) {
                 return surface;
             }
@@ -359,9 +385,9 @@ static QList<uint64_t> filterModifiers(const QList<uint64_t> &one, const QList<u
     return ret;
 }
 
-std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(const QSize &size, uint32_t format, const QList<uint64_t> &modifiers, MultiGpuImportMode importMode) const
+std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(const QSize &size, uint32_t format, const QList<uint64_t> &modifiers, MultiGpuImportMode importMode, BufferTarget bufferTarget) const
 {
-    const bool cpuCopy = importMode == MultiGpuImportMode::DumbBuffer || m_bufferTarget == BufferTarget::Dumb;
+    const bool cpuCopy = importMode == MultiGpuImportMode::DumbBuffer || bufferTarget == BufferTarget::Dumb;
     QList<uint64_t> renderModifiers;
     auto ret = std::make_unique<Surface>();
     const auto drmFormat = m_eglBackend->eglDisplayObject()->allSupportedDrmFormats()[format];
@@ -385,8 +411,9 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
         return nullptr;
     }
     ret->context = m_eglBackend->contextForGpu(m_eglBackend->gpu());
+    ret->bufferTarget = bufferTarget;
     ret->importMode = importMode;
-    ret->forceLinear = importMode == MultiGpuImportMode::DumbBuffer || importMode == MultiGpuImportMode::LinearDmabuf || m_bufferTarget != BufferTarget::Normal;
+    ret->forceLinear = importMode == MultiGpuImportMode::DumbBuffer || importMode == MultiGpuImportMode::LinearDmabuf || bufferTarget != BufferTarget::Normal;
     ret->gbmSwapchain = createGbmSwapchain(m_eglBackend->gpu(), m_eglBackend->contextObject(), size, format, renderModifiers, ret->forceLinear);
     if (!ret->gbmSwapchain) {
         return nullptr;
@@ -454,7 +481,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::doRenderTestBuffer(Surface *
 
 std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importBuffer(Surface *surface, EglSwapchainSlot *slot) const
 {
-    if (m_bufferTarget == BufferTarget::Dumb || surface->importMode == MultiGpuImportMode::DumbBuffer) {
+    if (surface->bufferTarget == BufferTarget::Dumb || surface->importMode == MultiGpuImportMode::DumbBuffer) {
         return importWithCpu(surface, slot);
     } else if (surface->importMode == MultiGpuImportMode::Egl) {
         return importWithEgl(surface, slot->buffer());

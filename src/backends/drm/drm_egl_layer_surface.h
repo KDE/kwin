@@ -94,6 +94,7 @@ private:
         MultiGpuImportMode importMode;
         std::shared_ptr<DrmFramebuffer> currentFramebuffer;
         bool forceLinear = false;
+        BufferTarget bufferTarget;
 
         // for color management
         bool colormanagementEnabled = false;
@@ -114,7 +115,7 @@ private:
     bool checkSurface(const QSize &size, const QMap<uint32_t, QList<uint64_t>> &formats);
     bool doesSurfaceFit(Surface *surface, const QSize &size, const QMap<uint32_t, QList<uint64_t>> &formats) const;
     std::unique_ptr<Surface> createSurface(const QSize &size, const QMap<uint32_t, QList<uint64_t>> &formats) const;
-    std::unique_ptr<Surface> createSurface(const QSize &size, uint32_t format, const QList<uint64_t> &modifiers, MultiGpuImportMode importMode) const;
+    std::unique_ptr<Surface> createSurface(const QSize &size, uint32_t format, const QList<uint64_t> &modifiers, MultiGpuImportMode importMode, BufferTarget bufferTarget) const;
     std::shared_ptr<EglSwapchain> createGbmSwapchain(DrmGpu *gpu, EglContext *context, const QSize &size, uint32_t format, const QList<uint64_t> &modifiers, bool forceLinear) const;
 
     std::shared_ptr<DrmFramebuffer> doRenderTestBuffer(Surface *surface) const;
@@ -127,7 +128,7 @@ private:
 
     DrmGpu *const m_gpu;
     EglGbmBackend *const m_eglBackend;
-    const BufferTarget m_bufferTarget;
+    const BufferTarget m_requestedBufferTarget;
     const FormatOption m_formatOption;
 };
 
