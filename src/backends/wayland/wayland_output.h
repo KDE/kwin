@@ -87,6 +87,7 @@ public:
 private:
     void handleConfigure(const QSize &size, KWayland::Client::XdgShellSurface::States states, quint32 serial);
     void updateWindowTitle();
+    void applyConfigure(const QSize &size, quint32 serial);
 
     std::unique_ptr<RenderLoop> m_renderLoop;
     std::unique_ptr<KWayland::Client::Surface> m_surface;
@@ -99,6 +100,9 @@ private:
     bool m_hasPointerLock = false;
     bool m_ready = false;
     std::shared_ptr<OutputFrame> m_frame;
+    quint32 m_pendingConfigureSerial = 0;
+    QSize m_pendingConfigureSize;
+    QTimer m_configureThrottleTimer;
 };
 
 } // namespace Wayland

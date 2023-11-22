@@ -119,6 +119,11 @@ WaylandOutput::WaylandOutput(const QString &name, WaylandBackend *backend)
         updateDpmsMode(DpmsMode::Off);
     });
 
+    m_configureThrottleTimer.setSingleShot(true);
+    connect(&m_configureThrottleTimer, &QTimer::timeout, this, [this]() {
+        applyConfigure(m_pendingConfigureSize, m_pendingConfigureSerial);
+    });
+
     connect(m_surface.get(), &KWayland::Client::Surface::frameRendered, this, [this]() {
         Q_ASSERT(m_frame);
         const auto primary = Compositor::self()->backend()->primaryLayer(this);
@@ -242,12 +247,27 @@ void WaylandOutput::updateEnabled(bool enabled)
 
 void WaylandOutput::handleConfigure(const QSize &size, XdgShellSurface::States states, quint32 serial)
 {
+    if (!m_ready) {
+        m_ready = true;
+
+        applyConfigure(size, serial);
+    } else {
+        // Output resizing is a resource intensive task, so the configure events are throttled.
+        m_pendingConfigureSerial = serial;
+        m_pendingConfigureSize = size;
+
+        if (!m_configureThrottleTimer.isActive()) {
+            m_configureThrottleTimer.start(1000000 / m_state.currentMode->refreshRate());
+        }
+    }
+}
+
+void WaylandOutput::applyConfigure(const QSize &size, quint32 serial)
+{
     m_xdgShellSurface->ackConfigure(serial);
-    if (size.width() > 0 && size.height() > 0) {
+    if (!size.isEmpty()) {
         resize(size * scale());
     }
-
-    m_ready = true;
 }
 
 void WaylandOutput::updateWindowTitle()
