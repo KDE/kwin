@@ -213,10 +213,10 @@ void EffectWindow::addLayerRepaint(const QRect &r)
 
 const EffectWindowGroup *EffectWindow::group() const
 {
-    if (auto c = qobject_cast<X11Window *>(d->m_window)) {
-        return c->group()->effectGroup();
+    if (Group *group = d->m_window->group()) {
+        return group->effectGroup();
     }
-    return nullptr; // TODO
+    return nullptr;
 }
 
 void EffectWindow::refWindow()
