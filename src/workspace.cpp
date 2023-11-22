@@ -2002,9 +2002,9 @@ void Workspace::setWasUserInteraction()
 void Workspace::updateTabbox()
 {
 #if KWIN_BUILD_TABBOX
-    if (m_tabbox->isDisplayed()) {
-        m_tabbox->reset(true);
-    }
+    // Need to reset the client model even if the task switcher is hidden otherwise there
+    // might be dangling pointers. Consider rewriting client model logic!
+    m_tabbox->reset(true);
 #endif
 }
 
