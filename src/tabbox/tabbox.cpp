@@ -171,7 +171,7 @@ bool TabBoxHandlerImpl::checkMultiScreen(Window *client) const
 
 Window *TabBoxHandlerImpl::clientToAddToList(Window *client) const
 {
-    if (!client) {
+    if (!client || client->isDeleted()) {
         return nullptr;
     }
     Window *ret = nullptr;
