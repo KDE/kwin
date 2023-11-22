@@ -116,9 +116,10 @@ void ScreenTransformEffect::addScreen(Output *screen)
 
 void ScreenTransformEffect::removeScreen(Output *screen)
 {
-    effects->makeOpenGLContextCurrent();
-    m_states.remove(screen);
-    effects->doneOpenGLContextCurrent();
+    if (auto it = m_states.find(screen); it != m_states.end()) {
+        effects->makeOpenGLContextCurrent();
+        m_states.erase(it);
+    }
 }
 
 void ScreenTransformEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
