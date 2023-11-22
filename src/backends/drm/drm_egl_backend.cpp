@@ -9,6 +9,7 @@
 #include "drm_egl_backend.h"
 #include "platformsupport/scenes/opengl/basiceglsurfacetexture_wayland.h"
 // kwin
+#include "core/syncobjtimeline.h"
 #include "drm_abstract_output.h"
 #include "drm_backend.h"
 #include "drm_egl_cursor_layer.h"
@@ -197,6 +198,21 @@ std::shared_ptr<DrmOutputLayer> EglGbmBackend::createLayer(DrmVirtualOutput *out
 DrmGpu *EglGbmBackend::gpu() const
 {
     return m_backend->primaryGpu();
+}
+
+bool EglGbmBackend::supportsTimelines() const
+{
+    return m_backend->primaryGpu()->syncObjTimelinesSupported();
+}
+
+std::unique_ptr<SyncTimeline> EglGbmBackend::importTimeline(FileDescriptor &&syncObjFd)
+{
+    uint32_t handle = 0;
+    if (drmSyncobjFDToHandle(m_backend->primaryGpu()->fd(), syncObjFd.get(), &handle) != 0) {
+        qCWarning(KWIN_DRM) << "importing syncobj timeline failed!" << strerror(errno);
+        return nullptr;
+    }
+    return std::make_unique<SyncTimeline>(m_backend->primaryGpu()->fd(), handle);
 }
 
 } // namespace KWin

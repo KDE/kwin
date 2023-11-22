@@ -8,7 +8,9 @@
 #include "core/pixelgrid.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
+#include "core/syncobjtimeline.h"
 #include "effect/effect.h"
+#include "opengl/eglnativefence.h"
 #include "platformsupport/scenes/opengl/openglsurfacetexture.h"
 #include "scene/decorationitem.h"
 #include "scene/imageitem.h"
@@ -20,7 +22,8 @@
 namespace KWin
 {
 
-ItemRendererOpenGL::ItemRendererOpenGL()
+ItemRendererOpenGL::ItemRendererOpenGL(EglDisplay *eglDisplay)
+    : m_eglDisplay(eglDisplay)
 {
     const QString visualizeOptionsString = qEnvironmentVariable("KWIN_SCENE_VISUALIZE");
     if (!visualizeOptionsString.isEmpty()) {
@@ -46,6 +49,14 @@ void ItemRendererOpenGL::endFrame()
 {
     GLVertexBuffer::streamingBuffer()->endOfFrame();
     GLFramebuffer::popFramebuffer();
+
+    if (m_eglDisplay) {
+        EGLNativeFence fence(m_eglDisplay);
+        if (fence.isValid()) {
+            new SyncReleasePointHolder(std::move(fence.fileDescriptor()), std::move(m_releasePoints));
+        }
+    }
+    m_releasePoints.clear();
 }
 
 QVector4D ItemRendererOpenGL::modulate(float opacity, float brightness) const
@@ -173,6 +184,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
                 .coordinateType = UnnormalizedCoordinates,
                 .scale = scale,
                 .colorDescription = item->colorDescription(),
+                .bufferReleasePoint = nullptr,
             });
         }
     } else if (auto decorationItem = qobject_cast<DecorationItem *>(item)) {
@@ -187,6 +199,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
                 .coordinateType = UnnormalizedCoordinates,
                 .scale = scale,
                 .colorDescription = item->colorDescription(),
+                .bufferReleasePoint = nullptr,
             });
         }
     } else if (auto surfaceItem = qobject_cast<SurfaceItem *>(item)) {
@@ -202,6 +215,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
                     .coordinateType = NormalizedCoordinates,
                     .scale = scale,
                     .colorDescription = item->colorDescription(),
+                    .bufferReleasePoint = surfaceItem->bufferReleasePoint(),
                 });
             }
         }
@@ -216,6 +230,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
                 .coordinateType = NormalizedCoordinates,
                 .scale = scale,
                 .colorDescription = item->colorDescription(),
+                .bufferReleasePoint = nullptr,
             });
         }
     }
@@ -406,6 +421,9 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
                 glActiveTexture(GL_TEXTURE0 + plane);
                 contents.planes[plane]->unbind();
             }
+        }
+        if (renderNode.bufferReleasePoint) {
+            m_releasePoints.insert(renderNode.bufferReleasePoint);
         }
     }
     if (shader) {

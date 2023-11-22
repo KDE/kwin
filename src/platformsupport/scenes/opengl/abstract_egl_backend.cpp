@@ -13,6 +13,7 @@
 #include "opengl/egl_context_attribute_builder.h"
 #include "utils/common.h"
 #include "wayland/drmclientbuffer.h"
+#include "wayland/linux_drm_syncobj_v1.h"
 #include "wayland_server.h"
 // kwin libs
 #include "opengl/eglimagetexture.h"
@@ -217,9 +218,13 @@ void AbstractEglBackend::initWayland()
         .formatTable = includeShaderConversions(filterFormats({}, true)),
     });
 
+    waylandServer()->setRenderBackend(this);
     LinuxDmaBufV1ClientBufferIntegration *dmabuf = waylandServer()->linuxDmabuf();
     dmabuf->setRenderBackend(this);
     dmabuf->setSupportedFormatsWithModifiers(m_tranches);
+    if (auto syncObj = waylandServer()->linuxSyncObj()) {
+        syncObj->setRenderBackend(this);
+    }
 }
 
 void AbstractEglBackend::initClientExtensions()

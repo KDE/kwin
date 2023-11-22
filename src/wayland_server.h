@@ -58,6 +58,8 @@ class XdgSurfaceWindow;
 class XdgToplevelWindow;
 class PresentationTime;
 class XXColorManagerV2;
+class LinuxDrmSyncObjV1Interface;
+class RenderBackend;
 
 class KWIN_EXPORT WaylandServer : public QObject
 {
@@ -226,6 +228,10 @@ public:
         return m_xdgActivationIntegration;
     }
 
+    LinuxDrmSyncObjV1Interface *linuxSyncObj() const;
+
+    void setRenderBackend(RenderBackend *backend);
+
 Q_SIGNALS:
     void windowAdded(KWin::Window *);
     void windowRemoved(KWin::Window *);
@@ -284,6 +290,7 @@ private:
     TearingControlManagerV1Interface *m_tearingControlInterface = nullptr;
     XwaylandShellV1Interface *m_xwaylandShell = nullptr;
     PresentationTime *m_presentationTime = nullptr;
+    LinuxDrmSyncObjV1Interface *m_linuxDrmSyncObj = nullptr;
     QList<Window *> m_windows;
     InitializationFlags m_initFlags;
     QHash<Output *, OutputInterface *> m_waylandOutputs;

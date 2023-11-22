@@ -32,6 +32,7 @@ class SlideInterface;
 class SubSurfaceInterface;
 class SurfaceInterfacePrivate;
 class Transaction;
+class SyncReleasePoint;
 
 /**
  * The SurfaceRole class represents a role assigned to a wayland surface.
@@ -343,6 +344,12 @@ public:
     void setPreferredColorDescription(const ColorDescription &descr);
 
     /**
+     * @returns the release point that should be referenced as long as the buffer on this surface
+     *          is, or may still be used by the compositor
+     */
+    std::shared_ptr<SyncReleasePoint> bufferReleasePoint() const;
+
+    /**
      * Traverses the surface sub-tree with this surface as the root.
      */
     void traverseTree(std::function<void(SurfaceInterface *surface)> callback);
@@ -426,6 +433,7 @@ Q_SIGNALS:
 
     void colorDescriptionChanged();
     void presentationModeHintChanged();
+    void bufferReleasePointChanged();
 
     /**
      * Emitted when the Surface has been committed.

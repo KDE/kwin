@@ -41,6 +41,7 @@
 #include "wayland/inputmethod_v1.h"
 #include "wayland/keyboard_shortcuts_inhibit_v1.h"
 #include "wayland/keystate.h"
+#include "wayland/linux_drm_syncobj_v1.h"
 #include "wayland/linuxdmabufv1clientbuffer.h"
 #include "wayland/lockscreen_overlay_v1.h"
 #include "wayland/output.h"
@@ -809,6 +810,22 @@ QString WaylandServer::socketName() const
         return socketNames.first();
     }
     return QString();
+}
+
+LinuxDrmSyncObjV1Interface *WaylandServer::linuxSyncObj() const
+{
+    return m_linuxDrmSyncObj;
+}
+
+void WaylandServer::setRenderBackend(RenderBackend *backend)
+{
+    if (backend->supportsTimelines()) {
+        if (!m_linuxDrmSyncObj) {
+            m_linuxDrmSyncObj = new LinuxDrmSyncObjV1Interface(m_display, m_display);
+        }
+    } else if (m_linuxDrmSyncObj) {
+        m_linuxDrmSyncObj->remove();
+    }
 }
 
 #if KWIN_BUILD_SCREENLOCKER

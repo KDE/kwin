@@ -73,6 +73,7 @@ target_sources(kwin PRIVATE
     core/session_logind.cpp
     core/session_noop.cpp
     core/shmgraphicsbufferallocator.cpp
+    core/syncobjtimeline.cpp
     cursor.cpp
     cursorsource.cpp
     dbusinterface.cpp

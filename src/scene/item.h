@@ -22,6 +22,7 @@ namespace KWin
 
 class SceneDelegate;
 class Scene;
+class SyncReleasePoint;
 
 /**
  * The Item class is the base class for items in the scene.

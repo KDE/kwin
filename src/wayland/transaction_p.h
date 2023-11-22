@@ -33,4 +33,19 @@ private:
     std::vector<std::unique_ptr<QSocketNotifier>> m_notifiers;
 };
 
+class TransactionEventFdLocker : public QObject
+{
+    Q_OBJECT
+public:
+    TransactionEventFdLocker(Transaction *transaction, FileDescriptor &&eventFd, ClientConnection *client);
+
+private:
+    void unlock();
+
+    Transaction *const m_transaction;
+    const QPointer<ClientConnection> m_client;
+    const FileDescriptor m_eventFd;
+    QSocketNotifier m_notifier;
+};
+
 } // namespace KWin

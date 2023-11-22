@@ -38,6 +38,8 @@ public:
     QSize bufferSize() const;
     void setBufferSize(const QSize &size);
 
+    std::shared_ptr<SyncReleasePoint> bufferReleasePoint() const;
+
     QRegion mapFromBuffer(const QRegion &region) const;
 
     void addDamage(const QRegion &region);
@@ -82,6 +84,7 @@ protected:
     std::deque<std::chrono::nanoseconds> m_lastDamageTimeDiffs;
     std::optional<std::chrono::steady_clock::time_point> m_lastDamage;
     std::chrono::nanoseconds m_frameTimeEstimation = std::chrono::days(1000);
+    std::shared_ptr<SyncReleasePoint> m_bufferReleasePoint;
 };
 
 class KWIN_EXPORT SurfaceTexture

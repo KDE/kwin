@@ -86,7 +86,7 @@ bool WaylandCompositor::attemptOpenGLCompositing()
     }
 
     m_scene = std::make_unique<WorkspaceSceneOpenGL>(backend.get());
-    m_cursorScene = std::make_unique<CursorScene>(std::make_unique<ItemRendererOpenGL>());
+    m_cursorScene = std::make_unique<CursorScene>(std::make_unique<ItemRendererOpenGL>(backend->eglDisplayObject()));
     m_backend = std::move(backend);
 
     qCDebug(KWIN_CORE) << "OpenGL compositing has been successfully initialized";

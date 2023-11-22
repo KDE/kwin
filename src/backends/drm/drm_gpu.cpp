@@ -76,6 +76,9 @@ DrmGpu::DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t device
     m_addFB2ModifiersSupported = drmGetCap(fd, DRM_CAP_ADDFB2_MODIFIERS, &capability) == 0 && capability == 1;
     qCDebug(KWIN_DRM) << "drmModeAddFB2WithModifiers is" << (m_addFB2ModifiersSupported ? "supported" : "not supported") << "on GPU" << m_devNode;
 
+    m_supportsSyncTimelines = drmGetCap(fd, DRM_CAP_SYNCOBJ_TIMELINE, &capability) == 0 && capability == 1;
+    qCDebug(KWIN_DRM) << "sync obj timelines are" << (m_supportsSyncTimelines ? "supported" : "not supported") << "on GPU" << this;
+
     // find out what driver this kms device is using
     DrmUniquePtr<drmVersion> version(drmGetVersion(fd));
     m_isI915 = strstr(version->name, "i915");
@@ -697,6 +700,11 @@ bool DrmGpu::addFB2ModifiersSupported() const
 bool DrmGpu::asyncPageflipSupported() const
 {
     return m_asyncPageflipSupported;
+}
+
+bool DrmGpu::syncObjTimelinesSupported() const
+{
+    return m_supportsSyncTimelines;
 }
 
 bool DrmGpu::isI915() const

@@ -40,6 +40,7 @@ void GraphicsBuffer::unref()
         if (m_dropped) {
             delete this;
         } else {
+            m_releasePoints.clear();
             Q_EMIT released();
         }
     }
@@ -71,6 +72,11 @@ const DmaBufAttributes *GraphicsBuffer::dmabufAttributes() const
 const ShmAttributes *GraphicsBuffer::shmAttributes() const
 {
     return nullptr;
+}
+
+void GraphicsBuffer::addReleasePoint(const std::shared_ptr<SyncReleasePoint> &releasePoint)
+{
+    m_releasePoints.push_back(releasePoint);
 }
 
 bool GraphicsBuffer::alphaChannelFromDrmFormat(uint32_t format)

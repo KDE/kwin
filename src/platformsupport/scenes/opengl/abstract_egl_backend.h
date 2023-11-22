@@ -34,7 +34,7 @@ public:
 
     EGLSurface surface() const;
     EGLConfig config() const;
-    EglDisplay *eglDisplayObject() const;
+    EglDisplay *eglDisplayObject() const override;
     EglContext *contextObject();
 
     bool testImportBuffer(GraphicsBuffer *buffer) override;

@@ -10,8 +10,12 @@
 #include "platformsupport/scenes/opengl/openglsurfacetexture.h"
 #include "scene/itemrenderer.h"
 
+#include <unordered_set>
+
 namespace KWin
 {
+
+class EglDisplay;
 
 class KWIN_EXPORT ItemRendererOpenGL : public ItemRenderer
 {
@@ -28,6 +32,7 @@ public:
         TextureCoordinateType coordinateType = UnnormalizedCoordinates;
         qreal scale = 1.0;
         ColorDescription colorDescription;
+        std::shared_ptr<SyncReleasePoint> bufferReleasePoint;
     };
 
     struct RenderContext
@@ -41,7 +46,7 @@ public:
         const qreal renderTargetScale;
     };
 
-    ItemRendererOpenGL();
+    ItemRendererOpenGL(EglDisplay *eglDisplay);
 
     void beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport) override;
     void endFrame() override;
@@ -58,6 +63,8 @@ private:
     void visualizeFractional(const RenderViewport &viewport, const QRegion &region, const RenderContext &renderContext);
 
     bool m_blendingEnabled = false;
+    EglDisplay *const m_eglDisplay;
+    std::unordered_set<std::shared_ptr<SyncReleasePoint>> m_releasePoints;
 
     struct
     {
