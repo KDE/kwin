@@ -103,16 +103,18 @@ void BasicEGLSurfaceTextureWayland::updateShmTexture(GraphicsBuffer *buffer, con
 
 bool BasicEGLSurfaceTextureWayland::loadDmabufTexture(GraphicsBuffer *buffer)
 {
-    auto createTexture = [this](EGLImageKHR image, const QSize &size, bool isExternalOnly) {
+    auto createTexture = [this](EGLImageKHR image, const QSize &size, bool isExternalOnly) -> std::shared_ptr<GLTexture> {
         if (Q_UNLIKELY(image == EGL_NO_IMAGE_KHR)) {
             qCritical(KWIN_OPENGL) << "Invalid dmabuf-based wl_buffer";
-            return std::shared_ptr<GLTexture>();
+            return nullptr;
         }
 
         GLint target = isExternalOnly ? GL_TEXTURE_EXTERNAL_OES : GL_TEXTURE_2D;
         auto texture = std::make_shared<GLTexture>(target);
         texture->setSize(size);
-        texture->create();
+        if (!texture->create()) {
+            return nullptr;
+        }
         texture->setWrapMode(GL_CLAMP_TO_EDGE);
         texture->setFilter(GL_LINEAR);
         texture->bind();
