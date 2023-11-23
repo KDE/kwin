@@ -13,7 +13,7 @@
 #include <QObject>
 #include <QStringList>
 
-#include <kactivities/controller.h>
+#include <PlasmaActivities/Controller>
 
 namespace KActivities
 {

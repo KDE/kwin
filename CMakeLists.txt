@@ -115,12 +115,12 @@ set_package_properties(KWayland PROPERTIES
 )
 
 # optional frameworks
-find_package(KF6Activities ${PROJECT_VERSION} CONFIG)
-set_package_properties(KF6Activities PROPERTIES
+find_package(PlasmaActivities ${PROJECT_VERSION} CONFIG)
+set_package_properties(PlasmaActivities PROPERTIES
     PURPOSE "Enable building of KWin with kactivities support"
     TYPE OPTIONAL
 )
-add_feature_info("KF6Activities" KF6Activities_FOUND "Enable building of KWin with kactivities support")
+add_feature_info("PlasmaActivities" PlasmaActivities_FOUND "Enable building of KWin with kactivities support")
 
 find_package(KF6DocTools ${KF6_MIN_VERSION} CONFIG)
 set_package_properties(KF6DocTools PROPERTIES
@@ -371,7 +371,7 @@ ecm_find_qmlmodule(org.kde.plasma.core 2.0)
 ecm_find_qmlmodule(org.kde.plasma.components 2.0)
 
 ########### configure tests ###############
-cmake_dependent_option(KWIN_BUILD_ACTIVITIES "Enable building of KWin with kactivities support" ON "KF6Activities_FOUND" OFF)
+cmake_dependent_option(KWIN_BUILD_ACTIVITIES "Enable building of KWin with kactivities support" ON "PlasmaActivities_FOUND" OFF)
 option(KWIN_BUILD_RUNNERS "Enable building of KWin with krunner support" ON)
 
 set(HAVE_GLX ${epoxy_HAS_GLX})

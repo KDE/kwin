@@ -322,7 +322,7 @@ add_subdirectory(xwayland)
 
 if (KWIN_BUILD_ACTIVITIES)
     target_sources(kwin PRIVATE activities.cpp)
-    target_link_libraries(kwin PRIVATE KF6::Activities)
+    target_link_libraries(kwin PRIVATE Plasma::Activities)
 endif()
 
 if (KWIN_BUILD_SCREENLOCKER)

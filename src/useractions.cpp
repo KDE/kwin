@@ -37,7 +37,7 @@
 
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
-#include <kactivities/info.h>
+#include <PlasmaActivities/Info>
 #endif
 #include "appmenu.h"
 

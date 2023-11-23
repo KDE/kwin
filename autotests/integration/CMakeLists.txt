@@ -139,7 +139,7 @@ if (TARGET K::KPipeWire)
 endif()
 
 if (KWIN_BUILD_ACTIVITIES)
-    integrationTest(NAME testActivities SRCS activities_test.cpp LIBS XCB::ICCCM KF6::Activities)
+    integrationTest(NAME testActivities SRCS activities_test.cpp LIBS XCB::ICCCM Plasma::Activities)
 endif()
 
 add_subdirectory(scripting)
