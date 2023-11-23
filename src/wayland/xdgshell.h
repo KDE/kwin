@@ -10,6 +10,8 @@
 
 #include <QObject>
 #include <QSharedDataPointer>
+
+#include <chrono>
 #include <memory>
 
 struct wl_resource;
@@ -64,6 +66,16 @@ public:
      * emitted.
      */
     quint32 ping(XdgSurfaceInterface *surface);
+
+    /**
+     * Returns the ping timeout.
+     */
+    std::chrono::milliseconds pingTimeoutInterval() const;
+
+    /**
+     * Set the ping timeout.
+     */
+    void setPingTimeoutInterval(std::chrono::milliseconds pingTimeout);
 
 Q_SIGNALS:
     /**

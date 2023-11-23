@@ -41,7 +41,8 @@ void XdgShellInterfacePrivate::unregisterXdgSurface(XdgSurfaceInterface *surface
 void XdgShellInterfacePrivate::registerPing(quint32 serial)
 {
     QTimer *timer = new QTimer(q);
-    timer->setInterval(1000);
+    // we'll run the timer twice.
+    timer->setInterval(pingTimeout / 2);
     QObject::connect(timer, &QTimer::timeout, q, [this, serial, attempt = 0]() mutable {
         ++attempt;
         if (attempt == 1) {
@@ -132,6 +133,16 @@ quint32 XdgShellInterface::ping(XdgSurfaceInterface *surface)
     d->registerPing(serial);
 
     return serial;
+}
+
+std::chrono::milliseconds XdgShellInterface::pingTimeoutInterval() const
+{
+    return d->pingTimeout;
+}
+
+void XdgShellInterface::setPingTimeoutInterval(std::chrono::milliseconds pingTimeout)
+{
+    d->pingTimeout = pingTimeout;
 }
 
 XdgSurfaceInterfacePrivate::XdgSurfaceInterfacePrivate(XdgSurfaceInterface *xdgSurface)

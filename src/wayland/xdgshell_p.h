@@ -31,6 +31,7 @@ public:
     XdgShellInterface *q;
     Display *display = nullptr;
     QMap<quint32, QTimer *> pings;
+    std::chrono::milliseconds pingTimeout = std::chrono::milliseconds(1000);
 
 protected:
     void xdg_wm_base_destroy_resource(Resource *resource) override;

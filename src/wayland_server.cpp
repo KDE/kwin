@@ -18,6 +18,7 @@
 #include "layershellv1integration.h"
 #include "layershellv1window.h"
 #include "main.h"
+#include "options.h"
 #include "utils/serviceutils.h"
 #include "virtualdesktops.h"
 #include "wayland/appmenu.h"
@@ -518,6 +519,12 @@ void WaylandServer::initWorkspace()
     auto xdgShellIntegration = new XdgShellIntegration(this);
     connect(xdgShellIntegration, &XdgShellIntegration::windowCreated,
             this, &WaylandServer::registerXdgGenericWindow);
+
+    auto setPingTimeout = [xdgShellIntegration] {
+        xdgShellIntegration->setPingTimeout(std::chrono::milliseconds(options->killPingTimeout()));
+    };
+    connect(options, &Options::killPingTimeoutChanged, xdgShellIntegration, setPingTimeout);
+    setPingTimeout();
 
     auto layerShellV1Integration = new LayerShellV1Integration(this);
     connect(layerShellV1Integration, &LayerShellV1Integration::windowCreated,

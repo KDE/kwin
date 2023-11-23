@@ -28,13 +28,22 @@ namespace KWin
 
 XdgShellIntegration::XdgShellIntegration(QObject *parent)
     : WaylandShellIntegration(parent)
+    , m_shell(new XdgShellInterface(waylandServer()->display(), this))
 {
-    XdgShellInterface *shell = new XdgShellInterface(waylandServer()->display(), this);
-
-    connect(shell, &XdgShellInterface::toplevelCreated,
+    connect(m_shell, &XdgShellInterface::toplevelCreated,
             this, &XdgShellIntegration::registerXdgToplevel);
-    connect(shell, &XdgShellInterface::popupCreated,
+    connect(m_shell, &XdgShellInterface::popupCreated,
             this, &XdgShellIntegration::registerXdgPopup);
+}
+
+std::chrono::milliseconds XdgShellIntegration::pingTimeout() const
+{
+    return m_shell->pingTimeoutInterval();
+}
+
+void XdgShellIntegration::setPingTimeout(std::chrono::milliseconds pingTimeout)
+{
+    m_shell->setPingTimeoutInterval(pingTimeout);
 }
 
 void XdgShellIntegration::registerXdgToplevel(XdgToplevelInterface *toplevel)

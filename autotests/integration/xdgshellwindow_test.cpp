@@ -822,7 +822,8 @@ void TestXdgShellWindow::testUnresponsiveWindow()
     QVERIFY(unresponsiveSpy.wait());
     // window should be marked unresponsive but not killed
     auto elapsed1 = QDateTime::currentMSecsSinceEpoch() - startTime;
-    QVERIFY(elapsed1 > 900 && elapsed1 < 1200); // ping timer is 1s, but coarse timers on a test across two processes means we need a fuzzy compare
+    const int timeout = options->killPingTimeout() / 2;
+    QVERIFY(elapsed1 > timeout - 200 && elapsed1 < timeout + 200); // coarse timers on a test across two processes means we need a fuzzy compare
     QVERIFY(killWindow->unresponsive());
     QVERIFY(killedSpy.isEmpty());
 
@@ -833,7 +834,7 @@ void TestXdgShellWindow::testUnresponsiveWindow()
     }
 
     auto elapsed2 = QDateTime::currentMSecsSinceEpoch() - startTime;
-    QVERIFY(elapsed2 > 1800); // second ping comes in a second later
+    QVERIFY(elapsed2 > timeout * 2 - 200); // second ping comes in later
 }
 
 void TestXdgShellWindow::testAppMenu()
