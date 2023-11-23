@@ -129,7 +129,7 @@ private:
     const std::chrono::microseconds m_timestamp;
 };
 
-class KeyEvent : public QKeyEvent
+class KWIN_EXPORT KeyEvent : public QKeyEvent
 {
 public:
     explicit KeyEvent(QEvent::Type type, Qt::Key key, Qt::KeyboardModifiers modifiers, quint32 code, quint32 keysym,

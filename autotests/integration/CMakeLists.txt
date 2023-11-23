@@ -69,6 +69,7 @@ integrationTest(NAME testDontCrashGlxgears SRCS dont_crash_glxgears.cpp LIBS KF6
 if (KWIN_BUILD_SCREENLOCKER)
     integrationTest(NAME testLockScreen SRCS lockscreen.cpp LIBS KF6::GlobalAccel)
 endif()
+integrationTest(NAME testBounceKeys SRCS bounce_keys_test.cpp)
 integrationTest(NAME testDecorationInput SRCS decoration_input_test.cpp LIBS KDecoration2::KDecoration KDecoration2::KDecoration2Private)
 integrationTest(NAME testInternalWindow SRCS internal_window.cpp)
 integrationTest(NAME testTouchInput SRCS touch_input_test.cpp)
