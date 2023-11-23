@@ -8,7 +8,9 @@ qt6_generate_wayland_protocol_client_sources(kwin_killer_helper FILES ${WaylandP
 
 target_link_libraries(kwin_killer_helper
     KF6::AuthCore
+    KF6::GuiAddons
     KF6::I18n
+    KF6::Service
     KF6::WidgetsAddons
     Qt::GuiPrivate
     Qt::WaylandClient
