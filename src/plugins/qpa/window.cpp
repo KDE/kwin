@@ -101,7 +101,11 @@ QSurfaceFormat Window::format() const
 
 void Window::requestActivateWindow()
 {
+#if QT_VERSION < QT_VERSION_CHECK(6, 7, 0)
     QWindowSystemInterface::handleWindowActivated(window());
+#else
+    QWindowSystemInterface::handleFocusWindowChanged(window());
+#endif
 }
 
 void Window::setGeometry(const QRect &rect)
