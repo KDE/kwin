@@ -12,7 +12,7 @@
 constexpr QLatin1String KWIN_CONFIG("kwinrc");
 constexpr QLatin1String KWIN_VERSION_STRING("${PROJECT_VERSION}");
 constexpr QLatin1String XCB_VERSION_STRING("${XCB_VERSION}");
-constexpr QLatin1String KWIN_KILLER_BIN("${CMAKE_INSTALL_FULL_LIBEXECDIR}/kwin_killer_helper");
+constexpr QLatin1String KWIN_KILLER_BIN("${KWIN_KILLER_BIN}");
 #cmakedefine01 HAVE_X11_XCB
 #cmakedefine01 HAVE_X11_XINPUT
 #cmakedefine01 HAVE_GBM_BO_GET_FD_FOR_PLANE

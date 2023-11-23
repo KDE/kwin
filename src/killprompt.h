@@ -18,7 +18,7 @@ class KillPrompt
 public:
     /**
      * @brief Creates a kill helper process.
-     * @param window The window to kill, must be an X11Window
+     * @param window The window to kill, must be an X11Window or XdgToplevelWindow.
      */
     explicit KillPrompt(Window *window);
 

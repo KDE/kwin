@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=KWin Kill Helper
+Comment=Prompts whether to kill an unresponsive window
+Exec=@KWIN_KILLER_BIN@
+Terminal=false
+NoDisplay=true
+Icon=tools-report-bug
+StartupNotify=false

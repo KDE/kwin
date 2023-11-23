@@ -14,6 +14,7 @@
 #include "activities.h"
 #endif
 #include "decorations/decorationbridge.h"
+#include "killprompt.h"
 #include "placement.h"
 #include "pointer_input.h"
 #include "touch_input.h"
@@ -453,6 +454,9 @@ XdgToplevelWindow::XdgToplevelWindow(XdgToplevelInterface *shellSurface)
 
 XdgToplevelWindow::~XdgToplevelWindow()
 {
+    if (m_killPrompt) {
+        m_killPrompt->quit();
+    }
 }
 
 void XdgToplevelWindow::handleRoleDestroyed()
@@ -1085,11 +1089,11 @@ void XdgToplevelWindow::handlePingTimeout(quint32 serial)
     if (pingIt.value() == PingReason::CloseWindow) {
         qCDebug(KWIN_CORE) << "Final ping timeout on a close attempt, asking to kill:" << caption();
 
-        // for internal windows, killing the window will delete this
-        QPointer<QObject> guard(this);
-        killWindow();
-        if (!guard) {
-            return;
+        if (!m_killPrompt) {
+            m_killPrompt = std::make_unique<KillPrompt>(this);
+        }
+        if (!m_killPrompt->isRunning()) {
+            m_killPrompt->start();
         }
     }
     m_pings.erase(pingIt);
@@ -1108,6 +1112,9 @@ void XdgToplevelWindow::handlePongReceived(quint32 serial)
 {
     if (m_pings.remove(serial)) {
         setUnresponsive(false);
+        if (m_killPrompt) {
+            m_killPrompt->quit();
+        }
     }
 }
 

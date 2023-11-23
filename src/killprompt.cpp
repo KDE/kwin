@@ -7,7 +7,13 @@
 #include "killprompt.h"
 
 #include "client_machine.h"
+#include "wayland/display.h"
+#include "wayland/seat.h"
+#include "wayland/xdgforeign_v2.h"
+#include "wayland_server.h"
 #include "x11window.h"
+#include "xdgactivationv1.h"
+#include "xdgshellwindow.h"
 
 #include <QDir>
 #include <QFileInfo>
@@ -19,7 +25,7 @@ namespace KWin
 KillPrompt::KillPrompt(Window *window)
     : m_window(window)
 {
-    Q_ASSERT(qobject_cast<X11Window *>(window));
+    Q_ASSERT(qobject_cast<X11Window *>(window) || qobject_cast<XdgToplevelWindow *>(window));
 
     m_process.setProcessChannelMode(QProcess::ForwardedChannels);
 
@@ -49,22 +55,37 @@ void KillPrompt::start(quint32 timestamp)
     QString wid;
     QString timestampString;
     QString hostname = QStringLiteral("localhost");
+    QString appId = !m_window->desktopFileName().isEmpty() ? m_window->desktopFileName() : m_window->resourceClass();
+    QString platform;
 
     if (auto *x11Window = qobject_cast<X11Window *>(m_window)) {
+        platform = QStringLiteral("xcb");
         wid = QString::number(x11Window->window());
         timestampString = QString::number(timestamp);
         if (!x11Window->clientMachine()->isLocal()) {
             hostname = x11Window->clientMachine()->hostName();
         }
+    } else if (auto *xdgToplevel = qobject_cast<XdgToplevelWindow *>(m_window)) {
+        platform = QStringLiteral("wayland");
+        auto *exported = waylandServer()->exportAsForeign(xdgToplevel->surface());
+        wid = exported->handle();
+
+        auto *seat = waylandServer()->seat();
+        const QString token = waylandServer()->xdgActivationIntegration()->requestPrivilegedToken(nullptr, seat->display()->serial(), seat, QStringLiteral("org.kde.kwin.killer"));
+        env.insert(QStringLiteral("XDG_ACTIVATION_TOKEN"), token);
+
+        env.remove(QStringLiteral("QT_WAYLAND_RECONNECT"));
     }
 
     QStringList args{
+        QStringLiteral("-platform"),
+        platform,
         QStringLiteral("--pid"),
         QString::number(m_window->pid()),
         QStringLiteral("--windowname"),
         m_window->captionNormal(),
         QStringLiteral("--applicationname"),
-        m_window->resourceClass(),
+        appId,
         QStringLiteral("--wid"),
         wid,
         QStringLiteral("--hostname"),

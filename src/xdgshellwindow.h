@@ -23,6 +23,7 @@ namespace KWin
 {
 
 class AppMenuInterface;
+class KillPrompt;
 class PlasmaShellSurfaceInterface;
 class ServerSideDecorationInterface;
 class ServerSideDecorationPaletteInterface;
@@ -227,6 +228,7 @@ private:
     bool m_isTransient = false;
     QPointer<Output> m_fullScreenRequestedOutput;
     std::shared_ptr<KDecoration2::Decoration> m_nextDecoration;
+    std::unique_ptr<KillPrompt> m_killPrompt;
 };
 
 class XdgPopupWindow final : public XdgSurfaceWindow
