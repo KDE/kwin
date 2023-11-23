@@ -510,6 +510,11 @@ SurfaceInterface *WaylandServer::findForeignTransientForSurface(SurfaceInterface
     return m_XdgForeign->transientFor(surface);
 }
 
+XdgExportedSurface *WaylandServer::exportAsForeign(SurfaceInterface *surface)
+{
+    return m_XdgForeign->exportSurface(surface);
+}
+
 void WaylandServer::initWorkspace()
 {
     auto inputPanelV1Integration = new InputPanelV1Integration(this);

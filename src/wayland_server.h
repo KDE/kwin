@@ -36,6 +36,7 @@ class PlasmaVirtualDesktopManagementInterface;
 class PlasmaWindowManagementInterface;
 class OutputDeviceV2Interface;
 class OutputManagementV2Interface;
+class XdgExportedSurface;
 class XdgForeignV2Interface;
 class XdgOutputManagerV1Interface;
 class DrmClientBufferIntegration;
@@ -152,6 +153,11 @@ public:
      * @returns a transient parent of a surface imported with the foreign protocol, if any
      */
     SurfaceInterface *findForeignTransientForSurface(SurfaceInterface *surface);
+
+    /**
+     * Exports a surface with the foreign protocol
+     */
+    XdgExportedSurface *exportAsForeign(SurfaceInterface *surface);
 
     /**
      * @returns file descriptor for Xwayland to connect to.

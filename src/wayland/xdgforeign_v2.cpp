@@ -1,6 +1,7 @@
 /*
     SPDX-FileCopyrightText: 2017 Marco Martin <notmart@gmail.com>
     SPDX-FileCopyrightText: 2021 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+    SPDX-FileCopyrightText: 2023 Kai Uwe Broulik <kde@broulik.de>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
@@ -14,6 +15,29 @@ namespace KWin
 {
 static const quint32 s_exporterVersion = 1;
 static const quint32 s_importerVersion = 1;
+
+XdgExportedSurface::XdgExportedSurface(SurfaceInterface *surface)
+    : QObject()
+    , m_handle(QUuid::createUuid().toString())
+    , m_surface(surface)
+{
+    connect(m_surface, &QObject::destroyed, this, &XdgExportedSurface::handleSurfaceDestroyed);
+}
+
+QString XdgExportedSurface::handle() const
+{
+    return m_handle;
+}
+
+SurfaceInterface *XdgExportedSurface::surface() const
+{
+    return m_surface;
+}
+
+void XdgExportedSurface::handleSurfaceDestroyed()
+{
+    delete this;
+}
 
 XdgForeignV2InterfacePrivate::XdgForeignV2InterfacePrivate(Display *display, XdgForeignV2Interface *_q)
     : q(_q)
@@ -37,15 +61,36 @@ SurfaceInterface *XdgForeignV2Interface::transientFor(SurfaceInterface *surface)
     return d->importer->transientFor(surface);
 }
 
+XdgExportedSurface *XdgForeignV2Interface::exportSurface(SurfaceInterface *surface)
+{
+    return d->exporter->exportSurface(surface);
+}
+
 XdgExporterV2Interface::XdgExporterV2Interface(Display *display, XdgForeignV2Interface *foreign)
     : QObject(foreign)
     , QtWaylandServer::zxdg_exporter_v2(*display, s_exporterVersion)
 {
 }
 
-XdgExportedV2Interface *XdgExporterV2Interface::exportedSurface(const QString &handle)
+XdgExportedSurface *XdgExporterV2Interface::exportedSurface(const QString &handle) const
 {
     return m_exportedSurfaces.value(handle);
+}
+
+XdgExportedSurface *XdgExporterV2Interface::exportSurface(SurfaceInterface *surface)
+{
+    auto *exported = new XdgExportedSurface(surface);
+    addExported(exported);
+    return exported;
+}
+
+void XdgExporterV2Interface::addExported(XdgExportedSurface *exported)
+{
+    const QString handle = exported->handle();
+    connect(exported, &XdgExportedSurface::destroyed, this, [this, handle] {
+        m_exportedSurfaces.remove(handle);
+    });
+    m_exportedSurfaces[handle] = exported;
 }
 
 void XdgExporterV2Interface::zxdg_exporter_v2_destroy(Resource *resource)
@@ -68,15 +113,9 @@ void XdgExporterV2Interface::zxdg_exporter_v2_export_toplevel(Resource *resource
     }
 
     XdgExportedV2Interface *exported = new XdgExportedV2Interface(surface, exportedResource);
-    const QString handle = QUuid::createUuid().toString();
+    addExported(exported);
 
-    // a surface not exported anymore
-    connect(exported, &XdgExportedV2Interface::destroyed, this, [this, handle]() {
-        m_exportedSurfaces.remove(handle);
-    });
-
-    m_exportedSurfaces[handle] = exported;
-    exported->send_handle(handle);
+    exported->send_handle(exported->handle());
 }
 
 XdgImporterV2Interface::XdgImporterV2Interface(Display *display, XdgForeignV2Interface *foreign)
@@ -110,7 +149,7 @@ void XdgImporterV2Interface::zxdg_importer_v2_import_toplevel(Resource *resource
 
     // If there is no exported surface with the specified handle, we must still create an
     // inert xdg_imported object and send the destroyed event right afterwards.
-    XdgExportedV2Interface *exported = m_foreign->d->exporter->exportedSurface(handle);
+    XdgExportedSurface *exported = m_foreign->d->exporter->exportedSurface(handle);
     if (!exported) {
         auto imported = new XdgDummyImportedV2Interface(importedResource);
         imported->send_destroyed();
@@ -175,15 +214,9 @@ void XdgImporterV2Interface::unlink(XdgImportedV2Interface *parent, SurfaceInter
 }
 
 XdgExportedV2Interface::XdgExportedV2Interface(SurfaceInterface *surface, wl_resource *resource)
-    : QtWaylandServer::zxdg_exported_v2(resource)
-    , m_surface(surface)
+    : XdgExportedSurface(surface)
+    , QtWaylandServer::zxdg_exported_v2(resource)
 {
-    connect(surface, &QObject::destroyed, this, &XdgExportedV2Interface::handleSurfaceDestroyed);
-}
-
-SurfaceInterface *XdgExportedV2Interface::surface()
-{
-    return m_surface;
 }
 
 void XdgExportedV2Interface::zxdg_exported_v2_destroy(Resource *resource)
@@ -192,11 +225,6 @@ void XdgExportedV2Interface::zxdg_exported_v2_destroy(Resource *resource)
 }
 
 void XdgExportedV2Interface::zxdg_exported_v2_destroy_resource(Resource *resource)
-{
-    delete this;
-}
-
-void XdgExportedV2Interface::handleSurfaceDestroyed()
 {
     delete this;
 }
@@ -216,11 +244,11 @@ void XdgDummyImportedV2Interface::zxdg_imported_v2_destroy_resource(Resource *re
     delete this;
 }
 
-XdgImportedV2Interface::XdgImportedV2Interface(XdgExportedV2Interface *exported, wl_resource *resource)
+XdgImportedV2Interface::XdgImportedV2Interface(XdgExportedSurface *exported, wl_resource *resource)
     : QtWaylandServer::zxdg_imported_v2(resource)
     , m_exported(exported)
 {
-    connect(exported, &QObject::destroyed, this, &XdgImportedV2Interface::handleExportedDestroyed);
+    connect(exported, &XdgExportedSurface::destroyed, this, &XdgImportedV2Interface::handleExportedDestroyed);
 }
 
 SurfaceInterface *XdgImportedV2Interface::child() const

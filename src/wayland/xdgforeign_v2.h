@@ -16,6 +16,23 @@ class Display;
 class SurfaceInterface;
 class XdgForeignV2InterfacePrivate;
 
+class KWIN_EXPORT XdgExportedSurface : public QObject
+{
+    Q_OBJECT
+
+public:
+    XdgExportedSurface(SurfaceInterface *surface);
+
+    QString handle() const;
+    SurfaceInterface *surface() const;
+
+private:
+    void handleSurfaceDestroyed();
+
+    const QString m_handle;
+    SurfaceInterface *m_surface;
+};
+
 /**
  * This class encapsulates the server side logic of the XdgForeign protocol.
  * a process can export a surface to be identifiable by a server-wide unique
@@ -38,6 +55,13 @@ public:
      * @returns the transient parent of the surface, if found, nullptr otherwise.
      */
     SurfaceInterface *transientFor(SurfaceInterface *surface);
+
+    /**
+     * Exports the given surface without creating a Wayland interface object.
+     * @param surface The surface to export
+     * @return The handle, this can then be passed to other clients.
+     */
+    XdgExportedSurface *exportSurface(SurfaceInterface *surface);
 
 Q_SIGNALS:
     /**
