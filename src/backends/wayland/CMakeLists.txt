@@ -7,4 +7,4 @@ target_sources(kwin PRIVATE
     wayland_qpainter_backend.cpp
 )
 
-target_link_libraries(kwin PRIVATE KF6::WaylandClient Wayland::Client gbm::gbm)
+target_link_libraries(kwin PRIVATE Plasma::KWaylandClient Wayland::Client gbm::gbm)

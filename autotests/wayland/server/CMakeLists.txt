@@ -35,7 +35,7 @@ add_executable(testTabletInterface)
 qt6_generate_wayland_protocol_client_sources(testTabletInterface FILES
     ${WaylandProtocols_DATADIR}/unstable/tablet/tablet-unstable-v2.xml)
 target_sources(testTabletInterface PRIVATE test_tablet_interface.cpp ${TABLET_SRCS})
-target_link_libraries( testTabletInterface Qt::Test kwin KF6::WaylandClient Wayland::Client)
+target_link_libraries( testTabletInterface Qt::Test kwin Plasma::KWaylandClient Wayland::Client)
 add_test(NAME kwayland-testTabletInterface COMMAND testTabletInterface)
 ecm_mark_as_test(testTabletInterface)
 
@@ -46,7 +46,7 @@ add_executable(testDataControlInterface test_datacontrol_interface.cpp ${DATACON
 qt6_generate_wayland_protocol_client_sources(testDataControlInterface FILES
     ${PROJECT_SOURCE_DIR}/src/wayland/protocols/wlr-data-control-unstable-v1.xml)
 target_sources(testDataControlInterface PRIVATE test_datacontrol_interface.cpp ${DATACONTROL_SRCS})
-target_link_libraries( testDataControlInterface Qt::Test kwin KF6::WaylandClient Wayland::Client)
+target_link_libraries( testDataControlInterface Qt::Test kwin Plasma::KWaylandClient Wayland::Client)
 add_test(NAME kwayland-testDataControlInterface COMMAND testDataControlInterface)
 ecm_mark_as_test(testDataControlInterface)
 
@@ -57,7 +57,7 @@ add_executable(testKeyboardShortcutsInhibitorInterface)
 qt6_generate_wayland_protocol_client_sources(testKeyboardShortcutsInhibitorInterface FILES
     ${WaylandProtocols_DATADIR}/unstable/keyboard-shortcuts-inhibit/keyboard-shortcuts-inhibit-unstable-v1.xml)
 target_sources(testKeyboardShortcutsInhibitorInterface PRIVATE test_keyboard_shortcuts_inhibitor_interface.cpp ${KEYBOARD_SHORTCUTS_INHIBITOR_SRCS})
-target_link_libraries(testKeyboardShortcutsInhibitorInterface Qt::Test kwin KF6::WaylandClient Wayland::Client)
+target_link_libraries(testKeyboardShortcutsInhibitorInterface Qt::Test kwin Plasma::KWaylandClient Wayland::Client)
 add_test(NAME kwayland-testKeyboardShortcutsInhibitorInterface COMMAND testKeyboardShortcutsInhibitorInterface)
 ecm_mark_as_test(testKeyboardShortcutsInhibitorInterface)
 
@@ -68,7 +68,7 @@ add_executable(testViewporterInterface)
 qt6_generate_wayland_protocol_client_sources(testViewporterInterface FILES
     ${WaylandProtocols_DATADIR}/stable/viewporter/viewporter.xml)
 target_sources(testViewporterInterface PRIVATE test_viewporter_interface.cpp ${VIEWPORTER_SRCS})
-target_link_libraries(testViewporterInterface Qt::Test kwin KF6::WaylandClient Wayland::Client)
+target_link_libraries(testViewporterInterface Qt::Test kwin Plasma::KWaylandClient Wayland::Client)
 add_test(NAME kwayland-testViewporterInterface COMMAND testViewporterInterface)
 ecm_mark_as_test(testViewporterInterface)
 
@@ -79,7 +79,7 @@ add_executable(testScreencastV1Interface)
 qt6_generate_wayland_protocol_client_sources(testScreencastV1Interface FILES
     ${PLASMA_WAYLAND_PROTOCOLS_DIR}/zkde-screencast-unstable-v1.xml)
 target_sources(testScreencastV1Interface PRIVATE test_screencast.cpp ${SCREENCAST_SRCS})
-target_link_libraries(testScreencastV1Interface Qt::Test kwin Wayland::Client KF6::WaylandClient)
+target_link_libraries(testScreencastV1Interface Qt::Test kwin Wayland::Client Plasma::KWaylandClient)
 add_test(NAME kwayland-testScreencastV1Interface COMMAND testScreencastV1Interface)
 ecm_mark_as_test(testScreencastV1Interface)
 
@@ -97,7 +97,7 @@ target_sources(testInputMethodInterface PRIVATE
     ${PROJECT_SOURCE_DIR}/tests/fakeoutput.cpp
     ${INPUTMETHOD_SRCS}
 )
-target_link_libraries(testInputMethodInterface Qt::Test kwin KF6::WaylandClient Wayland::Client)
+target_link_libraries(testInputMethodInterface Qt::Test kwin Plasma::KWaylandClient Wayland::Client)
 add_test(NAME kwayland-testInputMethodInterface COMMAND testInputMethodInterface)
 ecm_mark_as_test(testInputMethodInterface)
 
@@ -110,7 +110,7 @@ qt6_generate_wayland_protocol_client_sources(testLayerShellV1Interface FILES
     ${WaylandProtocols_DATADIR}/stable/xdg-shell/xdg-shell.xml
 )
 target_sources(testLayerShellV1Interface PRIVATE test_layershellv1_interface.cpp ${LAYERSHELLV1_SRCS})
-target_link_libraries(testLayerShellV1Interface Qt::Test kwin KF6::WaylandClient Wayland::Client)
+target_link_libraries(testLayerShellV1Interface Qt::Test kwin Plasma::KWaylandClient Wayland::Client)
 add_test(NAME kwayland-testLayerShellV1Interface COMMAND testLayerShellV1Interface)
 ecm_mark_as_test(testLayerShellV1Interface)
 
@@ -122,7 +122,7 @@ add_executable(testTextInputV3Interface)
 qt6_generate_wayland_protocol_client_sources(testTextInputV3Interface FILES
     ${WaylandProtocols_DATADIR}/unstable/text-input/text-input-unstable-v3.xml)
 target_sources(testTextInputV3Interface PRIVATE test_textinputv3_interface.cpp ${TEXTINPUTV3_SRCS})
-target_link_libraries(testTextInputV3Interface Qt::Test kwin KF6::WaylandClient Wayland::Client)
+target_link_libraries(testTextInputV3Interface Qt::Test kwin Plasma::KWaylandClient Wayland::Client)
 add_test(NAME kwayland-testTextInputV3Interface COMMAND testTextInputV3Interface)
 ecm_mark_as_test(testTextInputV3Interface)
 
@@ -133,6 +133,6 @@ add_executable(testTextInputV1Interface)
 qt6_generate_wayland_protocol_client_sources(testTextInputV1Interface FILES
     ${WaylandProtocols_DATADIR}/unstable/text-input/text-input-unstable-v1.xml)
 target_sources(testTextInputV1Interface PRIVATE test_textinputv1_interface.cpp ${TEXTINPUTV1_SRCS})
-target_link_libraries(testTextInputV1Interface Qt::Test kwin KF6::WaylandClient Wayland::Client)
+target_link_libraries(testTextInputV1Interface Qt::Test kwin Plasma::KWaylandClient Wayland::Client)
 add_test(NAME kwayland-testTextInputV1Interface COMMAND testTextInputV1Interface)
 ecm_mark_as_test(testTextInputV1Interface)

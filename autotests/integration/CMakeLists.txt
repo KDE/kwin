@@ -33,7 +33,7 @@ target_sources(KWinIntegrationTestFramework PRIVATE
 target_link_libraries(KWinIntegrationTestFramework
     PUBLIC
         Qt::Test
-        KF6::WaylandClient
+        Plasma::KWaylandClient
         Wayland::Client
         Libdrm::Libdrm
         kwin
