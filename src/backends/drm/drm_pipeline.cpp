@@ -661,7 +661,11 @@ void DrmPipeline::setRgbRange(Output::RgbRange range)
 void DrmPipeline::setGammaRamp(const std::shared_ptr<ColorTransformation> &transformation)
 {
     m_pending.colorTransformation = transformation;
-    m_pending.gamma = std::make_shared<DrmGammaRamp>(m_pending.crtc, transformation);
+    if (transformation) {
+        m_pending.gamma = std::make_shared<DrmGammaRamp>(m_pending.crtc, transformation);
+    } else {
+        m_pending.gamma.reset();
+    }
 }
 
 static uint64_t doubleToFixed(double value)

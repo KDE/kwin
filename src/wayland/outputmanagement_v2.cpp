@@ -5,14 +5,14 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 #include "outputmanagement_v2.h"
+#include "core/iccprofile.h"
+#include "core/outputbackend.h"
+#include "core/outputconfiguration.h"
 #include "display.h"
+#include "main.h"
 #include "outputdevice_v2.h"
 #include "outputmanagement_v2.h"
 #include "utils/common.h"
-
-#include "core/outputbackend.h"
-#include "core/outputconfiguration.h"
-#include "main.h"
 #include "workspace.h"
 
 #include "qwayland-server-kde-output-management-v2.h"
@@ -293,7 +293,9 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_set_icc_profile
         return;
     }
     if (OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice)) {
-        config.changeSet(output->handle())->iccProfilePath = profile_path;
+        const auto set = config.changeSet(output->handle());
+        set->iccProfilePath = profile_path;
+        set->iccProfile = IccProfile::load(profile_path);
     }
 }
 

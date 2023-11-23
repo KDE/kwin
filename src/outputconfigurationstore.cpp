@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "outputconfigurationstore.h"
+#include "core/iccprofile.h"
 #include "core/inputdevice.h"
 #include "core/output.h"
 #include "core/outputbackend.h"
@@ -287,6 +288,7 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::setupT
             .wideColorGamut = state.wideColorGamut,
             .autoRotationPolicy = state.autoRotation,
             .iccProfilePath = state.iccProfilePath,
+            .iccProfile = state.iccProfilePath ? IccProfile::load(*state.iccProfilePath) : nullptr,
             .maxPeakBrightnessOverride = state.maxPeakBrightnessOverride,
             .maxAverageBrightnessOverride = state.maxAverageBrightnessOverride,
             .minBrightnessOverride = state.minBrightnessOverride,
