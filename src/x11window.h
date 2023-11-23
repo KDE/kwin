@@ -32,6 +32,8 @@ class KStartupInfoId;
 namespace KWin
 {
 
+class KillPrompt;
+
 /**
  * @brief Defines Predicates on how to search for a Client.
  *
@@ -479,7 +481,7 @@ private:
     QString cap_normal, cap_iconic, cap_suffix;
     Group *in_group;
     QTimer *ping_timer;
-    qint64 m_killHelperPID;
+    std::unique_ptr<KillPrompt> m_killPrompt;
     xcb_timestamp_t m_pingTimestamp;
     xcb_timestamp_t m_userTime;
     NET::Actions allowed_actions;

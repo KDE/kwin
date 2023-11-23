@@ -114,6 +114,7 @@ target_sources(kwin PRIVATE
     keyboard_layout.cpp
     keyboard_layout_switching.cpp
     keyboard_repeat.cpp
+    killprompt.cpp
     killwindow.cpp
     kscreenintegration.cpp
     layers.cpp

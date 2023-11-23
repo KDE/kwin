@@ -23,6 +23,7 @@
 #include "effect/effecthandler.h"
 #include "focuschain.h"
 #include "group.h"
+#include "killprompt.h"
 #include "netinfo.h"
 #include "placement.h"
 #include "scene/surfaceitem_x11.h"
@@ -290,7 +291,6 @@ X11Window::X11Window()
     , blocks_compositing(false)
     , in_group(nullptr)
     , ping_timer(nullptr)
-    , m_killHelperPID(0)
     , m_pingTimestamp(XCB_TIME_CURRENT_TIME)
     , m_userTime(XCB_TIME_CURRENT_TIME) // Not known yet
     , allowed_actions()
@@ -356,9 +356,8 @@ X11Window::~X11Window()
 {
     delete info;
 
-    if (m_killHelperPID && !::kill(m_killHelperPID, 0)) { // means the process is alive
-        ::kill(m_killHelperPID, SIGTERM);
-        m_killHelperPID = 0;
+    if (m_killPrompt) {
+        m_killPrompt->quit();
     }
 
     Q_ASSERT(!isInteractiveMoveResize());
@@ -2106,15 +2105,14 @@ void X11Window::gotPing(xcb_timestamp_t timestamp)
 
     setUnresponsive(false);
 
-    if (m_killHelperPID && !::kill(m_killHelperPID, 0)) { // means the process is alive
-        ::kill(m_killHelperPID, SIGTERM);
-        m_killHelperPID = 0;
+    if (m_killPrompt) {
+        m_killPrompt->quit();
     }
 }
 
 void X11Window::killProcess(bool ask, xcb_timestamp_t timestamp)
 {
-    if (m_killHelperPID && !::kill(m_killHelperPID, 0)) { // means the process is alive
+    if (m_killPrompt && m_killPrompt->isRunning()) {
         return;
     }
     Q_ASSERT(!ask || timestamp != XCB_TIME_CURRENT_TIME);
@@ -2132,16 +2130,10 @@ void X11Window::killProcess(bool ask, xcb_timestamp_t timestamp)
             ::kill(pid, SIGTERM);
         }
     } else {
-        QString hostname = clientMachine()->isLocal() ? QStringLiteral("localhost") : clientMachine()->hostName();
-        // execute helper from build dir or the system installed one
-        const QFileInfo buildDirBinary{QDir{QCoreApplication::applicationDirPath()}, QStringLiteral("kwin_killer_helper")};
-        QProcess::startDetached(buildDirBinary.exists() ? buildDirBinary.absoluteFilePath() : KWIN_KILLER_BIN,
-                                QStringList() << QStringLiteral("--pid") << QString::number(unsigned(pid)) << QStringLiteral("--hostname") << hostname
-                                              << QStringLiteral("--windowname") << captionNormal()
-                                              << QStringLiteral("--applicationname") << resourceClass()
-                                              << QStringLiteral("--wid") << QString::number(window())
-                                              << QStringLiteral("--timestamp") << QString::number(timestamp),
-                                QString(), &m_killHelperPID);
+        if (!m_killPrompt) {
+            m_killPrompt = std::make_unique<KillPrompt>(this);
+        }
+        m_killPrompt->start(timestamp);
     }
 }
 
