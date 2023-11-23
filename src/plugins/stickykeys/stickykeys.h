@@ -22,6 +22,7 @@ public:
     enum KeyState {
         None,
         Latched,
+        Locked,
     };
 
 private:
@@ -30,4 +31,5 @@ private:
     KConfigWatcher::Ptr m_configWatcher;
     QMap<int, KeyState> m_keyStates;
     QList<int> m_modifiers = {Qt::Key_Shift, Qt::Key_Control, Qt::Key_Alt, Qt::Key_AltGr, Qt::Key_Meta};
+    bool m_lockKeys = false;
 };

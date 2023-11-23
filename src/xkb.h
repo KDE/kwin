@@ -66,6 +66,7 @@ public:
     bool switchToLayout(xkb_layout_index_t layout);
 
     void setModifierLatched(Qt::KeyboardModifier mod, bool latched);
+    void setModifierLocked(Qt::KeyboardModifier mod, bool locked);
 
     LEDs leds() const
     {

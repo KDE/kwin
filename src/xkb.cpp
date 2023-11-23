@@ -706,6 +706,54 @@ void Xkb::setModifierLatched(Qt::KeyboardModifier mod, bool latched)
     }
 }
 
+void Xkb::setModifierLocked(Qt::KeyboardModifier mod, bool locked)
+{
+    xkb_mod_index_t modifier = XKB_MOD_INVALID;
+
+    switch (mod) {
+    case Qt::NoModifier: {
+        break;
+    }
+    case Qt::ShiftModifier: {
+        modifier = m_shiftModifier;
+        break;
+    }
+    case Qt::AltModifier: {
+        modifier = m_altModifier;
+        break;
+    }
+    case Qt::ControlModifier: {
+        modifier = m_controlModifier;
+        break;
+    }
+    case Qt::MetaModifier: {
+        modifier = m_metaModifier;
+        break;
+    }
+    case Qt::GroupSwitchModifier: {
+        // TODO
+        break;
+    }
+    case Qt::KeypadModifier: {
+        modifier = m_numModifier;
+        break;
+    }
+    case Qt::KeyboardModifierMask: {
+        break;
+    }
+    }
+
+    if (modifier != XKB_MOD_INVALID) {
+        std::bitset<sizeof(xkb_mod_mask_t) * 8> mask{m_modifierState.locked};
+        if (mask.size() > modifier) {
+            mask[modifier] = locked;
+            m_modifierState.locked = mask.to_ulong();
+            xkb_state_update_mask(m_state, m_modifierState.depressed, m_modifierState.locked, m_modifierState.locked, 0, 0, m_currentLayout);
+            m_modifierState.locked = xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LOCKED));
+        }
+    }
+}
+
 quint32 Xkb::numberOfLayouts() const
 {
     if (!m_keymap) {
