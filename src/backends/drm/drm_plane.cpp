@@ -100,6 +100,7 @@ bool DrmPlane::updateProperties()
     m_possibleCrtcs = p->possible_crtcs;
 
     // read formats from blob if available and if modifiers are supported, and from the plane object if not
+    m_supportedFormats.clear();
     if (inFormats.isValid() && inFormats.immutableBlob() && gpu()->addFB2ModifiersSupported()) {
         drmModeFormatModifierIterator iterator{};
         while (drmModeFormatModifierBlobIterNext(inFormats.immutableBlob(), &iterator)) {
