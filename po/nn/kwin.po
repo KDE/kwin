@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-21 01:35+0000\n"
+"POT-Creation-Date: 2023-11-23 01:39+0000\n"
 "PO-Revision-Date: 2023-07-28 20:53+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
@@ -34,29 +34,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "gaute@verdsveven.com,korsvoll@skulelinux.no,karl@huftis.org"
 
-#: backends/wayland/wayland_output.cpp:257
+#: backends/wayland/wayland_output.cpp:277
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Trykk høgre «Ctrl» for å sleppa peikaren"
 
-#: backends/wayland/wayland_output.cpp:259
+#: backends/wayland/wayland_output.cpp:279
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Trykk høgre «Ctrl» for å fanga peikaren"
 
-#: backends/wayland/wayland_output.cpp:263
+#: backends/wayland/wayland_output.cpp:283
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1 (%2)"
 msgstr "KDE Wayland-samansetjar %1 (%2)"
 
-#: backends/wayland/wayland_output.cpp:266
+#: backends/wayland/wayland_output.cpp:286
 #, kde-format
 msgid "- Output disabled"
 msgstr "– Utdata slått av"
 
-#: backends/wayland/wayland_output.cpp:268
+#: backends/wayland/wayland_output.cpp:288
 #, kde-format
 msgid "- Output dimmed"
 msgstr "– Utdata dempa"
@@ -4172,7 +4172,7 @@ msgstr "Byt til skrivebordet under"
 msgid "Switch to Desktop %1"
 msgstr "Byt til skrivebord %1"
 
-#: window.cpp:3088
+#: window.cpp:3080
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

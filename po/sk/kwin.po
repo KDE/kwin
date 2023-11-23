@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-21 01:35+0000\n"
+"POT-Creation-Date: 2023-11-23 01:39+0000\n"
 "PO-Revision-Date: 2023-11-11 15:53+0100\n"
 "Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
@@ -38,29 +38,29 @@ msgstr ""
 "hornicek@globtel.sk,onofer@phf.euke.sk,visnovsky@kde.org,misurel@gmail.com,"
 "prescott66@gmail.com"
 
-#: backends/wayland/wayland_output.cpp:257
+#: backends/wayland/wayland_output.cpp:277
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Stlačením pravého klávesu Control zrušíte zachytenie kurzora"
 
-#: backends/wayland/wayland_output.cpp:259
+#: backends/wayland/wayland_output.cpp:279
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Stlačením pravého klávesu Control zachytíte kurzor"
 
-#: backends/wayland/wayland_output.cpp:263
+#: backends/wayland/wayland_output.cpp:283
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1 (%2)"
 msgstr "KDE Wayland Compositor %1 (%2)"
 
-#: backends/wayland/wayland_output.cpp:266
+#: backends/wayland/wayland_output.cpp:286
 #, kde-format
 msgid "- Output disabled"
 msgstr "- Výstup zakázaný"
 
-#: backends/wayland/wayland_output.cpp:268
+#: backends/wayland/wayland_output.cpp:288
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- Výstup stmavený"
@@ -4173,7 +4173,7 @@ msgstr "Prepnúť o jednu plochu dolu"
 msgid "Switch to Desktop %1"
 msgstr "Prepnúť na plochu %1"
 
-#: window.cpp:3088
+#: window.cpp:3080
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

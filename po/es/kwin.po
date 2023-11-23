@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-21 01:35+0000\n"
-"PO-Revision-Date: 2023-11-14 18:02+0100\n"
+"POT-Creation-Date: 2023-11-23 01:39+0000\n"
+"PO-Revision-Date: 2023-11-22 02:40+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -45,29 +45,29 @@ msgstr ""
 "ecuadra@eloihr.net,jaime@kde.org,vicente@oan.es,yo@miguelrevilla.com,the."
 "blue.valkyrie@gmail.com"
 
-#: backends/wayland/wayland_output.cpp:257
+#: backends/wayland/wayland_output.cpp:277
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Pulse la tecla de Control derecha para liberar el puntero"
 
-#: backends/wayland/wayland_output.cpp:259
+#: backends/wayland/wayland_output.cpp:279
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Pulse la tecla de Control derecha para capturar el puntero"
 
-#: backends/wayland/wayland_output.cpp:263
+#: backends/wayland/wayland_output.cpp:283
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1 (%2)"
 msgstr "Compositor de KDE Wayland %1 (%2)"
 
-#: backends/wayland/wayland_output.cpp:266
+#: backends/wayland/wayland_output.cpp:286
 #, kde-format
 msgid "- Output disabled"
 msgstr "- Salida desactivada"
 
-#: backends/wayland/wayland_output.cpp:268
+#: backends/wayland/wayland_output.cpp:288
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- Salida atenuada"
@@ -3554,18 +3554,20 @@ msgid ""
 "The following applications did not close:\n"
 "%1"
 msgstr ""
+"Las siguientes aplicaciones no se han cerrado:\n"
+"%1"
 
 #: sm.cpp:463
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
-msgstr ""
+msgstr "Cancelar cierre de sesión"
 
 #: sm.cpp:464
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
-msgstr ""
+msgstr "Forzar cierre de sesión"
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format
@@ -4187,7 +4189,7 @@ msgstr "Cambiar al escritorio inferior"
 msgid "Switch to Desktop %1"
 msgstr "Cambiar al escritorio %1"
 
-#: window.cpp:3088
+#: window.cpp:3080
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

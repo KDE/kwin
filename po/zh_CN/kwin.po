@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-21 01:35+0000\n"
+"POT-Creation-Date: 2023-11-23 01:39+0000\n"
 "PO-Revision-Date: 2023-11-19 03:37\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -28,29 +28,29 @@ msgid "Your emails"
 msgstr ""
 "kde-china@kde.org, csslayer@kde.org, i@guoyunhe.me, tysontan@tysontan.com"
 
-#: backends/wayland/wayland_output.cpp:257
+#: backends/wayland/wayland_output.cpp:277
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "按右 Ctrl 键释放指针"
 
-#: backends/wayland/wayland_output.cpp:259
+#: backends/wayland/wayland_output.cpp:279
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "按右 Ctrl 键抓取指针"
 
-#: backends/wayland/wayland_output.cpp:263
+#: backends/wayland/wayland_output.cpp:283
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1 (%2)"
 msgstr "KDE Wayland 显示特效混合器 %1 (%2)"
 
-#: backends/wayland/wayland_output.cpp:266
+#: backends/wayland/wayland_output.cpp:286
 #, kde-format
 msgid "- Output disabled"
 msgstr "- 输出已禁用"
 
-#: backends/wayland/wayland_output.cpp:268
+#: backends/wayland/wayland_output.cpp:288
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- 输出已变暗"
@@ -4129,7 +4129,7 @@ msgstr "切换到下方桌面"
 msgid "Switch to Desktop %1"
 msgstr "切换到桌面 %1"
 
-#: window.cpp:3088
+#: window.cpp:3080
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
