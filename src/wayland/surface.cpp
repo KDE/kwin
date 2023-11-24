@@ -790,6 +790,10 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
 
     Q_EMIT q->stateApplied(next->serial);
     Q_EMIT q->committed();
+
+    static quint32 timestamp = 0;
+    timestamp += 16;
+    q->frameRendered(timestamp);
 }
 
 bool SurfaceInterfacePrivate::computeEffectiveMapped() const
