@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-23 01:39+0000\n"
-"PO-Revision-Date: 2023-11-14 04:49+0200\n"
+"POT-Creation-Date: 2023-11-24 01:35+0000\n"
+"PO-Revision-Date: 2023-11-23 11:38+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
-"X-Generator: Lokalize 23.08.1\n"
+"X-Generator: Lokalize 23.08.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1205,22 +1205,22 @@ msgstr "&חיסול היישום %1"
 msgid "Wait Longer"
 msgstr "להמתין עוד קצת"
 
-#: input.cpp:2016
+#: input.cpp:2020
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "העברת מחשב הלוח לפלט הבא"
 
-#: input.cpp:2095
+#: input.cpp:2099
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "מחשב הלוח הועבר אל %1"
 
-#: input.cpp:2095
+#: input.cpp:2099
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "מחשבי הלוח החליפו אמצעי פלט"
 
-#: input.cpp:3188
+#: input.cpp:3192
 #, kde-format
 msgid "Touchpad"
 msgstr "משטח מגע"
@@ -3526,18 +3526,20 @@ msgid ""
 "The following applications did not close:\n"
 "%1"
 msgstr ""
+"היישומים הבאים לא נסגרו:\n"
+"%1"
 
 #: sm.cpp:463
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
-msgstr ""
+msgstr "לבטל יציאה"
 
 #: sm.cpp:464
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
-msgstr ""
+msgstr "לצאת בכל זאת"
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format

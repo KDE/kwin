@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-23 01:39+0000\n"
-"PO-Revision-Date: 2023-11-14 14:10+0100\n"
+"POT-Creation-Date: 2023-11-24 01:35+0000\n"
+"PO-Revision-Date: 2023-11-21 14:08+0100\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -1204,22 +1204,22 @@ msgstr "In&terrompi l'applicazione %1"
 msgid "Wait Longer"
 msgstr "Aspetta più a lungo"
 
-#: input.cpp:2016
+#: input.cpp:2020
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Sposta la tavoletta all'uscita successiva"
 
-#: input.cpp:2095
+#: input.cpp:2099
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Tavoletta spostata in %1"
 
-#: input.cpp:2095
+#: input.cpp:2099
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Uscite commutate delle tavolette"
 
-#: input.cpp:3188
+#: input.cpp:3192
 #, kde-format
 msgid "Touchpad"
 msgstr "Touchpad"
@@ -3553,18 +3553,20 @@ msgid ""
 "The following applications did not close:\n"
 "%1"
 msgstr ""
+"Le seguenti applicazioni non si sono chiuse:\n"
+"%1"
 
 #: sm.cpp:463
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
-msgstr ""
+msgstr "Annulla la chiusura della sessione"
 
 #: sm.cpp:464
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
-msgstr ""
+msgstr "Chiudi comunque la sessione"
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format
