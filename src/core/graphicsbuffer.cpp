@@ -75,7 +75,7 @@ const ShmAttributes *GraphicsBuffer::shmAttributes() const
 
 bool GraphicsBuffer::alphaChannelFromDrmFormat(uint32_t format)
 {
-    const auto info = formatInfo(format);
+    const auto info = FormatInfo::get(format);
     return info && info->alphaBits > 0;
 }
 

@@ -59,7 +59,7 @@ Swapchain *Window::swapchain(const QHash<uint32_t, QList<uint64_t>> &formats)
         }
 
         for (auto it = formats.begin(); it != formats.end(); it++) {
-            if (auto info = formatInfo(it.key()); info && info->bitsPerColor == 8 && info->alphaBits == 8) {
+            if (auto info = FormatInfo::get(it.key()); info && info->bitsPerColor == 8 && info->alphaBits == 8) {
                 const auto options = GraphicsBufferOptions{
                     .size = nativeSize,
                     .format = it.key(),

@@ -153,7 +153,7 @@ void AbstractEglBackend::initWayland()
     auto filterFormats = [this, &formats](std::optional<uint32_t> bpc, bool withExternalOnlyYUV) {
         QHash<uint32_t, QList<uint64_t>> set;
         for (auto it = formats.constBegin(); it != formats.constEnd(); it++) {
-            const auto info = formatInfo(it.key());
+            const auto info = FormatInfo::get(it.key());
             if (!info || (bpc && bpc != info->bitsPerColor)) {
                 continue;
             }

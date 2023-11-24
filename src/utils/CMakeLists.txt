@@ -1,6 +1,7 @@
 target_sources(kwin PRIVATE
     abstract_opengl_context_attribute_builder.cpp
     common.cpp
+    drm_format_helper.cpp
     edid.cpp
     egl_context_attribute_builder.cpp
     filedescriptor.cpp

@@ -284,7 +284,7 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
     QList<FormatInfo> preferredFormats;
     QList<FormatInfo> fallbackFormats;
     for (auto it = formats.begin(); it != formats.end(); it++) {
-        const auto format = formatInfo(it.key());
+        const auto format = FormatInfo::get(it.key());
         if (format.has_value() && format->bitsPerColor >= 8) {
             if (format->bitsPerPixel <= 32) {
                 preferredFormats.push_back(format.value());
