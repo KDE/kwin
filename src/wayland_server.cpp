@@ -358,18 +358,6 @@ bool WaylandServer::init(InitializationFlags flags)
     m_tabletManagerV2 = new TabletManagerV2Interface(m_display, m_display);
     m_keyboardShortcutsInhibitManager = new KeyboardShortcutsInhibitManagerV1Interface(m_display, m_display);
 
-    auto inputPanelV1Integration = new InputPanelV1Integration(this);
-    connect(inputPanelV1Integration, &InputPanelV1Integration::windowCreated,
-            this, &WaylandServer::registerWindow);
-
-    auto xdgShellIntegration = new XdgShellIntegration(this);
-    connect(xdgShellIntegration, &XdgShellIntegration::windowCreated,
-            this, &WaylandServer::registerXdgGenericWindow);
-
-    auto layerShellV1Integration = new LayerShellV1Integration(this);
-    connect(layerShellV1Integration, &LayerShellV1Integration::windowCreated,
-            this, &WaylandServer::registerWindow);
-
     m_xdgDecorationManagerV1 = new XdgDecorationManagerV1Interface(m_display, m_display);
     connect(m_xdgDecorationManagerV1, &XdgDecorationManagerV1Interface::decorationCreated, this, [this](XdgToplevelDecorationV1Interface *decoration) {
         if (XdgToplevelWindow *toplevel = findXdgToplevelWindow(decoration->toplevel()->surface())) {
@@ -523,6 +511,18 @@ SurfaceInterface *WaylandServer::findForeignTransientForSurface(SurfaceInterface
 
 void WaylandServer::initWorkspace()
 {
+    auto inputPanelV1Integration = new InputPanelV1Integration(this);
+    connect(inputPanelV1Integration, &InputPanelV1Integration::windowCreated,
+            this, &WaylandServer::registerWindow);
+
+    auto xdgShellIntegration = new XdgShellIntegration(this);
+    connect(xdgShellIntegration, &XdgShellIntegration::windowCreated,
+            this, &WaylandServer::registerXdgGenericWindow);
+
+    auto layerShellV1Integration = new LayerShellV1Integration(this);
+    connect(layerShellV1Integration, &LayerShellV1Integration::windowCreated,
+            this, &WaylandServer::registerWindow);
+
     new KeyStateInterface(m_display, m_display);
 
     VirtualDesktopManager::self()->setVirtualDesktopManagement(m_virtualDesktopManagement);
