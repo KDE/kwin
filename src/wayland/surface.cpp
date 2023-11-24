@@ -316,6 +316,7 @@ void SurfaceInterfacePrivate::surface_frame(Resource *resource, uint32_t callbac
         return;
     }
 
+    qDebug() << "wl_surface.frame";
     wl_resource_set_implementation(callbackResource, nullptr, nullptr, [](wl_resource *resource) {
         wl_list_remove(wl_resource_get_link(resource));
     });
@@ -341,6 +342,7 @@ void SurfaceInterfacePrivate::surface_commit(Resource *resource)
 {
     const bool sync = subsurface.handle && subsurface.handle->isSynchronized();
 
+    qDebug() << "wl_surface.commit";
     Transaction *transaction;
     if (sync) {
         if (!subsurface.transaction) {
@@ -790,6 +792,8 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
 
     Q_EMIT q->stateApplied(next->serial);
     Q_EMIT q->committed();
+
+    qDebug() << "wl_surface.committed completed";
 }
 
 bool SurfaceInterfacePrivate::computeEffectiveMapped() const
