@@ -24,7 +24,6 @@ struct gbm_device;
 
 namespace KWin
 {
-
 class DrmOutput;
 class DrmObject;
 class DrmCrtc;
@@ -78,7 +77,6 @@ public:
     bool atomicModeSetting() const;
     bool addFB2ModifiersSupported() const;
     bool asyncPageflipSupported() const;
-    bool isNVidia() const;
     bool isI915() const;
     gbm_device *gbmDevice() const;
     EglDisplay *eglDisplay() const;

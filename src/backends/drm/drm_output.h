@@ -58,7 +58,6 @@ public:
     void leased(DrmLease *lease);
     void leaseEnded();
 
-    bool setGammaRamp(const std::shared_ptr<ColorTransformation> &transformation) override;
     bool setChannelFactors(const QVector3D &rgb) override;
     QVector3D channelFactors() const;
     bool needsColormanagement() const;
@@ -66,6 +65,7 @@ public:
 private:
     bool setDrmDpmsMode(DpmsMode mode);
     void setDpmsMode(DpmsMode mode) override;
+    bool doSetChannelFactors(const QVector3D &rgb);
 
     QList<std::shared_ptr<OutputMode>> getModes() const;
 
@@ -76,6 +76,7 @@ private:
     DrmLease *m_lease = nullptr;
 
     QVector3D m_channelFactors = {1, 1, 1};
+    bool m_channelFactorsNeedShaderFallback = false;
 };
 
 }

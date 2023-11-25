@@ -474,6 +474,20 @@ QMap<uint32_t, QList<uint64_t>> DrmPipeline::cursorFormats() const
     }
 }
 
+bool DrmPipeline::hasCTM() const
+{
+    return m_pending.crtc && m_pending.crtc->ctm.isValid();
+}
+
+bool DrmPipeline::hasGammaRamp() const
+{
+    if (gpu()->atomicModeSetting()) {
+        return m_pending.crtc && m_pending.crtc->gammaLut.isValid();
+    } else {
+        return m_pending.crtc && m_pending.crtc->gammaRampSize() > 0;
+    }
+}
+
 bool DrmPipeline::pruneModifier()
 {
     const DmaBufAttributes *dmabufAttributes = m_primaryLayer->currentBuffer() ? m_primaryLayer->currentBuffer()->buffer()->dmabufAttributes() : nullptr;

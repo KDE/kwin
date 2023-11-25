@@ -386,6 +386,11 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     m_renderLoop->setRefreshRate(refreshRate());
     m_renderLoop->scheduleRepaint();
 
+    if (!next.wideColorGamut && !next.highDynamicRange && !m_pipeline->iccProfile()) {
+        // re-set the CTM and/or gamma lut
+        doSetChannelFactors(m_channelFactors);
+    }
+
     Q_EMIT changed();
 }
 
@@ -404,50 +409,54 @@ DrmOutputLayer *DrmOutput::cursorLayer() const
     return m_pipeline->cursorLayer();
 }
 
-bool DrmOutput::setGammaRamp(const std::shared_ptr<ColorTransformation> &transformation)
-{
-    if (!m_pipeline->activePending() || needsColormanagement()) {
-        return false;
-    }
-    m_pipeline->setGammaRamp(transformation);
-    m_pipeline->setCTM(QMatrix3x3());
-    if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
-        m_pipeline->applyPendingChanges();
-        m_renderLoop->scheduleRepaint();
-        return true;
-    } else {
-        m_pipeline->revertPendingChanges();
-        return false;
-    }
-}
-
 bool DrmOutput::setChannelFactors(const QVector3D &rgb)
 {
-    if (m_channelFactors == rgb) {
+    return m_channelFactors == rgb || doSetChannelFactors(rgb);
+}
+
+bool DrmOutput::doSetChannelFactors(const QVector3D &rgb)
+{
+    m_renderLoop->scheduleRepaint();
+    m_channelFactors = rgb;
+    if (m_state.wideColorGamut || m_state.highDynamicRange || m_state.iccProfile) {
+        // the shader "fallback" is always active
         return true;
     }
-    m_channelFactors = rgb;
-    if (!needsColormanagement()) {
-        if (!m_pipeline->activePending()) {
-            return false;
-        }
+    if (!m_pipeline->activePending()) {
+        return false;
+    }
+    if (m_pipeline->hasCTM()) {
         QMatrix3x3 ctm;
         ctm(0, 0) = rgb.x();
         ctm(1, 1) = rgb.y();
         ctm(2, 2) = rgb.z();
         m_pipeline->setCTM(ctm);
+        m_pipeline->setGammaRamp(nullptr);
         if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
             m_pipeline->applyPendingChanges();
-            m_renderLoop->scheduleRepaint();
+            m_channelFactorsNeedShaderFallback = false;
             return true;
         } else {
-            m_pipeline->revertPendingChanges();
-            return false;
+            m_pipeline->setCTM(QMatrix3x3());
+            m_pipeline->applyPendingChanges();
         }
-    } else {
-        m_renderLoop->scheduleRepaint();
-        return true;
     }
+    if (m_pipeline->hasGammaRamp()) {
+        auto lut = ColorTransformation::createScalingTransform(rgb);
+        if (lut) {
+            m_pipeline->setGammaRamp(std::move(lut));
+            if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
+                m_pipeline->applyPendingChanges();
+                m_channelFactorsNeedShaderFallback = false;
+                return true;
+            } else {
+                m_pipeline->setGammaRamp(nullptr);
+                m_pipeline->applyPendingChanges();
+            }
+        }
+    }
+    m_channelFactorsNeedShaderFallback = m_channelFactors != QVector3D{1, 1, 1};
+    return true;
 }
 
 QVector3D DrmOutput::channelFactors() const
@@ -457,7 +466,7 @@ QVector3D DrmOutput::channelFactors() const
 
 bool DrmOutput::needsColormanagement() const
 {
-    return m_state.wideColorGamut || m_state.highDynamicRange || m_state.iccProfile || m_gpu->isNVidia();
+    return m_state.wideColorGamut || m_state.highDynamicRange || m_state.iccProfile || m_channelFactorsNeedShaderFallback;
 }
 }
 

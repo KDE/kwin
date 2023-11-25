@@ -77,4 +77,31 @@ QVector3D ColorTransformation::transform(QVector3D in) const
     cmsPipelineEvalFloat(&in[0], &ret[0], m_pipeline);
     return ret;
 }
+
+std::unique_ptr<ColorTransformation> ColorTransformation::createScalingTransform(const QVector3D &scale)
+{
+    std::array<double, 3> curveParams = {1.0, scale.x(), 0.0};
+    auto r = cmsBuildParametricToneCurve(nullptr, 2, curveParams.data());
+    curveParams = {1.0, scale.y(), 0.0};
+    auto g = cmsBuildParametricToneCurve(nullptr, 2, curveParams.data());
+    curveParams = {1.0, scale.z(), 0.0};
+    auto b = cmsBuildParametricToneCurve(nullptr, 2, curveParams.data());
+    if (!r || !g || !b) {
+        qCWarning(KWIN_CORE) << "Failed to build tone curves";
+        return nullptr;
+    }
+    const std::array curves = {r, g, b};
+    const auto stage = cmsStageAllocToneCurves(nullptr, 3, curves.data());
+    if (!stage) {
+        qCWarning(KWIN_CORE) << "Failed to allocate tone curves";
+        return nullptr;
+    }
+    std::vector<std::unique_ptr<ColorPipelineStage>> stages;
+    stages.push_back(std::make_unique<ColorPipelineStage>(stage));
+    auto transform = std::make_unique<ColorTransformation>(std::move(stages));
+    if (!transform->valid()) {
+        return nullptr;
+    }
+    return transform;
+}
 }

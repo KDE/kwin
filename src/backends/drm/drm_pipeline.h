@@ -95,6 +95,8 @@ public:
 
     QMap<uint32_t, QList<uint64_t>> formats() const;
     QMap<uint32_t, QList<uint64_t>> cursorFormats() const;
+    bool hasCTM() const;
+    bool hasGammaRamp() const;
     bool pruneModifier();
 
     void setOutput(DrmOutput *output);

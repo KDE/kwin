@@ -39,7 +39,7 @@ public:
     int xineramaNumber() const;
     void setXineramaNumber(int number);
 
-    bool setGammaRamp(const std::shared_ptr<ColorTransformation> &transformation) override;
+    bool setChannelFactors(const QVector3D &rgb) override;
 
 private:
     void setCrtc(xcb_randr_crtc_t crtc);

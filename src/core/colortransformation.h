@@ -36,6 +36,8 @@ public:
     std::tuple<uint16_t, uint16_t, uint16_t> transform(uint16_t r, uint16_t g, uint16_t b) const;
     QVector3D transform(QVector3D in) const;
 
+    static std::unique_ptr<ColorTransformation> createScalingTransform(const QVector3D &scale);
+
 private:
     cmsPipeline *const m_pipeline;
     std::vector<std::unique_ptr<ColorPipelineStage>> m_stages;
