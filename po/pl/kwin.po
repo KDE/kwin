@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1665719 $
+# Version: $Revision: 1665760 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # Norbert Popiołek <norbert@kde.com.pl>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-24 01:35+0000\n"
+"POT-Creation-Date: 2023-11-25 01:35+0000\n"
 "PO-Revision-Date: 2023-10-21 11:33+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -4183,7 +4183,7 @@ msgstr "Przełącz jeden pulpit niżej"
 msgid "Switch to Desktop %1"
 msgstr "Przełącz na pulpit %1"
 
-#: window.cpp:3080
+#: window.cpp:3092
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
