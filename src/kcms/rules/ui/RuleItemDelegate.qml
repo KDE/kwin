@@ -37,11 +37,21 @@ QQC2.ItemDelegate {
             spacing: Kirigami.Units.smallSpacing
 
             QQC2.Label {
+                id: label
                 text: model.name
                 horizontalAlignment: Text.AlignLeft
                 elide: Text.ElideRight
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignVCenter
+
+                HoverHandler {
+                    id: labelHover
+                    enabled: label.truncated
+                }
+
+                QQC2.ToolTip.text: model.name
+                QQC2.ToolTip.visible: labelHover.hovered
+                QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
             }
 
             KCM.ContextualHelpButton {
