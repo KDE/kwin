@@ -24,9 +24,11 @@
 #include <KSharedConfig>
 #include <KWindowSystem>
 // KWin
+#include "core/output.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
+#include "main.h"
 #include "opengl/glutils.h"
 
 // based on StartupId in KRunner by Lubos Lunak
@@ -318,11 +320,22 @@ void StartupFeedbackEffect::start(const Startup &startup)
     if (!iconSize) {
         iconSize = QApplication::style()->pixelMetric(QStyle::PM_SmallIconSize);
     }
+
+    // On Wayland, the cursor is automatically scaled by output scale.
+    // Scale the feedback icon accordingly.
+    qreal dpr = 1.0;
+    if (kwinApp()->operationMode() != Application::OperationModeX11) {
+        if (Output *output = effects->screenAt(effects->cursorPos().toPoint())) {
+            dpr = output->scale();
+        }
+    }
+    iconSize *= dpr;
+
     // get ratio for bouncing cursor so we don't need to manually calculate the sizes for each icon size
     if (m_type == BouncingFeedback) {
         m_bounceSizesRatio = iconSize / 16.0;
     }
-    const QPixmap iconPixmap = startup.icon.pixmap(iconSize);
+    const QPixmap iconPixmap = startup.icon.pixmap(QSize(iconSize, iconSize), dpr);
     prepareTextures(iconPixmap);
     m_dirtyRect = m_currentGeometry = feedbackRect();
     effects->addRepaint(m_dirtyRect);
