@@ -1,0 +1,9 @@
+{
+    "KPlugin": {
+        "Category": "Accessibility",
+        "Description": "Makes the cursor larger when the pointer is quickly moved back and forth",
+        "EnabledByDefault": false,
+        "License": "GPL",
+        "Name": "Shake Cursor"
+    }
+}
