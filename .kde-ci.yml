@@ -27,12 +27,12 @@ Dependencies:
     'frameworks/kxmlgui': '@stable'
     'libraries/libqaccessibilityclient': '@latest'
     'libraries/plasma-wayland-protocols': '@latest'
-    'plasma/plasma-framework': 'kf5'
+    'plasma/libplasma': 'kf5'
     'plasma/kwayland': 'kf5'
     'plasma/breeze': '@same'
     'plasma/kdecoration': '@same'
     'plasma/kscreenlocker': '@same'
-    'plasma/kactivities': '@stable' # Different branch scheme as former Framework
+    'plasma/plasma-activities': '@stable' # Different branch scheme as former Framework
 
 Options:
   ctest-arguments: '--repeat until-pass:5'
