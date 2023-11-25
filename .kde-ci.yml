@@ -27,7 +27,7 @@ Dependencies:
     'libraries/libqaccessibilityclient': '@latest-kf6'
     'libraries/plasma-wayland-protocols': '@latest-kf6'
     'plasma/breeze': '@same'
-    'plasma/kactivities': '@same'
+    'plasma/plasma-activities': '@same'
     'plasma/kdecoration': '@same'
     'plasma/kglobalacceld': '@same'
     'plasma/kpipewire': '@same'
@@ -40,7 +40,7 @@ RuntimeDependencies:
 - 'on': ['@all']
   'require':
     'frameworks/kirigami': '@latest-kf6'
-    'plasma/plasma-framework': '@same'
+    'plasma/libplasma': '@same'
 
 Options:
   ctest-arguments: '--repeat until-pass:5'
