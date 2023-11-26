@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-25 01:35+0000\n"
-"PO-Revision-Date: 2023-11-19 03:37\n"
+"PO-Revision-Date: 2023-11-25 02:26\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -25,8 +25,7 @@ msgstr "KDE 中国, csslayer, Guo Yunhe, Tyson Tan"
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr ""
-"kde-china@kde.org, csslayer@kde.org, i@guoyunhe.me, tysontan@tysontan.com"
+msgstr "kde-china@kde.org, csslayer@kde.org, i@guoyunhe.me, tds00@qq.com"
 
 #: backends/wayland/wayland_output.cpp:277
 #, kde-format
@@ -2185,18 +2184,18 @@ msgstr "箭头绘制修饰键："
 #, kde-format
 msgctxt "Night Light was disabled"
 msgid "Night Light Off"
-msgstr ""
+msgstr "夜间颜色关闭"
 
 #: plugins/nightcolor/nightcolormanager.cpp:65
 #, kde-format
 msgctxt "Night Light was enabled"
 msgid "Night Light On"
-msgstr ""
+msgstr "夜间颜色开启"
 
 #: plugins/nightcolor/nightcolormanager.cpp:86
 #, kde-format
 msgid "Toggle Night Light"
-msgstr ""
+msgstr "开关夜间颜色"
 
 #: plugins/nightcolor/nightcolormanager.cpp:463
 #, kde-format
@@ -2271,7 +2270,7 @@ msgstr "使用网格视图组织窗口："
 #: plugins/overview/kcm/overvieweffectkcm.ui:71
 #, kde-format
 msgid "Search results include filtered windows:"
-msgstr ""
+msgstr "搜索结果包括过滤后的窗口："
 
 #: plugins/overview/overvieweffect.cpp:125
 #, kde-format
@@ -3502,18 +3501,20 @@ msgid ""
 "The following applications did not close:\n"
 "%1"
 msgstr ""
+"以下应用程序没有关闭：\n"
+"%1"
 
 #: sm.cpp:463
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
-msgstr ""
+msgstr "取消注销"
 
 #: sm.cpp:464
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
-msgstr ""
+msgstr "仍要注销"
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format

@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-10-14 01:49+0000\n"
-"PO-Revision-Date: 2023-03-27 18:58+0300\n"
+"PO-Revision-Date: 2023-11-25 20:28+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 23.11.70\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -118,7 +118,7 @@ msgstr "Geçerken canlandırma göster:"
 #: ui/main.qml:266
 #, kde-format
 msgid "Show on-screen display when switching:"
-msgstr "Değiştirirken ekran üzeri görünüm göster:"
+msgstr "Değiştirirken ekran üzeri görüntü göster:"
 
 #: ui/main.qml:285
 #, kde-format

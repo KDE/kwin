@@ -7,7 +7,7 @@
 <article id="kwintabbox" lang="&language;">
 <articleinfo>
 <title
->Görev Değiştirici</title>
+>Görev Değiştiricisi</title>
 <authorgroup>
 <author
 >&Martin.Graesslin;&Martin.Graesslin.mail;</author>
@@ -56,12 +56,12 @@
 >Pencereler Arasında Dolaşmak</title>
 
 <para
->Görev Değiştirici, kullanıcının klavyeyi kullanarak o anda açık olan pencereler arasında kolayca geçiş yapmasına olanak tanır. Yüksek düzeyde yapılandırılabilir ve kullanıcının davranışını, görsel görünümünü, klavye kısayollarını ve pencere süzmeyi denetlemesine izin verir.</para>
+>Görev Değiştiricisi, kullanıcının klavyeyi kullanarak o anda açık olan pencereler arasında kolayca geçiş yapmasına olanak tanır. Yüksek düzeyde yapılandırılabilir ve kullanıcının davranışını, görsel görünümünü, klavye kısayollarını ve pencere süzmeyi denetlemesine izin verir.</para>
 
 <para>
   <screenshot>
     <screeninfo
->Öntanımlı Görev Değiştirici ekran görüntüsü</screeninfo>
+>Öntanımlı Görev Değiştiricisi ekran görüntüsü</screeninfo>
     <mediaobject>
       <imageobject>
         <imagedata fileref="taskswitcher.png" format="PNG"/>
@@ -71,12 +71,12 @@
 </para>
 
 <para
->Görev Değiştirici genellikle <keycombo
+>Görev Değiştiricisi genellikle <keycombo
 >&Alt;&Tab;</keycombo
-> düğme kombinasyonu kullanılarak çağrılır; ancak bu değiştirilebilir. Çağrıldığında, yapılandırma ayarlarına göre isteğe bağlı olarak süzülmüş ve genişletilmiş olarak o anda açık olan tüm pencerelerin bir listesini gösterir. Örneğin, liste, şu anda görünür olan pencereler gibi yalnızca belirli ölçütleri karşılayan pencereleri gösterecek şekilde süzülebilir. Pencere listesi gösterildiğinde kullanıcı, Görev Değiştirici düğme kombinasyonuna art arda basarak listelenen tüm pencereler arasında ileri ve geri gidebilir. Görev Değiştirici düğme kombinasyonunun bırakılması, listede seçili pencereyi etkinleştirir.</para>
+> düğme kombinasyonu kullanılarak çağrılır; ancak bu değiştirilebilir. Çağrıldığında, yapılandırma ayarlarına göre isteğe bağlı olarak süzülmüş ve genişletilmiş olarak o anda açık olan tüm pencerelerin bir listesini gösterir. Örneğin, liste, şu anda görünür olan pencereler gibi yalnızca belirli ölçütleri karşılayan pencereleri gösterecek şekilde süzülebilir. Pencere listesi gösterildiğinde kullanıcı, Görev Değiştiricisi düğme kombinasyonuna art arda basarak listelenen tüm pencereler arasında ileri ve geri gidebilir. Görev Değiştiricisi düğme kombinasyonunun bırakılması, listede seçili pencereyi etkinleştirir.</para>
 
 <para
->Görev Değiştirici çok sayıda yapılandırma seçeneği sunduğundan, iki farklı yapılandırma ayarı koleksiyonu tanımlanabilir. Bu koleksiyonlara <guilabel
+>Görev Değiştiricisi çok sayıda yapılandırma seçeneği sunduğundan, iki farklı yapılandırma ayarı koleksiyonu tanımlanabilir. Bu koleksiyonlara <guilabel
 >Ana</guilabel
 > ve <guilabel
 >Alternatif</guilabel
@@ -107,11 +107,11 @@
 <para
 ><guilabel
 >Seçili pencereyi göster</guilabel
-> onay kutusu, kullanıcının hangi pencerenin etkinleştirileceğini ne kadar net göreceğini belirler. Bu kutu işaretlenirse Görev Değiştirici'de o anda vurgulanan pencere dışındaki tüm pencereler gizlenecektir.</para>
+> onay kutusu, kullanıcının hangi pencerenin etkinleştirileceğini ne kadar net göreceğini belirler. Bu kutu işaretlenirse Görev Değiştiricisi'nde o anda vurgulanan pencere dışındaki tüm pencereler gizlenecektir.</para>
 
 <note
 ><para
->İstenen Görev Değiştirici görselleştirmesinin gösterilemediği durumlar olabilir. Bu durumlardan biri, 'bileşikleştirme' adı verilen bir işlemin kapatıldığı veya devre dışı bırakıldığı zaman olabilir. Böyle bir durumda, pencere listesi yine de gösterilir; ancak çok basit bir biçimde.</para
+>İstenen Görev Değiştiricisi görselleştirmesinin gösterilemediği durumlar olabilir. Bu durumlardan biri, 'bileşikleştirme' adı verilen bir işlemin kapatıldığı veya devre dışı bırakıldığı zaman olabilir. Böyle bir durumda, pencere listesi yine de gösterilir; ancak çok basit bir biçimde.</para
 ></note>
 </sect2>
 
@@ -121,7 +121,7 @@
 <para
 >Bu bölüm, <guilabel
 >Ana</guilabel
-> yapılandırması için dört adede kadar Görev Değiştirici klavye kısayolu ve <guilabel
+> yapılandırması için dört adede kadar Görev Değiştiricisi klavye kısayolu ve <guilabel
 >Alternatif</guilabel
 > yapılandırması için dört tane daha tanımlamanıza olanak tanır. <guilabel
 >Ana</guilabel
@@ -153,7 +153,7 @@
 
 <note
 ><para
->Görev Değiştirici'yi çağırmak için tanımlanmış klavye kısayollarından herhangi biri kullanılabilir. Görev Değiştirici'yi klavyeyi kullanmadan çalıştırmak için <ulink url="help:/kcontrol/kwinscreenedges/index.html"
+>Görev Değiştiricisi'ni çağırmak için tanımlanmış klavye kısayollarından herhangi biri kullanılabilir. Görev Değiştiricisi'ni klavyeyi kullanmadan çalıştırmak için <ulink url="help:/kcontrol/kwinscreenedges/index.html"
 ><guilabel
 >Ekran Kenarları</guilabel
 ></ulink
@@ -165,7 +165,7 @@
 <title
 >İçerik</title>
 <para
->Bu bölümdeki seçenekler, Görev Değiştirici listesinde hangi pencerelerin görüneceğini kısımsal olarak denetler.</para>
+>Bu bölümdeki seçenekler, Görev Değiştiricisi listesinde hangi pencerelerin görüneceğini kısımsal olarak denetler.</para>
 
 <para
 ><guilabel
@@ -202,7 +202,7 @@
 <title
 >Pencereleri süzme ölçütü</title>
 <para
->Bu bölüm, Görev Değiştirici'nin pencere listesini ek olarak süzmek için seçenekler içerir.</para>
+>Bu bölüm, Görev Değiştiricisi'nin pencere listesini ek olarak süzmek için seçenekler içerir.</para>
 
 <para
 ><guilabel
@@ -245,9 +245,9 @@
 >'i seçin.</para>
 
 <para
->Bu bölümdeki bir seçeneğin işaretini kaldırırsanız o seçenek için herhangi bir süzgeç uygulanmaz. Örneğin, Ekranlar seçeneğini işaretler ve diğer üç seçeneği temizlerseniz Görev Değiştirici pencere listesi yalnızca geçerli ekranda hangi pencerelerin bulunduğuna göre süzülür.</para>
+>Bu bölümdeki bir seçeneğin işaretini kaldırırsanız o seçenek için herhangi bir süzgeç uygulanmaz. Örneğin, Ekranlar seçeneğini işaretler ve diğer üç seçeneği temizlerseniz Görev Değiştiricisi pencere listesi yalnızca geçerli ekranda hangi pencerelerin bulunduğuna göre süzülür.</para>
 <para
->Yukarıdaki bölümlerde açıklanan seçeneklerin tümü, Görev Değiştirici'nin davranışı ve görünüşü üzerinde çok ayrıntılı denetim sağlamak için birlikte çalışır. Örneğin, bir döngüde açık pencereleri göstermek için <keycombo
+>Yukarıdaki bölümlerde açıklanan seçeneklerin tümü, Görev Değiştiricisi'nin davranışı ve görünüşü üzerinde çok ayrıntılı denetim sağlamak için birlikte çalışır. Örneğin, bir döngüde açık pencereleri göstermek için <keycombo
 >&Alt;&Tab;</keycombo
 > düğme kombinasyonu ile çağrılacak <guilabel
 >Ana</guilabel
@@ -256,7 +256,7 @@
 <para
 ><guilabel
 >Alternatif</guilabel
-> Görev Değiştirici yapılandırmasının kullanılabilirliği, size pencere listelerini kolayca süzmek ve göz atmak için ikinci bir yol sunar. İki Görev Değiştirici yapılandırmasında bulunan sekiz düğme kombinasyonuyla, çok sayıda pencere arasında kolay ve hızlı bir biçimde dolaşabilirsiniz.</para>
+> Görev Değiştiricisi yapılandırmasının kullanılabilirliği, size pencere listelerini kolayca süzmek ve göz atmak için ikinci bir yol sunar. İki Görev Değiştiricisi yapılandırmasında bulunan sekiz düğme kombinasyonuyla, çok sayıda pencere arasında kolay ve hızlı bir biçimde dolaşabilirsiniz.</para>
 </sect2>
 </sect1>
 </article>
