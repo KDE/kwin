@@ -488,6 +488,8 @@ void NightColorManager::updateTargetTemperature()
 
 void NightColorManager::updateTransitionTimings(bool force)
 {
+    qDebug() << "nightcolor:"
+             << "update transition timings";
     const auto oldPrev = m_prev;
     const auto oldNext = m_next;
 
@@ -497,11 +499,15 @@ void NightColorManager::updateTransitionTimings(bool force)
         m_prev = DateTimes();
     } else if (m_mode == NightColorMode::Timings) {
         const QDateTime todayNow = QDateTime::currentDateTime();
+        qDebug() << "nightcolor:"
+                 << "manual timings" << todayNow;
 
         const QDateTime nextMorB = QDateTime(todayNow.date().addDays(m_morning < todayNow.time()), m_morning);
         const QDateTime nextMorE = nextMorB.addSecs(m_trTime * 60);
         const QDateTime nextEveB = QDateTime(todayNow.date().addDays(m_evening < todayNow.time()), m_evening);
         const QDateTime nextEveE = nextEveB.addSecs(m_trTime * 60);
+        qDebug() << "nightcolor:"
+                 << "nextMorB:" << nextMorB << "nextMorE:" << nextMorE << "nextEveB:" << nextEveB << "nextEveE:" << nextEveE;
 
         if (nextEveB < nextMorB) {
             setDaylight(true);
@@ -512,6 +518,8 @@ void NightColorManager::updateTransitionTimings(bool force)
             m_next = DateTimes(nextMorB, nextMorE);
             m_prev = DateTimes(nextEveB.addDays(-1), nextEveE.addDays(-1));
         }
+        qDebug() << "nightcolor:"
+                 << "next:" << m_next.first << "daylight:" << daylight();
     } else {
         const QDateTime todayNow = QDateTime::currentDateTime();
 
@@ -716,6 +724,8 @@ void NightColorManager::setDaylight(bool daylight)
     if (m_daylight == daylight) {
         return;
     }
+    qDebug() << "nightcolor:"
+             << "daylight changed";
     m_daylight = daylight;
     Q_EMIT daylightChanged();
 }
