@@ -136,7 +136,7 @@ NightColorDBusInterface::NightColorDBusInterface(NightColorManager *parent)
 
     connect(m_manager, &NightColorManager::daylightChanged, this, [this] {
         QVariantMap changedProperties;
-        changedProperties.insert(QStringLiteral("mode"), uint(m_manager->daylight()));
+        changedProperties.insert(QStringLiteral("daylight"), uint(m_manager->daylight()));
 
         QDBusMessage message = QDBusMessage::createSignal(
             QStringLiteral("/ColorCorrect"),
