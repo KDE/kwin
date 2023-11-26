@@ -25,6 +25,7 @@
                 "Name[tr]": "Gerçek Adı",
                 "Name[uk]": "Справжнє ім'я",
                 "Name[x-test]": "xxReal Namexx",
+                "Name[zh_CN]": "真实姓名",
                 "Name[zh_TW]": "Real Name"
             }
         ],
@@ -49,6 +50,7 @@
         "Description[tr]": "Tez Efekt",
         "Description[uk]": "Швидкий ефект",
         "Description[x-test]": "xxQuick Effectxx",
+        "Description[zh_CN]": "快速效果",
         "Description[zh_TW]": "快速效果",
         "EnabledByDefault": true,
         "Id": "quick-effect",
@@ -73,6 +75,7 @@
         "Name[tr]": "Tez Efekt",
         "Name[uk]": "Швидкий ефект",
         "Name[x-test]": "xxQuick Effectxx",
+        "Name[zh_CN]": "快速效果",
         "Name[zh_TW]": "快速效果"
     },
     "X-KDE-ConfigModule": "kcm_kwin4_genericscripted",
