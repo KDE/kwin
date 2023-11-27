@@ -60,12 +60,12 @@ void RegionScreenCastSource::updateOutput(Output *output)
         ShaderBinder shaderBinder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
         QMatrix4x4 projectionMatrix;
         projectionMatrix.ortho(m_region);
-        projectionMatrix.translate(outputGeometry.left() / m_scale, outputGeometry.top() / m_scale);
+        projectionMatrix.translate(outputGeometry.left(), outputGeometry.top());
 
         shaderBinder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix);
         shaderBinder.shader()->setColorspaceUniformsToSRGB(colorDescription);
 
-        outputTexture->render(output->geometry().size(), 1 / m_scale);
+        outputTexture->render(outputGeometry.size(), 1);
         GLFramebuffer::popFramebuffer();
     }
 }
@@ -104,7 +104,7 @@ void RegionScreenCastSource::render(GLFramebuffer *target)
     projectionMatrix.ortho(QRect(QPoint(), target->size()));
     shader->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix);
 
-    m_renderedTexture->render(target->size(), m_scale);
+    m_renderedTexture->render(target->size(), 1);
 
     ShaderManager::instance()->popShader();
     GLFramebuffer::popFramebuffer();
