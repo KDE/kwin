@@ -428,6 +428,77 @@ install(EXPORT KWinTargets DESTINATION "${KDE_INSTALL_CMAKEPACKAGEDIR}/KWin" FIL
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/config-kwin.h
     ${CMAKE_CURRENT_BINARY_DIR}/kwin_export.h
+    activities.h
+    appmenu.h
+    atoms.h
+    client_machine.h
+    compositor.h
+    cursor.h
+    cursorsource.h
+    dbusinterface.h
+    debug_console.h
+    focuschain.h
+    ftrace.h
+    gestures.h
+    globalshortcuts.h
+    group.h
+    idledetector.h
+    idle_inhibition.h
+    input_event.h
+    input_event_spy.h
+    input.h
+    inputmethod.h
+    inputpanelv1integration.h
+    inputpanelv1window.h
+    internalwindow.h
+    keyboard_input.h
+    keyboard_layout.h
+    keyboard_layout_switching.h
+    keyboard_repeat.h
+    killwindow.h
+    kscreenintegration.h
+    kwineglutils_p.h
+    layershellv1integration.h
+    layershellv1window.h
+    lidswitchtracker.h
+    main.h
+    mousebuttons.h
+    netinfo.h
+    onscreennotification.h
+    options.h
+    osd.h
+    outline.h
+    outputconfigurationstore.h
+    placeholderoutput.h
+    placement.h
+    placementtracker.h
+    plugin.h
+    pluginmanager.h
+    pointer_input.h
+    rulebooksettings.h
+    rules.h
+    screenedge.h
+    screenlockerwatcher.h
+    shadow.h
+    sm.h
+    tablet_input.h
+    tabletmodemanager.h
+    touch_input.h
+    useractions.h
+    virtualdesktopsdbustypes.h
+    virtualdesktops.h
+    virtualkeyboard_dbus.h
+    wayland_server.h
+    waylandshellintegration.h
+    waylandwindow.h
+    window.h
+    workspace.h
+    x11eventfilter.h
+    x11window.h
+    xdgactivationv1.h
+    xdgshellintegration.h
+    xdgshellwindow.h
+    xkb.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin COMPONENT Devel)
 
 install(FILES
