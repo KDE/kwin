@@ -55,6 +55,7 @@ find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     DBus
     Quick
     UiTools
+    WaylandClient
     Widgets
     Sensors
 )
@@ -70,7 +71,6 @@ if (NOT Qt6Test_FOUND)
 endif()
 
 if (BUILD_TESTING)
-    find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS WaylandClient)
     find_package(KPipeWire)
 endif()
 
