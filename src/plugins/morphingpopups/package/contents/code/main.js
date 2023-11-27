@@ -25,6 +25,7 @@ var morphingEffect = {
             window.fadeAnimation = animate({
                 window: window,
                 duration: morphingEffect.duration,
+                curve: QEasingCurve.InOutCubic,
                 animations: [{
                     type: Effect.CrossFadePrevious,
                     to: 1.0,
@@ -87,6 +88,7 @@ var morphingEffect = {
             window.moveAnimation = animate({
                 window: window,
                 duration: morphingEffect.duration,
+                curve: QEasingCurve.InOutCubic,
                 animations: [{
                     type: Effect.Size,
                     to: {
