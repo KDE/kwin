@@ -79,7 +79,7 @@ static std::vector<quint32> textToKey(const QString &text)
 
 InputMethod::InputMethod()
 {
-    m_enabled = kwinApp()->config()->group("Wayland").readEntry("VirtualKeyboardEnabled", true);
+    m_enabled = kwinApp()->config()->group(QStringLiteral("Wayland")).readEntry("VirtualKeyboardEnabled", true);
     // this is actually too late. Other processes are started before init,
     // so might miss the availability of text input
     // but without Workspace we don't have the window listed at all
@@ -487,7 +487,7 @@ void InputMethod::setEnabled(bool enabled)
         startInputMethod();
     }
     // save value into config
-    kwinApp()->config()->group("Wayland").writeEntry("VirtualKeyboardEnabled", m_enabled);
+    kwinApp()->config()->group(QStringLiteral("Wayland")).writeEntry("VirtualKeyboardEnabled", m_enabled);
     kwinApp()->config()->sync();
 }
 

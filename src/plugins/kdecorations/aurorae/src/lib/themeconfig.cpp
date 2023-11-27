@@ -76,7 +76,7 @@ ThemeConfig::ThemeConfig()
 
 void ThemeConfig::load(const KConfig &conf)
 {
-    KConfigGroup general(&conf, "General");
+    KConfigGroup general(&conf, QStringLiteral("General"));
     m_activeTextColor = general.readEntry("ActiveTextColor", defaultActiveTextColor());
     m_inactiveTextColor = general.readEntry("InactiveTextColor", defaultInactiveTextColor());
     m_activeFocusedTextColor = general.readEntry("ActiveFocusedTabColor", m_activeTextColor);

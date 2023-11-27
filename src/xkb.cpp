@@ -141,7 +141,7 @@ Xkb::~Xkb()
 
 void Xkb::setConfig(const KSharedConfigPtr &config)
 {
-    m_configGroup = config->group("Layout");
+    m_configGroup = config->group(QStringLiteral("Layout"));
 }
 
 void Xkb::setNumLockConfig(const KSharedConfigPtr &config)
@@ -324,7 +324,7 @@ void Xkb::updateKeymap(xkb_keymap *keymap)
     if (s_startup || qEnvironmentVariableIsSet("KWIN_FORCE_NUM_LOCK_EVALUATION")) {
         s_startup = false;
         if (m_numLockConfig) {
-            const KConfigGroup config = m_numLockConfig->group("Keyboard");
+            const KConfigGroup config = m_numLockConfig->group(QStringLiteral("Keyboard"));
             // STATE_ON = 0,  STATE_OFF = 1, STATE_UNCHANGED = 2, see plasma-desktop/kcms/keyboard/kcmmisc.h
             const auto setting = config.readEntry("NumLock", 2);
             if (setting != 2) {

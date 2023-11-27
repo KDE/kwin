@@ -141,7 +141,7 @@ void KeyboardLayoutTest::initTestCase()
     kwinApp()->setKxkbConfig(KSharedConfig::openConfig(QString(), KConfig::SimpleConfig));
     kwinApp()->setInputConfig(KSharedConfig::openConfig(QString(), KConfig::SimpleConfig));
 
-    layoutGroup = kwinApp()->kxkbConfig()->group("Layout");
+    layoutGroup = kwinApp()->kxkbConfig()->group(QStringLiteral("Layout"));
     layoutGroup.deleteGroup();
 
     kwinApp()->start();
@@ -175,7 +175,7 @@ void KeyboardLayoutTest::testReconfigure()
     QCOMPARE(xkb->layoutName(0), QStringLiteral("English (US)"));
 
     // create a new keymap
-    KConfigGroup layoutGroup = kwinApp()->kxkbConfig()->group("Layout");
+    KConfigGroup layoutGroup = kwinApp()->kxkbConfig()->group(QStringLiteral("Layout"));
     layoutGroup.writeEntry("LayoutList", QStringLiteral("de,us"));
     layoutGroup.sync();
 
@@ -537,7 +537,7 @@ void KeyboardLayoutTest::testNumLock()
     QVERIFY(!xkb->leds().testFlag(LED::NumLock));
 
     // let's reconfigure to enable through config
-    auto group = kwinApp()->inputConfig()->group("Keyboard");
+    auto group = kwinApp()->inputConfig()->group(QStringLiteral("Keyboard"));
     group.writeEntry("NumLock", 0);
     group.sync();
     xkb->reconfigure();

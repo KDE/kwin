@@ -106,7 +106,7 @@ void ScreensTest::testCurrent()
     Output *output = workspace()->outputs().at(currentId);
 
     // Disable "active screen follows mouse"
-    auto group = kwinApp()->config()->group("Windows");
+    auto group = kwinApp()->config()->group(QStringLiteral("Windows"));
     group.writeEntry("ActiveMouseScreen", false);
     group.sync();
     workspace()->slotReconfigure();
@@ -130,7 +130,7 @@ void ScreensTest::testCurrentWithFollowsMouse_data()
 void ScreensTest::testCurrentWithFollowsMouse()
 {
     // Enable "active screen follows mouse"
-    auto group = kwinApp()->config()->group("Windows");
+    auto group = kwinApp()->config()->group(QStringLiteral("Windows"));
     group.writeEntry("ActiveMouseScreen", true);
     group.sync();
     workspace()->slotReconfigure();
@@ -164,7 +164,7 @@ void ScreensTest::testCurrentPoint()
     Test::setOutputConfig(geometries);
 
     // Disable "active screen follows mouse"
-    auto group = kwinApp()->config()->group("Windows");
+    auto group = kwinApp()->config()->group(QStringLiteral("Windows"));
     group.writeEntry("ActiveMouseScreen", false);
     group.sync();
     workspace()->slotReconfigure();

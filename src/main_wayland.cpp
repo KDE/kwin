@@ -134,7 +134,7 @@ void ApplicationWayland::performStartup()
 {
     if (m_startXWayland) {
         setOperationMode(OperationModeXwayland);
-        setXwaylandScale(config()->group("Xwayland").readEntry("Scale", 1.0));
+        setXwaylandScale(config()->group(QStringLiteral("Xwayland")).readEntry("Scale", 1.0));
     }
     createOptions();
 
@@ -191,7 +191,7 @@ void ApplicationWayland::startSession()
     if (!m_inputMethodServerToStart.isEmpty()) {
         kwinApp()->inputMethod()->setInputMethodCommand(m_inputMethodServerToStart);
     } else {
-        refreshSettings(kwinSettings->group("Wayland"), {"InputMethod"});
+        refreshSettings(kwinSettings->group(QStringLiteral("Wayland")), {"InputMethod"});
     }
 
     // start session

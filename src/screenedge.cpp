@@ -818,11 +818,11 @@ void ScreenEdges::reconfigure()
     if (!m_config) {
         return;
     }
-    KConfigGroup screenEdgesConfig = m_config->group("ScreenEdges");
+    KConfigGroup screenEdgesConfig = m_config->group(QStringLiteral("ScreenEdges"));
     setRemainActiveOnFullscreen(screenEdgesConfig.readEntry("RemainActiveOnFullscreen", false));
 
     // TODO: migrate settings to a group ScreenEdges
-    KConfigGroup windowsConfig = m_config->group("Windows");
+    KConfigGroup windowsConfig = m_config->group(QStringLiteral("Windows"));
     setTimeThreshold(windowsConfig.readEntry("ElectricBorderDelay", 150));
     setReActivationThreshold(std::max(timeThreshold() + 50, windowsConfig.readEntry("ElectricBorderCooldown", 350)));
     int desktopSwitching = windowsConfig.readEntry("ElectricBorders", static_cast<int>(ElectricDisabled));
@@ -839,7 +839,7 @@ void ScreenEdges::reconfigure()
     const int pushBack = windowsConfig.readEntry("ElectricBorderPushbackPixels", 1);
     m_cursorPushBackDistance = QSize(pushBack, pushBack);
 
-    KConfigGroup borderConfig = m_config->group("ElectricBorders");
+    KConfigGroup borderConfig = m_config->group(QStringLiteral("ElectricBorders"));
     setActionForBorder(ElectricTopLeft, &m_actionTopLeft,
                        electricBorderAction(borderConfig.readEntry("TopLeft", "None")));
     setActionForBorder(ElectricTop, &m_actionTop,
@@ -857,7 +857,7 @@ void ScreenEdges::reconfigure()
     setActionForBorder(ElectricLeft, &m_actionLeft,
                        electricBorderAction(borderConfig.readEntry("Left", "None")));
 
-    borderConfig = m_config->group("TouchEdges");
+    borderConfig = m_config->group(QStringLiteral("TouchEdges"));
     setActionForTouchBorder(ElectricTop, electricBorderAction(borderConfig.readEntry("Top", "None")));
     setActionForTouchBorder(ElectricRight, electricBorderAction(borderConfig.readEntry("Right", "None")));
     setActionForTouchBorder(ElectricBottom, electricBorderAction(borderConfig.readEntry("Bottom", "None")));

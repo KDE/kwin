@@ -185,7 +185,7 @@ void KWinCompositingKCM::save()
     KCModule::save();
 
     // This clears up old entries that are now migrated to kdeglobals
-    KConfig("kwinrc", KConfig::NoGlobals).group("KDE").revertToDefault("AnimationDurationFactor");
+    KConfig("kwinrc", KConfig::NoGlobals).group(QStringLiteral("KDE")).revertToDefault("AnimationDurationFactor");
 
     // Send signal to all kwin instances
     QDBusMessage message = QDBusMessage::createSignal(QStringLiteral("/Compositor"),

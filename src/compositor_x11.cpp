@@ -495,7 +495,7 @@ X11Compositor *X11Compositor::self()
 
 bool X11Compositor::openGLCompositingIsBroken() const
 {
-    auto timestamp = KConfigGroup(kwinApp()->config(), "Compositing").readEntry(QLatin1String("LastFailureTimestamp"), 0);
+    auto timestamp = KConfigGroup(kwinApp()->config(), QStringLiteral("Compositing")).readEntry(QLatin1String("LastFailureTimestamp"), 0);
     if (timestamp > 0) {
         if (QDateTime::currentSecsSinceEpoch() - timestamp < 60) {
             return true;
@@ -508,7 +508,7 @@ bool X11Compositor::openGLCompositingIsBroken() const
 QString X11Compositor::compositingNotPossibleReason() const
 {
     // first off, check whether we figured that we'll crash on detection because of a buggy driver
-    KConfigGroup gl_workaround_group(kwinApp()->config(), "Compositing");
+    KConfigGroup gl_workaround_group(kwinApp()->config(), QStringLiteral("Compositing"));
     if (gl_workaround_group.readEntry("Backend", "OpenGL") == QLatin1String("OpenGL") && openGLCompositingIsBroken()) {
         return i18n("<b>OpenGL compositing (the default) has crashed KWin in the past.</b><br>"
                     "This was most likely due to a driver bug."
@@ -528,7 +528,7 @@ QString X11Compositor::compositingNotPossibleReason() const
 bool X11Compositor::compositingPossible() const
 {
     // first off, check whether we figured that we'll crash on detection because of a buggy driver
-    KConfigGroup gl_workaround_group(kwinApp()->config(), "Compositing");
+    KConfigGroup gl_workaround_group(kwinApp()->config(), QStringLiteral("Compositing"));
     if (gl_workaround_group.readEntry("Backend", "OpenGL") == QLatin1String("OpenGL") && openGLCompositingIsBroken()) {
         qCWarning(KWIN_CORE) << "Compositing disabled: video driver seems unstable. If you think it's a false positive, please try again in a few minutes.";
         return false;
@@ -556,7 +556,7 @@ bool X11Compositor::compositingPossible() const
 
 void X11Compositor::createOpenGLSafePoint(OpenGLSafePoint safePoint)
 {
-    auto group = KConfigGroup(kwinApp()->config(), "Compositing");
+    auto group = KConfigGroup(kwinApp()->config(), QStringLiteral("Compositing"));
     switch (safePoint) {
     case OpenGLSafePoint::PreInit:
         // Explicitly write the failure timestamp so that if we crash during
@@ -580,7 +580,7 @@ void X11Compositor::createOpenGLSafePoint(OpenGLSafePoint safePoint)
             connect(
                 m_openGLFreezeProtection.get(), &QTimer::timeout, m_openGLFreezeProtection.get(),
                 [configName] {
-                    auto group = KConfigGroup(KSharedConfig::openConfig(configName), "Compositing");
+                    auto group = KConfigGroup(KSharedConfig::openConfig(configName), QStringLiteral("Compositing"));
                     group.writeEntry(QLatin1String("LastFailureTimestamp"), QDateTime::currentSecsSinceEpoch());
                     group.sync();
                     KCrash::setDrKonqiEnabled(false);

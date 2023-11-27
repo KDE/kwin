@@ -72,7 +72,7 @@ WaylandTestApplication::WaylandTestApplication(OperationMode mode, int &argc, ch
     qunsetenv("XKB_DEFAULT_OPTIONS");
 
     auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    KConfigGroup windowsGroup = config->group("Windows");
+    KConfigGroup windowsGroup = config->group(QStringLiteral("Windows"));
     windowsGroup.writeEntry("Placement", Placement::policyToString(PlacementSmart));
     windowsGroup.sync();
     setConfig(config);

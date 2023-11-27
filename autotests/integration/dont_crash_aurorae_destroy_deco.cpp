@@ -50,7 +50,7 @@ void DontCrashAuroraeDestroyDecoTest::initTestCase()
     });
 
     KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("org.kde.kdecoration2").writeEntry("library", "org.kde.kwin.aurorae");
+    config->group(QStringLiteral("org.kde.kdecoration2")).writeEntry("library", "org.kde.kwin.aurorae");
     config->sync();
     kwinApp()->setConfig(config);
 
@@ -78,7 +78,7 @@ void DontCrashAuroraeDestroyDecoTest::testBorderlessMaximizedWindows()
     // see BUG 362772
 
     // first adjust the config
-    KConfigGroup group = kwinApp()->config()->group("Windows");
+    KConfigGroup group = kwinApp()->config()->group(QStringLiteral("Windows"));
     group.writeEntry("BorderlessMaximizedWindows", true);
     group.sync();
     workspace()->slotReconfigure();

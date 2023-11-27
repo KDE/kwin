@@ -63,7 +63,7 @@ void SlidingPopupsTest::initTestCase()
     for (QString name : builtinNames) {
         plugins.writeEntry(name + QStringLiteral("Enabled"), false);
     }
-    KConfigGroup wobblyGroup = config->group("Effect-Wobbly");
+    KConfigGroup wobblyGroup = config->group(QStringLiteral("Effect-Wobbly"));
     wobblyGroup.writeEntry(QStringLiteral("Settings"), QStringLiteral("Custom"));
     wobblyGroup.writeEntry(QStringLiteral("OpenEffect"), true);
     wobblyGroup.writeEntry(QStringLiteral("CloseEffect"), true);

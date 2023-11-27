@@ -93,7 +93,7 @@ void SessionManager::storeSession(const QString &sessionName, SMSavePhase phase)
     qCDebug(KWIN_CORE) << "storing session" << sessionName << "in phase" << phase;
     KConfig *config = sessionConfig(sessionName, QString());
 
-    KConfigGroup cg(config, "Session");
+    KConfigGroup cg(config, QStringLiteral("Session"));
     int count = 0;
     int active_client = -1;
 
@@ -228,7 +228,7 @@ void SessionManager::storeSubSession(const QString &name, QSet<QByteArray> sessi
 void SessionManager::loadSession(const QString &sessionName)
 {
     session.clear();
-    KConfigGroup cg(sessionConfig(sessionName, QString()), "Session");
+    KConfigGroup cg(sessionConfig(sessionName, QString()), QStringLiteral("Session"));
     Q_EMIT loadSessionRequested(sessionName);
     addSessionInfo(cg);
 }

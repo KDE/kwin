@@ -500,10 +500,10 @@ void TabBox::hide(bool abort)
 void TabBox::reconfigure()
 {
     KSharedConfigPtr c = kwinApp()->config();
-    KConfigGroup config = c->group("TabBox");
+    KConfigGroup config = c->group(QStringLiteral("TabBox"));
 
-    loadConfig(c->group("TabBox"), m_defaultConfig);
-    loadConfig(c->group("TabBoxAlternative"), m_alternativeConfig);
+    loadConfig(c->group(QStringLiteral("TabBox")), m_defaultConfig);
+    loadConfig(c->group(QStringLiteral("TabBoxAlternative")), m_alternativeConfig);
 
     m_defaultCurrentApplicationConfig = m_defaultConfig;
     m_defaultCurrentApplicationConfig.setClientApplicationsMode(TabBoxConfig::AllWindowsCurrentApplication);
@@ -924,7 +924,7 @@ void TabBox::CDEWalkThroughWindows(bool forward)
     Window *nc = c;
     bool options_traverse_all;
     {
-        KConfigGroup group(kwinApp()->config(), "TabBox");
+        KConfigGroup group(kwinApp()->config(), QStringLiteral("TabBox"));
         options_traverse_all = group.readEntry("TraverseAll", false);
     }
 

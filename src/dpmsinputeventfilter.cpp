@@ -26,7 +26,7 @@ DpmsInputEventFilter::DpmsInputEventFilter()
     : InputEventFilter()
 {
     KSharedConfig::Ptr kwinSettings = kwinApp()->config();
-    m_enableDoubleTap = kwinSettings->group("Wayland").readEntry<bool>("DoubleTapWakeup", true);
+    m_enableDoubleTap = kwinSettings->group(QStringLiteral("Wayland")).readEntry<bool>("DoubleTapWakeup", true);
     if (Session *session = kwinApp()->outputBackend()->session()) {
         connect(session, &Session::awoke, this, &DpmsInputEventFilter::notify);
     }

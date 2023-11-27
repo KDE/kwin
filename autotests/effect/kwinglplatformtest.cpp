@@ -221,7 +221,7 @@ void GLPlatformTest::testDetect()
 {
     QFETCH(QString, configFile);
     KConfig config(configFile);
-    const KConfigGroup driverGroup = config.group("Driver");
+    const KConfigGroup driverGroup = config.group(QStringLiteral("Driver"));
     s_gl = new MockGL;
     s_gl->getString.vendor = driverGroup.readEntry("Vendor").toUtf8();
     s_gl->getString.renderer = driverGroup.readEntry("Renderer").toUtf8();
@@ -238,7 +238,7 @@ void GLPlatformTest::testDetect()
     gl->detect(EglPlatformInterface);
     QCOMPARE(gl->platformInterface(), EglPlatformInterface);
 
-    const KConfigGroup settingsGroup = config.group("Settings");
+    const KConfigGroup settingsGroup = config.group(QStringLiteral("Settings"));
 
     QCOMPARE(gl->supports(GLFeature::LooseBinding), settingsGroup.readEntry("LooseBinding", false));
 

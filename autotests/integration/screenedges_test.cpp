@@ -123,7 +123,7 @@ void ScreenEdgesTest::testTouchCallback()
     // This test verifies that touch screen edges trigger associated callbacks.
 
     auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    auto group = config->group("TouchEdges");
+    auto group = config->group(QStringLiteral("TouchEdges"));
     group.writeEntry("Top", "none");
     group.writeEntry("Left", "none");
     group.writeEntry("Bottom", "none");
@@ -223,7 +223,7 @@ void ScreenEdgesTest::testPushBack()
 
     QFETCH(int, pushback);
     auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("Windows").writeEntry("ElectricBorderPushbackPixels", pushback);
+    config->group(QStringLiteral("Windows")).writeEntry("ElectricBorderPushbackPixels", pushback);
     config->sync();
 
     auto s = workspace()->screenEdges();

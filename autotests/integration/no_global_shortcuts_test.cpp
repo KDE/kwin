@@ -141,7 +141,7 @@ void NoGlobalShortcutsTest::testTrigger()
     Target target;
     QSignalSpy triggeredSpy(&target, &Target::shortcutTriggered);
 
-    KConfigGroup group = kwinApp()->config()->group("ModifierOnlyShortcuts");
+    KConfigGroup group = kwinApp()->config()->group(QStringLiteral("ModifierOnlyShortcuts"));
     QFETCH(QStringList, metaConfig);
     QFETCH(QStringList, altConfig);
     QFETCH(QStringList, shiftConfig);

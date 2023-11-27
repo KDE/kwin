@@ -279,7 +279,7 @@ void TouchInputTest::testUpdateFocusOnDecorationDestroy()
     QSignalSpy sequenceEndedSpy(m_touch, &KWayland::Client::Touch::sequenceEnded);
 
     // Enable the borderless maximized windows option.
-    auto group = kwinApp()->config()->group("Windows");
+    auto group = kwinApp()->config()->group(QStringLiteral("Windows"));
     group.writeEntry("BorderlessMaximizedWindows", true);
     group.sync();
     Workspace::self()->slotReconfigure();

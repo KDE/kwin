@@ -27,7 +27,7 @@ QList<KPluginMetaData> KWinScriptsData::pluginMetaDataList() const
 bool KWinScriptsData::isDefaults() const
 {
     QList<KPluginMetaData> plugins = pluginMetaDataList();
-    KConfigGroup cfgGroup(m_kwinConfig, "Plugins");
+    KConfigGroup cfgGroup(m_kwinConfig, QStringLiteral("Plugins"));
     for (auto &plugin : plugins) {
         if (cfgGroup.readEntry(plugin.pluginId() + QLatin1String("Enabled"), plugin.isEnabledByDefault()) != plugin.isEnabledByDefault()) {
             return false;

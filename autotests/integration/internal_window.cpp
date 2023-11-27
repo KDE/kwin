@@ -554,7 +554,7 @@ void InternalWindowTest::testModifierClickUnrestrictedMove()
     QVERIFY(internalWindow);
     QVERIFY(internalWindow->isDecorated());
 
-    KConfigGroup group = kwinApp()->config()->group("MouseBindings");
+    KConfigGroup group = kwinApp()->config()->group(QStringLiteral("MouseBindings"));
     group.writeEntry("CommandAllKey", "Meta");
     group.writeEntry("CommandAll1", "Move");
     group.writeEntry("CommandAll2", "Move");
@@ -595,7 +595,7 @@ void InternalWindowTest::testModifierScroll()
     QVERIFY(internalWindow);
     QVERIFY(internalWindow->isDecorated());
 
-    KConfigGroup group = kwinApp()->config()->group("MouseBindings");
+    KConfigGroup group = kwinApp()->config()->group(QStringLiteral("MouseBindings"));
     group.writeEntry("CommandAllKey", "Meta");
     group.writeEntry("CommandAllWheel", "change opacity");
     group.sync();

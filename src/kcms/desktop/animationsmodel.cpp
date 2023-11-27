@@ -156,7 +156,7 @@ bool AnimationsModel::isDefaults() const
 
 bool AnimationsModel::needsSave() const
 {
-    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Plugins");
+    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), QStringLiteral("Plugins"));
 
     for (int i = 0; i < rowCount(); ++i) {
         const QModelIndex index_ = index(i, 0);

@@ -97,7 +97,7 @@ KWinTabBoxConfig::KWinTabBoxConfig(QObject *parent, const KPluginMetaData &data)
     createConnections(m_alternativeTabBoxUi);
 
     // check focus policy - we don't offer configs for unreasonable focus policies
-    KConfigGroup config(m_config, "Windows");
+    KConfigGroup config(m_config, QStringLiteral("Windows"));
     QString policy = config.readEntry("FocusPolicy", "ClickToFocus");
     if ((policy == "FocusUnderMouse") || (policy == "FocusStrictlyUnderMouse")) {
         tabWidget->setEnabled(false);
@@ -129,8 +129,8 @@ static QList<KPackage::Package> availableLnFPackages()
         pkg.setFallbackPackage(KPackage::Package());
         if (!pkg.filePath("defaults").isEmpty()) {
             KSharedConfigPtr conf = KSharedConfig::openConfig(pkg.filePath("defaults"));
-            KConfigGroup cg = KConfigGroup(conf, "kwinrc");
-            cg = KConfigGroup(&cg, "WindowSwitcher");
+            KConfigGroup cg = KConfigGroup(conf, QStringLiteral("kwinrc"));
+            cg = KConfigGroup(&cg, QStringLiteral("WindowSwitcher"));
             if (!cg.readEntry("LayoutName", QString()).isEmpty()) {
                 packages << pkg;
             }

@@ -242,7 +242,7 @@ bool Output::directScanoutInhibited() const
 std::chrono::milliseconds Output::dimAnimationTime()
 {
     // See kscreen.kcfg
-    return std::chrono::milliseconds(KSharedConfig::openConfig()->group("Effect-Kscreen").readEntry("Duration", 250));
+    return std::chrono::milliseconds(KSharedConfig::openConfig()->group(QStringLiteral("Effect-Kscreen")).readEntry("Duration", 250));
 }
 
 QRect Output::mapFromGlobal(const QRect &rect) const

@@ -134,10 +134,10 @@ bool StartupFeedbackEffect::supported()
 
 void StartupFeedbackEffect::reconfigure(Effect::ReconfigureFlags flags)
 {
-    KConfigGroup c = m_configWatcher->config()->group("FeedbackStyle");
+    KConfigGroup c = m_configWatcher->config()->group(QStringLiteral("FeedbackStyle"));
     const bool busyCursor = c.readEntry("BusyCursor", true);
 
-    c = m_configWatcher->config()->group("BusyCursorSettings");
+    c = m_configWatcher->config()->group(QStringLiteral("BusyCursorSettings"));
     m_timeout = std::chrono::seconds(c.readEntry("Timeout", s_startupDefaultTimeout));
     m_startupInfo->setTimeout(m_timeout.count());
     const bool busyBlinking = c.readEntry("Blinking", false);
@@ -311,7 +311,7 @@ void StartupFeedbackEffect::start(const Startup &startup)
     m_active = true;
 
     // read details about the mouse-cursor theme define per default
-    KConfigGroup mousecfg(effects->inputConfig(), "Mouse");
+    KConfigGroup mousecfg(effects->inputConfig(), QStringLiteral("Mouse"));
     m_cursorSize = mousecfg.readEntry("cursorSize", 24);
 
     int iconSize = m_cursorSize / 1.5;

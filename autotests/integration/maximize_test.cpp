@@ -77,7 +77,7 @@ void TestMaximized::cleanup()
     Test::destroyWaylandConnection();
 
     // adjust config
-    auto group = kwinApp()->config()->group("Windows");
+    auto group = kwinApp()->config()->group(QStringLiteral("Windows"));
     group.writeEntry("BorderlessMaximizedWindows", false);
     group.sync();
     Workspace::self()->slotReconfigure();
@@ -168,7 +168,7 @@ void TestMaximized::testInitiallyMaximizedBorderless()
     // This test verifies that a window created as maximized, will be maximized and without Border with BorderlessMaximizedWindows
 
     // adjust config
-    auto group = kwinApp()->config()->group("Windows");
+    auto group = kwinApp()->config()->group(QStringLiteral("Windows"));
     group.writeEntry("BorderlessMaximizedWindows", true);
     group.sync();
     Workspace::self()->slotReconfigure();
@@ -218,7 +218,7 @@ void TestMaximized::testBorderlessMaximizedWindow()
     // decoration when the borderless maximized option is on.
 
     // Enable the borderless maximized windows option.
-    auto group = kwinApp()->config()->group("Windows");
+    auto group = kwinApp()->config()->group(QStringLiteral("Windows"));
     group.writeEntry("BorderlessMaximizedWindows", true);
     group.sync();
     Workspace::self()->slotReconfigure();

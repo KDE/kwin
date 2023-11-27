@@ -480,7 +480,7 @@ bool Workspace::applyOutputConfiguration(const OutputConfiguration &config, cons
     updateOutputs(outputOrder);
     m_outputConfigStore->storeConfig(kwinApp()->outputBackend()->outputs(), m_lidSwitchTracker->isLidClosed(), config, outputOrder);
     KConfig cfg(QStringLiteral("kdeglobals"));
-    KConfigGroup kscreenGroup = cfg.group("KScreen");
+    KConfigGroup kscreenGroup = cfg.group(QStringLiteral("KScreen"));
     const bool xwaylandClientsScale = kscreenGroup.readEntry("XwaylandClientsScale", true);
     if (xwaylandClientsScale && !outputOrder.isEmpty()) {
         double maxScale = 0;

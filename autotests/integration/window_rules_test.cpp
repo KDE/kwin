@@ -135,9 +135,9 @@ void WindowRuleTest::testApplyInitialMaximizeVert()
 void WindowRuleTest::testWindowClassChange()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
+    config->group(QStringLiteral("General")).writeEntry("count", 1);
 
-    auto group = config->group("1");
+    auto group = config->group(QStringLiteral("1"));
     group.writeEntry("above", true);
     group.writeEntry("aboverule", 2);
     group.writeEntry("wmclass", "org.kde.foo");

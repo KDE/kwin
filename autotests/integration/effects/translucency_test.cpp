@@ -59,8 +59,8 @@ void TranslucencyTest::initTestCase()
     for (QString name : builtinNames) {
         plugins.writeEntry(name + QStringLiteral("Enabled"), false);
     }
-    config->group("Outline").writeEntry(QStringLiteral("QmlPath"), QString("/does/not/exist.qml"));
-    config->group("Effect-translucency").writeEntry(QStringLiteral("Dialogs"), 90);
+    config->group(QStringLiteral("Outline")).writeEntry(QStringLiteral("QmlPath"), QString("/does/not/exist.qml"));
+    config->group(QStringLiteral("Effect-translucency")).writeEntry(QStringLiteral("Dialogs"), 90);
 
     config->sync();
     kwinApp()->setConfig(config);

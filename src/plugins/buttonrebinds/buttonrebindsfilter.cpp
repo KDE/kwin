@@ -147,7 +147,7 @@ void ButtonRebindsFilter::loadConfig(const KConfigGroup &group)
 
     bool foundActions = false;
     const auto mouseButtonEnum = QMetaEnum::fromType<Qt::MouseButtons>();
-    const auto mouseGroup = group.group("Mouse");
+    const auto mouseGroup = group.group(QStringLiteral("Mouse"));
     static constexpr auto maximumQtExtraButton = 24;
     for (int i = 1; i <= maximumQtExtraButton; ++i) {
         const QByteArray buttonName = QByteArray("ExtraButton") + QByteArray::number(i);
@@ -159,7 +159,7 @@ void ButtonRebindsFilter::loadConfig(const KConfigGroup &group)
         }
     }
 
-    const auto tabletsGroup = group.group("Tablet");
+    const auto tabletsGroup = group.group(QStringLiteral("Tablet"));
     const auto tablets = tabletsGroup.groupList();
     for (const auto &tabletName : tablets) {
         const auto tabletGroup = tabletsGroup.group(tabletName);
@@ -175,7 +175,7 @@ void ButtonRebindsFilter::loadConfig(const KConfigGroup &group)
         }
     }
 
-    const auto tabletToolsGroup = group.group("TabletTool");
+    const auto tabletToolsGroup = group.group(QStringLiteral("TabletTool"));
     const auto tabletTools = tabletToolsGroup.groupList();
     for (const auto &tabletToolName : tabletTools) {
         const auto toolGroup = tabletToolsGroup.group(tabletToolName);

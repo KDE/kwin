@@ -26,7 +26,7 @@ namespace KWin
 KeyboardLayout::KeyboardLayout(Xkb *xkb, const KSharedConfigPtr &config)
     : QObject()
     , m_xkb(xkb)
-    , m_configGroup(config->group("Layout"))
+    , m_configGroup(config->group(QStringLiteral("Layout")))
 {
 }
 
@@ -58,7 +58,7 @@ void KeyboardLayout::init()
     KGlobalAccel::self()->setShortcut(switchLastUsedKeyboardAction, QList<QKeySequence>({sequenceLastUsed}));
 
     connect(switchLastUsedKeyboardAction, &QAction::triggered, this, &KeyboardLayout::switchToLastUsedLayout);
-    
+
     QDBusConnection::sessionBus().connect(QString(),
                                           QStringLiteral("/Layouts"),
                                           QStringLiteral("org.kde.keyboard"),

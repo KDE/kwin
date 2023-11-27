@@ -29,9 +29,9 @@ int main(int argc, char *argv[])
         return 1;
     }
     KConfig src_cfg(file);
-    KConfig dest_cfg("kwinrulesrc", KConfig::NoGlobals);
-    KConfigGroup scg(&src_cfg, "General");
-    KConfigGroup dcg(&dest_cfg, "General");
+    KConfig dest_cfg(QStringLiteral("kwinrulesrc"), KConfig::NoGlobals);
+    KConfigGroup scg(&src_cfg, QStringLiteral("General"));
+    KConfigGroup dcg(&dest_cfg, QStringLiteral("General"));
     int count = scg.readEntry("count", 0);
     int pos = dcg.readEntry("count", 0);
     for (int group = 1;

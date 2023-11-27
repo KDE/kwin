@@ -358,7 +358,7 @@ void PointerInputTest::testUpdateFocusOnDecorationDestroy()
     QSignalSpy buttonStateChangedSpy(pointer, &KWayland::Client::Pointer::buttonStateChanged);
 
     // Enable the borderless maximized windows option.
-    auto group = kwinApp()->config()->group("Windows");
+    auto group = kwinApp()->config()->group(QStringLiteral("Windows"));
     group.writeEntry("BorderlessMaximizedWindows", true);
     group.sync();
     Workspace::self()->slotReconfigure();
@@ -487,7 +487,7 @@ void PointerInputTest::testModifierClickUnrestrictedMove()
 
     // first modify the config for this run
     QFETCH(QString, modKey);
-    KConfigGroup group = kwinApp()->config()->group("MouseBindings");
+    KConfigGroup group = kwinApp()->config()->group(QStringLiteral("MouseBindings"));
     group.writeEntry("CommandAllKey", modKey);
     group.writeEntry("CommandAll1", "Move");
     group.writeEntry("CommandAll2", "Move");
@@ -553,7 +553,7 @@ void PointerInputTest::testModifierClickUnrestrictedFullscreenMove()
     }
 
     // first modify the config for this run
-    KConfigGroup group = kwinApp()->config()->group("MouseBindings");
+    KConfigGroup group = kwinApp()->config()->group(QStringLiteral("MouseBindings"));
     group.writeEntry("CommandAllKey", "Meta");
     group.writeEntry("CommandAll1", "Move");
     group.writeEntry("CommandAll2", "Move");
@@ -607,7 +607,7 @@ void PointerInputTest::testModifierClickUnrestrictedMoveGlobalShortcutsDisabled(
     QSignalSpy buttonSpy(pointer, &KWayland::Client::Pointer::buttonStateChanged);
 
     // first modify the config for this run
-    KConfigGroup group = kwinApp()->config()->group("MouseBindings");
+    KConfigGroup group = kwinApp()->config()->group(QStringLiteral("MouseBindings"));
     group.writeEntry("CommandAllKey", "Meta");
     group.writeEntry("CommandAll1", "Move");
     group.writeEntry("CommandAll2", "Move");
@@ -684,7 +684,7 @@ void PointerInputTest::testModifierScrollOpacity()
 
     // first modify the config for this run
     QFETCH(QString, modKey);
-    KConfigGroup group = kwinApp()->config()->group("MouseBindings");
+    KConfigGroup group = kwinApp()->config()->group(QStringLiteral("MouseBindings"));
     group.writeEntry("CommandAllKey", modKey);
     group.writeEntry("CommandAllWheel", "change opacity");
     group.sync();
@@ -742,7 +742,7 @@ void PointerInputTest::testModifierScrollOpacityGlobalShortcutsDisabled()
     QSignalSpy axisSpy(pointer, &KWayland::Client::Pointer::axisChanged);
 
     // first modify the config for this run
-    KConfigGroup group = kwinApp()->config()->group("MouseBindings");
+    KConfigGroup group = kwinApp()->config()->group(QStringLiteral("MouseBindings"));
     group.writeEntry("CommandAllKey", "Meta");
     group.writeEntry("CommandAllWheel", "change opacity");
     group.sync();
@@ -791,7 +791,7 @@ void PointerInputTest::testScrollAction()
     QSignalSpy axisSpy(pointer, &KWayland::Client::Pointer::axisChanged);
 
     // first modify the config for this run
-    KConfigGroup group = kwinApp()->config()->group("MouseBindings");
+    KConfigGroup group = kwinApp()->config()->group(QStringLiteral("MouseBindings"));
     group.writeEntry("CommandWindowWheel", "activate and scroll");
     group.sync();
     workspace()->slotReconfigure();
@@ -837,7 +837,7 @@ void PointerInputTest::testFocusFollowsMouse()
     input()->pointer()->warp(QPointF(900, 900));
 
     // first modify the config for this run
-    KConfigGroup group = kwinApp()->config()->group("Windows");
+    KConfigGroup group = kwinApp()->config()->group(QStringLiteral("Windows"));
     group.writeEntry("AutoRaise", true);
     group.writeEntry("AutoRaiseInterval", 20);
     group.writeEntry("DelayFocusInterval", 200);
@@ -922,10 +922,10 @@ void PointerInputTest::testMouseActionInactiveWindow()
     // it should activate the window and raise it
 
     // first modify the config for this run - disable FocusFollowsMouse
-    KConfigGroup group = kwinApp()->config()->group("Windows");
+    KConfigGroup group = kwinApp()->config()->group(QStringLiteral("Windows"));
     group.writeEntry("FocusPolicy", "ClickToFocus");
     group.sync();
-    group = kwinApp()->config()->group("MouseBindings");
+    group = kwinApp()->config()->group(QStringLiteral("MouseBindings"));
     group.writeEntry("CommandWindow1", "Activate, raise and pass click");
     group.writeEntry("CommandWindow2", "Activate, raise and pass click");
     group.writeEntry("CommandWindow3", "Activate, raise and pass click");
@@ -1011,7 +1011,7 @@ void PointerInputTest::testMouseActionActiveWindow()
 
     // adjust config for this run
     QFETCH(bool, clickRaise);
-    KConfigGroup group = kwinApp()->config()->group("Windows");
+    KConfigGroup group = kwinApp()->config()->group(QStringLiteral("Windows"));
     group.writeEntry("ClickRaise", clickRaise);
     group.sync();
     workspace()->slotReconfigure();
@@ -1582,7 +1582,7 @@ void PointerInputTest::testResizeCursor()
     // this test verifies that the cursor has correct shape during resize operation
 
     // first modify the config for this run
-    KConfigGroup group = kwinApp()->config()->group("MouseBindings");
+    KConfigGroup group = kwinApp()->config()->group(QStringLiteral("MouseBindings"));
     group.writeEntry("CommandAllKey", "Meta");
     group.writeEntry("CommandAll3", "Resize");
     group.sync();
@@ -1669,7 +1669,7 @@ void PointerInputTest::testMoveCursor()
     // this test verifies that the cursor has correct shape during move operation
 
     // first modify the config for this run
-    KConfigGroup group = kwinApp()->config()->group("MouseBindings");
+    KConfigGroup group = kwinApp()->config()->group(QStringLiteral("MouseBindings"));
     group.writeEntry("CommandAllKey", "Meta");
     group.writeEntry("CommandAll1", "Move");
     group.sync();

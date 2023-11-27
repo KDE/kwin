@@ -379,7 +379,7 @@ bool WaylandServer::init(InitializationFlags flags)
     new CursorShapeManagerV1Interface(m_display, m_display);
 
     const auto kwinConfig = kwinApp()->config();
-    if (kwinConfig->group("Wayland").readEntry("EnablePrimarySelection", true)) {
+    if (kwinConfig->group(QStringLiteral("Wayland")).readEntry("EnablePrimarySelection", true)) {
         new PrimarySelectionDeviceManagerV1Interface(m_display, m_display);
     }
 

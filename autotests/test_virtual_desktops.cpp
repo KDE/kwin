@@ -605,12 +605,12 @@ void TestVirtualDesktops::load()
     vds->load();
     QCOMPARE(vds->count(), (uint)1);
     // setting a sensible number
-    config->group("Desktops").writeEntry("Number", 4);
+    config->group(QStringLiteral("Desktops")).writeEntry("Number", 4);
     vds->load();
     QCOMPARE(vds->count(), (uint)4);
 
     // setting the config value and reloading should update
-    config->group("Desktops").writeEntry("Number", 5);
+    config->group(QStringLiteral("Desktops")).writeEntry("Number", 5);
     vds->load();
     QCOMPARE(vds->count(), (uint)5);
 }
@@ -625,10 +625,10 @@ void TestVirtualDesktops::save()
     vds->setConfig(config);
 
     // now save should create the group "Desktops"
-    QCOMPARE(config->hasGroup("Desktops"), false);
+    QCOMPARE(config->hasGroup(QStringLiteral("Desktops")), false);
     vds->save();
-    QCOMPARE(config->hasGroup("Desktops"), true);
-    KConfigGroup desktops = config->group("Desktops");
+    QCOMPARE(config->hasGroup(QStringLiteral("Desktops")), true);
+    KConfigGroup desktops = config->group(QStringLiteral("Desktops"));
     QCOMPARE(desktops.readEntry<int>("Number", 1), 4);
     QCOMPARE(desktops.hasKey("Name_1"), false);
     QCOMPARE(desktops.hasKey("Name_2"), false);

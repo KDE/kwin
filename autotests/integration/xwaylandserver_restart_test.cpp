@@ -41,7 +41,7 @@ void XwaylandServerRestartTest::initTestCase()
     });
 
     KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    KConfigGroup xwaylandGroup = config->group("Xwayland");
+    KConfigGroup xwaylandGroup = config->group(QStringLiteral("Xwayland"));
     xwaylandGroup.writeEntry(QStringLiteral("XwaylandCrashPolicy"), QStringLiteral("Restart"));
     xwaylandGroup.sync();
     kwinApp()->setConfig(config);

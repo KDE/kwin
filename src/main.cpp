@@ -392,12 +392,12 @@ void Application::setXwaylandScale(qreal scale)
 void Application::applyXwaylandScale()
 {
     KConfig cfg(QStringLiteral("kdeglobals"));
-    KConfigGroup kscreenGroup = cfg.group("KScreen");
+    KConfigGroup kscreenGroup = cfg.group(QStringLiteral("KScreen"));
     const bool xwaylandClientsScale = kscreenGroup.readEntry("XwaylandClientsScale", true);
     if (xwaylandClientsScale) {
-        kwinApp()->config()->group("Xwayland").writeEntry("Scale", m_xwaylandScale, KConfig::Notify);
+        kwinApp()->config()->group(QStringLiteral("Xwayland")).writeEntry("Scale", m_xwaylandScale, KConfig::Notify);
     } else {
-        kwinApp()->config()->group("Xwayland").deleteEntry("Scale", KConfig::Notify);
+        kwinApp()->config()->group(QStringLiteral("Xwayland")).deleteEntry("Scale", KConfig::Notify);
     }
     if (x11Connection()) {
         // rerun the fonts kcm init that does the appropriate xrdb call with the new settings

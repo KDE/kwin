@@ -62,8 +62,8 @@ void ScreenEdgeTest::initTestCase()
     }
 
     // disable electric border pushback
-    config->group("Windows").writeEntry("ElectricBorderPushbackPixels", 0);
-    config->group("TabBox").writeEntry("TouchBorderActivate", int(ElectricNone));
+    config->group(QStringLiteral("Windows")).writeEntry("ElectricBorderPushbackPixels", 0);
+    config->group(QStringLiteral("TabBox")).writeEntry("TouchBorderActivate", int(ElectricNone));
 
     config->sync();
     kwinApp()->setConfig(config);

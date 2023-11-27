@@ -99,7 +99,7 @@ void TestPlacement::initTestCase()
 
 void TestPlacement::setPlacementPolicy(PlacementPolicy policy)
 {
-    auto group = kwinApp()->config()->group("Windows");
+    auto group = kwinApp()->config()->group(QStringLiteral("Windows"));
     group.writeEntry("Placement", Placement::policyToString(policy));
     group.sync();
     Workspace::self()->slotReconfigure();
@@ -238,7 +238,7 @@ void TestPlacement::testPlaceCentered()
 {
     // This test verifies that Centered placement policy works.
 
-    KConfigGroup group = kwinApp()->config()->group("Windows");
+    KConfigGroup group = kwinApp()->config()->group(QStringLiteral("Windows"));
     group.writeEntry("Placement", Placement::policyToString(PlacementCentered));
     group.sync();
     workspace()->slotReconfigure();
@@ -257,7 +257,7 @@ void TestPlacement::testPlaceUnderMouse()
 {
     // This test verifies that Under Mouse placement policy works.
 
-    KConfigGroup group = kwinApp()->config()->group("Windows");
+    KConfigGroup group = kwinApp()->config()->group(QStringLiteral("Windows"));
     group.writeEntry("Placement", Placement::policyToString(PlacementUnderMouse));
     group.sync();
     workspace()->slotReconfigure();
@@ -279,7 +279,7 @@ void TestPlacement::testPlaceZeroCornered()
 {
     // This test verifies that the Zero-Cornered placement policy works.
 
-    KConfigGroup group = kwinApp()->config()->group("Windows");
+    KConfigGroup group = kwinApp()->config()->group(QStringLiteral("Windows"));
     group.writeEntry("Placement", Placement::policyToString(PlacementZeroCornered));
     group.sync();
     workspace()->slotReconfigure();
@@ -317,7 +317,7 @@ void TestPlacement::testPlaceRandom()
 {
     // This test verifies that Random placement policy works.
 
-    KConfigGroup group = kwinApp()->config()->group("Windows");
+    KConfigGroup group = kwinApp()->config()->group(QStringLiteral("Windows"));
     group.writeEntry("Placement", Placement::policyToString(PlacementRandom));
     group.sync();
     workspace()->slotReconfigure();
@@ -388,7 +388,7 @@ void TestPlacement::testCascadeIfCovering()
     // This test verifies that the cascade-if-covering adjustment works for the Centered placement
     // policy.
 
-    KConfigGroup group = kwinApp()->config()->group("Windows");
+    KConfigGroup group = kwinApp()->config()->group(QStringLiteral("Windows"));
     group.writeEntry("Placement", Placement::policyToString(PlacementCentered));
     group.sync();
     workspace()->slotReconfigure();
@@ -430,7 +430,7 @@ void TestPlacement::testCascadeIfCoveringIgnoreNonCovering()
     // This test verifies that the cascade-if-covering adjustment doesn't take effect when the
     // other window wouldn't be fully covered.
 
-    KConfigGroup group = kwinApp()->config()->group("Windows");
+    KConfigGroup group = kwinApp()->config()->group(QStringLiteral("Windows"));
     group.writeEntry("Placement", Placement::policyToString(PlacementCentered));
     group.sync();
     workspace()->slotReconfigure();
@@ -459,7 +459,7 @@ void TestPlacement::testCascadeIfCoveringIgnoreOutOfArea()
     // This test verifies that the cascade-if-covering adjustment doesn't take effect when there is
     // not enough space on the placement area to cascade.
 
-    KConfigGroup group = kwinApp()->config()->group("Windows");
+    KConfigGroup group = kwinApp()->config()->group(QStringLiteral("Windows"));
     group.writeEntry("Placement", Placement::policyToString(PlacementCentered));
     group.sync();
     workspace()->slotReconfigure();
@@ -488,7 +488,7 @@ void TestPlacement::testCascadeIfCoveringIgnoreAlreadyCovered()
     // This test verifies that the cascade-if-covering adjustment doesn't take effect when the
     // other window is already fully covered by other windows anyway.
 
-    KConfigGroup group = kwinApp()->config()->group("Windows");
+    KConfigGroup group = kwinApp()->config()->group(QStringLiteral("Windows"));
     group.writeEntry("Placement", Placement::policyToString(PlacementCentered));
     group.sync();
     workspace()->slotReconfigure();

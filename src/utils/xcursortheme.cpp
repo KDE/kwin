@@ -181,7 +181,7 @@ void KXcursorThemePrivate::load(const QString &themeName, int size, qreal device
             loadCursors(dir.filePath(QStringLiteral("cursors")), size, devicePixelRatio);
             if (inherits.isEmpty()) {
                 const KConfig config(dir.filePath(QStringLiteral("index.theme")), KConfig::NoGlobals);
-                inherits << KConfigGroup(&config, "Icon Theme").readEntry("Inherits", QStringList());
+                inherits << KConfigGroup(&config, QStringLiteral("Icon Theme")).readEntry("Inherits", QStringList());
             }
         }
 

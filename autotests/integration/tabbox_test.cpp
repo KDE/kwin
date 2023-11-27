@@ -48,7 +48,7 @@ void TabBoxTest::initTestCase()
     });
 
     KSharedConfigPtr c = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    c->group("TabBox").writeEntry("ShowTabBox", false);
+    c->group(QStringLiteral("TabBox")).writeEntry("ShowTabBox", false);
     c->sync();
     kwinApp()->setConfig(c);
     qputenv("KWIN_XKB_DEFAULT_KEYMAP", "1");

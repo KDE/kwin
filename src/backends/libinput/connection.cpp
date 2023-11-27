@@ -661,22 +661,22 @@ void Connection::applyScreenToDevice(Device *device)
 
 void Connection::applyDeviceConfig(Device *device)
 {
-    KConfigGroup defaults = m_config->group("Libinput").group("Defaults");
+    KConfigGroup defaults = m_config->group(QStringLiteral("Libinput")).group(QStringLiteral("Defaults"));
     if (defaults.isValid()) {
-        if (device->isAlphaNumericKeyboard() && defaults.hasGroup("Keyboard")) {
-            defaults = defaults.group("Keyboard");
-        } else if (device->isTouchpad() && defaults.hasGroup("Touchpad")) {
+        if (device->isAlphaNumericKeyboard() && defaults.hasGroup(QStringLiteral("Keyboard"))) {
+            defaults = defaults.group(QStringLiteral("Keyboard"));
+        } else if (device->isTouchpad() && defaults.hasGroup(QStringLiteral("Touchpad"))) {
             // A Touchpad is a Pointer, so we need to check for it before Pointer.
-            defaults = defaults.group("Touchpad");
-        } else if (device->isPointer() && defaults.hasGroup("Pointer")) {
-            defaults = defaults.group("Pointer");
+            defaults = defaults.group(QStringLiteral("Touchpad"));
+        } else if (device->isPointer() && defaults.hasGroup(QStringLiteral("Pointer"))) {
+            defaults = defaults.group(QStringLiteral("Pointer"));
         }
 
         device->setDefaultConfig(defaults);
     }
 
     // pass configuration to Device
-    device->setConfig(m_config->group("Libinput").group(QString::number(device->vendor())).group(QString::number(device->product())).group(device->name()));
+    device->setConfig(m_config->group(QStringLiteral("Libinput")).group(QString::number(device->vendor())).group(QString::number(device->product())).group(device->name()));
     device->loadConfiguration();
 }
 

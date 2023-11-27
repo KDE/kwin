@@ -139,7 +139,7 @@ TabletModeManager::TabletModeManager()
 void KWin::TabletModeManager::refreshSettings()
 {
     KSharedConfig::Ptr kwinSettings = kwinApp()->config();
-    KConfigGroup cg = kwinSettings->group("Input");
+    KConfigGroup cg = kwinSettings->group(QStringLiteral("Input"));
     const QString tabletModeConfig = cg.readPathEntry("TabletMode", QStringLiteral("auto"));
     const bool oldEffectiveTabletMode = effectiveTabletMode();
     if (tabletModeConfig == QStringLiteral("on")) {

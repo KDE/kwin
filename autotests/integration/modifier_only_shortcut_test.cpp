@@ -133,7 +133,7 @@ void ModifierOnlyShortcutTest::testTrigger()
     Target target;
     QSignalSpy triggeredSpy(&target, &Target::shortcutTriggered);
 
-    KConfigGroup group = kwinApp()->config()->group("ModifierOnlyShortcuts");
+    KConfigGroup group = kwinApp()->config()->group(QStringLiteral("ModifierOnlyShortcuts"));
     QFETCH(QStringList, metaConfig);
     QFETCH(QStringList, altConfig);
     QFETCH(QStringList, shiftConfig);
@@ -248,7 +248,7 @@ void ModifierOnlyShortcutTest::testCapsLock()
     Target target;
     QSignalSpy triggeredSpy(&target, &Target::shortcutTriggered);
 
-    KConfigGroup group = kwinApp()->config()->group("ModifierOnlyShortcuts");
+    KConfigGroup group = kwinApp()->config()->group(QStringLiteral("ModifierOnlyShortcuts"));
     group.writeEntry("Meta", QStringList());
     group.writeEntry("Alt", QStringList());
     group.writeEntry("Shift", QStringList{s_serviceName, s_path, s_serviceName, QStringLiteral("shortcut")});
@@ -333,7 +333,7 @@ void ModifierOnlyShortcutTest::testGlobalShortcutsDisabled()
     Target target;
     QSignalSpy triggeredSpy(&target, &Target::shortcutTriggered);
 
-    KConfigGroup group = kwinApp()->config()->group("ModifierOnlyShortcuts");
+    KConfigGroup group = kwinApp()->config()->group(QStringLiteral("ModifierOnlyShortcuts"));
     QFETCH(QStringList, metaConfig);
     QFETCH(QStringList, altConfig);
     QFETCH(QStringList, shiftConfig);

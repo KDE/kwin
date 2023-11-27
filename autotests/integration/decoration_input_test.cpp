@@ -223,7 +223,7 @@ void DecorationInputTest::testDoubleClickOnAllDesktops_data()
 
 void KWin::DecorationInputTest::testDoubleClickOnAllDesktops()
 {
-    KConfigGroup group = kwinApp()->config()->group("Windows");
+    KConfigGroup group = kwinApp()->config()->group(QStringLiteral("Windows"));
     group.writeEntry("TitlebarDoubleClickCommand", QStringLiteral("OnAllDesktops"));
     group.sync();
     workspace()->slotReconfigure();
@@ -269,7 +269,7 @@ void KWin::DecorationInputTest::testDoubleClickOnAllDesktops()
 void DecorationInputTest::testDoubleClickClose()
 {
     // this test verifies that no crash occurs when double click is configured to close action
-    KConfigGroup group = kwinApp()->config()->group("Windows");
+    KConfigGroup group = kwinApp()->config()->group(QStringLiteral("Windows"));
     group.writeEntry("TitlebarDoubleClickCommand", QStringLiteral("Close"));
     group.sync();
     workspace()->slotReconfigure();
@@ -309,7 +309,7 @@ void DecorationInputTest::testDoubleTap_data()
 
 void KWin::DecorationInputTest::testDoubleTap()
 {
-    KConfigGroup group = kwinApp()->config()->group("Windows");
+    KConfigGroup group = kwinApp()->config()->group(QStringLiteral("Windows"));
     group.writeEntry("TitlebarDoubleClickCommand", QStringLiteral("OnAllDesktops"));
     group.sync();
     workspace()->slotReconfigure();
@@ -531,7 +531,7 @@ void DecorationInputTest::testResizeOutsideWindow()
     // this test verifies that one can resize the window outside the decoration with NoSideBorder
 
     // first adjust config
-    kwinApp()->config()->group("org.kde.kdecoration2").writeEntry("BorderSize", QStringLiteral("None"));
+    kwinApp()->config()->group(QStringLiteral("org.kde.kdecoration2")).writeEntry("BorderSize", QStringLiteral("None"));
     kwinApp()->config()->sync();
     workspace()->slotReconfigure();
 
@@ -617,7 +617,7 @@ void DecorationInputTest::testModifierClickUnrestrictedMove()
 
     // first modify the config for this run
     QFETCH(QString, modKey);
-    KConfigGroup group = kwinApp()->config()->group("MouseBindings");
+    KConfigGroup group = kwinApp()->config()->group(QStringLiteral("MouseBindings"));
     group.writeEntry("CommandAllKey", modKey);
     group.writeEntry("CommandAll1", "Move");
     group.writeEntry("CommandAll2", "Move");
@@ -686,7 +686,7 @@ void DecorationInputTest::testModifierScrollOpacity()
 
     // first modify the config for this run
     QFETCH(QString, modKey);
-    KConfigGroup group = kwinApp()->config()->group("MouseBindings");
+    KConfigGroup group = kwinApp()->config()->group(QStringLiteral("MouseBindings"));
     group.writeEntry("CommandAllKey", modKey);
     group.writeEntry("CommandAllWheel", "change opacity");
     group.sync();

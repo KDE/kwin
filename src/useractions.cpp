@@ -174,7 +174,7 @@ void UserActionsMenu::helperDialog(const QString &message)
     }
     if (!type.isEmpty()) {
         KConfig cfg(QStringLiteral("kwin_dialogsrc"));
-        KConfigGroup cg(&cfg, "Notification Messages"); // Depends on KMessageBox
+        KConfigGroup cg(&cfg, QStringLiteral("Notification Messages")); // Depends on KMessageBox
         if (!cg.readEntry(type, true)) {
             return;
         }

@@ -65,7 +65,7 @@ void TestPointerConstraints::initTestCase()
 
     // set custom config which disables the OnScreenNotification
     KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    KConfigGroup group = config->group("OnScreenNotification");
+    KConfigGroup group = config->group(QStringLiteral("OnScreenNotification"));
     group.writeEntry(QStringLiteral("QmlPath"), QString("/does/not/exist.qml"));
     group.sync();
 
@@ -167,7 +167,7 @@ void TestPointerConstraints::testConfinedPointer()
 
     // modifier + click should be ignored
     // first ensure the settings are ok
-    KConfigGroup group = kwinApp()->config()->group("MouseBindings");
+    KConfigGroup group = kwinApp()->config()->group(QStringLiteral("MouseBindings"));
     group.writeEntry("CommandAllKey", QStringLiteral("Meta"));
     group.writeEntry("CommandAll1", "Move");
     group.writeEntry("CommandAll2", "Move");

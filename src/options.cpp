@@ -686,14 +686,14 @@ void Options::loadConfig()
     syncFromKcfgc();
 
     // Electric borders
-    KConfigGroup config(m_settings->config(), "Windows");
+    KConfigGroup config(m_settings->config(), QStringLiteral("Windows"));
     OpTitlebarDblClick = windowOperation(config.readEntry("TitlebarDoubleClickCommand", "Maximize"), true);
     setOperationMaxButtonLeftClick(windowOperation(config.readEntry("MaximizeButtonLeftClickCommand", "Maximize"), true));
     setOperationMaxButtonMiddleClick(windowOperation(config.readEntry("MaximizeButtonMiddleClickCommand", "Maximize (vertical only)"), true));
     setOperationMaxButtonRightClick(windowOperation(config.readEntry("MaximizeButtonRightClickCommand", "Maximize (horizontal only)"), true));
 
     // Mouse bindings
-    config = KConfigGroup(m_settings->config(), "MouseBindings");
+    config = KConfigGroup(m_settings->config(), QStringLiteral("MouseBindings"));
     // TODO: add properties for missing options
     CmdTitlebarWheel = mouseWheelCommand(config.readEntry("CommandTitlebarWheel", "Nothing"));
     CmdAllModKey = (config.readEntry("CommandAllKey", "Meta") == QStringLiteral("Meta")) ? Qt::Key_Meta : Qt::Key_Alt;
@@ -713,7 +713,7 @@ void Options::loadConfig()
     setCommandAll3(mouseCommand(config.readEntry("CommandAll3", "Resize"), false));
 
     // Modifier Only Shortcuts
-    config = KConfigGroup(m_settings->config(), "ModifierOnlyShortcuts");
+    config = KConfigGroup(m_settings->config(), QStringLiteral("ModifierOnlyShortcuts"));
     m_modifierOnlyShortcuts.clear();
     if (config.hasKey("Shift")) {
         m_modifierOnlyShortcuts.insert(Qt::ShiftModifier, config.readEntry("Shift", QStringList()));
@@ -727,7 +727,7 @@ void Options::loadConfig()
     m_modifierOnlyShortcuts.insert(Qt::MetaModifier, config.readEntry("Meta", QStringList{QStringLiteral("org.kde.plasmashell"), QStringLiteral("/PlasmaShell"), QStringLiteral("org.kde.PlasmaShell"), QStringLiteral("activateLauncherMenu")}));
 
     // Compositing
-    config = KConfigGroup(m_settings->config(), "Compositing");
+    config = KConfigGroup(m_settings->config(), QStringLiteral("Compositing"));
     bool useCompositing = false;
     CompositingType compositingMode = NoCompositing;
     QString compositingBackend = config.readEntry("Backend", "OpenGL");

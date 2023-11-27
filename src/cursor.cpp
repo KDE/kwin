@@ -147,7 +147,7 @@ void Cursor::loadThemeSettings()
 
 void Cursor::loadThemeFromKConfig()
 {
-    KConfigGroup mousecfg(kwinApp()->inputConfig(), "Mouse");
+    KConfigGroup mousecfg(kwinApp()->inputConfig(), QStringLiteral("Mouse"));
     const QString themeName = mousecfg.readEntry("cursorTheme", defaultThemeName());
     const uint themeSize = mousecfg.readEntry("cursorSize", defaultThemeSize());
     updateTheme(themeName, themeSize);

@@ -278,8 +278,8 @@ template<typename T>
 void TestXdgShellWindowRules::setWindowRule(const QString &property, const T &value, int policy)
 {
     // Initialize RuleBook with the test rule.
-    m_config->group("General").writeEntry("count", 1);
-    KConfigGroup group = m_config->group("1");
+    m_config->group(QStringLiteral("General")).writeEntry("count", 1);
+    KConfigGroup group = m_config->group(QStringLiteral("1"));
 
     group.writeEntry(property, value);
     group.writeEntry(QStringLiteral("%1rule").arg(property), policy);
