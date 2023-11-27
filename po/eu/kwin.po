@@ -15,14 +15,14 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-25 01:35+0000\n"
-"PO-Revision-Date: 2023-10-22 14:33+0200\n"
+"PO-Revision-Date: 2023-11-26 08:39+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 23.08.2\n"
+"X-Generator: Lokalize 23.08.3\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, kde-format
@@ -2216,26 +2216,21 @@ msgid "Arrow draw modifier keys:"
 msgstr "Geziak marrazteko tekla aldarazleak:"
 
 #: plugins/nightcolor/nightcolormanager.cpp:64
-#, fuzzy, kde-format
-#| msgctxt "Night Color was disabled"
-#| msgid "Night Color Off"
+#, kde-format
 msgctxt "Night Light was disabled"
 msgid "Night Light Off"
-msgstr "Gaueko kolorea itzalita"
+msgstr "Gaueko argia itzalita"
 
 #: plugins/nightcolor/nightcolormanager.cpp:65
-#, fuzzy, kde-format
-#| msgctxt "Night Color was enabled"
-#| msgid "Night Color On"
+#, kde-format
 msgctxt "Night Light was enabled"
 msgid "Night Light On"
-msgstr "Gaueko kolorea piztuta"
+msgstr "Gaueko argia piztuta"
 
 #: plugins/nightcolor/nightcolormanager.cpp:86
-#, fuzzy, kde-format
-#| msgid "Toggle Night Color"
+#, kde-format
 msgid "Toggle Night Light"
-msgstr "Txandakatu gaueko kolorea"
+msgstr "Txandakatu gaueko argia"
 
 #: plugins/nightcolor/nightcolormanager.cpp:463
 #, kde-format
@@ -3545,18 +3540,20 @@ msgid ""
 "The following applications did not close:\n"
 "%1"
 msgstr ""
+"Ondoko aplikazioak ez dira itxi:\n"
+"%1"
 
 #: sm.cpp:463
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
-msgstr ""
+msgstr "Saio-ixtea ezeztatu"
 
 #: sm.cpp:464
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
-msgstr ""
+msgstr "Saioa itxi hala ere"
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format
