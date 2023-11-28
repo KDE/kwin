@@ -232,7 +232,7 @@ Window *Workspace::topWindowOnDesktop(VirtualDesktop *desktop, Output *output, b
     }
     for (int i = list.size() - 1; i >= 0; --i) {
         auto window = list.at(i);
-        if (!window->isClient()) {
+        if (!window->isClient() || window->isDeleted()) {
             continue;
         }
         if (window->isOnDesktop(desktop) && window->isShown() && window->isOnCurrentActivity() && !window->isShade()) {
@@ -256,12 +256,18 @@ Window *Workspace::findDesktop(bool topmost, VirtualDesktop *desktop) const
     if (topmost) {
         for (int i = stacking_order.size() - 1; i >= 0; i--) {
             auto window = stacking_order.at(i);
+            if (window->isDeleted()) {
+                continue;
+            }
             if (window->isClient() && window->isOnDesktop(desktop) && window->isDesktop() && window->isShown()) {
                 return window;
             }
         }
     } else { // bottom-most
         for (Window *window : std::as_const(stacking_order)) {
+            if (window->isDeleted()) {
+                continue;
+            }
             if (window->isClient() && window->isOnDesktop(desktop) && window->isDesktop() && window->isShown()) {
                 return window;
             }
@@ -330,7 +336,7 @@ void Workspace::lowerWindowWithinApplication(Window *window)
     // first try to put it below the bottom-most window of the application
     for (auto it = unconstrained_stacking_order.begin(); it != unconstrained_stacking_order.end(); ++it) {
         auto other = *it;
-        if (!other->isClient()) {
+        if (!other->isClient() || other->isDeleted()) {
             continue;
         }
         if (Window::belongToSameApplication(other, window)) {
@@ -386,7 +392,7 @@ void Workspace::raiseWindowWithinApplication(Window *window)
     // first try to put it above the top-most window of the application
     for (int i = unconstrained_stacking_order.size() - 1; i > -1; --i) {
         auto other = unconstrained_stacking_order.at(i);
-        if (!other->isClient()) {
+        if (!other->isClient() || other->isDeleted()) {
             continue;
         }
         if (other == window) { // don't lower it just because it asked to be raised
@@ -473,7 +479,7 @@ void Workspace::restoreSessionStackingOrder(X11Window *window)
     unconstrained_stacking_order.removeAll(window);
     for (auto it = unconstrained_stacking_order.begin(); it != unconstrained_stacking_order.end(); ++it) {
         X11Window *current = qobject_cast<X11Window *>(*it);
-        if (!current || current->isUnmanaged()) {
+        if (!current || current->isDeleted() || current->isUnmanaged()) {
             continue;
         }
         if (current->sessionStackingOrder() > window->sessionStackingOrder()) {
