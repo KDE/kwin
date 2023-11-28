@@ -198,6 +198,13 @@ void StartupFeedbackEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono
     effects->prePaintScreen(data, presentTime);
 }
 
+static QRectF snapToPixelGrid(const QRectF &rect, qreal devicePixelRatio)
+{
+    const QVector2D topLeft = roundVector(QVector2D(rect.topLeft()) * devicePixelRatio);
+    const QVector2D bottomRight = roundVector(QVector2D(rect.bottomRight()) * devicePixelRatio);
+    return QRectF(topLeft.x(), topLeft.y(), bottomRight.x() - topLeft.x(), bottomRight.y() - topLeft.y());
+}
+
 void StartupFeedbackEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen)
 {
     effects->paintScreen(renderTarget, viewport, mask, region, screen);
@@ -228,12 +235,12 @@ void StartupFeedbackEffect::paintScreen(const RenderTarget &renderTarget, const 
         } else {
             shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
         }
-        const auto scale = viewport.scale();
+        const QRectF pixelGeometry = snapToPixelGrid(m_currentGeometry, viewport.scale());
         QMatrix4x4 mvp = viewport.projectionMatrix();
-        mvp.translate(m_currentGeometry.x() * scale, m_currentGeometry.y() * scale);
+        mvp.translate(pixelGeometry.x(), pixelGeometry.y());
         shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
         shader->setColorspaceUniformsFromSRGB(renderTarget.colorDescription());
-        texture->render(m_currentGeometry.size(), scale);
+        texture->render(pixelGeometry.size(), 1);
         ShaderManager::instance()->popShader();
         glDisable(GL_BLEND);
     }
