@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-25 01:35+0000\n"
+"POT-Creation-Date: 2023-11-28 01:36+0000\n"
 "PO-Revision-Date: 2023-07-06 10:33+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -1069,144 +1069,163 @@ msgstr "الحافظة"
 msgid "Primary Selection"
 msgstr "الاختيار الأولي"
 
-#: helpers/killer/killer.cpp:29
+#: helpers/killer/killer.cpp:73
 #, kde-format
 msgid "Window Manager"
 msgstr "مدير نوافذ"
 
-#: helpers/killer/killer.cpp:33
+#: helpers/killer/killer.cpp:78
 #, kde-format
 msgid "PID of the application to terminate"
 msgstr "معرّف عمليّة التّطبيق لإنهائه."
 
-#: helpers/killer/killer.cpp:33
+#: helpers/killer/killer.cpp:78
 #, kde-format
 msgid "pid"
 msgstr "معرّف_العمليّة"
 
-#: helpers/killer/killer.cpp:35
+#: helpers/killer/killer.cpp:80
 #, kde-format
 msgid "Hostname on which the application is running"
 msgstr "اسم المضيف الذي يعمل فيه التّطبيق"
 
-#: helpers/killer/killer.cpp:35
+#: helpers/killer/killer.cpp:80
 #, kde-format
 msgid "hostname"
 msgstr "اسم_المضيف"
 
-#: helpers/killer/killer.cpp:37
+#: helpers/killer/killer.cpp:82
 #, kde-format
 msgid "Caption of the window to be terminated"
 msgstr "واصفة النّافذة لإنهائها"
 
-#: helpers/killer/killer.cpp:37
+#: helpers/killer/killer.cpp:82
 #, kde-format
 msgid "caption"
 msgstr "الواصفة"
 
-#: helpers/killer/killer.cpp:39
+#: helpers/killer/killer.cpp:84
 #, kde-format
 msgid "Name of the application to be terminated"
 msgstr "اسم التّطبيق لإنهائه."
 
-#: helpers/killer/killer.cpp:39
+#: helpers/killer/killer.cpp:84
 #, kde-format
 msgid "name"
 msgstr "الاسم"
 
-#: helpers/killer/killer.cpp:41
+#: helpers/killer/killer.cpp:86
 #, kde-format
 msgid "ID of resource belonging to the application"
 msgstr "معرّف المورد التّابع للتّطبيق"
 
-#: helpers/killer/killer.cpp:41
+#: helpers/killer/killer.cpp:86
 #, kde-format
 msgid "id"
 msgstr "المعرّف"
 
-#: helpers/killer/killer.cpp:43
+#: helpers/killer/killer.cpp:88
 #, kde-format
 msgid "Time of user action causing termination"
 msgstr "وقت إجراء المستخدم المسبّب للإنهاء"
 
-#: helpers/killer/killer.cpp:43
+#: helpers/killer/killer.cpp:88
 #, kde-format
 msgid "time"
 msgstr "الوقت"
 
-#: helpers/killer/killer.cpp:45
+#: helpers/killer/killer.cpp:90
 #, kde-format
 msgid "KWin helper utility"
 msgstr "أداة نوافذك للمساعدة"
 
-#: helpers/killer/killer.cpp:69
+#: helpers/killer/killer.cpp:126
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "لا يفترض طلب الأداة المساعدة هذه مباشرةً."
 
-#: helpers/killer/killer.cpp:79
-#, kde-format
-msgctxt "@info"
-msgid "<b>Application \"%1\" is not responding</b>"
-msgstr "<b>التّطبيق \"%1\" لا يستجيب</b>"
-
-#: helpers/killer/killer.cpp:81
+#: helpers/killer/killer.cpp:148
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
-"<para>You tried to close window \"%1\" from application \"%2\" (Process ID: "
-"%3) but the application is not responding.</para>"
+"<para><application>%1</application> is not responding. Do you want to "
+"terminate this application?</para>"
 msgstr ""
-"<para>حاولت إغلاق النّافذة \"%1\" من التّطبيق \"%2\" (معرّف العمليّة: %3) لكنّ "
-"التّطبيق لا يستجيب.</para>"
 
-#: helpers/killer/killer.cpp:83
+#: helpers/killer/killer.cpp:150
 #, kde-kuit-format
-msgctxt "@info"
+msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
-"<para>You tried to close window \"%1\" from application \"%2\" (Process ID: "
-"%3), running on host \"%4\", but the application is not responding.</para>"
+"<para>\"%1\" of <application>%2</application> is not responding. Do you want "
+"to terminate this application?</para>"
 msgstr ""
-"<para>حاولت إغلاق النّافذة \"%1\" من التّطبيق \"%2\" (معرّف العمليّة: %3)، والّتي "
-"تعمل على المضيف \"%4، لكنّ التّطبيق لا يستجيب.</para>"
 
-#: helpers/killer/killer.cpp:86
-#, kde-kuit-format
+#: helpers/killer/killer.cpp:153
+#, fuzzy, kde-kuit-format
+#| msgctxt "@info"
+#| msgid ""
+#| "<para>Do you want to terminate this application?</"
+#| "para><para><warning>Terminating the application will close all of its "
+#| "child windows. Any unsaved data will be lost.</warning></para>"
 msgctxt "@info"
 msgid ""
-"<para>Do you want to terminate this application?</"
-"para><para><warning>Terminating the application will close all of its child "
-"windows. Any unsaved data will be lost.</warning></para>"
+"<para><emphasis strong='true'>Terminating this application will close all of "
+"its windows. Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
 "<para>أتريد إنهاء هذا التّطبيق؟</para><para><warning>إنهاء التّطبيق سيغلق كلّ "
 "نوافذه الابنة. أيّة بيانات غير محفوظة ستُفقد.</warning></para>"
 
-#: helpers/killer/killer.cpp:89
-#, kde-format
-msgid "&Terminate Application %1"
+#: helpers/killer/killer.cpp:155
+#, fuzzy, kde-format
+#| msgid "&Terminate Application %1"
+msgctxt "@action:button Terminate app"
+msgid "&Terminate %1"
 msgstr "أ&نهِ التّطبيق %1"
 
-#: helpers/killer/killer.cpp:90
-#, kde-format
-msgid "Wait Longer"
+#: helpers/killer/killer.cpp:156
+#, fuzzy, kde-format
+#| msgid "Wait Longer"
+msgctxt "@action:button Wait for frozen app to maybe respond again"
+msgid "&Wait Longer"
 msgstr "انتظر أكثر"
 
-#: input.cpp:2020
+#: helpers/killer/killer.cpp:164
+#, fuzzy, kde-format
+#| msgctxt "Application is not responding, appended to window title"
+#| msgid "(Not Responding)"
+msgctxt "@title:window"
+msgid "Not Responding"
+msgstr "(لا يستجيب)"
+
+#: helpers/killer/killer.cpp:180
+#, kde-format
+msgctxt "@info"
+msgid "Process ID: %1"
+msgstr ""
+
+#: helpers/killer/killer.cpp:182
+#, fuzzy, kde-format
+#| msgid "hostname"
+msgctxt "@info"
+msgid "Host name: %1"
+msgstr "اسم_المضيف"
+
+#: input.cpp:2022
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "انقل اللوحي إلى الخرج التالي"
 
-#: input.cpp:2099
+#: input.cpp:2101
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "انتقل اللوحي إلى %1"
 
-#: input.cpp:2099
+#: input.cpp:2101
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "بدلت اللوحيات المخرجات"
 
-#: input.cpp:3192
+#: input.cpp:3199
 #, kde-format
 msgid "Touchpad"
 msgstr "لوحة اللمس"
@@ -1307,55 +1326,55 @@ msgstr "عطّل خيارات الضّبط"
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "يشير إلى عدد انهيارات كوين"
 
-#: main_wayland.cpp:289
+#: main_wayland.cpp:291
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "ابدأ خادم اكس_ويلاند بدون صلاحية الجذر."
 
-#: main_wayland.cpp:291
+#: main_wayland.cpp:293
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
 msgstr "اسم مقبس كوين. إذا لم يعين سيستخدم \"wayland-0\""
 
-#: main_wayland.cpp:294
+#: main_wayland.cpp:296
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr "شاشة اكس11 التي ستستخدم في وضع المؤطر على منصة اكس11."
 
-#: main_wayland.cpp:297
+#: main_wayland.cpp:299
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr "شاشة ويلاند التي ستستخدم في وضع المؤطر على منصة ويلاند."
 
-#: main_wayland.cpp:299
+#: main_wayland.cpp:301
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "التصيير إلى framebuffer افتراضي"
 
-#: main_wayland.cpp:301
+#: main_wayland.cpp:303
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "عرض نمط المؤطر. العرض المبدئي 1024."
 
-#: main_wayland.cpp:305
+#: main_wayland.cpp:307
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "ارتفاع نمط المؤطر. الارتفاع المبدئي 768."
 
-#: main_wayland.cpp:310
+#: main_wayland.cpp:312
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "مقياس التكبير لوضع المؤطر. المبدئي 1."
 
-#: main_wayland.cpp:315
+#: main_wayland.cpp:317
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
 msgstr ""
 "عدد النوافذ التي سيتم فتحها كمخرجات في الوضع المؤطر. القيمة المبدئي هي 1 "
 
-#: main_wayland.cpp:320
+#: main_wayland.cpp:322
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1364,7 +1383,7 @@ msgstr ""
 "مقبس ويلاند لاستخدامه في الاتصالات الواردة. يمكن دمج هذا --socket لتسمية "
 "المقبس"
 
-#: main_wayland.cpp:324
+#: main_wayland.cpp:326
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1372,63 +1391,63 @@ msgid ""
 msgstr ""
 "مقبس ويلاند_اكس لاستخدامه لاتصالات ويلاند_اكس الواردة. يمكن تعيينها عدة مرات"
 
-#: main_wayland.cpp:328
+#: main_wayland.cpp:330
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "اسم شاشة ويلاند_اكس التي تم إعدادها مسبقًا "
 
-#: main_wayland.cpp:332
+#: main_wayland.cpp:334
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "اسم ملف xauthority "
 
-#: main_wayland.cpp:336
+#: main_wayland.cpp:338
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr "اخرج من هذه النسخة حتى يمكن إعادة تشغيله بواسطة kwin_wayland_wrappe"
 
-#: main_wayland.cpp:338
+#: main_wayland.cpp:340
 #, kde-format
 msgid "Render through drm node."
 msgstr "التصيير عن طريق drm."
 
-#: main_wayland.cpp:339
+#: main_wayland.cpp:341
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr "استخرج معلومات المحليات من locale1 عوضاً عن ضبط المستخدم"
 
-#: main_wayland.cpp:361
+#: main_wayland.cpp:363
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "طريقة الإدخال الذي يبدأه كوين"
 
-#: main_wayland.cpp:367
+#: main_wayland.cpp:369
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "تبدأ الجلسة في النمط المقفل."
 
-#: main_wayland.cpp:371
+#: main_wayland.cpp:373
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "تبدأ الجَلسة دون دعم قفل الشاشة"
 
-#: main_wayland.cpp:376
+#: main_wayland.cpp:378
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "تبدأ الجلسة دون دعم الاختصارات العامة"
 
-#: main_wayland.cpp:381 main_x11.cpp:431
+#: main_wayland.cpp:383 main_x11.cpp:431
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "عطل تكامل الأنشطة KActivities"
 
-#: main_wayland.cpp:386
+#: main_wayland.cpp:388
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr "اخرج بعد إغلاق تطبيق الجَلسة، الذي بدأه كوين."
 
-#: main_wayland.cpp:391
+#: main_wayland.cpp:393
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr "التطبيقات التي تبدأ حين بَدْء خادم ويلاند و ويلاند_اكس"
@@ -4188,6 +4207,27 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "إنهار ويلاند_اكس"
+
+#~ msgctxt "@info"
+#~ msgid "<b>Application \"%1\" is not responding</b>"
+#~ msgstr "<b>التّطبيق \"%1\" لا يستجيب</b>"
+
+#~ msgctxt "@info"
+#~ msgid ""
+#~ "<para>You tried to close window \"%1\" from application \"%2\" (Process "
+#~ "ID: %3) but the application is not responding.</para>"
+#~ msgstr ""
+#~ "<para>حاولت إغلاق النّافذة \"%1\" من التّطبيق \"%2\" (معرّف العمليّة: %3) لكنّ "
+#~ "التّطبيق لا يستجيب.</para>"
+
+#~ msgctxt "@info"
+#~ msgid ""
+#~ "<para>You tried to close window \"%1\" from application \"%2\" (Process "
+#~ "ID: %3), running on host \"%4\", but the application is not responding.</"
+#~ "para>"
+#~ msgstr ""
+#~ "<para>حاولت إغلاق النّافذة \"%1\" من التّطبيق \"%2\" (معرّف العمليّة: %3)، "
+#~ "والّتي تعمل على المضيف \"%4، لكنّ التّطبيق لا يستجيب.</para>"
 
 #~ msgid "Show Desktop Grid"
 #~ msgstr "أظهر شبكة سطح المكتب"

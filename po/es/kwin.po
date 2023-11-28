@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-25 01:35+0000\n"
+"POT-Creation-Date: 2023-11-28 01:36+0000\n"
 "PO-Revision-Date: 2023-11-22 02:40+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -1091,146 +1091,164 @@ msgstr "Portapapeles"
 msgid "Primary Selection"
 msgstr "Selección principal"
 
-#: helpers/killer/killer.cpp:29
+#: helpers/killer/killer.cpp:73
 #, kde-format
 msgid "Window Manager"
 msgstr "Gestor de ventanas"
 
-#: helpers/killer/killer.cpp:33
+#: helpers/killer/killer.cpp:78
 #, kde-format
 msgid "PID of the application to terminate"
 msgstr "PID de la aplicación a finalizar."
 
-#: helpers/killer/killer.cpp:33
+#: helpers/killer/killer.cpp:78
 #, kde-format
 msgid "pid"
 msgstr "pid"
 
-#: helpers/killer/killer.cpp:35
+#: helpers/killer/killer.cpp:80
 #, kde-format
 msgid "Hostname on which the application is running"
 msgstr "Nombre de la máquina en la que se está ejecutando la aplicación."
 
-#: helpers/killer/killer.cpp:35
+#: helpers/killer/killer.cpp:80
 #, kde-format
 msgid "hostname"
 msgstr "máquina"
 
-#: helpers/killer/killer.cpp:37
+#: helpers/killer/killer.cpp:82
 #, kde-format
 msgid "Caption of the window to be terminated"
 msgstr "Leyenda de la ventana a finalizar."
 
-#: helpers/killer/killer.cpp:37
+#: helpers/killer/killer.cpp:82
 #, kde-format
 msgid "caption"
 msgstr "título"
 
-#: helpers/killer/killer.cpp:39
+#: helpers/killer/killer.cpp:84
 #, kde-format
 msgid "Name of the application to be terminated"
 msgstr "Nombre de la aplicación a finalizar"
 
-#: helpers/killer/killer.cpp:39
+#: helpers/killer/killer.cpp:84
 #, kde-format
 msgid "name"
 msgstr "nombre"
 
-#: helpers/killer/killer.cpp:41
+#: helpers/killer/killer.cpp:86
 #, kde-format
 msgid "ID of resource belonging to the application"
 msgstr "ID del recurso que pertenece a la aplicación."
 
-#: helpers/killer/killer.cpp:41
+#: helpers/killer/killer.cpp:86
 #, kde-format
 msgid "id"
 msgstr "id"
 
-#: helpers/killer/killer.cpp:43
+#: helpers/killer/killer.cpp:88
 #, kde-format
 msgid "Time of user action causing termination"
 msgstr "Hora de la acción de usuario que provocó la finalización"
 
-#: helpers/killer/killer.cpp:43
+#: helpers/killer/killer.cpp:88
 #, kde-format
 msgid "time"
 msgstr "hora"
 
-#: helpers/killer/killer.cpp:45
+#: helpers/killer/killer.cpp:90
 #, kde-format
 msgid "KWin helper utility"
 msgstr "Utilidad de ayuda de KWin"
 
-#: helpers/killer/killer.cpp:69
+#: helpers/killer/killer.cpp:126
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "Esta utilidad de ayuda no debe ser llamada directamente."
 
-#: helpers/killer/killer.cpp:79
-#, kde-format
-msgctxt "@info"
-msgid "<b>Application \"%1\" is not responding</b>"
-msgstr "<b>La aplicación «%1» no responde</b>"
-
-#: helpers/killer/killer.cpp:81
+#: helpers/killer/killer.cpp:148
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
-"<para>You tried to close window \"%1\" from application \"%2\" (Process ID: "
-"%3) but the application is not responding.</para>"
+"<para><application>%1</application> is not responding. Do you want to "
+"terminate this application?</para>"
 msgstr ""
-"<para>Ha intentado cerrar la ventana «%1» de la aplicación «%2» (ID de "
-"proceso: %3), pero la aplicación no responde.</para>"
 
-#: helpers/killer/killer.cpp:83
+#: helpers/killer/killer.cpp:150
 #, kde-kuit-format
-msgctxt "@info"
+msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
-"<para>You tried to close window \"%1\" from application \"%2\" (Process ID: "
-"%3), running on host \"%4\", but the application is not responding.</para>"
+"<para>\"%1\" of <application>%2</application> is not responding. Do you want "
+"to terminate this application?</para>"
 msgstr ""
-"<para>Ha intentado cerrar la ventana «%1» de la aplicación «%2» (ID de "
-"proceso: %3), que se está ejecutando en la máquina «%4», pero la aplicación "
-"no responde.</para>"
 
-#: helpers/killer/killer.cpp:86
-#, kde-kuit-format
+#: helpers/killer/killer.cpp:153
+#, fuzzy, kde-kuit-format
+#| msgctxt "@info"
+#| msgid ""
+#| "<para>Do you want to terminate this application?</"
+#| "para><para><warning>Terminating the application will close all of its "
+#| "child windows. Any unsaved data will be lost.</warning></para>"
 msgctxt "@info"
 msgid ""
-"<para>Do you want to terminate this application?</"
-"para><para><warning>Terminating the application will close all of its child "
-"windows. Any unsaved data will be lost.</warning></para>"
+"<para><emphasis strong='true'>Terminating this application will close all of "
+"its windows. Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
 "<para>¿Desea terminar esta aplicación?</para><para><warning>Si termina la "
 "aplicación se cerrarán todas sus ventanas hijas. Se perderá cualquier dato "
 "que no se haya guardado.</warning></para>"
 
-#: helpers/killer/killer.cpp:89
-#, kde-format
-msgid "&Terminate Application %1"
+#: helpers/killer/killer.cpp:155
+#, fuzzy, kde-format
+#| msgid "&Terminate Application %1"
+msgctxt "@action:button Terminate app"
+msgid "&Terminate %1"
 msgstr "&Terminar la aplicación %1"
 
-#: helpers/killer/killer.cpp:90
-#, kde-format
-msgid "Wait Longer"
+#: helpers/killer/killer.cpp:156
+#, fuzzy, kde-format
+#| msgid "Wait Longer"
+msgctxt "@action:button Wait for frozen app to maybe respond again"
+msgid "&Wait Longer"
 msgstr "Esperar más tiempo"
 
-#: input.cpp:2020
+#: helpers/killer/killer.cpp:164
+#, fuzzy, kde-format
+#| msgctxt "Application is not responding, appended to window title"
+#| msgid "(Not Responding)"
+msgctxt "@title:window"
+msgid "Not Responding"
+msgstr "(no responde)"
+
+#: helpers/killer/killer.cpp:180
+#, kde-format
+msgctxt "@info"
+msgid "Process ID: %1"
+msgstr ""
+
+#: helpers/killer/killer.cpp:182
+#, fuzzy, kde-format
+#| msgid "hostname"
+msgctxt "@info"
+msgid "Host name: %1"
+msgstr "máquina"
+
+#: input.cpp:2022
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Mover la tableta a la siguiente salida"
 
-#: input.cpp:2099
+#: input.cpp:2101
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Tableta movida a %1"
 
-#: input.cpp:2099
+#: input.cpp:2101
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Las tabletas han cambiado de salida"
 
-#: input.cpp:3192
+#: input.cpp:3199
 #, kde-format
 msgid "Touchpad"
 msgstr "Panel táctil"
@@ -1330,12 +1348,12 @@ msgstr "Desactivar las opciones de configuración"
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "Indica que KWin ha terminado inesperadamente n veces recientemente"
 
-#: main_wayland.cpp:289
+#: main_wayland.cpp:291
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "Iniciar un servidor Xwayland sin «root»."
 
-#: main_wayland.cpp:291
+#: main_wayland.cpp:293
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
@@ -1343,40 +1361,40 @@ msgstr ""
 "Nombre del conector Wayland en el que escuchar. Si no se indica ninguno, se "
 "usa «wayland-0»."
 
-#: main_wayland.cpp:294
+#: main_wayland.cpp:296
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr ""
 "La pantalla de X11 a usar en el modo de ventanas sobre la plataforma X11."
 
-#: main_wayland.cpp:297
+#: main_wayland.cpp:299
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr ""
 "La pantalla de Wayland a usar en el modo de ventanas sobre la plataforma "
 "Wayland."
 
-#: main_wayland.cpp:299
+#: main_wayland.cpp:301
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "Renderizar en un «framebuffer» virtual."
 
-#: main_wayland.cpp:301
+#: main_wayland.cpp:303
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "La anchura para el modo de ventanas. La anchura por omisión es 1024."
 
-#: main_wayland.cpp:305
+#: main_wayland.cpp:307
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "La altura para el modo de ventanas. La altura por omisión es 768."
 
-#: main_wayland.cpp:310
+#: main_wayland.cpp:312
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "La escala para el modo de ventanas. El valor por omisión es 1."
 
-#: main_wayland.cpp:315
+#: main_wayland.cpp:317
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
@@ -1384,7 +1402,7 @@ msgstr ""
 "El número de ventanas a abrir como salidas en el modo de ventanas. El valor "
 "por omisión es 1."
 
-#: main_wayland.cpp:320
+#: main_wayland.cpp:322
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1393,7 +1411,7 @@ msgstr ""
 "Conector de Wayland a usar para las conexiones entrantes. Se puede combinar "
 "con «--socket» para darle un nombre al «socket»."
 
-#: main_wayland.cpp:324
+#: main_wayland.cpp:326
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1402,28 +1420,28 @@ msgstr ""
 "«Socket» de XWayland a usar para las conexiones entrantes de XWayland. Se "
 "puede definir varias veces."
 
-#: main_wayland.cpp:328
+#: main_wayland.cpp:330
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "Nombre de la pantalla de XWayland que ha sido preconfigurada"
 
-#: main_wayland.cpp:332
+#: main_wayland.cpp:334
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "Nombre del archivo Xauthority"
 
-#: main_wayland.cpp:336
+#: main_wayland.cpp:338
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 "Sale de esta instancia para que se pueda reiniciar con kwin_wayland_wrapper."
 
-#: main_wayland.cpp:338
+#: main_wayland.cpp:340
 #, kde-format
 msgid "Render through drm node."
 msgstr "Renderizar a través del nodo DRM."
 
-#: main_wayland.cpp:339
+#: main_wayland.cpp:341
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
@@ -1431,37 +1449,37 @@ msgstr ""
 "Extraer información local de «locale1» en lugar de usar la configuración del "
 "usuario"
 
-#: main_wayland.cpp:361
+#: main_wayland.cpp:363
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "Método de entrada que inicia KWin."
 
-#: main_wayland.cpp:367
+#: main_wayland.cpp:369
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "Inicia la sesión en modo bloqueado."
 
-#: main_wayland.cpp:371
+#: main_wayland.cpp:373
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "Inicia la sesión sin permitir el bloqueo de pantalla."
 
-#: main_wayland.cpp:376
+#: main_wayland.cpp:378
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "Inicia la sesión sin usar los atajos de teclado globales."
 
-#: main_wayland.cpp:381 main_x11.cpp:431
+#: main_wayland.cpp:383 main_x11.cpp:431
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Desactivar la integración con KActivities."
 
-#: main_wayland.cpp:386
+#: main_wayland.cpp:388
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr "Salir tras cerrar la aplicación de sesión, que está iniciada por KWin."
 
-#: main_wayland.cpp:391
+#: main_wayland.cpp:393
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
@@ -4224,6 +4242,28 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland ha fallado"
+
+#~ msgctxt "@info"
+#~ msgid "<b>Application \"%1\" is not responding</b>"
+#~ msgstr "<b>La aplicación «%1» no responde</b>"
+
+#~ msgctxt "@info"
+#~ msgid ""
+#~ "<para>You tried to close window \"%1\" from application \"%2\" (Process "
+#~ "ID: %3) but the application is not responding.</para>"
+#~ msgstr ""
+#~ "<para>Ha intentado cerrar la ventana «%1» de la aplicación «%2» (ID de "
+#~ "proceso: %3), pero la aplicación no responde.</para>"
+
+#~ msgctxt "@info"
+#~ msgid ""
+#~ "<para>You tried to close window \"%1\" from application \"%2\" (Process "
+#~ "ID: %3), running on host \"%4\", but the application is not responding.</"
+#~ "para>"
+#~ msgstr ""
+#~ "<para>Ha intentado cerrar la ventana «%1» de la aplicación «%2» (ID de "
+#~ "proceso: %3), que se está ejecutando en la máquina «%4», pero la "
+#~ "aplicación no responde.</para>"
 
 #~ msgid "Show Desktop Grid"
 #~ msgstr "Mostrar la cuadrícula del escritorio"

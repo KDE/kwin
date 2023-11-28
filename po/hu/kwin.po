@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-25 01:35+0000\n"
+"POT-Creation-Date: 2023-11-28 01:36+0000\n"
 "PO-Revision-Date: 2021-11-23 11:35+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -1083,148 +1083,166 @@ msgstr "Vágólap"
 msgid "Primary Selection"
 msgstr "Elsődleges kijelölés"
 
-#: helpers/killer/killer.cpp:29
+#: helpers/killer/killer.cpp:73
 #, kde-format
 msgid "Window Manager"
 msgstr "Ablakkezelő"
 
-#: helpers/killer/killer.cpp:33
+#: helpers/killer/killer.cpp:78
 #, kde-format
 msgid "PID of the application to terminate"
 msgstr "A bezárni kívánt alkalmazás azonosítója (PID)"
 
-#: helpers/killer/killer.cpp:33
+#: helpers/killer/killer.cpp:78
 #, kde-format
 msgid "pid"
 msgstr "pid"
 
-#: helpers/killer/killer.cpp:35
+#: helpers/killer/killer.cpp:80
 #, kde-format
 msgid "Hostname on which the application is running"
 msgstr "Az alkalmazást futtató gép neve"
 
-#: helpers/killer/killer.cpp:35
+#: helpers/killer/killer.cpp:80
 #, kde-format
 msgid "hostname"
 msgstr "gépnév"
 
-#: helpers/killer/killer.cpp:37
+#: helpers/killer/killer.cpp:82
 #, kde-format
 msgid "Caption of the window to be terminated"
 msgstr "A bezárni kívánt ablak címe"
 
-#: helpers/killer/killer.cpp:37
+#: helpers/killer/killer.cpp:82
 #, kde-format
 msgid "caption"
 msgstr "felirat"
 
-#: helpers/killer/killer.cpp:39
+#: helpers/killer/killer.cpp:84
 #, kde-format
 msgid "Name of the application to be terminated"
 msgstr "A bezárni kívánt alkalmazás neve"
 
-#: helpers/killer/killer.cpp:39
+#: helpers/killer/killer.cpp:84
 #, kde-format
 msgid "name"
 msgstr "név"
 
-#: helpers/killer/killer.cpp:41
+#: helpers/killer/killer.cpp:86
 #, kde-format
 msgid "ID of resource belonging to the application"
 msgstr "Az alkalmazáshoz tartozó erőforrás azonosítója"
 
-#: helpers/killer/killer.cpp:41
+#: helpers/killer/killer.cpp:86
 #, kde-format
 msgid "id"
 msgstr "azonosító"
 
-#: helpers/killer/killer.cpp:43
+#: helpers/killer/killer.cpp:88
 #, kde-format
 msgid "Time of user action causing termination"
 msgstr "A lefagyást okozó felhasználói művelet időpontja"
 
-#: helpers/killer/killer.cpp:43
+#: helpers/killer/killer.cpp:88
 #, kde-format
 msgid "time"
 msgstr "idő"
 
-#: helpers/killer/killer.cpp:45
+#: helpers/killer/killer.cpp:90
 #, kde-format
 msgid "KWin helper utility"
 msgstr "KWin segédprogram"
 
-#: helpers/killer/killer.cpp:69
+#: helpers/killer/killer.cpp:126
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "Ezt a segédprogram nem közvetlen használatra való."
 
-#: helpers/killer/killer.cpp:79
-#, kde-format
-msgctxt "@info"
-msgid "<b>Application \"%1\" is not responding</b>"
-msgstr "<b>A(z) „%1” alkalmazás nem válaszol</b>"
-
-#: helpers/killer/killer.cpp:81
+#: helpers/killer/killer.cpp:148
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
-"<para>You tried to close window \"%1\" from application \"%2\" (Process ID: "
-"%3) but the application is not responding.</para>"
+"<para><application>%1</application> is not responding. Do you want to "
+"terminate this application?</para>"
 msgstr ""
-"<para>Megpróbálta bezárni a(z) „%1” ablakot a(z) „%2” alkalmazásból "
-"(Folyamatazonosító: %3), de az alkalmazás nem válaszol.</para>"
 
-#: helpers/killer/killer.cpp:83
+#: helpers/killer/killer.cpp:150
 #, kde-kuit-format
-msgctxt "@info"
+msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
-"<para>You tried to close window \"%1\" from application \"%2\" (Process ID: "
-"%3), running on host \"%4\", but the application is not responding.</para>"
+"<para>\"%1\" of <application>%2</application> is not responding. Do you want "
+"to terminate this application?</para>"
 msgstr ""
-"<para>Megpróbálta bezárni a(z) „%1” ablakot a(z) „%2” alkalmazásból "
-"(Folyamatazonosító: %3), amely a(z) „%4” gépen fut, de az alkalmazás nem "
-"válaszol.</para>"
 
-#: helpers/killer/killer.cpp:86
-#, kde-kuit-format
+#: helpers/killer/killer.cpp:153
+#, fuzzy, kde-kuit-format
+#| msgctxt "@info"
+#| msgid ""
+#| "<para>Do you want to terminate this application?</"
+#| "para><para><warning>Terminating the application will close all of its "
+#| "child windows. Any unsaved data will be lost.</warning></para>"
 msgctxt "@info"
 msgid ""
-"<para>Do you want to terminate this application?</"
-"para><para><warning>Terminating the application will close all of its child "
-"windows. Any unsaved data will be lost.</warning></para>"
+"<para><emphasis strong='true'>Terminating this application will close all of "
+"its windows. Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
 "<para>Be szeretné zárni ezt az alkalmazást?</para><para><warning>Az "
 "alkalmazás bezárásával minden gyermekablaka is be fog záródni. Az összes "
 "mentetlen adat el fog veszni.</warning></para>"
 
-#: helpers/killer/killer.cpp:89
-#, kde-format
-msgid "&Terminate Application %1"
-msgstr "A(z) %1 alkalmazás félbeszakítása"
+#: helpers/killer/killer.cpp:155
+#, fuzzy, kde-format
+#| msgid "Terminate"
+msgctxt "@action:button Terminate app"
+msgid "&Terminate %1"
+msgstr "Bezárás"
 
-#: helpers/killer/killer.cpp:90
-#, kde-format
-msgid "Wait Longer"
+#: helpers/killer/killer.cpp:156
+#, fuzzy, kde-format
+#| msgid "Wait Longer"
+msgctxt "@action:button Wait for frozen app to maybe respond again"
+msgid "&Wait Longer"
 msgstr "Várakozás tovább"
 
-#: input.cpp:2020
+#: helpers/killer/killer.cpp:164
+#, fuzzy, kde-format
+#| msgctxt "Application is not responding, appended to window title"
+#| msgid "(Not Responding)"
+msgctxt "@title:window"
+msgid "Not Responding"
+msgstr "(Nem válaszol)"
+
+#: helpers/killer/killer.cpp:180
+#, kde-format
+msgctxt "@info"
+msgid "Process ID: %1"
+msgstr ""
+
+#: helpers/killer/killer.cpp:182
+#, fuzzy, kde-format
+#| msgid "hostname"
+msgctxt "@info"
+msgid "Host name: %1"
+msgstr "gépnév"
+
+#: input.cpp:2022
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr ""
 
-#: input.cpp:2099
+#: input.cpp:2101
 #, fuzzy, kde-format
 #| msgctxt "Name of a hardware switch"
 #| msgid "Tablet mode"
 msgid "Tablet moved to %1"
 msgstr "Tablet mód"
 
-#: input.cpp:2099
+#: input.cpp:2101
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr ""
 
-#: input.cpp:3192
+#: input.cpp:3199
 #, kde-format
 msgid "Touchpad"
 msgstr "Érintőtábla"
@@ -1326,12 +1344,12 @@ msgstr "A beállítási lehetőségek letiltása"
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "Jelzés, hogy a KWin n alkalommal lefagyott"
 
-#: main_wayland.cpp:289
+#: main_wayland.cpp:291
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "Rootless Xwayland kiszolgáló indítása."
 
-#: main_wayland.cpp:291
+#: main_wayland.cpp:293
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
@@ -1339,37 +1357,37 @@ msgstr ""
 "A figyelendő Wayland socket neve. Ha nincs megadva, „wayland-0” az "
 "alapértelmezett."
 
-#: main_wayland.cpp:294
+#: main_wayland.cpp:296
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr "Az ablakos módon használandó X11 kijelző X11 platformon."
 
-#: main_wayland.cpp:297
+#: main_wayland.cpp:299
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr "Az ablakos módon használandó Wayland kijelző Wayland platformon."
 
-#: main_wayland.cpp:299
+#: main_wayland.cpp:301
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "Renderelés egy virtuális framebufferbe."
 
-#: main_wayland.cpp:301
+#: main_wayland.cpp:303
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "Az ablakos mód szélessége. Alapértelmezett érték: 1024."
 
-#: main_wayland.cpp:305
+#: main_wayland.cpp:307
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "Az ablakos mód magassága. Alapértelmezett érték: 768."
 
-#: main_wayland.cpp:310
+#: main_wayland.cpp:312
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "Az ablakoos mód skálázása. Alapértelmezett érték: 1."
 
-#: main_wayland.cpp:315
+#: main_wayland.cpp:317
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
@@ -1377,7 +1395,7 @@ msgstr ""
 "Az ablakos módban kimenetként megnyitandó ablakok száma. Alapértelmezett "
 "érték: 1"
 
-#: main_wayland.cpp:320
+#: main_wayland.cpp:322
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1386,7 +1404,7 @@ msgstr ""
 "A bejövő kapcsolatokhoz használandó Wayland socket. Ez kombinálható a --"
 "socket kapcsolóval annak elnevezéséhez"
 
-#: main_wayland.cpp:324
+#: main_wayland.cpp:326
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1395,65 +1413,65 @@ msgstr ""
 "Az Xwayland bejövő kapcsolataihoz használandó XWayland socket. Ez többször "
 "is megadható"
 
-#: main_wayland.cpp:328
+#: main_wayland.cpp:330
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "Az előre beállított xwayland kijelző neve"
 
-#: main_wayland.cpp:332
+#: main_wayland.cpp:334
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "Az xauthority fájl neve "
 
-#: main_wayland.cpp:336
+#: main_wayland.cpp:338
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 "Kilépés ebből a példányból, hogy újra lehessen indítani "
 "kwin_wayland_wrapperrel."
 
-#: main_wayland.cpp:338
+#: main_wayland.cpp:340
 #, kde-format
 msgid "Render through drm node."
 msgstr "Renderelés drm node-on."
 
-#: main_wayland.cpp:339
+#: main_wayland.cpp:341
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
 
-#: main_wayland.cpp:361
+#: main_wayland.cpp:363
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "A KWin által indított beviteli mód."
 
-#: main_wayland.cpp:367
+#: main_wayland.cpp:369
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "Munkamenet indítása zárolt módban."
 
-#: main_wayland.cpp:371
+#: main_wayland.cpp:373
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "Munkamenet indítása képernyőzár támogatás nélkül."
 
-#: main_wayland.cpp:376
+#: main_wayland.cpp:378
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "Munkamenet indítás a globális billentyűparancsok támogatása nélkül."
 
-#: main_wayland.cpp:381 main_x11.cpp:431
+#: main_wayland.cpp:383 main_x11.cpp:431
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "KActivities intergráció kikapcsolása."
 
-#: main_wayland.cpp:386
+#: main_wayland.cpp:388
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr "Kilépés a KWin által indított munkamenet alkalmazás bezárása után."
 
-#: main_wayland.cpp:391
+#: main_wayland.cpp:393
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
@@ -4373,6 +4391,31 @@ msgstr ""
 msgid "Xwayland has crashed"
 msgstr ""
 
+#~ msgctxt "@info"
+#~ msgid "<b>Application \"%1\" is not responding</b>"
+#~ msgstr "<b>A(z) „%1” alkalmazás nem válaszol</b>"
+
+#~ msgctxt "@info"
+#~ msgid ""
+#~ "<para>You tried to close window \"%1\" from application \"%2\" (Process "
+#~ "ID: %3) but the application is not responding.</para>"
+#~ msgstr ""
+#~ "<para>Megpróbálta bezárni a(z) „%1” ablakot a(z) „%2” alkalmazásból "
+#~ "(Folyamatazonosító: %3), de az alkalmazás nem válaszol.</para>"
+
+#~ msgctxt "@info"
+#~ msgid ""
+#~ "<para>You tried to close window \"%1\" from application \"%2\" (Process "
+#~ "ID: %3), running on host \"%4\", but the application is not responding.</"
+#~ "para>"
+#~ msgstr ""
+#~ "<para>Megpróbálta bezárni a(z) „%1” ablakot a(z) „%2” alkalmazásból "
+#~ "(Folyamatazonosító: %3), amely a(z) „%4” gépen fut, de az alkalmazás nem "
+#~ "válaszol.</para>"
+
+#~ msgid "&Terminate Application %1"
+#~ msgstr "A(z) %1 alkalmazás félbeszakítása"
+
 #, fuzzy
 #~| msgid "Show Desktop"
 #~ msgid "Show Desktop Grid"
@@ -5036,9 +5079,6 @@ msgstr ""
 
 #~ msgid "Hold Ctrl+Meta keys to see where the mouse cursor is."
 #~ msgstr "A Ctrl+Meta lenyomásával megtekinthető, hol van az egérmutató."
-
-#~ msgid "Terminate"
-#~ msgstr "Bezárás"
 
 #~ msgid "Keep Running"
 #~ msgstr "Folytatás"
