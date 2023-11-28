@@ -62,12 +62,12 @@ void OutputScreenCastSource::render(GLFramebuffer *target)
     ShaderBinder shaderBinder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
     QMatrix4x4 projectionMatrix;
     projectionMatrix.scale(1, -1);
-    projectionMatrix.ortho(QRect(QPoint(), textureSize() * m_output->scale()));
+    projectionMatrix.ortho(QRect(QPoint(), textureSize()));
     shaderBinder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix);
     shaderBinder.shader()->setColorspaceUniformsToSRGB(colorDescription);
 
     GLFramebuffer::pushFramebuffer(target);
-    outputTexture->render(textureSize(), m_output->scale());
+    outputTexture->render(textureSize(), 1);
     GLFramebuffer::popFramebuffer();
 }
 
