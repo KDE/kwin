@@ -110,11 +110,10 @@ public:
 
     void setMode(XwaylandEavesdropsMode mode)
     {
-        static const QSet<quint32> modifierKeys = {
-            Qt::Key_Control,
-            Qt::Key_Shift,
-            Qt::Key_Alt,
-            Qt::Key_Meta,
+        static const Qt::KeyboardModifiers modifierKeys = {
+            Qt::ControlModifier,
+            Qt::AltModifier,
+            Qt::MetaModifier,
         };
 
         static const QSet<quint32> characterKeys = {
@@ -347,9 +346,7 @@ public:
             break;
         case AllKeysWithModifier:
             m_filter = [](int key, Qt::KeyboardModifiers m) {
-                return m != Qt::NoModifier
-                    || modifierKeys.contains(key)
-                    || !characterKeys.contains(key);
+                return m.testAnyFlags(modifierKeys) || !characterKeys.contains(key);
             };
             break;
         case All:
