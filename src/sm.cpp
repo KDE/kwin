@@ -446,6 +446,13 @@ bool SessionManager::closeWaylandWindows()
             toplevelWindow->closeWindow();
         }
     }
+
+    if (m_pendingWindows.empty()) {
+        m_closingWindowsGuard.reset();
+        QDBusConnection::sessionBus().send(dbusMessage.createReply(true));
+        return true;
+    }
+
     m_closeTimer.start(std::chrono::seconds(10));
     m_closeTimer.setSingleShot(true);
     connect(&m_closeTimer, &QTimer::timeout, m_closingWindowsGuard.get(), [this, dbusMessage] {
