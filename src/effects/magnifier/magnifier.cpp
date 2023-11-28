@@ -36,8 +36,8 @@ MagnifierEffect::MagnifierEffect()
     initConfig<MagnifierConfig>();
     QAction *a;
     a = KStandardAction::zoomIn(this, &MagnifierEffect::zoomIn, this);
-    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Equal));
-    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Equal));
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Plus) << (Qt::META | Qt::Key_Equal));
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Plus) << (Qt::META | Qt::Key_Equal));
 
     a = KStandardAction::zoomOut(this, &MagnifierEffect::zoomOut, this);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Minus));
