@@ -50,8 +50,8 @@ MagnifierEffectConfig::MagnifierEffectConfig(QObject *parent, const KPluginMetaD
     QAction *a;
     a = m_actionCollection->addAction(KStandardAction::ZoomIn);
     a->setProperty("isConfigurationAction", true);
-    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Equal));
-    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Equal));
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Plus) << (Qt::META | Qt::Key_Equal));
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Plus) << (Qt::META | Qt::Key_Equal));
 
     a = m_actionCollection->addAction(KStandardAction::ZoomOut);
     a->setProperty("isConfigurationAction", true);
