@@ -24,8 +24,19 @@ ShakeCursorEffect::ShakeCursorEffect()
 
     m_resetCursorScaleTimer.setSingleShot(true);
     connect(&m_resetCursorScaleTimer, &QTimer::timeout, this, [this]() {
+        m_resetCursorScaleAnimation.setStartValue(m_cursorMagnification);
+        m_resetCursorScaleAnimation.setEndValue(1.0);
+        m_resetCursorScaleAnimation.setDuration(animationTime(150));
+        m_resetCursorScaleAnimation.setEasingCurve(QEasingCurve::InOutCubic);
+        m_resetCursorScaleAnimation.start();
+    });
+
+    connect(&m_resetCursorScaleAnimation, &QVariantAnimation::valueChanged, this, [this]() {
         update(Transaction{
-            .magnification = 1.0,
+            .position = m_cursor->pos(),
+            .hotspot = m_cursor->hotspot(),
+            .size = m_cursor->geometry().size(),
+            .magnification = m_resetCursorScaleAnimation.currentValue().toReal(),
         });
     });
 
@@ -73,11 +84,13 @@ void ShakeCursorEffect::pointerEvent(MouseEvent *event)
             .magnification = std::max(m_cursorMagnification, 1.0 + ShakeCursorConfig::magnification() * shakeFactor.value()),
         });
         m_resetCursorScaleTimer.start(1000);
+        m_resetCursorScaleAnimation.stop();
     } else {
         update(Transaction{
             .magnification = 1.0,
         });
         m_resetCursorScaleTimer.stop();
+        m_resetCursorScaleAnimation.stop();
     }
 }
 

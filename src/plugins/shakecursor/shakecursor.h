@@ -11,6 +11,7 @@
 #include "plugins/shakecursor/shakedetector.h"
 
 #include <QTimer>
+#include <QVariantAnimation>
 
 namespace KWin
 {
@@ -51,6 +52,7 @@ private:
     void update(const Transaction &transaction);
 
     QTimer m_resetCursorScaleTimer;
+    QVariantAnimation m_resetCursorScaleAnimation;
     ShakeDetector m_shakeDetector;
 
     Cursor *m_cursor;
