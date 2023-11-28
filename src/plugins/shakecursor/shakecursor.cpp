@@ -70,7 +70,7 @@ void ShakeCursorEffect::pointerEvent(MouseEvent *event)
             .position = m_cursor->pos(),
             .hotspot = m_cursor->hotspot(),
             .size = m_cursor->geometry().size(),
-            .magnification = 1.0 + ShakeCursorConfig::magnification() * shakeFactor.value(),
+            .magnification = std::max(m_cursorMagnification, 1.0 + ShakeCursorConfig::magnification() * shakeFactor.value()),
         });
         m_resetCursorScaleTimer.start(1000);
     } else {
