@@ -71,9 +71,10 @@ private:
 
     void start(const Startup &startup);
     void stop();
-    QImage scalePixmap(const QPixmap &pm, const QSize &size) const;
-    void prepareTextures(const QPixmap &pix);
+    QImage scalePixmap(const QPixmap &pm, const QSize &size, qreal devicePixelRatio) const;
+    void prepareTextures(const QPixmap &pix, qreal devicePixelRatio);
     QRect feedbackRect() const;
+    QSize feedbackIconSize() const;
 
     qreal m_bounceSizesRatio;
     KStartupInfo *m_startupInfo;

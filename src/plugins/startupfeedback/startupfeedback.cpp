@@ -24,6 +24,7 @@
 #include <KSharedConfig>
 #include <KWindowSystem>
 // KWin
+#include "core/output.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
@@ -305,6 +306,12 @@ void StartupFeedbackEffect::start(const Startup &startup)
     if (m_type == NoFeedback || m_splashVisible || effects->isCursorHidden()) {
         return;
     }
+
+    const Output *output = effects->screenAt(effects->cursorPos().toPoint());
+    if (!output) {
+        return;
+    }
+
     if (!m_active) {
         effects->startMousePolling();
     }
@@ -322,8 +329,9 @@ void StartupFeedbackEffect::start(const Startup &startup)
     if (m_type == BouncingFeedback) {
         m_bounceSizesRatio = iconSize / 16.0;
     }
+
     const QPixmap iconPixmap = startup.icon.pixmap(iconSize);
-    prepareTextures(iconPixmap);
+    prepareTextures(iconPixmap, output->scale());
     m_dirtyRect = m_currentGeometry = feedbackRect();
     effects->addRepaint(m_dirtyRect);
 }
@@ -354,13 +362,13 @@ void StartupFeedbackEffect::stop()
     effects->addRepaintFull();
 }
 
-void StartupFeedbackEffect::prepareTextures(const QPixmap &pix)
+void StartupFeedbackEffect::prepareTextures(const QPixmap &pix, qreal devicePixelRatio)
 {
     effects->makeOpenGLContextCurrent();
     switch (m_type) {
     case BouncingFeedback:
         for (int i = 0; i < 5; ++i) {
-            m_bouncingTextures[i] = GLTexture::upload(scalePixmap(pix, BOUNCE_SIZES[i]));
+            m_bouncingTextures[i] = GLTexture::upload(scalePixmap(pix, BOUNCE_SIZES[i], devicePixelRatio));
             if (!m_bouncingTextures[i]) {
                 return;
             }
@@ -385,7 +393,7 @@ void StartupFeedbackEffect::prepareTextures(const QPixmap &pix)
     }
 }
 
-QImage StartupFeedbackEffect::scalePixmap(const QPixmap &pm, const QSize &size) const
+QImage StartupFeedbackEffect::scalePixmap(const QPixmap &pm, const QSize &size, qreal devicePixelRatio) const
 {
     const QSize &adjustedSize = size * m_bounceSizesRatio;
     QImage scaled = pm.toImage().scaled(adjustedSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
@@ -393,7 +401,9 @@ QImage StartupFeedbackEffect::scalePixmap(const QPixmap &pm, const QSize &size) 
         scaled.convertTo(QImage::Format_ARGB32);
     }
 
-    QImage result(20 * m_bounceSizesRatio, 20 * m_bounceSizesRatio, QImage::Format_ARGB32);
+    QImage result(feedbackIconSize() * devicePixelRatio, QImage::Format_ARGB32);
+    result.setDevicePixelRatio(devicePixelRatio);
+
     QPainter p(&result);
     p.setCompositionMode(QPainter::CompositionMode_Source);
     p.fillRect(result.rect(), Qt::transparent);
@@ -403,6 +413,11 @@ QImage StartupFeedbackEffect::scalePixmap(const QPixmap &pm, const QSize &size) 
                        adjustedSize.height()),
                 scaled);
     return result;
+}
+
+QSize StartupFeedbackEffect::feedbackIconSize() const
+{
+    return QSize(20, 20) * m_bounceSizesRatio;
 }
 
 QRect StartupFeedbackEffect::feedbackRect() const
@@ -436,7 +451,7 @@ QRect StartupFeedbackEffect::feedbackRect() const
     const QPoint cursorPos = effects->cursorPos().toPoint() + QPoint(xDiff, yDiff + yOffset);
     QRect rect;
     if (texture) {
-        rect = QRect(cursorPos, texture->size());
+        rect = QRect(cursorPos, feedbackIconSize());
     }
     return rect;
 }
