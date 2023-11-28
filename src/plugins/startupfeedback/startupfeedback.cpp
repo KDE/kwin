@@ -397,7 +397,11 @@ QImage StartupFeedbackEffect::scalePixmap(const QPixmap &pm, const QSize &size) 
     QPainter p(&result);
     p.setCompositionMode(QPainter::CompositionMode_Source);
     p.fillRect(result.rect(), Qt::transparent);
-    p.drawImage((20 * m_bounceSizesRatio - adjustedSize.width()) / 2, (20 * m_bounceSizesRatio - adjustedSize.height()) / 2, scaled, 0, 0, adjustedSize.width(), adjustedSize.height() * m_bounceSizesRatio);
+    p.drawImage(QRectF((20 * m_bounceSizesRatio - adjustedSize.width()) / 2,
+                       (20 * m_bounceSizesRatio - adjustedSize.height()) / 2,
+                       adjustedSize.width(),
+                       adjustedSize.height()),
+                scaled);
     return result;
 }
 
