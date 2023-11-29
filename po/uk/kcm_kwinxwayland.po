@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-29 01:38+0000\n"
-"PO-Revision-Date: 2023-11-07 13:20+0200\n"
+"PO-Revision-Date: 2023-11-29 09:53+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -49,13 +49,12 @@ msgid "Only non-character keys"
 msgstr "Лише клавіші, які не пов'язано з літерами"
 
 #: ui/main.qml:71
-#, fuzzy, kde-format
-#| msgid "As above, plus any key typed while a modifier key is pressed"
+#, kde-format
 msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
 msgstr ""
-"Те саме, що і вище, і ще будь-які клавіші, які натиснуто разом із "
-"модифікатором"
+"Те саме, що і вище, і ще будь-які клавіші, які натиснуто разом із клавішами "
+"Control, Alt або Meta"
 
 #: ui/main.qml:75
 #, kde-format

@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-29 01:38+0000\n"
-"PO-Revision-Date: 2023-11-23 11:38+0200\n"
+"PO-Revision-Date: 2023-11-29 14:12+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -1164,7 +1164,7 @@ msgctxt "@info"
 msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
 "terminate this application?</para>"
-msgstr ""
+msgstr "<para><application>%1</application> לא מגיב. לחסל את היישום?</para>"
 
 #: helpers/killer/killer.cpp:150
 #, kde-kuit-format
@@ -1173,56 +1173,47 @@ msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
 "to terminate this application?</para>"
 msgstr ""
+"<para>„%1” של <application>%2</application> לא מגיב. לחסל את היישום?</para>"
 
 #: helpers/killer/killer.cpp:153
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para>Do you want to terminate this application?</"
-#| "para><para><warning>Terminating the application will close all of its "
-#| "child windows. Any unsaved data will be lost.</warning></para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para><emphasis strong='true'>Terminating this application will close all of "
 "its windows. Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<para>לחסל את היישום הזה?</para><para><warning>חיסול היישום יסגור את כל "
-"החלונות הצאצאיים שלו. כל השינויים שלא שמרת יעלמו.</warning></para>"
+"<para><emphasis strong='true'>חיסול היישום הזה יסגור את כל החלונות שלו. "
+"נתונים שלא נשמרו ילכו לאיבוד.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:155
-#, fuzzy, kde-format
-#| msgid "&Terminate Application %1"
+#, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
-msgstr "&חיסול היישום %1"
+msgstr "&חיסול %1"
 
 #: helpers/killer/killer.cpp:156
-#, fuzzy, kde-format
-#| msgid "Wait Longer"
+#, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
-msgstr "להמתין עוד קצת"
+msgstr "להמתין עוד &קצת"
 
 #: helpers/killer/killer.cpp:164
-#, fuzzy, kde-format
-#| msgctxt "Application is not responding, appended to window title"
-#| msgid "(Not Responding)"
+#, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
-msgstr "(לא מגיב)"
+msgstr "לא מגיב"
 
 #: helpers/killer/killer.cpp:180
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
-msgstr ""
+msgstr "מזהה תהליך: %1"
 
 #: helpers/killer/killer.cpp:182
-#, fuzzy, kde-format
-#| msgid "hostname"
+#, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
-msgstr "שם מארח (hostname)"
+msgstr "שם מארח: %1"
 
 #: input.cpp:2022
 #, kde-format
