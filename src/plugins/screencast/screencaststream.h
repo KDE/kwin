@@ -133,7 +133,6 @@ private:
         bool visible = false;
         bool invalid = true;
     } m_cursor;
-    QRectF cursorGeometry(Cursor *cursor) const;
 
     QHash<struct pw_buffer *, std::shared_ptr<ScreenCastDmaBufTexture>> m_dmabufDataForPwBuffer;
 

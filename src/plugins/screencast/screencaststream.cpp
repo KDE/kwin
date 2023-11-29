@@ -569,21 +569,18 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
             if (m_cursor.texture) {
                 GLFramebuffer::pushFramebuffer(buf->framebuffer());
 
-                QRect r(QPoint(), size);
                 auto shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
 
+                const QRectF cursorRect = scaledRect(cursor->geometry().translated(-m_cursor.viewport.topLeft()), m_cursor.scale);
                 QMatrix4x4 mvp;
-                mvp.ortho(r);
-                shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-
-                m_cursor.texture->setContentTransform(TextureTransforms());
-                const auto cursorRect = cursorGeometry(cursor);
-                mvp.translate(cursorRect.left(), r.height() - cursorRect.top() - m_cursor.texture->height());
+                mvp.scale(1, -1);
+                mvp.ortho(QRectF(QPointF(0, 0), size));
+                mvp.translate(cursorRect.x(), cursorRect.y());
                 shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
 
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-                m_cursor.texture->render(cursorRect.size(), m_cursor.scale);
+                m_cursor.texture->render(cursorRect.size(), 1);
                 glDisable(GL_BLEND);
 
                 ShaderManager::instance()->popShader();
@@ -802,16 +799,6 @@ spa_pod *ScreenCastStream::buildFormat(struct spa_pod_builder *b, enum spa_video
         spa_pod_builder_pop(b, &f[1]);
     }
     return (spa_pod *)spa_pod_builder_pop(b, &f[0]);
-}
-
-QRectF ScreenCastStream::cursorGeometry(Cursor *cursor) const
-{
-    if (!m_cursor.texture) {
-        return {};
-    }
-
-    const auto position = (cursor->pos() - m_cursor.viewport.topLeft() - cursor->hotspot()) * m_cursor.scale;
-    return QRectF{position, m_cursor.texture->size()};
 }
 
 void ScreenCastStream::sendCursorData(Cursor *cursor, spa_meta_cursor *spa_meta_cursor)
