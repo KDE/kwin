@@ -82,6 +82,9 @@ void RegionScreenCastSource::ensureTexture()
         if (!m_renderedTexture) {
             return;
         }
+        m_renderedTexture->setFilter(GL_LINEAR);
+        m_renderedTexture->setWrapMode(GL_CLAMP_TO_EDGE);
+
         m_target = std::make_unique<GLFramebuffer>(m_renderedTexture.get());
         const auto allOutputs = workspace()->outputs();
         for (auto output : allOutputs) {
