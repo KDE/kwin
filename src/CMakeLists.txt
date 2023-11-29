@@ -226,56 +226,54 @@ target_sources(kwin PRIVATE
 
 target_link_libraries(kwin
     PUBLIC
-
-    Qt::DBus
-    Qt::Quick
-    Qt::Widgets
-    Wayland::Server
-    KF6::ConfigCore
-    KF6::CoreAddons
-    KF6::WindowSystem
-    epoxy::epoxy
+        Qt::DBus
+        Qt::Quick
+        Qt::Widgets
+        Wayland::Server
+        KF6::ConfigCore
+        KF6::CoreAddons
+        KF6::WindowSystem
+        epoxy::epoxy
 
     PRIVATE
+        Qt::Concurrent
+        Qt::Sensors
+        Qt::GuiPrivate
 
-    Qt::Concurrent
-    Qt::Sensors
-    Qt::GuiPrivate
+        KF6::ConfigQml
+        KF6::ConfigWidgets
+        KF6::Crash
+        KF6::GlobalAccel
+        KF6::I18n
+        KF6::Package
+        KF6::Service
 
-    KF6::ConfigQml
-    KF6::ConfigWidgets
-    KF6::Crash
-    KF6::GlobalAccel
-    KF6::I18n
-    KF6::Package
-    KF6::Service
+        KDecoration2::KDecoration
+        KDecoration2::KDecoration2Private
 
-    KDecoration2::KDecoration
-    KDecoration2::KDecoration2Private
+        XCB::COMPOSITE
+        XCB::CURSOR
+        XCB::DAMAGE
+        XCB::GLX
+        XCB::ICCCM
+        XCB::KEYSYMS
+        XCB::RANDR
+        XCB::RENDER
+        XCB::SHAPE
+        XCB::SHM
+        XCB::SYNC
+        XCB::XCB
+        XCB::XFIXES
+        XCB::XINERAMA
 
-    XCB::COMPOSITE
-    XCB::CURSOR
-    XCB::DAMAGE
-    XCB::GLX
-    XCB::ICCCM
-    XCB::KEYSYMS
-    XCB::RANDR
-    XCB::RENDER
-    XCB::SHAPE
-    XCB::SHM
-    XCB::SYNC
-    XCB::XCB
-    XCB::XFIXES
-    XCB::XINERAMA
+        UDev::UDev
+        XKB::XKB
+        EGL::EGL
+        epoxy::epoxy
 
-    UDev::UDev
-    XKB::XKB
-    EGL::EGL
-    epoxy::epoxy
-
-    Threads::Threads
-    lcms2::lcms2
-    PkgConfig::libdisplayinfo
+        Threads::Threads
+        lcms2::lcms2
+        PkgConfig::libdisplayinfo
 )
 
 if (TARGET K::KGlobalAccelD)
