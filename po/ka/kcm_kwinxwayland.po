@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-07 02:44+0000\n"
+"POT-Creation-Date: 2023-11-29 01:38+0000\n"
 "PO-Revision-Date: 2023-11-08 03:02+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -51,8 +51,10 @@ msgid "Only non-character keys"
 msgstr "მხოლოდ არა-სიმბოლოს ღილაკები"
 
 #: ui/main.qml:71
-#, kde-format
-msgid "As above, plus any key typed while a modifier key is pressed"
+#, fuzzy, kde-format
+#| msgid "As above, plus any key typed while a modifier key is pressed"
+msgid ""
+"As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
 msgstr ""
 "როგორც ზემოთ, დამატებით ნებისმიერი ღილაკი, რომელზეც მოდიფიკატორ ღილაკთან "
 "ერთად დააჭირეთ"

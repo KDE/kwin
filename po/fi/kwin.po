@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-28 01:36+0000\n"
+"POT-Creation-Date: 2023-11-29 01:38+0000\n"
 "PO-Revision-Date: 2023-10-23 15:16+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -3569,20 +3569,20 @@ msgstr "Valintaikkuna"
 msgid "..."
 msgstr "…"
 
-#: sm.cpp:462
+#: sm.cpp:469
 #, kde-format
 msgid ""
 "The following applications did not close:\n"
 "%1"
 msgstr ""
 
-#: sm.cpp:463
+#: sm.cpp:470
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr ""
 
-#: sm.cpp:464
+#: sm.cpp:471
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"

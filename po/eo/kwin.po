@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-28 01:36+0000\n"
-"PO-Revision-Date: 2023-11-23 20:47+0100\n"
+"POT-Creation-Date: 2023-11-29 01:38+0000\n"
+"PO-Revision-Date: 2023-11-28 20:59+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -1161,6 +1161,8 @@ msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
 "terminate this application?</para>"
 msgstr ""
+"<para><application>%1</application> ne respondas. Ĉu vi volas fini ĉi tiun "
+"aplikaĵon?</para>"
 
 #: helpers/killer/killer.cpp:150
 #, kde-kuit-format
@@ -1169,57 +1171,48 @@ msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
 "to terminate this application?</para>"
 msgstr ""
+"<para>\"%1\" de <application>%2</application> ne respondas. Ĉu vi volas fini "
+"ĉi tiun aplikaĵon?</para>"
 
 #: helpers/killer/killer.cpp:153
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para>Do you want to terminate this application?</"
-#| "para><para><warning>Terminating the application will close all of its "
-#| "child windows. Any unsaved data will be lost.</warning></para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para><emphasis strong='true'>Terminating this application will close all of "
 "its windows. Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<para>Ĉu vi volas ĉesigi ĉi tiun aplikaĵon?</para><para><warning>Ĉu la "
-"aplikaĵon ĉesigas, fermos ĉiujn ĝiajn infanajn fenestrojn. Ĉiuj "
-"nekonservitaj datumoj estos perditaj.</warning></para>"
+"<para><emphasis strong='true'>Ĉesigo de ĉi tiu aplikaĵo fermos ĉiujn ĝiajn "
+"fenestrojn. Ĉiuj nekonservitaj datumoj estos perditaj.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:155
-#, fuzzy, kde-format
-#| msgid "&Terminate Application %1"
+#, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
 msgstr "&Fini Aplikaĵon %1"
 
 #: helpers/killer/killer.cpp:156
-#, fuzzy, kde-format
-#| msgid "Wait Longer"
+#, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
-msgstr "Atendi Pli Longe"
+msgstr "&Atendi Pli Longe"
 
 #: helpers/killer/killer.cpp:164
-#, fuzzy, kde-format
-#| msgctxt "Application is not responding, appended to window title"
-#| msgid "(Not Responding)"
+#, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
-msgstr "(Ne respondante)"
+msgstr "Ne Respondas"
 
 #: helpers/killer/killer.cpp:180
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
-msgstr ""
+msgstr "Procesa ID: %1"
 
 #: helpers/killer/killer.cpp:182
-#, fuzzy, kde-format
-#| msgid "hostname"
+#, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
-msgstr "gastiga nomo"
+msgstr "Gastigantnomo: %1"
 
 #: input.cpp:2022
 #, kde-format
@@ -3541,7 +3534,7 @@ msgstr "Dialogo"
 msgid "..."
 msgstr "..."
 
-#: sm.cpp:462
+#: sm.cpp:469
 #, kde-format
 msgid ""
 "The following applications did not close:\n"
@@ -3550,13 +3543,13 @@ msgstr ""
 "La sekvantaj aplikaĵoj ne fermiĝis:\n"
 "%1"
 
-#: sm.cpp:463
+#: sm.cpp:470
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr "Nuligi Elsaluton"
 
-#: sm.cpp:464
+#: sm.cpp:471
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
@@ -4212,25 +4205,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland paneis"
-
-#~ msgctxt "@info"
-#~ msgid "<b>Application \"%1\" is not responding</b>"
-#~ msgstr "<b>Apliko \"%1\" ne respondas</b>"
-
-#~ msgctxt "@info"
-#~ msgid ""
-#~ "<para>You tried to close window \"%1\" from application \"%2\" (Process "
-#~ "ID: %3) but the application is not responding.</para>"
-#~ msgstr ""
-#~ "<para>Vi provis fermi fenestron \"%1\" de aplikaĵo \"%2\" (Proceza ID: "
-#~ "%3) sed la aplikaĵo ne respondas.</para>"
-
-#~ msgctxt "@info"
-#~ msgid ""
-#~ "<para>You tried to close window \"%1\" from application \"%2\" (Process "
-#~ "ID: %3), running on host \"%4\", but the application is not responding.</"
-#~ "para>"
-#~ msgstr ""
-#~ "<para>Vi provis fermi fenestron \"%1\" de aplikaĵo \"%2\" (Proceza ID: "
-#~ "%3), funkcianta sur gastiganto \"%4\", sed la aplikaĵo ne respondas.</"
-#~ "para>"

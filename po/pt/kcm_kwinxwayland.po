@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-07 02:44+0000\n"
+"POT-Creation-Date: 2023-11-29 01:38+0000\n"
 "PO-Revision-Date: 2022-12-24 07:21+0000\n"
 "Last-Translator: José Nuno Coelho Pires <zepires@gmail.com>\n"
 "Language-Team: Portuguese <kde-i18n-pt@kde.org>\n"
@@ -51,9 +51,13 @@ msgid "Only non-character keys"
 msgstr ""
 
 #: ui/main.qml:71
-#, kde-format
-msgid "As above, plus any key typed while a modifier key is pressed"
+#, fuzzy, kde-format
+#| msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
+msgid ""
+"As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
 msgstr ""
+"Todas as teclas, mas apenas enquanto as teclas Meta, Ctrl, Alt ou Shift "
+"estiverem carregadas"
 
 #: ui/main.qml:75
 #, kde-format
@@ -74,11 +78,6 @@ msgstr ""
 
 #~ msgid "Only Meta, Control, Alt, and Shift keys"
 #~ msgstr "Apenas as teclas Meta, Control, Alt e Shift"
-
-#~ msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
-#~ msgstr ""
-#~ "Todas as teclas, mas apenas enquanto as teclas Meta, Ctrl, Alt ou Shift "
-#~ "estiverem carregadas"
 
 #~ msgid ""
 #~ "This module lets configure which keyboard events are forwarded to X11 "

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-07 02:44+0000\n"
+"POT-Creation-Date: 2023-11-29 01:38+0000\n"
 "PO-Revision-Date: 2023-11-10 22:53+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@linux.org.tw>\n"
@@ -45,8 +45,10 @@ msgid "Only non-character keys"
 msgstr "僅非字元按鍵"
 
 #: ui/main.qml:71
-#, kde-format
-msgid "As above, plus any key typed while a modifier key is pressed"
+#, fuzzy, kde-format
+#| msgid "As above, plus any key typed while a modifier key is pressed"
+msgid ""
+"As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
 msgstr "同上，加上按下修飾鍵時所輸入的任何按鍵"
 
 #: ui/main.qml:75

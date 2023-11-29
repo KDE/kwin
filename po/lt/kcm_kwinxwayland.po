@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-07 02:44+0000\n"
+"POT-Creation-Date: 2023-11-29 01:38+0000\n"
 "PO-Revision-Date: 2023-02-18 01:00+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -44,7 +44,8 @@ msgstr ""
 
 #: ui/main.qml:71
 #, kde-format
-msgid "As above, plus any key typed while a modifier key is pressed"
+msgid ""
+"As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
 msgstr ""
 
 #: ui/main.qml:75

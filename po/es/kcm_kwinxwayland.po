@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwinxwayland\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-07 02:44+0000\n"
+"POT-Creation-Date: 2023-11-29 01:38+0000\n"
 "PO-Revision-Date: 2023-11-07 21:39+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -52,8 +52,10 @@ msgid "Only non-character keys"
 msgstr "Solo teclas que no sean caracteres"
 
 #: ui/main.qml:71
-#, kde-format
-msgid "As above, plus any key typed while a modifier key is pressed"
+#, fuzzy, kde-format
+#| msgid "As above, plus any key typed while a modifier key is pressed"
+msgid ""
+"As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
 msgstr "Como más arriba, además de cualquier tecla pulsada con un modificador"
 
 #: ui/main.qml:75

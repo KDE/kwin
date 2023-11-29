@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-28 01:36+0000\n"
-"PO-Revision-Date: 2023-11-21 08:09+0200\n"
+"POT-Creation-Date: 2023-11-29 01:38+0000\n"
+"PO-Revision-Date: 2023-11-28 17:30+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -1162,6 +1162,8 @@ msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
 "terminate this application?</para>"
 msgstr ""
+"<para>Програма <application>%1</application> не відповідає на запити. Хочете "
+"перервати роботу цієї програми?</para>"
 
 #: helpers/killer/killer.cpp:150
 #, kde-kuit-format
@@ -1170,58 +1172,48 @@ msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
 "to terminate this application?</para>"
 msgstr ""
+"<para>«%1» програми <application>%2</application> не відповідає на запити. "
+"Хочете перервати роботу цієї програми?</para>"
 
 #: helpers/killer/killer.cpp:153
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para>Do you want to terminate this application?</"
-#| "para><para><warning>Terminating the application will close all of its "
-#| "child windows. Any unsaved data will be lost.</warning></para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para><emphasis strong='true'>Terminating this application will close all of "
 "its windows. Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<para>Хочете перервати роботу цієї програми?</"
-"para><para><warning>Переривання роботи програми призведе до закриття всіх її "
-"дочірніх вікон. Всі дані, які не було збережено, буде втрачено.</warning></"
-"para>"
+"<para><emphasis strong='true'>Переривання роботи програми призведе до "
+"закриття усіх її вікон. Усі незбережені дані буде втрачено.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:155
-#, fuzzy, kde-format
-#| msgid "&Terminate Application %1"
+#, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
-msgstr "&Завершити роботу програми %1"
+msgstr "П&ерервати %1"
 
 #: helpers/killer/killer.cpp:156
-#, fuzzy, kde-format
-#| msgid "Wait Longer"
+#, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
-msgstr "Почекати ще"
+msgstr "По&чекати ще"
 
 #: helpers/killer/killer.cpp:164
-#, fuzzy, kde-format
-#| msgctxt "Application is not responding, appended to window title"
-#| msgid "(Not Responding)"
+#, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
-msgstr "(Не відповідає)"
+msgstr "Не відповідає"
 
 #: helpers/killer/killer.cpp:180
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
-msgstr ""
+msgstr "Ід. процесу: %1"
 
 #: helpers/killer/killer.cpp:182
-#, fuzzy, kde-format
-#| msgid "hostname"
+#, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
-msgstr "назва вузла"
+msgstr "Назва вузла: %1"
 
 #: input.cpp:2022
 #, kde-format
@@ -3552,7 +3544,7 @@ msgstr "Вікно"
 msgid "..."
 msgstr "…"
 
-#: sm.cpp:462
+#: sm.cpp:469
 #, kde-format
 msgid ""
 "The following applications did not close:\n"
@@ -3561,13 +3553,13 @@ msgstr ""
 "Не завершено роботу таких програм:\n"
 "%1"
 
-#: sm.cpp:463
+#: sm.cpp:470
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr "Скасувати вихід"
 
-#: sm.cpp:464
+#: sm.cpp:471
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"

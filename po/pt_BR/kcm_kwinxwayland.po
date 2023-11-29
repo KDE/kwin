@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-07 02:44+0000\n"
+"POT-Creation-Date: 2023-11-29 01:38+0000\n"
 "PO-Revision-Date: 2023-10-20 00:38-0300\n"
 "Last-Translator: Geraldo Simiao <geraldosimiao@fedoraproject.org>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -50,9 +50,13 @@ msgid "Only non-character keys"
 msgstr ""
 
 #: ui/main.qml:71
-#, kde-format
-msgid "As above, plus any key typed while a modifier key is pressed"
+#, fuzzy, kde-format
+#| msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
+msgid ""
+"As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
 msgstr ""
+"Todas as teclas, mas apenas enquanto as teclas Meta, Ctrl, Alt ou Shift "
+"estiverem pressionadas."
 
 #: ui/main.qml:75
 #, kde-format
@@ -73,8 +77,3 @@ msgstr ""
 
 #~ msgid "Only Meta, Control, Alt, and Shift keys"
 #~ msgstr "Apenas teclas Meta, Control, Alt e Shift."
-
-#~ msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
-#~ msgstr ""
-#~ "Todas as teclas, mas apenas enquanto as teclas Meta, Ctrl, Alt ou Shift "
-#~ "estiverem pressionadas."
