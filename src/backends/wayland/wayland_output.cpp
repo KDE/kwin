@@ -13,7 +13,6 @@
 #include "core/renderloop_p.h"
 #include "wayland_backend.h"
 #include "wayland_display.h"
-#include "wayland_server.h"
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/pointer.h>
@@ -280,7 +279,7 @@ void WaylandOutput::updateWindowTitle()
     }
 
     QString title = i18nc("Title of nested KWin Wayland with Wayland socket identifier as argument",
-                          "KDE Wayland Compositor %1 (%2)", name(), waylandServer()->socketName());
+                          "KDE Wayland Compositor %1", name());
 
     if (!isEnabled()) {
         title += i18n("- Output disabled");

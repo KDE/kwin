@@ -510,6 +510,7 @@ int main(int argc, char *argv[])
             std::cerr << "FATAL ERROR: could not add wayland socket " << qPrintable(socketName) << std::endl;
             return 1;
         }
+        qInfo() << "Accepting client connections on sockets:" << server->display()->socketNames();
     }
 
     if (!server->init(flags)) {

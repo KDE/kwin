@@ -13,7 +13,6 @@
 #include <config-kwin.h>
 
 #include "utils/xcbutils.h"
-#include "wayland_server.h"
 #include "x11_windowed_egl_backend.h"
 #include "x11_windowed_logging.h"
 #include "x11_windowed_output.h"
@@ -514,7 +513,7 @@ void X11WindowedBackend::grabKeyboard(xcb_timestamp_t time)
 void X11WindowedBackend::updateWindowTitle()
 {
     const QString grab = m_keyboardGrabbed ? i18n("Press right control to ungrab input") : i18n("Press right control key to grab input");
-    const QString title = QStringLiteral("%1 (%2) - %3").arg(i18n("KDE Wayland Compositor"), waylandServer()->socketName(), grab);
+    const QString title = QStringLiteral("%1 - %2").arg(i18n("KDE Wayland Compositor"), grab);
     for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
         (*it)->setWindowTitle(title);
     }
