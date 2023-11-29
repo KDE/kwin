@@ -2,8 +2,18 @@
     "KPlugin": {
         "Category": "Accessibility",
         "Description": "Makes the cursor larger when the pointer is quickly moved back and forth",
+        "Description[he]": "מגדיל את הסמן בעת הזזת המצביע הלוך ושוב במהירות",
+        "Description[ka]": "კურსორის გადიდება, როცა მას წინ და უკან სწრაფად გააქანებთ",
+        "Description[uk]": "Робити курсор більшим, коли вказівник швидко рухається туди-сюди",
+        "Description[x-test]": "xxMakes the cursor larger when the pointer is quickly moved back and forthxx",
+        "Description[zh_TW]": "快速來回移動游標時讓游標變大",
         "EnabledByDefault": false,
         "License": "GPL",
-        "Name": "Shake Cursor"
+        "Name": "Shake Cursor",
+        "Name[he]": "ניעור סמן",
+        "Name[ka]": "კურსორის ჯანჯღარი",
+        "Name[uk]": "Бовтанка курсора",
+        "Name[x-test]": "xxShake Cursorxx",
+        "Name[zh_TW]": "甩動游標"
     }
 }
