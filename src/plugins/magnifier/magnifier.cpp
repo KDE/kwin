@@ -134,7 +134,7 @@ void MagnifierEffect::paintScreen(const RenderTarget &renderTarget, const Render
             QMatrix4x4 mvp = viewport.projectionMatrix();
             mvp.translate(area.x() * scale, area.y() * scale);
             s->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-            m_texture->render(area.size(), scale);
+            m_texture->render(area.size() * scale);
             ShaderManager::instance()->popShader();
 
             GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();

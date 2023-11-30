@@ -112,7 +112,7 @@ void ScreenEdgeEffect::paintScreen(const RenderTarget &renderTarget, const Rende
             QMatrix4x4 mvp = viewport.projectionMatrix();
             mvp.translate(glow->geometry.x() * scale, glow->geometry.y() * scale);
             binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-            texture->render(glow->geometry.size(), scale);
+            texture->render(glow->geometry.size() * scale);
             glDisable(GL_BLEND);
         } else if (effects->compositingType() == QPainterCompositing) {
             QImage tmp(glow->image.size(), QImage::Format_ARGB32_Premultiplied);

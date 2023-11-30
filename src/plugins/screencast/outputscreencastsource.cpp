@@ -67,7 +67,7 @@ void OutputScreenCastSource::render(GLFramebuffer *target)
     shaderBinder.shader()->setColorspaceUniformsToSRGB(colorDescription);
 
     GLFramebuffer::pushFramebuffer(target);
-    outputTexture->render(textureSize(), 1);
+    outputTexture->render(textureSize());
     GLFramebuffer::popFramebuffer();
 }
 

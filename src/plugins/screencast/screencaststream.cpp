@@ -580,7 +580,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
 
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-                m_cursor.texture->render(cursorRect.size(), 1);
+                m_cursor.texture->render(cursorRect.size());
                 glDisable(GL_BLEND);
 
                 ShaderManager::instance()->popShader();

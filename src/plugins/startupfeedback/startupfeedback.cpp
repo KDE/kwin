@@ -240,7 +240,7 @@ void StartupFeedbackEffect::paintScreen(const RenderTarget &renderTarget, const 
         mvp.translate(pixelGeometry.x(), pixelGeometry.y());
         shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
         shader->setColorspaceUniformsFromSRGB(renderTarget.colorDescription());
-        texture->render(pixelGeometry.size(), 1);
+        texture->render(pixelGeometry.size());
         ShaderManager::instance()->popShader();
         glDisable(GL_BLEND);
     }

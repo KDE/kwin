@@ -330,25 +330,25 @@ void GLTexture::unbind()
     glBindTexture(d->m_target, 0);
 }
 
-void GLTexture::render(const QSizeF &size, qreal scale)
+void GLTexture::render(const QSizeF &size)
 {
-    render(infiniteRegion(), size, scale, false);
+    render(infiniteRegion(), size, false);
 }
 
-void GLTexture::render(const QRegion &region, const QSizeF &targetSize, double scale, bool hardwareClipping)
+void GLTexture::render(const QRegion &region, const QSizeF &targetSize, bool hardwareClipping)
 {
     const auto rotatedSize = d->m_textureToBufferMatrix.mapRect(QRect(QPoint(), size())).size();
-    render(QRectF(QPoint(), rotatedSize), region, targetSize, scale, hardwareClipping);
+    render(QRectF(QPoint(), rotatedSize), region, targetSize, hardwareClipping);
 }
 
-void GLTexture::render(const QRectF &source, const QRegion &region, const QSizeF &targetSize, double scale, bool hardwareClipping)
+void GLTexture::render(const QRectF &source, const QRegion &region, const QSizeF &targetSize, bool hardwareClipping)
 {
     if (targetSize.isEmpty()) {
         return; // nothing to paint and m_vbo is likely nullptr and d->m_cachedSize empty as well, #337090
     }
 
-    QSizeF destinationSize = (targetSize * scale).toSize();
-    if (destinationSize != d->m_cachedSize || d->m_cachedSource != source) {
+    const QSize destinationSize = targetSize.toSize(); // TODO: toSize is not enough to snap to the pixel grid, fix render() users and drop this toSize
+    if (targetSize != d->m_cachedSize || d->m_cachedSource != source) {
         d->m_cachedSize = destinationSize;
         d->m_cachedSource = source;
 

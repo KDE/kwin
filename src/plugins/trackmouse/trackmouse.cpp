@@ -124,7 +124,7 @@ void TrackMouseEffect::paintScreen(const RenderTarget &renderTarget, const Rende
             QMatrix4x4 mvp(matrix);
             mvp.translate(m_lastRect[i].x() * scale, m_lastRect[i].y() * scale);
             shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-            m_texture[i]->render(m_lastRect[i].size(), scale);
+            m_texture[i]->render(m_lastRect[i].size() * scale);
         }
         glDisable(GL_BLEND);
     } else if (effects->compositingType() == QPainterCompositing && !m_image[0].isNull() && !m_image[1].isNull()) {

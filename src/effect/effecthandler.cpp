@@ -1518,7 +1518,7 @@ void EffectsHandler::renderOffscreenQuickView(const RenderTarget &renderTarget, 
             glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
         }
 
-        t->render(w->size(), viewport.scale());
+        t->render(rect.size());
 
         if (alphaBlending) {
             glDisable(GL_BLEND);

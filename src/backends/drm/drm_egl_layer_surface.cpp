@@ -169,7 +169,7 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion)
         mat.ortho(QRectF(QPointF(), fbo->size()));
         binder.shader()->setUniform(GLShader::MatrixUniform::ModelViewProjectionMatrix, mat);
         glDisable(GL_BLEND);
-        m_surface->shadowTexture->render(m_surface->gbmSwapchain->size(), 1);
+        m_surface->shadowTexture->render(m_surface->gbmSwapchain->size());
         GLFramebuffer::popFramebuffer();
     }
     m_surface->damageJournal.add(damagedRegion);
@@ -540,7 +540,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surfa
     shader->setUniform(GLShader::ModelViewProjectionMatrix, mat);
 
     sourceTexture->bind();
-    sourceTexture->render(fbo->size(), 1);
+    sourceTexture->render(fbo->size());
     sourceTexture->unbind();
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);

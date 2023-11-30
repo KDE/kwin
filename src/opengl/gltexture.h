@@ -101,9 +101,9 @@ public:
     void update(const QImage &image, const QPoint &offset = QPoint(0, 0), const QRect &src = QRect());
     void bind();
     void unbind();
-    void render(const QSizeF &size, double scale);
-    void render(const QRegion &region, const QSizeF &size, double scale, bool hardwareClipping = false);
-    void render(const QRectF &source, const QRegion &region, const QSizeF &targetSize, double scale, bool hardwareClipping = false);
+    void render(const QSizeF &size);
+    void render(const QRegion &region, const QSizeF &size, bool hardwareClipping = false);
+    void render(const QRectF &source, const QRegion &region, const QSizeF &targetSize, bool hardwareClipping = false);
 
     GLuint texture() const;
     GLenum target() const;
